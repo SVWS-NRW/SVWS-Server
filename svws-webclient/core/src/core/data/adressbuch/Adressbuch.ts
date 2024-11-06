@@ -37,6 +37,9 @@ export class Adressbuch extends JavaObject {
 	public adressbuchEintraege : List<AdressbuchEintrag> = new ArrayList<AdressbuchEintrag>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -76,8 +79,8 @@ export class Adressbuch extends JavaObject {
 	public static transpilerToJSON(obj : Adressbuch) : string {
 		let result = '{';
 		result += '"id" : ' + JSON.stringify(obj.id) + ',';
-		result += '"displayname" : ' + ((!obj.displayname) ? 'null' : JSON.stringify(obj.displayname)) + ',';
-		result += '"beschreibung" : ' + ((!obj.beschreibung) ? 'null' : JSON.stringify(obj.beschreibung)) + ',';
+		result += '"displayname" : ' + ((obj.displayname === null) ? 'null' : JSON.stringify(obj.displayname)) + ',';
+		result += '"beschreibung" : ' + ((obj.beschreibung === null) ? 'null' : JSON.stringify(obj.beschreibung)) + ',';
 		result += '"synctoken" : ' + obj.synctoken.toString() + ',';
 		result += '"adressbuchTyp" : ' + JSON.stringify(obj.adressbuchTyp) + ',';
 		result += '"adressbuchEintraege" : [ ';
@@ -99,10 +102,10 @@ export class Adressbuch extends JavaObject {
 			result += '"id" : ' + JSON.stringify(obj.id) + ',';
 		}
 		if (obj.displayname !== undefined) {
-			result += '"displayname" : ' + ((!obj.displayname) ? 'null' : JSON.stringify(obj.displayname)) + ',';
+			result += '"displayname" : ' + ((obj.displayname === null) ? 'null' : JSON.stringify(obj.displayname)) + ',';
 		}
 		if (obj.beschreibung !== undefined) {
-			result += '"beschreibung" : ' + ((!obj.beschreibung) ? 'null' : JSON.stringify(obj.beschreibung)) + ',';
+			result += '"beschreibung" : ' + ((obj.beschreibung === null) ? 'null' : JSON.stringify(obj.beschreibung)) + ',';
 		}
 		if (obj.synctoken !== undefined) {
 			result += '"synctoken" : ' + obj.synctoken.toString() + ',';

@@ -12,6 +12,7 @@ import java.util.Properties;
  *
  */
 public final class ServerProps {
+
 	private static final String PORT_PROPERTY_KEY = "svws.testing.api.port";
 	private static final String HOST_PROPERTY_KEY = "svws.testing.api.host";
 	private String host;
@@ -24,10 +25,10 @@ public final class ServerProps {
 	 * <code>svws.testing.api.port</code><br>
 	 *
 	 * @return die Serverprops, welche in den Systemproperties angegeben sind.
-	 * @throws IOException
-	 * @throws FileNotFoundException
+	 *
+	 * @throws IOException   evtl. FileNotFoundException
 	 */
-	public static ServerProps createFromSystemProperties() throws FileNotFoundException, IOException {
+	public static ServerProps createFromSystemProperties() throws IOException {
 		System.out.println(System.getProperties().entrySet());
 		if (System.getProperties().keySet().contains(HOST_PROPERTY_KEY)) System.out.println(System.getProperty(HOST_PROPERTY_KEY));
 		if (System.getProperties().keySet().contains(PORT_PROPERTY_KEY)) System.out.println(System.getProperty(PORT_PROPERTY_KEY));

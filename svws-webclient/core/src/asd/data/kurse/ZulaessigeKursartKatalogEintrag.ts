@@ -37,6 +37,9 @@ export class ZulaessigeKursartKatalogEintrag extends CoreTypeData {
 	public zulaessig : List<SchulformSchulgliederung> = new ArrayList<SchulformSchulgliederung>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -91,12 +94,12 @@ export class ZulaessigeKursartKatalogEintrag extends CoreTypeData {
 		result += '"schluessel" : ' + JSON.stringify(obj.schluessel) + ',';
 		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
 		result += '"text" : ' + JSON.stringify(obj.text) + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+		result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
 		result += '"nummer" : ' + JSON.stringify(obj.nummer) + ',';
-		result += '"bemerkungen" : ' + ((!obj.bemerkungen) ? 'null' : JSON.stringify(obj.bemerkungen)) + ',';
-		result += '"kuerzelAllg" : ' + ((!obj.kuerzelAllg) ? 'null' : JSON.stringify(obj.kuerzelAllg)) + ',';
-		result += '"bezeichnungAllg" : ' + ((!obj.bezeichnungAllg) ? 'null' : JSON.stringify(obj.bezeichnungAllg)) + ',';
+		result += '"bemerkungen" : ' + ((obj.bemerkungen === null) ? 'null' : JSON.stringify(obj.bemerkungen)) + ',';
+		result += '"kuerzelAllg" : ' + ((obj.kuerzelAllg === null) ? 'null' : JSON.stringify(obj.kuerzelAllg)) + ',';
+		result += '"bezeichnungAllg" : ' + ((obj.bezeichnungAllg === null) ? 'null' : JSON.stringify(obj.bezeichnungAllg)) + ',';
 		result += '"erlaubtGOSt" : ' + obj.erlaubtGOSt.toString() + ',';
 		result += '"zulaessig" : [ ';
 		for (let i = 0; i < obj.zulaessig.size(); i++) {
@@ -126,22 +129,22 @@ export class ZulaessigeKursartKatalogEintrag extends CoreTypeData {
 			result += '"text" : ' + JSON.stringify(obj.text) + ',';
 		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+			result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+			result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		if (obj.nummer !== undefined) {
 			result += '"nummer" : ' + JSON.stringify(obj.nummer) + ',';
 		}
 		if (obj.bemerkungen !== undefined) {
-			result += '"bemerkungen" : ' + ((!obj.bemerkungen) ? 'null' : JSON.stringify(obj.bemerkungen)) + ',';
+			result += '"bemerkungen" : ' + ((obj.bemerkungen === null) ? 'null' : JSON.stringify(obj.bemerkungen)) + ',';
 		}
 		if (obj.kuerzelAllg !== undefined) {
-			result += '"kuerzelAllg" : ' + ((!obj.kuerzelAllg) ? 'null' : JSON.stringify(obj.kuerzelAllg)) + ',';
+			result += '"kuerzelAllg" : ' + ((obj.kuerzelAllg === null) ? 'null' : JSON.stringify(obj.kuerzelAllg)) + ',';
 		}
 		if (obj.bezeichnungAllg !== undefined) {
-			result += '"bezeichnungAllg" : ' + ((!obj.bezeichnungAllg) ? 'null' : JSON.stringify(obj.bezeichnungAllg)) + ',';
+			result += '"bezeichnungAllg" : ' + ((obj.bezeichnungAllg === null) ? 'null' : JSON.stringify(obj.bezeichnungAllg)) + ',';
 		}
 		if (obj.erlaubtGOSt !== undefined) {
 			result += '"erlaubtGOSt" : ' + obj.erlaubtGOSt.toString() + ',';

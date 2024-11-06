@@ -39,6 +39,9 @@ export class KatalogEintragOrte extends JavaObject {
 	public gueltigBis : number | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -68,13 +71,13 @@ export class KatalogEintragOrte extends JavaObject {
 
 	public static transpilerToJSON(obj : KatalogEintragOrte) : string {
 		let result = '{';
-		result += '"ID" : ' + ((!obj.ID) ? 'null' : obj.ID.toString()) + ',';
-		result += '"PLZ" : ' + ((!obj.PLZ) ? 'null' : JSON.stringify(obj.PLZ)) + ',';
-		result += '"RegSchl" : ' + ((!obj.RegSchl) ? 'null' : JSON.stringify(obj.RegSchl)) + ',';
-		result += '"Ort" : ' + ((!obj.Ort) ? 'null' : JSON.stringify(obj.Ort)) + ',';
-		result += '"Sortierung" : ' + ((!obj.Sortierung) ? 'null' : obj.Sortierung.toString()) + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+		result += '"ID" : ' + ((obj.ID === null) ? 'null' : obj.ID.toString()) + ',';
+		result += '"PLZ" : ' + ((obj.PLZ === null) ? 'null' : JSON.stringify(obj.PLZ)) + ',';
+		result += '"RegSchl" : ' + ((obj.RegSchl === null) ? 'null' : JSON.stringify(obj.RegSchl)) + ',';
+		result += '"Ort" : ' + ((obj.Ort === null) ? 'null' : JSON.stringify(obj.Ort)) + ',';
+		result += '"Sortierung" : ' + ((obj.Sortierung === null) ? 'null' : obj.Sortierung.toString()) + ',';
+		result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -83,25 +86,25 @@ export class KatalogEintragOrte extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<KatalogEintragOrte>) : string {
 		let result = '{';
 		if (obj.ID !== undefined) {
-			result += '"ID" : ' + ((!obj.ID) ? 'null' : obj.ID.toString()) + ',';
+			result += '"ID" : ' + ((obj.ID === null) ? 'null' : obj.ID.toString()) + ',';
 		}
 		if (obj.PLZ !== undefined) {
-			result += '"PLZ" : ' + ((!obj.PLZ) ? 'null' : JSON.stringify(obj.PLZ)) + ',';
+			result += '"PLZ" : ' + ((obj.PLZ === null) ? 'null' : JSON.stringify(obj.PLZ)) + ',';
 		}
 		if (obj.RegSchl !== undefined) {
-			result += '"RegSchl" : ' + ((!obj.RegSchl) ? 'null' : JSON.stringify(obj.RegSchl)) + ',';
+			result += '"RegSchl" : ' + ((obj.RegSchl === null) ? 'null' : JSON.stringify(obj.RegSchl)) + ',';
 		}
 		if (obj.Ort !== undefined) {
-			result += '"Ort" : ' + ((!obj.Ort) ? 'null' : JSON.stringify(obj.Ort)) + ',';
+			result += '"Ort" : ' + ((obj.Ort === null) ? 'null' : JSON.stringify(obj.Ort)) + ',';
 		}
 		if (obj.Sortierung !== undefined) {
-			result += '"Sortierung" : ' + ((!obj.Sortierung) ? 'null' : obj.Sortierung.toString()) + ',';
+			result += '"Sortierung" : ' + ((obj.Sortierung === null) ? 'null' : obj.Sortierung.toString()) + ',';
 		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+			result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+			result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

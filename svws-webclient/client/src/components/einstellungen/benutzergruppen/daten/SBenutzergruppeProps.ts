@@ -1,5 +1,4 @@
 import type { BenutzergruppeListeEintrag, List, BenutzerListeEintrag, BenutzergruppenManager, BenutzerKompetenz, BenutzerKompetenzGruppe } from "@core";
-import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface BenutzergruppeProps{
 	auswahl: () => BenutzergruppeListeEintrag | undefined;
@@ -16,6 +15,6 @@ export interface BenutzergruppeProps{
 	create: ( bezeichnung : string, istAdmin : boolean) => Promise<void>;
 	addBenutzerKompetenzGruppe : (kompetenzgruppe : BenutzerKompetenzGruppe) => Promise<boolean>;
 	removeBenutzerKompetenzGruppe : (kompetenzgruppe : BenutzerKompetenzGruppe) => Promise<boolean>
-	gotoBenutzer: (b_id: number) => Promise<RoutingStatus>;
+	gotoBenutzer: (b_id: number) => Promise<void>;
 	benutzerKompetenzen:(kompetenzgruppe : BenutzerKompetenzGruppe) => List<BenutzerKompetenz>;
 }

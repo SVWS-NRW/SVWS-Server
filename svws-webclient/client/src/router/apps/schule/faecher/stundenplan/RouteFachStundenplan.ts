@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
 
 import type { DeveloperNotificationException} from "@core";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
@@ -12,7 +12,6 @@ import { RouteDataFachStundenplan } from "~/router/apps/schule/faecher/stundenpl
 import type { StundenplanAuswahlProps } from "@comp";
 import { ConfigElement } from "~/components/Config";
 import { api } from "~/router/Api";
-import { routeApp } from "~/router/apps/RouteApp";
 
 const SFachStundenplan = () => import("~/components/schule/faecher/stundenplan/SFachStundenplan.vue");
 
@@ -34,26 +33,30 @@ export class RouteFachStundenplan extends RouteNode<RouteDataFachStundenplan, Ro
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
 		try {
-			const { id: idFach } = RouteNode.getIntParams(to_params, ["id"]);
+			const { id } = RouteNode.getIntParams(to_params, ["id"]);
 			if (isEntering)
 				await routeFachStundenplan.data.ladeListe();
 			// Prüfe, ob ein Fach ausgewählt ist. Wenn nicht dann wechsele in die Fach-Route zurück.
-			if (idFach === undefined)
-				return routeSchuleFaecher.getRoute(undefined);
+			if (id === undefined)
+				return routeSchuleFaecher.getRoute();
 			// Prüfe, ob diese Route das Ziel ist. Wenn dies der fall ist, dann muss ggf. noch ein Stundenplan geladen werden
 			if (to.name === this.name)
 				// Und wähle dann einen Eintrag aus der Stundenplanliste aus, wenn diese nicht leer ist
 				if (routeFachStundenplan.data.mapStundenplaene.size !== 0) {
 					const [idStundenplan] = routeFachStundenplan.data.mapStundenplaene.keys();
-					return routeFachStundenplanDaten.getRoute(idFach, idStundenplan, 0);
+					return routeFachStundenplanDaten.getRoute({ id, idStundenplan, wochentyp: 0 });
 				}
 		} catch (error) {
-			return routeError.getRoute(error as DeveloperNotificationException);
+			return routeError.getErrorRoute(error as DeveloperNotificationException);
 		}
 	}
 
-	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id, wochentyp: 0 }};
+	public addRouteParamsFromState() : RouteParamsRawGeneric {
+		return {
+			idStundenplan: (this.data.hatAuswahl === true) ? this.data.auswahl.id : undefined,
+			wochentyp: this.data.wochentyp,
+			kw: (this.data.kalenderwoche === undefined) ? undefined : this.data.kalenderwoche.jahr + "." + this.data.kalenderwoche.kw,
+		};
 	}
 
 	public getProps(to: RouteLocationNormalized): StundenplanAuswahlProps {

@@ -34,6 +34,9 @@ export class SMTPServerKonfiguration extends JavaObject {
 	public trustTLSHost : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -77,7 +80,7 @@ export class SMTPServerKonfiguration extends JavaObject {
 		result += '"port" : ' + obj.port.toString() + ',';
 		result += '"useStartTLS" : ' + obj.useStartTLS.toString() + ',';
 		result += '"useTLS" : ' + obj.useTLS.toString() + ',';
-		result += '"trustTLSHost" : ' + ((!obj.trustTLSHost) ? 'null' : JSON.stringify(obj.trustTLSHost)) + ',';
+		result += '"trustTLSHost" : ' + ((obj.trustTLSHost === null) ? 'null' : JSON.stringify(obj.trustTLSHost)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -101,7 +104,7 @@ export class SMTPServerKonfiguration extends JavaObject {
 			result += '"useTLS" : ' + obj.useTLS.toString() + ',';
 		}
 		if (obj.trustTLSHost !== undefined) {
-			result += '"trustTLSHost" : ' + ((!obj.trustTLSHost) ? 'null' : JSON.stringify(obj.trustTLSHost)) + ',';
+			result += '"trustTLSHost" : ' + ((obj.trustTLSHost === null) ? 'null' : JSON.stringify(obj.trustTLSHost)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

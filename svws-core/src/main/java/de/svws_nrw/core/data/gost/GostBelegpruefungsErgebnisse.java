@@ -25,4 +25,11 @@ public class GostBelegpruefungsErgebnisse {
 	@Schema(implementation = GostBelegpruefungErgebnis.class)
 	public @NotNull GostBelegpruefungErgebnis ergebnis = new GostBelegpruefungErgebnis();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GostBelegpruefungsErgebnisse() {
+		// leer
+	}
+
 }

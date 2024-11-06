@@ -33,4 +33,11 @@ public class BenutzergruppeDaten {
 	@Schema(description = "die IDs der Kompetenzen, die speziell diesem Benutzer zugeordnet sind")
 	public @NotNull List<Long> kompetenzen = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public BenutzergruppeDaten() {
+		// leer
+	}
+
 }

@@ -1,6 +1,6 @@
 import { bench, describe } from "vitest";
-import { Vector } from "@transpiled";
 import { l, n, s } from "../../shared/TestObjects";
+import { Vector } from "../../../../../main/resources/typescript/java/util/Vector";
 
 let v: Vector<unknown>;
 

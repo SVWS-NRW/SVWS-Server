@@ -15,6 +15,13 @@ public final class GOStHalbjahrConverter extends DBAttributeConverter<GostHalbja
 	/** Die Instanz des Konverters */
 	public static final GOStHalbjahrConverter instance = new GOStHalbjahrConverter();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GOStHalbjahrConverter() {
+		// leer
+	}
+
 	@Override
 	public Integer convertToDatabaseColumn(final GostHalbjahr value) {
 		if (value == null)

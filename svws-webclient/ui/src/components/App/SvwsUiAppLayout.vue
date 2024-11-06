@@ -1,61 +1,13 @@
 <template>
-	<div class="app--layout" :class="{ 'app--layout--has-aside': $slots.aside, 'loading-skeleton pointer-events-none': skeleton,
+	<div class="app--layout" :class="{ 'app--layout--has-aside': $slots.aside,
 		's-sidebar': $slots.secondaryMenu && hasSecondaryMenu,
 		's-all-sidebars-collapsed' : (!$slots.secondaryMenu || !hasSecondaryMenu || !sidebarExpanded) && (!$slots.tertiaryMenu || !hasTertiaryMenu || !secondSidebarExpanded),
 		's-sidebar-collapsed': !sidebarExpanded, 's-second-sidebar-collapsed': !secondSidebarExpanded }">
-		<div ref="appMenu" v-if="($slots.sidebar && !fullwidthContent) || skeleton" class="app--menu" :class="{ 'has-scrollbar': hasScrollbar }" :style="{ '--scrollbar-width': scrollbarWidth + 'px' }">
+		<div ref="appMenu" v-if="($slots.sidebar && !fullwidthContent)" class="app--menu" :class="{ 'has-scrollbar': hasScrollbar }" :style="{ '--scrollbar-width': scrollbarWidth + 'px' }">
 			<slot name="sidebar" />
-			<template v-if="skeleton">
-				<svws-ui-menu>
-					<template #header>
-						<div class="flex items-center justify-center w-full">
-							<span class="inline-block h-12 rounded-xl animate-pulse w-12 bg-black/5 dark:bg-white/5" />
-						</div>
-					</template>
-					<template #default>
-						<svws-ui-menu-item :active="false">
-							<template #label>
-								<span class="inline-block h-3 rounded animate-pulse w-16 bg-black/10 dark:bg-white/10" />
-							</template>
-							<template #icon>
-								<span class="inline-block h-5 rounded-full animate-pulse w-5 bg-black/5 dark:bg-white/5" />
-							</template>
-						</svws-ui-menu-item>
-						<svws-ui-menu-item :active="false">
-							<template #label>
-								<span class="inline-block h-3 rounded animate-pulse w-16 bg-black/10 dark:bg-white/10" />
-							</template>
-							<template #icon>
-								<span class="inline-block h-5 rounded-full animate-pulse w-5 bg-black/5 dark:bg-white/5" />
-							</template>
-						</svws-ui-menu-item>
-						<svws-ui-menu-item :active="false">
-							<template #label>
-								<span class="inline-block h-3 rounded animate-pulse w-16 bg-black/10 dark:bg-white/10" />
-							</template>
-							<template #icon>
-								<span class="inline-block h-5 rounded-full animate-pulse w-5 bg-black/5 dark:bg-white/5" />
-							</template>
-						</svws-ui-menu-item>
-					</template>
-					<template #footer>
-						<svws-ui-menu-item :active="false">
-							<template #label>
-								<span class="inline-block h-3 rounded animate-pulse w-16 bg-black/10 dark:bg-white/10" />
-							</template>
-							<template #icon>
-								<span class="inline-block h-5 rounded-full animate-pulse w-5 bg-black/5 dark:bg-white/5" />
-							</template>
-						</svws-ui-menu-item>
-					</template>
-					<template #version>
-						<span class="inline-block h-4 rounded animate-pulse w-16 bg-black/10 dark:bg-white/10" />
-					</template>
-				</svws-ui-menu>
-			</template>
 		</div>
-		<div v-if="$slots.secondaryMenu && hasSecondaryMenu || skeleton" class="app--sidebar" :class="{ 'app--sidebar-normal' : !secondaryMenuSmall }">
-			<div class="s-toggle-first" v-if="!skeleton">
+		<div v-if="$slots.secondaryMenu && hasSecondaryMenu" class="app--sidebar" :class="{ 'app--sidebar-normal' : !secondaryMenuSmall }">
+			<div class="s-toggle-first">
 				<svws-ui-tooltip>
 					<button type="button" @click="updateSidebarExpanded">
 						<span class="icon i-ri-menu-fold-line" v-if="sidebarExpanded" />
@@ -68,20 +20,10 @@
 			</div>
 			<div class="app--sidebar-container">
 				<slot name="secondaryMenu" />
-				<template v-if="skeleton">
-					<svws-ui-secondary-menu>
-						<template #headline>
-							<span>SVWS NRW</span>
-						</template>
-						<template #abschnitt>
-							<span class="inline-block h-4 rounded animate-pulse w-16 bg-black/10 dark:bg-white/10 -mb-1" />
-						</template>
-					</svws-ui-secondary-menu>
-				</template>
 			</div>
 		</div>
-		<div v-if="$slots.tertiaryMenu && hasTertiaryMenu || skeleton" class="app--second-sidebar" :class="{ 'app--sidebar-normal' : !tertiaryMenuSmall }">
-			<div class="s-toggle-second" v-if="!skeleton">
+		<div v-if="$slots.tertiaryMenu && hasTertiaryMenu" class="app--second-sidebar" :class="{ 'app--sidebar-normal' : !tertiaryMenuSmall }">
+			<div class="s-toggle-second">
 				<svws-ui-tooltip>
 					<button type="button" @click="updateSecondSidebarExpanded">
 						<span class="icon i-ri-menu-fold-line" v-if="secondSidebarExpanded" />
@@ -94,35 +36,12 @@
 			</div>
 			<div class="app--second-sidebar-container">
 				<slot name="tertiaryMenu" />
-				<template v-if="skeleton">
-					<svws-ui-secondary-menu>
-						<template #headline>
-							<span>SVWS NRW</span>
-						</template>
-						<template #abschnitt>
-							<span class="inline-block h-4 rounded animate-pulse w-16 bg-black/10 dark:bg-white/10 -mb-1" />
-						</template>
-					</svws-ui-secondary-menu>
-				</template>
 			</div>
 		</div>
 		<main class="app--content">
 			<div class="app--content-container relative" :class="{ 'fullwidth-content' : fullwidthContent }">
-				<div class="app--page" v-if="skeleton">
-					<svws-ui-header>
-						<div class="flex items-center">
-							<div class="w-20 mr-6">
-								<div class="inline-block h-20 rounded-xl animate-pulse w-20 bg-black/5 dark:bg-white/5" />
-							</div>
-							<div class="animate-pulse">
-								<span>Daten</span>
-								<br>
-								<span class="opacity-40">werden geladen…</span>
-							</div>
-						</div>
-					</svws-ui-header>
-				</div>
-				<slot name="main" v-else />
+				<svws-ui-header v-if="false" />
+				<slot name="main" />
 			</div>
 			<aside class="app-layout--aside" v-if="$slots.aside">
 				<div class="app-layout--aside-container relative">
@@ -138,14 +57,12 @@
 	import { onBeforeUnmount, onMounted, ref, computed } from "vue";
 
 	const props = withDefaults(defineProps<{
-		skeleton?: boolean;
 		fullwidthContent?: boolean;
 		noSecondaryMenu?: boolean;
 		tertiaryMenu?: boolean;
 		secondaryMenuSmall?: boolean;
 		tertiaryMenuSmall?: boolean;
 	}>(), {
-		skeleton: false,
 		fullwidthContent: false,
 		noSecondaryMenu: false,
 		tertiaryMenu: false,
@@ -205,10 +122,10 @@
 <style lang="postcss">
 	html {
 		font-size: 10px;
-		@apply bg-light;
+		@apply bg-ui-neutral text-ui;
 
 		&.dark {
-			@apply bg-[#000] text-white;
+			@apply bg-ui-black;
 		}
 
 		&.font-size-small {
@@ -235,7 +152,7 @@
 	}
 
 	.app--layout {
-		@apply relative h-screen w-full overflow-hidden;
+		@apply relative h-screen w-full overflow-hidden bg-ui-neutral;
 		@apply flex flex-row gap-2 p-2;
 		/*@apply max-w-[220rem] mx-auto;*/
 	}
@@ -253,10 +170,9 @@
 	.app--sidebar,
 	.app--second-sidebar,
 	.app--content-container {
-		@apply bg-white dark:bg-black rounded-3xl;
-		@apply h-full;
+		@apply bg-ui;
+		@apply h-full rounded-3xl;
 		@apply flex flex-col;
-		@apply border border-black/10 dark:border-white/5;
 		@apply overflow-y-auto;
 	}
 
@@ -273,7 +189,7 @@
 
 		.app--sidebar-container {
 			@apply rounded-2xl h-full;
-			@apply border border-black/20 dark:border-white/20;
+      @apply border border-ui-secondary;
 		}
 
 		.secondary-menu--headline {
@@ -284,15 +200,24 @@
 			@apply absolute right-0 top-0 z-40 pt-4 pr-2 flex flex-col;
 
 			button {
-				@apply rounded-lg text-black/50 dark:text-white/50 p-0.5 inline-flex flex-col items-center gap-1 text-headline-sm;
+				@apply rounded-lg text-ui-secondary p-0.5 inline-flex flex-col items-center gap-1 text-headline-sm;
+				/* TODO: COLORS icon */
 
 				svg {
 					@apply flex-shrink-0 text-headline-md;
 				}
 
+				&:focus {
+					@apply outline-none;
+				}
+
 				&:hover,
 				&:focus-visible {
-					@apply bg-black/10 dark:bg-white/10 text-black dark:text-white;
+					@apply bg-ui-hover text-ui;
+				}
+
+				&:focus-visible {
+					@apply ring ring-ui;
 				}
 			}
 
@@ -464,8 +389,8 @@
 	}
 
 	.app-layout--aside {
-		@apply -ml-4 z-50 w-1/2 absolute top-5 right-5 bottom-5 rounded-2xl;
-		@apply shadow-xl bg-white dark:bg-black border border-black/10 dark:border-white/10;
+		@apply bg-ui text-ui border border-ui-secondary;
+		@apply -ml-4 z-50 w-1/2 absolute top-9 right-2 bottom-2 rounded-2xl;
 	}
 
 	.app--sidebar-container,

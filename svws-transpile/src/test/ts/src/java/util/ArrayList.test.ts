@@ -1,8 +1,12 @@
 import { describe, test, expect, beforeEach } from "vitest";
-import { ArrayList, ArrayListEnumerator, ArrayIndexOutOfBoundsException, NullPointerException, NoSuchElementException } from "@transpiled";
 import { l,n,s } from "../../shared/TestObjects";
 import { TestConsumer } from "../../shared/TestConsumer";
 import { TestMaxComparator } from "../../shared/TestComparator";
+import { ArrayIndexOutOfBoundsException } from "../../../../../main/resources/typescript/java/lang/ArrayIndexOutOfBoundsException";
+import { NullPointerException } from "../../../../../main/resources/typescript/java/lang/NullPointerException";
+import { ArrayList } from "../../../../../main/resources/typescript/java/util/ArrayList";
+import { ArrayListEnumerator } from "../../../../../main/resources/typescript/java/util/ArrayListEnumerator";
+import { NoSuchElementException } from "../../../../../main/resources/typescript/java/util/NoSuchElementException";
 
 const maxComparator = new TestMaxComparator();
 

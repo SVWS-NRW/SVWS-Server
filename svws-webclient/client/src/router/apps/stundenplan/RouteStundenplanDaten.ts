@@ -5,7 +5,6 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeStundenplan, type RouteStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
 
 import type { StundenplanDatenProps } from "~/components/stundenplan/daten/SStundenplanDatenProps";
-import { routeApp } from "../RouteApp";
 import { api } from "~/router/Api";
 
 const SStundenplanDaten = () => import("~/components/stundenplan/daten/SStundenplanDaten.vue");
@@ -22,10 +21,6 @@ export class RouteStundenplanDaten extends RouteNode<any, RouteStundenplan> {
 	}
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-	}
-
-	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): StundenplanDatenProps {

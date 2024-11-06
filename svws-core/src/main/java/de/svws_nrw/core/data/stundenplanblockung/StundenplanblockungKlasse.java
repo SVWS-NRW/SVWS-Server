@@ -25,4 +25,11 @@ public class StundenplanblockungKlasse {
 	/** Das Kürzel der Lehrkraft. Beispielsweise '07c' oder 'Q1'. */
 	public @NotNull String kuerzel = "";
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public StundenplanblockungKlasse() {
+		// leer
+	}
+
 }

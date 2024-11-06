@@ -42,6 +42,7 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingKlasse}.
+	 *
 	 * @param reportingRepository Repository für die Reporting.
 	 * @param klassenDaten Stammdaten-Objekt aus der DB.
 	 */
@@ -83,6 +84,7 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 
 	/**
 	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.
+	 *
 	 * @return Repository für die Reporting
 	 */
 	public ReportingRepository reportingRepository() {
@@ -92,6 +94,7 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 
 	/**
 	 * Stellt die Daten der Folgeklasse der Klasse zur Verfügung, wenn diese bereits existiert.
+	 *
 	 * @return Daten der Folgeklasse
 	 */
 	@Override
@@ -120,6 +123,7 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 
 	/**
 	 * Stellt die Jahrgangsdaten der Klasse zur Verfügung.
+	 *
 	 * @return	Die Jahrgangsdaten der Klasse.
 	 */
 	@Override
@@ -144,6 +148,7 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 
 	/**
 	 * Stellt eine Liste mit Lehrern in der Funktion der Klassenleitung der Klasse zur Verfügung.
+	 *
 	 * @return	Liste von Lehrern als Klassenleitungen
 	 */
 	@Override
@@ -175,6 +180,7 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 
 	/**
 	 * Stellt eine Liste mit Schülern der Klasse zur Verfügung.
+	 *
 	 * @return	Liste mit Schülern
 	 */
 	@Override
@@ -209,6 +215,7 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 
 	/**
 	 * Stellt die Daten der Vorgängerklasse der Klasse zur Verfügung.
+	 *
 	 * @return Daten der Vorgängerklasse
 	 */
 	@Override

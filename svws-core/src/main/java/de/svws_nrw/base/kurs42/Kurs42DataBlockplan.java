@@ -22,4 +22,11 @@ public class Kurs42DataBlockplan {
 	/** Gibt an, ob der Kurs in dieser Schiene fixiert ist (1), oder nicht (0). */
 	public int Fixiert;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Kurs42DataBlockplan() {
+		// leer
+	}
+
 }

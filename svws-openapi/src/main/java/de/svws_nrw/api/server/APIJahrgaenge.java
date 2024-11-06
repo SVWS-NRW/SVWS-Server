@@ -43,6 +43,13 @@ import jakarta.ws.rs.core.Response;
 public class APIJahrgaenge {
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public APIJahrgaenge() {
+		// leer
+	}
+
+	/**
 	 * Die OpenAPI-Methode für die Abfrage der Liste der Jahrgänge im angegebenen Schema.
 	 *
 	 * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll

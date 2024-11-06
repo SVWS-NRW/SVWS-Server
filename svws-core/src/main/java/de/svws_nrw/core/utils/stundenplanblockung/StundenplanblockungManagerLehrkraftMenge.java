@@ -20,6 +20,13 @@ public class StundenplanblockungManagerLehrkraftMenge {
 	private final @NotNull Map<Long, StundenplanblockungManagerLehrkraft> _map = new HashMap<>();
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public StundenplanblockungManagerLehrkraftMenge() {
+		// leer
+	}
+
+	/**
 	 * Fügt die Lehrkraft hinzu. <br>
 	 * Wirft eine NullPointerException, falls die Lehrkraft-ID bereits existiert.
 	 *

@@ -4,7 +4,7 @@
 			<svws-ui-action-button title="Löschen" description="Ausgewählte Abiturjahrgäge werden gelöscht." icon="i-ri-delete-bin-line"
 				:action-function="entferneAbiturjahrgaenge" action-label="Löschen" :is-loading="loading" :is-active="currentAction === 'delete'"
 				:action-disabled="!checkIsEnabled[0]" @click="toggleDelete">
-				<span v-if="checkIsEnabled[0] == true">Alle ausgewählten Abiturjahrgänge sind bereit zum Löschen.</span>
+				<span v-if="checkIsEnabled[0] === true">Alle ausgewählten Abiturjahrgänge sind bereit zum Löschen.</span>
 				<template v-else v-for="message in checkIsEnabled[1]" :key="message">
 					<span class="text-error"> {{ message }} <br> </span>
 				</template>

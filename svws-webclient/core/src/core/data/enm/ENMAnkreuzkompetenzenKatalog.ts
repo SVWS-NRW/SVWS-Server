@@ -22,6 +22,9 @@ export class ENMAnkreuzkompetenzenKatalog extends JavaObject {
 	public kompetenzen : List<ENMAnkreuzkompetenz> = new ArrayList<ENMAnkreuzkompetenz>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -63,7 +66,7 @@ export class ENMAnkreuzkompetenzenKatalog extends JavaObject {
 				result += ',';
 		}
 		result += ' ]' + ',';
-		result += '"textSonstiges" : ' + ((!obj.textSonstiges) ? 'null' : JSON.stringify(obj.textSonstiges)) + ',';
+		result += '"textSonstiges" : ' + ((obj.textSonstiges === null) ? 'null' : JSON.stringify(obj.textSonstiges)) + ',';
 		result += '"kompetenzen" : [ ';
 		for (let i = 0; i < obj.kompetenzen.size(); i++) {
 			const elem = obj.kompetenzen.get(i);
@@ -91,7 +94,7 @@ export class ENMAnkreuzkompetenzenKatalog extends JavaObject {
 			result += ' ]' + ',';
 		}
 		if (obj.textSonstiges !== undefined) {
-			result += '"textSonstiges" : ' + ((!obj.textSonstiges) ? 'null' : JSON.stringify(obj.textSonstiges)) + ',';
+			result += '"textSonstiges" : ' + ((obj.textSonstiges === null) ? 'null' : JSON.stringify(obj.textSonstiges)) + ',';
 		}
 		if (obj.kompetenzen !== undefined) {
 			result += '"kompetenzen" : [ ';

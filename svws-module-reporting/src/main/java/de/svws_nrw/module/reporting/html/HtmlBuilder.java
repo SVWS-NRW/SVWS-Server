@@ -34,6 +34,7 @@ public class HtmlBuilder {
 
 	/**
 	 * Erstellt einen neunen html-Builder und initialisiert die Variablen
+	 *
 	 * @param htmlVorlage   Der Inhalt einer html-Vorlagendatei, die mit Daten gefüllt werden soll.
 	 * @param contexts 	    Liste mit Daten-Contexts, die zu einem finalen Context zusammengefügt werden, um damit das html-Template zu füllen.
 	 * @param dateiname 	Dateiname der html-Datei ohne Dateiendung.
@@ -48,6 +49,7 @@ public class HtmlBuilder {
 
 	/**
 	 * Gibt den Dateinamen der html-Datei zurück.
+	 *
 	 * @return Dateiname der html-Datei.
 	 */
 	public String getDateiname() {
@@ -56,6 +58,7 @@ public class HtmlBuilder {
 
 	/**
 	 * Gibt den Dateinamen der html-Datei mit Dateiendung zurück.
+	 *
 	 * @return Dateiname der html-Datei mit Endung.
 	 */
 	public String getDateinameMitEndung() {
@@ -65,6 +68,7 @@ public class HtmlBuilder {
 
 	/**
 	 * Gibt den finalen html-Inhalt als String zurück.
+	 *
 	 * @return String des finalen html-Inhaltes.
 	 */
 	public String getHtml() {
@@ -74,6 +78,7 @@ public class HtmlBuilder {
 
 	/**
 	 * Gibt den finalen html-Inhalt in Form eines Byte-Arrays.
+	 *
 	 * @return 	das Byte-Array des finalen html-Inhaltes im UTF-8-Format.
 	 */
 	public byte[] getHtmlByteArray() {
@@ -83,6 +88,7 @@ public class HtmlBuilder {
 
 	/**
 	 * Erzeugt eine Response mit einer html-Datei als Content
+	 *
 	 * @return Response mit der html-Datei als Content
 	 */
 	public Response getHtmlResponse() {
@@ -97,6 +103,7 @@ public class HtmlBuilder {
 	/**
 	 * Erstellt das finale html-Dokument mit den Daten.
 	 * Hierzu werden die Variablen in der html-Vorlage durch Daten ersetzt.
+	 *
 	 * @return 	Das finale Html mit den Daten
 	 */
 	private String erzeugeHtml() {

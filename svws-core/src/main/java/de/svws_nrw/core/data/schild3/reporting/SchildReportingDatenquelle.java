@@ -51,4 +51,11 @@ public class SchildReportingDatenquelle {
 			description = "Die Liste der JSON-Attribute für diese Datenquelle."))
 	public @NotNull List<SchildReportingDatenquelleAttribut> attribute = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SchildReportingDatenquelle() {
+		// leer
+	}
+
 }

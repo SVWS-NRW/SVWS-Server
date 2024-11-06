@@ -17,4 +17,11 @@ public class AdressbuchKontaktListe extends AdressbuchEintrag {
 	/** Die Kategorien dieses Kontakts */
 	@ArraySchema(schema = @Schema(description = "Die Kategorien dieses Kontakts", example = "..."))
 	public @NotNull List<AdressbuchKontakt> kontakte = new ArrayList<>();
+
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public AdressbuchKontaktListe() {
+		// leer
+	}
 }

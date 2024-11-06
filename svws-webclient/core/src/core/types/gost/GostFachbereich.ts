@@ -276,7 +276,7 @@ export class GostFachbereich extends JavaEnum<GostFachbereich> {
 		const sortierung : number | null = GostFachbereich.getAlleFaecher().get(fach);
 		if (sortierung === null)
 			return JavaInteger.MAX_VALUE;
-		return sortierung!;
+		return sortierung;
 	}
 
 	/**

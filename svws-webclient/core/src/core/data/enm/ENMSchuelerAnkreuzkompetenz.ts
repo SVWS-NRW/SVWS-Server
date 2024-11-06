@@ -24,6 +24,9 @@ export class ENMSchuelerAnkreuzkompetenz extends JavaObject {
 	public tsStufe : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -57,7 +60,7 @@ export class ENMSchuelerAnkreuzkompetenz extends JavaObject {
 	public static transpilerToJSON(obj : ENMSchuelerAnkreuzkompetenz) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"kompetenzID" : ' + ((!obj.kompetenzID) ? 'null' : obj.kompetenzID.toString()) + ',';
+		result += '"kompetenzID" : ' + ((obj.kompetenzID === null) ? 'null' : obj.kompetenzID.toString()) + ',';
 		result += '"stufen" : [ ';
 		for (let i = 0; i < obj.stufen.length; i++) {
 			const elem = obj.stufen[i];
@@ -66,7 +69,7 @@ export class ENMSchuelerAnkreuzkompetenz extends JavaObject {
 				result += ',';
 		}
 		result += ' ]' + ',';
-		result += '"tsStufe" : ' + ((!obj.tsStufe) ? 'null' : JSON.stringify(obj.tsStufe)) + ',';
+		result += '"tsStufe" : ' + ((obj.tsStufe === null) ? 'null' : JSON.stringify(obj.tsStufe)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -78,7 +81,7 @@ export class ENMSchuelerAnkreuzkompetenz extends JavaObject {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.kompetenzID !== undefined) {
-			result += '"kompetenzID" : ' + ((!obj.kompetenzID) ? 'null' : obj.kompetenzID.toString()) + ',';
+			result += '"kompetenzID" : ' + ((obj.kompetenzID === null) ? 'null' : obj.kompetenzID.toString()) + ',';
 		}
 		if (obj.stufen !== undefined) {
 			const a = obj.stufen;
@@ -92,7 +95,7 @@ export class ENMSchuelerAnkreuzkompetenz extends JavaObject {
 			result += ' ]' + ',';
 		}
 		if (obj.tsStufe !== undefined) {
-			result += '"tsStufe" : ' + ((!obj.tsStufe) ? 'null' : JSON.stringify(obj.tsStufe)) + ',';
+			result += '"tsStufe" : ' + ((obj.tsStufe === null) ? 'null' : JSON.stringify(obj.tsStufe)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

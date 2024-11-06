@@ -14,6 +14,13 @@ import jakarta.validation.constraints.NotNull;
 @TranspilerDTO
 public class BenutzerListeEintrag {
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public BenutzerListeEintrag() {
+		// leer
+	}
+
 	/** Die ID des Benutzers. */
 	@Schema(description = "die ID des Benutzers", example = "4711")
 	public long id = -1;

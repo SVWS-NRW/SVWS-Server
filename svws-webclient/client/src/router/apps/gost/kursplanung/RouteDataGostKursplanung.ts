@@ -80,12 +80,13 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		return this._state.value.abiturjahr;
 	}
 
-	public setAbiturjahr = async (abiturjahr: number | undefined, force: boolean) => {
-		if ((abiturjahr === this._state.value.abiturjahr) && (!force))
-			return;
+	public setAbiturjahr = async (abiturjahr: number | undefined, force: boolean) : Promise<boolean> => {
+		const abiturjahrwechsel = (abiturjahr !== this._state.value.abiturjahr);
+		if (!abiturjahrwechsel && (!force))
+			return false;
 		if (abiturjahr === undefined) {
 			this.setDefaultState();
-			return;
+			return true;
 		}
 		api.status.start();
 		// Lade die Daten für die Kursplanung, die nur vom Abiturjahrgang abhängen
@@ -113,6 +114,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			halbjahrInitialisiert: false,
 			mapFachwahlStatistik,
 		});
+		return abiturjahrwechsel;
 	}
 
 	public get jahrgangsdaten(): GostJahrgangsdaten {
@@ -815,8 +817,14 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 
 	gotoSchueler = async (schueler: Schueler) => {
 		// TODO alle möglichen Fälle von fehlenden Informationen (Abiturjahr, Blockung und Ergebnis) berücksichtigen
-		if ((!this.hatSchueler) || (schueler.id !== this.auswahlSchueler.id))
-			await RouteManager.doRoute(routeGostKursplanungSchueler.getRoute(this.abiturjahr, this.halbjahr.id, this.auswahlBlockung.id, this.auswahlErgebnis.id, schueler.id));
+		if ((!this.hatSchueler) || (schueler.id !== this.auswahlSchueler.id)) {
+			const abiturjahr = this.abiturjahr;
+			const halbjahr = this.halbjahr.id;
+			const idblockung = this.auswahlBlockung.id;
+			const idergebnis = this.auswahlErgebnis.id;
+			const idschueler = schueler.id;
+			await RouteManager.doRoute(routeGostKursplanungSchueler.getRoute({ abiturjahr, halbjahr, idblockung, idergebnis, idschueler }));
+		}
 	}
 
 	public kurssortierung = computed<'fach' | 'kursart'>({

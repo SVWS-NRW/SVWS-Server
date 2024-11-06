@@ -34,6 +34,9 @@ export class BenutzerEMailDaten extends JavaObject {
 	public signatur : string = "";
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

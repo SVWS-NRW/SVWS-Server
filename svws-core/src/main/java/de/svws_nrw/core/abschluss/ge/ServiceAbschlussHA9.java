@@ -40,6 +40,12 @@ public class ServiceAbschlussHA9 extends Service<GEAbschlussFaecher, AbschlussEr
 	/** Die Zeichenkette, welche zum Trennen von Teilen des Logs verwendet wird. */
 	private static final @NotNull String LOG_SEPERATOR = "______________________________";
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ServiceAbschlussHA9() {
+		// leer
+	}
 
 	/**
 	 * Führt die Abschlussberechnung anhand der übergebenen Abschlussfächer durch

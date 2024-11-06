@@ -25,7 +25,7 @@ export class StringUtils extends JavaObject {
 			if (sb.isEmpty())
 				sb.append(s);
 			else
-				sb.append(", " + s!);
+				sb.append(", " + s);
 		return sb.toString();
 	}
 

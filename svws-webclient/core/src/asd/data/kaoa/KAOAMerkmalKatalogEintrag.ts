@@ -21,6 +21,9 @@ export class KAOAMerkmalKatalogEintrag extends CoreTypeData {
 	public bkAnlagen : List<string> = new ArrayList<string>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -70,10 +73,10 @@ export class KAOAMerkmalKatalogEintrag extends CoreTypeData {
 		result += '"schluessel" : ' + JSON.stringify(obj.schluessel) + ',';
 		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
 		result += '"text" : ' + JSON.stringify(obj.text) + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+		result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
 		result += '"kategorie" : ' + JSON.stringify(obj.kategorie) + ',';
-		result += '"optionsart" : ' + ((!obj.optionsart) ? 'null' : JSON.stringify(obj.optionsart)) + ',';
+		result += '"optionsart" : ' + ((obj.optionsart === null) ? 'null' : JSON.stringify(obj.optionsart)) + ',';
 		result += '"bkAnlagen" : [ ';
 		for (let i = 0; i < obj.bkAnlagen.size(); i++) {
 			const elem = obj.bkAnlagen.get(i);
@@ -102,16 +105,16 @@ export class KAOAMerkmalKatalogEintrag extends CoreTypeData {
 			result += '"text" : ' + JSON.stringify(obj.text) + ',';
 		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+			result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+			result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		if (obj.kategorie !== undefined) {
 			result += '"kategorie" : ' + JSON.stringify(obj.kategorie) + ',';
 		}
 		if (obj.optionsart !== undefined) {
-			result += '"optionsart" : ' + ((!obj.optionsart) ? 'null' : JSON.stringify(obj.optionsart)) + ',';
+			result += '"optionsart" : ' + ((obj.optionsart === null) ? 'null' : JSON.stringify(obj.optionsart)) + ',';
 		}
 		if (obj.bkAnlagen !== undefined) {
 			result += '"bkAnlagen" : [ ';

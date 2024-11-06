@@ -33,4 +33,11 @@ public class VermerkartEintrag {
 	@Schema(description = "gibt an wie viele Vermerke dem entsprechenden Vermerkart-Eintrag zugeordnet sind (berechneter Wert)", example = "3")
 	public int anzahlVermerke;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public VermerkartEintrag() {
+		// leer
+	}
+
 }

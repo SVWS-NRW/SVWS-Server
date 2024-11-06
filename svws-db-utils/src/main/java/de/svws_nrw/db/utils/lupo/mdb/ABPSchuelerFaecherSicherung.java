@@ -132,6 +132,12 @@ public final class ABPSchuelerFaecherSicherung {
 	private static final String fieldAendern_Q3 = "Aendern_Q3";
 	private static final String fieldAendern_Q4 = "Aendern_Q4";
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ABPSchuelerFaecherSicherung() {
+		// leer
+	}
 
 	/**
 	 * Liest alle Einträge der Tabelle "ABP_SchuelerFaecherSicherung" aus der LuPO-Datei ein.

@@ -29,4 +29,11 @@ public class SchuleAbschnitte {
 	@Schema(description = "Bezeichnungen für die Abschnitte", example = "1. Quartal")
 	public @NotNull List<String> bezAbschnitte = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SchuleAbschnitte() {
+		// leer
+	}
+
 }

@@ -94,4 +94,11 @@ public class SchuleStammdaten {
 	@ArraySchema(schema = @Schema(implementation = Schuljahresabschnitt.class))
 	public final @NotNull List<Schuljahresabschnitt> abschnitte = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SchuleStammdaten() {
+		// leer
+	}
+
 }

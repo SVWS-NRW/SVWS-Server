@@ -1,6 +1,6 @@
 import type { ComputedRef, Ref } from "vue";
-import { computed, ref } from "vue";
-import type { RouteComponent, RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordName, RouteRecordRaw } from "vue-router";
+import { computed, defineComponent, ref } from "vue";
+import type { RouteComponent, RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric, RouteRecordName, RouteRecordRaw } from "vue-router";
 
 import type { Schulform} from "@core";
 import { ServerMode, BenutzerKompetenz, DeveloperNotificationException } from "@core";
@@ -83,12 +83,12 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * @param component     die vue-Komponente für die Darstellung der Informationen der gewählten Route
 	 * @param data          die dem Knoten zugeordneten Daten
 	 */
-	public constructor(schulformen: Iterable<Schulform>, kompetenzen: Iterable<BenutzerKompetenz>, name: string, path: string, component: RouteComponent, data?: TRouteData) {
+	public constructor(schulformen: Iterable<Schulform>, kompetenzen: Iterable<BenutzerKompetenz>, name: string, path: string, component?: RouteComponent, data?: TRouteData) {
 		RouteNode.mapNodesByName.set(name, this);
 		this._record = {
 			name: name,
 			path: path,
-			components: { default: component },
+			components: { default: component === undefined ? defineComponent({}) : component },
 			props: { default: (to) => this.getNoProps(to) },
 			children: undefined,
 			meta: {
@@ -129,11 +129,86 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	}
 
 	/**
-	 * Gibt die Route zurück, die die notwendigen Parameter mitbringt.
+	 * Ergänzt beim Bestimmen der Route-Parameter die Route-Parameter für diesen Knoten, sofern
+	 * welche gesetzt werden sollen. Für diesen Fall muss diese Methode übeschrieben werden.
 	 *
-	 * @param {any[]} args die Parameter
+	 * @returns die zu ergänzenden Routen-Parameter
 	 */
-	public abstract getRoute(...args: any[]) : RouteLocationRaw;
+	public addRouteParamsFromState() : RouteParamsRawGeneric {
+		return {};
+	}
+
+	/**
+	 * Bestimmt die Routen-Parameter für diese Route und kombiniert diese mit den Routen-Parametern
+	 * der Parent-Nodes.
+	 *
+	 * @param params Routen-Parameter, die zum Abschluss gesetzt werden können, um die aus dem State
+	 *               gewonnenen Parameter ersetzen zu können.
+	 *
+	 * @returns die Routen-Parameter für diese Route
+	 */
+	public getRouteParams(params? : RouteParamsRawGeneric) : RouteParamsRawGeneric {
+		let result = {};
+		let cur : RouteNode<any, any> | undefined = this;
+		while (cur !== undefined) {
+			result = Object.assign(result, cur.addRouteParamsFromState());
+			cur = cur.parent;
+		}
+		if (params !== undefined)
+			result = Object.assign(result, params);
+		return result;
+	}
+
+	/**
+	 * Gibt die Route für diesen Knoten zurück. Dabei werden die Routen-Parameter
+	 * mithilfe der Methode getRouteParams von diesem Knoten gesetzt.
+	 *
+	 * @param params  Routen-Parameter, die ggf. ermittelte Routen-Parameter ersetzen können.
+	 *
+	 * @returns die Route
+	 */
+	public getRoute(params? : RouteParamsRawGeneric): RouteLocationRaw {
+		return { name: this.name, params: this.getRouteParams(params) };
+	}
+
+	/**
+	 * Gibt die Route für den Einstieg in die View zurück. Dabei werden die Routen-Parameter
+	 * mithilfe der Methode getRouteParams von diesem Knoten gesetzt.
+	 *
+	 * @param view     die View für die die Route bestimmt wird
+	 * @param params   Routen-Parameter, die ggf. ermittelte Routen-Parameter ersetzen können.
+	 *
+	 * @returns die Route
+	 */
+	public getRouteView(view: RouteNode<any, any>, params? : RouteParamsRawGeneric): RouteLocationRaw {
+		return { name: view.name, params: this.getRouteParams(params) };
+	}
+
+	/**
+	 * Gibt die Route für den Einstieg in die Selected-Child-Route zurück. Dabei werden die Routen-Parameter
+	 * mithilfe der Methode getRouteParams von diesem Knoten gesetzt. Liegt keine Auswahl vor, so wird die
+	 * Default-Child-Route gewählt.
+	 *
+	 * @param params  Routen-Parameter, die ggf. ermittelte Routen-Parameter ersetzen können.
+	 *
+	 * @returns die Route
+	 */
+	public getRouteSelectedChild(params? : RouteParamsRawGeneric): RouteLocationRaw {
+		const name: string = (this.selectedChild === undefined) ? this.defaultChild!.name : this.selectedChild.name;
+		return { name: name, params: this.getRouteParams(params) };
+	}
+
+	/**
+	 * Gibt die Route für den Einstieg in die Default-Child-Route zurück. Dabei werden die Routen-Parameter
+	 * mithilfe der Methode getRouteParams von diesem Knoten gesetzt.
+	 *
+	 * @param params  Routen-Parameter, die ggf. ermittelte Routen-Parameter ersetzen können.
+	 *
+	 * @returns die Route
+	 */
+	public getRouteDefaultChild(params? : RouteParamsRawGeneric): RouteLocationRaw {
+		return { name: this.defaultChild!.name, params: this.getRouteParams(params) };
+	}
 
 	/**
 	 * Gibt den Text der Route zurück, welcher für die Visualisierung genutzt wird (z.B. bei Tabs).
@@ -201,7 +276,9 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	/**
 	 * Gibt den hinterlegten Checkpoint zurück.
 	 */
-	public get checkpoint() : Checkpoint | undefined {
+	public get checkpoint() : Checkpoint {
+		if (this._checkpoint === undefined)
+			throw new DeveloperNotificationException("Es wurde kein Checkpoint gesetzt.");
 		return this._checkpoint;
 	}
 
@@ -224,6 +301,28 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 */
 	protected set types(types : Set<ViewType>) {
 		this._types = types;
+	}
+
+	/**
+	 * Die Methode prüft ob diese RouteNode mindestens eine der übergebenen ViewTypes als Typ hinterlegt hat.
+	 *
+	 * @param viewTypes Array der zu prüfenden ViewTypes
+	 *
+	 * @return <code>true</code> wenn mindestens ein übergebener ViewType als Typ für diese RouteNode hinterlegt ist, ansonsten <code>false</code>.
+	 */
+	public hasOneOfTypes(viewTypes: ViewType[]): boolean {
+		return !this._types.isDisjointFrom(new Set(viewTypes));
+	}
+
+	/**
+	 * Die Methode prüft ob diese RouteNode den übergebenen ViewType als Typ hinterlegt hat.
+	 *
+	 * @param viewType der zu prüfende ViewType
+	 *
+	 * @return <code>true</code> wenn der übergebene ViewType als Typ für diese RouteNode hinterlegt ist, ansonsten <code>false</code>.
+	 */
+	public hasType(viewType: ViewType): boolean {
+		return this._types.has(viewType);
 	}
 
 	/**
@@ -273,9 +372,11 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 */
 	public get menu() : RouteNode<any, any>[] {
 		const result: RouteNode<any, any>[] = [];
-		for (const node of this._menu)
-			if (node.mode.checkServerMode(api.mode))
-				result.push(node);
+		for (const node of this._menu) {
+			if (api.authenticated && (!node.mode.checkServerMode(api.mode) || !node.hatSchulform() || !node.hatEineKompetenz()))
+				continue;
+			result.push(node);
+		}
 		return result;
 	}
 
@@ -377,7 +478,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * @param tabname       der Name des ausgewählten Tabs
 	 * @param setTab        die Callback-Methode
 	 */
-	private createTabManager(nodes: RouteNode<any, any>[], nodesHidden: boolean[], tabname : string, setTab: (value: TabData) => Promise<void>, type : ViewType = ViewType.DEFAULT) {
+	public createTabManager(nodes: RouteNode<any, any>[], nodesHidden: boolean[], tabname : string, setTab: (value: TabData) => Promise<void>, type : ViewType = ViewType.DEFAULT) {
 		const tabs: TabData[] = [];
 		let tab = null;
 		for (const node of nodes) {
@@ -474,8 +575,10 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 */
 	public hidden(params?: RouteParams): RouteLocationRaw | false {
 		// Prüfen, ob die aktuelle Schulform und die Kompetenzen des angemdelteten Benutzers die Route erlaubt oder nicht
-		if (api.authenticated && (this.name !== "init") && ((!this.hatSchulform()) || (!this.hatEineKompetenz())))
-			return false;
+		if (api.authenticated && (this.name !== "init")) {
+			if ((!this.hatSchulform()) || (!this.hatEineKompetenz()))
+				return this.parent?.getRoute() ?? false;
+		}
 		// Prüfen, ob die Komponente dargestellt werden darf oder nicht
 		return (this.isHidden === undefined) ? false : this.isHidden(params);
 	}
@@ -656,8 +759,9 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * @param from          die alte Route
 	 * @param from_params   die Routen-Parameter der alten Route
 	 * @param isEntering    gibt an, ob die Route das erste mal betreten wird (true) oder aufgrund von Parameter-Änderungen nur aktualisiert wird (false)
+	 * @param redirected    gibt den Knoten an, von dem umgeleitet wurde, falls im Routing-Prozess bereits ein redirect stattgefunden hat
 	 */
-	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
+	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean, redirected: RouteNode<any, any> | undefined) : Promise<void | Error | RouteLocationRaw> {
 	}
 
 	/**
@@ -671,8 +775,9 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * @param from          die alte Route
 	 * @param from_params   die Routen-Parameter der alten Route
 	 * @param isEntering    gibt an, ob die Route das erste mal betreten wird (true) oder aufgrund von Parameter-Änderungen nur aktualisiert wird (false)
+	 * @param redirected    gibt den Knoten an, von dem umgeleitet wurde, falls im Routing-Prozess bereits ein redirect stattgefunden hat
 	 */
-	public async doUpdate(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
+	public async doUpdate(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean, redirected: RouteNode<any, any> | undefined) : Promise<void | Error | RouteLocationRaw> {
 		try {
 			// Prüfe mithilfe der hidden-Methode, ob die Route sichtbar ist
 			const tmpHidden = this.hidden(to_params);
@@ -680,7 +785,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 				return this.parent === undefined ? this.getRoute() : tmpHidden;
 			if (this._parent !== undefined)
 				this._parent._selectedChild.value = this;
-			return await this.update(to, to_params, from, from_params, isEntering);
+			return await this.update(to, to_params, from, from_params, isEntering, redirected);
 		} catch (e) {
 			routerManager.errorcode = undefined;
 			routerManager.error = e instanceof Error ? e : new DeveloperNotificationException("Fehler beim Routing in doUpdate(" + to.name + ")");
@@ -689,22 +794,22 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	}
 
 	/**
-     * Ein Ereignis, welches im globalen beforeEach-Guard aufgerufen wird,
-     * bevor eine Route verlassen wird.
-     *
-     * @param from   die Route, die verlassen wird
-     * @param from_params   die Routen-Parameter
-     */
+	 * Ein Ereignis, welches im globalen beforeEach-Guard aufgerufen wird,
+	 * bevor eine Route verlassen wird.
+	 *
+	 * @param from   die Route, die verlassen wird
+	 * @param from_params   die Routen-Parameter
+	 */
 	protected async leaveBefore(from: RouteNode<any, any>, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 	}
 
 	/**
-   * Ein Ereignis, welches im globalen beforeEach-Guard aufgerufen wird,
-   * bevor eine Route verlassen wird.
-   *
-   * @param from   die Route, die verlassen wird
-   * @param from_params   die Routen-Parameter
-   */
+	 * Ein Ereignis, welches im globalen beforeEach-Guard aufgerufen wird,
+	 * bevor eine Route verlassen wird.
+	 *
+	 * @param from   die Route, die verlassen wird
+	 * @param from_params   die Routen-Parameter
+	 */
 	public async doLeaveBefore(from: RouteNode<any, any>, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		try {
 			return await this.leaveBefore(from, from_params);
@@ -717,22 +822,22 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 
 
 	/**
-     * Ein Ereignis, welches im globalen afterEach des Routings aufgerufen wird,
-     * zu dem Zeitpunkt nachdem die Route verlassen wurde.
-     *
-     * @param from   die Route, die verlassen wird
-     * @param from_params   die Routen-Parameter
-     */
+	 * Ein Ereignis, welches im globalen afterEach des Routings aufgerufen wird,
+	 * zu dem Zeitpunkt nachdem die Route verlassen wurde.
+	 *
+	 * @param from   die Route, die verlassen wird
+	 * @param from_params   die Routen-Parameter
+	 */
 	public async leave(from: RouteNode<any, any>, from_params: RouteParams) : Promise<void> {
 	}
 
 	/**
-     * Gibt den Knoten für den übergebenen Namen zurück.
-     *
-     * @param name   der Name des Knotens bzw. der Route
-     *
-     * @returns der Knoten oder undefined
-     */
+	 * Gibt den Knoten für den übergebenen Namen zurück.
+	 *
+	 * @param name   der Name des Knotens bzw. der Route
+	 *
+	 * @returns der Knoten oder undefined
+	 */
 	public static getNodeByName(name : string | undefined | null) : RouteNode<any, any> | undefined {
 		if ((name === undefined) || (name === null))
 			return undefined;
@@ -769,7 +874,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	protected static getIntParams<const K extends ReadonlyArray<string>>(params: RouteParams, names: K): Record<K[number], number | undefined> {
 		const res: Record<string, number | undefined> = {};
 		for (const name of names) {
-			const value = params[name];
+			const value = params[name] as string | string [] | undefined;
 			if (value instanceof Array)
 				throw new DeveloperNotificationException(`Fehler: Der Parameter ${name} der Route darf kein Array sein`);
 			else if ((value === undefined) || (value.toString().trim().length === 0))
@@ -791,7 +896,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	protected static getStringParams<const K extends ReadonlyArray<string>>(params: RouteParams, names: K): Record<K[number], string | undefined> {
 		const res: Record<string, string | undefined> = {};
 		for (const name of names) {
-			const value = params[name];
+			const value = params[name] as string | string [] | undefined;
 			if (value instanceof Array)
 				throw new DeveloperNotificationException(`Fehler: Der Parameter ${name} der Route darf kein Array sein`);
 			else if ((value === undefined) || (value.toString().trim().length === 0))

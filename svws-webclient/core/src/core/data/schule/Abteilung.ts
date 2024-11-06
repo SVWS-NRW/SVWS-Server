@@ -52,6 +52,9 @@ export class Abteilung extends JavaObject {
 	public readonly klassen : List<AbteilungKlassenzuordnung> = new ArrayList<AbteilungKlassenzuordnung>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -98,10 +101,10 @@ export class Abteilung extends JavaObject {
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		result += '"idSchuljahresabschnitts" : ' + obj.idSchuljahresabschnitts.toString() + ',';
-		result += '"idAbteilungsleiter" : ' + ((!obj.idAbteilungsleiter) ? 'null' : obj.idAbteilungsleiter.toString()) + ',';
-		result += '"raum" : ' + ((!obj.raum) ? 'null' : JSON.stringify(obj.raum)) + ',';
-		result += '"email" : ' + ((!obj.email) ? 'null' : JSON.stringify(obj.email)) + ',';
-		result += '"durchwahl" : ' + ((!obj.durchwahl) ? 'null' : JSON.stringify(obj.durchwahl)) + ',';
+		result += '"idAbteilungsleiter" : ' + ((obj.idAbteilungsleiter === null) ? 'null' : obj.idAbteilungsleiter.toString()) + ',';
+		result += '"raum" : ' + ((obj.raum === null) ? 'null' : JSON.stringify(obj.raum)) + ',';
+		result += '"email" : ' + ((obj.email === null) ? 'null' : JSON.stringify(obj.email)) + ',';
+		result += '"durchwahl" : ' + ((obj.durchwahl === null) ? 'null' : JSON.stringify(obj.durchwahl)) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"klassen" : [ ';
 		for (let i = 0; i < obj.klassen.size(); i++) {
@@ -128,16 +131,16 @@ export class Abteilung extends JavaObject {
 			result += '"idSchuljahresabschnitts" : ' + obj.idSchuljahresabschnitts.toString() + ',';
 		}
 		if (obj.idAbteilungsleiter !== undefined) {
-			result += '"idAbteilungsleiter" : ' + ((!obj.idAbteilungsleiter) ? 'null' : obj.idAbteilungsleiter.toString()) + ',';
+			result += '"idAbteilungsleiter" : ' + ((obj.idAbteilungsleiter === null) ? 'null' : obj.idAbteilungsleiter.toString()) + ',';
 		}
 		if (obj.raum !== undefined) {
-			result += '"raum" : ' + ((!obj.raum) ? 'null' : JSON.stringify(obj.raum)) + ',';
+			result += '"raum" : ' + ((obj.raum === null) ? 'null' : JSON.stringify(obj.raum)) + ',';
 		}
 		if (obj.email !== undefined) {
-			result += '"email" : ' + ((!obj.email) ? 'null' : JSON.stringify(obj.email)) + ',';
+			result += '"email" : ' + ((obj.email === null) ? 'null' : JSON.stringify(obj.email)) + ',';
 		}
 		if (obj.durchwahl !== undefined) {
-			result += '"durchwahl" : ' + ((!obj.durchwahl) ? 'null' : JSON.stringify(obj.durchwahl)) + ',';
+			result += '"durchwahl" : ' + ((obj.durchwahl === null) ? 'null' : JSON.stringify(obj.durchwahl)) + ',';
 		}
 		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung.toString() + ',';

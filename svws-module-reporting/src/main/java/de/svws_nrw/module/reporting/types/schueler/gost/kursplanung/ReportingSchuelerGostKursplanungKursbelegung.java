@@ -22,6 +22,7 @@ public class ReportingSchuelerGostKursplanungKursbelegung {
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
+	 *
 	 * @param abiturfach			Abiturfach, falls das Fach des Kurses Abiturfach ist.
 	 * @param hatGueltigeFachwahl 	Angabe, ob die Kursbelegung eine gültige Fachwahl im Abiturjahrgang hat.
 	 * @param istSchriftlich		Angabe, ob der Kurs schriftlich belegt ist.
@@ -41,6 +42,7 @@ public class ReportingSchuelerGostKursplanungKursbelegung {
 
 	/**
 	 * Nummer des Abiturfaches, sofern das Fach des Kurses ein Abiturfach des Schülers ist.
+	 *
 	 * @return Inhalt des Feldes abiturfach
 	 */
 	public String abiturfach() {
@@ -49,6 +51,7 @@ public class ReportingSchuelerGostKursplanungKursbelegung {
 
 	/**
 	 * Gibt an, ob die Kursbelegung eine gültige Fachwahl im Abiturjahrgang hat.
+	 *
 	 * @return Inhalt des Feldes hatGueltigeFachwahl
 	 */
 	public boolean hatGueltigeFachwahl() {
@@ -57,6 +60,7 @@ public class ReportingSchuelerGostKursplanungKursbelegung {
 
 	/**
 	 * Gibt an, ob der Kurs schriftlich belegt ist.
+	 *
 	 * @return Inhalt des Feldes istSchriftlich
 	 */
 	public boolean istSchriftlich() {
@@ -65,6 +69,7 @@ public class ReportingSchuelerGostKursplanungKursbelegung {
 
 	/**
 	 * Der Kurs, der vom Schüler belegt wird.
+	 *
 	 * @return Inhalt des Feldes kurs
 	 */
 	public ReportingGostKursplanungKurs kurs() {

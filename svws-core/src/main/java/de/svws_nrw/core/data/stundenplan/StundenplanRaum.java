@@ -30,4 +30,11 @@ public class StundenplanRaum {
 	@Schema(description = "die Grösse des Raumes an Arbeitsplätzen für Schüler", example = "30")
 	public int groesse = -1;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public StundenplanRaum() {
+		// leer
+	}
+
 }

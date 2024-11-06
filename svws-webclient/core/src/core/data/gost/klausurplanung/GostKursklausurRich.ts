@@ -173,7 +173,7 @@ export class GostKursklausurRich extends JavaObject {
 		result += '"idFach" : ' + obj.idFach.toString() + ',';
 		result += '"kursart" : ' + JSON.stringify(obj.kursart) + ',';
 		result += '"idKurs" : ' + obj.idKurs.toString() + ',';
-		result += '"kursKurzbezeichnung" : ' + ((!obj.kursKurzbezeichnung) ? 'null' : JSON.stringify(obj.kursKurzbezeichnung)) + ',';
+		result += '"kursKurzbezeichnung" : ' + ((obj.kursKurzbezeichnung === null) ? 'null' : JSON.stringify(obj.kursKurzbezeichnung)) + ',';
 		result += '"kursSchiene" : [ ';
 		for (let i = 0; i < obj.kursSchiene.length; i++) {
 			const elem = obj.kursSchiene[i];
@@ -182,9 +182,9 @@ export class GostKursklausurRich extends JavaObject {
 				result += ',';
 		}
 		result += ' ]' + ',';
-		result += '"idLehrer" : ' + ((!obj.idLehrer) ? 'null' : obj.idLehrer.toString()) + ',';
-		result += '"idTermin" : ' + ((!obj.idTermin) ? 'null' : obj.idTermin.toString()) + ',';
-		result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : obj.startzeit.toString()) + ',';
+		result += '"idLehrer" : ' + ((obj.idLehrer === null) ? 'null' : obj.idLehrer.toString()) + ',';
+		result += '"idTermin" : ' + ((obj.idTermin === null) ? 'null' : obj.idTermin.toString()) + ',';
+		result += '"startzeit" : ' + ((obj.startzeit === null) ? 'null' : obj.startzeit.toString()) + ',';
 		result += '"schuelerIds" : [ ';
 		for (let i = 0; i < obj.schuelerIds.size(); i++) {
 			const elem = obj.schuelerIds.get(i);
@@ -193,7 +193,7 @@ export class GostKursklausurRich extends JavaObject {
 				result += ',';
 		}
 		result += ' ]' + ',';
-		result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
+		result += '"bemerkung" : ' + ((obj.bemerkung === null) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -226,7 +226,7 @@ export class GostKursklausurRich extends JavaObject {
 			result += '"idKurs" : ' + obj.idKurs.toString() + ',';
 		}
 		if (obj.kursKurzbezeichnung !== undefined) {
-			result += '"kursKurzbezeichnung" : ' + ((!obj.kursKurzbezeichnung) ? 'null' : JSON.stringify(obj.kursKurzbezeichnung)) + ',';
+			result += '"kursKurzbezeichnung" : ' + ((obj.kursKurzbezeichnung === null) ? 'null' : JSON.stringify(obj.kursKurzbezeichnung)) + ',';
 		}
 		if (obj.kursSchiene !== undefined) {
 			const a = obj.kursSchiene;
@@ -240,13 +240,13 @@ export class GostKursklausurRich extends JavaObject {
 			result += ' ]' + ',';
 		}
 		if (obj.idLehrer !== undefined) {
-			result += '"idLehrer" : ' + ((!obj.idLehrer) ? 'null' : obj.idLehrer.toString()) + ',';
+			result += '"idLehrer" : ' + ((obj.idLehrer === null) ? 'null' : obj.idLehrer.toString()) + ',';
 		}
 		if (obj.idTermin !== undefined) {
-			result += '"idTermin" : ' + ((!obj.idTermin) ? 'null' : obj.idTermin.toString()) + ',';
+			result += '"idTermin" : ' + ((obj.idTermin === null) ? 'null' : obj.idTermin.toString()) + ',';
 		}
 		if (obj.startzeit !== undefined) {
-			result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : obj.startzeit.toString()) + ',';
+			result += '"startzeit" : ' + ((obj.startzeit === null) ? 'null' : obj.startzeit.toString()) + ',';
 		}
 		if (obj.schuelerIds !== undefined) {
 			result += '"schuelerIds" : [ ';
@@ -259,7 +259,7 @@ export class GostKursklausurRich extends JavaObject {
 			result += ' ]' + ',';
 		}
 		if (obj.bemerkung !== undefined) {
-			result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
+			result += '"bemerkung" : ' + ((obj.bemerkung === null) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

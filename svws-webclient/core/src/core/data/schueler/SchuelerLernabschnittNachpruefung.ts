@@ -24,6 +24,9 @@ export class SchuelerLernabschnittNachpruefung extends JavaObject {
 	public datum : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -56,8 +59,8 @@ export class SchuelerLernabschnittNachpruefung extends JavaObject {
 		let result = '{';
 		result += '"grund" : ' + JSON.stringify(obj.grund) + ',';
 		result += '"fachID" : ' + obj.fachID.toString() + ',';
-		result += '"note" : ' + ((!obj.note) ? 'null' : JSON.stringify(obj.note)) + ',';
-		result += '"datum" : ' + ((!obj.datum) ? 'null' : JSON.stringify(obj.datum)) + ',';
+		result += '"note" : ' + ((obj.note === null) ? 'null' : JSON.stringify(obj.note)) + ',';
+		result += '"datum" : ' + ((obj.datum === null) ? 'null' : JSON.stringify(obj.datum)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -72,10 +75,10 @@ export class SchuelerLernabschnittNachpruefung extends JavaObject {
 			result += '"fachID" : ' + obj.fachID.toString() + ',';
 		}
 		if (obj.note !== undefined) {
-			result += '"note" : ' + ((!obj.note) ? 'null' : JSON.stringify(obj.note)) + ',';
+			result += '"note" : ' + ((obj.note === null) ? 'null' : JSON.stringify(obj.note)) + ',';
 		}
 		if (obj.datum !== undefined) {
-			result += '"datum" : ' + ((!obj.datum) ? 'null' : JSON.stringify(obj.datum)) + ',';
+			result += '"datum" : ' + ((obj.datum === null) ? 'null' : JSON.stringify(obj.datum)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

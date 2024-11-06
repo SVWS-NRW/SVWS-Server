@@ -83,6 +83,7 @@ public class ReportingLehrer {
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
+	 *
 	 * @param amtsbezeichnung Ggf. die Amtsbezeichnung des Lehrers.
 	 * @param anrede Ggf. die Anrede des Lehrers.
 	 * @param emailDienstlich Ggf. die dienstliche E-Mail-Adresse des Lehrers.
@@ -143,6 +144,7 @@ public class ReportingLehrer {
 
 	/**
 	 * Erzeugt eine Beschriftung für ein Unterschriftsfeld.
+	 *
 	 * @return Beschriftung in der Form: Titel Vorname (erster Buchstabe). Nachname
 	 */
 	public String unterschriftfeld() {
@@ -153,6 +155,7 @@ public class ReportingLehrer {
 	 * Erzeugt eine Beschriftung für ein Unterschriftsfeld.
 	 * @param mitVornameKurz     Gibt an, ob nur der erste Buchstabe des Vornamens ausgegeben werden soll.
 	 * @param mitAmtsbezeichnung Gibt an, ob die Amtsbezeichnung hinzugefügt werden soll.
+	 *
 	 * @return Beschriftung gemäß Parametern: Titel Vorname Nachname, Amtsbezeichnung
 	 */
 	public String unterschriftfeld(final boolean mitVornameKurz, final boolean mitAmtsbezeichnung) {
@@ -167,9 +170,11 @@ public class ReportingLehrer {
 
 	/**
 	 * Erzeugt eine Beschriftung für ein Unterschriftsfeld.
+	 *
 	 * @param mitVornameKurz     Gibt an, ob nur der erste Buchstabe des Vornamens ausgegeben werden soll.
 	 * @param mitAmtsbezeichnung Gibt an, ob die Amtsbezeichnung hinzugefügt werden soll.
 	 * @param zusatzUnterschrift Zusatz, der an die Unterschrift angehängt werden soll. Evtl. Zeilenumbruch kann eingefügt werden.
+	 *
 	 * @return Beschriftung gemäß Parametern: Titel Vorname Nachname, Amtsbezeichnung_ZusatzUnterschrift
 	 */
 	public String unterschriftfeld(final boolean mitVornameKurz, final boolean mitAmtsbezeichnung, final String zusatzUnterschrift) {
@@ -182,6 +187,7 @@ public class ReportingLehrer {
 
 	/**
 	 * Ggf. die Amtsbezeichnung des Lehrers.
+	 *
 	 * @return Inhalt des Feldes amtsbezeichnung
 	 */
 	public String amtsbezeichnung() {
@@ -190,6 +196,7 @@ public class ReportingLehrer {
 
 	/**
 	 * Ggf. die Anrede des Lehrers.
+	 *
 	 * @return Inhalt des Feldes anrede
 	 */
 	public String anrede() {
@@ -198,6 +205,7 @@ public class ReportingLehrer {
 
 	/**
 	 * Ggf. die dienstliche E-Mail-Adresse des Lehrers.
+	 *
 	 * @return Inhalt des Feldes emailDienstlich
 	 */
 	public String emailDienstlich() {
@@ -206,6 +214,7 @@ public class ReportingLehrer {
 
 	/**
 	 * Ggf. die private Email-Adresse des Lehrers.
+	 *
 	 * @return Inhalt des Feldes emailPrivat
 	 */
 	public String emailPrivat() {
@@ -214,6 +223,7 @@ public class ReportingLehrer {
 
 	/**
 	 * Ggf. das Foto des Lehrers (jpg, Base64-kodiert des Lehrers.)
+	 *
 	 * @return Inhalt des Feldes foto
 	 */
 	public String foto() {
@@ -222,6 +232,7 @@ public class ReportingLehrer {
 
 	/**
 	 * Das Geburtsdatum des Lehrers.
+	 *
 	 * @return Inhalt des Feldes geburtsdatum
 	 */
 	public String geburtsdatum() {
@@ -230,6 +241,7 @@ public class ReportingLehrer {
 
 	/**
 	 * Das Geschlecht des Lehrers
+	 *
 	 * @return Inhalt des Feldes geschlecht
 	 */
 	public Geschlecht geschlecht() {
@@ -238,6 +250,7 @@ public class ReportingLehrer {
 
 	/**
 	 * Ggf. die Hausnummer zur Straße im Wohnort des Lehrers.
+	 *
 	 * @return Inhalt des Feldes hausnummer
 	 */
 	public String hausnummer() {
@@ -246,6 +259,7 @@ public class ReportingLehrer {
 
 	/**
 	 * Ggf. der Hausnummerzusatz zur Straße im Wohnort des Lehrers.
+	 *
 	 * @return Inhalt des Feldes hausnummerZusatz
 	 */
 	public String hausnummerZusatz() {
@@ -254,6 +268,7 @@ public class ReportingLehrer {
 
 	/**
 	 * Die ID des Lehrers.
+	 *
 	 * @return Inhalt des Feldes id
 	 */
 	public long id() {
@@ -262,6 +277,7 @@ public class ReportingLehrer {
 
 	/**
 	 * Das Kürzel des Lehrers.
+	 *
 	 * @return Inhalt des Feldes kuerzel
 	 */
 	public String kuerzel() {
@@ -270,6 +286,7 @@ public class ReportingLehrer {
 
 	/**
 	 * Der Nachname des Lehrers.
+	 *
 	 * @return Inhalt des Feldes nachname
 	 */
 	public String nachname() {
@@ -278,6 +295,7 @@ public class ReportingLehrer {
 
 	/**
 	 * Die Bezeichnung des Personals-Typs des Lehrers.
+	 *
 	 * @return Inhalt des Feldes personalTyp
 	 */
 	public String personalTyp() {
@@ -286,6 +304,7 @@ public class ReportingLehrer {
 
 	/**
 	 * Ggf. die Staatsangehörigkeit des Lehrers.
+	 *
 	 * @return Inhalt des Feldes staatsangehoerigkeit
 	 */
 	public Nationalitaeten staatsangehoerigkeit() {
@@ -294,6 +313,7 @@ public class ReportingLehrer {
 
 	/**
 	 * Ggf. der Straßenname im Wohnort des Lehrers.
+	 *
 	 * @return Inhalt des Feldes strassenname
 	 */
 	public String strassenname() {
@@ -302,6 +322,7 @@ public class ReportingLehrer {
 
 	/**
 	 * Ggf. die Telefonnummer des Lehrers.
+	 *
 	 * @return Inhalt des Feldes telefon
 	 */
 	public String telefon() {
@@ -310,6 +331,7 @@ public class ReportingLehrer {
 
 	/**
 	 * Ggf. die Mobilnummer des Lehrers.
+	 *
 	 * @return Inhalt des Feldes telefonMobil
 	 */
 	public String telefonMobil() {
@@ -318,6 +340,7 @@ public class ReportingLehrer {
 
 	/**
 	 * Ggf. ein akademischer Grad des Lehrers.
+	 *
 	 * @return Inhalt des Feldes titel
 	 */
 	public String titel() {
@@ -326,6 +349,7 @@ public class ReportingLehrer {
 
 	/**
 	 * Der Vorname des Lehrers.
+	 *
 	 * @return Inhalt des Feldes vorname
 	 */
 	public String vorname() {
@@ -334,6 +358,7 @@ public class ReportingLehrer {
 
 	/**
 	 * Der Wohnort des Lehrers.
+	 *
 	 * @return Inhalt des Feldes wohnort
 	 */
 	public OrtKatalogEintrag wohnort() {
@@ -342,6 +367,7 @@ public class ReportingLehrer {
 
 	/**
 	 * Der Wohnortsname des Lehrers.
+	 *
 	 * @return Inhalt des Feldes wohnortname
 	 */
 	public String wohnortname() {
@@ -350,6 +376,7 @@ public class ReportingLehrer {
 
 	/**
 	 * Ggf. der Ortsteil des Wohnortes des Lehrers.
+	 *
 	 * @return Inhalt des Feldes wohnortsteil
 	 */
 	public OrtsteilKatalogEintrag wohnortsteil() {
@@ -358,6 +385,7 @@ public class ReportingLehrer {
 
 	/**
 	 * Ggf. der Ortsteilname des Wohnortes des Lehrers.
+	 *
 	 * @return Inhalt des Feldes wohnortsteilname
 	 */
 	public String wohnortsteilname() {

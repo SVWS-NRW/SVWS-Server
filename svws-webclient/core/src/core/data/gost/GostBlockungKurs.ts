@@ -52,6 +52,9 @@ export class GostBlockungKurs extends JavaObject {
 	public lehrer : List<GostBlockungKursLehrer> = new ArrayList<GostBlockungKursLehrer>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

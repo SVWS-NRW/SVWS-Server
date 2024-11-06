@@ -18,6 +18,13 @@ public final class BooleanPlusMinusDefaultPlusConverter extends DBAttributeConve
 	/** Die Instanz des Konverters */
 	public static final BooleanPlusMinusDefaultPlusConverter instance = new BooleanPlusMinusDefaultPlusConverter();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public BooleanPlusMinusDefaultPlusConverter() {
+		// leer
+	}
+
 	@Override
 	public String convertToDatabaseColumn(final Boolean value) {
 		return ((value == null) || value) ? "+" : "-";

@@ -14,6 +14,13 @@ public final class MigrationStringToIntegerConverter extends DBAttributeConverte
 	/** Die Instanz des Konverters */
 	public static final MigrationStringToIntegerConverter instance = new MigrationStringToIntegerConverter();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public MigrationStringToIntegerConverter() {
+		// leer
+	}
+
 	@Override
 	public String convertToDatabaseColumn(final Integer value) {
 		if (value == null)

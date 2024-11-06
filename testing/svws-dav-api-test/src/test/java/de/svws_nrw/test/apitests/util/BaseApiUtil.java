@@ -1,6 +1,5 @@
 package de.svws_nrw.test.apitests.util;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -8,6 +7,9 @@ import org.junit.jupiter.api.BeforeAll;
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
 
+/**
+ * Tests für die grundlegenden API-Funktionen.
+ */
 public class BaseApiUtil {
 
 	/** HTTP-Methode PROPFIND */
@@ -62,13 +64,11 @@ public class BaseApiUtil {
 	/**
 	 * Initialisiert die Server Properties
 	 *
-	 * @throws FileNotFoundException vgl.
-	 *                               {@link ServerProps#createFromSystemProperties()}
-	 * @throws IOException           vgl.
-	 *                               {@link ServerProps#createFromSystemProperties()}
+	 * @throws IOException           vgl. {@link ServerProps#createFromSystemProperties()}, z.B. FileNotFoundException
 	 */
 	@BeforeAll
-	static void initializeProperties() throws FileNotFoundException, IOException {
+	static void initializeProperties() throws IOException {
 		serverProps = ServerProps.createFromSystemProperties();
 	}
+
 }

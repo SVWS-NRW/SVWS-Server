@@ -64,6 +64,9 @@ export class SchuelerBetriebsdaten extends JavaObject {
 	public betreuungslehrer_id : number | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -111,15 +114,15 @@ export class SchuelerBetriebsdaten extends JavaObject {
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"schueler_id" : ' + obj.schueler_id.toString() + ',';
 		result += '"betrieb_id" : ' + obj.betrieb_id.toString() + ',';
-		result += '"beschaeftigungsart_id" : ' + ((!obj.beschaeftigungsart_id) ? 'null' : obj.beschaeftigungsart_id.toString()) + ',';
-		result += '"vertragsbeginn" : ' + ((!obj.vertragsbeginn) ? 'null' : JSON.stringify(obj.vertragsbeginn)) + ',';
-		result += '"vertragsende" : ' + ((!obj.vertragsende) ? 'null' : JSON.stringify(obj.vertragsende)) + ',';
-		result += '"ausbilder" : ' + ((!obj.ausbilder) ? 'null' : JSON.stringify(obj.ausbilder)) + ',';
-		result += '"allgadranschreiben" : ' + obj.allgadranschreiben! + ',';
-		result += '"praktikum" : ' + obj.praktikum! + ',';
-		result += '"sortierung" : ' + ((!obj.sortierung) ? 'null' : obj.sortierung.toString()) + ',';
-		result += '"ansprechpartner_id" : ' + ((!obj.ansprechpartner_id) ? 'null' : obj.ansprechpartner_id.toString()) + ',';
-		result += '"betreuungslehrer_id" : ' + ((!obj.betreuungslehrer_id) ? 'null' : obj.betreuungslehrer_id.toString()) + ',';
+		result += '"beschaeftigungsart_id" : ' + ((obj.beschaeftigungsart_id === null) ? 'null' : obj.beschaeftigungsart_id.toString()) + ',';
+		result += '"vertragsbeginn" : ' + ((obj.vertragsbeginn === null) ? 'null' : JSON.stringify(obj.vertragsbeginn)) + ',';
+		result += '"vertragsende" : ' + ((obj.vertragsende === null) ? 'null' : JSON.stringify(obj.vertragsende)) + ',';
+		result += '"ausbilder" : ' + ((obj.ausbilder === null) ? 'null' : JSON.stringify(obj.ausbilder)) + ',';
+		result += '"allgadranschreiben" : ' + obj.allgadranschreiben + ',';
+		result += '"praktikum" : ' + obj.praktikum + ',';
+		result += '"sortierung" : ' + ((obj.sortierung === null) ? 'null' : obj.sortierung.toString()) + ',';
+		result += '"ansprechpartner_id" : ' + ((obj.ansprechpartner_id === null) ? 'null' : obj.ansprechpartner_id.toString()) + ',';
+		result += '"betreuungslehrer_id" : ' + ((obj.betreuungslehrer_id === null) ? 'null' : obj.betreuungslehrer_id.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -137,16 +140,16 @@ export class SchuelerBetriebsdaten extends JavaObject {
 			result += '"betrieb_id" : ' + obj.betrieb_id.toString() + ',';
 		}
 		if (obj.beschaeftigungsart_id !== undefined) {
-			result += '"beschaeftigungsart_id" : ' + ((!obj.beschaeftigungsart_id) ? 'null' : obj.beschaeftigungsart_id.toString()) + ',';
+			result += '"beschaeftigungsart_id" : ' + ((obj.beschaeftigungsart_id === null) ? 'null' : obj.beschaeftigungsart_id.toString()) + ',';
 		}
 		if (obj.vertragsbeginn !== undefined) {
-			result += '"vertragsbeginn" : ' + ((!obj.vertragsbeginn) ? 'null' : JSON.stringify(obj.vertragsbeginn)) + ',';
+			result += '"vertragsbeginn" : ' + ((obj.vertragsbeginn === null) ? 'null' : JSON.stringify(obj.vertragsbeginn)) + ',';
 		}
 		if (obj.vertragsende !== undefined) {
-			result += '"vertragsende" : ' + ((!obj.vertragsende) ? 'null' : JSON.stringify(obj.vertragsende)) + ',';
+			result += '"vertragsende" : ' + ((obj.vertragsende === null) ? 'null' : JSON.stringify(obj.vertragsende)) + ',';
 		}
 		if (obj.ausbilder !== undefined) {
-			result += '"ausbilder" : ' + ((!obj.ausbilder) ? 'null' : JSON.stringify(obj.ausbilder)) + ',';
+			result += '"ausbilder" : ' + ((obj.ausbilder === null) ? 'null' : JSON.stringify(obj.ausbilder)) + ',';
 		}
 		if (obj.allgadranschreiben !== undefined) {
 			result += '"allgadranschreiben" : ' + obj.allgadranschreiben + ',';
@@ -155,13 +158,13 @@ export class SchuelerBetriebsdaten extends JavaObject {
 			result += '"praktikum" : ' + obj.praktikum + ',';
 		}
 		if (obj.sortierung !== undefined) {
-			result += '"sortierung" : ' + ((!obj.sortierung) ? 'null' : obj.sortierung.toString()) + ',';
+			result += '"sortierung" : ' + ((obj.sortierung === null) ? 'null' : obj.sortierung.toString()) + ',';
 		}
 		if (obj.ansprechpartner_id !== undefined) {
-			result += '"ansprechpartner_id" : ' + ((!obj.ansprechpartner_id) ? 'null' : obj.ansprechpartner_id.toString()) + ',';
+			result += '"ansprechpartner_id" : ' + ((obj.ansprechpartner_id === null) ? 'null' : obj.ansprechpartner_id.toString()) + ',';
 		}
 		if (obj.betreuungslehrer_id !== undefined) {
-			result += '"betreuungslehrer_id" : ' + ((!obj.betreuungslehrer_id) ? 'null' : obj.betreuungslehrer_id.toString()) + ',';
+			result += '"betreuungslehrer_id" : ' + ((obj.betreuungslehrer_id === null) ? 'null' : obj.betreuungslehrer_id.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

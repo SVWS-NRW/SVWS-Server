@@ -38,6 +38,7 @@ class TestJSONMapper {
 			original.geschlecht = "m";
 			original.status = 2;
 			original.idSchuljahresabschnitt = 4L;
+			original.idSchuljahresabschnittSchueler = 5L;
 			original.idKlasse = 43L;
 			original.abiturjahrgang = 2050;
 			original.schulgliederung = Schulgliederung.GY8.daten(2024).kuerzel;
@@ -51,6 +52,7 @@ class TestJSONMapper {
 			assertEquals(original.geschlecht, decoded.geschlecht);
 			assertEquals(original.status, decoded.status);
 			assertEquals(original.idSchuljahresabschnitt, decoded.idSchuljahresabschnitt);
+			assertEquals(original.idSchuljahresabschnittSchueler, decoded.idSchuljahresabschnittSchueler);
 			assertEquals(original.idKlasse, decoded.idKlasse);
 			assertEquals(original.abiturjahrgang, decoded.abiturjahrgang);
 			assertEquals(original.schulgliederung, decoded.schulgliederung);

@@ -50,4 +50,11 @@ public class SchulgliederungKatalogEintrag extends CoreTypeDataNurSchulformen {
 	@Schema(description = "gibt die möglichen Abschlusskombinationen (berufsbildend und allgemeinbildend) unter Angabe der zulässigen Jahrgänge", example = "BS")
 	public @NotNull List<SchulgliederungGueltigerAbschluss> abschluesse = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SchulgliederungKatalogEintrag() {
+		// leer
+	}
+
 }

@@ -18,7 +18,6 @@ import de.svws_nrw.transpiler.TranspilerDTO;
 @Schema(description = "Ein Adressbuch.")
 @TranspilerDTO
 public class Adressbuch {
-
 	/** ID des Adressbuchs */
 	@Schema(description = "die ID des Adressbuchs", example = "global")
 	public @NotNull String id = "";
@@ -46,5 +45,12 @@ public class Adressbuch {
 	 */
 	@ArraySchema(schema = @Schema(description = "eine Liste der Einträge des Adressbuchs", example = "..."))
 	public @NotNull List<AdressbuchEintrag> adressbuchEintraege = new ArrayList<>();
+
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Adressbuch() {
+		// leer
+	}
 
 }

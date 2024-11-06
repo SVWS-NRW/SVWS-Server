@@ -19,6 +19,7 @@ public class ReportingGostLaufbahnplanungErgebnismeldung {
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
+	 *
 	 * @param code			Interner Code der Meldung aus der Prüfung, wenn vorhanden, sonst leer,
 	 * @param kategorie 	Kategorie der Meldung, bspw. Fehler oder Hinweis.
 	 * @param meldung		Text zur Meldung für den Benutzer
@@ -36,6 +37,7 @@ public class ReportingGostLaufbahnplanungErgebnismeldung {
 
 	/**
 	 * Interner Code der Meldung aus der Prüfung, wenn vorhanden, sonst leer,
+	 *
 	 * @return Inhalt des Feldes code
 	 */
 	public String code() {
@@ -44,6 +46,7 @@ public class ReportingGostLaufbahnplanungErgebnismeldung {
 
 	/**
 	 * Kategorie der Meldung, bspw. Fehler oder Hinweis.
+	 *
 	 * @return Inhalt des Feldes kategorie
 	 */
 	public ReportingGostLaufbahnplanungErgebnismeldungKategorie kategorie() {
@@ -52,6 +55,7 @@ public class ReportingGostLaufbahnplanungErgebnismeldung {
 
 	/**
 	 * Text zur Meldung für den Benutzer
+	 *
 	 * @return Inhalt des Feldes meldung
 	 */
 	public String meldung() {

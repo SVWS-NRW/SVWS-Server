@@ -1,10 +1,9 @@
-import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
+import type { RouteLocationNormalized, RouteParamsRawGeneric } from "vue-router";
 
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
-import { routeApp } from "../RouteApp";
 import { ViewType } from "@ui";
 import type { SchuelerGruppenprozesseProps } from "~/components/schueler/gruppenprozesse/SSchuelerGruppenprozesseProps";
 import { api } from "~/router/Api";
@@ -21,8 +20,8 @@ export class RouteSchuelerGruppenprozesse extends RouteNode<any, RouteSchueler> 
 		super.text = "Gruppenprozesse";
 	}
 
-	public getRoute() : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: "" }};
+	public addRouteParamsFromState() : RouteParamsRawGeneric {
+		return { id : "" };
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuelerGruppenprozesseProps {

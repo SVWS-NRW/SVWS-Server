@@ -29,6 +29,9 @@ export class ENMFach extends JavaObject {
 	public istFremdsprache : boolean = false;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

@@ -14,6 +14,13 @@ public final class GOStKursartConverter extends DBAttributeConverter<GostKursart
 	/** Die Instanz des Konverters */
 	public static final GOStKursartConverter instance = new GOStKursartConverter();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GOStKursartConverter() {
+		// leer
+	}
+
 	@Override
 	public String convertToDatabaseColumn(final GostKursart value) {
 		if (value == null)

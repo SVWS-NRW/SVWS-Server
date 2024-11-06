@@ -3,7 +3,6 @@ import type { StundenplanKlasseProps } from "~/components/stundenplan/klasse/SSt
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { routeStundenplan, type RouteStundenplan} from "~/router/apps/stundenplan/RouteStundenplan";
-import { routeApp } from "../RouteApp";
 import { api } from "~/router/Api";
 
 const SStundenplanKlasse = () => import("~/components/stundenplan/klasse/SStundenplanKlasse.vue");
@@ -20,10 +19,6 @@ export class RouteStundenplanKlasse extends RouteNode<any, RouteStundenplan> {
 	}
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-	}
-
-	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): StundenplanKlasseProps {

@@ -48,7 +48,7 @@
 				<!-- Darstellung des Unterrichtes in dem Zeitraster -->
 				<template v-for="stunde in zeitrasterRange" :key="stunde">
 					<template v-if="manager().zeitrasterGetByWochentagAndStundeOrNull(wochentag.id, stunde)">
-						<div class="svws-ui-stundenplan--stunde flex-row relative" :class="dragData && dragData() !== undefined ? 'z-20 bg-opacity-0' : ''"
+						<div class="svws-ui-stundenplan--stunde flex-row relative" :class="dragData && dragData() !== undefined ? 'z-20 svws-ui-stundenplan--stunde--klausurplan-opacity' : ''"
 							:style="posZeitraster(wochentag, stunde)"
 							@dragover="checkDropZoneZeitraster($event, manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde))"
 							@dragleave="checkDropZoneZeitraster($event, undefined)"
@@ -101,7 +101,7 @@
 								<span v-if="zeigeAlleJahrgaenge()" class="absolute top-1.5 right-1.5 z-10 font-bold text-sm opacity-50">{{ GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(termin.abijahr, routeApp.data.aktAbschnitt.value.schuljahr, halbjahr.halbjahr)?.jahrgang }}</span>
 								<svws-ui-tooltip :hover="false" position="right-start" class="!items-start h-full mr-auto" :indicator="false" :class="{'!cursor-grab': termin.abijahr === jahrgangsdaten.abiturjahr, '!cursor-pointer': termin.abijahr !== jahrgangsdaten.abiturjahr}">
 									<span class="z-10 relative p-1 leading-tight cursor-pointer font-medium text-left mt-6 pb-0 hyphens-auto">
-										<span class="line-clamp-4">{{ terminBezeichnung(termin) }}</span>
+										<span class="line-clamp-4" :class="dragData && dragData() !== undefined ? 'opacity-0' : ''">{{ terminBezeichnung(termin) }}</span>
 									</span>
 									<template #content>
 										<s-gost-klausurplanung-termin :termin

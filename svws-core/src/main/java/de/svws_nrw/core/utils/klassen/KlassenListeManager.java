@@ -289,6 +289,9 @@ public final class KlassenListeManager extends AuswahlManager<Long, KlassenDaten
 		this.auswahlKlassenLeitung = klassenLeitung;
 	}
 
+	/**
+	 * Trigger, wenn eine Checkbox zum Hinzufügen von Schülern zu einer Klasse verwendet wird.
+	 */
 	protected final @NotNull Runnable _eventSchuelerAuswahlChanged = () -> {
 		// TODO erstmal nichts zu tun ... wird später implementiert, wenn eine Checkbox zum Hinzufügen von Schülern zu einer Klasse verwendet wird
 	};

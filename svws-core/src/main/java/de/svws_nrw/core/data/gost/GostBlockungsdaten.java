@@ -55,4 +55,11 @@ public class GostBlockungsdaten {
 	/** Eine Liste der Ergebnisse, die der Blockungsdefinition zugeordnet sind.  */
 	public final @NotNull List<GostBlockungsergebnis> ergebnisse = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GostBlockungsdaten() {
+		// leer
+	}
+
 }

@@ -91,13 +91,13 @@ export class DateUtils extends JavaObject {
 	 */
 	public static extractFromDateISO8601(datumISO8601 : string) : Array<number> {
 		const split : Array<string | null> = datumISO8601.split("-");
-		DeveloperNotificationException.ifTrue("Datumsformat von " + datumISO8601! + " ist nicht ISO8601 konform!", split.length !== 3);
+		DeveloperNotificationException.ifTrue("Datumsformat von " + datumISO8601 + " ist nicht ISO8601 konform!", split.length !== 3);
 		const jahr : number = DeveloperNotificationException.ifNotInt(split[0]);
-		DeveloperNotificationException.ifTrue("Das Jahr von " + datumISO8601! + " ist ungültig!", DateUtils.gibIstJahrUngueltig(jahr));
+		DeveloperNotificationException.ifTrue("Das Jahr von " + datumISO8601 + " ist ungültig!", DateUtils.gibIstJahrUngueltig(jahr));
 		const monat : number = DeveloperNotificationException.ifNotInt(split[1]);
-		DeveloperNotificationException.ifTrue("Der Monat von " + datumISO8601! + " ist ungültig!", (monat < 1) || (monat > 12));
+		DeveloperNotificationException.ifTrue("Der Monat von " + datumISO8601 + " ist ungültig!", (monat < 1) || (monat > 12));
 		const tagImMonat : number = DeveloperNotificationException.ifNotInt(split[2]);
-		DeveloperNotificationException.ifTrue("Der Tag von " + datumISO8601! + " ist ungültig!", (tagImMonat < 1) || (tagImMonat > 31));
+		DeveloperNotificationException.ifTrue("Der Tag von " + datumISO8601 + " ist ungültig!", (tagImMonat < 1) || (tagImMonat > 31));
 		const schalttage1 : number = ((Math.trunc((jahr - 1) / 4)) - (Math.trunc((jahr - 1) / 100))) + (Math.trunc((jahr - 1) / 400));
 		const schalttage2 : number = ((Math.trunc(jahr / 4)) - (Math.trunc(jahr / 100))) + (Math.trunc(jahr / 400));
 		const schaltjahr : number = schalttage2 - schalttage1;
@@ -235,7 +235,7 @@ export class DateUtils extends JavaObject {
 				break;
 			}
 		const tagDesMonats : number = t - vergangeneTage[monat];
-		return StringUtils.padZahl(j, 4)! + "-" + StringUtils.padZahl(monat, 2)! + "-" + StringUtils.padZahl(tagDesMonats, 2)!;
+		return StringUtils.padZahl(j, 4) + "-" + StringUtils.padZahl(monat, 2) + "-" + StringUtils.padZahl(tagDesMonats, 2);
 	}
 
 	/**
@@ -261,7 +261,7 @@ export class DateUtils extends JavaObject {
 		const jahr : number = info[0];
 		const monat : number = info[1];
 		const tagImMonat : number = info[2];
-		return StringUtils.padZahl(tagImMonat, 2)! + "." + StringUtils.padZahl(monat, 2)! + "." + StringUtils.padZahl(jahr, 4)!;
+		return StringUtils.padZahl(tagImMonat, 2) + "." + StringUtils.padZahl(monat, 2) + "." + StringUtils.padZahl(jahr, 4);
 	}
 
 	/**
@@ -276,7 +276,7 @@ export class DateUtils extends JavaObject {
 		const jahr : number = info[0];
 		const monat : number = info[1];
 		const tagImMonat : number = info[2];
-		return tagImMonat + ". " + DateUtils.MONAT_ZU_TEXT[monat] + " " + StringUtils.padZahl(jahr, 4)!;
+		return tagImMonat + ". " + DateUtils.MONAT_ZU_TEXT[monat] + " " + StringUtils.padZahl(jahr, 4);
 	}
 
 	/**
@@ -318,7 +318,7 @@ export class DateUtils extends JavaObject {
 		const min : number = minuten - (std * 60);
 		const sStd : string = (std < 10 ? "0" : "") + std;
 		const sMin : string = (min < 10 ? "0" : "") + min;
-		return sStd! + ":" + sMin!;
+		return sStd + ":" + sMin;
 	}
 
 	/**

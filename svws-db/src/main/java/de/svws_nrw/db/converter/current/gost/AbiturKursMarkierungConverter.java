@@ -40,4 +40,10 @@ public final class AbiturKursMarkierungConverter extends DBAttributeConverter<Ab
 		return String.class;
 	}
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public AbiturKursMarkierungConverter() {
+		// leer
+	}
 }

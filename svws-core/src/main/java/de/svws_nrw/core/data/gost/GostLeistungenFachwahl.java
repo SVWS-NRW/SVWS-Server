@@ -30,4 +30,11 @@ public class GostLeistungenFachwahl {
 	/** Die einzelnen Belegungen dieses Faches */
 	public final @NotNull List<GostLeistungenFachbelegung> belegungen = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GostLeistungenFachwahl() {
+		// leer
+	}
+
 }

@@ -1,6 +1,23 @@
-# Reporting
-Das Reporting erzeugt für die API gestellte Anfragen eine Rückgabe in Form von html- oder PDF-Dateien. Die PDF-Dateien werden dabei ebenfalls aus html-Dateien erzeugt, wofür OpenHtmlToPDF verwendet wird.
+# Reporting - Klassen, Struktur und Generierung
+Das Reporting erzeugt für die über die API gestellten Anfragen eine Rückgabe in Form von html- oder PDF-Dateien. Die PDF-Dateien werden dabei ebenfalls aus html-Dateien erzeugt, wofür OpenHtmlToPDF verwendet wird.
 Daher sind [html-Templates](#html-Templates) die Basis der Reporterstellung, welche durch die Template-Engine Thymeleaf mit Daten gefüllt werden.
+
+Die folgende Dokumentation soll die einzelnen Klassen und deren Zusammenspiel bei der Erzeugung der Druckausgabe darstellen. Folgende Punkte werden dabei behandelt.
+
+<!-- TOC -->
+* [Reporting - Klassen, Struktur und Generierung](#reporting---klassen-struktur-und-generierung)
+  * [Datenklassen für das Reporting](#datenklassen-für-das-reporting)
+    * [Reporting-Types](#reporting-types)
+    * [Reporting-Proxy-Types](#reporting-proxy-types)
+  * [Ablauf der Reporterstellung](#ablauf-der-reporterstellung)
+  * [Informationen zu den einzelnen Klassen](#informationen-zu-den-einzelnen-klassen)
+    * [Reporting-Parameter](#reporting-parameter)
+    * [Reporting-Factory](#reporting-factory)
+    * [html-Factory](#html-factory)
+    * [html-Contexts](#html-contexts)
+    * [html-Builder](#html-builder)
+  * [html-Templates](#html-templates)
+<!-- TOC -->
 
 ## Datenklassen für das Reporting
 
@@ -33,11 +50,11 @@ Der Ablauf der Reporterstellung ist dabei der folgende:
 
 * API-Aufruf erfolgt unter der Server-API *APIReporting*. Bei diesem API-Aufruf werden [ReportingParameter](#Reporting-Parameter) übergeben.
 * Der API-Aufruf erfolgt an der [ReportingFactory](#Reporting-Factory).
-* Die [html-Factory](#html-Factory) wird aufgerufen und diese erzeugt die [html-builder](html-builder).
-* [html-builder](html-builder) erzeugen dann entweder direkt html-Code für die Ausgabe oder werden an weitere Factories wie die PDF-Factory weitergegeben.
+* Die [html-Factory](#html-Factory) wird aufgerufen und diese erzeugt die [html-builder](#html-Builder).
+* [html-builder](#html-Builder) erzeugen dann entweder direkt html-Code für die Ausgabe oder werden an weitere Factories wie die PDF-Factory weitergegeben.
 * Die letzte Factory in der Kette erzeugt mit ihrem Builder eine passende API-Response, die auf die ursprüngliche Anfrage zurückgegeben wird.
 
-## Informationen den einzelnen Klassen
+## Informationen zu den einzelnen Klassen
 Im Folgenden werden einzelne ergänzende Informationen zu den Klassen gegeben, die an der Report-Erzeugung beteiligt sind.
 
 ### Reporting-Parameter
@@ -63,7 +80,7 @@ Die Aufgabe der html-Builder besteht darin, aus dem gewählten [html-Template](#
 
 
 ## html-Templates
-Die html-Templates werden durch Thymeleaf verarbeitet. Daher ist dessen Syntax für die Templates zu verwenden. Gleichzeitig ist zu bedenken, dass der generierte html-Code in der Regel für die Druckausgabe gedacht ist und dafür durch OpenHtmlToPDF in eine PDF-Datei umgewandelt wird. Daher ist hier insbesondere beim CSS auf die Verwendung von PrintCSS zu achten.
+Die html-Templates werden durch [Thymeleaf](https://www.thymeleaf.org) verarbeitet. Daher ist dessen Syntax für die Templates zu verwenden. Gleichzeitig ist zu bedenken, dass der generierte html-Code in der Regel für die Druckausgabe gedacht ist und dafür durch OpenHtmlToPDF in eine PDF-Datei umgewandelt wird. Daher ist hier insbesondere beim CSS auf die Verwendung von PrintCSS zu achten.
 
 Ein Template wird mit seiner html-Dateien sowie weiteren Eigenschaften in der Enum *HtmlTemplateDefinition* definiert. Dafür wird vorab auch eine Definition unter dem CoreType *ReportingReportvorlage* benötigt. Bzgl. der einzelnen Einträge in der ENUM ist unbedingt die dortige Kommentierung zu beachten.
 
@@ -71,3 +88,4 @@ In der *HtmlTemplateDefinition* wird ein Root-Pfad angegeben. Unter dem müssen 
 
 Zudem müssen die css-Dateien mittels Thymeleaf th:href eingebunden werden, damit die Pfade im realen Betrieb auch korrekt gesetzt werden. Ein solcher Aufruf wäre: *\<link rel="stylesheet" th:href="@{css/svws-reporting.css}" href="../../../css/svws-reporting.css" />*
 
+Alle weiteren Informationen rund um die Erstellung der Templates sind in einer weiteren [Dokumentation](reporting-template-erstellung.md) untergebracht.

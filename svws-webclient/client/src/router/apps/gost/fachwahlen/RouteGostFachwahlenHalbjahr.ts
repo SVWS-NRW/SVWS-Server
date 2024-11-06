@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
 
 import { BenutzerKompetenz, DeveloperNotificationException, GostHalbjahr, ServerMode } from "@core";
 
@@ -28,7 +28,7 @@ export class RouteGostFachwahlenHalbjahr extends RouteNode<any, RouteGost> {
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
 			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
 			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN
-		], "gost.fachwahlen.halbjahr", "halbjahr/:idhalbjahr(\\d+)?", SGostFachwahlenHalbjahr);
+		], "gost.fachwahlen.halbjahr", "halbjahr/:idHalbjahr(\\d+)?", SGostFachwahlenHalbjahr);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Fachwahlen - Halbjahresbezogen";
@@ -39,30 +39,31 @@ export class RouteGostFachwahlenHalbjahr extends RouteNode<any, RouteGost> {
 
 	public checkHidden(params?: RouteParams) {
 		try {
-			const { abiturjahr } = params ? RouteNode.getIntParams(params, ["abiturjahr"]) : { abiturjahr: null };
+			const { abiturjahr } = params ? RouteNode.getIntParams(params, [ "abiturjahr" ]) : { abiturjahr: null };
 			if ((abiturjahr === null) || (abiturjahr === -1))
 				return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr }};
 			return false;
 		} catch (e) {
-			return routeError.getRoute(e as DeveloperNotificationException);
+			return routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		try {
-			const { idhalbjahr } = RouteNode.getIntParams(to_params, ["idfach", "idhalbjahr"]);
-			const halbjahr = GostHalbjahr.fromID(idhalbjahr ?? null);
+			const { idHalbjahr } = RouteNode.getIntParams(to_params, [ "idHalbjahr" ]);
+			const halbjahr = GostHalbjahr.fromID(idHalbjahr ?? null);
 			if (halbjahr === null)
-				throw new DeveloperNotificationException("Fehler: Das Halbjahr " + idhalbjahr + " ist ungültig");
+				throw new DeveloperNotificationException("Fehler: Das Halbjahr " + idHalbjahr + " ist ungültig");
 			this._halbjahr.value = halbjahr;
 			routeGostFachwahlen.data.auswahl = { bereich: halbjahr.kuerzel };
 		} catch (e) {
-			return routeError.getRoute(e as DeveloperNotificationException);
+			return routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 
-	public getRoute(abiturjahr: number, halbjahr: GostHalbjahr) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr, idhalbjahr: halbjahr.id }};
+	public addRouteParamsFromState() : RouteParamsRawGeneric {
+		const idHalbjahr = this._halbjahr.value.id;
+		return { idHalbjahr };
 	}
 
 	public getProps(to: RouteLocationNormalized): GostFachwahlenHalbjahrProps {

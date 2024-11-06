@@ -1,6 +1,4 @@
-import type { WritableComputedRef } from "vue";
-import { computed } from "vue";
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
 import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
 
@@ -17,7 +15,6 @@ import type { BenutzerAppProps } from "~/components/einstellungen/benutzer/SBenu
 import type { BenutzerAuswahlProps } from "~/components/einstellungen/benutzer/SBenutzerAuswahlProps";
 import { RouteEinstellungenMenuGroup } from "../RouteEinstellungenMenuGroup";
 
-const SEinstellungenAuswahl = () => import("~/components/einstellungen/SEinstellungenAuswahl.vue")
 const SBenutzerAuswahl = () => import("~/components/einstellungen/benutzer/SBenutzerAuswahl.vue");
 const SBenutzerApp = () => import("~/components/einstellungen/benutzer/SBenutzerApp.vue");
 
@@ -30,7 +27,6 @@ export class RouteEinstellungenBenutzer extends RouteNode<RouteDataEinstellungen
 		super.text = "Benutzer";
 		super.menugroup = RouteEinstellungenMenuGroup.BENUTZERVERWALTUNG;
 		super.setView("liste", SBenutzerAuswahl, (route) => this.getAuswahlProps(route));
-		super.setView("submenu", SEinstellungenAuswahl, (route) => routeEinstellungen.getAuswahlProps(route));
 		super.children = [routeEinstellungenBenutzerDaten];
 		super.defaultChild = routeEinstellungenBenutzerDaten;
 	}
@@ -39,7 +35,8 @@ export class RouteEinstellungenBenutzer extends RouteNode<RouteDataEinstellungen
 		if (to_params.id instanceof Array)
 			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const id = !to_params.id ? undefined : parseInt(to_params.id);
-		if (id !== undefined) return routeEinstellungenBenutzer.getRoute(id);
+		if (id !== undefined)
+			return routeEinstellungenBenutzer.getRoute({ id });
 		return true;
 	}
 
@@ -50,17 +47,13 @@ export class RouteEinstellungenBenutzer extends RouteNode<RouteDataEinstellungen
 		await this.data.ladeListe();
 		if (to.name === this.name) {
 			if (this.data.mapBenutzer.size === 0) return;
-			return this.getRoute(this.data.mapBenutzer.values().next().value?.id);
+			return this.getRouteDefaultChild({ id: this.data.mapBenutzer.values().next().value?.id });
 		}
 		// Weiterleitung an das erste Objekt in der Liste, wenn id nicht vorhanden ist.
 		if (id !== undefined && !this.data.mapBenutzer.has(id))
-			return this.getRoute(this.data.mapBenutzer.values().next().value?.id);
+			return this.getRouteDefaultChild({ id: this.data.mapBenutzer.values().next().value?.id });
 		const eintrag = (id !== undefined) ? this.data.mapBenutzer.get(id) : undefined;
 		await this.data.setBenutzer(eintrag);
-	}
-
-	public getRoute(id?: number): RouteLocationRaw {
-		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: id } };
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): BenutzerAuswahlProps {
@@ -81,21 +74,11 @@ export class RouteEinstellungenBenutzer extends RouteNode<RouteDataEinstellungen
 		};
 	}
 
-	public get childRouteSelector(): WritableComputedRef<RouteRecordRaw> {
-		return computed({
-			get: () => this.selectedChildRecord || this.defaultChild!.record,
-			set: (value) => {
-				this.selectedChildRecord = value;
-				void RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.auswahl?.id }, });
-			},
-		});
-	}
-
 	private setTab = async (value: TabData) => {
 		if (value.name === this.data.view.name) return;
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined) throw new DeveloperNotificationException("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.auswahl?.id } });
+		await RouteManager.doRoute(node.getRoute());
 		this.data.setView(node, routeEinstellungen.children);
 	};
 

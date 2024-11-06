@@ -46,4 +46,11 @@ public class ENMLehrer {
 	@Schema(description = "der Zeitstempel der letzten Änderung an dem Password-Hash", example = "2013-11-14 13:12:48.774")
 	public String tsPasswordHash;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ENMLehrer() {
+		// leer
+	}
+
 }

@@ -44,6 +44,9 @@ export class Schild3KatalogEintragFilterFeldListe extends JavaObject {
 	public Zusatzbedingung : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -74,14 +77,14 @@ export class Schild3KatalogEintragFilterFeldListe extends JavaObject {
 
 	public static transpilerToJSON(obj : Schild3KatalogEintragFilterFeldListe) : string {
 		let result = '{';
-		result += '"ID" : ' + ((!obj.ID) ? 'null' : obj.ID.toString()) + ',';
-		result += '"Bezeichnung" : ' + ((!obj.Bezeichnung) ? 'null' : JSON.stringify(obj.Bezeichnung)) + ',';
-		result += '"DBFeld" : ' + ((!obj.DBFeld) ? 'null' : JSON.stringify(obj.DBFeld)) + ',';
-		result += '"Typ" : ' + ((!obj.Typ) ? 'null' : JSON.stringify(obj.Typ)) + ',';
-		result += '"Werte" : ' + ((!obj.Werte) ? 'null' : JSON.stringify(obj.Werte)) + ',';
-		result += '"StdWert" : ' + ((!obj.StdWert) ? 'null' : JSON.stringify(obj.StdWert)) + ',';
-		result += '"Operator" : ' + ((!obj.Operator) ? 'null' : JSON.stringify(obj.Operator)) + ',';
-		result += '"Zusatzbedingung" : ' + ((!obj.Zusatzbedingung) ? 'null' : JSON.stringify(obj.Zusatzbedingung)) + ',';
+		result += '"ID" : ' + ((obj.ID === null) ? 'null' : obj.ID.toString()) + ',';
+		result += '"Bezeichnung" : ' + ((obj.Bezeichnung === null) ? 'null' : JSON.stringify(obj.Bezeichnung)) + ',';
+		result += '"DBFeld" : ' + ((obj.DBFeld === null) ? 'null' : JSON.stringify(obj.DBFeld)) + ',';
+		result += '"Typ" : ' + ((obj.Typ === null) ? 'null' : JSON.stringify(obj.Typ)) + ',';
+		result += '"Werte" : ' + ((obj.Werte === null) ? 'null' : JSON.stringify(obj.Werte)) + ',';
+		result += '"StdWert" : ' + ((obj.StdWert === null) ? 'null' : JSON.stringify(obj.StdWert)) + ',';
+		result += '"Operator" : ' + ((obj.Operator === null) ? 'null' : JSON.stringify(obj.Operator)) + ',';
+		result += '"Zusatzbedingung" : ' + ((obj.Zusatzbedingung === null) ? 'null' : JSON.stringify(obj.Zusatzbedingung)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -90,28 +93,28 @@ export class Schild3KatalogEintragFilterFeldListe extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Schild3KatalogEintragFilterFeldListe>) : string {
 		let result = '{';
 		if (obj.ID !== undefined) {
-			result += '"ID" : ' + ((!obj.ID) ? 'null' : obj.ID.toString()) + ',';
+			result += '"ID" : ' + ((obj.ID === null) ? 'null' : obj.ID.toString()) + ',';
 		}
 		if (obj.Bezeichnung !== undefined) {
-			result += '"Bezeichnung" : ' + ((!obj.Bezeichnung) ? 'null' : JSON.stringify(obj.Bezeichnung)) + ',';
+			result += '"Bezeichnung" : ' + ((obj.Bezeichnung === null) ? 'null' : JSON.stringify(obj.Bezeichnung)) + ',';
 		}
 		if (obj.DBFeld !== undefined) {
-			result += '"DBFeld" : ' + ((!obj.DBFeld) ? 'null' : JSON.stringify(obj.DBFeld)) + ',';
+			result += '"DBFeld" : ' + ((obj.DBFeld === null) ? 'null' : JSON.stringify(obj.DBFeld)) + ',';
 		}
 		if (obj.Typ !== undefined) {
-			result += '"Typ" : ' + ((!obj.Typ) ? 'null' : JSON.stringify(obj.Typ)) + ',';
+			result += '"Typ" : ' + ((obj.Typ === null) ? 'null' : JSON.stringify(obj.Typ)) + ',';
 		}
 		if (obj.Werte !== undefined) {
-			result += '"Werte" : ' + ((!obj.Werte) ? 'null' : JSON.stringify(obj.Werte)) + ',';
+			result += '"Werte" : ' + ((obj.Werte === null) ? 'null' : JSON.stringify(obj.Werte)) + ',';
 		}
 		if (obj.StdWert !== undefined) {
-			result += '"StdWert" : ' + ((!obj.StdWert) ? 'null' : JSON.stringify(obj.StdWert)) + ',';
+			result += '"StdWert" : ' + ((obj.StdWert === null) ? 'null' : JSON.stringify(obj.StdWert)) + ',';
 		}
 		if (obj.Operator !== undefined) {
-			result += '"Operator" : ' + ((!obj.Operator) ? 'null' : JSON.stringify(obj.Operator)) + ',';
+			result += '"Operator" : ' + ((obj.Operator === null) ? 'null' : JSON.stringify(obj.Operator)) + ',';
 		}
 		if (obj.Zusatzbedingung !== undefined) {
-			result += '"Zusatzbedingung" : ' + ((!obj.Zusatzbedingung) ? 'null' : JSON.stringify(obj.Zusatzbedingung)) + ',';
+			result += '"Zusatzbedingung" : ' + ((obj.Zusatzbedingung === null) ? 'null' : JSON.stringify(obj.Zusatzbedingung)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

@@ -1554,7 +1554,7 @@ export class Fach extends JavaEnum<Fach> implements CoreType<FachKatalogEintrag,
 		}
 		if (mapFremdsprachen.isEmpty()) {
 			for (const f of Fach.values()) {
-				const fke : FachKatalogEintrag | null = f.daten(schuljahr!);
+				const fke : FachKatalogEintrag | null = f.daten(schuljahr);
 				if (fke !== null && fke.istFremdsprache && JavaObject.equalsTranspiler(fke.schluessel, (fke.kuerzel)))
 					mapFremdsprachen.put(fke.kuerzel, f);
 			}

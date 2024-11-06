@@ -19,7 +19,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class KAOAMerkmalKatalogEintrag extends CoreTypeData {
 
 	/** Die Kategorie, welcher das Merkmal zugeordnet ist. */
-	@Schema(description = "die Kategorie, welcher das Merkmal zugeordnet ist", example = "Formen der Orientierung und Beratung")
+	@Schema(description = "die Kategorie, welcher das Merkmal zugeordnet ist", example = "SBO_2")
 	public @NotNull String kategorie = "";
 
 	/** Die Optionsart des Merkmals. */
@@ -29,5 +29,12 @@ public class KAOAMerkmalKatalogEintrag extends CoreTypeData {
 	/** Die Anlagen des Berufskollegs bei denen der Eintrag gemacht werden darf */
 	@Schema(description = "die Anlagen des Berufskollegs bei denen der Eintrag gemacht werden darf")
 	public @NotNull List<String> bkAnlagen = new ArrayList<>();
+
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public KAOAMerkmalKatalogEintrag() {
+		// leer
+	}
 
 }

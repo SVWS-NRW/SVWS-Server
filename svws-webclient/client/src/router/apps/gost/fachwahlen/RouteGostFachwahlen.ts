@@ -64,7 +64,7 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostFachwahlen, Rout
 				return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr }};
 			return false;
 		} catch(e) {
-			return routeError.getRoute(e as DeveloperNotificationException);
+			return routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 
@@ -77,9 +77,9 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostFachwahlen, Rout
 			}
 			await this.data.setEintrag(abiturjahr);
 			if (to.name === this.name)
-				return this.defaultChild!.getRoute(abiturjahr);
+				return this.getRouteDefaultChild();
 		} catch (e) {
-			return routeError.getRoute(e as DeveloperNotificationException);
+			return routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 
@@ -88,11 +88,7 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostFachwahlen, Rout
 	}
 
 	gotoLaufbahnplanung = async (idSchueler: number) => {
-		await RouteManager.doRoute(routeSchuelerLaufbahnplanung.getRoute(idSchueler));
-	}
-
-	public getRoute(abiturjahr: number) : RouteLocationRaw {
-		return { name: this.name, params: { abiturjahr }};
+		await RouteManager.doRoute(routeSchuelerLaufbahnplanung.getRoute({ id: idSchueler }));
 	}
 
 	public getProps(to: RouteLocationNormalized): GostFachwahlenProps {

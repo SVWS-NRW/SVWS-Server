@@ -34,6 +34,9 @@ export class MigrateBody extends JavaObject {
 	public schemaUserPassword : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -62,12 +65,12 @@ export class MigrateBody extends JavaObject {
 
 	public static transpilerToJSON(obj : MigrateBody) : string {
 		let result = '{';
-		result += '"srcUsername" : ' + ((!obj.srcUsername) ? 'null' : JSON.stringify(obj.srcUsername)) + ',';
-		result += '"srcPassword" : ' + ((!obj.srcPassword) ? 'null' : JSON.stringify(obj.srcPassword)) + ',';
-		result += '"srcLocation" : ' + ((!obj.srcLocation) ? 'null' : JSON.stringify(obj.srcLocation)) + ',';
-		result += '"srcSchema" : ' + ((!obj.srcSchema) ? 'null' : JSON.stringify(obj.srcSchema)) + ',';
-		result += '"schemaUsername" : ' + ((!obj.schemaUsername) ? 'null' : JSON.stringify(obj.schemaUsername)) + ',';
-		result += '"schemaUserPassword" : ' + ((!obj.schemaUserPassword) ? 'null' : JSON.stringify(obj.schemaUserPassword)) + ',';
+		result += '"srcUsername" : ' + ((obj.srcUsername === null) ? 'null' : JSON.stringify(obj.srcUsername)) + ',';
+		result += '"srcPassword" : ' + ((obj.srcPassword === null) ? 'null' : JSON.stringify(obj.srcPassword)) + ',';
+		result += '"srcLocation" : ' + ((obj.srcLocation === null) ? 'null' : JSON.stringify(obj.srcLocation)) + ',';
+		result += '"srcSchema" : ' + ((obj.srcSchema === null) ? 'null' : JSON.stringify(obj.srcSchema)) + ',';
+		result += '"schemaUsername" : ' + ((obj.schemaUsername === null) ? 'null' : JSON.stringify(obj.schemaUsername)) + ',';
+		result += '"schemaUserPassword" : ' + ((obj.schemaUserPassword === null) ? 'null' : JSON.stringify(obj.schemaUserPassword)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -76,22 +79,22 @@ export class MigrateBody extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<MigrateBody>) : string {
 		let result = '{';
 		if (obj.srcUsername !== undefined) {
-			result += '"srcUsername" : ' + ((!obj.srcUsername) ? 'null' : JSON.stringify(obj.srcUsername)) + ',';
+			result += '"srcUsername" : ' + ((obj.srcUsername === null) ? 'null' : JSON.stringify(obj.srcUsername)) + ',';
 		}
 		if (obj.srcPassword !== undefined) {
-			result += '"srcPassword" : ' + ((!obj.srcPassword) ? 'null' : JSON.stringify(obj.srcPassword)) + ',';
+			result += '"srcPassword" : ' + ((obj.srcPassword === null) ? 'null' : JSON.stringify(obj.srcPassword)) + ',';
 		}
 		if (obj.srcLocation !== undefined) {
-			result += '"srcLocation" : ' + ((!obj.srcLocation) ? 'null' : JSON.stringify(obj.srcLocation)) + ',';
+			result += '"srcLocation" : ' + ((obj.srcLocation === null) ? 'null' : JSON.stringify(obj.srcLocation)) + ',';
 		}
 		if (obj.srcSchema !== undefined) {
-			result += '"srcSchema" : ' + ((!obj.srcSchema) ? 'null' : JSON.stringify(obj.srcSchema)) + ',';
+			result += '"srcSchema" : ' + ((obj.srcSchema === null) ? 'null' : JSON.stringify(obj.srcSchema)) + ',';
 		}
 		if (obj.schemaUsername !== undefined) {
-			result += '"schemaUsername" : ' + ((!obj.schemaUsername) ? 'null' : JSON.stringify(obj.schemaUsername)) + ',';
+			result += '"schemaUsername" : ' + ((obj.schemaUsername === null) ? 'null' : JSON.stringify(obj.schemaUsername)) + ',';
 		}
 		if (obj.schemaUserPassword !== undefined) {
-			result += '"schemaUserPassword" : ' + ((!obj.schemaUserPassword) ? 'null' : JSON.stringify(obj.schemaUserPassword)) + ',';
+			result += '"schemaUserPassword" : ' + ((obj.schemaUserPassword === null) ? 'null' : JSON.stringify(obj.schemaUserPassword)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

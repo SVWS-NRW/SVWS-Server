@@ -16,4 +16,11 @@ public class KindergartenbesuchKatalogEintrag extends CoreTypeData {
 
 	// keine weiteren Attribute
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public KindergartenbesuchKatalogEintrag() {
+		// leer
+	}
+
 }

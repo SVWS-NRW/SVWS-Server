@@ -78,7 +78,7 @@ public class ReportAddressbookDispatcher extends DavDispatcher {
 				final AddressbookMultiget multiget = XmlUnmarshallingUtil.unmarshal(inputStreamClone1,
 						AddressbookMultiget.class);
 				return this.handleAdressbookMultigetRequest(adressbuch.get(), multiget);
-			} catch (final IOException e) {
+			} catch (@SuppressWarnings("unused") final IOException e) {
 				try (InputStream inputStreamClone2 = new ByteArrayInputStream(inputStreamAsByteArray.toByteArray())) {
 					final SyncCollection syncCollection = XmlUnmarshallingUtil.unmarshal(inputStreamClone2,
 							SyncCollection.class);

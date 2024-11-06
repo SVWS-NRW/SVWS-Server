@@ -72,4 +72,11 @@ public class ENMLeistungBemerkungen {
 	@Schema(description = "Der Zeitstempel mit den letzten Änderungen zu den Förderbemerkungen.", example = "2013-11-14 13:12:48.774")
 	public String tsFoerderbemerkungen;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ENMLeistungBemerkungen() {
+		// leer
+	}
+
 }

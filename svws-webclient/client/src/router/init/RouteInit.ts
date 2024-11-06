@@ -50,29 +50,29 @@ export class RouteInit extends RouteNode<any, any> {
 		if (this.source.value === 'restore')
 			return this.importSQLite(formData);
 		const db = this.db.value;
-		if (!db) return false;
+		if (db === undefined) return false;
 		const schulnummer = parseInt(formData.get('schulnummer')?.toString() ?? '');
 		const data = new DatenbankVerbindungsdaten();
-		data.location = formData.get('location')?.toString() || null;
-		data.schema = formData.get('schema')?.toString() || null;
-		data.username = formData.get('username')?.toString() || null;
-		data.password = formData.get('password')?.toString() || null;
+		data.location = formData.get('location')?.toString() ?? null;
+		data.schema = formData.get('schema')?.toString() ?? null;
+		data.username = formData.get('username')?.toString() ?? null;
+		data.password = formData.get('password')?.toString() ?? null;
 		try {
 			switch (db) {
 				case 'mariadb':
-					if (schulnummer)
+					if (schulnummer > 0)
 						await api.server.migrateMariaDBSchulnummer(data, api.schema, schulnummer);
 					else
 						await api.server.migrateMariaDB(data, api.schema);
 					break;
 				case 'mysql':
-					if (schulnummer)
+					if (schulnummer > 0)
 						await api.server.migrateMySqlSchulnummer(data, api.schema, schulnummer);
 					else
 						await api.server.migrateMySql(data, api.schema);
 					break;
 				case 'mssql':
-					if (schulnummer)
+					if (schulnummer > 0)
 						await api.server.migrateMsSqlServerSchulnummer(data, api.schema, schulnummer);
 					else
 						await api.server.migrateMsSqlServer(data, api.schema);
@@ -96,11 +96,11 @@ export class RouteInit extends RouteNode<any, any> {
 
 	setSource = async (source: 'init'|'restore'|'migrate') => {
 		const db = (source === 'migrate') ? 'mdb' : undefined;
-		await RouteManager.doRoute({name: this.name, params: { source, db } });
+		await RouteManager.doRoute(this.getRoute({ source, db }));
 	}
 
 	setDB = async (db: 'mysql'|'mariadb'|'mssql'|'mdb') => {
-		await RouteManager.doRoute({name: this.name, params: { source: this.source.value, db }});
+		await RouteManager.doRoute(this.getRoute({ source: this.source.value, db }));
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
@@ -118,10 +118,6 @@ export class RouteInit extends RouteNode<any, any> {
 			return { name: this.name, params: { source: to_params.source }};
 		this.source.value = source;
 		this.db.value = db;
-	}
-
-	public getRoute(): RouteLocationRaw {
-		return { name: this.name };
 	}
 
 	public getProps(): InitProps {

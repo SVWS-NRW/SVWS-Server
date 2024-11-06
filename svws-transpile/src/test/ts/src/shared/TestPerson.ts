@@ -1,4 +1,4 @@
-import { JavaObject } from '@transpiled';
+import { JavaObject } from "../../../../main/resources/typescript/java/lang/JavaObject";
 
 export class TestPerson extends JavaObject {
 
@@ -17,8 +17,49 @@ export class TestPerson extends JavaObject {
 	/** Der Vorname der Person. */
 	public vorname : string = "";
 
-	public constructor() {
+	public constructor(id? : number, kuerzel? : string, titel? : string, nachname? : string, vorname?: string) {
 		super();
+		if (id !== undefined)
+			this.id = id;
+		if (kuerzel !== undefined)
+			this.kuerzel = kuerzel;
+		if (titel !== undefined)
+			this.titel = titel;
+		if (nachname !== undefined)
+			this.nachname = nachname;
+		if (vorname !== undefined)
+			this.vorname = vorname;
+	}
+
+	public hashCode() : number {
+		const prime = 31;
+		let result = this.id;
+		result = (prime * result) + JavaObject._hashCode(this.kuerzel);
+		result = (prime * result) + ((this.titel === null) ? 0 : JavaObject._hashCode(this.titel));
+		result = (prime * result) + JavaObject._hashCode(this.nachname);
+		result = (prime * result) + JavaObject._hashCode(this.vorname);
+		return result;
+	}
+
+	public equals(obj : unknown) : boolean {
+		if (obj === null)
+			return false;
+		if (this as unknown === obj as unknown)
+			return true;
+		if (!(((obj instanceof JavaObject) && (obj.isTranspiledInstanceOf('de.svws_nrw.transpiler.test.TestPerson') === true))))
+			return false;
+		const other : TestPerson = (cast_de_svws_nrw_transpiler_test_TestPerson(obj));
+		if (this.id !== other.id)
+			return false;
+		if (this.kuerzel !== other.kuerzel)
+			return false;
+		if (this.titel !== other.titel)
+			return false;
+		if (this.nachname !== other.nachname)
+			return false;
+		if (this.vorname !== other.vorname)
+			return false;
+		return true;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
@@ -48,7 +89,7 @@ export class TestPerson extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
-		result += '"titel" : ' + ((!obj.titel) ? 'null' : JSON.stringify(obj.titel)) + ',';
+		result += '"titel" : ' + ((obj.titel === null) ? 'null' : JSON.stringify(obj.titel)) + ',';
 		result += '"nachname" : ' + JSON.stringify(obj.nachname) + ',';
 		result += '"vorname" : ' + JSON.stringify(obj.vorname) + ',';
 		result = result.slice(0, -1);
@@ -65,7 +106,7 @@ export class TestPerson extends JavaObject {
 			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
 		}
 		if (typeof obj.titel !== "undefined") {
-			result += '"titel" : ' + ((!obj.titel) ? 'null' : JSON.stringify(obj.titel)) + ',';
+			result += '"titel" : ' + ((obj.titel === null) ? 'null' : JSON.stringify(obj.titel)) + ',';
 		}
 		if (typeof obj.nachname !== "undefined") {
 			result += '"nachname" : ' + JSON.stringify(obj.nachname) + ',';
@@ -80,6 +121,6 @@ export class TestPerson extends JavaObject {
 
 }
 
-export function cast_de_svws_nrw_transpiler_test_LTestPerson(obj : unknown) : TestPerson {
+export function cast_de_svws_nrw_transpiler_test_TestPerson(obj : unknown) : TestPerson {
 	return obj as TestPerson;
 }

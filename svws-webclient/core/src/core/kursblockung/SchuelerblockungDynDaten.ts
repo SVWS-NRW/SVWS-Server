@@ -134,7 +134,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 					if (kurs.istGesperrt)
 						continue;
 					if (kurs.istFixiert) {
-						DeveloperNotificationException.ifTrue("Die Fachart/Fachwahl (" + representation! + ") hat mehr als eine Fixierung!", kursWurdeFixiert);
+						DeveloperNotificationException.ifTrue("Die Fachart/Fachwahl (" + representation + ") hat mehr als eine Fixierung!", kursWurdeFixiert);
 						kursWurdeFixiert = true;
 					}
 				}
@@ -325,11 +325,11 @@ export class SchuelerblockungDynDaten extends JavaObject {
 
 	private debug(logger : Logger, pHeader : string, pPrintMatrix : boolean) : void {
 		logger.logLn("");
-		logger.logLn("#################### " + pHeader! + " ####################");
+		logger.logLn("#################### " + pHeader + " ####################");
 		logger.logLn("Bewertung      = " + this._aktuellNichtwahlen + " / " + this._aktuellBewertung);
-		logger.logLn("Fachwahlen     = " + Arrays.toString(this._aktuellFachwahlZuKurs)!);
+		logger.logLn("Fachwahlen     = " + Arrays.toString(this._aktuellFachwahlZuKurs));
 		logger.logLn("BewertungBest  = " + this._aktuellNichtwahlenBest + " / " + this._aktuellBewertungBest);
-		logger.logLn("FachwahlenBest = " + Arrays.toString(this._aktuellFachwahlZuKursBest)!);
+		logger.logLn("FachwahlenBest = " + Arrays.toString(this._aktuellFachwahlZuKursBest));
 		if (!pPrintMatrix)
 			return;
 		const data : Array<Array<number>> = this._aktuellMatrix.getMatrix();

@@ -21,6 +21,9 @@ export class GostBlockungRegel extends JavaObject {
 	public parameter : List<number> = new ArrayList<number>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

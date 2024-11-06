@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
 import type { GostKursplanungUmwahlansichtProps } from "~/components/gost/kursplanung/SGostKursplanungUmwahlansichtProps";
 import type { KursplanungSchuelerAuswahlProps } from "~/components/gost/kursplanung/SGostKursplanungSchuelerAuswahlProps";
 
@@ -46,7 +46,7 @@ export class RouteGostKursplanungSchueler extends RouteNode<any, RouteGostKurspl
 				return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr }};
 			return false;
 		} catch (e) {
-			return routeError.getRoute(e as DeveloperNotificationException);
+			return routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 
@@ -62,7 +62,7 @@ export class RouteGostKursplanungSchueler extends RouteNode<any, RouteGostKurspl
 				return routeGostKursplanung.getRouteBlockung(abiturjahr, halbjahr.id, idBlockung);
 			return true;
 		} catch(e) {
-			return routeError.getRoute(e instanceof Error ? e : new DeveloperNotificationException("Unbekannter Fehler beim Laden der Klausurplanungsdaten."));
+			return routeError.getErrorRoute(e instanceof Error ? e : new DeveloperNotificationException("Unbekannter Fehler beim Laden der Klausurplanungsdaten."));
 		}
 	}
 
@@ -86,7 +86,7 @@ export class RouteGostKursplanungSchueler extends RouteNode<any, RouteGostKurspl
 			if (idSchueler === undefined) {
 				if (routeGostKursplanung.data.datenmanager.schuelerGetAnzahl() > 0) {
 					const schueler = routeGostKursplanung.data.datenmanager.schuelerGetListe().get(0);
-					return this.getRoute(abiturjahr, halbjahr.id, idBlockung, idErgebnis, schueler.id);
+					return this.getRoute({ idschueler: schueler.id });
 				}
 				return;
 			}
@@ -95,33 +95,24 @@ export class RouteGostKursplanungSchueler extends RouteNode<any, RouteGostKurspl
 			// Setze den neu ausgewählten Schüler-Eintrag
 				const schueler = routeGostKursplanung.data.datenmanager.schuelerGetOrNull(idSchueler);
 				if (schueler === null)
-					return this.getRoute(abiturjahr, halbjahr.id, idBlockung, idErgebnis, undefined);
+					return this.getRoute({ idschueler: undefined });
 				await routeGostKursplanung.data.setAuswahlSchueler(schueler);
 			}
 		} catch(e) {
-			return routeError.getRoute(e instanceof Error ? e : new DeveloperNotificationException("Unbekannter Fehler beim Laden der Klausurplanungsdaten."));
+			return routeError.getErrorRoute(e instanceof Error ? e : new DeveloperNotificationException("Unbekannter Fehler beim Laden der Klausurplanungsdaten."));
 		}
 	}
 
-	public getRoute(abiturjahr: number | undefined, halbjahr: number | undefined, idblockung: number | undefined, idergebnis: number | undefined, idschueler: number | undefined) : RouteLocationRaw {
-		try {
-
-			if ((abiturjahr === undefined) || (halbjahr === undefined) || (idblockung === undefined) || (idergebnis === undefined))
-				throw new DeveloperNotificationException("Abiturjahr, Halbjahr und die ID der Blockung und des Ergebnisses müssen für diese Route definiert sein.");
-			if (idschueler === undefined)
-				return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr, halbjahr, idblockung, idergebnis }};
-			return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr, halbjahr, idblockung, idergebnis, idschueler }};
-		} catch(e) {
-			return routeError.getRoute(e instanceof Error ? e : new DeveloperNotificationException("Unbekannter Fehler beim Laden der Klausurplanungsdaten."));
-		}
+	public addRouteParamsFromState() : RouteParamsRawGeneric {
+		return { idschueler: routeGostKursplanung.data.hatSchueler ? routeGostKursplanung.data.auswahlSchueler.id : undefined };
 	}
 
 	gotoSchuelerIndividualdaten = async (idSchueler: number) => {
-		await RouteManager.doRoute(routeSchuelerIndividualdaten.getRoute(idSchueler));
+		await RouteManager.doRoute(routeSchuelerIndividualdaten.getRoute({ id: idSchueler }));
 	}
 
 	gotoLaufbahnplanung = async (idSchueler: number) => {
-		await RouteManager.doRoute(routeSchuelerLaufbahnplanung.getRoute(idSchueler));
+		await RouteManager.doRoute(routeSchuelerLaufbahnplanung.getRoute({ id: idSchueler }));
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): KursplanungSchuelerAuswahlProps {

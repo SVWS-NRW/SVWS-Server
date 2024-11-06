@@ -16,6 +16,13 @@ import de.svws_nrw.data.benutzer.BenutzerApiPrincipal;
  */
 public final class SVWSIdentityService implements IdentityService {
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SVWSIdentityService() {
+		// leer
+	}
+
 	@Override
 	public Association associate(final UserIdentity user, final RunAsToken runAsToken) {
 		return null;

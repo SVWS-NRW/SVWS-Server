@@ -58,4 +58,11 @@ public class Kurs42DataKurse {
 	/** Gibt ggf. an, in welcher Schiene der Kurs fixiert ist */
 	public String FixiertInSchiene;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Kurs42DataKurse() {
+		// leer
+	}
+
 }

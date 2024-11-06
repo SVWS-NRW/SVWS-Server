@@ -50,43 +50,65 @@ public class CardAddressData {
 	@XmlAttribute(name = "version")
 	private String version;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public CardAddressData() {
+		// leer
+	}
+
+	/**
+	 * Gibt den Inhaltstyp der CardAddressData zurück.
+	 *
+	 * @return der Inhaltstyp als String.
+	 */
 	public String getContentType() {
 		return contentType;
 	}
 
-	public void setContentType(String contentType) {
+	/**
+	 * Setzt den Inhaltstyp der CardAddressData.
+	 *
+	 * @param contentType   der zu setzende Inhaltstyp.
+	 */
+	public void setContentType(final String contentType) {
 		this.contentType = contentType;
 	}
 
+	/**
+	 * Gibt die Version der CardAddressData zurück.
+	 *
+	 * @return die Version als String.
+	 */
 	public String getVersion() {
 		return version;
 	}
 
-	public void setVersion(String version) {
+	/**
+	 * Setzt die Version der CardAddressData.
+	 *
+	 * @param version   die zu setzende Version.
+	 */
+	public void setVersion(final String version) {
 		this.version = version;
 	}
 
 	/**
-	 * Gets the value of the content property.
+	 * Gibt den Inhalt der CardAddressData zurück.
 	 *
-	 * <p>
-	 * This accessor method returns a reference to the live list, not a snapshot.
-	 * Therefore any modification you make to the returned list will be present
-	 * inside the JAXB object. This is why there is not a <CODE>set</CODE> method
-	 * for the content property.
+	 * <p>Diese Methode gibt eine Referenz auf die aktuelle Liste zurück, nicht eine Kopie.
+	 * Daher werden alle Änderungen an der zurückgegebenen Liste auch im JAXB-Objekt reflektiert.
+	 * Aus diesem Grund gibt es keine <CODE>set</CODE>-Methode für die content-Eigenschaft.</p>
 	 *
-	 * <p>
-	 * For example, to add a new item, do as follows:
+	 * <p>Um ein neues Element hinzuzufügen, verwenden Sie folgendes Beispiel:</p>
 	 *
 	 * <pre>
-	 * getContent().add(newItem);
+	 * getContent().add(neuesElement);
 	 * </pre>
 	 *
+	 * <p>Die Liste kann Objekte vom Typ {@link String} enthalten.</p>
 	 *
-	 * <p>
-	 * Objects of the following type(s) are allowed in the list {@link String }
-	 *
-	 *
+	 * @return eine Liste von Strings, die den Inhalt repräsentieren. Wenn die Liste noch nicht existiert, wird eine neue erstellt.
 	 */
 	public List<String> getContent() {
 		if (content == null) {

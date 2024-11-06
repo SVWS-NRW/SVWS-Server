@@ -26,6 +26,8 @@ public class StundenplanblockungManagerLehrkraft {
 	final @NotNull List<StundenplanblockungManagerLerngruppe> _menge_gr;
 
 	/**
+	 * Konstrukur zur Erstellung eines {@link StundenplanblockungManagerLehrkraft}-Objektes.
+	 *
 	 * @param pLehrkraftID  Die Datenbank-ID der Lehrkraft.
 	 * @param pKuerzel      Das Kürzel der Lehrkraft.
 	 */

@@ -48,4 +48,11 @@ public class Schild3KatalogEintragExportCSV {
 	@Schema(description = "Die unterstützen Datenbank-Formate")
 	public String DBFormat;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Schild3KatalogEintragExportCSV() {
+		// leer
+	}
+
 }

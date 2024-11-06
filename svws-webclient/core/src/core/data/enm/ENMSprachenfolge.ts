@@ -54,6 +54,9 @@ export class ENMSprachenfolge extends JavaObject {
 	public belegungSekI : number | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -94,16 +97,16 @@ export class ENMSprachenfolge extends JavaObject {
 
 	public static transpilerToJSON(obj : ENMSprachenfolge) : string {
 		let result = '{';
-		result += '"sprache" : ' + ((!obj.sprache) ? 'null' : JSON.stringify(obj.sprache)) + ',';
+		result += '"sprache" : ' + ((obj.sprache === null) ? 'null' : JSON.stringify(obj.sprache)) + ',';
 		result += '"fachID" : ' + obj.fachID.toString() + ',';
-		result += '"fachKuerzel" : ' + ((!obj.fachKuerzel) ? 'null' : JSON.stringify(obj.fachKuerzel)) + ',';
+		result += '"fachKuerzel" : ' + ((obj.fachKuerzel === null) ? 'null' : JSON.stringify(obj.fachKuerzel)) + ',';
 		result += '"reihenfolge" : ' + obj.reihenfolge.toString() + ',';
 		result += '"belegungVonJahrgang" : ' + obj.belegungVonJahrgang.toString() + ',';
 		result += '"belegungVonAbschnitt" : ' + obj.belegungVonAbschnitt.toString() + ',';
-		result += '"belegungBisJahrgang" : ' + ((!obj.belegungBisJahrgang) ? 'null' : obj.belegungBisJahrgang.toString()) + ',';
-		result += '"belegungBisAbschnitt" : ' + ((!obj.belegungBisAbschnitt) ? 'null' : obj.belegungBisAbschnitt.toString()) + ',';
-		result += '"referenzniveau" : ' + ((!obj.referenzniveau) ? 'null' : JSON.stringify(obj.referenzniveau)) + ',';
-		result += '"belegungSekI" : ' + ((!obj.belegungSekI) ? 'null' : obj.belegungSekI.toString()) + ',';
+		result += '"belegungBisJahrgang" : ' + ((obj.belegungBisJahrgang === null) ? 'null' : obj.belegungBisJahrgang.toString()) + ',';
+		result += '"belegungBisAbschnitt" : ' + ((obj.belegungBisAbschnitt === null) ? 'null' : obj.belegungBisAbschnitt.toString()) + ',';
+		result += '"referenzniveau" : ' + ((obj.referenzniveau === null) ? 'null' : JSON.stringify(obj.referenzniveau)) + ',';
+		result += '"belegungSekI" : ' + ((obj.belegungSekI === null) ? 'null' : obj.belegungSekI.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -112,13 +115,13 @@ export class ENMSprachenfolge extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<ENMSprachenfolge>) : string {
 		let result = '{';
 		if (obj.sprache !== undefined) {
-			result += '"sprache" : ' + ((!obj.sprache) ? 'null' : JSON.stringify(obj.sprache)) + ',';
+			result += '"sprache" : ' + ((obj.sprache === null) ? 'null' : JSON.stringify(obj.sprache)) + ',';
 		}
 		if (obj.fachID !== undefined) {
 			result += '"fachID" : ' + obj.fachID.toString() + ',';
 		}
 		if (obj.fachKuerzel !== undefined) {
-			result += '"fachKuerzel" : ' + ((!obj.fachKuerzel) ? 'null' : JSON.stringify(obj.fachKuerzel)) + ',';
+			result += '"fachKuerzel" : ' + ((obj.fachKuerzel === null) ? 'null' : JSON.stringify(obj.fachKuerzel)) + ',';
 		}
 		if (obj.reihenfolge !== undefined) {
 			result += '"reihenfolge" : ' + obj.reihenfolge.toString() + ',';
@@ -130,16 +133,16 @@ export class ENMSprachenfolge extends JavaObject {
 			result += '"belegungVonAbschnitt" : ' + obj.belegungVonAbschnitt.toString() + ',';
 		}
 		if (obj.belegungBisJahrgang !== undefined) {
-			result += '"belegungBisJahrgang" : ' + ((!obj.belegungBisJahrgang) ? 'null' : obj.belegungBisJahrgang.toString()) + ',';
+			result += '"belegungBisJahrgang" : ' + ((obj.belegungBisJahrgang === null) ? 'null' : obj.belegungBisJahrgang.toString()) + ',';
 		}
 		if (obj.belegungBisAbschnitt !== undefined) {
-			result += '"belegungBisAbschnitt" : ' + ((!obj.belegungBisAbschnitt) ? 'null' : obj.belegungBisAbschnitt.toString()) + ',';
+			result += '"belegungBisAbschnitt" : ' + ((obj.belegungBisAbschnitt === null) ? 'null' : obj.belegungBisAbschnitt.toString()) + ',';
 		}
 		if (obj.referenzniveau !== undefined) {
-			result += '"referenzniveau" : ' + ((!obj.referenzniveau) ? 'null' : JSON.stringify(obj.referenzniveau)) + ',';
+			result += '"referenzniveau" : ' + ((obj.referenzniveau === null) ? 'null' : JSON.stringify(obj.referenzniveau)) + ',';
 		}
 		if (obj.belegungSekI !== undefined) {
-			result += '"belegungSekI" : ' + ((!obj.belegungSekI) ? 'null' : obj.belegungSekI.toString()) + ',';
+			result += '"belegungSekI" : ' + ((obj.belegungSekI === null) ? 'null' : obj.belegungSekI.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

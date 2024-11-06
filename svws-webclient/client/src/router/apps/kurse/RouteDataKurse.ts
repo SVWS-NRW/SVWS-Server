@@ -1,4 +1,5 @@
-import { KursListeManager, type KursDaten, type Schueler, DeveloperNotificationException} from "@core";
+import type { KursDaten, List, Schueler } from "@core";
+import { KursListeManager, DeveloperNotificationException, ArrayList } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -7,6 +8,10 @@ import { RouteManager } from "~/router/RouteManager";
 import { routeKurse } from "~/router/apps/kurse/RouteKurse";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeKursDaten } from "~/router/apps/kurse/RouteKursDaten";
+import { ViewType } from "@ui";
+import { routeKurseGruppenprozesse } from "./RouteKurseGruppenprozesse";
+import { RoutingStatus } from "~/router/RoutingStatus";
+import { routeKurseNeu } from "./RouteKurseNeu";
 
 
 interface RouteStateKurse extends RouteStateInterface {
@@ -26,6 +31,10 @@ export class RouteDataKurse extends RouteData<RouteStateKurse> {
 		super(defaultState);
 	}
 
+	get hatKursListeManagerManager(): boolean {
+		return (this._state.value.kursListeManager !== undefined);
+	}
+
 	get kursListeManager(): KursListeManager {
 		if (this._state.value.kursListeManager === undefined)
 			throw new DeveloperNotificationException("Zugriff auf den Kurs-Liste-Manager, bevor dieser initialisiert wurde.");
@@ -36,8 +45,7 @@ export class RouteDataKurse extends RouteData<RouteStateKurse> {
 		const schuljahresabschnitt = api.mapAbschnitte.value.get(idSchuljahresabschnitt);
 		if (schuljahresabschnitt === undefined)
 			return null;
-		// Bestimme die Kursdaten vorher, um ggf. eine neu ID für das Routing zurückzugeben
-		const hatteAuswahl = (this._state.value.kursListeManager !== undefined) && (this.kursListeManager.auswahlID() !== null) ? this.kursListeManager.auswahl() : null;
+
 		// Lade die Kataloge und erstelle den Manager
 		const listKurse = await api.server.getKurseFuerAbschnitt(api.schema, idSchuljahresabschnitt);
 		const listSchueler = await api.server.getSchuelerFuerAbschnitt(api.schema, idSchuljahresabschnitt);
@@ -46,21 +54,28 @@ export class RouteDataKurse extends RouteData<RouteStateKurse> {
 		const listFaecher = await api.server.getFaecher(api.schema);
 		const kursListeManager = new KursListeManager(idSchuljahresabschnitt, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,
 			api.schulform, listKurse, listSchueler, listJahrgaenge, listLehrer, listFaecher);
-		kursListeManager.setFilterAuswahlPermitted(false);
-		// Wählen nun einen Kurs aus, dabei wird sich ggf. an der alten Auswahl orientiert
-		let result : number | null = null;
-		if (hatteAuswahl && (!hatteAuswahl.idJahrgaenge.isEmpty())) {
-			let auswahl = kursListeManager.getByKuerzelAndJahrgangOrNull(hatteAuswahl.kuerzel, hatteAuswahl.idJahrgaenge.get(0));
-			if ((auswahl === null) && (kursListeManager.liste.size() > 0))
-				auswahl = kursListeManager.liste.list().get(0);
-			if (auswahl !== null) {
-				kursListeManager.setDaten(auswahl);
-				result = auswahl.id;
-			}
+
+		if (this._state.value.idSchuljahresabschnitt === -1) {
+			// Initiales Setzen der Filter
+			kursListeManager.setFilterAuswahlPermitted(true);
+		} else {
+			// Filter aus vorherigem Manager übernehmen
+			// kursListeManager.useFilter(this._state.value.kursListeManager);
 		}
+
+		// Versuche den ausgewählten Kurs von vorher zu laden
+		const vorherigeAuswahl = (this._state.value.kursListeManager !== undefined) && this.kursListeManager.hasDaten() ? this.kursListeManager.auswahl() : null;
+		if (vorherigeAuswahl !== null) {
+			const auswahl = kursListeManager.getByKuerzelAndJahrgangOrNull(vorherigeAuswahl.kuerzel, vorherigeAuswahl.idJahrgaenge.get(0));
+			kursListeManager.setDaten(auswahl ?? kursListeManager.liste.list().get(0));
+		}
+
+		// stellt die ursprünglich gefilterte Liste wieder her
+		kursListeManager.filtered();
+
 		// Aktualisiere den State
-		this.setPatchedDefaultState({ idSchuljahresabschnitt, kursListeManager });
-		return result;
+		this.setPatchedDefaultState({ idSchuljahresabschnitt, kursListeManager, activeViewType: this.activeViewType });
+		return this.kursListeManager.auswahlID();
 	}
 
 	public async setSchuljahresabschnitt(idSchuljahresabschnitt : number) : Promise<number | null> {
@@ -77,7 +92,6 @@ export class RouteDataKurse extends RouteData<RouteStateKurse> {
 	get idSchuljahresabschnitt(): number {
 		return this._state.value.idSchuljahresabschnitt;
 	}
-
 
 	public async setEintrag(kurs: KursDaten | null) {
 		if ((kurs === null) && (!this.kursListeManager.hasDaten()))
@@ -108,11 +122,11 @@ export class RouteDataKurse extends RouteData<RouteStateKurse> {
 	}
 
 	gotoEintrag = async (eintrag: KursDaten) => {
-		await RouteManager.doRoute(routeKurse.getRoute(eintrag.id));
+		await RouteManager.doRoute(routeKurse.getRoute({ id: eintrag.id }));
 	}
 
 	gotoSchueler = async (eintrag: Schueler) => {
-		await RouteManager.doRoute(routeSchueler.getRoute(eintrag.id));
+		await RouteManager.doRoute(routeSchueler.getRoute({ id: eintrag.id }));
 	}
 
 	setFilter = async () => {
@@ -125,6 +139,88 @@ export class RouteDataKurse extends RouteData<RouteStateKurse> {
 		}
 		const kursListeManager = this.kursListeManager;
 		this.setPatchedState({ kursListeManager });
+	}
+
+	add = async (partialKurs: Partial<KursDaten>): Promise<void> => {
+		// TODO: Implementieren
+	}
+
+	private setDefaults() {
+		this.activeViewType = ViewType.DEFAULT;
+		this._state.value.view = (this._state.value.view?.name === this.view.name) ? this.view : routeKursDaten;
+	}
+
+	gotoDefaultView = async (eintragId?: number | null) => {
+		if ((eintragId !== null) && (eintragId !== undefined) && this.kursListeManager.liste.has(eintragId)) {
+			const route = (this.view === routeKursDaten)
+				? this.view.getRoute({ id: eintragId }) : routeKursDaten.getRoute({ id: eintragId });
+			const result = await RouteManager.doRoute(route);
+			if (result === RoutingStatus.STOPPED_ROUTING_IS_ACTIVE)
+				await this.setEintrag(this.kursListeManager.liste.get(eintragId));
+
+			if ((result === RoutingStatus.SUCCESS) || (result === RoutingStatus.STOPPED_ROUTING_IS_ACTIVE))
+				this.setDefaults();
+
+			this.commit();
+			return;
+		}
+
+		// Default Eintrag selektieren, wenn keine ID übergeben wurde
+		const filtered = this.kursListeManager.filtered();
+		if (!filtered.isEmpty()) {
+			const kurs = this.kursListeManager.filtered().getFirst();
+			const route = routeKursDaten.getRoute({ id: kurs.id });
+			const result = await RouteManager.doRoute(route);
+			if ((result === RoutingStatus.SUCCESS) || (result === RoutingStatus.STOPPED_ROUTING_IS_ACTIVE))
+				this.setDefaults();
+
+			await this.setEintrag(kurs);
+			this.commit();
+		}
+	}
+
+	gotoGruppenprozessView = async (navigate: boolean) => {
+		if (this.activeViewType === ViewType.GRUPPENPROZESSE || (this._state.value.view === routeKurseGruppenprozesse)) {
+			this.commit();
+			return;
+		}
+
+		this.activeViewType = ViewType.GRUPPENPROZESSE;
+
+		if (navigate)
+			await RouteManager.doRoute(routeKurseGruppenprozesse.getRoute());
+
+		this._state.value.view = routeKurseGruppenprozesse;
+		this.kursListeManager.setDaten(null);
+		this.commit();
+	}
+
+	gotoHinzufuegenView = async (navigate: boolean) => {
+		if (this.activeViewType === ViewType.HINZUFUEGEN || (this._state.value.view === routeKurseNeu)) {
+			this.commit();
+			return;
+		}
+
+		this.activeViewType = ViewType.HINZUFUEGEN;
+
+		if (navigate) {
+			const result = await RouteManager.doRoute(routeKurseNeu.getRoute());
+			if (result === RoutingStatus.SUCCESS)
+				this.kursListeManager.liste.auswahlClear();
+		}
+
+		this._state.value.view = routeKurseNeu;
+		this.kursListeManager.setDaten(null);
+		this.commit();
+	}
+
+	deleteKurseCheck = (): [boolean, List<string>] => {
+		const errorLog: List<string> = new ArrayList<string>();
+		return [false, errorLog];
+	}
+
+	deleteKurse = async (): Promise<[boolean, List<string>]> => {
+		return [false, new ArrayList<string>()];
 	}
 
 	/* TODO

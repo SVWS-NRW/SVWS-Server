@@ -54,6 +54,13 @@ import jakarta.ws.rs.core.Response;
 public class APISchild {
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public APISchild() {
+		// leer
+	}
+
+	/**
 	 * Die OpenAPI-Methode für die Abfrage des Schild3-Kataloges AbiturInfos.
 	 *
 	 * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll

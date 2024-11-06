@@ -14,6 +14,9 @@ export class SchulformSchulgliederung extends JavaObject {
 	public gliederung : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -41,7 +44,7 @@ export class SchulformSchulgliederung extends JavaObject {
 	public static transpilerToJSON(obj : SchulformSchulgliederung) : string {
 		let result = '{';
 		result += '"schulform" : ' + JSON.stringify(obj.schulform) + ',';
-		result += '"gliederung" : ' + ((!obj.gliederung) ? 'null' : JSON.stringify(obj.gliederung)) + ',';
+		result += '"gliederung" : ' + ((obj.gliederung === null) ? 'null' : JSON.stringify(obj.gliederung)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -53,7 +56,7 @@ export class SchulformSchulgliederung extends JavaObject {
 			result += '"schulform" : ' + JSON.stringify(obj.schulform) + ',';
 		}
 		if (obj.gliederung !== undefined) {
-			result += '"gliederung" : ' + ((!obj.gliederung) ? 'null' : JSON.stringify(obj.gliederung)) + ',';
+			result += '"gliederung" : ' + ((obj.gliederung === null) ? 'null' : JSON.stringify(obj.gliederung)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

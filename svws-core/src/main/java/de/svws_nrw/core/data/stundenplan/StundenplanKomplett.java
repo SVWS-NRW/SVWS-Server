@@ -37,4 +37,11 @@ public class StundenplanKomplett {
 	@Schema(description = "die Zusatzinformationen zu der Unterrichtsverteilung")
 	public @NotNull StundenplanUnterrichtsverteilung unterrichtsverteilung = new StundenplanUnterrichtsverteilung();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public StundenplanKomplett() {
+		// leer
+	}
+
 }

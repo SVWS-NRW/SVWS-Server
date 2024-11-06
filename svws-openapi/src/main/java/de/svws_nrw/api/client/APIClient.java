@@ -23,6 +23,12 @@ import jakarta.ws.rs.core.Response.Status;
 @Tag(name = "SVWSClient")
 public class APIClient {
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public APIClient() {
+		// leer
+	}
 
 	/**
 	 * Greift auf die einzelne Dateien aus dem Resource-Verzeichnis des SVWS-Client zurück. Diese

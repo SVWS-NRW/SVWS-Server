@@ -19,6 +19,9 @@ export class StundenplanJahrgang extends JavaObject {
 	public bezeichnung : string = "";
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

@@ -21,6 +21,13 @@ public class StundenplanblockungManagerLerngruppeMenge {
 	private final @NotNull Map<Long, StundenplanblockungManagerLerngruppe> _map = new HashMap<>();
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public StundenplanblockungManagerLerngruppeMenge() {
+		// leer
+	}
+
+	/**
 	 * Liefert die zuvor erzeugte Lerngruppe. <br>
 	 * Wirft eine NullPointerException, falls die Lerngruppe-ID bereits existiert.
 	 *

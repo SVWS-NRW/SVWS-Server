@@ -12,12 +12,22 @@ public class CardDavUriParameter {
 
 	/** Datenbankschema, gegen das Anfragen an das API ausgeführt werden */
 	private String schema;
+
 	/** Id der Ressource Benutzer */
 	private String benutzerId;
+
 	/** Id der Ressource Adressbuch */
 	private String adressbuchId;
+
 	/** Id der Ressource AdressbuchEintrag */
 	private String adressbuchEintragId;
+
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public CardDavUriParameter() {
+		// leer
+	}
 
 	/**
 	 * getter für den Parameter 'schema', das Datenbankschema, gegen das Anfragen an

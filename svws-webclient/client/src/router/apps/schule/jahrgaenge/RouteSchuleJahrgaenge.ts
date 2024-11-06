@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
 
 import type { JahrgangsDaten } from "@core";
 import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
@@ -8,7 +8,6 @@ import { RouteNode } from "~/router/RouteNode";
 
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeApp } from "~/router/apps/RouteApp";
-import { routeSchule } from "~/router/apps/schule/RouteSchule";
 import { routeSchuleJahrgaengeDaten } from "~/router/apps/schule/jahrgaenge/RouteSchuleJahrgaengeDaten";
 
 import type { TabData } from "@ui";
@@ -18,7 +17,6 @@ import { RouteDataSchuleJahrgaenge } from "./RouteDataSchuleJahrgaenge";
 import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
 import { routeError } from "~/router/error/RouteError";
 
-const SSchuleAuswahl = () => import("~/components/schule/SSchuleAuswahl.vue")
 const SJahrgaengeAuswahl = () => import("~/components/schule/jahrgaenge/SJahrgaengeAuswahl.vue")
 const SJahrgaengeApp = () => import("~/components/schule/jahrgaenge/SJahrgaengeApp.vue")
 
@@ -30,7 +28,6 @@ export class RouteSchuleJahrgaenge extends RouteNode<RouteDataSchuleJahrgaenge, 
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Jahrgänge";
 		super.menugroup = RouteSchuleMenuGroup.SCHULBEZOGEN;
-		super.setView("submenu", SSchuleAuswahl, (route) => routeSchule.getAuswahlProps(route));
 		super.setView("liste", SJahrgaengeAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 			routeSchuleJahrgaengeDaten,
@@ -47,22 +44,24 @@ export class RouteSchuleJahrgaenge extends RouteNode<RouteDataSchuleJahrgaenge, 
 				return;
 			let eintrag: JahrgangsDaten | undefined;
 			if ((id === undefined) && (this.data.auswahl !== undefined))
-				return this.getRoute(this.data.auswahl.id);
+				return this.getRouteDefaultChild({ id: this.data.auswahl.id });
 			if (id === undefined) {
 				eintrag = this.data.mapKatalogeintraege.get(0);
-				return this.getRoute(eintrag?.id);
+				return this.getRouteDefaultChild({ id: eintrag?.id });
 			}
 			eintrag = this.data.mapKatalogeintraege.get(id);
 			if (eintrag === undefined)
-				return this.getRoute(undefined);
+				return;
 			await this.data.setEintrag(eintrag);
+			if (to.name === this.name)
+				return this.getRouteDefaultChild();
 		} catch (error) {
-			return routeError.getRoute(error as DeveloperNotificationException);
+			return routeError.getErrorRoute(error as DeveloperNotificationException);
 		}
 	}
 
-	public getRoute(id: number | undefined) : RouteLocationRaw {
-		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
+	public addRouteParamsFromState() : RouteParamsRawGeneric {
+		return { id : this.data.auswahl?.id ?? undefined };
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): JahrgaengeAuswahlProps {
@@ -87,7 +86,7 @@ export class RouteSchuleJahrgaenge extends RouteNode<RouteDataSchuleJahrgaenge, 
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new DeveloperNotificationException("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.auswahl?.id } });
+		await RouteManager.doRoute(node.getRoute());
 		this.data.setView(node, this.children);
 	}
 }

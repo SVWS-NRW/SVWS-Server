@@ -24,6 +24,9 @@ export class SchulgliederungGueltigerAbschluss extends JavaObject {
 	public jahrgangBis : string = "JAHRGANG_13";
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

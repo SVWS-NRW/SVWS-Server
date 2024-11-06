@@ -1,12 +1,18 @@
 package de.svws_nrw.asd.types.kaoa;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import de.svws_nrw.asd.data.kaoa.KAOAMerkmalKatalogEintrag;
 import de.svws_nrw.asd.data.kaoa.KAOAZusatzmerkmalKatalogEintrag;
 import de.svws_nrw.asd.types.CoreType;
 import de.svws_nrw.asd.utils.CoreTypeDataManager;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Der Core-Type für die KAOA-Zusatzmerkmal.
+ * Der Core-Type für die KAOA-Zusatzmerkmale.
  */
 public enum KAOAZusatzmerkmal implements CoreType<KAOAZusatzmerkmalKatalogEintrag, KAOAZusatzmerkmal> {
 
@@ -361,6 +367,11 @@ public enum KAOAZusatzmerkmal implements CoreType<KAOAZusatzmerkmalKatalogEintra
 	/** KAoA-Zusatzmerkmal: Anschlüsse mit der allgemeinen Hochschulreife */
 	SBO_10_7_13;
 
+	/* ----- Die nachfolgenden Attribute werden nicht initialisiert und werden als Cache verwendet, um z.B. den Schuljahres-bezogenen Zugriff zu cachen ----- */
+
+	/** (Integer, Long) -> Schuljahr, idMerkmal */
+	private static final @NotNull Map<Integer, Map<Long, List<KAOAZusatzmerkmalKatalogEintrag>>> _mapEintraegeBySchuljahrAndMerkmal = new HashMap<>();
+
 	/**
 	 * Initialisiert den Core-Type mit dem angegebenen Manager.
 	 *
@@ -368,6 +379,7 @@ public enum KAOAZusatzmerkmal implements CoreType<KAOAZusatzmerkmalKatalogEintra
 	 */
 	public static void init(final @NotNull CoreTypeDataManager<KAOAZusatzmerkmalKatalogEintrag, KAOAZusatzmerkmal> manager) {
 		CoreTypeDataManager.putManager(KAOAZusatzmerkmal.class, manager);
+		_mapEintraegeBySchuljahrAndMerkmal.clear();
 	}
 
 
@@ -378,6 +390,53 @@ public enum KAOAZusatzmerkmal implements CoreType<KAOAZusatzmerkmalKatalogEintra
 	 */
 	public static @NotNull CoreTypeDataManager<KAOAZusatzmerkmalKatalogEintrag, KAOAZusatzmerkmal> data() {
 		return CoreTypeDataManager.getManager(KAOAZusatzmerkmal.class);
+	}
+
+	/**
+	 * Liefert alle zulässigen KAoA-Zusatzmerkmal-Historien-Einträge für das angegebene Merkmal in dem angegebenen Schuljahr zurück.
+	 * Dabei wird intern für das Schuljahr ein Cache aufgebaut, dass nachfolgende Zugriffe auf das gleiche Schuljahr direkt aus
+	 * dem Cache bedient werden können.
+	 *
+	 * @param schuljahr   das Schuljahr
+	 * @param idMerkmal   die id des KAoA-Merkmal-Historien-Eintrags
+	 *
+	 * @return alle zulässigen KAoA-Zusatzmerkmal-Historien-Einträge für das angegebene Merkmal in dem angegebenen Schuljahr.
+	 */
+	public static @NotNull List<KAOAZusatzmerkmalKatalogEintrag> getEintraegeBySchuljahrAndIdMerkmal(final int schuljahr, final long idMerkmal) {
+		// Bestimme die Schuljahres-spezifische Map aus dem Cache. Ist diese nicht vorhanden, so muss der Cache später neu aufgebaut werden.
+		Map<Long, List<KAOAZusatzmerkmalKatalogEintrag>> mapEintraegeByMerkmal = _mapEintraegeBySchuljahrAndMerkmal.get(schuljahr);
+		// Die Map ist vorhanden, weshalb der Zugriff aus dem Cache möglich ist.
+		if (mapEintraegeByMerkmal != null) {
+			final List<KAOAZusatzmerkmalKatalogEintrag> result = mapEintraegeByMerkmal.get(idMerkmal);
+			return (result != null) ? result : new ArrayList<>();
+		}
+		// Falls der Cache nicht vorhanden ist, wird er erstellt.
+		mapEintraegeByMerkmal = cacheEintraegeBySchuljahrAndIdMerkmal(schuljahr);
+		_mapEintraegeBySchuljahrAndMerkmal.put(schuljahr, mapEintraegeByMerkmal);
+		// Rückgabe des Ergebnisses nach dem Aufbau des Caches.
+		final List<KAOAZusatzmerkmalKatalogEintrag> result = mapEintraegeByMerkmal.get(idMerkmal);
+		return (result != null) ? result : new ArrayList<>();
+	}
+
+	/**
+	 * Liefert einen Cache der zulässigen KAoA-Zusatzmerkmal-Historien-Einträge je Merkmal in dem angegebenen Schuljahr zurück.
+	 *
+	 * @param schuljahr   das Schuljahr
+	 * @return einen Cache der zulässigen KAoA-Zusatzmerkmal-Historien-Einträge je Merkmal in dem angegebenen Schuljahr.
+	 */
+	private static @NotNull Map<Long, List<KAOAZusatzmerkmalKatalogEintrag>> cacheEintraegeBySchuljahrAndIdMerkmal(final int schuljahr) {
+		final Map<Long, List<KAOAZusatzmerkmalKatalogEintrag>> cache = new HashMap<>();
+
+		// Füge die Einträge zur Cache-Map hinzu, sofern sie im gegebenen Schuljahr gültig sind.
+		for (final KAOAMerkmalKatalogEintrag merkmalHistorienEintrag : KAOAMerkmal.data().getEintraegeBySchuljahr(schuljahr)) {
+			final List<KAOAZusatzmerkmalKatalogEintrag> result = new ArrayList<>();
+			// Iteriere durch die Anschlussoptionen und füge die zulässigen zur Ergebnisliste hinzu.
+			for (final KAOAZusatzmerkmalKatalogEintrag zusatzmerkmalHistorienEintrag : KAOAZusatzmerkmal.data().getEintraegeBySchuljahr(schuljahr))
+				if (zusatzmerkmalHistorienEintrag.merkmal.equals(KAOAMerkmal.data().getWertByID(merkmalHistorienEintrag.id).name()))
+					result.add(zusatzmerkmalHistorienEintrag);
+			cache.put(merkmalHistorienEintrag.id, result);
+		}
+		return cache;
 	}
 
 }

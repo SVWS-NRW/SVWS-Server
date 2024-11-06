@@ -52,6 +52,9 @@ export class StundenplanUnterricht extends JavaObject {
 	public schienen : List<number> = new ArrayList<number>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -110,7 +113,7 @@ export class StundenplanUnterricht extends JavaObject {
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"idZeitraster" : ' + obj.idZeitraster.toString() + ',';
 		result += '"wochentyp" : ' + obj.wochentyp.toString() + ',';
-		result += '"idKurs" : ' + ((!obj.idKurs) ? 'null' : obj.idKurs.toString()) + ',';
+		result += '"idKurs" : ' + ((obj.idKurs === null) ? 'null' : obj.idKurs.toString()) + ',';
 		result += '"idFach" : ' + obj.idFach.toString() + ',';
 		result += '"lehrer" : [ ';
 		for (let i = 0; i < obj.lehrer.size(); i++) {
@@ -161,7 +164,7 @@ export class StundenplanUnterricht extends JavaObject {
 			result += '"wochentyp" : ' + obj.wochentyp.toString() + ',';
 		}
 		if (obj.idKurs !== undefined) {
-			result += '"idKurs" : ' + ((!obj.idKurs) ? 'null' : obj.idKurs.toString()) + ',';
+			result += '"idKurs" : ' + ((obj.idKurs === null) ? 'null' : obj.idKurs.toString()) + ',';
 		}
 		if (obj.idFach !== undefined) {
 			result += '"idFach" : ' + obj.idFach.toString() + ',';

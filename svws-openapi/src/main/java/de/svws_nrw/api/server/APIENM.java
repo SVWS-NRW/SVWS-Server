@@ -41,6 +41,12 @@ import jakarta.ws.rs.core.Response.Status;
 @Tag(name = "Server")
 public class APIENM {
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public APIENM() {
+		// leer
+	}
 
 	/**
 	 * Die OpenAPI-Methode für die Abfrage einer leeren Datendatei für das Externe Datenmodul (ENM).

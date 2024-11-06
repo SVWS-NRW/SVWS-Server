@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
 import type { StundenplanAuswahlProps } from "@comp";
 
 import type { DeveloperNotificationException} from "@core";
@@ -36,25 +36,29 @@ export class RouteSchuelerStundenplan extends RouteNode<RouteDataSchuelerStunden
 		try {
 			if (isEntering)
 				await routeSchuelerStundenplan.data.ladeListe();
-			const { id: idSchueler } = RouteNode.getIntParams(to_params, ["id"]);
+			const { id } = RouteNode.getIntParams(to_params, ["id"]);
 			// Prüfe, ob ein Schüler ausgewählt ist. Wenn nicht dann wechsele in die Schüler-Route zurück.
-			if (idSchueler === undefined)
+			if (id === undefined)
 				return routeSchueler.getRoute();
 			// Prüfe, ob diese Route das Ziel ist. Wenn dies der fall ist, dann muss ggf. noch ein Stundenplan geladen werden
 			if (to.name === this.name) {
 			// Und wähle dann einen Eintrag aus der Stundenplanliste aus, wenn diese nicht leer ist
 				if (routeSchuelerStundenplan.data.mapStundenplaene.size !== 0) {
 					const [stundenplan] = routeSchuelerStundenplan.data.mapStundenplaene.values();
-					return routeSchuelerStundenplanDaten.getRoute(idSchueler, stundenplan.id, 0);
+					return routeSchuelerStundenplanDaten.getRoute({ id, idStundenplan: stundenplan.id, wochentyp: 0 });
 				}
 			}
 		} catch (e) {
-			return routeError.getRoute(e as DeveloperNotificationException);
+			return routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 
-	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id, wochentyp: 0 }};
+	public addRouteParamsFromState() : RouteParamsRawGeneric {
+		return {
+			idStundenplan: (this.data.hatAuswahl === true) ? this.data.auswahl.id : undefined,
+			wochentyp: this.data.wochentyp,
+			kw: (this.data.kalenderwoche === undefined) ? undefined : this.data.kalenderwoche.jahr + "." + this.data.kalenderwoche.kw,
+		};
 	}
 
 	public getProps(to: RouteLocationNormalized): StundenplanAuswahlProps {

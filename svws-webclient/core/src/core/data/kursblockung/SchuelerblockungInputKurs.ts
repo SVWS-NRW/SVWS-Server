@@ -49,6 +49,9 @@ export class SchuelerblockungInputKurs extends JavaObject {
 	public anzahlVerbotenMitWuensche : number = 0;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

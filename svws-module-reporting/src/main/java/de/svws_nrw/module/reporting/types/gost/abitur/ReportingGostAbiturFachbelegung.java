@@ -58,6 +58,7 @@ public class ReportingGostAbiturFachbelegung {
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
+	 *
 	 * @param abiturFach Gibt an, als welches Abiturfach das Fach belegt wurde (1,2,3,4 oder null)
 	 * @param block1NotenpunkteDurchschnitt Der Durchschnitt der Notenpunkte im Block I des Abiturs für die Fachbelegung
 	 * @param block1PunktSumme Die Punktsumme im Block I des Abiturs für die Fachbelegung
@@ -103,8 +104,10 @@ public class ReportingGostAbiturFachbelegung {
 
 	/**
 	 * Vergleicht zwei ReportingGostAbiturFachbelegungen hinsichtlich ihrer Fachsortierung in der GOSt.
+	 *
 	 * @param gostAbiFachbelegung1 Erste ReportingGostAbiturFachbelegung
 	 * @param gostAbiFachbelegung2 Zweite ReportingGostAbiturFachbelegung
+	 *
 	 * @return int-Wert des Vergleiches gemäß {@link Comparable#compareTo(Object)}
 	 */
 	public static int compareToGost(final ReportingGostAbiturFachbelegung gostAbiFachbelegung1, final ReportingGostAbiturFachbelegung gostAbiFachbelegung2) {
@@ -117,6 +120,7 @@ public class ReportingGostAbiturFachbelegung {
 
 	/**
 	 * Gibt an, als welches Abiturfach das Fach belegt wurde (1,2,3,4 oder null)
+	 *
 	 * @return Inhalt des Feldes abiturFach
 	 */
 	public Integer abiturFach() {
@@ -125,6 +129,7 @@ public class ReportingGostAbiturFachbelegung {
 
 	/**
 	 * Der Durchschnitt der Notenpunkte im Block I des Abiturs für die Fachbelegung
+	 *
 	 * @return Inhalt des Feldes block1NotenpunkteDurchschnitt
 	 */
 	public Double block1NotenpunkteDurchschnitt() {
@@ -133,6 +138,7 @@ public class ReportingGostAbiturFachbelegung {
 
 	/**
 	 * Die Punktsumme im Block I des Abiturs für die Fachbelegung
+	 *
 	 * @return Inhalt des Feldes block1PunktSumme
 	 */
 	public Integer block1PunktSumme() {
@@ -141,6 +147,7 @@ public class ReportingGostAbiturFachbelegung {
 
 	/**
 	 * Gibt an, ob eine mündliche Abweichungsprüfung angesetzt werden muss, sofern dies die Belegung eines schriftlichen Abiturfaches ist (nur bis Abiturjahrgang 2019, ab 2020 gibt es keine Abweichungsprüfungen mehr).
+	 *
 	 * @return Inhalt des Feldes block2MuendlichePruefungAbweichung
 	 */
 	public Boolean block2MuendlichePruefungAbweichung() {
@@ -149,6 +156,7 @@ public class ReportingGostAbiturFachbelegung {
 
 	/**
 	 * Gibt an, ob eine mündliche Bestehensprüfung angesetzt werden muss, sofern dies die Belegung eines schriftlichen Abiturfaches ist.
+	 *
 	 * @return Inhalt des Feldes block2MuendlichePruefungBestehen
 	 */
 	public Boolean block2MuendlichePruefungBestehen() {
@@ -157,6 +165,7 @@ public class ReportingGostAbiturFachbelegung {
 
 	/**
 	 * Gibt an, ob eine freiwillige mündliche Prüfung angesetzt wurde, sofern dies die Belegung eines schriftlichen Abiturfaches ist.
+	 *
 	 * @return Inhalt des Feldes block2MuendlichePruefungFreiwillig
 	 */
 	public Boolean block2MuendlichePruefungFreiwillig() {
@@ -165,6 +174,7 @@ public class ReportingGostAbiturFachbelegung {
 
 	/**
 	 * Das Notenkürzel der mündlichen Abiturprüfung, sofern es sich um eine mündliche Prüfung bei einer Belegung eines schriftlichen Abiturfaches handelt.
+	 *
 	 * @return Inhalt des Feldes block2MuendlichePruefungNote
 	 */
 	public Note block2MuendlichePruefungNote() {
@@ -173,6 +183,7 @@ public class ReportingGostAbiturFachbelegung {
 
 	/**
 	 * Gibt die Reihenfolge bei den angesetzten mündlichen Prüfungen an, sofern dies die Belegung eines schriftlichen Abiturfaches ist.
+	 *
 	 * @return Inhalt des Feldes block2MuendlichePruefungReihenfolge
 	 */
 	public Integer block2MuendlichePruefungReihenfolge() {
@@ -181,6 +192,7 @@ public class ReportingGostAbiturFachbelegung {
 
 	/**
 	 * Die Lehrkraft, welche Prüfer im Rahmen der Abiturprüfung ist.
+	 *
 	 * @return Inhalt des Feldes block2Pruefer
 	 */
 	public ReportingLehrer block2Pruefer() {
@@ -189,6 +201,7 @@ public class ReportingGostAbiturFachbelegung {
 
 	/**
 	 * Die Note in der Abiturprüfung, sofern dies die Belegung eines Abiturfaches ist.
+	 *
 	 * @return Inhalt des Feldes block2PruefungNote
 	 */
 	public Note block2PruefungNote() {
@@ -197,6 +210,7 @@ public class ReportingGostAbiturFachbelegung {
 
 	/**
 	 * Die erreichten Punkte im Abitur nach einer evtl. mündlichen Prüfung, sofern dies die Belegung eines Abiturfaches ist.
+	 *
 	 * @return Inhalt des Feldes block2Punkte
 	 */
 	public Integer block2Punkte() {
@@ -205,6 +219,7 @@ public class ReportingGostAbiturFachbelegung {
 
 	/**
 	 * Der Zwischenstand der erreichten Punkte im Abitur vor einer evtl. mündlichen Prüfung, sofern dies die Belegung eines Abiturfaches ist.
+	 *
 	 * @return Inhalt des Feldes block2PunkteZwischenstand
 	 */
 	public Integer block2PunkteZwischenstand() {
@@ -213,6 +228,7 @@ public class ReportingGostAbiturFachbelegung {
 
 	/**
 	 * Das Fach der gymnasialen Oberstufe, welches belegt wurde.
+	 *
 	 * @return Inhalt des Feldes fach
 	 */
 	public ReportingFach fach() {
@@ -221,6 +237,7 @@ public class ReportingGostAbiturFachbelegung {
 
 	/**
 	 * Die Einzelbelegungen des Faches in den einzelnen Halbjahren im Block I des Abiturs
+	 *
 	 * @return Inhalt des Feldes halbjahresbelegungen
 	 */
 	public final ReportingGostAbiturFachbelegungHalbjahr[] halbjahresbelegungen() {
@@ -229,6 +246,7 @@ public class ReportingGostAbiturFachbelegung {
 
 	/**
 	 * Die letzte Kursart der gymnasialen Oberstufe (LK, GK, ZK, PJK, VTF), mit welcher das Fach belegt wurde
+	 *
 	 * @return Inhalt des Feldes letzteKursart
 	 */
 	public String letzteKursart() {

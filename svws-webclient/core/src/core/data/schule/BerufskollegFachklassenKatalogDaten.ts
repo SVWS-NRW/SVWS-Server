@@ -64,6 +64,9 @@ export class BerufskollegFachklassenKatalogDaten extends JavaObject {
 	public gueltigBis : number | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -110,16 +113,16 @@ export class BerufskollegFachklassenKatalogDaten extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"istAusgelaufen" : ' + obj.istAusgelaufen.toString() + ',';
-		result += '"berufsfeldGruppe" : ' + ((!obj.berufsfeldGruppe) ? 'null' : JSON.stringify(obj.berufsfeldGruppe)) + ',';
-		result += '"berufsfeld" : ' + ((!obj.berufsfeld) ? 'null' : JSON.stringify(obj.berufsfeld)) + ',';
-		result += '"ebene1" : ' + ((!obj.ebene1) ? 'null' : JSON.stringify(obj.ebene1)) + ',';
-		result += '"ebene2" : ' + ((!obj.ebene2) ? 'null' : JSON.stringify(obj.ebene2)) + ',';
-		result += '"ebene3" : ' + ((!obj.ebene3) ? 'null' : JSON.stringify(obj.ebene3)) + ',';
+		result += '"berufsfeldGruppe" : ' + ((obj.berufsfeldGruppe === null) ? 'null' : JSON.stringify(obj.berufsfeldGruppe)) + ',';
+		result += '"berufsfeld" : ' + ((obj.berufsfeld === null) ? 'null' : JSON.stringify(obj.berufsfeld)) + ',';
+		result += '"ebene1" : ' + ((obj.ebene1 === null) ? 'null' : JSON.stringify(obj.ebene1)) + ',';
+		result += '"ebene2" : ' + ((obj.ebene2 === null) ? 'null' : JSON.stringify(obj.ebene2)) + ',';
+		result += '"ebene3" : ' + ((obj.ebene3 === null) ? 'null' : JSON.stringify(obj.ebene3)) + ',';
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		result += '"bezeichnungM" : ' + JSON.stringify(obj.bezeichnungM) + ',';
 		result += '"bezeichnungW" : ' + JSON.stringify(obj.bezeichnungW) + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+		result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -134,19 +137,19 @@ export class BerufskollegFachklassenKatalogDaten extends JavaObject {
 			result += '"istAusgelaufen" : ' + obj.istAusgelaufen.toString() + ',';
 		}
 		if (obj.berufsfeldGruppe !== undefined) {
-			result += '"berufsfeldGruppe" : ' + ((!obj.berufsfeldGruppe) ? 'null' : JSON.stringify(obj.berufsfeldGruppe)) + ',';
+			result += '"berufsfeldGruppe" : ' + ((obj.berufsfeldGruppe === null) ? 'null' : JSON.stringify(obj.berufsfeldGruppe)) + ',';
 		}
 		if (obj.berufsfeld !== undefined) {
-			result += '"berufsfeld" : ' + ((!obj.berufsfeld) ? 'null' : JSON.stringify(obj.berufsfeld)) + ',';
+			result += '"berufsfeld" : ' + ((obj.berufsfeld === null) ? 'null' : JSON.stringify(obj.berufsfeld)) + ',';
 		}
 		if (obj.ebene1 !== undefined) {
-			result += '"ebene1" : ' + ((!obj.ebene1) ? 'null' : JSON.stringify(obj.ebene1)) + ',';
+			result += '"ebene1" : ' + ((obj.ebene1 === null) ? 'null' : JSON.stringify(obj.ebene1)) + ',';
 		}
 		if (obj.ebene2 !== undefined) {
-			result += '"ebene2" : ' + ((!obj.ebene2) ? 'null' : JSON.stringify(obj.ebene2)) + ',';
+			result += '"ebene2" : ' + ((obj.ebene2 === null) ? 'null' : JSON.stringify(obj.ebene2)) + ',';
 		}
 		if (obj.ebene3 !== undefined) {
-			result += '"ebene3" : ' + ((!obj.ebene3) ? 'null' : JSON.stringify(obj.ebene3)) + ',';
+			result += '"ebene3" : ' + ((obj.ebene3 === null) ? 'null' : JSON.stringify(obj.ebene3)) + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
@@ -158,10 +161,10 @@ export class BerufskollegFachklassenKatalogDaten extends JavaObject {
 			result += '"bezeichnungW" : ' + JSON.stringify(obj.bezeichnungW) + ',';
 		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+			result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+			result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

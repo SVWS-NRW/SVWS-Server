@@ -14,6 +14,13 @@ public final class LehrerLeitungsfunktionConverter extends DBAttributeConverter<
 	/** Die Instanz des Konverters */
 	public static final LehrerLeitungsfunktionConverter instance = new LehrerLeitungsfunktionConverter();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public LehrerLeitungsfunktionConverter() {
+		// leer
+	}
+
 	@Override
 	public Integer convertToDatabaseColumn(final BenutzerTyp typ) {
 		return typ.id;

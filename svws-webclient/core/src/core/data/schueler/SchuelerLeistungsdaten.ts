@@ -129,6 +129,9 @@ export class SchuelerLeistungsdaten extends JavaObject {
 	public fehlstundenUnentschuldigt : number = 0;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -207,24 +210,24 @@ export class SchuelerLeistungsdaten extends JavaObject {
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"lernabschnittID" : ' + obj.lernabschnittID.toString() + ',';
 		result += '"fachID" : ' + obj.fachID.toString() + ',';
-		result += '"kursID" : ' + ((!obj.kursID) ? 'null' : obj.kursID.toString()) + ',';
-		result += '"kursart" : ' + ((!obj.kursart) ? 'null' : JSON.stringify(obj.kursart)) + ',';
-		result += '"abifach" : ' + ((!obj.abifach) ? 'null' : obj.abifach.toString()) + ',';
+		result += '"kursID" : ' + ((obj.kursID === null) ? 'null' : obj.kursID.toString()) + ',';
+		result += '"kursart" : ' + ((obj.kursart === null) ? 'null' : JSON.stringify(obj.kursart)) + ',';
+		result += '"abifach" : ' + ((obj.abifach === null) ? 'null' : obj.abifach.toString()) + ',';
 		result += '"istZP10oderZK10" : ' + obj.istZP10oderZK10.toString() + ',';
-		result += '"koopSchule" : ' + ((!obj.koopSchule) ? 'null' : obj.koopSchule.toString()) + ',';
-		result += '"lehrerID" : ' + ((!obj.lehrerID) ? 'null' : obj.lehrerID.toString()) + ',';
+		result += '"koopSchule" : ' + ((obj.koopSchule === null) ? 'null' : obj.koopSchule.toString()) + ',';
+		result += '"lehrerID" : ' + ((obj.lehrerID === null) ? 'null' : obj.lehrerID.toString()) + ',';
 		result += '"wochenstunden" : ' + obj.wochenstunden.toString() + ',';
-		result += '"zusatzkraftID" : ' + ((!obj.zusatzkraftID) ? 'null' : obj.zusatzkraftID.toString()) + ',';
+		result += '"zusatzkraftID" : ' + ((obj.zusatzkraftID === null) ? 'null' : obj.zusatzkraftID.toString()) + ',';
 		result += '"zusatzkraftWochenstunden" : ' + obj.zusatzkraftWochenstunden.toString() + ',';
 		result += '"aufZeugnis" : ' + obj.aufZeugnis.toString() + ',';
-		result += '"note" : ' + ((!obj.note) ? 'null' : JSON.stringify(obj.note)) + ',';
-		result += '"noteQuartal" : ' + ((!obj.noteQuartal) ? 'null' : JSON.stringify(obj.noteQuartal)) + ',';
+		result += '"note" : ' + ((obj.note === null) ? 'null' : JSON.stringify(obj.note)) + ',';
+		result += '"noteQuartal" : ' + ((obj.noteQuartal === null) ? 'null' : JSON.stringify(obj.noteQuartal)) + ',';
 		result += '"istGemahnt" : ' + obj.istGemahnt.toString() + ',';
-		result += '"mahndatum" : ' + ((!obj.mahndatum) ? 'null' : JSON.stringify(obj.mahndatum)) + ',';
+		result += '"mahndatum" : ' + ((obj.mahndatum === null) ? 'null' : JSON.stringify(obj.mahndatum)) + ',';
 		result += '"istEpochal" : ' + obj.istEpochal.toString() + ',';
-		result += '"geholtJahrgangAbgeschlossen" : ' + ((!obj.geholtJahrgangAbgeschlossen) ? 'null' : JSON.stringify(obj.geholtJahrgangAbgeschlossen)) + ',';
+		result += '"geholtJahrgangAbgeschlossen" : ' + ((obj.geholtJahrgangAbgeschlossen === null) ? 'null' : JSON.stringify(obj.geholtJahrgangAbgeschlossen)) + ',';
 		result += '"gewichtungAllgemeinbildend" : ' + obj.gewichtungAllgemeinbildend.toString() + ',';
-		result += '"noteBerufsabschluss" : ' + ((!obj.noteBerufsabschluss) ? 'null' : JSON.stringify(obj.noteBerufsabschluss)) + ',';
+		result += '"noteBerufsabschluss" : ' + ((obj.noteBerufsabschluss === null) ? 'null' : JSON.stringify(obj.noteBerufsabschluss)) + ',';
 		result += '"textFachbezogeneLernentwicklung" : ' + JSON.stringify(obj.textFachbezogeneLernentwicklung) + ',';
 		result += '"umfangLernstandsbericht" : ' + JSON.stringify(obj.umfangLernstandsbericht) + ',';
 		result += '"fehlstundenGesamt" : ' + obj.fehlstundenGesamt.toString() + ',';
@@ -246,28 +249,28 @@ export class SchuelerLeistungsdaten extends JavaObject {
 			result += '"fachID" : ' + obj.fachID.toString() + ',';
 		}
 		if (obj.kursID !== undefined) {
-			result += '"kursID" : ' + ((!obj.kursID) ? 'null' : obj.kursID.toString()) + ',';
+			result += '"kursID" : ' + ((obj.kursID === null) ? 'null' : obj.kursID.toString()) + ',';
 		}
 		if (obj.kursart !== undefined) {
-			result += '"kursart" : ' + ((!obj.kursart) ? 'null' : JSON.stringify(obj.kursart)) + ',';
+			result += '"kursart" : ' + ((obj.kursart === null) ? 'null' : JSON.stringify(obj.kursart)) + ',';
 		}
 		if (obj.abifach !== undefined) {
-			result += '"abifach" : ' + ((!obj.abifach) ? 'null' : obj.abifach.toString()) + ',';
+			result += '"abifach" : ' + ((obj.abifach === null) ? 'null' : obj.abifach.toString()) + ',';
 		}
 		if (obj.istZP10oderZK10 !== undefined) {
 			result += '"istZP10oderZK10" : ' + obj.istZP10oderZK10.toString() + ',';
 		}
 		if (obj.koopSchule !== undefined) {
-			result += '"koopSchule" : ' + ((!obj.koopSchule) ? 'null' : obj.koopSchule.toString()) + ',';
+			result += '"koopSchule" : ' + ((obj.koopSchule === null) ? 'null' : obj.koopSchule.toString()) + ',';
 		}
 		if (obj.lehrerID !== undefined) {
-			result += '"lehrerID" : ' + ((!obj.lehrerID) ? 'null' : obj.lehrerID.toString()) + ',';
+			result += '"lehrerID" : ' + ((obj.lehrerID === null) ? 'null' : obj.lehrerID.toString()) + ',';
 		}
 		if (obj.wochenstunden !== undefined) {
 			result += '"wochenstunden" : ' + obj.wochenstunden.toString() + ',';
 		}
 		if (obj.zusatzkraftID !== undefined) {
-			result += '"zusatzkraftID" : ' + ((!obj.zusatzkraftID) ? 'null' : obj.zusatzkraftID.toString()) + ',';
+			result += '"zusatzkraftID" : ' + ((obj.zusatzkraftID === null) ? 'null' : obj.zusatzkraftID.toString()) + ',';
 		}
 		if (obj.zusatzkraftWochenstunden !== undefined) {
 			result += '"zusatzkraftWochenstunden" : ' + obj.zusatzkraftWochenstunden.toString() + ',';
@@ -276,28 +279,28 @@ export class SchuelerLeistungsdaten extends JavaObject {
 			result += '"aufZeugnis" : ' + obj.aufZeugnis.toString() + ',';
 		}
 		if (obj.note !== undefined) {
-			result += '"note" : ' + ((!obj.note) ? 'null' : JSON.stringify(obj.note)) + ',';
+			result += '"note" : ' + ((obj.note === null) ? 'null' : JSON.stringify(obj.note)) + ',';
 		}
 		if (obj.noteQuartal !== undefined) {
-			result += '"noteQuartal" : ' + ((!obj.noteQuartal) ? 'null' : JSON.stringify(obj.noteQuartal)) + ',';
+			result += '"noteQuartal" : ' + ((obj.noteQuartal === null) ? 'null' : JSON.stringify(obj.noteQuartal)) + ',';
 		}
 		if (obj.istGemahnt !== undefined) {
 			result += '"istGemahnt" : ' + obj.istGemahnt.toString() + ',';
 		}
 		if (obj.mahndatum !== undefined) {
-			result += '"mahndatum" : ' + ((!obj.mahndatum) ? 'null' : JSON.stringify(obj.mahndatum)) + ',';
+			result += '"mahndatum" : ' + ((obj.mahndatum === null) ? 'null' : JSON.stringify(obj.mahndatum)) + ',';
 		}
 		if (obj.istEpochal !== undefined) {
 			result += '"istEpochal" : ' + obj.istEpochal.toString() + ',';
 		}
 		if (obj.geholtJahrgangAbgeschlossen !== undefined) {
-			result += '"geholtJahrgangAbgeschlossen" : ' + ((!obj.geholtJahrgangAbgeschlossen) ? 'null' : JSON.stringify(obj.geholtJahrgangAbgeschlossen)) + ',';
+			result += '"geholtJahrgangAbgeschlossen" : ' + ((obj.geholtJahrgangAbgeschlossen === null) ? 'null' : JSON.stringify(obj.geholtJahrgangAbgeschlossen)) + ',';
 		}
 		if (obj.gewichtungAllgemeinbildend !== undefined) {
 			result += '"gewichtungAllgemeinbildend" : ' + obj.gewichtungAllgemeinbildend.toString() + ',';
 		}
 		if (obj.noteBerufsabschluss !== undefined) {
-			result += '"noteBerufsabschluss" : ' + ((!obj.noteBerufsabschluss) ? 'null' : JSON.stringify(obj.noteBerufsabschluss)) + ',';
+			result += '"noteBerufsabschluss" : ' + ((obj.noteBerufsabschluss === null) ? 'null' : JSON.stringify(obj.noteBerufsabschluss)) + ',';
 		}
 		if (obj.textFachbezogeneLernentwicklung !== undefined) {
 			result += '"textFachbezogeneLernentwicklung" : ' + JSON.stringify(obj.textFachbezogeneLernentwicklung) + ',';

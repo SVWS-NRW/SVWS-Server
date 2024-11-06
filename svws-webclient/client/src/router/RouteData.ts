@@ -2,6 +2,7 @@ import { type ShallowRef, shallowRef, ref } from "vue";
 
 import { type RouteNode } from "~/router/RouteNode";
 import { DeveloperNotificationException } from "@core";
+import { ViewType } from "@ui";
 
 
 /**
@@ -9,6 +10,7 @@ import { DeveloperNotificationException } from "@core";
  */
 export interface RouteStateInterface {
 	view?: RouteNode<any, any>;
+	activeViewType?: ViewType;
 }
 
 
@@ -138,6 +140,25 @@ export abstract class RouteData<RouteState extends RouteStateInterface> {
 		if (this._state.value.view === undefined)
 			throw new DeveloperNotificationException("Bei dieser Route wurde keine Ansicht im Default-State definiert.");
 		return this._state.value.view;
+	}
+
+	/**
+	 * Gibt die aktuelle Art der View zurück (Default, Hinzufügen oder Gruppenprozess).
+	 * Ist keiner spezifiziert, so wird DEFAULT zurückgegeben.
+	 */
+	get activeViewType() : ViewType {
+		if (this._state.value.activeViewType === undefined)
+			return ViewType.DEFAULT;
+		return this._state.value.activeViewType;
+	}
+
+	/**
+	 * Setzt die aktuelle Art der View zurück (Default, Hinzufügen oder Gruppenprozess).
+	 *
+	 * @param value   die Art der View
+	 */
+	set activeViewType(value : ViewType) {
+		this._state.value.activeViewType = value;
 	}
 
 	/**

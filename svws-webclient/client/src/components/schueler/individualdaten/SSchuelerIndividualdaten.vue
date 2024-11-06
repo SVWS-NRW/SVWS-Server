@@ -56,7 +56,7 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Migrationshintergrund" v-if="hatKompetenzAnsehen">
 			<template #actions>
-				<svws-ui-checkbox :disabled="!hatKompetenzUpdate" class="mt-3 xl:mt-0" :model-value="hatMigrationshintergrund"
+				<svws-ui-checkbox :disabled="!hatKompetenzUpdate" class="mt-3 xl:mt-0" :model-value="hatMigrationshintergrund" statistics
 					@update:model-value="hatMigrationshintergrund => patch({hatMigrationshintergrund})">
 					Migrationshintergrund vorhanden
 				</svws-ui-checkbox>

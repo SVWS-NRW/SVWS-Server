@@ -49,6 +49,9 @@ export class BetriebListeEintrag extends JavaObject {
 	public branche : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -83,14 +86,14 @@ export class BetriebListeEintrag extends JavaObject {
 	public static transpilerToJSON(obj : BetriebListeEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"adressArt" : ' + ((!obj.adressArt) ? 'null' : obj.adressArt.toString()) + ',';
-		result += '"name1" : ' + ((!obj.name1) ? 'null' : JSON.stringify(obj.name1)) + ',';
-		result += '"strassenname" : ' + ((!obj.strassenname) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
-		result += '"hausnr" : ' + ((!obj.hausnr) ? 'null' : JSON.stringify(obj.hausnr)) + ',';
-		result += '"hausnrzusatz" : ' + ((!obj.hausnrzusatz) ? 'null' : JSON.stringify(obj.hausnrzusatz)) + ',';
-		result += '"ort_id" : ' + ((!obj.ort_id) ? 'null' : obj.ort_id.toString()) + ',';
-		result += '"ortsteil_id" : ' + ((!obj.ortsteil_id) ? 'null' : obj.ortsteil_id.toString()) + ',';
-		result += '"branche" : ' + ((!obj.branche) ? 'null' : JSON.stringify(obj.branche)) + ',';
+		result += '"adressArt" : ' + ((obj.adressArt === null) ? 'null' : obj.adressArt.toString()) + ',';
+		result += '"name1" : ' + ((obj.name1 === null) ? 'null' : JSON.stringify(obj.name1)) + ',';
+		result += '"strassenname" : ' + ((obj.strassenname === null) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
+		result += '"hausnr" : ' + ((obj.hausnr === null) ? 'null' : JSON.stringify(obj.hausnr)) + ',';
+		result += '"hausnrzusatz" : ' + ((obj.hausnrzusatz === null) ? 'null' : JSON.stringify(obj.hausnrzusatz)) + ',';
+		result += '"ort_id" : ' + ((obj.ort_id === null) ? 'null' : obj.ort_id.toString()) + ',';
+		result += '"ortsteil_id" : ' + ((obj.ortsteil_id === null) ? 'null' : obj.ortsteil_id.toString()) + ',';
+		result += '"branche" : ' + ((obj.branche === null) ? 'null' : JSON.stringify(obj.branche)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -102,28 +105,28 @@ export class BetriebListeEintrag extends JavaObject {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.adressArt !== undefined) {
-			result += '"adressArt" : ' + ((!obj.adressArt) ? 'null' : obj.adressArt.toString()) + ',';
+			result += '"adressArt" : ' + ((obj.adressArt === null) ? 'null' : obj.adressArt.toString()) + ',';
 		}
 		if (obj.name1 !== undefined) {
-			result += '"name1" : ' + ((!obj.name1) ? 'null' : JSON.stringify(obj.name1)) + ',';
+			result += '"name1" : ' + ((obj.name1 === null) ? 'null' : JSON.stringify(obj.name1)) + ',';
 		}
 		if (obj.strassenname !== undefined) {
-			result += '"strassenname" : ' + ((!obj.strassenname) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
+			result += '"strassenname" : ' + ((obj.strassenname === null) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
 		}
 		if (obj.hausnr !== undefined) {
-			result += '"hausnr" : ' + ((!obj.hausnr) ? 'null' : JSON.stringify(obj.hausnr)) + ',';
+			result += '"hausnr" : ' + ((obj.hausnr === null) ? 'null' : JSON.stringify(obj.hausnr)) + ',';
 		}
 		if (obj.hausnrzusatz !== undefined) {
-			result += '"hausnrzusatz" : ' + ((!obj.hausnrzusatz) ? 'null' : JSON.stringify(obj.hausnrzusatz)) + ',';
+			result += '"hausnrzusatz" : ' + ((obj.hausnrzusatz === null) ? 'null' : JSON.stringify(obj.hausnrzusatz)) + ',';
 		}
 		if (obj.ort_id !== undefined) {
-			result += '"ort_id" : ' + ((!obj.ort_id) ? 'null' : obj.ort_id.toString()) + ',';
+			result += '"ort_id" : ' + ((obj.ort_id === null) ? 'null' : obj.ort_id.toString()) + ',';
 		}
 		if (obj.ortsteil_id !== undefined) {
-			result += '"ortsteil_id" : ' + ((!obj.ortsteil_id) ? 'null' : obj.ortsteil_id.toString()) + ',';
+			result += '"ortsteil_id" : ' + ((obj.ortsteil_id === null) ? 'null' : obj.ortsteil_id.toString()) + ',';
 		}
 		if (obj.branche !== undefined) {
-			result += '"branche" : ' + ((!obj.branche) ? 'null' : JSON.stringify(obj.branche)) + ',';
+			result += '"branche" : ' + ((obj.branche === null) ? 'null' : JSON.stringify(obj.branche)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

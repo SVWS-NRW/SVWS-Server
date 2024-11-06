@@ -19,4 +19,11 @@ public class KAOAEbene4KatalogEintrag extends CoreTypeData {
 	@Schema(description = "das Zusatzmerkmal, welcher der Eintrag zugeordnet ist", example = "SBO 6.5.1")
 	public @NotNull String zusatzmerkmal = "";
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public KAOAEbene4KatalogEintrag() {
+		// leer
+	}
+
 }

@@ -10,6 +10,7 @@ public class ProxyReportingGostLaufbahnplanungErgebnismeldung extends ReportingG
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingGostLaufbahnplanungErgebnismeldung}.
+	 *
 	 * @param code			Interner Code der Meldung aus der Prüfung, wenn vorhanden, sonst leer,
 	 * @param kategorie 	Kategorie der Meldung, bspw. Fehler oder Hinweis.
 	 * @param meldung		Text zur Meldung für den Benutzer

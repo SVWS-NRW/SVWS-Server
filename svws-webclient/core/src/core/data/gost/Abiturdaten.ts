@@ -189,6 +189,9 @@ export class Abiturdaten extends JavaObject {
 	public note : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -297,36 +300,36 @@ export class Abiturdaten extends JavaObject {
 		}
 		result += ' ]' + ',';
 		result += '"sprachendaten" : ' + Sprachendaten.transpilerToJSON(obj.sprachendaten) + ',';
-		result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
+		result += '"bilingualeSprache" : ' + ((obj.bilingualeSprache === null) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
 		result += '"latinum" : ' + obj.latinum.toString() + ',';
 		result += '"kleinesLatinum" : ' + obj.kleinesLatinum.toString() + ',';
 		result += '"graecum" : ' + obj.graecum.toString() + ',';
 		result += '"hebraicum" : ' + obj.hebraicum.toString() + ',';
 		result += '"block1FehlstundenGesamt" : ' + obj.block1FehlstundenGesamt.toString() + ',';
 		result += '"block1FehlstundenUnentschuldigt" : ' + obj.block1FehlstundenUnentschuldigt.toString() + ',';
-		result += '"projektKursThema" : ' + ((!obj.projektKursThema) ? 'null' : JSON.stringify(obj.projektKursThema)) + ',';
-		result += '"projektkursLeitfach1Kuerzel" : ' + ((!obj.projektkursLeitfach1Kuerzel) ? 'null' : JSON.stringify(obj.projektkursLeitfach1Kuerzel)) + ',';
-		result += '"projektkursLeitfach2Kuerzel" : ' + ((!obj.projektkursLeitfach2Kuerzel) ? 'null' : JSON.stringify(obj.projektkursLeitfach2Kuerzel)) + ',';
-		result += '"besondereLernleistung" : ' + ((!obj.besondereLernleistung) ? 'null' : JSON.stringify(obj.besondereLernleistung)) + ',';
-		result += '"besondereLernleistungNotenKuerzel" : ' + ((!obj.besondereLernleistungNotenKuerzel) ? 'null' : JSON.stringify(obj.besondereLernleistungNotenKuerzel)) + ',';
-		result += '"besondereLernleistungThema" : ' + ((!obj.besondereLernleistungThema) ? 'null' : JSON.stringify(obj.besondereLernleistungThema)) + ',';
-		result += '"block1AnzahlKurse" : ' + ((!obj.block1AnzahlKurse) ? 'null' : obj.block1AnzahlKurse.toString()) + ',';
-		result += '"block1DefiziteGesamt" : ' + ((!obj.block1DefiziteGesamt) ? 'null' : obj.block1DefiziteGesamt.toString()) + ',';
-		result += '"block1DefiziteLK" : ' + ((!obj.block1DefiziteLK) ? 'null' : obj.block1DefiziteLK.toString()) + ',';
-		result += '"block1PunktSummeGK" : ' + ((!obj.block1PunktSummeGK) ? 'null' : obj.block1PunktSummeGK.toString()) + ',';
-		result += '"block1PunktSummeLK" : ' + ((!obj.block1PunktSummeLK) ? 'null' : obj.block1PunktSummeLK.toString()) + ',';
-		result += '"block1PunktSummeNormiert" : ' + ((!obj.block1PunktSummeNormiert) ? 'null' : obj.block1PunktSummeNormiert.toString()) + ',';
-		result += '"block1NotenpunkteDurchschnitt" : ' + ((!obj.block1NotenpunkteDurchschnitt) ? 'null' : obj.block1NotenpunkteDurchschnitt.toString()) + ',';
-		result += '"block1Zulassung" : ' + ((!obj.block1Zulassung) ? 'null' : obj.block1Zulassung.toString()) + ',';
+		result += '"projektKursThema" : ' + ((obj.projektKursThema === null) ? 'null' : JSON.stringify(obj.projektKursThema)) + ',';
+		result += '"projektkursLeitfach1Kuerzel" : ' + ((obj.projektkursLeitfach1Kuerzel === null) ? 'null' : JSON.stringify(obj.projektkursLeitfach1Kuerzel)) + ',';
+		result += '"projektkursLeitfach2Kuerzel" : ' + ((obj.projektkursLeitfach2Kuerzel === null) ? 'null' : JSON.stringify(obj.projektkursLeitfach2Kuerzel)) + ',';
+		result += '"besondereLernleistung" : ' + ((obj.besondereLernleistung === null) ? 'null' : JSON.stringify(obj.besondereLernleistung)) + ',';
+		result += '"besondereLernleistungNotenKuerzel" : ' + ((obj.besondereLernleistungNotenKuerzel === null) ? 'null' : JSON.stringify(obj.besondereLernleistungNotenKuerzel)) + ',';
+		result += '"besondereLernleistungThema" : ' + ((obj.besondereLernleistungThema === null) ? 'null' : JSON.stringify(obj.besondereLernleistungThema)) + ',';
+		result += '"block1AnzahlKurse" : ' + ((obj.block1AnzahlKurse === null) ? 'null' : obj.block1AnzahlKurse.toString()) + ',';
+		result += '"block1DefiziteGesamt" : ' + ((obj.block1DefiziteGesamt === null) ? 'null' : obj.block1DefiziteGesamt.toString()) + ',';
+		result += '"block1DefiziteLK" : ' + ((obj.block1DefiziteLK === null) ? 'null' : obj.block1DefiziteLK.toString()) + ',';
+		result += '"block1PunktSummeGK" : ' + ((obj.block1PunktSummeGK === null) ? 'null' : obj.block1PunktSummeGK.toString()) + ',';
+		result += '"block1PunktSummeLK" : ' + ((obj.block1PunktSummeLK === null) ? 'null' : obj.block1PunktSummeLK.toString()) + ',';
+		result += '"block1PunktSummeNormiert" : ' + ((obj.block1PunktSummeNormiert === null) ? 'null' : obj.block1PunktSummeNormiert.toString()) + ',';
+		result += '"block1NotenpunkteDurchschnitt" : ' + ((obj.block1NotenpunkteDurchschnitt === null) ? 'null' : obj.block1NotenpunkteDurchschnitt.toString()) + ',';
+		result += '"block1Zulassung" : ' + ((obj.block1Zulassung === null) ? 'null' : obj.block1Zulassung.toString()) + ',';
 		result += '"freiwilligerRuecktritt" : ' + obj.freiwilligerRuecktritt.toString() + ',';
-		result += '"block2DefiziteGesamt" : ' + ((!obj.block2DefiziteGesamt) ? 'null' : obj.block2DefiziteGesamt.toString()) + ',';
-		result += '"block2DefiziteLK" : ' + ((!obj.block2DefiziteLK) ? 'null' : obj.block2DefiziteLK.toString()) + ',';
-		result += '"block2PunktSumme" : ' + ((!obj.block2PunktSumme) ? 'null' : obj.block2PunktSumme.toString()) + ',';
-		result += '"gesamtPunkte" : ' + ((!obj.gesamtPunkte) ? 'null' : obj.gesamtPunkte.toString()) + ',';
-		result += '"gesamtPunkteVerbesserung" : ' + ((!obj.gesamtPunkteVerbesserung) ? 'null' : obj.gesamtPunkteVerbesserung.toString()) + ',';
-		result += '"gesamtPunkteVerschlechterung" : ' + ((!obj.gesamtPunkteVerschlechterung) ? 'null' : obj.gesamtPunkteVerschlechterung.toString()) + ',';
-		result += '"pruefungBestanden" : ' + ((!obj.pruefungBestanden) ? 'null' : obj.pruefungBestanden.toString()) + ',';
-		result += '"note" : ' + ((!obj.note) ? 'null' : JSON.stringify(obj.note)) + ',';
+		result += '"block2DefiziteGesamt" : ' + ((obj.block2DefiziteGesamt === null) ? 'null' : obj.block2DefiziteGesamt.toString()) + ',';
+		result += '"block2DefiziteLK" : ' + ((obj.block2DefiziteLK === null) ? 'null' : obj.block2DefiziteLK.toString()) + ',';
+		result += '"block2PunktSumme" : ' + ((obj.block2PunktSumme === null) ? 'null' : obj.block2PunktSumme.toString()) + ',';
+		result += '"gesamtPunkte" : ' + ((obj.gesamtPunkte === null) ? 'null' : obj.gesamtPunkte.toString()) + ',';
+		result += '"gesamtPunkteVerbesserung" : ' + ((obj.gesamtPunkteVerbesserung === null) ? 'null' : obj.gesamtPunkteVerbesserung.toString()) + ',';
+		result += '"gesamtPunkteVerschlechterung" : ' + ((obj.gesamtPunkteVerschlechterung === null) ? 'null' : obj.gesamtPunkteVerschlechterung.toString()) + ',';
+		result += '"pruefungBestanden" : ' + ((obj.pruefungBestanden === null) ? 'null' : obj.pruefungBestanden.toString()) + ',';
+		result += '"note" : ' + ((obj.note === null) ? 'null' : JSON.stringify(obj.note)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -368,7 +371,7 @@ export class Abiturdaten extends JavaObject {
 			result += '"sprachendaten" : ' + Sprachendaten.transpilerToJSON(obj.sprachendaten) + ',';
 		}
 		if (obj.bilingualeSprache !== undefined) {
-			result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
+			result += '"bilingualeSprache" : ' + ((obj.bilingualeSprache === null) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
 		}
 		if (obj.latinum !== undefined) {
 			result += '"latinum" : ' + obj.latinum.toString() + ',';
@@ -389,73 +392,73 @@ export class Abiturdaten extends JavaObject {
 			result += '"block1FehlstundenUnentschuldigt" : ' + obj.block1FehlstundenUnentschuldigt.toString() + ',';
 		}
 		if (obj.projektKursThema !== undefined) {
-			result += '"projektKursThema" : ' + ((!obj.projektKursThema) ? 'null' : JSON.stringify(obj.projektKursThema)) + ',';
+			result += '"projektKursThema" : ' + ((obj.projektKursThema === null) ? 'null' : JSON.stringify(obj.projektKursThema)) + ',';
 		}
 		if (obj.projektkursLeitfach1Kuerzel !== undefined) {
-			result += '"projektkursLeitfach1Kuerzel" : ' + ((!obj.projektkursLeitfach1Kuerzel) ? 'null' : JSON.stringify(obj.projektkursLeitfach1Kuerzel)) + ',';
+			result += '"projektkursLeitfach1Kuerzel" : ' + ((obj.projektkursLeitfach1Kuerzel === null) ? 'null' : JSON.stringify(obj.projektkursLeitfach1Kuerzel)) + ',';
 		}
 		if (obj.projektkursLeitfach2Kuerzel !== undefined) {
-			result += '"projektkursLeitfach2Kuerzel" : ' + ((!obj.projektkursLeitfach2Kuerzel) ? 'null' : JSON.stringify(obj.projektkursLeitfach2Kuerzel)) + ',';
+			result += '"projektkursLeitfach2Kuerzel" : ' + ((obj.projektkursLeitfach2Kuerzel === null) ? 'null' : JSON.stringify(obj.projektkursLeitfach2Kuerzel)) + ',';
 		}
 		if (obj.besondereLernleistung !== undefined) {
-			result += '"besondereLernleistung" : ' + ((!obj.besondereLernleistung) ? 'null' : JSON.stringify(obj.besondereLernleistung)) + ',';
+			result += '"besondereLernleistung" : ' + ((obj.besondereLernleistung === null) ? 'null' : JSON.stringify(obj.besondereLernleistung)) + ',';
 		}
 		if (obj.besondereLernleistungNotenKuerzel !== undefined) {
-			result += '"besondereLernleistungNotenKuerzel" : ' + ((!obj.besondereLernleistungNotenKuerzel) ? 'null' : JSON.stringify(obj.besondereLernleistungNotenKuerzel)) + ',';
+			result += '"besondereLernleistungNotenKuerzel" : ' + ((obj.besondereLernleistungNotenKuerzel === null) ? 'null' : JSON.stringify(obj.besondereLernleistungNotenKuerzel)) + ',';
 		}
 		if (obj.besondereLernleistungThema !== undefined) {
-			result += '"besondereLernleistungThema" : ' + ((!obj.besondereLernleistungThema) ? 'null' : JSON.stringify(obj.besondereLernleistungThema)) + ',';
+			result += '"besondereLernleistungThema" : ' + ((obj.besondereLernleistungThema === null) ? 'null' : JSON.stringify(obj.besondereLernleistungThema)) + ',';
 		}
 		if (obj.block1AnzahlKurse !== undefined) {
-			result += '"block1AnzahlKurse" : ' + ((!obj.block1AnzahlKurse) ? 'null' : obj.block1AnzahlKurse.toString()) + ',';
+			result += '"block1AnzahlKurse" : ' + ((obj.block1AnzahlKurse === null) ? 'null' : obj.block1AnzahlKurse.toString()) + ',';
 		}
 		if (obj.block1DefiziteGesamt !== undefined) {
-			result += '"block1DefiziteGesamt" : ' + ((!obj.block1DefiziteGesamt) ? 'null' : obj.block1DefiziteGesamt.toString()) + ',';
+			result += '"block1DefiziteGesamt" : ' + ((obj.block1DefiziteGesamt === null) ? 'null' : obj.block1DefiziteGesamt.toString()) + ',';
 		}
 		if (obj.block1DefiziteLK !== undefined) {
-			result += '"block1DefiziteLK" : ' + ((!obj.block1DefiziteLK) ? 'null' : obj.block1DefiziteLK.toString()) + ',';
+			result += '"block1DefiziteLK" : ' + ((obj.block1DefiziteLK === null) ? 'null' : obj.block1DefiziteLK.toString()) + ',';
 		}
 		if (obj.block1PunktSummeGK !== undefined) {
-			result += '"block1PunktSummeGK" : ' + ((!obj.block1PunktSummeGK) ? 'null' : obj.block1PunktSummeGK.toString()) + ',';
+			result += '"block1PunktSummeGK" : ' + ((obj.block1PunktSummeGK === null) ? 'null' : obj.block1PunktSummeGK.toString()) + ',';
 		}
 		if (obj.block1PunktSummeLK !== undefined) {
-			result += '"block1PunktSummeLK" : ' + ((!obj.block1PunktSummeLK) ? 'null' : obj.block1PunktSummeLK.toString()) + ',';
+			result += '"block1PunktSummeLK" : ' + ((obj.block1PunktSummeLK === null) ? 'null' : obj.block1PunktSummeLK.toString()) + ',';
 		}
 		if (obj.block1PunktSummeNormiert !== undefined) {
-			result += '"block1PunktSummeNormiert" : ' + ((!obj.block1PunktSummeNormiert) ? 'null' : obj.block1PunktSummeNormiert.toString()) + ',';
+			result += '"block1PunktSummeNormiert" : ' + ((obj.block1PunktSummeNormiert === null) ? 'null' : obj.block1PunktSummeNormiert.toString()) + ',';
 		}
 		if (obj.block1NotenpunkteDurchschnitt !== undefined) {
-			result += '"block1NotenpunkteDurchschnitt" : ' + ((!obj.block1NotenpunkteDurchschnitt) ? 'null' : obj.block1NotenpunkteDurchschnitt.toString()) + ',';
+			result += '"block1NotenpunkteDurchschnitt" : ' + ((obj.block1NotenpunkteDurchschnitt === null) ? 'null' : obj.block1NotenpunkteDurchschnitt.toString()) + ',';
 		}
 		if (obj.block1Zulassung !== undefined) {
-			result += '"block1Zulassung" : ' + ((!obj.block1Zulassung) ? 'null' : obj.block1Zulassung.toString()) + ',';
+			result += '"block1Zulassung" : ' + ((obj.block1Zulassung === null) ? 'null' : obj.block1Zulassung.toString()) + ',';
 		}
 		if (obj.freiwilligerRuecktritt !== undefined) {
 			result += '"freiwilligerRuecktritt" : ' + obj.freiwilligerRuecktritt.toString() + ',';
 		}
 		if (obj.block2DefiziteGesamt !== undefined) {
-			result += '"block2DefiziteGesamt" : ' + ((!obj.block2DefiziteGesamt) ? 'null' : obj.block2DefiziteGesamt.toString()) + ',';
+			result += '"block2DefiziteGesamt" : ' + ((obj.block2DefiziteGesamt === null) ? 'null' : obj.block2DefiziteGesamt.toString()) + ',';
 		}
 		if (obj.block2DefiziteLK !== undefined) {
-			result += '"block2DefiziteLK" : ' + ((!obj.block2DefiziteLK) ? 'null' : obj.block2DefiziteLK.toString()) + ',';
+			result += '"block2DefiziteLK" : ' + ((obj.block2DefiziteLK === null) ? 'null' : obj.block2DefiziteLK.toString()) + ',';
 		}
 		if (obj.block2PunktSumme !== undefined) {
-			result += '"block2PunktSumme" : ' + ((!obj.block2PunktSumme) ? 'null' : obj.block2PunktSumme.toString()) + ',';
+			result += '"block2PunktSumme" : ' + ((obj.block2PunktSumme === null) ? 'null' : obj.block2PunktSumme.toString()) + ',';
 		}
 		if (obj.gesamtPunkte !== undefined) {
-			result += '"gesamtPunkte" : ' + ((!obj.gesamtPunkte) ? 'null' : obj.gesamtPunkte.toString()) + ',';
+			result += '"gesamtPunkte" : ' + ((obj.gesamtPunkte === null) ? 'null' : obj.gesamtPunkte.toString()) + ',';
 		}
 		if (obj.gesamtPunkteVerbesserung !== undefined) {
-			result += '"gesamtPunkteVerbesserung" : ' + ((!obj.gesamtPunkteVerbesserung) ? 'null' : obj.gesamtPunkteVerbesserung.toString()) + ',';
+			result += '"gesamtPunkteVerbesserung" : ' + ((obj.gesamtPunkteVerbesserung === null) ? 'null' : obj.gesamtPunkteVerbesserung.toString()) + ',';
 		}
 		if (obj.gesamtPunkteVerschlechterung !== undefined) {
-			result += '"gesamtPunkteVerschlechterung" : ' + ((!obj.gesamtPunkteVerschlechterung) ? 'null' : obj.gesamtPunkteVerschlechterung.toString()) + ',';
+			result += '"gesamtPunkteVerschlechterung" : ' + ((obj.gesamtPunkteVerschlechterung === null) ? 'null' : obj.gesamtPunkteVerschlechterung.toString()) + ',';
 		}
 		if (obj.pruefungBestanden !== undefined) {
-			result += '"pruefungBestanden" : ' + ((!obj.pruefungBestanden) ? 'null' : obj.pruefungBestanden.toString()) + ',';
+			result += '"pruefungBestanden" : ' + ((obj.pruefungBestanden === null) ? 'null' : obj.pruefungBestanden.toString()) + ',';
 		}
 		if (obj.note !== undefined) {
-			result += '"note" : ' + ((!obj.note) ? 'null' : JSON.stringify(obj.note)) + ',';
+			result += '"note" : ' + ((obj.note === null) ? 'null' : JSON.stringify(obj.note)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

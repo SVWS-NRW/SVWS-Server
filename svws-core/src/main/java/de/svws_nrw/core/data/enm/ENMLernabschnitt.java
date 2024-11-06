@@ -60,4 +60,11 @@ public class ENMLernabschnitt {
 	@Schema(description = "Das Kürzel des weiteren Förderschwerpunktes oder null bei keinem weiteren Förderschwerpunkt.", example = "ES")
 	public String foerderschwerpunkt2;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ENMLernabschnitt() {
+		// leer
+	}
+
 }

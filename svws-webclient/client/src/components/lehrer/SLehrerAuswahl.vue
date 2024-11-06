@@ -7,8 +7,8 @@
 			<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
 		</template>
 		<template #content>
-			<svws-ui-table clickable :clicked="lehrerListeManager().hasDaten() ? lehrerListeManager().auswahl() : null" @update:clicked="gotoLehrer"
-				:items="rowsFiltered.values()" :model-value="selectedItems" @update:model-value="items => setAuswahl(items)"
+			<svws-ui-table :clickable="!lehrerListeManager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="lehrerDaten => gotoDefaultView(lehrerDaten.id)"
+				:items="rowsFiltered" :model-value="[...props.lehrerListeManager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)"
 				:columns selectable count :filter-open="true" :filtered="filterChanged()" :filterReset scroll-into-view scroll
 				v-model:sort-by-and-order="sortByAndOrder" :sort-by-multi allow-arrow-key-selection>
 				<template #search>
@@ -21,7 +21,16 @@
 						<svws-ui-checkbox type="toggle" v-model="filterNurStatistikrelevant">Nur Statistik-Relevante</svws-ui-checkbox>
 					</div>
 				</template>
-				<!-- TODO: Beim Implementieren des '+'-Buttons zum Hinfügen eines Eintrags die property hasFocus auf die svws-ui-button-Komponente setzen. true, wenn Liste leer, sonst false (z.B. :hasFocus="rowsFiltered.length === 0") -->
+				<template #actions>
+					<svws-ui-tooltip position="bottom" v-if="ServerMode.DEV.checkServerMode(serverMode)">
+						<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="props.gotoHinzufuegenView(true)" :has-focus="rowsFiltered.length === 0">
+							<span class="icon i-ri-add-line" />
+						</svws-ui-button>
+						<template #content>
+							Neuen Lehrer anlegen
+						</template>
+					</svws-ui-tooltip>
+				</template>
 			</svws-ui-table>
 		</template>
 	</svws-ui-secondary-menu>
@@ -29,9 +38,11 @@
 
 <script setup lang="ts">
 
-	import { computed, ref, shallowRef } from "vue";
-	import type { SortByAndOrder } from "@ui";
+	import { computed, ref } from "vue";
+	import type { SortByAndOrder} from "@ui";
+	import { ViewType } from "@ui";
 	import type { PersonalTyp, LehrerListeEintrag } from "@core";
+	import { ServerMode } from "@core";
 	import type { LehrerAuswahlProps } from "./SLehrerAuswahlProps";
 
 	const props = defineProps<LehrerAuswahlProps>();
@@ -98,12 +109,6 @@
 		}
 	})
 
-
-	const actions = [
-		{ label: "Löschen", action: "delete" },
-		{ label: "Kopieren", action: "copy" }
-	];
-
 	const search = ref<string>("");
 
 	const rowsFiltered = computed<LehrerListeEintrag[]>(() => {
@@ -127,20 +132,18 @@
 		return (props.lehrerListeManager().personaltypen.auswahlExists());
 	}
 
-	const selectedItems = shallowRef<LehrerListeEintrag[]>([]);
+	const clickedEintrag = computed(() => ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN)) ? null
+		: (props.lehrerListeManager().hasDaten() ? props.lehrerListeManager().auswahl() : null));
 
-	function setAuswahl(items : LehrerListeEintrag[]) {
-		const auswahl = props.lehrerListeManager().liste;
-		for (const vorhanden of [ ... auswahl.auswahl() ])
-			if (!items.includes(vorhanden))
-				auswahl.auswahlRemove(vorhanden);
+	async function setAuswahl(items : LehrerListeEintrag[]) {
+		props.lehrerListeManager().liste.auswahlClear();
 		for (const item of items)
-			auswahl.auswahlAdd(item);
-		selectedItems.value = [ ... auswahl.auswahl() ];
-	}
-
-	function onAction(action: string, item: LehrerListeEintrag) {
-		console.log(action, item);
+			if (props.lehrerListeManager().liste.hasValue(item))
+				props.lehrerListeManager().liste.auswahlAdd(item);
+		if (props.lehrerListeManager().liste.auswahlExists())
+			await props.gotoGruppenprozessView(true);
+		else
+			await props.gotoDefaultView(props.lehrerListeManager().getVorherigeAuswahl()?.id);
 	}
 
 </script>

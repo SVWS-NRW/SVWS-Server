@@ -89,4 +89,11 @@ public class Kurs42DataFachwahlen {
 	 * Leistungsdaten beim Import nicht berücksichtigt werden. */
 	public int Mahnung;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Kurs42DataFachwahlen() {
+		// leer
+	}
+
 }

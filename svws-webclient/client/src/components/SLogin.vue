@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-app-layout :fullwidth-content="!authentication_success" :skeleton="authentication_success" :class="{'app--layout--login': !authentication_success}">
+	<svws-ui-app-layout :fullwidth-content="!authentication_success" :class="{'app--layout--login': !authentication_success}">
 		<template #main>
 			<div class="login-wrapper">
 				<div class="login-container pt-5">

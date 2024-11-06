@@ -23,6 +23,9 @@ export class Sprachendaten extends JavaObject {
 	public pruefungen : List<Sprachpruefung> = new ArrayList<Sprachpruefung>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

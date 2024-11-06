@@ -18,4 +18,11 @@ public class BilingualeSpracheKatalogEintrag extends CoreTypeDataNurSchulformen 
 
 	// keine weiteren Attribute vorhanden
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public BilingualeSpracheKatalogEintrag() {
+		// leer
+	}
+
 }

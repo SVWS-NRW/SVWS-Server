@@ -17,6 +17,9 @@ export class GostBlockungRegelUpdate extends JavaObject {
 	public listHinzuzufuegen : List<GostBlockungRegel> = new ArrayList<GostBlockungRegel>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

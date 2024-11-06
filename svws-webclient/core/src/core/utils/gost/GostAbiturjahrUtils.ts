@@ -54,7 +54,7 @@ export class GostAbiturjahrUtils extends JavaObject {
 			return null;
 		if ((schulform as unknown !== Schulform.GY as unknown) && (!JahrgangsUtils.istGymOb(jahrgang)))
 			restjahre += 3;
-		return aktuellesSchuljahr + restjahre!;
+		return aktuellesSchuljahr + restjahre;
 	}
 
 	/**
@@ -85,7 +85,7 @@ export class GostAbiturjahrUtils extends JavaObject {
 			return null;
 		let strJG : string | null = "" + (sekIJahre - (restlicheJahre - 4));
 		if (strJG.length === 1)
-			strJG = "0" + strJG!;
+			strJG = "0" + strJG;
 		return strJG;
 	}
 

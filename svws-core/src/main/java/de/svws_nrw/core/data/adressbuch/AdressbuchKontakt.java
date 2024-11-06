@@ -82,4 +82,12 @@ public class AdressbuchKontakt extends AdressbuchEintrag {
 	/** Die ID des Adressbuchkontakts der Eltern */
 	@Schema(description = "Die ID des Adressbuchkontakts der Eltern", example = "Erzieher_1234")
 	public String idEltern;
+
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public AdressbuchKontakt() {
+		// leer
+	}
+
 }

@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
 
 import type { BetriebListeEintrag} from "@core";
 import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
@@ -14,11 +14,9 @@ import type { BetriebeAppProps } from "~/components/schule/betriebe/SBetriebeApp
 import type { BetriebeAuswahlProps } from "~/components/schule/betriebe/SBetriebeAuswahlProps";
 import { RouteDataSchuleBetriebe } from "./RouteDataSchuleBetriebe";
 import { routeSchuleBetriebeDaten } from "./RouteSchuleBetriebeDaten";
-import { routeSchule } from "../RouteSchule";
 import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
 import { routeError } from "~/router/error/RouteError";
 
-const SSchuleAuswahl = () => import("~/components/schule/SSchuleAuswahl.vue")
 const SBetriebeAuswahl = () => import("~/components/schule/betriebe/SBetriebeAuswahl.vue")
 const SBetriebeApp = () => import("~/components/schule/betriebe/SBetriebeApp.vue")
 
@@ -30,7 +28,6 @@ export class RouteSchuleBetriebe extends RouteNode<RouteDataSchuleBetriebe, Rout
 		super.propHandler = (route) => this.getProps(route);
 		super.text="Betriebe";
 		super.menugroup = RouteSchuleMenuGroup.SCHULBEZOGEN;
-		super.setView("submenu", SSchuleAuswahl, (route) => routeSchule.getAuswahlProps(route));
 		super.setView("liste", SBetriebeAuswahl, (route) => this.getAuswahlProps(route));
 
 		super.children = [
@@ -49,24 +46,24 @@ export class RouteSchuleBetriebe extends RouteNode<RouteDataSchuleBetriebe, Rout
 				return;
 			let eintrag: BetriebListeEintrag | undefined;
 			if ((id === undefined) && this.data.auswahl)
-				return this.getRoute(this.data.auswahl.id);
+				return this.getRouteDefaultChild();
 			if (id === undefined) {
 				eintrag = this.data.mapKatalogeintraege.get(0);
-				return this.getRoute(eintrag?.id);
+				return this.getRouteDefaultChild({ id: eintrag?.id });
 			}
-			else {
-				eintrag = this.data.mapKatalogeintraege.get(id);
-				if (eintrag === undefined)
-					return;
-			}
+			eintrag = this.data.mapKatalogeintraege.get(id);
+			if (eintrag === undefined)
+				return;
 			await this.data.setEintrag(eintrag);
+			if (to.name === this.name)
+				return this.getRouteDefaultChild();
 		} catch(e) {
-			return routeError.getRoute(e as DeveloperNotificationException);
+			return routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 
-	public getRoute(id: number | undefined) : RouteLocationRaw {
-		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
+	public addRouteParamsFromState() : RouteParamsRawGeneric {
+		return { id : this.data.auswahl?.id ?? undefined };
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): BetriebeAuswahlProps {
@@ -96,7 +93,7 @@ export class RouteSchuleBetriebe extends RouteNode<RouteDataSchuleBetriebe, Rout
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new DeveloperNotificationException("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.auswahl?.id } });
+		await RouteManager.doRoute(node.getRoute());
 		this.data.setView(node, this.children);
 	}
 

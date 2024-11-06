@@ -85,7 +85,7 @@ export class GostKlausurenCollectionSkrsKrsData extends JavaObject {
 				result += ',';
 		}
 		result += ' ]' + ',';
-		result += '"kursKlausurPatched" : ' + ((!obj.kursKlausurPatched) ? 'null' : GostKursklausur.transpilerToJSON(obj.kursKlausurPatched)) + ',';
+		result += '"kursKlausurPatched" : ' + ((obj.kursKlausurPatched === null) ? 'null' : GostKursklausur.transpilerToJSON(obj.kursKlausurPatched)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -117,7 +117,7 @@ export class GostKlausurenCollectionSkrsKrsData extends JavaObject {
 			result += ' ]' + ',';
 		}
 		if (obj.kursKlausurPatched !== undefined) {
-			result += '"kursKlausurPatched" : ' + ((!obj.kursKlausurPatched) ? 'null' : GostKursklausur.transpilerToJSON(obj.kursKlausurPatched)) + ',';
+			result += '"kursKlausurPatched" : ' + ((obj.kursKlausurPatched === null) ? 'null' : GostKursklausur.transpilerToJSON(obj.kursKlausurPatched)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

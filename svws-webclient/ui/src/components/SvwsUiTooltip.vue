@@ -34,9 +34,9 @@
 						top: middlewareData.arrow?.y != null ? middlewareData.arrow.y + 'px' : '',
 						...floatingArrowBalance,
 					}"
-					class="absolute rotate-45 bg-inherit aspect-square w-2"
+					class="absolute rotate-45 bg-inherit aspect-square w-2 tooltip-arrow"
 					ref="floatingArrow" />
-				<slot name="content" />
+				<div class="tooltip-content"><slot name="content" /></div>
 			</div>
 		</Transition>
 	</Teleport>
@@ -136,7 +136,7 @@
 <style lang="postcss">
 .tooltip-trigger {
 	.icon--indicator {
-		@apply text-black dark:text-white;
+		@apply text-ui;
 		width: 1em;
 		height: 1em;
 		margin-left: 0.1em;
@@ -156,11 +156,7 @@
 			filter: invert(44%) sepia(52%) saturate(1260%) hue-rotate(173deg) brightness(91%) contrast(86%);
 
 			.page--statistik & {
-				@apply text-violet-500;
-			}
-
-			.text-error & {
-				color: inherit;
+				@apply text-ui-statistic;
 			}
 		}
 	}
@@ -182,26 +178,67 @@
 }
 
 .tooltip {
+	@apply bg-ui text-ui border border-ui-secondary;
 	@apply rounded-md z-50;
-	@apply px-2 py-0.5 w-max max-w-[24rem];
-	@apply bg-white text-black border border-light dark:bg-black dark:text-white dark:border-white/5;
+	@apply w-max max-w-[24rem];
 	box-shadow: -8px -8px 25px -3px rgb(0 0 0 / 0.1), 8px 8px 25px -3px rgb(0 0 0 / 0.1), -4px 4px 6px -4px rgb(0 0 0 / 0.1);
+
+	&-content {
+		@apply px-2 py-0.5 relative z-10 bg-ui rounded-md;
+	}
+
+	&-arrow {
+		@apply border border-ui-secondary;
+	}
 
 	&--autosize {
 		@apply max-w-none;
 	}
 
 	&--primary {
-		@apply bg-svws text-white dark:bg-svws border-none;
-		@apply shadow-sm shadow-black/25;
+		&,
+		.tooltip-content {
+			@apply bg-ui-brand text-ui-onbrand;
+		}
 
-		.page--statistik & {
-			@apply bg-violet-500 dark:bg-violet-500;
+		&,
+		.tooltip-arrow {
+			@apply border-ui-brand;
+		}
+
+		.page--statistik &,
+		.page--statistik & .tooltip-content {
+			@apply bg-ui-statistic text-ui-onstatistic;
+		}
+
+		.page--statistik &,
+		.page--statistik & .tooltip-arrow {
+			@apply border-ui-statistic;
 		}
 	}
 
 	&--danger {
-		@apply bg-error dark:bg-error text-white border border-error/5 shadow-error/10 shadow-md;
+		&,
+		.tooltip-content {
+			@apply bg-ui-danger text-ui-ondanger;
+		}
+
+		&,
+		.tooltip-arrow {
+			@apply border-ui-danger;
+		}
+	}
+
+	&--dark {
+		&,
+		.tooltip-content {
+			@apply bg-ui-danger text-ui-ondanger;
+		}
+
+		&,
+		.tooltip-arrow {
+			@apply border-ui-danger;
+		}
 	}
 }
 </style>

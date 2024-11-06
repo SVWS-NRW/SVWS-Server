@@ -30,4 +30,11 @@ public class SchulformGliederungJahrgaenge {
 	@Schema(description = "die Liste der Jahrgänge")
 	public @NotNull List<String> jahrgaenge = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SchulformGliederungJahrgaenge() {
+		// leer
+	}
+
 }

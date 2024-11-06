@@ -16,4 +16,11 @@ public class SchulabschlussAllgemeinbildendKatalogEintrag extends CoreTypeData {
 
 	// keine weiteren Attribute
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SchulabschlussAllgemeinbildendKatalogEintrag() {
+		// leer
+	}
+
 }

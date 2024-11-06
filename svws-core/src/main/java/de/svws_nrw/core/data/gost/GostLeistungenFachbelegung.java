@@ -57,4 +57,11 @@ public class GostLeistungenFachbelegung {
 	/** Gibt die Anzahl der unentschuldigten Fehlstunden in dem Halbjahr an. */
 	public int fehlstundenUnentschuldigt;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GostLeistungenFachbelegung() {
+		// leer
+	}
+
 }

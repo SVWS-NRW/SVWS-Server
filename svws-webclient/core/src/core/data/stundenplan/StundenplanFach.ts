@@ -35,6 +35,9 @@ export class StundenplanFach extends JavaObject {
 	public farbe : RGBFarbe | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -78,7 +81,7 @@ export class StundenplanFach extends JavaObject {
 		result += '"kuerzelStatistik" : ' + JSON.stringify(obj.kuerzelStatistik) + ',';
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
-		result += '"farbe" : ' + ((!obj.farbe) ? 'null' : RGBFarbe.transpilerToJSON(obj.farbe)) + ',';
+		result += '"farbe" : ' + ((obj.farbe === null) ? 'null' : RGBFarbe.transpilerToJSON(obj.farbe)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -102,7 +105,7 @@ export class StundenplanFach extends JavaObject {
 			result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		}
 		if (obj.farbe !== undefined) {
-			result += '"farbe" : ' + ((!obj.farbe) ? 'null' : RGBFarbe.transpilerToJSON(obj.farbe)) + ',';
+			result += '"farbe" : ' + ((obj.farbe === null) ? 'null' : RGBFarbe.transpilerToJSON(obj.farbe)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

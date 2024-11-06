@@ -50,7 +50,7 @@
 				</svws-ui-tooltip>
 			</span>
 		</span>
-		<span v-if="data != null && !hideStepper && !disabled" class="svws-input-stepper">
+		<span v-if="data !== null && !hideStepper && !disabled" class="svws-input-stepper">
 			<button ref="btnMinus" role="button" @click="onInputNumber('down')" @blur="onBlur" :class="{'svws-disabled': String($attrs?.min) === String(data)}"><span class="icon i-ri-subtract-line inline-block" /></button>
 			<button ref="btnPlus" role="button" @click="onInputNumber('up')" @blur="onBlur" :class="{'svws-disabled': String($attrs?.max) === String(data)}"><span class="icon i-ri-add-line inline-block" /></button>
 		</span>
@@ -61,7 +61,6 @@
 <script setup lang="ts">
 
 	import { ref, computed, watch, type ComputedRef, type Ref, useId, useAttrs } from "vue";
-	import { genId } from "../utils";
 
 	defineOptions({
 		inheritAttrs: false,
@@ -173,7 +172,7 @@
 		data.value = props.modelValue;
 	}
 
-	const labelId = genId();
+	const labelId = useId();
 
 	const content = computed<number | null>(() => data.value);
 
@@ -195,10 +194,10 @@
 		@apply overflow-hidden whitespace-nowrap text-base;
 
 		input::placeholder {
-			@apply text-black/25 dark:text-white/25;
+			@apply text-ui-secondary;
 
 			.placeholder--visible & {
-				@apply text-black dark:text-white;
+				@apply text-ui;
 			}
 		}
 
@@ -216,7 +215,8 @@
 	}
 
 	.input-number-component .svws-icon {
-		@apply pointer-events-none absolute top-1 right-1 bottom-1 bg-white dark:bg-black w-5 rounded inline-flex items-center justify-end pr-1 leading-none;
+		@apply bg-ui;
+		@apply pointer-events-none absolute top-1 right-1 bottom-1 w-5 rounded inline-flex items-center justify-end pr-1 leading-none;
 
 		span.icon {
 			@apply opacity-25 -mr-0.5;
@@ -233,33 +233,36 @@
 	}
 
 	.input-number--statistics .svws-icon {
-		@apply text-violet-500;
+		@apply text-ui-statistic;
 
 		span.icon {
 			-webkit-filter: brightness(0) saturate(100%) invert(37%) sepia(71%) saturate(868%) hue-rotate(224deg) brightness(103%) contrast(93%);
 			filter: brightness(0) saturate(100%) invert(37%) sepia(71%) saturate(868%) hue-rotate(224deg) brightness(103%) contrast(93%);
 		}
+
+		/* TODO: COLORS icon darkmode */
 	}
 
 	.input-number--number {
 		input {
-			@apply pr-12;
+			@apply pr-14;
 			appearance: textfield;
 		}
 
 		.svws-input-stepper {
-			@apply absolute top-1 right-1 bottom-1 flex justify-center items-center gap-0.5;
+			@apply absolute top-1 right-1.5 bottom-1 flex justify-center items-center gap-1;
 
 			button {
-				@apply bg-light dark:bg-white/5 border border-black/10 dark:border-white/10 rounded focus:outline-none leading-none;
+				@apply bg-ui-neutral border border-ui-secondary;
+				@apply rounded-[0.2rem] focus:outline-none leading-none;
 
 				&:hover,
 				&:focus-visible {
-					@apply bg-black/10 dark:bg-white/10;
+					@apply bg-ui-neutral-hover border-ui-neutral-hover;
 				}
 
 				&:focus-visible {
-					@apply ring-2 ring-offset-1 ring-black/25 dark:ring-white/25;
+					@apply ring ring-ui;
 				}
 
 				&.svws-disabled {
@@ -268,6 +271,11 @@
 					span.icon {
 						@apply opacity-50;
 					}
+				}
+
+				.icon {
+					margin-top: 0.1rem;
+					/* TODO: COLORS icon darkmode */
 				}
 			}
 		}
@@ -278,19 +286,20 @@
 	}
 
 	.input-number--invalid .svws-icon {
-		@apply text-error;
+		@apply text-ui-danger;
 	}
 
 	.input-number--control {
-		@apply bg-white dark:bg-black;
-		@apply rounded-md border border-black/5 dark:border-white/5;
+		@apply bg-ui border border-ui-secondary;
+		@apply rounded-md;
 		@apply h-9 w-full;
 		@apply text-base;
 		@apply whitespace-nowrap;
 		padding: 0.5em 0.7em;
 
-		&:hover {
-			@apply border-black/25 dark:border-white/25;
+		&:hover,
+		&:focus-active {
+			@apply border-ui;
 		}
 	}
 
@@ -300,51 +309,51 @@
 
 	.input-number-component:focus-within .input-number--control,
 	.input-number--filled .input-number--control {
-		@apply border-black dark:border-white;
+		@apply border-ui;
 		@apply outline-none;
 	}
 
+	.input-number-component:focus-within .input-number--control {
+		@apply ring ring-ui-neutral;
+	}
+
 	.input-number--filled:not(:focus-within):not(:hover) .input-number--control {
-		@apply border-black/25 dark:border-white/25;
+		@apply border-ui-secondary;
 	}
 
 	.input-number--statistics.input-number--filled:not(:focus-within):not(:hover) .input-number--control,
 	.input-number--statistics:not(:focus-within):not(:hover) .input-number--control {
-		@apply border-violet-500/25 dark:border-violet-800/25;
+		@apply border-ui-statistic;
 	}
 
 	.input-number--invalid.input-number--filled:not(:focus-within):not(:hover) .input-number--control {
-		@apply border-error/25 dark:border-error/25;
+		@apply border-ui-danger;
 	}
 
 	.input-number--statistics.input-number--filled:not(:focus-within):hover .input-number--control,
 	.input-number--statistics:not(:focus-within):hover .input-number--control {
-		@apply border-violet-500/50 dark:border-violet-800/50;
+		@apply border-ui-statistic;
 	}
 
 	.input-number--invalid.input-number--filled:not(:focus-within):hover .input-number--control {
-		@apply border-error/50 dark:border-error/50;
-	}
-
-	.input-number--invalid.input-number--filled:focus-within:hover .input-number--control {
-		@apply border-error/50 dark:border-error/50;
+		@apply border-ui-danger;
 	}
 
 	.input-number--filled:not(:focus-within):hover .input-number--control {
-		@apply border-black/50 dark:border-white/50;
+		@apply border-ui-secondary;
 	}
 
 	.input-number--statistics.input-number-component:focus-within .input-number--control,
 	.input-number--statistics.input-number--filled .input-number--control {
-		@apply border-violet-500;
+		@apply border-ui-statistic;
 	}
 
 	.input-number--readonly:hover .input-number--control {
-		@apply border-black/5 dark:border-white/5;
+		@apply border-ui-secondary;
 	}
 
 	.input-number--readonly.input-number--filled:hover .input-number--control {
-		@apply border-black/25 dark:border-white/25;
+		@apply border-ui;
 	}
 
 	.input-number--control--multiselect-tags {
@@ -353,12 +362,12 @@
 
 	.input-number--statistics {
 		.tooltip-trigger--triggered svg {
-			@apply text-violet-800;
+			@apply text-ui-statistic;
 		}
 	}
 
     &.input-number--filled {
-      @apply text-svws;
+      @apply text-ui-brand;
     }
 
 	/* Das sieht gut aus, aber führt zu Problemen, wenn das Fenster verkleinert wird. Min/Max verwenden?
@@ -394,10 +403,6 @@
 		}
 	}
 
-	.input-number-component:not(.input-number--filled):not(:focus-within):not(.input-number--disabled):not(.input-number--readonly):hover .input-number--placeholder {
-		@apply opacity-100;
-	}
-
 	.input-number--placeholder--prefix {
 		left: 4.5em;
 		top: 0.5em;
@@ -409,10 +414,8 @@
 
 	.input-number-component:focus-within .input-number--placeholder,
 	.input-number--filled .input-number--placeholder {
-		@apply -translate-y-1/2;
-		@apply bg-white dark:bg-black opacity-100;
-		@apply rounded;
-		@apply px-1;
+		@apply bg-ui;
+		@apply -translate-y-1/2 opacity-100 rounded px-1;
 
 		top: 0;
 		left: 0.7em;
@@ -424,25 +427,25 @@
 	}
 
 	.input-number--statistics .input-number--placeholder {
-		@apply text-violet-500 font-bold;
+		@apply text-ui-statistic;
+		@apply font-bold;
 	}
 
-	.input-number--invalid:not(:focus-within) .input-number--placeholder,
+	.input-number--invalid .input-number--placeholder,
 	.input-number--invalid:not(:focus-within) .input-number--control {
-		@apply text-error;
+		@apply text-ui-danger;
 	}
 
 	.input-number--disabled {
-		@apply cursor-default;
+		@apply cursor-default pointer-events-none;
 
 		.input-number--placeholder {
-			@apply text-black/25 dark:text-white/25;
+			@apply text-ui-disabled;
 		}
 	}
 
 	.input-number--control:disabled {
-		@apply bg-black/10 dark:bg-white/10 border-black/25 dark:border-white/25 text-black;
-		@apply opacity-20;
+		@apply text-ui-disabled !border-ui-disabled;
 		@apply pointer-events-none;
 	}
 
@@ -452,7 +455,8 @@
 	}
 
 	.input-number--placeholder--required:after {
-		@apply text-error inline-block font-normal relative;
+		@apply text-ui-danger;
+		@apply inline-block font-normal relative;
 		content: "*";
 		font-size: 1.2em;
 		margin-bottom: -0.2em;

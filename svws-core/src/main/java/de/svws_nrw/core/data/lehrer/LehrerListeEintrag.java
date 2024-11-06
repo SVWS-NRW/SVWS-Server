@@ -50,4 +50,11 @@ public class LehrerListeEintrag {
 	@Schema(description = "gibt an, ob der Eintrag für die Schulstatistik relevant ist oder nicht", example = "true")
 	public boolean istRelevantFuerStatistik;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public LehrerListeEintrag() {
+		// leer
+	}
+
 }

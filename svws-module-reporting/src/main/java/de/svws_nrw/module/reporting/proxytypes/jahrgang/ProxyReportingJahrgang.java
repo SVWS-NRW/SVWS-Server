@@ -24,6 +24,7 @@ public class ProxyReportingJahrgang extends ReportingJahrgang {
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingJahrgang}.
+	 *
 	 * @param reportingRepository Repository für die Reporting.
 	 * @param jahrgangsDaten Stammdaten-Objekt aus der DB.
 	 * @param schuljahresabschnitt Der Schuljahresabschnitt zu diesem Jahrgang.
@@ -51,6 +52,7 @@ public class ProxyReportingJahrgang extends ReportingJahrgang {
 
 	/**
 	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.
+	 *
 	 * @return Repository für die Reporting
 	 */
 	public ReportingRepository reportingRepository() {
@@ -59,6 +61,7 @@ public class ProxyReportingJahrgang extends ReportingJahrgang {
 
 	/**
 	 * Stellt die Daten des Folgejahrgangs zur Verfügung.
+	 *
 	 * @return Daten des Folgejahrgangs
 	 */
 	@Override
@@ -69,16 +72,16 @@ public class ProxyReportingJahrgang extends ReportingJahrgang {
 				//  Jahrgänge übernommen und der Folgejahrgang innerhalb des gleichen Lernabschnitts ermittelt, da keine Regelung zum Folgejahrgang und einem
 				//  Folgeabschnitt im System implementiert ist. Daher wird eine direkt Rückgabe erzeugt, die aber nie auftreten dürfte.
 				return super.folgejahrgang();
-			} else {
-				// ID des FolgeJahrgangs ist bekannt und der Jahrgang wurde in einem Lernabschnitt bereits erzeugt, hole ihn aus Lernabschnitt.
-				super.folgejahrgang = super.schuljahresabschnitt().jahrgang(super.idFolgejahrgang());
 			}
+			// ID des FolgeJahrgangs ist bekannt und der Jahrgang wurde in einem Lernabschnitt bereits erzeugt, hole ihn aus Lernabschnitt.
+			super.folgejahrgang = super.schuljahresabschnitt().jahrgang(super.idFolgejahrgang());
 		}
 		return super.folgejahrgang();
 	}
 
 	/**
 	 * Stellt eine Liste mit Klassen des Jahrgangs im übergebenen Schuljahresabschnitt zur Verfügung.
+	 *
 	 * @return	Liste mit Klassen
 	 */
 	@Override
@@ -97,6 +100,7 @@ public class ProxyReportingJahrgang extends ReportingJahrgang {
 
 	/**
 	 * Stellt eine Liste mit Schülern des Jahrgangs zur Verfügung.
+	 *
 	 * @return	Liste mit Schülern
 	 */
 	@Override

@@ -114,7 +114,7 @@
 	}
 
 	.router-vertical-tab-bar--content {
-		@apply bg-light rounded-md p-[2px];
+		@apply bg-ui-neutral rounded-md p-[2px];
 		@apply flex flex-col items-center;
 		@apply overflow-y-scroll;
 		@apply relative;
@@ -130,7 +130,7 @@
 		}
 
 		.svws-ui-tab-button.svws-active {
-			@apply overflow-hidden bg-white;
+			@apply overflow-hidden bg-ui;
 
 			&:after {
 				@apply hidden;
@@ -171,11 +171,11 @@
 		@apply pointer-events-auto;
 		@apply py-3.5;
 		@apply rounded-full;
-		@apply text-black;
+		@apply text-ui;
 	}
 
 	.router-vertical-tab-bar--scroll-button:focus {
-		@apply outline-none ring ring-inset ring-primary ring-opacity-75;
+		@apply outline-none ring ring-inset ring-ui-brand ring-opacity-75;
 	}
 
 </style>

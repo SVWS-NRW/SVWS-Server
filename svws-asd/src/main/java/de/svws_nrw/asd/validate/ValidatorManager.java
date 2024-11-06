@@ -170,8 +170,7 @@ public final class ValidatorManager {
 	 * @return die Map, die für das gegebene Schuljahr die Fehlerart pro Validator enthält
 	 */
 	private @NotNull HashMap<String, ValidatorFehlerart> getValidatornameToFehlerartCache(final int schuljahr) {
-		@NotNull
-		final HashMap<String, ValidatorFehlerart> mapValidatorToFehlerart = computeIfAbsentValidatornameToFehlerart(schuljahr);
+		final @NotNull HashMap<String, ValidatorFehlerart> mapValidatorToFehlerart = computeIfAbsentValidatornameToFehlerart(schuljahr);
 		// Prüfe, ob die Einträge im Cache sind. Wenn nicht, dann erzeuge die Daten im Cache
 		if (mapValidatorToFehlerart.isEmpty())
 			createCache(schuljahr);
@@ -188,8 +187,7 @@ public final class ValidatorManager {
 	 * @return die Map, die für das gegebene Schuljahr pro Fehlerart die Liste der Validatornamen enthält
 	 */
 	private @NotNull HashMap<ValidatorFehlerart, List<String>> getFehlerartToValidatornameCache(final int schuljahr) {
-		@NotNull
-		final HashMap<ValidatorFehlerart, List<String>> mapFehlerartToValidatorname = computeIfAbsentFehlerartToValidatorname(schuljahr);
+		final @NotNull HashMap<ValidatorFehlerart, List<String>> mapFehlerartToValidatorname = computeIfAbsentFehlerartToValidatorname(schuljahr);
 		// Prüfe, ob die Einträge im Cache sind. Wenn nicht, dann erzeuge die Daten im Cache
 		if (mapFehlerartToValidatorname.isEmpty())
 			createCache(schuljahr);
@@ -321,8 +319,22 @@ public final class ValidatorManager {
 	 *
 	 * @return die Fehlerart des Validators für das angegebene Schuljahr
 	 */
-	public ValidatorFehlerart getFehlerartBySchuljahr(final int schuljahr, final @NotNull String validator) {
+	public ValidatorFehlerart getFehlerartBySchuljahrAndValidatorName(final int schuljahr, final @NotNull String validator) {
 		return getValidatornameToFehlerartCache(schuljahr).get(validator);
+	}
+
+
+	/**
+	 * Gibt die Fehlerart eines Validators für das angegebene Schuljahr zurück.
+	 *
+	 * @param <T>         der Type des Validators
+	 * @param schuljahr   das Schuljahr
+	 * @param validator   die Klasse des Validators
+	 *
+	 * @return die Fehlerart des Validators für das angegebene Schuljahr
+	 */
+	public <T extends Validator<?>> ValidatorFehlerart getFehlerartBySchuljahrAndValidatorClass(final int schuljahr, final @NotNull Class<T> validator) {
+		return getValidatornameToFehlerartCache(schuljahr).get(validator.getCanonicalName());
 	}
 
 
@@ -334,18 +346,18 @@ public final class ValidatorManager {
 	 * @param fehlerart   die Fehlerart des Validators
 	 */
 	public void setFehlerartBySchuljahr(final int schuljahr, final @NotNull String validator, final @NotNull ValidatorFehlerart fehlerart) {
-		//ändere Cache FehlerartToValidatorname
+		// Ändere Cache FehlerartToValidatorname
 		final @NotNull HashMap<ValidatorFehlerart, List<String>> mapFehlerartToValidator = getFehlerartToValidatornameCache(schuljahr);
-		//entferne validator aus alter Fehlerartliste, wenn vorhanden
-		final ValidatorFehlerart art = getFehlerartBySchuljahr(schuljahr, validator);
+		// Entferne validator aus alter Fehlerartliste, wenn vorhanden
+		final ValidatorFehlerart art = getFehlerartBySchuljahrAndValidatorName(schuljahr, validator);
 		if (art != null) {
 			final List<String> list = mapFehlerartToValidator.get(art);
 			if (list != null)
 				list.remove(validator);
 		}
-		//füge den Validator in entsprechende Fehlerartliste ein
+		// Füge den Validator in entsprechende Fehlerartliste ein
 		computeIfAbsentFehlerartValidator(fehlerart, mapFehlerartToValidator).add(validator);
-		//ändere Cache ValidatornameToFehlerart
+		// Ändere Cache ValidatornameToFehlerart
 		final @NotNull HashMap<String, ValidatorFehlerart> map = getValidatornameToFehlerartCache(schuljahr);
 		map.remove(validator);
 		map.put(validator, fehlerart);

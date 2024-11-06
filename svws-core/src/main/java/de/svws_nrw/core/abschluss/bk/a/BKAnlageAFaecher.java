@@ -13,6 +13,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(name = "BKAbschlussFaecher", description = "Die Fachinformationen für eine Abschlussberechnung.")
 public class BKAnlageAFaecher {
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public BKAnlageAFaecher() {
+		// leer
+	}
+
 	/** Die Fachinformationen. */
 	@Schema(description = "Die Fachinformationen.")
 	public List<BKAnlageAFach> faecher;

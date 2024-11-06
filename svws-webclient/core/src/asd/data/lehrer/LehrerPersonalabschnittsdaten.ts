@@ -68,6 +68,9 @@ export class LehrerPersonalabschnittsdaten extends JavaObject {
 	public readonly funktionen : List<LehrerPersonalabschnittsdatenLehrerfunktion> = new ArrayList<LehrerPersonalabschnittsdatenLehrerfunktion>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -127,11 +130,11 @@ export class LehrerPersonalabschnittsdaten extends JavaObject {
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"idLehrer" : ' + obj.idLehrer.toString() + ',';
 		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt.toString() + ',';
-		result += '"pflichtstundensoll" : ' + ((!obj.pflichtstundensoll) ? 'null' : obj.pflichtstundensoll.toString()) + ',';
-		result += '"rechtsverhaeltnis" : ' + ((!obj.rechtsverhaeltnis) ? 'null' : JSON.stringify(obj.rechtsverhaeltnis)) + ',';
-		result += '"beschaeftigungsart" : ' + ((!obj.beschaeftigungsart) ? 'null' : JSON.stringify(obj.beschaeftigungsart)) + ',';
-		result += '"einsatzstatus" : ' + ((!obj.einsatzstatus) ? 'null' : JSON.stringify(obj.einsatzstatus)) + ',';
-		result += '"stammschulnummer" : ' + ((!obj.stammschulnummer) ? 'null' : JSON.stringify(obj.stammschulnummer)) + ',';
+		result += '"pflichtstundensoll" : ' + ((obj.pflichtstundensoll === null) ? 'null' : obj.pflichtstundensoll.toString()) + ',';
+		result += '"rechtsverhaeltnis" : ' + ((obj.rechtsverhaeltnis === null) ? 'null' : JSON.stringify(obj.rechtsverhaeltnis)) + ',';
+		result += '"beschaeftigungsart" : ' + ((obj.beschaeftigungsart === null) ? 'null' : JSON.stringify(obj.beschaeftigungsart)) + ',';
+		result += '"einsatzstatus" : ' + ((obj.einsatzstatus === null) ? 'null' : JSON.stringify(obj.einsatzstatus)) + ',';
+		result += '"stammschulnummer" : ' + ((obj.stammschulnummer === null) ? 'null' : JSON.stringify(obj.stammschulnummer)) + ',';
 		result += '"anrechnungen" : [ ';
 		for (let i = 0; i < obj.anrechnungen.size(); i++) {
 			const elem = obj.anrechnungen.get(i);
@@ -181,19 +184,19 @@ export class LehrerPersonalabschnittsdaten extends JavaObject {
 			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt.toString() + ',';
 		}
 		if (obj.pflichtstundensoll !== undefined) {
-			result += '"pflichtstundensoll" : ' + ((!obj.pflichtstundensoll) ? 'null' : obj.pflichtstundensoll.toString()) + ',';
+			result += '"pflichtstundensoll" : ' + ((obj.pflichtstundensoll === null) ? 'null' : obj.pflichtstundensoll.toString()) + ',';
 		}
 		if (obj.rechtsverhaeltnis !== undefined) {
-			result += '"rechtsverhaeltnis" : ' + ((!obj.rechtsverhaeltnis) ? 'null' : JSON.stringify(obj.rechtsverhaeltnis)) + ',';
+			result += '"rechtsverhaeltnis" : ' + ((obj.rechtsverhaeltnis === null) ? 'null' : JSON.stringify(obj.rechtsverhaeltnis)) + ',';
 		}
 		if (obj.beschaeftigungsart !== undefined) {
-			result += '"beschaeftigungsart" : ' + ((!obj.beschaeftigungsart) ? 'null' : JSON.stringify(obj.beschaeftigungsart)) + ',';
+			result += '"beschaeftigungsart" : ' + ((obj.beschaeftigungsart === null) ? 'null' : JSON.stringify(obj.beschaeftigungsart)) + ',';
 		}
 		if (obj.einsatzstatus !== undefined) {
-			result += '"einsatzstatus" : ' + ((!obj.einsatzstatus) ? 'null' : JSON.stringify(obj.einsatzstatus)) + ',';
+			result += '"einsatzstatus" : ' + ((obj.einsatzstatus === null) ? 'null' : JSON.stringify(obj.einsatzstatus)) + ',';
 		}
 		if (obj.stammschulnummer !== undefined) {
-			result += '"stammschulnummer" : ' + ((!obj.stammschulnummer) ? 'null' : JSON.stringify(obj.stammschulnummer)) + ',';
+			result += '"stammschulnummer" : ' + ((obj.stammschulnummer === null) ? 'null' : JSON.stringify(obj.stammschulnummer)) + ',';
 		}
 		if (obj.anrechnungen !== undefined) {
 			result += '"anrechnungen" : [ ';

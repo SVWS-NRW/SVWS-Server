@@ -1,9 +1,8 @@
-import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
+import type { RouteLocationNormalized, RouteParamsRawGeneric } from "vue-router";
 
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
-import { routeApp } from "../RouteApp";
 import { routeGost, type RouteGost } from "./RouteGost";
 import type { GostAbiturjahrgangNeuProps } from "~/components/gost/SGostAbiturjahrgangNeuProps";
 import { ViewType } from "@ui";
@@ -20,8 +19,8 @@ export class RouteGostAbiturjahrNeu extends RouteNode<any, RouteGost> {
 		super.text = "Abiturjahr anlegen";
 	}
 
-	public getRoute(): RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: "" } };
+	public addRouteParamsFromState() : RouteParamsRawGeneric {
+		return { id : "" };
 	}
 
 	public getProps(to: RouteLocationNormalized): GostAbiturjahrgangNeuProps {

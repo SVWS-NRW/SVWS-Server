@@ -24,6 +24,9 @@ export class GostBlockungSchiene extends JavaObject {
 	public wochenstunden : number = 3;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

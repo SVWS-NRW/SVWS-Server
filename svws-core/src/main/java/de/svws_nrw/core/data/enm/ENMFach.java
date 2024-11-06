@@ -34,4 +34,11 @@ public class ENMFach {
 	@Schema(description = "Gibt an, ob es sich bei dem Fach um eine Fremdsprache handelt oder nicht.", example = "false")
 	public boolean istFremdsprache;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ENMFach() {
+		// leer
+	}
+
 }

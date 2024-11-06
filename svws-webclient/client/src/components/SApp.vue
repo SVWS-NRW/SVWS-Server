@@ -66,7 +66,7 @@
 				</template>
 			</svws-ui-menu>
 		</template>
-		<template #secondaryMenu v-if="app.hide !== true">
+		<template #secondaryMenu v-if="showSubmenu()">
 			<template v-if="pendingSetApp">
 				<svws-ui-secondary-menu>
 					<template #headline>
@@ -78,7 +78,16 @@
 				</svws-ui-secondary-menu>
 			</template>
 			<template v-else>
-				<router-view :key="app.name" name="submenu" />
+				<svws-ui-secondary-menu>
+					<template #headline> {{ app.name.startsWith('schule') ? "Schule" : "Einstellungen" }} </template>
+					<template #abschnitt v-if="app.name.startsWith('schule')">
+						<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
+					</template>
+					<template #header />
+					<template #content>
+						<svws-ui-secondary-menu-navigation :tab-manager="(app.name.startsWith('schule') ? tabManagerSchule : tabManagerEinstellungen)" />
+					</template>
+				</svws-ui-secondary-menu>
 			</template>
 		</template>
 		<template #tertiaryMenu v-if="app.hide !== true">

@@ -24,4 +24,11 @@ public class SchuelerblockungOutputFachwahlZuKurs {
 	 * nicht zugeordnet werden konnte, was als <b>Nicht-Wahl</b> bezeichnet wird. */
 	public long kursID;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SchuelerblockungOutputFachwahlZuKurs() {
+		// leer
+	}
+
 }

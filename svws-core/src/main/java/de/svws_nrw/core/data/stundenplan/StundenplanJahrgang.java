@@ -26,4 +26,11 @@ public class StundenplanJahrgang {
 	@Schema(description = "Die Bezeichnung des Jahrgangs", example = "6. Jahrgang")
 	public @NotNull String bezeichnung = "";
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public StundenplanJahrgang() {
+		// leer
+	}
+
 }

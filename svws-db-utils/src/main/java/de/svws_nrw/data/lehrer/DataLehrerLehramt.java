@@ -42,7 +42,7 @@ public final class DataLehrerLehramt extends DataManager<Long> {
 		final LehrerLehramtAnerkennungKatalogEintrag eintragAnerkennung = (anerkennung == null) ? null : anerkennung.daten(schuljahr);
 		daten.idAnerkennungsgrund = (eintragAnerkennung == null) ? null : eintragAnerkennung.id;
 		return daten;
-	};
+	}
 
 	@Override
 	public Response getAll() {

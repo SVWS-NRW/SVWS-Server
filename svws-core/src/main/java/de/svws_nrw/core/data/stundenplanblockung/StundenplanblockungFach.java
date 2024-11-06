@@ -25,4 +25,11 @@ public class StundenplanblockungFach {
 	/** Die Nummer, welche die Sortierung der Fächer angibt. */
 	public int sortierung = 32000;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public StundenplanblockungFach() {
+		// leer
+	}
+
 }

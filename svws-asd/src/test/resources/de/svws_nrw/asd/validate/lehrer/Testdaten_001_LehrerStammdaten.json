@@ -1,0 +1,33 @@
+{
+  "id": 4711,
+  "kuerzel": "KRZ",
+  "personalTyp": "LEHRKRAFT",
+  "anrede": "Herr",
+  "titel": "",
+  "amtsbezeichnung": "OStR",
+  "nachname": "Müller",
+  "vorname": "Frank",
+  "geschlecht": 3,
+  "geburtsdatum": "1990-01-01",
+  "staatsangehoerigkeitID": "000",
+  "strassenname": "Völklinger Straße",
+  "hausnummer": "49",
+  "hausnummerZusatz": null,
+  "wohnortID": null,
+  "ortsteilID": null,
+  "telefon": "0211 5867 40",
+  "telefonMobil": null,
+  "emailPrivat": "frank.mueller@web.de",
+  "emailDienstlich": "frank.mueller@schule.nrw.de",
+  "foto": null,
+  "istSichtbar": true,
+  "istRelevantFuerStatistik": true,
+  "leitungsfunktionen": [ { 
+		"id": 1,
+		"idLeitungsfunktion": 1,
+		"bezeichnung": "Schulleiter",
+		"idLehrer": 4711,
+		"beginn": "2024-08-01",
+		"ende": "2025-07-31"
+    } ]
+}

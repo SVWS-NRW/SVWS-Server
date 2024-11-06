@@ -40,19 +40,46 @@ public class CardAddressDataType {
 	@XmlAttribute(name = "version")
 	private String version;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public CardAddressDataType() {
+		// leer
+	}
+
+	/**
+	 * Gibt den Inhaltstyp zurück.
+	 *
+	 * @return der Inhaltstyp als String.
+	 */
 	public String getContentType() {
 		return contentType;
 	}
 
-	public void setContentType(String contentType) {
+	/**
+	 * Setzt den Inhaltstyp.
+	 *
+	 * @param contentType   der zu setzende Inhaltstyp.
+	 */
+	public void setContentType(final String contentType) {
 		this.contentType = contentType;
 	}
 
+	/**
+	* Gibt die Version zurück.
+	*
+	* @return die Version als String.
+	*/
 	public String getVersion() {
 		return version;
 	}
 
-	public void setVersion(String version) {
+	/**
+	* Setzt die Version.
+	*
+	* @param version   die zu setzende Version.
+	*/
+	public void setVersion(final String version) {
 		this.version = version;
 	}
 

@@ -20,7 +20,7 @@
 	const props = defineProps<{
 		stundenplanManager: () => StundenplanManager;
 		importZeitraster: () => Promise<void>;
-		removeZeitraster: (multi: StundenplanZeitraster[]) => Promise<void>;
+		removeZeitraster: (zeitraster: Iterable<StundenplanZeitraster>) => Promise<void>;
 	}>();
 
 	const _showModal = ref<boolean>(false);
@@ -32,7 +32,7 @@
 
 	async function importer() {
 		const list = props.stundenplanManager().getListZeitraster();
-		await props.removeZeitraster([...list]);
+		await props.removeZeitraster(list);
 		await props.importZeitraster();
 		showModal().value = false;
 	}

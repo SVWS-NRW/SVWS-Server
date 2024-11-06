@@ -52,8 +52,9 @@
 	@apply flex flex-col items-center w-full justify-center mx-auto relative;
 
 	.app--menu--initials--icon {
+		@apply bg-ui text-ui border border-ui-secondary;
 		@apply flex flex-col items-center w-full justify-center mx-auto relative;
-		@apply rounded-lg overflow-hidden bg-white text-black dark:text-white dark:bg-white/5 border border-black/10 dark:border-white/10 font-bold;
+		@apply rounded-lg overflow-hidden font-bold;
 		@apply w-12 h-12 xl:w-14 xl:h-14;
 
 		&.svws-is-admin-client:before {

@@ -30,6 +30,9 @@ export class GostBelegpruefungsdaten extends JavaObject {
 	public gostFaecherKombinationen : List<GostJahrgangFachkombination> = new ArrayList<GostJahrgangFachkombination>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

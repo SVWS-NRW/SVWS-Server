@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
+import type { RouteLocationNormalized } from "vue-router";
 
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
@@ -7,7 +7,6 @@ import { routeEinstellungen } from "~/router/apps/einstellungen/RouteEinstellung
 import { routeEinstellungenBenutzer, type RouteEinstellungenBenutzer } from "~/router/apps/einstellungen/benutzer/RouteEinstellungenBenutzer";
 
 import type { BenutzerProps } from "~/components/einstellungen/benutzer/daten/SBenutzerProps";
-import { routeApp } from "../../RouteApp";
 
 const SBenutzer = () => import("~/components/einstellungen/benutzer/daten/SBenutzer.vue");
 
@@ -18,10 +17,6 @@ export class RouteEinstellungenBenutzerDaten extends RouteNode<any, RouteEinstel
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Benutzer";
-	}
-
-	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): BenutzerProps {

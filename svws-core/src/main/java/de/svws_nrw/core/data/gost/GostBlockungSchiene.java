@@ -29,4 +29,11 @@ public class GostBlockungSchiene {
 	/** Die Anzahl der Wochenstunden, welche der Schiene zugeordnet sind */
 	public int wochenstunden = 3;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GostBlockungSchiene() {
+		// leer
+	}
+
 }

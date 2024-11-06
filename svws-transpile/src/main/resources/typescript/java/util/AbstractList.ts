@@ -193,7 +193,6 @@ export abstract class AbstractList<E> extends AbstractCollection<E> implements L
 	/* Implementierung der Default-Methode removeLast */
 	public removeLast: () => E = java_util_List_removeLast;
 
-
 	public transpilerCanonicalName(): string {
 		return 'java.util.AbstractList';
 	}

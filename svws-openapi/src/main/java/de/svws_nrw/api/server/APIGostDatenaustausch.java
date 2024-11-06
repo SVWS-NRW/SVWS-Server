@@ -46,6 +46,13 @@ import jakarta.ws.rs.core.Response.Status;
 public class APIGostDatenaustausch {
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public APIGostDatenaustausch() {
+		// leer
+	}
+
+	/**
 	 * Die OpenAPI-Methode für den Import einer LuPO-MDB-Datenbank in ein Schema mit dem angegebenen Namen.
 	 *
 	 * @param schemaname    Name des Schemas, in welches die LuPO-Daten importiert werden sollen

@@ -58,4 +58,11 @@ public class StundenplanUnterricht {
 			description = "Ein Array mit den IDs der Schienen, die dieser Unterrichtseinheit zugeordnet sind (im Normalfall eine, bei Kursen mit Schülern aus mehreren Jahrgangsstufen ggf. mehrere)."))
 	public @NotNull List<Long> schienen = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public StundenplanUnterricht() {
+		// leer
+	}
+
 }

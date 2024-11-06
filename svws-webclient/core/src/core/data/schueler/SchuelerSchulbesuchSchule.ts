@@ -49,6 +49,9 @@ export class SchuelerSchulbesuchSchule extends JavaObject {
 	public jahrgangBis : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -83,14 +86,14 @@ export class SchuelerSchulbesuchSchule extends JavaObject {
 	public static transpilerToJSON(obj : SchuelerSchulbesuchSchule) : string {
 		let result = '{';
 		result += '"schulnummer" : ' + JSON.stringify(obj.schulnummer) + ',';
-		result += '"schulgliederung" : ' + ((!obj.schulgliederung) ? 'null' : JSON.stringify(obj.schulgliederung)) + ',';
-		result += '"entlassgrundID" : ' + ((!obj.entlassgrundID) ? 'null' : obj.entlassgrundID.toString()) + ',';
-		result += '"abschlussartID" : ' + ((!obj.abschlussartID) ? 'null' : JSON.stringify(obj.abschlussartID)) + ',';
-		result += '"organisationsFormID" : ' + ((!obj.organisationsFormID) ? 'null' : JSON.stringify(obj.organisationsFormID)) + ',';
-		result += '"datumVon" : ' + ((!obj.datumVon) ? 'null' : JSON.stringify(obj.datumVon)) + ',';
-		result += '"datumBis" : ' + ((!obj.datumBis) ? 'null' : JSON.stringify(obj.datumBis)) + ',';
-		result += '"jahrgangVon" : ' + ((!obj.jahrgangVon) ? 'null' : JSON.stringify(obj.jahrgangVon)) + ',';
-		result += '"jahrgangBis" : ' + ((!obj.jahrgangBis) ? 'null' : JSON.stringify(obj.jahrgangBis)) + ',';
+		result += '"schulgliederung" : ' + ((obj.schulgliederung === null) ? 'null' : JSON.stringify(obj.schulgliederung)) + ',';
+		result += '"entlassgrundID" : ' + ((obj.entlassgrundID === null) ? 'null' : obj.entlassgrundID.toString()) + ',';
+		result += '"abschlussartID" : ' + ((obj.abschlussartID === null) ? 'null' : JSON.stringify(obj.abschlussartID)) + ',';
+		result += '"organisationsFormID" : ' + ((obj.organisationsFormID === null) ? 'null' : JSON.stringify(obj.organisationsFormID)) + ',';
+		result += '"datumVon" : ' + ((obj.datumVon === null) ? 'null' : JSON.stringify(obj.datumVon)) + ',';
+		result += '"datumBis" : ' + ((obj.datumBis === null) ? 'null' : JSON.stringify(obj.datumBis)) + ',';
+		result += '"jahrgangVon" : ' + ((obj.jahrgangVon === null) ? 'null' : JSON.stringify(obj.jahrgangVon)) + ',';
+		result += '"jahrgangBis" : ' + ((obj.jahrgangBis === null) ? 'null' : JSON.stringify(obj.jahrgangBis)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -102,28 +105,28 @@ export class SchuelerSchulbesuchSchule extends JavaObject {
 			result += '"schulnummer" : ' + JSON.stringify(obj.schulnummer) + ',';
 		}
 		if (obj.schulgliederung !== undefined) {
-			result += '"schulgliederung" : ' + ((!obj.schulgliederung) ? 'null' : JSON.stringify(obj.schulgliederung)) + ',';
+			result += '"schulgliederung" : ' + ((obj.schulgliederung === null) ? 'null' : JSON.stringify(obj.schulgliederung)) + ',';
 		}
 		if (obj.entlassgrundID !== undefined) {
-			result += '"entlassgrundID" : ' + ((!obj.entlassgrundID) ? 'null' : obj.entlassgrundID.toString()) + ',';
+			result += '"entlassgrundID" : ' + ((obj.entlassgrundID === null) ? 'null' : obj.entlassgrundID.toString()) + ',';
 		}
 		if (obj.abschlussartID !== undefined) {
-			result += '"abschlussartID" : ' + ((!obj.abschlussartID) ? 'null' : JSON.stringify(obj.abschlussartID)) + ',';
+			result += '"abschlussartID" : ' + ((obj.abschlussartID === null) ? 'null' : JSON.stringify(obj.abschlussartID)) + ',';
 		}
 		if (obj.organisationsFormID !== undefined) {
-			result += '"organisationsFormID" : ' + ((!obj.organisationsFormID) ? 'null' : JSON.stringify(obj.organisationsFormID)) + ',';
+			result += '"organisationsFormID" : ' + ((obj.organisationsFormID === null) ? 'null' : JSON.stringify(obj.organisationsFormID)) + ',';
 		}
 		if (obj.datumVon !== undefined) {
-			result += '"datumVon" : ' + ((!obj.datumVon) ? 'null' : JSON.stringify(obj.datumVon)) + ',';
+			result += '"datumVon" : ' + ((obj.datumVon === null) ? 'null' : JSON.stringify(obj.datumVon)) + ',';
 		}
 		if (obj.datumBis !== undefined) {
-			result += '"datumBis" : ' + ((!obj.datumBis) ? 'null' : JSON.stringify(obj.datumBis)) + ',';
+			result += '"datumBis" : ' + ((obj.datumBis === null) ? 'null' : JSON.stringify(obj.datumBis)) + ',';
 		}
 		if (obj.jahrgangVon !== undefined) {
-			result += '"jahrgangVon" : ' + ((!obj.jahrgangVon) ? 'null' : JSON.stringify(obj.jahrgangVon)) + ',';
+			result += '"jahrgangVon" : ' + ((obj.jahrgangVon === null) ? 'null' : JSON.stringify(obj.jahrgangVon)) + ',';
 		}
 		if (obj.jahrgangBis !== undefined) {
-			result += '"jahrgangBis" : ' + ((!obj.jahrgangBis) ? 'null' : JSON.stringify(obj.jahrgangBis)) + ',';
+			result += '"jahrgangBis" : ' + ((obj.jahrgangBis === null) ? 'null' : JSON.stringify(obj.jahrgangBis)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

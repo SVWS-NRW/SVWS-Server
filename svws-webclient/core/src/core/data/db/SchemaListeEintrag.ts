@@ -39,6 +39,9 @@ export class SchemaListeEintrag extends JavaObject {
 	public isDeactivated : boolean = false;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

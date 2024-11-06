@@ -1,12 +1,12 @@
 import type { WritableComputedRef } from "vue";
 import { computed } from "vue";
-import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
+import type { RouteLocationNormalized } from "vue-router";
 
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 
-import { routeApp, type RouteApp } from "~/router/apps/RouteApp";
+import { type RouteApp } from "~/router/apps/RouteApp";
 
 import type { StatistikAppProps } from "~/components/statistik/SStatistikAppProps";
 import { api } from "~/router/Api";
@@ -29,10 +29,6 @@ export class RouteStatistik extends RouteNode<any, RouteApp> {
 	protected getAuswahlComputedProperty(): WritableComputedRef<undefined> {
 		// TODO
 		return computed({ get(): undefined { return undefined; }, set(value: undefined) { }});
-	}
-
-	public getRoute() : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } };
 	}
 
 	public getProps(to: RouteLocationNormalized): StatistikAppProps {

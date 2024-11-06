@@ -24,4 +24,11 @@ public class KlassenartKatalogEintrag extends CoreTypeData {
 	@Schema(description = "die Informationen zu Schulformen und -gliederungen, wo die Klassenart zulässig ist.")
 	public @NotNull List<SchulformSchulgliederung> zulaessig = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public KlassenartKatalogEintrag() {
+		// leer
+	}
+
 }

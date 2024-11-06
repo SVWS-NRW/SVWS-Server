@@ -26,4 +26,11 @@ public class SchuelerLernabschnittNachpruefungsdaten {
 	@ArraySchema(schema = @Schema(implementation = SchuelerLernabschnittNachpruefung.class, description = "Die angesetzten bzw. durchgeführten Nachprüfungen."))
 	public @NotNull List<SchuelerLernabschnittNachpruefung> pruefungen = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SchuelerLernabschnittNachpruefungsdaten() {
+		// leer
+	}
+
 }

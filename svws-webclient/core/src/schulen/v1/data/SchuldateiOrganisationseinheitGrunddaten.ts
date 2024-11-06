@@ -165,9 +165,9 @@ export class SchuldateiOrganisationseinheitGrunddaten extends SchuldateiEintrag 
 
 	public static transpilerToJSON(obj : SchuldateiOrganisationseinheitGrunddaten) : string {
 		let result = '{';
-		result += '"gueltigab" : ' + ((!obj.gueltigab) ? 'null' : JSON.stringify(obj.gueltigab)) + ',';
-		result += '"gueltigbis" : ' + ((!obj.gueltigbis) ? 'null' : JSON.stringify(obj.gueltigbis)) + ',';
-		result += '"geaendertam" : ' + ((!obj.geaendertam) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
+		result += '"gueltigab" : ' + ((obj.gueltigab === null) ? 'null' : JSON.stringify(obj.gueltigab)) + ',';
+		result += '"gueltigbis" : ' + ((obj.gueltigbis === null) ? 'null' : JSON.stringify(obj.gueltigbis)) + ',';
+		result += '"geaendertam" : ' + ((obj.geaendertam === null) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
 		result += '"id" : ' + JSON.stringify(obj.id) + ',';
 		result += '"schulnummer" : ' + JSON.stringify(obj.schulnummer) + ',';
 		result += '"kurzbezeichnung" : ' + JSON.stringify(obj.kurzbezeichnung) + ',';
@@ -199,13 +199,13 @@ export class SchuldateiOrganisationseinheitGrunddaten extends SchuldateiEintrag 
 	public static transpilerToJSONPatch(obj : Partial<SchuldateiOrganisationseinheitGrunddaten>) : string {
 		let result = '{';
 		if (obj.gueltigab !== undefined) {
-			result += '"gueltigab" : ' + ((!obj.gueltigab) ? 'null' : JSON.stringify(obj.gueltigab)) + ',';
+			result += '"gueltigab" : ' + ((obj.gueltigab === null) ? 'null' : JSON.stringify(obj.gueltigab)) + ',';
 		}
 		if (obj.gueltigbis !== undefined) {
-			result += '"gueltigbis" : ' + ((!obj.gueltigbis) ? 'null' : JSON.stringify(obj.gueltigbis)) + ',';
+			result += '"gueltigbis" : ' + ((obj.gueltigbis === null) ? 'null' : JSON.stringify(obj.gueltigbis)) + ',';
 		}
 		if (obj.geaendertam !== undefined) {
-			result += '"geaendertam" : ' + ((!obj.geaendertam) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
+			result += '"geaendertam" : ' + ((obj.geaendertam === null) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
 		}
 		if (obj.id !== undefined) {
 			result += '"id" : ' + JSON.stringify(obj.id) + ',';

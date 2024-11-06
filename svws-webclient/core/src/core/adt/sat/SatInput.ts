@@ -204,7 +204,7 @@ export class SatInput extends JavaObject {
 			const c : number = this.create_var_OR(a, b);
 			list.addLast(c);
 		}
-		return list.removeFirst()!;
+		return list.removeFirst();
 	}
 
 	/**
@@ -400,11 +400,11 @@ export class SatInput extends JavaObject {
 			return;
 		}
 		if (size === 1) {
-			this.add_clause_1(pList.getFirst()!);
+			this.add_clause_1(pList.getFirst());
 			return;
 		}
 		if (size === 2) {
-			this.add_clause_unequal(pList.getFirst()!, pList.getLast()!);
+			this.add_clause_unequal(pList.getFirst(), pList.getLast());
 			return;
 		}
 		const x : number = this.create_var_at_most_one_tree(pList);
@@ -416,9 +416,9 @@ export class SatInput extends JavaObject {
 		let i : number = 0;
 		for (const value of list) {
 			if (i < amount) {
-				this.add_clause_1(+value!);
+				this.add_clause_1(+value);
 			} else {
-				this.add_clause_1(-value!);
+				this.add_clause_1(-value);
 			}
 			i++;
 		}

@@ -39,6 +39,9 @@ export class Schild3KatalogEintragUnicodeUmwandlung extends JavaObject {
 	public HexErsatzzeichen : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -68,13 +71,13 @@ export class Schild3KatalogEintragUnicodeUmwandlung extends JavaObject {
 
 	public static transpilerToJSON(obj : Schild3KatalogEintragUnicodeUmwandlung) : string {
 		let result = '{';
-		result += '"ID" : ' + ((!obj.ID) ? 'null' : obj.ID.toString()) + ',';
-		result += '"Unicodezeichen" : ' + ((!obj.Unicodezeichen) ? 'null' : JSON.stringify(obj.Unicodezeichen)) + ',';
-		result += '"Ersatzzeichen" : ' + ((!obj.Ersatzzeichen) ? 'null' : JSON.stringify(obj.Ersatzzeichen)) + ',';
-		result += '"DecimalZeichen" : ' + ((!obj.DecimalZeichen) ? 'null' : JSON.stringify(obj.DecimalZeichen)) + ',';
-		result += '"DecimalErsatzzeichen" : ' + ((!obj.DecimalErsatzzeichen) ? 'null' : JSON.stringify(obj.DecimalErsatzzeichen)) + ',';
-		result += '"Hexzeichen" : ' + ((!obj.Hexzeichen) ? 'null' : JSON.stringify(obj.Hexzeichen)) + ',';
-		result += '"HexErsatzzeichen" : ' + ((!obj.HexErsatzzeichen) ? 'null' : JSON.stringify(obj.HexErsatzzeichen)) + ',';
+		result += '"ID" : ' + ((obj.ID === null) ? 'null' : obj.ID.toString()) + ',';
+		result += '"Unicodezeichen" : ' + ((obj.Unicodezeichen === null) ? 'null' : JSON.stringify(obj.Unicodezeichen)) + ',';
+		result += '"Ersatzzeichen" : ' + ((obj.Ersatzzeichen === null) ? 'null' : JSON.stringify(obj.Ersatzzeichen)) + ',';
+		result += '"DecimalZeichen" : ' + ((obj.DecimalZeichen === null) ? 'null' : JSON.stringify(obj.DecimalZeichen)) + ',';
+		result += '"DecimalErsatzzeichen" : ' + ((obj.DecimalErsatzzeichen === null) ? 'null' : JSON.stringify(obj.DecimalErsatzzeichen)) + ',';
+		result += '"Hexzeichen" : ' + ((obj.Hexzeichen === null) ? 'null' : JSON.stringify(obj.Hexzeichen)) + ',';
+		result += '"HexErsatzzeichen" : ' + ((obj.HexErsatzzeichen === null) ? 'null' : JSON.stringify(obj.HexErsatzzeichen)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -83,25 +86,25 @@ export class Schild3KatalogEintragUnicodeUmwandlung extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Schild3KatalogEintragUnicodeUmwandlung>) : string {
 		let result = '{';
 		if (obj.ID !== undefined) {
-			result += '"ID" : ' + ((!obj.ID) ? 'null' : obj.ID.toString()) + ',';
+			result += '"ID" : ' + ((obj.ID === null) ? 'null' : obj.ID.toString()) + ',';
 		}
 		if (obj.Unicodezeichen !== undefined) {
-			result += '"Unicodezeichen" : ' + ((!obj.Unicodezeichen) ? 'null' : JSON.stringify(obj.Unicodezeichen)) + ',';
+			result += '"Unicodezeichen" : ' + ((obj.Unicodezeichen === null) ? 'null' : JSON.stringify(obj.Unicodezeichen)) + ',';
 		}
 		if (obj.Ersatzzeichen !== undefined) {
-			result += '"Ersatzzeichen" : ' + ((!obj.Ersatzzeichen) ? 'null' : JSON.stringify(obj.Ersatzzeichen)) + ',';
+			result += '"Ersatzzeichen" : ' + ((obj.Ersatzzeichen === null) ? 'null' : JSON.stringify(obj.Ersatzzeichen)) + ',';
 		}
 		if (obj.DecimalZeichen !== undefined) {
-			result += '"DecimalZeichen" : ' + ((!obj.DecimalZeichen) ? 'null' : JSON.stringify(obj.DecimalZeichen)) + ',';
+			result += '"DecimalZeichen" : ' + ((obj.DecimalZeichen === null) ? 'null' : JSON.stringify(obj.DecimalZeichen)) + ',';
 		}
 		if (obj.DecimalErsatzzeichen !== undefined) {
-			result += '"DecimalErsatzzeichen" : ' + ((!obj.DecimalErsatzzeichen) ? 'null' : JSON.stringify(obj.DecimalErsatzzeichen)) + ',';
+			result += '"DecimalErsatzzeichen" : ' + ((obj.DecimalErsatzzeichen === null) ? 'null' : JSON.stringify(obj.DecimalErsatzzeichen)) + ',';
 		}
 		if (obj.Hexzeichen !== undefined) {
-			result += '"Hexzeichen" : ' + ((!obj.Hexzeichen) ? 'null' : JSON.stringify(obj.Hexzeichen)) + ',';
+			result += '"Hexzeichen" : ' + ((obj.Hexzeichen === null) ? 'null' : JSON.stringify(obj.Hexzeichen)) + ',';
 		}
 		if (obj.HexErsatzzeichen !== undefined) {
-			result += '"HexErsatzzeichen" : ' + ((!obj.HexErsatzzeichen) ? 'null' : JSON.stringify(obj.HexErsatzzeichen)) + ',';
+			result += '"HexErsatzzeichen" : ' + ((obj.HexErsatzzeichen === null) ? 'null' : JSON.stringify(obj.HexErsatzzeichen)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

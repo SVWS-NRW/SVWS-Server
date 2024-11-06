@@ -25,4 +25,11 @@ public class PrivateKeyCertificateMultipartBody {
 	@FormParam("certificate")
 	public byte[] certificate;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public PrivateKeyCertificateMultipartBody() {
+		// leer
+	}
+
 }

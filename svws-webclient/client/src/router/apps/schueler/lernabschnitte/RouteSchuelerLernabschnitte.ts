@@ -1,11 +1,11 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
 
 import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
 
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
-import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
+import { type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeSchuelerLernabschnittAllgemein } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnittAllgemein";
 import { routeSchuelerLernabschnittLeistungen } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnittLeistungen";
 import { routeSchuelerLernabschnittVersetzungAbschluss } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnittVersetzungAbschluss";
@@ -16,7 +16,6 @@ import { RouteDataSchuelerLernabschnitte } from "~/router/apps/schueler/lernabsc
 
 import type { SchuelerLernabschnitteProps } from "~/components/schueler/lernabschnitte/SSchuelerLernabschnitteProps";
 import { routeSchuelerLernabschnittGostKlausuren } from "./RouteSchuelerLernabschnittGostKlausuren";
-import { routeApp } from "../../RouteApp";
 import type { TabData } from "@ui";
 
 const SSchuelerLernabschnitte = () => import("~/components/schueler/lernabschnitte/SSchuelerLernabschnitte.vue");
@@ -51,13 +50,13 @@ export class RouteSchuelerLernabschnitte extends RouteNode<RouteDataSchuelerLern
 				await routeSchuelerLernabschnitte.data.setLernabschnitt(idSchuljahresabschnitt, wechselNr ?? 0);
 			}
 			if ((to === this) && (this.data.hatAuswahl))
-				return this.getChildRoute(id, this.data.auswahl.schuljahresabschnitt, this.data.auswahl.wechselNr);
+				return this.getRouteView(this.data.view);
 			if (!to.name.startsWith(this.data.view.name))
 				for (const child of this.children)
 					if (to.name.startsWith(child.name))
 						this.data.setView(child, this.children);
 		} catch (e) {
-			return routeError.getRoute(e as DeveloperNotificationException);
+			return routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 
@@ -65,12 +64,10 @@ export class RouteSchuelerLernabschnitte extends RouteNode<RouteDataSchuelerLern
 		this.data.reset();
 	}
 
-	public getChildRoute(id: number, abschnitt: number | undefined, wechselNr: number | undefined) : RouteLocationRaw {
-		return { name: this.data.view.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: id, abschnitt: abschnitt, wechselNr: wechselNr }};
-	}
-
-	public getRoute(id: number, abschnitt: number | undefined, wechselNr: number | undefined) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: id, abschnitt: abschnitt, wechselNr: wechselNr }};
+	public addRouteParamsFromState() : RouteParamsRawGeneric {
+		const abschnitt = this.data.hatAuswahl ? this.data.auswahl.schuljahresabschnitt : undefined;
+		const wechselNr = this.data.hatAuswahl ? this.data.auswahl.wechselNr : undefined;
+		return { abschnitt , wechselNr };
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuelerLernabschnitteProps {
@@ -88,11 +85,7 @@ export class RouteSchuelerLernabschnitte extends RouteNode<RouteDataSchuelerLern
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new DeveloperNotificationException("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: {
-			id: routeSchueler.data.schuelerListeManager.daten().id,
-			abschnitt: this.data.auswahl.schuljahresabschnitt,
-			wechselNr: this.data.auswahl.wechselNr
-		} });
+		await RouteManager.doRoute(this.getRouteView(node));
 		this.data.setView(node, this.children);
 	}
 

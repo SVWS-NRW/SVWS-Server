@@ -246,6 +246,14 @@ public final class DTOs {
 
 
     /**
+     * Leerer privater Konstruktor, da diese Klasse nicht zur Instantiierung vorgesehen ist.
+     */
+    private DTOs() {
+        throw new UnsupportedOperationException("Instantiation not allowed.");
+    }
+
+
+    /**
      * Gibt das Mapping der Datenbank-Tabellennamen zu den zugehörigen Java-DTO-Klassen für die SVWS-DB zurück.
      *
      * @return eine Hashmap mit dem Mapping

@@ -22,6 +22,13 @@ public final class KursblockungAlgorithmus extends Service<GostBlockungsdatenMan
 
 	private final @NotNull Random _random = new Random();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public KursblockungAlgorithmus() {
+		// leer
+	}
+
 	@Override
 	public @NotNull ArrayList<@NotNull GostBlockungsergebnisManager> handle(final @NotNull GostBlockungsdatenManager pInput) {
 		// Logger-Einrückung (relativ +4).

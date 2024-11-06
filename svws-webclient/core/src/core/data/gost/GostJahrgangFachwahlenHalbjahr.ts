@@ -12,6 +12,9 @@ export class GostJahrgangFachwahlenHalbjahr extends JavaObject {
 	public fachwahlen : List<GostFachwahl> = new ArrayList<GostFachwahl>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

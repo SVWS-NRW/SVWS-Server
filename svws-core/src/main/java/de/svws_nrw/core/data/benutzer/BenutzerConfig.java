@@ -25,4 +25,11 @@ public class BenutzerConfig {
 	@Schema(description = "die globale Konfiguration, die auch für den Benutzer gilt")
 	public @NotNull List<BenutzerConfigElement> global = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public BenutzerConfig() {
+		// leer
+	}
+
 }

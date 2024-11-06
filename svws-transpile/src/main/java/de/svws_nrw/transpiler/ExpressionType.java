@@ -21,6 +21,7 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.NewArrayTree;
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.PrimitiveTypeTree;
+import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.source.tree.VariableTree;
@@ -171,6 +172,10 @@ public abstract class ExpressionType implements Tree {
 	public static ExpressionType getExpressionType(final Transpiler transpiler, final Tree type) throws TranspilerException {
 		if (type instanceof final ExpressionType et)
 			return et;
+		if (type instanceof final SwitchExpressionTree set) {
+			final ExpressionType et = getExpressionType(transpiler, set.getExpression());
+			return et;
+		}
 		if (type instanceof final LiteralTree literal) {
 			return switch (literal.getKind()) {
 				case INT_LITERAL -> new ExpressionPrimitiveType(TypeKind.INT);

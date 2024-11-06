@@ -8,7 +8,6 @@ import { routeGost, type RouteGost } from "~/router/apps/gost/RouteGost";
 import type { GostBeratungProps } from "~/components/gost/beratung/SGostBeratungProps";
 import { RouteDataGostBeratung } from "~/router/apps/gost/beratung/RouteDataGostBeratung";
 import { routeError } from "~/router/error/RouteError";
-import { routeApp } from "../../RouteApp";
 import { api } from "~/router/Api";
 import { schulformenGymOb } from "~/router/RouteHelper";
 
@@ -35,15 +34,9 @@ export class RouteGostBeratung extends RouteNode<RouteDataGostBeratung, RouteGos
 				throw new DeveloperNotificationException("Fehler: Die Route ist ungültig - Ein Abiturjahrgang muss angegeben sein");
 			await this.data.ladeDaten(abiturjahr, isEntering);
 		} catch(e) {
-			return routeError.getRoute(e as DeveloperNotificationException);
+			return routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
-
-
-	public getRoute(abiturjahr: number) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr }};
-	}
-
 
 	public getProps(to: RouteLocationNormalized): GostBeratungProps {
 		return {

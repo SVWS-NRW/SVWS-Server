@@ -17,6 +17,13 @@ public final class Boolean01StringConverter extends DBAttributeConverter<Boolean
 	/** Die Instanz des Konverters */
 	public static final Boolean01StringConverter instance = new Boolean01StringConverter();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Boolean01StringConverter() {
+		// leer
+	}
+
 	@Override
 	public String convertToDatabaseColumn(final Boolean value) {
 		return ((value != null) && value) ? "1" : "0";

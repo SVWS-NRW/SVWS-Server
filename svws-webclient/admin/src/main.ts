@@ -2,6 +2,7 @@ import { createApp } from "vue";
 import { router } from "./router/RouteManager";
 
 import "../../ui/src/assets/styles/index.css";
+import "../../ui/src/assets/styles/colors.css";
 import "./svws-client.css";
 
 import SWrapper from "~/components/SWrapper.vue";
@@ -12,7 +13,7 @@ app.use(router);
 app.mixin({
 	created() {
 		const title = this.$options.title;
-		if (title) {
+		if (title !== undefined) {
 			document.title = title;
 		}
 	}

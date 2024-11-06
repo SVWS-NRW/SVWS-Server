@@ -10,7 +10,7 @@
 		<slot />
 	</div>
 </template>
-<style>
+<style lang="postcss">
 	.radio {
 		@apply flex flex-col items-start gap-1;
 	}

@@ -14,6 +14,7 @@ public class ProxyReportingGostKlausurplanungKlausurtermin extends ReportingGost
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingGostKlausurplanungKlausurtermin}.
 	 * Das Hinzufügen dieser Elemente erfolgt in der Proxy-Klassen bei ihrer Erzeugung.
+	 *
 	 * @param gostKlausurtermin	Der GostKlausurtermin mit den Daten zum Klausurtermin.
 	 */
 	public ProxyReportingGostKlausurplanungKlausurtermin(final GostKlausurtermin gostKlausurtermin) {

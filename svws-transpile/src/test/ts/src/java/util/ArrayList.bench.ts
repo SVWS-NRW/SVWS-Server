@@ -1,6 +1,6 @@
 import { bench, describe } from "vitest";
-import { ArrayList } from "@transpiled";
 import { l, n, s } from "../../shared/TestObjects";
+import { ArrayList } from "../../../../../main/resources/typescript/java/util/ArrayList";
 
 let v: ArrayList<unknown>;
 

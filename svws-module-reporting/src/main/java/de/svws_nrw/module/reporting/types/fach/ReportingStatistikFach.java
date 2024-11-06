@@ -62,6 +62,7 @@ public class ReportingStatistikFach {
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
+	 *
 	 * @param abJahrgang Der ASD-Jahrgang, ab dem das Fach zulässig ist (z.B. bei Fremdsprachen)
 	 * @param aufgabenfeld Das Aufgabenfeld, welchem das Fach ggf. zugeordnet ist (1, 2 oder 3)
 	 * @param bezeichnung Die textuelle Beschreibung des Faches
@@ -108,6 +109,7 @@ public class ReportingStatistikFach {
 	// ##### Getter #####
 	/**
 	 * Der ASD-Jahrgang, ab dem das Fach zulässig ist (z.B. bei Fremdsprachen)
+	 *
 	 * @return Inhalt des Feldes abJahrgang
 	 */
 	public String abJahrgang() {
@@ -116,6 +118,7 @@ public class ReportingStatistikFach {
 
 	/**
 	 * Das Aufgabenfeld, welchem das Fach ggf. zugeordnet ist (1, 2 oder 3)
+	 *
 	 * @return Inhalt des Feldes aufgabenfeld
 	 */
 	public Integer aufgabenfeld() {
@@ -124,6 +127,7 @@ public class ReportingStatistikFach {
 
 	/**
 	 * Die textuelle Beschreibung des Faches
+	 *
 	 * @return Inhalt des Feldes bezeichnung
 	 */
 	public String bezeichnung() {
@@ -132,6 +136,7 @@ public class ReportingStatistikFach {
 
 	/**
 	 * Gibt an, ob das Fach bei Export der amtlichen Schulstatistik berücksichtigt werden soll oder nicht.
+	 *
 	 * @return Inhalt des Feldes exportASD
 	 */
 	public boolean exportASD() {
@@ -140,6 +145,7 @@ public class ReportingStatistikFach {
 
 	/**
 	 * Das Kürzel der zugeordneten Fachgruppe
+	 *
 	 * @return Inhalt des Feldes fachgruppe
 	 */
 	public Fachgruppe fachgruppe() {
@@ -148,6 +154,7 @@ public class ReportingStatistikFach {
 
 	/**
 	 * Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
+	 *
 	 * @return Inhalt des Feldes gueltigBis
 	 */
 	public Integer gueltigBis() {
@@ -156,6 +163,7 @@ public class ReportingStatistikFach {
 
 	/**
 	 * Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
+	 *
 	 * @return Inhalt des Feldes gueltigVon
 	 */
 	public Integer gueltigVon() {
@@ -164,6 +172,7 @@ public class ReportingStatistikFach {
 
 	/**
 	 * Die RGB-Farbe des Faches für html
+	 *
 	 * @return Inhalt des Feldes htmlFarbeRGB
 	 */
 	public String htmlFarbeRGB() {
@@ -172,6 +181,7 @@ public class ReportingStatistikFach {
 
 	/**
 	 * Die ID des Katalog-Eintrags.
+	 *
 	 * @return Inhalt des Feldes idFachkatalog
 	 */
 	public long idFachkatalog() {
@@ -180,6 +190,7 @@ public class ReportingStatistikFach {
 
 	/**
 	 * Gibt an, ob das Fach außerhalb des regulären Fachunterrichts unterrichtet wird.
+	 *
 	 * @return Inhalt des Feldes istAusRegUFach
 	 */
 	public boolean istAusRegUFach() {
@@ -188,6 +199,7 @@ public class ReportingStatistikFach {
 
 	/**
 	 * Gibt an, ob es sich bei dem Fach um einen Ersatz für eine Pflichtfremdsprache handelt (siehe auch istHKFS)
+	 *
 	 * @return Inhalt des Feldes istErsatzPflichtFS
 	 */
 	public boolean istErsatzPflichtFS() {
@@ -196,6 +208,7 @@ public class ReportingStatistikFach {
 
 	/**
 	 * Gibt an, ob es sich um eine Fremdsprache handelt
+	 *
 	 * @return Inhalt des Feldes istFremdsprache
 	 */
 	public boolean istFremdsprache() {
@@ -204,6 +217,7 @@ public class ReportingStatistikFach {
 
 	/**
 	 * Gibt an, ob es sich um ein Fach der Herkunftssprache handelt (Unterrichts in der Herkunftssprache oder Herkunftssprache anstelle einer Pflichtfremdsprache)
+	 *
 	 * @return Inhalt des Feldes istHKFS
 	 */
 	public boolean istHKFS() {
@@ -212,6 +226,7 @@ public class ReportingStatistikFach {
 
 	/**
 	 * Gibt an, ob das Religionsfach konfessionell kooperativ unterrichtet wird oder nicht - Teil des Kürzels für die amtliche Schulstatistik
+	 *
 	 * @return Inhalt des Feldes istKonfKoop
 	 */
 	public boolean istKonfKoop() {
@@ -220,6 +235,7 @@ public class ReportingStatistikFach {
 
 	/**
 	 * Das atomare Kürzel des Faches (z.B. bei Fremdsprachen - für das Sprachenkürzel) - Teil des Kürzels für die amtliche Schulstatistik
+	 *
 	 * @return Inhalt des Feldes kuerzel
 	 */
 	public String kuerzel() {
@@ -228,6 +244,7 @@ public class ReportingStatistikFach {
 
 	/**
 	 * Das eindeutige Kürzel des Faches entsprechend der Vorgaben der amtlichen Schulstatistik
+	 *
 	 * @return Inhalt des Feldes kuerzelASD
 	 */
 	public String kuerzelASD() {
@@ -236,6 +253,7 @@ public class ReportingStatistikFach {
 
 	/**
 	 * Gibt an, ob das Fach nur in der Sekundarstufe II unterrichtet wird.
+	 *
 	 * @return Inhalt des Feldes nurSII
 	 */
 	public boolean nurSII() {

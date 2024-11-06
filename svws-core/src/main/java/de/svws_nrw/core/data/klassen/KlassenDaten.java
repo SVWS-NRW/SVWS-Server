@@ -120,4 +120,11 @@ public class KlassenDaten {
 	@Schema(description = "gibt am WBK an, ob die Klassen im Sommersemester angefangen hat", example = "false")
 	public boolean beginnSommersemester = false;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public KlassenDaten() {
+		// leer
+	}
+
 }

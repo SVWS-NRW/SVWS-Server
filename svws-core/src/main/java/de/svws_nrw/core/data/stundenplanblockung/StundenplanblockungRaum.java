@@ -24,4 +24,11 @@ public class StundenplanblockungRaum {
 	/** Das Kürzel des Raumes. Beispielsweise 'E21'. */
 	public @NotNull String kuerzel = "";
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public StundenplanblockungRaum() {
+		// leer
+	}
+
 }

@@ -162,14 +162,14 @@ export class NationalitaetenKatalogEintrag extends JavaObject {
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"iso3" : ' + JSON.stringify(obj.iso3) + ',';
 		result += '"iso2" : ' + JSON.stringify(obj.iso2) + ',';
-		result += '"isoNumerisch" : ' + ((!obj.isoNumerisch) ? 'null' : JSON.stringify(obj.isoNumerisch)) + ',';
+		result += '"isoNumerisch" : ' + ((obj.isoNumerisch === null) ? 'null' : JSON.stringify(obj.isoNumerisch)) + ',';
 		result += '"codeDEStatis" : ' + JSON.stringify(obj.codeDEStatis) + ',';
 		result += '"bezeichnungSuche" : ' + JSON.stringify(obj.bezeichnungSuche) + ',';
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		result += '"bezeichnungLang" : ' + JSON.stringify(obj.bezeichnungLang) + ',';
 		result += '"staatsangehoerigkeit" : ' + JSON.stringify(obj.staatsangehoerigkeit) + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+		result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -187,7 +187,7 @@ export class NationalitaetenKatalogEintrag extends JavaObject {
 			result += '"iso2" : ' + JSON.stringify(obj.iso2) + ',';
 		}
 		if (obj.isoNumerisch !== undefined) {
-			result += '"isoNumerisch" : ' + ((!obj.isoNumerisch) ? 'null' : JSON.stringify(obj.isoNumerisch)) + ',';
+			result += '"isoNumerisch" : ' + ((obj.isoNumerisch === null) ? 'null' : JSON.stringify(obj.isoNumerisch)) + ',';
 		}
 		if (obj.codeDEStatis !== undefined) {
 			result += '"codeDEStatis" : ' + JSON.stringify(obj.codeDEStatis) + ',';
@@ -205,10 +205,10 @@ export class NationalitaetenKatalogEintrag extends JavaObject {
 			result += '"staatsangehoerigkeit" : ' + JSON.stringify(obj.staatsangehoerigkeit) + ',';
 		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+			result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+			result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

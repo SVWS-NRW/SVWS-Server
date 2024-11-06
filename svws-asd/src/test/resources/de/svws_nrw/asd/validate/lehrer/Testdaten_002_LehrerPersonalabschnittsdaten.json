@@ -1,0 +1,33 @@
+{
+  "id": 1,
+  "idLehrer": 4711,
+  "idSchuljahresabschnitt": 1,
+  "pflichtstundensoll": 25.5,
+  "rechtsverhaeltnis": "L",
+  "beschaeftigungsart": "V",
+  "einsatzstatus": null,
+  "stammschulnummer": null,
+   "anrechnungen": [ { 
+		"id": 1,
+		"idAbschnittsdaten": 1,
+		"idGrund": 330000,
+		"anzahl": 3.0
+    } , {
+		"id": 2,
+		"idAbschnittsdaten": 1,
+		"idGrund": 520000,
+		"anzahl": 1.5
+	} ],
+   "mehrleistung": [ { 
+		"id": 1,
+		"idAbschnittsdaten": 1,
+		"idGrund": 3,
+		"anzahl": 0.5
+    } ],
+   "minderleistung": null,
+   "funktionen": [ { 
+		"id": 1,
+		"idAbschnittsdaten": 1,
+		"idFunktion": 1
+    } ]
+}

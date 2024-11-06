@@ -17,6 +17,9 @@ export class AbgangsartKatalogEintrag extends JavaObject {
 	public historie : List<AbgangsartKatalogDaten> = new ArrayList<AbgangsartKatalogDaten>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

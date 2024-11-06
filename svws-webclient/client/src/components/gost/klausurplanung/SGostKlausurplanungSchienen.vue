@@ -27,54 +27,52 @@
 			<svws-ui-button type="primary" @click="blocken"> Blocken </svws-ui-button>
 		</template>
 	</svws-ui-modal>
-
 	<div class="page--content page--content--full relative">
-		<svws-ui-content-card title="In Planung">
-			<div class="flex flex-col p-1" @drop="onDrop(undefined)" @dragover="$event.preventDefault()" :class="[(dragData !== undefined && dragData instanceof GostKursklausur && dragData.idTermin !== null) ? 'ring-offset-8 ring-4 ring-error/20 rounded-xl' : '' ]">
-				<svws-ui-table :items="props.kMan().kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value)" :columns="cols">
-					<template #noData>
-						<div class="leading-tight flex flex-col gap-0.5">
-							<span>Aktuell keine Klausuren zu planen.</span>
-							<span class="opacity-50">Bereits geplante Einträge können hier zurückgelegt werden.</span>
+		<div class="flex flex-col p-1" @drop="onDrop(undefined)" @dragover="$event.preventDefault()" :class="[(dragData !== undefined && dragData instanceof GostKursklausur && dragData.idTermin !== null) ? 'ring-offset-8 ring-4 ring-error/20 rounded-xl' : '' ]">
+			<h3 class="content-card--headline my-5 mt-8" title="In Planung">In Planung</h3>
+			<svws-ui-table :items="props.kMan().kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value)" :columns="cols">
+				<template #noData>
+					<div class="leading-tight flex flex-col gap-0.5">
+						<span>Aktuell keine Klausuren zu planen.</span>
+						<span class="opacity-50">Bereits geplante Einträge können hier zurückgelegt werden.</span>
+					</div>
+				</template>
+				<template #header(schriftlich)>
+					<svws-ui-tooltip>
+						<span class="icon i-ri-group-line" />
+						<template #content>Schriftlich/Insgesamt im Kurs</template>
+					</svws-ui-tooltip>
+				</template>
+				<template #header(dauer)>
+					<svws-ui-tooltip>
+						<span class="icon i-ri-time-line" />
+						<template #content>Dauer in Minuten</template>
+					</svws-ui-tooltip>
+				</template>
+				<template #body>
+					<div v-for="klausur in props.kMan().kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value)" class="svws-ui-tr cursor-grab active:cursor-grabbing" role="row"
+						:key="klausur.id"
+						:data="klausur"
+						:draggable="draggable(klausur)"
+						@dragstart="onDrag(klausur)"
+						@dragend="onDrag(undefined)"
+						:class="klausurCssClasses(klausur, undefined)">
+						<div class="svws-ui-td">
+							<span v-if="hatKompetenzUpdate" class="icon i-ri-draggable -m-0.5 -ml-4 -mr-1" />
+							<span class="svws-ui-badge" :style="`--background-color: ${kMan().fachHTMLFarbeRgbaByKursklausur(klausur)};`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
 						</div>
-					</template>
-					<template #header(schriftlich)>
-						<svws-ui-tooltip>
-							<span class="icon i-ri-group-line" />
-							<template #content>Schriftlich/Insgesamt im Kurs</template>
-						</svws-ui-tooltip>
-					</template>
-					<template #header(dauer)>
-						<svws-ui-tooltip>
-							<span class="icon i-ri-time-line" />
-							<template #content>Dauer in Minuten</template>
-						</svws-ui-tooltip>
-					</template>
-					<template #body>
-						<div v-for="klausur in props.kMan().kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value)" class="svws-ui-tr cursor-grab active:cursor-grabbing" role="row"
-							:key="klausur.id"
-							:data="klausur"
-							:draggable="draggable(klausur)"
-							@dragstart="onDrag(klausur)"
-							@dragend="onDrag(undefined)"
-							:class="klausurCssClasses(klausur, undefined)">
-							<div class="svws-ui-td">
-								<span v-if="hatKompetenzUpdate" class="icon i-ri-draggable -m-0.5 -ml-4 -mr-1" />
-								<span class="svws-ui-badge" :style="`--background-color: ${kMan().fachHTMLFarbeRgbaByKursklausur(klausur)};`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
-							</div>
-							<div class="svws-ui-td">{{ kMan().kursLehrerKuerzelByKursklausur(klausur) }}</div>
-							<div class="svws-ui-td svws-align-right">{{ kMan().schuelerklausurGetMengeByKursklausur(klausur).size() + "/" + kMan().kursAnzahlSchuelerGesamtByKursklausur(klausur) }}</div>
-							<div class="svws-ui-td svws-align-right">{{ kMan().vorgabeByKursklausur(klausur).dauer }}</div>
-							<div class="svws-ui-td svws-align-right"><span class="opacity-50">{{ kMan().kursSchieneByKursklausur(klausur).isEmpty() ? "-" : kMan().kursSchieneByKursklausur(klausur).get(0) }}</span></div>
-							<div class="svws-ui-td svws-align-right -mr-0.5" v-if="!quartalsauswahl.value"><span class="opacity-50">{{ kMan().vorgabeByKursklausur(klausur).quartal }}.</span></div>
-						</div>
-					</template>
-					<template #actions>
-						<svws-ui-button :disabled="!hatKompetenzUpdate" class="-mr-3" type="transparent" @click="erzeugeKursklausurenAusVorgabenOrModal" title="Erstelle Klausuren aus den Vorgaben"><span class="icon i-ri-upload-2-line" />Aus Vorgaben erstellen</svws-ui-button>
-					</template>
-				</svws-ui-table>
-			</div>
-		</svws-ui-content-card>
+						<div class="svws-ui-td">{{ kMan().kursLehrerKuerzelByKursklausur(klausur) }}</div>
+						<div class="svws-ui-td svws-align-right">{{ kMan().schuelerklausurGetMengeByKursklausur(klausur).size() + "/" + kMan().kursAnzahlSchuelerGesamtByKursklausur(klausur) }}</div>
+						<div class="svws-ui-td svws-align-right">{{ kMan().vorgabeByKursklausur(klausur).dauer }}</div>
+						<div class="svws-ui-td svws-align-right"><span class="opacity-50">{{ kMan().kursSchieneByKursklausur(klausur).isEmpty() ? "-" : kMan().kursSchieneByKursklausur(klausur).get(0) }}</span></div>
+						<div class="svws-ui-td svws-align-right -mr-0.5" v-if="!quartalsauswahl.value"><span class="opacity-50">{{ kMan().vorgabeByKursklausur(klausur).quartal }}.</span></div>
+					</div>
+				</template>
+				<template #actions>
+					<svws-ui-button :disabled="!hatKompetenzUpdate" class="-mr-3" type="transparent" @click="erzeugeKursklausurenAusVorgabenOrModal" title="Erstelle Klausuren aus den Vorgaben"><span class="icon i-ri-upload-2-line" />Aus Vorgaben erstellen</svws-ui-button>
+				</template>
+			</svws-ui-table>
+		</div>
 		<svws-ui-content-card>
 			<div class="flex justify-between items-start mb-5">
 				<div class="flex flex-wrap items-center gap-0.5 w-full">
@@ -310,17 +308,8 @@
 
 	const klausurCssClasses = (kl: GostKlausurplanungDragData, termin: GostKlausurtermin | undefined) => {
 		const klausur = kl as GostKursklausur;
-		// let konfliktfreiZuFremdtermin = false;
-		// for (const oTermin of termine.value) {
-		// 	if (oTermin.id !== klausur.idTermin && oTermin.quartal === props.kMan().vorgabeByKursklausur(klausur).quartal || oTermin.quartal === 0)
-		// 		konfliktfreiZuFremdtermin = props.kMan().konflikteAnzahlZuTerminGetByTerminAndKursklausur(oTermin, klausur) === 0;
-		// 	if (konfliktfreiZuFremdtermin)
-		// 		break;
-		// }
 		const konfliktZuEigenemTermin = termin === undefined ? false : props.kMan().konflikteAnzahlZuEigenemTerminGetByKursklausur(klausur) > 0;
 		return {
-			// "svws-ok": !konfliktZuEigenemTermin && konfliktfreiZuFremdtermin,
-			// "bg-yellow-300": !konfliktfreiZuFremdtermin,
 			"bg-red-200": konfliktZuEigenemTermin,
 		}
 	};
@@ -337,9 +326,9 @@
 
 	function calculateColumns() {
 		const cols: DataTableColumn[] = [
-			{ key: "kurs", label: "Kurs", span: 1.25 },
+			{ key: "kurs", label: "Kurs", minWidth: 6.25 },
 			{ key: "kuerzel", label: "Lehrkraft" },
-			{ key: "schriftlich", label: "Schriftlich", span: 0.5, align: "right", minWidth: 3.25 },
+			{ key: "schriftlich", label: "Schriftlich", span: 0.5, align: "center", minWidth: 3.25 },
 			{ key: "dauer", label: "Dauer", tooltip: "Dauer in Minuten", span: 0.5, align: "right", minWidth: 3.25 },
 			{ key: "kursSchiene", label: "S", tooltip: "Schiene", span: 0.25, align: "right", minWidth: 2.75 },
 		];

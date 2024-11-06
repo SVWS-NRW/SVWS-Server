@@ -67,6 +67,12 @@ public class GenerateTestdatenLaufbahn {
 	/// Der Logger
 	private static final Logger logger = new Logger();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GenerateTestdatenLaufbahn() {
+		// leer
+	}
 
 	/**
 	 * Diese Methode schreibt die übergebenen Daten in die angebene Datei.
@@ -87,10 +93,11 @@ public class GenerateTestdatenLaufbahn {
 
 
 	/**
-	 *
+	 ** Hauptmethode zum Generieren von Testfällen für die Gymnasiale Oberstufe aus den Laufbahnplanungsdaten
+     * der Gymnasialen Oberstufe einer SVWS-DB. Diese können im Server-Teilprojekt svws-test-libcore verwendet werden.
 	 *
 	 * @param args  die Optionen für die Codegenerierung, @see options
-	 * @throws ApiOperationException
+	 * @throws ApiOperationException    im Fehlerfall.
 	 */
 	public static void main(final String[] args) throws ApiOperationException {
 		logger.addConsumer(new LogConsumerConsole());

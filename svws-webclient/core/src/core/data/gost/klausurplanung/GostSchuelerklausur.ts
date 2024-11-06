@@ -82,7 +82,7 @@ export class GostSchuelerklausur extends JavaObject {
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"idKursklausur" : ' + obj.idKursklausur.toString() + ',';
 		result += '"idSchueler" : ' + obj.idSchueler.toString() + ',';
-		result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
+		result += '"bemerkung" : ' + ((obj.bemerkung === null) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -100,7 +100,7 @@ export class GostSchuelerklausur extends JavaObject {
 			result += '"idSchueler" : ' + obj.idSchueler.toString() + ',';
 		}
 		if (obj.bemerkung !== undefined) {
-			result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
+			result += '"bemerkung" : ' + ((obj.bemerkung === null) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

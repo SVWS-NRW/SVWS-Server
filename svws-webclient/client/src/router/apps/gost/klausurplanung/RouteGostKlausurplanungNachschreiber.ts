@@ -31,7 +31,7 @@ export class RouteGostKlausurplanungNachschreiber extends RouteNode<any, RouteGo
 			const { abiturjahr } = params ? RouteNode.getIntParams(params, ["abiturjahr"]) : { abiturjahr: undefined };
 			return ((abiturjahr === undefined) || (abiturjahr === -1))
 		} catch (e) {
-			return routeError.getRoute(e as DeveloperNotificationException);
+			return routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 
@@ -42,12 +42,8 @@ export class RouteGostKlausurplanungNachschreiber extends RouteNode<any, RouteGo
 			if ((abiturjahr === undefined) || (halbjahr === null))
 				throw new DeveloperNotificationException("Fehler: Abiturjahr und Halbjahr müssen als Parameter der Route an dieser Stelle vorhanden sein.");
 		} catch(e) {
-			return routeError.getRoute(e instanceof Error ? e : new DeveloperNotificationException("Unbekannter Fehler beim Laden der Klausurplanungsdaten."));
+			return routeError.getErrorRoute(e instanceof Error ? e : new DeveloperNotificationException("Unbekannter Fehler beim Laden der Klausurplanungsdaten."));
 		}
-	}
-
-	public getRoute(abiturjahr: number, halbjahr: number) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr, halbjahr }};
 	}
 
 	public getProps(to: RouteLocationNormalized): GostKlausurplanungNachschreiberProps {

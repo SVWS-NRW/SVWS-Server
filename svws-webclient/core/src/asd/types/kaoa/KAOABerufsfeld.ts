@@ -119,6 +119,17 @@ export class KAOABerufsfeld extends JavaEnum<KAOABerufsfeld> implements CoreType
 	}
 
 	/**
+	 * Liefert alle zulässigen KAoA-Berufsfeld-Historien-Einträge in dem angegebenen Schuljahr zurück.
+	 *
+	 * @param schuljahr   das Schuljahr
+	 *
+	 * @return alle zulässigen KAoA-Berufsfeld-Historien-Einträge in dem angegebenen Schuljahr.
+	 */
+	public static getEintraegeBySchuljahr(schuljahr : number) : List<KAOABerufsfeldKatalogEintrag> {
+		return KAOABerufsfeld.data().getEintraegeBySchuljahr(schuljahr);
+	}
+
+	/**
 	 * Returns an array with enumeration values.
 	 *
 	 * @returns the array with enumeration values

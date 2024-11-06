@@ -8,7 +8,6 @@ import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteS
 import { RouteDataSchuelerSprachen } from "~/router/apps/schueler/sprachen/RouteDataSchuelerSprachen";
 import { type SchuelerSprachenProps } from "~/components/schueler/sprachen/SchuelerSprachenProps";
 import { api } from "~/router/Api";
-import { routeApp } from "../../RouteApp";
 
 const SSchuelerSprachen = () => import("~/components/schueler/sprachen/SSchuelerSprachen.vue");
 
@@ -31,19 +30,15 @@ export class RouteSchuelerSprachen extends RouteNode<RouteDataSchuelerSprachen, 
 			try {
 				await this.data.auswahlSchueler(routeSchueler.data.schuelerListeManager.liste.get(id));
 			} catch(error) {
-				return routeSchueler.getRoute(id);
+				return routeSchueler.getRouteDefaultChild({ id });
 			}
 		} catch (e) {
-			return routeError.getRoute(e as DeveloperNotificationException);
+			return routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 
 	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
 		await this.data.clear();
-	}
-
-	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuelerSprachenProps {

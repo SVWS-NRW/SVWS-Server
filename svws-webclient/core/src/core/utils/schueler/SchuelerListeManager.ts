@@ -316,7 +316,7 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 	 */
 	public schuelerIstImSchuljahresabschnitt(idSchueler : number) : boolean {
 		const schueler : SchuelerListeEintrag | null = this.liste.get(idSchueler);
-		return (schueler !== null) && (schueler.idSchuljahresabschnitt === this._schuljahresabschnitt);
+		return (schueler !== null) && (schueler.idSchuljahresabschnittSchueler === this._schuljahresabschnitt);
 	}
 
 	/**

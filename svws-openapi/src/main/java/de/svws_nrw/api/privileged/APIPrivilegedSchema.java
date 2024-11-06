@@ -74,6 +74,13 @@ import jakarta.ws.rs.core.Response.Status;
 public class APIPrivilegedSchema {
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public APIPrivilegedSchema() {
+		// leer
+	}
+
+	/**
 	 * Erzeugt eine einfache Anwort mit der Angabe, ob die Operation erfolgreich war und
 	 * mit dem Log derOperation.
 	 *

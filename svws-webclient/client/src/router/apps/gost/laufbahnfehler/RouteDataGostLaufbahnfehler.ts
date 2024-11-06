@@ -85,10 +85,10 @@ export class RouteDataGostLaufbahnfehler extends RouteData<RouteStateDataGostLau
 	}
 
 	gotoLaufbahnplanung = async (idSchueler: number) =>
-		await RouteManager.doRoute(routeSchuelerLaufbahnplanung.getRoute(idSchueler));
+		await RouteManager.doRoute(routeSchuelerLaufbahnplanung.getRoute({ id: idSchueler }));
 
 	gotoSprachenfolge = async (idSchueler: number) =>
-		await RouteManager.doRoute(routeSchuelerSprachen.getRoute(idSchueler));
+		await RouteManager.doRoute(routeSchuelerSprachen.getRoute({ id: idSchueler }));
 
 	importLaufbahnplanung = async (data: FormData): Promise<SimpleOperationResponse> => {
 		api.status.start();

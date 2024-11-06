@@ -1,36 +1,31 @@
 <template>
 	<div class="svws-ui-avatar" :class="{'is-capturing': isCapturing}">
-		<div class="avatar--edit" v-if="capture || upload || src" tabindex="0">
-			<span class="avatar--edit-trigger w-6 h-6 p-0.5 rounded bg-light dark:bg-white/10 mt-auto ml-auto -mr-1.5 -mb-0.5 border border-black/10 dark:border-white/10">
+		<div v-if="capture || upload || (src.length > 0)" tabindex="0" class="avatar--edit">
+			<span class="avatar--edit-trigger">
 				<span class="icon i-ri-camera-line w-full h-full opacity-50 inline-block" />
 			</span>
-
-			<svws-ui-button type="icon" @click="toggleUpload" v-if="src && src.split('data:image/png;base64, /').length > 1" tabindex="0"
-				title="Bild löschen">
+			<svws-ui-button v-if="src && (src.split(',').length > 1)" type="icon" @click="deleteImage" tabindex="0" title="Bild löschen">
 				<span class="icon i-ri-delete-bin-line inline-block" />
 			</svws-ui-button>
-			<svws-ui-button type="icon" @click="toggleUpload" v-if="upload && !uploadedImage && src.split('data:image/png;base64, /').length < 2" tabindex="0" title="Bild hochladen">
-				<input class="hidden" ref="fileInputEl" type="file" accept="image/*" @change="onSelectFile">
+			<svws-ui-button v-if="upload && (uploadedImage === null) && (src.split(',').length < 2)" type="icon" @click="toggleUpload" tabindex="0" title="Bild hochladen">
+				<input class="hidden" ref="fileInputEl" type="file" accept="image/*" @change="onFileChanged">
 				<span class="icon i-ri-upload-2-line inline-block" />
 			</svws-ui-button>
-			<svws-ui-button type="icon" @click="toggleUpload" v-if="upload && uploadedImage" tabindex="0" title="Bild löschen">
-				<span class="icon i-ri-delete-bin-line inline-block" />
-			</svws-ui-button>
-			<svws-ui-button type="icon" @click="toggleCapturing" v-if="capture && !currentSnapshot" tabindex="0" title="Aufnahme starten">
+			<svws-ui-button v-if="capture && (currentSnapshot === null)" type="icon" @click="toggleCapturing" tabindex="0" title="Aufnahme starten">
 				<span class="icon i-ri-camera-fill inline-block" />
 			</svws-ui-button>
-			<svws-ui-button type="icon" @click="toggleSnapshot" v-if="capture && isCapturing && currentSnapshot" tabindex="0" title="Aufnahme löschen">
+			<svws-ui-button v-if="capture && isCapturing && (currentSnapshot !== null)" type="icon" @click="toggleSnapshot" tabindex="0" title="Aufnahme löschen">
 				<span class="icon i-ri-delete-bin-line inline-block" />
 			</svws-ui-button>
 		</div>
 		<div class="avatar--capture-control" v-if="isCapturing">
-			<svws-ui-button v-if="currentSnapshot" type="icon" @click="toggleSnapshot" tabindex="0" title="Neue Aufnahme">
+			<svws-ui-button v-if="currentSnapshot !== null" type="icon" @click="toggleSnapshot" tabindex="0" title="Neue Aufnahme">
 				<span class="icon i-ri-refresh-line inline-block" />
 			</svws-ui-button>
-			<svws-ui-button v-if="!currentSnapshot" type="icon" @click="toggleCapturing" tabindex="0" title="Aufnahme abbrechen">
+			<svws-ui-button v-if="currentSnapshot === null" type="icon" @click="stopCapturing" tabindex="0" title="Aufnahme abbrechen">
 				<span class="icon i-ri-camera-off-line inline-block" />
 			</svws-ui-button>
-			<svws-ui-button v-if="!currentSnapshot" type="primary" @click="toggleSnapshot" tabindex="0" title="Bild aufnehmen">
+			<svws-ui-button v-if="currentSnapshot === null" type="primary" @click="toggleSnapshot" tabindex="0" title="Bild aufnehmen">
 				<span class="icon i-ri-fullscreen-line inline-block" />
 				<span>Bild aufnehmen</span>
 			</svws-ui-button>
@@ -39,33 +34,27 @@
 				<span class="icon i-ri-check-line inline-block" />
 			</svws-ui-button>
 		</div>
-		<div class="avatar">
+		<div class="avatar" :class="{'avatar--has-image': uploadedImage}">
 			<template v-if="isCapturing">
 				<span v-if="capturingError">{{ capturingError }}</span>
 				<template v-else>
 					<video playsinline ref="videoEl" autoplay id="video" />
 					<canvas ref="canvasEl" id="canvas" class="hidden" />
-					<img :src="currentSnapshot" :alt="alt" v-if="currentSnapshot">
+					<img v-if="currentSnapshot !== null" :src="currentSnapshot" :alt>
 				</template>
-			</template>
-			<template v-else-if="uploadedImage">
-				<img :src="uploadedImage" :alt="alt">
 			</template>
 			<template v-else>
 				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-					<path
-						d="M20 22h-2v-2a3 3 0 0 0-3-3H9a3 3 0 0 0-3 3v2H4v-2a5 5 0 0 1 5-5h6a5 5 0 0 1 5 5v2zm-8-9a6 6 0 1 1 0-12 6 6 0 0 1 0 12zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" />
+					<path d="M20 22h-2v-2a3 3 0 0 0-3-3H9a3 3 0 0 0-3 3v2H4v-2a5 5 0 0 1 5-5h6a5 5 0 0 1 5 5v2zm-8-9a6 6 0 1 1 0-12 6 6 0 0 1 0 12zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" />
 				</svg>
-				<img :src="currentSnapshot" :alt="alt" v-if="currentSnapshot">
-				<img :src="src" :alt="alt" @error="onError">
+				<img :src :alt @error="onError">
 			</template>
 		</div>
 	</div>
 </template>
 
 <script setup lang='ts'>
-	import useCapturing from "../composables/use-capturing";
-	import useUploading from "../composables/use-uploading";
+	import { ref, computed, onUnmounted } from "vue";
 	import imageFile from "../assets/img/avatar_placeholder.svg";
 
 	const props = withDefaults(defineProps<{
@@ -80,38 +69,134 @@
 		capture: false,
 	});
 
-	defineEmits<{
-		(e: 'image:captured', val: Blob | null): void;
+	const emit = defineEmits<{
+		'image:captured': [value: Blob | null];
+		'image:base64': [val: string | null];
 	}>();
 
-	const {
-		videoEl,
-		canvasEl,
-		isCapturing,
-		currentSnapshot,
-		toggleCapturing,
-		capturingError,
-		toggleSnapshot
-	} = useCapturing();
-	const {fileInputEl, toggleUpload, onSelectFile, uploadedImage} = useUploading();
+	const fileInputEl = ref<null | HTMLInputElement>(null);
+	const uploadedImage = ref<string | null>(null);
+	const file = ref<File | null>(null);
+
+	function deleteImage() {
+		emit('image:base64', null);
+		emit('image:captured', null);
+	}
+
+	function toggleUpload() {
+		if (uploadedImage.value !== null)
+			uploadedImage.value = null;
+		else
+			fileInputEl.value?.click()
+	}
+
+	function toggleSnapshot() {
+		if (capturedImage.value)
+			capturedImage.value = null;
+		else
+			takeSnapshot();
+	}
+
+	async function toggleCapturing() {
+		if (isCapturing.value) {
+			emit('image:captured', capturedImage.value);
+			emit('image:base64', canvasEl.value?.toDataURL('image/jpeg', 0.75).split(',').pop() ?? null);
+			stopCapturing();
+		}
+		else
+			await startCapturing();
+	}
+
+	function onFileChanged(event: Event) {
+		const target = event.target as HTMLInputElement;
+		if (target.files === null)
+			return;
+		file.value = target.files[0];
+		emit('image:captured', file.value);
+		const reader = new FileReader();
+		reader.onload = e => {
+			uploadedImage.value = e.target?.result?.toString() ?? null;
+			emit('image:base64', uploadedImage.value?.split(',').pop() ?? null);
+		};
+		reader.readAsDataURL(file.value);
+	}
+
+	const isCapturing = ref(false);
+	const capturedImage = ref<Blob | null>(null);
+	const capturingError = ref("");
+	const videoEl = ref<HTMLVideoElement>();
+	const canvasEl = ref<HTMLCanvasElement>();
+	const stream = ref<MediaStream>();
+
+	const constraints = {
+		video: { width: 320 },
+		facingMode: 'user',
+	};
+
+	const currentSnapshot = computed(() => {
+		if (capturedImage.value !== null)
+			return URL.createObjectURL(capturedImage.value);
+		return null;
+	});
+
+	async function startCapturing() {
+		capturedImage.value = null;
+		isCapturing.value = true;
+		try {
+			stream.value = await navigator.mediaDevices.getUserMedia(constraints);
+			if (videoEl.value)
+				videoEl.value.srcObject = stream.value;
+		} catch (err) {
+			capturingError.value = (err as { message: string }).message;
+		}
+	}
+
+	function stopCapturing() {
+		stream.value?.getTracks().forEach(track => track.stop());
+		capturedImage.value = null;
+		isCapturing.value = false;
+	}
+
+	function takeSnapshot() {
+		if ((canvasEl.value === undefined) || (videoEl.value === undefined))
+			return;
+		canvasEl.value.width = constraints.video.width;
+		canvasEl.value.height = videoEl.value.videoHeight / (videoEl.value.videoWidth / constraints.video.width);
+		canvasEl.value.getContext("2d")?.drawImage(videoEl.value, 0, 0);
+		canvasEl.value.toBlob((blob: Blob | null) => capturedImage.value = blob);
+	}
+
+	onUnmounted(() => stopCapturing());
 
 	function onError(e: Event) {
 		(e.target as HTMLImageElement).src = imageFile;
 	}
+
 </script>
 
 <style lang="postcss">
 .svws-ui-avatar {
 	@apply relative;
+
+	.avatar--edit-trigger {
+		@apply bg-ui border border-ui-neutral;
+		@apply w-6 h-6 p-0.5 rounded mt-auto ml-auto -mr-1.5 -mb-0.5;
+		/* TODO: COLORS icon */
+	}
 }
 
 .avatar {
-	@apply w-full rounded-xl overflow-hidden relative bg-light;
-	@apply border border-black/5 dark:border-white/5;
+	@apply bg-ui-neutral border border-ui-secondary;
+	@apply w-full rounded-xl overflow-hidden relative;
 	padding-bottom: 100%;
 
+	&--has-image {
+		@apply border-transparent;
+	}
+
 	svg {
-		@apply absolute -bottom-0.5 w-full h-5/6 text-svws-950 opacity-20;
+		@apply text-ui-secondary opacity-50;
+		@apply absolute -bottom-0.5 w-full h-5/6;
 		margin-bottom: -5%;
 	}
 
@@ -121,7 +206,7 @@
 	}
 
 	video {
-		@apply bg-light;
+		@apply bg-ui-neutral;
 	}
 
 	&--edit {
@@ -134,10 +219,6 @@
 
 		.button {
 			@apply hidden;
-
-			&:hover, &:focus {
-				@apply bg-opacity-100;
-			}
 		}
 
 		.button--icon {
@@ -147,7 +228,7 @@
 		&:hover,
 		&:focus,
 		&:focus-within {
-			@apply outline-none;
+			@apply outline-none bg-ui rounded-xl border border-ui-disabled;
 
 			.avatar--edit-trigger {
 				@apply hidden;
@@ -156,15 +237,11 @@
 			.button {
 				@apply block;
 			}
-
-			+ .avatar {
-				@apply opacity-10 border-black/50;
-			}
 		}
 
 		&:focus-visible {
 			+ .avatar {
-				@apply ring ring-primary;
+				@apply ring ring-ui-brand;
 			}
 		}
 	}
@@ -179,12 +256,12 @@
 }
 
 .is-capturing {
-	@apply fixed inset-0 z-[100] h-screen;
-	@apply bg-light/90 dark:bg-[#000]/90 backdrop-filter backdrop-grayscale;
+	@apply bg-ui;
+	@apply fixed z-50 h-screen;
 	@apply flex flex-col justify-center items-center;
 
 	.avatar {
-		@apply p-0 -order-1;
+		@apply p-0 -order-1 border-none;
 		@apply rounded-3xl;
 		width: 90vmin;
 		height: 90vmin;

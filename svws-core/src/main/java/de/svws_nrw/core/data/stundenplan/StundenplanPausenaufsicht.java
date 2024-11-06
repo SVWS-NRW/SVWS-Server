@@ -35,4 +35,11 @@ public class StundenplanPausenaufsicht {
 			description = "Ein Array mit den Zuordnungen der Aufsichtsbeiche zu den Pausenaufsichten und dem Wochentyp."))
 	public @NotNull List<StundenplanPausenaufsichtBereich> bereiche = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public StundenplanPausenaufsicht() {
+		// leer
+	}
+
 }

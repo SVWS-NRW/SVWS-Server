@@ -38,4 +38,11 @@ public class Schulleitung {
 	@Schema(description = "das Datum, bis zu welchem die Leitunsfunktion übernommen wurde", example = "2020-02-18")
 	public String ende = null;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Schulleitung() {
+		// leer
+	}
+
 }

@@ -17,4 +17,11 @@ public class OAuth2Token {
 	/** Der Gültigkeitsbereich des Tokens */
 	public String scope;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public OAuth2Token() {
+		// leer
+	}
+
 }

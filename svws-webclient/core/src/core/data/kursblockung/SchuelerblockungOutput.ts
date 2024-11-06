@@ -12,6 +12,9 @@ export class SchuelerblockungOutput extends JavaObject {
 	public fachwahlenZuKurs : List<SchuelerblockungOutputFachwahlZuKurs> = new ArrayList<SchuelerblockungOutputFachwahlZuKurs>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

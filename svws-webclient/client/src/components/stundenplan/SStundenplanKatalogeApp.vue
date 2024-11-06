@@ -25,3 +25,11 @@
 	const props = defineProps<StundenplanKatalogeAppProps>();
 
 </script>
+
+<style lang="postcss" scoped>
+
+	.page--content {
+		@apply overflow-y-hidden overflow-x-auto h-full pb-3 pt-6 lg:gap-x-8;
+	}
+
+</style>

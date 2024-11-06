@@ -44,6 +44,7 @@ public class ReportingSchuljahresabschnitt {
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
+	 *
 	 * @param id 					Die ID des Schuljahresabschnittes
 	 * @param schuljahr 			Das Schuljahr, in welchem der Schuljahresabschnitt liegt
 	 * @param abschnitt 			Die Nummer des Abschnitts im Schuljahr
@@ -74,6 +75,7 @@ public class ReportingSchuljahresabschnitt {
 	// ##### Berechnete Methoden #####
 	/**
 	 * Kurzer Text zum Schuljahresabschnitt im Format 20XX/YY.A
+	 *
 	 * @return Kurzer Text zum Schuljahresabschnitt
 	 */
 	public String textSchuljahresabschnittKurz() {
@@ -82,6 +84,7 @@ public class ReportingSchuljahresabschnitt {
 
 	/**
 	 * Kurzer Text zum Schuljahresabschnitt im Format 20XX/YY.A
+	 *
 	 * @return Kurzer Text zum Schuljahresabschnitt
 	 */
 	public String textSchuljahresabschnittLang() {
@@ -90,7 +93,9 @@ public class ReportingSchuljahresabschnitt {
 
 	/**
 	 * Gibt das Fach zur ID aus der Liste der Fächer des Schuljahresabschnitts zurück
+	 *
 	 * @param id	Die ID des Faches
+	 *
 	 * @return 		Das Fach zur ID oder null, wenn das Fach nicht vorhanden ist.
 	 */
 	public ReportingFach fach(final long id) {
@@ -99,7 +104,9 @@ public class ReportingSchuljahresabschnitt {
 
 	/**
 	 * Gibt den Jahrgang zur ID aus der Liste der Jahrgänge des Schuljahresabschnitts zurück
+	 *
 	 * @param id	Die ID des Jahrgangs
+	 *
 	 * @return 		Der Jahrgang zur ID oder null, wenn der Jahrgang nicht vorhanden ist.
 	 */
 	public ReportingJahrgang jahrgang(final long id) {
@@ -108,7 +115,9 @@ public class ReportingSchuljahresabschnitt {
 
 	/**
 	 * Gibt die Klasse zur ID aus der Liste der Klassen des Schuljahresabschnitts zurück
+	 *
 	 * @param id	Die ID der Klasse
+	 *
 	 * @return 		Die Klasse zur ID oder null, wenn die Klasse nicht vorhanden ist.
 	 */
 	public ReportingKlasse klasse(final long id) {
@@ -120,6 +129,7 @@ public class ReportingSchuljahresabschnitt {
 
 	/**
 	 * Die ID des Schuljahresabschnittes
+	 *
 	 * @return Inhalt des Feldes id
 	 */
 	public long id() {
@@ -128,6 +138,7 @@ public class ReportingSchuljahresabschnitt {
 
 	/**
 	 * Das Schuljahr, in welchem der Schuljahresabschnitt liegt
+	 *
 	 * @return Inhalt des Feldes schuljahr
 	 */
 	public int schuljahr() {
@@ -136,6 +147,7 @@ public class ReportingSchuljahresabschnitt {
 
 	/**
 	 * Die Nummer des Abschnitts im Schuljahr
+	 *
 	 * @return Inhalt des Feldes abschnitt
 	 */
 	public int abschnitt() {
@@ -144,6 +156,7 @@ public class ReportingSchuljahresabschnitt {
 
 	/**
 	 * Die ID des Schuljahresabschnittes, der diesem Abschnitt folgt.
+	 *
 	 * @return Inhalt des Feldes idFolgenderAbschnitt
 	 */
 	public Long idFolgenderAbschnitt() {
@@ -152,6 +165,7 @@ public class ReportingSchuljahresabschnitt {
 
 	/**
 	 * Die ID des Schuljahresabschnittes, der diesem Abschnitt vorhergeht.
+	 *
 	 * @return Inhalt des Feldes idVorherigerAbschnitt
 	 */
 	public Long idVorherigerAbschnitt() {
@@ -160,6 +174,7 @@ public class ReportingSchuljahresabschnitt {
 
 	/**
 	 * Der Schuljahresabschnitt, der diesem Abschnitt folgt.
+	 *
 	 * @return Inhalt des Feldes folgenderAbschnitt
 	 */
 	public ReportingSchuljahresabschnitt folgenderAbschnitt() {
@@ -168,6 +183,7 @@ public class ReportingSchuljahresabschnitt {
 
 	/**
 	 * Der Schuljahresabschnitt, der diesem Abschnitt vorhergeht.
+	 *
 	 * @return Inhalt des Feldes vorherigerAbschnitt
 	 */
 	public ReportingSchuljahresabschnitt vorherigerAbschnitt() {
@@ -176,6 +192,7 @@ public class ReportingSchuljahresabschnitt {
 
 	/**
 	 * Die Fächer des Schuljahresabschnitts
+	 *
 	 * @return Inhalt des Feldes faecher
 	 */
 	public List<ReportingFach> faecher() {
@@ -184,6 +201,7 @@ public class ReportingSchuljahresabschnitt {
 
 	/**
 	 * Die Jahrgänge des Schuljahresabschnitts
+	 *
 	 * @return Inhalt des Feldes jahrgaenge
 	 */
 	public List<ReportingJahrgang> jahrgaenge() {
@@ -192,6 +210,7 @@ public class ReportingSchuljahresabschnitt {
 
 	/**
 	 * Die Klassen des Schuljahresabschnitts
+	 *
 	 * @return Inhalt des Feldes klassen
 	 */
 	public List<ReportingKlasse> klassen() {

@@ -43,4 +43,11 @@ public class ENMKlasse {
 	@ArraySchema(schema = @Schema(implementation = Long.class, description = "Ein Array mit den Informationen der IDs der zugeordneten Klassenlehrer."))
 	public @NotNull List<Long> klassenlehrer = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ENMKlasse() {
+		// leer
+	}
+
 }

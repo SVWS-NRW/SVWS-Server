@@ -142,6 +142,9 @@ export class BetriebStammdaten extends JavaObject {
 	public ansprechpartner : List<BetriebAnsprechpartner> = new ArrayList<BetriebAnsprechpartner>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -242,13 +245,13 @@ export class BetriebStammdaten extends JavaObject {
 	public static transpilerToJSON(obj : BetriebStammdaten) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"adressArt" : ' + ((!obj.adressArt) ? 'null' : obj.adressArt.toString()) + ',';
+		result += '"adressArt" : ' + ((obj.adressArt === null) ? 'null' : obj.adressArt.toString()) + ',';
 		result += '"name1" : ' + JSON.stringify(obj.name1) + ',';
 		result += '"name2" : ' + JSON.stringify(obj.name2) + ',';
 		result += '"strassenname" : ' + JSON.stringify(obj.strassenname) + ',';
 		result += '"hausnr" : ' + JSON.stringify(obj.hausnr) + ',';
 		result += '"hausnrzusatz" : ' + JSON.stringify(obj.hausnrzusatz) + ',';
-		result += '"ort_id" : ' + ((!obj.ort_id) ? 'null' : obj.ort_id.toString()) + ',';
+		result += '"ort_id" : ' + ((obj.ort_id === null) ? 'null' : obj.ort_id.toString()) + ',';
 		result += '"telefon1" : ' + JSON.stringify(obj.telefon1) + ',';
 		result += '"telefon2" : ' + JSON.stringify(obj.telefon2) + ',';
 		result += '"fax" : ' + JSON.stringify(obj.fax) + ',';
@@ -266,7 +269,7 @@ export class BetriebStammdaten extends JavaObject {
 		result += '"BelehrungISG" : ' + obj.BelehrungISG.toString() + ',';
 		result += '"GU_ID" : ' + JSON.stringify(obj.GU_ID) + ',';
 		result += '"ErwFuehrungszeugnis" : ' + obj.ErwFuehrungszeugnis.toString() + ',';
-		result += '"ExtID" : ' + ((!obj.ExtID) ? 'null' : JSON.stringify(obj.ExtID)) + ',';
+		result += '"ExtID" : ' + ((obj.ExtID === null) ? 'null' : JSON.stringify(obj.ExtID)) + ',';
 		result += '"ansprechpartner" : [ ';
 		for (let i = 0; i < obj.ansprechpartner.size(); i++) {
 			const elem = obj.ansprechpartner.get(i);
@@ -286,7 +289,7 @@ export class BetriebStammdaten extends JavaObject {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.adressArt !== undefined) {
-			result += '"adressArt" : ' + ((!obj.adressArt) ? 'null' : obj.adressArt.toString()) + ',';
+			result += '"adressArt" : ' + ((obj.adressArt === null) ? 'null' : obj.adressArt.toString()) + ',';
 		}
 		if (obj.name1 !== undefined) {
 			result += '"name1" : ' + JSON.stringify(obj.name1) + ',';
@@ -304,7 +307,7 @@ export class BetriebStammdaten extends JavaObject {
 			result += '"hausnrzusatz" : ' + JSON.stringify(obj.hausnrzusatz) + ',';
 		}
 		if (obj.ort_id !== undefined) {
-			result += '"ort_id" : ' + ((!obj.ort_id) ? 'null' : obj.ort_id.toString()) + ',';
+			result += '"ort_id" : ' + ((obj.ort_id === null) ? 'null' : obj.ort_id.toString()) + ',';
 		}
 		if (obj.telefon1 !== undefined) {
 			result += '"telefon1" : ' + JSON.stringify(obj.telefon1) + ',';
@@ -358,7 +361,7 @@ export class BetriebStammdaten extends JavaObject {
 			result += '"ErwFuehrungszeugnis" : ' + obj.ErwFuehrungszeugnis.toString() + ',';
 		}
 		if (obj.ExtID !== undefined) {
-			result += '"ExtID" : ' + ((!obj.ExtID) ? 'null' : JSON.stringify(obj.ExtID)) + ',';
+			result += '"ExtID" : ' + ((obj.ExtID === null) ? 'null' : JSON.stringify(obj.ExtID)) + ',';
 		}
 		if (obj.ansprechpartner !== undefined) {
 			result += '"ansprechpartner" : [ ';

@@ -44,4 +44,11 @@ public class ZulaessigeKursartKatalogEintrag extends CoreTypeData {
 	@Schema(description = "die Informationen zu Schulformen und -gliederungen, wo die Kursart zulässig ist.")
 	public @NotNull List<SchulformSchulgliederung> zulaessig = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ZulaessigeKursartKatalogEintrag() {
+		// leer
+	}
+
 }

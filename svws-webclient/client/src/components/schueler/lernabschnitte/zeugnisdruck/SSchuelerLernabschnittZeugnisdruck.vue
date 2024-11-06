@@ -3,7 +3,7 @@
 		<svws-ui-content-card>
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input placeholder="Konferenz-Datum" :model-value="manager().lernabschnittGet().datumKonferenz" type="date" disabled />
-				<svws-ui-text-input placeholder="Zeugnis-Datum" :model-value="manager().lernabschnittGet().datumZeugnis" @change="datumZeugnis=>patch({ datumZeugnis })" type="date" />
+				<svws-ui-text-input placeholder="Zeugnis-Datum" :model-value="manager().lernabschnittGet().datumZeugnis" @change="datumZeugnis=>patch({ datumZeugnis })" type="date" focus />
 			</svws-ui-input-wrapper>
 			<svws-ui-spacing />
 			<svws-ui-input-wrapper class="opacity-50">

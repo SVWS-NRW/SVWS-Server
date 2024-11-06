@@ -26,7 +26,6 @@ import jakarta.xml.bind.annotation.XmlType;
  * &lt;/complexType&gt;
  * </pre>
  *
- *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
@@ -38,28 +37,36 @@ public class Organizer {
     @XmlMixed
     private List<String> content;
 
-    /**
-     * Gets the value of the content property.
-     *
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the content property.
-     *
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getContent().add(newItem);
-     * </pre>
-     *
-     *
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link String }
-     *
-     *
-     */
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Organizer() {
+		// leer
+	}
+
+ 	/**
+	* Gibt die Liste der String-Inhalte  des Contents zurück.
+	*
+	* <p>
+	* Diese Methode gibt eine Referenz auf die live-Liste zurück,
+	* nicht auf eine Kopie. Änderungen an dieser Liste wirken sich direkt
+	* auf das JAXB-Objekt aus. Daher gibt es keine <CODE>set</CODE>-Methode.
+	* </p>
+	*
+	* <p>
+	* Um ein neues Element hinzuzufügen, verwenden Sie bitte folgenden Code:
+	* </p>
+	* <pre>
+	*    getContent().add(neuesElement);
+	* </pre>
+	*
+	* <p>
+	* In dieser Liste sind Objekte des folgenden Typs erlaubt:
+	* {@link String}
+	* </p>
+	*
+	* @return eine modifizierbare Liste von String-Inhalten des Contents. Die Liste ist nie null.
+	*/
     public List<String> getContent() {
         if (content == null) {
             content = new ArrayList<>();

@@ -30,12 +30,8 @@ export class RouteSchuelerAusbildungsbetriebe extends RouteNode<RouteDataSchuele
 			await this.data.setSchueler(id);
 			await this.data.setSchuelerBetrieb();
 		} catch (e) {
-			return routeError.getRoute(e as DeveloperNotificationException);
+			return routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
-	}
-
-	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuelerAdressenProps {

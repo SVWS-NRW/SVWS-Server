@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
 
 import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
 
@@ -13,11 +13,9 @@ import type { TabData } from "@ui";
 import type { SEinwilligungsartenAppProps } from "~/components/schule/kataloge/einwilligungsarten/SEinwilligungsartenAppProps";
 import type { SEinwilligungsartenAuswahlProps } from "~/components/schule/kataloge/einwilligungsarten/SEinwilligungsartenAuswahlProps";
 import { RouteDataKatalogEinwilligungsarten } from "./RouteDataKatalogEinwilligungsarten";
-import { routeSchule } from "../RouteSchule";
 import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
 import { routeError } from "~/router/error/RouteError";
 
-const SSchuleAuswahl = () => import("~/components/schule/SSchuleAuswahl.vue")
 const SEinwilligungsartenAuswahl = () => import("~/components/schule/kataloge/einwilligungsarten/SEinwilligungsartenAuswahl.vue");
 const SEinwilligungsartenApp = () => import("~/components/schule/kataloge/einwilligungsarten/SEinwilligungsartenApp.vue");
 
@@ -30,7 +28,6 @@ export class RouteKatalogEinwilligungsarten extends RouteNode<RouteDataKatalogEi
 		super.text = "Einwilligungsarten";
 		super.menugroup = RouteSchuleMenuGroup.SCHULBEZOGEN;
 		super.setView("liste", SEinwilligungsartenAuswahl, (route) => this.getAuswahlProps(route));
-		super.setView("submenu", SSchuleAuswahl, (route) => routeSchule.getAuswahlProps(route));
 		super.children = [
 			routeKatalogEinwilligungsartenDaten,
 		];
@@ -46,19 +43,19 @@ export class RouteKatalogEinwilligungsarten extends RouteNode<RouteDataKatalogEi
 				const eintrag = this.data.mapKatalogeintraege.get(id);
 				if ((eintrag === undefined) && (this.data.auswahl !== undefined)) {
 					await this.data.ladeListe();
-					return this.getRoute(this.data.auswahl.id);
+					return this.getRouteDefaultChild();
 				} else if (eintrag)
 					this.data.setEintrag(eintrag);
 			}
 			if ((to.name === this.name) && (this.data.auswahl !== undefined))
-				return this.getRoute(this.data.auswahl.id);
+				return this.getRouteDefaultChild();
 		} catch (error) {
-			return routeError.getRoute(error as DeveloperNotificationException);
+			return routeError.getErrorRoute(error as DeveloperNotificationException);
 		}
 	}
 
-	public getRoute(id: number | undefined): RouteLocationRaw {
-		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id } };
+	public addRouteParamsFromState() : RouteParamsRawGeneric {
+		return { id : this.data.auswahl?.id ?? undefined };
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): SEinwilligungsartenAuswahlProps {
@@ -85,7 +82,7 @@ export class RouteKatalogEinwilligungsarten extends RouteNode<RouteDataKatalogEi
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new DeveloperNotificationException("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.auswahl?.id } });
+		await RouteManager.doRoute(node.getRoute());
 		this.data.setView(node, this.children);
 	}
 }

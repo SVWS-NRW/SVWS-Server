@@ -4,8 +4,6 @@
 // Any modifications to this file will be lost upon recompilation of the source schema.
 // Generated on: 2015.09.22 at 01:09:41 PM PDT
 //
-
-
 package de.svws_nrw.davapi.model.dav;
 
 import jakarta.xml.bind.annotation.*;
@@ -31,121 +29,111 @@ import jakarta.xml.bind.annotation.*;
  * &lt;/complexType&gt;
  * </pre>
  *
- *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "syncToken",
-    "syncLevel",
-    "limit",
-    "prop"
+		"syncToken",
+		"syncLevel",
+		"limit",
+		"prop"
 })
 @XmlRootElement(name = "sync-collection")
 public class SyncCollection {
 
-    @XmlElement(name = "sync-token", required = true)
-    @XmlSchemaType(name = "anyURI")
-    protected String syncToken;
-    @XmlElement(name = "sync-level", required = true)
-    protected String syncLevel;
-    protected Limit limit;
-    @XmlElement(required = true)
-    protected Prop prop;
+	/** Das Synchronisierungstoken. */
+	@XmlElement(name = "sync-token", required = true)
+	@XmlSchemaType(name = "anyURI")
+	protected String syncToken;
+
+	/** Das Synchronisierungslevel. */
+	@XmlElement(name = "sync-level", required = true)
+	protected String syncLevel;
+
+	/** Ein Limit der Synchronisierung. */
+	protected Limit limit;
+
+	/** Die Eigenschaften, der Synchronisierung. */
+	@XmlElement(required = true)
+	protected Prop prop;
+
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SyncCollection() {
+		// leer
+	}
+
+	/**
+	 * Liefert den Wert von {@link #syncToken}.
+	 *
+	 * @return den Wert von {@link #syncToken}.
+	 */
+	public String getSyncToken() {
+		return syncToken;
+	}
+
+	/**
+	 * Setzt den Wert von {@link #syncToken}.
+	 *
+	 * @param value   der zu setzende Wert von {@link #syncToken}.
+	 */
+	public void setSyncToken(final String value) {
+		this.syncToken = value;
+	}
+
+
+	/**
+	 * Liefert den Wert von {@link #syncLevel}.
+	 *
+	 * @return den Wert von {@link #syncLevel}.
+	 */
+	public String getSyncLevel() {
+		return syncLevel;
+	}
+
+	/**
+	 * Setzt den Wert von {@link #syncLevel}.
+	 *
+	 * @param value   der zu setzende Wert von {@link #syncLevel}.
+	 */
+	public void setSyncLevel(final String value) {
+		this.syncLevel = value;
+	}
+
+	 /**
+     * Liefert das {@link Limit}-Objekt.
+     *
+     * @return das {@link Limit}-Objekt.
+     */
+	public Limit getLimit() {
+		return limit;
+	}
 
     /**
-     * Gets the value of the syncToken property.
+     * Setzt das {@link Limit}-Objekt.
      *
-     * @return
-     *     possible object is
-     *     {@link String }
-     *
+     * @param value   das zu setzende {@link Limit}-Objekt.
      */
-    public String getSyncToken() {
-        return syncToken;
-    }
+	public void setLimit(final Limit value) {
+		this.limit = value;
+	}
+
+	 /**
+     * Liefert das {@link Prop}-Objekt.
+     *
+     * @return das {@link Prop}-Objekt.
+     */
+	public Prop getProp() {
+		return prop;
+	}
 
     /**
-     * Sets the value of the syncToken property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *
-     */
-    public void setSyncToken(String value) {
-        this.syncToken = value;
-    }
-
-    /**
-     * Gets the value of the syncLevel property.
-     *
-     * @return
-     *     possible object is
-     *     {@link String }
-     *
-     */
-    public String getSyncLevel() {
-        return syncLevel;
-    }
-
-    /**
-     * Sets the value of the syncLevel property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *
-     */
-    public void setSyncLevel(String value) {
-        this.syncLevel = value;
-    }
-
-    /**
-     * Gets the value of the limit property.
-     *
-     * @return
-     *     possible object is
-     *     {@link Limit }
-     *
-     */
-    public Limit getLimit() {
-        return limit;
-    }
-
-    /**
-     * Sets the value of the limit property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link Limit }
-     *
-     */
-    public void setLimit(Limit value) {
-        this.limit = value;
-    }
-
-    /**
-     * Gets the value of the prop property.
-     *
-     * @return
-     *     possible object is
-     *     {@link Prop }
-     *
-     */
-    public Prop getProp() {
-        return prop;
-    }
-
-    /**
-     * Sets the value of the prop property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link Prop }
-     *
-     */
-    public void setProp(Prop value) {
-        this.prop = value;
-    }
+	 * Setzt das {@link Prop}-Objekt.
+	 *
+	 * @param value   das zu setzende {@link Prop}-Objekt.
+	 */
+	public void setProp(final Prop value) {
+		this.prop = value;
+	}
 
 }

@@ -27,6 +27,12 @@ public class CreateSchema {
 	/// Der Logger
 	private static final Logger logger = new Logger();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public CreateSchema() {
+		// leer
+	}
 
 	/**
 	 * Stellt eine einfache Frage auf der Kommandozeile, welche mit Ja oder Nein

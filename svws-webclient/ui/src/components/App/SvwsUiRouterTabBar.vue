@@ -159,10 +159,11 @@
 	}
 
 	.svws-ui-tabs--wrapper {
+		@apply bg-ui;
 		@apply flex items-center -mx-3 px-0.5 w-auto relative z-30 flex-shrink-0 overflow-hidden;
-		@apply bg-white dark:bg-black;
 		&:before {
-			@apply h-[2px] bg-light dark:bg-white/10 absolute left-0 right-0 bottom-0;
+			@apply bg-ui-neutral;
+			@apply h-[2px] absolute left-0 right-0 bottom-0;
 			content: '';
 			.svws-has-sub-nav & {
 				@apply rounded-md h-[10px] bottom-[-8px];
@@ -189,7 +190,8 @@
 		@apply from-white/0 via-50% via-white to-white dark:from-black/0 dark:via-50% dark:via-black dark:to-black;
 
 		.button {
-			@apply w-5 h-full p-0 rounded bg-light dark:bg-white/5 border border-black/5 dark:border-white/5;
+			@apply bg-ui-neutral border border-ui-secondary;
+			@apply w-5 h-full p-0 rounded;
 
 			&:hover,
 			&:focus-visible {

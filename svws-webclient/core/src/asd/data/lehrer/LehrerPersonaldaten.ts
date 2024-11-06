@@ -80,6 +80,9 @@ export class LehrerPersonaldaten extends JavaObject {
 	public readonly lehrbefaehigungen : List<LehrerLehrbefaehigungEintrag> = new ArrayList<LehrerLehrbefaehigungEintrag>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -135,15 +138,15 @@ export class LehrerPersonaldaten extends JavaObject {
 	public static transpilerToJSON(obj : LehrerPersonaldaten) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"identNrTeil1" : ' + ((!obj.identNrTeil1) ? 'null' : JSON.stringify(obj.identNrTeil1)) + ',';
-		result += '"identNrTeil2SerNr" : ' + ((!obj.identNrTeil2SerNr) ? 'null' : JSON.stringify(obj.identNrTeil2SerNr)) + ',';
-		result += '"personalaktennummer" : ' + ((!obj.personalaktennummer) ? 'null' : JSON.stringify(obj.personalaktennummer)) + ',';
-		result += '"lbvPersonalnummer" : ' + ((!obj.lbvPersonalnummer) ? 'null' : JSON.stringify(obj.lbvPersonalnummer)) + ',';
-		result += '"lbvVerguetungsschluessel" : ' + ((!obj.lbvVerguetungsschluessel) ? 'null' : JSON.stringify(obj.lbvVerguetungsschluessel)) + ',';
-		result += '"zugangsdatum" : ' + ((!obj.zugangsdatum) ? 'null' : JSON.stringify(obj.zugangsdatum)) + ',';
-		result += '"zugangsgrund" : ' + ((!obj.zugangsgrund) ? 'null' : JSON.stringify(obj.zugangsgrund)) + ',';
-		result += '"abgangsdatum" : ' + ((!obj.abgangsdatum) ? 'null' : JSON.stringify(obj.abgangsdatum)) + ',';
-		result += '"abgangsgrund" : ' + ((!obj.abgangsgrund) ? 'null' : JSON.stringify(obj.abgangsgrund)) + ',';
+		result += '"identNrTeil1" : ' + ((obj.identNrTeil1 === null) ? 'null' : JSON.stringify(obj.identNrTeil1)) + ',';
+		result += '"identNrTeil2SerNr" : ' + ((obj.identNrTeil2SerNr === null) ? 'null' : JSON.stringify(obj.identNrTeil2SerNr)) + ',';
+		result += '"personalaktennummer" : ' + ((obj.personalaktennummer === null) ? 'null' : JSON.stringify(obj.personalaktennummer)) + ',';
+		result += '"lbvPersonalnummer" : ' + ((obj.lbvPersonalnummer === null) ? 'null' : JSON.stringify(obj.lbvPersonalnummer)) + ',';
+		result += '"lbvVerguetungsschluessel" : ' + ((obj.lbvVerguetungsschluessel === null) ? 'null' : JSON.stringify(obj.lbvVerguetungsschluessel)) + ',';
+		result += '"zugangsdatum" : ' + ((obj.zugangsdatum === null) ? 'null' : JSON.stringify(obj.zugangsdatum)) + ',';
+		result += '"zugangsgrund" : ' + ((obj.zugangsgrund === null) ? 'null' : JSON.stringify(obj.zugangsgrund)) + ',';
+		result += '"abgangsdatum" : ' + ((obj.abgangsdatum === null) ? 'null' : JSON.stringify(obj.abgangsdatum)) + ',';
+		result += '"abgangsgrund" : ' + ((obj.abgangsgrund === null) ? 'null' : JSON.stringify(obj.abgangsgrund)) + ',';
 		result += '"abschnittsdaten" : [ ';
 		for (let i = 0; i < obj.abschnittsdaten.size(); i++) {
 			const elem = obj.abschnittsdaten.get(i);
@@ -187,31 +190,31 @@ export class LehrerPersonaldaten extends JavaObject {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.identNrTeil1 !== undefined) {
-			result += '"identNrTeil1" : ' + ((!obj.identNrTeil1) ? 'null' : JSON.stringify(obj.identNrTeil1)) + ',';
+			result += '"identNrTeil1" : ' + ((obj.identNrTeil1 === null) ? 'null' : JSON.stringify(obj.identNrTeil1)) + ',';
 		}
 		if (obj.identNrTeil2SerNr !== undefined) {
-			result += '"identNrTeil2SerNr" : ' + ((!obj.identNrTeil2SerNr) ? 'null' : JSON.stringify(obj.identNrTeil2SerNr)) + ',';
+			result += '"identNrTeil2SerNr" : ' + ((obj.identNrTeil2SerNr === null) ? 'null' : JSON.stringify(obj.identNrTeil2SerNr)) + ',';
 		}
 		if (obj.personalaktennummer !== undefined) {
-			result += '"personalaktennummer" : ' + ((!obj.personalaktennummer) ? 'null' : JSON.stringify(obj.personalaktennummer)) + ',';
+			result += '"personalaktennummer" : ' + ((obj.personalaktennummer === null) ? 'null' : JSON.stringify(obj.personalaktennummer)) + ',';
 		}
 		if (obj.lbvPersonalnummer !== undefined) {
-			result += '"lbvPersonalnummer" : ' + ((!obj.lbvPersonalnummer) ? 'null' : JSON.stringify(obj.lbvPersonalnummer)) + ',';
+			result += '"lbvPersonalnummer" : ' + ((obj.lbvPersonalnummer === null) ? 'null' : JSON.stringify(obj.lbvPersonalnummer)) + ',';
 		}
 		if (obj.lbvVerguetungsschluessel !== undefined) {
-			result += '"lbvVerguetungsschluessel" : ' + ((!obj.lbvVerguetungsschluessel) ? 'null' : JSON.stringify(obj.lbvVerguetungsschluessel)) + ',';
+			result += '"lbvVerguetungsschluessel" : ' + ((obj.lbvVerguetungsschluessel === null) ? 'null' : JSON.stringify(obj.lbvVerguetungsschluessel)) + ',';
 		}
 		if (obj.zugangsdatum !== undefined) {
-			result += '"zugangsdatum" : ' + ((!obj.zugangsdatum) ? 'null' : JSON.stringify(obj.zugangsdatum)) + ',';
+			result += '"zugangsdatum" : ' + ((obj.zugangsdatum === null) ? 'null' : JSON.stringify(obj.zugangsdatum)) + ',';
 		}
 		if (obj.zugangsgrund !== undefined) {
-			result += '"zugangsgrund" : ' + ((!obj.zugangsgrund) ? 'null' : JSON.stringify(obj.zugangsgrund)) + ',';
+			result += '"zugangsgrund" : ' + ((obj.zugangsgrund === null) ? 'null' : JSON.stringify(obj.zugangsgrund)) + ',';
 		}
 		if (obj.abgangsdatum !== undefined) {
-			result += '"abgangsdatum" : ' + ((!obj.abgangsdatum) ? 'null' : JSON.stringify(obj.abgangsdatum)) + ',';
+			result += '"abgangsdatum" : ' + ((obj.abgangsdatum === null) ? 'null' : JSON.stringify(obj.abgangsdatum)) + ',';
 		}
 		if (obj.abgangsgrund !== undefined) {
-			result += '"abgangsgrund" : ' + ((!obj.abgangsgrund) ? 'null' : JSON.stringify(obj.abgangsgrund)) + ',';
+			result += '"abgangsgrund" : ' + ((obj.abgangsgrund === null) ? 'null' : JSON.stringify(obj.abgangsgrund)) + ',';
 		}
 		if (obj.abschnittsdaten !== undefined) {
 			result += '"abschnittsdaten" : [ ';

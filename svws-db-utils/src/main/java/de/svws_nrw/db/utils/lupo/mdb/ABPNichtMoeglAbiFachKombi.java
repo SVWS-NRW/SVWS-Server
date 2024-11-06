@@ -186,5 +186,10 @@ public final class ABPNichtMoeglAbiFachKombi {
 				+ ", Phase=" + Phase + ", PK=" + PK + ", Typ=" + Typ + "]";
 	}
 
-
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ABPNichtMoeglAbiFachKombi() {
+		// leer
+	}
 }

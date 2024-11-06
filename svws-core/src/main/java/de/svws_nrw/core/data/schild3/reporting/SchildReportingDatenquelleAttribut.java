@@ -27,4 +27,11 @@ public class SchildReportingDatenquelleAttribut {
 	@Schema(description = "die Beschreibung des Attributs", example = "Der Vorname des Schülers")
 	public @NotNull String beschreibung = "";
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SchildReportingDatenquelleAttribut() {
+		// leer
+	}
+
 }

@@ -34,4 +34,11 @@ public class StundenplanZeitraster {
 	@Schema(description = "die Uhrzeit in Minuten seit 0 Uhr, wann die Unterrichtsstunde endet", example = "475")
 	public Integer stundenende = null;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public StundenplanZeitraster() {
+		// leer
+	}
+
 }

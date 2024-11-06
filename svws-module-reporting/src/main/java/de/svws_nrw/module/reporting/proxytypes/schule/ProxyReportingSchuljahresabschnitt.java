@@ -37,6 +37,7 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingSchuljahresabschnitt}.
+	 *
 	 * @param reportingRepository 	Repository für die Reporting.
 	 * @param schuljahresabschnitt	Stammdaten-Objekt aus der DB.
 	 */
@@ -58,6 +59,7 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 
 	/**
 	 * Gibt die Liste der Fächer dieses Schuljahresabschnitts zurück.
+	 *
 	 * @return Liste der Fächer, die in diesem Schuljahresabschnitt gültig sind.
 	 */
 	@Override
@@ -89,6 +91,7 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 
 	/**
 	 * Gibt die Liste der Jahrgänge dieses Schuljahresabschnitts zurück.
+	 *
 	 * @return Liste der Jahrgänge, die in diesem Schuljahresabschnitt gültig sind.
 	 */
 	@Override
@@ -105,6 +108,7 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 
 	/**
 	 * Gibt die Liste der Klassen dieses Schuljahresabschnitts zurück.
+	 *
 	 * @return Liste der Klassen, die in diesem Schuljahresabschnitt gültig sind.
 	 */
 	@Override

@@ -129,6 +129,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
+	 *
 	 * @param abiturjahr Das Kalenderjahr, in dem die Abiturprüfung stattfindet
 	 * @param aktuelleKlasse Die aktuelle Klasse zum aktuellen Halbjahr der Oberstufenlaufbahn
 	 * @param aktuellesGOStHalbjahr Das Halbjahr der Oberstufenlaufbahn gemäß Halbjahr der Schule
@@ -221,6 +222,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 	/**
 	 * Erstellt einen Satz für die Angaben zur letzten Beratung in der Form: "Die letzte Beratung wurde durchgeführt am (Datum) von (Lehrkraft)."
 	 * Nicht vorhandene Informationen werden entsprechend ausgelassen. Sind keinerlei Informationen vorhanden, so wird ein leerer String zurückgegeben.
+	 *
 	 * @return 	Satz mit den Informationen zur letzten Beratung oder ein leerer String.
 	 */
 	public String letzteBeratungText() {
@@ -242,6 +244,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 	/**
 	 * Erzeugt eine Beschriftung für ein Unterschriftsfeld mit allen Beratungslehrkräften.
+	 *
 	 * @return 	Beschriftung in der Form: Titel Vorname (erster Buchstabe). Nachname
 	 */
 	public String unterschriftfeldBeratungslehrkraefteMehrzeiligHtml() {
@@ -250,8 +253,10 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 	/**
 	 * Erzeugt eine Beschriftung für ein Unterschriftsfeld mit allen Beratungslehrkraeften.
+	 *
 	 * @param mitVornameKurz		Gibt an, ob nur der erste Buchstabe des Vornamens ausgegeben werden soll.
 	 * @param mitAmtsbezeichnung	Gibt an, ob die Amtsbezeichnung hinzugefügt werden soll.
+	 *
 	 * @return 						Beschriftung gemäß Parametern: Titel Vorname Nachname, Amtsbezeichnung
 	 */
 	public String unterschriftfeldBeratungslehrkraefteMehrzeiligHtml(final boolean mitVornameKurz, final boolean mitAmtsbezeichnung) {
@@ -268,6 +273,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 	/**
 	 * Das Kalenderjahr, in dem die Abiturprüfung stattfindet
+	 *
 	 * @return Inhalt des Feldes abiturjahr
 	 */
 	public int abiturjahr() {
@@ -276,6 +282,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 	/**
 	 * Die aktuelle Klasse zum aktuellen Halbjahr der Oberstufenlaufbahn
+	 *
 	 * @return Inhalt des Feldes aktuelleKlasse
 	 */
 	public String aktuelleKlasse() {
@@ -284,6 +291,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 	/**
 	 * Das Halbjahr der Oberstufenlaufbahn gemäß Halbjahr der Schule
+	 *
 	 * @return Inhalt des Feldes aktuellesGOStHalbjahr
 	 */
 	public String aktuellesGOStHalbjahr() {
@@ -292,6 +300,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 	/**
 	 * Die Klasse zum ausgewählten Halbjahr der Oberstufenlaufbahn
+	 *
 	 * @return Inhalt des Feldes auswahlKlasse
 	 */
 	public String auswahlKlasse() {
@@ -300,6 +309,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 	/**
 	 * Das ausgewählte Halbjahr der Oberstufenlaufbahn
+	 *
 	 * @return Inhalt des Feldes auswahlGOStHalbjahr
 	 */
 	public String auswahlGOStHalbjahr() {
@@ -308,6 +318,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 	/**
 	 * Der Text der Schule für den Beratungsbogen
+	 *
 	 * @return Inhalt des Feldes beratungsbogenText
 	 */
 	public String beratungsbogenText() {
@@ -316,6 +327,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 	/**
 	 * Beratungslehrkräfte des Abiturjahrgangs durch Semikolon getrennt
+	 *
 	 * @return Inhalt des Feldes beratungslehrkraefte
 	 */
 	public List<ReportingLehrer> beratungslehrkraefte() {
@@ -325,6 +337,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 	/**
 	 * Der Text der Schule für den E-Mail-Versand
+	 *
 	 * @return Inhalt des Feldes emailText
 	 */
 	public String emailText() {
@@ -333,6 +346,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 	/**
 	 * Eine Liste vom Typ Fachwahl, die alle Fachwahlen und deren Daten enthält.
+	 *
 	 * @return Inhalt des Feldes fachwahlen
 	 */
 	public List<ReportingGostLaufbahnplanungFachwahl> fachwahlen() {
@@ -341,6 +355,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 	/**
 	 * Eine Liste vom Typ Fehler, die alle Fehler zur Laufbahn und deren Daten enthält.
+	 *
 	 * @return Inhalt des Feldes fehler
 	 */
 	public List<ReportingGostLaufbahnplanungErgebnismeldung> fehler() {
@@ -349,6 +364,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 	/**
 	 * Das folgende Halbjahr der Oberstufenlaufbahn auf das aktuelle Halbjahr, also in der Regel das Halbjahr, für das die Beratung erfolgt
+	 *
 	 * @return Inhalt des Feldes folgeAktuellesGOStHalbjahr
 	 */
 	public String folgeAktuellesGOStHalbjahr() {
@@ -357,6 +373,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 	/**
 	 * Das folgende Halbjahr der Oberstufenlaufbahn auf das ausgewählte Halbjahr, also in der Regel das Halbjahr, für das die Beratung erfolgt
+	 *
 	 * @return Inhalt des Feldes folgeAuswahlGOStHalbjahr
 	 */
 	public String folgeAuswahlGOStHalbjahr() {
@@ -365,6 +382,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 	/**
 	 * Eine Liste vom Typ Hinweise, die alle Hinweise zur Laufbahn und deren Daten enthält.
+	 *
 	 * @return Inhalt des Feldes hinweise
 	 */
 	public List<ReportingGostLaufbahnplanungErgebnismeldung> hinweise() {
@@ -373,6 +391,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 	/**
 	 * Das Datum der letzten Beratung
+	 *
 	 * @return Inhalt des Feldes letzteBeratungDatum
 	 */
 	public String letzteBeratungDatum() {
@@ -381,6 +400,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 	/**
 	 * Die Lehrkraft der letzten Beratung
+	 *
 	 * @return Inhalt des Feldes letzteBeratungLehrkraft
 	 */
 	public ReportingLehrer letzteBeratungLehrkraft() {
@@ -389,6 +409,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 	/**
 	 * Das Datum des Rücklaufes der letzten importierten Wahldatei
+	 *
 	 * @return Inhalt des Feldes letzterRuecklaufDatum
 	 */
 	public String letzterRuecklaufDatum() {
@@ -397,6 +418,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 	/**
 	 * Kommentar der Schule zur Laufbahn
+	 *
 	 * @return Inhalt des Feldes kommentar
 	 */
 	public String kommentar() {
@@ -405,6 +427,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 	/**
 	 * Kursanzahl in der EF.1
+	 *
 	 * @return Inhalt des Feldes kursanzahlEF1
 	 */
 	public int kursanzahlEF1() {
@@ -413,6 +436,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 	/**
 	 * Kursanzahl in der EF.2
+	 *
 	 * @return Inhalt des Feldes kursanzahlEF2
 	 */
 	public int kursanzahlEF2() {
@@ -421,6 +445,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 	/**
 	 * Kursanzahl in der Q1.1
+	 *
 	 * @return Inhalt des Feldes kursanzahlQ11
 	 */
 	public int kursanzahlQ11() {
@@ -429,6 +454,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 	/**
 	 * Kursanzahl in der Q1.2
+	 *
 	 * @return Inhalt des Feldes kursanzahlQ12
 	 */
 	public int kursanzahlQ12() {
@@ -437,6 +463,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 	/**
 	 * Kursanzahl in der Q2.1
+	 *
 	 * @return Inhalt des Feldes kursanzahlQ21
 	 */
 	public int kursanzahlQ21() {
@@ -445,6 +472,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 	/**
 	 * Kursanzahl in der Q2.2
+	 *
 	 * @return Inhalt des Feldes kursanzahlQ22
 	 */
 	public int kursanzahlQ22() {
@@ -453,6 +481,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 	/**
 	 * Kursanzahl in der Qualifikationsphase
+	 *
 	 * @return Inhalt des Feldes kursanzahlQPh
 	 */
 	public int kursanzahlQPh() {
@@ -461,6 +490,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 	/**
 	 * Kursanzahl der aus der Qualifikationsphase anrechenbaren Kurse für Block I
+	 *
 	 * @return Inhalt des Feldes kursanzahlAnrechenbarBlockI
 	 */
 	public int kursanzahlAnrechenbarBlockI() {
@@ -469,6 +499,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 	/**
 	 * Die Prüfungsordnung des Schülers aus dem aktuellen Lernabschnitt
+	 *
 	 * @return Inhalt des Feldes pruefungsordnung
 	 */
 	public String pruefungsordnung() {
@@ -477,6 +508,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 	/**
 	 * Wochenstundensumme in der EF.1
+	 *
 	 * @return Inhalt des Feldes wochenstundenEF1
 	 */
 	public int wochenstundenEF1() {
@@ -485,6 +517,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 	/**
 	 * Wochenstundensumme in der EF.2
+	 *
 	 * @return Inhalt des Feldes wochenstundenEF2
 	 */
 	public int wochenstundenEF2() {
@@ -493,6 +526,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 	/**
 	 * Wochenstundensumme in der Q1.1
+	 *
 	 * @return Inhalt des Feldes wochenstundenQ11
 	 */
 	public int wochenstundenQ11() {
@@ -501,6 +535,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 	/**
 	 * Wochenstundensumme in der Q1.2
+	 *
 	 * @return Inhalt des Feldes wochenstundenQ12
 	 */
 	public int wochenstundenQ12() {
@@ -509,6 +544,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 	/**
 	 * Wochenstundensumme in der Q2.1
+	 *
 	 * @return Inhalt des Feldes wochenstundenQ21
 	 */
 	public int wochenstundenQ21() {
@@ -517,6 +553,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 	/**
 	 * Wochenstundensumme in der Q2.2
+	 *
 	 * @return Inhalt des Feldes wochenstundenQ22
 	 */
 	public int wochenstundenQ22() {
@@ -525,6 +562,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 	/**
 	 * Wochenstundendurchschnitt in der EF
+	 *
 	 * @return Inhalt des Feldes wochenstundenDurchschnittEF
 	 */
 	public double wochenstundenDurchschnittEF() {
@@ -533,6 +571,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 	/**
 	 * Wochenstundendurchschnitt in der Q1
+	 *
 	 * @return Inhalt des Feldes wochenstundenDurchschnittQ1
 	 */
 	public double wochenstundenDurchschnittQ1() {
@@ -541,6 +580,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 	/**
 	 * Wochenstundendurchschnitt in der Q2
+	 *
 	 * @return Inhalt des Feldes wochenstundenDurchschnittQ2
 	 */
 	public double wochenstundenDurchschnittQ2() {
@@ -549,6 +589,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 	/**
 	 * Wochenstundendurchschnitt in der Qualifikationsphase
+	 *
 	 * @return Inhalt des Feldes wochenstundenDurchschnittQPh
 	 */
 	public double wochenstundenDurchschnittQPh() {
@@ -557,6 +598,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 	/**
 	 * Wochenstundensumme der gesamten Laufbahn
+	 *
 	 * @return Inhalt des Feldes wochenstundenGesamt
 	 */
 	public double wochenstundenGesamt() {

@@ -1,15 +1,13 @@
 <template>
 	<div class="inline-flex">
-		<label class="svws-ui-checkbox" :class="{'svws-statistik': statistics, 'svws-bw': bw, 'svws-ui-toggle': type === 'toggle'}" :title>
+		<label class="svws-ui-checkbox" :class="{'svws-statistik': statistics, 'svws-bw': bw, 'svws-ui-toggle': type === 'toggle'}" :title :color>
 			<input type="checkbox" v-model="checked" :class="{'svws-headless': headless && type !== 'toggle'}" :disabled :readonly :indeterminate :color ref="input">
 			<span v-if="type === 'toggle'" class="svws-ui-toggle--icon" />
 			<span v-if="$slots.default" class="svws-ui-checkbox--label">
-				<span v-if="statistics" class="mr-1 -mb-1 inline-block align-top">
+				<span v-if="statistics" class="-mb-1 inline-block align-top">
 					<svws-ui-tooltip position="right">
-						<span class="icon i-ri-bar-chart-2-line pointer-events-auto" />
-						<template #content>
-							Relevant für die Statistik
-						</template>
+						<span class="icon icon-statistics i-ri-bar-chart-2-line pointer-events-auto" />
+						<template #content>Relevant für die Statistik</template>
 					</svws-ui-tooltip>
 				</span>
 				<slot />
@@ -21,6 +19,7 @@
 <script lang="ts" setup>
 
 	import type { ComputedRef, Ref } from 'vue';
+	import { onMounted } from 'vue';
 	import { computed, ref } from 'vue';
 
 	const props = withDefaults(defineProps<{
@@ -34,6 +33,7 @@
 		indeterminate?: boolean;
 		readonly?: boolean;
 		color?: 'success' | 'error' | 'warning';
+		autofocus?: boolean;
 	}>(), {
 		statistics: false,
 		disabled: false,
@@ -44,7 +44,15 @@
 		indeterminate: false,
 		readonly: false,
 		color: undefined,
+		autofocus: false,
 	});
+
+	onMounted(() => doFocus())
+
+	function doFocus() {
+		if (props.autofocus)
+			input.value?.focus();
+	}
 
 	const emit = defineEmits<{
 		(e: 'update:modelValue', event: boolean): void;
@@ -68,40 +76,46 @@
 </script>
 
 <style lang="postcss">
-	.svws-ui-checkbox {
-		@apply inline-flex items-start text-base leading-tight my-0.5;
+	.svws-ui-checkbox,
+	input[type="checkbox"] {
+		@apply text-inherit accent-ui;
 
-		input[color="success"] { @apply accent-success; }
-		input[color="error"] { @apply accent-error; }
-		input[color="warning"] { @apply accent-orange-400; }
-
-		&.svws-statistik {
-			@apply text-violet-500;
-
-			input[type="checkbox"] {
-				@apply accent-violet-500;
-			}
+		&[color="success"] {
+			@apply accent-ui-success text-ui-success;
 		}
 
-		&.svws-bw {
-			input[type="checkbox"] {
-				@apply accent-black dark:accent-white;
-			}
+		&[color="error"] {
+			@apply accent-ui-danger text-ui-danger;
 		}
 
+		&[color="warning"] {
+			@apply accent-ui-warning text-ui-warning;
+		}
+
+		&.svws-statistik,
+		&.svws-statistik input[type="checkbox"] {
+			@apply text-ui-statistic accent-ui-statistic;
+		}
+
+		&.svws-bw,
+		&.svws-bw input[type="checkbox"] {
+			@apply accent-ui-neutral;
+		}
+
+		.svws-loading &,
 		&.svws-loading {
+			@apply accent-ui-disabled;
 			@apply animate-pulse;
 
-			input[type="checkbox"],
-			input[type="checkbox"] ~ .svws-ui-toggle--icon {
-				@apply opacity-25 grayscale filter;
-			}
-
-			input[type="checkbox"],
+			&,
 			.svws-ui-checkbox--label {
 				@apply cursor-wait;
 			}
 		}
+	}
+
+	.svws-ui-checkbox {
+		@apply inline-flex items-start text-base leading-tight my-0.5;
 
 		.router-tab-bar--subnav & {
 			@apply text-sm font-bold my-0;
@@ -118,7 +132,34 @@
 	}
 
 	input[type="checkbox"] {
-		@apply h-4 w-4 cursor-pointer accent-svws;
+		@apply h-4 w-4 cursor-pointer;
+
+		&:focus,
+		&:focus-visible {
+			@apply ring;
+			@apply outline-none;
+		}
+
+		&:focus-visible {
+			@apply ring ring-offset-2 ring-ui;
+
+			&[color="success"] {
+				@apply ring-ui-success;
+			}
+
+			&[color="error"] {
+				@apply ring-ui-danger;
+			}
+
+			&[color="warning"] {
+				@apply ring-ui-warning;
+			}
+
+			&.svws-statistik,
+			.svws-statistik & {
+				@apply ring-ui-statistic;
+			}
+		}
 
 		& ~ .svws-ui-checkbox--label {
 			@apply cursor-pointer ml-1.5;
@@ -126,38 +167,33 @@
 		}
 
 		&[disabled] {
-			@apply pointer-events-none cursor-default opacity-50;
+			@apply pointer-events-none cursor-default accent-ui-disabled;
 
 			& ~ .svws-ui-checkbox--label,
 			& ~ .svws-ui-toggle--icon {
+				@apply text-ui-disabled;
 				@apply cursor-default;
-				@apply text-black/50 dark:text-white/50;
 			}
 		}
 
 		&.svws-headless {
-			@apply flex appearance-none items-center justify-center rounded border border-transparent font-bold opacity-50 p-0;
+			@apply flex appearance-none items-center justify-center rounded border border-transparent font-bold p-0 bg-transparent;
 
 			&:before {
 				content: '';
 			}
 
-			&:focus-visible {
-				@apply outline-none ring-2 ring-black ring-offset-1;
+			&:not(:checked) {
+				@apply border-ui-dark-gray;
 			}
 
-			&:not(:checked),
 			&:hover:not([disabled]),
 			&:focus-visible:not([disabled]) {
-				@apply border-black/25 bg-black/5 dark:border-white/25 dark:bg-white/5;
-
-				.table--with-background & {
-					@apply dark:border-black/25 dark:bg-black/5;
-				}
+				@apply border-ui-dark-gray;
 			}
 
 			&:not(:checked)[disabled] {
-				@apply border-transparent bg-transparent opacity-25 dark:border-transparent dark:bg-transparent;
+				@apply border-transparent opacity-25;
 
 				&:before {
 					content: '\2715';
@@ -166,7 +202,6 @@
 			}
 
 			&:checked {
-				@apply opacity-100;
 				font-size: 95%;
 
 				&[disabled] {
@@ -177,76 +212,93 @@
 					content: '\2713';
 				}
 			}
-
-			&:hover,
-			&:focus-visible {
-				@apply opacity-100;
-
-				&[disabled]:not(:checked) {
-					@apply opacity-25;
-				}
-			}
 		}
 	}
 
 	.svws-ui-toggle {
 		.svws-ui-toggle--icon {
-			@apply -ml-4 flex h-4 w-8 flex-shrink-0 cursor-pointer items-center justify-start overflow-hidden rounded-md bg-black/25 shadow-inner dark:bg-white/25;
-			padding: 2px;
+			@apply bg-ui-neutral border border-ui-neutral;
+			@apply -ml-4 flex h-4 w-8 flex-shrink-0 cursor-pointer items-center justify-start overflow-hidden rounded-[0.3rem] shadow-inner p-px;
 
 			&:before {
 				content: '';
-				@apply inline-block h-full w-4 bg-white shadow-md shadow-black/25 rounded-[0.275rem] dark:bg-black;
+				@apply bg-ui-white border border-ui;
+				@apply inline-block h-full w-4 rounded-[0.2rem];
 			}
 		}
 
 		&:hover {
-			.svws-ui-toggle--icon {
-				@apply bg-black/50 dark:bg-white/50;
+			.svws-ui-toggle--icon,
+			.svws-ui-toggle--icon:before {
+				@apply border-ui-neutral-hover;
+			}
+
+			input[type="checkbox"]:checked ~ .svws-ui-toggle--icon {
+				@apply bg-ui-brand-hover border-transparent;
 			}
 		}
 
+		&:has([disabled]) {
+			@apply pointer-events-none;
+		}
+
 		input[type="checkbox"] {
-			@apply mr-0 opacity-0;
+			@apply mr-0 !opacity-0;
 
 			&:focus-visible ~ .svws-ui-toggle--icon {
-				@apply bg-black/50 ring-2 ring-offset-1 ring-svws dark:bg-white/50;
+				@apply ring ring-offset-1 ring-ui-brand;
 			}
 
 			&:checked ~ .svws-ui-toggle--icon {
-				@apply justify-end bg-svws dark:bg-svws;
+				@apply bg-ui-brand border-ui-brand;
+				@apply justify-end;
+
+				&:before {
+					@apply border-transparent;
+				}
+			}
+
+			&:checked:focus-visible ~ .svws-ui-toggle--icon {
+				@apply bg-ui-brand-hover;
 			}
 
 			&:indeterminate ~ .svws-ui-toggle--icon {
 				@apply justify-center;
 			}
 
-			&[disabled] ~ .svws-ui-toggle--icon,
 			&[disabled] ~ .svws-ui-toggle--icon {
-				@apply opacity-10;
+				@apply opacity-50;
+
+				&:before {
+					@apply border-ui-neutral;
+				}
 			}
 		}
 
 		&.svws-statistik {
 			input[type="checkbox"] {
 				&:focus-visible ~ .svws-ui-toggle--icon {
-					@apply ring-violet-500;
+					@apply ring-ui-statistic;
 				}
 
 				&:checked ~ .svws-ui-toggle--icon {
-					@apply bg-violet-500 dark:bg-violet-500;
+					@apply bg-ui-statistic border-ui-statistic;
+				}
+
+				&:checked:focus-visible ~ .svws-ui-toggle--icon {
+					@apply bg-ui-statistic-hover;
 				}
 			}
 		}
 
 		&.svws-bw {
 			input[type="checkbox"] {
-				&:focus-visible ~ .svws-ui-toggle--icon {
-					@apply ring-black;
-				}
-
 				&:checked ~ .svws-ui-toggle--icon {
-					@apply bg-black dark:bg-black;
+					@apply bg-ui-inverted border-transparent;
+
+					&:before {
+						@apply border-transparent bg-ui;
+					}
 				}
 			}
 		}

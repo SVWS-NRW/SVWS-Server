@@ -31,6 +31,13 @@ import jakarta.ws.rs.core.Response;
 public class APIGesamtschule {
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public APIGesamtschule() {
+		// leer
+	}
+
+	/**
 	 * Die OpenAPI-Methode für die Abfrage der Leistungsdaten aus dem aktuellen Abschnitt zu der ID eines Schüler im angegebenen Schema, um die Prognose zu berechnen.
 	 *
 	 * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll

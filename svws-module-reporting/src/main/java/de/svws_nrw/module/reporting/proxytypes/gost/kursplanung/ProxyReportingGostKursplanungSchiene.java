@@ -17,6 +17,7 @@ public class ProxyReportingGostKursplanungSchiene extends ReportingGostKursplanu
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingGostKursplanungSchiene}.
+	 *
 	 * @param reportingGostKursplanungBlockungsergebnis Das Blockungsergebnis zur Kursplanung der gymnasialen Oberstufe, zu dem dieses Objekt gehört.
 	 * @param anzahlDummy				Anzahl der Dummy-Schüler in der Schiene
 	 * @param anzahlExterne				Anzahl der externen Schüler in der Schiene
@@ -40,6 +41,7 @@ public class ProxyReportingGostKursplanungSchiene extends ReportingGostKursplanu
 
 	/**
 	 * Liste vom Typ Kurs, die die Kurse beinhaltet, die in dieser Schiene gemäß Blockungsergebnis liegt.
+	 *
 	 * @return Liste mit Schienen des Kurses
 	 */
 	@Override

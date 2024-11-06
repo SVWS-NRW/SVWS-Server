@@ -1,7 +1,7 @@
 <template>
-	<svws-ui-content-card :title="erzieher.vorname || erzieher.nachname ? `Daten zu ${erzieher.vorname ? erzieher.vorname + ' ' : '' }${erzieher.nachname}` : 'Daten zur Person'" class="col-span-full mt-16 lg:mt-20">
+	<svws-ui-content-card :title="(erzieher.vorname !== null) || (erzieher.nachname !== null) ? `Daten zu ${erzieher.vorname ? erzieher.vorname + ' ' : '' }${erzieher.nachname}` : 'Daten zur Person'" class="col-span-full mt-16 lg:mt-20">
 		<template #actions>
-			<svws-ui-checkbox :model-value="erzieher.erhaeltAnschreiben === true" @update:model-value="patch({ erhaeltAnschreiben: Boolean($event) }, erzieher.id)" class="mr-2">
+			<svws-ui-checkbox :model-value="erzieher.erhaeltAnschreiben === true" @update:model-value="erhaeltAnschreiben => patch({ erhaeltAnschreiben }, erzieher.id)" class="mr-2">
 				Erhält Anschreiben
 			</svws-ui-checkbox>
 			<!-- TOS: Api erweitern <svws-ui-button type="danger">
@@ -10,18 +10,15 @@
 			</svws-ui-button> -->
 		</template>
 		<svws-ui-input-wrapper :grid="4">
-			<svws-ui-select title="Erzieherart" v-model="idErzieherArt" :items="mapErzieherarten" :item-sort="erzieherArtSort" :item-text="(i: Erzieherart) => i.bezeichnung ?? ''" />
+			<svws-ui-select title="Erzieherart" v-model="idErzieherArt" :items="mapErzieherarten" :item-sort="erzieherArtSort" :item-text="i => i.bezeichnung ?? ''" />
 			<svws-ui-text-input placeholder="Name" :model-value="erzieher.nachname" @change="nachname=>patch({ nachname }, erzieher.id)" type="text" />
-			<svws-ui-text-input placeholder="Rufname" :model-value="erzieher.vorname" @change="vorname=>patch({ vorname }, erzieher.id)" type="text" />
+			<svws-ui-text-input placeholder="Vorname" :model-value="erzieher.vorname" @change="vorname=>patch({ vorname }, erzieher.id)" type="text" />
 			<svws-ui-text-input placeholder="E-Mail Adresse" :model-value="erzieher.eMail" @change="eMail=>patch({ eMail }, erzieher.id)" type="email" verify-email />
-			<svws-ui-select title="1. Staatsangehörigkeit" v-model="staatsangehoerigkeit" :items="Nationalitaeten.values()"
-				:item-text="(i: Nationalitaeten) => i.daten.staatsangehoerigkeit" :item-sort="staatsangehoerigkeitKatalogEintragSort"
-				:item-filter="staatsangehoerigkeitKatalogEintragFilter" autocomplete />
+			<svws-ui-select title="Staatsangehörigkeit" v-model="staatsangehoerigkeit" :items="Nationalitaeten.values()" :item-text="i => i.daten.staatsangehoerigkeit" :item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" autocomplete />
 			<svws-ui-spacing />
-			<svws-ui-text-input placeholder="Straße und Hausnummer" :model-value="erzieher.strassenname" @change="strassenname=>patch({ strassenname }, erzieher.id)" type="text" />
-			<svws-ui-text-input placeholder="Adresszusatz" :model-value="erzieher.hausnummerZusatz" @change="hausnummerZusatz=>patch({ hausnummerZusatz }, props.erzieher.id)" type="text" />
-			<svws-ui-select title="Wohnort" v-model="wohnort" :items="mapOrte" :item-filter="orte_filter" :item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
-			<svws-ui-select title="Ortsteil" v-model="ortsteil" :items="ortsteile" :item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''" :item-sort="ortsteilSort" :item-filter="ortsteilFilter" removable />
+			<svws-ui-text-input placeholder="Straße und Hausnummer" :model-value="strasse" @change="patchStrasse" type="text" />
+			<svws-ui-select title="Wohnort" v-model="wohnort" :items="mapOrte" :item-filter="orte_filter" :item-sort="orte_sort" :item-text="i => `${i.plz} ${i.ortsname}`" autocomplete />
+			<svws-ui-select title="Ortsteil" v-model="ortsteil" :items="ortsteile" :item-text="i => i.ortsteil ?? ''" :item-sort="ortsteilSort" :item-filter="ortsteilFilter" removable />
 			<svws-ui-spacing />
 			<svws-ui-textarea-input placeholder="Bemerkungen" :model-value="erzieher.bemerkungen" span="full" autoresize
 				@change="bemerkungen => patch({ bemerkungen: bemerkungen === null ? '' : bemerkungen }, erzieher.id)" />
@@ -33,8 +30,8 @@
 
 	import { computed } from "vue";
 	import type { Erzieherart, ErzieherStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
+	import { AdressenUtils, Nationalitaeten } from "@core";
 	import { erzieherArtSort, staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort, orte_filter, orte_sort, ortsteilFilter, ortsteilSort } from "~/utils/helfer";
-	import { Nationalitaeten } from "@core";
 
 	const props = defineProps<{
 		erzieher: ErzieherStammdaten;
@@ -43,6 +40,15 @@
 		mapOrtsteile: Map<number, OrtsteilKatalogEintrag>;
 		patch: (data : Partial<ErzieherStammdaten>, id: number) => Promise<void>;
 	}>();
+
+	const strasse = computed(() => AdressenUtils.combineStrasse(props.erzieher.strassenname ?? "", props.erzieher.hausnummer ?? "", props.erzieher.hausnummerZusatz ?? ""))
+
+	function patchStrasse(value: string | null) {
+		if (value !== null) {
+			const vals = AdressenUtils.splitStrasse(value);
+			void props.patch({ strassenname: vals[0], hausnummer: vals[1], hausnummerZusatz: vals[2] }, props.erzieher.id);
+		}
+	}
 
 	const wohnort = computed<OrtKatalogEintrag | undefined>({
 		get: () => props.erzieher.wohnortID === null ? undefined : props.mapOrte.get(props.erzieher.wohnortID),

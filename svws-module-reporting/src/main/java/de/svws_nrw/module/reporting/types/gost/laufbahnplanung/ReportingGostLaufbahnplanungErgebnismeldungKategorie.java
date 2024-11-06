@@ -17,6 +17,7 @@ public enum ReportingGostLaufbahnplanungErgebnismeldungKategorie {
 
 	/**
 	 * Erstellt einen Eintrag für die ENU;
+	 *
 	 * @param kategorie Kategorie der Meldung.
 	 */
 	ReportingGostLaufbahnplanungErgebnismeldungKategorie(final String kategorie) {
@@ -28,6 +29,7 @@ public enum ReportingGostLaufbahnplanungErgebnismeldungKategorie {
 
 	/**
 	 * Gibt die Kategorie der Meldung der Laufbahnplanung zurück.
+	 *
 	 * @return Inhalt des Feldes kategorie
 	 */
 	public String kategorie() {

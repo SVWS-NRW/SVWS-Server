@@ -27,4 +27,11 @@ public class NoteKatalogEintrag extends CoreTypeData {
 	@Schema(description = "textZeugnis", example = "sehr gut")
 	public @NotNull String textZeugnis = "";
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public NoteKatalogEintrag() {
+		// leer
+	}
+
 }

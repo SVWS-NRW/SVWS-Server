@@ -43,4 +43,12 @@ public class SchuelerblockungInputKurs {
 
 	/** Die Anzahl an anderen SuS, die mit diesem S. in diesem Kurs nicht zusammen sein sollen. */
 	public int anzahlVerbotenMitWuensche = 0;
+
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SchuelerblockungInputKurs() {
+		// leer
+	}
+
 }

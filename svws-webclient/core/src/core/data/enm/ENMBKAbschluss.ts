@@ -72,6 +72,9 @@ export class ENMBKAbschluss extends JavaObject {
 	public faecher : List<ENMBKFach> = new ArrayList<ENMBKFach>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -131,13 +134,13 @@ export class ENMBKAbschluss extends JavaObject {
 		result += '"hatBestanden" : ' + obj.hatBestanden.toString() + ',';
 		result += '"hatZulassungErweiterteBeruflicheKenntnisse" : ' + obj.hatZulassungErweiterteBeruflicheKenntnisse.toString() + ',';
 		result += '"hatErworbenErweiterteBeruflicheKenntnisse" : ' + obj.hatErworbenErweiterteBeruflicheKenntnisse.toString() + ',';
-		result += '"notePraktischePruefung" : ' + ((!obj.notePraktischePruefung) ? 'null' : JSON.stringify(obj.notePraktischePruefung)) + ',';
-		result += '"noteKolloqium" : ' + ((!obj.noteKolloqium) ? 'null' : JSON.stringify(obj.noteKolloqium)) + ',';
+		result += '"notePraktischePruefung" : ' + ((obj.notePraktischePruefung === null) ? 'null' : JSON.stringify(obj.notePraktischePruefung)) + ',';
+		result += '"noteKolloqium" : ' + ((obj.noteKolloqium === null) ? 'null' : JSON.stringify(obj.noteKolloqium)) + ',';
 		result += '"hatZulassungBerufsabschlusspruefung" : ' + obj.hatZulassungBerufsabschlusspruefung.toString() + ',';
 		result += '"hatBestandenBerufsabschlusspruefung" : ' + obj.hatBestandenBerufsabschlusspruefung.toString() + ',';
-		result += '"themaAbschlussarbeit" : ' + ((!obj.themaAbschlussarbeit) ? 'null' : JSON.stringify(obj.themaAbschlussarbeit)) + ',';
+		result += '"themaAbschlussarbeit" : ' + ((obj.themaAbschlussarbeit === null) ? 'null' : JSON.stringify(obj.themaAbschlussarbeit)) + ',';
 		result += '"istVorhandenBerufsabschlusspruefung" : ' + obj.istVorhandenBerufsabschlusspruefung.toString() + ',';
-		result += '"noteFachpraxis" : ' + ((!obj.noteFachpraxis) ? 'null' : JSON.stringify(obj.noteFachpraxis)) + ',';
+		result += '"noteFachpraxis" : ' + ((obj.noteFachpraxis === null) ? 'null' : JSON.stringify(obj.noteFachpraxis)) + ',';
 		result += '"istFachpraktischerTeilAusreichend" : ' + obj.istFachpraktischerTeilAusreichend.toString() + ',';
 		result += '"faecher" : [ ';
 		for (let i = 0; i < obj.faecher.size(); i++) {
@@ -167,10 +170,10 @@ export class ENMBKAbschluss extends JavaObject {
 			result += '"hatErworbenErweiterteBeruflicheKenntnisse" : ' + obj.hatErworbenErweiterteBeruflicheKenntnisse.toString() + ',';
 		}
 		if (obj.notePraktischePruefung !== undefined) {
-			result += '"notePraktischePruefung" : ' + ((!obj.notePraktischePruefung) ? 'null' : JSON.stringify(obj.notePraktischePruefung)) + ',';
+			result += '"notePraktischePruefung" : ' + ((obj.notePraktischePruefung === null) ? 'null' : JSON.stringify(obj.notePraktischePruefung)) + ',';
 		}
 		if (obj.noteKolloqium !== undefined) {
-			result += '"noteKolloqium" : ' + ((!obj.noteKolloqium) ? 'null' : JSON.stringify(obj.noteKolloqium)) + ',';
+			result += '"noteKolloqium" : ' + ((obj.noteKolloqium === null) ? 'null' : JSON.stringify(obj.noteKolloqium)) + ',';
 		}
 		if (obj.hatZulassungBerufsabschlusspruefung !== undefined) {
 			result += '"hatZulassungBerufsabschlusspruefung" : ' + obj.hatZulassungBerufsabschlusspruefung.toString() + ',';
@@ -179,13 +182,13 @@ export class ENMBKAbschluss extends JavaObject {
 			result += '"hatBestandenBerufsabschlusspruefung" : ' + obj.hatBestandenBerufsabschlusspruefung.toString() + ',';
 		}
 		if (obj.themaAbschlussarbeit !== undefined) {
-			result += '"themaAbschlussarbeit" : ' + ((!obj.themaAbschlussarbeit) ? 'null' : JSON.stringify(obj.themaAbschlussarbeit)) + ',';
+			result += '"themaAbschlussarbeit" : ' + ((obj.themaAbschlussarbeit === null) ? 'null' : JSON.stringify(obj.themaAbschlussarbeit)) + ',';
 		}
 		if (obj.istVorhandenBerufsabschlusspruefung !== undefined) {
 			result += '"istVorhandenBerufsabschlusspruefung" : ' + obj.istVorhandenBerufsabschlusspruefung.toString() + ',';
 		}
 		if (obj.noteFachpraxis !== undefined) {
-			result += '"noteFachpraxis" : ' + ((!obj.noteFachpraxis) ? 'null' : JSON.stringify(obj.noteFachpraxis)) + ',';
+			result += '"noteFachpraxis" : ' + ((obj.noteFachpraxis === null) ? 'null' : JSON.stringify(obj.noteFachpraxis)) + ',';
 		}
 		if (obj.istFachpraktischerTeilAusreichend !== undefined) {
 			result += '"istFachpraktischerTeilAusreichend" : ' + obj.istFachpraktischerTeilAusreichend.toString() + ',';

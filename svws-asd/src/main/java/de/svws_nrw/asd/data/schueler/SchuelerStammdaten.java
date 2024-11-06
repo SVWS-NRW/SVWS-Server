@@ -205,4 +205,11 @@ public class SchuelerStammdaten {
 	@Schema(description = "gibt an, ob der Schüler Meister-BAFÖG erhält oder nicht", example = "true")
 	public boolean erhaeltMeisterBAFOEG;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SchuelerStammdaten() {
+		// leer
+	}
+
 }

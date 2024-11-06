@@ -1,5 +1,7 @@
 package de.svws_nrw.asd.types.kaoa;
 
+import java.util.List;
+
 import de.svws_nrw.asd.data.kaoa.KAOABerufsfeldKatalogEintrag;
 import de.svws_nrw.asd.types.CoreType;
 import de.svws_nrw.asd.utils.CoreTypeDataManager;
@@ -57,6 +59,8 @@ public enum KAOABerufsfeld implements CoreType<KAOABerufsfeldKatalogEintrag, KAO
 
 	/** KAoA-Berufsfeld: Wirtschaft, Verwaltung */
 	WIVE;
+
+
 	/**
 	 * Initialisiert den Core-Type mit dem angegebenen Manager.
 	 *
@@ -74,6 +78,17 @@ public enum KAOABerufsfeld implements CoreType<KAOABerufsfeldKatalogEintrag, KAO
 	 */
 	public static @NotNull CoreTypeDataManager<KAOABerufsfeldKatalogEintrag, KAOABerufsfeld> data() {
 		return CoreTypeDataManager.getManager(KAOABerufsfeld.class);
+	}
+
+	/**
+	 * Liefert alle zulässigen KAoA-Berufsfeld-Historien-Einträge in dem angegebenen Schuljahr zurück.
+	 *
+	 * @param schuljahr   das Schuljahr
+	 *
+	 * @return alle zulässigen KAoA-Berufsfeld-Historien-Einträge in dem angegebenen Schuljahr.
+	 */
+	public static @NotNull List<KAOABerufsfeldKatalogEintrag> getEintraegeBySchuljahr(final int schuljahr) {
+		return KAOABerufsfeld.data().getEintraegeBySchuljahr(schuljahr);
 	}
 
 }

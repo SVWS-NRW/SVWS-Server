@@ -88,6 +88,9 @@ export class Stundenplan extends JavaObject {
 	public jahrgaenge : List<StundenplanJahrgang> = new ArrayList<StundenplanJahrgang>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

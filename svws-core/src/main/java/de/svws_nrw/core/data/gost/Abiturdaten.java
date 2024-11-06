@@ -191,4 +191,10 @@ public class Abiturdaten {
 	@Schema(description = "Die Abiturnote einer bestandenen Abiturprüfung - sofern das Prüfungsverfahren schon abgeschlossen wurde.", example = "3,1")
 	public String note = null;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Abiturdaten() {
+		// leer
+	}
 }

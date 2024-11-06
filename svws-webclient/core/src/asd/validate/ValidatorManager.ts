@@ -12,6 +12,7 @@ import type { List } from '../../java/util/List';
 import { Class } from '../../java/lang/Class';
 import { CoreTypeData } from '../../asd/data/CoreTypeData';
 import type { JavaMap } from '../../java/util/JavaMap';
+import { Validator, cast_de_svws_nrw_asd_validate_Validator } from '../../asd/validate/Validator';
 import { CoreTypeException } from '../../asd/data/CoreTypeException';
 
 export class ValidatorManager extends JavaObject {
@@ -156,7 +157,7 @@ export class ValidatorManager extends JavaObject {
 	public static getValidatorHistorie(validator : string) : List<ValidatorFehlerartKontext> {
 		const tmp : List<ValidatorFehlerartKontext> | null = ValidatorManager._data.get(validator);
 		if (tmp === null)
-			throw new CoreTypeException("Der Validator " + validator! + " existiert nicht in 'validatoren.json'.")
+			throw new CoreTypeException("Der Validator " + validator + " existiert nicht in 'validatoren.json'.")
 		return tmp;
 	}
 
@@ -307,8 +308,21 @@ export class ValidatorManager extends JavaObject {
 	 *
 	 * @return die Fehlerart des Validators für das angegebene Schuljahr
 	 */
-	public getFehlerartBySchuljahr(schuljahr : number, validator : string) : ValidatorFehlerart | null {
+	public getFehlerartBySchuljahrAndValidatorName(schuljahr : number, validator : string) : ValidatorFehlerart | null {
 		return this.getValidatornameToFehlerartCache(schuljahr).get(validator);
+	}
+
+	/**
+	 * Gibt die Fehlerart eines Validators für das angegebene Schuljahr zurück.
+	 *
+	 * @param <T>         der Type des Validators
+	 * @param schuljahr   das Schuljahr
+	 * @param validator   die Klasse des Validators
+	 *
+	 * @return die Fehlerart des Validators für das angegebene Schuljahr
+	 */
+	public getFehlerartBySchuljahrAndValidatorClass<T extends Validator<any>>(schuljahr : number, validator : Class<T>) : ValidatorFehlerart | null {
+		return this.getValidatornameToFehlerartCache(schuljahr).get(validator.getCanonicalName());
 	}
 
 	/**
@@ -320,7 +334,7 @@ export class ValidatorManager extends JavaObject {
 	 */
 	public setFehlerartBySchuljahr(schuljahr : number, validator : string, fehlerart : ValidatorFehlerart) : void {
 		const mapFehlerartToValidator : HashMap<ValidatorFehlerart, List<string>> = this.getFehlerartToValidatornameCache(schuljahr);
-		const art : ValidatorFehlerart | null = this.getFehlerartBySchuljahr(schuljahr, validator);
+		const art : ValidatorFehlerart | null = this.getFehlerartBySchuljahrAndValidatorName(schuljahr, validator);
 		if (art !== null) {
 			const list : List<string> | null = mapFehlerartToValidator.get(art);
 			if (list !== null)
@@ -412,7 +426,7 @@ export class ValidatorManager extends JavaObject {
 				return true;
 			if (iObermenge >= listObermenge.size())
 				return false;
-			if (listObermenge.get(iObermenge)! === listUntermenge.get(iUntermenge)!) {
+			if (listObermenge.get(iObermenge) === listUntermenge.get(iUntermenge)) {
 				iObermenge++;
 				iUntermenge++;
 			} else {
@@ -468,7 +482,7 @@ export class ValidatorManager extends JavaObject {
 	 */
 	private static createZeitraum(von : number | null, bis : number | null) : PairNN<number, number> {
 		const v : number = (von === null ? JavaInteger.MIN_VALUE : von);
-		const b : number = (bis === null ? JavaInteger.MAX_VALUE : bis! + 1);
+		const b : number = (bis === null ? JavaInteger.MAX_VALUE : bis + 1);
 		return new PairNN<number, number>(v, b);
 	}
 

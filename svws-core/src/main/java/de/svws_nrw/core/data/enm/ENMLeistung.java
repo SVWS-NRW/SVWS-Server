@@ -101,4 +101,11 @@ public class ENMLeistung {
 			+ "sofern welche vordefiniert sind."))
 	public @NotNull List<ENMTeilleistung> teilleistungen = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ENMLeistung() {
+		// leer
+	}
+
 }

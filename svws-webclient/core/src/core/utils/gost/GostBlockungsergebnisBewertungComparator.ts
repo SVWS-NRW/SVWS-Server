@@ -51,13 +51,15 @@ export class GostBlockungsergebnisBewertungComparator extends JavaObject impleme
 			return -1;
 		if (kdMax1 > kdMax2)
 			return +1;
-		const o1Kursdifferenzen : Array<number> | null = o1.kursdifferenzHistogramm;
-		const o2Kursdifferenzen : Array<number> | null = o2.kursdifferenzHistogramm;
-		for (let i : number = kdMax1; i >= 0; i--) {
-			if (o1Kursdifferenzen[i] < o2Kursdifferenzen[i])
-				return -1;
-			if (o1Kursdifferenzen[i] > o2Kursdifferenzen[i])
-				return +1;
+		if ((o1.kursdifferenzHistogramm.length > 0) && (o2.kursdifferenzHistogramm.length > 0)) {
+			const o1Kursdifferenzen : Array<number> | null = o1.kursdifferenzHistogramm;
+			const o2Kursdifferenzen : Array<number> | null = o2.kursdifferenzHistogramm;
+			for (let i : number = kdMax1; i >= 0; i--) {
+				if (o1Kursdifferenzen[i] < o2Kursdifferenzen[i])
+					return -1;
+				if (o1Kursdifferenzen[i] > o2Kursdifferenzen[i])
+					return +1;
+			}
 		}
 		const o1Wert4 : number = o1.anzahlKurseMitGleicherFachartProSchiene;
 		const o2Wert4 : number = o2.anzahlKurseMitGleicherFachartProSchiene;

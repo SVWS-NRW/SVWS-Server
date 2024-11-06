@@ -17,4 +17,10 @@ public class AdressbuchQueryParameters {
 	 */
 	public boolean includeAdressbuchEintragIDsOnly;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public AdressbuchQueryParameters() {
+		// leer
+	}
 }

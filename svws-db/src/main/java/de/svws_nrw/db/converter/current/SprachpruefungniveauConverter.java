@@ -38,4 +38,11 @@ public final class SprachpruefungniveauConverter extends DBAttributeConverter<Sp
 		return Integer.class;
 	}
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SprachpruefungniveauConverter() {
+		// leer
+	}
+
 }

@@ -12,12 +12,19 @@ import org.slf4j.spi.SLF4JServiceProvider;
  */
 public final class SvwsSlf4jServiceProvider implements SLF4JServiceProvider {
 
-	// Die API-Version von SLF4J gegen welcher programmiert wurde
+	/** Die API-Version von SLF4J gegen welcher programmiert wurde. */
 	public static String REQUESTED_API_VERSION = "2.0.7";
 
 	private ILoggerFactory _loggerFactory;
 	private IMarkerFactory _markerFactory;
 	private MDCAdapter _mdcAdapter;
+
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SvwsSlf4jServiceProvider() {
+		// leer
+	}
 
 	@Override
 	public ILoggerFactory getLoggerFactory() {

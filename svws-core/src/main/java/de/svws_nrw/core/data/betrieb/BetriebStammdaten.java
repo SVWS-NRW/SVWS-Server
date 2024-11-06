@@ -18,6 +18,13 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @TranspilerDTO
 public class BetriebStammdaten {
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public BetriebStammdaten() {
+		// leer
+	}
+
 	/** ID der weiteren Adresse (Betriebe) */
 	@Schema(description = "die ID des Betriebes", example = "4711")
 	public long id = -1;

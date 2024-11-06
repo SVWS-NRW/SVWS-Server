@@ -9,7 +9,7 @@ import { routeApp } from "~/router/apps/RouteApp";
 import { routeGost } from "~/router/apps/gost/RouteGost";
 
 import { routeGostBeratung } from "~/router/apps/gost/beratung/RouteGostBeratung";
-import type { RouteNode } from "~/router/RouteNode";
+import { RouteNode } from "~/router/RouteNode";
 import { routeGostAbiturjahrNeu } from "./RouteGostAbiturjahrNeu";
 import { routeGostGruppenprozesse } from "./RouteGostGruppenprozesse";
 
@@ -216,7 +216,7 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 			throw new DeveloperNotificationException("Der neu erstelle Abiturjahrgang konnte nicht geladen werden.");
 		daten = await this.ladeDatenFuerAbiturjahrgang(jahrgang, daten, true);
 		this.setPatchedDefaultState(daten);
-		await RouteManager.doRoute(routeGost.getRoute(jahrgang.abiturjahr));
+		await RouteManager.doRoute(routeGost.getRoute({ abiturjahr: jahrgang.abiturjahr }));
 	}
 
 	patchFach = async (data: Partial<GostFach>, fach_id: number) => {
@@ -259,12 +259,14 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 	gotoAbiturjahrgang = async (value: GostJahrgang | undefined) => {
 		if (value === undefined)
 			// TODO: Das ist ein Bug in der Tabelle, die bei gleicher Auswahl undefined schickt
-			// await RouteManager.doRoute({ name: routeGost.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } });
+			// await RouteManager.doRoute(routeGost.getRoute());
 			return;
 		this._state.value.creationModeEnabled = false;
 		this._state.value.gruppenprozesseEnabled = false;
 		const redirect_name: string = ((routeGost.selectedChild === undefined) || (routeGost.selectedChild.name === routeGostAbiturjahrNeu.name) || (routeGost.selectedChild.name === routeGostGruppenprozesse.name)) ? routeGostBeratung.name : routeGost.selectedChild.name;
-		await RouteManager.doRoute({ name: redirect_name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: value.abiturjahr } });
+		const node = RouteNode.getNodeByName(redirect_name);
+		if (node !== undefined)
+			await RouteManager.doRoute(node.getRoute({ abiturjahr: value.abiturjahr }));
 	}
 
 	private getAbiturjahrFuerJahrgangMitMap(idJahrgang : number, mapJahrgaenge : Map<number, JahrgangsDaten>) : number | null {

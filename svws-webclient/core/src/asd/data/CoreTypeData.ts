@@ -36,6 +36,9 @@ export class CoreTypeData extends JavaObject {
 	public gueltigBis : number | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -46,7 +49,7 @@ export class CoreTypeData extends JavaObject {
 	 * @return die Daten als String
 	 */
 	public toString() : string | null {
-		return "CoreTypeData [id=" + this.id + ", schluessel=" + this.schluessel! + ", kuerzel=" + this.kuerzel! + ", text=" + this.text! + ", gueltigVon=" + this.gueltigVon! + ", gueltigBis=" + this.gueltigBis! + "]";
+		return "CoreTypeData [id=" + this.id + ", schluessel=" + this.schluessel + ", kuerzel=" + this.kuerzel + ", text=" + this.text + ", gueltigVon=" + this.gueltigVon + ", gueltigBis=" + this.gueltigBis + "]";
 	}
 
 	transpilerCanonicalName(): string {
@@ -85,8 +88,8 @@ export class CoreTypeData extends JavaObject {
 		result += '"schluessel" : ' + JSON.stringify(obj.schluessel) + ',';
 		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
 		result += '"text" : ' + JSON.stringify(obj.text) + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+		result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -107,10 +110,10 @@ export class CoreTypeData extends JavaObject {
 			result += '"text" : ' + JSON.stringify(obj.text) + ',';
 		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+			result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+			result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

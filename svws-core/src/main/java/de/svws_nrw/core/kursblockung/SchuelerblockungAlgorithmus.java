@@ -19,6 +19,13 @@ public final class SchuelerblockungAlgorithmus extends Service<SchuelerblockungI
 
 	private static final @NotNull Random _random = new Random();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SchuelerblockungAlgorithmus() {
+		// leer
+	}
+
 	@Override
 	public @NotNull SchuelerblockungOutput handle(final @NotNull SchuelerblockungInput pInput) {
 		// Logger-Einrückung (relativ +4).

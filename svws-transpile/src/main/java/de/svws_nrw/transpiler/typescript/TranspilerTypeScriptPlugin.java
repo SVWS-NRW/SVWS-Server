@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -417,25 +418,16 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		};
 		if (result != null)
 			return result;
-		// check whether a String or a Number expression needs a .valueOf call in typescript
-		String valueOf = "";
-		if ((type instanceof final ExpressionClassType classType) && ((classType.isNumberType()) || (classType.isString()))) {
-			final Tree parent = transpiler.getParent(node);
-			if ((parent instanceof final BinaryTree bt) && ((bt.getKind() == Kind.MULTIPLY) || (bt.getKind() == Kind.DIVIDE)
-					|| (bt.getKind() == Kind.REMAINDER) || (bt.getKind() == Kind.PLUS) || (bt.getKind() == Kind.MINUS)
-					|| (bt.getKind() == Kind.LEFT_SHIFT) || (bt.getKind() == Kind.RIGHT_SHIFT) || (bt.getKind() == Kind.UNSIGNED_RIGHT_SHIFT)))
-				valueOf = "!";
-		}
 		// check whether we have a case identifier of a switch statement where we have to add the class/enumeration name
 		if ((type instanceof final ExpressionClassType classType)
 				&& ((transpiler.getParent(node) instanceof CaseTree) || (transpiler.getParent(node) instanceof ConstantCaseLabelTree))) {
-			return classType.toString() + "." + node.getName().toString() + valueOf;
+			return classType.toString() + "." + node.getName().toString();
 		}
 		if (!transpiler.isClassMember(node))
-			return node.getName().toString() + valueOf;
+			return node.getName().toString();
 		if (transpiler.isStaticClassMember(node))
-			return transpiler.getClass(node).getSimpleName().toString() + "." + node.getName().toString() + valueOf;
-		return "this." + node.getName().toString() + valueOf;
+			return transpiler.getClass(node).getSimpleName().toString() + "." + node.getName().toString();
+		return "this." + node.getName().toString();
 	}
 
 
@@ -506,6 +498,11 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				case strMAX_VALUE -> "JavaDouble.MAX_VALUE";
 				case strSIZE -> "JavaDouble.SIZE";
 				case strBYTES -> "JavaDouble.BYTES";
+				default -> null;
+			};
+			case strCharacter -> switch (node.getIdentifier().toString()) {
+				case "isUpperCase" -> "JavaCharacter.isUpperCase";
+				case "isLowerCase" -> "JavaCharacter.isLowerCase";
 				default -> null;
 			};
 			default -> null;
@@ -805,8 +802,10 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 							} else {
 								sb.append(" else ");
 							}
-							sb.append("if (").append(tmpExprVar).append(" === ").append(typeNode.transpile(true)).append(".").append(cclt.toString())
-									.append(") {");
+							sb.append("if (").append(tmpExprVar).append(" === ");
+							if (!typeNode.isPrimitive())
+								sb.append(typeNode.transpile(true)).append(".");
+							sb.append(cclt.toString()).append(") {");
 							indentC++;
 							final boolean isBlock = ct.getBody() instanceof BlockTree;
 							sb.append(System.lineSeparator());
@@ -847,8 +846,11 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 						sb.append(" else {");
 						indentC++;
 						final boolean isBlock = ct.getBody() instanceof BlockTree;
+						final boolean isThrow = ct.getBody() instanceof ThrowTree;
 						sb.append(System.lineSeparator());
-						if (!isBlock)
+						if (isThrow)
+							sb.append(getIndent());
+						else if (!isBlock)
 							sb.append(getIndent()).append(tmpVar).append(" = ");
 						switch (ct.getBody()) {
 							case final BlockTree bt -> sb.append(convertBlock(bt, false, tmpVar));
@@ -879,6 +881,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	 * @return the transpiled string if the expression was transpiled successfully and null otherwise
 	 */
 	public String convertExpression(final ExpressionTree node) {
+		final Tree parent = transpiler.getParent(node);
 		return switch (node) {
 			case final BinaryTree b -> convertBinaryOperator(b);
 			case final AssignmentTree a -> convertAssignment(a);
@@ -896,7 +899,12 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			case final TypeCastTree tc -> convertTypeCast(tc);
 			case final LambdaExpressionTree le -> convertLambdaExpression(le);
 			case final InstanceOfTree io -> convertInstanceOf(io);
-			case final SwitchExpressionTree se -> convertSwitchExpression(se, null);
+			case final SwitchExpressionTree se -> switch (parent) {
+				case final ReturnTree rt -> convertSwitchExpression(se, null);
+				case final AssignmentTree at -> convertSwitchExpression(se, convertExpression(at.getVariable()));
+				default -> throw new TranspilerException(
+						"Transpiler Error: The parent-node of kind " + parent.getKind() + " is not yet supported for an switch expression.");
+			};
 			default -> throw new TranspilerException("Transpiler Error: The node of kind " + node.getKind() + " is not yet supported for an expression.");
 		};
 	}
@@ -1013,6 +1021,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		final ExpressionTree expression = node.getExpression();
 		final String strVariable = convertExpression(variable);
 		String strExpression = convertExpression(expression);
+		if (expression instanceof SwitchExpressionTree)
+			return strExpression;
 		final ExpressionType typeVariable = transpiler.getExpressionType(variable);
 		final ExpressionType typeExpression = transpiler.getExpressionType(expression);
 		if ((typeVariable == null) || (typeExpression == null))
@@ -1223,7 +1233,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	public String convertReturn(final ReturnTree node) {
 		if (node.getExpression() == null)
 			return "return;";
-		String converted = convertExpression(node.getExpression());
+		final String converted = convertExpression(node.getExpression());
 		final ExpressionType type = transpiler.getExpressionType(node.getExpression());
 		if ((type instanceof final ExpressionClassType ect) && (ect.isPrimitiveOrBoxedPrimitive())) {
 			final Tree parent = transpiler.getMethod(node);
@@ -1234,8 +1244,6 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				final TypeNode returnType = method.getReturnType();
 				if (returnType == null)
 					throw new TranspilerException("Transpiler Error: Method return type expected while handling boxed return type.");
-				if (returnType.isPrimitive())
-					converted += "!";
 			} else if (parent instanceof LambdaExpressionTree) {
 				throw new TranspilerException("Transpiler Error: Handling boxed return types for lambda expressions not yet supported");
 			}
@@ -1463,9 +1471,6 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 						if (i >= params.size())
 							throw new TranspilerException("Transpiler Error: Number of parameters in invoked method is to small");
 						final VariableElement param = params.get(i);
-						// append tsValueOf if the parameter type requires a primitive type instead of the wrapper type
-						if (param.asType().getKind().isPrimitive())
-							sb.append("!");
 					} else if (exprTree instanceof final IdentifierTree it) {
 						final Set<ExecutableElement> methods = unit.allLocalMethodElements.get(it.toString());
 						if (methods == null)
@@ -1478,9 +1483,6 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 							if (expressions.size() != methodParams.size())
 								continue; // invalid number of parameters
 							final VariableElement param = methodParams.get(i);
-							// append tsValueOf if the parameter type requires a primitive type instead of the wrapper type
-							if (param.asType().getKind().isPrimitive())
-								sb.append("!");
 						}
 					}
 				}
@@ -1538,6 +1540,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		// print the expression to identify the method
 		final StringBuilder sb = new StringBuilder();
 		final ExpressionTree methodExpression = node.getMethodSelect();
+		final TranspilerUnit unit = transpiler.getTranspilerUnit(node);
 		if (methodExpression instanceof final IdentifierTree ident) {
 			// add super method calls in classes without a specified super class
 			if (strSuper.equals(ident.getName().toString())) {
@@ -1583,8 +1586,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 						&& (type instanceof final ExpressionClassType ect)) {
 					final String expression = convertExpression(ms.getExpression());
 					if ("java.lang.Double".equals(ect.getFullQualifiedName()) || ("java.lang.Float".equals(ect.getFullQualifiedName())))
-						return "Math.trunc(" + expression + "!)";
-					return expression + "!";
+						return "Math.trunc(" + expression + ")";
+					return expression;
 				}
 			}
 			// replace String methods...
@@ -1621,11 +1624,33 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					};
 				}
 			}
+			// replace some static methods of Set
+			if ((type instanceof final ExpressionClassType classType) && ("java.util.Set".equals(classType.getFullQualifiedName()))) {
+				final Set<String> strMethods = Set.of("of");
+				if (strMethods.contains(ms.getIdentifier().toString())) {
+					final String method = switch (ms.getIdentifier().toString()) {
+						case "of" -> "java_util_Set_of";
+						default -> throw new TranspilerException("TranspilerError: Unhandled Set method");
+					};
+					unit.allDefaultMethodImports.computeIfAbsent("java.util.JavaSet", v -> new LinkedHashSet<>()).add(method);
+					return method + "(" + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
+				}
+			}
+			// replace some static methods of List
+			if ((type instanceof final ExpressionClassType classType) && ("java.util.List".equals(classType.getFullQualifiedName()))) {
+				final Set<String> strMethods = Set.of("of");
+				if (strMethods.contains(ms.getIdentifier().toString())) {
+					final String method = switch (ms.getIdentifier().toString()) {
+						case "of" -> "ArrayList.of";  // TODO immutable list in typescript implementieren und davon eine Instanz erzeugen -> siehe auch ImmutableCollections.listFromArray
+						default -> throw new TranspilerException("TranspilerError: Unhandled List method");
+					};
+					unit.imports.put("ArrayList", "java.util");
+					return method + "(" + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
+				}
+			}
 			// replace some Math commands
 			if ((type instanceof final ExpressionClassType classType) && ("java.lang.Math".equals(classType.getFullQualifiedName()))) {
-				final Set<String> strMethods = Set.of(
-						"clamp"
-				);
+				final Set<String> strMethods = Set.of("clamp");
 				if (strMethods.contains(ms.getIdentifier().toString())) {
 					transpiler.getTranspilerUnit(node).imports.put("Math", "java.lang");
 					return switch (ms.getIdentifier().toString()) {
@@ -1678,18 +1703,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			throw new TranspilerException("Transpiler Error: Unhandled method expression type of kind " + methodExpression.getKind() + ".");
 		}
 
-		// check whether the result type is String an the parent tree node requires a valueOf() call in TypeScript
-		String valueOf = "";
-		final ExpressionType type = transpiler.getExpressionType(node);
-		if ((type instanceof final ExpressionClassType ect) && ("java.lang.String".equals(ect.getFullQualifiedName()))) {
-			final Tree parent = transpiler.getParent(node);
-			if ((parent instanceof final BinaryTree bt) && (bt.getKind() == Kind.PLUS))
-				valueOf = "!";
-		}
-
 		// print arguments for the method call
 		sb.append(convertMethodInvocationParameters(node.getArguments(), null, null, false));
-		sb.append(valueOf);
 		return sb.toString();
 	}
 
@@ -2038,13 +2053,13 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				if (type.isNotNull()) {
 					sb.append(getIndent() + addAttrName + " + JSON.stringify(" + objAttr + ")" + endline);
 				} else {
-					sb.append(getIndent() + addAttrName + " + ((!" + objAttr + ") ? 'null' : JSON.stringify(" + objAttr + "))" + endline);
+					sb.append(getIndent() + addAttrName + " + ((" + objAttr + " === null) ? 'null' : JSON.stringify(" + objAttr + "))" + endline);
 				}
 			} else if (type.isNumberClass() || type.isBoolean()) {
 				if (type.isNotNull()) {
-					sb.append(getIndent() + addAttrName + " + " + objAttr + "!" + endline);
+					sb.append(getIndent() + addAttrName + " + " + objAttr + endline);
 				} else {
-					sb.append(getIndent() + addAttrName + " + ((!" + objAttr + ") ? 'null' : " + objAttr + ".toString())" + endline);
+					sb.append(getIndent() + addAttrName + " + ((" + objAttr + " === null) ? 'null' : " + objAttr + ".toString())" + endline);
 				}
 			} else if (type.isCollectionType()) {
 				// TODO notNull, Collection initialisiert
@@ -2139,7 +2154,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				if (type.isNotNull()) {
 					sb.append(getIndent() + addAttrName + " + " + type.transpile(true) + ".transpilerToJSON(" + objAttr + ")" + endline);
 				} else {
-					sb.append(getIndent() + addAttrName + " + ((!" + objAttr + ") ? 'null' : " + type.getNoDeclarationType().transpile(true)
+					sb.append(getIndent() + addAttrName + " + ((" + objAttr + " === null) ? 'null' : " + type.getNoDeclarationType().transpile(true)
 							+ ".transpilerToJSON(" + objAttr + "))" + endline);
 				}
 			}
@@ -2195,13 +2210,13 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				if (type.isNotNull()) {
 					sb.append(getIndent() + addAttrName + " + JSON.stringify(" + objAttr + ")" + endline);
 				} else {
-					sb.append(getIndent() + addAttrName + " + ((!" + objAttr + ") ? 'null' : JSON.stringify(" + objAttr + "))" + endline);
+					sb.append(getIndent() + addAttrName + " + ((" + objAttr + " === null) ? 'null' : JSON.stringify(" + objAttr + "))" + endline);
 				}
 			} else if (type.isNumberClass() || type.isBoolean()) {
 				if (type.isNotNull()) {
 					sb.append(getIndent() + addAttrName + " + " + objAttr + endline);
 				} else {
-					sb.append(getIndent() + addAttrName + " + ((!" + objAttr + ") ? 'null' : " + objAttr + ".toString())" + endline);
+					sb.append(getIndent() + addAttrName + " + ((" + objAttr + " === null) ? 'null' : " + objAttr + ".toString())" + endline);
 				}
 			} else if (type.isCollectionType()) {
 				// TODO notNull, Collection initialisiert
@@ -2296,7 +2311,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				if (type.isNotNull()) {
 					sb.append(getIndent() + addAttrName + " + " + type.transpile(true) + ".transpilerToJSON(" + objAttr + ")" + endline);
 				} else {
-					sb.append(getIndent() + addAttrName + " + ((!" + objAttr + ") ? 'null' : " + type.getNoDeclarationType().transpile(true)
+					sb.append(getIndent() + addAttrName + " + ((" + objAttr + " === null) ? 'null' : " + type.getNoDeclarationType().transpile(true)
 							+ ".transpilerToJSON(" + objAttr + "))" + endline);
 				}
 			}
@@ -2451,7 +2466,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				final String ifName = te.getQualifiedName().toString();
 				final String defaultMethodName = ifName.replace(".", "_") + "_" + methodName;
 				sb.append(defaultMethodName);
-				unit.allDefaultMethodImports.computeIfAbsent(ifName, v -> new ArrayList<>()).add(defaultMethodName);
+				unit.allDefaultMethodImports.computeIfAbsent(ifName, v -> new LinkedHashSet<>()).add(defaultMethodName);
 			}
 			sb.append("(this");
 			for (final var param : method.getParameters())
@@ -2803,6 +2818,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				case strLong -> "JavaLong";
 				case strFloat -> "JavaFloat";
 				case strDouble -> "JavaDouble";
+				case strCharacter -> "JavaCharacter";
 				case "Enum" -> "JavaEnum";
 				case "Iterable" -> "JavaIterable";
 				default -> className;
@@ -2895,7 +2911,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			final String importCast = "cast_" + value.replace('.', '_') + "_" + key.replace('.', '_');
 			switch (value + "." + key) {
 				case "java.lang.String", "java.lang.Long", "java.lang.Integer", "java.lang.Short", "java.lang.Byte", "java.lang.Float", "java.lang.Double",
-						"java.lang.Boolean", "java.lang.Enum" -> {
+						"java.lang.Boolean", "java.lang.Character", "java.lang.Enum" -> {
 					final String importName = "Java" + key;
 					final String importLocation = importPathPrefix + "java/lang/Java" + key;
 					final boolean hasClass = body.contains(importName);
@@ -2912,9 +2928,6 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					}
 				}
 				case "java.lang.reflect.Array" -> {
-					/**/
-				}
-				case "java.lang.Character" -> {
 					/**/
 				}
 				case "java.lang.Math" -> {
@@ -2947,7 +2960,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 							strImports.add(importName);
 						if (hasCast)
 							strImports.add(importCast);
-						for (final String m : unit.allDefaultMethodImports.getOrDefault(importFullPackageName + "." + importName, new ArrayList<>()))
+						for (final String m : unit.allDefaultMethodImports.getOrDefault(importFullPackageName + "." + importName, new LinkedHashSet<>()))
 							strImports.add(m);
 						if (!strTypeImports.isEmpty()) {
 							sb.append(strTypeImports.stream()

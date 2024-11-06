@@ -53,4 +53,10 @@ public class AbiturFachbelegungHalbjahr {
 	/** Gibt an, ob die Belegung des Kurses auf dem Abiturzeugnis angezeigt werden soll oder nicht. Eine Belegung kann auf Wunsch des Prüflings bei nicht gewerteten Kursen nicht auf dem Zeugnis erscheinen. */
 	public Boolean block1kursAufZeugnis = null;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public AbiturFachbelegungHalbjahr() {
+		// leer
+	}
 }

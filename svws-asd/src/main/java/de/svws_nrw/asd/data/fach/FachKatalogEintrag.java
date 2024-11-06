@@ -64,4 +64,11 @@ public class FachKatalogEintrag extends CoreTypeData {
 	@Schema(description = "die Informationen zu Schulformen und -gliederungen, wo das Fach zulässig ist.")
 	public @NotNull List<SchulformSchulgliederung> zulaessig = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public FachKatalogEintrag() {
+		// leer
+	}
+
 }

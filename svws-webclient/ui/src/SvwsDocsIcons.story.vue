@@ -2,10 +2,14 @@
 	<Story title="Icons" id="icons" group="top" icon="ri:landscape-line" :responsive-disabled="true" :layout="{type: 'grid', width: '45%'}">
 		<Variant title="Info zu den Icons" source=" " id="info">
 			<div class="htw-prose dark:htw-prose-invert">
-				<p> Bevor ein neues Icon aus dem Icon-Set gesucht wird, sollte immer geprüft werden, ob es bereits ein passendes Icon gibt.
-					Für den Client und Components werden ausschließlich Icons von <a href="https://remixicon.com/" target="_blank">Remix Icon</a> verwendet. </p>
-				<p> In jedem Button Type kann einfach ein Icon neben dem Text optional ergänzt werden. Falls kein Text benötigt wird, ist type="icon" zu
-					verwenden (z.B. im Tabellen-Footer). </p>
+				<p>
+					Bevor ein neues Icon aus dem Icon-Set gesucht wird, sollte immer geprüft werden, ob es bereits ein passendes Icon gibt.
+					Für den Client und Components werden ausschließlich Icons von <a href="https://remixicon.com/" target="_blank">Remix Icon</a> verwendet.
+				</p>
+				<p>
+					In jedem Button Type kann einfach ein Icon neben dem Text optional ergänzt werden. Falls kein Text benötigt wird, ist type="icon" zu
+					verwenden (z.B. im Tabellen-Footer).
+				</p>
 			</div>
 		</Variant>
 		<Variant title="Favicon" :source="sourceFavicon">
@@ -308,24 +312,24 @@
 <style lang="postcss" scoped>
 
 	.svws-docs-icon-table {
-		@apply w-full;
+		@apply w-full text-ui;
 
 		+ .svws-docs-icon-table {
 			@apply mt-8;
 		}
 
 		tr {
-			@apply grid border-b border-black/10 last:border-0;
+			@apply grid border-b border-ui-secondary last:border-0;
 			grid-template-columns: 0.25fr 1fr 2fr;
 
 			&:hover {
-				@apply text-svws;
+				@apply text-ui-hover;
 			}
 		}
 
 		th,
 		td {
-			@apply py-1 px-2 border-r border-black/10 last:border-0 h-full flex items-center leading-tight;
+			@apply py-1 px-2 border-r border-ui-secondary last:border-0 h-full flex items-center leading-tight;
 
 			svg {
 				@apply text-headline-md;
@@ -333,7 +337,7 @@
 		}
 
 		code {
-			@apply select-all bg-black/5 rounded px-1 -my-0.5 dark:bg-white/5;
+			@apply select-all bg-ui-neutral rounded px-1 -my-0.5;
 		}
 
 		th {

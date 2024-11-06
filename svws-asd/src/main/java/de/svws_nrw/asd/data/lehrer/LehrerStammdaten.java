@@ -115,4 +115,11 @@ public class LehrerStammdaten {
 	@ArraySchema(schema = @Schema(implementation = Schulleitung.class))
 	public final @NotNull List<Schulleitung> leitungsfunktionen = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public LehrerStammdaten() {
+		// leer
+	}
+
 }

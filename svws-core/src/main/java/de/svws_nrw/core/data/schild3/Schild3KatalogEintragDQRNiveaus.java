@@ -32,4 +32,11 @@ public class Schild3KatalogEintragDQRNiveaus {
 	@Schema(description = "Gültig bis Schuljahr")
 	public Integer gueltigBis;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Schild3KatalogEintragDQRNiveaus() {
+		// leer
+	}
+
 }

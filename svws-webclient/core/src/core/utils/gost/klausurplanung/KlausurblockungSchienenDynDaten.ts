@@ -120,7 +120,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 		for (const gostKursklausur of pInput) {
 			for (const schuelerID of gostKursklausur.schuelerIds) {
 				if (schuelerID < 0)
-					throw new DeveloperNotificationException("Schüler-ID " + schuelerID! + " ist negativ!")
+					throw new DeveloperNotificationException("Schüler-ID " + schuelerID + " ist negativ!")
 				if (setSchueler.add(schuelerID)) {
 					const schuelerNummer : number = this._mapSchuelerZuNummer.size();
 					this._mapSchuelerZuNummer.put(schuelerID, schuelerNummer);
@@ -157,8 +157,8 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 			const list : LinkedCollection<number> = e.getValue();
 			for (const klausurID1 of list)
 				for (const klausurID2 of list) {
-					const klausurNr1 : number = DeveloperNotificationException.ifNull("NULL-Wert beim Mapping von klausurID1(" + klausurID1! + ")", this._mapKlausurZuNummer.get(klausurID1));
-					const klausurNr2 : number = DeveloperNotificationException.ifNull("NULL-Wert beim Mapping von klausurID2(" + klausurID2! + ")", this._mapKlausurZuNummer.get(klausurID2));
+					const klausurNr1 : number = DeveloperNotificationException.ifNull("NULL-Wert beim Mapping von klausurID1(" + klausurID1 + ")", this._mapKlausurZuNummer.get(klausurID1));
+					const klausurNr2 : number = DeveloperNotificationException.ifNull("NULL-Wert beim Mapping von klausurID2(" + klausurID2 + ")", this._mapKlausurZuNummer.get(klausurID2));
 					this._verboten[klausurNr1.valueOf()][klausurNr2.valueOf()] = true;
 				}
 		}
@@ -529,7 +529,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 
 	private gibIstBenachbart(nr3 : number, setS : LinkedCollection<number>) : boolean {
 		for (const nr4 of setS)
-			if (this._verboten[nr3][nr4!])
+			if (this._verboten[nr3][nr4])
 				return true;
 		return false;
 	}
@@ -693,7 +693,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 					const gostKlausur : GostKursklausurRich | null = this._mapNummerZuKlausur.get(nr);
 					if (gostKlausur === null)
 						throw new DeveloperNotificationException("Mapping _mapNummerZuKlausur.get(" + nr + ") ist NULL!")
-					this._logger.log(" " + (nr + 1) + "/" + Arrays.toString(gostKlausur.kursSchiene)!);
+					this._logger.log(" " + (nr + 1) + "/" + Arrays.toString(gostKlausur.kursSchiene));
 				}
 			this._logger.logLn("");
 		}

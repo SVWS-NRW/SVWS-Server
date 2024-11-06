@@ -30,4 +30,11 @@ public class StundenplanPausenaufsichtBereich {
 	@Schema(description = "der Wochen-Typ bei der Unterscheidung von (A,B,... -Wochen -> 1, 2, ...) oder 0 ", example = "0")
 	public int wochentyp = -1;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public StundenplanPausenaufsichtBereich() {
+		// leer
+	}
+
 }

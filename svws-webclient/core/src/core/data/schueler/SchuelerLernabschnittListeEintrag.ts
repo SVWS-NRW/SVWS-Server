@@ -74,6 +74,9 @@ export class SchuelerLernabschnittListeEintrag extends JavaObject {
 	public jahrgang : string = "";
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -143,10 +146,10 @@ export class SchuelerLernabschnittListeEintrag extends JavaObject {
 		result += '"istGewertet" : ' + obj.istGewertet.toString() + ',';
 		result += '"istWiederholung" : ' + obj.istWiederholung.toString() + ',';
 		result += '"pruefungsOrdnung" : ' + JSON.stringify(obj.pruefungsOrdnung) + ',';
-		result += '"klassenID" : ' + ((!obj.klassenID) ? 'null' : obj.klassenID.toString()) + ',';
+		result += '"klassenID" : ' + ((obj.klassenID === null) ? 'null' : obj.klassenID.toString()) + ',';
 		result += '"klasse" : ' + JSON.stringify(obj.klasse) + ',';
 		result += '"klasseStatistik" : ' + JSON.stringify(obj.klasseStatistik) + ',';
-		result += '"jahrgangID" : ' + ((!obj.jahrgangID) ? 'null' : obj.jahrgangID.toString()) + ',';
+		result += '"jahrgangID" : ' + ((obj.jahrgangID === null) ? 'null' : obj.jahrgangID.toString()) + ',';
 		result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang) + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -183,7 +186,7 @@ export class SchuelerLernabschnittListeEintrag extends JavaObject {
 			result += '"pruefungsOrdnung" : ' + JSON.stringify(obj.pruefungsOrdnung) + ',';
 		}
 		if (obj.klassenID !== undefined) {
-			result += '"klassenID" : ' + ((!obj.klassenID) ? 'null' : obj.klassenID.toString()) + ',';
+			result += '"klassenID" : ' + ((obj.klassenID === null) ? 'null' : obj.klassenID.toString()) + ',';
 		}
 		if (obj.klasse !== undefined) {
 			result += '"klasse" : ' + JSON.stringify(obj.klasse) + ',';
@@ -192,7 +195,7 @@ export class SchuelerLernabschnittListeEintrag extends JavaObject {
 			result += '"klasseStatistik" : ' + JSON.stringify(obj.klasseStatistik) + ',';
 		}
 		if (obj.jahrgangID !== undefined) {
-			result += '"jahrgangID" : ' + ((!obj.jahrgangID) ? 'null' : obj.jahrgangID.toString()) + ',';
+			result += '"jahrgangID" : ' + ((obj.jahrgangID === null) ? 'null' : obj.jahrgangID.toString()) + ',';
 		}
 		if (obj.jahrgang !== undefined) {
 			result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang) + ',';

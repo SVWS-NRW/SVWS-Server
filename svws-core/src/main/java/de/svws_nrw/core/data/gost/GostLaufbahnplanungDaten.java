@@ -88,4 +88,11 @@ public class GostLaufbahnplanungDaten {
 	@ArraySchema(schema = @Schema(implementation = GostLaufbahnplanungDatenSchueler.class))
 	public final @NotNull List<GostLaufbahnplanungDatenSchueler> schueler = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GostLaufbahnplanungDaten() {
+		// leer
+	}
+
 }

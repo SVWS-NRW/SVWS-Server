@@ -39,6 +39,9 @@ export class StundenplanListeEintrag extends JavaObject {
 	public gueltigBis : string = "";
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

@@ -48,6 +48,7 @@ public class ReportingGostKlausurplanungKursklausur {
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
+	 *
 	 * @param auswahlzeit		Die Auswahlzeit in Minuten, sofern vorhanden.
 	 * @param bemerkung			Die textuelle Bemerkung zur Kursklausur, sofern vorhanden.
 	 * @param dauer				Die Dauer der Klausur in Minuten.
@@ -82,135 +83,126 @@ public class ReportingGostKlausurplanungKursklausur {
 
 	/**
 	 * Die Anzahl an Schülern, die an diese Kursklausur schreiben müssen.
+	 *
 	 * @return Anzahl der Schüler
 	 */
 	public String anzahlSchuelerKlausur() {
-		if ((this.schuelerklausuren == null) || this.schuelerklausuren.isEmpty()) {
+		if ((this.schuelerklausuren == null) || this.schuelerklausuren.isEmpty())
 			return "00";
-		} else {
-			final int anzahl = schuelerklausuren.stream().map(s -> s.id).distinct().toList().size();
-			if (anzahl < 10)
-				return "0" + anzahl;
-			else
-				return "" + anzahl;
-		}
+		final int anzahl = schuelerklausuren.stream().map(s -> s.id).distinct().toList().size();
+		if (anzahl < 10)
+			return "0" + anzahl;
+		return "" + anzahl;
 	}
 
 	/**
 	 * Die Anzahl an Schüler, die im Kurs dieser Klausur sind.
+	 *
 	 * @return Anzahl der Schüler
 	 */
 	public String anzahlSchuelerKurs() {
-		if (this.kurs == null) {
+		if (this.kurs == null)
 			return "00";
-		} else {
-			final int anzahl = this.kurs.schueler().stream().map(ReportingSchueler::id).distinct().toList().size();
-			if (anzahl < 10)
-				return "0" + anzahl;
-			else
-				return "" + anzahl;
-		}
+		final int anzahl = this.kurs.schueler().stream().map(ReportingSchueler::id).distinct().toList().size();
+		if (anzahl < 10)
+			return "0" + anzahl;
+		return "" + anzahl;
 	}
 
 	/**
 	 * Die Liste aller Namen der regulären Klausurschreiber dieser Kursklausur.
+	 *
 	 * @return	Liste der Klausurschreiber.
 	 */
 	public List<String> klausurschreiberNamen() {
-		if (this.kurs == null) {
+		if (this.kurs == null)
 			return new ArrayList<>();
-		} else {
-			return schuelerklausuren.stream().map(s -> s.schueler.vorname() + " " + s.schueler.nachname()).toList();
-		}
+		return schuelerklausuren.stream().map(s -> s.schueler.vorname() + " " + s.schueler.nachname()).toList();
 	}
 
 	/**
 	 * Die Liste der Räume, in denen die Schüler des Kurses ihre Klausur schreiben.
+	 *
 	 * @return Die Liste der Räume der Kursklausur.
 	 */
 	public List<String> raeume() {
-		if ((schuelerklausuren == null) || schuelerklausuren.isEmpty()) {
+		if ((schuelerklausuren == null) || schuelerklausuren.isEmpty())
 			return new ArrayList<>();
-		} else {
-			// Der erste Termin einer Schülerklausur ist der Termin der Kursklausur (FolgeNr ist 0).
-			return schuelerklausuren.stream()
-					.filter(s -> (s.klausurtermin != null) && (s.nummerTerminfolge == 0)
-							&& (s.klausurraum != null) && (s.klausurraum.raumdaten != null))
-					.map(s -> s.klausurraum.raumdaten.kuerzel()).distinct().toList();
-		}
+		// Der erste Termin einer Schülerklausur ist der Termin der Kursklausur (FolgeNr ist 0).
+		return schuelerklausuren.stream()
+				.filter(s -> (s.klausurtermin != null) && (s.nummerTerminfolge == 0)
+						&& (s.klausurraum != null) && (s.klausurraum.raumdaten != null))
+				.map(s -> s.klausurraum.raumdaten.kuerzel()).distinct().toList();
 	}
 
 	/**
 	 * Die Startuhrzeit der Kursklausur, falls schon gesetzt.
+	 *
 	 * @return Die Uhrzeitangabe der Startzeit.
 	 */
 	public String startuhrzeit() {
 		if (this.startzeit == null) {
 			if ((klausurtermin != null) && (klausurtermin.startzeit != null))
 				return DateUtils.gibZeitStringOfMinuten(klausurtermin.startzeit);
-			else
-				return "";
-		} else
-			return DateUtils.gibZeitStringOfMinuten(this.startzeit);
+			return "";
+		}
+		return DateUtils.gibZeitStringOfMinuten(this.startzeit);
 	}
 
 	/**
 	 * Die Unterrichtsstunden, in denen die Schüler des Kurses ihre Klausur schreiben.
+	 *
 	 * @return Die Unterrichtsstunden der Klausur.
 	 */
 	public List<Integer> stunden() {
 		if ((schuelerklausuren == null) || schuelerklausuren.isEmpty()) {
 			return new ArrayList<>();
-		} else {
-			// Der erste Termin einer Schülerklausur ist der Termin der Kursklausur (FolgeNr ist 0). Nehme diesen für die Zeiten.
-			final List<ReportingGostKlausurplanungSchuelerklausur> klausurenMitRaumUndStunden = schuelerklausuren.stream()
-					.filter(s -> (s.klausurtermin != null)
-							&& (s.nummerTerminfolge == 0)
-							&& (s.klausurraum != null)
-							&& (!s.klausurraum.aufsichten.isEmpty()))
-					.toList();
-
-			if (!klausurenMitRaumUndStunden.isEmpty())
-				return klausurenMitRaumUndStunden.getFirst().klausurraum.aufsichten.stream()
-						.map(a -> a.unterrichtsstunde.unterrichtstunde()).toList();
-			else
-				return new ArrayList<>();
 		}
+		// Der erste Termin einer Schülerklausur ist der Termin der Kursklausur (FolgeNr ist 0). Nehme diesen für die Zeiten.
+		final List<ReportingGostKlausurplanungSchuelerklausur> klausurenMitRaumUndStunden = schuelerklausuren.stream()
+				.filter(s -> (s.klausurtermin != null)
+						&& (s.nummerTerminfolge == 0)
+						&& (s.klausurraum != null)
+						&& (!s.klausurraum.aufsichten.isEmpty()))
+				.toList();
+
+		if (!klausurenMitRaumUndStunden.isEmpty())
+			return klausurenMitRaumUndStunden.getFirst().klausurraum.aufsichten.stream()
+					.map(a -> a.unterrichtsstunde.unterrichtstunde()).toList();
+		return new ArrayList<>();
 	}
 
 	/**
 	 * Die kommaseparierte Liste in Textform aller Namen der regulären Klausurschreiber dieser Kursklausur.
+	 *
 	 * @return	Liste der Klausurschreiber als Text.
 	 */
 	public String textKlausurschreiberNamen() {
-		if (this.kurs == null) {
+		if (this.kurs == null)
 			return "";
-		} else {
-			return String.join(", ", klausurschreiberNamen());
-		}
+		return String.join(", ", klausurschreiberNamen());
 	}
 
 	/**
 	 * Die kommaseparierte Liste der Räume, in denen die Schüler des Kurses ihre Klausur schreiben.
+	 *
 	 * @return Die Liste der Räume der Kursklausur als Text.
 	 */
 	public String textRaeume() {
-		if ((schuelerklausuren == null) || schuelerklausuren.isEmpty()) {
+		if ((schuelerklausuren == null) || schuelerklausuren.isEmpty())
 			return "";
-		} else {
-			return String.join(", ", raeume());
-		}
+		return String.join(", ", raeume());
 	}
 
 	/**
 	 * Die Unterrichtsstunden als Zeitbereich in Textform.
+	 *
 	 * @return Die Unterrichtsstunden der Klausur als Text.
 	 */
 	public String textStunden() {
 		if (!stunden().isEmpty())
 			return stunden().getFirst() + "-" + stunden().getLast();
-		else
-			return "";
+		return "";
 	}
 
 
@@ -219,6 +211,7 @@ public class ReportingGostKlausurplanungKursklausur {
 
 	/**
 	 * Die Auswahlzeit in Minuten, sofern vorhanden.
+	 *
 	 * @return Inhalt des Feldes auswahlzeit
 	 */
 	public int auswahlzeit() {
@@ -227,6 +220,7 @@ public class ReportingGostKlausurplanungKursklausur {
 
 	/**
 	 * Die textuelle Bemerkung zur Kursklausur, sofern vorhanden.
+	 *
 	 * @return Inhalt des Feldes bemerkung
 	 */
 	public String bemerkung() {
@@ -235,6 +229,7 @@ public class ReportingGostKlausurplanungKursklausur {
 
 	/**
 	 * Die Dauer der Klausur in Minuten.
+	 *
 	 * @return Inhalt des Feldes dauer
 	 */
 	public int dauer() {
@@ -243,6 +238,7 @@ public class ReportingGostKlausurplanungKursklausur {
 
 	/**
 	 * Die ID der Kursklausur.
+	 *
 	 * @return Inhalt des Feldes id
 	 */
 	public long id() {
@@ -251,6 +247,7 @@ public class ReportingGostKlausurplanungKursklausur {
 
 	/**
 	 * Die Information, ob Audioequipment nötig ist, z.B. für Klausuren mit Hörverstehensanteilen.
+	 *
 	 * @return Inhalt des Feldes istAudioNotwendig
 	 */
 	public boolean istAudioNotwendig() {
@@ -259,6 +256,7 @@ public class ReportingGostKlausurplanungKursklausur {
 
 	/**
 	 * Die Information, ob es sich um eine mündliche Prüfung handelt.
+	 *
 	 * @return Inhalt des Feldes istMdlPruefung
 	 */
 	public boolean istMdlPruefung() {
@@ -267,6 +265,7 @@ public class ReportingGostKlausurplanungKursklausur {
 
 	/**
 	 * Die Information, ob Videoequipment nötig ist, z.B. für Klausuren mit Videoanalyse.
+	 *
 	 * @return Inhalt des Feldes istVideoNotwendig
 	 */
 	public boolean istVideoNotwendig() {
@@ -275,6 +274,7 @@ public class ReportingGostKlausurplanungKursklausur {
 
 	/**
 	 * Der Termin aus der Klausurplanung, an dem diese Kursklausur stattfindet.
+	 *
 	 * @return Inhalt des Feldes klausurtermin
 	 */
 	public ReportingGostKlausurplanungKlausurtermin klausurtermin() {
@@ -283,6 +283,7 @@ public class ReportingGostKlausurplanungKursklausur {
 
 	/**
 	 * Der Kurs, indem die Klausur geschrieben wird, mit seinen Daten.
+	 *
 	 * @return Inhalt des Feldes kurs
 	 */
 	public ReportingKurs kurs() {
@@ -291,6 +292,7 @@ public class ReportingGostKlausurplanungKursklausur {
 
 	/**
 	 * Die Liste der Schüler aus dem Kurs, die diese Klausur schreiben.
+	 *
 	 * @return Inhalt des Feldes klausurschreiber
 	 */
 	public List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausuren() {
@@ -299,6 +301,7 @@ public class ReportingGostKlausurplanungKursklausur {
 
 	/**
 	 * Die Startzeit der Klausur in Minuten seit 0 Uhr, wenn abweichend vom Klausurtermin, sonst null.
+	 *
 	 * @return Inhalt des Feldes startzeit
 	 */
 	public Integer startzeit() {

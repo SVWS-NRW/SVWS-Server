@@ -1,12 +1,18 @@
 package de.svws_nrw.asd.types.kaoa;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import de.svws_nrw.asd.data.kaoa.KAOAKategorieKatalogEintrag;
 import de.svws_nrw.asd.data.kaoa.KAOAMerkmalKatalogEintrag;
 import de.svws_nrw.asd.types.CoreType;
 import de.svws_nrw.asd.utils.CoreTypeDataManager;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Der Core-Type für die KAOA-Merkmal.
+ * Der Core-Type für die KAOA-Merkmale.
  */
 public enum KAOAMerkmal implements CoreType<KAOAMerkmalKatalogEintrag, KAOAMerkmal> {
 
@@ -115,6 +121,11 @@ public enum KAOAMerkmal implements CoreType<KAOAMerkmalKatalogEintrag, KAOAMerkm
 	/** KAoA-Merkmal: Koordinierte Übergangsgestaltung */
 	SBO_10_7;
 
+	/* ----- Die nachfolgenden Attribute werden nicht initialisiert und werden als Cache verwendet, um z.B. den Schuljahres-bezogenen Zugriff zu cachen ----- */
+
+	/** (Integer, Long) -> Schuljahr, idKategorie */
+	private static final @NotNull Map<Integer, Map<Long, List<KAOAMerkmalKatalogEintrag>>> _mapEintraegeBySchuljahrAndKategorie = new HashMap<>();
+
 	/**
 	 * Initialisiert den Core-Type mit dem angegebenen Manager.
 	 *
@@ -122,6 +133,7 @@ public enum KAOAMerkmal implements CoreType<KAOAMerkmalKatalogEintrag, KAOAMerkm
 	 */
 	public static void init(final @NotNull CoreTypeDataManager<KAOAMerkmalKatalogEintrag, KAOAMerkmal> manager) {
 		CoreTypeDataManager.putManager(KAOAMerkmal.class, manager);
+		_mapEintraegeBySchuljahrAndKategorie.clear();
 	}
 
 
@@ -132,6 +144,54 @@ public enum KAOAMerkmal implements CoreType<KAOAMerkmalKatalogEintrag, KAOAMerkm
 	 */
 	public static @NotNull CoreTypeDataManager<KAOAMerkmalKatalogEintrag, KAOAMerkmal> data() {
 		return CoreTypeDataManager.getManager(KAOAMerkmal.class);
+	}
+
+
+	/**
+	 * Liefert alle zulässigen KAoA-Merkmal-Historien-Einträge für die angegebene Kategorie in dem angegebenen Schuljahr zurück.
+	 * Dabei wird intern für das Schuljahr ein Cache aufgebaut, dass nachfolgende Zugriffe auf das gleiche Schuljahr direkt aus
+	 * dem Cache bedient werden können.
+	 *
+	 * @param schuljahr     das Schuljahr
+	 * @param idKategorie   die id des KAoA-Kategorie-Historien-Eintrags
+	 *
+	 * @return alle zulässigen KAoA-Merkmal-Historien-Einträge für die angegebene Kategorie in dem angegebenen Schuljahr.
+	 */
+	public static @NotNull List<KAOAMerkmalKatalogEintrag> getEintraegeBySchuljahrAndIdKategorie(final int schuljahr, final long idKategorie) {
+		// Bestimme die Schuljahres-spezifische Map aus dem Cache. Ist diese nicht vorhanden, so muss der Cache später neu aufgebaut werden.
+		Map<Long, List<KAOAMerkmalKatalogEintrag>> mapEintraegeByKategorie = _mapEintraegeBySchuljahrAndKategorie.get(schuljahr);
+		// Die Map ist vorhanden, weshalb der Zugriff aus dem Cache möglich ist.
+		if (mapEintraegeByKategorie != null) {
+			final List<KAOAMerkmalKatalogEintrag> result = mapEintraegeByKategorie.get(idKategorie);
+			return (result != null) ? result : new ArrayList<>();
+		}
+		// Falls der Cache nicht vorhanden ist, wird er erstellt.
+		mapEintraegeByKategorie = cacheEintraegeBySchuljahrAndIdKategorie(schuljahr);
+		_mapEintraegeBySchuljahrAndKategorie.put(schuljahr, mapEintraegeByKategorie);
+		// Rückgabe des Ergebnisses nach dem Aufbau des Caches.
+		final List<KAOAMerkmalKatalogEintrag> result = mapEintraegeByKategorie.get(idKategorie);
+		return (result != null) ? result : new ArrayList<>();
+	}
+
+	/**
+	 * Liefert einen Cache der zulässigen KAoA-Merkmal-Historien-Einträge je Kategorie in dem angegebenen Schuljahr zurück.
+	 *
+	 * @param schuljahr   das Schuljahr
+	 * @return einen Cache der zulässigen KAoA-Merkmal-Historien-Einträge je Kategorie in dem angegebenen Schuljahr.
+	 */
+	private static @NotNull Map<Long, List<KAOAMerkmalKatalogEintrag>> cacheEintraegeBySchuljahrAndIdKategorie(final int schuljahr) {
+		final Map<Long, List<KAOAMerkmalKatalogEintrag>> cache = new HashMap<>();
+
+		// Füge die Einträge zur Cache-Map hinzu, sofern sie im gegebenen Schuljahr gültig sind.
+		for (final KAOAKategorieKatalogEintrag kategorieHistorienEintrag : KAOAKategorie.data().getEintraegeBySchuljahr(schuljahr)) {
+			// Iteriere durch die Merkmale und füge die zulässigen zur Ergebnisliste hinzu.
+			final List<KAOAMerkmalKatalogEintrag> result = new ArrayList<>();
+			for (final KAOAMerkmalKatalogEintrag merkmalHistorienEintrag : KAOAMerkmal.data().getEintraegeBySchuljahr(schuljahr))
+				if (merkmalHistorienEintrag.kategorie.equals(KAOAKategorie.data().getWertByID(kategorieHistorienEintrag.id).name()))
+					result.add(merkmalHistorienEintrag);
+			cache.put(kategorieHistorienEintrag.id, result);
+		}
+		return cache;
 	}
 
 }

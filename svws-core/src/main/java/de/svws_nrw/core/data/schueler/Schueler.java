@@ -46,4 +46,11 @@ public class Schueler {
 	@Schema(description = "die Schulnummer eines externen Schülers oder null", example = "null")
 	public String externeSchulNr;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Schueler() {
+		// leer
+	}
+
 }

@@ -56,6 +56,7 @@ public class PdfBuilder {
 
 	/**
 	 * Gibt den Dateinamen der PDF-Datei zurück.
+	 *
 	 * @return Dateiname der PDF-Datei.
 	 */
 	public String getDateiname() {
@@ -64,6 +65,7 @@ public class PdfBuilder {
 
 	/**
 	 * Gibt den Dateinamen der PDF-Datei mit Dateiendung zurück.
+	 *
 	 * @return Dateiname der PDF-Datei mit Endung.
 	 */
 	public String getDateinameMitEndung() {
@@ -73,6 +75,7 @@ public class PdfBuilder {
 
 	/**
 	 * Erzeugt die PDF-Datei in Form eines Byte-Arrays.
+	 *
 	 * @return 	das Byte-Array mit der PDF-Datei oder null im Fehlerfall
 	 */
 	public byte[] getPdfByteArray() {
@@ -88,6 +91,7 @@ public class PdfBuilder {
 
 	/**
 	 * Erzeugt eine Response mit der PDF-Datei als Content
+	 *
 	 * @return Response mit der PDF-Datei als Content
 	 */
 	public Response getPdfResponse() {
@@ -109,7 +113,9 @@ public class PdfBuilder {
 
 	/**
 	 * Erzeugt das PDF-Dokument mit der Hilfe des PdfRendererBuilder und schreibt in den übergebenen Output-Stream.
+	 *
 	 * @param 	oStream			der {@link OutputStream}, der die Daten der PDF-Datei enthält.
+	 *
 	 * @throws 	IOException   	wenn der HTML-Code nicht erzeugt werden kann oder bei einem Fehler beim Erzeugen (siehe auch {@link PdfRendererBuilder#run()}
 	 */
 	private void erzeugePDF(final OutputStream oStream) throws IOException {

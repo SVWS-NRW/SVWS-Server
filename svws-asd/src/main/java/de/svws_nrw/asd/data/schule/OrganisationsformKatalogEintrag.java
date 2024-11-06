@@ -17,4 +17,11 @@ public class OrganisationsformKatalogEintrag extends CoreTypeDataNurSchulformen 
 
 	// keine weiteren Attribute vorhanden
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public OrganisationsformKatalogEintrag() {
+		// leer
+	}
+
 }

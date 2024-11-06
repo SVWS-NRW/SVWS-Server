@@ -48,4 +48,11 @@ public class GostBlockungsergebnisBewertung {
 	/** Bewertungskriterium 4: Anzahl aller Kurse mit gleicher Fachart in einer Schiene. */
 	public int anzahlKurseMitGleicherFachartProSchiene = 0;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GostBlockungsergebnisBewertung() {
+		// leer
+	}
+
 }

@@ -13,11 +13,17 @@ import { JavaObject } from '../../java/lang/JavaObject';
 
 export class HashSet<E> extends AbstractSet<E> implements JavaSet<E>, Cloneable, Serializable {
 
+	// Ein internes Java-Set, welches aber nicht korrekt mit der equals-Methode von Java-Objekte arbeitet
 	protected readonly _set : Set<E>;
+
+	// Eine Map mit Kollisionslisten, falls es sich um Java-Objekte handelt
+	protected readonly _mapKollisionen : Map<number, Set<E>>;
+
 
 	public constructor(c? : Collection<E>) {
 		super();
 		this._set = new Set<E>();
+		this._mapKollisionen = new Map<number, Set<E>>();
 		if (c === undefined)
 			return;
 		if ((c instanceof JavaObject) && c.isTranspiledInstanceOf('java.util.Collection')) {
@@ -39,27 +45,68 @@ export class HashSet<E> extends AbstractSet<E> implements JavaSet<E>, Cloneable,
 	}
 
 	public contains(e: any): boolean {
+		if (e instanceof JavaObject) {
+			const hash = JavaObject.getTranspilerHashCode(e);
+			const s = this._mapKollisionen.get(hash);
+			if (s === undefined)
+				return false;
+			for (const elem of s)
+				if (e.equals(elem))
+					return true;
+			return false;
+		}
 		return this._set.has(e);
 	}
 
 	public add(e: E): boolean {
-		const result : boolean = this._set.has(e);
+		if (this.contains(e))
+			return false;
 		this._set.add(e);
+		if (e instanceof JavaObject) {
+			const hash = JavaObject.getTranspilerHashCode(e);
+			let s = this._mapKollisionen.get(hash);
+			if (s === undefined) {
+				s = new Set<E>();
+				this._mapKollisionen.set(hash, s);
+			}
+			s.add(e);
+		}
 		this.modCount++;
-		return !result;
+		return true;
 	}
 
 	public remove(o: any): boolean {
-		const result : boolean = this._set.delete(o);
-		if (result)
+		if (o instanceof JavaObject) {
+			const hash = JavaObject.getTranspilerHashCode(o);
+			const s = this._mapKollisionen.get(hash);
+			if (s === undefined)
+				return false;
+			let obj = undefined;
+			for (const elem of s)
+				if (o.equals(elem))
+					obj = elem;
+			if (obj === undefined)
+				return false;
+			s.delete(obj as unknown as E);
+			if (s.size === 0)
+				this._mapKollisionen.delete(hash);
+			this._set.delete(obj as unknown as E);
 			this.modCount++;
-		return result;
+			return true;
+		} else {
+			if (!this.contains(o))
+				return false;
+			this._set.delete(o);
+			this.modCount++;
+			return true;
+		}
 	}
 
 	public clear(): void {
 		if (this._set.size > 0)
 			this.modCount++;
 		this._set.clear();
+		this._mapKollisionen.clear();
 	}
 
 	public clone() : JavaObject {
@@ -68,10 +115,10 @@ export class HashSet<E> extends AbstractSet<E> implements JavaSet<E>, Cloneable,
 
 	public toArray() : Array<unknown>;
 	public toArray<U>(a: Array<U>) : Array<U>;
-	public toArray<T>(__param0? : Array<T>) : Array<T> | Array<unknown> {
+	public toArray<T>(__param0? : Array<T> | null) : Array<T> | Array<unknown> {
 		if ((__param0 === undefined) || (__param0 === null) || (__param0.length < this._set.size)) {
 			const result : Array<E> = [];
-			this._set.forEach((value : E) => {result.push(value)});
+			this._set.forEach((value : E) => { result.push(value) });
 			return result;
 		} else if (Array.isArray(__param0)) {
 			// TODO handle the case where a is not null and try to fill into the parameter array if possible - see JavaDoc for implementation

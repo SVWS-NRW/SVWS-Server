@@ -19,7 +19,7 @@
 	const props = defineProps<{
 		selected: Wochentag;
 		stundenplanManager: () => StundenplanManager;
-		removeZeitraster: (multi: Iterable<StundenplanZeitraster>) => Promise<void>;
+		removeZeitraster: (zeitraster: Iterable<StundenplanZeitraster>) => Promise<void>;
 		addZeitraster: (zeitraster: Iterable<StundenplanZeitraster>) => Promise<void>;
 		removePausenzeiten: (pausenzeiten: Iterable<StundenplanPausenzeit>) => Promise<void>;
 	}>();

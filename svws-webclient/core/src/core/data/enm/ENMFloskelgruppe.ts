@@ -27,6 +27,9 @@ export class ENMFloskelgruppe extends JavaObject {
 	public readonly floskeln : List<ENMFloskel> = new ArrayList<ENMFloskel>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -57,9 +60,9 @@ export class ENMFloskelgruppe extends JavaObject {
 
 	public static transpilerToJSON(obj : ENMFloskelgruppe) : string {
 		let result = '{';
-		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
-		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
-		result += '"hauptgruppe" : ' + ((!obj.hauptgruppe) ? 'null' : JSON.stringify(obj.hauptgruppe)) + ',';
+		result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
+		result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
+		result += '"hauptgruppe" : ' + ((obj.hauptgruppe === null) ? 'null' : JSON.stringify(obj.hauptgruppe)) + ',';
 		result += '"floskeln" : [ ';
 		for (let i = 0; i < obj.floskeln.size(); i++) {
 			const elem = obj.floskeln.get(i);
@@ -76,13 +79,13 @@ export class ENMFloskelgruppe extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<ENMFloskelgruppe>) : string {
 		let result = '{';
 		if (obj.kuerzel !== undefined) {
-			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
+			result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
+			result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		}
 		if (obj.hauptgruppe !== undefined) {
-			result += '"hauptgruppe" : ' + ((!obj.hauptgruppe) ? 'null' : JSON.stringify(obj.hauptgruppe)) + ',';
+			result += '"hauptgruppe" : ' + ((obj.hauptgruppe === null) ? 'null' : JSON.stringify(obj.hauptgruppe)) + ',';
 		}
 		if (obj.floskeln !== undefined) {
 			result += '"floskeln" : [ ';

@@ -36,6 +36,9 @@ export class StundenplanPausenzeit extends JavaObject {
 	public klassen : List<number> = new ArrayList<number>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -76,8 +79,8 @@ export class StundenplanPausenzeit extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"wochentag" : ' + obj.wochentag.toString() + ',';
-		result += '"beginn" : ' + ((!obj.beginn) ? 'null' : obj.beginn.toString()) + ',';
-		result += '"ende" : ' + ((!obj.ende) ? 'null' : obj.ende.toString()) + ',';
+		result += '"beginn" : ' + ((obj.beginn === null) ? 'null' : obj.beginn.toString()) + ',';
+		result += '"ende" : ' + ((obj.ende === null) ? 'null' : obj.ende.toString()) + ',';
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		result += '"klassen" : [ ';
 		for (let i = 0; i < obj.klassen.size(); i++) {
@@ -101,10 +104,10 @@ export class StundenplanPausenzeit extends JavaObject {
 			result += '"wochentag" : ' + obj.wochentag.toString() + ',';
 		}
 		if (obj.beginn !== undefined) {
-			result += '"beginn" : ' + ((!obj.beginn) ? 'null' : obj.beginn.toString()) + ',';
+			result += '"beginn" : ' + ((obj.beginn === null) ? 'null' : obj.beginn.toString()) + ',';
 		}
 		if (obj.ende !== undefined) {
-			result += '"ende" : ' + ((!obj.ende) ? 'null' : obj.ende.toString()) + ',';
+			result += '"ende" : ' + ((obj.ende === null) ? 'null' : obj.ende.toString()) + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';

@@ -30,47 +30,60 @@ import de.svws_nrw.davapi.model.dav.Prop;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "prop",
-    "href"
+		"prop",
+		"href"
 })
 @XmlRootElement(name = "addressbook-multiget", namespace = "urn:ietf:params:xml:ns:carddav")
 public class AddressbookMultiget {
 
-    @XmlElement(required = true, namespace = "DAV:")
-    protected Prop prop;
+	/**
+	 * Das Prop-Objekt, das die Eigenschaften für die Multiget-Anfrage enthält.
+	 */
+	@XmlElement(required = true, namespace = "DAV:")
+	protected Prop prop;
 
-    /**
-     * Gets the value of the prop property.
-     *
-     * @return
-     *     possible object is
-     *     {@link Prop }
-     *
-     */
-    public Prop getProp() {
-        return prop;
-    }
+	/**
+	 * Liste von Href-Strings, die die Ressourcen für die Multiget-Anfrage identifizieren.
+	 */
+	@XmlElement(required = false, namespace = "DAV:")
+	protected List<String> href;
 
-    /**
-     * Sets the value of the prop property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link Prop }
-     *
-     */
-    public void setProp(Prop value) {
-        this.prop = value;
-    }
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public AddressbookMultiget() {
+		// leer
+	}
 
-    @XmlElement(required = false, namespace = "DAV:")
-    protected List<String> href;
+	/**
+	 * Gibt das Prop-Objekt zurück.
+	 *
+	 * @return Das Prop-Objekt mit den Eigenschaften für die Multiget-Anfrage.
+	 */
+	public Prop getProp() {
+		return prop;
+	}
 
-    public List<String> getHref() {
-        if (href == null) {
-            href = new ArrayList<>();
-        }
-        return this.href;
-    }
+	/**
+	 * Setzt das Prop-Objekt.
+	 *
+	 * @param value Das zu setzende Prop-Objekt.
+	 */
+	public void setProp(final Prop value) {
+		this.prop = value;
+	}
+
+	/**
+	 * Gibt die Liste der Href-Strings zurück.
+	 * Wenn die Liste noch nicht existiert, wird eine neue erstellt.
+	 *
+	 * @return Die Liste der Href-Strings.
+	 */
+	public List<String> getHref() {
+		if (href == null) {
+			href = new ArrayList<>();
+		}
+		return this.href;
+	}
 
 }

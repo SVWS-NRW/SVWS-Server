@@ -86,14 +86,14 @@ public class ReportCalendarDispatcher extends DavDispatcher {
 					CalendarMultiget.class);
 			inputStreamAsByteArray.close();
 			return this.handleCalendarMultigetRequest(kalender.get(), multiget);
-		} catch (final IOException e1) {
+		} catch (@SuppressWarnings("unused") final IOException e1) {
 			// Kein Multiget, versuche Sync-Collection
 			try (InputStream inputStreamClone2 = new ByteArrayInputStream(inputStreamAsByteArray.toByteArray())) {
 				final SyncCollection syncCollection = XmlUnmarshallingUtil.unmarshal(inputStreamClone2,
 						SyncCollection.class);
 				inputStreamAsByteArray.close();
 				return this.handleSyncCollectionRequest(kalender.get(), syncCollection);
-			} catch (final Exception e2) {
+			} catch (@SuppressWarnings("unused") final Exception e2) {
 				// Kein Sync-Collection, Versuche CalendarQuery
 				try (InputStream inputStreamClone3 = new ByteArrayInputStream(inputStreamAsByteArray.toByteArray())) {
 					final CalendarQuery calendarQuery = XmlUnmarshallingUtil.unmarshal(inputStreamClone3,

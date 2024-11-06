@@ -82,7 +82,7 @@ export class RouteDataKatalogSchulen extends RouteData<RouteStateKatalogSchulen>
 	}
 
 	gotoEintrag = async (eintrag: SchulEintrag) => {
-		await RouteManager.doRoute(routeKatalogSchulen.getRoute(eintrag.id));
+		await RouteManager.doRoute(routeKatalogSchulen.getRoute({ id: eintrag.id }));
 	}
 
 	patch = async (data : Partial<SchulEintrag>) => {

@@ -23,24 +23,27 @@
 				<div class="notification--text">
 					<slot />
 				</div>
-				<div class="mt-3 -mb-1 flex flex-wrap gap-1" v-if="$slots.stack || type === 'bug'">
-					<svws-ui-button v-if="type === 'bug'" type="secondary">
+				<div class="mt-4 flex flex-wrap gap-1 w-full" v-if="$slots.stack || type === 'bug'">
+					<svws-ui-button v-if="type === 'bug'" type="secondary" class="notification--send-button">
 						Fehler melden
 						<span class="icon i-ri-send-plane-fill" />
 					</svws-ui-button>
-					<svws-ui-button type="transparent" @click="toggleStackOpen" v-if="$slots.stack">
-						<span>Details</span>
-						<span class="icon i-ri-arrow-up-s-line -ml-1" v-if="stackOpen" />
-						<span class="icon i-ri-arrow-down-s-line -ml-1" v-else />
-					</svws-ui-button>
-					<svws-ui-button type="transparent" @click="copyToClipboard" v-if="toCopy !== undefined">
-						<span>Meldung Kopieren</span>
+					<button @click="copyToClipboard" v-if="toCopy !== undefined" class="notification--copy-button">
+						<span>
+							<span v-if="copied === null || copied === false">Meldung kopieren</span>
+							<span v-else>Meldung kopiert</span>
+						</span>
 						<span class="icon i-ri-file-copy-line" v-if="copied === null" />
 						<span class="icon i-ri-error-warning-fill" v-else-if="copied === false" />
 						<span class="icon i-ri-check-line icon-success" v-else />
-					</svws-ui-button>
+					</button>
+					<button @click="toggleStackOpen" v-if="$slots.stack" class="notification--details-button">
+						<span>Details</span>
+						<span class="icon i-ri-arrow-up-s-line -ml-1" v-if="stackOpen" />
+						<span class="icon i-ri-arrow-down-s-line -ml-1" v-else />
+					</button>
 				</div>
-				<div v-if="copied === false" class="p-2 bg-white border rounded-md text-error mt-2">{{ "Es gab einen Fehler beim Kopieren in die Zwischenablage. Ist die Zwischenablage gesperrt?" }}</div>
+				<div v-if="copied === false" class="p-2 bg-ui border rounded-md text-ui-danger mt-2">{{ "Es gab einen Fehler beim Kopieren in die Zwischenablage. Ist die Zwischenablage gesperrt?" }}</div>
 				<div class="notification--stack" v-if="$slots.stack && stackOpen">
 					<slot name="stack" />
 				</div>
@@ -115,44 +118,66 @@
 <style lang="postcss">
 
 	.notification {
+		@apply bg-ui text-ui border border-ui-neutral;
 		@apply flex flex-col flex-shrink-0;
 		@apply w-full;
 		@apply relative z-40;
 		@apply rounded-lg overflow-hidden;
-		@apply shadow-lg shadow-black/10;
+		@apply shadow-xl;
 		@apply text-base pointer-events-auto;
-		@apply bg-primary text-white font-bold;
+		@apply font-bold;
 		transition: transform 0.2s ease-out;
+
+		.notification--icon {
+			@apply opacity-75;
+
+			span {
+				@apply inline-block -my-1;
+			}
+		}
 
 		.button:not(.button--secondary), .button--icon {
 			@apply rounded-md;
 
 			&:hover {
-				@apply ring-0 bg-white/25;
+				@apply ring-0 bg-ui;
 			}
 		}
 
-		&--error {
-			@apply bg-error text-white;
+		&--info {
+			@apply dark:bg-ui-neutral-weak;
+		}
 
-			.notification--icon {
-				@apply animate-pulse;
-			}
+		&--success,
+		&--error,
+		.dark &--info,
+		.htw-dark &--info {
 			span.icon {
 				-webkit-filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
 				filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
-				@apply inline-block -my-1;
+			}
+			/* TODO: COLORS icon */
+		}
+
+		&--error {
+			@apply bg-ui-danger text-ui-ondanger border-ui-danger;
+
+			.notification--icon {
+				@apply animate-pulse opacity-100;
 			}
 		}
 
 		&--success {
-			@apply bg-success text-white;
+			@apply bg-ui-success text-ui-onsuccess border-ui-success;
+		}
 
-			.button, .button--icon {
-				&:hover,
-				&:focus {
-					@apply bg-black/10;
-				}
+		&--warning {
+			@apply bg-ui-warning text-ui-onwarning border-ui-warning;
+
+			.dark & span.icon,
+			.htw-dark & span.icon {
+				-webkit-filter: none;
+				filter: none;
 			}
 		}
 	}
@@ -168,11 +193,11 @@
 	}
 
 	.notification--content {
-		@apply flex-grow flex flex-wrap;
-		@apply px-4 py-2 overflow-hidden;
+		@apply flex-grow flex flex-wrap gap-x-1;
+		@apply px-3 py-2 overflow-hidden;
 
 		.notification--icon {
-			@apply inline-block mr-1 text-base leading-none -mb-1;
+			@apply inline-block text-base leading-none;
 		}
 
 		.notification--text {
@@ -180,14 +205,12 @@
 		};
 
 		&--has-header {
-			@apply py-3;
-
 			.notification--icon {
 				@apply text-headline-sm;
 			}
 
 			.notification--header {
-				@apply w-auto text-headline-sm font-bold mb-1;
+				@apply w-auto text-headline-sm font-bold mb-0.5;
 			}
 
 			.notification--text {
@@ -196,12 +219,86 @@
 		}
 
 		.notification--stack {
-			@apply whitespace-pre-wrap bg-black mt-4 -mb-2 -mx-3 p-3 font-mono overflow-auto min-w-full rounded-md;
+			@apply whitespace-pre-wrap bg-ui-black mt-2 -mb-2 -mx-3 p-3 font-mono overflow-auto min-w-full rounded-b-md;
 		}
 	}
 
-	.notification--close-button {
-		@apply w-7 h-7;
+	.notification .notification--content-wrapper .notification--close-button {
+		@apply w-6 h-6 inline-flex items-center justify-center p-0 opacity-75;
+
+		&:hover,
+		&:focus-visible {
+			@apply bg-ui opacity-100;
+
+			span.icon {
+				-webkit-filter: none;
+				filter: none;
+
+				.dark &,
+				.htw-dark & {
+					-webkit-filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
+					filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
+				}
+			}
+		}
+	}
+
+	.notification--info .notification--content-wrapper .notification--close-button {
+		@apply border border-transparent;
+
+		&:hover,
+		&:focus-visible {
+			@apply bg-ui-hover border-ui-neutral-hover;
+
+			span.icon {
+				-webkit-filter: none;
+				filter: none;
+
+				.dark &,
+				.htw-dark & {
+					-webkit-filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
+					filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
+				}
+			}
+		}
+	}
+
+	.notification--send-button,
+	.notification--details-button,
+	.notification--copy-button {
+		&:hover,
+		&:focus-visible {
+			@apply !bg-ui !text-ui;
+
+			.dark &,
+			.htw-dark & {
+				@apply !border-ui-black;
+			}
+
+			span.icon {
+				-webkit-filter: none;
+				filter: none;
+
+				.dark &,
+				.htw-dark & {
+					-webkit-filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
+					filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
+				}
+			}
+		}
+	}
+
+	.notification--details-button,
+	.notification--copy-button {
+		@apply flex items-center gap-1 text-sm font-bold px-2 rounded-md;
+
+		span.icon {
+			@apply w-5 h-5 inline-block -mr-1;
+		}
+	}
+
+	.notification--details-button {
+		@apply ml-auto;
 	}
 
 </style>

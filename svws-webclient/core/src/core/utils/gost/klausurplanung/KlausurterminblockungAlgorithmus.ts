@@ -174,7 +174,7 @@ export class KlausurterminblockungAlgorithmus extends JavaObject {
 			for (const algorithmus of algorithmen) {
 				const zeitEndeRunde : number = System.currentTimeMillis() + zeitProAlgorithmus;
 				algorithmus.berechne(zeitEndeRunde);
-				this._logger.log(algorithmus.toString()! + " --> " + dynDaten.gibTerminAnzahl());
+				this._logger.log(algorithmus.toString() + " --> " + dynDaten.gibTerminAnzahl());
 			}
 			zeitProAlgorithmus *= 2;
 		} while ((System.currentTimeMillis() + (algorithmen.length * zeitProAlgorithmus)) <= zeitEndeGesamt);

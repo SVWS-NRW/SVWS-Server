@@ -34,6 +34,9 @@ export class Schulleitung extends JavaObject {
 	public ende : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -74,8 +77,8 @@ export class Schulleitung extends JavaObject {
 		result += '"idLeitungsfunktion" : ' + obj.idLeitungsfunktion.toString() + ',';
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		result += '"idLehrer" : ' + obj.idLehrer.toString() + ',';
-		result += '"beginn" : ' + ((!obj.beginn) ? 'null' : JSON.stringify(obj.beginn)) + ',';
-		result += '"ende" : ' + ((!obj.ende) ? 'null' : JSON.stringify(obj.ende)) + ',';
+		result += '"beginn" : ' + ((obj.beginn === null) ? 'null' : JSON.stringify(obj.beginn)) + ',';
+		result += '"ende" : ' + ((obj.ende === null) ? 'null' : JSON.stringify(obj.ende)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -96,10 +99,10 @@ export class Schulleitung extends JavaObject {
 			result += '"idLehrer" : ' + obj.idLehrer.toString() + ',';
 		}
 		if (obj.beginn !== undefined) {
-			result += '"beginn" : ' + ((!obj.beginn) ? 'null' : JSON.stringify(obj.beginn)) + ',';
+			result += '"beginn" : ' + ((obj.beginn === null) ? 'null' : JSON.stringify(obj.beginn)) + ',';
 		}
 		if (obj.ende !== undefined) {
-			result += '"ende" : ' + ((!obj.ende) ? 'null' : JSON.stringify(obj.ende)) + ',';
+			result += '"ende" : ' + ((obj.ende === null) ? 'null' : JSON.stringify(obj.ende)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

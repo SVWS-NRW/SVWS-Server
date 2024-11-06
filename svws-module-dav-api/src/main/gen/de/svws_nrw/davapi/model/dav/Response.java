@@ -12,7 +12,6 @@ import jakarta.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * <p>Java class for anonymous complex type.
  *
@@ -43,176 +42,207 @@ import java.util.List;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "href",
-    "status",
-    "propstat",
-    "error",
-    "responsedescription",
-    "location"
+		"href",
+		"status",
+		"propstat",
+		"error",
+		"responsedescription",
+		"location"
 })
 @XmlRootElement(name = "response")
 public class Response {
 
-    @XmlElement(required = true)
-    protected List<String> href;
-    protected String status;
-    protected List<Propstat> propstat;
-    protected Error error;
-    protected String responsedescription;
-    protected Location location;
+	/**
+	 * Eine Liste von href-Strings, die die Links darstellen.
+	 */
+	@XmlElement(required = true)
+	protected List<String> href;
 
-    /**
-     * Gets the value of the href property.
-     *
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the href property.
-     *
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getHref().add(newItem);
-     * </pre>
-     *
-     *
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link String }
-     *
-     *
-     */
-    public List<String> getHref() {
-        if (href == null) {
-            href = new ArrayList<>();
-        }
-        return this.href;
-    }
+	/**
+	 * Die Status Eigenschaft.
+	 */
+	protected String status;
 
-    /**
-     * Gets the value of the status property.
-     *
-     * @return
-     *     possible object is
-     *     {@link String }
-     *
-     */
-    public String getStatus() {
-        return status;
-    }
+	/**
+	 * Eine Liste der {@link Propstat}-Objekte.
+	 */
+	protected List<Propstat> propstat;
 
-    /**
-     * Sets the value of the status property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *
-     */
-    public void setStatus(String value) {
-        this.status = value;
-    }
+	/**
+	 * Das {@link Propstat}-Objekt.
+	 */
+	protected Error error;
 
-    /**
-     * Gets the value of the propstat property.
-     *
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the propstat property.
-     *
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getPropstat().add(newItem);
-     * </pre>
-     *
-     *
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Propstat }
-     *
-     *
-     */
-    public List<Propstat> getPropstat() {
-        if (propstat == null) {
-            propstat = new ArrayList<>();
-        }
-        return this.propstat;
-    }
+	/**
+	 * Der Response-String einer Antwort.
+	 */
+	protected String responsedescription;
 
-    /**
-     * Gets the value of the error property.
-     *
-     * @return
-     *     possible object is
-     *     {@link Error }
-     *
-     */
-    public Error getError() {
-        return error;
-    }
+	/**
+	 * Das {@link Location}-Objekt.
+	 */
+	protected Location location;
 
-    /**
-     * Sets the value of the error property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link Error }
-     *
-     */
-    public void setError(Error value) {
-        this.error = value;
-    }
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Response() {
+		// leer
+	}
 
-    /**
-     * Gets the value of the responsedescription property.
-     *
-     * @return
-     *     possible object is
-     *     {@link String }
-     *
-     */
-    public String getResponsedescription() {
-        return responsedescription;
-    }
+	/**
+	 * Gibt die Liste der href-Inhalte zurück.
+	 *
+	 * <p>
+	 * Diese Zugriffsmethode gibt eine Referenz auf die live-Liste zurück,
+	 * nicht auf eine Kopie. Daher sind alle Änderungen, die Sie an der
+	 * zurückgegebenen Liste vornehmen, im JAXB-Objekt sichtbar.
+	 * Aus diesem Grund gibt es keine <CODE>set</CODE>-Methode.
+	 *
+	 * <p>
+	 * Um beispielsweise ein neues Element hinzuzufügen, gehen Sie wie folgt vor:
+	 * <pre>
+	 *    getHref().add(neuesElement);
+	 * </pre>
+	 *
+	 * <p>
+	 * Objekte des folgenden Typs sind in der Liste erlaubt:
+	 * {@link String }
+	 *
+	 * @return eine modifizierbare Liste von href-Strings. Die Liste ist nie null.
+	 */
+	public List<String> getHref() {
+		if (href == null) {
+			href = new ArrayList<>();
+		}
+		return this.href;
+	}
 
-    /**
-     * Sets the value of the responsedescription property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *
-     */
-    public void setResponsedescription(String value) {
-        this.responsedescription = value;
-    }
+	/**
+	 * Gets the value of the status property.
+	 *
+	 * @return
+	 *     possible object is
+	 *     {@link String }
+	 *
+	 */
+	public String getStatus() {
+		return status;
+	}
 
-    /**
-     * Gets the value of the location property.
-     *
-     * @return
-     *     possible object is
-     *     {@link Location }
-     *
-     */
-    public Location getLocation() {
-        return location;
-    }
+	/**
+	 * Sets the value of the status property.
+	 *
+	 * @param value
+	 *     allowed object is
+	 *     {@link String }
+	 *
+	 */
+	public void setStatus(final String value) {
+		this.status = value;
+	}
 
-    /**
-     * Sets the value of the location property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link Location }
-     *
-     */
-    public void setLocation(Location value) {
-        this.location = value;
-    }
+	/**
+	* Gibt die Liste der Propstat-Inhalte zurück.
+	*
+	* <p>
+	* Diese Methode gibt eine Referenz auf die live-Liste zurück,
+	* nicht auf eine Kopie. Änderungen an dieser Liste wirken sich direkt
+	* auf das JAXB-Objekt aus. Daher gibt es keine <CODE>set</CODE>-Methode.
+	* </p>
+	*
+	* <p>
+	* Um ein neues Element hinzuzufügen, verwenden Sie bitte folgenden Code:
+	* </p>
+	* <pre>
+	*    getPropstat().add(neuesElement);
+	* </pre>
+	*
+	* <p>
+	* In dieser Liste sind Objekte des folgenden Typs erlaubt:
+	* {@link Propstat}
+	* </p>
+	*
+	* @return eine modifizierbare Liste von Propstat-Inhalten. Die Liste ist niemals null.
+	*/
+
+	public List<Propstat> getPropstat() {
+		if (propstat == null) {
+			propstat = new ArrayList<>();
+		}
+		return this.propstat;
+	}
+
+	/**
+	 * Gets the value of the error property.
+	 *
+	 * @return
+	 *     possible object is
+	 *     {@link Error }
+	 *
+	 */
+	public Error getError() {
+		return error;
+	}
+
+	/**
+	 * Sets the value of the error property.
+	 *
+	 * @param value
+	 *     allowed object is
+	 *     {@link Error }
+	 *
+	 */
+	public void setError(final Error value) {
+		this.error = value;
+	}
+
+	/**
+	 * Gets the value of the responsedescription property.
+	 *
+	 * @return
+	 *     possible object is
+	 *     {@link String }
+	 *
+	 */
+	public String getResponsedescription() {
+		return responsedescription;
+	}
+
+	/**
+	 * Sets the value of the responsedescription property.
+	 *
+	 * @param value
+	 *     allowed object is
+	 *     {@link String }
+	 *
+	 */
+	public void setResponsedescription(final String value) {
+		this.responsedescription = value;
+	}
+
+	/**
+	 * Gets the value of the location property.
+	 *
+	 * @return
+	 *     possible object is
+	 *     {@link Location }
+	 *
+	 */
+	public Location getLocation() {
+		return location;
+	}
+
+	/**
+	 * Sets the value of the location property.
+	 *
+	 * @param value
+	 *     allowed object is
+	 *     {@link Location }
+	 *
+	 */
+	public void setLocation(final Location value) {
+		this.location = value;
+	}
 
 }

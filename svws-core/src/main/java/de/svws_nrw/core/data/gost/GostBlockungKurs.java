@@ -47,4 +47,11 @@ public class GostBlockungKurs {
 	/** Die Lehrer, die diesem Kurs bereits fest zugeordnet sind. */
 	public @NotNull List<GostBlockungKursLehrer> lehrer = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GostBlockungKurs() {
+		// leer
+	}
+
 }

@@ -79,8 +79,8 @@ export class GostKlausurraum extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"idTermin" : ' + obj.idTermin.toString() + ',';
-		result += '"idStundenplanRaum" : ' + ((!obj.idStundenplanRaum) ? 'null' : obj.idStundenplanRaum.toString()) + ',';
-		result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
+		result += '"idStundenplanRaum" : ' + ((obj.idStundenplanRaum === null) ? 'null' : obj.idStundenplanRaum.toString()) + ',';
+		result += '"bemerkung" : ' + ((obj.bemerkung === null) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -95,10 +95,10 @@ export class GostKlausurraum extends JavaObject {
 			result += '"idTermin" : ' + obj.idTermin.toString() + ',';
 		}
 		if (obj.idStundenplanRaum !== undefined) {
-			result += '"idStundenplanRaum" : ' + ((!obj.idStundenplanRaum) ? 'null' : obj.idStundenplanRaum.toString()) + ',';
+			result += '"idStundenplanRaum" : ' + ((obj.idStundenplanRaum === null) ? 'null' : obj.idStundenplanRaum.toString()) + ',';
 		}
 		if (obj.bemerkung !== undefined) {
-			result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
+			result += '"bemerkung" : ' + ((obj.bemerkung === null) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

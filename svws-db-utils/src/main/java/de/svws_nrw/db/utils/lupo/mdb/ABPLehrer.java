@@ -108,6 +108,12 @@ public final class ABPLehrer {
 		return new ArrayList<>();
 	}
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ABPLehrer() {
+		// leer
+	}
 
 	@Override
 	public String toString() {

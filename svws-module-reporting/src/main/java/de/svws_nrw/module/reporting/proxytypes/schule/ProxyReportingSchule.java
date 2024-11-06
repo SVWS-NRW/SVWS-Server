@@ -20,6 +20,7 @@ public class ProxyReportingSchule extends ReportingSchule {
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingSchule}.
+	 *
 	 * @param reportingRepository Repository für die Reporting.
 	 */
 	public ProxyReportingSchule(final ReportingRepository reportingRepository) {
@@ -61,6 +62,7 @@ public class ProxyReportingSchule extends ReportingSchule {
 
 	/**
 	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.
+	 *
 	 * @return Repository für die Reporting
 	 */
 	public ReportingRepository reportingRepository() {

@@ -27,6 +27,9 @@ export class GostBlockungKursAufteilung extends JavaObject {
 	public schueler2 : List<number> = new ArrayList<number>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

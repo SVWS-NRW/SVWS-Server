@@ -26,6 +26,9 @@ export class AbschlussErgebnis extends JavaObject {
 	public log : List<string> | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -69,7 +72,7 @@ export class AbschlussErgebnis extends JavaObject {
 	public static transpilerToJSON(obj : AbschlussErgebnis) : string {
 		let result = '{';
 		result += '"erworben" : ' + obj.erworben.toString() + ',';
-		result += '"abschluss" : ' + ((!obj.abschluss) ? 'null' : JSON.stringify(obj.abschluss)) + ',';
+		result += '"abschluss" : ' + ((obj.abschluss === null) ? 'null' : JSON.stringify(obj.abschluss)) + ',';
 		if (!obj.npFaecher) {
 			result += '"npFaecher" : null' + ',';
 		} else {
@@ -105,7 +108,7 @@ export class AbschlussErgebnis extends JavaObject {
 			result += '"erworben" : ' + obj.erworben.toString() + ',';
 		}
 		if (obj.abschluss !== undefined) {
-			result += '"abschluss" : ' + ((!obj.abschluss) ? 'null' : JSON.stringify(obj.abschluss)) + ',';
+			result += '"abschluss" : ' + ((obj.abschluss === null) ? 'null' : JSON.stringify(obj.abschluss)) + ',';
 		}
 		if (obj.npFaecher !== undefined) {
 			if (!obj.npFaecher) {

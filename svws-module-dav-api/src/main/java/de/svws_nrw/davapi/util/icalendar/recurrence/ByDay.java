@@ -81,14 +81,18 @@ public final class ByDay implements Comparable<ByDay> {
 	}
 
 	/**
-	 * @return the weekDay
+	 * Gibt das WeekDay-Objekt zurück.
+	 *
+	 * @return Das WeekDay-Objekt.
 	 */
 	public WeekDay getWeekDay() {
 		return weekDay;
 	}
 
 	/**
-	 * @param weekDay the weekDay to set
+	 * Setzt das WeekDay-Objekt.
+	 *
+	 * @param weekDay Das zu setzende WeekDay-Objekt.
 	 */
 	public void setWeekDay(final WeekDay weekDay) {
 		this.weekDay = weekDay;

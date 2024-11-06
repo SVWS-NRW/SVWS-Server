@@ -205,7 +205,7 @@ export class AbschlussFaecherGruppe extends JavaObject {
 				continue;
 			if (!GELeistungsdifferenzierteKursart.Sonstige.hat(fach.kursart))
 				diffkursinfo += fach.kursart + ",";
-			sb.append(fach.kuerzel + "(" + diffkursinfo! + fach.note + ")");
+			sb.append(fach.kuerzel + "(" + diffkursinfo + fach.note + ")");
 		}
 		return sb.toString();
 	}

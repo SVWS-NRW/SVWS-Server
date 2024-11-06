@@ -12,6 +12,9 @@ export class AdressbuchKontaktListe extends AdressbuchEintrag {
 	public kontakte : List<AdressbuchKontakt> = new ArrayList<AdressbuchKontakt>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

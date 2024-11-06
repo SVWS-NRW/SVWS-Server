@@ -26,4 +26,11 @@ public class StundenplanListeEintragMinimal {
 	@Schema(description = "das Datum, ab dem der Stundenpland gültig ist", example = "1899-1-1")
 	public @NotNull String gueltigAb = "";
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public StundenplanListeEintragMinimal() {
+		// leer
+	}
+
 }

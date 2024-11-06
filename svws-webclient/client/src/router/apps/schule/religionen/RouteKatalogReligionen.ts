@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
 
 import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
 
@@ -13,11 +13,9 @@ import type { TabData } from "@ui";
 import type { ReligionenAppProps } from "~/components/schule/kataloge/religionen/SReligionenAppProps";
 import type { ReligionenAuswahlProps } from "~/components/schule/kataloge/religionen/SReligionenAuswahlPops";
 import { RouteDataKatalogReligionen } from "./RouteDataKatalogReligionen";
-import { routeSchule } from "../RouteSchule";
 import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
 import { routeError } from "~/router/error/RouteError";
 
-const SSchuleAuswahl = () => import("~/components/schule/SSchuleAuswahl.vue")
 const SReligionenAuswahl = () => import("~/components/schule/kataloge/religionen/SReligionenAuswahl.vue");
 const SReligionenApp = () => import("~/components/schule/kataloge/religionen/SReligionenApp.vue");
 
@@ -29,7 +27,6 @@ export class RouteKatalogReligionen extends RouteNode<RouteDataKatalogReligionen
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Religionen";
 		super.menugroup = RouteSchuleMenuGroup.ALLGEMEIN;
-		super.setView("submenu", SSchuleAuswahl, (route) => routeSchule.getAuswahlProps(route));
 		super.setView("liste", SReligionenAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 			routeKatalogReligionDaten,
@@ -48,19 +45,19 @@ export class RouteKatalogReligionen extends RouteNode<RouteDataKatalogReligionen
 				const eintrag = this.data.religionListeManager.liste.get(id);
 				if ((eintrag === null) && (this.data.religionListeManager.auswahlID() !== null)) {
 					await this.data.ladeListe();
-					return this.getRoute(this.data.religionListeManager.auswahlID() ?? undefined);
+					return this.getRouteDefaultChild();
 				} else if (eintrag !== null)
 					this.data.setEintrag(eintrag);
 			}
 			if ((to.name === this.name) && (this.data.religionListeManager.auswahlID() !== null))
-				return this.getRoute(this.data.religionListeManager.auswahlID() ?? undefined);
+				return this.getRouteDefaultChild();
 		} catch (error) {
-			return routeError.getRoute(error as DeveloperNotificationException);
+			return routeError.getErrorRoute(error as DeveloperNotificationException);
 		}
 	}
 
-	public getRoute(id: number|undefined) : RouteLocationRaw {
-		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
+	public addRouteParamsFromState() : RouteParamsRawGeneric {
+		return { id : this.data.religionListeManager.auswahlID() ?? undefined };
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): ReligionenAuswahlProps {
@@ -87,7 +84,7 @@ export class RouteKatalogReligionen extends RouteNode<RouteDataKatalogReligionen
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new DeveloperNotificationException("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.religionListeManager.auswahlID() ?? undefined } });
+		await RouteManager.doRoute(node.getRoute());
 		this.data.setView(node, this.children);
 	}
 }

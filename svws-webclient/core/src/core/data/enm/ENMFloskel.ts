@@ -31,6 +31,9 @@ export class ENMFloskel extends JavaObject {
 	public jahrgangID : number | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -58,11 +61,11 @@ export class ENMFloskel extends JavaObject {
 
 	public static transpilerToJSON(obj : ENMFloskel) : string {
 		let result = '{';
-		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
-		result += '"text" : ' + ((!obj.text) ? 'null' : JSON.stringify(obj.text)) + ',';
-		result += '"fachID" : ' + ((!obj.fachID) ? 'null' : obj.fachID.toString()) + ',';
-		result += '"niveau" : ' + ((!obj.niveau) ? 'null' : obj.niveau.toString()) + ',';
-		result += '"jahrgangID" : ' + ((!obj.jahrgangID) ? 'null' : obj.jahrgangID.toString()) + ',';
+		result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
+		result += '"text" : ' + ((obj.text === null) ? 'null' : JSON.stringify(obj.text)) + ',';
+		result += '"fachID" : ' + ((obj.fachID === null) ? 'null' : obj.fachID.toString()) + ',';
+		result += '"niveau" : ' + ((obj.niveau === null) ? 'null' : obj.niveau.toString()) + ',';
+		result += '"jahrgangID" : ' + ((obj.jahrgangID === null) ? 'null' : obj.jahrgangID.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -71,19 +74,19 @@ export class ENMFloskel extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<ENMFloskel>) : string {
 		let result = '{';
 		if (obj.kuerzel !== undefined) {
-			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
+			result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		}
 		if (obj.text !== undefined) {
-			result += '"text" : ' + ((!obj.text) ? 'null' : JSON.stringify(obj.text)) + ',';
+			result += '"text" : ' + ((obj.text === null) ? 'null' : JSON.stringify(obj.text)) + ',';
 		}
 		if (obj.fachID !== undefined) {
-			result += '"fachID" : ' + ((!obj.fachID) ? 'null' : obj.fachID.toString()) + ',';
+			result += '"fachID" : ' + ((obj.fachID === null) ? 'null' : obj.fachID.toString()) + ',';
 		}
 		if (obj.niveau !== undefined) {
-			result += '"niveau" : ' + ((!obj.niveau) ? 'null' : obj.niveau.toString()) + ',';
+			result += '"niveau" : ' + ((obj.niveau === null) ? 'null' : obj.niveau.toString()) + ',';
 		}
 		if (obj.jahrgangID !== undefined) {
-			result += '"jahrgangID" : ' + ((!obj.jahrgangID) ? 'null' : obj.jahrgangID.toString()) + ',';
+			result += '"jahrgangID" : ' + ((obj.jahrgangID === null) ? 'null' : obj.jahrgangID.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

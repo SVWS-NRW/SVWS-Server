@@ -41,6 +41,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingSchueler}.
+	 *
 	 * @param reportingRepository Repository für die Reporting.
 	 * @param schuelerStammdaten Stammdaten-Objekt aus der DB.
 	 */
@@ -117,6 +118,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 
 	/**
 	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.
+	 *
 	 * @return Repository für die Reporting
 	 */
 	public ReportingRepository reportingRepository() {
@@ -126,6 +128,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 
 	/**
 	 * Stellt die Daten des aktuellen Lernabschnitts des Schülers zur Verfügung.
+	 *
 	 * @return Daten des aktuellen Lernabschnitts, wenn dieser vorhanden ist.
 	 */
 	@Override
@@ -149,6 +152,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 
 	/**
 	 * Stellt die Daten des ausgewählten Lernabschnitts des Schülers zur Verfügung.
+	 *
 	 * @return Daten des ausgewählten Lernabschnitts, wenn dieser vorhanden ist.
 	 */
 	@Override
@@ -198,6 +202,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 
 	/**
 	 * Stellt die Daten der GOSt-Laufbahnplanung des Schülers zur Verfügung.
+	 *
 	 * @return Daten der GOSt-Laufbahnplanung
 	 */
 	@Override
@@ -210,6 +215,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 
 	/**
 	 * Stellt die Daten aller Lernabschnitte des Schülers in einer Liste zur Verfügung.
+	 *
 	 * @return Liste der Daten aller Lernabschnitte
 	 */
 	@Override

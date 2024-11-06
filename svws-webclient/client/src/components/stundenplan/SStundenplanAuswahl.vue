@@ -8,7 +8,7 @@
 			<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="mapKatalogeintraege().values()" :unselectable :columns selectable v-model="selected" scroll-into-view>
 				<template #actions>
 					<svws-ui-button @click="doDeleteEintraege" type="trash" :disabled="selected.length === 0" />
-					<svws-ui-button type="icon" @click="addEintrag" :hasFocus="mapKatalogeintraege().size === 0">
+					<svws-ui-button type="icon" @click="addEintrag" :has-focus="mapKatalogeintraege().size === 0">
 						<span class="icon i-ri-add-line" />
 					</svws-ui-button>
 				</template>

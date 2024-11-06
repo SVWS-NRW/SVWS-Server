@@ -48,6 +48,7 @@ public class ReportingSchuelerSprachbelegung {
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
+	 *
 	 * @param belegungBisJahrgang Der Jahrgang, in dem die Belegung der Sprache beendet wurde - sofern sie schon beendet wurde
 	 * @param belegungBisAbschnitt Der Abschnitt des Jahrgangs, in dem die Belegung der Sprache beendet wurde - sofern sie schon beendet wurde
 	 * @param belegungVonJahrgang Der Jahrgang, in dem die Sprache zum ersten Mal belegt wurde
@@ -84,6 +85,7 @@ public class ReportingSchuelerSprachbelegung {
 
 	/**
 	 * Der Jahrgang, in dem die Belegung der Sprache beendet wurde - sofern sie schon beendet wurde
+	 *
 	 * @return Inhalt des Feldes belegungBisJahrgang
 	 */
 	public String belegungBisJahrgang() {
@@ -92,6 +94,7 @@ public class ReportingSchuelerSprachbelegung {
 
 	/**
 	 * Der Abschnitt des Jahrgangs, in dem die Belegung der Sprache beendet wurde - sofern sie schon beendet wurde
+	 *
 	 * @return Inhalt des Feldes belegungBisAbschnitt
 	 */
 	public Integer belegungBisAbschnitt() {
@@ -100,6 +103,7 @@ public class ReportingSchuelerSprachbelegung {
 
 	/**
 	 * Der Jahrgang, in dem die Sprache zum ersten Mal belegt wurde
+	 *
 	 * @return Inhalt des Feldes belegungVonJahrgang
 	 */
 	public String belegungVonJahrgang() {
@@ -108,6 +112,7 @@ public class ReportingSchuelerSprachbelegung {
 
 	/**
 	 * Der Abschnitt des Jahrganges, in welchem die Sprache zum ersten Mal belegt wurde
+	 *
 	 * @return Inhalt des Feldes belegungVonAbschnitt
 	 */
 	public Integer belegungVonAbschnitt() {
@@ -116,6 +121,7 @@ public class ReportingSchuelerSprachbelegung {
 
 	/**
 	 * Gibt an, ob das kleine Latinum erreicht wurde oder nicht.
+	 *
 	 * @return Inhalt des Feldes hatKleinesLatinum
 	 */
 	public boolean hatKleinesLatinum() {
@@ -124,6 +130,7 @@ public class ReportingSchuelerSprachbelegung {
 
 	/**
 	 * Gibt an, ob das Latinum erreicht wurde oder nicht.
+	 *
 	 * @return Inhalt des Feldes hatLatinum
 	 */
 	public boolean hatLatinum() {
@@ -132,6 +139,7 @@ public class ReportingSchuelerSprachbelegung {
 
 	/**
 	 * Gibt an, ob das Graecum erreicht wurde oder nicht.
+	 *
 	 * @return Inhalt des Feldes hatGraecum
 	 */
 	public boolean hatGraecum() {
@@ -140,6 +148,7 @@ public class ReportingSchuelerSprachbelegung {
 
 	/**
 	 * Gibt an, ob das Hebraicum erreicht wurde oder nicht.
+	 *
 	 * @return Inhalt des Feldes hatHebraicum
 	 */
 	public boolean hatHebraicum() {
@@ -148,6 +157,7 @@ public class ReportingSchuelerSprachbelegung {
 
 	/**
 	 * Das Referenzniveau, welches bisher erreicht wurde
+	 *
 	 * @return Inhalt des Feldes referenzniveau
 	 */
 	public Sprachreferenzniveau referenzniveau() {
@@ -156,6 +166,7 @@ public class ReportingSchuelerSprachbelegung {
 
 	/**
 	 * Gibt an, an welcher Stelle in der Sprachenfolge die Sprache begonnen wurde
+	 *
 	 * @return Inhalt des Feldes reihenfolge
 	 */
 	public Integer reihenfolge() {
@@ -164,6 +175,7 @@ public class ReportingSchuelerSprachbelegung {
 
 	/**
 	 * Das einstellige Sprachkürzel des Faches der Sprache
+	 *
 	 * @return Inhalt des Feldes sprache
 	 */
 	public String sprache() {
@@ -172,6 +184,7 @@ public class ReportingSchuelerSprachbelegung {
 
 	/**
 	 * Das Statistik-Fach zur Sprache
+	 *
 	 * @return Inhalt des Feldes fach
 	 */
 	public ReportingStatistikFach statistikfach() {

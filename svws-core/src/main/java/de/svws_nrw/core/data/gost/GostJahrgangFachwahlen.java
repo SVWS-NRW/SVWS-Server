@@ -21,4 +21,11 @@ public class GostJahrgangFachwahlen {
 	/** Die Fachwahlen für den Abiturbereich */
 	public @NotNull GostJahrgangFachwahlenHalbjahr abitur = new GostJahrgangFachwahlenHalbjahr();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GostJahrgangFachwahlen() {
+		// leer
+	}
+
 }

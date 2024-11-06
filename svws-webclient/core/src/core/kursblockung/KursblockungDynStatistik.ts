@@ -180,7 +180,7 @@ export class KursblockungDynStatistik extends JavaObject {
 	 */
 	debug(pPrefix : string) : void {
 		this._logger.modifyIndent(+4);
-		this._logger.logLn(pPrefix! + ", RV = " + this.bewertungRegelverletzungen + ", NW = " + this.bewertungNichtwahlen + ", FW = " + this.bewertungFachartPaar + ", KDs = " + this.bewertungKursdifferenzenMaxIndex + " = " + Arrays.toString(this.bewertungKursdifferenzen)!);
+		this._logger.logLn(pPrefix + ", RV = " + this.bewertungRegelverletzungen + ", NW = " + this.bewertungNichtwahlen + ", FW = " + this.bewertungFachartPaar + ", KDs = " + this.bewertungKursdifferenzenMaxIndex + " = " + Arrays.toString(this.bewertungKursdifferenzen));
 		this._logger.modifyIndent(-4);
 	}
 
@@ -190,7 +190,7 @@ export class KursblockungDynStatistik extends JavaObject {
 	 * @return Debug-Informationen in einer Zeile.
 	 */
 	debugRow() : string {
-		return " RV = " + this.bewertungRegelverletzungen + ", NW = " + this.bewertungNichtwahlen + ", FW = " + this.bewertungFachartPaar + ", KDs = " + this.bewertungKursdifferenzenMaxIndex + " = " + Arrays.toString(this.bewertungKursdifferenzen)!;
+		return " RV = " + this.bewertungRegelverletzungen + ", NW = " + this.bewertungNichtwahlen + ", FW = " + this.bewertungFachartPaar + ", KDs = " + this.bewertungKursdifferenzenMaxIndex + " = " + Arrays.toString(this.bewertungKursdifferenzen);
 	}
 
 	/**

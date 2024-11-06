@@ -1,5 +1,8 @@
 {
 	"project": {
-		"version": "1.0.0"
+		"version": "1.0.1"
+	},
+	"schild": {
+		"version": "3.1.0"
 	}
 }

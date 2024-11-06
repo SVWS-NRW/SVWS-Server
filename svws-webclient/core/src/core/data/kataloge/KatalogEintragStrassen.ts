@@ -24,6 +24,9 @@ export class KatalogEintragStrassen extends JavaObject {
 	public Stand : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -50,10 +53,10 @@ export class KatalogEintragStrassen extends JavaObject {
 
 	public static transpilerToJSON(obj : KatalogEintragStrassen) : string {
 		let result = '{';
-		result += '"Ort" : ' + ((!obj.Ort) ? 'null' : JSON.stringify(obj.Ort)) + ',';
-		result += '"RegSchl" : ' + ((!obj.RegSchl) ? 'null' : JSON.stringify(obj.RegSchl)) + ',';
-		result += '"Strasse" : ' + ((!obj.Strasse) ? 'null' : JSON.stringify(obj.Strasse)) + ',';
-		result += '"Stand" : ' + ((!obj.Stand) ? 'null' : JSON.stringify(obj.Stand)) + ',';
+		result += '"Ort" : ' + ((obj.Ort === null) ? 'null' : JSON.stringify(obj.Ort)) + ',';
+		result += '"RegSchl" : ' + ((obj.RegSchl === null) ? 'null' : JSON.stringify(obj.RegSchl)) + ',';
+		result += '"Strasse" : ' + ((obj.Strasse === null) ? 'null' : JSON.stringify(obj.Strasse)) + ',';
+		result += '"Stand" : ' + ((obj.Stand === null) ? 'null' : JSON.stringify(obj.Stand)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -62,16 +65,16 @@ export class KatalogEintragStrassen extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<KatalogEintragStrassen>) : string {
 		let result = '{';
 		if (obj.Ort !== undefined) {
-			result += '"Ort" : ' + ((!obj.Ort) ? 'null' : JSON.stringify(obj.Ort)) + ',';
+			result += '"Ort" : ' + ((obj.Ort === null) ? 'null' : JSON.stringify(obj.Ort)) + ',';
 		}
 		if (obj.RegSchl !== undefined) {
-			result += '"RegSchl" : ' + ((!obj.RegSchl) ? 'null' : JSON.stringify(obj.RegSchl)) + ',';
+			result += '"RegSchl" : ' + ((obj.RegSchl === null) ? 'null' : JSON.stringify(obj.RegSchl)) + ',';
 		}
 		if (obj.Strasse !== undefined) {
-			result += '"Strasse" : ' + ((!obj.Strasse) ? 'null' : JSON.stringify(obj.Strasse)) + ',';
+			result += '"Strasse" : ' + ((obj.Strasse === null) ? 'null' : JSON.stringify(obj.Strasse)) + ',';
 		}
 		if (obj.Stand !== undefined) {
-			result += '"Stand" : ' + ((!obj.Stand) ? 'null' : JSON.stringify(obj.Stand)) + ',';
+			result += '"Stand" : ' + ((obj.Stand === null) ? 'null' : JSON.stringify(obj.Stand)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

@@ -21,44 +21,56 @@ import java.util.List;
  * &lt;/complexType&gt;
  * </pre>
  *
- *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "href"
+		"href"
 })
 @XmlRootElement(name = "current-user-principal", namespace = "DAV:")
 public class CurrentUserPrincipal {
 
-    @XmlElement(required = true)
-    protected List<String> href;
-    /**
-     * Gets the value of the href property.
-     *
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the href property.
-     *
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getHref().add(newItem);
-     * </pre>
-     *
-     *
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link String }
-     *
-     *
-     */
-    public List<String> getHref() {
-        if (href == null) {
-            href = new ArrayList<>();
-        }
-        return this.href;
-    }
+	/**
+	 * Die Liste der Href-Strings.
+	 */
+	@XmlElement(required = true)
+	protected List<String> href;
+
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public CurrentUserPrincipal() {
+		// leer
+	}
+
+	/**
+	 * Liefert eine Liste der href-Strings.
+	 *
+	 * <p>
+	 * Diese Zugriffsmethode gibt eine Referenz auf die Live-Liste zurück,
+	 * also keine Kopie. Daher werden alle Änderungen, die Sie an der
+	 * zurückgegebenen Liste vornehmen, im JAXB-Objekt präsent sein.
+	 * Aus diesem Grund gibt es keine <CODE>set</CODE>-Methode.
+	 * </p>
+	 *
+	 * <p>
+	 * Um beispielsweise ein neues Element hinzuzufügen, gehen Sie wie folgt vor:
+	 * </p>
+	 * <pre>
+	 *    getHref().add(neuesElement);
+	 * </pre>
+	 *
+	 * <p>
+	 * Objekte der folgenden Typ(en) sind in der Liste erlaubt:
+	 * {@link String}
+	 * </p>
+	 *
+	 * @return eine Liste der href-Strings.
+	 */
+	public List<String> getHref() {
+		if (href == null) {
+			href = new ArrayList<>();
+		}
+		return this.href;
+	}
 
 }

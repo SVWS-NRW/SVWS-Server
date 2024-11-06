@@ -73,6 +73,13 @@ import jakarta.ws.rs.core.Response;
 public class APILehrer {
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public APILehrer() {
+		// leer
+	}
+
+	/**
 	 * Die OpenAPI-Methode für die Abfrage der Liste aller Lehrer.
 	 *
 	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll

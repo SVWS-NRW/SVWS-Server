@@ -76,7 +76,7 @@ export class BerufskollegFachklassenManager extends JavaObject {
 				for (const daten of eintrag.historie) {
 					const alt : BerufskollegFachklassenKatalogEintrag | null = this._mapByID.put(daten.id, eintrag);
 					if (alt !== null)
-						throw new DeveloperNotificationException("Fehlerhafter Katalog: Doppelte ID '" + daten.id + "' bei der Fachklasse '" + kuerzel! + "'")
+						throw new DeveloperNotificationException("Fehlerhafter Katalog: Doppelte ID '" + daten.id + "' bei der Fachklasse '" + kuerzel + "'")
 					this._mapDatenByID.put(daten.id, daten);
 				}
 			}
@@ -193,7 +193,7 @@ export class BerufskollegFachklassenManager extends JavaObject {
 	public getKuerzel(id : number) : string | null {
 		const eintrag : BerufskollegFachklassenKatalogEintrag | null = this._mapByID.get(id);
 		const index : number | null = this._mapIndexByEintrag.get(eintrag);
-		return ((eintrag === null) || (index === null)) ? null : ("" + index! + "-" + eintrag.schluessel + "-" + eintrag.schluessel2);
+		return ((eintrag === null) || (index === null)) ? null : ("" + index + "-" + eintrag.schluessel + "-" + eintrag.schluessel2);
 	}
 
 	/**

@@ -36,95 +36,103 @@ import java.util.List;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "response",
-    "responsedescription",
-    "syncToken"
+		"response",
+		"responsedescription",
+		"syncToken"
 })
 @XmlRootElement(name = "multistatus")
 public class Multistatus {
 
-    @XmlElement(required = true)
-    protected List<Response> response;
-    protected String responsedescription;
-    @XmlElement(name = "sync-token")
-    @XmlSchemaType(name = "anyURI")
-    protected String syncToken;
+	/**
+	 * Liste von Response-Objekten.
+	 */
+	@XmlElement(required = true)
+	protected List<Response> response;
 
-    /**
-     * Gets the value of the response property.
-     *
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the response property.
-     *
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getResponse().add(newItem);
-     * </pre>
-     *
-     *
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Response }
-     *
-     *
-     */
-    public List<Response> getResponse() {
-        if (response == null) {
-            response = new ArrayList<>();
-        }
-        return this.response;
-    }
+	/**
+	 * Beschreibung der Antwort.
+	 */
+	protected String responsedescription;
 
-    /**
-     * Gets the value of the responsedescription property.
-     *
-     * @return
-     *     possible object is
-     *     {@link String }
-     *
-     */
-    public String getResponsedescription() {
-        return responsedescription;
-    }
+	/**
+	 * Das Synchronisations-Token.
+	 */
+	@XmlElement(name = "sync-token")
+	@XmlSchemaType(name = "anyURI")
+	protected String syncToken;
 
-    /**
-     * Sets the value of the responsedescription property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *
-     */
-    public void setResponsedescription(String value) {
-        this.responsedescription = value;
-    }
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Multistatus() {
+		// leer
+	}
 
-    /**
-     * Gets the value of the syncToken property.
-     *
-     * @return
-     *     possible object is
-     *     {@link String }
-     *
-     */
-    public String getSyncToken() {
-        return syncToken;
-    }
+	/**
+	* Gibt die Liste der Response-Inhalte zurück.
+	*
+	* <p>
+	* Diese Zugriffsmetode gibt eine Referenz auf die live-Liste zurück,
+	* nicht auf eine Kopie. Daher werden alle Änderungen, die Sie an der
+	* zurückgegebenen Liste vornehmen, im JAXB-Objekt sichtbar sein.
+	* Aus diesem Grund gibt es keine <CODE>set</CODE>-Methode.
+	* </p>
+	*
+	* <p>
+	* Um beispielsweise ein neues Element hinzuzufügen, tun Sie Folgendes:
+	* </p>
+	* <pre>
+	*    getResponse().add(neuesElement);
+	* </pre>
+	*
+	* <p>
+	* Objekte des folgenden Typs sind in der Liste erlaubt:
+	* {@link Response }
+	* </p>
+	*
+	* @return eine modifizierbare Liste von Response-Inhalten. Die Liste ist niemals null.
+	*/
+	public List<Response> getResponse() {
+		if (response == null) {
+			response = new ArrayList<>();
+		}
+		return this.response;
+	}
 
-    /**
-     * Sets the value of the syncToken property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *
-     */
-    public void setSyncToken(String value) {
-        this.syncToken = value;
-    }
+	/**
+	 * Liefert den Wert von {@link #responsedescription}.
+	 *
+	 * @return den Wert von {@link #responsedescription}.
+	 */
+	public String getResponsedescription() {
+		return responsedescription;
+	}
+
+	/**
+	 * Setzt den Wert von {@link #responsedescription}.
+	 *
+	 * @param value   der zu setzende Wert von {@link #responsedescription}.
+	 */
+	public void setResponsedescription(final String value) {
+		this.responsedescription = value;
+	}
+
+	/**
+	 * Liefert den Wert von {@link #syncToken}.
+	 *
+	 * @return den Wert von {@link #syncToken}.
+	 */
+	public String getSyncToken() {
+		return syncToken;
+	}
+
+	/**
+	 * Setzt den Wert von {@link #syncToken}.
+	 *
+	 * @param value   der zu setzende Wert von {@link #syncToken}.
+	 */
+	public void setSyncToken(final String value) {
+		this.syncToken = value;
+	}
 
 }

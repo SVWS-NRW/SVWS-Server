@@ -1,3 +1,4 @@
+import { ValidatorFehlerart } from '../../asd/validate/ValidatorFehlerart';
 import { ArrayList } from '../../java/util/ArrayList';
 import { ValidatorFehler } from '../../asd/validate/ValidatorFehler';
 import type { List } from '../../java/util/List';
@@ -92,7 +93,7 @@ export abstract class Validator<T extends JavaObject> extends JavaObject {
 				if (!this.pruefe())
 					success = false;
 			} catch(e : any) {
-				this.addFehler("Unerwarteter Fehler bei der Validierung: " + e.getMessage()!);
+				this.addFehler("Unerwarteter Fehler bei der Validierung: " + e.getMessage());
 			}
 		}
 		return success;
@@ -114,6 +115,18 @@ export abstract class Validator<T extends JavaObject> extends JavaObject {
 	 */
 	public getFehler() : List<ValidatorFehler<any>> {
 		return new ArrayList<ValidatorFehler<any>>(this._fehler);
+	}
+
+	/**
+	 * Die Fehlerart, welcher der Validator in seinem Kontext zugeordnet ist.
+	 *
+	 * @return die Fehlerart
+	 */
+	public getFehlerart() : ValidatorFehlerart {
+		const result : ValidatorFehlerart | null = this._kontext.getValidatorManager().getFehlerartBySchuljahrAndValidatorClass(this._kontext.getSchuljahr(), this.getClass());
+		if (result === null)
+			return ValidatorFehlerart.UNGENUTZT;
+		return result;
 	}
 
 	/**

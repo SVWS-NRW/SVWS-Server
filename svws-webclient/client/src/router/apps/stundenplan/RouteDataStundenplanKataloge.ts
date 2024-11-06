@@ -1,5 +1,5 @@
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-import { routeKatalogAufsichtsbereiche } from "./kataloge/RouteKatalogAufsichtsbereiche";
+import { routeKatalogZeitraster } from "./kataloge/RouteKatalogZeitraster";
 import { api } from "~/router/Api";
 import { StundenplanListeEintrag } from "@core";
 import { routeApp } from "../RouteApp";
@@ -16,7 +16,7 @@ const defaultState = <RouteStateStundenplanKataloge> {
 	idSchuljahresabschnitt: -1,
 	auswahl: undefined,
 	mapKatalogeintraege: new Map(),
-	view: routeKatalogAufsichtsbereiche,
+	view: routeKatalogZeitraster,
 };
 
 export class RouteDataStundenplanKataloge extends RouteData<RouteStateStundenplanKataloge> {
@@ -78,6 +78,6 @@ export class RouteDataStundenplanKataloge extends RouteData<RouteStateStundenpla
 		await this.gotoEintrag(this.auswahl);
 	}
 
-	gotoEintrag = async (eintrag?: StundenplanListeEintrag) => await RouteManager.doRoute(routeStundenplan.getRoute(eintrag?.id));
+	gotoEintrag = async (eintrag?: StundenplanListeEintrag) => await RouteManager.doRoute(routeStundenplan.getRoute({ id: eintrag?.id }));
 
 }

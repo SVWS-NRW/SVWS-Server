@@ -25,4 +25,11 @@ public class GostBlockungsergebnisKursSchienenZuordnungUpdate {
 	/** Die Blockungs-Regeln, die dabei angepasst werden sollen. Das ist nur zulässig, wenn nur ein Blockungsergebnis für die Blockung vorhanden ist. */
 	public @NotNull GostBlockungRegelUpdate regelUpdates = new GostBlockungRegelUpdate();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GostBlockungsergebnisKursSchienenZuordnungUpdate() {
+		// leer
+	}
+
 }

@@ -19,6 +19,9 @@ export class BenutzerAllgemeinCredentials extends JavaObject {
 	public password : string = "";
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

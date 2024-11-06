@@ -44,6 +44,9 @@ export class OrtKatalogEintrag extends JavaObject {
 	public istAenderbar : boolean = false;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -83,10 +86,10 @@ export class OrtKatalogEintrag extends JavaObject {
 	public static transpilerToJSON(obj : OrtKatalogEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"plz" : ' + ((!obj.plz) ? 'null' : JSON.stringify(obj.plz)) + ',';
-		result += '"ortsname" : ' + ((!obj.ortsname) ? 'null' : JSON.stringify(obj.ortsname)) + ',';
-		result += '"kreis" : ' + ((!obj.kreis) ? 'null' : JSON.stringify(obj.kreis)) + ',';
-		result += '"kuerzelBundesland" : ' + ((!obj.kuerzelBundesland) ? 'null' : JSON.stringify(obj.kuerzelBundesland)) + ',';
+		result += '"plz" : ' + ((obj.plz === null) ? 'null' : JSON.stringify(obj.plz)) + ',';
+		result += '"ortsname" : ' + ((obj.ortsname === null) ? 'null' : JSON.stringify(obj.ortsname)) + ',';
+		result += '"kreis" : ' + ((obj.kreis === null) ? 'null' : JSON.stringify(obj.kreis)) + ',';
+		result += '"kuerzelBundesland" : ' + ((obj.kuerzelBundesland === null) ? 'null' : JSON.stringify(obj.kuerzelBundesland)) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		result += '"istAenderbar" : ' + obj.istAenderbar.toString() + ',';
@@ -101,16 +104,16 @@ export class OrtKatalogEintrag extends JavaObject {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.plz !== undefined) {
-			result += '"plz" : ' + ((!obj.plz) ? 'null' : JSON.stringify(obj.plz)) + ',';
+			result += '"plz" : ' + ((obj.plz === null) ? 'null' : JSON.stringify(obj.plz)) + ',';
 		}
 		if (obj.ortsname !== undefined) {
-			result += '"ortsname" : ' + ((!obj.ortsname) ? 'null' : JSON.stringify(obj.ortsname)) + ',';
+			result += '"ortsname" : ' + ((obj.ortsname === null) ? 'null' : JSON.stringify(obj.ortsname)) + ',';
 		}
 		if (obj.kreis !== undefined) {
-			result += '"kreis" : ' + ((!obj.kreis) ? 'null' : JSON.stringify(obj.kreis)) + ',';
+			result += '"kreis" : ' + ((obj.kreis === null) ? 'null' : JSON.stringify(obj.kreis)) + ',';
 		}
 		if (obj.kuerzelBundesland !== undefined) {
-			result += '"kuerzelBundesland" : ' + ((!obj.kuerzelBundesland) ? 'null' : JSON.stringify(obj.kuerzelBundesland)) + ',';
+			result += '"kuerzelBundesland" : ' + ((obj.kuerzelBundesland === null) ? 'null' : JSON.stringify(obj.kuerzelBundesland)) + ',';
 		}
 		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung.toString() + ',';

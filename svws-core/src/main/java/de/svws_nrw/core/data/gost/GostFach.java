@@ -93,4 +93,11 @@ public class GostFach {
 	/** Die Fach-Kürzel des zweiten Leitfaches eines Projektkurses */
 	public String projektKursLeitfach2Kuerzel = null;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GostFach() {
+		// leer
+	}
+
 }

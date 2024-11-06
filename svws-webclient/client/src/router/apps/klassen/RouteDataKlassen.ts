@@ -22,7 +22,6 @@ interface RouteStateKlassen extends RouteStateInterface {
 	mapKlassenVorigerAbschnitt: Map<number, KlassenDaten>;
 	mapKlassenFolgenderAbschnitt: Map<number, KlassenDaten>;
 	oldView?: RouteNode<any, any>;
-	activeRouteType: ViewType;
 }
 
 const defaultState = <RouteStateKlassen> {
@@ -32,13 +31,17 @@ const defaultState = <RouteStateKlassen> {
 	mapKlassenFolgenderAbschnitt: new Map<number, KlassenDaten>(),
 	view: routeKlassenDaten,
 	oldView: undefined,
-	activeRouteType: ViewType.DEFAULT
+	activeViewType: ViewType.DEFAULT,
 };
 
 export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 
 	public constructor() {
 		super(defaultState);
+	}
+
+	get hatKlassenListeManagerManager(): boolean {
+		return (this._state.value.klassenListeManager !== undefined);
 	}
 
 	get klassenListeManager(): KlassenListeManager {
@@ -53,10 +56,6 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 
 	get mapKlassenFolgenderAbschnitt(): Map<number, KlassenDaten> {
 		return this._state.value.mapKlassenFolgenderAbschnitt;
-	}
-
-	get activeRouteType(): ViewType {
-		return this._state.value.activeRouteType;
 	}
 
 	private async ladeSchuljahresabschnitt(idSchuljahresabschnitt : number) : Promise<number | null> {
@@ -96,7 +95,7 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		klassenListeManager.filtered();
 
 		// Aktualisiere den State
-		this.setPatchedDefaultState({ idSchuljahresabschnitt, klassenListeManager, mapKlassenVorigerAbschnitt, mapKlassenFolgenderAbschnitt, activeRouteType: this.activeRouteType });
+		this.setPatchedDefaultState({ idSchuljahresabschnitt, klassenListeManager, mapKlassenVorigerAbschnitt, mapKlassenFolgenderAbschnitt, activeViewType: this.activeViewType });
 		return this.klassenListeManager.auswahlID();
 	}
 
@@ -246,10 +245,10 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 	}
 
 	setFilter = async () => {
-		if (!this.klassenListeManager.hasDaten() && (this.activeRouteType === ViewType.DEFAULT)) {
+		if (!this.klassenListeManager.hasDaten() && (this.activeViewType === ViewType.DEFAULT)) {
 			const listFiltered = this.klassenListeManager.filtered();
 			if (!listFiltered.isEmpty()) {
-				return await this.gotoEintrag(listFiltered.get(0).id);
+				return await this.gotoDefaultView(listFiltered.get(0).id);
 			}
 		}
 		this.commit();
@@ -266,19 +265,20 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 	add = async (partialKlasse: Partial<KlassenDaten>): Promise<void> => {
 		const neueKlasse = await api.server.addKlasse({ ...partialKlasse, idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }, api.schema);
 		await this.ladeSchuljahresabschnitt(this.idSchuljahresabschnitt);
-		await this.gotoEintrag(neueKlasse.id);
+		await this.gotoDefaultView(neueKlasse.id);
 	}
 
 	private setDefaults() {
 		this.klassenListeManager.setAuswahlKlassenLeitung(null);
-		this._state.value.activeRouteType = ViewType.DEFAULT;
+		this.activeViewType = ViewType.DEFAULT;
 		this._state.value.view = (this._state.value.view?.name === this.view.name) ? this.view : routeKlassenDaten;
 	}
 
-	gotoEintrag = async (eintragId?: number | null) => {
+	gotoDefaultView = async (eintragId?: number | null) => {
 		this._state.value.oldView = this._state.value.view;
 		if ((eintragId !== null) && (eintragId !== undefined) && this.klassenListeManager.liste.has(eintragId)) {
-			const route = ((this.view === routeKlassenDaten) || (this.view === routeKlassenStundenplan)) ? this.view.getRoute(eintragId) : routeKlassenDaten.getRoute(eintragId)
+			const route = ((this.view === routeKlassenDaten) || (this.view === routeKlassenStundenplan))
+				? this.view.getRoute({ id: eintragId }) : routeKlassenDaten.getRoute({ id: eintragId })
 			const result = await RouteManager.doRoute(route);
 			if (result === RoutingStatus.STOPPED_ROUTING_IS_ACTIVE)
 				await this.setEintrag(this.klassenListeManager.liste.get(eintragId));
@@ -294,7 +294,7 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		const filtered = this.klassenListeManager.filtered();
 		if (!filtered.isEmpty()) {
 			const klasse = this.klassenListeManager.filtered().getFirst();
-			const route = routeKlassenDaten.getRoute(klasse.id);
+			const route = routeKlassenDaten.getRoute({ id: klasse.id });
 			const result = await RouteManager.doRoute(route);
 			if ((result === RoutingStatus.SUCCESS) || (result === RoutingStatus.STOPPED_ROUTING_IS_ACTIVE))
 				this.setDefaults();
@@ -305,20 +305,20 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 	}
 
 	gotoSchueler = async (eintrag: Schueler) => {
-		await RouteManager.doRoute(routeSchueler.getRoute(eintrag.id));
+		await RouteManager.doRoute(routeSchueler.getRoute({ id: eintrag.id }));
 	}
 
 	gotoLehrer = async (eintrag: LehrerListeEintrag) => {
-		await RouteManager.doRoute(routeLehrer.getRoute(eintrag.id));
+		await RouteManager.doRoute(routeLehrer.getRoute({ id: eintrag.id }));
 	}
 
-	gotoCreationMode = async (navigate: boolean) => {
-		if (this._state.value.activeRouteType === ViewType.HINZUFUEGEN || (this._state.value.view === routeKlassenNeu)) {
+	gotoHinzufuegenView = async (navigate: boolean) => {
+		if (this.activeViewType === ViewType.HINZUFUEGEN || (this._state.value.view === routeKlassenNeu)) {
 			this.commit();
 			return;
 		}
 
-		this._state.value.activeRouteType = ViewType.HINZUFUEGEN;
+		this.activeViewType = ViewType.HINZUFUEGEN;
 		this._state.value.oldView = this._state.value.view;
 
 		if (navigate) {
@@ -333,13 +333,13 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		this.commit();
 	}
 
-	gotoGruppenprozess = async (navigate: boolean) => {
-		if (this._state.value.activeRouteType === ViewType.GRUPPENPROZESSE || (this._state.value.view === routeKlasseGruppenprozesse)) {
+	gotoGruppenprozessView = async (navigate: boolean) => {
+		if (this.activeViewType === ViewType.GRUPPENPROZESSE || (this._state.value.view === routeKlasseGruppenprozesse)) {
 			this.commit();
 			return;
 		}
 
-		this._state.value.activeRouteType = ViewType.GRUPPENPROZESSE;
+		this.activeViewType = ViewType.GRUPPENPROZESSE;
 		this._state.value.oldView = this._state.value.view;
 
 		if (navigate)

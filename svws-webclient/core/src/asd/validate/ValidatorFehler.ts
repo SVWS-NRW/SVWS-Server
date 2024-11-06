@@ -1,3 +1,4 @@
+import { ValidatorFehlerart } from '../../asd/validate/ValidatorFehlerart';
 import { Class, cast_java_lang_Class } from '../../java/lang/Class';
 import { JavaObject } from '../../java/lang/JavaObject';
 import { ValidatorKontext } from '../../asd/validate/ValidatorKontext';
@@ -107,6 +108,15 @@ export class ValidatorFehler<T extends JavaObject> extends JavaObject {
 	 */
 	public getFehlermeldung() : string | null {
 		return this._fehlermeldung;
+	}
+
+	/**
+	 * Die Fehlerart, welcher der Fehler zugeordnet ist.
+	 *
+	 * @return die Fehlerart
+	 */
+	public getFehlerart() : ValidatorFehlerart {
+		return this._validator.getFehlerart();
 	}
 
 	transpilerCanonicalName(): string {

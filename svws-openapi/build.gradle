@@ -68,7 +68,7 @@ task assembleTranspiled(type: Copy) {
 	inputs.dir "$buildDir/tsapi"
 	outputs.dir "$rootDir/svws-webclient/core/src"
 	doFirst {
-		delete fileTree(dir: "$rootDir/svws-webclient/core/src", includes: [ "**/*.ts" ], excludes: [ "**/JsonCore*.ts", "**/test.ts" ])
+		delete fileTree(dir: "$rootDir/svws-webclient/core/src", includes: [ "**/*.ts" ], excludes: [ "asd/utils/JsonCore*.ts", "**/test.ts" ])
 	}
 	from "$rootDir/svws-schulen/build/ts"
 	from "$rootDir/svws-asd/build/ts"
@@ -78,7 +78,7 @@ task assembleTranspiled(type: Copy) {
 	include "**/*.ts"
 	exclude "index.ts"
 	doLast {
-		(new File("$rootDir/svws-webclient/core/src/index.ts")).text = "export { JsonCoreTypeReader } from './JsonCoreTypeReader';\n" + 
+		(new File("$rootDir/svws-webclient/core/src/index.ts")).text = "export { JsonCoreTypeReader } from './asd/utils/JsonCoreTypeReader';\n" + 
 			file("$rootDir/svws-schulen/build/ts/index.ts").getText() + file("$rootDir/svws-asd/build/ts/index.ts").getText() +
 			file("$rootDir/svws-core/build/ts/index.ts").getText() + file("$buildDir/tsapi/index.ts").getText()
 	}
@@ -100,7 +100,9 @@ task createVersionProperties() {
 	inputs.files "$rootDir/buildconfig.json"
     outputs.files "$projectDir/src/main/resources/config/version.properties"
     doLast {
-        file("src/main/resources/config/version.properties").text = "svws.version=" + project.version.toString() + "\n"
+        file("src/main/resources/config/version.properties").text = 
+        	"svws.version=" + project.version.toString() + "\n" +
+        	"schild.version=" + project.ext.schildMinVersion.toString() + "\n"
     }
 }
 

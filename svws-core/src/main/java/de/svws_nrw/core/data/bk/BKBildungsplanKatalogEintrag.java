@@ -34,4 +34,11 @@ public class BKBildungsplanKatalogEintrag {
 	@Schema(description = "die Lehrpläne des Katalogs")
 	public @NotNull List<BKBildungsplan> historie = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public BKBildungsplanKatalogEintrag() {
+		// leer
+	}
+
 }

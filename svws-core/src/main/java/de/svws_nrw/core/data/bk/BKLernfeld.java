@@ -39,4 +39,11 @@ public class BKLernfeld {
 	@Schema(description = "Zeitrichtwert in 45-Min. Einheiten.")
 	public @NotNull int zeitrichtwert = -1;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public BKLernfeld() {
+		// leer
+	}
+
 }

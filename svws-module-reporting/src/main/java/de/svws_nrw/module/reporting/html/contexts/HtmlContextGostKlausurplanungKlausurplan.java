@@ -37,6 +37,7 @@ public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext 
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Daten.
 	 * @param reportingRepository		Repository mit Parametern, Logger und Daten zum Reporting.
 	 * @param idsFilterSchueler 		Eine Liste, die die schülerbezogene Ausgabe auf die Schüler mit den enthaltenen IDs beschränkt.
+	 *
 	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	public HtmlContextGostKlausurplanungKlausurplan(final ReportingRepository reportingRepository, final List<Long> idsFilterSchueler)
@@ -47,6 +48,7 @@ public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext 
 
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Daten.
+	 *
 	 * @param reportingRepository	Repository mit Parametern, Logger und Daten zum Reporting.
 	 * @param gostKlausurplan		Ein GOSt-Klausurplan, auf dem dieser Kontext aufbauen sollen.
 	 * @param idsFilterSchueler 	Eine Liste, die die schülerbezogene Ausgabe auf die Schüler mit den enthaltenen IDs beschränkt.
@@ -60,7 +62,9 @@ public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext 
 
 	/**
 	 * Erzeugt den Context zur GOSt-Klausurplanung.
+	 *
 	 * @param idsFilterSchueler 		Eine Liste, die die schülerbezogene Ausgabe auf die Schüler mit den enthaltenen IDs beschränkt.
+	 *
 	 * @throws ApiOperationException   	im Fehlerfall
 	 */
 	private void erzeugeContext(final List<Long> idsFilterSchueler) throws ApiOperationException {
@@ -109,6 +113,7 @@ public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext 
 
 	/**
 	 * Erzeugt den Context zur GOSt-Klausurplanung auf Basis des Klausurplan-Objektes.
+	 *
 	 * @param gostKlausurplan		Ein GOSt-Klausurplan, auf dem dieser Kontext aufbauen sollen.
 	 * @param idsFilterSchueler 	Eine Liste, die die schülerbezogene Ausgabe auf die Schüler mit den enthaltenen IDs beschränkt.
 	 */
@@ -126,6 +131,7 @@ public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext 
 
 	/**
 	 * Teile diesen Context mit allen Schülern in eine Liste von Contexts auf, die jeweils auf einen Schüler filtern. Damit können Ausgaben pro Schüler erzeugt werden.
+	 *
 	 * @return	Liste der Einzel-Contexts.
 	 */
 	public List<HtmlContextGostKlausurplanungKlausurplan> getEinzelSchuelerContexts() {

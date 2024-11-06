@@ -24,6 +24,12 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public class Main {
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Main() {
+		// leer
+	}
 
 	/**
 	 * Aktualisiert das Schema, mit welchem der Manager initialisiert wurde.

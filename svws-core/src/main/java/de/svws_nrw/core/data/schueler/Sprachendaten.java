@@ -24,4 +24,11 @@ public class Sprachendaten {
 	/** Die Liste der Sprachpruefungen. */
 	public @NotNull List<Sprachpruefung> pruefungen = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Sprachendaten() {
+		// leer
+	}
+
 }

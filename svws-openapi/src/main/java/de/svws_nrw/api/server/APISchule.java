@@ -121,6 +121,13 @@ import jakarta.ws.rs.core.Response.Status;
 public class APISchule {
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public APISchule() {
+		// leer
+	}
+
+	/**
 	 * Die OpenAPI-Methode für das Initialisieren des Schema mit einer Schulnummer.
 	 * Es wird vorausgesetzt, dass bisher keine Schulnummer in dem Schema festgelegt wurde.
 	 *

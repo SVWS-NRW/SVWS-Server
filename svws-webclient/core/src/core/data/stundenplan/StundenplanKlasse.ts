@@ -41,6 +41,9 @@ export class StundenplanKlasse extends JavaObject {
 	public schueler : List<number> = new ArrayList<number>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

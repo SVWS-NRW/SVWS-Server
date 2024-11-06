@@ -26,4 +26,11 @@ public class BenutzergruppeListeEintrag {
 	@Schema(description = "gibt an, ob es sich um eine Administrative Benutzergruppe handelt oder nicht.", example = "true")
 	public @NotNull boolean istAdmin = false;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public BenutzergruppeListeEintrag() {
+		// leer
+	}
+
 }

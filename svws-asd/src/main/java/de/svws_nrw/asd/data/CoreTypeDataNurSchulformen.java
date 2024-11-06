@@ -27,4 +27,11 @@ public class CoreTypeDataNurSchulformen extends CoreTypeData {
 	@Schema(description = "die Kürzel der Schulformen, bei welchen der Jahrgang vorkommt")
 	public @NotNull List<String> schulformen = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public CoreTypeDataNurSchulformen() {
+		// leer
+	}
+
 }

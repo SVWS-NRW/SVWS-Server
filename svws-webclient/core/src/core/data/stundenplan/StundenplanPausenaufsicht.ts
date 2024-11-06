@@ -27,6 +27,9 @@ export class StundenplanPausenaufsicht extends JavaObject {
 	public bereiche : List<StundenplanPausenaufsichtBereich> = new ArrayList<StundenplanPausenaufsichtBereich>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

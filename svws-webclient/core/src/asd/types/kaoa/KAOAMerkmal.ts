@@ -1,9 +1,14 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { HashMap } from '../../../java/util/HashMap';
 import { CoreTypeDataManager } from '../../../asd/utils/CoreTypeDataManager';
+import { ArrayList } from '../../../java/util/ArrayList';
+import { KAOAKategorie } from '../../../asd/types/kaoa/KAOAKategorie';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import type { CoreType } from '../../../asd/types/CoreType';
 import { de_svws_nrw_asd_types_CoreType_getManager, de_svws_nrw_asd_types_CoreType_daten, de_svws_nrw_asd_types_CoreType_historienId, de_svws_nrw_asd_types_CoreType_historie } from '../../../asd/types/CoreType';
+import type { JavaMap } from '../../../java/util/JavaMap';
 import { KAOAMerkmalKatalogEintrag } from '../../../asd/data/kaoa/KAOAMerkmalKatalogEintrag';
 
 export class KAOAMerkmal extends JavaEnum<KAOAMerkmal> implements CoreType<KAOAMerkmalKatalogEintrag, KAOAMerkmal> {
@@ -189,6 +194,11 @@ export class KAOAMerkmal extends JavaEnum<KAOAMerkmal> implements CoreType<KAOAM
 	 */
 	public static readonly SBO_10_7 : KAOAMerkmal = new KAOAMerkmal("SBO_10_7", 34, );
 
+	/**
+	 * (Integer, Long) -> Schuljahr, idKategorie
+	 */
+	private static readonly _mapEintraegeBySchuljahrAndKategorie : JavaMap<number, JavaMap<number, List<KAOAMerkmalKatalogEintrag>>> = new HashMap<number, JavaMap<number, List<KAOAMerkmalKatalogEintrag>>>();
+
 	private constructor(name : string, ordinal : number) {
 		super(name, ordinal);
 		KAOAMerkmal.all_values_by_ordinal.push(this);
@@ -202,6 +212,7 @@ export class KAOAMerkmal extends JavaEnum<KAOAMerkmal> implements CoreType<KAOAM
 	 */
 	public static init(manager : CoreTypeDataManager<KAOAMerkmalKatalogEintrag, KAOAMerkmal>) : void {
 		CoreTypeDataManager.putManager(KAOAMerkmal.class, manager);
+		KAOAMerkmal._mapEintraegeBySchuljahrAndKategorie.clear();
 	}
 
 	/**
@@ -211,6 +222,46 @@ export class KAOAMerkmal extends JavaEnum<KAOAMerkmal> implements CoreType<KAOAM
 	 */
 	public static data() : CoreTypeDataManager<KAOAMerkmalKatalogEintrag, KAOAMerkmal> {
 		return CoreTypeDataManager.getManager(KAOAMerkmal.class);
+	}
+
+	/**
+	 * Liefert alle zulässigen KAoA-Merkmal-Historien-Einträge für die angegebene Kategorie in dem angegebenen Schuljahr zurück.
+	 * Dabei wird intern für das Schuljahr ein Cache aufgebaut, dass nachfolgende Zugriffe auf das gleiche Schuljahr direkt aus
+	 * dem Cache bedient werden können.
+	 *
+	 * @param schuljahr     das Schuljahr
+	 * @param idKategorie   die id des KAoA-Kategorie-Historien-Eintrags
+	 *
+	 * @return alle zulässigen KAoA-Merkmal-Historien-Einträge für die angegebene Kategorie in dem angegebenen Schuljahr.
+	 */
+	public static getEintraegeBySchuljahrAndIdKategorie(schuljahr : number, idKategorie : number) : List<KAOAMerkmalKatalogEintrag> {
+		let mapEintraegeByKategorie : JavaMap<number, List<KAOAMerkmalKatalogEintrag>> | null = KAOAMerkmal._mapEintraegeBySchuljahrAndKategorie.get(schuljahr);
+		if (mapEintraegeByKategorie !== null) {
+			const result : List<KAOAMerkmalKatalogEintrag> | null = mapEintraegeByKategorie.get(idKategorie);
+			return (result !== null) ? result : new ArrayList();
+		}
+		mapEintraegeByKategorie = KAOAMerkmal.cacheEintraegeBySchuljahrAndIdKategorie(schuljahr);
+		KAOAMerkmal._mapEintraegeBySchuljahrAndKategorie.put(schuljahr, mapEintraegeByKategorie);
+		const result : List<KAOAMerkmalKatalogEintrag> | null = mapEintraegeByKategorie.get(idKategorie);
+		return (result !== null) ? result : new ArrayList();
+	}
+
+	/**
+	 * Liefert einen Cache der zulässigen KAoA-Merkmal-Historien-Einträge je Kategorie in dem angegebenen Schuljahr zurück.
+	 *
+	 * @param schuljahr   das Schuljahr
+	 * @return einen Cache der zulässigen KAoA-Merkmal-Historien-Einträge je Kategorie in dem angegebenen Schuljahr.
+	 */
+	private static cacheEintraegeBySchuljahrAndIdKategorie(schuljahr : number) : JavaMap<number, List<KAOAMerkmalKatalogEintrag>> {
+		const cache : JavaMap<number, List<KAOAMerkmalKatalogEintrag>> | null = new HashMap<number, List<KAOAMerkmalKatalogEintrag>>();
+		for (const kategorieHistorienEintrag of KAOAKategorie.data().getEintraegeBySchuljahr(schuljahr)) {
+			const result : List<KAOAMerkmalKatalogEintrag> | null = new ArrayList<KAOAMerkmalKatalogEintrag>();
+			for (const merkmalHistorienEintrag of KAOAMerkmal.data().getEintraegeBySchuljahr(schuljahr))
+				if (JavaObject.equalsTranspiler(merkmalHistorienEintrag.kategorie, (KAOAKategorie.data().getWertByID(kategorieHistorienEintrag.id).name())))
+					result.add(merkmalHistorienEintrag);
+			cache.put(kategorieHistorienEintrag.id, result);
+		}
+		return cache;
 	}
 
 	/**

@@ -42,7 +42,7 @@ export class RouteGostFachwahlenAllgemein extends RouteNode<any, RouteGost> {
 				return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr }};
 			return false;
 		} catch (e) {
-			return routeError.getRoute(e as DeveloperNotificationException);
+			return routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 
@@ -50,10 +50,6 @@ export class RouteGostFachwahlenAllgemein extends RouteNode<any, RouteGost> {
 		// if (to_params.abiturjahr instanceof Array)
 		// 	return new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		// const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr);
-	}
-
-	public getRoute(abiturjahr: number) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr }};
 	}
 
 	public getProps(to: RouteLocationNormalized): GostFachwahlenAllgemeinProps {

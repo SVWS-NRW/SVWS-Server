@@ -31,7 +31,7 @@ import jakarta.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "content"
+		"content"
 })
 @XmlRootElement(name = "calendar-data", namespace = "urn:ietf:params:xml:ns:caldav")
 public class CalendarData {
@@ -45,43 +45,65 @@ public class CalendarData {
 	@XmlAttribute(name = "version")
 	private String version;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public CalendarData() {
+		// leer
+	}
+
+	/**
+	 * Gibt den Inhaltstyp des Kalenders zurück.
+	 *
+	 * @return der Inhaltstyp des Kalenders
+	 */
 	public String getContentType() {
 		return contentType;
 	}
 
-	public void setContentType(String contentType) {
+	/**
+	 * Setzt den Inhaltstyp des Kalenders.
+	 *
+	 * @param contentType   der zu setzende Inhaltstyp
+	 */
+	public void setContentType(final String contentType) {
 		this.contentType = contentType;
 	}
 
+	/**
+	 * Gibt die Version des Kalenders zurück.
+	 *
+	 * @return die Version des Kalenders
+	 */
 	public String getVersion() {
 		return version;
 	}
 
-	public void setVersion(String version) {
+	/**
+	 * Setzt die Version des Kalenders.
+	 *
+	 * @param version   die zu setzende Version
+	 */
+	public void setVersion(final String version) {
 		this.version = version;
 	}
 
 	/**
-	 * Gets the value of the content property.
+	 * Gibt die Liste der Kalenderinhalte zurück.
 	 *
-	 * <p>
-	 * This accessor method returns a reference to the live list, not a snapshot.
-	 * Therefore any modification you make to the returned list will be present
-	 * inside the JAXB object. This is why there is not a <CODE>set</CODE> method
-	 * for the content property.
+	 * <p>Diese Zugriffsmethode gibt eine Referenz auf die aktuelle Liste zurück. Es handelt sich also nicht im eine Kopie.
+	 * Daher werden alle Änderungen, die Sie an der zurückgegebenen Liste vornehmen, im JAXB-Objekt präsent sein.
+	 * Dies ist der Grund, warum es keine <CODE>set</CODE>-Methode für die content-Eigenschaft gibt.</p>
 	 *
-	 * <p>
-	 * For example, to add a new item, do as follows:
+	 * <p>Um beispielsweise ein neues Element hinzuzufügen, gehen Sie wie folgt vor:</p>
 	 *
 	 * <pre>
 	 * getContent().add(newItem);
 	 * </pre>
 	 *
+	 * <p>Objekte der folgenden Typ(en) sind in der Liste erlaubt: {@link String}</p>
 	 *
-	 * <p>
-	 * Objects of the following type(s) are allowed in the list {@link String }
-	 *
-	 *
+	 * @return eine Liste von Strings, die den Inhalt des Kalenders repräsentieren
 	 */
 	public List<String> getContent() {
 		if (content == null) {

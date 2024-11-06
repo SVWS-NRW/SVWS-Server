@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
+import type { RouteLocationNormalized } from "vue-router";
 
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
@@ -20,12 +20,9 @@ export class RouteLehrerIndividualdaten extends RouteNode<any, RouteLehrer> {
 		super.text = "Individualdaten";
 	}
 
-	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: id }};
-	}
-
 	public getProps(to: RouteLocationNormalized): LehrerIndividualdatenProps {
 		return {
+			validatorKontext: () => api.validatorKontext,
 			schulform: api.schulform,
 			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,

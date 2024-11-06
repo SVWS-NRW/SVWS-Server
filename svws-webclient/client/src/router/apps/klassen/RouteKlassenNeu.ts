@@ -1,10 +1,9 @@
-import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
+import type { RouteLocationNormalized, RouteParamsRawGeneric } from "vue-router";
 
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeKlassen, type RouteKlassen } from "~/router/apps/klassen/RouteKlassen";
-import { routeApp } from "../RouteApp";
 import { api } from "~/router/Api";
 import { ViewType } from "@ui";
 import { RouteManager } from "~/router/RouteManager";
@@ -23,8 +22,8 @@ export class RouteKlassenNeu extends RouteNode<any, RouteKlassen> {
 		super.setCheckpoint = true;
 	}
 
-	public getRoute(): RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: "" } };
+	public addRouteParamsFromState() : RouteParamsRawGeneric {
+		return { id : "" };
 	}
 
 	public getProps(to: RouteLocationNormalized): KlassenNeuProps {
@@ -34,7 +33,7 @@ export class RouteKlassenNeu extends RouteNode<any, RouteKlassen> {
 			mapKlassenVorigerAbschnitt: () => routeKlassen.data.mapKlassenVorigerAbschnitt,
 			mapKlassenFolgenderAbschnitt: () => routeKlassen.data.mapKlassenFolgenderAbschnitt,
 			add: routeKlassen.data.add,
-			gotoEintrag: routeKlassen.data.gotoEintrag,
+			gotoDefaultView: routeKlassen.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 		};

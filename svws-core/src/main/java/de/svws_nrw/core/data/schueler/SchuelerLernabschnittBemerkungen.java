@@ -42,4 +42,11 @@ public class SchuelerLernabschnittBemerkungen {
 	@Schema(description = "eine Bemerkung zur Versetzungsentscheidung", example = "")
 	public @NotNull String versetzungsentscheidung = "";
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SchuelerLernabschnittBemerkungen() {
+		// leer
+	}
+
 }

@@ -51,6 +51,9 @@ export class ENMLerngruppe extends JavaObject {
 	public wochenstunden : number = 0;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -97,10 +100,10 @@ export class ENMLerngruppe extends JavaObject {
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"kID" : ' + obj.kID.toString() + ',';
 		result += '"fachID" : ' + obj.fachID.toString() + ',';
-		result += '"kursartID" : ' + ((!obj.kursartID) ? 'null' : obj.kursartID.toString()) + ',';
-		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
-		result += '"kursartKuerzel" : ' + ((!obj.kursartKuerzel) ? 'null' : JSON.stringify(obj.kursartKuerzel)) + ',';
-		result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
+		result += '"kursartID" : ' + ((obj.kursartID === null) ? 'null' : obj.kursartID.toString()) + ',';
+		result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
+		result += '"kursartKuerzel" : ' + ((obj.kursartKuerzel === null) ? 'null' : JSON.stringify(obj.kursartKuerzel)) + ',';
+		result += '"bilingualeSprache" : ' + ((obj.bilingualeSprache === null) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
 		result += '"lehrerID" : [ ';
 		for (let i = 0; i < obj.lehrerID.size(); i++) {
 			const elem = obj.lehrerID.get(i);
@@ -127,16 +130,16 @@ export class ENMLerngruppe extends JavaObject {
 			result += '"fachID" : ' + obj.fachID.toString() + ',';
 		}
 		if (obj.kursartID !== undefined) {
-			result += '"kursartID" : ' + ((!obj.kursartID) ? 'null' : obj.kursartID.toString()) + ',';
+			result += '"kursartID" : ' + ((obj.kursartID === null) ? 'null' : obj.kursartID.toString()) + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
+			result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		}
 		if (obj.kursartKuerzel !== undefined) {
-			result += '"kursartKuerzel" : ' + ((!obj.kursartKuerzel) ? 'null' : JSON.stringify(obj.kursartKuerzel)) + ',';
+			result += '"kursartKuerzel" : ' + ((obj.kursartKuerzel === null) ? 'null' : JSON.stringify(obj.kursartKuerzel)) + ',';
 		}
 		if (obj.bilingualeSprache !== undefined) {
-			result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
+			result += '"bilingualeSprache" : ' + ((obj.bilingualeSprache === null) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
 		}
 		if (obj.lehrerID !== undefined) {
 			result += '"lehrerID" : [ ';

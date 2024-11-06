@@ -31,4 +31,11 @@ public class LehrerPersonalabschnittsdatenAnrechnungsstunden {
 	@Schema(description = "Die Anzahl der Anrechnungsstunden, welche dem Grund zugeordnet sind.", example = "0.5")
 	public double anzahl = 0.0;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public LehrerPersonalabschnittsdatenAnrechnungsstunden() {
+		// leer
+	}
+
 }

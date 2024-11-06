@@ -9,6 +9,13 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class IntegerComparator implements Comparator<Integer> {
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public IntegerComparator() {
+		// leer
+	}
+
 	@Override
 	public int compare(final @NotNull Integer o1, final @NotNull Integer o2) {
 		return o1 - o2;

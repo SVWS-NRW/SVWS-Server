@@ -10,6 +10,7 @@ public class ProxyReportingGostLaufbahnplanungFachwahl extends ReportingGostLauf
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingGostLaufbahnplanungFachwahl}.
+	 *
 	 * @param abiturfach								Abiturfacheintrag, sofern das belegte Fach als Abiturfach gewählt wurde.
 	 * @param belegungEF1								Fachbelegung in der EF.1
 	 * @param belegungEF2								Fachbelegung in der EF.2

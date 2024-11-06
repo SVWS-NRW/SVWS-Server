@@ -22,6 +22,9 @@ export class BerufskollegFachklassenKatalogIndex extends JavaObject {
 	public fachklassen : List<BerufskollegFachklassenKatalogEintrag> = new ArrayList<BerufskollegFachklassenKatalogEintrag>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

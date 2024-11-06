@@ -15,6 +15,13 @@ public final class GostKursblockungRegelTypConverter extends DBAttributeConverte
 	/** Die Instanz des Konverters */
 	public static final GostKursblockungRegelTypConverter instance = new GostKursblockungRegelTypConverter();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GostKursblockungRegelTypConverter() {
+		// leer
+	}
+
 	@Override
 	public Integer convertToDatabaseColumn(final GostKursblockungRegelTyp value) {
 		if (value == null)

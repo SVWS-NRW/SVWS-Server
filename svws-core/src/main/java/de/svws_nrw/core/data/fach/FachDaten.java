@@ -92,4 +92,11 @@ public class FachDaten {
 			example = "true")
 	public boolean holeAusAltenLernabschnitten = false;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public FachDaten() {
+		// leer
+	}
+
 }

@@ -44,11 +44,17 @@ import jakarta.ws.rs.core.Response;
 @Tag(name = "Server")
 public class APIAdressbuch {
 
-
 	/**
 	 * Logger für diese Klasse
 	 */
 	private static final Logger logger = createLogger();
+
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public APIAdressbuch() {
+		// leer
+	}
 
 	/**
 	 * Die CardDAV-API Methode zur Abfrage von Eigenschaften der Root-Ressource.

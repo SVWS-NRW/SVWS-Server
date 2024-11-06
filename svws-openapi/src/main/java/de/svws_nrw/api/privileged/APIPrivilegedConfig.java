@@ -38,6 +38,13 @@ import jakarta.ws.rs.core.Response.Status;
 public class APIPrivilegedConfig {
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public APIPrivilegedConfig() {
+		// leer
+	}
+
+	/**
 	 * Die OpenAPI-Methode für die Abfrage ob der angemeldete Datenbankuser ein priviligierter Datenbank-Benutzer
 	 * mit Rechten zur Anpassung der SVWS-Konfiguration ist.
 	 *

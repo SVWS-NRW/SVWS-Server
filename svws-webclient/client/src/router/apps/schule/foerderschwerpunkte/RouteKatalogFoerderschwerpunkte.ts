@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
 
 import type { FoerderschwerpunktEintrag } from "@core";
 import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
@@ -14,11 +14,9 @@ import type { TabData } from "@ui";
 import type { FoerderschwerpunkteAppProps } from "~/components/schule/kataloge/foerderschwerpunkte/SFoerderschwerpunkteAppProps";
 import type { FoerderschwerpunkteAuswahlProps } from "~/components/schule/kataloge/foerderschwerpunkte/SFoerderschwerpunkteAuswahlProps";
 import { RouteDataKatalogFoerderschwerpunkte } from "./RouteDataKatalogFoerderschwerpunkte";
-import { routeSchule } from "../RouteSchule";
 import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
 import { routeError } from "~/router/error/RouteError";
 
-const SSchuleAuswahl = () => import("~/components/schule/SSchuleAuswahl.vue")
 const SFoerderschwerpunkteAuswahl = () => import("~/components/schule/kataloge/foerderschwerpunkte/SFoerderschwerpunkteAuswahl.vue");
 const SFoerderschwerpunkteApp = () => import("~/components/schule/kataloge/foerderschwerpunkte/SFoerderschwerpunkteApp.vue");
 
@@ -31,7 +29,6 @@ export class RouteKatalogFoerderschwerpunkte extends RouteNode<RouteDataKatalogF
 		super.text = "Förderschwerpunkte";
 		super.menugroup = RouteSchuleMenuGroup.SCHULBEZOGEN;
 		super.setView("liste", SFoerderschwerpunkteAuswahl, (route) => this.getAuswahlProps(route));
-		super.setView("submenu", SSchuleAuswahl, (route) => routeSchule.getAuswahlProps(route));
 		super.children = [
 			routeKatalogFoerderschwerpunktDaten,
 		];
@@ -47,24 +44,24 @@ export class RouteKatalogFoerderschwerpunkte extends RouteNode<RouteDataKatalogF
 				return;
 			let eintrag: FoerderschwerpunktEintrag | undefined;
 			if ((id === undefined) && this.data.auswahl)
-				return this.getRoute(this.data.auswahl.id);
+				return this.getRouteDefaultChild({ id: this.data.auswahl.id });
 			if (id === undefined) {
 				eintrag = this.data.mapKatalogeintraege.get(0);
-				return this.getRoute(eintrag?.id);
+				return this.getRouteDefaultChild({ id: eintrag?.id });
 			}
-			else {
-				eintrag = this.data.mapKatalogeintraege.get(id);
-				if (eintrag === undefined)
-					return this.getRoute(undefined);
-			}
+			eintrag = this.data.mapKatalogeintraege.get(id);
+			if (eintrag === undefined)
+				return;
 			await this.data.setEintrag(eintrag);
+			if (to.name === this.name)
+				return this.getRouteDefaultChild();
 		} catch (error) {
-			return routeError.getRoute(error as DeveloperNotificationException);
+			return routeError.getErrorRoute(error as DeveloperNotificationException);
 		}
 	}
 
-	public getRoute(id: number | undefined) : RouteLocationRaw {
-		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
+	public addRouteParamsFromState() : RouteParamsRawGeneric {
+		return { id : this.data.auswahl?.id ?? undefined };
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): FoerderschwerpunkteAuswahlProps {
@@ -89,7 +86,7 @@ export class RouteKatalogFoerderschwerpunkte extends RouteNode<RouteDataKatalogF
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new DeveloperNotificationException("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.auswahl?.id } });
+		await RouteManager.doRoute(node.getRoute());
 		this.data.setView(node, this.children);
 	}
 }

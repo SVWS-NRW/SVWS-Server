@@ -24,6 +24,9 @@ export class GostLaufbahnplanungBeratungsdaten extends JavaObject {
 	public ruecklaufdatum : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -50,10 +53,10 @@ export class GostLaufbahnplanungBeratungsdaten extends JavaObject {
 
 	public static transpilerToJSON(obj : GostLaufbahnplanungBeratungsdaten) : string {
 		let result = '{';
-		result += '"beratungslehrerID" : ' + ((!obj.beratungslehrerID) ? 'null' : obj.beratungslehrerID.toString()) + ',';
-		result += '"beratungsdatum" : ' + ((!obj.beratungsdatum) ? 'null' : JSON.stringify(obj.beratungsdatum)) + ',';
-		result += '"kommentar" : ' + ((!obj.kommentar) ? 'null' : JSON.stringify(obj.kommentar)) + ',';
-		result += '"ruecklaufdatum" : ' + ((!obj.ruecklaufdatum) ? 'null' : JSON.stringify(obj.ruecklaufdatum)) + ',';
+		result += '"beratungslehrerID" : ' + ((obj.beratungslehrerID === null) ? 'null' : obj.beratungslehrerID.toString()) + ',';
+		result += '"beratungsdatum" : ' + ((obj.beratungsdatum === null) ? 'null' : JSON.stringify(obj.beratungsdatum)) + ',';
+		result += '"kommentar" : ' + ((obj.kommentar === null) ? 'null' : JSON.stringify(obj.kommentar)) + ',';
+		result += '"ruecklaufdatum" : ' + ((obj.ruecklaufdatum === null) ? 'null' : JSON.stringify(obj.ruecklaufdatum)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -62,16 +65,16 @@ export class GostLaufbahnplanungBeratungsdaten extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<GostLaufbahnplanungBeratungsdaten>) : string {
 		let result = '{';
 		if (obj.beratungslehrerID !== undefined) {
-			result += '"beratungslehrerID" : ' + ((!obj.beratungslehrerID) ? 'null' : obj.beratungslehrerID.toString()) + ',';
+			result += '"beratungslehrerID" : ' + ((obj.beratungslehrerID === null) ? 'null' : obj.beratungslehrerID.toString()) + ',';
 		}
 		if (obj.beratungsdatum !== undefined) {
-			result += '"beratungsdatum" : ' + ((!obj.beratungsdatum) ? 'null' : JSON.stringify(obj.beratungsdatum)) + ',';
+			result += '"beratungsdatum" : ' + ((obj.beratungsdatum === null) ? 'null' : JSON.stringify(obj.beratungsdatum)) + ',';
 		}
 		if (obj.kommentar !== undefined) {
-			result += '"kommentar" : ' + ((!obj.kommentar) ? 'null' : JSON.stringify(obj.kommentar)) + ',';
+			result += '"kommentar" : ' + ((obj.kommentar === null) ? 'null' : JSON.stringify(obj.kommentar)) + ',';
 		}
 		if (obj.ruecklaufdatum !== undefined) {
-			result += '"ruecklaufdatum" : ' + ((!obj.ruecklaufdatum) ? 'null' : JSON.stringify(obj.ruecklaufdatum)) + ',';
+			result += '"ruecklaufdatum" : ' + ((obj.ruecklaufdatum === null) ? 'null' : JSON.stringify(obj.ruecklaufdatum)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

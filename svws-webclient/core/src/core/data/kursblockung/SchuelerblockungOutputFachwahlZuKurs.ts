@@ -20,6 +20,9 @@ export class SchuelerblockungOutputFachwahlZuKurs extends JavaObject {
 	public kursID : number = 0;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

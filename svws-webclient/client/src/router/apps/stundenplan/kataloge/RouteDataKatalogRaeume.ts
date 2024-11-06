@@ -49,7 +49,7 @@ export class RouteDataKatalogRaeume extends RouteData<RouteStateKatalogRaeume> {
 	}
 
 	gotoEintrag = async (eintrag: Raum) => {
-		await RouteManager.doRoute({ name: routeKatalogRaeume.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: eintrag.id } });
+		await RouteManager.doRoute(routeKatalogRaeume.getRoute({ id: eintrag.id }));
 	}
 
 	addEintrag = async (eintrag: Partial<Raum>) => {

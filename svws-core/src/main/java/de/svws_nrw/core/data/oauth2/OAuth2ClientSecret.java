@@ -29,4 +29,11 @@ public class OAuth2ClientSecret {
 	@Schema(description = "Das Client-Secret für die Client ID für diesen Auth-Server.", example = "abc")
 	public String clientSecret;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public OAuth2ClientSecret() {
+		// leer
+	}
+
 }

@@ -17,6 +17,13 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @TranspilerDTO
 public class BerufskollegFachklassenKatalogEintrag {
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public BerufskollegFachklassenKatalogEintrag() {
+		// leer
+	}
+
 	/** Der Fachklassenschlüssel. */
 	@Schema(description = "der Fachklassenschlüssel - Teil 1", example = "620")
 	public @NotNull String schluessel = "";

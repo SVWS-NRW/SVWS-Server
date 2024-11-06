@@ -92,6 +92,9 @@ export class KursDaten extends JavaObject {
 	public bezeichnungZeugnis : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -177,7 +180,7 @@ export class KursDaten extends JavaObject {
 		}
 		result += ' ]' + ',';
 		result += '"idFach" : ' + obj.idFach.toString() + ',';
-		result += '"lehrer" : ' + ((!obj.lehrer) ? 'null' : obj.lehrer.toString()) + ',';
+		result += '"lehrer" : ' + ((obj.lehrer === null) ? 'null' : obj.lehrer.toString()) + ',';
 		result += '"kursartAllg" : ' + JSON.stringify(obj.kursartAllg) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
@@ -200,9 +203,9 @@ export class KursDaten extends JavaObject {
 		result += '"wochenstunden" : ' + obj.wochenstunden.toString() + ',';
 		result += '"wochenstundenLehrer" : ' + obj.wochenstundenLehrer.toString() + ',';
 		result += '"idKursFortschreibungsart" : ' + obj.idKursFortschreibungsart.toString() + ',';
-		result += '"schulnummer" : ' + ((!obj.schulnummer) ? 'null' : obj.schulnummer.toString()) + ',';
+		result += '"schulnummer" : ' + ((obj.schulnummer === null) ? 'null' : obj.schulnummer.toString()) + ',';
 		result += '"istEpochalunterricht" : ' + obj.istEpochalunterricht.toString() + ',';
-		result += '"bezeichnungZeugnis" : ' + ((!obj.bezeichnungZeugnis) ? 'null' : JSON.stringify(obj.bezeichnungZeugnis)) + ',';
+		result += '"bezeichnungZeugnis" : ' + ((obj.bezeichnungZeugnis === null) ? 'null' : JSON.stringify(obj.bezeichnungZeugnis)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -233,7 +236,7 @@ export class KursDaten extends JavaObject {
 			result += '"idFach" : ' + obj.idFach.toString() + ',';
 		}
 		if (obj.lehrer !== undefined) {
-			result += '"lehrer" : ' + ((!obj.lehrer) ? 'null' : obj.lehrer.toString()) + ',';
+			result += '"lehrer" : ' + ((obj.lehrer === null) ? 'null' : obj.lehrer.toString()) + ',';
 		}
 		if (obj.kursartAllg !== undefined) {
 			result += '"kursartAllg" : ' + JSON.stringify(obj.kursartAllg) + ',';
@@ -274,13 +277,13 @@ export class KursDaten extends JavaObject {
 			result += '"idKursFortschreibungsart" : ' + obj.idKursFortschreibungsart.toString() + ',';
 		}
 		if (obj.schulnummer !== undefined) {
-			result += '"schulnummer" : ' + ((!obj.schulnummer) ? 'null' : obj.schulnummer.toString()) + ',';
+			result += '"schulnummer" : ' + ((obj.schulnummer === null) ? 'null' : obj.schulnummer.toString()) + ',';
 		}
 		if (obj.istEpochalunterricht !== undefined) {
 			result += '"istEpochalunterricht" : ' + obj.istEpochalunterricht.toString() + ',';
 		}
 		if (obj.bezeichnungZeugnis !== undefined) {
-			result += '"bezeichnungZeugnis" : ' + ((!obj.bezeichnungZeugnis) ? 'null' : JSON.stringify(obj.bezeichnungZeugnis)) + ',';
+			result += '"bezeichnungZeugnis" : ' + ((obj.bezeichnungZeugnis === null) ? 'null' : JSON.stringify(obj.bezeichnungZeugnis)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

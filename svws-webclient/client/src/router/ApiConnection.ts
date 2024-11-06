@@ -1,7 +1,7 @@
 import { ref, shallowRef } from "vue";
 
-import type { BenutzerDaten, DBSchemaListeEintrag, List, SchuleStammdaten} from "@core";
-import { ApiSchema, ApiServer, BenutzerKompetenz, ServerMode, DeveloperNotificationException, UserNotificationException } from "@core";
+import type { BenutzerDaten, DBSchemaListeEintrag, List, SchuleStammdaten } from "@core";
+import { ValidatorKontext, ApiSchema, ApiServer, BenutzerKompetenz, ServerMode, DeveloperNotificationException, UserNotificationException } from "@core";
 
 import { Config } from "~/components/Config";
 import { AES } from "~/utils/crypto/aes";
@@ -55,7 +55,7 @@ export class ApiConnection {
 	protected _config = ref<Config | undefined>(undefined);
 
 	// Die Stammdaten der Schule, sofern ein Login stattgefunden hat
-	protected _stammdaten = shallowRef<{ stammdaten: SchuleStammdaten | undefined }>({ stammdaten : undefined });
+	protected _stammdaten = shallowRef<{ stammdaten: SchuleStammdaten | undefined, kontext: ValidatorKontext | undefined }>({ stammdaten : undefined, kontext : undefined });
 
 	// Der Modus, in welchem der Server betrieben wird
 	protected _serverMode = shallowRef<ServerMode>(ServerMode.STABLE)
@@ -184,11 +184,26 @@ export class ApiConnection {
 		await this.api.setClientConfigGlobalKey(value, this.schema, 'SVWS-Client', key);
 	}
 
-	// Gibt die Stammdaten der Schule zurück, sofern ein Login sattgefunden hat
+	/**
+	 * Gibt die Stammdaten der Schule zurück, sofern bereits ein Login stattgefunden hat.
+	 *
+	 * @returns die Stammdaten
+	 */
 	get schuleStammdaten(): SchuleStammdaten {
 		if (this._stammdaten.value.stammdaten === undefined)
 			throw new DeveloperNotificationException("Der Benutzer muss angemeldet sein und die Stammdaten der Schule müssen erfolgreich geladen sein.");
 		return this._stammdaten.value.stammdaten;
+	}
+
+	/**
+	 * Gibt den Validator-Kontext für die Validierung von Statistik-relevanten Daten zurück.
+	 *
+	 * @returns der Validator-Kontext
+	 */
+	get validatorKontext(): ValidatorKontext {
+		if (this._stammdaten.value.kontext === undefined)
+			throw new DeveloperNotificationException("Der Benutzer muss angemeldet sein und der Validator-Kontext muss erfolgreich erstellt sein.");
+		return this._stammdaten.value.kontext;
 	}
 
 	/**
@@ -402,7 +417,7 @@ export class ApiConnection {
 			this._kompetenzenAbiturjahrgaenge.value = undefined;
 			this.config.mapGlobal = new Map();
 			this.config.mapUser = new Map();
-			this._stammdaten.value = {stammdaten: undefined};
+			this._stammdaten.value = { stammdaten: undefined, kontext: undefined };
 			this._serverMode.value = ServerMode.STABLE;
 			this._aes.value = undefined;
 		}
@@ -415,11 +430,14 @@ export class ApiConnection {
 	 */
 	init = async (): Promise<boolean> => {
 		try {
-			if (this._api && (this._schema !== undefined))
-				this._stammdaten.value.stammdaten = await this._api.getSchuleStammdaten(this._schema);
+			if (this._api && (this._schema !== undefined)) {
+				const stammdaten = await this._api.getSchuleStammdaten(this._schema);
+				const kontext = new ValidatorKontext(stammdaten, false);
+				this._stammdaten.value = { stammdaten, kontext };
+			}
 			return true;
 		} catch(error) {
-			this._stammdaten.value = {stammdaten: undefined};
+			this._stammdaten.value = { stammdaten: undefined, kontext: undefined };
 		}
 		return false;
 	}
@@ -429,7 +447,7 @@ export class ApiConnection {
 	 */
 	logout = async (): Promise<void> => {
 		this._authenticated.value = false;
-		this._stammdaten.value = {stammdaten: undefined};
+		this._stammdaten.value = { stammdaten: undefined, kontext: undefined };
 		this._benutzerdaten.value = undefined;
 		this._istAdmin.value = undefined;
 		this._kompetenzen.value = undefined;

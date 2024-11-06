@@ -48,7 +48,7 @@ export class RouteDataKatalogEinwilligungsarten extends RouteData<RouteStateKata
 	}
 
 	gotoEintrag = async (eintrag: Einwilligungsart) => {
-		await RouteManager.doRoute(routeKatalogEinwilligungsarten.getRoute(eintrag.id));
+		await RouteManager.doRoute(routeKatalogEinwilligungsarten.getRoute({ id: eintrag.id }));
 	}
 
 	addEintrag = async (eintrag: Partial<Einwilligungsart>) => {
@@ -57,7 +57,7 @@ export class RouteDataKatalogEinwilligungsarten extends RouteData<RouteStateKata
 		const mapKatalogeintraege = this.mapKatalogeintraege;
 		mapKatalogeintraege.set(res.id, res);
 		this.setPatchedState({ mapKatalogeintraege });
-		await RouteManager.doRoute({ name: routeKatalogEinwilligungsarten.name, params: { id: res.id } });
+		await RouteManager.doRoute(routeKatalogEinwilligungsarten.getRoute({ id: res.id }));
 	}
 
 	patch = async (data: Partial<Einwilligungsart>) => {

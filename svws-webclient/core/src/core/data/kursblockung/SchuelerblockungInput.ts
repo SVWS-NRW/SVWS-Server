@@ -28,6 +28,9 @@ export class SchuelerblockungInput extends JavaObject {
 	public fachwahlenText : List<string> = new ArrayList<string>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

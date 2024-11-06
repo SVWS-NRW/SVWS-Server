@@ -19,6 +19,13 @@ public class StundenplanblockungManagerKopplungMenge {
 	private final @NotNull Map<Long, StundenplanblockungManagerKopplung> _map = new HashMap<>();
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public StundenplanblockungManagerKopplungMenge() {
+		// leer
+	}
+
+	/**
 	 * Fügt die Kopplung hinzu. <br>
 	 * Wirft eine NullPointerException, falls die Kopplung-ID bereits existiert.
 	 *

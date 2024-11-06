@@ -5,6 +5,9 @@ import { StundenplanblockungManager } from '../../core/utils/stundenplanblockung
 export class StundenplanblockungAlgorithmus extends Service<StundenplanblockungManager, StundenplanblockungManager> {
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

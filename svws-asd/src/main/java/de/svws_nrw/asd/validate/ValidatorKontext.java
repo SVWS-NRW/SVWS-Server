@@ -93,6 +93,38 @@ public class ValidatorKontext {
 
 
 	/**
+	 * Gibt den Datums-Manager für den Beginn des aktuellen Schuljahres zurück.
+	 *
+	 * @return der Datums-Manager für den Beginn des aktuellen Schuljahres
+	 */
+	public @NotNull DateManager getSchuljahresbeginn() {
+		try {
+			// am 1.8. beginnt das Schuljahr...
+			return DateManager.fromValues(getSchuljahr(), 8, 1);
+		} catch (final InvalidDateException e) {
+			// sollte nicht erreicht werden !
+			throw new ValidatorException("Fehler beim Erstellen des Datums für den Beginn des Schuljahres", e);
+		}
+	}
+
+
+	/**
+	 * Gibt den Datums-Manager für das Ende des aktuellen Schuljahres zurück.
+	 *
+	 * @return der Datums-Manager für das Ende des aktuellen Schuljahres
+	 */
+	public @NotNull DateManager getSchuljahresende() {
+		try {
+			// am 31.7. des Folgejahres endet das Schuljahr...
+			return DateManager.fromValues(getSchuljahr() + 1, 7, 31);
+		} catch (final InvalidDateException e) {
+			// sollte nicht erreicht werden !
+			throw new ValidatorException("Fehler beim Erstellen des Datums für das Ende des Schuljahres", e);
+		}
+	}
+
+
+	/**
 	 * Gibt den aktuellen Schuljahresabschnitt der Schule zurück.
 	 *
 	 * @return der Schuljahresabschnitt oder null, wenn dieser nicht korrekt gesetzt ist

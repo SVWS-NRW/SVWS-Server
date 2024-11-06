@@ -24,10 +24,6 @@ export class RouteStundenplanPausen extends RouteNode<any, RouteStundenplan> {
 	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 	}
 
-	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
-	}
-
 	public getProps(to: RouteLocationNormalized): StundenplanPausenProps {
 		return {
 			schulform: api.schulform,

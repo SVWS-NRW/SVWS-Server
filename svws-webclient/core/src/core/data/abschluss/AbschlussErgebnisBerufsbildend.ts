@@ -31,6 +31,9 @@ export class AbschlussErgebnisBerufsbildend extends JavaObject {
 	public log : List<string> | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -71,8 +74,8 @@ export class AbschlussErgebnisBerufsbildend extends JavaObject {
 		let result = '{';
 		result += '"hatBSA" : ' + obj.hatBSA.toString() + ',';
 		result += '"note" : ' + obj.note.toString() + ',';
-		result += '"hatBA" : ' + ((!obj.hatBA) ? 'null' : obj.hatBA.toString()) + ',';
-		result += '"abschlussAllgemeinbildend" : ' + ((!obj.abschlussAllgemeinbildend) ? 'null' : JSON.stringify(obj.abschlussAllgemeinbildend)) + ',';
+		result += '"hatBA" : ' + ((obj.hatBA === null) ? 'null' : obj.hatBA.toString()) + ',';
+		result += '"abschlussAllgemeinbildend" : ' + ((obj.abschlussAllgemeinbildend === null) ? 'null' : JSON.stringify(obj.abschlussAllgemeinbildend)) + ',';
 		if (!obj.log) {
 			result += '"log" : null' + ',';
 		} else {
@@ -99,10 +102,10 @@ export class AbschlussErgebnisBerufsbildend extends JavaObject {
 			result += '"note" : ' + obj.note.toString() + ',';
 		}
 		if (obj.hatBA !== undefined) {
-			result += '"hatBA" : ' + ((!obj.hatBA) ? 'null' : obj.hatBA.toString()) + ',';
+			result += '"hatBA" : ' + ((obj.hatBA === null) ? 'null' : obj.hatBA.toString()) + ',';
 		}
 		if (obj.abschlussAllgemeinbildend !== undefined) {
-			result += '"abschlussAllgemeinbildend" : ' + ((!obj.abschlussAllgemeinbildend) ? 'null' : JSON.stringify(obj.abschlussAllgemeinbildend)) + ',';
+			result += '"abschlussAllgemeinbildend" : ' + ((obj.abschlussAllgemeinbildend === null) ? 'null' : JSON.stringify(obj.abschlussAllgemeinbildend)) + ',';
 		}
 		if (obj.log !== undefined) {
 			if (!obj.log) {

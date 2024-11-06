@@ -1,6 +1,6 @@
 <template>
 	<div class="flex flex-col gap-4">
-		<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="stundenplanManager().pausenzeitGetMengeAsList()" :columns selectable v-model="selected" class="max-w-128 min-w-96">
+		<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="stundenplanManager().pausenzeitGetMengeAsList()" :columns selectable v-model="selected" class="max-w-128 min-w-96" scroll>
 			<template #cell(wochentag)="{ value }">
 				{{ Wochentag.fromIDorException(value).beschreibung }}
 			</template>

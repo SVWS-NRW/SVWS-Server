@@ -19,10 +19,6 @@ export class RouteLehrerUnterrichtsdaten extends RouteNode<any, RouteLehrer> {
 		super.text = "Unterricht";
 	}
 
-	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: id }};
-	}
-
 	public getProps(to: RouteLocationNormalized): LehrerUnterrichtsdatenProps {
 		return {
 			lehrerListeManager: () => routeLehrer.data.lehrerListeManager

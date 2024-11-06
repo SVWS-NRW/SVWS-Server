@@ -14,6 +14,13 @@ public final class BenutzerTypConverter extends DBAttributeConverter<BenutzerTyp
 	/** Die Instanz des Konverters */
 	public static final BenutzerTypConverter instance = new BenutzerTypConverter();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public BenutzerTypConverter() {
+		// leer
+	}
+
 	@Override
 	public Integer convertToDatabaseColumn(final BenutzerTyp typ) {
 		return typ.id;

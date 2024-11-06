@@ -18,6 +18,13 @@ import jakarta.validation.constraints.NotNull;
 @TranspilerDTO
 public class BerufskollegFachklassenKatalogIndex {
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public BerufskollegFachklassenKatalogIndex() {
+		// leer
+	}
+
 	/** Der Index für die Verknüpfung von einem Bildungsgang des Berufskollegs mit Fachklassen */
 	@Schema(description = "der Index für die Verknüpfung von einem Bildungsgang des Berufskollegs mit Fachklassen", example = "100")
 	public int index;

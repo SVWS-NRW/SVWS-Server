@@ -85,12 +85,13 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		return this._state.value.abiturjahr;
 	}
 
-	public async setAbiturjahr(abiturjahr: number | undefined) {
-		if (abiturjahr === this._state.value.abiturjahr)
-			return;
+	public async setAbiturjahr(abiturjahr: number | undefined) : Promise<boolean> {
+		const abiturjahrwechsel = (abiturjahr !== this._state.value.abiturjahr);
+		if (!abiturjahrwechsel)
+			return false;
 		if (abiturjahr === undefined) {
 			this._state.value = this._defaultState;
-			return;
+			return true;
 		}
 		try {
 			api.status.start();
@@ -116,6 +117,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		} finally {
 			api.status.stop();
 		}
+		return abiturjahrwechsel;
 	}
 
 	public get hatJahrgangsdaten(): boolean {
@@ -135,7 +137,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 	public async setHalbjahr(halbjahr: GostHalbjahr, hjChanged: boolean): Promise<boolean> {
 		if (this._state.value.abiturjahr === undefined)
 			throw new DeveloperNotificationException("Es kann kein Halbjahr ausgewählt werden, wenn zuvor kein Abiturjahrgang ausgewählt wurde.");
-		if (!hjChanged && halbjahr === this._state.value.halbjahr)
+		if (!hjChanged && (halbjahr === this._state.value.halbjahr))
 			return false;
 		try {
 			api.status.start();
@@ -197,6 +199,15 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		return this._state.value.manager;
 	}
 
+	/**
+	 * Führt einen reset der Daten durch. Dabei wird der State auf den
+	 * Default-State zurückgesetzt.
+	 */
+	public reset(): void {
+		super.reset();
+		this._state.value.manager = new GostKlausurplanManager();
+	}
+
 	getConfigValue = (key: string) => api.config.getValue("gost.klausurplan." + key);
 
 	setConfigValue = async (key: string, value: string) => {
@@ -252,30 +263,40 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 	});
 
 	gotoVorgaben = async () => {
-		await RouteManager.doRoute({ name: routeGostKlausurplanungVorgaben.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: this.abiturjahr, halbjahr: this.halbjahr.id } });
+		await RouteManager.doRoute(routeGostKlausurplanungVorgaben.getRoute({ abiturjahr: this.abiturjahr, halbjahr: this.halbjahr.id }));
 	}
 
 	gotoSchienen = async (termin: GostKlausurtermin | undefined) => {
-		await RouteManager.doRoute({ name: routeGostKlausurplanungSchienen.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: this.abiturjahr, halbjahr: this.halbjahr.id, idtermin: termin ? termin.id : undefined } });
+		await RouteManager.doRoute(routeGostKlausurplanungSchienen.getRoute({ abiturjahr: this.abiturjahr, halbjahr: this.halbjahr.id, idtermin: termin ? termin.id : undefined }));
 	}
 
-	gotoKalenderdatum = async (goto: string | GostKlausurtermin) => {
-		if (goto instanceof GostKlausurtermin)
-			await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute(goto.abijahr, goto.halbjahr, undefined, goto.id ))
-		else
-			await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute(this.abiturjahr, this.halbjahr.id, goto, this.terminSelected.value !== undefined ? this.terminSelected.value.id : undefined ));
+	gotoKalenderdatum = async (goto: string | GostKlausurtermin | undefined) => {
+		if (goto instanceof GostKlausurtermin) {
+			if (goto.datum === null) {
+				this.terminSelected.value = goto;
+				await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute({ abiturjahr: goto.abijahr, halbjahr: goto.halbjahr, datum: -1, idtermin: goto.id }));
+			} else {
+				this.terminSelected.value = undefined;
+				await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute({ abiturjahr: goto.abijahr, halbjahr: goto.halbjahr, datum: goto.datum.replace(/-/g, ""), idtermin: goto.id }));
+			}
+		} else if (goto !== undefined) {
+			await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute({ abiturjahr: this.abiturjahr, halbjahr: this.halbjahr.id, datum: goto.replace(/-/g, ""), idtermin: (this.terminSelected.value !== undefined) ? this.terminSelected.value.id : undefined }));
+		} else {
+			await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute({ abiturjahr: this.abiturjahr, halbjahr: this.halbjahr.id, datum: undefined, idtermin: undefined }));
+			this.terminSelected.value = undefined;
+		}
 	}
 
 	gotoRaumzeitTermin = async (abiturjahr: number, halbjahr: GostHalbjahr, idtermin: number | undefined) => {
-		await RouteManager.doRoute(routeGostKlausurplanungRaumzeit.getRoute(abiturjahr, halbjahr.id, idtermin ));
+		await RouteManager.doRoute(routeGostKlausurplanungRaumzeit.getRoute({ abiturjahr, halbjahr: halbjahr.id, idtermin }));
 	}
 
 	gotoHalbjahr = async (value: GostHalbjahr) => {
-		await RouteManager.doRoute(this.view.getRoute(this.abiturjahr, value.id));
+		await RouteManager.doRoute(this.view.getRoute({ abiturjahr: this.abiturjahr, halbjahr: value.id }));
 	}
 
 	gotoNachschreiber = async (abiturjahr: number, halbjahr: GostHalbjahr) => {
-		await RouteManager.doRoute({ name: routeGostKlausurplanungNachschreiber.name, params: { abiturjahr, halbjahr: halbjahr.id } });
+		await RouteManager.doRoute(routeGostKlausurplanungNachschreiber.getRoute({ abiturjahr, halbjahr: halbjahr.id }));
 	}
 
 	get zeigeAlleJahrgaenge(): boolean {
@@ -360,7 +381,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 
 	erzeugeDefaultKlausurvorgaben = async (quartal: number) => {
 		api.status.start();
-		const neueVorgaben = await api.server.createDefaultGostKlausurenVorgaben(api.schema, this.halbjahr.id, quartal);
+		const neueVorgaben = await api.server.createGostKlausurenDefaultVorgaben(api.schema, this.halbjahr.id, quartal);
 		this.manager.vorgabeAddAll(neueVorgaben);
 		this.commit();
 		api.status.stop();

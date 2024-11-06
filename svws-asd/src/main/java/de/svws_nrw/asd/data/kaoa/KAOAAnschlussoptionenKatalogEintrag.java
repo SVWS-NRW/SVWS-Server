@@ -25,4 +25,11 @@ public class KAOAAnschlussoptionenKatalogEintrag extends CoreTypeData {
 	@Schema(description = "Gibt an bei welchen Anschlussvereinbarungen SBO10.7 die Optionen angezeigt werden")
 	public @NotNull List<String> anzeigeZusatzmerkmal = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public KAOAAnschlussoptionenKatalogEintrag() {
+		// leer
+	}
+
 }

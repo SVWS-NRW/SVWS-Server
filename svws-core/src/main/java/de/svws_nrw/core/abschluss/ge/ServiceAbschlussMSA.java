@@ -58,6 +58,12 @@ public class ServiceAbschlussMSA extends Service<GEAbschlussFaecher, AbschlussEr
 	/** Die Zeichenkette, welche zum Trennen von Teilen des Logs verwendet wird. */
 	private static final @NotNull String LOG_SEPERATOR = "______________________________";
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ServiceAbschlussMSA() {
+		// leer
+	}
 
 	/**
 	 * Bestimmt anhand der übergebenen Fächer die Zuordnung zu den beiden Fächergruppen.

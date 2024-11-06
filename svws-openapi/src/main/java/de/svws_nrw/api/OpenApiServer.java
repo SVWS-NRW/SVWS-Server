@@ -75,6 +75,13 @@ public class OpenApiServer extends BaseOpenApiResource {
 			.prettyPrint(true)
 			.resourcePackages(Stream.of("de.svws_nrw.api.server").collect(Collectors.toSet()));
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public OpenApiServer() {
+		// leer
+	}
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private OpenApiContext getOpenApiContext() throws OpenApiConfigurationException {
 		return new JaxrsOpenApiContextBuilder()

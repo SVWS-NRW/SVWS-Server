@@ -224,8 +224,10 @@ public class StundenplanManager {
 
 	// StundenplanKalenderwochenzuordnung
 	private @NotNull HashMap<Long, StundenplanKalenderwochenzuordnung> _kwz_by_id = new HashMap<>();
-	private @NotNull List<StundenplanKalenderwochenzuordnung> _kwzmenge_sortiert = new ArrayList<>();
-	private @NotNull List<StundenplanKalenderwochenzuordnung> _kwzmenge_sortiert_invers = new ArrayList<>();
+	private @NotNull List<StundenplanKalenderwochenzuordnung> _kwzmenge_sortiert_ungueltige = new ArrayList<>();
+	private @NotNull List<StundenplanKalenderwochenzuordnung> _kwzmenge_sortiert_gueltige = new ArrayList<>();
+	private @NotNull List<StundenplanKalenderwochenzuordnung> _kwzmenge_sortiert_alle = new ArrayList<>();
+	private @NotNull List<StundenplanKalenderwochenzuordnung> _kwzmenge_sortiert_alle_invers = new ArrayList<>();
 	private @NotNull HashMap2D<Integer, Integer, StundenplanKalenderwochenzuordnung> _kwz_by_jahr_and_kw = new HashMap2D<>();
 	private @NotNull HashMap<Integer, List<StundenplanKalenderwochenzuordnung>> _kwzmenge_by_wochentyp = new HashMap<>();
 
@@ -1414,15 +1416,14 @@ public class StundenplanManager {
 	}
 
 	private void update_kwzmenge_update_kwz_by_jahr_and_kw() {
-		// _list_kwz
-		_kwzmenge_sortiert = new ArrayList<>(_kwz_by_id.values());
 
-		// _map2d_jahr_kw_zu_kwz (Original - Objekte)
+		// Echte KWZ-Objekte in die Datenstrukturen hinzufügen.
+		_kwzmenge_sortiert_alle = new ArrayList<>(_kwz_by_id.values());
 		_kwz_by_jahr_and_kw = new HashMap2D<>();
-		for (final @NotNull StundenplanKalenderwochenzuordnung kwz : _kwzmenge_sortiert)
+		for (final @NotNull StundenplanKalenderwochenzuordnung kwz : _kwzmenge_sortiert_alle)
 			DeveloperNotificationException.ifMap2DPutOverwrites(_kwz_by_jahr_and_kw, kwz.jahr, kwz.kw, kwz);
 
-		// _map2d_jahr_kw_zu_kwz (Pseudo - Objekte)
+		// Pseudo KWZ-Objekte in die Datenstrukturen ergänzen.
 		final @NotNull int[] infoVon = DateUtils.extractFromDateISO8601(_stundenplanGueltigAb);
 		final @NotNull int[] infoBis = DateUtils.extractFromDateISO8601(_stundenplanGueltigBis);
 		final int jahrVon = infoVon[6]; // 6 = kalenderwochenjahr
@@ -1442,18 +1443,36 @@ public class StundenplanManager {
 					kwz.jahr = jahr;
 					kwz.kw = kw;
 					kwz.wochentyp = kalenderwochenzuordnungGetWochentypOrDefault(jahr, kw);
-					// Hinzufügen
+					// Hinzufügen (Pseudo - Objekt)
 					DeveloperNotificationException.ifMap2DPutOverwrites(_kwz_by_jahr_and_kw, kwz.jahr, kwz.kw, kwz);
-					_kwzmenge_sortiert.add(kwz);
+					_kwzmenge_sortiert_alle.add(kwz);
 				}
 		}
+		_kwzmenge_sortiert_alle.sort(_compKWZ);
 
-		_kwzmenge_sortiert.sort(_compKWZ);
+		// Inverse Liste aufbauen.
+		_kwzmenge_sortiert_alle_invers = new ArrayList<>();
+		for (final @NotNull StundenplanKalenderwochenzuordnung kwz : _kwzmenge_sortiert_alle)
+			_kwzmenge_sortiert_alle_invers.addFirst(kwz);
 
-		// Inverse Liste aufbauen
-		_kwzmenge_sortiert_invers = new ArrayList<>();
-		for (final @NotNull StundenplanKalenderwochenzuordnung kwz : _kwzmenge_sortiert)
-			_kwzmenge_sortiert_invers.addFirst(kwz);
+		// Ungültige Liste aufbauen (enthält keine Pseudo-Objekte).
+		_kwzmenge_sortiert_ungueltige = new ArrayList<>();
+		for (final @NotNull StundenplanKalenderwochenzuordnung kwz : _kwz_by_id.values()) {
+			final boolean istKleiner = (kwz.jahr < jahrVon) || ((kwz.jahr == jahrVon) && (kwz.kw < kwVon));
+			final boolean istGroesser = (kwz.jahr > jahrBis) || ((kwz.jahr == jahrBis) && (kwz.kw > kwBis));
+			if (istKleiner || istGroesser)
+				_kwzmenge_sortiert_ungueltige.add(kwz);
+		}
+		_kwzmenge_sortiert_ungueltige.sort(_compKWZ);
+
+		// Gültige Liste aufbauen (enthält ggf. Pseudo-Objekte).
+		_kwzmenge_sortiert_gueltige = new ArrayList<>();
+		for (final @NotNull StundenplanKalenderwochenzuordnung kwz : _kwzmenge_sortiert_alle) {
+			final boolean istKleiner = (kwz.jahr < jahrVon) || ((kwz.jahr == jahrVon) && (kwz.kw < kwVon));
+			final boolean istGroesser = (kwz.jahr > jahrBis) || ((kwz.jahr == jahrBis) && (kwz.kw > kwBis));
+			if (!istKleiner && !istGroesser)
+				_kwzmenge_sortiert_gueltige.add(kwz);
+		}
 	}
 
 	private void update_klassenmenge() {
@@ -1923,7 +1942,7 @@ public class StundenplanManager {
 	private void update_kwzmenge_by_wochentyp() {
 		_kwzmenge_by_wochentyp = new HashMap<>();
 
-		for (final @NotNull StundenplanKalenderwochenzuordnung kwz : _kwzmenge_sortiert)
+		for (final @NotNull StundenplanKalenderwochenzuordnung kwz : _kwzmenge_sortiert_alle)
 			MapUtils.addToList(_kwzmenge_by_wochentyp, kwz.wochentyp, kwz);
 	}
 
@@ -2502,12 +2521,12 @@ public class StundenplanManager {
 
 		// Datum kleiner First?
 		final @NotNull StundenplanKalenderwochenzuordnung kwzFirst =
-				DeveloperNotificationException.ifListGetFirstFailes("_kwz_by_jahr_and_kw", _kwzmenge_sortiert);
+				DeveloperNotificationException.ifListGetFirstFailes("_kwz_by_jahr_and_kw", _kwzmenge_sortiert_alle);
 		if ((jahr < kwzFirst.jahr) || ((jahr == kwzFirst.jahr) && (kalenderwoche < kwzFirst.kw)))
 			return kwzFirst;
 
 		// Datum größer Last
-		return DeveloperNotificationException.ifListGetLastFailes("_kwz_by_jahr_and_kw", _kwzmenge_sortiert);
+		return DeveloperNotificationException.ifListGetLastFailes("_kwz_by_jahr_and_kw", _kwzmenge_sortiert_alle);
 	}
 
 	/**
@@ -2529,14 +2548,55 @@ public class StundenplanManager {
 	}
 
 	/**
-	 * Liefert sortierte eine Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte.
+	 * Liefert das zum Jahr und KW zugehörige {@link StundenplanKalenderwochenzuordnung}-Objekt, oder NULL.
+	 *
+	 * @param jahr           Das Jahr der Kalenderwoche. Es muss zwischen {@link DateUtils#MIN_GUELTIGES_JAHR} und {@link DateUtils#MAX_GUELTIGES_JAHR} liegen.
+	 * @param kalenderwoche  Die gewünschten Kalenderwoche. Es muss zwischen 1 und {@link DateUtils#gibKalenderwochenOfJahr(int)} liegen.
+
+	 * @return das zum Jahr und KW zugehörige {@link StundenplanKalenderwochenzuordnung}-Objekt, oder NULL.
+	 */
+	public StundenplanKalenderwochenzuordnung kalenderwochenzuordnungGueltigGetByDatumOrNull(final int jahr, final int kalenderwoche) {
+		final StundenplanKalenderwochenzuordnung kwz = _kwz_by_jahr_and_kw.getOrNull(jahr, kalenderwoche);
+
+		// Keine KWZ-Zuordnung vorhanden.
+		if (kwz == null)
+			return null;
+
+		// Überprüfe, ob das KWZ-Objekt innerhalb der gültigen Datumsgrenzen des Stundenplans liegt.
+		final @NotNull int[] infoVon = DateUtils.extractFromDateISO8601(_stundenplanGueltigAb);
+		final @NotNull int[] infoBis = DateUtils.extractFromDateISO8601(_stundenplanGueltigBis);
+		final int jahrVon = infoVon[6]; // 6 = kalenderwochenjahr
+		final int jahrBis = infoBis[6]; // 6 = kalenderwochenjahr
+		final int kwVon = infoVon[5]; // 5 = kalenderwoche
+		final int kwBis = infoBis[5]; // 5 = kalenderwoche
+		final boolean istKleiner = (kwz.jahr < jahrVon) || ((kwz.jahr == jahrVon) && (kwz.kw < kwVon));
+		final boolean istGroesser = (kwz.jahr > jahrBis) || ((kwz.jahr == jahrBis) && (kwz.kw > kwBis));
+
+		return (istKleiner || istGroesser) ? null : kwz;
+	}
+
+	/**
+	 * Liefert eine sortierte Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte,
+	 *         die innerhalb der Datumsgrenzen des Stundenplanes liegen.
 	 * <br>Hinweis: Einige Objekte dieser Menge können die ID = -1 haben, falls sie erzeugt wurden und nicht aus der DB stammen.
 	 * <br>Laufzeit: O(1)
 	 *
-	 * @return eine Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte.
+	 * @return eine sortierte Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte,
+	 *         die innerhalb der Datumsgrenzen des Stundenplanes liegen.
+	 */
+	public @NotNull List<StundenplanKalenderwochenzuordnung> kalenderwochenzuordnungGetMengeGueltigeAsList() {
+		return _kwzmenge_sortiert_gueltige;
+	}
+
+	/**
+	 * Liefert eine sortierte Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte.
+	 * <br>Hinweis: Einige Objekte dieser Menge können die ID = -1 haben, falls sie erzeugt wurden und nicht aus der DB stammen.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return eine sortierte Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte.
 	 */
 	public @NotNull List<StundenplanKalenderwochenzuordnung> kalenderwochenzuordnungGetMengeAsList() {
-		return _kwzmenge_sortiert;
+		return _kwzmenge_sortiert_alle;
 	}
 
 	/**
@@ -2547,7 +2607,7 @@ public class StundenplanManager {
 	 * @return eine sortierte Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte in inverser Reihenfolge.
 	 */
 	public @NotNull List<StundenplanKalenderwochenzuordnung> kalenderwochenzuordnungGetMengeInversAsList() {
-		return _kwzmenge_sortiert_invers;
+		return _kwzmenge_sortiert_alle_invers;
 	}
 
 	/**
@@ -2561,6 +2621,17 @@ public class StundenplanManager {
 	 */
 	public @NotNull List<StundenplanKalenderwochenzuordnung> kalenderwochenzuordnungGetMengeByWochentyp(final int wochentyp) {
 		return MapUtils.getOrCreateArrayList(_kwzmenge_by_wochentyp, wochentyp);
+	}
+
+	/**
+	 * Liefert eine sortierte Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte, welche außerhalb des gültigen Datumsbereiches liegen.
+	 * <br>Hinweis: Wenn die Map Objekte enthält, dann haben diese eine gültige Datenbank-ID.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return eine sortierte Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte, welche außerhalb des gültigen Datumsbereiches liegen.
+	 */
+	public @NotNull List<StundenplanKalenderwochenzuordnung> kalenderwochenzuordnungGetMengeUngueltige() {
+		return _kwzmenge_sortiert_ungueltige;
 	}
 
 	/**
@@ -4597,8 +4668,8 @@ public class StundenplanManager {
 		for (int wochentag = tagVon; wochentag <= tagBis; wochentag++) {
 			// 1. Vormittagspause
 			if (_stundenplanKonfig.defaultVormittagspause1Dauer > 0) {
-				int beginn = zeitrasterGetDefaultStundenendeByStunde(_stundenplanKonfig.defaultVormittagspause1Nach);
-				int ende = beginn + _stundenplanKonfig.defaultVormittagspause1Dauer;
+				final int beginn = zeitrasterGetDefaultStundenendeByStunde(_stundenplanKonfig.defaultVormittagspause1Nach);
+				final int ende = beginn + _stundenplanKonfig.defaultVormittagspause1Dauer;
 				final @NotNull LongArrayKey key = new LongArrayKey(new long[] { wochentag, beginn, ende });
 				if (!_pausenzeit_by_tag_and_beginn_and_ende.containsKey(key)) {
 					final @NotNull StundenplanPausenzeit p = new StundenplanPausenzeit();
@@ -4612,8 +4683,8 @@ public class StundenplanManager {
 			}
 			// 2. Vormittagspause
 			if (_stundenplanKonfig.defaultVormittagspause2Dauer > 0) {
-				int beginn = zeitrasterGetDefaultStundenendeByStunde(_stundenplanKonfig.defaultVormittagspause2Nach);
-				int ende = beginn + _stundenplanKonfig.defaultVormittagspause2Dauer;
+				final int beginn = zeitrasterGetDefaultStundenendeByStunde(_stundenplanKonfig.defaultVormittagspause2Nach);
+				final int ende = beginn + _stundenplanKonfig.defaultVormittagspause2Dauer;
 				final @NotNull LongArrayKey key = new LongArrayKey(new long[] { wochentag, beginn, ende });
 				if (!_pausenzeit_by_tag_and_beginn_and_ende.containsKey(key)) {
 					final @NotNull StundenplanPausenzeit p = new StundenplanPausenzeit();
@@ -4627,8 +4698,8 @@ public class StundenplanManager {
 			}
 			// Mittagspause
 			if (_stundenplanKonfig.defaultMittagspauseDauer > 0) {
-				int beginn = zeitrasterGetDefaultStundenendeByStunde(_stundenplanKonfig.defaultMittagspauseNach);
-				int ende = beginn + _stundenplanKonfig.defaultMittagspauseDauer;
+				final int beginn = zeitrasterGetDefaultStundenendeByStunde(_stundenplanKonfig.defaultMittagspauseNach);
+				final int ende = beginn + _stundenplanKonfig.defaultMittagspauseDauer;
 				final @NotNull LongArrayKey key = new LongArrayKey(new long[] { wochentag, beginn, ende });
 				if (!_pausenzeit_by_tag_and_beginn_and_ende.containsKey(key)) {
 					final @NotNull StundenplanPausenzeit p = new StundenplanPausenzeit();
@@ -6896,20 +6967,23 @@ public class StundenplanManager {
 	 * @param stunde  Die Unterrichtsstunde, nach welcher gefragt wird.
 	 *
 	 * @return den Default-Stundenbeginn (in Minuten nach 0 Uhr) einer Unterrichtsstunde.
+	 *
+	 * @throws DeveloperNotificationException   wenn für die Stunde ein Wert kleiner 0 angegeben wird
 	 */
 	public int zeitrasterGetDefaultStundenbeginnByStunde(final int stunde) throws DeveloperNotificationException {
 		DeveloperNotificationException.ifTrue("zeitrasterGetDefaultStundenbeginnByStunde: stunde < 0", stunde < 0);
 
-		int start = _stundenplanKonfig.defaultUnterrichtsbeginn + ((stunde - 1) * (_stundenplanKonfig.defaultStundendauer +  _stundenplanKonfig.defaultPausenzeitFuerRaumwechsel));
+		int start = _stundenplanKonfig.defaultUnterrichtsbeginn
+				+ ((stunde - 1) * (_stundenplanKonfig.defaultStundendauer + _stundenplanKonfig.defaultPausenzeitFuerRaumwechsel));
 
-		if ((stunde >  _stundenplanKonfig.defaultVormittagspause1Nach) && (_stundenplanKonfig.defaultVormittagspause1Dauer > 0))
-			start +=  _stundenplanKonfig.defaultVormittagspause1Dauer -  _stundenplanKonfig.defaultPausenzeitFuerRaumwechsel;
+		if ((stunde > _stundenplanKonfig.defaultVormittagspause1Nach) && (_stundenplanKonfig.defaultVormittagspause1Dauer > 0))
+			start += _stundenplanKonfig.defaultVormittagspause1Dauer - _stundenplanKonfig.defaultPausenzeitFuerRaumwechsel;
 
-		if ((stunde >  _stundenplanKonfig.defaultVormittagspause2Nach) && (_stundenplanKonfig.defaultVormittagspause2Dauer > 0))
-			start +=  _stundenplanKonfig.defaultVormittagspause2Dauer -  _stundenplanKonfig.defaultPausenzeitFuerRaumwechsel;
+		if ((stunde > _stundenplanKonfig.defaultVormittagspause2Nach) && (_stundenplanKonfig.defaultVormittagspause2Dauer > 0))
+			start += _stundenplanKonfig.defaultVormittagspause2Dauer - _stundenplanKonfig.defaultPausenzeitFuerRaumwechsel;
 
-		if ((stunde >  _stundenplanKonfig.defaultMittagspauseNach) && (_stundenplanKonfig.defaultMittagspauseDauer > 0))
-			start +=  _stundenplanKonfig.defaultMittagspauseDauer -  _stundenplanKonfig.defaultPausenzeitFuerRaumwechsel;
+		if ((stunde > _stundenplanKonfig.defaultMittagspauseNach) && (_stundenplanKonfig.defaultMittagspauseDauer > 0))
+			start += _stundenplanKonfig.defaultMittagspauseDauer - _stundenplanKonfig.defaultPausenzeitFuerRaumwechsel;
 
 		return start;
 	}

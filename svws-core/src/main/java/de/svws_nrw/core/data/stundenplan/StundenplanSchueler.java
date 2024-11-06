@@ -30,4 +30,11 @@ public class StundenplanSchueler {
 	@Schema(description = "die ID der Klasse in der sich der Schüler befindet")
 	public long idKlasse = -1;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public StundenplanSchueler() {
+		// leer
+	}
+
 }

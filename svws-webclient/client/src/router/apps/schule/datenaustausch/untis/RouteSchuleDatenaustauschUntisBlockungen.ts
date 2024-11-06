@@ -1,8 +1,7 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
 import type { DeveloperNotificationException} from "@core";
 import { BenutzerKompetenz, GostHalbjahr, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
-import { routeApp } from "../../../RouteApp";
 import { routeSchuleDatenaustauschUntis, type RouteSchuleDatenaustauschUntis } from "~/router/apps/schule/datenaustausch/untis/RouteSchuleDatenaustauschUntis";
 
 import type { SchuleDatenaustauschUntisBlockungenProps } from "~/components/schule/datenaustausch/untis/SSchuleDatenaustauschUntisBlockungenProps";
@@ -14,7 +13,12 @@ const SSchuleDatenaustauschUntisBlockungen = () => import("~/components/schule/d
 export class RouteSchuleDatenaustauschUntisBlockungen extends RouteNode<any, RouteSchuleDatenaustauschUntis> {
 
 	public constructor() {
-		super(schulformenGymOb, [ BenutzerKompetenz.KEINE ], "schule.datenaustausch.untis.blockungen", "blockungen/:abiturjahr(\\d+)?/:halbjahr([0-5])?/:idblockung(\\d+)?/:idergebnis(\\d+)?", SSchuleDatenaustauschUntisBlockungen);
+		super(schulformenGymOb, [
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+			BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN,
+			BenutzerKompetenz.STUNDENPLAN_FUNKTIONSBEZOGEN_ANSEHEN,
+		], "schule.datenaustausch.untis.blockungen", "blockungen/:abiturjahr(\\d+)?/:halbjahr([0-5])?/:idblockung(\\d+)?/:idergebnis(\\d+)?", SSchuleDatenaustauschUntisBlockungen);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Blockungen";
@@ -46,17 +50,17 @@ export class RouteSchuleDatenaustauschUntisBlockungen extends RouteNode<any, Rou
 												break;
 											}
 								} else if (routeSchuleDatenaustauschUntis.data.ergebnis)
-									return this.getRoute({abiturjahr: to_params.abiturjahr, halbjahr: to_params.halbjahr, idblockung: to_params.idblockung, idergebnis: routeSchuleDatenaustauschUntis.data.ergebnis.id.toString()});
+									return this.getRoute({ abiturjahr: to_params.abiturjahr, halbjahr: to_params.halbjahr, idblockung: to_params.idblockung, idergebnis: routeSchuleDatenaustauschUntis.data.ergebnis.id.toString() });
 							}
 						} else {
 							if (routeSchuleDatenaustauschUntis.data.ergebnis && routeSchuleDatenaustauschUntis.data.blockung)
-								return this.getRoute({abiturjahr: to_params.abiturjahr, halbjahr: to_params.halbjahr, idblockung: routeSchuleDatenaustauschUntis.data.blockung.id.toString(), idergebnis: routeSchuleDatenaustauschUntis.data.ergebnis.id.toString()});
+								return this.getRoute({ abiturjahr: to_params.abiturjahr, halbjahr: to_params.halbjahr, idblockung: routeSchuleDatenaustauschUntis.data.blockung.id.toString(), idergebnis: routeSchuleDatenaustauschUntis.data.ergebnis.id.toString() });
 						}
 					}
 				}
 			}
 		} catch(e) {
-			return routeError.getRoute(e as DeveloperNotificationException);
+			return routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 
@@ -64,9 +68,12 @@ export class RouteSchuleDatenaustauschUntisBlockungen extends RouteNode<any, Rou
 		return routeSchuleDatenaustauschUntis.data.cleanup();
 	}
 
-	public getRoute(to_params?: RouteParams) : RouteLocationRaw {
-		const { abiturjahr, halbjahr, idblockung, idergebnis } = to_params || {};
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr, halbjahr, idblockung, idergebnis}};
+	public addRouteParamsFromState() : RouteParamsRawGeneric {
+		const abiturjahr = routeSchuleDatenaustauschUntis.data.abiturjahrgang?.abiturjahr ?? -1;
+		const halbjahr = routeSchuleDatenaustauschUntis.data.halbjahr?.id ?? undefined;
+		const idblockung = routeSchuleDatenaustauschUntis.data.blockung?.id ?? undefined;
+		const idergebnis = routeSchuleDatenaustauschUntis.data.ergebnis?.id ?? undefined;
+		return { abiturjahr, halbjahr, idblockung, idergebnis };
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuleDatenaustauschUntisBlockungenProps {

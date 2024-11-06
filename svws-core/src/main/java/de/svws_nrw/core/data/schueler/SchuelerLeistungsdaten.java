@@ -128,4 +128,11 @@ public class SchuelerLeistungsdaten {
 	@Schema(description = "die Anzahl der unentschuldigten Fehlstunden für dieses Fach", example = "2")
 	public int fehlstundenUnentschuldigt = 0;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SchuelerLeistungsdaten() {
+		// leer
+	}
+
 }

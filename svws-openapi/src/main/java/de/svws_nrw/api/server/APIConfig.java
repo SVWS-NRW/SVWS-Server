@@ -40,6 +40,12 @@ import jakarta.ws.rs.core.Response.Status;
 @Tag(name = "Server")
 public class APIConfig {
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public APIConfig() {
+		// leer
+	}
 
 	/**
 	 * Diese Methode kann genutzt werden, um die Verfügbarkeit des SVWS-Server zu testen.
@@ -122,6 +128,30 @@ public class APIConfig {
 		try {
 			final ServerMode mode = SVWSKonfiguration.get().getServerMode();
 			return JSONMapper.fromString(mode.text);
+		} catch (final ApiOperationException e) {
+			return e.getResponse();
+		}
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der ersten kompatiblen Schild-Version
+	 *
+	 * @return die erste kompatible Schild-Version
+	 */
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/status/schild/minversion")
+	@Operation(summary = "Gibt die erste kompatible Schild-Version zurück.",
+			description = "Gibt die erste kompatible Schild-Version zurück.")
+	@ApiResponse(responseCode = "200", description = "Die erste kompatible Schild-Version",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = String.class)))
+	public Response getSchildMinVersion() {
+		try {
+			final String version = SVWSVersion.getSchildMinVersion();
+			if (version == null)
+				throw new ApiOperationException(Status.NOT_FOUND);
+			return JSONMapper.fromString(version);
 		} catch (final ApiOperationException e) {
 			return e.getResponse();
 		}

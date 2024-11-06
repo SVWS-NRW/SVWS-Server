@@ -8,7 +8,6 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeKatalogVermerkarten, type RouteKatalogVermerkarten } from "~/router/apps/schule/vermerke/RouteKatalogVermerkarten";
 
 import type { VermerkartDatenProps } from "~/components/schule/kataloge/vermerke/daten/SVermerkartDatenProps";
-import { routeApp } from "~/router/apps/RouteApp";
 import { RouteManager } from "~/router/RouteManager";
 import { routeSchuelerVermerke } from "../../schueler/vermerke/RouteSchuelerVermerke";
 
@@ -24,17 +23,12 @@ export class RouteKatalogVermerkartenDaten extends RouteNode<any, RouteKatalogVe
 	}
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-
 		if (routeKatalogVermerkarten.data.vermerkartenManager.auswahlID() === null)
 			return routeKatalogVermerkarten.getRoute(undefined);
 	}
 
-	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
-	}
-
 	gotoSchueler = async (schuelerVermerkartZusammenfassung: SchuelerVermerkartZusammenfassung) => {
-		await RouteManager.doRoute(routeSchuelerVermerke.getRoute(schuelerVermerkartZusammenfassung.id));
+		await RouteManager.doRoute(routeSchuelerVermerke.getRoute({ id: schuelerVermerkartZusammenfassung.id }));
 	}
 
 	public getProps(to: RouteLocationNormalized): VermerkartDatenProps {

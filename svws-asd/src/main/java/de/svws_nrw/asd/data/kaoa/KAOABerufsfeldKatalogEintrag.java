@@ -16,4 +16,11 @@ public class KAOABerufsfeldKatalogEintrag extends CoreTypeData {
 
 	// Keine weiteren Attribute
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public KAOABerufsfeldKatalogEintrag() {
+		// leer
+	}
+
 }

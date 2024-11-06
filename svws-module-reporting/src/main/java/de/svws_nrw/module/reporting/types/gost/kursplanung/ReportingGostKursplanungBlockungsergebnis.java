@@ -58,6 +58,7 @@ public class ReportingGostKursplanungBlockungsergebnis {
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
+	 *
 	 * @param abiturjahr Das Kalenderjahr, in dem die Abiturprüfung des Blockungsergebnisses stattfindet
 	 * @param anzahlDummy Anzahl der Dummy-Schüler im Ergebnis
 	 * @param anzahlExterne Anzahl der externen Schüler im Ergebnis
@@ -96,7 +97,9 @@ public class ReportingGostKursplanungBlockungsergebnis {
 
 	/**
 	 * Gibt eine Liste mit Kursen zurück, deren IDs in der Filterliste enthalten sind.
+	 *
 	 * @param idsKurseFilter Die IDs der Kurse, die zurückgegebenen werden sollen.
+	 *
 	 * @return Die Liste der Kurse, die in der Filterliste enthalten waren.
 	 */
 	@JsonIgnore
@@ -106,7 +109,9 @@ public class ReportingGostKursplanungBlockungsergebnis {
 
 	/**
 	 * Gibt eine Liste mit Schülern zurück, deren IDs in der Filterliste enthalten sind.
+	 *
 	 * @param idsSchuelerFilter Die IDs der Schüler, die zurückgegebenen werden sollen.
+	 *
 	 * @return Die Liste der Schüler, die in der Filterliste enthalten waren.
 	 */
 	@JsonIgnore
@@ -120,6 +125,7 @@ public class ReportingGostKursplanungBlockungsergebnis {
 
 	/**
 	 * Das Kalenderjahr, in dem die Abiturprüfung des Blockungsergebnisses stattfindet
+	 *
 	 * @return Inhalt des Feldes abiturjahr
 	 */
 	public int abiturjahr() {
@@ -128,6 +134,7 @@ public class ReportingGostKursplanungBlockungsergebnis {
 
 	/**
 	 * Anzahl der Dummy-Schüler im Ergebnis
+	 *
 	 * @return Inhalt des Feldes anzahlDummy
 	 */
 	public int anzahlDummy() {
@@ -136,6 +143,7 @@ public class ReportingGostKursplanungBlockungsergebnis {
 
 	/**
 	 * Anzahl der externen Schüler im Ergebnis
+	 *
 	 * @return Inhalt des Feldes anzahlExterne
 	 */
 	public int anzahlExterne() {
@@ -144,6 +152,7 @@ public class ReportingGostKursplanungBlockungsergebnis {
 
 	/**
 	 * Maximale Anzahl an Kursen über alle Schienen
+	 *
 	 * @return Inhalt des Feldes anzahlMaxKurseProSchiene
 	 */
 	public int anzahlMaxKurseProSchiene() {
@@ -152,6 +161,7 @@ public class ReportingGostKursplanungBlockungsergebnis {
 
 	/**
 	 * Anzahl der Schienen
+	 *
 	 * @return Inhalt des Feldes anzahlSchienen
 	 */
 	public int anzahlSchienen() {
@@ -160,6 +170,7 @@ public class ReportingGostKursplanungBlockungsergebnis {
 
 	/**
 	 * Anzahl der Schüler im Ergebnis
+	 *
 	 * @return Inhalt des Feldes anzahlSchueler
 	 */
 	public int anzahlSchueler() {
@@ -168,6 +179,7 @@ public class ReportingGostKursplanungBlockungsergebnis {
 
 	/**
 	 * Map mit den Fachwahlstatistiken des GOSt-Halbjahres des Blockungsergebnisses zur Fach-ID
+	 *
 	 * @return Inhalt des Feldes fachwahlstatistik
 	 */
 	public Map<Long, ReportingGostKursplanungFachwahlstatistik> fachwahlstatistik() {
@@ -176,6 +188,7 @@ public class ReportingGostKursplanungBlockungsergebnis {
 
 	/**
 	 * Bezeichnung des Blockungsergebnisses
+	 *
 	 * @return Inhalt des Feldes bezeichnung
 	 */
 	public String bezeichnung() {
@@ -184,6 +197,7 @@ public class ReportingGostKursplanungBlockungsergebnis {
 
 	/**
 	 * Das Halbjahr der gymnasialen Oberstufe des Blockungsergebnisses
+	 *
 	 * @return Inhalt des Feldes gostHalbjahr
 	 */
 	public GostHalbjahr gostHalbjahr() {
@@ -192,6 +206,7 @@ public class ReportingGostKursplanungBlockungsergebnis {
 
 	/**
 	 * ID des Blockungsergebnisses
+	 *
 	 * @return Inhalt des Feldes id
 	 */
 	public long id() {
@@ -200,6 +215,7 @@ public class ReportingGostKursplanungBlockungsergebnis {
 
 	/**
 	 * Eine Liste vom Typ Kurs, die alle Kurse des Blockungsergebnisses beinhaltet.
+	 *
 	 * @return Inhalt des Feldes kurse
 	 */
 	public List<ReportingGostKursplanungKurs> kurse() {
@@ -208,6 +224,7 @@ public class ReportingGostKursplanungBlockungsergebnis {
 
 	/**
 	 * Eine Liste vom Typ Schiene, die alle Schienen des Blockungsergebnisses beinhaltet.
+	 *
 	 * @return Inhalt des Feldes schienen
 	 */
 	public List<ReportingGostKursplanungSchiene> schienen() {
@@ -216,6 +233,7 @@ public class ReportingGostKursplanungBlockungsergebnis {
 
 	/**
 	 * Eine Liste vom Typ Schüler, die alle Schüler des Blockungsergebnisses beinhaltet.
+	 *
 	 * @return Inhalt des Feldes schienen
 	 */
 	public List<ReportingSchueler> schueler() {

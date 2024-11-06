@@ -23,6 +23,8 @@ export class StundenplanblockungManagerRaum extends JavaObject {
 
 
 	/**
+	 * Konstruktor zur Erstellung eines {@link StundenplanblockungManagerRaum}-Objektes.
+	 *
 	 * @param pRaumID   Die Datenbank-ID des Raumes.
 	 * @param pKuerzel  Das Kürzel des Raumes.
 	 */

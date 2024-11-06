@@ -29,6 +29,9 @@ export class GostBlockungListeneintrag extends JavaObject {
 	public anzahlErgebnisse : number = -1;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

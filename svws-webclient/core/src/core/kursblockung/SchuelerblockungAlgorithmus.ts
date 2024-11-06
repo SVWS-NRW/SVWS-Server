@@ -11,6 +11,9 @@ export class SchuelerblockungAlgorithmus extends Service<SchuelerblockungInput, 
 	private static readonly _random : Random = new Random();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

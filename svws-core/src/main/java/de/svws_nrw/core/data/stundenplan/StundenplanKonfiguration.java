@@ -49,4 +49,11 @@ public class StundenplanKonfiguration {
 	@Schema(description = "Der Default-Wert der Dauer der Mittagspause.", example = "60 (Minuten)")
 	public int defaultMittagspauseDauer = 60; // Die Mittagspause dauert 60 Minuten.
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public StundenplanKonfiguration() {
+		// leer
+	}
+
 }

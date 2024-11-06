@@ -71,14 +71,13 @@
 			<div class="flex-grow">
 				<svws-ui-table :items="[]" :columns="cols" :disable-header="true" :no-data="false" class="border-t">
 					<template #body>
-						<div v-for="(schiene, index) in getErgebnismanager().getMengeAllerSchienen()" :key="index"
-							role="row" class="svws-ui-tr">
+						<div v-for="(schiene, index) in getErgebnismanager().getMengeAllerSchienen()" :key="index" role="row" class="svws-ui-tr">
 							<!-- Informationen zu der Schiene und der Statistik dazu auf der linken Seite der Tabelle -->
 							<div role="cell" class="svws-ui-td svws-divider">
-								<div class="flex flex-col py-1" :title="getErgebnismanager().getSchieneG(schiene.id).bezeichnung">
+								<div class="flex flex-col py-1 w-full" :title="getErgebnismanager().getSchieneG(schiene.id).bezeichnung">
 									<div class="inline-flex items-center" :class="{'text-error': hatSchieneKollisionen(schiene.id).value}">
 										<span class="icon icon-error i-ri-alert-line -mt-0.5" v-if="hatSchieneKollisionen(schiene.id).value" />
-										<span class="mb-0.5 text-button">{{ getErgebnismanager().getSchieneG(schiene.id).bezeichnung }}</span>
+										<div class="overflow-hidden overflow-ellipsis whitespace-nowrap w-full"><span class="mb-0.5 text-button">{{ getErgebnismanager().getSchieneG(schiene.id).bezeichnung }}</span></div>
 									</div>
 									<span class="text-sm font-medium opacity-50">{{ schiene.kurse.size() }} Kurs{{ schiene.kurse.size() === 1 ? '' : 'e' }}</span>
 									<span class="text-sm font-medium opacity-50">{{ getErgebnismanager().getOfSchieneAnzahlSchueler(schiene.id) }} Schüler</span>
@@ -100,12 +99,12 @@
 									<span class="text-sm opacity-50 relative" title="Schriftlich/Insgesamt im Kurs">
 										{{ getErgebnismanager().getOfKursAnzahlSchuelerSchriftlich(kurs.id) }}/{{ kurs.schueler.size() }}
 									</span>
-									<span class="py-0.5 font-medium" :class="{'opacity-50': !getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id)}">{{ getErgebnismanager().getOfKursName(kurs.id) }}</span>
+									<div class="w-full overflow-hidden text-ellipsis whitespace-nowrap"><span class="py-0.5 font-medium" :class="{'opacity-50': !getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id)}">{{ getErgebnismanager().getOfKursName(kurs.id) }}</span></div>
 									<span class="inline-flex items-center gap-1">
-										<span v-if="getDatenmanager().getHalbjahr().istQualifikationsphase() && getAbiturfach(kurs.id).value !== null"
-											class="opacity-75 text-sm">
+										<span v-if="getDatenmanager().getHalbjahr().istQualifikationsphase() && getAbiturfach(kurs.id).value !== null" class="opacity-75 text-sm">
 											AB{{ getDatenmanager().schuelerGetOfFachFachwahl(schueler.id, kurs.fachID).abiturfach }}
 										</span>
+										<span v-if="getDatenmanager().kursGetLehrkraefteSortiert(kurs.id).size() > 0" class="opacity-75 text-sm"> {{ getDatenmanager().kursGetLehrkraefteSortiert(kurs.id).getFirst().kuerzel }} </span>
 										<template v-if="fach_gewaehlt(kurs)">
 											<span class="cursor-pointer" @click.stop="verbieten_regel_toggle(kurs.id)" :title="verbieten_regel(kurs.id) ? 'Verboten' : 'Verbieten'">
 												<span class="icon i-ri-forbid-fill inline-block" v-if="verbieten_regel(kurs.id)" />
@@ -184,9 +183,9 @@
 	}
 
 	const cols = computed(() => {
-		const cols: DataTableColumn[] = [{ key: "schiene", label: "Schiene", minWidth: 9, span: 0.1, align: 'left' }];
+		const cols: DataTableColumn[] = [{ key: "schiene", label: "Schiene", minWidth: 8, span: 1, align: 'left' }];
 		for (let i = 0; i < props.getErgebnismanager().getOfSchieneMaxKursanzahl(); i++)
-			cols.push({ key: "kurs_" + (i+1), label: "Kurs " + (i+1), align: 'center', minWidth: 6, span: 1 });
+			cols.push({ key: "kurs_" + (i+1), label: "Kurs " + (i+1), align: 'center', minWidth: 7, span: 1 });
 		return cols;
 	})
 

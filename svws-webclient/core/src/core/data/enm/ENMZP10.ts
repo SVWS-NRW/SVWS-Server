@@ -39,6 +39,9 @@ export class ENMZP10 extends JavaObject {
 	public abschlussnote : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -75,12 +78,12 @@ export class ENMZP10 extends JavaObject {
 	public static transpilerToJSON(obj : ENMZP10) : string {
 		let result = '{';
 		result += '"fachID" : ' + obj.fachID.toString() + ',';
-		result += '"vornote" : ' + ((!obj.vornote) ? 'null' : JSON.stringify(obj.vornote)) + ',';
-		result += '"noteSchriftlichePruefung" : ' + ((!obj.noteSchriftlichePruefung) ? 'null' : JSON.stringify(obj.noteSchriftlichePruefung)) + ',';
+		result += '"vornote" : ' + ((obj.vornote === null) ? 'null' : JSON.stringify(obj.vornote)) + ',';
+		result += '"noteSchriftlichePruefung" : ' + ((obj.noteSchriftlichePruefung === null) ? 'null' : JSON.stringify(obj.noteSchriftlichePruefung)) + ',';
 		result += '"muendlichePruefung" : ' + obj.muendlichePruefung.toString() + ',';
 		result += '"muendlichePruefungFreiwillig" : ' + obj.muendlichePruefungFreiwillig.toString() + ',';
-		result += '"noteMuendlichePruefung" : ' + ((!obj.noteMuendlichePruefung) ? 'null' : JSON.stringify(obj.noteMuendlichePruefung)) + ',';
-		result += '"abschlussnote" : ' + ((!obj.abschlussnote) ? 'null' : JSON.stringify(obj.abschlussnote)) + ',';
+		result += '"noteMuendlichePruefung" : ' + ((obj.noteMuendlichePruefung === null) ? 'null' : JSON.stringify(obj.noteMuendlichePruefung)) + ',';
+		result += '"abschlussnote" : ' + ((obj.abschlussnote === null) ? 'null' : JSON.stringify(obj.abschlussnote)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -92,10 +95,10 @@ export class ENMZP10 extends JavaObject {
 			result += '"fachID" : ' + obj.fachID.toString() + ',';
 		}
 		if (obj.vornote !== undefined) {
-			result += '"vornote" : ' + ((!obj.vornote) ? 'null' : JSON.stringify(obj.vornote)) + ',';
+			result += '"vornote" : ' + ((obj.vornote === null) ? 'null' : JSON.stringify(obj.vornote)) + ',';
 		}
 		if (obj.noteSchriftlichePruefung !== undefined) {
-			result += '"noteSchriftlichePruefung" : ' + ((!obj.noteSchriftlichePruefung) ? 'null' : JSON.stringify(obj.noteSchriftlichePruefung)) + ',';
+			result += '"noteSchriftlichePruefung" : ' + ((obj.noteSchriftlichePruefung === null) ? 'null' : JSON.stringify(obj.noteSchriftlichePruefung)) + ',';
 		}
 		if (obj.muendlichePruefung !== undefined) {
 			result += '"muendlichePruefung" : ' + obj.muendlichePruefung.toString() + ',';
@@ -104,10 +107,10 @@ export class ENMZP10 extends JavaObject {
 			result += '"muendlichePruefungFreiwillig" : ' + obj.muendlichePruefungFreiwillig.toString() + ',';
 		}
 		if (obj.noteMuendlichePruefung !== undefined) {
-			result += '"noteMuendlichePruefung" : ' + ((!obj.noteMuendlichePruefung) ? 'null' : JSON.stringify(obj.noteMuendlichePruefung)) + ',';
+			result += '"noteMuendlichePruefung" : ' + ((obj.noteMuendlichePruefung === null) ? 'null' : JSON.stringify(obj.noteMuendlichePruefung)) + ',';
 		}
 		if (obj.abschlussnote !== undefined) {
-			result += '"abschlussnote" : ' + ((!obj.abschlussnote) ? 'null' : JSON.stringify(obj.abschlussnote)) + ',';
+			result += '"abschlussnote" : ' + ((obj.abschlussnote === null) ? 'null' : JSON.stringify(obj.abschlussnote)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

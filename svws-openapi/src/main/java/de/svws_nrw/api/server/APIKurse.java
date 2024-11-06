@@ -41,6 +41,13 @@ import jakarta.ws.rs.core.Response;
 public class APIKurse {
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public APIKurse() {
+		// leer
+	}
+
+	/**
 	 * Die OpenAPI-Methode für die Abfrage der Liste der Kurse aller Schuljahresabschniite
 	 * im angegebenen Schema.
 	 *

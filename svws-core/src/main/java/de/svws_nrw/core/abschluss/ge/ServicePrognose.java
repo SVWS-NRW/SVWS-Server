@@ -19,6 +19,12 @@ import jakarta.validation.constraints.NotNull;
  */
 public class ServicePrognose extends Service<GEAbschlussFaecher, AbschlussErgebnis> {
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ServicePrognose() {
+		// leer
+	}
 
 	/**
 	 * Prüft, ob Lernbereichsnoten bei den Abschlussfächern zur Verfügung stehen oder nicht.

@@ -47,4 +47,11 @@ public class GostStatistikFachwahl {
 	@ArraySchema(schema = @Schema(implementation = GostStatistikFachwahlHalbjahr.class))
 	public @NotNull GostStatistikFachwahlHalbjahr @NotNull [] fachwahlen = new GostStatistikFachwahlHalbjahr[6];
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GostStatistikFachwahl() {
+		// leer
+	}
+
 }

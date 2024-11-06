@@ -63,13 +63,16 @@ public final class GostBlockungsergebnisBewertungComparator implements Comparato
 		if (kdMax1 > kdMax2)
 			return +1;
 
-		final int[] o1Kursdifferenzen = o1.kursdifferenzHistogramm;
-		final int[] o2Kursdifferenzen = o2.kursdifferenzHistogramm;
-		for (int i = kdMax1; i >= 0; i--) {
-			if (o1Kursdifferenzen[i] < o2Kursdifferenzen[i])
-				return -1;
-			if (o1Kursdifferenzen[i] > o2Kursdifferenzen[i])
-				return +1;
+		// Bewertungskriterium 3: Danach wird nach Häufigkeitsverteilung der Kursdifferenzen entschieden.
+		if ((o1.kursdifferenzHistogramm.length > 0) && (o2.kursdifferenzHistogramm.length > 0)) {
+			final int[] o1Kursdifferenzen = o1.kursdifferenzHistogramm;
+			final int[] o2Kursdifferenzen = o2.kursdifferenzHistogramm;
+			for (int i = kdMax1; i >= 0; i--) {
+				if (o1Kursdifferenzen[i] < o2Kursdifferenzen[i])
+					return -1;
+				if (o1Kursdifferenzen[i] > o2Kursdifferenzen[i])
+					return +1;
+			}
 		}
 
 		// Bewertungskriterium 4: Je weniger Facharten in der selben Schiene sind, desto besser.

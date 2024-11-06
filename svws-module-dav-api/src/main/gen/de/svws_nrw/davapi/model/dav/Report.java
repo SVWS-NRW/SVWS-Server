@@ -5,7 +5,6 @@
 // Generated on: 2015.09.04 at 11:14:25 AM PDT
 //
 
-
 package de.svws_nrw.davapi.model.dav;
 
 import org.w3c.dom.Element;
@@ -32,70 +31,104 @@ import jakarta.xml.bind.annotation.*;
  * &lt;/complexType&gt;
  * </pre>
  *
- *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "")
 @XmlRootElement(name = "report")
 public class Report {
 
-    @XmlAnyElement
-    protected Element any;
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Report() {
+		// leer
+	}
 
-    /**
-     * Gets the value of the any property.
-     *
-     * @return
-     *     possible object is
-     *     {@link Element }
-     *
-     */
-    public Element getAny() {
-        return any;
-    }
+	/** Das {@link Element}-Objekt. */
+	@XmlAnyElement
+	protected Element any;
 
-    /**
-     * Sets the value of the any property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link Element }
-     *
-     */
-    public void setAny(Element value) {
-        this.any = value;
-    }
-
+	/** Das {@link SyncCollection}-Objekt. */
 	@XmlElement(name = "sync-collection")
 	protected SyncCollection syncCollection;
 
+	/** Das {@link CalendarMultiget}-Objekt. */
+	@XmlElement(name = "calendar-multiget", namespace = "urn:ietf:params:xml:ns:caldav")
+	protected CalendarMultiget calendarMultiget;
+
+	/** Das {@link CalendarQuery}-Objekt. */
+	@XmlElement(name = "calendar-query", namespace = "urn:ietf:params:xml:ns:caldav")
+	protected CalendarQuery calendarQuery;
+
+	/**
+	 * Liefert das {@link Element}-Objekt.
+	 *
+	 * @return das {@link Element}-Objekt.
+	 */
+	public Element getAny() {
+		return any;
+	}
+
+	/**
+	 * Setzt das {@link Element}-Objekt.
+	 *
+	 * @param value   das zu setzende {@link Element}-Objekt.
+	 */
+	public void setAny(final Element value) {
+		this.any = value;
+	}
+
+	/**
+	 * Liefert das {@link SyncCollection}-Objekt.
+	 *
+	 * @return das {@link SyncCollection}-Objekt.
+	 */
 	public SyncCollection getSyncCollection() {
 		return syncCollection;
 	}
 
-	public void setSyncCollection(SyncCollection syncCollection) {
+	/**
+	 * Setzt das {@link SyncCollection}-Objekt.
+	 *
+	 * @param syncCollection   das zu setzende {@link SyncCollection}-Objekt.
+	 */
+	public void setSyncCollection(final SyncCollection syncCollection) {
 		this.syncCollection = syncCollection;
 	}
 
-	@XmlElement(name = "calendar-multiget", namespace = "urn:ietf:params:xml:ns:caldav")
-	protected CalendarMultiget calendarMultiget;
-
+	/**
+	 * Liefert das {@link CalendarMultiget}-Objekt.
+	 *
+	 * @return das {@link CalendarMultiget}-Objekt.
+	 */
 	public CalendarMultiget getCalendarMultiget() {
 		return calendarMultiget;
 	}
 
-	public void setCalendarMultiget(CalendarMultiget calendarMultiget) {
+	/**
+	 * Setzt das {@link CalendarMultiget}-Objekt.
+	 *
+	 * @param calendarMultiget   das zu setzende {@link CalendarMultiget}-Objekt.
+	 */
+	public void setCalendarMultiget(final CalendarMultiget calendarMultiget) {
 		this.calendarMultiget = calendarMultiget;
 	}
 
-	@XmlElement(name = "calendar-query", namespace = "urn:ietf:params:xml:ns:caldav")
-	protected CalendarQuery calendarQuery;
-
+	/**
+	 * Liefert das {@link CalendarQuery}-Objekt.
+	 *
+	 * @return das {@link CalendarQuery}-Objekt.
+	 */
 	public CalendarQuery getCalendarQuery() {
 		return calendarQuery;
 	}
 
-	public void setCalendarQuery(CalendarQuery calendarQuery) {
+	/**
+	 * Setzt das {@link CalendarQuery}-Objekt.
+	 *
+	 * @param calendarQuery   das zu setzende {@link CalendarQuery}-Objekt.
+	 */
+	public void setCalendarQuery(final CalendarQuery calendarQuery) {
 		this.calendarQuery = calendarQuery;
 	}
 

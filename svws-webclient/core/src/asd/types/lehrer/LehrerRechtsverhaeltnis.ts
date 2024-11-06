@@ -89,6 +89,20 @@ export class LehrerRechtsverhaeltnis extends JavaEnum<LehrerRechtsverhaeltnis> i
 	}
 
 	/**
+	 * Gibt das Rechtsverhältnis zu dem übergebenen Schlüssel zurück. Bei einem ungültigen Schlüssel
+	 * wird null zurückgegeben,
+	 *
+	 * @param schluessel   der Schlüsselwert
+	 *
+	 * @return das zugehörige Rechtsverhältnis oder null
+	 */
+	public static getBySchluessel(schluessel : string | null) : LehrerRechtsverhaeltnis | null {
+		if (schluessel === null)
+			return null;
+		return LehrerRechtsverhaeltnis.data().getWertBySchluessel(schluessel);
+	}
+
+	/**
 	 * Returns an array with enumeration values.
 	 *
 	 * @returns the array with enumeration values

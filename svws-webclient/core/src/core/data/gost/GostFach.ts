@@ -114,6 +114,9 @@ export class GostFach extends JavaObject {
 	public projektKursLeitfach2Kuerzel : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -190,13 +193,13 @@ export class GostFach extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
-		result += '"kuerzelAnzeige" : ' + ((!obj.kuerzelAnzeige) ? 'null' : JSON.stringify(obj.kuerzelAnzeige)) + ',';
-		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
+		result += '"kuerzelAnzeige" : ' + ((obj.kuerzelAnzeige === null) ? 'null' : JSON.stringify(obj.kuerzelAnzeige)) + ',';
+		result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"istPruefungsordnungsRelevant" : ' + obj.istPruefungsordnungsRelevant.toString() + ',';
 		result += '"istFremdsprache" : ' + obj.istFremdsprache.toString() + ',';
 		result += '"istFremdSpracheNeuEinsetzend" : ' + obj.istFremdSpracheNeuEinsetzend.toString() + ',';
-		result += '"biliSprache" : ' + ((!obj.biliSprache) ? 'null' : JSON.stringify(obj.biliSprache)) + ',';
+		result += '"biliSprache" : ' + ((obj.biliSprache === null) ? 'null' : JSON.stringify(obj.biliSprache)) + ',';
 		result += '"istMoeglichAbiLK" : ' + obj.istMoeglichAbiLK.toString() + ',';
 		result += '"istMoeglichAbiGK" : ' + obj.istMoeglichAbiGK.toString() + ',';
 		result += '"istMoeglichEF1" : ' + obj.istMoeglichEF1.toString() + ',';
@@ -206,10 +209,10 @@ export class GostFach extends JavaObject {
 		result += '"istMoeglichQ21" : ' + obj.istMoeglichQ21.toString() + ',';
 		result += '"istMoeglichQ22" : ' + obj.istMoeglichQ22.toString() + ',';
 		result += '"wochenstundenQualifikationsphase" : ' + obj.wochenstundenQualifikationsphase.toString() + ',';
-		result += '"projektKursLeitfach1ID" : ' + ((!obj.projektKursLeitfach1ID) ? 'null' : obj.projektKursLeitfach1ID.toString()) + ',';
-		result += '"projektKursLeitfach1Kuerzel" : ' + ((!obj.projektKursLeitfach1Kuerzel) ? 'null' : JSON.stringify(obj.projektKursLeitfach1Kuerzel)) + ',';
-		result += '"projektKursLeitfach2ID" : ' + ((!obj.projektKursLeitfach2ID) ? 'null' : obj.projektKursLeitfach2ID.toString()) + ',';
-		result += '"projektKursLeitfach2Kuerzel" : ' + ((!obj.projektKursLeitfach2Kuerzel) ? 'null' : JSON.stringify(obj.projektKursLeitfach2Kuerzel)) + ',';
+		result += '"projektKursLeitfach1ID" : ' + ((obj.projektKursLeitfach1ID === null) ? 'null' : obj.projektKursLeitfach1ID.toString()) + ',';
+		result += '"projektKursLeitfach1Kuerzel" : ' + ((obj.projektKursLeitfach1Kuerzel === null) ? 'null' : JSON.stringify(obj.projektKursLeitfach1Kuerzel)) + ',';
+		result += '"projektKursLeitfach2ID" : ' + ((obj.projektKursLeitfach2ID === null) ? 'null' : obj.projektKursLeitfach2ID.toString()) + ',';
+		result += '"projektKursLeitfach2Kuerzel" : ' + ((obj.projektKursLeitfach2Kuerzel === null) ? 'null' : JSON.stringify(obj.projektKursLeitfach2Kuerzel)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -224,10 +227,10 @@ export class GostFach extends JavaObject {
 			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
 		}
 		if (obj.kuerzelAnzeige !== undefined) {
-			result += '"kuerzelAnzeige" : ' + ((!obj.kuerzelAnzeige) ? 'null' : JSON.stringify(obj.kuerzelAnzeige)) + ',';
+			result += '"kuerzelAnzeige" : ' + ((obj.kuerzelAnzeige === null) ? 'null' : JSON.stringify(obj.kuerzelAnzeige)) + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
+			result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		}
 		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung.toString() + ',';
@@ -242,7 +245,7 @@ export class GostFach extends JavaObject {
 			result += '"istFremdSpracheNeuEinsetzend" : ' + obj.istFremdSpracheNeuEinsetzend.toString() + ',';
 		}
 		if (obj.biliSprache !== undefined) {
-			result += '"biliSprache" : ' + ((!obj.biliSprache) ? 'null' : JSON.stringify(obj.biliSprache)) + ',';
+			result += '"biliSprache" : ' + ((obj.biliSprache === null) ? 'null' : JSON.stringify(obj.biliSprache)) + ',';
 		}
 		if (obj.istMoeglichAbiLK !== undefined) {
 			result += '"istMoeglichAbiLK" : ' + obj.istMoeglichAbiLK.toString() + ',';
@@ -272,16 +275,16 @@ export class GostFach extends JavaObject {
 			result += '"wochenstundenQualifikationsphase" : ' + obj.wochenstundenQualifikationsphase.toString() + ',';
 		}
 		if (obj.projektKursLeitfach1ID !== undefined) {
-			result += '"projektKursLeitfach1ID" : ' + ((!obj.projektKursLeitfach1ID) ? 'null' : obj.projektKursLeitfach1ID.toString()) + ',';
+			result += '"projektKursLeitfach1ID" : ' + ((obj.projektKursLeitfach1ID === null) ? 'null' : obj.projektKursLeitfach1ID.toString()) + ',';
 		}
 		if (obj.projektKursLeitfach1Kuerzel !== undefined) {
-			result += '"projektKursLeitfach1Kuerzel" : ' + ((!obj.projektKursLeitfach1Kuerzel) ? 'null' : JSON.stringify(obj.projektKursLeitfach1Kuerzel)) + ',';
+			result += '"projektKursLeitfach1Kuerzel" : ' + ((obj.projektKursLeitfach1Kuerzel === null) ? 'null' : JSON.stringify(obj.projektKursLeitfach1Kuerzel)) + ',';
 		}
 		if (obj.projektKursLeitfach2ID !== undefined) {
-			result += '"projektKursLeitfach2ID" : ' + ((!obj.projektKursLeitfach2ID) ? 'null' : obj.projektKursLeitfach2ID.toString()) + ',';
+			result += '"projektKursLeitfach2ID" : ' + ((obj.projektKursLeitfach2ID === null) ? 'null' : obj.projektKursLeitfach2ID.toString()) + ',';
 		}
 		if (obj.projektKursLeitfach2Kuerzel !== undefined) {
-			result += '"projektKursLeitfach2Kuerzel" : ' + ((!obj.projektKursLeitfach2Kuerzel) ? 'null' : JSON.stringify(obj.projektKursLeitfach2Kuerzel)) + ',';
+			result += '"projektKursLeitfach2Kuerzel" : ' + ((obj.projektKursLeitfach2Kuerzel === null) ? 'null' : JSON.stringify(obj.projektKursLeitfach2Kuerzel)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

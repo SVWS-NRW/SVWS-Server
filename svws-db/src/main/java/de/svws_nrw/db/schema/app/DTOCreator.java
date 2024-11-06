@@ -38,6 +38,12 @@ public class DTOCreator {
 	/** Ein ArrayList mit allen generierten DTO-Klassen (voll qualifizierte Klassennamen) */
 	private static final ArrayList<String> allClasses = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public DTOCreator() {
+		// leer
+	}
 
 	/**
 	 * Erstellt das Verzeichnis für die DTO-Packages
@@ -257,6 +263,14 @@ public class DTOCreator {
 				+ "" + System.lineSeparator()
 				+ "" + System.lineSeparator()
 				+ "    /**" + System.lineSeparator()
+				+ "     * Leerer privater Konstruktor, da diese Klasse nicht zur Instantiierung vorgesehen ist." + System.lineSeparator()
+				+ "     */" + System.lineSeparator()
+				+ "    private " + dtosClassname + "() {" + System.lineSeparator()
+				+ "        throw new UnsupportedOperationException(\"Instantiation not allowed.\");" + System.lineSeparator()
+				+ "    }" + System.lineSeparator()
+				+ "" + System.lineSeparator()
+				+ "" + System.lineSeparator()
+				+ "    /**" + System.lineSeparator()
 				+ "     * Gibt das Mapping der Datenbank-Tabellennamen zu den zugehörigen Java-DTO-Klassen für die SVWS-DB zurück." + System.lineSeparator()
 				+ "     *" + System.lineSeparator()
 				+ "     * @return eine Hashmap mit dem Mapping" + System.lineSeparator()
@@ -332,7 +346,14 @@ public class DTOCreator {
 				+ " * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden," + System.lineSeparator()
 				+ " * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird." + System.lineSeparator()
 				+ " */" + System.lineSeparator()
-				+ "public class DTOHelper {" + System.lineSeparator()
+				+ "public final class DTOHelper {" + System.lineSeparator()
+				+ "" + System.lineSeparator()
+				+ "    /**" + System.lineSeparator()
+				+ "     * Leerer privater Konstruktor, da diese Klasse nicht zur Instantiierung vorgesehen ist." + System.lineSeparator()
+				+ "     */" + System.lineSeparator()
+				+ "    private DTOHelper() {" + System.lineSeparator()
+				+ "        throw new UnsupportedOperationException(\"Instantiation not allowed.\");" + System.lineSeparator()
+				+ "    }" + System.lineSeparator()
 				+ "" + System.lineSeparator()
 				+ "" + System.lineSeparator()
 				+ "    /**" + System.lineSeparator()

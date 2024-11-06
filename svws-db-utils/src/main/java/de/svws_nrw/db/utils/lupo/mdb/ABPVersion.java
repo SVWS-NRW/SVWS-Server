@@ -21,6 +21,12 @@ public final class ABPVersion {
 	/** Die Version der LuPO-MDB als Datum in der Form yyyyMMdd */
 	public String Version = "20210307";
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ABPVersion() {
+		// leer
+	}
 
 	/**
 	 * Liest alle Einträge der Tabelle "ABP_Version" aus der LuPO-Datei ein.

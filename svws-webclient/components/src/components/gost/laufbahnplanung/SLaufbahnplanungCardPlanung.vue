@@ -210,7 +210,7 @@
 		abiturdatenManager: () => AbiturdatenManager;
 		gostJahrgangsdaten: GostJahrgangsdaten;
 		setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>;
-		gotoKursblockung: (halbjahr: GostHalbjahr) => Promise<void>
+		gotoKursblockung: (halbjahr: GostHalbjahr) => Promise<unknown>
 		modus?: 'normal' | 'manuell' | 'hochschreiben';
 		ignoriereSprachenfolge? : boolean;
 		faecherAnzeigen: 'alle' | 'nur_waehlbare' | 'nur_gewaehlt';

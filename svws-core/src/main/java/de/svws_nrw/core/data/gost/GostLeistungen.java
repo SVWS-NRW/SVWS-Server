@@ -53,4 +53,11 @@ public class GostLeistungen {
 	/** Die einzelnen Fachwahlen des Schülers. */
 	public final @NotNull List<GostLeistungenFachwahl> faecher = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GostLeistungen() {
+		// leer
+	}
+
 }

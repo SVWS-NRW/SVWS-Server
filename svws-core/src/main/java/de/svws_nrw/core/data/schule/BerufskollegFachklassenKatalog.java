@@ -26,4 +26,11 @@ public class BerufskollegFachklassenKatalog {
 	@Schema(description = "die Teilkataloge in Abhängigkeit vom Index der Fachklassen")
 	public @NotNull List<BerufskollegFachklassenKatalogIndex> indizes = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public BerufskollegFachklassenKatalog() {
+		// leer
+	}
+
 }

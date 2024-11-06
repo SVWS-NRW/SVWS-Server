@@ -29,6 +29,9 @@ export class Schuljahresabschnitt extends JavaObject {
 	public idFolgeAbschnitt : number | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -65,8 +68,8 @@ export class Schuljahresabschnitt extends JavaObject {
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"schuljahr" : ' + obj.schuljahr.toString() + ',';
 		result += '"abschnitt" : ' + obj.abschnitt.toString() + ',';
-		result += '"idVorigerAbschnitt" : ' + ((!obj.idVorigerAbschnitt) ? 'null' : obj.idVorigerAbschnitt.toString()) + ',';
-		result += '"idFolgeAbschnitt" : ' + ((!obj.idFolgeAbschnitt) ? 'null' : obj.idFolgeAbschnitt.toString()) + ',';
+		result += '"idVorigerAbschnitt" : ' + ((obj.idVorigerAbschnitt === null) ? 'null' : obj.idVorigerAbschnitt.toString()) + ',';
+		result += '"idFolgeAbschnitt" : ' + ((obj.idFolgeAbschnitt === null) ? 'null' : obj.idFolgeAbschnitt.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -84,10 +87,10 @@ export class Schuljahresabschnitt extends JavaObject {
 			result += '"abschnitt" : ' + obj.abschnitt.toString() + ',';
 		}
 		if (obj.idVorigerAbschnitt !== undefined) {
-			result += '"idVorigerAbschnitt" : ' + ((!obj.idVorigerAbschnitt) ? 'null' : obj.idVorigerAbschnitt.toString()) + ',';
+			result += '"idVorigerAbschnitt" : ' + ((obj.idVorigerAbschnitt === null) ? 'null' : obj.idVorigerAbschnitt.toString()) + ',';
 		}
 		if (obj.idFolgeAbschnitt !== undefined) {
-			result += '"idFolgeAbschnitt" : ' + ((!obj.idFolgeAbschnitt) ? 'null' : obj.idFolgeAbschnitt.toString()) + ',';
+			result += '"idFolgeAbschnitt" : ' + ((obj.idFolgeAbschnitt === null) ? 'null' : obj.idFolgeAbschnitt.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

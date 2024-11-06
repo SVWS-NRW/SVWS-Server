@@ -627,37 +627,67 @@ public class GostBlockungsergebnisManager {
 	}
 
 
+	/**
+	 * Wichtig: Die Methode muss auf gelöschte und hinzugefügt Schienen reagieren
+	 * und die eigene Datenstruktur anpassen.
+	 */
 	private void update_0_schienenID_to_schiene_schienenNR_to_schiene() {
 		_schienenID_to_schiene = new HashMap<>();
 		_schienenNR_to_schiene = new HashMap<>();
+
+		// Lösche alle E-Schienen, die es im Elternteil nicht mehr gibt.
+		final List<GostBlockungsergebnisSchiene> listZuLoeschen = new ArrayList<>();
+		for (final @NotNull GostBlockungsergebnisSchiene eSchiene : _ergebnis.schienen)
+			if (!_parent.schieneGetExistiert(eSchiene.id)) {
+				listZuLoeschen.add(eSchiene);
+				if (!eSchiene.kurse.isEmpty())
+					_fehlermeldungen.add("Schiene ID=" + eSchiene.id + " wird gelöscht, obwohl "
+							+ eSchiene.kurse.size() + " Kurse in der Schiene enthalten sind!");
+			}
+		_ergebnis.schienen.removeAll(listZuLoeschen);
+
+		// Erzeuge für jede E-Schiene ein Mapping
 		for (final @NotNull GostBlockungsergebnisSchiene eSchiene : _ergebnis.schienen) {
 			_schienenID_to_schiene.put(eSchiene.id, eSchiene);
 			final int nr = _parent.schieneGet(eSchiene.id).nummer;
 			_schienenNR_to_schiene.put(nr, eSchiene);
 		}
-		for (final @NotNull GostBlockungSchiene gSchiene : _parent.daten().schienen) {
+
+		// Erzeuge fehlende E-Schienen, die nur das Elternteil derzeit hat.
+		for (final @NotNull GostBlockungSchiene gSchiene : _parent.daten().schienen)
 			if (!_schienenID_to_schiene.containsKey(gSchiene.id)) {
 				final @NotNull GostBlockungsergebnisSchiene eSchiene = DTOUtils.newGostBlockungsergebnisSchiene(gSchiene.id);
 				_schienenID_to_schiene.put(gSchiene.id, eSchiene);
 				_schienenNR_to_schiene.put(gSchiene.nummer, eSchiene);
 				_ergebnis.schienen.add(eSchiene);
 			}
-		}
 	}
 
+	/**
+	 * Um Bugs zu verhindern, muss die DTO-Datenstruktor hier korrigiert werden,
+	 * denn Multi-Schienen-Kurse existieren in der jeweiligen Schiene als Kopie.
+	 * Alle Kopien müssen durch das selbe Kurs-Objekt ersetzt werden.
+	 */
 	private void update_0_kursID_to_kurs() {
 		_kursID_to_kurs = new HashMap<>();
 		for (final @NotNull GostBlockungsergebnisSchiene eSchiene : _ergebnis.schienen)
-			for (final @NotNull GostBlockungsergebnisKurs eKurs : eSchiene.kurse)
-				_kursID_to_kurs.put(eKurs.id, eKurs);
+			for (int i = 0; i < eSchiene.kurse.size(); i++) {
+				final @NotNull GostBlockungsergebnisKurs eKurs = eSchiene.kurse.get(i);
+				final GostBlockungsergebnisKurs eKursAlt = _kursID_to_kurs.get(eKurs.id);
+				if (eKursAlt != null) {
+					eSchiene.kurse.set(i, eKursAlt); // Kopie durch Original ersetzen!
+				} else {
+					_kursID_to_kurs.put(eKurs.id, eKurs);
+				}
+			}
 
-		for (final @NotNull GostBlockungKurs gKurs : _parent.daten().kurse) {
+		// Kurse deren Anzahl noch 0 ist, müssen künstlich erzeugt werden.
+		for (final @NotNull GostBlockungKurs gKurs : _parent.daten().kurse)
 			if (!_kursID_to_kurs.containsKey(gKurs.id)) {
 				final @NotNull GostBlockungsergebnisKurs eKurs =
 						DTOUtils.newGostBlockungsergebnisKurs(gKurs.id, gKurs.fach_id, gKurs.kursart, gKurs.anzahlSchienen);
 				_kursID_to_kurs.put(gKurs.id, eKurs);
 			}
-		}
 	}
 
 	private void update_0_schuelerID_to_schueler() {
@@ -755,14 +785,14 @@ public class GostBlockungsergebnisManager {
 	}
 
 	private void update_1_fachartID_to_kurseList() {
-		// Leeren und hinzufügen (ermittelt über alle Kurse).
+		// Erzeuge pro Fachart eine Liste und fülle sie mit den E-Kursen.
 		_fachartID_to_kurseList = new HashMap<>();
 		for (final @NotNull GostBlockungsergebnisKurs eKurs : _kursID_to_kurs.values()) {
 			final long fachartID = GostKursart.getFachartID(eKurs.fachID, eKurs.kursart);
 			MapUtils.getOrCreateArrayList(_fachartID_to_kurseList, fachartID).add(eKurs);
 		}
 
-		// Ergänze mit Fachwahlen zu denen es keinen Kurs gibt.
+		// Ergänze Facharten zu deinen es keinen Kurs gibt, aber Fachwahlen.
 		for (final @NotNull GostFachwahl gFachwahl : _parent.daten().fachwahlen)
 			MapUtils.getOrCreateArrayList(_fachartID_to_kurseList, GostKursart.getFachartIDByFachwahl(gFachwahl));
 
@@ -1012,7 +1042,7 @@ public class GostBlockungsergebnisManager {
 	private void stateRegelvalidierung6_kursart_allein_in_schiene_von_bis(final @NotNull GostBlockungRegel r) {
 		for (final GostBlockungsergebnisKurs eKurs : _kursID_to_kurs.values())
 			for (final @NotNull Long eSchieneID : eKurs.schienen) {
-				final int nr = getSchieneG(eSchieneID).nummer;
+				final int nr = getSchieneG(eSchieneID).nummer; // Hier stürzt es ab?
 				final int kursart = r.parameter.get(0).intValue();
 				final int schienenNrVon = r.parameter.get(1).intValue();
 				final int schienenNrBis = r.parameter.get(2).intValue();
@@ -1287,13 +1317,7 @@ public class GostBlockungsergebnisManager {
 		final @NotNull GostBlockungsergebnisKurs kurs = getKursE(idKurs);
 		final @NotNull GostBlockungsergebnisSchiene schiene = getSchieneE(idSchiene);
 		schiene.kurse.remove(kurs);
-
-		// Muss so entfernt werden, da der transpilierte Code nicht unterscheiden kann, ob Long-Objekt oder Index.
-		for (int i = kurs.schienen.size() - 1; i >= 0; i--)
-			if (kurs.schienen.get(i) == schiene.id) {
-				kurs.schienen.remove(i);
-				return;
-			}
+		kurs.schienen.remove(idSchiene);
 	}
 
 	// #########################################################################
@@ -1307,6 +1331,15 @@ public class GostBlockungsergebnisManager {
 	 */
 	public int getAnzahlSchuelerExterne() {
 		return ListUtils.getCountFiltered(_parent.daten().schueler, (final @NotNull Schueler schueler) -> getOfSchuelerHatStatusExtern(schueler.id));
+	}
+
+	/**
+	 * Liefert die Anzahl an E-Schienen.
+	 *
+	 * @return die Anzahl an E-Schienen.
+	 */
+	public int getAnzahlSchienen() {
+		return _ergebnis.schienen.size();
 	}
 
 	/**
@@ -5879,7 +5912,7 @@ public class GostBlockungsergebnisManager {
 		for (final @NotNull GostBlockungsergebnisKursSchienenZuordnung z : update.listEntfernen)
 			stateKursSchieneEntfernenOhneRegelvalidierung(z.idKurs, z.idSchiene);
 
-		// An dieser Stelle darf kein "stateRevalidateEverything", da sonst SuS aus den Kurses entfernt werden.
+		// An dieser Stelle darf kein "stateRevalidateEverything", da sonst SuS aus den Kursen entfernt werden.
 
 		// Kurse in Schienen setzen.
 		for (final @NotNull GostBlockungsergebnisKursSchienenZuordnung z : update.listHinzuzufuegen)
@@ -5910,16 +5943,27 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert das zur ID zugehörige {@link GostBlockungsergebnisSchiene}-Objekt.<br>
-	 * Wirft eine Exception, wenn der ID keine Schiene zugeordnet ist.
+	 * Liefert das zur ID zugehörige {@link GostBlockungsergebnisSchiene}-Objekt.
 	 *
 	 * @param idSchiene  Die Datenbank-ID der Schiene.
 	 *
 	 * @return das zur ID zugehörige {@link GostBlockungsergebnisSchiene}-Objekt.
-	 * @throws DeveloperNotificationException falls die ID unbekannt ist.
+	 * @throws DeveloperNotificationException falls die Schiene nicht existiert.
 	 */
 	private @NotNull GostBlockungsergebnisSchiene getSchieneE(final long idSchiene) throws DeveloperNotificationException {
 		return DeveloperNotificationException.ifMapGetIsNull(_schienenID_to_schiene, idSchiene);
+	}
+
+	/**
+	 * Liefert TRUE, falls die Schiene keine Kurse enthält.
+	 *
+	 * @param idSchiene  Die Datenbank-ID der Schiene.
+	 *
+	 * @return TRUE, falls die Schiene keine Kurse enthält.
+	 * @throws DeveloperNotificationException falls die Schiene nicht existiert.
+	 */
+	public boolean getOfSchieneIstLeer(final long idSchiene) throws DeveloperNotificationException {
+		return getSchieneE(idSchiene).kurse.isEmpty();
 	}
 
 	/**

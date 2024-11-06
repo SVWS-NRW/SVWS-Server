@@ -10,7 +10,7 @@ import io.restassured.path.xml.XmlPath;
  * Diese Klasse basiert auf dem {@link XmlPath} und überschreibt
  * {@link XmlPath#get(String)}, so dass immer vom zuletzt betrachteten
  * XML-Element ausgegangen wird. Dazu bietet sie die {@link #up()} und
- * {@link #up(int)} Methoden, um den im XML-Tree nach oben zu wandern.
+ * {@link #up()} Methoden, um den im XML-Tree nach oben zu wandern.
  *
  * Es werden Methoden aus XmlPath zusätzlich als *AndUp angeboten, um auf ein
  * Element zu peeken.

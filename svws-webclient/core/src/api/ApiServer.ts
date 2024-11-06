@@ -5772,7 +5772,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode createDefaultGostKlausurenVorgaben für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/vorgaben/createDefault/halbjahr/{halbjahr : -?\d+}/quartal/{quartal : -?\d+}
+	 * Implementierung der GET-Methode createGostKlausurenDefaultVorgaben für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/vorgaben/createDefault/halbjahr/{halbjahr : -?\d+}/quartal/{quartal : -?\d+}
 	 *
 	 * Legt die Default-Klausurvorgaben im Vorlagen-Jahrgang an und gibt sie zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Gost-Klausurvorgabe besitzt.
 	 *
@@ -5790,7 +5790,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Liste der neuen Klausurvorgaben.
 	 */
-	public async createDefaultGostKlausurenVorgaben(schema : string, halbjahr : number, quartal : number) : Promise<List<GostKlausurvorgabe>> {
+	public async createGostKlausurenDefaultVorgaben(schema : string, halbjahr : number, quartal : number) : Promise<List<GostKlausurvorgabe>> {
 		const path = "/db/{schema}/gost/klausuren/vorgaben/createDefault/halbjahr/{halbjahr : -?\\d+}/quartal/{quartal : -?\\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString())
@@ -14591,6 +14591,26 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getServerModus() : Promise<string | null> {
 		const path = "/status/mode";
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return JSON.parse(text).toString();
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getSchildMinVersion für den Zugriff auf die URL https://{hostname}/status/schild/minversion
+	 *
+	 * Gibt die erste kompatible Schild-Version zurück.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die erste kompatible Schild-Version
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: String
+	 *
+	 * @returns Die erste kompatible Schild-Version
+	 */
+	public async getSchildMinVersion() : Promise<string | null> {
+		const path = "/status/schild/minversion";
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return JSON.parse(text).toString();

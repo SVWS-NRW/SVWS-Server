@@ -44,7 +44,7 @@ export class RouteDataSchuelerSprachen extends RouteData<RouteStateSchuelerSprac
 	public async auswahlSchueler(auswahl: SchuelerListeEintrag | null) {
 		if (auswahl === this._state.value.auswahl)
 			return;
-		if ((auswahl === null) || (auswahl === undefined)) {
+		if (auswahl === null) {
 			this.setPatchedDefaultState({});
 			return;
 		}

@@ -50,7 +50,7 @@ export class RouteDataKatalogPausenzeiten extends RouteData<RouteStateKatalogPau
 
 	setEintrag = async (auswahl: StundenplanPausenzeit | undefined) => this.setPatchedState({ auswahl });
 
-	gotoEintrag = async (eintrag: StundenplanPausenzeit) => await RouteManager.doRoute(routeKatalogPausenzeiten.getRoute(eintrag.id));
+	gotoEintrag = async (eintrag: StundenplanPausenzeit) => await RouteManager.doRoute(routeKatalogPausenzeiten.getRoute({ id: eintrag.id }));
 
 	addPausenzeiten = async (eintraege: Iterable<Partial<StundenplanPausenzeit>>) => {
 		const list = new ArrayList<Partial<StundenplanPausenzeit>>();

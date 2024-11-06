@@ -619,47 +619,65 @@ export class GostKlausurplanManager extends JavaObject {
 	}
 
 	/**
-	 * Prüft, ob zu den angegebenen Parametern bereits ein StundenplanManager geladen wurde.
+	 * Prüft, ob zu dem angegebenen Schuljahresabschnitt bereits die StundenplanManager aus der Datenbank geladen wurden.
 	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
-	 * @return true, wenn ein StundenplanManager gelaen wurde, sonst false
+	 * @return true, wenn die StundenplanManager bereits geladen wurde, sonst false
 	 */
 	public stundenplanManagerGeladenByAbschnitt(idSchuljahresabschnitt : number) : boolean {
 		return this._stundenplanmanagermenge_by_schuljahresabschnitt.containsKey(idSchuljahresabschnitt);
 	}
 
 	/**
-	 * Prüft, ob zu den angegebenen Parametern bereits ein StundenplanManager geladen wurde.
+	 * Prüft, ob zu den angegebenen Parametern ein StundenplanManager existiert. Falls noch keine StundenplanManager für den angegebenen Schuljahresabschnitt geladen wurden, wird eine {@link DeveloperNotificationException} geworfen
 	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
-	 * @return true, wenn ein StundenplanManager gelaen wurde, sonst false
+	 * @return true, wenn ein StundenplanManager existiert, sonst false
 	 */
 	public stundenplanManagerExistsByAbschnitt(idSchuljahresabschnitt : number) : boolean {
+		if (!this.stundenplanManagerGeladenByAbschnitt(idSchuljahresabschnitt))
+			throw new DeveloperNotificationException("StundenplanManager für Schuljahresabschnitt " + idSchuljahresabschnitt + " wurde nicht geladen.")
 		const liste : List<StundenplanManager> | null = this._stundenplanmanagermenge_by_schuljahresabschnitt.get(idSchuljahresabschnitt);
 		return liste !== null && !liste.isEmpty();
 	}
 
 	/**
-	 * Prüft, ob zu den angegebenen Parametern bereits ein StundenplanManager geladen wurde.
+	 * Prüft, ob zu den angegebenen Parametern ein StundenplanManager existiert.
+	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
+	 * @return true, wenn ein StundenplanManager existiert, sonst false
+	 */
+	public stundenplanManagerGeladenAndExistsByAbschnitt(idSchuljahresabschnitt : number) : boolean {
+		if (!this.stundenplanManagerGeladenByAbschnitt(idSchuljahresabschnitt))
+			return false;
+		const liste : List<StundenplanManager> | null = this._stundenplanmanagermenge_by_schuljahresabschnitt.get(idSchuljahresabschnitt);
+		return liste !== null && !liste.isEmpty();
+	}
+
+	/**
+	 * Prüft, ob zu den angegebenen Parametern ein StundenplanManager existiert. Falls noch keine StundenplanManager für den angegebenen Schuljahresabschnitt geladen wurden, wird eine {@link DeveloperNotificationException} geworfen
 	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
 	 * @param jahr das Jahr
 	 * @param kalenderwoche die Kalenderwoche
-	 * @return true, wenn ein StundenplanManager gelaen wurde, sonst false
+	 * @return true, wenn ein StundenplanManager existiert, sonst false
 	 */
 	public stundenplanManagerExistsByAbschnittAndKW(idSchuljahresabschnitt : number, jahr : number, kalenderwoche : number) : boolean {
+		if (!this.stundenplanManagerGeladenByAbschnitt(idSchuljahresabschnitt))
+			throw new DeveloperNotificationException("StundenplanManager für Schuljahresabschnitt " + idSchuljahresabschnitt + " wurde nicht geladen.")
 		return this._stundenplanmanager_by_schuljahresabschnitt_and_kw.contains(idSchuljahresabschnitt, jahr, kalenderwoche);
 	}
 
 	/**
-	 * Prüft, ob zu den angegebenen Parametern bereits ein StundenplanManager geladen wurde.
+	 * Prüft, ob zu den angegebenen Parametern ein StundenplanManager existiert. Falls noch keine StundenplanManager für den angegebenen Schuljahresabschnitt geladen wurden, wird eine {@link DeveloperNotificationException} geworfen
 	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
 	 * @param datum das Datum
-	 * @return true, wenn ein StundenplanManager gelaen wurde, sonst false
+	 * @return true, wenn ein StundenplanManager existiert, sonst false
 	 */
 	public stundenplanManagerExistsByAbschnittAndDatum(idSchuljahresabschnitt : number, datum : string) : boolean {
+		if (!this.stundenplanManagerGeladenByAbschnitt(idSchuljahresabschnitt))
+			throw new DeveloperNotificationException("StundenplanManager für Schuljahresabschnitt " + idSchuljahresabschnitt + " wurde nicht geladen.")
 		return this._stundenplanmanager_by_schuljahresabschnitt_and_datum.contains(idSchuljahresabschnitt, datum);
 	}
 
 	/**
-	 * Setzt den {@link StundenplanManager}
+	 * Setzt die {@link StundenplanManager} für den angegebenen Schuljahresabschnitt
 	 *
 	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
 	 * @param stundenplanManagerList die Liste der {@link StundenplanManager}
@@ -697,8 +715,8 @@ export class GostKlausurplanManager extends JavaObject {
 	 */
 	public stundenplanManagerAddByAbschnittAndDatum(idSchuljahresabschnitt : number, datum : string, stundenplanManager : StundenplanManager) : void {
 		this._stundenplanmanager_by_schuljahresabschnitt_and_datum.put(idSchuljahresabschnitt, datum, stundenplanManager);
-		let kwjahr : number = DateUtils.gibKwJahrDesDatumsISO8601(datum);
-		let kw : number = DateUtils.gibKwDesDatumsISO8601(datum);
+		const kwjahr : number = DateUtils.gibKwJahrDesDatumsISO8601(datum);
+		const kw : number = DateUtils.gibKwDesDatumsISO8601(datum);
 		if (this._stundenplanmanager_by_schuljahresabschnitt_and_kw.contains(idSchuljahresabschnitt, kwjahr, kw)) {
 			const managerInMap : StundenplanManager | null = this._stundenplanmanager_by_schuljahresabschnitt_and_kw.getOrNull(idSchuljahresabschnitt, kwjahr, kw);
 			if ((managerInMap !== null) && (managerInMap.stundenplanGetID() !== stundenplanManager.stundenplanGetID()))
@@ -716,6 +734,8 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @return den {@link StundenplanManager}, zu den übergebenen Parametern, sonst null.
 	 */
 	public stundenplanManagerGetByAbschnittAndDatumOrNull(idSchuljahresabschnitt : number, datum : string) : StundenplanManager | null {
+		if (!this.stundenplanManagerGeladenByAbschnitt(idSchuljahresabschnitt))
+			throw new DeveloperNotificationException("StundenplanManager für Schuljahresabschnitt " + idSchuljahresabschnitt + " wurde nicht geladen.")
 		return this._stundenplanmanager_by_schuljahresabschnitt_and_datum.getOrNull(idSchuljahresabschnitt, datum);
 	}
 
@@ -778,9 +798,11 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @return eine Liste mit allen {@link StundenplanKalenderwochenzuordnung}-Objekten, die zu dem übergebenen Schuljahresabschnitt gehören.
 	 */
 	public stundenplanManagerKalenderwochenzuordnungenGetMengeByAbschnitt(idSchuljahresabschnitt : number) : List<StundenplanKalenderwochenzuordnung> {
+		if (!this.stundenplanManagerGeladenByAbschnitt(idSchuljahresabschnitt))
+			throw new DeveloperNotificationException("StundenplanManager für Schuljahresabschnitt " + idSchuljahresabschnitt + " wurde nicht geladen.")
 		const kwzAll : List<StundenplanKalenderwochenzuordnung> = new ArrayList<StundenplanKalenderwochenzuordnung>();
-		for (let manager of DeveloperNotificationException.ifNull(JavaString.format("_stundenplanmanagermenge_by_schuljahresabschnitt null für Abschnitt %d", idSchuljahresabschnitt), this._stundenplanmanagermenge_by_schuljahresabschnitt.get(idSchuljahresabschnitt))) {
-			kwzAll.addAll(manager.kalenderwochenzuordnungGetMengeAsList());
+		for (const manager of DeveloperNotificationException.ifNull(JavaString.format("_stundenplanmanagermenge_by_schuljahresabschnitt null für Abschnitt %d", idSchuljahresabschnitt), this._stundenplanmanagermenge_by_schuljahresabschnitt.get(idSchuljahresabschnitt))) {
+			kwzAll.addAll(manager.kalenderwochenzuordnungGetMengeGueltigeAsList());
 		}
 		return kwzAll;
 	}
@@ -821,6 +843,8 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @return das dem Jahr und der Kalenderwoche zugeordnete {@link StundenplanKalenderwochenzuordnung}-Objekt der Auswahl-Menge oder das nächstmöglichste.
 	 */
 	public stundenplanManagerGetByAbschnittAndJahrAndKWOrClosest(idSchuljahresabschnitt : number, jahr : number, kalenderwoche : number) : StundenplanManager {
+		if (!this.stundenplanManagerGeladenByAbschnitt(idSchuljahresabschnitt))
+			throw new DeveloperNotificationException("StundenplanManager für Schuljahresabschnitt " + idSchuljahresabschnitt + " wurde nicht geladen.")
 		const manager : StundenplanManager | null = this._stundenplanmanager_by_schuljahresabschnitt_and_kw.getOrNull(idSchuljahresabschnitt, jahr, kalenderwoche);
 		if (manager !== null)
 			return manager;
@@ -851,7 +875,7 @@ export class GostKlausurplanManager extends JavaObject {
 		const idSchuljahresabschnitt : number | null = this.getSchuljahresabschnittIdByTerminOrNull(termin);
 		if (idSchuljahresabschnitt === null)
 			return this.stundenplanManagerGetByDatumLinearSearch(DeveloperNotificationException.ifNull(JavaString.format("Kein Datum zum Termin %d gefunden.", termin.id), termin.datum));
-		return this.stundenplanManagerGetByAbschnittAndDatumOrException(idSchuljahresabschnitt!, DeveloperNotificationException.ifNull(JavaString.format("Kein Datum zum Termin %d gefunden.", termin.id), termin.datum));
+		return this.stundenplanManagerGetByAbschnittAndDatumOrException(idSchuljahresabschnitt, DeveloperNotificationException.ifNull(JavaString.format("Kein Datum zum Termin %d gefunden.", termin.id), termin.datum));
 	}
 
 	private stundenplanManagerGetByDatumLinearSearch(datum : string) : StundenplanManager {
@@ -919,7 +943,7 @@ export class GostKlausurplanManager extends JavaObject {
 	public getMissingHjKlausurdata(abiturjahr : number, halbjahr : number) : List<GostKlausurenCollectionHjData> {
 		const jahrgaenge : List<GostKlausurenCollectionHjData> = new ArrayList<GostKlausurenCollectionHjData>();
 		const abijahreAngefordert : JavaSet<number> = new HashSet<number>();
-		let hjStart : number = (halbjahr % 2 === 0) ? halbjahr : halbjahr - 1;
+		const hjStart : number = (halbjahr % 2 === 0) ? halbjahr : halbjahr - 1;
 		this.addSchuljahresPaare(jahrgaenge, abiturjahr, hjStart, abijahreAngefordert);
 		switch (halbjahr) {
 			case 0:
@@ -2910,7 +2934,7 @@ export class GostKlausurplanManager extends JavaObject {
 		let minStart : number = 1440;
 		const skts : List<GostSchuelerklausurTermin> = this.schuelerklausurterminAktuellGetMengeByTermin(termin);
 		if (skts.isEmpty())
-			return termin.startzeit!;
+			return DeveloperNotificationException.ifNull("Die Startzeit des Termins darf an dieser Stelle nicht null sein.", termin.startzeit);
 		for (const skt of skts) {
 			if (!includeNachschreiber && skt.folgeNr > 0)
 				continue;
@@ -3374,7 +3398,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 */
 	public terminOrExceptionBySchuelerklausurTermin(termin : GostSchuelerklausurTermin) : GostKlausurtermin {
 		if (termin.folgeNr > 0) {
-			return this.terminGetByIdOrException(DeveloperNotificationException.ifNull(JavaString.format("idTermin von Termin %d", termin.id), termin.idTermin)!);
+			return this.terminGetByIdOrException(DeveloperNotificationException.ifNull(JavaString.format("idTermin von Termin %d", termin.id), termin.idTermin));
 		}
 		return this.terminOrExceptionByKursklausur(this.kursklausurBySchuelerklausurTermin(termin));
 	}
@@ -3531,13 +3555,13 @@ export class GostKlausurplanManager extends JavaObject {
 	 */
 	public startzeitBySchuelerklausurterminOrException(skt : GostSchuelerklausurTermin) : number {
 		if (skt.startzeit !== null)
-			return skt.startzeit!;
+			return skt.startzeit;
 		else
 			if (skt.folgeNr === 0)
 				return this.startzeitByKursklausurOrException(this.kursklausurBySchuelerklausurTermin(skt));
 			else {
 				const idTermin : number = DeveloperNotificationException.ifNull(JavaString.format("idTermin von SchülerklausurTermin %d", skt.id), skt.idTermin).valueOf();
-				return DeveloperNotificationException.ifNull(JavaString.format("startzeit von Termin %d", idTermin), this.terminGetByIdOrException(idTermin).startzeit)!;
+				return DeveloperNotificationException.ifNull(JavaString.format("startzeit von Termin %d", idTermin), this.terminGetByIdOrException(idTermin).startzeit);
 			}
 	}
 
@@ -3568,7 +3592,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @return die Startzeit der {@link GostKursklausur}
 	 */
 	public startzeitByKursklausurOrException(klausur : GostKursklausur) : number {
-		return (klausur.startzeit !== null) ? klausur.startzeit : DeveloperNotificationException.ifNull(JavaString.format("Startzeit des Termins %d", this.terminOrExceptionByKursklausur(klausur).id), this.terminOrExceptionByKursklausur(klausur).startzeit)!;
+		return (klausur.startzeit !== null) ? klausur.startzeit : DeveloperNotificationException.ifNull(JavaString.format("Startzeit des Termins %d", this.terminOrExceptionByKursklausur(klausur).id), this.terminOrExceptionByKursklausur(klausur).startzeit);
 	}
 
 	/**
@@ -3969,9 +3993,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 */
 	public kursdatenByKursklausur(k : GostKursklausur) : KursDaten {
 		const kurs : KursDaten | null = this.getKursManager().get(k.idKurs);
-		if (kurs === null)
-			throw new DeveloperNotificationException("Kurs mit ID " + k.idKurs + " nicht in KursManager vorhanden.")
-		return kurs;
+		return DeveloperNotificationException.ifNull("Kurs mit ID " + k.idKurs + " nicht in KursManager vorhanden.", kurs);
 	}
 
 	/**
@@ -3983,10 +4005,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 */
 	public fachByKursklausur(k : GostKursklausur) : GostFach {
 		const vorgabe : GostKlausurvorgabe | null = this.vorgabeByKursklausur(k);
-		const fach : GostFach | null = this.getFaecherManager(vorgabe.abiJahrgang).get(vorgabe.idFach);
-		if (fach === null)
-			throw new DeveloperNotificationException("Fach mit ID " + this.vorgabeByKursklausur(k).idFach + " nicht in GostFaecherManager vorhanden.")
-		return fach;
+		return DeveloperNotificationException.ifNull("Fach mit ID " + this.vorgabeByKursklausur(k).idFach + " nicht in GostFaecherManager vorhanden.", this.getFaecherManager(vorgabe.abiJahrgang).get(vorgabe.idFach));
 	}
 
 	/**
@@ -4126,9 +4145,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @return das Datum des Vorgängertermins zum übergebenen {@link GostSchuelerklausurTermin}
 	 */
 	public datumSchuelerklausurVorgaenger(skt : GostSchuelerklausurTermin) : string | null {
-		const vorgaengerSkt : GostSchuelerklausurTermin | null = this.schuelerklausurterminVorgaengerBySchuelerklausurtermin(skt);
-		if (vorgaengerSkt === null)
-			throw new DeveloperNotificationException("Kein Vorgängertermin zu Schülerklausurtermin gefunden.")
+		const vorgaengerSkt : GostSchuelerklausurTermin = DeveloperNotificationException.ifNull("Kein Vorgängertermin zu Schülerklausurtermin gefunden.", this.schuelerklausurterminVorgaengerBySchuelerklausurtermin(skt));
 		const termin : GostKlausurtermin | null = this.terminOrNullBySchuelerklausurTermin(vorgaengerSkt);
 		return (termin === null) ? null : termin.datum;
 	}
@@ -4690,7 +4707,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @return der zugehörige {@link StundenplanRaum}
 	 */
 	public stundenplanraumGetByKlausurraum(raum : GostKlausurraum) : StundenplanRaum {
-		return this.stundenplanManagerGetByTerminOrException(this.terminGetByIdOrException(raum.idTermin)).raumGetByIdOrException(DeveloperNotificationException.ifNull("StundenplanRaum darf nicht NULL sein", raum.idStundenplanRaum)!);
+		return this.stundenplanManagerGetByTerminOrException(this.terminGetByIdOrException(raum.idTermin)).raumGetByIdOrException(DeveloperNotificationException.ifNull("StundenplanRaum darf nicht NULL sein", raum.idStundenplanRaum));
 	}
 
 	/**
@@ -4964,7 +4981,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @return die Id des {@link Schuljahresabschnitt}s zum übergebenen Abiturjahrgang und Halbjahr. Falls kein {@link Schuljahresabschnitt} gefunden wird, wird eine <code>DeveloperNotificationException</code> geworfen.
 	 */
 	public getSchuljahresabschnittIdByAbijahrAndHalbjahrOrException(abiJahrgang : number, halbjahr : GostHalbjahr) : number {
-		return this._schuljahresabschnitt_by_abijahr_and_halbjahr.getOrException(abiJahrgang, halbjahr.id)!;
+		return this._schuljahresabschnitt_by_abijahr_and_halbjahr.getOrException(abiJahrgang, halbjahr.id);
 	}
 
 	/**

@@ -15,6 +15,13 @@ public final class DavRessourceCollectionTypConverter extends DBAttributeConvert
 	/** Die Instanz des Konverters */
 	public static final DavRessourceCollectionTypConverter instance = new DavRessourceCollectionTypConverter();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public DavRessourceCollectionTypConverter() {
+		// leer
+	}
+
 	@Override
 	public Integer convertToDatabaseColumn(final DavRessourceCollectionTyp typ) {
 		return typ.id;

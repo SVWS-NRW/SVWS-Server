@@ -112,8 +112,9 @@
 	}
 
 	.tab-bar-vertical--content {
-		@apply bg-light rounded-md p-[2px];
-		@apply flex flex-col items-center;
+		@apply bg-ui-neutral;
+		@apply rounded-md p-[4px];
+		@apply flex flex-col;
 		@apply overflow-y-scroll;
 		@apply relative;
 		@apply gap-[2px];
@@ -128,7 +129,7 @@
 		}
 
 		.svws-ui-tab-button.svws-active {
-			@apply overflow-hidden bg-white;
+			@apply overflow-hidden bg-ui;
 
 			&:after {
 				@apply hidden;
@@ -169,83 +170,75 @@
 		@apply pointer-events-auto;
 		@apply py-3.5;
 		@apply rounded-full;
-		@apply text-black;
+		@apply text-ui;
 	}
 
 	.tab-bar-vertical--scroll-button:focus {
-		@apply outline-none ring ring-inset ring-primary ring-opacity-75;
+		@apply outline-none ring ring-inset ring-ui;
 	}
 
 	.tab-bar-vertical--button {
-		@apply inline-flex items-center justify-center;
-		@apply py-1 px-2;
+		@apply text-ui;
+		@apply inline-flex items-center;
+		@apply py-1.5 px-2;
 		@apply rounded;
 		@apply select-none;
-		@apply text-sm font-bold text-black dark:text-white;
+		@apply text-sm font-bold;
 		@apply whitespace-nowrap;
 		@apply relative border border-transparent;
 
-		.svws-ui-tabs--vertical & {
-			@apply py-1.5 px-2.5;
-		}
-
 		.svws-ui-spinner {
 			@apply w-4 h-4 absolute top-1.5 right-0.5;
-		}
-
-		&:hover {
-			@apply bg-black/10 dark:bg-white/10;
-			&:active {
-				@apply bg-black/20 dark:bg-white/20;
-			}
-		}
-
-		&:focus-visible {
-			@apply ring-2 ring-svws/50;
-			.page--statistik & {
-				@apply ring-violet-500/50;
-			}
 		}
 
 		&:focus {
 			@apply outline-none;
 		}
 
-		&.svws-active,
-		&.svws-active:hover {
-			@apply outline-none text-svws;
-			.svws-ui-tabs--vertical & {
-				@apply bg-white dark:bg-black shadow;
-			}
-			.svws-ui-tabs &,
-			.svws-ui-secondary-tabs & {
-				&:before {
-					@apply absolute left-2 right-2 -bottom-2 h-[2px] bg-svws;
-					content: '';
-					.page--statistik & {
-						@apply bg-violet-500;
-					}
-				}
-			}
-			.svws-ui-secondary-tabs & {
-				@apply bg-white dark:bg-black;
-				&:before {
-					@apply -bottom-1;
-				}
-			}
+		&:hover,
+		&:focus-visible {
+			@apply bg-ui-neutral-hover text-ui-onneutral-hover;
+
 			.page--statistik & {
-				@apply text-violet-500;
+				@apply text-ui-statistic;
+			}
+
+		}
+
+		&:active {
+			@apply bg-ui-selected text-ui-onselected;
+
+			.page--statistik & {
+				@apply bg-ui-statistic-weak text-ui-statistic;
 			}
 		}
 
-		&.svws-active:hover {
-			.svws-ui-tabs &,
-			.svws-ui-secondary-tabs & {
-				@apply bg-svws/5 dark:bg-svws/10;
+		&:focus-visible {
+			@apply ring ring-ui;
+			@apply z-10;
 
-				.page--statistik & {
-					@apply bg-violet-500/5 dark:bg-violet-500/10;
+			.page--statistik & {
+				@apply ring-ui-statistic;
+			}
+		}
+
+		&.svws-active,
+		&.svws-active:hover {
+			@apply text-ui-onselected bg-ui-selected;
+
+			.svws-ui-tabs--vertical & {
+				&:before {
+					@apply absolute -left-[5px] -top-px -bottom-px w-[2px] border-r-2;
+					content: '';
+
+					.page--statistik & {
+						@apply bg-ui-statistic-weak text-ui-statistic;
+					}
 				}
+			}
+
+			.page--statistik & {
+				@apply text-ui-statistic;
 			}
 		}
 
@@ -258,9 +251,7 @@
 		}
 
 		&:disabled {
-			@apply bg-transparent dark:bg-transparent text-black dark:text-white;
-			@apply opacity-20;
-			@apply cursor-not-allowed pointer-events-none;
+			@apply bg-transparent text-ui-disabled pointer-events-none;
 		}
 	}
 

@@ -43,6 +43,7 @@ public class ReportingGostAbiturFachbelegungHalbjahr {
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
+	 *
 	 * @param bilingualeSprache Das einstellige Kürzel der bilingualen Sprache, sofern das Fach bilingual unterrichtet wurde.
 	 * @param block1gewertet Gibt an, ob die Belegung für den Block I gewertet wird oder nicht - nicht alle Kursbelegungen müssen laut Prüfungsordnung in die Abiturnote einfliessen
 	 * @param block1kursAufZeugnis Gibt an, ob die Belegung des Kurses auf dem Abiturzeugnis angezeigt werden soll oder nicht. Eine Belegung kann auf Wunsch des Prüflings bei nicht gewerteten Kursen nicht auf dem Zeugnis erscheinen.
@@ -77,6 +78,7 @@ public class ReportingGostAbiturFachbelegungHalbjahr {
 
 	/**
 	 * Das einstellige Kürzel der bilingualen Sprache, sofern das Fach bilingual unterrichtet wurde.
+	 *
 	 * @return Inhalt des Feldes bilingualeSprache
 	 */
 	public String bilingualeSprache() {
@@ -85,6 +87,7 @@ public class ReportingGostAbiturFachbelegungHalbjahr {
 
 	/**
 	 * Gibt an, ob die Belegung für den Block I gewertet wird oder nicht - nicht alle Kursbelegungen müssen laut Prüfungsordnung in die Abiturnote einfliessen
+	 *
 	 * @return Inhalt des Feldes block1gewertet
 	 */
 	public Boolean block1gewertet() {
@@ -93,6 +96,7 @@ public class ReportingGostAbiturFachbelegungHalbjahr {
 
 	/**
 	 * Gibt an, ob die Belegung des Kurses auf dem Abiturzeugnis angezeigt werden soll oder nicht. Eine Belegung kann auf Wunsch des Prüflings bei nicht gewerteten Kursen nicht auf dem Zeugnis erscheinen.
+	 *
 	 * @return Inhalt des Feldes block1kursAufZeugnis
 	 */
 	public Boolean block1kursAufZeugnis() {
@@ -101,6 +105,7 @@ public class ReportingGostAbiturFachbelegungHalbjahr {
 
 	/**
 	 * Die Anzahl der Fehlstunden.
+	 *
 	 * @return Inhalt des Feldes fehlstundenGesamt
 	 */
 	public int fehlstundenGesamt() {
@@ -109,6 +114,7 @@ public class ReportingGostAbiturFachbelegungHalbjahr {
 
 	/**
 	 * Die Anzahl der unentschuldigten Fehlstunden.
+	 *
 	 * @return Inhalt des Feldes fehlstundenUnentschuldigt
 	 */
 	public int fehlstundenUnentschuldigt() {
@@ -117,6 +123,7 @@ public class ReportingGostAbiturFachbelegungHalbjahr {
 
 	/**
 	 * Das Kürzel des Halbjahres der Fachbelegung
+	 *
 	 * @return Inhalt des Feldes halbjahrKuerzel
 	 */
 	public String halbjahrKuerzel() {
@@ -125,6 +132,7 @@ public class ReportingGostAbiturFachbelegungHalbjahr {
 
 	/**
 	 * Angabe, ob das schriftlich belegt wurde oder nicht.
+	 *
 	 * @return Inhalt des Feldes istSchriftlich
 	 */
 	public boolean istSchriftlich() {
@@ -133,6 +141,7 @@ public class ReportingGostAbiturFachbelegungHalbjahr {
 
 	/**
 	 * Das Kürzel der Kursart der gymnasialen Oberstufe dieser Fachbelegung
+	 *
 	 * @return Inhalt des Feldes kursartKuerzel
 	 */
 	public String kursartKuerzel() {
@@ -141,6 +150,7 @@ public class ReportingGostAbiturFachbelegungHalbjahr {
 
 	/**
 	 * Die Lehrkraft, welche die Note erteilt.
+	 *
 	 * @return Inhalt des Feldes lehrer
 	 */
 	public ReportingLehrer lehrer() {
@@ -149,6 +159,7 @@ public class ReportingGostAbiturFachbelegungHalbjahr {
 
 	/**
 	 * Die erteilte Note.
+	 *
 	 * @return Inhalt des Feldes note
 	 */
 	public Note note() {
@@ -157,6 +168,7 @@ public class ReportingGostAbiturFachbelegungHalbjahr {
 
 	/**
 	 * Die Wochenstundenzahl, mir der das Fach belegt wurde
+	 *
 	 * @return Inhalt des Feldes wochenstunden
 	 */
 	public int wochenstunden() {

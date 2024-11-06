@@ -39,6 +39,9 @@ export class SchuelerVermerke extends JavaObject {
 	public geaendertVon : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -76,11 +79,11 @@ export class SchuelerVermerke extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"idSchueler" : ' + obj.idSchueler.toString() + ',';
-		result += '"idVermerkart" : ' + ((!obj.idVermerkart) ? 'null' : obj.idVermerkart.toString()) + ',';
-		result += '"datum" : ' + ((!obj.datum) ? 'null' : JSON.stringify(obj.datum)) + ',';
+		result += '"idVermerkart" : ' + ((obj.idVermerkart === null) ? 'null' : obj.idVermerkart.toString()) + ',';
+		result += '"datum" : ' + ((obj.datum === null) ? 'null' : JSON.stringify(obj.datum)) + ',';
 		result += '"bemerkung" : ' + JSON.stringify(obj.bemerkung) + ',';
-		result += '"angelegtVon" : ' + ((!obj.angelegtVon) ? 'null' : JSON.stringify(obj.angelegtVon)) + ',';
-		result += '"geaendertVon" : ' + ((!obj.geaendertVon) ? 'null' : JSON.stringify(obj.geaendertVon)) + ',';
+		result += '"angelegtVon" : ' + ((obj.angelegtVon === null) ? 'null' : JSON.stringify(obj.angelegtVon)) + ',';
+		result += '"geaendertVon" : ' + ((obj.geaendertVon === null) ? 'null' : JSON.stringify(obj.geaendertVon)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -95,19 +98,19 @@ export class SchuelerVermerke extends JavaObject {
 			result += '"idSchueler" : ' + obj.idSchueler.toString() + ',';
 		}
 		if (obj.idVermerkart !== undefined) {
-			result += '"idVermerkart" : ' + ((!obj.idVermerkart) ? 'null' : obj.idVermerkart.toString()) + ',';
+			result += '"idVermerkart" : ' + ((obj.idVermerkart === null) ? 'null' : obj.idVermerkart.toString()) + ',';
 		}
 		if (obj.datum !== undefined) {
-			result += '"datum" : ' + ((!obj.datum) ? 'null' : JSON.stringify(obj.datum)) + ',';
+			result += '"datum" : ' + ((obj.datum === null) ? 'null' : JSON.stringify(obj.datum)) + ',';
 		}
 		if (obj.bemerkung !== undefined) {
 			result += '"bemerkung" : ' + JSON.stringify(obj.bemerkung) + ',';
 		}
 		if (obj.angelegtVon !== undefined) {
-			result += '"angelegtVon" : ' + ((!obj.angelegtVon) ? 'null' : JSON.stringify(obj.angelegtVon)) + ',';
+			result += '"angelegtVon" : ' + ((obj.angelegtVon === null) ? 'null' : JSON.stringify(obj.angelegtVon)) + ',';
 		}
 		if (obj.geaendertVon !== undefined) {
-			result += '"geaendertVon" : ' + ((!obj.geaendertVon) ? 'null' : JSON.stringify(obj.geaendertVon)) + ',';
+			result += '"geaendertVon" : ' + ((obj.geaendertVon === null) ? 'null' : JSON.stringify(obj.geaendertVon)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

@@ -47,6 +47,7 @@ public class ReportingGostLaufbahnplanungFachwahl {
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
+	 *
 	 * @param abiturfach								Abiturfacheintrag, sofern das belegte Fach als Abiturfach gewählt wurde.
 	 * @param belegungEF1								Fachbelegung in der EF.1
 	 * @param belegungEF2								Fachbelegung in der EF.2
@@ -83,6 +84,7 @@ public class ReportingGostLaufbahnplanungFachwahl {
 
 	/**
 	 * Abiturfacheintrag, sofern das belegte Fach als Abiturfach gewählt wurde
+	 *
 	 * @return Inhalt des Feldes abiturfach
 	 */
 	public String abiturfach() {
@@ -91,6 +93,7 @@ public class ReportingGostLaufbahnplanungFachwahl {
 
 	/**
 	 * Fachbelegung in der EF.1
+	 *
 	 * @return Inhalt des Feldes belegungEF1
 	 */
 	public String belegungEF1() {
@@ -99,6 +102,7 @@ public class ReportingGostLaufbahnplanungFachwahl {
 
 	/**
 	 * Fachbelegung in der EF.2
+	 *
 	 * @return Inhalt des Feldes belegungEF2
 	 */
 	public String belegungEF2() {
@@ -107,6 +111,7 @@ public class ReportingGostLaufbahnplanungFachwahl {
 
 	/**
 	 * Fachbelegung in der Q1.1
+	 *
 	 * @return Inhalt des Feldes belegungQ11
 	 */
 	public String belegungQ11() {
@@ -115,6 +120,7 @@ public class ReportingGostLaufbahnplanungFachwahl {
 
 	/**
 	 * Fachbelegung in der Q1.2
+	 *
 	 * @return Inhalt des Feldes belegungQ12
 	 */
 	public String belegungQ12() {
@@ -123,6 +129,7 @@ public class ReportingGostLaufbahnplanungFachwahl {
 
 	/**
 	 * Fachbelegung in der Q2.1
+	 *
 	 * @return Inhalt des Feldes belegungQ21
 	 */
 	public String belegungQ21() {
@@ -131,6 +138,7 @@ public class ReportingGostLaufbahnplanungFachwahl {
 
 	/**
 	 * Fachbelegung in der Q2.2
+	 *
 	 * @return Inhalt des Feldes belegungQ22
 	 */
 	public String belegungQ22() {
@@ -139,6 +147,7 @@ public class ReportingGostLaufbahnplanungFachwahl {
 
 	/**
 	 * Das Fach der Fachwahl
+	 *
 	 * @return Inhalt des Feldes fach
 	 */
 	public ReportingFach fach() {
@@ -147,6 +156,7 @@ public class ReportingGostLaufbahnplanungFachwahl {
 
 	/**
 	 * Fach ist in mindestens einem Halbjahr der GOSt belegt.
+	 *
 	 * @return Inhalt des Feldes fachIstBelegtInGOSt
 	 */
 	public Boolean fachIstBelegtInGOSt() {
@@ -155,6 +165,7 @@ public class ReportingGostLaufbahnplanungFachwahl {
 
 	/**
 	 * Fach ist eine Fremdsprache in der GOSt fortführbare Fremdsprache
+	 *
 	 * @return Inhalt des Feldes fachIstFortfuehrbareFremdspracheInGOSt
 	 */
 	public Boolean fachIstFortfuehrbareFremdspracheInGOSt() {
@@ -163,6 +174,7 @@ public class ReportingGostLaufbahnplanungFachwahl {
 
 	/**
 	 * Fach ist eine Fremdsprache: Jahrgangsstufe des Beginns der Sprachbelegung
+	 *
 	 * @return Inhalt des Feldes jahrgangFremdsprachenbeginn
 	 */
 	public String jahrgangFremdsprachenbeginn() {
@@ -171,6 +183,7 @@ public class ReportingGostLaufbahnplanungFachwahl {
 
 	/**
 	 * Fach ist eine Fremdsprache: Position in der Fremdsprachenfolge bzw. Prüfungsvermerk
+	 *
 	 * @return Inhalt des Feldes positionFremdsprachenfolge
 	 */
 	public String positionFremdsprachenfolge() {

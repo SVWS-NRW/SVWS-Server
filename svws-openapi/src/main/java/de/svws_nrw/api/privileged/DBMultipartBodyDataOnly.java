@@ -19,4 +19,11 @@ public class DBMultipartBodyDataOnly {
 	@FormParam("database")
 	public byte[] database;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public DBMultipartBodyDataOnly() {
+		// leer
+	}
+
 }

@@ -17,4 +17,11 @@ public class SchuelerStatusKatalogEintrag extends CoreTypeData {
 
 	// keine weiteren Attribute
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SchuelerStatusKatalogEintrag() {
+		// leer
+	}
+
 }

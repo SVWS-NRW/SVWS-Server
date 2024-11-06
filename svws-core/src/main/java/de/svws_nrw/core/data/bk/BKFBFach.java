@@ -43,4 +43,11 @@ public class BKFBFach {
 			example = "null")
 	public Integer gueltigBis = null;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public BKFBFach() {
+		// leer
+	}
+
 }

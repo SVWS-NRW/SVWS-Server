@@ -25,7 +25,7 @@
 
 	const props = withDefaults(defineProps<{
 		checkpoint: Checkpoint;
-		continueRouting: () => Promise<void>;
+		continueRouting: () => Promise<unknown>;
 	}>(),{ });
 
 	const _showModal = ref<boolean>(false);

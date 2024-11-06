@@ -30,521 +30,639 @@ import java.math.BigInteger;
  */
 @SuppressWarnings("unused")
 @XmlRegistry
-public class ObjectFactory
-{
+public class ObjectFactory {
 
-    private static final QName _Timeout_QNAME = new QName("DAV:", "timeout");
-    private static final QName _SyncLevel_QNAME = new QName("DAV:", "sync-level");
-    private static final QName _Status_QNAME = new QName("DAV:", "status");
-    private static final QName _Responsedescription_QNAME = new QName("DAV:", "responsedescription");
-    private static final QName _Href_QNAME = new QName("DAV:", "href");
-    private static final QName _SyncToken_QNAME = new QName("DAV:", "sync-token");
-    private static final QName _Dst_QNAME = new QName("DAV:", "dst");
-    private static final QName _Nresults_QNAME = new QName("DAV:", "nresults");
-    private static final QName _Src_QNAME = new QName("DAV:", "src");
-    private static final QName _Depth_QNAME = new QName("DAV:", "depth");
+	private static final QName _Timeout_QNAME = new QName("DAV:", "timeout");
+	private static final QName _SyncLevel_QNAME = new QName("DAV:", "sync-level");
+	private static final QName _Status_QNAME = new QName("DAV:", "status");
+	private static final QName _Responsedescription_QNAME = new QName("DAV:", "responsedescription");
+	private static final QName _Href_QNAME = new QName("DAV:", "href");
+	private static final QName _SyncToken_QNAME = new QName("DAV:", "sync-token");
+	private static final QName _Dst_QNAME = new QName("DAV:", "dst");
+	private static final QName _Nresults_QNAME = new QName("DAV:", "nresults");
+	private static final QName _Src_QNAME = new QName("DAV:", "src");
+	private static final QName _Depth_QNAME = new QName("DAV:", "depth");
 
 	/**
-	 * Create an instance of {@link Propfind }
+	 * Leerer Standardkonstruktor.
 	 */
-	public Propfind createPropfind()
-	{
+	public ObjectFactory() {
+		// leer
+	}
+
+
+	/**
+	 * Erzeugt ein neues {@link Propfind}-Objekt.
+	 *
+	 * @return ein neues {@link Propfind}-Objekt.
+	 */
+	public Propfind createPropfind() {
 		return new Propfind();
 	}
 
 	/**
-	 * Create an instance of {@link Keepalive }
+	 * Erzeugt ein neues {@link Keepalive}-Objekt.
+	 *
+	 * @return ein neues {@link Keepalive}-Objekt.
 	 */
-	public Keepalive createKeepalive()
-	{
+	public Keepalive createKeepalive() {
 		return new Keepalive();
 	}
 
 	/**
-	 * Create an instance of {@link Supportedlock }
+	 * Erzeugt ein neues {@link Supportedlock}-Objekt.
+	 *
+	 * @return ein neues {@link Supportedlock}-Objekt.
 	 */
-	public Supportedlock createSupportedlock()
-	{
+	public Supportedlock createSupportedlock() {
 		return new Supportedlock();
 	}
 
 	/**
-	 * Create an instance of {@link Propertyupdate }
+	 * Erzeugt ein neues {@link Propertyupdate}-Objekt.
+	 *
+	 * @return ein neues {@link Propertyupdate}-Objekt.
 	 */
-	public Propertyupdate createPropertyupdate()
-	{
+	public Propertyupdate createPropertyupdate() {
 		return new Propertyupdate();
 	}
 
 	/**
-	 * Create an instance of {@link Lockinfo }
+	 * Erzeugt ein neues {@link Lockinfo}-Objekt.
+	 *
+	 * @return ein neues {@link Lockinfo}-Objekt.
 	 */
-	public Lockinfo createLockinfo()
-	{
+	public Lockinfo createLockinfo() {
 		return new Lockinfo();
 	}
 
 	/**
-	 * Create an instance of {@link Getlastmodified }
+	 * Erzeugt ein neues {@link Getlastmodified}-Objekt.
+	 *
+	 * @return ein neues {@link Getlastmodified}-Objekt.
 	 */
-	public Getlastmodified createGetlastmodified()
-	{
+	public Getlastmodified createGetlastmodified() {
 		return new Getlastmodified();
 	}
 
 	/**
-	 * Create an instance of {@link Exclusive }
+	 * Erzeugt ein neues {@link Exclusive}-Objekt.
+	 *
+	 * @return ein neues {@link Exclusive}-Objekt.
 	 */
-	public Exclusive createExclusive()
-	{
+	public Exclusive createExclusive() {
 		return new Exclusive();
 	}
 
 	/**
-	 * Create an instance of {@link Getcontentlanguage }
+	 * Erzeugt ein neues {@link Getcontentlanguage}-Objekt.
+	 *
+	 * @return ein neues {@link Getcontentlanguage}-Objekt.
 	 */
-	public Getcontentlanguage createGetcontentlanguage()
-	{
+	public Getcontentlanguage createGetcontentlanguage() {
 		return new Getcontentlanguage();
 	}
 
 	/**
-	 * Create an instance of {@link Locktoken }
+	 * Erzeugt ein neues {@link Locktoken}-Objekt.
+	 *
+	 * @return ein neues {@link Locktoken}-Objekt.
 	 */
-	public Locktoken createLocktoken()
-	{
+	public Locktoken createLocktoken() {
 		return new Locktoken();
 	}
 
 	/**
-	 * Create an instance of {@link Propertybehavior }
+	 * Erzeugt ein neues {@link Propertybehavior}-Objekt.
+	 *
+	 * @return ein neues {@link Propertybehavior}-Objekt.
 	 */
-	public Propertybehavior createPropertybehavior()
-	{
+	public Propertybehavior createPropertybehavior() {
 		return new Propertybehavior();
 	}
 
 	/**
-	 * Create an instance of {@link Propstat }
+	 * Erzeugt ein neues {@link Propstat}-Objekt.
+	 *
+	 * @return ein neues {@link Propstat}-Objekt.
 	 */
-	public Propstat createPropstat()
-	{
+	public Propstat createPropstat() {
 		return new Propstat();
 	}
 
 	/**
-	 * Create an instance of {@link Multistatus }
+	 * Erzeugt ein neues {@link Multistatus}-Objekt.
+	 *
+	 * @return ein neues {@link Multistatus}-Objekt.
 	 */
-	public Multistatus createMultistatus()
-	{
+	public Multistatus createMultistatus() {
 		return new Multistatus();
 	}
 
 	/**
-	 * Create an instance of {@link Prop }
+	 * Erzeugt ein neues {@link Prop}-Objekt.
+	 *
+	 * @return ein neues {@link Prop}-Objekt.
 	 */
-	public Prop createProp()
-	{
+	public Prop createProp() {
 		return new Prop();
 	}
 
 	/**
-	 * Create an instance of {@link Remove }
+	 * Erzeugt ein neues {@link Remove}-Objekt.
+	 *
+	 * @return ein neues {@link Remove}-Objekt.
 	 */
-	public Remove createRemove()
-	{
+	public Remove createRemove() {
 		return new Remove();
 	}
 
 	/**
-	 * Create an instance of {@link Response }
+	 * Erzeugt ein neues {@link Response}-Objekt.
+	 *
+	 * @return ein neues {@link Response}-Objekt.
 	 */
-	public Response createResponse()
-	{
+	public Response createResponse() {
 		return new Response();
 	}
 
 	/**
-	 * Create an instance of {@link Location }
+	 * Erzeugt ein neues {@link Location}-Objekt.
 	 *
+	 * @return ein neues {@link Location}-Objekt.
 	 */
 	public Location createLocation() {
 		return new Location();
 	}
 
 	/**
-	 * Create an instance of {@link Omit }
+	 * Erzeugt ein neues {@link Omit}-Objekt.
+	 *
+	 * @return ein neues {@link Omit}-Objekt.
 	 */
-	public Omit createOmit()
-	{
+	public Omit createOmit() {
 		return new Omit();
 	}
 
 	/**
-	 * Create an instance of {@link Shared }
+	 * Erzeugt ein neues {@link Shared}-Objekt.
+	 *
+	 * @return ein neues {@link Shared}-Objekt.
 	 */
-	public Shared createShared()
-	{
+	public Shared createShared() {
 		return new Shared();
 	}
 
 	/**
-	 * Create an instance of {@link Lockentry }
+	 * Erzeugt ein neues {@link Lockentry}-Objekt.
+	 *
+	 * @return ein neues {@link Lockentry}-Objekt.
 	 */
-	public Lockentry createLockentry()
-	{
+	public Lockentry createLockentry() {
 		return new Lockentry();
 	}
 
 	/**
-	 * Create an instance of {@link Collection }
+	 * Erzeugt ein neues {@link Collection}-Objekt.
+	 *
+	 * @return ein neues {@link Collection}-Objekt.
 	 */
-	public Collection createCollection()
-	{
+	public Collection createCollection() {
 		return new Collection();
 	}
 
 	/**
-	 * Create an instance of {@link Locktype }
+	 * Erzeugt ein neues {@link Locktype}-Objekt.
+	 *
+	 * @return ein neues {@link Locktype}-Objekt.
 	 */
-	public Locktype createLocktype()
-	{
+	public Locktype createLocktype() {
 		return new Locktype();
 	}
 
 	/**
-	 * Create an instance of {@link Error }
+	 * Erzeugt ein neues {@link Error}-Objekt.
+	 *
+	 * @return ein neues {@link Error}-Objekt.
 	 */
-	public Error createError()
-	{
+	public Error createError() {
 		return new Error();
 	}
 
 	/**
-	 * Create an instance of {@link Getetag }
+	 * Erzeugt ein neues {@link Getetag}-Objekt.
+	 *
+	 * @return ein neues {@link Getetag}-Objekt.
 	 */
-	public Getetag createGetetag()
-	{
+	public Getetag createGetetag() {
 		return new Getetag();
 	}
 
 	/**
-	 * Create an instance of {@link Displayname }
+	 * Erzeugt ein neues {@link Displayname}-Objekt.
+	 *
+	 * @return ein neues {@link Displayname}-Objekt.
 	 */
-	public Displayname createDisplayname()
-	{
+	public Displayname createDisplayname() {
 		return new Displayname();
 	}
 
 	/**
-	 * Create an instance of {@link Getcontenttype }
+	 * Erzeugt ein neues {@link Getcontenttype}-Objekt.
+	 *
+	 * @return ein neues {@link Getcontenttype}-Objekt.
 	 */
-	public Getcontenttype createGetcontenttype()
-	{
+	public Getcontenttype createGetcontenttype() {
 		return new Getcontenttype();
 	}
 
 	/**
-	 * Create an instance of {@link SupportedReportSet }
+	 * Erzeugt ein neues {@link SupportedReportSet}-Objekt.
 	 *
+	 * @return ein neues {@link SupportedReportSet}-Objekt.
 	 */
 	public SupportedReportSet createSupportedReportSet() {
 		return new SupportedReportSet();
 	}
 
 	/**
-	 * Create an instance of {@link SupportedReport }
+	 * Erzeugt ein neues {@link SupportedReport}-Objekt.
 	 *
+	 * @return ein neues {@link SupportedReport}-Objekt.
 	 */
 	public SupportedReport createSupportedReport() {
 		return new SupportedReport();
 	}
 
 	/**
-	 * Create an instance of {@link Report }
+	 * Erzeugt ein neues {@link Report}-Objekt.
 	 *
+	 * @return ein neues {@link Report}-Objekt.
 	 */
 	public Report createReport() {
 		return new Report();
 	}
 
 	/**
-	 * Create an instance of {@link SyncCollection }
+	 * Erzeugt ein neues {@link SyncCollection}-Objekt.
 	 *
+	 * @return ein neues {@link SyncCollection}-Objekt.
 	 */
 	public SyncCollection createSyncCollection() {
 		return new SyncCollection();
 	}
 
 	/**
-	 * Create an instance of {@link Limit }
+	 * Erzeugt ein neues {@link Limit}-Objekt.
 	 *
+	 * @return ein neues {@link Limit}-Objekt.
 	 */
 	public Limit createLimit() {
 		return new Limit();
 	}
 
 	/**
-	 * Create an instance of {@link Allprop }
+	 * Erzeugt ein neues {@link Allprop}-Objekt.
+	 *
+	 * @return ein neues {@link Allprop}-Objekt.
 	 */
-	public Allprop createAllprop()
-	{
+	public Allprop createAllprop() {
 		return new Allprop();
 	}
 
 	/**
-	 * Create an instance of {@link Link }
+	 * Erzeugt ein neues {@link Link}-Objekt.
+	 *
+	 * @return ein neues {@link Link}-Objekt.
 	 */
-	public Link createLink()
-	{
+	public Link createLink() {
 		return new Link();
 	}
 
 	/**
-	 * Create an instance of {@link Owner }
+	 * Erzeugt ein neues {@link Owner}-Objekt.
+	 *
+	 * @return ein neues {@link Owner}-Objekt.
 	 */
-	public Owner createOwner()
-	{
+	public Owner createOwner() {
 		return new Owner();
 	}
 
 	/**
-	 * Create an instance of {@link Lockscope }
+	 * Erzeugt ein neues {@link Lockscope}-Objekt.
+	 *
+	 * @return ein neues {@link Lockscope}-Objekt.
 	 */
-	public Lockscope createLockscope()
-	{
+	public Lockscope createLockscope() {
 		return new Lockscope();
 	}
 
 	/**
-	 * Create an instance of {@link Set }
+	 * Erzeugt ein neues {@link Set}-Objekt.
+	 *
+	 * @return ein neues {@link Set}-Objekt.
 	 */
-	public Set createSet()
-	{
+	public Set createSet() {
 		return new Set();
 	}
 
 	/**
-	 * Create an instance of {@link Lockdiscovery }
+	 * Erzeugt ein neues {@link Lockdiscovery}-Objekt.
+	 *
+	 * @return ein neues {@link Lockdiscovery}-Objekt.
 	 */
-	public Lockdiscovery createLockdiscovery()
-	{
+	public Lockdiscovery createLockdiscovery() {
 		return new Lockdiscovery();
 	}
 
 	/**
-	 * Create an instance of {@link Write }
+	 * Erzeugt ein neues {@link Write}-Objekt.
+	 *
+	 * @return ein neues {@link Write}-Objekt.
 	 */
-	public Write createWrite()
-	{
+	public Write createWrite() {
 		return new Write();
 	}
 
-	public WriteContent createWriteContent()
-	{
+	/**
+	 * Erzeugt ein neues {@link WriteContent}-Objekt.
+	 *
+	 * @return ein neues {@link WriteContent}-Objekt.
+	 */
+	public WriteContent createWriteContent() {
 		return new WriteContent();
 	}
 
-	public WriteProperties createWriteProperties()
-	{
+	/**
+	 * Erzeugt ein neues {@link WriteProperties}-Objekt.
+	 *
+	 * @return ein neues {@link WriteProperties}-Objekt.
+	 */
+	public WriteProperties createWriteProperties() {
 		return new WriteProperties();
 	}
 
-	public Read createRead()
-	{
+	/**
+	 * Erzeugt ein neues {@link Read}-Objekt.
+	 *
+	 * @return ein neues {@link Read}-Objekt.
+	 */
+	public Read createRead() {
 		return new Read();
 	}
 
-	public ReadAcl createReadAcl()
-	{
+	/**
+	 * Erzeugt ein neues {@link ReadAcl}-Objekt.
+	 *
+	 * @return ein neues {@link ReadAcl}-Objekt.
+	 */
+	public ReadAcl createReadAcl() {
 		return new ReadAcl();
 	}
 
-	public ReadCurrentUserPrivilegeSet createReadCurrentUserPrivilegeSet()
-	{
+	/**
+	 * Erzeugt ein neues {@link ReadCurrentUserPrivilegeSet}-Objekt.
+	 *
+	 * @return ein neues {@link ReadCurrentUserPrivilegeSet}-Objekt.
+	 */
+	public ReadCurrentUserPrivilegeSet createReadCurrentUserPrivilegeSet() {
 		return new ReadCurrentUserPrivilegeSet();
 	}
 
-	public UnBind createUnbind()
-	{
+	/**
+	 * Erzeugt ein neues {@link UnBind}-Objekt.
+	 *
+	 * @return ein neues {@link UnBind}-Objekt.
+	 */
+	public UnBind createUnbind() {
 		return new UnBind();
 	}
 
-	public Unlock createUnlock()
-	{
+	/**
+	 * Erzeugt ein neues {@link Unlock}-Objekt.
+	 *
+	 * @return ein neues {@link Unlock}-Objekt.
+	 */
+	public Unlock createUnlock() {
 		return new Unlock();
 	}
 
-	public All createAll()
-	{
+	/**
+	 * Erzeugt ein neues {@link All}-Objekt.
+	 *
+	 * @return ein neues {@link All}-Objekt.
+	 */
+	public All createAll() {
 		return new All();
 	}
 
-	public Unauthenticated createUnauthenticated()
-	{
+	/**
+	 * Erzeugt ein neues {@link Unauthenticated}-Objekt.
+	 *
+	 * @return ein neues {@link Unauthenticated}-Objekt.
+	 */
+	public Unauthenticated createUnauthenticated() {
 		return new Unauthenticated();
 	}
 
-	public Authenticated createAuthenticated()
-	{
+	/**
+	 * Erzeugt ein neues {@link Authenticated}-Objekt.
+	 *
+	 * @return ein neues {@link Authenticated}-Objekt.
+	 */
+	public Authenticated createAuthenticated() {
 		return new Authenticated();
 	}
 
-	public Self createSelf()
-	{
+	/**
+	 * Erzeugt ein neues {@link Self}-Objekt.
+	 *
+	 * @return ein neues {@link Self}-Objekt.
+	 */
+	public Self createSelf() {
 		return new Self();
 	}
 
-	public Bind createBind()
-	{
+	/**
+	 * Erzeugt ein neues {@link Bind}-Objekt.
+	 *
+	 * @return ein neues {@link Bind}-Objekt.
+	 */
+	public Bind createBind() {
 		return new Bind();
 	}
 
 	/**
-	 * Create an instance of {@link Source }
+	 * Erzeugt ein neues {@link Source}-Objekt.
+	 *
+	 * @return ein neues {@link Source}-Objekt.
 	 */
-	public Source createSource()
-	{
+	public Source createSource() {
 		return new Source();
 	}
 
 	/**
-	 * Create an instance of {@link Activelock }
+	 * Erzeugt ein neues {@link Activelock}-Objekt.
+	 *
+	 * @return ein neues {@link Activelock}-Objekt.
 	 */
-	public Activelock createActivelock()
-	{
+	public Activelock createActivelock() {
 		return new Activelock();
 	}
 
 	/**
-	 * Create an instance of {@link Propname }
+	 * Erzeugt ein neues {@link Propname}-Objekt.
+	 *
+	 * @return ein neues {@link Propname}-Objekt.
 	 */
-	public Propname createPropname()
-	{
+	public Propname createPropname() {
 		return new Propname();
 	}
 
 	/**
-	 * Create an instance of {@link Resourcetype }
+	 * Erzeugt ein neues {@link Resourcetype}-Objekt.
+	 *
+	 * @return ein neues {@link Resourcetype}-Objekt.
 	 */
-	public Resourcetype createResourcetype()
-	{
+	public Resourcetype createResourcetype() {
 		return new Resourcetype();
 	}
 
 	/**
-	 * Create an instance of {@link Getcontentlength }
+	 * Erzeugt ein neues {@link Getcontentlength}-Objekt.
+	 *
+	 * @return ein neues {@link Getcontentlength}-Objekt.
 	 */
-	public Getcontentlength createGetcontentlength()
-	{
+	public Getcontentlength createGetcontentlength() {
 		return new Getcontentlength();
 	}
 
 	/**
-	 * Create an instance of {@link Creationdate }
+	 * Erzeugt ein neues {@link Creationdate}-Objekt.
+	 *
+	 * @return ein neues {@link Creationdate}-Objekt.
 	 */
-	public Creationdate createCreationdate()
-	{
+	public Creationdate createCreationdate() {
 		return new Creationdate();
 	}
 
 	/**
-	 * Create an instance of {@link SearchRequest }
+	 * Erzeugt ein neues {@link SearchRequest}-Objekt.
+	 *
+	 * @return ein neues {@link SearchRequest}-Objekt.
 	 */
-	public SearchRequest createSearch()
-	{
-	    return new SearchRequest();
+	public SearchRequest createSearch() {
+		return new SearchRequest();
 	}
 
 	/**
-	 * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
+	 * Erzeugt ein {@link JAXBElement }{@code <}{@link String }{@code >}}-Objekt.
 	 *
+	 * @param value   der String, der dem {@link JAXBElement}-Objekt übergeben wird.
+	 * @return ein {@link JAXBElement }{@code <}{@link String }{@code >}}-Objekt.
 	 */
 	@XmlElementDecl(namespace = "DAV:", name = "timeout")
-	public JAXBElement<String> createTimeout(String value) {
+	public JAXBElement<String> createTimeout(final String value) {
 		return new JAXBElement<>(_Timeout_QNAME, String.class, null, value);
 	}
 
 	/**
-	 * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
+	 * Erzeugt ein {@link JAXBElement }{@code <}{@link String }{@code >}}-Objekt.
 	 *
+	 * @param value   der String, der dem {@link JAXBElement}-Objekt übergeben wird.
+	 * @return ein {@link JAXBElement }{@code <}{@link String }{@code >}}-Objekt.
 	 */
 	@XmlElementDecl(namespace = "DAV:", name = "sync-level")
-	public JAXBElement<String> createSyncLevel(String value) {
+	public JAXBElement<String> createSyncLevel(final String value) {
 		return new JAXBElement<>(_SyncLevel_QNAME, String.class, null, value);
 	}
 
 	/**
-	 * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
+	 * Erzeugt ein {@link JAXBElement }{@code <}{@link String }{@code >}}-Objekt.
 	 *
+	 * @param value   der String, der dem {@link JAXBElement}-Objekt übergeben wird.
+	 * @return ein {@link JAXBElement }{@code <}{@link String }{@code >}}-Objekt.
 	 */
 	@XmlElementDecl(namespace = "DAV:", name = "status")
-	public JAXBElement<String> createStatus(String value) {
+	public JAXBElement<String> createStatus(final String value) {
 		return new JAXBElement<>(_Status_QNAME, String.class, null, value);
 	}
 
 	/**
-	 * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
+	 * Erzeugt ein {@link JAXBElement }{@code <}{@link String }{@code >}}-Objekt.
 	 *
+	 * @param value   der String, der dem {@link JAXBElement}-Objekt übergeben wird.
+	 * @return ein {@link JAXBElement }{@code <}{@link String }{@code >}}-Objekt.
 	 */
 	@XmlElementDecl(namespace = "DAV:", name = "responsedescription")
-	public JAXBElement<String> createResponsedescription(String value) {
+	public JAXBElement<String> createResponsedescription(final String value) {
 		return new JAXBElement<>(_Responsedescription_QNAME, String.class, null, value);
 	}
 
 	/**
-	 * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
+	 * Erzeugt ein {@link JAXBElement }{@code <}{@link String }{@code >}}-Objekt.
 	 *
+	 * @param value   der String, der dem {@link JAXBElement}-Objekt übergeben wird.
+	 * @return ein {@link JAXBElement }{@code <}{@link String }{@code >}}-Objekt.
 	 */
 	@XmlElementDecl(namespace = "DAV:", name = "href")
-	public JAXBElement<String> createHref(String value) {
+	public JAXBElement<String> createHref(final String value) {
 		return new JAXBElement<>(_Href_QNAME, String.class, null, value);
 	}
 
 	/**
-	 * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
+	 * Erzeugt ein {@link JAXBElement }{@code <}{@link String }{@code >}}-Objekt.
 	 *
+	 * @param value   der String, der dem {@link JAXBElement}-Objekt übergeben wird.
+	 * @return ein {@link JAXBElement }{@code <}{@link String }{@code >}}-Objekt.
 	 */
 	@XmlElementDecl(namespace = "DAV:", name = "sync-token")
-	public JAXBElement<String> createSyncToken(String value) {
+	public JAXBElement<String> createSyncToken(final String value) {
 		return new JAXBElement<>(_SyncToken_QNAME, String.class, null, value);
 	}
 
 	/**
-	 * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
+	 * Erzeugt ein {@link JAXBElement }{@code <}{@link String }{@code >}}-Objekt.
 	 *
+	 * @param value   der String, der dem {@link JAXBElement}-Objekt übergeben wird.
+	 * @return ein {@link JAXBElement }{@code <}{@link String }{@code >}}-Objekt.
 	 */
 	@XmlElementDecl(namespace = "DAV:", name = "dst")
-	public JAXBElement<String> createDst(String value) {
+	public JAXBElement<String> createDst(final String value) {
 		return new JAXBElement<>(_Dst_QNAME, String.class, null, value);
 	}
 
 	/**
-	 * Create an instance of {@link JAXBElement }{@code <}{@link BigInteger }{@code >}}
+	 * Erzeugt ein {@link JAXBElement }{@code <}{@link BigInteger }{@code >}}-Objekt.
 	 *
+	 * @param value   das BigInteger-Objekt, der dem {@link JAXBElement}-Objekt übergeben wird.
+	 * @return ein {@link JAXBElement }{@code <}{@link BigInteger }{@code >}}-Objekt.
 	 */
 	@XmlElementDecl(namespace = "DAV:", name = "nresults")
-	public JAXBElement<BigInteger> createNresults(BigInteger value) {
+	public JAXBElement<BigInteger> createNresults(final BigInteger value) {
 		return new JAXBElement<>(_Nresults_QNAME, BigInteger.class, null, value);
 	}
 
 	/**
-	 * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
+	 * Erzeugt ein {@link JAXBElement }{@code <}{@link String }{@code >}}-Objekt.
 	 *
+	 * @param value   der String, der dem {@link JAXBElement}-Objekt übergeben wird.
+	 * @return ein {@link JAXBElement }{@code <}{@link String }{@code >}}-Objekt.
 	 */
 	@XmlElementDecl(namespace = "DAV:", name = "src")
-	public JAXBElement<String> createSrc(String value) {
+	public JAXBElement<String> createSrc(final String value) {
 		return new JAXBElement<>(_Src_QNAME, String.class, null, value);
 	}
 
 	/**
-	 * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
+	 * Erzeugt ein {@link JAXBElement }{@code <}{@link String }{@code >}}-Objekt.
 	 *
+	 * @param value   der String, der dem {@link JAXBElement}-Objekt übergeben wird.
+	 * @return ein {@link JAXBElement }{@code <}{@link String }{@code >}}-Objekt.
 	 */
 	@XmlElementDecl(namespace = "DAV:", name = "depth")
-	public JAXBElement<String> createDepth(String value) {
+	public JAXBElement<String> createDepth(final String value) {
 		return new JAXBElement<>(_Depth_QNAME, String.class, null, value);
 	}
-
 
 }

@@ -19,6 +19,13 @@ public final class VerkehrssprachenConverter extends DBAttributeConverter<Verkeh
 	/** Die Instanz des Konverters */
 	public static final VerkehrssprachenConverter instance = new VerkehrssprachenConverter();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public VerkehrssprachenConverter() {
+		// leer
+	}
+
 	@Override
 	public String convertToDatabaseColumn(final Verkehrssprache attribute) {
 		return (attribute == null) ? null : attribute.daten.kuerzel;

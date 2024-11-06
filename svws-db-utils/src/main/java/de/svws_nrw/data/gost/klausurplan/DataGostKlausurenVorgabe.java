@@ -16,15 +16,12 @@ import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
-import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
-import de.svws_nrw.data.gost.DBUtilsGost;
+import de.svws_nrw.data.gost.DataGostFaecher;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenKursklausuren;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenVorgaben;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
-import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
-import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response.Status;
@@ -377,10 +374,6 @@ public final class DataGostKlausurenVorgabe extends DataManagerRevised<Long, DTO
 	 */
 	public List<GostKlausurvorgabe> createDefaultVorgaben(final GostHalbjahr halbjahr, final int quartal)
 			throws ApiOperationException {
-		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
-		final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
-		if (schuljahresabschnitt == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Keine gültiger Schuljahresabschnitt vorhanden.");
 		final List<DTOGostKlausurenVorgaben> vorgabenVorlage =
 				conn.queryList(DTOGostKlausurenVorgaben.QUERY_BY_ABI_JAHRGANG, DTOGostKlausurenVorgaben.class, -1);
 		// Prüfe, ob die Vorlage eingelesen werden kann
@@ -389,7 +382,7 @@ public final class DataGostKlausurenVorgabe extends DataManagerRevised<Long, DTO
 		final EnumMap<GostHalbjahr, GostKlausurplanManager> manager = new EnumMap<>(GostHalbjahr.class);
 		for (final GostHalbjahr hj : GostHalbjahr.values())
 			manager.put(hj, new GostKlausurplanManager(mapList(vorgabenVorlage.stream().filter(v -> v.Halbjahr == hj).toList())));
-		final List<GostFach> faecher = DBUtilsFaecherGost.getFaecherManager(schuljahresabschnitt.Jahr, conn, null).getFaecherSchriftlichMoeglich();
+		final List<GostFach> faecher = DataGostFaecher.getFaecherManager(conn, -1).getFaecherSchriftlichMoeglich();
 		final List<DTOGostKlausurenVorgaben> neueVorgaben = new ArrayList<>();
 		// Bestimme die ID, für welche der Datensatz eingefügt wird
 		long idNMK = conn.transactionGetNextID(DTOGostKlausurenVorgaben.class);

@@ -9,18 +9,16 @@ import java.util.Collections;
  * für wiederkehrende Ereignisse notwendig sind. Darüber hinaus bietet sie
  * Methoden zur Bestimmung des letzten Termins einer begrenzt wiederkehrenden
  * Regel
- *
- *
  */
 public class RecurrenceSet {
 
-	/**
-	 * Regeln,welche wiederkehrende Ereignisse definieren.
-	 */
+	/** Regeln,welche wiederkehrende Ereignisse definieren. */
 	private RRule rrule;
-	/** eine Liste von Datumsangaben, an denen ein Ereignis auftritt */
+
+	/** Eine Liste von Datumsangaben, an denen ein Ereignis auftritt. */
 	private DateListProperty rDates;
-	/** eine Liste von Ausnahemn für die Regeln und die Daten */
+
+	/** Eine Liste von Ausnahemn für die Regeln und die Daten. */
 	private DateListProperty exDates;
 
 	/**
@@ -31,28 +29,36 @@ public class RecurrenceSet {
 	}
 
 	/**
-	 * @return the rrule
+	 * Liefert das {@link RRule}-Objekt.
+	 *
+	 * @return das {@link RRule}-Objekt.
 	 */
 	public RRule getRrule() {
 		return rrule;
 	}
 
 	/**
-	 * @param rrule the rrule to set
+	 * Setzt das {@link RRule}-Objekt.
+	 *
+	 * @param rrule   das zu setzende {@link RRule}-Objekt.
 	 */
 	public void setRrule(final RRule rrule) {
 		this.rrule = rrule;
 	}
 
 	/**
-	 * @return the rDates
+	 * Liefert das {@link DateListProperty}-Objekt.
+	 *
+	 * @return das {@link DateListProperty}-Objekt.
 	 */
 	public DateListProperty getrDates() {
 		return this.rDates;
 	}
 
 	/**
-	 * @return the exDates
+	 * Liefert das {@link DateListProperty}-Objekt.
+	 *
+	 * @return das {@link DateListProperty}-Objekt.
 	 */
 	public DateListProperty getExDates() {
 		return this.exDates;
@@ -62,8 +68,8 @@ public class RecurrenceSet {
 	 * Berechnet aus dem gegebenen Werten Startzeitpunkt sowie den Regeln
 	 * und Daten dieses RecurrenceSets den maximalen Endzeitpunkt eines Ereignis
 	 *
-	 * @param dtStart der Startzeitpunkt des Ereignisses
-	 * @param tzid    die Zeitzone
+	 * @param dtStart  der Startzeitpunkt des Ereignisses
+	 * @param tzid     die Zeitzone
 	 * @return das letzte Auftreten des Ereignisses gemäß dieses RecurrenceSets oder
 	 *         {@link Instant#MAX}, wenn das Ereignis unendlich oft auftritt
 	 */

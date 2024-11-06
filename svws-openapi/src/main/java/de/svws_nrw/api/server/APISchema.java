@@ -37,6 +37,13 @@ import jakarta.ws.rs.core.Response.Status;
 public class APISchema {
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public APISchema() {
+		// leer
+	}
+
+	/**
 	 * Die OpenAPI-Methode um ein Datenbankschema auf eine bestimmte Revision upzudaten.
 	 *
 	 * @param schemaname    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll

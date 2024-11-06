@@ -15,6 +15,13 @@ public final class BenutzerKompetenzConverter extends DBAttributeConverter<Benut
 	/** Die Instanz des Konverters */
 	public static final BenutzerKompetenzConverter instance = new BenutzerKompetenzConverter();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public BenutzerKompetenzConverter() {
+		// leer
+	}
+
 	@Override
 	public Long convertToDatabaseColumn(final BenutzerKompetenz kompetenz) {
 		return kompetenz.daten.id;

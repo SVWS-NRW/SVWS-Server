@@ -23,7 +23,9 @@ public final class HtmlContextGostKursplanungBlockungsergebnis extends HtmlConte
 
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Daten.
+	 *
 	 * @param reportingRepository		Repository mit Parametern, Logger und Daten zum Reporting.
+	 *
 	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	public HtmlContextGostKursplanungBlockungsergebnis(final ReportingRepository reportingRepository) throws ApiOperationException {
@@ -33,6 +35,7 @@ public final class HtmlContextGostKursplanungBlockungsergebnis extends HtmlConte
 
 	/**
 	 * Erzeugt den Context zum Füllen eines html-Templates.
+	 *
 	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	private void erzeugeContext() throws ApiOperationException {

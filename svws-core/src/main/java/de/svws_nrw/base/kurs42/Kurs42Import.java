@@ -143,12 +143,12 @@ public class Kurs42Import {
 		this.logger = logger;
 		this.setSchueler = setSchueler;
 		this.k42Blockung = new Kurs42DataBlockung(parent.resolve("Blockung.txt"));
-		this.k42Schueler = CsvReader.from(parent.resolve("Schueler.txt"), Kurs42DataSchueler.class);
-		this.k42Faecher = CsvReader.from(parent.resolve("Faecher.txt"), Kurs42DataFaecher.class);
-		this.k42Kurse = CsvReader.from(parent.resolve("Kurse.txt"), Kurs42DataKurse.class);
-		this.k42Schienen = CsvReader.from(parent.resolve("Schienen.txt"), Kurs42DataSchienen.class);
-		this.k42Blockplan = CsvReader.from(parent.resolve("Blockplan.txt"), Kurs42DataBlockplan.class);
-		this.k42Fachwahlen = CsvReader.from(parent.resolve("Fachwahlen.txt"), Kurs42DataFachwahlen.class);
+		this.k42Schueler = CsvReader.fromKurs42(parent.resolve("Schueler.txt"), Kurs42DataSchueler.class);
+		this.k42Faecher = CsvReader.fromKurs42(parent.resolve("Faecher.txt"), Kurs42DataFaecher.class);
+		this.k42Kurse = CsvReader.fromKurs42(parent.resolve("Kurse.txt"), Kurs42DataKurse.class);
+		this.k42Schienen = CsvReader.fromKurs42(parent.resolve("Schienen.txt"), Kurs42DataSchienen.class);
+		this.k42Blockplan = CsvReader.fromKurs42(parent.resolve("Blockplan.txt"), Kurs42DataBlockplan.class);
+		this.k42Fachwahlen = CsvReader.fromKurs42(parent.resolve("Fachwahlen.txt"), Kurs42DataFachwahlen.class);
 		if (!("" + schulnummer).equals(k42Blockung.Schulnummer))
 			throw new IOException(
 					"Die Schulnummer der Schule stimmt nicht mit der Schulnummer des Kurs42-Exportes überein. Die Daten können daher nicht importiert werden.");

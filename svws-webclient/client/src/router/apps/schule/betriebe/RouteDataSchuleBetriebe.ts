@@ -85,7 +85,7 @@ export class RouteDataSchuleBetriebe extends RouteData<RouteStateSchuleBetriebe>
 	}
 
 	gotoEintrag = async (eintrag: BetriebListeEintrag | undefined) => {
-		await RouteManager.doRoute(routeSchuleBetriebe.getRoute(eintrag?.id));
+		await RouteManager.doRoute(routeSchuleBetriebe.getRoute({ id: eintrag?.id }));
 	}
 
 	addEintrag =async (eintrag: BetriebStammdaten) => {

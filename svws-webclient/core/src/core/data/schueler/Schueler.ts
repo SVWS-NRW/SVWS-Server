@@ -39,6 +39,9 @@ export class Schueler extends JavaObject {
 	public externeSchulNr : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -86,7 +89,7 @@ export class Schueler extends JavaObject {
 		result += '"geschlecht" : ' + obj.geschlecht.toString() + ',';
 		result += '"status" : ' + obj.status.toString() + ',';
 		result += '"abschlussjahrgang" : ' + obj.abschlussjahrgang.toString() + ',';
-		result += '"externeSchulNr" : ' + ((!obj.externeSchulNr) ? 'null' : JSON.stringify(obj.externeSchulNr)) + ',';
+		result += '"externeSchulNr" : ' + ((obj.externeSchulNr === null) ? 'null' : JSON.stringify(obj.externeSchulNr)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -113,7 +116,7 @@ export class Schueler extends JavaObject {
 			result += '"abschlussjahrgang" : ' + obj.abschlussjahrgang.toString() + ',';
 		}
 		if (obj.externeSchulNr !== undefined) {
-			result += '"externeSchulNr" : ' + ((!obj.externeSchulNr) ? 'null' : JSON.stringify(obj.externeSchulNr)) + ',';
+			result += '"externeSchulNr" : ' + ((obj.externeSchulNr === null) ? 'null' : JSON.stringify(obj.externeSchulNr)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

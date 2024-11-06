@@ -20,6 +20,13 @@ public final class RestAppDav extends Application {
 
 			OpenAPICorsFilter.class);
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public RestAppDav() {
+		// leer
+	}
+
 	@Override
 	public Set<Class<?>> getClasses() {
 		return this.classes;

@@ -119,4 +119,14 @@ public class ValidatorFehler<@TsObject T> {
 		return _fehlermeldung;
 	}
 
+
+	/**
+	 * Die Fehlerart, welcher der Fehler zugeordnet ist.
+	 *
+	 * @return die Fehlerart
+	 */
+	public @NotNull ValidatorFehlerart getFehlerart() {
+		return _validator.getFehlerart();
+	}
+
 }

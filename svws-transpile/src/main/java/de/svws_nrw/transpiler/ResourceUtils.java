@@ -27,6 +27,13 @@ public class ResourceUtils {
 // TODO language of javadoc
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	protected ResourceUtils() {
+		// leer
+	}
+
+	/**
 	 * Ermittelt alle Dateien, die in dem angebenen Pfad path liegen und zu dem
 	 * Package mit dem Name packageName oder einem Sub-Package davon gehören
 	 * sowie die angegebene Dateiendung haben.

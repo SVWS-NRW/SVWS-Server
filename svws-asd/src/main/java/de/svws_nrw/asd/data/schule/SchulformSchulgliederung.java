@@ -22,4 +22,11 @@ public class SchulformSchulgliederung {
 	@Schema(description = "das Kürzel der Schulgliederung bzw. des Bildungsganges", example = "A01")
 	public String gliederung = null;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SchulformSchulgliederung() {
+		// leer
+	}
+
 }

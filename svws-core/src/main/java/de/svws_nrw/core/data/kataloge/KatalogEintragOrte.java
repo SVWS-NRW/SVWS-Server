@@ -45,4 +45,11 @@ public class KatalogEintragOrte {
 	@Schema(description = "gibt die Gültigkeit bis zu welchem Schuljahr an", example = "null")
 	public Integer gueltigBis;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public KatalogEintragOrte() {
+		// leer
+	}
+
 }

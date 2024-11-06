@@ -85,11 +85,11 @@ export class GostKlausurenKalenderinformation extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
-		result += '"startdatum" : ' + ((!obj.startdatum) ? 'null' : JSON.stringify(obj.startdatum)) + ',';
-		result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : obj.startzeit.toString()) + ',';
-		result += '"enddatum" : ' + ((!obj.enddatum) ? 'null' : JSON.stringify(obj.enddatum)) + ',';
-		result += '"endzeit" : ' + ((!obj.endzeit) ? 'null' : obj.endzeit.toString()) + ',';
-		result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
+		result += '"startdatum" : ' + ((obj.startdatum === null) ? 'null' : JSON.stringify(obj.startdatum)) + ',';
+		result += '"startzeit" : ' + ((obj.startzeit === null) ? 'null' : obj.startzeit.toString()) + ',';
+		result += '"enddatum" : ' + ((obj.enddatum === null) ? 'null' : JSON.stringify(obj.enddatum)) + ',';
+		result += '"endzeit" : ' + ((obj.endzeit === null) ? 'null' : obj.endzeit.toString()) + ',';
+		result += '"bemerkung" : ' + ((obj.bemerkung === null) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		result += '"istSperrtermin" : ' + obj.istSperrtermin.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -105,19 +105,19 @@ export class GostKlausurenKalenderinformation extends JavaObject {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		}
 		if (obj.startdatum !== undefined) {
-			result += '"startdatum" : ' + ((!obj.startdatum) ? 'null' : JSON.stringify(obj.startdatum)) + ',';
+			result += '"startdatum" : ' + ((obj.startdatum === null) ? 'null' : JSON.stringify(obj.startdatum)) + ',';
 		}
 		if (obj.startzeit !== undefined) {
-			result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : obj.startzeit.toString()) + ',';
+			result += '"startzeit" : ' + ((obj.startzeit === null) ? 'null' : obj.startzeit.toString()) + ',';
 		}
 		if (obj.enddatum !== undefined) {
-			result += '"enddatum" : ' + ((!obj.enddatum) ? 'null' : JSON.stringify(obj.enddatum)) + ',';
+			result += '"enddatum" : ' + ((obj.enddatum === null) ? 'null' : JSON.stringify(obj.enddatum)) + ',';
 		}
 		if (obj.endzeit !== undefined) {
-			result += '"endzeit" : ' + ((!obj.endzeit) ? 'null' : obj.endzeit.toString()) + ',';
+			result += '"endzeit" : ' + ((obj.endzeit === null) ? 'null' : obj.endzeit.toString()) + ',';
 		}
 		if (obj.bemerkung !== undefined) {
-			result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
+			result += '"bemerkung" : ' + ((obj.bemerkung === null) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		}
 		if (obj.istSperrtermin !== undefined) {
 			result += '"istSperrtermin" : ' + obj.istSperrtermin.toString() + ',';

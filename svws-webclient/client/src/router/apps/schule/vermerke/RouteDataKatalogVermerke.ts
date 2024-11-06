@@ -79,7 +79,7 @@ export class RouteDataKatalogVermerke extends RouteData<RouteStateKatalogeVermer
 
 	gotoEintrag = async (eintrag: VermerkartEintrag) => {
 		if (this._state.value.vermerkartenManager.liste.has(eintrag.id)) {
-			await RouteManager.doRoute(routeKatalogVermerkarten.getRoute(eintrag.id));
+			await RouteManager.doRoute(routeKatalogVermerkarten.getRoute({ id: eintrag.id }));
 			await this.setEintrag(this._state.value.vermerkartenManager.liste.get(eintrag.id))
 		}
 	}
@@ -94,7 +94,7 @@ export class RouteDataKatalogVermerke extends RouteData<RouteStateKatalogeVermer
 		const res = await api.server.createVermerkart(eintrag, api.schema);
 		const listKatalogeintraege = await api.server.getVermerkarten(api.schema);
 		await this.initManager(this.vermerkartenManager.auswahl(), listKatalogeintraege)
-		await RouteManager.doRoute({ name: routeKatalogVermerkartenDaten.name, params: { id: res.id } });
+		await RouteManager.doRoute(routeKatalogVermerkartenDaten.getRoute({ id: res.id }));
 	}
 
 	patch = async (data : Partial<VermerkartEintrag>) => {

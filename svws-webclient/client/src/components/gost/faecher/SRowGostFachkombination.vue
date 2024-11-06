@@ -1,17 +1,17 @@
 <template>
-	<div class="svws-ui-td" role="cell">
+	<div class="svws-ui-td" :style="{ 'background-color': bgColor1 }" role="cell">
 		<svws-ui-select :disabled="!hatUpdateKompetenz" v-model="fach1" title="Fach" :items="faecher" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" headless />
 	</div>
-	<div class="svws-ui-td svws-divider" role="cell">
+	<div class="svws-ui-td svws-divider" :style="{ 'background-color': bgColor1 }" role="cell">
 		<svws-ui-select :disabled="!hatUpdateKompetenz" v-model="kursart1" title="Kursart" :items="kursarten" :item-text="(i: GostKursart) => i.kuerzel" headless />
 	</div>
-	<div class="svws-ui-td" role="cell">
+	<div class="svws-ui-td" :style="{ 'background-color': bgColor2 }" role="cell">
 		&nbsp;
 	</div>
-	<div class="svws-ui-td" role="cell">
+	<div class="svws-ui-td" :style="{ 'background-color': bgColor2 }" role="cell">
 		<svws-ui-select :disabled="!hatUpdateKompetenz" v-model="fach2" title="Fach" :items="faecher" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" headless />
 	</div>
-	<div class="svws-ui-td svws-divider" role="cell">
+	<div class="svws-ui-td svws-divider" :style="{ 'background-color': bgColor2 }" role="cell">
 		<svws-ui-select :disabled="!hatUpdateKompetenz" v-model="kursart2" title="Kursart" :items="kursarten" :item-text="(i: GostKursart) => i.kuerzel" headless />
 	</div>
 	<div class="svws-ui-td svws-align-center" role="cell">
@@ -49,7 +49,7 @@
 
 	import { computed } from "vue";
 	import type { GostJahrgangFachkombination, GostFach, GostFaecherManager, List} from "@core";
-	import { GostLaufbahnplanungFachkombinationTyp, GostKursart, GostHalbjahr } from "@core";
+	import { GostLaufbahnplanungFachkombinationTyp, GostKursart, GostHalbjahr, Fach } from "@core";
 
 	const props = defineProps<{
 		faecherManager: () => GostFaecherManager;
@@ -62,6 +62,9 @@
 
 	const faecher = computed<List<GostFach>>(() => props.faecherManager().faecher());
 	const kursarten = computed<GostKursart[]>(() => GostKursart.values());
+	const schuljahr = computed(() => props.faecherManager().getSchuljahr());
+	const bgColor1 = computed<string>(() => fach1.value !== null ? Fach.getBySchluesselOrDefault(fach1.value.kuerzel).getHMTLFarbeRGB(schuljahr.value) : '');
+	const bgColor2 = computed<string>(() => fach2.value !== null ? Fach.getBySchluesselOrDefault(fach2.value.kuerzel).getHMTLFarbeRGB(schuljahr.value) : '');
 
 	const fach1 = computed<GostFach | null>({
 		get: () => props.faecherManager().get(props.kombination.fachID1),

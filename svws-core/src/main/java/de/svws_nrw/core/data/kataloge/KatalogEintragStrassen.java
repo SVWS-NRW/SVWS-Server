@@ -34,4 +34,11 @@ public class KatalogEintragStrassen {
 	@Schema(description = "der Stand des Katalog-Eintrags", example = "09.04.2020")
 	public String Stand;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public KatalogEintragStrassen() {
+		// leer
+	}
+
 }

@@ -58,7 +58,7 @@ export class LogData extends JavaObject implements Comparable<LogData> {
 	 * @return die Log-Informationen als JSON-String
 	 */
 	public toString() : string {
-		return "{ \"time\":" + this.time + ", \"level\":" + this.level.toInteger() + ", \"text\":\"" + this.getText()! + "\"}";
+		return "{ \"time\":" + this.time + ", \"level\":" + this.level.toInteger() + ", \"text\":\"" + this.getText() + "\"}";
 	}
 
 	/**
@@ -108,7 +108,7 @@ export class LogData extends JavaObject implements Comparable<LogData> {
 			return this.text;
 		const indentChars : Array<string> | null = Array(this.indent).fill("");
 		Arrays.fill(indentChars, ' ');
-		return indentChars.join("") + this.text!;
+		return indentChars.join("") + this.text;
 	}
 
 	public hashCode() : number {

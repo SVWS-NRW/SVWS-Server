@@ -23,9 +23,15 @@ public class ImportLupoMDB {
 	/// Der Logger
 	private static final Logger logger = new Logger();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ImportLupoMDB() {
+		// leer
+	}
 
 	/**
-	 *
+	 * Hauptmethode zum Import einer LuPO-MDB-Datenbank in ein SVWS-Schema.
 	 *
 	 * @param args  die Optionen für die Codegenerierung, @see options
 	 */

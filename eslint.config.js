@@ -109,6 +109,7 @@ export default tseslint.config(
 			// prüfen
 			"@typescript-eslint/prefer-function-type": "off",
 
+			"vue/eqeqeq": "error",
 			"vue/no-required-prop-with-default": "error",
 			"vue/no-setup-props-reactivity-loss": "error",
 			"vue/script-indent": ["error", "tab", { "baseIndent": 1, "switchCase": 1 }],

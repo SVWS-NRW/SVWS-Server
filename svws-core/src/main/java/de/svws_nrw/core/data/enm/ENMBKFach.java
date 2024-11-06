@@ -58,4 +58,11 @@ public class ENMBKFach {
 	@Schema(description = "Das Notenkürzel der Abschlussnote nach der Prüfung.", example = "2-")
 	public String abschlussnote;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ENMBKFach() {
+		// leer
+	}
+
 }

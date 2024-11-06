@@ -28,6 +28,7 @@ public class ProxyReportingGostKlausurplanungKlausurraum extends ReportingGostKl
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingGostKlausurplanungKlausurraum}.
+	 *
 	 * @param reportingRepository		Repository für die Reporting.
 	 * @param klausurtermin 			Der Klausurtermin, dem dieser Klausurraum zugeordnet ist.
 	 * @param gostKlausurraum 			Der Klausurraum mit Informationen zum Termin und dem Stundeplanraum

@@ -509,7 +509,7 @@ export class SchuldateiOrganisationseinheitManager extends JavaObject {
 		const nummer : string = this.getGrunddaten(schuljahr).schultraegernummer;
 		const schultraeger : SchuldateiOrganisationseinheitManager | null = this._managerSchuldatei.getOrganisationsheinheitManager(nummer);
 		if (schultraeger === null)
-			throw new IllegalArgumentException("Der Schulträger " + nummer! + " bei den Grunddaten der Organisationseinheit mit der Schulnummer " + this._organisationseinheit.schulnummer + " konnte nicht als Organisationseinheit gefunden werden.")
+			throw new IllegalArgumentException("Der Schulträger " + nummer + " bei den Grunddaten der Organisationseinheit mit der Schulnummer " + this._organisationseinheit.schulnummer + " konnte nicht als Organisationseinheit gefunden werden.")
 		return schultraeger;
 	}
 
@@ -584,7 +584,7 @@ export class SchuldateiOrganisationseinheitManager extends JavaObject {
 		const nummer : string = this.getGrunddaten(schuljahr).obereschulaufsicht;
 		const schulaufsicht : SchuldateiOrganisationseinheitManager | null = this._managerSchuldatei.getOrganisationsheinheitManager(nummer);
 		if (schulaufsicht === null)
-			throw new IllegalArgumentException("Die obere Schulfaufsicht " + nummer! + " bei den Grunddaten der Organisationseinheit mit der Schulnummer " + this._organisationseinheit.schulnummer + " konnte nicht als Organisationseinheit gefunden werden.")
+			throw new IllegalArgumentException("Die obere Schulfaufsicht " + nummer + " bei den Grunddaten der Organisationseinheit mit der Schulnummer " + this._organisationseinheit.schulnummer + " konnte nicht als Organisationseinheit gefunden werden.")
 		return schulaufsicht;
 	}
 
@@ -617,7 +617,7 @@ export class SchuldateiOrganisationseinheitManager extends JavaObject {
 		const nummer : string = this.getGrunddaten(schuljahr).untereschulaufsicht;
 		const schulaufsicht : SchuldateiOrganisationseinheitManager | null = this._managerSchuldatei.getOrganisationsheinheitManager(nummer);
 		if (schulaufsicht === null)
-			throw new IllegalArgumentException("Die untere Schulfaufsicht " + nummer! + " bei den Grunddaten der Organisationseinheit mit der Schulnummer " + this._organisationseinheit.schulnummer + " konnte nicht als Organisationseinheit gefunden werden.")
+			throw new IllegalArgumentException("Die untere Schulfaufsicht " + nummer + " bei den Grunddaten der Organisationseinheit mit der Schulnummer " + this._organisationseinheit.schulnummer + " konnte nicht als Organisationseinheit gefunden werden.")
 		return schulaufsicht;
 	}
 
@@ -650,7 +650,7 @@ export class SchuldateiOrganisationseinheitManager extends JavaObject {
 		const nummer : string = this.getGrunddaten(schuljahr).zfsl;
 		const zfsl : SchuldateiOrganisationseinheitManager | null = this._managerSchuldatei.getOrganisationsheinheitManager(nummer);
 		if (zfsl === null)
-			throw new IllegalArgumentException("Das ZfsL " + nummer! + " bei den Grunddaten der Organisationseinheit mit der Schulnummer " + this._organisationseinheit.schulnummer + " konnte nicht als Organisationseinheit gefunden werden.")
+			throw new IllegalArgumentException("Das ZfsL " + nummer + " bei den Grunddaten der Organisationseinheit mit der Schulnummer " + this._organisationseinheit.schulnummer + " konnte nicht als Organisationseinheit gefunden werden.")
 		return zfsl;
 	}
 

@@ -154,7 +154,7 @@ export class GostKlausurvorgabe extends JavaObject {
 		result += '"istMdlPruefung" : ' + obj.istMdlPruefung.toString() + ',';
 		result += '"istAudioNotwendig" : ' + obj.istAudioNotwendig.toString() + ',';
 		result += '"istVideoNotwendig" : ' + obj.istVideoNotwendig.toString() + ',';
-		result += '"bemerkungVorgabe" : ' + ((!obj.bemerkungVorgabe) ? 'null' : JSON.stringify(obj.bemerkungVorgabe)) + ',';
+		result += '"bemerkungVorgabe" : ' + ((obj.bemerkungVorgabe === null) ? 'null' : JSON.stringify(obj.bemerkungVorgabe)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -196,7 +196,7 @@ export class GostKlausurvorgabe extends JavaObject {
 			result += '"istVideoNotwendig" : ' + obj.istVideoNotwendig.toString() + ',';
 		}
 		if (obj.bemerkungVorgabe !== undefined) {
-			result += '"bemerkungVorgabe" : ' + ((!obj.bemerkungVorgabe) ? 'null' : JSON.stringify(obj.bemerkungVorgabe)) + ',';
+			result += '"bemerkungVorgabe" : ' + ((obj.bemerkungVorgabe === null) ? 'null' : JSON.stringify(obj.bemerkungVorgabe)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

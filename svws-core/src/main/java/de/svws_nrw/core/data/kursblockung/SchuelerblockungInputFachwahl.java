@@ -26,4 +26,11 @@ public class SchuelerblockungInputFachwahl {
 	 * beispielsweise 'Mareike Musterfrau hat D;LK'. */
 	public @NotNull String representation = "";
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SchuelerblockungInputFachwahl() {
+		// leer
+	}
+
 }

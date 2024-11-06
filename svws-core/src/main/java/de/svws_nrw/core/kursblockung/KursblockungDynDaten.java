@@ -8,6 +8,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.ArrayList;
 
+import de.svws_nrw.core.adt.LongArrayKey;
 import de.svws_nrw.core.adt.collection.LinkedCollection;
 import de.svws_nrw.core.adt.map.ArrayMap;
 import de.svws_nrw.core.adt.map.HashMap2D;
@@ -926,7 +927,7 @@ public class KursblockungDynDaten {
 
 	private void fehlerBeiRegel_11_bis_14_SCHUELER_MIT_SCHUELER_VARIANTEN(final @NotNull GostBlockungsdatenManager input) {
 		// Das Set dient dazu, Widersprüche/Dopplungen bei den Regeln zu finden.
-		final @NotNull HashSet<String> setSSF = new HashSet<>();
+		final @NotNull HashSet<LongArrayKey> setSSF = new HashSet<>();
 
 		// Regel 11: SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH
 		for (final @NotNull GostBlockungRegel regel11 : MapUtils.getOrCreateArrayList(_regelMap,
@@ -934,8 +935,10 @@ public class KursblockungDynDaten {
 			final long idS1 = regel11.parameter.get(0);
 			final long idS2 = regel11.parameter.get(1);
 			final long idF = regel11.parameter.get(2);
-			DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(idS1 + ";" + idS2 + ";" + idF));
-			DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(idS2 + ";" + idS1 + ";" + idF));
+			final @NotNull LongArrayKey key12F = new LongArrayKey(idS1, idS2, idF);
+			final @NotNull LongArrayKey key21F = new LongArrayKey(idS2, idS1, idF);
+			DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(key12F));
+			DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(key21F));
 			// Regel 11 persistieren
 			final @NotNull KursblockungDynSchueler sch1 = gibSchueler(idS1);
 			final @NotNull KursblockungDynSchueler sch2 = gibSchueler(idS2);
@@ -948,8 +951,10 @@ public class KursblockungDynDaten {
 			final long idS1 = regel12.parameter.get(0);
 			final long idS2 = regel12.parameter.get(1);
 			final long idF = regel12.parameter.get(2);
-			DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(idS1 + ";" + idS2 + ";" + idF));
-			DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(idS2 + ";" + idS1 + ";" + idF));
+			final @NotNull LongArrayKey key12F = new LongArrayKey(idS1, idS2, idF);
+			final @NotNull LongArrayKey key21F = new LongArrayKey(idS2, idS1, idF);
+			DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(key12F));
+			DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(key21F));
 			// Regel 12 persistieren
 			final @NotNull KursblockungDynSchueler sch1 = gibSchueler(idS1);
 			final @NotNull KursblockungDynSchueler sch2 = gibSchueler(idS2);
@@ -961,8 +966,10 @@ public class KursblockungDynDaten {
 			final long idS1 = regel13.parameter.get(0);
 			final long idS2 = regel13.parameter.get(1);
 			for (final @NotNull GostFach fach : input.schuelerGetFachListeGemeinsamerFacharten(idS1, idS2)) {
-				DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(idS1 + ";" + idS2 + ";" + fach.id));
-				DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(idS2 + ";" + idS1 + ";" + fach.id));
+				final @NotNull LongArrayKey key12F = new LongArrayKey(idS1, idS2, fach.id);
+				final @NotNull LongArrayKey key21F = new LongArrayKey(idS2, idS1, fach.id);
+				DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(key12F));
+				DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(key21F));
 				// Regel 13 persistieren
 				final @NotNull KursblockungDynSchueler sch1 = gibSchueler(idS1);
 				final @NotNull KursblockungDynSchueler sch2 = gibSchueler(idS2);
@@ -975,8 +982,10 @@ public class KursblockungDynDaten {
 			final long idS1 = r14.parameter.get(0);
 			final long idS2 = r14.parameter.get(1);
 			for (final @NotNull GostFach fach : input.schuelerGetFachListeGemeinsamerFacharten(idS1, idS2)) {
-				DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(idS1 + ";" + idS2 + ";" + fach.id));
-				DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(idS2 + ";" + idS1 + ";" + fach.id));
+				final @NotNull LongArrayKey key12F = new LongArrayKey(idS1, idS2, fach.id);
+				final @NotNull LongArrayKey key21F = new LongArrayKey(idS2, idS1, fach.id);
+				DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(key12F));
+				DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(key21F));
 			}
 			// Regel 14 persistieren
 			final @NotNull KursblockungDynSchueler sch1 = gibSchueler(idS1);
@@ -1047,9 +1056,7 @@ public class KursblockungDynDaten {
 		final @NotNull GostBlockungsergebnisManager out = new GostBlockungsergebnisManager(pDataManager, pErgebnisID);
 
 		// Erzeuge die Kurs-Schienen-Zuordnungen. Verwende Update-Objekte, da nur eine Regelvalidierung am Ende erfolgt.
-		final @NotNull Set<GostBlockungsergebnisKursSchienenZuordnung> kursSchienenZuordnungen =
-				new HashSet<GostBlockungsergebnisKursSchienenZuordnung>();
-
+		final @NotNull Set<GostBlockungsergebnisKursSchienenZuordnung> kursSchienenZuordnungen = new HashSet<>();
 		for (final @NotNull KursblockungDynKurs dynKurs : _kursArr)
 			for (final int schienenNr : dynKurs.gibSchienenLage()) {
 				final long idKurs = dynKurs.gibDatenbankID();
@@ -1057,27 +1064,33 @@ public class KursblockungDynDaten {
 				kursSchienenZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchienenZuordnung(idKurs, idSchiene));
 			}
 
+		// UPDATE - Kurs - Schiene
 		final @NotNull GostBlockungsergebnisKursSchienenZuordnungUpdate uKursSchienen =
 				out.kursSchienenUpdate_01a_FUEGE_KURS_SCHIENEN_PAARE_HINZU(kursSchienenZuordnungen);
 		out.kursSchienenUpdateExecute(uKursSchienen);
 
 		// Erzeuge die Kurs-Schüler-Zuordnungen. Verwende Update-Objekte, da nur eine Regelvalidierung am Ende erfolgt.
-		final @NotNull Set<GostBlockungsergebnisKursSchuelerZuordnung> kursSchuelerZuordnungen =
-				new HashSet<GostBlockungsergebnisKursSchuelerZuordnung>();
-
+		final @NotNull Set<GostBlockungsergebnisKursSchuelerZuordnung> kursSchuelerZuordnungen = new HashSet<>();
 		for (final @NotNull KursblockungDynSchueler dynSchueler : _schuelerArr)
 			for (final KursblockungDynKurs kurs : dynSchueler.gibKurswahlen())
-				if (kurs != null)
-					kursSchuelerZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(kurs.gibDatenbankID(), dynSchueler.gibDatenbankID()));
+				if (kurs != null) {
+					// Set verhindert Duplikate (sollte hier nicht vorkommen).
+					final long idKurs = kurs.gibDatenbankID();
+					final long idSchueler = dynSchueler.gibDatenbankID();
+					kursSchuelerZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idKurs, idSchueler));
+				}
 
 		// Erzeuge durch Regeln forcierte Schüler-Kurs-Zuordnungen.
+		// Das kann später zu Kollisionen führen, was aber richtig ist.
 		for (final @NotNull GostBlockungRegel gRegel : pDataManager.regelGetListe())
 			if (gRegel.typ == GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ) {
+				// Set verhindert Duplikate (das ist in diesem Fall möglich).
 				final long idSchueler = gRegel.parameter.get(0);
 				final long idKurs = gRegel.parameter.get(1);
-				kursSchuelerZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idKurs, idSchueler)); // Kann später zu Kollisionen führen!
+				kursSchuelerZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idKurs, idSchueler));
 			}
 
+		// UPDATE - Kurs - Schüler
 		final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate uKursSchueler =
 				out.kursSchuelerUpdate_03a_FUEGE_KURS_SCHUELER_PAARE_HINZU(kursSchuelerZuordnungen);
 		out.kursSchuelerUpdateExecute(uKursSchueler);

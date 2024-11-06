@@ -14,6 +14,13 @@ public final class GostLaufbahnplanungFachkombinationTypConverter extends DBAttr
 	/** Die Instanz des Konverters */
 	public static final GostLaufbahnplanungFachkombinationTypConverter instance = new GostLaufbahnplanungFachkombinationTypConverter();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GostLaufbahnplanungFachkombinationTypConverter() {
+		// leer
+	}
+
 	@Override
 	public Integer convertToDatabaseColumn(final GostLaufbahnplanungFachkombinationTyp value) {
 		if (value == null)

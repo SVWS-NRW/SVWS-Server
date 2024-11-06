@@ -14,6 +14,9 @@ export class BKFachklassenSchluessel extends JavaObject {
 	public schluessel : string = "";
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -42,7 +45,7 @@ export class BKFachklassenSchluessel extends JavaObject {
 
 	public static transpilerToJSON(obj : BKFachklassenSchluessel) : string {
 		let result = '{';
-		result += '"index" : ' + obj.index! + ',';
+		result += '"index" : ' + obj.index + ',';
 		result += '"schluessel" : ' + JSON.stringify(obj.schluessel) + ',';
 		result = result.slice(0, -1);
 		result += '}';

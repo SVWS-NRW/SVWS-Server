@@ -19,4 +19,11 @@ public class StundenplanInputSimpleRaum {
 	/** Das Kürzel des Raumes. Beispielsweise 'SpH1' oder 'BK05'. */
 	public @NotNull String kuerzel = "";
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public StundenplanInputSimpleRaum() {
+		// leer
+	}
+
 }

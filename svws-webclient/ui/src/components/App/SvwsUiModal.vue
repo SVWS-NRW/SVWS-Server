@@ -108,15 +108,16 @@
 		@apply flex flex-row items-center justify-between;
 		@apply w-full;
 	}
+	/* TODO: COLORS icon close darkmode */
 
 	.modal {
+		@apply bg-ui text-ui border border-ui-secondary;
 		@apply align-bottom sm:align-middle my-8 transform transition-all overflow-hidden;
-		@apply bg-white dark:bg-black max-h-full max-w-modal-sm border border-black/20 dark:border-white/5;
+		@apply max-h-full max-w-modal-sm;
 		@apply flex flex-col items-center;
 		@apply w-full mx-auto;
 		@apply relative z-50;
 		@apply rounded-xl;
-		@apply shadow-xl shadow-black/10 dark:shadow-white/5;
 
 		&--sm {
 			@apply w-full max-w-modal-sm;
@@ -133,9 +134,10 @@
 		}
 
 		&--help {
+			@apply border border-ui;
 			@apply m-0 h-full;
 			@apply shadow-xl;
-			@apply border border-black/25 dark:border-white/25;
+			@apply w-full max-w-modal-help;
 			@apply pointer-events-auto rounded-lg;
 
 			.modal--description,
@@ -145,11 +147,22 @@
 		}
 
 		&--danger {
-			@apply border-2 border-error dark:border-error;
+			.modal--title {
+				@apply text-ui-danger;
+			}
+
+			.button--primary {
+				@apply bg-ui-danger text-ui-ondanger border-ui-danger;
+
+				&:focus-visible {
+					@apply ring-ui-danger;
+				}
+			}
 		}
 
 		.modal--titlebar {
-			@apply p-2 border-b-2 border-light dark:border-white/10;
+			@apply border-b border-ui-secondary;
+			@apply p-2;
 
 			.button {
 				@apply rounded-md;
@@ -209,7 +222,7 @@
 	}
 
 	.modal--overlay {
-		@apply bg-light/75 dark:bg-[#000]/75 backdrop-filter backdrop-grayscale;
+		@apply bg-ui-neutral-weak backdrop-filter backdrop-grayscale;
 		@apply absolute top-0 left-0;
 		@apply h-full w-full;
 		@apply z-50;

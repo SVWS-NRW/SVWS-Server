@@ -30,41 +30,40 @@ import jakarta.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "content"
+		"content"
 })
 @XmlRootElement(name = "calendar-color", namespace = "http://apple.com/ns/ical")
 public class CalendarColor {
 
-    @XmlMixed
-    private List<String> content;
+	@XmlMixed
+	private List<String> content;
 
-    /**
-     * Gets the value of the content property.
-     *
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the content property.
-     *
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getContent().add(newItem);
-     * </pre>
-     *
-     *
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link String }
-     *
-     *
-     */
-    public List<String> getContent() {
-        if (content == null) {
-            content = new ArrayList<>();
-        }
-        return this.content;
-    }
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public CalendarColor() {
+		// leer
+	}
+
+	/**
+	 * Gibt die Liste des Inhalts zurück.
+	 *
+	 * @return Eine Live-Referenz auf die content-Liste. Wenn die Liste noch nicht
+	 *         existiert, wird sie erstellt.
+	 *
+	 * Hinweis: Änderungen an der zurückgegebenen Liste wirken sich direkt auf das
+	 * Objekt aus. Es wird keine Kopie erstellt.
+	 *
+	 * Beispiel zur Verwendung:
+	 * <pre>
+	 *    calendarColor.getContent().add(neuesElement);
+	 * </pre>
+	 */
+	public List<String> getContent() {
+		if (content == null) {
+			content = new ArrayList<>();
+		}
+		return this.content;
+	}
 
 }

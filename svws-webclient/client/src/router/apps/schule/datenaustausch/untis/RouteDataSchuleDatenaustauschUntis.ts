@@ -102,13 +102,13 @@ export class RouteDataSchuleDatenaustauschUntis extends RouteData<RouteStateDate
 		this.setPatchedDefaultState({ mapAbiturjahrgaenge });
 	}
 
-	public gotoAbiturjahrgang = async (abiturjahr: number) => RouteManager.doRoute(routeSchuleDatenaustauschUntisBlockungen.getRoute({abiturjahr: abiturjahr.toString()}));
+	public gotoAbiturjahrgang = async (abiturjahr: number) => RouteManager.doRoute(routeSchuleDatenaustauschUntisBlockungen.getRoute({ abiturjahr: abiturjahr }));
 
 	public gotoHalbjahr = async (idHalbjahr: number) => {
 		const abiturjahrgang = this.abiturjahrgang;
 		if (abiturjahrgang === undefined)
 			return;
-		return RouteManager.doRoute(routeSchuleDatenaustauschUntisBlockungen.getRoute({abiturjahr: abiturjahrgang.abiturjahr.toString(), halbjahr: idHalbjahr.toString()}));
+		return RouteManager.doRoute(routeSchuleDatenaustauschUntisBlockungen.getRoute({ abiturjahr: abiturjahrgang.abiturjahr, halbjahr: idHalbjahr }));
 	}
 
 	public gotoBlockung = async (idBlockung: number) => {
@@ -116,7 +116,7 @@ export class RouteDataSchuleDatenaustauschUntis extends RouteData<RouteStateDate
 		const halbjahr = this.halbjahr;
 		if (abiturjahrgang === undefined || halbjahr === undefined)
 			return;
-		return RouteManager.doRoute(routeSchuleDatenaustauschUntisBlockungen.getRoute({abiturjahr: abiturjahrgang.abiturjahr.toString(), halbjahr: halbjahr.id.toString(), idblockung: idBlockung.toString()}));
+		return RouteManager.doRoute(routeSchuleDatenaustauschUntisBlockungen.getRoute({ abiturjahr: abiturjahrgang.abiturjahr, halbjahr: halbjahr.id, idblockung: idBlockung }));
 	}
 
 	public gotoErgebnis = async (idErgebnis: number) => {
@@ -125,7 +125,7 @@ export class RouteDataSchuleDatenaustauschUntis extends RouteData<RouteStateDate
 		const blockung = this.blockung;
 		if (abiturjahrgang === undefined || halbjahr === undefined || blockung === undefined)
 			return;
-		return RouteManager.doRoute(routeSchuleDatenaustauschUntisBlockungen.getRoute({abiturjahr: abiturjahrgang.abiturjahr.toString(), halbjahr: halbjahr.id.toString(), idblockung: blockung.id.toString(), idergebnis: idErgebnis.toString()}));
+		return RouteManager.doRoute(routeSchuleDatenaustauschUntisBlockungen.getRoute({abiturjahr: abiturjahrgang.abiturjahr, halbjahr: halbjahr.id, idblockung: blockung.id, idergebnis: idErgebnis }));
 	}
 
 	public setAbiturjahrgang = async (abiturjahrgang: GostJahrgang) => {

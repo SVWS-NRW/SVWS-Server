@@ -30,6 +30,9 @@ export class StundenplanKomplett extends JavaObject {
 	public unterrichtsverteilung : StundenplanUnterrichtsverteilung = new StundenplanUnterrichtsverteilung();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

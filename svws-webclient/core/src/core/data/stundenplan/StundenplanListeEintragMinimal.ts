@@ -19,6 +19,9 @@ export class StundenplanListeEintragMinimal extends JavaObject {
 	public gueltigAb : string = "";
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

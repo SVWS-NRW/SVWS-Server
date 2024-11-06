@@ -15,11 +15,11 @@ export class AbiturBlockIMarkierPruefung extends Service<Abiturdaten, boolean> {
 
 	public handle(abidaten : Abiturdaten | null) : boolean | null {
 		if (abidaten === null) {
-			this.logger.logLn(LogLevel.ERROR, "Der Dienst " + this.getClass().getSimpleName()! + " hat keine gültigen Abiturdaten erhalten.");
+			this.logger.logLn(LogLevel.ERROR, "Der Dienst " + this.getClass().getSimpleName() + " hat keine gültigen Abiturdaten erhalten.");
 			return false;
 		}
 		const ergebnis : boolean = false;
-		this.logger.logLn(LogLevel.ERROR, "Der Dienst " + this.getClass().getSimpleName()! + " ist noch nicht fertig programmiert...");
+		this.logger.logLn(LogLevel.ERROR, "Der Dienst " + this.getClass().getSimpleName() + " ist noch nicht fertig programmiert...");
 		return ergebnis;
 	}
 

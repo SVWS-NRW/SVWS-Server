@@ -6,27 +6,28 @@ import type { SchuleDatenaustauschUntisProps } from "~/components/schule/datenau
 import type { TabData } from "@ui";
 import { RouteNode } from "~/router/RouteNode";
 import type { RouteApp} from "~/router/apps/RouteApp";
-import { routeApp } from "~/router/apps/RouteApp";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteDataSchuleDatenaustauschUntis } from "./RouteDataSchuleDatenaustauschUntis";
 import { routeSchuleDatenaustauschUntisStundenplan } from "./RouteSchuleDatenaustauschUntisStundenplan";
 import { routeSchuleDatenaustauschUntisRaeume } from "./RouteSchuleDatenaustauschUntisRaeume";
 import { routeSchuleDatenaustauschUntisBlockungen } from "./RouteSchuleDatenaustauschUntisBlockungen";
-import { routeSchule } from "../../RouteSchule";
 import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
 
 const SSchuleDatenaustauschUntis = () => import("~/components/schule/datenaustausch/untis/SSchuleDatenaustauschUntis.vue");
-const SSchuleAuswahl = () => import("~/components/schule/SSchuleAuswahl.vue")
 
 export class RouteSchuleDatenaustauschUntis extends RouteNode<RouteDataSchuleDatenaustauschUntis, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.datenaustausch.untis", "untis", SSchuleDatenaustauschUntis, new RouteDataSchuleDatenaustauschUntis());
+		super(Schulform.values(), [
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+			BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN,
+			BenutzerKompetenz.STUNDENPLAN_FUNKTIONSBEZOGEN_ANSEHEN,
+		], "schule.datenaustausch.untis", "untis", SSchuleDatenaustauschUntis, new RouteDataSchuleDatenaustauschUntis());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Untis";
 		super.menugroup = RouteSchuleMenuGroup.DATENAUSTAUSCH;
-		super.setView("submenu", SSchuleAuswahl, (route) => routeSchule.getAuswahlProps(route));
 		super.children = [
 			routeSchuleDatenaustauschUntisStundenplan,
 			routeSchuleDatenaustauschUntisRaeume,
@@ -37,7 +38,7 @@ export class RouteSchuleDatenaustauschUntis extends RouteNode<RouteDataSchuleDat
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (to.name === this.name)
-			return this.defaultChild!.getRoute();
+			return this.getRouteDefaultChild();
 		if (!to.name.startsWith(this.data.view.name)) {
 			for (const child of this.children) {
 				if (to.name.startsWith(child.name)) {
@@ -46,10 +47,6 @@ export class RouteSchuleDatenaustauschUntis extends RouteNode<RouteDataSchuleDat
 				}
 			}
 		}
-	}
-
-	public getRoute() : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }};
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuleDatenaustauschUntisProps {
@@ -64,7 +61,7 @@ export class RouteSchuleDatenaustauschUntis extends RouteNode<RouteDataSchuleDat
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new DeveloperNotificationException("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } });
+		await RouteManager.doRoute(node.getRoute());
 		this.data.setView(node, this.children);
 	}
 }

@@ -358,29 +358,29 @@ public enum GostKursblockungRegelTyp {
 	 * Simuliert ein Löschen der Schienen-Nummer und liefert die ggf. veränderten Parameterwerte zurück,
 	 * oder NULL wenn die Regel gelöscht werden muss.
 	 *
-	 * @param pRegel      Die Regel, die von einer Schienen-Löschung ggf. betroffen ist.
-	 * @param pSchienenNr Die Schiene deren Nummer gelöscht werden soll.
+	 * @param regel      Die Regel, die von einer Schienen-Löschung ggf. betroffen ist.
+	 * @param nr Die Schiene deren Nummer gelöscht werden soll.
 	 *
 	 * @return die ggf. veränderten Parameter, oder NULL wenn die Regel gelöscht werden muss.
 	 */
-	public static long[] getNeueParameterBeiSchienenLoeschung(final @NotNull GostBlockungRegel pRegel, final int pSchienenNr) {
-		final @NotNull List<Long> param = pRegel.parameter;
+	public static long[] getNeueParameterBeiSchienenLoeschung(final @NotNull GostBlockungRegel regel, final int nr) {
+		final @NotNull List<Long> param = regel.parameter;
 
-		final @NotNull GostKursblockungRegelTyp typ = fromTyp(pRegel.typ);
+		final @NotNull GostKursblockungRegelTyp typ = fromTyp(regel.typ);
 		switch (typ) {
 			// Fälle, bei denen es zu einer Veränderung kommt.
 			case KURS_FIXIERE_IN_SCHIENE, KURS_SPERRE_IN_SCHIENE: // 2, 3
-				if (pSchienenNr > param.get(1))
+				if (nr > param.get(1))
 					return new long[] { param.get(0), param.get(1) }; // Keine Veränderung.
-				if (pSchienenNr < param.get(1))
+				if (nr < param.get(1))
 					return new long[] { param.get(0), param.get(1) - 1 }; // Indexverschiebung der Schienen-Nr.
 				return null;
 
 			case KURSART_SPERRE_SCHIENEN_VON_BIS, KURSART_ALLEIN_IN_SCHIENEN_VON_BIS: // 1, 6
 				long von = param.get(1);
 				long bis = param.get(2);
-				von = (pSchienenNr < von) ? (von - 1) : von;
-				bis = (pSchienenNr <= bis) ? (bis - 1) : bis;
+				von = (nr < von) ? (von - 1) : von;
+				bis = (nr <= bis) ? (bis - 1) : bis;
 				if (von <= bis)
 					return new long[] { param.get(0), von, bis };
 				return null;

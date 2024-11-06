@@ -60,6 +60,13 @@ import java.util.List;
 public class APIGostKursplanung {
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public APIGostKursplanung() {
+		// leer
+	}
+
+	/**
 	 * Die OpenAPI-Methode für die Abfrage der Liste der Blockungen der gymnasialen Oberstufe
 	 * im angegebenen Schema für den angegebenen Abitur-Jahrgang und das angegebene Halbjahr.
 	 *

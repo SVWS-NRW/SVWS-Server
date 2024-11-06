@@ -11,7 +11,8 @@ plugins {
 apply from: ("$rootDir/gradle/checkVulnerability.gradle")
 
 def config = new groovy.json.JsonSlurper().parseText(file("buildconfig.json").text)
-println "Version " + config.project.version
+println "Version: " + config.project.version
+println "Kompatible Schild-Version: " + config.schild.version
 def gitHASH = null;
 if (file(".git/HEAD").exists()) {
 	def gitHEADFileString = file(".git/HEAD").text
@@ -54,13 +55,13 @@ println "*** Memory (used): %.0fM".formatted(memUsed)
 println "*** Memory (max): %.0fM".formatted(memMax)
 
 wrapper {
-    description "Regenerates the Gradle Wrapper files"
-    gradleVersion = '8.8'
-    distributionUrl = "https://services.gradle.org/distributions/gradle-${gradleVersion}-bin.zip"
+	description "Regenerates the Gradle Wrapper files"
+	gradleVersion = '8.8'
+	distributionUrl = "https://services.gradle.org/distributions/gradle-${gradleVersion}-bin.zip"
 }
 
 allprojects {
-    apply plugin: 'svws.gradle.javalib.plugin'
+	apply plugin: 'svws.gradle.javalib.plugin'
 	apply plugin: 'svws.gradle.svwsmavenrepo.plugin'
 	apply plugin: 'svws.gradle.svwseclipse.plugin'
 	apply plugin: 'svws.gradle.svwsintellij.plugin'
@@ -72,6 +73,7 @@ allprojects {
 
 	version = config.project.version
 	project.ext.latestRelease = config.project.version
+	project.ext.schildMinVersion = config.schild.version
 	group = 'de.svws-nrw'
 
 	svwsmavenrepo {
@@ -80,20 +82,20 @@ allprojects {
 	}
 
 	java {
-	    withJavadocJar()
-	    withSourcesJar()
+		withJavadocJar()
+		withSourcesJar()
 	}
 
 	javadoc {
 		options.encoding = 'UTF-8'
 		options.charSet = 'UTF-8'
 		options.docEncoding = 'UTF-8'
-	    options.addStringOption('Xmaxerrs', '10000')
-	    options.addStringOption('Xmaxwarns', '10000')
-	    if (JavaVersion.current().isJava9Compatible()) {
-	        options.addBooleanOption('html5', true)
-	    	options.addStringOption('Xdoclint:none', '-quiet')
-	    }
+		options.addStringOption('Xmaxerrs', '10000')
+		options.addStringOption('Xmaxwarns', '10000')
+		if (JavaVersion.current().isJava9Compatible()) {
+			options.addBooleanOption('html5', true)
+			options.addStringOption('Xdoclint:none', '-quiet')
+		}
 	}
 
 	sonarqube {
@@ -112,7 +114,7 @@ allprojects {
 */
 
 	test {
-	    useJUnitPlatform()
+		useJUnitPlatform()
 	}
 
 	configurations {
@@ -177,8 +179,8 @@ fileGithashTSLaufbahnplanung.withWriter { w -> w << 'export const githash = ' + 
 
 task npmPrepare(type: NpmInstall) {
 	group "build"
-    inputs.files fileTree(dir: './', include: 'package.json')
-    doNotTrackState("")
+	inputs.files fileTree(dir: './', include: 'package.json')
+	doNotTrackState("")
 }
 
 
@@ -222,28 +224,28 @@ task publishReleaseAllAndCloseSonatype(type: GradleBuild) {
 }
 
 nexusPublishing {
-    repositories {
-        sonatype {
-            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+	repositories {
+		sonatype {
+			nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
 			snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
-            username =  getOssrhActor()
-            password = getOssrhToken()
-        }
-    }
+			username =  getOssrhActor()
+			password = getOssrhToken()
+		}
+	}
 }
 
 
 task allJavadoc(type: Javadoc) {
 	group "documentation"
-    project.subprojects.each {
-        if (it.plugins.hasPlugin('java')) {
-            source += it.java.sourceSets.main.allJava
-            classpath += it.java.sourceSets.main.compileClasspath
-        }
-    }
-    destinationDir = file("${buildDir}/docs/javadoc-all")
-    options.addStringOption('Xmaxerrs', '10000')
-    options.addStringOption('Xmaxwarns', '10000')
+	project.subprojects.each {
+		if (it.plugins.hasPlugin('java')) {
+			source += it.java.sourceSets.main.allJava
+			classpath += it.java.sourceSets.main.compileClasspath
+		}
+	}
+	destinationDir = file("${buildDir}/docs/javadoc-all")
+	options.addStringOption('Xmaxerrs', '10000')
+	options.addStringOption('Xmaxwarns', '10000')
 }
 
 
@@ -252,41 +254,41 @@ task allJavadoc(type: Javadoc) {
 import com.github.jk1.license.render.*
 
 licenseReport {
-    // Set output directory for the report data.
-    // Defaults to ${project.buildDir}/reports/dependency-license.
-    outputDir = "$projectDir/build/licenses"
+	// Set output directory for the report data.
+	// Defaults to ${project.buildDir}/reports/dependency-license.
+	outputDir = "$projectDir/build/licenses"
 
-    // Select projects to examine for dependencies.
-    // Defaults to current project and all its subprojects
-    projects = [project] + project.subprojects
+	// Select projects to examine for dependencies.
+	// Defaults to current project and all its subprojects
+	projects = [project] + project.subprojects
 
-    // Adjust the configurations to fetch dependencies, e.g. for Android projects. Default is 'runtimeClasspath'
-    // configurations = ['implementation']
-    // Use 'ALL' to dynamically resolve all configurations:
-//    configurations = ALL
-    configurations = ['runtimeClasspath']
+	// Adjust the configurations to fetch dependencies, e.g. for Android projects. Default is 'runtimeClasspath'
+	// configurations = ['implementation']
+	// Use 'ALL' to dynamically resolve all configurations:
+	// configurations = ALL
+	configurations = ['runtimeClasspath']
 
 
-    // List the groups ids to exclude from dependency report. Supports regular expressions.
-    // For finer granularity, see: excludes.
-    excludeGroups = ['de.svws_nrw.server']
+	// List the groups ids to exclude from dependency report. Supports regular expressions.
+	// For finer granularity, see: excludes.
+	excludeGroups = ['de.svws_nrw.server']
 
-    // List the ids (in module:name format) to exclude from dependency report. Supports regular expressions.
-    // By default excludes is empty.
-    excludes = ['moduleGroup:moduleName']
+	// List the ids (in module:name format) to exclude from dependency report. Supports regular expressions.
+	// By default excludes is empty.
+	excludes = ['moduleGroup:moduleName']
 
-    // Don't include artifacts of project's own group into the report
-    excludeOwnGroup = true
+	// Don't include artifacts of project's own group into the report
+	excludeOwnGroup = true
 
-    // Set custom report renderer, implementing ReportRenderer.
-    // Yes, you can write your own to support any format necessary.
-    renderers = [new XmlReportRenderer('third-party-libs.xml', 'Back-End Libraries')]
+	// Set custom report renderer, implementing ReportRenderer.
+	// Yes, you can write your own to support any format necessary.
+	renderers = [new XmlReportRenderer('third-party-libs.xml', 'Back-End Libraries')]
 
-    // Set importers to import any external dependency information, i.e. from npm.
-    // Custom importer should implement DependencyDataImporter interface.
-    // importers = [new XmlReportImporter('Frontend dependencies', file(frontend_libs.xml))]
+	// Set importers to import any external dependency information, i.e. from npm.
+	// Custom importer should implement DependencyDataImporter interface.
+	// importers = [new XmlReportImporter('Frontend dependencies', file(frontend_libs.xml))]
 
-    // This is for the allowed-licenses-file in checkLicense Task
-    allowedLicensesFile = new File("$projectDir/allowed-licenses.json")
+	// This is for the allowed-licenses-file in checkLicense Task
+	allowedLicensesFile = new File("$projectDir/allowed-licenses.json")
 }
 

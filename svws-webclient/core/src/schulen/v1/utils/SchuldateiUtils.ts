@@ -49,7 +49,7 @@ export class SchuldateiUtils extends JavaObject {
 	private static splitDate(date : string) : Array<number> {
 		const dmy : Array<string> = date.split("\\.");
 		if (dmy.length !== 3)
-			throw new IllegalArgumentException("Der Datumswert '" + date! + "' ist fehlerhaft.")
+			throw new IllegalArgumentException("Der Datumswert '" + date + "' ist fehlerhaft.")
 		try {
 			const result : Array<number> = Array(3).fill(0);
 			result[0] = JavaInteger.parseInt(dmy[0]);
@@ -61,7 +61,7 @@ export class SchuldateiUtils extends JavaObject {
 			result[2] = JavaInteger.parseInt(dmy[2]);
 			return result;
 		} catch(nfe : any) {
-			throw new IllegalArgumentException("Der Datumswert '" + date! + "' ist fehlerhaft.")
+			throw new IllegalArgumentException("Der Datumswert '" + date + "' ist fehlerhaft.")
 		}
 	}
 

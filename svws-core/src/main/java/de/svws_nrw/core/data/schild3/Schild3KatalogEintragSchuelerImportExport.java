@@ -52,4 +52,11 @@ public class Schild3KatalogEintragSchuelerImportExport {
 	@Schema(description = "TMP")
 	public Integer Reihenfolge;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Schild3KatalogEintragSchuelerImportExport() {
+		// leer
+	}
+
 }

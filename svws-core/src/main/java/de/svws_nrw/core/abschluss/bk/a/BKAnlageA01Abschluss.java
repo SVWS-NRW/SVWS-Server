@@ -26,6 +26,13 @@ import jakarta.validation.constraints.NotNull;
 public class BKAnlageA01Abschluss extends Service<BKAnlageAFaecher, AbschlussErgebnisBerufsbildend> {
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public BKAnlageA01Abschluss() {
+		// leer
+	}
+
+	/**
 	 * TODO
 	 *
 	 * @param input   die Fächer für die Abschlussprüfung

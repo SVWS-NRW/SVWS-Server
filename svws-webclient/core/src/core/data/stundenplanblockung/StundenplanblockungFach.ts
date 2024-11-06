@@ -19,6 +19,9 @@ export class StundenplanblockungFach extends JavaObject {
 	public sortierung : number = 32000;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

@@ -283,7 +283,7 @@ export class GostKursart extends JavaEnum<GostKursart> {
 	public static fromKuerzelOrException(kuerzel : string | null) : GostKursart {
 		const gk : GostKursart | null = GostKursart.getMapByKuerzel().get(kuerzel);
 		if (gk === null)
-			throw new DeveloperNotificationException("Invalid value for kurzel: " + kuerzel!)
+			throw new DeveloperNotificationException("Invalid value for kurzel: " + kuerzel)
 		return gk;
 	}
 

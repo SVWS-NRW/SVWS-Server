@@ -18,6 +18,13 @@ public final class BooleanPlusMinusConverter extends DBAttributeConverter<Boolea
 	/** Die Instanz des Konverters */
 	public static final BooleanPlusMinusConverter instance = new BooleanPlusMinusConverter();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public BooleanPlusMinusConverter() {
+		// leer
+	}
+
 	@Override
 	public String convertToDatabaseColumn(final Boolean value) {
 		if (value == null)

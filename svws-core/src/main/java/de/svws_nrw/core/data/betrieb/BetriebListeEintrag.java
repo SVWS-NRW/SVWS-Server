@@ -13,6 +13,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @TranspilerDTO
 public class BetriebListeEintrag {
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public BetriebListeEintrag() {
+		// leer
+	}
+
 	/** ID der weiteren Adresse (Betriebe) */
 	@Schema(description = "die ID des Betriebes", example = "4711")
 	public long id;

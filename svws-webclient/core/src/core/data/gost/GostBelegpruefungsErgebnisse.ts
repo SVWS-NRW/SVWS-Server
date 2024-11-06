@@ -16,6 +16,9 @@ export class GostBelegpruefungsErgebnisse extends JavaObject {
 	public ergebnis : GostBelegpruefungErgebnis = new GostBelegpruefungErgebnis();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

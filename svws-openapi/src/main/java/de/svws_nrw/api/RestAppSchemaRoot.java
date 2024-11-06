@@ -25,6 +25,13 @@ public final class RestAppSchemaRoot extends Application {
 			APIPrivilegedSchema.class,
 			OpenApiSchemaRoot.class);
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public RestAppSchemaRoot() {
+		// leer
+	}
+
 	@Override
 	public Set<Class<?>> getClasses() {
 		return classes;

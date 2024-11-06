@@ -48,6 +48,13 @@ import jakarta.ws.rs.core.Response;
 public class APIBetrieb {
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public APIBetrieb() {
+		// leer
+	}
+
+	/**
 	 * Die OpenAPI-Methode für die Abfrage der Liste aller Betriebe.
 	 *
 	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll

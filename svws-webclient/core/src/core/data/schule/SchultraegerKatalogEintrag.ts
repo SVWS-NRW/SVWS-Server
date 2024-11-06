@@ -134,6 +134,9 @@ export class SchultraegerKatalogEintrag extends JavaObject {
 	public gueltigBis : number | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -185,31 +188,31 @@ export class SchultraegerKatalogEintrag extends JavaObject {
 	public static transpilerToJSON(obj : SchultraegerKatalogEintrag) : string {
 		let result = '{';
 		result += '"SchulNr" : ' + JSON.stringify(obj.SchulNr) + ',';
-		result += '"RegSchl" : ' + ((!obj.RegSchl) ? 'null' : JSON.stringify(obj.RegSchl)) + ',';
-		result += '"KoRe" : ' + ((!obj.KoRe) ? 'null' : JSON.stringify(obj.KoRe)) + ',';
-		result += '"KoHo" : ' + ((!obj.KoHo) ? 'null' : JSON.stringify(obj.KoHo)) + ',';
-		result += '"ABez1" : ' + ((!obj.ABez1) ? 'null' : JSON.stringify(obj.ABez1)) + ',';
-		result += '"ABez2" : ' + ((!obj.ABez2) ? 'null' : JSON.stringify(obj.ABez2)) + ',';
-		result += '"ABez3" : ' + ((!obj.ABez3) ? 'null' : JSON.stringify(obj.ABez3)) + ',';
-		result += '"PLZ" : ' + ((!obj.PLZ) ? 'null' : JSON.stringify(obj.PLZ)) + ',';
-		result += '"Ort" : ' + ((!obj.Ort) ? 'null' : JSON.stringify(obj.Ort)) + ',';
-		result += '"Strasse" : ' + ((!obj.Strasse) ? 'null' : JSON.stringify(obj.Strasse)) + ',';
-		result += '"TelVorw" : ' + ((!obj.TelVorw) ? 'null' : JSON.stringify(obj.TelVorw)) + ',';
-		result += '"Telefon" : ' + ((!obj.Telefon) ? 'null' : JSON.stringify(obj.Telefon)) + ',';
-		result += '"SF" : ' + ((!obj.SF) ? 'null' : JSON.stringify(obj.SF)) + ',';
-		result += '"OeffPri" : ' + ((!obj.OeffPri) ? 'null' : JSON.stringify(obj.OeffPri)) + ',';
-		result += '"KurzBez" : ' + ((!obj.KurzBez) ? 'null' : JSON.stringify(obj.KurzBez)) + ',';
-		result += '"SchBetrSchl" : ' + ((!obj.SchBetrSchl) ? 'null' : obj.SchBetrSchl.toString()) + ',';
-		result += '"SchBetrSchlDatum" : ' + ((!obj.SchBetrSchlDatum) ? 'null' : JSON.stringify(obj.SchBetrSchlDatum)) + ',';
-		result += '"SchuelerZahlASD" : ' + ((!obj.SchuelerZahlASD) ? 'null' : obj.SchuelerZahlASD.toString()) + ',';
-		result += '"SchuelerZahlVS" : ' + ((!obj.SchuelerZahlVS) ? 'null' : obj.SchuelerZahlVS.toString()) + ',';
-		result += '"ArtDerTraegerschaft" : ' + ((!obj.ArtDerTraegerschaft) ? 'null' : JSON.stringify(obj.ArtDerTraegerschaft)) + ',';
-		result += '"SchultraegerNr" : ' + ((!obj.SchultraegerNr) ? 'null' : JSON.stringify(obj.SchultraegerNr)) + ',';
-		result += '"Schulgliederung" : ' + ((!obj.Schulgliederung) ? 'null' : JSON.stringify(obj.Schulgliederung)) + ',';
-		result += '"Ganztagsbetrieb" : ' + ((!obj.Ganztagsbetrieb) ? 'null' : JSON.stringify(obj.Ganztagsbetrieb)) + ',';
-		result += '"Aktiv" : ' + ((!obj.Aktiv) ? 'null' : obj.Aktiv.toString()) + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+		result += '"RegSchl" : ' + ((obj.RegSchl === null) ? 'null' : JSON.stringify(obj.RegSchl)) + ',';
+		result += '"KoRe" : ' + ((obj.KoRe === null) ? 'null' : JSON.stringify(obj.KoRe)) + ',';
+		result += '"KoHo" : ' + ((obj.KoHo === null) ? 'null' : JSON.stringify(obj.KoHo)) + ',';
+		result += '"ABez1" : ' + ((obj.ABez1 === null) ? 'null' : JSON.stringify(obj.ABez1)) + ',';
+		result += '"ABez2" : ' + ((obj.ABez2 === null) ? 'null' : JSON.stringify(obj.ABez2)) + ',';
+		result += '"ABez3" : ' + ((obj.ABez3 === null) ? 'null' : JSON.stringify(obj.ABez3)) + ',';
+		result += '"PLZ" : ' + ((obj.PLZ === null) ? 'null' : JSON.stringify(obj.PLZ)) + ',';
+		result += '"Ort" : ' + ((obj.Ort === null) ? 'null' : JSON.stringify(obj.Ort)) + ',';
+		result += '"Strasse" : ' + ((obj.Strasse === null) ? 'null' : JSON.stringify(obj.Strasse)) + ',';
+		result += '"TelVorw" : ' + ((obj.TelVorw === null) ? 'null' : JSON.stringify(obj.TelVorw)) + ',';
+		result += '"Telefon" : ' + ((obj.Telefon === null) ? 'null' : JSON.stringify(obj.Telefon)) + ',';
+		result += '"SF" : ' + ((obj.SF === null) ? 'null' : JSON.stringify(obj.SF)) + ',';
+		result += '"OeffPri" : ' + ((obj.OeffPri === null) ? 'null' : JSON.stringify(obj.OeffPri)) + ',';
+		result += '"KurzBez" : ' + ((obj.KurzBez === null) ? 'null' : JSON.stringify(obj.KurzBez)) + ',';
+		result += '"SchBetrSchl" : ' + ((obj.SchBetrSchl === null) ? 'null' : obj.SchBetrSchl.toString()) + ',';
+		result += '"SchBetrSchlDatum" : ' + ((obj.SchBetrSchlDatum === null) ? 'null' : JSON.stringify(obj.SchBetrSchlDatum)) + ',';
+		result += '"SchuelerZahlASD" : ' + ((obj.SchuelerZahlASD === null) ? 'null' : obj.SchuelerZahlASD.toString()) + ',';
+		result += '"SchuelerZahlVS" : ' + ((obj.SchuelerZahlVS === null) ? 'null' : obj.SchuelerZahlVS.toString()) + ',';
+		result += '"ArtDerTraegerschaft" : ' + ((obj.ArtDerTraegerschaft === null) ? 'null' : JSON.stringify(obj.ArtDerTraegerschaft)) + ',';
+		result += '"SchultraegerNr" : ' + ((obj.SchultraegerNr === null) ? 'null' : JSON.stringify(obj.SchultraegerNr)) + ',';
+		result += '"Schulgliederung" : ' + ((obj.Schulgliederung === null) ? 'null' : JSON.stringify(obj.Schulgliederung)) + ',';
+		result += '"Ganztagsbetrieb" : ' + ((obj.Ganztagsbetrieb === null) ? 'null' : JSON.stringify(obj.Ganztagsbetrieb)) + ',';
+		result += '"Aktiv" : ' + ((obj.Aktiv === null) ? 'null' : obj.Aktiv.toString()) + ',';
+		result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -221,79 +224,79 @@ export class SchultraegerKatalogEintrag extends JavaObject {
 			result += '"SchulNr" : ' + JSON.stringify(obj.SchulNr) + ',';
 		}
 		if (obj.RegSchl !== undefined) {
-			result += '"RegSchl" : ' + ((!obj.RegSchl) ? 'null' : JSON.stringify(obj.RegSchl)) + ',';
+			result += '"RegSchl" : ' + ((obj.RegSchl === null) ? 'null' : JSON.stringify(obj.RegSchl)) + ',';
 		}
 		if (obj.KoRe !== undefined) {
-			result += '"KoRe" : ' + ((!obj.KoRe) ? 'null' : JSON.stringify(obj.KoRe)) + ',';
+			result += '"KoRe" : ' + ((obj.KoRe === null) ? 'null' : JSON.stringify(obj.KoRe)) + ',';
 		}
 		if (obj.KoHo !== undefined) {
-			result += '"KoHo" : ' + ((!obj.KoHo) ? 'null' : JSON.stringify(obj.KoHo)) + ',';
+			result += '"KoHo" : ' + ((obj.KoHo === null) ? 'null' : JSON.stringify(obj.KoHo)) + ',';
 		}
 		if (obj.ABez1 !== undefined) {
-			result += '"ABez1" : ' + ((!obj.ABez1) ? 'null' : JSON.stringify(obj.ABez1)) + ',';
+			result += '"ABez1" : ' + ((obj.ABez1 === null) ? 'null' : JSON.stringify(obj.ABez1)) + ',';
 		}
 		if (obj.ABez2 !== undefined) {
-			result += '"ABez2" : ' + ((!obj.ABez2) ? 'null' : JSON.stringify(obj.ABez2)) + ',';
+			result += '"ABez2" : ' + ((obj.ABez2 === null) ? 'null' : JSON.stringify(obj.ABez2)) + ',';
 		}
 		if (obj.ABez3 !== undefined) {
-			result += '"ABez3" : ' + ((!obj.ABez3) ? 'null' : JSON.stringify(obj.ABez3)) + ',';
+			result += '"ABez3" : ' + ((obj.ABez3 === null) ? 'null' : JSON.stringify(obj.ABez3)) + ',';
 		}
 		if (obj.PLZ !== undefined) {
-			result += '"PLZ" : ' + ((!obj.PLZ) ? 'null' : JSON.stringify(obj.PLZ)) + ',';
+			result += '"PLZ" : ' + ((obj.PLZ === null) ? 'null' : JSON.stringify(obj.PLZ)) + ',';
 		}
 		if (obj.Ort !== undefined) {
-			result += '"Ort" : ' + ((!obj.Ort) ? 'null' : JSON.stringify(obj.Ort)) + ',';
+			result += '"Ort" : ' + ((obj.Ort === null) ? 'null' : JSON.stringify(obj.Ort)) + ',';
 		}
 		if (obj.Strasse !== undefined) {
-			result += '"Strasse" : ' + ((!obj.Strasse) ? 'null' : JSON.stringify(obj.Strasse)) + ',';
+			result += '"Strasse" : ' + ((obj.Strasse === null) ? 'null' : JSON.stringify(obj.Strasse)) + ',';
 		}
 		if (obj.TelVorw !== undefined) {
-			result += '"TelVorw" : ' + ((!obj.TelVorw) ? 'null' : JSON.stringify(obj.TelVorw)) + ',';
+			result += '"TelVorw" : ' + ((obj.TelVorw === null) ? 'null' : JSON.stringify(obj.TelVorw)) + ',';
 		}
 		if (obj.Telefon !== undefined) {
-			result += '"Telefon" : ' + ((!obj.Telefon) ? 'null' : JSON.stringify(obj.Telefon)) + ',';
+			result += '"Telefon" : ' + ((obj.Telefon === null) ? 'null' : JSON.stringify(obj.Telefon)) + ',';
 		}
 		if (obj.SF !== undefined) {
-			result += '"SF" : ' + ((!obj.SF) ? 'null' : JSON.stringify(obj.SF)) + ',';
+			result += '"SF" : ' + ((obj.SF === null) ? 'null' : JSON.stringify(obj.SF)) + ',';
 		}
 		if (obj.OeffPri !== undefined) {
-			result += '"OeffPri" : ' + ((!obj.OeffPri) ? 'null' : JSON.stringify(obj.OeffPri)) + ',';
+			result += '"OeffPri" : ' + ((obj.OeffPri === null) ? 'null' : JSON.stringify(obj.OeffPri)) + ',';
 		}
 		if (obj.KurzBez !== undefined) {
-			result += '"KurzBez" : ' + ((!obj.KurzBez) ? 'null' : JSON.stringify(obj.KurzBez)) + ',';
+			result += '"KurzBez" : ' + ((obj.KurzBez === null) ? 'null' : JSON.stringify(obj.KurzBez)) + ',';
 		}
 		if (obj.SchBetrSchl !== undefined) {
-			result += '"SchBetrSchl" : ' + ((!obj.SchBetrSchl) ? 'null' : obj.SchBetrSchl.toString()) + ',';
+			result += '"SchBetrSchl" : ' + ((obj.SchBetrSchl === null) ? 'null' : obj.SchBetrSchl.toString()) + ',';
 		}
 		if (obj.SchBetrSchlDatum !== undefined) {
-			result += '"SchBetrSchlDatum" : ' + ((!obj.SchBetrSchlDatum) ? 'null' : JSON.stringify(obj.SchBetrSchlDatum)) + ',';
+			result += '"SchBetrSchlDatum" : ' + ((obj.SchBetrSchlDatum === null) ? 'null' : JSON.stringify(obj.SchBetrSchlDatum)) + ',';
 		}
 		if (obj.SchuelerZahlASD !== undefined) {
-			result += '"SchuelerZahlASD" : ' + ((!obj.SchuelerZahlASD) ? 'null' : obj.SchuelerZahlASD.toString()) + ',';
+			result += '"SchuelerZahlASD" : ' + ((obj.SchuelerZahlASD === null) ? 'null' : obj.SchuelerZahlASD.toString()) + ',';
 		}
 		if (obj.SchuelerZahlVS !== undefined) {
-			result += '"SchuelerZahlVS" : ' + ((!obj.SchuelerZahlVS) ? 'null' : obj.SchuelerZahlVS.toString()) + ',';
+			result += '"SchuelerZahlVS" : ' + ((obj.SchuelerZahlVS === null) ? 'null' : obj.SchuelerZahlVS.toString()) + ',';
 		}
 		if (obj.ArtDerTraegerschaft !== undefined) {
-			result += '"ArtDerTraegerschaft" : ' + ((!obj.ArtDerTraegerschaft) ? 'null' : JSON.stringify(obj.ArtDerTraegerschaft)) + ',';
+			result += '"ArtDerTraegerschaft" : ' + ((obj.ArtDerTraegerschaft === null) ? 'null' : JSON.stringify(obj.ArtDerTraegerschaft)) + ',';
 		}
 		if (obj.SchultraegerNr !== undefined) {
-			result += '"SchultraegerNr" : ' + ((!obj.SchultraegerNr) ? 'null' : JSON.stringify(obj.SchultraegerNr)) + ',';
+			result += '"SchultraegerNr" : ' + ((obj.SchultraegerNr === null) ? 'null' : JSON.stringify(obj.SchultraegerNr)) + ',';
 		}
 		if (obj.Schulgliederung !== undefined) {
-			result += '"Schulgliederung" : ' + ((!obj.Schulgliederung) ? 'null' : JSON.stringify(obj.Schulgliederung)) + ',';
+			result += '"Schulgliederung" : ' + ((obj.Schulgliederung === null) ? 'null' : JSON.stringify(obj.Schulgliederung)) + ',';
 		}
 		if (obj.Ganztagsbetrieb !== undefined) {
-			result += '"Ganztagsbetrieb" : ' + ((!obj.Ganztagsbetrieb) ? 'null' : JSON.stringify(obj.Ganztagsbetrieb)) + ',';
+			result += '"Ganztagsbetrieb" : ' + ((obj.Ganztagsbetrieb === null) ? 'null' : JSON.stringify(obj.Ganztagsbetrieb)) + ',';
 		}
 		if (obj.Aktiv !== undefined) {
-			result += '"Aktiv" : ' + ((!obj.Aktiv) ? 'null' : obj.Aktiv.toString()) + ',';
+			result += '"Aktiv" : ' + ((obj.Aktiv === null) ? 'null' : obj.Aktiv.toString()) + ',';
 		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+			result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+			result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

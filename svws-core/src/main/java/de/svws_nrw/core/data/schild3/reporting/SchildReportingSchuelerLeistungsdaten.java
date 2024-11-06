@@ -79,4 +79,11 @@ public class SchildReportingSchuelerLeistungsdaten {
 
 	// TODO weitere Attribute
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SchildReportingSchuelerLeistungsdaten() {
+		// leer
+	}
+
 }

@@ -44,4 +44,11 @@ public class StundenplanPausenzeit {
 			description = "Ein Array mit den IDs der Klassen, denen diese Pausenzeit zugeordnet sind. Ist die Liste leer, so gilt die Pausenzeit für alle Klassen!"))
 	public @NotNull List<Long> klassen = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public StundenplanPausenzeit() {
+		// leer
+	}
+
 }

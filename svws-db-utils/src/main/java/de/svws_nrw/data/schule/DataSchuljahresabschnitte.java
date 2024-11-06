@@ -113,6 +113,7 @@ public final class DataSchuljahresabschnitte extends DataManager<Long> {
 	 * @param id     die ID des Schuljahresabschnitts
 	 *
 	 * @return der Schuljahresabschnitt
+	 * @throws ApiOperationException   falls id null ist, oder es nur id keinen Abschnitt gibt.
 	 */
 	public Schuljahresabschnitt getByID(final Long id) throws ApiOperationException {
 		if (id == null)

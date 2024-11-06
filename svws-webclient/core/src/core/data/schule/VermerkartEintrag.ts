@@ -29,6 +29,9 @@ export class VermerkartEintrag extends JavaObject {
 	public anzahlVermerke : number = 0;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

@@ -47,6 +47,9 @@ export class ServiceAbschlussHA9 extends Service<GEAbschlussFaecher, AbschlussEr
 	private static readonly LOG_SEPERATOR : string = "______________________________";
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -105,15 +108,15 @@ export class ServiceAbschlussHA9 extends Service<GEAbschlussFaecher, AbschlussEr
 			this.logger.logLn(LogLevel.DEBUG, "   " + f.kuerzel + "(E):" + note + "->" + note_neu);
 			f.note = note_neu;
 		}
-		this.logger.logLn(LogLevel.DEBUG, " -> FG1: Fächer " + faecher.fg1.toString()!);
-		this.logger.logLn(LogLevel.DEBUG, " -> FG2: Fächer " + faecher.fg2.toString()!);
+		this.logger.logLn(LogLevel.DEBUG, " -> FG1: Fächer " + faecher.fg1.toString());
+		this.logger.logLn(LogLevel.DEBUG, " -> FG2: Fächer " + faecher.fg2.toString());
 		const abschlussergebnis : AbschlussErgebnis = this.pruefeDefizite(faecher, "");
 		if (abschlussergebnis.erworben) {
 			this.logger.logLn(LogLevel.DEBUG, ServiceAbschlussHA9.LOG_SEPERATOR);
 			this.logger.logLn(LogLevel.INFO, " => HA 9: APO-SI §40 (3)");
 		} else
 			if (AbschlussManager.hatNachpruefungsmoeglichkeit(abschlussergebnis)) {
-				this.logger.logLn(LogLevel.INFO, " => kein HA9 - Nachprüfungsmöglichkeite(en) in " + AbschlussManager.getNPFaecherString(abschlussergebnis)!);
+				this.logger.logLn(LogLevel.INFO, " => kein HA9 - Nachprüfungsmöglichkeite(en) in " + AbschlussManager.getNPFaecherString(abschlussergebnis));
 			} else {
 				this.logger.logLn(LogLevel.INFO, " => kein HA9 - KEINE Nachprüfungsmöglichkeiten!");
 			}
@@ -136,39 +139,39 @@ export class ServiceAbschlussHA9 extends Service<GEAbschlussFaecher, AbschlussEr
 		const fg1_ungenuegend : number = faecher.fg1.getFaecherAnzahl(ServiceAbschlussHA9.filterUngenuegend);
 		const fg2_ungenuegend : number = faecher.fg2.getFaecherAnzahl(ServiceAbschlussHA9.filterUngenuegend);
 		if (fg1_defizite > 0)
-			this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> FG1: Defizit" + (fg1_defizite > 1 ? "e" : "") + ": " + faecher.fg1.getKuerzelListe(ServiceAbschlussHA9.filterDefizit)!);
+			this.logger.logLn(LogLevel.DEBUG, logIndent + " -> FG1: Defizit" + (fg1_defizite > 1 ? "e" : "") + ": " + faecher.fg1.getKuerzelListe(ServiceAbschlussHA9.filterDefizit));
 		if (fg2_defizite > 0)
-			this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> FG2: Defizit" + (fg2_defizite > 1 ? "e" : "") + ": " + faecher.fg2.getKuerzelListe(ServiceAbschlussHA9.filterDefizit)!);
+			this.logger.logLn(LogLevel.DEBUG, logIndent + " -> FG2: Defizit" + (fg2_defizite > 1 ? "e" : "") + ": " + faecher.fg2.getKuerzelListe(ServiceAbschlussHA9.filterDefizit));
 		if ((fg1_ungenuegend > 0) || (fg2_ungenuegend > 1)) {
-			this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> zu oft ungenügend (6) - 0x6 in FG1 und max. 1x6 in FG2 erlaubt.");
+			this.logger.logLn(LogLevel.DEBUG, logIndent + " -> zu oft ungenügend (6) - 0x6 in FG1 und max. 1x6 in FG2 erlaubt.");
 			return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.HA9, false);
 		}
-		this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> " + ((fg2_ungenuegend === 1) ? "1x6 in FG2 erlaubt" : "0x6 in FG1 und FG2") + " -> prüfe weitere Defizite");
+		this.logger.logLn(LogLevel.DEBUG, logIndent + " -> " + ((fg2_ungenuegend === 1) ? "1x6 in FG2 erlaubt" : "0x6 in FG1 und FG2") + " -> prüfe weitere Defizite");
 		if (fg1_mangelhaft > 2) {
-			this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> zu viele Defizite: Mehr als 2x5 in FG1");
+			this.logger.logLn(LogLevel.DEBUG, logIndent + " -> zu viele Defizite: Mehr als 2x5 in FG1");
 			return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.HA9, false);
 		}
 		if ((fg1_mangelhaft === 2) && (fg2_defizite > 1)) {
-			this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> zu viele Defizite: 2x5 in FG1 und mind. ein weiteres Defizit in FG2");
+			this.logger.logLn(LogLevel.DEBUG, logIndent + " -> zu viele Defizite: 2x5 in FG1 und mind. ein weiteres Defizit in FG2");
 			return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.HA9, false);
 		}
 		if (ges_defizite > 3) {
-			this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> zu viele Defizite: Insgesamt mehr als 3 Defizite");
+			this.logger.logLn(LogLevel.DEBUG, logIndent + " -> zu viele Defizite: Insgesamt mehr als 3 Defizite");
 			return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.HA9, false);
 		}
 		const hatNP : boolean = (fg1_mangelhaft === 2) || (ges_defizite === 3);
 		if (hatNP) {
 			const np_faecher : List<string> = (fg1_mangelhaft === 2) ? faecher.fg1.getKuerzel(ServiceAbschlussHA9.filterMangelhaft) : faecher.getKuerzel(ServiceAbschlussHA9.filterMangelhaft);
-			this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> zu viele Defizite: " + ((fg1_mangelhaft === 2) ? "2x5 in FG1, aber kein weiteres Defizit in FG2" : "3 Defizite nicht erlaubt"));
+			this.logger.logLn(LogLevel.DEBUG, logIndent + " -> zu viele Defizite: " + ((fg1_mangelhaft === 2) ? "2x5 in FG1, aber kein weiteres Defizit in FG2" : "3 Defizite nicht erlaubt"));
 			const abschlussergebnis : AbschlussErgebnis = AbschlussManager.getErgebnisNachpruefung(SchulabschlussAllgemeinbildend.HA9, np_faecher);
-			this.logger.logLn(LogLevel.INFO, " -> Nachprüfungsmöglichkeit(en) in " + AbschlussManager.getNPFaecherString(abschlussergebnis)!);
+			this.logger.logLn(LogLevel.INFO, " -> Nachprüfungsmöglichkeit(en) in " + AbschlussManager.getNPFaecherString(abschlussergebnis));
 			return abschlussergebnis;
 		}
 		if ((fg1_defizite === 0) && (fg2_defizite === 0)) {
-			this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> keine Defizite in FG1 und FG2");
+			this.logger.logLn(LogLevel.DEBUG, logIndent + " -> keine Defizite in FG1 und FG2");
 			return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.HA9, true);
 		}
-		this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> zwei Defizite erlaubt (solange nicht beide in FG1)");
+		this.logger.logLn(LogLevel.DEBUG, logIndent + " -> zwei Defizite erlaubt (solange nicht beide in FG1)");
 		return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.HA9, true);
 	}
 

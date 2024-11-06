@@ -4,13 +4,12 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.List;
 
-import com.fasterxml.jackson.databind.MappingIterator;
-import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.csv.CsvGenerator;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 
+import de.svws_nrw.base.CsvReader;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -70,7 +69,7 @@ public final class UntisGPU010 {
 
 
 	/** Das CSV-Schema */
-	private static final CsvSchema schema = CsvSchema.builder()
+	private static final CsvSchema csvSchema = CsvSchema.builder()
 			.addColumn("name")
 			.addColumn("langname")
 			.addColumn("text")
@@ -93,26 +92,27 @@ public final class UntisGPU010 {
 			.withNullValue("")
 			.withoutHeader();
 
-	/** Die Instanz des Object-Readers für die CSV-Daten */
-	private static final ObjectReader reader = new CsvMapper().readerFor(UntisGPU010.class).with(schema);
-
 	/** Die Instanz des Object-Writers für die CSV-Daten */
-	private static final ObjectWriter writer = new CsvMapper().writerFor(UntisGPU010.class).with(schema).with(CsvGenerator.Feature.ALWAYS_QUOTE_STRINGS);
+	private static final ObjectWriter writer = new CsvMapper().writerFor(UntisGPU010.class).with(csvSchema).with(CsvGenerator.Feature.ALWAYS_QUOTE_STRINGS);
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public UntisGPU010() {
+		// leer
+	}
 
 	/**
 	 * Erstellt aus den übergebenen CSV-Daten eine Liste der GPU010-Datensätze
 	 *
-	 * @param csvData   die Daten des CSV-Datei als String
+	 * @param csvData   die Daten des CSV-Datei als Byte-Array
 	 *
 	 * @return eine Liste mit den GPU010-Datensätzen
 	 *
 	 * @throws IOException falls die CSV-Datei nicht korrekt gelesen werden kann
 	 */
-	public static @NotNull List<UntisGPU010> readCSV(final String csvData) throws IOException {
-		try (MappingIterator<UntisGPU010> it = reader.readValues(csvData)) {
-			return it.readAll();
-		}
+	public static @NotNull List<UntisGPU010> readCSV(final byte[] csvData) throws IOException {
+		return CsvReader.fromUntis(UntisGPU010.class, csvSchema, csvData);
 	}
 
 

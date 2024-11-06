@@ -38,7 +38,7 @@ export class RouteStundenplanKataloge extends RouteNode<RouteDataStundenplanKata
 			routeKatalogAufsichtsbereiche,
 			routeKatalogRaeume,
 		];
-		super.defaultChild = routeKatalogAufsichtsbereiche;
+		super.defaultChild = routeKatalogZeitraster;
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
@@ -47,20 +47,11 @@ export class RouteStundenplanKataloge extends RouteNode<RouteDataStundenplanKata
 			throw new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt.");
 		await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
 		if (to.name === this.name)
-			return this.getRoute();
+			return this.getRouteDefaultChild();
 	}
 
 	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
 		this.data.reset();
-	}
-
-	public getRoute(id?: number) : RouteLocationRaw {
-		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
-	}
-
-	public getChildRoute(id: number | undefined) : RouteLocationRaw {
-		const redirect_name = (routeStundenplanKataloge.selectedChild === undefined) ? routeKatalogAufsichtsbereiche.name : routeStundenplanKataloge.selectedChild.name;
-		return { name: redirect_name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): StundenplanAuswahlProps {
@@ -87,7 +78,7 @@ export class RouteStundenplanKataloge extends RouteNode<RouteDataStundenplanKata
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new DeveloperNotificationException("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } });
+		await RouteManager.doRoute(node.getRoute());
 		this.data.setView(node, this.children);
 	}
 

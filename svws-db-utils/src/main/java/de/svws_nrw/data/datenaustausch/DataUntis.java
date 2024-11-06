@@ -292,8 +292,7 @@ public final class DataUntis {
 		try {
 			// Erstelle aus dem Multipart den String mit dem Inhalt der Textdatei
 			logger.logLn("Lese die Datensätze aus der Text-Datei ein.");
-			final String strGPU001 = new String(multipart.data, StandardCharsets.UTF_8);
-			final List<UntisGPU001> unterrichte = UntisGPU001.readCSV(strGPU001);
+			final List<UntisGPU001> unterrichte = UntisGPU001.readCSV(multipart.data);
 			final StundenplanListeEintragMinimal entry = new ObjectMapper().readValue(multipart.entry, StundenplanListeEintragMinimal.class);
 			logger.logLn("Importiere den Stundenplan:");
 			_importGPU001(logger, conn, entry.idSchuljahresabschnitt, entry.gueltigAb, entry.bezeichnung, unterrichte, 0, ignoreMissing);
@@ -332,9 +331,8 @@ public final class DataUntis {
 		boolean success = true;
 		Status statusCode = Status.OK;
 		try {
-			final String csv = new String(multipart.data, StandardCharsets.UTF_8);
 			logger.logLn("Importiere die Räume aus der Untis-Datei GPU005.txt:");
-			importUntisRaeume(conn, logger, csv);
+			importUntisRaeume(conn, logger, multipart.data);
 			logger.logLn("  Import beendet");
 		} catch (final Exception e) {
 			success = false;
@@ -364,7 +362,7 @@ public final class DataUntis {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static boolean importUntisRaeume(final DBEntityManager conn, final Logger logger, final String csv) throws ApiOperationException {
+	public static boolean importUntisRaeume(final DBEntityManager conn, final Logger logger, final byte[] csv) throws ApiOperationException {
 		// Lese zunächst die Informationen zur Schule aus der SVWS-Datenbank und überprüfe die Schulform
 		logger.logLn("-> Lese Informationen zu der Schule ein...");
 		logger.modifyIndent(2);

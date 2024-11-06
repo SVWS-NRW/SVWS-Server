@@ -18,4 +18,11 @@ public class SchulformKatalogEintrag extends CoreTypeData {
 	@Schema(description = "gibt an, ob eine Schule der Schulform eine gymnasiale Oberstufe haben kann oder nicht", example = "true")
 	public boolean hatGymOb;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SchulformKatalogEintrag() {
+		// leer
+	}
+
 }

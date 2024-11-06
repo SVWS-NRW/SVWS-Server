@@ -43,6 +43,9 @@ export class GostBlockungsergebnis extends JavaObject {
 	public bewertung : GostBlockungsergebnisBewertung = new GostBlockungsergebnisBewertung();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

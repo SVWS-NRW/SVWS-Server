@@ -30,4 +30,12 @@ public class StundenplanSchiene {
 	@Schema(description = "die Bezeichnung der Schiene", example = "Schiene 3")
 	public @NotNull String bezeichnung = "";
 
+
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public StundenplanSchiene() {
+		// leer
+	}
+
 }

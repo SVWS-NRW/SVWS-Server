@@ -54,6 +54,9 @@ export class SchuelerKAoADaten extends JavaObject {
 	public bemerkung : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -104,10 +107,10 @@ export class SchuelerKAoADaten extends JavaObject {
 		result += '"idKategorie" : ' + obj.idKategorie.toString() + ',';
 		result += '"idMerkmal" : ' + obj.idMerkmal.toString() + ',';
 		result += '"idZusatzmerkmal" : ' + obj.idZusatzmerkmal.toString() + ',';
-		result += '"idAnschlussoption" : ' + ((!obj.idAnschlussoption) ? 'null' : obj.idAnschlussoption.toString()) + ',';
-		result += '"idBerufsfeld" : ' + ((!obj.idBerufsfeld) ? 'null' : obj.idBerufsfeld.toString()) + ',';
-		result += '"idEbene4" : ' + ((!obj.idEbene4) ? 'null' : obj.idEbene4.toString()) + ',';
-		result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
+		result += '"idAnschlussoption" : ' + ((obj.idAnschlussoption === null) ? 'null' : obj.idAnschlussoption.toString()) + ',';
+		result += '"idBerufsfeld" : ' + ((obj.idBerufsfeld === null) ? 'null' : obj.idBerufsfeld.toString()) + ',';
+		result += '"idEbene4" : ' + ((obj.idEbene4 === null) ? 'null' : obj.idEbene4.toString()) + ',';
+		result += '"bemerkung" : ' + ((obj.bemerkung === null) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -134,16 +137,16 @@ export class SchuelerKAoADaten extends JavaObject {
 			result += '"idZusatzmerkmal" : ' + obj.idZusatzmerkmal.toString() + ',';
 		}
 		if (obj.idAnschlussoption !== undefined) {
-			result += '"idAnschlussoption" : ' + ((!obj.idAnschlussoption) ? 'null' : obj.idAnschlussoption.toString()) + ',';
+			result += '"idAnschlussoption" : ' + ((obj.idAnschlussoption === null) ? 'null' : obj.idAnschlussoption.toString()) + ',';
 		}
 		if (obj.idBerufsfeld !== undefined) {
-			result += '"idBerufsfeld" : ' + ((!obj.idBerufsfeld) ? 'null' : obj.idBerufsfeld.toString()) + ',';
+			result += '"idBerufsfeld" : ' + ((obj.idBerufsfeld === null) ? 'null' : obj.idBerufsfeld.toString()) + ',';
 		}
 		if (obj.idEbene4 !== undefined) {
-			result += '"idEbene4" : ' + ((!obj.idEbene4) ? 'null' : obj.idEbene4.toString()) + ',';
+			result += '"idEbene4" : ' + ((obj.idEbene4 === null) ? 'null' : obj.idEbene4.toString()) + ',';
 		}
 		if (obj.bemerkung !== undefined) {
-			result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
+			result += '"bemerkung" : ' + ((obj.bemerkung === null) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

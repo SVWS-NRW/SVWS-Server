@@ -45,4 +45,11 @@ public class Sprachbelegung {
 	/** Gibt an, ob das Hebraicum erreicht wurde oder nicht. */
 	public boolean hatHebraicum;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Sprachbelegung() {
+		// leer
+	}
+
 }

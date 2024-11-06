@@ -8,7 +8,6 @@ import type { GostKlausurplanungDetailAnsichtProps } from "~/components/gost/kla
 import SGostKlausurplanungDetailAnsichtVue from "~/components/gost/klausurplanung/SGostKlausurplanungDetailAnsicht.vue";
 import { routeApp } from "../../RouteApp";
 import { schulformenGymOb } from "~/router/RouteHelper";
-import { RouteDataGostKlausurplanung } from "./RouteDataGostKlausurplanung";
 
 export class RouteGostKlausurplanungDetailAnsicht extends RouteNode<any, RouteGostKlausurplanung> {
 
@@ -26,13 +25,9 @@ export class RouteGostKlausurplanungDetailAnsicht extends RouteNode<any, RouteGo
 	}
 
 	public checkHidden(params?: RouteParams) {
-		if (!routeGostKlausurplanung.data.abschnitt || !routeGostKlausurplanung.data.manager.stundenplanManagerExistsByAbschnitt(routeGostKlausurplanung.data.abschnitt.id))
+		if (!routeGostKlausurplanung.data.abschnitt || routeGostKlausurplanung.data.manager.stundenplanManagerGeladenAndExistsByAbschnitt(routeGostKlausurplanung.data.abschnitt.id) === false)
 			return { name: routeGostKlausurplanung.defaultChild!.name, params };
 		return false;
-	}
-
-	public getRoute(abiturjahr: number, halbjahr: number) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: abiturjahr, halbjahr: halbjahr }};
 	}
 
 	public getProps(to: RouteLocationNormalized): GostKlausurplanungDetailAnsichtProps {

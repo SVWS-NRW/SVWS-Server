@@ -7,7 +7,14 @@ import de.svws_nrw.db.schema.SchemaRevisionen;
  * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
-public class DTOHelper {
+public final class DTOHelper {
+
+    /**
+     * Leerer privater Konstruktor, da diese Klasse nicht zur Instantiierung vorgesehen ist.
+     */
+    private DTOHelper() {
+        throw new UnsupportedOperationException("Instantiation not allowed.");
+    }
 
 
     /**

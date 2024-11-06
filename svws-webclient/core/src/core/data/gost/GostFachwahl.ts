@@ -29,6 +29,9 @@ export class GostFachwahl extends JavaObject {
 	public abiturfach : number | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -68,7 +71,7 @@ export class GostFachwahl extends JavaObject {
 		result += '"schuelerID" : ' + obj.schuelerID.toString() + ',';
 		result += '"kursartID" : ' + obj.kursartID.toString() + ',';
 		result += '"istSchriftlich" : ' + obj.istSchriftlich.toString() + ',';
-		result += '"abiturfach" : ' + ((!obj.abiturfach) ? 'null' : obj.abiturfach.toString()) + ',';
+		result += '"abiturfach" : ' + ((obj.abiturfach === null) ? 'null' : obj.abiturfach.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -89,7 +92,7 @@ export class GostFachwahl extends JavaObject {
 			result += '"istSchriftlich" : ' + obj.istSchriftlich.toString() + ',';
 		}
 		if (obj.abiturfach !== undefined) {
-			result += '"abiturfach" : ' + ((!obj.abiturfach) ? 'null' : obj.abiturfach.toString()) + ',';
+			result += '"abiturfach" : ' + ((obj.abiturfach === null) ? 'null' : obj.abiturfach.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

@@ -86,4 +86,11 @@ public class KursDaten {
 	@Schema(description = "ggf. die die Zeugnisbezeichnung des Kurses", example = "false")
 	public String bezeichnungZeugnis = null;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public KursDaten() {
+		// leer
+	}
+
 }

@@ -21,10 +21,6 @@ export class RouteGostKlausurplanungProbleme extends RouteNode<any, RouteGostKla
 		super.text = "Fehler und Hinweise";
 	}
 
-	public getRoute(abiturjahr: number, halbjahr: number) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr, halbjahr }};
-	}
-
 	public getProps(to: RouteLocationNormalized): GostKlausurplanungProblemeProps {
 		return {
 			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,

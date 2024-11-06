@@ -57,4 +57,11 @@ public class ENMSprachenfolge {
 			+ "SprachBelegungSekI (0, 2, 4, 6)", example = "4")
 	public Integer belegungSekI;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ENMSprachenfolge() {
+		// leer
+	}
+
 }

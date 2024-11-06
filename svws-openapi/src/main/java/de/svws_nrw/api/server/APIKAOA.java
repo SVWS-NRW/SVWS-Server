@@ -41,6 +41,13 @@ import jakarta.ws.rs.core.Response;
 public class APIKAOA {
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public APIKAOA() {
+		// leer
+	}
+
+	/**
 	 * Die OpenAPI-Methode für die Abfrage des KAoA-Kataloges Kategorien.
 	 *
 	 * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll

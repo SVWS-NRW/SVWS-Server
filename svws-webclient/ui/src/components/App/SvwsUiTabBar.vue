@@ -145,11 +145,14 @@
 	}
 
 	.svws-ui-tabs--wrapper {
+		@apply bg-ui;
 		@apply flex items-center -mx-3 px-0.5 w-auto relative z-30 flex-shrink-0 overflow-hidden;
-		@apply bg-white dark:bg-black;
+
 		&:before {
-			@apply h-[2px] bg-light dark:bg-white/10 absolute left-0 right-0 bottom-0;
+			@apply bg-ui-neutral;
+			@apply h-[2px] absolute left-0 right-0 bottom-0;
 			content: '';
+
 			.svws-has-sub-nav & {
 				@apply rounded-md h-[10px] bottom-[-8px];
 			}
@@ -175,11 +178,20 @@
 		@apply from-white/0 via-50% via-white to-white dark:from-black/0 dark:via-50% dark:via-black dark:to-black;
 
 		.button {
-			@apply w-5 h-full p-0 rounded bg-light dark:bg-white/5 border border-black/5 dark:border-white/5;
+			@apply bg-ui-neutral border border-ui-secondary;
+			@apply w-5 h-full p-0 rounded;
+
+			&:focus {
+				@apply outline-none;
+			}
 
 			&:hover,
 			&:focus-visible {
-				@apply brightness-95;
+				@apply bg-ui-neutral-hover border-ui-neutral-hover;
+			}
+
+			&:focus-visible {
+				@apply ring ring-ui;
 			}
 		}
 	}
@@ -193,75 +205,76 @@
 	}
 
 	.svws-ui-tab-button {
+		@apply text-ui bg-ui;
 		@apply inline-flex items-center justify-center;
 		@apply py-1 px-2;
 		@apply rounded;
 		@apply select-none;
-		@apply text-sm font-bold text-black dark:text-white;
+		@apply text-sm font-bold;
 		@apply whitespace-nowrap;
 		@apply relative border border-transparent;
 
-		.svws-ui-tabs--vertical & {
-			@apply py-1.5 px-2.5;
-		}
-
 		.svws-ui-spinner {
 			@apply w-4 h-4 absolute top-1.5 right-0.5;
-		}
-
-		&:hover {
-			@apply bg-black/10 dark:bg-white/10;
-			&:active {
-				@apply bg-black/20 dark:bg-white/20;
-			}
-		}
-
-		&:focus-visible {
-			@apply ring-2 ring-svws/50;
-			.page--statistik & {
-				@apply ring-violet-500/50;
-			}
 		}
 
 		&:focus {
 			@apply outline-none;
 		}
 
+		&:hover,
+		&:focus-visible {
+			@apply bg-ui-hover text-ui-hover;
+
+			.page--statistik & {
+				@apply text-ui-statistic;
+			}
+
+		}
+
+		&:active {
+			@apply bg-ui-selected text-ui-onselected;
+
+			.page--statistik & {
+				@apply bg-ui-statistic-weak text-ui-statistic;
+			}
+		}
+
+		&:focus-visible {
+			@apply ring ring-ui;
+			@apply z-10;
+
+			.page--statistik & {
+				@apply ring-ui-statistic;
+			}
+		}
+
 		&.svws-active,
 		&.svws-active:hover {
-			@apply outline-none text-svws;
-			.svws-ui-tabs--vertical & {
-				@apply bg-white dark:bg-black shadow;
-			}
+			@apply text-ui-onselected bg-ui-selected;
+
 			.svws-ui-tabs &,
 			.svws-ui-secondary-tabs & {
 				&:before {
-					@apply absolute left-2 right-2 -bottom-2 h-[2px] bg-svws;
+					@apply absolute left-2 right-2 -bottom-2 h-[2px] border-b-2;
 					content: '';
+
 					.page--statistik & {
-						@apply bg-violet-500;
+						@apply bg-ui-statistic-weak text-ui-statistic;
 					}
 				}
 			}
+
 			.svws-ui-secondary-tabs & {
-				@apply bg-white dark:bg-black;
+				@apply bg-ui;
+
 				&:before {
 					@apply -bottom-1;
 				}
 			}
+
 			.page--statistik & {
-				@apply text-violet-500;
-			}
-		}
-
-		&.svws-active:hover {
-			.svws-ui-tabs &,
-			.svws-ui-secondary-tabs & {
-				@apply bg-svws/5 dark:bg-svws/10;
-
-				.page--statistik & {
-					@apply bg-violet-500/5 dark:bg-violet-500/10;
-				}
+				@apply text-ui-statistic;
 			}
 		}
 
@@ -274,9 +287,7 @@
 		}
 
 		&:disabled {
-			@apply bg-transparent dark:bg-transparent text-black dark:text-white;
-			@apply opacity-20;
-			@apply cursor-not-allowed pointer-events-none;
+			@apply bg-transparent text-ui-disabled pointer-events-none;
 		}
 	}
 

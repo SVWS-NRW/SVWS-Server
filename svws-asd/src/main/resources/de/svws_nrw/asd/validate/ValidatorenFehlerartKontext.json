@@ -30,5 +30,82 @@
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
+    }, {
+		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLehrerStammdaten",
+		"historie": [ {
+			"zebras": true,
+			"svws": true,
+			"hart": [],
+			"muss": [],
+			"hinweis": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+    }, {
+		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLehrerStammdatenGeburtsdatum",
+		"historie": [ {
+			"zebras": true,
+			"svws": true,
+			"hart": [],
+			"muss": [],
+			"hinweis": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+    }, {
+		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLehrerStammdatenNachname",
+		"historie": [ {
+			"zebras": true,
+			"svws": true,
+			"hart": [],
+			"muss": [],
+			"hinweis": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+    }, {
+		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLehrerStammdatenVorname",
+		"historie": [ {
+			"zebras": true,
+			"svws": true,
+			"hart": [],
+			"muss": [],
+			"hinweis": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+    }, {
+		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLehrerPersonalabschnittdaten",
+		"historie": [ {
+			"zebras": true,
+			"svws": true,
+			"hart": [],
+			"muss": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+			"hinweis": [],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+    }, {
+		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLehrerPersonalabschnittdatenRechtsverhaeltnisGeburtsdatum",
+		"historie": [ {
+			"zebras": true,
+			"svws": true,
+			"hart": [],
+			"muss": [],
+			"hinweis": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+    }, {
+		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLehrerPersonalabschnittdatenPflichtstundensoll",
+		"historie": [ {
+			"zebras": true,
+			"svws": true,
+			"hart": [],
+			"muss": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+			"hinweis": [],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
     } ]
 }	

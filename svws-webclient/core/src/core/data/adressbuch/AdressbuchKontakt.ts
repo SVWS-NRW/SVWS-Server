@@ -82,6 +82,9 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 	public idEltern : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -149,11 +152,11 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 		result += '"version" : ' + JSON.stringify(obj.version) + ',';
 		result += '"nachname" : ' + JSON.stringify(obj.nachname) + ',';
 		result += '"vorname" : ' + JSON.stringify(obj.vorname) + ',';
-		result += '"strassenname" : ' + ((!obj.strassenname) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
-		result += '"hausnummer" : ' + ((!obj.hausnummer) ? 'null' : JSON.stringify(obj.hausnummer)) + ',';
-		result += '"hausnummerZusatz" : ' + ((!obj.hausnummerZusatz) ? 'null' : JSON.stringify(obj.hausnummerZusatz)) + ',';
-		result += '"plz" : ' + ((!obj.plz) ? 'null' : JSON.stringify(obj.plz)) + ',';
-		result += '"ort" : ' + ((!obj.ort) ? 'null' : JSON.stringify(obj.ort)) + ',';
+		result += '"strassenname" : ' + ((obj.strassenname === null) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
+		result += '"hausnummer" : ' + ((obj.hausnummer === null) ? 'null' : JSON.stringify(obj.hausnummer)) + ',';
+		result += '"hausnummerZusatz" : ' + ((obj.hausnummerZusatz === null) ? 'null' : JSON.stringify(obj.hausnummerZusatz)) + ',';
+		result += '"plz" : ' + ((obj.plz === null) ? 'null' : JSON.stringify(obj.plz)) + ',';
+		result += '"ort" : ' + ((obj.ort === null) ? 'null' : JSON.stringify(obj.ort)) + ',';
 		result += '"telefonnummern" : [ ';
 		for (let i = 0; i < obj.telefonnummern.size(); i++) {
 			const elem = obj.telefonnummern.get(i);
@@ -162,8 +165,8 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 				result += ',';
 		}
 		result += ' ]' + ',';
-		result += '"email" : ' + ((!obj.email) ? 'null' : JSON.stringify(obj.email)) + ',';
-		result += '"webAdresse" : ' + ((!obj.webAdresse) ? 'null' : JSON.stringify(obj.webAdresse)) + ',';
+		result += '"email" : ' + ((obj.email === null) ? 'null' : JSON.stringify(obj.email)) + ',';
+		result += '"webAdresse" : ' + ((obj.webAdresse === null) ? 'null' : JSON.stringify(obj.webAdresse)) + ',';
 		result += '"kategorien" : [ ';
 		for (let i = 0; i < obj.kategorien.size(); i++) {
 			const elem = obj.kategorien.get(i);
@@ -172,10 +175,10 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 				result += ',';
 		}
 		result += ' ]' + ',';
-		result += '"organisation" : ' + ((!obj.organisation) ? 'null' : JSON.stringify(obj.organisation)) + ',';
-		result += '"rolle" : ' + ((!obj.rolle) ? 'null' : JSON.stringify(obj.rolle)) + ',';
-		result += '"idKind" : ' + ((!obj.idKind) ? 'null' : JSON.stringify(obj.idKind)) + ',';
-		result += '"idEltern" : ' + ((!obj.idEltern) ? 'null' : JSON.stringify(obj.idEltern)) + ',';
+		result += '"organisation" : ' + ((obj.organisation === null) ? 'null' : JSON.stringify(obj.organisation)) + ',';
+		result += '"rolle" : ' + ((obj.rolle === null) ? 'null' : JSON.stringify(obj.rolle)) + ',';
+		result += '"idKind" : ' + ((obj.idKind === null) ? 'null' : JSON.stringify(obj.idKind)) + ',';
+		result += '"idEltern" : ' + ((obj.idEltern === null) ? 'null' : JSON.stringify(obj.idEltern)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -202,19 +205,19 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 			result += '"vorname" : ' + JSON.stringify(obj.vorname) + ',';
 		}
 		if (obj.strassenname !== undefined) {
-			result += '"strassenname" : ' + ((!obj.strassenname) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
+			result += '"strassenname" : ' + ((obj.strassenname === null) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
 		}
 		if (obj.hausnummer !== undefined) {
-			result += '"hausnummer" : ' + ((!obj.hausnummer) ? 'null' : JSON.stringify(obj.hausnummer)) + ',';
+			result += '"hausnummer" : ' + ((obj.hausnummer === null) ? 'null' : JSON.stringify(obj.hausnummer)) + ',';
 		}
 		if (obj.hausnummerZusatz !== undefined) {
-			result += '"hausnummerZusatz" : ' + ((!obj.hausnummerZusatz) ? 'null' : JSON.stringify(obj.hausnummerZusatz)) + ',';
+			result += '"hausnummerZusatz" : ' + ((obj.hausnummerZusatz === null) ? 'null' : JSON.stringify(obj.hausnummerZusatz)) + ',';
 		}
 		if (obj.plz !== undefined) {
-			result += '"plz" : ' + ((!obj.plz) ? 'null' : JSON.stringify(obj.plz)) + ',';
+			result += '"plz" : ' + ((obj.plz === null) ? 'null' : JSON.stringify(obj.plz)) + ',';
 		}
 		if (obj.ort !== undefined) {
-			result += '"ort" : ' + ((!obj.ort) ? 'null' : JSON.stringify(obj.ort)) + ',';
+			result += '"ort" : ' + ((obj.ort === null) ? 'null' : JSON.stringify(obj.ort)) + ',';
 		}
 		if (obj.telefonnummern !== undefined) {
 			result += '"telefonnummern" : [ ';
@@ -227,10 +230,10 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 			result += ' ]' + ',';
 		}
 		if (obj.email !== undefined) {
-			result += '"email" : ' + ((!obj.email) ? 'null' : JSON.stringify(obj.email)) + ',';
+			result += '"email" : ' + ((obj.email === null) ? 'null' : JSON.stringify(obj.email)) + ',';
 		}
 		if (obj.webAdresse !== undefined) {
-			result += '"webAdresse" : ' + ((!obj.webAdresse) ? 'null' : JSON.stringify(obj.webAdresse)) + ',';
+			result += '"webAdresse" : ' + ((obj.webAdresse === null) ? 'null' : JSON.stringify(obj.webAdresse)) + ',';
 		}
 		if (obj.kategorien !== undefined) {
 			result += '"kategorien" : [ ';
@@ -243,16 +246,16 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 			result += ' ]' + ',';
 		}
 		if (obj.organisation !== undefined) {
-			result += '"organisation" : ' + ((!obj.organisation) ? 'null' : JSON.stringify(obj.organisation)) + ',';
+			result += '"organisation" : ' + ((obj.organisation === null) ? 'null' : JSON.stringify(obj.organisation)) + ',';
 		}
 		if (obj.rolle !== undefined) {
-			result += '"rolle" : ' + ((!obj.rolle) ? 'null' : JSON.stringify(obj.rolle)) + ',';
+			result += '"rolle" : ' + ((obj.rolle === null) ? 'null' : JSON.stringify(obj.rolle)) + ',';
 		}
 		if (obj.idKind !== undefined) {
-			result += '"idKind" : ' + ((!obj.idKind) ? 'null' : JSON.stringify(obj.idKind)) + ',';
+			result += '"idKind" : ' + ((obj.idKind === null) ? 'null' : JSON.stringify(obj.idKind)) + ',';
 		}
 		if (obj.idEltern !== undefined) {
-			result += '"idEltern" : ' + ((!obj.idEltern) ? 'null' : JSON.stringify(obj.idEltern)) + ',';
+			result += '"idEltern" : ' + ((obj.idEltern === null) ? 'null' : JSON.stringify(obj.idEltern)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

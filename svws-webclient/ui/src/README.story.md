@@ -127,7 +127,7 @@ Beispiel: `.svws-active`, `.svws-disabled`
   @apply text-sm;
 
   &.svws-active {
-    @apply bg-svws;
+    @apply bg-ui-selected text-ui-onselected;
   }
 }
 
@@ -144,12 +144,12 @@ Beispiel: `.svws-active`, `.svws-disabled`
 <style lang="postcss">
 .svws-ui-component-a {
   .svws-ui-thead {
-    @apply text-svws;
+    @apply text-ui-brand;
   }
 
   .svws-ui-button {
     &.svws-active {
-      @apply bg-error;
+      @apply bg-ui-danger;
     }
   }
 }

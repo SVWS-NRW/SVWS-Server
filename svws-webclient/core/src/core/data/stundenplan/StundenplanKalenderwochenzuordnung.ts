@@ -24,6 +24,9 @@ export class StundenplanKalenderwochenzuordnung extends JavaObject {
 	public wochentyp : number = 0;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

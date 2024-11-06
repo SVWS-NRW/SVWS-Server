@@ -35,13 +35,14 @@
 <style lang="postcss">
 
 	.svws-ui-tab-button {
+		@apply bg-ui text-ui border border-transparent;
 		@apply inline-flex items-center justify-center;
 		@apply py-1 px-2;
 		@apply rounded;
 		@apply select-none;
-		@apply text-sm font-bold text-black dark:text-white;
+		@apply text-sm font-bold;
 		@apply whitespace-nowrap;
-		@apply relative border border-transparent;
+		@apply relative;
 
 		.svws-ui-tabs--vertical & {
 			@apply py-1.5 px-2.5;
@@ -52,16 +53,17 @@
 		}
 
 		&:hover {
-			@apply bg-black/10 dark:bg-white/10;
+			@apply bg-ui-hover text-ui-hover;
+
 			&:active {
-				@apply bg-black/20 dark:bg-white/20;
+				@apply bg-ui-neutral;
 			}
 		}
 
 		&:focus-visible {
-			@apply ring-2 ring-svws/50;
+			@apply ring ring-ui;
 			.page--statistik & {
-				@apply ring-violet-500/50;
+				@apply ring-ui-statistic;
 			}
 		}
 
@@ -71,38 +73,38 @@
 
 		&.svws-active,
 		&.svws-active:hover {
-			@apply outline-none text-svws;
+			@apply outline-none text-ui-brand;
 			.svws-ui-tabs--vertical & {
-				@apply bg-white dark:bg-black shadow;
+				@apply bg-ui shadow;
 			}
 			.svws-ui-tabs &,
 			.svws-ui-secondary-tabs & {
 				&:before {
-					@apply absolute left-2 right-2 -bottom-2 h-[2px] bg-svws;
+					@apply absolute left-2 right-2 -bottom-2 h-[2px] bg-ui-brand;
 					content: '';
 					.page--statistik & {
-						@apply bg-violet-500;
+						@apply bg-ui-statistic;
 					}
 				}
 			}
 			.svws-ui-secondary-tabs & {
-				@apply bg-white dark:bg-black;
+				@apply bg-ui;
 				&:before {
 					@apply -bottom-1;
 				}
 			}
 			.page--statistik & {
-				@apply text-violet-500;
+				@apply text-ui-statistic;
 			}
 		}
 
 		&.svws-active:hover {
 			.svws-ui-tabs &,
 			.svws-ui-secondary-tabs & {
-				@apply bg-svws/5 dark:bg-svws/10;
+				@apply bg-ui-brand-weak;
 
 				.page--statistik & {
-					@apply bg-violet-500/5 dark:bg-violet-500/10;
+					@apply bg-ui-statistic-weak;
 				}
 			}
 		}
@@ -116,7 +118,7 @@
 		}
 
 		&:disabled {
-			@apply bg-transparent dark:bg-transparent text-black dark:text-white;
+			@apply bg-transparent dark:bg-transparent text-ui;
 			@apply opacity-20;
 			@apply cursor-not-allowed pointer-events-none;
 		}

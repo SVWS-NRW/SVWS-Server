@@ -22,4 +22,11 @@ public class MultipleBinaryMultipartBody {
 	@FormParam("data")
 	public List<byte[]> data;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public MultipleBinaryMultipartBody() {
+		// leer
+	}
+
 }

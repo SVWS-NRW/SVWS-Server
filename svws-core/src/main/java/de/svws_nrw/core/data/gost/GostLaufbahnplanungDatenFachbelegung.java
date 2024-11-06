@@ -27,4 +27,11 @@ public class GostLaufbahnplanungDatenFachbelegung {
 	/** Gibt an, ob die Einzelbelegung des Faches in den Halbjahren schriftlich ist oder nicht */
 	public final @NotNull boolean[] schriftlich = new boolean[GostHalbjahr.maxHalbjahre];
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GostLaufbahnplanungDatenFachbelegung() {
+		// leer
+	}
+
 }

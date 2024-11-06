@@ -39,4 +39,10 @@ public class AbgangsartKatalogDaten {
 			example = "null")
 	public Integer gueltigBis = null;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public AbgangsartKatalogDaten() {
+		// leer
+	}
 }

@@ -38,4 +38,11 @@ public class BenutzerEMailDaten {
 	@Schema(description = "die zu verwendende Signatur beim Versenden von E-Mails")
 	public @NotNull String signatur = "";
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public BenutzerEMailDaten() {
+		// leer
+	}
+
 }

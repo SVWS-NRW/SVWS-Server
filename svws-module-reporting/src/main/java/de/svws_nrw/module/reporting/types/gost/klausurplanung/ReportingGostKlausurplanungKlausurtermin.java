@@ -51,6 +51,7 @@ public class ReportingGostKlausurplanungKlausurtermin {
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
+	 *
 	 * @param bemerkung					Die textuelle Bemerkung zum Termin, sofern vorhanden.
 	 * @param bezeichnung				Die Bezeichnung des Klausurtermins, falls schon gesetzt.
 	 * @param datum						Das Datum des Klausurtermins, falls schon gesetzt.
@@ -88,39 +89,40 @@ public class ReportingGostKlausurplanungKlausurtermin {
 
 	/**
 	 * Die Liste der Schülerklausuren zum Termin ihres Kurses.
+	 *
 	 * @return Die Schülerklausuren zum Kurstermin.
 	 */
 	public List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausurenKurstermin() {
-		if (this.schuelerklausuren.isEmpty()) {
+		if (this.schuelerklausuren.isEmpty())
 			return new ArrayList<>();
-		} else
-			return this.schuelerklausuren.stream().filter(k -> k.nummerTerminfolge == 0).toList();
+		return this.schuelerklausuren.stream().filter(k -> k.nummerTerminfolge == 0).toList();
 	}
 
 	/**
 	 * Die Liste der Schülerklausuren zum Termin die Nachschreibklausuren darstellen.
+	 *
 	 * @return Die Schülerklausuren als Nachschreibklausuren.
 	 */
 	public List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausurenNachschreibtermin() {
-		if (this.schuelerklausuren.isEmpty()) {
+		if (this.schuelerklausuren.isEmpty())
 			return new ArrayList<>();
-		} else
-			return this.schuelerklausuren.stream().filter(k -> k.nummerTerminfolge > 0).toList();
+		return this.schuelerklausuren.stream().filter(k -> k.nummerTerminfolge > 0).toList();
 	}
 
 	/**
 	 * Die Startuhrzeit des Klausurtermins, falls schon gesetzt
+	 *
 	 * @return Die Uhrzeitangabe der Startzeit.
 	 */
 	public String startuhrzeit() {
-		if (this.startzeit == null) {
+		if (this.startzeit == null)
 			return "";
-		} else
-			return DateUtils.gibZeitStringOfMinuten(this.startzeit);
+		return DateUtils.gibZeitStringOfMinuten(this.startzeit);
 	}
 
 	/**
 	 * Erstellt eine Liste der Klausurräume mit Stunden für den Klausurtermin.
+	 *
 	 * @return Die Angaben zu Räumen und Stunden.
 	 */
 	public String raeumeUndStunden() {
@@ -141,8 +143,7 @@ public class ReportingGostKlausurplanungKlausurtermin {
 		}
 		if (tempList.isEmpty())
 			return "";
-		else
-			return String.join(",", tempList);
+		return String.join(",", tempList);
 	}
 
 
@@ -151,6 +152,7 @@ public class ReportingGostKlausurplanungKlausurtermin {
 
 	/**
 	 * Die textuelle Bemerkung zum Termin, sofern vorhanden.
+	 *
 	 * @return Inhalt des Feldes bemerkung
 	 */
 	public String bemerkung() {
@@ -159,6 +161,7 @@ public class ReportingGostKlausurplanungKlausurtermin {
 
 	/**
 	 * Die Bezeichnung des Klausurtermins, falls schon gesetzt.
+	 *
 	 * @return Inhalt des Feldes bezeichnung
 	 */
 	public String bezeichnung() {
@@ -167,6 +170,7 @@ public class ReportingGostKlausurplanungKlausurtermin {
 
 	/**
 	 * Das Datum des Klausurtermins, falls schon gesetzt.
+	 *
 	 * @return Inhalt des Feldes datum
 	 */
 	public String datum() {
@@ -175,6 +179,7 @@ public class ReportingGostKlausurplanungKlausurtermin {
 
 	/**
 	 * Das Gost-Halbjahr, in dem die Klausur geschrieben wird.
+	 *
 	 * @return Inhalt des Feldes gostHalbjahr
 	 */
 	public GostHalbjahr gostHalbjahr() {
@@ -183,6 +188,7 @@ public class ReportingGostKlausurplanungKlausurtermin {
 
 	/**
 	 * Die ID des Klausurtermins.
+	 *
 	 * @return Inhalt des Feldes id
 	 */
 	public long id() {
@@ -191,6 +197,7 @@ public class ReportingGostKlausurplanungKlausurtermin {
 
 	/**
 	 * Die Information, ob es sich um einen Haupttermin handelt oder nicht.
+	 *
 	 * @return Inhalt des Feldes istHaupttermin
 	 */
 	public boolean istHaupttermin() {
@@ -199,6 +206,7 @@ public class ReportingGostKlausurplanungKlausurtermin {
 
 	/**
 	 * Die Klausurräume dieses Termines, inklusive der Aufsichten für die Unterrichtsstunden der Klausur.
+	 *
 	 * @return Inhalt des Feldes klausurraeume
 	 */
 	public List<ReportingGostKlausurplanungKlausurraum> klausurraeume() {
@@ -207,6 +215,7 @@ public class ReportingGostKlausurplanungKlausurtermin {
 
 	/**
 	 * Die Liste von Kursklausuren zu diesem Klausurtermin.
+	 *
 	 * @return Inhalt des Feldes kursklausuren
 	 */
 	public List<ReportingGostKlausurplanungKursklausur> kursklausuren() {
@@ -215,6 +224,7 @@ public class ReportingGostKlausurplanungKlausurtermin {
 
 	/**
 	 * Die Information, ob es bei einem Haupttermin auch Nachschreibklausuren zugelassen sind oder nicht.
+	 *
 	 * @return Inhalt des Feldes nachschreiberZugelassen
 	 */
 	public boolean nachschreiberZugelassen() {
@@ -223,6 +233,7 @@ public class ReportingGostKlausurplanungKlausurtermin {
 
 	/**
 	 * Das Quartal, in welchem die Klausur geschrieben wird.
+	 *
 	 * @return Inhalt des Feldes quartal
 	 */
 	public int quartal() {
@@ -231,6 +242,7 @@ public class ReportingGostKlausurplanungKlausurtermin {
 
 	/**
 	 * Die Liste aller Schülerklausuren zu diesem Termin.
+	 *
 	 * @return Inhalt des Feldes schuelerklausuren
 	 */
 	public List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausuren() {

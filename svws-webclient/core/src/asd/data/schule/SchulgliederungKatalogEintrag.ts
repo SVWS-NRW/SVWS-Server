@@ -47,6 +47,9 @@ export class SchulgliederungKatalogEintrag extends CoreTypeDataNurSchulformen {
 	public abschluesse : List<SchulgliederungGueltigerAbschluss> = new ArrayList<SchulgliederungGueltigerAbschluss>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -120,14 +123,14 @@ export class SchulgliederungKatalogEintrag extends CoreTypeDataNurSchulformen {
 		result += '"schluessel" : ' + JSON.stringify(obj.schluessel) + ',';
 		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
 		result += '"text" : ' + JSON.stringify(obj.text) + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+		result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
 		result += '"istBK" : ' + obj.istBK.toString() + ',';
 		result += '"istAuslaufend" : ' + obj.istAuslaufend.toString() + ',';
 		result += '"istAusgelaufen" : ' + obj.istAusgelaufen.toString() + ',';
-		result += '"bkAnlage" : ' + ((!obj.bkAnlage) ? 'null' : JSON.stringify(obj.bkAnlage)) + ',';
-		result += '"bkTyp" : ' + ((!obj.bkTyp) ? 'null' : JSON.stringify(obj.bkTyp)) + ',';
-		result += '"bkIndex" : ' + ((!obj.bkIndex) ? 'null' : obj.bkIndex.toString()) + ',';
+		result += '"bkAnlage" : ' + ((obj.bkAnlage === null) ? 'null' : JSON.stringify(obj.bkAnlage)) + ',';
+		result += '"bkTyp" : ' + ((obj.bkTyp === null) ? 'null' : JSON.stringify(obj.bkTyp)) + ',';
+		result += '"bkIndex" : ' + ((obj.bkIndex === null) ? 'null' : obj.bkIndex.toString()) + ',';
 		result += '"istVZ" : ' + obj.istVZ.toString() + ',';
 		result += '"abschluesse" : [ ';
 		for (let i = 0; i < obj.abschluesse.size(); i++) {
@@ -167,10 +170,10 @@ export class SchulgliederungKatalogEintrag extends CoreTypeDataNurSchulformen {
 			result += '"text" : ' + JSON.stringify(obj.text) + ',';
 		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+			result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+			result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		if (obj.istBK !== undefined) {
 			result += '"istBK" : ' + obj.istBK.toString() + ',';
@@ -182,13 +185,13 @@ export class SchulgliederungKatalogEintrag extends CoreTypeDataNurSchulformen {
 			result += '"istAusgelaufen" : ' + obj.istAusgelaufen.toString() + ',';
 		}
 		if (obj.bkAnlage !== undefined) {
-			result += '"bkAnlage" : ' + ((!obj.bkAnlage) ? 'null' : JSON.stringify(obj.bkAnlage)) + ',';
+			result += '"bkAnlage" : ' + ((obj.bkAnlage === null) ? 'null' : JSON.stringify(obj.bkAnlage)) + ',';
 		}
 		if (obj.bkTyp !== undefined) {
-			result += '"bkTyp" : ' + ((!obj.bkTyp) ? 'null' : JSON.stringify(obj.bkTyp)) + ',';
+			result += '"bkTyp" : ' + ((obj.bkTyp === null) ? 'null' : JSON.stringify(obj.bkTyp)) + ',';
 		}
 		if (obj.bkIndex !== undefined) {
-			result += '"bkIndex" : ' + ((!obj.bkIndex) ? 'null' : obj.bkIndex.toString()) + ',';
+			result += '"bkIndex" : ' + ((obj.bkIndex === null) ? 'null' : obj.bkIndex.toString()) + ',';
 		}
 		if (obj.istVZ !== undefined) {
 			result += '"istVZ" : ' + obj.istVZ.toString() + ',';

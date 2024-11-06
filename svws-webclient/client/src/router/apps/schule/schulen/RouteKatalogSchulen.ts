@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
 
 import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
 
@@ -13,11 +13,9 @@ import type { TabData } from "@ui";
 import type { SchulenAppProps } from "~/components/schule/kataloge/schulen/SSchulenAppProps";
 import type { SchulenAuswahlProps } from "~/components/schule/kataloge/schulen/SSchulenAuswahlProps";
 import { RouteDataKatalogSchulen } from "./RouteDataKatalogSchulen";
-import { routeSchule } from "../RouteSchule";
 import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
 import { routeError } from "~/router/error/RouteError";
 
-const SSchuleAuswahl = () => import("~/components/schule/SSchuleAuswahl.vue")
 const SSchulenAuswahl = () => import("~/components/schule/kataloge/schulen/SSchulenAuswahl.vue");
 const SSchulenApp = () => import("~/components/schule/kataloge/schulen/SSchulenApp.vue");
 
@@ -29,7 +27,6 @@ export class RouteKatalogSchulen extends RouteNode<RouteDataKatalogSchulen, Rout
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schulen";
 		super.menugroup = RouteSchuleMenuGroup.ALLGEMEIN;
-		super.setView("submenu", SSchuleAuswahl, (route) => routeSchule.getAuswahlProps(route));
 		super.setView("liste", SSchulenAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 			routeKatalogSchuleDaten,
@@ -46,20 +43,20 @@ export class RouteKatalogSchulen extends RouteNode<RouteDataKatalogSchulen, Rout
 				const eintrag = this.data.mapKatalogeintraege.get(id);
 				if (eintrag === undefined && this.data.auswahl !== undefined) {
 					await this.data.ladeListe();
-					return this.getRoute(this.data.auswahl.id);
+					return this.getRouteDefaultChild();
 				}
 				else if (eintrag)
 					this.data.setEintrag(eintrag);
 			}
 			if (to.name === this.name && this.data.auswahl !== undefined)
-				return this.getRoute(this.data.auswahl.id);
+				return this.getRouteDefaultChild();
 		} catch (error) {
-			return routeError.getRoute(error as DeveloperNotificationException);
+			return routeError.getErrorRoute(error as DeveloperNotificationException);
 		}
 	}
 
-	public getRoute(id: number | undefined) : RouteLocationRaw {
-		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
+	public addRouteParamsFromState() : RouteParamsRawGeneric {
+		return { id : this.data.auswahl?.id ?? undefined };
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): SchulenAuswahlProps {
@@ -86,7 +83,7 @@ export class RouteKatalogSchulen extends RouteNode<RouteDataKatalogSchulen, Rout
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new DeveloperNotificationException("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.auswahl?.id } });
+		await RouteManager.doRoute(node.getRoute());
 		this.data.setView(node, this.children);
 	}
 }

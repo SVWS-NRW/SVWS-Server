@@ -46,4 +46,11 @@ public class SchuleInfo {
 	@Schema(description = "der Ort der Schule", example = "Düsseldorf")
 	public String ort;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SchuleInfo() {
+		// leer
+	}
+
 }

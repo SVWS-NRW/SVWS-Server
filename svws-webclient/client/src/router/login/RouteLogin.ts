@@ -18,7 +18,6 @@ export class RouteLogin extends RouteNode<any, any> {
 
 	// Der Pfad, zu welchem weitergeleitet wird
 	public routepath = "/";
-	public redirect = '';
 	protected schema = ref<string | null>(null);
 
 	public constructor() {
@@ -28,14 +27,15 @@ export class RouteLogin extends RouteNode<any, any> {
 		super.text = "Login";
 	}
 
-	public getRoute(): RouteLocationRaw {
-		return { name: this.name };
-	}
-
 	public login = async (schema: string, username: string, password: string): Promise<void> => {
 		await api.login(schema, username, password);
 		if (api.authenticated) {
 			if (await api.init()) {
+				if (this.routepath !== "/") {
+					// Überprüfe das Schema, falls ein redirect nach dem Login geplant ist
+					if (!this.routepath.startsWith("/" + encodeURIComponent(schema)))
+						this.routepath = "/";
+				}
 				await RouteManager.doRoute(this.routepath);
 				return;
 			}
@@ -47,7 +47,7 @@ export class RouteLogin extends RouteNode<any, any> {
 	public logout = async () => {
 		this.routepath = "/";
 		this.schema.value = api.schema;
-		await RouteManager.doRoute({ name: this.name });
+		await RouteManager.doRoute(this.getRoute());
 		await api.logout();
 		RouteManager.resetRouteState();
 	}

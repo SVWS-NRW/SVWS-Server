@@ -8,7 +8,8 @@
 		</template>
 		<template #header />
 		<template #content>
-			<svws-ui-table :clicked="fachListeManager().auswahl()" clickable @update:clicked="gotoEintrag" :items="fachListeManager().filtered()" :columns :filter-open="true" scroll-into-view>
+			<svws-ui-table :clickable="!fachListeManager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="fachdaten => gotoDefaultView(fachdaten.id)" :items="fachListeManager().filtered()"
+				:model-value="[...props.fachListeManager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)" :columns :filter-open="true" selectable count scroll-into-view scroll allow-arrow-key-selection>
 				<template #filterAdvanced>
 					<svws-ui-checkbox type="toggle" v-model="filterNurSichtbare">Nur Sichtbare</svws-ui-checkbox>
 				</template>
@@ -18,8 +19,15 @@
 							<svws-ui-button type="secondary" @click="openModal">Standardsortierung Sek II anwenden …</svws-ui-button>
 						</s-faecher-auswahl-sortierung-sek-i-i-modal>
 					</template>
+					<svws-ui-tooltip position="bottom" v-if="mode === ServerMode.DEV">
+						<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="gotoHinzufuegenView(true)" :has-focus="fachListeManager().filtered().size() === 0">
+							<span class="icon i-ri-add-line" />
+						</svws-ui-button>
+						<template #content>
+							Neues Fach anlegen
+						</template>
+					</svws-ui-tooltip>
 				</template>
-				<!-- TODO: Beim Implementieren des '+'-Buttons zum Hinfügen eines Eintrags die property hasFocus auf die svws-ui-button-Komponente setzen. true, wenn Liste leer, sonst false (z.B. :hasFocus="rowsFiltered.length === 0") -->
 			</svws-ui-table>
 		</template>
 	</svws-ui-secondary-menu>
@@ -29,6 +37,9 @@
 
 	import { computed } from "vue";
 	import type { FaecherAuswahlProps } from "./SFaecherAuswahlProps";
+	import type { FachDaten } from "@core";
+	import { ViewType } from "@ui";
+	import { ServerMode } from "@core";
 
 	const props = defineProps<FaecherAuswahlProps>();
 
@@ -46,5 +57,19 @@
 			void props.setFilter();
 		}
 	});
+
+	const clickedEintrag = computed(() => ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN)) ? null
+		: (props.fachListeManager().hasDaten() ? props.fachListeManager().auswahl() : null));
+
+	async function setAuswahl(items : FachDaten[]) {
+		props.fachListeManager().liste.auswahlClear();
+		for (const item of items)
+			if (props.fachListeManager().liste.hasValue(item))
+				props.fachListeManager().liste.auswahlAdd(item);
+		if (props.fachListeManager().liste.auswahlExists())
+			await props.gotoGruppenprozessView(true);
+		else
+			await props.gotoDefaultView(props.fachListeManager().getVorherigeAuswahl()?.id);
+	}
 
 </script>

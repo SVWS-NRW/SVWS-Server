@@ -42,25 +42,17 @@ export class RouteSchuelerStundenplanDaten extends RouteNode<any, RouteSchuelerS
 			if (idStundenplan === undefined) {
 				if (routeSchuelerStundenplan.data.mapStundenplaene.size === 0)
 					throw new DeveloperNotificationException("Fehler: Kein Stundenplan für die angegebene ID gefunden.");
-				return this.getRoute(idSchueler, routeSchuelerStundenplan.data.auswahl.id,
-					routeSchuelerStundenplan.data.wochentyp, routeSchuelerStundenplan.data.kalenderwoche?.jahr,
-					routeSchuelerStundenplan.data.kalenderwoche?.kw);
+				return this.getRoute();
 			}
 			// Lade den Stundenplan ...
 			await routeSchuelerStundenplan.data.setEintrag(idSchueler, idStundenplan, wochentyp ?? 0, kwjahr, kw);
-		// TODO Prüfe, ob Änderungen stattgefunden haben und passe die Route ggf. an (return ...)
 		} catch (e) {
-			return routeError.getRoute(e as DeveloperNotificationException);
+			return routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 
 	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
 		await routeSchuelerStundenplan.data.setEintrag(-1, undefined, 0, undefined, undefined);
-	}
-
-	public getRoute(id: number, idStundenplan: number, wochentyp: number, kwjahr?: number, kw?: number) : RouteLocationRaw {
-		const tmpKW = ((kwjahr === undefined) || (kw === undefined)) ? undefined : kwjahr + "." + kw;
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id, idStundenplan, wochentyp, kw: tmpKW }};
 	}
 
 	public getProps(to: RouteLocationNormalized): StundenplanSchuelerProps {

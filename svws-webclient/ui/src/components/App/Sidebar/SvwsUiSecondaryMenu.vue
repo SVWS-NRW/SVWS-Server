@@ -73,18 +73,14 @@
 		@apply flex flex-wrap;
 
 		> *:not(:last-child) {
-			@apply opacity-25 cursor-pointer;
+			@apply text-ui-secondary cursor-pointer;
 
 			&:hover {
-				@apply opacity-100 text-primary;
-
-				&:after {
-					@apply opacity-25;
-				}
+				@apply text-ui-brand;
 			}
 
 			&:after {
-				@apply inline-block mx-1 text-black dark:text-white;
+				@apply inline-block mx-1 text-ui-secondary;
 				content: '/';
 			}
 		}

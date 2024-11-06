@@ -12,6 +12,7 @@ public class ProxyReportingStundenplanungZeitrasterstunde extends ReportingStund
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingStundenplanungZeitrasterstunde}.
+	 *
 	 * @param zeitraster		Der Raum aus dem Stundenplan.
 	 * @param idStundenplan 	Optional: Die des Stundenplanes, zu dem der Raum mit seiner ID gehört, sonst null.
 	 */

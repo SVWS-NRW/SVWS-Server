@@ -1,5 +1,6 @@
 import { IllegalFormatException } from '../util/IllegalFormatException';
 
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export abstract class JavaString {
 
 	public static contains(str: string, s: string | null) : boolean {
@@ -62,10 +63,10 @@ export abstract class JavaString {
 					result = parseFloat(replacement).toExponential(precision);
 					break;
 				case 'x':
-					result = parseInt(replacement).toString(base ? base : 16);
+					result = parseInt(replacement).toString(base === undefined ? 16 : base);
 					break;
 				case 'd':
-					result = parseFloat(parseInt(replacement, base ? base : 10).toPrecision(precision)).toFixed(0);
+					result = parseFloat(parseInt(replacement, base === undefined ? 10 : base).toPrecision(precision)).toFixed(0);
 					break;
 			}
 			while (result.length < paddingSize)

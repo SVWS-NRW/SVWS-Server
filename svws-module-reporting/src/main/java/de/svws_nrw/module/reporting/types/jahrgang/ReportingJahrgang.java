@@ -55,6 +55,7 @@ public class ReportingJahrgang {
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
+	 *
 	 * @param bezeichnung Der Name bzw. die Bezeichnung des Jahrgangs.
 	 * @param gueltigBis Gibt an, bis zu welchem Schuljahresabschnitt an der Jahrgang gültig ist (einschließlich), null bedeutet bis zum letzten Abschnitt, Ende offen
 	 * @param gueltigVon Gibt an, von welchem Schuljahresabschnitt an der Jahrgang gültig ist (einschließlich), null bedeutet von dem ersten Abschnitt an
@@ -96,6 +97,7 @@ public class ReportingJahrgang {
 
 	/**
 	 * Der Name bzw. die Bezeichnung des Jahrgangs.
+	 *
 	 * @return Inhalt des Feldes bezeichnung
 	 */
 	public String bezeichnung() {
@@ -104,6 +106,7 @@ public class ReportingJahrgang {
 
 	/**
 	 * Gibt an, bis zu welchem Schuljahresabschnitt an der Jahrgang gültig ist (einschließlich), null bedeutet bis zum letzten Abschnitt, Ende offen
+	 *
 	 * @return Inhalt des Feldes gueltigBis
 	 */
 	public Long gueltigBis() {
@@ -112,6 +115,7 @@ public class ReportingJahrgang {
 
 	/**
 	 * Gibt an, von welchem Schuljahresabschnitt an der Jahrgang gültig ist (einschließlich), null bedeutet von dem ersten Abschnitt an
+	 *
 	 * @return Inhalt des Feldes gueltigVon
 	 */
 	public Long gueltigVon() {
@@ -120,6 +124,7 @@ public class ReportingJahrgang {
 
 	/**
 	 * Die Daten des Folgejahrgangs.
+	 *
 	 * @return Inhalt des Feldes folgejahrgang
 	 */
 	public ReportingJahrgang folgejahrgang() {
@@ -128,6 +133,7 @@ public class ReportingJahrgang {
 
 	/**
 	 * Die ID des Jahrgangs.
+	 *
 	 * @return Inhalt des Feldes id
 	 */
 	public long id() {
@@ -136,6 +142,7 @@ public class ReportingJahrgang {
 
 	/**
 	 * Die ID des Folgejahrgangs, sofern einer definiert ist, ansonsten null
+	 *
 	 * @return Inhalt des Feldes idFolgejahrgang
 	 */
 	public Long idFolgejahrgang() {
@@ -144,6 +151,7 @@ public class ReportingJahrgang {
 
 	/**
 	 * Liste der Klassen des Jahrgangs.
+	 *
 	 * @return Inhalt des Feldes klassen
 	 */
 	public List<ReportingKlasse> klassen() {
@@ -152,6 +160,7 @@ public class ReportingJahrgang {
 
 	/**
 	 * Das Kürzel des Jahrgangs.
+	 *
 	 * @return Inhalt des Feldes kuerzel
 	 */
 	public String kuerzel() {
@@ -160,6 +169,7 @@ public class ReportingJahrgang {
 
 	/**
 	 * Das Kürzel der Schulgliederung, der der Eintrag zugeordnet ist.
+	 *
 	 * @return Inhalt des Feldes kuerzelSchulgliederung
 	 */
 	public String kuerzelSchulgliederung() {
@@ -168,6 +178,7 @@ public class ReportingJahrgang {
 
 	/**
 	 * Das dem Jahrgang zugeordnete Statistik-Kürzel.
+	 *
 	 * @return Inhalt des Feldes kuerzelStatistik
 	 */
 	public String kuerzelStatistik() {
@@ -176,6 +187,7 @@ public class ReportingJahrgang {
 
 	/**
 	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
+	 *
 	 * @return Inhalt des Feldes istSichtbar
 	 */
 	public boolean istSichtbar() {
@@ -184,6 +196,7 @@ public class ReportingJahrgang {
 
 	/**
 	 * Liste der Schüler des Jahrgangs.
+	 *
 	 * @return Inhalt des Feldes schueler
 	 */
 	public List<ReportingSchueler> schueler() {
@@ -192,6 +205,7 @@ public class ReportingJahrgang {
 
 	/**
 	 * Der Schuljahresabschnitt zu diesem Jahrgang.
+	 *
 	 * @return Inhalt des Feldes schuljahresabschnitt
 	 */
 	public ReportingSchuljahresabschnitt schuljahresabschnitt() {
@@ -200,6 +214,7 @@ public class ReportingJahrgang {
 
 	/**
 	 * Die Sortierreihenfolge des Jahrgangs in der Liste der Jahrgänge.
+	 *
 	 * @return Inhalt des Feldes sortierung
 	 */
 	public int sortierung() {

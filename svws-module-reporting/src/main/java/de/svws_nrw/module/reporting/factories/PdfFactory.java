@@ -43,8 +43,10 @@ public class PdfFactory {
 
 	/**
 	 * Erzeugt eine neue PdfFactory, um eine Pdf-Datei aus den übergebenen Html-Inhalten zu erzeugen.
+	 *
 	 * @param htmlBuilders 				Eine Map mit den Dateinamen und Html-Dateiinhalten.
 	 * @param reportingRepository		Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung.
+	 *
 	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	protected PdfFactory(final List<HtmlBuilder> htmlBuilders, final ReportingRepository reportingRepository)
@@ -76,7 +78,9 @@ public class PdfFactory {
 
 	/**
 	 * Erstellt eine Response in Form einer einzelnen PDF-Datei oder ZIP-Datei mit den mehreren generierten PDF-Dateien.
+	 *
 	 * @return Im Falle eines Success enthält die HTTP-Response das PDF-Dokument oder die ZIP-Datei.
+	 *
 	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	protected Response createPdfResponse() throws ApiOperationException {
@@ -109,6 +113,7 @@ public class PdfFactory {
 
 	/**
 	 * Erzeugt auf Basis der übergebenen html-Builder die PDF-Builder zur Erzeugung der PDF-Dateien.
+	 *
 	 * @return Ein oder mehrere PDF-Builder zur Erzeugung der PDF-Dateien.
 	 */
 	private List<PdfBuilder> getPdfBuilders() {
@@ -127,8 +132,11 @@ public class PdfFactory {
 
 	/**
 	 * Erstellt eine ZIP-Datei, die alle PDF-Dateien der übergebenen PDF-Builder enthält.
+	 *
 	 * @param pdfBuilders 				Liste mit PdfBuilder, die die einzelnen PDF-Dateien erzeugen.
+	 *
 	 * @return Gibt das ZIP in Form eines ByteArrays zurück.
+	 *
 	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	private byte[] createZIP(final List<PdfBuilder> pdfBuilders) throws ApiOperationException {

@@ -40,4 +40,11 @@ public class SMTPServerKonfiguration {
 			example = "*")
 	public String trustTLSHost = null;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SMTPServerKonfiguration() {
+		// leer
+	}
+
 }

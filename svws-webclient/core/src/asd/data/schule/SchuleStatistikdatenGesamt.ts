@@ -10,6 +10,9 @@ export class SchuleStatistikdatenGesamt extends JavaObject {
 	public stammdaten : SchuleStammdaten = new SchuleStammdaten();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

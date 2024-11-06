@@ -58,6 +58,9 @@ export class GostLeistungen extends JavaObject {
 	public readonly faecher : List<GostLeistungenFachwahl> = new ArrayList<GostLeistungenFachwahl>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -101,13 +104,13 @@ export class GostLeistungen extends JavaObject {
 	public static transpilerToJSON(obj : GostLeistungen) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"aktuellesSchuljahr" : ' + ((!obj.aktuellesSchuljahr) ? 'null' : obj.aktuellesSchuljahr.toString()) + ',';
-		result += '"aktuellerJahrgang" : ' + ((!obj.aktuellerJahrgang) ? 'null' : JSON.stringify(obj.aktuellerJahrgang)) + ',';
-		result += '"sprachendaten" : ' + ((!obj.sprachendaten) ? 'null' : Sprachendaten.transpilerToJSON(obj.sprachendaten)) + ',';
-		result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
-		result += '"projektkursThema" : ' + ((!obj.projektkursThema) ? 'null' : JSON.stringify(obj.projektkursThema)) + ',';
-		result += '"projektkursLeitfach1Kuerzel" : ' + ((!obj.projektkursLeitfach1Kuerzel) ? 'null' : JSON.stringify(obj.projektkursLeitfach1Kuerzel)) + ',';
-		result += '"projektkursLeitfach2Kuerzel" : ' + ((!obj.projektkursLeitfach2Kuerzel) ? 'null' : JSON.stringify(obj.projektkursLeitfach2Kuerzel)) + ',';
+		result += '"aktuellesSchuljahr" : ' + ((obj.aktuellesSchuljahr === null) ? 'null' : obj.aktuellesSchuljahr.toString()) + ',';
+		result += '"aktuellerJahrgang" : ' + ((obj.aktuellerJahrgang === null) ? 'null' : JSON.stringify(obj.aktuellerJahrgang)) + ',';
+		result += '"sprachendaten" : ' + ((obj.sprachendaten === null) ? 'null' : Sprachendaten.transpilerToJSON(obj.sprachendaten)) + ',';
+		result += '"bilingualeSprache" : ' + ((obj.bilingualeSprache === null) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
+		result += '"projektkursThema" : ' + ((obj.projektkursThema === null) ? 'null' : JSON.stringify(obj.projektkursThema)) + ',';
+		result += '"projektkursLeitfach1Kuerzel" : ' + ((obj.projektkursLeitfach1Kuerzel === null) ? 'null' : JSON.stringify(obj.projektkursLeitfach1Kuerzel)) + ',';
+		result += '"projektkursLeitfach2Kuerzel" : ' + ((obj.projektkursLeitfach2Kuerzel === null) ? 'null' : JSON.stringify(obj.projektkursLeitfach2Kuerzel)) + ',';
 		result += '"bewertetesHalbjahr" : [ ';
 		for (let i = 0; i < obj.bewertetesHalbjahr.length; i++) {
 			const elem = obj.bewertetesHalbjahr[i];
@@ -135,25 +138,25 @@ export class GostLeistungen extends JavaObject {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.aktuellesSchuljahr !== undefined) {
-			result += '"aktuellesSchuljahr" : ' + ((!obj.aktuellesSchuljahr) ? 'null' : obj.aktuellesSchuljahr.toString()) + ',';
+			result += '"aktuellesSchuljahr" : ' + ((obj.aktuellesSchuljahr === null) ? 'null' : obj.aktuellesSchuljahr.toString()) + ',';
 		}
 		if (obj.aktuellerJahrgang !== undefined) {
-			result += '"aktuellerJahrgang" : ' + ((!obj.aktuellerJahrgang) ? 'null' : JSON.stringify(obj.aktuellerJahrgang)) + ',';
+			result += '"aktuellerJahrgang" : ' + ((obj.aktuellerJahrgang === null) ? 'null' : JSON.stringify(obj.aktuellerJahrgang)) + ',';
 		}
 		if (obj.sprachendaten !== undefined) {
-			result += '"sprachendaten" : ' + ((!obj.sprachendaten) ? 'null' : Sprachendaten.transpilerToJSON(obj.sprachendaten)) + ',';
+			result += '"sprachendaten" : ' + ((obj.sprachendaten === null) ? 'null' : Sprachendaten.transpilerToJSON(obj.sprachendaten)) + ',';
 		}
 		if (obj.bilingualeSprache !== undefined) {
-			result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
+			result += '"bilingualeSprache" : ' + ((obj.bilingualeSprache === null) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
 		}
 		if (obj.projektkursThema !== undefined) {
-			result += '"projektkursThema" : ' + ((!obj.projektkursThema) ? 'null' : JSON.stringify(obj.projektkursThema)) + ',';
+			result += '"projektkursThema" : ' + ((obj.projektkursThema === null) ? 'null' : JSON.stringify(obj.projektkursThema)) + ',';
 		}
 		if (obj.projektkursLeitfach1Kuerzel !== undefined) {
-			result += '"projektkursLeitfach1Kuerzel" : ' + ((!obj.projektkursLeitfach1Kuerzel) ? 'null' : JSON.stringify(obj.projektkursLeitfach1Kuerzel)) + ',';
+			result += '"projektkursLeitfach1Kuerzel" : ' + ((obj.projektkursLeitfach1Kuerzel === null) ? 'null' : JSON.stringify(obj.projektkursLeitfach1Kuerzel)) + ',';
 		}
 		if (obj.projektkursLeitfach2Kuerzel !== undefined) {
-			result += '"projektkursLeitfach2Kuerzel" : ' + ((!obj.projektkursLeitfach2Kuerzel) ? 'null' : JSON.stringify(obj.projektkursLeitfach2Kuerzel)) + ',';
+			result += '"projektkursLeitfach2Kuerzel" : ' + ((obj.projektkursLeitfach2Kuerzel === null) ? 'null' : JSON.stringify(obj.projektkursLeitfach2Kuerzel)) + ',';
 		}
 		if (obj.bewertetesHalbjahr !== undefined) {
 			const a = obj.bewertetesHalbjahr;

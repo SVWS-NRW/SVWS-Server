@@ -3,7 +3,7 @@
  */
 export enum ViewType {
 
-	/** Normaler View */
+	/** Normale View */
 	DEFAULT,
 
 	/** View zum Hinzufügen von Daten */

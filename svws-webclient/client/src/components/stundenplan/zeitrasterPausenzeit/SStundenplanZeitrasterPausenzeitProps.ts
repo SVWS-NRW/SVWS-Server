@@ -8,7 +8,7 @@ export interface StundenplanZeitrasterPausenzeitProps {
 	importPausenzeiten: (pausenzeiten: StundenplanPausenzeit[]) => Promise<void>;
 	patchZeitraster: (zeitraster : Iterable<StundenplanZeitraster>) => Promise<void>;
 	addZeitraster: (zeitraster: Iterable<StundenplanZeitraster>) => Promise<void>;
-	removeZeitraster: (multi: Iterable<StundenplanZeitraster>) => Promise<void>;
+	removeZeitraster: (zeitraster: Iterable<StundenplanZeitraster>) => Promise<void>;
 	importZeitraster: undefined | (() => Promise<void>);
 	listLehrer: List<LehrerListeEintrag>;
 	selected: Wochentag | number | StundenplanZeitraster | StundenplanPausenzeit | undefined;

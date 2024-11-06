@@ -31,4 +31,11 @@ public class GostBelegpruefungErgebnis {
 	@ArraySchema(schema = @Schema(description = "der Log der Belegprüfung.", example = "Ein Log, der den Ablauf der Belegprüfung verdeutlicht"))
 	public @NotNull List<String> log = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GostBelegpruefungErgebnis() {
+		// leer
+	}
+
 }

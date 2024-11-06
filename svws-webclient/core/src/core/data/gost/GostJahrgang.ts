@@ -39,6 +39,9 @@ export class GostJahrgang extends JavaObject {
 	public existierenNotenInLeistungsdaten : Array<boolean> = Array(6).fill(false);
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -83,9 +86,9 @@ export class GostJahrgang extends JavaObject {
 	public static transpilerToJSON(obj : GostJahrgang) : string {
 		let result = '{';
 		result += '"abiturjahr" : ' + obj.abiturjahr.toString() + ',';
-		result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
+		result += '"jahrgang" : ' + ((obj.jahrgang === null) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
 		result += '"halbjahr" : ' + obj.halbjahr.toString() + ',';
-		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
+		result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		result += '"istAbgeschlossen" : ' + obj.istAbgeschlossen.toString() + ',';
 		result += '"istBlockungFestgelegt" : [ ';
 		for (let i = 0; i < obj.istBlockungFestgelegt.length; i++) {
@@ -114,13 +117,13 @@ export class GostJahrgang extends JavaObject {
 			result += '"abiturjahr" : ' + obj.abiturjahr.toString() + ',';
 		}
 		if (obj.jahrgang !== undefined) {
-			result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
+			result += '"jahrgang" : ' + ((obj.jahrgang === null) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
 		}
 		if (obj.halbjahr !== undefined) {
 			result += '"halbjahr" : ' + obj.halbjahr.toString() + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
+			result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		}
 		if (obj.istAbgeschlossen !== undefined) {
 			result += '"istAbgeschlossen" : ' + obj.istAbgeschlossen.toString() + ',';

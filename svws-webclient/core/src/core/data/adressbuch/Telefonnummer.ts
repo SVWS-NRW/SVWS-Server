@@ -14,6 +14,9 @@ export class Telefonnummer extends JavaObject {
 	public number : string = "";
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

@@ -43,7 +43,7 @@ public class LehrerPersonalabschnittsdaten {
 	public String beschaeftigungsart;
 
 	/** [ASD] Der Einsatzstatus (z.B. Stammschule, nur hier tätig) */
-	@Schema(description = "[ASD] Der Einsatzstatus (z.B. Stammschule, nur hier tätig) - siehe Statistik-Katalog.", example = "*")
+	@Schema(description = "[ASD] Der Einsatzstatus (z.B. Stammschule, nur hier tätig) - siehe Statistik-Katalog. Ein leerer Eintrag wird als DEFAULT interpretiert, und bedeutet \"Nur an Stammschule tätig.\"", example = "A")
 	public String einsatzstatus;
 
 	/** Die Schulnummer der Stammschule, sofern diese abweicht. */
@@ -65,5 +65,12 @@ public class LehrerPersonalabschnittsdaten {
 	/** Die schulspezifischen-Funktionen, die einem Lehrer in dem Abschnitt der Abschnittsdaten zugeordnet sind. */
 	@ArraySchema(schema = @Schema(implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class, description = "Ein Array mit schulspezifischen-Funktionen, die einem Lehrer in dem Abschnitt der Abschnittsdaten zugeordnet sind."))
 	public final @NotNull List<LehrerPersonalabschnittsdatenLehrerfunktion> funktionen = new ArrayList<>();
+
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public LehrerPersonalabschnittsdaten() {
+		// leer
+	}
 
 }

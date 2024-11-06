@@ -16,6 +16,7 @@ public class ProxyReportingGostKlausurplanungKursklausur extends ReportingGostKl
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingGostKlausurplanungKursklausur}.
+	 *
 	 * @param gostKursklausur		Die GostKursklausur mit den Daten zur Klausur eines Kurses.
 	 * @param gostKlausurVorgabe	Die Vorlage für diese Klausur mit ihren Werten.
 	 * @param klausurtermin			Der Klausurtermin, der dieser Kursklausur zugewiesen wurde.

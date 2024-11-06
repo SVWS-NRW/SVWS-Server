@@ -7,49 +7,70 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 
+/**
+ * Diese Klasse repräsentiert eine Kalenderabfrage im CalDAV-Protokoll.
+ * Sie enthält Eigenschaften zur Definition der Abfrage und der Filterkriterien.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "prop",
-    "filter"
+		"prop",
+		"filter"
 })
 @XmlRootElement(name = "calendar-query", namespace = "urn:ietf:params:xml:ns:caldav")
 public class CalendarQuery {
 
-    @XmlElement(required = true, namespace = "DAV:")
-    protected Prop prop;
+	/**
+	 * Die Prop-Eigenschaft dieser CalendarQuery.
+	 */
+	@XmlElement(required = true, namespace = "DAV:")
+	protected Prop prop;
 
+	/**
+	 * Die Filter-Eigenschaft dieser CalendarQuery.
+	 */
 	@XmlElement(required = true)
 	protected Filter filter;
 
-    /**
-     * Gets the value of the prop property.
-     *
-     * @return
-     *     possible object is
-     *     {@link Prop }
-     *
-     */
-    public Prop getProp() {
-        return prop;
-    }
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public CalendarQuery() {
+		// leer
+	}
 
-    /**
-     * Sets the value of the prop property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link Prop }
-     *
-     */
-    public void setProp(Prop value) {
-        this.prop = value;
-    }
+	/**
+	* Liefert das {@link Prop}-Objekt.
+	*
+	* @return das {@link Prop}-Objekt.
+	*/
+	public Prop getProp() {
+		return prop;
+	}
 
+	/**
+	 * Setzt das {@link Prop}-Objekt.
+	 *
+	 * @param value   das zu setzende {@link Prop}-Objekt.
+	 */
+	public void setProp(final Prop value) {
+		this.prop = value;
+	}
+
+	/**
+	* Liefert das {@link Filter}-Objekt.
+	*
+	* @return das {@link Filter}-Objekt.
+	*/
 	public Filter getFilter() {
 		return filter;
 	}
 
-	public void setFilter(Filter filter) {
+	/**
+	 * Setzt das {@link Filter}-Objekt.
+	 *
+	 * @param filter   das zu setzende {@link Filter}-Objekt.
+	 */
+	public void setFilter(final Filter filter) {
 		this.filter = filter;
 	}
 

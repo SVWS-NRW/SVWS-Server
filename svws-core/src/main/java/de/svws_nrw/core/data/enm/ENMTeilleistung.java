@@ -49,4 +49,11 @@ public class ENMTeilleistung {
 	@Schema(description = "Der Zeitstempel der letzten Änderung an der Note.", example = "2013-11-14 13:12:48.774")
 	public String tsNote;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ENMTeilleistung() {
+		// leer
+	}
+
 }

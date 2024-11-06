@@ -34,6 +34,9 @@ export class OrtsteilKatalogEintrag extends JavaObject {
 	public istAenderbar : boolean = false;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -71,8 +74,8 @@ export class OrtsteilKatalogEintrag extends JavaObject {
 	public static transpilerToJSON(obj : OrtsteilKatalogEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"ort_id" : ' + ((!obj.ort_id) ? 'null' : obj.ort_id.toString()) + ',';
-		result += '"ortsteil" : ' + ((!obj.ortsteil) ? 'null' : JSON.stringify(obj.ortsteil)) + ',';
+		result += '"ort_id" : ' + ((obj.ort_id === null) ? 'null' : obj.ort_id.toString()) + ',';
+		result += '"ortsteil" : ' + ((obj.ortsteil === null) ? 'null' : JSON.stringify(obj.ortsteil)) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		result += '"istAenderbar" : ' + obj.istAenderbar.toString() + ',';
@@ -87,10 +90,10 @@ export class OrtsteilKatalogEintrag extends JavaObject {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.ort_id !== undefined) {
-			result += '"ort_id" : ' + ((!obj.ort_id) ? 'null' : obj.ort_id.toString()) + ',';
+			result += '"ort_id" : ' + ((obj.ort_id === null) ? 'null' : obj.ort_id.toString()) + ',';
 		}
 		if (obj.ortsteil !== undefined) {
-			result += '"ortsteil" : ' + ((!obj.ortsteil) ? 'null' : JSON.stringify(obj.ortsteil)) + ',';
+			result += '"ortsteil" : ' + ((obj.ortsteil === null) ? 'null' : JSON.stringify(obj.ortsteil)) + ',';
 		}
 		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung.toString() + ',';

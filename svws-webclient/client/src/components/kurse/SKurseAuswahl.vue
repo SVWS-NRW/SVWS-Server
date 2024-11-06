@@ -5,8 +5,8 @@
 			<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
 		</template>
 		<template #content>
-			<svws-ui-table clickable :clicked="kursListeManager().hasDaten() ? kursListeManager().auswahl() : null" @update:clicked="gotoEintrag"
-				:items="rowsFiltered" :model-value="selectedItems" @update:model-value="items => setAuswahl(items)"
+			<svws-ui-table :clickable="!kursListeManager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="kursDaten => gotoDefaultView(kursDaten.id)"
+				:items="rowsFiltered" :model-value="[...props.kursListeManager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)"
 				:columns selectable count :filter-open="true" :filtered="filterChanged()" :filterReset scroll-into-view scroll
 				v-model:sort-by-and-order="sortByAndOrder" :sort-by-multi allow-arrow-key-selection>
 				<template #search>
@@ -23,7 +23,16 @@
 				<template #cell(lehrer)="{ value }"> {{ getLehrerKuerzel(value) }} </template>
 				<template #cell(idJahrgaenge)="{ value }"> {{ getJahrgangsKuerzel(value) }} </template>
 				<template #cell(schueler)="{ value }">{{ value.size() }}</template>
-				<!-- TODO: Beim Implementieren des '+'-Buttons zum Hinfügen eines Eintrags die property hasFocus auf die svws-ui-button-Komponente setzen. true, wenn Liste leer, sonst false (z.B. :hasFocus="rowsFiltered.length === 0") -->
+				<template #actions>
+					<svws-ui-tooltip position="bottom" v-if="ServerMode.DEV.checkServerMode(serverMode)">
+						<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="props.gotoHinzufuegenView(true)" :has-focus="rowsFiltered.length === 0">
+							<span class="icon i-ri-add-line" />
+						</svws-ui-button>
+						<template #content>
+							Neuen Kurs anlegen
+						</template>
+					</svws-ui-tooltip>
+				</template>
 			</svws-ui-table>
 		</template>
 	</svws-ui-secondary-menu>
@@ -31,10 +40,11 @@
 
 <script setup lang="ts">
 
-	import { ref, computed, shallowRef } from "vue";
+	import { ref, computed } from "vue";
 	import type { KurseAuswahlProps } from "./SKurseAuswahlProps";
-	import type { DataTableColumn, SortByAndOrder } from "@ui";
+	import { ViewType, type DataTableColumn, type SortByAndOrder } from "@ui";
 	import type { ArrayList, FachDaten, JahrgangsDaten, KursDaten, LehrerListeEintrag, SchuelerListeEintrag, Schulgliederung } from "@core";
+	import { ServerMode } from "@core";
 
 	const props = defineProps<KurseAuswahlProps>();
 
@@ -187,16 +197,18 @@
 			|| props.kursListeManager().jahrgaenge.auswahlExists());
 	}
 
-	const selectedItems = shallowRef<KursDaten[]>([]);
+	const clickedEintrag = computed(() => ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN)) ? null
+		: (props.kursListeManager().hasDaten() ? props.kursListeManager().auswahl() : null));
 
-	function setAuswahl(items : KursDaten[]) {
-		const auswahl = props.kursListeManager().liste;
-		for (const vorhanden of auswahl.auswahl())
-			if (!items.includes(vorhanden))
-				auswahl.auswahlRemove(vorhanden);
+	async function setAuswahl(items : KursDaten[]) {
+		props.kursListeManager().liste.auswahlClear();
 		for (const item of items)
-			auswahl.auswahlAdd(item);
-		selectedItems.value = [ ... auswahl.auswahl() ];
+			if (props.kursListeManager().liste.hasValue(item))
+				props.kursListeManager().liste.auswahlAdd(item);
+		if (props.kursListeManager().liste.auswahlExists())
+			await props.gotoGruppenprozessView(true);
+		else
+			await props.gotoDefaultView(props.kursListeManager().getVorherigeAuswahl()?.id);
 	}
 
 

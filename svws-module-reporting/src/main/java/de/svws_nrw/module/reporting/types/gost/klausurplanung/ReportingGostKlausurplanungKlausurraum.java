@@ -28,6 +28,7 @@ public class ReportingGostKlausurplanungKlausurraum {
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
+	 *
 	 * @param aufsichten	Die Klausuraufsichten in diesem Raum für den Klausurtermin.
 	 * @param bemerkung		Die Bemerkung zum Raum für die Klausur.
 	 * @param id			Die ID des Raumes in der Klausurplanung, genauer die ID für die Kombination aus Raum der Schule und Klausurtermin.
@@ -48,6 +49,7 @@ public class ReportingGostKlausurplanungKlausurraum {
 
 	/**
 	 * Die Klausuraufsichten in diesem Raum für den Klausurtermin.
+	 *
 	 * @return Inhalt des Feldes aufsichten
 	 */
 	public List<ReportingGostKlausurplanungKlausuraufsicht> aufsichten() {
@@ -56,6 +58,7 @@ public class ReportingGostKlausurplanungKlausurraum {
 
 	/**
 	 * Die Bemerkung zum Raum für die Klausur.
+	 *
 	 * @return Inhalt des Feldes bemerkung
 	 */
 	public String bemerkung() {
@@ -64,6 +67,7 @@ public class ReportingGostKlausurplanungKlausurraum {
 
 	/**
 	 * Die ID des Raumes in der Klausurplanung, genauer die ID für die Kombination aus Raum der Schule und Klausurtermin.
+	 *
 	 * @return Inhalt des Feldes id
 	 */
 	public long id() {
@@ -72,6 +76,7 @@ public class ReportingGostKlausurplanungKlausurraum {
 
 	/**
 	 * Der Klausurtermin, dem dieser Raum mit seinen Aufsichten zugeordnet wurde.
+	 *
 	 * @return Inhalt des Feldes klausurtermin
 	 */
 	public ReportingGostKlausurplanungKlausurtermin klausurtermin() {
@@ -80,6 +85,7 @@ public class ReportingGostKlausurplanungKlausurraum {
 
 	/**
 	 * Die Daten des Raumes gemäß dem zum Klausurtermin gültigen Stundenplanes.
+	 *
 	 * @return Inhalt des Feldes raumdaten
 	 */
 	public ReportingStundenplanungRaum raumdaten() {

@@ -28,6 +28,13 @@ public class ImportKurs42Blockung {
 	private static final Logger logger = new Logger();
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ImportKurs42Blockung() {
+		// leer
+	}
+
+	/**
 	 * Importiert eine Kurs42-Blockung in ein SVWS-Schema.
 	 *
 	 * @param args  die Optionen für den Import, @see options

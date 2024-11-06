@@ -30,4 +30,11 @@ public class ENMNote {
 	@Schema(description = "Die Note / Pseudonote in ausführlicher Textform ggf. mit Tendenz (plus/minus)", example = "befriedigend (minus)")
 	public String text;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ENMNote() {
+		// leer
+	}
+
 }

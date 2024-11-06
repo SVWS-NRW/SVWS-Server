@@ -46,6 +46,7 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingGostKlausurplanungKlausurplan}.
+	 *
 	 * @param reportingRepository	Repository für die Reporting.
 	 * @param klausurtermine		Eine Liste, die alle Termine des Klausurplanes beinhaltet.
 	 * @param kurse 				Eine Liste, die alle Kurse des Klausurplanes beinhaltet.
@@ -66,6 +67,7 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt anhand des GostKlausurplanManagers.
+	 *
 	 * @param reportingRepository		Repository für die Reporting.
 	 * @param gostKlausurplanManager 	Der Manager der Klausuren zu diesem Klausurplan
 	 * @param idsFilterSchueler 		Eine Liste, die die schülerbezogene Ausgabe auf die Schüler mit den enthaltenen IDs beschränkt.
@@ -235,6 +237,7 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 
 	/**
 	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.
+	 *
 	 * @return Repository für die Reporting
 	 */
 	@JsonIgnore

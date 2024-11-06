@@ -597,47 +597,65 @@ public class GostKlausurplanManager {
 	}
 
 	/**
-	 * Prüft, ob zu den angegebenen Parametern bereits ein StundenplanManager geladen wurde.
+	 * Prüft, ob zu dem angegebenen Schuljahresabschnitt bereits die StundenplanManager aus der Datenbank geladen wurden.
 	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
-	 * @return true, wenn ein StundenplanManager gelaen wurde, sonst false
+	 * @return true, wenn die StundenplanManager bereits geladen wurde, sonst false
 	 */
 	public boolean stundenplanManagerGeladenByAbschnitt(final long idSchuljahresabschnitt) {
 		return _stundenplanmanagermenge_by_schuljahresabschnitt.containsKey(idSchuljahresabschnitt);
 	}
 
 	/**
-	 * Prüft, ob zu den angegebenen Parametern bereits ein StundenplanManager geladen wurde.
+	 * Prüft, ob zu den angegebenen Parametern ein StundenplanManager existiert. Falls noch keine StundenplanManager für den angegebenen Schuljahresabschnitt geladen wurden, wird eine {@link DeveloperNotificationException} geworfen
 	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
-	 * @return true, wenn ein StundenplanManager gelaen wurde, sonst false
+	 * @return true, wenn ein StundenplanManager existiert, sonst false
 	 */
 	public boolean stundenplanManagerExistsByAbschnitt(final long idSchuljahresabschnitt) {
+		if (!stundenplanManagerGeladenByAbschnitt(idSchuljahresabschnitt))
+			throw new DeveloperNotificationException("StundenplanManager für Schuljahresabschnitt " + idSchuljahresabschnitt + " wurde nicht geladen.");
 		final List<StundenplanManager> liste = _stundenplanmanagermenge_by_schuljahresabschnitt.get(idSchuljahresabschnitt);
 		return liste != null && !liste.isEmpty();
 	}
 
 	/**
-	 * Prüft, ob zu den angegebenen Parametern bereits ein StundenplanManager geladen wurde.
+	 * Prüft, ob zu den angegebenen Parametern ein StundenplanManager existiert.
+	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
+	 * @return true, wenn ein StundenplanManager existiert, sonst false
+	 */
+	public boolean stundenplanManagerGeladenAndExistsByAbschnitt(final long idSchuljahresabschnitt) {
+		if (!stundenplanManagerGeladenByAbschnitt(idSchuljahresabschnitt))
+			return false;
+		final List<StundenplanManager> liste = _stundenplanmanagermenge_by_schuljahresabschnitt.get(idSchuljahresabschnitt);
+		return liste != null && !liste.isEmpty();
+	}
+
+	/**
+	 * Prüft, ob zu den angegebenen Parametern ein StundenplanManager existiert. Falls noch keine StundenplanManager für den angegebenen Schuljahresabschnitt geladen wurden, wird eine {@link DeveloperNotificationException} geworfen
 	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
 	 * @param jahr das Jahr
 	 * @param kalenderwoche die Kalenderwoche
-	 * @return true, wenn ein StundenplanManager gelaen wurde, sonst false
+	 * @return true, wenn ein StundenplanManager existiert, sonst false
 	 */
 	public boolean stundenplanManagerExistsByAbschnittAndKW(final long idSchuljahresabschnitt, final int jahr, final int kalenderwoche) {
+		if (!stundenplanManagerGeladenByAbschnitt(idSchuljahresabschnitt))
+			throw new DeveloperNotificationException("StundenplanManager für Schuljahresabschnitt " + idSchuljahresabschnitt + " wurde nicht geladen.");
 		return _stundenplanmanager_by_schuljahresabschnitt_and_kw.contains(idSchuljahresabschnitt, jahr, kalenderwoche);
 	}
 
 	/**
-	 * Prüft, ob zu den angegebenen Parametern bereits ein StundenplanManager geladen wurde.
+	 * Prüft, ob zu den angegebenen Parametern ein StundenplanManager existiert. Falls noch keine StundenplanManager für den angegebenen Schuljahresabschnitt geladen wurden, wird eine {@link DeveloperNotificationException} geworfen
 	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
 	 * @param datum das Datum
-	 * @return true, wenn ein StundenplanManager gelaen wurde, sonst false
+	 * @return true, wenn ein StundenplanManager existiert, sonst false
 	 */
 	public boolean stundenplanManagerExistsByAbschnittAndDatum(final long idSchuljahresabschnitt, final @NotNull String datum) {
+		if (!stundenplanManagerGeladenByAbschnitt(idSchuljahresabschnitt))
+			throw new DeveloperNotificationException("StundenplanManager für Schuljahresabschnitt " + idSchuljahresabschnitt + " wurde nicht geladen.");
 		return _stundenplanmanager_by_schuljahresabschnitt_and_datum.contains(idSchuljahresabschnitt, datum);
 	}
 
 	/**
-	 * Setzt den {@link StundenplanManager}
+	 * Setzt die {@link StundenplanManager} für den angegebenen Schuljahresabschnitt
 	 *
 	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
 	 * @param stundenplanManagerList die Liste der {@link StundenplanManager}
@@ -677,8 +695,8 @@ public class GostKlausurplanManager {
 		// TODO: so muss es sein, wenn Stundenpläne sich nicht mehr überscheiden dürfen:
 		// DeveloperNotificationException.ifMap2DPutOverwrites(_stundenplanmanager_by_schuljahresabschnitt_and_datum, idSchuljahresabschnitt, datum, stundenplanManager);
 		_stundenplanmanager_by_schuljahresabschnitt_and_datum.put(idSchuljahresabschnitt, datum, stundenplanManager);
-		int kwjahr = DateUtils.gibKwJahrDesDatumsISO8601(datum);
-		int kw = DateUtils.gibKwDesDatumsISO8601(datum);
+		final int kwjahr = DateUtils.gibKwJahrDesDatumsISO8601(datum);
+		final int kw = DateUtils.gibKwDesDatumsISO8601(datum);
 		if (_stundenplanmanager_by_schuljahresabschnitt_and_kw.contains(idSchuljahresabschnitt, kwjahr, kw)) {
 			final StundenplanManager managerInMap = _stundenplanmanager_by_schuljahresabschnitt_and_kw.getOrNull(idSchuljahresabschnitt, kwjahr, kw);
 			if ((managerInMap != null) && (managerInMap.stundenplanGetID() != stundenplanManager.stundenplanGetID()))
@@ -696,14 +714,8 @@ public class GostKlausurplanManager {
 	 * @return den {@link StundenplanManager}, zu den übergebenen Parametern, sonst null.
 	 */
 	public StundenplanManager stundenplanManagerGetByAbschnittAndDatumOrNull(final long idSchuljahresabschnitt, final @NotNull String datum) {
-//		if (datum == null) {
-//			if (!_stundenplanmanager_by_schuljahresabschnitt_and_datum.containsKey1(idSchuljahresabschnitt))
-//				return null;
-//			final @NotNull List<@AllowNull StundenplanManager> stundenplanManagerList = _stundenplanmanager_by_schuljahresabschnitt_and_datum.getNonNullValuesOfKey1AsList(idSchuljahresabschnitt);
-//			if (stundenplanManagerList.isEmpty())
-//				return null;
-//			return stundenplanManagerList.getFirst();
-//		}
+		if (!stundenplanManagerGeladenByAbschnitt(idSchuljahresabschnitt))
+			throw new DeveloperNotificationException("StundenplanManager für Schuljahresabschnitt " + idSchuljahresabschnitt + " wurde nicht geladen.");
 		return _stundenplanmanager_by_schuljahresabschnitt_and_datum.getOrNull(idSchuljahresabschnitt, datum);
 	}
 
@@ -766,9 +778,11 @@ public class GostKlausurplanManager {
 	 * @return eine Liste mit allen {@link StundenplanKalenderwochenzuordnung}-Objekten, die zu dem übergebenen Schuljahresabschnitt gehören.
 	 */
 	public @NotNull List<StundenplanKalenderwochenzuordnung> stundenplanManagerKalenderwochenzuordnungenGetMengeByAbschnitt(final long idSchuljahresabschnitt) {
+		if (!stundenplanManagerGeladenByAbschnitt(idSchuljahresabschnitt))
+			throw new DeveloperNotificationException("StundenplanManager für Schuljahresabschnitt " + idSchuljahresabschnitt + " wurde nicht geladen.");
 		final @NotNull List<StundenplanKalenderwochenzuordnung> kwzAll = new ArrayList<>();
-		for (@NotNull StundenplanManager manager : DeveloperNotificationException.ifNull("_stundenplanmanagermenge_by_schuljahresabschnitt null für Abschnitt %d".formatted(idSchuljahresabschnitt), _stundenplanmanagermenge_by_schuljahresabschnitt.get(idSchuljahresabschnitt))) {
-			kwzAll.addAll(manager.kalenderwochenzuordnungGetMengeAsList());
+		for (@NotNull final StundenplanManager manager : DeveloperNotificationException.ifNull("_stundenplanmanagermenge_by_schuljahresabschnitt null für Abschnitt %d".formatted(idSchuljahresabschnitt), _stundenplanmanagermenge_by_schuljahresabschnitt.get(idSchuljahresabschnitt))) {
+			kwzAll.addAll(manager.kalenderwochenzuordnungGetMengeGueltigeAsList());
 		}
 		return kwzAll;
 	}
@@ -809,6 +823,8 @@ public class GostKlausurplanManager {
 	 * @return das dem Jahr und der Kalenderwoche zugeordnete {@link StundenplanKalenderwochenzuordnung}-Objekt der Auswahl-Menge oder das nächstmöglichste.
 	 */
 	public @NotNull StundenplanManager stundenplanManagerGetByAbschnittAndJahrAndKWOrClosest(final long idSchuljahresabschnitt, final int jahr, final int kalenderwoche) {
+		if (!stundenplanManagerGeladenByAbschnitt(idSchuljahresabschnitt))
+			throw new DeveloperNotificationException("StundenplanManager für Schuljahresabschnitt " + idSchuljahresabschnitt + " wurde nicht geladen.");
 		final StundenplanManager manager = _stundenplanmanager_by_schuljahresabschnitt_and_kw.getOrNull(idSchuljahresabschnitt, jahr, kalenderwoche);
 		if (manager != null)
 			return manager;
@@ -909,7 +925,7 @@ public class GostKlausurplanManager {
 	    final @NotNull List<GostKlausurenCollectionHjData> jahrgaenge = new ArrayList<>();
 	    final @NotNull Set<Integer> abijahreAngefordert = new HashSet<>();
 
-	    int hjStart = (halbjahr % 2 == 0) ? halbjahr : halbjahr - 1;
+	    final int hjStart = (halbjahr % 2 == 0) ? halbjahr : halbjahr - 1;
 	    addSchuljahresPaare(jahrgaenge, abiturjahr, hjStart, abijahreAngefordert);
 
 	    switch (halbjahr) {
@@ -3135,7 +3151,7 @@ public class GostKlausurplanManager {
 		int minStart = 1440;
 		final @NotNull List<GostSchuelerklausurTermin> skts = schuelerklausurterminAktuellGetMengeByTermin(termin);
 		if (skts.isEmpty())
-			return termin.startzeit;
+			return DeveloperNotificationException.ifNull("Die Startzeit des Termins darf an dieser Stelle nicht null sein.", termin.startzeit);
 		for (final @NotNull GostSchuelerklausurTermin skt : skts) {
 			if (!includeNachschreiber && skt.folgeNr > 0)
 				continue;
@@ -4287,9 +4303,7 @@ public class GostKlausurplanManager {
 	 */
 	public @NotNull KursDaten kursdatenByKursklausur(final @NotNull GostKursklausur k) {
 		final KursDaten kurs = getKursManager().get(k.idKurs);
-		if (kurs == null)
-			throw new DeveloperNotificationException("Kurs mit ID " + k.idKurs + " nicht in KursManager vorhanden.");
-		return kurs;
+		return DeveloperNotificationException.ifNull("Kurs mit ID " + k.idKurs + " nicht in KursManager vorhanden.", kurs);
 	}
 
 	/**
@@ -4301,11 +4315,7 @@ public class GostKlausurplanManager {
 	 */
 	public @NotNull GostFach fachByKursklausur(final @NotNull GostKursklausur k) {
 		final GostKlausurvorgabe vorgabe = vorgabeByKursklausur(k);
-		final GostFach fach = getFaecherManager(vorgabe.abiJahrgang).get(vorgabe.idFach);
-		if (fach == null)
-			throw new DeveloperNotificationException(
-					"Fach mit ID " + vorgabeByKursklausur(k).idFach + " nicht in GostFaecherManager vorhanden.");
-		return fach;
+		return DeveloperNotificationException.ifNull("Fach mit ID " + vorgabeByKursklausur(k).idFach + " nicht in GostFaecherManager vorhanden.", getFaecherManager(vorgabe.abiJahrgang).get(vorgabe.idFach));
 	}
 
 	/**
@@ -4448,9 +4458,7 @@ public class GostKlausurplanManager {
 	 * @return das Datum des Vorgängertermins zum übergebenen {@link GostSchuelerklausurTermin}
 	 */
 	public String datumSchuelerklausurVorgaenger(final @NotNull GostSchuelerklausurTermin skt) {
-		final GostSchuelerklausurTermin vorgaengerSkt = schuelerklausurterminVorgaengerBySchuelerklausurtermin(skt);
-		if (vorgaengerSkt == null)
-			throw new DeveloperNotificationException("Kein Vorgängertermin zu Schülerklausurtermin gefunden.");
+		final @NotNull GostSchuelerklausurTermin vorgaengerSkt = DeveloperNotificationException.ifNull("Kein Vorgängertermin zu Schülerklausurtermin gefunden.", schuelerklausurterminVorgaengerBySchuelerklausurtermin(skt));
 		final GostKlausurtermin termin = terminOrNullBySchuelerklausurTermin(vorgaengerSkt);
 		return (termin == null) ? null : termin.datum;
 	}

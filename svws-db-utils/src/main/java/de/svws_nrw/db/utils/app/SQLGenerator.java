@@ -35,6 +35,13 @@ public class SQLGenerator {
 	private static final String dirOutput = "build/sql";
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SQLGenerator() {
+		// leer
+	}
+
+	/**
 	 * Generiert das SQL-Skript zum Erstellen eines Schema für die angebene Revision
 	 * und den SQL-Dialekt des angegebenen DBMS.
 	 *

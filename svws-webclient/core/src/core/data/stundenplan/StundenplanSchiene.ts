@@ -24,6 +24,9 @@ export class StundenplanSchiene extends JavaObject {
 	public bezeichnung : string = "";
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

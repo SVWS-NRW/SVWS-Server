@@ -31,4 +31,11 @@ public class SchulgliederungGueltigerAbschluss {
 	@Schema(description = "der höchste Jahrgang, in dem der Abschluss möglich ist", example = "JAHRGANG_04")
 	public @NotNull String jahrgangBis = "JAHRGANG_13";
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SchulgliederungGueltigerAbschluss() {
+		// leer
+	}
+
 }

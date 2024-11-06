@@ -164,7 +164,7 @@ export class StundenplanblockungRegelTyp extends JavaEnum<StundenplanblockungReg
 	 */
 	public getParamType(i : number) : StundenplanblockungRegelParameterTyp {
 		if ((i < 0) || (i >= this.paramTypes.size()))
-			throw new IllegalArgumentException("Ein Parameter mit dem Index i existiert nicht für den Regel-Typ " + this.name()!)
+			throw new IllegalArgumentException("Ein Parameter mit dem Index i existiert nicht für den Regel-Typ " + this.name())
 		return this.paramTypes.get(i);
 	}
 

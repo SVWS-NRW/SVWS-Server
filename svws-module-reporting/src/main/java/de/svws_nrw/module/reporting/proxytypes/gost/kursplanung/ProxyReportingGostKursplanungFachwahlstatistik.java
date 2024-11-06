@@ -17,6 +17,7 @@ public class ProxyReportingGostKursplanungFachwahlstatistik extends ReportingGos
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingGostKursplanungFachwahlstatistik}.
+	 *
 	 * @param reportingRepository Repository für die Reporting
 	 * @param gostHalbjahr Das GostHalbjahr, für die die fachwahlstatistik erstellt wird.
 	 * @param gostStatistikFachwahl Wahlstatistik für ein Fach der GOSt über alle Halbjahre.
@@ -56,27 +57,27 @@ public class ProxyReportingGostKursplanungFachwahlstatistik extends ReportingGos
 
 		try {
 			kursgroessendifferenzLK = ergebnisManager.getOfFachOfKursartKursdifferenz(reportingFach.id(), GostKursart.LK.id);
-		} catch (final Exception ignored) {
+		} catch (@SuppressWarnings("unused") final Exception ignored) {
 			// DeveloperNotificationException wird ignoriert. Hier wurde eine Differenz zu einer nicht vorhandenen Fach-Kursart-Kombination abgefragt.
 		}
 		try {
 			kursgroessendifferenzGK = ergebnisManager.getOfFachOfKursartKursdifferenz(reportingFach.id(), GostKursart.GK.id);
-		} catch (final Exception ignored) {
+		} catch (@SuppressWarnings("unused") final Exception ignored) {
 			// DeveloperNotificationException wird ignoriert. Hier wurde eine Differenz zu einer nicht vorhandenen Fach-Kursart-Kombination abgefragt.
 		}
 		try {
 			kursgroessendifferenzZK = ergebnisManager.getOfFachOfKursartKursdifferenz(reportingFach.id(), GostKursart.ZK.id);
-		} catch (final Exception ignored) {
+		} catch (@SuppressWarnings("unused") final Exception ignored) {
 			// DeveloperNotificationException wird ignoriert. Hier wurde eine Differenz zu einer nicht vorhandenen Fach-Kursart-Kombination abgefragt.
 		}
 		try {
 			kursgroessendifferenzPJK = ergebnisManager.getOfFachOfKursartKursdifferenz(reportingFach.id(), GostKursart.PJK.id);
-		} catch (final Exception ignored) {
+		} catch (@SuppressWarnings("unused") final Exception ignored) {
 			// DeveloperNotificationException wird ignoriert. Hier wurde eine Differenz zu einer nicht vorhandenen Fach-Kursart-Kombination abgefragt.
 		}
 		try {
 			kursgroessendifferenzVTF = ergebnisManager.getOfFachOfKursartKursdifferenz(reportingFach.id(), GostKursart.VTF.id);
-		} catch (final Exception ignored) {
+		} catch (@SuppressWarnings("unused") final Exception ignored) {
 			// DeveloperNotificationException wird ignoriert. Hier wurde eine Differenz zu einer nicht vorhandenen Fach-Kursart-Kombination abgefragt.
 		}
 

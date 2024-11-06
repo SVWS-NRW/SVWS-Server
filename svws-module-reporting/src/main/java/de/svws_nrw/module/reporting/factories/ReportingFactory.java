@@ -44,8 +44,10 @@ public final class ReportingFactory {
 
 	/**
 	 * Erzeugt eine neue Reporting-Factory, um einen Report zu erzeugen.
+	 *
 	 * @param conn 						Die Verbindung zur Datenbank.
 	 * @param reportingParameter 		Einstellungen und Daten zum Steuern der Report-Generierung.
+	 *
 	 * @throws ApiOperationException   	im Fehlerfall
 	 */
 	public ReportingFactory(final DBEntityManager conn, final ReportingParameter reportingParameter) throws ApiOperationException {
@@ -101,7 +103,9 @@ public final class ReportingFactory {
 
 	/**
 	 * Erstellt eine Response in Form einer einzelnen Datei oder ZIP-Datei mit den mehreren generierten Report-Dateien.
+	 *
 	 * @return Im Falle eines Success enthält die HTTP-Response das Dokument oder die ZIP-Datei.
+	 *
 	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	public Response createReportResponse() throws ApiOperationException {

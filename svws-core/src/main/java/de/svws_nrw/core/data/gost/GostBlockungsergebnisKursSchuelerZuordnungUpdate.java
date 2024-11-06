@@ -25,4 +25,11 @@ public class GostBlockungsergebnisKursSchuelerZuordnungUpdate {
 	/** Die Blockungs-Regeln, die dabei angepasst werden sollen (das ist nur zulässig, wenn nur ein Blockungsergebnis für die Blockung vorhanden ist) */
 	public @NotNull GostBlockungRegelUpdate regelUpdates = new GostBlockungRegelUpdate();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GostBlockungsergebnisKursSchuelerZuordnungUpdate() {
+		// leer
+	}
+
 }

@@ -23,7 +23,7 @@ describe.concurrent("PropHandhabung läuft korrekt", () => {
 		[ "text", 'type="text"', "Type Prop as number"],
 		[ "search", "search-icon", "Typ Prop als Suche rendert Icons"],
 		[ "search", '<span class="icon', "Typ Prop als Suche rendert Icons Klasse"],
-		[ "date", '<span class="svws-icon icon i-ri-calendar-line"></span>', "Typ Prop als Datum zeigt das Datumssymbol an"],
+		[ "date", '<span class="svws-icon icon i-ri-calendar-2-line">', "Typ Prop als Datum zeigt das Datumssymbol an"],
 	])('Mit Props type="%s" HTML enthält "%s" | %s ', async (x, y, _) => {
 		const props = { type: x as "text" | "date" | "email" | "search" | "tel" | "password" };
 

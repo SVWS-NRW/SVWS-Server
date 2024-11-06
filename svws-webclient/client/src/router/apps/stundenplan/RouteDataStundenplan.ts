@@ -173,10 +173,28 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		if (data.gueltigBis !== undefined)
 			this.auswahl.gueltigBis = data.gueltigBis;
 		this.mapKatalogeintraege.set(this.auswahl.id, this.auswahl);
+		if (!this.stundenplanManager.kalenderwochenzuordnungGetMengeUngueltige().isEmpty()) {
+			const ids = new ArrayList<number>();
+			for (const z of this.stundenplanManager.kalenderwochenzuordnungGetMengeUngueltige())
+				ids.add(z.id);
+			const res = await api.server.deleteStundenplanKalenderwochenzuordnungen(ids, api.schema, this.auswahl.id);
+			this.stundenplanManager.kalenderwochenzuordnungRemoveAll(res);
+		}
 		this.setPatchedState({daten, auswahl: this.auswahl, mapKatalogeintraege: this.mapKatalogeintraege, stundenplanManager: this.stundenplanManager});
 		api.status.stop();
 	}
 
+	deleteKalenderwochenzuordnungen = async () => {
+		if (this.auswahl === undefined)
+			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
+		if (!this.stundenplanManager.kalenderwochenzuordnungGetMengeUngueltige().isEmpty()) {
+			const ids = new ArrayList<number>();
+			for (const z of this.stundenplanManager.kalenderwochenzuordnungGetMengeUngueltige())
+				ids.add(z.id);
+			const res = await api.server.deleteStundenplanKalenderwochenzuordnungen(ids, api.schema, this.auswahl.id);
+			this.stundenplanManager.kalenderwochenzuordnungRemoveAll(res);
+		}
+	}
 	patchKalenderwochenzuordnungen = async (data: List<StundenplanKalenderwochenzuordnung>) => {
 		if (this.auswahl === undefined)
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
@@ -607,11 +625,11 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 	gotoKatalog = async (katalog: 'raeume'|'aufsichtsbereiche'|'pausenzeiten') => {
 		switch (katalog) {
 			case 'aufsichtsbereiche':
-				return await RouteManager.doRoute(routeKatalogAufsichtsbereiche.getRoute(undefined));
+				return await RouteManager.doRoute(routeKatalogAufsichtsbereiche.getRoute());
 			case 'pausenzeiten':
-				return await RouteManager.doRoute(routeKatalogPausenzeiten.getRoute(undefined));
+				return await RouteManager.doRoute(routeKatalogPausenzeiten.getRoute());
 			case 'raeume':
-				return await RouteManager.doRoute(routeKatalogRaeume.getRoute(undefined));
+				return await RouteManager.doRoute(routeKatalogRaeume.getRoute());
 		}
 	}
 
@@ -673,6 +691,6 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		await api.config.setValue("stundenplan.raeume.ganzerStundenplan", value ? "true" : "false");
 	}
 
-	gotoEintrag = async (eintrag?: StundenplanListeEintrag) => await RouteManager.doRoute(routeStundenplan.getRoute(eintrag?.id));
+	gotoEintrag = async (eintrag?: StundenplanListeEintrag) => await RouteManager.doRoute(routeStundenplan.getRoute({ id: eintrag?.id }));
 
 }

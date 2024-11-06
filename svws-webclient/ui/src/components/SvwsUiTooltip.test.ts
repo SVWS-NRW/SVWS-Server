@@ -1,4 +1,5 @@
 import { describe, test, expect, beforeEach, afterEach } from "vitest";
+import type { VueWrapper } from "@vue/test-utils";
 import { mount } from "@vue/test-utils";
 import SvwsUiTooltip from "./SvwsUiTooltip.vue";
 
@@ -101,28 +102,28 @@ describe("SvwsUiTooltip", () => {
 	});
 
 	test("renders with position prop 'top'", () => {
-		const wrapper = mount(SvwsUiTooltip, {
+		const wrapper: VueWrapper<any> = mount(SvwsUiTooltip, {
 			props: { position: "top" },
 		});
 		expect(wrapper.vm.placement).toBe("top");
 	});
 
 	test("renders with keepOpen prop", () => {
-		const wrapper = mount(SvwsUiTooltip, {
+		const wrapper: VueWrapper<any> = mount(SvwsUiTooltip, {
 			props: { keepOpen: true },
 		});
 		expect(wrapper.vm.isOpen).toBe(true);
 	});
 
 	test("renders with initOpen prop", () => {
-		const wrapper = mount(SvwsUiTooltip, {
+		const wrapper: VueWrapper<any> = mount(SvwsUiTooltip, {
 			props: { initOpen: true },
 		});
 		expect(wrapper.vm.isOpen).toBe(true);
 	});
 
 	test("Beim Mouseover wird Tooltip angezeigt", async () => {
-		const wrapper = mount(SvwsUiTooltip, {
+		const wrapper: VueWrapper<any> = mount(SvwsUiTooltip, {
 			props: { initOpen: false },
 		});
 
@@ -133,7 +134,7 @@ describe("SvwsUiTooltip", () => {
 	});
 
 	test("Beim Mouse Leave wird Tooltip nicht mehr angezeigt", async () => {
-		const wrapper = mount(SvwsUiTooltip, {
+		const wrapper: VueWrapper<any> = mount(SvwsUiTooltip, {
 			props: { initOpen: false },
 		});
 
@@ -145,7 +146,7 @@ describe("SvwsUiTooltip", () => {
 	});
 
 	test("Beim Mouse Leave wird Tooltip immer noch angezeigt wenn keepOpen= true ist", async () => {
-		const wrapper = mount(SvwsUiTooltip, {
+		const wrapper: VueWrapper<any> = mount(SvwsUiTooltip, {
 			props: { initOpen: false, keepOpen: true },
 		});
 
@@ -163,7 +164,7 @@ describe("SvwsUiTooltip", () => {
 	});
 
 	test("Inhalts slot im Tooltip wird angezeigt", async () => {
-		const wrapper = mount(SvwsUiTooltip, {
+		const wrapper: VueWrapper<any> = mount(SvwsUiTooltip, {
 			slots: {
 				content: "<span class='tooltip-content'>Lorem123</span>",
 			},

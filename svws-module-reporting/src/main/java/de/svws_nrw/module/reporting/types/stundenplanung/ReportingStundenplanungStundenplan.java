@@ -35,6 +35,7 @@ public class ReportingStundenplanungStundenplan {
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
+	 *
 	 * @param beschreibung			Die Beschreibung des Stundenplans
 	 * @param gueltigAb				Datum, ab dem der Stundenplan gültig ist.
 	 * @param gueltigBis			Datum, bis zu dem der Stundenplan gültig ist.
@@ -60,7 +61,9 @@ public class ReportingStundenplanungStundenplan {
 
 	/**
 	 * Prüft, ob das übergebene Datum im Zeitbereich des Stundenplans liegt.
+	 *
 	 * @param datum Das zu prüfende Datum im Format yyyy-mm-dd
+	 *
 	 * @return true, wenn das Datum im Zeitbereich des Stundenplans liegt, sonst false. Ist nur eine Gültigkeitsangabe im Plan gesetzt, wird nur gegen diese geprüft.
 	 */
 	public boolean istDatumImStundenplan(final String datum) {
@@ -78,7 +81,9 @@ public class ReportingStundenplanungStundenplan {
 
 	/**
 	 * Gibt den Raum zur übergebenen ID aus dem Stundenplan zurück.
+	 *
 	 * @param idRaumStundenplan Die ID des Raumes im Stundenplan.
+	 *
 	 * @return Raum zur ID oder null, wenn es zu ID keinen Raum im Stundenplan gibt.
 	 */
 	public ReportingStundenplanungRaum raum(final Long idRaumStundenplan) {
@@ -89,7 +94,9 @@ public class ReportingStundenplanungStundenplan {
 
 	/**
 	 * Gibt die Stunde im Zeitraster zur übergebenen ID des Zeitrastereintrags aus dem Stundenplan zurück.
+	 *
 	 * @param id Die ID des Zeitrastereintrags im Stundenplan.
+	 *
 	 * @return Stunde im Zeitraster zur ID oder null, wenn es zu ID keinem Zeitrastereintrag im Stundenplan gibt.
 	 */
 	public ReportingStundenplanungZeitrasterstunde zeitrasterstunde(final Long id) {
@@ -100,8 +107,10 @@ public class ReportingStundenplanungStundenplan {
 
 	/**
 	 * Gibt die Stunde im Zeitraster zum übergebenen Tag und zur übergebenen Stunde aus dem Stundenplan zurück.
+	 *
 	 * @param wochentag 		Der Wochentag der Unterrichtsstunde aus dem Zeitraster
 	 * @param unterrichtstunde 	Die Unterrichtstunde am übergebenen Wochentag.
+	 *
 	 * @return Stunde im Zeitraster oder null, wenn es zu ID keinem Zeitrastereintrag im Stundenplan gibt.
 	 */
 	public ReportingStundenplanungZeitrasterstunde zeitrasterstunde(final Wochentag wochentag, final int unterrichtstunde) {
@@ -116,6 +125,7 @@ public class ReportingStundenplanungStundenplan {
 
 	/**
 	 * Die Beschreibung des Stundenplans.
+	 *
 	 * @return Inhalt des Feldes beschreibung
 	 */
 	public String beschreibung() {
@@ -124,6 +134,7 @@ public class ReportingStundenplanungStundenplan {
 
 	/**
 	 * Datum, ab dem der Stundenplan gültig ist.
+	 *
 	 * @return Inhalt des Feldes gueltigAb
 	 */
 	public String gueltigAb() {
@@ -132,6 +143,7 @@ public class ReportingStundenplanungStundenplan {
 
 	/**
 	 * Datum, bis zu dem der Stundenplan gültig ist.
+	 *
 	 * @return Inhalt des Feldes gueltigBis
 	 */
 	public String gueltigBis() {
@@ -140,6 +152,7 @@ public class ReportingStundenplanungStundenplan {
 
 	/**
 	 * Die ID des Stundenplans.
+	 *
 	 * @return Inhalt des Feldes id
 	 */
 	public Long id() {
@@ -148,6 +161,7 @@ public class ReportingStundenplanungStundenplan {
 
 	/**
 	 * Eine Liste aller Räume im Stundenplan.
+	 *
 	 * @return Inhalt des Feldes raeume
 	 */
 	public List<ReportingStundenplanungRaum> raeume() {
@@ -156,6 +170,7 @@ public class ReportingStundenplanungStundenplan {
 
 	/**
 	 * Der Schuljahresabschnitt, dem dieser Stundenplan zugeordnet ist.
+	 *
 	 * @return Inhalt des Feldes schuljahresabschnitt
 	 */
 	public ReportingSchuljahresabschnitt schuljahresabschnitt() {
@@ -164,6 +179,7 @@ public class ReportingStundenplanungStundenplan {
 
 	/**
 	 * Das Zeitraster dieses Stundenplanes.
+	 *
 	 * @return Inhalt des Feldes zeitraster
 	 */
 	public List<ReportingStundenplanungZeitrasterstunde> zeitraster() {

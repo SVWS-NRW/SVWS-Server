@@ -49,6 +49,9 @@ export class StundenplanKonfiguration extends JavaObject {
 	public defaultMittagspauseDauer : number = 60;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

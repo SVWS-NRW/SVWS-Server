@@ -32,4 +32,11 @@ public class GostBlockungListeneintrag {
 	/** Gibt die Anzahl der Ergebnisse an, die bei der Blockung vorliegen */
 	public int anzahlErgebnisse = -1;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GostBlockungListeneintrag() {
+		// leer
+	}
+
 }

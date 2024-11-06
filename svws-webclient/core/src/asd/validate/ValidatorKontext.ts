@@ -1,10 +1,11 @@
 import { JavaObject } from '../../java/lang/JavaObject';
-import { SchuleStammdaten } from '../../asd/data/schule/SchuleStammdaten';
 import { ValidatorManager } from '../../asd/validate/ValidatorManager';
-import { ValidatorException } from '../../asd/validate/ValidatorException';
 import { HashMap } from '../../java/util/HashMap';
 import { CoreTypeDataManager } from '../../asd/utils/CoreTypeDataManager';
 import { Schulform } from '../../asd/types/schule/Schulform';
+import { SchuleStammdaten } from '../../asd/data/schule/SchuleStammdaten';
+import { DateManager } from '../../asd/validate/DateManager';
+import { ValidatorException } from '../../asd/validate/ValidatorException';
 import { Class } from '../../java/lang/Class';
 import type { JavaMap } from '../../java/util/JavaMap';
 import { Schuljahresabschnitt } from '../../asd/data/schule/Schuljahresabschnitt';
@@ -85,6 +86,32 @@ export class ValidatorKontext extends JavaObject {
 		if (abschnitt !== null)
 			return abschnitt.schuljahr;
 		throw new ValidatorException("Es ist kein gültiger Schuljahresabschnitt in den SchuleStammdaten gesetzt")
+	}
+
+	/**
+	 * Gibt den Datums-Manager für den Beginn des aktuellen Schuljahres zurück.
+	 *
+	 * @return der Datums-Manager für den Beginn des aktuellen Schuljahres
+	 */
+	public getSchuljahresbeginn() : DateManager {
+		try {
+			return DateManager.fromValues(this.getSchuljahr(), 8, 1);
+		} catch(e : any) {
+			throw new ValidatorException("Fehler beim Erstellen des Datums für den Beginn des Schuljahres", e)
+		}
+	}
+
+	/**
+	 * Gibt den Datums-Manager für das Ende des aktuellen Schuljahres zurück.
+	 *
+	 * @return der Datums-Manager für das Ende des aktuellen Schuljahres
+	 */
+	public getSchuljahresende() : DateManager {
+		try {
+			return DateManager.fromValues(this.getSchuljahr() + 1, 7, 31);
+		} catch(e : any) {
+			throw new ValidatorException("Fehler beim Erstellen des Datums für das Ende des Schuljahres", e)
+		}
 	}
 
 	/**

@@ -1,7 +1,7 @@
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 
-import { List, SchuelerListeEintrag, SchuelerKAoADaten, OpenApiError } from "@core";
-import { ArrayList, SchuelerKAoAManager, DeveloperNotificationException } from "@core";
+import { List, SchuelerListeEintrag, SchuelerKAoADaten, OpenApiError, SchuelerLernabschnittListeEintrag } from "@core";
+import { SchuelerKAoAManager, DeveloperNotificationException } from "@core";
 import { api } from "~/router/Api";
 import { routeApp } from "../../RouteApp";
 
@@ -34,17 +34,15 @@ export class RouteDataSchuelerKAoA extends RouteData<RouteStateSchuelerKAoA> {
 		return this._state.value.schuelerKAoAManager;
 	}
 
-	patch = async (data : Partial<SchuelerKAoADaten>) => {
-		if (this.auswahl === undefined)
-			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		console.log("TODO: Implementierung patch KAoA", data);
-	}
-
-	addKaoaDaten = async (data : Partial<SchuelerKAoADaten>, id : number) => {
+	patch = async (data : Partial<SchuelerKAoADaten>, idKaoa : number) => {
 		api.status.start()
 		try {
-			const schuelerKAoADaten = await api.server.addKAoAdaten(data, api.schema, id);
-			this.schuelerKaoaManager.addKaoaDaten(schuelerKAoADaten)
+			//ToDo: Anpassung falls zukünftig Patch das Objekt zurückgeben sollte
+			await api.server.patchKAoADaten(data, api.schema, this.auswahl.id, idKaoa)
+			const kaoaDaten = this.schuelerKaoaManager.liste.getOrException(idKaoa)
+			const patchedObject = Object.assign(kaoaDaten, data);
+			this.schuelerKaoaManager.liste.remove(kaoaDaten)
+			this.schuelerKaoaManager.liste.add(patchedObject)
 			this.commit()
 		} catch (error: OpenApiError) {
 			throw new OpenApiError(error, error.toString() + " Fehlercode: " + error.response?.status);
@@ -52,11 +50,24 @@ export class RouteDataSchuelerKAoA extends RouteData<RouteStateSchuelerKAoA> {
 		api.status.stop()
 	}
 
-	deleteKaoaDaten = async (idSchueler: number, idKaoaEntry: number) => {
+	add = async (data : Partial<SchuelerKAoADaten>, id : number) => {
+		api.status.start()
+		try {
+			const schuelerKAoADaten = await api.server.addKAoAdaten(data, api.schema, id);
+			this.schuelerKaoaManager.liste.add(schuelerKAoADaten)
+			this.commit()
+		} catch (error: OpenApiError) {
+			throw new OpenApiError(error, error.toString() + " Fehlercode: " + error.response?.status);
+		}
+		api.status.stop()
+	}
+
+	delete = async (idSchueler: number, idKaoaEntry: number) => {
 		api.status.start()
 		try {
 			await api.server.deleteKAoAdaten(api.schema, idSchueler, idKaoaEntry)
-			this.schuelerKaoaManager.deleteKaoaDaten(idKaoaEntry)
+			const schuelerKAoADaten = this.schuelerKaoaManager.liste.getOrException(idKaoaEntry)
+			this.schuelerKaoaManager.liste.remove(schuelerKAoADaten);
 			this.commit()
 		} catch (error: OpenApiError) {
 			throw new OpenApiError(error, error.toString() + " Fehlercode: " + error.response?.status);
@@ -72,8 +83,9 @@ export class RouteDataSchuelerKAoA extends RouteData<RouteStateSchuelerKAoA> {
 			this.setDefaultState();
 		else {
 			try {
+				const lernabschnitteAuswahl: List<SchuelerLernabschnittListeEintrag> = await api.server.getSchuelerLernabschnittsliste(api.schema, auswahl.id);
 				const data: List<SchuelerKAoADaten> = await api.server.getKAoAdaten(api.schema, auswahl.id);
-				const schuelerKAoAManager = new SchuelerKAoAManager(routeApp.data.aktAbschnitt.value.id, api.abschnitt.id, api.schuleStammdaten.abschnitte, api.schulform, data, new ArrayList());
+				const schuelerKAoAManager = new SchuelerKAoAManager(routeApp.data.aktAbschnitt.value.id, api.abschnitt.id, api.schuleStammdaten.abschnitte, api.schulform, data, lernabschnitteAuswahl);
 				this.setPatchedState({auswahl, schuelerKAoAManager});
 			} catch (error) {
 				throw new DeveloperNotificationException("Die KAoA-Daten konnten nicht eingeholt werden, sind für diesen Schüler KAoA-Daten möglich?");

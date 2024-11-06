@@ -53,6 +53,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingGostKursplanungBlockungsergebnis}.
+	 *
 	 * @param reportingRepository	Repository für die Reporting.
 	 * @param blockungsergebnis 	Das GOSt-Blockungsergebnis, welches für das Reporting genutzt werden soll.
 	 * @param datenManager 			Der zum Blockungsergebnis gehörige Datenmanager der Blockung.
@@ -224,6 +225,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 
 	/**
 	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.
+	 *
 	 * @return Repository für die Reporting
 	 */
 	@JsonIgnore
@@ -234,6 +236,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 
 	/**
 	 * Map mit den Fachwahlstatistiken des GOSt-Halbjahres des Blockungsergebnisses zur Fach-ID
+	 *
 	 * @return Map mit den Fachwahlstatistiken zu den Fächern.
 	 */
 	@Override

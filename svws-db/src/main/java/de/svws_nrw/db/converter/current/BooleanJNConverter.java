@@ -18,6 +18,13 @@ public final class BooleanJNConverter extends DBAttributeConverter<Boolean, Stri
 	/** Die Instanz des Konverters */
 	public static final BooleanJNConverter instance = new BooleanJNConverter();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public BooleanJNConverter() {
+		// leer
+	}
+
 	@Override
 	public String convertToDatabaseColumn(final Boolean value) {
 		if (value == null)

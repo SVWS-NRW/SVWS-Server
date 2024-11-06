@@ -67,6 +67,9 @@ export class BenutzerDaten extends JavaObject {
 	public leitungsfunktionen : List<number> = new ArrayList<number>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

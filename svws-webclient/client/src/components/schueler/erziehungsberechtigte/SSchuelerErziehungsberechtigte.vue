@@ -1,7 +1,7 @@
 <template>
 	<div class="page--content">
 		<svws-ui-content-card title="Erziehungsberechtigte" class="col-span-full">
-			<svws-ui-table :items="data()" :columns :no-data="data().size() === 0" clickable :clicked="erzieher" @update:clicked="value => erzieher = value">
+			<svws-ui-table :items="data()" :columns :no-data="data().size() === 0" clickable :clicked="erzieher" @update:clicked="value => erzieher = value" focus-first-element>
 				<template #header(anschreiben)>
 					<svws-ui-tooltip>
 						<span class="icon i-ri-mail-send-line" />
@@ -20,7 +20,7 @@
 					{{ eMail ? eMail : '–' }}
 				</template>
 				<template #cell(adresse)="{ rowData }">
-					{{ rowData.strassenname }}{{ rowData.wohnortID && mapOrte?.get(rowData.wohnortID) ? `, ${mapOrte.get(rowData.wohnortID)?.plz} ${mapOrte?.get(rowData.wohnortID)?.ortsname}` : '' }}
+					{{ strasse(rowData) }}{{ rowData.wohnortID && mapOrte?.get(rowData.wohnortID) ? `, ${mapOrte.get(rowData.wohnortID)?.plz} ${mapOrte?.get(rowData.wohnortID)?.ortsname}` : '' }}
 				</template>
 				<template #cell(anschreiben)="{ value: erhaeltAnschreiben }">
 					{{ erhaeltAnschreiben ? '&check;' : '&times;' }}
@@ -36,7 +36,7 @@
 	import { ref } from "vue";
 	import type { DataTableColumn } from "@ui";
 	import type { SchuelerErziehungsberechtigteProps } from "./SSchuelerErziehungsberechtigteProps";
-	import type { ErzieherStammdaten } from "@core";
+	import { AdressenUtils, type ErzieherStammdaten } from "@core";
 
 	const props = defineProps<SchuelerErziehungsberechtigteProps>();
 
@@ -45,6 +45,10 @@
 	async function hinzufuegen() {
 		const neu = await props.add();
 		erzieher.value = neu;
+	}
+
+	function strasse(erzieher: ErzieherStammdaten) {
+		return AdressenUtils.combineStrasse(erzieher.strassenname ?? "", erzieher.hausnummer ?? "", erzieher.hausnummerZusatz ?? "");
 	}
 
 	const columns: DataTableColumn[] = [

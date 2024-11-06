@@ -12,6 +12,7 @@ public class ProxyReportingStatistikFach extends ReportingStatistikFach {
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingStatistikFach}.
 	 * Wenn das Statistikfach im Schuljahresabschnitt nicht gültig war, können keine Daten des Statistikfaches ergänzt werden. Es ist dann null.
+	 *
 	 * @param statistikfach 			Fach aus dem Katalog der Statistikfächer
 	 * @param schuljahr					Das Schuljahr, aus dem die Statistikdaten des Faches gelesen werden.
 	 * @param exaktePruefungSchuljahr	Wenn true, dann werden nur Statistikdaten aus dem angegebenen Schuljahr zugelassen. Wenn false, dann wird der letzte
@@ -42,6 +43,7 @@ public class ProxyReportingStatistikFach extends ReportingStatistikFach {
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für ein {@link ReportingStatistikFach}.
 	 * Wenn das Statistikfach im Schuljahresabschnitt nicht gültig war, können keine Daten des Statistikfaches ergänzt werden. Es ist dann null.
+	 *
 	 * @param statistikfachKuerzel 		ASD-Kürzel des zugehörigen Statistik-Faches
 	 * @param schuljahr					Das Schuljahr, aus dem die Statistikdaten des Faches gelesen werden.
 	 * @param exaktePruefungSchuljahr	Wenn true, dann werden nur Statistikdaten aus dem angegebenen Schuljahr zugelassen. Wenn false, dann wird der letzte
@@ -73,6 +75,7 @@ public class ProxyReportingStatistikFach extends ReportingStatistikFach {
 
 	/**
 	 * Initialisiert die Daten des Statistikfaches, wenn es für das angegebene Schuljahr ein solches gültiges Fach gibt.
+	 *
 	 * @param statistikfach				Fach aus dem Katalog der Statistikfächer
 	 * @param schuljahr					Das Schuljahr, aus dem die Statistikdaten des Faches gelesen werden.
 	 * @param exaktePruefungSchuljahr	Wenn true, dann werden nur Statistikdaten aus dem angegebenen Schuljahr zugelassen. Wenn false, dann wird der letzte

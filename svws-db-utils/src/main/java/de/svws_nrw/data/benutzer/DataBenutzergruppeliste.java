@@ -28,12 +28,11 @@ public final class DataBenutzergruppeliste extends DataManager<Long> {
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link BenutzergruppeListeEintrag}.
 	 *
-	 * @param conn        die Datenbank-Verbindung für den Datenbankzugriff
+	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
 	 */
 	public DataBenutzergruppeliste(final DBEntityManager conn) {
 		super(conn);
 	}
-
 
 	@Override
 	public Response getAll() throws ApiOperationException {
@@ -50,8 +49,10 @@ public final class DataBenutzergruppeliste extends DataManager<Long> {
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
-
 	/**
+	 * Liefert Benutzergruppen, die den Benutzer enthalten.
+	 * Das Response-Objekt enthält: {@code List<BenutzergruppeListeEintrag>}
+	 *
 	 * @param id ID des Benutzers
 	 * @return Benutzergruppen, die den Benutzer enthalten.
 	 */
@@ -67,7 +68,6 @@ public final class DataBenutzergruppeliste extends DataManager<Long> {
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
-
 	@Override
 	public Response get(final Long id) {
 		throw new UnsupportedOperationException();
@@ -77,8 +77,6 @@ public final class DataBenutzergruppeliste extends DataManager<Long> {
 	public Response patch(final Long id, final InputStream is) {
 		throw new UnsupportedOperationException();
 	}
-
-
 
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOBenutzergruppe} in einen Core-DTO {@link BenutzergruppeListeEintrag}.
@@ -90,7 +88,6 @@ public final class DataBenutzergruppeliste extends DataManager<Long> {
 		daten.istAdmin = (b.IstAdmin != null) && b.IstAdmin;
 		return daten;
 	};
-
 
 	/**
 	 * Lambda-Ausdruck zum Vergleichen/Sortieren der Core-DTOs {@link BenutzerListeEintrag}.

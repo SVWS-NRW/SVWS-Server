@@ -1,3 +1,6 @@
+/**
+ * Generated classes from the WebDAV XML schema.
+ */
 @jakarta.xml.bind.annotation.XmlSchema(namespace = "http://calendarserver.org/ns/",
     elementFormDefault = jakarta.xml.bind.annotation.XmlNsForm.QUALIFIED,
     xmlns = {@XmlNs(namespaceURI = "http://calendarserver.org/ns/", prefix = "cs")})

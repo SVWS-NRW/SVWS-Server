@@ -60,6 +60,13 @@ public class APIKalender {
 	private static final Logger logger = createLogger();
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public APIKalender() {
+		// leer
+	}
+
+	/**
 	 * Die CardDAV-API Methode zur Abfrage von Eigenschaften der
 	 * Ressource-Collection Kalender
 	 *

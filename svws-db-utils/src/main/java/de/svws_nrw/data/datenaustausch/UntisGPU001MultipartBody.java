@@ -26,4 +26,12 @@ public class UntisGPU001MultipartBody {
 	@FormParam("data")
 	public byte[] data;
 
+
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public UntisGPU001MultipartBody() {
+		// leer
+	}
+
 }

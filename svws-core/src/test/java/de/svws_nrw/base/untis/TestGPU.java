@@ -24,8 +24,8 @@ class TestGPU {
 	void testGPU001() {
 		try {
 			final Path path = ResourceUtils.getFile(PFAD_DATEN + "GPU001.txt");
-			final String strGPU001 = Files.readString(path);
-			final List<UntisGPU001> unterrichte = UntisGPU001.readCSV(strGPU001);
+			final byte[] dataGPU001 = Files.readAllBytes(path);
+			final List<UntisGPU001> unterrichte = UntisGPU001.readCSV(dataGPU001);
 			for (final UntisGPU001 unterricht : unterrichte)
 				System.out.println(unterricht.idUnterricht + " -> " + unterricht.klasseKuerzel + " " + unterricht.fachKuerzel + " " + unterricht.lehrerKuerzel);
 		} catch (final Exception e) {
@@ -41,8 +41,8 @@ class TestGPU {
 	void testGPU002() {
 		try {
 			final Path path = ResourceUtils.getFile(PFAD_DATEN + "GPU002.txt");
-			final String strGPU002 = Files.readString(path);
-			final List<UntisGPU002> unterrichte = UntisGPU002.readCSV(strGPU002);
+			final byte[] dataGPU002 = Files.readAllBytes(path);
+			final List<UntisGPU002> unterrichte = UntisGPU002.readCSV(dataGPU002);
 			for (final UntisGPU002 unterricht : unterrichte)
 				System.out.println(unterricht.idUnterricht + " -> " + unterricht.wochenTyp + " " + unterricht.klasseKuerzel + " " + unterricht.fachKuerzel + " "
 						+ unterricht.lehrerKuerzel);

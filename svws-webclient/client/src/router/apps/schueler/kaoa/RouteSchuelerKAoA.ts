@@ -8,7 +8,6 @@ import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteS
 import { RouteDataSchuelerKAoA } from "~/router/apps/schueler/kaoa/RouteDataSchuelerKAoA";
 
 import type { SchuelerKAoAProps } from "~/components/schueler/kaoa/SSchuelerKaoaProps";
-import { routeApp } from "../../RouteApp";
 
 
 const SSchuelerKaoa = () => import("~/components/schueler/kaoa/SSchuelerKaoa.vue");
@@ -22,8 +21,8 @@ export class RouteSchuelerKAoA extends RouteNode<RouteDataSchuelerKAoA, RouteSch
 		super.text = "KAoA";
 		this.isHidden = (params?: RouteParams) => {
 			if ((params === undefined) || (params.id instanceof Array))
-				return routeError.getRoute(new DeveloperNotificationException("Fehler: Die Parameter der Route sind nicht gültig gesetzt."));
-			return routeSchueler.data.schuelerListeManager.hasDaten() ? false : routeSchueler.getRoute(parseInt(params.id));
+				return routeError.getErrorRoute(new DeveloperNotificationException("Fehler: Die Parameter der Route sind nicht gültig gesetzt."));
+			return routeSchueler.data.schuelerListeManager.hasDaten() ? false : routeSchueler.getRouteDefaultChild({ id: parseInt(params.id) });
 		};
 	}
 
@@ -38,25 +37,21 @@ export class RouteSchuelerKAoA extends RouteNode<RouteDataSchuelerKAoA, RouteSch
 				try {
 					await this.data.ladeDaten(routeSchueler.data.schuelerListeManager.liste.get(id));
 				} catch(error) {
-					return routeSchueler.getRoute(id);
+					// TODO: Routing zum Schüler zurück führt zu einer Endlosschleife... return routeSchueler.getRoute({ id });
 				}
 			}
 		} catch (e) {
-			return routeError.getRoute(e as DeveloperNotificationException);
+			return routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
-	}
-
-	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuelerKAoAProps {
 		return {
-			patch: this.data.patch,
 			schuelerKaoaManager: () => this.data.schuelerKaoaManager,
 			auswahl: () => this.data.auswahl,
-			addKaoaDaten: routeSchuelerKAoA.data.addKaoaDaten,
-			deleteKaoaDaten: routeSchuelerKAoA.data.deleteKaoaDaten
+			add: this.data.add,
+			patch: this.data.patch,
+			delete: this.data.delete
 		};
 	}
 

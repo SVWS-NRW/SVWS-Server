@@ -19,4 +19,11 @@ public class StundenplanInputSimpleKlasse {
 	/** Das Kürzel der Klasse. Beispielsweise '7b' oder 'Q1'. */
 	public @NotNull String kuerzel = "";
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public StundenplanInputSimpleKlasse() {
+		// leer
+	}
+
 }

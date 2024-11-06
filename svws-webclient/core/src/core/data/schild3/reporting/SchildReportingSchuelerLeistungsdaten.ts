@@ -84,6 +84,9 @@ export class SchildReportingSchuelerLeistungsdaten extends JavaObject {
 	public sortierungSekII : number | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -147,17 +150,17 @@ export class SchildReportingSchuelerLeistungsdaten extends JavaObject {
 		result += '"fachID" : ' + obj.fachID.toString() + ',';
 		result += '"fachKuerzel" : ' + JSON.stringify(obj.fachKuerzel) + ',';
 		result += '"fach" : ' + JSON.stringify(obj.fach) + ',';
-		result += '"lehrerID" : ' + ((!obj.lehrerID) ? 'null' : obj.lehrerID.toString()) + ',';
-		result += '"lehrerKuerzel" : ' + ((!obj.lehrerKuerzel) ? 'null' : JSON.stringify(obj.lehrerKuerzel)) + ',';
-		result += '"kursID" : ' + ((!obj.kursID) ? 'null' : obj.kursID.toString()) + ',';
+		result += '"lehrerID" : ' + ((obj.lehrerID === null) ? 'null' : obj.lehrerID.toString()) + ',';
+		result += '"lehrerKuerzel" : ' + ((obj.lehrerKuerzel === null) ? 'null' : JSON.stringify(obj.lehrerKuerzel)) + ',';
+		result += '"kursID" : ' + ((obj.kursID === null) ? 'null' : obj.kursID.toString()) + ',';
 		result += '"kurs" : ' + JSON.stringify(obj.kurs) + ',';
 		result += '"kursart" : ' + JSON.stringify(obj.kursart) + ',';
 		result += '"kursartAllg" : ' + JSON.stringify(obj.kursartAllg) + ',';
 		result += '"note" : ' + JSON.stringify(obj.note) + ',';
 		result += '"noteKuerzel" : ' + JSON.stringify(obj.noteKuerzel) + ',';
-		result += '"notePunkte" : ' + ((!obj.notePunkte) ? 'null' : obj.notePunkte.toString()) + ',';
-		result += '"sortierungAllg" : ' + ((!obj.sortierungAllg) ? 'null' : obj.sortierungAllg.toString()) + ',';
-		result += '"sortierungSekII" : ' + ((!obj.sortierungSekII) ? 'null' : obj.sortierungSekII.toString()) + ',';
+		result += '"notePunkte" : ' + ((obj.notePunkte === null) ? 'null' : obj.notePunkte.toString()) + ',';
+		result += '"sortierungAllg" : ' + ((obj.sortierungAllg === null) ? 'null' : obj.sortierungAllg.toString()) + ',';
+		result += '"sortierungSekII" : ' + ((obj.sortierungSekII === null) ? 'null' : obj.sortierungSekII.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -181,13 +184,13 @@ export class SchildReportingSchuelerLeistungsdaten extends JavaObject {
 			result += '"fach" : ' + JSON.stringify(obj.fach) + ',';
 		}
 		if (obj.lehrerID !== undefined) {
-			result += '"lehrerID" : ' + ((!obj.lehrerID) ? 'null' : obj.lehrerID.toString()) + ',';
+			result += '"lehrerID" : ' + ((obj.lehrerID === null) ? 'null' : obj.lehrerID.toString()) + ',';
 		}
 		if (obj.lehrerKuerzel !== undefined) {
-			result += '"lehrerKuerzel" : ' + ((!obj.lehrerKuerzel) ? 'null' : JSON.stringify(obj.lehrerKuerzel)) + ',';
+			result += '"lehrerKuerzel" : ' + ((obj.lehrerKuerzel === null) ? 'null' : JSON.stringify(obj.lehrerKuerzel)) + ',';
 		}
 		if (obj.kursID !== undefined) {
-			result += '"kursID" : ' + ((!obj.kursID) ? 'null' : obj.kursID.toString()) + ',';
+			result += '"kursID" : ' + ((obj.kursID === null) ? 'null' : obj.kursID.toString()) + ',';
 		}
 		if (obj.kurs !== undefined) {
 			result += '"kurs" : ' + JSON.stringify(obj.kurs) + ',';
@@ -205,13 +208,13 @@ export class SchildReportingSchuelerLeistungsdaten extends JavaObject {
 			result += '"noteKuerzel" : ' + JSON.stringify(obj.noteKuerzel) + ',';
 		}
 		if (obj.notePunkte !== undefined) {
-			result += '"notePunkte" : ' + ((!obj.notePunkte) ? 'null' : obj.notePunkte.toString()) + ',';
+			result += '"notePunkte" : ' + ((obj.notePunkte === null) ? 'null' : obj.notePunkte.toString()) + ',';
 		}
 		if (obj.sortierungAllg !== undefined) {
-			result += '"sortierungAllg" : ' + ((!obj.sortierungAllg) ? 'null' : obj.sortierungAllg.toString()) + ',';
+			result += '"sortierungAllg" : ' + ((obj.sortierungAllg === null) ? 'null' : obj.sortierungAllg.toString()) + ',';
 		}
 		if (obj.sortierungSekII !== undefined) {
-			result += '"sortierungSekII" : ' + ((!obj.sortierungSekII) ? 'null' : obj.sortierungSekII.toString()) + ',';
+			result += '"sortierungSekII" : ' + ((obj.sortierungSekII === null) ? 'null' : obj.sortierungSekII.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

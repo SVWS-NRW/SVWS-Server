@@ -25,4 +25,11 @@ public class StundenplanblockungStundenelement {
 	/** Der Typ. (1 = jede Woche, 2 = gedoppelte Einzelstunde) */
 	public int typ = -1;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public StundenplanblockungStundenelement() {
+		// leer
+	}
+
 }

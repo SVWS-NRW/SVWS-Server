@@ -31,4 +31,11 @@ public class GostBeratungslehrer {
 	@Schema(description = "der Vorname des Lehrers", example = "Max")
 	public String vorname;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GostBeratungslehrer() {
+		// leer
+	}
+
 }

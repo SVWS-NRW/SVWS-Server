@@ -17,6 +17,9 @@ export class SchuelerLernabschnittNachpruefungsdaten extends JavaObject {
 	public pruefungen : List<SchuelerLernabschnittNachpruefung> = new ArrayList<SchuelerLernabschnittNachpruefung>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

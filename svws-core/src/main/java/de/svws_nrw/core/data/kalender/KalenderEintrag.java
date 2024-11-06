@@ -12,6 +12,7 @@ import jakarta.validation.constraints.NotNull;
 @Schema(description = "Ein Eintrag in einem Kalender.")
 @TranspilerDTO
 public class KalenderEintrag {
+
 	/** ID des Kalendereintrags */
 	@Schema(description = "die ID des Kalendereintrag", example = "123")
 	public @NotNull String id = "";
@@ -59,4 +60,12 @@ public class KalenderEintrag {
 	/** der Typ des Kalendereintrags */
 	@Schema(description = "der Typ des Kalendereintrags ", example = "VEVENT")
 	public @NotNull String kalenderTyp = "VEVENT";
+
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public KalenderEintrag() {
+		// leer
+	}
+
 }

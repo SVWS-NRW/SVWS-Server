@@ -12,12 +12,22 @@ public class DavUriParameter {
 
 	/** Datenbankschema, gegen das Anfragen an das API ausgeführt werden */
 	private String schema;
+
 	/** Id der Ressource Benutzer */
 	private String benutzerId;
+
 	/** Id der Ressource-Collection, z.B. Adressbuch, Kalender */
 	private String resourceCollectionId;
+
 	/** Id der Ressource, z.B. Adressbuch-Eintrag, Kalender-Eintrag */
 	private String resourceId;
+
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public DavUriParameter() {
+		// leer
+	}
 
 	/**
 	 * getter für den Parameter 'schema', das Datenbankschema, gegen das Anfragen an

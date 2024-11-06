@@ -64,12 +64,12 @@ export class StundenplanUnterrichtUtils extends JavaObject {
 	/**
 	 * Ein Default-Comparator für den Vergleich von Stunden in Listen.
 	 */
-	public static readonly comparatorStunden : Comparator<number> = { compare : (a: number, b: number) => JavaLong.compare(a!, b!) };
+	public static readonly comparatorStunden : Comparator<number> = { compare : (a: number, b: number) => JavaLong.compare(a, b) };
 
 	/**
 	 * Ein Default-Comparator für den Vergleich von Wochentypen in Listen.
 	 */
-	public static readonly comparatorWochentypen : Comparator<number> = { compare : (a: number, b: number) => JavaLong.compare(a!, b!) };
+	public static readonly comparatorWochentypen : Comparator<number> = { compare : (a: number, b: number) => JavaLong.compare(a, b) };
 
 	/**
 	 * Ein Default-Comparator für den Vergleich von Klassen in Listen.

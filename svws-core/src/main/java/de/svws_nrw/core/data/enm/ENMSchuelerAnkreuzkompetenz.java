@@ -33,4 +33,11 @@ public class ENMSchuelerAnkreuzkompetenz {
 	@Schema(description = "Der Zeitstempel der letzten Änderung an den zugewiesenen Stufen.", example = "2013-11-14 13:12:48.774")
 	public String tsStufe;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ENMSchuelerAnkreuzkompetenz() {
+		// leer
+	}
+
 }

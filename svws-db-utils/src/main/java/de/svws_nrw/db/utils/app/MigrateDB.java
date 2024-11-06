@@ -27,6 +27,12 @@ public class MigrateDB {
 	/// Der Logger
 	private static final Logger logger = new Logger();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public MigrateDB() {
+		// leer
+	}
 
 	/**
 	 * Stellt eine einfache Frage auf der Kommandozeile, welche mit Ja oder Nein

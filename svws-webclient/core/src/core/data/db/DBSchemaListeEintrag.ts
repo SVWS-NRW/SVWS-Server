@@ -14,6 +14,9 @@ export class DBSchemaListeEintrag extends JavaObject {
 	public isDefault : boolean = false;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -40,7 +43,7 @@ export class DBSchemaListeEintrag extends JavaObject {
 
 	public static transpilerToJSON(obj : DBSchemaListeEintrag) : string {
 		let result = '{';
-		result += '"name" : ' + ((!obj.name) ? 'null' : JSON.stringify(obj.name)) + ',';
+		result += '"name" : ' + ((obj.name === null) ? 'null' : JSON.stringify(obj.name)) + ',';
 		result += '"isDefault" : ' + obj.isDefault.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -50,7 +53,7 @@ export class DBSchemaListeEintrag extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<DBSchemaListeEintrag>) : string {
 		let result = '{';
 		if (obj.name !== undefined) {
-			result += '"name" : ' + ((!obj.name) ? 'null' : JSON.stringify(obj.name)) + ',';
+			result += '"name" : ' + ((obj.name === null) ? 'null' : JSON.stringify(obj.name)) + ',';
 		}
 		if (obj.isDefault !== undefined) {
 			result += '"isDefault" : ' + obj.isDefault.toString() + ',';

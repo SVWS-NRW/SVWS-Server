@@ -348,6 +348,9 @@ public final class KursListeManager extends AuswahlManager<Long, KursDaten, Kurs
 	}
 
 
+	/**
+	 * Trigger, wenn eine Checkbox zum Hinzufügen von Schülern zu einem Kurs verwendet wird.
+	 */
 	protected final @NotNull Runnable _eventSchuelerAuswahlChanged = () -> {
 		// TODO erstmal nichts zu tun ... wird später implementiert, wenn eine Checkbox zum Hinzufügen von Schülern zu einem Kurs verwendet wird
 	};

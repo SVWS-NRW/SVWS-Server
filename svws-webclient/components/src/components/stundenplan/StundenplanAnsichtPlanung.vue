@@ -32,9 +32,9 @@
 					</div>
 				</div>
 			</div>
-			<div v-for="wochentag in wochentagRange" :key="wochentag.id" class="svws-ui-stundenplan--zeitraster" :class="{'svws-selected': selected===wochentag}">
+			<div v-for="wochentag in wochentagRange" :key="wochentag.id" class="svws-ui-stundenplan--zeitraster" :class="{'svws-selected': selected === wochentag}">
 				<template v-for="zeitrasterEintrag in manager().getListZeitrasterZuWochentag(wochentag)" :key="zeitrasterEintrag.id">
-					<div class="svws-ui-stundenplan--stunde cursor-pointer" @click="updateSelected(zeitrasterEintrag)" :style="posZeitraster(wochentag, zeitrasterEintrag.unterrichtstunde)" :class="{'svws-selected': selected===zeitrasterEintrag || selected === zeitrasterEintrag.unterrichtstunde, 'bg-highlight': manager().zeitrasterGetIstZustandProblematisch(zeitrasterEintrag)}">
+					<div class="svws-ui-stundenplan--stunde cursor-pointer" @click="updateSelected(zeitrasterEintrag)" :style="posZeitraster(wochentag, zeitrasterEintrag.unterrichtstunde)" :class="{'svws-selected': (selected === zeitrasterEintrag) || (selected === zeitrasterEintrag.unterrichtstunde), 'bg-highlight': manager().zeitrasterGetIstZustandProblematisch(zeitrasterEintrag)}">
 						<div class="svws-ui-stundenplan--unterricht">
 							<span>{{ zeitrasterEintrag.unterrichtstunde }}</span>
 							<div class="flex content-start">
@@ -44,7 +44,7 @@
 					</div>
 				</template>
 				<template v-for="pause in manager().pausenzeitGetMengeByWochentagOrEmptyList(wochentag.id)" :key="pause.id">
-					<div class="svws-ui-stundenplan--pause cursor-pointer" @click="updateSelected(pause)" :style="posPause(wochentag, pause)" :class="{'svws-selected': selected===pause}">
+					<div class="svws-ui-stundenplan--pause cursor-pointer" @click="updateSelected(pause)" :style="posPause(wochentag, pause)" :class="{'svws-selected': selected === pause}">
 						<div v-if="selected===pause" class="svws-ui-stundenplan--pausen-aufsicht">
 							<span class="icon i-ri-cup-line icon-primary" />
 						</div>
@@ -82,6 +82,14 @@
 					<svws-ui-button class="mb-5" type="secondary" @click="openModal()"><span class="icon i-ri-archive-line" /> Aus Katalog importieren</svws-ui-button>
 				</stundenplan-zeitraster-import-modal>
 			</template>
+			<div class="flex gap-3 flex-wrap justify-stretch">
+				<svws-ui-button class="grow" type="secondary" @click="exportJSON" title="Alle Zeitraster als JSON-Datei exportieren">
+					<span class="icon i-ri-upload-2-line" />Exportieren
+				</svws-ui-button>
+				<stundenplan-zeitraster-json-import-modal :stundenplan-manager="manager" :add-zeitraster :remove-zeitraster v-slot="{ openModal }">
+					<svws-ui-button class="grow" type="secondary" @click="openModal" title="Zeitraster aus einer JSON-Datei importieren"> <span class="icon i-ri-download-2-line" /> Importieren… </svws-ui-button>
+				</stundenplan-zeitraster-json-import-modal>
+			</div>
 			<slot />
 		</div>
 	</aside>
@@ -91,7 +99,7 @@
 
 	import { computed, ref } from "vue";
 	import type { StundenplanAnsichtPlanungProps } from "./StundenplanAnsichtPlanungProps";
-	import type { StundenplanZeitraster } from "../../../../core/src/core/data/stundenplan/StundenplanZeitraster";
+	import { StundenplanZeitraster } from "../../../../core/src/core/data/stundenplan/StundenplanZeitraster";
 	import type { StundenplanPausenzeit } from "../../../../core/src/core/data/stundenplan/StundenplanPausenzeit";
 	import { Wochentag } from "../../../../core/src/core/types/Wochentag";
 	import { Schulform } from "../../../../core/src/asd/types/schule/Schulform";
@@ -194,5 +202,19 @@
 		const list = props.manager().zeitrasterGetDummyListe(1, 5, 1, letzteStunde);
 		await props.addZeitraster(list);
 	}
+
+	async function exportJSON() {
+		const arr = [];
+		for (const e of props.manager().getListZeitraster())
+			arr.push(StundenplanZeitraster.transpilerToJSON(e));
+		const blob = new Blob(['['+arr.toString()+']'], { type: "application/json" });
+		const link = document.createElement("a");
+		link.href = URL.createObjectURL(blob);
+		link.download = "ExportZeitraster.json";
+		link.target = "_blank";
+		link.click();
+		URL.revokeObjectURL(link.href);
+	}
+
 
 </script>

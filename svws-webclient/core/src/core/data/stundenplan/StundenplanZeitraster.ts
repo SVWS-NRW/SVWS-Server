@@ -29,6 +29,9 @@ export class StundenplanZeitraster extends JavaObject {
 	public stundenende : number | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -65,8 +68,8 @@ export class StundenplanZeitraster extends JavaObject {
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"wochentag" : ' + obj.wochentag.toString() + ',';
 		result += '"unterrichtstunde" : ' + obj.unterrichtstunde.toString() + ',';
-		result += '"stundenbeginn" : ' + ((!obj.stundenbeginn) ? 'null' : obj.stundenbeginn.toString()) + ',';
-		result += '"stundenende" : ' + ((!obj.stundenende) ? 'null' : obj.stundenende.toString()) + ',';
+		result += '"stundenbeginn" : ' + ((obj.stundenbeginn === null) ? 'null' : obj.stundenbeginn.toString()) + ',';
+		result += '"stundenende" : ' + ((obj.stundenende === null) ? 'null' : obj.stundenende.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -84,10 +87,10 @@ export class StundenplanZeitraster extends JavaObject {
 			result += '"unterrichtstunde" : ' + obj.unterrichtstunde.toString() + ',';
 		}
 		if (obj.stundenbeginn !== undefined) {
-			result += '"stundenbeginn" : ' + ((!obj.stundenbeginn) ? 'null' : obj.stundenbeginn.toString()) + ',';
+			result += '"stundenbeginn" : ' + ((obj.stundenbeginn === null) ? 'null' : obj.stundenbeginn.toString()) + ',';
 		}
 		if (obj.stundenende !== undefined) {
-			result += '"stundenende" : ' + ((!obj.stundenende) ? 'null' : obj.stundenende.toString()) + ',';
+			result += '"stundenende" : ' + ((obj.stundenende === null) ? 'null' : obj.stundenende.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

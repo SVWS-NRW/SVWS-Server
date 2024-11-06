@@ -22,6 +22,9 @@ export class StundenplanblockungKopplung extends JavaObject {
 	public stundenelemente : List<StundenplanblockungStundenelement> = new ArrayList<StundenplanblockungStundenelement>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

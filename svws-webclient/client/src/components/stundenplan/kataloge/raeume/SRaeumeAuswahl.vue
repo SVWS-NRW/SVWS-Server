@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-table :clicked clickable @update:clicked="gotoEintrag" :items="raumListeManager().liste.list()" :columns selectable v-model="selected" class="max-w-128 min-w-96">
+	<svws-ui-table :clicked clickable @update:clicked="gotoEintrag" :items="raumListeManager().liste.list()" :columns selectable v-model="selected" class="max-w-128 min-w-96" scroll>
 		<template #actions>
 			<svws-ui-button @click="doDeleteEintraege()" type="trash" :disabled="selected.length === 0" />
 			<svws-ui-button type="transparent" title="Räume exportieren" @click="export_raeume" :disabled="selected.length === 0"><span class="icon-sm i-ri-upload-2-line" /></svws-ui-button>

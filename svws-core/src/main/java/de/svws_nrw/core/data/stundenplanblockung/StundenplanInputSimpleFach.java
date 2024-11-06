@@ -19,4 +19,11 @@ public class StundenplanInputSimpleFach {
 	/** Das Kürzel des Faches. Beispielsweise 'D' oder 'E5'. */
 	public @NotNull String kuerzel = "";
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public StundenplanInputSimpleFach() {
+		// leer
+	}
+
 }
