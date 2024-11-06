@@ -76,7 +76,13 @@
 		bemerkung: null,
 	});
 	const selectedSchuljahresabschnitt = computed({
-		get: () => selectedIDs.value.idSchuljahresabschnitt !== null ? props.schuelerKaoaManager().schuljahresabschnitte.get(selectedIDs.value.idSchuljahresabschnitt) : props.schuelerKaoaManager().schuljahresabschnitte.get(props.auswahl().idSchuljahresabschnitt),
+		get: () => {
+			if (selectedIDs.value.idSchuljahresabschnitt !== null)
+				return props.schuelerKaoaManager().schuljahresabschnitte.get(selectedIDs.value.idSchuljahresabschnitt);
+			if (props.schuelerKaoaManager()._schuljahresabschnitteFiltered.isEmpty())
+				return null;
+			return props.schuelerKaoaManager().schuljahresabschnitte.get(props.auswahl().idSchuljahresabschnitt);
+		},
 		set: (val: Schuljahresabschnitt | null) => {
 			resetMandatoryAndOptionalSelectedIDs();
 			selectedIDs.value.idSchuljahresabschnitt = val ? val.id : null;
@@ -239,6 +245,7 @@
 			bemerkung: selectedBemerkung.value,
 		};
 		await props.patch(data, selectedEntry.value.id);
+		resetMandatoryAndOptionalSelectedIDs();
 		setMode(Mode.DEFAULT);
 	}
 	function resetMandatoryAndOptionalSelectedIDs() {

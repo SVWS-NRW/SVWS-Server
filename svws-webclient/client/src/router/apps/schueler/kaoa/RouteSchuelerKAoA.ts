@@ -15,15 +15,22 @@ const SSchuelerKaoa = () => import("~/components/schueler/kaoa/SSchuelerKaoa.vue
 export class RouteSchuelerKAoA extends RouteNode<RouteDataSchuelerKAoA, RouteSchueler> {
 
 	public constructor() {
-		super(Schulform.values().filter(f => !f.equals(Schulform.G)), [ BenutzerKompetenz.KEINE ], "schueler.kaoa", "kaoa", SSchuelerKaoa, new RouteDataSchuelerKAoA());
+		super(Schulform.values().filter(f => ![Schulform.G, Schulform.FW, Schulform.HI, Schulform.KS].includes(f)), [BenutzerKompetenz.KEINE], "schueler.kaoa", "kaoa", SSchuelerKaoa, new RouteDataSchuelerKAoA());
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "KAoA";
-		this.isHidden = (params?: RouteParams) => {
-			if ((params === undefined) || (params.id instanceof Array))
-				return routeError.getErrorRoute(new DeveloperNotificationException("Fehler: Die Parameter der Route sind nicht gültig gesetzt."));
-			return routeSchueler.data.schuelerListeManager.hasDaten() ? false : routeSchueler.getRouteDefaultChild({ id: parseInt(params.id) });
-		};
+		this.isHidden = (params?: RouteParams) => this.checkHidden(params);
+	}
+
+	protected checkHidden(params?: RouteParams) {
+		try {
+			const { id } = (params !== undefined) ? RouteNode.getIntParams(params, ["id"]) : {id: undefined};
+			if (!routeSchueler.data.schuelerListeManager.hasDaten() || (routeSchueler.data.schuelerListeManager.auswahl().status === 6) || (routeSchueler.data.schuelerListeManager.auswahl().status === 10))
+				return routeSchueler.getRouteDefaultChild({ id });
+			return false;
+		} catch (e) {
+			return routeError.getErrorRoute(e as DeveloperNotificationException);
+		}
 	}
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {

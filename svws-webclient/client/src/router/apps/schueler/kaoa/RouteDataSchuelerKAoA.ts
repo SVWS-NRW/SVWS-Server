@@ -1,6 +1,6 @@
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 
-import { List, SchuelerListeEintrag, SchuelerKAoADaten, OpenApiError, SchuelerLernabschnittListeEintrag } from "@core";
+import { List, SchuelerListeEintrag, SchuelerKAoADaten, SchuelerLernabschnittListeEintrag } from "@core";
 import { SchuelerKAoAManager, DeveloperNotificationException } from "@core";
 import { api } from "~/router/Api";
 import { routeApp } from "../../RouteApp";
@@ -36,42 +36,30 @@ export class RouteDataSchuelerKAoA extends RouteData<RouteStateSchuelerKAoA> {
 
 	patch = async (data : Partial<SchuelerKAoADaten>, idKaoa : number) => {
 		api.status.start()
-		try {
-			//ToDo: Anpassung falls zukünftig Patch das Objekt zurückgeben sollte
-			await api.server.patchKAoADaten(data, api.schema, this.auswahl.id, idKaoa)
-			const kaoaDaten = this.schuelerKaoaManager.liste.getOrException(idKaoa)
-			const patchedObject = Object.assign(kaoaDaten, data);
-			this.schuelerKaoaManager.liste.remove(kaoaDaten)
-			this.schuelerKaoaManager.liste.add(patchedObject)
-			this.commit()
-		} catch (error: OpenApiError) {
-			throw new OpenApiError(error, error.toString() + " Fehlercode: " + error.response?.status);
-		}
+		//ToDo: Anpassung falls zukünftig Patch das Objekt zurückgeben sollte
+		await api.server.patchKAoADaten(data, api.schema, this.auswahl.id, idKaoa)
+		const kaoaDaten = this.schuelerKaoaManager.liste.getOrException(idKaoa)
+		const patchedObject = Object.assign(kaoaDaten, data);
+		this.schuelerKaoaManager.liste.remove(kaoaDaten)
+		this.schuelerKaoaManager.liste.add(patchedObject)
+		this.commit()
 		api.status.stop()
 	}
 
 	add = async (data : Partial<SchuelerKAoADaten>, id : number) => {
 		api.status.start()
-		try {
-			const schuelerKAoADaten = await api.server.addKAoAdaten(data, api.schema, id);
-			this.schuelerKaoaManager.liste.add(schuelerKAoADaten)
-			this.commit()
-		} catch (error: OpenApiError) {
-			throw new OpenApiError(error, error.toString() + " Fehlercode: " + error.response?.status);
-		}
+		const schuelerKAoADaten = await api.server.addKAoAdaten(data, api.schema, id);
+		this.schuelerKaoaManager.liste.add(schuelerKAoADaten)
+		this.commit()
 		api.status.stop()
 	}
 
 	delete = async (idSchueler: number, idKaoaEntry: number) => {
 		api.status.start()
-		try {
-			await api.server.deleteKAoAdaten(api.schema, idSchueler, idKaoaEntry)
-			const schuelerKAoADaten = this.schuelerKaoaManager.liste.getOrException(idKaoaEntry)
-			this.schuelerKaoaManager.liste.remove(schuelerKAoADaten);
-			this.commit()
-		} catch (error: OpenApiError) {
-			throw new OpenApiError(error, error.toString() + " Fehlercode: " + error.response?.status);
-		}
+		await api.server.deleteKAoAdaten(api.schema, idSchueler, idKaoaEntry)
+		const schuelerKAoADaten = this.schuelerKaoaManager.liste.getOrException(idKaoaEntry)
+		this.schuelerKaoaManager.liste.remove(schuelerKAoADaten);
+		this.commit()
 		api.status.stop()
 	}
 
@@ -79,7 +67,7 @@ export class RouteDataSchuelerKAoA extends RouteData<RouteStateSchuelerKAoA> {
 	public async ladeDaten(auswahl: SchuelerListeEintrag | null) {
 		if (auswahl === this._state.value.auswahl)
 			return;
-		if ((auswahl === null) || (auswahl === undefined))
+		if (auswahl === null)
 			this.setDefaultState();
 		else {
 			try {
