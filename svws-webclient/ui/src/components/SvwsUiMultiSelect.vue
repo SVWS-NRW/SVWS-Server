@@ -151,24 +151,18 @@
 
 	const data = shallowRef(new Set(rawModelValues.value));
 
-	watch(rawModelValues, (value) => updateData(new Set(value)), { immediate: false });
+	watch(rawModelValues, (value) => updateData(value), { immediate: false });
 
-	function updateData(value: Set<Item>) {
-		const a = rawModelValues.value;
-		const b = value;
-		if (a.size === b.size) {
-			let diff : boolean = false;
-			for (const e of a) {
-				if (!b.has(e)) {
-					diff = true;
-					break;
-				}
-			}
-			if (!diff)
-				return;
-		}
-		data.value = b;
-		emit("update:modelValue", [...data.value]);
+	function updateData(newValueSet: Set<Item>) {
+		const oldValueArr = [...data.value];
+		const newValueArr = [...newValueSet];
+
+		// Nur ein update:modelValue triggern, wenn sich die neuen von den alten Values unterscheiden
+		if ((newValueArr.length === oldValueArr.length) && (newValueArr.filter(n => !oldValueArr.includes(n)).length === 0))
+			return;
+
+		data.value = newValueSet;
+		emit("update:modelValue", newValueArr);
 	}
 
 	const selectedItem = computed({
@@ -177,12 +171,14 @@
 			return e;
 		},
 		set: (item) => {
-			if (item !== null && item !== undefined)
-				if (data.value.has(item))
-					data.value.delete(item);
+			if ((item !== null) && (item !== undefined)) {
+				const newSelectedItems = new Set(data.value);
+				if (newSelectedItems.has(item))
+					newSelectedItems.delete(item);
 				else
-					data.value.add(item);
-			updateData(data.value);
+					newSelectedItems.add(item);
+				updateData(newSelectedItems);
+			}
 		}
 	});
 
