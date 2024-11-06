@@ -1,6 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, DeveloperNotificationException, SchuelerStatus, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
@@ -22,10 +22,13 @@ export class RouteSchuelerKAoA extends RouteNode<RouteDataSchuelerKAoA, RouteSch
 		this.isHidden = (params?: RouteParams) => this.checkHidden(params);
 	}
 
-	protected checkHidden(params?: RouteParams) {
+	protected checkHidden(params: RouteParams = {}) {
 		try {
-			const { id } = (params !== undefined) ? RouteNode.getIntParams(params, ["id"]) : {id: undefined};
-			if (!routeSchueler.data.schuelerListeManager.hasDaten() || (routeSchueler.data.schuelerListeManager.auswahl().status === 6) || (routeSchueler.data.schuelerListeManager.auswahl().status === 10))
+			const { id } = RouteNode.getIntParams(params, ["id"]);
+			const schuljahr = routeSchueler.data.schuelerListeManager.getSchuljahr();
+			if (!routeSchueler.data.schuelerListeManager.hasDaten()
+				|| (routeSchueler.data.schuelerListeManager.auswahl().status === SchuelerStatus.EXTERN.daten(schuljahr)?.id)
+				|| (routeSchueler.data.schuelerListeManager.auswahl().status === SchuelerStatus.EHEMALIGE.daten(schuljahr)?.id))
 				return routeSchueler.getRouteDefaultChild({ id });
 			return false;
 		} catch (e) {
