@@ -27,6 +27,7 @@
 </template>
 
 <script setup lang="ts">
+	import type { ButtonType } from '../types';
 
 	const props = withDefaults(defineProps<{
 		title?: string;
@@ -37,6 +38,8 @@
 		actionDisabled?: boolean;
 		isLoading?: boolean;
 		isActive?: boolean;
+		type?: ButtonType;
+		size?: 'small' | 'normal' | 'big';
 	}>(), {
 		title: '',
 		description: '',
@@ -46,6 +49,8 @@
 		actionDisabled: false,
 		isLoading: false,
 		isActive: false,
+		type: 'primary',
+		size: 'normal',
 	});
 
 	const emit = defineEmits<{
