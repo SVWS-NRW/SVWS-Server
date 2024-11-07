@@ -154,15 +154,10 @@
 	watch(rawModelValues, (value) => updateData(value), { immediate: false });
 
 	function updateData(newValueSet: Set<Item>) {
-		const oldValueArr = [...data.value];
-		const newValueArr = [...newValueSet];
-
-		// Nur ein update:modelValue triggern, wenn sich die neuen von den alten Values unterscheiden
-		if ((newValueArr.length === oldValueArr.length) && (newValueArr.filter(n => !oldValueArr.includes(n)).length === 0))
+		if ((data.value.size === newValueSet.size) && (data.value.difference(newValueSet).size === 0))
 			return;
-
 		data.value = newValueSet;
-		emit("update:modelValue", newValueArr);
+		emit("update:modelValue", [...newValueSet]);
 	}
 
 	const selectedItem = computed({
