@@ -63,10 +63,9 @@ Lehrer;Tel;Telefon (Festnetz);S;;;;;ALLE
 Lehrer;Titel;Titel;S;;;;;ALLE
 Lehrer;Vorname;Vorname;S;;;;;ALLE
 Lehrer;Vschluessel;Vergütungsschlüssel;S;;;;;ALLE
-Lehrer;MasernImpfnachweis;Masern-Impfnachweis;B;;;;;ALLE
 Lehrer;ID;Pflichtstunden-Soll;S;;;PflichtstdSoll;select LA.PflichtstdSoll from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
 Lehrer;ID;Rechtsverhältnis;S;;;Rechtsverhaeltnis;select LA.Rechtsverhaeltnis from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
-Lehrer;ID;Beschäftigungsart;S;;;Beschaeftigungsart;select LA.PflichtstdSoll from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
+Lehrer;ID;Beschäftigungsart;S;;;Beschaeftigungsart;select LA.Beschaeftigungsart from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
 Lehrer;ID;Einsatzstatus;S;;;Einsatzstatus;select LA.Einsatzstatus from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
 Lehrer;ID;Unterrichtsstunden;S;;;UnterrichtsStd;select LA.UnterrichtsStd from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
 Lehrer;ID;Mehrleistungsstunden;S;;;MehrleistungStd;select LA.MehrleistungStd from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
