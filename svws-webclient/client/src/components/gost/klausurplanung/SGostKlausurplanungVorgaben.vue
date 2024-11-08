@@ -105,7 +105,7 @@
 <script setup lang="ts">
 
 	import type { Ref , WritableComputedRef } from 'vue'
-	import { computed, ref, onMounted } from 'vue';
+	import { computed, ref, onMounted, onUnmounted } from 'vue';
 	import type { DataTableColumn } from "@ui";
 	import type { GostFach } from "@core";
 	import { BenutzerKompetenz, ArrayList, GostKlausurvorgabe, Fach } from "@core";
@@ -185,6 +185,11 @@
 	const isMounted = ref(false);
 	onMounted(() => {
 		isMounted.value = true;
+		window.addEventListener('click', handleClick);
+	});
+
+	onUnmounted(() => {
+		window.removeEventListener('click', handleClick);
 	});
 
 	const cols: DataTableColumn[] = [
@@ -205,15 +210,20 @@
 		return Fach.getBySchluesselOrDefault(kuerzel).getHMTLFarbeRGBA(props.jahrgangsdaten!.abiturjahr-1, 1.0);
 	}
 
-	window.addEventListener('click', function(e) {
+	function handleClick(e: MouseEvent) {
 		const vT = document.getElementById('vorgabenTable');
 		const vE = document.getElementById('vorgabenEdit');
-		// const vL = document.getElementById('svws-ui-dropdown-list-id');
-		if (vE !== null && vT !== null && !vT.contains(e.target as Node) && !vE.contains(e.target as Node) && !(e.target as HTMLElement).parentElement?.parentElement?.classList.contains("svws-ui-dropdown-list") && !(e.target as HTMLElement).parentElement?.parentElement?.parentElement?.classList.contains("svws-ui-dropdown-list")) {
+
+		if (vE !== null && vT !== null &&
+			!vT.contains(e.target as Node) &&
+			!vE.contains(e.target as Node) &&
+			!(e.target as HTMLElement).parentElement?.parentElement?.classList.contains("svws-ui-dropdown-list") &&
+			!(e.target as HTMLElement).parentElement?.parentElement?.parentElement?.classList.contains("svws-ui-dropdown-list")
+		) {
 			activeVorgabe.value = new GostKlausurvorgabe();
 			selectedVorgabeRow.value = undefined;
 		}
-	});
+	}
 
 </script>
 

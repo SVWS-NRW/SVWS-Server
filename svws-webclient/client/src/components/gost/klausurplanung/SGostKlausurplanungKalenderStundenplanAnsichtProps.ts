@@ -24,6 +24,6 @@ export interface SGostKlausurplanungKalenderStundenplanAnsichtProps {
 	checkDropZoneZeitraster: (event: DragEvent, zeitraster: StundenplanZeitraster | undefined) => void;
 	zeigeAlleJahrgaenge: () => boolean;
 	kursklausurMouseOver: () => GostKursklausur | undefined;
-	gotoKalenderdatum: (goto: string | GostKlausurtermin) => Promise<void>;
+	gotoKalenderdatum: (datum: string | undefined, termin: GostKlausurtermin | undefined) => Promise<void>;
 	gotoRaumzeitTermin: (abiturjahr: number, halbjahr: GostHalbjahr, value: number) => Promise<void>;
 }

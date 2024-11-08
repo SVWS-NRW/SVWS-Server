@@ -46,7 +46,5 @@ export class RouteGostKlausurplanungNachschreibAnsicht extends RouteNode<any, Ro
 
 }
 
-
-
 export const routeGostKlausurplanungNachschreibAnsicht = new RouteGostKlausurplanungNachschreibAnsicht();
 

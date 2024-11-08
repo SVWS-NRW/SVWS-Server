@@ -20,7 +20,7 @@ export interface GostKlausurplanungRaumzeitProps {
 	halbjahr: GostHalbjahr;
 	abschnitt: Schuljahresabschnitt | undefined;
 	gotoTermin: (abiturjahr: number, halbjahr: GostHalbjahr, value: number) => Promise<void>;
-	gotoKalenderdatum: (goto: string | GostKlausurtermin) => Promise<void>;
+	gotoKalenderdatum: (datum: string | undefined, termin: GostKlausurtermin | undefined) => Promise<void>;
 	kMan: () => GostKlausurplanManager;
 	createKlausurraum: (raum: Partial<GostKlausurraum>) => Promise<void>;
 	loescheKlausurraum: (id: number) => Promise<boolean>;

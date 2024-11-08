@@ -67,7 +67,7 @@
 		createSchuelerklausurTermin: (id: number) => Promise<void>;
 		terminSelected?: boolean;
 		showSchuelerklausuren?: boolean;
-		gotoKalenderdatum: (goto: string | GostKlausurtermin) => Promise<void>;
+		gotoKalenderdatum: (datum: string | undefined, termin: GostKlausurtermin | undefined) => Promise<void>;
 		gotoRaumzeitTermin: (abiturjahr: number, halbjahr: GostHalbjahr, value: number) => Promise<void>;
 	}>(), {
 		loescheKlausurtermine: undefined,

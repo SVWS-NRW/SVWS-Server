@@ -184,7 +184,7 @@
 			return props.kMan().stundenplanManagerGetByAbschnittAndDatumOrException(props.abschnitt!.id, props.kalenderdatum.value!).kalenderwochenzuordnungGetByDatum(props.kalenderdatum.value!);
 		},
 		set: (value) => {
-			void props.gotoKalenderdatum(DateUtils.gibDatumDesMontagsOfJahrAndKalenderwoche(value.jahr, value.kw));
+			void props.gotoKalenderdatum(DateUtils.gibDatumDesMontagsOfJahrAndKalenderwoche(value.jahr, value.kw), props.terminSelected.value);
 		}
 	});
 
@@ -240,7 +240,7 @@
 	}
 
 	async function navKalenderdatum(by: number) {
-		await props.gotoKalenderdatum(berechneKwzDatum(by));
+		await props.gotoKalenderdatum(berechneKwzDatum(by), props.terminSelected.value);
 	}
 
 	function checkDropZoneTerminAuswahl(event: DragEvent) : void {
@@ -276,10 +276,10 @@
 
 	const onDrag = (data: GostKlausurplanungDragData) => {
 		if (data instanceof GostKlausurtermin) {
-			void props.gotoKalenderdatum(data);
+			void props.gotoKalenderdatum(undefined, data);
 			zeitrasterSelected.value = undefined;
 		} else if (data === undefined) {
-			void props.gotoKalenderdatum(data);
+			void props.gotoKalenderdatum(undefined, undefined);
 		}
 	};
 

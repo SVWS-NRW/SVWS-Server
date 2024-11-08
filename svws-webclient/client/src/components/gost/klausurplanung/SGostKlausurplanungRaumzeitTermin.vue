@@ -103,8 +103,6 @@
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';
 	import type { GostKlausurplanManager, GostKlausurtermin, GostKursklausur, GostKlausurraum, GostKlausurenCollectionSkrsKrsData, List, GostSchuelerklausurTermin, GostSchuelerklausurTerminRich} from '@core';
 	import { ArrayList, DateUtils, GostHalbjahr, GostKlausurraumblockungKonfiguration, KlausurraumblockungAlgorithmus, ListUtils, BenutzerKompetenz, GostKlausurraumRich } from '@core';
-	import { RouteManager } from '~/router/RouteManager';
-	import { routeGostKlausurplanungRaumzeit } from '~/router/apps/gost/klausurplanung/RouteGostKlausurplanungRaumzeit';
 
 	const props = defineProps<{
 		benutzerKompetenzen: Set<BenutzerKompetenz>,

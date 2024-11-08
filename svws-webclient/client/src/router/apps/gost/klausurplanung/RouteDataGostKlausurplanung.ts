@@ -1,10 +1,10 @@
 
 import type { GostJahrgangsdaten, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, GostKlausurterminblockungDaten, GostNachschreibterminblockungKonfiguration, GostKlausurenUpdate, List, GostKlausurraumRich, ApiFile, GostSchuelerklausur} from "@core";
-import { GostKlausurenCollectionAllData, GostKlausurenCollectionHjData, ReportingParameter, ReportingReportvorlage, StundenplanKalenderwochenzuordnung} from "@core";
+import { GostKlausurenCollectionAllData, GostKlausurenCollectionHjData, ReportingParameter, ReportingReportvorlage} from "@core";
 import { GostSchuelerklausurTermin } from "@core";
 import { GostKlausurenCollectionSkrsKrsData, GostKursklausur } from "@core";
 import type { RouteNode } from "~/router/RouteNode";
-import { StundenplanManager, GostFaecherManager, GostHalbjahr, GostKlausurplanManager, StundenplanListUtils, DeveloperNotificationException } from "@core";
+import { StundenplanManager, GostFaecherManager, GostHalbjahr, GostKlausurplanManager, DeveloperNotificationException } from "@core";
 import { GostKlausurtermin, ArrayList} from "@core";
 import { computed } from "vue";
 
@@ -20,6 +20,7 @@ import type { DownloadPDFTypen } from "~/components/gost/klausurplanung/Download
 import { routeGostKlausurplanungSchienen } from "./RouteGostKlausurplanungSchienen";
 import { routeGostKlausurplanungNachschreiber } from "./RouteGostKlausurplanungNachschreiber";
 import type { RouteParams } from "vue-router";
+import { routeStundenplan } from "../../stundenplan/RouteStundenplan";
 
 interface RouteStateGostKlausurplanung extends RouteStateInterface {
 	// Daten nur abhängig von dem Abiturjahrgang
@@ -270,21 +271,16 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		await RouteManager.doRoute(routeGostKlausurplanungSchienen.getRoute({ abiturjahr: this.abiturjahr, halbjahr: this.halbjahr.id, idtermin: termin ? termin.id : undefined }));
 	}
 
-	gotoKalenderdatum = async (goto: string | GostKlausurtermin | undefined) => {
-		if (goto instanceof GostKlausurtermin) {
-			if (goto.datum === null) {
-				this.terminSelected.value = goto;
-				await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute({ abiturjahr: goto.abijahr, halbjahr: goto.halbjahr, datum: -1, idtermin: goto.id }));
-			} else {
-				this.terminSelected.value = undefined;
-				await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute({ abiturjahr: goto.abijahr, halbjahr: goto.halbjahr, datum: goto.datum.replace(/-/g, ""), idtermin: goto.id }));
-			}
-		} else if (goto !== undefined) {
-			await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute({ abiturjahr: this.abiturjahr, halbjahr: this.halbjahr.id, datum: goto.replace(/-/g, ""), idtermin: (this.terminSelected.value !== undefined) ? this.terminSelected.value.id : undefined }));
-		} else {
-			await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute({ abiturjahr: this.abiturjahr, halbjahr: this.halbjahr.id, datum: undefined, idtermin: undefined }));
-			this.terminSelected.value = undefined;
-		}
+	gotoKalenderdatum = async (datum: string | undefined, termin: GostKlausurtermin | undefined) => {
+		if (termin !== undefined) {
+			if (datum !== undefined)
+				await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute({ abiturjahr: termin.abijahr, halbjahr: termin.halbjahr, datum: datum.replace(/-/g, ""), idtermin: termin.id }));
+			else
+				await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute({ abiturjahr: termin.abijahr, halbjahr: termin.halbjahr, datum: (termin.datum === null ? -1 : termin.datum.replace(/-/g, "")), idtermin: termin.id }));
+		} else if (datum !== undefined)
+			await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute({ abiturjahr: this.abiturjahr, halbjahr: this.halbjahr.id, datum: datum.replace(/-/g, ""), idtermin: undefined }));
+		else
+			await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute({ abiturjahr: this.abiturjahr, halbjahr: this.halbjahr.id, datum: -1, idtermin: undefined }));
 	}
 
 	gotoRaumzeitTermin = async (abiturjahr: number, halbjahr: GostHalbjahr, idtermin: number | undefined) => {
@@ -297,6 +293,10 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 
 	gotoNachschreiber = async (abiturjahr: number, halbjahr: GostHalbjahr) => {
 		await RouteManager.doRoute(routeGostKlausurplanungNachschreiber.getRoute({ abiturjahr, halbjahr: halbjahr.id }));
+	}
+
+	gotoStundenplan = async () => {
+		await RouteManager.doRoute(routeStundenplan.getRoute({ idSchuljahresabschnitt: this.abschnitt!.id }))
 	}
 
 	get zeigeAlleJahrgaenge(): boolean {
