@@ -486,4 +486,16 @@ public abstract class AuswahlManager<TID, TAuswahl, TDaten> {
 		return this._vorherigeAuswahl;
 	}
 
+
+	/**
+	 * Gibt für den übergebenen Listen-Eintrag die ID zurück.
+	 *
+	 * @param eintrag   der Listen-Eintrag
+	 *
+	 * @return die zugehörige ID
+	 */
+	public @NotNull TID getIdByEintrag(final @NotNull TAuswahl eintrag) {
+		return this._listeToId.apply(eintrag);
+	}
+
 }

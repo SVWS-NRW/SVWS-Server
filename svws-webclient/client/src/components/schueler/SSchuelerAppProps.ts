@@ -1,9 +1,4 @@
-import type { SchuelerListeManager, SchuelerStammdaten } from "@core";
-import type { TabManager, ViewType } from "@ui";
+import type { SchuelerListeManager } from "@core";
+import type { RouteAuswahlProps } from "~/router/RouteAuswahlNode";
 
-export interface SchuelerAppProps {
-	patch: (data: Partial<SchuelerStammdaten>) => Promise<void>;
-	schuelerListeManager: () => SchuelerListeManager;
-	tabManager: () => TabManager;
-	activeViewType: ViewType;
-}
+export type SchuelerAppProps = RouteAuswahlProps<SchuelerListeManager>

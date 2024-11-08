@@ -143,6 +143,15 @@ export abstract class RouteData<RouteState extends RouteStateInterface> {
 	}
 
 	/**
+	 * Getter für die Default-View
+	 */
+	public get defaultView(): RouteNode<any,any> {
+		if (this._defaultState.view === undefined)
+			throw new DeveloperNotificationException("Bei dieser Route wurde keine Ansicht im Default-State definiert.");
+		return this._defaultState.view;
+	}
+
+	/**
 	 * Gibt die aktuelle Art der View zurück (Default, Hinzufügen oder Gruppenprozess).
 	 * Ist keiner spezifiziert, so wird DEFAULT zurückgegeben.
 	 */

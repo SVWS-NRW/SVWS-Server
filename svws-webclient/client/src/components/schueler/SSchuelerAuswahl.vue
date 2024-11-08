@@ -7,35 +7,35 @@
 			<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
 		</template>
 		<template #content>
-			<svws-ui-table :clickable="!schuelerListeManager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="schueler => gotoDefaultView(schueler.id)"
-				:items="rowsFiltered" :model-value="[...props.schuelerListeManager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)"
+			<svws-ui-table :clickable="!manager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="schueler => gotoDefaultView(schueler.id)"
+				:items="rowsFiltered" :model-value="[...manager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)"
 				:columns="cols" selectable count :filter-open="true" :filtered="filterChanged()" :filterReset="filterReset" scroll-into-view scroll
 				v-model:sort-by-and-order="sortByAndOrder" :sort-by-multi="sortByMulti" allow-arrow-key-selection>
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" removable />
 				</template>
 				<template #filterAdvanced>
-					<svws-ui-multi-select v-if="schuelerListeManager().istSchuljahresabschnittAktuell()" v-model="filterStatus" title="Status"
-						:items="schuelerListeManager().schuelerstatus.list()" :item-text="status => status.daten(schuljahr)?.text ?? '—'" class="col-span-full" />
+					<svws-ui-multi-select v-if="manager().istSchuljahresabschnittAktuell()" v-model="filterStatus" title="Status"
+						:items="manager().schuelerstatus.list()" :item-text="status => status.daten(schuljahr)?.text ?? '—'" class="col-span-full" />
 					<div v-else class="col-span-full flex flex-wrap gap-x-5">
 						<svws-ui-checkbox type="toggle" v-model="filterNurMitLernabschitt">nur mit Lernabschnitt</svws-ui-checkbox>
 					</div>
-					<svws-ui-multi-select v-model="filterKlassen" title="Klasse" :items="schuelerListeManager().klassen.list()" :item-text="klasse => klasse.kuerzel ?? ''" :item-filter="find" />
-					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="schuelerListeManager().jahrgaenge.list()" :item-text="jahrgang => jahrgang.kuerzel ?? ''" :item-filter="find" />
-					<svws-ui-multi-select v-model="filterKurse" title="Kurs" :items="schuelerListeManager().kurse.list()" :item-text="textKurs" :item-filter="findKurs" />
-					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="schuelerListeManager().schulgliederungen.list()" :item-text="textSchulgliederung" />
+					<svws-ui-multi-select v-model="filterKlassen" title="Klasse" :items="manager().klassen.list()" :item-text="klasse => klasse.kuerzel ?? ''" :item-filter="find" />
+					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="manager().jahrgaenge.list()" :item-text="jahrgang => jahrgang.kuerzel ?? ''" :item-filter="find" />
+					<svws-ui-multi-select v-model="filterKurse" title="Kurs" :items="manager().kurse.list()" :item-text="textKurs" :item-filter="findKurs" />
+					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="manager().schulgliederungen.list()" :item-text="textSchulgliederung" />
 					<!--					<svws-ui-button type="transparent" class="justify-center">
 						<span class="icon i-ri-filter-line" />
 						Erweiterte Filter
 					</svws-ui-button>-->
 				</template>
 				<template #cell(idKlasse)="{ rowData, value }">
-					{{ value === null ? "–" : (schuelerListeManager().klasseGetOrNull(value)?.kuerzel) ?? "–" }}
-					<svws-ui-tooltip v-if="!schuelerListeManager().schuelerIstImSchuljahresabschnitt(rowData.id)" autosize>
+					{{ value === null ? "–" : (manager().klasseGetOrNull(value)?.kuerzel) ?? "–" }}
+					<svws-ui-tooltip v-if="!manager().schuelerIstImSchuljahresabschnitt(rowData.id)" autosize>
 						<span v-if="schuljahresabschnittsauswahl().aktuell === schuljahresabschnittsauswahl().schule" class="icon icon-error i-ri-alert-line" />
 						<span v-else class="icon icon-primary i-ri-information-line" />
 						<template #content>
-							Der Schüler befindet sich nicht in dem ausgewählten Schuljahrsabschnitt, sondern in {{ schuelerListeManager().schuelerSchuljahresabschnittAsString(rowData.id) }}
+							Der Schüler befindet sich nicht in dem ausgewählten Schuljahrsabschnitt, sondern in {{ manager().schuelerSchuljahresabschnittAsString(rowData.id) }}
 						</template>
 					</svws-ui-tooltip>
 				</template>
@@ -100,7 +100,7 @@
 
 	const sortByMulti = computed<Map<string, boolean>>(() => {
 		const map = new Map<string, boolean>();
-		for (const pair of props.schuelerListeManager().orderGet())
+		for (const pair of props.manager().orderGet())
 			if (pair.b !== null)
 				map.set(pair.a === "klassen" ? "idKlasse" : pair.a, pair.b);
 		return map;
@@ -108,7 +108,7 @@
 
 	const sortByAndOrder = computed<SortByAndOrder | undefined>({
 		get: () => {
-			const list = props.schuelerListeManager().orderGet();
+			const list = props.manager().orderGet();
 			if (list.isEmpty())
 				return undefined;
 			else {
@@ -120,7 +120,7 @@
 			if ((value === undefined) || (value.key === null))
 				return;
 			const key = value.key === 'idKlasse' ? 'klassen' : value.key;
-			props.schuelerListeManager().orderUpdate(key, value.order);
+			props.manager().orderUpdate(key, value.order);
 			void props.setFilter();
 		}
 	})
@@ -131,8 +131,8 @@
 		{ key: "vorname", label: "Vorname", sortable: true, span: 2 },
 	]
 
-	watch(() => props.schuelerListeManager().filtered(), async (neu) => {
-		if (props.schuelerListeManager().hasDaten() && !neu.contains(props.schuelerListeManager().auswahl()))
+	watch(() => props.manager().filtered(), async (neu) => {
+		if (props.manager().hasDaten() && !neu.contains(props.manager().auswahl()))
 			await props.gotoDefaultView(neu.isEmpty() ? null : neu.get(0).id);
 	})
 
@@ -140,7 +140,7 @@
 		const arr = [];
 		const searchValueIsNumber = /^[0-9]+$/.test(search.value.trim());
 		const searchValueLowerCase = search.value.toLocaleLowerCase();
-		for (const e of props.schuelerListeManager().filtered())
+		for (const e of props.manager().filtered())
 			if ((searchValueIsNumber && e.id.toString().includes(search.value))
 				|| (e.nachname.toLocaleLowerCase().includes(searchValueLowerCase) || e.vorname.toLocaleLowerCase().includes(searchValueLowerCase)))
 				arr.push(e);
@@ -148,90 +148,90 @@
 	});
 
 	const filterNurMitLernabschitt = computed<boolean>({
-		get: () => props.schuelerListeManager().filterNurMitLernabschitt(),
+		get: () => props.manager().filterNurMitLernabschitt(),
 		set: (value) => {
-			props.schuelerListeManager().setFilterNurMitLernabschitt(value);
+			props.manager().setFilterNurMitLernabschitt(value);
 			void props.setFilter();
 		}
 	});
 
 	const filterStatus = computed<SchuelerStatus[]>({
-		get: () => [...props.schuelerListeManager().schuelerstatus.auswahl()],
+		get: () => [...props.manager().schuelerstatus.auswahl()],
 		set: (value) => {
-			props.schuelerListeManager().schuelerstatus.auswahlClear();
+			props.manager().schuelerstatus.auswahlClear();
 			for (const v of value)
-				props.schuelerListeManager().schuelerstatus.auswahlAdd(v);
+				props.manager().schuelerstatus.auswahlAdd(v);
 			void props.setFilter();
 		}
 	});
 
 	const filterSchulgliederung = computed<Schulgliederung[]>({
-		get: () => [...props.schuelerListeManager().schulgliederungen.auswahl()],
+		get: () => [...props.manager().schulgliederungen.auswahl()],
 		set: (value) => {
-			props.schuelerListeManager().schulgliederungen.auswahlClear();
+			props.manager().schulgliederungen.auswahlClear();
 			for (const v of value)
-				props.schuelerListeManager().schulgliederungen.auswahlAdd(v);
+				props.manager().schulgliederungen.auswahlAdd(v);
 			void props.setFilter();
 		}
 	});
 
 	const filterJahrgaenge = computed<JahrgangsDaten[]>({
-		get: () => [...props.schuelerListeManager().jahrgaenge.auswahl()],
+		get: () => [...props.manager().jahrgaenge.auswahl()],
 		set: (value) => {
-			props.schuelerListeManager().jahrgaenge.auswahlClear();
+			props.manager().jahrgaenge.auswahlClear();
 			for (const v of value)
-				props.schuelerListeManager().jahrgaenge.auswahlAdd(v);
+				props.manager().jahrgaenge.auswahlAdd(v);
 			void props.setFilter();
 		}
 	});
 
 	const filterKlassen = computed<KlassenDaten[]>({
-		get: () => [...props.schuelerListeManager().klassen.auswahl()],
+		get: () => [...props.manager().klassen.auswahl()],
 		set: (value) => {
-			props.schuelerListeManager().klassen.auswahlClear();
+			props.manager().klassen.auswahlClear();
 			for (const v of value)
-				props.schuelerListeManager().klassen.auswahlAdd(v);
+				props.manager().klassen.auswahlAdd(v);
 			void props.setFilter();
 		}
 	});
 
 	const filterKurse = computed<KursDaten[]>({
-		get: () => [...props.schuelerListeManager().kurse.auswahl()],
+		get: () => [...props.manager().kurse.auswahl()],
 		set: (value) => {
-			props.schuelerListeManager().kurse.auswahlClear();
+			props.manager().kurse.auswahlClear();
 			for (const v of value)
-				props.schuelerListeManager().kurse.auswahlAdd(v);
+				props.manager().kurse.auswahlAdd(v);
 			void props.setFilter();
 		}
 	});
 
 	async function filterReset() {
-		props.schuelerListeManager().schulgliederungen.auswahlClear();
-		props.schuelerListeManager().schuelerstatus.auswahlClear();
-		props.schuelerListeManager().schuelerstatus.auswahlAdd(SchuelerStatus.AKTIV);
-		props.schuelerListeManager().schuelerstatus.auswahlAdd(SchuelerStatus.EXTERN);
-		props.schuelerListeManager().jahrgaenge.auswahlClear();
-		props.schuelerListeManager().klassen.auswahlClear();
-		props.schuelerListeManager().kurse.auswahlClear();
+		props.manager().schulgliederungen.auswahlClear();
+		props.manager().schuelerstatus.auswahlClear();
+		props.manager().schuelerstatus.auswahlAdd(SchuelerStatus.AKTIV);
+		props.manager().schuelerstatus.auswahlAdd(SchuelerStatus.EXTERN);
+		props.manager().jahrgaenge.auswahlClear();
+		props.manager().klassen.auswahlClear();
+		props.manager().kurse.auswahlClear();
 		await props.setFilter();
 	}
 
 	function filterChanged(): boolean {
-		if (props.schuelerListeManager().schulgliederungen.auswahlExists()
-			|| props.schuelerListeManager().jahrgaenge.auswahlExists()
-			|| props.schuelerListeManager().klassen.auswahlExists()
-			|| props.schuelerListeManager().kurse.auswahlExists())
+		if (props.manager().schulgliederungen.auswahlExists()
+			|| props.manager().jahrgaenge.auswahlExists()
+			|| props.manager().klassen.auswahlExists()
+			|| props.manager().kurse.auswahlExists())
 			return true;
-		return (!(props.schuelerListeManager().schuelerstatus.auswahlSize() === 2
-			&& props.schuelerListeManager().schuelerstatus.auswahlHas(SchuelerStatus.AKTIV)
-			&& props.schuelerListeManager().schuelerstatus.auswahlHas(SchuelerStatus.EXTERN)))
+		return (!(props.manager().schuelerstatus.auswahlSize() === 2
+			&& props.manager().schuelerstatus.auswahlHas(SchuelerStatus.AKTIV)
+			&& props.manager().schuelerstatus.auswahlHas(SchuelerStatus.EXTERN)))
 	}
 
 	function textKurs(kurs: KursDaten): string {
 		let jahrgaenge = "";
 		let index = 0;
 		for (const j of kurs.idJahrgaenge) {
-			const jg = props.schuelerListeManager().jahrgaenge.get(j);
+			const jg = props.manager().jahrgaenge.get(j);
 			if (jg === null)
 				continue;
 			jahrgaenge += jg.kuerzel;
@@ -265,21 +265,21 @@
 	const selectedItems = shallowRef<SchuelerListeEintrag[]>([]);
 
 	async function setAuswahl(schuelerEintraege : SchuelerListeEintrag[]) {
-		props.schuelerListeManager().liste.auswahlClear();
+		props.manager().liste.auswahlClear();
 		for (const schueler of schuelerEintraege)
-			if (props.schuelerListeManager().liste.hasValue(schueler))
-				props.schuelerListeManager().liste.auswahlAdd(schueler);
+			if (props.manager().liste.hasValue(schueler))
+				props.manager().liste.auswahlAdd(schueler);
 
-		if (props.schuelerListeManager().liste.auswahlExists())
+		if (props.manager().liste.auswahlExists())
 			await props.gotoGruppenprozessView(true);
 		else
-			await props.gotoDefaultView(props.schuelerListeManager().getVorherigeAuswahl()?.id);
+			await props.gotoDefaultView(props.manager().getVorherigeAuswahl()?.id);
 	}
 
 	const clickedEintrag = computed(() => {
 		if ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN))
 			return null;
-		return props.schuelerListeManager().hasDaten() ? props.schuelerListeManager().auswahl() : null;
+		return props.manager().hasDaten() ? props.manager().auswahl() : null;
 	});
 
 </script>

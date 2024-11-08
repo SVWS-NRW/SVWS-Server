@@ -1,173 +1,72 @@
-import type { List, SchuelerListeEintrag, SchuelerStammdaten } from "@core";
-import { BenutzerKompetenz, ArrayList, DeveloperNotificationException, SchuelerListe, SchuelerListeManager, SchuelerStatus } from "@core";
+import type { List, SchuelerListeEintrag, SchuelerStammdaten, SimpleOperationResponse } from "@core";
+import { BenutzerKompetenz, ArrayList, SchuelerListe, SchuelerListeManager, SchuelerStatus } from "@core";
 
 import { api } from "~/router/Api";
-import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-import { RouteManager } from "~/router/RouteManager";
+import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdaten";
-import type { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import { routeSchuelerNeu } from "~/router/apps/schueler/RouteSchuelerNeu";
-import { RoutingStatus } from "~/router/RoutingStatus";
 import { routeSchuelerGruppenprozesse } from "~/router/apps/schueler/RouteSchuelerGruppenprozesse";
+import type { RouteParamsRawGeneric } from "vue-router";
 
 
-interface RouteStateSchueler extends RouteStateInterface {
-	idSchuljahresabschnitt: number;
-	schuelerListeManager: SchuelerListeManager | undefined;
-}
+type RouteStateSchueler = RouteStateAuswahlInterface<SchuelerListeManager>
 
 const defaultState = <RouteStateSchueler> {
 	idSchuljahresabschnitt: -1,
-	schuelerListeManager: undefined,
+	manager: undefined,
 	view: routeSchuelerIndividualdaten,
 	activeViewType: ViewType.DEFAULT,
 };
 
-export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
+export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, RouteStateSchueler> {
 
 	public constructor() {
-		super(defaultState);
+		super(defaultState, routeSchuelerGruppenprozesse, routeSchuelerNeu);
 	}
 
-	public async setSchuljahresabschnitt(idSchuljahresabschnitt : number, isEntering: boolean) : Promise<number | null> {
-		if (!isEntering && idSchuljahresabschnitt === this._state.value.idSchuljahresabschnitt)
-			return null;
-		return await this.ladeSchuljahresabschnitt(idSchuljahresabschnitt);
+	public addID(param: RouteParamsRawGeneric, id: number): void {
+		param.id = id;
 	}
 
-	/**
-	 * Setzt die Daten zum ausgewählten Schuljahresabschnitt und Schülers und triggert damit das Laden der Defaults für diesen Abschnitt
-	 *
-	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
-	 */
-	private async ladeSchuljahresabschnitt(idSchuljahresabschnitt: number): Promise<number | null> {
-		// Erzeuge neuen SchuelerListeManager, wenn die Route neu betreten wird oder der Schuljahresabschnitt geändert wird
-		const schuelerListe: SchuelerListe = await this.loadSchuelerListe(idSchuljahresabschnitt);
+	protected async createManager(idSchuljahresabschnitt : number) : Promise<SchuelerListeManager> {
+		// Lade die Daten von der API
+		const auswahllisteGzip = await api.server.getSchuelerAuswahllisteFuerAbschnitt(api.schema, idSchuljahresabschnitt);
+		const auswahllisteBlob = await new Response(auswahllisteGzip.data.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
+		const schuelerListe: SchuelerListe = SchuelerListe.transpilerFromJSON(await auswahllisteBlob.text());
 
+		// Erstelle den Schüler-Liste-Manager
 		const manager = new SchuelerListeManager(api.schulform, schuelerListe, api.schuleStammdaten.abschnitte, api.schuleStammdaten.idSchuljahresabschnitt);
-		if (this._state.value.schuelerListeManager === undefined) {
+
+		// Übernehme den Filter von dem vorigen Manager oder initialisiere ihn neu, falls kein voriger Manager vorhanden ist
+		if (this._state.value.manager === undefined) {
 			manager.schuelerstatus.auswahlAdd(SchuelerStatus.AKTIV);
 			manager.schuelerstatus.auswahlAdd(SchuelerStatus.EXTERN);
 		} else {
-			manager.useFilter(this._state.value.schuelerListeManager);
+			manager.useFilter(this._state.value.manager);
 		}
-
-		// Funktioniert aktuell nicht, zudem muss überlegt werden anhand welcher eindeutigen Kriterien der Schüler im neuen Abschnitt
-		//  zugeordnet/gefunden werden kann ggf. über Geburtsdatum + Name
-		//  (Und wenn es dann tatsächlich immer noch > 1 zutreffenden Schüler geben sollte wird keiner selektiert)?
-
-		// Lade und setze Schüler Stammdaten falls ein Schüler ausgewählt ist und dieser im neuen Manager vorhanden ist
-		// const vorherigeAuswahl = ((this._state.value.schuelerListeManager !== undefined) && this.schuelerListeManager.hasDaten()) ? this.schuelerListeManager.auswahl() : null;
-		// if (vorherigeAuswahl !== null) {
-		// 	const auswahl = this.schuelerListeManager.liste.get(vorherigeAuswahl.id);
-		// 	let schuelerStammdaten = await this.loadSchuelerStammdaten(auswahl);
-		// 	if (schuelerStammdaten === null)
-		// 		schuelerStammdaten = await this.loadSchuelerStammdaten(manager.liste.list().get(0));
-		//
-		// 	this.schuelerListeManager.setDaten(schuelerStammdaten);
-		// }
-
-		// stellt die ursprünglich gefilterte Liste wieder her
-		manager.filtered();
-
-		const view = this.getCurrentViewOrDefault(manager);
-
-		this.setPatchedDefaultState({
-			idSchuljahresabschnitt: idSchuljahresabschnitt,
-			schuelerListeManager: manager,
-			activeViewType: this.activeViewType,
-			view: view,
-		});
-
-		return this.schuelerListeManager.auswahlID();
+		return manager;
 	}
 
-	/**
-	 * Lädt das {@link SchuelerListe} Objekt von der API, für die übergebene Schuljahresabschnitt ID
-	 *
-	 * @param {number} idSchuljahresabschnitt   die ID des Schuljahresabschnitts
-	 *
-	 * @returns Gibt SchuelerListe zurück
-	 */
-	private async loadSchuelerListe(idSchuljahresabschnitt: number): Promise<SchuelerListe> {
-		// Lese die grundlegenden Daten für den Schuljahresabschnitt ein und erstelle den SchülerListeManager
-		const auswahllisteGzip = await api.server.getSchuelerAuswahllisteFuerAbschnitt(api.schema, idSchuljahresabschnitt);
-		const auswahllisteBlob = await new Response(auswahllisteGzip.data.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
-		return SchuelerListe.transpilerFromJSON(await auswahllisteBlob.text());
+	public async ladeDaten(auswahl: SchuelerListeEintrag | null) : Promise<SchuelerStammdaten | null> {
+		return (auswahl === null) ? null : await api.server.getSchuelerStammdaten(api.schema, auswahl.id);
 	}
-
-	/**
-	 * Liefert die bisher ausgewählte View oder die Default View {@link RouteSchuelerIndividualdaten}
-	 *
-	 * @returns aktuelle View oder Default View
-	 */
-	private getCurrentViewOrDefault(schuelerManager: SchuelerListeManager): RouteNode<any, any> | undefined {
-		if (schuelerManager.hasDaten())
-			return this._state.value.view;
-		else
-			return routeSchuelerIndividualdaten;
-	}
-
-	/**
-	 * Lädt das {@link SchuelerStammdaten} Objekt zum übergebenen {@link SchuelerListeEintrag}.
-	 * Die Methode liefert <code>null</code>, wenn der Parameter <code>schuelerEintrag</code> <code>null</code> ist.
-	 *
-	 * @param {SchuelerListeEintrag | null} schuelerEintrag     Eintrag des Schülers
-	 *
-	 * @returns Gibt Stammdaten des Schülers oder <code>null</code> zurück
-	 */
-	private async loadSchuelerStammdaten(schuelerEintrag: SchuelerListeEintrag | null): Promise<SchuelerStammdaten | null> {
-		if (schuelerEintrag === null)
-			return null;
-
-		return await api.server.getSchuelerStammdaten(api.schema, schuelerEintrag.id);
-	}
-
 
 	get schuelerListeManager(): SchuelerListeManager {
-		if (this._state.value.schuelerListeManager === undefined)
-			return new SchuelerListeManager(api.schulform, new SchuelerListe(), api.schuleStammdaten.abschnitte, api.schuleStammdaten.idSchuljahresabschnitt); // Gib Dummy zurück
-		return this._state.value.schuelerListeManager;
+		return this.hasManager ? this.manager // oder gib einen Dummy zurück...
+			: new SchuelerListeManager(api.schulform, new SchuelerListe(), api.schuleStammdaten.abschnitte, api.schuleStammdaten.idSchuljahresabschnitt);
 	}
 
-	patch = async (data : Partial<SchuelerStammdaten>) => {
-		if (!this.schuelerListeManager.hasDaten())
-			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		const idSchueler = this.schuelerListeManager.auswahl().id;
-		const stammdaten = this.schuelerListeManager.daten();
-		await api.server.patchSchuelerStammdaten(data, api.schema, idSchueler);
-		Object.assign(stammdaten, data);
-		this.schuelerListeManager.setDaten(stammdaten);
-		this.commit();
+	protected async doPatch(data : Partial<SchuelerStammdaten>, id: number) : Promise<void> {
+		await api.server.patchSchuelerStammdaten(data, api.schema, id);
 	}
 
-	public deleteSchueler = async (): Promise<[boolean, ArrayList<string | null>]> => {
-		const ids = new ArrayList<number>();
-		for (const schueler of this.schuelerListeManager.liste.auswahlSorted())
-			ids.add(schueler.id);
+	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {
+		return await api.server.deleteSchueler(ids, api.schema);
+	}
 
-		const operationResponses = await api.server.deleteSchueler(ids, api.schema);
-
-		const schuelerToRemove = new ArrayList<SchuelerListeEintrag>();
-		const logMessages = new ArrayList<string | null>();
-		let status = true;
-		for (const response of operationResponses)
-			if (response.success && response.id !== null) {
-				const schueler = this.schuelerListeManager.liste.get(response.id);
-				logMessages.add(`Schüler ${(schueler?.vorname ?? '???') + ' ' + (schueler?.nachname ?? '???')} (ID: ${response.id.toString()}) wurde erfolgreich gelöscht.`);
-				schuelerToRemove.add(schueler);
-			} else {
-				status = false;
-				logMessages.addAll(response.log);
-			}
-		if (!schuelerToRemove.isEmpty()) {
-			this.schuelerListeManager.liste.auswahlClear();
-			this.schuelerListeManager.setDaten(null);
-			await this.ladeSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt);
-		}
-
-		return [status, logMessages];
+	protected deleteMessage(id: number, schueler: SchuelerListeEintrag | null) : string {
+		return `Schüler ${(schueler?.vorname ?? '???') + ' ' + (schueler?.nachname ?? '???')} (ID: ${id.toString()}) wurde erfolgreich gelöscht.`;
 	}
 
 	public deleteSchuelerCheck = (): [boolean, List<string>] => {
@@ -179,114 +78,6 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 			errorLog.add('Es wurde kein Schüler zum Löschen ausgewählt.');
 
 		return [errorLog.isEmpty(), errorLog];
-	}
-
-	public async setDaten(schueler: SchuelerListeEintrag | null) {
-		const hatteDaten = this.schuelerListeManager.hasDaten();
-		if ((schueler === null) && (!hatteDaten))
-			return;
-
-		if ((schueler === null) || (this.schuelerListeManager.liste.list().isEmpty())) {
-			this.schuelerListeManager.setDaten(null);
-			this.commit();
-			return;
-		}
-
-		if (hatteDaten && (schueler.id === this.schuelerListeManager.auswahl().id))
-			return;
-
-		const schuelerEintrag = this.getEintragOrDefault(schueler.id);
-		const schuelerStammdaten = await this.loadSchuelerStammdaten(schuelerEintrag);
-		this.schuelerListeManager.setDaten(schuelerStammdaten);
-		this.commit();
-	}
-
-	getEintragOrDefault = (idSchueler: number) => {
-		if (this.schuelerListeManager.liste.has(idSchueler))
-			return this.schuelerListeManager.liste.get(idSchueler);
-		else
-			return this.schuelerListeManager.filtered().isEmpty() ? null : this.schuelerListeManager.filtered().get(0);
-	}
-
-	gotoDefaultView = async (idSchueler?: number | null) => {
-		if ((idSchueler !== null) && (idSchueler !== undefined) && this.schuelerListeManager.liste.has(idSchueler)) {
-			const route = ((this.view !== routeSchuelerNeu) && (this.view !== routeSchuelerGruppenprozesse))
-				? this.view.getRoute({ id: idSchueler }) : routeSchuelerIndividualdaten.getRoute({ id: idSchueler });
-			const result = await RouteManager.doRoute(route);
-			if (result === RoutingStatus.STOPPED_ROUTING_IS_ACTIVE){
-				const schuelerEintrag = this.getEintragOrDefault(idSchueler);
-				await this.setDaten(schuelerEintrag);
-			}
-
-			if ((result === RoutingStatus.SUCCESS) || (result === RoutingStatus.STOPPED_ROUTING_IS_ACTIVE))
-				this.setDefaults();
-
-			this.commit();
-			return;
-		}
-
-		// Default Eintrag selektieren, wenn keine ID übergeben wurde
-		const filtered = this.schuelerListeManager.filtered();
-		if (!filtered.isEmpty()) {
-			const schueler = filtered.getFirst();
-			const route = routeSchuelerIndividualdaten.getRoute({ id: schueler.id });
-			const result = await RouteManager.doRoute(route);
-			if ((result === RoutingStatus.SUCCESS) || (result === RoutingStatus.STOPPED_ROUTING_IS_ACTIVE))
-				this.setDefaults();
-
-			await this.setDaten(schueler);
-		}
-	}
-
-	private setDefaults() {
-		this.activeViewType = ViewType.DEFAULT
-		this._state.value.view = (this._state.value.view?.name === this.view.name) ? this.view : routeSchuelerIndividualdaten;
-		this.commit();
-	}
-
-	gotoGruppenprozessView = async (navigate: boolean) => {
-		if ((this.activeViewType === ViewType.GRUPPENPROZESSE) || (this._state.value.view === routeSchuelerGruppenprozesse)) {
-			this.commit();
-			return;
-		}
-
-		this.activeViewType = ViewType.GRUPPENPROZESSE;
-
-		if (navigate)
-			await RouteManager.doRoute(routeSchuelerGruppenprozesse.getRoute());
-
-		this._state.value.view = routeSchuelerGruppenprozesse;
-		this.schuelerListeManager.setDaten(null);
-		this.commit();
-	}
-
-	gotoHinzufuegenView = async (navigate: boolean) => {
-		if ((this.activeViewType === ViewType.HINZUFUEGEN) || (this._state.value.view === routeSchuelerNeu)) {
-			this.commit();
-			return;
-		}
-
-		this.activeViewType = ViewType.HINZUFUEGEN;
-
-		if (navigate) {
-			const result = await RouteManager.doRoute(routeSchuelerNeu.getRoute());
-			if (result === RoutingStatus.SUCCESS)
-				this.schuelerListeManager.liste.auswahlClear();
-		}
-
-		this._state.value.view = routeSchuelerNeu;
-		this.schuelerListeManager.setDaten(null);
-		this.commit();
-	}
-
-	setFilter = async () => {
-		if (!this.schuelerListeManager.hasDaten() && (this.activeViewType === ViewType.DEFAULT)) {
-			const listFiltered = this.schuelerListeManager.filtered();
-			if (!listFiltered.isEmpty()) {
-				return await this.gotoDefaultView(listFiltered.get(0).id);
-			}
-		}
-		this.commit();
 	}
 
 }

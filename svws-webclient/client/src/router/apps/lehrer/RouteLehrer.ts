@@ -3,7 +3,6 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParam
 import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
 
 import { api } from "~/router/Api";
-import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 
 import type { RouteApp } from "~/router/apps/RouteApp";
@@ -18,23 +17,23 @@ import { RouteDataLehrer } from "~/router/apps/lehrer/RouteDataLehrer";
 
 import type { LehrerAppProps } from "~/components/lehrer/SLehrerAppProps";
 import type { LehrerAuswahlProps } from "~/components/lehrer/SLehrerAuswahlProps";
-import type { TabData} from "@ui";
 import { ViewType } from "@ui";
 import { routeError } from "~/router/error/RouteError";
 import { routeLehrerGruppenprozesse } from "~/router/apps/lehrer/RouteLehrerGruppenprozesse";
 import { routeLehrerNeu } from "~/router/apps/lehrer/RouteLehrerNeu";
+import type { RouteTabProps } from "~/router/RouteTabNode";
+import { RouteTabNode } from "~/router/RouteTabNode";
 
 
 const SLehrerAuswahl = () => import("~/components/lehrer/SLehrerAuswahl.vue");
 const SLehrerApp = () => import("~/components/lehrer/SLehrerApp.vue");
 
 
-export class RouteLehrer extends RouteNode<RouteDataLehrer, RouteApp> {
+export class RouteLehrer extends RouteTabNode<RouteDataLehrer, RouteApp> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.LEHRERDATEN_ANSEHEN ], "lehrer", "lehrkraefte/:id(\\d+)?", SLehrerApp, new RouteDataLehrer());
 		super.mode = ServerMode.STABLE;
-		super.propHandler = (route) => this.getProps(route);
 		super.text = "Lehrkräfte";
 		super.setView("liste", SLehrerAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
@@ -111,22 +110,11 @@ export class RouteLehrer extends RouteNode<RouteDataLehrer, RouteApp> {
 		};
 	}
 
-	public getProps(to: RouteLocationNormalized): LehrerAppProps {
+	public getProps(props: RouteTabProps): LehrerAppProps {
 		return {
+			...props,
 			lehrerListeManager: () => this.data.lehrerListeManager,
-			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab, this.data.activeViewType),
-			activeViewType: this.data.activeViewType
 		};
-	}
-
-	private setTab = async (value: TabData) => {
-		if (value.name === this.data.view.name)
-			return;
-		const node = RouteNode.getNodeByName(value.name);
-		if (node === undefined)
-			throw new DeveloperNotificationException("Unbekannte Route");
-		await RouteManager.doRoute(this.getRouteView(node));
-		this.data.setView(node, this.children);
 	}
 
 }
