@@ -765,6 +765,18 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	}
 
 	/**
+	 * Prüft, ob die Route wirklich neu betreten wurde oder vor einem redirect schon betreten wurde.
+	 *
+	 * @param isEntering   die Information vom Route-Manager, ob die Route neu betreten wurde
+	 * @param redirected   ggf. die Information zu einem redirect, welches ausgeführt wurde
+	 *
+	 * @returns true, falls die Route wirklich neu betreten wurde und dies nicht zuvor vor einem redirect erfolgt ist.
+	 */
+	private isReallyEntering(isEntering : boolean, redirected : RouteNode<any, any> | undefined) : boolean {
+		return isEntering && ((redirected === undefined) || (!redirected.name.startsWith(this.name)));
+	}
+
+	/**
 	 * Ein Ereignis, welches im globalen beforeEach-Guard aufgerufen wird,
 	 * wenn die Informationen einer Route aktualisiert werden sollen.
 	 * Dieses Ereignis wird unabhängig davon aufgerufen, ob die Route das erste
@@ -785,7 +797,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 				return this.parent === undefined ? this.getRoute() : tmpHidden;
 			if (this._parent !== undefined)
 				this._parent._selectedChild.value = this;
-			return await this.update(to, to_params, from, from_params, isEntering, redirected);
+			return await this.update(to, to_params, from, from_params, this.isReallyEntering(isEntering, redirected), redirected);
 		} catch (e) {
 			routerManager.errorcode = undefined;
 			routerManager.error = e instanceof Error ? e : new DeveloperNotificationException("Fehler beim Routing in doUpdate(" + to.name + ")");
