@@ -30,8 +30,8 @@ export class RouteLehrerGruppenprozesse extends RouteNode<any, RouteLehrer> {
 			serverMode: api.mode,
 			schulform: api.schulform,
 			schulgliederungen: api.schulgliederungen,
-			lehrerListeManager: () => routeLehrer.data.lehrerListeManager,
-			deleteLehrer: routeLehrer.data.deleteLehrer,
+			lehrerListeManager: () => routeLehrer.data.manager,
+			deleteLehrer: routeLehrer.data.delete,
 			deleteLehrerCheck: routeLehrer.data.deleteLehrerCheck,
 		};
 	}

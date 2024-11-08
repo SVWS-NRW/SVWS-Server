@@ -1,5 +1,5 @@
 <template>
-	<template v-if="(lehrerListeManager().hasDaten() && (activeViewType === ViewType.DEFAULT)) || (activeViewType !== ViewType.DEFAULT)">
+	<template v-if="(manager().hasDaten() && (activeViewType === ViewType.DEFAULT)) || (activeViewType !== ViewType.DEFAULT)">
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
 				<template v-if="activeViewType === ViewType.DEFAULT">
@@ -46,10 +46,10 @@
 
 	const props = defineProps<LehrerAppProps>();
 
-	const daten = computed(() => props.lehrerListeManager().hasDaten() ? props.lehrerListeManager().daten() : null);
+	const daten = computed(() => props.manager().hasDaten() ? props.manager().daten() : null);
 
 	const lehrerSubline = computed(() => {
-		const auswahlLehrerList = props.lehrerListeManager().liste.auswahlSorted();
+		const auswahlLehrerList = props.manager().liste.auswahlSorted();
 		if (auswahlLehrerList.size() > 5)
 			return `${auswahlLehrerList.size()} Lehrer ausgewählt`;
 		return [...auswahlLehrerList].map(k => k.kuerzel).join(', ');

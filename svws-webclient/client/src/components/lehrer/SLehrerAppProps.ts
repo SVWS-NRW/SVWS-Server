@@ -1,8 +1,4 @@
 import type { LehrerListeManager } from "@core";
-import type { TabManager, ViewType } from "@ui";
+import type { RouteAuswahlProps } from "~/router/RouteAuswahlNode";
 
-export interface LehrerAppProps {
-	lehrerListeManager: () => LehrerListeManager;
-	tabManager: () => TabManager;
-	activeViewType: ViewType;
-}
+export type LehrerAppProps = RouteAuswahlProps<LehrerListeManager>;

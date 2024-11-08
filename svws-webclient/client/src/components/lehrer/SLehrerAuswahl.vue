@@ -7,15 +7,15 @@
 			<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
 		</template>
 		<template #content>
-			<svws-ui-table :clickable="!lehrerListeManager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="lehrerDaten => gotoDefaultView(lehrerDaten.id)"
-				:items="rowsFiltered" :model-value="[...props.lehrerListeManager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)"
+			<svws-ui-table :clickable="!manager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="lehrerDaten => gotoDefaultView(lehrerDaten.id)"
+				:items="rowsFiltered" :model-value="[...props.manager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)"
 				:columns selectable count :filter-open="true" :filtered="filterChanged()" :filterReset scroll-into-view scroll
 				v-model:sort-by-and-order="sortByAndOrder" :sort-by-multi allow-arrow-key-selection>
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" removable />
 				</template>
 				<template #filterAdvanced>
-					<svws-ui-multi-select v-model="filterPersonaltyp" title="Personaltyp" :items="lehrerListeManager().personaltypen.list()" :item-text="textPersonaltyp" class="col-span-full" />
+					<svws-ui-multi-select v-model="filterPersonaltyp" title="Personaltyp" :items="manager().personaltypen.list()" :item-text="textPersonaltyp" class="col-span-full" />
 					<div class="col-span-full flex flex-wrap gap-x-5">
 						<svws-ui-checkbox type="toggle" v-model="filterNurSichtbare">Nur Sichtbare</svws-ui-checkbox>
 						<svws-ui-checkbox type="toggle" v-model="filterNurStatistikrelevant">Nur Statistik-Relevante</svws-ui-checkbox>
@@ -60,34 +60,34 @@
 	}
 
 	const filterNurSichtbare = computed<boolean>({
-		get: () => props.lehrerListeManager().filterNurSichtbar(),
+		get: () => props.manager().filterNurSichtbar(),
 		set: (value) => {
-			props.lehrerListeManager().setFilterNurSichtbar(value);
+			props.manager().setFilterNurSichtbar(value);
 			void props.setFilter();
 		}
 	});
 
 	const filterNurStatistikrelevant = computed<boolean>({
-		get: () => props.lehrerListeManager().filterNurStatistikRelevant(),
+		get: () => props.manager().filterNurStatistikRelevant(),
 		set: (value) => {
-			props.lehrerListeManager().setFilterNurStatistikRelevant(value);
+			props.manager().setFilterNurStatistikRelevant(value);
 			void props.setFilter();
 		}
 	});
 
 	const filterPersonaltyp = computed<PersonalTyp[]>({
-		get: () => [...props.lehrerListeManager().personaltypen.auswahl()],
+		get: () => [...props.manager().personaltypen.auswahl()],
 		set: (value) => {
-			props.lehrerListeManager().personaltypen.auswahlClear();
+			props.manager().personaltypen.auswahlClear();
 			for (const v of value)
-				props.lehrerListeManager().personaltypen.auswahlAdd(v);
+				props.manager().personaltypen.auswahlAdd(v);
 			void props.setFilter();
 		}
 	});
 
 	const sortByMulti = computed<Map<string, boolean>>(() => {
 		const map = new Map<string, boolean>();
-		for (const pair of props.lehrerListeManager().orderGet())
+		for (const pair of props.manager().orderGet())
 			if (pair.b !== null)
 				map.set(pair.a, pair.b);
 		return map;
@@ -95,7 +95,7 @@
 
 	const sortByAndOrder = computed<SortByAndOrder | undefined>({
 		get: () => {
-			const list = props.lehrerListeManager().orderGet();
+			const list = props.manager().orderGet();
 			if (list.isEmpty())
 				return undefined;
 			else {
@@ -106,7 +106,7 @@
 		set: (value) => {
 			if ((value === undefined) || (value.key === null))
 				return;
-			props.lehrerListeManager().orderUpdate(value.key, value.order);
+			props.manager().orderUpdate(value.key, value.order);
 			void props.setFilter();
 		}
 	})
@@ -115,7 +115,7 @@
 
 	const rowsFiltered = computed<LehrerListeEintrag[]>(() => {
 		const arr = [];
-		for (const e of props.lehrerListeManager().filtered())
+		for (const e of props.manager().filtered())
 			if (e.nachname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())
 				|| e.vorname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())
 				|| e.kuerzel.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()))
@@ -124,31 +124,31 @@
 	});
 
 	async function filterReset() {
-		props.lehrerListeManager().personaltypen.auswahlClear();
-		props.lehrerListeManager().setFilterNurSichtbar(true);
-		props.lehrerListeManager().setFilterNurStatistikRelevant(true);
+		props.manager().personaltypen.auswahlClear();
+		props.manager().setFilterNurSichtbar(true);
+		props.manager().setFilterNurStatistikRelevant(true);
 		await props.setFilter();
 	}
 
 	function filterChanged(): boolean {
-		return (props.lehrerListeManager().personaltypen.auswahlExists());
+		return (props.manager().personaltypen.auswahlExists());
 	}
 
 	const clickedEintrag = computed(() => {
 		if ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN))
 			return null;
-		return props.lehrerListeManager().hasDaten() ? props.lehrerListeManager().auswahl() : null;
+		return props.manager().hasDaten() ? props.manager().auswahl() : null;
 	});
 
 	async function setAuswahl(items : LehrerListeEintrag[]) {
-		props.lehrerListeManager().liste.auswahlClear();
+		props.manager().liste.auswahlClear();
 		for (const item of items)
-			if (props.lehrerListeManager().liste.hasValue(item))
-				props.lehrerListeManager().liste.auswahlAdd(item);
-		if (props.lehrerListeManager().liste.auswahlExists())
+			if (props.manager().liste.hasValue(item))
+				props.manager().liste.auswahlAdd(item);
+		if (props.manager().liste.auswahlExists())
 			await props.gotoGruppenprozessView(true);
 		else
-			await props.gotoDefaultView(props.lehrerListeManager().getVorherigeAuswahl()?.id);
+			await props.gotoDefaultView(props.manager().getVorherigeAuswahl()?.id);
 	}
 
 </script>

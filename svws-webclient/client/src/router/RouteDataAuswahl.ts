@@ -84,6 +84,18 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 		return this.ladeSchuljahresabschnitt(idSchuljahresabschnitt);
 	}
 
+	/**
+	 * Diese Methode kann überschrieben werden, wenn weitere Aktualisierungen beim Ersetzen des
+	 * Managers bei einem Wechsel des Schuljahresabschnittes durchgeführt werden sollen und eine
+	 * vorige Auswahl bestand.
+	 *
+	 * @param manager      der neue Manager
+	 * @param managerAlt   der alte Manager
+	 * @param daten        die neuen Daten
+	 */
+	protected async updateManager(manager: TAuswahlManager, managerAlt: TAuswahlManager, daten: TDaten) : Promise<void> {
+		// nichts zu tun
+	}
 
 	/**
 	 * Lädt die Daten zum ausgewählten Schuljahresabschnitt und setzt die Default-Werte für den Manager.
@@ -91,24 +103,25 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
 	 */
 	private async ladeSchuljahresabschnitt(idSchuljahresabschnitt : number) : Promise<number | null> {
-		const newState = <Partial<RouteState>>{ idSchuljahresabschnitt };
-		newState.manager = await this.createManager(idSchuljahresabschnitt);
+		const manager = await this.createManager(idSchuljahresabschnitt);
+		const newState = <Partial<RouteState>>{ idSchuljahresabschnitt, manager };
 
-		// Lade und setze Schüler Stammdaten falls ein Schüler ausgewählt ist und dieser im neuen Manager vorhanden ist
-		// const vorherigeAuswahl = ((this._state.value.schuelerListeManager !== undefined) && this.schuelerListeManager.hasDaten()) ? this.schuelerListeManager.auswahl() : null;
-		// if (vorherigeAuswahl !== null) {
-		// 	const auswahl = this.schuelerListeManager.liste.get(vorherigeAuswahl.id);
-		// 	let schuelerStammdaten = await this.ladeDaten(auswahl);
-		// 	if (schuelerStammdaten === null)
-		// 		schuelerStammdaten = await this.ladeDaten(manager.liste.list().get(0));
-		//
-		// 	this.schuelerListeManager.setDaten(schuelerStammdaten);
-		// }
+		// Lade und setze Daten falls eine Auswahl bestand und diese im neuen Manager vorhanden ist
+		const vorherigeAuswahl = ((this._state.value.manager !== undefined) && this.manager.hasDaten()) ? this.manager.auswahl() : null;
+		if (vorherigeAuswahl !== null) {
+			const auswahl = this.manager.liste.get(this.manager.getIdByEintrag(vorherigeAuswahl));
+			let daten = await this.ladeDaten(auswahl);
+			if ((daten === null) && (!manager.liste.list().isEmpty()))
+				daten = await this.ladeDaten(manager.liste.list().getFirst());
+			this.manager.setDaten(daten);
+			if (daten !== null)
+				await this.updateManager(manager, this.manager, daten);
+		}
 
 		// stellt die ursprünglich gefilterte Liste wieder her
-		newState.manager.filtered();
+		manager.filtered();
 
-		newState.view = (newState.manager.hasDaten()) ? this._state.value.view : this.defaultView;
+		newState.view = (manager.hasDaten()) ? this._state.value.view : this.defaultView;
 		newState.activeViewType = this.activeViewType;
 
 		this.setPatchedDefaultState(newState);
@@ -151,6 +164,16 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	 */
 	public abstract ladeDaten(auswahl: TAuswahl | null) : Promise<TDaten | null>;
 
+
+	/**
+	 * Diese Methode kann überschrieben werden. Sie aktualisiert die Daten im Manager.
+	 *
+	 * @param daten   die im Manager zu aktualisierenden Daten
+	 */
+	protected async updateDaten(daten: TDaten | null) {
+		this.manager.setDaten(daten);
+	}
+
 	/**
 	 * Setzt die Auswahl in der Liste und lädt die Daten zu der Auswahl in den Manager.
 	 *
@@ -173,7 +196,7 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 
 		const eintrag = this.getEintragOrDefault(id);
 		const daten = await this.ladeDaten(eintrag);
-		this.manager.setDaten(daten);
+		await this.updateDaten(daten);
 		this.commit();
 	}
 
@@ -223,7 +246,7 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 
 	protected abstract deleteMessage(id: number, eintrag: TAuswahl | null) : string;
 
-	public deleteSchueler = async (): Promise<[boolean, List<string | null>]> => {
+	public delete = async (): Promise<[boolean, List<string | null>]> => {
 		const ids = new ArrayList<number>();
 		for (const schueler of this.manager.liste.auswahlSorted())
 			ids.add(this.manager.getIdByEintrag(schueler));

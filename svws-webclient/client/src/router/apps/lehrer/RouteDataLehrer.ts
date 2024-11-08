@@ -1,4 +1,4 @@
-import type { LehrerFachrichtungAnerkennung, LehrerFachrichtungEintrag, LehrerLehramtAnerkennung, LehrerLehramtEintrag, LehrerLehrbefaehigungAnerkennung, LehrerLehrbefaehigungEintrag, LehrerListeEintrag, LehrerPersonalabschnittsdaten, LehrerPersonaldaten, LehrerStammdaten, List } from "@core";
+import { LehrerFachrichtungAnerkennung, LehrerFachrichtungEintrag, LehrerLehramtAnerkennung, LehrerLehramtEintrag, LehrerLehrbefaehigungAnerkennung, LehrerLehrbefaehigungEintrag, LehrerListeEintrag, LehrerPersonalabschnittsdaten, LehrerPersonaldaten, LehrerStammdaten, List, SimpleOperationResponse } from "@core";
 import { ArrayList, DeveloperNotificationException, LehrerListeManager } from "@core";
 
 import { api } from "~/router/Api";
@@ -14,73 +14,55 @@ import { routeLehrerUnterrichtsdaten } from "~/router/apps/lehrer/RouteLehrerUnt
 import { routeLehrerStundenplanDaten } from "~/router/apps/lehrer/stundenplan/RouteLehrerStundenplanDaten";
 import { routeLehrerGruppenprozesse } from "~/router/apps/lehrer/RouteLehrerGruppenprozesse";
 import { routeLehrerNeu } from "~/router/apps/lehrer/RouteLehrerNeu";
+import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
+import type { RouteParamsRawGeneric } from "vue-router";
 
-interface RouteStateLehrer extends RouteStateInterface {
-	// Daten, allgemein
-	idSchuljahresabschnitt: number,
-	lehrerListeManager: LehrerListeManager,
-	// TODO Unterrichtsdaten
-}
+type RouteStateLehrer = RouteStateAuswahlInterface<LehrerListeManager>
 
 const defaultState = <RouteStateLehrer>{
 	idSchuljahresabschnitt: -1,
-	lehrerListeManager: new LehrerListeManager(-1, -1, new ArrayList(), null, new ArrayList()),
+	manager: new LehrerListeManager(-1, -1, new ArrayList(), null, new ArrayList()),
 	activeViewType: ViewType.DEFAULT,
 	view: routeLehrerIndividualdaten,
 };
 
-export class RouteDataLehrer extends RouteData<RouteStateLehrer> {
+export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteStateLehrer> {
 
 	public constructor() {
-		super(defaultState);
+		super(defaultState, routeLehrerGruppenprozesse, routeLehrerNeu);
 	}
 
-	get lehrerListeManager(): LehrerListeManager {
-		return this._state.value.lehrerListeManager;
+	public addID(param: RouteParamsRawGeneric, id: number): void {
+		param.id = id;
 	}
 
-	/**
-	 * Setzt den Schuljahresabschnitt und triggert damit das Laden der Defaults für diesen Abschnitt
-	 *
-	 * @param {number} idSchuljahresabschnitt   die ID des Schuljahresabschnitts
-	 */
-	private async ladeSchuljahresabschnitt(idSchuljahresabschnitt: number): Promise<number | null> {
-		// TODO Lade die Lehrerliste in Abhängigkeit von dem angegebenen Schuljahresabschnitt, sobald die API-Methode dafür existiert
+	protected async createManager(idSchuljahresabschnitt : number) : Promise<LehrerListeManager> {
+		// Lade die Daten von der API
 		const listLehrer = await api.server.getLehrer(api.schema);
-		const lehrerListeManager = new LehrerListeManager(idSchuljahresabschnitt, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,
+
+		// Erstelle den Lehrer-Liste-Manager
+		const manager = new LehrerListeManager(idSchuljahresabschnitt, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,
 			api.schulform, listLehrer);
 
+		// Übernehme den Filter von dem vorigen Manager oder initialisiere ihn neu, falls kein voriger Manager vorhanden ist
 		if (this._state.value.idSchuljahresabschnitt === -1) {
 			// Initiales Setzen der Filter
-			lehrerListeManager.setFilterAuswahlPermitted(true);
-			lehrerListeManager.setFilterNurSichtbar(false);
+			manager.setFilterAuswahlPermitted(true);
+			manager.setFilterNurSichtbar(false);
 		} else {
 			// Filter aus vorherigem Manager übernehmen
-			// lehrerListeManager.useFilter(this._state.value.klassenListeManager);
+			// TODO manager.useFilter(this._state.value.manager);
 		}
-
-		// Versuche die ausgewählte Klasse von vorher zu laden
-		const vorherigeAuswahlID = this.lehrerListeManager.hasDaten() ? this.lehrerListeManager.auswahlID() : null;
-		if (vorherigeAuswahlID !== null) {
-			lehrerListeManager.setDaten(await api.server.getLehrerStammdaten(api.schema, vorherigeAuswahlID));
-
-			const hattePersonaldaten = this.lehrerListeManager.hasPersonalDaten();
-			if (lehrerListeManager.hasDaten() && hattePersonaldaten)
-				lehrerListeManager.setPersonalDaten(await api.server.getLehrerPersonaldaten(api.schema, vorherigeAuswahlID));
-		}
-
-		// stellt die ursprünglich gefilterte Liste wieder her
-		lehrerListeManager.filtered();
-
-		this.setPatchedDefaultState({ idSchuljahresabschnitt, lehrerListeManager, activeViewType: this.activeViewType, view: this._state.value.view });
-		return this.lehrerListeManager.auswahlID();
+		return manager;
 	}
 
+	public async ladeDaten(auswahl: LehrerListeEintrag | null) : Promise<LehrerStammdaten | null> {
+		return (auswahl === null) ? null : await api.server.getLehrerStammdaten(api.schema, auswahl.id);
+	}
 
-	public async setSchuljahresabschnitt(idSchuljahresabschnitt: number, isEntering: boolean): Promise<number | null> {
-		if (!isEntering && (idSchuljahresabschnitt === this._state.value.idSchuljahresabschnitt))
-			return null;
-		return await this.ladeSchuljahresabschnitt(idSchuljahresabschnitt);
+	protected async updateManager(manager: LehrerListeManager, managerAlt: LehrerListeManager, daten: LehrerStammdaten) {
+		if (managerAlt.hasPersonalDaten())
+			manager.setPersonalDaten(await api.server.getLehrerPersonaldaten(api.schema, daten.id));
 	}
 
 	/**
@@ -93,71 +75,51 @@ export class RouteDataLehrer extends RouteData<RouteStateLehrer> {
 	}
 
 	/**
-	 * Setzt den ausgewählten Lehrer und lädt dessen Stammdaten.
+	 * Aktualisiere beim Manager bei den neuen Daten ggf. auch die Personaldaten
 	 *
-	 * @param lehrer   der ausgewählte Lehrer
+	 * @param daten   die neuen Daten des Lehrers
 	 */
-	public async setLehrer(lehrer: LehrerListeEintrag | null) {
-		if ((lehrer === null) && (!this.lehrerListeManager.hasDaten()))
-			return;
-		if ((lehrer === null) || (this.lehrerListeManager.liste.list().isEmpty())) {
-			this.lehrerListeManager.setDaten(null);
-			this.commit();
-			return;
-		}
-		if ((this.lehrerListeManager.hasDaten() && (lehrer.id === this.lehrerListeManager.auswahl().id)))
-			return;
-		const hattePersonaldaten = this.lehrerListeManager.hasPersonalDaten();
-		let auswahl = this.lehrerListeManager.liste.get(lehrer.id);
-		if (auswahl === null)
-			auswahl = this.lehrerListeManager.filtered().isEmpty() ? null : this.lehrerListeManager.filtered().get(0);
-		const daten = auswahl === null ? null : await api.server.getLehrerStammdaten(api.schema, auswahl.id);
-		this.lehrerListeManager.setDaten(daten);
-		const personaldaten = (this.lehrerListeManager.hasDaten() && hattePersonaldaten)
-			? await api.server.getLehrerPersonaldaten(api.schema, this.lehrerListeManager.auswahl().id)
+	protected async updateDaten(daten: LehrerStammdaten | null) {
+		const hattePersonaldaten = this.manager.hasPersonalDaten();
+		this.manager.setDaten(daten);
+		const personaldaten = (this.manager.hasDaten() && hattePersonaldaten)
+			? await api.server.getLehrerPersonaldaten(api.schema, this.manager.auswahl().id)
 			: null;
-		this.lehrerListeManager.setPersonalDaten(personaldaten);
-		this.commit();
+		this.manager.setPersonalDaten(personaldaten);
 	}
 
+
 	public async loadPersonaldaten() {
-		if (!this.lehrerListeManager.hasDaten())
+		if (!this.manager.hasDaten())
 			return;
-		const personaldaten = await api.server.getLehrerPersonaldaten(api.schema, this.lehrerListeManager.auswahl().id)
-		this.lehrerListeManager.setPersonalDaten(personaldaten);
+		const personaldaten = await api.server.getLehrerPersonaldaten(api.schema, this.manager.auswahl().id)
+		this.manager.setPersonalDaten(personaldaten);
 		this.commit();
 	}
 
 	public async unloadPersonaldaten() {
-		this.lehrerListeManager.setPersonalDaten(null);
+		this.manager.setPersonalDaten(null);
 		this.commit();
 	}
 
-	patchStammdaten = async (data: Partial<LehrerStammdaten>) => {
-		if (!this.lehrerListeManager.hasDaten())
-			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		const idLehrer = this.lehrerListeManager.auswahl().id;
-		const daten = this.lehrerListeManager.daten();
-		await api.server.patchLehrerStammdaten(data, api.schema, idLehrer);
-		Object.assign(daten, data);
-		this.lehrerListeManager.setDaten(daten);
-		this.commit();
+	protected async doPatch(data : Partial<LehrerStammdaten>, id: number) : Promise<void> {
+		await api.server.patchLehrerStammdaten(data, api.schema, id);
 	}
 
 	patchPersonaldaten = async (data: Partial<LehrerPersonaldaten>) => {
-		if (!this.lehrerListeManager.hasPersonalDaten())
+		if (!this.manager.hasPersonalDaten())
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		const personaldaten = this.lehrerListeManager.personalDaten();
+		const personaldaten = this.manager.personalDaten();
 		await api.server.patchLehrerPersonaldaten(data, api.schema, personaldaten.id);
 		Object.assign(personaldaten, data);
-		this.lehrerListeManager.setPersonalDaten(personaldaten);
+		this.manager.setPersonalDaten(personaldaten);
 		this.commit();
 	}
 
 	patchPersonalAbschnittsdaten = async (data: Partial<LehrerPersonalabschnittsdaten>, id: number) => {
-		if (!this.lehrerListeManager.hasPersonalDaten())
+		if (!this.manager.hasPersonalDaten())
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		const abschnittsdaten = this.lehrerListeManager.getAbschnittById(id);
+		const abschnittsdaten = this.manager.getAbschnittById(id);
 		if (abschnittsdaten === null)
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten mit der ID " + id.toString() + " geladen.");
 		await api.server.patchLehrerPersonalabschnittsdaten(data, api.schema, abschnittsdaten.id);
@@ -166,197 +128,106 @@ export class RouteDataLehrer extends RouteData<RouteStateLehrer> {
 	}
 
 	addLehramt = async (eintrag: LehrerLehramtEintrag) => {
-		if (!this.lehrerListeManager.hasPersonalDaten())
+		if (!this.manager.hasPersonalDaten())
 			throw new DeveloperNotificationException("Lehrämter können nur hinzugefügt werden, wenn gültige Personal-Daten geladen sind.");
 		// TODO API-Aufruf ...
 		console.log("Hinzufügen von Lehrämtern noch nicht implementiert");
-		this.lehrerListeManager.personalDaten().lehraemter.add(eintrag);
+		this.manager.personalDaten().lehraemter.add(eintrag);
 		this.commit();
 	}
 
 	removeLehraemter = async (eintraege: List<LehrerLehramtEintrag>) => {
-		if (!this.lehrerListeManager.hasPersonalDaten())
+		if (!this.manager.hasPersonalDaten())
 			throw new DeveloperNotificationException("Lehrämter können nur entfernt werden, wenn gültige Personal-Daten geladen sind.");
 		// TODO API-Aufruf ...
 		console.log("Entfernen von Lehrämtern noch nicht implementiert");
-		this.lehrerListeManager.personalDaten().lehraemter.removeAll(eintraege);
+		this.manager.personalDaten().lehraemter.removeAll(eintraege);
 		this.commit();
 	}
 
 	patchLehramtAnerkennung = async (eintrag: LehrerLehramtEintrag, anerkennung: LehrerLehramtAnerkennung | null) => {
-		if (!this.lehrerListeManager.hasPersonalDaten())
+		if (!this.manager.hasPersonalDaten())
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		// TODO API-Aufruf mit idAnerkennungsgrund ...
 		console.log("Anpassen von Lehrämtern noch nicht implementiert");
-		Object.assign(eintrag, { idAnerkennungsgrund: anerkennung?.daten(this.lehrerListeManager.getSchuljahr())?.id ?? null });
+		Object.assign(eintrag, { idAnerkennungsgrund: anerkennung?.daten(this.manager.getSchuljahr())?.id ?? null });
 		this.commit();
 	}
 
 	addLehrbefaehigung = async (eintrag: LehrerLehrbefaehigungEintrag) => {
-		if (!this.lehrerListeManager.hasPersonalDaten())
+		if (!this.manager.hasPersonalDaten())
 			throw new DeveloperNotificationException("Lehrbefähigungen können nur hinzugefügt werden, wenn gültige Personal-Daten geladen sind.");
 		// TODO API-Aufruf ...
 		console.log("Hinzufügen von Lehrbefähigungen noch nicht implementiert");
-		this.lehrerListeManager.personalDaten().lehrbefaehigungen.add(eintrag);
+		this.manager.personalDaten().lehrbefaehigungen.add(eintrag);
 		this.commit();
 	}
 
 	removeLehrbefaehigungen = async (eintraege: List<LehrerLehrbefaehigungEintrag>) => {
-		if (!this.lehrerListeManager.hasPersonalDaten())
+		if (!this.manager.hasPersonalDaten())
 			throw new DeveloperNotificationException("Lehrbefähigungen können nur entfernt werden, wenn gültige Personal-Daten geladen sind.");
 		// TODO API-Aufruf ...
 		console.log("Entfernen von Lehrbefähigungen noch nicht implementiert");
-		this.lehrerListeManager.personalDaten().lehrbefaehigungen.removeAll(eintraege);
+		this.manager.personalDaten().lehrbefaehigungen.removeAll(eintraege);
 		this.commit();
 	}
 
 	patchLehrbefaehigungAnerkennung = async (eintrag: LehrerLehrbefaehigungEintrag, anerkennung: LehrerLehrbefaehigungAnerkennung | null) => {
-		if (!this.lehrerListeManager.hasPersonalDaten())
+		if (!this.manager.hasPersonalDaten())
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		// TODO API-Aufruf mit idAnerkennungsgrund ...
 		console.log("Anpassen von Lehrbefähigungen noch nicht implementiert");
-		Object.assign(eintrag, { idAnerkennungsgrund: anerkennung?.daten(this.lehrerListeManager.getSchuljahr())?.id ?? null });
+		Object.assign(eintrag, { idAnerkennungsgrund: anerkennung?.daten(this.manager.getSchuljahr())?.id ?? null });
 		this.commit();
 	}
 
 	addFachrichtung = async (eintrag: LehrerFachrichtungEintrag) => {
-		if (!this.lehrerListeManager.hasPersonalDaten())
+		if (!this.manager.hasPersonalDaten())
 			throw new DeveloperNotificationException("Fachrichtungen können nur hinzugefügt werden, wenn gültige Personal-Daten geladen sind.");
 		// TODO API-Aufruf ...
 		console.log("Hinzufügen von Fachrichtungen noch nicht implementiert");
-		this.lehrerListeManager.personalDaten().fachrichtungen.add(eintrag);
+		this.manager.personalDaten().fachrichtungen.add(eintrag);
 		this.commit();
 	}
 
 	removeFachrichtungen = async (eintraege: List<LehrerFachrichtungEintrag>) => {
-		if (!this.lehrerListeManager.hasPersonalDaten())
+		if (!this.manager.hasPersonalDaten())
 			throw new DeveloperNotificationException("Fachrichtungen können nur entfernt werden, wenn gültige Personal-Daten geladen sind.");
 		// TODO API-Aufruf ...
 		console.log("Entfernen von Fachrichtungen noch nicht implementiert");
-		this.lehrerListeManager.personalDaten().fachrichtungen.removeAll(eintraege);
+		this.manager.personalDaten().fachrichtungen.removeAll(eintraege);
 		this.commit();
 	}
 
 	patchFachrichtungAnerkennung = async (eintrag: LehrerFachrichtungEintrag, anerkennung: LehrerFachrichtungAnerkennung | null) => {
-		if (!this.lehrerListeManager.hasPersonalDaten())
+		if (!this.manager.hasPersonalDaten())
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		// TODO API-Aufruf mit idAnerkennungsgrund ...
 		console.log("Anpassen von Fachrichtungen noch nicht implementiert");
-		Object.assign(eintrag, { idAnerkennungsgrund: anerkennung?.daten(this.lehrerListeManager.getSchuljahr())?.id ?? null });
+		Object.assign(eintrag, { idAnerkennungsgrund: anerkennung?.daten(this.manager.getSchuljahr())?.id ?? null });
 		this.commit();
 	}
 
-	private setDefaults() {
-		this.activeViewType = ViewType.DEFAULT;
-		this._state.value.view = (this._state.value.view?.name === this.view.name) ? this.view : routeLehrerIndividualdaten;
+
+	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {
+		// TODO Implementierung der Delete-Methode analog zu RouteSchueler
+		const responses = new ArrayList<SimpleOperationResponse>();
+		for (const id of ids) {
+			const resp = new SimpleOperationResponse();
+			resp.id = id;
+			resp.success = false;
+			resp.log = new ArrayList<string>();
+			responses.add(resp);
+		}
+		return responses;
 	}
 
-	public async setEintrag(lehrer: LehrerListeEintrag | null) {
-		if ((lehrer === null) && (!this.lehrerListeManager.hasDaten()))
-			return;
-		if ((lehrer === null) || (this.lehrerListeManager.liste.list().isEmpty())) {
-			this.lehrerListeManager.setDaten(null);
-			this.commit();
-			return;
-		}
-		if (this.lehrerListeManager.hasDaten() && (lehrer.id === this.lehrerListeManager.auswahl().id))
-			return;
-
-		let daten = this.lehrerListeManager.liste.get(lehrer.id);
-		if (daten === null)
-			daten = this.lehrerListeManager.filtered().isEmpty() ? null : this.lehrerListeManager.filtered().get(0);
-
-		if (daten !== null){
-			const lehrerStammdaten = await api.server.getLehrerStammdaten(api.schema, daten.id)
-			this.lehrerListeManager.setDaten(lehrerStammdaten);
-
-			const personaldaten = this.lehrerListeManager.hasPersonalDaten() ? await api.server.getLehrerPersonaldaten(api.schema, this.lehrerListeManager.auswahl().id) : null;
-			this.lehrerListeManager.setPersonalDaten(personaldaten);
-		}
-
-		this.commit();
-	}
-
-	gotoDefaultView = async (eintragId?: number | null) => {
-		if ((eintragId !== null) && (eintragId !== undefined) && this.lehrerListeManager.liste.has(eintragId)) {
-			const route = [ routeLehrerPersonaldaten.name, routeLehrerStundenplan.name, routeLehrerUnterrichtsdaten.name, routeLehrerIndividualdaten.name, routeLehrerStundenplanDaten.name ].includes(this.view.name)
-				? this.view.getRoute({ id: eintragId }) : routeLehrerIndividualdaten.getRoute({ id: eintragId })
-			const result = await RouteManager.doRoute(route);
-			if (result === RoutingStatus.STOPPED_ROUTING_IS_ACTIVE)
-				await this.setEintrag(this.lehrerListeManager.liste.get(eintragId));
-
-			if ((result === RoutingStatus.SUCCESS) || (result === RoutingStatus.STOPPED_ROUTING_IS_ACTIVE))
-				this.setDefaults();
-
-			this.commit();
-			return;
-		}
-
-		// Default Eintrag selektieren, wenn keine ID übergeben wurde
-		const filtered = this.lehrerListeManager.filtered();
-		if (!filtered.isEmpty()) {
-			const auswahl = this.lehrerListeManager.filtered().getFirst();
-			const route = routeLehrerIndividualdaten.getRoute({ id: auswahl.id });
-			const result = await RouteManager.doRoute(route);
-			if ((result === RoutingStatus.SUCCESS) || (result === RoutingStatus.STOPPED_ROUTING_IS_ACTIVE))
-				this.setDefaults();
-
-			await this.setEintrag(auswahl);
-			this.commit();
-		}
-	}
-
-	gotoGruppenprozessView = async (navigate: boolean) => {
-		if (this.activeViewType === ViewType.GRUPPENPROZESSE || (this._state.value.view === routeLehrerGruppenprozesse)) {
-			this.commit();
-			return;
-		}
-
-		this.activeViewType = ViewType.GRUPPENPROZESSE;
-
-		if (navigate)
-			await RouteManager.doRoute(routeLehrerGruppenprozesse.getRoute());
-
-		this._state.value.view = routeLehrerGruppenprozesse;
-		this.lehrerListeManager.setDaten(null);
-		this.commit();
-	}
-
-	gotoHinzufuegenView = async (navigate: boolean) => {
-		if (this.activeViewType === ViewType.HINZUFUEGEN || (this._state.value.view === routeLehrerNeu)) {
-			this.commit();
-			return;
-		}
-
-		this.activeViewType = ViewType.HINZUFUEGEN;
-
-		if (navigate) {
-			const result = await RouteManager.doRoute(routeLehrerNeu.getRoute());
-			if (result === RoutingStatus.SUCCESS)
-				this.lehrerListeManager.liste.auswahlClear();
-		}
-
-		this._state.value.view = routeLehrerNeu;
-		this.lehrerListeManager.setDaten(null);
-		this.commit();
-	}
-
-	deleteLehrer = async (): Promise<[boolean, List<string | null>]> => {
-		return [false, new ArrayList()];
+	protected deleteMessage(id: number, lehrer: LehrerListeEintrag | null) : string {
+		return `Lehrer ${(lehrer?.vorname ?? '???') + ' ' + (lehrer?.nachname ?? '???')} (ID: ${id.toString()}) wurde erfolgreich gelöscht.`;
 	}
 
 	deleteLehrerCheck = (): [boolean, List<string>] => {
 		return [false, new ArrayList()];
-	}
-
-	setFilter = async () => {
-		if (!this.lehrerListeManager.hasDaten() && (this.activeViewType === ViewType.DEFAULT)) {
-			const listFiltered = this.lehrerListeManager.filtered();
-			if (!listFiltered.isEmpty()) {
-				return await this.gotoDefaultView(listFiltered.get(0).id);
-			}
-		}
-		this.commit();
 	}
 
 }

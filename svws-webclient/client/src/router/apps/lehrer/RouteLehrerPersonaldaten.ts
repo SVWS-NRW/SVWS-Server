@@ -24,10 +24,10 @@ export class RouteLehrerPersonaldaten extends RouteNode<any, RouteLehrer> {
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		try {
-			if (!routeLehrer.data.lehrerListeManager.hasDaten())
+			if (!routeLehrer.data.manager.hasDaten())
 				return routeLehrer.getRoute();
 			const { id } = RouteNode.getIntParams(to_params, ["id"]);
-			if ((!routeLehrer.data.lehrerListeManager.hasPersonalDaten()) || (id !== routeLehrer.data.lehrerListeManager.personalDaten().id))
+			if ((!routeLehrer.data.manager.hasPersonalDaten()) || (id !== routeLehrer.data.manager.personalDaten().id))
 				await routeLehrer.data.loadPersonaldaten();
 		} catch (e) {
 			return routeError.getErrorRoute(e as DeveloperNotificationException);
@@ -43,7 +43,7 @@ export class RouteLehrerPersonaldaten extends RouteNode<any, RouteLehrer> {
 			schulform: api.schulform,
 			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
-			lehrerListeManager: () => routeLehrer.data.lehrerListeManager,
+			lehrerListeManager: () => routeLehrer.data.manager,
 			patch: routeLehrer.data.patchPersonaldaten,
 			patchAbschnittsdaten: routeLehrer.data.patchPersonalAbschnittsdaten,
 			patchLehramtAnerkennung: routeLehrer.data.patchLehramtAnerkennung,

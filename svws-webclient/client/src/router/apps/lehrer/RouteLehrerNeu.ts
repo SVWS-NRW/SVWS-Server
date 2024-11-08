@@ -28,7 +28,7 @@ export class RouteLehrerNeu extends RouteNode<any, RouteLehrer> {
 
 	public getProps(to: RouteLocationNormalized): LehrerNeuProps {
 		return {
-			lehrerListeManager: () => routeLehrer.data.lehrerListeManager,
+			lehrerListeManager: () => routeLehrer.data.manager,
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 		};

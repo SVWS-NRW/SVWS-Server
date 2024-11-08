@@ -28,7 +28,7 @@ export class RouteSchuelerGruppenprozesse extends RouteNode<any, RouteSchueler> 
 		return {
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			schuelerListeManager: () => routeSchueler.data.schuelerListeManager,
-			deleteSchueler: routeSchueler.data.deleteSchueler,
+			deleteSchueler: routeSchueler.data.delete,
 			deleteSchuelerCheck: routeSchueler.data.deleteSchuelerCheck,
 		};
 	}
