@@ -1,9 +1,14 @@
-import type { JahrgangsDaten } from "@core";
+import type { BenutzerKompetenz, JahrgangListeManager, ServerMode } from "@core";
+import type { ViewType } from "@ui";
 import type { AbschnittAuswahlDaten } from "@comp";
 
 export interface JahrgaengeAuswahlProps {
-	auswahl: () => JahrgangsDaten | undefined;
-	mapKatalogeintraege: () => Map<number, JahrgangsDaten>;
-	gotoEintrag: (eintrag: JahrgangsDaten) => Promise<void>;
+	serverMode: ServerMode;
+	benutzerKompetenzen: Set<BenutzerKompetenz>;
+	jahrgangListeManager: () => JahrgangListeManager;
 	schuljahresabschnittsauswahl: () => AbschnittAuswahlDaten;
+	gotoDefaultView: (eintragId?: number | null) => Promise<void>;
+	gotoGruppenprozessView: (navigate: boolean) => Promise<void>;
+	gotoHinzufuegenView: (navigate: boolean) => Promise<void>;
+	activeViewType: ViewType;
 }

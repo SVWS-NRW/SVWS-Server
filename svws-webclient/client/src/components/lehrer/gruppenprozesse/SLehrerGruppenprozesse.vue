@@ -4,7 +4,7 @@
 			<svws-ui-action-button title="Löschen" description="Ausgewählte Lehrer werden gelöscht." icon="i-ri-delete-bin-line"
 				:action-function="entferneLehrer" action-label="Löschen" :is-loading="loading" :is-active="currentAction === 'delete'"
 				:action-disabled="!preConditionCheck[0]" @click="toggleDeleteLehrer">
-				<span v-if="preConditionCheck[0] === true">Alle ausgewählten Lehrer sind bereit zum Löschen.</span>
+				<span v-if="preConditionCheck[0]">Alle ausgewählten Lehrer sind bereit zum Löschen.</span>
 				<template v-else v-for="message in preConditionCheck[1]" :key="message">
 					<span class="text-error"> {{ message }} <br> </span>
 				</template>

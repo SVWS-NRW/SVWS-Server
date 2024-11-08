@@ -1,7 +1,8 @@
-import type { JahrgangsDaten } from "@core";
-import type { TabManager } from "@ui";
+import type { TabManager, ViewType } from "@ui";
+import type { JahrgangListeManager } from "@core";
 
 export interface JahrgaengeAppProps {
-	auswahl: () => JahrgangsDaten | undefined;
+	jahrgangListeManager: () => JahrgangListeManager;
 	tabManager: () => TabManager;
+	activeViewType: ViewType;
 }

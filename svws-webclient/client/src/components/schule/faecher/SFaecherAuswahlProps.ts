@@ -1,9 +1,10 @@
-import type { FachListeManager, ServerMode } from "@core";
+import type { BenutzerKompetenz, FachListeManager, ServerMode } from "@core";
 import type { AbschnittAuswahlDaten } from "@comp";
 import type { ViewType } from "@ui";
 
 export interface FaecherAuswahlProps {
-	mode: ServerMode;
+	serverMode: ServerMode;
+	benutzerKompetenzen: Set<BenutzerKompetenz>;
 	fachListeManager: () => FachListeManager;
 	schuljahresabschnittsauswahl: () => AbschnittAuswahlDaten;
 	setFilter: () => Promise<void>;

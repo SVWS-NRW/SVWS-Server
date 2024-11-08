@@ -1,10 +1,10 @@
 <template>
 	<div class="page--content">
-		<div class="flex flex-col gap-y-16 lg:gap-y-16" v-if="mode === ServerMode.DEV">
+		<div class="flex flex-col gap-y-16 lg:gap-y-16" v-if="ServerMode.DEV.checkServerMode(serverMode)">
 			<svws-ui-action-button title="Löschen" description="Ausgewählte Fächer werden gelöscht." icon="i-ri-delete-bin-line"
 				:action-function="entferneFaecher" action-label="Löschen" :is-loading="loading" :is-active="currentAction === 'delete'"
 				:action-disabled="!preConditionCheck[0]" @click="toggleDeleteFaecher">
-				<span v-if="preConditionCheck[0] === true">Alle ausgewählten Fächer sind bereit zum Löschen.</span>
+				<span v-if="preConditionCheck[0]">Alle ausgewählten Fächer sind bereit zum Löschen.</span>
 				<template v-else v-for="message in preConditionCheck[1]" :key="message">
 					<span class="text-error"> {{ message }} <br> </span>
 				</template>
@@ -14,6 +14,11 @@
 					<svws-ui-button v-if="status !== undefined" type="transparent" @click="clearLog" title="Log verwerfen">Log verwerfen</svws-ui-button>
 				</template>
 			</log-box>
+		</div>
+		<div v-else>
+			<svws-ui-todo title="Fächer - Gruppenprozesse">
+				Dieser Bereich ist noch in Entwicklung. Hier werden später Gruppenprozesse zu den Fächern vorhanden sein.
+			</svws-ui-todo>
 		</div>
 	</div>
 </template>

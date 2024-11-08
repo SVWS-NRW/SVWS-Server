@@ -24,7 +24,7 @@
 				<template #cell(idJahrgaenge)="{ value }"> {{ getJahrgangsKuerzel(value) }} </template>
 				<template #cell(schueler)="{ value }">{{ value.size() }}</template>
 				<template #actions>
-					<svws-ui-tooltip position="bottom" v-if="ServerMode.DEV.checkServerMode(serverMode)">
+					<svws-ui-tooltip position="bottom" v-if="ServerMode.DEV.checkServerMode(serverMode) && hatKompetenzAendern">
 						<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="props.gotoHinzufuegenView(true)" :has-focus="rowsFiltered.length === 0">
 							<span class="icon i-ri-add-line" />
 						</svws-ui-button>
@@ -43,12 +43,14 @@
 	import { ref, computed } from "vue";
 	import type { KurseAuswahlProps } from "./SKurseAuswahlProps";
 	import { ViewType, type DataTableColumn, type SortByAndOrder } from "@ui";
-	import type { ArrayList, FachDaten, JahrgangsDaten, KursDaten, LehrerListeEintrag, SchuelerListeEintrag, Schulgliederung } from "@core";
-	import { ServerMode } from "@core";
+	import type { FachDaten, JahrgangsDaten, KursDaten, LehrerListeEintrag, List, SchuelerListeEintrag, Schulgliederung } from "@core";
+	import { ServerMode, BenutzerKompetenz } from "@core";
 
 	const props = defineProps<KurseAuswahlProps>();
 
 	const schuljahr = computed<number>(() => props.schuljahresabschnittsauswahl().aktuell.schuljahr);
+
+	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN));
 
 	const columns: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc"},
@@ -87,7 +89,7 @@
 		return eintrag.kuerzel ?? "";
 	}
 
-	const find = (items: Iterable<LehrerListeEintrag | JahrgangsDaten | FachDaten>, search: string) => {
+	function find(items: Iterable<LehrerListeEintrag | JahrgangsDaten | FachDaten>, search: string) {
 		const list = [];
 		for (const i of items)
 			if ((i.kuerzel !== null) && i.kuerzel.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
@@ -197,8 +199,11 @@
 			|| props.kursListeManager().jahrgaenge.auswahlExists());
 	}
 
-	const clickedEintrag = computed(() => ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN)) ? null
-		: (props.kursListeManager().hasDaten() ? props.kursListeManager().auswahl() : null));
+	const clickedEintrag = computed(() => {
+		if ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN))
+			return null;
+		return props.kursListeManager().hasDaten() ? props.kursListeManager().auswahl() : null;
+	});
 
 	async function setAuswahl(items : KursDaten[]) {
 		props.kursListeManager().liste.auswahlClear();
@@ -224,22 +229,12 @@
 	/**
 	 * Ermittel eine komma-separierte Liste der Kürzel der Jahrgänge mit den übergebenen IDs.
 	 *
-	 * @param jahrgaenge   die Liste von Jahrgangs-IDs
+	 * @param jahrgaengeIds   die Liste von Jahrgangs-IDs
 	 */
-	function getJahrgangsKuerzel(jahrgaenge: ArrayList<number>) : string {
-		// Prüfe zunächst, ob die Liste der Jahrgänge von dem Kurs einen Jahrgang der Map beinhaltet.
-		let found = false;
-		let result = "";
-		for (const jg of jahrgaenge) {
-			const jahrgang = props.kursListeManager().jahrgaenge.get(jg);
-			if ((jahrgang !== null) && (jahrgang.kuerzel !== null)) {
-				if (found)
-					result += ",";
-				result += jahrgang.kuerzel;
-				found = true;
-			}
-		}
-		return result;
+	function getJahrgangsKuerzel(jahrgaengeIds: List<number>): string {
+		return [...jahrgaengeIds].map(jgId => props.kursListeManager().jahrgaenge.get(jgId)?.kuerzel)
+			.filter(jgKuerzel => (jgKuerzel !== undefined) && (jgKuerzel !== ''))
+			.join(',');
 	}
 
 </script>

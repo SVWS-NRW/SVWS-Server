@@ -122,6 +122,7 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 	public getAuswahlProps(to: RouteLocationNormalized): SchuelerAuswahlProps {
 		return {
 			serverMode: api.mode,
+			benutzerKompetenzen: api.benutzerKompetenzen,
 			schuelerListeManager: () => this.data.schuelerListeManager,
 			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(true),
 			gotoDefaultView: this.data.gotoDefaultView,

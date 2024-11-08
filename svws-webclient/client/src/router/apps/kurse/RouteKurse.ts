@@ -87,6 +87,7 @@ export class RouteKurse extends RouteNode<RouteDataKurse, RouteApp> {
 	public getAuswahlProps(to: RouteLocationNormalized): KurseAuswahlProps {
 		return {
 			serverMode: api.mode,
+			benutzerKompetenzen: api.benutzerKompetenzen,
 			kursListeManager: () => this.data.kursListeManager,
 			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(true),
 			gotoDefaultView: this.data.gotoDefaultView,

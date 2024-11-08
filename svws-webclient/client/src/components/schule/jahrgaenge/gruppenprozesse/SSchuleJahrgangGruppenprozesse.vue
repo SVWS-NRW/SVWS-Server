@@ -1,10 +1,10 @@
 <template>
 	<div class="page--content">
 		<div class="flex flex-col gap-y-16 lg:gap-y-16" v-if="ServerMode.DEV.checkServerMode(serverMode)">
-			<svws-ui-action-button title="Löschen" description="Ausgewählte Kurse werden gelöscht." icon="i-ri-delete-bin-line"
-				:action-function="entferneKurse" action-label="Löschen" :is-loading="loading" :is-active="currentAction === 'delete'"
-				:action-disabled="!preConditionCheck[0]" @click="toggleDeleteKurse">
-				<span v-if="preConditionCheck[0]">Alle ausgewählten Kurse sind bereit zum Löschen.</span>
+			<svws-ui-action-button title="Löschen" description="Ausgewählte Jahrgänge werden gelöscht." icon="i-ri-delete-bin-line"
+				:action-function="entferneJahrgaenge" action-label="Löschen" :is-loading="loading" :is-active="currentAction === 'delete'"
+				:action-disabled="!preConditionCheck[0]" @click="toggleDeleteJahrgaenge">
+				<span v-if="preConditionCheck[0]">Alle ausgewählten Jahrgänge sind bereit zum Löschen.</span>
 				<template v-else v-for="message in preConditionCheck[1]" :key="message">
 					<span class="text-error"> {{ message }} <br> </span>
 				</template>
@@ -16,8 +16,8 @@
 			</log-box>
 		</div>
 		<div v-else>
-			<svws-ui-todo title="Kurse - Gruppenprozesse">
-				Dieser Bereich ist noch in Entwicklung. Hier werden später Gruppenprozesse zu den Kursen vorhanden sein.
+			<svws-ui-todo title="Jahrgänge - Gruppenprozesse">
+				Dieser Bereich ist noch in Entwicklung. Hier werden später Gruppenprozesse zu den Jahrgängen vorhanden sein.
 			</svws-ui-todo>
 		</div>
 	</div>
@@ -26,11 +26,11 @@
 <script setup lang="ts">
 
 	import { ref, computed } from "vue";
-	import type { KurseGruppenprozesseProps } from "./SKurseGruppenprozesseProps";
+	import type { SchuleJahrgangGruppenprozesseProps } from "./SSchuleJahrgangGruppenprozesseProps";
 	import type { List } from "@core";
 	import { ServerMode } from "@core";
 
-	const props = defineProps<KurseGruppenprozesseProps>();
+	const props = defineProps<SchuleJahrgangGruppenprozesseProps>();
 
 	const currentAction = ref<string>('');
 	const loading = ref<boolean>(false);
@@ -39,11 +39,11 @@
 
 	const preConditionCheck = computed(() => {
 		if (currentAction.value === 'delete')
-			return props.deleteKurseCheck();
+			return props.deleteJahrgaengeCheck();
 		return [false, []];
 	})
 
-	function toggleDeleteKurse() {
+	function toggleDeleteJahrgaenge() {
 		currentAction.value = currentAction.value === 'delete' ? '' : 'delete';
 	}
 
@@ -53,10 +53,10 @@
 		status.value = undefined;
 	}
 
-	async function entferneKurse() {
+	async function entferneJahrgaenge() {
 		loading.value = true;
 
-		const [delStatus, logMessages] = await props.deleteKurse();
+		const [delStatus, logMessages] = await props.deleteJahrgaenge();
 		logs.value = logMessages;
 		status.value = delStatus;
 		currentAction.value = '';

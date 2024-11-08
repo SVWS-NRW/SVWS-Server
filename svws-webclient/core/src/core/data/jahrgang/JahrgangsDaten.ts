@@ -21,7 +21,7 @@ export class JahrgangsDaten extends JavaObject {
 	/**
 	 * Der Name / die Bezeichnung des Jahrgangs.
 	 */
-	public bezeichnung : string | null = null;
+	public bezeichnung : string = "";
 
 	/**
 	 * Die Sortierreihenfolge des Jahrgangslisten-Eintrags.
@@ -86,7 +86,9 @@ export class JahrgangsDaten extends JavaObject {
 		if (obj.kuerzelStatistik === undefined)
 			throw new Error('invalid json format, missing attribute kuerzelStatistik');
 		result.kuerzelStatistik = obj.kuerzelStatistik;
-		result.bezeichnung = (obj.bezeichnung === undefined) ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
+		if (obj.bezeichnung === undefined)
+			throw new Error('invalid json format, missing attribute bezeichnung');
+		result.bezeichnung = obj.bezeichnung;
 		if (obj.sortierung === undefined)
 			throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
@@ -106,7 +108,7 @@ export class JahrgangsDaten extends JavaObject {
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		result += '"kuerzelStatistik" : ' + JSON.stringify(obj.kuerzelStatistik) + ',';
-		result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"kuerzelSchulgliederung" : ' + ((obj.kuerzelSchulgliederung === null) ? 'null' : JSON.stringify(obj.kuerzelSchulgliederung)) + ',';
 		result += '"idFolgejahrgang" : ' + ((obj.idFolgejahrgang === null) ? 'null' : obj.idFolgejahrgang.toString()) + ',';
@@ -131,7 +133,7 @@ export class JahrgangsDaten extends JavaObject {
 			result += '"kuerzelStatistik" : ' + JSON.stringify(obj.kuerzelStatistik) + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		}
 		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung.toString() + ',';

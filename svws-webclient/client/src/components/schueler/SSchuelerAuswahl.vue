@@ -41,7 +41,7 @@
 				</template>
 
 				<template #actions>
-					<svws-ui-tooltip position="bottom" v-if="ServerMode.DEV.checkServerMode(serverMode)">
+					<svws-ui-tooltip position="bottom" v-if="ServerMode.DEV.checkServerMode(serverMode) && hatKompetenzAendern">
 						<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="startCreationMode" :has-focus="rowsFiltered.length === 0">
 							<span class="icon i-ri-add-line" />
 						</svws-ui-button>
@@ -78,12 +78,14 @@
 
 	import { computed, ref, shallowRef, watch } from "vue";
 	import type { SchuelerListeEintrag, JahrgangsDaten, KlassenDaten, Schulgliederung, KursDaten } from "@core";
-	import { ServerMode, SchuelerStatus } from "@core";
+	import { ServerMode, SchuelerStatus, BenutzerKompetenz } from "@core";
 	import type { SortByAndOrder } from "@ui";
 	import { ViewType } from "@ui";
 	import type { SchuelerAuswahlProps } from "./SSchuelerAuswahlProps";
 
 	const props = defineProps<SchuelerAuswahlProps>();
+
+	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 
 	const _showModalGruppenaktionen = ref<boolean>(false);
 	const showModalGruppenaktionen = () => _showModalGruppenaktionen;
@@ -275,10 +277,9 @@
 	}
 
 	const clickedEintrag = computed(() => {
-		if ((props.activeViewType !== ViewType.GRUPPENPROZESSE) && (props.activeViewType !== ViewType.HINZUFUEGEN) && props.schuelerListeManager().hasDaten())
-			return props.schuelerListeManager().auswahl();
-		else
+		if ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN))
 			return null;
+		return props.schuelerListeManager().hasDaten() ? props.schuelerListeManager().auswahl() : null;
 	});
 
 </script>

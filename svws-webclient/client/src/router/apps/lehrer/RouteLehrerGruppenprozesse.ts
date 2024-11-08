@@ -14,7 +14,7 @@ const SLehrerGruppenprozesse = () => import("~/components/lehrer/gruppenprozesse
 export class RouteLehrerGruppenprozesse extends RouteNode<any, RouteLehrer> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.LEHRERDATEN_AENDERN ], "lehrer.gruppenprozesse", "gruppenprozesse", SLehrerGruppenprozesse);
+		super(Schulform.values(), [ BenutzerKompetenz.LEHRERDATEN_ANSEHEN ], "lehrer.gruppenprozesse", "gruppenprozesse", SLehrerGruppenprozesse);
 		super.types = new Set([ ViewType.GRUPPENPROZESSE ]);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);

@@ -26,7 +26,7 @@ const SFaecherApp = () => import("~/components/schule/faecher/SFaecherApp.vue")
 export class RouteSchuleFaecher extends RouteNode<RouteDataSchuleFaecher, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.faecher", "schule/faecher/:id(\\d+)?", SFaecherApp, new RouteDataSchuleFaecher());
+		super(Schulform.values(), [ BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN ], "schule.faecher", "schule/faecher/:id(\\d+)?", SFaecherApp, new RouteDataSchuleFaecher());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Fächer";
@@ -86,7 +86,8 @@ export class RouteSchuleFaecher extends RouteNode<RouteDataSchuleFaecher, RouteA
 
 	public getAuswahlProps(to: RouteLocationNormalized): FaecherAuswahlProps {
 		return {
-			mode: api.mode,
+			serverMode: api.mode,
+			benutzerKompetenzen: api.benutzerKompetenzen,
 			fachListeManager: () => this.data.fachListeManager,
 			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(false),
 			setFilter: this.data.setFilter,

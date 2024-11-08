@@ -19,7 +19,7 @@
 							<svws-ui-button type="secondary" @click="openModal">Standardsortierung Sek II anwenden …</svws-ui-button>
 						</s-faecher-auswahl-sortierung-sek-i-i-modal>
 					</template>
-					<svws-ui-tooltip position="bottom" v-if="mode === ServerMode.DEV">
+					<svws-ui-tooltip position="bottom" v-if="ServerMode.DEV.checkServerMode(serverMode) && hatKompetenzAendern">
 						<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="gotoHinzufuegenView(true)" :has-focus="fachListeManager().filtered().size() === 0">
 							<span class="icon i-ri-add-line" />
 						</svws-ui-button>
@@ -37,11 +37,12 @@
 
 	import { computed } from "vue";
 	import type { FaecherAuswahlProps } from "./SFaecherAuswahlProps";
-	import type { FachDaten } from "@core";
 	import { ViewType } from "@ui";
-	import { ServerMode } from "@core";
+	import { ServerMode, BenutzerKompetenz, type FachDaten } from "@core";
 
 	const props = defineProps<FaecherAuswahlProps>();
+
+	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 
 	const schuljahr = computed(() => props.schuljahresabschnittsauswahl().aktuell.schuljahr)
 
@@ -58,8 +59,11 @@
 		}
 	});
 
-	const clickedEintrag = computed(() => ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN)) ? null
-		: (props.fachListeManager().hasDaten() ? props.fachListeManager().auswahl() : null));
+	const clickedEintrag = computed(() => {
+		if ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN))
+			return null;
+		return props.fachListeManager().hasDaten() ? props.fachListeManager().auswahl() : null;
+	});
 
 	async function setAuswahl(items : FachDaten[]) {
 		props.fachListeManager().liste.auswahlClear();

@@ -1,7 +1,7 @@
 import type { Schulform, List, Schulgliederung, FachListeManager, ServerMode } from "@core";
 
 export interface SchuleFachGruppenprozesseProps {
-	mode: ServerMode;
+	serverMode: ServerMode;
 	schulform: Schulform;
 	schulgliederungen: List<Schulgliederung>;
 	fachListeManager: () => FachListeManager;

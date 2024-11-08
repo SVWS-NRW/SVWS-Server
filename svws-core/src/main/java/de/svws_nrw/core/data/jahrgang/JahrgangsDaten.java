@@ -28,7 +28,7 @@ public class JahrgangsDaten {
 
 	/** Der Name / die Bezeichnung des Jahrgangs. */
 	@Schema(description = "der Name / die Bezeichnung des Jahrgangs", example = "Einführungsphase")
-	public String bezeichnung;
+	public @NotNull String bezeichnung = "";
 
 	/** Die Sortierreihenfolge des Jahrgangslisten-Eintrags. */
 	@Schema(description = "die Sortierreihenfolge des Jahrgangslisten-Eintrags", example = "1")

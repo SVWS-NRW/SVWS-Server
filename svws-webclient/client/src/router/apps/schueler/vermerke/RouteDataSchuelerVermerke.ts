@@ -71,7 +71,7 @@ export class RouteDataSchuelerVermerke extends RouteData<RouteStateSchuelerVerme
 	}
 
 	public async ladeDaten(auswahl: SchuelerListeEintrag | null) {
-		if ((auswahl === null) || (auswahl === undefined)) {
+		if (auswahl === null) {
 			this.setPatchedDefaultState({});
 		} else {
 			const schuelerVermerke = await api.server.getVermerkdaten(api.schema, auswahl.id);

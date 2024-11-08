@@ -14,7 +14,7 @@
 				<template #filterAdvanced>
 					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="klassenListeManager().jahrgaenge.list()" :item-text="text" :item-filter="find" />
 					<svws-ui-multi-select v-model="filterLehrer" title="Klassenleitung" :items="klassenListeManager().lehrer.list()" :item-text="text" :item-filter="find" />
-					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="klassenListeManager().schulgliederungen.list()" :item-text="text_schulgliederung" />
+					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="klassenListeManager().schulgliederungen.list()" :item-text="textSchulgliederung" />
 				</template>
 				<template #cell(schueler)="{value}"> {{ klassengroesse(value) }} </template>
 				<template #cell(klassenLehrer)="{value}">
@@ -32,7 +32,7 @@
 								</template>
 							</svws-ui-tooltip>
 						</s-klassen-auswahl-sortierung-modal>
-						<svws-ui-tooltip position="bottom">
+						<svws-ui-tooltip position="bottom" v-if="hatKompetenzAendern">
 							<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="gotoHinzufuegenView(true)" :has-focus="rowsFiltered.length === 0">
 								<span class="icon i-ri-add-line" />
 							</svws-ui-button>
@@ -50,13 +50,16 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { JahrgangsDaten, KlassenDaten, LehrerListeEintrag, List, SchuelerListeEintrag, Schulgliederung } from "@core";
+	import type{ JahrgangsDaten, KlassenDaten, LehrerListeEintrag, List, SchuelerListeEintrag, Schulgliederung } from "@core";
+	import { BenutzerKompetenz } from "@core";
 	import type { KlassenAuswahlProps } from "./SKlassenAuswahlProps";
 	import { ViewType } from "@ui";
 
 	const props = defineProps<KlassenAuswahlProps>();
 
 	const schuljahr = computed<number>(() => props.schuljahresabschnittsauswahl().aktuell.schuljahr);
+
+	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN));
 
 	const columns = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc", span: 0.5 },
@@ -73,11 +76,11 @@
 		// return counter;
 	})
 
-	function text(klasse: LehrerListeEintrag | JahrgangsDaten): string {
-		return klasse.kuerzel ?? "";
+	function text(eintrag: LehrerListeEintrag | JahrgangsDaten): string {
+		return eintrag.kuerzel ?? "";
 	}
 
-	const find = (items: Iterable<LehrerListeEintrag | JahrgangsDaten>, search: string) => {
+	function find(items: Iterable<LehrerListeEintrag | JahrgangsDaten>, search: string) {
 		const list = [];
 		for (const i of items)
 			if ((i.kuerzel !== null) && i.kuerzel.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
@@ -85,7 +88,7 @@
 		return list;
 	}
 
-	function text_schulgliederung(schulgliederung: Schulgliederung): string {
+	function textSchulgliederung(schulgliederung: Schulgliederung): string {
 		return schulgliederung.daten(schuljahr.value)?.kuerzel ?? '—';
 	}
 
@@ -144,8 +147,11 @@
 			|| props.klassenListeManager().jahrgaenge.auswahlExists());
 	}
 
-	const clickedEintrag = computed(() => ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN)) ? null
-		: (props.klassenListeManager().hasDaten() ? props.klassenListeManager().auswahl() : null));
+	const clickedEintrag = computed(() => {
+		if ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN))
+			return null;
+		return props.klassenListeManager().hasDaten() ? props.klassenListeManager().auswahl() : null;
+	});
 
 	async function setAuswahl(items : KlassenDaten[]) {
 		props.klassenListeManager().liste.auswahlClear();

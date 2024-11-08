@@ -13,7 +13,7 @@ const SSchuleFachGruppenprozesse = () => import("~/components/schule/faecher/gru
 export class RouteSchuleFachGruppenprozesse extends RouteNode<any, RouteSchuleFaecher> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN ], "schule.faecher.gruppenprozesse", "gruppenprozesse", SSchuleFachGruppenprozesse);
+		super(Schulform.values(), [ BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN ], "schule.faecher.gruppenprozesse", "gruppenprozesse", SSchuleFachGruppenprozesse);
 		super.types = new Set([ ViewType.GRUPPENPROZESSE ]);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
@@ -26,7 +26,7 @@ export class RouteSchuleFachGruppenprozesse extends RouteNode<any, RouteSchuleFa
 
 	public getProps(to: RouteLocationNormalized): SchuleFachGruppenprozesseProps {
 		return {
-			mode: api.mode,
+			serverMode: api.mode,
 			schulform: api.schulform,
 			schulgliederungen: api.schulgliederungen,
 			fachListeManager: () => routeSchuleFaecher.data.fachListeManager,

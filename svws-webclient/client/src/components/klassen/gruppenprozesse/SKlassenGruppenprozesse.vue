@@ -1,10 +1,10 @@
 <template>
 	<div class="page--content">
 		<div class="flex flex-col gap-y-16 lg:gap-y-16">
-			<svws-ui-action-button title="Löschen" description="Ausgewählte Klassen werden gelöscht." icon="i-ri-delete-bin-line"
+			<svws-ui-action-button v-if="hatKompetenzLoeschen" title="Löschen" description="Ausgewählte Klassen werden gelöscht." icon="i-ri-delete-bin-line"
 				:action-function="entferneKlassen" action-label="Löschen" :is-loading="loading" :is-active="currentAction === 'delete'"
 				:action-disabled="!preConditionCheck[0]" @click="toggleDeleteKlassen">
-				<span v-if="preConditionCheck[0] === true">Alle ausgewählten Klassen sind bereit zum Löschen.</span>
+				<span v-if="preConditionCheck[0]">Alle ausgewählten Klassen sind bereit zum Löschen.</span>
 				<template v-else v-for="message in preConditionCheck[1]" :key="message">
 					<span class="text-error"> {{ message }} <br> </span>
 				</template>
@@ -22,9 +22,11 @@
 
 	import { ref, computed } from "vue";
 	import type { KlassenGruppenprozesseProps } from "./SKlassenGruppenprozesseProps";
-	import type { List } from "@core";
+	import { BenutzerKompetenz, type List } from "@core";
 
 	const props = defineProps<KlassenGruppenprozesseProps>();
+
+	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN));
 
 	const currentAction = ref<string>('');
 	const loading = ref<boolean>(false);

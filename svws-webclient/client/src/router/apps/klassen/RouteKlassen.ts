@@ -94,6 +94,7 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 	public getAuswahlProps(to: RouteLocationNormalized): KlassenAuswahlProps {
 		return {
 			serverMode: api.mode,
+			benutzerKompetenzen: api.benutzerKompetenzen,
 			klassenListeManager: () => this.data.klassenListeManager,
 			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(true),
 			setFilter: this.data.setFilter,

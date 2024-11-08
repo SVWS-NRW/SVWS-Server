@@ -1,9 +1,10 @@
-import type { LehrerListeManager, ServerMode } from "@core";
+import type { BenutzerKompetenz, LehrerListeManager, ServerMode } from "@core";
 import type { AbschnittAuswahlDaten } from "@comp";
 import type { ViewType } from "@ui";
 
 export interface LehrerAuswahlProps {
 	serverMode: ServerMode;
+	benutzerKompetenzen: Set<BenutzerKompetenz>;
 	lehrerListeManager: () => LehrerListeManager;
 	schuljahresabschnittsauswahl: () => AbschnittAuswahlDaten;
 	gotoDefaultView: (eintragId?: number | null) => Promise<void>;

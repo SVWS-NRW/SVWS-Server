@@ -1,16 +1,28 @@
 <template>
-	<template v-if="auswahl()">
-		<svws-ui-header>
-			<div>
-				<span class="inline-block mr-3">{{ auswahl()!.bezeichnung }}</span>
-				<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
-					ID: {{ auswahl()!.id }}
-				</svws-ui-badge>
+	<template v-if="(jahrgangListeManager().hasDaten() && (activeViewType === ViewType.DEFAULT)) || (activeViewType !== ViewType.DEFAULT)">
+		<header class="svws-ui-header">
+			<div class="svws-ui-header--title">
+				<div class="svws-headline-wrapper">
+					<template v-if="activeViewType === ViewType.DEFAULT">
+						<h2 class="svws-headline">
+							<span>{{ jahrgangListeManager().auswahl().bezeichnung }}</span>
+							<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
+								ID: {{ jahrgangListeManager().auswahl().id }}
+							</svws-ui-badge>
+						</h2>
+						<span class="svws-subline">{{ jahrgangListeManager().auswahl().kuerzel }}</span>
+					</template>
+					<template v-else-if="activeViewType === ViewType.HINZUFUEGEN">
+						<h2 class="svws-headline">Anlegen eines neuen Jahrgangs...</h2>
+					</template>
+					<template v-else-if="activeViewType === ViewType.GRUPPENPROZESSE">
+						<h2 class="svws-headline"> Gruppenprozesse </h2>
+						<span class="svws-subline">{{ jahrgaengeSubline }}</span>
+					</template>
+				</div>
 			</div>
-			<div>
-				<span class="opacity-40">{{ auswahl()!.kuerzel }}</span>
-			</div>
-		</svws-ui-header>
+			<div class="svws-ui-header--actions" />
+		</header>
 		<svws-ui-tab-bar :tab-manager>
 			<router-view />
 		</svws-ui-tab-bar>
@@ -23,7 +35,16 @@
 <script setup lang="ts">
 
 	import type { JahrgaengeAppProps } from "./SJahrgaengeAppProps";
+	import { ViewType } from "@ui";
+	import { computed } from "vue";
 
 	const props = defineProps<JahrgaengeAppProps>();
+
+	const jahrgaengeSubline = computed(() => {
+		const auswahlJahrgaengeList = props.jahrgangListeManager().liste.auswahlSorted();
+		if (auswahlJahrgaengeList.size() > 5)
+			return `${auswahlJahrgaengeList.size()} Jahrgänge ausgewählt`;
+		return [...auswahlJahrgaengeList].map(k => k.kuerzel).join(', ');
+	})
 
 </script>
