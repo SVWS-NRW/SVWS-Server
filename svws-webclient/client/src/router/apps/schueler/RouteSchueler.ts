@@ -27,6 +27,7 @@ import { routeSchuelerSprachen } from "./sprachen/RouteSchuelerSprachen";
 import { routeSchuelerAbschluesse } from "./abschluesse/RouteSchuelerAbschluesse";
 import { routeSchuelerGruppenprozesse } from "~/router/apps/schueler/RouteSchuelerGruppenprozesse";
 import { routeSchuelerNeu } from "./RouteSchuelerNeu";
+import { ConfigElement } from "~/components/Config";
 
 const SSchuelerAuswahl = () => import("~/components/schueler/SSchuelerAuswahl.vue")
 const SSchuelerApp = () => import("~/components/schueler/SSchuelerApp.vue")
@@ -56,15 +57,23 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 			routeSchuelerGruppenprozesse,
 		];
 		super.defaultChild = routeSchuelerIndividualdaten;
+		api.nonPersistentConfig.addElements([
+			new ConfigElement(`${this.name}.auswahl.id`, "user", ""),
+		]);
 	}
 
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
 		try {
-			const { idSchuljahresabschnitt, id } = RouteNode.getIntParams(to_params, ["idSchuljahresabschnitt", "id"]);
+			const { idSchuljahresabschnitt, id: paramId } = RouteNode.getIntParams(to_params, ["idSchuljahresabschnitt", "id"]);
 			if (idSchuljahresabschnitt === undefined)
 				throw new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt.");
-
+			let id = paramId;
+			if ((paramId === undefined) && isEntering) {
+				const lastId = parseInt(api.nonPersistentConfig.getValue(`${this.name}.auswahl.id`));
+				if (!isNaN(lastId))
+					id = lastId;
+			}
 			if (isEntering && (to.types.has(ViewType.GRUPPENPROZESSE) || to.types.has(ViewType.HINZUFUEGEN)))
 				return this.getRouteView(this.data.view, { id: id ?? '' });
 			// Daten zum ausgewählten Schuljahresabschnitt und Schüler laden
@@ -102,6 +111,8 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 
 	public async leave(from: RouteNode<any, any>, from_params: RouteParams) : Promise<void> {
 		this.data.reset();
+		const { id } = RouteNode.getStringParams(from_params, ["id"]);
+		await api.nonPersistentConfig.setValue(`${this.name}.auswahl.id`, id ?? "");
 	}
 
 	public addRouteParamsFromState() : RouteParamsRawGeneric {

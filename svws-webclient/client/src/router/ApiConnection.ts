@@ -54,6 +54,9 @@ export class ApiConnection {
 	// Die aktuelle Konfiguration der Schule, sofern ein Login stattgefunden hat
 	protected _config = ref<Config | undefined>(undefined);
 
+	// Die aktuelle temporäre, nicht in der DB festgehaltene Konfiguration der Schule
+	protected _nonPersistentConfig = ref<Config>(new Config(async (_,__) => {}, async (_,__) => { }));
+
 	// Die Stammdaten der Schule, sofern ein Login stattgefunden hat
 	protected _stammdaten = shallowRef<{ stammdaten: SchuleStammdaten | undefined, kontext: ValidatorKontext | undefined }>({ stammdaten : undefined, kontext : undefined });
 
@@ -137,6 +140,10 @@ export class ApiConnection {
 		if (this._config.value === undefined)
 			throw new DeveloperNotificationException("Eine Konfiguration ist nicht vorhanden.");
 		return this._config.value as Config;
+	}
+
+	get nonPersistentConfig(): Config {
+		return this._nonPersistentConfig.value as Config;
 	}
 
 	// Gibt den Modus zurück, in welchem der Server betrieben wird.
@@ -357,14 +364,33 @@ export class ApiConnection {
 		return result;
 	}
 
+	/**
+	 * Initialialisiert die Daten, die beim Login geladen werden sollen
+	 *
+	 * @returns {Promise<boolean>} true beim erfolgreichen Laden der Daten und ansonsten false
+	 */
+	init = async (): Promise<boolean> => {
+		try {
+			if (this._api && (this._schema !== undefined)) {
+				const stammdaten = await this._api.getSchuleStammdaten(this._schema);
+				const kontext = new ValidatorKontext(stammdaten, false);
+				this._stammdaten.value = { stammdaten, kontext };
+			}
+			return true;
+		} catch(error) {
+			this._stammdaten.value = { stammdaten: undefined, kontext: undefined };
+		}
+		return false;
+	}
+
 
 	/**
 	 * Liest die Client-Konfiguration vom Server und erstellt das zugehörige
 	 * TypeScript-Objekt.
 	 *
-	 * @returns das Konfigurationspbjekt
+	 * @returns das Konfigurationsobjekt
 	 */
-	protected async getConfig(): Promise<void> {
+	protected async initConfig(): Promise<void> {
 		const cfg = await this.api.getClientConfig(this.schema, 'SVWS-Client');
 		const mapUser = new Map<string, string>();
 		for (const c of cfg.user)
@@ -374,7 +400,11 @@ export class ApiConnection {
 			mapGlobal.set(c.key, c.value);
 		this.config.mapGlobal = mapGlobal;
 		this.config.mapUser = mapUser;
+		// nicht-persistente Config ebenfalls anlegen
+		this.nonPersistentConfig.mapGlobal = new Map<string, string>();
+		this.nonPersistentConfig.mapUser = new Map<string, string>();
 	}
+
 
 	/**
 	 * Authentifiziert den angebenen Benutzer mit dem angegebenen Kennwort.
@@ -406,7 +436,7 @@ export class ApiConnection {
 			this._kompetenzenKlasse.value = this.getKompetenzenKlasse(this._benutzerdaten.value);
 			this._kompetenzenAbiturjahrgaenge.value = this.getKompetenzenAbiturjahrgaenge(this._benutzerdaten.value);
 			this._serverMode.value = ServerMode.getByText(await this._api.getServerModus());
-			await this.getConfig();
+			await this.initConfig();
 		} catch (error) {
 			// TODO Anmelde-Fehler wird nur in der App angezeigt. Der konkreten Fehler könnte ggf. geloggt werden...
 			this._authenticated.value = false;
@@ -417,30 +447,14 @@ export class ApiConnection {
 			this._kompetenzenAbiturjahrgaenge.value = undefined;
 			this.config.mapGlobal = new Map();
 			this.config.mapUser = new Map();
+			this.nonPersistentConfig.mapGlobal = new Map();
+			this.nonPersistentConfig.mapUser = new Map();
 			this._stammdaten.value = { stammdaten: undefined, kontext: undefined };
 			this._serverMode.value = ServerMode.STABLE;
 			this._aes.value = undefined;
 		}
 	}
 
-	/**
-	 * Initialialisiert die Daten, die beim Login geladen werden sollen
-	 *
-	 * @returns {Promise<boolean>} true beim erfolgreichen Laden der Daten und ansonsten false
-	 */
-	init = async (): Promise<boolean> => {
-		try {
-			if (this._api && (this._schema !== undefined)) {
-				const stammdaten = await this._api.getSchuleStammdaten(this._schema);
-				const kontext = new ValidatorKontext(stammdaten, false);
-				this._stammdaten.value = { stammdaten, kontext };
-			}
-			return true;
-		} catch(error) {
-			this._stammdaten.value = { stammdaten: undefined, kontext: undefined };
-		}
-		return false;
-	}
 
 	/**
 	 * Trennt die Verbindung für den aktuell angemeldeten Benutzer
@@ -458,6 +472,10 @@ export class ApiConnection {
 		this._schema_api = undefined;
 		this._aes.value = undefined;
 		this._api = undefined;
+		this.config.mapGlobal = new Map();
+		this.config.mapUser = new Map();
+		this.nonPersistentConfig.mapGlobal = new Map();
+		this.nonPersistentConfig.mapUser = new Map();
 	}
 
 	/**
