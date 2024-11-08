@@ -3795,6 +3795,8 @@ public class GostKlausurplanManager {
 		final GostKlausurvorgabe previousVorgabe = vorgabeGetPrevious(vorgabeGetByIdOrException(klausur.idVorgabe));
 		if (previousVorgabe == null)
 			return null;
+		if (!_kursklausur_by_idVorgabe_and_idKurs.containsKey1(previousVorgabe.idVorgabe))
+			return null;
 		final List<GostKursklausur> klausuren = _kursklausur_by_idVorgabe_and_idKurs.getNonNullValuesOfKey1AsList(previousVorgabe.idVorgabe);
 		for (final @NotNull GostKursklausur k : klausuren) {
 			final KursDaten kKurs = getKursManager().get(k.idKurs);

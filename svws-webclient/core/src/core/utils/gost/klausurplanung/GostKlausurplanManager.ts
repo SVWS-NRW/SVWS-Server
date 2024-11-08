@@ -3517,6 +3517,8 @@ export class GostKlausurplanManager extends JavaObject {
 		const previousVorgabe : GostKlausurvorgabe | null = this.vorgabeGetPrevious(this.vorgabeGetByIdOrException(klausur.idVorgabe));
 		if (previousVorgabe === null)
 			return null;
+		if (!this._kursklausur_by_idVorgabe_and_idKurs.containsKey1(previousVorgabe.idVorgabe))
+			return null;
 		const klausuren : List<GostKursklausur> | null = this._kursklausur_by_idVorgabe_and_idKurs.getNonNullValuesOfKey1AsList(previousVorgabe.idVorgabe);
 		for (const k of klausuren) {
 			const kKurs : KursDaten | null = this.getKursManager().get(k.idKurs);
