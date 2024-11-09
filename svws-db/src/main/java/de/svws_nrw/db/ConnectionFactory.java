@@ -205,6 +205,7 @@ public class ConnectionFactory {
 			}
 			if (config.createDBFile())
 				url += ";newdatabaseversion=V2000";
+			propertyMap.put("eclipselink.jpa.uppercase-column-names", "true");
 		}
 		final String sessionName = "SVWSDB_url=" + url + "_user=" + config.getUsername() + "_random=" + random.ints(48, 123)  // from 0 to z
 				.filter(i -> ((i <= 57) || (i >= 65)) && ((i <= 90) || (i >= 97)))  // filter some unicode characters
