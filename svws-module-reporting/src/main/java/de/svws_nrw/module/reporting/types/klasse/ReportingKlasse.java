@@ -1,6 +1,7 @@
 package de.svws_nrw.module.reporting.types.klasse;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
@@ -172,6 +173,20 @@ public class ReportingKlasse {
 		this.vorgaengerklasse = vorgaengerklasse;
 	}
 
+
+
+	// ##### Berechnete Methoden #####
+
+	/**
+	 * Auflistung der Klassenleitungen als kommaseparierte Liste der Kürzel.
+	 *
+	 * @return		Kommaseparierte Liste der Klassenleitungen.
+	 */
+	public String auflistungKlassenleitung() {
+		if ((this.klassenleitungen() == null) || this.klassenleitungen().isEmpty())
+			return "";
+		return this.klassenleitungen().stream().map(ReportingLehrer::kuerzel).collect(Collectors.joining(","));
+	}
 
 
 	// ##### Getter #####

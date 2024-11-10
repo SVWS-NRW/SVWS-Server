@@ -5,6 +5,7 @@ import java.util.List;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
 import de.svws_nrw.module.reporting.types.klasse.ReportingKlasse;
+import de.svws_nrw.module.reporting.types.kurs.ReportingKurs;
 
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Schuljahresabschnitt.
@@ -41,6 +42,8 @@ public class ReportingSchuljahresabschnitt {
 	/** Die Klassen des Schuljahresabschnitts */
 	protected List<ReportingKlasse> klassen;
 
+	/** Die Kurse des Schuljahresabschnitts */
+	protected List<ReportingKurs> kurse;
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
@@ -55,10 +58,11 @@ public class ReportingSchuljahresabschnitt {
 	 * @param faecher				Die Fächer des Schuljahresabschnitts
 	 * @param jahrgaenge			Die Jahrgänge des Schuljahresabschnitts
 	 * @param klassen				Die Klassen des Schuljahresabschnitts
+	 * @param kurse					Die Kurse des Schuljahresabschnitts
 	 */
 	public ReportingSchuljahresabschnitt(final long id, final int schuljahr, final int abschnitt, final Long idFolgenderAbschnitt,
 			final Long idVorherigerAbschnitt, final ReportingSchuljahresabschnitt folgenderAbschnitt, final ReportingSchuljahresabschnitt vorherigerAbschnitt,
-			final List<ReportingFach> faecher, final List<ReportingJahrgang> jahrgaenge, final List<ReportingKlasse> klassen) {
+			final List<ReportingFach> faecher, final List<ReportingJahrgang> jahrgaenge, final List<ReportingKlasse> klassen, final List<ReportingKurs> kurse) {
 		this.id = id;
 		this.schuljahr = schuljahr;
 		this.abschnitt = abschnitt;
@@ -69,6 +73,7 @@ public class ReportingSchuljahresabschnitt {
 		this.faecher = faecher;
 		this.jahrgaenge = jahrgaenge;
 		this.klassen = klassen;
+		this.kurse = kurse;
 	}
 
 
@@ -122,6 +127,17 @@ public class ReportingSchuljahresabschnitt {
 	 */
 	public ReportingKlasse klasse(final long id) {
 		return klassen().stream().filter(k -> k.id() == id).findFirst().orElse(null);
+	}
+
+	/**
+	 * Gibt den Kurs zur ID aus der Liste der Kurse des Schuljahresabschnitts zurück
+	 *
+	 * @param id	Die ID des Kurses
+	 *
+	 * @return 		Der Kurs zur ID oder null, wenn der Kurs nicht vorhanden ist.
+	 */
+	public ReportingKurs kurs(final long id) {
+		return kurse().stream().filter(k -> k.id() == id).findFirst().orElse(null);
 	}
 
 
@@ -215,5 +231,14 @@ public class ReportingSchuljahresabschnitt {
 	 */
 	public List<ReportingKlasse> klassen() {
 		return klassen;
+	}
+
+	/**
+	 * Die Kurse des Schuljahresabschnitts
+	 *
+	 * @return Inhalt des Feldes kurse
+	 */
+	public List<ReportingKurs> kurse() {
+		return kurse;
 	}
 }

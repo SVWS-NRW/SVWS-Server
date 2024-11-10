@@ -40,6 +40,7 @@ import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.proxytypes.schule.ProxyReportingSchuljahresabschnitt;
 import de.svws_nrw.module.reporting.types.klasse.ReportingKlasse;
+import de.svws_nrw.module.reporting.types.kurs.ReportingKurs;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import jakarta.ws.rs.core.Response.Status;
@@ -135,6 +136,9 @@ public class ReportingRepository {
 
 	/** Stellt alle Klassen in den Schuljahresabschnitten über eine Map zur Klassen-ID zur Verfügung. */
 	private final Map<Long, ReportingKlasse> mapKlassen = new HashMap<>();
+
+	/** Stellt alle Kurse in den Schuljahresabschnitten über eine Map zur Kurs-ID zur Verfügung. */
+	private final Map<Long, ReportingKurs> mapKurse = new HashMap<>();
 
 
 	/**
@@ -565,6 +569,15 @@ public class ReportingRepository {
 	 */
 	public Map<Long, ReportingKlasse> mapKlassen() {
 		return mapKlassen;
+	}
+
+	/**
+	 * Stellt alle Kurse in den Schuljahresabschnitten über eine Map zur Kurs-ID zur Verfügung.
+	 *
+	 * @return Map der Stammdaten der Kurse.
+	 */
+	public Map<Long, ReportingKurs> mapKurse() {
+		return mapKurse;
 	}
 
 	/**

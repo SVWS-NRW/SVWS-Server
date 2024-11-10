@@ -11,18 +11,22 @@ import de.svws_nrw.core.data.fach.FachDaten;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
 import de.svws_nrw.core.data.klassen.KlassenDaten;
+import de.svws_nrw.core.data.kurse.KursDaten;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.data.faecher.DataFachdaten;
 import de.svws_nrw.data.klassen.DataKlassendaten;
+import de.svws_nrw.data.kurse.DataKursdaten;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.module.reporting.proxytypes.fach.ProxyReportingFach;
 import de.svws_nrw.module.reporting.proxytypes.jahrgang.ProxyReportingJahrgang;
 import de.svws_nrw.module.reporting.proxytypes.klasse.ProxyReportingKlasse;
+import de.svws_nrw.module.reporting.proxytypes.kurs.ProxyReportingKurs;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
 import de.svws_nrw.module.reporting.types.klasse.ReportingKlasse;
+import de.svws_nrw.module.reporting.types.kurs.ReportingKurs;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 
@@ -43,7 +47,7 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 	 */
 	public ProxyReportingSchuljahresabschnitt(final ReportingRepository reportingRepository, final Schuljahresabschnitt schuljahresabschnitt) {
 		super(schuljahresabschnitt.id, schuljahresabschnitt.schuljahr, schuljahresabschnitt.abschnitt, schuljahresabschnitt.idFolgeAbschnitt,
-				schuljahresabschnitt.idVorigerAbschnitt, null, null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+				schuljahresabschnitt.idVorigerAbschnitt, null, null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 
 		this.reportingRepository = reportingRepository;
 
@@ -118,7 +122,7 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 			List<KlassenDaten> klassendaten = new ArrayList<>();
 			try {
 				this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Ermittle die Klassendaten.");
-				klassendaten = new DataKlassendaten(this.reportingRepository.conn()).getListBySchuljahresabschnittID(this.id(), false);
+				klassendaten = new DataKlassendaten(this.reportingRepository.conn()).getListBySchuljahresabschnittID(this.id(), true);
 			} catch (final Exception e) {
 				ReportingExceptionUtils.putStacktraceInLog(
 						"FEHLER: Fehler bei der Erstellung der Klassenliste für den Schuljahresabschnitt %s.".formatted(this.textSchuljahresabschnittKurz()), e,
@@ -135,5 +139,35 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 
 		}
 		return super.klassen;
+	}
+
+	/**
+	 * Gibt die Liste der Kurse dieses Schuljahresabschnitts zurück.
+	 *
+	 * @return Liste der Kurse, die in diesem Schuljahresabschnitt gültig sind.
+	 */
+	@Override
+	public List<ReportingKurs> kurse() {
+		if ((super.kurse == null) || super.kurse.isEmpty()) {
+			super.kurse = new ArrayList<>();
+			List<KursDaten> kurseDaten = new ArrayList<>();
+			try {
+				this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Ermittle die Kursdaten.");
+				kurseDaten = new DataKursdaten(this.reportingRepository.conn()).getListBySchuljahresabschnittID(this.id(), true);
+			} catch (final Exception e) {
+				ReportingExceptionUtils.putStacktraceInLog(
+						"FEHLER: Fehler bei der Erstellung der Liste der Kurse für den Schuljahresabschnitt %s.".formatted(this.textSchuljahresabschnittKurz()),
+						e, reportingRepository.logger(), LogLevel.ERROR, 0);
+			}
+			if (kurseDaten.isEmpty())
+				return super.kurse;
+
+			for (final KursDaten kurs : kurseDaten) {
+				final ReportingKurs reportingKurs = new ProxyReportingKurs(this.reportingRepository, kurs);
+				super.kurse.add(reportingKurs);
+				this.reportingRepository.mapKurse().putIfAbsent(reportingKurs.id(), reportingKurs);
+			}
+		}
+		return super.kurse;
 	}
 }

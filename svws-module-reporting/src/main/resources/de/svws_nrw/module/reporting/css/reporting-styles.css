@@ -19,7 +19,7 @@ Schriftart definieren
 @font-face {
 	/*noinspection CssNoGenericFontName*/
 	font-family: 'liberation';
-	src: local('Liberation Sans')
+	src: local('Liberation Sans');
 }
 
 

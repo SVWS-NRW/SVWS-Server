@@ -84,6 +84,7 @@ public final class ReportingFactory {
 		if (this.reportingParameter.idsHauptdaten == null) {
 			this.reportingParameter.idsHauptdaten = new ArrayList<>();
 		} else {
+			// Evtl. vorhandene null-Elemente in der Liste entfernen.
 			this.reportingParameter.idsHauptdaten.removeIf(Objects::isNull);
 		}
 		if (this.reportingParameter.idsHauptdaten.isEmpty())
@@ -92,8 +93,10 @@ public final class ReportingFactory {
 		// Stelle sicher, dass bei nicht vorhandenen Detaildaten eine leere Liste statt null vorhanden ist.
 		if (this.reportingParameter.idsDetaildaten == null)
 			this.reportingParameter.idsDetaildaten = new ArrayList<>();
-		else
+		else {
+			// Evtl. vorhandene null-Elemente in der Liste entfernen.
 			this.reportingParameter.idsDetaildaten.removeIf(Objects::isNull);
+		}
 
 		this.logger.logLn(LogLevel.DEBUG, 4, "Erzeugung des Reporting-Repository");
 		this.reportingRepository = new ReportingRepository(this.conn, this.reportingParameter, this.logger, this.log);

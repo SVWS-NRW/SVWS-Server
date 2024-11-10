@@ -113,6 +113,43 @@ public final class DataLehrerStammdaten extends DataManager<Long> {
 	}
 
 	/**
+	 * Gibt die Liste der Stammdaten aller Lehrer zurück, die in der angegebenen Liste enthalten sind.
+	 *
+	 * @param conn	die Datenbank-Verbindung
+	 * @param idsLehrer die Liste der IDs der gewünschten Lehrer
+	 *
+	 * @return Liste der Stammdaten der Lehrer zu den IDs, bei einer leeren ID-Liste werden alle Lehrer zurückgegeben.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public List<LehrerStammdaten> getFromIDs(final DBEntityManager conn, final List<Long> idsLehrer) throws ApiOperationException {
+		final var result = new ArrayList<LehrerStammdaten>();
+		if (idsLehrer == null)
+			return result;
+
+		final List<DTOLehrer> dtoListLehrer = new ArrayList<>();
+		if (idsLehrer.isEmpty())
+			dtoListLehrer.addAll(conn.queryList(DTOLehrer.QUERY_ALL, DTOLehrer.class));
+		else
+			dtoListLehrer.addAll(conn.queryByKeyList(DTOLehrer.class, idsLehrer));
+		if (dtoListLehrer.isEmpty())
+			return result;
+
+		final List<DTOLehrer> lehrer = dtoListLehrer.stream().filter(l -> idsLehrer.contains(l.ID)).toList();
+
+		final Map<Long, DTOLehrerFoto> mapFotos = conn.queryByKeyList(DTOLehrerFoto.class, dtoListLehrer.stream().map(l -> l.ID).toList())
+				.stream().collect(Collectors.toMap(lf -> lf.Lehrer_ID, lf -> lf));
+		for (final DTOLehrer l : lehrer) {
+			final LehrerStammdaten daten = dtoMapper.apply(l);
+			final var tmpFoto = mapFotos.get(daten.id);
+			daten.foto = (tmpFoto == null) ? null : tmpFoto.FotoBase64;
+			daten.leitungsfunktionen.addAll(DataSchulleitung.getSchulleitungsfunktionen(conn, daten.id));
+			result.add(daten);
+		}
+		return result;
+	}
+
+	/**
 	 * Gibt die Liste der Stammdaten der Lehrer zurück, die sichtbar sind.
 	 *
 	 * @param conn	die Datenbank-Verbindung

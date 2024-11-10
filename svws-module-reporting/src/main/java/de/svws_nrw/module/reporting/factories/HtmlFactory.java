@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -23,6 +24,9 @@ import de.svws_nrw.module.reporting.html.HtmlTemplateDefinition;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContext;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextGostKlausurplanungKlausurplan;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextGostKursplanungBlockungsergebnis;
+import de.svws_nrw.module.reporting.html.contexts.HtmlContextKlassen;
+import de.svws_nrw.module.reporting.html.contexts.HtmlContextKurse;
+import de.svws_nrw.module.reporting.html.contexts.HtmlContextLehrer;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextSchueler;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextSchule;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
@@ -111,6 +115,8 @@ public class HtmlFactory {
 			case "SCHUELER":
 				// Schüler-Context ist Hauptdatenquelle
 				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für Schüler für die html-Generierung.");
+				// Entferne null-Elemente und evtl. Duplikate in der Liste der Hauptdaten-Ids
+				reportingParameter.idsHauptdaten = reportingParameter.idsHauptdaten.stream().filter(Objects::nonNull).distinct().toList();
 				ReportingValidierung.validiereDatenFuerSchueler(reportingRepository, reportingParameter.idsHauptdaten,
 						htmlTemplateDefinition.name().startsWith("SCHUELER_v_GOST_LAUFBAHNPLANUNG_"),
 						htmlTemplateDefinition.name().startsWith("SCHUELER_v_GOST_ABITUR_"), true);
@@ -119,6 +125,42 @@ public class HtmlFactory {
 								.formatted(reportingParameter.idsHauptdaten.size(), htmlTemplateDefinition.name()));
 				final HtmlContextSchueler htmlContextSchueler = new HtmlContextSchueler(reportingRepository);
 				mapHtmlContexts.put("Schueler", htmlContextSchueler);
+				break;
+			case "KLASSEN":
+				// Klassen-Context ist Hauptdatenquelle
+				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für Klassen für die html-Generierung.");
+				// Entferne null-Elemente und evtl. Duplikate in der Liste der Hauptdaten-Ids
+				reportingParameter.idsHauptdaten = reportingParameter.idsHauptdaten.stream().filter(Objects::nonNull).distinct().toList();
+				ReportingValidierung.validiereDatenFuerKlassen(reportingRepository, reportingParameter.idsHauptdaten);
+				reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+						("Erzeuge Datenkontext Klassen für die html-Generierung - %d IDs von Klassen wurden übergeben für Template %s.")
+								.formatted(reportingParameter.idsHauptdaten.size(), htmlTemplateDefinition.name()));
+				final HtmlContextKlassen htmlContextKlassen = new HtmlContextKlassen(reportingRepository);
+				mapHtmlContexts.put("Klassen", htmlContextKlassen);
+				break;
+			case "KURSE":
+				// Kurse-Context ist Hauptdatenquelle
+				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für Kurse für die html-Generierung.");
+				// Entferne null-Elemente und evtl. Duplikate in der Liste der Hauptdaten-Ids
+				reportingParameter.idsHauptdaten = reportingParameter.idsHauptdaten.stream().filter(Objects::nonNull).distinct().toList();
+				ReportingValidierung.validiereDatenFuerKurse(reportingRepository, reportingParameter.idsHauptdaten, true);
+				reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+						("Erzeuge Datenkontext Kurse für die html-Generierung - %d IDs von Kursen wurden übergeben für Template %s.")
+								.formatted(reportingParameter.idsHauptdaten.size(), htmlTemplateDefinition.name()));
+				final HtmlContextKurse htmlContextKurse = new HtmlContextKurse(reportingRepository);
+				mapHtmlContexts.put("Kurse", htmlContextKurse);
+				break;
+			case "LEHRER":
+				// Lehrer-Context ist Hauptdatenquelle
+				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für Lehrer für die html-Generierung.");
+				// Entferne null-Elemente und evtl. Duplikate in der Liste der Hauptdaten-Ids
+				reportingParameter.idsHauptdaten = reportingParameter.idsHauptdaten.stream().filter(Objects::nonNull).distinct().toList();
+				ReportingValidierung.validiereDatenFuerLehrer(reportingRepository, reportingParameter.idsHauptdaten, true);
+				reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+						("Erzeuge Datenkontext Lehrer für die html-Generierung - %d IDs von Lehrern wurden übergeben für Template %s.")
+								.formatted(reportingParameter.idsHauptdaten.size(), htmlTemplateDefinition.name()));
+				final HtmlContextLehrer htmlContextLehrer = new HtmlContextLehrer(reportingRepository);
+				mapHtmlContexts.put("Lehrer", htmlContextLehrer);
 				break;
 			case "GOST_KURSPLANUNG":
 				// GOSt-Kursplanung-Blockungsergebnis-Context ist Hauptdatenquelle

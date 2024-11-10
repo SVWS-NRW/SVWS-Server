@@ -42,24 +42,39 @@ export class ReportingReportvorlage extends JavaEnum<ReportingReportvorlage> {
 	public static readonly GOST_KURSPLANUNG_v_SCHUELER_MIT_SCHIENEN_KURSEN : ReportingReportvorlage = new ReportingReportvorlage("GOST_KURSPLANUNG_v_SCHUELER_MIT_SCHIENEN_KURSEN", 5, "GostKursplanung-SchuelerMitSchienenKursen");
 
 	/**
+	 * Report-Vorlage: Klasse - Schülerstammdaten - Liste
+	 */
+	public static readonly KLASSEN_v_KLASSE_SCHUELER_STAMMDATENLISTE : ReportingReportvorlage = new ReportingReportvorlage("KLASSEN_v_KLASSE_SCHUELER_STAMMDATENLISTE", 6, "Klasse-Schueler-Stammdatenliste");
+
+	/**
+	 * Report-Vorlage: Kurs - Schülerstammdaten - Liste
+	 */
+	public static readonly KURSE_v_KURS_SCHUELER_STAMMDATENLISTE : ReportingReportvorlage = new ReportingReportvorlage("KURSE_v_KURS_SCHUELER_STAMMDATENLISTE", 7, "Kurs-Schueler-Stammdatenliste");
+
+	/**
+	 * Report-Vorlage: Lehrer - Stammdaten - Liste
+	 */
+	public static readonly LEHRER_v_STAMMDATENLISTE : ReportingReportvorlage = new ReportingReportvorlage("LEHRER_v_STAMMDATENLISTE", 8, "Lehrer-Stammdatenliste");
+
+	/**
 	 * Report-Vorlage: GOSt - Abitur - APO - Anlage 12 (Abiturzeugnis)
 	 */
-	public static readonly SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12 : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12", 6, "Schueler-GostAbiturApoAnlage12");
+	public static readonly SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12 : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12", 9, "Schueler-GostAbiturApoAnlage12");
 
 	/**
 	 * Report-Vorlage: GOSt - Laufbahnplanung - Ergebnisübersicht
 	 */
-	public static readonly SCHUELER_v_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT", 7, "Schueler-GostLaufbahnplanungErgebnisuebersicht");
+	public static readonly SCHUELER_v_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT", 10, "Schueler-GostLaufbahnplanungErgebnisuebersicht");
 
 	/**
 	 * Report-Vorlage: GOSt - Laufbahnplanung - Wahlbogen
 	 */
-	public static readonly SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN", 8, "Schueler-GostLaufbahnplanungWahlbogen");
+	public static readonly SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN", 11, "Schueler-GostLaufbahnplanungWahlbogen");
 
 	/**
 	 * Report-Vorlage: Schüler - Stammdaten - Liste
 	 */
-	public static readonly SCHUELER_v_STAMMDATEN_LISTE : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_STAMMDATEN_LISTE", 9, "Schueler-Stammdatenliste");
+	public static readonly SCHUELER_v_STAMMDATENLISTE : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_STAMMDATENLISTE", 12, "Schueler-Stammdatenliste");
 
 	/**
 	 * Die Bezeichnung der Report-Vorlage

@@ -3,6 +3,7 @@ package de.svws_nrw.module.reporting.types.kurs;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
@@ -40,8 +41,8 @@ public class ReportingKurs {
 	/** Die allgemeine Kursart, welche zur Filterung der speziellen Kursarten verwendet wird. */
 	protected String kursartAllg;
 
-	/** Der Lehrer, der den Kurs unterrichtet und verantwortlich leite. */
-	protected ReportingLehrer kursLehrer;
+	/** Die Lehrkraft, die den Kurs unterrichtet und verantwortlich leite. */
+	protected ReportingLehrer kursleitung;
 
 	/** Die Nummern der Kurs-Schienen, in welchen sich der Kurs befindet - sofern eine Schiene zugeordnet wurde */
 	protected List<Integer> schienen;
@@ -65,39 +66,39 @@ public class ReportingKurs {
 	protected int wochenstunden;
 
 	/** Eine Map mit den Wochenstunden der Lehrkräfte zu deren ID. */
-	protected Map<Long, Double> wochenstundenLehrer;
+	protected Map<Long, Double> wochenstundenLehrkraefte;
 
-	/** Die Lehrer, die den Kurs neben dem Kurslehrer (Verantwortlichen) unterrichten. */
-	protected List<ReportingLehrer> zusatzLehrer;
+	/** Die Lehrkräfte, die den Kurs neben der Kursleitung unterrichten. */
+	protected List<ReportingLehrer> zusatzLehrkraefte;
 
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
 	 *
-	 * @param bezeichnungZeugnis 	Ggf. die Zeugnisbezeichnung des Kurses.
-	 * @param fach 					Das Fach, das dem Kurs zugeordnet ist.
-	 * @param id 					Die ID des Kurses.
-	 * @param istEpochalunterricht 	Gibt an, ob der Kurs zu einem epochalen Unterricht gehört.
-	 * @param istSichtbar 			Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
-	 * @param jahrgaenge 			Die Jahrgänge, denen der Kurs zugeordnet ist.
-	 * @param kuerzel 				Das Kürzel des Kurses.
-	 * @param kursartAllg 			Die allgemeine Kursart, welche zur Filterung der speziellen Kursarten verwendet wird.
-	 * @param kursLehrer 			Der Lehrer, der den Kurs unterrichtet und verantwortlich leite.
-	 * @param schienen 				Die Nummern der Kurs-Schienen, in welchen sich der Kurs befindet - sofern eine Schiene zugeordnet wurde.
-	 * @param schueler 				Die Schüler des Kurses.
-	 * @param idsSchueler 			Die Schüler des Kurses als Liste ihrer IDs.
-	 * @param schuljahresabschnitt 	Der Schuljahresabschnitt des Kurses.
-	 * @param schulnummer 			Die Schulnummer des Kurses, falls der Kurs an einer anderen Schule stattfindet.
-	 * @param sortierung 			Die Sortierreihenfolge des Listen-Eintrags.
-	 * @param wochenstunden 		Die Wochenstunden des Kurses für die Schüler.
-	 * @param wochenstundenLehrer 	Eine Map mit den Wochenstunden der Lehrkräfte zu deren ID.
-	 * @param zusatzLehrer 			Die Lehrer, die den Kurs neben dem Kurslehrer (Verantwortlichen) unterrichten.
+	 * @param bezeichnungZeugnis 		Ggf. die Zeugnisbezeichnung des Kurses.
+	 * @param fach 						Das Fach, das dem Kurs zugeordnet ist.
+	 * @param id 						Die ID des Kurses.
+	 * @param istEpochalunterricht 		Gibt an, ob der Kurs zu einem epochalen Unterricht gehört.
+	 * @param istSichtbar 				Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
+	 * @param jahrgaenge 				Die Jahrgänge, denen der Kurs zugeordnet ist.
+	 * @param kuerzel 					Das Kürzel des Kurses.
+	 * @param kursartAllg 				Die allgemeine Kursart, welche zur Filterung der speziellen Kursarten verwendet wird.
+	 * @param kursleitung 				Der Lehrer, der den Kurs unterrichtet und verantwortlich leite.
+	 * @param schienen 					Die Nummern der Kurs-Schienen, in welchen sich der Kurs befindet - sofern eine Schiene zugeordnet wurde.
+	 * @param schueler 					Die Schüler des Kurses.
+	 * @param idsSchueler 				Die Schüler des Kurses als Liste ihrer IDs.
+	 * @param schuljahresabschnitt 		Der Schuljahresabschnitt des Kurses.
+	 * @param schulnummer 				Die Schulnummer des Kurses, falls der Kurs an einer anderen Schule stattfindet.
+	 * @param sortierung 				Die Sortierreihenfolge des Listen-Eintrags.
+	 * @param wochenstunden 			Die Wochenstunden des Kurses für die Schüler.
+	 * @param wochenstundenLehrkraefte 	Eine Map mit den Wochenstunden der Lehrkräfte zu deren ID.
+	 * @param zusatzLehrkraefte 		Die Lehrkräfte, die den Kurs neben der Kursleitung (Verantwortlichen) unterrichten.
 	 */
 	public ReportingKurs(final String bezeichnungZeugnis, final ReportingFach fach, final long id, final boolean istEpochalunterricht,
 			final boolean istSichtbar, final List<ReportingJahrgang> jahrgaenge, final String kuerzel, final String kursartAllg,
-			final List<Integer> schienen, final List<Long> idsSchueler, final List<ReportingSchueler> schueler, final ReportingLehrer kursLehrer,
+			final List<Integer> schienen, final List<Long> idsSchueler, final List<ReportingSchueler> schueler, final ReportingLehrer kursleitung,
 			final ReportingSchuljahresabschnitt schuljahresabschnitt, final Integer schulnummer, final int sortierung,
-			final int wochenstunden, final Map<Long, Double> wochenstundenLehrer, final List<ReportingLehrer> zusatzLehrer) {
+			final int wochenstunden, final Map<Long, Double> wochenstundenLehrkraefte, final List<ReportingLehrer> zusatzLehrkraefte) {
 		this.bezeichnungZeugnis = bezeichnungZeugnis;
 		this.fach = fach;
 		this.id = id;
@@ -106,7 +107,7 @@ public class ReportingKurs {
 		this.jahrgaenge = jahrgaenge;
 		this.kuerzel = kuerzel;
 		this.kursartAllg = kursartAllg;
-		this.kursLehrer = kursLehrer;
+		this.kursleitung = kursleitung;
 		this.schienen = schienen;
 		this.idsSchueler = idsSchueler;
 		this.schueler = schueler;
@@ -114,8 +115,8 @@ public class ReportingKurs {
 		this.schulnummer = schulnummer;
 		this.sortierung = sortierung;
 		this.wochenstunden = wochenstunden;
-		this.wochenstundenLehrer = wochenstundenLehrer;
-		this.zusatzLehrer = zusatzLehrer;
+		this.wochenstundenLehrkraefte = wochenstundenLehrkraefte;
+		this.zusatzLehrkraefte = zusatzLehrkraefte;
 	}
 
 
@@ -123,15 +124,26 @@ public class ReportingKurs {
 	/**
 	 * Gibt eine Liste aller Lehrkräfte des Kurses aus, wobei die erste die Kursleitung ist.
 	 *
-	 * @return		Die Kursleitung
+	 * @return		Die Liste der Lehrkräfte im Kurs, beginnend mit der Kursleitung.
 	 */
-	public List<ReportingLehrer> listeLehrer() {
-		final List<ReportingLehrer> listeLehrer = new ArrayList<>();
-		if (kursLehrer != null)
-			listeLehrer.add(kursLehrer);
-		if ((zusatzLehrer != null) && !zusatzLehrer.isEmpty())
-			listeLehrer.addAll(zusatzLehrer);
-		return listeLehrer;
+	public List<ReportingLehrer> lehrkraefte() {
+		final List<ReportingLehrer> listeLehrkraefte = new ArrayList<>();
+		if (kursleitung != null)
+			listeLehrkraefte.add(kursleitung);
+		if ((zusatzLehrkraefte != null) && !zusatzLehrkraefte.isEmpty())
+			listeLehrkraefte.addAll(zusatzLehrkraefte);
+		return listeLehrkraefte;
+	}
+
+	/**
+	 * Auflistung der Lehrkräfte des Kurses als kommaseparierte Liste der Kürzel.
+	 *
+	 * @return		Kommaseparierte Liste der Lehrkräfte, beginnend mit der Kursleitung.
+	 */
+	public String auflistungLehrkraefte() {
+		if (lehrkraefte().isEmpty())
+			return "";
+		return this.lehrkraefte().stream().map(ReportingLehrer::kuerzel).collect(Collectors.joining(","));
 	}
 
 	/**
@@ -142,9 +154,9 @@ public class ReportingKurs {
 	 * @return		Die Wochenstunden der Lehrkraft in diesem Kurs.
 	 */
 	public double wochenstundenLehrerZurID(final Long id) {
-		if ((id == null) || !wochenstundenLehrer.containsKey(id))
+		if ((id == null) || !wochenstundenLehrkraefte.containsKey(id))
 			return 0;
-		return wochenstundenLehrer.get(id);
+		return wochenstundenLehrkraefte.get(id);
 	}
 
 
@@ -223,12 +235,12 @@ public class ReportingKurs {
 	}
 
 	/**
-	 * Der Lehrer, der den Kurs unterrichtet und verantwortlich leite.
+	 * Die Lehrkraft, die den Kurs unterrichtet und verantwortlich leite.
 	 *
 	 * @return Inhalt des Feldes lehrer
 	 */
-	public ReportingLehrer kursLehrer() {
-		return kursLehrer;
+	public ReportingLehrer kursleitung() {
+		return kursleitung;
 	}
 
 	/**
@@ -298,19 +310,19 @@ public class ReportingKurs {
 	/**
 	 * Eine Map mit den Wochenstunden der Lehrkräfte zu deren ID.
 	 *
-	 * @return Inhalt des Feldes wochenstundenLehrer
+	 * @return Inhalt des Feldes wochenstundenLehrkraefte
 	 */
-	public Map<Long, Double> wochenstundenLehrer() {
-		return wochenstundenLehrer;
+	public Map<Long, Double> wochenstundenLehrkraefte() {
+		return wochenstundenLehrkraefte;
 	}
 
 	/**
-	 * Die Lehrer, die den Kurs neben dem Kurslehrer (Verantwortlichen) unterrichten.
+	 * Die Lehrkräfte, die den Kurs neben der Kursleitung (Verantwortlichen) unterrichten.
 	 *
-	 * @return Inhalt des Feldes lehrer
+	 * @return Inhalt des Feldes zusatzLehrkraefte
 	 */
-	public List<ReportingLehrer> zusatzLehrer() {
-		return zusatzLehrer;
+	public List<ReportingLehrer> zusatzLehrkraefte() {
+		return zusatzLehrkraefte;
 	}
 
 }

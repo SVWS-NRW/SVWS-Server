@@ -1,0 +1,81 @@
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+	<head th:with="mediaPrint = ${Parameter.ausgabeformat == 2}">
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width"/>
+		<title>Lehrerliste mit Lehrerstammdaten</title>
+		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-pdf.css}" href="../../css/reporting-pdf.css" />
+		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-seite-hoch-koepfe-fuesse.css}" href="../../css/reporting-seite-hoch-koepfe-fuesse.css" />
+		<link rel="stylesheet" th:href="@{css/reporting-styles.css}" href="../../css/reporting-styles.css" />
+		<link rel="stylesheet" th:href="@{lehrer/stammdaten/LehrerStammdatenliste.css}" href="../../lehrer/stammdaten/LehrerStammdatenliste.css" />
+	</head>
+
+	<body th:with="mediaPrint = ${Parameter.ausgabeformat == 2}">
+		<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+		<th:block th:if="${mediaPrint}">
+			<div class="pageTopLeft" th:utext="${Schule.bezeichnungSchuleMehrzeiligHtml}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
+			<div class="pageTopRight" th:utext="'Lehrerliste ' + ${Schule.auswahlSchuljahresabschnitt().textSchuljahresabschnittKurz()} + '<br/>Schulnummer: ' + ${Schule.schulnummer()}">Klausurplanung<br/><br/>Schulnummer: 123456</div>
+			<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')}">Gedruckt am: 02.02.2022</div>
+			<div class="pageBottomRight"><span class="page-nums-print">Seite </span></div>
+		</th:block>
+		<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+        <table class="fixed-100 p-0">
+            <colgroup>
+                <col style="width: 14%;" />
+                <col style="width: 2%;" />
+                <col style="width: 20%;" />
+                <col style="width: 2%;" />
+                <col style="width: 10%;" />
+                <col style="width: 2%;" />
+                <col style="width: 10%;" />
+                <col style="width: 2%;" />
+                <col style="width: 38%;" />
+            </colgroup>
+            <thead>
+            <tr>
+                <td colspan="9" class="bo-b-grey"><h2>Lehrerliste</h2></td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr><td colspan="9" class="p-t-25of100"></td></tr>
+            </tbody>
+        </table>
+
+		<table class="fixed-100 p-0">
+			<colgroup>
+                <col style="width: 4%;"/>
+                <col style="width: 14%;"/>
+                <col style="width: 15%;"/>
+                <col style="width: 7%;"/>
+                <col style="width: 4%;"/>
+                <col style="width: 10%;"/>
+                <col style="width: 24%;"/>
+                <col style="width: 8%;"/>
+                <col style="width: 14%;"/>
+			</colgroup>
+			<thead>
+			<tr>
+				<td class="head-small-grey"></td>
+				<td class="head-small-grey">Name</td>
+				<td class="head-small-grey">Vorname</td>
+				<td class="head-small-grey ta-r">Amtsbez.</td>
+				<td class="head-small-grey ta-c">Ges.</td>
+				<td class="head-small-grey">Geb. am</td>
+				<td class="head-small-grey">Straße</td>
+				<td class="head-small-grey ta-r">PLZ</td>
+				<td class="head-small-grey">Ort</td>
+			</tr>
+			</thead>
+			<tr style="page-break-inside: avoid;" th:each="lehrer,iterationVarLehrer : ${Lehrer}">
+				<td class="f-small ta-r bo-t-grey p-tb-0-lr-1" th:text="${iterationVarLehrer.count + '. '}">1. </td>
+				<td class="f-small bo-t-grey p-tb-0-lr-1" th:text="${lehrer.nachname()}">Mustermann</td>
+				<td class="f-small bo-t-grey p-tb-0-lr-1" th:text="${lehrer.vorname()}">Maximilian Moritz</td>
+				<td class="f-small bo-t-grey p-tb-0-lr-1" th:text="${lehrer.amtsbezeichnung()}">OStR</td>
+				<td class="f-small bo-t-grey p-tb-0-lr-1 ta-c" th:text="${lehrer.geschlecht().kuerzel}">m</td>
+				<td class="f-small bo-t-grey p-tb-0-lr-1" th:text="${#convert.toDateDE(lehrer.geburtsdatum())}">07.08.2010</td>
+				<td class="f-small bo-t-grey p-tb-0-lr-1" th:text="${lehrer.strassenname() + (!lehrer.hausnummer().isEmpty() ? (' ' + lehrer.hausnummer() + (!lehrer.hausnummerZusatz().isEmpty() ? lehrer.hausnummerZusatz() : '')) : '')}">Musterstraße 13a</td>
+				<td class="f-small bo-t-grey p-tb-0-lr-1 ta-r" th:text="${lehrer.wohnort().plz}">12345</td>
+				<td class="f-small bo-t-grey p-tb-0-lr-1" th:text="${lehrer.wohnort().ortsname}">Musterstadt</td>
+			</tr>
+		</table>
+	</body>
+</html>

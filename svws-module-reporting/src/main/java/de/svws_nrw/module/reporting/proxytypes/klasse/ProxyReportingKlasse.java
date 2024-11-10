@@ -22,6 +22,7 @@ import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
 import java.text.Collator;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
@@ -58,19 +59,19 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 				klassenDaten.idJahrgang,
 				klassenDaten.idKlassenart,
 				klassenDaten.klassenLeitungen,
-				klassenDaten.schueler.stream().map(s -> s.id).toList(),
+				new ArrayList<>(),
 				klassenDaten.idSchulgliederung,
 				klassenDaten.idVorgaengerklasse,
 				klassenDaten.idWeiterbildungOrganisationsform,
 				klassenDaten.istSichtbar,
 				null,
-				null,
+				new ArrayList<>(),
 				klassenDaten.kuerzel,
 				klassenDaten.kuerzelFolgeklasse,
 				klassenDaten.kuerzelVorgaengerklasse,
 				klassenDaten.parallelitaet,
 				klassenDaten.pruefungsordnung,
-				null,
+				new ArrayList<>(),
 				null,
 				klassenDaten.sortierung,
 				klassenDaten.teilstandort,
@@ -79,6 +80,10 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 
 		this.reportingRepository = reportingRepository;
 		this.schuljahresabschnitt = this.reportingRepository.schuljahresabschnitt(klassenDaten.idSchuljahresabschnitt);
+		// Schüler setzen. Fülle nur die Liste der IDs. Die ReportingSchueler-Liste wird per lazy-Loading gefüllt, da nicht immer die Klassenschüler benötigt
+		// werden.
+		if ((klassenDaten.schueler != null) && !klassenDaten.schueler.isEmpty())
+			idsSchueler.addAll(klassenDaten.schueler.stream().map(s -> s.id).toList());
 	}
 
 
@@ -169,10 +174,6 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 							.map(l -> (ReportingLehrer) new ProxyReportingLehrer(
 									this.reportingRepository,
 									l))
-							.sorted(Comparator
-									.comparing(ReportingLehrer::nachname, colGerman)
-									.thenComparing(ReportingLehrer::vorname, colGerman)
-									.thenComparing(ReportingLehrer::kuerzel, colGerman))
 							.toList();
 		}
 		return super.klassenleitungen();
@@ -185,30 +186,35 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 	 */
 	@Override
 	public List<ReportingSchueler> schueler() {
-		if (super.schueler().isEmpty() && !super.idsSchueler().isEmpty()) {
+		if (super.schueler().isEmpty()) {
 			final KlassenDaten klassenDaten;
-			try {
-				klassenDaten = new DataKlassendaten(reportingRepository.conn()).getById(super.id());
-			} catch (final ApiOperationException e) {
-				ReportingExceptionUtils.putStacktraceInLog(
-						"FEHLER: Fehler bei der Ermittlung der Schülerdaten der Klasse %s in %s."
-								.formatted(super.kuerzel, super.schuljahresabschnitt.textSchuljahresabschnittKurz()),
-						e, reportingRepository.logger(), LogLevel.ERROR, 0);
-				return super.schueler();
+			if (super.idsSchueler().isEmpty()) {
+				try {
+					klassenDaten = new DataKlassendaten(reportingRepository.conn()).getById(super.id());
+					if ((klassenDaten.schueler != null) && !klassenDaten.schueler.isEmpty())
+						idsSchueler.addAll(klassenDaten.schueler.stream().map(s -> s.id).toList());
+				} catch (final ApiOperationException e) {
+					ReportingExceptionUtils.putStacktraceInLog(
+							"FEHLER: Fehler bei der Ermittlung der Schülerdaten der Klasse %s in %s."
+									.formatted(super.kuerzel, super.schuljahresabschnitt.textSchuljahresabschnittKurz()),
+							e, reportingRepository.logger(), LogLevel.ERROR, 0);
+					return super.schueler();
+				}
 			}
-			super.schueler =
-					DataSchuelerStammdaten.getListStammdaten(this.reportingRepository.conn(), klassenDaten.schueler.stream().map(s -> s.id).toList()).stream()
-							.map(s -> this.reportingRepository.mapSchuelerStammdaten().computeIfAbsent(s.id, k -> s))
-							.map(s -> (ReportingSchueler) new ProxyReportingSchueler(
-									this.reportingRepository,
-									s))
-							.sorted(Comparator
-									.comparing(ReportingSchueler::nachname, colGerman)
-									.thenComparing(ReportingSchueler::vorname, colGerman)
-									.thenComparing(ReportingSchueler::vornamen, colGerman)
-									.thenComparing(ReportingSchueler::geburtsdatum, colGerman)
-									.thenComparing(ReportingSchueler::id, colGerman))
-							.toList();
+			if (!super.idsSchueler.isEmpty()) {
+				super.schueler = DataSchuelerStammdaten.getListStammdaten(this.reportingRepository.conn(), idsSchueler).stream()
+						.map(s -> this.reportingRepository.mapSchuelerStammdaten().computeIfAbsent(s.id, k -> s))
+						.map(s -> (ReportingSchueler) new ProxyReportingSchueler(
+								this.reportingRepository,
+								s))
+						.sorted(Comparator
+								.comparing(ReportingSchueler::nachname, colGerman)
+								.thenComparing(ReportingSchueler::vorname, colGerman)
+								.thenComparing(ReportingSchueler::vornamen, colGerman)
+								.thenComparing(ReportingSchueler::geburtsdatum, colGerman)
+								.thenComparing(ReportingSchueler::id, colGerman))
+						.toList();
+			}
 		}
 		return super.schueler();
 	}

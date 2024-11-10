@@ -127,16 +127,84 @@ public final class DataKursdaten extends DataManager<Long> {
 			throw new ApiOperationException(Status.NOT_FOUND);
 		final KursDaten daten = dtoMapper.apply(kurs);
 		// Bestimme die Schüler des Kurses
+		attachKursSchueler(conn, daten);
+		return daten;
+	}
+
+	/**
+	 * Ermittelt die Kurse zu dem Schuljahresabschnitt mit der angegebenen ID.
+	 *
+	 * @param idSchuljahresabschnitt	die ID des Schuljahresabschnitts
+	 * @param attachSchueler			gibt an, ob die Schüler zu den Kursen mit geladen werden sollen
+	 *
+	 * @return eine Liste mit den Kursen des Schuljahresabschnitts
+	 *
+	 * @throws ApiOperationException im Fehlerfall
+	 */
+	public List<KursDaten> getListBySchuljahresabschnittID(final Long idSchuljahresabschnitt, final boolean attachSchueler) throws ApiOperationException {
+		if (idSchuljahresabschnitt == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		final List<DTOKurs> kurse = conn.queryList(DTOKurs.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKurs.class, idSchuljahresabschnitt);
+		return getKurseDaten(kurse, attachSchueler);
+	}
+
+	/**
+	 * Ermittelt die Kurse zu den übergebenen Kurs-IDs.
+	 *
+	 * @param ids				die ID des Schuljahresabschnitts
+	 * @param attachSchueler	gibt an, ob die Schüler zu den Kursen mit geladen werden sollen
+	 *
+	 * @return eine Liste mit den Kursen zu den übergebenen IDs
+	 *
+	 * @throws ApiOperationException im Fehlerfall
+	 */
+	public List<KursDaten> getListByIDs(final List<Long> ids, final boolean attachSchueler) throws ApiOperationException {
+		if (ids == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		final List<DTOKurs> kurse = conn.queryByKeyList(DTOKurs.class, ids);
+		return getKurseDaten(kurse, attachSchueler);
+	}
+
+	/**
+	 * Ermittelt die Kursdaten der übergebenen Kurs-DTOs
+	 *
+	 * @param dtoKurse			die DTOs der Kurse
+	 * @param attachSchueler	gibt an, ob die Schüler zu den Kursen mit geladen werden sollen
+	 *
+	 * @return eine Liste der Kursdaten zu den DTOs der Kurse
+	 *
+	 * @throws ApiOperationException im Fehlerfall
+	 */
+	private List<KursDaten> getKurseDaten(final List<DTOKurs> dtoKurse, final boolean attachSchueler) throws ApiOperationException {
+		if ((dtoKurse == null) || dtoKurse.isEmpty())
+			throw new ApiOperationException(Status.NOT_FOUND);
+		final List<KursDaten> kurseDaten = new ArrayList<>();
+		for (final DTOKurs kurs : dtoKurse) {
+			final KursDaten kursdaten = dtoMapper.apply(kurs);
+			// Bestimme die Schüler der Kurse, wenn gewünscht.
+			if (attachSchueler)
+				attachKursSchueler(conn, kursdaten);
+			kurseDaten.add(kursdaten);
+		}
+		return kurseDaten;
+	}
+
+	/**
+	 * Fügt den übergebenen Kursdaten die Schüler des Kurses hinzu.
+	 *
+	 * @param conn   	die Datenbankverbindung
+	 * @param kursdaten die Daten des Kurses
+	 */
+	private static void attachKursSchueler(final DBEntityManager conn, final KursDaten kursdaten) {
 		final List<DTOKursSchueler> listKursSchueler =
-				conn.queryList("SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID = ?1 AND e.LernabschnittWechselNr = 0", DTOKursSchueler.class, daten.id);
+				conn.queryList("SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID = ?1 AND e.LernabschnittWechselNr = 0", DTOKursSchueler.class,
+						kursdaten.id);
 		final List<Long> schuelerIDs = listKursSchueler.stream().map(ks -> ks.Schueler_ID).toList();
 		final List<DTOSchueler> listSchueler = ((schuelerIDs == null) || (schuelerIDs.isEmpty())) ? new ArrayList<>()
 				: conn.queryByKeyList(DTOSchueler.class, schuelerIDs);
 		for (final DTOSchueler dto : listSchueler)
-			daten.schueler.add(DataSchuelerliste.mapToSchueler(dto, null));  // TODO Abschlussjahrgang bestimmen
-		return daten;
+			kursdaten.schueler.add(DataSchuelerliste.mapToSchueler(dto, null));  // TODO Abschlussjahrgang bestimmen
 	}
-
 
 	@Override
 	public Response get(final Long id) throws ApiOperationException {
