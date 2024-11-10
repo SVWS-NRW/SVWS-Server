@@ -124,22 +124,15 @@ public final class DataLehrerStammdaten extends DataManager<Long> {
 	 */
 	public List<LehrerStammdaten> getFromIDs(final DBEntityManager conn, final List<Long> idsLehrer) throws ApiOperationException {
 		final var result = new ArrayList<LehrerStammdaten>();
-		if (idsLehrer == null)
+
+		if ((idsLehrer == null) || idsLehrer.isEmpty())
 			return result;
 
-		final List<DTOLehrer> dtoListLehrer = new ArrayList<>();
-		if (idsLehrer.isEmpty())
-			dtoListLehrer.addAll(conn.queryList(DTOLehrer.QUERY_ALL, DTOLehrer.class));
-		else
-			dtoListLehrer.addAll(conn.queryByKeyList(DTOLehrer.class, idsLehrer));
-		if (dtoListLehrer.isEmpty())
-			return result;
-
-		final List<DTOLehrer> lehrer = dtoListLehrer.stream().filter(l -> idsLehrer.contains(l.ID)).toList();
+		final List<DTOLehrer> dtoListLehrer = conn.queryByKeyList(DTOLehrer.class, idsLehrer);
 
 		final Map<Long, DTOLehrerFoto> mapFotos = conn.queryByKeyList(DTOLehrerFoto.class, dtoListLehrer.stream().map(l -> l.ID).toList())
 				.stream().collect(Collectors.toMap(lf -> lf.Lehrer_ID, lf -> lf));
-		for (final DTOLehrer l : lehrer) {
+		for (final DTOLehrer l : dtoListLehrer) {
 			final LehrerStammdaten daten = dtoMapper.apply(l);
 			final var tmpFoto = mapFotos.get(daten.id);
 			daten.foto = (tmpFoto == null) ? null : tmpFoto.FotoBase64;

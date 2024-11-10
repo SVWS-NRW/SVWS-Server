@@ -33,11 +33,17 @@ Die zueinander gehörenden Definitionen in der *ReportingReportvorlage* und der 
 
 Der erste Teil des Namens ist der Bereich, aus dem die Daten geholt werden sollen und der zweite Teil der gewünschte Name der Vorlage. Beide werden durch ein "\_v_" voneinander getrennt. Folgende Bereiche gibt es:
 * SCHUELER_v_
+* KLASSEN_v_
+* KURSE_v_
+* LEHRER_v_
 * GOST_KURSPLANUNG_v_
 * GOST_KLAUSURPLANUNG_v_
 
 Zu jedem dieser Bereiche kann es eine oder mehrere "Datenquellen" in Thymeleaf geben, dort werden sie als *Context* bezeichnet. Aktuell können davon folgende Contexts angesprochen werden:
 * Benennung SCHUELER_v_ entspricht dem Context "**Schueler**" in der html-Datei
+* Benennung KLASSEN_v_ entspricht dem Context "**Klassen**" in der html-Datei
+* Benennung KURSE_v_ entspricht dem Context "**Kurse**" in der html-Datei
+* Benennung LEHRER_v_ entspricht dem Context "**Lehrer**" in der html-Datei
 * Benennung GOST_KURSPLANUNG_v_ entspricht dem Context "**GostBlockungsergebnis**" in der html-Datei
 * Benennung GOST_KLAUSURPLANUNG_v_ entspricht dem Context "**GostKlausurplan**" in der html-Datei
 
@@ -90,6 +96,9 @@ Um die Templates mit Daten zu füllen, stehen folgende Contexts zur Verfügung, 
 * GostKlausurplan
 * Parameter (wird immer gefüllt, enthält die übergebenen Daten der ReportingParameter)
 * Schueler
+* Klassen
+* Kurse
+* Lehrer
 * Schule (wird immer gefüllt, enthält die Daten der Schule)
 
 Diese Contexts sind Java-Objekte und können mit ihren Attributen und Methoden im Template verwendet werden, sofern Thymeleaf dies auch zulässt.

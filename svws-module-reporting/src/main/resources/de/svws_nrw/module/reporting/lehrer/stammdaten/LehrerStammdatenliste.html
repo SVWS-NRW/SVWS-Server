@@ -43,9 +43,9 @@
 		<table class="fixed-100 p-0">
 			<colgroup>
                 <col style="width: 4%;"/>
+                <col style="width: 13%;"/>
                 <col style="width: 14%;"/>
-                <col style="width: 15%;"/>
-                <col style="width: 7%;"/>
+                <col style="width: 9%;"/>
                 <col style="width: 4%;"/>
                 <col style="width: 10%;"/>
                 <col style="width: 24%;"/>
@@ -57,7 +57,7 @@
 				<td class="head-small-grey"></td>
 				<td class="head-small-grey">Name</td>
 				<td class="head-small-grey">Vorname</td>
-				<td class="head-small-grey ta-r">Amtsbez.</td>
+				<td class="head-small-grey">Amtsbez.</td>
 				<td class="head-small-grey ta-c">Ges.</td>
 				<td class="head-small-grey">Geb. am</td>
 				<td class="head-small-grey">Straße</td>
@@ -65,7 +65,7 @@
 				<td class="head-small-grey">Ort</td>
 			</tr>
 			</thead>
-			<tr style="page-break-inside: avoid;" th:each="lehrer,iterationVarLehrer : ${Lehrer}">
+			<tr style="page-break-inside: avoid;" th:each="lehrer,iterationVarLehrer : ${Lehrer}" th:classappend="${iterationVarLehrer.odd} ? 'bg-lightgrey'">
 				<td class="f-small ta-r bo-t-grey p-tb-0-lr-1" th:text="${iterationVarLehrer.count + '. '}">1. </td>
 				<td class="f-small bo-t-grey p-tb-0-lr-1" th:text="${lehrer.nachname()}">Mustermann</td>
 				<td class="f-small bo-t-grey p-tb-0-lr-1" th:text="${lehrer.vorname()}">Maximilian Moritz</td>
