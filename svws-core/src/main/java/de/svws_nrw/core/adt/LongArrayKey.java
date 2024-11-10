@@ -1,5 +1,6 @@
 package de.svws_nrw.core.adt;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 import de.svws_nrw.core.adt.map.AVLMap;
@@ -69,6 +70,11 @@ public final class LongArrayKey implements Comparable<LongArrayKey> {
 			hashCode = (31 * hashCode) + (int) (value ^ (value >>> 32));
 		}
 		return hashCode;
+	}
+
+	@Override
+	public String toString() {
+		return Arrays.toString(_keys);
 	}
 
 	@Override

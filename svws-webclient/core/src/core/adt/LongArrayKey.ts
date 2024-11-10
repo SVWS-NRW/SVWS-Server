@@ -1,6 +1,7 @@
 import type { Comparable } from '../../java/lang/Comparable';
 import { JavaObject } from '../../java/lang/JavaObject';
 import { Class } from '../../java/lang/Class';
+import { Arrays } from '../../java/util/Arrays';
 import { System } from '../../java/lang/System';
 
 export class LongArrayKey extends JavaObject implements Comparable<LongArrayKey> {
@@ -76,6 +77,10 @@ export class LongArrayKey extends JavaObject implements Comparable<LongArrayKey>
 			hashCode = (31 * hashCode) + (value ^ (value >>> 32)) as number;
 		}
 		return hashCode;
+	}
+
+	public toString() : string | null {
+		return Arrays.toString(this._keys);
 	}
 
 	public equals(obj : unknown | null) : boolean {
