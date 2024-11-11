@@ -1,4 +1,5 @@
 <template>
+	<RegionSwitch />
 	<svws-ui-app-layout :no-secondary-menu="!showSubmenu()" :tertiary-menu="showAuswahlliste()" secondary-menu-small>
 		<template #sidebar>
 			<svws-ui-menu>
@@ -85,7 +86,8 @@
 					</template>
 					<template #header />
 					<template #content>
-						<svws-ui-secondary-menu-navigation :tab-manager="(app.name.startsWith('schule') ? tabManagerSchule : tabManagerEinstellungen)" />
+						<p :id="showSubmenu() ? 'menuFocusNumber' : ''" class="region-enumeration">2</p>
+						<svws-ui-secondary-menu-navigation :id="showSubmenu() ? 'menuFocusBorder' : ''" class="focus-region" :tab-manager="(app.name.startsWith('schule') ? tabManagerSchule : tabManagerEinstellungen)" />
 					</template>
 				</svws-ui-secondary-menu>
 			</template>
@@ -124,7 +126,10 @@
 					</svws-ui-header>
 				</div>
 				<div v-show="!pendingSetApp" class="page--wrapper" :class="{'svws-api--pending': apiStatus.pending}">
-					<router-view :key="app.name" />
+					<p id="contentFocusNumber" class="region-enumeration">8</p>
+					<div id="contentFocusBorder" class="focus-region">
+						<router-view :key="app.name" />
+					</div>
 				</div>
 			</main>
 		</template>
@@ -161,6 +166,7 @@
 	import { githash } from '../../githash';
 	import { version } from '../../version';
 	import { api } from '~/router/Api';
+	import RegionSwitch from "~/components/RegionSwitch.vue";
 
 	const props = defineProps<AppProps>();
 

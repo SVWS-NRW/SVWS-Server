@@ -1,7 +1,9 @@
 <template>
 	<div :class="{ 'svws-ui-page': !secondary, 'svws-single-tab': tabManager().tabs.length === 1 }">
 		<div class="svws-ui-tabs" :class="{ 'svws-ui-tabs--secondary': secondary }">
-			<div class="svws-ui-tabs--wrapper">
+			<div :id="secondary ? 'tabsSecondLevelFocusBorder' : 'tabsFirstLevelFocusBorder'" class="svws-ui-tabs--wrapper focus-region">
+				<p v-if="secondary" id="tabsSecondLevelFocusNumber" class="region-enumeration">6</p>
+				<p v-else id="tabsFirstLevelFocusNumber" class="region-enumeration">5</p>
 				<div v-if="state.scrolled" class="svws-ui-tabs--scroll-button -left-1 pl-1 bg-gradient-to-l" @click="scroll('left')">
 					<svws-ui-button type="icon">
 						<span class="icon i-ri-arrow-left-s-line" />
@@ -9,7 +11,9 @@
 				</div>
 				<div ref="tabsListElement" class="svws-ui-tabs--list">
 					<template v-for="(tab, index) in props.tabManager().tabs" :key="index">
-						<button v-if="!(tab.hide === true) && (tab.text !== '')" @click="tabManager().setTab(tab)" class="svws-ui-tab-button flex flex-row"
+						<button :id="tab.name === tabManager().tab.name
+								? (secondary ? 'tabsSecondLevelFocusField' : 'tabsFirstLevelFocusField')
+								: ''" v-if="!(tab.hide === true) && (tab.text !== '')" @click="tabManager().setTab(tab)" class="svws-ui-tab-button flex flex-row"
 							:class="{ 'svws-active': tab.name === tabManager().tab.name }">
 							<span>{{ tab.text }}</span>
 							<slot name="badge" :tab />

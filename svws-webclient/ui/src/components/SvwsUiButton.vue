@@ -1,5 +1,5 @@
 <template>
-	<button class="button" :class="{
+	<button :id="filterButton ? 'filterFocusField' : ''" class="button" :class="{
 		'button--primary': type === 'primary',
 		'button--secondary': type === 'secondary',
 		'button--danger': (type === 'error') || (type === 'danger'),
@@ -32,11 +32,13 @@
 		disabled?: boolean;
 		size?: 'small' | 'normal' | 'big';
 		autofocus?: boolean;
+		filterButton?: boolean;
 	}>(),{
 		type: 'primary',
 		disabled: false,
 		size: 'normal',
-		autofocus: false
+		autofocus: false,
+		filterButton: false,
 	});
 
 	onMounted(() => setAutofocus());

@@ -1,6 +1,7 @@
 <template>
 	<div
-		class="sidebar--menu">
+		id="navigationFocusBorder" class="sidebar--menu focus-region">
+		<p id="navigationFocusNumber" class="region-enumeration">1</p>
 		<div class="sidebar--menu--header" v-if="$slots.header">
 			<slot name="header" />
 		</div>

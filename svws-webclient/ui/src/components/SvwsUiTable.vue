@@ -1,5 +1,6 @@
 <template>
-	<div v-if="$slots.search || $slots.filter || $slots.filterAdvanced || toggleColumns" class="svws-ui-table-filter" :class="{'svws-open': $slots.filter && isFilterOpen}">
+	<p id="filterFocusNumber" v-if="$slots.search || $slots.filter || $slots.filterAdvanced || toggleColumns" class="region-enumeration">3</p>
+	<div id="filterFocusBorder" v-if="$slots.search || $slots.filter || $slots.filterAdvanced || toggleColumns" class="svws-ui-table-filter focus-region" :class="{'svws-open': $slots.filter && isFilterOpen}">
 		<div class="flex w-full gap-0.5 overflow-hidden">
 			<div class="flex-grow" v-if="$slots.search">
 				<slot name="search" />
@@ -30,7 +31,7 @@
 				</svws-ui-tooltip>
 			</div>
 			<div v-if="$slots.filterAdvanced && filterHide" class="flex flex-shrink-0" :class="{'ml-auto': !$slots.filter && !toggleColumns}">
-				<svws-ui-button type="transparent" @click="toggleFilterOpen" class="h-full" :class="{'opacity-50 hover:opacity-100 focus-visible:opacity-100': !filtered && isFilterOpen}">
+				<svws-ui-button type="transparent" @click="toggleFilterOpen" class="h-full" :class="{'opacity-50 hover:opacity-100 focus-visible:opacity-100': !filtered && isFilterOpen}" filter-button>
 					<template #badge v-if="filtered">
 						<span />
 					</template>
@@ -49,7 +50,7 @@
 			<slot name="filterAdvanced" />
 		</div>
 	</div>
-	<div class="svws-ui-table" role="table" aria-label="Tabelle" v-bind="$attrs" style="scrollbar-gutter: stable; scrollbar-width: thin; scrollbar-color: rgba(0,0,0,0.2) transparent;"
+	<div id="listFocusBorder" class="svws-ui-table focus-region" role="table" aria-label="Tabelle" v-bind="$attrs" style="scrollbar-gutter: stable; scrollbar-width: thin; scrollbar-color: rgba(0,0,0,0.2) transparent;"
 		:class="{
 			'svws-clickable': clickable && (typeof noData !== 'undefined' ? !noData : !noDataCalculated),
 			'svws-selectable': selectable,
@@ -63,6 +64,7 @@
 			'overflow-auto': scroll,
 			'pr-4': scroll && win11FForMacOS,
 		}">
+		<p id="listFocusNumber" class="region-enumeration">4</p>
 		<div v-if="!disableHeader" class="svws-ui-thead" role="rowgroup" aria-label="Tabellenkopf">
 			<slot name="header" :all-rows-selected="allRowsSelected" :toggle-all-rows="toggleBulkSelection" :columns="columnsComputed">
 				<div role="row" class="svws-ui-tr">
@@ -108,7 +110,7 @@
 				</div>
 				<template v-for="(row, index) in sortedRows">
 					<slot name="rowCustom" :row="row.source">
-						<div class="svws-ui-tr" role="row" :key="`table-row_${row}_${index}`" @click.exact="toggleRowClick(row)" :ref="el => itemRefs.set(index, el)"
+						<div :id="isRowClicked(row) ? 'listFocusField' : ''" class="svws-ui-tr" role="row" :key="`table-row_${row}_${index}`" @click.exact="toggleRowClick(row)" :ref="el => itemRefs.set(index, el)"
 							:class="{ 'svws-selected': isRowSelected(row), 'svws-clicked': isRowClicked(row), }" tabindex="0" @keydown.enter="toggleRowClick(row)"
 							@keydown.down.prevent="switchElement($event, itemRefs, index, false)" @keydown.up.prevent="switchElement($event, itemRefs, index, true)">
 							<slot name="row" :row="row.source">
