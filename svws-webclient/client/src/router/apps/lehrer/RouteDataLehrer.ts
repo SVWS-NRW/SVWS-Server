@@ -1,17 +1,10 @@
-import { LehrerFachrichtungAnerkennung, LehrerFachrichtungEintrag, LehrerLehramtAnerkennung, LehrerLehramtEintrag, LehrerLehrbefaehigungAnerkennung, LehrerLehrbefaehigungEintrag, LehrerListeEintrag, LehrerPersonalabschnittsdaten, LehrerPersonaldaten, LehrerStammdaten, List, SimpleOperationResponse } from "@core";
-import { ArrayList, DeveloperNotificationException, LehrerListeManager } from "@core";
+import type { LehrerFachrichtungAnerkennung, LehrerFachrichtungEintrag, LehrerLehramtAnerkennung, LehrerLehramtEintrag, LehrerLehrbefaehigungAnerkennung, LehrerLehrbefaehigungEintrag, LehrerListeEintrag, LehrerPersonalabschnittsdaten, LehrerPersonaldaten, LehrerStammdaten, List } from "@core";
+import { SimpleOperationResponse, ArrayList, DeveloperNotificationException, LehrerListeManager } from "@core";
 
 import { api } from "~/router/Api";
-import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-import { RouteManager } from "~/router/RouteManager";
 
 import { routeLehrerIndividualdaten } from "~/router/apps/lehrer/RouteLehrerIndividualdaten";
 import { ViewType } from "@ui";
-import { RoutingStatus } from "~/router/RoutingStatus";
-import { routeLehrerPersonaldaten } from "~/router/apps/lehrer/RouteLehrerPersonaldaten";
-import { routeLehrerStundenplan } from "~/router/apps/lehrer/stundenplan/RouteLehrerStundenplan";
-import { routeLehrerUnterrichtsdaten } from "~/router/apps/lehrer/RouteLehrerUnterrichtsdaten";
-import { routeLehrerStundenplanDaten } from "~/router/apps/lehrer/stundenplan/RouteLehrerStundenplanDaten";
 import { routeLehrerGruppenprozesse } from "~/router/apps/lehrer/RouteLehrerGruppenprozesse";
 import { routeLehrerNeu } from "~/router/apps/lehrer/RouteLehrerNeu";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";

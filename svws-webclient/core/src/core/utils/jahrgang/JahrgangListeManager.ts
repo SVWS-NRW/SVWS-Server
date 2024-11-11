@@ -10,7 +10,6 @@ import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import { Arrays } from '../../../java/util/Arrays';
 import { Schuljahresabschnitt } from '../../../asd/data/schule/Schuljahresabschnitt';
-import { Pair } from '../../../asd/adt/Pair';
 
 export class JahrgangListeManager extends AuswahlManager<number, JahrgangsDaten, JahrgangsDaten> {
 
@@ -30,7 +29,7 @@ export class JahrgangListeManager extends AuswahlManager<number, JahrgangsDaten,
 	 * @param jahrgaenge       die Liste der Jahrgänge
 	 */
 	public constructor(schuljahresabschnitt : number, schuljahresabschnittSchule : number, schuljahresabschnitte : List<Schuljahresabschnitt>, schulform : Schulform | null, jahrgaenge : List<JahrgangsDaten>) {
-		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, jahrgaenge, JahrgangsUtils.comparator, JahrgangListeManager._jahrgangToId, JahrgangListeManager._jahrgangToId, Arrays.asList(new Pair("kuerzel", true), new Pair("bezeichnung", true)));
+		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, jahrgaenge, JahrgangsUtils.comparator, JahrgangListeManager._jahrgangToId, JahrgangListeManager._jahrgangToId, Arrays.asList());
 	}
 
 	/**

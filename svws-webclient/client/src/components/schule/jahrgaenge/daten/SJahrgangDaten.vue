@@ -8,6 +8,9 @@
 				<svws-ui-select title="Statistik-Jahrgang" v-model="statistikjahrgang" :items="Jahrgaenge.getListBySchuljahrAndSchulform(schuljahr, schulform)" :item-text="textStatistikJahrgang" statistics />
 				<svws-ui-select title="Folgejahrgang" v-model="idFolgejahrgang" :items="folgejahrgaenge" :item-text="textFolgejahrgang" />
 				<svws-ui-input-number placeholder="Anzahl der Restabschnitte" :model-value="jahrgangListeManager().daten().anzahlRestabschnitte" @change="patchRestabschnitte" />
+				<svws-ui-spacing />
+				<svws-ui-input-number placeholder="Sortierung" :required="true" :min="0" :model-value="jahrgangListeManager().daten().sortierung"
+					@change="sortierung => patch({ sortierung: sortierung ?? undefined })" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 	</div>

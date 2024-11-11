@@ -33,7 +33,7 @@ public final class JahrgangListeManager extends AuswahlManager<Long, JahrgangsDa
 	public JahrgangListeManager(final long schuljahresabschnitt, final long schuljahresabschnittSchule,
 			final @NotNull List<Schuljahresabschnitt> schuljahresabschnitte, final Schulform schulform, final @NotNull List<JahrgangsDaten> jahrgaenge) {
 		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, jahrgaenge, JahrgangsUtils.comparator, _jahrgangToId,
-				_jahrgangToId,  Arrays.asList(new Pair<>("kuerzel", true), new Pair<>("bezeichnung", true)));
+				_jahrgangToId,  Arrays.asList());
 	}
 
 
