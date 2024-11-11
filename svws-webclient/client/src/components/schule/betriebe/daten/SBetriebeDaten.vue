@@ -96,8 +96,8 @@
 	}
 </script>
 
-<style lang="postcss" scoped>
+<!-- <style lang="postcss" scoped>
 	.page--content {
 		@apply grid overflow-y-hidden overflow-x-auto h-full pb-3 pt-6;
 	}
-</style>
+</style> -->

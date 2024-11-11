@@ -1,6 +1,6 @@
 <template>
 	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="showModal" size="big" class="hidden">
+	<svws-ui-modal :show="showModal" size="big" class="hidden" :no-scroll="false">
 		<template #modalTitle>Schülerbetrieb hinzufügen</template>
 		<template #modalDescription />
 		<template #modalContent>
@@ -38,11 +38,14 @@
 					<div class="col-span-2">
 						<svws-ui-textarea-input v-model="betrieb.bemerkungen" placeholder="Bemerkungen" />
 					</div>
-					<svws-ui-checkbox v-model="betrieb.ausbildungsbetrieb"> Ausbildungsbetrieb </svws-ui-checkbox>
-					<svws-ui-checkbox v-model="betrieb.bietetPraktika"> Bietet Praktumsplätze </svws-ui-checkbox>
-					<svws-ui-checkbox v-model="betrieb.Massnahmentraeger"> Maßnahmenträger </svws-ui-checkbox>
-					<svws-ui-checkbox v-model="betrieb.ErwFuehrungszeugnis"> Erweitertes Führungszeugnis notwendig </svws-ui-checkbox>
-					<svws-ui-checkbox v-model="betrieb.BelehrungISG"> Belehrung n. Infektionsschutzgesetz notwendig </svws-ui-checkbox>
+					<svws-ui-spacing />
+					<svws-ui-input-wrapper :grid="2">
+						<svws-ui-checkbox v-model="betrieb.ausbildungsbetrieb"> Ausbildungsbetrieb </svws-ui-checkbox>
+						<svws-ui-checkbox v-model="betrieb.bietetPraktika"> Bietet Praktumsplätze </svws-ui-checkbox>
+						<svws-ui-checkbox v-model="betrieb.Massnahmentraeger"> Maßnahmenträger </svws-ui-checkbox>
+						<svws-ui-checkbox v-model="betrieb.ErwFuehrungszeugnis"> Erweitertes Führungszeugnis notwendig </svws-ui-checkbox>
+						<svws-ui-checkbox v-model="betrieb.BelehrungISG"> Belehrung n. Infektionsschutzgesetz notwendig </svws-ui-checkbox>
+					</svws-ui-input-wrapper>
 				</div>
 			</svws-ui-content-card>
 		</template>
