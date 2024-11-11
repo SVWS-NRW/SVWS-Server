@@ -171,21 +171,14 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		return [status, logMessages];
 	}
 
-	patch = async (data : Partial<KlassenDaten>) => {
+	patch = async (datenToPatch : Partial<KlassenDaten>) => {
 		if (!this.klassenListeManager.hasDaten())
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		const idKlasse = this.klassenListeManager.auswahl().id;
+
 		const daten = this.klassenListeManager.daten();
-		await api.server.patchKlasse(data, api.schema, idKlasse);
-		Object.assign(daten, data);
-		const eintrag = this.klassenListeManager.liste.get(idKlasse);
-		if (eintrag !== null) {
-			if (data.kuerzel !== undefined)
-				eintrag.kuerzel = data.kuerzel;
-			if (data.sortierung !== undefined)
-				eintrag.sortierung = data.sortierung;
-		}
-		this.klassenListeManager.setDaten(daten);
+		await api.server.patchKlasse(datenToPatch, api.schema, daten.id);
+		const patchedDaten = Object.assign(daten, datenToPatch);
+		this.klassenListeManager.setDaten(patchedDaten);
 		this.commit();
 	}
 
