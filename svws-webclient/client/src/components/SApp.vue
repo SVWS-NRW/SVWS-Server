@@ -1,5 +1,4 @@
 <template>
-	<RegionSwitch />
 	<svws-ui-app-layout :no-secondary-menu="!showSubmenu()" :tertiary-menu="showAuswahlliste()" secondary-menu-small>
 		<template #sidebar>
 			<svws-ui-menu>
@@ -166,9 +165,10 @@
 	import { githash } from '../../githash';
 	import { version } from '../../version';
 	import { api } from '~/router/Api';
-	import RegionSwitch from "~/components/RegionSwitch.vue";
+	import { regionSwitch } from "~/components/RegionSwitch";
 
 	const props = defineProps<AppProps>();
+	regionSwitch();
 
 	const nextFocusSection = ref(0);
 	const sectionRefs = ref<Map<number, HTMLElement>>(new Map());
