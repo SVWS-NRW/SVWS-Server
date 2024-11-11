@@ -16,8 +16,8 @@
 					<svws-ui-multi-select v-model="filterLehrer" title="Klassenleitung" :items="klassenListeManager().lehrer.list()" :item-text="text" :item-filter="find" />
 					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="klassenListeManager().schulgliederungen.list()" :item-text="textSchulgliederung" />
 				</template>
-				<template #cell(schueler)="{value}"> {{ klassengroesse(value) }} </template>
-				<template #cell(klassenLehrer)="{value}">
+				<template #cell(schueler)="{value}"> {{ value.size() }} </template>
+				<template #cell(klassenLeitungen)="{value}">
 					{{ lehrerkuerzel(value) }}
 				</template>
 				<template #actions>
@@ -32,7 +32,7 @@
 								</template>
 							</svws-ui-tooltip>
 						</s-klassen-auswahl-sortierung-modal>
-						<svws-ui-tooltip position="bottom" v-if="hatKompetenzAendern">
+						<svws-ui-tooltip v-if="hatKompetenzAendern" position="bottom">
 							<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="gotoHinzufuegenView(true)" :has-focus="rowsFiltered.length === 0">
 								<span class="icon i-ri-add-line" />
 							</svws-ui-button>
@@ -50,9 +50,9 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type{ JahrgangsDaten, KlassenDaten, LehrerListeEintrag, List, SchuelerListeEintrag, Schulgliederung } from "@core";
-	import { BenutzerKompetenz } from "@core";
 	import type { KlassenAuswahlProps } from "./SKlassenAuswahlProps";
+	import type{ JahrgangsDaten, KlassenDaten, LehrerListeEintrag, Schulgliederung } from "@core";
+	import { BenutzerKompetenz } from "@core";
 	import { ViewType } from "@ui";
 
 	const props = defineProps<KlassenAuswahlProps>();
@@ -63,18 +63,9 @@
 
 	const columns = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc", span: 0.5 },
-		{ key: "klassenLehrer", label: "Klassenleitung" },
-		{ key: "schueler", label: "Schüler", span: 0.5, sortable: true }
+		{ key: "klassenLeitungen", label: "Klassenleitung" },
+		{ key: "schueler", label: "Schüler", span: 0.5, sortable: true },
 	];
-
-	const klassengroesse = (schueler: List<SchuelerListeEintrag>) => computed(() => {
-		return schueler.size();
-		// let counter = 0;
-		// for (const s of schueler)
-		// 	if ((s.status === 2)|| (s.status === 4)) // aktiv oder extern
-		// 		counter++;
-		// return counter;
-	})
 
 	function text(eintrag: LehrerListeEintrag | JahrgangsDaten): string {
 		return eintrag.kuerzel ?? "";
@@ -169,11 +160,10 @@
 		if (props.klassenListeManager().hasDaten())
 			for (const id of list) {
 				const lehrer = props.klassenListeManager().lehrer.get(id);
-				if (lehrer !== null) {
+				if (lehrer !== null)
 					if (s.length > 0)
 						s += `, ${lehrer.kuerzel}`;
 					else s = lehrer.kuerzel;
-				}
 			}
 		return s;
 	}
