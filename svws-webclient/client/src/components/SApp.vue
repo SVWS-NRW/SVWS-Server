@@ -125,10 +125,10 @@
 					</svws-ui-header>
 				</div>
 				<div v-show="!pendingSetApp" class="page--wrapper" :class="{'svws-api--pending': apiStatus.pending}">
-					<p id="contentFocusNumber" class="region-enumeration">8</p>
-					<div id="contentFocusBorder" class="focus-region">
-						<router-view :key="app.name" />
-					</div>
+					<!-- <p id="contentFocusNumber" class="region-enumeration">8</p>
+					<div id="contentFocusBorder" class="focus-region"> -->
+					<router-view :key="app.name" />
+					<!-- </div> -->
 				</div>
 			</main>
 		</template>
