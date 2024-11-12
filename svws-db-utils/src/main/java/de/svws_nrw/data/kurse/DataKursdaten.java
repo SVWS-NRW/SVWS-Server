@@ -203,7 +203,8 @@ public final class DataKursdaten extends DataManager<Long> {
 		final List<DTOSchueler> listSchueler = ((schuelerIDs == null) || (schuelerIDs.isEmpty())) ? new ArrayList<>()
 				: conn.queryByKeyList(DTOSchueler.class, schuelerIDs);
 		for (final DTOSchueler dto : listSchueler)
-			kursdaten.schueler.add(DataSchuelerliste.mapToSchueler(dto, null));  // TODO Abschlussjahrgang bestimmen
+			if (Boolean.FALSE.equals(dto.Geloescht))
+				kursdaten.schueler.add(DataSchuelerliste.mapToSchueler(dto, null));  // TODO Abschlussjahrgang bestimmen
 	}
 
 	@Override
