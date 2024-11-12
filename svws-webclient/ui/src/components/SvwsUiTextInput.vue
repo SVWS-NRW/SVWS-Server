@@ -394,6 +394,21 @@
 		@apply border-ui-statistic;
 	}
 
+	.text-input--invalid.text-input-component:focus-within .text-input--control,
+	.text-input--invalid .text-input--control {
+		@apply border-ui-danger;
+	}
+
+	.text-input--statistic-kann.text-input-component:focus-within .text-input--control,
+	.text-input--statistic-kann .text-input--control {
+		@apply border-ui-caution;
+	}
+
+	.text-input--statistic-hinweis.text-input-component:focus-within .text-input--control,
+	.text-input--statistic-hinweis .text-input--control {
+		@apply border-ui-warning;
+	}
+
 	.text-input--statistics:not(.text-input--filled) .text-input--control {
 		@apply border-ui-statistic-secondary;
 	}
