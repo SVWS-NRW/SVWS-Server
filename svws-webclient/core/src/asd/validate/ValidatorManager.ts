@@ -88,8 +88,8 @@ export class ValidatorManager extends JavaObject {
 			const mapZeitraeumeBySchulform : HashMap<string, List<PairNN<number, number>>> = new HashMap<string, List<PairNN<number, number>>>();
 			for (const eintrag of list) {
 				const zeitraum : PairNN<number, number> = ValidatorManager.createZeitraum(eintrag.gueltigVon, eintrag.gueltigBis);
-				ValidatorManager.addZeitraum(mapZeitraeumeBySchulform, zeitraum, eintrag.hart);
 				ValidatorManager.addZeitraum(mapZeitraeumeBySchulform, zeitraum, eintrag.muss);
+				ValidatorManager.addZeitraum(mapZeitraeumeBySchulform, zeitraum, eintrag.kann);
 				ValidatorManager.addZeitraum(mapZeitraeumeBySchulform, zeitraum, eintrag.hinweis);
 			}
 			for (const zeitraeume of mapZeitraeumeBySchulform.entrySet()) {
@@ -263,10 +263,10 @@ export class ValidatorManager extends JavaObject {
 		mapValidatorToFehlerart.clear();
 		const mapFehlerartToValidator : JavaMap<ValidatorFehlerart, List<string>> = this.computeIfAbsentFehlerartToValidatorname(schuljahr);
 		mapFehlerartToValidator.clear();
-		const hart : List<string> = ValidatorManager.computeIfAbsentFehlerartValidator(ValidatorFehlerart.HART, mapFehlerartToValidator);
-		hart.clear();
 		const muss : List<string> = ValidatorManager.computeIfAbsentFehlerartValidator(ValidatorFehlerart.MUSS, mapFehlerartToValidator);
 		muss.clear();
+		const kann : List<string> = ValidatorManager.computeIfAbsentFehlerartValidator(ValidatorFehlerart.KANN, mapFehlerartToValidator);
+		kann.clear();
 		const hinweis : List<string> = ValidatorManager.computeIfAbsentFehlerartValidator(ValidatorFehlerart.HINWEIS, mapFehlerartToValidator);
 		hinweis.clear();
 		const ungenutzt : List<string> = ValidatorManager.computeIfAbsentFehlerartValidator(ValidatorFehlerart.UNGENUTZT, mapFehlerartToValidator);
@@ -275,19 +275,19 @@ export class ValidatorManager extends JavaObject {
 			const validatorName : string = entry.getKey();
 			const list : List<ValidatorFehlerartKontext> = entry.getValue();
 			for (const eintrag of list) {
-				const hasHart : boolean = eintrag.hart.contains(this._schulform.name());
-				const hasMuss : boolean = eintrag.muss.contains(this._schulform.name());
+				const hasHart : boolean = eintrag.muss.contains(this._schulform.name());
+				const hasMuss : boolean = eintrag.kann.contains(this._schulform.name());
 				const hasHinweis : boolean = eintrag.hinweis.contains(this._schulform.name());
 				if ((hasHart && hasMuss) || (hasMuss && hasHinweis) || (hasHart && hasHinweis))
 					throw new CoreTypeException("Ein Validator kann bei einer Schulform nicht gleichzeitig bei mehreren Fehlerarten aktiv sein.")
 				const validatorAktivInUmgebungUndSchuljahr : boolean = (this._isZebras ? eintrag.zebras : eintrag.svws) && ((eintrag.gueltigVon === null) || (eintrag.gueltigVon <= schuljahr)) && ((eintrag.gueltigBis === null) || (schuljahr <= eintrag.gueltigBis));
 				if (validatorAktivInUmgebungUndSchuljahr && hasHart) {
-					mapValidatorToFehlerart.put(validatorName, ValidatorFehlerart.HART);
-					hart.add(validatorName);
+					mapValidatorToFehlerart.put(validatorName, ValidatorFehlerart.MUSS);
+					muss.add(validatorName);
 				} else
 					if (validatorAktivInUmgebungUndSchuljahr && hasMuss) {
-						mapValidatorToFehlerart.put(validatorName, ValidatorFehlerart.MUSS);
-						muss.add(validatorName);
+						mapValidatorToFehlerart.put(validatorName, ValidatorFehlerart.KANN);
+						kann.add(validatorName);
 					} else
 						if (validatorAktivInUmgebungUndSchuljahr && hasHinweis) {
 							mapValidatorToFehlerart.put(validatorName, ValidatorFehlerart.HINWEIS);

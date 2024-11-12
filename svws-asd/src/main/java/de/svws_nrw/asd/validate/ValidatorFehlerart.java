@@ -6,10 +6,10 @@ package de.svws_nrw.asd.validate;
 public enum ValidatorFehlerart {
 
 	/** MUSS-Fehler : verhindert das Absenden der Statistik */
-	HART,
-
-	/** KANN-Fehler: Fehler, der erklärt werden muss, aber das Absenden der Statistik nicht verhindert */
 	MUSS,
+
+	/** KANN-Fehler: Wahrscheinlicher Fehler, der erklärt werden muss, aber das Absenden der Statistik nicht verhindert */
+	KANN,
 
 	/** HINWEIS: auf einen möglichen Fehler */
 	HINWEIS,

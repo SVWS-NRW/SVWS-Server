@@ -3,8 +3,8 @@
 		:class="{
 			'text-input--filled': (`${data}`.length > 0 && data !== null) || type === 'date',
 			'text-input--invalid': (isValid === false),
-			'text-input--statistic-hart': ((validator !== undefined) && (!validator().getFehler().isEmpty()) && (validator().getFehlerart() === ValidatorFehlerart.HART)),
 			'text-input--statistic-muss': ((validator !== undefined) && (!validator().getFehler().isEmpty()) && (validator().getFehlerart() === ValidatorFehlerart.MUSS)),
+			'text-input--statistic-kann': ((validator !== undefined) && (!validator().getFehler().isEmpty()) && (validator().getFehlerart() === ValidatorFehlerart.KANN)),
 			'text-input--statistic-hinweis': ((validator !== undefined) && (!validator().getFehler().isEmpty()) && (validator().getFehlerart() === ValidatorFehlerart.HINWEIS)),
 			'text-input--disabled': disabled,
 			'text-input--readonly': readonly,
@@ -52,8 +52,8 @@
 							<span class="icon i-ri-alert-fill icon-error" v-if="(data === '') || (data === null) || (data === undefined)" />
 						</template>
 						<template v-else>
-							<span class="icon i-ri-alert-fill icon-danger" v-if="validator().getFehlerart() === ValidatorFehlerart.HART" />
-							<span class="icon i-ri-error-warning-fill icon-caution" v-if="validator().getFehlerart() === ValidatorFehlerart.MUSS" />
+							<span class="icon i-ri-alert-fill icon-danger" v-if="validator().getFehlerart() === ValidatorFehlerart.MUSS" />
+							<span class="icon i-ri-error-warning-fill icon-caution" v-if="validator().getFehlerart() === ValidatorFehlerart.KANN" />
 							<span class="icon i-ri-question-fill icon-warning" v-if="validator().getFehlerart() === ValidatorFehlerart.HINWEIS" />
 						</template>
 					</span>
@@ -62,8 +62,8 @@
 							<div class="text-ui-statistic text-headline-sm text-center pt-1"> Relevant für die Statistik </div>
 							<div v-for="fehler in validator().getFehler()" :key="fehler.hashCode" class="pt-2 pb-2">
 								<div class="rounded pl-2" :class="{
-									'bg-ui-danger': (validator().getFehlerart() === ValidatorFehlerart.HART),
-									'bg-ui-caution': (validator().getFehlerart() === ValidatorFehlerart.MUSS),
+									'bg-ui-danger': (validator().getFehlerart() === ValidatorFehlerart.MUSS),
+									'bg-ui-caution': (validator().getFehlerart() === ValidatorFehlerart.KANN),
 									'bg-ui-warning': (validator().getFehlerart() === ValidatorFehlerart.HINWEIS)}">
 									{{ fehler.getFehlerart() }}
 								</div>
@@ -343,7 +343,7 @@
 		/* TODO: COLORS icon */
 	}
 
-	.text-input--statistic-muss .svws-icon {
+	.text-input--statistic-kann .svws-icon {
 		@apply text-ui-caution;
 		/* TODO: COLORS icon */
 	}
@@ -402,7 +402,7 @@
 		@apply border-ui-danger;
 	}
 
-	.text-input--statistic-muss.text-input--filled:not(:focus-within) .text-input--control {
+	.text-input--statistic-kann.text-input--filled:not(:focus-within) .text-input--control {
 		@apply border-ui-caution;
 	}
 
@@ -521,8 +521,8 @@
 		@apply text-ui-danger;
 	}
 
-	.text-input--statistic-muss .text-input--placeholder,
-	.text-input--statistic-muss:not(:focus-within) .text-input--control {
+	.text-input--statistic-kann .text-input--placeholder,
+	.text-input--statistic-kann:not(:focus-within) .text-input--control {
 		@apply text-ui-caution;
 	}
 
@@ -562,7 +562,7 @@
 		@apply text-ui-danger opacity-100;
 	}
 
-	.text-input--statistic-muss .text-input--placeholder--required:after {
+	.text-input--statistic-kann .text-input--placeholder--required:after {
 		@apply text-ui-caution opacity-100;
 	}
 

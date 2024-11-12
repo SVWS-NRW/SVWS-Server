@@ -24,16 +24,16 @@ public class ValidatorFehlerartKontext {
 	@Schema(description = "ob der Validator in Client ausgeführt werden soll")
 	public boolean svws;
 
-	/** Liste der Schulformen, in denen ein harter Fehler vorliegt */
-	@Schema(description = "Liste der Schulformen, in denen ein harter Fehler vorliegt")
-	public @NotNull List<String> hart = new ArrayList<>();
-
-	/** Liste der Schulformen, in denen ein harter Fehler vorliegt */
-	@Schema(description = "Liste der Schulformen, in denen ein Muss-Fehler vorliegt")
+	/** Liste der Schulformen, in denen ein Fehler vorliegt */
+	@Schema(description = "Liste der Schulformen, in denen ein Fehler vorliegt")
 	public @NotNull List<String> muss = new ArrayList<>();
 
-	/** Liste der Schulformen, in denen ein harter Fehler vorliegt */
-	@Schema(description = "Liste der Schulformen, in denen ein Hinweis erfolgt")
+	/** Liste der Schulformen, in denen wahrscheinlich ein Fehler vorliegt */
+	@Schema(description = "Liste der Schulformen, in denen wahrscheinlich ein Fehler vorliegt")
+	public @NotNull List<String> kann = new ArrayList<>();
+
+	/** Liste der Schulformen, in denen ein Hinweise auf einen möglichen Fehler erfolgt */
+	@Schema(description = "Liste der Schulformen, in denen ein Hinweis auf einen möglichen Fehler erfolgt")
 	public @NotNull List<String> hinweis = new ArrayList<>();
 
 	/** Gibt an, ab welchem Schuljahr die Laufeigenschaft des Validators gilt. Falls schon immer, so ist null gesetzt. */
