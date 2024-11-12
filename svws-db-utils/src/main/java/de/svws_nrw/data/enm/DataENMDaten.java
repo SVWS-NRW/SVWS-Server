@@ -256,6 +256,7 @@ public final class DataENMDaten extends DataManager<Long> {
 			final DTOKlassen dtoKlasse = mapKlassen.get(lernabschnitt.Klassen_ID);
 			if (dtoKlasse == null)
 				throw new NullPointerException();
+			final Set<Long> idsKlassenleitungen = new HashSet<>();
 			ENMKlasse enmKlasse = manager.getKlasse(dtoKlasse.ID);
 			if (enmKlasse == null) {
 				manager.addKlasse(dtoKlasse.ID, dtoKlasse.ASDKlasse, dtoKlasse.Klasse, dtoKlasse.Jahrgang_ID, dtoKlasse.Sortierung);
@@ -274,6 +275,7 @@ public final class DataENMDaten extends DataManager<Long> {
 							}
 						}
 						enmKlasse.klassenlehrer.add(kl.Lehrer_ID);
+						idsKlassenleitungen.add(kl.Lehrer_ID);
 					}
 				}
 			}
@@ -325,33 +327,9 @@ public final class DataENMDaten extends DataManager<Long> {
 				enmSchueler.bemerkungen.tsIndividuelleVersetzungsbemerkungen = tsLernabschnitt.tsBemerkungVersetzung;
 				enmSchueler.bemerkungen.foerderbemerkungen = (bemerkungen == null) ? null : bemerkungen.BemerkungFSP;
 				enmSchueler.bemerkungen.tsFoerderbemerkungen = tsLernabschnitt.tsBemerkungFSP;
-
-				// Ankreuzkompetenzen hinzufügen und deren Katalog-Einträge hinzufügen
-				final List<DTOSchuelerAnkreuzfloskeln> ankreuzkompetenzen = mapAnkreuzkompetenzen.get(lernabschnitt.ID);
-				if (ankreuzkompetenzen != null) {
-					for (final DTOSchuelerAnkreuzfloskeln ankreuzkompetenz : ankreuzkompetenzen) {
-						// Prüfe die Teilleistungsart und ergänze sie ggf.
-						final ENMAnkreuzkompetenz enmAnkreuzkompetenz = manager.getAnkreuzkompetenz(ankreuzkompetenz.Floskel_ID);
-						if (enmAnkreuzkompetenz == null) {
-							final DTOAnkreuzfloskeln dtoAnkreuzkompetenz = mapKatalogAnkreuzkompetenzen.get(ankreuzkompetenz.Floskel_ID);
-							if (dtoAnkreuzkompetenz == null) // DB-Error -> should not happen
-								throw new NullPointerException();
-							manager.addAnkreuzkompetenz(dtoAnkreuzkompetenz.ID, (dtoAnkreuzkompetenz.IstASV == 0), dtoAnkreuzkompetenz.Fach_ID,
-									dtoAnkreuzkompetenz.Jahrgang, dtoAnkreuzkompetenz.FloskelText, dtoAnkreuzkompetenz.Sortierung);
-						}
-						// Füge die Schueler-Ankreuzkompetenz hinzu
-						final DTOTimestampsSchuelerAnkreuzkompetenzen ankreuzkompetenzTimestamps = mapAnkreuzkompetenzenTimestamps.get(ankreuzkompetenz.ID);
-						if (ankreuzkompetenzTimestamps == null)
-							throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
-									"Es konnten keine Zeitstempel für die Ankreuzkompetenzen ausgelesen werden. Dies deutet auf einen Fehler in der Datenbank hin.");
-						final boolean[] stufen = { ankreuzkompetenz.Stufe1, ankreuzkompetenz.Stufe2, ankreuzkompetenz.Stufe3, ankreuzkompetenz.Stufe4,
-								ankreuzkompetenz.Stufe5 };
-						manager.addSchuelerAnkreuzkompetenz(enmSchueler, ankreuzkompetenz.ID, ankreuzkompetenz.Floskel_ID, stufen,
-								ankreuzkompetenzTimestamps.tsStufe);
-					}
-				}
 			}
 
+			final Set<Long> leistungenFachIDs = new HashSet<>(); // Für die Ankreuzkompetenzen, sofern die auf einen unterrichtenden Lehrer eingeschränkt werden (Lehrer-spezifische ENMDaten)
 			final List<DTOSchuelerLeistungsdaten> leistungen = mapLeistungen.get(lernabschnitt.ID);
 			if (leistungen != null) {
 				for (final DTOSchuelerLeistungsdaten leistung : leistungen) {
@@ -404,6 +382,8 @@ public final class DataENMDaten extends DataManager<Long> {
 							}
 						}
 						// TODO ggf. im Team-Teaching unterrichtende Lehrer hinzufügen (Zusatzkraft in Leistungsdaten bzw. weitere Lehrkraft bei Kursen)
+						if ((dtoLehrer != null) && (leistung.Fachlehrer_ID == dtoLehrer.ID))
+							leistungenFachIDs.add(fach.ID);
 					}
 
 					final int halbjahr = abschnitt.abschnitt;
@@ -458,6 +438,34 @@ public final class DataENMDaten extends DataManager<Long> {
 
 					// TODO check and add ZP10 - Data
 					// TODO check and add BKAbschluss - Data
+				}
+			}
+
+			// Ankreuzkompetenzen hinzufügen und deren Katalog-Einträge hinzufügen
+			final List<DTOSchuelerAnkreuzfloskeln> ankreuzkompetenzen = mapAnkreuzkompetenzen.get(lernabschnitt.ID);
+			if (ankreuzkompetenzen != null) {
+				for (final DTOSchuelerAnkreuzfloskeln ankreuzkompetenz : ankreuzkompetenzen) {
+					final DTOAnkreuzfloskeln dtoAnkreuzkompetenz = mapKatalogAnkreuzkompetenzen.get(ankreuzkompetenz.Floskel_ID);
+					if (dtoAnkreuzkompetenz == null) // DB-Error -> should not happen
+						throw new NullPointerException();
+					// Überspringe bei Lehrer-Spezifischen Daten die Ankreuzkompetezen, falls keine Fachlehrer-Zuordnung vorliegt bzw. der Lehrer kein Klassenlehrer ist
+					if ((dtoLehrer != null) && (((dtoAnkreuzkompetenz.Fach_ID == null) && !idsKlassenleitungen.contains(dtoLehrer.ID))
+							|| ((dtoAnkreuzkompetenz.Fach_ID != null) && !leistungenFachIDs.contains(dtoAnkreuzkompetenz.Fach_ID))))
+						continue;
+					// Prüfe die Ankreuzfloskel und ergänze sie ggf.
+					final ENMAnkreuzkompetenz enmAnkreuzkompetenz = manager.getAnkreuzkompetenz(ankreuzkompetenz.Floskel_ID);
+					if (enmAnkreuzkompetenz == null)
+						manager.addAnkreuzkompetenz(dtoAnkreuzkompetenz.ID, (dtoAnkreuzkompetenz.IstASV == 0), dtoAnkreuzkompetenz.Fach_ID,
+								dtoAnkreuzkompetenz.Jahrgang, dtoAnkreuzkompetenz.FloskelText, dtoAnkreuzkompetenz.Sortierung);
+					// Füge die Schueler-Ankreuzkompetenz hinzu
+					final DTOTimestampsSchuelerAnkreuzkompetenzen ankreuzkompetenzTimestamps = mapAnkreuzkompetenzenTimestamps.get(ankreuzkompetenz.ID);
+					if (ankreuzkompetenzTimestamps == null)
+						throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+								"Es konnten keine Zeitstempel für die Ankreuzkompetenzen ausgelesen werden. Dies deutet auf einen Fehler in der Datenbank hin.");
+					final boolean[] stufen = { ankreuzkompetenz.Stufe1, ankreuzkompetenz.Stufe2, ankreuzkompetenz.Stufe3, ankreuzkompetenz.Stufe4,
+							ankreuzkompetenz.Stufe5 };
+					manager.addSchuelerAnkreuzkompetenz(enmSchueler, ankreuzkompetenz.ID, ankreuzkompetenz.Floskel_ID, stufen,
+							ankreuzkompetenzTimestamps.tsStufe);
 				}
 			}
 		}
