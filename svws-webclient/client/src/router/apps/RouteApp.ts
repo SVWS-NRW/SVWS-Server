@@ -206,9 +206,15 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	private setApp = async (value: TabData) => {
 		if (value.name === this.data.view.name)
 			return;
-		const node = RouteNode.getNodeByName(value.name);
+		let node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new DeveloperNotificationException("Unbekannte Route");
+		if (node === routeEinstellungen)
+			node = this.menuEinstellungen.at(0);
+		else if (node === routeSchule)
+			node = this.menuSchule.at(0);
+		if (node === undefined)
+			return;
 		const result = await RouteManager.doRoute(node.getRoute());
 		if (result === RoutingStatus.SUCCESS)
 			this.data.setView(node, this.children);
