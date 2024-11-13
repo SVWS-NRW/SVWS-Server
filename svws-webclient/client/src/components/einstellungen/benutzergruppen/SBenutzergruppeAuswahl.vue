@@ -8,7 +8,7 @@
 		</template>
 		<template #content>
 			<svws-ui-table :clicked="auswahl()" @update:clicked="gotoBenutzergruppe" v-model="selectedItems" :items="rowsFiltered.values()"
-				:columns="cols" clickable selectable count :unique-key="String(auswahl()?.id)" scroll scroll-into-view>
+				:columns="cols" clickable selectable count :unique-key="String(auswahl()?.id)" scroll scroll-into-view enable-focus-switching>
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" removable />
 				</template>

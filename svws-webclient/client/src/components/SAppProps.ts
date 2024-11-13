@@ -19,4 +19,5 @@ export interface AppProps {
 	schuljahresabschnittsauswahl: () => AbschnittAuswahlDaten;
 	tabManagerSchule: () => TabManager;
 	tabManagerEinstellungen: () => TabManager;
+	enableFocusSwitching: boolean;
 }

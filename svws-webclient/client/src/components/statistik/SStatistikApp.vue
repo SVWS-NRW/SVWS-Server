@@ -14,7 +14,7 @@
 				</div>
 			</div>
 		</svws-ui-header>
-		<svws-ui-tab-bar :tab-manager>
+		<svws-ui-tab-bar :tab-manager enable-focus-switching>
 			<template v-if="selectedRoute.name === 'dashboard'">
 				<div class="page--content--dashboard">
 					<svws-ui-dashboard-tile :span="2" color="transparent" title="Adresse">

@@ -7,7 +7,7 @@
 				<span class="icon-xl i-ri-download-2-line" />
 			</span>
 		</svws-ui-header>
-		<svws-ui-tab-bar :tab-manager>
+		<svws-ui-tab-bar :tab-manager enable-focus-switching>
 			<router-view />
 		</svws-ui-tab-bar>
 	</div>

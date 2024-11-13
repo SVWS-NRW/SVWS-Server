@@ -21,7 +21,7 @@
 		</div>
 		<Teleport to=".svws-sub-nav-target" defer>
 			<nav class="svws-ui-secondary-tabs">
-				<svws-ui-tab-bar :tab-manager secondary />
+				<svws-ui-tab-bar :tab-manager secondary enable-focus-switching />
 			</nav>
 		</Teleport>
 		<div class="grow h-full">

@@ -28,7 +28,7 @@
 			<div class="svws-ui-header--actions" />
 		</header>
 
-		<svws-ui-tab-bar :tab-manager>
+		<svws-ui-tab-bar :tab-manager enable-focus-switching>
 			<router-view />
 		</svws-ui-tab-bar>
 	</div>

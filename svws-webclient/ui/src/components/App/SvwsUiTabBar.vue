@@ -1,9 +1,9 @@
 <template>
 	<div :class="{ 'svws-ui-page': !secondary, 'svws-single-tab': tabManager().tabs.length === 1 }">
 		<div class="svws-ui-tabs" :class="{ 'svws-ui-tabs--secondary': secondary }">
-			<div :id="secondary ? 'tabsSecondLevelFocusBorder' : 'tabsFirstLevelFocusBorder'" class="svws-ui-tabs--wrapper focus-region">
-				<p v-if="secondary" id="tabsSecondLevelFocusNumber" class="region-enumeration">6</p>
-				<p v-else id="tabsFirstLevelFocusNumber" class="region-enumeration">5</p>
+			<div :id="((tabManager().tabs.length > 1) && enableFocusSwitching) ? (secondary ? 'tabsSecondLevelFocusBorder' : 'tabsFirstLevelFocusBorder') : ''" class="svws-ui-tabs--wrapper focus-region">
+				<p v-if="(tabManager().tabs.length > 1) && enableFocusSwitching && secondary" id="tabsSecondLevelFocusNumber" class="region-enumeration">6</p>
+				<p v-else-if="(enableFocusSwitching && (tabManager().tabs.length > 1))" id="tabsFirstLevelFocusNumber" class="region-enumeration">5</p>
 				<div v-if="state.scrolled" class="svws-ui-tabs--scroll-button -left-1 pl-1 bg-gradient-to-l" @click="scroll('left')">
 					<svws-ui-button type="icon">
 						<span class="icon i-ri-arrow-left-s-line" />
@@ -42,8 +42,10 @@
 	const props = withDefaults(defineProps<{
 		tabManager: () => TabManager;
 		secondary?: boolean;
+		enableFocusSwitching? : boolean;
 	}>(), {
 		secondary: false,
+		enableFocusSwitching: false,
 	});
 
 	type ComponentData = {

@@ -1,6 +1,6 @@
 <template>
-	<p id="filterFocusNumber" v-if="$slots.search || $slots.filter || $slots.filterAdvanced || toggleColumns" class="region-enumeration">3</p>
-	<div id="filterFocusBorder" v-if="$slots.search || $slots.filter || $slots.filterAdvanced || toggleColumns" class="svws-ui-table-filter focus-region" :class="{'svws-open': $slots.filter && isFilterOpen}">
+	<p v-if="enableFocusSwitching && ($slots.search || $slots.filter || $slots.filterAdvanced || toggleColumns)" id="filterFocusNumber" class="region-enumeration">3</p>
+	<div :id="enableFocusSwitching ? 'filterFocusBorder' : ''" v-if="$slots.search || $slots.filter || $slots.filterAdvanced || toggleColumns" class="svws-ui-table-filter focus-region" :class="{'svws-open': $slots.filter && isFilterOpen}">
 		<div class="flex w-full gap-0.5 overflow-hidden">
 			<div class="flex-grow" v-if="$slots.search">
 				<slot name="search" />
@@ -50,7 +50,7 @@
 			<slot name="filterAdvanced" />
 		</div>
 	</div>
-	<div id="listFocusBorder" class="svws-ui-table focus-region" role="table" aria-label="Tabelle" v-bind="$attrs" style="scrollbar-gutter: stable; scrollbar-width: thin; scrollbar-color: rgba(0,0,0,0.2) transparent;"
+	<div :id="enableFocusSwitching ? 'listFocusBorder' : ''" class="svws-ui-table focus-region" role="table" aria-label="Tabelle" v-bind="$attrs" style="scrollbar-gutter: stable; scrollbar-width: thin; scrollbar-color: rgba(0,0,0,0.2) transparent;"
 		:class="{
 			'svws-clickable': clickable && (typeof noData !== 'undefined' ? !noData : !noDataCalculated),
 			'svws-selectable': selectable,
@@ -64,7 +64,7 @@
 			'overflow-auto': scroll,
 			'pr-4': scroll && win11FForMacOS,
 		}">
-		<p id="listFocusNumber" class="region-enumeration">4</p>
+		<p v-if="enableFocusSwitching" id="listFocusNumber" class="region-enumeration">4</p>
 		<div v-if="!disableHeader" class="svws-ui-thead" role="rowgroup" aria-label="Tabellenkopf">
 			<slot name="header" :all-rows-selected="allRowsSelected" :toggle-all-rows="toggleBulkSelection" :columns="columnsComputed">
 				<div role="row" class="svws-ui-tr">
@@ -245,6 +245,7 @@
 			allowArrowKeySelection?: boolean;
 			unselectable?: Set<DataTableItem>;
 			focusFirstElement?: boolean;
+			enableFocusSwitching? : boolean;
 		}>(),
 		{
 			columns: () => [],
@@ -275,6 +276,7 @@
 			allowArrowKeySelection: false,
 			unselectable: () => new Set<DataTableItem>(),
 			focusFirstElement: false,
+			enableFocusSwitching: false,
 		}
 	);
 

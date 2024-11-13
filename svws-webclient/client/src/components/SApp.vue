@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-app-layout :no-secondary-menu="!showSubmenu()" :tertiary-menu="showAuswahlliste()" secondary-menu-small>
 		<template #sidebar>
-			<svws-ui-menu>
+			<svws-ui-menu enable-focus-switching>
 				<template #header>
 					<!--<span v-if="apiStatus?.pending">...</span>-->
 					<!--TODO: Statt Name den vollen Anzeigenamen anzeigen (erstellt dann automatisch eine Ausgabe der Initialien-->
@@ -85,8 +85,8 @@
 					</template>
 					<template #header />
 					<template #content>
-						<p :id="showSubmenu() ? 'menuFocusNumber' : ''" class="region-enumeration">2</p>
-						<svws-ui-secondary-menu-navigation :id="showSubmenu() ? 'menuFocusBorder' : ''" class="focus-region" :tab-manager="(app.name.startsWith('schule') ? tabManagerSchule : tabManagerEinstellungen)" />
+						<p v-if="enableFocusSwitching" :id="enableFocusSwitching && showSubmenu() ? 'menuFocusNumber' : ''" class="region-enumeration">2</p>
+						<svws-ui-secondary-menu-navigation :id="enableFocusSwitching && showSubmenu() ? 'menuFocusBorder' : ''" class="focus-region" :tab-manager="(app.name.startsWith('schule') ? tabManagerSchule : tabManagerEinstellungen)" />
 					</template>
 				</svws-ui-secondary-menu>
 			</template>
@@ -124,11 +124,9 @@
 						</div>
 					</svws-ui-header>
 				</div>
-				<div v-show="!pendingSetApp" class="page--wrapper" :class="{'svws-api--pending': apiStatus.pending}">
-					<!-- <p id="contentFocusNumber" class="region-enumeration">8</p>
-					<div id="contentFocusBorder" class="focus-region"> -->
+				<p v-if="enableFocusSwitching" id="contentFocusNumber" class="region-enumeration">8</p>
+				<div :id="enableFocusSwitching ? 'contentFocusBorder' : ''" v-show="!pendingSetApp" class="page--wrapper" :class="{'svws-api--pending': apiStatus.pending, 'focus-region': enableFocusSwitching}">
 					<router-view :key="app.name" />
-					<!-- </div> -->
 				</div>
 			</main>
 		</template>
@@ -168,7 +166,10 @@
 	import { regionSwitch } from "~/components/RegionSwitch";
 
 	const props = defineProps<AppProps>();
-	regionSwitch();
+
+	if (props.enableFocusSwitching) {
+		regionSwitch();
+	}
 
 	const nextFocusSection = ref(0);
 	const sectionRefs = ref<Map<number, HTMLElement>>(new Map());

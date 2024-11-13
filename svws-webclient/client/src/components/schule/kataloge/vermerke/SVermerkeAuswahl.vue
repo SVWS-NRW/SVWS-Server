@@ -11,7 +11,7 @@
 			<div class="container">
 				<svws-ui-table clickable :clicked="clickedEintrag" @update:clicked="gotoEintrag" :items="props.vermerkartenManager().liste.list()" :columns selectable
 					:model-value="[...props.vermerkartenManager().liste.auswahl()]"
-					@update:model-value="items => setAuswahl(items)" scroll-into-view>
+					@update:model-value="items => setAuswahl(items)" scroll-into-view enable-focus-switching>
 					<template #cell(anzahlVermerke)="{ value, rowData }">
 						<div class="inline-flex min-h-5">
 							<div v-if="isRemovable(rowData)" class="inline-flex">

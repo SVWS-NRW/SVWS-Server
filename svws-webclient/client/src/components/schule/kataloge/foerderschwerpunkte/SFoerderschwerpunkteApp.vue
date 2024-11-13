@@ -11,7 +11,7 @@
 				<span class="opacity-40">{{ auswahl.kuerzel }}</span>
 			</div>
 		</svws-ui-header>
-		<svws-ui-tab-bar :tab-manager>
+		<svws-ui-tab-bar :tab-manager enable-focus-switching>
 			<router-view />
 		</svws-ui-tab-bar>
 	</template>

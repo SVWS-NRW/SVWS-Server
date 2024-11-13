@@ -6,7 +6,7 @@
 	</Teleport>
 	<Teleport to=".svws-sub-nav-target" defer>
 		<nav class="svws-ui-secondary-tabs">
-			<svws-ui-tab-bar :tab-manager secondary>
+			<svws-ui-tab-bar :tab-manager secondary enable-focus-switching>
 				<template #badge="{ tab }">
 					<template v-if="(tab.name === 'gost.klausurplanung.probleme') && kMan().hasFehlenddatenZuAbijahrUndHalbjahr(props.jahrgangsdaten!.abiturjahr, halbjahr)">
 						<div class="font-bold text-white bg-error rounded-full shadow h-5 ml-1 -mt-3 px-1.5 pt-0.5" v-if="numErrors">{{ numErrors }}</div>

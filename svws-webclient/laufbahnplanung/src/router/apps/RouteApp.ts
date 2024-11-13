@@ -52,6 +52,7 @@ export class RouteApp extends RouteNode<RouteData, any> {
 			app: this.getApp(),
 			apps: this.getApps(),
 			appsHidden: this.children_hidden().value,
+			enableFocusSwitching: false,
 		};
 	}
 

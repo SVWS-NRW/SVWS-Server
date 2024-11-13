@@ -9,7 +9,7 @@
 		<template #header />
 		<template #content>
 			<svws-ui-table :clickable="!jahrgangListeManager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="jahrgangsdaten => gotoDefaultView(jahrgangsdaten.id)" :items="jahrgangListeManager().filtered()"
-				:model-value="[...jahrgangListeManager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)" :columns :filter-open="true" selectable count scroll-into-view scroll allow-arrow-key-selection>
+				:model-value="[...jahrgangListeManager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)" :columns :filter-open="true" selectable count scroll-into-view scroll allow-arrow-key-selection enable-focus-switching>
 				<template #cell(bezeichnung)="{ value, rowData }">
 					{{ value }}
 					<svws-ui-tooltip position="bottom" v-if="rowData.anzahlRestabschnitte === null" autosize>

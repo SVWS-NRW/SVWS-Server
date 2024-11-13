@@ -5,7 +5,7 @@
 			<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
 		</template>
 		<template #content>
-			<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="mapKatalogeintraege().values()" :unselectable :columns selectable v-model="selected" scroll-into-view>
+			<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="mapKatalogeintraege().values()" :unselectable :columns selectable v-model="selected" scroll-into-view enable-focus-switching>
 				<template #actions>
 					<svws-ui-button @click="doDeleteEintraege" type="trash" :disabled="selected.length === 0" />
 					<svws-ui-button type="icon" @click="addEintrag" :has-focus="mapKatalogeintraege().size === 0">

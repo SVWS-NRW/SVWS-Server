@@ -8,7 +8,7 @@
 				<span class="i-ri-upload-2-line icon-xl" />
 			</span>
 		</svws-ui-header>
-		<svws-ui-tab-bar :tab-manager>
+		<svws-ui-tab-bar :tab-manager enable-focus-switching>
 			<router-view />
 		</svws-ui-tab-bar>
 	</div>

@@ -10,4 +10,5 @@ export interface AppProps {
 	apps: TabData[];
 	appsHidden: boolean[];
 	apiStatus: ApiStatus;
+	enableFocusSwitching: boolean;
 }

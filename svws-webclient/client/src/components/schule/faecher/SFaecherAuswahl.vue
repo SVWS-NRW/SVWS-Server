@@ -9,7 +9,7 @@
 		<template #header />
 		<template #content>
 			<svws-ui-table :clickable="!fachListeManager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="fachdaten => gotoDefaultView(fachdaten.id)" :items="fachListeManager().filtered()"
-				:model-value="[...props.fachListeManager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)" :columns :filter-open="true" selectable count scroll-into-view scroll allow-arrow-key-selection>
+				:model-value="[...props.fachListeManager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)" :columns :filter-open="true" selectable count scroll-into-view scroll allow-arrow-key-selection enable-focus-switching>
 				<template #filterAdvanced>
 					<svws-ui-checkbox type="toggle" v-model="filterNurSichtbare">Nur Sichtbare</svws-ui-checkbox>
 				</template>

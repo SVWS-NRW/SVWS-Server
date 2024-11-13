@@ -8,7 +8,8 @@
 		</template>
 		<template #header />
 		<template #content>
-			<svws-ui-table :clicked="auswahl" @update:clicked="gotoEintrag" :items="rowsFiltered" :columns clickable scroll-into-view selectable :model-value="selected" @update:model-value="selected=$event" count>
+			<svws-ui-table :clicked="auswahl" @update:clicked="gotoEintrag" :items="rowsFiltered" :columns clickable scroll-into-view selectable :model-value="selected" @update:model-value="selected=$event" count
+				enable-focus-switching>
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" removable />
 				</template>

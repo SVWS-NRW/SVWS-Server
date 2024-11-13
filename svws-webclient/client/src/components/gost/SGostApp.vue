@@ -25,7 +25,7 @@
 			</div>
 			<div class="svws-ui-header--actions" />
 		</header>
-		<svws-ui-tab-bar :tab-manager :class="`router--tab--${tabManager().tab.name} router--tab--${tabManager().tab.name.replace('.', '_')}`">
+		<svws-ui-tab-bar :tab-manager :class="`router--tab--${tabManager().tab.name} router--tab--${tabManager().tab.name.replace('.', '_')}`" enable-focus-switching>
 			<router-view />
 		</svws-ui-tab-bar>
 	</template>
