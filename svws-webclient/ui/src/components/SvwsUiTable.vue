@@ -481,8 +481,8 @@
 		if ((neu === undefined) || (neu === null))
 			return;
 		const index = clickedItemIndex.value = sortedRows.value.map(r => r.source).indexOf(neu);
-		const clickedElementHtml: any = itemRefs.value.get(index);
-		if ((clickedElementHtml !== undefined) && (alt !== neu))
+		const clickedElementHtml: unknown = itemRefs.value.get(index);
+		if ((alt !== neu) && (clickedElementHtml instanceof HTMLElement))
 			clickedElementHtml.focus();
 	});
 
