@@ -17,5 +17,10 @@
 		"auto-imports.d.ts",
 		"../core/src/**/*.ts",
 	],
-	"exclude": ["**/*.story.vue", "**/*.test.ts", "src/histoire.setup.ts"]
+	"exclude": [
+		"**/*.story.vue",
+		"**/*.test.ts",
+		"src/tailwind/*",
+		"src/histoire.setup.ts"
+	]
 }

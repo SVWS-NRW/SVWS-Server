@@ -19,6 +19,7 @@
 		"../core/src/**/*.ts",
 	],
 	"exclude": [
+		"src/tailwind/*",
 		"tailwind.config.js",
 		"postcss.config.js",
 	]

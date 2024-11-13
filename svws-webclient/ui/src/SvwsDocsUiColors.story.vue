@@ -201,7 +201,7 @@
 					<li><a href="https://medium.com/thinking-design/adaptive-color-in-design-systems-7bcd2e664fa0" target="_blank" rel="noopener noreferrer">Adaptive Color in Design Systems</a></li>
 				</ul>
 				<h2>Technische Umsetzung</h2>
-				<p>Farben sind in <code>/SVWS-Server/svws-webclient/tailwind.preset.js</code> definiert. Eine allgemeine Palette ist darin unter <code>colors > ui > palette</code> definiert. Diese Farben sollen niemals direkt verwendet werden. <a href="https://tailwindcss.com/docs/theme#configuration-reference" target="_blank" rel="noopener noreferrer">Tailwind Configuration Reference (separate Definition für Border, Text, Background, Ring colors)</a></p>
+				<p>Farben sind in <code>/SVWS-Server/svws-webclient/ui/src/tailwind/tailwind.preset.js</code> definiert. Eine allgemeine Palette ist darin unter <code>colors > ui > palette</code> definiert. Diese Farben sollen niemals direkt verwendet werden. <a href="https://tailwindcss.com/docs/theme#configuration-reference" target="_blank" rel="noopener noreferrer">Tailwind Configuration Reference (separate Definition für Border, Text, Background, Ring colors)</a></p>
 				<p>
 					In <code>/SVWS-Server/svws-webclient/ui/src/assets/styles/colors.css</code> werden die Farben für jeden Token angepasst. Dazu sollen ausschließlich Farben aus der UI Palette eingesetzt werden.
 					<br>Im <code>:root</code> ist der Default bzw. Light Mode angelegt. Unter der <code>.dark</code> css class werden in diesem Fall alle Tokens für den Dark Mode überschrieben. Bei Erweiterung durch zum Beispiel einen High Contrast Mode muss nur ein Block mit allen Tokens dupliziert werden und kann ohne Kollision separat und sicher angepasst werden.
