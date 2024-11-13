@@ -75,7 +75,7 @@ public final class DataKursliste extends DataManager<Long> {
 		final HashMap<Long, List<Schueler>> mapKursSchueler = new HashMap<>();
 		for (final DTOKursSchueler ks : listKursSchueler) {
 			final DTOSchueler dtoSchueler = mapSchueler.get(ks.Schueler_ID);
-			if (dtoSchueler == null)
+			if ((dtoSchueler == null) || (Boolean.TRUE.equals(dtoSchueler.Geloescht)))
 				continue;
 			List<Schueler> listSchueler = mapKursSchueler.get(ks.Kurs_ID);
 			if (listSchueler == null) {
