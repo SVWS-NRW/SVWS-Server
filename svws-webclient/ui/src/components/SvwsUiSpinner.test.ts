@@ -1,5 +1,4 @@
 import { beforeEach, expect, test, afterEach } from "vitest";
-import SvwsUiSpacing from "./SvwsUiSpacing.vue";
 import type { VueWrapper } from "@vue/test-utils";
 import { mount } from "@vue/test-utils";
 import SvwsUiSpinner from "./SvwsUiSpinner.vue";
