@@ -146,8 +146,7 @@ public final class DataSchuelerKAoADaten extends DataManagerRevised<Long, DTOSch
 		return schuljahresabschnitt.schuljahr;
 	}
 
-	@NotNull
-	JahrgaengeKatalogEintrag getJahrgaengeKatalogEintrag(final DTOSchuelerKAoADaten schuelerKAoADaten) throws ApiOperationException {
+	@NotNull JahrgaengeKatalogEintrag getJahrgaengeKatalogEintrag(final DTOSchuelerKAoADaten schuelerKAoADaten) throws ApiOperationException {
 		final int schuljahr = getSchuljahrByKAoADaten(schuelerKAoADaten);
 		final Jahrgaenge jahrgang = Jahrgaenge.data().getWertBySchluessel(schuelerKAoADaten.jahrgang);
 		if (jahrgang == null)

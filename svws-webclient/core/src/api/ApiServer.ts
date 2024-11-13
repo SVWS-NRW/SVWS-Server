@@ -2658,14 +2658,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @param {Partial<FachDaten>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
 	 *
 	 * @returns Das Fach wurde erfolgreich hinzugefügt.
 	 */
-	public async addFach(data : Partial<FachDaten>, schema : string, id : number) : Promise<FachDaten> {
+	public async addFach(data : Partial<FachDaten>, schema : string) : Promise<FachDaten> {
 		const path = "/db/{schema}/faecher/create"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = FachDaten.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;

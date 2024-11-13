@@ -74,7 +74,7 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 
 			try {
 				faecherdaten.addAll(new DataFachdaten(this.reportingRepository.conn())
-						.getFaecherdatenFromList(this.reportingRepository.mapFaecher().values().stream().toList()).values().stream().toList());
+						.getMapFachdatenFromDTOFachList(this.reportingRepository.mapFaecher().values().stream().toList()).values().stream().toList());
 			} catch (final Exception e) {
 				ReportingExceptionUtils.putStacktraceInLog(
 						"FEHLER: Fehler bei der Erstellung der Fächerliste für den Schuljahresabschnitt %s.".formatted(this.textSchuljahresabschnittKurz()), e,

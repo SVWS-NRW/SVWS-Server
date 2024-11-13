@@ -102,8 +102,7 @@ public class APIFaecher {
 	@ApiResponse(responseCode = "404", description = "Kein Fach-Eintrag mit der angegebenen ID gefunden")
 	public Response getFach(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataFachdaten(conn).get(id),
-				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataFachdaten(conn).getByIdAsResponse(id), request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
 	}
 
 
@@ -133,8 +132,8 @@ public class APIFaecher {
 			@RequestBody(description = "Der Patch für das Fach", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = FachDaten.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataFachdaten(conn).patch(id, is),
-				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataFachdaten(conn).patchAsResponse(id, is), request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 
 
@@ -143,7 +142,6 @@ public class APIFaecher {
 	 * Die OpenAPI-Methode für das Hinzufügen eines neuen Faches.
 	 *
 	 * @param schema       das Datenbankschema
-	 * @param id           die ID des Faches
 	 * @param is           der Input-Stream mit den Daten des Faches
 	 * @param request      die Informationen zur HTTP-Anfrage
 	 *
@@ -158,12 +156,12 @@ public class APIFaecher {
 			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = FachDaten.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um ein Fach anzulegen.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response addFach(@PathParam("schema") final String schema, @PathParam("id") final long id,
+	public Response addFach(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die Daten des zu erstellenden Faches ohne ID, welche automatisch generiert wird", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = FachDaten.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataFachdaten(conn).add(is),
-				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataFachdaten(conn).addAsResponse(is), request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 
 
@@ -188,8 +186,8 @@ public class APIFaecher {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteFach(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataFachdaten(conn).delete(id),
-				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataFachdaten(conn).deleteAsResponse(id), request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
 
 
