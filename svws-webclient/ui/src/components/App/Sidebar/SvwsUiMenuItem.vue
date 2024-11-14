@@ -106,12 +106,7 @@
 		}
 
 		.icon-lg {
-			-webkit-filter: invert(44%) sepia(52%) saturate(1260%) hue-rotate(173deg) brightness(91%) contrast(86%);
-			filter: invert(44%) sepia(52%) saturate(1260%) hue-rotate(173deg) brightness(91%) contrast(86%);
-		} /* TODO: COLORS icon */
-
-		&.sidebar--menu-item--statistik {
-			@apply bg-ui-statistic-weak text-ui-statistic;
+			@apply icon-primary;
 		}
 	}
 }
