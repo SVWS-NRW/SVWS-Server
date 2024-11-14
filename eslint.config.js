@@ -11,7 +11,7 @@ export default tseslint.config(
 	// globale Einstellung für extends und ignores
 	// betrifft alle vue und ts-Dateien
   {
-    files: ["**/*.ts", "**/*.vue",],
+    files: ["**/*.ts", "**/*.vue", "**/tailwind/*.js"],
 		ignores: ["dist/**", "node_modules/**", "build/**"],
 		// verwende die Basisregeln, die mitgeliefert werden
 		extends: [

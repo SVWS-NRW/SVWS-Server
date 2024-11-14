@@ -1,4 +1,4 @@
-import preset from "../ui/src/tailwind/tailwind.preset.js";
+import preset from "../ui/src/tailwind/tailwind.preset";
 
 export default {
 	presets: [ preset ],
