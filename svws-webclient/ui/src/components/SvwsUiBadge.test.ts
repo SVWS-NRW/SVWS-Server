@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest";
 import SvwsUiBadge from "./SvwsUiBadge.vue";
 import { mount } from "@vue/test-utils";
 import SvwsUiTooltip from "./SvwsUiTooltip.vue";
-import type { Size, Type } from "src/types";
+import type { Size, Type } from "../types";
 
 describe("SvwsUiInputWrapper", () => {
 	// Testet, ob das HTML korrekt gerendert wird

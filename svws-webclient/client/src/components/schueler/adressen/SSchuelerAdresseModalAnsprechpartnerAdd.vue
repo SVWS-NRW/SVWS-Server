@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-modal :show="showModal" class="hidden">
+	<svws-ui-modal v-model:show="show" class="hidden">
 		<template #modalTitle>Ansprechpartner hinzufügen</template>
 		<template #modalContent>
 			<svws-ui-input-wrapper :grid="2">
@@ -14,11 +14,11 @@
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="showModal().value = false"> Abbrechen </svws-ui-button>
-			<svws-ui-button type="primary" @click="save()"> Speichern </svws-ui-button>
+			<svws-ui-button type="secondary" @click="show = false"> Abbrechen </svws-ui-button>
+			<svws-ui-button type="primary" @click="save"> Speichern </svws-ui-button>
 		</template>
 	</svws-ui-modal>
-	<svws-ui-button type="icon" @click="showModal().value = true" title="Ansprechpartner hinzufügen">
+	<svws-ui-button type="icon" @click="show = true" title="Ansprechpartner hinzufügen">
 		<span class="icon i-ri-user-add-line" />
 	</svws-ui-button>
 </template>
@@ -34,15 +34,14 @@
 		createAnsprechpartner: (data: BetriebAnsprechpartner) => Promise<void>;
 	}>();
 
-	const _showModal = ref<boolean>(false);
-	const showModal = () => _showModal;
+	const show = ref<boolean>(false);
 
 	const ansprechpartner = ref<BetriebAnsprechpartner>(new BetriebAnsprechpartner())
 
 	async function save() {
 		ansprechpartner.value.betrieb_id = props.betriebsStammdaten.id;
 		await props.createAnsprechpartner(ansprechpartner.value);
-		showModal().value = false;
+		show.value = false;
 	}
 
 </script>

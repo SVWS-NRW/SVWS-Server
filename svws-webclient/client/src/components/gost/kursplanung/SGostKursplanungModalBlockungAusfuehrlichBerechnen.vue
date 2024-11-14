@@ -1,6 +1,6 @@
 <template>
-	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="showModal" size="big" class="hidden" :auto-close="false" :close-in-title="false">
+	<slot :open-modal />
+	<svws-ui-modal v-model:show="show" size="big" class="hidden" :auto-close="false" :close-in-title="false">
 		<template #modalTitle>Ausführliche Berechnung lokal im Browser</template>
 		<template #hilfe>
 			Zum Start auf „Berechnung starten“ klicken. Sobald die Bedingungen erfüllt sind,
@@ -125,12 +125,11 @@
 		{ key: 'wert4', label: 'Fächer parallel' },
 	];
 
-	const _showModal = ref<boolean>(false);
-	const showModal = () => _showModal;
+	const show = ref<boolean>(false);
 
 	const workerManager = shallowRef<WorkerManagerKursblockung | undefined>(undefined);
 
-	watch(_showModal, neu => {
+	watch(show, neu => {
 		if (workerManager.value !== undefined) {
 			workerManager.value.terminate();
 			workerManager.value = undefined;
@@ -207,11 +206,11 @@
 	}
 
 	function openModal() {
-		return showModal().value = true;
+		return show.value = true;
 	}
 
 	function closeModal() {
-		showModal().value = false;
+		show.value = false;
 		nachfragen.value = false;
 	}
 

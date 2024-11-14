@@ -1,6 +1,6 @@
 <template>
 	<slot :open-modal="showModal" />
-	<svws-ui-modal :show="showModal" size="medium">
+	<svws-ui-modal v-model:show="showModal" size="medium">
 		<template #modalTitle>Lehrkraft als Klassenleitung hinzufügen</template>
 		<template #modalContent>
 			<div style="height:250pt">
@@ -59,7 +59,7 @@
 			search.value = "";
 			clickedRow.value = undefined;
 		}
-		return _showModal;
+		return _showModal.value;
 	}
 
 	function closeModal() {

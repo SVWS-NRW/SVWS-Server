@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-modal :show="() => ref(_showModalAutomatischVerteilen)" size="small">
+	<svws-ui-modal v-model:show="_showModalAutomatischVerteilen" size="small">
 		<template #modalTitle>
 			Automatisch Verteilen
 		</template>
@@ -29,7 +29,7 @@
 			<svws-ui-button type="primary" @click="verteilen"> Verteilen <svws-ui-spinner :spinning="loading" /> </svws-ui-button>
 		</template>
 	</svws-ui-modal>
-	<svws-ui-modal :show="showModalNichtVerteilt" size="small">
+	<svws-ui-modal v-model:show="showModalNichtVerteilt" size="small">
 		<template #modalTitle>
 			Nicht verteilt
 		</template>
@@ -37,7 +37,7 @@
 			<div>{{ nichtVerteilt }} Klausuren konnten nicht verteilt werden. Bitte erhöhen Sie die Raumkapazität oder ändern Sie die Regeln.</div>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="primary" @click="showModalNichtVerteilt().value = false"> OK </svws-ui-button>
+			<svws-ui-button type="primary" @click="showModalNichtVerteilt = false"> OK </svws-ui-button>
 		</template>
 	</svws-ui-modal>
 	<svws-ui-content-card>
@@ -135,11 +135,7 @@
 	}
 
 	const loading = ref<boolean>(false);
-	const _showModalNichtVerteilt = ref<boolean>(false);
-
-	function showModalNichtVerteilt() {
-		return _showModalNichtVerteilt;
-	}
+	const showModalNichtVerteilt = ref<boolean>(false);
 
 	const config = new GostKlausurraumblockungKonfiguration();
 
@@ -174,7 +170,7 @@
 		await props.setzeRaumZuSchuelerklausuren(config.raeume, false);
 		loading.value = false;
 		if (nichtVerteilt > 0)
-			showModalNichtVerteilt().value = true;
+			showModalNichtVerteilt.value = true;
 		_showModalAutomatischVerteilen.value = false;
 	}
 

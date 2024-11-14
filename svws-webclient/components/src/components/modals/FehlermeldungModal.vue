@@ -1,6 +1,6 @@
 <template>
-	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="showModal" type="danger" class="hidden">
+	<slot :open-modal />
+	<svws-ui-modal v-model:show="show" type="danger" class="hidden">
 		<template #modalTitle><slot name="title">Fehler</slot></template>
 		<template #modalContent>
 			<slot name="content">
@@ -14,7 +14,7 @@
 			</slot>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="danger" @click="showModal().value = false"> Schließen </svws-ui-button>
+			<svws-ui-button type="danger" @click="show = false"> Schließen </svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>
@@ -42,14 +42,13 @@
 		log: null,
 	});
 
-	const _showModal = ref<boolean>(false);
-	const showModal = () => _showModal;
+	const show = ref<boolean>(false);
 
 	const openModal = (error?: string | Error) => {
 		if (error === undefined)
 			return;
 		const reason = (typeof error === 'string') ? new Error(error) : error;
-		createCapturedError(reason).then(() => showModal().value = true).catch((e: unknown) => e);
+		createCapturedError(reason).then(() => show.value = true).catch((e: unknown) => e);
 	}
 
 	async function createCapturedError(reason: Error) {

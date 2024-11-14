@@ -1,6 +1,6 @@
 <template>
-	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="() => ref(showModal)" :close-in-title="false">
+	<slot :open-modal />
+	<svws-ui-modal v-model:show="show" :close-in-title="false">
 		<template #modalTitle>Seite verlassen</template>
 		<template #modalContent>
 			Beim Verlassen dieser Seite gehen die Daten der neuen Klasse verloren.
@@ -19,23 +19,23 @@
 
 	const emit = defineEmits(['callback']);
 
-	const showModal = ref<boolean>(false);
+	const show = ref<boolean>(false);
 
-	const leave = () => {
+	function leave() {
 		emit('callback', true);
 		closeModal();
 	}
 
-	const cancel = () => {
+	function cancel() {
 		emit('callback', false);
 		closeModal();
 	}
 
-	const openModal = () => {
-		showModal.value = true;
+	function openModal() {
+		show.value = true;
 	}
 	const closeModal = () => {
-		showModal.value = false;
+		show.value = false;
 	}
 
 </script>

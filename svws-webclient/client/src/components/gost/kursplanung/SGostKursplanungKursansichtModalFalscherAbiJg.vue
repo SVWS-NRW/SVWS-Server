@@ -1,6 +1,6 @@
 <template>
-	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="showModal" size="small" class="hidden">
+	<slot :open-modal />
+	<svws-ui-modal v-model:show="show" size="small" class="hidden">
 		<template #modalTitle>Ungültige Abiturjahrgänge für das Abiturjahr {{ getErgebnismanager().getParent().daten().abijahrgang }}</template>
 		<template #modalDescription>
 			Sollen folgende Schüler mit einem falschen Abiturjahrgang aus ihren Kursen entfernt werden?
@@ -14,7 +14,7 @@
 			</svws-ui-table>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="showModal().value = false">Abbrechen</svws-ui-button>
+			<svws-ui-button type="secondary" @click="show = false">Abbrechen</svws-ui-button>
 			<svws-ui-button type="primary" @click="removeZuordnung">OK</svws-ui-button>
 		</template>
 	</svws-ui-modal>
@@ -33,14 +33,13 @@
 	}>();
 
 	const selected = shallowRef<Schueler[]>([]);
-	const _showModal = shallowRef<boolean>(false);
-	const showModal = () => _showModal;
+	const show = shallowRef<boolean>(false);
 
 	async function removeZuordnung() {
 		const set = new HashSet<number>();
 		for (const z of selected.value)
 			set.add(z.id);
-		showModal().value = false;
+		show.value = false;
 		if (!set.isEmpty()) {
 			const kursUpdate = props.getErgebnismanager().kursSchuelerUpdate_02b_ENTFERNE_SCHUELERMENGE_AUS_ALLEN_KURSEN(set);
 			await props.updateKursSchuelerZuordnungen(kursUpdate);
@@ -52,7 +51,7 @@
 
 	function openModal() {
 		selected.value = props.getErgebnismanager().getOfSchuelerMengeMitAbweichendemAbijahrgang().toArray() as Schueler[];
-		showModal().value = true;
+		show.value = true;
 	}
 
 </script>

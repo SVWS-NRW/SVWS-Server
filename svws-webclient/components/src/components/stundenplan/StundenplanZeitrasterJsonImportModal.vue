@@ -1,6 +1,6 @@
 <template>
-	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="showModal" type="danger" class="hidden">
+	<slot :open-modal />
+	<svws-ui-modal v-model:show="show" type="danger" class="hidden">
 		<template #modalTitle>Zeitraster importieren</template>
 		<template #modalContent>
 			<svws-ui-input-wrapper>
@@ -9,7 +9,7 @@
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="showModal().value = false"> Abbrechen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="show = false"> Abbrechen </svws-ui-button>
 			<svws-ui-button type="danger" @click="importFile" :disabled="loading"><svws-ui-spinner :spinning="loading" /> Importieren </svws-ui-button>
 		</template>
 	</svws-ui-modal>
@@ -27,15 +27,14 @@
 		removeZeitraster: (multi: Iterable<StundenplanZeitraster>) => Promise<void>;
 	}>();
 
-	const _showModal = ref<boolean>(false);
-	const showModal = () => _showModal;
+	const show = ref<boolean>(false);
 
 	const status = ref<boolean | undefined>(undefined);
 	const loading = ref<boolean>(false);
 	const file = ref<File | null>(null);
 
 	const openModal = () => {
-		showModal().value = true;
+		show.value = true;
 	}
 
 	function onFileChanged(event: Event) {
@@ -65,6 +64,6 @@
 		}
 		loading.value = false;
 		file.value = null;
-		showModal().value = false;
+		show.value = false;
 	}
 </script>

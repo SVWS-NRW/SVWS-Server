@@ -1,6 +1,6 @@
 <template>
-	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="showModal" size="big" class="hidden" :no-scroll="false">
+	<slot :open-modal />
+	<svws-ui-modal v-model:show="show" size="big" class="hidden" :no-scroll="false">
 		<template #modalTitle>Schülerbetrieb hinzufügen</template>
 		<template #modalDescription />
 		<template #modalContent>
@@ -50,7 +50,7 @@
 			</svws-ui-content-card>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="showModal().value = false"> Abbrechen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="show = false"> Abbrechen </svws-ui-button>
 			<svws-ui-button type="primary" @click="importer()" :disabled="!betrieb.name1"> Speichern </svws-ui-button>
 		</template>
 	</svws-ui-modal>
@@ -71,8 +71,7 @@
 		mapOrtsteile: Map<number, OrtsteilKatalogEintrag>;
 	}>();
 
-	const _showModal = ref<boolean>(false);
-	const showModal = () => _showModal;
+	const show = ref<boolean>(false);
 
 	const betrieb = ref<BetriebStammdaten>(new BetriebStammdaten());
 	const beschaeftigungsart = ref<KatalogEintrag>();
@@ -83,13 +82,13 @@
 	});
 
 	const openModal = () => {
-		showModal().value = true;
+		show.value = true;
 	}
 
 	async function importer() {
 		await props.addEintrag(betrieb.value)
 		betrieb.value = new BetriebStammdaten();
-		showModal().value = false;
+		show.value = false;
 	}
 
 </script>

@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-modal :show="showModal" size="small" class="hidden">
+	<svws-ui-modal v-model:show="show" size="small" class="hidden">
 		<template #modalTitle>
 			Benutzergruppe hinzufügen
 		</template>
@@ -12,14 +12,14 @@
 		</template>
 
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="showModal().value = false"> Abbrechen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="show = false"> Abbrechen </svws-ui-button>
 			<svws-ui-button @click="create"> Weiter </svws-ui-button>
 		</template>
 	</svws-ui-modal>
 
 	<svws-ui-button type="trash" :disabled="!showDeleteIcon" @click="deleteBenutzergruppen" />
 
-	<svws-ui-button type="icon" @click="showModal().value = true" :has-focus>
+	<svws-ui-button type="icon" @click="show = true" :has-focus>
 		<span class="icon i-ri-add-line" />
 	</svws-ui-button>
 </template>
@@ -37,17 +37,14 @@
 		hasFocus: false,
 	});
 
-	const _showModal = ref<boolean>(false);
-	function showModal() {
-		return _showModal;
-	}
+	const show = ref<boolean>(false);
 
 	const bezeichnung = ref();
 	const inputbgIstAdmin=ref(false);
 
 	function create(){
 		void props.createBenutzergruppe(bezeichnung.value,inputbgIstAdmin.value);
-		showModal().value = false;
+		show.value = false;
 		bezeichnung.value = "";
 		inputbgIstAdmin.value=false;
 	}

@@ -1,12 +1,12 @@
 <template>
-	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="showModal" size="small" class="hidden">
+	<slot :open-modal />
+	<svws-ui-modal v-model:show="show" size="small" class="hidden">
 		<template #modalTitle>Ergebnis hochschreiben</template>
 		<template #modalDescription>
 			<p>Das Blockungsergebnis wird mit dieser Aktion in das nächste Halbjahr ({{ getDatenmanager().getHalbjahr().next()?.kuerzel || '(kein Folgehalbjahr)' }}) hochgeschrieben.</p>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="showModal().value = false">Abbrechen</svws-ui-button>
+			<svws-ui-button type="secondary" @click="show = false">Abbrechen</svws-ui-button>
 			<svws-ui-button @click="hochschreiben_ergebnis">Hochschreiben</svws-ui-button>
 		</template>
 	</svws-ui-modal>
@@ -22,16 +22,15 @@
 		ergebnisHochschreiben: () => Promise<void>;
 	}>();
 
-	const _showModal = ref<boolean>(false);
-	const showModal = () => _showModal;
+	const show = ref<boolean>(false);
 
 	async function hochschreiben_ergebnis() {
-		showModal().value = false;
+		show.value = false;
 		await props.ergebnisHochschreiben();
 	}
 
 	const openModal = () => {
-		showModal().value = true;
+		show.value = true;
 	}
 
 </script>

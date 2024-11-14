@@ -1,12 +1,12 @@
 <template>
-	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="showModal" size="small" class="hidden">
+	<slot :open-modal />
+	<svws-ui-modal v-model:show="show" size="small" class="hidden">
 		<template #modalTitle>Blockung Wiederherstellen</template>
 		<template #modalDescription>
 			Soll eine Blockung aus bestehenden Leistungsdaten wiederhergestellt werden?
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="showModal().value = false">Abbrechen</svws-ui-button>
+			<svws-ui-button type="secondary" @click="show = false">Abbrechen</svws-ui-button>
 			<svws-ui-button type="primary" @click="activate_recovery">Ja</svws-ui-button>
 		</template>
 	</svws-ui-modal>
@@ -20,16 +20,15 @@
 		restoreBlockung: () => Promise<void>;
 	}>();
 
-	const _showModal = ref<boolean>(false);
-	const showModal = () => _showModal;
+	const show = ref<boolean>(false);
 
 	async function activate_recovery() {
-		showModal().value = false;
+		show.value = false;
 		await props.restoreBlockung();
 	}
 
 	const openModal = () => {
-		showModal().value = true;
+		show.value = true;
 	}
 
 </script>

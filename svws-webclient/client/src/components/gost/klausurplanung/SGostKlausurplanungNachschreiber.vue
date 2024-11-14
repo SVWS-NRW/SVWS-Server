@@ -39,10 +39,10 @@
 			</svws-ui-table>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="primary" @click="_showModalTerminGrund = false"> OK </svws-ui-button>
+			<svws-ui-button type="primary" @click="showModalTerminGrund = false"> OK </svws-ui-button>
 		</template>
 	</svws-ui-modal>
-	<svws-ui-modal :show="showModalAutomatischBlocken" size="small">
+	<svws-ui-modal v-model:show="showModalAutomatischBlocken" size="small">
 		<template #modalTitle>
 			Automatisch blocken
 		</template>
@@ -55,7 +55,7 @@
 			</svws-ui-checkbox>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="showModalAutomatischBlocken().value = false"> Abbrechen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="showModalAutomatischBlocken = false"> Abbrechen </svws-ui-button>
 			<svws-ui-button type="primary" @click="blocken"> Blocken </svws-ui-button>
 		</template>
 	</svws-ui-modal>
@@ -106,8 +106,8 @@
 			<div class="flex justify-between items-start mt-5 mb-5">
 				<div class="flex flex-wrap items-center gap-2 w-full">
 					<svws-ui-button :disabled="!hatKompetenzUpdate" @click="erzeugeKlausurtermin(quartalsauswahl.value, false)"><span class="icon i-ri-add-line -ml-1" />Neuer Nachschreibtermin</svws-ui-button>
-					<svws-ui-button :disabled="!hatKompetenzUpdate" type="secondary" @click="_showModalTerminGrund = true"><span class="icon i-ri-checkbox-circle-line -ml-1" />Haupttermin zulassen</svws-ui-button>
-					<svws-ui-button type="secondary" :disabled="!hatKompetenzUpdate || selectedNachschreiber.isEmpty()" @click="showModalAutomatischBlocken().value = true"><span class="icon i-ri-sparkling-line" />Automatisch blocken <svws-ui-spinner :spinning="loading" /></svws-ui-button>
+					<svws-ui-button :disabled="!hatKompetenzUpdate" type="secondary" @click="showModalTerminGrund = true"><span class="icon i-ri-checkbox-circle-line -ml-1" />Haupttermin zulassen</svws-ui-button>
+					<svws-ui-button type="secondary" :disabled="!hatKompetenzUpdate || selectedNachschreiber.isEmpty()" @click="showModalAutomatischBlocken = true"><span class="icon i-ri-sparkling-line" />Automatisch blocken <svws-ui-spinner :spinning="loading" /></svws-ui-button>
 				</div>
 			</div>
 			<div class="grid grid-cols-[repeat(auto-fill,minmax(45rem,1fr))] gap-4 pt-2 -mt-2">
@@ -143,18 +143,15 @@
 </template>
 
 <script setup lang="ts">
-
-	import type { JavaSet} from "@core";
+	import type { JavaSet } from "@core";
 	import { GostKlausurplanManager, GostKursklausur, DateUtils, GostKlausurtermin, GostSchuelerklausurTermin, GostNachschreibterminblockungKonfiguration, HashSet, ArrayList, BenutzerKompetenz } from "@core";
 	import { computed, ref, onMounted } from 'vue';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type { GostKlausurplanungNachschreiberProps } from "./SGostKlausurplanungNachschreiberProps";
 	import type { DataTableColumn } from "@ui";
 
-	const _showModalTerminGrund = ref<boolean>(false);
-	const showModalTerminGrund = () => _showModalTerminGrund;
-	const _showModalAutomatischBlocken = ref<boolean>(false);
-	const showModalAutomatischBlocken = () => _showModalAutomatischBlocken;
+	const showModalTerminGrund = ref<boolean>(false);
+	const showModalAutomatischBlocken = ref<boolean>(false);
 	const nachschreiber_der_selben_klausur_auf_selbe_termine = ref(false);
 	const gleiche_fachart_auf_selbe_termine = ref(false);
 
@@ -177,7 +174,7 @@
 	};
 
 	async function blocken() {
-		showModalAutomatischBlocken().value = false
+		showModalAutomatischBlocken.value = false
 		loading.value = true;
 		const config = new GostNachschreibterminblockungKonfiguration();
 		config.termine = termine.value;

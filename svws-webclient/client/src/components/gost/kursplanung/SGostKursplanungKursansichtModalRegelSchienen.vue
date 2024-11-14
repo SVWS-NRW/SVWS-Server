@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-modal :show="showModal" size="small" class="hidden">
+	<svws-ui-modal v-model:show="show" size="small" class="hidden">
 		<template #modalTitle>Regel erstellen</template>
 		<template #modalContent>
 			<div class="flex flex-col gap-1">
@@ -26,8 +26,7 @@
 		regelnUpdate: (update: GostBlockungRegelUpdate) => Promise<void>;
 	}>();
 
-	const _showModal = ref<boolean>(false);
-	const showModal = () => _showModal;
+	const show = ref<boolean>(false);
 
 	const von = ref<GostBlockungSchiene>(new GostBlockungSchiene());
 	const bis = ref<GostBlockungSchiene>(new GostBlockungSchiene());
@@ -35,13 +34,13 @@
 	const openModal = (schieneVon: GostBlockungSchiene, schieneBis: GostBlockungSchiene) => {
 		von.value = schieneVon;
 		bis.value = schieneBis;
-		showModal().value = true;
+		show.value = true;
 	};
 
 	const kursart = shallowRef<GostKursart>(GostKursart.GK)
 
 	async function regel_hinzufuegen(value: boolean) {
-		showModal().value = false;
+		show.value = false;
 		const update = value === true
 			? props.getErgebnismanager().regelupdateCreate_01_KURSART_SPERRE_SCHIENEN_VON_BIS(kursart.value.id, von.value.nummer, bis.value.nummer)
 			: props.getErgebnismanager().regelupdateCreate_06_KURSART_ALLEIN_IN_SCHIENEN_VON_BIS(kursart.value.id, von.value.nummer, bis.value.nummer)

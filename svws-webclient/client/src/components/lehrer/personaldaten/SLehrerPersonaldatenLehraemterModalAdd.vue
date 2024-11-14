@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-modal :show="show">
+	<svws-ui-modal :show="show" @update:show="value => emit('update:show', value)">
 		<template #modalTitle>Lehramt hinzufügen</template>
 		<template #modalContent>
 			<svws-ui-input-wrapper>
@@ -7,7 +7,7 @@
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="show().value = false"> Abbrechen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="emit('update:show', false)"> Abbrechen </svws-ui-button>
 			<svws-ui-button type="secondary" @click="add" :disabled="lehramt === undefined"> Lehramt hinzufügen </svws-ui-button>
 		</template>
 	</svws-ui-modal>
@@ -15,14 +15,18 @@
 
 <script setup lang="ts">
 
-	import { ref, type Ref } from "vue";
+	import { ref } from "vue";
 	import { DeveloperNotificationException, LehrerLehramt, LehrerLehramtEintrag } from "@core";
 
 	const props = defineProps<{
-		show: () => Ref<boolean>;
+		show: boolean;
 		idLehrer: number;
 		addLehramt: (eintrag: LehrerLehramtEintrag) => Promise<void>;
 		schuljahr: number;
+	}>();
+
+	const emit = defineEmits<{
+		"update:show": [show: boolean];
 	}>();
 
 	const lehramt = ref<LehrerLehramt | undefined>(undefined);
@@ -37,7 +41,7 @@
 		l.idAnerkennungsgrund = null;
 		void props.addLehramt(l);
 		lehramt.value = undefined;
-		props.show().value = false;
+		emit('update:show', false);
 	}
 
 </script>

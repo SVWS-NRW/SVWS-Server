@@ -53,7 +53,7 @@
 			</svws-ui-table>
 		</template>
 	</svws-ui-secondary-menu>
-	<svws-ui-modal :show="showModalGruppenaktionen" size="medium">
+	<svws-ui-modal v-model:show="showModalGruppenaktionen" size="medium">
 		<template #modalTitle>
 			Aktionen für {{ selectedItems.length }} ausgewählte Schüler
 		</template>
@@ -87,8 +87,7 @@
 
 	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 
-	const _showModalGruppenaktionen = ref<boolean>(false);
-	const showModalGruppenaktionen = () => _showModalGruppenaktionen;
+	const showModalGruppenaktionen = ref<boolean>(false);
 
 	const schuljahr = computed<number>(() => props.schuljahresabschnittsauswahl().aktuell.schuljahr);
 

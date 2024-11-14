@@ -5,7 +5,7 @@
 	<Teleport to=".router-tab-bar--subnav" v-if="isMounted">
 		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" :halbjahr="halbjahr" />
 	</Teleport>
-	<svws-ui-modal :show="showModalAutomatischBlocken" size="small">
+	<svws-ui-modal v-model:show="showModalAutomatischBlocken" size="small">
 		<template #modalTitle>
 			Automatisch blocken
 		</template>
@@ -23,7 +23,7 @@
 			</svws-ui-checkbox>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="showModalAutomatischBlocken().value = false"> Abbrechen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="showModalAutomatischBlocken = false"> Abbrechen </svws-ui-button>
 			<svws-ui-button type="primary" @click="blocken"> Blocken </svws-ui-button>
 		</template>
 	</svws-ui-modal>
@@ -77,7 +77,7 @@
 			<div class="flex justify-between items-start mb-5">
 				<div class="flex flex-wrap items-center gap-0.5 w-full">
 					<svws-ui-button :disabled="!hatKompetenzUpdate" @click="erzeugeKlausurtermin(quartalsauswahl.value, true)"><span class="icon i-ri-add-line -ml-1" />Termin<template v-if="termine.size() === 0"> hinzufügen</template></svws-ui-button>
-					<svws-ui-button type="transparent" @click="showModalAutomatischBlocken().value = true" :disabled="!hatKompetenzUpdate || props.kMan().kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value).size() === 0"><span class="icon i-ri-sparkling-line" />Automatisch blocken <svws-ui-spinner :spinning="loading" /></svws-ui-button>
+					<svws-ui-button type="transparent" @click="showModalAutomatischBlocken = true" :disabled="!hatKompetenzUpdate || props.kMan().kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value).size() === 0"><span class="icon i-ri-sparkling-line" />Automatisch blocken <svws-ui-spinner :spinning="loading" /></svws-ui-button>
 					<svws-ui-button type="transparent" :disabled="!hatKompetenzUpdate" class="hover--danger ml-auto" @click="terminSelected.value = undefined; loescheKlausurtermine(termine)" v-if="termine.size() > 0" title="Alle Termine löschen"><span class="icon i-ri-delete-bin-line" />Alle löschen</svws-ui-button>
 				</div>
 			</div>
@@ -164,8 +164,8 @@
 				<span>Klicke auf einen Termin oder verschiebe eine Klausur, um Details zu bestehenden bzw. entstehenden Konflikten anzuzeigen.</span>
 			</div>
 		</svws-ui-content-card>
-		<s-gost-klausurplanung-modal :show="returnModalVorgaben()" :text="modalError" :jump-to="gotoVorgaben" jump-to_text="Zu den Klausurvorgaben" abbrechen_text="OK" />
-		<s-gost-klausurplanung-modal :show="returnModalKlausurHatRaeume()" text="Die Kursklausur hat bereits eine oder mehrere Raumzuweisungen. Beim Fortfahren werden diese gelöscht." :weiter="verschiebeKlausurTrotzRaumzuweisung" />
+		<s-gost-klausurplanung-modal :show="modalVorgaben" :text="modalError" :jump-to="gotoVorgaben" jump-to_text="Zu den Klausurvorgaben" abbrechen_text="OK" />
+		<s-gost-klausurplanung-modal :show="modalKlausurHatRaeume" text="Die Kursklausur hat bereits eine oder mehrere Raumzuweisungen. Beim Fortfahren werden diese gelöscht." :weiter="verschiebeKlausurTrotzRaumzuweisung" />
 	</div>
 </template>
 
@@ -180,8 +180,7 @@
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type {DataTableColumn} from "@ui";
 
-	const _showModalAutomatischBlocken = ref<boolean>(false);
-	const showModalAutomatischBlocken = () => _showModalAutomatischBlocken;
+	const showModalAutomatischBlocken = ref<boolean>(false);
 
 	const props = defineProps<GostKlausurplanungSchienenProps>();
 
@@ -206,16 +205,10 @@
 	}
 
 	const modalVorgaben = ref<boolean>(false);
-	function returnModalVorgaben(): () => Ref<boolean> {
-		return () => modalVorgaben;
-	}
 
 	let klausurMoveDropZone: GostKlausurplanungDropZone = undefined;
 	let klausurMoveDragData: GostKlausurplanungDragData = undefined;
 	const modalKlausurHatRaeume = ref<boolean>(false);
-	function returnModalKlausurHatRaeume(): () => Ref<boolean> {
-		return () => modalKlausurHatRaeume;
-	}
 
 	const modalError = ref<string | undefined>(undefined);
 
@@ -296,7 +289,7 @@
 
 	const blocken = async () => {
 		loading.value = true;
-		showModalAutomatischBlocken().value = false;
+		showModalAutomatischBlocken.value = false;
 		const daten = new GostKlausurterminblockungDaten();
 		daten.klausuren = props.kMan().kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value);
 		daten.konfiguration.modusQuartale = KlausurterminblockungModusQuartale.GETRENNT.id;

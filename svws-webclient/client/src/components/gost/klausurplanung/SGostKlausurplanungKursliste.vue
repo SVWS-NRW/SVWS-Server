@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-modal v-if="showModalTerminGrund" :show="showModalTerminGrund" size="small">
+	<svws-ui-modal v-if="show" :show size="small">
 		<template #modalTitle>
 			Grund für Fehlen angeben
 		</template>
@@ -28,7 +28,7 @@
 				</span>
 			</td>
 			<td v-if="patchKlausur && createSchuelerklausurTermin">
-				<svws-ui-button v-if="termin !== undefined && kMan().schuelerSchreibtKlausurtermin(kMan().schuelerGetBySchuelerklausurtermin(s).id, termin)" @click="terminSelected = s; showModalTerminGrund().value = true">
+				<svws-ui-button v-if="termin !== undefined && kMan().schuelerSchreibtKlausurtermin(kMan().schuelerGetBySchuelerklausurtermin(s).id, termin)" @click="terminSelected = s; show = true">
 					<svws-ui-tooltip>
 						<template #content>
 							Klausur nicht mitgeschrieben
@@ -62,11 +62,10 @@
 		'modal': [value: boolean];
 	}>();
 
-	const _showModalTerminGrund = ref<boolean>(false);
-	const showModalTerminGrund = () => _showModalTerminGrund;
+	const show = ref<boolean>(false);
 
 	watchEffect(() => {
-		if (_showModalTerminGrund.value)
+		if (show.value)
 			emit('modal', true);
 		else
 			emit('modal', false);
@@ -79,9 +78,8 @@
 			await props.patchKlausur(terminSelected.value, { bemerkung: terminSelected.value.bemerkung } );
 			await props.createSchuelerklausurTermin(terminSelected.value.idSchuelerklausur);
 		}
-		showModalTerminGrund().value = false;
+		show.value = false;
 		terminSelected.value = new GostSchuelerklausurTermin();
 	};
-
 
 </script>

@@ -1,6 +1,6 @@
 <template>
-	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="showModal" size="medium" class="hidden">
+	<slot :open-modal />
+	<svws-ui-modal v-model:show="show" size="medium" class="hidden">
 		<template #modalTitle>Vermerkart Hinzufügen</template>
 		<template #modalContent>
 			<svws-ui-input-wrapper :grid="2">
@@ -12,7 +12,7 @@
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="showModal().value = false"> Abbrechen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="show = false"> Abbrechen </svws-ui-button>
 			<svws-ui-button type="primary" @click="saveEntries()" :disabled="!validatorVermerkBezeichnung(vermerkart.bezeichnung) || (vermerkart.bezeichnung.length === 0)"> Speichern </svws-ui-button>
 		</template>
 	</svws-ui-modal>
@@ -29,13 +29,9 @@
 		vermerkartenManager : () => VermerkartenManager;
 	}>();
 
-	const _showModal = ref<boolean>(false);
+	const show = ref<boolean>(false);
 
 	const vermerkart = ref(new VermerkartEintrag());
-
-	function showModal() {
-		return _showModal;
-	}
 
 	function validatorVermerkBezeichnung(value: string |null) : boolean {
 		if (value === null)
@@ -48,13 +44,13 @@
 
 	async function saveEntries() : Promise<void> {
 		const postCandidate: Partial<VermerkartEintrag> = {bezeichnung: vermerkart.value.bezeichnung};
-		showModal().value = false;
+		show.value = false;
 		await props.addEintrag(postCandidate);
 	}
 
 	function openModal() : void {
 		vermerkart.value = new VermerkartEintrag();
-		showModal().value = true;
+		show.value = true;
 	}
 
 </script>

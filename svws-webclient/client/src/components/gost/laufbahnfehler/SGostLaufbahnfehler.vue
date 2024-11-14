@@ -3,8 +3,8 @@
 		<Teleport to=".svws-sub-nav-target" v-if="isMounted && hatUpdateKompetenz">
 			<svws-ui-sub-nav>
 				<s-modal-laufbahnplanung-alle-fachwahlen-loeschen :gost-jahrgangsdaten="jahrgangsdaten" :reset-fachwahlen="resetFachwahlenAlle" />
-				<svws-ui-button :disabled="apiStatus.pending" type="transparent" title="Planung importieren" @click="showModalImport().value = true"><span class="icon i-ri-download-2-line" /> Importieren…</svws-ui-button>
-				<s-laufbahnplanung-import-modal :show="showModalImport" multiple :import-laufbahnplanung />
+				<svws-ui-button :disabled="apiStatus.pending" type="transparent" title="Planung importieren" @click="showModalImport = true"><span class="icon i-ri-download-2-line" /> Importieren…</svws-ui-button>
+				<s-laufbahnplanung-import-modal v-model:show="showModalImport" multiple :import-laufbahnplanung />
 				<svws-ui-button :disabled="apiStatus.pending" type="transparent" title="Planung exportieren" @click="export_laufbahnplanung"><span class="icon i-ri-upload-2-line" />Exportiere {{ auswahl.length > 0 ? 'Auswahl':'alle' }}</svws-ui-button>
 			</svws-ui-sub-nav>
 		</Teleport>
@@ -110,8 +110,7 @@
 		{key: 'ergebnis', label: 'Fehler', tooltip: 'Anzahl der Fehler insgesamt', fixedWidth: 3.5, align: 'right', sortable: true},
 	];
 
-	const _showModalImport = ref<boolean>(false);
-	const showModalImport = () => _showModalImport;
+	const showModalImport = ref<boolean>(false);
 	const auswahl = ref<GostBelegpruefungsErgebnisse[]>([]);
 
 	const hasFilter = computed<boolean>(() => props.filterFehler() || props.filterExterne());

@@ -88,7 +88,7 @@
 								</div>
 
 								<div style="display: flex; justify-content: flex-end">
-									<svws-ui-button type="icon" @click="openModal().value = true">
+									<svws-ui-button type="icon" @click="openModal">
 										<span class="icon i-ri-add-line" />
 									</svws-ui-button>
 								</div>

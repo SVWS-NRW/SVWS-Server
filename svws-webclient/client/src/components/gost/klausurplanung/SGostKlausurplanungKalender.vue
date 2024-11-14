@@ -155,11 +155,10 @@
 			</svws-ui-content-card>
 		</div>
 	</template>
-	<s-gost-klausurplanung-modal :show="returnModalKlausurHatRaeume()" text="Der Klausurtermin ist Teil einer jahrgangsübergreifenden Raumplanung. Die Aktion hat daher Auswirkungen auf andere Termine." :weiter="verschiebeKlausurTrotzRaumzuweisung" />
+	<s-gost-klausurplanung-modal :show="modalKlausurHatRaeume" text="Der Klausurtermin ist Teil einer jahrgangsübergreifenden Raumplanung. Die Aktion hat daher Auswirkungen auf andere Termine." :weiter="verschiebeKlausurTrotzRaumzuweisung" />
 </template>
 
 <script setup lang="ts">
-	import type { Ref } from "vue";
 	import { ref, onMounted, computed } from "vue";
 	import type { GostKlausurplanungKalenderProps } from "./SGostKlausurplanungKalenderProps";
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
@@ -193,9 +192,6 @@
 	}
 
 	const modalKlausurHatRaeume = ref<boolean>(false);
-	function returnModalKlausurHatRaeume(): () => Ref<boolean> {
-		return () => modalKlausurHatRaeume;
-	}
 
 	let klausurMoveDragData: GostKlausurtermin | undefined = undefined;
 	let klausurMoveDropZone: GostKlausurplanungDropZone = undefined;

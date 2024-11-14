@@ -13,14 +13,14 @@
 			<slot name="footer" />
 			<div class="sidebar--menu--footer-credits flex flex-col items-center text-ui-secondary">
 				<div class="text-sm mt-2 mb-2 text-center">Powered by<br>SVWS NRW</div>
-				<button role="link" @click="showModalInfo().value = true"
+				<button role="link" @click="show = true"
 					class="mb-1 underline hover:text-ui-secondary-hover text-sm">
 					Client Info
 				</button>
 			</div>
 		</div>
 	</div>
-	<svws-ui-modal :show="showModalInfo" size="small">
+	<svws-ui-modal v-model:show="show" size="small">
 		<template #modalTitle>
 			SVWS-Client
 		</template>
@@ -47,9 +47,6 @@
 
 	import { ref } from "vue";
 
-	const _showModalInfo = ref<boolean>(false);
-	const showModalInfo = () => _showModalInfo;
-
 	const props = withDefaults(defineProps<{
 		showEinstellungenDefaultApp? : boolean;
 		enableFocusSwitching? : boolean;
@@ -58,6 +55,7 @@
 		enableFocusSwitching: false,
 	});
 
+	const show = ref<boolean>(false);
 
 	// function handleBeforePrint() {
 	// 	if (themeRef.value === 'dark') {

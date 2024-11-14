@@ -1,6 +1,6 @@
 <template>
-	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="showModal" size="medium" class="hidden h-full overflow-none" no-scroll>
+	<slot :open-modal />
+	<svws-ui-modal v-model:show="show" size="medium" class="hidden h-full overflow-none" no-scroll>
 		<template #modalTitle>Kurs-Schüler-Zuordnung</template>
 		<template #modalContent>
 			<div class="flex flex-row gap-8 h-full overflow-y-hidden">
@@ -108,7 +108,7 @@
 			</div>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="showModal().value = false">Schließen</svws-ui-button>
+			<svws-ui-button type="secondary" @click="show = false">Schließen</svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>
@@ -134,8 +134,7 @@
 		apiStatus: ApiStatus;
 	}>();
 
-	const _showModal = ref<boolean>(false);
-	const showModal = () => _showModal;
+	const show = ref<boolean>(false);
 
 	const _kurseZurUebertragung = ref<GostBlockungsergebnisKurs[]>([]);
 
@@ -291,7 +290,9 @@
 		return props.getErgebnismanager().getOfKursName(k.id);
 	}
 
-	const openModal = () => showModal().value = true;
+	function openModal() {
+		return show.value = true;
+	}
 
 	async function toggleFixierRegelKursSchueler(idKurs: number | null, idSchueler: number) : Promise<void> {
 		if ((idKurs === null) || (props.apiStatus.pending))

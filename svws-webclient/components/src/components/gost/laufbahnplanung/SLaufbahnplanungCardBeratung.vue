@@ -8,7 +8,7 @@
 			<svws-ui-textarea-input placeholder="Kommentar" :model-value="gostLaufbahnBeratungsdaten().kommentar" :autoresize="true" ref="refKommentar" span="full" />
 			<svws-ui-button @click="speichern" :disabled="!dirty">Beratungsdaten speichern</svws-ui-button>
 		</svws-ui-input-wrapper>
-		<svws-ui-modal size="small" :show="()=>ref(show)">
+		<svws-ui-modal size="small" :show>
 			<template #modalTitle>Ungesicherte Beratungsdaten</template>
 			<template #modalContent>
 				Die Änderungen an den Beratungsdaten wurden noch nicht gespeichert.

@@ -272,12 +272,10 @@
 		</svws-ui-action-button>
 	</div>
 
-	<s-gost-klausurplanung-modal :show="returnModalVorgaben()" :text="modalError" :jump-to="gotoVorgaben" jump-to_text="Zu den Klausurvorgaben" abbrechen_text="OK" />
+	<s-gost-klausurplanung-modal v-model:show="modalVorgaben" :text="modalError" :jump-to="gotoVorgaben" jump-to_text="Zu den Klausurvorgaben" abbrechen_text="OK" />
 </template>
 
 <script setup lang="ts">
-
-	import type { Ref } from 'vue';
 	import { ref, onMounted } from 'vue';
 	import type { DataTableColumn } from "@ui";
 	import type {GostKlausurtermin } from "@core";
@@ -365,9 +363,6 @@
 	}
 
 	const modalVorgaben = ref<boolean>(false);
-	function returnModalVorgaben(): () => Ref<boolean> {
-		return () => modalVorgaben;
-	}
 	const modalError = ref<string | undefined>(undefined);
 
 	async function erzeugeKursklausurenAusVorgabenOrModal() {

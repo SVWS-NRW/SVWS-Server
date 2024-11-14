@@ -1,6 +1,6 @@
 <template>
-	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="showModal">
+	<slot :open-modal />
+	<svws-ui-modal v-model:show="show">
 		<template #modalTitle>Raum hinzufügen</template>
 		<template #modalContent>
 			<svws-ui-input-wrapper :grid="2">
@@ -10,7 +10,7 @@
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="showModal().value = false"> Abbrechen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="show = false"> Abbrechen </svws-ui-button>
 			<svws-ui-button type="secondary" @click="importer()" :disabled="!item.kuerzel || !item.groesse"> Raum Hinzufügen </svws-ui-button>
 		</template>
 	</svws-ui-modal>
@@ -25,19 +25,18 @@
 		addRaum: (raum: StundenplanRaum) => Promise<void>;
 	}>();
 
-	const _showModal = ref<boolean>(false);
-	const showModal = () => _showModal;
+	const show = ref<boolean>(false);
 
 	const item = ref<StundenplanRaum>(new StundenplanRaum());
 	item.value.groesse = 30;
 
 	const openModal = () => {
-		showModal().value = true;
+		show.value = true;
 	}
 
 	async function importer() {
 		await props.addRaum(item.value);
-		showModal().value = false;
+		show.value = false;
 	}
 
 </script>

@@ -1,6 +1,6 @@
 <template>
-	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="showModal" size="small">
+	<slot :open-modal />
+	<svws-ui-modal v-model:show="show" size="small">
 		<template #modalTitle>Information zum Datenschutz</template>
 		<template #modalDescription>
 			<div class="space-y-2 text-left">
@@ -24,15 +24,14 @@
 
 	import { ref } from 'vue';
 
-	const _showModal = ref<boolean>(false);
-	const showModal = () => _showModal;
+	const show = ref<boolean>(false);
 
 	async function closeModal() {
-		showModal().value = false;
+		show.value = false;
 	}
 
 	const openModal = () => {
-		showModal().value = true;
+		show.value = true;
 	}
 
 </script>

@@ -1,6 +1,6 @@
 <template>
-	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="showModal" size="small" class="hidden">
+	<slot :open-modal />
+	<svws-ui-modal v-model:show="show" size="small" class="hidden">
 		<template #modalTitle>Blockungsergebnis synchronisieren</template>
 		<template #modalDescription>
 			<div class="prose text-justify">
@@ -16,7 +16,7 @@
 			</div>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="showModal().value = false">Abbrechen</svws-ui-button>
+			<svws-ui-button type="secondary" @click="show = false">Abbrechen</svws-ui-button>
 			<svws-ui-button type="primary" @click="activate_ergebnis">Ja</svws-ui-button>
 		</template>
 	</svws-ui-modal>
@@ -33,16 +33,15 @@
 		ergebnisSynchronisieren: () => Promise<void>;
 	}>();
 
-	const _showModal = ref<boolean>(false);
-	const showModal = () => _showModal;
+	const show = ref<boolean>(false);
 
 	async function activate_ergebnis() {
-		showModal().value = false;
+		show.value = false;
 		await props.ergebnisSynchronisieren();
 	}
 
 	const openModal = () => {
-		showModal().value = true;
+		show.value = true;
 	}
 
 </script>

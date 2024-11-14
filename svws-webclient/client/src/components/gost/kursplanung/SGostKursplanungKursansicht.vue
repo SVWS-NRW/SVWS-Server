@@ -290,7 +290,7 @@
 		</svws-ui-table>
 		<s-gost-kursplanung-kursansicht-modal-regel-schienen :get-ergebnismanager :regeln-update ref="modalRegelKursartSchienen" />
 		<s-gost-kursplanung-kursansicht-modal-combine-kurse :get-datenmanager :combine-kurs ref="modal_combine_kurse" />
-		<svws-ui-modal :show="() => toRef((fehlermeldungen.size() > 0) && !fehlerIgnore)" type="danger" size="medium">
+		<svws-ui-modal :show="(fehlermeldungen.size() > 0) && !fehlerIgnore" type="danger" size="medium">
 			<template #modalTitle>Achtung</template>
 			<template #modalContent>
 				Es sind Fehler in dieser Blockung aufgetaucht:

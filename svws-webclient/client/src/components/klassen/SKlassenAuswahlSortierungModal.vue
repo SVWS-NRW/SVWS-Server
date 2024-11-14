@@ -1,13 +1,13 @@
 <template>
-	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="()=>ref(showModal)">
+	<slot :open-modal />
+	<svws-ui-modal v-model:show="show">
 		<template #modalTitle>Standardsortierung anwenden</template>
 		<template #modalContent>
 			Sollen alle Klassen nach der Standardsortierung sortiert werden, die sich an der Klassenbezeichnung orientiert? Dabei geht die aktuell hinterlegt Sortierreihenfolge verloren.
 			<br>Die Standardsortierung orientiert sich an der Jahrgang-Sortierung und Parallelität. Die Jahrgangssortierung wird im Katalog der Jahrgänge festgelegt.
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="showModal = false"> Abbrechen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="show = false"> Abbrechen </svws-ui-button>
 			<svws-ui-button type="secondary" @click="sortiere"> OK </svws-ui-button>
 		</template>
 	</svws-ui-modal>
@@ -21,14 +21,14 @@
 		setzeDefaultSortierung: () => Promise<void>;
 	}>();
 
-	const showModal = ref<boolean>(false);
+	const show = ref<boolean>(false);
 
-	const openModal = () => {
-		showModal.value = true;
+	function openModal() {
+		show.value = true;
 	}
 
 	async function sortiere() {
-		showModal.value = false;
+		show.value = false;
 		await props.setzeDefaultSortierung();
 	}
 

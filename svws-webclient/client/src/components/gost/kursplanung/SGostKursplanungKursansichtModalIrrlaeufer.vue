@@ -1,6 +1,6 @@
 <template>
-	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="showModal" size="small" class="hidden">
+	<slot :open-modal />
+	<svws-ui-modal v-model:show="show" size="small" class="hidden">
 		<template #modalTitle>Ungültige Kurszuordnungen</template>
 		<template #modalDescription>
 			Sollen folgende fehlerhafte Kurs-Schüler-Zuordnungen entfernt werden?
@@ -17,7 +17,7 @@
 			</svws-ui-table>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="showModal().value = false">Abbrechen</svws-ui-button>
+			<svws-ui-button type="secondary" @click="show = false">Abbrechen</svws-ui-button>
 			<svws-ui-button type="primary" @click="removeZuordnung">OK</svws-ui-button>
 		</template>
 	</svws-ui-modal>
@@ -43,14 +43,13 @@
 	})
 
 	const selected = shallowRef<GostBlockungsergebnisKursSchuelerZuordnung[]>(zuordnungen.value.toArray() as GostBlockungsergebnisKursSchuelerZuordnung[]);
-	const _showModal = shallowRef<boolean>(false);
-	const showModal = () => _showModal;
+	const show = shallowRef<boolean>(false);
 
 	async function removeZuordnung() {
 		const set = new HashSet<GostBlockungsergebnisKursSchuelerZuordnung>();
 		for (const z of selected.value)
 			set.add(z);
-		showModal().value = false;
+		show.value = false;
 		if (!set.isEmpty()) {
 			const update = props.getErgebnismanager().kursSchuelerUpdate_03b_ENTFERNE_KURS_SCHUELER_PAARE(set);
 			await props.updateKursSchuelerZuordnungen(update);
@@ -60,7 +59,7 @@
 
 	const openModal = () => {
 		selected.value = zuordnungen.value.toArray() as GostBlockungsergebnisKursSchuelerZuordnung[];
-		showModal().value = true;
+		show.value = true;
 	}
 
 </script>

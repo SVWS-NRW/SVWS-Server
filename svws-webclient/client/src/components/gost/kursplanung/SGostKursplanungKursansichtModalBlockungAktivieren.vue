@@ -1,12 +1,12 @@
 <template>
-	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="showModal" size="small" class="hidden" :type="hatUngueltigeKurszuordnungen ? 'danger' : 'default'">
+	<slot :open-modal />
+	<svws-ui-modal v-model:show="show" size="small" class="hidden" :type="hatUngueltigeKurszuordnungen ? 'danger' : 'default'">
 		<template #modalTitle>Blockungsergebnis {{ hatUngueltigeKurszuordnungen ? 'trotzdem':'' }} übertragen</template>
 		<template #modalDescription>
 			Soll {{ blockungsname }} übertragen werden{{ hatUngueltigeKurszuordnungen ? ', obwohl ungültige Kurszuordnungen vorliegen':'' }}?
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="showModal().value = false">Abbrechen</svws-ui-button>
+			<svws-ui-button type="secondary" @click="show = false">Abbrechen</svws-ui-button>
 			<svws-ui-button type="primary" @click="activate_ergebnis">Ja</svws-ui-button>
 		</template>
 	</svws-ui-modal>
@@ -22,16 +22,15 @@
 		ergebnisAktivieren: () => Promise<boolean>;
 	}>();
 
-	const _showModal = ref<boolean>(false);
-	const showModal = () => _showModal;
+	const show = ref<boolean>(false);
 
 	async function activate_ergebnis() {
-		showModal().value = false;
+		show.value = false;
 		await props.ergebnisAktivieren();
 	}
 
 	const openModal = () => {
-		showModal().value = true;
+		show.value = true;
 	}
 
 </script>

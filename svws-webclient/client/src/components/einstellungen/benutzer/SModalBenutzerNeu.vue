@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-modal :show="showModal" size="small">
+	<svws-ui-modal v-model:show="show" size="small">
 		<template #modalTitle>
 			Benutzer hinzufügen
 		</template>
@@ -15,14 +15,14 @@
 		</template>
 
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="showModal().value = false"> Abbrechen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="show = false"> Abbrechen </svws-ui-button>
 			<svws-ui-button @click="create"> Weiter </svws-ui-button>
 		</template>
 	</svws-ui-modal>
 
 	<svws-ui-button type="trash" v-if="showDeleteIcon" @click="deleteBenutzerAllgemein" />
 
-	<svws-ui-button type="icon" @click="showModal().value = true" :has-focus>
+	<svws-ui-button type="icon" @click="show = true" :has-focus>
 		<span class="icon i-ri-add-line" />
 	</svws-ui-button>
 </template>
@@ -41,9 +41,7 @@
 		hasFocus: false,
 	});
 
-	const _showModal = ref<boolean>(false);
-	const showModal = () => _showModal;
-
+	const show = ref<boolean>(false);
 	const anzeigename = ref();
 	const name = ref();
 	const passwort1 = ref();
@@ -52,7 +50,7 @@
 	async function create() {
 		if (passwort1.value === passwort2.value){
 			await props.createBenutzerAllgemein(anzeigename.value, name.value, passwort1.value);
-			showModal().value = false;
+			show.value = false;
 			anzeigename.value = "";
 			name.value = "";
 			passwort1.value = "";

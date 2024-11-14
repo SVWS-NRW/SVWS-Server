@@ -11,17 +11,17 @@
 		</template>
 		<template #actions v-if="hatUpdateKompetenz">
 			<svws-ui-button @click="removeLehraemter(Arrays.asList(selected))" type="trash" :disabled="selected.length <= 0" />
-			<svws-ui-button @click="showModal().value = true" type="icon" title="Lehramt hinzufügen"> <span class="icon i-ri-add-line" /> </svws-ui-button>
+			<svws-ui-button @click="show = true" type="icon" title="Lehramt hinzufügen"> <span class="icon i-ri-add-line" /> </svws-ui-button>
 		</template>
 	</svws-ui-table>
-	<s-lehrer-personaldaten-lehraemter-modal-add v-if="hatUpdateKompetenz" :show="showModal" :id-lehrer="personaldaten.id" :add-lehramt :schuljahr />
+	<s-lehrer-personaldaten-lehraemter-modal-add v-if="hatUpdateKompetenz" v-model:show="show" :id-lehrer="personaldaten.id" :add-lehramt :schuljahr />
 </template>
 
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
 	import type { List, LehrerLehramtEintrag, LehrerListeManager, LehrerPersonaldaten} from "@core";
-	import { DeveloperNotificationException, LehrerLehramt, LehrerLehramtAnerkennung, Arrays } from "@core";
+	import { LehrerLehramt, LehrerLehramtAnerkennung, Arrays } from "@core";
 
 	const props = defineProps<{
 		hatUpdateKompetenz: boolean;
@@ -34,8 +34,7 @@
 
 	const personaldaten = computed<LehrerPersonaldaten>(() => props.lehrerListeManager().personalDaten());
 
-	const _modal = ref<boolean>(false);
-	const showModal = () => _modal;
+	const show = ref<boolean>(false);
 
 	const selected = ref<LehrerLehramtEintrag[]>([]);
 
@@ -46,8 +45,6 @@
 
 	function getLehramt(eintrag: LehrerLehramtEintrag) : LehrerLehramt {
 		const lehramt = LehrerLehramt.data().getWertByID(eintrag.idLehramt);
-		if (lehramt === null)
-			throw new DeveloperNotificationException("Die ID des Lehramtes ist unzulässig. Die vorhandenen Daten sind inkonsistent.");
 		return lehramt;
 	}
 
