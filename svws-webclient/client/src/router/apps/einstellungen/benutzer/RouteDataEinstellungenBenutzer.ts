@@ -75,16 +75,11 @@ export class RouteDataEinstellungenBenutzer extends RouteData<RouteStateEinstell
 			})
 			await this.ladeListe();
 		}
-		const neueAuswahl = benutzer === undefined ? this.firstBenutzer(this.mapBenutzer) : benutzer;
-		const daten = await this.ladeBenutzerDaten(neueAuswahl);
+		const auswahl = benutzer === undefined ? this.firstBenutzer(this.mapBenutzer) : benutzer;
+		const daten = await this.ladeBenutzerDaten(auswahl);
 		const listBenutzergruppen = await api.server.getBenutzergruppenliste(api.schema);
-		const benutzerManager = daten=== undefined ? undefined : new BenutzerManager(daten);
-		this.setPatchedState({
-			auswahl: neueAuswahl,
-			benutzerManager: benutzerManager,
-			listBenutzergruppen: listBenutzergruppen,
-			daten: daten
-		})
+		const benutzerManager = (daten === undefined) ? undefined : new BenutzerManager(daten);
+		this.setPatchedState({ auswahl, benutzerManager, listBenutzergruppen, daten });
 	}
 
 	gotoBenutzer = async (value: BenutzerListeEintrag | undefined) => {
