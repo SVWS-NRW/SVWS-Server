@@ -283,9 +283,7 @@
 	.htw-dark .text-input-component .icon.svws-icon,
 	.dark .text-input-component .text-input--search-icon,
 	.htw-dark .text-input-component .text-input--search-icon {
-		-webkit-filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
-		filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
-		/* TODO: COLORS icon darkmode */
+		@apply icon-white;
 	}
 
 	.text-input-component .icon.svws-icon {
@@ -296,14 +294,11 @@
 
 			.dark &,
 			.htw-dark & {
-				-webkit-filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
-				filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
-				/* TODO: COLORS icon darkmode */
+				@apply icon-white;
 			}
 
 			&:hover {
-				-webkit-filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
-				filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
+				@apply icon-danger;
 			}
 		}
 	}
@@ -334,23 +329,19 @@
 	}
 
 	.text-input--statistics .svws-icon.icon {
-		@apply text-ui-statistic-secondary;
-		/* TODO: COLORS icon */
+		@apply text-ui-statistic-secondary icon-statistics;
 	}
 
 	.text-input--invalid .svws-icon {
-		@apply text-ui-danger;
-		/* TODO: COLORS icon */
+		@apply text-ui-danger icon-danger;
 	}
 
 	.text-input--statistic-kann .svws-icon {
-		@apply text-ui-caution;
-		/* TODO: COLORS icon */
+		@apply text-ui-caution icon-caution;
 	}
 
 	.text-input--statistic-hinweis .svws-icon {
-		@apply text-ui-warning;
-		/* TODO: COLORS icon */
+		@apply text-ui-warning icon-warning;
 	}
 
 	.text-input--control {
@@ -432,7 +423,6 @@
 	.text-input--statistics {
 		.tooltip-trigger--triggered span.icon {
 			@apply text-ui-statistic;
-			/* TODO: COLORS icon */
 		}
 	}
 
@@ -447,7 +437,6 @@
 			@apply absolute left-2 opacity-25;
 			top: 50%;
 			transform: translateY(-50%) scale(90%);
-			/* TODO: COLORS icon darkmode */
 
 			.text-input-component:not(.text-input--filled):not(:focus-within):not(.text-input--disabled):hover & {
 				@apply opacity-100;
@@ -476,8 +465,6 @@
 
 	.text-input--readonly .text-input--control {
 		@apply pointer-events-auto cursor-default select-none;
-		/* @apply border-dashed border-ui-secondary;
-		@apply pointer-events-auto cursor-default select-all; */
 	}
 
 	.text-input--placeholder {

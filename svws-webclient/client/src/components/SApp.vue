@@ -344,4 +344,10 @@
 		@apply flex flex-col w-full h-full;
 	}
 
+	span.icon, span.icon-lg {
+		.dark & {
+			@apply icon-white;
+		}
+	}
+
 </style>
