@@ -113,7 +113,7 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 			let daten = await this.ladeDaten(auswahl);
 			if ((daten === null) && (!manager.liste.list().isEmpty()))
 				daten = await this.ladeDaten(manager.liste.list().getFirst());
-			this.manager.setDaten(daten);
+			manager.setDaten(daten);
 			if (daten !== null)
 				await this.updateManager(manager, this.manager, daten);
 		}
