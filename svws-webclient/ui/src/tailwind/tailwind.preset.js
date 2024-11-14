@@ -5,7 +5,7 @@ import { borderWidth, boxShadow } from './tailwind.borders';
 import { screens } from './tailwind.screens';
 import { colors, backgroundColor, textColor, borderColor, accentColor, ringColor, opacity } from './tailwind.colors';
 import { spacing, maxWidth, zIndex } from './tailwind.dimensions';
-import { iconColors, iconPath, iconPlugins } from './tailwind.icons.plugin';
+import { iconSize, iconColors, iconPath, iconPlugins } from './tailwind.icons';
 
 /**
  * Die Voreinstellungen für die Nutzung von Tailwind - siehe auch: https://tailwindcss.com/docs/theme#configuration-reference
@@ -20,6 +20,7 @@ export default {
 		fontSize,
 		fontWeight,
 		borderWidth,
+		iconSize,
 		iconColors,
 		iconPath,
 		extend: {

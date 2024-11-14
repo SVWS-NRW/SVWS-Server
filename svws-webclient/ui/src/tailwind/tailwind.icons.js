@@ -1,5 +1,21 @@
 import plugin from 'tailwindcss/plugin';
 
+/**
+ * Icons - Beispiel zur Verwendung in den vue-Dateien:
+ *
+ * <span class="icon icon-white i-ri-alert-line"/>
+ */
+
+const iconSize = {
+	'xxs': '0.5rem',
+	'xs': '0.75rem',
+	'sm': '1rem',
+	DEFAULT: '1.2rem',
+	'lg': '1.5rem',
+	'xl': '2rem',
+	'xxl': '4rem',
+}
+
 const iconColors = {
 	'white': 'invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);',
 	'gray': 'invert(32%) sepia(97%) saturate(0%) hue-rotate(163deg) brightness(103%) contrast(104%);',
@@ -162,6 +178,16 @@ const iconPlugins = [
 			}),
 		}, { values: theme('iconColors') })
 	}),
+	// eslint-disable-next-line @typescript-eslint/unbound-method
+	plugin(function({ matchUtilities, theme }) {
+		matchUtilities({
+			'icon': (value) => ({
+				'width': value,
+				'height': value,
+				'line-height': value,
+			}),
+		}, { values: theme('iconSize') })
+	}),
 ];
 
-export { iconPlugins, iconColors, iconPath };
+export { iconSize, iconColors, iconPath, iconPlugins };

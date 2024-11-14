@@ -36,10 +36,6 @@
 		@apply uppercase;
 	}
 
-	.icon {
-		line-height: 1 !important;
-	}
-
 	hr {
 		@apply border-0 border-t-2 border-solid border-black/10 dark:border-white/10;
 	}
@@ -50,14 +46,5 @@
 		padding: 0.05rem 0.25rem;
 		margin: -0.125rem auto -0.125rem -0.125rem;
 	}
-
-	/** Icons - Beispiel zur Verwendung: <span class="icon i-ri-alert-line" /> */
-	.icon-xxs { @apply w-2 h-2 }
-	.icon-xs { @apply w-3 h-3 }
-	.icon-sm { @apply w-4 h-4 }
-	.icon { @apply w-[1.2rem] h-[1.2rem] }
-	.icon-lg { @apply w-6 h-6 }
-	.icon-xl { @apply w-8 h-8 }
-	.icon-xxl { @apply w-16 h-16 }
 
 }
