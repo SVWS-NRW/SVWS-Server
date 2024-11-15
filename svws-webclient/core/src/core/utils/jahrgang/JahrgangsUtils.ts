@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { IllegalStateException } from '../../../java/lang/IllegalStateException';
 import { Jahrgaenge } from '../../../asd/types/jahrgang/Jahrgaenge';
 import { Schulform } from '../../../asd/types/schule/Schulform';
+import { SchulformKatalogEintrag } from '../../../asd/data/schule/SchulformKatalogEintrag';
 import { JavaLong } from '../../../java/lang/JavaLong';
 import { Schulgliederung } from '../../../asd/types/schule/Schulgliederung';
 import { JahrgangsDaten } from '../../../core/data/jahrgang/JahrgangsDaten';
@@ -148,6 +149,53 @@ export class JahrgangsUtils extends JavaObject {
 				return null;
 			}
 		}
+	}
+
+	/**
+	 * Bestimmt für die angegebene Schulform, die übergebene Schulgliederung (auch beim Schüler eingetragenen Schulgliederung)
+	 * und den angegebenen Jahrgang die restlichen Jahre an der Schule bis zum Abitur.
+	 *
+	 * @param schulform    die Schulform
+	 * @param gliederung   die Schulgliederung
+	 * @param schuljahr    das Schuljahr
+	 * @param jahrgang     der Jahrgang, für den die restlichen Jahre bestimmt werden sollen
+	 *
+	 * @return die restlichen Jahre oder null
+	 */
+	public static getRestlicheJahreBisAbitur(schulform : Schulform, gliederung : Schulgliederung | null, schuljahr : number, jahrgang : string | null) : number | null {
+		const sf : SchulformKatalogEintrag | null = schulform.daten(schuljahr);
+		if ((sf === null) || (!sf.hatGymOb) || (gliederung === null) || (jahrgang === null))
+			return null;
+		let _sevar_1739790870 : any;
+		const _seexpr_1739790870 = (jahrgang);
+		if (_seexpr_1739790870 === "05") {
+			_sevar_1739790870 = ((schulform as unknown === Schulform.GY as unknown) && (gliederung.istG8() || (gliederung as unknown === Schulgliederung.DEFAULT as unknown))) ? 8 : 9;
+		} else if (_seexpr_1739790870 === "06") {
+			_sevar_1739790870 = ((schulform as unknown === Schulform.GY as unknown) && (gliederung.istG8() || (gliederung as unknown === Schulgliederung.DEFAULT as unknown))) ? 7 : 8;
+		} else if (_seexpr_1739790870 === "07") {
+			_sevar_1739790870 = ((schulform as unknown === Schulform.GY as unknown) && (gliederung.istG8() || (gliederung as unknown === Schulgliederung.DEFAULT as unknown))) ? 6 : 7;
+		} else if (_seexpr_1739790870 === "08") {
+			_sevar_1739790870 = ((schulform as unknown === Schulform.GY as unknown) && (gliederung.istG8() || (gliederung as unknown === Schulgliederung.DEFAULT as unknown))) ? 5 : 6;
+		} else if (_seexpr_1739790870 === "09") {
+			_sevar_1739790870 = ((schulform as unknown === Schulform.GY as unknown) && (gliederung.istG8() || (gliederung as unknown === Schulgliederung.DEFAULT as unknown))) ? 4 : 5;
+		} else if (_seexpr_1739790870 === "10") {
+			_sevar_1739790870 = ((schulform as unknown === Schulform.GY as unknown) && (gliederung.istG8() || (gliederung as unknown === Schulgliederung.DEFAULT as unknown))) ? null : 4;
+		} else if (_seexpr_1739790870 === "EF") {
+			_sevar_1739790870 = 3;
+		} else if (_seexpr_1739790870 === "11") {
+			_sevar_1739790870 = 3;
+		} else if (_seexpr_1739790870 === "Q1") {
+			_sevar_1739790870 = 2;
+		} else if (_seexpr_1739790870 === "12") {
+			_sevar_1739790870 = 2;
+		} else if (_seexpr_1739790870 === "Q2") {
+			_sevar_1739790870 = 1;
+		} else if (_seexpr_1739790870 === "13") {
+			_sevar_1739790870 = 1;
+		} else {
+			_sevar_1739790870 = null;
+		}
+		return _sevar_1739790870;
 	}
 
 	/**

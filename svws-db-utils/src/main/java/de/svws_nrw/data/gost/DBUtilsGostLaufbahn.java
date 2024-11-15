@@ -727,7 +727,8 @@ public final class DBUtilsGostLaufbahn {
 			// Bestimme die Restjahre in Bezug auf den Abiturjahrgang und den Schuljahresabschnitt
 			final int restjahreNachAbiturjahr = abijahrgang - schuljahresabschnitt.Jahr;
 			final Integer restjahreNachJahrgang =
-					JahrgangsUtils.getRestlicheJahre(schulform, Schulgliederung.data().getWertByKuerzel(jahrgang.GliederungKuerzel), jahrgang.ASDJahrgang);
+					JahrgangsUtils.getRestlicheJahreBisAbitur(schulform, Schulgliederung.data().getWertByKuerzel(jahrgang.GliederungKuerzel),
+							schuljahresabschnitt.Jahr, jahrgang.ASDJahrgang);
 			if ((restjahreNachJahrgang != null) && (restjahreNachAbiturjahr == restjahreNachJahrgang))
 				result.add(schueler);
 		}

@@ -803,7 +803,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 								sb.append(" else ");
 							}
 							sb.append("if (").append(tmpExprVar).append(" === ");
-							if (!typeNode.isPrimitive())
+							if (!typeNode.isPrimitive() && (!typeNode.isString()))
 								sb.append(typeNode.transpile(true)).append(".");
 							sb.append(cclt.toString()).append(") {");
 							indentC++;
