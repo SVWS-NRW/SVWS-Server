@@ -128,10 +128,6 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		super.defaultChild = routeSchueler;
 	}
 
-	public async beforeEach(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
-		return this.getRouteDefaultChild({ idSchuljahresabschnitt : undefined });
-	}
-
 	public async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
 		try {
 			if (isEntering)
