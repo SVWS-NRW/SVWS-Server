@@ -15,7 +15,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Diese Klasse dient als DTO für die CSV-Datei {@code GPU015.txt} des
  * Untis-Datenaustausch-Formates und enthält damit eine Beschreibung der
- * Kurswahlen der Stundenten, d.h. der Schüler-Kurs-Zuordnungen.
+ * Kurswahlen der Studenten, d.h. der Schüler-Kurs-Zuordnungen.
  */
 public final class UntisGPU015 {
 
