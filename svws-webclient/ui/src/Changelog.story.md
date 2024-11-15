@@ -9,6 +9,8 @@ icon: 'carbon:bookmark'
 # Changelog
 
 Chronologische Auflistung von Änderungen an den Komponenten Fix/Feature/Breaking Change:
+## ab 1.0.2
+Modale verwenden nun zum Öffnen mit dem `:show`-Prop lediglich ein boolean statt der bisherigen Funktion
 ## ab 1.0.1
 * [Design Tokens](/story/farben) werden eingeführt. Deprecated Farbdefinitionen sollen nicht mehr verwendet werden. In den Docs sind zu dem Thema alle wichtigen Details nachzulesen und es gibt eine Übersicht aller verfügbaren Variablen.  
 Beispiel: `bg-white dark:bg-black text-black dark:text-white hover:text-primary dark:hover:text-primary-dark` → `bg-ui text-ui hover:text-ui-hover`

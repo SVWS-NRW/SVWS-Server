@@ -79,14 +79,13 @@
 						<s-klassen-daten-lehrer-zuweisung-modal v-slot="{openModal}" :klassen-liste-manager :add-klassenleitung>
 							<div style="vertical-align: center; display: flex; float: right; margin-right: 5.7pt">
 								<div v-if="klassenListeManager().getAuswahlKlassenLeitung() !== null" class="w-6 me-1">
-									<svws-ui-button v-if="showPfeilHoch" type="icon" @click="erhoeheReihenfolge()">
+									<svws-ui-button v-if="showPfeilHoch" type="icon" @click="erhoeheReihenfolge">
 										<span class="icon i-ri-arrow-up-line" />
 									</svws-ui-button>
-									<svws-ui-button v-else-if="showPfeilRunter" type="icon" @click="reduziereReihenfolge()">
+									<svws-ui-button v-else-if="showPfeilRunter" type="icon" @click="reduziereReihenfolge">
 										<span class="icon i-ri-arrow-down-line" />
 									</svws-ui-button>
 								</div>
-
 								<div style="display: flex; justify-content: flex-end">
 									<svws-ui-button type="icon" @click="openModal">
 										<span class="icon i-ri-add-line" />

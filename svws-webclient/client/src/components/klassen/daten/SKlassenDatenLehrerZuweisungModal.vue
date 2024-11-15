@@ -1,6 +1,6 @@
 <template>
-	<slot :open-modal="showModal" />
-	<svws-ui-modal v-model:show="showModal" size="medium">
+	<slot :open-modal />
+	<svws-ui-modal :show @update:show="closeModal" size="medium">
 		<template #modalTitle>Lehrkraft als Klassenleitung hinzufügen</template>
 		<template #modalContent>
 			<div style="height:250pt">
@@ -51,21 +51,16 @@
 
 	const auswaehlenDeaktiviert = computed<boolean>(() => clickedRow.value === undefined)
 
-	const _showModal = ref<boolean>(false);
-
-	function showModal() {
-		// Benötigt damit der X Button oben das Modal zurücksetzt
-		if (_showModal.value === false) {
-			search.value = "";
-			clickedRow.value = undefined;
-		}
-		return _showModal.value;
-	}
+	const show = ref<boolean>(false);
 
 	function closeModal() {
 		search.value = "";
 		clickedRow.value = undefined;
-		_showModal.value = false;
+		show.value = false;
+	}
+
+	function openModal() {
+		show.value = true;
 	}
 
 	async function add() {
