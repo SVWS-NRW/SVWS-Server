@@ -133,7 +133,7 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 
 	public deleteKlassen = async (): Promise<[boolean, List<string>]> => {
 		const ids = new ArrayList<number>();
-		const set = this.klassenListeManager.getSetKlasseMitSchueler();
+		const set = this.klassenListeManager.getKlassenIDsMitSchuelern();
 		for (const klasse of this.klassenListeManager.liste.auswahlSorted())
 			if (!set.contains(klasse.id))
 				ids.add(klasse.id);
