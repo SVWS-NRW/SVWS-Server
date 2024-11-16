@@ -4,7 +4,7 @@
 		<meta name="viewport" content="width=device-width"/>
 		<title>Lehrerliste mit Lehrerstammdaten</title>
 		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-pdf.css}" href="../../css/reporting-pdf.css" />
-		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-seite-hoch-koepfe-fuesse.css}" href="../../css/reporting-seite-hoch-koepfe-fuesse.css" />
+		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-A4-hoch-koepfe-fuesse.css}" href="../../css/reporting-A4-hoch-koepfe-fuesse.css" />
 		<link rel="stylesheet" th:href="@{css/reporting-styles.css}" href="../../css/reporting-styles.css" />
 		<link rel="stylesheet" th:href="@{lehrer/stammdaten/LehrerStammdatenliste.css}" href="../../lehrer/stammdaten/LehrerStammdatenliste.css" />
 	</head>
@@ -72,7 +72,7 @@
 				<td class="f-small bo-t-grey p-tb-0-lr-1" th:text="${lehrer.amtsbezeichnung()}">OStR</td>
 				<td class="f-small bo-t-grey p-tb-0-lr-1 ta-c" th:text="${lehrer.geschlecht().kuerzel}">m</td>
 				<td class="f-small bo-t-grey p-tb-0-lr-1" th:text="${#convert.toDateDE(lehrer.geburtsdatum())}">07.08.2010</td>
-				<td class="f-small bo-t-grey p-tb-0-lr-1" th:text="${lehrer.strassenname() + (!lehrer.hausnummer().isEmpty() ? (' ' + lehrer.hausnummer() + (!lehrer.hausnummerZusatz().isEmpty() ? lehrer.hausnummerZusatz() : '')) : '')}">Musterstraße 13a</td>
+				<td class="f-small bo-t-grey p-tb-0-lr-1" th:text="${lehrer.strassennameHausnummer()}">Musterstraße 13a</td>
 				<td class="f-small bo-t-grey p-tb-0-lr-1 ta-r" th:text="${lehrer.wohnort().plz}">12345</td>
 				<td class="f-small bo-t-grey p-tb-0-lr-1" th:text="${lehrer.wohnort().ortsname}">Musterstadt</td>
 			</tr>

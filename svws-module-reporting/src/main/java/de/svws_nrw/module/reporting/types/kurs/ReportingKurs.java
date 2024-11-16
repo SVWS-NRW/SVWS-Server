@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
@@ -15,7 +16,7 @@ import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Kurs.
  */
-public class ReportingKurs {
+public class ReportingKurs extends ReportingBaseType {
 
 	/** Ggf. die Zeugnisbezeichnung des Kurses. */
 	protected String bezeichnungZeugnis;

@@ -23,5 +23,7 @@ public class ProxyReportingStundenplanungZeitrasterstunde extends ReportingStund
 				zeitraster.stundenende,
 				zeitraster.unterrichtstunde,
 				Wochentag.fromIDorException(zeitraster.wochentag));
+
+		ersetzeStringNullDurchEmpty(this, false);
 	}
 }

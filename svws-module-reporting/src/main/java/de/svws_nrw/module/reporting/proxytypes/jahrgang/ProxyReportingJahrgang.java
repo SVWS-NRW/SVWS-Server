@@ -25,7 +25,7 @@ public class ProxyReportingJahrgang extends ReportingJahrgang {
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingJahrgang}.
 	 *
-	 * @param reportingRepository Repository für die Reporting.
+	 * @param reportingRepository Repository für das Reporting.
 	 * @param jahrgangsDaten Stammdaten-Objekt aus der DB.
 	 * @param schuljahresabschnitt Der Schuljahresabschnitt zu diesem Jahrgang.
 	 */
@@ -45,7 +45,10 @@ public class ProxyReportingJahrgang extends ReportingJahrgang {
 				null,
 				schuljahresabschnitt,
 				jahrgangsDaten.sortierung);
+
 		this.reportingRepository = reportingRepository;
+
+		ersetzeStringNullDurchEmpty(this, false);
 	}
 
 
@@ -53,7 +56,7 @@ public class ProxyReportingJahrgang extends ReportingJahrgang {
 	/**
 	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.
 	 *
-	 * @return Repository für die Reporting
+	 * @return Repository für das Reporting
 	 */
 	public ReportingRepository reportingRepository() {
 		return reportingRepository;

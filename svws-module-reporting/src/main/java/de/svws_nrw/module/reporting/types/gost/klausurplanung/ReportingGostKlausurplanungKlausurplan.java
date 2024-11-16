@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
+import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.kurs.ReportingKurs;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
@@ -12,7 +13,7 @@ import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostKlausurplanungKlausurplan.
  */
-public class ReportingGostKlausurplanungKlausurplan {
+public class ReportingGostKlausurplanungKlausurplan extends ReportingBaseType {
 
 	/** Eine Liste, die die schülerbezogene Ausgabe auf die Schüler mit den enthaltenen IDs beschränkt. */
 	protected List<Long> idsFilterSchueler;

@@ -2,6 +2,7 @@ package de.svws_nrw.module.reporting.types.jahrgang;
 
 import java.util.List;
 
+import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.klasse.ReportingKlasse;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
@@ -9,7 +10,7 @@ import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Jahrgang.
  */
-public class ReportingJahrgang {
+public class ReportingJahrgang extends ReportingBaseType {
 
 	/** Der Name bzw. die Bezeichnung des Jahrgangs. */
 	protected String bezeichnung;

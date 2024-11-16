@@ -2,10 +2,12 @@ package de.svws_nrw.module.reporting.types.gost.kursplanung;
 
 import java.util.List;
 
+import de.svws_nrw.module.reporting.types.ReportingBaseType;
+
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostKursplanungSchiene.
  */
-public class ReportingGostKursplanungSchiene {
+public class ReportingGostKursplanungSchiene extends ReportingBaseType {
 
 	/** Anzahl der Dummy-Schüler in der Schiene */
 	protected int anzahlDummy;

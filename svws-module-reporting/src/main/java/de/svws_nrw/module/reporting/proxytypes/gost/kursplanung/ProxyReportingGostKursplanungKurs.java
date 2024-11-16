@@ -52,7 +52,10 @@ public class ProxyReportingGostKursplanungKurs extends ReportingGostKursplanungK
 		super(anzahlAB12, anzahlAB3, anzahlAB4, anzahlDummy, anzahlExterne, anzahlSchueler, anzahlSchuelerSchriftlich, bezeichnung, fach,
 				fachwahlstatistik, gostHalbjahr,
 				gostKursart, id, lehrkraefte, schienen, schueler);
+
 		this.reportingGostKursplanungBlockungsergebnis = reportingGostKursplanungBlockungsergebnis;
+
+		ersetzeStringNullDurchEmpty(this, false);
 	}
 
 

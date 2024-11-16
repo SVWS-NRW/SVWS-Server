@@ -4,7 +4,7 @@
 		<meta name="viewport" content="width=device-width"/>
 		<title>Schülerliste mit Schülerstammdaten</title>
 		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-pdf.css}" href="../../css/reporting-pdf.css" />
-		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-seite-hoch-koepfe-fuesse.css}" href="../../css/reporting-seite-hoch-koepfe-fuesse.css" />
+		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-A4-hoch-koepfe-fuesse.css}" href="../../css/reporting-A4-hoch-koepfe-fuesse.css" />
 		<link rel="stylesheet" th:href="@{css/reporting-styles.css}" href="../../css/reporting-styles.css" />
 		<link rel="stylesheet" th:href="@{schueler/stammdaten/SchuelerStammdatenliste.css}" href="../../schueler/stammdaten/SchuelerStammdatenliste.css" />
 	</head>
@@ -71,7 +71,7 @@
 				<td class="f-small bo-t-grey p-tb-0-lr-1" th:text="${Parameter.detailLevel == 0 ? schueler.vorname() : schueler.vornamen()}">Maximilian Moritz</td>
 				<td class="f-small bo-t-grey p-tb-0-lr-1 ta-c" th:text="${schueler.geschlecht().kuerzel}">m</td>
 				<td class="f-small bo-t-grey p-tb-0-lr-1" th:text="${#convert.toDateDE(schueler.geburtsdatum())}">07.08.2010</td>
-				<td class="f-small bo-t-grey p-tb-0-lr-1" th:text="${schueler.strassenname() + (!schueler.hausnummer().isEmpty() ? (' ' + schueler.hausnummer() + (!schueler.hausnummerZusatz().isEmpty() ? schueler.hausnummerZusatz() : '')) : '')}">Musterstraße 13a</td>
+				<td class="f-small bo-t-grey p-tb-0-lr-1" th:text="${schueler.strassennameHausnummer()}">Musterstraße 13a</td>
 				<td class="f-small bo-t-grey p-tb-0-lr-1 ta-r" th:text="${schueler.wohnort().plz}">12345</td>
 				<td class="f-small bo-t-grey p-tb-0-lr-1" th:text="${schueler.wohnort().ortsname}">Musterstadt</td>
 				<td class="f-small bo-t-grey p-tb-0-lr-1 ta-r" th:text="${(schueler.auswahlLernabschnitt().klasse().kuerzel())}">07A</td>

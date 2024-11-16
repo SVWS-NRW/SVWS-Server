@@ -50,5 +50,7 @@ public class ProxyReportingFach extends ReportingFach {
 			this.istFremdsprache = fachGostDaten.istFremdsprache;
 			this.istFremdSpracheNeuEinsetzend = fachGostDaten.istFremdSpracheNeuEinsetzend;
 		}
+
+		ersetzeStringNullDurchEmpty(this, false);
 	}
 }

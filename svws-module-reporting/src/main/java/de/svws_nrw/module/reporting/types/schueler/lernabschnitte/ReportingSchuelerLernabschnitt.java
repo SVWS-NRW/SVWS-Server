@@ -3,6 +3,7 @@ package de.svws_nrw.module.reporting.types.schueler.lernabschnitte;
 import de.svws_nrw.core.data.schueler.SchuelerLeistungsdaten;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittNachpruefungsdaten;
 import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
+import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
 import de.svws_nrw.module.reporting.types.klasse.ReportingKlasse;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
@@ -14,7 +15,7 @@ import java.util.List;
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Lernabschnitt.
  */
-public class ReportingSchuelerLernabschnitt {
+public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 
 	/** Der erreichte allgemeinbildende Abschluss */
 	protected String abschluss;

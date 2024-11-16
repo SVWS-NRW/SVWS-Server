@@ -1,13 +1,14 @@
 package de.svws_nrw.module.reporting.types.gost.abitur;
 
 import de.svws_nrw.asd.types.Note;
+import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostAbiturFachbelegung.
  */
-public class ReportingGostAbiturFachbelegung {
+public class ReportingGostAbiturFachbelegung extends ReportingBaseType {
 
 	/** Gibt an, als welches Abiturfach das Fach belegt wurde (1,2,3,4 oder null) */
 	protected Integer abiturFach;

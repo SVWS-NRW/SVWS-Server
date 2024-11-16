@@ -123,4 +123,4 @@ Leider unterstützen die Plugins die Dialekte nicht. Daher können die zur Verf�
 ## Report-Ausgabe testen
 Die erstellten html-Templates können im Browser oder IDE angezeigt werden, wenn man die dortige Vorschau nutzt. Dabei wird aber nur der statische Teil des html angezeigt, es werden keine Daten in das Template geladen.
 
-Möchte man eine Vorschau mit Daten erstellen, kann man die Debug-Schnittstelle unter unter localhast/debug aufrufen und dort den API-Endpunkt *Reportausgabe* auf. Die anzugebenen Parameter werden als JSON übergeben. Entsprechend sind die Eingaben vorzunehmen.
+Möchte man eine Vorschau mit Daten erstellen, kann man die Debug-Schnittstelle unter localhast/debug aufrufen und dort den API-Endpunkt *Reportausgabe* auf. Die anzugebenen Parameter werden als JSON übergeben. Entsprechend sind die Eingaben vorzunehmen.

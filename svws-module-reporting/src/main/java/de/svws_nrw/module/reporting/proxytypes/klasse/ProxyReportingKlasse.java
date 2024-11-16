@@ -44,7 +44,7 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingKlasse}.
 	 *
-	 * @param reportingRepository Repository für die Reporting.
+	 * @param reportingRepository Repository für das Reporting.
 	 * @param klassenDaten Stammdaten-Objekt aus der DB.
 	 */
 	public ProxyReportingKlasse(final ReportingRepository reportingRepository, final KlassenDaten klassenDaten) {
@@ -84,13 +84,15 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 		// werden.
 		if ((klassenDaten.schueler != null) && !klassenDaten.schueler.isEmpty())
 			idsSchueler.addAll(klassenDaten.schueler.stream().map(s -> s.id).toList());
+
+		ersetzeStringNullDurchEmpty(this, false);
 	}
 
 
 	/**
 	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.
 	 *
-	 * @return Repository für die Reporting
+	 * @return Repository für das Reporting
 	 */
 	public ReportingRepository reportingRepository() {
 		return reportingRepository;

@@ -32,3 +32,7 @@ table {
     -fs-table-paginate: paginate;
 	-fs-page-break-min-height: 4mm;
 }
+
+.reset-page-counter {
+	-fs-page-sequence: start;
+}

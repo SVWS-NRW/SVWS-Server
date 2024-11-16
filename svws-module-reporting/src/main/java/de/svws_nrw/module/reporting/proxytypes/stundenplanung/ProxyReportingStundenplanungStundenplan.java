@@ -24,7 +24,7 @@ public class ProxyReportingStundenplanungStundenplan extends ReportingStundenpla
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingStundenplanungStundenplan}.
 	 *
-	 * @param reportingRepository 	Repository für die Reporting.
+	 * @param reportingRepository 	Repository für das Reporting.
 	 * @param stundenplan 			Das Stundenplan-Objekt mit den gesammelten Daten des Stundenplanes.
 	 */
 	public ProxyReportingStundenplanungStundenplan(final ReportingRepository reportingRepository, final Stundenplan stundenplan) {
@@ -43,6 +43,8 @@ public class ProxyReportingStundenplanungStundenplan extends ReportingStundenpla
 
 		super.schuljahresabschnitt = this.reportingRepository.schuljahresabschnitt(stundenplan.idSchuljahresabschnitt);
 
+		ersetzeStringNullDurchEmpty(this, false);
+
 		// Räume und Zeitraster werden per lazy-loading nachgeladen.
 	}
 
@@ -50,7 +52,7 @@ public class ProxyReportingStundenplanungStundenplan extends ReportingStundenpla
 	/**
 	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.
 	 *
-	 * @return Repository für die Reporting
+	 * @return Repository für das Reporting
 	 */
 	public ReportingRepository reportingRepository() {
 		return reportingRepository;

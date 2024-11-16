@@ -35,7 +35,10 @@ public class ProxyReportingGostKursplanungSchiene extends ReportingGostKursplanu
 			final List<Long> idsKurseMitKollisionen, final List<Long> idsSchuelerMitKollisionen, final List<ReportingGostKursplanungKurs> kurse,
 			final int nummer) {
 		super(anzahlDummy, anzahlExterne, anzahlSchueler, bezeichnung, hatKollisionen, id, idsKurseMitKollisionen, idsSchuelerMitKollisionen, kurse, nummer);
+
 		this.reportingGostKursplanungBlockungsergebnis = reportingGostKursplanungBlockungsergebnis;
+
+		ersetzeStringNullDurchEmpty(this, false);
 	}
 
 

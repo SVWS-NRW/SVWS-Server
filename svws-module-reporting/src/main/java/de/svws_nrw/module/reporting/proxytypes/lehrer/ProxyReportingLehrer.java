@@ -20,16 +20,19 @@ public class ProxyReportingLehrer extends ReportingLehrer {
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingLehrer}.
 	 *
-	 * @param reportingRepository Repository für die Reporting.
+	 * @param reportingRepository Repository für das Reporting.
 	 * @param lehrerStammdaten Stammdaten-Objekt aus der DB.
 	 */
 	public ProxyReportingLehrer(final ReportingRepository reportingRepository, final LehrerStammdaten lehrerStammdaten) {
 		super(lehrerStammdaten.amtsbezeichnung,
 				lehrerStammdaten.anrede,
-				lehrerStammdaten.emailDienstlich,
 				lehrerStammdaten.emailPrivat,
+				lehrerStammdaten.emailDienstlich,
 				lehrerStammdaten.foto,
 				lehrerStammdaten.geburtsdatum,
+				"",
+				"",
+				"",
 				Geschlecht.fromValue(lehrerStammdaten.geschlecht),
 				lehrerStammdaten.hausnummer,
 				lehrerStammdaten.hausnummerZusatz,
@@ -38,29 +41,29 @@ public class ProxyReportingLehrer extends ReportingLehrer {
 				lehrerStammdaten.nachname,
 				lehrerStammdaten.personalTyp,
 				Nationalitaeten.getByDESTATIS(lehrerStammdaten.staatsangehoerigkeitID),
+				null,
 				lehrerStammdaten.strassenname,
 				lehrerStammdaten.telefon,
 				lehrerStammdaten.telefonMobil,
 				lehrerStammdaten.titel,
 				lehrerStammdaten.vorname,
+				lehrerStammdaten.vorname,
 				(lehrerStammdaten.wohnortID != null) ? reportingRepository.katalogOrte().get(lehrerStammdaten.wohnortID) : null,
-				"",
-				(lehrerStammdaten.ortsteilID != null) ? reportingRepository.katalogOrtsteile().get(lehrerStammdaten.ortsteilID) : null,
-				"");
+				(lehrerStammdaten.ortsteilID != null) ? reportingRepository.katalogOrtsteile().get(lehrerStammdaten.ortsteilID) : null);
 
 		this.reportingRepository = reportingRepository;
-		super.wohnortname = (super.wohnort() != null) ? super.wohnort().ortsname : "";
-		super.wohnortsteilname = (super.wohnortsteil() != null) ? super.wohnortsteil().ortsteil : "";
 
 		// Füge Stammdaten des Lehrers für weitere Verwendung in der Map im Repository hinzu.
 		reportingRepository.mapLehrerStammdaten().putIfAbsent(super.id(), lehrerStammdaten);
+
+		ersetzeStringNullDurchEmpty(this, false);
 	}
 
 
 	/**
 	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.
 	 *
-	 * @return Repository für die Reporting
+	 * @return Repository für das Reporting
 	 */
 	public ReportingRepository reportingRepository() {
 		return reportingRepository;

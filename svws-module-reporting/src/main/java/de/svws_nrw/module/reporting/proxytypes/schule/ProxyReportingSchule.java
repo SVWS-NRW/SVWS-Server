@@ -21,7 +21,7 @@ public class ProxyReportingSchule extends ReportingSchule {
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingSchule}.
 	 *
-	 * @param reportingRepository Repository für die Reporting.
+	 * @param reportingRepository Repository für das Reporting.
 	 */
 	public ProxyReportingSchule(final ReportingRepository reportingRepository) {
 		super(null,
@@ -55,6 +55,8 @@ public class ProxyReportingSchule extends ReportingSchule {
 		super.schuljahresabschnitte = this.reportingRepository.schuljahresabschnitte();
 		super.aktuellerSchuljahresabschnitt = this.reportingRepository.aktuellerSchuljahresabschnitt();
 		super.auswahlSchuljahresabschnitt = this.reportingRepository.auswahlSchuljahresabschnitt();
+
+		ersetzeStringNullDurchEmpty(this, false);
 	}
 
 
@@ -63,7 +65,7 @@ public class ProxyReportingSchule extends ReportingSchule {
 	/**
 	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.
 	 *
-	 * @return Repository für die Reporting
+	 * @return Repository für das Reporting
 	 */
 	public ReportingRepository reportingRepository() {
 		return reportingRepository;

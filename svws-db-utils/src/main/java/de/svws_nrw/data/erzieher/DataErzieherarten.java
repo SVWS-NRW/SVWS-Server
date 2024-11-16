@@ -40,12 +40,24 @@ public final class DataErzieherarten extends DataManager<Long> {
 
 	@Override
 	public Response getAll() throws ApiOperationException {
+		final List<Erzieherart> daten = getListErzieherarten();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+	}
+
+	/**
+	 * Gibt eine vollständige Liste aller Erzieher-Arten aus der Datenbank zurück.
+	 *
+	 * @return Liste der Erzieherarten
+	 *
+	 * @throws ApiOperationException im Fehlerfall
+	 */
+	public List<Erzieherart> getListErzieherarten() throws ApiOperationException {
 		final List<DTOErzieherart> erzieherarten = conn.queryAll(DTOErzieherart.class);
 		if (erzieherarten == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
-		final List<Erzieherart> daten = erzieherarten.stream().map(dtoMapper).toList();
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return erzieherarten.stream().map(dtoMapper).toList();
 	}
+
 
 	@Override
 	public Response getList() throws ApiOperationException {

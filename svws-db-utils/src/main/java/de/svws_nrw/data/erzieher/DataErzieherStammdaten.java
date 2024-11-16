@@ -106,6 +106,20 @@ public final class DataErzieherStammdaten extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public Response getListFromSchueler(final long schuelerID) throws ApiOperationException {
+		final List<ErzieherStammdaten> daten = getFromId(schuelerID);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+	}
+
+	/**
+	 * Ermittelt eine Liste der {@link ErzieherStammdaten} für den Schüler mit der angegebenen ID.
+	 *
+	 * @param schuelerID   die ID des Schülers, dessen {@link ErzieherStammdaten} ermittelt werden sollen
+	 *
+	 * @return ErieherStammdaten zur SchuelerID
+	 *
+	 * @throws ApiOperationException im Fehlerfall
+	 */
+	public List<ErzieherStammdaten> getFromId(final long schuelerID) throws ApiOperationException {
 		final List<DTOSchuelerErzieherAdresse> erzieher = conn.queryList(DTOSchuelerErzieherAdresse.QUERY_BY_SCHUELER_ID, DTOSchuelerErzieherAdresse.class,
 				schuelerID);
 		if (erzieher == null)
@@ -113,7 +127,27 @@ public final class DataErzieherStammdaten extends DataManager<Long> {
 		final List<ErzieherStammdaten> daten = new ArrayList<>();
 		daten.addAll(erzieher.stream().filter(e -> ((e.Name1 != null) && !"".equals(e.Name1.trim()))).map(dtoMapperErzieher1).toList());
 		daten.addAll(erzieher.stream().filter(e -> ((e.Name2 != null) && !"".equals(e.Name2.trim()))).map(dtoMapperErzieher2).toList());
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return daten;
+	}
+
+	/**
+	 * Ermittelt eine Liste der {@link ErzieherStammdaten} für die Schüler mit den angegebenen IDs.
+	 *
+	 * @param schuelerIDs   die IDs der Schüler, deren {@link ErzieherStammdaten} ermittelt werden sollen
+	 *
+	 * @return ErieherStammdaten zun SchuelerIDs
+	 *
+	 * @throws ApiOperationException im Fehlerfall
+	 */
+	public List<ErzieherStammdaten> getFromIds(final List<Long> schuelerIDs) throws ApiOperationException {
+		final List<DTOSchuelerErzieherAdresse> erzieher = conn.queryList(DTOSchuelerErzieherAdresse.QUERY_LIST_BY_SCHUELER_ID, DTOSchuelerErzieherAdresse.class,
+				schuelerIDs);
+		if (erzieher == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		final List<ErzieherStammdaten> daten = new ArrayList<>();
+		daten.addAll(erzieher.stream().filter(e -> ((e.Name1 != null) && !"".equals(e.Name1.trim()))).map(dtoMapperErzieher1).toList());
+		daten.addAll(erzieher.stream().filter(e -> ((e.Name2 != null) && !"".equals(e.Name2.trim()))).map(dtoMapperErzieher2).toList());
+		return daten;
 	}
 
 	@Override

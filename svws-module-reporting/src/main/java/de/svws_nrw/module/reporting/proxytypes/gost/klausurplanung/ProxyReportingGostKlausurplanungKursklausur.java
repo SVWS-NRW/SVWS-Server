@@ -40,5 +40,7 @@ public class ProxyReportingGostKlausurplanungKursklausur extends ReportingGostKl
 		if ((super.klausurtermin != null) && super.klausurtermin.kursklausuren().stream().noneMatch(s -> s.id() == super.id)) {
 			super.klausurtermin.kursklausuren().add(this);
 		}
+
+		ersetzeStringNullDurchEmpty(this, false);
 	}
 }

@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.schule.SchuleStammdaten;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
+import de.svws_nrw.core.data.erzieher.ErzieherStammdaten;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten;
@@ -26,6 +27,7 @@ import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
+import de.svws_nrw.data.erzieher.DataErzieherarten;
 import de.svws_nrw.data.jahrgaenge.DataJahrgangsdaten;
 import de.svws_nrw.data.kataloge.DataOrte;
 import de.svws_nrw.data.kataloge.DataOrtsteile;
@@ -38,9 +40,11 @@ import de.svws_nrw.data.stundenplan.DataStundenplanListe;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.proxytypes.schueler.erzieher.ProxyReportingErzieherArt;
 import de.svws_nrw.module.reporting.proxytypes.schule.ProxyReportingSchuljahresabschnitt;
 import de.svws_nrw.module.reporting.types.klasse.ReportingKlasse;
 import de.svws_nrw.module.reporting.types.kurs.ReportingKurs;
+import de.svws_nrw.module.reporting.types.schueler.erzieher.ReportingErzieherArt;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import jakarta.ws.rs.core.Response.Status;
@@ -92,6 +96,9 @@ public class ReportingRepository {
 	/** Stellt die Daten von bereits abgerufenen ausgewählten Lernabschnitten zur Schüler-ID zur Verfügung. */
 	private final Map<Long, SchuelerLernabschnittsdaten> mapAuswahlLernabschnittsdaten = new HashMap<>();
 
+	/** Stellt die Stammdaten von bereits abgerufenen Erziehern über eine Map zur Schueler-ID zur Verfügung. */
+	private final Map<Long, List<ErzieherStammdaten>> mapErzieherStammdaten = new HashMap<>();
+
 	/** Stellt alle Fächer der Schule als DTOs zur Fach-ID zur Verfügung. Die Reporting-Fächer -Objekte sind in den Schuljahresabschnitten abrufbar. */
 	private final Map<Long, DTOFach> mapFaecher = new HashMap<>();
 
@@ -125,20 +132,23 @@ public class ReportingRepository {
 
 	// #########  Ab hier folgen Reporting-Objekte. #########
 
-	/** Stellt die Liste aller Schuljahresabschnitte über eine Map zur Schulabschnitts-ID zur Verfügung */
-	private final Map<Long, ReportingSchuljahresabschnitt> mapReportingSchuljahresabschnitte = new HashMap<>();
-
 	/** Der aktuelle Schuljahresabschnitt der Schule aus der Datenbankverbindung */
 	private final ReportingSchuljahresabschnitt aktuellerSchuljahresabschnitt;
 
 	/** Der ausgewählte Schuljahresabschnitt, der für die Ausgabe der Reports ausgewählt wurde */
 	private final ReportingSchuljahresabschnitt auswahlSchuljahresabschnitt;
 
+	/** Stellt alle Erzieherarten über eine Map zur Erzieherart-ID zur Verfügung */
+	private Map<Long, ReportingErzieherArt> mapReportingErzieherarten;
+
 	/** Stellt alle Klassen in den Schuljahresabschnitten über eine Map zur Klassen-ID zur Verfügung. */
 	private final Map<Long, ReportingKlasse> mapKlassen = new HashMap<>();
 
 	/** Stellt alle Kurse in den Schuljahresabschnitten über eine Map zur Kurs-ID zur Verfügung. */
 	private final Map<Long, ReportingKurs> mapKurse = new HashMap<>();
+
+	/** Stellt die Liste aller Schuljahresabschnitte über eine Map zur Schulabschnitts-ID zur Verfügung */
+	private final Map<Long, ReportingSchuljahresabschnitt> mapReportingSchuljahresabschnitte = new HashMap<>();
 
 
 	/**
@@ -259,6 +269,10 @@ public class ReportingRepository {
 
 			this.katalogReligionen = new DataReligionen(this.conn).getListReligionen().stream().collect(Collectors.toMap(r -> r.id, r -> r));
 			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog Religionen geladen.");
+
+			this.mapReportingErzieherarten = new DataErzieherarten(this.conn).getListErzieherarten().stream().collect(Collectors.toMap(a -> a.id,
+					a -> new ProxyReportingErzieherArt(this, a)));
+			this.logger.logLn(LogLevel.DEBUG, 8, "Liste der Erzieherarten geladen.");
 		} catch (final Exception e) {
 			this.logger.logLn(LogLevel.ERROR, 8, "FEHLER: Die Kataloge der Schule konnten nicht vollständig ermittelt werden.");
 			throw new ApiOperationException(Status.NOT_FOUND, e,
@@ -509,6 +523,24 @@ public class ReportingRepository {
 	}
 
 	/**
+	 * Stellt die Stammdaten von bereits abgerufenen Erziehern über eine Map zur Schüler-ID zur Verfügung
+	 *
+	 * @return Inhalt des Feldes mapErzieherStammdaten
+	 */
+	public Map<Long, List<ErzieherStammdaten>> mapErzieherStammdaten() {
+		return mapErzieherStammdaten;
+	}
+
+	/**
+	 * Stellt alle Erzieherarten über eine Map zur Erzieherart-ID zur Verfügung
+	 *
+	 * @return Inhalt des Feldes mapReportingErzieherarten
+	 */
+	public Map<Long, ReportingErzieherArt> mapReportingErzieherarten() {
+		return mapReportingErzieherarten;
+	}
+
+	/**
 	 * Stellt alle Fächer der Schule als DTOs zur Fach-ID zur Verfügung. Die Reporting-Fächer -Objekte sind in den Schuljahresabschnitten abrufbar.
 	 *
 	 * @return Map der Fächer-DTO
@@ -596,6 +628,15 @@ public class ReportingRepository {
 	 */
 	public Map<Long, SchuelerStammdaten> mapSchuelerStammdaten() {
 		return mapSchuelerStammdaten;
+	}
+
+	/**
+	 * Stellt die Liste aller Schuljahresabschnitte über eine Map zur Schulabschnitts-ID zur Verfügung
+	 *
+	 * @return Inhalt des Feldes mapReportingSchuljahresabschnitte
+	 */
+	public Map<Long, ReportingSchuljahresabschnitt> mapReportingSchuljahresabschnitte() {
+		return mapReportingSchuljahresabschnitte;
 	}
 
 	/**

@@ -1,12 +1,13 @@
 package de.svws_nrw.module.reporting.types.gost.abitur;
 
 import de.svws_nrw.asd.types.Note;
+import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostAbiturFachbelegungHalbjahr.
  */
-public class ReportingGostAbiturFachbelegungHalbjahr {
+public class ReportingGostAbiturFachbelegungHalbjahr extends ReportingBaseType {
 
 	/** Das einstellige Kürzel der bilingualen Sprache, sofern das Fach bilingual unterrichtet wurde. */
 	protected String bilingualeSprache;

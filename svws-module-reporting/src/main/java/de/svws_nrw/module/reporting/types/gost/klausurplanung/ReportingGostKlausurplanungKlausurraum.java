@@ -3,12 +3,13 @@ package de.svws_nrw.module.reporting.types.gost.klausurplanung;
 
 import java.util.List;
 
+import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungRaum;
 
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Raum in der GOSt-Klausurplanung.
  */
-public class ReportingGostKlausurplanungKlausurraum {
+public class ReportingGostKlausurplanungKlausurraum extends ReportingBaseType {
 
 	/** Die Klausuraufsichten in diesem Raum für den Klausurtermin. */
 	protected List<ReportingGostKlausurplanungKlausuraufsicht> aufsichten;

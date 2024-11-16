@@ -3,6 +3,7 @@ package de.svws_nrw.module.reporting.types.klasse;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
@@ -11,7 +12,7 @@ import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Klasse.
  */
-public class ReportingKlasse {
+public class ReportingKlasse extends ReportingBaseType {
 
 	/** Gibt am WBK an, ob die Klassen im Sommersemester angefangen hat. */
 	protected boolean beginnSommersemester;

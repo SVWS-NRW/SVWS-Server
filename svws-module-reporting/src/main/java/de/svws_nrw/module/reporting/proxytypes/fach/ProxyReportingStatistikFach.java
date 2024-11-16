@@ -38,6 +38,8 @@ public class ProxyReportingStatistikFach extends ReportingStatistikFach {
 				false);
 
 		initReportingStatistikFach(statistikfach, schuljahr, exaktePruefungSchuljahr);
+
+		ersetzeStringNullDurchEmpty(this, false);
 	}
 
 	/**

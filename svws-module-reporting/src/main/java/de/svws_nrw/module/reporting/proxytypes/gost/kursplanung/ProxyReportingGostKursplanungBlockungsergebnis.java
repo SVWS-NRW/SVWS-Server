@@ -43,7 +43,7 @@ import java.util.stream.Collectors;
  */
 public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGostKursplanungBlockungsergebnis {
 
-	/** Repository für die Reporting. */
+	/** Repository für das Reporting. */
 	@JsonIgnore
 	private final ReportingRepository reportingRepository;
 
@@ -54,7 +54,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingGostKursplanungBlockungsergebnis}.
 	 *
-	 * @param reportingRepository	Repository für die Reporting.
+	 * @param reportingRepository	Repository für das Reporting.
 	 * @param blockungsergebnis 	Das GOSt-Blockungsergebnis, welches für das Reporting genutzt werden soll.
 	 * @param datenManager 			Der zum Blockungsergebnis gehörige Datenmanager der Blockung.
 	 */
@@ -220,13 +220,15 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 						.thenComparing(ReportingSchueler::vornamen, colGerman)
 						.thenComparing(ReportingSchueler::id))
 				.toList());
+
+		ersetzeStringNullDurchEmpty(this, false);
 	}
 
 
 	/**
 	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.
 	 *
-	 * @return Repository für die Reporting
+	 * @return Repository für das Reporting
 	 */
 	@JsonIgnore
 	public ReportingRepository reportingRepository() {

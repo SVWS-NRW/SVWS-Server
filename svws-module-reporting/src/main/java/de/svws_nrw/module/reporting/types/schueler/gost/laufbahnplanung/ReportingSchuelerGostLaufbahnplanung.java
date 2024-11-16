@@ -1,5 +1,6 @@
 package de.svws_nrw.module.reporting.types.schueler.gost.laufbahnplanung;
 
+import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.gost.laufbahnplanung.ReportingGostLaufbahnplanungErgebnismeldung;
 import de.svws_nrw.module.reporting.types.gost.laufbahnplanung.ReportingGostLaufbahnplanungFachwahl;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ SchuelerGostLaufbahnplanung.
  */
-public class ReportingSchuelerGostLaufbahnplanung {
+public class ReportingSchuelerGostLaufbahnplanung extends ReportingBaseType {
 
 	/** Das Kalenderjahr, in dem die Abiturprüfung stattfindet */
 	protected int abiturjahr;

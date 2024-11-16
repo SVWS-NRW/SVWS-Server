@@ -23,7 +23,7 @@ public class ProxyReportingSchuelerGostAbitur extends ReportingSchuelerGostAbitu
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingSchuelerGostAbitur}.
 	 *
-	 * @param reportingRepository Repository für die Reporting.
+	 * @param reportingRepository Repository für das Reporting.
 	 * @param abiturdaten Daten-Objekt der Fachbelegungen aus der Datenbank
 	 */
 	public ProxyReportingSchuelerGostAbitur(final ReportingRepository reportingRepository, final Abiturdaten abiturdaten) {
@@ -64,13 +64,15 @@ public class ProxyReportingSchuelerGostAbitur extends ReportingSchuelerGostAbitu
 						.map(f -> new ProxyReportingGostAbiturFachbelegung(this.reportingRepository, abiturdaten.schuljahrAbitur, f)).toList());
 
 		this.fachbelegungen().sort(ReportingGostAbiturFachbelegung::compareToGost);
+
+		ersetzeStringNullDurchEmpty(this, false);
 	}
 
 
 	/**
 	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.
 	 *
-	 * @return Repository für die Reporting
+	 * @return Repository für das Reporting
 	 */
 	public ReportingRepository reportingRepository() {
 		return reportingRepository;

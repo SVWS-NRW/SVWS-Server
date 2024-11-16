@@ -1,10 +1,12 @@
 package de.svws_nrw.module.reporting.types.stundenplanung;
 
 
+import de.svws_nrw.module.reporting.types.ReportingBaseType;
+
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Raum.
  */
-public class ReportingStundenplanungRaum {
+public class ReportingStundenplanungRaum extends ReportingBaseType {
 
 	/** Die Beschreibung des Raumes. */
 	protected String beschreibung;

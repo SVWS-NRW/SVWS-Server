@@ -38,7 +38,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingSchuelerLernabschnitt}.
 	 *
-	 * @param reportingRepository Repository für die Reporting.
+	 * @param reportingRepository Repository für das Reporting.
 	 * @param schuelerLernabschnittsdaten Stammdaten-Objekt aus der DB.
 	 */
 	public ProxyReportingSchuelerLernabschnitt(final ReportingRepository reportingRepository, final SchuelerLernabschnittsdaten schuelerLernabschnittsdaten) {
@@ -107,13 +107,15 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 		this.reportingRepository = reportingRepository;
 		super.foerderschwerpunkt1 = this.reportingRepository.katalogFoerderschwerpunkte().get(schuelerLernabschnittsdaten.foerderschwerpunkt1ID);
 		super.foerderschwerpunkt2 = this.reportingRepository.katalogFoerderschwerpunkte().get(schuelerLernabschnittsdaten.foerderschwerpunkt2ID);
+
+		ersetzeStringNullDurchEmpty(this, false);
 	}
 
 
 	/**
 	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.
 	 *
-	 * @return Repository für die Reporting
+	 * @return Repository für das Reporting
 	 */
 	public ReportingRepository reportingRepository() {
 		return reportingRepository;

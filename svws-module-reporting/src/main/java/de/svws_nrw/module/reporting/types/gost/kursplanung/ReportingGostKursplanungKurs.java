@@ -2,6 +2,7 @@ package de.svws_nrw.module.reporting.types.gost.kursplanung;
 
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
+import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
@@ -12,7 +13,7 @@ import java.util.stream.Collectors;
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostKursplanungKurs.
  */
-public class ReportingGostKursplanungKurs {
+public class ReportingGostKursplanungKurs extends ReportingBaseType {
 
 	/** Anzahl der Schülerinnen und Schüler für das Fach des Kurses erstes oder zweites Abiturfach ist. */
 	protected int anzahlAB12;

@@ -1,11 +1,12 @@
 package de.svws_nrw.module.reporting.types.fach;
 
 import de.svws_nrw.asd.types.fach.Fachgruppe;
+import de.svws_nrw.module.reporting.types.ReportingBaseType;
 
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Statistik-Fach.
  */
-public class ReportingStatistikFach {
+public class ReportingStatistikFach extends ReportingBaseType {
 
 	/** Der ASD-Jahrgang, ab dem das Fach zulässig ist (z. B. bei Fremdsprachen) */
 	protected String abJahrgang;

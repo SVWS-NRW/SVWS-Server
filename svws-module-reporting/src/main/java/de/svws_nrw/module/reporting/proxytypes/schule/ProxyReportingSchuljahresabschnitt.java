@@ -42,7 +42,7 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingSchuljahresabschnitt}.
 	 *
-	 * @param reportingRepository 	Repository für die Reporting.
+	 * @param reportingRepository 	Repository für das Reporting.
 	 * @param schuljahresabschnitt	Stammdaten-Objekt aus der DB.
 	 */
 	public ProxyReportingSchuljahresabschnitt(final ReportingRepository reportingRepository, final Schuljahresabschnitt schuljahresabschnitt) {
@@ -56,6 +56,8 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 		super.vorherigerAbschnitt =
 				(schuljahresabschnitt.idVorigerAbschnitt != null) ? this.reportingRepository.schuljahresabschnitt(schuljahresabschnitt.idVorigerAbschnitt)
 						: null;
+
+		ersetzeStringNullDurchEmpty(this, false);
 
 		// Die weiteren Daten werden später durch lazy-loading ergänzt
 	}

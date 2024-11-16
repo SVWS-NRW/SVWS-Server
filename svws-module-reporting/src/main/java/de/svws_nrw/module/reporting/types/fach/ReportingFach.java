@@ -3,11 +3,12 @@ package de.svws_nrw.module.reporting.types.fach;
 import de.svws_nrw.asd.types.fach.Fachgruppe;
 import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.types.gost.GostFachbereich;
+import de.svws_nrw.module.reporting.types.ReportingBaseType;
 
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Fach.
  */
-public class ReportingFach {
+public class ReportingFach extends ReportingBaseType {
 
 	/** Das Aufgabenfeld am Berufskolleg, zu welchem das Fach gehört */
 	protected String aufgabenfeld;

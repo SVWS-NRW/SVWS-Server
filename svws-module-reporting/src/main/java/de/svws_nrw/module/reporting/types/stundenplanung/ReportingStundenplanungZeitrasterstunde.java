@@ -2,11 +2,12 @@ package de.svws_nrw.module.reporting.types.stundenplanung;
 
 
 import de.svws_nrw.core.types.Wochentag;
+import de.svws_nrw.module.reporting.types.ReportingBaseType;
 
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Zeitrasterstunde.
  */
-public class ReportingStundenplanungZeitrasterstunde {
+public class ReportingStundenplanungZeitrasterstunde extends ReportingBaseType {
 
 	/** Die ID der Zeitrasterstunde. */
 	protected long id;

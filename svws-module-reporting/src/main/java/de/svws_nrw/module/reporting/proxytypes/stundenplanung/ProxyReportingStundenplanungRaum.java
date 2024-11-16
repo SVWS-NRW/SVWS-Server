@@ -22,5 +22,7 @@ public class ProxyReportingStundenplanungRaum extends ReportingStundenplanungRau
 				idStundenplan,
 				raum.groesse,
 				raum.kuerzel);
+
+		ersetzeStringNullDurchEmpty(this, false);
 	}
 }

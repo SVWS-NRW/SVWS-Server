@@ -2,10 +2,12 @@ package de.svws_nrw.module.reporting.types.schule;
 
 import java.util.List;
 
+import de.svws_nrw.module.reporting.types.ReportingBaseType;
+
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Schule.
  */
-public class ReportingSchule {
+public class ReportingSchule extends ReportingBaseType {
 
 	/** Der aktuelle Abschnitt des Schuljahres der Schule. */
 	protected ReportingSchuljahresabschnitt aktuellerSchuljahresabschnitt;

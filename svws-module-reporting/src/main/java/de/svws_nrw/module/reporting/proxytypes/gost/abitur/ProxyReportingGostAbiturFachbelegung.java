@@ -27,7 +27,7 @@ public class ProxyReportingGostAbiturFachbelegung extends ReportingGostAbiturFac
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingGostAbiturFachbelegung}.
 	 *
-	 * @param reportingRepository 	Repository für die Reporting.
+	 * @param reportingRepository 	Repository für das Reporting.
 	 * @param schuljahrAbitur		Das Schuljahr der Abiturprüfung
 	 * @param abiturFachbelegung 	Daten-Objekt der Fachbelegungen aus der Datenbank
 	 */
@@ -83,13 +83,15 @@ public class ProxyReportingGostAbiturFachbelegung extends ReportingGostAbiturFac
 		final ReportingSchuljahresabschnitt abschnittQ11 = this.reportingRepository.schuljahresabschnitt(schuljahrAbitur - 1, 1);
 		if (abschnittQ11 != null)
 			super.fach = abschnittQ11.fach(abiturFachbelegung.fachID);
+
+		ersetzeStringNullDurchEmpty(this, false);
 	}
 
 
 	/**
 	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.
 	 *
-	 * @return Repository für die Reporting
+	 * @return Repository für das Reporting
 	 */
 	public ReportingRepository reportingRepository() {
 		return reportingRepository;

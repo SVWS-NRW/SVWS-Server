@@ -18,5 +18,7 @@ public class ProxyReportingSchuelerGostKursplanungKursbelegung extends Reporting
 	 */
 	public ProxyReportingSchuelerGostKursplanungKursbelegung(final String abiturfach, final boolean hatGueltigeFachwahl, final boolean istSchriftlich, final ReportingGostKursplanungKurs kurs) {
 		super(abiturfach, hatGueltigeFachwahl, istSchriftlich, kurs);
+
+		ersetzeStringNullDurchEmpty(this, false);
 	}
 }

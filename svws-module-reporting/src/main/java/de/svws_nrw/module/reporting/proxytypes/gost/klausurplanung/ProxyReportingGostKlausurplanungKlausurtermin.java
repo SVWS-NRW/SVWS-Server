@@ -31,6 +31,8 @@ public class ProxyReportingGostKlausurplanungKlausurtermin extends ReportingGost
 				new ArrayList<>(),
 				gostKlausurtermin.startzeit);
 
+		ersetzeStringNullDurchEmpty(this, false);
+
 		// Kursklausuren werden bei deren Erzeugung dem Klausurtermin hinzugefügt.
 		// Schülerklausuren werden bei deren Erzeugung dem Klausurtermin hinzugefügt.
 		// Klausurräume werden gesammelt für alle Termine erzeugt.

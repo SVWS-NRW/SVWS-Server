@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.svws_nrw.core.utils.DateUtils;
+import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.kurs.ReportingKurs;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
@@ -11,7 +12,7 @@ import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostKlausurplanungKursklausur.
  */
-public class ReportingGostKlausurplanungKursklausur {
+public class ReportingGostKlausurplanungKursklausur extends ReportingBaseType {
 
 	/** Die Auswahlzeit in Minuten, sofern vorhanden. */
 	protected int auswahlzeit;

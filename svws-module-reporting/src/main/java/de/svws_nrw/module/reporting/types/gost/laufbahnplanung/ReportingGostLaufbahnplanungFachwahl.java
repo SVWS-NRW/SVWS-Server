@@ -1,11 +1,12 @@
 package de.svws_nrw.module.reporting.types.gost.laufbahnplanung;
 
+import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostLaufbahnplanungFachwahl.
  */
-public class ReportingGostLaufbahnplanungFachwahl {
+public class ReportingGostLaufbahnplanungFachwahl extends ReportingBaseType {
 
 	/** Abiturfacheintrag, sofern das belegte Fach als Abiturfach gewählt wurde */
 	protected String abiturfach;

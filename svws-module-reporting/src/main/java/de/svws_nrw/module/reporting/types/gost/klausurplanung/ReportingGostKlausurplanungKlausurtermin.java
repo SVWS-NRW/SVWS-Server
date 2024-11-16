@@ -5,12 +5,13 @@ import java.util.List;
 
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.utils.DateUtils;
+import de.svws_nrw.module.reporting.types.ReportingBaseType;
 
 
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostKlausurplanungKlausurtermin.
  */
-public class ReportingGostKlausurplanungKlausurtermin {
+public class ReportingGostKlausurplanungKlausurtermin extends ReportingBaseType {
 
 	/** Die textuelle Bemerkung zum Termin, sofern vorhanden. */
 	protected String bemerkung;

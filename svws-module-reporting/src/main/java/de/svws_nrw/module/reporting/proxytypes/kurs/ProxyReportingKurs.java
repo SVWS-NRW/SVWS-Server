@@ -44,7 +44,7 @@ public class ProxyReportingKurs extends ReportingKurs {
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingKurs}.
 	 *
-	 * @param reportingRepository Repository für die Reporting.
+	 * @param reportingRepository Repository für das Reporting.
 	 * @param kursDaten Stammdaten-Objekt aus der DB.
 	 */
 	public ProxyReportingKurs(final ReportingRepository reportingRepository, final KursDaten kursDaten) {
@@ -108,6 +108,8 @@ public class ProxyReportingKurs extends ReportingKurs {
 		if ((kursDaten.schueler != null) && !kursDaten.schueler.isEmpty()) {
 			super.idsSchueler = kursDaten.schueler.stream().map(s -> s.id).toList();
 		}
+
+		ersetzeStringNullDurchEmpty(this, false);
 	}
 
 	// Initialisiert alle Lehrer-Stammdaten des Kurses.
@@ -146,7 +148,7 @@ public class ProxyReportingKurs extends ReportingKurs {
 	/**
 	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.
 	 *
-	 * @return Repository für die Reporting
+	 * @return Repository für das Reporting
 	 */
 	public ReportingRepository reportingRepository() {
 		return reportingRepository;

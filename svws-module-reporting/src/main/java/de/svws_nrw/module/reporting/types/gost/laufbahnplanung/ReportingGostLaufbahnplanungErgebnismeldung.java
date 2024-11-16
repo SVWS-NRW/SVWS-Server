@@ -1,10 +1,12 @@
 package de.svws_nrw.module.reporting.types.gost.laufbahnplanung;
 
 
+import de.svws_nrw.module.reporting.types.ReportingBaseType;
+
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ SchuelerGostLaufbahnplanungErgebnismeldung.
  */
-public class ReportingGostLaufbahnplanungErgebnismeldung {
+public class ReportingGostLaufbahnplanungErgebnismeldung extends ReportingBaseType {
 
 	/** Interner Code der Meldung aus der Prüfung, wenn vorhanden, sonst leer, */
 	protected String code;
