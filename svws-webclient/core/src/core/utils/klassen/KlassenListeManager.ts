@@ -3,6 +3,7 @@ import { HashMap2D } from '../../../core/adt/map/HashMap2D';
 import { KlassenDaten } from '../../../core/data/klassen/KlassenDaten';
 import { SchuelerListeEintrag } from '../../../core/data/schueler/SchuelerListeEintrag';
 import { SchuelerStatusKatalogEintrag } from '../../../asd/data/schueler/SchuelerStatusKatalogEintrag';
+import type { JavaSet } from '../../../java/util/JavaSet';
 import { HashMap } from '../../../java/util/HashMap';
 import { Schulform } from '../../../asd/types/schule/Schulform';
 import { KlassenUtils } from '../../../core/utils/klassen/KlassenUtils';
@@ -19,6 +20,7 @@ import { Schulgliederung } from '../../../asd/types/schule/Schulgliederung';
 import { SchulgliederungKatalogEintrag } from '../../../asd/data/schule/SchulgliederungKatalogEintrag';
 import type { List } from '../../../java/util/List';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
+import { HashSet } from '../../../java/util/HashSet';
 import { Pair } from '../../../asd/adt/Pair';
 import { AttributMitAuswahl } from '../../../core/utils/AttributMitAuswahl';
 import { AuswahlManager } from '../../../core/utils/AuswahlManager';
@@ -53,6 +55,11 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 	private readonly _mapKlasseInSchulgliederung : HashMap2D<string, number, KlassenDaten> = new HashMap2D<string, number, KlassenDaten>();
 
 	private readonly _mapKlasseByKuerzel : HashMap<string, KlassenDaten> = new HashMap<string, KlassenDaten>();
+
+	/**
+	 * Sets mit Listen zur aktuellen Auswahl
+	 */
+	private readonly setKlassenIDsMitSchuelern : HashSet<number> = new HashSet<number>();
 
 	/**
 	 * Die ausgewählte Klassenleitung
@@ -244,6 +251,13 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 		return JavaLong.compare(a.id, b.id);
 	}
 
+	protected onMehrfachauswahlChanged() : void {
+		this.setKlassenIDsMitSchuelern.clear();
+		for (const k of this.liste.auswahl())
+			if (!k.schueler.isEmpty())
+				this.setKlassenIDsMitSchuelern.add(k.id);
+	}
+
 	protected checkFilter(eintrag : KlassenDaten) : boolean {
 		this._filteredSchuelerListe = null;
 		if (this._filterNurSichtbar && !eintrag.istSichtbar)
@@ -283,6 +297,15 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 						this._filteredSchuelerListe.add(s);
 		}
 		return this._filteredSchuelerListe;
+	}
+
+	/**
+	 *Gibt das Set mit den KlassenIds zurück, die in der Auswahl sind und Schüler beinhalten
+	 *
+	 * @return Das Set mit IDs von Klassen, die Schüler haben
+	 */
+	public getKlassenIDsMitSchuelern() : JavaSet<number> {
+		return this.setKlassenIDsMitSchuelern;
 	}
 
 	/**

@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 
 import de.svws_nrw.asd.adt.Pair;
@@ -44,6 +46,9 @@ public final class KlassenListeManager extends AuswahlManager<Long, KlassenDaten
 	private final @NotNull HashMap2D<Long, Long, KlassenDaten> _mapKlassenlehrerInKlasse = new HashMap2D<>();
 	private final @NotNull HashMap2D<String, Long, KlassenDaten> _mapKlasseInSchulgliederung = new HashMap2D<>();
 	private final @NotNull HashMap<String, KlassenDaten> _mapKlasseByKuerzel = new HashMap<>();
+
+	/** Sets mit Listen zur aktuellen Auswahl */
+	private final @NotNull HashSet<Long> setKlassenIDsMitSchuelern = new HashSet<>();
 
 	/** Die ausgewählte Klassenleitung */
 	public LehrerListeEintrag auswahlKlassenLeitung = null;
@@ -227,6 +232,13 @@ public final class KlassenListeManager extends AuswahlManager<Long, KlassenDaten
 		return Long.compare(a.id, b.id);
 	}
 
+	@Override
+	protected void onMehrfachauswahlChanged() {
+		this.setKlassenIDsMitSchuelern.clear();
+		for (final @NotNull KlassenDaten k : this.liste.auswahl())
+			if (!k.schueler.isEmpty())
+				this.setKlassenIDsMitSchuelern.add(k.id);
+	}
 
 	@Override
 	protected boolean checkFilter(final @NotNull KlassenDaten eintrag) {
@@ -269,6 +281,14 @@ public final class KlassenListeManager extends AuswahlManager<Long, KlassenDaten
 						_filteredSchuelerListe.add(s);
 		}
 		return this._filteredSchuelerListe;
+	}
+
+	/** Gibt das Set mit den KlassenIds zurück, die in der Auswahl sind und Schüler beinhalten
+	 *
+	 * @return Das Set mit IDs von Klassen, die Schüler haben
+	*/
+	public @NotNull Set<Long> getKlassenIDsMitSchuelern() {
+		return this.setKlassenIDsMitSchuelern;
 	}
 
 	/**

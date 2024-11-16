@@ -6,5 +6,4 @@ export interface KlassenGruppenprozesseProps {
 	schulgliederungen: List<Schulgliederung>;
 	klassenListeManager: () => KlassenListeManager;
 	deleteKlassen: () => Promise<[boolean, List<string | null>]>;
-	deleteKlassenCheck: () => [boolean, List<string>];
 }

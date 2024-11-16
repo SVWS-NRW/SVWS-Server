@@ -131,23 +131,13 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		this.commit();
 	}
 
-	public deleteKlassenCheck = (): [boolean, List<string>] => {
-		const errorLog: List<string> = new ArrayList<string>();
-		if (!this.klassenListeManager.liste.auswahlExists())
-			errorLog.add('Es wurde keine Klasse zum Löschen ausgewählt.')
-		for (const klasse of this.klassenListeManager.liste.auswahlSorted())
-			if (klasse.schueler.size() > 0)
-				errorLog.add(`Klasse ${klasse.kuerzel ?? '???'} (ID: ${klasse.id.toString()}) kann nicht gelöscht werden, da ihr noch Schüler zugeordnet sind.`);
-		return [errorLog.isEmpty(), errorLog];
-	}
-
 	public deleteKlassen = async (): Promise<[boolean, List<string>]> => {
 		const ids = new ArrayList<number>();
+		const set = this.klassenListeManager.getSetKlasseMitSchueler();
 		for (const klasse of this.klassenListeManager.liste.auswahlSorted())
-			ids.add(klasse.id);
-
+			if (!set.contains(klasse.id))
+				ids.add(klasse.id);
 		const operationResponses = await api.server.deleteKlassen(ids, api.schema);
-
 		const klassenToRemove = new ArrayList<KlassenDaten>();
 		const logMessages: List<string> = new ArrayList<string>();
 		let status = true;
@@ -161,13 +151,11 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 				logMessages.addAll(response.log);
 			}
 		}
-
 		if (!klassenToRemove.isEmpty()) {
 			this.klassenListeManager.liste.auswahlClear();
 			this.klassenListeManager.setDaten(null);
 			await this.ladeSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt);
 		}
-
 		return [status, logMessages];
 	}
 
