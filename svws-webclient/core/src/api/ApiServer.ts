@@ -1993,7 +1993,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der POST-Methode exportUntisKlassenGPU003 für den Zugriff auf die URL https://{hostname}/db/{schema}/datenaustausch/untis/export/klassen/{id : \d+}
 	 *
-	 * Liefert einen Export für die Klassen eines Schuljahresabschnittes.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Exportieren besitzt.
+	 * Liefert einen Export für die Klassen eines Schuljahresabschnittes (GPU003.txt).Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Exportieren besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die GPU003.txt
@@ -2023,7 +2023,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der POST-Methode exportUntisSchuelerGPU010 für den Zugriff auf die URL https://{hostname}/db/{schema}/datenaustausch/untis/export/schueler/{id : \d+}
 	 *
-	 * Liefert einen Export für die Schüler eines Schuljahresabschnittes.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Exportieren besitzt.
+	 * Liefert einen Export für die Schüler eines Schuljahresabschnittes (GPU010.txt).Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Exportieren besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die GPU010.txt

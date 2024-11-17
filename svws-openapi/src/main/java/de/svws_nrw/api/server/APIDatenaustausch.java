@@ -274,8 +274,8 @@ public class APIDatenaustausch {
 	@POST
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
 	@Path("/untis/export/klassen/{id : \\d+}")
-	@Operation(summary = "Liefert einen Export für die Klassen eines Schuljahresabschnittes.",
-			description = "Liefert einen Export für die Klassen eines Schuljahresabschnittes."
+	@Operation(summary = "Liefert einen Export für die Klassen eines Schuljahresabschnittes (GPU003.txt).",
+			description = "Liefert einen Export für die Klassen eines Schuljahresabschnittes (GPU003.txt)."
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Exportieren besitzt.")
 	@ApiResponse(responseCode = "200", description = "Die GPU003.txt", content = @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM,
 			schema = @Schema(type = "string", format = "binary", description = "Die GPU003.txt")))
@@ -313,8 +313,8 @@ public class APIDatenaustausch {
 	@POST
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
 	@Path("/untis/export/schueler/{id : \\d+}")
-	@Operation(summary = "Liefert einen Export für die Schüler eines Schuljahresabschnittes.",
-			description = "Liefert einen Export für die Schüler eines Schuljahresabschnittes."
+	@Operation(summary = "Liefert einen Export für die Schüler eines Schuljahresabschnittes (GPU010.txt).",
+			description = "Liefert einen Export für die Schüler eines Schuljahresabschnittes (GPU010.txt)."
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Exportieren besitzt.")
 	@ApiResponse(responseCode = "200", description = "Die GPU010.txt", content = @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM,
 			schema = @Schema(type = "string", format = "binary", description = "Die GPU010.txt")))
