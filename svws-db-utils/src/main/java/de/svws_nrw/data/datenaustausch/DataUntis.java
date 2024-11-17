@@ -21,6 +21,7 @@ import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.base.LogUtils;
 import de.svws_nrw.base.untis.UntisGPU001;
 import de.svws_nrw.base.untis.UntisGPU002;
+import de.svws_nrw.base.untis.UntisGPU003;
 import de.svws_nrw.base.untis.UntisGPU005;
 import de.svws_nrw.base.untis.UntisGPU010;
 import de.svws_nrw.base.untis.UntisGPU015;
@@ -43,6 +44,7 @@ import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.fach.Fach;
+import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.core.utils.DateUtils;
 import de.svws_nrw.core.utils.gost.GostBlockungsdatenManager;
@@ -51,6 +53,7 @@ import de.svws_nrw.data.SimpleBinaryMultipartBody;
 import de.svws_nrw.data.faecher.DataFaecherliste;
 import de.svws_nrw.data.gost.DBUtilsGost;
 import de.svws_nrw.data.gost.DataGostBlockungsergebnisse;
+import de.svws_nrw.data.jahrgaenge.DataJahrgangsdaten;
 import de.svws_nrw.data.kataloge.DataKatalogRaeume;
 import de.svws_nrw.data.kataloge.DataKatalogZeitraster;
 import de.svws_nrw.data.klassen.DataKlassendaten;
@@ -63,8 +66,10 @@ import de.svws_nrw.data.stundenplan.DataStundenplanZeitraster;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogRaum;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
+import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
+import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterricht;
@@ -465,7 +470,154 @@ public final class DataUntis {
 
 
 	/**
-	 * Bestimmt anhand der übergebenen Schülerliste und der übergebenen Klasseniformationen zu den Schüler die
+	 * Bestimmt die für den Untis-Export verwendete Schulstufe anhand des übergebenen Jahrgangs.
+	 *
+	 * @param jg   der Jahrgang
+	 *
+	 * @return die Schulstufe
+	 */
+	private static Integer getSchulstufeByASDJahrgang(final Jahrgaenge jg) {
+		if (jg == null)
+			return null;
+		return switch (jg) {
+			case JAHRGANG_00, VORKURS_SEMESTER_1, VORKURS_SEMESTER_2 -> 0;
+			case JAHRGANG_01, SEMESTER_01 -> 1;
+			case JAHRGANG_02, SEMESTER_02 -> 2;
+			case JAHRGANG_03, SEMESTER_03 -> 3;
+			case JAHRGANG_04, SEMESTER_04 -> 4;
+			case JAHRGANG_05, SEMESTER_05 -> 5;
+			case JAHRGANG_06, SEMESTER_06 -> 6;
+			case JAHRGANG_07 -> 7;
+			case JAHRGANG_08 -> 8;
+			case JAHRGANG_09 -> 9;
+			case JAHRGANG_10 -> 10;
+			case JAHRGANG_11, EF -> 11;
+			case JAHRGANG_12, Q1 -> 12;
+			case JAHRGANG_13, Q2 -> 13;
+			default -> null;
+		};
+	}
+
+
+	/**
+	 * Bestimmt anhand der übergebenen Klassenliste, der übergebenen Jahrgangsinformationen, Klassenlehrer und Vorjahresklassen
+	 * zu den Klassen die Liste der zugehörigen Klasseneinträge für die GPU003.TXT-Datei von Untis.
+	 *
+	 * @param klassen             die Klassen
+	 * @param mapJahrgang         die Jahrgänge zu den Klassen
+	 * @param mapKlassenlehrer    die Klassenlehrer zu den Klassen
+	 *
+	 * @return die Liste der GPU003-Einträge
+	 */
+	private static List<UntisGPU003> getListGPU003(final @NotNull List<DTOKlassen> klassen, final @NotNull Map<Long, DTOJahrgang> mapJahrgang,
+			final @NotNull Map<Long, List<DTOLehrer>> mapKlassenlehrer) {
+		final List<UntisGPU003> result = new ArrayList<>();
+		for (final DTOKlassen klasse : klassen) {
+			final UntisGPU003 dto = new UntisGPU003();
+			dto.kuerzel = klasse.Klasse;
+			dto.bezeichnung = klasse.Bezeichnung;
+			dto.raumKuerzel = null; // Der Klassenraum für die Klasse
+			dto.kennzeichen = null; // Das Untis-Kennzeichen der Klasse
+			final DTOJahrgang dtoJg = mapJahrgang.get(klasse.ID);
+			final Jahrgaenge jg = (dtoJg == null) ? null : Jahrgaenge.data().getWertBySchluessel(dtoJg.ASDJahrgang);
+			dto.schulstufe = getSchulstufeByASDJahrgang(jg);
+			dto.kuerzelVorjahr = klasse.VKlasse;
+			final List<DTOLehrer> klLehrer = mapKlassenlehrer.get(klasse.ID);
+			dto.kuerzelKlassenlehrer = ((klLehrer == null) || (klLehrer.isEmpty())) ? null
+					: klLehrer.stream().map(l -> l.Kuerzel).collect(Collectors.joining(","));
+			dto.kuerzelHauptklasse = ((dtoJg != null) && (jg != null) && jg.istGymOb()) ? dtoJg.ASDJahrgang : klasse.Klasse;
+			result.add(dto);
+		}
+		return result;
+	}
+
+
+	/**
+	 * Erstellt die GPU003-CSV-Daten für die übergebene Klassenliste und die übergebenen Zuordnungen.
+	 *
+	 * @param logger             der Logger
+	 * @param klassen            die Klassen
+	 * @param mapJahrgang        die Jahrgänge zu den Klassen
+	 * @param mapKlassenlehrer   die Klassenlehrer zu den Klassen
+	 *
+	 * @return die CSV-Daten als UTF8-String
+	 *
+	 * @throws ApiOperationException   falls ein Fehler beim Erstellen der CSV-Daten entsteht
+	 */
+	private static @NotNull String getGPU003(final @NotNull Logger logger, final @NotNull List<DTOKlassen> klassen,
+			final @NotNull Map<Long, DTOJahrgang> mapJahrgang, final @NotNull Map<Long, List<DTOLehrer>> mapKlassenlehrer) throws ApiOperationException {
+		logger.logLn("-> Erstelle Liste der Klassen für GPU003.txt");
+		logger.modifyIndent(2);
+		try {
+			final List<UntisGPU003> gpu003 = getListGPU003(klassen, mapJahrgang, mapKlassenlehrer);
+			final String csvSchueler = UntisGPU003.writeCSV(gpu003);
+			logger.logLn("OK");
+			logger.modifyIndent(-2);
+			return csvSchueler;
+		} catch (final Exception e) {
+			logger.logLn("Fehler beim Erstellen der Datei GPU003.txt.");
+			logger.modifyIndent(-2);
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen der Datei GPU003.txt.");
+		}
+	}
+
+
+	/**
+	 * Bestimmt die Export-Daten für die Klassenliste für den übergebenen Schuljahresabschnitt
+	 *
+	 * @param conn                     die aktuelle Datenbankverbindung
+	 * @param logger                   der Logger zum Protokollieren des Exportes
+	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
+	 *
+	 * @return die GPU003.txt-Datei als String im UTF8-Format
+	 *
+	 * @throws ApiOperationException   wenn ein Fehler beim Erstellen des Exportes auftritt
+	 */
+	private static @NotNull String getGPU003bySchuljahresabschnitt(final @NotNull DBEntityManager conn, final @NotNull Logger logger,
+			final long idSchuljahresabschnitt) throws ApiOperationException {
+		logger.log("Ermittle GPU003-Daten für die Klassen...");
+		final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetAbschnittById(idSchuljahresabschnitt);
+		if (schuljahresabschnitt == null) {
+			logger.logLn("-> FEHLER: Kein Schuljahresabschnitt mit der ID %d gefunden.".formatted(idSchuljahresabschnitt));
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"In der Datenbank gibt es keinen Schuljahresabschnitt mit der ID %d.".formatted(idSchuljahresabschnitt));
+		}
+		logger.logLn("-> für den Schuljahresabschnitt %d.%d".formatted(schuljahresabschnitt.schuljahr, schuljahresabschnitt.abschnitt));
+		final List<DTOKlassen> klassen = conn.queryList(DTOKlassen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKlassen.class, schuljahresabschnitt.id);
+		if (klassen.isEmpty()) {
+			logger.logLn("-> keine Klassen für den Export gefunden");
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Klassen im Schuljahresabschnitt %d.%d für den Export gefunden."
+					.formatted(schuljahresabschnitt.schuljahr, schuljahresabschnitt.abschnitt));
+		}
+		final List<Long> idsKlassen = klassen.stream().map(kl -> kl.ID).toList();
+		logger.logLn("-> bestimme die zugehörigen Jahrgänge...");
+		final Map<Long, DTOJahrgang> mapJahrgaengeByKlassenId = DataJahrgangsdaten.getDTOMapByKlassen(conn, klassen);
+		logger.logLn("-> bestimme die zugehörigen Klassenlehrer...");
+		final Map<Long, List<DTOLehrer>> mapKlassenlehrerByKlassenId = DataKlassendaten.getDTOMapKlassenlehrerByKlassenID(conn, idsKlassen);
+		return getGPU003(logger, klassen, mapJahrgaengeByKlassenId, mapKlassenlehrerByKlassenId);
+	}
+
+
+	/**
+	 * Erzeugt den Export der Klassenliste des angegebenen Schuljahresabschnittes für Untis (Datei GPU003.txt)
+	 * und gibt diese als Response zurück.
+	 *
+	 * @param conn                     die Datenbank-Verbindung
+	 * @param logger                   der Logger
+	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnittes
+	 *
+	 * @return eine Response mit der CSV-Datei
+	 *
+	 * @throws ApiOperationException   wenn ein Fehler beim Erstellen des Exportes auftritt
+	 */
+	public static Response exportGPU003(final DBEntityManager conn, final Logger logger, final long idSchuljahresabschnitt) throws ApiOperationException {
+		final @NotNull String daten = getGPU003bySchuljahresabschnitt(conn, logger, idSchuljahresabschnitt);
+		return Response.ok(daten).header("Content-Disposition", "attachment; filename=\"GPU003.txt\"").build();
+	}
+
+
+	/**
+	 * Bestimmt anhand der übergebenen Schülerliste und der übergebenen Klasseninformationen zu den Schüler die
 	 * Liste der zugehörigen Schülereinträge für die GPU010.TXT-Datei von Untis.
 	 *
 	 * @param schueler    die Liste der schüler
@@ -497,7 +649,7 @@ public final class DataUntis {
 
 
 	/**
-	 * Erstellt die GPU010-CSV-Daten für die übegebene Schüler-Liste und die übergebene Klassenzuordnung.
+	 * Erstellt die GPU010-CSV-Daten für die übergebene Schüler-Liste und die übergebene Klassenzuordnung.
 	 *
 	 * @param logger      der Logger
 	 * @param schueler    die Schüler-Liste
@@ -557,9 +709,11 @@ public final class DataUntis {
 		if (schueler.isEmpty()) {
 			logger.logLn("-> keine Schüler für den Export gefunden");
 			throw new ApiOperationException(Status.NOT_FOUND,
-					"Keine Schüler im Schuljahresabschnitt %d.%d für den Export gefunden.".formatted(schuljahresabschnitt.schuljahr, schuljahresabschnitt.abschnitt));
+					"Keine Schüler im Schuljahresabschnitt %d.%d für den Export gefunden.".formatted(schuljahresabschnitt.schuljahr,
+							schuljahresabschnitt.abschnitt));
 		}
 		final List<Long> idsSchueler = schueler.stream().map(s -> s.ID).toList();
+		logger.logLn("-> bestimme die zugehörigen Klassen...");
 		final Map<Long, DTOKlassen> mapKlassenBySchuelerId = DataKlassendaten.getDTOMapAktuellBySchuelerID(conn, idsSchueler);
 		return getGPU010(logger, schueler, mapKlassenBySchuelerId);
 	}

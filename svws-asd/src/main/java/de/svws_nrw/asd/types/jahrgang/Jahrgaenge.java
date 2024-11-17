@@ -151,6 +151,20 @@ public enum Jahrgaenge implements CoreType<JahrgaengeKatalogEintrag, Jahrgaenge>
 
 
 	/**
+	 * Gibt zurück, ob es sich bei diesem Jahrgang um einen Jahrgang der gymnasialen Oberstufe
+	 * handelt oder nicht.
+	 *
+	 * @return true, wenn dieser ein Jahrgang der gymnasialen Oberstufe ist, und ansonsten false
+	 */
+	public boolean istGymOb() {
+		return switch (this) {
+			case EF, Q1, Q2, JAHRGANG_11, JAHRGANG_12, JAHRGANG_13 -> true;
+			default -> false;
+		};
+	}
+
+
+	/**
 	 * Prüft, ob der angegebene Jahrgang bei der angegebenen Schulform und Gliederung ein gültiger Vorgänger-Jahrgang
 	 * dieses Jahrgangs ist.
 	 *

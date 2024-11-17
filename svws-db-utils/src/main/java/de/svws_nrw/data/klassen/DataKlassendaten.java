@@ -659,6 +659,40 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 
 
 	/**
+	 * Bestimmt zu den übergebenen Klassen-IDs die jeweils zugehörigen Klassenlehrer aus der Datenbank und gib eine
+	 * Map mit der Zuordnung zurück.
+	 *
+	 * @param conn         die aktuelle Datenbank-Verbindung
+	 * @param idsKlassen   die IDs der Klassen
+	 *
+	 * @return die Zuordnung der Klassenlehrer zu den Klassen-IDs
+	 */
+	public static Map<Long, List<DTOLehrer>> getDTOMapKlassenlehrerByKlassenID(final @NotNull DBEntityManager conn, final @NotNull List<Long> idsKlassen) {
+		if (idsKlassen.isEmpty())
+			return new HashMap<>();
+		final List<DTOKlassenLeitung> listKlassenleitungen = conn.queryList(DTOKlassenLeitung.QUERY_LIST_BY_KLASSEN_ID, DTOKlassenLeitung.class, idsKlassen);
+		if (listKlassenleitungen.isEmpty())
+			return new HashMap<>();
+		final List<Long> idsLehrer = listKlassenleitungen.stream().map(kl -> kl.Lehrer_ID).distinct().toList();
+		if (idsLehrer.isEmpty())
+			return new HashMap<>();
+		final Map<Long, DTOLehrer> mapLehrer = conn.queryByKeyList(DTOLehrer.class, idsLehrer).stream().collect(Collectors.toMap(l -> l.ID, l -> l));
+		final List<DTOKlassenLeitung> listSorted = listKlassenleitungen.stream().sorted((a, b) -> {
+			final int tmp = Long.compare(a.Klassen_ID, b.Klassen_ID);
+			return (tmp != 0) ? tmp : Integer.compare(a.Reihenfolge, b.Reihenfolge);
+		}).toList();
+		final Map<Long, List<DTOLehrer>> mapKlassenlehrerByKlassenId = new HashMap<>();
+		for (final DTOKlassenLeitung kl : listSorted) {
+			final DTOLehrer lehrer = mapLehrer.get(kl.Lehrer_ID);
+			if (lehrer == null)
+				continue;
+			mapKlassenlehrerByKlassenId.computeIfAbsent(kl.Klassen_ID, l -> new ArrayList<>()).add(lehrer);
+		}
+		return mapKlassenlehrerByKlassenId;
+	}
+
+
+	/**
 	 * Bestimmt zu den übergebenen Schüler-IDs die jeweils zugehörigen aktuellen Klassen aus der Datenbank und gib eine
 	 * Map mit der Zuordnung zurück.
 	 *

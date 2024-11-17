@@ -262,6 +262,45 @@ public class APIDatenaustausch {
 
 
 	/**
+	 * Die OpenAPI-Methode für den Export einer Klassenliste zu einem Schuljahresabschnitt für Untis. Dabei
+	 * wird die GPU-Datei GPU003.txt generiert.
+	 *
+	 * @param schema   das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param id       die ID des Schuljahresabschnittes, für den die Klassendaten exportiert werden sollen
+	 * @param request  die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die GPU003-Datei
+	 */
+	@POST
+	@Produces(MediaType.APPLICATION_OCTET_STREAM)
+	@Path("/untis/export/klassen/{id : \\d+}")
+	@Operation(summary = "Liefert einen Export für die Klassen eines Schuljahresabschnittes.",
+			description = "Liefert einen Export für die Klassen eines Schuljahresabschnittes."
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Exportieren besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die GPU003.txt", content = @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM,
+			schema = @Schema(type = "string", format = "binary", description = "Die GPU003.txt")))
+	@ApiResponse(responseCode = "404", description = "Es wurden nicht alle benötigten Daten für den Export gefunden.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "500", description = "Es ist ein unerwarteter Fehler aufgetreten.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	public Response exportUntisKlassenGPU003(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@Context final HttpServletRequest request) {
+		final Logger logger = new Logger();
+		final LogConsumerList log = new LogConsumerList();
+		logger.addConsumer(log);
+		return DBBenutzerUtils.runWithTransaction(conn -> {
+			try {
+				return DataUntis.exportGPU003(conn, logger, id);
+			} catch (final ApiOperationException aoe) {
+				final SimpleOperationResponse sor = new SimpleOperationResponse();
+				sor.log.addAll(log.getStrings());
+				throw new ApiOperationException(aoe.getStatus(), aoe, sor, "application/json");
+			}
+		}, request, ServerMode.STABLE, BenutzerKompetenz.IMPORT_EXPORT_SCHUELERDATEN_EXPORTIEREN);
+	}
+
+
+	/**
 	 * Die OpenAPI-Methode für den Export einer Schülerliste zu einem Schuljahresabschnitt für Untis. Dabei
 	 * wird die GPU-Datei GPU010.txt generiert.
 	 *
