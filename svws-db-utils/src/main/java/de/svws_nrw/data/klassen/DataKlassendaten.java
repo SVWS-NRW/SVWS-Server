@@ -657,6 +657,42 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 		dto.AdrMerkmal = teilstandortStr;
 	}
 
+
+	/**
+	 * Bestimmt zu den übergebenen Schüler-IDs die jeweils zugehörigen aktuellen Klassen aus der Datenbank und gib eine
+	 * Map mit der Zuordnung zurück.
+	 *
+	 * @param conn          die aktuelle Datenbank-Verbindung
+	 * @param idsSchueler   die IDs der Schüler
+	 *
+	 * @return die Zuordnung der Klassen zu den Schüler-IDs
+	 */
+	public static Map<Long, DTOKlassen> getDTOMapAktuellBySchuelerID(final @NotNull DBEntityManager conn, final @NotNull List<Long> idsSchueler) {
+		if (idsSchueler.isEmpty())
+			return new HashMap<>();
+		final List<DTOSchuelerLernabschnittsdaten> listAbschnitte = conn.queryList(
+				"SELECT l FROM DTOSchueler s JOIN DTOSchuelerLernabschnittsdaten l ON s.ID IN ?1 AND s.Geloescht = false AND s.ID = l.Schueler_ID"
+						+ " AND s.Schuljahresabschnitts_ID = l.Schuljahresabschnitts_ID AND l.WechselNr = 0",
+				DTOSchuelerLernabschnittsdaten.class, idsSchueler);
+		final Map<Long, DTOSchuelerLernabschnittsdaten> mapAbschnitte = listAbschnitte.stream().collect(Collectors.toMap(l -> l.Schueler_ID, l -> l));
+		final List<Long> idsKlassen = listAbschnitte.isEmpty() ? new ArrayList<>() : listAbschnitte.stream().map(a -> a.Klassen_ID).distinct().toList();
+		final List<DTOKlassen> listKlassen = idsKlassen.isEmpty() ? new ArrayList<>() : conn.queryByKeyList(DTOKlassen.class, idsKlassen);
+		final Map<Long, DTOKlassen> mapKlassen = listKlassen.stream().collect(Collectors.toMap(k -> k.ID, k -> k));
+		final Map<Long, DTOKlassen> mapKlassenBySchueler = new HashMap<>();
+		for (final long sid : idsSchueler) {
+			final DTOSchuelerLernabschnittsdaten abschnitt = mapAbschnitte.get(sid);
+			if (abschnitt == null)
+				continue;
+			final DTOKlassen kl = mapKlassen.get(abschnitt.Klassen_ID);
+			if (kl == null)
+				continue;
+			mapKlassenBySchueler.put(sid, kl);
+		}
+		return mapKlassenBySchueler;
+	}
+
+
+
 	/**
 	 * Die Methode ermittelt eine Liste von {@link DTOKlassen} Objekten zu den angegebenen Klassen IDs.
 	 *

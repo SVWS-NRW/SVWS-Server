@@ -43,6 +43,7 @@ import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.fach.Fach;
+import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.core.utils.DateUtils;
 import de.svws_nrw.core.utils.gost.GostBlockungsdatenManager;
 import de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager;
@@ -52,6 +53,7 @@ import de.svws_nrw.data.gost.DBUtilsGost;
 import de.svws_nrw.data.gost.DataGostBlockungsergebnisse;
 import de.svws_nrw.data.kataloge.DataKatalogRaeume;
 import de.svws_nrw.data.kataloge.DataKatalogZeitraster;
+import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.data.kurse.DataKursliste;
 import de.svws_nrw.data.lehrer.DataLehrerliste;
 import de.svws_nrw.data.schule.DataSchuljahresabschnitte;
@@ -231,8 +233,9 @@ public final class DataUntis {
 				}
 				final long[] key = { kurs.id, u.idUnterricht, u.wochentag, u.stunde, wt };
 				if (!setKursUnterricht.add(new LongArrayKey(key))) {
-					logger.logLn(2, "Unterricht mit der ID %d wurde für den Kurs '%s' mit der ID %d bereits für den Wochentag %d und der Stunde %d mit Wochentyp %d hinzugefügt."
-							.formatted(u.idUnterricht, kurs.kuerzel, kurs.id, u.wochentag, u.stunde, wt) + " Überspringe diesen Eintrag...");
+					logger.logLn(2,
+							"Unterricht mit der ID %d wurde für den Kurs '%s' mit der ID %d bereits für den Wochentag %d und der Stunde %d mit Wochentyp %d hinzugefügt."
+									.formatted(u.idUnterricht, kurs.kuerzel, kurs.id, u.wochentag, u.stunde, wt) + " Überspringe diesen Eintrag...");
 					continue;
 				}
 				// Erstelle den Kurs-Unterricht ...
@@ -430,6 +433,157 @@ public final class DataUntis {
 		}
 	}
 
+
+	/**
+	 * Gibt das im iso-Format angegebene Datum im Format für Untis zurück.
+	 *
+	 * @param isoDate   das Datum im ISO-Format
+	 *
+	 * @return das Datum im Untis-Format
+	 */
+	private static String getUntisDate(final String isoDate) {
+		final LocalDate date = ((isoDate == null) || "".equals(isoDate)) ? null : LocalDate.parse(isoDate);
+		return (date == null) ? null : "%04d%02d%02d".formatted(date.getYear(), date.getMonthValue(), date.getDayOfMonth());
+	}
+
+
+	/**
+	 * Gibt die Schülerbezeichnung für Untis zurück, wie sie vom SVWS-Server generiert wird.
+	 *
+	 * @param nachname   der Nachname des Schülers
+	 * @param vorname    der Vorname des Schülers
+	 * @param isoDate    das Geburtsdatum des Schülers im ISO-Format
+	 *
+	 * @return die Schülerbezeichnung fpr Untis
+	 */
+	private static @NotNull String getUntisSchuelerName(final String nachname, final String vorname, final String isoDate) {
+		final String geburtsdatum = getUntisDate(isoDate);
+		return ((nachname == null) || ("".equals(nachname.trim())) ? "???" : nachname.trim().replace(" ", ""))
+				+ "_" + (((vorname == null) || "".equals(vorname.trim())) ? "???" : vorname.trim().replace(" ", "").substring(0, 3))
+				+ "_" + ((geburtsdatum == null) ? "????????" : geburtsdatum);
+	}
+
+
+	/**
+	 * Bestimmt anhand der übergebenen Schülerliste und der übergebenen Klasseniformationen zu den Schüler die
+	 * Liste der zugehörigen Schülereinträge für die GPU010.TXT-Datei von Untis.
+	 *
+	 * @param schueler    die Liste der schüler
+	 * @param mapKlasse   die Klassen der Schüler anhand der jeweiligen Schüler-ID
+	 *
+	 * @return die Liste der GPU010-Einträge
+	 */
+	private static List<UntisGPU010> getListGPU010(final @NotNull List<DTOSchueler> schueler, final @NotNull Map<Long, DTOKlassen> mapKlasse) {
+		final List<UntisGPU010> result = new ArrayList<>();
+		for (final DTOSchueler dtoSchueler : schueler) {
+			final UntisGPU010 dto = new UntisGPU010();
+			dto.geburtsdatum = getUntisDate(dtoSchueler.Geburtsdatum);
+			dto.name = getUntisSchuelerName(dtoSchueler.Nachname, dtoSchueler.Vorname, dtoSchueler.Geburtsdatum);
+			dto.langname = ((dtoSchueler.Nachname == null) || ("".equals(dtoSchueler.Nachname.trim()))) ? "???" : dtoSchueler.Nachname.trim();
+			dto.vorname = ((dtoSchueler.Vorname == null) || "".equals(dtoSchueler.Vorname.trim())) ? "???" : dtoSchueler.Vorname.trim();
+			final DTOKlassen kl = mapKlasse.get(dtoSchueler.ID);
+			dto.klasse = (kl == null) ? null : kl.Klasse;
+			dto.geschlecht = switch (dtoSchueler.Geschlecht) {
+				case Geschlecht.M -> "2";
+				case Geschlecht.W -> "1";
+				default -> null;
+			};
+			dto.emailAdresse = dtoSchueler.Email;
+			dto.fremdschluessel = "" + dtoSchueler.ID;
+			result.add(dto);
+		}
+		return result;
+	}
+
+
+	/**
+	 * Erstellt die GPU010-CSV-Daten für die übegebene Schüler-Liste und die übergebene Klassenzuordnung.
+	 *
+	 * @param logger      der Logger
+	 * @param schueler    die Schüler-Liste
+	 * @param mapKlasse   die Klassenzuordnungen der Schüler
+	 *
+	 * @return die CSV-Daten als UTF8-String
+	 *
+	 * @throws ApiOperationException   falls ein Fehler beim Erstellen der CSV-Daten entsteht
+	 */
+	private static @NotNull String getGPU010(final @NotNull Logger logger, final @NotNull List<DTOSchueler> schueler,
+			final @NotNull Map<Long, DTOKlassen> mapKlasse)
+			throws ApiOperationException {
+		logger.logLn("-> Erstelle Liste der Schüler für GPU010.txt");
+		logger.modifyIndent(2);
+		try {
+			final List<UntisGPU010> gpu010 = getListGPU010(schueler, mapKlasse);
+			final String csvSchueler = UntisGPU010.writeCSV(gpu010);
+			logger.logLn("OK");
+			logger.modifyIndent(-2);
+			return csvSchueler;
+		} catch (final Exception e) {
+			logger.logLn("Fehler beim Erstellen der Datei GPU010.txt.");
+			logger.modifyIndent(-2);
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen der Datei GPU010.txt.");
+		}
+	}
+
+
+	/**
+	 * Bestimmt die Export-Daten für die Schülerliste für den übergebenen Schuljahresabschnitt
+	 *
+	 * @param conn                     die aktuelle Datenbankverbindung
+	 * @param logger                   der Logger zum Protokollieren des Exportes
+	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
+	 *
+	 * @return die GPU010.txt-Datei als String im UTF8-Format
+	 *
+	 * @throws ApiOperationException   wenn ein Fehler beim Erstellen des Exportes auftritt
+	 */
+	private static @NotNull String getGPU010bySchuljahresabschnitt(final @NotNull DBEntityManager conn, final @NotNull Logger logger,
+			final long idSchuljahresabschnitt) throws ApiOperationException {
+		logger.log("Ermittle GPU010-Daten für die Schüler...");
+		final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetAbschnittById(idSchuljahresabschnitt);
+		if (schuljahresabschnitt == null) {
+			logger.logLn("-> FEHLER: Kein Schuljahresabschnitt mit der ID %d gefunden.".formatted(idSchuljahresabschnitt));
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"In der Datenbank gibt es keinen Schuljahresabschnitt mit der ID %d.".formatted(idSchuljahresabschnitt));
+		}
+		logger.logLn("-> für den Schuljahresabschnitt %d.%d".formatted(schuljahresabschnitt.schuljahr, schuljahresabschnitt.abschnitt));
+		final List<Long> statusIDs = List.of(
+				SchuelerStatus.NEUAUFNAHME.daten(schuljahresabschnitt.schuljahr).id,
+				SchuelerStatus.WARTELISTE.daten(schuljahresabschnitt.schuljahr).id,
+				SchuelerStatus.AKTIV.daten(schuljahresabschnitt.schuljahr).id,
+				SchuelerStatus.EXTERN.daten(schuljahresabschnitt.schuljahr).id);
+		final List<DTOSchueler> schueler = conn.queryList("SELECT s FROM DTOSchueler s WHERE s.ID IS NOT NULL AND s.Schuljahresabschnitts_ID = ?1 AND "
+				+ "(s.Geloescht = null OR s.Geloescht = false) AND s.idStatus IN ?2", DTOSchueler.class, idSchuljahresabschnitt, statusIDs);
+		if (schueler.isEmpty()) {
+			logger.logLn("-> keine Schüler für den Export gefunden");
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"Keine Schüler im Schuljahresabschnitt %d.%d für den Export gefunden.".formatted(schuljahresabschnitt.schuljahr, schuljahresabschnitt.abschnitt));
+		}
+		final List<Long> idsSchueler = schueler.stream().map(s -> s.ID).toList();
+		final Map<Long, DTOKlassen> mapKlassenBySchuelerId = DataKlassendaten.getDTOMapAktuellBySchuelerID(conn, idsSchueler);
+		return getGPU010(logger, schueler, mapKlassenBySchuelerId);
+	}
+
+
+	/**
+	 * Erzeugt den Export der Schülerliste des angegebenen Schuljahresabschnittes für Untis (Datei GPU010.txt)
+	 * und gibt diese als Response zurück. Dabei werden nur Schüler mit dem Status AKTIV, EXTERN, NEUAUFNAHME
+	 * und WARTELISTE berücksichtigt.
+	 *
+	 * @param conn                     die Datenbank-Verbindung
+	 * @param logger                   der Logger
+	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnittes
+	 *
+	 * @return eine Response mit der CSV-Datei
+	 *
+	 * @throws ApiOperationException   wenn ein Fehler beim Erstellen des Exportes auftritt
+	 */
+	public static Response exportGPU010(final DBEntityManager conn, final Logger logger, final long idSchuljahresabschnitt) throws ApiOperationException {
+		final @NotNull String daten = getGPU010bySchuljahresabschnitt(conn, logger, idSchuljahresabschnitt);
+		return Response.ok(daten).header("Content-Disposition", "attachment; filename=\"GPU010.txt\"").build();
+	}
+
+
 	/**
 	 * Erzeugt den Export eines Blockungsergebnisses für Untis, indem die Dateien GPU002.txt, GPU010.txt, GPU015.txt und GPU019.txt
 	 * erzeugt werden und in einem Zip-File in der Response zurückgegeben werden.
@@ -492,7 +646,8 @@ public final class DataUntis {
 			logger.modifyIndent(-2);
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Es konnten nicht alle Schüler der Blockung in der Datenbank gefunden werden.");
 		}
-		final Map<Long, DTOSchueler> mapSchueler = dtosSchueler.stream().collect(Collectors.toMap(s -> s.ID, s -> s));
+		final Map<Long, DTOKlassen> mapKlassenBySchueler = DataKlassendaten.getDTOMapAktuellBySchuelerID(conn, idsSchueler);
+
 		logger.modifyIndent(-2);
 
 		logger.logLn("-> Erstelle Liste der Unterrichte für GPU002.txt");
@@ -545,62 +700,23 @@ public final class DataUntis {
 		logger.logLn("OK");
 		logger.modifyIndent(-2);
 
-		logger.logLn("-> Erstelle Liste der Schüler für GPU010.txt");
-		final String csvSchueler;
-		logger.modifyIndent(2);
-		try {
-			final List<UntisGPU010> gpu010 = new ArrayList<>();
-			for (final Schueler s : schueler) {
-				final DTOSchueler dtoSchueler = mapSchueler.get(s.id);
-				final LocalDate date =
-						((dtoSchueler.Geburtsdatum == null) || "".equals(dtoSchueler.Geburtsdatum)) ? null : LocalDate.parse(dtoSchueler.Geburtsdatum);
-				final UntisGPU010 dto = new UntisGPU010();
-				dto.geburtsdatum = (date == null) ? null : "%04d%02d%02d".formatted(date.getYear(), date.getMonthValue(), date.getDayOfMonth());
-				dto.name = ((s.nachname == null) || ("".equals(s.nachname.trim())) ? "???" : s.nachname.trim().replace(" ", ""))
-						+ "_" + (((s.vorname == null) || "".equals(s.vorname.trim())) ? "???" : s.vorname.trim().replace(" ", "").substring(0, 3))
-						+ "_" + ((dto.geburtsdatum == null) ? "????????" : dto.geburtsdatum);
-				dto.langname = ((s.nachname == null) || ("".equals(s.nachname.trim()))) ? "???" : s.nachname.trim();
-				dto.vorname = ((s.vorname == null) || "".equals(s.vorname.trim())) ? "???" : s.vorname.trim();
-				dto.klasse = datenManager.getHalbjahr().jahrgang;
-				dto.geschlecht = switch (Geschlecht.fromValue(s.geschlecht)) {
-					case Geschlecht.M -> "2";
-					case Geschlecht.W -> "1";
-					default -> null;
-				};
-				dto.emailAdresse = dtoSchueler.Email;
-				dto.fremdschluessel = "" + s.id;
-				gpu010.add(dto);
-			}
-			csvSchueler = UntisGPU010.writeCSV(gpu010);
-		} catch (final Exception e) {
-			logger.logLn("Fehler beim Erstellen der Datei GPU010.txt.");
-			logger.modifyIndent(-2);
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen der Datei GPU002.txt.");
-		}
-		logger.logLn("OK");
-		logger.modifyIndent(-2);
+		final String csvSchueler = getGPU010(logger, dtosSchueler, mapKlassenBySchueler);
 
 		logger.logLn("-> Erstelle Liste der Kurswahlen für GPU015.txt");
 		final String csvKurswahlen;
 		logger.modifyIndent(2);
 		try {
 			final List<UntisGPU015> gpu015 = new ArrayList<>();
-			for (final Schueler s : schueler) {
-				final DTOSchueler dtoSchueler = mapSchueler.get(s.id);
-				final LocalDate date =
-						((dtoSchueler.Geburtsdatum == null) || "".equals(dtoSchueler.Geburtsdatum)) ? null : LocalDate.parse(dtoSchueler.Geburtsdatum);
-				final String gebDatum = (date == null) ? null : "%04d%02d%02d".formatted(date.getYear(), date.getMonthValue(), date.getDayOfMonth());
-				final String schuelerName = ((s.nachname == null) || ("".equals(s.nachname.trim())) ? "???" : s.nachname.trim().replace(" ", ""))
-						+ "_" + (((s.vorname == null) || "".equals(s.vorname.trim())) ? "???" : s.vorname.trim().replace(" ", "").substring(0, 3))
-						+ "_" + ((gebDatum == null) ? "????????" : gebDatum);
+			for (final DTOSchueler dtoSchueler : dtosSchueler) {
+				final String schuelerName = getUntisSchuelerName(dtoSchueler.Nachname, dtoSchueler.Vorname, dtoSchueler.Geburtsdatum);
 
-				for (final GostBlockungsergebnisKurs k : ergebnisManager.getOfSchuelerKursmenge(s.id)) {
+				for (final GostBlockungsergebnisKurs k : ergebnisManager.getOfSchuelerKursmenge(dtoSchueler.ID)) {
 					final UntisGPU015 dto = new UntisGPU015();
 					dto.name = schuelerName;
 					dto.idUnterricht = mapKursZuUnterricht.get(k.id);
 					dto.fach = datenManager.kursGetName(k.id);
 					dto.klasse = datenManager.getHalbjahr().jahrgang;
-					dto.statistikKennzeichen = datenManager.schuelerGetOfFachFachwahl(s.id, k.fachID).istSchriftlich ? "S" : "M";
+					dto.statistikKennzeichen = datenManager.schuelerGetOfFachFachwahl(dtoSchueler.ID, k.fachID).istSchriftlich ? "S" : "M";
 					dto.idsUnterrichteAlternativkurse = "";
 					dto.kuerzelAlternativkurse = "";
 					dto.prioAlternativkurse = "";
@@ -620,7 +736,7 @@ public final class DataUntis {
 		} catch (final Exception e) {
 			logger.logLn("Fehler beim Erstellen der Datei GPU015.txt.");
 			logger.modifyIndent(-2);
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen der Datei GPU002.txt.");
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen der Datei GPU015.txt.");
 		}
 		logger.logLn("OK");
 		logger.modifyIndent(-2);
@@ -648,7 +764,7 @@ public final class DataUntis {
 		} catch (final Exception e) {
 			logger.logLn("Fehler beim Erstellen der Datei GPU019.txt.");
 			logger.modifyIndent(-2);
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen der Datei GPU002.txt.");
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen der Datei GPU019.txt.");
 		}
 		logger.logLn("OK");
 		logger.modifyIndent(-2);
