@@ -25,7 +25,7 @@ public class UntisGPU003 {
 	/** Die Bezeichnung der Klasse (z.B. "Klasse 05a") */
 	public String bezeichnung;
 
-	/** Statistik */
+	/** Statistik ("N" für nicht zu zählende Unterrichte) */
 	public String statistik;
 
 	/** Das Kürzel des Raumes (z.B. "") */
