@@ -8,6 +8,9 @@
 			</svws-ui-radio-group>
 		</template>
 		<div class="print:hidden">
+			<div v-if="abiturdatenManager().getBiligualenBildungsgang() !== null" class="mb-4">
+				<span class="font-bold">Hinweis:</span> Der Schüler befindet sich aktuell im Bilingualen Zweig ({{ abiturdatenManager().getBiligualenBildungsgang() }})
+			</div>
 			<s-laufbahnplanung-fehler :fehlerliste :belegpruefungs-art="() => abiturdatenManager().getPruefungsArt()" />
 			<s-laufbahnplanung-informationen :fehlerliste />
 			<s-laufbahnplanung-sprachpruefungen v-if="sprachendaten" :schuljahr :sprachendaten="() => abiturdatenManager().getSprachendaten()" />
