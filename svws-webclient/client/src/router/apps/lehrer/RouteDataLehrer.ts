@@ -29,7 +29,7 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		param.id = id;
 	}
 
-	protected async createManager(idSchuljahresabschnitt : number) : Promise<LehrerListeManager> {
+	protected async createManager(idSchuljahresabschnitt : number) : Promise<Partial<RouteStateLehrer>> {
 		// Lade die Daten von der API
 		const listLehrer = await api.server.getLehrer(api.schema);
 
@@ -46,7 +46,7 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 			// Filter aus vorherigem Manager übernehmen
 			// TODO manager.useFilter(this._state.value.manager);
 		}
-		return manager;
+		return { manager };
 	}
 
 	public async ladeDaten(auswahl: LehrerListeEintrag | null) : Promise<LehrerStammdaten | null> {

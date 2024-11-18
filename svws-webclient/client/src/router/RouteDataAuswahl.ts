@@ -68,7 +68,7 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	 *
 	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
 	 */
-	protected abstract createManager(idSchuljahresabschnitt : number) : Promise<TAuswahlManager>;
+	protected abstract createManager(idSchuljahresabschnitt : number) : Promise<Partial<RouteState>>;
 
 
 	/**
@@ -103,13 +103,16 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
 	 */
 	private async ladeSchuljahresabschnitt(idSchuljahresabschnitt : number) : Promise<number | null> {
-		const manager = await this.createManager(idSchuljahresabschnitt);
-		const newState = <Partial<RouteState>>{ idSchuljahresabschnitt, manager };
+		const newState = await this.createManager(idSchuljahresabschnitt);
+		const manager = newState.manager;
+		if (manager === undefined)
+			throw new DeveloperNotificationException('Die Methode createManager muss einen gültigen State mit einem initialisierten Manager liefern');
+		newState.idSchuljahresabschnitt = idSchuljahresabschnitt;
 
 		// Lade und setze Daten falls eine Auswahl bestand und diese im neuen Manager vorhanden ist
 		const vorherigeAuswahl = ((this._state.value.manager !== undefined) && this.manager.hasDaten()) ? this.manager.auswahl() : null;
 		if (vorherigeAuswahl !== null) {
-			const auswahl = this.manager.liste.get(this.manager.getIdByEintrag(vorherigeAuswahl));
+			const auswahl = manager.liste.get(this.manager.getIdByEintrag(vorherigeAuswahl));
 			let daten = await this.ladeDaten(auswahl);
 			if ((daten === null) && (!manager.liste.list().isEmpty()))
 				daten = await this.ladeDaten(manager.liste.list().getFirst());
@@ -234,10 +237,10 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 		if (!this.manager.hasDaten())
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		const id = this.manager.getIdByEintrag(this.manager.auswahl());
-		const stammdaten = this.manager.daten();
+		const daten = this.manager.daten();
 		await this.doPatch(data, id);
-		Object.assign(stammdaten as object, data);
-		this.manager.setDaten(stammdaten);
+		Object.assign(daten as object, data);
+		this.manager.setDaten(daten);
 		this.commit();
 	}
 
@@ -246,27 +249,40 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 
 	protected abstract deleteMessage(id: number, eintrag: TAuswahl | null) : string;
 
-	public delete = async (): Promise<[boolean, List<string | null>]> => {
-		const ids = new ArrayList<number>();
-		for (const schueler of this.manager.liste.auswahlSorted())
-			ids.add(this.manager.getIdByEintrag(schueler));
+	/**
+	 * Diese Methode kann von einer abgeleiteten Klasse überschrieben werden, um die
+	 * zu löschenden IDs nachträglich zu filtern.
+	 *
+	 * @param ids   die Liste der zu löschenden IDs, vor dem Filtern
+	 *
+	 * @returns die Liste der zu löschenden IDs, nach dem Filtern
+	 */
+	protected filterOnDelete(ids: List<number>): List<number> {
+		return ids;
+	}
 
+	public delete = async (): Promise<[boolean, List<string | null>]> => {
+		let ids: List<number> = new ArrayList();
+		for (const eintrag of this.manager.liste.auswahlSorted())
+			ids.add(this.manager.getIdByEintrag(eintrag));
+		ids = this.filterOnDelete(ids);
+	
 		const operationResponses = await this.doDelete(ids);
 
-		const schuelerToRemove = new ArrayList<TAuswahl>();
+		const eintraegeToRemove = new ArrayList<TAuswahl>();
 		const logMessages = new ArrayList<string | null>();
 		let status = true;
 		for (const response of operationResponses) {
 			if (response.success && (response.id !== null)) {
-				const schueler = this.manager.liste.get(response.id);
-				logMessages.add(this.deleteMessage(response.id, schueler));
-				schuelerToRemove.add(schueler);
+				const eintrag = this.manager.liste.get(response.id);
+				logMessages.add(this.deleteMessage(response.id, eintrag));
+				eintraegeToRemove.add(eintrag);
 			} else {
 				status = false;
 				logMessages.addAll(response.log);
 			}
 		}
-		if (!schuelerToRemove.isEmpty()) {
+		if (!eintraegeToRemove.isEmpty()) {
 			this.manager.liste.auswahlClear();
 			this.manager.setDaten(null);
 			await this.ladeSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt);

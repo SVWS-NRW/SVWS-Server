@@ -23,7 +23,7 @@ export class RouteKlassenStundenplan extends RouteNode<RouteDataKlassenStundenpl
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Stundenplan";
 		super.children = [
-			routeKlassenStundenplanDaten
+			routeKlassenStundenplanDaten,
 		];
 		super.defaultChild = routeKlassenStundenplanDaten;
 		api.config.addElements([

@@ -60,12 +60,14 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 		super.defaultChild = routeGostFaecher;
 		api.config.addElements([
 			new ConfigElement("gost.auswahl.filterNurAktuelle", "user", "true"),
+			new ConfigElement("gost.auswahl.abiturjahr", "user", "-1"),
+			new ConfigElement("gost.tab.selected", "user", ""),
 		]);
 	}
 
 	public async beforeEach(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
 		if ((this.selectedChild === undefined) || (this.selectedChild.hidden({ abiturjahr: "-1" }) !== false))
-			return this.getRouteDefaultChild();
+			this.setTab(this.data.selectedTabFromConfig);
 		return this.getRouteSelectedChild();
 	}
 
@@ -102,7 +104,7 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 	}
 
 	public addRouteParamsFromState() : RouteParamsRawGeneric {
-		return { abiturjahr : this.data.auswahl?.abiturjahr ?? -1 };
+		return { abiturjahr: this.data.abiturjahrFromConfig };
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): GostAuswahlProps {
@@ -153,6 +155,9 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new DeveloperNotificationException("Unbekannte Route");
+		const previousTab = this.data.selectedTabFromConfig;
+		if (value.name !== previousTab.name)
+			this.data.setSelectedTabToConfig(value);
 		await RouteManager.doRoute(node.getRoute());
 		this.data.setView(node, this.children);
 	}

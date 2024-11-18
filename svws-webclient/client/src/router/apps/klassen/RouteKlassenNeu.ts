@@ -28,7 +28,7 @@ export class RouteKlassenNeu extends RouteNode<any, RouteKlassen> {
 
 	public getProps(to: RouteLocationNormalized): KlassenNeuProps {
 		return {
-			klassenListeManager: () => routeKlassen.data.klassenListeManager,
+			manager: () => routeKlassen.data.manager,
 			schulform: api.schulform,
 			mapKlassenVorigerAbschnitt: () => routeKlassen.data.mapKlassenVorigerAbschnitt,
 			mapKlassenFolgenderAbschnitt: () => routeKlassen.data.mapKlassenFolgenderAbschnitt,

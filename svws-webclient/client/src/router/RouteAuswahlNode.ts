@@ -12,7 +12,7 @@ import { routeError } from "./error/RouteError";
 import { ConfigElement } from "~/components/Config";
 
 /**
- * Das Interface für die Properties in Bezug auf das Handling der Tabs, welche der Komponente,
+ * Das Interface für die Properties in Bezug auf das Handling des Listenbereichs, welcher der Komponente,
  * die dieser Route zugeordnet ist, übergeben werden.
  */
 export interface RouteAuswahlListProps<TAuswahlManager extends AuswahlManager<any, any, any>> {
@@ -29,8 +29,8 @@ export interface RouteAuswahlListProps<TAuswahlManager extends AuswahlManager<an
 
 
 /**
- * Das Interface für die Properties in Bezug auf das Handling der Tabs, welche der Komponente,
- * die dieser Route zugeordnet ist, übergeben werden.
+ * Das Interface für die Properties in Bezug auf das Handling des Applikationsbereichs der Tabs, welche der Komponente,
+ * die dieser Route zugeordnet sind, übergeben werden.
  */
 export interface RouteAuswahlProps<TAuswahlManager extends AuswahlManager<number, TAuswahl, TDaten>, TAuswahl = any, TDaten = any> extends RouteTabProps {
 	manager: () => TAuswahlManager;

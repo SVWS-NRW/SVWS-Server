@@ -10,7 +10,7 @@ import { routeSchuelerGruppenprozesse } from "~/router/apps/schueler/RouteSchuel
 import type { RouteParamsRawGeneric } from "vue-router";
 
 
-type RouteStateSchueler = RouteStateAuswahlInterface<SchuelerListeManager>
+type RouteStateSchueler = RouteStateAuswahlInterface<SchuelerListeManager>;
 
 const defaultState = <RouteStateSchueler> {
 	idSchuljahresabschnitt: -1,
@@ -29,7 +29,7 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 		param.id = id;
 	}
 
-	protected async createManager(idSchuljahresabschnitt : number) : Promise<SchuelerListeManager> {
+	protected async createManager(idSchuljahresabschnitt : number) : Promise<Partial<RouteStateSchueler>> {
 		// Lade die Daten von der API
 		const auswahllisteGzip = await api.server.getSchuelerAuswahllisteFuerAbschnitt(api.schema, idSchuljahresabschnitt);
 		const auswahllisteBlob = await new Response(auswahllisteGzip.data.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
@@ -45,7 +45,7 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 		} else {
 			manager.useFilter(this._state.value.manager);
 		}
-		return manager;
+		return { manager };
 	}
 
 	public async ladeDaten(auswahl: SchuelerListeEintrag | null) : Promise<SchuelerStammdaten | null> {

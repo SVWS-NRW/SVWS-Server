@@ -4,6 +4,6 @@ export interface KlassenGruppenprozesseProps {
 	schulform: Schulform;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
 	schulgliederungen: List<Schulgliederung>;
-	klassenListeManager: () => KlassenListeManager;
+	manager: () => KlassenListeManager;
 	deleteKlassen: () => Promise<[boolean, List<string | null>]>;
 }

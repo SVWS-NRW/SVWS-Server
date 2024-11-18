@@ -56,7 +56,7 @@ export class RouteKlassenStundenplanDaten extends RouteNode<any, RouteKlassenStu
 
 	public getProps(to: RouteLocationNormalized): StundenplanKlasseProps {
 		return {
-			id: routeKlassen.data.klassenListeManager.daten().id,
+			id: routeKlassen.data.manager.daten().id,
 			ignoreEmpty: routeKlassenStundenplan.data.ganzerStundenplan,
 			manager: () => routeKlassenStundenplan.data.manager,
 			wochentyp: () => routeKlassenStundenplan.data.wochentyp,

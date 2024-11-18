@@ -57,7 +57,7 @@
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<svws-ui-content-card title="Klassenleitung">
-				<svws-ui-table :columns="columnsKlassenleitungen" :items="listeKlassenlehrer" :clickable="hatKompetenzUpdate" v-model:clicked="klassenleitungClicked">
+				<svws-ui-table :columns="columnsKlassenleitungen" :items="listeKlassenlehrer" :clickable="hatKompetenzUpdate" :clicked="klassenleitungClicked" @update:clicked="setKlassenleitungClicked">
 					<template #header(linkToLehrer)>
 						<span class="icon i-ri-group-line" />
 					</template>
@@ -76,30 +76,29 @@
 						</div>
 					</template>
 					<template #footer v-if="hatKompetenzUpdate">
-						<s-klassen-daten-lehrer-zuweisung-modal v-slot="{openModal}" :klassen-liste-manager :add-klassenleitung>
-							<div style="vertical-align: center; display: flex; float: right; margin-right: 5.7pt">
-								<div v-if="klassenListeManager().getAuswahlKlassenLeitung() !== null" class="w-6 me-1">
-									<svws-ui-button v-if="showPfeilHoch" type="icon" @click="erhoeheReihenfolge">
-										<span class="icon i-ri-arrow-up-line" />
-									</svws-ui-button>
-									<svws-ui-button v-else-if="showPfeilRunter" type="icon" @click="reduziereReihenfolge">
-										<span class="icon i-ri-arrow-down-line" />
-									</svws-ui-button>
-								</div>
-								<div style="display: flex; justify-content: flex-end">
-									<svws-ui-button type="icon" @click="openModal">
-										<span class="icon i-ri-add-line" />
-									</svws-ui-button>
-								</div>
+						<div style="vertical-align: center; display: flex; float: right; margin-right: 5.7pt">
+							<div v-if="manager().getAuswahlKlassenLeitung() !== null" class="w-6 me-1">
+								<svws-ui-button v-if="showPfeilHoch" type="icon" @click="erhoeheReihenfolge">
+									<span class="icon i-ri-arrow-up-line" />
+								</svws-ui-button>
+								<svws-ui-button v-else-if="showPfeilRunter" type="icon" @click="reduziereReihenfolge">
+									<span class="icon i-ri-arrow-down-line" />
+								</svws-ui-button>
 							</div>
-						</s-klassen-daten-lehrer-zuweisung-modal>
+							<div style="display: flex; justify-content: flex-end">
+								<s-klassen-daten-lehrer-zuweisung-modal v-slot="{openModal}" :manager :add-klassenleitung>
+									<svws-ui-button type="icon" @click="openModal"> <span class="icon i-ri-add-line" /> </svws-ui-button>
+								</s-klassen-daten-lehrer-zuweisung-modal>
+							</div>
+						</div>
 					</template>
 				</svws-ui-table>
 			</svws-ui-content-card>
 		</div>
 		<svws-ui-content-card title="Klassenliste">
-			<svws-ui-multi-select v-model="filterSchuelerStatus" title="Status" :items="klassenListeManager().schuelerstatus.list()" :item-text="status => status.daten(schuljahr)?.text ?? '—'" class="col-span-full" />
-			<svws-ui-table :columns="colsSchueler" :items="klassenListeManager().getSchuelerListe()" count>
+			<svws-ui-multi-select v-model="filterSchuelerStatus" title="Status" :items="manager().schuelerstatus.list()" :item-text="status => status.daten(schuljahr)?.text ?? '—'" class="col-span-full" />
+			<svws-ui-spacing />
+			<svws-ui-table :columns="colsSchueler" :items="manager().getSchuelerListe()" count>
 				<template #cell(status)="{ value } : { value: number}">
 					<span :class="{'opacity-25': value === 2}">{{ SchuelerStatus.data().getWertByID(value)?.daten(schuljahr)?.text ?? "—" }}</span>
 				</template>
@@ -118,7 +117,7 @@
 
 <script setup lang="ts">
 
-	import { computed } from "vue";
+	import { computed, ref } from "vue";
 	import type { DataTableColumn } from "@ui";
 	import type { KlassenDatenProps } from "./SKlassenDatenProps";
 	import type { LehrerListeEintrag, KlassenDaten, JahrgangsDaten, List } from "@core";
@@ -126,19 +125,21 @@
 
 	const props = defineProps<KlassenDatenProps>();
 
-	const schuljahr = computed<number>(() => props.klassenListeManager().getSchuljahr());
+	const schuljahr = computed<number>(() => props.manager().getSchuljahr());
 
 	// TODO auch UNTERRICHTSVERTEILUNG_PLANUNG_ANSEHEN verwenden und hier unterscheiden zu UNTERRICHTSVERTEILUNG_ANSEHEN
 	const hatKompetenzAnsehen = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN));
 	// TODO auch UNTERRICHTSVERTEILUNG_FUNKTIONSBEZOGEN_AENDERN berücksichtigen in Bezug auf Abteilungsleitungen / Koordinationen (API muss dafür noch erweitert werden)
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN));
 
-	const klassenleitungClicked = computed<LehrerListeEintrag | null>({
-		get: () => props.klassenListeManager().getAuswahlKlassenLeitung(),
-		set: (value) => props.klassenListeManager().setAuswahlKlassenLeitung(value)
-	});
+	const klassenleitungClicked = ref(props.manager().getAuswahlKlassenLeitung());
 
-	const data = computed<KlassenDaten>(() => props.klassenListeManager().daten());
+	function setKlassenleitungClicked(value: LehrerListeEintrag | null) {
+		props.manager().setAuswahlKlassenLeitung(value);
+		klassenleitungClicked.value = value;
+	}
+
+	const data = computed<KlassenDaten>(() => props.manager().daten());
 
 	function textJahrgang(jg : JahrgangsDaten) : string {
 		if (jg.kuerzel === null)
@@ -195,13 +196,13 @@
 	}
 
 	const jahrgang = computed<JahrgangsDaten | null>({
-		get: () => (data.value.idJahrgang === null) ? null : props.klassenListeManager().jahrgaenge.get(data.value.idJahrgang),
+		get: () => (data.value.idJahrgang === null) ? null : props.manager().jahrgaenge.get(data.value.idJahrgang),
 		set: (value) => void props.patch({ idJahrgang: value?.id ?? null })
 	});
 
 	const jahrgaenge = computed<List<JahrgangsDaten>>(() => {
 		const result = new ArrayList<JahrgangsDaten>();
-		for (const jg of props.klassenListeManager().jahrgaenge.list())
+		for (const jg of props.manager().jahrgaenge.list())
 			if (jg.kuerzel !== "E3") // Das dritte Jahr der Schuleingangsphase sollte nicht für einen Jahrgang einer Klasse verwendet werden, da es Schüler-spezifisch ist
 				result.add(jg);
 		return result;
@@ -209,11 +210,11 @@
 
 
 	const filterSchuelerStatus = computed<SchuelerStatus[]>({
-		get: () => [...props.klassenListeManager().schuelerstatus.auswahl()],
+		get: () => [...props.manager().schuelerstatus.auswahl()],
 		set: (value) => {
-			props.klassenListeManager().schuelerstatus.auswahlClear();
+			props.manager().schuelerstatus.auswahlClear();
 			for (const v of value)
-				props.klassenListeManager().schuelerstatus.auswahlAdd(v);
+				props.manager().schuelerstatus.auswahlAdd(v);
 			void props.setFilter();
 		}
 	});
@@ -225,14 +226,14 @@
 				result.add(kl);
 			return result;
 		}
-		const jg = props.klassenListeManager().jahrgaenge.get(data.value.idJahrgang);
+		const jg = props.manager().jahrgaenge.get(data.value.idJahrgang);
 		if (jg === null)
 			return result;
 		for (const kl of props.mapKlassenFolgenderAbschnitt().values()) {
 			if (kl.idJahrgang === null) {
 				result.add(kl);
 			} else {
-				const jgKl = props.klassenListeManager().jahrgaenge.get(kl.idJahrgang);
+				const jgKl = props.manager().jahrgaenge.get(kl.idJahrgang);
 				if (jg.idFolgejahrgang === jgKl?.id)
 					result.add(kl);
 			}
@@ -247,14 +248,14 @@
 				result.add(kl);
 			return result;
 		}
-		const jg = props.klassenListeManager().jahrgaenge.get(data.value.idJahrgang);
+		const jg = props.manager().jahrgaenge.get(data.value.idJahrgang);
 		if (jg === null)
 			return result;
 		for (const kl of props.mapKlassenVorigerAbschnitt().values()) {
 			if (kl.idJahrgang === null) {
 				result.add(kl);
 			} else {
-				const jgKl = props.klassenListeManager().jahrgaenge.get(kl.idJahrgang);
+				const jgKl = props.manager().jahrgaenge.get(kl.idJahrgang);
 				if (jg.id === jgKl?.idFolgejahrgang)
 					result.add(kl);
 			}
@@ -264,8 +265,8 @@
 
 	const listeKlassenlehrer = computed<LehrerListeEintrag[]>(() => {
 		const a : LehrerListeEintrag[] = [];
-		for (const klassenLeitung of props.klassenListeManager().daten().klassenLeitungen) {
-			const lehrer : LehrerListeEintrag | null = props.klassenListeManager().lehrer.get(klassenLeitung);
+		for (const klassenLeitung of props.manager().daten().klassenLeitungen) {
+			const lehrer : LehrerListeEintrag | null = props.manager().lehrer.get(klassenLeitung);
 			if (lehrer !== null)
 				a.push(lehrer);
 		}
@@ -291,9 +292,9 @@
 		{ key: "status", label: "Status", sortable: true, span: 0.5 }
 	];
 
-	const validateKuerzel = (kuerzel: string | null): boolean => props.klassenListeManager().validateKuerzel(kuerzel);
-	const validateBeschreibung = (beschreibung: string | null): boolean => props.klassenListeManager().validateBeschreibung(beschreibung);
-	const validateSortierung = (sortierung: number | null): boolean => props.klassenListeManager().validateSortierung(sortierung);
+	const validateKuerzel = (kuerzel: string | null): boolean => props.manager().validateKuerzel(kuerzel);
+	const validateBeschreibung = (beschreibung: string | null): boolean => props.manager().validateBeschreibung(beschreibung);
+	const validateSortierung = (sortierung: number | null): boolean => props.manager().validateSortierung(sortierung);
 
 	async function patchPartial(data: Partial<KlassenDaten>, isValid?: boolean) {
 		if (isValid === undefined || isValid)

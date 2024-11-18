@@ -34,13 +34,11 @@
 
 	const search = ref<string>("");
 
-	const klassenleitungen = computed<List<number>>( () =>
-		props.klassenListeManager().daten().klassenLeitungen
-	);
+	const klassenleitungen = computed<List<number>>( () => props.manager().daten().klassenLeitungen);
 
 	const rowsFiltered = computed<LehrerListeEintrag[]>(() => {
 		const arr = [];
-		for (const e of props.klassenListeManager().lehrer.list())
+		for (const e of props.manager().lehrer.list())
 			if ((e.nachname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())
 				|| e.vorname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())
 				|| e.kuerzel.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()))
@@ -49,7 +47,7 @@
 		return arr;
 	});
 
-	const auswaehlenDeaktiviert = computed<boolean>(() => clickedRow.value === undefined)
+	const auswaehlenDeaktiviert = computed<boolean>(() => clickedRow.value === undefined);
 
 	const show = ref<boolean>(false);
 
@@ -64,15 +62,15 @@
 	}
 
 	async function add() {
-		const klassenId = props.klassenListeManager().auswahl().id;
-		await props.addKlassenleitung(clickedRow.value!.id, klassenId)
+		const klassenId = props.manager().auswahl().id;
+		await props.addKlassenleitung(clickedRow.value!.id, klassenId);
 		closeModal();
 	}
 
 	const cols = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc" },
 		{ key: "nachname", label: "Nachname", sortable: true, span: 2 },
-		{ key: "vorname", label: "Vorname", sortable: true, span: 2 }
+		{ key: "vorname", label: "Vorname", sortable: true, span: 2 },
 	];
 
 </script>

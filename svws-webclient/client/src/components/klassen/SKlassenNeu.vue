@@ -48,7 +48,7 @@
 	const props = defineProps<KlassenNeuProps>();
 
 	const schulform = computed(() => props.schulform);
-	const schuljahr = computed(() => props.klassenListeManager().getSchuljahr());
+	const schuljahr = computed(() => props.manager().getSchuljahr());
 
 	const isLoading = ref<boolean>(false);
 	const isValid = ref<boolean>(false);
@@ -60,9 +60,9 @@
 			beschreibung: "",
 			idJahrgang: null,
 			parallelitaet: null,
-			idSchulgliederung: Schulgliederung.getDefault(props.schulform)?.daten(props.klassenListeManager().getSchuljahr())?.id ?? -1,
-			idKlassenart: Klassenart.getDefault(props.schulform).daten(props.klassenListeManager().getSchuljahr())?.id ?? Klassenart.UNDEFINIERT.daten(props.klassenListeManager().getSchuljahr())?.id,
-			idAllgemeinbildendOrganisationsform: AllgemeinbildendOrganisationsformen.GANZTAG.daten(props.klassenListeManager().getSchuljahr())?.id ?? null
+			idSchulgliederung: Schulgliederung.getDefault(props.schulform)?.daten(props.manager().getSchuljahr())?.id ?? -1,
+			idKlassenart: Klassenart.getDefault(props.schulform).daten(props.manager().getSchuljahr())?.id ?? Klassenart.UNDEFINIERT.daten(props.manager().getSchuljahr())?.id,
+			idAllgemeinbildendOrganisationsform: AllgemeinbildendOrganisationsformen.GANZTAG.daten(props.manager().getSchuljahr())?.id ?? null
 		}
 
 		watch(() => data.value, async () => {
@@ -108,13 +108,13 @@
 			const id = data.value.idJahrgang;
 			if ((id === null) || (id === undefined))
 				return null;
-			return props.klassenListeManager().jahrgaenge.get(id);
+			return props.manager().jahrgaenge.get(id);
 		},
 		set: (value) => (data.value.idJahrgang = value?.id ?? null)
 	});
 	const jahrgaenge = computed<List<JahrgangsDaten>>(() => {
 		const result = new ArrayList<JahrgangsDaten>();
-		for (const jg of props.klassenListeManager().jahrgaenge.list())
+		for (const jg of props.manager().jahrgaenge.list())
 			if (jg.kuerzel !== "E3") // Das dritte Jahr der Schuleingangsphase sollte nicht für einen Jahrgang einer Klasse verwendet werden, da es Schüler-spezifisch ist
 				result.add(jg);
 		return result;
@@ -159,8 +159,8 @@
 		isLoading.value = false;
 	}
 
-	const validateKuerzel = (kuerzel: string | null): boolean => props.klassenListeManager().validateKuerzel(kuerzel);
-	const validateBeschreibung = (beschreibung: string | null): boolean => props.klassenListeManager().validateBeschreibung(beschreibung);
+	const validateKuerzel = (kuerzel: string | null): boolean => props.manager().validateKuerzel(kuerzel);
+	const validateBeschreibung = (beschreibung: string | null): boolean => props.manager().validateBeschreibung(beschreibung);
 
 	const validateAll = () => isValid.value = (data.value.kuerzel !== undefined) && validateKuerzel(data.value.kuerzel) && (data.value.beschreibung !== undefined) && validateBeschreibung(data.value.beschreibung);
 
@@ -189,7 +189,7 @@
 			return result;
 		}
 
-		const jg = data.value.idJahrgang === undefined ? null : props.klassenListeManager().jahrgaenge.get(data.value.idJahrgang);
+		const jg = data.value.idJahrgang === undefined ? null : props.manager().jahrgaenge.get(data.value.idJahrgang);
 		if (jg === null)
 			return result;
 
@@ -197,7 +197,7 @@
 			if (kl.idJahrgang === null) {
 				result.add(kl);
 			} else {
-				const jgKl = props.klassenListeManager().jahrgaenge.get(kl.idJahrgang);
+				const jgKl = props.manager().jahrgaenge.get(kl.idJahrgang);
 				if (jg.idFolgejahrgang === jgKl?.id)
 					result.add(kl);
 			}
@@ -213,7 +213,7 @@
 			return result;
 		}
 
-		const jg = data.value.idJahrgang === undefined ? null : props.klassenListeManager().jahrgaenge.get(data.value.idJahrgang);
+		const jg = data.value.idJahrgang === undefined ? null : props.manager().jahrgaenge.get(data.value.idJahrgang);
 		if (jg === null)
 			return result;
 
@@ -221,7 +221,7 @@
 			if (kl.idJahrgang === null) {
 				result.add(kl);
 			} else {
-				const jgKl = props.klassenListeManager().jahrgaenge.get(kl.idJahrgang);
+				const jgKl = props.manager().jahrgaenge.get(kl.idJahrgang);
 				if (jg.id === jgKl?.idFolgejahrgang)
 					result.add(kl);
 			}

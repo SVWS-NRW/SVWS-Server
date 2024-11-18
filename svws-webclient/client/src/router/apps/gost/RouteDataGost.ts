@@ -1,6 +1,6 @@
 import type { RouteParams } from "vue-router";
 import type { GostJahrgang, GostJahrgangsdaten, JahrgangsDaten, GostFach } from "@core";
-import { NullPointerException, DeveloperNotificationException, GostAbiturjahrUtils, Schulgliederung, GostFaecherManager, ArrayList, Jahrgaenge } from "@core";
+import { DeveloperNotificationException, GostAbiturjahrUtils, Schulgliederung, GostFaecherManager, ArrayList, Jahrgaenge } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -12,6 +12,7 @@ import { routeGostBeratung } from "~/router/apps/gost/beratung/RouteGostBeratung
 import { RouteNode } from "~/router/RouteNode";
 import { routeGostAbiturjahrNeu } from "./RouteGostAbiturjahrNeu";
 import { routeGostGruppenprozesse } from "./RouteGostGruppenprozesse";
+import { TabData } from "@ui";
 
 interface RouteStateGost extends RouteStateInterface {
 	params: RouteParams;
@@ -56,6 +57,25 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 
 	setFilterNurAktuelle = async (value: boolean) => {
 		await api.config.setValue('gost.auswahl.filterNurAktuelle', value ? "true" : "false");
+	}
+
+	get abiturjahrFromConfig(): number {
+		return parseInt(api.config.getValue("gost.auswahl.abiturjahr"));
+	}
+
+	setAbiturjahrToConfig = async (value: number) => {
+		await api.config.setValue('gost.auswahl.abiturjahr', value.toString());
+	}
+
+	get selectedTabFromConfig(): TabData {
+		const tab = api.config.getValue("gost.tab.selected");
+		if (tab.length === 0)
+			return { name: this.defaultView.name, text: this.defaultView.text };
+		return JSON.parse(tab) as TabData;
+	}
+
+	setSelectedTabToConfig = async (value: TabData) => {
+		await api.config.setValue('gost.tab.selected', JSON.stringify(value));
 	}
 
 	get creationModeEnabled(): boolean {
@@ -253,6 +273,8 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 
 	setAbiturjahrgang = async (jahrgang: GostJahrgang | undefined, isEntering: boolean) => {
 		const daten = await this.ladeDatenFuerAbiturjahrgang(jahrgang, this._state.value, isEntering);
+		if ((jahrgang?.abiturjahr !== undefined) && this.mapAbiturjahrgaenge.has(jahrgang.abiturjahr))
+			this.setAbiturjahrToConfig(jahrgang.abiturjahr);
 		this.setPatchedDefaultState(daten);
 	}
 
@@ -285,7 +307,7 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 	getAbiturjahrFuerJahrgang = (idJahrgang : number) => {
 		const abiturjahr = this.getAbiturjahrFuerJahrgangMitMap(idJahrgang, this._state.value.mapJahrgaenge);
 		if (abiturjahr === null)
-			throw new NullPointerException("Dem Jahrgang mit der ID " + idJahrgang + " konnte kein Abiturjahr zugeordnet werden.");
+			throw new DeveloperNotificationException(`Dem Jahrgang mit der ID ${idJahrgang} konnte kein Abiturjahr zugeordnet werden.`);
 		return abiturjahr;
 	}
 
