@@ -52,6 +52,8 @@ public enum LehrerBeschaeftigungsart implements @NotNull CoreType<LehrerBeschaef
 
 	/** Beschaeftigungsart 'Beamte auf Widerruf (LAA) in Vollzeit' eines Lehrers */
 	WV;
+
+
 	/**
 	 * Initialisiert den Core-Type mit dem angegebenen Manager.
 	 *

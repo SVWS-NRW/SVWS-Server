@@ -3,15 +3,20 @@ package de.svws_nrw.data.lehrer;
 import java.io.InputStream;
 import java.text.Collator;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
+import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerAbschnittsdaten;
 import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -122,6 +127,27 @@ public final class DataLehrerliste extends DataManager<Long> {
 	@Override
 	public Response patch(final Long id, final InputStream is) {
 		throw new UnsupportedOperationException();
+	}
+
+
+	/**
+	 * Bestimmt zu den übergebenen Lehrer-IDs die jeweils zugehörigen Abschnittsdaten aus der Datenbank für
+	 * den angegebenen Schuljahresabschnitt und gib eine Map mit der Zuordnung zurück.
+	 *
+	 * @param conn                     die aktuelle Datenbank-Verbindung
+	 * @param idsLehrer                die IDs der Lehrer
+	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnittes
+	 *
+	 * @return die Zuordnung der Abschnittsdaten zu den Lehrer-IDs
+	 */
+	public static Map<Long, DTOLehrerAbschnittsdaten> getDTOMapAbschnittsdatenByID(final @NotNull DBEntityManager conn,
+			final @NotNull List<Long> idsLehrer, final long idSchuljahresabschnitt) {
+		if (idsLehrer.isEmpty())
+			return new HashMap<>();
+		final List<DTOLehrerAbschnittsdaten> listAbschnitte =
+				conn.queryList(DTOLehrerAbschnittsdaten.QUERY_BY_SCHULJAHRESABSCHNITTS_ID + " AND e.Lehrer_ID IN ?2", DTOLehrerAbschnittsdaten.class,
+						idSchuljahresabschnitt, idsLehrer);
+		return listAbschnitte.stream().collect(Collectors.toMap(a -> a.Lehrer_ID, a -> a));
 	}
 
 }

@@ -22,6 +22,7 @@ import de.svws_nrw.base.LogUtils;
 import de.svws_nrw.base.untis.UntisGPU001;
 import de.svws_nrw.base.untis.UntisGPU002;
 import de.svws_nrw.base.untis.UntisGPU003;
+import de.svws_nrw.base.untis.UntisGPU004;
 import de.svws_nrw.base.untis.UntisGPU005;
 import de.svws_nrw.base.untis.UntisGPU010;
 import de.svws_nrw.base.untis.UntisGPU015;
@@ -45,6 +46,8 @@ import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
+import de.svws_nrw.asd.types.lehrer.LehrerBeschaeftigungsart;
+import de.svws_nrw.asd.types.lehrer.LehrerRechtsverhaeltnis;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.core.utils.DateUtils;
 import de.svws_nrw.core.utils.gost.GostBlockungsdatenManager;
@@ -67,6 +70,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogRaum;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
+import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerAbschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
@@ -440,6 +444,22 @@ public final class DataUntis {
 
 
 	/**
+	 * Gibt das Untis-Kürzel für das angegebene Geschlecht zurück oder null.
+	 *
+	 * @param geschlecht   das Geschlecht
+	 *
+	 * @return das Untis-Kürzel
+	 */
+	private static String getUntisGeschlecht(final Geschlecht geschlecht) {
+		return switch (geschlecht) {
+			case Geschlecht.M -> "2";
+			case Geschlecht.W -> "1";
+			default -> null;
+		};
+	}
+
+
+	/**
 	 * Gibt das im iso-Format angegebene Datum im Format für Untis zurück.
 	 *
 	 * @param isoDate   das Datum im ISO-Format
@@ -617,6 +637,79 @@ public final class DataUntis {
 
 
 	/**
+	 * Bestimmt anhand der übergebenen Lehrerliste und der übergebenen Abschnittsinformationen zu den Lehrkräften die
+	 * Liste der zugehörigen Klasseneinträge für die GPU004.TXT-Datei von Untis.
+	 *
+	 * @param lehrer          die Lehrkräfte
+	 * @param mapAbschnitte   die Abschnittsdaten der einzelnen Lehrkräfte
+	 *
+	 * @return die Liste der GPU004-Einträge
+	 */
+	private static List<UntisGPU004> getListGPU004(final @NotNull List<DTOLehrer> lehrer, final @NotNull Map<Long, DTOLehrerAbschnittsdaten> mapAbschnitte) {
+		final List<UntisGPU004> result = new ArrayList<>();
+		for (final DTOLehrer l : lehrer) {
+			final UntisGPU004 dto = new UntisGPU004();
+			dto.kuerzel = l.Kuerzel;
+			dto.nachname = l.Nachname;
+			dto.vorname = l.Vorname;
+			dto.titel = l.Titel;
+			dto.geburtsdatum = getUntisDate(l.Geburtsdatum);
+			dto.geschlecht = getUntisGeschlecht(l.Geschlecht);
+			dto.eMail = l.eMailDienstlich;
+			dto.telefon = l.telefon;
+			dto.telefonMobil = l.telefonMobil;
+			dto.persNr = l.personalNrLBV;
+			dto.stundensatz = l.verguetungsSchluessel;
+			dto.datumZugang = getUntisDate(l.DatumZugang);
+			dto.datumAbgang = getUntisDate(l.DatumAbgang);
+			final DTOLehrerAbschnittsdaten a = mapAbschnitte.get(l.ID);
+			if (a != null) {
+				final LehrerRechtsverhaeltnis rv = LehrerRechtsverhaeltnis.data().getWertBySchluessel(a.Rechtsverhaeltnis);
+				if (rv != null) {
+					dto.statistik1 = a.Rechtsverhaeltnis;
+					final LehrerBeschaeftigungsart ba = LehrerBeschaeftigungsart.data().getWertBySchluessel(a.Beschaeftigungsart);
+					if ((ba == LehrerBeschaeftigungsart.T) || (ba == LehrerBeschaeftigungsart.WT) || (ba == LehrerBeschaeftigungsart.TA))
+						dto.statistik1 += ",T";
+				}
+				dto.stammschule = a.StammschulNr;
+				dto.wochenSoll = a.PflichtstdSoll;
+			}
+			result.add(dto);
+		}
+		return result;
+	}
+
+
+	/**
+	 * Erstellt die GPU004-CSV-Daten für die übergebene Lehrerliste und die übergebenen Zuordnungen.
+	 *
+	 * @param logger          der Logger
+	 * @param lehrer          die Lehrkräfte
+	 * @param mapAbschnitte   die Abschnittsdaten der einzelnen Lehrkräfte
+	 *
+	 * @return die CSV-Daten als UTF8-String
+	 *
+	 * @throws ApiOperationException   falls ein Fehler beim Erstellen der CSV-Daten entsteht
+	 */
+	private static @NotNull String getGPU004(final @NotNull Logger logger, final @NotNull List<DTOLehrer> lehrer,
+			final @NotNull Map<Long, DTOLehrerAbschnittsdaten> mapAbschnitte) throws ApiOperationException {
+		logger.logLn("-> Erstelle Liste der Klassen für GPU004.txt");
+		logger.modifyIndent(2);
+		try {
+			final List<UntisGPU004> gpu004 = getListGPU004(lehrer, mapAbschnitte);
+			final String csvSchueler = UntisGPU004.writeCSV(gpu004);
+			logger.logLn("OK");
+			logger.modifyIndent(-2);
+			return csvSchueler;
+		} catch (final Exception e) {
+			logger.logLn("Fehler beim Erstellen der Datei GPU004.txt.");
+			logger.modifyIndent(-2);
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen der Datei GPU004.txt.");
+		}
+	}
+
+
+	/**
 	 * Bestimmt anhand der übergebenen Schülerliste und der übergebenen Klasseninformationen zu den Schüler die
 	 * Liste der zugehörigen Schülereinträge für die GPU010.TXT-Datei von Untis.
 	 *
@@ -635,16 +728,64 @@ public final class DataUntis {
 			dto.vorname = ((dtoSchueler.Vorname == null) || "".equals(dtoSchueler.Vorname.trim())) ? "???" : dtoSchueler.Vorname.trim();
 			final DTOKlassen kl = mapKlasse.get(dtoSchueler.ID);
 			dto.klasse = (kl == null) ? null : kl.Klasse;
-			dto.geschlecht = switch (dtoSchueler.Geschlecht) {
-				case Geschlecht.M -> "2";
-				case Geschlecht.W -> "1";
-				default -> null;
-			};
+			dto.geschlecht = getUntisGeschlecht(dtoSchueler.Geschlecht);
 			dto.emailAdresse = dtoSchueler.Email;
 			dto.fremdschluessel = "" + dtoSchueler.ID;
 			result.add(dto);
 		}
 		return result;
+	}
+
+
+	/**
+	 * Bestimmt die Export-Daten für die Lehrerliste für den übergebenen Schuljahresabschnitt
+	 *
+	 * @param conn                     die aktuelle Datenbankverbindung
+	 * @param logger                   der Logger zum Protokollieren des Exportes
+	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
+	 *
+	 * @return die GPU004.txt-Datei als String im UTF8-Format
+	 *
+	 * @throws ApiOperationException   wenn ein Fehler beim Erstellen des Exportes auftritt
+	 */
+	private static @NotNull String getGPU004bySchuljahresabschnitt(final @NotNull DBEntityManager conn, final @NotNull Logger logger,
+			final long idSchuljahresabschnitt) throws ApiOperationException {
+		logger.log("Ermittle GPU004-Daten für die Lehrer...");
+		final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetAbschnittById(idSchuljahresabschnitt);
+		if (schuljahresabschnitt == null) {
+			logger.logLn("-> FEHLER: Kein Schuljahresabschnitt mit der ID %d gefunden.".formatted(idSchuljahresabschnitt));
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"In der Datenbank gibt es keinen Schuljahresabschnitt mit der ID %d.".formatted(idSchuljahresabschnitt));
+		}
+		logger.logLn("-> für den Schuljahresabschnitt %d.%d".formatted(schuljahresabschnitt.schuljahr, schuljahresabschnitt.abschnitt));
+		final List<DTOLehrer> lehrer = conn.queryList(DTOLehrer.QUERY_BY_SICHTBAR, DTOLehrer.class, true);
+		if (lehrer.isEmpty()) {
+			logger.logLn("-> keine Lehrer für den Export gefunden");
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine sichtbaren Lehrer für den Export gefunden.");
+		}
+		final List<Long> idsLehrer = lehrer.stream().map(kl -> kl.ID).toList();
+		logger.logLn("-> bestimme die zugehörigen Abschnittsdaten für die Lehrer...");
+		final Map<Long, DTOLehrerAbschnittsdaten> mapAbschnitteByLehrerId =
+				DataLehrerliste.getDTOMapAbschnittsdatenByID(conn, idsLehrer, idSchuljahresabschnitt);
+		return getGPU004(logger, lehrer, mapAbschnitteByLehrerId);
+	}
+
+
+	/**
+	 * Erzeugt den Export der Lehrerliste des angegebenen Schuljahresabschnittes für Untis (Datei GPU004.txt)
+	 * und gibt diese als Response zurück.
+	 *
+	 * @param conn                     die Datenbank-Verbindung
+	 * @param logger                   der Logger
+	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnittes
+	 *
+	 * @return eine Response mit der CSV-Datei
+	 *
+	 * @throws ApiOperationException   wenn ein Fehler beim Erstellen des Exportes auftritt
+	 */
+	public static Response exportGPU004(final DBEntityManager conn, final Logger logger, final long idSchuljahresabschnitt) throws ApiOperationException {
+		final @NotNull String daten = getGPU004bySchuljahresabschnitt(conn, logger, idSchuljahresabschnitt);
+		return Response.ok(daten).header("Content-Disposition", "attachment; filename=\"GPU004.txt\"").build();
 	}
 
 

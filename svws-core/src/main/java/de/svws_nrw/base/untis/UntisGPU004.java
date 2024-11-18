@@ -28,7 +28,7 @@ public class UntisGPU004 {
 	/** (3) Statistik 1 (Kürzel Rechtsverhältnis, bei Teilzeit: "RV,T") */
 	public String statistik1;
 
-	/** (4) Personal-Nummer */
+	/** (4) Personal-Nummer (LBV-Nummer) */
 	public String persNr;
 
 	/** (5) Stammraum */
