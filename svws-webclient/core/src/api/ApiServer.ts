@@ -1991,6 +1991,36 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode exportUntisLehrerGPU006 für den Zugriff auf die URL https://{hostname}/db/{schema}/datenaustausch/untis/export/faecher/{id : \d+}
+	 *
+	 * Liefert einen Export für die Fächer- bzw. Kursdaten eines Schuljahresabschnittes (GPU006.txt).Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Exportieren besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die GPU006.txt
+	 *     - Mime-Type: application/octet-stream
+	 *     - Rückgabe-Typ: ApiFile
+	 *   Code 404: Es wurden nicht alle benötigten Daten für den Export gefunden.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 500: Es ist ein unerwarteter Fehler aufgetreten.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die GPU006.txt
+	 */
+	public async exportUntisLehrerGPU006(schema : string, id : number) : Promise<ApiFile> {
+		const path = "/db/{schema}/datenaustausch/untis/export/faecher/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : ApiFile = await super.postJSONtoOctetStream(path, null);
+		return result;
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode exportUntisKlassenGPU003 für den Zugriff auf die URL https://{hostname}/db/{schema}/datenaustausch/untis/export/klassen/{id : \d+}
 	 *
 	 * Liefert einen Export für die Klassen eines Schuljahresabschnittes (GPU003.txt).Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Exportieren besitzt.

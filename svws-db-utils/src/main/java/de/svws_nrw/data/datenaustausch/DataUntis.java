@@ -24,12 +24,14 @@ import de.svws_nrw.base.untis.UntisGPU002;
 import de.svws_nrw.base.untis.UntisGPU003;
 import de.svws_nrw.base.untis.UntisGPU004;
 import de.svws_nrw.base.untis.UntisGPU005;
+import de.svws_nrw.base.untis.UntisGPU006;
 import de.svws_nrw.base.untis.UntisGPU010;
 import de.svws_nrw.base.untis.UntisGPU015;
 import de.svws_nrw.base.untis.UntisGPU019;
 import de.svws_nrw.core.adt.LongArrayKey;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.asd.data.RGBFarbe;
+import de.svws_nrw.asd.data.fach.FachgruppeKatalogEintrag;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.fach.FachDaten;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
@@ -45,6 +47,7 @@ import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.fach.Fach;
+import de.svws_nrw.asd.types.fach.Fachgruppe;
 import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.asd.types.lehrer.LehrerBeschaeftigungsart;
 import de.svws_nrw.asd.types.lehrer.LehrerRechtsverhaeltnis;
@@ -67,8 +70,10 @@ import de.svws_nrw.data.stundenplan.DataStundenplanRaeume;
 import de.svws_nrw.data.stundenplan.DataStundenplanSchienen;
 import de.svws_nrw.data.stundenplan.DataStundenplanZeitraster;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogRaum;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
+import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerAbschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
@@ -710,34 +715,6 @@ public final class DataUntis {
 
 
 	/**
-	 * Bestimmt anhand der übergebenen Schülerliste und der übergebenen Klasseninformationen zu den Schüler die
-	 * Liste der zugehörigen Schülereinträge für die GPU010.TXT-Datei von Untis.
-	 *
-	 * @param schueler    die Liste der schüler
-	 * @param mapKlasse   die Klassen der Schüler anhand der jeweiligen Schüler-ID
-	 *
-	 * @return die Liste der GPU010-Einträge
-	 */
-	private static List<UntisGPU010> getListGPU010(final @NotNull List<DTOSchueler> schueler, final @NotNull Map<Long, DTOKlassen> mapKlasse) {
-		final List<UntisGPU010> result = new ArrayList<>();
-		for (final DTOSchueler dtoSchueler : schueler) {
-			final UntisGPU010 dto = new UntisGPU010();
-			dto.geburtsdatum = getUntisDate(dtoSchueler.Geburtsdatum);
-			dto.name = getUntisSchuelerName(dtoSchueler.Nachname, dtoSchueler.Vorname, dtoSchueler.Geburtsdatum);
-			dto.langname = ((dtoSchueler.Nachname == null) || ("".equals(dtoSchueler.Nachname.trim()))) ? "???" : dtoSchueler.Nachname.trim();
-			dto.vorname = ((dtoSchueler.Vorname == null) || "".equals(dtoSchueler.Vorname.trim())) ? "???" : dtoSchueler.Vorname.trim();
-			final DTOKlassen kl = mapKlasse.get(dtoSchueler.ID);
-			dto.klasse = (kl == null) ? null : kl.Klasse;
-			dto.geschlecht = getUntisGeschlecht(dtoSchueler.Geschlecht);
-			dto.emailAdresse = dtoSchueler.Email;
-			dto.fremdschluessel = "" + dtoSchueler.ID;
-			result.add(dto);
-		}
-		return result;
-	}
-
-
-	/**
 	 * Bestimmt die Export-Daten für die Lehrerliste für den übergebenen Schuljahresabschnitt
 	 *
 	 * @param conn                     die aktuelle Datenbankverbindung
@@ -786,6 +763,177 @@ public final class DataUntis {
 	public static Response exportGPU004(final DBEntityManager conn, final Logger logger, final long idSchuljahresabschnitt) throws ApiOperationException {
 		final @NotNull String daten = getGPU004bySchuljahresabschnitt(conn, logger, idSchuljahresabschnitt);
 		return Response.ok(daten).header("Content-Disposition", "attachment; filename=\"GPU004.txt\"").build();
+	}
+
+
+	/**
+	 * Bestimmt anhand der übergebenen Fächerliste und der übergebenen Kursliste die Liste der
+	 * zugehörigen Fächereinträge für die GPU006.TXT-Datei von Untis. Kurse werden hier auch als
+	 * Fächer modelliert.
+	 *
+	 * @param faecher         die Fächer
+	 * @param kurse           die Jahrgänge zu den Klassen
+	 * @param mapFachgruppe   eine Map mit den Zuordnungen der Fächer zu den Informationen der Fachgruppen
+	 *
+	 * @return die Liste der GPU006-Einträge
+	 */
+	private static List<UntisGPU006> getListGPU006(final @NotNull List<DTOFach> faecher, final @NotNull List<DTOKurs> kurse,
+			final @NotNull Map<String, FachgruppeKatalogEintrag> mapFachgruppe) {
+		final List<UntisGPU006> result = new ArrayList<>();
+		for (final DTOFach fach : faecher) {
+			final FachgruppeKatalogEintrag fg = mapFachgruppe.get(fach.StatistikKuerzel);
+			final UntisGPU006 dto = new UntisGPU006();
+			dto.kuerzel = fach.Kuerzel;
+			dto.bezeichnung = fach.Bezeichnung;
+			dto.kennzeichen = null; // evtl. Hauptfächer mit H kennzeichnen
+			dto.fachgruppe = (fg == null) ? null : fg.text;
+			dto.farbeHintergrund = null; // kann ggf. anhand der Farbe der Fachgruppe gesetzt werden
+			dto.faktor = 1.0;
+			dto.text = "Sort-" + (fach.SortierungAllg == null ? 32000 : fach.SortierungAllg);
+			dto.beschreibung = fach.Bezeichnung;
+			result.add(dto);
+		}
+		final Map<Long, DTOFach> mapFaecher = faecher.stream().collect(Collectors.toMap(f -> f.ID, f -> f));
+		for (final DTOKurs kurs : kurse) {
+			final DTOFach fach = mapFaecher.get(kurs.Fach_ID);
+			final FachgruppeKatalogEintrag fg = (fach == null) ? null : mapFachgruppe.get(fach.StatistikKuerzel);
+			final UntisGPU006 dto = new UntisGPU006();
+			dto.kuerzel = kurs.KurzBez;
+			dto.bezeichnung = (fach == null) ? null : fach.Bezeichnung;
+			dto.kennzeichen = null; // evtl. Hauptfächer mit H kennzeichnen
+			dto.fachgruppe = (fg == null) ? null : fg.text;
+			dto.farbeHintergrund = null; // kann ggf. anhand der Farbe der Fachgruppe gesetzt werden
+			dto.faktor = 1.0;
+			dto.text = "Sort-" + (((fach == null) || (fach.SortierungAllg == null)) ? 0 : fach.SortierungAllg) + "-"
+					+ ((kurs.Sortierung == null) ? 0 : kurs.Sortierung) + "-" + ((kurs.ASDJahrgang == null) ? "JU" : kurs.ASDJahrgang) + "-" + kurs.KurzBez;
+			dto.beschreibung = (fach == null) ? null : fach.Bezeichnung;
+			result.add(dto);
+		}
+		return result;
+	}
+
+
+	/**
+	 * Erstellt die GPU006-CSV-Daten für die übergebene Lehrerliste und die übergebenen Zuordnungen.
+	 *
+	 * @param logger          der Logger
+	 * @param faecher         die Fächer
+	 * @param kurse           die Jahrgänge zu den Klassen
+	 * @param mapFachgruppe   eine Map mit den Zuordnungen der Fächer zu den Informationen der Fachgruppen
+	 *
+	 * @return die CSV-Daten als UTF8-String
+	 *
+	 * @throws ApiOperationException   falls ein Fehler beim Erstellen der CSV-Daten entsteht
+	 */
+	private static @NotNull String getGPU006(final @NotNull Logger logger, final @NotNull List<DTOFach> faecher, final @NotNull List<DTOKurs> kurse,
+			final @NotNull Map<String, FachgruppeKatalogEintrag> mapFachgruppe) throws ApiOperationException {
+		logger.logLn("-> Erstelle Liste der Klassen für GPU006.txt");
+		logger.modifyIndent(2);
+		try {
+			final List<UntisGPU006> gpu006 = getListGPU006(faecher, kurse, mapFachgruppe);
+			final String csvSchueler = UntisGPU006.writeCSV(gpu006);
+			logger.logLn("OK");
+			logger.modifyIndent(-2);
+			return csvSchueler;
+		} catch (final Exception e) {
+			logger.logLn("Fehler beim Erstellen der Datei GPU006.txt.");
+			logger.modifyIndent(-2);
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen der Datei GPU006.txt.");
+		}
+	}
+
+
+	/**
+	 * Bestimmt die Export-Daten für die Fächer- bzw. Kursliste für den übergebenen Schuljahresabschnitt
+	 *
+	 * @param conn                     die aktuelle Datenbankverbindung
+	 * @param logger                   der Logger zum Protokollieren des Exportes
+	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
+	 *
+	 * @return die GPU006.txt-Datei als String im UTF8-Format
+	 *
+	 * @throws ApiOperationException   wenn ein Fehler beim Erstellen des Exportes auftritt
+	 */
+	private static @NotNull String getGPU006bySchuljahresabschnitt(final @NotNull DBEntityManager conn, final @NotNull Logger logger,
+			final long idSchuljahresabschnitt) throws ApiOperationException {
+		logger.log("Ermittle GPU006-Daten für die Fächer bzw. die Kurse...");
+		final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetAbschnittById(idSchuljahresabschnitt);
+		if (schuljahresabschnitt == null) {
+			logger.logLn("-> FEHLER: Kein Schuljahresabschnitt mit der ID %d gefunden.".formatted(idSchuljahresabschnitt));
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"In der Datenbank gibt es keinen Schuljahresabschnitt mit der ID %d.".formatted(idSchuljahresabschnitt));
+		}
+		logger.logLn("-> für den Schuljahresabschnitt %d.%d".formatted(schuljahresabschnitt.schuljahr, schuljahresabschnitt.abschnitt));
+		final List<DTOFach> faecher = conn.queryAll(DTOFach.class);
+		if (faecher.isEmpty()) {
+			logger.logLn("-> keine Fächer für den Export gefunden");
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Fächer für den Export gefunden.");
+		}
+		final @NotNull Map<String, FachgruppeKatalogEintrag> mapFachgruppeByStatistikKuerzel = new HashMap<>();
+		for (final @NotNull DTOFach fach : faecher) {
+			if (fach.StatistikKuerzel == null)
+				continue;
+			final Fach f = Fach.data().getWertBySchluessel(fach.StatistikKuerzel);
+			if (f == null)
+				continue;
+			final Fachgruppe fg = f.getFachgruppe(schuljahresabschnitt.schuljahr);
+			if (fg == null)
+				continue;
+			final FachgruppeKatalogEintrag fgke = fg.daten(schuljahresabschnitt.schuljahr);
+			if (fgke != null)
+				mapFachgruppeByStatistikKuerzel.put(fach.StatistikKuerzel, fgke);
+		}
+		final List<DTOKurs> kurse = conn.queryList(DTOKurs.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKurs.class, idSchuljahresabschnitt);
+		if (kurse.isEmpty())
+			logger.logLn("-> keine Kurse in dem Schuljahresabschnitt %d.%d gefunden. Es werden nur die Fächer exportiert."
+					.formatted(schuljahresabschnitt.schuljahr, schuljahresabschnitt.abschnitt));
+		return getGPU006(logger, faecher, kurse, mapFachgruppeByStatistikKuerzel);
+	}
+
+
+	/**
+	 * Erzeugt den Export der Fächer- bzw- Kursliste des angegebenen Schuljahresabschnittes für Untis (Datei GPU006.txt)
+	 * und gibt diese als Response zurück.
+	 *
+	 * @param conn                     die Datenbank-Verbindung
+	 * @param logger                   der Logger
+	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnittes
+	 *
+	 * @return eine Response mit der CSV-Datei
+	 *
+	 * @throws ApiOperationException   wenn ein Fehler beim Erstellen des Exportes auftritt
+	 */
+	public static Response exportGPU006(final DBEntityManager conn, final Logger logger, final long idSchuljahresabschnitt) throws ApiOperationException {
+		final @NotNull String daten = getGPU006bySchuljahresabschnitt(conn, logger, idSchuljahresabschnitt);
+		return Response.ok(daten).header("Content-Disposition", "attachment; filename=\"GPU006.txt\"").build();
+	}
+
+
+	/**
+	 * Bestimmt anhand der übergebenen Schülerliste und der übergebenen Klasseninformationen zu den Schüler die
+	 * Liste der zugehörigen Schülereinträge für die GPU010.TXT-Datei von Untis.
+	 *
+	 * @param schueler    die Liste der schüler
+	 * @param mapKlasse   die Klassen der Schüler anhand der jeweiligen Schüler-ID
+	 *
+	 * @return die Liste der GPU010-Einträge
+	 */
+	private static List<UntisGPU010> getListGPU010(final @NotNull List<DTOSchueler> schueler, final @NotNull Map<Long, DTOKlassen> mapKlasse) {
+		final List<UntisGPU010> result = new ArrayList<>();
+		for (final DTOSchueler dtoSchueler : schueler) {
+			final UntisGPU010 dto = new UntisGPU010();
+			dto.geburtsdatum = getUntisDate(dtoSchueler.Geburtsdatum);
+			dto.name = getUntisSchuelerName(dtoSchueler.Nachname, dtoSchueler.Vorname, dtoSchueler.Geburtsdatum);
+			dto.langname = ((dtoSchueler.Nachname == null) || ("".equals(dtoSchueler.Nachname.trim()))) ? "???" : dtoSchueler.Nachname.trim();
+			dto.vorname = ((dtoSchueler.Vorname == null) || "".equals(dtoSchueler.Vorname.trim())) ? "???" : dtoSchueler.Vorname.trim();
+			final DTOKlassen kl = mapKlasse.get(dtoSchueler.ID);
+			dto.klasse = (kl == null) ? null : kl.Klasse;
+			dto.geschlecht = getUntisGeschlecht(dtoSchueler.Geschlecht);
+			dto.emailAdresse = dtoSchueler.Email;
+			dto.fremdschluessel = "" + dtoSchueler.ID;
+			result.add(dto);
+		}
+		return result;
 	}
 
 

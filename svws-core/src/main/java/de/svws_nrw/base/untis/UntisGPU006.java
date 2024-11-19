@@ -1,8 +1,12 @@
 package de.svws_nrw.base.untis;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.dataformat.csv.CsvGenerator;
+import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 
 import de.svws_nrw.base.CsvReader;
@@ -113,11 +117,30 @@ public final class UntisGPU006 {
 			.withNullValue("")
 			.withoutHeader();
 
+	/** Die Instanz des Object-Writers für die CSV-Daten */
+	private static final ObjectWriter writer = new CsvMapper().writerFor(UntisGPU006.class).with(csvSchema).with(CsvGenerator.Feature.ALWAYS_QUOTE_STRINGS);
+
 	/**
 	 * Leerer Standardkonstruktor.
 	 */
 	public UntisGPU006() {
 		// leer
+	}
+
+	/**
+	 * Erstellt aus der übergebenen Liste der DTOs die CSV-Daten als String
+	 *
+	 * @param dtos   die Liste der DTOs
+	 *
+	 * @return die CSV-Daten als UTF-8 String
+	 *
+	 * @throws IOException falls die CSV-Daten nicht erstellt werden können
+	 */
+	@SuppressWarnings("resource")
+	public static String writeCSV(final @NotNull List<UntisGPU006> dtos) throws IOException {
+		final StringWriter sw = new StringWriter();
+		writer.writeValues(sw).writeAll(dtos).close();
+		return sw.toString();
 	}
 
 	/**
