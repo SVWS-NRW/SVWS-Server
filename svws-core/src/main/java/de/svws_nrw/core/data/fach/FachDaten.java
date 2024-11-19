@@ -73,7 +73,7 @@ public class FachDaten {
 
 	/** Gibt die maximale Anzahl an Zeichen an, doe in Fachbemerkungen genutzt werden dürfen. */
 	@Schema(description = "gibt die maximale Anzahl an Zeichen an, doe in Fachbemerkungen genutzt werden dürfen", example = "100000")
-	public int maxZeichenInFachbemerkungen = -1;
+	public int maxZeichenInFachbemerkungen = Integer.MAX_VALUE;
 
 	/** Gibt an, ob das Fach ein schriftliches Fach für die zentralen Klausuren ist oder nicht. */
 	@Schema(description = "gibt an, ob das Fach ein schriftliches Fach für die zentralen Klausuren ist oder nicht", example = "true")

@@ -186,7 +186,7 @@ export class FachListeManager extends AuswahlManager<number, FachDaten, FachDate
 	public validateMaxZeichenInFachbemerkungen(maxZeichenInFachbemerkungen : number | null) : boolean {
 		if (maxZeichenInFachbemerkungen === null)
 			return true;
-		return (maxZeichenInFachbemerkungen > 0) && (maxZeichenInFachbemerkungen < JavaInteger.MAX_VALUE);
+		return (maxZeichenInFachbemerkungen > 0);
 	}
 
 	/**

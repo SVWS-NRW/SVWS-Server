@@ -199,7 +199,7 @@ public final class FachListeManager extends AuswahlManager<Long, FachDaten, Fach
 	public boolean validateMaxZeichenInFachbemerkungen(final Integer maxZeichenInFachbemerkungen) {
 		if (maxZeichenInFachbemerkungen == null)
 			return true;
-		return (maxZeichenInFachbemerkungen > 0) && (maxZeichenInFachbemerkungen < Integer.MAX_VALUE);
+		return (maxZeichenInFachbemerkungen > 0);
 	}
 
 	/**
