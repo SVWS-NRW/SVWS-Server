@@ -5,6 +5,7 @@ import { Schulform } from '../../../asd/types/schule/Schulform';
 import { JavaString } from '../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { AuswahlManager } from '../../../core/utils/AuswahlManager';
+import { JavaInteger } from '../../../java/lang/JavaInteger';
 import type { JavaFunction } from '../../../java/util/function/JavaFunction';
 import { FachDaten } from '../../../core/data/fach/FachDaten';
 import type { List } from '../../../java/util/List';
@@ -136,6 +137,70 @@ export class FachListeManager extends AuswahlManager<number, FachDaten, FachDate
 	 */
 	public getByKuerzelOrNull(kuerzel : string) : FachDaten | null {
 		return this._mapFachByKuerzel.get(kuerzel);
+	}
+
+	/**
+	 * Wenn das Kürzel nicht leer, bislang nicht verwendet und zwischen 1 und 20 Zeichen lang ist,
+	 * wird <code>true</code>, andernfalls <code>false</code> zurückgegeben.
+	 *
+	 * @param kuerzel   das gegebene Kürzel
+	 *
+	 * @return <code>true</code> wenn das Kürzel gültig ist, ansonsten <code>false</code>
+	 */
+	public validateKuerzel(kuerzel : string | null) : boolean {
+		if ((kuerzel === null) || JavaString.isBlank(kuerzel) || (kuerzel.trim().length > 20))
+			return false;
+		for (const fachDaten of this.liste.list()) {
+			if (JavaObject.equalsTranspiler(fachDaten.kuerzel, (kuerzel)))
+				return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Wenn die Bezeichnung nicht leer, bislang nicht verwendet und zwischen 1 und 255 Zeichen lang ist,
+	 * wird <code>true</code>, andernfalls <code>false</code> zurückgegeben.
+	 *
+	 * @param bezeichnung   die gegebene Bezeichnung
+	 *
+	 * @return <code>true</code> wenn die Bezeichnung gültig ist, ansonsten <code>false</code>
+	 */
+	public validateBezeichnung(bezeichnung : string | null) : boolean {
+		if ((bezeichnung === null) || JavaString.isBlank(bezeichnung) || (bezeichnung.trim().length > 255))
+			return false;
+		for (const fachDaten of this.liste.list()) {
+			if (JavaObject.equalsTranspiler(fachDaten.bezeichnung, (bezeichnung)))
+				return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Wenn die maxZeichenInFachbemerkungen leer oder einen positiven Wert hat,
+	 * wird <code>true</code>, andernfalls <code>false</code> zurückgegeben.
+	 *
+	 * @param maxZeichenInFachbemerkungen   die gegebene maxZeichenInFachbemerkungen
+	 *
+	 * @return <code>true</code> wenn die maxZeichenInFachbemerkungen gültig sind, ansonsten <code>false</code>
+	 */
+	public validateMaxZeichenInFachbemerkungen(maxZeichenInFachbemerkungen : number | null) : boolean {
+		if (maxZeichenInFachbemerkungen === null)
+			return true;
+		return (maxZeichenInFachbemerkungen > 0) && (maxZeichenInFachbemerkungen < JavaInteger.MAX_VALUE);
+	}
+
+	/**
+	 * Wenn die Sortierung einen positiven Wert hat,
+	 * wird <code>true</code>, andernfalls <code>false</code> zurückgegeben.
+	 *
+	 * @param sortierung   die gegebene sortierung
+	 *
+	 * @return <code>true</code> wenn die sortierung gültig ist, ansonsten <code>false</code>
+	 */
+	public validateSortierung(sortierung : number | null) : boolean {
+		if (sortierung === null)
+			return false;
+		return (sortierung > 0) && (sortierung < JavaInteger.MAX_VALUE);
 	}
 
 	transpilerCanonicalName(): string {

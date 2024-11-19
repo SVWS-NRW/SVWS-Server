@@ -133,8 +133,12 @@ export class RouteDataSchuleFaecher extends RouteData<RouteStateSchuleFaecher> {
 		await this.setEintrag(auswahl);
 	}
 
-	add = async (partialFach: Partial<FachDaten>): Promise<void> => {
-		// Implementieren
+	add = async (data: Partial<FachDaten>): Promise<void> => {
+		api.status.start();
+		const fachDaten = await api.server.addFach(data, api.schema);
+		this.fachListeManager.liste.add(fachDaten)
+		this.commit()
+		api.status.stop()
 	}
 
 	private setDefaults() {

@@ -80,7 +80,7 @@ public class FachDaten {
 	public boolean istSchriftlichZK = false;
 
 	/** Gibt an, ob das Fach als schriftliches Fach für den Berufsabschluss gewertest wird (Berufskolleg). */
-	@Schema(description = "gibt an, ob das Fach als schriftliches Fach für den Berufsabschluss gewertest wird (Berufskolleg)", example = "true")
+	@Schema(description = "gibt an, ob das Fach als schriftliches Fach für den Berufsabschluss gewertet wird (Berufskolleg)", example = "true")
 	public boolean istSchriftlichBA = false;
 
 	/** Gibt an, ob das Fach bei der Berechnung der FHR berücksichtigt wird oder nicht (Berufskolleg). */
