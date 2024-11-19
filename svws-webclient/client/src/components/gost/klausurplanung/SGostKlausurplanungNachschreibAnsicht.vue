@@ -65,11 +65,11 @@
 		arr.sort((a, b) => {
 			switch (temp.key) {
 				case 'nachname':
-					return props.kMan().schuelerGetByIdOrException(props.kMan().schuelerklausurGetByIdOrException(a.idSchuelerklausur).idSchueler).nachname.localeCompare(props.kMan().schuelerGetByIdOrException(props.kMan().schuelerklausurGetByIdOrException(b.idSchuelerklausur).idSchueler).nachname, "de-DE",);
+					return props.kMan().schuelerGetByIdOrException(props.kMan().schuelerklausurGetByIdOrException(a.idSchuelerklausur).idSchueler).nachname.localeCompare(props.kMan().schuelerGetByIdOrException(props.kMan().schuelerklausurGetByIdOrException(b.idSchuelerklausur).idSchueler).nachname, "de-DE");
 				case 'vorname':
-					return props.kMan().schuelerGetByIdOrException(props.kMan().schuelerklausurGetByIdOrException(a.idSchuelerklausur).idSchueler).vorname.localeCompare(props.kMan().schuelerGetByIdOrException(props.kMan().schuelerklausurGetByIdOrException(b.idSchuelerklausur).idSchueler).vorname, "de-DE",);
+					return props.kMan().schuelerGetByIdOrException(props.kMan().schuelerklausurGetByIdOrException(a.idSchuelerklausur).idSchueler).vorname.localeCompare(props.kMan().schuelerGetByIdOrException(props.kMan().schuelerklausurGetByIdOrException(b.idSchuelerklausur).idSchueler).vorname, "de-DE");
 				case 'kurs':
-					return props.kMan().kursKurzbezeichnungByKursklausur(props.kMan().kursklausurBySchuelerklausurTermin(a)).localeCompare(props.kMan().kursKurzbezeichnungByKursklausur(props.kMan().kursklausurBySchuelerklausurTermin(b)), "de-DE",);
+					return props.kMan().kursKurzbezeichnungByKursklausur(props.kMan().kursklausurBySchuelerklausurTermin(a)).localeCompare(props.kMan().kursKurzbezeichnungByKursklausur(props.kMan().kursklausurBySchuelerklausurTermin(b)), "de-DE");
 				default:
 					return 0;
 			}

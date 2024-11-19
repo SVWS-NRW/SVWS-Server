@@ -12,8 +12,9 @@ import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { routeKlassenNeu } from "~/router/apps/klassen/RouteKlassenNeu";
 import { routeApp } from "~/router/apps/RouteApp";
 import { ViewType } from "@ui";
-import { RouteDataAuswahl, RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
-import { RouteParamsRawGeneric } from "vue-router";
+import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
+import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
+import type { RouteParamsRawGeneric } from "vue-router";
 
 interface RouteStateKlassen extends RouteStateAuswahlInterface<KlassenListeManager> {
 	mapKlassenVorigerAbschnitt: Map<number, KlassenDaten>;
@@ -36,7 +37,7 @@ export class RouteDataKlassen extends RouteDataAuswahl<KlassenListeManager, Rout
 	public constructor() {
 		super(defaultState, routeKlasseGruppenprozesse, routeKlassenNeu);
 	}
-	
+
 	public addID(param: RouteParamsRawGeneric, id: number): void {
 		param.id = id;
 	}

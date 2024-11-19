@@ -17,8 +17,8 @@ import { routeKurseGruppenprozesse } from "./RouteKurseGruppenprozesse";
 import { routeKurseNeu } from "./RouteKurseNeu";
 
 
-const SKurseAuswahl = () => import("~/components/kurse/SKurseAuswahl.vue")
-const SKurseApp = () => import("~/components/kurse/SKurseApp.vue")
+const SKurseAuswahl = () => import("~/components/kurse/SKurseAuswahl.vue");
+const SKurseApp = () => import("~/components/kurse/SKurseApp.vue");
 
 export class RouteKurse extends RouteNode<RouteDataKurse, RouteApp> {
 
@@ -31,7 +31,7 @@ export class RouteKurse extends RouteNode<RouteDataKurse, RouteApp> {
 		super.children = [
 			routeKursDaten,
 			routeKurseGruppenprozesse,
-			routeKurseNeu
+			routeKurseNeu,
 		];
 		super.defaultChild = routeKursDaten;
 	}

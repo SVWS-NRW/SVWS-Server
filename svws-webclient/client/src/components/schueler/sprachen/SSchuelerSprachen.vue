@@ -227,7 +227,7 @@
 			{ key: "anspruchsniveauId", label: "Anspruchsniveau", tooltip: "Bezeichnung des am Schulabschluss orientierte Anspruchsniveau der Sprachprüfung", minWidth: 4 },
 			{ key: "note", label: "Note", tooltip: "Prüfungsnote", minWidth: 2 },
 			{ key: "referenzniveau", label: "Referenzniveau", tooltip: "Das Kürzel des Referenzniveau nach dem gemeinsamen europäischen Referenznahmen, welches durch die Prüfung erreicht wurde", minWidth: 3 },
-			{ key: "pruefungsdatum", label: "Prüfungsdatum", tooltip: "Prüfungsdatum", minWidth: 3, },
+			{ key: "pruefungsdatum", label: "Prüfungsdatum", tooltip: "Prüfungsdatum", minWidth: 3 },
 		]
 	});
 	const colsSprachpruefungenFP = computed<DataTableColumn[]>(() => {
@@ -240,7 +240,7 @@
 			{ key: "anspruchsniveauId", label: "Anspruchsniveau", tooltip: "Bezeichnung des am Schulabschluss orientierte Anspruchsniveau der Sprachprüfung", minWidth: 4 },
 			{ key: "note", label: "Note", tooltip: "Prüfungsnote", minWidth: 2 },
 			{ key: "referenzniveau", label: "Referenzniveau", tooltip: "Das Kürzel des Referenzniveau nach dem gemeinsamen europäischen Referenznahmen, welches durch die Prüfung erreicht wurde", minWidth: 3 },
-			{ key: "pruefungsdatum", label: "Prüfungsdatum", tooltip: "Prüfungsdatum", minWidth: 3, },
+			{ key: "pruefungsdatum", label: "Prüfungsdatum", tooltip: "Prüfungsdatum", minWidth: 3 },
 		]
 	});
 

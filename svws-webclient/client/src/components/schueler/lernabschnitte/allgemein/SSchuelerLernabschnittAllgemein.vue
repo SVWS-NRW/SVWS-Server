@@ -62,7 +62,8 @@
 <script setup lang="ts">
 
 	import { computed } from 'vue';
-	import { BilingualeSprache, FoerderschwerpunktEintrag, JahrgangsDaten, KlassenDaten, LehrerListeEintrag, List, OrganisationsformKatalogEintrag } from "@core";
+	import type { FoerderschwerpunktEintrag, JahrgangsDaten, KlassenDaten, LehrerListeEintrag, List, OrganisationsformKatalogEintrag } from "@core";
+	import { BilingualeSprache } from "@core";
 	import { AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen, Klassenart, Schulform, Schulgliederung, ArrayList, WeiterbildungskollegOrganisationsformen, DeveloperNotificationException, BenutzerKompetenz } from "@core";
 
 	import type { SchuelerLernabschnittAllgemeinProps } from "./SSchuelerLernabschnittAllgemeinProps";
@@ -70,7 +71,7 @@
 	const props = defineProps<SchuelerLernabschnittAllgemeinProps>();
 
 	const schuljahr = computed<number>(() => props.manager().schuljahrGet());
-	const schulform = computed<Schulform>(() => Schulform.data().getWertByKuerzel(props.schule.schulform) ?? Schulform.G); // Die Schulform muss definiert sein, sonst würde diese Ansicht 
+	const schulform = computed<Schulform>(() => Schulform.data().getWertByKuerzel(props.schule.schulform) ?? Schulform.G); // Die Schulform muss definiert sein, sonst würde diese Ansicht
 
 	const hatUpdateKompetenz = computed<boolean>(() => {
 		return (props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN))

@@ -12,7 +12,7 @@ import { routeGostBeratung } from "~/router/apps/gost/beratung/RouteGostBeratung
 import { RouteNode } from "~/router/RouteNode";
 import { routeGostAbiturjahrNeu } from "./RouteGostAbiturjahrNeu";
 import { routeGostGruppenprozesse } from "./RouteGostGruppenprozesse";
-import { TabData } from "@ui";
+import type { TabData } from "@ui";
 
 interface RouteStateGost extends RouteStateInterface {
 	params: RouteParams;
@@ -274,7 +274,7 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 	setAbiturjahrgang = async (jahrgang: GostJahrgang | undefined, isEntering: boolean) => {
 		const daten = await this.ladeDatenFuerAbiturjahrgang(jahrgang, this._state.value, isEntering);
 		if ((jahrgang?.abiturjahr !== undefined) && this.mapAbiturjahrgaenge.has(jahrgang.abiturjahr))
-			this.setAbiturjahrToConfig(jahrgang.abiturjahr);
+			await this.setAbiturjahrToConfig(jahrgang.abiturjahr);
 		this.setPatchedDefaultState(daten);
 	}
 

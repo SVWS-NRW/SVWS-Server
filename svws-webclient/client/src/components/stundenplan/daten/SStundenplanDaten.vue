@@ -201,8 +201,8 @@
 	const itemsPausenzeit = computed(() => [...props.stundenplanManager().pausenzeitGetMengeAsList()]);
 
 	const colsPausenzeiten = [
-		{key: 'wochentag', label: 'Wochentag', span: 1, sortable: true, },
-		{key: 'beginn', label: 'Beginn', span: 1, sortable: true, },
+		{key: 'wochentag', label: 'Wochentag', span: 1, sortable: true },
+		{key: 'beginn', label: 'Beginn', span: 1, sortable: true },
 		{key: 'ende', label: 'Ende', span: 1},
 		{key: 'klassen', label: 'Nur in Klassen', span: 2},
 	]

@@ -1,8 +1,9 @@
 import type { RouteParams } from "vue-router";
 
-import { BenutzerKompetenz, KlassenListeManager, Schulform, ServerMode } from "@core";
+import type { KlassenListeManager} from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
-import { RouteNode } from "~/router/RouteNode";
+import type { RouteNode } from "~/router/RouteNode";
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { RouteDataKlassen } from "~/router/apps/klassen/RouteDataKlassen";
 import { routeKlassenDaten } from "~/router/apps/klassen/RouteKlassenDaten";

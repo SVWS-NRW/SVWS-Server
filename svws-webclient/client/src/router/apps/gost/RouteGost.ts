@@ -67,7 +67,7 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 
 	public async beforeEach(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
 		if ((this.selectedChild === undefined) || (this.selectedChild.hidden({ abiturjahr: "-1" }) !== false))
-			this.setTab(this.data.selectedTabFromConfig);
+			await this.setTab(this.data.selectedTabFromConfig);
 		return this.getRouteSelectedChild();
 	}
 
@@ -157,7 +157,7 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 			throw new DeveloperNotificationException("Unbekannte Route");
 		const previousTab = this.data.selectedTabFromConfig;
 		if (value.name !== previousTab.name)
-			this.data.setSelectedTabToConfig(value);
+			await this.data.setSelectedTabToConfig(value);
 		await RouteManager.doRoute(node.getRoute());
 		this.data.setView(node, this.children);
 	}

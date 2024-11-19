@@ -266,7 +266,7 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 		for (const eintrag of this.manager.liste.auswahlSorted())
 			ids.add(this.manager.getIdByEintrag(eintrag));
 		ids = this.filterOnDelete(ids);
-	
+
 		const operationResponses = await this.doDelete(ids);
 
 		const eintraegeToRemove = new ArrayList<TAuswahl>();

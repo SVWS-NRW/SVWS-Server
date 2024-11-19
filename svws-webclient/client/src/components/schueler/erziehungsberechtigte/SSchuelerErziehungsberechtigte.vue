@@ -68,7 +68,7 @@
 
 	const erzieher = ref<ErzieherStammdaten | undefined>();
 	const columns: DataTableColumn[] = [
-		{ key: "idErzieherArt", label: "Art",},
+		{ key: "idErzieherArt", label: "Art"},
 		{ key: "name", label: "Name"},
 		{ key: "email", label: "E-Mail"},
 		{ key: "adresse", label: "Adresse"},
