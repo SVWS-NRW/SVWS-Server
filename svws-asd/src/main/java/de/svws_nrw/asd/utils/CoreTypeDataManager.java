@@ -289,7 +289,7 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	 * @return das Set der Core-Type-Werte
 	 */
 	public @NotNull Set<U> getWerteByBezeichnerAsSet(final @NotNull List<String> bezeichner) {
-		final @NotNull Set<U> result = new HashSet<U>();
+		final @NotNull Set<U> result = new HashSet<>();
 		for (final @NotNull String b : bezeichner)
 			result.add(getWertByBezeichner(b));
 		return result;
@@ -305,8 +305,8 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	 */
 	public @NotNull Set<U> getWerteByBezeichnerAsNonEmptySet(final @NotNull List<String> bezeichner) {
 		if (bezeichner.isEmpty())
-			throw new CoreTypeException(_name + ": Die Liste der Bezeichner " + bezeichner + " ist leer.");
-		final @NotNull Set<U> result = new HashSet<U>();
+			throw new CoreTypeException(_name + ": Die Liste der Bezeichner ist leer.");
+		final @NotNull Set<U> result = new HashSet<>();
 		for (final @NotNull String b : bezeichner)
 			result.add(getWertByBezeichner(b));
 		return result;

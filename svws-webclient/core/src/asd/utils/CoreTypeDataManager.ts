@@ -310,7 +310,7 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	 */
 	public getWerteByBezeichnerAsNonEmptySet(bezeichner : List<string>) : JavaSet<U> {
 		if (bezeichner.isEmpty())
-			throw new CoreTypeException(this._name + ": Die Liste der Bezeichner " + bezeichner + " ist leer.")
+			throw new CoreTypeException(this._name + ": Die Liste der Bezeichner ist leer.")
 		const result : JavaSet<U> = new HashSet<U>();
 		for (const b of bezeichner)
 			result.add(this.getWertByBezeichner(b));
