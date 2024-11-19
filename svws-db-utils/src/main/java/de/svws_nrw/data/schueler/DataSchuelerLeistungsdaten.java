@@ -63,7 +63,7 @@ public final class DataSchuelerLeistungsdaten extends DataManagerRevised<Long, D
 		} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
 			daten.abifach = null;
 		}
-		daten.istZP10oderZK10 = (dto.Prf10Fach != null) && dto.Prf10Fach;
+		daten.istZP10oderZKEF = (dto.Prf10Fach != null) && dto.Prf10Fach;
 		daten.koopSchule = dto.SchulNr;
 		daten.lehrerID = dto.Fachlehrer_ID;
 		daten.wochenstunden = (dto.Wochenstunden == null) ? 0 : dto.Wochenstunden;

@@ -38,10 +38,10 @@ public class SchuelerLeistungsdaten {
 	@Schema(description = "gibt an, ob es sich bei der Fachbelegung um ein Abiturfach des Schülers handelt (NULL, 1, 2, 3, 4)", example = "1")
 	public Integer abifach = null;
 
-	/** Gibt an, ob es sich um ein Fach der Zentralen Prüfungen 10 handelt oder um ein Fach der Zentralen Klausuren 10 (G8) */
-	@Schema(description = "gibt an, ob es sich um ein Fach der Zentralen Prüfungen 10 handelt oder um ein Fach der Zentralen Klausuren 10 (G8)",
+	/** Gibt an, ob es sich um ein Fach der Zentralen Prüfungen 10 handelt oder um ein Fach der Zentralen Klausuren in der EF (G8) */
+	@Schema(description = "gibt an, ob es sich um ein Fach der Zentralen Prüfungen 10 handelt oder um ein Fach der Zentralen Klausuren in der EF (G8)",
 			example = "false")
-	public boolean istZP10oderZK10 = false;
+	public boolean istZP10oderZKEF = false;
 
 	// --- Informationen zum Fachlehrer
 
