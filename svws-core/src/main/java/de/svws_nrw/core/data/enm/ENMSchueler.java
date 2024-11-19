@@ -72,7 +72,7 @@ public class ENMSchueler {
 	/** Die Ankreuzkompetenzen des Schülers in dem Lernabschnitt der Notendatei */
 	@ArraySchema(schema = @Schema(implementation = ENMSchuelerAnkreuzkompetenz.class, description = "Ein Array mit den Informationen "
 			+ "der Ankreuzkompetenzen des Schülers in dem Lernabschnitt der Notendatei."))
-	public @NotNull List<ENMSchuelerAnkreuzkompetenz> ankreuzkompetenzen = new ArrayList<ENMSchuelerAnkreuzkompetenz>();
+	public @NotNull List<ENMSchuelerAnkreuzkompetenz> ankreuzkompetenzen = new ArrayList<>();
 
 	/** Die Bemerkungen bei dem Schüler in Bezug auf den Lernabschnitt der Notendatei */
 	@Schema(description = "Die Bemerkungen bei dem Schüler in Bezug auf den Lernabschnitt der Notendatei.", example = "Bemerkungstext.")

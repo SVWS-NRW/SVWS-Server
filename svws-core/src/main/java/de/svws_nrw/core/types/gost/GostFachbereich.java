@@ -98,10 +98,10 @@ public enum GostFachbereich {
 
 
 	/** Eine Map mit allen Statistik-Fächern, die einem Fachbereich der gymnasialen Oberstufe zugeordnet sind. Die Map verweist auf einen Long-Wert für die Sortierung der Fächer */
-	private static final @NotNull Map<Fach, Integer> _mapAlleFaecher = new HashMap<Fach, Integer>();
+	private static final @NotNull Map<Fach, Integer> _mapAlleFaecher = new HashMap<>();
 
 	/** Eine Liste mit allen Statistik-Fächern in einer Standard-Sortierung, die einem Fachbereich der gymnasialen Oberstufe zugeordnet sind. */
-	private static final @NotNull List<Fach> _listAlleFaecher = new ArrayList<Fach>();
+	private static final @NotNull List<Fach> _listAlleFaecher = new ArrayList<>();
 
 	/** Eine Map, welche dem zulässigen Fach alle seine Fachbereiche zuordnet. */
 	private static final @NotNull Map<Fach, List<GostFachbereich>> _mapFachbereichByFach =
