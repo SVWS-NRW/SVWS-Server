@@ -1,5 +1,5 @@
 <template>
-	<div class="svws-ui-card" :class="{'compact' : compact}" tabindex="0">
+	<div class="svws-ui-card" :class="{ 'compact' : compact }" tabindex="0">
 		<!-- Header Section -->
 		<component :is="collapsible ? 'button' : 'div'" :type="collapsible ? 'button' : 'text'" :class="{ 'svws-active': isActive }" class="svws-ui-card--header"
 			@click="collapsible ? setActive() : null" :aria-expanded="ariaExpanded" :aria-controls="collapsible ? 'cardBody' + instanceId : undefined">
@@ -15,29 +15,21 @@
 			<slot name="collapseLeft" />
 
 			<!-- Icon Section -->
-			<div v-if="showIcon" class="header--icon">
-				<span :class="[icon]" />
-			</div>
+			<div v-if="showIcon" class="header--icon"> <span :class="[icon]" /> </div>
 			<slot name="icon" />
 
 			<!-- Title and Subtitle Section -->
 			<div v-if="showTitleWrapper" class="header--title-wrapper">
-				<div v-if="showTitle" class="header--title">
-					{{ props.title }}
-				</div>
+				<div v-if="showTitle" class="header--title"> {{ title }} </div>
 				<slot name="title" />
-				<div v-if="showSubtitle" class="header--subtitle">
-					{{ props.subtitle }}
-				</div>
+				<div v-if="showSubtitle" class="header--subtitle"> {{ subtitle }} </div>
 				<slot name="subtitle" />
 			</div>
 
 			<!-- Right Section -->
 			<div class="header--right-section">
 				<!-- Info Section -->
-				<div v-if="showInfo" class="header--info">
-					{{ props.info }}
-				</div>
+				<div v-if="showInfo" class="header--info"> {{ info }} </div>
 				<slot name="info" />
 
 				<!-- Right Collapse Icon -->
@@ -60,46 +52,44 @@
 				<div class="body--content">
 					<!-- Left Button Section -->
 					<template v-if="showContentLeftButton">
-						<div v-if="buttonMode === 'icon'" class="card--buttons" :class="{ 'flex-col': props.buttonOrientation === 'vertical'}">
+						<div v-if="buttonMode === 'icon'" class="card--buttons" :class="{ 'flex-col': (buttonOrientation === 'vertical') }">
 							<template v-for="(button, index) in buttons" :key="index">
 								<SvwsUiTooltip :position="(buttonOrientation === 'vertical') ? 'right' : 'top'">
 									<template #content>{{ button.label }}</template>
 									<SvwsUiButton class="card--button" @click="button.click" type="icon" aria-label="Button {{ button.label }}">
-										<span :class="[button.icon, button.iconType]" />
+										<span :class="[ button.icon, button.iconType ]" />
 									</SvwsUiButton>
 								</SvwsUiTooltip>
 							</template>
 						</div>
-						<div v-else class="card--buttons" :class="{ 'flex-col': props.buttonOrientation === 'vertical'}">
-							<SvwsUiButton v-for="(button, index) in buttons" :key="index" :type="props.buttonMode === 'icon' ? 'icon' : button.type"
-								:size="compact && (buttonMode === 'text') ? 'small' : 'normal'" class="card--button" @click="button.click">
-								<span v-if="props.buttonMode === 'text'">{{ button.label }}</span>
-								<span v-else :class="[button.icon, button.iconType]" />
+						<div v-else class="card--buttons" :class="{ 'flex-col': (buttonOrientation === 'vertical') }">
+							<SvwsUiButton v-for="(button, index) in buttons" :key="index" :type="button.type"
+								:size="compact ? 'small' : 'normal'" class="card--button" @click="button.click">
+								<span>{{ button.label }}</span>
 							</SvwsUiButton>
 						</div>
 					</template>
 					<slot name="buttonContentLeft" />
 					<!-- Main Section -->
-					<span v-if="showContentMain" class="content--main">{{ props.content }}</span>
+					<span v-if="showContentMain" class="content--main">{{ content }}</span>
 					<slot name="content" />
 
 					<!-- Right Button Section -->
 					<template v-if="showContentRightButton">
-						<div v-if="buttonMode === 'icon'" class="card--buttons ml-auto" :class="{ 'flex-col': props.buttonOrientation === 'vertical'}">
+						<div v-if="buttonMode === 'icon'" class="card--buttons ml-auto" :class="{ 'flex-col': (buttonOrientation === 'vertical') }">
 							<template v-for="(button, index) in buttons" :key="index">
 								<SvwsUiTooltip :position="(buttonOrientation === 'vertical') ? 'right' : 'top'">
 									<template #content>{{ button.label }}</template>
 									<SvwsUiButton class="card--button" @click="button.click" type="icon" aria-label="Button {{ button.label }}">
-										<span :class="[button.icon, button.iconType]" />
+										<span :class="[ button.icon, button.iconType ]" />
 									</SvwsUiButton>
 								</SvwsUiTooltip>
 							</template>
 						</div>
-						<div v-else class="card--buttons ml-auto" :class="{ 'flex-col': props.buttonOrientation === 'vertical'}">
-							<SvwsUiButton v-for="(button, index) in buttons" :key="index" :type="props.buttonMode === 'icon' ? 'icon' : button.type"
-								:size="compact && (buttonMode === 'text') ? 'small' : 'normal'" class="card--button" @click="button.click">
-								<span v-if="props.buttonMode === 'text'">{{ button.label }}</span>
-								<span v-else :class="[button.icon, button.iconType]" />
+						<div v-else class="card--buttons ml-auto" :class="{ 'flex-col': (buttonOrientation === 'vertical') }">
+							<SvwsUiButton v-for="(button, index) in buttons" :key="index" :type="button.type"
+								:size="compact ? 'small' : 'normal'" class="card--button" @click="button.click">
+								<span>{{ button.label }}</span>
 							</SvwsUiButton>
 						</div>
 					</template>
@@ -114,47 +104,43 @@
 				<div v-if="showFooter" class="body--footer">
 					<!-- Left Button Section -->
 					<template v-if="showFooterLeftButton">
-						<div v-if="buttonMode === 'icon'" class="card--buttons" :class="{ 'flex-col': props.buttonOrientation === 'vertical'}">
+						<div v-if="buttonMode === 'icon'" class="card--buttons" :class="{ 'flex-col': (buttonOrientation === 'vertical') }">
 							<template v-for="(button, index) in buttons" :key="index">
 								<SvwsUiTooltip :position="(buttonOrientation === 'vertical') ? 'right' : 'top'">
 									<template #content>{{ button.label }}</template>
 									<SvwsUiButton class="card--button" @click="button.click" type="icon" aria-label="Button {{ button.label }}">
-										<span :class="[button.icon, button.iconType]" />
+										<span :class="[ button.icon, button.iconType ]" />
 									</SvwsUiButton>
 								</SvwsUiTooltip>
 							</template>
 						</div>
-						<div v-else class="card--buttons" :class="{ 'flex-col': props.buttonOrientation === 'vertical'}">
-							<SvwsUiButton v-for="(button, index) in buttons" :key="index" :type="props.buttonMode === 'icon' ? 'icon' : button.type"
-								:size="compact && (buttonMode === 'text') ? 'small' : 'normal'" class="card--button" @click="button.click">
-								<span v-if="props.buttonMode === 'text'">{{ button.label }}</span>
-								<span v-else :class="[button.icon, button.iconType]" />
+						<div v-else class="card--buttons" :class="{ 'flex-col': (buttonOrientation === 'vertical') }">
+							<SvwsUiButton v-for="(button, index) in buttons" :key="index" :type="button.type"
+								:size="compact ? 'small' : 'normal'" class="card--button" @click="button.click">
+								<span>{{ button.label }}</span>
 							</SvwsUiButton>
 						</div>
 					</template>
 					<slot name="buttonFooterLeft" />
 					<!-- Footer Main Content -->
-					<span v-if="showFooterMain" class="footer--main">
-						{{ props.footer }}
-					</span>
+					<span v-if="showFooterMain" class="footer--main"> {{ footer }} </span>
 					<slot name="footer" />
 					<!-- Right Button Section -->
 					<template v-if="showFooterRightButton">
-						<div v-if="buttonMode === 'icon'" class="card--buttons ml-auto" :class="{ 'flex-col': props.buttonOrientation === 'vertical'}">
+						<div v-if="buttonMode === 'icon'" class="card--buttons ml-auto" :class="{ 'flex-col': (buttonOrientation === 'vertical') }">
 							<template v-for="(button, index) in buttons" :key="index">
 								<SvwsUiTooltip :position="(buttonOrientation === 'vertical') ? 'right' : 'top'">
 									<template #content>{{ button.label }}</template>
 									<SvwsUiButton class="card--button" @click="button.click" type="icon" aria-label="Button {{ button.label }}">
-										<span :class="[button.icon, button.iconType]" />
+										<span :class="[ button.icon, button.iconType ]" />
 									</SvwsUiButton>
 								</SvwsUiTooltip>
 							</template>
 						</div>
-						<div v-else class="card--buttons ml-auto" :class="{ 'flex-col': props.buttonOrientation === 'vertical'}">
-							<SvwsUiButton v-for="(button, index) in buttons" :key="index" :type="props.buttonMode === 'icon' ? 'icon' : button.type"
-								:size="compact && (buttonMode === 'text') ? 'small' : 'normal'" class="card--button" @click="button.click">
-								<span v-if="props.buttonMode === 'text'">{{ button.label }}</span>
-								<span v-else :class="[button.icon, button.iconType]" />
+						<div v-else class="card--buttons ml-auto" :class="{ 'flex-col': (buttonOrientation === 'vertical') }">
+							<SvwsUiButton v-for="(button, index) in buttons" :key="index" :type="button.type"
+								:size="compact ? 'small' : 'normal'" class="card--button" @click="button.click">
+								<span>{{ button.label }}</span>
 							</SvwsUiButton>
 						</div>
 					</template>
@@ -168,8 +154,8 @@
 
 <script lang="ts" setup>
 
-	import type { ButtonType } from '../types';
 	import { ref, onMounted, onBeforeUnmount, computed, useSlots, getCurrentInstance } from 'vue';
+	import type { ButtonType } from '../types';
 
 	const props = withDefaults(defineProps<{
 		compact?: boolean;
@@ -240,13 +226,7 @@
 	const showFooterRightButton = computed(() => !slots.buttonFooterRight && (props.buttonContainer === 'footer') && (props.buttonPosition === 'right'));
 	const showFooterLeftButton = computed(() => !slots.buttonFooterLeft && (props.buttonContainer === 'footer') && (props.buttonPosition === 'left'));
 
-	const ariaExpanded = computed(() => {
-		if(!props.collapsible) {
-			return undefined;
-		}
-		return isActive.value;
-	});
-
+	const ariaExpanded = computed(() => props.collapsible ? isActive.value : undefined);
 
 	/**
 	 * Berechnung der Buttons, die zur Verfügung gestellt werden. Verhindert, dass die Buttons im <template>-Bereich mehrfach definiert werden müssen.
@@ -260,17 +240,15 @@
 	}
 
 	const buttons = computed<ButtonConfig[]>(() => {
-		const buttons = [];
-
+		const buttons = new Array<ButtonConfig>();
 		if (props.onSave !== undefined)
-			buttons.push({ type: 'primary' as ButtonType, label: 'Speichern', icon: 'i-ri-check-line', iconType: 'icon-primary', click: props.onSave });
+			buttons.push({ type: 'primary', label: 'Speichern', icon: 'i-ri-check-line', iconType: 'icon-primary', click: props.onSave });
 		if (props.onCancel !== undefined)
-			buttons.push({ type: 'secondary' as ButtonType, label: 'Abbrechen', icon: 'i-ri-close-line', iconType: 'icon-primary', click: props.onCancel });
+			buttons.push({ type: 'secondary', label: 'Abbrechen', icon: 'i-ri-close-line', iconType: 'icon-primary', click: props.onCancel });
 		if (props.onEdit !== undefined)
-			buttons.push({ type: 'primary' as ButtonType, label: 'Bearbeiten', icon: 'i-ri-edit-2-line', iconType: 'icon-primary', click: props.onEdit });
+			buttons.push({ type: 'primary', label: 'Bearbeiten', icon: 'i-ri-edit-2-line', iconType: 'icon-primary', click: props.onEdit });
 		if (props.onDelete !== undefined)
-			buttons.push({ type: 'danger' as ButtonType, label: 'Löschen', icon: 'i-ri-delete-bin-line', iconType: 'icon-error', click: props.onDelete });
-
+			buttons.push({ type: 'danger', label: 'Löschen', icon: 'i-ri-delete-bin-line', iconType: 'icon-error', click: props.onDelete });
 		return buttons;
 	});
 
@@ -285,28 +263,25 @@
 	 * Wird benötigt, um die Animation beim Öffnen des Collapsibles zu erzeugen.
 	 */
 	const resizeObserver = new ResizeObserver(() => {
-		if (isActive.value && bodyWrapperRef.value) {
+		if (isActive.value && bodyWrapperRef.value)
 			bodyWrapperRef.value.style.maxHeight = getContentHeightWithBorder() + 'px';
-		}
 	});
 
 	onMounted(() => {
 		const instance = getCurrentInstance();
 		if (instance)
 			instanceId.value = instance.uid.toString(); // Zugriff auf die _uid
-		if (props.initiallyOpened === undefined) {
+		if (props.initiallyOpened === undefined)
 			setActive(props.collapsible ? false : true);
-		} else {
+		else
 			setActive(props.initiallyOpened);
-		}
 		if (bodyRef.value)
 			resizeObserver.observe(bodyRef.value);
 	});
 
 	onBeforeUnmount(() => {
-		if (bodyRef.value) {
+		if (bodyRef.value)
 			resizeObserver.unobserve(bodyRef.value);
-		}
 	});
 
 	/**
@@ -315,17 +290,15 @@
 	 * @param setActive   Der neue Wert von isActive. Falls nicht gesetzt, wird der Wert nur getoggelt.
 	 */
 	function setActive(setActive?: boolean): void {
-		if (setActive !== undefined) {
+		if (setActive !== undefined)
 			isActive.value = setActive;
-		} else {
+		else
 			isActive.value = !isActive.value;
-		}
 		if (bodyWrapperRef.value) {
-			if (isActive.value) {
+			if (isActive.value)
 				bodyWrapperRef.value.style.maxHeight = getContentHeightWithBorder() + 'px';
-			} else {
+			else
 				bodyWrapperRef.value.style.maxHeight = '0';
-			}
 		}
 	}
 
@@ -349,7 +322,8 @@
 
 </script>
 
-<style lang="postcss">
+
+<style lang="postcss" scoped>
 
 	.svws-ui-card {
 		@apply rounded-lg m-2 min-w-fit gap-3;
