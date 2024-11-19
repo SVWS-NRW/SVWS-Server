@@ -312,8 +312,9 @@ public final class ReportingValidierung {
 
 		// Prüfe nun, ob es zur angegebenen Blockungsergebnis-ID ein Ergebnis gibt.
 		try {
-			DataGostBlockungsdaten.getBlockungsdatenManagerFromDB(reportingRepository.conn(),
-					DataGostBlockungsergebnisse.getErgebnisFromID(reportingRepository.conn(), idBlockungsergebnis).blockungID);
+			final DBEntityManager conn = reportingRepository.conn();
+			DataGostBlockungsdaten.getBlockungsdatenManagerFromDB(conn,
+					DataGostBlockungsergebnisse.getErgebnisFromID(conn, idBlockungsergebnis).blockungID);
 		} catch (final ApiOperationException e) {
 			throw new ApiOperationException(Status.NOT_FOUND, e, "FEHLER: Mit der angegebenen Blockungsergebnis-ID konnte keine Daten ermittelt werden..");
 		}
