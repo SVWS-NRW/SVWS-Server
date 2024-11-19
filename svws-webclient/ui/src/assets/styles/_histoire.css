@@ -10,7 +10,7 @@ html {
 }
 
 .histoire-generic-render-story {
-	@apply h-full;
+	@apply h-auto;
 	contain: layout;
 }
 
