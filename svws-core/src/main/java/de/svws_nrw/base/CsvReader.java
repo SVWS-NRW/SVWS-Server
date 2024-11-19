@@ -78,7 +78,6 @@ public final class CsvReader {
 	 * @throws URISyntaxException   falls der Pfad der Ressource nicht in eine URI
 	 *                              umgewandelt werden kann.
 	 */
-	@SuppressWarnings("resource")
 	private static Path getPath(final String location) throws URISyntaxException {
 		final ClassLoader classLoader = CsvReader.class.getClassLoader();
 		final var url = classLoader.getResource(location);

@@ -94,7 +94,7 @@ public final class SvwsServer {
 		contextHandlerCollection.addHandler(context_handler);
 
 		// Ordne die Context-Handler den allgemeinen Handlern zu
-		handlerCollection.setHandlers(new Handler[] { contextHandlerCollection, new DefaultHandler() });
+		handlerCollection.setHandlers(contextHandlerCollection, new DefaultHandler());
 
 		// Erstelle einen ConstraintSecurityHandler mit dem Login-Service, etc.
 		server.setHandler(createConstraintSecurityHandler(server, loginService, handlerCollection));
@@ -257,7 +257,6 @@ public final class SvwsServer {
 	 * Erzeugt eine neue HTTP- bzw. HTTPS-Konfiguration basierend auf der {@link SVWSKonfiguration}
 	 * und fügt diese zum Jetty-Server hinzu.
 	 */
-	@SuppressWarnings("resource")
 	private void addHTTPServerConnections() {
 		final SVWSKonfiguration config = SVWSKonfiguration.get();
 		server.addConnector(getHttpServerConnector(

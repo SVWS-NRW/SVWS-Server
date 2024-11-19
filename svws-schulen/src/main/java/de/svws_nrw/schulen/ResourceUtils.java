@@ -81,7 +81,6 @@ public final class ResourceUtils {
 	 *
 	 * @throws IOException   falls das JAR-Dateisystem nicht erstellt werden kann
 	 */
-	@SuppressWarnings("resource")
 	private static FileSystem getJARFileSystem(final URI uri) throws IOException {
 		final String[] array = uri.toString().split("!");
 		FileSystem fs = jarFS.get(array[0]);
@@ -108,7 +107,6 @@ public final class ResourceUtils {
 	 *
 	 * @return das Path-Objekt
 	 */
-	@SuppressWarnings("resource")
 	public static Path getFile(final String filename) {
 		Path path = null;
 		try {
@@ -159,7 +157,6 @@ public final class ResourceUtils {
 	 *
 	 * @throws IOException    bei einem Fehler beim Zugriff auf das Package
 	 */
-	@SuppressWarnings("resource")
 	private static void getFilesInPackageFromURL(final URL url, final String packagePath, final List<Path> result, final String fileextension)
 			throws IOException {
 		final URI uri;

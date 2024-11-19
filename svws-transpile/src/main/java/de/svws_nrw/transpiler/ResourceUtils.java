@@ -111,7 +111,6 @@ public class ResourceUtils {
 	 *
 	 * @return eine List mit den Pfaden der gefundenen Dateien
 	 */
-	@SuppressWarnings("resource")
 	public static List<TranspilerResource> getFilesInPackage(final String packageName, final String fileextension) {
 		final List<TranspilerResource> result = new ArrayList<>();
 		final Enumeration<URL> res;

@@ -742,7 +742,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	 * @return the transpiled switch expression
 	 */
 	public String convertSwitchExpression(final SwitchExpressionTree node, final String switchVarName) {
-		int nodeID = Math.abs(node.toString().hashCode());
+		final int hashCode = node.toString().hashCode();
+		int nodeID = Math.abs(hashCode);
 		if (nodeID < 0)
 			nodeID = 0;
 		final String tmpVar = (switchVarName != null) ? switchVarName : "_sevar_" + nodeID;
@@ -1248,8 +1249,10 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				throw new TranspilerException("Transpiler Error: Handling boxed return types for lambda expressions not yet supported");
 			}
 		}
-		if (node.getExpression() instanceof final SwitchExpressionTree set)
-			return converted + "return _sevar_" + Math.abs(set.toString().hashCode()) + ";";
+		if (node.getExpression() instanceof final SwitchExpressionTree set) {
+			final int hashCode = set.toString().hashCode();
+			return converted + "return _sevar_" + Math.abs(hashCode) + ";";
+		}
 		return "return %s;".formatted(converted);
 	}
 
@@ -1541,166 +1544,171 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		final StringBuilder sb = new StringBuilder();
 		final ExpressionTree methodExpression = node.getMethodSelect();
 		final TranspilerUnit unit = transpiler.getTranspilerUnit(node);
-		if (methodExpression instanceof final IdentifierTree ident) {
-			// add super method calls in classes without a specified super class
-			if (strSuper.equals(ident.getName().toString())) {
-				final ExpressionType et = transpiler.getExpressionType(ident);
-				if ((et == null) || (et instanceof ExpressionTypeNone))
-					return "super()";
-			}
-			sb.append(convertIdentifier(ident));
-		} else if (methodExpression instanceof final MemberSelectTree ms) {
-			final ExpressionType type = transpiler.getExpressionType(ms.getExpression());
-			// replace all hashCode invocations
-			if ("hashCode".equals(ms.getIdentifier().toString())) {
-				final String expression = convertExpression(ms.getExpression());
-				if (strSuper.equals(expression))
-					return "super.hashCode()";
-				if ((ms.getExpression() instanceof final IdentifierTree idt) && !node.getArguments().isEmpty()) {
-					final ExpressionType idtType = transpiler.getExpressionType(idt);
-					if (idtType == null)
-						throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the identifier " + idt.getName().toString());
-					if (idtType instanceof final ExpressionClassType ect) {
-						final String importName = getImportName(ect.toString(), ect.getPackageName());
-						return importName + ".hashCode(" + convertMethodInvocationParameters(node.getArguments(), null, null, false) + ")";
-					}
+		switch (methodExpression) {
+			case final IdentifierTree ident -> {
+				// add super method calls in classes without a specified super class
+				if (strSuper.equals(ident.getName().toString())) {
+					final ExpressionType et = transpiler.getExpressionType(ident);
+					if ((et == null) || (et instanceof ExpressionTypeNone))
+						return "super()";
 				}
-				return "JavaObject.getTranspilerHashCode(" + expression + ")";
+				sb.append(convertIdentifier(ident));
 			}
-			// replace all equals invocations
-			if ("equals".equals(ms.getIdentifier().toString())) {
-				final String expression = convertExpression(ms.getExpression());
-				if (strSuper.equals(expression))
-					return "super.equals(" + convertMethodInvocationParameters(node.getArguments(), null, null, false) + ")";
-				return "JavaObject.equalsTranspiler(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, false) + ")";
-			}
-			// replace Long, Integer, Short, Byte, Float and Double methods...
-			if (type.isNumberType()) {
-				final String identifier = ms.getIdentifier().toString();
-				// replace compare invocations
-				if (strCompare.equals(identifier)) {
-					final String expression = type.toString();
-					return "Java" + expression + "." + identifier + convertMethodInvocationParameters(node.getArguments(), null, null, false);
-				}
-				if (("byteValue".equals(identifier) || "shortValue".equals(identifier) || "intValue".equals(identifier) || "longValue".equals(identifier))
-						&& (type instanceof final ExpressionClassType ect)) {
+			case final MemberSelectTree ms -> {
+				final ExpressionType type = transpiler.getExpressionType(ms.getExpression());
+				// replace all hashCode invocations
+				if ("hashCode".equals(ms.getIdentifier().toString())) {
 					final String expression = convertExpression(ms.getExpression());
-					if ("java.lang.Double".equals(ect.getFullQualifiedName()) || ("java.lang.Float".equals(ect.getFullQualifiedName())))
-						return "Math.trunc(" + expression + ")";
-					return expression;
-				}
-			}
-			// replace String methods...
-			if (type.isString()) {
-				final String expression = convertExpression(ms.getExpression());
-				final Set<String> strMethods = Set.of(
-						"contains", "indexOf", "compareTo", "compareToIgnoreCase", "equalsIgnoreCase",
-						"replaceAll", "replaceFirst", "formatted", "format", "length", "isBlank", "isEmpty"
-				);
-				if (strMethods.contains(ms.getIdentifier().toString())) {
-					transpiler.getTranspilerUnit(node).imports.put("String", "java.lang");
-					return switch (ms.getIdentifier().toString()) {
-						case "contains" ->
-							"JavaString.contains(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
-						case "indexOf" ->
-							"JavaString.indexOf(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
-						case "compareTo" ->
-							"JavaString.compareTo(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
-						case "compareToIgnoreCase" -> "JavaString.compareToIgnoreCase(" + expression + ", "
-								+ convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
-						case "equalsIgnoreCase" ->
-							"JavaString.equalsIgnoreCase(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
-						case "replaceAll" ->
-							"JavaString.replaceAll(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
-						case "replaceFirst" ->
-							"JavaString.replaceFirst(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
-						case "formatted" ->
-							"JavaString.format(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
-						case "format" -> "JavaString.format(" + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
-						case "length" -> expression + ".length"; // in typescript it is not a method...
-						case "isBlank" -> "JavaString.isBlank(" + expression + ")";
-						case "isEmpty" -> "JavaString.isEmpty(" + expression + ")";
-						default -> throw new TranspilerException("TranspilerError: Unhandled String method");
-					};
-				}
-			}
-			// replace some static methods of Set
-			if ((type instanceof final ExpressionClassType classType) && ("java.util.Set".equals(classType.getFullQualifiedName()))) {
-				final Set<String> strMethods = Set.of("of");
-				if (strMethods.contains(ms.getIdentifier().toString())) {
-					final String method = switch (ms.getIdentifier().toString()) {
-						case "of" -> "java_util_Set_of";
-						default -> throw new TranspilerException("TranspilerError: Unhandled Set method");
-					};
-					unit.allDefaultMethodImports.computeIfAbsent("java.util.JavaSet", v -> new LinkedHashSet<>()).add(method);
-					return method + "(" + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
-				}
-			}
-			// replace some static methods of List
-			if ((type instanceof final ExpressionClassType classType) && ("java.util.List".equals(classType.getFullQualifiedName()))) {
-				final Set<String> strMethods = Set.of("of");
-				if (strMethods.contains(ms.getIdentifier().toString())) {
-					final String method = switch (ms.getIdentifier().toString()) {
-						case "of" -> "ArrayList.of";  // TODO immutable list in typescript implementieren und davon eine Instanz erzeugen -> siehe auch ImmutableCollections.listFromArray
-						default -> throw new TranspilerException("TranspilerError: Unhandled List method");
-					};
-					unit.imports.put("ArrayList", "java.util");
-					return method + "(" + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
-				}
-			}
-			// replace some Math commands
-			if ((type instanceof final ExpressionClassType classType) && ("java.lang.Math".equals(classType.getFullQualifiedName()))) {
-				final Set<String> strMethods = Set.of("clamp");
-				if (strMethods.contains(ms.getIdentifier().toString())) {
-					transpiler.getTranspilerUnit(node).imports.put("Math", "java.lang");
-					return switch (ms.getIdentifier().toString()) {
-						case "clamp" -> "JavaMath.clamp(" + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
-						default -> throw new TranspilerException("TranspilerError: Unhandled Math method");
-					};
-				}
-			}
-			// replace reflective Array commands
-			if ((type instanceof final ExpressionClassType classType) && ("java.lang.reflect.Array".equals(classType.getFullQualifiedName()))) {
-				if ("newInstance".equals(ms.getIdentifier().toString())) {
-					final List<? extends ExpressionTree> params = node.getArguments();
-					if ((params == null) || (params.size() < 2))
-						throw new TranspilerException("TranspilerError: Invalid number of parameters for Array.newInstance");
-					final ExpressionTree param = params.get(1);
-					final ExpressionType paramType = transpiler.getExpressionType(param);
-					if ((paramType instanceof final ExpressionPrimitiveType ept) && (ept.isNumberType()))
-						return "Array(" + this.convertExpression(param) + ").fill(null)";
-					if ((paramType instanceof final ExpressionClassType ect) && (ect.isNumberType()))
-						return "Array(" + this.convertExpression(param) + ".valueOf()).fill(null)";
-					if (paramType instanceof final ExpressionArrayType eat)
-						throw new TranspilerException(
-								"Transpiler Error: Array.newInstance (Kind %s) not yet supported for multidimensional arrays".formatted(eat.getKind()));
-					throw new TranspilerException("Transpiler Error: Array.newInstance with unsupported parameter types");
-				}
-			}
-			// replace System.out and System.err commands
-			if ((type instanceof final ExpressionClassType classType) && ("java.io.PrintStream".equals(classType.getFullQualifiedName()))) {
-				final String expression = convertExpression(ms.getExpression());
-				if (expression.equals("System.out")) {
-					if ("flush".equals(ms.getIdentifier().toString()))
-						return null;
-					if ("print".equals(ms.getIdentifier().toString()) || "println".equals(ms.getIdentifier().toString())) {
-						if (!node.getArguments().isEmpty())
-							return "console.log(JSON.stringify" + convertMethodInvocationParameters(node.getArguments(), null, null, false) + ")";
-						return "console.log" + convertMethodInvocationParameters(node.getArguments(), null, null, false);
+					if (strSuper.equals(expression))
+						return "super.hashCode()";
+					if ((ms.getExpression() instanceof final IdentifierTree idt) && !node.getArguments().isEmpty()) {
+						final ExpressionType idtType = transpiler.getExpressionType(idt);
+						if (idtType == null)
+							throw new TranspilerException(
+									"Transpiler Error: Cannot retrieve the type information for the identifier " + idt.getName().toString());
+						if (idtType instanceof final ExpressionClassType ect) {
+							final String importName = getImportName(ect.toString(), ect.getPackageName());
+							return importName + ".hashCode(" + convertMethodInvocationParameters(node.getArguments(), null, null, false) + ")";
+						}
 					}
-				} else if (expression.equals("System.err")) {
-					if ("flush".equals(ms.getIdentifier().toString()))
-						return null;
-					if ("print".equals(ms.getIdentifier().toString()) || "println".equals(ms.getIdentifier().toString())) {
-						if (!node.getArguments().isEmpty())
-							return "console.error(JSON.stringify" + convertMethodInvocationParameters(node.getArguments(), null, null, false) + ")";
-						return "console.error" + convertMethodInvocationParameters(node.getArguments(), null, null, false);
+					return "JavaObject.getTranspilerHashCode(" + expression + ")";
+				}
+				// replace all equals invocations
+				if ("equals".equals(ms.getIdentifier().toString())) {
+					final String expression = convertExpression(ms.getExpression());
+					if (strSuper.equals(expression))
+						return "super.equals(" + convertMethodInvocationParameters(node.getArguments(), null, null, false) + ")";
+					return "JavaObject.equalsTranspiler(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, false) + ")";
+				}
+				// replace Long, Integer, Short, Byte, Float and Double methods...
+				if (type.isNumberType()) {
+					final String identifier = ms.getIdentifier().toString();
+					// replace compare invocations
+					if (strCompare.equals(identifier)) {
+						final String expression = type.toString();
+						return "Java" + expression + "." + identifier + convertMethodInvocationParameters(node.getArguments(), null, null, false);
+					}
+					if (("byteValue".equals(identifier) || "shortValue".equals(identifier) || "intValue".equals(identifier) || "longValue".equals(identifier))
+							&& (type instanceof final ExpressionClassType ect)) {
+						final String expression = convertExpression(ms.getExpression());
+						if ("java.lang.Double".equals(ect.getFullQualifiedName()) || ("java.lang.Float".equals(ect.getFullQualifiedName())))
+							return "Math.trunc(" + expression + ")";
+						return expression;
 					}
 				}
+				// replace String methods...
+				if (type.isString()) {
+					final String expression = convertExpression(ms.getExpression());
+					final Set<String> strMethods = Set.of(
+							"contains", "indexOf", "compareTo", "compareToIgnoreCase", "equalsIgnoreCase",
+							"replaceAll", "replaceFirst", "formatted", "format", "length", "isBlank", "isEmpty"
+					);
+					if (strMethods.contains(ms.getIdentifier().toString())) {
+						transpiler.getTranspilerUnit(node).imports.put("String", "java.lang");
+						return switch (ms.getIdentifier().toString()) {
+							case "contains" ->
+								"JavaString.contains(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
+							case "indexOf" ->
+								"JavaString.indexOf(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
+							case "compareTo" ->
+								"JavaString.compareTo(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
+							case "compareToIgnoreCase" -> "JavaString.compareToIgnoreCase(" + expression + ", "
+									+ convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
+							case "equalsIgnoreCase" ->
+								"JavaString.equalsIgnoreCase(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true)
+										+ ")";
+							case "replaceAll" ->
+								"JavaString.replaceAll(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
+							case "replaceFirst" ->
+								"JavaString.replaceFirst(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
+							case "formatted" ->
+								"JavaString.format(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
+							case "format" -> "JavaString.format(" + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
+							case "length" -> expression + ".length"; // in typescript it is not a method...
+							case "isBlank" -> "JavaString.isBlank(" + expression + ")";
+							case "isEmpty" -> "JavaString.isEmpty(" + expression + ")";
+							default -> throw new TranspilerException("TranspilerError: Unhandled String method");
+						};
+					}
+				}
+				// replace some static methods of Set
+				if ((type instanceof final ExpressionClassType classType) && ("java.util.Set".equals(classType.getFullQualifiedName()))) {
+					final Set<String> strMethods = Set.of("of");
+					if (strMethods.contains(ms.getIdentifier().toString())) {
+						final String method = switch (ms.getIdentifier().toString()) {
+							case "of" -> "java_util_Set_of";
+							default -> throw new TranspilerException("TranspilerError: Unhandled Set method");
+						};
+						unit.allDefaultMethodImports.computeIfAbsent("java.util.JavaSet", v -> new LinkedHashSet<>()).add(method);
+						return method + "(" + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
+					}
+				}
+				// replace some static methods of List
+				if ((type instanceof final ExpressionClassType classType) && ("java.util.List".equals(classType.getFullQualifiedName()))) {
+					final Set<String> strMethods = Set.of("of");
+					if (strMethods.contains(ms.getIdentifier().toString())) {
+						final String method = switch (ms.getIdentifier().toString()) {
+							case "of" -> "ArrayList.of";  // TODO immutable list in typescript implementieren und davon eine Instanz erzeugen -> siehe auch ImmutableCollections.listFromArray
+							default -> throw new TranspilerException("TranspilerError: Unhandled List method");
+						};
+						unit.imports.put("ArrayList", "java.util");
+						return method + "(" + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
+					}
+				}
+				// replace some Math commands
+				if ((type instanceof final ExpressionClassType classType) && ("java.lang.Math".equals(classType.getFullQualifiedName()))) {
+					final Set<String> strMethods = Set.of("clamp");
+					if (strMethods.contains(ms.getIdentifier().toString())) {
+						transpiler.getTranspilerUnit(node).imports.put("Math", "java.lang");
+						return switch (ms.getIdentifier().toString()) {
+							case "clamp" -> "JavaMath.clamp(" + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
+							default -> throw new TranspilerException("TranspilerError: Unhandled Math method");
+						};
+					}
+				}
+				// replace reflective Array commands
+				if ((type instanceof final ExpressionClassType classType) && ("java.lang.reflect.Array".equals(classType.getFullQualifiedName()))) {
+					if ("newInstance".equals(ms.getIdentifier().toString())) {
+						final List<? extends ExpressionTree> params = node.getArguments();
+						if ((params == null) || (params.size() < 2))
+							throw new TranspilerException("TranspilerError: Invalid number of parameters for Array.newInstance");
+						final ExpressionTree param = params.get(1);
+						final ExpressionType paramType = transpiler.getExpressionType(param);
+						if ((paramType instanceof final ExpressionPrimitiveType ept) && (ept.isNumberType()))
+							return "Array(" + this.convertExpression(param) + ").fill(null)";
+						if ((paramType instanceof final ExpressionClassType ect) && (ect.isNumberType()))
+							return "Array(" + this.convertExpression(param) + ".valueOf()).fill(null)";
+						if (paramType instanceof final ExpressionArrayType eat)
+							throw new TranspilerException(
+									"Transpiler Error: Array.newInstance (Kind %s) not yet supported for multidimensional arrays".formatted(eat.getKind()));
+						throw new TranspilerException("Transpiler Error: Array.newInstance with unsupported parameter types");
+					}
+				}
+				// replace System.out and System.err commands
+				if ((type instanceof final ExpressionClassType classType) && ("java.io.PrintStream".equals(classType.getFullQualifiedName()))) {
+					final String expression = convertExpression(ms.getExpression());
+					if (expression.equals("System.out")) {
+						if ("flush".equals(ms.getIdentifier().toString()))
+							return null;
+						if ("print".equals(ms.getIdentifier().toString()) || "println".equals(ms.getIdentifier().toString())) {
+							if (!node.getArguments().isEmpty())
+								return "console.log(JSON.stringify" + convertMethodInvocationParameters(node.getArguments(), null, null, false) + ")";
+							return "console.log" + convertMethodInvocationParameters(node.getArguments(), null, null, false);
+						}
+					} else if (expression.equals("System.err")) {
+						if ("flush".equals(ms.getIdentifier().toString()))
+							return null;
+						if ("print".equals(ms.getIdentifier().toString()) || "println".equals(ms.getIdentifier().toString())) {
+							if (!node.getArguments().isEmpty())
+								return "console.error(JSON.stringify" + convertMethodInvocationParameters(node.getArguments(), null, null, false) + ")";
+							return "console.error" + convertMethodInvocationParameters(node.getArguments(), null, null, false);
+						}
+					}
+				}
+				sb.append(convertMemberSelect(ms));
 			}
-			sb.append(convertMemberSelect(ms));
-		} else {
-			throw new TranspilerException("Transpiler Error: Unhandled method expression type of kind " + methodExpression.getKind() + ".");
+			default ->
+				throw new TranspilerException("Transpiler Error: Unhandled method expression type of kind " + methodExpression.getKind() + ".");
 		}
 
 		// print arguments for the method call
@@ -2371,14 +2379,14 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	 * @return die Methoden-Parameter als String
 	 */
 	public String convertDefaultMethodParameters(final ExecutableElement method, final Map<String, TypeMirror> resolved) {
-		String result = "";
+		final StringBuilder sb = new StringBuilder();
 		final var params = method.getParameters();
 		for (final VariableElement param : params) {
-			if (!"".equals(result))
-				result += ", ";
-			result += (new VariableNode(this, param, method.isVarArgs(), resolved)).transpile();
+			if (sb.length() > 0)
+				sb.append(", ");
+			sb.append((new VariableNode(this, param, method.isVarArgs(), resolved)).transpile());
 		}
-		return result;
+		return sb.toString();
 	}
 
 
