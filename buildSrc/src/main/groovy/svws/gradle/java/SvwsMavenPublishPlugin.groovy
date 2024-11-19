@@ -125,7 +125,8 @@ class SvwsMavenPublishPlugin extends SvwsMavenRepoCredentialsPlugin implements P
 		}
 	}
 
-  	void apply(Project project) {
+  	@Override
+	void apply(Project project) {
 		super.apply(project)
 		this.project = project
 		this.extension = project.getExtensions()

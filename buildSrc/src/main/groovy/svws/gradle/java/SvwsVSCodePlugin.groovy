@@ -61,6 +61,7 @@ class SvwsVSCodePlugin implements Plugin<Project> {
 	 *
 	 * @param project das Gradle-Projekt, auf das dieses Plugin angewendet wird.
 	 */
+	@Override
 	void apply(Project project) {
 		this.project = project
 
