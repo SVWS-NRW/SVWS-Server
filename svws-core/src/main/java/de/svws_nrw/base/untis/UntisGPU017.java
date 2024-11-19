@@ -110,7 +110,6 @@ public final class UntisGPU017 {
 	 *
 	 * @throws IOException falls die CSV-Daten nicht erstellt werden können
 	 */
-	@SuppressWarnings("resource")
 	public static String writeCSV(final @NotNull List<UntisGPU017> dtos) throws IOException {
 		final StringWriter sw = new StringWriter();
 		writer.writeValues(sw).writeAll(dtos).close();
