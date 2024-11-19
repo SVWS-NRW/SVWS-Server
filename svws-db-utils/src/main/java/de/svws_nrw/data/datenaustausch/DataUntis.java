@@ -496,24 +496,24 @@ public final class DataUntis {
 	 *
 	 * @return die Schulstufe
 	 */
-	private static Integer getSchulstufeByASDJahrgang(final Jahrgaenge jg) {
+	private static String getSchulstufeByASDJahrgang(final Jahrgaenge jg) {
 		if (jg == null)
 			return null;
 		return switch (jg) {
-			case JAHRGANG_00, VORKURS_SEMESTER_1, VORKURS_SEMESTER_2 -> 0;
-			case JAHRGANG_01, SEMESTER_01 -> 1;
-			case JAHRGANG_02, SEMESTER_02 -> 2;
-			case JAHRGANG_03, SEMESTER_03 -> 3;
-			case JAHRGANG_04, SEMESTER_04 -> 4;
-			case JAHRGANG_05, SEMESTER_05 -> 5;
-			case JAHRGANG_06, SEMESTER_06 -> 6;
-			case JAHRGANG_07 -> 7;
-			case JAHRGANG_08 -> 8;
-			case JAHRGANG_09 -> 9;
-			case JAHRGANG_10 -> 10;
-			case JAHRGANG_11, EF -> 11;
-			case JAHRGANG_12, Q1 -> 12;
-			case JAHRGANG_13, Q2 -> 13;
+			case JAHRGANG_00, VORKURS_SEMESTER_1, VORKURS_SEMESTER_2 -> "00";
+			case JAHRGANG_01, SEMESTER_01 -> "01";
+			case JAHRGANG_02, SEMESTER_02 -> "02";
+			case JAHRGANG_03, SEMESTER_03 -> "03";
+			case JAHRGANG_04, SEMESTER_04 -> "04";
+			case JAHRGANG_05, SEMESTER_05 -> "05";
+			case JAHRGANG_06, SEMESTER_06 -> "06";
+			case JAHRGANG_07 -> "07";
+			case JAHRGANG_08 -> "08";
+			case JAHRGANG_09 -> "09";
+			case JAHRGANG_10 -> "10";
+			case JAHRGANG_11, EF -> "11";
+			case JAHRGANG_12, Q1 -> "12";
+			case JAHRGANG_13, Q2 -> "13";
 			default -> null;
 		};
 	}

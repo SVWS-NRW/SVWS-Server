@@ -59,7 +59,7 @@ public class UntisGPU003 {
 	public String klassenGruppe;
 
 	/** Schulstufe */
-	public Integer schulstufe;
+	public String schulstufe;
 
 	/** Abteilung */
 	public String abteilung;
@@ -134,7 +134,7 @@ public class UntisGPU003 {
 			.addNumberColumn("hauptfolge")
 			.addNumberColumn("hauptfolgeHint")
 			.addColumn("klassenGruppe")
-			.addNumberColumn("schulstufe")
+			.addColumn("schulstufe")
 			.addColumn("abteilung")
 			.addColumn("faktor")
 			.addNumberColumn("studentenM")
