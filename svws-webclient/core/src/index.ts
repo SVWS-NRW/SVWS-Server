@@ -105,6 +105,7 @@ export { Pair } from './asd/adt/Pair';
 export { PairNN } from './asd/adt/PairNN';
 export { CoreTypeData } from './asd/data/CoreTypeData';
 export { CoreTypeDataNurSchulformen } from './asd/data/CoreTypeDataNurSchulformen';
+export { CoreTypeDataNurSchulformenUndSchulgliederungen } from './asd/data/CoreTypeDataNurSchulformenUndSchulgliederungen';
 export { CoreTypeException } from './asd/data/CoreTypeException';
 export { NoteKatalogEintrag } from './asd/data/NoteKatalogEintrag';
 export { RGBFarbe } from './asd/data/RGBFarbe';

@@ -1950,13 +1950,19 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				}
 				sb.append(getIndent() + "for (const elem of obj." + attribute.getName() + ") {" + System.lineSeparator());
 				indentC++;
-				if (paramType.isNotNull() && (paramType.isString() || paramType.isNumberClass() || paramType.isBoolean()))
+				if (paramType.isNotNull() && (paramType.isString() || paramType.isNumberClass() || paramType.isBoolean())) {
 					sb.append(getIndent() + "result." + attribute.getName() + ".add(elem);" + System.lineSeparator());
-				else if (paramType.isString() || paramType.isNumberClass() || paramType.isBoolean())
+				} else if (paramType.isString() || paramType.isNumberClass() || paramType.isBoolean()) {
 					sb.append(getIndent() + "result." + attribute.getName() + ".add(elem === null ? null : elem);" + System.lineSeparator());
-				else
+				} else {
+					final String qualifiedName = paramType.getQualifiedName();
+					if (qualifiedName != null) {
+						final String[] result = qualifiedName.split("\\.(?=[^\\.]*$)", 2);
+						transpiler.getTranspilerUnit(node).imports.put(result[1], result[0]);
+					}
 					sb.append(getIndent() + "result." + attribute.getName() + ".add(" + paramType.transpile(true)
 							+ ".transpilerFromJSON(JSON.stringify(elem)));" + System.lineSeparator());
+				}
 				indentC--;
 				sb.append(getIndent() + "}" + System.lineSeparator());
 				indentC--;
@@ -1983,19 +1989,31 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					sb.append(getIndent() + "result." + attribute.getName() + "[i] = obj." + attribute.getName() + "[i];" + System.lineSeparator());
 				} else if (contentType.isNotNull()) {
 					final String tmpAttribute = "obj." + attribute.getName() + "[i]";
-					if (contentType.isString() || contentType.isNumberClass() || contentType.isBoolean())
+					if (contentType.isString() || contentType.isNumberClass() || contentType.isBoolean()) {
 						sb.append(getIndent() + "result." + attribute.getName() + "[i] = " + tmpAttribute + ";" + System.lineSeparator());
-					else
+					} else {
+						final String qualifiedName = contentType.getQualifiedName();
+						if (qualifiedName != null) {
+							final String[] result = qualifiedName.split("\\.(?=[^\\.]*$)", 2);
+							transpiler.getTranspilerUnit(node).imports.put(result[1], result[0]);
+						}
 						sb.append(getIndent() + "result." + attribute.getName() + "[i] = (" + contentType.transpile(true)
 								+ ".transpilerFromJSON(JSON.stringify(" + tmpAttribute + ")));" + System.lineSeparator());
+					}
 				} else {
 					final String tmpAttribute = "obj." + attribute.getName() + "[i]";
-					if (contentType.isString() || contentType.isNumberClass() || contentType.isBoolean())
+					if (contentType.isString() || contentType.isNumberClass() || contentType.isBoolean()) {
 						sb.append(getIndent() + "result." + attribute.getName() + "[i] = " + tmpAttribute + " === null ? null : " + tmpAttribute + ";"
 								+ System.lineSeparator());
-					else
+					} else {
+						final String qualifiedName = contentType.getQualifiedName();
+						if (qualifiedName != null) {
+							final String[] result = qualifiedName.split("\\.(?=[^\\.]*$)", 2);
+							transpiler.getTranspilerUnit(node).imports.put(result[1], result[0]);
+						}
 						sb.append(getIndent() + "result." + attribute.getName() + "[i] = " + tmpAttribute + " == null ? null : (" + contentType.transpile(true)
 								+ ".transpilerFromJSON(JSON.stringify(" + tmpAttribute + ")));" + System.lineSeparator());
+					}
 				}
 				indentC--;
 				sb.append(getIndent() + "}" + System.lineSeparator());
@@ -2009,6 +2027,11 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					sb.append(getIndent() + "result." + attribute.getName() + " = " + type.transpile(true) + ".transpilerFromJSON(JSON.stringify(obj."
 							+ attribute.getName() + "));" + System.lineSeparator());
 				} else {
+					final String qualifiedName = type.getNoDeclarationType().getQualifiedName();
+					if (qualifiedName != null) {
+						final String[] result = qualifiedName.split("\\.(?=[^\\.]*$)", 2);
+						transpiler.getTranspilerUnit(node).imports.put(result[1], result[0]);
+					}
 					sb.append(getIndent() + "result." + attribute.getName() + " = ((obj." + attribute.getName() + " === undefined) || (obj."
 							+ attribute.getName() + " === null)) ? null : " + type.getNoDeclarationType().transpile(true)
 							+ ".transpilerFromJSON(JSON.stringify(obj." + attribute.getName() + "));" + System.lineSeparator());

@@ -1,10 +1,8 @@
 import { SchulformSchulgliederung } from '../../../asd/data/schule/SchulformSchulgliederung';
-import { ArrayList } from '../../../java/util/ArrayList';
-import type { List } from '../../../java/util/List';
+import { CoreTypeDataNurSchulformenUndSchulgliederungen } from '../../../asd/data/CoreTypeDataNurSchulformenUndSchulgliederungen';
 import { Class } from '../../../java/lang/Class';
-import { CoreTypeData } from '../../../asd/data/CoreTypeData';
 
-export class FachKatalogEintrag extends CoreTypeData {
+export class FachKatalogEintrag extends CoreTypeDataNurSchulformenUndSchulgliederungen {
 
 	/**
 	 * Das Aufgabenfeld, welchem das Fach ggf. zugeordnet ist (1, 2 oder 3)
@@ -56,11 +54,6 @@ export class FachKatalogEintrag extends CoreTypeData {
 	 */
 	public exportASD : boolean = false;
 
-	/**
-	 * Die Informationen zu Schulformen und -gliederungen, wo das Fach zulässig ist.
-	 */
-	public zulaessig : List<SchulformSchulgliederung> = new ArrayList<SchulformSchulgliederung>();
-
 
 	/**
 	 * Leerer Standardkonstruktor.
@@ -74,7 +67,7 @@ export class FachKatalogEintrag extends CoreTypeData {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.asd.data.fach.FachKatalogEintrag', 'de.svws_nrw.asd.data.CoreTypeData'].includes(name);
+		return ['de.svws_nrw.asd.data.CoreTypeDataNurSchulformenUndSchulgliederungen', 'de.svws_nrw.asd.data.fach.FachKatalogEintrag', 'de.svws_nrw.asd.data.CoreTypeData'].includes(name);
 	}
 
 	public static class = new Class<FachKatalogEintrag>('de.svws_nrw.asd.data.fach.FachKatalogEintrag');
@@ -82,6 +75,11 @@ export class FachKatalogEintrag extends CoreTypeData {
 	public static transpilerFromJSON(json : string): FachKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<FachKatalogEintrag>;
 		const result = new FachKatalogEintrag();
+		if (obj.zulaessig !== undefined) {
+			for (const elem of obj.zulaessig) {
+				result.zulaessig.add(SchulformSchulgliederung.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
 		if (obj.id === undefined)
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
@@ -120,16 +118,19 @@ export class FachKatalogEintrag extends CoreTypeData {
 		if (obj.exportASD === undefined)
 			throw new Error('invalid json format, missing attribute exportASD');
 		result.exportASD = obj.exportASD;
-		if (obj.zulaessig !== undefined) {
-			for (const elem of obj.zulaessig) {
-				result.zulaessig.add(SchulformSchulgliederung.transpilerFromJSON(JSON.stringify(elem)));
-			}
-		}
 		return result;
 	}
 
 	public static transpilerToJSON(obj : FachKatalogEintrag) : string {
 		let result = '{';
+		result += '"zulaessig" : [ ';
+		for (let i = 0; i < obj.zulaessig.size(); i++) {
+			const elem = obj.zulaessig.get(i);
+			result += SchulformSchulgliederung.transpilerToJSON(elem);
+			if (i < obj.zulaessig.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"schluessel" : ' + JSON.stringify(obj.schluessel) + ',';
 		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
@@ -146,14 +147,6 @@ export class FachKatalogEintrag extends CoreTypeData {
 		result += '"istKonfKoop" : ' + obj.istKonfKoop.toString() + ',';
 		result += '"nurSII" : ' + obj.nurSII.toString() + ',';
 		result += '"exportASD" : ' + obj.exportASD.toString() + ',';
-		result += '"zulaessig" : [ ';
-		for (let i = 0; i < obj.zulaessig.size(); i++) {
-			const elem = obj.zulaessig.get(i);
-			result += SchulformSchulgliederung.transpilerToJSON(elem);
-			if (i < obj.zulaessig.size() - 1)
-				result += ',';
-		}
-		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -161,6 +154,16 @@ export class FachKatalogEintrag extends CoreTypeData {
 
 	public static transpilerToJSONPatch(obj : Partial<FachKatalogEintrag>) : string {
 		let result = '{';
+		if (obj.zulaessig !== undefined) {
+			result += '"zulaessig" : [ ';
+			for (let i = 0; i < obj.zulaessig.size(); i++) {
+				const elem = obj.zulaessig.get(i);
+				result += SchulformSchulgliederung.transpilerToJSON(elem);
+				if (i < obj.zulaessig.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
 		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
@@ -208,16 +211,6 @@ export class FachKatalogEintrag extends CoreTypeData {
 		}
 		if (obj.exportASD !== undefined) {
 			result += '"exportASD" : ' + obj.exportASD.toString() + ',';
-		}
-		if (obj.zulaessig !== undefined) {
-			result += '"zulaessig" : [ ';
-			for (let i = 0; i < obj.zulaessig.size(); i++) {
-				const elem = obj.zulaessig.get(i);
-				result += SchulformSchulgliederung.transpilerToJSON(elem);
-				if (i < obj.zulaessig.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

@@ -3,7 +3,7 @@ plugins {
 }
 
 task assembleUi(type: NpmRun) {
-	dependsOn rootProject.npmPrepare
+	dependsOn rootProject.npmPrepare, project(':svws-webclient:core').tasks.assemble
 	group "build"
 	args = ['build']
 	inputs.files fileTree("$projectDir").matching { exclude "build", "dist", ".histoire" }
