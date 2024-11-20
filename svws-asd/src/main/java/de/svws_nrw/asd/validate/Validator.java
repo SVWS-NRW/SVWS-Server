@@ -25,6 +25,9 @@ public abstract class Validator<@TsObject T> {
 	/** Eine Liste mit Fehlern bei der Validierung */
 	private final @NotNull List<ValidatorFehler<?>> _fehler = new ArrayList<>();
 
+	/** Die stärkste Fehlerart die bei einem Lauf des Validators vorgekommen ist. */
+	private @NotNull ValidatorFehlerart _fehlerart = ValidatorFehlerart.UNGENUTZT;
+
 	/** Die DTO-Klasse, welche von dem Validator geprüft wurde */
 	private final @NotNull Class<T> _dtoClass;
 
@@ -50,6 +53,15 @@ public abstract class Validator<@TsObject T> {
 	 */
 	public @NotNull ValidatorKontext kontext() {
 		return _kontext;
+	}
+
+	/**
+	 * Gibt den zugehörigen ValidatorManager zurück.
+	 *
+	 * @return der ValidatorManager
+	 */
+	public @NotNull ValidatorManager getValidatorManager() {
+		return _kontext.getValidatorManager();
 	}
 
 	/**
@@ -86,6 +98,7 @@ public abstract class Validator<@TsObject T> {
 				if (!validator.run())
 					success = false;
 				_fehler.addAll(validator._fehler);
+				updateFehlerart(validator.getFehlerart());
 			}
 			// Berücksichtige auch Exceptions bei der Prüfung dieses Validators
 			try {
@@ -99,12 +112,26 @@ public abstract class Validator<@TsObject T> {
 	}
 
 	/**
+	 * Aktualisiert die Fehlerart, die durch den Lauf dieses Validators erzeugt wurde
+	 * anhand der übergebenen Fehlerart. Wird null übergeben, so wird die Fehlerart genutzt, die
+	 * diesem Validator zugeordnet ist.
+	 *
+	 * @param art   die Fehlerart, die für die Überprüfung genutzt wird, oder null
+	 */
+	private void updateFehlerart(final ValidatorFehlerart art) {
+		final @NotNull ValidatorFehlerart tmp = (art != null) ? art : this.getValidatorFehlerart();
+		if (this._fehlerart.ordinal() > tmp.ordinal())
+			this._fehlerart = tmp;
+	}
+
+	/**
 	 * Erstellt einen neuen Fehler mit der übergebenen Fehlermeldung
 	 *
 	 * @param fehlermeldung   die Fehlermeldung
 	 */
 	protected void addFehler(final @NotNull String fehlermeldung) {
 		_fehler.add(new ValidatorFehler<>(this, fehlermeldung));
+		updateFehlerart(null);
 	}
 
 	/**
@@ -118,15 +145,24 @@ public abstract class Validator<@TsObject T> {
 
 
 	/**
-	 * Die Fehlerart, welcher der Validator in seinem Kontext zugeordnet ist.
+	 * Die Fehlerart, welche diesem speziellen Validator zugeordnet ist.
+	 *
+	 * @return die Fehlerart
+	 */
+	public @NotNull ValidatorFehlerart getValidatorFehlerart() {
+		return _kontext.getValidatorManager().getFehlerartBySchuljahrAndValidatorClass(_kontext.getSchuljahr(), this.getClass());
+	}
+
+
+	/**
+	 * Die Fehlerart, welche dem Validator nach dem Lauf der Validierung zugeordnet ist.
+	 * Dabei sind die Ergebnisse von ggf. vorhandene Sub-Validatoren mit einbezogen.
+	 * Es wird also die schwerwiegendste Fehlerart zurückgegeben.
 	 *
 	 * @return die Fehlerart
 	 */
 	public @NotNull ValidatorFehlerart getFehlerart() {
-		final ValidatorFehlerart result = _kontext.getValidatorManager().getFehlerartBySchuljahrAndValidatorClass(_kontext.getSchuljahr(), this.getClass());
-		if (result == null)
-			return ValidatorFehlerart.UNGENUTZT;
-		return result;
+		return this._fehlerart;
 	}
 
 

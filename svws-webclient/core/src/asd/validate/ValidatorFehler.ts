@@ -116,7 +116,7 @@ export class ValidatorFehler<T extends JavaObject> extends JavaObject {
 	 * @return die Fehlerart
 	 */
 	public getFehlerart() : ValidatorFehlerart {
-		return this._validator.getFehlerart();
+		return this._validator.getValidatorFehlerart();
 	}
 
 	transpilerCanonicalName(): string {

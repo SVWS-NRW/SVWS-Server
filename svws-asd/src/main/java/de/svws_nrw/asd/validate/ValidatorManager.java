@@ -76,25 +76,26 @@ public final class ValidatorManager {
 		// TODO Überprüfung ob alle Validatoren in der Json aufgeführt sind
 
 		// Überprüfung ob die Schulformen, die eingetragen sind, zu dem entsprechenden Zeitpunkt beim Core-Type überhaupt gültig sind
-    	for (final Entry<String, List<ValidatorFehlerartKontext>> entry : _data.entrySet()) {
+		for (final Entry<String, List<ValidatorFehlerartKontext>> entry : _data.entrySet()) {
 			final @NotNull String validatorName = entry.getKey();
 			final @NotNull List<ValidatorFehlerartKontext> list = entry.getValue();
-    		final @NotNull HashMap<String, List<PairNN<Integer, Integer>>> mapZeitraeumeBySchulform = new HashMap<>();
-    		for (final @NotNull ValidatorFehlerartKontext eintrag : list) {
-    			final @NotNull PairNN<Integer, Integer> zeitraum = createZeitraum(eintrag.gueltigVon, eintrag.gueltigBis);
-    			addZeitraum(mapZeitraeumeBySchulform, zeitraum, eintrag.muss);
-    			addZeitraum(mapZeitraeumeBySchulform, zeitraum, eintrag.kann);
-    			addZeitraum(mapZeitraeumeBySchulform, zeitraum, eintrag.hinweis);
-    		}
-        	for (final Entry<String, List<PairNN<Integer, Integer>>> zeitraeume : mapZeitraeumeBySchulform.entrySet()) {
-        		final @NotNull List<CoreTypeData> l = new ArrayList<>();
-        		final Schulform sf = Schulform.valueOf(zeitraeume.getKey());
-        		if (sf != null)
-        			l.addAll(sf.historie());
-        		if (!pruefeAufZeitraumueberdeckung(validatorName, createSchulformZeitraumListe(l), zeitraeume.getValue()))
-        			throw new CoreTypeException("Fehler beim prüfen der Schulform. Der Validator %s hat ungültige Schulform-Zeitraum-Kombinationen.".formatted(validatorName));
-        	}
-    	}
+			final @NotNull HashMap<String, List<PairNN<Integer, Integer>>> mapZeitraeumeBySchulform = new HashMap<>();
+			for (final @NotNull ValidatorFehlerartKontext eintrag : list) {
+				final @NotNull PairNN<Integer, Integer> zeitraum = createZeitraum(eintrag.gueltigVon, eintrag.gueltigBis);
+				addZeitraum(mapZeitraeumeBySchulform, zeitraum, eintrag.muss);
+				addZeitraum(mapZeitraeumeBySchulform, zeitraum, eintrag.kann);
+				addZeitraum(mapZeitraeumeBySchulform, zeitraum, eintrag.hinweis);
+			}
+			for (final Entry<String, List<PairNN<Integer, Integer>>> zeitraeume : mapZeitraeumeBySchulform.entrySet()) {
+				final @NotNull List<CoreTypeData> l = new ArrayList<>();
+				final Schulform sf = Schulform.valueOf(zeitraeume.getKey());
+				if (sf != null)
+					l.addAll(sf.historie());
+				if (!pruefeAufZeitraumueberdeckung(validatorName, createSchulformZeitraumListe(l), zeitraeume.getValue()))
+					throw new CoreTypeException(
+							"Fehler beim prüfen der Schulform. Der Validator %s hat ungültige Schulform-Zeitraum-Kombinationen.".formatted(validatorName));
+			}
+		}
 	}
 
 
@@ -234,7 +235,8 @@ public final class ValidatorManager {
 	 * @param map - die HashMap mit den ArrayLists
 	 * @return das benötigte Objekt
 	 */
-	private static @NotNull List<String> computeIfAbsentFehlerartValidator(final @NotNull ValidatorFehlerart art, final @NotNull Map<ValidatorFehlerart, List<String>> map) {
+	private static @NotNull List<String> computeIfAbsentFehlerartValidator(final @NotNull ValidatorFehlerart art,
+			final @NotNull Map<ValidatorFehlerart, List<String>> map) {
 		List<String> list = map.get(art);
 		if (list == null) {
 			list = new ArrayList<>();
@@ -251,7 +253,8 @@ public final class ValidatorManager {
 	 * @param map - die HashMap mit den ArrayLists
 	 * @return das benötigte Objekt
 	 */
-	private static @NotNull List<PairNN<Integer, Integer>> computeIfAbsentZeitraeumeSchulform(final @NotNull String schulform, final @NotNull HashMap<String, List<PairNN<Integer, Integer>>> map) {
+	private static @NotNull List<PairNN<Integer, Integer>> computeIfAbsentZeitraeumeSchulform(final @NotNull String schulform,
+			final @NotNull HashMap<String, List<PairNN<Integer, Integer>>> map) {
 		List<PairNN<Integer, Integer>> list = map.get(schulform);
 		if (list == null) {
 			list = new ArrayList<>();
@@ -291,7 +294,8 @@ public final class ValidatorManager {
 					throw new CoreTypeException("Ein Validator kann bei einer Schulform nicht gleichzeitig bei mehreren Fehlerarten aktiv sein.");
 				// ... überprüfe Umgebung und Schuljahr ...
 				final boolean validatorAktivInUmgebungUndSchuljahr = (_isZebras ? eintrag.zebras : eintrag.svws)
-						&& ((eintrag.gueltigVon == null) || (eintrag.gueltigVon <= schuljahr)) && ((eintrag.gueltigBis == null) || (schuljahr <= eintrag.gueltigBis));
+						&& ((eintrag.gueltigVon == null) || (eintrag.gueltigVon <= schuljahr))
+						&& ((eintrag.gueltigBis == null) || (schuljahr <= eintrag.gueltigBis));
 				// ... und befülle den Cache
 				if (validatorAktivInUmgebungUndSchuljahr && hasHart) {
 					mapValidatorToFehlerart.put(validatorName, ValidatorFehlerart.MUSS);
@@ -333,8 +337,10 @@ public final class ValidatorManager {
 	 *
 	 * @return die Fehlerart des Validators für das angegebene Schuljahr
 	 */
-	public <T extends Validator<?>> ValidatorFehlerart getFehlerartBySchuljahrAndValidatorClass(final int schuljahr, final @NotNull Class<T> validator) {
-		return getValidatornameToFehlerartCache(schuljahr).get(validator.getCanonicalName());
+	public <T extends Validator<?>> @NotNull ValidatorFehlerart getFehlerartBySchuljahrAndValidatorClass(final int schuljahr,
+			final @NotNull Class<T> validator) {
+		final ValidatorFehlerart tmp = getValidatornameToFehlerartCache(schuljahr).get(validator.getCanonicalName());
+		return (tmp == null) ? ValidatorFehlerart.UNGENUTZT : tmp;
 	}
 
 
@@ -385,7 +391,7 @@ public final class ValidatorManager {
 	 * @param schulformen					Die Liste der in dem Zeitraum gültigen Schulformen.
 	 */
 	private static void addZeitraum(final @NotNull HashMap<String, List<PairNN<Integer, Integer>>> mapZeitraeumeBySchulform,
-		                            final @NotNull PairNN<Integer, Integer> zeitraum, final @NotNull List<String> schulformen) {
+			final @NotNull PairNN<Integer, Integer> zeitraum, final @NotNull List<String> schulformen) {
 		for (final @NotNull String schulform : schulformen) {
 			final @NotNull List<PairNN<Integer, Integer>> zeitraeumeBySchulform = computeIfAbsentZeitraeumeSchulform(schulform, mapZeitraeumeBySchulform);
 			zeitraeumeBySchulform.add(zeitraum);
@@ -422,7 +428,7 @@ public final class ValidatorManager {
 	 * Zeitstrahl untermenge:    -------       -----                       -----    ---------- <br>
 	 * scanPoints:               ^     ^      ^^   ^ .   .        .      ^ ^   ^^   ^        ^   // . werden nicht mehr geprüft, da Ergebnis fest steht <br>
 	 * <br>
-     * Ungültige Beispiele für 'obermenge' enthält 'untermenge' <br>
+	 * Ungültige Beispiele für 'obermenge' enthält 'untermenge' <br>
 	 * Zeitstrahl obermenge:  a)   -----   b) --------   ----------   c) --------   ---------- <br>
 	 * Zeitstrahl untermenge:    -------       --------                   -----    ---------- <br>
 	 * scanPoints:               ^ .   .      ^^     ^^  .        .      ^^   ^ ^  ^.       ..   // . werden nicht mehr geprüft, da Ergebnis fest steht <br>
@@ -494,7 +500,8 @@ public final class ValidatorManager {
 		while (i + 1 < vbs.size()) {
 			// Prüfe auf überlappende Zeiträume, die nicht erlaubt sind.
 			if (vbs.get(i).b > vbs.get(i + 1).a)
-				throw new CoreTypeException("Fehler beim prüfen der Zeiträume bei dem Validator '%s'. Die Zeiträume von %s sind überlappend definiert.".formatted(validatorName, vbs.get(0).getClass().getSimpleName()));
+				throw new CoreTypeException("Fehler beim prüfen der Zeiträume bei dem Validator '%s'. Die Zeiträume von %s sind überlappend definiert."
+						.formatted(validatorName, vbs.get(0).getClass().getSimpleName()));
 			if (vbs.get(i).b < vbs.get(i + 1).a) {
 				// Lücke gefunden
 				list.add(vbs.get(i).b);
@@ -507,17 +514,17 @@ public final class ValidatorManager {
 		return list;
 	}
 
-    /**
-     * Erzeugt ein PairNN, dass den Anfangszeitpunkt und den Endzeitpunkt enthält. Die Zeiträume sind werden
-     * hier in der Form [von,bis[ erwartet, Schuljahr 'von' ist Teil des Zeitraums Schuljahr 'bis' nicht,
-     * Die null-Werte aus gueltigVon und gueltigBis werden in 0 bzw. MAX_VALUE übersetzt, sowie der
-     * gueltigBis-Wert um 1 erhöht, damit kontinuierliche  Zeiträume entstehen können.
+	/**
+	 * Erzeugt ein PairNN, dass den Anfangszeitpunkt und den Endzeitpunkt enthält. Die Zeiträume sind werden
+	 * hier in der Form [von,bis[ erwartet, Schuljahr 'von' ist Teil des Zeitraums Schuljahr 'bis' nicht,
+	 * Die null-Werte aus gueltigVon und gueltigBis werden in 0 bzw. MAX_VALUE übersetzt, sowie der
+	 * gueltigBis-Wert um 1 erhöht, damit kontinuierliche  Zeiträume entstehen können.
 	 *
-     * @param von  Beginn des Zeitraums
-     * @param bis  Ende des Zeitraums
-     *
-     * @return Das Zeitraum-Paar mit übersetzten Null-Werten.
-     */
+	 * @param von  Beginn des Zeitraums
+	 * @param bis  Ende des Zeitraums
+	 *
+	 * @return Das Zeitraum-Paar mit übersetzten Null-Werten.
+	 */
 	private static @NotNull PairNN<Integer, Integer> createZeitraum(final Integer von, final Integer bis) {
 		/* Die null-Werte aus gueltigVon und gueltigBis werden in MIN_VALUE bzw. MAX_VALUE übersetzt, sowie der gueltigBis-Wert
 		 * um 1 erhöht, damit kontinuierliche  Zeiträume entstehen können. */
