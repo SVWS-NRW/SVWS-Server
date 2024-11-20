@@ -19,7 +19,7 @@
 							<svws-ui-button type="secondary" @click="openModal">Standardsortierung Sek II anwenden …</svws-ui-button>
 						</s-faecher-auswahl-sortierung-sek-i-i-modal>
 					</template>
-					<svws-ui-tooltip position="bottom" v-if="ServerMode.DEV.checkServerMode(serverMode) && hatKompetenzAendern">
+					<svws-ui-tooltip position="bottom" v-if="hatKompetenzAendern">
 						<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="gotoHinzufuegenView(true)" :has-focus="fachListeManager().filtered().size() === 0">
 							<span class="icon i-ri-add-line" />
 						</svws-ui-button>
