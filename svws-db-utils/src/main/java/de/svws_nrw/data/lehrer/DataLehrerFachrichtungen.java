@@ -37,7 +37,7 @@ public final class DataLehrerFachrichtungen extends DataManager<Long> {
 		daten.id = l.Lehrer_ID;
 		final LehrerFachrichtung fachrichtung = LehrerFachrichtung.data().getWertByKuerzel(l.FachrKrz);
 		final LehrerFachrichtungKatalogEintrag eintragFachrichtung = (fachrichtung == null) ? null : fachrichtung.daten(schuljahr);
-		daten.idFachrichtung = (eintragFachrichtung == null) ? null : eintragFachrichtung.id;
+		daten.idFachrichtung = (eintragFachrichtung == null) ? -1 : eintragFachrichtung.id;
 		final LehrerFachrichtungAnerkennung anerkennung = LehrerFachrichtungAnerkennung.data().getWertByKuerzel(l.FachrAnerkennungKrz);
 		final LehrerFachrichtungAnerkennungKatalogEintrag eintragAnerkennung = (anerkennung == null) ? null : anerkennung.daten(schuljahr);
 		daten.idAnerkennungsgrund = (eintragAnerkennung == null) ? null : eintragAnerkennung.id;

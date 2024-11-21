@@ -984,7 +984,7 @@ public class LupoMDB {
 			belegung.kursartKuerzel = "LK";
 		else if ("ZK".equals(belegungPlanungKursart))
 			belegung.kursartKuerzel = "ZK";
-		belegung.schriftlich = (belegungPlanungKursart == null) ? null : ("LK".equals(belegungPlanungKursart) || "S".equals(belegungPlanungKursart));
+		belegung.schriftlich = (belegungPlanungKursart == null) ? false : ("LK".equals(belegungPlanungKursart) || "S".equals(belegungPlanungKursart));
 		if ("LK".equals(belegungPlanungKursart))
 			belegung.wochenstunden = 5;
 		else if (wochenstunden == null)

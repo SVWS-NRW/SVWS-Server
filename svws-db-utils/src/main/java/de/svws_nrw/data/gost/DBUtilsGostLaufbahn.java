@@ -383,8 +383,7 @@ public final class DBUtilsGostLaufbahn {
 			case "ZK" -> "ZK";
 			default -> fachKursart.toString();
 		};
-		belegung.schriftlich = (belegungPlanungKursart == null) ? null
-				: ("LK".equals(belegungPlanungKursart) || "S".equals(belegungPlanungKursart));
+		belegung.schriftlich = (belegungPlanungKursart == null) ? false : ("LK".equals(belegungPlanungKursart) || "S".equals(belegungPlanungKursart));
 		belegung.wochenstunden = "LK".equals(belegungPlanungKursart) ? 5 : wochenstunden;
 		belegung.block1gewertet = istInAbiwertung;
 		belegung.notenkuerzel = null;

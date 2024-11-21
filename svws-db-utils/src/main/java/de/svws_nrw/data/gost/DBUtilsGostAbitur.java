@@ -7,6 +7,7 @@ import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.GostLeistungen;
 import de.svws_nrw.core.data.gost.GostLeistungenFachbelegung;
 import de.svws_nrw.core.data.gost.GostLeistungenFachwahl;
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.types.gost.AbiturBelegungsart;
@@ -26,8 +27,6 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response.Status;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 
 
@@ -56,8 +55,6 @@ public final class DBUtilsGostAbitur {
 		final GostLeistungen leistungen = DBUtilsGost.getLeistungsdaten(conn, id);
 		if (leistungen == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
-
-		// TODO bestimme ggf. einen Teil der Daten aus den LuPO-Wahlen des Schülers
 
 		if (!"Q2".equals(leistungen.aktuellerJahrgang))
 			return null;
@@ -148,12 +145,6 @@ public final class DBUtilsGostAbitur {
 		if (dtoSchueler == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 
-		final Map<Long, DTOSchuljahresabschnitte> schuljahresabschnitte =
-				conn.queryAll(DTOSchuljahresabschnitte.class).stream().collect(Collectors.toMap(a -> a.ID, a -> a));
-		final DTOSchuljahresabschnitte dtoAbschnitt = schuljahresabschnitte.get(dtoSchueler.Schuljahresabschnitts_ID);
-		if (dtoAbschnitt == null)
-			throw new ApiOperationException(Status.NOT_FOUND);
-
 		// Lese die Abiturdaten anhand der ID aus der Datenbank
 		final List<DTOSchuelerAbitur> dtosSchuelerAbitur = conn.queryList(DTOSchuelerAbitur.QUERY_BY_SCHUELER_ID, DTOSchuelerAbitur.class, id);
 		if ((dtosSchuelerAbitur == null) || (dtosSchuelerAbitur.isEmpty()))
@@ -167,7 +158,7 @@ public final class DBUtilsGostAbitur {
 		// Lese beide Tabellen mit den Informationen zu den belegten oder geprüften Sprachen aus.
 		final List<DTOSchuelerSprachenfolge> sprachenfolge = conn.queryList(DTOSchuelerSprachenfolge.QUERY_BY_SCHUELER_ID, DTOSchuelerSprachenfolge.class, id);
 
-		final DTOSchuljahresabschnitte dtoAbschnittPruefung = schuljahresabschnitte.get(dtoSchuelerAbitur.Schuljahresabschnitts_ID);
+		final Schuljahresabschnitt schuljahresabschnittPruefung = conn.getUser().schuleGetAbschnittById(dtoSchuelerAbitur.Schuljahresabschnitts_ID);
 
 		// Bestimme zunächst das Abiturjahr
 		Integer abiturjahr = null;
@@ -185,7 +176,7 @@ public final class DBUtilsGostAbitur {
 		// Kopiere die DTOs in die Abiturdaten-Klasse
 		final Abiturdaten abidaten = new Abiturdaten();
 		abidaten.schuelerID = dtoSchuelerAbitur.Schueler_ID;
-		abidaten.schuljahrAbitur = (dtoAbschnittPruefung == null) ? null : dtoAbschnittPruefung.Jahr;
+		abidaten.schuljahrAbitur = schuljahresabschnittPruefung.schuljahr;
 		abidaten.abiturjahr = abiturjahr;
 		abidaten.projektKursThema = dtoSchuelerAbitur.ProjektkursThema;
 		abidaten.block1FehlstundenGesamt = (dtoSchuelerAbitur.FehlstundenSumme == null) ? -1 : dtoSchuelerAbitur.FehlstundenSumme;
@@ -193,25 +184,27 @@ public final class DBUtilsGostAbitur {
 				: dtoSchuelerAbitur.FehlstundenSummeUnentschuldigt;
 		abidaten.latinum = false;
 		for (final DTOSchuelerSprachenfolge folge : sprachenfolge)
-			if ((Fach.L == Fach.data().getWertByKuerzel(folge.Sprache)) && (folge.LatinumErreicht != null) && (folge.LatinumErreicht)) {
+			if ((Fach.L == Fach.data().getWertByKuerzel(folge.Sprache)) && (folge.LatinumErreicht != null) && Boolean.TRUE.equals((folge.LatinumErreicht))) {
 				abidaten.latinum = true;
 				break;
 			}
 		abidaten.kleinesLatinum = false;
 		for (final DTOSchuelerSprachenfolge folge : sprachenfolge)
-			if ((Fach.L == Fach.data().getWertByKuerzel(folge.Sprache)) && (folge.KleinesLatinumErreicht != null) && (folge.KleinesLatinumErreicht)) {
+			if ((Fach.L == Fach.data().getWertByKuerzel(folge.Sprache)) && (folge.KleinesLatinumErreicht != null)
+					&& Boolean.TRUE.equals((folge.KleinesLatinumErreicht))) {
 				abidaten.kleinesLatinum = true;
 				break;
 			}
 		abidaten.graecum = false;
 		for (final DTOSchuelerSprachenfolge folge : sprachenfolge)
-			if ((Fach.G == Fach.data().getWertByKuerzel(folge.Sprache)) && (folge.GraecumErreicht != null) && (folge.GraecumErreicht)) {
+			if ((Fach.G == Fach.data().getWertByKuerzel(folge.Sprache)) && (folge.GraecumErreicht != null) && Boolean.TRUE.equals((folge.GraecumErreicht))) {
 				abidaten.graecum = true;
 				break;
 			}
 		abidaten.hebraicum = false;
 		for (final DTOSchuelerSprachenfolge folge : sprachenfolge)
-			if ((Fach.H == Fach.data().getWertByKuerzel(folge.Sprache)) && (folge.HebraicumErreicht != null) && (folge.HebraicumErreicht)) {
+			if ((Fach.H == Fach.data().getWertByKuerzel(folge.Sprache)) && (folge.HebraicumErreicht != null)
+					&& Boolean.TRUE.equals((folge.HebraicumErreicht))) {
 				abidaten.hebraicum = true;
 				break;
 			}
