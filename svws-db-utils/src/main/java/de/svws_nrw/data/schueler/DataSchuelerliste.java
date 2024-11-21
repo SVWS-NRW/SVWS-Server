@@ -24,7 +24,7 @@ import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.gost.DataGostJahrgangsliste;
 import de.svws_nrw.data.jahrgaenge.DataJahrgangsliste;
 import de.svws_nrw.data.klassen.DataKlassendaten;
-import de.svws_nrw.data.kurse.DataKursliste;
+import de.svws_nrw.data.kurse.DataKurse;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
@@ -350,7 +350,7 @@ public final class DataSchuelerliste extends DataManager<Long> {
 		result.idSchuljahresabschnitt = idSchuljahresabschnitt;
 		result.schueler.addAll(getListeSchueler(conn, idSchuljahresabschnitt, false));
 		result.klassen.addAll(dataKlassendaten.getListBySchuljahresabschnittID(idSchuljahresabschnitt, false));
-		result.kurse.addAll(DataKursliste.getKursListenFuerAbschnitt(conn, idSchuljahresabschnitt, true));
+		result.kurse.addAll(DataKurse.getKursListenFuerAbschnitt(conn, idSchuljahresabschnitt, true));
 		result.jahrgaenge.addAll(DataJahrgangsliste.getJahrgangsliste(conn));
 
 		if (conn.getUser().schuleHatGymOb())

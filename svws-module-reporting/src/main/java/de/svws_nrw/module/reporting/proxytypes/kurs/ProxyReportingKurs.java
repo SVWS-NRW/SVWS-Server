@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.kurse.KursDaten;
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.data.kurse.DataKursdaten;
+import de.svws_nrw.data.kurse.DataKurse;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursLehrer;
@@ -166,7 +166,7 @@ public class ProxyReportingKurs extends ReportingKurs {
 			final KursDaten kursDaten;
 			if (super.idsSchueler().isEmpty()) {
 				try {
-					kursDaten = DataKursdaten.getKursdaten(reportingRepository.conn(), super.id());
+					kursDaten = DataKurse.getKursdaten(reportingRepository.conn(), super.id());
 					if ((kursDaten.schueler != null) && !kursDaten.schueler.isEmpty())
 						idsSchueler.addAll(kursDaten.schueler.stream().map(s -> s.id).toList());
 				} catch (final ApiOperationException e) {

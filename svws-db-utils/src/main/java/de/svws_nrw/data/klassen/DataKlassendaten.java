@@ -63,14 +63,14 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 	 *
 	 * @param id   Die ID der Klasse.
 	 *
-	 * @return die Daten der KLasse zur ID.
+	 * @return die Daten der Klasse zur ID.
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	@Override
 	public KlassenDaten getById(final Long id) throws ApiOperationException {
-		final DTOKlassen klasseDto = getDTO(id);
-		return map(klasseDto, true);
+		final DTOKlassen dto = getDTO(id);
+		return map(dto, true);
 	}
 
 	/**

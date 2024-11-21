@@ -20,7 +20,7 @@ import de.svws_nrw.data.gost.DataGostBlockungsdaten;
 import de.svws_nrw.data.gost.DataGostBlockungsergebnisse;
 import de.svws_nrw.data.gost.DataGostSchuelerLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.data.klassen.DataKlassendaten;
-import de.svws_nrw.data.kurse.DataKursdaten;
+import de.svws_nrw.data.kurse.DataKurse;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
@@ -218,7 +218,7 @@ public final class ReportingValidierung {
 
 		// Prüfe die Kurs-IDs. Erzeuge Maps, damit auch später leicht auf die Kursdaten zugegriffen werden kann.
 		final Map<Long, KursDaten> mapKursdaten =
-				new DataKursdaten(reportingRepository.conn()).getListByIDs(idsNonNull, cacheDaten).stream()
+				new DataKurse(reportingRepository.conn()).getListByIDs(idsNonNull, cacheDaten).stream()
 						.collect(Collectors.toMap(k -> k.id, k -> k));
 		for (final Long kID : idsNonNull)
 			if (mapKursdaten.get(kID) == null) {

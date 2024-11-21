@@ -60,12 +60,7 @@ export class RouteDataKurse extends RouteDataAuswahl<KursListeManager, RouteStat
 	}
 
 	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {
-		for (const id of ids)
-			await api.server.deleteKurs(api.schema, id);
-		// TODO ergänze multiple-Klasse
-		const list = new ArrayList<SimpleOperationResponse>();
-		list.add(new SimpleOperationResponse());
-		return list;
+		return await api.server.deleteKurse(ids, api.schema);
 	}
 
 	protected deleteMessage(id: number, kurs: KursDaten | null) : string {

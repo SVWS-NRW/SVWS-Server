@@ -2,14 +2,15 @@ package de.svws_nrw.api.server;
 
 import java.io.InputStream;
 
+import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.kurse.KursDaten;
 import de.svws_nrw.asd.data.kurse.ZulaessigeKursartKatalogEintrag;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
+import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.kurse.DataKatalogKursarten;
-import de.svws_nrw.data.kurse.DataKursdaten;
-import de.svws_nrw.data.kurse.DataKursliste;
+import de.svws_nrw.data.kurse.DataKurse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -68,7 +69,7 @@ public class APIKurse {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Kursdaten anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Kurs-Einträge gefunden")
 	public Response getKurse(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKursliste(conn, null).getList(),
+		return DBBenutzerUtils.runWithTransaction(conn -> DataKurse.getKurslistenFuerAbschnittAsResponse(conn, null, true),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN);
 	}
@@ -96,7 +97,7 @@ public class APIKurse {
 	@ApiResponse(responseCode = "404", description = "Keine Kurs-Einträge gefunden")
 	public Response getKurseFuerAbschnitt(@PathParam("schema") final String schema, @PathParam("abschnitt") final long abschnitt,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKursliste(conn, abschnitt).getList(),
+		return DBBenutzerUtils.runWithTransaction(conn -> DataKurse.getKurslistenFuerAbschnittAsResponse(conn, abschnitt, true),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
 	}
@@ -122,7 +123,7 @@ public class APIKurse {
 	@ApiResponse(responseCode = "404", description = "Kein Kurs-Eintrag mit der angegebenen ID gefunden")
 	public Response getKurs(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKursdaten(conn).get(id),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKurse(conn).getByIdAsResponse(id),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN);
 	}
@@ -154,7 +155,7 @@ public class APIKurse {
 			@RequestBody(description = "Der Patch für die Daten des Kurses", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = KursDaten.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKursdaten(conn).patch(id, is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKurse(conn).patchAsResponse(id, is),
 				request, ServerMode.STABLE, BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN);
 	}
 
@@ -181,7 +182,7 @@ public class APIKurse {
 	public Response addKurs(@PathParam("schema") final String schema, @RequestBody(description = "Die Daten des Kurses", required = true,
 			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = KursDaten.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKursdaten(conn).add(is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKurse(conn).addAsResponse(is),
 				request, ServerMode.STABLE, BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN);
 	}
 
@@ -205,8 +206,35 @@ public class APIKurse {
 	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteKurs(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKursdaten(conn).delete(id),
-				request, ServerMode.STABLE, BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN);
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKurse(conn).deleteAsResponse(id),
+				request, ServerMode.DEV, BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen mehrerer Kurse.
+	 *
+	 * @param schema    das Datenbankschema
+	 * @param is        der InputStream, mit der Liste von zu löschenden IDs
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
+	 */
+	@DELETE
+	@Path("/delete/multiple")
+	@Operation(summary = "Entfernt mehrere Kurse.", description = "Entfernt mehrere Kurse. Dabei wird geprüft, ob alle Vorbedingungen zum Entfernen"
+			+ "der Kurse erfüllt sind und der SVWS-Benutzer die notwendige Berechtigung hat.")
+	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Kurse zu entfernen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteKurse(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der zu löschenden Kurse", required = true,
+			content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(conn -> new DataKurse(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)),
+				request, ServerMode.DEV,
+				BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN);
 	}
 
 

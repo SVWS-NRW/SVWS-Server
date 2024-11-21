@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import de.svws_nrw.core.data.kurse.KursDaten;
 import de.svws_nrw.core.data.stundenplan.StundenplanListeEintrag;
 import de.svws_nrw.data.DataManager;
-import de.svws_nrw.data.kurse.DataKursliste;
+import de.svws_nrw.data.kurse.DataKurse;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
@@ -155,7 +155,7 @@ public final class DataStundenplanListe extends DataManager<Long> {
 			conn.transactionPersist(stundenplan);
 			conn.transactionFlush();
 			// Füge die Schienen, welche bereits in der Kursliste angegeben sind zum Stundenplan hinzu
-			final List<KursDaten> kurse = DataKursliste.getKursListenFuerAbschnitt(conn, idSchuljahresabschnitt, false);
+			final List<KursDaten> kurse = DataKurse.getKursListenFuerAbschnitt(conn, idSchuljahresabschnitt, false);
 			DataStundenplanSchienen.updateSchienenFromKursliste(conn, stundenplan.ID, kurse);
 			// Geben den neuen Stundenplan-Listeneintrag zurück
 			final StundenplanListeEintrag daten = DataStundenplanListe.dtoMapper.apply(stundenplan);

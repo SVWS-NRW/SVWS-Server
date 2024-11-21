@@ -11,7 +11,7 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.kurse.KursDaten;
 import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.data.kurse.DataKursdaten;
+import de.svws_nrw.data.kurse.DataKurse;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.kurs.ReportingKurs;
@@ -96,7 +96,7 @@ public final class HtmlContextKurse extends HtmlContext {
 				// ID des Kurses ist bekannt, aber er wurde noch nicht aus der DB geladen. Lade dessen Daten und lade dabei alle Kurses des Lernabschnitts.
 				final KursDaten kursDaten;
 				try {
-					kursDaten = DataKursdaten.getKursdaten(reportingRepository.conn(), idKurs);
+					kursDaten = DataKurse.getKursdaten(reportingRepository.conn(), idKurs);
 					mapKurse.put(idKurs, this.reportingRepository.schuljahresabschnitt(kursDaten.idSchuljahresabschnitt).kurs(idKurs));
 				} catch (final ApiOperationException e) {
 					ReportingExceptionUtils.putStacktraceInLog(

@@ -16,7 +16,7 @@ import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.data.faecher.DataFachdaten;
 import de.svws_nrw.data.klassen.DataKlassendaten;
-import de.svws_nrw.data.kurse.DataKursdaten;
+import de.svws_nrw.data.kurse.DataKurse;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.module.reporting.proxytypes.fach.ProxyReportingFach;
 import de.svws_nrw.module.reporting.proxytypes.jahrgang.ProxyReportingJahrgang;
@@ -155,7 +155,7 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 			List<KursDaten> kurseDaten = new ArrayList<>();
 			try {
 				this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Ermittle die Kursdaten.");
-				kurseDaten = new DataKursdaten(this.reportingRepository.conn()).getListBySchuljahresabschnittID(this.id(), true);
+				kurseDaten = new DataKurse(this.reportingRepository.conn()).getListBySchuljahresabschnittID(this.id(), true);
 			} catch (final Exception e) {
 				ReportingExceptionUtils.putStacktraceInLog(
 						"FEHLER: Fehler bei der Erstellung der Liste der Kurse für den Schuljahresabschnitt %s.".formatted(this.textSchuljahresabschnittKurz()),

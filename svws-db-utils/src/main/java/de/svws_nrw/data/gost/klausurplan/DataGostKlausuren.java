@@ -23,7 +23,7 @@ import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.gost.DataGostFaecher;
 import de.svws_nrw.data.gost.DataGostJahrgangSchuelerliste;
-import de.svws_nrw.data.kurse.DataKursliste;
+import de.svws_nrw.data.kurse.DataKurse;
 import de.svws_nrw.data.lehrer.DataLehrerliste;
 import de.svws_nrw.data.schueler.DataSchuelerliste;
 import de.svws_nrw.data.schule.DataSchuljahresabschnitte;
@@ -86,12 +86,12 @@ public final class DataGostKlausuren {
 			if (jg.faecher != null)
 				jg.faecher = DataGostFaecher.getFaecherManager(conn, jg.abiturjahrgang).faecher();
 
-			GostHalbjahr gj = GostHalbjahr.fromID(jg.gostHalbjahr);
+			final GostHalbjahr gj = GostHalbjahr.fromID(jg.gostHalbjahr);
 			final Schuljahresabschnitt sja =
 					DataSchuljahresabschnitte.getFromSchuljahrUndAbschnitt(conn, gj.getSchuljahrFromAbiturjahr(jg.abiturjahrgang), gj.halbjahr);
 			if (sja != null) {
 				jg.schuljahresabschnitt = sja.id;
-				jg.kurse.addAll(DataKursliste.getKursListenFuerAbschnitt(conn, sja.id, true));
+				jg.kurse.addAll(DataKurse.getKursListenFuerAbschnitt(conn, sja.id, true));
 			}
 			jg.raumdata =
 					new DataGostKlausurenSchuelerklausurraumstunde(conn).getSchuelerklausurraumstundenByTerminids(jg.data.termine.stream().map(t -> t.id).toList());
