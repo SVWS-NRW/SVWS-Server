@@ -1,15 +1,8 @@
 import { SchulformSchulgliederung } from '../../../asd/data/schule/SchulformSchulgliederung';
-import { ArrayList } from '../../../java/util/ArrayList';
-import type { List } from '../../../java/util/List';
+import { CoreTypeDataNurSchulformenUndSchulgliederungen } from '../../../asd/data/CoreTypeDataNurSchulformenUndSchulgliederungen';
 import { Class } from '../../../java/lang/Class';
-import { CoreTypeData } from '../../../asd/data/CoreTypeData';
 
-export class HerkunftBildungsgangKatalogEintrag extends CoreTypeData {
-
-	/**
-	 * Die Kürzel der Schulformen, bei welchen der Bildungsgang als Herkunft vorkommen kann (BK und SB).
-	 */
-	public zulaessig : List<SchulformSchulgliederung> = new ArrayList<SchulformSchulgliederung>();
+export class HerkunftBildungsgangKatalogEintrag extends CoreTypeDataNurSchulformenUndSchulgliederungen {
 
 
 	/**
@@ -24,7 +17,7 @@ export class HerkunftBildungsgangKatalogEintrag extends CoreTypeData {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.asd.data.schueler.HerkunftBildungsgangKatalogEintrag', 'de.svws_nrw.asd.data.CoreTypeData'].includes(name);
+		return ['de.svws_nrw.asd.data.schueler.HerkunftBildungsgangKatalogEintrag', 'de.svws_nrw.asd.data.CoreTypeDataNurSchulformenUndSchulgliederungen', 'de.svws_nrw.asd.data.CoreTypeData'].includes(name);
 	}
 
 	public static class = new Class<HerkunftBildungsgangKatalogEintrag>('de.svws_nrw.asd.data.schueler.HerkunftBildungsgangKatalogEintrag');
@@ -32,6 +25,11 @@ export class HerkunftBildungsgangKatalogEintrag extends CoreTypeData {
 	public static transpilerFromJSON(json : string): HerkunftBildungsgangKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<HerkunftBildungsgangKatalogEintrag>;
 		const result = new HerkunftBildungsgangKatalogEintrag();
+		if (obj.zulaessig !== undefined) {
+			for (const elem of obj.zulaessig) {
+				result.zulaessig.add(SchulformSchulgliederung.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
 		if (obj.id === undefined)
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
@@ -46,22 +44,11 @@ export class HerkunftBildungsgangKatalogEintrag extends CoreTypeData {
 		result.text = obj.text;
 		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
 		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
-		if (obj.zulaessig !== undefined) {
-			for (const elem of obj.zulaessig) {
-				result.zulaessig.add(SchulformSchulgliederung.transpilerFromJSON(JSON.stringify(elem)));
-			}
-		}
 		return result;
 	}
 
 	public static transpilerToJSON(obj : HerkunftBildungsgangKatalogEintrag) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"schluessel" : ' + JSON.stringify(obj.schluessel) + ',';
-		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
-		result += '"text" : ' + JSON.stringify(obj.text) + ',';
-		result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
-		result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
 		result += '"zulaessig" : [ ';
 		for (let i = 0; i < obj.zulaessig.size(); i++) {
 			const elem = obj.zulaessig.get(i);
@@ -70,6 +57,12 @@ export class HerkunftBildungsgangKatalogEintrag extends CoreTypeData {
 				result += ',';
 		}
 		result += ' ]' + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"schluessel" : ' + JSON.stringify(obj.schluessel) + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+		result += '"text" : ' + JSON.stringify(obj.text) + ',';
+		result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -77,6 +70,16 @@ export class HerkunftBildungsgangKatalogEintrag extends CoreTypeData {
 
 	public static transpilerToJSONPatch(obj : Partial<HerkunftBildungsgangKatalogEintrag>) : string {
 		let result = '{';
+		if (obj.zulaessig !== undefined) {
+			result += '"zulaessig" : [ ';
+			for (let i = 0; i < obj.zulaessig.size(); i++) {
+				const elem = obj.zulaessig.get(i);
+				result += SchulformSchulgliederung.transpilerToJSON(elem);
+				if (i < obj.zulaessig.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
 		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
@@ -94,16 +97,6 @@ export class HerkunftBildungsgangKatalogEintrag extends CoreTypeData {
 		}
 		if (obj.gueltigBis !== undefined) {
 			result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
-		}
-		if (obj.zulaessig !== undefined) {
-			result += '"zulaessig" : [ ';
-			for (let i = 0; i < obj.zulaessig.size(); i++) {
-				const elem = obj.zulaessig.get(i);
-				result += SchulformSchulgliederung.transpilerToJSON(elem);
-				if (i < obj.zulaessig.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

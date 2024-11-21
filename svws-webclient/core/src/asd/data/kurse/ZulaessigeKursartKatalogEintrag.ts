@@ -1,10 +1,8 @@
 import { SchulformSchulgliederung } from '../../../asd/data/schule/SchulformSchulgliederung';
-import { ArrayList } from '../../../java/util/ArrayList';
-import type { List } from '../../../java/util/List';
+import { CoreTypeDataNurSchulformenUndSchulgliederungen } from '../../../asd/data/CoreTypeDataNurSchulformenUndSchulgliederungen';
 import { Class } from '../../../java/lang/Class';
-import { CoreTypeData } from '../../../asd/data/CoreTypeData';
 
-export class ZulaessigeKursartKatalogEintrag extends CoreTypeData {
+export class ZulaessigeKursartKatalogEintrag extends CoreTypeDataNurSchulformenUndSchulgliederungen {
 
 	/**
 	 * Die Nummer der Kursart entsprechend der Vorgaben der amtlichen Schulstatistik
@@ -31,11 +29,6 @@ export class ZulaessigeKursartKatalogEintrag extends CoreTypeData {
 	 */
 	public erlaubtGOSt : boolean = false;
 
-	/**
-	 * Die Informationen zu Schulformen und -gliederungen, wo die Kursart zulässig ist.
-	 */
-	public zulaessig : List<SchulformSchulgliederung> = new ArrayList<SchulformSchulgliederung>();
-
 
 	/**
 	 * Leerer Standardkonstruktor.
@@ -49,7 +42,7 @@ export class ZulaessigeKursartKatalogEintrag extends CoreTypeData {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.asd.data.CoreTypeData', 'de.svws_nrw.asd.data.kurse.ZulaessigeKursartKatalogEintrag'].includes(name);
+		return ['de.svws_nrw.asd.data.CoreTypeDataNurSchulformenUndSchulgliederungen', 'de.svws_nrw.asd.data.CoreTypeData', 'de.svws_nrw.asd.data.kurse.ZulaessigeKursartKatalogEintrag'].includes(name);
 	}
 
 	public static class = new Class<ZulaessigeKursartKatalogEintrag>('de.svws_nrw.asd.data.kurse.ZulaessigeKursartKatalogEintrag');
@@ -57,6 +50,11 @@ export class ZulaessigeKursartKatalogEintrag extends CoreTypeData {
 	public static transpilerFromJSON(json : string): ZulaessigeKursartKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<ZulaessigeKursartKatalogEintrag>;
 		const result = new ZulaessigeKursartKatalogEintrag();
+		if (obj.zulaessig !== undefined) {
+			for (const elem of obj.zulaessig) {
+				result.zulaessig.add(SchulformSchulgliederung.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
 		if (obj.id === undefined)
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
@@ -80,16 +78,19 @@ export class ZulaessigeKursartKatalogEintrag extends CoreTypeData {
 		if (obj.erlaubtGOSt === undefined)
 			throw new Error('invalid json format, missing attribute erlaubtGOSt');
 		result.erlaubtGOSt = obj.erlaubtGOSt;
-		if (obj.zulaessig !== undefined) {
-			for (const elem of obj.zulaessig) {
-				result.zulaessig.add(SchulformSchulgliederung.transpilerFromJSON(JSON.stringify(elem)));
-			}
-		}
 		return result;
 	}
 
 	public static transpilerToJSON(obj : ZulaessigeKursartKatalogEintrag) : string {
 		let result = '{';
+		result += '"zulaessig" : [ ';
+		for (let i = 0; i < obj.zulaessig.size(); i++) {
+			const elem = obj.zulaessig.get(i);
+			result += SchulformSchulgliederung.transpilerToJSON(elem);
+			if (i < obj.zulaessig.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"schluessel" : ' + JSON.stringify(obj.schluessel) + ',';
 		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
@@ -101,14 +102,6 @@ export class ZulaessigeKursartKatalogEintrag extends CoreTypeData {
 		result += '"kuerzelAllg" : ' + ((obj.kuerzelAllg === null) ? 'null' : JSON.stringify(obj.kuerzelAllg)) + ',';
 		result += '"bezeichnungAllg" : ' + ((obj.bezeichnungAllg === null) ? 'null' : JSON.stringify(obj.bezeichnungAllg)) + ',';
 		result += '"erlaubtGOSt" : ' + obj.erlaubtGOSt.toString() + ',';
-		result += '"zulaessig" : [ ';
-		for (let i = 0; i < obj.zulaessig.size(); i++) {
-			const elem = obj.zulaessig.get(i);
-			result += SchulformSchulgliederung.transpilerToJSON(elem);
-			if (i < obj.zulaessig.size() - 1)
-				result += ',';
-		}
-		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -116,6 +109,16 @@ export class ZulaessigeKursartKatalogEintrag extends CoreTypeData {
 
 	public static transpilerToJSONPatch(obj : Partial<ZulaessigeKursartKatalogEintrag>) : string {
 		let result = '{';
+		if (obj.zulaessig !== undefined) {
+			result += '"zulaessig" : [ ';
+			for (let i = 0; i < obj.zulaessig.size(); i++) {
+				const elem = obj.zulaessig.get(i);
+				result += SchulformSchulgliederung.transpilerToJSON(elem);
+				if (i < obj.zulaessig.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
 		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
@@ -148,16 +151,6 @@ export class ZulaessigeKursartKatalogEintrag extends CoreTypeData {
 		}
 		if (obj.erlaubtGOSt !== undefined) {
 			result += '"erlaubtGOSt" : ' + obj.erlaubtGOSt.toString() + ',';
-		}
-		if (obj.zulaessig !== undefined) {
-			result += '"zulaessig" : [ ';
-			for (let i = 0; i < obj.zulaessig.size(); i++) {
-				const elem = obj.zulaessig.get(i);
-				result += SchulformSchulgliederung.transpilerToJSON(elem);
-				if (i < obj.zulaessig.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';
