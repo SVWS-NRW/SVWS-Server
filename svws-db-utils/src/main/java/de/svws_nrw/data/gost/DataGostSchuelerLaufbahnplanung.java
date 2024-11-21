@@ -52,7 +52,6 @@ import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.data.schueler.DBUtilsSchueler;
-import de.svws_nrw.data.schule.DataSchuleStammdaten;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangBeratungslehrer;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangFachkombinationen;
@@ -139,6 +138,90 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 	}
 
 
+	/**
+	 * Prüft, ob die Fachwahl in dem Halbjahr zu den Leistungsdaten passt. Ist dies nicht der Fall, so wird eine Exception generiert.
+	 *
+	 * @param leistungen    die Leistungen die geprüft werden
+	 * @param halbjahr      das Halbjahr, auf welches sich der Patch bezieht
+	 * @param istSP         gibt an, ob das Fach für die Leistungsdaten Sport ist
+	 * @param fw            der Wert für die Fachwahl
+	 *
+	 * @throws ApiOperationException im Fehlerfall
+	 */
+	private static void patchFachwahlHalbjahrCheckLeistungen(final List<DTOSchuelerLeistungsdaten> leistungen, final GostHalbjahr halbjahr, final boolean istSP,
+			final String fw) throws ApiOperationException {
+		for (final DTOSchuelerLeistungsdaten leistung : leistungen) {
+			final ZulaessigeKursart zulkursart = ZulaessigeKursart.data().getWertByKuerzel(leistung.Kursart);
+			final GostKursart kursart = GostKursart.fromKursart(zulkursart);
+			if (kursart == null)
+				continue;
+			// Keine Fachwahl -> Konflikt, da Leistungsdaten vorhanden sind
+			if (fw == null)
+				throw new ApiOperationException(Status.CONFLICT);
+			// Prüfe, ob Fachwahl mündlich passt
+			if (("M".equals(fw)) && ((kursart == GostKursart.PJK) || (kursart == GostKursart.VTF)
+					|| ((kursart == GostKursart.GK) && ((zulkursart == ZulaessigeKursart.GKM)
+							|| ((zulkursart == ZulaessigeKursart.AB4) && (halbjahr == GostHalbjahr.Q22))))))
+				return;
+			// Prüfe, ob Fachwahl schriftlich passt
+			if (("S".equals(fw)) && ((kursart == GostKursart.GK) && ((zulkursart == ZulaessigeKursart.GKS) || (zulkursart == ZulaessigeKursart.AB3)
+					|| ((zulkursart == ZulaessigeKursart.AB4) && (halbjahr != GostHalbjahr.Q22)))))
+				return;
+			// Prüfe, ob Fachwahl Leistungskurs passt
+			if (("LK".equals(fw)) && (kursart == GostKursart.LK))
+				return;
+			// Prüfe, ob Fachwahl Zusatzkurs passt
+			if (("ZK".equals(fw)) && (kursart == GostKursart.ZK))
+				return;
+			// Prüfe, ob ein Sportattest passt
+			if (("AT".equals(fw)) && (istSP && (Note.data().getWertByKuerzel(leistung.NotenKrz) == Note.ATTEST)))
+				return;
+		}
+		if (fw != null)
+			throw new ApiOperationException(Status.CONFLICT);
+	}
+
+	/**
+	 * Prüft, ob die Fachwahl in dem Halbjahr zu den Leistungsdaten in den Lernabschnitten passt.
+	 * Ist dies nicht der Fall, so wird eine Exception generiert.
+	 *
+	 * @param schueler      der Schüler, für welchen die Fachwahl angepasst wird
+	 * @param halbjahr      das Halbjahr, auf welches sich der Patch bezieht
+	 * @param fach          das Fach, für welches die Fachwahl angepasst werden soll
+	 * @param fw            der Wert für die Fachwahl
+	 *
+	 * @throws ApiOperationException im Fehlerfall
+	 */
+	private void patchFachwahlHalbjahrCheckLernabschnitt(final DTOSchueler schueler, final GostHalbjahr halbjahr, final DTOFach fach, final String fw)
+			throws ApiOperationException {
+		// Prüfe, ob die eingebene Fachwahl den Leistungsdaten entspricht
+		final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList(
+				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 AND e.ASDJahrgang = ?2 AND e.SemesterWertung = true AND e.WechselNr = 0",
+				DTOSchuelerLernabschnittsdaten.class,
+				schueler.ID, halbjahr.jahrgang);
+		for (final DTOSchuelerLernabschnittsdaten lernabschnitt : lernabschnitte) {
+			final DTOSchuljahresabschnitte abschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, lernabschnitt.Schuljahresabschnitts_ID);
+			if (halbjahr.halbjahr != abschnitt.Abschnitt)
+				continue;
+			final List<DTOSchuelerLeistungsdaten> leistungen =
+					conn.queryList("SELECT e FROM DTOSchuelerLeistungsdaten e WHERE e.Abschnitt_ID = ?1 AND e.Fach_ID = ?2", DTOSchuelerLeistungsdaten.class,
+							lernabschnitt.ID, fach.ID);
+			if (leistungen.isEmpty()) {
+				final boolean valid = (fw == null)
+						|| (fw.equals("M")) || (fw.equals("S"))
+						|| (((fw.equals("LK")) || (fw.equals("ZK"))) && (!halbjahr.istEinfuehrungsphase()))
+						|| ((fw.equals("AT")) && ("SP".equals(fach.StatistikKuerzel)));
+				if (!valid)
+					throw new ApiOperationException(Status.CONFLICT);
+				return;
+			}
+			patchFachwahlHalbjahrCheckLeistungen(leistungen, halbjahr, "SP".equals(fach.StatistikKuerzel), fw);
+			return;
+		}
+		if (fw != null)
+			throw new ApiOperationException(Status.CONFLICT);
+	}
+
 
 	/**
 	 * Führt den Fachwahl-Patch für das angegebene Halbjahr aus, sofern dieser gültig ist und in dem
@@ -163,70 +246,6 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 			return null;
 		if (((fw == null) && (fwDB == null)) || ((fw != null) && (fw.equals(fwDB))))
 			return fwDB;
-		// prüfe, ob eine Änderung bei diesem Schüler überhaupt erlaubt ist oder in das aktuelle Halbjahr des Schülers oder früher fällt...
-		if ((aktHalbjahr != null) && (aktHalbjahr.compareTo(halbjahr) >= 0)) {
-			// Prüfe, ob die eingebene Fachwahl den Leistungsdaten entspricht
-			final int anzahlAbschnitte = DataSchuleStammdaten.getAnzahlAbschnitte(conn);
-			final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList(
-					"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 AND e.ASDJahrgang = ?2 AND e.SemesterWertung = true AND e.WechselNr = 0",
-					DTOSchuelerLernabschnittsdaten.class,
-					schueler.ID, halbjahr.jahrgang);
-			for (final DTOSchuelerLernabschnittsdaten lernabschnitt : lernabschnitte) {
-				final DTOSchuljahresabschnitte abschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, lernabschnitt.Schuljahresabschnitts_ID);
-				if ((halbjahr.halbjahr * ((anzahlAbschnitte == 4) ? 2 : 1)) == abschnitt.Abschnitt) {
-					final List<DTOSchuelerLeistungsdaten> leistungen = conn.queryList(
-							"SELECT e FROM DTOSchuelerLeistungsdaten e WHERE e.Abschnitt_ID = ?1 AND e.Fach_ID = ?2",
-							DTOSchuelerLeistungsdaten.class,
-							lernabschnitt.ID, fach.ID);
-					if (leistungen.isEmpty()) {
-						final boolean valid = (fw == null)
-								|| (fw.equals("M")) || (fw.equals("S"))
-								|| (((fw.equals("LK")) || (fw.equals("ZK"))) && (!halbjahr.istEinfuehrungsphase()))
-								|| ((fw.equals("AT")) && ("SP".equals(fach.StatistikKuerzel)));
-						if (!valid)
-							throw new ApiOperationException(Status.CONFLICT);
-						return fw;
-					}
-					for (final DTOSchuelerLeistungsdaten leistung : leistungen) {
-						final ZulaessigeKursart zulkursart = ZulaessigeKursart.data().getWertByKuerzel(leistung.Kursart);
-						final GostKursart kursart = GostKursart.fromKursart(zulkursart);
-						if (kursart == null)
-							continue;
-						if (fw == null)
-							throw new ApiOperationException(Status.CONFLICT);
-						switch (fw) {
-							case "M" -> {
-								if ((kursart == GostKursart.PJK) || (kursart == GostKursart.VTF)
-										|| ((kursart == GostKursart.GK) && ((zulkursart == ZulaessigeKursart.GKM)
-												|| ((zulkursart == ZulaessigeKursart.AB4) && (halbjahr == GostHalbjahr.Q22)))))
-									return fw;
-							}
-							case "S" -> {
-								if ((kursart == GostKursart.GK) && ((zulkursart == ZulaessigeKursart.GKS) || (zulkursart == ZulaessigeKursart.AB3)
-										|| ((zulkursart == ZulaessigeKursart.AB4) && (halbjahr != GostHalbjahr.Q22))))
-									return fw;
-							}
-							case "LK" -> {
-								if ((kursart == GostKursart.LK))
-									return fw;
-							}
-							case "ZK" -> {
-								if ((kursart == GostKursart.ZK))
-									return fw;
-							}
-							case "AT" -> {
-								if ("SP".equals(fach.StatistikKuerzel) && (Note.data().getWertByKuerzel(leistung.NotenKrz) == Note.ATTEST))
-									return fw;
-							}
-							default -> throw new ApiOperationException(Status.CONFLICT);
-						}
-					}
-				}
-			}
-			if (fw == null)
-				return fw;
-			throw new ApiOperationException(Status.CONFLICT);
-		}
 		final boolean valid = (fw == null)
 				|| (fw.equals("M")) || (fw.equals("S"))
 				|| (fw.equals("LK") && !halbjahr.istEinfuehrungsphase()
@@ -234,7 +253,12 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 				|| (fw.equals("ZK") && !halbjahr.istEinfuehrungsphase())
 				|| (fw.equals("AT") && "SP".equals(fach.StatistikKuerzel));
 		if (!valid)
-			throw new ApiOperationException(Status.CONFLICT);
+			throw new ApiOperationException(Status.CONFLICT, "Die angegebene Fachwahl ist ungültig.");
+		// prüfe, ob eine Änderung bei diesem Schüler überhaupt erlaubt ist oder in das aktuelle Halbjahr des Schülers oder früher fällt...
+		if ((aktHalbjahr != null) && (aktHalbjahr.compareTo(halbjahr) >= 0)) {
+			patchFachwahlHalbjahrCheckLernabschnitt(schueler, halbjahr, fach, fw);
+			return fw;
+		}
 		return fw;
 	}
 
@@ -252,75 +276,75 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 	 */
 	public Response patchFachwahl(final Long schueler_id, final Long fach_id, final InputStream is) throws ApiOperationException {
 		final Map<String, Object> map = JSONMapper.toMap(is);
-		if (map.size() > 0) {
-			final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
-			final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, schueler_id);
-			if (schueler == null)
-				throw new ApiOperationException(Status.NOT_FOUND);
-			// Ermittle den aktuellen Schuljahresaschnitt und den dazugehörigen Schüler-Lernabschnitt
-			final DTOSchuljahresabschnitte abschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schueler.Schuljahresabschnitts_ID);
-			if (abschnitt == null)
-				throw new ApiOperationException(Status.NOT_FOUND);
-			final TypedQuery<DTOSchuelerLernabschnittsdaten> queryAktAbschnitt = conn.query(
-					"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = :schueler_id AND e.Schuljahresabschnitts_ID = :abschnitt_id",
-					DTOSchuelerLernabschnittsdaten.class);
-			final DTOSchuelerLernabschnittsdaten lernabschnitt = queryAktAbschnitt
-					.setParameter("schueler_id", schueler.ID)
-					.setParameter("abschnitt_id", schueler.Schuljahresabschnitts_ID)
-					.getResultList().stream().findFirst().orElse(null);
-			if (lernabschnitt == null)
-				throw new ApiOperationException(Status.NOT_FOUND);
-			final GostHalbjahr aktHalbjahr = (schule.AnzahlAbschnitte == 4)
-					? GostHalbjahr.fromJahrgangUndHalbjahr(lernabschnitt.ASDJahrgang, (abschnitt.Abschnitt + 1) / 2)
-					: GostHalbjahr.fromJahrgangUndHalbjahr(lernabschnitt.ASDJahrgang, abschnitt.Abschnitt);
-			// Bestimme das Fach und die Fachbelegungen in der DB. Liegen keine vor, so erstelle eine neue Fachnbelegung in der DB,um den Patch zu speichern
-			final DTOFach fach = conn.queryByKey(DTOFach.class, fach_id);
-			if ((fach == null) || (fach.IstOberstufenFach == null) || Boolean.TRUE.equals(!fach.IstOberstufenFach))
-				throw new ApiOperationException(Status.NOT_FOUND);
-			DTOGostSchuelerFachbelegungen fachbelegung = conn.queryByKey(DTOGostSchuelerFachbelegungen.class, schueler.ID, fach.ID);
-			if (fachbelegung == null)
-				fachbelegung = new DTOGostSchuelerFachbelegungen(schueler.ID, fach.ID);
-			for (final Entry<String, Object> entry : map.entrySet()) {
-				final String key = entry.getKey();
-				final Object value = entry.getValue();
-				switch (key) {
-					case "halbjahre" -> {
-						final String[] wahlen = JSONMapper.convertToStringArray(value, true, 6);
-						if ((wahlen == null) || ((wahlen.length != 0) && (wahlen.length != 6)))
-							throw new ApiOperationException(Status.CONFLICT);
-						if (wahlen.length == 0) {
-							fachbelegung.EF1_Kursart = null;
-							fachbelegung.EF2_Kursart = null;
-							fachbelegung.Q11_Kursart = null;
-							fachbelegung.Q12_Kursart = null;
-							fachbelegung.Q21_Kursart = null;
-							fachbelegung.Q22_Kursart = null;
-						} else {
-							fachbelegung.EF1_Kursart =
-									patchFachwahlHalbjahr(schueler, fachbelegung.EF1_Kursart, GostHalbjahr.EF1, aktHalbjahr, fach, wahlen[0]);
-							fachbelegung.EF2_Kursart =
-									patchFachwahlHalbjahr(schueler, fachbelegung.EF2_Kursart, GostHalbjahr.EF2, aktHalbjahr, fach, wahlen[1]);
-							fachbelegung.Q11_Kursart =
-									patchFachwahlHalbjahr(schueler, fachbelegung.Q11_Kursart, GostHalbjahr.Q11, aktHalbjahr, fach, wahlen[2]);
-							fachbelegung.Q12_Kursart =
-									patchFachwahlHalbjahr(schueler, fachbelegung.Q12_Kursart, GostHalbjahr.Q12, aktHalbjahr, fach, wahlen[3]);
-							fachbelegung.Q21_Kursart =
-									patchFachwahlHalbjahr(schueler, fachbelegung.Q21_Kursart, GostHalbjahr.Q21, aktHalbjahr, fach, wahlen[4]);
-							fachbelegung.Q22_Kursart =
-									patchFachwahlHalbjahr(schueler, fachbelegung.Q22_Kursart, GostHalbjahr.Q22, aktHalbjahr, fach, wahlen[5]);
-						}
+		if (map.isEmpty())
+			return Response.status(Status.OK).build();
+		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, schueler_id);
+		if (schueler == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		// Ermittle den aktuellen Schuljahresaschnitt und den dazugehörigen Schüler-Lernabschnitt
+		final DTOSchuljahresabschnitte abschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schueler.Schuljahresabschnitts_ID);
+		if (abschnitt == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		final TypedQuery<DTOSchuelerLernabschnittsdaten> queryAktAbschnitt = conn.query(
+				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = :schueler_id AND e.Schuljahresabschnitts_ID = :abschnitt_id",
+				DTOSchuelerLernabschnittsdaten.class);
+		final DTOSchuelerLernabschnittsdaten lernabschnitt = queryAktAbschnitt
+				.setParameter("schueler_id", schueler.ID)
+				.setParameter("abschnitt_id", schueler.Schuljahresabschnitts_ID)
+				.getResultList().stream().findFirst().orElse(null);
+		if (lernabschnitt == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		final GostHalbjahr aktHalbjahr = (schule.AnzahlAbschnitte == 4)
+				? GostHalbjahr.fromJahrgangUndHalbjahr(lernabschnitt.ASDJahrgang, (abschnitt.Abschnitt + 1) / 2)
+				: GostHalbjahr.fromJahrgangUndHalbjahr(lernabschnitt.ASDJahrgang, abschnitt.Abschnitt);
+		// Bestimme das Fach und die Fachbelegungen in der DB. Liegen keine vor, so erstelle eine neue Fachnbelegung in der DB,um den Patch zu speichern
+		final DTOFach fach = conn.queryByKey(DTOFach.class, fach_id);
+		if ((fach == null) || (fach.IstOberstufenFach == null) || Boolean.TRUE.equals(!fach.IstOberstufenFach))
+			throw new ApiOperationException(Status.NOT_FOUND);
+		DTOGostSchuelerFachbelegungen fachbelegung = conn.queryByKey(DTOGostSchuelerFachbelegungen.class, schueler.ID, fach.ID);
+		if (fachbelegung == null)
+			fachbelegung = new DTOGostSchuelerFachbelegungen(schueler.ID, fach.ID);
+		for (final Entry<String, Object> entry : map.entrySet()) {
+			final String key = entry.getKey();
+			final Object value = entry.getValue();
+			switch (key) {
+				case "halbjahre" -> {
+					final String[] wahlen = JSONMapper.convertToStringArray(value, true, 6);
+					if ((wahlen == null) || ((wahlen.length != 0) && (wahlen.length != 6)))
+						throw new ApiOperationException(Status.CONFLICT);
+					if (wahlen.length == 0) {
+						fachbelegung.EF1_Kursart = null;
+						fachbelegung.EF2_Kursart = null;
+						fachbelegung.Q11_Kursart = null;
+						fachbelegung.Q12_Kursart = null;
+						fachbelegung.Q21_Kursart = null;
+						fachbelegung.Q22_Kursart = null;
+					} else {
+						fachbelegung.EF1_Kursart =
+								patchFachwahlHalbjahr(schueler, fachbelegung.EF1_Kursart, GostHalbjahr.EF1, aktHalbjahr, fach, wahlen[0]);
+						fachbelegung.EF2_Kursart =
+								patchFachwahlHalbjahr(schueler, fachbelegung.EF2_Kursart, GostHalbjahr.EF2, aktHalbjahr, fach, wahlen[1]);
+						fachbelegung.Q11_Kursart =
+								patchFachwahlHalbjahr(schueler, fachbelegung.Q11_Kursart, GostHalbjahr.Q11, aktHalbjahr, fach, wahlen[2]);
+						fachbelegung.Q12_Kursart =
+								patchFachwahlHalbjahr(schueler, fachbelegung.Q12_Kursart, GostHalbjahr.Q12, aktHalbjahr, fach, wahlen[3]);
+						fachbelegung.Q21_Kursart =
+								patchFachwahlHalbjahr(schueler, fachbelegung.Q21_Kursart, GostHalbjahr.Q21, aktHalbjahr, fach, wahlen[4]);
+						fachbelegung.Q22_Kursart =
+								patchFachwahlHalbjahr(schueler, fachbelegung.Q22_Kursart, GostHalbjahr.Q22, aktHalbjahr, fach, wahlen[5]);
 					}
-					case "abiturFach" -> {
-						final Integer af = JSONMapper.convertToInteger(value, true);
-						if ((af != null) && ((af < 1) || (af > 4)))
-							throw new ApiOperationException(Status.CONFLICT);
-						fachbelegung.AbiturFach = af;
-					}
-					default -> throw new ApiOperationException(Status.BAD_REQUEST);
 				}
+				case "abiturFach" -> {
+					final Integer af = JSONMapper.convertToInteger(value, true);
+					if ((af != null) && ((af < 1) || (af > 4)))
+						throw new ApiOperationException(Status.CONFLICT);
+					fachbelegung.AbiturFach = af;
+				}
+				default -> throw new ApiOperationException(Status.BAD_REQUEST);
 			}
-			conn.transactionPersist(fachbelegung);
 		}
+		conn.transactionPersist(fachbelegung);
 		return Response.status(Status.OK).build();
 	}
 
