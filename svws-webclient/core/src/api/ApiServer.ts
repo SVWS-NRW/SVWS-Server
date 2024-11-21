@@ -7092,30 +7092,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der DELETE-Methode deleteKlasse für den Zugriff auf die URL https://{hostname}/db/{schema}/klassen/{id : \d+}
-	 *
-	 * Entfernt eine Klasse. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen der Klasse hat.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 204: Die Klasse wurde erfolgreich entfernt.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Klasse zu entfernen.
-	 *   Code 404: Die Klasse ist nicht vorhanden
-	 *   Code 409: Die übergebenen Daten sind fehlerhaft
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 */
-	public async deleteKlasse(schema : string, id : number) : Promise<void> {
-		const path = "/db/{schema}/klassen/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		await super.deleteJSON(path, null);
-		return;
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode getKlassenFuerAbschnitt für den Zugriff auf die URL https://{hostname}/db/{schema}/klassen/abschnitt/{abschnitt : \d+}
 	 *
 	 * Erstellt eine Liste aller in der Datenbank vorhanden Klassen unter Angabe der ID, des Kürzels, der Parallelität, der Kürzel des Klassenlehrers und des zweiten Klassenlehrers, einer Sortierreihenfolge und ob sie in der Anwendung sichtbar sein sollen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Klassendaten besitzt.
@@ -7327,30 +7303,6 @@ export class ApiServer extends BaseApi {
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = KursDaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
-	}
-
-
-	/**
-	 * Implementierung der DELETE-Methode deleteKurs für den Zugriff auf die URL https://{hostname}/db/{schema}/kurse/{id : \d+}
-	 *
-	 * Entfernt einen Kurs. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen des Kurses hat.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 204: Der Kurs wurde erfolgreich entfernt.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Kurs zu entfernen.
-	 *   Code 404: Der Kurs ist nicht vorhanden
-	 *   Code 409: Die übergebenen Daten sind fehlerhaft
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 */
-	public async deleteKurs(schema : string, id : number) : Promise<void> {
-		const path = "/db/{schema}/kurse/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		await super.deleteJSON(path, null);
-		return;
 	}
 
 

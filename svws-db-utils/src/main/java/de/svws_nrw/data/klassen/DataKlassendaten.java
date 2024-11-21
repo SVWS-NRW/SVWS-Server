@@ -15,7 +15,6 @@ import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.klassen.KlassenDaten;
 import de.svws_nrw.core.data.schule.BerufskollegFachklassenKatalogDaten;
-import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.asd.types.klassen.Klassenart;
 import de.svws_nrw.asd.types.schule.AllgemeinbildendOrganisationsformen;
 import de.svws_nrw.asd.types.schule.BerufskollegOrganisationsformen;
@@ -171,34 +170,34 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 		return map(klasseDto, false);
 	}
 
-	/**
-	 * Löscht mehrere Klassen und gibt das Ergebnis der Lösch-Operationen als Liste von {@link SimpleOperationResponse} zurück.
-	 *
-	 * @param ids   die IDs der zu löschenden Klassen
-	 *
-	 * @return die Response mit einer Liste von {@link SimpleOperationResponse} zu den angefragten Lösch-Operationen.
-	 */
+
 	@Override
-	public Response deleteMultipleAsResponse(final List<Long> ids) {
-		// Bestimme die Datenbank-DTOs der Klassen
-		final List<DTOKlassen> klassen = this.conn.queryByKeyList(DTOKlassen.class, ids).stream().toList();
-
-		// Prüfe ob das Löschen der Klassen erlaubt ist
-		final Map<Long, SimpleOperationResponse> mapResponses = klassen.stream()
-				.collect(Collectors.toMap(r -> r.ID, this::checkDeletePreConditions));
-
-		// Lösche die Klassen und gib den Erfolg in der Response zurück
-		for (final DTOKlassen klasse : klassen) {
-			final SimpleOperationResponse operationResponse = mapResponses.get(klasse.ID);
-			if (operationResponse == null)
-				throw new DeveloperNotificationException("Das SimpleOperationResponse Objekt zu der ID %d existiert nicht.".formatted(klasse.ID));
-
-			if (operationResponse.log.isEmpty())
-				operationResponse.success = this.conn.transactionRemove(klasse);
-		}
-
-		return Response.ok().entity(mapResponses.values()).build();
+	protected long getLongId(final DTOKlassen klasse) throws ApiOperationException {
+		return klasse.ID;
 	}
+
+
+	@Override
+	protected void checkBeforeDeletionWithSimpleOperationResponse(final List<DTOKlassen> klassen, final Map<Long, SimpleOperationResponse> mapResponses)
+			throws ApiOperationException {
+		for (final @NotNull DTOKlassen dtoKlasse : klassen) {
+			final SimpleOperationResponse operationResponse = mapResponses.get(dtoKlasse.ID);
+			// Die Klasse darf keine Schüler beinhalten. Dies kann an zugeordneten Lernabschnittsdaten geprüft werden...
+			final List<Long> schuelerIds =
+					conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_KLASSEN_ID, DTOSchuelerLernabschnittsdaten.class, dtoKlasse.ID)
+							.stream().filter(sla -> sla.WechselNr == 0).map(sla -> sla.Schueler_ID).distinct().toList();
+			// ... allerdings sollten zuvor die gelöschten Schüler gefiltert werden, da diese auf die Lösch-Operation keinen Einfluss haben sollten
+			final List<Long> schuelerIdsGeloescht = schuelerIds.isEmpty() ? new ArrayList<>()
+					: conn.queryByKeyList(DTOSchueler.class, schuelerIds).stream().filter(s -> s.Geloescht).map(s -> s.ID).toList();
+			// ... und dann darf die Klasse gelöscht werden, wenn keine nicht gelöschten Schüler der Klasse zugeordnet sind...
+			if (schuelerIds.size() > schuelerIdsGeloescht.size()) {
+				operationResponse.success = false;
+				operationResponse.log.add("Klasse %s (ID: %d) hat noch %d verknüpfte(n) Schüler."
+						.formatted(dtoKlasse.Klasse, dtoKlasse.ID, schuelerIds.size()));
+			}
+		}
+	}
+
 
 	/**
 	 * Die Methode stellt für die Klassen des angegebenen Schuljahresabschnittes eine Defaultsortierung her, in dem es Default-Werte in das
@@ -281,7 +280,9 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 	public void checkBeforeCreation(final Long newID, final Map<String, Object> initAttributes) throws ApiOperationException {
 		final Long idSchuljahresabschnitt = JSONMapper.convertToLong(initAttributes.get("idSchuljahresabschnitt"), false);
 		final String kuerzel = JSONMapper.convertToString(initAttributes.get("kuerzel"), false, false, Schema.tab_Klassen.col_Klasse.datenlaenge());
-		checkKuerzelExists(idSchuljahresabschnitt, kuerzel);
+		if (checkKuerzelExists(conn, idSchuljahresabschnitt, kuerzel))
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die Klasse %s existiert bereits im Schuljahresabschnitt %d"
+					.formatted(kuerzel, idSchuljahresabschnitt));
 	}
 
 	@Override
@@ -583,30 +584,11 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 		}
 	}
 
-	/**
-	 * Prüft, ob das Klassenkürzel im Schuljahresabschnitt existiert.
-	 *
-	 * @param idSchuljahresabschnitt ID des Schuljahresabschnittes
-	 * @param kuerzel Kürzel der Klasse
-	 *
-	 * @throws ApiOperationException wenn das Kürzel bereits existiert
-	 */
-	void checkKuerzelExists(final Long idSchuljahresabschnitt, final String kuerzel) throws ApiOperationException {
-		final String existingKlasseQuery = "SELECT e FROM DTOKlassen e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.Klasse = ?2";
-		final boolean klasseAlreadyExists = !conn.query(existingKlasseQuery, DTOKlassen.class)
-				.setParameter(1, idSchuljahresabschnitt)
-				.setParameter(2, kuerzel)
-				.getResultList()
-				.isEmpty();
-
-		if (klasseAlreadyExists)
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Die Klasse %s existiert bereits im Schuljahresabschnitt %d".formatted(kuerzel, idSchuljahresabschnitt));
-	}
-
 	private void mapKuerzel(final DTOKlassen dto, final Object value) throws ApiOperationException {
 		final String kuerzel = JSONMapper.convertToString(value, false, false, Schema.tab_Klassen.col_Klasse.datenlaenge());
-		checkKuerzelExists(dto.Schuljahresabschnitts_ID, kuerzel);
+		if (checkKuerzelExists(conn, dto.Schuljahresabschnitts_ID, kuerzel))
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die Klasse %s existiert bereits im Schuljahresabschnitt %d"
+					.formatted(kuerzel, dto.Schuljahresabschnitts_ID));
 		dto.Klasse = kuerzel;
 	}
 
@@ -935,30 +917,6 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 	}
 
 
-	/**
-	 * Diese Methode prüft, ob alle Vorbedingungen zum Löschen einer Klasse erfüllt sind.
-	 * Es wird eine {@link SimpleOperationResponse} zurückgegeben.
-	 *
-	 * @param dtoKlasse   das DTO der Klasse, die gelöscht werden soll
-	 *
-	 * @return Liefert eine Response mit dem Log der Vorbedingungsprüfung zurück.
-	 */
-	SimpleOperationResponse checkDeletePreConditions(final @NotNull DTOKlassen dtoKlasse) {
-		final SimpleOperationResponse operationResponse = new SimpleOperationResponse();
-		operationResponse.id = dtoKlasse.ID;
-
-		// Die Klasse darf keine Schüler beinhalten. Dies kann an zugeordneten Lernabschnittsdaten geprüft werden...
-		final List<Long> schuelerIds = getSchuelerIDsByKlassenID(dtoKlasse.ID);
-		// ... allerdings sollten zuvor die gelöschten Schüler gefiltert werden, da diese auf die Lösch-Operation keinen Einfluss haben sollten
-		final List<Long> schuelerIdsGeloescht = schuelerIds.isEmpty() ? new ArrayList<>()
-				: conn.queryByKeyList(DTOSchueler.class, schuelerIds).stream().filter(s -> s.Geloescht).map(s -> s.ID).toList();
-		// ... und dann darf die Klasse gelöscht werden, wenn keine nicht gelöschten Schüler der Klasse zugeordnet sind...
-		if (schuelerIds.size() > schuelerIdsGeloescht.size())
-			operationResponse.log.add("Klasse %s (ID: %d) hat noch %d verknüpfte(n) Schüler.".formatted(dtoKlasse.Klasse, dtoKlasse.ID, schuelerIds.size()));
-
-		return operationResponse;
-	}
-
 	// TODO: Methode sollte später durch eigene Methode in zugehöriger DataManager Klasse abgelöst werden
 	@NotNull
 	DTOTeilstandorte getDTOTeilstandort() throws ApiOperationException {
@@ -966,6 +924,22 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 		if (teilstandort == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es ist kein Teilstandort definiert, es muss mindestens ein Teilstandort hinterlegt sein.");
 		return teilstandort;
+	}
+
+
+	/**
+	 * Prüft, ob das übergebene Klassenkürzel bereits in dem angebenen Schuljahresabschnitt existiert.
+	 *
+	 * @param conn                     die aktuelle Datenbank-Verbindung
+	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnittes
+	 * @param kuerzel                  das Kürzel der Klasse
+	 *
+	 * @return true, wenn das Kürzel bereits existiert und ansonsten false
+	 */
+	public static boolean checkKuerzelExists(final DBEntityManager conn, final Long idSchuljahresabschnitt, final String kuerzel) {
+		final List<DTOKlassen> klassen = conn.queryList("SELECT e FROM DTOKlassen e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.Klasse = ?2", DTOKlassen.class,
+				idSchuljahresabschnitt, kuerzel);
+		return !klassen.isEmpty();
 	}
 
 }

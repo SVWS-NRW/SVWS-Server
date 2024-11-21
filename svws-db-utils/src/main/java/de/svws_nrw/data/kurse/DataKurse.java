@@ -57,6 +57,10 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 		return getKursdaten(conn, id);
 	}
 
+	@Override
+	protected long getLongId(final DTOKurs kurs) throws ApiOperationException {
+		return kurs.ID;
+	}
 
 	@Override
 	protected KursDaten map(final DTOKurs dto) throws ApiOperationException {

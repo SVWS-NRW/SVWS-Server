@@ -188,30 +188,6 @@ public class APIKurse {
 
 
 	/**
-	 * Die OpenAPI-Methode für das Entfernen eines Kurses.
-	 *
-	 * @param schema       das Datenbankschema
-	 * @param id           die ID des Kurses
-	 * @param request      die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die HTTP-Antwort mit dem Status
-	 */
-	@DELETE
-	@Path("/{id : \\d+}")
-	@Operation(summary = "Entfernt einen Kurs.",
-			description = "Entfernt einen Kurs. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen des Kurses hat.")
-	@ApiResponse(responseCode = "204", description = "Der Kurs wurde erfolgreich entfernt.")
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Kurs zu entfernen.")
-	@ApiResponse(responseCode = "404", description = "Der Kurs ist nicht vorhanden")
-	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
-	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response deleteKurs(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKurse(conn).deleteAsResponse(id),
-				request, ServerMode.DEV, BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN);
-	}
-
-
-	/**
 	 * Die OpenAPI-Methode für das Entfernen mehrerer Kurse.
 	 *
 	 * @param schema    das Datenbankschema
@@ -232,7 +208,8 @@ public class APIKurse {
 			content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(conn -> new DataKurse(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)),
+		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
+				conn -> new DataKurse(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
 				request, ServerMode.DEV,
 				BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN);
 	}

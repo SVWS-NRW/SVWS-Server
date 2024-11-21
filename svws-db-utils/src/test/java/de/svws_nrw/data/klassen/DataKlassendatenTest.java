@@ -8,14 +8,12 @@ import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
-import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.dto.current.schild.schule.DTOTeilstandorte;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response;
-import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,13 +23,10 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -75,53 +70,6 @@ class DataKlassendatenTest {
 		assertThat(result).isInstanceOf(ApiOperationException.class)
 				.hasMessage("Es ist kein Teilstandort definiert, es muss mindestens ein Teilstandort hinterlegt sein.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.NOT_FOUND);
-	}
-
-	@Test
-	@DisplayName("checkDeletePreConditions | Es wird eine löschbare Klasse übergeben => SimpleOperationResponse mit leerem Log")
-	void checkDeletePreConditions_Valid() {
-		cut = spy(cut);
-		doReturn(Collections.EMPTY_LIST).when(cut).getSchuelerIDsByKlassenID(1L);
-
-		final DTOKlassen klasse = new DTOKlassen(1L, 1, "5a");
-
-		final SimpleOperationResponse result = cut.checkDeletePreConditions(klasse);
-		assertThat(result)
-				.hasFieldOrPropertyWithValue("id", 1L)
-				.hasFieldOrPropertyWithValue("success", false)
-				.extracting(e -> e.log, as(InstanceOfAssertFactories.LIST)).isEmpty();
-	}
-
-	@Test
-	@DisplayName("checkDeletePreConditions | Es wird eine Klasse mit einem verknüpften Schüler übergeben => SimpleOperationResponse mit einem Log-Eintrag zu "
-			+ "verknüpftem Schüler")
-	void checkDeletePreConditions_KlasseExists() {
-		cut = spy(cut);
-		doReturn(List.of(99L)).when(cut).getSchuelerIDsByKlassenID(1L);
-
-		final DTOKlassen klasse = new DTOKlassen(1L, 1, "5a");
-
-		final SimpleOperationResponse result = cut.checkDeletePreConditions(klasse);
-		assertThat(result)
-				.hasFieldOrPropertyWithValue("id", 1L)
-				.hasFieldOrPropertyWithValue("success", false)
-				.extracting(e -> e.log, as(InstanceOfAssertFactories.LIST)).containsExactly("Klasse 5a (ID: 1) hat noch 1 verknüpfte(n) Schüler.");
-	}
-
-	@Test
-	@DisplayName("checkDeletePreConditions | Es wird eine Klasse mit zwei verknüpften Schülern übergeben => SimpleOperationResponse mit einem Log-Eintrag zu "
-			+ "verknüpften Schülern")
-	void checkDeletePreConditions_KlassenExist() {
-		cut = spy(cut);
-		doReturn(List.of(99L, 44L)).when(cut).getSchuelerIDsByKlassenID(1L);
-
-		final DTOKlassen klasse = new DTOKlassen(1L, 1, "5a");
-
-		final SimpleOperationResponse result = cut.checkDeletePreConditions(klasse);
-		assertThat(result)
-				.hasFieldOrPropertyWithValue("id", 1L)
-				.hasFieldOrPropertyWithValue("success", false)
-				.extracting(e -> e.log, as(InstanceOfAssertFactories.LIST)).containsExactly("Klasse 5a (ID: 1) hat noch 2 verknüpfte(n) Schüler.");
 	}
 
 	@Test
