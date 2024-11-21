@@ -22,7 +22,7 @@ interface RouteStateKlassen extends RouteStateAuswahlInterface<KlassenListeManag
 	oldView?: RouteNode<any, any>;
 }
 
-const defaultState = <RouteStateKlassen> {
+const defaultState: RouteStateKlassen = {
 	idSchuljahresabschnitt: -1,
 	manager: undefined,
 	mapKlassenVorigerAbschnitt: new Map<number, KlassenDaten>(),

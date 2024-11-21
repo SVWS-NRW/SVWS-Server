@@ -27,7 +27,7 @@ export class RouteKurseNeu extends RouteNode<any, RouteKurse> {
 
 	public getProps(to: RouteLocationNormalized): KurseNeuProps {
 		return {
-			kurseListeManager: () => routeKurse.data.kursListeManager,
+			manager: () => routeKurse.data.manager,
 			schulform: api.schulform,
 			add: routeKurse.data.add,
 			gotoDefaultView: routeKurse.data.gotoDefaultView,

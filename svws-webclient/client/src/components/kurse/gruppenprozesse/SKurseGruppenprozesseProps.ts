@@ -4,7 +4,6 @@ export interface KurseGruppenprozesseProps {
 	serverMode: ServerMode;
 	schulform: Schulform;
 	schulgliederungen: List<Schulgliederung>;
-	kurseListeManager: () => KursListeManager;
+	manager: () => KursListeManager;
 	deleteKurse: () => Promise<[boolean, List<string | null>]>;
-	deleteKurseCheck: () => [boolean, List<string>];
 }

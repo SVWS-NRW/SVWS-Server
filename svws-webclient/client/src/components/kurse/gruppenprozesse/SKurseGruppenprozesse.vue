@@ -39,7 +39,7 @@
 
 	const preConditionCheck = computed(() => {
 		if (currentAction.value === 'delete')
-			return props.deleteKurseCheck();
+			return [true, []];
 		return [false, []];
 	})
 

@@ -5,7 +5,7 @@ import type { ViewType } from "@ui";
 export interface KurseAuswahlProps {
 	serverMode: ServerMode;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
-	kursListeManager: () => KursListeManager;
+	manager: () => KursListeManager;
 	schuljahresabschnittsauswahl: () => AbschnittAuswahlDaten;
 	gotoDefaultView: (eintragId?: number | null) => Promise<void>;
 	gotoGruppenprozessView: (navigate: boolean) => Promise<void>;
