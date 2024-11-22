@@ -154,12 +154,12 @@
 
 <script lang="ts" setup>
 
-	import { ref, onMounted, onBeforeUnmount, computed, useSlots, getCurrentInstance } from 'vue';
+	import { ref, onMounted, onBeforeUnmount, computed, useSlots, getCurrentInstance, watch } from 'vue';
 	import type { ButtonType } from '../types';
 
 	const props = withDefaults(defineProps<{
 		compact?: boolean;
-		initiallyOpened?: boolean;
+		isOpen?: boolean;
 		collapsible?: boolean;
 		collapseIconPosition?: 'left' | 'right';
 		collapseIconOpened?: string;
@@ -181,7 +181,7 @@
 		onCancel?: () => void;
 	}>(), {
 		compact: true,
-		initiallyOpened: undefined,
+		isOpen: undefined,
 		collapsible: true,
 		collapseIconPosition: 'right',
 		collapseIconOpened: 'i-ri-arrow-up-s-line',
@@ -194,14 +194,16 @@
 		showDivider: false,
 		footer: undefined,
 		buttonMode: 'text',
-		buttonContainer: undefined,
-		buttonPosition: undefined,
+		buttonContainer: 'content',
+		buttonPosition: 'right',
 		buttonOrientation: 'horizontal',
 		onEdit: undefined,
 		onSave: undefined,
 		onDelete: undefined,
 		onCancel: undefined,
 	});
+
+	const emit = defineEmits(['close', 'open']);
 
 	/**
 	 * Berechnungen, wann welches Element angezeigt wird.
@@ -267,14 +269,23 @@
 			bodyWrapperRef.value.style.maxHeight = getContentHeightWithBorder() + 'px';
 	});
 
+	/**
+	 * Wenn der Zustand isActive von außen manipuliert wird, wird dieser entsprechend gesetzt
+	 */
+	watch(() => props.isOpen, (newValue) => {
+		setActive(newValue);
+	});
+
 	onMounted(() => {
 		const instance = getCurrentInstance();
 		if (instance)
-			instanceId.value = instance.uid.toString(); // Zugriff auf die _uid
-		if (props.initiallyOpened === undefined)
-			setActive(props.collapsible ? false : true);
+			instanceId.value = instance.uid.toString();
+
+		if (props.collapsible)
+			setActive((props.isOpen === undefined) ? false : props.isOpen)
 		else
-			setActive(props.initiallyOpened);
+			setActive(true);
+		
 		if (bodyRef.value)
 			resizeObserver.observe(bodyRef.value);
 	});
@@ -300,6 +311,8 @@
 			else
 				bodyWrapperRef.value.style.maxHeight = '0';
 		}
+
+		isActive.value ? emit('open') : emit('close');
 	}
 
 	/**

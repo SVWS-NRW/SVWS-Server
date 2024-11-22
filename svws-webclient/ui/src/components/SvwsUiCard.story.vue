@@ -2,12 +2,14 @@
 	<Story title="Card" id="svws-ui-card" icon="ri:window-2-fill" :layout="{ type: 'single' }" auto-props-disabled>
 		<Variant title="Collapsible" id="Collapsible" :responsive-disabled="false">
 			<div class="p-4">
-				<svws-ui-card :compact="state.compact" :collapsible="true" :collapse-icon-position="state.iconPosition"
+				<svws-ui-card :compact="state.compact" :isOpen="state.isOpen" :collapsible="true" :collapse-icon-position="state.iconPosition"
 					:icon="state.showIcon ? 'i-ri-settings-2-line' : undefined" :title="state.title" :subtitle="state.subtitle" :info="state.info"
-					:content="state.content" :show-divider="state.showDivider" :footer="state.footer" />
+					:content="state.content" :show-divider="state.showDivider" :footer="state.footer" @open="state.isOpen = true" 
+					@close="state.isOpen = false" />
 			</div>
 			<template #controls>
 				<HstCheckbox v-model="state.compact" title="kompakt" />
+				<HstCheckbox v-model="state.isOpen" title="geöffnet" />
 				<div class="text-headline-sm pl-2">Header</div>
 				<HstCheckbox v-model="state.showIcon" title="Icon" />
 				<HstText v-model="state.title" title="Titel" />
@@ -44,15 +46,17 @@
 		</Variant>
 		<Variant title="Collapsible Buttons" id="CollapsibleButtons">
 			<div class="p-4">
-				<svws-ui-card :compact="state.compact" :initially-opened="true" :collapsible="true" :collapse-icon-position="state.iconPosition"
+				<svws-ui-card :compact="state.compact" :isOpen="state.isOpen" :collapsible="true" :collapse-icon-position="state.iconPosition"
 					:icon="state.showIcon ? 'i-ri-settings-2-line' : undefined" :title="state.title" :subtitle="state.subtitle" :info="state.info"
 					:content="state.content" :show-divider="state.showDivider" :footer="state.footer" :button-mode="state.buttonMode"
 					:button-container="state.buttonContainer" :button-position="state.buttonPosition" :button-orientation="state.buttonOrientation"
-					:on-edit="state.showEdit ? state.onEdit : undefined" :on-save="state.showSave ? state.onSave : undefined"
-					:on-delete="state.showDelete ? state.onDelete : undefined" :on-cancel="state.showCancel ? state.onCancel : undefined" />
+					:on-edit="state.showEdit ? onEdit : undefined" :on-save="state.showSave ? onSave : undefined"
+					:on-delete="state.showDelete ? onDelete : undefined" :on-cancel="state.showCancel ? onCancel : undefined" 
+					@open="state.isOpen = true" @close="state.isOpen = false" />
 			</div>
 			<template #controls>
 				<HstCheckbox v-model="state.compact" title="kompakt" />
+				<HstCheckbox v-model="state.isOpen" title="geöffnet" />
 				<div class="text-headline-sm pl-2">Header</div>
 				<HstCheckbox v-model="state.showIcon" title="Icon" />
 				<HstText v-model="state.title" title="Titel" />
@@ -97,8 +101,14 @@
 
 	import { reactive } from 'vue';
 
+	const onEdit = () => alert("Bearbeiten");
+	const onSave = () => alert("Speichern");
+	const onDelete = () => alert("Löschen");
+	const onCancel = () => alert("Abbrechen");
+
 	const state = reactive({
 		compact: false,
+		isOpen: true,
 		title: 'Card Title',
 		subtitle: 'Card Subtitle',
 		info: 'Info Text',
@@ -113,10 +123,6 @@
 			'diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren',
 		showDivider: true,
 		buttonMode: 'icon' as 'icon' | 'text',
-		onEdit: () => alert("Bearbeiten"),
-		onSave: () => alert("Speichern"),
-		onDelete: () => alert("Löschen"),
-		onCancel: () => alert("Abbrechen"),
 		showEdit: true,
 		showDelete: true,
 		showCancel: false,
