@@ -109,10 +109,10 @@ public final class DataJahrgangsdaten extends DataManager<Long> {
 	private static final Map<String, DataBasicMapper<DTOJahrgang>> patchMappings = Map.ofEntries(
 			Map.entry("id", (conn, dto, value, map) -> {
 				final Long patch_id = JSONMapper.convertToLong(value, true);
-				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+				if ((patch_id == null) || (patch_id != dto.ID))
 					throw new ApiOperationException(Status.BAD_REQUEST);
 			}),
-			Map.entry("kuerzel", (conn, dto, value, map) -> dto.InternKrz = JSONMapper.convertToString(value, true, true, 20)),
+			Map.entry("kuerzel", (conn, dto, value, map) -> dto.InternKrz = JSONMapper.convertToString(value, false, false, 20)),
 			Map.entry("kuerzelStatistik", (conn, dto, value, map) -> {
 				final String strJahrgang = JSONMapper.convertToString(value, true, false, 2);
 				final Jahrgaenge jahrgang = (strJahrgang == null) ? null : Jahrgaenge.data().getWertBySchluessel(strJahrgang);
@@ -185,8 +185,6 @@ public final class DataJahrgangsdaten extends DataManager<Long> {
 	 * @return true, falls der Jahrgang sicher gelöscht werden kann und ansonsten false
 	 */
 	private boolean isDeletable(final Long id) {
-		if (id == null) {
-		}
 		// TODO Prüfe, ob der Jahrgang sicher (true) gelöscht werden kann. Existiert auch nur eine Referenz, so muss dieser erhalten bleiben (false)
 		return false;
 	}
@@ -244,9 +242,8 @@ public final class DataJahrgangsdaten extends DataManager<Long> {
 			if (klasse.Jahrgang_ID == null)
 				continue;
 			final DTOJahrgang jg = mapJahrgaenge.get(klasse.Jahrgang_ID);
-			if (jg == null)
-				continue;
-			mapJahrgaengeByKlassenId.put(klasse.ID, jg);
+			if (jg != null)
+				mapJahrgaengeByKlassenId.put(klasse.ID, jg);
 		}
 		return mapJahrgaengeByKlassenId;
 	}
