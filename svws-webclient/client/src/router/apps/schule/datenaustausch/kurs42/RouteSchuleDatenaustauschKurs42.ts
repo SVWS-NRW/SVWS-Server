@@ -1,22 +1,19 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationRaw, RouteParamsRawGeneric } from "vue-router";
 
-import { BenutzerKompetenz, DeveloperNotificationException, ServerMode } from "@core";
+import { BenutzerKompetenz, ServerMode } from "@core";
 
-import { RouteNode } from "~/router/RouteNode";
 import type { RouteApp} from "~/router/apps/RouteApp";
 
-import type { SchuleDatenaustauschKurs42Props } from "~/components/schule/datenaustausch/kurs42/SSchuleDatenaustauschKurs42Props";
-import type { TabData } from "@ui";
-import { RouteManager } from "~/router/RouteManager";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { RouteDataSchuleDatenaustauschKurs42 } from "./RouteDataSchuleDatenaustauschKurs42";
 import { routeSchuleDatenaustauschKurs42Blockung } from "./RouteSchuleDatenaustauschKurs42Blockung";
 import { routeSchuleDatenaustauschKurs42Raeume } from "./RouteSchuleDatenaustauschKurs42Raeume";
 import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
+import { RouteTabNode } from "~/router/RouteTabNode";
 
 const SSchuleDatenaustauschKurs42 = () => import("~/components/schule/datenaustausch/kurs42/SSchuleDatenaustauschKurs42.vue");
 
-export class RouteSchuleDatenaustauschKurs42 extends RouteNode<RouteDataSchuleDatenaustauschKurs42, RouteApp> {
+export class RouteSchuleDatenaustauschKurs42 extends RouteTabNode<RouteDataSchuleDatenaustauschKurs42, RouteApp> {
 
 	public constructor() {
 		super(schulformenGymOb, [
@@ -26,7 +23,6 @@ export class RouteSchuleDatenaustauschKurs42 extends RouteNode<RouteDataSchuleDa
 			BenutzerKompetenz.STUNDENPLAN_FUNKTIONSBEZOGEN_ANSEHEN,
 		], "schule.datenaustausch.kurs42", "kurs42", SSchuleDatenaustauschKurs42, new RouteDataSchuleDatenaustauschKurs42());
 		super.mode = ServerMode.STABLE;
-		super.propHandler = (route) => this.getProps(route);
 		super.text = "Kurs42";
 		super.menugroup = RouteSchuleMenuGroup.DATENAUSTAUSCH;
 		super.children = [
@@ -36,37 +32,11 @@ export class RouteSchuleDatenaustauschKurs42 extends RouteNode<RouteDataSchuleDa
 		this.defaultChild = routeSchuleDatenaustauschKurs42Blockung;
 	}
 
-	protected async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		if (to.name === this.name) {
-			if (routeSchuleDatenaustauschKurs42Blockung.hidden() === false)
-				return routeSchuleDatenaustauschKurs42Blockung.getRoute();
-			else
-				return routeSchuleDatenaustauschKurs42Raeume.getRoute();
-		}
-		if (!to.name.startsWith(this.data.view.name)) {
-			for (const child of this.children) {
-				if (to.name.startsWith(child.name)) {
-					this.data.setView(child, this.children);
-					return child.getRoute();
-				}
-			}
-		}
-	}
-
-	public getProps(to: RouteLocationNormalized): SchuleDatenaustauschKurs42Props {
-		return {
-			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab),
-		};
-	}
-
-	private setTab = async (value: TabData) => {
-		if (value.name === this.data.view.name)
-			return;
-		const node = RouteNode.getNodeByName(value.name);
-		if (node === undefined)
-			throw new DeveloperNotificationException("Unbekannte Route");
-		await RouteManager.doRoute(node.getRoute());
-		this.data.setView(node, this.children);
+	public getRouteDefaultChild(params? : RouteParamsRawGeneric): RouteLocationRaw {
+		if (routeSchuleDatenaustauschKurs42Blockung.hidden() === false)
+			return routeSchuleDatenaustauschKurs42Blockung.getRoute();
+		else
+			return routeSchuleDatenaustauschKurs42Raeume.getRoute();
 	}
 
 }

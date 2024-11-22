@@ -760,6 +760,8 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * @param from_params   die Routen-Parameter der alten Route
 	 * @param isEntering    gibt an, ob die Route das erste mal betreten wird (true) oder aufgrund von Parameter-Änderungen nur aktualisiert wird (false)
 	 * @param redirected    gibt den Knoten an, von dem umgeleitet wurde, falls im Routing-Prozess bereits ein redirect stattgefunden hat
+	 *
+	 * @returns ggf. die Route für ein redirect oder ein Fehler
 	 */
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean, redirected: RouteNode<any, any> | undefined) : Promise<void | Error | RouteLocationRaw> {
 	}

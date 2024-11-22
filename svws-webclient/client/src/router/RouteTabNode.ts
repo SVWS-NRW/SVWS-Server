@@ -1,7 +1,7 @@
 import { DeveloperNotificationException, type BenutzerKompetenz, type Schulform } from "@core";
 import type { RouteData } from "./RouteData";
 import { RouteNode } from "./RouteNode";
-import type { RouteComponent } from "vue-router";
+import type { RouteComponent, RouteLocationRaw, RouteParams } from "vue-router";
 import type { TabData, TabManager, ViewType } from "@ui";
 import { RouteManager } from "./RouteManager";
 
@@ -41,12 +41,43 @@ export abstract class RouteTabNode<TRouteData extends RouteData<any>, TRoutePare
 	}
 
 	/**
-	 * Diese Methode muss überschrieben werden, um die Properties für die Komponente zu bestimmen, welche
-	 * dieser Route zugeordnet ist.
+	 * Eine Default-Implementierung für die update-Methode, die für alle einfachen Fälle genutzt werden kann,
+	 * wo einfach in einer Child-Komponente weitergeleitet werden soll.
+	 * In komplexeren Fällen kann diese Methode einfach von der konkreten Route überschrieben werden,
+	 * um das Verhalten anzupassen.
+	 *
+	 * @param to            die neue Route
+	 * @param to_params     die Routen-Parameter
+	 * @param from          die alte Route
+	 * @param from_params   die Routen-Parameter der alten Route
+	 * @param isEntering    gibt an, ob die Route das erste mal betreten wird (true) oder aufgrund von Parameter-Änderungen nur aktualisiert wird (false)
+	 * @param redirected    gibt den Knoten an, von dem umgeleitet wurde, falls im Routing-Prozess bereits ein redirect stattgefunden hat
+	 *
+	 * @returns ggf. die Route für ein redirect oder ein Fehler
+	 */
+	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean, redirected: RouteNode<any, any> | undefined) : Promise<void | Error | RouteLocationRaw> {
+		if (to.name === this.name)
+			return this.getRouteDefaultChild();
+		if (!to.name.startsWith(this.data.view.name)) {
+			for (const child of this.children) {
+				if (to.name.startsWith(child.name)) {
+					this.data.setView(child, this.children);
+					return child.getRoute(to_params);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Diese Methode muss überschrieben werden, wenn weitere Properties für die Komponente zu bestimmen sind.
+	 * Wenn keine weiteren Properties ergänzt werden sollen, so kann einfach diese Implementierung verwendet
+	 * werden.
 	 *
 	 * @returns die Properties für die Komponente
 	 */
-	public abstract getProps(props: RouteTabProps): Record<string, any>;
+	public getProps(props: RouteTabProps): RouteTabProps {
+		return props;
+	}
 
 	/**
 	 * Callback-Methode, welche vom Tab-Manager aufgerufen wird, um das Routing zu dem ausgewählten Tab-

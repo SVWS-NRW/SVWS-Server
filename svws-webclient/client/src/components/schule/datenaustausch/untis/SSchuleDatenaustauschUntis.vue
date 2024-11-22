@@ -16,8 +16,8 @@
 
 <script setup lang="ts">
 
-	import type { SchuleDatenaustauschUntisProps } from './SSchuleDatenaustauschUntisProps';
+	import type { RouteTabProps } from '~/router/RouteTabNode';
 
-	const props = defineProps<SchuleDatenaustauschUntisProps>();
+	const props = defineProps<RouteTabProps>();
 
 </script>
