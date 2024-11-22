@@ -58,14 +58,10 @@ export abstract class RouteTabNode<TRouteData extends RouteData<any>, TRoutePare
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean, redirected: RouteNode<any, any> | undefined) : Promise<void | Error | RouteLocationRaw> {
 		if (to.name === this.name)
 			return this.getRouteDefaultChild();
-		if (!to.name.startsWith(this.data.view.name)) {
-			for (const child of this.children) {
-				if (to.name.startsWith(child.name)) {
+		if (!to.name.startsWith(this.data.view.name))
+			for (const child of this.children)
+				if (to.name.startsWith(child.name))
 					this.data.setView(child, this.children);
-					return child.getRoute(to_params);
-				}
-			}
-		}
 	}
 
 	/**
