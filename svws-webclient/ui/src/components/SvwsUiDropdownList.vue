@@ -23,7 +23,7 @@
 						class="svws-ui-dropdown-list--item"
 						:class="{
 							'svws-active': activeItemIndex === index,
-							'svws-selected': selectedItemList.has(item)
+							'svws-selected': selectedItemList.has(item),
 						}"
 						:aria-selected="selectedItemList.has(item) ? 'true' : 'false'"
 						@mousedown.prevent
@@ -41,7 +41,6 @@
 <script setup lang="ts" generic="Item">
 
 	import type { Strategy } from "@floating-ui/vue";
-	import type { Ref, ShallowRef } from "vue";
 	import { ref, shallowRef, computed, useId } from "vue";
 
 	const props = withDefaults(defineProps<{
@@ -77,13 +76,7 @@
 		return true;
 	})
 
-	defineExpose<{
-		activeItemIndex: Ref<number>;
-		floating: Ref<HTMLElement|null>;
-		itemRefs: ShallowRef<HTMLLIElement[]>;
-	}>({
-		activeItemIndex, floating, itemRefs
-	});
+	defineExpose({ activeItemIndex, floating, itemRefs });
 
 
 </script>
@@ -114,7 +107,10 @@
 		@apply bg-ui-hover border-ui;
 
 		&.svws-selected {
-			@apply bg-ui-selected-hover text-ui-onselected-hover border-ui-selected;
+			@apply bg-ui-selected-hover text-ui-onbrand-hover border-ui-selected;
+			.icon {
+				@apply icon-ui-onbrand;
+			}
 		}
 	}
 
