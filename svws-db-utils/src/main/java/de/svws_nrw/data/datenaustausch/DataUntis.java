@@ -1151,6 +1151,8 @@ public final class DataUntis {
 		try {
 			final List<UntisGPU015> gpu015 = new ArrayList<>();
 			for (final DTOSchueler dtoSchueler : dtosSchueler) {
+				if (datenManager.schuelerGetListeOfFachwahlen(dtoSchueler.ID).isEmpty())
+					continue;
 				final String schuelerName = getUntisSchuelerName(dtoSchueler.Nachname, dtoSchueler.Vorname, dtoSchueler.Geburtsdatum);
 
 				for (final GostBlockungsergebnisKurs k : ergebnisManager.getOfSchuelerKursmenge(dtoSchueler.ID)) {
