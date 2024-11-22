@@ -361,7 +361,7 @@ public class APIDatenaustausch {
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	@ApiResponse(responseCode = "500", description = "Es ist ein unerwarteter Fehler aufgetreten.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
-	public Response exportUntisLehrerGPU006(@PathParam("schema") final String schema, @PathParam("id") final long id,
+	public Response exportUntisFaecherGPU006(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
 		final Logger logger = new Logger();
 		final LogConsumerList log = new LogConsumerList();

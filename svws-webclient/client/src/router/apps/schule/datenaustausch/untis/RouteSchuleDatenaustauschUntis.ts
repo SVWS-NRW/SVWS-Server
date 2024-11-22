@@ -7,6 +7,7 @@ import { routeSchuleDatenaustauschUntisRaeume } from "./RouteSchuleDatenaustausc
 import { routeSchuleDatenaustauschUntisBlockungen } from "./RouteSchuleDatenaustauschUntisBlockungen";
 import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
 import { RouteTabNode } from "~/router/RouteTabNode";
+import { routeSchuleDatenaustauschUntisExporte } from "./RouteSchuleDatenaustauschUntisExporte";
 
 const SSchuleDatenaustauschUntis = () => import("~/components/schule/datenaustausch/untis/SSchuleDatenaustauschUntis.vue");
 
@@ -26,6 +27,7 @@ export class RouteSchuleDatenaustauschUntis extends RouteTabNode<RouteDataSchule
 			routeSchuleDatenaustauschUntisStundenplan,
 			routeSchuleDatenaustauschUntisRaeume,
 			routeSchuleDatenaustauschUntisBlockungen,
+			routeSchuleDatenaustauschUntisExporte,
 		];
 		super.defaultChild = routeSchuleDatenaustauschUntisStundenplan;
 	}

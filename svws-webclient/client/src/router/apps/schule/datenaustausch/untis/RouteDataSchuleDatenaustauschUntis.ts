@@ -5,6 +5,7 @@ import type { ApiFile, GostBlockungListeneintrag, GostBlockungsergebnis, GostJah
 import { DeveloperNotificationException, OpenApiError, SimpleOperationResponse, GostBlockungsdatenManager, GostBlockungsdaten, GostFaecherManager, ArrayList } from "@core";
 import { RouteManager } from "~/router/RouteManager";
 import { routeSchuleDatenaustauschUntisBlockungen } from "./RouteSchuleDatenaustauschUntisBlockungen";
+import { routeApp } from "~/router/apps/RouteApp";
 
 
 interface RouteStateDatenaustauschUntis extends RouteStateInterface {
@@ -235,5 +236,24 @@ export class RouteDataSchuleDatenaustauschUntis extends RouteData<RouteStateDate
 		throw new DeveloperNotificationException(`Es konnte keine Exportdatei für die ergebnisID ${ergebnisID} und unterrichtID ${unterrichtID} erstellt werden`);
 	}
 
-}
+	exportUntisKlassenGPU003 = async(): Promise<string> => {
+		const apifile = await api.server.exportUntisKlassenGPU003(api.schema, routeApp.data.aktAbschnitt.value.id);
+		return apifile.data.text();
+	}
 
+	exportUntisLehrerGPU004 = async(): Promise<string> => {
+		const apifile = await api.server.exportUntisLehrerGPU004(api.schema, routeApp.data.aktAbschnitt.value.id);
+		return apifile.data.text();
+	}
+
+	exportUntisFaecherGPU006 = async(): Promise<string> => {
+		const apifile = await api.server.exportUntisFaecherGPU006(api.schema, routeApp.data.aktAbschnitt.value.id);
+		return apifile.data.text();
+	}
+
+	exportUntisSchuelerGPU010 = async(): Promise<string> => {
+		const apifile = await api.server.exportUntisSchuelerGPU010(api.schema, routeApp.data.aktAbschnitt.value.id);
+		return apifile.data.text();
+	}
+
+}
