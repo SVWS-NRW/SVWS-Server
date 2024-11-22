@@ -23,10 +23,10 @@
 										:draggable="hatUpdateKompetenz && (fachwahlKurszuordnungen.get(fach.fachID) === undefined)"
 										@dragstart="drag_started(fachwahlKurszuordnungen.get(fach.fachID)?.id, fach.fachID, fachwahlKursarten.get(fach.fachID)!.id)"
 										@dragend="drag_ended()"
-										class="select-none svws-ui-td svws-no-padding group -my-1 !py-0.5"
+										class="select-none svws-ui-td svws-no-padding group"
 										:class="hatUpdateKompetenz && (fachwahlKurszuordnungen.get(fach.fachID) === undefined) ? 'cursor-grab' : 'opacity-50'"
 										:style="{ '--background-color': bgColorFachwahl(fach.fachID) }">
-										<div class="svws-ui-badge w-auto flex-grow -mx-3 py-0.5 !my-0 !h-full items-center">
+										<div class="svws-ui-badge w-auto flex-grow !h-full items-center m-0">
 											<div class="flex flex-row flex-grow">
 												<template v-if="(fachwahlKurszuordnungen.get(fach.fachID) === undefined) && hatUpdateKompetenz">
 													<span class="icon-sm i-ri-draggable opacity-50 group-hover:opacity-100 rounded-sm group-hover:bg-white/50" />
@@ -37,13 +37,13 @@
 												<span class="ml-0.5">
 													{{ getFachwahlKursname(fach.fachID) }}
 													<template v-if="getDatenmanager().getHalbjahr().istQualifikationsphase() && getDatenmanager().schuelerGetOfFachFachwahl(schueler.id, fach.fachID).abiturfach !== null">
-														<span class="text-sm ml-2 mr-2">—</span>
+														<span class="text-sm">—</span>
 														<span>AB{{ getDatenmanager().schuelerGetOfFachFachwahl(schueler.id, fach.fachID).abiturfach }}</span>
 													</template>
 												</span>
 											</div>
-											<span v-if="fach.istSchriftlich" class="icon i-ri-draft-line -my-0.5" />
-											<span v-else class="icon i-ri-chat-1-line -my-0.5" />
+											<span v-if="fach.istSchriftlich" class="icon i-ri-draft-line" />
+											<span v-else class="icon i-ri-chat-1-line" />
 										</div>
 									</div>
 								</div>
