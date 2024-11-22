@@ -328,13 +328,13 @@
 <style lang="postcss">
 
 	.svws-ui-select.svws-ui-multiselect {
-		@apply flex-none justify-start;
+		@apply flex-none;
 		&:focus-visible,
 		&:focus-within {
 			@apply ring ring-ui-neutral;
 		}
 		.svws-dropdown-icon {
-			@apply top-[0.175rem];
+			@apply top-[0.175rem] right-[0.19rem];
 
 		}
 		.text-input-component .text-input--control:focus-visible {
@@ -372,7 +372,7 @@
 		}
 
 		.svws-tags {
-			@apply relative z-10 flex flex-wrap gap-0.5 pl-1 pr-7 pointer-events-none m-0.5 mt-2 content-start justify-start;
+			@apply relative z-10 flex flex-wrap gap-0.5 pr-5 pointer-events-none m-0.5 mt-2 content-start justify-start;
 
 			.svws-remove {
 				@apply relative top-0 left-0.5 -my-1 w-auto h-auto pointer-events-auto py-0;

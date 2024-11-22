@@ -321,7 +321,7 @@
 		}
 	}
 
-	const { x, y, strategy } = useFloating( inputEl, refList as Readonly<Ref<MaybeElement<HTMLElement>>>, {
+	const { x, y, strategy } = useFloating(inputEl, refList as Readonly<Ref<MaybeElement<HTMLElement>>>, {
 		placement: 'bottom',
 		middleware: [flip(), shift(), offset(2), size({ apply({rects, elements}) { Object.assign(elements.floating.style, { width: `${rects.reference.width}px` }); } })],
 		whileElementsMounted: autoUpdate,
