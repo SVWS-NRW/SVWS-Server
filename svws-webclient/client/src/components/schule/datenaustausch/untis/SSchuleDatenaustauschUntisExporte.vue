@@ -1,17 +1,31 @@
 <template>
-	<div class="page--content page--content--flex h-full w-full overflow-hidden">
-		<div class="h-full w-full overflow-y-hidden flex flex-col">
-			<div v-for="gpu in gpus" :key="gpu.value.title" class="overflow-hidden w-full" :class="{ 'flex-none': !gpu.value.isOpen }">
-				<svws-ui-card :title="gpu.value.title" :subtitle="gpu.value.subtitle" collapsible @open="onOpen(gpu.value)" @close="onClose(gpu.value)"
-					show-divider button-mode="text" button-container="footer" button-position="right" :on-save="() => onSave(gpu.value)">
-					<template #content>
-						<pre>{{ gpu.value.daten }}</pre>
-					</template>
-					<template #footer>
-						<span class="font-bold">Dateiname:</span>
-						<svws-ui-text-input placeholder="Dateiname" :model-value="gpu.value.filename" type="text" headless />
-					</template>
-				</svws-ui-card>
+	<div class="page--content page--content--flex-row gap-2 h-full w-full overflow-hidden">
+		<!-- Auswahl des Untis-Exportes (linke Seite) -->
+		<div class="h-full w-48 flex flex-col gap-2">
+			<svws-ui-button v-for="gpu in gpus" :key="gpu.title" :type="(aktuell === gpu) ? 'primary' : 'secondary'" @click="onSelect(gpu)">
+				<div class="flex flex-col gap-1">
+					<p class="text-left font-bold ">{{ gpu.title }}</p>
+					<p class="text-left font-normal">{{ gpu.subtitle }}</p>
+				</div>
+			</svws-ui-button>
+		</div>
+
+		<!-- Weitere Eingabemöglichkeiten für den zuvor gewählten Untis-Export (rechte Seite - spezielle Ansicht nach Auswahl) -->
+		<div v-if="daten !== null" class="w-full h-full overflow-hidden flex flex-col gap-4">
+			<!-- Angabe des Dateinamen und Speichermöglichkeit -->
+			<div class="flex flex-row gap-2 mt-2">
+				<div class="grow max-w-128">
+					<svws-ui-text-input placeholder="Dateiname" :model-value="filename" @change="(value) => filename = value ?? ''" type="text" required />
+				</div>
+				<svws-ui-button type="primary" :disabled="(daten === null) || (filename.trim() === '')" @click="() => onSave()">
+					Speichern
+				</svws-ui-button>
+				<div class="grow" />
+			</div>
+
+			<!-- Visualisierung der zuvor vom SVWS-Server geladenen Daten -->
+			<div class="h-full w-full overflow-scroll grow bg-ui border border-ui-secondary text-ui rounded-md text-base pt-2 pl-2 pr-6 pb-6">
+				<pre>{{ daten }}</pre>
 			</div>
 		</div>
 	</div>
@@ -19,7 +33,7 @@
 
 <script setup lang="ts">
 
-	import { ref } from 'vue';
+	import { computed, ref, shallowRef } from 'vue';
 	import type { SchuleDatenaustauschUntisExporteProps } from './SSchuleDatenaustauschUntisExporteProps';
 
 	const props = defineProps<SchuleDatenaustauschUntisExporteProps>();
@@ -27,67 +41,52 @@
 	type GPU = {
 		title: string,
 		subtitle: string,
-		isOpen: boolean;
-		daten: string | null,
-		filename : string,
 		export: () => Promise<string>,
 	};
 
-	const klassenGPU003 = ref<GPU>({
+	const klassenGPU003 = <GPU>({
 		title: 'Klassenliste',
-		subtitle: 'Export im Untis-Format GPU003.txt',
-		isOpen: false,
-		daten: null,
-		filename: 'GPU003.txt',
+		subtitle: 'GPU003.txt',
 		export: async () => await props.exportUntisKlassenGPU003(),
 	});
 
-	const lehrerGPU004 = ref<GPU>({
+	const lehrerGPU004 = <GPU>({
 		title: 'Lehrerliste',
-		subtitle: 'Export im Untis-Format GPU004.txt',
-		isOpen: false,
-		daten: null,
-		filename: 'GPU004.txt',
+		subtitle: 'GPU004.txt',
 		export: async () => await props.exportUntisLehrerGPU004(),
 	});
 
-	const faecherGPU006 = ref<GPU>({
+	const faecherGPU006 = <GPU>({
 		title: 'Fächer- und Kursliste',
-		subtitle: 'Export im Untis-Format GPU006.txt',
-		isOpen: false,
-		daten: null,
-		filename: 'GPU006.txt',
+		subtitle: 'GPU006.txt',
 		export: async () => await props.exportUntisFaecherGPU006(),
 	});
 
-	const schuelerGPU010 = ref<GPU>({
+	const schuelerGPU010 = <GPU>({
 		title: 'Schülerliste',
-		subtitle: 'Export im Untis-Format GPU010.txt',
-		isOpen: false,
-		daten: null,
-		filename: 'GPU010.txt',
+		subtitle: 'GPU010.txt',
 		export: async () => await props.exportUntisSchuelerGPU010(),
 	});
 
 	const gpus = [ klassenGPU003, lehrerGPU004, faecherGPU006, schuelerGPU010 ];
 
-	async function onOpen(gpu: GPU): Promise<void> {
-		gpu.daten = await gpu.export();
-		gpu.isOpen = true;
+	const aktuell = shallowRef<GPU>(klassenGPU003);
+	const filename = ref<string>('');
+	const daten = shallowRef<string | null>(null);
+
+	async function onSelect(gpu : GPU): Promise<void> {
+		aktuell.value = gpu;
+		filename.value = gpu.subtitle;
+		daten.value = await gpu.export();
 	}
 
-	function onClose(gpu: GPU): void {
-		gpu.daten = null;
-		gpu.isOpen = false;
-	}
-
-	function onSave(gpu: GPU): void {
-		if (gpu.daten === null)
+	function onSave(): void {
+		if ((daten.value === null) || (filename.value.trim() === ''))
 			return;
 		const link = document.createElement("a");
-		const blob = new Blob([gpu.daten], { type : 'plain/text' });
+		const blob = new Blob([daten.value], { type : 'plain/text' });
 		link.href = URL.createObjectURL(blob);
-		link.download = gpu.filename;
+		link.download = filename.value;
 		link.target = "_blank";
 		link.click();
 		URL.revokeObjectURL(link.href);

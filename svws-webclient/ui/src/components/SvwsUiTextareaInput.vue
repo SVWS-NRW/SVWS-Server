@@ -13,7 +13,7 @@
 			'flex-grow': span === 'grow'
 		}">
 		<textarea ref="textarea" v-model="dataOrEmpty" @input="onInput" @keyup.enter="onKeyEnter" @blur="onBlur"
-			:required="required" :disabled="disabled" class="textarea-input--control" :rows="rows" />
+			:required="required" :disabled="disabled" class="textarea-input--control" :rows="rows" v-bind="{ ...$attrs }" />
 		<span v-if="placeholder"
 			class="textarea-input--placeholder"
 			:class="{
