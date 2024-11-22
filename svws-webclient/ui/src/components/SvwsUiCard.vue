@@ -180,7 +180,7 @@
 		onDelete?: () => void;
 		onCancel?: () => void;
 	}>(), {
-		compact: true,
+		compact: false,
 		isOpen: undefined,
 		collapsible: true,
 		collapseIconPosition: 'right',
@@ -285,7 +285,7 @@
 			setActive((props.isOpen === undefined) ? false : props.isOpen)
 		else
 			setActive(true);
-		
+
 		if (bodyRef.value)
 			resizeObserver.observe(bodyRef.value);
 	});
@@ -312,7 +312,10 @@
 				bodyWrapperRef.value.style.maxHeight = '0';
 		}
 
-		isActive.value ? emit('open') : emit('close');
+		if(isActive.value)
+			emit('open')
+		else
+			emit('close');
 	}
 
 	/**
@@ -412,7 +415,8 @@
 				@apply rounded-b-lg p-4 bg-ui-neutral border border-ui-brand flex gap-3 flex-col;
 
 				.body--content {
-					@apply flex gap-3 justify-between items-start;
+					@apply flex gap-3 justify-between items-start overflow-auto;
+					scrollbar-width: thin;
 
 					.content--main {
 						@apply text-justify;
@@ -420,7 +424,8 @@
 				}
 
 				.body--footer {
-					@apply flex gap-3 items-center;
+					@apply flex gap-3 items-center relative overflow-auto;
+					scrollbar-width: thin;
 
 					.footer--main {
 						@apply text-justify text-ui-secondary;
