@@ -12,7 +12,7 @@
 					<svws-ui-radio-option value="option2" name="radioInputExample" label="Option 2" disabled />
 					<svws-ui-radio-option value="option3" name="radioInputExample" label="Option 3" />
 					<svws-ui-radio-option value="option4" name="radioInputExample" label="Option 4">
-						<span class="icon i-ri-forbid-2-line" />
+						<span class="icon i-ri-forbid-line" />
 					</svws-ui-radio-option>
 					<svws-ui-radio-option value="option4" name="radioInputExample" label="Option 4" :icon="false" />
 				</svws-ui-radio-group>

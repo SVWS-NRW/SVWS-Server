@@ -154,7 +154,7 @@
 		mounted: (el: HTMLInputElement) => {
 			if (props.focus)
 				el.focus();
-		}
+		},
 	};
 
 	const data = ref<string | null>(null);

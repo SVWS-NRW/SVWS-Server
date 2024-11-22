@@ -5,7 +5,6 @@
 				<svws-ui-text-input placeholder="Kürzel" :required="true" :max-len="20" :valid="(v) => fachListeManager().validateKuerzel(v)" v-model="selectedFields.kuerzel" type="text" :disabled />
 				<svws-ui-select title="Statistik-Fach" :required="true" :items="Fach.data().getListBySchuljahrAndSchulform(schuljahr, fachListeManager().schulform())"
 					v-model="selectedStatistikFach" :item-text="getStatistikfachText" />
-					{{ fachListeManager().schulform() }}
 				<svws-ui-text-input placeholder="Bezeichnung" :required="true" :max-len="255" :valid="(v) => fachListeManager().validateBezeichnung(v)" v-model="selectedFields.bezeichnung" type="text" :disabled />
 				<svws-ui-text-input placeholder="Fachgruppe" :model-value="fachgruppe" readonly type="text" :disabled />
 				<svws-ui-select removable title="Bilinguale Sachfachsprache" :items="BilingualeSprache.values()" v-model="selectedBilingualeSprache"

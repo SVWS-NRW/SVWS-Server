@@ -1,6 +1,14 @@
 <template>
-	<div class="flex gap-1 svws-ui-select svws-ui-multi-select pt-2" :class="{ 'svws-open': showList, 'svws-has-value': hasSelected(), 'svws-headless': headless,
-		'svws-statistik': statistics, 'svws-danger': danger, 'svws-readonly': readonly, 'svws-disabled': disabled, 'svws-autocomplete': autocomplete}" v-bind="$attrs" ref="inputElTags">
+	<div class="svws-ui-select svws-ui-multiselect" :class="{
+		'svws-open': showList,
+		'svws-has-value': hasSelected(),
+		'svws-headless': headless,
+		'svws-statistik': statistics,
+		'svws-danger': danger,
+		'svws-readonly': readonly,
+		'svws-disabled': disabled,
+		'svws-autocomplete': autocomplete
+	}" v-bind="$attrs" ref="inputElTags">
 		<div v-if="!headless && (data.size > 0)" class="svws-tags">
 			<span v-for="(item, index) in data" :key="index" class="svws-tag">
 				<span class="line-clamp-1 leading-tight break-all max-w-[14rem]">{{ itemText(item) }}</span>
@@ -9,39 +17,37 @@
 				</button>
 			</span>
 		</div>
-		<div class="flex-grow">
-			<svws-ui-text-input ref="inputEl"
-				:model-value="headless ? dynModelValue : (data.size ? ' ' : '')"
-				:readonly="!autocomplete || readonly"
-				:is-select-input="!readonly"
-				:placeholder="label || title"
-				:statistics
-				:headless
-				:disabled
-				:required
-				:debounce-ms="0"
-				role="combobox"
-				:aria-label="label || title"
-				:aria-expanded="showList"
-				aria-haspopup="listbox"
-				aria-autocomplete="list"
-				:aria-controls="showList ? listIdPrefix : null"
-				:aria-activedescendant="refList && refList.activeItemIndex > -1 ? `${listIdPrefix}-${refList.activeItemIndex}` : null"
-				@update:model-value="value => searchText = value ?? ''"
-				@click="toggleListBox"
-				@focus="onInputFocus"
-				@methods="methods => methodsTextField = methods"
-				@blur="onInputBlur"
-				@keyup.down.prevent
-				@keyup.up.prevent
-				@keydown.down.prevent="onArrowDown"
-				@keydown.up.prevent="onArrowUp"
-				@keydown.enter.prevent="selectCurrentActiveItem"
-				@keydown.backspace="onBackspace"
-				@keydown.esc.prevent="toggleListBox"
-				@keydown.space.prevent="onSpace"
-				@keydown.tab="onTab" />
-		</div>
+		<svws-ui-text-input ref="inputEl"
+			:model-value="headless ? dynModelValue : (data.size ? ' ' : '')"
+			:readonly="!autocomplete || readonly"
+			:is-select-input="!readonly"
+			:placeholder="label || title"
+			:statistics
+			:headless
+			:disabled
+			:required
+			:debounce-ms="0"
+			role="combobox"
+			:aria-label="label || title"
+			:aria-expanded="showList"
+			aria-haspopup="listbox"
+			aria-autocomplete="list"
+			:aria-controls="showList ? listIdPrefix : null"
+			:aria-activedescendant="refList && refList.activeItemIndex > -1 ? `${listIdPrefix}-${refList.activeItemIndex}` : null"
+			@update:model-value="value => searchText = value ?? ''"
+			@click.stop="toggleListBox"
+			@focus="onInputFocus"
+			@methods="methods => methodsTextField = methods"
+			@blur="onInputBlur"
+			@keyup.down.prevent
+			@keyup.up.prevent
+			@keydown.down.prevent="onArrowDown"
+			@keydown.up.prevent="onArrowUp"
+			@keydown.enter.prevent="selectCurrentActiveItem"
+			@keydown.backspace="onBackspace"
+			@keydown.esc.prevent="toggleListBox"
+			@keydown.space.prevent="onSpace"
+			@keydown.tab="onTab" />
 		<button v-if="!readonly" role="button" class="svws-dropdown-icon" @keydown.enter="toggleListBox" @keydown.down="toggleListBox">
 			<span class="icon i-ri-expand-up-down-line" v-if="headless" />
 			<span class="icon i-ri-expand-up-down-fill" v-else />
@@ -174,9 +180,8 @@
 					newSelectedItems.add(item);
 				updateData(newSelectedItems);
 			}
-		}
+		},
 	});
-
 
 	function hasSelected(): boolean {
 		return (selectedItem.value !== null) && (selectedItem.value !== undefined);
@@ -300,9 +305,9 @@
 			middleware: [flip(), shift(), offset(2), size({
 				apply({rects, elements}) {
 					Object.assign(elements.floating.style, {
-						width: `${rects.reference.width}px`
+						width: `${rects.reference.width}px`,
 					});
-				}
+				},
 			})],
 			whileElementsMounted: autoUpdate,
 		}
@@ -322,22 +327,19 @@
 
 <style lang="postcss">
 
-	.svws-ui-multi-select {
-		&:not(.svws-headless) {
-			@apply bg-ui border border-ui-secondary text-ui;
-			@apply rounded-md;
-
-			&:hover {
-				@apply border-ui;
-			}
+	.svws-ui-select.svws-ui-multiselect {
+		@apply flex-none justify-start;
+		&:focus-visible,
+		&:focus-within {
+			@apply ring ring-ui-neutral;
 		}
+		.svws-dropdown-icon {
+			@apply top-[0.175rem];
 
-		.text-input--control {
+		}
+		.text-input-component .text-input--control:focus-visible {
+			@apply ring-0;
 			@apply bg-transparent border-none;
-		}
-
-		&.svws-ui-select .svws-dropdown-icon {
-			@apply items-center;
 		}
 
 		&.svws-open.svws-autocomplete .svws-tags {
@@ -346,6 +348,8 @@
 
 		&:not(.svws-headless) {
 			@apply min-h-[2.25rem];
+			@apply bg-ui border border-ui-secondary text-ui;
+			@apply rounded-md;
 
 			.text-input-component {
 				@apply absolute top-0 left-0 w-full h-full cursor-pointer;
@@ -362,29 +366,34 @@
 					@apply hidden;
 				}
 			}
+			&:hover {
+				@apply border-ui;
+			}
 		}
 
 		.svws-tags {
-			@apply relative z-10 flex flex-wrap gap-0.5 pl-1 pr-7 pointer-events-none;
+			@apply relative z-10 flex flex-wrap gap-0.5 pl-1 pr-7 pointer-events-none m-0.5 mt-2 content-start justify-start;
 
 			.svws-remove {
 				@apply relative top-0 left-0.5 -my-1 w-auto h-auto pointer-events-auto py-0;
 
 				.icon {
 					@apply mt-0 w-4 h-4;
-					/* TODO: COLORS icon darkmode */
 				}
 
 				&:hover .icon {
-					-webkit-filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
-					filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
+					@apply icon-ui-danger;
+
+					.dark & {
+						@apply icon-ui-danger--dark;
+					}
 				}
 			}
-		}
+			.svws-tag {
+				@apply bg-ui border border-ui-secondary;
+				@apply inline-flex items-center gap-0.5 rounded leading-none pl-2 pr-1 text-base;
+			}
 
-		.svws-tag {
-			@apply bg-ui border border-ui-secondary;
-			@apply inline-flex items-center gap-0.5 rounded leading-none py-[0.15rem] pl-2 pr-1 text-base;
 		}
 
 		&.svws-disabled {
@@ -401,8 +410,9 @@
 	}
 </style>
 
-<!--TODO: Duplicate CSS und JS Functions (identisch zu SvwsUiSelect) entfernen?-->
+
 <style lang="postcss">
+	/* TODO: Doppeltes CSS entfernen, dies ist identisch zum select */
 	.svws-ui-select {
 		@apply relative w-full cursor-pointer flex;
 
@@ -413,10 +423,6 @@
 		.svws-dropdown-icon,
 		.svws-remove {
 			@apply inline-flex w-5 h-7 absolute text-headline-md top-1 rounded items-center justify-center;
-
-			svg {
-				@apply my-auto;
-			}
 		}
 
 		.svws-dropdown-icon {
@@ -428,6 +434,7 @@
 			&:hover,
 			&:focus-visible,
 			&:focus-within {
+				@apply grow;
 				& ~ .svws-dropdown-icon {
 					@apply bg-ui-neutral-hover border-ui-neutral-hover;
 					/* TODO: COLORS icon */
@@ -437,7 +444,7 @@
 
 		&.svws-statistik {
 			.svws-dropdown-icon {
-				@apply bg-ui-statistic-weak text-ui-statistic border-transparent;
+				@apply bg-ui-statistic-weak text-ui-statistic border-ui-onstatistic-secondary-hover;
 				/* TODO: COLORS icon */
 			}
 

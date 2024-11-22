@@ -6,7 +6,7 @@
 		color-scheme: light;
 
 		--color-bg-ui: theme('colors.palette.neutral.100');
-		--color-bg-ui-hover: theme('colors.palette.neutral.200');
+		--color-bg-ui-hover: rgba(0, 0, 0, 0.05);
 		--color-bg-ui-brand: theme('colors.palette.brand.500');
 		--color-bg-ui-brand-hover: theme('colors.palette.brand.600');
 		--color-bg-ui-statistic: theme('colors.palette.statistic.500');
@@ -218,7 +218,7 @@
 		color-scheme: dark;
 
 		--color-bg-ui: theme('colors.palette.neutral.800');
-		--color-bg-ui-hover: theme('colors.palette.neutral.750');
+		--color-bg-ui-hover: rgba(255, 255, 255, 0.13);
 		--color-bg-ui-brand: theme('colors.palette.brand.500');
 		--color-bg-ui-brand-hover: theme('colors.palette.brand.400');
 		--color-bg-ui-statistic: theme('colors.palette.statistic.500');
@@ -423,6 +423,72 @@
 		--color-ring-ui-warning: theme('colors.palette.warning.100');
 		--color-ring-ui-caution: theme('colors.palette.caution.100');
 		--color-ring-ui-neutral: rgba(255, 255, 255, 0.2);
+
+		
+		.icon,
+		.icon-ui {
+			@apply icon-ui--dark;
+		}
+		
+		.icon-ui-brand {
+			@apply icon-ui-brand--dark;
+		}
+		
+		.icon-ui-statistic {
+			@apply icon-ui-statistic--dark;
+		}
+		
+		.icon-ui-danger {
+			@apply icon-ui-danger--dark;
+		}
+		
+		.icon-ui-success {
+			@apply icon-ui-success--dark;
+		}
+		
+		.icon-ui-warning {
+			@apply icon-ui-warning--dark;
+		}
+		
+		.icon-ui-caution {
+			@apply icon-ui-caution--dark;
+		}
+		
+		.icon-ui-neutral {
+			@apply icon-ui-neutral--dark;
+		}
+		
+		.icon-ui-onbrand {
+			@apply icon-ui-onbrand--dark;
+		}
+		
+		.icon-ui-onstatistic {
+			@apply icon-ui-onstatistic--dark;
+		}
+		
+		.icon-ui-onselected {
+			@apply icon-ui-onselected--dark;
+		}
+		
+		.icon-ui-ondanger {
+			@apply icon-ui-ondanger--dark;
+		}
+		
+		.icon-ui-onsuccess {
+			@apply icon-ui-onsuccess--dark;
+		}
+		
+		.icon-ui-onwarning {
+			@apply icon-ui-onwarning--dark;
+		}
+		
+		.icon-ui-oncaution {
+			@apply icon-ui-oncaution--dark;
+		}
+		
+		.icon-ui-onneutral {
+			@apply icon-ui-onneutral--dark;
+		}
 	}
 
 	/* .htw-dark input[type="checkbox"]:checked,

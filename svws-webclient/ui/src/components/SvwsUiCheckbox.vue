@@ -6,7 +6,7 @@
 			<span v-if="$slots.default" class="svws-ui-checkbox--label">
 				<span v-if="statistics" class="-mb-1 inline-block align-top">
 					<svws-ui-tooltip position="right">
-						<span class="icon icon-statistics i-ri-bar-chart-2-line pointer-events-auto" />
+						<span class="icon icon-ui-statistic i-ri-bar-chart-2-line pointer-events-auto mr-1" />
 						<template #content>Relevant für die Statistik</template>
 					</svws-ui-tooltip>
 				</span>

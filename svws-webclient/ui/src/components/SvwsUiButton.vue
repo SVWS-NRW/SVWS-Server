@@ -102,13 +102,24 @@
 		@apply bg-ui-brand-hover text-ui-onbrand-hover border-ui-brand-hover;
 	}
 
-	.icon, .icon-sm, .icon-lg {
-		-webkit-filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
-		filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
+	.icon {
+		@apply icon-ui-onbrand;
+
+		.dark & {
+			@apply icon-ui-onbrand--dark;
+		}
 	}
 
 	.page--statistik & {
 		@apply bg-ui-statistic text-ui-onstatistic border-ui-statistic;
+
+		.icon {
+			@apply icon-ui-onstatistic;
+
+			.dark & {
+				@apply icon-ui-onstatistic--dark;
+			}
+		}
 
 		&:hover,
 		&:focus-visible {
@@ -129,13 +140,24 @@
 	&:focus-visible {
 		@apply border-ui-brand text-ui-brand;
 
-		.icon, .icon-sm, .icon-lg {
-			-webkit-filter: invert(44%) sepia(52%) saturate(1260%) hue-rotate(173deg) brightness(91%) contrast(86%);
-			filter: invert(44%) sepia(52%) saturate(1260%) hue-rotate(173deg) brightness(91%) contrast(86%);
+		.icon {
+			@apply icon-ui-brand;
+
+			.dark & {
+				@apply icon-ui-brand--dark;
+			}
 		}
 
 		.page--statistik & {
 			@apply border-ui-statistic text-ui-statistic;
+
+			.icon {
+				@apply icon-ui-statistic;
+
+				.dark & {
+					@apply icon-ui-statistic--dark;
+				}
+			}
 		}
 
 		.notification--error &,
@@ -147,7 +169,7 @@
 	&:focus-visible {
 		.notification--error &,
 		.svws-ui-stundenplan--unterricht--warning & {
-			@apply ring-ui-neutral; /* TODO: COLORS ring-ui-ondanger */
+			@apply ring-ui-neutral;
 		}
 	}
 }
@@ -170,18 +192,24 @@
 .button--trash {
 	@apply bg-transparent text-ui-danger border-ui-danger;
 
-	.icon, .icon-sm, .icon-lg {
-		-webkit-filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
-		filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
+	.icon {
+		@apply icon-ui-danger;
+
+		.dark & {
+			@apply icon-ui-danger--dark;
+		}
 	}
 
 	&:hover,
 	&:focus-visible {
 		@apply bg-ui-danger text-ui-ondanger;
 
-		.icon, .icon-sm, .icon-lg {
-			-webkit-filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
-			filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
+		.icon {
+			@apply icon-ui-ondanger;
+
+			.dark & {
+				@apply icon-ui-ondanger--dark;
+			}
 		}
 	}
 
@@ -246,13 +274,6 @@
 		width: 1.3rem;
 		height: 1.3rem;
 	}
-
-	.dark & {
-		.icon, .icon-sm, .icon-lg {
-			-webkit-filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
-			filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
-		}
-	}
 }
 
 .button:disabled {
@@ -262,11 +283,6 @@
 	&:focus-visible {
 		@apply bg-ui-disabled text-ui-ondisabled border-ui-disabled;
 		@apply cursor-not-allowed pointer-events-none;
-
-		span.icon {
-			-webkit-filter: invert(32%) sepia(97%) saturate(0%) hue-rotate(163deg) brightness(103%) contrast(104%);
-			filter: invert(32%) sepia(97%) saturate(0%) hue-rotate(163deg) brightness(103%) contrast(104%);
-		}
 	}
 }
 

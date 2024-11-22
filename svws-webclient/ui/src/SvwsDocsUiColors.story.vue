@@ -50,11 +50,12 @@
 										<div class="ui-docs-bg flex items-center gap-1"
 											:style="{
 												backgroundColor: `${role.startsWith('on') ? `var(--color-bg-ui-${role.replace('on', '')})` : ''}`,
-												color: `${role.startsWith('on') ? `var(--color-${type}-ui${ role ? `-${role}` : '' }${ prominence ? `-${prominence}` : '' }${ interaction ? `-${interaction}` : '' })` : ''}`,
+												color: `${role.startsWith('on') ? `var(--color-${type.startsWith('icon') ? 'text' : type}-ui${ role ? `-${role}` : '' }${ prominence ? `-${prominence}` : '' }${ interaction ? `-${interaction}` : '' })` : ''}`,
 												accentColor: `${type.startsWith('accent') ? `var(--color-accent-ui${ role ? `-${role}` : '' })` : ''}`
 											}">
-											<div class="ui-docs-color-swatch" :style="{backgroundColor: `var(--color-${type}-ui${ role ? `-${role}` : '' }${ prominence ? `-${prominence}` : '' }${ interaction ? `-${interaction}` : '' })`}" />
-											<div v-if="type === 'accent'" class="ui-docs-preview-checkbox"><input type="checkbox" checked style="pointer-events: none;"></div>
+											<div class="ui-docs-color-swatch" :style="{backgroundColor: `var(--color-${type === 'icon' ? 'text' : type}-ui${ role ? `-${role}` : '' }${ prominence ? `-${prominence}` : '' }${ interaction ? `-${interaction}` : '' })`}" />
+											<div v-if="type === 'accent'" class="ui-docs-preview-checkbox"><input type="checkbox" checked style="pointer-events: none; accent-color: inherit;"></div>
+											<span v-if="type === 'icon'" class="i-ri-archive-line icon-xl" :class="`icon-ui${ role ? `-${role}` : '' }`"></span>
 											<div style="user-select: all;">
 												<span><span class="font-bold">{{ type }}</span><span class="opacity-50 font-bold">-ui</span></span>
 												<span>{{ role ? `-${role}` : '' }}</span>
@@ -67,11 +68,12 @@
 											:class="{darkOnDisabled: role.startsWith('ondisabled')}"
 											:style="{
 												backgroundColor: `${role.startsWith('on') ? `var(--color-bg-ui-${role.replace('on', '')})` : ''}`,
-												color: `${role.startsWith('on') ? `var(--color-${type}-ui${ role ? `-${role}` : '' }${ prominence ? `-${prominence}` : '' }${ interaction ? `-${interaction}` : '' })` : ''}`,
+												color: `${role.startsWith('on') ? `var(--color-${type.startsWith('icon') ? 'text' : type}-ui${ role ? `-${role}` : '' }${ prominence ? `-${prominence}` : '' }${ interaction ? `-${interaction}` : '' })` : ''}`,
 												accentColor: `${type.startsWith('accent') ? `var(--color-accent-ui${ role ? `-${role}` : '' })` : ''}`
 											}">
-											<div class="ui-docs-color-swatch" :style="{backgroundColor: `var(--color-${type}-ui${ role ? `-${role}` : '' }${ prominence ? `-${prominence}` : '' }${ interaction ? `-${interaction}` : '' })`}" />
+											<div class="ui-docs-color-swatch" :style="{backgroundColor: `var(--color-${type === 'icon' ? 'text' : type}-ui${ role ? `-${role}` : '' }${ prominence ? `-${prominence}` : '' }${ interaction ? `-${interaction}` : '' })`}" />
 											<div v-if="type === 'accent'" class="ui-docs-preview-checkbox"><input type="checkbox" checked style="pointer-events: none;"></div>
+											<span v-if="type === 'icon'" class="i-ri-archive-line icon-xl" :class="`icon-ui${ role ? `-${role}` : '' }`"></span>
 											<div style="user-select: all;">
 												<span><span class="font-bold">{{ type }}</span><span class="opacity-50 font-bold">-ui</span></span>
 												<span>{{ role ? `-${role}` : '' }}</span>
@@ -87,6 +89,9 @@
 					</div>
 				</div>
 			</div>
+			<!-- Generate all tailwind colors for icons: 
+			 icon-ui icon-ui-brand icon-ui-statistic icon-ui-danger icon-ui-success icon-ui-warning icon-ui-caution icon-ui-neutral icon-ui-onbrand icon-ui-onstatistic icon-ui-onselected icon-ui-ondanger icon-ui-onsuccess icon-ui-onwarning icon-ui-oncaution icon-ui-onneutral 
+			 icon-ui--dark icon-ui-brand--dark icon-ui-statistic--dark icon-ui-danger--dark icon-ui-success--dark icon-ui-warning--dark icon-ui-caution--dark icon-ui-neutral--dark icon-ui-onbrand--dark icon-ui-onstatistic--dark icon-ui-onselected--dark icon-ui-ondanger--dark icon-ui-onsuccess--dark icon-ui-onwarning--dark icon-ui-oncaution--dark icon-ui-onneutral--dark -->
 		</Variant>
 		<Variant title="Beispiele" source=" " id="beispiele">
 			<div class="htw-prose dark:htw-prose-invert" style="max-width: unset;">
@@ -214,7 +219,7 @@
 	import { onMounted } from 'vue';
 
 	const semantics = {
-		type: ['bg', 'text', 'border', 'accent', 'ring'], // icon sind mit css filtern gefärbt und können aktuell nicht konform mit den tokens dargestellt werden
+		type: ['bg', 'text', 'border', 'accent', 'ring', 'icon'],
 		role: ['', 'brand', 'statistic', 'selected', 'danger', 'success', 'warning', 'caution', 'neutral', 'disabled', 'onbrand', 'onstatistic', 'onselected', 'ondanger', 'onsuccess', 'onwarning', 'oncaution', 'onneutral', 'ondisabled', 'inverted'],
 		prominence: ['', 'secondary', 'weak'], // strong, weak
 		interaction: ['', 'hover'], // active
@@ -228,6 +233,9 @@
 			return false;
 		}
 		if ((type === 'ring') && (role === 'selected' || role.includes('disabled') || role.startsWith('on') || prominence !== '' || interaction !== '')) {
+			return false;
+		}
+		if ((type === 'icon') && (role === 'selected' || role.includes('disabled') || prominence !== '' || interaction !== '')) {
 			return false;
 		}
 		if ((type === 'accent') && (role === 'selected' || prominence !== '' || interaction !== '')) {

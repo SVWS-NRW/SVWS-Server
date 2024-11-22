@@ -47,4 +47,7 @@
 		margin: -0.125rem auto -0.125rem -0.125rem;
 	}
 
+	.icon {
+		@apply inline-block;
+	}
 }

@@ -10,6 +10,6 @@ export enum ViewType {
 	HINZUFUEGEN,
 
 	/** View, welcher Gruppenprozesse bereitstellt */
-	GRUPPENPROZESSE,
+	GRUPPENPROZESSE
 
 }

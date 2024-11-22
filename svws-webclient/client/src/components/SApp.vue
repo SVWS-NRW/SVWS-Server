@@ -124,7 +124,7 @@
 						</div>
 					</svws-ui-header>
 				</div>
-				<p v-if="enableFocusSwitching" id="contentFocusNumber" class="region-enumeration">8</p>
+				<!-- <p v-if="enableFocusSwitching" id="contentFocusNumber" class="region-enumeration">8</p> -->
 				<div :id="enableFocusSwitching ? 'contentFocusBorder' : ''" v-show="!pendingSetApp" class="page--wrapper" :class="{'svws-api--pending': apiStatus.pending, 'focus-region': enableFocusSwitching}">
 					<router-view :key="app.name" />
 				</div>
@@ -204,7 +204,7 @@
 
 	const hideAuswahlliste = new Set<string>([ "statistik", "einstellungen",
 		"schule", "schule.stammdaten", "schule.datenaustausch.kurs42", "schule.datenaustausch.untis", "schule.datenaustausch.enm",
-		"schule.datenaustausch.laufbahnplanung", "schule.datenaustausch.schulbewerbung", "schule.datenaustausch.wenom"
+		"schule.datenaustausch.laufbahnplanung", "schule.datenaustausch.schulbewerbung", "schule.datenaustausch.wenom",
 	]);
 
 	function showAuswahlliste() : boolean {

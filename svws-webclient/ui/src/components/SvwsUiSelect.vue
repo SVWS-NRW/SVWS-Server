@@ -1,6 +1,14 @@
 <template>
-	<div class="svws-ui-select" :class="{ 'svws-open': showList, 'svws-has-value': hasSelected, 'svws-headless': headless, 'svws-statistik': statistics,
-		'svws-danger': danger, 'svws-disabled': disabled, 'svws-removable': removable, 'svws-readonly': readonly }" v-bind="$attrs">
+	<div class="svws-ui-select" :class="{
+		'svws-open': showList,
+		'svws-has-value': hasSelected,
+		'svws-headless': headless,
+		'svws-statistik': statistics,
+		'svws-danger': danger,
+		'svws-disabled': disabled,
+		'svws-removable': removable,
+		'svws-readonly': readonly
+	}" v-bind="$attrs">
 		<svws-ui-text-input ref="inputEl"
 			:model-value="dynModelValue"
 			:readonly="!autocomplete || readonly"
@@ -170,7 +178,7 @@
 
 	const selectedItem = computed<SelectDataType>({
 		get: () => data.value,
-		set: (item) => updateData(item, false)
+		set: (item) => updateData(item, false),
 	});
 
 	const selectedItemList = computed<Set<Item>>(() => {
@@ -343,10 +351,6 @@
 		.svws-dropdown-icon,
 		.svws-remove {
 			@apply inline-flex w-5 h-7 absolute text-headline-md top-1 rounded items-center justify-center;
-
-			svg {
-				@apply my-auto;
-			}
 		}
 
 		.svws-dropdown-icon {
@@ -358,6 +362,7 @@
 			&:hover,
 			&:focus-visible,
 			&:focus-within {
+				@apply grow;
 				& ~ .svws-dropdown-icon {
 					@apply bg-ui-neutral-hover border-ui-neutral-hover;
 					/* TODO: COLORS icon */
@@ -367,7 +372,7 @@
 
 		&.svws-statistik {
 			.svws-dropdown-icon {
-				@apply bg-ui-statistic-weak text-ui-statistic border-transparent;
+				@apply bg-ui-statistic-weak text-ui-statistic border-ui-onstatistic-secondary-hover;
 				/* TODO: COLORS icon */
 			}
 

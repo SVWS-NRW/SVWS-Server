@@ -3,7 +3,7 @@ import plugin from 'tailwindcss/plugin';
 /**
  * Icons - Beispiel zur Verwendung in den vue-Dateien:
  *
- * <span class="icon icon-white i-ri-alert-line"/>
+ * <span class="icon icon-ui-brand i-ri-alert-line"/>
  */
 
 const iconSize = {
@@ -30,6 +30,38 @@ const iconColors = {
 	'success': 'invert(86%) sepia(40%) saturate(5221%) hue-rotate(37deg) brightness(101%) contrast(83%);',
 	'highlight': 'invert(88%) sepia(25%) saturate(695%) hue-rotate(346deg) brightness(107%) contrast(106%);',
 	'statistics': 'brightness(0) saturate(100%) invert(37%) sepia(71%) saturate(868%) hue-rotate(224deg) brightness(103%) contrast(93%);',
+	'ui': 'none;',
+	'ui-brand': 'brightness(0) saturate(100%) invert(37%) sepia(100%) saturate(422%) hue-rotate(172deg) brightness(93%) contrast(82%);',
+	'ui-statistic': 'brightness(0) saturate(100%) invert(28%) sepia(56%) saturate(3209%) hue-rotate(255deg) brightness(96%) contrast(101%);',
+	'ui-danger': 'brightness(0) saturate(100%) invert(26%) sepia(66%) saturate(2654%) hue-rotate(332deg) brightness(87%) contrast(85%);',
+	'ui-success': 'brightness(0) saturate(100%) invert(36%) sepia(34%) saturate(945%) hue-rotate(55deg) brightness(110%) contrast(85%);',
+	'ui-warning': 'brightness(0) saturate(100%) invert(56%) sepia(19%) saturate(1401%) hue-rotate(11deg) brightness(95%) contrast(87%);',
+	'ui-caution': 'brightness(0) saturate(100%) invert(31%) sepia(43%) saturate(1936%) hue-rotate(347deg) brightness(101%) contrast(90%);',
+	'ui-neutral': 'brightness(200%);',
+	'ui-onbrand': 'invert(100%);',
+	'ui-onstatistic': 'invert(100%);',
+	'ui-onselected': 'brightness(0) saturate(100%) invert(21%) sepia(83%) saturate(516%) hue-rotate(174deg) brightness(97%) contrast(98%);',
+	'ui-ondanger': 'invert(100%);',
+	'ui-onsuccess': 'invert(100%);',
+	'ui-onwarning': 'none;',
+	'ui-oncaution': 'none;',
+	'ui-onneutral': 'none;',
+	'ui--dark': 'invert(100%);',
+	'ui-brand--dark': 'brightness(0) saturate(100%) invert(74%) sepia(30%) saturate(6750%) hue-rotate(187deg) brightness(87%) contrast(88%);',
+	'ui-statistic--dark': 'brightness(0) saturate(100%) invert(46%) sepia(48%) saturate(867%) hue-rotate(225deg) brightness(101%) contrast(94%);',
+	'ui-danger--dark': 'brightness(0) saturate(100%) invert(52%) sepia(22%) saturate(1384%) hue-rotate(306deg) brightness(94%) contrast(96%);',
+	'ui-success--dark': 'brightness(0) saturate(100%) invert(56%) sepia(63%) saturate(457%) hue-rotate(48deg) brightness(98%) contrast(90%);',
+	'ui-warning--dark': 'brightness(0) saturate(100%) invert(52%) sepia(73%) saturate(390%) hue-rotate(11deg) brightness(90%) contrast(90%);',
+	'ui-caution--dark': 'brightness(0) saturate(100%) invert(26%) sepia(72%) saturate(1684%) hue-rotate(354deg) brightness(102%) contrast(82%);',
+	'ui-neutral--dark': 'invert(100%);',
+	'ui-onbrand--dark': 'invert(100%);',
+	'ui-onstatistic--dark': 'invert(100%);',
+	'ui-onselected--dark': 'brightness(0) saturate(100%) invert(81%) sepia(8%) saturate(1290%) hue-rotate(180deg) brightness(98%) contrast(95%);',
+	'ui-ondanger--dark': 'invert(100%);',
+	'ui-onsuccess--dark': 'invert(100%);',
+	'ui-onwarning--dark': 'none;',
+	'ui-oncaution--dark': 'none;',
+	'ui-onneutral--dark': 'invert(100%);',
 };
 
 const iconPath = {
