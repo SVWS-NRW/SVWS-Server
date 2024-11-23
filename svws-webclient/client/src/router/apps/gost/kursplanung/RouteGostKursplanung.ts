@@ -33,14 +33,14 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 		super.setView("gost_child_auswahl", SGostKursplanungAuswahl, (route) => this.getAuswahlProps(route));
 		super.text = "Kursplanung";
 		super.children = [
-			routeGostKursplanungSchueler
+			routeGostKursplanungSchueler,
 		];
 		super.defaultChild = routeGostKursplanungSchueler;
 		this.isHidden = (params?: RouteParams) => {
 			return this.checkHidden(params);
 		}
 		api.config.addElements([
-			new ConfigElement("gost.kursplanung.kursansicht.ausgeblendet", "user", "false"),
+			new ConfigElement("gost.kursplanung.kursansicht.ausgeblendet", "user", "nichts"), // nichts, alles, schienen
 			new ConfigElement("gost.kursplanung.kursansicht.sortierung", "user", "kursart"),
 			new ConfigElement("gost.kursplanung.kursansicht.zeigeSchienenbezeichnung", "user", "false"),
 			new ConfigElement("gost.kursplanung.umkursen.fixierteVerschieben", "user", "false"),

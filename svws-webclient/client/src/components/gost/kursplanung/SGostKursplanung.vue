@@ -1,5 +1,5 @@
 <template>
-	<div class="page--content page--content--full page--content--gost-grid" :class="{'svws-blockungstabelle-hidden': blockungstabelleHidden()}">
+	<div class="page--content page--content--full page--content--gost-grid" :class="{'svws-blockungstabelle-hidden': (blockungstabelleHidden() === 'alles'), 'svws-blockungstabelle-schienen-hidden': (blockungstabelleHidden() === 'schienen')}">
 		<Teleport to=".svws-ui-header--actions" v-if="isMounted">
 			<svws-ui-button-select v-if="hatBlockung" type="secondary" :dropdown-actions="dropdownList">
 				<template #icon> <svws-ui-spinner spinning v-if="apiStatus.pending" /> <span class="icon-sm i-ri-printer-line" v-else /> </template>
@@ -10,7 +10,11 @@
 			<Teleport to=".svws-sub-nav-target" v-if="isMounted">
 				<svws-ui-sub-nav>
 					<svws-ui-button type="transparent" @click="toggleBlockungstabelle">
-						<template v-if="blockungstabelleHidden()">
+						<template v-if="blockungstabelleHidden() === 'alles'">
+							<span class="icon-sm i-ri-menu-unfold-line" />
+							Nur Schienen ausblenden
+						</template>
+						<template v-else-if="blockungstabelleHidden() === 'schienen'">
 							<span class="icon-sm i-ri-menu-unfold-line" />
 							Tabelle einblenden
 						</template>
@@ -100,7 +104,7 @@
 				:get-datenmanager :get-kursauswahl :set-kursauswahl :get-ergebnismanager :map-fachwahl-statistik :map-lehrer :schueler-filter :kurssortierung
 				:regeln-update :update-kurs-schienen-zuordnung :patch-kurs :add-kurs :remove-kurse :add-kurs-lehrer
 				:patch-schiene :add-schiene :remove-schiene :remove-kurs-lehrer :ergebnis-aktivieren :existiert-schuljahresabschnitt
-				:blockungstabelle-visible="!blockungstabelleHidden()" :add-schiene-kurs :remove-schiene-kurs :combine-kurs :split-kurs :hat-update-kompetenz />
+				:blockungstabelle-hidden :add-schiene-kurs :remove-schiene-kurs :combine-kurs :split-kurs :hat-update-kompetenz />
 			<router-view name="gost_kursplanung_schueler_auswahl" />
 			<router-view />
 			<Teleport to="body">
@@ -145,11 +149,9 @@
 
 	const props = defineProps<GostKursplanungProps>();
 
-	const hatUpdateKompetenz = computed<boolean>(() => {
-		return props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN)
-			|| (props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)
-				&& props.benutzerKompetenzenAbiturjahrgaenge.has(props.jahrgangsdaten().abiturjahr))
-	});
+	const hatUpdateKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN)
+		|| (props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)
+			&& props.benutzerKompetenzenAbiturjahrgaenge.has(props.jahrgangsdaten().abiturjahr)));
 
 	const aktuellesHalbjahr = computed<GostHalbjahr | null>(() => GostHalbjahr.fromJahrgangUndHalbjahr(props.jahrgangsdaten().jahrgang, props.jahrgangsdaten().halbjahr));
 
@@ -178,7 +180,12 @@
 	}
 
 	function toggleBlockungstabelle() {
-		return props.setBlockungstabelleHidden(!props.blockungstabelleHidden());
+		if (props.blockungstabelleHidden() === 'alles')
+			return props.setBlockungstabelleHidden('schienen');
+		else if (props.blockungstabelleHidden() === 'schienen')
+			return props.setBlockungstabelleHidden('nichts');
+		else
+			return props.setBlockungstabelleHidden('alles');
 	}
 
 	const dropdownList = [
@@ -308,6 +315,10 @@
 		grid-auto-rows: 100%;
 		grid-template-columns: minmax(min-content, 1.5fr) minmax(18rem, 0.4fr) 1fr;
 		grid-auto-columns: max-content;
+
+		&.svws-blockungstabelle-schienen-hidden {
+			grid-template-columns: min-content minmax(20rem, 0.15fr) 1fr;
+		}
 
 		&.svws-blockungstabelle-hidden {
 			grid-template-columns: 0 minmax(20rem, 0.15fr) 1fr;

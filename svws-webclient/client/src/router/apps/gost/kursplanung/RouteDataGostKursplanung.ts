@@ -139,12 +139,12 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		return this._state.value.halbjahr;
 	}
 
-	get blockungstabelleHidden(): boolean {
-		return api.config.getValue("gost.kursplanung.kursansicht.ausgeblendet") === 'true';
+	get blockungstabelleHidden(): 'nichts'|'alles'|'schienen' {
+		return api.config.getValue("gost.kursplanung.kursansicht.ausgeblendet") as 'nichts'|'alles'|'schienen';
 	}
 
-	setBlockungstabelleHidden = async (value: boolean) => {
-		await api.config.setValue('gost.kursplanung.kursansicht.ausgeblendet', value ? "true" : "false");
+	setBlockungstabelleHidden = async (value: 'nichts'|'alles'|'schienen') => {
+		await api.config.setValue('gost.kursplanung.kursansicht.ausgeblendet', value);
 	}
 
 	get zeigeSchienenbezeichnungen(): boolean {
@@ -425,7 +425,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		// Aktualisiere den State
 		this.setPatchedState({
 			faecherManager,
-			mapBlockungen: this.mapBlockungen
+			mapBlockungen: this.mapBlockungen,
 		})
 		await this.gotoBlockung(result);
 	});
@@ -843,7 +843,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 					this.ergebnismanager.kursSetSortierungFachKursartNummer();
 			}
 			this.commit();
-		}
+		},
 	});
 
 	protected getListeKursauswahl(): List<number> {

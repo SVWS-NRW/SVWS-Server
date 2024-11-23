@@ -51,8 +51,8 @@ export interface GostKursplanungProps {
 	// Config
 	zeigeSchienenbezeichnungen: () => boolean;
 	setZeigeSchienenbezeichnungen: (value: boolean) => Promise<void>;
-	blockungstabelleHidden: () => boolean;
-	setBlockungstabelleHidden: (value: boolean) => Promise<void>;
+	blockungstabelleHidden: () => 'nichts'|'alles'|'schienen';
+	setBlockungstabelleHidden: (value: 'nichts'|'alles'|'schienen') => Promise<void>;
 	fixierteVerschieben: () => boolean;
 	setFixierteVerschieben: (value: boolean) => Promise<void>;
 	inZielkursFixieren: () => boolean;
