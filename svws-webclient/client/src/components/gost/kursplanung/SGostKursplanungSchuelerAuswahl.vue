@@ -61,7 +61,7 @@
 				<div class="svws-ui-tr" role="row">
 					<div class="svws-ui-td col-span-full" role="columnheader">
 						<svws-ui-tooltip v-if="schuelerFilter().filtered.value.length > 0">
-							<span class="icon-sm i-ri-information-line" />
+							<span class="icon i-ri-information-line" />
 							<template #content>
 								<ul class="flex flex-col gap-3 py-1">
 									<li class="flex flex-col">
@@ -203,7 +203,7 @@
 					return fach;
 			return undefined;
 		},
-		set: (value) => props.schuelerFilter().fach = value?.id
+		set: (value) => props.schuelerFilter().fach = value?.id,
 	})
 
 	const selected = computed<Schueler | undefined>({
@@ -211,7 +211,7 @@
 		set: (value) => {
 			if (value !== undefined)
 				void props.setSchueler(value);
-		}
+		},
 	});
 
 	const kollision = (idSchueler: number) => computed<boolean>(() => {

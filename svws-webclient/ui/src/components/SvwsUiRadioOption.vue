@@ -2,7 +2,7 @@
 	<label class="radio--label" :class="{
 		'radio--label--disabled': disabled,
 		'radio--statistics': statistics,
-		'radio--label--checked-': forceChecked || modelValue === value || checked,
+		'radio--label--checked-': forceChecked || (modelValue === value) || checked,
 		'radio--label--no-icon': !icon,
 		'radio--label--no-text': !label,
 		'radio--icon-type-view': iconType === 'view'
@@ -25,7 +25,6 @@
 
 <script setup lang='ts'>
 
-	import type { WritableComputedRef} from 'vue';
 	import { computed } from 'vue';
 
 	const props = withDefaults(defineProps<{
@@ -54,9 +53,9 @@
 		(e: 'update:modelValue', value: object | number | string | boolean): void,
 	}>();
 
-	const checked: WritableComputedRef<object | number | boolean | string> = computed({
+	const checked = computed<object | number | boolean | string>({
 		get: () => props.modelValue,
-		set: (value) => emit('update:modelValue', value)
+		set: (value) => emit('update:modelValue', value),
 	})
 
 </script>
@@ -128,7 +127,7 @@
 }
 
 .radio--indicator ~ .radio--indicator-icon {
-	@apply absolute inset-0 opacity-25 pointer-events-none left-1.5 top-1.5 w-5 h-5;
+	@apply absolute inset-0 opacity-70 pointer-events-none left-1.5 top-1.5 w-5 h-5;
 }
 
 .radio--label:not(.radio--label--checked) .radio--indicator-icon .radio--indicator-icon--checked {
@@ -138,7 +137,7 @@
 .radio--indicator:checked ~ .radio--indicator-icon,
 .radio--label--checked .radio--indicator-icon {
 	@apply opacity-100 text-ui-brand;
-	
+
 	.icon {
 		@apply icon-ui-onselected;
 

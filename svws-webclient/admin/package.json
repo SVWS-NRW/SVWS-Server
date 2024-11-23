@@ -12,15 +12,15 @@
 	],
 	"scripts": {
 		"dev": "vite",
+		"lint": "eslint 'src/**/*.{ts,vue}' --cache",
+		"lint-tsc": "vue-tsc --noEmit",
 		"build": "npm run build-app && npm run build-dts",
 		"build-app": "vite build",
 		"build-dts": "vue-tsc --declaration --emitDeclarationOnly -p tsconfig.build.json",
 		"serve": "vite preview",
 		"test": "vitest",
 		"test:run": "vitest run --coverage",
-		"lint": "eslint 'src/**/*.{ts,vue}' --cache",
 		"lint-fix": "eslint 'src/**/*.{ts,vue}' --fix --cache",
-		"lint-tsc": "vue-tsc --noEmit",
 		"check-licenses": "license-checker-rseidelsohn --summary --unknown --production"
 	},
 	"dependencies": {

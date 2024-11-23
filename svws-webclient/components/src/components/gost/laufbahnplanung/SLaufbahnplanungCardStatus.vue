@@ -38,7 +38,7 @@
 
 	const art = computed<'ef1'|'gesamt'|'auto'>({
 		get: () => props.gostBelegpruefungsArt(),
-		set: (value) => void props.setGostBelegpruefungsArt(value)
+		set: (value) => void props.setGostBelegpruefungsArt(value),
 	});
 
 	const sprachendaten = computed<Sprachendaten | null>(() => props.abiturdatenManager().getSprachendaten());

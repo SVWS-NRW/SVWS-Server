@@ -12,8 +12,7 @@
 							<svws-ui-select :items="schuelerFilter().getKurse()" :item-text="kurs => getErgebnismanager().getOfKursName(kurs.id)" :model-value="toRaw(schuelerFilter().kurs) || setKurs()" @update:model-value="kurs => schuelerFilter().kurs = kurs ?? undefined" headless />
 						</span>
 					</div>
-					<svws-ui-table :items="schuelerFilter().filtered.value" :columns="[{key: 'pin', label: 'Fixierung aller Kurs-Schüler', fixedWidth: 2 }, {key: 'name', label: 'Name'}]"
-						:no-data="schuelerFilter().filtered.value.length <= 0" scroll>
+					<svws-ui-table :items="schuelerFilter().filtered.value" :columns="[{key: 'pin', label: 'Fixierung aller Kurs-Schüler', fixedWidth: 2 }, {key: 'name', label: 'Name'}]" :no-data="schuelerFilter().filtered.value.length <= 0" scroll>
 						<template #header(pin)>
 							<div v-if="apiStatus.pending">
 								<svws-ui-spinner spinning />
@@ -56,9 +55,8 @@
 				<!-- Die Tabelle mit den Schülern gleicher Fachwahl, aber nicht in diesem Kurs -->
 				<div class="flex flex-col w-128 overflow-y-hidden">
 					<span class="text-headline-sm pb-2">mit Fachwahl {{ fachname }} {{ kursart }}</span>
-					<svws-ui-table :items="fachwahlschueler" :columns="[{key: 'pin', label: 'Fixierung', fixedWidth: 2 }, {key: 'name', label: 'Name'}, {key: 'kurs', label: 'andere Kurszuordnung'}]"
-						:no-data="fachwahlschueler.length <= 0" scroll>
-						<template #header(pin)="{ }">
+					<svws-ui-table :items="fachwahlschueler" :columns="[{key: 'pin', label: 'Fixierung', fixedWidth: 2 }, {key: 'name', label: 'Name'}, {key: 'kurs', label: 'andere Kurszuordnung'}]" :no-data="fachwahlschueler.length <= 0" scroll>
+						<template #header(pin)>
 							&nbsp;
 						</template>
 						<template #cell(pin)="{ rowData }">
@@ -72,15 +70,12 @@
 							</div>
 						</template>
 						<template #cell(name)="{ rowData }">
-							<div @click="move(rowData.id)" class="w-full text-left"
-								:class="(andererKurs(rowData.id).value !== null) && (props.getDatenmanager().schuelerGetIstFixiertInKurs(rowData.id, andererKurs(rowData.id).value!.id)) ? [] : [ 'cursor-pointer', 'hover:font-bold' ]">
+							<div @click="move(rowData.id)" class="w-full text-left" :class="{'cursor-pointer hover:font-bold': (andererKurs(rowData.id).value !== null) && (props.getDatenmanager().schuelerGetIstFixiertInKurs(rowData.id, andererKurs(rowData.id).value!.id))}">
 								{{ rowData.nachname }}, {{ rowData.vorname }}
 							</div>
 						</template>
 						<template #cell(kurs)="{ rowData }">
-							<svws-ui-select :key="rowData.id" title="Anderer Kurs" :items="kurse" :item-text="getKursBezeichnung"
-								:model-value="getKurs(rowData)" @update:model-value="value => updateZuordnung(rowData, value)"
-								class="w-full" headless removable />
+							<svws-ui-select :key="rowData.id" title="Anderer Kurs" :items="kurse" :item-text="getKursBezeichnung" :model-value="getKurs(rowData)" @update:model-value="value => updateZuordnung(rowData, value)" class="w-full" headless removable />
 						</template>
 					</svws-ui-table>
 				</div>
@@ -93,10 +88,11 @@
 				</div>
 				<div class="flex gap-2 m-2">
 					<div class="mt-4 min-w-72 mb-4 flex flex-col gap-2">
-						<svws-ui-multi-select title="Andere Kurse" :items="listeKurseZurUbertragung" :item-text="getKursBezeichnung"
-							v-model="_kurseZurUebertragung" class="w-full" removable :disabled="apiStatus.pending" />
+						<svws-ui-multi-select title="Andere Kurse" :items="listeKurseZurUbertragung" :item-text="getKursBezeichnung" v-model="_kurseZurUebertragung" class="w-full" removable :disabled="apiStatus.pending" />
 						<div class="text-center">
-							<svws-ui-button type="secondary" @click="uebertragen" :disabled="(_kurseZurUebertragung.length === 0) || apiStatus.pending"><svws-ui-spinner v-if="apiStatus.pending" spinning /> Schülermenge übertragen</svws-ui-button>
+							<svws-ui-button type="secondary" @click="uebertragen" :disabled="(_kurseZurUebertragung.length === 0) || apiStatus.pending">
+								<svws-ui-spinner v-if="apiStatus.pending" spinning /> Schülermenge übertragen
+							</svws-ui-button>
 						</div>
 					</div>
 					<div class="flex flex-col gap-2">

@@ -5,17 +5,16 @@
 	"license": "BSD-3-Clause",
 	"version": "1.0.2-SNAPSHOT",
 	"scripts": {
+		"dev": "histoire dev",
+		"lint": "eslint 'src/**/*.{ts,vue}' --cache",
+		"lint-tsc": "vue-tsc --noEmit",
+		"test": "vitest",
+		"test:run": "vitest run --coverage --coverage.include=src/components/*.vue --coverage.exclude=src/components/*.story.*",
 		"build": "npm run build-lib && npm run build-dts",
 		"build-lib": "vite build",
 		"build-dts": "vue-tsc --declaration --emitDeclarationOnly -p tsconfig.build.json",
-		"lint-tsc": "vue-tsc --noEmit",
-		"lint": "eslint 'src/**/*.{ts,vue}' --cache",
-		"lint-fix": "eslint 'src/**/*.{ts,vue}' --fix --cache",
-		"dev": "histoire dev",
 		"story:build": "histoire build",
 		"story:preview": "histoire preview",
-		"test": "vitest",
-		"test:run": "vitest run --coverage --coverage.include=src/components/*.vue --coverage.exclude=src/components/*.story.*",
 		"check-licenses": "license-checker-rseidelsohn --summary --unknown --production"
 	},
 	"files": [

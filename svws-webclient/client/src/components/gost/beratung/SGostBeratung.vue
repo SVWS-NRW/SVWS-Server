@@ -18,8 +18,8 @@
 				:abiturdaten-manager :modus :faecher-anzeigen="'alle'" :gost-jahrgangsdaten="jahrgangsdaten()" :set-wahl ignoriere-sprachenfolge />
 		</div>
 		<div class="overflow-y-auto overflow-x-hidden flex flex-col gap-y-8 lg:gap-y-12 scrollbar-thin pr-4">
-			<svws-ui-content-card v-if="istAbiturjahrgang" title="Beratungslehrer" class="m-0">
-				<svws-ui-table :items="beratungslehrer()" :selectable="hatUpdateKompetenz" :model-value="selected" @update:model-value="selected=$event" count :columns="[{key: 'kuerzel', label: 'Kürzel', span: 0.25}, {key: 'name', label: 'Name'}]">
+			<svws-ui-content-card v-if="istAbiturjahrgang" title="Beratungslehrer">
+				<svws-ui-table :items="beratungslehrer()" :selectable="hatUpdateKompetenz" :model-value="selected" @update:model-value="selected=$event" count :columns="[{key: 'kuerzel', label: 'Kürzel', span: 0.25}, {key: 'name', label: 'Name'}]" class="svws-no-mx">
 					<template #cell(name)="{ rowData: l }">
 						{{ `${l.nachname}, ${l.vorname}` }}
 					</template>

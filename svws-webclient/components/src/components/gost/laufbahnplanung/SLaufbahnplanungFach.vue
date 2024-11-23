@@ -601,7 +601,7 @@
 							props.fach.istMoeglichQ11 ? 'S' : null,
 							props.fach.istMoeglichQ12 ? 'S' : null,
 							props.fach.istMoeglichQ21 ? 'S' : null,
-							props.fach.istMoeglichQ22 ? 'M' : null
+							props.fach.istMoeglichQ22 ? 'M' : null,
 						];
 				} else {
 					if (ist_VTF.value || ist_PJK.value || (GostFachbereich.SPORT.hat(props.fach) && !props.fach.istMoeglichAbiGK && !props.fach.istMoeglichAbiLK))
@@ -625,7 +625,7 @@
 							props.fach.istMoeglichQ11 ? 'M' : null,
 							props.fach.istMoeglichQ12 ? 'M' : null,
 							props.fach.istMoeglichQ21 ? 'M' : null,
-							props.fach.istMoeglichQ22 ? 'M' : null
+							props.fach.istMoeglichQ22 ? 'M' : null,
 						];
 				else if (hochschreibenIstWahl(props.fach, wahl.halbjahre, ['S', 'S', 'LK', 'LK', 'LK', 'LK']) && (GostFachbereich.SPORT.hat(props.fach) && !props.fach.istMoeglichAbiGK && props.fach.istMoeglichAbiLK))
 					wahl.halbjahre = ['M', 'M', 'M', 'M', 'M', 'M'];
@@ -681,7 +681,7 @@
 							props.fach.istMoeglichQ11 ? 'S' : null,
 							props.fach.istMoeglichQ12 ? 'S' : null,
 							props.fach.istMoeglichQ21 ? 'S' : null,
-							props.fach.istMoeglichQ22 ? 'M' : null
+							props.fach.istMoeglichQ22 ? 'M' : null,
 						];
 				} else {
 					if (ist_VTF.value || ist_PJK.value || (GostFachbereich.SPORT.hat(props.fach) && !props.fach.istMoeglichAbiGK && !props.fach.istMoeglichAbiLK))
@@ -705,7 +705,7 @@
 							props.fach.istMoeglichQ11 ? 'M' : null,
 							props.fach.istMoeglichQ12 ? 'M' : null,
 							props.fach.istMoeglichQ21 ? 'M' : null,
-							props.fach.istMoeglichQ22 ? 'M' : null
+							props.fach.istMoeglichQ22 ? 'M' : null,
 						];
 				else if (hochschreibenIstWahlIgnoreFirstAndSecond(props.fach, wahl.halbjahre, ['LK', 'LK', 'LK', 'LK']) && (GostFachbereich.SPORT.hat(props.fach) && !props.fach.istMoeglichAbiGK && props.fach.istMoeglichAbiLK))
 					wahl.halbjahre = [wahl.halbjahre[0], 'M', 'M', 'M', 'M', 'M'];

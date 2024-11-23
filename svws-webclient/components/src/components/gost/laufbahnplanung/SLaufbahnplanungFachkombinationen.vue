@@ -1,10 +1,10 @@
 <template>
 	<template v-if="!abiturdatenManager().faecher().getFachkombinationen().isEmpty()">
-		<svws-ui-table :no-data="false" :items="[]" :columns="[{key: 'icon', label: ' ', fixedWidth: 1.8},{key: 'beschreibung', label: 'Fachkombinationsregeln'}]" type="navigation">
+		<svws-ui-table :no-data="false" :items="[]" :columns="[{key: 'icon', label: ' ', fixedWidth: 1.8},{key: 'beschreibung', label: 'Fachkombinationsregeln'}]" type="navigation" class="svws-no-mx">
 			<template #header>
 				<div class="svws-ui-tr" role="row">
 					<div class="svws-ui-td col-span-full" role="columnheader">
-						<span class="icon i-ri-checkbox-circle-fill flex-shrink-0 icon-success -my-1 -mx-0.5" v-if="regelnVerletzt.size === 0" />
+						<span class="icon i-ri-checkbox-circle-fill flex-shrink-0 icon-success -my-1" v-if="regelnVerletzt.size === 0" />
 						<template v-if="regelnVerletzt.size !== 0">
 							{{ regelnVerletzt.size }} Fehler bei Fachkombinationsregeln
 						</template>
