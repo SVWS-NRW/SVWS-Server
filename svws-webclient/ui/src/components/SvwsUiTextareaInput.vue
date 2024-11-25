@@ -2,7 +2,7 @@
 	<label class="textarea-input"
 		:class="{
 			'textarea-input--filled': data !== null,
-			'textarea-input--invalid': (isValid === false),
+			'textarea-input--invalid': !isValid,
 			'textarea-input--disabled': disabled,
 			'textarea-input--statistics': statistics,
 			'textarea-input--resize-none': resizeable === 'none',
@@ -13,20 +13,18 @@
 			'flex-grow': span === 'grow'
 		}">
 		<textarea ref="textarea" v-model="dataOrEmpty" @input="onInput" @keyup.enter="onKeyEnter" @blur="onBlur"
-			:required="required" :disabled="disabled" class="textarea-input--control" :rows="rows" v-bind="{ ...$attrs }" />
-		<span v-if="placeholder"
-			class="textarea-input--placeholder"
-			:class="{
-				'textarea-input--placeholder--required': required
-			}">
+			:required :disabled class="textarea-input--control" :rows v-bind="{ ...$attrs }" />
+		<span v-if="placeholder" class="textarea-input--placeholder" :class="{ 'textarea-input--placeholder--required': required }">
 			<span>{{ placeholder }}</span>
-			<span class="icon i-ri-alert-line ml-0.5 -my-0.5 icon-error" v-if="(isValid === false)" />
-			<span v-if="maxLen" class="inline-flex ml-1 gap-1" :class="{'text-ui-danger': !maxLenValid, 'opacity-50': maxLenValid}">{{ maxLen ? ` (${data?.toLocaleString() ? data?.toLocaleString().length + '/' : 'maximal '}${maxLen} Zeichen)` : '' }}</span>
+			<span class="icon i-ri-alert-line ml-0.5 -my-0.5 icon-error" v-if="isValid === false" />
+			<span v-if="maxLen && (data !== null)" class="inline-flex ml-1 gap-1" :class="maxLenValid ? 'opacity-50' : 'text-ui-danger'">
+				{{ `(${(data.toLocaleString().length > 0) ? data.toLocaleString().length + '/' : 'maximal '}${maxLen} Zeichen)` }}
+			</span>
 			<span v-if="statistics" class="cursor-pointer">
 				<svws-ui-tooltip position="right">
 					<span class="inline-flex items-center">
 						<span class="icon i-ri-bar-chart-2-line icon-statistics pointer-events-auto ml-0.5" />
-						<span class="icon i-ri-alert-fill icon-error" v-if="data === '' || data === null" />
+						<span class="icon i-ri-alert-fill icon-error" v-if="(data === '') || (data === null)" />
 					</span>
 					<template #content>
 						Relevant für die Statistik
@@ -97,7 +95,7 @@
 		let tmpIsValid = true;
 		if ((props.required === true) && (data.value === null))
 			return false;
-		if ((props.maxLen !== undefined) && (typeof data.value === 'string') && (data.value.toLocaleString().length <= props.maxLen))
+		if (!maxLenValid.value)
 			tmpIsValid = false;
 		if (tmpIsValid && (data.value !== null) && (data.value !== ''))
 			tmpIsValid = props.valid(data.value);
@@ -114,7 +112,7 @@
 	const maxLenValid = computed(() => {
 		if ((props.maxLen === undefined) || (data.value === null))
 			return true;
-		return (typeof data.value === 'string') && (data.value.toLocaleString().length <= props.maxLen);
+		return data.value.toLocaleString().length <= props.maxLen;
 	})
 
 	function onInput(event: Event) {
