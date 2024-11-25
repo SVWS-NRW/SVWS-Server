@@ -27,6 +27,7 @@ export interface GostKlausurplanungRaumzeitProps {
 	patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>) => Promise<boolean>;
 	setzeRaumZuSchuelerklausuren: (raeume: List<GostKlausurraumRich>, deleteFromRaeume: boolean) => Promise<GostKlausurenCollectionSkrsKrsData>;
 	patchKlausur: (klausur: GostKursklausur, patch: Partial<GostKursklausur>) => Promise<GostKlausurenCollectionSkrsKrsData>;
+	patchKlausurtermin: (id: number, termin: Partial<GostKlausurtermin>) => Promise<void>;
 	quartalsauswahl: WritableComputedRef<0 | 1 | 2>;
 	setRaumTermin : (termin: GostKlausurtermin | null) => void;
 	terminSelected: WritableComputedRef<GostKlausurtermin | undefined>;

@@ -93,10 +93,17 @@
 											</template>
 											<span class="svws-ui-badge hover:opacity-75" :style="`--background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
 											<svws-ui-tooltip>
-												<template #content>
-													Bemerkung: {{ klausur.bemerkung }}
+												<template #content class="space-y-2">
+													<div v-if="kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe !== null && kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe!.trim().length > 0">
+														<h3 class="border-b text-headline-md">Bemerkung zur Vorgabe</h3>
+														<p>{{ kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe }}</p>
+													</div>
+													<div v-if="klausur.bemerkung !== null && klausur.bemerkung.trim().length > 0">
+														<h3 class="border-b text-headline-md">Bemerkung zur Kursklausur</h3>
+														<p>{{ klausur.bemerkung }}</p>
+													</div>
 												</template>
-												<span class="icon i-ri-edit-2-line icon-primary" v-if="klausur.bemerkung !== null && klausur.bemerkung.trim().length > 0" />
+												<span class="icon i-ri-edit-2-line icon-primary" v-if="(klausur.bemerkung !== null && klausur.bemerkung.trim().length > 0) || (kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe !== null && kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe!.trim().length > 0)" />
 											</svws-ui-tooltip>
 										</svws-ui-tooltip>
 									</div>
@@ -134,6 +141,9 @@
 					<!--<div v-else-if="schuelerklausurtermine().size()">
 						{{ schuelerklausurtermine().size() }} Nachschreibklausuren
 					</div>-->
+					<div class="mt-4">
+						<svws-ui-textarea-input resizeable="none" autoresize placeholder="Bemerkungen zum Termin" :disabled="!hatKompetenzUpdate" :model-value="termin.bemerkung" @change="bemerkung => patchKlausurtermin(termin.id, {bemerkung})" @click="$event.stopPropagation()" />
+					</div>
 					<span class="flex w-full justify-between items-center gap-1 text-sm mt-auto pr-2" :class="{'pl-3': inTooltip}">
 						<div class="py-3" :class="{'opacity-50': !kursklausuren().size() && (showSchuelerklausuren && !schuelerklausurtermine().size())}">
 							<span class="font-bold">{{ kMan().schuelerklausurterminAktuellGetMengeByTermin(termin).size() }} Schüler, </span>
@@ -176,6 +186,7 @@
 		hideButtonRaeumePlanen?: boolean;
 		createSchuelerklausurTermin?: (id: number) => Promise<void>;
 		patchKlausur?: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<GostKlausurenCollectionSkrsKrsData>;
+		patchKlausurtermin: (id: number, termin: Partial<GostKlausurtermin>) => Promise<void>;
 		inTooltip?: boolean;
 		gotoKalenderdatum: (datum: string | undefined, termin: GostKlausurtermin | undefined) => Promise<void>;
 		gotoRaumzeitTermin: (abiturjahr: number, halbjahr: GostHalbjahr, value: number) => Promise<void>;

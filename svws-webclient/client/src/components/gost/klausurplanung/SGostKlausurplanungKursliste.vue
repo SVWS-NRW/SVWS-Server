@@ -12,7 +12,11 @@
 		</template>
 	</svws-ui-modal>
 
-	<h3 class="border-b text-headline-md">Klausurschreiber im Kurs {{ kMan().kursKurzbezeichnungByKursklausur(kursklausur) }}</h3>
+	<div v-if="kMan().vorgabeByKursklausur(kursklausur).bemerkungVorgabe !== null && kMan().vorgabeByKursklausur(kursklausur).bemerkungVorgabe!.trim().length > 0">
+		<h3 class="border-b text-headline-md">Bemerkung zur Vorgabe</h3>
+		{{ kMan().vorgabeByKursklausur(kursklausur).bemerkungVorgabe }}
+	</div>
+	<h3 class="border-b text-headline-md mt-4">Klausurschreiber im Kurs {{ kMan().kursKurzbezeichnungByKursklausur(kursklausur) }}</h3>
 	<table>
 		<tr v-for="s in kMan().schuelerklausurterminGetMengeByKursklausur(kursklausur)" :key="s.id">
 			<td>

@@ -11,6 +11,7 @@
 			:patch-klausur
 			:show-schuelerklausuren
 			:goto-kalenderdatum
+			:patch-klausurtermin
 			:goto-raumzeit-termin>
 			<template #title>
 				<div class="flex gap-2 w-full mb-1">

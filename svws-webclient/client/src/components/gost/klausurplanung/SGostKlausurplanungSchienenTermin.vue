@@ -16,6 +16,7 @@
 			:klausur-css-classes
 			:show-schuelerklausuren
 			:patch-klausur
+			:patch-klausurtermin
 			:goto-kalenderdatum
 			:goto-raumzeit-termin
 			:create-schuelerklausur-termin>

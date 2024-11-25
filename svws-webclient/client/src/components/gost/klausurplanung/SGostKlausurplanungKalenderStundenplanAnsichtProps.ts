@@ -17,6 +17,7 @@ export interface SGostKlausurplanungKalenderStundenplanAnsichtProps {
 	// kalenderwoche: () => StundenplanKalenderwochenzuordnung | undefined;
 	useDragAndDrop?: boolean;
 	kurseGefiltert: (datum: string, day: Wochentag, stunde: number) => List<number>;
+	patchKlausurtermin: (id: number, termin: Partial<GostKlausurtermin>) => Promise<void>;
 	sumSchreiber: (datum: string, day: Wochentag, stunde: number) => number;
 	dragData: () => GostKlausurplanungDragData;
 	onDrag: (data: GostKlausurplanungDragData) => void;

@@ -41,6 +41,7 @@
 									:show-last-klausurtermin="true"
 									:goto-kalenderdatum
 									:goto-raumzeit-termin
+									:patch-klausurtermin
 									drag-icon>
 									<template #datum><span /></template>
 								</s-gost-klausurplanung-termin>
@@ -68,6 +69,7 @@
 						:zeige-alle-jahrgaenge
 						:goto-kalenderdatum
 						:goto-raumzeit-termin
+						:patch-klausurtermin
 						:kalenderwoche
 						:kursklausur-mouse-over="() => kursklausurMouseOver">
 						<template #kwAuswahl>

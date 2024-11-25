@@ -59,7 +59,28 @@
 						:class="klausurCssClasses(klausur, undefined)">
 						<div class="svws-ui-td">
 							<span v-if="hatKompetenzUpdate" class="icon i-ri-draggable -m-0.5 -ml-4 -mr-1" />
-							<span class="svws-ui-badge" :style="`--background-color: ${kMan().fachHTMLFarbeRgbaByKursklausur(klausur)};`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
+							<svws-ui-tooltip :hover="false" :indicator="false">
+								<template #content>
+									<s-gost-klausurplanung-kursliste :k-man :kursklausur="klausur" :patch-klausur :create-schuelerklausur-termin :benutzer-kompetenzen />
+								</template>
+								<span class="svws-ui-badge hover:opacity-75" :style="`--background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
+								<svws-ui-tooltip>
+									<template #content class="space-y-2">
+										<div v-if="kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe !== null && kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe!.trim().length > 0">
+											<h3 class="border-b text-headline-md">Bemerkung zur Vorgabe</h3>
+											<p>{{ kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe }}</p>
+										</div>
+										<div v-if="klausur.bemerkung !== null && klausur.bemerkung.trim().length > 0">
+											<h3 class="border-b text-headline-md">Bemerkung zur Kursklausur</h3>
+											<p>{{ klausur.bemerkung }}</p>
+										</div>
+									</template>
+									<span class="icon i-ri-edit-2-line icon-primary" v-if="(klausur.bemerkung !== null && klausur.bemerkung.trim().length > 0) || (kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe !== null && kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe!.trim().length > 0)" />
+								</svws-ui-tooltip>
+							</svws-ui-tooltip>
+
+
+							<!-- <span class="svws-ui-badge" :style="`--background-color: ${kMan().fachHTMLFarbeRgbaByKursklausur(klausur)};`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span> -->
 						</div>
 						<div class="svws-ui-td">{{ kMan().kursLehrerKuerzelByKursklausur(klausur) }}</div>
 						<div class="svws-ui-td svws-align-right">{{ kMan().schuelerklausurGetMengeByKursklausur(klausur).size() + "/" + kMan().kursAnzahlSchuelerGesamtByKursklausur(klausur) }}</div>
