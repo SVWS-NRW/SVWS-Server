@@ -44,7 +44,25 @@
 					<td v-else colspan="3" class="border-black/25 border-r text-center text-error p-2">
 						Keine Klausuren in diesem Raum
 					</td>
-					<td :rowspan="kMan().raumGetMengeByTermin(termin).size()" v-if="id===0"><span class="px-3 py-1">{{ termin.bemerkung }}</span></td>
+					<td :rowspan="kMan().raumGetMengeByTermin(termin).size()" v-if="id===0" class="space-y-3">
+						<div v-if="termin.bemerkung !== null && termin.bemerkung.trim().length > 0" class="px-3 py-1">{{ termin.bemerkung }}</div>
+						<div>
+							<div v-for="raum in kMan().raumGetMengeByTermin(termin)" :key="raum.id">
+								<template v-if="raum.bemerkung !== null && raum.bemerkung.trim().length > 0">
+									<span class="font-bold">Raum {{ kMan().stundenplanraumGetByKlausurraumOrNull(raum) !== null ? kMan().stundenplanraumGetByKlausurraum(raum).kuerzel : "N.N." }}:</span>
+									{{ raum.bemerkung }}
+								</template>
+							</div>
+						</div>
+						<div>
+							<div v-for="klausur in kMan().kursklausurGetMengeByTermin(termin)" :key="klausur.id">
+								<template v-if="klausur.bemerkung !== null && klausur.bemerkung.trim().length > 0">
+									<span class="font-bold">Kurs {{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}:</span>
+									{{ klausur.bemerkung }}
+								</template>
+							</div>
+						</div>
+					</td>
 				</tr>
 			</tbody>
 		</table>

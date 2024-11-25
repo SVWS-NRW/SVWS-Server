@@ -1829,9 +1829,10 @@ export class GostKlausurplanManager extends JavaObject {
 		this.update_all();
 	}
 
-	private schuelerklausurRemoveOhneUpdateById(idKursklausur : number) : void {
-		const removed : GostSchuelerklausur | null = DeveloperNotificationException.ifMapRemoveFailes(this._schuelerklausur_by_id, idKursklausur);
+	private schuelerklausurRemoveOhneUpdateById(idSchuelerklausur : number) : void {
+		const removed : GostSchuelerklausur | null = DeveloperNotificationException.ifMapRemoveFailes(this._schuelerklausur_by_id, idSchuelerklausur);
 		this.schuelerklausurterminRemoveAll(this.schuelerklausurterminGetMengeBySchuelerklausur(removed));
+		this.schuelerklausurfehlendRemoveOhneUpdate(removed);
 	}
 
 	/**
@@ -1847,12 +1848,12 @@ export class GostKlausurplanManager extends JavaObject {
 	/**
 	 * Entfernt alle {@link GostKursklausur}-Objekte.
 	 *
-	 * @param listKursklausuren Die Liste der zu entfernenden
+	 * @param listSchuelerklausuren Die Liste der zu entfernenden
 	 *                          {@link GostKursklausur}-Objekte.
 	 */
-	public schuelerklausurRemoveAll(listKursklausuren : List<GostSchuelerklausur>) : void {
-		for (const kursklausur of listKursklausuren)
-			this.schuelerklausurRemoveOhneUpdateById(kursklausur.id);
+	public schuelerklausurRemoveAll(listSchuelerklausuren : List<GostSchuelerklausur>) : void {
+		for (const schuelerklausur of listSchuelerklausuren)
+			this.schuelerklausurRemoveOhneUpdateById(schuelerklausur.id);
 		this.update_all();
 	}
 

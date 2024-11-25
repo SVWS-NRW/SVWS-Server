@@ -89,9 +89,15 @@
 									<div class="svws-ui-td" role="cell">
 										<svws-ui-tooltip :hover="false" :indicator="false" :keep-open>
 											<template #content>
-												<s-gost-klausurplanung-kursliste :k-man :kursklausur="klausur" :termin :patch-klausur :create-schuelerklausur-termin @modal="keepOpen = $event" />
+												<s-gost-klausurplanung-kursliste :k-man :kursklausur="klausur" :termin :patch-klausur :create-schuelerklausur-termin @modal="keepOpen = $event" :benutzer-kompetenzen />
 											</template>
 											<span class="svws-ui-badge hover:opacity-75" :style="`--background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
+											<svws-ui-tooltip>
+												<template #content>
+													Bemerkung: {{ klausur.bemerkung }}
+												</template>
+												<span class="icon i-ri-edit-2-line icon-primary" v-if="klausur.bemerkung !== null && klausur.bemerkung.trim().length > 0" />
+											</svws-ui-tooltip>
 										</svws-ui-tooltip>
 									</div>
 									<div class="svws-ui-td" role="cell">{{ kMan().kursLehrerKuerzelByKursklausur(klausur) }}</div>

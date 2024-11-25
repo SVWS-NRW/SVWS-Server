@@ -1911,9 +1911,10 @@ public class GostKlausurplanManager {
 		update_all();
 	}
 
-	private void schuelerklausurRemoveOhneUpdateById(final long idKursklausur) {
-		final GostSchuelerklausur removed = DeveloperNotificationException.ifMapRemoveFailes(_schuelerklausur_by_id, idKursklausur);
+	private void schuelerklausurRemoveOhneUpdateById(final long idSchuelerklausur) {
+		final GostSchuelerklausur removed = DeveloperNotificationException.ifMapRemoveFailes(_schuelerklausur_by_id, idSchuelerklausur);
 		schuelerklausurterminRemoveAll(schuelerklausurterminGetMengeBySchuelerklausur(removed));
+		schuelerklausurfehlendRemoveOhneUpdate(removed);
 	}
 
 	/**
@@ -1930,12 +1931,12 @@ public class GostKlausurplanManager {
 	/**
 	 * Entfernt alle {@link GostKursklausur}-Objekte.
 	 *
-	 * @param listKursklausuren Die Liste der zu entfernenden
+	 * @param listSchuelerklausuren Die Liste der zu entfernenden
 	 *                          {@link GostKursklausur}-Objekte.
 	 */
-	public void schuelerklausurRemoveAll(final @NotNull List<GostSchuelerklausur> listKursklausuren) {
-		for (final @NotNull GostSchuelerklausur kursklausur : listKursklausuren)
-			schuelerklausurRemoveOhneUpdateById(kursklausur.id);
+	public void schuelerklausurRemoveAll(final @NotNull List<GostSchuelerklausur> listSchuelerklausuren) {
+		for (final @NotNull GostSchuelerklausur schuelerklausur : listSchuelerklausuren)
+			schuelerklausurRemoveOhneUpdateById(schuelerklausur.id);
 
 		update_all();
 	}

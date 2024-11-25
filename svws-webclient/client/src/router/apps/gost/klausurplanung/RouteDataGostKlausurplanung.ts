@@ -146,14 +146,15 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 				abschnitt: undefined,
 				halbjahr: halbjahr,
 			}
+
+			if (!this.manager.isVorgabenInitialized()) {
+				const listKlausurvorgaben = await api.server.getGostKlausurenVorgabenJahrgang(api.schema, -1);
+				this.manager.vorgabeAddAll(listKlausurvorgaben);
+				const listFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, -1);
+				const faecherManager = new GostFaecherManager(api.abschnitt.schuljahr, listFaecher);
+				this.manager.setFaecherManager(-1, faecherManager);
+			}
 			if (this._state.value.abiturjahr === -1) {
-				if (!this.manager.isVorgabenInitialized()) {
-					const listKlausurvorgaben = await api.server.getGostKlausurenVorgabenJahrgang(api.schema, -1);
-					this.manager.vorgabeAddAll(listKlausurvorgaben);
-					const listFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, -1);
-					const faecherManager = new GostFaecherManager(api.abschnitt.schuljahr, listFaecher);
-					this.manager.setFaecherManager(-1, faecherManager);
-				}
 				this.setPatchedState(result);
 				return true;
 			}

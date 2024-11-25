@@ -12,7 +12,6 @@
 		</template>
 	</svws-ui-modal>
 
-
 	<h3 class="border-b text-headline-md">Klausurschreiber im Kurs {{ kMan().kursKurzbezeichnungByKursklausur(kursklausur) }}</h3>
 	<table>
 		<tr v-for="s in kMan().schuelerklausurterminGetMengeByKursklausur(kursklausur)" :key="s.id">
@@ -28,7 +27,7 @@
 				</span>
 			</td>
 			<td v-if="patchKlausur && createSchuelerklausurTermin">
-				<svws-ui-button v-if="termin !== undefined && kMan().schuelerSchreibtKlausurtermin(kMan().schuelerGetBySchuelerklausurtermin(s).id, termin)" @click="terminSelected = s; show = true">
+				<svws-ui-button v-if="hatKompetenzUpdate && termin !== undefined && kMan().schuelerSchreibtKlausurtermin(kMan().schuelerGetBySchuelerklausurtermin(s).id, termin)" @click="terminSelected = s; show = true">
 					<svws-ui-tooltip>
 						<template #content>
 							Klausur nicht mitgeschrieben
@@ -39,12 +38,19 @@
 			</td>
 		</tr>
 	</table>
+	<div class="mt-4">
+		<svws-ui-textarea-input placeholder="Bemerkungen zum Kurs" resizeable="none" autoresize :disabled="!hatKompetenzUpdate || !patchKlausur" :model-value="kursklausur.bemerkung" @change="bemerkung => patchKlausur(kursklausur, {bemerkung})" />
+	</div>
+
+
 </template>
 
 <script setup lang="ts">
-	import { ref, watchEffect } from 'vue';
+	import { computed, ref, watchEffect } from 'vue';
 	import type { GostKlausurplanManager, GostKursklausur, GostKlausurtermin, GostKlausurenCollectionSkrsKrsData } from '@core';
-	import { GostSchuelerklausurTermin } from '@core';
+	import { BenutzerKompetenz, GostSchuelerklausurTermin } from '@core';
+
+	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
 
 	const props = withDefaults(defineProps<{
 		kMan: () => GostKlausurplanManager;
@@ -52,6 +58,7 @@
 		termin?: GostKlausurtermin;
 		createSchuelerklausurTermin?: (id: number) => Promise<void>;
 		patchKlausur?: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<GostKlausurenCollectionSkrsKrsData>;
+		benutzerKompetenzen: Set<BenutzerKompetenz>,
 	}>(), {
 		termin: undefined,
 		createSchuelerklausurTermin: undefined,
