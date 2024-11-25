@@ -22,9 +22,11 @@ import jakarta.ws.rs.core.Response.Status;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 /**
@@ -55,9 +57,7 @@ public final class DataSchuelerSprachbelegung extends DataManagerRevised<Long, D
 	}
 
 
-	@Override
-	public Sprachbelegung map(final DTOSchuelerSprachenfolge dto) throws ApiOperationException {
-		final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, dto.Schueler_ID);
+	private static Sprachbelegung mapInternal(final DBEntityManager conn, final DTOSchueler dtoSchueler, final DTOSchuelerSprachenfolge dto) {
 		final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dtoSchueler.Schuljahresabschnitts_ID);
 		final Sprachbelegung daten = new Sprachbelegung();
 		daten.sprache = dto.Sprache;
@@ -74,6 +74,13 @@ public final class DataSchuelerSprachbelegung extends DataManagerRevised<Long, D
 		daten.hatGraecum = (dto.GraecumErreicht != null) && dto.GraecumErreicht;
 		daten.hatHebraicum = (dto.HebraicumErreicht != null) && dto.HebraicumErreicht;
 		return daten;
+	}
+
+
+	@Override
+	public Sprachbelegung map(final DTOSchuelerSprachenfolge dto) throws ApiOperationException {
+		final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, dto.Schueler_ID);
+		return mapInternal(conn, dtoSchueler, dto);
 	}
 
 
@@ -339,6 +346,36 @@ public final class DataSchuelerSprachbelegung extends DataManagerRevised<Long, D
 		if (dto == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 		return deleteAsResponse(dto.ID);
+	}
+
+
+
+	/**
+	 * Ermittelt die Liste der Sprachbelegungen für die angegebenen IDs von Schülern.
+	 *
+	 * @param conn          die Datenbankverbindung
+	 * @param idsSchueler   die IDs der Schüler
+	 *
+	 * @return die Liste der Sprachbelegungen
+	 */
+	public static List<Sprachbelegung> getListBySchuelerIDs(final @NotNull DBEntityManager conn, final @NotNull List<Long> idsSchueler) {
+		if (idsSchueler.isEmpty())
+			return Collections.emptyList();
+		final Map<Long, DTOSchueler> mapSchueler = conn.queryByKeyList(DTOSchueler.class, idsSchueler).stream().collect(Collectors.toMap(s -> s.ID, s -> s));
+		if (mapSchueler.isEmpty())
+			return Collections.emptyList();
+		final List<DTOSchuelerSprachenfolge> listSprachenfolgen =
+				conn.queryList(DTOSchuelerSprachenfolge.QUERY_LIST_BY_SCHUELER_ID, DTOSchuelerSprachenfolge.class, idsSchueler);
+		if (listSprachenfolgen.isEmpty())
+			return Collections.emptyList();
+		final List<Sprachbelegung> result = new ArrayList<>();
+		for (final DTOSchuelerSprachenfolge dtoFolge : listSprachenfolgen) {
+			final DTOSchueler dtoSchueler = mapSchueler.get(dtoFolge.Schueler_ID);
+			if (dtoSchueler == null)
+				continue;
+			result.add(mapInternal(conn, dtoSchueler, dtoFolge));
+		}
+		return result;
 	}
 
 }
