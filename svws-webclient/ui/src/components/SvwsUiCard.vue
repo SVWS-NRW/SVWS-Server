@@ -93,7 +93,9 @@
 							</SvwsUiButton>
 						</div>
 					</template>
-					<slot name="buttonContentRight" />
+					<div class="ml-auto">
+						<slot name="buttonContentRight" />
+					</div>
 				</div>
 
 				<!-- Divider Section -->
@@ -144,7 +146,9 @@
 							</SvwsUiButton>
 						</div>
 					</template>
-					<slot name="buttonFooterRight" />
+					<div class="ml-auto">
+						<slot name="buttonFooterRight" />
+					</div>
 				</div>
 			</div>
 		</div>
@@ -223,7 +227,7 @@
 	const showContentRightButton = computed(() => !slots.buttonContentRight && (buttons.value.length !== 0) && (props.buttonPosition === 'right')
 		&& (props.buttonContainer === 'content'));
 	const showFooterDivider = computed(() => !slots.footerDivider && props.showDivider);
-	const showFooter = computed(() => slots.footer || ((props.footer !== undefined) && (props.footer.length !== 0)) || (props.buttonContainer === 'footer'));
+	const showFooter = computed(() => slots.footer || slots.buttonFooterLeft || slots.buttonFooterRight || ((props.footer !== undefined) && (props.footer.length !== 0)) || (props.buttonContainer === 'footer'));
 	const showFooterMain = computed(() => !slots.footer && (props.footer !== undefined) && (props.footer.length !== 0));
 	const showFooterRightButton = computed(() => !slots.buttonFooterRight && (props.buttonContainer === 'footer') && (props.buttonPosition === 'right'));
 	const showFooterLeftButton = computed(() => !slots.buttonFooterLeft && (props.buttonContainer === 'footer') && (props.buttonPosition === 'left'));
