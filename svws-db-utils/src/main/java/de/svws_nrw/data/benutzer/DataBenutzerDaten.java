@@ -473,15 +473,7 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 	}
 
 
-	@Override
-	public Response get(final Long id) throws ApiOperationException {
-		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		if (schule == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Keine Schule angelegt.");
-		final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
-		if (schuljahresabschnitt == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Keine gültiger Schuljahresabschnitt vorhanden.");
-
+	private BenutzerDaten getInternal(final long id) throws ApiOperationException {
 		// Lese die Informationen zu den Gruppen ein
 		final List<Long> gruppenIDs = conn.queryList(DTOBenutzergruppenMitglied.QUERY_BY_BENUTZER_ID, DTOBenutzergruppenMitglied.class, id).stream()
 				.map(g -> g.Gruppe_ID).toList();
@@ -511,12 +503,28 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 					gdaten.kompetenzen.add(kompetenzID);
 			daten.gruppen.add(gdaten);
 		}
-		// Füge die Informationen hinzu, zu welchen Klassen funktionsbezogene Kompetenzen vorliegen oder welche Leitungsfunktionen vorliegen
-		daten.kompetenzenKlassen.addAll(getKlassenFunktionsbezogen(conn, daten.typ, daten.typID));
-		daten.leitungsfunktionen.addAll(getLeitungsfunktionenIDs(schuljahresabschnitt.Jahr, conn, daten.typ, daten.typID));
-		daten.kompetenzenAbiturjahrgaenge.addAll(getBeratungslehrerAbiturjahrgaenge(conn, daten.typ, daten.typID));
+		return daten;
+	}
+
+
+	@Override
+	public Response get(final Long id) throws ApiOperationException {
+		final BenutzerDaten daten = getInternal(id);
+		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
+		if (schule != null) {
+			// Ermittle die restlichen Daten nur, wenn die Schule bereits initialisiert wurde. Wenn nicht, dannn sind diese Daten noch nicht verfügbar
+			final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
+			if (schuljahresabschnitt == null)
+				throw new ApiOperationException(Status.NOT_FOUND, "Keine gültiger Schuljahresabschnitt vorhanden.");
+
+			// Füge die Informationen hinzu, zu welchen Klassen funktionsbezogene Kompetenzen vorliegen oder welche Leitungsfunktionen vorliegen
+			daten.kompetenzenKlassen.addAll(getKlassenFunktionsbezogen(conn, daten.typ, daten.typID));
+			daten.leitungsfunktionen.addAll(getLeitungsfunktionenIDs(schuljahresabschnitt.Jahr, conn, daten.typ, daten.typID));
+			daten.kompetenzenAbiturjahrgaenge.addAll(getBeratungslehrerAbiturjahrgaenge(conn, daten.typ, daten.typID));
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
+
 
 	/**
 	 * Entfernt die Admin-Berechtigung des Benutzers.
