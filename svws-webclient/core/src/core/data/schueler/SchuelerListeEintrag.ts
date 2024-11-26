@@ -27,6 +27,11 @@ export class SchuelerListeEintrag extends JavaObject {
 	public geschlecht : string = "";
 
 	/**
+	 * Das Geburtsdatum des Schülers.
+	 */
+	public geburtsdatum : string | null = null;
+
+	/**
 	 * Die ID der aktuellen Klasse des Schülers.
 	 */
 	public idKlasse : number = -1;
@@ -90,9 +95,10 @@ export class SchuelerListeEintrag extends JavaObject {
 	}
 
 	/**
-	 * Vergleicht, ob das akutelle dasselbe Objekt, wie ein anderes übergebenes Objekt ist.
+	 * Vergleicht anhand der ID, ob das akutelle dasselbe Objekt, wie ein anderes übergebenes Objekt ist.
 	 *
 	 * @param another     das zu vergleichende Objekt
+	 *
 	 * @return true, falls die Objekte indentisch sind, sonst false
 	 */
 	public equals(another : unknown | null) : boolean {
@@ -100,7 +106,7 @@ export class SchuelerListeEintrag extends JavaObject {
 	}
 
 	/**
-	 * Erzeugt den Hashcode zu Objekt auf Basis der id.
+	 * Erzeugt den Hashcode zu Objekt auf Basis der ID.
 	 *
 	 * @return den HashCode
 	 */
@@ -133,6 +139,7 @@ export class SchuelerListeEintrag extends JavaObject {
 		if (obj.geschlecht === undefined)
 			throw new Error('invalid json format, missing attribute geschlecht');
 		result.geschlecht = obj.geschlecht;
+		result.geburtsdatum = (obj.geburtsdatum === undefined) ? null : obj.geburtsdatum === null ? null : obj.geburtsdatum;
 		if (obj.idKlasse === undefined)
 			throw new Error('invalid json format, missing attribute idKlasse');
 		result.idKlasse = obj.idKlasse;
@@ -173,6 +180,7 @@ export class SchuelerListeEintrag extends JavaObject {
 		result += '"nachname" : ' + JSON.stringify(obj.nachname) + ',';
 		result += '"vorname" : ' + JSON.stringify(obj.vorname) + ',';
 		result += '"geschlecht" : ' + JSON.stringify(obj.geschlecht) + ',';
+		result += '"geburtsdatum" : ' + ((obj.geburtsdatum === null) ? 'null' : JSON.stringify(obj.geburtsdatum)) + ',';
 		result += '"idKlasse" : ' + obj.idKlasse + ',';
 		result += '"idJahrgang" : ' + obj.idJahrgang + ',';
 		result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang) + ',';
@@ -209,6 +217,9 @@ export class SchuelerListeEintrag extends JavaObject {
 		}
 		if (obj.geschlecht !== undefined) {
 			result += '"geschlecht" : ' + JSON.stringify(obj.geschlecht) + ',';
+		}
+		if (obj.geburtsdatum !== undefined) {
+			result += '"geburtsdatum" : ' + ((obj.geburtsdatum === null) ? 'null' : JSON.stringify(obj.geburtsdatum)) + ',';
 		}
 		if (obj.idKlasse !== undefined) {
 			result += '"idKlasse" : ' + obj.idKlasse + ',';

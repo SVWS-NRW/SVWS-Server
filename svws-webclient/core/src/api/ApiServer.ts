@@ -2080,6 +2080,38 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode exportUntisKlausurenGPU017 für den Zugriff auf die URL https://{hostname}/db/{schema}/datenaustausch/untis/export/klausuren/{id : \d+}
+	 *
+	 * Liefert einen Export für die Klausurdaten eines Schuljahresabschnittes (GPU017.txt).Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Exportieren besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die GPU017.txt
+	 *     - Mime-Type: application/octet-stream
+	 *     - Rückgabe-Typ: ApiFile
+	 *   Code 404: Es wurden nicht alle benötigten Daten für den Export gefunden.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 500: Es ist ein unerwarteter Fehler aufgetreten.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {string | null} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die GPU017.txt
+	 */
+	public async exportUntisKlausurenGPU017(data : string | null, schema : string, id : number) : Promise<ApiFile> {
+		const path = "/db/{schema}/datenaustausch/untis/export/klausuren/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = JSON.stringify(data);
+		const result : ApiFile = await super.postJSONtoOctetStream(path, body);
+		return result;
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode exportUntisLehrerGPU004 für den Zugriff auf die URL https://{hostname}/db/{schema}/datenaustausch/untis/export/lehrer/{id : \d+}
 	 *
 	 * Liefert einen Export für die Lehrkräfte eines Schuljahresabschnittes (GPU004.txt).Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Exportieren besitzt.

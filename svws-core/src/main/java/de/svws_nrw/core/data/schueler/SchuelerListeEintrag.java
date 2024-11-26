@@ -35,6 +35,10 @@ public class SchuelerListeEintrag {
 	@Schema(description = "das Geschlecht des Schülers", example = "4711")
 	public @NotNull String geschlecht = "";
 
+	/** Das Geburtsdatum des Schülers. */
+	@Schema(description = "das Geburtsdatum", example = "1911-11-11")
+	public String geburtsdatum;
+
 	/** Die ID der aktuellen Klasse des Schülers.*/
 	@Schema(description = "die ID der aktuellen Klasse des Schülers", example = "47")
 	public @NotNull Long idKlasse = -1L;
@@ -87,19 +91,19 @@ public class SchuelerListeEintrag {
 	}
 
 	/**
-	 * Vergleicht, ob das akutelle dasselbe Objekt, wie ein anderes übergebenes Objekt ist.
+	 * Vergleicht anhand der ID, ob das akutelle dasselbe Objekt, wie ein anderes übergebenes Objekt ist.
 	 *
 	 * @param another     das zu vergleichende Objekt
+	 *
 	 * @return true, falls die Objekte indentisch sind, sonst false
 	 */
 	@Override
 	public boolean equals(final Object another) {
-		// return another != null && another instanceof SchuelerListeEintrag skt && this.id == skt.id; (Syntax von Transpiler nicht unterstützt)
 		return (another != null) && (another instanceof SchuelerListeEintrag) && (this.id == ((SchuelerListeEintrag) another).id);
 	}
 
 	/**
-	 * Erzeugt den Hashcode zu Objekt auf Basis der id.
+	 * Erzeugt den Hashcode zu Objekt auf Basis der ID.
 	 *
 	 * @return den HashCode
 	 */

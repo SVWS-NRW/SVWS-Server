@@ -619,6 +619,15 @@ export class GostKlausurplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert die Map mit den {@link SchuelerListeEintrag}enn
+	 *
+	 * @return die Map mit den {@link SchuelerListeEintrag}en
+	 */
+	public getSchuelerMap() : JavaMap<number, SchuelerListeEintrag> {
+		return this._schuelerlisteeintrag_by_id;
+	}
+
+	/**
 	 * Prüft, ob zu dem angegebenen Schuljahresabschnitt bereits die StundenplanManager aus der Datenbank geladen wurden.
 	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
 	 * @return true, wenn die StundenplanManager bereits geladen wurde, sonst false
@@ -865,6 +874,20 @@ export class GostKlausurplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert den {@link StundenplanManager}, zu den übergebenen Parametern, sonst null.
+	 *
+	 * @param termin der {@link GostKlausurtermin}
+	 *
+	 * @return den {@link StundenplanManager}, zu den übergebenen Parametern, sonst null.
+	 */
+	public stundenplanManagerGetByTerminOrNull(termin : GostKlausurtermin) : StundenplanManager | null {
+		const idSchuljahresabschnitt : number | null = this.getSchuljahresabschnittIdByTerminOrNull(termin);
+		if (idSchuljahresabschnitt === null)
+			return this.stundenplanManagerGetByDatumLinearSearch(DeveloperNotificationException.ifNull(JavaString.format("Kein Datum zum Termin %d gefunden.", termin.id), termin.datum));
+		return this.stundenplanManagerGetByAbschnittAndDatumOrNull(idSchuljahresabschnitt, DeveloperNotificationException.ifNull(JavaString.format("Kein Datum zum Termin %d gefunden.", termin.id), termin.datum));
+	}
+
+	/**
 	 * Liefert den {@link StundenplanManager}, zu den übergebenen Parametern, sonst wird eine {@link DeveloperNotificationException} geworfen.
 	 *
 	 * @param termin der {@link GostKlausurtermin}
@@ -872,10 +895,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @return den {@link StundenplanManager}, zu den übergebenen Parametern, sonst wird eine {@link DeveloperNotificationException} geworfen.
 	 */
 	public stundenplanManagerGetByTerminOrException(termin : GostKlausurtermin) : StundenplanManager {
-		const idSchuljahresabschnitt : number | null = this.getSchuljahresabschnittIdByTerminOrNull(termin);
-		if (idSchuljahresabschnitt === null)
-			return this.stundenplanManagerGetByDatumLinearSearch(DeveloperNotificationException.ifNull(JavaString.format("Kein Datum zum Termin %d gefunden.", termin.id), termin.datum));
-		return this.stundenplanManagerGetByAbschnittAndDatumOrException(idSchuljahresabschnitt, DeveloperNotificationException.ifNull(JavaString.format("Kein Datum zum Termin %d gefunden.", termin.id), termin.datum));
+		return DeveloperNotificationException.ifNull(JavaString.format("Kein Stundenplanmanager zu Termin %d gefunden.", termin.id), this.stundenplanManagerGetByTerminOrNull(termin));
 	}
 
 	private stundenplanManagerGetByDatumLinearSearch(datum : string) : StundenplanManager {
@@ -4331,6 +4351,21 @@ export class GostKlausurplanManager extends JavaObject {
 			return schuelerklausuren;
 		for (const idKK of this._schuelerklausurterminaktuellmenge_by_idRaum_and_idKursklausur.getKeySetOf(raum.id))
 			schuelerklausuren.addAll(this._schuelerklausurterminaktuellmenge_by_idRaum_and_idKursklausur.getOrException(raum.id, idKK));
+		return schuelerklausuren;
+	}
+
+	/**
+	 * Liefert die Menge aller aktueller {@link GostSchuelerklausur}e zurück, die in einem {@link GostKlausurraum} geschrieben werden.
+	 *
+	 * @param raum  der {@link GostKlausurraum}
+	 *
+	 * @return die Menge aller aktueller {@link GostSchuelerklausur}e zurück, die in einem {@link GostKlausurraum} geschrieben werden.
+	 */
+	public schuelerklausurGetMengeByRaum(raum : GostKlausurraum) : List<GostSchuelerklausur> {
+		const schuelerklausuren : List<GostSchuelerklausur> = new ArrayList<GostSchuelerklausur>();
+		const schuelerklausurtermine : List<GostSchuelerklausurTermin> = this.schuelerklausurterminGetMengeByRaum(raum);
+		for (const skt of schuelerklausurtermine)
+			schuelerklausuren.add(this.schuelerklausurBySchuelerklausurtermin(skt));
 		return schuelerklausuren;
 	}
 

@@ -597,6 +597,15 @@ public class GostKlausurplanManager {
 	}
 
 	/**
+	 * Liefert die Map mit den {@link SchuelerListeEintrag}enn
+	 *
+	 * @return die Map mit den {@link SchuelerListeEintrag}en
+	 */
+	public @NotNull Map<Long, SchuelerListeEintrag> getSchuelerMap() {
+		return _schuelerlisteeintrag_by_id;
+	}
+
+	/**
 	 * Prüft, ob zu dem angegebenen Schuljahresabschnitt bereits die StundenplanManager aus der Datenbank geladen wurden.
 	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
 	 * @return true, wenn die StundenplanManager bereits geladen wurde, sonst false
@@ -845,6 +854,20 @@ public class GostKlausurplanManager {
 	}
 
 	/**
+	 * Liefert den {@link StundenplanManager}, zu den übergebenen Parametern, sonst null.
+	 *
+	 * @param termin der {@link GostKlausurtermin}
+	 *
+	 * @return den {@link StundenplanManager}, zu den übergebenen Parametern, sonst null.
+	 */
+	public StundenplanManager stundenplanManagerGetByTerminOrNull(final @NotNull GostKlausurtermin termin) {
+		final Long idSchuljahresabschnitt = getSchuljahresabschnittIdByTerminOrNull(termin);
+		if (idSchuljahresabschnitt == null)
+			return stundenplanManagerGetByDatumLinearSearch(DeveloperNotificationException.ifNull("Kein Datum zum Termin %d gefunden.".formatted(termin.id), termin.datum));
+		return stundenplanManagerGetByAbschnittAndDatumOrNull(idSchuljahresabschnitt, DeveloperNotificationException.ifNull("Kein Datum zum Termin %d gefunden.".formatted(termin.id), termin.datum));
+	}
+
+	/**
 	 * Liefert den {@link StundenplanManager}, zu den übergebenen Parametern, sonst wird eine {@link DeveloperNotificationException} geworfen.
 	 *
 	 * @param termin der {@link GostKlausurtermin}
@@ -852,10 +875,7 @@ public class GostKlausurplanManager {
 	 * @return den {@link StundenplanManager}, zu den übergebenen Parametern, sonst wird eine {@link DeveloperNotificationException} geworfen.
 	 */
 	public @NotNull StundenplanManager stundenplanManagerGetByTerminOrException(final @NotNull GostKlausurtermin termin) {
-		final Long idSchuljahresabschnitt = getSchuljahresabschnittIdByTerminOrNull(termin);
-		if (idSchuljahresabschnitt == null)
-			return stundenplanManagerGetByDatumLinearSearch(DeveloperNotificationException.ifNull("Kein Datum zum Termin %d gefunden.".formatted(termin.id), termin.datum));
-		return stundenplanManagerGetByAbschnittAndDatumOrException(idSchuljahresabschnitt, DeveloperNotificationException.ifNull("Kein Datum zum Termin %d gefunden.".formatted(termin.id), termin.datum));
+		return DeveloperNotificationException.ifNull("Kein Stundenplanmanager zu Termin %d gefunden.".formatted(termin.id), stundenplanManagerGetByTerminOrNull(termin));
 	}
 
 	private @NotNull StundenplanManager stundenplanManagerGetByDatumLinearSearch(final @NotNull String datum) {
@@ -4653,6 +4673,21 @@ public class GostKlausurplanManager {
 			return schuelerklausuren;
 		for (final long idKK : _schuelerklausurterminaktuellmenge_by_idRaum_and_idKursklausur.getKeySetOf(raum.id))
 			schuelerklausuren.addAll(_schuelerklausurterminaktuellmenge_by_idRaum_and_idKursklausur.getOrException(raum.id, idKK));
+		return schuelerklausuren;
+	}
+
+	/**
+	 * Liefert die Menge aller aktueller {@link GostSchuelerklausur}e zurück, die in einem {@link GostKlausurraum} geschrieben werden.
+	 *
+	 * @param raum  der {@link GostKlausurraum}
+	 *
+	 * @return die Menge aller aktueller {@link GostSchuelerklausur}e zurück, die in einem {@link GostKlausurraum} geschrieben werden.
+	 */
+	public @NotNull List<GostSchuelerklausur> schuelerklausurGetMengeByRaum(final @NotNull GostKlausurraum raum) {
+		final @NotNull List<GostSchuelerklausur> schuelerklausuren = new ArrayList<>();
+		final @NotNull List<GostSchuelerklausurTermin> schuelerklausurtermine = schuelerklausurterminGetMengeByRaum(raum);
+		for (final @NotNull GostSchuelerklausurTermin skt : schuelerklausurtermine)
+			schuelerklausuren.add(schuelerklausurBySchuelerklausurtermin(skt));
 		return schuelerklausuren;
 	}
 

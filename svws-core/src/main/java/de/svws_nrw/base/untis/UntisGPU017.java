@@ -29,13 +29,13 @@ public final class UntisGPU017 {
 	public String text;
 
 	/** Das Datum der Klausur (JJJJMMTT) */
-	public Long datum = null;
+	public String datum = null;
 
 	/** Die erste Stunde der Klausur */
-	public Long vonStunde;
+	public Integer vonStunde;
 
 	/** Die letzte Stunde der Klausur */
-	public Long bisStunde;
+	public Integer bisStunde;
 
 	/** Die von der Klausur betroffenen Kurse (z.B. "KU-GK1~KU-GK2") */
 	public String kurse;

@@ -17,7 +17,16 @@ import java.util.zip.ZipOutputStream;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 
+import de.svws_nrw.asd.data.RGBFarbe;
+import de.svws_nrw.asd.data.fach.FachgruppeKatalogEintrag;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
+import de.svws_nrw.asd.types.Geschlecht;
+import de.svws_nrw.asd.types.fach.Fach;
+import de.svws_nrw.asd.types.fach.Fachgruppe;
+import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
+import de.svws_nrw.asd.types.lehrer.LehrerBeschaeftigungsart;
+import de.svws_nrw.asd.types.lehrer.LehrerRechtsverhaeltnis;
+import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.base.LogUtils;
 import de.svws_nrw.base.untis.UntisGPU001;
 import de.svws_nrw.base.untis.UntisGPU002;
@@ -27,38 +36,42 @@ import de.svws_nrw.base.untis.UntisGPU005;
 import de.svws_nrw.base.untis.UntisGPU006;
 import de.svws_nrw.base.untis.UntisGPU010;
 import de.svws_nrw.base.untis.UntisGPU015;
+import de.svws_nrw.base.untis.UntisGPU017;
 import de.svws_nrw.base.untis.UntisGPU019;
 import de.svws_nrw.core.adt.LongArrayKey;
 import de.svws_nrw.core.adt.map.HashMap2D;
-import de.svws_nrw.asd.data.RGBFarbe;
-import de.svws_nrw.asd.data.fach.FachgruppeKatalogEintrag;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.fach.FachDaten;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKurs;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisSchiene;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionAllData;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionHjData;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumstunde;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
 import de.svws_nrw.core.data.kurse.KursDaten;
 import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
 import de.svws_nrw.core.data.schueler.Schueler;
+import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
+import de.svws_nrw.core.data.stundenplan.StundenplanListeEintrag;
 import de.svws_nrw.core.data.stundenplan.StundenplanListeEintragMinimal;
+import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
 import de.svws_nrw.core.data.stundenplan.StundenplanSchiene;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
-import de.svws_nrw.asd.types.Geschlecht;
-import de.svws_nrw.asd.types.fach.Fach;
-import de.svws_nrw.asd.types.fach.Fachgruppe;
-import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
-import de.svws_nrw.asd.types.lehrer.LehrerBeschaeftigungsart;
-import de.svws_nrw.asd.types.lehrer.LehrerRechtsverhaeltnis;
-import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.core.utils.DateUtils;
 import de.svws_nrw.core.utils.gost.GostBlockungsdatenManager;
 import de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager;
+import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
+import de.svws_nrw.core.utils.stundenplan.StundenplanManager;
 import de.svws_nrw.data.SimpleBinaryMultipartBody;
 import de.svws_nrw.data.faecher.DataFaecherliste;
 import de.svws_nrw.data.gost.DBUtilsGost;
 import de.svws_nrw.data.gost.DataGostBlockungsergebnisse;
+import de.svws_nrw.data.gost.klausurplan.DataGostKlausuren;
 import de.svws_nrw.data.jahrgaenge.DataJahrgangsdaten;
 import de.svws_nrw.data.kataloge.DataKatalogRaeume;
 import de.svws_nrw.data.kataloge.DataKatalogZeitraster;
@@ -66,8 +79,13 @@ import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.data.kurse.DataKurse;
 import de.svws_nrw.data.lehrer.DataLehrerliste;
 import de.svws_nrw.data.schule.DataSchuljahresabschnitte;
+import de.svws_nrw.data.stundenplan.DataStundenplan;
+import de.svws_nrw.data.stundenplan.DataStundenplanListe;
+import de.svws_nrw.data.stundenplan.DataStundenplanPausenaufsichten;
 import de.svws_nrw.data.stundenplan.DataStundenplanRaeume;
 import de.svws_nrw.data.stundenplan.DataStundenplanSchienen;
+import de.svws_nrw.data.stundenplan.DataStundenplanUnterricht;
+import de.svws_nrw.data.stundenplan.DataStundenplanUnterrichtsverteilung;
 import de.svws_nrw.data.stundenplan.DataStundenplanZeitraster;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
@@ -1007,6 +1025,139 @@ public final class DataUntis {
 		return getGPU010(logger, schueler, mapKlassenBySchuelerId);
 	}
 
+	/**
+	 * Bestimmt anhand des übergebenen Managers die
+	 * Liste der zugehörigen Klausureinträge für die GPU017.TXT-Datei von Untis.
+	 *
+	 * @param logger     der Logger
+	 * @param manager    der Klausurplan-Manager
+	 *
+	 * @return die Liste der GPU017-Einträge
+	 */
+	private static List<UntisGPU017> getListGPU017(final @NotNull Logger logger, final @NotNull GostKlausurplanManager manager) {
+		final List<UntisGPU017> result = new ArrayList<>();
+
+		for (final GostKlausurraum raum : manager.raumGetMengeAsList()) {
+			final List<GostKlausurraumstunde> stunden = manager.raumstundeGetMengeByRaum(raum);
+
+			if (stunden.isEmpty()) {
+				logger.logLn("-> INFO: Keine Klausurraumstunden zu Raum %d gefunden. Überspringe.".formatted(raum.id));
+				continue;
+			}
+
+			final UntisGPU017 klausur = new UntisGPU017();
+			klausur.id = raum.id;
+
+			final GostKlausurtermin termin = manager.terminGetByIdOrException(raum.idTermin);
+			klausur.datum = getUntisDate(termin.datum);
+
+			final StundenplanManager stundenplan = manager.stundenplanManagerGetByTerminOrNull(termin);
+			if (stundenplan == null)
+				logger.logLn("-> INFO: Kein Stundenplan zu Termin %d gefunden.".formatted(termin.id));
+			else {
+				klausur.vonStunde = stundenplan.zeitrasterGetByIdOrException(stunden.getFirst().idZeitraster).unterrichtstunde;
+				klausur.bisStunde = stundenplan.zeitrasterGetByIdOrException(stunden.getLast().idZeitraster).unterrichtstunde;
+			}
+
+			final StundenplanRaum stundenplanraum = manager.stundenplanraumGetByKlausurraumOrNull(raum);
+			if (stundenplanraum != null)
+				klausur.raeume = stunden.stream().map(s -> stundenplanraum.kuerzel).collect(Collectors.joining("~"));
+
+			final List<GostKursklausur> klausuren = manager.kursklausurGetMengeByRaum(raum);
+
+			klausur.lehrer = klausuren.stream().map(k -> manager.kursLehrerByKursklausur(k).kuerzel).collect(Collectors.joining("~"));
+			klausur.kurse = klausuren.stream().map(manager::kursKurzbezeichnungByKursklausur).collect(Collectors.joining("~"));
+			klausur.name = klausur.kurse;
+			klausur.text = klausur.kurse;
+
+			klausur.unterrichte = "HIERKOMMENDIEUNTERRICHTEREIN";
+
+			final List<SchuelerListeEintrag> schueler = manager.schuelerklausurGetMengeByRaum(raum).stream().map(sk -> sk.idSchueler).map(manager.getSchuelerMap()::get).toList();
+			klausur.schueler = schueler.stream().map(s -> getUntisSchuelerName(s.nachname, s.vorname, s.geburtsdatum)).collect(Collectors.joining("~"));
+
+			result.add(klausur);
+		}
+
+		return result;
+	}
+
+	/**
+	 * Erstellt die GPU017-CSV-Daten für den übergebenen Klausurplan-Manager.
+	 *
+	 * @param logger      der Logger
+	 * @param manager      der Klausurplan-Manager
+	 *
+	 * @return die CSV-Daten als UTF8-String
+	 *
+	 * @throws ApiOperationException   falls ein Fehler beim Erstellen der CSV-Daten entsteht
+	 */
+	private static @NotNull String getGPU017(final @NotNull Logger logger, final @NotNull GostKlausurplanManager manager)
+			throws ApiOperationException {
+		logger.logLn("-> Erstelle Liste der Klausurdaten für GPU017.txt");
+		logger.modifyIndent(2);
+		try {
+			final List<UntisGPU017> gpu017 = getListGPU017(logger, manager);
+			final String csvKlausuren = UntisGPU017.writeCSV(gpu017);
+			logger.logLn("OK");
+			logger.modifyIndent(-2);
+			return csvKlausuren;
+		} catch (final Exception e) {
+			logger.logLn("Fehler beim Erstellen der Datei GPU017.txt.");
+			logger.modifyIndent(-2);
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen der Datei GPU017.txt.");
+		}
+	}
+
+	/**
+	 * Bestimmt die Export-Daten für die Klausurdaten für den übergebenen Schuljahresabschnitt
+	 *
+	 * @param conn                     die aktuelle Datenbankverbindung
+	 * @param logger                   der Logger zum Protokollieren des Exportes
+	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
+	 * @param gpu002                   die GPU002-Datei als String
+	 *
+	 * @return die GPU017.txt-Datei als String im UTF8-Format
+	 *
+	 * @throws ApiOperationException   wenn ein Fehler beim Erstellen des Exportes auftritt
+	 */
+	private static @NotNull String getGPU017bySchuljahresabschnitt(final @NotNull DBEntityManager conn, final @NotNull Logger logger,
+			final long idSchuljahresabschnitt, final String gpu002) throws ApiOperationException {
+		logger.log("Ermittle GPU017-Daten...");
+		final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetAbschnittById(idSchuljahresabschnitt);
+		if (schuljahresabschnitt == null) {
+			logger.logLn("-> FEHLER: Kein Schuljahresabschnitt mit der ID %d gefunden.".formatted(idSchuljahresabschnitt));
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"In der Datenbank gibt es keinen Schuljahresabschnitt mit der ID %d.".formatted(idSchuljahresabschnitt));
+		}
+		logger.logLn("-> für den Schuljahresabschnitt %d.%d".formatted(schuljahresabschnitt.schuljahr, schuljahresabschnitt.abschnitt));
+
+		final List<GostKlausurenCollectionHjData> selection = new ArrayList<>();
+		selection.add(new GostKlausurenCollectionHjData(schuljahresabschnitt.schuljahr + 3, schuljahresabschnitt.abschnitt - 1));
+		selection.add(new GostKlausurenCollectionHjData(schuljahresabschnitt.schuljahr + 2, schuljahresabschnitt.abschnitt + 1));
+		selection.add(new GostKlausurenCollectionHjData(schuljahresabschnitt.schuljahr + 1, schuljahresabschnitt.abschnitt + 3));
+
+		selection.forEach(hjData -> {
+			hjData.schueler = new ArrayList<>();
+            hjData.faecher = new ArrayList<>();
+        });
+
+		logger.logLn("-> bestimme die Klausurplan-Daten...");
+		final GostKlausurenCollectionAllData data = DataGostKlausuren.getAllData(conn, selection);
+		final GostKlausurplanManager manager = new GostKlausurplanManager(data);
+
+		logger.logLn("-> laden der Stundenpläne für den Schuljahresabschnitt...");
+		final List<StundenplanListeEintrag> sleList = DataStundenplanListe.getStundenplaene(conn, schuljahresabschnitt.id);
+		for (final StundenplanListeEintrag sle : sleList) {
+			final StundenplanManager stundenplanManager =
+					new StundenplanManager(DataStundenplan.getStundenplan(conn, sle.id), DataStundenplanUnterricht.getUnterrichte(conn, sle.id),
+							DataStundenplanPausenaufsichten.getAufsichten(conn, sle.id),
+							DataStundenplanUnterrichtsverteilung.getUnterrichtsverteilung(conn, sle.id));
+			manager.stundenplanManagerAdd(stundenplanManager);
+		}
+
+		return getGPU017(logger, manager);
+	}
+
 
 	/**
 	 * Erzeugt den Export der Schülerliste des angegebenen Schuljahresabschnittes für Untis (Datei GPU010.txt)
@@ -1024,6 +1175,24 @@ public final class DataUntis {
 	public static Response exportGPU010(final DBEntityManager conn, final Logger logger, final long idSchuljahresabschnitt) throws ApiOperationException {
 		final @NotNull String daten = getGPU010bySchuljahresabschnitt(conn, logger, idSchuljahresabschnitt);
 		return Response.ok(daten).header("Content-Disposition", "attachment; filename=\"GPU010.txt\"").build();
+	}
+
+	/**
+	 * Erzeugt den Export die Klausurdaten des angegebenen Schuljahresabschnittes für Untis (Datei GPU017.txt)
+	 * und gibt diese als Response zurück.
+	 *
+	 * @param conn                     die Datenbank-Verbindung
+	 * @param logger                   der Logger
+	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnittes
+	 * @param gpu002                   die GPU002-Datei als String
+	 *
+	 * @return eine Response mit der CSV-Datei
+	 *
+	 * @throws ApiOperationException   wenn ein Fehler beim Erstellen des Exportes auftritt
+	 */
+	public static Response exportGPU017(final DBEntityManager conn, final Logger logger, final long idSchuljahresabschnitt, final String gpu002) throws ApiOperationException {
+		final @NotNull String daten = getGPU017bySchuljahresabschnitt(conn, logger, idSchuljahresabschnitt, gpu002);
+		return Response.ok(daten).header("Content-Disposition", "attachment; filename=\"GPU017.txt\"").build();
 	}
 
 

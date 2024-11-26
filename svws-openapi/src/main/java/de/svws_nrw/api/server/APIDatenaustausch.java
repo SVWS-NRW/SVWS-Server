@@ -416,6 +416,46 @@ public class APIDatenaustausch {
 		}, request, ServerMode.STABLE, BenutzerKompetenz.IMPORT_EXPORT_SCHUELERDATEN_EXPORTIEREN);
 	}
 
+	/**
+	 * Die OpenAPI-Methode für den Export einer Klausurplanung zu einem Schuljahresabschnitt für Untis. Dabei
+	 * wird die GPU-Datei GPU017.txt generiert.
+	 *
+	 * @param schema   das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param id       die ID des Schuljahresabschnittes, für den die Klausurdaten exportiert werden sollen
+	 * @param gpu002 GPU002-Datei
+	 * @param request  die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die GPU017-Datei
+	 */
+	@POST
+	@Produces(MediaType.APPLICATION_OCTET_STREAM)
+	@Path("/untis/export/klausuren/{id : \\d+}")
+	@Operation(summary = "Liefert einen Export für die Klausurdaten eines Schuljahresabschnittes (GPU017.txt).",
+			description = "Liefert einen Export für die Klausurdaten eines Schuljahresabschnittes (GPU017.txt)."
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Exportieren besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die GPU017.txt", content = @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM,
+			schema = @Schema(type = "string", format = "binary", description = "Die GPU017.txt")))
+	@ApiResponse(responseCode = "404", description = "Es wurden nicht alle benötigten Daten für den Export gefunden.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "500", description = "Es ist ein unerwarteter Fehler aufgetreten.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	public Response exportUntisKlausurenGPU017(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@RequestBody(description = "Die Liste von GostKlausurraumRich-Objekten, die die zuzuweisenden GostSchuelerklausurTermine-IDs enthalten.", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+			schema = @Schema(implementation = String.class))) final String gpu002,
+			@Context final HttpServletRequest request) {
+		final Logger logger = new Logger();
+		final LogConsumerList log = new LogConsumerList();
+		logger.addConsumer(log);
+		return DBBenutzerUtils.runWithTransaction(conn -> {
+			try {
+				return DataUntis.exportGPU017(conn, logger, id, gpu002);
+			} catch (final ApiOperationException aoe) {
+				final SimpleOperationResponse sor = new SimpleOperationResponse();
+				sor.log.addAll(log.getStrings());
+				throw new ApiOperationException(aoe.getStatus(), aoe, sor, "application/json");
+			}
+		}, request, ServerMode.STABLE, BenutzerKompetenz.IMPORT_EXPORT_SCHUELERDATEN_EXPORTIEREN);
+	}
 
 	/**
 	 * Die OpenAPI-Methode für den Export eines Blockungsergebnisses für Untis. Dabei

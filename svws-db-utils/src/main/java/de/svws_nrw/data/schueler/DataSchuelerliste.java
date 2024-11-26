@@ -113,6 +113,7 @@ public final class DataSchuelerliste extends DataManager<Long> {
 		eintrag.nachname = (schueler.Nachname == null) ? "" : schueler.Nachname;
 		eintrag.vorname = (schueler.Vorname == null) ? "" : schueler.Vorname;
 		eintrag.geschlecht = (schueler.Geschlecht == null) ? "" : schueler.Geschlecht.kuerzel;
+		eintrag.geburtsdatum = schueler.Geburtsdatum;
 		eintrag.idSchuljahresabschnittSchueler = schueler.Schuljahresabschnitts_ID;
 		if (aktAbschnitt == null) {
 			eintrag.idSchuljahresabschnitt = schueler.Schuljahresabschnitts_ID;

@@ -33,7 +33,7 @@
 
 <script setup lang="ts">
 
-	import { computed, ref, shallowRef } from 'vue';
+	import { ref, shallowRef } from 'vue';
 	import type { SchuleDatenaustauschUntisExporteProps } from './SSchuleDatenaustauschUntisExporteProps';
 
 	const props = defineProps<SchuleDatenaustauschUntisExporteProps>();
@@ -68,7 +68,13 @@
 		export: async () => await props.exportUntisSchuelerGPU010(),
 	});
 
-	const gpus = [ klassenGPU003, lehrerGPU004, faecherGPU006, schuelerGPU010 ];
+	const klausurenGPU017 = <GPU>({
+		title: 'Klausuren',
+		subtitle: 'GPU017.txt',
+		export: async () => await props.exportUntisKlausurenGPU017(),
+	});
+
+	const gpus = [ klassenGPU003, lehrerGPU004, faecherGPU006, schuelerGPU010, klausurenGPU017 ];
 
 	const aktuell = shallowRef<GPU>(klassenGPU003);
 	const filename = ref<string>('');
