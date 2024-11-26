@@ -9,6 +9,7 @@
 			'textarea-input--resize-horizontal': resizeable === 'horizontal',
 			'textarea-input--resize-vertical': resizeable === 'vertical',
 			'textarea-input--resize-both': resizeable === 'both',
+			'textarea-input--headless': headless,
 			'col-span-full': span === 'full',
 			'flex-grow': span === 'grow'
 		}">
@@ -55,6 +56,7 @@
 		rows?: number;
 		maxLen?: number;
 		span?: 'full' | 'grow';
+		headless?: boolean;
 	}>(), {
 		modelValue: "",
 		placeholder: "",
@@ -68,6 +70,7 @@
 		rows: 3,
 		maxLen: undefined,
 		span: undefined,
+		headless: false,
 	})
 
 	const emit = defineEmits<{
@@ -144,6 +147,12 @@
 
 		textarea::placeholder {
 			@apply text-ui-secondary;
+		}
+		&.textarea-input--headless {
+			@apply bg-transparent;
+			textarea {
+				@apply bg-transparent border-none ;
+			}
 		}
 	}
 
@@ -236,8 +245,8 @@
 		@apply text-ui-statistic;
 	}
 
-	.textarea-input--focus .textarea-input--placeholder,
-	.textarea-input--filled .textarea-input--placeholder {
+	.textarea-input--focus:not(.textarea-input--headless) .textarea-input--placeholder,
+	.textarea-input--filled:not(.textarea-input--headless) .textarea-input--placeholder {
 		@apply -translate-y-1/2;
 		@apply bg-ui opacity-100;
 		@apply rounded;
@@ -250,6 +259,10 @@
 		&:after {
 			content: "";
 		}
+	}
+	.textarea-input--headless.textarea-input--filled
+	.textarea-input--placeholder {
+		@apply opacity-0;
 	}
 
 	.textarea-input--invalid .textarea-input--placeholder,
@@ -270,5 +283,7 @@
 	.textarea-input--disabled .textarea-input--placeholder {
 		@apply bg-ui text-ui-disabled;
 	}
+
+
 
 </style>

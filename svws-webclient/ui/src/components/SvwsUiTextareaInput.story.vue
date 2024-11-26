@@ -41,6 +41,28 @@
 				<svws-ui-textarea-input v-model="modelValue" statistics placeholder="Textarea Input Placeholder" resizeable="vertical" @input="onInput" />
 			</div>
 		</Variant>
+		<Variant title="Statistics" id="Statistics">
+			<div class="p-4">
+				<svws-ui-textarea-input v-model="modelValue" statistics placeholder="Textarea Input Placeholder" resizeable="vertical" @input="onInput" />
+			</div>
+		</Variant>
+		<Variant title="Statistics" id="Statistics">
+			<div class="p-4">
+				<svws-ui-textarea-input v-model="modelValue" statistics placeholder="Textarea Input Placeholder" resizeable="vertical" @input="onInput" />
+			</div>
+		</Variant>
+		<Variant title="Headless" id="Headless">
+			<div class="bg-ui-neutral px-4 py-8 font-bold mb-1">
+				<svws-ui-textarea-input v-model="modelValue" headless placeholder="Textarea Input Placeholder" resizeable="vertical" @input="onInput" />
+			</div>
+			<div class="bg-ui-brand text-ui-onbrand px-4 py-8 font-bold">
+				<svws-ui-textarea-input v-model="modelValue" headless resizeable="none" :rows="1" placeholder="Textarea Input Placeholder" @input="onInput" />
+			</div>
+			<p class="mt-2 text-ui-secondary">
+				Info: Die Hintergrundfarbe des Headless Inputs ist transparent und zeigt so immer die Hintergrundfarbe des Parent-Elements.<br>
+				Mit <code class="bg-ui-neutral px-2 rounded">bg-ui-xxxx text-ui-xxxx</code> in einem übergeordneten Element kann die Hintergrundfarbe und Textfarbe des Inputs geändert werden.
+			</p>
+		</Variant>
 	</Story>
 </template>
 
