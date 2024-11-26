@@ -500,17 +500,15 @@ public final class DataUntis {
 	/**
 	 * Gibt die Schülerbezeichnung für Untis zurück, wie sie vom SVWS-Server generiert wird.
 	 *
+	 * @param id         die ID des Schülers
 	 * @param nachname   der Nachname des Schülers
 	 * @param vorname    der Vorname des Schülers
 	 * @param isoDate    das Geburtsdatum des Schülers im ISO-Format
 	 *
-	 * @return die Schülerbezeichnung fpr Untis
+	 * @return die Schülerbezeichnung für Untis
 	 */
-	private static @NotNull String getUntisSchuelerName(final String nachname, final String vorname, final String isoDate) {
-		final String geburtsdatum = getUntisDate(isoDate);
-		return ((nachname == null) || ("".equals(nachname.trim())) ? "???" : nachname.trim().replace(" ", ""))
-				+ "_" + (((vorname == null) || "".equals(vorname.trim())) ? "???" : vorname.trim().replace(" ", "").substring(0, 3))
-				+ "_" + ((geburtsdatum == null) ? "????????" : geburtsdatum);
+	private static @NotNull String getUntisSchuelerName(final long id, final String nachname, final String vorname, final String isoDate) {
+		return "S-" + id;
 	}
 
 
@@ -809,7 +807,6 @@ public final class DataUntis {
 			dto.fachgruppe = (fg == null) ? null : fg.text;
 			dto.farbeHintergrund = null; // kann ggf. anhand der Farbe der Fachgruppe gesetzt werden
 			dto.faktor = 1.0;
-			dto.text = "Sort-" + (fach.SortierungAllg == null ? 32000 : fach.SortierungAllg);
 			dto.beschreibung = fach.Bezeichnung;
 			result.add(dto);
 		}
@@ -824,8 +821,6 @@ public final class DataUntis {
 			dto.fachgruppe = (fg == null) ? null : fg.text;
 			dto.farbeHintergrund = null; // kann ggf. anhand der Farbe der Fachgruppe gesetzt werden
 			dto.faktor = 1.0;
-			dto.text = "Sort-" + (((fach == null) || (fach.SortierungAllg == null)) ? 0 : fach.SortierungAllg) + "-"
-					+ ((kurs.Sortierung == null) ? 0 : kurs.Sortierung) + "-" + ((kurs.ASDJahrgang == null) ? "JU" : kurs.ASDJahrgang) + "-" + kurs.KurzBez;
 			dto.beschreibung = (fach == null) ? null : fach.Bezeichnung;
 			result.add(dto);
 		}
@@ -943,9 +938,10 @@ public final class DataUntis {
 		for (final DTOSchueler dtoSchueler : schueler) {
 			final UntisGPU010 dto = new UntisGPU010();
 			dto.geburtsdatum = getUntisDate(dtoSchueler.Geburtsdatum);
-			dto.name = getUntisSchuelerName(dtoSchueler.Nachname, dtoSchueler.Vorname, dtoSchueler.Geburtsdatum);
+			dto.name = getUntisSchuelerName(dtoSchueler.ID, dtoSchueler.Nachname, dtoSchueler.Vorname, dtoSchueler.Geburtsdatum);
 			dto.langname = ((dtoSchueler.Nachname == null) || ("".equals(dtoSchueler.Nachname.trim()))) ? "???" : dtoSchueler.Nachname.trim();
 			dto.vorname = ((dtoSchueler.Vorname == null) || "".equals(dtoSchueler.Vorname.trim())) ? "???" : dtoSchueler.Vorname.trim();
+			dto.schuelernummer = "" + dtoSchueler.ID;
 			final DTOKlassen kl = mapKlasse.get(dtoSchueler.ID);
 			dto.klasse = (kl == null) ? null : kl.Klasse;
 			dto.geschlecht = getUntisGeschlecht(dtoSchueler.Geschlecht);
@@ -1079,7 +1075,7 @@ public final class DataUntis {
 			klausur.text = klausur.kurse;
 
 			final List<SchuelerListeEintrag> schueler = manager.schuelerklausurGetMengeByRaum(raum).stream().map(sk -> sk.idSchueler).map(manager.getSchuelerMap()::get).toList();
-			klausur.schueler = schueler.stream().map(s -> getUntisSchuelerName(s.nachname, s.vorname, s.geburtsdatum)).collect(Collectors.joining("~"));
+			klausur.schueler = schueler.stream().map(s -> getUntisSchuelerName(s.id, s.nachname, s.vorname, s.geburtsdatum)).collect(Collectors.joining("~"));
 
 			result.add(klausur);
 		}
@@ -1166,7 +1162,7 @@ public final class DataUntis {
 		logger.logLn("-> analysieren der GPU002-Daten...");
 		try {
 			unterrichte = getUnterrichtsnummern(UntisGPU002.readCSV(gpu002.getBytes(StandardCharsets.UTF_8)));
-		} catch (IOException e) {
+		} catch (final IOException e) {
  			logger.logLn("-> Fehler: " + e.getMessage());
 			return "Fehler: " + e.getMessage();
 		}
@@ -1349,7 +1345,7 @@ public final class DataUntis {
 			for (final DTOSchueler dtoSchueler : dtosSchueler) {
 				if (datenManager.schuelerGetListeOfFachwahlen(dtoSchueler.ID).isEmpty())
 					continue;
-				final String schuelerName = getUntisSchuelerName(dtoSchueler.Nachname, dtoSchueler.Vorname, dtoSchueler.Geburtsdatum);
+				final String schuelerName = getUntisSchuelerName(dtoSchueler.ID, dtoSchueler.Nachname, dtoSchueler.Vorname, dtoSchueler.Geburtsdatum);
 
 				for (final GostBlockungsergebnisKurs k : ergebnisManager.getOfSchuelerKursmenge(dtoSchueler.ID)) {
 					final UntisGPU015 dto = new UntisGPU015();
