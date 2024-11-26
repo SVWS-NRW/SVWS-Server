@@ -62,7 +62,9 @@ import de.svws_nrw.core.data.stundenplan.StundenplanSchiene;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
+import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.utils.DateUtils;
+import de.svws_nrw.core.utils.Map2DUtils;
 import de.svws_nrw.core.utils.gost.GostBlockungsdatenManager;
 import de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager;
 import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
@@ -1031,10 +1033,11 @@ public final class DataUntis {
 	 *
 	 * @param logger     der Logger
 	 * @param manager    der Klausurplan-Manager
+	 * @param unterrichte  die Zuordnung der Unterrichtsnummern zu den Kursen
 	 *
 	 * @return die Liste der GPU017-Einträge
 	 */
-	private static List<UntisGPU017> getListGPU017(final @NotNull Logger logger, final @NotNull GostKlausurplanManager manager) {
+	private static List<UntisGPU017> getListGPU017(final @NotNull Logger logger, final @NotNull GostKlausurplanManager manager, final HashMap2D<String, String, List<Long>> unterrichte) {
 		final List<UntisGPU017> result = new ArrayList<>();
 
 		for (final GostKlausurraum raum : manager.raumGetMengeAsList()) {
@@ -1064,13 +1067,16 @@ public final class DataUntis {
 				klausur.raeume = stunden.stream().map(s -> stundenplanraum.kuerzel).collect(Collectors.joining("~"));
 
 			final List<GostKursklausur> klausuren = manager.kursklausurGetMengeByRaum(raum);
+			for (final GostKursklausur k : klausuren) {
+				final List<Long> unterrichtsnummern = unterrichte.getOrNull(GostHalbjahr.fromIDorException(manager.vorgabeByKursklausur(k).halbjahr).jahrgang, manager.kursKurzbezeichnungByKursklausur(k));
+				if (unterrichtsnummern != null)
+					klausur.unterrichte = unterrichtsnummern.stream().map(Object::toString).collect(Collectors.joining("~"));
+			}
 
 			klausur.lehrer = klausuren.stream().map(k -> manager.kursLehrerByKursklausur(k).kuerzel).collect(Collectors.joining("~"));
 			klausur.kurse = klausuren.stream().map(manager::kursKurzbezeichnungByKursklausur).collect(Collectors.joining("~"));
 			klausur.name = klausur.kurse;
 			klausur.text = klausur.kurse;
-
-			klausur.unterrichte = "HIERKOMMENDIEUNTERRICHTEREIN";
 
 			final List<SchuelerListeEintrag> schueler = manager.schuelerklausurGetMengeByRaum(raum).stream().map(sk -> sk.idSchueler).map(manager.getSchuelerMap()::get).toList();
 			klausur.schueler = schueler.stream().map(s -> getUntisSchuelerName(s.nachname, s.vorname, s.geburtsdatum)).collect(Collectors.joining("~"));
@@ -1086,17 +1092,18 @@ public final class DataUntis {
 	 *
 	 * @param logger      der Logger
 	 * @param manager      der Klausurplan-Manager
+	 * @param unterrichte  die Zuordnung der Unterrichtsnummern zu den Kursen
 	 *
 	 * @return die CSV-Daten als UTF8-String
 	 *
 	 * @throws ApiOperationException   falls ein Fehler beim Erstellen der CSV-Daten entsteht
 	 */
-	private static @NotNull String getGPU017(final @NotNull Logger logger, final @NotNull GostKlausurplanManager manager)
+	private static @NotNull String getGPU017(final @NotNull Logger logger, final @NotNull GostKlausurplanManager manager, final HashMap2D<String, String, List<Long>> unterrichte)
 			throws ApiOperationException {
 		logger.logLn("-> Erstelle Liste der Klausurdaten für GPU017.txt");
 		logger.modifyIndent(2);
 		try {
-			final List<UntisGPU017> gpu017 = getListGPU017(logger, manager);
+			final List<UntisGPU017> gpu017 = getListGPU017(logger, manager, unterrichte);
 			final String csvKlausuren = UntisGPU017.writeCSV(gpu017);
 			logger.logLn("OK");
 			logger.modifyIndent(-2);
@@ -1155,7 +1162,27 @@ public final class DataUntis {
 			manager.stundenplanManagerAdd(stundenplanManager);
 		}
 
-		return getGPU017(logger, manager);
+		HashMap2D<String, String, List<Long>> unterrichte = new HashMap2D<>();
+		logger.logLn("-> analysieren der GPU002-Daten...");
+		try {
+			unterrichte = getUnterrichtsnummern(UntisGPU002.readCSV(gpu002.getBytes(StandardCharsets.UTF_8)));
+		} catch (IOException e) {
+ 			logger.logLn("-> Fehler: " + e.getMessage());
+			return "Fehler: " + e.getMessage();
+		}
+
+		return getGPU017(logger, manager, unterrichte);
+	}
+
+	private static HashMap2D<String, String, List<Long>> getUnterrichtsnummern(final List<UntisGPU002> gpu002List) {
+		final HashMap2D<String, String, List<Long>> result = new HashMap2D<>();
+        for (final UntisGPU002 entry : gpu002List) {
+            final String klasse = entry.klasseKuerzel;
+            final String fach = entry.fachKuerzel;
+            final long unterrichtsnummer = entry.idUnterricht;
+            Map2DUtils.addToList(result, klasse, fach, unterrichtsnummer);
+        }
+        return result;
 	}
 
 
