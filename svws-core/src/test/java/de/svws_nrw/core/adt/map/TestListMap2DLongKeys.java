@@ -53,7 +53,17 @@ class TestListMap2DLongKeys {
 		// V
 		assertEquals("Ben", map.get12(2, 3).getFirst());
 		assertEquals("Bar", map.get12(2, 4).getFirst());
-	}
 
+		// (2, 3, "Ben")
+		// (2, 4, "Bar")
+		map.addEmpty(2, 5);
+		assertEquals(true, map.containsKey1(2));
+		assertEquals(true, map.containsKey2(5));
+		assertEquals(true, map.containsKey12(2, 5));
+
+		assertEquals(2, map.get1(2).size());
+		assertEquals(0, map.get2(5).size());
+		assertEquals(true, map.get12(2, 5).isEmpty());
+	}
 
 }

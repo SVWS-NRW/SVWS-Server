@@ -1,13 +1,13 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import type { JavaSet } from '../../../java/util/JavaSet';
 import { HashMap } from '../../../java/util/HashMap';
-import { PairNN } from '../../../asd/adt/PairNN';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
 import { LongArrayKey } from '../../../core/adt/LongArrayKey';
 import { Class } from '../../../java/lang/Class';
 import { MapUtils } from '../../../core/utils/MapUtils';
 import type { JavaMap } from '../../../java/util/JavaMap';
+import { Pair } from '../../../asd/adt/Pair';
 
 export class ListMap3DLongKeys<V> extends JavaObject {
 
@@ -25,7 +25,7 @@ export class ListMap3DLongKeys<V> extends JavaObject {
 
 	private readonly _map123 : JavaMap<LongArrayKey, List<V>> = new HashMap<LongArrayKey, List<V>>();
 
-	private readonly _list : List<PairNN<LongArrayKey, V>> = new ArrayList<PairNN<LongArrayKey, V>>();
+	private readonly _list : List<Pair<LongArrayKey, V>> = new ArrayList<Pair<LongArrayKey, V>>();
 
 
 	/**
@@ -39,7 +39,10 @@ export class ListMap3DLongKeys<V> extends JavaObject {
 		const map : JavaMap<number, List<V>> | null = new HashMap<number, List<V>>();
 		for (const e of this._list) {
 			const key1 : number = e.a.getKeyAt(0);
-			MapUtils.getOrCreateArrayList(map, key1).add(e.b);
+			if (e.b === null)
+				MapUtils.getOrCreateArrayList(map, key1);
+			else
+				MapUtils.getOrCreateArrayList(map, key1).add(e.b);
 		}
 		return map;
 	}
@@ -48,7 +51,10 @@ export class ListMap3DLongKeys<V> extends JavaObject {
 		const map : JavaMap<number, List<V>> | null = new HashMap<number, List<V>>();
 		for (const e of this._list) {
 			const key2 : number = e.a.getKeyAt(1);
-			MapUtils.getOrCreateArrayList(map, key2).add(e.b);
+			if (e.b === null)
+				MapUtils.getOrCreateArrayList(map, key2);
+			else
+				MapUtils.getOrCreateArrayList(map, key2).add(e.b);
 		}
 		return map;
 	}
@@ -57,7 +63,10 @@ export class ListMap3DLongKeys<V> extends JavaObject {
 		const map : JavaMap<number, List<V>> | null = new HashMap<number, List<V>>();
 		for (const e of this._list) {
 			const key3 : number = e.a.getKeyAt(2);
-			MapUtils.getOrCreateArrayList(map, key3).add(e.b);
+			if (e.b === null)
+				MapUtils.getOrCreateArrayList(map, key3);
+			else
+				MapUtils.getOrCreateArrayList(map, key3).add(e.b);
 		}
 		return map;
 	}
@@ -67,7 +76,10 @@ export class ListMap3DLongKeys<V> extends JavaObject {
 		for (const e of this._list) {
 			const key1 : number = e.a.getKeyAt(0);
 			const key2 : number = e.a.getKeyAt(1);
-			MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2)).add(e.b);
+			if (e.b === null)
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2));
+			else
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2)).add(e.b);
 		}
 		return map;
 	}
@@ -77,7 +89,10 @@ export class ListMap3DLongKeys<V> extends JavaObject {
 		for (const e of this._list) {
 			const key1 : number = e.a.getKeyAt(0);
 			const key3 : number = e.a.getKeyAt(2);
-			MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3)).add(e.b);
+			if (e.b === null)
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3));
+			else
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3)).add(e.b);
 		}
 		return map;
 	}
@@ -87,7 +102,10 @@ export class ListMap3DLongKeys<V> extends JavaObject {
 		for (const e of this._list) {
 			const key2 : number = e.a.getKeyAt(1);
 			const key3 : number = e.a.getKeyAt(2);
-			MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3)).add(e.b);
+			if (e.b === null)
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3));
+			else
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3)).add(e.b);
 		}
 		return map;
 	}
@@ -104,7 +122,7 @@ export class ListMap3DLongKeys<V> extends JavaObject {
 	public add(key1 : number, key2 : number, key3 : number, value : V) : void {
 		const key : LongArrayKey = new LongArrayKey(key1, key2, key3);
 		MapUtils.getOrCreateArrayList(this._map123, key).add(value);
-		this._list.add(new PairNN<LongArrayKey, V>(key, value));
+		this._list.add(new Pair<LongArrayKey, V>(key, value));
 		if (this._map1 !== null)
 			MapUtils.getOrCreateArrayList(this._map1, key1).add(value);
 		if (this._map2 !== null)
@@ -117,6 +135,32 @@ export class ListMap3DLongKeys<V> extends JavaObject {
 			MapUtils.getOrCreateArrayList(this._map13, new LongArrayKey(key1, key3)).add(value);
 		if (this._map23 !== null)
 			MapUtils.getOrCreateArrayList(this._map23, new LongArrayKey(key2, key3)).add(value);
+	}
+
+	/**
+	 * Erzeugt den Pfad (key1, key2, key3) fügt aber nichts hinzu.
+	 * Alle Pfad, die es vorher nicht gab, verweisen dann auf leere Listen.
+	 *
+	 * @param key1  Der 1. Schlüssel.
+	 * @param key2  Der 2. Schlüssel.
+	 * @param key3  Der 3. Schlüssel.
+	 */
+	public addEmpty(key1 : number, key2 : number, key3 : number) : void {
+		const key : LongArrayKey = new LongArrayKey(key1, key2, key3);
+		MapUtils.getOrCreateArrayList(this._map123, key);
+		this._list.add(new Pair<LongArrayKey, V>(key, null));
+		if (this._map1 !== null)
+			MapUtils.getOrCreateArrayList(this._map1, key1);
+		if (this._map2 !== null)
+			MapUtils.getOrCreateArrayList(this._map2, key2);
+		if (this._map3 !== null)
+			MapUtils.getOrCreateArrayList(this._map3, key3);
+		if (this._map12 !== null)
+			MapUtils.getOrCreateArrayList(this._map12, new LongArrayKey(key1, key2));
+		if (this._map13 !== null)
+			MapUtils.getOrCreateArrayList(this._map13, new LongArrayKey(key1, key3));
+		if (this._map23 !== null)
+			MapUtils.getOrCreateArrayList(this._map23, new LongArrayKey(key2, key3));
 	}
 
 	/**

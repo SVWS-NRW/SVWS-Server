@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import de.svws_nrw.asd.adt.PairNN;
+import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.core.adt.LongArrayKey;
 import de.svws_nrw.core.utils.MapUtils;
 import jakarta.validation.constraints.NotNull;
@@ -30,7 +30,7 @@ public class ListMap3DLongKeys<V> {
 	private Map<LongArrayKey, List<V>> _map23 = null;
 
 	private final @NotNull Map<LongArrayKey, List<V>> _map123 = new HashMap<>();
-	private final @NotNull List<PairNN<LongArrayKey, V>> _list = new ArrayList<>();
+	private final @NotNull List<Pair<LongArrayKey, V>> _list = new ArrayList<>();
 
 	/**
 	 * Konstruktor.
@@ -42,9 +42,12 @@ public class ListMap3DLongKeys<V> {
 	private @NotNull Map<Long, List<V>> _lazyLoad1() {
 		final Map<Long, List<V>> map = new HashMap<>();
 
-		for (final @NotNull PairNN<LongArrayKey, V> e : _list) {
+		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
 			final long key1 = e.a.getKeyAt(0);
-			MapUtils.getOrCreateArrayList(map, key1).add(e.b);
+			if (e.b == null)
+				MapUtils.getOrCreateArrayList(map, key1);
+			else
+			    MapUtils.getOrCreateArrayList(map, key1).add(e.b);
 		}
 
 		return map;
@@ -53,9 +56,12 @@ public class ListMap3DLongKeys<V> {
 	private @NotNull Map<Long, List<V>> _lazyLoad2() {
 		final Map<Long, List<V>> map = new HashMap<>();
 
-		for (final @NotNull PairNN<LongArrayKey, V> e : _list) {
+		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
 			final long key2 = e.a.getKeyAt(1);
-			MapUtils.getOrCreateArrayList(map, key2).add(e.b);
+			if (e.b == null)
+				MapUtils.getOrCreateArrayList(map, key2);
+			else
+				MapUtils.getOrCreateArrayList(map, key2).add(e.b);
 		}
 
 		return map;
@@ -64,9 +70,12 @@ public class ListMap3DLongKeys<V> {
 	private @NotNull Map<Long, List<V>> _lazyLoad3() {
 		final Map<Long, List<V>> map = new HashMap<>();
 
-		for (final @NotNull PairNN<LongArrayKey, V> e : _list) {
+		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
 			final long key3 = e.a.getKeyAt(2);
-			MapUtils.getOrCreateArrayList(map, key3).add(e.b);
+			if (e.b == null)
+				MapUtils.getOrCreateArrayList(map, key3);
+			else
+				MapUtils.getOrCreateArrayList(map, key3).add(e.b);
 		}
 
 		return map;
@@ -75,10 +84,13 @@ public class ListMap3DLongKeys<V> {
 	private @NotNull Map<LongArrayKey, List<V>> _lazyLoad12() {
 		final Map<LongArrayKey, List<V>> map = new HashMap<>();
 
-		for (final @NotNull PairNN<LongArrayKey, V> e : _list) {
+		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
 			final long key1 = e.a.getKeyAt(0);
 			final long key2 = e.a.getKeyAt(1);
-			MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2)).add(e.b);
+			if (e.b == null)
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2));
+			else
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2)).add(e.b);
 		}
 
 		return map;
@@ -87,10 +99,13 @@ public class ListMap3DLongKeys<V> {
 	private @NotNull Map<LongArrayKey, List<V>> _lazyLoad13() {
 		final Map<LongArrayKey, List<V>> map = new HashMap<>();
 
-		for (final @NotNull PairNN<LongArrayKey, V> e : _list) {
+		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
 			final long key1 = e.a.getKeyAt(0);
 			final long key3 = e.a.getKeyAt(2);
-			MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3)).add(e.b);
+			if (e.b == null)
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3));
+			else
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3)).add(e.b);
 		}
 
 		return map;
@@ -99,10 +114,13 @@ public class ListMap3DLongKeys<V> {
 	private @NotNull Map<LongArrayKey, List<V>> _lazyLoad23() {
 		final Map<LongArrayKey, List<V>> map = new HashMap<>();
 
-		for (final @NotNull PairNN<LongArrayKey, V> e : _list) {
+		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
 			final long key2 = e.a.getKeyAt(1);
 			final long key3 = e.a.getKeyAt(2);
-			MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3)).add(e.b);
+			if (e.b == null)
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3));
+			else
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3)).add(e.b);
 		}
 
 		return map;
@@ -121,7 +139,7 @@ public class ListMap3DLongKeys<V> {
 	public void add(final long key1, final long key2, final long key3, final @NotNull V value) {
 		final @NotNull LongArrayKey key = new LongArrayKey(key1, key2, key3);
 		MapUtils.getOrCreateArrayList(_map123, key).add(value);
-		_list.add(new PairNN<>(key, value));
+		_list.add(new Pair<>(key, value));
 
 		if (_map1 != null)
 			MapUtils.getOrCreateArrayList(_map1, key1).add(value);
@@ -136,6 +154,34 @@ public class ListMap3DLongKeys<V> {
 			MapUtils.getOrCreateArrayList(_map13, new LongArrayKey(key1, key3)).add(value);
 		if (_map23 != null)
 			MapUtils.getOrCreateArrayList(_map23, new LongArrayKey(key2, key3)).add(value);
+	}
+
+	/**
+	 * Erzeugt den Pfad (key1, key2, key3) fügt aber nichts hinzu.
+	 * Alle Pfad, die es vorher nicht gab, verweisen dann auf leere Listen.
+	 *
+	 * @param key1  Der 1. Schlüssel.
+	 * @param key2  Der 2. Schlüssel.
+	 * @param key3  Der 3. Schlüssel.
+	 */
+	public void addEmpty(final long key1, final long key2, final long key3) {
+		final @NotNull LongArrayKey key = new LongArrayKey(key1, key2, key3);
+		MapUtils.getOrCreateArrayList(_map123, key);
+		_list.add(new Pair<>(key, null));
+
+		if (_map1 != null)
+			MapUtils.getOrCreateArrayList(_map1, key1);
+		if (_map2 != null)
+			MapUtils.getOrCreateArrayList(_map2, key2);
+		if (_map3 != null)
+			MapUtils.getOrCreateArrayList(_map3, key3);
+
+		if (_map12 != null)
+			MapUtils.getOrCreateArrayList(_map12, new LongArrayKey(key1, key2));
+		if (_map13 != null)
+			MapUtils.getOrCreateArrayList(_map13, new LongArrayKey(key1, key3));
+		if (_map23 != null)
+			MapUtils.getOrCreateArrayList(_map23, new LongArrayKey(key2, key3));
 	}
 
 	/**
