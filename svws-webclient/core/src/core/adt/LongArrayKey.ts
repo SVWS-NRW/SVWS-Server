@@ -118,6 +118,17 @@ export class LongArrayKey extends JavaObject implements Comparable<LongArrayKey>
 		return 0;
 	}
 
+	/**
+	 * Liefert den Key-Wert an dem Index.
+	 *
+	 * @param i    der Index
+	 *
+	 * @return den Key-Wert an dem Index.
+	 */
+	public getKeyAt(i : number) : number {
+		return this._keys[i];
+	}
+
 	transpilerCanonicalName(): string {
 		return 'de.svws_nrw.core.adt.LongArrayKey';
 	}

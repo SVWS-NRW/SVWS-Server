@@ -1,0 +1,421 @@
+package de.svws_nrw.core.adt.map;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import de.svws_nrw.asd.adt.PairNN;
+import de.svws_nrw.core.adt.LongArrayKey;
+import de.svws_nrw.core.utils.MapUtils;
+import jakarta.validation.constraints.NotNull;
+
+/**
+ * Diese 3D-List-Map ordnet 3 Schlüssel auf eine Liste von Werten (V) ab.
+ * <br> Diese spezielle Map stellt Zugriffsmethoden für alle Kombinationen der Schlüssel auf die Werte (V) zur Verfügung.
+ * <br> Die Einfüge-Reihenfolge bleibt bei allen Listen erhalten.
+ * <br> Ein Entfernen aus der Datenstruktur ist nicht vorgesehen.
+ *
+ * @param <V> Der Typ der zugeordneten Werte.
+ */
+public class ListMap3DLongKeys<V> {
+
+	private Map<Long, List<V>> _map1 = null;
+	private Map<Long, List<V>> _map2 = null;
+	private Map<Long, List<V>> _map3 = null;
+
+	private Map<LongArrayKey, List<V>> _map12 = null;
+	private Map<LongArrayKey, List<V>> _map13 = null;
+	private Map<LongArrayKey, List<V>> _map23 = null;
+
+	private final @NotNull Map<LongArrayKey, List<V>> _map123 = new HashMap<>();
+	private final @NotNull List<PairNN<LongArrayKey, V>> _list = new ArrayList<>();
+
+	/**
+	 * Konstruktor.
+	 */
+	public ListMap3DLongKeys() {
+		// no implementation
+	}
+
+	private @NotNull Map<Long, List<V>> _lazyLoad1() {
+		final Map<Long, List<V>> map = new HashMap<>();
+
+		for (final @NotNull PairNN<LongArrayKey, V> e : _list) {
+			final long key1 = e.a.getKeyAt(0);
+			MapUtils.getOrCreateArrayList(map, key1).add(e.b);
+		}
+
+		return map;
+	}
+
+	private @NotNull Map<Long, List<V>> _lazyLoad2() {
+		final Map<Long, List<V>> map = new HashMap<>();
+
+		for (final @NotNull PairNN<LongArrayKey, V> e : _list) {
+			final long key2 = e.a.getKeyAt(1);
+			MapUtils.getOrCreateArrayList(map, key2).add(e.b);
+		}
+
+		return map;
+	}
+
+	private @NotNull Map<Long, List<V>> _lazyLoad3() {
+		final Map<Long, List<V>> map = new HashMap<>();
+
+		for (final @NotNull PairNN<LongArrayKey, V> e : _list) {
+			final long key3 = e.a.getKeyAt(2);
+			MapUtils.getOrCreateArrayList(map, key3).add(e.b);
+		}
+
+		return map;
+	}
+
+	private @NotNull Map<LongArrayKey, List<V>> _lazyLoad12() {
+		final Map<LongArrayKey, List<V>> map = new HashMap<>();
+
+		for (final @NotNull PairNN<LongArrayKey, V> e : _list) {
+			final long key1 = e.a.getKeyAt(0);
+			final long key2 = e.a.getKeyAt(1);
+			MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2)).add(e.b);
+		}
+
+		return map;
+	}
+
+	private @NotNull Map<LongArrayKey, List<V>> _lazyLoad13() {
+		final Map<LongArrayKey, List<V>> map = new HashMap<>();
+
+		for (final @NotNull PairNN<LongArrayKey, V> e : _list) {
+			final long key1 = e.a.getKeyAt(0);
+			final long key3 = e.a.getKeyAt(2);
+			MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3)).add(e.b);
+		}
+
+		return map;
+	}
+
+	private @NotNull Map<LongArrayKey, List<V>> _lazyLoad23() {
+		final Map<LongArrayKey, List<V>> map = new HashMap<>();
+
+		for (final @NotNull PairNN<LongArrayKey, V> e : _list) {
+			final long key2 = e.a.getKeyAt(1);
+			final long key3 = e.a.getKeyAt(2);
+			MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3)).add(e.b);
+		}
+
+		return map;
+	}
+
+
+	/**
+	 * Fügt das Element hinzu.
+	 *
+	 * @param key1  Der 1. Schlüssel.
+	 * @param key2  Der 2. Schlüssel.
+	 * @param key3  Der 3. Schlüssel.
+	 *
+	 * @param value Der zugeordnete Wert. Der Wert NULL ist nicht erlaubt.
+	 */
+	public void add(final long key1, final long key2, final long key3, final @NotNull V value) {
+		final @NotNull LongArrayKey key = new LongArrayKey(key1, key2, key3);
+		MapUtils.getOrCreateArrayList(_map123, key).add(value);
+		_list.add(new PairNN<>(key, value));
+
+		if (_map1 != null)
+			MapUtils.getOrCreateArrayList(_map1, key1).add(value);
+		if (_map2 != null)
+			MapUtils.getOrCreateArrayList(_map2, key2).add(value);
+		if (_map3 != null)
+			MapUtils.getOrCreateArrayList(_map3, key3).add(value);
+
+		if (_map12 != null)
+			MapUtils.getOrCreateArrayList(_map12, new LongArrayKey(key1, key2)).add(value);
+		if (_map13 != null)
+			MapUtils.getOrCreateArrayList(_map13, new LongArrayKey(key1, key3)).add(value);
+		if (_map23 != null)
+			MapUtils.getOrCreateArrayList(_map23, new LongArrayKey(key2, key3)).add(value);
+	}
+
+	/**
+	 * Liefert TRUE, falls es den Schlüssel (key1) gibt.
+	 *
+	 * @param key1   Der 1. Schlüssel.
+	 *
+	 * @return TRUE, falls es den Schlüssel (key1) gibt.
+	 */
+	public boolean containsKey1(final long key1) {
+		if (_map1 == null)
+			_map1 = _lazyLoad1();
+		return _map1.containsKey(key1);
+	}
+
+	/**
+	 * Liefert TRUE, falls es den Schlüssel (key2) gibt.
+	 *
+	 * @param key2   Der 2. Schlüssel.
+	 *
+	 * @return TRUE, falls es den Schlüssel (key2) gibt.
+	 */
+	public boolean containsKey2(final long key2) {
+		if (_map2 == null)
+			_map2 = _lazyLoad2();
+		return _map2.containsKey(key2);
+	}
+
+	/**
+	 * Liefert TRUE, falls es den Schlüssel (key3) gibt.
+	 *
+	 * @param key3   Der 3. Schlüssel.
+	 *
+	 * @return TRUE, falls es den Schlüssel (key3) gibt.
+	 */
+	public boolean containsKey3(final long key3) {
+		if (_map3 == null)
+			_map3 = _lazyLoad3();
+		return _map3.containsKey(key3);
+	}
+
+	/**
+	 * Liefert TRUE, falls es den Schlüssel (key1, key2) gibt.
+	 *
+	 * @param key1   Der 1. Schlüssel.
+	 * @param key2   Der 2. Schlüssel.
+	 *
+	 * @return TRUE, falls es den Schlüssel (key1, key2) gibt.
+	 */
+	public boolean containsKey12(final long key1, final long key2) {
+		if (_map12 == null)
+			_map12 = _lazyLoad12();
+		return _map12.containsKey(new LongArrayKey(key1, key2));
+	}
+
+	/**
+	 * Liefert TRUE, falls es den Schlüssel (key1, key3) gibt.
+	 *
+	 * @param key1   Der 1. Schlüssel.
+	 * @param key3   Der 3. Schlüssel.
+	 *
+	 * @return TRUE, falls es den Schlüssel (key1, key3) gibt.
+	 */
+	public boolean containsKey13(final long key1, final long key3) {
+		if (_map13 == null)
+			_map13 = _lazyLoad13();
+		return _map13.containsKey(new LongArrayKey(key1, key3));
+	}
+
+	/**
+	 * Liefert TRUE, falls es den Schlüssel (key2, key3) gibt.
+	 *
+	 * @param key2   Der 2. Schlüssel.
+	 * @param key3   Der 3. Schlüssel.
+	 *
+	 * @return TRUE, falls es den Schlüssel (key2, key3) gibt.
+	 */
+	public boolean containsKey23(final long key2, final long key3) {
+		if (_map23 == null)
+			_map23 = _lazyLoad23();
+		return _map23.containsKey(new LongArrayKey(key2, key3));
+	}
+
+	/**
+	 * Liefert TRUE, falls es den Schlüssel (key1, key2, key3) gibt.
+	 *
+	 * @param key1   Der 1. Schlüssel.
+	 * @param key2   Der 2. Schlüssel.
+	 * @param key3   Der 3. Schlüssel.
+	 *
+	 * @return TRUE, falls es den Schlüssel (key1, key2, key3) gibt.
+	 */
+	public boolean containsKey123(final long key1, final long key2, final long key3) {
+		return _map123.containsKey(new LongArrayKey(key1, key2, key3));
+	}
+
+	/**
+	 * Liefert eine Kopie der Liste aller Values zum Mapping (key1).
+	 *
+	 * @param key1   Der 1. Schlüssel.
+	 *
+	 * @return eine Liste aller Values in dieser Zuordnung.
+	 */
+	public @NotNull List<V> get1(final long key1) {
+		if (_map1 == null)
+			_map1 = _lazyLoad1();
+		if (!_map1.containsKey(key1))
+			return new ArrayList<>();
+		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map1, key1));
+	}
+
+	/**
+	 * Liefert eine Kopie der Liste aller Values zum Mapping (key2).
+	 *
+	 * @param key2   Der 2. Schlüssel.
+	 *
+	 * @return eine Liste aller Values in dieser Zuordnung.
+	 */
+	public @NotNull List<V> get2(final long key2) {
+		if (_map2 == null)
+			_map2 = _lazyLoad2();
+		if (!_map2.containsKey(key2))
+			return new ArrayList<>();
+		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map2, key2));
+	}
+
+	/**
+	 * Liefert eine Kopie der Liste aller Values zum Mapping (key3).
+	 *
+	 * @param key3   Der 3. Schlüssel
+	 *
+	 * @return eine Kopie der Liste aller Values zum Mapping (key3).
+	 */
+	public @NotNull List<V> get3(final long key3) {
+		if (_map3 == null)
+			_map3 = _lazyLoad3();
+		if (!_map3.containsKey(key3))
+			return new ArrayList<>();
+		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map3, key3));
+	}
+
+	/**
+	 * Liefert eine Kopie der Liste aller Values zum Mapping (key1, key2).
+	 *
+	 * @param key1   Der 1. Schlüssel
+	 * @param key2   Der 2. Schlüssel
+	 *
+	 * @return eine Kopie der Liste aller Values zum Mapping (key1, key2).
+	 */
+	public @NotNull List<V> get12(final long key1, final long key2) {
+		if (_map12 == null)
+			_map12 = _lazyLoad12();
+		final @NotNull LongArrayKey key = new LongArrayKey(key1, key2);
+		if (!_map12.containsKey(key))
+			return new ArrayList<>();
+		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map12, key));
+	}
+
+	/**
+	 * Liefert eine Kopie der Liste aller Values zum Mapping (key1, key3).
+	 *
+	 * @param key1   Der 1. Schlüssel
+	 * @param key3   Der 3. Schlüssel
+	 *
+	 * @return eine Kopie der Liste aller Values zum Mapping (key1, key3).
+	 */
+	public @NotNull List<V> get13(final long key1, final long key3) {
+		if (_map13 == null)
+			_map13 = _lazyLoad13();
+		final @NotNull LongArrayKey key = new LongArrayKey(key1, key3);
+		if (!_map13.containsKey(key))
+			return new ArrayList<>();
+		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map13, key));
+	}
+
+	/**
+	 * Liefert eine Kopie der Liste aller Values zum Mapping (key2, key3).
+	 *
+	 * @param key2   Der 2. Schlüssel
+	 * @param key3   Der 3. Schlüssel
+	 *
+	 * @return eine Kopie der Liste aller Values zum Mapping (key2, key3).
+	 */
+	public @NotNull List<V> get23(final long key2, final long key3) {
+		if (_map23 == null)
+			_map23 = _lazyLoad23();
+		final @NotNull LongArrayKey key = new LongArrayKey(key2, key3);
+		if (!_map23.containsKey(key))
+			return new ArrayList<>();
+		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map23, key));
+	}
+
+	/**
+	 * Liefert eine Kopie der Liste aller Values zum Mapping (key1, key2, key3).
+	 *
+	 * @param key1   Der 1. Schlüssel
+	 * @param key2   Der 2. Schlüssel
+	 * @param key3   Der 3. Schlüssel
+	 *
+	 * @return eine Kopie der Liste aller Values zum Mapping (key2, key3).
+	 */
+	public @NotNull List<V> get123(final long key1, final long key2, final long key3) {
+		final @NotNull LongArrayKey key = new LongArrayKey(key1, key2, key3);
+		if (!_map123.containsKey(key))
+			return new ArrayList<>();
+		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map123, key));
+	}
+
+	/**
+	 * Liefert das Key-Set der Map1.
+	 *
+	 * @return das Key-Set der Map1.
+	 */
+	public Set<Long> keySet1() {
+		if (_map1 == null)
+			_map1 = _lazyLoad1();
+		return _map1.keySet();
+	}
+
+	/**
+	 * Liefert das Key-Set der Map2.
+	 *
+	 * @return das Key-Set der Map2.
+	 */
+	public Set<Long> keySet2() {
+		if (_map2 == null)
+			_map2 = _lazyLoad2();
+		return _map2.keySet();
+	}
+
+	/**
+	 * Liefert das Key-Set der Map3.
+	 *
+	 * @return das Key-Set der Map3.
+	 */
+	public Set<Long> keySet3() {
+		if (_map3 == null)
+			_map3 = _lazyLoad3();
+		return _map3.keySet();
+	}
+
+	/**
+	 * Liefert das Key-Set der Map12.
+	 *
+	 * @return das Key-Set der Map12.
+	 */
+	public Set<LongArrayKey> keySet12() {
+		if (_map12 == null)
+			_map12 = _lazyLoad12();
+		return _map12.keySet();
+	}
+
+	/**
+	 * Liefert das Key-Set der Map13.
+	 *
+	 * @return das Key-Set der Map13.
+	 */
+	public Set<LongArrayKey> keySet13() {
+		if (_map13 == null)
+			_map13 = _lazyLoad13();
+		return _map13.keySet();
+	}
+
+	/**
+	 * Liefert das Key-Set der Map23.
+	 *
+	 * @return das Key-Set der Map23.
+	 */
+	public Set<LongArrayKey> keySet23() {
+		if (_map23 == null)
+			_map23 = _lazyLoad23();
+		return _map23.keySet();
+	}
+
+	/**
+	 * Liefert das Key-Set der Map123.
+	 *
+	 * @return das Key-Set der Map123.
+	 */
+	public Set<LongArrayKey> keySet123() {
+		return _map123.keySet();
+	}
+}

@@ -125,4 +125,15 @@ public final class LongArrayKey implements Comparable<LongArrayKey> {
 		return 0;
 	}
 
+	/**
+	 * Liefert den Key-Wert an dem Index.
+	 *
+	 * @param i    der Index
+	 *
+	 * @return den Key-Wert an dem Index.
+	 */
+	public long getKeyAt(final int i) {
+		return _keys[i];
+	}
+
 }
