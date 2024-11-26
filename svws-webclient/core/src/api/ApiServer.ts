@@ -12,6 +12,7 @@ import { BenutzergruppeDaten } from '../core/data/benutzer/BenutzergruppeDaten';
 import { BenutzergruppeListeEintrag } from '../core/data/benutzer/BenutzergruppeListeEintrag';
 import { BenutzerKompetenzGruppenKatalogEintrag } from '../core/data/benutzer/BenutzerKompetenzGruppenKatalogEintrag';
 import { BenutzerKompetenzKatalogEintrag } from '../core/data/benutzer/BenutzerKompetenzKatalogEintrag';
+import { BenutzerLehrerCredentials } from '../core/data/benutzer/BenutzerLehrerCredentials';
 import { BenutzerListeEintrag } from '../core/data/benutzer/BenutzerListeEintrag';
 import { BerufskollegAnlageKatalogEintrag } from '../asd/data/schule/BerufskollegAnlageKatalogEintrag';
 import { BerufskollegBerufsebeneKatalogEintrag } from '../core/data/schule/BerufskollegBerufsebeneKatalogEintrag';
@@ -1085,6 +1086,34 @@ export class ApiServer extends BaseApi {
 		const path = "/db/{schema}/benutzer/new"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = BenutzerAllgemeinCredentials.transpilerToJSON(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return BenutzerDaten.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode createBenutzerLehrer für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/new/lehrer
+	 *
+	 * Erstellt einen neuen Lehrer-Benutzer und gibt ihn zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Benutzers besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Benutzer wurde erfolgreich angelegt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: BenutzerDaten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Benutzer anzulegen.
+	 *   Code 409: Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {BenutzerLehrerCredentials} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Benutzer wurde erfolgreich angelegt.
+	 */
+	public async createBenutzerLehrer(data : BenutzerLehrerCredentials, schema : string) : Promise<BenutzerDaten> {
+		const path = "/db/{schema}/benutzer/new/lehrer"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = BenutzerLehrerCredentials.transpilerToJSON(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return BenutzerDaten.transpilerFromJSON(text);

@@ -16,6 +16,7 @@ import de.svws_nrw.base.crypto.AES;
 import de.svws_nrw.base.crypto.AESException;
 import de.svws_nrw.core.data.benutzer.BenutzerAllgemeinCredentials;
 import de.svws_nrw.core.data.benutzer.BenutzerDaten;
+import de.svws_nrw.core.data.benutzer.BenutzerLehrerCredentials;
 import de.svws_nrw.core.data.benutzer.BenutzergruppeDaten;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.types.benutzer.BenutzerTyp;
@@ -227,7 +228,7 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 		DTOBenutzer benutzer = null;
 		DTOCredentials credential = null;
 
-		if ((cred.benutzername == null) || (cred.password == null))
+		if ((cred.benutzername == null) || (cred.password == null) || (cred.benutzername.isBlank()) || (cred.password.isBlank()))
 			throw new ApiOperationException(Status.BAD_REQUEST, "Benuzername oder Passwort leer!");
 
 		// Bestimme die ID des Benutzers / Credentials / BenutzerAllgemeins
@@ -276,10 +277,53 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 	/**
 	 * Erstellt einen neuen Benutzer mit dem Benutzertyp Lehrer
 	 *
+	 * @param cred   die Credentials für den neu zu erstellenden Lehrer-Benutzer
+	 *
 	 * @return Eine Response mit dem neuen Benutzer
+	 *
+	 * @throws ApiOperationException   wenn ein Fehler auftritt
 	 */
-	public Response createBenutzerLehrer() {
-		throw new UnsupportedOperationException();
+	public Response createBenutzerLehrer(final BenutzerLehrerCredentials cred) throws ApiOperationException {
+		if ((cred.benutzername == null) || (cred.password == null) || (cred.benutzername.isBlank()) || (cred.password.isBlank()))
+			throw new ApiOperationException(Status.BAD_REQUEST, "Benuzername oder Passwort leer!");
+
+		// Bestimme den Lehrer mit der angegebenen ID aus der Datenbank
+		final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, cred.idLehrer);
+		if (lehrer == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Kein Lehrer mit der angebenen ID gefunden!");
+
+		// Prüfe, ob für den Lehrer mit der angegebenen ID bereits ein Benutzer angelegt wurde, wenn nicht, dann muss ein neuer Benutzer angelegt werden
+		DTOBenutzer benutzer = conn.queryList(DTOBenutzer.QUERY_BY_LEHRER_ID, DTOBenutzer.class, cred.idLehrer).stream().findFirst().orElse(null);
+		if (benutzer != null)
+			throw new ApiOperationException(Status.CONFLICT, "Es ist bereits ein Lehrer-Benutzer mit der angebenen ID vorhanden!");
+		final long idBenutzer = conn.transactionGetNextID(DTOBenutzer.class);
+		benutzer = new DTOBenutzer(idBenutzer, BenutzerTyp.LEHRER, false);
+		benutzer.Lehrer_ID = cred.idLehrer;
+		conn.transactionPersist(benutzer);
+
+		// Prüfe, ob der Benutzername bereits verwendet wurde
+		if (!conn.queryList(DTOCredentials.QUERY_BY_BENUTZERNAME, DTOCredentials.class, cred.benutzername).isEmpty())
+			throw new ApiOperationException(Status.CONFLICT, "Es existiert bereits ein Benutzer mit dem Benutzernamen \"%s\"!".formatted(cred.benutzername));
+
+		// Prüfe, ob dem Benutzer bereits Credentials zugeordnet sind, wenn ja, dann werden diese überschrieben. Wenn nicht, dann werden neue angelegt
+		DTOCredentials credential;
+		if (lehrer.CredentialID == null) {
+			final long idCredential = conn.transactionGetNextID(DTOCredentials.class);
+			credential = new DTOCredentials(idCredential, cred.benutzername);
+		} else {
+			credential = conn.queryByKey(DTOCredentials.class, lehrer.CredentialID);
+		}
+		credential.PasswordHash = Benutzer.erstellePasswortHash(cred.password);
+		conn.transactionPersist(credential);
+		conn.transactionFlush();
+
+		if (lehrer.CredentialID == null) {
+			lehrer.CredentialID = credential.ID;
+			conn.transactionPersist(lehrer);
+			conn.transactionFlush();
+		}
+
+		return get(idBenutzer);
 	}
 
 	/**

@@ -336,6 +336,7 @@ export { BenutzerDaten } from './core/data/benutzer/BenutzerDaten';
 export { BenutzerEMailDaten } from './core/data/benutzer/BenutzerEMailDaten';
 export { BenutzerKompetenzGruppenKatalogEintrag } from './core/data/benutzer/BenutzerKompetenzGruppenKatalogEintrag';
 export { BenutzerKompetenzKatalogEintrag } from './core/data/benutzer/BenutzerKompetenzKatalogEintrag';
+export { BenutzerLehrerCredentials } from './core/data/benutzer/BenutzerLehrerCredentials';
 export { BenutzerListeEintrag } from './core/data/benutzer/BenutzerListeEintrag';
 export { BenutzergruppeDaten } from './core/data/benutzer/BenutzergruppeDaten';
 export { BenutzergruppeListeEintrag } from './core/data/benutzer/BenutzergruppeListeEintrag';
