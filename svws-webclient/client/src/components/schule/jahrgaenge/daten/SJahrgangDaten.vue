@@ -5,7 +5,7 @@
 				<svws-ui-text-input placeholder="Kürzel" :model-value="jahrgangListeManager().daten().kuerzel" @change="patchKuerzel" type="text" :valid="validateKuerzel" :max-len="20" :min-len="1" />
 				<svws-ui-text-input placeholder="Bezeichnung" :model-value="jahrgangListeManager().daten().bezeichnung" @change="bezeichnung => patch({ bezeichnung: bezeichnung ?? '' })" type="text" />
 				<svws-ui-select title="Schulgliederung" v-model="schulgliederung" :items="Schulgliederung.getBySchuljahrAndSchulform(schuljahr, schulform)" :item-text="textSchulgliederung" />
-				<svws-ui-select title="Statistik-Jahrgang" v-model="statistikjahrgang" :items="Jahrgaenge.getListBySchuljahrAndSchulform(schuljahr, schulform)" :item-text="textStatistikJahrgang" statistics />
+				<svws-ui-select title="Statistik-Jahrgang" v-model="statistikjahrgang" :items="Jahrgaenge.getListBySchuljahrAndSchulform(schuljahr, schulform)" :item-text="textStatistikJahrgang" :empty-text="() => textStatistikJahrgang(null)" removable statistics />
 				<svws-ui-select title="Folgejahrgang" v-model="idFolgejahrgang" :items="folgejahrgaenge" :item-text="textFolgejahrgang" />
 				<svws-ui-input-number placeholder="Anzahl der Restabschnitte" :model-value="jahrgangListeManager().daten().anzahlRestabschnitte" @change="patchRestabschnitte" :valid="validateRestabschnitte" :min="0" :max="40" :required="true" />
 				<svws-ui-spacing />
@@ -64,17 +64,19 @@
 	const statistikjahrgang = computed<Jahrgaenge | null>({
 		get: () => {
 			const kuerzel = props.jahrgangListeManager().daten().kuerzelStatistik;
-			return Jahrgaenge.data().getWertByKuerzel(kuerzel);
+			return (kuerzel === null) ? null : Jahrgaenge.data().getWertByKuerzel(kuerzel);
 		},
 		set: (value) => {
-			const kuerzel = value?.daten(props.schuljahr)?.kuerzel;
+			const kuerzel = value?.daten(props.schuljahr)?.kuerzel ?? null;
 			void props.patch({ kuerzelStatistik : kuerzel });
 		},
 	});
 
-	function textStatistikJahrgang(jahrgang: Jahrgaenge) {
-		const jahrgangEintrag = jahrgang.daten(props.schuljahr);
-		return (jahrgangEintrag?.kuerzel ?? '—') + ": " + (jahrgangEintrag?.text ?? '—');
+	function textStatistikJahrgang(jahrgang: Jahrgaenge | null) {
+		const jahrgangEintrag = jahrgang === null ? null : jahrgang.daten(props.schuljahr);
+		if (jahrgangEintrag === null)
+			return 'JU - Jahrgangsübergreifend';
+		return jahrgangEintrag.kuerzel + " - " + jahrgangEintrag.text;
 	}
 
 	async function patchKuerzel(kuerzel: string | null) {

@@ -24,7 +24,7 @@ public class JahrgangsDaten {
 
 	/** Das dem Jahrgang zugeordnete Statistik-Kürzel. */
 	@Schema(description = "das dem Jahrgang zugeordnete Statistik-Kürzel", example = "EF")
-	public @NotNull String kuerzelStatistik = "";
+	public String kuerzelStatistik;
 
 	/** Der Name / die Bezeichnung des Jahrgangs. */
 	@Schema(description = "der Name / die Bezeichnung des Jahrgangs", example = "Einführungsphase")
