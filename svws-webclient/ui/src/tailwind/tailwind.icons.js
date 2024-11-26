@@ -65,129 +65,129 @@ const iconColors = {
 };
 
 const iconPath = {
-	'add-line': { path: 'System', icon: 'add-line' },
-	'alert-fill': { path: 'System', icon: 'alert-fill' },
-	'alert-line': { path: 'System', icon: 'alert-line' },
-	'archive-line': { path: 'Business', icon: 'archive-line' },
-	'archive-stack-line': { path: 'Business', icon: 'archive-stack-line' },
-	'arrow-down-line': { path: 'Arrows', icon: 'arrow-down-line' },
-	'arrow-down-s-line': { path: 'Arrows', icon: 'arrow-down-s-line' },
-	'arrow-go-back-line': { path: 'Arrows', icon: 'arrow-go-back-line' },
-	'arrow-left-s-line': { path: 'Arrows', icon: 'arrow-left-s-line' },
-	'arrow-right-circle-line': { path: 'Arrows', icon: 'arrow-right-circle-line' },
-	'arrow-right-s-line': { path: 'Arrows', icon: 'arrow-right-s-line' },
-	'arrow-turn-back-line': { path: 'Arrows', icon: 'arrow-turn-back-line' },
-	'arrow-up-down-line': { path: 'Arrows', icon: 'arrow-up-down-line' },
-	'arrow-up-line': { path: 'Arrows', icon: 'arrow-up-line' },
-	'arrow-up-s-line': { path: 'Arrows', icon: 'arrow-up-s-line' },
-	'at-line': { path: 'Business', icon: 'at-line' },
-	'bar-chart-2-line': { path: 'Business', icon: 'bar-chart-2-line' },
-	'book-2-line': { path: 'Document', icon: 'book-2-line' },
-	'box-3-line': { path: 'Others', icon: 'box-3-line' },
-	'briefcase-line': { path: 'Business', icon: 'briefcase-line' },
-	'bug-fill': { path: 'Development', icon: 'bug-fill' },
-	'calculator-line': { path: 'Business', icon: 'calculator-line' },
-	'calendar-2-line': { path: 'Business', icon: 'calendar-2-line' },
-	'calendar-event-line': { path: 'Business', icon: 'calendar-event-line' },
-	'camera-fill': { path: 'Media', icon: 'camera-fill' },
-	'camera-line': { path: 'Media', icon: 'camera-line' },
-	'camera-off-line': { path: 'Media', icon: 'camera-off-line' },
-	'chat-1-line': { path: 'Communication', icon: 'chat-1-line' },
-	'check-line': { path: 'System', icon: 'check-line' },
-	'checkbox-blank-circle-line': { path: 'System', icon: 'checkbox-blank-circle-line' },
-	'checkbox-circle-fill': { path: 'System', icon: 'checkbox-circle-fill' },
-	'checkbox-circle-line': { path: 'System', icon: 'checkbox-circle-line' },
-	'close-line': { path: 'System', icon: 'close-line' },
-	'corner-right-up-line': { path: 'Arrows', icon: 'corner-right-up-line' },
-	'cup-line': { path: 'Food', icon: 'cup-line' },
-	'database-2-line': { path: 'Device', icon: 'database-2-line' },
-	'delete-bin-fill': { path: 'System', icon: 'delete-bin-fill' },
-	'delete-bin-line': { path: 'System', icon: 'delete-bin-line' },
-	'device-recover-line': { path: 'Device', icon: 'device-recover-line' },
-	'download-2-line': { path: 'System', icon: 'download-2-line' },
-	'draft-line': { path: 'Document', icon: 'draft-line' },
-	'draggable': { path: 'Editor', icon: 'draggable' },
-	'edit-2-line': { path: 'Design', icon: 'edit-2-line' },
-	'eraser-fill': { path: 'Design', icon: 'eraser-fill' },
-	'eraser-line': { path: 'Design', icon: 'eraser-line' },
-	'error-warning-fill': { path: 'System', icon: 'error-warning-fill' },
-	'error-warning-line': { path: 'System', icon: 'error-warning-line' },
-	'expand-height-line': { path: 'Arrows', icon: 'expand-height-line' },
-	'expand-up-down-fill': { path: 'Arrows', icon: 'expand-up-down-fill' },
-	'expand-up-down-line': { path: 'Arrows', icon: 'expand-up-down-line' },
-	'eye-line': { path: 'System', icon: 'eye-line' },
-	'file-close-line': { path: 'Document', icon: 'file-close-line' },
-	'file-copy-line': { path: 'Document', icon: 'file-copy-line' },
-	'file-damage-line': { path: 'Document', icon: 'file-damage-line' },
-	'filter-fill': { path: 'System', icon: 'filter-fill' },
-	'filter-line': { path: 'System', icon: 'filter-line' },
-	'filter-off-line': { path: 'System', icon: 'filter-off-line' },
-	'folder-open-line': { path: 'Document', icon: 'folder-open-line' },
-	'forbid-fill': { path: 'System', icon: 'forbid-fill' },
-	'forbid-line': { path: 'System', icon: 'forbid-line' },
-	'fullscreen-line': { path: 'Media', icon: 'fullscreen-line' },
-	'graduation-cap-line': { path: 'Others', icon: 'graduation-cap-line' },
-	'group-line': { path: 'User%20&%20Faces', icon: 'group-line' },
-	'headphone-line': { path: 'Media', icon: 'headphone-line' },
-	'information-fill': { path: 'System', icon: 'information-fill' },
-	'information-line': { path: 'System', icon: 'information-line' },
-	'lightbulb-line': { path: 'Others', icon: 'lightbulb-line' },
-	'link': { path: 'Editor', icon: 'link' },
-	'loader-4-line': { path: 'System', icon: 'loader-4-line' },
-	'lock-2-line': { path: 'System', icon: 'lock-2-line' },
-	'lock-fill': { path: 'System', icon: 'lock-fill' },
-	'lock-line': { path: 'System', icon: 'lock-line' },
-	'lock-unlock-line': { path: 'System', icon: 'lock-unlock-line' },
-	'login-circle-line': { path: 'System', icon: 'login-circle-line' },
-	'logout-circle-line': { path: 'System', icon: 'logout-circle-line' },
-	'loop-left-line': { path: 'System', icon: 'loop-left-line' },
-	'loop-right-line': { path: 'System', icon: 'loop-right-line' },
-	'mail-send-line': { path: 'Business', icon: 'mail-send-line' },
-	'menu-fold-line': { path: 'System', icon: 'menu-fold-line' },
-	'menu-line': { path: 'System', icon: 'menu-line' },
-	'menu-unfold-line': { path: 'System', icon: 'menu-unfold-line' },
-	'moon-line': { path: 'Weather', icon: 'moon-line' },
-	'palette-line': { path: 'Design', icon: 'palette-line' },
-	'phone-line': { path: 'Device', icon: 'phone-line' },
-	'presentation-line': { path: 'Business', icon: 'presentation-line' },
-	'printer-line': { path: 'Business', icon: 'printer-line' },
-	'prohibited-fill': { path: 'System', icon: 'prohibited-fill' },
-	'prohibited-line': { path: 'System', icon: 'prohibited-line' },
-	'pushpin-fill': { path: 'Map', icon: 'pushpin-fill' },
-	'pushpin-line': { path: 'Map', icon: 'pushpin-line' },
-	'question-line': { path: 'System', icon: 'question-line' },
-	'question-fill': { path: 'System', icon: 'question-fill' },
-	'refresh-line': { path: 'System', icon: 'refresh-line' },
-	'restart-line': { path: 'Device', icon: 'restart-line' },
-	'save-3-line': { path: 'Device', icon: 'save-3-line' },
-	'school-line': { path: 'Buildings', icon: 'school-line' },
-	'search-line': { path: 'System', icon: 'search-line' },
-	'send-plane-fill': { path: 'Business', icon: 'send-plane-fill' },
-	'settings-2-line': { path: 'System', icon: 'settings-2-line' },
-	'settings-3-line': { path: 'System', icon: 'settings-3-line' },
-	'share-forward-2-line': { path: 'System', icon: 'share-forward-2-line' },
-	'share-forward-line': { path: 'System', icon: 'share-forward-line' },
-	'shield-star-line': { path: 'System', icon: 'shield-star-line' },
-	'spam-3-line': { path: 'System', icon: 'spam-3-line' },
-	'sparkling-line': { path: 'Weather', icon: 'sparkling-line' },
-	'speak-line': { path: 'Communication', icon: 'speak-line' },
-	'speed-line': { path: 'Media', icon: 'speed-line' },
-	'subtract-line': { path: 'System', icon: 'subtract-line' },
-	'sun-line': { path: 'Weather', icon: 'sun-line' },
-	'table-line': { path: 'Design', icon: 'table-line' },
-	'team-line': { path: 'User%20&%20Faces', icon: 'team-line' },
-	'text': { path: 'Editor', icon: 'text' },
-	'time-line': { path: 'System', icon: 'time-line' },
-	'upload-2-line': { path: 'System', icon: 'upload-2-line' },
-	'user-add-line': { path: 'User%20&%20Faces', icon: 'user-add-line' },
-	'user-forbid-line': { path: 'User%20&%20Faces', icon: 'user-forbid-line' },
-	'vidicon-line': { path: 'Media', icon: 'vidicon-line' },
-	'zoom-in-line': { path: 'System', icon: 'zoom-in-line' },
-	'zoom-out-line': { path: 'System', icon: 'zoom-out-line' },
-	'play-line': { path: 'Media', icon: 'play-line' },
-	'message-line': { path: 'Communication', icon: 'message-line' },
-	'chat-new-line': { path: 'Communication', icon: 'chat-new-line' },
-	'question-mark': { path: 'Editor', icon: 'question-mark' },
+	'add-line': { path: 'System', icon: 'add-line' }, // i-ri-add-line
+	'alert-fill': { path: 'System', icon: 'alert-fill' }, // i-ri-alert-fill
+	'alert-line': { path: 'System', icon: 'alert-line' }, // i-ri-alert-line
+	'archive-line': { path: 'Business', icon: 'archive-line' }, // i-ri-archive-line
+	'archive-stack-line': { path: 'Business', icon: 'archive-stack-line' }, // i-ri-archive-stack-line
+	'arrow-down-line': { path: 'Arrows', icon: 'arrow-down-line' }, // i-ri-arrow-down-line
+	'arrow-down-s-line': { path: 'Arrows', icon: 'arrow-down-s-line' }, // i-ri-arrow-down-s-line
+	'arrow-go-back-line': { path: 'Arrows', icon: 'arrow-go-back-line' }, // i-ri-arrow-go-back-line
+	'arrow-left-s-line': { path: 'Arrows', icon: 'arrow-left-s-line' }, // i-ri-arrow-left-s-line
+	'arrow-right-circle-line': { path: 'Arrows', icon: 'arrow-right-circle-line' }, // i-ri-arrow-right-circle-line
+	'arrow-right-s-line': { path: 'Arrows', icon: 'arrow-right-s-line' }, // i-ri-arrow-right-s-line
+	'arrow-turn-back-line': { path: 'Arrows', icon: 'arrow-turn-back-line' }, // i-ri-arrow-turn-back-line
+	'arrow-up-down-line': { path: 'Arrows', icon: 'arrow-up-down-line' }, // i-ri-arrow-up-down-line
+	'arrow-up-line': { path: 'Arrows', icon: 'arrow-up-line' }, // i-ri-arrow-up-line
+	'arrow-up-s-line': { path: 'Arrows', icon: 'arrow-up-s-line' }, // i-ri-arrow-up-s-line
+	'at-line': { path: 'Business', icon: 'at-line' }, // i-ri-at-line
+	'bar-chart-2-line': { path: 'Business', icon: 'bar-chart-2-line' }, // i-ri-bar-chart-2-line
+	'book-2-line': { path: 'Document', icon: 'book-2-line' }, // i-ri-book-2-line
+	'box-3-line': { path: 'Others', icon: 'box-3-line' }, // i-ri-box-3-line
+	'briefcase-line': { path: 'Business', icon: 'briefcase-line' }, // i-ri-briefcase-line
+	'bug-fill': { path: 'Development', icon: 'bug-fill' }, // i-ri-bug-fill
+	'calculator-line': { path: 'Business', icon: 'calculator-line' }, // i-ri-calculator-line
+	'calendar-2-line': { path: 'Business', icon: 'calendar-2-line' }, // i-ri-calendar-2-line
+	'calendar-event-line': { path: 'Business', icon: 'calendar-event-line' }, // i-ri-calendar-event-line
+	'camera-fill': { path: 'Media', icon: 'camera-fill' }, // i-ri-camera-fill
+	'camera-line': { path: 'Media', icon: 'camera-line' }, // i-ri-camera-line
+	'camera-off-line': { path: 'Media', icon: 'camera-off-line' }, // i-ri-camera-off-line
+	'chat-1-line': { path: 'Communication', icon: 'chat-1-line' }, // i-ri-chat-1-line
+	'check-line': { path: 'System', icon: 'check-line' }, // i-ri-check-line
+	'checkbox-blank-circle-line': { path: 'System', icon: 'checkbox-blank-circle-line' }, // i-ri-checkbox-blank-circle-line
+	'checkbox-circle-fill': { path: 'System', icon: 'checkbox-circle-fill' }, // i-ri-checkbox-circle-fill
+	'checkbox-circle-line': { path: 'System', icon: 'checkbox-circle-line' }, // i-ri-checkbox-circle-line
+	'close-line': { path: 'System', icon: 'close-line' }, // i-ri-close-line
+	'corner-right-up-line': { path: 'Arrows', icon: 'corner-right-up-line' }, // i-ri-corner-right-up-line
+	'cup-line': { path: 'Food', icon: 'cup-line' }, // i-ri-cup-line
+	'database-2-line': { path: 'Device', icon: 'database-2-line' }, // i-ri-database-2-line
+	'delete-bin-fill': { path: 'System', icon: 'delete-bin-fill' }, // i-ri-delete-bin-fill
+	'delete-bin-line': { path: 'System', icon: 'delete-bin-line' }, // i-ri-delete-bin-line
+	'device-recover-line': { path: 'Device', icon: 'device-recover-line' }, // i-ri-device-recover-line
+	'download-2-line': { path: 'System', icon: 'download-2-line' }, // i-ri-download-2-line
+	'draft-line': { path: 'Document', icon: 'draft-line' }, // i-ri-draft-line
+	'draggable': { path: 'Editor', icon: 'draggable' }, // i-ri-draggable
+	'edit-2-line': { path: 'Design', icon: 'edit-2-line' }, // i-ri-edit-2-line
+	'eraser-fill': { path: 'Design', icon: 'eraser-fill' }, // i-ri-eraser-fill
+	'eraser-line': { path: 'Design', icon: 'eraser-line' }, // i-ri-eraser-line
+	'error-warning-fill': { path: 'System', icon: 'error-warning-fill' }, // i-ri-error-warning-fill
+	'error-warning-line': { path: 'System', icon: 'error-warning-line' }, // i-ri-error-warning-line
+	'expand-height-line': { path: 'Arrows', icon: 'expand-height-line' }, // i-ri-expand-height-line
+	'expand-up-down-fill': { path: 'Arrows', icon: 'expand-up-down-fill' }, // i-ri-expand-up-down-fill
+	'expand-up-down-line': { path: 'Arrows', icon: 'expand-up-down-line' }, // i-ri-expand-up-down-line
+	'eye-line': { path: 'System', icon: 'eye-line' }, // i-ri-eye-line
+	'file-close-line': { path: 'Document', icon: 'file-close-line' }, // i-ri-file-close-line
+	'file-copy-line': { path: 'Document', icon: 'file-copy-line' }, // i-ri-file-copy-line
+	'file-damage-line': { path: 'Document', icon: 'file-damage-line' }, // i-ri-file-damage-line
+	'filter-fill': { path: 'System', icon: 'filter-fill' }, // i-ri-filter-fill
+	'filter-line': { path: 'System', icon: 'filter-line' }, // i-ri-filter-line
+	'filter-off-line': { path: 'System', icon: 'filter-off-line' }, // i-ri-filter-off-line
+	'folder-open-line': { path: 'Document', icon: 'folder-open-line' }, // i-ri-folder-open-line
+	'forbid-fill': { path: 'System', icon: 'forbid-fill' }, // i-ri-forbid-fill
+	'forbid-line': { path: 'System', icon: 'forbid-line' }, // i-ri-forbid-line
+	'fullscreen-line': { path: 'Media', icon: 'fullscreen-line' }, // i-ri-fullscreen-line
+	'graduation-cap-line': { path: 'Others', icon: 'graduation-cap-line' }, // i-ri-graduation-cap-line
+	'group-line': { path: 'User%20&%20Faces', icon: 'group-line' }, // i-ri-group-line
+	'headphone-line': { path: 'Media', icon: 'headphone-line' }, // i-ri-headphone-line
+	'information-fill': { path: 'System', icon: 'information-fill' }, // i-ri-information-fill
+	'information-line': { path: 'System', icon: 'information-line' }, // i-ri-information-line
+	'lightbulb-line': { path: 'Others', icon: 'lightbulb-line' }, // i-ri-lightbulb-line
+	'link': { path: 'Editor', icon: 'link' }, // i-ri-link
+	'loader-4-line': { path: 'System', icon: 'loader-4-line' }, // i-ri-loader-4-line
+	'lock-2-line': { path: 'System', icon: 'lock-2-line' }, // i-ri-lock-2-line
+	'lock-fill': { path: 'System', icon: 'lock-fill' }, // i-ri-lock-fill
+	'lock-line': { path: 'System', icon: 'lock-line' }, // i-ri-lock-line
+	'lock-unlock-line': { path: 'System', icon: 'lock-unlock-line' }, // i-ri-lock-unlock-line
+	'login-circle-line': { path: 'System', icon: 'login-circle-line' }, // i-ri-login-circle-line
+	'logout-circle-line': { path: 'System', icon: 'logout-circle-line' }, // i-ri-logout-circle-line
+	'loop-left-line': { path: 'System', icon: 'loop-left-line' }, // i-ri-loop-left-line
+	'loop-right-line': { path: 'System', icon: 'loop-right-line' }, // i-ri-loop-right-line
+	'mail-send-line': { path: 'Business', icon: 'mail-send-line' }, // i-ri-mail-send-line
+	'menu-fold-line': { path: 'System', icon: 'menu-fold-line' }, // i-ri-menu-fold-line
+	'menu-line': { path: 'System', icon: 'menu-line' }, // i-ri-menu-line
+	'menu-unfold-line': { path: 'System', icon: 'menu-unfold-line' }, // i-ri-menu-unfold-line
+	'moon-line': { path: 'Weather', icon: 'moon-line' }, // i-ri-moon-line
+	'palette-line': { path: 'Design', icon: 'palette-line' }, // i-ri-palette-line
+	'phone-line': { path: 'Device', icon: 'phone-line' }, // i-ri-phone-line
+	'presentation-line': { path: 'Business', icon: 'presentation-line' }, // i-ri-presentation-line
+	'printer-line': { path: 'Business', icon: 'printer-line' }, // i-ri-printer-line
+	'prohibited-fill': { path: 'System', icon: 'prohibited-fill' }, // i-ri-prohibited-fill
+	'prohibited-line': { path: 'System', icon: 'prohibited-line' }, // i-ri-prohibited-line
+	'pushpin-fill': { path: 'Map', icon: 'pushpin-fill' }, // i-ri-pushpin-fill
+	'pushpin-line': { path: 'Map', icon: 'pushpin-line' }, // i-ri-pushpin-line
+	'question-line': { path: 'System', icon: 'question-line' }, // i-ri-question-line
+	'question-fill': { path: 'System', icon: 'question-fill' }, // i-ri-question-fill
+	'refresh-line': { path: 'System', icon: 'refresh-line' }, // i-ri-refresh-line
+	'restart-line': { path: 'Device', icon: 'restart-line' }, // i-ri-restart-line
+	'save-3-line': { path: 'Device', icon: 'save-3-line' }, // i-ri-save-3-line
+	'school-line': { path: 'Buildings', icon: 'school-line' }, // i-ri-school-line
+	'search-line': { path: 'System', icon: 'search-line' }, // i-ri-search-line
+	'send-plane-fill': { path: 'Business', icon: 'send-plane-fill' }, // i-ri-send-plane-fill
+	'settings-2-line': { path: 'System', icon: 'settings-2-line' }, // i-ri-settings-2-line
+	'settings-3-line': { path: 'System', icon: 'settings-3-line' }, // i-ri-settings-3-line
+	'share-forward-2-line': { path: 'System', icon: 'share-forward-2-line' }, // i-ri-share-forward-2-line
+	'share-forward-line': { path: 'System', icon: 'share-forward-line' }, // i-ri-share-forward-line
+	'shield-star-line': { path: 'System', icon: 'shield-star-line' }, // i-ri-shield-star-line
+	'spam-3-line': { path: 'System', icon: 'spam-3-line' }, // i-ri-spam-3-line
+	'sparkling-line': { path: 'Weather', icon: 'sparkling-line' }, // i-ri-sparkling-line
+	'speak-line': { path: 'Communication', icon: 'speak-line' }, // i-ri-speak-line
+	'speed-line': { path: 'Media', icon: 'speed-line' }, // i-ri-speed-line
+	'subtract-line': { path: 'System', icon: 'subtract-line' }, // i-ri-subtract-line
+	'sun-line': { path: 'Weather', icon: 'sun-line' }, // i-ri-sun-line
+	'table-line': { path: 'Design', icon: 'table-line' }, // i-ri-table-line
+	'team-line': { path: 'User%20&%20Faces', icon: 'team-line' }, // i-ri-team-line
+	'text': { path: 'Editor', icon: 'text' }, // i-ri-text
+	'time-line': { path: 'System', icon: 'time-line' }, // i-ri-time-line
+	'upload-2-line': { path: 'System', icon: 'upload-2-line' }, // i-ri-upload-2-line
+	'user-add-line': { path: 'User%20&%20Faces', icon: 'user-add-line' }, // i-ri-user-add-line
+	'user-forbid-line': { path: 'User%20&%20Faces', icon: 'user-forbid-line' }, // i-ri-user-forbid-line
+	'vidicon-line': { path: 'Media', icon: 'vidicon-line' }, // i-ri-vidicon-line
+	'zoom-in-line': { path: 'System', icon: 'zoom-in-line' }, // i-ri-zoom-in-line
+	'zoom-out-line': { path: 'System', icon: 'zoom-out-line' }, // i-ri-zoom-out-line
+	'play-line': { path: 'Media', icon: 'play-line' }, // i-ri-play-line
+	'message-line': { path: 'Communication', icon: 'message-line' }, // i-ri-message-line
+	'chat-new-line': { path: 'Communication', icon: 'chat-new-line' }, // i-ri-chat-new-line
+	'question-mark': { path: 'Editor', icon: 'question-mark' }, // i-ri-question-mark
 }
 
 const iconPlugins = [

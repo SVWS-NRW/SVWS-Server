@@ -57,7 +57,7 @@ export default tseslint.config(
         "functions": "never",
         "importAttributes": "never",
         "dynamicImports": "never"
-    }],
+    	}],
 			"@stylistic/no-mixed-operators": "error",
 			"@stylistic/no-multi-spaces": "error",
 			"@stylistic/no-trailing-spaces": "error",
