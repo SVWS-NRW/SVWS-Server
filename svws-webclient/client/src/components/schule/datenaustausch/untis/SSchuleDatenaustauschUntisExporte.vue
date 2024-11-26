@@ -12,17 +12,31 @@
 
 		<!-- Weitere Eingabemöglichkeiten für den zuvor gewählten Untis-Export (rechte Seite - spezielle Ansicht nach Auswahl) -->
 		<div v-if="gpusBrauchenGPU002.includes(aktuell)">
-			<p class="mb-4">
-				Laden Sie zunächst die Datei
-				<svws-ui-tooltip>
-					<span class="font-bold flex flex-row gap-1">GPU002.txt: <span class="icon i-ri-information-line mt-0.5" /></span>
-					<template #content>
-						Die CSV-Datei muss als Textkodierung UTF-8 ohne BOM verwenden. Als Trennzeichen wird das Semikolon verwendet und für die textbegrenzung doppelte Anführungszeichen (")
-					</template>
-				</svws-ui-tooltip>
-				von Untis hier hoch, um die Klausuren anschließend zu exportieren.
-			</p>
-			<input type="file" accept=".txt" @change="importGPU002">
+			<svws-ui-card :compact="true" :collapsible="false" title="Schema Schüler-IDs"
+				content="Wählen Sie zunächst das Schema der Schüler-IDs in Untis:">
+				<template #footer>
+					<svws-ui-radio-group @click="console.log(gpu002schuelerid)">
+						<svws-ui-radio-option value="id" v-model="gpu002schuelerid"
+							name="radioInputSchueleridschema"
+							label="SVWS ID-Schema (S-SVWSID)" />
+						<svws-ui-radio-option value="kurz" v-model="gpu002schuelerid"
+							name="radioInputSchueleridschema"
+							label="Untis ID-Schema kurz (Nachname-Vor-20081023)" />
+						<svws-ui-radio-option value="lang" v-model="gpu002schuelerid"
+							name="radioInputSchueleridschema"
+							label="Untis ID-Schema lang (Nachname-Vorname-20081023)" />
+					</svws-ui-radio-group>
+				</template>
+			</svws-ui-card>
+			<svws-ui-card :compact="true" :collapsible="false" title="Upload GPU002.txt" v-if="gpu002schuelerid !== undefined">
+				<template #content>
+					Laden Sie jetzt die Datei <span class="font-bold flex flex-row gap-1">GPU002.txt</span> von Untis hier hoch, um die Klausuren anschließend zu exportieren.<br>
+					Die CSV-Datei muss als Textkodierung UTF-8 ohne BOM verwenden. Als Trennzeichen wird das Semikolon verwendet und für die textbegrenzung doppelte Anführungszeichen (").
+				</template>
+				<template #footer>
+					<input type="file" accept=".txt" @change="importGPU002">
+				</template>
+			</svws-ui-card>
 		</div>
 		<div v-if="(daten !== null) && (!gpusBrauchenGPU002.includes(aktuell) || (gpu002 !== null))" class="w-full h-full overflow-hidden flex flex-col gap-4">
 			<!-- Angabe des Dateinamen und Speichermöglichkeit -->
@@ -46,7 +60,7 @@
 
 <script setup lang="ts">
 
-	import { ref, shallowRef } from 'vue';
+	import { computed, ref, shallowRef } from 'vue';
 	import type { SchuleDatenaustauschUntisExporteProps } from './SSchuleDatenaustauschUntisExporteProps';
 
 	const props = defineProps<SchuleDatenaustauschUntisExporteProps>();
@@ -84,7 +98,7 @@
 	const klausurenGPU017 = <GPU>({
 		title: 'Klausuren',
 		subtitle: 'GPU017.txt',
-		export: async (gpu002 : string) => await props.exportUntisKlausurenGPU017(gpu002),
+		export: async (gpu002 : string) => await props.exportUntisKlausurenGPU017(gpu002schuelerid.value!, gpu002),
 	});
 
 	const gpus = [ klassenGPU003, lehrerGPU004, faecherGPU006, schuelerGPU010, klausurenGPU017 ];
@@ -128,5 +142,7 @@
 		link.click();
 		URL.revokeObjectURL(link.href);
 	}
+
+	const gpu002schuelerid = ref<"id" | "kurz" | "lang" | undefined>(undefined)
 
 </script>

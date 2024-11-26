@@ -424,6 +424,7 @@ public class APIDatenaustausch {
 	 *
 	 * @param schema   das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
 	 * @param id       die ID des Schuljahresabschnittes, für den die Klausurdaten exportiert werden sollen
+	 * @param sidschema das SIDSchema, für das die Klausurdaten exportiert werden sollen
 	 * @param gpu002 GPU002-Datei
 	 * @param request  die Informationen zur HTTP-Anfrage
 	 *
@@ -431,7 +432,7 @@ public class APIDatenaustausch {
 	 */
 	@POST
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
-	@Path("/untis/export/klausuren/{id : \\d+}")
+	@Path("/untis/export/klausuren/{id : \\d+}/{sidschema : \\w+}")
 	@Operation(summary = "Liefert einen Export für die Klausurdaten eines Schuljahresabschnittes (GPU017.txt).",
 			description = "Liefert einen Export für die Klausurdaten eines Schuljahresabschnittes (GPU017.txt)."
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Exportieren besitzt.")
@@ -441,7 +442,7 @@ public class APIDatenaustausch {
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	@ApiResponse(responseCode = "500", description = "Es ist ein unerwarteter Fehler aufgetreten.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
-	public Response exportUntisKlausurenGPU017(@PathParam("schema") final String schema, @PathParam("id") final long id,
+	public Response exportUntisKlausurenGPU017(@PathParam("schema") final String schema, @PathParam("id") final long id, @PathParam("sidschema") final String sidschema,
 			@RequestBody(description = "Die Liste von GostKlausurraumRich-Objekten, die die zuzuweisenden GostSchuelerklausurTermine-IDs enthalten.", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 			schema = @Schema(implementation = String.class))) final InputStream gpu002,
 			@Context final HttpServletRequest request) {
@@ -450,7 +451,7 @@ public class APIDatenaustausch {
 		logger.addConsumer(log);
 		return DBBenutzerUtils.runWithTransaction(conn -> {
 			try {
-				return DataUntis.exportGPU017(conn, logger, id, gpu002);
+				return DataUntis.exportGPU017(conn, logger, id, gpu002, sidschema);
 			} catch (final ApiOperationException aoe) {
 				final SimpleOperationResponse sor = new SimpleOperationResponse();
 				sor.log.addAll(log.getStrings());
