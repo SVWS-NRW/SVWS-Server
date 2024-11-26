@@ -12,6 +12,16 @@
 
 		<!-- Weitere Eingabemöglichkeiten für den zuvor gewählten Untis-Export (rechte Seite - spezielle Ansicht nach Auswahl) -->
 		<div v-if="gpusBrauchenGPU002.includes(aktuell)">
+			<p class="mb-4">
+				Laden Sie zunächst die Datei
+				<svws-ui-tooltip>
+					<span class="font-bold flex flex-row gap-1">GPU002.txt: <span class="icon i-ri-information-line mt-0.5" /></span>
+					<template #content>
+						Die CSV-Datei muss als Textkodierung UTF-8 ohne BOM verwenden. Als Trennzeichen wird das Semikolon verwendet und für die textbegrenzung doppelte Anführungszeichen (")
+					</template>
+				</svws-ui-tooltip>
+				von Untis hier hoch, um die Klausuren anschließend zu exportieren.
+			</p>
 			<input type="file" accept=".txt" @change="importGPU002">
 		</div>
 		<div v-if="(daten !== null) && (!gpusBrauchenGPU002.includes(aktuell) || (gpu002 !== null))" class="w-full h-full overflow-hidden flex flex-col gap-4">

@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<div class="text-base font-bold">{{ kMan().stundenplanManagerGetByAbschnittAndDatumOrException(abschnitt!.id, termin.datum!).zeitrasterGetWochentageAlsEnumRange().at(DateUtils.gibWochentagDesDatumsISO8601(termin.datum!) - 1)?.beschreibung }}, {{ DateUtils.gibDatumGermanFormat(termin.datum!) }}</div>
-		<div class="text-base font-bold opacity-50 mb-2">ab {{ DateUtils.getStringOfUhrzeitFromMinuten(termin.startzeit!) }} Uhr</div>
+		<div class="text-base font-bold opacity-50 mb-2">ab {{ DateUtils.getStringOfUhrzeitFromMinuten(kMan().minKlausurstartzeitByTermin(termin, false)) }} Uhr</div>
 		<table class="table-auto min-w-full border -mx-3 border-black/25" v-if="kMan().raumGetMengeByTermin(termin).size() > 0">
 			<thead class="border-b border-black/25 text-left text-button">
 				<tr>

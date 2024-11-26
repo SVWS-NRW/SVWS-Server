@@ -2,6 +2,7 @@ package de.svws_nrw.data.datenaustausch;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
@@ -54,7 +56,6 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
 import de.svws_nrw.core.data.kurse.KursDaten;
 import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
 import de.svws_nrw.core.data.schueler.Schueler;
-import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.core.data.stundenplan.StundenplanListeEintrag;
 import de.svws_nrw.core.data.stundenplan.StundenplanListeEintragMinimal;
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
@@ -69,6 +70,7 @@ import de.svws_nrw.core.utils.gost.GostBlockungsdatenManager;
 import de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager;
 import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
 import de.svws_nrw.core.utils.stundenplan.StundenplanManager;
+import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.SimpleBinaryMultipartBody;
 import de.svws_nrw.data.faecher.DataFaecherliste;
 import de.svws_nrw.data.gost.DBUtilsGost;
@@ -501,13 +503,10 @@ public final class DataUntis {
 	 * Gibt die Schülerbezeichnung für Untis zurück, wie sie vom SVWS-Server generiert wird.
 	 *
 	 * @param id         die ID des Schülers
-	 * @param nachname   der Nachname des Schülers
-	 * @param vorname    der Vorname des Schülers
-	 * @param isoDate    das Geburtsdatum des Schülers im ISO-Format
 	 *
 	 * @return die Schülerbezeichnung für Untis
 	 */
-	private static @NotNull String getUntisSchuelerName(final long id, final String nachname, final String vorname, final String isoDate) {
+	private static @NotNull String getUntisSchuelerName(final long id) {
 		return "S-" + id;
 	}
 
@@ -938,7 +937,7 @@ public final class DataUntis {
 		for (final DTOSchueler dtoSchueler : schueler) {
 			final UntisGPU010 dto = new UntisGPU010();
 			dto.geburtsdatum = getUntisDate(dtoSchueler.Geburtsdatum);
-			dto.name = getUntisSchuelerName(dtoSchueler.ID, dtoSchueler.Nachname, dtoSchueler.Vorname, dtoSchueler.Geburtsdatum);
+			dto.name = getUntisSchuelerName(dtoSchueler.ID);
 			dto.langname = ((dtoSchueler.Nachname == null) || ("".equals(dtoSchueler.Nachname.trim()))) ? "???" : dtoSchueler.Nachname.trim();
 			dto.vorname = ((dtoSchueler.Vorname == null) || "".equals(dtoSchueler.Vorname.trim())) ? "???" : dtoSchueler.Vorname.trim();
 			dto.schuelernummer = "" + dtoSchueler.ID;
@@ -1063,19 +1062,26 @@ public final class DataUntis {
 				klausur.raeume = stunden.stream().map(s -> stundenplanraum.kuerzel).collect(Collectors.joining("~"));
 
 			final List<GostKursklausur> klausuren = manager.kursklausurGetMengeByRaum(raum);
-			for (final GostKursklausur k : klausuren) {
-				final List<Long> unterrichtsnummern = unterrichte.getOrNull(GostHalbjahr.fromIDorException(manager.vorgabeByKursklausur(k).halbjahr).jahrgang, manager.kursKurzbezeichnungByKursklausur(k));
-				if (unterrichtsnummern != null)
-					klausur.unterrichte = unterrichtsnummern.stream().map(Object::toString).collect(Collectors.joining("~"));
-			}
+
+			klausur.unterrichte = klausuren.stream()
+				    .map(k -> unterrichte.getOrNull(
+				            GostHalbjahr.fromIDorException(manager.vorgabeByKursklausur(k).halbjahr).jahrgang,
+				            manager.kursKurzbezeichnungByKursklausur(k)
+				    ))
+				    .filter(Objects::nonNull)
+				    .map(unrs -> unrs.stream()
+				        .map(Object::toString)
+				        .collect(Collectors.joining("~"))
+				    )
+				    .collect(Collectors.joining("~"));
 
 			klausur.lehrer = klausuren.stream().map(k -> manager.kursLehrerByKursklausur(k).kuerzel).collect(Collectors.joining("~"));
 			klausur.kurse = klausuren.stream().map(manager::kursKurzbezeichnungByKursklausur).collect(Collectors.joining("~"));
 			klausur.name = klausur.kurse;
 			klausur.text = klausur.kurse;
 
-			final List<SchuelerListeEintrag> schueler = manager.schuelerklausurGetMengeByRaum(raum).stream().map(sk -> sk.idSchueler).map(manager.getSchuelerMap()::get).toList();
-			klausur.schueler = schueler.stream().map(s -> getUntisSchuelerName(s.id, s.nachname, s.vorname, s.geburtsdatum)).collect(Collectors.joining("~"));
+			final List<Long> schueler = manager.schuelerklausurGetMengeByRaum(raum).stream().map(sk -> sk.idSchueler).toList();
+			klausur.schueler = schueler.stream().map(s -> getUntisSchuelerName(s)).collect(Collectors.joining("~"));
 
 			result.add(klausur);
 		}
@@ -1213,8 +1219,8 @@ public final class DataUntis {
 	 *
 	 * @throws ApiOperationException   wenn ein Fehler beim Erstellen des Exportes auftritt
 	 */
-	public static Response exportGPU017(final DBEntityManager conn, final Logger logger, final long idSchuljahresabschnitt, final String gpu002) throws ApiOperationException {
-		final @NotNull String daten = getGPU017bySchuljahresabschnitt(conn, logger, idSchuljahresabschnitt, gpu002);
+	public static Response exportGPU017(final DBEntityManager conn, final Logger logger, final long idSchuljahresabschnitt, final InputStream gpu002) throws ApiOperationException {
+		final @NotNull String daten = getGPU017bySchuljahresabschnitt(conn, logger, idSchuljahresabschnitt, JSONMapper.toString(gpu002));
 		return Response.ok(daten).header("Content-Disposition", "attachment; filename=\"GPU017.txt\"").build();
 	}
 
@@ -1345,7 +1351,7 @@ public final class DataUntis {
 			for (final DTOSchueler dtoSchueler : dtosSchueler) {
 				if (datenManager.schuelerGetListeOfFachwahlen(dtoSchueler.ID).isEmpty())
 					continue;
-				final String schuelerName = getUntisSchuelerName(dtoSchueler.ID, dtoSchueler.Nachname, dtoSchueler.Vorname, dtoSchueler.Geburtsdatum);
+				final String schuelerName = getUntisSchuelerName(dtoSchueler.ID);
 
 				for (final GostBlockungsergebnisKurs k : ergebnisManager.getOfSchuelerKursmenge(dtoSchueler.ID)) {
 					final UntisGPU015 dto = new UntisGPU015();

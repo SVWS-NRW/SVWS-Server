@@ -1,5 +1,7 @@
 package de.svws_nrw.api.server;
 
+import java.io.InputStream;
+
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 import de.svws_nrw.core.data.SimpleOperationResponse;
@@ -441,7 +443,7 @@ public class APIDatenaustausch {
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	public Response exportUntisKlausurenGPU017(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@RequestBody(description = "Die Liste von GostKlausurraumRich-Objekten, die die zuzuweisenden GostSchuelerklausurTermine-IDs enthalten.", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-			schema = @Schema(implementation = String.class))) final String gpu002,
+			schema = @Schema(implementation = String.class))) final InputStream gpu002,
 			@Context final HttpServletRequest request) {
 		final Logger logger = new Logger();
 		final LogConsumerList log = new LogConsumerList();
