@@ -73,7 +73,7 @@
 	});
 
 	function textStatistikJahrgang(jahrgang: Jahrgaenge | null) {
-		const jahrgangEintrag = jahrgang === null ? null : jahrgang.daten(props.schuljahr);
+		const jahrgangEintrag = (jahrgang === null) ? null : jahrgang.daten(props.schuljahr);
 		if (jahrgangEintrag === null)
 			return 'JU - Jahrgangsübergreifend';
 		return jahrgangEintrag.kuerzel + " - " + jahrgangEintrag.text;

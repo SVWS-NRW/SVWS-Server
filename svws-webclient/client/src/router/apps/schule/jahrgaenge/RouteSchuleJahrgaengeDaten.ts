@@ -24,7 +24,7 @@ export class RouteSchuleJahrgaengeDaten extends RouteNode<any, RouteSchuleJahrga
 		return {
 			schuljahr: routeApp.data.aktAbschnitt.value.schuljahr,
 			schulform: api.schulform,
-			jahrgangListeManager: () => routeSchuleJahrgaenge.data.jahrgangListeManager,
+			jahrgangListeManager: () => routeSchuleJahrgaenge.data.manager,
 			patch: routeSchuleJahrgaenge.data.patch,
 		};
 	}

@@ -1,8 +1,4 @@
-import type { TabManager, ViewType } from "@ui";
 import type { JahrgangListeManager } from "@core";
+import type { RouteAuswahlProps } from "~/router/RouteAuswahlNode";
 
-export interface JahrgaengeAppProps {
-	jahrgangListeManager: () => JahrgangListeManager;
-	tabManager: () => TabManager;
-	activeViewType: ViewType;
-}
+export type JahrgaengeAppProps = RouteAuswahlProps<JahrgangListeManager>

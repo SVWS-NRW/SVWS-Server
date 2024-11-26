@@ -2,10 +2,11 @@
 	<div class="page--content">
 		<div class="flex flex-col gap-y-16 lg:gap-y-16" v-if="ServerMode.DEV.checkServerMode(serverMode)">
 			<svws-ui-action-button title="Löschen" description="Ausgewählte Jahrgänge werden gelöscht." icon="i-ri-delete-bin-line"
-				:action-function="entferneJahrgaenge" action-label="Löschen" :is-loading="loading" :is-active="currentAction === 'delete'"
-				:action-disabled="!preConditionCheck[0]" @click="toggleDeleteJahrgaenge">
-				<span v-if="preConditionCheck[0]">Alle ausgewählten Jahrgänge sind bereit zum Löschen.</span>
-				<template v-else v-for="message in preConditionCheck[1]" :key="message">
+				:action-function="deleteJahrgaenge" action-label="Löschen" :is-loading="loading" :is-active="currentAction === 'delete'"
+				:action-disabled="true" @click="toggleDeleteJahrgaenge">
+				<!-- TODO: Vollständige Vorbedingungsprüfung für das Löschen einbauen -->
+				<span v-if="false">Alle ausgewählten Jahrgänge sind bereit zum Löschen.</span>
+				<template v-else v-for="message in []" :key="message">
 					<span class="text-error"> {{ message }} <br> </span>
 				</template>
 			</svws-ui-action-button>
@@ -37,12 +38,6 @@
 	const logs = ref<List<string | null> | undefined>();
 	const status = ref<boolean | undefined>();
 
-	const preConditionCheck = computed(() => {
-		if (currentAction.value === 'delete')
-			return props.deleteJahrgaengeCheck();
-		return [false, []];
-	})
-
 	function toggleDeleteJahrgaenge() {
 		currentAction.value = currentAction.value === 'delete' ? '' : 'delete';
 	}
@@ -53,10 +48,10 @@
 		status.value = undefined;
 	}
 
-	async function entferneJahrgaenge() {
+	async function deleteJahrgaenge() {
 		loading.value = true;
 
-		const [delStatus, logMessages] = await props.deleteJahrgaenge();
+		const [delStatus, logMessages] = await props.delete();
 		logs.value = logMessages;
 		status.value = delStatus;
 		currentAction.value = '';

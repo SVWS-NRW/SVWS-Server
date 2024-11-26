@@ -29,9 +29,8 @@ export class RouteSchuleJahrgangGruppenprozesse extends RouteNode<any, RouteSchu
 			serverMode: api.mode,
 			schulform: api.schulform,
 			schulgliederungen: api.schulgliederungen,
-			jahrgangListeManager: () => routeSchuleJahrgaenge.data.jahrgangListeManager,
-			deleteJahrgaenge: routeSchuleJahrgaenge.data.deleteJahrgaenge,
-			deleteJahrgaengeCheck: routeSchuleJahrgaenge.data.deleteJahrgaengeCheck,
+			jahrgangListeManager: () => routeSchuleJahrgaenge.data.manager,
+			delete: routeSchuleJahrgaenge.data.delete,
 		};
 	}
 

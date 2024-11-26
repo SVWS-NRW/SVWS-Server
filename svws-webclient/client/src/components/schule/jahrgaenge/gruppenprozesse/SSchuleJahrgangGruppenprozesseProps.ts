@@ -5,6 +5,5 @@ export interface SchuleJahrgangGruppenprozesseProps {
 	schulform: Schulform;
 	schulgliederungen: List<Schulgliederung>;
 	jahrgangListeManager: () => JahrgangListeManager;
-	deleteJahrgaenge: () => Promise<[boolean, List<string | null>]>;
-	deleteJahrgaengeCheck: () => [boolean, List<string>];
+	delete: () => Promise<[boolean, List<string | null>]>;
 }
