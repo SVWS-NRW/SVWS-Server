@@ -22,7 +22,7 @@ public class ENMDaten {
 	/** Die Revision des ENM-Datenformates, um zu überprüfen, ob die Datei in dem richtigen Format vorliegt (-1 für Entwickler-Revisionen und ansonsten aufsteigend ab 1 */
 	@Schema(description = "Die Revision des ENM-Datenformates, um zu überprüfen, ob die Datei in dem richtigen Format vorliegt (-1 für Entwickler-Revisionen und ansonsten aufsteigend ab 1.",
 			example = "1")
-	public int enmRevision = -1;
+	public int enmRevision = 1;
 
 	/** Die Schulnummer, für welche die ENM-Daten generiert wurden. */
 	@Schema(description = "Die Schulnummer, für welche die ENM-Daten generiert wurden.", example = "100815")
