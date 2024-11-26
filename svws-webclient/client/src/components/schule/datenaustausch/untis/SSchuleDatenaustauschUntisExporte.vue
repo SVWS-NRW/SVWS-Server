@@ -11,7 +11,10 @@
 		</div>
 
 		<!-- Weitere Eingabemöglichkeiten für den zuvor gewählten Untis-Export (rechte Seite - spezielle Ansicht nach Auswahl) -->
-		<div v-if="daten !== null" class="w-full h-full overflow-hidden flex flex-col gap-4">
+		<div v-if="gpusBrauchenGPU002.includes(aktuell)">
+			<input type="file" accept=".txt" @change="importGPU002">
+		</div>
+		<div v-if="(daten !== null) && (!gpusBrauchenGPU002.includes(aktuell) || (gpu002 !== null))" class="w-full h-full overflow-hidden flex flex-col gap-4">
 			<!-- Angabe des Dateinamen und Speichermöglichkeit -->
 			<div class="flex flex-row gap-2 mt-2">
 				<div class="grow max-w-128">
@@ -41,7 +44,7 @@
 	type GPU = {
 		title: string,
 		subtitle: string,
-		export: () => Promise<string>,
+		export: (gpu002? : string) => Promise<string>,
 	};
 
 	const klassenGPU003 = <GPU>({
@@ -71,19 +74,37 @@
 	const klausurenGPU017 = <GPU>({
 		title: 'Klausuren',
 		subtitle: 'GPU017.txt',
-		export: async () => await props.exportUntisKlausurenGPU017(),
+		export: async (gpu002 : string) => await props.exportUntisKlausurenGPU017(gpu002),
 	});
 
 	const gpus = [ klassenGPU003, lehrerGPU004, faecherGPU006, schuelerGPU010, klausurenGPU017 ];
 
+	const gpusBrauchenGPU002 = [ klausurenGPU017 ];
+
 	const aktuell = shallowRef<GPU>(klassenGPU003);
 	const filename = ref<string>('');
+	const gpu002 = shallowRef<string | null>(null);
 	const daten = shallowRef<string | null>(null);
 
 	async function onSelect(gpu : GPU): Promise<void> {
 		aktuell.value = gpu;
 		filename.value = gpu.subtitle;
-		daten.value = await gpu.export();
+		if (gpusBrauchenGPU002.includes(aktuell.value))
+			daten.value = null;
+		else
+			daten.value = await gpu.export();
+		gpu002.value = null;
+	}
+
+	async function importGPU002(event: Event) {
+		const target = event.target as HTMLInputElement;
+		if ((target.files === null) || (target.files.length === 0))
+			return;
+		const file = target.files.item(0);
+		if (!file)
+			return;
+		gpu002.value = await file.text();
+		daten.value = await aktuell.value.export(gpu002.value);
 	}
 
 	function onSave(): void {
