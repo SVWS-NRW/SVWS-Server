@@ -225,9 +225,10 @@ public final class DataENMDaten extends DataManager<Long> {
 					final DTOKlassen klasse = mapKlassen.get(la.Klassen_ID);
 					if (klasse != null) {
 						final List<DTOKlassenLeitung> klassenleitungen = mapKlassenLeitung.get(la.Klassen_ID);
-						for (final DTOKlassenLeitung klassenleitung : klassenleitungen)
-							if (klassenleitung.Lehrer_ID == dtoLehrer.ID)
-								return true;
+						if (!klassenleitungen.isEmpty())
+							for (final DTOKlassenLeitung klassenleitung : klassenleitungen)
+								if (klassenleitung.Lehrer_ID == dtoLehrer.ID)
+									return true;
 					}
 				}
 				// ... und ein Lernabschnitt, wo der Lehrer Fachlehrer ist
