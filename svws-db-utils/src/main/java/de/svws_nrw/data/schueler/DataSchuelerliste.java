@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -110,8 +111,8 @@ public final class DataSchuelerliste extends DataManager<Long> {
 			final DTOSchuelerLernabschnittsdaten aktAbschnitt, final Map<Long, DTOJahrgang> mapJahrgaenge, final Schulform schulform) {
 		final SchuelerListeEintrag eintrag = new SchuelerListeEintrag();
 		eintrag.id = schueler.ID;
-		eintrag.nachname = (schueler.Nachname == null) ? "" : schueler.Nachname;
-		eintrag.vorname = (schueler.Vorname == null) ? "" : schueler.Vorname;
+		eintrag.nachname = Objects.toString(schueler.Nachname, "");
+		eintrag.vorname = Objects.toString(schueler.Vorname, "");
 		eintrag.geschlecht = (schueler.Geschlecht == null) ? "" : schueler.Geschlecht.kuerzel;
 		eintrag.geburtsdatum = schueler.Geburtsdatum;
 		eintrag.idSchuljahresabschnittSchueler = schueler.Schuljahresabschnitts_ID;
@@ -130,7 +131,7 @@ public final class DataSchuelerliste extends DataManager<Long> {
 				eintrag.jahrgang = "";
 			} else {
 				eintrag.idJahrgang = jg.ID;
-				eintrag.jahrgang = jg.ASDJahrgang;
+				eintrag.jahrgang = Objects.toString(jg.ASDJahrgang, "");
 			}
 			if (aktAbschnitt.Schulgliederung == null) {
 				final Schulgliederung sgl = Schulgliederung.getDefault(schulform);
