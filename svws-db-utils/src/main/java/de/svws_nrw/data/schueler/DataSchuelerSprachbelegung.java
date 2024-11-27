@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -351,30 +352,31 @@ public final class DataSchuelerSprachbelegung extends DataManagerRevised<Long, D
 
 
 	/**
-	 * Ermittelt die Liste der Sprachbelegungen für die angegebenen IDs von Schülern.
+	 * Ermittelt die Map der Sprachbelegungen für die angegebenen IDs von Schülern.
 	 *
 	 * @param conn          die Datenbankverbindung
 	 * @param idsSchueler   die IDs der Schüler
 	 *
-	 * @return die Liste der Sprachbelegungen
+	 * @return die Map der Sprachbelegungen
 	 */
-	public static List<Sprachbelegung> getListBySchuelerIDs(final @NotNull DBEntityManager conn, final @NotNull List<Long> idsSchueler) {
+	public static Map<Long, List<Sprachbelegung>> getMapBySchuelerIDs(final @NotNull DBEntityManager conn, final @NotNull List<Long> idsSchueler) {
 		if (idsSchueler.isEmpty())
-			return Collections.emptyList();
-		final Map<Long, DTOSchueler> mapSchueler = conn.queryByKeyList(DTOSchueler.class, idsSchueler).stream().collect(Collectors.toMap(s -> s.ID, s -> s));
-		if (mapSchueler.isEmpty())
-			return Collections.emptyList();
+			return Collections.emptyMap();
+		final List<DTOSchueler> listSchueler = conn.queryByKeyList(DTOSchueler.class, idsSchueler.stream().filter(Objects::nonNull).toList());
+		if (listSchueler.isEmpty())
+			return Collections.emptyMap();
+		final List<Long> listIdsDtoSchueler = listSchueler.stream().map(s -> s.ID).distinct().toList();
 		final List<DTOSchuelerSprachenfolge> listSprachenfolgen =
-				conn.queryList(DTOSchuelerSprachenfolge.QUERY_LIST_BY_SCHUELER_ID, DTOSchuelerSprachenfolge.class, idsSchueler);
+				conn.queryList(DTOSchuelerSprachenfolge.QUERY_LIST_BY_SCHUELER_ID, DTOSchuelerSprachenfolge.class, listIdsDtoSchueler);
 		if (listSprachenfolgen.isEmpty())
-			return Collections.emptyList();
-		final List<Sprachbelegung> result = new ArrayList<>();
-		for (final DTOSchuelerSprachenfolge dtoFolge : listSprachenfolgen) {
-			final DTOSchueler dtoSchueler = mapSchueler.get(dtoFolge.Schueler_ID);
-			if (dtoSchueler == null)
-				continue;
-			result.add(mapInternal(conn, dtoSchueler, dtoFolge));
-		}
+			return listIdsDtoSchueler.stream().collect(Collectors.toMap(s -> s, s -> new ArrayList<>()));
+		// Erstelle die Maps der Schüler und der Sprachbelegungen zur Schüler-ID.
+		final Map<Long, DTOSchueler> mapSchueler = listSchueler.stream().collect(Collectors.toMap(s -> s.ID, s -> s));
+		final Map<Long, List<Sprachbelegung>> result = listSprachenfolgen.stream().collect(Collectors.groupingBy(sf -> sf.Schueler_ID,
+				Collectors.mapping(sf -> mapInternal(conn, mapSchueler.get(sf.Schueler_ID), sf), Collectors.toList())));
+		// Ergänze leere Liste für Schüler ohne Sprachen in der Sprachenfolge.
+		for (final DTOSchueler dtoSchueler : listSchueler)
+			result.computeIfAbsent(dtoSchueler.ID, s -> new ArrayList<>());
 		return result;
 	}
 

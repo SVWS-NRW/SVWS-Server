@@ -1,29 +1,29 @@
 package de.svws_nrw.module.reporting.proxytypes.schueler.lernabschnitte;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
 import de.svws_nrw.core.data.klassen.KlassenDaten;
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittsdaten;
-import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.data.jahrgaenge.DataJahrgangsdaten;
 import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
-import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
+
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLeistungsdaten;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import de.svws_nrw.module.reporting.proxytypes.jahrgang.ProxyReportingJahrgang;
 import de.svws_nrw.module.reporting.proxytypes.lehrer.ProxyReportingLehrer;
-import de.svws_nrw.module.reporting.proxytypes.schueler.ProxyReportingSchueler;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
 import de.svws_nrw.module.reporting.types.klasse.ReportingKlasse;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
-import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLernabschnitt;
-import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 
 /**
  * Proxy-Klasse im Rahmen des Reportings für Daten vom Typ Lernabschnitt und erweitert die Klasse {@link ReportingSchuelerLernabschnitt}.
@@ -81,7 +81,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 				schuelerLernabschnittsdaten.istWiederholung,
 				null,
 				schuelerLernabschnittsdaten.Klassenart,
-				null,
+				new ArrayList<>(),
 				null,
 				schuelerLernabschnittsdaten.noteDurchschnitt,
 				schuelerLernabschnittsdaten.noteLernbereichGSbzwAL,
@@ -105,11 +105,42 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 				schuelerLernabschnittsdaten.bemerkungen.zeugnisLELS);
 
 		this.reportingRepository = reportingRepository;
+
 		super.foerderschwerpunkt1 = this.reportingRepository.katalogFoerderschwerpunkte().get(schuelerLernabschnittsdaten.foerderschwerpunkt1ID);
 		super.foerderschwerpunkt2 = this.reportingRepository.katalogFoerderschwerpunkte().get(schuelerLernabschnittsdaten.foerderschwerpunkt2ID);
 
+		super.schuljahresabschnitt = this.reportingRepository.schuljahresabschnitt(super.idSchuljahresabschnitt());
+
+		super.schueler = this.reportingRepository.mapSchueler().get(schuelerLernabschnittsdaten.schuelerID);
+
+		schuelerLernabschnittsdaten.leistungsdaten.forEach(
+				l -> this.reportingRepository.mapAlleLeistungsdaten().add(this.schueler().id(), this.id(), l.id, l));
+
 		ersetzeStringNullDurchEmpty(this, false);
 	}
+
+
+	// ##### Hash und Equals Methoden #####
+
+	/**
+	 * Hashcode der Klasse
+	 * @return Hashcode der Klasse
+	 */
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
+	/**
+	 * Equals der Klasse
+	 * @param obj Das Vergleichsobjekt
+	 * @return    true, falls es das gleiche Objekt ist, andernfalls false.
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		return super.equals(obj);
+	}
+
 
 
 	/**
@@ -205,48 +236,23 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 		return super.klasse();
 	}
 
-	// TODO Klasse für die Leistungsdaten für die Reporting erzeugen und dann die Daten im überschriebenen Getter hier dynamisch nachladen.
+	/**
+	 * Stellt die Leistungsdaten zur Verfügung, die in diesem Lernabschnitt dem Schüler zugeordnet sind.
+	 *
+	 * @return Die Leistungsdaten des Lernabschnitts.
+	 */
+	@Override
+	public List<ReportingSchuelerLeistungsdaten> leistungsdaten() {
+		if (super.leistungsdaten == null) {
+			super.leistungsdaten = this.reportingRepository.mapAlleLeistungsdaten()
+					.get12(this.schueler().id(), this.id()).stream()
+					.map(l -> (ReportingSchuelerLeistungsdaten) new ProxyReportingSchuelerLeistungsdaten(reportingRepository, this, l))
+					.toList();
+		}
+		return super.leistungsdaten;
+	}
 
 	// TODO Klasse für die Nachprüfungen für die Reporting erzeugen und dann die Daten im überschriebenen Getter hier dynamisch nachladen.
-
-	/**
-	 * Stellt die Daten des Schülers zur Verfügung, dem dieser Lernabschnitt gehört.
-	 *
-	 * @return Daten des Schülers
-	 */
-	@Override
-	public ReportingSchueler schueler() {
-		if ((super.schueler() == null) && (super.idSchueler() >= 0)) {
-			super.schueler =
-					new ProxyReportingSchueler(
-							reportingRepository,
-							reportingRepository.mapSchuelerStammdaten().computeIfAbsent(super.idSchueler(), l -> {
-								try {
-									return new DataSchuelerStammdaten(reportingRepository.conn()).getStammdaten(reportingRepository.conn(), super.idSchueler());
-								} catch (final ApiOperationException e) {
-									ReportingExceptionUtils.putStacktraceInLog(
-											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Schülers.", e,
-											reportingRepository.logger(), LogLevel.INFO, 0);
-									return new SchuelerStammdaten();
-								}
-							}));
-		}
-		return super.schueler();
-	}
-
-	/**
-	 * Stellt die Daten des Schuljahresabschnitts zur Verfügung, in dem dieser Lernabschnitt liegt.
-	 *
-	 * @return Daten des Schuljahresabschnitts
-	 */
-	@Override
-	public ReportingSchuljahresabschnitt schuljahresabschnitt() {
-		if ((super.schuljahresabschnitt() == null) && (super.idSchuljahresabschnitt() >= 0)) {
-			super.schuljahresabschnitt = this.reportingRepository.schuljahresabschnitt(super.idSchuljahresabschnitt());
-		}
-		return super.schuljahresabschnitt();
-	}
-
 
 	/**
 	 * Stellt die Daten des Sonderpädagogen zur Verfügung, der in diesem Lernabschnitt dem Schüler zugeordnet ist.

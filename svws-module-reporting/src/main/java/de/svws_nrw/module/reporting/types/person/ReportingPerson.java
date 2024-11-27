@@ -606,7 +606,10 @@ public class ReportingPerson extends ReportingBaseType {
 	 * @return Inhalt des Feldes vornamen
 	 */
 	public String vornamen() {
-		return vornamen;
+		if (!vornamen.isEmpty())
+			return vornamen;
+		else
+			return vorname;
 	}
 
 	/**

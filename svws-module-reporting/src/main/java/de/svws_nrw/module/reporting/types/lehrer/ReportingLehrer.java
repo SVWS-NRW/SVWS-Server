@@ -73,6 +73,30 @@ public class ReportingLehrer extends ReportingPerson {
 
 
 
+	/**
+	 * Hashcode der Klasse
+	 * @return Hashcode der Klasse
+	 */
+	public int hashCode() {
+		return 31 + Long.hashCode(id);
+	}
+
+	/**
+	 * Equals der Klasse
+	 * @param obj Das Vergleichsobjekt
+	 * @return	true, falls es das gleiche Objekt ist, andernfalls false.
+	 */
+	public boolean equals(final Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof final ReportingLehrer other))
+			return false;
+		return (id == other.id);
+	}
+
+
 	// ##### Berechnete Felder #####
 
 	/**

@@ -17,7 +17,9 @@ import de.svws_nrw.module.reporting.types.schueler.gost.laufbahnplanung.Reportin
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLernabschnitt;
 import de.svws_nrw.module.reporting.types.schueler.sprachen.ReportingSchuelerSprachbelegung;
 
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ Schüler.</p>
@@ -35,6 +37,9 @@ public class ReportingSchueler extends ReportingPerson {
 
 	/** Daten des ausgewählten Lernabschnitts. */
 	protected ReportingSchuelerLernabschnitt auswahlLernabschnitt;
+
+	/** Status-Flags zu bereits aus der Datenbank geladenen Daten. */
+	protected EnumSet<ReportingSchuelerDatenstatus> datenstatus;
 
 	/** Gibt an, ob die Konfession bei dem Schülerdatensatz auf dem Zeugnis erscheinen soll. */
 	protected boolean druckeKonfessionAufZeugnisse;
@@ -138,6 +143,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @param anrede Die Anrede des Schülers.
 	 * @param aufnahmedatum Das Aufnahmedatum des Schülers.
 	 * @param auswahlLernabschnitt Daten des ausgewählten Lernabschnitts.
+	 * @param datenstatus Status-Flags zu bereits aus der Datenbank geladenen Date
 	 * @param druckeKonfessionAufZeugnisse Gibt an, ob die Konfession bei dem Schülerdatensatz auf dem Zeugnis erscheinen soll.
 	 * @param emailPrivat Die private Email-Adresse des Schülers.
 	 * @param emailSchule Die schulische E-Mail-Adresse des Schülers.
@@ -192,7 +198,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 */
 	public ReportingSchueler(final ReportingSchuelerLernabschnitt aktuellerLernabschnitt, final String anmeldedatum,
 			final String anrede, final String aufnahmedatum, final ReportingSchuelerLernabschnitt auswahlLernabschnitt,
-			final boolean druckeKonfessionAufZeugnisse,
+			final EnumSet<ReportingSchuelerDatenstatus> datenstatus, final boolean druckeKonfessionAufZeugnisse,
 			final String emailPrivat, final String emailSchule, final boolean erhaeltMeisterBAFOEG, final boolean erhaeltSchuelerBAFOEG,
 			final List<ReportingErzieher> erzieher,
 			final List<ReportingErzieherArtGruppe> erzieherArtGruppen, final String externeSchulNr, final Long fahrschuelerArtID, final String foto,
@@ -216,6 +222,7 @@ public class ReportingSchueler extends ReportingPerson {
 		this.anmeldedatum = anmeldedatum;
 		this.aufnahmedatum = aufnahmedatum;
 		this.auswahlLernabschnitt = auswahlLernabschnitt;
+		this.datenstatus = datenstatus;
 		this.druckeKonfessionAufZeugnisse = druckeKonfessionAufZeugnisse;
 		this.erhaeltMeisterBAFOEG = erhaeltMeisterBAFOEG;
 		this.erhaeltSchuelerBAFOEG = erhaeltSchuelerBAFOEG;
@@ -269,6 +276,31 @@ public class ReportingSchueler extends ReportingPerson {
 	}
 
 
+	// ##### Hash und Equals Methoden #####
+
+	/**
+	 * Hashcode der Klasse
+	 * @return Hashcode der Klasse
+	 */
+	public int hashCode() {
+		return 31 + Long.hashCode(id);
+	}
+
+	/**
+	 * Equals der Klasse
+	 * @param obj Das Vergleichsobjekt
+	 * @return	true, falls es das gleiche Objekt ist, andernfalls false.
+	 */
+	public boolean equals(final Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof final ReportingSchueler other))
+			return false;
+		return (id == other.id);
+	}
+
 
 	// ##### Getter #####
 
@@ -306,6 +338,15 @@ public class ReportingSchueler extends ReportingPerson {
 	 */
 	public ReportingSchuelerLernabschnitt auswahlLernabschnitt() {
 		return auswahlLernabschnitt;
+	}
+
+	/**
+	 * Status-Flags zu bereits aus der Datenbank geladenen Daten.
+	 *
+	 * @return Inhalt des Feldes datenstatus
+	 */
+	public Set<ReportingSchuelerDatenstatus> datenstatus() {
+		return datenstatus;
 	}
 
 	/**

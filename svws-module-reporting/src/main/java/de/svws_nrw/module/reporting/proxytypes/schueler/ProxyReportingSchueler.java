@@ -2,6 +2,7 @@ package de.svws_nrw.module.reporting.proxytypes.schueler;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,7 +11,6 @@ import de.svws_nrw.core.data.erzieher.ErzieherStammdaten;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittsdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
-import de.svws_nrw.core.data.schueler.Sprachbelegung;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
@@ -21,6 +21,7 @@ import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerSprachbelegung;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.proxytypes.schueler.erzieher.ProxyReportingErzieher;
+import de.svws_nrw.module.reporting.types.schueler.ReportingSchuelerDatenstatus;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ReportingErzieher;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ReportingErzieherArtGruppe;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
@@ -57,6 +58,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 				"",
 				schuelerStammdaten.aufnahmedatum,
 				null,
+				EnumSet.noneOf(ReportingSchuelerDatenstatus.class),
 				schuelerStammdaten.druckeKonfessionAufZeugnisse,
 				schuelerStammdaten.emailPrivat,
 				schuelerStammdaten.emailSchule,
@@ -89,7 +91,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 				schuelerStammdaten.istSchulpflichtErfuellt,
 				schuelerStammdaten.istVolljaehrig,
 				schuelerStammdaten.keineAuskunftAnDritte,
-				new ArrayList<>(),
+				null,
 				schuelerStammdaten.nachname,
 				schuelerStammdaten.religionabmeldung,
 				schuelerStammdaten.religionanmeldung,
@@ -113,14 +115,36 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 
 		super.religion = this.reportingRepository.katalogReligionen().get(schuelerStammdaten.religionID);
 
-		// Sprachbelegungen ermitteln
-		final List<Sprachbelegung> sprachbelegungen = new DataSchuelerSprachbelegung(reportingRepository.conn(), super.id()).getListSprachbelegungen();
-		super.sprachbelegungen = sprachbelegungen.stream()
-				.map(sb -> ((ReportingSchuelerSprachbelegung) new ProxyReportingSchuelerSprachbelegung(reportingRepository, sb))).toList();
-
 		// Füge Stammdaten des Schülers für weitere Verwendung in der Map im Repository hinzu.
-		this.reportingRepository.mapSchuelerStammdaten().putIfAbsent(super.id(), schuelerStammdaten);
+		this.reportingRepository.mapSchuelerStammdaten().put(super.id(), schuelerStammdaten);
+
+		ersetzeStringNullDurchEmpty(this, true);
+
+		this.reportingRepository.mapSchueler().put(this.id(), this);
 	}
+
+
+	// ##### Hash und Equals Methoden #####
+
+	/**
+	 * Hashcode der Klasse
+	 * @return Hashcode der Klasse
+	 */
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
+	/**
+	 * Equals der Klasse
+	 * @param obj Das Vergleichsobjekt
+	 * @return    true, falls es das gleiche Objekt ist, andernfalls false.
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		return super.equals(obj);
+	}
+
 
 
 	/**
@@ -140,21 +164,9 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	 */
 	@Override
 	public ReportingSchuelerLernabschnitt aktuellerLernabschnitt() {
-		if (super.aktuellerLernabschnitt() == null) {
-			if (this.reportingRepository.mapAktuelleLernabschnittsdaten().containsKey(this.id())) {
-				super.aktuellerLernabschnitt = new ProxyReportingSchuelerLernabschnitt(this.reportingRepository,
-						this.reportingRepository.mapAktuelleLernabschnittsdaten().get(this.id()));
-			} else {
-				if (!lernabschnitte().isEmpty()) {
-					final List<ReportingSchuelerLernabschnitt> tmpListAbschnitte =
-							lernabschnitte().stream().filter(a -> a.wechselNr() == 0)
-									.filter(a -> a.schuljahresabschnitt().id() == this.reportingRepository.aktuellerSchuljahresabschnitt().id()).toList();
-					if (!tmpListAbschnitte.isEmpty())
-						super.aktuellerLernabschnitt = tmpListAbschnitte.getFirst();
-				}
-			}
-		}
-		return super.aktuellerLernabschnitt();
+		if (super.aktuellerLernabschnitt == null)
+			lernabschnitte();
+		return super.aktuellerLernabschnitt;
 	}
 
 	/**
@@ -164,21 +176,9 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	 */
 	@Override
 	public ReportingSchuelerLernabschnitt auswahlLernabschnitt() {
-		if (super.auswahlLernabschnitt() == null) {
-			if (this.reportingRepository.mapAuswahlLernabschnittsdaten().containsKey(this.id())) {
-				super.auswahlLernabschnitt = new ProxyReportingSchuelerLernabschnitt(this.reportingRepository,
-						this.reportingRepository.mapAuswahlLernabschnittsdaten().get(this.id()));
-			} else {
-				if (!lernabschnitte().isEmpty()) {
-					final List<ReportingSchuelerLernabschnitt> tmpListAbschnitte =
-							lernabschnitte().stream().filter(a -> a.wechselNr() == 0)
-									.filter(a -> a.schuljahresabschnitt().id() == this.reportingRepository.auswahlSchuljahresabschnitt().id()).toList();
-					if (!tmpListAbschnitte.isEmpty())
-						super.auswahlLernabschnitt = tmpListAbschnitte.getFirst();
-				}
-			}
-		}
-		return super.auswahlLernabschnitt();
+		if (super.auswahlLernabschnitt == null)
+			lernabschnitte();
+		return super.auswahlLernabschnitt;
 	}
 
 	/**
@@ -188,12 +188,8 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	 */
 	@Override
 	public List<ReportingErzieher> erzieher() {
-		if ((super.erzieher == null) || super.erzieher.isEmpty()) {
-			super.erzieher = new ArrayList<>();
-			super.erzieherArtGruppen = new ArrayList<>();
-			initErzieher();
-		}
-		return super.erzieher();
+		getErzieher();
+		return super.erzieher;
 	}
 
 	/**
@@ -203,50 +199,45 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	 */
 	@Override
 	public List<ReportingErzieherArtGruppe> erzieherArtGruppen() {
-		if ((super.erzieherArtGruppen == null) || super.erzieherArtGruppen.isEmpty()) {
-			super.erzieherArtGruppen = new ArrayList<>();
-			initErzieher();
-		}
-		return super.erzieherArtGruppen();
+		getErzieher();
+		return super.erzieherArtGruppen;
 	}
 
 	/**
 	 * Hilfsfunktion, die die Erzieherdaten ggf. nachlädt und die Erzieher ggf. gruppiert.
 	 */
-	private void initErzieher() {
-		if ((super.erzieher == null) || super.erzieher.isEmpty()) {
-			if (this.reportingRepository.mapErzieherStammdaten().isEmpty() || !this.reportingRepository.mapErzieherStammdaten().containsKey(this.id())) {
+	private void getErzieher() {
+		if (!super.datenstatus.contains(ReportingSchuelerDatenstatus.ERZIEHER)) {
+			if (!this.reportingRepository.mapErzieherStammdaten().containsKey(this.id())) {
 				try {
-					// Bisher wurden keine Erzieherdaten aus der DB geladen. Lade nun alle Erzieher zu den bereits geladenen Schülerstammdaten in einem Vorgang aus der DB.
-					final List<Long> idsSchuelerSchuelerStammdaten =
-							new ArrayList<>(this.reportingRepository.mapSchuelerStammdaten().keySet().stream().toList());
-					final List<Long> idsSchuelerErzieherStammdaten =
-							new ArrayList<>(this.reportingRepository.mapErzieherStammdaten().keySet().stream().toList());
-					idsSchuelerSchuelerStammdaten.removeIf(idsSchuelerErzieherStammdaten::contains);
+					// Keine passenden Erzieherdaten gefunden. Lade nun alle Erzieherdaten aus der DB zu Schülern, bei denen noch keine Erzieher vorhanden sind.
+					final List<Long> idsSchuelerOhneErzieher = this.reportingRepository.mapSchueler().values().stream()
+							.filter(s -> (!s.datenstatus().contains(ReportingSchuelerDatenstatus.ERZIEHER))).map(ReportingSchueler::id).toList();
 					final List<ErzieherStammdaten> erzieherStammdaten =
-							new DataErzieherStammdaten(this.reportingRepository.conn()).getFromIds(idsSchuelerSchuelerStammdaten);
+							new DataErzieherStammdaten(this.reportingRepository.conn()).getFromIds(idsSchuelerOhneErzieher);
 					if (!erzieherStammdaten.isEmpty())
 						this.reportingRepository.mapErzieherStammdaten().putAll(erzieherStammdaten.stream().collect(Collectors.groupingBy(e -> e.idSchueler)));
 				} catch (final ApiOperationException e) {
 					ReportingExceptionUtils.putStacktraceInLog(
 							"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Erzieher der bereits eingelesenen Schülerstammdaten.",
-							e,
-							reportingRepository.logger(), LogLevel.INFO, 0);
+							e, reportingRepository.logger(), LogLevel.INFO, 0);
 					return;
 				}
 			}
 
-			final List<ErzieherStammdaten> tempErzieherStammdaten = this.reportingRepository.mapErzieherStammdaten().get(this.id());
-			if ((tempErzieherStammdaten == null) || tempErzieherStammdaten.isEmpty())
+			final List<ErzieherStammdaten> thisErzieherStammdaten = this.reportingRepository.mapErzieherStammdaten().get(this.id());
+			super.erzieher = new ArrayList<>();
+			if ((thisErzieherStammdaten == null) || thisErzieherStammdaten.isEmpty()) {
 				return;
-			super.erzieher.addAll(tempErzieherStammdaten.stream().map(e -> new ProxyReportingErzieher(this.reportingRepository, e, this)).toList());
-		}
+			}
+			super.erzieher.addAll(thisErzieherStammdaten.stream().map(e -> new ProxyReportingErzieher(this.reportingRepository, e, this)).toList());
 
-		if (((super.erzieher() != null) && !super.erzieher().isEmpty()) && ((super.erzieherArtGruppen == null) || super.erzieherArtGruppen.isEmpty())) {
-			final List<Long> idsArt = this.erzieher().stream().filter(re -> re.art() != null).map(re -> re.art().id()).distinct().toList();
+			// Erstelle die Gruppen der Erzieherarten.
+			final List<ReportingErzieher> erzieherMitArt = super.erzieher.stream().filter(re -> re.art() != null).toList();
+			final List<Long> idsArt = erzieherMitArt.stream().map(re -> re.art().id()).distinct().toList();
 
 			for (final Long idArt : idsArt) {
-				final List<ReportingErzieher> erzieherInGruppe = this.erzieher().stream().filter(re -> re.art().id() == idArt)
+				final List<ReportingErzieher> erzieherInGruppe = erzieherMitArt.stream().filter(re -> re.art().id() == idArt)
 						.sorted(Comparator.comparing(ReportingErzieher::anrede)
 								.thenComparing(ReportingErzieher::nachname)
 								.thenComparing(ReportingErzieher::vorname))
@@ -256,7 +247,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 			}
 
 			// Sonderfall, wenn bei Erziehern keine Art gesetzt wurde.
-			final List<ReportingErzieher> erzieherInGruppe = this.erzieher().stream().filter(re -> re.art() == null)
+			final List<ReportingErzieher> erzieherInGruppe = super.erzieher.stream().filter(re -> re.art() == null)
 					.sorted(Comparator.comparing(ReportingErzieher::anrede)
 							.thenComparing(ReportingErzieher::nachname)
 							.thenComparing(ReportingErzieher::vorname))
@@ -265,6 +256,8 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 				super.erzieherArtGruppen.add(new ReportingErzieherArtGruppe("---", erzieherInGruppe, -1, this, -1));
 
 			super.erzieherArtGruppen.sort(Comparator.comparing(ReportingErzieherArtGruppe::sortierung).thenComparing(ReportingErzieherArtGruppe::bezeichnung));
+
+			super.datenstatus.add(ReportingSchuelerDatenstatus.ERZIEHER);
 		}
 	}
 
@@ -292,7 +285,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 				}
 			}
 		}
-		return super.gostAbitur();
+		return super.gostAbitur;
 	}
 
 	/**
@@ -305,7 +298,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 		if (super.gostLaufbahnplanung() == null) {
 			super.gostLaufbahnplanung = new ProxyReportingSchuelerGostLaufbahnplanung(this.reportingRepository, this);
 		}
-		return super.gostLaufbahnplanung();
+		return super.gostLaufbahnplanung;
 	}
 
 	/**
@@ -315,22 +308,26 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	 */
 	@Override
 	public List<ReportingSchuelerLernabschnitt> lernabschnitte() {
-		if (super.lernabschnitte().isEmpty()) {
-			final List<SchuelerLernabschnittsdaten> schuelerLernabschnittsdaten = new ArrayList<>();
-			try {
-				schuelerLernabschnittsdaten.addAll(new DataSchuelerLernabschnittsdaten(this.reportingRepository().conn())
-						.getListFromSchuelerIDs(new ArrayList<>(List.of(this.id())), true));
-			} catch (final ApiOperationException e) {
-				ReportingExceptionUtils.putStacktraceInLog(
-						"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Lernabschnitte eines Schülers.", e,
-						reportingRepository.logger(), LogLevel.INFO, 0);
+		if (super.lernabschnitte == null) {
+			if (!this.reportingRepository.mapAlleLernabschnittsdaten().containsKey1(this.id())) {
+				// Wenn zum Schüler keine Lernabschnitte aus der DB gefunden wurden, dann müssen diese nachträglich geladen worden sein oder der Schüler hat keine
+				// Lernabschnitte. Prüfe auf Differenzen und lade nach.
+				getLernabschnitt();
 			}
+
+			// Die Lernabschnitte aller Schüler der Stammdatenabschnitte liegen nun vor. Filtere alle Lernabschnitte des Schülers heraus.
+			final List<SchuelerLernabschnittsdaten> schuelerLernabschnittsdaten =
+					new ArrayList<>(this.reportingRepository.mapAlleLernabschnittsdaten().get1(this.id()));
+
 			// Wenn, wie bei einer Neuaufnahme, keine Lernabschnitte vorhanden sind, gebe die leere Liste zurück.
 			if (schuelerLernabschnittsdaten.isEmpty()) {
+				super.lernabschnitte = new ArrayList<>();
 				super.aktuellerLernabschnitt = null;
 				super.auswahlLernabschnitt = null;
 				return super.lernabschnitte();
 			}
+
+			// Sortiere die Lernabschnitte dieses Schülers und fülle damit seine Liste von Lernabschnitten.
 			super.lernabschnitte = schuelerLernabschnittsdaten.stream()
 					.map(a -> (ReportingSchuelerLernabschnitt) new ProxyReportingSchuelerLernabschnitt(this.reportingRepository, a))
 					.sorted(Comparator
@@ -338,27 +335,79 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 							.thenComparing((final ReportingSchuelerLernabschnitt a) -> a.schuljahresabschnitt().abschnitt())
 							.thenComparing(ReportingSchuelerLernabschnitt::wechselNr))
 					.toList();
-			// Aktuellen Lernabschnitt in der Map im Repository speichern. Gibt es nur einen Abschnitt, dann wird dieser gespeichert, andernfalls der mit WechselNr. 0 im aktuellen Schuljahresabschnitt.
-			if (schuelerLernabschnittsdaten.size() == 1) {
-				this.reportingRepository.mapAktuelleLernabschnittsdaten()
-						.computeIfAbsent(super.id(), l -> schuelerLernabschnittsdaten.getFirst());
-				if (reportingRepository.reportingParameter().idSchuljahresabschnitt == reportingRepository.mapAktuelleLernabschnittsdaten()
-						.get(super.id()).schuljahresabschnitt)
-					this.reportingRepository.mapAuswahlLernabschnittsdaten()
-							.computeIfAbsent(super.id(), l -> schuelerLernabschnittsdaten.getFirst());
+
+			final List<SchuelerLernabschnittsdaten> aktuelleAbschnitte = this.reportingRepository.mapAlleLernabschnittsdaten().get12(super.id,
+					this.reportingRepository.aktuellerSchuljahresabschnitt().id()).stream().filter(a -> a.wechselNr == 0).toList();
+			if (!aktuelleAbschnitte.isEmpty())
+				super.aktuellerLernabschnitt = new ProxyReportingSchuelerLernabschnitt(this.reportingRepository, aktuelleAbschnitte.getFirst());
+			else
+				super.aktuellerLernabschnitt = null;
+
+			final List<SchuelerLernabschnittsdaten> auswahlAbschnitte = this.reportingRepository.mapAlleLernabschnittsdaten().get12(super.id,
+					this.reportingRepository.auswahlSchuljahresabschnitt().id()).stream().filter(a -> a.wechselNr == 0).toList();
+			if (!auswahlAbschnitte.isEmpty())
+				super.auswahlLernabschnitt = new ProxyReportingSchuelerLernabschnitt(this.reportingRepository, auswahlAbschnitte.getFirst());
+			else
+				super.auswahlLernabschnitt = null;
+		}
+		return super.lernabschnitte;
+	}
+
+	private void getLernabschnitt() {
+		final List<Long> idsSchuelerOhneLernabschnitte = new ArrayList<>(this.reportingRepository.mapSchueler().size());
+
+		for (final long key : this.reportingRepository.mapSchueler().keySet())
+			if (!this.reportingRepository.mapAlleLernabschnittsdaten().containsKey1(key))
+				idsSchuelerOhneLernabschnitte.add(key);
+
+		if (!idsSchuelerOhneLernabschnitte.isEmpty()) {
+			final List<SchuelerLernabschnittsdaten> schuelerGesamteLernabschnittsdaten = new ArrayList<>();
+			try {
+				schuelerGesamteLernabschnittsdaten.addAll(new DataSchuelerLernabschnittsdaten(this.reportingRepository().conn())
+						.getListFromSchuelerIDs(idsSchuelerOhneLernabschnitte, true));
+			} catch (final ApiOperationException e) {
+				ReportingExceptionUtils.putStacktraceInLog(
+						"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Lernabschnitte eines Schülers.", e,
+						reportingRepository.logger(), LogLevel.INFO, 0);
+			}
+			// Lege die Lernabschnittsdaten in den entsprechenden Maps des Repositories ab.
+			if (!schuelerGesamteLernabschnittsdaten.isEmpty()) {
+				for (final SchuelerLernabschnittsdaten la : schuelerGesamteLernabschnittsdaten) {
+					this.reportingRepository.mapAlleLernabschnittsdaten().add(la.schuelerID, la.schuljahresabschnitt, la.id, la);
+				}
 			} else {
-				final List<SchuelerLernabschnittsdaten> tmpListAktuell =
-						schuelerLernabschnittsdaten.stream().filter(a -> a.wechselNr == 0)
-								.filter(a -> a.schuljahresabschnitt == this.reportingRepository.aktuellerSchuljahresabschnitt().id()).toList();
-				final List<SchuelerLernabschnittsdaten> tmpListAuswahl =
-						schuelerLernabschnittsdaten.stream().filter(a -> a.wechselNr == 0)
-								.filter(a -> a.schuljahresabschnitt == this.reportingRepository.auswahlSchuljahresabschnitt().id()).toList();
-				if (!tmpListAktuell.isEmpty())
-					this.reportingRepository.mapAktuelleLernabschnittsdaten().computeIfAbsent(super.id(), l -> tmpListAktuell.getFirst());
-				if (!tmpListAuswahl.isEmpty())
-					this.reportingRepository.mapAuswahlLernabschnittsdaten().computeIfAbsent(super.id(), l -> tmpListAuswahl.getFirst());
+				this.reportingRepository.mapAlleLernabschnittsdaten().addEmpty(super.id, -1, -1);
 			}
 		}
-		return super.lernabschnitte();
+	}
+
+
+	/**
+	 * Stellt die Daten aller Sprachbelegungen des Schülers in einer Liste zur Verfügung.
+	 *
+	 * @return Liste der Daten aller Sprachbelegungen
+	 */
+	@Override
+	public List<ReportingSchuelerSprachbelegung> sprachbelegungen() {
+		if (!super.datenstatus.contains(ReportingSchuelerDatenstatus.SPRACHBELEGUNGEN)) {
+			if (!this.reportingRepository.mapSchuelerSprachbelegungen().containsKey(this.id())) {
+				// Wenn zum Schüler keine Sprachbelegungen aus der DB gefunden wurden, dann müssen diese nachträglich geladen worden sein oder der Schüler hat keine
+				// Sprachbelegungen. Prüfe auf Differenzen und lade nach.
+				final List<Long> idsSchuelerOhneSprachbelegungen = new ArrayList<>(this.reportingRepository.mapSchueler().values().stream()
+						.filter(s -> (!s.datenstatus().contains(ReportingSchuelerDatenstatus.SPRACHBELEGUNGEN))).map(ReportingSchueler::id).toList());
+				if (!idsSchuelerOhneSprachbelegungen.isEmpty()) {
+					this.reportingRepository.mapSchuelerSprachbelegungen()
+							.putAll(DataSchuelerSprachbelegung.getMapBySchuelerIDs(this.reportingRepository.conn(), idsSchuelerOhneSprachbelegungen));
+				}
+			}
+			if (this.reportingRepository.mapSchuelerSprachbelegungen().containsKey(this.id()))
+				super.sprachbelegungen = this.reportingRepository.mapSchuelerSprachbelegungen().get(this.id()).stream()
+						.map(sb -> ((ReportingSchuelerSprachbelegung) new ProxyReportingSchuelerSprachbelegung(reportingRepository, sb))).toList();
+			else
+				super.sprachbelegungen = new ArrayList<>();
+
+			super.datenstatus.add(ReportingSchuelerDatenstatus.SPRACHBELEGUNGEN);
+		}
+		return super.sprachbelegungen();
 	}
 }

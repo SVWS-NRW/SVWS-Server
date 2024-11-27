@@ -515,25 +515,6 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 		return daten;
 	}
 
-	/**
-	 * Erstellt eine Liste von Lernabschnittsdaten anhand der übergebenen Schüler-IDs und dem angegebenen Schuljahresabschnitt.
-	 *
-	 * @param schueler_ids           	die Liste mit Schüler-IDs
-	 * @param schuljahresabschnitt_id   der Schuljahresabschnitt
-	 * @param mitWechseln				legt fest, ob auch die Lernabschnitte berücksichtigt werden soll,
-	 *                                  die durch einen Wechsel entstanden sind, also Abschnitt mit Wechsel-Nr größer 0.
-	 *
-	 * @return	die Lernabschnittsdaten zu den übergebenen IDs.
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	public List<SchuelerLernabschnittsdaten> getListFromSchuelerIDsUndSchuljahresabschnittID(final List<Long> schueler_ids, final long schuljahresabschnitt_id,
-			final boolean mitWechseln) throws ApiOperationException {
-		return getListFromSchuelerIDs(schueler_ids, mitWechseln).stream()
-				.filter(a -> a.schuljahresabschnitt == schuljahresabschnitt_id)
-				.toList();
-	}
-
 
 	/**
 	 * Für einen Patch für die angegebenen Bemerkungsfelder aus.

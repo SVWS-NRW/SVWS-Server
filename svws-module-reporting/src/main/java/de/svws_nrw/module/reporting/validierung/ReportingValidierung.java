@@ -22,7 +22,6 @@ import de.svws_nrw.data.gost.DataGostSchuelerLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.data.kurse.DataKurse;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
-import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
@@ -136,10 +135,6 @@ public final class ReportingValidierung {
 		if (cacheDaten) {
 			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Beginn der Speicherung der Daten aus der Validierung der Schülerdaten im Repository.");
 			reportingRepository.mapSchuelerStammdaten().putAll(mapSchueler);
-			reportingRepository.mapAktuelleLernabschnittsdaten()
-					.putAll(new DataSchuelerLernabschnittsdaten(conn)
-							.getListFromSchuelerIDsUndSchuljahresabschnittID(idsNonNull, reportingRepository.aktuellerSchuljahresabschnitt().id(), false)
-							.stream().collect(Collectors.toMap(l -> l.schuelerID, l -> l)));
 			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Ende der Speicherung der Daten aus der Validierung der Schülerdaten im Repository.");
 		}
 	}

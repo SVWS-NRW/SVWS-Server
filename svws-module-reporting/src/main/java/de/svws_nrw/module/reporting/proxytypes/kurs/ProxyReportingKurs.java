@@ -11,6 +11,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.core.data.kurse.KursDaten;
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.logger.LogLevel;
@@ -145,6 +146,28 @@ public class ProxyReportingKurs extends ReportingKurs {
 	}
 
 
+	// ##### Hash und Equals Methoden #####
+
+	/**
+	 * Hashcode der Klasse
+	 * @return Hashcode der Klasse
+	 */
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
+	/**
+	 * Equals der Klasse
+	 * @param obj Das Vergleichsobjekt
+	 * @return    true, falls es das gleiche Objekt ist, andernfalls false.
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		return super.equals(obj);
+	}
+
+
 	/**
 	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.
 	 *
@@ -156,7 +179,7 @@ public class ProxyReportingKurs extends ReportingKurs {
 
 
 	/**
-	 * Stellt eine Liste mit Schülern der Klasse zur Verfügung.
+	 * Stellt eine Liste mit Schülern des Kurses zur Verfügung.
 	 *
 	 * @return	Liste mit Schülern
 	 */
@@ -178,19 +201,17 @@ public class ProxyReportingKurs extends ReportingKurs {
 				}
 			}
 			if (!idsSchueler.isEmpty()) {
-				super.schueler =
-						DataSchuelerStammdaten.getListStammdaten(this.reportingRepository.conn(), super.idsSchueler).stream()
-								.map(s -> this.reportingRepository.mapSchuelerStammdaten().computeIfAbsent(s.id, k -> s))
-								.map(s -> (ReportingSchueler) new ProxyReportingSchueler(
-										this.reportingRepository,
-										s))
-								.sorted(Comparator
-										.comparing(ReportingSchueler::nachname, colGerman)
-										.thenComparing(ReportingSchueler::vorname, colGerman)
-										.thenComparing(ReportingSchueler::vornamen, colGerman)
-										.thenComparing(ReportingSchueler::geburtsdatum, colGerman)
-										.thenComparing(ReportingSchueler::id, colGerman))
-								.toList();
+				final List<SchuelerStammdaten> schuelerStammdaten = DataSchuelerStammdaten.getListStammdaten(this.reportingRepository.conn(),
+						super.idsSchueler);
+				this.reportingRepository.mapSchuelerStammdaten().putAll(schuelerStammdaten.stream().collect(Collectors.toMap(s -> s.id, s -> s)));
+				super.schueler = schuelerStammdaten.stream().map(s -> (ReportingSchueler) new ProxyReportingSchueler(this.reportingRepository, s))
+						.sorted(Comparator
+								.comparing(ReportingSchueler::nachname, colGerman)
+								.thenComparing(ReportingSchueler::vorname, colGerman)
+								.thenComparing(ReportingSchueler::vornamen, colGerman)
+								.thenComparing(ReportingSchueler::geburtsdatum, colGerman)
+								.thenComparing(ReportingSchueler::id, colGerman))
+						.toList();
 			}
 		}
 		return super.schueler();

@@ -1,6 +1,5 @@
 package de.svws_nrw.module.reporting.types.schueler.lernabschnitte;
 
-import de.svws_nrw.core.data.schueler.SchuelerLeistungsdaten;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittNachpruefungsdaten;
 import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
@@ -135,7 +134,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	protected String klassenart;
 
 	/** Die Leistungsdaten des Schülers in diesem Lernabschnitt. */
-	protected List<SchuelerLeistungsdaten> leistungsdaten;
+	protected List<ReportingSchuelerLeistungsdaten> leistungsdaten;
 
 	/** Die Informationen den Nachprüfungen in diesem Lernabschnitt oder null, falls keine vorhanden sind. */
 	protected SchuelerLernabschnittNachpruefungsdaten nachpruefungen;
@@ -276,7 +275,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 			final Long idFoerderschwerpunkt1, final Long idFoerderschwerpunkt2, final Long idFolgeklasse, final Long idJahrgang, final Long idKlasse,
 			final long idSchueler, final long idSchuljahresabschnitt, final Long idSchwerpunkt, final Long idSonderpaedagoge, final Long idTutor,
 			final boolean istAbschlussPrognose, final boolean istFachpraktischerAnteilAusreichend, final boolean istGewertet, final boolean istWiederholung,
-			final ReportingKlasse klasse, final String klassenart, final List<SchuelerLeistungsdaten> leistungsdaten,
+			final ReportingKlasse klasse, final String klassenart, final List<ReportingSchuelerLeistungsdaten> leistungsdaten,
 			final SchuelerLernabschnittNachpruefungsdaten nachpruefungen, final String noteDurchschnitt, final Integer noteLernbereichGSbzwAL,
 			final Integer noteLernbereichNW, final String organisationsform, final String pruefungsOrdnung, final ReportingSchueler schueler,
 			final String schulgliederung, final ReportingSchuljahresabschnitt schuljahresabschnitt, final ReportingLehrer sonderpaedagoge,
@@ -346,6 +345,32 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 		this.zeugnisLELSText = zeugnisLELSText;
 	}
 
+
+
+	// ##### Hash und Equals Methoden #####
+
+	/**
+	 * Hashcode der Klasse
+	 * @return Hashcode der Klasse
+	 */
+	public int hashCode() {
+		return 31 + Long.hashCode(id);
+	}
+
+	/**
+	 * Equals der Klasse
+	 * @param obj Das Vergleichsobjekt
+	 * @return	true, falls es das gleiche Objekt ist, andernfalls false.
+	 */
+	public boolean equals(final Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof final ReportingSchuelerLernabschnitt other))
+			return false;
+		return (id == other.id);
+	}
 
 
 	// ##### Getter #####
@@ -706,7 +731,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 *
 	 * @return Inhalt des Feldes leistungsdaten
 	 */
-	public List<SchuelerLeistungsdaten> leistungsdaten() {
+	public List<ReportingSchuelerLeistungsdaten> leistungsdaten() {
 		return leistungsdaten;
 	}
 

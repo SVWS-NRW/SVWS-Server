@@ -75,7 +75,6 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 
 		this.reportingRepository = reportingRepository;
 		this.auswahlSchuljahr = this.reportingRepository.auswahlSchuljahresabschnitt().schuljahr();
-		final int auswahlSchuljahrAbschnitt = this.reportingRepository.auswahlSchuljahresabschnitt().abschnitt();
 
 		// Abiturdaten zum Schüler holen. Wenn zum Schüler kein Abiturjahr gefunden wird, dann wird er übergangen. Die Daten sind dann die aus der
 		// Initialisierung.
