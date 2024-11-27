@@ -1982,7 +1982,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode exportUntisKursblockungAsZip für den Zugriff auf die URL https://{hostname}/db/{schema}/datenaustausch/untis/export/blockung/{ergebnisid : \d+}/zip/{unterrichtid : \d+}
+	 * Implementierung der POST-Methode exportUntisKursblockungAsZip für den Zugriff auf die URL https://{hostname}/db/{schema}/datenaustausch/untis/export/blockung/{ergebnisid : \d+}/zip/{unterrichtid : \d+}/{sidvariante : \d+}
 	 *
 	 * Liefert einen Export für das Blockungsergebnis mit der angegebenen ID für Untis ein einer Zip-Datei.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Exportieren besitzt.
 	 *
@@ -2006,14 +2006,16 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} ergebnisid - der Pfad-Parameter ergebnisid
 	 * @param {number} unterrichtid - der Pfad-Parameter unterrichtid
+	 * @param {number} sidvariante - der Pfad-Parameter sidvariante
 	 *
 	 * @returns Das exportierten Blockungsergebnis in einer Zip-Datei
 	 */
-	public async exportUntisKursblockungAsZip(schema : string, ergebnisid : number, unterrichtid : number) : Promise<ApiFile> {
-		const path = "/db/{schema}/datenaustausch/untis/export/blockung/{ergebnisid : \\d+}/zip/{unterrichtid : \\d+}"
+	public async exportUntisKursblockungAsZip(schema : string, ergebnisid : number, unterrichtid : number, sidvariante : number) : Promise<ApiFile> {
+		const path = "/db/{schema}/datenaustausch/untis/export/blockung/{ergebnisid : \\d+}/zip/{unterrichtid : \\d+}/{sidvariante : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{ergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, ergebnisid.toString())
-			.replace(/{unterrichtid\s*(:[^{}]+({[^{}]+})*)?}/g, unterrichtid.toString());
+			.replace(/{unterrichtid\s*(:[^{}]+({[^{}]+})*)?}/g, unterrichtid.toString())
+			.replace(/{sidvariante\s*(:[^{}]+({[^{}]+})*)?}/g, sidvariante.toString());
 		const result : ApiFile = await super.postJSONtoZIP(path, null);
 		return result;
 	}
@@ -2080,7 +2082,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode exportUntisKlausurenGPU017 für den Zugriff auf die URL https://{hostname}/db/{schema}/datenaustausch/untis/export/klausuren/{id : \d+}/{sidschema : \w+}
+	 * Implementierung der POST-Methode exportUntisKlausurenGPU017 für den Zugriff auf die URL https://{hostname}/db/{schema}/datenaustausch/untis/export/klausuren/{id : \d+}/{sidvariante : \d+}
 	 *
 	 * Liefert einen Export für die Klausurdaten eines Schuljahresabschnittes (GPU017.txt).Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Exportieren besitzt.
 	 *
@@ -2098,15 +2100,15 @@ export class ApiServer extends BaseApi {
 	 * @param {string | null} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
-	 * @param {string} sidschema - der Pfad-Parameter sidschema
+	 * @param {number} sidvariante - der Pfad-Parameter sidvariante
 	 *
 	 * @returns Die GPU017.txt
 	 */
-	public async exportUntisKlausurenGPU017(data : string | null, schema : string, id : number, sidschema : string) : Promise<ApiFile> {
-		const path = "/db/{schema}/datenaustausch/untis/export/klausuren/{id : \\d+}/{sidschema : \\w+}"
+	public async exportUntisKlausurenGPU017(data : string | null, schema : string, id : number, sidvariante : number) : Promise<ApiFile> {
+		const path = "/db/{schema}/datenaustausch/untis/export/klausuren/{id : \\d+}/{sidvariante : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
-			.replace(/{sidschema\s*(:[^{}]+({[^{}]+})*)?}/g, sidschema);
+			.replace(/{sidvariante\s*(:[^{}]+({[^{}]+})*)?}/g, sidvariante.toString());
 		const body : string = JSON.stringify(data);
 		const result : ApiFile = await super.postJSONtoOctetStream(path, body);
 		return result;
@@ -2144,7 +2146,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode exportUntisSchuelerGPU010 für den Zugriff auf die URL https://{hostname}/db/{schema}/datenaustausch/untis/export/schueler/{id : \d+}
+	 * Implementierung der POST-Methode exportUntisSchuelerGPU010 für den Zugriff auf die URL https://{hostname}/db/{schema}/datenaustausch/untis/export/schueler/{id : \d+}/{sidvariante : \d+}
 	 *
 	 * Liefert einen Export für die Schüler eines Schuljahresabschnittes (GPU010.txt).Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Exportieren besitzt.
 	 *
@@ -2161,13 +2163,15 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
+	 * @param {number} sidvariante - der Pfad-Parameter sidvariante
 	 *
 	 * @returns Die GPU010.txt
 	 */
-	public async exportUntisSchuelerGPU010(schema : string, id : number) : Promise<ApiFile> {
-		const path = "/db/{schema}/datenaustausch/untis/export/schueler/{id : \\d+}"
+	public async exportUntisSchuelerGPU010(schema : string, id : number, sidvariante : number) : Promise<ApiFile> {
+		const path = "/db/{schema}/datenaustausch/untis/export/schueler/{id : \\d+}/{sidvariante : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
+			.replace(/{sidvariante\s*(:[^{}]+({[^{}]+})*)?}/g, sidvariante.toString());
 		const result : ApiFile = await super.postJSONtoOctetStream(path, null);
 		return result;
 	}

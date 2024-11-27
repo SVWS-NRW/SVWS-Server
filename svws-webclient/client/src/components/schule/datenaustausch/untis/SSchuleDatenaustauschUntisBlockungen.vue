@@ -56,6 +56,7 @@
 		const formData = new FormData();
 		formData.append("ergebnisID", id.toString());
 		formData.append("unterrichtID", unterrichtID.value.toString());
+		formData.append("sidvariante", "1"); // TODO
 		const { data, name } = await props.exportUntisBlockungenZIP(formData);
 		spinning.value = false;
 		const link = document.createElement("a");

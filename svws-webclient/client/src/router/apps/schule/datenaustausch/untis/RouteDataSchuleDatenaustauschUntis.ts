@@ -231,8 +231,9 @@ export class RouteDataSchuleDatenaustauschUntis extends RouteData<RouteStateDate
 	exportUntisBlockungenZIP = async (formData: FormData): Promise<ApiFile> => {
 		const ergebnisID = formData.get('ergebnisID')?.toString();
 		const unterrichtID = formData.get('unterrichtID')?.toString();
-		if (typeof ergebnisID === 'string' && typeof unterrichtID === 'string')
-			return await api.server.exportUntisKursblockungAsZip(api.schema, parseInt(ergebnisID), parseInt(unterrichtID));
+		const sidvariante = formData.get('sidvariante')?.toString();
+		if ((typeof ergebnisID === 'string') && (typeof unterrichtID === 'string') && (typeof sidvariante === 'string'))
+			return await api.server.exportUntisKursblockungAsZip(api.schema, parseInt(ergebnisID), parseInt(unterrichtID), parseInt(sidvariante));
 		throw new DeveloperNotificationException(`Es konnte keine Exportdatei für die ergebnisID ${ergebnisID} und unterrichtID ${unterrichtID} erstellt werden`);
 	}
 
@@ -251,13 +252,13 @@ export class RouteDataSchuleDatenaustauschUntis extends RouteData<RouteStateDate
 		return apifile.data.text();
 	}
 
-	exportUntisSchuelerGPU010 = async(): Promise<string> => {
-		const apifile = await api.server.exportUntisSchuelerGPU010(api.schema, routeApp.data.aktAbschnitt.value.id);
+	exportUntisSchuelerGPU010 = async(sidvariante: number): Promise<string> => {
+		const apifile = await api.server.exportUntisSchuelerGPU010(api.schema, routeApp.data.aktAbschnitt.value.id, sidvariante);
 		return apifile.data.text();
 	}
 
-	exportUntisKlausurenGPU017 = async(idschema: "id" | "kurz" |"lang", gpu002 : string): Promise<string> => {
-		const apifile = await api.server.exportUntisKlausurenGPU017(gpu002, api.schema, routeApp.data.aktAbschnitt.value.id, idschema);
+	exportUntisKlausurenGPU017 = async(sidvariante: number, gpu002 : string): Promise<string> => {
+		const apifile = await api.server.exportUntisKlausurenGPU017(gpu002, api.schema, routeApp.data.aktAbschnitt.value.id, sidvariante);
 		return apifile.data.text();
 	}
 
