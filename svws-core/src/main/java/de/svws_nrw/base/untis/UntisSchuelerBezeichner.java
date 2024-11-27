@@ -29,7 +29,7 @@ public enum UntisSchuelerBezeichner {
 	 *
 	 * @param id   die zugehörige ID
 	 */
-	private UntisSchuelerBezeichner(final int id) {
+	UntisSchuelerBezeichner(final int id) {
 		this.id = id;
 	}
 
