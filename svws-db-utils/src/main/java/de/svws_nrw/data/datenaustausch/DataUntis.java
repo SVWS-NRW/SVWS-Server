@@ -1104,6 +1104,8 @@ public final class DataUntis {
 				))
 						.map(uKlausuren -> uKlausuren.stream()
 								.filter(uKlausur -> {
+									if (klausur.datum == null)
+										return true;
 									long gueltigAb = Long.parseLong(uKlausur.datumVon);
 									long gueltigBis = Long.parseLong(uKlausur.datumBis);
 									long klausurDatum = Long.parseLong(klausur.datum);
