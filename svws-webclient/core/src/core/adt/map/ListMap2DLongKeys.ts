@@ -174,7 +174,7 @@ export class ListMap2DLongKeys<V> extends JavaObject {
 	 *
 	 * @return das Key-Set der Map1.
 	 */
-	public keySet1() : JavaSet<number> | null {
+	public keySet1() : JavaSet<number> {
 		if (this._map1 === null)
 			this._map1 = this._lazyLoad1();
 		return this._map1.keySet();
@@ -185,7 +185,7 @@ export class ListMap2DLongKeys<V> extends JavaObject {
 	 *
 	 * @return das Key-Set der Map2.
 	 */
-	public keySet2() : JavaSet<number> | null {
+	public keySet2() : JavaSet<number> {
 		if (this._map2 === null)
 			this._map2 = this._lazyLoad2();
 		return this._map2.keySet();
@@ -196,7 +196,7 @@ export class ListMap2DLongKeys<V> extends JavaObject {
 	 *
 	 * @return das Key-Set der Map12.
 	 */
-	public keySet12() : JavaSet<LongArrayKey> | null {
+	public keySet12() : JavaSet<LongArrayKey> {
 		return this._map12.keySet();
 	}
 

@@ -360,7 +360,7 @@ export class ListMap3DLongKeys<V> extends JavaObject {
 	 * @param key2   Der 2. Schlüssel
 	 * @param key3   Der 3. Schlüssel
 	 *
-	 * @return eine Kopie der Liste aller Values zum Mapping (key2, key3).
+	 * @return eine Kopie der Liste aller Values zum Mapping (key1, key2, key3).
 	 */
 	public get123(key1 : number, key2 : number, key3 : number) : List<V> {
 		const key : LongArrayKey = new LongArrayKey(key1, key2, key3);
@@ -374,7 +374,7 @@ export class ListMap3DLongKeys<V> extends JavaObject {
 	 *
 	 * @return das Key-Set der Map1.
 	 */
-	public keySet1() : JavaSet<number> | null {
+	public keySet1() : JavaSet<number> {
 		if (this._map1 === null)
 			this._map1 = this._lazyLoad1();
 		return this._map1.keySet();
@@ -385,7 +385,7 @@ export class ListMap3DLongKeys<V> extends JavaObject {
 	 *
 	 * @return das Key-Set der Map2.
 	 */
-	public keySet2() : JavaSet<number> | null {
+	public keySet2() : JavaSet<number> {
 		if (this._map2 === null)
 			this._map2 = this._lazyLoad2();
 		return this._map2.keySet();
@@ -396,7 +396,7 @@ export class ListMap3DLongKeys<V> extends JavaObject {
 	 *
 	 * @return das Key-Set der Map3.
 	 */
-	public keySet3() : JavaSet<number> | null {
+	public keySet3() : JavaSet<number> {
 		if (this._map3 === null)
 			this._map3 = this._lazyLoad3();
 		return this._map3.keySet();
@@ -407,7 +407,7 @@ export class ListMap3DLongKeys<V> extends JavaObject {
 	 *
 	 * @return das Key-Set der Map12.
 	 */
-	public keySet12() : JavaSet<LongArrayKey> | null {
+	public keySet12() : JavaSet<LongArrayKey> {
 		if (this._map12 === null)
 			this._map12 = this._lazyLoad12();
 		return this._map12.keySet();
@@ -418,7 +418,7 @@ export class ListMap3DLongKeys<V> extends JavaObject {
 	 *
 	 * @return das Key-Set der Map13.
 	 */
-	public keySet13() : JavaSet<LongArrayKey> | null {
+	public keySet13() : JavaSet<LongArrayKey> {
 		if (this._map13 === null)
 			this._map13 = this._lazyLoad13();
 		return this._map13.keySet();
@@ -429,7 +429,7 @@ export class ListMap3DLongKeys<V> extends JavaObject {
 	 *
 	 * @return das Key-Set der Map23.
 	 */
-	public keySet23() : JavaSet<LongArrayKey> | null {
+	public keySet23() : JavaSet<LongArrayKey> {
 		if (this._map23 === null)
 			this._map23 = this._lazyLoad23();
 		return this._map23.keySet();
@@ -440,7 +440,7 @@ export class ListMap3DLongKeys<V> extends JavaObject {
 	 *
 	 * @return das Key-Set der Map123.
 	 */
-	public keySet123() : JavaSet<LongArrayKey> | null {
+	public keySet123() : JavaSet<LongArrayKey> {
 		return this._map123.keySet();
 	}
 

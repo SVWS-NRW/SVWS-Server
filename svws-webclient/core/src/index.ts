@@ -310,6 +310,7 @@ export { HashMap4D } from './core/adt/map/HashMap4D';
 export { HashMap5D } from './core/adt/map/HashMap5D';
 export { ListMap2DLongKeys } from './core/adt/map/ListMap2DLongKeys';
 export { ListMap3DLongKeys } from './core/adt/map/ListMap3DLongKeys';
+export { ListMap4DLongKeys } from './core/adt/map/ListMap4DLongKeys';
 export { SatInput } from './core/adt/sat/SatInput';
 export { SatOutput } from './core/adt/sat/SatOutput';
 export { SatSolver } from './core/adt/sat/SatSolver';

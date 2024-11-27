@@ -6813,6 +6813,73 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert eine String-Menge aller Uhrzeiten der Zeitraster einer bestimmten Unterrichtsstunde. Dabei werden identische Uhrzeiten zusammengefasst.
+	 * <br>Beispiel: "08:00-8:45", falls sie nicht abweichen.
+	 * <br>Beispiel: "Mo-Mi 08:00-8:45", "Do 07:55-8:40", "Fr 07:40-8:25", falls sie abweichen.
+	 *
+	 * @param stunde  Die Nr. der Unterrichtsstunde.
+	 *
+	 * @return eine String-Menge aller Uhrzeiten der Zeitraster einer bestimmten Unterrichtsstunde. Dabei werden identische Uhrzeiten zusammengefasst.
+	 */
+	public @NotNull List<String> unterrichtsstundeGetUhrzeitenAsStrings(final int stunde) {
+		final @NotNull List<String> listUhrzeit = new ArrayList<>();
+		final @NotNull List<String> listWochentagVon = new ArrayList<>();
+		final @NotNull List<String> listWochentagBis = new ArrayList<>();
+
+		for (int wochentag = _zeitrasterWochentagMin; wochentag <= _zeitrasterWochentagMax; wochentag++) {
+			final @NotNull String sUhrzeit = unterrichtsstundeGetUhrzeitAsString(wochentag, stunde);
+			final @NotNull String sWochentag = Wochentag.fromIDorException(wochentag).kuerzel;
+
+			if (listUhrzeit.isEmpty()) {
+				listUhrzeit.add(sUhrzeit);
+				listWochentagVon.add(sWochentag);
+				listWochentagBis.add(sWochentag);
+				continue;
+			}
+
+			final @NotNull String sUhrzeitDavor = DeveloperNotificationException.ifListGetLastFailes("listUhrzeit", listUhrzeit);
+
+			if (sUhrzeitDavor.equals(sUhrzeit)) {
+				listWochentagBis.set(listWochentagBis.size() - 1, sWochentag);
+			} else {
+				listUhrzeit.add(sUhrzeit);
+				listWochentagVon.add(sWochentag);
+				listWochentagBis.add(sWochentag);
+			}
+
+		}
+
+		// Fall: Alle Zeiten sind identisch.
+		if (listUhrzeit.size() <= 1)
+			return listUhrzeit;
+
+		// Fall: Unterschiedliche Zeiten benötigen als Prefix den Wochentag.
+		for (int i = 0; i < listUhrzeit.size(); i++) {
+			final @NotNull String sUhrzeit = listUhrzeit.get(i);
+			final @NotNull String sWochentagVon = listWochentagVon.get(i);
+			final @NotNull String sWochentagBis = listWochentagBis.get(i);
+			if (sWochentagVon.equals(sWochentagBis))
+				listUhrzeit.set(i, sWochentagVon + " " + sUhrzeit);
+			else
+				listUhrzeit.set(i, sWochentagVon + "–" + sWochentagBis + " " + sUhrzeit);
+		}
+
+		return listUhrzeit;
+	}
+
+	private @NotNull String unterrichtsstundeGetUhrzeitAsString(final int wochentag, final int stunde) {
+		final StundenplanZeitraster zeitraster = _zeitraster_by_wochentag_and_stunde.getOrNull(wochentag, stunde);
+
+		if (zeitraster == null)
+			return "???";
+
+		final @NotNull String sBeginn = (zeitraster.stundenbeginn == null) ? "??:??" : DateUtils.getStringOfUhrzeitFromMinuten(zeitraster.stundenbeginn);
+		final @NotNull String sEnde = (zeitraster.stundenende == null) ? "??:??" : DateUtils.getStringOfUhrzeitFromMinuten(zeitraster.stundenende);
+
+		return sBeginn + "–" + sEnde + " Uhr";
+	}
+
+	/**
 	 * Liefert TRUE, falls es {@link StundenplanUnterricht} gibt, der einen Wochentyp > 0 hat.
 	 * <br>Laufzeit: O(1)
 	 *
@@ -6955,73 +7022,6 @@ public class StundenplanManager {
 	 */
 	public @NotNull List<List<StundenplanUnterricht>> unterrichtsgruppenMergeableGet() {
 		return _unterrichtsgruppenMergeable;
-	}
-
-	/**
-	 * Liefert eine String-Menge aller Uhrzeiten der Zeitraster einer bestimmten Unterrichtsstunde. Dabei werden identische Uhrzeiten zusammengefasst.
-	 * <br>Beispiel: "08:00-8:45", falls sie nicht abweichen.
-	 * <br>Beispiel: "Mo-Mi 08:00-8:45", "Do 07:55-8:40", "Fr 07:40-8:25", falls sie abweichen.
-	 *
-	 * @param stunde  Die Nr. der Unterrichtsstunde.
-	 *
-	 * @return eine String-Menge aller Uhrzeiten der Zeitraster einer bestimmten Unterrichtsstunde. Dabei werden identische Uhrzeiten zusammengefasst.
-	 */
-	public @NotNull List<String> unterrichtsstundeGetUhrzeitenAsStrings(final int stunde) {
-		final @NotNull List<String> listUhrzeit = new ArrayList<>();
-		final @NotNull List<String> listWochentagVon = new ArrayList<>();
-		final @NotNull List<String> listWochentagBis = new ArrayList<>();
-
-		for (int wochentag = _zeitrasterWochentagMin; wochentag <= _zeitrasterWochentagMax; wochentag++) {
-			final @NotNull String sUhrzeit = unterrichtsstundeGetUhrzeitAsString(wochentag, stunde);
-			final @NotNull String sWochentag = Wochentag.fromIDorException(wochentag).kuerzel;
-
-			if (listUhrzeit.isEmpty()) {
-				listUhrzeit.add(sUhrzeit);
-				listWochentagVon.add(sWochentag);
-				listWochentagBis.add(sWochentag);
-				continue;
-			}
-
-			final @NotNull String sUhrzeitDavor = DeveloperNotificationException.ifListGetLastFailes("listUhrzeit", listUhrzeit);
-
-			if (sUhrzeitDavor.equals(sUhrzeit)) {
-				listWochentagBis.set(listWochentagBis.size() - 1, sWochentag);
-			} else {
-				listUhrzeit.add(sUhrzeit);
-				listWochentagVon.add(sWochentag);
-				listWochentagBis.add(sWochentag);
-			}
-
-		}
-
-		// Fall: Alle Zeiten sind identisch.
-		if (listUhrzeit.size() <= 1)
-			return listUhrzeit;
-
-		// Fall: Unterschiedliche Zeiten benötigen als Prefix den Wochentag.
-		for (int i = 0; i < listUhrzeit.size(); i++) {
-			final @NotNull String sUhrzeit = listUhrzeit.get(i);
-			final @NotNull String sWochentagVon = listWochentagVon.get(i);
-			final @NotNull String sWochentagBis = listWochentagBis.get(i);
-			if (sWochentagVon.equals(sWochentagBis))
-				listUhrzeit.set(i, sWochentagVon + " " + sUhrzeit);
-			else
-				listUhrzeit.set(i, sWochentagVon + "–" + sWochentagBis + " " + sUhrzeit);
-		}
-
-		return listUhrzeit;
-	}
-
-	private @NotNull String unterrichtsstundeGetUhrzeitAsString(final int wochentag, final int stunde) {
-		final StundenplanZeitraster zeitraster = _zeitraster_by_wochentag_and_stunde.getOrNull(wochentag, stunde);
-
-		if (zeitraster == null)
-			return "???";
-
-		final @NotNull String sBeginn = (zeitraster.stundenbeginn == null) ? "??:??" : DateUtils.getStringOfUhrzeitFromMinuten(zeitraster.stundenbeginn);
-		final @NotNull String sEnde = (zeitraster.stundenende == null) ? "??:??" : DateUtils.getStringOfUhrzeitFromMinuten(zeitraster.stundenende);
-
-		return sBeginn + "–" + sEnde + " Uhr";
 	}
 
 	/**

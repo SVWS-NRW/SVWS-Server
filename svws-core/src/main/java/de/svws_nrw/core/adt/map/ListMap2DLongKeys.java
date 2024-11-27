@@ -187,7 +187,7 @@ public class ListMap2DLongKeys<V> {
 	 *
 	 * @return das Key-Set der Map1.
 	 */
-	public Set<Long> keySet1() {
+	public @NotNull Set<Long> keySet1() {
 		if (_map1 == null)
 			_map1 = _lazyLoad1();
 		return _map1.keySet();
@@ -198,7 +198,7 @@ public class ListMap2DLongKeys<V> {
 	 *
 	 * @return das Key-Set der Map2.
 	 */
-	public Set<Long> keySet2() {
+	public @NotNull Set<Long> keySet2() {
 		if (_map2 == null)
 			_map2 = _lazyLoad2();
 		return _map2.keySet();
@@ -209,7 +209,7 @@ public class ListMap2DLongKeys<V> {
 	 *
 	 * @return das Key-Set der Map12.
 	 */
-	public Set<LongArrayKey> keySet12() {
+	public @NotNull Set<LongArrayKey> keySet12() {
 		return _map12.keySet();
 	}
 }

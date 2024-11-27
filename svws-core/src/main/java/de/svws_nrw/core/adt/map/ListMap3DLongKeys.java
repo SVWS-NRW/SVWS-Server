@@ -381,7 +381,7 @@ public class ListMap3DLongKeys<V> {
 	 * @param key2   Der 2. Schlüssel
 	 * @param key3   Der 3. Schlüssel
 	 *
-	 * @return eine Kopie der Liste aller Values zum Mapping (key2, key3).
+	 * @return eine Kopie der Liste aller Values zum Mapping (key1, key2, key3).
 	 */
 	public @NotNull List<V> get123(final long key1, final long key2, final long key3) {
 		final @NotNull LongArrayKey key = new LongArrayKey(key1, key2, key3);
@@ -395,7 +395,7 @@ public class ListMap3DLongKeys<V> {
 	 *
 	 * @return das Key-Set der Map1.
 	 */
-	public Set<Long> keySet1() {
+	public @NotNull Set<Long> keySet1() {
 		if (_map1 == null)
 			_map1 = _lazyLoad1();
 		return _map1.keySet();
@@ -406,7 +406,7 @@ public class ListMap3DLongKeys<V> {
 	 *
 	 * @return das Key-Set der Map2.
 	 */
-	public Set<Long> keySet2() {
+	public @NotNull Set<Long> keySet2() {
 		if (_map2 == null)
 			_map2 = _lazyLoad2();
 		return _map2.keySet();
@@ -417,7 +417,7 @@ public class ListMap3DLongKeys<V> {
 	 *
 	 * @return das Key-Set der Map3.
 	 */
-	public Set<Long> keySet3() {
+	public @NotNull Set<Long> keySet3() {
 		if (_map3 == null)
 			_map3 = _lazyLoad3();
 		return _map3.keySet();
@@ -428,7 +428,7 @@ public class ListMap3DLongKeys<V> {
 	 *
 	 * @return das Key-Set der Map12.
 	 */
-	public Set<LongArrayKey> keySet12() {
+	public @NotNull Set<LongArrayKey> keySet12() {
 		if (_map12 == null)
 			_map12 = _lazyLoad12();
 		return _map12.keySet();
@@ -439,7 +439,7 @@ public class ListMap3DLongKeys<V> {
 	 *
 	 * @return das Key-Set der Map13.
 	 */
-	public Set<LongArrayKey> keySet13() {
+	public @NotNull Set<LongArrayKey> keySet13() {
 		if (_map13 == null)
 			_map13 = _lazyLoad13();
 		return _map13.keySet();
@@ -450,7 +450,7 @@ public class ListMap3DLongKeys<V> {
 	 *
 	 * @return das Key-Set der Map23.
 	 */
-	public Set<LongArrayKey> keySet23() {
+	public @NotNull Set<LongArrayKey> keySet23() {
 		if (_map23 == null)
 			_map23 = _lazyLoad23();
 		return _map23.keySet();
@@ -461,7 +461,7 @@ public class ListMap3DLongKeys<V> {
 	 *
 	 * @return das Key-Set der Map123.
 	 */
-	public Set<LongArrayKey> keySet123() {
+	public @NotNull Set<LongArrayKey> keySet123() {
 		return _map123.keySet();
 	}
 }
