@@ -1,7 +1,7 @@
 import { ref, shallowRef } from "vue";
 
 import type { BenutzerDaten, DBSchemaListeEintrag, List, SchuleStammdaten } from "@core";
-import { ValidatorKontext, ApiSchema, ApiServer, BenutzerKompetenz, ServerMode, DeveloperNotificationException, UserNotificationException } from "@core";
+import { ValidatorKontext, ApiSchema, ApiServer, BenutzerKompetenz, ServerMode, DeveloperNotificationException, UserNotificationException, OpenApiError } from "@core";
 
 import { Config } from "~/components/Config";
 import { AES } from "~/utils/crypto/aes";
@@ -371,7 +371,7 @@ export class ApiConnection {
 	 */
 	init = async (): Promise<boolean> => {
 		try {
-			if (this._api && (this._schema !== undefined)) {
+			if ((this._api !== undefined) && (this._schema !== undefined)) {
 				const stammdaten = await this._api.getSchuleStammdaten(this._schema);
 				const kontext = new ValidatorKontext(stammdaten, false);
 				this._stammdaten.value = { stammdaten, kontext };
@@ -438,6 +438,9 @@ export class ApiConnection {
 			this._serverMode.value = ServerMode.getByText(await this._api.getServerModus());
 			await this.initConfig();
 		} catch (error) {
+			// Wenn Status 404, dann ist das Schema noch nicht initialisiert
+			if ((error instanceof OpenApiError) && (error.response?.status === 404))
+				return;
 			// TODO Anmelde-Fehler wird nur in der App angezeigt. Der konkreten Fehler könnte ggf. geloggt werden...
 			this._authenticated.value = false;
 			this._benutzerdaten.value = undefined;
