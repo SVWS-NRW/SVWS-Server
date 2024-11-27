@@ -1,7 +1,7 @@
 <template>
 	<div class="page--content page--content--flex-row gap-2 h-full w-full overflow-hidden">
 		<!-- Auswahl des Untis-Exportes (linke Seite) -->
-		<div class="h-full w-48 flex flex-col gap-2">
+		<div class="h-full min-w-48 w-48 flex flex-col gap-2">
 			<svws-ui-button v-for="gpu in gpus" :key="gpu.title" :type="(aktuell === gpu) ? 'primary' : 'secondary'" @click="onSelect(gpu)">
 				<div class="flex flex-col gap-1">
 					<p class="text-left font-bold ">{{ gpu.title }}</p>
@@ -16,9 +16,9 @@
 				<svws-ui-card :compact="true" :collapsible="false" title="Schema Schüler-IDs" content="Wählen Sie das Schema für das Erzeugen der Schüler-IDs in Untis:">
 					<template #footer>
 						<svws-ui-radio-group>
-							<svws-ui-radio-option value="1" v-model="sidvar" name="radioInputSchueleridschema" label="SVWS ID-Schema (S-SVWSID)" />
-							<svws-ui-radio-option value="2" v-model="sidvar" name="radioInputSchueleridschema" label="Untis ID-Schema kurz (Nachname-Vor-20081023)" />
-							<svws-ui-radio-option value="3" v-model="sidvar" name="radioInputSchueleridschema" label="Untis ID-Schema lang (Nachname-Vorname-20081023)" />
+							<svws-ui-radio-option value="1" v-model="sidvariante" @update:model-value="setSIDVariante" name="radioInputSchueleridschema" label="SVWS ID-Schema (S-SVWSID)" />
+							<svws-ui-radio-option value="2" v-model="sidvariante" @update:model-value="setSIDVariante" name="radioInputSchueleridschema" label="Untis ID-Schema kurz (Nachname-Vor-20081023)" />
+							<svws-ui-radio-option value="3" v-model="sidvariante" @update:model-value="setSIDVariante" name="radioInputSchueleridschema" label="Untis ID-Schema lang (Nachname-Vorname-20081023)" />
 						</svws-ui-radio-group>
 					</template>
 				</svws-ui-card>
@@ -59,7 +59,7 @@
 
 <script setup lang="ts">
 
-	import { computed, ref, shallowRef } from 'vue';
+	import { ref, shallowRef } from 'vue';
 	import type { SchuleDatenaustauschUntisExporteProps } from './SSchuleDatenaustauschUntisExporteProps';
 
 	const props = defineProps<SchuleDatenaustauschUntisExporteProps>();
@@ -106,13 +106,17 @@
 
 	const gpusHabenSchueler = [ schuelerGPU010, klausurenGPU017 ];
 	const sidvariante = ref<number>(1);
-	const sidvar = computed<number>({
-		get: () => sidvariante.value,
-		set: (value) => {
-			sidvariante.value = value;
-			void onSelect(aktuell.value);
-		},
-	});
+	async function setSIDVariante(value: number | string | boolean | object) {
+		if (typeof value !== 'string')
+			return;
+		sidvariante.value = parseInt(value);
+		if (gpusBrauchenGPU002.includes(aktuell.value)) {
+			if (gpu002.value !== null)
+				daten.value = await aktuell.value.export(gpu002.value);
+		} else {
+			daten.value = await aktuell.value.export();
+		}
+	}
 
 	const aktuell = shallowRef<GPU>(klassenGPU003);
 	const filename = ref<string>('');
