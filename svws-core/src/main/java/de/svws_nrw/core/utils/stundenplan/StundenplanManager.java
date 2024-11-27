@@ -6164,6 +6164,18 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte eines Klassenunterrichts (Klasse, Fach).
+	 *
+	 * @param idKlasse   Die Datenbank-ID der Klasse.
+	 * @param idFach     Die Datenbank-ID des Faches.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte eines Klassenunterrichts (Klasse, Fach).
+	 */
+	public @NotNull List<StundenplanUnterricht> unterrichtGetMengeByKlasseIdAndFachId(final long idKlasse, final long idFach) {
+		return Map2DUtils.getOrCreateArrayList(_unterrichtmenge_by_idKlasse_and_idFach, idKlasse, idFach);
+	}
+
+	/**
 	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte eines Klassenunterrichts (Klasse, Fach) mit einem bestimmten Wochentyp.
 	 *
 	 * @param idKlasse   Die Datenbank-ID der Klasse.
@@ -6197,6 +6209,17 @@ public class StundenplanManager {
 			final int jahr, final int kalenderwoche) {
 		final int wochentyp = kalenderwochenzuordnungGetWochentypOrDefault(jahr, kalenderwoche);
 		return unterrichtGetMengeByKlasseIdAndFachIdAndWochentyp(idKlasse, idFach, wochentyp);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte eines Kurses.
+	 *
+	 * @param idkurs     Die ID des Kurses.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte eines Kurses.
+	 */
+	public @NotNull List<StundenplanUnterricht> unterrichtGetMengeByKurs(final long idkurs) {
+		return MapUtils.getOrCreateArrayList(_unterrichtmenge_by_idKurs, idkurs);
 	}
 
 	/**
@@ -6647,6 +6670,19 @@ public class StundenplanManager {
 			list.add(u);
 
 		return list;
+	}
+
+
+	/**
+	 * Liefert eine Liste aller Geschwister-{@link StundenplanUnterricht}-Objekte.
+	 * <br> Vorsicht: Der eigene Unterricht wird ebenso mitgeliefert!
+	 *
+	 * @param idUnterricht   Die Datenbank-ID des Unterrichts
+	 *
+	 * @return eine eine Liste aller Geschwister-{@link StundenplanUnterricht}-Objekte.
+	 */
+	public @NotNull List<StundenplanUnterricht> unterrichtGetMengeByUnterrichtId(final long idUnterricht) {
+		return MapUtils.getOrCreateArrayList(_unterrichtmenge_by_idUnterricht, idUnterricht);
 	}
 
 	/**

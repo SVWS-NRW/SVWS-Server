@@ -5602,6 +5602,18 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte eines Klassenunterrichts (Klasse, Fach).
+	 *
+	 * @param idKlasse   Die Datenbank-ID der Klasse.
+	 * @param idFach     Die Datenbank-ID des Faches.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte eines Klassenunterrichts (Klasse, Fach).
+	 */
+	public unterrichtGetMengeByKlasseIdAndFachId(idKlasse : number, idFach : number) : List<StundenplanUnterricht> {
+		return Map2DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idKlasse_and_idFach, idKlasse, idFach);
+	}
+
+	/**
 	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte eines Klassenunterrichts (Klasse, Fach) mit einem bestimmten Wochentyp.
 	 *
 	 * @param idKlasse   Die Datenbank-ID der Klasse.
@@ -5629,6 +5641,17 @@ export class StundenplanManager extends JavaObject {
 	public unterrichtGetMengeByKlasseIdAndFachIdAndJahrAndKW(idKlasse : number, idFach : number, jahr : number, kalenderwoche : number) : List<StundenplanUnterricht> {
 		const wochentyp : number = this.kalenderwochenzuordnungGetWochentypOrDefault(jahr, kalenderwoche);
 		return this.unterrichtGetMengeByKlasseIdAndFachIdAndWochentyp(idKlasse, idFach, wochentyp);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte eines Kurses.
+	 *
+	 * @param idkurs     Die ID des Kurses.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte eines Kurses.
+	 */
+	public unterrichtGetMengeByKurs(idkurs : number) : List<StundenplanUnterricht> {
+		return MapUtils.getOrCreateArrayList(this._unterrichtmenge_by_idKurs, idkurs);
 	}
 
 	/**
@@ -6002,6 +6025,18 @@ export class StundenplanManager extends JavaObject {
 		for (const u of Map3DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idZeitraster_wochentyp_raum, z.id, wochentyp, idRaum))
 			list.add(u);
 		return list;
+	}
+
+	/**
+	 * Liefert eine Liste aller Geschwister-{@link StundenplanUnterricht}-Objekte.
+	 * <br> Vorsicht: Der eigene Unterricht wird ebenso mitgeliefert!
+	 *
+	 * @param idUnterricht   Die Datenbank-ID des Unterrichts
+	 *
+	 * @return eine eine Liste aller Geschwister-{@link StundenplanUnterricht}-Objekte.
+	 */
+	public unterrichtGetMengeByUnterrichtId(idUnterricht : number) : List<StundenplanUnterricht> {
+		return MapUtils.getOrCreateArrayList(this._unterrichtmenge_by_idUnterricht, idUnterricht);
 	}
 
 	/**
