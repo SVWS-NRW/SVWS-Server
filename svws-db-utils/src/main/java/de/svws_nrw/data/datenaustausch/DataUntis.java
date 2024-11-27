@@ -10,9 +10,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -1027,7 +1028,7 @@ public final class DataUntis {
 	 * @return die Liste der GPU017-Einträge
 	 */
 	private static List<UntisGPU017> getListGPU017(final @NotNull Logger logger, final @NotNull GostKlausurplanManager manager,
-			final HashMap2D<String, String, List<Long>> unterrichte, final int idVariante) {
+			final HashMap2D<String, String, List<UntisGPU002>> unterrichte, final int idVariante) {
 		final List<UntisGPU017> result = new ArrayList<>();
 
 		manager.raumGetMengeAsList().forEach(raum -> {
@@ -1040,6 +1041,13 @@ public final class DataUntis {
 
 				final GostKlausurtermin termin = manager.terminGetByIdOrException(raum.idTermin);
 				klausur.datum = getUntisDate(termin.datum);
+
+				klausur.name = "%s_K%d_%s"
+					.formatted(
+							GostHalbjahr.fromIDorException(termin.halbjahr).jahrgang,
+							termin.quartal,
+							manager.kursklausurGetMengeByRaum(raum).stream().map(manager::kursKurzbezeichnungByKursklausur).collect(Collectors.joining("_"))
+					);
 
 				final StundenplanManager stundenplan = manager.stundenplanManagerGetByTerminOrNull(termin);
 				if (stundenplan == null) {
@@ -1069,6 +1077,13 @@ public final class DataUntis {
 
 					final List<GostKursklausur> klausuren = manager.kursklausurGetMengeByTermin(termin);
 
+					klausur.name = termin.bezeichnung != null ? termin.bezeichnung : "%s_K%d_%s"
+						.formatted(
+								GostHalbjahr.fromIDorException(termin.halbjahr).jahrgang,
+								termin.quartal,
+								klausuren.stream().map(manager::kursKurzbezeichnungByKursklausur).collect(Collectors.joining("_"))
+						);
+
 					processKlausurenAndSchueler(klausur, manager, unterrichte, idVariante, klausuren,
 							manager.schuelerklausurGetMengeByTermin(termin));
 
@@ -1079,23 +1094,29 @@ public final class DataUntis {
 	}
 
 	private static void processKlausurenAndSchueler(final UntisGPU017 klausur, final GostKlausurplanManager manager,
-			final HashMap2D<String, String, List<Long>> unterrichte, final int idVarianteSchuelerBezeichner,
+			final HashMap2D<String, String, List<UntisGPU002>> unterrichte, final int idVarianteSchuelerBezeichner,
 			final List<GostKursklausur> klausuren, final List<GostSchuelerklausur> schuelerKlausuren) {
+
 		klausur.unterrichte = klausuren.stream()
-				.map(k -> unterrichte.getOrNull(
+				.flatMap(k -> Optional.ofNullable(unterrichte.getOrNull(
 						GostHalbjahr.fromIDorException(manager.vorgabeByKursklausur(k).halbjahr).jahrgang,
 						manager.kursKurzbezeichnungByKursklausur(k)
 				))
-				.filter(Objects::nonNull)
-				.flatMap(List::stream)
-				.map(Object::toString)
+						.map(uKlausuren -> uKlausuren.stream()
+								.filter(uKlausur -> {
+									long gueltigAb = Long.parseLong(uKlausur.datumVon);
+									long gueltigBis = Long.parseLong(uKlausur.datumBis);
+									long klausurDatum = Long.parseLong(klausur.datum);
+									return gueltigAb <= klausurDatum && klausurDatum <= gueltigBis;
+								}))
+						.orElseGet(Stream::empty))
+				.map(u -> u.idUnterricht).map(Object::toString)
 				.collect(Collectors.joining("~"));
 
 		klausur.kurse = klausuren.stream()
 				.map(manager::kursKurzbezeichnungByKursklausur)
 				.collect(Collectors.joining("~"));
 
-		klausur.name = klausur.kurse;
 		klausur.text = klausur.kurse;
 
 		klausur.schueler = schuelerKlausuren.stream()
@@ -1118,7 +1139,7 @@ public final class DataUntis {
 	 * @throws ApiOperationException   falls ein Fehler beim Erstellen der CSV-Daten entsteht
 	 */
 	private static @NotNull String getGPU017(final @NotNull Logger logger, final @NotNull GostKlausurplanManager manager,
-			final HashMap2D<String, String, List<Long>> unterrichte, final int idVariante)
+			final HashMap2D<String, String, List<UntisGPU002>> unterrichte, final int idVariante)
 			throws ApiOperationException {
 		logger.logLn("-> Erstelle Liste der Klausurdaten für GPU017.txt");
 		logger.modifyIndent(2);
@@ -1183,10 +1204,10 @@ public final class DataUntis {
 			manager.stundenplanManagerAdd(stundenplanManager);
 		}
 
-		HashMap2D<String, String, List<Long>> unterrichte = new HashMap2D<>();
+		HashMap2D<String, String, List<UntisGPU002>> unterrichte = new HashMap2D<>();
 		logger.logLn("-> analysieren der GPU002-Daten...");
 		try {
-			unterrichte = getUnterrichtsnummern(UntisGPU002.readCSV(gpu002.getBytes(StandardCharsets.UTF_8)));
+			unterrichte = getUntisGPU002ByKlasseAndFach(UntisGPU002.readCSV(gpu002.getBytes(StandardCharsets.UTF_8)));
 		} catch (final IOException e) {
 			logger.logLn("-> Fehler: " + e.getMessage());
 			return "Fehler: " + e.getMessage();
@@ -1195,14 +1216,9 @@ public final class DataUntis {
 		return getGPU017(logger, manager, unterrichte, idVariante);
 	}
 
-	private static HashMap2D<String, String, List<Long>> getUnterrichtsnummern(final List<UntisGPU002> gpu002List) {
-		final HashMap2D<String, String, List<Long>> result = new HashMap2D<>();
-		for (final UntisGPU002 entry : gpu002List) {
-			final String klasse = entry.klasseKuerzel;
-			final String fach = entry.fachKuerzel;
-			final long unterrichtsnummer = entry.idUnterricht;
-			Map2DUtils.addToList(result, klasse, fach, unterrichtsnummer);
-		}
+	private static HashMap2D<String, String, List<UntisGPU002>> getUntisGPU002ByKlasseAndFach(final List<UntisGPU002> gpu002List) {
+		final HashMap2D<String, String, List<UntisGPU002>> result = new HashMap2D<>();
+		gpu002List.stream().forEach(entry -> Map2DUtils.addToList(result, entry.klasseKuerzel, entry.fachKuerzel, entry));
 		return result;
 	}
 
