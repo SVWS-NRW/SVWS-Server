@@ -164,7 +164,7 @@ public class APISchueler {
 				conn -> JSONMapper.gzipFileResponseFromObject(DataSchuelerliste.getSchuelerListe(conn, abschnitt),
 						"auswahlliste_%d.json.gz".formatted(abschnitt)),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
+				BenutzerKompetenz.KEINE);
 	}
 
 
@@ -190,7 +190,7 @@ public class APISchueler {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerStammdaten(conn).get(id),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
+				BenutzerKompetenz.KEINE);
 	}
 
 

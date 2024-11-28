@@ -101,7 +101,7 @@ public class APILehrer {
 	public Response getLehrer(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerliste(conn).getAll(),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.LEHRERDATEN_ANSEHEN, BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN);
+				BenutzerKompetenz.KEINE);
 	}
 
 

@@ -65,16 +65,12 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 		]);
 	}
 
-	public async beforeEach(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
-		if ((this.selectedChild === undefined) || (this.selectedChild.hidden({ abiturjahr: "-1" }) !== false))
-			await this.setTab(this.data.selectedTabFromConfig);
-		return this.getRouteSelectedChild();
-	}
-
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
 		try {
 			if (isEntering || (this.data.idSchuljahresabschnitt !== routeApp.data.aktAbschnitt.value.id))
 				await this.data.setSchuljahresabschnitt(routeApp.data.aktAbschnitt.value.id);
+			if (to === this)
+				return this.getRouteDefaultChild();
 			let cur: RouteNode<any, any> = to;
 			while (cur.parent !== this)
 				cur = cur.parent;
@@ -86,7 +82,9 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 					return this.getRouteDefaultChild();
 				return this.getRouteSelectedChild();
 			}
-			const eintrag = this.data.mapAbiturjahrgaenge.get(abiturjahr);
+			let eintrag = this.data.mapAbiturjahrgaenge.get(abiturjahr);
+			if ((eintrag === undefined) && (this.data.mapAbiturjahrgaenge.size > 0))
+				eintrag = this.data.mapAbiturjahrgaenge.get(-1);
 			await this.data.setAbiturjahrgang(eintrag, isEntering);
 			if (this.name !== to.name)
 				return;

@@ -201,7 +201,7 @@ public class APISchule {
 	public Response getSchuleStammdaten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuleStammdaten(conn).get(),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.SCHULBEZOGENE_DATEN_ANSEHEN);
+				BenutzerKompetenz.KEINE);
 	}
 
 

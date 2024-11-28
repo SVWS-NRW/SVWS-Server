@@ -122,7 +122,7 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
 		const mapJahrgaenge = new Map<number, JahrgangsDaten>();
 		for (const j of listJahrgaenge) {
-			const jg : Jahrgaenge | null = Jahrgaenge.data().getWertByKuerzel(j.kuerzelStatistik);
+			const jg : Jahrgaenge | null = (j.kuerzelStatistik === null) ? null : Jahrgaenge.data().getWertByKuerzel(j.kuerzelStatistik);
 			if ((jg !== null) && (jg.hatSchulform(schuljahresabschnitt.schuljahr, api.schulform)))
 				mapJahrgaenge.set(j.id, j);
 		}
@@ -298,7 +298,8 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 		const schulgliederung: Schulgliederung | null = (jahrgang.kuerzelSchulgliederung === null) ? null : Schulgliederung.data().getWertByKuerzel(jahrgang.kuerzelSchulgliederung);
 		if (schulgliederung === null)
 			throw new DeveloperNotificationException("Dem Jahrgang mit der ID " + idJahrgang + " ist eine unbekannte Schulgliederung " + jahrgang.kuerzelSchulgliederung + " zugeordnet.");
-		const abiturjahr = GostAbiturjahrUtils.getGostAbiturjahr(api.schulform, schulgliederung, routeApp.data.aktAbschnitt.value.schuljahr, jahrgang.kuerzelStatistik);
+		const abiturjahr = (jahrgang.kuerzelStatistik === null) ? null
+			: GostAbiturjahrUtils.getGostAbiturjahr(api.schulform, schulgliederung, routeApp.data.aktAbschnitt.value.schuljahr, jahrgang.kuerzelStatistik);
 		if (abiturjahr === null)
 			return null;
 		return abiturjahr;
