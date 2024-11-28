@@ -16,7 +16,7 @@ const SSchuelerAdressen = () => import("~/components/schueler/adressen/SSchueler
 export class RouteSchuelerAusbildungsbetriebe extends RouteNode<RouteDataSchuelerAusbildungsbetriebe, RouteSchueler> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler.ausbildungsbetriebe", "ausbildungsbetriebe", SSchuelerAdressen, new RouteDataSchuelerAusbildungsbetriebe());
+		super(Schulform.values(), [ BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN ], "schueler.ausbildungsbetriebe", "ausbildungsbetriebe", SSchuelerAdressen, new RouteDataSchuelerAusbildungsbetriebe());
 		super.mode = ServerMode.ALPHA;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Ausbildungsbetriebe";

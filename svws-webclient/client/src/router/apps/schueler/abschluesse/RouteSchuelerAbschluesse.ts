@@ -8,14 +8,13 @@ import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteS
 import { RouteDataSchuelerAbschluesse } from "~/router/apps/schueler/abschluesse/RouteDataSchuelerAbschluesse";
 import { type SchuelerAbschluesseProps } from "~/components/schueler/abschluesse/SchuelerAbschluesseProps";
 import { api } from "~/router/Api";
-import { routeApp } from "../../RouteApp";
 
 const SSchuelerAbschluesse = () => import("~/components/schueler/abschluesse/SSchuelerAbschluesse.vue");
 
 export class RouteSchuelerAbschluesse extends RouteNode<RouteDataSchuelerAbschluesse, RouteSchueler> {
 
 	public constructor() {
-		super(Schulform.values().filter(f => !f.equals(Schulform.G)), [ BenutzerKompetenz.KEINE ], "schueler.abschluesse", "abschluesse", SSchuelerAbschluesse, new RouteDataSchuelerAbschluesse());
+		super(Schulform.values().filter(f => !f.equals(Schulform.G)), [ BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN ], "schueler.abschluesse", "abschluesse", SSchuelerAbschluesse, new RouteDataSchuelerAbschluesse());
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Abschlüsse";

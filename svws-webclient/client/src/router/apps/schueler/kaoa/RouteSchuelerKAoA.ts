@@ -15,7 +15,7 @@ const SSchuelerKaoa = () => import("~/components/schueler/kaoa/SSchuelerKaoa.vue
 export class RouteSchuelerKAoA extends RouteNode<RouteDataSchuelerKAoA, RouteSchueler> {
 
 	public constructor() {
-		super(Schulform.values().filter(f => ![Schulform.G, Schulform.FW, Schulform.HI, Schulform.KS].includes(f)), [BenutzerKompetenz.KEINE], "schueler.kaoa", "kaoa", SSchuelerKaoa, new RouteDataSchuelerKAoA());
+		super(Schulform.values().filter(f => ![Schulform.G, Schulform.FW, Schulform.HI, Schulform.KS].includes(f)), [BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_KAOA_DATEN_AENDERN], "schueler.kaoa", "kaoa", SSchuelerKaoa, new RouteDataSchuelerKAoA());
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "KAoA";
