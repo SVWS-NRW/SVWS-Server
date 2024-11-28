@@ -16,7 +16,7 @@ const SJahrgaengeApp = () => import("~/components/schule/jahrgaenge/SJahrgaengeA
 export class RouteSchuleJahrgaenge extends RouteAuswahlNode<JahrgangListeManager, RouteDataSchuleJahrgaenge, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN ], "schule.jahrgaenge", "schule/jahrgaenge/:id(\\d+)?", SJahrgaengeApp, SJahrgaengeAuswahl, new RouteDataSchuleJahrgaenge());
+		super(Schulform.values(), [ BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN ], "schule.jahrgaenge", "schule/jahrgaenge/:id(\\d+)?", SJahrgaengeApp, SJahrgaengeAuswahl, new RouteDataSchuleJahrgaenge());
 		super.mode = ServerMode.DEV;
 		super.text = "Jahrgänge";
 		super.menugroup = RouteSchuleMenuGroup.SCHULBEZOGEN;

@@ -16,7 +16,7 @@ const SVermerkDaten = () => import("~/components/schule/kataloge/vermerke/daten/
 export class RouteKatalogVermerkartenDaten extends RouteNode<any, RouteKatalogVermerkarten> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.vermerke.daten", "daten", SVermerkDaten);
+		super(Schulform.values(), [ BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN ], "schule.vermerke.daten", "daten", SVermerkDaten);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Vermerkart";

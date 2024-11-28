@@ -23,7 +23,7 @@ const SBetriebeApp = () => import("~/components/schule/betriebe/SBetriebeApp.vue
 export class RouteSchuleBetriebe extends RouteNode<RouteDataSchuleBetriebe, RouteApp>{
 
 	public constructor(){
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.betriebe", "schule/betriebe/:id(\\d+)?", SBetriebeApp, new RouteDataSchuleBetriebe());
+		super(Schulform.values(), [ BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN ], "schule.betriebe", "schule/betriebe/:id(\\d+)?", SBetriebeApp, new RouteDataSchuleBetriebe());
 		super.mode = ServerMode.ALPHA;
 		super.propHandler = (route) => this.getProps(route);
 		super.text="Betriebe";

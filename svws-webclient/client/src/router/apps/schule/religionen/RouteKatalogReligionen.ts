@@ -22,7 +22,7 @@ const SReligionenApp = () => import("~/components/schule/kataloge/religionen/SRe
 export class RouteKatalogReligionen extends RouteNode<RouteDataKatalogReligionen, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.religionen", "schule/religion/:id(\\d+)?", SReligionenApp, new RouteDataKatalogReligionen());
+		super(Schulform.values(), [ BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN ], "schule.religionen", "schule/religion/:id(\\d+)?", SReligionenApp, new RouteDataKatalogReligionen());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Religionen";

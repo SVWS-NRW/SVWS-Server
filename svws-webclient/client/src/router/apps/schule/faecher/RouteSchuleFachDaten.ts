@@ -12,7 +12,7 @@ const SFachDaten = () => import("~/components/schule/faecher/daten/SFachDaten.vu
 export class RouteSchuleFachDaten extends RouteNode<any, RouteSchuleFaecher> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN ], "schule.faecher.daten", "daten", SFachDaten);
+		super(Schulform.values(), [ BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN ], "schule.faecher.daten", "daten", SFachDaten);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Fach";

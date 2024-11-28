@@ -20,7 +20,7 @@ const SFaecherApp = () => import("~/components/schule/faecher/SFaecherApp.vue")
 export class RouteSchuleFaecher extends RouteAuswahlNode<FachListeManager, RouteDataSchuleFaecher, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN ], "schule.faecher", "schule/faecher/:id(\\d+)?", SFaecherApp, SFaecherAuswahl, new RouteDataSchuleFaecher());
+		super(Schulform.values(), [ BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN ], "schule.faecher", "schule/faecher/:id(\\d+)?", SFaecherApp, SFaecherAuswahl, new RouteDataSchuleFaecher());
 		super.mode = ServerMode.STABLE;
 		super.text = "Fächer";
 		super.menugroup = RouteSchuleMenuGroup.SCHULBEZOGEN;
