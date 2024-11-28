@@ -51,6 +51,7 @@ import de.svws_nrw.core.data.gost.GostBlockungsergebnisKurs;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisSchiene;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionAllData;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionHjData;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumstunde;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
@@ -529,6 +530,22 @@ public final class DataUntis {
 			default -> null;
 		};
 	}
+
+	/**
+	 * Erstellt für die übergebenen GPU002-Daten eine 2D-Map mit den Schlüsseln der Klassen- und Fach-Kürzeln auf die
+	 * einzelnen Unterrichts-Einträge der GPU002
+	 *
+	 * @param gpu002List   die Liste der GPU002-Einträge
+	 *
+	 * @return die Map
+	 */
+	private static HashMap2D<String, String, List<UntisGPU002>> getMapUntisGPU002ByKlasseAndFach(final List<UntisGPU002> gpu002List) {
+		final HashMap2D<String, String, List<UntisGPU002>> result = new HashMap2D<>();
+		for (final UntisGPU002 entry : gpu002List)
+			Map2DUtils.addToList(result, entry.klasseKuerzel, entry.fachKuerzel, entry);
+		return result;
+	}
+
 
 
 	/**
@@ -1017,6 +1034,26 @@ public final class DataUntis {
 	}
 
 	/**
+	 * Erzeugt den Export der Schülerliste des angegebenen Schuljahresabschnittes für Untis (Datei GPU010.txt)
+	 * und gibt diese als Response zurück. Dabei werden nur Schüler mit dem Status AKTIV, EXTERN, NEUAUFNAHME
+	 * und WARTELISTE berücksichtigt.
+	 *
+	 * @param conn                     die Datenbank-Verbindung
+	 * @param logger                   der Logger
+	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnittes
+	 * @param idVariante               die Variante für den Schüler-Bezeichner (1, 2 oder 3 - siehe {@link UntisSchuelerBezeichner})
+	 *
+	 * @return eine Response mit der CSV-Datei
+	 *
+	 * @throws ApiOperationException   wenn ein Fehler beim Erstellen des Exportes auftritt
+	 */
+	public static Response exportGPU010(final DBEntityManager conn, final Logger logger, final long idSchuljahresabschnitt, final int idVariante)
+			throws ApiOperationException {
+		final @NotNull String daten = getGPU010bySchuljahresabschnitt(conn, logger, idSchuljahresabschnitt, idVariante);
+		return Response.ok(daten).header("Content-Disposition", "attachment; filename=\"GPU010.txt\"").build();
+	}
+
+	/**
 	 * Bestimmt anhand des übergebenen Managers die
 	 * Liste der zugehörigen Klausureinträge für die GPU017.TXT-Datei von Untis.
 	 *
@@ -1030,8 +1067,8 @@ public final class DataUntis {
 	private static List<UntisGPU017> getListGPU017(final @NotNull Logger logger, final @NotNull GostKlausurplanManager manager,
 			final HashMap2D<String, String, List<UntisGPU002>> unterrichte, final int idVariante) {
 		final List<UntisGPU017> result = new ArrayList<>();
-
-		manager.raumGetMengeAsList().forEach(raum -> {
+		// Füge zunächst alle Klausuren mit Raumzuordnung hinzu
+		for (final GostKlausurraum raum : manager.raumGetMengeAsList()) {
 			final List<GostKlausurraumstunde> stunden = manager.raumstundeGetMengeByRaum(raum);
 			if (stunden.isEmpty()) {
 				logger.logLn("-> INFO: Keine Klausurraumstunden zu Raum %d gefunden. Überspringe.".formatted(raum.id));
@@ -1041,13 +1078,8 @@ public final class DataUntis {
 
 				final GostKlausurtermin termin = manager.terminGetByIdOrException(raum.idTermin);
 				klausur.datum = getUntisDate(termin.datum);
-
-				klausur.name = "%s_K%d_%s"
-					.formatted(
-							GostHalbjahr.fromIDorException(termin.halbjahr).jahrgang,
-							termin.quartal,
-							manager.kursklausurGetMengeByRaum(raum).stream().map(manager::kursKurzbezeichnungByKursklausur).collect(Collectors.joining("_"))
-					);
+				klausur.name = "%s_K%d_%s".formatted(GostHalbjahr.fromIDorException(termin.halbjahr).jahrgang, termin.quartal,
+						manager.kursklausurGetMengeByRaum(raum).stream().map(manager::kursKurzbezeichnungByKursklausur).collect(Collectors.joining("_")));
 
 				final StundenplanManager stundenplan = manager.stundenplanManagerGetByTerminOrNull(termin);
 				if (stundenplan == null) {
@@ -1060,69 +1092,49 @@ public final class DataUntis {
 				final StundenplanRaum stundenplanraum = manager.stundenplanraumGetByKlausurraumOrNull(raum);
 				if (stundenplanraum != null)
 					klausur.raeume = stunden.stream().map(s -> stundenplanraum.kuerzel).collect(Collectors.joining(" - "));
-
 				processKlausurenAndSchueler(klausur, manager, unterrichte, idVariante, manager.kursklausurGetMengeByRaum(raum),
 						manager.schuelerklausurGetMengeByRaum(raum));
-
 				result.add(klausur);
 			}
-		});
+		}
+		// Füge dann alle Termine hinzu, die noch keine Raumzuordnung haben
+		for (final GostKlausurtermin termin : manager.terminGetMengeAsList()) {
+			if (!manager.raumGetMengeByTermin(termin).isEmpty())
+				continue;
+			final UntisGPU017 klausur = new UntisGPU017();
+			klausur.id = termin.id;
+			klausur.datum = getUntisDate(termin.datum);
 
-		manager.terminGetMengeAsList().stream()
-				.filter(termin -> manager.raumGetMengeByTermin(termin).isEmpty())
-				.forEach(termin -> {
-					final UntisGPU017 klausur = new UntisGPU017();
-					klausur.id = termin.id;
-					klausur.datum = getUntisDate(termin.datum);
-
-					final List<GostKursklausur> klausuren = manager.kursklausurGetMengeByTermin(termin);
-
-					klausur.name = termin.bezeichnung != null ? termin.bezeichnung : "%s_K%d_%s"
-						.formatted(
-								GostHalbjahr.fromIDorException(termin.halbjahr).jahrgang,
-								termin.quartal,
-								klausuren.stream().map(manager::kursKurzbezeichnungByKursklausur).collect(Collectors.joining("_"))
-						);
-
-					processKlausurenAndSchueler(klausur, manager, unterrichte, idVariante, klausuren,
-							manager.schuelerklausurGetMengeByTermin(termin));
-
-					result.add(klausur);
-				});
-
+			final List<GostKursklausur> klausuren = manager.kursklausurGetMengeByTermin(termin);
+			klausur.name = (termin.bezeichnung != null) ? termin.bezeichnung : "%s_K%d_%s".formatted(
+					GostHalbjahr.fromIDorException(termin.halbjahr).jahrgang, termin.quartal,
+					klausuren.stream().map(manager::kursKurzbezeichnungByKursklausur).collect(Collectors.joining("_")));
+			processKlausurenAndSchueler(klausur, manager, unterrichte, idVariante, klausuren, manager.schuelerklausurGetMengeByTermin(termin));
+			result.add(klausur);
+		}
 		return result;
 	}
 
 	private static void processKlausurenAndSchueler(final UntisGPU017 klausur, final GostKlausurplanManager manager,
 			final HashMap2D<String, String, List<UntisGPU002>> unterrichte, final int idVarianteSchuelerBezeichner,
 			final List<GostKursklausur> klausuren, final List<GostSchuelerklausur> schuelerKlausuren) {
-
 		klausur.unterrichte = klausuren.stream()
-				.flatMap(k -> Optional.ofNullable(unterrichte.getOrNull(
-						GostHalbjahr.fromIDorException(manager.vorgabeByKursklausur(k).halbjahr).jahrgang,
-						manager.kursKurzbezeichnungByKursklausur(k)
-				))
-						.map(uKlausuren -> uKlausuren.stream()
-								.filter(uKlausur -> {
-									if (klausur.datum == null)
-										return true;
-									long gueltigAb = Long.parseLong(uKlausur.datumVon);
-									long gueltigBis = Long.parseLong(uKlausur.datumBis);
-									long klausurDatum = Long.parseLong(klausur.datum);
-									return gueltigAb <= klausurDatum && klausurDatum <= gueltigBis;
-								}))
+				.flatMap(k -> Optional.ofNullable(unterrichte
+						.getOrNull(GostHalbjahr.fromIDorException(manager.vorgabeByKursklausur(k).halbjahr).jahrgang,
+								manager.kursKurzbezeichnungByKursklausur(k)))
+						.map(uKlausuren -> uKlausuren.stream().filter(uKlausur -> {
+							if (klausur.datum == null)
+								return true;
+							final long gueltigAb = Long.parseLong(uKlausur.datumVon);
+							final long gueltigBis = Long.parseLong(uKlausur.datumBis);
+							final long klausurDatum = Long.parseLong(klausur.datum);
+							return (gueltigAb <= klausurDatum) && (klausurDatum <= gueltigBis);
+						}))
 						.orElseGet(Stream::empty))
-				.map(u -> u.idUnterricht).map(Object::toString)
-				.collect(Collectors.joining("~"));
-
-		klausur.kurse = klausuren.stream()
-				.map(manager::kursKurzbezeichnungByKursklausur)
-				.collect(Collectors.joining("~"));
-
+				.map(u -> u.idUnterricht).map(Object::toString).collect(Collectors.joining("~"));
+		klausur.kurse = klausuren.stream().map(manager::kursKurzbezeichnungByKursklausur).collect(Collectors.joining("~"));
 		klausur.text = klausur.kurse;
-
-		klausur.schueler = schuelerKlausuren.stream()
-				.map(sk -> manager.getSchuelerMap().get(sk.idSchueler))
+		klausur.schueler = schuelerKlausuren.stream().map(sk -> manager.getSchuelerMap().get(sk.idSchueler))
 				.map(s -> UntisSchuelerBezeichner.getBezeichner(idVarianteSchuelerBezeichner, s.id, s.nachname, s.vorname, s.geburtsdatum))
 				.collect(Collectors.joining("~"));
 	}
@@ -1209,40 +1221,13 @@ public final class DataUntis {
 		HashMap2D<String, String, List<UntisGPU002>> unterrichte = new HashMap2D<>();
 		logger.logLn("-> analysieren der GPU002-Daten...");
 		try {
-			unterrichte = getUntisGPU002ByKlasseAndFach(UntisGPU002.readCSV(gpu002.getBytes(StandardCharsets.UTF_8)));
+			unterrichte = getMapUntisGPU002ByKlasseAndFach(UntisGPU002.readCSV(gpu002.getBytes(StandardCharsets.UTF_8)));
 		} catch (final IOException e) {
 			logger.logLn("-> Fehler: " + e.getMessage());
 			return "Fehler: " + e.getMessage();
 		}
 
 		return getGPU017(logger, manager, unterrichte, idVariante);
-	}
-
-	private static HashMap2D<String, String, List<UntisGPU002>> getUntisGPU002ByKlasseAndFach(final List<UntisGPU002> gpu002List) {
-		final HashMap2D<String, String, List<UntisGPU002>> result = new HashMap2D<>();
-		gpu002List.stream().forEach(entry -> Map2DUtils.addToList(result, entry.klasseKuerzel, entry.fachKuerzel, entry));
-		return result;
-	}
-
-
-	/**
-	 * Erzeugt den Export der Schülerliste des angegebenen Schuljahresabschnittes für Untis (Datei GPU010.txt)
-	 * und gibt diese als Response zurück. Dabei werden nur Schüler mit dem Status AKTIV, EXTERN, NEUAUFNAHME
-	 * und WARTELISTE berücksichtigt.
-	 *
-	 * @param conn                     die Datenbank-Verbindung
-	 * @param logger                   der Logger
-	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnittes
-	 * @param idVariante               die Variante für den Schüler-Bezeichner (1, 2 oder 3 - siehe {@link UntisSchuelerBezeichner})
-	 *
-	 * @return eine Response mit der CSV-Datei
-	 *
-	 * @throws ApiOperationException   wenn ein Fehler beim Erstellen des Exportes auftritt
-	 */
-	public static Response exportGPU010(final DBEntityManager conn, final Logger logger, final long idSchuljahresabschnitt, final int idVariante)
-			throws ApiOperationException {
-		final @NotNull String daten = getGPU010bySchuljahresabschnitt(conn, logger, idSchuljahresabschnitt, idVariante);
-		return Response.ok(daten).header("Content-Disposition", "attachment; filename=\"GPU010.txt\"").build();
 	}
 
 	/**
