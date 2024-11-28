@@ -1,11 +1,12 @@
 <template>
 	<div class="page--content">
 		<div class="flex flex-col gap-y-16 lg:gap-y-16" v-if="ServerMode.DEV.checkServerMode(serverMode)">
-			<svws-ui-action-button title="Löschen" description="Ausgewählte Fächer werden gelöscht." icon="i-ri-delete-bin-line"
+			<svws-ui-action-button v-if="hatKompetenzLoeschen" title="Löschen" description="Ausgewählte Fächer werden gelöscht." icon="i-ri-delete-bin-line"
 				:action-function="entferneFaecher" action-label="Löschen" :is-loading="loading" :is-active="currentAction === 'delete'"
-				:action-disabled="!preConditionCheck[0]" @click="toggleDeleteFaecher">
-				<span v-if="preConditionCheck[0]">Alle ausgewählten Fächer sind bereit zum Löschen.</span>
-				<template v-else v-for="message in preConditionCheck[1]" :key="message">
+				:action-disabled="true" @click="toggleDeleteFaecher">
+				<!-- TODO: Implementierung des Löschgruppenprozesses -->
+				<span v-if="false">Alle ausgewählten Fächer sind bereit zum Löschen.</span>
+				<template v-else v-for="message in []" :key="message">
 					<span class="text-error"> {{ message }} <br> </span>
 				</template>
 			</svws-ui-action-button>
@@ -25,23 +26,19 @@
 
 <script setup lang="ts">
 
-	import { ref, computed } from "vue";
+	import { computed, ref } from "vue";
 	import type { SchuleFachGruppenprozesseProps } from "./SSchuleFachGruppenprozesseProps";
 	import type { List } from "@core";
-	import { ServerMode } from "@core";
+	import { ServerMode, BenutzerKompetenz } from "@core";
 
 	const props = defineProps<SchuleFachGruppenprozesseProps>();
+
+	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
 
 	const currentAction = ref<string>('');
 	const loading = ref<boolean>(false);
 	const logs = ref<List<string | null> | undefined>();
 	const status = ref<boolean | undefined>();
-
-	const preConditionCheck = computed(() => {
-		if (currentAction.value === 'delete')
-			return props.deleteFaecherCheck();
-		return [false, []];
-	})
 
 	function toggleDeleteFaecher() {
 		currentAction.value = currentAction.value === 'delete' ? '' : 'delete';

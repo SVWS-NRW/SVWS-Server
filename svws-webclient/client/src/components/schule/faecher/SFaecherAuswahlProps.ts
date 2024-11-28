@@ -1,16 +1,6 @@
-import type { BenutzerKompetenz, FachListeManager, ServerMode } from "@core";
-import type { AbschnittAuswahlDaten } from "@comp";
-import type { ViewType } from "@ui";
+import type { FachListeManager } from "@core";
+import type { RouteAuswahlListProps } from "~/router/RouteAuswahlNode";
 
-export interface FaecherAuswahlProps {
-	serverMode: ServerMode;
-	benutzerKompetenzen: Set<BenutzerKompetenz>;
-	fachListeManager: () => FachListeManager;
-	schuljahresabschnittsauswahl: () => AbschnittAuswahlDaten;
-	setFilter: () => Promise<void>;
+export interface FaecherAuswahlProps extends RouteAuswahlListProps<FachListeManager> {
 	setzeDefaultSortierungSekII: () => Promise<void>;
-	gotoDefaultView: (eintragId?: number | null) => Promise<void>;
-	gotoGruppenprozessView: (navigate: boolean) => Promise<void>;
-	gotoHinzufuegenView: (navigate: boolean) => Promise<void>;
-	activeViewType: ViewType;
 }

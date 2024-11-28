@@ -1,5 +1,5 @@
 <template>
-	<template v-if="(fachListeManager().hasDaten() && (activeViewType === ViewType.DEFAULT)) || (activeViewType !== ViewType.DEFAULT)">
+	<div v-if="(manager().hasDaten() && (activeViewType === ViewType.DEFAULT)) || (activeViewType !== ViewType.DEFAULT)" class="page--flex">
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
 				<div class="svws-headline-wrapper">
@@ -26,7 +26,7 @@
 		<svws-ui-tab-bar :tab-manager enable-focus-switching>
 			<router-view />
 		</svws-ui-tab-bar>
-	</template>
+	</div>
 	<div v-else class="app--content--placeholder">
 		<span class="icon i-ri-archive-line" />
 	</div>
@@ -41,10 +41,10 @@
 
 	const props = defineProps<FaecherAppProps>();
 
-	const fach = computed<FachDaten>(() => props.fachListeManager().auswahl());
+	const fach = computed<FachDaten>(() => props.manager().auswahl());
 
 	const faecherSubline = computed(() => {
-		const auswahlFaecherList = props.fachListeManager().liste.auswahlSorted();
+		const auswahlFaecherList = props.manager().liste.auswahlSorted();
 		if (auswahlFaecherList.size() > 5)
 			return `${auswahlFaecherList.size()} Fächer ausgewählt`;
 		return [...auswahlFaecherList].map(k => k.kuerzel).join(', ');

@@ -27,7 +27,7 @@ export class RouteSchuleFachNeu extends RouteNode<any, RouteSchuleFaecher> {
 
 	public getProps(to: RouteLocationNormalized): SchuleFachNeuProps {
 		return {
-			fachListeManager: () => routeSchuleFaecher.data.fachListeManager,
+			manager: () => routeSchuleFaecher.data.manager,
 			add: routeSchuleFaecher.data.add,
 			gotoDefaultView: routeSchuleFaecher.data.gotoDefaultView,
 			checkpoint: this.checkpoint,

@@ -2,14 +2,14 @@
 	<div class="page--content">
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input placeholder="Kürzel" :required="true" :max-len="20" :valid="(v) => fachListeManager().validateKuerzel(v)" v-model="selectedFields.kuerzel" type="text" :disabled />
-				<svws-ui-select title="Statistik-Fach" :required="true" :items="Fach.data().getListBySchuljahrAndSchulform(schuljahr, fachListeManager().schulform())"
+				<svws-ui-text-input placeholder="Kürzel" :required="true" :max-len="20" :valid="(v) => manager().validateKuerzel(v)" v-model="selectedFields.kuerzel" type="text" :disabled />
+				<svws-ui-select title="Statistik-Fach" :required="true" :items="Fach.data().getListBySchuljahrAndSchulform(schuljahr, manager().schulform())"
 					v-model="selectedStatistikFach" :item-text="getStatistikfachText" />
-				<svws-ui-text-input placeholder="Bezeichnung" :required="true" :max-len="255" :valid="(v) => fachListeManager().validateBezeichnung(v)" v-model="selectedFields.bezeichnung" type="text" :disabled />
+				<svws-ui-text-input placeholder="Bezeichnung" :required="true" :max-len="255" :valid="(v) => manager().validateBezeichnung(v)" v-model="selectedFields.bezeichnung" type="text" :disabled />
 				<svws-ui-text-input placeholder="Fachgruppe" :model-value="fachgruppe" readonly type="text" :disabled />
 				<svws-ui-select removable title="Bilinguale Sachfachsprache" :items="BilingualeSprache.values()" v-model="selectedBilingualeSprache"
 					:item-text="b => b.daten(schuljahr)?.text ?? '—'" :disabled />
-				<svws-ui-input-number placeholder="Sortierung" :valid="(v) => fachListeManager().validateSortierung(v)" v-model="selectedFields.sortierung" :disabled />
+				<svws-ui-input-number placeholder="Sortierung" :valid="(v) => manager().validateSortierung(v)" v-model="selectedFields.sortierung" :disabled />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Zeugnis">
@@ -23,18 +23,18 @@
 		<svws-ui-content-card title="Sonstiges">
 			<svws-ui-input-wrapper :grid="1">
 				<svws-ui-checkbox v-model="selectedFields.istSichtbar" :disabled>Sichtbar</svws-ui-checkbox>
-				<template v-if="fachListeManager().schulform().daten(schuljahr)?.hatGymOb ?? false">
+				<template v-if="manager().schulform().daten(schuljahr)?.hatGymOb ?? false">
 					<svws-ui-checkbox v-model="selectedFields.istOberstufenFach" :disabled>Fach der Oberstufe</svws-ui-checkbox>
 					<svws-ui-checkbox v-model="selectedFields.istPruefungsordnungsRelevant" :disabled>Ist Prüfungsordnungs-Relevant (z.B. bei Belegprüfungen)</svws-ui-checkbox>
 				</template>
-				<template v-if="fachListeManager().schulform() !== Schulform.G">
+				<template v-if="manager().schulform() !== Schulform.G">
 					<svws-ui-checkbox v-model="selectedFields.istNachpruefungErlaubt" :disabled>Nachprüfung erlaubt</svws-ui-checkbox>
 					<svws-ui-checkbox v-model="selectedFields.istSchriftlichZK" :disabled>Schriftliches Fach für ZK</svws-ui-checkbox>
 					<svws-ui-checkbox v-model="selectedFields.istSchriftlichBA" :disabled>Schriftliches Fach für BA</svws-ui-checkbox>
 					<svws-ui-checkbox v-model="selectedFields.holeAusAltenLernabschnitten" :disabled>Berücksichtigen beim Holen von abgeschlossenen Fächern</svws-ui-checkbox>
 				</template>
 				<svws-ui-input-number placeholder="maximale Zeichenanzahl in Fachbemerkungen" v-model="selectedFields.maxZeichenInFachbemerkungen" :min="0"
-					:max="JavaInteger.MAX_VALUE" :valid="(v) => fachListeManager().validateMaxZeichenInFachbemerkungen(v)" :disabled />
+					:max="JavaInteger.MAX_VALUE" :valid="(v) => manager().validateMaxZeichenInFachbemerkungen(v)" :disabled />
 			</svws-ui-input-wrapper>
 			<div class="mt-7 flex flex-row gap-4 justify-end">
 				<svws-ui-button type="secondary" @click="cancel">Abbrechen</svws-ui-button>
@@ -48,12 +48,11 @@
 <script setup lang="ts">
 
 	import { ref, computed } from "vue";
-	import { FachDaten, GostFachbereich } from "@core";
-	import { BilingualeSprache, Fach, JavaInteger, Schulform } from "@core";
+	import { BilingualeSprache, Fach, JavaInteger, Schulform, FachDaten, GostFachbereich } from "@core";
 	import type { SchuleFachNeuProps } from "./SSchuleFachNeuProps";
 
 	const props = defineProps<SchuleFachNeuProps>();
-	const schuljahr = computed<number>(() => props.fachListeManager().getSchuljahr());
+	const schuljahr = computed<number>(() => props.manager().getSchuljahr());
 
 	const selectedFields = ref<FachDaten>(new FachDaten());
 
@@ -111,13 +110,13 @@
 	const isValid = computed(() => {
 		if (selectedFields.value.kuerzelStatistik === "")
 			return false;
-		if (!props.fachListeManager().validateKuerzel(selectedFields.value.kuerzel))
+		if (!props.manager().validateKuerzel(selectedFields.value.kuerzel))
 			return false;
-		if (!props.fachListeManager().validateBezeichnung(selectedFields.value.bezeichnung))
+		if (!props.manager().validateBezeichnung(selectedFields.value.bezeichnung))
 			return false;
-		if (!props.fachListeManager().validateMaxZeichenInFachbemerkungen(selectedFields.value.maxZeichenInFachbemerkungen))
+		if (!props.manager().validateMaxZeichenInFachbemerkungen(selectedFields.value.maxZeichenInFachbemerkungen))
 			return false;
-		if (!props.fachListeManager().validateSortierung(selectedFields.value.sortierung))
+		if (!props.manager().validateSortierung(selectedFields.value.sortierung))
 			return false;
 		return true;
 	});
