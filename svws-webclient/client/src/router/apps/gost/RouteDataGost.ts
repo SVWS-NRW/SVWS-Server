@@ -327,9 +327,7 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 			await api.server.deleteGostAbiturjahrgang(api.schema, j.abiturjahr);
 			this.mapAbiturjahrgaenge.delete(j.abiturjahr);
 		}
-		// let state = await this.ladeDatenFuerSchuljahresabschnitt(this.idSchuljahresabschnitt);
-		// state = await this.ladeDatenFuerAbiturjahrgang(state.auswahl, state, true);
-		this.setPatchedState({ mapAbiturjahrgaenge: this.mapAbiturjahrgaenge });
+		this.setPatchedState({ mapAbiturjahrgaenge: this.mapAbiturjahrgaenge, selected: [ ] });
 		return [true, new ArrayList<null|string>()];
 	}
 
