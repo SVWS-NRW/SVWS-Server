@@ -784,7 +784,7 @@ public class APISchule {
 	public Response getReligionen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).getAll(),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+				BenutzerKompetenz.KEINE);
 	}
 
 
@@ -1238,7 +1238,7 @@ public class APISchule {
 	public Response getKatalogAbgangsartenAllgemeinbildend(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogAbgangsartenAllgemeinbildend().getList(),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+				BenutzerKompetenz.KEINE);
 	}
 
 
@@ -1264,7 +1264,7 @@ public class APISchule {
 	public Response getKatalogAbgangsartenBerufsbildend(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogAbgangsartenBerufsbildend().getList(),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+				BenutzerKompetenz.KEINE);
 	}
 
 
@@ -1410,7 +1410,7 @@ public class APISchule {
 	public Response getKatalogReformpaedagogikAlle(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogReformpaedagogik(conn).getAll(),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+				BenutzerKompetenz.KEINE);
 	}
 
 
@@ -1434,7 +1434,7 @@ public class APISchule {
 	public Response getKatalogReformpaedagogik(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogReformpaedagogik(conn).getList(),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+				BenutzerKompetenz.KEINE);
 	}
 
 
@@ -1460,7 +1460,7 @@ public class APISchule {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogReformpaedagogik(conn).get(id),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+				BenutzerKompetenz.KEINE);
 	}
 
 
@@ -1484,7 +1484,7 @@ public class APISchule {
 	public Response getKatalogKindergartenbesuchsdauer(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogKindergartenbesuch().getList(),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+				BenutzerKompetenz.KEINE);
 	}
 
 
@@ -1508,7 +1508,7 @@ public class APISchule {
 	public Response getKatalogNoten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogNoten().getList(),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+				BenutzerKompetenz.KEINE);
 	}
 
 
@@ -2368,7 +2368,7 @@ public class APISchule {
 	public Response getSchulen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchulen(conn).getAll(),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+				BenutzerKompetenz.KEINE);
 	}
 
 	/**
