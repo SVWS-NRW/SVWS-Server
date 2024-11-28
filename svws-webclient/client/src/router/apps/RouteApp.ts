@@ -228,8 +228,9 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new DeveloperNotificationException("Unbekannte Route");
-		await RouteManager.doRoute(node.getRoute());
-		this.data.setView(node, this.children);
+		const routingStatus = await RouteManager.doRoute(node.getRoute());
+		if (routingStatus === RoutingStatus.SUCCESS)
+			this.data.setView(node, this.children);
 	}
 
 }
