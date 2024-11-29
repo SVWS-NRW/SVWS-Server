@@ -4,8 +4,7 @@
 			<div class="p-4">
 				<svws-ui-card :compact="state.compact" :is-open="state.isOpen" :collapsible="true" :collapse-icon-position="state.iconPosition"
 					:icon="state.showIcon ? 'i-ri-settings-2-line' : undefined" :title="state.title" :subtitle="state.subtitle" :info="state.info"
-					:content="state.content" :show-divider="state.showDivider" :footer="state.footer" @open="state.isOpen = true"
-					@close="state.isOpen = false" />
+					:content="state.content" :show-divider="state.showDivider" :footer="state.footer" @update:is-open="(isOpen) => state.isOpen = isOpen" />
 			</div>
 			<template #controls>
 				<HstCheckbox v-model="state.compact" title="kompakt" />
@@ -52,7 +51,7 @@
 					:button-container="state.buttonContainer" :button-position="state.buttonPosition" :button-orientation="state.buttonOrientation"
 					:on-edit="state.showEdit ? onEdit : undefined" :on-save="state.showSave ? onSave : undefined"
 					:on-delete="state.showDelete ? onDelete : undefined" :on-cancel="state.showCancel ? onCancel : undefined"
-					@open="state.isOpen = true" @close="state.isOpen = false" />
+					@update:is-open="(isOpen) => state.isOpen = isOpen" />
 			</div>
 			<template #controls>
 				<HstCheckbox v-model="state.compact" title="kompakt" />

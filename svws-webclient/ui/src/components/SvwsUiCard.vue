@@ -45,120 +45,118 @@
 			</div>
 		</component>
 
-		<!-- Body Section -->
-		<div :id="'cardBody' + instanceId" ref="bodyWrapperRef" class="svws-ui-card--body-wrapper" :class="{ 'svws-active': isActive }">
-			<div ref="bodyRef" class="svws-ui-card--body">
-				<!-- Content Section -->
-				<div class="body--content">
-					<!-- Left Button Section -->
-					<template v-if="showContentLeftButton">
-						<div v-if="buttonMode === 'icon'" class="card--buttons" :class="{ 'flex-col': (buttonOrientation === 'vertical') }">
-							<template v-for="(button, index) in buttons" :key="index">
-								<SvwsUiTooltip :position="(buttonOrientation === 'vertical') ? 'right' : 'top'">
-									<template #content>{{ button.label }}</template>
-									<SvwsUiButton class="card--button" @click="button.click" type="icon" aria-label="Button {{ button.label }}">
-										<span :class="[ button.icon, button.iconType ]" />
-									</SvwsUiButton>
-								</SvwsUiTooltip>
-							</template>
+		<transition name="collapse" @before-enter="emit('update:isOpen', true);" @enter="openCard" @after-enter="afterOpenCard" @before-leave="beforeCloseCard" @leave="closeCard" @after-leave="emit('update:isOpen', false);">
+			<div v-show="isActive" :id="'cardBody' + instanceId" ref="bodyWrapperRef" class="svws-ui-card--body-wrapper" :class="{ 'svws-active': isActive }">
+				<div class="svws-ui-card--body">
+					<!-- Content Section -->
+					<div class="body--content">
+						<!-- Left Button Section -->
+						<template v-if="showContentLeftButton">
+							<div v-if="buttonMode === 'icon'" class="card--buttons" :class="{ 'flex-col': (buttonOrientation === 'vertical') }">
+								<template v-for="(button, index) in buttons" :key="index">
+									<SvwsUiTooltip :position="(buttonOrientation === 'vertical') ? 'right' : 'top'">
+										<template #content>{{ button.label }}</template>
+										<SvwsUiButton class="card--button" @click="button.click" type="icon" aria-label="Button {{ button.label }}">
+											<span :class="[ button.icon, button.iconType ]" />
+										</SvwsUiButton>
+									</SvwsUiTooltip>
+								</template>
+							</div>
+							<div v-else class="card--buttons" :class="{ 'flex-col': (buttonOrientation === 'vertical') }">
+								<SvwsUiButton v-for="(button, index) in buttons" :key="index" :type="button.type"
+									:size="compact ? 'small' : 'normal'" class="card--button" @click="button.click">
+									<span>{{ button.label }}</span>
+								</SvwsUiButton>
+							</div>
+						</template>
+						<slot name="buttonContentLeft" />
+						<!-- Main Section -->
+						<span v-if="showContentMain" class="content--main">{{ content }}</span>
+						<slot name="content" />
+						<!-- Right Button Section -->
+						<template v-if="showContentRightButton">
+							<div v-if="buttonMode === 'icon'" class="card--buttons ml-auto" :class="{ 'flex-col': (buttonOrientation === 'vertical') }">
+								<template v-for="(button, index) in buttons" :key="index">
+									<SvwsUiTooltip :position="(buttonOrientation === 'vertical') ? 'right' : 'top'">
+										<template #content>{{ button.label }}</template>
+										<SvwsUiButton class="card--button" @click="button.click" type="icon" aria-label="Button {{ button.label }}">
+											<span :class="[ button.icon, button.iconType ]" />
+										</SvwsUiButton>
+									</SvwsUiTooltip>
+								</template>
+							</div>
+							<div v-else class="card--buttons ml-auto" :class="{ 'flex-col': (buttonOrientation === 'vertical') }">
+								<SvwsUiButton v-for="(button, index) in buttons" :key="index" :type="button.type"
+									:size="compact ? 'small' : 'normal'" class="card--button" @click="button.click">
+									<span>{{ button.label }}</span>
+								</SvwsUiButton>
+							</div>
+						</template>
+						<div class="ml-auto">
+							<slot name="buttonContentRight" />
 						</div>
-						<div v-else class="card--buttons" :class="{ 'flex-col': (buttonOrientation === 'vertical') }">
-							<SvwsUiButton v-for="(button, index) in buttons" :key="index" :type="button.type"
-								:size="compact ? 'small' : 'normal'" class="card--button" @click="button.click">
-								<span>{{ button.label }}</span>
-							</SvwsUiButton>
-						</div>
-					</template>
-					<slot name="buttonContentLeft" />
-					<!-- Main Section -->
-					<span v-if="showContentMain" class="content--main">{{ content }}</span>
-					<slot name="content" />
-
-					<!-- Right Button Section -->
-					<template v-if="showContentRightButton">
-						<div v-if="buttonMode === 'icon'" class="card--buttons ml-auto" :class="{ 'flex-col': (buttonOrientation === 'vertical') }">
-							<template v-for="(button, index) in buttons" :key="index">
-								<SvwsUiTooltip :position="(buttonOrientation === 'vertical') ? 'right' : 'top'">
-									<template #content>{{ button.label }}</template>
-									<SvwsUiButton class="card--button" @click="button.click" type="icon" aria-label="Button {{ button.label }}">
-										<span :class="[ button.icon, button.iconType ]" />
-									</SvwsUiButton>
-								</SvwsUiTooltip>
-							</template>
-						</div>
-						<div v-else class="card--buttons ml-auto" :class="{ 'flex-col': (buttonOrientation === 'vertical') }">
-							<SvwsUiButton v-for="(button, index) in buttons" :key="index" :type="button.type"
-								:size="compact ? 'small' : 'normal'" class="card--button" @click="button.click">
-								<span>{{ button.label }}</span>
-							</SvwsUiButton>
-						</div>
-					</template>
-					<div class="ml-auto">
-						<slot name="buttonContentRight" />
 					</div>
-				</div>
-
-				<!-- Divider Section -->
-				<hr v-if="showFooterDivider">
-				<slot name="footerDivider" v-else />
-
-				<!-- Footer Section -->
-				<div v-if="showFooter" class="body--footer">
-					<!-- Left Button Section -->
-					<template v-if="showFooterLeftButton">
-						<div v-if="buttonMode === 'icon'" class="card--buttons" :class="{ 'flex-col': (buttonOrientation === 'vertical') }">
-							<template v-for="(button, index) in buttons" :key="index">
-								<SvwsUiTooltip :position="(buttonOrientation === 'vertical') ? 'right' : 'top'">
-									<template #content>{{ button.label }}</template>
-									<SvwsUiButton class="card--button" @click="button.click" type="icon" aria-label="Button {{ button.label }}">
-										<span :class="[ button.icon, button.iconType ]" />
-									</SvwsUiButton>
-								</SvwsUiTooltip>
-							</template>
+					<!-- Divider Section -->
+					<hr v-if="showFooterDivider">
+					<slot name="footerDivider" v-else />
+					<!-- Footer Section -->
+					<div v-if="showFooter" class="body--footer">
+						<!-- Left Button Section -->
+						<template v-if="showFooterLeftButton">
+							<div v-if="buttonMode === 'icon'" class="card--buttons" :class="{ 'flex-col': (buttonOrientation === 'vertical') }">
+								<template v-for="(button, index) in buttons" :key="index">
+									<SvwsUiTooltip :position="(buttonOrientation === 'vertical') ? 'right' : 'top'">
+										<template #content>{{ button.label }}</template>
+										<SvwsUiButton class="card--button" @click="button.click" type="icon" aria-label="Button {{ button.label }}">
+											<span :class="[ button.icon, button.iconType ]" />
+										</SvwsUiButton>
+									</SvwsUiTooltip>
+								</template>
+							</div>
+							<div v-else class="card--buttons" :class="{ 'flex-col': (buttonOrientation === 'vertical') }">
+								<SvwsUiButton v-for="(button, index) in buttons" :key="index" :type="button.type"
+									:size="compact ? 'small' : 'normal'" class="card--button" @click="button.click">
+									<span>{{ button.label }}</span>
+								</SvwsUiButton>
+							</div>
+						</template>
+						<slot name="buttonFooterLeft" />
+						<!-- Footer Main Content -->
+						<span v-if="showFooterMain" class="footer--main"> {{ footer }} </span>
+						<slot name="footer" />
+						<!-- Right Button Section -->
+						<template v-if="showFooterRightButton">
+							<div v-if="buttonMode === 'icon'" class="card--buttons ml-auto" :class="{ 'flex-col': (buttonOrientation === 'vertical') }">
+								<template v-for="(button, index) in buttons" :key="index">
+									<SvwsUiTooltip :position="(buttonOrientation === 'vertical') ? 'right' : 'top'">
+										<template #content>{{ button.label }}</template>
+										<SvwsUiButton class="card--button" @click="button.click" type="icon" aria-label="Button {{ button.label }}">
+											<span :class="[ button.icon, button.iconType ]" />
+										</SvwsUiButton>
+									</SvwsUiTooltip>
+								</template>
+							</div>
+							<div v-else class="card--buttons ml-auto" :class="{ 'flex-col': (buttonOrientation === 'vertical') }">
+								<SvwsUiButton v-for="(button, index) in buttons" :key="index" :type="button.type"
+									:size="compact ? 'small' : 'normal'" class="card--button" @click="button.click">
+									<span>{{ button.label }}</span>
+								</SvwsUiButton>
+							</div>
+						</template>
+						<div class="ml-auto">
+							<slot name="buttonFooterRight" />
 						</div>
-						<div v-else class="card--buttons" :class="{ 'flex-col': (buttonOrientation === 'vertical') }">
-							<SvwsUiButton v-for="(button, index) in buttons" :key="index" :type="button.type"
-								:size="compact ? 'small' : 'normal'" class="card--button" @click="button.click">
-								<span>{{ button.label }}</span>
-							</SvwsUiButton>
-						</div>
-					</template>
-					<slot name="buttonFooterLeft" />
-					<!-- Footer Main Content -->
-					<span v-if="showFooterMain" class="footer--main"> {{ footer }} </span>
-					<slot name="footer" />
-					<!-- Right Button Section -->
-					<template v-if="showFooterRightButton">
-						<div v-if="buttonMode === 'icon'" class="card--buttons ml-auto" :class="{ 'flex-col': (buttonOrientation === 'vertical') }">
-							<template v-for="(button, index) in buttons" :key="index">
-								<SvwsUiTooltip :position="(buttonOrientation === 'vertical') ? 'right' : 'top'">
-									<template #content>{{ button.label }}</template>
-									<SvwsUiButton class="card--button" @click="button.click" type="icon" aria-label="Button {{ button.label }}">
-										<span :class="[ button.icon, button.iconType ]" />
-									</SvwsUiButton>
-								</SvwsUiTooltip>
-							</template>
-						</div>
-						<div v-else class="card--buttons ml-auto" :class="{ 'flex-col': (buttonOrientation === 'vertical') }">
-							<SvwsUiButton v-for="(button, index) in buttons" :key="index" :type="button.type"
-								:size="compact ? 'small' : 'normal'" class="card--button" @click="button.click">
-								<span>{{ button.label }}</span>
-							</SvwsUiButton>
-						</div>
-					</template>
-					<div class="ml-auto">
-						<slot name="buttonFooterRight" />
 					</div>
 				</div>
 			</div>
-		</div>
+		</transition>
 	</div>
 </template>
 
 
 <script lang="ts" setup>
 
-	import { ref, onMounted, onBeforeUnmount, computed, useSlots, getCurrentInstance, watch } from 'vue';
+	import { ref, onMounted, onBeforeUnmount, computed, useSlots, getCurrentInstance, watch, nextTick } from 'vue';
 	import type { ButtonType } from '../types';
 
 	const props = withDefaults(defineProps<{
@@ -207,7 +205,9 @@
 		onCancel: undefined,
 	});
 
-	const emit = defineEmits(['close', 'open']);
+	const emit = defineEmits<{
+		"update:isOpen": [isOpen: boolean];
+	}>();
 
 	/**
 	 * Berechnungen, wann welches Element angezeigt wird.
@@ -260,18 +260,8 @@
 
 	// Wenn true, dann ist das Collapsible geöffnet
 	const isActive = ref(false);
-
+	// Wird für die eindeutige ID der Card benötigt, um diese für ARIA-Attribute zu verwenden
 	const instanceId = ref<string>('');
-	const bodyWrapperRef = ref<HTMLElement | null>(null);
-	const bodyRef = ref<HTMLElement | null>(null);
-
-	/**
-	 * Wird benötigt, um die Animation beim Öffnen des Collapsibles zu erzeugen.
-	 */
-	const resizeObserver = new ResizeObserver(() => {
-		if (isActive.value && bodyWrapperRef.value)
-			bodyWrapperRef.value.style.maxHeight = getContentHeightWithBorder() + 'px';
-	});
 
 	/**
 	 * Wenn der Zustand isActive von außen manipuliert wird, wird dieser entsprechend gesetzt
@@ -289,15 +279,59 @@
 			setActive((props.isOpen === undefined) ? false : props.isOpen)
 		else
 			setActive(true);
-
-		if (bodyRef.value)
-			resizeObserver.observe(bodyRef.value);
 	});
 
-	onBeforeUnmount(() => {
-		if (bodyRef.value)
-			resizeObserver.unobserve(bodyRef.value);
-	});
+	/**
+	 * Zustandsübergang beim Öffnen der Card.
+	 *
+	 * @param content   Der Contentbereich, dessen Höhe animiert werden soll
+	 */
+	async function openCard (content: Element, done: () => void) {
+		const element = content as HTMLElement;
+		element.style.maxHeight = '0';
+		element.style.overflow = 'hidden';
+		await nextTick(() => {
+			element.style.maxHeight = `${element.scrollHeight}px`;
+			element.addEventListener('transitionend', done, { once: true });
+		});
+	};
+
+	/**
+	 * Zustand der Card nach dem Öffnen.
+	 *
+	 * @param content   Der Contentbereich, dessen Zusatnd nach dem Öffnen gesetzt werden soll.
+	 */
+	function afterOpenCard (content: Element) {
+		const element = content as HTMLElement;
+		element.style.maxHeight = 'auto';
+		element.style.overflow = '';
+	};
+
+	/**
+	 * Zustand der Card vor dem Öffnen.
+	 *
+	 * @param content   Der Contentbereich, dessen Zusatnd nach dem Öffnen gesetzt werden soll.
+	 */
+	function beforeCloseCard (el: Element) {
+		const element = el as HTMLElement;
+		element.style.maxHeight = `${element.scrollHeight}px`;
+		element.style.overflow = 'hidden';
+	};
+
+	/**
+	 * Zustandsübergang beim Scließen der Card.
+	 *
+	 * @param content   Der Contentbereich, dessen Höhe animiert werden soll
+	 */
+	async function closeCard (el: Element, done: () => void) {
+		const element = el as HTMLElement;
+		element.style.maxHeight = `${element.scrollHeight}px`;
+		await nextTick(() => {
+			element.style.maxHeight = '0';
+			element.addEventListener('transitionend', done, { once: true });
+		});
+	};
+
 
 	/**
 	 * Setzt die Card auf geöffnet (isActive) oder geschlossen.
@@ -309,35 +343,6 @@
 			isActive.value = setActive;
 		else
 			isActive.value = !isActive.value;
-		if (bodyWrapperRef.value) {
-			if (isActive.value)
-				bodyWrapperRef.value.style.maxHeight = getContentHeightWithBorder() + 'px';
-			else
-				bodyWrapperRef.value.style.maxHeight = '0';
-		}
-
-		if(isActive.value)
-			emit('open')
-		else
-			emit('close');
-	}
-
-	/**
-	 * Berechnet die Höhe des Content-Bereichs inklusive des Rahmens, um eine korrekte Animation beim Öffnen und Schließen zu bewirken.
-	 */
-	function getContentHeightWithBorder(): number {
-		if (bodyRef.value) {
-			const computedStyle = getComputedStyle(bodyRef.value);
-
-			const borderTop = computedStyle.borderTopWidth;
-			const borderBottom = computedStyle.borderBottomWidth;
-			const parsedBorderTop = borderTop !== '' ? parseFloat(borderTop) : 0;
-			const parsedBorderBottom = borderBottom !== '' ? parseFloat(borderBottom) : 0;
-			const borderHeight = parsedBorderTop + parsedBorderBottom;
-
-			return bodyRef.value.scrollHeight + borderHeight;
-		}
-		return 0;
 	}
 
 </script>
@@ -350,7 +355,7 @@
 
 		.svws-ui-card--header {
 			@apply p-4 flex items-center gap-3 text-left w-full rounded-lg bg-ui-brand-weak border border-ui-brand transition-[border-radius]
-				duration-75 delay-[600ms] ease-in-out;
+				duration-100 delay-[450ms] ease-in-out;
 
 			.header--icon span {
 				@apply icon-xl block;
@@ -400,23 +405,15 @@
 			}
 
 			&.svws-active {
-				@apply rounded-b-none transition-[border-radius] duration-100 delay-0 ease-in-out bg-ui-brand border-ui-brand;
+				@apply rounded-b-none transition-[border-radius] delay-0 duration-100 ease-in-out bg-ui-brand border-ui-brand;
 			}
 		}
 
 		.svws-ui-card--body-wrapper {
-			@apply transition-[max-height] duration-500 delay-75 ease-in-out overflow-hidden;
-
-			&:not(.svws-active) .svws-ui-card--body {
-				@apply transition-[border-color] duration-500 border-transparent;
-			}
-
-			&.svws-active {
-				@apply transition-[max-height] duration-500 ease-in-out;
-			}
+			@apply overflow-hidden rounded-b-lg;
 
 			.svws-ui-card--body {
-				@apply rounded-b-lg p-4 bg-ui-neutral border border-ui-brand flex gap-3 flex-col;
+				@apply rounded-b-lg p-4 bg-ui-neutral flex gap-3 flex-col border border-ui-brand border-t-0;
 
 				.body--content {
 					@apply flex gap-3 justify-between items-start overflow-auto;
@@ -499,10 +496,19 @@
 				}
 			}
 
-			.svws-ui-card--body {
+			.svws-ui-card--body-wrapper .svws-ui-card--body {
 				@apply border-ui-brand-hover;
 			}
 		}
+	}
+
+	.collapse-enter-active,
+	.collapse-leave-active {
+		@apply transition-[max-height] duration-500 delay-[50ms] ease-in-out;
+	}
+
+	.collapse-leave-active {
+		@apply delay-0;
 	}
 
 </style>
