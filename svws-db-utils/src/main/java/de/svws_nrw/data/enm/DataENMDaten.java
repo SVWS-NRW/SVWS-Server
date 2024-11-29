@@ -204,7 +204,8 @@ public final class DataENMDaten extends DataManager<Long> {
 						DTOSchuelerLernabschnittsdaten.class, abschnitt.id).stream().filter(la -> mapSchueler.get(la.Schueler_ID) != null).toList();
 		final List<Long> idsLernabschnitte = lernabschnitte.stream().map(la -> la.ID).toList();
 		final Map<Long, DTOSchuelerPSFachBemerkungen> mapBemerkungen = idsLernabschnitte.isEmpty() ? new HashMap<>()
-				: conn.queryByKeyList(DTOSchuelerPSFachBemerkungen.class, idsLernabschnitte).stream().collect(Collectors.toMap(b -> b.ID, b -> b));
+				: conn.queryList(DTOSchuelerPSFachBemerkungen.QUERY_LIST_BY_ABSCHNITT_ID, DTOSchuelerPSFachBemerkungen.class, idsLernabschnitte)
+						.stream().collect(Collectors.toMap(b -> b.Abschnitt_ID, b -> b));
 		final Map<Long, DTOTimestampsSchuelerLernabschnittsdaten> mapTimestampsLernabschnitte = idsLernabschnitte.isEmpty() ? new HashMap<>()
 				: conn.queryByKeyList(DTOTimestampsSchuelerLernabschnittsdaten.class, idsLernabschnitte).stream().collect(Collectors.toMap(t -> t.ID, t -> t));
 		// Bestimme die relevanten Leistungsdaten zu den Lernabschnitten
@@ -310,8 +311,10 @@ public final class DataENMDaten extends DataManager<Long> {
 				final Note noteLB2 = Note.fromNoteSekI(lernabschnitt.Gesamtnote_NW);
 				enmSchueler.lernabschnitt.lernbereich1note = (noteLB1 == null) ? null : noteLB1.daten(abschnitt.schuljahr).kuerzel;
 				enmSchueler.lernabschnitt.lernbereich2note = (noteLB2 == null) ? null : noteLB2.daten(abschnitt.schuljahr).kuerzel;
-				final DTOFoerderschwerpunkt fs1 = (lernabschnitt.Foerderschwerpunkt_ID == null) ? null : mapFoerderschwerpunkte.get(lernabschnitt.Foerderschwerpunkt_ID);
-				final DTOFoerderschwerpunkt fs2 = (lernabschnitt.Foerderschwerpunkt2_ID == null) ? null : mapFoerderschwerpunkte.get(lernabschnitt.Foerderschwerpunkt2_ID);
+				final DTOFoerderschwerpunkt fs1 =
+						(lernabschnitt.Foerderschwerpunkt_ID == null) ? null : mapFoerderschwerpunkte.get(lernabschnitt.Foerderschwerpunkt_ID);
+				final DTOFoerderschwerpunkt fs2 =
+						(lernabschnitt.Foerderschwerpunkt2_ID == null) ? null : mapFoerderschwerpunkte.get(lernabschnitt.Foerderschwerpunkt2_ID);
 				enmSchueler.lernabschnitt.foerderschwerpunkt1 = (fs1 == null) ? null : fs1.StatistikKrz;
 				enmSchueler.lernabschnitt.foerderschwerpunkt2 = (fs2 == null) ? null : fs2.StatistikKrz;
 				enmSchueler.bemerkungen.ASV = (bemerkungen == null) ? null : bemerkungen.ASV;
