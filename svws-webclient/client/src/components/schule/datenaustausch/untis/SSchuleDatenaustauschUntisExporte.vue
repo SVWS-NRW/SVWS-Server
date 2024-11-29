@@ -94,6 +94,12 @@
 		export: async () => await props.exportUntisSchuelerGPU010(sidvariante.value),
 	});
 
+	const fachwahlenGPU017 = <GPU>({
+		title: 'Fachwahlen',
+		subtitle: 'GPU015.txt',
+		export: async (gpu002 : string) => await props.exportUntisFachwahlenGPU015(sidvariante.value, gpu002),
+	});
+
 	const klausurenGPU017 = <GPU>({
 		title: 'Klausuren',
 		subtitle: 'GPU017.txt',
@@ -106,11 +112,11 @@
 		export: async (gpu002 : string) => await props.exportUntisSchienenGPU019(gpu002),
 	});
 
-	const gpus = [ klassenGPU003, lehrerGPU004, faecherGPU006, schuelerGPU010, klausurenGPU017, schienenGPU019 ];
+	const gpus = [ klassenGPU003, lehrerGPU004, faecherGPU006, schuelerGPU010, fachwahlenGPU017, klausurenGPU017, schienenGPU019 ];
 
-	const gpusBrauchenGPU002 = [ klausurenGPU017, schienenGPU019 ];
+	const gpusBrauchenGPU002 = [ fachwahlenGPU017, klausurenGPU017, schienenGPU019 ];
 
-	const gpusHabenSchueler = [ schuelerGPU010, klausurenGPU017 ];
+	const gpusHabenSchueler = [ schuelerGPU010, fachwahlenGPU017, klausurenGPU017 ];
 	const sidvariante = ref<number>(1);
 	async function setSIDVariante(value: number | string | boolean | object) {
 		if (typeof value !== 'string')

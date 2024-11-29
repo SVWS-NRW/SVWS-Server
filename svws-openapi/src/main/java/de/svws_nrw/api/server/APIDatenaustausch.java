@@ -421,6 +421,49 @@ public class APIDatenaustausch {
 	}
 
 	/**
+	 * Die OpenAPI-Methode für den Export der Fachwahlen zu einem Schuljahresabschnitt für Untis. Dabei
+	 * wird die GPU-Datei GPU015.txt generiert.
+	 *
+	 * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param id            die ID des Schuljahresabschnittes, für den die Fachwahlen exportiert werden sollen
+	 * @param sidvariante   die Variante, wie die Schüler-Bezeichner generiert werden (1 - ID, 2 - Nachname, drei Stellen Vorname und Geurtsdatum,
+	 *                      3 - Nachname, Vorname, Geburtsdatum)
+	 * @param gpu002        GPU002-Datei
+	 * @param request       die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die GPU015-Datei
+	 */
+	@POST
+	@Produces(MediaType.APPLICATION_OCTET_STREAM)
+	@Path("/untis/export/fachwahlen/{id : \\d+}/{sidvariante : \\d+}")
+	@Operation(summary = "Liefert einen Export für die Fachwahlen eines Schuljahresabschnittes (GPU015.txt).",
+			description = "Liefert einen Export für die Fachwahlen eines Schuljahresabschnittes (GPU015.txt)."
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Exportieren besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die GPU015.txt", content = @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM,
+			schema = @Schema(type = "string", format = "binary", description = "Die GPU015.txt")))
+	@ApiResponse(responseCode = "404", description = "Es wurden nicht alle benötigten Daten für den Export gefunden.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "500", description = "Es ist ein unerwarteter Fehler aufgetreten.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	public Response exportUntisFachwahlenGPU015(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@PathParam("sidvariante") final int sidvariante, @RequestBody(description = "Die Unterrichte von Untis (GPU002.txt)", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = String.class))) final InputStream gpu002,
+			@Context final HttpServletRequest request) {
+		final Logger logger = new Logger();
+		final LogConsumerList log = new LogConsumerList();
+		logger.addConsumer(log);
+		return DBBenutzerUtils.runWithTransaction(conn -> {
+			try {
+				return DataUntis.exportGPU015(conn, logger, id, gpu002, sidvariante);
+			} catch (final ApiOperationException aoe) {
+				final SimpleOperationResponse sor = new SimpleOperationResponse();
+				sor.log.addAll(log.getStrings());
+				throw new ApiOperationException(aoe.getStatus(), aoe, sor, "application/json");
+			}
+		}, request, ServerMode.STABLE, BenutzerKompetenz.IMPORT_EXPORT_SCHUELERDATEN_EXPORTIEREN);
+	}
+
+	/**
 	 * Die OpenAPI-Methode für den Export einer Klausurplanung zu einem Schuljahresabschnitt für Untis. Dabei
 	 * wird die GPU-Datei GPU017.txt generiert.
 	 *

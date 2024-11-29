@@ -2022,6 +2022,40 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode exportUntisFachwahlenGPU015 für den Zugriff auf die URL https://{hostname}/db/{schema}/datenaustausch/untis/export/fachwahlen/{id : \d+}/{sidvariante : \d+}
+	 *
+	 * Liefert einen Export für die Fachwahlen eines Schuljahresabschnittes (GPU015.txt).Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Exportieren besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die GPU015.txt
+	 *     - Mime-Type: application/octet-stream
+	 *     - Rückgabe-Typ: ApiFile
+	 *   Code 404: Es wurden nicht alle benötigten Daten für den Export gefunden.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 500: Es ist ein unerwarteter Fehler aufgetreten.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {string | null} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 * @param {number} sidvariante - der Pfad-Parameter sidvariante
+	 *
+	 * @returns Die GPU015.txt
+	 */
+	public async exportUntisFachwahlenGPU015(data : string | null, schema : string, id : number, sidvariante : number) : Promise<ApiFile> {
+		const path = "/db/{schema}/datenaustausch/untis/export/fachwahlen/{id : \\d+}/{sidvariante : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
+			.replace(/{sidvariante\s*(:[^{}]+({[^{}]+})*)?}/g, sidvariante.toString());
+		const body : string = JSON.stringify(data);
+		const result : ApiFile = await super.postJSONtoOctetStream(path, body);
+		return result;
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode exportUntisFaecherGPU006 für den Zugriff auf die URL https://{hostname}/db/{schema}/datenaustausch/untis/export/faecher/{id : \d+}
 	 *
 	 * Liefert einen Export für die Fächer- bzw. Kursdaten eines Schuljahresabschnittes (GPU006.txt).Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Exportieren besitzt.

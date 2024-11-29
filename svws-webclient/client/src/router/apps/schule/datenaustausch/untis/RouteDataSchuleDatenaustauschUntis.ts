@@ -257,6 +257,11 @@ export class RouteDataSchuleDatenaustauschUntis extends RouteData<RouteStateDate
 		return apifile.data.text();
 	}
 
+	exportUntisFachwahlenGPU015 = async(sidvariante: number, gpu002 : string): Promise<string> => {
+		const apifile = await api.server.exportUntisFachwahlenGPU015(gpu002, api.schema, routeApp.data.aktAbschnitt.value.id, sidvariante);
+		return apifile.data.text();
+	}
+
 	exportUntisKlausurenGPU017 = async(sidvariante: number, gpu002 : string): Promise<string> => {
 		const apifile = await api.server.exportUntisKlausurenGPU017(gpu002, api.schema, routeApp.data.aktAbschnitt.value.id, sidvariante);
 		return apifile.data.text();
