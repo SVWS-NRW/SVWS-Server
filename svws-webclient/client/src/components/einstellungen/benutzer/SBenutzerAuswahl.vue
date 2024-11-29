@@ -13,8 +13,7 @@
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" removable />
 				</template>
 				<template #actions>
-					<s-modal-benutzer-neu :show-delete-icon="selectedItems.length > 0" :create-benutzer-allgemein
-						:delete-benutzer-allgemein :has-focus="rowsFiltered.size === 0" />
+					<s-modal-benutzer-neu :show-delete-icon="selectedItems.length > 0" :create-benutzer-allgemein :delete-benutzer-allgemein :has-focus="rowsFiltered.size === 0" :map-benutzer />
 				</template>
 			</svws-ui-table>
 		</template>
