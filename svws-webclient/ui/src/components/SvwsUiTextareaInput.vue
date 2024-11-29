@@ -1,5 +1,5 @@
 <template>
-	<label class="textarea-input"
+	<label :id="idComponent" class="textarea-input"
 		:class="{
 			'textarea-input--filled': data !== null,
 			'textarea-input--invalid': !isValid,
@@ -13,15 +13,14 @@
 			'col-span-full': span === 'full',
 			'flex-grow': span === 'grow'
 		}">
-		<textarea ref="textarea" v-model="dataOrEmpty" @input="onInput" @keyup.enter="onKeyEnter" @blur="onBlur"
-			:required :disabled class="textarea-input--control" :rows v-bind="{ ...$attrs }" />
-		<span v-if="placeholder" class="textarea-input--placeholder" :class="{ 'textarea-input--placeholder--required': required }">
+		<textarea ref="textarea" v-model="dataOrEmpty" @input="onInput" @blur="onBlur" class="textarea-input--control" :disabled :required :rows v-bind="{ ...$attrs }" />
+		<span :id="idPlaceholder" v-if="placeholder.length > 0" class="textarea-input--placeholder" :class="{ 'textarea-input--placeholder--required': required }">
 			<span>{{ placeholder }}</span>
 			<span class="icon i-ri-alert-line ml-0.5 -my-0.5 icon-error" v-if="isValid === false" />
-			<span v-if="maxLen && (data !== null)" class="inline-flex ml-1 gap-1" :class="maxLenValid ? 'opacity-50' : 'text-ui-danger'">
+			<span v-if="(maxLen > 0) && (data !== null)" class="inline-flex ml-1 gap-1" :class="maxLenValid ? 'opacity-50' : 'text-ui-danger'">
 				{{ `(${(data.toLocaleString().length > 0) ? data.toLocaleString().length + '/' : 'maximal '}${maxLen} Zeichen)` }}
 			</span>
-			<span v-if="statistics" class="cursor-pointer">
+			<span :id="idStatistics" v-if="statistics" class="cursor-pointer">
 				<svws-ui-tooltip position="right">
 					<span class="inline-flex items-center">
 						<span class="icon i-ri-bar-chart-2-line icon-statistics pointer-events-auto ml-0.5" />
@@ -39,7 +38,7 @@
 
 <script setup lang="ts">
 
-	import { ref, computed, watch, nextTick } from 'vue';
+	import { ref, computed, watch, useId, onMounted } from 'vue';
 
 	type ResizableOption = "both" | "horizontal" | "vertical" | "none";
 
@@ -81,16 +80,15 @@
 
 	const data = ref<string | null>(props.modelValue);
 
+	const idComponent = useId();
+	const idPlaceholder = useId();
+	const idStatistics = useId();
 	const dataOrEmpty = computed<string>({
 		get: () => data.value === null ? '' : data.value,
-		set: (value) => data.value = (value === '') ? null : value
+		set: (value) => data.value = (value === '') ? null : value,
 	});
 
 	const textarea = ref<HTMLTextAreaElement | null>(null);
-	watch([data], () => nextTick(() => {
-		if (textarea.value !== null)
-			textarea.value.style.height = textarea.value.scrollHeight > textarea.value.clientHeight ? `${textarea.value.scrollHeight}px`: 'inherit';
-	}), { immediate: true })
 
 	watch(() => props.modelValue, (value: string | null) => updateData(value), { immediate: false });
 
@@ -120,6 +118,9 @@
 
 	function onInput(event: Event) {
 		const value = (event.target as HTMLInputElement).value;
+		if(textarea.value) textarea.value.style.height='auto';
+		if (textarea.value !== null)
+			textarea.value.style.height = textarea.value.scrollHeight > textarea.value.clientHeight ? `${textarea.value.scrollHeight}px`: 'inherit';
 		if (value !== data.value)
 			updateData(value);
 	}
@@ -130,10 +131,10 @@
 		emit("blur", data.value);
 	}
 
-	function onKeyEnter() {
-		if (props.modelValue !== data.value)
-			emit("change", data.value);
-	}
+	onMounted(() => {
+		if (textarea.value !== null)
+			textarea.value.style.height = textarea.value.scrollHeight > textarea.value.clientHeight ? `${textarea.value.scrollHeight}px`: 'inherit';
+	});
 
 	defineExpose({ content: data });
 
