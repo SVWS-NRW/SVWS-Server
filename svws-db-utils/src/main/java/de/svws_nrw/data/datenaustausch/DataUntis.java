@@ -1295,7 +1295,7 @@ public final class DataUntis {
 				final String strKlassen = klassenKuerzel.stream().collect(Collectors.joining("~"));
 				final String strSchienenBezKlassen = klassenKuerzel.stream().collect(Collectors.joining(",", " (", ")"));
 				final List<Long> unterrichte =
-						klassenKuerzel.stream().flatMap(k -> Optional.ofNullable(mapUnterrichte.getOrNull(k, fach.Kuerzel)).orElse(new ArrayList<>()).stream())
+						klassenKuerzel.stream().flatMap(k -> Optional.ofNullable(mapUnterrichte.getOrNull(k, kurs.kuerzel)).orElse(new ArrayList<>()).stream())
 								.map(u -> u.idUnterricht).distinct().toList();
 				for (final long unterricht : unterrichte) {
 					for (final int schienenNr : kurs.schienen) {
