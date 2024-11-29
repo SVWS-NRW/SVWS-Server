@@ -28,7 +28,7 @@
 					<template #content>
 						<div class="text-justify">
 							Laden Sie jetzt die Datei <span class="font-bold">GPU002.txt</span> von Untis hier hoch, um die Klausuren anschließend zu exportieren.
-							Die CSV-Datei muss als Textkodierung UTF-8 ohne BOM verwenden. Als Trennzeichen wird das Semikolon verwendet und für die textbegrenzung doppelte Anführungszeichen (").
+							Die CSV-Datei muss als Textkodierung UTF-8 verwenden. Als Trennzeichen wird das Semikolon verwendet und für die textbegrenzung doppelte Anführungszeichen (").
 						</div>
 					</template>
 					<template #footer>
