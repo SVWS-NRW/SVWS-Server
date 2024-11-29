@@ -1252,6 +1252,176 @@ public final class DataUntis {
 
 
 	/**
+	 * Bestimmt anhand der übergebenen Fächerliste und der übergebenen Kursliste die Schienenzuordnungs-Liste der
+	 * Kurse für die GPU019.TXT-Datei von Untis.
+	 *
+	 * @param kurse            die Kurse
+	 * @param faecher          die Fächer
+	 * @param klassen          die Klassen
+	 * @param mapUnterrichte   die Zuordnung der Unterrichtsnummern zu den Kursen
+	 *
+	 * @return die Liste der GPU019-Einträge
+	 */
+	private static List<UntisGPU019> getListGPU019(final @NotNull List<KursDaten> kurse, final @NotNull List<DTOFach> faecher,
+			final @NotNull List<DTOKlassen> klassen, final HashMap2D<String, String, List<UntisGPU002>> mapUnterrichte) {
+		final List<UntisGPU019> result = new ArrayList<>();
+		final Map<Long, DTOFach> mapFaecher = faecher.stream().collect(Collectors.toMap(f -> f.ID, f -> f));
+		final Map<Long, List<DTOKlassen>> mapKlassenByJahrgang = klassen.stream().collect(Collectors.groupingBy(k -> k.Jahrgang_ID));
+		for (final KursDaten kurs : kurse) {
+			if (kurs.schienen.isEmpty())
+				continue;
+			final DTOFach fach = mapFaecher.get(kurs.idFach);
+			if (fach == null)
+				continue;
+			if (kurs.idJahrgaenge.isEmpty()) {
+				// Fall 1: Schulweiter Kurs
+				for (final long unterricht : mapUnterrichte.getEntrySet().stream().flatMap(m -> m.getValue().entrySet().stream())
+						.flatMap(e -> e.getValue().stream()).map(u -> u.idUnterricht).toList()) {
+					for (final int schienenNr : kurs.schienen) {
+						final UntisGPU019 dto = new UntisGPU019();
+						dto.name = "Schiene " + schienenNr;
+						dto.art = "2";
+						dto.anzahlWochenstunden = kurs.wochenstunden;
+						dto.idUnterricht = unterricht;
+						dto.fach = kurs.kuerzel;
+						dto.klassen = "";
+						result.add(dto);
+					}
+				}
+			} else {
+				// Fall 2: Ein Kurs, welcher einem oder mehreren Jahrgängen zugeordnet ist
+				final List<String> klassenKuerzel =
+						kurs.idJahrgaenge.stream().flatMap(idJahrgang -> mapKlassenByJahrgang.get(idJahrgang).stream().map(k -> k.Klasse)).toList();
+				final String strKlassen = klassenKuerzel.stream().collect(Collectors.joining("~"));
+				final String strSchienenBezKlassen = klassenKuerzel.stream().collect(Collectors.joining(",", " (", ")"));
+				final List<Long> unterrichte =
+						klassenKuerzel.stream().flatMap(k -> Optional.ofNullable(mapUnterrichte.getOrNull(k, fach.Kuerzel)).orElse(new ArrayList<>()).stream())
+								.map(u -> u.idUnterricht).distinct().toList();
+				for (final long unterricht : unterrichte) {
+					for (final int schienenNr : kurs.schienen) {
+						final UntisGPU019 dto = new UntisGPU019();
+						dto.name = "Schiene " + schienenNr + strSchienenBezKlassen;
+						dto.art = "2";
+						dto.anzahlWochenstunden = kurs.wochenstunden;
+						dto.idUnterricht = unterricht;
+						dto.fach = kurs.kuerzel;
+						dto.klassen = strKlassen;
+						result.add(dto);
+					}
+				}
+			}
+		}
+		return result;
+	}
+
+
+	/**
+	 * Erstellt die GPU019-CSV-Daten für die übergebenen Daten.
+	 *
+	 * @param logger          der Logger
+	 * @param kurse            die Kurse
+	 * @param faecher          die Fächer
+	 * @param klassen          die Klassen
+	 * @param mapUnterrichte   die Zuordnung der Unterrichtsnummern zu den Kursen
+	 *
+	 * @return die CSV-Daten als UTF8-String
+	 *
+	 * @throws ApiOperationException   falls ein Fehler beim Erstellen der CSV-Daten entsteht
+	 */
+	private static @NotNull String getGPU019(final @NotNull Logger logger, final @NotNull List<KursDaten> kurse, final @NotNull List<DTOFach> faecher,
+			final @NotNull List<DTOKlassen> klassen, final HashMap2D<String, String, List<UntisGPU002>> mapUnterrichte) throws ApiOperationException {
+		logger.logLn("-> Erstelle Liste der Klassen für GPU019.txt");
+		logger.modifyIndent(2);
+		try {
+			final List<UntisGPU019> gpu019 = getListGPU019(kurse, faecher, klassen, mapUnterrichte);
+			final String csvSchueler = UntisGPU019.writeCSV(gpu019);
+			logger.logLn("OK");
+			logger.modifyIndent(-2);
+			return csvSchueler;
+		} catch (final Exception e) {
+			logger.logLn("Fehler beim Erstellen der Datei GPU019.txt.");
+			logger.modifyIndent(-2);
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen der Datei GPU019.txt.");
+		}
+	}
+
+
+	/**
+	 * Bestimmt die Export-Daten für die Schienenzuordnungen für den übergebenen Schuljahresabschnitt
+	 *
+	 * @param conn                     die aktuelle Datenbankverbindung
+	 * @param logger                   der Logger zum Protokollieren des Exportes
+	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
+	 * @param gpu002                   die GPU002-Datei als String
+	 *
+	 * @return die GPU019.txt-Datei als String im UTF8-Format
+	 *
+	 * @throws ApiOperationException   wenn ein Fehler beim Erstellen des Exportes auftritt
+	 */
+	private static @NotNull String getGPU019bySchuljahresabschnitt(final @NotNull DBEntityManager conn, final @NotNull Logger logger,
+			final long idSchuljahresabschnitt, final String gpu002) throws ApiOperationException {
+		logger.log("Ermittle GPU019-Daten für die Schienenzuordnungen...");
+		final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetAbschnittById(idSchuljahresabschnitt);
+		if (schuljahresabschnitt == null) {
+			logger.logLn("-> FEHLER: Kein Schuljahresabschnitt mit der ID %d gefunden.".formatted(idSchuljahresabschnitt));
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"In der Datenbank gibt es keinen Schuljahresabschnitt mit der ID %d.".formatted(idSchuljahresabschnitt));
+		}
+		final String strSchuljahresabschnitt = "Schuljahresabschnitt %d.%d".formatted(schuljahresabschnitt.schuljahr, schuljahresabschnitt.abschnitt);
+		logger.logLn("-> für den " + strSchuljahresabschnitt);
+		final List<KursDaten> kurse = DataKurse.getKursListenFuerAbschnitt(conn, idSchuljahresabschnitt, false);
+		if (kurse.isEmpty()) {
+			final String error = "Keine Kurse in dem %s gefunden.".formatted(strSchuljahresabschnitt);
+			logger.logLn("-> " + error);
+			throw new ApiOperationException(Status.NOT_FOUND, error);
+		}
+		final List<DTOFach> faecher = conn.queryAll(DTOFach.class);
+		if (faecher.isEmpty()) {
+			final String error = "Keine Klassen in dem %s gefunden.".formatted(strSchuljahresabschnitt);
+			logger.logLn("-> " + error);
+			throw new ApiOperationException(Status.NOT_FOUND, error);
+		}
+		final List<DTOKlassen> klassen = conn.queryList(DTOKlassen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKlassen.class, idSchuljahresabschnitt);
+		if (klassen.isEmpty()) {
+			final String error = "Keine Klassen in dem Schuljahresabschnitt %s gefunden.".formatted(strSchuljahresabschnitt);
+			logger.logLn("-> " + error);
+			throw new ApiOperationException(Status.NOT_FOUND, error);
+		}
+
+		HashMap2D<String, String, List<UntisGPU002>> unterrichte = new HashMap2D<>();
+		logger.logLn("-> analysieren der GPU002-Daten...");
+		try {
+			unterrichte = getMapUntisGPU002ByKlasseAndFach(UntisGPU002.readCSV(gpu002.getBytes(StandardCharsets.UTF_8)));
+		} catch (final IOException e) {
+			logger.logLn("-> Fehler: " + e.getMessage());
+			return "Fehler: " + e.getMessage();
+		}
+
+		return getGPU019(logger, kurse, faecher, klassen, unterrichte);
+	}
+
+
+	/**
+	 * Erzeugt den Export der Schienenzuordnungen des angegebenen Schuljahresabschnittes für Untis (Datei GPU019.txt)
+	 * und gibt diese als Response zurück.
+	 *
+	 * @param conn                     die Datenbank-Verbindung
+	 * @param logger                   der Logger
+	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnittes
+	 * @param gpu002                   die GPU002-Datei als String
+	 *
+	 * @return eine Response mit der CSV-Datei
+	 *
+	 * @throws ApiOperationException   wenn ein Fehler beim Erstellen des Exportes auftritt
+	 */
+	public static Response exportGPU019(final DBEntityManager conn, final Logger logger, final long idSchuljahresabschnitt, final InputStream gpu002)
+			throws ApiOperationException {
+		final @NotNull String daten = getGPU019bySchuljahresabschnitt(conn, logger, idSchuljahresabschnitt, JSONMapper.toString(gpu002));
+		return Response.ok(daten).header("Content-Disposition", "attachment; filename=\"GPU019.txt\"").build();
+	}
+
+
+	/**
 	 * Erzeugt den Export eines Blockungsergebnisses für Untis, indem die Dateien GPU002.txt, GPU010.txt, GPU015.txt und GPU019.txt
 	 * erzeugt werden und in einem Zip-File in der Response zurückgegeben werden.
 	 *

@@ -100,9 +100,15 @@
 		export: async (gpu002 : string) => await props.exportUntisKlausurenGPU017(sidvariante.value, gpu002),
 	});
 
-	const gpus = [ klassenGPU003, lehrerGPU004, faecherGPU006, schuelerGPU010, klausurenGPU017 ];
+	const schienenGPU019 = <GPU>({
+		title: 'Schienen',
+		subtitle: 'GPU019.txt',
+		export: async (gpu002 : string) => await props.exportUntisSchienenGPU019(gpu002),
+	});
 
-	const gpusBrauchenGPU002 = [ klausurenGPU017 ];
+	const gpus = [ klassenGPU003, lehrerGPU004, faecherGPU006, schuelerGPU010, klausurenGPU017, schienenGPU019 ];
+
+	const gpusBrauchenGPU002 = [ klausurenGPU017, schienenGPU019 ];
 
 	const gpusHabenSchueler = [ schuelerGPU010, klausurenGPU017 ];
 	const sidvariante = ref<number>(1);

@@ -28,6 +28,7 @@ export class RouteSchuleDatenaustauschUntisExporte extends RouteNode<any, RouteS
 			exportUntisFaecherGPU006: routeSchuleDatenaustauschUntis.data.exportUntisFaecherGPU006,
 			exportUntisSchuelerGPU010: routeSchuleDatenaustauschUntis.data.exportUntisSchuelerGPU010,
 			exportUntisKlausurenGPU017: routeSchuleDatenaustauschUntis.data.exportUntisKlausurenGPU017,
+			exportUntisSchienenGPU019: routeSchuleDatenaustauschUntis.data.exportUntisSchienenGPU019,
 		};
 	}
 

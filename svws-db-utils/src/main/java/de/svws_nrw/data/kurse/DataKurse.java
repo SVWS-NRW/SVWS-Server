@@ -244,7 +244,15 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 	}
 
 
-	private static List<Integer> convertSchienenStrToList(final String strSchienen) {
+	/**
+	 * Wandelt den übergebenen String aus komma-separierten Schienenlisten in eine Liste der
+	 * Schienen-Nummern um.
+	 *
+	 * @param strSchienen   der String mit der Schienenliste
+	 *
+	 * @return die Liste der Schienennummern
+	 */
+	public static List<Integer> convertSchienenStrToList(final String strSchienen) {
 		final List<Integer> result = new ArrayList<>();
 		if ((strSchienen != null) && (!strSchienen.isBlank())) {
 			for (final String strSchiene : strSchienen.split(",")) {

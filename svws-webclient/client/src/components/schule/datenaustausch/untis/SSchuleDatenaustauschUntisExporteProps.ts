@@ -5,4 +5,5 @@ export interface SchuleDatenaustauschUntisExporteProps {
 	exportUntisFaecherGPU006: () => Promise<string>;
 	exportUntisSchuelerGPU010: (sidvariante: number) => Promise<string>;
 	exportUntisKlausurenGPU017: (sidvariante: number, gpu002: string) => Promise<string>;
+	exportUntisSchienenGPU019: (gpu002: string) => Promise<string>;
 }
