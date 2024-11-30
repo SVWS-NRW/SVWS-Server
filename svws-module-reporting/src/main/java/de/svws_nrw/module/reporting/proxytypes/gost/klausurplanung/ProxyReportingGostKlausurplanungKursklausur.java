@@ -25,7 +25,7 @@ public class ProxyReportingGostKlausurplanungKursklausur extends ReportingGostKl
 	public ProxyReportingGostKlausurplanungKursklausur(final GostKursklausur gostKursklausur, final GostKlausurvorgabe gostKlausurVorgabe,
 			final ReportingGostKlausurplanungKlausurtermin klausurtermin, final ReportingKurs kurs) {
 		super(gostKlausurVorgabe.auswahlzeit,
-				gostKursklausur.bemerkung,
+				ersetzeNullDurchEmpty(gostKursklausur.bemerkung),
 				gostKlausurVorgabe.dauer,
 				gostKursklausur.id,
 				gostKlausurVorgabe.istAudioNotwendig,
@@ -40,7 +40,5 @@ public class ProxyReportingGostKlausurplanungKursklausur extends ReportingGostKl
 		if ((super.klausurtermin != null) && super.klausurtermin.kursklausuren().stream().noneMatch(s -> s.id() == super.id)) {
 			super.klausurtermin.kursklausuren().add(this);
 		}
-
-		ersetzeStringNullDurchEmpty(this, false);
 	}
 }

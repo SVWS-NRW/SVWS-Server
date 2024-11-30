@@ -86,7 +86,5 @@ public class ProxyReportingGostKursplanungFachwahlstatistik extends ReportingGos
 		super.differenzKursgroessenZK = kursgroessendifferenzZK;
 		super.differenzKursgroessenPJK = kursgroessendifferenzPJK;
 		super.differenzKursgroessenVTF = kursgroessendifferenzVTF;
-
-		ersetzeStringNullDurchEmpty(this, false);
 	}
 }

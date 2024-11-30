@@ -1,23 +1,17 @@
 package de.svws_nrw.module.reporting.proxytypes.schule;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
-import de.svws_nrw.core.data.fach.FachDaten;
-import de.svws_nrw.core.data.gost.GostFach;
-import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
 import de.svws_nrw.core.data.klassen.KlassenDaten;
 import de.svws_nrw.core.data.kurse.KursDaten;
 import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
-import de.svws_nrw.data.faecher.DataFachdaten;
 import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.data.kurse.DataKurse;
-import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.module.reporting.proxytypes.fach.ProxyReportingFach;
 import de.svws_nrw.module.reporting.proxytypes.jahrgang.ProxyReportingJahrgang;
 import de.svws_nrw.module.reporting.proxytypes.klasse.ProxyReportingKlasse;
@@ -46,8 +40,17 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 	 * @param schuljahresabschnitt	Stammdaten-Objekt aus der DB.
 	 */
 	public ProxyReportingSchuljahresabschnitt(final ReportingRepository reportingRepository, final Schuljahresabschnitt schuljahresabschnitt) {
-		super(schuljahresabschnitt.id, schuljahresabschnitt.schuljahr, schuljahresabschnitt.abschnitt, schuljahresabschnitt.idFolgeAbschnitt,
-				schuljahresabschnitt.idVorigerAbschnitt, null, null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+		super(schuljahresabschnitt.id,
+				schuljahresabschnitt.schuljahr,
+				schuljahresabschnitt.abschnitt,
+				schuljahresabschnitt.idFolgeAbschnitt,
+				schuljahresabschnitt.idVorigerAbschnitt,
+				null,
+				null,
+				new HashMap<>(),
+				new HashMap<>(),
+				new HashMap<>(),
+				new HashMap<>());
 
 		this.reportingRepository = reportingRepository;
 
@@ -57,70 +60,50 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 				(schuljahresabschnitt.idVorigerAbschnitt != null) ? this.reportingRepository.schuljahresabschnitt(schuljahresabschnitt.idVorigerAbschnitt)
 						: null;
 
-		ersetzeStringNullDurchEmpty(this, false);
-
 		// Die weiteren Daten werden später durch lazy-loading ergänzt
 	}
 
 
 	/**
-	 * Gibt die Liste der Fächer dieses Schuljahresabschnitts zurück.
+	 * Gibt die Map der Fächer dieses Schuljahresabschnitts zurück.
 	 *
-	 * @return Liste der Fächer, die in diesem Schuljahresabschnitt gültig sind.
+	 * @return Map der Fächer, die in diesem Schuljahresabschnitt gültig sind.
 	 */
 	@Override
-	public List<ReportingFach> faecher() {
-		if ((super.faecher == null) || super.faecher.isEmpty()) {
-			super.faecher = new ArrayList<>();
-			final List<FachDaten> faecherdaten = new ArrayList<>();
-
-			try {
-				faecherdaten.addAll(new DataFachdaten(this.reportingRepository.conn())
-						.getMapFachdatenFromDTOFachList(this.reportingRepository.mapFaecher().values().stream().toList()).values().stream().toList());
-			} catch (final Exception e) {
-				ReportingExceptionUtils.putStacktraceInLog(
-						"FEHLER: Fehler bei der Erstellung der Fächerliste für den Schuljahresabschnitt %s.".formatted(this.textSchuljahresabschnittKurz()), e,
-						reportingRepository.logger(), LogLevel.ERROR, 0);
-			}
-			if (faecherdaten.isEmpty())
-				return super.faecher;
-
-			final Map<Long, DTOFach> mapfaecherFuerFaecherdatenGost =
-					this.reportingRepository.mapFaecher().values().stream().collect(Collectors.toMap(f -> f.ID, f -> f));
-			final Map<Long, GostFach> mapFaecherdatenGost = mapfaecherFuerFaecherdatenGost.values().stream()
-					.collect(Collectors.toMap(f -> f.ID, f -> DBUtilsFaecherGost.mapFromDTOFach(this.schuljahr, f, mapfaecherFuerFaecherdatenGost)));
-			for (final FachDaten fach : faecherdaten)
-				super.faecher.add(new ProxyReportingFach(fach, mapFaecherdatenGost.get(fach.id), this.schuljahr));
+	public Map<Long, ReportingFach> mapFaecher() {
+		if ((super.mapFaecher == null) || super.mapFaecher.isEmpty()) {
+			super.mapFaecher = new HashMap<>();
+			this.reportingRepository.mapFaecher().forEach((idFach, fach) -> super.mapFaecher.put(idFach, new ProxyReportingFach(fach, this.schuljahr)));
 		}
-		return super.faecher;
+		return super.mapFaecher;
 	}
 
 	/**
-	 * Gibt die Liste der Jahrgänge dieses Schuljahresabschnitts zurück.
+	 * Gibt die Map der Jahrgänge dieses Schuljahresabschnitts zurück.
 	 *
-	 * @return Liste der Jahrgänge, die in diesem Schuljahresabschnitt gültig sind.
+	 * @return Map der Jahrgänge, die in diesem Schuljahresabschnitt gültig sind.
 	 */
 	@Override
-	public List<ReportingJahrgang> jahrgaenge() {
-		if ((super.jahrgaenge == null) || super.jahrgaenge.isEmpty()) {
-			super.jahrgaenge = new ArrayList<>();
+	public Map<Long, ReportingJahrgang> mapJahrgaenge() {
+		if ((super.mapJahrgaenge == null) || super.mapJahrgaenge.isEmpty()) {
+			super.mapJahrgaenge = new HashMap<>();
 			// TODO: Wenn die Jahrgänge eine Gültigkeit erhalten, dann ist diese hier auch zu implementieren. Aktuell werden in alle Schuljahresabschnitte alle
 			//  Jahrgänge übernommen.
-			for (final JahrgangsDaten jahrgang : this.reportingRepository.mapJahrgaenge().values().stream().toList())
-				super.jahrgaenge.add(new ProxyReportingJahrgang(this.reportingRepository, jahrgang, this));
+			this.reportingRepository.mapJahrgaenge().forEach((idJahrgang, jahrgang) -> super.mapJahrgaenge.put(idJahrgang,
+					new ProxyReportingJahrgang(this.reportingRepository, jahrgang, this)));
 		}
-		return super.jahrgaenge;
+		return super.mapJahrgaenge;
 	}
 
 	/**
-	 * Gibt die Liste der Klassen dieses Schuljahresabschnitts zurück.
+	 * Gibt die Map der Klassen dieses Schuljahresabschnitts zurück.
 	 *
-	 * @return Liste der Klassen, die in diesem Schuljahresabschnitt gültig sind.
+	 * @return Map der Klassen, die in diesem Schuljahresabschnitt gültig sind.
 	 */
 	@Override
-	public List<ReportingKlasse> klassen() {
-		if ((super.klassen == null) || super.klassen.isEmpty()) {
-			super.klassen = new ArrayList<>();
+	public Map<Long, ReportingKlasse> mapKlassen() {
+		if ((super.mapKlassen == null) || super.mapKlassen.isEmpty()) {
+			super.mapKlassen = new HashMap<>();
 			List<KlassenDaten> klassendaten = new ArrayList<>();
 			try {
 				this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Ermittle die Klassendaten.");
@@ -131,27 +114,27 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 						reportingRepository.logger(), LogLevel.ERROR, 0);
 			}
 			if (klassendaten.isEmpty())
-				return super.klassen;
+				return super.mapKlassen;
 
 			for (final KlassenDaten klasse : klassendaten) {
 				final ReportingKlasse reportingKlasse = new ProxyReportingKlasse(this.reportingRepository, klasse);
-				super.klassen.add(reportingKlasse);
-				this.reportingRepository.mapKlassen().putIfAbsent(reportingKlasse.id(), reportingKlasse);
+				super.mapKlassen.put(reportingKlasse.id(), reportingKlasse);
+				this.reportingRepository.mapKlassen().put(reportingKlasse.id(), reportingKlasse);
 			}
 
 		}
-		return super.klassen;
+		return super.mapKlassen;
 	}
 
 	/**
-	 * Gibt die Liste der Kurse dieses Schuljahresabschnitts zurück.
+	 * Gibt die Map der Kurse dieses Schuljahresabschnitts zurück.
 	 *
-	 * @return Liste der Kurse, die in diesem Schuljahresabschnitt gültig sind.
+	 * @return Map der Kurse, die in diesem Schuljahresabschnitt gültig sind.
 	 */
 	@Override
-	public List<ReportingKurs> kurse() {
-		if ((super.kurse == null) || super.kurse.isEmpty()) {
-			super.kurse = new ArrayList<>();
+	public Map<Long, ReportingKurs> mapKurse() {
+		if ((super.mapKurse == null) || super.mapKurse.isEmpty()) {
+			super.mapKurse = new HashMap<>();
 			List<KursDaten> kurseDaten = new ArrayList<>();
 			try {
 				this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Ermittle die Kursdaten.");
@@ -162,14 +145,14 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 						e, reportingRepository.logger(), LogLevel.ERROR, 0);
 			}
 			if (kurseDaten.isEmpty())
-				return super.kurse;
+				return super.mapKurse;
 
 			for (final KursDaten kurs : kurseDaten) {
 				final ReportingKurs reportingKurs = new ProxyReportingKurs(this.reportingRepository, kurs);
-				super.kurse.add(reportingKurs);
-				this.reportingRepository.mapKurse().putIfAbsent(reportingKurs.id(), reportingKurs);
+				super.mapKurse.put(reportingKurs.id(), reportingKurs);
+				this.reportingRepository.mapKurse().put(reportingKurs.id(), reportingKurs);
 			}
 		}
-		return super.kurse;
+		return super.mapKurse;
 	}
 }

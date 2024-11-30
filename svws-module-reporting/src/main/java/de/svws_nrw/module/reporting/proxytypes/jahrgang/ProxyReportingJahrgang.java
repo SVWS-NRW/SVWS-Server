@@ -31,24 +31,22 @@ public class ProxyReportingJahrgang extends ReportingJahrgang {
 	 */
 	public ProxyReportingJahrgang(final ReportingRepository reportingRepository, final JahrgangsDaten jahrgangsDaten,
 			final ReportingSchuljahresabschnitt schuljahresabschnitt) {
-		super(jahrgangsDaten.bezeichnung,
+		super(ersetzeNullDurchEmpty(jahrgangsDaten.bezeichnung),
 				jahrgangsDaten.gueltigBis,
 				jahrgangsDaten.gueltigVon,
 				null,
 				jahrgangsDaten.id,
 				jahrgangsDaten.idFolgejahrgang,
 				null,
-				jahrgangsDaten.kuerzel,
-				jahrgangsDaten.kuerzelSchulgliederung,
-				jahrgangsDaten.kuerzelStatistik,
+				ersetzeNullDurchEmpty(jahrgangsDaten.kuerzel),
+				ersetzeNullDurchEmpty(jahrgangsDaten.kuerzelSchulgliederung),
+				ersetzeNullDurchEmpty(jahrgangsDaten.kuerzelStatistik),
 				jahrgangsDaten.istSichtbar,
 				null,
 				schuljahresabschnitt,
 				jahrgangsDaten.sortierung);
 
 		this.reportingRepository = reportingRepository;
-
-		ersetzeStringNullDurchEmpty(this, false);
 	}
 
 

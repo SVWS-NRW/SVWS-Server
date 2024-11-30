@@ -49,14 +49,14 @@ public class ProxyReportingKurs extends ReportingKurs {
 	 * @param kursDaten Stammdaten-Objekt aus der DB.
 	 */
 	public ProxyReportingKurs(final ReportingRepository reportingRepository, final KursDaten kursDaten) {
-		super(kursDaten.bezeichnungZeugnis,
+		super(ersetzeNullDurchEmpty(kursDaten.bezeichnungZeugnis),
 				null,
 				kursDaten.id,
 				kursDaten.istEpochalunterricht,
 				kursDaten.istSichtbar,
 				new ArrayList<>(),
-				kursDaten.kuerzel,
-				kursDaten.kursartAllg,
+				ersetzeNullDurchEmpty(kursDaten.kuerzel),
+				ersetzeNullDurchEmpty(kursDaten.kursartAllg),
 				kursDaten.schienen,
 				new ArrayList<>(),
 				new ArrayList<>(),
@@ -109,8 +109,6 @@ public class ProxyReportingKurs extends ReportingKurs {
 		if ((kursDaten.schueler != null) && !kursDaten.schueler.isEmpty()) {
 			super.idsSchueler = kursDaten.schueler.stream().map(s -> s.id).toList();
 		}
-
-		ersetzeStringNullDurchEmpty(this, false);
 	}
 
 	// Initialisiert alle Lehrer-Stammdaten des Kurses.

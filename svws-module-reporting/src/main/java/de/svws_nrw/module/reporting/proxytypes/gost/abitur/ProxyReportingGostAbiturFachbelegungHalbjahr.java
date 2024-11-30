@@ -30,14 +30,14 @@ public class ProxyReportingGostAbiturFachbelegungHalbjahr extends ReportingGostA
 	 */
 	public ProxyReportingGostAbiturFachbelegungHalbjahr(final ReportingRepository reportingRepository,
 			final AbiturFachbelegungHalbjahr abiturFachbelegungHalbjahr) {
-		super(abiturFachbelegungHalbjahr.biliSprache,
+		super(ersetzeNullDurchEmpty(abiturFachbelegungHalbjahr.biliSprache),
 				abiturFachbelegungHalbjahr.block1gewertet,
 				abiturFachbelegungHalbjahr.block1kursAufZeugnis,
 				abiturFachbelegungHalbjahr.fehlstundenGesamt,
 				abiturFachbelegungHalbjahr.fehlstundenUnentschuldigt,
-				abiturFachbelegungHalbjahr.halbjahrKuerzel,
+				ersetzeNullDurchEmpty(abiturFachbelegungHalbjahr.halbjahrKuerzel),
 				abiturFachbelegungHalbjahr.schriftlich,
-				abiturFachbelegungHalbjahr.kursartKuerzel,
+				ersetzeNullDurchEmpty(abiturFachbelegungHalbjahr.kursartKuerzel),
 				null,
 				null,
 				abiturFachbelegungHalbjahr.wochenstunden);
@@ -59,8 +59,6 @@ public class ProxyReportingGostAbiturFachbelegungHalbjahr extends ReportingGostA
 						}
 					}));
 		}
-
-		ersetzeStringNullDurchEmpty(this, false);
 	}
 
 

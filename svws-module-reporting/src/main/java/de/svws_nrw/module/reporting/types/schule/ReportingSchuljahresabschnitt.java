@@ -1,6 +1,7 @@
 package de.svws_nrw.module.reporting.types.schule;
 
 import java.util.List;
+import java.util.Map;
 
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
@@ -34,17 +35,17 @@ public class ReportingSchuljahresabschnitt extends ReportingBaseType {
 	/** Der Schuljahresabschnitt, der diesem Abschnitt vorhergeht. */
 	protected ReportingSchuljahresabschnitt vorherigerAbschnitt;
 
-	/** Die Fächer des Schuljahresabschnitts */
-	protected List<ReportingFach> faecher;
+	/** Die Map der Fächer des Schuljahresabschnitts */
+	protected Map<Long, ReportingFach> mapFaecher;
 
-	/** Die Jahrgänge des Schuljahresabschnitts */
-	protected List<ReportingJahrgang> jahrgaenge;
+	/** Die Map der Jahrgänge des Schuljahresabschnitts */
+	protected Map<Long, ReportingJahrgang> mapJahrgaenge;
 
-	/** Die Klassen des Schuljahresabschnitts */
-	protected List<ReportingKlasse> klassen;
+	/** Die Map der Klassen des Schuljahresabschnitts */
+	protected Map<Long, ReportingKlasse> mapKlassen;
 
-	/** Die Kurse des Schuljahresabschnitts */
-	protected List<ReportingKurs> kurse;
+	/** Die Map der Kurse des Schuljahresabschnitts */
+	protected Map<Long, ReportingKurs> mapKurse;
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
@@ -63,7 +64,8 @@ public class ReportingSchuljahresabschnitt extends ReportingBaseType {
 	 */
 	public ReportingSchuljahresabschnitt(final long id, final int schuljahr, final int abschnitt, final Long idFolgenderAbschnitt,
 			final Long idVorherigerAbschnitt, final ReportingSchuljahresabschnitt folgenderAbschnitt, final ReportingSchuljahresabschnitt vorherigerAbschnitt,
-			final List<ReportingFach> faecher, final List<ReportingJahrgang> jahrgaenge, final List<ReportingKlasse> klassen, final List<ReportingKurs> kurse) {
+			final Map<Long, ReportingFach> faecher, final Map<Long, ReportingJahrgang> jahrgaenge, final Map<Long, ReportingKlasse> klassen,
+			final Map<Long, ReportingKurs> kurse) {
 		this.id = id;
 		this.schuljahr = schuljahr;
 		this.abschnitt = abschnitt;
@@ -71,10 +73,10 @@ public class ReportingSchuljahresabschnitt extends ReportingBaseType {
 		this.idVorherigerAbschnitt = idVorherigerAbschnitt;
 		this.folgenderAbschnitt = folgenderAbschnitt;
 		this.vorherigerAbschnitt = vorherigerAbschnitt;
-		this.faecher = faecher;
-		this.jahrgaenge = jahrgaenge;
-		this.klassen = klassen;
-		this.kurse = kurse;
+		this.mapFaecher = faecher;
+		this.mapJahrgaenge = jahrgaenge;
+		this.mapKlassen = klassen;
+		this.mapKurse = kurse;
 	}
 
 
@@ -105,7 +107,7 @@ public class ReportingSchuljahresabschnitt extends ReportingBaseType {
 	 * @return 		Das Fach zur ID oder null, wenn das Fach nicht vorhanden ist.
 	 */
 	public ReportingFach fach(final long id) {
-		return faecher().stream().filter(f -> f.id() == id).findFirst().orElse(null);
+		return mapFaecher().get(id);
 	}
 
 	/**
@@ -116,7 +118,7 @@ public class ReportingSchuljahresabschnitt extends ReportingBaseType {
 	 * @return 		Der Jahrgang zur ID oder null, wenn der Jahrgang nicht vorhanden ist.
 	 */
 	public ReportingJahrgang jahrgang(final long id) {
-		return jahrgaenge().stream().filter(j -> j.id() == id).findFirst().orElse(null);
+		return mapJahrgaenge().get(id);
 	}
 
 	/**
@@ -127,7 +129,7 @@ public class ReportingSchuljahresabschnitt extends ReportingBaseType {
 	 * @return 		Die Klasse zur ID oder null, wenn die Klasse nicht vorhanden ist.
 	 */
 	public ReportingKlasse klasse(final long id) {
-		return klassen().stream().filter(k -> k.id() == id).findFirst().orElse(null);
+		return mapKlassen().get(id);
 	}
 
 	/**
@@ -138,7 +140,43 @@ public class ReportingSchuljahresabschnitt extends ReportingBaseType {
 	 * @return 		Der Kurs zur ID oder null, wenn der Kurs nicht vorhanden ist.
 	 */
 	public ReportingKurs kurs(final long id) {
-		return kurse().stream().filter(k -> k.id() == id).findFirst().orElse(null);
+		return mapKurse().get(id);
+	}
+
+	/**
+	 * Die Fächer des Schuljahresabschnitts
+	 *
+	 * @return Inhalt des Feldes faecher
+	 */
+	public List<ReportingFach> faecher() {
+		return mapFaecher.values().stream().toList();
+	}
+
+	/**
+	 * Die Jahrgänge des Schuljahresabschnitts
+	 *
+	 * @return Inhalt des Feldes jahrgaenge
+	 */
+	public List<ReportingJahrgang> jahrgaenge() {
+		return mapJahrgaenge.values().stream().toList();
+	}
+
+	/**
+	 * Die Klassen des Schuljahresabschnitts
+	 *
+	 * @return Inhalt des Feldes klassen
+	 */
+	public List<ReportingKlasse> klassen() {
+		return mapKlassen.values().stream().toList();
+	}
+
+	/**
+	 * Die Kurse des Schuljahresabschnitts
+	 *
+	 * @return Inhalt des Feldes kurse
+	 */
+	public List<ReportingKurs> kurse() {
+		return mapKurse.values().stream().toList();
 	}
 
 
@@ -208,38 +246,38 @@ public class ReportingSchuljahresabschnitt extends ReportingBaseType {
 	}
 
 	/**
-	 * Die Fächer des Schuljahresabschnitts
+	 * Die Map der Fächer des Schuljahresabschnitts
 	 *
-	 * @return Inhalt des Feldes faecher
+	 * @return Inhalt des Feldes mapFaecher
 	 */
-	public List<ReportingFach> faecher() {
-		return faecher;
+	public Map<Long, ReportingFach> mapFaecher() {
+		return mapFaecher;
 	}
 
 	/**
-	 * Die Jahrgänge des Schuljahresabschnitts
+	 * Die Map der Jahrgänge des Schuljahresabschnitts
 	 *
-	 * @return Inhalt des Feldes jahrgaenge
+	 * @return Inhalt des Feldes mapJahrgaenge
 	 */
-	public List<ReportingJahrgang> jahrgaenge() {
-		return jahrgaenge;
+	public Map<Long, ReportingJahrgang> mapJahrgaenge() {
+		return mapJahrgaenge;
 	}
 
 	/**
-	 * Die Klassen des Schuljahresabschnitts
+	 * Die Map der Klassen des Schuljahresabschnitts
 	 *
-	 * @return Inhalt des Feldes klassen
+	 * @return Inhalt des Feldes mapKlassen
 	 */
-	public List<ReportingKlasse> klassen() {
-		return klassen;
+	public Map<Long, ReportingKlasse> mapKlassen() {
+		return mapKlassen;
 	}
 
 	/**
-	 * Die Kurse des Schuljahresabschnitts
+	 * Die Map der Kurse des Schuljahresabschnitts
 	 *
-	 * @return Inhalt des Feldes kurse
+	 * @return Inhalt des Feldes mapKurse
 	 */
-	public List<ReportingKurs> kurse() {
-		return kurse;
+	public Map<Long, ReportingKurs> mapKurse() {
+		return mapKurse;
 	}
 }

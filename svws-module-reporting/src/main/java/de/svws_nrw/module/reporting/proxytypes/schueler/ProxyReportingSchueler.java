@@ -54,27 +54,27 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	 */
 	public ProxyReportingSchueler(final ReportingRepository reportingRepository, final SchuelerStammdaten schuelerStammdaten) {
 		super(null,
-				schuelerStammdaten.anmeldedatum,
+				ersetzeNullDurchEmpty(schuelerStammdaten.anmeldedatum),
 				"",
-				schuelerStammdaten.aufnahmedatum,
+				ersetzeNullDurchEmpty(schuelerStammdaten.aufnahmedatum),
 				null,
 				EnumSet.noneOf(ReportingSchuelerDatenstatus.class),
 				schuelerStammdaten.druckeKonfessionAufZeugnisse,
-				schuelerStammdaten.emailPrivat,
-				schuelerStammdaten.emailSchule,
+				ersetzeNullDurchEmpty(schuelerStammdaten.emailPrivat),
+				ersetzeNullDurchEmpty(schuelerStammdaten.emailSchule),
 				schuelerStammdaten.erhaeltMeisterBAFOEG,
 				schuelerStammdaten.erhaeltSchuelerBAFOEG,
 				new ArrayList<>(),
 				new ArrayList<>(),
-				schuelerStammdaten.externeSchulNr,
+				ersetzeNullDurchEmpty(schuelerStammdaten.externeSchulNr),
 				schuelerStammdaten.fahrschuelerArtID,
 				schuelerStammdaten.foto,
-				schuelerStammdaten.geburtsdatum,
-				schuelerStammdaten.geburtsland,
-				schuelerStammdaten.geburtslandMutter,
-				schuelerStammdaten.geburtslandVater,
-				schuelerStammdaten.geburtsname,
-				schuelerStammdaten.geburtsort,
+				ersetzeNullDurchEmpty(schuelerStammdaten.geburtsdatum),
+				ersetzeNullDurchEmpty(schuelerStammdaten.geburtsland),
+				ersetzeNullDurchEmpty(schuelerStammdaten.geburtslandMutter),
+				ersetzeNullDurchEmpty(schuelerStammdaten.geburtslandVater),
+				ersetzeNullDurchEmpty(schuelerStammdaten.geburtsname),
+				ersetzeNullDurchEmpty(schuelerStammdaten.geburtsort),
 				Geschlecht.fromValue(schuelerStammdaten.geschlecht),
 				null,
 				new ArrayList<>(),
@@ -83,8 +83,8 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 				schuelerStammdaten.haltestelleID,
 				schuelerStammdaten.hatMasernimpfnachweis,
 				schuelerStammdaten.hatMigrationshintergrund,
-				schuelerStammdaten.hausnummer,
-				schuelerStammdaten.hausnummerZusatz,
+				ersetzeNullDurchEmpty(schuelerStammdaten.hausnummer),
+				ersetzeNullDurchEmpty(schuelerStammdaten.hausnummerZusatz),
 				schuelerStammdaten.id,
 				schuelerStammdaten.istBerufsschulpflichtErfuellt,
 				schuelerStammdaten.istDuplikat,
@@ -92,21 +92,21 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 				schuelerStammdaten.istVolljaehrig,
 				schuelerStammdaten.keineAuskunftAnDritte,
 				null,
-				schuelerStammdaten.nachname,
-				schuelerStammdaten.religionabmeldung,
-				schuelerStammdaten.religionanmeldung,
+				ersetzeNullDurchEmpty(schuelerStammdaten.nachname),
+				ersetzeNullDurchEmpty(schuelerStammdaten.religionabmeldung),
+				ersetzeNullDurchEmpty(schuelerStammdaten.religionanmeldung),
 				null,
 				new ArrayList<>(),
 				Nationalitaeten.getByDESTATIS(schuelerStammdaten.staatsangehoerigkeitID),
 				Nationalitaeten.getByDESTATIS(schuelerStammdaten.staatsangehoerigkeit2ID),
 				SchuelerStatus.data().getWertByKuerzel("" + schuelerStammdaten.status),
-				schuelerStammdaten.strassenname,
-				schuelerStammdaten.telefon,
-				schuelerStammdaten.telefonMobil,
+				ersetzeNullDurchEmpty(schuelerStammdaten.strassenname),
+				ersetzeNullDurchEmpty(schuelerStammdaten.telefon),
+				ersetzeNullDurchEmpty(schuelerStammdaten.telefonMobil),
 				"",
-				schuelerStammdaten.verkehrspracheFamilie,
-				schuelerStammdaten.vorname,
-				schuelerStammdaten.alleVornamen,
+				ersetzeNullDurchEmpty(schuelerStammdaten.verkehrspracheFamilie),
+				ersetzeNullDurchEmpty(schuelerStammdaten.vorname),
+				ersetzeNullDurchEmpty(schuelerStammdaten.alleVornamen),
 				(schuelerStammdaten.wohnortID != null) ? reportingRepository.katalogOrte().get(schuelerStammdaten.wohnortID) : null,
 				(schuelerStammdaten.ortsteilID != null) ? reportingRepository.katalogOrtsteile().get(schuelerStammdaten.ortsteilID) : null,
 				schuelerStammdaten.zuzugsjahr);
@@ -117,10 +117,6 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 
 		// Füge Stammdaten des Schülers für weitere Verwendung in der Map im Repository hinzu.
 		this.reportingRepository.mapSchuelerStammdaten().put(super.id(), schuelerStammdaten);
-
-		ersetzeStringNullDurchEmpty(this, true);
-
-		this.reportingRepository.mapSchueler().put(this.id(), this);
 	}
 
 
@@ -364,7 +360,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 			final List<SchuelerLernabschnittsdaten> schuelerGesamteLernabschnittsdaten = new ArrayList<>();
 			try {
 				schuelerGesamteLernabschnittsdaten.addAll(new DataSchuelerLernabschnittsdaten(this.reportingRepository().conn())
-						.getListFromSchuelerIDs(idsSchuelerOhneLernabschnitte, true));
+						.getListFromSchuelerIDs(idsSchuelerOhneLernabschnitte, false, false));
 			} catch (final ApiOperationException e) {
 				ReportingExceptionUtils.putStacktraceInLog(
 						"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Lernabschnitte eines Schülers.", e,

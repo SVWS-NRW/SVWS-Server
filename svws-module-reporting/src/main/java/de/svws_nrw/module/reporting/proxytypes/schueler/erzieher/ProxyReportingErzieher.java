@@ -27,10 +27,10 @@ public class ProxyReportingErzieher extends ReportingErzieher {
 	 */
 	public ProxyReportingErzieher(final ReportingRepository reportingRepository, final ErzieherStammdaten erzieherStammdaten,
 			final ReportingSchueler reportingSchueler) {
-		super(erzieherStammdaten.anrede,
+		super(ersetzeNullDurchEmpty(erzieherStammdaten.anrede),
 				null,
-				erzieherStammdaten.bemerkungen,
-				erzieherStammdaten.eMail,
+				ersetzeNullDurchEmpty(erzieherStammdaten.bemerkungen),
+				ersetzeNullDurchEmpty(erzieherStammdaten.eMail),
 				"",
 				erzieherStammdaten.erhaeltAnschreiben,
 				"",
@@ -38,27 +38,25 @@ public class ProxyReportingErzieher extends ReportingErzieher {
 				"",
 				"",
 				null,
-				erzieherStammdaten.hausnummer,
-				erzieherStammdaten.hausnummerZusatz,
+				ersetzeNullDurchEmpty(erzieherStammdaten.hausnummer),
+				ersetzeNullDurchEmpty(erzieherStammdaten.hausnummerZusatz),
 				erzieherStammdaten.id,
-				erzieherStammdaten.nachname,
+				ersetzeNullDurchEmpty(erzieherStammdaten.nachname),
 				reportingSchueler,
 				Nationalitaeten.getByDESTATIS(erzieherStammdaten.staatsangehoerigkeitID),
 				null,
-				erzieherStammdaten.strassenname,
+				ersetzeNullDurchEmpty(erzieherStammdaten.strassenname),
 				"",
 				"",
-				erzieherStammdaten.titel,
-				erzieherStammdaten.vorname,
-				erzieherStammdaten.vorname,
+				ersetzeNullDurchEmpty(erzieherStammdaten.titel),
+				ersetzeNullDurchEmpty(erzieherStammdaten.vorname),
+				ersetzeNullDurchEmpty(erzieherStammdaten.vorname),
 				(erzieherStammdaten.wohnortID != null) ? reportingRepository.katalogOrte().get(erzieherStammdaten.wohnortID) : null,
 				(erzieherStammdaten.ortsteilID != null) ? reportingRepository.katalogOrtsteile().get(erzieherStammdaten.ortsteilID) : null);
 
 		this.reportingRepository = reportingRepository;
 		if (erzieherStammdaten.idErzieherArt != null)
 			super.art = this.reportingRepository.mapReportingErzieherarten().get(erzieherStammdaten.idErzieherArt);
-
-		ersetzeStringNullDurchEmpty(this, false);
 	}
 
 

@@ -24,30 +24,30 @@ public class ProxyReportingLehrer extends ReportingLehrer {
 	 * @param lehrerStammdaten Stammdaten-Objekt aus der DB.
 	 */
 	public ProxyReportingLehrer(final ReportingRepository reportingRepository, final LehrerStammdaten lehrerStammdaten) {
-		super(lehrerStammdaten.amtsbezeichnung,
-				lehrerStammdaten.anrede,
-				lehrerStammdaten.emailPrivat,
-				lehrerStammdaten.emailDienstlich,
+		super(ersetzeNullDurchEmpty(lehrerStammdaten.amtsbezeichnung),
+				ersetzeNullDurchEmpty(lehrerStammdaten.anrede),
+				ersetzeNullDurchEmpty(lehrerStammdaten.emailPrivat),
+				ersetzeNullDurchEmpty(lehrerStammdaten.emailDienstlich),
 				lehrerStammdaten.foto,
-				lehrerStammdaten.geburtsdatum,
+				ersetzeNullDurchEmpty(lehrerStammdaten.geburtsdatum),
 				"",
 				"",
 				"",
 				Geschlecht.fromValue(lehrerStammdaten.geschlecht),
-				lehrerStammdaten.hausnummer,
-				lehrerStammdaten.hausnummerZusatz,
+				ersetzeNullDurchEmpty(lehrerStammdaten.hausnummer),
+				ersetzeNullDurchEmpty(lehrerStammdaten.hausnummerZusatz),
 				lehrerStammdaten.id,
-				lehrerStammdaten.kuerzel,
-				lehrerStammdaten.nachname,
-				lehrerStammdaten.personalTyp,
+				ersetzeNullDurchEmpty(lehrerStammdaten.kuerzel),
+				ersetzeNullDurchEmpty(lehrerStammdaten.nachname),
+				ersetzeNullDurchEmpty(lehrerStammdaten.personalTyp),
 				Nationalitaeten.getByDESTATIS(lehrerStammdaten.staatsangehoerigkeitID),
 				null,
-				lehrerStammdaten.strassenname,
-				lehrerStammdaten.telefon,
-				lehrerStammdaten.telefonMobil,
-				lehrerStammdaten.titel,
-				lehrerStammdaten.vorname,
-				lehrerStammdaten.vorname,
+				ersetzeNullDurchEmpty(lehrerStammdaten.strassenname),
+				ersetzeNullDurchEmpty(lehrerStammdaten.telefon),
+				ersetzeNullDurchEmpty(lehrerStammdaten.telefonMobil),
+				ersetzeNullDurchEmpty(lehrerStammdaten.titel),
+				ersetzeNullDurchEmpty(lehrerStammdaten.vorname),
+				ersetzeNullDurchEmpty(lehrerStammdaten.vorname),
 				(lehrerStammdaten.wohnortID != null) ? reportingRepository.katalogOrte().get(lehrerStammdaten.wohnortID) : null,
 				(lehrerStammdaten.ortsteilID != null) ? reportingRepository.katalogOrtsteile().get(lehrerStammdaten.ortsteilID) : null);
 
@@ -55,8 +55,6 @@ public class ProxyReportingLehrer extends ReportingLehrer {
 
 		// Füge Stammdaten des Lehrers für weitere Verwendung in der Map im Repository hinzu.
 		reportingRepository.mapLehrerStammdaten().putIfAbsent(super.id(), lehrerStammdaten);
-
-		ersetzeStringNullDurchEmpty(this, false);
 	}
 
 

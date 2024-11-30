@@ -16,6 +16,13 @@ public abstract class ReportingBaseType {
 		// Standardkonstruktor ohne Inhalt, da Klasse ohne Attribute.
 	}
 
+	protected static String ersetzeNullDurchEmpty(final String value) {
+		if (value == null)
+			return "";
+		return value;
+	}
+
+
 	/**
 	 * Ersetzt im Quellobjekt in den darin enthaltenen String-Attributen null durch einen leeren String.
 	 *

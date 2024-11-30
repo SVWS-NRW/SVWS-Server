@@ -59,7 +59,12 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 			final List<ReportingGostKlausurplanungKlausurtermin> klausurtermine, final List<ReportingKurs> kurse,
 			final List<ReportingGostKlausurplanungKursklausur> kursklausuren, final List<ReportingSchueler> schueler,
 			final List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausuren, final List<Long> idsFilterSchueler) {
-		super(klausurtermine, kurse, kursklausuren, schueler, schuelerklausuren, idsFilterSchueler);
+		super(klausurtermine,
+				kurse,
+				kursklausuren,
+				schueler,
+				schuelerklausuren,
+				idsFilterSchueler);
 		this.reportingRepository = reportingRepository;
 		this.gostKlausurplanManager = null;
 	}
@@ -163,6 +168,7 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 						.thenComparing(ReportingSchueler::vornamen, colGerman)
 						.thenComparing(ReportingSchueler::id))
 				.toList());
+		this.reportingRepository.mapSchueler().putAll(super.schueler.stream().collect(Collectors.toMap(ReportingSchueler::id, s -> s)));
 	}
 
 	/**
@@ -232,8 +238,6 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 						mapKursklausuren.get(gostKlausurplanManager.kursklausurBySchuelerklausur(sk).id), schueler(sk.idSchueler)));
 			}
 		}
-
-		ersetzeStringNullDurchEmpty(this, false);
 	}
 
 

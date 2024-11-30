@@ -5,19 +5,16 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
 import de.svws_nrw.core.data.klassen.KlassenDaten;
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittsdaten;
 import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.data.jahrgaenge.DataJahrgangsdaten;
 import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLeistungsdaten;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
-import de.svws_nrw.module.reporting.proxytypes.jahrgang.ProxyReportingJahrgang;
 import de.svws_nrw.module.reporting.proxytypes.lehrer.ProxyReportingLehrer;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
@@ -42,21 +39,21 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	 * @param schuelerLernabschnittsdaten Stammdaten-Objekt aus der DB.
 	 */
 	public ProxyReportingSchuelerLernabschnitt(final ReportingRepository reportingRepository, final SchuelerLernabschnittsdaten schuelerLernabschnittsdaten) {
-		super(schuelerLernabschnittsdaten.abschluss,
+		super(ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.abschluss),
 				schuelerLernabschnittsdaten.abschlussart,
-				schuelerLernabschnittsdaten.abschlussBerufsbildend,
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.abschlussBerufsbildend),
 				schuelerLernabschnittsdaten.anzahlSchulbesuchsjahre,
-				schuelerLernabschnittsdaten.bilingualerZweig,
-				schuelerLernabschnittsdaten.datumAnfang,
-				schuelerLernabschnittsdaten.datumEnde,
-				schuelerLernabschnittsdaten.datumKonferenz,
-				schuelerLernabschnittsdaten.datumZeugnis,
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.bilingualerZweig),
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.datumAnfang),
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.datumEnde),
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.datumKonferenz),
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.datumZeugnis),
 				schuelerLernabschnittsdaten.fehlstundenGesamt,
 				schuelerLernabschnittsdaten.fehlstundenGrenzwert,
 				schuelerLernabschnittsdaten.fehlstundenUnentschuldigt,
 				null,
 				null,
-				schuelerLernabschnittsdaten.bemerkungen.foerderschwerpunkt,
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.bemerkungen.foerderschwerpunkt),
 				null,
 				schuelerLernabschnittsdaten.hatAOSF,
 				schuelerLernabschnittsdaten.hatAutismus,
@@ -80,29 +77,29 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 				schuelerLernabschnittsdaten.istGewertet,
 				schuelerLernabschnittsdaten.istWiederholung,
 				null,
-				schuelerLernabschnittsdaten.Klassenart,
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.Klassenart),
 				new ArrayList<>(),
 				null,
-				schuelerLernabschnittsdaten.noteDurchschnitt,
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.noteDurchschnitt),
 				schuelerLernabschnittsdaten.noteLernbereichGSbzwAL,
 				schuelerLernabschnittsdaten.noteLernbereichNW,
-				schuelerLernabschnittsdaten.organisationsform,
-				schuelerLernabschnittsdaten.pruefungsOrdnung,
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.organisationsform),
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.pruefungsOrdnung),
 				null,
-				schuelerLernabschnittsdaten.schulgliederung,
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.schulgliederung),
 				null,
 				null,
-				schuelerLernabschnittsdaten.textErgebnisPruefungsalgorithmus,
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.textErgebnisPruefungsalgorithmus),
 				null,
-				schuelerLernabschnittsdaten.bemerkungen.uebergangESF,
-				schuelerLernabschnittsdaten.bemerkungen.versetzungsentscheidung,
-				schuelerLernabschnittsdaten.versetzungsvermerk,
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.bemerkungen.uebergangESF),
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.bemerkungen.versetzungsentscheidung),
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.versetzungsvermerk),
 				schuelerLernabschnittsdaten.wechselNr,
-				schuelerLernabschnittsdaten.zeugnisart,
-				schuelerLernabschnittsdaten.bemerkungen.zeugnisASV,
-				schuelerLernabschnittsdaten.bemerkungen.zeugnisAUE,
-				schuelerLernabschnittsdaten.bemerkungen.zeugnisAllgemein,
-				schuelerLernabschnittsdaten.bemerkungen.zeugnisLELS);
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.zeugnisart),
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.bemerkungen.zeugnisASV),
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.bemerkungen.zeugnisAUE),
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.bemerkungen.zeugnisAllgemein),
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.bemerkungen.zeugnisLELS));
 
 		this.reportingRepository = reportingRepository;
 
@@ -115,8 +112,6 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 
 		schuelerLernabschnittsdaten.leistungsdaten.forEach(
 				l -> this.reportingRepository.mapAlleLeistungsdaten().add(this.schueler().id(), this.id(), l.id, l));
-
-		ersetzeStringNullDurchEmpty(this, false);
 	}
 
 
@@ -189,21 +184,8 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	 */
 	@Override
 	public ReportingJahrgang jahrgang() {
-		if ((super.jahrgang() == null) && (super.idJahrgang() != null) && (super.idJahrgang() >= 0)) {
-			super.jahrgang =
-					new ProxyReportingJahrgang(
-							reportingRepository,
-							reportingRepository.mapJahrgaenge().computeIfAbsent(super.idJahrgang(), k -> {
-								try {
-									return new DataJahrgangsdaten(reportingRepository.conn()).getFromID(super.idJahrgang());
-								} catch (final ApiOperationException e) {
-									ReportingExceptionUtils.putStacktraceInLog(
-											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Daten eines Jahrgangs.", e,
-											reportingRepository.logger(), LogLevel.INFO, 0);
-									return new JahrgangsDaten();
-								}
-							}), this.schuljahresabschnitt());
-		}
+		if ((super.jahrgang == null) && (super.idJahrgang != null) && (super.idJahrgang >= 0))
+			super.jahrgang = super.schuljahresabschnitt.jahrgang(super.idJahrgang);
 		return super.jahrgang();
 	}
 
@@ -214,25 +196,8 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	 */
 	@Override
 	public ReportingKlasse klasse() {
-		if ((super.klasse() == null) && (super.idKlasse() != null) && (super.idKlasse() >= 0)) {
-			if (!this.reportingRepository.mapKlassen().containsKey(super.idKlasse())) {
-				// ID der Klasse ist bekannt, aber sie wurde noch nicht aus der DB geladen. Lade deren Daten und lade dann alle Klassen des Lernabschnitts.
-				final KlassenDaten klassenDaten;
-				try {
-					klassenDaten = new DataKlassendaten(reportingRepository.conn()).getByIdOhneSchueler(super.idKlasse());
-				} catch (final ApiOperationException e) {
-					ReportingExceptionUtils.putStacktraceInLog(
-							"FEHLER: Fehler bei der Ermittlung der Daten für die Klasse des Schülers %s in %s."
-									.formatted(super.schueler().id(), super.schuljahresabschnitt.textSchuljahresabschnittKurz()),
-							e, reportingRepository.logger(), LogLevel.ERROR, 0);
-					return super.klasse();
-				}
-				super.klasse = this.reportingRepository.schuljahresabschnitt(klassenDaten.idSchuljahresabschnitt).klasse(super.idKlasse());
-			} else {
-				// ID der Klasse ist bekannt und die Klasse wurde in einem Lernabschnitt bereits erzeugt, hole sie aus Lernabschnitt.
-				super.klasse = this.reportingRepository.mapKlassen().get(super.idKlasse()).schuljahresabschnitt().klasse(super.idKlasse());
-			}
-		}
+		if ((super.klasse() == null) && (super.idKlasse() != null) && (super.idKlasse() >= 0))
+			super.klasse = super.schuljahresabschnitt.klasse(super.idKlasse);
 		return super.klasse();
 	}
 

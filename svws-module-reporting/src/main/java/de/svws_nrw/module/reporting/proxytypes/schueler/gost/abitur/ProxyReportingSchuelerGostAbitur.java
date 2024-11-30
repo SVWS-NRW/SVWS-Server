@@ -28,11 +28,11 @@ public class ProxyReportingSchuelerGostAbitur extends ReportingSchuelerGostAbitu
 	 */
 	public ProxyReportingSchuelerGostAbitur(final ReportingRepository reportingRepository, final Abiturdaten abiturdaten) {
 		super(abiturdaten.abiturjahr,
-				abiturdaten.besondereLernleistung,
+				ersetzeNullDurchEmpty(abiturdaten.besondereLernleistung),
 				null,
-				abiturdaten.besondereLernleistungThema,
+				ersetzeNullDurchEmpty(abiturdaten.besondereLernleistungThema),
 				abiturdaten.bewertetesHalbjahr,
-				abiturdaten.bilingualeSprache,
+				ersetzeNullDurchEmpty(abiturdaten.bilingualeSprache),
 				abiturdaten.block1AnzahlKurse,
 				abiturdaten.block1DefiziteGesamt,
 				abiturdaten.block1DefiziteLK,
@@ -51,8 +51,8 @@ public class ProxyReportingSchuelerGostAbitur extends ReportingSchuelerGostAbitu
 				abiturdaten.gesamtPunkte,
 				abiturdaten.gesamtPunkteVerbesserung,
 				abiturdaten.gesamtPunkteVerschlechterung,
-				abiturdaten.note,
-				abiturdaten.projektKursThema,
+				ersetzeNullDurchEmpty(abiturdaten.note),
+				ersetzeNullDurchEmpty(abiturdaten.projektKursThema),
 				abiturdaten.pruefungBestanden,
 				abiturdaten.schuljahrAbitur);
 		this.reportingRepository = reportingRepository;
@@ -64,8 +64,6 @@ public class ProxyReportingSchuelerGostAbitur extends ReportingSchuelerGostAbitu
 						.map(f -> new ProxyReportingGostAbiturFachbelegung(this.reportingRepository, abiturdaten.schuljahrAbitur, f)).toList());
 
 		this.fachbelegungen().sort(ReportingGostAbiturFachbelegung::compareToGost);
-
-		ersetzeStringNullDurchEmpty(this, false);
 	}
 
 

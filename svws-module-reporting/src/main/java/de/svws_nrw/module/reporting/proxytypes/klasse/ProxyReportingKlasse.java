@@ -49,7 +49,7 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 	 */
 	public ProxyReportingKlasse(final ReportingRepository reportingRepository, final KlassenDaten klassenDaten) {
 		super(klassenDaten.beginnSommersemester,
-				klassenDaten.beschreibung,
+				ersetzeNullDurchEmpty(klassenDaten.beschreibung),
 				null,
 				klassenDaten.id,
 				klassenDaten.idAllgemeinbildendOrganisationsform,
@@ -66,15 +66,15 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 				klassenDaten.istSichtbar,
 				null,
 				new ArrayList<>(),
-				klassenDaten.kuerzel,
-				klassenDaten.kuerzelFolgeklasse,
-				klassenDaten.kuerzelVorgaengerklasse,
-				klassenDaten.parallelitaet,
-				klassenDaten.pruefungsordnung,
+				ersetzeNullDurchEmpty(klassenDaten.kuerzel),
+				ersetzeNullDurchEmpty(klassenDaten.kuerzelFolgeklasse),
+				ersetzeNullDurchEmpty(klassenDaten.kuerzelVorgaengerklasse),
+				ersetzeNullDurchEmpty(klassenDaten.parallelitaet),
+				ersetzeNullDurchEmpty(klassenDaten.pruefungsordnung),
 				new ArrayList<>(),
 				null,
 				klassenDaten.sortierung,
-				klassenDaten.teilstandort,
+				ersetzeNullDurchEmpty(klassenDaten.teilstandort),
 				klassenDaten.verwendungAnkreuzkompetenzen,
 				null);
 
@@ -84,8 +84,6 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 		// werden.
 		if ((klassenDaten.schueler != null) && !klassenDaten.schueler.isEmpty())
 			idsSchueler.addAll(klassenDaten.schueler.stream().map(s -> s.id).toList());
-
-		ersetzeStringNullDurchEmpty(this, false);
 	}
 
 

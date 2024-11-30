@@ -34,7 +34,7 @@ public class ProxyReportingSchuelerSprachbelegung extends ReportingSchuelerSprac
 				sprachbelegung.hatLatinum,
 				null,
 				sprachbelegung.reihenfolge,
-				sprachbelegung.sprache,
+				ersetzeNullDurchEmpty(sprachbelegung.sprache),
 				null
 		);
 		this.reportingRepository = reportingRepository;
@@ -42,8 +42,6 @@ public class ProxyReportingSchuelerSprachbelegung extends ReportingSchuelerSprac
 			super.referenzniveau = Sprachreferenzniveau.data().getWertByKuerzel(sprachbelegung.referenzniveau);
 		super.statistikfach =
 				new ProxyReportingStatistikFach(sprachbelegung.sprache, this.reportingRepository.aktuellerSchuljahresabschnitt().schuljahr(), false);
-
-		ersetzeStringNullDurchEmpty(this, false);
 	}
 
 

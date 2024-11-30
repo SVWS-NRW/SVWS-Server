@@ -44,22 +44,22 @@ public class ProxyReportingSchuelerLeistungsdaten extends ReportingSchuelerLeist
 				null,
 				schuelerLeistungsdaten.fehlstundenGesamt,
 				schuelerLeistungsdaten.fehlstundenUnentschuldigt,
-				schuelerLeistungsdaten.geholtJahrgangAbgeschlossen,
+				ersetzeNullDurchEmpty(schuelerLeistungsdaten.geholtJahrgangAbgeschlossen),
 				schuelerLeistungsdaten.gewichtungAllgemeinbildend,
 				schuelerLeistungsdaten.id,
 				schuelerLeistungsdaten.istEpochal,
 				schuelerLeistungsdaten.istGemahnt,
 				schuelerLeistungsdaten.istZP10oderZKEF,
 				null,
-				schuelerLeistungsdaten.kursart,
+				ersetzeNullDurchEmpty(schuelerLeistungsdaten.kursart),
 				reportingSchuelerLernabschnitt,
-				schuelerLeistungsdaten.mahndatum,
+				ersetzeNullDurchEmpty(schuelerLeistungsdaten.mahndatum),
 				Note.fromKuerzel(schuelerLeistungsdaten.note),
 				Note.fromKuerzel(schuelerLeistungsdaten.noteBerufsabschluss),
 				Note.fromKuerzel(schuelerLeistungsdaten.noteQuartal),
 				schuelerLeistungsdaten.koopSchule,
-				schuelerLeistungsdaten.textFachbezogeneLernentwicklung,
-				schuelerLeistungsdaten.umfangLernstandsbericht,
+				ersetzeNullDurchEmpty(schuelerLeistungsdaten.textFachbezogeneLernentwicklung),
+				ersetzeNullDurchEmpty(schuelerLeistungsdaten.umfangLernstandsbericht),
 				new HashMap<>(),
 				(double) schuelerLeistungsdaten.wochenstunden,
 				new ArrayList<>());
@@ -70,7 +70,6 @@ public class ProxyReportingSchuelerLeistungsdaten extends ReportingSchuelerLeist
 		if ((reportingSchuelerLernabschnitt == null) || (this.lernabschnitt().id() != schuelerLeistungsdaten.lernabschnittID)) {
 			// Wenn der Lernabschnitt nicht in den Maps gefunden werden kann, dann bleiben die Leistungsdaten an zentraler Stelle null.
 			super.lernabschnitt = null;
-			ersetzeStringNullDurchEmpty(this, false);
 			return;
 		}
 
@@ -106,8 +105,6 @@ public class ProxyReportingSchuelerLeistungsdaten extends ReportingSchuelerLeist
 			super.zusatzLehrkraefte.addAll(kurs.zusatzLehrkraefte());
 			super.wochenstundenLehrkraefte.putAll(kurs.wochenstundenLehrkraefte());
 		}
-
-		ersetzeStringNullDurchEmpty(this, false);
 	}
 
 

@@ -28,9 +28,9 @@ public class ProxyReportingStundenplanungStundenplan extends ReportingStundenpla
 	 * @param stundenplan 			Das Stundenplan-Objekt mit den gesammelten Daten des Stundenplanes.
 	 */
 	public ProxyReportingStundenplanungStundenplan(final ReportingRepository reportingRepository, final Stundenplan stundenplan) {
-		super(stundenplan.bezeichnungStundenplan,
-				stundenplan.gueltigAb,
-				stundenplan.gueltigBis,
+		super(ersetzeNullDurchEmpty(stundenplan.bezeichnungStundenplan),
+				ersetzeNullDurchEmpty(stundenplan.gueltigAb),
+				ersetzeNullDurchEmpty(stundenplan.gueltigBis),
 				stundenplan.id,
 				new ArrayList<>(),
 				null,
@@ -42,8 +42,6 @@ public class ProxyReportingStundenplanungStundenplan extends ReportingStundenpla
 			this.reportingRepository.mapStundenplaene().put(stundenplan.id, stundenplan);
 
 		super.schuljahresabschnitt = this.reportingRepository.schuljahresabschnitt(stundenplan.idSchuljahresabschnitt);
-
-		ersetzeStringNullDurchEmpty(this, false);
 
 		// Räume und Zeitraster werden per lazy-loading nachgeladen.
 	}

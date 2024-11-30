@@ -119,7 +119,7 @@ public class HtmlFactory {
 				reportingParameter.idsHauptdaten = reportingParameter.idsHauptdaten.stream().filter(Objects::nonNull).distinct().toList();
 				ReportingValidierung.validiereDatenFuerSchueler(reportingRepository, reportingParameter.idsHauptdaten,
 						htmlTemplateDefinition.name().startsWith("SCHUELER_v_GOST_LAUFBAHNPLANUNG_"),
-						htmlTemplateDefinition.name().startsWith("SCHUELER_v_GOST_ABITUR_"), true);
+						htmlTemplateDefinition.name().startsWith("SCHUELER_v_GOST_ABITUR_"));
 				reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
 						("Erzeuge Datenkontext Schüler für die html-Generierung - %d IDs von Schülern wurden übergeben für Template %s.")
 								.formatted(reportingParameter.idsHauptdaten.size(), htmlTemplateDefinition.name()));

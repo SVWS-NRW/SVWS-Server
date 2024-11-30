@@ -76,6 +76,12 @@ public class ReportingRepository {
 	/** Liste, die Einträge aus dem Logger sammelt. */
 	private final LogConsumerList log;
 
+	/** Die ID des aktuellen Schuljahresabschnitts der Schule. */
+	private final Long idAktuellerSchuljahresbaschnitt;
+
+	/** Die ID des in den ReportingParamtern ausgewählten Schuljahresabschnitts. */
+	private final Long idAuswahlSchuljahresbaschnitt;
+
 
 	// #########  Ab hier folgen Objekte aus dem Core. #########
 
@@ -115,6 +121,9 @@ public class ReportingRepository {
 	/** Stellt die Beratungsdaten zur GOSt von bereits abgerufenen Schülern über eine Map zur Schüler-ID zur Verfügung. */
 	private final Map<Long, GostLaufbahnplanungBeratungsdaten> mapGostBeratungsdaten = new HashMap<>();
 
+	/** Stellt die für die Beratungsdaten zur GOSt relevanten Abiturdaten von bereits abgerufenen Schülern über eine Map zur Schüler-ID zur Verfügung. */
+	private final Map<Long, Abiturdaten> mapGostBeratungsdatenAbiturdaten = new HashMap<>();
+
 	/** Stellt die Abiturdaten in der GOSt von bereits abgerufenen Schülern über eine Map zur Schüler-ID zur Verfügung. */
 	private final Map<Long, Abiturdaten> mapGostSchuelerAbiturdaten = new HashMap<>();
 
@@ -139,11 +148,11 @@ public class ReportingRepository {
 
 	// #########  Ab hier folgen Reporting-Objekte. #########
 
-	/** Der aktuelle Schuljahresabschnitt der Schule aus der Datenbankverbindung */
-	private final ReportingSchuljahresabschnitt aktuellerSchuljahresabschnitt;
-
-	/** Der ausgewählte Schuljahresabschnitt, der für die Ausgabe der Reports ausgewählt wurde */
-	private final ReportingSchuljahresabschnitt auswahlSchuljahresabschnitt;
+//	/** Der aktuelle Schuljahresabschnitt der Schule aus der Datenbankverbindung */
+//	private final ReportingSchuljahresabschnitt aktuellerSchuljahresabschnitt;
+//
+//	/** Der ausgewählte Schuljahresabschnitt, der für die Ausgabe der Reports ausgewählt wurde */
+//	private final ReportingSchuljahresabschnitt auswahlSchuljahresabschnitt;
 
 	/** Stellt alle Erzieherarten über eine Map zur Erzieherart-ID zur Verfügung */
 	private Map<Long, ReportingErzieherArt> mapReportingErzieherarten;
@@ -217,19 +226,22 @@ public class ReportingRepository {
 						new ProxyReportingSchuljahresabschnitt(this, datenSchuljahresabschnitt));
 			}
 
-			aktuellerSchuljahresabschnitt =
-					this.mapSchuljahresabschnitte.values().stream().filter(a -> a.id() == this.schulstammdaten.idSchuljahresabschnitt).toList()
-							.getFirst();
+			idAktuellerSchuljahresbaschnitt = this.schulstammdaten.idSchuljahresabschnitt;
+			idAuswahlSchuljahresbaschnitt = this.reportingParameter.idSchuljahresabschnitt;
 
-			if ((this.reportingParameter.idSchuljahresabschnitt == this.aktuellerSchuljahresabschnitt.id())
-					|| (this.reportingParameter.idSchuljahresabschnitt < 0)
-					|| this.mapSchuljahresabschnitte.values().stream().filter(a -> a.id() == this.reportingParameter.idSchuljahresabschnitt).toList()
-							.isEmpty())
-				auswahlSchuljahresabschnitt = aktuellerSchuljahresabschnitt;
-			else
-				auswahlSchuljahresabschnitt =
-						this.mapSchuljahresabschnitte.values().stream().filter(a -> a.id() == this.reportingParameter.idSchuljahresabschnitt).toList()
-								.getFirst();
+//			aktuellerSchuljahresabschnitt =
+//					this.mapSchuljahresabschnitte.values().stream().filter(a -> a.id() == this.schulstammdaten.idSchuljahresabschnitt).toList()
+//							.getFirst();
+//
+//			if ((this.reportingParameter.idSchuljahresabschnitt == this.aktuellerSchuljahresabschnitt.id())
+//					|| (this.reportingParameter.idSchuljahresabschnitt < 0)
+//					|| this.mapSchuljahresabschnitte.values().stream().filter(a -> a.id() == this.reportingParameter.idSchuljahresabschnitt).toList()
+//							.isEmpty())
+//				auswahlSchuljahresabschnitt = aktuellerSchuljahresabschnitt;
+//			else
+//				auswahlSchuljahresabschnitt =
+//						this.mapSchuljahresabschnitte.values().stream().filter(a -> a.id() == this.reportingParameter.idSchuljahresabschnitt).toList()
+//								.getFirst();
 
 		} catch (final Exception e) {
 			ReportingExceptionUtils.putStacktraceInLog(
@@ -352,8 +364,8 @@ public class ReportingRepository {
 			this.stundenplandefinitionen = DataStundenplanListe.getStundenplaene(this.conn, null);
 			this.logger.logLn(LogLevel.DEBUG, 8, "Ermittle die Stundenpläne für den aktuellen und ausgewählten Schuljahresabschnitt.");
 			final List<StundenplanListeEintrag> filterStundenplandefinitionen =
-					stundenplandefinitionen.stream().filter(d -> ((d.idSchuljahresabschnitt == aktuellerSchuljahresabschnitt.id())
-							|| (d.idSchuljahresabschnitt == auswahlSchuljahresabschnitt.id()))).toList();
+					stundenplandefinitionen.stream().filter(d -> ((d.idSchuljahresabschnitt == idAktuellerSchuljahresbaschnitt)
+							|| (d.idSchuljahresabschnitt == idAuswahlSchuljahresbaschnitt))).toList();
 			if (!filterStundenplandefinitionen.isEmpty()) {
 				for (final StundenplanListeEintrag stundenplandefinition : filterStundenplandefinitionen) {
 					final Stundenplan stundenplan = DataStundenplan.getStundenplan(this.conn, stundenplandefinition.id);
@@ -462,7 +474,7 @@ public class ReportingRepository {
 	 * @return Aktueller Schuljahresabschnitt der Schule
 	 */
 	public ReportingSchuljahresabschnitt aktuellerSchuljahresabschnitt() {
-		return aktuellerSchuljahresabschnitt;
+		return this.mapSchuljahresabschnitte.get(idAktuellerSchuljahresbaschnitt);
 	}
 
 	/**
@@ -471,7 +483,7 @@ public class ReportingRepository {
 	 * @return Schuljahresabschnitt der Auswahl für den Druck
 	 */
 	public ReportingSchuljahresabschnitt auswahlSchuljahresabschnitt() {
-		return auswahlSchuljahresabschnitt;
+		return this.mapSchuljahresabschnitte.get(idAuswahlSchuljahresbaschnitt);
 	}
 
 
@@ -585,6 +597,15 @@ public class ReportingRepository {
 	 */
 	public Map<Long, GostLaufbahnplanungBeratungsdaten> mapGostBeratungsdaten() {
 		return mapGostBeratungsdaten;
+	}
+
+	/**
+	 * Stellt die für die Beratungsdaten zur GOSt relevanten Abiturdaten von bereits abgerufenen Schülern über eine Map zur Schüler-ID zur Verfügung.
+	 *
+	 * @return Inhalt des Feldes mapGostBeratungsdatenAbiturdaten
+	 */
+	public Map<Long, Abiturdaten> mapGostBeratungsdatenAbiturdaten() {
+		return mapGostBeratungsdatenAbiturdaten;
 	}
 
 	/**

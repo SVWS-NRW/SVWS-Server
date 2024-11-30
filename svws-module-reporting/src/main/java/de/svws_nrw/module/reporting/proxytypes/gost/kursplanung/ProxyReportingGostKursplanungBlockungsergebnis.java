@@ -77,7 +77,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 		super.anzahlMaxKurseProSchiene = ergebnisManager.getOfSchieneMaxKursanzahl();
 		super.anzahlSchienen = super.schienen().size();
 		super.anzahlSchueler = datenManager.schuelerGetAnzahl();
-		super.bezeichnung = datenManager.daten().name;
+		super.bezeichnung = ersetzeNullDurchEmpty(datenManager.daten().name);
 		super.gostHalbjahr = GostHalbjahr.fromID(datenManager.daten().gostHalbjahr);
 
 		// Schülerstammdaten ermitteln und in Listen und Maps einfügen
@@ -220,8 +220,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 						.thenComparing(ReportingSchueler::vornamen, colGerman)
 						.thenComparing(ReportingSchueler::id))
 				.toList());
-
-		ersetzeStringNullDurchEmpty(this, false);
+		this.reportingRepository.mapSchueler().putAll(super.schueler.stream().collect(Collectors.toMap(ReportingSchueler::id, s -> s)));
 	}
 
 

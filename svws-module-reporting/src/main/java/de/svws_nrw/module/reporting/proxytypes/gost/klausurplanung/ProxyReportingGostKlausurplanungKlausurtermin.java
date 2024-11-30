@@ -18,9 +18,9 @@ public class ProxyReportingGostKlausurplanungKlausurtermin extends ReportingGost
 	 * @param gostKlausurtermin	Der GostKlausurtermin mit den Daten zum Klausurtermin.
 	 */
 	public ProxyReportingGostKlausurplanungKlausurtermin(final GostKlausurtermin gostKlausurtermin) {
-		super(gostKlausurtermin.bemerkung,
-				gostKlausurtermin.bezeichnung,
-				gostKlausurtermin.datum,
+		super(ersetzeNullDurchEmpty(gostKlausurtermin.bemerkung),
+				ersetzeNullDurchEmpty(gostKlausurtermin.bezeichnung),
+				ersetzeNullDurchEmpty(gostKlausurtermin.datum),
 				GostHalbjahr.fromID(gostKlausurtermin.halbjahr),
 				gostKlausurtermin.id,
 				gostKlausurtermin.istHaupttermin,
@@ -30,8 +30,6 @@ public class ProxyReportingGostKlausurplanungKlausurtermin extends ReportingGost
 				gostKlausurtermin.quartal,
 				new ArrayList<>(),
 				gostKlausurtermin.startzeit);
-
-		ersetzeStringNullDurchEmpty(this, false);
 
 		// Kursklausuren werden bei deren Erzeugung dem Klausurtermin hinzugefügt.
 		// Schülerklausuren werden bei deren Erzeugung dem Klausurtermin hinzugefügt.

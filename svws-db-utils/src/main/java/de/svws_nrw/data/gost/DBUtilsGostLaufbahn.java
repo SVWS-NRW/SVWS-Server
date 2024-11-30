@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -290,6 +291,235 @@ public final class DBUtilsGostLaufbahn {
 
 		// und gib die Abiturdaten zurück...
 		return abidaten;
+	}
+
+
+	/**
+	 * Ermittelt die für die Laufbahnplanung der gymnasialen Oberstufe relevanten Daten für
+	 * den Schüler mit der angegebenen ID aus den in der Datenbank gespeicherten
+	 * Laufbahnplanungstabellen und ggf. den Abiturtabellen.
+	 *
+	 * @param conn                   die Datenbank-Verbindung
+	 * @param idsSchueler            die IDs der Schüler
+	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts, dessen Lernabschnitt betrachtet werden soll.
+	 *
+	 * @return die für das Abitur relevanten Daten für den Schüler mit der angegebenen ID
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public static Map<Long, Abiturdaten> getFromIDsUndSchuljahresabschnitt(final DBEntityManager conn, final List<Long> idsSchueler,
+			final Long idSchuljahresabschnitt) throws ApiOperationException {
+		// Prüfe zunächst die Schüler auf Existenz.
+		if (idsSchueler == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+
+		final List<Long> idsSchuelerNonNull = new ArrayList<>(idsSchueler.stream().filter(Objects::nonNull).toList());
+		if (idsSchuelerNonNull.isEmpty())
+			throw new ApiOperationException(Status.NOT_FOUND);
+
+		final List<DTOSchueler> dtoSchueler = conn.queryByKeyList(DTOSchueler.class, idsSchuelerNonNull);
+		if ((dtoSchueler == null) || dtoSchueler.isEmpty() || (dtoSchueler.size() != idsSchuelerNonNull.size()))
+			throw new ApiOperationException(Status.NOT_FOUND);
+		final Map<Long, DTOSchueler> mapSchueler = dtoSchueler.stream().collect(Collectors.toMap(s -> s.ID, s -> s));
+
+		// Bestimme die Schulform der Schule.
+		final Schulform schulform = conn.getUser().schuleGetSchulform();
+
+		// Bestimme die Jahrgänge der Schule.
+		final Map<Long, DTOJahrgang> mapJahrgaenge = conn.queryAll(DTOJahrgang.class).stream().collect(Collectors.toMap(j -> j.ID, j -> j));
+
+		// Bestimme die gültigen Lernabschnitte der Schüler zum übergebenen Schuljahresabschnitt und sammle sie in einer Map.
+		final TypedQuery<DTOSchuelerLernabschnittsdaten> queryLernabschnitte =
+				conn.query(
+						"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID IN :idsSchueler AND e.Schuljahresabschnitts_ID = :idSchuljahresabschnitt"
+								+ " AND e.WechselNr = 0",
+						DTOSchuelerLernabschnittsdaten.class);
+		final Map<Long, List<DTOSchuelerLernabschnittsdaten>> mapSchuelerLernabschnitte = queryLernabschnitte
+				.setParameter("idsSchueler", idsSchuelerNonNull)
+				.setParameter("idSchuljahresabschnitt", idSchuljahresabschnitt)
+				.getResultList().stream().collect(Collectors.groupingBy(la -> la.Schueler_ID));
+
+		// Map für die GostFaecherManager
+		final Map<Integer, GostFaecherManager> mapGostFaecherManager = new HashMap<>();
+
+		// Map für die zurückzugebenenden Abiturdaten.
+		final Map<Long, Abiturdaten> mapAbiturdaten = new HashMap<>();
+
+		// Durchlaufe die Schüler und bestimme die Abiturdaten.
+		for (final Long idSchueler : idsSchuelerNonNull) {
+			if (!mapSchuelerLernabschnitte.containsKey(idSchueler) || (mapSchuelerLernabschnitte.get(idSchueler) == null)
+					|| (mapSchuelerLernabschnitte.get(idSchueler).isEmpty()))
+				throw new ApiOperationException(Status.NOT_FOUND);
+			final DTOSchuelerLernabschnittsdaten schuelerLernabschnitt = mapSchuelerLernabschnitte.get(idSchueler).getFirst();
+
+			// Bestimme das Abiturjahr
+			final Schulgliederung schulgliederung = (schuelerLernabschnitt.Schulgliederung == null)
+					? Schulgliederung.getDefault(schulform)
+					: Schulgliederung.data().getWertByKuerzel(schuelerLernabschnitt.Schulgliederung);
+			final DTOJahrgang dtoJahrgang = mapJahrgaenge.get(schuelerLernabschnitt.Jahrgang_ID);
+			final Jahrgaenge jahrgang =
+					((dtoJahrgang == null) || (dtoJahrgang.ASDJahrgang == null)) ? null : Jahrgaenge.data().getWertBySchluessel(dtoJahrgang.ASDJahrgang);
+			final Integer abiturjahr = DBUtilsGost.getAbiturjahr(schulform, schulgliederung,
+					conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(idSchuljahresabschnitt).schuljahr, jahrgang);
+			if (abiturjahr == null)
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
+
+			// Bestimme die Fächer des Abiturjahrgangs, wenn noch nicht erfolgt.
+			if (!mapGostFaecherManager.containsKey(abiturjahr)) {
+				mapGostFaecherManager.put(abiturjahr,
+						DBUtilsFaecherGost.getFaecherManager(conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(idSchuljahresabschnitt).schuljahr,
+								conn, abiturjahr));
+			}
+			final GostFaecherManager gostFaecher = mapGostFaecherManager.get(abiturjahr);
+
+			// Initialisiere die Daten des Schülers, falls er nicht bereits angelegt wurde
+			getSchuelerOrInit(conn, idSchueler, abiturjahr);
+			// Da vorab eine evtl. Initialisierung erfolgt, können die Fachbelegungen hier erst pro Schüler geladen werden.
+			final Map<Long, DTOGostSchuelerFachbelegungen> dtoFachwahlen = conn.queryList(DTOGostSchuelerFachbelegungen.QUERY_BY_SCHUELER_ID,
+					DTOGostSchuelerFachbelegungen.class, idSchueler).stream().collect(Collectors.toMap(fb -> fb.Fach_ID, fb -> fb));
+
+			// Bestimme die bereits vorhandenen Leistungsdaten für die weitere Laufbahnplanung
+			final GostLeistungen leistungen = DBUtilsGost.getLeistungsdaten(conn, idSchueler);
+			if (leistungen == null)
+				throw new ApiOperationException(Status.NOT_FOUND);
+
+			final Abiturdaten abidaten = new Abiturdaten();
+			abidaten.schuelerID = idSchueler;
+			abidaten.abiturjahr = abiturjahr;
+			abidaten.schuljahrAbitur = abidaten.abiturjahr - 1;
+			abidaten.sprachendaten = leistungen.sprachendaten;
+			abidaten.bilingualeSprache = leistungen.bilingualeSprache;
+			abidaten.projektKursThema = leistungen.projektkursThema;
+			abidaten.projektkursLeitfach1Kuerzel = leistungen.projektkursLeitfach1Kuerzel;
+			abidaten.projektkursLeitfach2Kuerzel = leistungen.projektkursLeitfach2Kuerzel;
+
+			for (final GostHalbjahr hj : GostHalbjahr.values())
+				abidaten.bewertetesHalbjahr[hj.id] = leistungen.bewertetesHalbjahr[hj.id];
+
+			for (final GostLeistungenFachwahl leistungenFach : leistungen.faecher) {
+				GostHalbjahr letzteBelegungHalbjahr = null;   // das Halbjahr der letzten Belegung
+				final AbiturFachbelegung fach = new AbiturFachbelegung();
+				fach.fachID = leistungenFach.fach.id;
+				fach.istFSNeu = leistungenFach.istFSNeu;
+				fach.abiturFach = (GostAbiturFach.fromID(leistungenFach.abiturfach) == null) ? null : leistungenFach.abiturfach;
+				for (final GostLeistungenFachbelegung leistungenBelegung : leistungenFach.belegungen) {
+					if (!leistungenBelegung.abschnittGewertet)
+						continue;
+					// Nehme jeweils die Kursart, welche beim letzten gewerteten Abschnitt eingetragen ist
+					if (((letzteBelegungHalbjahr == null)
+							|| (GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel).compareTo(letzteBelegungHalbjahr) > 0))
+							&& (GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel) != null)) {
+						letzteBelegungHalbjahr = GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel);
+						fach.letzteKursart = (GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel) == null) ? null
+								: GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel).kuerzel;
+					}
+
+					// Erzeuge die zugehörige Belegung
+					final AbiturFachbelegungHalbjahr belegung = new AbiturFachbelegungHalbjahr();
+					belegung.halbjahrKuerzel = (GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel) == null) ? null
+							: GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel).kuerzel;
+					belegung.kursartKuerzel = (GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel) == null) ? null
+							: GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel).kuerzel;
+					if ("AT".equals(leistungenBelegung.notenKuerzel)) {
+						final GostFach gostFach = gostFaecher.get(fach.fachID);
+						if (Fach.SP == Fach.getBySchluesselOrDefault(gostFach.kuerzel))
+							belegung.kursartKuerzel = "AT";
+					}
+					belegung.schriftlich = leistungenBelegung.istSchriftlich;
+					belegung.biliSprache = leistungenBelegung.bilingualeSprache;
+					belegung.lehrer = leistungenBelegung.lehrer;
+					belegung.wochenstunden = leistungenBelegung.wochenstunden;
+					belegung.fehlstundenGesamt = leistungenBelegung.fehlstundenGesamt;
+					belegung.fehlstundenUnentschuldigt = leistungenBelegung.fehlstundenUnentschuldigt;
+					belegung.notenkuerzel = (leistungenBelegung.notenKuerzel == null) ? "" : leistungenBelegung.notenKuerzel;
+					fach.belegungen[GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel).id] = belegung;
+				}
+				// Prüfe, ob das Fach in einem gewerteten Abschnitt belegt wurde. Wenn ja, dann füge es zu es den Fachbelegungen hinzu
+				if (letzteBelegungHalbjahr != null)
+					abidaten.fachbelegungen.add(fach);
+			}
+
+			// Bestimmt die Fehlstunden-Summe für den Block I (Qualifikationsphase) anhand der Fehlstunden bei den einzelnen Kurs-Belegungen.
+			int block1FehlstundenGesamt = 0;
+			int block1FehlstundenUnentschuldigt = 0;
+			for (final AbiturFachbelegung fach : abidaten.fachbelegungen) {
+				for (final AbiturFachbelegungHalbjahr belegung : fach.belegungen) {
+					if ((belegung == null) || !GostHalbjahr.fromKuerzel(belegung.halbjahrKuerzel).istQualifikationsphase())
+						continue;
+					block1FehlstundenGesamt += belegung.fehlstundenGesamt;
+					block1FehlstundenUnentschuldigt += belegung.fehlstundenUnentschuldigt;
+				}
+			}
+			abidaten.block1FehlstundenGesamt = block1FehlstundenGesamt;
+			abidaten.block1FehlstundenUnentschuldigt = block1FehlstundenUnentschuldigt;
+
+			// Belegte Fächer aus den Leistungsdaten überprüfen und Abiturfach setzen
+			for (final AbiturFachbelegung fach : abidaten.fachbelegungen) {
+				final DTOGostSchuelerFachbelegungen belegungPlanung = dtoFachwahlen.get(fach.fachID);
+				if (belegungPlanung == null) {
+					fach.abiturFach = null;
+				} else {
+					final GostAbiturFach tmpAbiturFach = GostAbiturFach.fromID(belegungPlanung.AbiturFach);
+					fach.abiturFach = (tmpAbiturFach == null) ? null : tmpAbiturFach.id;
+				}
+			}
+
+			// Füge gewählte Fächer ohne Leistungsdaten hinzu
+			for (final DTOGostSchuelerFachbelegungen belegungPlanung : dtoFachwahlen.values()) {
+				// filtere leere Belegungen aus der Planung
+				if ((belegungPlanung.EF1_Kursart == null) && (belegungPlanung.EF2_Kursart == null)
+						&& (belegungPlanung.Q11_Kursart == null) && (belegungPlanung.Q12_Kursart == null)
+						&& (belegungPlanung.Q21_Kursart == null) && (belegungPlanung.Q22_Kursart == null))
+					continue;
+
+				// Prüfe, ob die Fachbelegung aufgrund von Leistungsdaten schon vorhanden ist
+				AbiturFachbelegung fach = null;
+				for (final AbiturFachbelegung fb : abidaten.fachbelegungen) {
+					if (fb.fachID == belegungPlanung.Fach_ID) {
+						fach = fb;
+						break;
+					}
+				}
+				// Es wurde keine Fachbelegung gefunden, also muss eine neue ergänzt werden.
+				if (fach == null) {
+					fach = new AbiturFachbelegung();
+					fach.fachID = belegungPlanung.Fach_ID;
+					abidaten.fachbelegungen.add(fach);
+				}
+
+				final GostFach gostFach = gostFaecher.get(fach.fachID);
+				if (gostFach == null)
+					continue;
+				final Fach zulFach = Fach.getBySchluesselOrDefault(gostFach.kuerzel);
+				fach.istFSNeu = zulFach.daten(abidaten.schuljahrAbitur).istFremdsprache && zulFach.daten(abidaten.schuljahrAbitur).nurSII;
+				final GostAbiturFach tmpAbiturFach = GostAbiturFach.fromID(belegungPlanung.AbiturFach);
+				fach.abiturFach = (tmpAbiturFach == null) ? null : tmpAbiturFach.id;
+				GostKursart fachKursart = GostKursart.GK;
+				if ("PX".equals(gostFach.kuerzel))
+					fachKursart = GostKursart.PJK;
+				else if ("VX".equals(gostFach.kuerzel))
+					fachKursart = GostKursart.VTF;
+				if ((fach.belegungen[GostHalbjahr.EF1.id] == null) && (belegungPlanung.EF1_Kursart != null))
+					setFachbelegung(fach, GostHalbjahr.EF1, belegungPlanung.EF1_Kursart, fachKursart, gostFach.wochenstundenQualifikationsphase, false);
+				if ((fach.belegungen[GostHalbjahr.EF2.id] == null) && (belegungPlanung.EF2_Kursart != null))
+					setFachbelegung(fach, GostHalbjahr.EF2, belegungPlanung.EF2_Kursart, fachKursart, gostFach.wochenstundenQualifikationsphase, false);
+				if ((fach.belegungen[GostHalbjahr.Q11.id] == null) && (belegungPlanung.Q11_Kursart != null))
+					setFachbelegung(fach, GostHalbjahr.Q11, belegungPlanung.Q11_Kursart, fachKursart, gostFach.wochenstundenQualifikationsphase,
+							belegungPlanung.Markiert_Q1);
+				if ((fach.belegungen[GostHalbjahr.Q12.id] == null) && (belegungPlanung.Q12_Kursart != null))
+					setFachbelegung(fach, GostHalbjahr.Q12, belegungPlanung.Q12_Kursart, fachKursart, gostFach.wochenstundenQualifikationsphase,
+							belegungPlanung.Markiert_Q2);
+				if ((fach.belegungen[GostHalbjahr.Q21.id] == null) && (belegungPlanung.Q21_Kursart != null))
+					setFachbelegung(fach, GostHalbjahr.Q21, belegungPlanung.Q21_Kursart, fachKursart, gostFach.wochenstundenQualifikationsphase,
+							belegungPlanung.Markiert_Q3);
+				if ((fach.belegungen[GostHalbjahr.Q22.id] == null) && (belegungPlanung.Q22_Kursart != null))
+					setFachbelegung(fach, GostHalbjahr.Q22, belegungPlanung.Q22_Kursart, fachKursart, gostFach.wochenstundenQualifikationsphase,
+							belegungPlanung.Markiert_Q4);
+			}
+			mapAbiturdaten.put(idSchueler, abidaten);
+		}
+		// Gib die Abiturdaten zurück.
+		return mapAbiturdaten;
 	}
 
 

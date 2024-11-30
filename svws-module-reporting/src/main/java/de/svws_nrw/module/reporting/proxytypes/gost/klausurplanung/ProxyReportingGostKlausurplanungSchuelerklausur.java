@@ -29,7 +29,7 @@ public class ProxyReportingGostKlausurplanungSchuelerklausur extends ReportingGo
 			final GostSchuelerklausurTermin gostSchuelerklausurtermin, final ReportingGostKlausurplanungKlausurraum klausurraum,
 			final ReportingGostKlausurplanungKlausurtermin klausurtermin, final ReportingGostKlausurplanungKursklausur kursklausur,
 			final ReportingSchueler schueler) {
-		super(gostSchuelerklausur.bemerkung,
+		super(ersetzeNullDurchEmpty(gostSchuelerklausur.bemerkung),
 				gostSchuelerklausur.id,
 				gostSchuelerklausurtermin.id,
 				klausurraum,
@@ -48,7 +48,5 @@ public class ProxyReportingGostKlausurplanungSchuelerklausur extends ReportingGo
 		if ((super.klausurtermin != null) && super.klausurtermin.schuelerklausuren().stream().noneMatch(s -> s.id() == super.id)) {
 			super.klausurtermin.schuelerklausuren().add(this);
 		}
-
-		ersetzeStringNullDurchEmpty(this, false);
 	}
 }

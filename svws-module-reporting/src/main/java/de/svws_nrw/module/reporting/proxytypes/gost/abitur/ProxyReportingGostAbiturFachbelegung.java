@@ -47,7 +47,7 @@ public class ProxyReportingGostAbiturFachbelegung extends ReportingGostAbiturFac
 				abiturFachbelegung.block2PunkteZwischenstand,
 				null,
 				null,
-				abiturFachbelegung.letzteKursart);
+				ersetzeNullDurchEmpty(abiturFachbelegung.letzteKursart));
 		this.reportingRepository = reportingRepository;
 
 		super.block2PruefungNote = Note.fromKuerzel(abiturFachbelegung.block2NotenKuerzelPruefung);
@@ -83,8 +83,6 @@ public class ProxyReportingGostAbiturFachbelegung extends ReportingGostAbiturFac
 		final ReportingSchuljahresabschnitt abschnittQ11 = this.reportingRepository.schuljahresabschnitt(schuljahrAbitur - 1, 1);
 		if (abschnittQ11 != null)
 			super.fach = abschnittQ11.fach(abiturFachbelegung.fachID);
-
-		ersetzeStringNullDurchEmpty(this, false);
 	}
 
 
