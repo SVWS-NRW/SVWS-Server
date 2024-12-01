@@ -45,7 +45,7 @@ public class ListMap4DLongKeys<V> {
 	 * Konstruktor.
 	 */
 	public ListMap4DLongKeys() {
-		// no implementation
+		// leer
 	}
 
 	private @NotNull Map<Long, List<V>> _lazyLoad1() {

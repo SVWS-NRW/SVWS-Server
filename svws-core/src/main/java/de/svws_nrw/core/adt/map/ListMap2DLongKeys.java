@@ -8,12 +8,13 @@ import java.util.Set;
 
 import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.core.adt.LongArrayKey;
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.utils.MapUtils;
 import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese 2D-List-Map ordnet 2 Schlüssel auf eine Liste von Werten (V) ab.
- * <br> Diese spezielle Map stellt für alle Teilmengen der 2-KEY-Zugriffsmethoden auf die Werte (V) zur Verfügung.
+ * <br> Diese spezielle Map stellt Zugriffsmethoden für alle Kombinationen der Schlüssel auf die Werte (V) zur Verfügung.
  * <br> Die Einfüge-Reihenfolge bleibt bei allen Listen erhalten.
  * <br> Ein Entfernen aus der Datenstruktur ist nicht vorgesehen.
  *
@@ -31,7 +32,7 @@ public class ListMap2DLongKeys<V> {
 	 * Konstruktor.
 	 */
 	public ListMap2DLongKeys() {
-		// no implementation
+		// leer
 	}
 
 	private @NotNull Map<Long, List<V>> _lazyLoad1() {
@@ -89,9 +90,9 @@ public class ListMap2DLongKeys<V> {
 	 * @param key2   Der 2. Schlüssel.
 	 */
 	public void addEmpty(final long key1, final long key2) {
-		final @NotNull LongArrayKey key = new LongArrayKey(key1, key2);
-		MapUtils.getOrCreateArrayList(_map12, key);
-		_list.add(new Pair<>(key, null));
+		final @NotNull LongArrayKey key12 = new LongArrayKey(key1, key2);
+		MapUtils.getOrCreateArrayList(_map12, key12);
+		_list.add(new Pair<>(key12, null));
 
 		if (_map1 != null)
 			MapUtils.getOrCreateArrayList(_map1, key1);
@@ -147,9 +148,10 @@ public class ListMap2DLongKeys<V> {
 	public @NotNull List<V> get1(final long key1) {
 		if (_map1 == null)
 			_map1 = _lazyLoad1();
-		if (!_map1.containsKey(key1))
+		List<V> list = _map1.get(key1);
+		if (list == null)
 			return new ArrayList<>();
-		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map1, key1));
+		return new ArrayList<>(list);
 	}
 
 	/**
@@ -162,9 +164,10 @@ public class ListMap2DLongKeys<V> {
 	public @NotNull List<V> get2(final long key2) {
 		if (_map2 == null)
 			_map2 = _lazyLoad2();
-		if (!_map2.containsKey(key2))
+		List<V> list = _map2.get(key2);
+		if (list == null)
 			return new ArrayList<>();
-		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map2, key2));
+		return new ArrayList<>(list);
 	}
 
 	/**
@@ -176,10 +179,102 @@ public class ListMap2DLongKeys<V> {
 	 * @return eine Liste aller Values in dieser Zuordnung.
 	 */
 	public @NotNull List<V> get12(final long key1, final long key2) {
-		final @NotNull LongArrayKey key = new LongArrayKey(key1, key2);
-		if (!_map12.containsKey(key))
+		final @NotNull LongArrayKey key12 = new LongArrayKey(key1, key2);
+		List<V> list = _map12.get(key12);
+		if (list == null)
 			return new ArrayList<>();
-		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map12, key));
+		return new ArrayList<>(list);
+	}
+
+	/**
+	 * Liefert das zugeordnete Element zum Mapping (key1), falls es genau eines gibt, andernfalls NULL.
+	 *
+	 * @param key1   Der 1. Schlüssel.
+	 *
+	 * @return das zugeordnete Element zum Mapping (key1), falls es genau eines gibt, andernfalls NULL.
+	 */
+	public V getSingleOrNull1(final long key1) {
+		if (_map1 == null)
+			_map1 = _lazyLoad1();
+		List<V> list = _map1.get(key1);
+		if (list == null)
+			return null;
+		if (list.size() != 1)
+			return null;
+		return list.getFirst();
+	}
+
+	/**
+	 * Liefert das zugeordnete Element zum Mapping (key2), falls es genau eines gibt, andernfalls NULL.
+	 *
+	 * @param key2   Der 2. Schlüssel.
+	 *
+	 * @return das zugeordnete Element zum Mapping (key2), falls es genau eines gibt, andernfalls NULL.
+	 */
+	public V getSingleOrNull2(final long key2) {
+		if (_map2 == null)
+			_map2 = _lazyLoad2();
+		List<V> list = _map2.get(key2);
+		if (list == null)
+			return null;
+		if (list.size() != 1)
+			return null;
+		return list.getFirst();
+	}
+
+	/**
+	 * Liefert das zugeordnete Element zum Mapping (key1, key2), falls es genau eines gibt, andernfalls NULL.
+	 *
+	 * @param key1   Der 1. Schlüssel.
+	 * @param key2   Der 2. Schlüssel.
+	 *
+	 * @return das zugeordnete Element zum Mapping (key1, key2), falls es genau eines gibt, andernfalls NULL.
+	 */
+	public V getSingleOrNull12(final long key1, final long key2) {
+		final @NotNull LongArrayKey key12 = new LongArrayKey(key1, key2);
+		List<V> list = _map12.get(key12);
+		if (list == null)
+			return null;
+		if (list.size() != 1)
+			return null;
+		return list.getFirst();
+	}
+
+	/**
+	 * Liefert das zugeordnete Element zum Mapping (key1), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
+	 *
+	 * @param key1   Der 1. Schlüssel.
+	 *
+	 * @return das zugeordnete Element zum Mapping (key1), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
+	 * @throws DeveloperNotificationException falls nicht genau ein Element zugeordnet ist.
+ 	 */
+	public @NotNull V getSingleOrException1(final long key1) throws DeveloperNotificationException {
+		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingleOrNull1(key1));
+	}
+
+	/**
+	 * Liefert das zugeordnete Element zum Mapping (key2), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
+	 *
+	 * @param key2   Der 2. Schlüssel.
+	 *
+	 * @return das zugeordnete Element zum Mapping (key2), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
+	 * @throws DeveloperNotificationException falls nicht genau ein Element zugeordnet ist.
+	 */
+	public @NotNull V getSingleOrException2(final long key2) throws DeveloperNotificationException {
+		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingleOrNull2(key2));
+	}
+
+	/**
+	 * Liefert das zugeordnete Element zum Mapping (key1, key2), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
+	 *
+	 * @param key1   Der 1. Schlüssel.
+	 * @param key2   Der 2. Schlüssel.
+	 *
+	 * @return das zugeordnete Element zum Mapping (key1, key2), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
+	 * @throws DeveloperNotificationException falls nicht genau ein Element zugeordnet ist.
+	 */
+	public @NotNull V getSingleOrException12(final long key1, final long key2) throws DeveloperNotificationException {
+		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingleOrNull12(key1, key2));
 	}
 
 	/**

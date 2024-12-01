@@ -8,6 +8,7 @@ import java.util.Set;
 
 import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.core.adt.LongArrayKey;
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.utils.MapUtils;
 import jakarta.validation.constraints.NotNull;
 
@@ -36,7 +37,7 @@ public class ListMap3DLongKeys<V> {
 	 * Konstruktor.
 	 */
 	public ListMap3DLongKeys() {
-		// no implementation
+		// lerr
 	}
 
 	private @NotNull Map<Long, List<V>> _lazyLoad1() {
@@ -47,7 +48,7 @@ public class ListMap3DLongKeys<V> {
 			if (e.b == null)
 				MapUtils.getOrCreateArrayList(map, key1);
 			else
-			    MapUtils.getOrCreateArrayList(map, key1).add(e.b);
+				MapUtils.getOrCreateArrayList(map, key1).add(e.b);
 		}
 
 		return map;
@@ -126,6 +127,23 @@ public class ListMap3DLongKeys<V> {
 		return map;
 	}
 
+	private V getSingleOrNullHelperLong(final @NotNull Map<Long, List<V>> map, final long key) {
+		List<V> list = map.get(key);
+		if (list == null)
+			return null;
+		if (list.size() != 1)
+			return null;
+		return list.getFirst();
+	}
+
+	private V getSingleOrNullHelperLongArray(final @NotNull Map<LongArrayKey, List<V>> map, final @NotNull LongArrayKey key) {
+		List<V> list = map.get(key);
+		if (list == null)
+			return null;
+		if (list.size() != 1)
+			return null;
+		return list.getFirst();
+	}
 
 	/**
 	 * Fügt das Element hinzu.
@@ -158,7 +176,7 @@ public class ListMap3DLongKeys<V> {
 
 	/**
 	 * Erzeugt den Pfad (key1, key2, key3) fügt aber nichts hinzu.
-	 * Alle Pfad, die es vorher nicht gab, verweisen dann auf leere Listen.
+	 * Alle Pfade, die es vorher nicht gab, verweisen dann auf leere Listen.
 	 *
 	 * @param key1  Der 1. Schlüssel.
 	 * @param key2  Der 2. Schlüssel.
@@ -388,6 +406,189 @@ public class ListMap3DLongKeys<V> {
 		if (!_map123.containsKey(key))
 			return new ArrayList<>();
 		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map123, key));
+	}
+
+	/**
+	 * Liefert das zugeordnete Element zum Mapping (key1), falls es genau eines gibt, andernfalls NULL.
+	 *
+	 * @param key1   Der 1. Schlüssel.
+	 *
+	 * @return das zugeordnete Element zum Mapping (key1), falls es genau eines gibt, andernfalls NULL.
+	 */
+	public V getSingleOrNull1(final long key1) {
+		if (_map1 == null)
+			_map1 = _lazyLoad1();
+		return getSingleOrNullHelperLong(_map1, key1);
+	}
+
+	/**
+	 * Liefert das zugeordnete Element zum Mapping (key2), falls es genau eines gibt, andernfalls NULL.
+	 *
+	 * @param key2   Der 2. Schlüssel.
+	 *
+	 * @return das zugeordnete Element zum Mapping (key2), falls es genau eines gibt, andernfalls NULL.
+	 */
+	public V getSingleOrNull2(final long key2) {
+		if (_map2 == null)
+			_map2 = _lazyLoad2();
+		return getSingleOrNullHelperLong(_map2, key2);
+	}
+
+	/**
+	 * Liefert das zugeordnete Element zum Mapping (key3), falls es genau eines gibt, andernfalls NULL.
+	 *
+	 * @param key3   Der 3. Schlüssel.
+	 *
+	 * @return das zugeordnete Element zum Mapping (key3), falls es genau eines gibt, andernfalls NULL.
+	 */
+	public V getSingleOrNull3(final long key3) {
+		if (_map3 == null)
+			_map3 = _lazyLoad3();
+		return getSingleOrNullHelperLong(_map3, key3);
+	}
+
+	/**
+	 * Liefert das zugeordnete Element zum Mapping (key1, key2), falls es genau eines gibt, andernfalls NULL.
+	 *
+	 * @param key1   Der 1. Schlüssel.
+	 * @param key2   Der 2. Schlüssel.
+	 *
+	 * @return das zugeordnete Element zum Mapping (key1, key2), falls es genau eines gibt, andernfalls NULL.
+	 */
+	public V getSingleOrNull12(final long key1, final long key2) {
+		if (_map12 == null)
+			_map12 = _lazyLoad12();
+		return getSingleOrNullHelperLongArray(_map12, new LongArrayKey(key1, key2));
+	}
+
+	/**
+	 * Liefert das zugeordnete Element zum Mapping (key1, key3), falls es genau eines gibt, andernfalls NULL.
+	 *
+	 * @param key1   Der 1. Schlüssel.
+	 * @param key3   Der 3. Schlüssel.
+	 *
+	 * @return das zugeordnete Element zum Mapping (key1, key3), falls es genau eines gibt, andernfalls NULL.
+	 */
+	public V getSingleOrNull13(final long key1, final long key3) {
+		if (_map13 == null)
+			_map13 = _lazyLoad13();
+		return getSingleOrNullHelperLongArray(_map13, new LongArrayKey(key1, key3));
+	}
+
+	/**
+	 * Liefert das zugeordnete Element zum Mapping (key2, key3), falls es genau eines gibt, andernfalls NULL.
+	 *
+	 * @param key2   Der 2. Schlüssel.
+	 * @param key3   Der 3. Schlüssel.
+	 *
+	 * @return das zugeordnete Element zum Mapping (key2, key3), falls es genau eines gibt, andernfalls NULL.
+	 */
+	public V getSingleOrNull23(final long key2, final long key3) {
+		if (_map23 == null)
+			_map23 = _lazyLoad23();
+		return getSingleOrNullHelperLongArray(_map23, new LongArrayKey(key2, key3));
+	}
+
+	/**
+	 * Liefert das zugeordnete Element zum Mapping (key1, key2, key3), falls es genau eines gibt, andernfalls NULL.
+	 *
+	 * @param key1   Der 1. Schlüssel.
+	 * @param key2   Der 2. Schlüssel.
+	 * @param key3   Der 3. Schlüssel.
+	 *
+	 * @return das zugeordnete Element zum Mapping (key1, key2, key3), falls es genau eines gibt, andernfalls NULL.
+	 */
+	public V getSingleOrNull123(final long key1, final long key2, final long key3) {
+		return getSingleOrNullHelperLongArray(_map123, new LongArrayKey(key1, key2, key3));
+	}
+
+	/**
+	 * Liefert das zugeordnete Element zum Mapping (key1), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
+	 *
+	 * @param key1   Der 1. Schlüssel.
+	 *
+	 * @return das zugeordnete Element zum Mapping (key1), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
+	 * @throws DeveloperNotificationException falls nicht genau ein Element zugeordnet ist.
+	 */
+	public @NotNull V getSingleOrException1(final long key1) throws DeveloperNotificationException {
+		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingleOrNull1(key1));
+	}
+
+	/**
+	 * Liefert das zugeordnete Element zum Mapping (key2), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
+	 *
+	 * @param key2   Der 2. Schlüssel.
+	 *
+	 * @return das zugeordnete Element zum Mapping (key2), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
+	 * @throws DeveloperNotificationException falls nicht genau ein Element zugeordnet ist.
+	 */
+	public @NotNull V getSingleOrException2(final long key2) throws DeveloperNotificationException {
+		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingleOrNull2(key2));
+	}
+
+	/**
+	 * Liefert das zugeordnete Element zum Mapping (key3), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
+	 *
+	 * @param key3   Der 3. Schlüssel.
+	 *
+	 * @return das zugeordnete Element zum Mapping (key3), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
+	 * @throws DeveloperNotificationException falls nicht genau ein Element zugeordnet ist.
+	 */
+	public @NotNull V getSingleOrException3(final long key3) throws DeveloperNotificationException {
+		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingleOrNull3(key3));
+	}
+
+	/**
+	 * Liefert das zugeordnete Element zum Mapping (key1, key2), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
+	 *
+	 * @param key1   Der 1. Schlüssel.
+	 * @param key2   Der 2. Schlüssel.
+	 *
+	 * @return das zugeordnete Element zum Mapping (key1, key2), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
+	 * @throws DeveloperNotificationException falls nicht genau ein Element zugeordnet ist.
+	 */
+	public @NotNull V getSingleOrException12(final long key1, final long key2) throws DeveloperNotificationException {
+		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingleOrNull12(key1, key2));
+	}
+
+	/**
+	 * Liefert das zugeordnete Element zum Mapping (key1, key3), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
+	 *
+	 * @param key1   Der 1. Schlüssel.
+	 * @param key3   Der 3. Schlüssel.
+	 *
+	 * @return das zugeordnete Element zum Mapping (key1, key3), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
+	 * @throws DeveloperNotificationException falls nicht genau ein Element zugeordnet ist.
+	 */
+	public @NotNull V getSingleOrException13(final long key1, final long key3) throws DeveloperNotificationException {
+		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingleOrNull13(key1, key3));
+	}
+
+	/**
+	 * Liefert das zugeordnete Element zum Mapping (key2, key3), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
+	 *
+	 * @param key2   Der 2. Schlüssel.
+	 * @param key3   Der 3. Schlüssel.
+	 *
+	 * @return das zugeordnete Element zum Mapping (key2, key3), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
+	 * @throws DeveloperNotificationException falls nicht genau ein Element zugeordnet ist.
+	 */
+	public @NotNull V getSingleOrException23(final long key2, final long key3) throws DeveloperNotificationException {
+		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingleOrNull23(key2, key3));
+	}
+
+	/**
+	 * Liefert das zugeordnete Element zum Mapping (key1, key2, key3), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
+	 *
+	 * @param key1   Der 1. Schlüssel.
+	 * @param key2   Der 2. Schlüssel.
+	 * @param key3   Der 3. Schlüssel.
+	 *
+	 * @return das zugeordnete Element zum Mapping (key1, key2, key3), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
+	 * @throws DeveloperNotificationException falls nicht genau ein Element zugeordnet ist.
+	 */
+	public @NotNull V getSingleOrException123(final long key1, final long key2, final long key3) throws DeveloperNotificationException {
+		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingleOrNull123(key1, key2, key3));
 	}
 
 	/**

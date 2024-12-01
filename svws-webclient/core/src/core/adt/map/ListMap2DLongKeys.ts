@@ -5,6 +5,7 @@ import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
 import { LongArrayKey } from '../../../core/adt/LongArrayKey';
 import { Class } from '../../../java/lang/Class';
+import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { MapUtils } from '../../../core/utils/MapUtils';
 import type { JavaMap } from '../../../java/util/JavaMap';
 import { Pair } from '../../../asd/adt/Pair';
@@ -77,9 +78,9 @@ export class ListMap2DLongKeys<V> extends JavaObject {
 	 * @param key2   Der 2. Schlüssel.
 	 */
 	public addEmpty(key1 : number, key2 : number) : void {
-		const key : LongArrayKey = new LongArrayKey(key1, key2);
-		MapUtils.getOrCreateArrayList(this._map12, key);
-		this._list.add(new Pair<LongArrayKey, V>(key, null));
+		const key12 : LongArrayKey = new LongArrayKey(key1, key2);
+		MapUtils.getOrCreateArrayList(this._map12, key12);
+		this._list.add(new Pair<LongArrayKey, V>(key12, null));
 		if (this._map1 !== null)
 			MapUtils.getOrCreateArrayList(this._map1, key1);
 		if (this._map2 !== null)
@@ -134,9 +135,10 @@ export class ListMap2DLongKeys<V> extends JavaObject {
 	public get1(key1 : number) : List<V> {
 		if (this._map1 === null)
 			this._map1 = this._lazyLoad1();
-		if (!this._map1.containsKey(key1))
+		let list : List<V> | null = this._map1.get(key1);
+		if (list === null)
 			return new ArrayList();
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map1, key1));
+		return new ArrayList<V>(list);
 	}
 
 	/**
@@ -149,9 +151,10 @@ export class ListMap2DLongKeys<V> extends JavaObject {
 	public get2(key2 : number) : List<V> {
 		if (this._map2 === null)
 			this._map2 = this._lazyLoad2();
-		if (!this._map2.containsKey(key2))
+		let list : List<V> | null = this._map2.get(key2);
+		if (list === null)
 			return new ArrayList();
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map2, key2));
+		return new ArrayList<V>(list);
 	}
 
 	/**
@@ -163,10 +166,102 @@ export class ListMap2DLongKeys<V> extends JavaObject {
 	 * @return eine Liste aller Values in dieser Zuordnung.
 	 */
 	public get12(key1 : number, key2 : number) : List<V> {
-		const key : LongArrayKey = new LongArrayKey(key1, key2);
-		if (!this._map12.containsKey(key))
+		const key12 : LongArrayKey = new LongArrayKey(key1, key2);
+		let list : List<V> | null = this._map12.get(key12);
+		if (list === null)
 			return new ArrayList();
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map12, key));
+		return new ArrayList<V>(list);
+	}
+
+	/**
+	 * Liefert das zugeordnete Element zum Mapping (key1), falls es genau eines gibt, andernfalls NULL.
+	 *
+	 * @param key1   Der 1. Schlüssel.
+	 *
+	 * @return das zugeordnete Element zum Mapping (key1), falls es genau eines gibt, andernfalls NULL.
+	 */
+	public getSingleOrNull1(key1 : number) : V | null {
+		if (this._map1 === null)
+			this._map1 = this._lazyLoad1();
+		let list : List<V> | null = this._map1.get(key1);
+		if (list === null)
+			return null;
+		if (list.size() !== 1)
+			return null;
+		return list.getFirst();
+	}
+
+	/**
+	 * Liefert das zugeordnete Element zum Mapping (key2), falls es genau eines gibt, andernfalls NULL.
+	 *
+	 * @param key2   Der 2. Schlüssel.
+	 *
+	 * @return das zugeordnete Element zum Mapping (key2), falls es genau eines gibt, andernfalls NULL.
+	 */
+	public getSingleOrNull2(key2 : number) : V | null {
+		if (this._map2 === null)
+			this._map2 = this._lazyLoad2();
+		let list : List<V> | null = this._map2.get(key2);
+		if (list === null)
+			return null;
+		if (list.size() !== 1)
+			return null;
+		return list.getFirst();
+	}
+
+	/**
+	 * Liefert das zugeordnete Element zum Mapping (key1, key2), falls es genau eines gibt, andernfalls NULL.
+	 *
+	 * @param key1   Der 1. Schlüssel.
+	 * @param key2   Der 2. Schlüssel.
+	 *
+	 * @return das zugeordnete Element zum Mapping (key1, key2), falls es genau eines gibt, andernfalls NULL.
+	 */
+	public getSingleOrNull12(key1 : number, key2 : number) : V | null {
+		const key12 : LongArrayKey = new LongArrayKey(key1, key2);
+		let list : List<V> | null = this._map12.get(key12);
+		if (list === null)
+			return null;
+		if (list.size() !== 1)
+			return null;
+		return list.getFirst();
+	}
+
+	/**
+	 * Liefert das zugeordnete Element zum Mapping (key1), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
+	 *
+	 * @param key1   Der 1. Schlüssel.
+	 *
+	 * @return das zugeordnete Element zum Mapping (key1), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
+	 * @throws DeveloperNotificationException falls nicht genau ein Element zugeordnet ist.
+	 */
+	public getSingleOrException1(key1 : number) : V {
+		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", this.getSingleOrNull1(key1));
+	}
+
+	/**
+	 * Liefert das zugeordnete Element zum Mapping (key2), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
+	 *
+	 * @param key2   Der 2. Schlüssel.
+	 *
+	 * @return das zugeordnete Element zum Mapping (key2), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
+	 * @throws DeveloperNotificationException falls nicht genau ein Element zugeordnet ist.
+	 */
+	public getSingleOrException2(key2 : number) : V {
+		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", this.getSingleOrNull2(key2));
+	}
+
+	/**
+	 * Liefert das zugeordnete Element zum Mapping (key1, key2), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
+	 *
+	 * @param key1   Der 1. Schlüssel.
+	 * @param key2   Der 2. Schlüssel.
+	 *
+	 * @return das zugeordnete Element zum Mapping (key1, key2), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
+	 * @throws DeveloperNotificationException falls nicht genau ein Element zugeordnet ist.
+	 */
+	public getSingleOrException12(key1 : number, key2 : number) : V {
+		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", this.getSingleOrNull12(key1, key2));
 	}
 
 	/**
