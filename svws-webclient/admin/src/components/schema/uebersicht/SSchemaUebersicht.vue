@@ -90,7 +90,7 @@
 		return revServer !== eintrag.value.revision;
 	})
 
-	const zeigeNeuesSchemaAnlegen = computed<boolean>(() =>(eintrag.value !== undefined) && (eintrag.value.isInConfig) && !eintrag.value.isSVWS);
+	const zeigeNeuesSchemaAnlegen = computed<boolean>(() => (eintrag.value !== undefined) && (eintrag.value.isInConfig) && !eintrag.value.isSVWS);
 
 	const zeigeInitialisierungMitSchulkatalog = computed<boolean>(() =>
 		(eintrag.value !== undefined) && (eintrag.value.isInConfig) && eintrag.value.isSVWS && (props.schuleInfo() === undefined) && !revisionNotUpToDate.value);
@@ -101,36 +101,50 @@
 	];
 
 	function clickConfig() {
+		if (loading.value)
+			return;
 		currentAction.value = (currentAction.value === 'config') ? '' : 'config';
 		clearLog();
 	}
 
 	function clickEmpty() {
+		if (loading.value)
+			return;
 		currentAction.value = (currentAction.value === 'empty') ? '' : 'empty';
 		clearLog();
 	}
 
 	function clickInit() {
+		if (loading.value)
+			return;
 		currentAction.value = (currentAction.value === 'init') ? '' : 'init';
 		clearLog();
 	}
 
 	function clickRestore() {
+		if (loading.value)
+			return;
 		currentAction.value = (currentAction.value === 'restore') ? '' : 'restore';
 		clearLog();
 	}
 
 	function clickMigrate() {
+		if (loading.value)
+			return;
 		currentAction.value = (currentAction.value === 'migrate') ? '' : 'migrate';
 		clearLog();
 	}
 
 	function clickUpgrade() {
+		if (loading.value)
+			return;
 		currentAction.value = (currentAction.value === 'upgrade') ? '' : 'upgrade';
 		clearLog();
 	}
 
 	function clickBackup() {
+		if (loading.value)
+			return;
 		currentAction.value = (currentAction.value === 'backup') ? '' : 'backup';
 		clearLog();
 	}

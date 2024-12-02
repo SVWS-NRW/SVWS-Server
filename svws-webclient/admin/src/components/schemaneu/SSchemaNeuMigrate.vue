@@ -1,5 +1,7 @@
 <template>
-	<svws-ui-action-button title="Schild2-Datenbank migrieren" description="Eine Schild2-Datenbank wird in ein neues Schema migriert." icon="i-ri-database-2-line" action-label="Migrieren" :action-function :action-disabled="(zielSchema.length === 0) || (zielUsername.length === 0) || (zielUserPassword.length === 0) || (statusFunction().value !== undefined) || (zielUsername === 'root')" :is-loading="loadingFunction().value" :is-active>
+	<svws-ui-action-button title="Schild2-Datenbank migrieren" description="Eine Schild2-Datenbank wird in ein neues Schema migriert." icon="i-ri-database-2-line" action-label="Migrieren" :action-function
+		:action-disabled="(zielSchema.length === 0) || (zielUsername.length === 0) || (zielUserPassword.length === 0) || loadingFunction().value || (zielUsername === 'root')"
+		:is-loading="loadingFunction().value" :is-active>
 		<div class="input-wrapper">
 			<svws-ui-select v-model="migrationQuellinformationen().dbms" :items="items.keys()" :item-text="i => items.get(i) || ''" title="Datenbank-Typ" />
 			<svws-ui-spacing />

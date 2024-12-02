@@ -62,21 +62,29 @@
 	}
 
 	async function clickNeu() {
+		if (loading.value)
+			return;
 		currentAction.value = (currentAction.value === 'neu') ? '' : 'neu';
 		clearLog();
 	}
 
 	async function clickRestore() {
+		if (loading.value)
+			return;
 		currentAction.value = (currentAction.value === 'restore') ? '' : 'restore';
 		clearLog();
 	}
 
 	async function clickMigrate() {
+		if (loading.value)
+			return;
 		currentAction.value = (currentAction.value === 'migrate') ? '' : 'migrate';
 		clearLog();
 	}
 
 	async function clickDuplicate() {
+		if (loading.value)
+			return;
 		currentAction.value = (currentAction.value === 'duplicate') ? '' : 'duplicate';
 		clearLog();
 	}
