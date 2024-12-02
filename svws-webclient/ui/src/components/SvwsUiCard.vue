@@ -46,7 +46,7 @@
 		</component>
 
 		<transition name="collapse" @before-enter="emit('update:isOpen', true);" @enter="openCard" @after-enter="afterOpenCard" @before-leave="beforeCloseCard" @leave="closeCard" @after-leave="emit('update:isOpen', false);">
-			<div v-show="isActive" :id="'cardBody' + instanceId" ref="bodyWrapperRef" class="svws-ui-card--body-wrapper" :class="{ 'svws-active': isActive }">
+			<div v-show="isActive" :id="'cardBody' + instanceId" class="svws-ui-card--body-wrapper">
 				<div class="svws-ui-card--body">
 					<!-- Content Section -->
 					<div class="body--content">
@@ -156,7 +156,7 @@
 
 <script lang="ts" setup>
 
-	import { ref, onMounted, onBeforeUnmount, computed, useSlots, getCurrentInstance, watch, nextTick } from 'vue';
+	import { ref, onMounted, computed, useSlots, getCurrentInstance, watch, nextTick, useId } from 'vue';
 	import type { ButtonType } from '../types';
 
 	const props = withDefaults(defineProps<{
@@ -261,7 +261,7 @@
 	// Wenn true, dann ist das Collapsible geöffnet
 	const isActive = ref(false);
 	// Wird für die eindeutige ID der Card benötigt, um diese für ARIA-Attribute zu verwenden
-	const instanceId = ref<string>('');
+	const instanceId = useId();
 
 	/**
 	 * Wenn der Zustand isActive von außen manipuliert wird, wird dieser entsprechend gesetzt
@@ -271,10 +271,6 @@
 	});
 
 	onMounted(() => {
-		const instance = getCurrentInstance();
-		if (instance)
-			instanceId.value = instance.uid.toString();
-
 		if (props.collapsible)
 			setActive((props.isOpen === undefined) ? false : props.isOpen)
 		else
@@ -289,7 +285,6 @@
 	async function openCard (content: Element, done: () => void) {
 		const element = content as HTMLElement;
 		element.style.maxHeight = '0';
-		element.style.overflow = 'hidden';
 		await nextTick(() => {
 			element.style.maxHeight = `${element.scrollHeight}px`;
 			element.addEventListener('transitionend', done, { once: true });
@@ -303,8 +298,7 @@
 	 */
 	function afterOpenCard (content: Element) {
 		const element = content as HTMLElement;
-		element.style.maxHeight = 'auto';
-		element.style.overflow = '';
+		element.style.maxHeight = 'fit-content';
 	};
 
 	/**
@@ -315,7 +309,6 @@
 	function beforeCloseCard (el: Element) {
 		const element = el as HTMLElement;
 		element.style.maxHeight = `${element.scrollHeight}px`;
-		element.style.overflow = 'hidden';
 	};
 
 	/**
