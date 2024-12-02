@@ -1,164 +1,290 @@
 <template>
 	<div class="page--content">
-		<svws-ui-table :columns="cols" :items="props.schuelerKaoaManager().liste.list()" class="col-span-full" clickable :clicked="selectedEntry" @update:clicked="item => selectEntry(item)">
-			<template #cell(idJahrgang)="{ value } : { value: number }">
-				<span>{{ getJahrgangFullName(value) }}</span>
-			</template>
-			<template #cell(idKategorie)="{ value } : { value: number }">
-				<span>{{ getKategorieFullName(value) }}</span>
-			</template>
-			<template #cell(idMerkmal)="{ value } : { value: number }">
-				<span>{{ getMerkmalFullName(value) }}</span>
-			</template>
-			<template #cell(idZusatzmerkmal)="{ value } : { value: number }">
-				<span>{{ getZusatzmerkmalFullName(value) }}</span>
-			</template>
-		</svws-ui-table>
-		<div class="button-container">
-			<svws-ui-button v-if="currentMode === Mode.DEFAULT" title="AddButton" @click="setMode(Mode.ADD)" autofocus>
-				<span class="icon i-ri-add-line" />
-			</svws-ui-button>
-			<svws-ui-button v-if="currentMode === Mode.DEFAULT && selectedEntry" title="PatchButton" @click="patchSelectedIDs">
-				<span class="icon i-ri-edit-2-line" />
-			</svws-ui-button>
-			<svws-ui-button v-if="currentMode === Mode.DEFAULT && selectedEntry" title="DeleteButton" @click="deleteEntry">
-				<span class="icon i-ri-delete-bin-line" />
-			</svws-ui-button>
-		</div>
-		<br>
-		<div v-if="(currentMode === Mode.ADD) || (currentMode === Mode.PATCH)">
-			<svws-ui-select title="Schuljahresabschnitt" :items="props.schuelerKaoaManager()._schuljahresabschnitteFiltered" :item-text="schuljahresabschnittText" v-model="selectedSchuljahresabschnitt" />
-			<svws-ui-select title="KAoAKategorie" v-if="selectedSchuljahresabschnitt" :items="KAOAKategorie.getEintraegeBySchuljahrAndIdJahrgang(schuljahr, selectedJahrgang? selectedJahrgang.id : -1)" :item-text="itemText" v-model="selectedKategorie" />
-			<svws-ui-select title="KAoAMerkmal" v-if="selectedKategorie" :items="KAOAMerkmal.getEintraegeBySchuljahrAndIdKategorie(schuljahr, selectedKategorie.id)" :item-text="itemText" v-model="selectedMerkmal" />
-			<svws-ui-select title="KAoAZusatzmerkmal" v-if="selectedMerkmal" :items="KAOAZusatzmerkmal.getEintraegeBySchuljahrAndIdMerkmal(schuljahr, selectedMerkmal.id)" :item-text="itemText" v-model="selectedZusatzmerkmal" />
-			<svws-ui-select title="KAoAEbene4" v-if="showEbene4" :items="KAOAEbene4.getEintraegeBySchuljahrAndIdZusatzmerkmal(schuljahr, selectedZusatzmerkmal? selectedZusatzmerkmal.id : -1)" :item-text="itemText" v-model="selectedEbene4" />
-			<svws-ui-select title="KAoAAnschlussoption" v-if="selectedZusatzmerkmal && showAnschlussoption" :items="KAOAAnschlussoptionen.getEintraegeBySchuljahrAndIdZusatzmerkmal(schuljahr, selectedZusatzmerkmal.id)" :item-text="itemText" v-model="selectedAnschlussoption" />
-			<svws-ui-select title="KAoABerufsfeld" v-if="showBerufsfeld" :items="KAOABerufsfeld.getEintraegeBySchuljahr(schuljahr)" :item-text="itemText" v-model="selectedBerufsfeld" />
-			<svws-ui-text-input title="Bemerkung" v-if="showFreitext" v-model="selectedBemerkung" placeholder="Freitext" type="text" />
-			<svws-ui-button title="Add" v-if="currentMode === Mode.ADD" :disabled="!validateRequiredFieldsFilled()" @click="addEntry">
-				<span class="icon i-ri-add-line" />
-			</svws-ui-button>
-			<svws-ui-button title="Patch" v-if="currentMode === Mode.PATCH && validateRequiredFieldsFilled()" @click="patchEntry">
-				<span class="icon i-ri-edit-2-line" />
-			</svws-ui-button>
-		</div>
+		<svws-ui-content-card class="col-span-full">
+			<div class="justify-items-end mr-2">
+				<svws-ui-button v-if="currentMode !== 0" :type="'primary'" title="AddButton" @click="enterAddMode"> Neuer Eintrag </svws-ui-button>
+			</div>
+
+			<!-- UI Card zum Erstellen eines neuen Eintrags  !-->
+			<svws-ui-card v-if="currentMode === 0" class="col-span-full" :is-open="true" :collapsible="false"
+				:title="'Standardelement der Berufsorientierung ' + dynamicHeaderForAddingNewEntry">
+				<template #info v-if="(schuelerKAoADaten.idSchuljahresabschnitt !== -1) && (schuljahresabschnitt)">
+					{{ schuljahresabschnittText(schuljahresabschnitt) }}
+				</template>
+				<template #content>
+					<div class="w-full grid grid-cols-2 gap-10">
+						<div class="flex flex-col gap-4 mt-4">
+							<div class="flex flex-row item-center">
+								<svws-ui-select title="Schuljahresabschnitt" :items="props.schuelerKaoaManager()._schuljahresabschnitteFiltered" removable
+									:item-text="schuljahresabschnittText" :model-value="schuljahresabschnitt"
+									@update:model-value="(v) => updateModel(1, v?.id ?? -1)" />
+							</div>
+							<div class="flex flex-row item-center">
+								<svws-ui-select v-if="schuelerKAoADaten.idSchuljahresabschnitt !== -1" class="pl-8" title="Kategorie" removable :item-text
+									:items="KAOAKategorie.getEintraegeBySchuljahrAndIdJahrgang(schuljahr, schuelerKAoADaten.idJahrgang)"
+									:model-value="KAOAKategorie.data().getEintragByID(schuelerKAoADaten.idKategorie)"
+									@update:model-value="(v) => updateModel(2, v?.id ?? -1)" />
+							</div>
+							<div class="flex flex-row item-center">
+								<svws-ui-select v-if="schuelerKAoADaten.idKategorie !== -1" class="pl-16" title="Merkmal" removable :item-text
+									:items="KAOAMerkmal.getEintraegeBySchuljahrAndIdKategorie(schuljahr, schuelerKAoADaten.idKategorie)"
+									:model-value="KAOAMerkmal.data().getEintragByID(schuelerKAoADaten.idMerkmal)"
+									@update:model-value="(v) => updateModel(3, v?.id ?? -1)" />
+							</div>
+							<div class="flex flex-row item-center">
+								<svws-ui-select v-if="schuelerKAoADaten.idMerkmal !== -1" class="pl-24" title="Zusatzmerkmal" removable :item-text
+									:items="KAOAZusatzmerkmal.getEintraegeBySchuljahrAndIdMerkmal(schuljahr, schuelerKAoADaten.idMerkmal)"
+									:model-value="KAOAZusatzmerkmal.data().getEintragByID(schuelerKAoADaten.idZusatzmerkmal)"
+									@update:model-value="(v) => updateModel(4, v?.id ?? -1)" />
+							</div>
+						</div>
+						<div class="flex flex-col gap-4 mt-4">
+							<svws-ui-select v-if="showEbene4" title="KAoAEbene4" removable :item-text
+								:items="KAOAEbene4.getEintraegeBySchuljahrAndIdZusatzmerkmal(schuljahr, zusatzmerkmal? zusatzmerkmal.id : -1)"
+								:model-value="KAOAEbene4.data().getEintragByID(schuelerKAoADaten.idEbene4 ?? -1)"
+								@update:model-value="(v) => schuelerKAoADaten.idEbene4 = v?.id ?? null" />
+							<svws-ui-select v-if="zusatzmerkmal && showAnschlussoption" title="KAoAAnschlussoption" removable :item-text
+								:items="KAOAAnschlussoptionen.getEintraegeBySchuljahrAndIdZusatzmerkmal(schuljahr, zusatzmerkmal.id)"
+								:model-value="KAOAAnschlussoptionen.data().getEintragByID(schuelerKAoADaten.idAnschlussoption ?? -1)"
+								@update:model-value="(v) => schuelerKAoADaten.idAnschlussoption = v?.id ?? null" />
+							<svws-ui-select v-if="showBerufsfeld" title="KAoABerufsfeld" removable :item-text
+								:items="KAOABerufsfeld.getEintraegeBySchuljahr(schuljahr)"
+								:model-value="KAOABerufsfeld.data().getEintragByID(schuelerKAoADaten.idBerufsfeld ?? -1)"
+								@update:model-value="(v) => schuelerKAoADaten.idBerufsfeld = v?.id ?? null" />
+							<svws-ui-text-input v-if="showFreitext" title="Bemerkung" placeholder="Bemerkung" type="text" :max-len="255"
+								v-model="schuelerKAoADaten.bemerkung" :valid="(v) => validateBemerkung(v)" removable />
+						</div>
+					</div>
+				</template>
+				<template #buttonFooterRight>
+					<div class="flex gap-2 mt-2">
+						<svws-ui-button v-if="currentMode === Mode.ADD" :type="'primary'" :disabled="!validateRequiredFieldsFilled()" @click="sendRequest(Mode.ADD)">
+							Speichern
+						</svws-ui-button>
+						<svws-ui-button v-if="currentMode === Mode.ADD" :type="'secondary'" @click="enterDefaultMode">
+							Abbrechen
+						</svws-ui-button>
+					</div>
+				</template>
+			</svws-ui-card>
+
+			<!-- UI Card zum Anzeigen und Patchen !-->
+			<svws-ui-card v-for="kaoaDaten of props.schuelerKaoaManager().liste.list()" class="col-span-full" :key="kaoaDaten.id"
+				:title="dynamicHeaderForPatchingEntry(kaoaDaten)"
+				:info="schuljahresabschnittTextFromKaoaDaten(kaoaDaten)">
+
+				<template #content>
+					<!-- PATCH  !-->
+					<div v-if="(idPatchObject === kaoaDaten.id) && (currentMode === Mode.PATCH)" class="w-full grid grid-cols-2 gap-10">
+						<div class="flex flex-col gap-4 mt-4">
+							<div class="flex flex-row item-center">
+								<svws-ui-select title="Schuljahresabschnitt" removable :item-text="schuljahresabschnittText"
+									:items="props.schuelerKaoaManager()._schuljahresabschnitteFiltered" :model-value="schuljahresabschnitt"
+									@update:model-value="(v) => updateModel(1, v?.id ?? -1)" />
+							</div>
+							<div class="flex flex-row item-center">
+								<svws-ui-select v-if="schuelerKAoADaten.idSchuljahresabschnitt !== -1" class="pl-8" title="Kategorie" removable :item-text
+									:items="KAOAKategorie.getEintraegeBySchuljahrAndIdJahrgang(schuljahr, schuelerKAoADaten.idJahrgang)"
+									:model-value="KAOAKategorie.data().getEintragByID(schuelerKAoADaten.idKategorie)"
+									@update:model-value="(v) => updateModel(2, v?.id ?? -1)" />
+							</div>
+							<div class="flex flex-row item-center">
+								<svws-ui-select v-if="schuelerKAoADaten.idKategorie !== -1" class="pl-16" title="Merkmal" removable :item-text
+									:items="KAOAMerkmal.getEintraegeBySchuljahrAndIdKategorie(schuljahr, schuelerKAoADaten.idKategorie)"
+									:model-value="KAOAMerkmal.data().getEintragByID(schuelerKAoADaten.idMerkmal)"
+									@update:model-value="(v) => updateModel(3, v?.id ?? -1)" />
+							</div>
+							<div class="flex flex-row item-center">
+								<svws-ui-select v-if="schuelerKAoADaten.idMerkmal !== -1" class="pl-24" title="Zusatzmerkmal" removable :item-text
+									:items="KAOAZusatzmerkmal.getEintraegeBySchuljahrAndIdMerkmal(schuljahr, schuelerKAoADaten.idMerkmal)"
+									:model-value="KAOAZusatzmerkmal.data().getEintragByID(schuelerKAoADaten.idZusatzmerkmal)"
+									@update:model-value="(v) => updateModel(4, v?.id ?? -1)" />
+							</div>
+						</div>
+						<div class="flex flex-col gap-4 mt-4">
+							<svws-ui-select v-if="showEbene4" title="KAoAEbene4" removable :item-text
+								:items="KAOAEbene4.getEintraegeBySchuljahrAndIdZusatzmerkmal(schuljahr, zusatzmerkmal? zusatzmerkmal.id : -1)"
+								:model-value="KAOAEbene4.data().getEintragByID(schuelerKAoADaten.idEbene4 ?? -1)"
+								@update:model-value="(v) => schuelerKAoADaten.idEbene4 = v?.id ?? null" />
+							<svws-ui-select v-if="zusatzmerkmal && showAnschlussoption" title="KAoAAnschlussoption" removable :item-text
+								:items="KAOAAnschlussoptionen.getEintraegeBySchuljahrAndIdZusatzmerkmal(schuljahr, zusatzmerkmal.id)"
+								:model-value="KAOAAnschlussoptionen.data().getEintragByID(schuelerKAoADaten.idAnschlussoption ?? -1)"
+								@update:model-value="(v) => schuelerKAoADaten.idAnschlussoption = v?.id ?? null" />
+							<svws-ui-select v-if="showBerufsfeld" title="KAoABerufsfeld" removable :item-text
+								:items="KAOABerufsfeld.getEintraegeBySchuljahr(schuljahr)"
+								:model-value="KAOABerufsfeld.data().getEintragByID(schuelerKAoADaten.idBerufsfeld ?? -1)"
+								@update:model-value="(v) => schuelerKAoADaten.idBerufsfeld = v?.id ?? null" />
+							<svws-ui-text-input v-if="showFreitext" title="Bemerkung" placeholder="Bemerkung" type="text" :max-len="255" removabe
+								v-model="schuelerKAoADaten.bemerkung" :valid="(v) => validateBemerkung(v)" />
+						</div>
+					</div>
+
+					<!-- ANZEIGEN  !-->
+					<div v-if="idPatchObject !== kaoaDaten.id" class="w-full grid grid-cols-2 gap-10">
+						<div class="overflow-hidden flex flex-col gap-4">
+
+							<svws-ui-select class="mt-4" title="Schuljahresabschnitt" :item-text="schuljahresabschnittText" readonly
+								:items="props.schuelerKaoaManager()._schuljahresabschnitteFiltered" :model-value="schuljahresabschnitt" />
+							<div class="pl-8">
+								<svws-ui-select title="Kategorie" :item-text readonly removable
+									:items="KAOAKategorie.getEintraegeBySchuljahrAndIdJahrgang(schuljahr, kaoaDaten.idJahrgang)"
+									:model-value="KAOAKategorie.data().getEintragByID(kaoaDaten.idKategorie)" />
+							</div>
+							<div class="pl-16">
+								<svws-ui-select title="Merkmal" :item-text readonly removable
+									:items="KAOAMerkmal.getEintraegeBySchuljahrAndIdKategorie(schuljahr, kaoaDaten.idKategorie)"
+									:model-value="KAOAMerkmal.data().getEintragByID(kaoaDaten.idMerkmal)" />
+							</div>
+							<div class="pl-24">
+								<svws-ui-select title="Zusatzmerkmal" :item-text readonly removable
+									:items="KAOAZusatzmerkmal.getEintraegeBySchuljahrAndIdMerkmal(schuljahr, kaoaDaten.idMerkmal)"
+									:model-value="KAOAZusatzmerkmal.data().getEintragByID(kaoaDaten.idZusatzmerkmal)" />
+							</div>
+						</div>
+						<div class="overflow-hidden flex flex-col gap-4">
+							<div class="flex flex-col gap-4 mt-4">
+								<svws-ui-select v-if="kaoaDaten.idEbene4 !== null" title="KAoAEbene4" :item-text readonly removable
+									:items="KAOAEbene4.getEintraegeBySchuljahrAndIdZusatzmerkmal(schuljahr, kaoaDaten.idZusatzmerkmal)"
+									:model-value="KAOAEbene4.data().getEintragByID(kaoaDaten.idEbene4)" />
+								<svws-ui-select v-if="kaoaDaten.idAnschlussoption !== null" title="KAoAAnschlussoption" :item-text readonly removable
+									:items="KAOAAnschlussoptionen.getEintraegeBySchuljahrAndIdZusatzmerkmal(schuljahr, kaoaDaten.idZusatzmerkmal)"
+									:model-value="KAOAAnschlussoptionen.data().getEintragByID(kaoaDaten.idAnschlussoption)" />
+								<svws-ui-select v-if="kaoaDaten.idBerufsfeld !== null" title="KAoABerufsfeld" :item-text readonly removable
+									:items="KAOABerufsfeld.getEintraegeBySchuljahr(schuljahr)"
+									:model-value="KAOABerufsfeld.data().getEintragByID(kaoaDaten.idBerufsfeld)" />
+								<svws-ui-text-input v-if="validateBemerkung(kaoaDaten.bemerkung)" title="Bemerkung" placeholder="Bemerkung" type="text"
+									:model-value="kaoaDaten.bemerkung" readonly removable :max-len="255" :valid="(v) => validateBemerkung(v)" />
+							</div>
+						</div>
+					</div>
+				</template>
+				<template #buttonFooterRight>
+					<div class="flex gap-2 mt-2">
+						<svws-ui-button v-if="idPatchObject !== kaoaDaten.id" :type="'primary'" @click="enterPatchMode(kaoaDaten)">
+							Bearbeiten
+						</svws-ui-button>
+						<svws-ui-button v-if="idPatchObject === kaoaDaten.id" :disabled="!validateRequiredFieldsFilled()" :type="'primary'" @click="sendRequest(Mode.PATCH)">
+							Änderung speichern
+						</svws-ui-button>
+						<svws-ui-button v-if="(currentMode !== Mode.PATCH)" :type="'danger'" @click="deleteEntry(kaoaDaten.id)">
+							Löschen
+						</svws-ui-button>
+						<svws-ui-button v-if="(currentMode === Mode.PATCH) && (kaoaDaten.id === idPatchObject)" :type="'secondary'" @click="enterDefaultMode">
+							Abbrechen
+						</svws-ui-button>
+					</div>
+				</template>
+			</svws-ui-card>
+		</svws-ui-content-card>
 	</div>
 </template>
 
 <script setup lang="ts">
 
 	import type { SchuelerKAoAProps } from './SSchuelerKaoaProps';
-	import type { CoreTypeData, KAOAKategorieKatalogEintrag, KAOAMerkmalKatalogEintrag, KAOAZusatzmerkmalKatalogEintrag, SchuelerKAoADaten, Schuljahresabschnitt,
-		KAOAEbene4KatalogEintrag, KAOAAnschlussoptionenKatalogEintrag, KAOABerufsfeldKatalogEintrag} from "@core";
-	import { KAOAAnschlussoptionen, KAOABerufsfeld, KAOAEbene4 , Jahrgaenge, KAOAKategorie, KAOAMerkmal, KAOAZusatzmerkmal } from "@core";
-	import type { DataTableColumn } from "@ui";
+	import type {Schuljahresabschnitt, CoreTypeData, JahrgaengeKatalogEintrag, KAOAZusatzmerkmalKatalogEintrag} from "@core";
+	import { JavaString, KAOAAnschlussoptionen, KAOABerufsfeld, KAOAEbene4 , Jahrgaenge, KAOAKategorie, KAOAMerkmal, KAOAZusatzmerkmal, SchuelerKAoADaten } from "@core";
 	import { ref, computed, watch } from 'vue';
 
 	const props = defineProps<SchuelerKAoAProps>();
-	interface SelectedIDs {
-		idSchuljahresabschnitt: number | null;
-		idKategorie: number | null;
-		idMerkmal: number | null;
-		idZusatzmerkmal: number | null;
-		idEbene4: number | null;
-		idAnschlussoption: number | null;
-		idBerufsfeld: number | null;
-		bemerkung: string | null;
+	const schuelerKAoADaten = ref<SchuelerKAoADaten>(new SchuelerKAoADaten());
+	const idPatchObject = ref<number>(-1);
+
+	function isReadOnly(id: number) {
+		return id !== idPatchObject.value;
 	}
-	const selectedIDs = ref<SelectedIDs>({
-		idSchuljahresabschnitt: null,
-		idKategorie: null,
-		idMerkmal: null,
-		idZusatzmerkmal: null,
-		idEbene4: null,
-		idAnschlussoption: null,
-		idBerufsfeld: null,
-		bemerkung: null,
-	});
-	const selectedSchuljahresabschnitt = computed({
-		get: () => {
-			if (selectedIDs.value.idSchuljahresabschnitt !== null)
-				return props.schuelerKaoaManager().schuljahresabschnitte.get(selectedIDs.value.idSchuljahresabschnitt);
-			if (props.schuelerKaoaManager()._schuljahresabschnitteFiltered.isEmpty())
-				return null;
-			return props.schuelerKaoaManager().schuljahresabschnitte.get(props.auswahl().idSchuljahresabschnitt);
-		},
-		set: (val: Schuljahresabschnitt | null) => {
-			resetMandatoryAndOptionalSelectedIDs();
-			selectedIDs.value.idSchuljahresabschnitt = val ? val.id : null;
-		}
-	});
-	const selectedKategorie = computed({
-		get: () => selectedIDs.value.idKategorie !== null ? KAOAKategorie.data().getEintragByID(selectedIDs.value.idKategorie) : null,
-		set: (val: KAOAKategorieKatalogEintrag | null) => {
-			selectedIDs.value.idKategorie = val ? val.id : null;
-			selectedIDs.value.idMerkmal = null;
-			selectedIDs.value.idZusatzmerkmal = null;
-			resetOptionalSelectedIDs();
-		}
-	});
-	const selectedMerkmal = computed({
-		get: () => selectedIDs.value.idMerkmal !== null ? KAOAMerkmal.data().getEintragByID(selectedIDs.value.idMerkmal) : null,
-		set: (val: KAOAMerkmalKatalogEintrag | null) => {
-			selectedIDs.value.idMerkmal = val ? val.id : null;
-			selectedIDs.value.idZusatzmerkmal = null;
-			resetOptionalSelectedIDs();
-		}
-	});
-	const selectedZusatzmerkmal = computed({
-		get: () => selectedIDs.value.idZusatzmerkmal !== null ? KAOAZusatzmerkmal.data().getEintragByID(selectedIDs.value.idZusatzmerkmal) : null,
-		set: (val: KAOAZusatzmerkmalKatalogEintrag | null) => {
-			selectedIDs.value.idZusatzmerkmal = val ? val.id : null;
-			resetOptionalSelectedIDs();
-		}
-	});
-	const selectedEbene4 = computed({
-		get: () => selectedIDs.value.idEbene4 !== null ? KAOAEbene4.data().getEintragByID(selectedIDs.value.idEbene4) : null,
-		set: (val: KAOAEbene4KatalogEintrag | null) => selectedIDs.value.idEbene4 = val ? val.id : null
-	});
-	const selectedAnschlussoption = computed({
-		get: () => selectedIDs.value.idAnschlussoption !== null ? KAOAAnschlussoptionen.data().getEintragByID(selectedIDs.value.idAnschlussoption) : null,
-		set: (val: KAOAAnschlussoptionenKatalogEintrag | null) => selectedIDs.value.idAnschlussoption = val ? val.id : null
-	});
-	const selectedBerufsfeld = computed({
-		get: () => selectedIDs.value.idBerufsfeld !== null ? KAOABerufsfeld.data().getEintragByID(selectedIDs.value.idBerufsfeld) : null,
-		set: (val: KAOABerufsfeldKatalogEintrag | null) => selectedIDs.value.idBerufsfeld = val ? val.id : null
-	});
-	const selectedBemerkung = computed({
-		get: () => selectedIDs.value.bemerkung,
-		set: (val: string | null) => selectedIDs.value.bemerkung = val
-	});
-	const selectedEntry = ref<SchuelerKAoADaten | null>();
 
-	const optionsart = computed(() => selectedZusatzmerkmal.value?.optionsart);
+	const schuljahr = computed<number>(() => (schuljahresabschnitt.value?.schuljahr !== undefined) ? schuljahresabschnitt.value.schuljahr : -1);
+	const jahrgang = computed<JahrgaengeKatalogEintrag | null> (
+		() => Jahrgaenge.data().getWertByKuerzel(props.schuelerKaoaManager().getKuerzelJahrgangBySchuljahr(schuljahr.value))?.daten(schuljahr.value) ?? null);
+	const zusatzmerkmal = computed<KAOAZusatzmerkmalKatalogEintrag | null>(() => KAOAZusatzmerkmal.data().getEintragByID(schuelerKAoADaten.value.idZusatzmerkmal) ?? null);
+	const schuljahresabschnitt = computed<Schuljahresabschnitt | null>(() => {
+		if (schuelerKAoADaten.value.idSchuljahresabschnitt === -1)
+			return props.schuelerKaoaManager().schuljahresabschnitte.get(props.auswahl().idSchuljahresabschnitt) ?? null;
+		return props.schuelerKaoaManager().schuljahresabschnitte.get(schuelerKAoADaten.value.idSchuljahresabschnitt) ?? null;
+	});
 
-	const showEbene4 = computed(() => (selectedZusatzmerkmal.value !== null) && (optionsart.value === 'SBO_EBENE_4'));
-	const showAnschlussoption = computed(() => (selectedZusatzmerkmal.value !== null) && (optionsart.value === 'ANSCHLUSSOPTION'));
-	const showBerufsfeld = computed(() => (selectedZusatzmerkmal.value !== null) && (optionsart.value === 'BERUFSFELD'));
-	const showFreitext = computed(() => (selectedZusatzmerkmal.value !== null) && ((optionsart.value === 'FREITEXT') || (optionsart.value === 'FREITEXT_BERUF')));
+	const showEbene4 = computed<boolean>(() => zusatzmerkmal.value?.optionsart ==='SBO_EBENE_4');
+	const showAnschlussoption = computed<boolean>(() => zusatzmerkmal.value?.optionsart ==='ANSCHLUSSOPTION');
+	const showBerufsfeld = computed<boolean>(() => zusatzmerkmal.value?.optionsart ==='BERUFSFELD');
+	const showFreitext = computed<boolean>(() => (zusatzmerkmal.value?.optionsart ==='FREITEXT') || (zusatzmerkmal.value?.optionsart ==='FREITEXT_BERUF'));
 
-	const selectedJahrgang = computed (() => Jahrgaenge.data().getWertByKuerzel(props.schuelerKaoaManager().getKuerzelJahrgangBySchuljahr(schuljahr.value))?.daten(schuljahr.value));
-	const schuljahr = computed(() => (selectedSchuljahresabschnitt.value?.schuljahr !== undefined) ? selectedSchuljahresabschnitt.value.schuljahr : -1);
-	const itemText = computed(() => (i: CoreTypeData) => i.kuerzel + '- ' + i.text);
-	const schuljahresabschnittText = (item: Schuljahresabschnitt) => item.schuljahr > 0 ? `${item.schuljahr}/${(item.schuljahr + 1) % 100}.${item.abschnitt}` : "Abschnitt";
-	type ModeType = 'add' | 'patch' | 'default';
-	const Mode = Object.freeze({ADD: 'add' as ModeType, PATCH: 'patch' as ModeType, DEFAULT: 'default' as ModeType});
-	const currentMode = ref(Mode.DEFAULT);
-	const setMode = (newMode: ModeType) => currentMode.value = newMode;
+	// setzt die selektierten Felder abhängig vom Ziellevel zurück
+	function updateModel(targetLevel: number, value: number) {
+		if (targetLevel <= 1) {
+			schuelerKAoADaten.value.idSchuljahresabschnitt = value;
+			schuelerKAoADaten.value.idJahrgang = jahrgang.value? jahrgang.value.id : -1;
+		}
+		if (targetLevel <= 2)
+			schuelerKAoADaten.value.idKategorie = targetLevel === 2 ? value : -1;
+		if (targetLevel <= 3)
+			schuelerKAoADaten.value.idMerkmal = targetLevel === 3 ? value : -1;
+		if (targetLevel <= 4)
+			schuelerKAoADaten.value.idZusatzmerkmal = targetLevel === 4 ? value : -1;
+		if (targetLevel >= 1) {
+			schuelerKAoADaten.value.idEbene4 = null;
+			schuelerKAoADaten.value.idAnschlussoption = null;
+			schuelerKAoADaten.value.idBerufsfeld = null;
+			schuelerKAoADaten.value.bemerkung = null;
+		}
+	}
+
+	// die Werte des aktuell ausgewählten zu bearbeitenden Objekts übertragen
+	function transferPatchValues(kaoaDaten: SchuelerKAoADaten) {
+		Object.assign(schuelerKAoADaten.value, {
+			idJahrgang: kaoaDaten.idJahrgang,
+			idSchuljahresabschnitt: kaoaDaten.idSchuljahresabschnitt,
+			idKategorie: kaoaDaten.idKategorie,
+			idMerkmal: kaoaDaten.idMerkmal,
+			idZusatzmerkmal: kaoaDaten.idZusatzmerkmal,
+			idEbene4: kaoaDaten.idEbene4,
+			idAnschlussoption: kaoaDaten.idAnschlussoption,
+			idBerufsfeld: kaoaDaten.idBerufsfeld,
+			bemerkung: kaoaDaten.bemerkung,
+		});
+	}
+
+	// api call für Delete
+	async function deleteEntry(id: number) {
+		await props.delete(props.auswahl().id, id);
+		setMode(Mode.DEFAULT);
+	}
+
+	// api call für Create und Patch
+	async function sendRequest(type : Mode) {
+		if (!validateRequiredFieldsFilled())
+			return;
+		if (type === Mode.ADD)
+			await props.add(createPartialWithoutId(), props.auswahl().id);
+		if (type === Mode.PATCH) {
+			await props.patch(createPartialWithoutId(), idPatchObject.value);
+		}
+		enterDefaultMode();
+	}
+
+	// das zu übertragene Objekt darf keine Id enthalten. Diese wird im Backend vergeben.
+	function createPartialWithoutId() {
+		const data: Partial<SchuelerKAoADaten> = schuelerKAoADaten.value;
+		delete data.id;
+		return data;
+	}
+
+	// Validierung
+	const optionsart = computed<string | null> (() => zusatzmerkmal.value?.optionsart ?? null);
 
 	function validateRequiredFieldsFilled() {
-		if (!selectedKategorie.value || !selectedMerkmal.value || !selectedZusatzmerkmal.value || optionsart.value === null)
+		if ((schuelerKAoADaten.value.idKategorie === -1) || (schuelerKAoADaten.value.idMerkmal === -1) || (schuelerKAoADaten.value.idZusatzmerkmal === -1))
 			return false;
-		switch(optionsart.value){
+		switch(optionsart.value) {
 			case 'SBO_EBENE_4':
-				return !!selectedEbene4.value;
+				return schuelerKAoADaten.value.idEbene4 !== null;
 			case 'ANSCHLUSSOPTION':
-				return !!selectedAnschlussoption.value;
+				return schuelerKAoADaten.value.idAnschlussoption !== null;
 			case 'BERUFSFELD':
-				return !!selectedBerufsfeld.value;
+				return schuelerKAoADaten.value.idBerufsfeld !== null;
 			case 'FREITEXT':
 			case 'FREITEXT_BERUF':
-				return (selectedBemerkung.value !== null) && (selectedBemerkung.value.trim() !== '');
+				return validateBemerkung(schuelerKAoADaten.value.bemerkung);
 			case 'KEINE':
 				return true;
 			default:
@@ -166,145 +292,81 @@
 		}
 	}
 
-	async function addEntry(){
-		if (!validateRequiredFieldsFilled())
-			return;
-		const data: Partial<SchuelerKAoADaten> = {
-			idSchuljahresabschnitt: selectedSchuljahresabschnitt.value?.id,
-			idJahrgang: selectedJahrgang.value?.id,
-			idKategorie: selectedKategorie.value?.id,
-			idMerkmal: selectedMerkmal.value?.id,
-			idZusatzmerkmal: selectedZusatzmerkmal.value?.id,
-			idBerufsfeld: selectedBerufsfeld.value?.id,
-			idEbene4: selectedEbene4.value?.id,
-			idAnschlussoption: selectedAnschlussoption.value?.id,
-			bemerkung: selectedBemerkung.value,
-		};
-		const idSchueler = props.auswahl().id;
-		await props.add(data, idSchueler);
-		selectedEntry.value = null;
-		resetMandatoryAndOptionalSelectedIDs();
-		setMode(Mode.DEFAULT);
+	function validateBemerkung(bemerkung : string | null) {
+		return (bemerkung !== null) && !JavaString.isBlank(bemerkung) && (bemerkung.trim().length <= 255);
 	}
-	async function deleteEntry() {
-		if (selectedEntry.value === null || selectedEntry.value === undefined)
-			return;
-		await props.delete(props.auswahl().id, selectedEntry.value.id);
-		selectedEntry.value = null;
-		setMode(Mode.DEFAULT);
+
+	// Bezeichnungen
+	function itemText(i: CoreTypeData) {
+		return i.kuerzel + '- ' + i.text
 	}
-	async function patchSelectedIDs() {
+
+	function schuljahresabschnittText(value: Schuljahresabschnitt) {
+		return value.schuljahr > 0 ? `${value.schuljahr}/${(value.schuljahr + 1) % 100}.${value.abschnitt}` : "Abschnitt";
+	}
+
+	function schuljahresabschnittTextFromKaoaDaten(item: SchuelerKAoADaten) {
+		const abschnitt = props.schuelerKaoaManager().schuljahresabschnitte.get(item.idSchuljahresabschnitt);
+		return abschnitt ? schuljahresabschnittText(abschnitt) : "-";
+	}
+
+	const dynamicHeaderForAddingNewEntry = computed<string> (() => {
+		let eintrag;
+		if (schuelerKAoADaten.value.idZusatzmerkmal !== -1)
+			eintrag = KAOAZusatzmerkmal.data().getEintragByID(schuelerKAoADaten.value.idZusatzmerkmal);
+		else if (schuelerKAoADaten.value.idMerkmal !== -1)
+			eintrag = KAOAMerkmal.data().getEintragByID(schuelerKAoADaten.value.idMerkmal);
+		else if (schuelerKAoADaten.value.idKategorie !== -1)
+			eintrag = KAOAKategorie.data().getEintragByID(schuelerKAoADaten.value.idKategorie);
+		else if (schuelerKAoADaten.value.idSchuljahresabschnitt !== -1)
+			return "SBO";
+		return eintrag?.kuerzel ?? "";
+	})
+
+	function dynamicHeaderForPatchingEntry(kaoaDaten : SchuelerKAoADaten) {
+		if (kaoaDaten.id !== idPatchObject.value)
+			return KAOAZusatzmerkmal.data().getWertByID(kaoaDaten.idZusatzmerkmal).daten(schuljahr.value)?.kuerzel ?? "";
+		return dynamicHeaderForAddingNewEntry.value;
+	}
+
+	// Modus
+	enum Mode { ADD, PATCH , DEFAULT }
+	const currentMode = ref<Mode>(Mode.DEFAULT);
+
+	function deselectEntry() {
+		idPatchObject.value = -1;
+	}
+
+	function setMode(newMode: Mode) {
+		return currentMode.value = newMode;
+	}
+
+	function resetSchuelerKaoaFields() {
+		schuelerKAoADaten.value = new SchuelerKAoADaten();
+	}
+
+	function enterPatchMode(kaoaDaten : SchuelerKAoADaten) {
+		resetSchuelerKaoaFields();
+		transferPatchValues(kaoaDaten);
 		setMode(Mode.PATCH);
-		if (!selectedEntry.value)
-			return
-		selectedIDs.value.idSchuljahresabschnitt = selectedEntry.value.idSchuljahresabschnitt;
-		selectedIDs.value.idKategorie = selectedEntry.value.idKategorie;
-		selectedIDs.value.idMerkmal = selectedEntry.value.idMerkmal;
-		selectedIDs.value.idZusatzmerkmal = selectedEntry.value.idZusatzmerkmal;
-		if (!selectedZusatzmerkmal.value)
-			return;
-		switch (selectedZusatzmerkmal.value.optionsart) {
-			case 'SBO_EBENE_4': {
-				resetOptionalSelectedIDs();
-				selectedIDs.value.idEbene4 = selectedEntry.value.idEbene4 !== null ? selectedEntry.value.idEbene4 : null;
-				break;
-			}
-			case 'ANSCHLUSSOPTION': {
-				resetOptionalSelectedIDs();
-				selectedIDs.value.idAnschlussoption = selectedEntry.value.idAnschlussoption !== null ?selectedEntry.value.idAnschlussoption : null;
-				break;
-			}
-			case 'BERUFSFELD': {
-				resetOptionalSelectedIDs();
-				selectedIDs.value.idBerufsfeld = selectedEntry.value.idBerufsfeld !== null ? selectedEntry.value.idBerufsfeld : null;
-				break;
-			}
-			case 'FREITEXT':
-			case 'FREITEXT_BERUF': {
-				resetOptionalSelectedIDs();
-				selectedIDs.value.bemerkung = selectedEntry.value.bemerkung;
-				break;
-			}
-			case 'KEINE' : {
-				resetOptionalSelectedIDs();
-				break;
-			}
-		}
+		idPatchObject.value = kaoaDaten.id;
 	}
-	async function patchEntry() {
-		if (!validateRequiredFieldsFilled() || !selectedEntry.value)
-			return false;
-		const data: Partial<SchuelerKAoADaten> = {
-			idSchuljahresabschnitt: selectedSchuljahresabschnitt.value?.id,
-			idKategorie: selectedKategorie.value?.id,
-			idMerkmal: selectedMerkmal.value?.id,
-			idZusatzmerkmal: selectedZusatzmerkmal.value?.id,
-			idBerufsfeld: selectedIDs.value.idBerufsfeld !== null ? selectedBerufsfeld.value?.id : null,
-			idEbene4: selectedIDs.value.idEbene4 !== null ? selectedEbene4.value?.id : null,
-			idAnschlussoption: selectedIDs.value.idAnschlussoption !== null ? selectedAnschlussoption.value?.id : null,
-			bemerkung: selectedBemerkung.value,
-		};
-		await props.patch(data, selectedEntry.value.id);
-		resetMandatoryAndOptionalSelectedIDs();
+
+	function enterAddMode() {
+		setMode(Mode.ADD);
+		deselectEntry();
+		resetSchuelerKaoaFields();
+		updateModel(1, schuljahresabschnitt.value ? schuljahresabschnitt.value.id : -1);
+	}
+
+	function enterDefaultMode() {
 		setMode(Mode.DEFAULT);
+		deselectEntry();
+		resetSchuelerKaoaFields();
 	}
-	function resetMandatoryAndOptionalSelectedIDs() {
-		selectedIDs.value.idSchuljahresabschnitt = null;
-		selectedIDs.value.idKategorie = null;
-		selectedIDs.value.idMerkmal = null;
-		selectedIDs.value.idZusatzmerkmal = null;
-		resetOptionalSelectedIDs();
-	}
-	function resetOptionalSelectedIDs(){
-		selectedIDs.value.idEbene4 = null;
-		selectedIDs.value.idAnschlussoption = null;
-		selectedIDs.value.idBerufsfeld = null;
-		selectedIDs.value.bemerkung = null;
-	}
-	function selectEntry(item: SchuelerKAoADaten) {
-		selectedEntry.value = item;
-		resetMandatoryAndOptionalSelectedIDs();
-		setMode(Mode.DEFAULT);
-	}
+
+	// Auswahl eines anderen Schuelers
 	watch(props, () => {
-		resetMandatoryAndOptionalSelectedIDs();
-		selectedEntry.value = null;
-		setMode(Mode.DEFAULT);
+		enterDefaultMode();
 	});
-	function getJahrgangFullName(idJahrgang: number) {
-		const jahrgangEintrag = Jahrgaenge.data().getEintragByID(idJahrgang);
-		return jahrgangEintrag?.kuerzel;
-	}
-	function getKategorieFullName(idKategorie: number) {
-		const kategorieEintrag = KAOAKategorie.data().getEintragByID(idKategorie);
-		return kategorieEintrag?.kuerzel + " " + kategorieEintrag?.text;
-	}
-	function getMerkmalFullName(idMerkmal: number) {
-		const merkmalEintrag = KAOAMerkmal.data().getEintragByID(idMerkmal);
-		return merkmalEintrag?.kuerzel + " " + merkmalEintrag?.text;
-	}
-	function getZusatzmerkmalFullName(idZusatzmerkmal: number) {
-		const zusatzmerkmalEintrag = KAOAZusatzmerkmal.data().getEintragByID(idZusatzmerkmal);
-		return zusatzmerkmalEintrag?.kuerzel + " " + zusatzmerkmalEintrag?.text;
-	}
-	const cols: DataTableColumn[] = [
-		{ key: "id", label: "ID", sortable: true, fixedWidth: 5, align: "center" },
-		{ key: "idJahrgang", label: "Jahrgang", sortable: true, align: "center" },
-		{ key: "idKategorie", label: "Kategorie", sortable: true, align: "center" },
-		{ key: "idMerkmal", label: "Merkmal", sortable: true, align: "center" },
-		{ key: "idZusatzmerkmal", label: "Zusatzmerkmal", sortable: true, align: "center" },
-	];
-
 </script>
-
-<style lang="postcss" scoped>
-
-	.button-container {
-		@apply mt-5 flex justify-between gap-5;
-	}
-
-	button {
-		@apply px-3 py-3 cursor-pointer;
-	}
-
-</style>
