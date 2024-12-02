@@ -3,16 +3,15 @@
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
 				<template v-if="activeViewType === ViewType.DEFAULT">
-					<svws-ui-avatar :src="daten?.foto ? `data:image/png;base64, ${daten?.foto}` : undefined"
-						:alt="daten?.foto ? `Foto ${daten?.vorname} ${daten?.nachname}` : ''" upload capture />
+					<svws-ui-avatar :src="foto ? `data:image/png;base64, ${foto}` : undefined" :alt="foto !== null ? `Foto von ${manager().daten().vorname} ${manager().daten().nachname}` : ''" upload capture @image:base64="foto => patch({ foto })" />
 					<div class="svws-headline-wrapper">
 						<h2 class="svws-headline">
-							{{ daten?.titel }} {{ daten?.vorname }} {{ daten?.nachname }}
+							{{ manager().daten().titel }} {{ manager().daten().vorname }} {{ manager().daten().nachname }}
 							<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
-								ID: {{ daten?.id }}
+								ID: {{ manager().daten().id }}
 							</svws-ui-badge>
 						</h2>
-						<span class="svws-subline">{{ daten?.kuerzel }}</span>
+						<span class="svws-subline">{{ manager().daten().kuerzel }}</span>
 					</div>
 				</template>
 				<template v-else-if="activeViewType === ViewType.HINZUFUEGEN">
@@ -46,7 +45,9 @@
 
 	const props = defineProps<LehrerAppProps>();
 
-	const daten = computed(() => props.manager().hasDaten() ? props.manager().daten() : null);
+	const foto = computed<string | null>(() => {
+		return props.manager().daten().foto;
+	});
 
 	const lehrerSubline = computed(() => {
 		const auswahlLehrerList = props.manager().liste.auswahlSorted();
