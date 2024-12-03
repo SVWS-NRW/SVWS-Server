@@ -126,8 +126,8 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 			case "abijahr" -> dto.Abi_Jahrgang = JSONMapper.convertToInteger(value, false);
 			case "halbjahr" -> dto.Halbjahr = DataGostKlausurenVorgabe.checkHalbjahr(JSONMapper.convertToInteger(value, false));
 			case "quartal" -> dto.Quartal =	DataGostKlausurenVorgabe.checkQuartal(JSONMapper.convertToInteger(value, false));
-			case "bemerkung" -> dto.Bemerkungen = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Termine.col_Bemerkungen.datenlaenge());
-			case "bezeichnung" -> dto.Bezeichnung =	JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Termine.col_Bezeichnung.datenlaenge());
+			case "bemerkung" -> dto.Bemerkungen = DataGostKlausuren.convertEmptyStringToNull(JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Termine.col_Bemerkungen.datenlaenge()));
+			case "bezeichnung" -> dto.Bezeichnung =	DataGostKlausuren.convertEmptyStringToNull(JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Termine.col_Bezeichnung.datenlaenge()));
 			case "datum" -> {
 				final String newDate = JSONMapper.convertToString(value, true, false, null);
 				if (dto.Datum != null && !dto.Datum.equals(newDate))

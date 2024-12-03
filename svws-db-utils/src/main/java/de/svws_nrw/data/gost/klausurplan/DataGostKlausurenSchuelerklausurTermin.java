@@ -112,7 +112,7 @@ public final class DataGostKlausurenSchuelerklausurTermin
 			case "folgeNr" -> dto.Folge_Nr = JSONMapper.convertToInteger(value, false);
 			case "startzeit" -> dto.Startzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440);
 			case "bemerkung" -> dto.Bemerkungen =
-					JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Schuelerklausuren_Termine.col_Bemerkungen.datenlaenge());
+					DataGostKlausuren.convertEmptyStringToNull(JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Schuelerklausuren_Termine.col_Bemerkungen.datenlaenge()));
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Das Patchen des Attributes %s wird nicht unterstützt.".formatted(name));
 		}
 	}

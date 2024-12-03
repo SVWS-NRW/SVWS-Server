@@ -151,7 +151,7 @@ public final class DataGostKlausurenVorgabe extends DataManagerRevised<Long, DTO
 			case "istAudioNotwendig" -> dto.IstAudioNotwendig = JSONMapper.convertToBoolean(value, false);
 			case "istVideoNotwendig" -> dto.IstVideoNotwendig = JSONMapper.convertToBoolean(value, false);
 			case "bemerkungVorgabe" -> dto.Bemerkungen =
-					JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Vorgaben.col_Bemerkungen.datenlaenge());
+					DataGostKlausuren.convertEmptyStringToNull(JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Vorgaben.col_Bemerkungen.datenlaenge()));
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Das Patchen des Attributes %s wird nicht unterstützt.".formatted(name));
 		}
 	}

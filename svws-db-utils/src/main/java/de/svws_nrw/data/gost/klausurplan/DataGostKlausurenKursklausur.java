@@ -172,7 +172,7 @@ public final class DataGostKlausurenKursklausur extends DataManagerRevised<Long,
 				}
 			}
 			case "bemerkung" -> dto.Bemerkungen =
-					JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Kursklausuren.col_Bemerkungen.datenlaenge());
+					DataGostKlausuren.convertEmptyStringToNull(JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Kursklausuren.col_Bemerkungen.datenlaenge()));
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Das Patchen des Attributes %s wird nicht unterstützt.".formatted(name));
 		}
 	}

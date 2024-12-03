@@ -426,9 +426,9 @@ export class GostKlausurplanManager extends JavaObject {
 	}
 
 	private addRaumAllDataOhneUpdate(allData : GostKlausurenCollectionAllData) : void {
-		let raeume : JavaSet<GostKlausurraum> = new HashSet<GostKlausurraum>();
-		let raumstunden : JavaSet<GostKlausurraumstunde> = new HashSet<GostKlausurraumstunde>();
-		let sktRaumstunden : JavaSet<GostSchuelerklausurterminraumstunde> = new HashSet<GostSchuelerklausurterminraumstunde>();
+		const raeume : JavaSet<GostKlausurraum> = new HashSet<GostKlausurraum>();
+		const raumstunden : JavaSet<GostKlausurraumstunde> = new HashSet<GostKlausurraumstunde>();
+		const sktRaumstunden : JavaSet<GostSchuelerklausurterminraumstunde> = new HashSet<GostSchuelerklausurterminraumstunde>();
 		const idsKlausurtermine : List<number> = new ArrayList<number>();
 		for (const data of allData.datacontained) {
 			raeume.addAll(data.raumdata.raeume);
@@ -436,10 +436,7 @@ export class GostKlausurplanManager extends JavaObject {
 			sktRaumstunden.addAll(data.raumdata.sktRaumstunden);
 			idsKlausurtermine.addAll(data.raumdata.idsKlausurtermine);
 		}
-		raeume = GostKlausurplanManager.removeDuplicatesFromSet(raeume);
-		raumstunden = GostKlausurplanManager.removeDuplicatesFromSet(raumstunden);
-		sktRaumstunden = GostKlausurplanManager.removeDuplicatesFromSet(sktRaumstunden);
-		this.addRaumDataListenOhneUpdate(raeume, raumstunden, sktRaumstunden, idsKlausurtermine);
+		this.addRaumDataListenOhneUpdate(GostKlausurplanManager.removeDuplicatesFromSet(raeume), GostKlausurplanManager.removeDuplicatesFromSet(raumstunden), sktRaumstunden, idsKlausurtermine);
 	}
 
 	private static removeDuplicatesFromSet<T>(objects : JavaSet<T>) : JavaSet<T> {
@@ -476,7 +473,7 @@ export class GostKlausurplanManager extends JavaObject {
 		this.schuelerAddAllOhneUpdate(schueler);
 	}
 
-	private addKlausurDataListenOhneUpdate(listVorgaben : List<GostKlausurvorgabe>, listKlausuren : List<GostKursklausur>, listTermine : List<GostKlausurtermin> | null, listSchuelerklausuren : List<GostSchuelerklausur> | null, listSchuelerklausurtermine : List<GostSchuelerklausurTermin> | null) : void {
+	private addKlausurDataListenOhneUpdate(listVorgaben : List<GostKlausurvorgabe>, listKlausuren : List<GostKursklausur>, listTermine : Collection<GostKlausurtermin> | null, listSchuelerklausuren : List<GostSchuelerklausur> | null, listSchuelerklausurtermine : List<GostSchuelerklausurTermin> | null) : void {
 		this.vorgabeAddAllOhneUpdate(listVorgaben);
 		this.kursklausurAddAllOhneUpdate(listKlausuren);
 		if (listTermine !== null)
@@ -490,7 +487,7 @@ export class GostKlausurplanManager extends JavaObject {
 	private addKlausurAllDataOhneUpdate(allData : GostKlausurenCollectionAllData) : void {
 		const listVorgaben : List<GostKlausurvorgabe> = new ArrayList<GostKlausurvorgabe>();
 		const listKlausuren : List<GostKursklausur> = new ArrayList<GostKursklausur>();
-		const listTermine : List<GostKlausurtermin> = new ArrayList<GostKlausurtermin>();
+		const listTermine : JavaSet<GostKlausurtermin> = new HashSet<GostKlausurtermin>();
 		const listSchuelerklausuren : List<GostSchuelerklausur> = new ArrayList<GostSchuelerklausur>();
 		const listSchuelerklausurtermine : List<GostSchuelerklausurTermin> = new ArrayList<GostSchuelerklausurTermin>();
 		for (const data of allData.datacontained) {
@@ -501,7 +498,7 @@ export class GostKlausurplanManager extends JavaObject {
 			listSchuelerklausuren.addAll(data.data.schuelerklausuren);
 			listSchuelerklausurtermine.addAll(data.data.schuelerklausurtermine);
 		}
-		this.addKlausurDataListenOhneUpdate(listVorgaben, listKlausuren, listTermine, listSchuelerklausuren, listSchuelerklausurtermine);
+		this.addKlausurDataListenOhneUpdate(listVorgaben, listKlausuren, GostKlausurplanManager.removeDuplicatesFromSet(listTermine), listSchuelerklausuren, listSchuelerklausurtermine);
 	}
 
 	private addKlausurDataFehlendOhneUpdate(fehlendData : GostKlausurenCollectionHjData) : void {
@@ -1661,7 +1658,7 @@ export class GostKlausurplanManager extends JavaObject {
 		this.terminAddAll(ListUtils.create1(termin));
 	}
 
-	private terminAddAllOhneUpdate(list : List<GostKlausurtermin>) : void {
+	private terminAddAllOhneUpdate(list : Collection<GostKlausurtermin>) : void {
 		const setOfIDs : HashSet<number> = new HashSet<number>();
 		for (const termin of list) {
 			GostKlausurplanManager.terminCheck(termin);

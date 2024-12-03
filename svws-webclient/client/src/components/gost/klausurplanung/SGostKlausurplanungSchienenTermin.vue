@@ -22,7 +22,7 @@
 			:create-schuelerklausur-termin>
 			<template #title>
 				<div class="flex gap-2 w-full mb-1">
-					<svws-ui-text-input :placeholder="(termin().bezeichnung === null ? (kMan().kursklausurGetMengeByTermin(termin()).size() ? terminTitel() : 'Neuer Termin') : 'Klausurtermin')" :model-value="termin().bezeichnung" @change="bezeichnung => patchKlausurtermin(termin().id, {bezeichnung})" headless />
+					<svws-ui-text-input :placeholder="((termin().bezeichnung === null || termin().bezeichnung?.trim().length === 0) ? (kMan().kursklausurGetMengeByTermin(termin()).size() ? terminTitel() : 'Neuer Termin') : 'Klausurtermin')" :model-value="termin().bezeichnung" @change="bezeichnung => patchKlausurtermin(termin().id, {bezeichnung})" headless />
 					<span v-if="(dragData() !== undefined && dragData() instanceof GostKursklausur && (termin().quartal === kMan().vorgabeByKursklausur(dragData() as GostKursklausur).quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur > 0) || konflikteTermin()" class="inline-flex items-center flex-shrink-0 text-error font-bold text-headline-md -my-1">
 						<span class="icon i-ri-alert-line" />
 						<span>{{ konflikteTerminDragKlausur >= 0 ? konflikteTerminDragKlausur : konflikteTermin() }}</span>

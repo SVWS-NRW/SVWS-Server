@@ -42,7 +42,7 @@
 							{{ GostHalbjahr.fromIDorException(kMan().vorgabeByKursklausur(klausur).halbjahr).jahrgang }}
 						</div>
 						<div class="svws-ui-td" role="cell">
-							<svws-ui-tooltip :hover="false" :indicator="false">
+							<svws-ui-tooltip :hover="false" :indicator="false" autosize>
 								<template #content>
 									<s-gost-klausurplanung-kursliste :k-man :kursklausur="klausur" :termin="kMan().terminOrNullByKursklausur(klausur)!" :benutzer-kompetenzen />
 								</template>

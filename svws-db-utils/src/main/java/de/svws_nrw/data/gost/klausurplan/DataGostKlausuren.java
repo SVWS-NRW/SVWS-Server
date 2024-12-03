@@ -342,4 +342,16 @@ public final class DataGostKlausuren {
 		return fehlendData;
 	}
 
+	/**
+	 * Konvertiert einen leeren oder nur aus Leerzeichen bestehenden String in {@code null}.
+	 * Wenn der Eingabestring bereits {@code null} ist, wird ebenfalls {@code null} zurückgegeben.
+	 *
+	 * @param s Der Eingabestring, der überprüft und konvertiert werden soll.
+	 * @return {@code null}, wenn die Eingabe {@code null} ist oder nur aus Leerzeichen besteht;
+	 *         ansonsten der ursprüngliche String.
+	 */
+	public static String convertEmptyStringToNull(final String s) {
+		return (s == null || s.strip().isEmpty()) ? null : s.strip();
+	}
+
 }

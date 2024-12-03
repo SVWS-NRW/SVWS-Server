@@ -399,9 +399,9 @@ public class GostKlausurplanManager {
 	}
 
 	private void addRaumAllDataOhneUpdate(final @NotNull GostKlausurenCollectionAllData allData) {
-		@NotNull Set<GostKlausurraum> raeume = new HashSet<>();
-		@NotNull Set<GostKlausurraumstunde> raumstunden = new HashSet<>();
-		@NotNull Set<GostSchuelerklausurterminraumstunde> sktRaumstunden = new HashSet<>();
+		final @NotNull Set<GostKlausurraum> raeume = new HashSet<>();
+		final @NotNull Set<GostKlausurraumstunde> raumstunden = new HashSet<>();
+		final @NotNull Set<GostSchuelerklausurterminraumstunde> sktRaumstunden = new HashSet<>();
 		final @NotNull List<Long> idsKlausurtermine = new ArrayList<>();
 		for (final GostKlausurenCollectionHjData data : allData.datacontained) {
 			raeume.addAll(data.raumdata.raeume);
@@ -409,10 +409,7 @@ public class GostKlausurplanManager {
 			sktRaumstunden.addAll(data.raumdata.sktRaumstunden);
 			idsKlausurtermine.addAll(data.raumdata.idsKlausurtermine);
 		}
-		raeume = removeDuplicatesFromSet(raeume);
-		raumstunden = removeDuplicatesFromSet(raumstunden);
-		sktRaumstunden = removeDuplicatesFromSet(sktRaumstunden);
-		addRaumDataListenOhneUpdate(raeume, raumstunden, sktRaumstunden, idsKlausurtermine);
+		addRaumDataListenOhneUpdate(removeDuplicatesFromSet(raeume), removeDuplicatesFromSet(raumstunden), sktRaumstunden, idsKlausurtermine);
 	}
 
 	private static <T> @NotNull Set<T> removeDuplicatesFromSet(final @NotNull Set<T> objects) {
@@ -451,7 +448,7 @@ public class GostKlausurplanManager {
 	}
 
 	private void addKlausurDataListenOhneUpdate(final @NotNull List<GostKlausurvorgabe> listVorgaben, final @NotNull List<GostKursklausur> listKlausuren,
-			final List<GostKlausurtermin> listTermine,
+			final Collection<GostKlausurtermin> listTermine,
 			final List<GostSchuelerklausur> listSchuelerklausuren,
 			final List<GostSchuelerklausurTermin> listSchuelerklausurtermine) {
 		vorgabeAddAllOhneUpdate(listVorgaben);
@@ -467,7 +464,7 @@ public class GostKlausurplanManager {
 	private void addKlausurAllDataOhneUpdate(final @NotNull GostKlausurenCollectionAllData allData) {
 		final @NotNull List<GostKlausurvorgabe> listVorgaben = new ArrayList<>();
 		final @NotNull List<GostKursklausur> listKlausuren = new ArrayList<>();
-		final @NotNull List<GostKlausurtermin> listTermine = new ArrayList<>();
+		final @NotNull Set<GostKlausurtermin> listTermine = new HashSet<>();
 		final @NotNull List<GostSchuelerklausur> listSchuelerklausuren = new ArrayList<>();
 		final @NotNull List<GostSchuelerklausurTermin> listSchuelerklausurtermine = new ArrayList<>();
 		for (final GostKlausurenCollectionHjData data : allData.datacontained) {
@@ -478,7 +475,7 @@ public class GostKlausurplanManager {
 			listSchuelerklausuren.addAll(data.data.schuelerklausuren);
 			listSchuelerklausurtermine.addAll(data.data.schuelerklausurtermine);
 		}
-		addKlausurDataListenOhneUpdate(listVorgaben, listKlausuren, listTermine, listSchuelerklausuren, listSchuelerklausurtermine);
+		addKlausurDataListenOhneUpdate(listVorgaben, listKlausuren, removeDuplicatesFromSet(listTermine), listSchuelerklausuren, listSchuelerklausurtermine);
 	}
 
 	private void addKlausurDataFehlendOhneUpdate(final @NotNull GostKlausurenCollectionHjData fehlendData) {
@@ -1718,7 +1715,7 @@ public class GostKlausurplanManager {
 		terminAddAll(ListUtils.create1(termin));
 	}
 
-	private void terminAddAllOhneUpdate(final @NotNull List<GostKlausurtermin> list) {
+	private void terminAddAllOhneUpdate(final @NotNull Collection<GostKlausurtermin> list) {
 		// check all
 		final @NotNull HashSet<Long> setOfIDs = new HashSet<>();
 		for (final @NotNull GostKlausurtermin termin : list) {
