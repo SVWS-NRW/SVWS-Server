@@ -210,6 +210,7 @@ public class ProxyReportingKurs extends ReportingKurs {
 								.thenComparing(ReportingSchueler::geburtsdatum, colGerman)
 								.thenComparing(ReportingSchueler::id, colGerman))
 						.toList();
+				this.reportingRepository.mapSchueler().putAll(super.schueler.stream().collect(Collectors.toMap(ReportingSchueler::id, s -> s)));
 			}
 		}
 		return super.schueler();

@@ -119,6 +119,7 @@ public final class HtmlContextSchueler extends HtmlContext {
 		for (final Long schuelerID : sortierteSchuelerIDs) {
 			final ProxyReportingSchueler proxyReportingSchueler = new ProxyReportingSchueler(reportingRepository, mapSchueler.get(schuelerID));
 			schueler.add(proxyReportingSchueler);
+			this.reportingRepository.mapSchueler().put(schuelerID, proxyReportingSchueler);
 		}
 
 		// Daten-Context für Thymeleaf erzeugen.

@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 /**
  * Proxy-Klasse im Rahmen des Reportings für Daten vom Typ Klasse und erweitert die Klasse {@link ReportingKlasse}.
@@ -236,6 +237,7 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 								.thenComparing(ReportingSchueler::geburtsdatum, colGerman)
 								.thenComparing(ReportingSchueler::id, colGerman))
 						.toList();
+				this.reportingRepository.mapSchueler().putAll(super.schueler.stream().collect(Collectors.toMap(ReportingSchueler::id, s -> s)));
 			}
 		}
 		return super.schueler();

@@ -539,7 +539,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 	getPDF = api.call(async (title: DownloadPDFTypen): Promise<ApiFile> => {
 		const reportingParameter = new ReportingParameter();
 		reportingParameter.idSchuljahresabschnitt = routeApp.data.aktAbschnitt.value.id;
-		reportingParameter.detailLevel = 0;
+		reportingParameter.detailLevel = 1;
 		if (title.startsWith("Klausurplan", 0)) {
 			reportingParameter.reportvorlage = ReportingReportvorlage.GOST_KLAUSURPLANUNG_v_KLAUSURTERMINE_MIT_KURSEN.getBezeichnung()!;
 		} else {
@@ -549,11 +549,14 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 			reportingParameter.idsHauptdaten.add(this.abiturjahr);
 			reportingParameter.idsHauptdaten.add(this.halbjahr.id);
 		}
+		if (title.indexOf("Kurse") > 0) {
+			reportingParameter.detailLevel = reportingParameter.detailLevel * 2;
+		}
 		if (title.indexOf("Nachschreiber") > 0) {
-			reportingParameter.detailLevel = 1;
+			reportingParameter.detailLevel = reportingParameter.detailLevel * 3;
 		}
 		if (title.indexOf("detailliert") > 0) {
-			reportingParameter.detailLevel = 2;
+			reportingParameter.detailLevel = reportingParameter.detailLevel * 30;
 		}
 		if (title.indexOf("einzeln") > 0) {
 			reportingParameter.einzelausgabeDetaildaten = true;
