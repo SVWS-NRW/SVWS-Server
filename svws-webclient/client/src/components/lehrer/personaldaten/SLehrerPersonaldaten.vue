@@ -48,7 +48,7 @@
 					:item-text="i => i.daten(schuljahr)?.text ?? '—'" />
 				<svws-ui-input-number placeholder="Stundensumme" :disabled="!hatUpdateKompetenz" :model-value="personalabschnittsdaten()?.pflichtstundensoll ?? 0.0"
 					@change="pflichtstundensoll => patchAbschnittsdaten({ pflichtstundensoll: pflichtstundensoll }, personalabschnittsdaten()?.id ?? -1)" />
-				<svws-ui-select title="Nicht unterichtliche Tätigkeiten" :disabled="!hatUpdateKompetenz" v-model="anrechnungsgrund" :items="LehrerAnrechnungsgrund.values()"
+				<svws-ui-select title="Nicht unterrichtliche Tätigkeiten" :disabled="!hatUpdateKompetenz" v-model="anrechnungsgrund" :items="LehrerAnrechnungsgrund.values()"
 					:item-text="i => i.daten(schuljahr)?.text ?? '—'" />
 				<svws-ui-spacing />
 			</svws-ui-input-wrapper>

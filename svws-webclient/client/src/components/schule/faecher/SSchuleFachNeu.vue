@@ -2,11 +2,11 @@
 	<div class="page--content">
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input placeholder="Kürzel" :required="true" :max-len="20" :valid="(v) => manager().validateKuerzel(v)" v-model="data.kuerzel" type="text" :disabled />
-				<svws-ui-select title="Statistik-Fach" :required="true" :items="Fach.data().getListBySchuljahrAndSchulform(schuljahr, manager().schulform())"
-					v-model="selectedStatistikFach" :item-text="getStatistikfachText" />
-				<svws-ui-text-input placeholder="Bezeichnung" :required="true" :max-len="255" :valid="(v) => manager().validateBezeichnung(v)" v-model="data.bezeichnung" type="text" :disabled />
-				<svws-ui-text-input placeholder="Fachgruppe" :model-value="fachgruppe" type="text" disabled />
+				<svws-ui-text-input placeholder="Kürzel" required :max-len="20" :valid="(v) => manager().validateKuerzel(v)" v-model="data.kuerzel" :disabled />
+				<svws-ui-select title="Statistik-Fach" required :items="statistikFachEintraege" :item-filter="statistik_fach_filter"
+					v-model="selectedStatistikFach" :item-text="getStatistikfachText" autocomplete />
+				<svws-ui-text-input placeholder="Bezeichnung" required :max-len="255" :valid="(v) => manager().validateBezeichnung(v)" v-model="data.bezeichnung" :disabled />
+				<svws-ui-text-input placeholder="Fachgruppe" :model-value="fachgruppe" disabled />
 				<svws-ui-select removable title="Bilinguale Sachfachsprache" :items="BilingualeSprache.values()" v-model="selectedBilingualeSprache"
 					:item-text="b => b.daten(schuljahr)?.text ?? '—'" :disabled />
 				<svws-ui-input-number placeholder="Sortierung" :valid="(v) => manager().validateSortierung(v)" v-model="data.sortierung" :disabled />
@@ -15,8 +15,8 @@
 		<svws-ui-content-card title="Zeugnis">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-checkbox v-model="data.aufZeugnis" :disabled>Auf Zeugnis</svws-ui-checkbox>
-				<svws-ui-text-input placeholder="Bezeichnung (Zeugnis)" :required="true" v-model="data.bezeichnungZeugnis" type="text" :disabled />
-				<svws-ui-text-input placeholder="Bezeichnung (Überweisungszeugnis)" :required="true" v-model="data.bezeichnungUeberweisungszeugnis" type="text" :disabled />
+				<svws-ui-text-input placeholder="Bezeichnung (Zeugnis)" required v-model="data.bezeichnungZeugnis" :disabled />
+				<svws-ui-text-input placeholder="Bezeichnung (Überweisungszeugnis)" required v-model="data.bezeichnungUeberweisungszeugnis" :disabled />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Sonstiges">
@@ -37,7 +37,7 @@
 			</svws-ui-input-wrapper>
 			<div class="mt-7 flex flex-row gap-4 justify-end">
 				<svws-ui-button type="secondary" @click="cancel">Abbrechen</svws-ui-button>
-				<svws-ui-button @click="addFachDaten()" :disabled="!isValid">Speichern</svws-ui-button>
+				<svws-ui-button @click="addFachDaten" :disabled="!isValid">Speichern</svws-ui-button>
 			</div>
 		</svws-ui-content-card>
 		<svws-ui-checkpoint-modal :checkpoint :continue-routing="continueRoutingAfterCheckpoint" />
@@ -46,9 +46,11 @@
 
 <script setup lang="ts">
 
-	import { ref, computed, watch } from "vue";
-	import { BilingualeSprache, Fach, JavaInteger, Schulform, FachDaten, GostFachbereich } from "@core";
+	import { computed, ref, watch } from "vue";
+	import { BilingualeSprache, Fach, FachDaten, GostFachbereich, JavaInteger, Schulform } from "@core";
+	import type { FachKatalogEintrag } from "@core";
 	import type { SchuleFachNeuProps } from "./SSchuleFachNeuProps";
+	import { statistik_fach_filter } from "~/utils/helfer";
 
 	const props = defineProps<SchuleFachNeuProps>();
 
@@ -76,22 +78,29 @@
 
 	const fachgruppe = computed(() => Fach.getBySchluesselOrDefault(data.value.kuerzelStatistik).getFachgruppe(schuljahr.value)?.daten(schuljahr.value)?.text ?? '—');
 
+	const statistikFachEintraege = computed(() => {
+		const list = Fach.data().getListBySchuljahrAndSchulform(schuljahr.value, props.manager().schulform());
+		return Array.from(list).map(item => Fach.data().getEintragBySchuljahrUndWert(schuljahr.value, item)).filter((eintrag) => eintrag !== null);
+	})
+
 	const selectedStatistikFach = computed({
-		get: () => Fach.data().getWertByKuerzel(data.value.kuerzelStatistik),
-		set: (val: Fach) => {
-			const eintrag = Fach.data().getEintragBySchuljahrUndWert(schuljahr.value, val);
-			if (eintrag !== null) {
-				data.value.kuerzelStatistik = eintrag.kuerzel;
-				data.value.aufgabenfeld = eintrag.aufgabenfeld?.toString() ?? '';
-				data.value.kuerzel = eintrag.kuerzel;
-				data.value.bezeichnung = eintrag.text;
-				data.value.istOberstufenFach = GostFachbereich.getAlleFaecherSortiert().contains(val);
-				data.value.istPruefungsordnungsRelevant = GostFachbereich.getAlleFaecherSortiert().contains(val);
-				data.value.istSichtbar = true;
-				data.value.bezeichnungZeugnis = eintrag.text;
-				data.value.bezeichnungUeberweisungszeugnis = eintrag.text;
-				data.value.maxZeichenInFachbemerkungen = JavaInteger.MAX_VALUE;
-			}
+		get: () => {
+			const wert = Fach.data().getWertByKuerzel(data.value.kuerzelStatistik);
+			if (wert === null)
+				return null;
+			return Fach.data().getEintragBySchuljahrUndWert(schuljahr.value, wert);
+		},
+		set: (eintrag: FachKatalogEintrag) => {
+			data.value.kuerzelStatistik = eintrag.kuerzel;
+			data.value.aufgabenfeld = eintrag.aufgabenfeld?.toString() ?? '';
+			data.value.kuerzel = eintrag.kuerzel;
+			data.value.bezeichnung = eintrag.text;
+			data.value.istOberstufenFach = GostFachbereich.getAlleFaecherSortiert().contains(eintrag);
+			data.value.istPruefungsordnungsRelevant = GostFachbereich.getAlleFaecherSortiert().contains(eintrag);
+			data.value.istSichtbar = true;
+			data.value.bezeichnungZeugnis = eintrag.text;
+			data.value.bezeichnungUeberweisungszeugnis = eintrag.text;
+			data.value.maxZeichenInFachbemerkungen = JavaInteger.MAX_VALUE;
 		},
 	});
 
@@ -104,10 +113,7 @@
 		},
 	});
 
-	function getStatistikfachText(fach: Fach) {
-		const fachEintrag = fach.daten(schuljahr.value);
-		if (fachEintrag === null)
-			return "unzulässiges Fach";
+	function getStatistikfachText(fachEintrag: FachKatalogEintrag) {
 		return `${fachEintrag.schluessel} : ${fachEintrag.text}`;
 	}
 

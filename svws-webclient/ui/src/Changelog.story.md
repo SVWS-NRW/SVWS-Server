@@ -22,7 +22,7 @@ Beispiel: `bg-white dark:bg-black text-black dark:text-white hover:text-primary 
 ## ab 0.9.2
 * Das Text-Input unterstützt keinen Typ number mehr und verlangt als Input den Typ string | null. Für Zahleneingabefelder ist als Ersatz der Number-Input zu nehmen.
 ## ab 0.8.16
-* Das Multiselect bekommt die Prop `autofocus`. Wird das übergeben, dann öffnet sich automatisch das Auswahlmenü. Wird z.B. bei Stundenplan-Unterichte verwendet
+* Das Multiselect bekommt die Prop `autofocus`. Wird das übergeben, dann öffnet sich automatisch das Auswahlmenü. Wird z.B. bei Stundenplan-Unterrichte verwendet
 * Das MS sendet auch ein `blur`-Event, damit man beim Verlassen z.B. auch das MS wieder entfernen kann. Ebenso bei den Unterrichten zu finden.
 ## ab 0.8.11
 * Die Table-Komponente kennt nun auch zwei weitere Slots: `row` und `rowSelectable` und `rowCustom`. Dies gibt nun die jeweiligen Rows zurück und sollte statt `body` verwendet werden.

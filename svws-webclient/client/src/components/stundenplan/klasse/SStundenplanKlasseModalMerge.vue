@@ -27,7 +27,7 @@
 		mergeUnterrichte: (list: Array<List<StundenplanUnterricht>>) => Promise<void>;
 	}>();
 
-	const columns = [{key: 'id', label: 'Untericht'}, {key: 'idZeitraster', label: 'Stunde'}];
+	const columns = [{key: 'id', label: 'Unterricht'}, {key: 'idZeitraster', label: 'Stunde'}];
 
 	const selected = ref([]);
 

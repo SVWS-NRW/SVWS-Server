@@ -11,7 +11,7 @@
 				<svws-ui-select title="Bilinguale Sachfachsprache"
 					:model-value="(manager().daten().bilingualeSprache === null) ? null : BilingualeSprache.data().getWertByKuerzel(manager().daten().bilingualeSprache!)"
 					@update:model-value="value => patch({ bilingualeSprache: value?.daten(schuljahr)?.kuerzel ?? null })"
-					:items="BilingualeSprache.values()" :item-text="(b: BilingualeSprache) => b.daten(schuljahr)?.kuerzel ?? '—'" />
+					:items="BilingualeSprache.values()" :item-text="(b: BilingualeSprache) => b.daten(schuljahr)?.text ?? '—'" />
 				<svws-ui-select v-if="manager().schulform() === Schulform.BK || manager().schulform() === Schulform.SB"
 					title="Aufgabenfeld" :model-value="manager().daten().aufgabenfeld" @update:model-value="f => patch({ aufgabenfeld: f ?? null })"
 					:items="[ null, '1', '2', '3' ]" :item-text="getAufgabenfeld" />
