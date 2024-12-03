@@ -1,5 +1,16 @@
-import type { List } from "@core";
-import { ArrayList, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnis, GostFach, GostFaecherManager, JsonCoreTypeReader, KursblockungAlgorithmusPermanent } from "@core";
+/**
+ * Im Worker müssen alle Importe direkt auf die jeweilige Datei verweisen, keine Importe über die index.ts, sonst wird alles in den Worker gebundelt beim Bauen.
+ */
+
+import { JsonCoreTypeReader } from "../../../../../core/src/asd/utils/JsonCoreTypeReader";
+import { GostBlockungsdaten } from "../../../../../core/src/core/data/gost/GostBlockungsdaten";
+import { GostBlockungsergebnis } from "../../../../../core/src/core/data/gost/GostBlockungsergebnis";
+import { GostFach } from "../../../../../core/src/core/data/gost/GostFach";
+import { KursblockungAlgorithmusPermanent } from "../../../../../core/src/core/kursblockung/KursblockungAlgorithmusPermanent";
+import { GostBlockungsdatenManager } from "../../../../../core/src/core/utils/gost/GostBlockungsdatenManager";
+import { GostFaecherManager } from "../../../../../core/src/core/utils/gost/GostFaecherManager";
+import { ArrayList } from "../../../../../core/src/java/util/ArrayList";
+import type { List } from "../../../../../core/src/java/util/List";
 import type { WorkerKursblockungErrorMessage, WorkerKursblockungMessageType, WorkerKursblockungReplyErgebnisse, WorkerKursblockungReplyInit, WorkerKursblockungReplyNext, WorkerKursblockungRequestErgebnisse, WorkerKursblockungRequestInit, WorkerKursblockungRequestNext } from "./WorkerKursblockungMessageTypes";
 
 /**

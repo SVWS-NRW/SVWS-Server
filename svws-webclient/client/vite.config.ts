@@ -9,7 +9,7 @@ export default defineConfig({
 	server: { port: 3000 },
 	plugins: [
 		Vue({
-			include: [/\.vue$/, /\.md$/]
+			include: [/\.vue$/, /\.md$/],
 		}),
 		Markdown({}),
 		Components({
@@ -29,7 +29,7 @@ export default defineConfig({
 			"@comp": resolve(__dirname, '../components/src/index.ts'),
 			"@ui": resolve(__dirname, '../ui/src/index.ts'),
 			"@core": resolve(__dirname, '../core/src/index.ts'),
-		}
+		},
 	},
 	build: {
 		outDir: "build/output",
@@ -41,8 +41,8 @@ export default defineConfig({
 			output: {
 				entryFileNames: `assets/[name].js`,
 				chunkFileNames: `assets/[name].js`,
-				assetFileNames: `assets/[name].[ext]`
-			}
-		}
-	}
+				assetFileNames: `assets/[name].[ext]`,
+			},
+		},
+	},
 });
