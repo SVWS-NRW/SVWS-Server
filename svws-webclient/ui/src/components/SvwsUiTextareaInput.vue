@@ -1,7 +1,7 @@
 <template>
 	<label :id="idComponent" class="textarea-input"
 		:class="{
-			'textarea-input--filled': data !== null,
+			'textarea-input--filled': data,
 			'textarea-input--invalid': !isValid,
 			'textarea-input--disabled': disabled,
 			'textarea-input--statistics': statistics,
@@ -231,7 +231,7 @@
 	}
 
 	.textarea-input:not(.textarea-input--filled):not(:focus-within):not(.textarea-input--disabled):hover .textarea-input--placeholder {
-		@apply opacity-100;
+		@apply opacity-80;
 	}
 
 	.textarea-input--statistics.textarea-input--invalid .textarea-input--control {
@@ -248,8 +248,8 @@
 
 	.textarea-input--focus:not(.textarea-input--headless) .textarea-input--placeholder,
 	.textarea-input--filled:not(.textarea-input--headless) .textarea-input--placeholder {
-		@apply -translate-y-1/2;
 		@apply bg-ui opacity-100;
+		@apply -translate-y-1/2;
 		@apply rounded;
 		@apply px-1;
 
@@ -261,8 +261,8 @@
 			content: "";
 		}
 	}
-	.textarea-input--headless.textarea-input--filled
-	.textarea-input--placeholder {
+
+	.textarea-input--headless.textarea-input--filled .textarea-input--placeholder {
 		@apply opacity-0;
 	}
 
