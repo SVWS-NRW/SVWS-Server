@@ -2,9 +2,8 @@
 	<div class="page--content">
 		<svws-ui-content-card class="col-span-full">
 			<div class="justify-items-end mr-2">
-				<svws-ui-button v-if="currentMode !== 0" :type="'primary'" title="AddButton" @click="enterAddMode"> Neuer Eintrag </svws-ui-button>
+				<svws-ui-button v-if="currentMode !== 0" type="primary" title="AddButton" @click="enterAddMode"> Neuer Eintrag </svws-ui-button>
 			</div>
-
 			<!-- UI Card zum Erstellen eines neuen Eintrags  !-->
 			<svws-ui-card v-if="currentMode === 0" class="col-span-full" :is-open="true" :collapsible="false"
 				:title="'Standardelement der Berufsorientierung ' + dynamicHeaderForAddingNewEntry">
@@ -12,58 +11,53 @@
 					{{ schuljahresabschnittText(schuljahresabschnitt) }}
 				</template>
 				<template #content>
+					<!-- CREATE  !-->
 					<div class="w-full grid grid-cols-2 gap-10">
-						<div class="flex flex-col gap-4 mt-4">
-							<div class="flex flex-row item-center">
-								<svws-ui-select title="Schuljahresabschnitt" :items="props.schuelerKaoaManager()._schuljahresabschnitteFiltered" removable
-									:item-text="schuljahresabschnittText" :model-value="schuljahresabschnitt"
-									@update:model-value="(v) => updateModel(1, v?.id ?? -1)" />
+						<div class="overflow-hidden flex flex-col gap-2">
+							<svws-ui-select class="mt-2" title="Schuljahresabschnitt" removable
+								:items="props.schuelerKaoaManager()._schuljahresabschnitteFiltered"
+								:model-value="schuljahresabschnitt" :item-text="schuljahresabschnittText"
+								@update:model-value="(v) => updateModel(1, v?.id ?? -1)" />
+							<svws-ui-select v-if="schuelerKAoADaten.idSchuljahresabschnitt !== -1" class="pl-8" title="Kategorie"
+								:items="KAOAKategorie.getEintraegeBySchuljahrAndIdJahrgang(schuljahr, schuelerKAoADaten.idJahrgang)" removable :item-text
+								:model-value="KAOAKategorie.data().getEintragByID(schuelerKAoADaten.idKategorie)"
+								@update:model-value="(v) => updateModel(2, v?.id ?? -1)" />
+							<svws-ui-select v-if="schuelerKAoADaten.idKategorie !== -1" class="pl-16" title="Merkmal"
+								:items="KAOAMerkmal.getEintraegeBySchuljahrAndIdKategorie(schuljahr, schuelerKAoADaten.idKategorie)" removable :item-text
+								:model-value="KAOAMerkmal.data().getEintragByID(schuelerKAoADaten.idMerkmal)"
+								@update:model-value="(v) => updateModel(3, v?.id ?? -1)" />
+							<svws-ui-select v-if="schuelerKAoADaten.idMerkmal !== -1" class="pl-24" title="Zusatzmerkmal"
+								:items="KAOAZusatzmerkmal.getEintraegeBySchuljahrAndIdMerkmal(schuljahr, schuelerKAoADaten.idMerkmal)" removable :item-text
+								:model-value="KAOAZusatzmerkmal.data().getEintragByID(schuelerKAoADaten.idZusatzmerkmal)"
+								@update:model-value="(v) => updateModel(4, v?.id ?? -1)" />
+						</div>
+						<div class="overflow-hidden flex flex-col gap-2">
+							<div class="flex flex-col gap-2 mt-2">
+								<svws-ui-select v-if="showEbene4" title="KAoAEbene4" removable :item-text
+									:items="KAOAEbene4.getEintraegeBySchuljahrAndIdZusatzmerkmal(schuljahr, zusatzmerkmal? zusatzmerkmal.id : -1)"
+									:model-value="KAOAEbene4.data().getEintragByID(schuelerKAoADaten.idEbene4 ?? -1)"
+									@update:model-value="(v) => schuelerKAoADaten.idEbene4 = v?.id ?? null" />
+								<svws-ui-select v-if="zusatzmerkmal && showAnschlussoption" title="KAoAAnschlussoption" removable :item-text
+									:items="KAOAAnschlussoptionen.getEintraegeBySchuljahrAndIdZusatzmerkmal(schuljahr, zusatzmerkmal.id)"
+									:model-value="KAOAAnschlussoptionen.data().getEintragByID(schuelerKAoADaten.idAnschlussoption ?? -1)"
+									@update:model-value="(v) => schuelerKAoADaten.idAnschlussoption = v?.id ?? null" />
+								<svws-ui-select v-if="showBerufsfeld" title="KAoABerufsfeld" removable :item-text
+									:items="KAOABerufsfeld.getEintraegeBySchuljahr(schuljahr)"
+									:model-value="KAOABerufsfeld.data().getEintragByID(schuelerKAoADaten.idBerufsfeld ?? -1)"
+									@update:model-value="(v) => schuelerKAoADaten.idBerufsfeld = v?.id ?? null" />
+								<svws-ui-text-input v-if="showFreitext" title="Bemerkung" placeholder="Bemerkung" type="text" :max-len="255"
+									v-model="schuelerKAoADaten.bemerkung" :valid="(v) => validateBemerkung(v)" removable />
 							</div>
-							<div class="flex flex-row item-center">
-								<svws-ui-select v-if="schuelerKAoADaten.idSchuljahresabschnitt !== -1" class="pl-8" title="Kategorie" removable :item-text
-									:items="KAOAKategorie.getEintraegeBySchuljahrAndIdJahrgang(schuljahr, schuelerKAoADaten.idJahrgang)"
-									:model-value="KAOAKategorie.data().getEintragByID(schuelerKAoADaten.idKategorie)"
-									@update:model-value="(v) => updateModel(2, v?.id ?? -1)" />
-							</div>
-							<div class="flex flex-row item-center">
-								<svws-ui-select v-if="schuelerKAoADaten.idKategorie !== -1" class="pl-16" title="Merkmal" removable :item-text
-									:items="KAOAMerkmal.getEintraegeBySchuljahrAndIdKategorie(schuljahr, schuelerKAoADaten.idKategorie)"
-									:model-value="KAOAMerkmal.data().getEintragByID(schuelerKAoADaten.idMerkmal)"
-									@update:model-value="(v) => updateModel(3, v?.id ?? -1)" />
-							</div>
-							<div class="flex flex-row item-center">
-								<svws-ui-select v-if="schuelerKAoADaten.idMerkmal !== -1" class="pl-24" title="Zusatzmerkmal" removable :item-text
-									:items="KAOAZusatzmerkmal.getEintraegeBySchuljahrAndIdMerkmal(schuljahr, schuelerKAoADaten.idMerkmal)"
-									:model-value="KAOAZusatzmerkmal.data().getEintragByID(schuelerKAoADaten.idZusatzmerkmal)"
-									@update:model-value="(v) => updateModel(4, v?.id ?? -1)" />
+							<div class="flex-grow" />
+							<div class="flex gap-2 mt-2 justify-end items-end">
+								<svws-ui-button type="primary" :disabled="!validateRequiredFieldsFilled()" @click="sendRequest(Mode.ADD)">
+									Speichern
+								</svws-ui-button>
+								<svws-ui-button type="secondary" @click="enterDefaultMode">
+									Abbrechen
+								</svws-ui-button>
 							</div>
 						</div>
-						<div class="flex flex-col gap-4 mt-4">
-							<svws-ui-select v-if="showEbene4" title="KAoAEbene4" removable :item-text
-								:items="KAOAEbene4.getEintraegeBySchuljahrAndIdZusatzmerkmal(schuljahr, zusatzmerkmal? zusatzmerkmal.id : -1)"
-								:model-value="KAOAEbene4.data().getEintragByID(schuelerKAoADaten.idEbene4 ?? -1)"
-								@update:model-value="(v) => schuelerKAoADaten.idEbene4 = v?.id ?? null" />
-							<svws-ui-select v-if="zusatzmerkmal && showAnschlussoption" title="KAoAAnschlussoption" removable :item-text
-								:items="KAOAAnschlussoptionen.getEintraegeBySchuljahrAndIdZusatzmerkmal(schuljahr, zusatzmerkmal.id)"
-								:model-value="KAOAAnschlussoptionen.data().getEintragByID(schuelerKAoADaten.idAnschlussoption ?? -1)"
-								@update:model-value="(v) => schuelerKAoADaten.idAnschlussoption = v?.id ?? null" />
-							<svws-ui-select v-if="showBerufsfeld" title="KAoABerufsfeld" removable :item-text
-								:items="KAOABerufsfeld.getEintraegeBySchuljahr(schuljahr)"
-								:model-value="KAOABerufsfeld.data().getEintragByID(schuelerKAoADaten.idBerufsfeld ?? -1)"
-								@update:model-value="(v) => schuelerKAoADaten.idBerufsfeld = v?.id ?? null" />
-							<svws-ui-text-input v-if="showFreitext" title="Bemerkung" placeholder="Bemerkung" type="text" :max-len="255"
-								v-model="schuelerKAoADaten.bemerkung" :valid="(v) => validateBemerkung(v)" removable />
-						</div>
-					</div>
-				</template>
-				<template #buttonFooterRight>
-					<div class="flex gap-2 mt-2">
-						<svws-ui-button v-if="currentMode === Mode.ADD" :type="'primary'" :disabled="!validateRequiredFieldsFilled()" @click="sendRequest(Mode.ADD)">
-							Speichern
-						</svws-ui-button>
-						<svws-ui-button v-if="currentMode === Mode.ADD" :type="'secondary'" @click="enterDefaultMode">
-							Abbrechen
-						</svws-ui-button>
 					</div>
 				</template>
 			</svws-ui-card>
@@ -72,77 +66,76 @@
 			<svws-ui-card v-for="kaoaDaten of props.schuelerKaoaManager().liste.list()" class="col-span-full" :key="kaoaDaten.id"
 				:title="dynamicHeaderForPatchingEntry(kaoaDaten)"
 				:info="schuljahresabschnittTextFromKaoaDaten(kaoaDaten)">
-
 				<template #content>
 					<!-- PATCH  !-->
 					<div v-if="(idPatchObject === kaoaDaten.id) && (currentMode === Mode.PATCH)" class="w-full grid grid-cols-2 gap-10">
-						<div class="flex flex-col gap-4 mt-4">
-							<div class="flex flex-row item-center">
-								<svws-ui-select title="Schuljahresabschnitt" removable :item-text="schuljahresabschnittText"
-									:items="props.schuelerKaoaManager()._schuljahresabschnitteFiltered" :model-value="schuljahresabschnitt"
-									@update:model-value="(v) => updateModel(1, v?.id ?? -1)" />
-							</div>
-							<div class="flex flex-row item-center">
-								<svws-ui-select v-if="schuelerKAoADaten.idSchuljahresabschnitt !== -1" class="pl-8" title="Kategorie" removable :item-text
-									:items="KAOAKategorie.getEintraegeBySchuljahrAndIdJahrgang(schuljahr, schuelerKAoADaten.idJahrgang)"
-									:model-value="KAOAKategorie.data().getEintragByID(schuelerKAoADaten.idKategorie)"
-									@update:model-value="(v) => updateModel(2, v?.id ?? -1)" />
-							</div>
-							<div class="flex flex-row item-center">
-								<svws-ui-select v-if="schuelerKAoADaten.idKategorie !== -1" class="pl-16" title="Merkmal" removable :item-text
-									:items="KAOAMerkmal.getEintraegeBySchuljahrAndIdKategorie(schuljahr, schuelerKAoADaten.idKategorie)"
-									:model-value="KAOAMerkmal.data().getEintragByID(schuelerKAoADaten.idMerkmal)"
-									@update:model-value="(v) => updateModel(3, v?.id ?? -1)" />
-							</div>
-							<div class="flex flex-row item-center">
-								<svws-ui-select v-if="schuelerKAoADaten.idMerkmal !== -1" class="pl-24" title="Zusatzmerkmal" removable :item-text
-									:items="KAOAZusatzmerkmal.getEintraegeBySchuljahrAndIdMerkmal(schuljahr, schuelerKAoADaten.idMerkmal)"
-									:model-value="KAOAZusatzmerkmal.data().getEintragByID(schuelerKAoADaten.idZusatzmerkmal)"
-									@update:model-value="(v) => updateModel(4, v?.id ?? -1)" />
-							</div>
+						<div class="overflow-hidden flex flex-col gap-2">
+							<svws-ui-select class="mt-2" title="Schuljahresabschnitt" removable :item-text="schuljahresabschnittText"
+								:items="props.schuelerKaoaManager()._schuljahresabschnitteFiltered" :model-value="schuljahresabschnitt"
+								@update:model-value="(v) => updateModel(1, v?.id ?? -1)" />
+							<svws-ui-select v-if="schuelerKAoADaten.idSchuljahresabschnitt !== -1" class="pl-8" title="Kategorie" removable :item-text
+								:items="KAOAKategorie.getEintraegeBySchuljahrAndIdJahrgang(schuljahr, schuelerKAoADaten.idJahrgang)"
+								:model-value="KAOAKategorie.data().getEintragByID(schuelerKAoADaten.idKategorie)"
+								@update:model-value="(v) => updateModel(2, v?.id ?? -1)" />
+							<svws-ui-select v-if="schuelerKAoADaten.idKategorie !== -1" class="pl-16" title="Merkmal" removable :item-text
+								:items="KAOAMerkmal.getEintraegeBySchuljahrAndIdKategorie(schuljahr, schuelerKAoADaten.idKategorie)"
+								:model-value="KAOAMerkmal.data().getEintragByID(schuelerKAoADaten.idMerkmal)"
+								@update:model-value="(v) => updateModel(3, v?.id ?? -1)" />
+							<svws-ui-select v-if="schuelerKAoADaten.idMerkmal !== -1" class="pl-24" title="Zusatzmerkmal" removable :item-text
+								:items="KAOAZusatzmerkmal.getEintraegeBySchuljahrAndIdMerkmal(schuljahr, schuelerKAoADaten.idMerkmal)"
+								:model-value="KAOAZusatzmerkmal.data().getEintragByID(schuelerKAoADaten.idZusatzmerkmal)"
+								@update:model-value="(v) => updateModel(4, v?.id ?? -1)" />
 						</div>
-						<div class="flex flex-col gap-4 mt-4">
-							<svws-ui-select v-if="showEbene4" title="KAoAEbene4" removable :item-text
-								:items="KAOAEbene4.getEintraegeBySchuljahrAndIdZusatzmerkmal(schuljahr, zusatzmerkmal? zusatzmerkmal.id : -1)"
-								:model-value="KAOAEbene4.data().getEintragByID(schuelerKAoADaten.idEbene4 ?? -1)"
-								@update:model-value="(v) => schuelerKAoADaten.idEbene4 = v?.id ?? null" />
-							<svws-ui-select v-if="zusatzmerkmal && showAnschlussoption" title="KAoAAnschlussoption" removable :item-text
-								:items="KAOAAnschlussoptionen.getEintraegeBySchuljahrAndIdZusatzmerkmal(schuljahr, zusatzmerkmal.id)"
-								:model-value="KAOAAnschlussoptionen.data().getEintragByID(schuelerKAoADaten.idAnschlussoption ?? -1)"
-								@update:model-value="(v) => schuelerKAoADaten.idAnschlussoption = v?.id ?? null" />
-							<svws-ui-select v-if="showBerufsfeld" title="KAoABerufsfeld" removable :item-text
-								:items="KAOABerufsfeld.getEintraegeBySchuljahr(schuljahr)"
-								:model-value="KAOABerufsfeld.data().getEintragByID(schuelerKAoADaten.idBerufsfeld ?? -1)"
-								@update:model-value="(v) => schuelerKAoADaten.idBerufsfeld = v?.id ?? null" />
-							<svws-ui-text-input v-if="showFreitext" title="Bemerkung" placeholder="Bemerkung" type="text" :max-len="255" removabe
-								v-model="schuelerKAoADaten.bemerkung" :valid="(v) => validateBemerkung(v)" />
+						<div class="overflow-hidden flex flex-col gap-2">
+							<div class="flex flex-col gap-2 mt-2">
+								<svws-ui-select v-if="showEbene4" title="KAoAEbene4" removable :item-text
+									:items="KAOAEbene4.getEintraegeBySchuljahrAndIdZusatzmerkmal(schuljahr, zusatzmerkmal? zusatzmerkmal.id : -1)"
+									:model-value="KAOAEbene4.data().getEintragByID(schuelerKAoADaten.idEbene4 ?? -1)"
+									@update:model-value="(v) => schuelerKAoADaten.idEbene4 = v?.id ?? null" />
+								<svws-ui-select v-if="zusatzmerkmal && showAnschlussoption" title="KAoAAnschlussoption" removable :item-text
+									:items="KAOAAnschlussoptionen.getEintraegeBySchuljahrAndIdZusatzmerkmal(schuljahr, zusatzmerkmal.id)"
+									:model-value="KAOAAnschlussoptionen.data().getEintragByID(schuelerKAoADaten.idAnschlussoption ?? -1)"
+									@update:model-value="(v) => schuelerKAoADaten.idAnschlussoption = v?.id ?? null" />
+								<svws-ui-select v-if="showBerufsfeld" title="KAoABerufsfeld" removable :item-text
+									:items="KAOABerufsfeld.getEintraegeBySchuljahr(schuljahr)"
+									:model-value="KAOABerufsfeld.data().getEintragByID(schuelerKAoADaten.idBerufsfeld ?? -1)"
+									@update:model-value="(v) => schuelerKAoADaten.idBerufsfeld = v?.id ?? null" />
+								<svws-ui-text-input v-if="showFreitext" title="Bemerkung" placeholder="Bemerkung" type="text" :max-len="255" removabe
+									v-model="schuelerKAoADaten.bemerkung" :valid="(v) => validateBemerkung(v)" />
+							</div>
+							<div class="flex-grow" />
+							<div class="flex gap-2 mt-2 justify-end items-end">
+								<svws-ui-button :disabled="!validateRequiredFieldsFilled()" type="primary" @click="sendRequest(Mode.PATCH)">
+									Änderung speichern
+								</svws-ui-button>
+								<svws-ui-button type="secondary" @click="enterDefaultMode">
+									Abbrechen
+								</svws-ui-button>
+								<svws-ui-button type="danger" @click="deleteEntry(kaoaDaten.id)">
+									Löschen
+								</svws-ui-button>
+							</div>
 						</div>
 					</div>
 
 					<!-- ANZEIGEN  !-->
 					<div v-if="idPatchObject !== kaoaDaten.id" class="w-full grid grid-cols-2 gap-10">
-						<div class="overflow-hidden flex flex-col gap-4">
-
-							<svws-ui-select class="mt-4" title="Schuljahresabschnitt" :item-text="schuljahresabschnittText" readonly
-								:items="props.schuelerKaoaManager()._schuljahresabschnitteFiltered" :model-value="schuljahresabschnitt" />
-							<div class="pl-8">
-								<svws-ui-select title="Kategorie" :item-text readonly removable
-									:items="KAOAKategorie.getEintraegeBySchuljahrAndIdJahrgang(schuljahr, kaoaDaten.idJahrgang)"
-									:model-value="KAOAKategorie.data().getEintragByID(kaoaDaten.idKategorie)" />
-							</div>
-							<div class="pl-16">
-								<svws-ui-select title="Merkmal" :item-text readonly removable
-									:items="KAOAMerkmal.getEintraegeBySchuljahrAndIdKategorie(schuljahr, kaoaDaten.idKategorie)"
-									:model-value="KAOAMerkmal.data().getEintragByID(kaoaDaten.idMerkmal)" />
-							</div>
-							<div class="pl-24">
-								<svws-ui-select title="Zusatzmerkmal" :item-text readonly removable
-									:items="KAOAZusatzmerkmal.getEintraegeBySchuljahrAndIdMerkmal(schuljahr, kaoaDaten.idMerkmal)"
-									:model-value="KAOAZusatzmerkmal.data().getEintragByID(kaoaDaten.idZusatzmerkmal)" />
-							</div>
+						<div class="overflow-hidden flex flex-col gap-2">
+							<svws-ui-select class="mt-2" title="Schuljahresabschnitt" :item-text="schuljahresabschnittText" readonly
+								:items="props.schuelerKaoaManager()._schuljahresabschnitteFiltered"
+								:model-value="props.schuelerKaoaManager().schuljahresabschnitte.get(kaoaDaten.idSchuljahresabschnitt)" />
+							<svws-ui-select class="pl-8" title="Kategorie" :item-text readonly removable
+								:items="KAOAKategorie.getEintraegeBySchuljahrAndIdJahrgang(schuljahr, kaoaDaten.idJahrgang)"
+								:model-value="KAOAKategorie.data().getEintragByID(kaoaDaten.idKategorie)" />
+							<svws-ui-select class="pl-16" title="Merkmal" :item-text readonly removable
+								:items="KAOAMerkmal.getEintraegeBySchuljahrAndIdKategorie(schuljahr, kaoaDaten.idKategorie)"
+								:model-value="KAOAMerkmal.data().getEintragByID(kaoaDaten.idMerkmal)" />
+							<svws-ui-select class="pl-24" title="Zusatzmerkmal" :item-text readonly removable
+								:items="KAOAZusatzmerkmal.getEintraegeBySchuljahrAndIdMerkmal(schuljahr, kaoaDaten.idMerkmal)"
+								:model-value="KAOAZusatzmerkmal.data().getEintragByID(kaoaDaten.idZusatzmerkmal)" />
 						</div>
-						<div class="overflow-hidden flex flex-col gap-4">
-							<div class="flex flex-col gap-4 mt-4">
+						<div class="overflow-hidden flex flex-col gap-2">
+							<div class="flex flex-col gap-2 mt-2">
 								<svws-ui-select v-if="kaoaDaten.idEbene4 !== null" title="KAoAEbene4" :item-text readonly removable
 									:items="KAOAEbene4.getEintraegeBySchuljahrAndIdZusatzmerkmal(schuljahr, kaoaDaten.idZusatzmerkmal)"
 									:model-value="KAOAEbene4.data().getEintragByID(kaoaDaten.idEbene4)" />
@@ -155,23 +148,16 @@
 								<svws-ui-text-input v-if="validateBemerkung(kaoaDaten.bemerkung)" title="Bemerkung" placeholder="Bemerkung" type="text"
 									:model-value="kaoaDaten.bemerkung" readonly removable :max-len="255" :valid="(v) => validateBemerkung(v)" />
 							</div>
+							<div class="flex-grow" />
+							<div class="flex gap-2 mt-2  justify-end items-end">
+								<svws-ui-button v-if="idPatchObject !== kaoaDaten.id" type="primary" @click="enterPatchMode(kaoaDaten)">
+									Bearbeiten
+								</svws-ui-button>
+								<svws-ui-button type="danger" @click="deleteEntry(kaoaDaten.id)">
+									Löschen
+								</svws-ui-button>
+							</div>
 						</div>
-					</div>
-				</template>
-				<template #buttonFooterRight>
-					<div class="flex gap-2 mt-2">
-						<svws-ui-button v-if="idPatchObject !== kaoaDaten.id" :type="'primary'" @click="enterPatchMode(kaoaDaten)">
-							Bearbeiten
-						</svws-ui-button>
-						<svws-ui-button v-if="idPatchObject === kaoaDaten.id" :disabled="!validateRequiredFieldsFilled()" :type="'primary'" @click="sendRequest(Mode.PATCH)">
-							Änderung speichern
-						</svws-ui-button>
-						<svws-ui-button v-if="(currentMode !== Mode.PATCH)" :type="'danger'" @click="deleteEntry(kaoaDaten.id)">
-							Löschen
-						</svws-ui-button>
-						<svws-ui-button v-if="(currentMode === Mode.PATCH) && (kaoaDaten.id === idPatchObject)" :type="'secondary'" @click="enterDefaultMode">
-							Abbrechen
-						</svws-ui-button>
 					</div>
 				</template>
 			</svws-ui-card>
@@ -181,18 +167,14 @@
 
 <script setup lang="ts">
 
+	import { ref, computed, watch } from 'vue';
 	import type { SchuelerKAoAProps } from './SSchuelerKaoaProps';
 	import type {Schuljahresabschnitt, CoreTypeData, JahrgaengeKatalogEintrag, KAOAZusatzmerkmalKatalogEintrag} from "@core";
 	import { JavaString, KAOAAnschlussoptionen, KAOABerufsfeld, KAOAEbene4 , Jahrgaenge, KAOAKategorie, KAOAMerkmal, KAOAZusatzmerkmal, SchuelerKAoADaten } from "@core";
-	import { ref, computed, watch } from 'vue';
 
 	const props = defineProps<SchuelerKAoAProps>();
 	const schuelerKAoADaten = ref<SchuelerKAoADaten>(new SchuelerKAoADaten());
 	const idPatchObject = ref<number>(-1);
-
-	function isReadOnly(id: number) {
-		return id !== idPatchObject.value;
-	}
 
 	const schuljahr = computed<number>(() => (schuljahresabschnitt.value?.schuljahr !== undefined) ? schuljahresabschnitt.value.schuljahr : -1);
 	const jahrgang = computed<JahrgaengeKatalogEintrag | null> (
@@ -256,9 +238,8 @@
 			return;
 		if (type === Mode.ADD)
 			await props.add(createPartialWithoutId(), props.auswahl().id);
-		if (type === Mode.PATCH) {
+		if (type === Mode.PATCH)
 			await props.patch(createPartialWithoutId(), idPatchObject.value);
-		}
 		enterDefaultMode();
 	}
 
