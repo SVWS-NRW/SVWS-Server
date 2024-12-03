@@ -1101,16 +1101,24 @@ public final class DataUntis {
 					continue;
 				final String schuelerName = UntisSchuelerBezeichner.getBezeichner(idVariante, schueler.id, schueler.nachname,
 						schueler.vorname, (idVariante == 1) ? "" : mapSchueler.get(schueler.id).Geburtsdatum);
-				// TODO Erkennung der Schriftlichkeit verbessern, z.B. AB4 und Q2.2
-				final boolean istSchriftlich = (kursart == ZulaessigeKursart.WPII) || (kursart == ZulaessigeKursart.LK1) || (kursart == ZulaessigeKursart.LK2)
-						|| (kursart == ZulaessigeKursart.AB3) || (kursart == ZulaessigeKursart.AB4) || (kursart == ZulaessigeKursart.GKS);
 				for (final UntisGPU002 unterricht : unterrichte) {
 					final UntisGPU015 dto = new UntisGPU015();
 					dto.name = schuelerName;
 					dto.idUnterricht = unterricht.idUnterricht;
 					dto.fach = kurs.kuerzel;
 					dto.klasse = kl.Klasse;
-					dto.statistikKennzeichen = istSchriftlich ? "S" : "M";
+					dto.statistikKennzeichen = switch (kursart) {
+						case LK1 -> "1";
+						case LK2 -> "2";
+						case AB3 -> "3";
+						case AB4 -> "4";
+						case GKS, WPII -> "S";
+						case PJK -> "P";
+						case VTF -> "V";
+						case ZK -> "Z";
+						case GKM -> "M";
+						default -> "";
+					};
 					dto.idsUnterrichteAlternativkurse = "";
 					dto.kuerzelAlternativkurse = "";
 					dto.prioAlternativkurse = "";
@@ -1789,12 +1797,12 @@ public final class DataUntis {
 					dto.prioAlternativkurse = "";
 					String tilde = "";
 					for (final GostBlockungKurs ak : datenManager.kursGetListeByFachUndKursart(k.fachID, k.kursart)) {
-						if ("".equals(tilde))
-							tilde = "~";
 						final Long idUnterrichtAlternativ = mapKursZuUnterricht.get(ak.id);
 						dto.idsUnterrichteAlternativkurse += tilde + idUnterrichtAlternativ;
 						dto.kuerzelAlternativkurse += tilde + datenManager.kursGetName(ak.id);
 						dto.prioAlternativkurse += tilde + "1";
+						if ("".equals(tilde))
+							tilde = "~";
 					}
 					gpu015.add(dto);
 				}
