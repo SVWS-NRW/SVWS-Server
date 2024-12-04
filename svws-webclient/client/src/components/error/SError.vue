@@ -117,7 +117,7 @@
 
 	async function copyToClipboard() {
 		const capturedError = await createCapturedError();
-		const json = JSON.stringify({ env: { mode: props.api.mode.text, version: props.api.version, commit: props.api.githash, kompetenzen: props.benutzerKompetenzen.values().toArray().toString() }, capturedError }, null, 2);
+		const json = JSON.stringify({ env: { mode: props.api.mode.text, version: props.api.version, commit: props.api.githash, kompetenzen: props.benutzerKompetenzen.values().toArray().toString(), userAgent: window.navigator.userAgent }, capturedError }, null, 2);
 		try {
 			await navigator.clipboard.writeText("```json\n"+json+"\n```");
 		} catch(e) {
