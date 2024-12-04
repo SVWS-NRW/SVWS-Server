@@ -334,7 +334,7 @@
 				</template>
 			</svws-ui-table>
 		</template>
-		<div class="h-fit rounded-r-md border-r- border-t border-b -ml-5 pl-4 pt-2 flex flex-col gap-2 pr-2">
+		<div class="h-fit rounded-r-md border-r border-t border-b -ml-5 pl-4 pt-2 flex flex-col gap-2 pr-2">
 			<button type="button" @click="blockungstabelleHidden() !== 'alles' ? setBlockungstabelleHidden('alles') : setBlockungstabelleHidden('nichts')">
 				<template v-if="blockungstabelleHidden() !== 'alles'">
 					<span class="icon i-ri-menu-fold-line inline-block" title="Kurstabelle ausblenden" />
