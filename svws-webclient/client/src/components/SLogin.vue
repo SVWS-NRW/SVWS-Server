@@ -84,7 +84,7 @@
 
 <script setup lang="ts">
 
-	import { computed, nextTick, ref, shallowRef } from "vue";
+	import { computed, nextTick, onMounted, ref, shallowRef } from "vue";
 	import { type ComponentExposed } from "vue-component-type-helpers";
 	import type { DBSchemaListeEintrag, List } from "@core";
 	import { ArrayList, DeveloperNotificationException, JsonCoreTypeReader } from "@core";
@@ -102,6 +102,15 @@
 	const password = ref("");
 	const error = ref<{name: string; message: string;}|null>(null);
 	const copied = ref<boolean|null>(null);
+
+	onMounted(() => {
+		try {
+			const set = new Set();
+			set.difference(new Set());
+		} catch (e) {
+			error.value = {name: "Achtung", message: "Ihr Browser ist veraltet. Bitte aktualisieren Sie Ihren Browser auf eine aktuelle Version. Die weitere Nutzung wird zu Fehlern im SVWS-Client führen."};
+		}
+	})
 
 	async function copyToClipboard() {
 		try {
@@ -123,7 +132,7 @@
 
 	const inputHostname = computed<string>({
 		get: () => props.hostname,
-		set: (value) => props.setHostname(value)
+		set: (value) => props.setHostname(value),
 	});
 
 	// Versuche zu beim Laden der Komponente automatisch mit Default-Einstellungen eine Verbindung zu dem Server aufzubauen
@@ -191,7 +200,7 @@
 		authenticating.value = false;
 		firstauth.value = false;
 		if (!props.authenticated)
-			error.value = {name: "Eingabefehler", message: "Passwort oder Benutzername falsch."};
+			error.value = {name: "Eingabefehler", message: "Passwort oder Benutzername falsch. Bitte achten Sie auch auf die Groß- Kleinschreibung beim Benutzernamen."};
 		else
 			localStorage.setItem("SVWS-Client Last Used Schema", schema.value.name);
 	}

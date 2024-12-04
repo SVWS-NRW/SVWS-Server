@@ -162,7 +162,7 @@ export class ApiConnection {
 	// gibt die Map mit den CoreType-Daten zurück
 	get mapCoreTypeNameJsonData(): Map<string, string> {
 		if (this._mapCoreTypeNameJsonData.value === undefined)
-			throw new DeveloperNotificationException("Eine KMap mi den CoreTypeDaten ist nicht vorhanden.");
+			throw new DeveloperNotificationException("Eine Map mit den CoreType-Daten ist nicht vorhanden.");
 		return this._mapCoreTypeNameJsonData.value;
 	}
 
