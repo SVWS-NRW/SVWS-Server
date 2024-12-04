@@ -1,4 +1,6 @@
+import type { ApiFile } from "../../../../core/src/api/BaseApi";
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+
 export interface ConfigAppProps {
+	getCert: () => Promise<ApiFile>;
 }

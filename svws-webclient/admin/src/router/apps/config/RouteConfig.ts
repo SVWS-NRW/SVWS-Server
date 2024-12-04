@@ -40,6 +40,7 @@ export class RouteConfig extends RouteNode<RouteDataConfig, RouteApp> {
 
 	public getProps(to: RouteLocationNormalized): ConfigAppProps {
 		return {
+			getCert: this.data.getCert,
 		};
 	}
 
