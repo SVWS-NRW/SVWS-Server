@@ -134,6 +134,20 @@
 					</div>
 				</template>
 
+				<template #header(auswahl)>
+					<div role="columnheader" aria-label="Alle auswählen">
+						<svws-ui-checkbox :model-value="getDatenmanager().kursGetAnzahl() === getKursauswahl().size()" :indeterminate="(getKursauswahl().size() > 0) && (getKursauswahl().size() < getDatenmanager().kursGetAnzahl())"
+							@update:model-value="updateKursauswahlAlle" headless />
+					</div>
+				</template>
+				<template #header(kurs)>
+					<div role="columnheader" class="svws-ui-td svws-sortable-column mt-2" @click="kurssortierung.value = (kurssortierung.value === 'kursart') ? 'fach' : 'kursart'" :class="zeigeAufklappzeile ? 'col-span-2' : 'col-span-1'">
+						<span>Kurs</span>
+						<span class="svws-sorting-icon">
+							<span class="icon-sm i-ri-arrow-up-down-line" :class="{'opacity-75': kurssortierung.value === 'kursart'}" />
+						</span>
+					</div>
+				</template>
 				<template #body>
 					<template v-for="fachwahl in fachwahlListe" :key="fachwahl">
 						<template v-if="istFachwahlVorhanden(fachwahl.fachwahlen, fachwahl.kursart)">
