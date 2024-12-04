@@ -5,10 +5,10 @@
 		@blur="hideTooltip"
 		@click="toggleTooltip"
 		class="inline-flex flex-wrap items-center gap-0.5 tooltip-trigger"
-		:class="{'tooltip-trigger--underline': indicator, 'tooltip-trigger--triggered': isOpen, 'tooltip-trigger--danger': color === 'danger' || (indicator && indicator === 'danger'), 'cursor-help': !hover, 'cursor-default': hover }"
+		:class="{'tooltip-trigger--underline': indicator && !disabled, 'tooltip-trigger--triggered': isOpen, 'tooltip-trigger--danger': color === 'danger' || (indicator && indicator === 'danger'), 'cursor-help': (!hover && !disabled), 'cursor-default': hover }"
 		ref="reference" v-bind="$attrs">
 		<slot />
-		<template v-if="(indicator && indicator !== 'underline') || $slots.icon">
+		<template v-if="(indicator && indicator !== 'underline' && !disabled ) || $slots.icon">
 			<slot name="icon">
 				<span class="icon i-ri-information-fill icon--indicator" v-if="indicator === 'info'" />
 				<span class="icon i-ri-alert-fill icon--indicator" v-else-if="indicator === 'danger'" />
@@ -44,7 +44,7 @@
 
 <script setup lang="ts">
 	import { useFloating, autoUpdate, arrow, flip, offset, shift } from "@floating-ui/vue";
-	import { ref, computed } from "vue";
+	import { ref, computed, toRefs } from "vue";
 	import { onClickOutside } from '@vueuse/core'
 
 	const props = withDefaults(defineProps<{
@@ -56,6 +56,7 @@
 		keepOpen?: boolean;
 		initOpen?: boolean;
 		autosize?: boolean;
+		disabled?: boolean;
 	}>(), {
 		position: "bottom",
 		showArrow: true,
@@ -65,6 +66,7 @@
 		keepOpen: false,
 		initOpen: false,
 		autosize: false,
+		disabled: false,
 	});
 
 	const emit = defineEmits<{
@@ -79,15 +81,17 @@
 	if (props.hover === false || props.initOpen === true)
 		onClickOutside(floating, hideTooltip, { ignore: [reference] });
 
-	if ((props.keepOpen === true) || (props.initOpen === true))
+	if (!props.disabled && ((props.keepOpen === true) || (props.initOpen === true)))
 		isOpen.value = true;
+
+	const { position, showArrow } = toRefs(props);
 
 	const { placement, middlewareData, floatingStyles } = useFloating(
 		reference,
 		floating,
 		{
-			placement: props.position,
-			middleware: [flip(), shift(), offset(props.showArrow ? 6 : 2), arrow({element: floatingArrow})],
+			placement: position.value,
+			middleware: [flip(), shift(), offset(showArrow.value ? 6 : 2), arrow({element: floatingArrow})],
 			whileElementsMounted: autoUpdate,
 		}
 	);
@@ -106,7 +110,8 @@
 	});
 
 	function showTooltip() {
-		isOpen.value = true;
+		if(!props.disabled)
+			isOpen.value = true;
 	}
 
 	function hoverEnterTooltip() {
@@ -127,7 +132,7 @@
 	}
 
 	function toggleTooltip() {
-		if (!props.keepOpen)
+		if (!props.keepOpen && !props.disabled)
 			isOpen.value = !isOpen.value;
 	}
 
