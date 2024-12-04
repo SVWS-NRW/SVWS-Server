@@ -8,9 +8,7 @@ export default defineConfig({
 	test: {},
 	server: { port: 3000 },
 	plugins: [
-		Vue({
-			include: [/\.vue$/, /\.md$/],
-		}),
+		Vue({ include: [/\.vue$/, /\.md$/] }),
 		Markdown({}),
 		Components({
 			dirs: [
@@ -39,9 +37,9 @@ export default defineConfig({
 		commonjsOptions: {},
 		rollupOptions: {
 			output: {
-				entryFileNames: `assets/[name].js`,
-				chunkFileNames: `assets/[name].js`,
-				assetFileNames: `assets/[name].[ext]`,
+				entryFileNames: 'assets/[name].js',
+				chunkFileNames: 'assets/[name].js',
+				assetFileNames: 'assets/[name].[ext]',
 			},
 		},
 	},
