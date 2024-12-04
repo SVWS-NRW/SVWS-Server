@@ -6,7 +6,7 @@
 	</Teleport>
 	<Teleport to=".svws-sub-nav-target" defer>
 		<nav class="svws-ui-secondary-tabs">
-			<svws-ui-tab-bar :tab-manager secondary enable-focus-switching>
+			<svws-ui-tab-bar :tab-manager secondary :focus-switching-enabled :focus-help-visible>
 				<template #badge="{ tab }">
 					<template v-if="(tab.name === 'gost.klausurplanung.probleme') && kMan().hasFehlenddatenZuAbijahrUndHalbjahr(props.jahrgangsdaten!.abiturjahr, halbjahr)">
 						<div class="font-bold text-white bg-error rounded-full shadow h-5 ml-1 -mt-3 px-1.5 pt-0.5" v-if="numErrors">{{ numErrors }}</div>
@@ -26,8 +26,11 @@
 	import type { DownloadPDFTypen } from "./DownloadPDFTypen";
 	import type { GostKlausurplanungProps } from "./SGostKlausurplanungProps";
 	import { computed, onMounted, ref } from "vue";
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<GostKlausurplanungProps>();
+
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const isMounted = ref(false);
 	onMounted(() => isMounted.value = true);

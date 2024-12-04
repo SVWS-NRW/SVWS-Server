@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-content-card title="Login">
 		<svws-ui-input-wrapper :grid="2">
-			<svws-ui-text-input :model-value="getBenutzerManager().getAnmeldename()" @change="setAnmeldename" type="text" placeholder="Benutzername" />
+			<svws-ui-text-input id="contentFocusField" :model-value="getBenutzerManager().getAnmeldename()" @change="setAnmeldename" type="text" placeholder="Benutzername" />
 			<svws-ui-text-input :model-value="getBenutzerManager().getAnzeigename()" type="text" placeholder="Anzeigename" readonly />
 			<svws-ui-text-input v-model.trim="kennwort1" type="password" placeholder="Neues Passwort" />
 			<svws-ui-text-input v-model.trim="kennwort2" type="password" placeholder="Neues Passwort wiederholen" />

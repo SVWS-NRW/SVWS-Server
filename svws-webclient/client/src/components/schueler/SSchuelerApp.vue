@@ -37,7 +37,7 @@
 			<div class="svws-ui-header--actions" />
 		</header>
 
-		<svws-ui-tab-bar :tab-manager enable-focus-switching>
+		<svws-ui-tab-bar :tab-manager :focus-switching-enabled :focus-help-visible>
 			<router-view />
 		</svws-ui-tab-bar>
 	</div>
@@ -52,8 +52,11 @@
 	import { computed } from "vue";
 	import type { SchuelerAppProps } from "./SSchuelerAppProps";
 	import { ViewType } from "@ui";
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<SchuelerAppProps>();
+
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const schuelerSubline = computed(() => {
 		const auswahlKlassenList = props.manager().liste.auswahlSorted();

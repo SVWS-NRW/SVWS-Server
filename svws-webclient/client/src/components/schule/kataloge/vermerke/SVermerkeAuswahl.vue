@@ -11,7 +11,7 @@
 			<div class="container">
 				<svws-ui-table clickable :clicked="clickedEintrag" @update:clicked="gotoEintrag" :items="props.vermerkartenManager().liste.list()" :columns selectable
 					:model-value="[...props.vermerkartenManager().liste.auswahl()]"
-					@update:model-value="items => setAuswahl(items)" scroll-into-view enable-focus-switching>
+					@update:model-value="items => setAuswahl(items)" scroll-into-view :focus-switching-enabled :focus-help-visible>
 					<template #cell(anzahlVermerke)="{ value, rowData }">
 						<div class="inline-flex min-h-5">
 							<div v-if="isRemovable(rowData)" class="inline-flex">
@@ -41,8 +41,10 @@
 	import type { VermerkeAuswahlProps } from "./SVermerkeAuswahlProps";
 	import type { VermerkartEintrag } from "@core";
 	import type { DataTableColumn } from "@ui";
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<VermerkeAuswahlProps>();
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const columns : DataTableColumn[] = [
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, defaultSort: "asc", span: 2},

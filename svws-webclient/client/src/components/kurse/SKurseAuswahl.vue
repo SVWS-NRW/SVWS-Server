@@ -8,7 +8,7 @@
 			<svws-ui-table :clickable="!manager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="kursDaten => gotoDefaultView(kursDaten.id)"
 				:items="rowsFiltered" :model-value="[...props.manager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)"
 				:columns selectable count :filter-open="true" :filtered="filterChanged()" :filterReset scroll-into-view scroll
-				v-model:sort-by-and-order="sortByAndOrder" :sort-by-multi allow-arrow-key-selection enable-focus-switching>
+				v-model:sort-by-and-order="sortByAndOrder" :sort-by-multi allow-arrow-key-selection :focus-switching-enabled :focus-help-visible>
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Kurs" removable />
 				</template>
@@ -45,8 +45,10 @@
 	import { ViewType, type DataTableColumn, type SortByAndOrder } from "@ui";
 	import type { FachDaten, JahrgangsDaten, KursDaten, LehrerListeEintrag, List, SchuelerListeEintrag, Schulgliederung } from "@core";
 	import { ServerMode, BenutzerKompetenz } from "@core";
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<KurseAuswahlProps>();
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const schuljahr = computed<number>(() => props.schuljahresabschnittsauswahl().aktuell.schuljahr);
 

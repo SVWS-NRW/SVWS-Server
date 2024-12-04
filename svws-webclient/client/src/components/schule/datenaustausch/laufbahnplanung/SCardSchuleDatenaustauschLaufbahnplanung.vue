@@ -22,7 +22,7 @@
 					</svws-ui-checkbox>
 				</div>
 				<div>
-					<input type="file" accept=".lup" @change="import_file" :disabled="loading">
+					<input id="contentFocusField" type="file" accept=".lup" @change="import_file" :disabled="loading">
 					<svws-ui-spinner :spinning="loading" />
 				</div>
 			</div>

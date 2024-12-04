@@ -9,7 +9,8 @@
 		<template #header />
 		<template #content>
 			<svws-ui-table :clickable="!manager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="fachdaten => gotoDefaultView(fachdaten.id)" :items="manager().filtered()"
-				:model-value="[...props.manager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)" :columns :filter-open="true" selectable count scroll-into-view scroll allow-arrow-key-selection enable-focus-switching>
+				:model-value="[...props.manager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)" :columns :filter-open="true" selectable count scroll-into-view scroll allow-arrow-key-selection
+				:focus-switching-enabled :focus-help-visible>
 				<template #filterAdvanced>
 					<svws-ui-checkbox type="toggle" v-model="filterNurSichtbare">Nur Sichtbare</svws-ui-checkbox>
 				</template>
@@ -39,8 +40,11 @@
 	import type { FaecherAuswahlProps } from "./SFaecherAuswahlProps";
 	import { ViewType } from "@ui";
 	import { BenutzerKompetenz, type FachDaten } from "@core";
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<FaecherAuswahlProps>();
+
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 

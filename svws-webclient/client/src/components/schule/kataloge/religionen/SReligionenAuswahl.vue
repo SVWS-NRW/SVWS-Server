@@ -9,7 +9,7 @@
 		<template #header />
 		<template #content>
 			<svws-ui-table :clicked @update:clicked="gotoEintrag" :items="religionListeManager().filtered()" :columns
-				clickable selectable v-model="selected" :filter-open="true" scroll-into-view enable-focus-switching>
+				clickable selectable v-model="selected" :filter-open="true" scroll-into-view :focus-switching-enabled :focus-help-visible>
 				<template #filterAdvanced>
 					<svws-ui-checkbox type="toggle" v-model="filterNurSichtbare">Nur Sichtbare</svws-ui-checkbox>
 				</template>
@@ -31,8 +31,10 @@
 	import { computed, ref } from "vue";
 	import type { ReligionEintrag } from "@core";
 	import type { ReligionenAuswahlProps } from "./SReligionenAuswahlPops";
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<ReligionenAuswahlProps>();
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const schuljahr = computed<number>(() => props.religionListeManager().getSchuljahr());
 
@@ -45,7 +47,7 @@
 
 	const columns = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc" },
-		{ key: "text", label: "Bezeichnung", sortable: true, span: 3 }
+		{ key: "text", label: "Bezeichnung", sortable: true, span: 3 },
 	];
 
 	const filterNurSichtbare = computed<boolean>({
@@ -53,7 +55,7 @@
 		set: (value) => {
 			props.religionListeManager().setFilterNurSichtbar(value);
 			void props.setFilter();
-		}
+		},
 	});
 
 	async function doDeleteEintraege() {

@@ -9,7 +9,8 @@
 		<template #header />
 		<template #content>
 			<svws-ui-table :clickable="!manager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="jahrgangsdaten => gotoDefaultView(jahrgangsdaten.id)" :items="manager().filtered()"
-				:model-value="[...manager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)" :columns :filter-open="true" selectable count scroll-into-view scroll allow-arrow-key-selection enable-focus-switching>
+				:model-value="[...manager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)" :columns :filter-open="true" selectable count scroll-into-view scroll allow-arrow-key-selection
+				:focus-switching-enabled :focus-help-visible>
 				<template #cell(bezeichnung)="{ value, rowData }">
 					{{ value }}
 					<svws-ui-tooltip position="bottom" v-if="rowData.anzahlRestabschnitte === null" autosize>
@@ -40,8 +41,10 @@
 	import { computed } from "vue";
 	import { ViewType } from "@ui";
 	import { BenutzerKompetenz, type JahrgangsDaten, ServerMode } from "@core";
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<JahrgaengeAuswahlProps>();
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 

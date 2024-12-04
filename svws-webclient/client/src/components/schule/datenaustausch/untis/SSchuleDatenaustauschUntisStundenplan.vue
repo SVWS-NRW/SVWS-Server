@@ -21,7 +21,7 @@
 							Die CSV-Datei muss als Textkodierung UTF-8 ohne BOM verwenden. Als Trennzeichen wird das Semikolon verwendet und für die textbegrenzung doppelte Anführungszeichen (")
 						</template>
 					</svws-ui-tooltip>
-					<input type="file" accept=".txt" @change="onFileChanged" :disabled="loading">
+					<input id="contentFocusField" type="file" accept=".txt" @change="onFileChanged" :disabled="loading">
 				</div>
 				<div class="col-span-full">
 					<svws-ui-button type="secondary" @click="import_file" :disabled="bezeichnung.length < 1 || !file || loading"> Stundenplan importieren </svws-ui-button>

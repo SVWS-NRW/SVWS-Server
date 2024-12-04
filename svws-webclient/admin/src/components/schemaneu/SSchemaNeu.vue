@@ -11,7 +11,7 @@
 			</div>
 			<div class="svws-ui-header--actions" />
 		</header>
-		<svws-ui-tab-bar :tab-manager="() => new TabManager([], { name: 'Dummy', text: 'Dummy' }, async (a) => {})" enable-focus-switching>
+		<svws-ui-tab-bar :tab-manager="() => new TabManager([], { name: 'Dummy', text: 'Dummy' }, async (a) => {})">
 			<div class="page--content">
 				<div class="flex flex-col gap-y-16 lg:gap-y-20">
 					<svws-ui-content-card>

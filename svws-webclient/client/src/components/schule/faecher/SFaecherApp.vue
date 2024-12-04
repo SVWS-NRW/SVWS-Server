@@ -23,7 +23,7 @@
 			</div>
 			<div class="svws-ui-header--actions" />
 		</header>
-		<svws-ui-tab-bar :tab-manager enable-focus-switching>
+		<svws-ui-tab-bar :tab-manager :focus-switching-enabled :focus-help-visible>
 			<router-view />
 		</svws-ui-tab-bar>
 	</div>
@@ -38,8 +38,11 @@
 	import type { FaecherAppProps } from "./SFaecherAppProps";
 	import type { FachDaten } from "@core";
 	import { ViewType } from "@ui";
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<FaecherAppProps>();
+
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const fach = computed<FachDaten>(() => props.manager().auswahl());
 

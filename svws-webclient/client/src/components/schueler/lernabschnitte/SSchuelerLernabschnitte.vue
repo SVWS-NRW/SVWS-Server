@@ -21,7 +21,7 @@
 		</div>
 		<Teleport to=".svws-sub-nav-target" defer>
 			<nav class="svws-ui-secondary-tabs">
-				<svws-ui-tab-bar :tab-manager secondary enable-focus-switching />
+				<svws-ui-tab-bar :tab-manager secondary :focus-switching-enabled :focus-help-visible />
 			</nav>
 		</Teleport>
 		<div class="grow h-full">
@@ -34,8 +34,11 @@
 <script setup lang="ts">
 
 	import type { SchuelerLernabschnitteProps } from "./SSchuelerLernabschnitteProps";
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<SchuelerLernabschnitteProps>();
+
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 </script>
 

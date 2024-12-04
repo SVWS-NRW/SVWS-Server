@@ -10,6 +10,7 @@
 		'svws-readonly': readonly
 	}" v-bind="$attrs">
 		<svws-ui-text-input ref="inputEl"
+			:id="focusId"
 			:model-value="dynModelValue"
 			:readonly="!autocomplete || readonly"
 			:is-select-input="!readonly"
@@ -85,6 +86,7 @@
 		indeterminate?: boolean;
 		highlightItem?: Item;
 		autofocus?: boolean;
+		focusId?: string;
 	}>(), {
 		label: '',
 		title: '',
@@ -102,6 +104,7 @@
 		indeterminate: false,
 		highlightItem: undefined,
 		autofocus: false,
+		focusId: "",
 	})
 
 	const emit = defineEmits<{

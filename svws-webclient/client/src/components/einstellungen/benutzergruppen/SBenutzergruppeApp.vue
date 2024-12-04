@@ -8,7 +8,7 @@
 				</svws-ui-badge>
 			</div>
 		</svws-ui-header>
-		<svws-ui-tab-bar :tab-manager enable-focus-switching>
+		<svws-ui-tab-bar :tab-manager :focus-switching-enabled :focus-help-visible>
 			<router-view />
 		</svws-ui-tab-bar>
 	</div>
@@ -21,8 +21,11 @@
 
 	import { computed } from "vue";
 	import type { BenutzergruppeAppProps } from "./SBenutzergruppeAppProps";
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<BenutzergruppeAppProps>();
+
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const gruppe = computed(() => props.auswahl());
 

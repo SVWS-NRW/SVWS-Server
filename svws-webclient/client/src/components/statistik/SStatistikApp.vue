@@ -14,7 +14,7 @@
 				</div>
 			</div>
 		</svws-ui-header>
-		<svws-ui-tab-bar :tab-manager enable-focus-switching>
+		<svws-ui-tab-bar :tab-manager :focus-switching-enabled :focus-help-visible>
 			<template v-if="selectedRoute.name === 'dashboard'">
 				<div class="page--content--dashboard">
 					<svws-ui-dashboard-tile :span="2" color="transparent" title="Adresse">
@@ -168,8 +168,10 @@
 	import {computed, ref} from "vue";
 	import type {StatistikAppProps} from "./SStatistikAppProps";
 	import { type TabData, type DataTableColumn, TabManager } from "@ui";
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<StatistikAppProps>();
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const schulname = computed(() => {
 		const name = props.schule.bezeichnung1;

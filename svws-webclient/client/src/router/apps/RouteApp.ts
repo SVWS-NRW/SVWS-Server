@@ -177,7 +177,6 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			tabManagerSchule: this.getTabManagerSchule,
 			tabManagerEinstellungen: this.getTabManagerEinstellungen,
 			schuljahresabschnittsauswahl: () => this.data.getSchuljahresabschnittsauswahl(false),
-			enableFocusSwitching: true,
 		};
 	}
 

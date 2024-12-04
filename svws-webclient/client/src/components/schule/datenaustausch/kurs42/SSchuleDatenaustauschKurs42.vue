@@ -7,7 +7,7 @@
 				<span class="icon-xl i-ri-download-2-line" />
 			</span>
 		</svws-ui-header>
-		<svws-ui-tab-bar :tab-manager enable-focus-switching>
+		<svws-ui-tab-bar :tab-manager :focus-switching-enabled :focus-help-visible>
 			<router-view />
 		</svws-ui-tab-bar>
 	</div>
@@ -16,7 +16,9 @@
 <script setup lang="ts">
 
 	import type { RouteTabProps } from '~/router/RouteTabNode';
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<RouteTabProps>();
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 </script>

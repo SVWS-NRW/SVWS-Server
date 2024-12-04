@@ -2,7 +2,7 @@
 	<div class="page--content page--content--flex-row gap-2 h-full w-full overflow-hidden">
 		<!-- Auswahl des Untis-Exportes (linke Seite) -->
 		<div class="h-full min-w-48 w-48 flex flex-col gap-2">
-			<svws-ui-button v-for="gpu in gpus" :key="gpu.title" :type="(aktuell === gpu) ? 'primary' : 'secondary'" @click="onSelect(gpu)">
+			<svws-ui-button :id="index===0 ? 'contentFocusField' : ''" v-for="(gpu, index) in gpus" :key="gpu.title" :type="(aktuell === gpu) ? 'primary' : 'secondary'" @click="onSelect(gpu)">
 				<div class="flex flex-col gap-1">
 					<p class="text-left font-bold ">{{ gpu.title }}</p>
 					<p class="text-left font-normal">{{ gpu.subtitle }}</p>

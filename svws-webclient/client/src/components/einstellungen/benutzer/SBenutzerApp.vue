@@ -16,7 +16,7 @@
 			</div>
 			<div class="svws-ui-header--actions" />
 		</header>
-		<svws-ui-tab-bar :tab-manager enable-focus-switching>
+		<svws-ui-tab-bar :tab-manager :focus-switching-enabled :focus-help-visible>
 			<router-view />
 		</svws-ui-tab-bar>
 	</div>
@@ -29,8 +29,11 @@
 
 	import { computed } from "vue";
 	import type { BenutzerAppProps } from "./SBenutzerAppProps";
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<BenutzerAppProps>();
+
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const id = computed<number | string>(() => props.auswahl()?.id ?? "?");
 	const anzeigename = computed<string>(() => props.auswahl()?.anzeigename ?? "---");

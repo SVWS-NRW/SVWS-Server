@@ -3,7 +3,7 @@
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-input-wrapper>
-					<svws-ui-select title="Statistikkürzel" v-model="inputStatistikKuerzel" :items="Religion.values()" :item-text="getStatistikText" required statistics />
+					<svws-ui-select focus-id="contentFocusField" title="Statistikkürzel" v-model="inputStatistikKuerzel" :items="Religion.values()" :item-text="getStatistikText" required statistics />
 				</svws-ui-input-wrapper>
 				<svws-ui-text-input placeholder="Bezeichnung" :model-value="auswahl.text" @change="text=>patch({text})" type="text" />
 				<svws-ui-text-input placeholder="Zeugnisbezeichnung" :model-value="auswahl.textZeugnis" @change="textZeugnis=>patch({textZeugnis})" type="text" />

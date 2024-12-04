@@ -7,7 +7,7 @@
 		<template #content>
 			<svws-ui-table :clickable="!manager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="klassendaten => gotoDefaultView(klassendaten.id)"
 				:items="rowsFiltered" :model-value="[...props.manager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)"
-				:columns selectable count :filter-open="true" :filtered="filterChanged()" :filterReset scroll-into-view scroll allow-arrow-key-selection enable-focus-switching>
+				:columns selectable count :filter-open="true" :filtered="filterChanged()" :filterReset scroll-into-view scroll allow-arrow-key-selection :focus-switching-enabled :focus-help-visible>
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" removable />
 				</template>
@@ -54,8 +54,10 @@
 	import type{ JahrgangsDaten, KlassenDaten, LehrerListeEintrag, Schulgliederung } from "@core";
 	import { BenutzerKompetenz } from "@core";
 	import { ViewType } from "@ui";
+	import {useRegionSwitch} from "~/components/useRegionSwitch";
 
 	const props = defineProps<KlassenAuswahlProps>();
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const schuljahr = computed<number>(() => props.schuljahresabschnittsauswahl().aktuell.schuljahr);
 
@@ -90,7 +92,7 @@
 			for (const v of value)
 				props.manager().schulgliederungen.auswahlAdd(v);
 			void props.setFilter();
-		}
+		},
 	});
 
 	const filterJahrgaenge = computed<JahrgangsDaten[]>({
@@ -100,7 +102,7 @@
 			for (const v of value)
 				props.manager().jahrgaenge.auswahlAdd(v);
 			void props.setFilter();
-		}
+		},
 	});
 
 	const filterLehrer = computed<LehrerListeEintrag[]>({
@@ -110,7 +112,7 @@
 			for (const v of value)
 				props.manager().lehrer.auswahlAdd(v);
 			void props.setFilter();
-		}
+		},
 	});
 
 	const search = ref<string>("");

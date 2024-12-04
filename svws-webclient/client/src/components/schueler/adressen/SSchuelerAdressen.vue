@@ -7,7 +7,7 @@
 			<s-card-schueler-add-adresse-modal :id-schueler="idSchueler" :map-beschaeftigungsarten="mapBeschaeftigungsarten"
 				:map-lehrer="mapLehrer" :map-betriebe="mapBetriebe" :map-ansprechpartner="mapAnsprechpartner"
 				:create-schueler-betriebsdaten="createSchuelerBetriebsdaten" v-slot="{ openModal }">
-				<svws-ui-button @click="openModal()" class="mt-4" autofocus>Betrieb hinzufügen</svws-ui-button>
+				<svws-ui-button id="contentFocusField" @click="openModal()" class="mt-4" autofocus>Betrieb hinzufügen</svws-ui-button>
 			</s-card-schueler-add-adresse-modal>
 			<template v-if="(betriebsStammdaten !== undefined) && (betrieb !== undefined)">
 				<s-card-schueler-adresse :betriebs-stammdaten="betriebsStammdaten" :betrieb="betrieb" :map-orte="mapOrte"

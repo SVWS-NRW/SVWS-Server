@@ -1,7 +1,7 @@
 <template>
 	<div
-		:id="enableFocusSwitching ? 'navigationFocusBorder' : ''" class="sidebar--menu focus-region">
-		<p v-if="enableFocusSwitching" id="navigationFocusNumber" class="region-enumeration">1</p>
+		:id="focusSwitchingEnabled ? 'navigationFocusBorder' : ''" class="sidebar--menu focus-region">
+		<p v-if="focusSwitchingEnabled" v-show="focusHelpVisible" id="navigationFocusNumber" class="region-enumeration">1</p>
 		<div class="sidebar--menu--header" v-if="$slots.header">
 			<slot name="header" />
 		</div>
@@ -49,10 +49,12 @@
 
 	const props = withDefaults(defineProps<{
 		showEinstellungenDefaultApp? : boolean;
-		enableFocusSwitching? : boolean;
+		focusSwitchingEnabled? : boolean;
+		focusHelpVisible?: boolean;
 	}>(), {
 		showEinstellungenDefaultApp: true,
-		enableFocusSwitching: false,
+		focusSwitchingEnabled: false,
+		focusHelpVisible: false,
 	});
 
 	const show = ref<boolean>(false);

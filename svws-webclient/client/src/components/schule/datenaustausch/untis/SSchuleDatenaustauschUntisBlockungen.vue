@@ -5,7 +5,7 @@
 				Um eine ZIP-Datei zu erzeugen, werden die folgenden Angaben benötigt:
 			</div>
 			<svws-ui-input-wrapper v-if="jahrgaenge.length" :grid="2">
-				<svws-ui-select :items="jahrgaenge" :model-value="abiturjahrgang()" :item-text="i=>i.abiturjahr.toString()" @update:model-value="jahrgang => jahrgang && gotoAbiturjahrgang(jahrgang.abiturjahr)" title="Abiturjahrgang" />
+				<svws-ui-select focus-id="contentFocusField" :items="jahrgaenge" :model-value="abiturjahrgang()" :item-text="i=>i.abiturjahr.toString()" @update:model-value="jahrgang => jahrgang && gotoAbiturjahrgang(jahrgang.abiturjahr)" title="Abiturjahrgang" />
 				<svws-ui-select v-if="abiturjahrgang()" :items="GostHalbjahr.values()" :model-value="halbjahr()" @update:model-value="hj => hj && gotoHalbjahr(hj.id)" :item-text="i=>i.beschreibung" title="Halbjahr" ref="selectHalbjahr" />
 				<template v-if="blockungen.size()">
 					<svws-ui-select :items="blockungen" :model-value="blockung()" @update:model-value="blockung => blockung && gotoBlockung(blockung.id)" :item-text="i=>i.name" title="Blockung" />

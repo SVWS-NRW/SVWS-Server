@@ -10,7 +10,7 @@
 			<svws-ui-table :clickable="!manager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="lehrerDaten => gotoDefaultView(lehrerDaten.id)"
 				:items="rowsFiltered" :model-value="[...props.manager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)"
 				:columns selectable count :filter-open="true" :filtered="filterChanged()" :filterReset scroll-into-view scroll
-				v-model:sort-by-and-order="sortByAndOrder" :sort-by-multi allow-arrow-key-selection enable-focus-switching>
+				v-model:sort-by-and-order="sortByAndOrder" :sort-by-multi allow-arrow-key-selection :focus-switching-enabled :focus-help-visible>
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" removable />
 				</template>
@@ -44,15 +44,17 @@
 	import type { PersonalTyp, LehrerListeEintrag } from "@core";
 	import { ServerMode, BenutzerKompetenz } from "@core";
 	import type { LehrerAuswahlProps } from "./SLehrerAuswahlProps";
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<LehrerAuswahlProps>();
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.LEHRERDATEN_AENDERN));
 
 	const columns = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc" },
 		{ key: "nachname", label: "Nachname", sortable: true, span: 2 },
-		{ key: "vorname", label: "Vorname", sortable: true, span: 2 }
+		{ key: "vorname", label: "Vorname", sortable: true, span: 2 },
 	];
 
 	function textPersonaltyp(personaltyp: PersonalTyp): string {
@@ -64,7 +66,7 @@
 		set: (value) => {
 			props.manager().setFilterNurSichtbar(value);
 			void props.setFilter();
-		}
+		},
 	});
 
 	const filterNurStatistikrelevant = computed<boolean>({
@@ -72,7 +74,7 @@
 		set: (value) => {
 			props.manager().setFilterNurStatistikRelevant(value);
 			void props.setFilter();
-		}
+		},
 	});
 
 	const filterPersonaltyp = computed<PersonalTyp[]>({
@@ -82,7 +84,7 @@
 			for (const v of value)
 				props.manager().personaltypen.auswahlAdd(v);
 			void props.setFilter();
-		}
+		},
 	});
 
 	const sortByMulti = computed<Map<string, boolean>>(() => {
@@ -108,7 +110,7 @@
 				return;
 			props.manager().orderUpdate(value.key, value.order);
 			void props.setFilter();
-		}
+		},
 	})
 
 	const search = ref<string>("");

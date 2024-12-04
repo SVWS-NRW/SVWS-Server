@@ -30,7 +30,7 @@
 			</div>
 			<div class="svws-ui-header--actions" />
 		</header>
-		<svws-ui-tab-bar :tab-manager enable-focus-switching>
+		<svws-ui-tab-bar :tab-manager :focus-switching-enabled :focus-help-visible>
 			<router-view />
 		</svws-ui-tab-bar>
 	</template>
@@ -44,8 +44,11 @@
 	import { computed } from "vue";
 	import type { KurseAppProps } from "./SKurseAppProps";
 	import { ViewType } from "@ui";
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<KurseAppProps>();
+
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const lehrerkuerzel = computed<string>(() => {
 		let s = '';

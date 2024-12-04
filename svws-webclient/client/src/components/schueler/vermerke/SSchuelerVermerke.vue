@@ -1,7 +1,7 @@
 <template>
 	<div class="page--content">
 		<svws-ui-content-card title="" class="col-span-full">
-			<svws-ui-button v-autofocus class="ml-auto mr-0 p-3 mb-8 min-h-10" @click="addWrapper">
+			<svws-ui-button id="contentFocusField" v-autofocus class="ml-auto mr-0 p-3 mb-8 min-h-10" @click="addWrapper">
 				<p style="margin-right: 1rem">Neuen Vermerk hinzufügen</p>
 				<span class="icon icon-lg i-ri-chat-new-line" />
 			</svws-ui-button>

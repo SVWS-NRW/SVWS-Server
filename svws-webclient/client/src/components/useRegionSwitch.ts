@@ -1,6 +1,9 @@
-import { onMounted, onUnmounted } from 'vue'
+import { type Ref, ref } from 'vue'
 
-export function regionSwitch() {
+const focusSwitchingEnabled: Ref<boolean> = ref(false);
+const focusHelpVisible: Ref<boolean> = ref(false);
+
+export function useRegionSwitch() {
 
 	const regionMap = new Map<string, string>([
 		["Digit1", "navigationFocusField"],
@@ -16,33 +19,46 @@ export function regionSwitch() {
 	const regionBorders = ["navigationFocusBorder", "menuFocusBorder", "filterFocusBorder", "listFocusBorder", "tabsFirstLevelFocusBorder", "tabsSecondLevelFocusBorder", "tabsThirdLevelFocusBorder", "contentFocusBorder"];
 	const regionNumbers = ["navigationFocusNumber", "menuFocusNumber", "filterFocusNumber", "listFocusNumber", "tabsFirstLevelFocusNumber", "tabsSecondLevelFocusNumber", "tabsThirdLevelFocusNumber","contentFocusNumber"]
 
-	let helpVisible: boolean = false;
-
 	function switchRegion(event: KeyboardEvent) {
 		if (event.repeat || !event.altKey)
 			return
-		if (regionMap.has(event.code))
+		if (regionMap.has(event.code)) {
 			document.getElementById(regionMap.get(event.code) ?? "")?.focus();
-		else if (event.code === 'Digit0')
+		}
+		else if (event.code === 'Digit0') {
 			toggleHelp();
+		}
 	}
 
 	function toggleHelp() {
+		focusHelpVisible.value = !focusHelpVisible.value;
 		for (let i=0; i<= regionBorders.length; i++) {
 			const borderElement = document.getElementById(regionBorders[i]);
 			const enumerationElement = document.getElementById(regionNumbers[i]);
-			if (helpVisible) {
-				borderElement?.classList.remove("highlighted");
-				enumerationElement?.classList.remove("highlighted");
-			} else {
+			if (focusHelpVisible.value) {
 				borderElement?.classList.add("highlighted");
 				enumerationElement?.classList.add("highlighted");
+			} else {
+				borderElement?.classList.remove("highlighted");
+				enumerationElement?.classList.remove("highlighted");
 			}
 		}
-		helpVisible = !helpVisible;
 	}
 
-	onMounted(() => window.addEventListener('keydown', switchRegion))
-	onUnmounted(() => window.removeEventListener('keydown', switchRegion))
+	function enable() {
+		window.addEventListener('keydown', switchRegion);
+		focusSwitchingEnabled.value = true;
+	}
 
+	function disable() {
+		window.removeEventListener('keydown', switchRegion);
+		focusSwitchingEnabled.value = false;
+	}
+
+	return {
+		focusHelpVisible,
+		focusSwitchingEnabled,
+		enable,
+		disable,
+	}
 }

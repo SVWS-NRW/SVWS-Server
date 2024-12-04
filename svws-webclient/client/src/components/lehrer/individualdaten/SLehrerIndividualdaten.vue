@@ -6,7 +6,7 @@
 					<svws-ui-checkbox :disabled="!hatUpdateKompetenz" :model-value="data().istSichtbar" @update:model-value="istSichtbar => patch({istSichtbar: istSichtbar === true})"> Ist sichtbar </svws-ui-checkbox>
 					<svws-ui-checkbox :disabled="!hatUpdateKompetenz" :model-value="data().istRelevantFuerStatistik" @update:model-value="istRelevantFuerStatistik => patch({istRelevantFuerStatistik: istRelevantFuerStatistik === true})"> Ist Relevant für Statistik </svws-ui-checkbox>
 				</svws-ui-input-wrapper>
-				<svws-ui-text-input placeholder="Kürzel" :disabled="!hatUpdateKompetenz" :model-value="data().kuerzel" @change="kuerzel => patch({kuerzel: kuerzel ?? undefined})" required focus />
+				<svws-ui-text-input id="contentFocusField" placeholder="Kürzel" :disabled="!hatUpdateKompetenz" :model-value="data().kuerzel" @change="kuerzel => patch({kuerzel: kuerzel ?? undefined})" required focus />
 				<svws-ui-select title="Personal-Typ" :disabled="!hatUpdateKompetenz" v-model="inputPersonalTyp" :items="PersonalTyp.values()" :item-text="i => i.bezeichnung" required />
 				<svws-ui-text-input placeholder="Nachname" :disabled="!hatUpdateKompetenz" :model-value="data().nachname" @change="nachname => patch({nachname: nachname ?? undefined})"
 					required statistics :validator="() => validatorNachname" :do-validate="validateNachname" />

@@ -2,7 +2,7 @@
 	<div class="page--content">
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input v-autofocus placeholder="Nachname" :readonly="!hatKompetenzUpdate" :model-value="data.nachname"
+				<svws-ui-text-input id="contentFocusField" v-autofocus placeholder="Nachname" :readonly="!hatKompetenzUpdate" :model-value="data.nachname"
 					@change="nachname => patch({ nachname: nachname ?? undefined })" type="text" />
 				<svws-ui-text-input placeholder="Rufname" :readonly="!hatKompetenzUpdate" :model-value="data.vorname"
 					@change="vorname => patch({ vorname: vorname ?? undefined })" type="text" />

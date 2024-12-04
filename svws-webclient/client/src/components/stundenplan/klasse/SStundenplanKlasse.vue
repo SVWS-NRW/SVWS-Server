@@ -4,7 +4,7 @@
 			<svws-ui-sub-nav>
 				<div class="ml-4 flex gap-0.5 items-center leading-none">
 					<div class="text-button font-bold mr-1 -mt-px">Klasse:</div>
-					<svws-ui-select headless title="Klasse" v-model="klasse" :items="stundenplanManager().klasseGetMengeAsList()" :item-text="i => i.kuerzel" autocomplete
+					<svws-ui-select focus-id="contentFocusField" headless title="Klasse" v-model="klasse" :items="stundenplanManager().klasseGetMengeAsList()" :item-text="i => i.kuerzel" autocomplete
 						:item-filter="(i, text)=> i.filter(k => k.kuerzel.includes(text.toLocaleLowerCase()))" :item-sort="() => 0" type="transparent" />
 					<template v-if="stundenplanManager().getWochenTypModell() > 0">
 						<div class="text-button font-bold mr-1 -mt-px">Wochentyp:</div>

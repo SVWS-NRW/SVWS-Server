@@ -6,7 +6,7 @@
 		</template>
 		<template #content>
 			<svws-ui-table :clicked="auswahl" clickable :model-value="selected()" @update:model-value="setAuswahl" :selectable="hatUpdateKompetenz" :unselectable
-				@update:clicked="gotoAbiturjahrgang" :items :columns :filter-open="false" scroll-into-view enable-focus-switching>
+				@update:clicked="gotoAbiturjahrgang" :items :columns :filter-open="false" scroll-into-view :focus-switching-enabled :focus-help-visible>
 				<template #filterAdvanced>
 					<div class="col-span-full flex flex-wrap gap-x-5">
 						<svws-ui-checkbox type="toggle" :model-value="filterNurAktuelle()" @update:model-value="setFilterNurAktuelle">Nur Aktuelle Jahrgänge</svws-ui-checkbox>
@@ -41,8 +41,10 @@
 	import type { GostAuswahlProps } from "./SGostAuswahlProps";
 	import type { GostJahrgang } from "@core";
 	import { BenutzerKompetenz } from "@core";
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<GostAuswahlProps>();
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const columns = [
 		{ key: "bezeichnung", label: "Abiturjahrgang", sortable: true, span: 2 },

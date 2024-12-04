@@ -5,5 +5,4 @@ export interface AppProps {
 	app: TabData;
 	apps: TabData[];
 	appsHidden: boolean[];
-	enableFocusSwitching: boolean;
 }

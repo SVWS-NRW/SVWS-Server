@@ -31,7 +31,7 @@
 				</p>
 			</div>
 			<svws-ui-input-wrapper>
-				<input type="file" accept=".zip" @change="import_file" :disabled="loading">
+				<input id="contentFocusField" type="file" accept=".zip" @change="import_file" :disabled="loading">
 				<svws-ui-spinner :spinning="loading" />
 			</svws-ui-input-wrapper>
 			<log-box :logs="logs" :status="status" />

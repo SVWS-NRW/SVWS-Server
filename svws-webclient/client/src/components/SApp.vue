@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-app-layout :no-secondary-menu="!showSubmenu()" :tertiary-menu="showAuswahlliste()" secondary-menu-small>
 		<template #sidebar>
-			<svws-ui-menu enable-focus-switching>
+			<svws-ui-menu :focus-switching-enabled :focus-help-visible>
 				<template #header>
 					<!--<span v-if="apiStatus?.pending">...</span>-->
 					<!--TODO: Statt Name den vollen Anzeigenamen anzeigen (erstellt dann automatisch eine Ausgabe der Initialien-->
@@ -85,8 +85,8 @@
 					</template>
 					<template #header />
 					<template #content>
-						<p v-if="enableFocusSwitching" :id="enableFocusSwitching && showSubmenu() ? 'menuFocusNumber' : ''" class="region-enumeration">2</p>
-						<svws-ui-secondary-menu-navigation :id="enableFocusSwitching && showSubmenu() ? 'menuFocusBorder' : ''" class="focus-region" :tab-manager="(app.name.startsWith('schule') ? tabManagerSchule : tabManagerEinstellungen)" />
+						<p v-if="focusSwitchingEnabled" v-show="focusHelpVisible" :id="focusSwitchingEnabled && showSubmenu() ? 'menuFocusNumber' : ''" class="region-enumeration">2</p>
+						<svws-ui-secondary-menu-navigation :id="focusSwitchingEnabled && showSubmenu() ? 'menuFocusBorder' : ''" class="focus-region" :tab-manager="(app.name.startsWith('schule') ? tabManagerSchule : tabManagerEinstellungen)" />
 					</template>
 				</svws-ui-secondary-menu>
 			</template>
@@ -124,8 +124,8 @@
 						</div>
 					</svws-ui-header>
 				</div>
-				<!-- <p v-if="enableFocusSwitching" id="contentFocusNumber" class="region-enumeration">8</p> -->
-				<div :id="enableFocusSwitching ? 'contentFocusBorder' : ''" v-show="!pendingSetApp" class="page--wrapper" :class="{'svws-api--pending': apiStatus.pending, 'focus-region': enableFocusSwitching}">
+				<p v-if="focusSwitchingEnabled" v-show="focusHelpVisible" id="contentFocusNumber" class="region-enumeration">8</p>
+				<div :id="focusSwitchingEnabled ? 'contentFocusBorder' : ''" v-show="!pendingSetApp" class="page--wrapper" :class="{'svws-api--pending': apiStatus.pending, 'focus-region': focusSwitchingEnabled}">
 					<router-view :key="app.name" />
 				</div>
 			</main>
@@ -155,7 +155,7 @@
 
 <script setup lang="ts">
 
-	import { computed, ref, onErrorCaptured } from "vue";
+	import { computed, onMounted, onUnmounted, ref, onErrorCaptured } from "vue";
 	import type { TabData } from "@ui";
 	import type { AppProps } from './SAppProps';
 	import type { SimpleOperationResponse } from '@core';
@@ -163,15 +163,13 @@
 	import { githash } from '../../githash';
 	import { version } from '../../version';
 	import { api } from '~/router/Api';
-	import { regionSwitch } from "~/components/RegionSwitch";
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<AppProps>();
 
-	if (props.enableFocusSwitching) {
-		regionSwitch();
-	}
+	const { focusHelpVisible, focusSwitchingEnabled , enable, disable } = useRegionSwitch();
 
-	const nextFocusSection = ref(0);
+	// const nextFocusSection = ref(0);
 	const sectionRefs = ref<Map<number, HTMLElement>>(new Map());
 
 	const schulname = computed<string>(() => {
@@ -280,6 +278,14 @@
 		return false;
 	});
 
+	onMounted(() => {
+		enable();
+	})
+
+	onUnmounted(() => {
+		disable();
+	})
+
 	async function createCapturedError(reason: Error) {
 		console.warn(reason);
 		counter.value++;
@@ -313,16 +319,16 @@
 		errors.value.set(newError.id, newError);
 	}
 
-	window.addEventListener("keydown", switchFocus);
-
-	function switchFocus(event: KeyboardEvent) {
-		if (!event.repeat && event.ctrlKey && event.altKey && ((event.key === "PageUp") || (event.key === "PageDown"))) {
-			nextFocusSection.value = event.key === "PageUp"
-				? ((nextFocusSection.value + 1) % sectionRefs.value.size)
-				: (nextFocusSection.value === 0 ) ? (sectionRefs.value.size - 1) : (nextFocusSection.value - 1);
-			sectionRefs.value.get(nextFocusSection.value)?.focus();
-		}
-	}
+	// window.addEventListener("keydown", switchFocus);
+	//
+	// function switchFocus(event: KeyboardEvent) {
+	// 	if (!event.repeat && event.ctrlKey && event.altKey && ((event.key === "PageUp") || (event.key === "PageDown"))) {
+	// 		nextFocusSection.value = event.key === "PageUp"
+	// 			? ((nextFocusSection.value + 1) % sectionRefs.value.size)
+	// 			: (nextFocusSection.value === 0 ) ? (sectionRefs.value.size - 1) : (nextFocusSection.value - 1);
+	// 		sectionRefs.value.get(nextFocusSection.value)?.focus();
+	// 	}
+	// }
 
 </script>
 

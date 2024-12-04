@@ -23,7 +23,7 @@
 			</div>
 			<div class="svws-ui-header--actions" />
 		</header>
-		<svws-ui-tab-bar :tab-manager enable-focus-switching>
+		<svws-ui-tab-bar :tab-manager :focus-switching-enabled :focus-help-visible>
 			<router-view />
 		</svws-ui-tab-bar>
 	</template>
@@ -37,8 +37,11 @@
 	import type { JahrgaengeAppProps } from "./SJahrgaengeAppProps";
 	import { ViewType } from "@ui";
 	import { computed } from "vue";
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<JahrgaengeAppProps>();
+
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const jahrgaengeSubline = computed(() => {
 		const auswahlJahrgaengeList = props.manager().liste.auswahlSorted();

@@ -11,7 +11,7 @@
 		<div class="svws-ui-tab-content">
 			<div class="page--content page--content--full">
 				<svws-ui-content-card title="Import von Schulbewerbung.de">
-					<svws-ui-button type="primary" @click="doImport">
+					<svws-ui-button id="contentFocusField" type="primary" @click="doImport">
 						<span class="icon i-ri-download-2-line" />
 						<span>Import</span>
 					</svws-ui-button>

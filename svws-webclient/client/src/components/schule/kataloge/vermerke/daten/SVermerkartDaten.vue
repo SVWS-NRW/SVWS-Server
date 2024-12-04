@@ -1,7 +1,7 @@
 <template>
 	<div class="page--content">
 		<svws-ui-content-card title="Vermerkart" class="w-full">
-			<svws-ui-text-input class="w-5/5" placeholder="Bezeichnung" :model-value="vermerkartenManager().auswahl().bezeichnung" @change="bezeichnung => patch({ bezeichnung: bezeichnung ?? undefined })" type="text" />
+			<svws-ui-text-input id="contentFocusField" class="w-5/5" placeholder="Bezeichnung" :model-value="vermerkartenManager().auswahl().bezeichnung" @change="bezeichnung => patch({ bezeichnung: bezeichnung ?? undefined })" type="text" />
 		</svws-ui-content-card>
 
 		<svws-ui-content-card :title="'Alle Schüler mit der Vermerkart `' + vermerkartenManager().auswahl().bezeichnung + '`'" class="w-full" v-if="vermerkartenManager().getListSchuelerVermerkartZusammenfassung().list().size() > 0">
