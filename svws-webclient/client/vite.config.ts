@@ -35,7 +35,7 @@ export default defineConfig({
 		outDir: "build/output",
 		emptyOutDir: true,
 		sourcemap: true,
-		minify: true,
+		minify: false,
 		commonjsOptions: {},
 		rollupOptions: {
 			output: {
