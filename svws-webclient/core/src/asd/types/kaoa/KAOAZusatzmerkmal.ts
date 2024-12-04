@@ -300,309 +300,314 @@ export class KAOAZusatzmerkmal extends JavaEnum<KAOAZusatzmerkmal> implements Co
 	public static readonly SBO_6_1_5 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_6_1_5", 55, );
 
 	/**
+	 * KAoA-Zusatzmerkmal: Teilnahme am Intensivtraining TASK
+	 */
+	public static readonly SBO_6_2_1 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_6_2_1", 56, );
+
+	/**
 	 * KAoA-Zusatzmerkmal: Keine Teilnahme am Intensivtraining TASK
 	 */
-	public static readonly SBO_6_2_2 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_6_2_2", 56, );
+	public static readonly SBO_6_2_2 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_6_2_2", 57, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Am STAR - Betriebspraktikum im Block - eine Woche teilgenommen
 	 */
-	public static readonly SBO_6_3_1 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_6_3_1", 57, );
+	public static readonly SBO_6_3_1 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_6_3_1", 58, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Am STAR - Betriebspraktikum im Block - zwei Wochen teilgenommen
 	 */
-	public static readonly SBO_6_3_2 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_6_3_2", 58, );
+	public static readonly SBO_6_3_2 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_6_3_2", 59, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Am STAR - Betriebspraktikum im Block - drei Wochen teilgenommen
 	 */
-	public static readonly SBO_6_3_3 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_6_3_3", 59, );
+	public static readonly SBO_6_3_3 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_6_3_3", 60, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Am STAR - Betriebspraktikum im Block - vier Wochen teilgenommen
 	 */
-	public static readonly SBO_6_3_4 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_6_3_4", 60, );
+	public static readonly SBO_6_3_4 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_6_3_4", 61, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Am STAR - Betriebspraktikum im Block - fünf Wochen teilgenommen
 	 */
-	public static readonly SBO_6_3_5 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_6_3_5", 61, );
+	public static readonly SBO_6_3_5 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_6_3_5", 62, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Am STAR - Betriebspraktikum im Block - sechs Wochen teilgenommen
 	 */
-	public static readonly SBO_6_3_6 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_6_3_6", 62, );
+	public static readonly SBO_6_3_6 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_6_3_6", 63, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Keine Teilnahme am STAR - Betriebspraktikum im Block
 	 */
-	public static readonly SBO_6_3_7 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_6_3_7", 63, );
+	public static readonly SBO_6_3_7 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_6_3_7", 64, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: An trägergestützten Praxiskursen teilgenommen
 	 */
-	public static readonly SBO_6_4_1 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_6_4_1", 64, );
+	public static readonly SBO_6_4_1 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_6_4_1", 65, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: An betrieblichen Praxiskursen teilgenommen
 	 */
-	public static readonly SBO_6_4_2 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_6_4_2", 65, );
+	public static readonly SBO_6_4_2 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_6_4_2", 66, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Keine Teilnahme an Praxiskursen
 	 */
-	public static readonly SBO_6_4_3 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_6_4_3", 66, );
+	public static readonly SBO_6_4_3 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_6_4_3", 67, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Am Langzeitpraktikum teilgenommen
 	 */
-	public static readonly SBO_6_5_1 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_6_5_1", 67, );
+	public static readonly SBO_6_5_1 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_6_5_1", 68, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Langzeitpraktikum abgebrochen
 	 */
-	public static readonly SBO_6_5_2 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_6_5_2", 68, );
+	public static readonly SBO_6_5_2 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_6_5_2", 69, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Am STAR - Betriebspraktikum in Langzeit 1-tägig teilgenommen
 	 */
-	public static readonly SBO_6_6_1 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_6_6_1", 69, );
+	public static readonly SBO_6_6_1 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_6_6_1", 70, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Am STAR - Betriebspraktikum in Langzeit 2-tägig teilgenommen
 	 */
-	public static readonly SBO_6_6_2 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_6_6_2", 70, );
+	public static readonly SBO_6_6_2 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_6_6_2", 71, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: STAR - Betriebspraktikum in Langzeit abgebrochen
 	 */
-	public static readonly SBO_6_6_3 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_6_6_3", 71, );
+	public static readonly SBO_6_6_3 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_6_6_3", 72, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: An KAoA-kompakt teilgenommen
 	 */
-	public static readonly SBO_7_1_1 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_7_1_1", 72, );
+	public static readonly SBO_7_1_1 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_7_1_1", 73, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Keine Teilnahme an KAoA-kompakt
 	 */
-	public static readonly SBO_7_1_2 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_7_1_2", 73, );
+	public static readonly SBO_7_1_2 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_7_1_2", 74, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Am Workshop "Standortbestimmung Reflexionsworkshop Sek. II" teilgenommen
 	 */
-	public static readonly SBO_8_1_1 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_8_1_1", 74, );
+	public static readonly SBO_8_1_1 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_8_1_1", 75, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Keine Teilnahme am Workshop "Standortbestimmung Reflexionsworkshop Sek. II"
 	 */
-	public static readonly SBO_8_1_2 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_8_1_2", 75, );
+	public static readonly SBO_8_1_2 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_8_1_2", 76, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Am Workshop "Stärkung der Entscheidungskompetenz I - Sek. II" teilgenommen
 	 */
-	public static readonly SBO_8_2_1 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_8_2_1", 76, );
+	public static readonly SBO_8_2_1 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_8_2_1", 77, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Keine Teilnahme am Workshop "Stärkung der Entscheidungskompetenz I - Sek. II"
 	 */
-	public static readonly SBO_8_2_2 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_8_2_2", 77, );
+	public static readonly SBO_8_2_2 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_8_2_2", 78, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: An Praxiselementen in Betrieben, Hochschulen, Institutionen teilgenommen
 	 */
-	public static readonly SBO_9_1_1 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_9_1_1", 78, );
+	public static readonly SBO_9_1_1 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_9_1_1", 79, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Keine Teilnahme an den Praxiselementen
 	 */
-	public static readonly SBO_9_1_2 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_9_1_2", 79, );
+	public static readonly SBO_9_1_2 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_9_1_2", 80, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Am Betriebspraktikum teilgenommen - 1 Woche (Sek II)
 	 */
-	public static readonly SBO_9_1_3 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_9_1_3", 80, );
+	public static readonly SBO_9_1_3 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_9_1_3", 81, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Am Betriebspraktikum teilgenommen - 2 Wochen (Sek II)
 	 */
-	public static readonly SBO_9_1_4 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_9_1_4", 81, );
+	public static readonly SBO_9_1_4 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_9_1_4", 82, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Teilnahme an den Veranstaltungen zur Studienorientierung
 	 */
-	public static readonly SBO_9_2_1 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_9_2_1", 82, );
+	public static readonly SBO_9_2_1 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_9_2_1", 83, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Keine Teilnahme an den Veranstaltungen zur Studienorientierung
 	 */
-	public static readonly SBO_9_2_2 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_9_2_2", 83, );
+	public static readonly SBO_9_2_2 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_9_2_2", 84, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Am Workshop "Stärkung der Entscheidungskompetenz II - Sek II" teilgenommen
 	 */
-	public static readonly SBO_9_3_1 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_9_3_1", 84, );
+	public static readonly SBO_9_3_1 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_9_3_1", 85, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Keine Teilnahme am Workshop "Stärkung der Entscheidungskompetenz II - Sek II"
 	 */
-	public static readonly SBO_9_3_2 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_9_3_2", 85, );
+	public static readonly SBO_9_3_2 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_9_3_2", 86, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Bewerbungstraining wurde durchgeführt
 	 */
-	public static readonly SBO_10_1_1 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_1_1", 86, );
+	public static readonly SBO_10_1_1 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_1_1", 87, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Keine Teilnahme an einem Bewerbungstraining
 	 */
-	public static readonly SBO_10_1_2 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_1_2", 87, );
+	public static readonly SBO_10_1_2 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_1_2", 88, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Am STAR - Arbeitsplatzbezogenen Kommunikationstraining II teilgenommen
 	 */
-	public static readonly SBO_10_2_1 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_2_1", 88, );
+	public static readonly SBO_10_2_1 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_2_1", 89, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Keine Teilnahme am STAR - Arbeitsplatzbezogenen Kommunikationstraining II
 	 */
-	public static readonly SBO_10_2_2 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_2_2", 89, );
+	public static readonly SBO_10_2_2 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_2_2", 90, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Am STAR - Bewerbungstraining teilgenommen
 	 */
-	public static readonly SBO_10_3_1 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_3_1", 90, );
+	public static readonly SBO_10_3_1 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_3_1", 91, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Keine Teilnahme am STAR - Bewerbungstraining
 	 */
-	public static readonly SBO_10_3_2 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_3_2", 91, );
+	public static readonly SBO_10_3_2 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_3_2", 92, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: durch die Jugendhilfe
 	 */
-	public static readonly SBO_10_4_1 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_4_1", 92, );
+	public static readonly SBO_10_4_1 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_4_1", 93, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: durch die Schulsozialarbeit
 	 */
-	public static readonly SBO_10_4_2 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_4_2", 93, );
+	public static readonly SBO_10_4_2 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_4_2", 94, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: durch die Berufseinstiegsbegleitung
 	 */
-	public static readonly SBO_10_4_3 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_4_3", 94, );
+	public static readonly SBO_10_4_3 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_4_3", 95, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: durch die Einstiegsbegleitung über die Kommune finanziert
 	 */
-	public static readonly SBO_10_4_4 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_4_4", 95, );
+	public static readonly SBO_10_4_4 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_4_4", 96, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: durch eine ehrenamtlich tätige Person
 	 */
-	public static readonly SBO_10_4_5 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_4_5", 96, );
+	public static readonly SBO_10_4_5 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_4_5", 97, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: durch andere Institution
 	 */
-	public static readonly SBO_10_4_6 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_4_6", 97, );
+	public static readonly SBO_10_4_6 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_4_6", 98, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Eine STAR - Übergangsbegleitung durch den Integrationsfachdienst (IFD) findet statt
 	 */
-	public static readonly SBO_10_5_1 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_5_1", 98, );
+	public static readonly SBO_10_5_1 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_5_1", 99, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Keine STAR - Übergangsbegleitung durch den Integrationsfachdienst (IFD)
 	 */
-	public static readonly SBO_10_5_2 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_5_2", 99, );
+	public static readonly SBO_10_5_2 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_5_2", 100, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Die Anschlussvereinbarung Sek. I ist ausgefüllt worden
 	 */
-	public static readonly SBO_10_6_1 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_6_1", 100, );
+	public static readonly SBO_10_6_1 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_6_1", 101, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Die Anschlussvereinbarung Sek. I ist nicht ausgefüllt worden
 	 */
-	public static readonly SBO_10_6_2 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_6_2", 101, );
+	public static readonly SBO_10_6_2 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_6_2", 102, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Die Anschlussvereinbarung Sek. II ist ausgefüllt worden
 	 */
-	public static readonly SBO_10_6_3 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_6_3", 102, );
+	public static readonly SBO_10_6_3 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_6_3", 103, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Die Anschlussvereinbarung Sek. II ist nicht ausgefüllt worden
 	 */
-	public static readonly SBO_10_6_4 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_6_4", 103, );
+	public static readonly SBO_10_6_4 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_6_4", 104, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Anschlüsse bei einem Abgangszeugnis für Schüler/innen mit sonderpädagogischem Unterstützungsbedarf
 	 */
-	public static readonly SBO_10_7_1 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_7_1", 104, );
+	public static readonly SBO_10_7_1 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_7_1", 105, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Anschlüsse bei einem Abgangszeugnis
 	 */
-	public static readonly SBO_10_7_2 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_7_2", 105, );
+	public static readonly SBO_10_7_2 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_7_2", 106, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Anschlüsse bei einem Abschlusszeugnis im Bildungsgang Geistige Entwicklung
 	 */
-	public static readonly SBO_10_7_3 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_7_3", 106, );
+	public static readonly SBO_10_7_3 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_7_3", 107, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Anschlüsse bei einem Abschlusszeugnis im Bildungsgang Lernen
 	 */
-	public static readonly SBO_10_7_4 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_7_4", 107, );
+	public static readonly SBO_10_7_4 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_7_4", 108, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Anschlüsse bei einem Hauptschulabschluss (HA9) oder diesem gleichwertig
 	 */
-	public static readonly SBO_10_7_5 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_7_5", 108, );
+	public static readonly SBO_10_7_5 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_7_5", 109, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Anschlüsse bei einem Hauptschulabschluss nach Klasse 10 oder diesem gleichwertig
 	 */
-	public static readonly SBO_10_7_6 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_7_6", 109, );
+	public static readonly SBO_10_7_6 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_7_6", 110, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Anschlüsse bei einem Mittlerem Schulabschluss (FOR)
 	 */
-	public static readonly SBO_10_7_7 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_7_7", 110, );
+	public static readonly SBO_10_7_7 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_7_7", 111, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Anschlüsse bei einem Mittlerem Schulabschluss (FOR) mit der Qualifikation für die Oberstufe
 	 */
-	public static readonly SBO_10_7_8 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_7_8", 111, );
+	public static readonly SBO_10_7_8 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_7_8", 112, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Anschlüsse bei einem Hauptschulabschluss (HA9) mit der Qualifikation für die Oberstufe
 	 */
-	public static readonly SBO_10_7_9 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_7_9", 112, );
+	public static readonly SBO_10_7_9 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_7_9", 113, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Anschlüsse bei einem Hauptschulabschluss nach Klasse 10 mit der Qualifikation für die Oberstufe
 	 */
-	public static readonly SBO_10_7_10 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_7_10", 113, );
+	public static readonly SBO_10_7_10 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_7_10", 114, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Anschlüsse bei dem schulischen Teil der Fachhochschulreife
 	 */
-	public static readonly SBO_10_7_11 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_7_11", 114, );
+	public static readonly SBO_10_7_11 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_7_11", 115, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Anschlüsse mit der Fachhochschulreife
 	 */
-	public static readonly SBO_10_7_12 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_7_12", 115, );
+	public static readonly SBO_10_7_12 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_7_12", 116, );
 
 	/**
 	 * KAoA-Zusatzmerkmal: Anschlüsse mit der allgemeinen Hochschulreife
 	 */
-	public static readonly SBO_10_7_13 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_7_13", 116, );
+	public static readonly SBO_10_7_13 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_7_13", 117, );
 
 	/**
 	 * (Integer, Long) -> Schuljahr, idMerkmal
