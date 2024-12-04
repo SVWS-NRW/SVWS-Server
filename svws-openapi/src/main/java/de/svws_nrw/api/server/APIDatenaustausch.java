@@ -4,6 +4,7 @@ import java.io.InputStream;
 
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
+import de.svws_nrw.core.data.LongAndStringLists;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
@@ -18,6 +19,7 @@ import de.svws_nrw.data.datenaustausch.UntisGPU001MultipartBody;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.utils.ApiOperationException;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -547,45 +549,44 @@ public class APIDatenaustausch {
 		}, request, ServerMode.STABLE, BenutzerKompetenz.IMPORT_EXPORT_SCHUELERDATEN_EXPORTIEREN);
 	}
 
+
 	/**
-	 * Die OpenAPI-Methode für den Export eines Blockungsergebnisses für Untis. Dabei
-	 * werden die GPU-Dateien GPU002.txt, GPU010.txt, GPU015.txt und GPU019.txt generiert
-	 * und in einer ZIP-Datei gepackt.
+	 * Die OpenAPI-Methode für den Export von Blockungen zu den übergebenen Abiturjahrgängen in dem übergebenen Schuljahresabschnitt.
+	 * Dabei wird eine GPU002.txt für neue Unterrichte, eine GPU015.txt für die zugrundeliegenden Fachwahlen und eine GPU019.txt für
+	 * die genutzten Schienen generiert.
 	 *
-	 * @param schema         das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param idErgebnis     die ID des Kursblockungsergebnisses, welches exportiert werden soll
-	 * @param idUnterricht   die erste ID für den Unterricht, der für Untis generiert wird
-	 * @param sidvariante    die Variante, wie die Schüler-Bezeichner generiert werden (1 - ID, 2 - Nachname, drei Stellen Vorname und Geurtsdatum,
-	 *                       3 - Nachname, Vorname, Geburtsdatum)
-	 * @param request        die Informationen zur HTTP-Anfrage
+	 * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param id            die ID des Schuljahresabschnittes, für welche die Blockungsergebnisse exportiert werden sollen
+	 * @param params        die für die bisherigen Unterricht übergebene GPU002-Datei und die IDs der Blckungsergebnisse
+	 * @param sidvariante   die Variante, wie die Schüler-Bezeichner generiert werden (1 - ID, 2 - Nachname, drei Stellen Vorname und Geurtsdatum,
+	 *                      3 - Nachname, Vorname, Geburtsdatum)
+	 * @param request       die Informationen zur HTTP-Anfrage
 	 *
-	 * @return die Zip-Datei mit dem Export
+	 * @return die GPU019-Datei
 	 */
 	@POST
-	@Produces("application/zip")
-	@Path("/untis/export/blockung/{ergebnisid : \\d+}/zip/{unterrichtid : \\d+}/{sidvariante : \\d+}")
-	@Operation(summary = "Liefert einen Export für das Blockungsergebnis mit der angegebenen ID für Untis ein einer Zip-Datei.",
-			description = "Liefert einen Export für das Blockungsergebnis mit der angegebenen ID für Untis ein einer Zip-Datei."
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/untis/export/blockung/{id : \\d+}/{sidvariante : \\d+}")
+	@Operation(summary = "Liefert einen Export für die Blockungsergebnisse als Liste mit drei Strings (GPU002.txt, GPU015.txt, GPU019.txt).",
+			description = "Liefert einen Export für die Blockungsergebnisse als Liste mit drei Strings (GPU002.txt, GPU015.txt, GPU019.txt)."
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Exportieren besitzt.")
-	@ApiResponse(responseCode = "200", description = "Das exportierten Blockungsergebnis in einer Zip-Datei", content = @Content(mediaType = "application/zip",
-			schema = @Schema(type = "string", format = "binary", description = "Die Zip-Datei mit dem exportierten Blockungsergebnis")))
-	@ApiResponse(responseCode = "400", description = "Die Angaben zur ersten Unterrichts-ID für Untis sind ungültig.",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um das Blockungsergebnis zu exportieren.",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "200", description = "Die Liste mit den Daten der drei GPUs",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = String.class))))
 	@ApiResponse(responseCode = "404", description = "Es wurden nicht alle benötigten Daten für den Export gefunden.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	@ApiResponse(responseCode = "500", description = "Es ist ein unerwarteter Fehler aufgetreten.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
-	public Response exportUntisKursblockungAsZip(@PathParam("schema") final String schema, @PathParam("ergebnisid") final long idErgebnis,
-			@PathParam("unterrichtid") final long idUnterricht, @PathParam("sidvariante") final int sidvariante,
-			@Context final HttpServletRequest request) {
+	public Response exportUntisBlockungGPU002GPU015GPU019(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@RequestBody(description = "Die Unterrichte von Untis (GPU002.txt) und die IDs der Blockungsergebnisse", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = LongAndStringLists.class))) final LongAndStringLists params,
+			@PathParam("sidvariante") final int sidvariante, @Context final HttpServletRequest request) {
 		final Logger logger = new Logger();
 		final LogConsumerList log = new LogConsumerList();
 		logger.addConsumer(log);
 		return DBBenutzerUtils.runWithTransaction(conn -> {
 			try {
-				return DataUntis.exportUntisBlockungsergebnis(conn, logger, idErgebnis, idUnterricht, sidvariante);
+				return DataUntis.exportUntisBlockungsergebnisse(conn, logger, id, params, sidvariante);
 			} catch (final ApiOperationException aoe) {
 				final SimpleOperationResponse sor = new SimpleOperationResponse();
 				sor.log.addAll(log.getStrings());

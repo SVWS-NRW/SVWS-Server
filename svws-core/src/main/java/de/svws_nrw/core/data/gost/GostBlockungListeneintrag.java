@@ -32,6 +32,10 @@ public class GostBlockungListeneintrag {
 	/** Gibt die Anzahl der Ergebnisse an, die bei der Blockung vorliegen */
 	public int anzahlErgebnisse = -1;
 
+	/** Die ID des Ergebnisses, welches bei der Blockung als aktiv gesetzt wurde, sofern es ein aktives Ergebnis gibt */
+	public Long idAktivesErgebnis = null;
+
+
 	/**
 	 * Leerer Standardkonstruktor.
 	 */

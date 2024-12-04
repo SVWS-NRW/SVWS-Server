@@ -1,6 +1,5 @@
 package de.svws_nrw.data.datenaustausch;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -14,8 +13,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
@@ -45,6 +42,7 @@ import de.svws_nrw.base.untis.UntisGPU019;
 import de.svws_nrw.base.untis.UntisSchuelerBezeichner;
 import de.svws_nrw.core.adt.LongArrayKey;
 import de.svws_nrw.core.adt.map.HashMap2D;
+import de.svws_nrw.core.data.LongAndStringLists;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.fach.FachDaten;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
@@ -77,7 +75,6 @@ import de.svws_nrw.core.utils.stundenplan.StundenplanManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.SimpleBinaryMultipartBody;
 import de.svws_nrw.data.faecher.DataFaecherliste;
-import de.svws_nrw.data.gost.DBUtilsGost;
 import de.svws_nrw.data.gost.DataGostBlockungsergebnisse;
 import de.svws_nrw.data.gost.klausurplan.DataGostKlausuren;
 import de.svws_nrw.data.jahrgaenge.DataJahrgangsdaten;
@@ -107,7 +104,6 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
-import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterricht;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtKlasse;
@@ -1655,229 +1651,229 @@ public final class DataUntis {
 	}
 
 
+	private static long getGPU002ForBlockung(final int schuljahr, final long idUnterrichtStart, final GostBlockungsergebnisManager ergebnisManager,
+			final List<UntisGPU002> neueUnterrichte, final HashMap2D<String, String, List<UntisGPU002>> mapUnterrichte,
+			final @NotNull Map<@NotNull Long, @NotNull Long> mapKursZuUnterricht) {
+		final GostBlockungsdatenManager datenManager = ergebnisManager.getParent();
+		final @NotNull List<@NotNull GostBlockungKurs> kurse = datenManager.kursGetListeSortiertNachKursartFachNummer();
+		long idUnterricht = idUnterrichtStart;
+		for (final @NotNull GostBlockungKurs kurs : kurse) {
+			final UntisGPU002 u = new UntisGPU002();
+			u.idUnterricht = idUnterricht++;
+			mapKursZuUnterricht.put(kurs.id, u.idUnterricht);
+			u.wochenstunden = kurs.wochenstunden;
+			u.wochenstundenKlasse = kurs.wochenstunden;
+			u.wochenstundenLehrer = kurs.wochenstunden;
+			u.klasseKuerzel = datenManager.getHalbjahr().jahrgang;
+			u.lehrerKuerzel = kurs.lehrer.isEmpty() ? null : kurs.lehrer.get(0).kuerzel;
+			u.fachKuerzel = datenManager.kursGetName(kurs.id);
+			u.studentenZahl = ergebnisManager.getOfKursAnzahlSchueler(kurs.id);
+			u.wochenTyp = "WA";
+			u.jahreswert = 0.0048;
+			final RGBFarbe fachFarbe = Fach.getBySchluesselOrDefault(ergebnisManager.getFach(kurs.fach_id).kuerzel).getFarbe(schuljahr);
+			u.farbeHintergrund = "" + ((fachFarbe.red * 65536) + (fachFarbe.green * 256) + fachFarbe.blue);
+			u.kennzeichen = "n";
+			u.doppelStdMin = 1;
+			u.doppelStdMax = 1;
+			u.studentenMaennlich = 0;
+			u.studentenWeiblich = 0;
+			for (final Schueler s : ergebnisManager.getOfKursSchuelermenge(kurs.id)) {
+				switch (Geschlecht.fromValue(s.geschlecht)) {
+					case Geschlecht.M -> u.studentenMaennlich++;
+					case Geschlecht.W -> u.studentenWeiblich++;
+					default -> {
+						/* nicht zu tun */
+					}
+				}
+			}
+			u.eigenwert = "100000";
+			u.eigenwertHunderttausendstel = "1";
+			neueUnterrichte.add(u);
+		}
+		return idUnterricht;
+	}
+
+
+	private static void getGPU015ForBlockung(final List<DTOSchueler> dtosSchueler, final int idVariante, final GostBlockungsergebnisManager ergebnisManager,
+			final List<UntisGPU015> gpu015, final @NotNull Map<@NotNull Long, @NotNull Long> mapKursZuUnterricht) {
+		final GostBlockungsdatenManager datenManager = ergebnisManager.getParent();
+		for (final DTOSchueler dtoSchueler : dtosSchueler) {
+			if (datenManager.schuelerGetListeOfFachwahlen(dtoSchueler.ID).isEmpty())
+				continue;
+			final String schuelerName = UntisSchuelerBezeichner.getBezeichner(idVariante, dtoSchueler.ID, dtoSchueler.Nachname,
+					dtoSchueler.Vorname, dtoSchueler.Geburtsdatum);
+
+			for (final GostBlockungsergebnisKurs k : ergebnisManager.getOfSchuelerKursmenge(dtoSchueler.ID)) {
+				final UntisGPU015 dto = new UntisGPU015();
+				dto.name = schuelerName;
+				dto.idUnterricht = mapKursZuUnterricht.get(k.id);
+				dto.fach = datenManager.kursGetName(k.id);
+				dto.klasse = datenManager.getHalbjahr().jahrgang;
+				dto.statistikKennzeichen = datenManager.schuelerGetOfFachFachwahl(dtoSchueler.ID, k.fachID).istSchriftlich ? "S" : "M";
+				dto.idsUnterrichteAlternativkurse = "";
+				dto.kuerzelAlternativkurse = "";
+				dto.prioAlternativkurse = "";
+				String tilde = "";
+				for (final GostBlockungKurs ak : datenManager.kursGetListeByFachUndKursart(k.fachID, k.kursart)) {
+					final Long idUnterrichtAlternativ = mapKursZuUnterricht.get(ak.id);
+					dto.idsUnterrichteAlternativkurse += tilde + idUnterrichtAlternativ;
+					dto.kuerzelAlternativkurse += tilde + datenManager.kursGetName(ak.id);
+					dto.prioAlternativkurse += tilde + "1";
+					if ("".equals(tilde))
+						tilde = "~";
+				}
+				gpu015.add(dto);
+			}
+		}
+	}
+
+	private static void getGPU019ForBlockung(final GostBlockungsergebnisManager ergebnisManager, final List<UntisGPU019> gpu019,
+			final @NotNull Map<@NotNull Long, @NotNull Long> mapKursZuUnterricht) {
+		final GostBlockungsdatenManager datenManager = ergebnisManager.getParent();
+		final @NotNull List<@NotNull GostBlockungKurs> kurse = datenManager.kursGetListeSortiertNachKursartFachNummer();
+		for (final @NotNull GostBlockungKurs kurs : kurse) {
+			final UntisGPU019 dto = new UntisGPU019();
+			// TODO evtl. Multi-Schienen-Kurse unterstützen
+			final Set<GostBlockungsergebnisSchiene> schienen = ergebnisManager.getOfKursSchienenmenge(kurs.id);
+			final GostBlockungsergebnisSchiene schiene = schienen.iterator().next();
+			dto.name = datenManager.schieneGet(schiene.id).bezeichnung;
+			dto.art = "2";
+			dto.anzahlWochenstunden = kurs.wochenstunden;
+			dto.idUnterricht = mapKursZuUnterricht.get(kurs.id);
+			dto.fach = datenManager.kursGetName(kurs.id);
+			dto.klassen = datenManager.getHalbjahr().jahrgang;
+			gpu019.add(dto);
+		}
+	}
+
 	/**
-	 * Erzeugt den Export eines Blockungsergebnisses für Untis, indem die Dateien GPU002.txt, GPU010.txt, GPU015.txt und GPU019.txt
-	 * erzeugt werden und in einem Zip-File in der Response zurückgegeben werden.
+	 * Erzeugt den Export eines Blockungsergebnisses für Untis, indem die Dateien GPU002.txt, GPU015.txt und GPU019.txt
+	 * erzeugt werden und in einem Liste von Strings in dieser Reihenfolge in der Response zurückgegeben werden.
 	 *
-	 * @param conn                  die Datenbank-Verbindung
-	 * @param logger                der Logger
-	 * @param idBlockungsergebnis   die ID des Blockungsergebnisses
-	 * @param idUnterrichtStart     die erste ID für die Unterricht-IDs, welche in dem Untis-Export verwendet wird
-	 * @param idVariante            die Variante für den Schüler-Bezeichner (1, 2 oder 3 - siehe {@link UntisSchuelerBezeichner})
+	 * @param conn                     die Datenbank-Verbindung
+	 * @param logger                   der Logger
+	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnittes
+	 * @param params                   die Abiturjahre und die GPU002 als Parameter
+	 * @param idVariante               die Variante für den Schüler-Bezeichner (1, 2 oder 3 - siehe {@link UntisSchuelerBezeichner})
 	 *
-	 * @return eine Response mit dem Zip-File
+	 * @return eine Response mit den drei Strings in einer Liste
 	 *
-	 * @throws ApiOperationException im Fehlerfall
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static Response exportUntisBlockungsergebnis(final DBEntityManager conn, final Logger logger,
-			final long idBlockungsergebnis, final long idUnterrichtStart, final int idVariante) throws ApiOperationException {
-		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
-		final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
-		if (schuljahresabschnitt == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Keine gültiger Schuljahresabschnitt vorhanden.");
-		logger.logLn("-> Prüfe, ob das Blockungsergebnis gültig ist und die erste ID für den Unterricht > 0 ist...");
-		logger.modifyIndent(2);
-		logger.log("Prüfe die ID für den Unterricht auf Gültigkeit... ");
-		if (idUnterrichtStart <= 0) {
+	public static Response exportUntisBlockungsergebnisse(final DBEntityManager conn, final Logger logger, final long idSchuljahresabschnitt,
+			final LongAndStringLists params, final int idVariante) throws ApiOperationException {
+		// Prüfe den Schuljahresabschnitt auf Gültigkeit
+		logger.log("Prüfe, ob der Schuljahresabschnitt mit der ID %d in der Datenbank existiert... ".formatted(idSchuljahresabschnitt));
+		final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetAbschnittById(idSchuljahresabschnitt);
+		if (schuljahresabschnitt == null) {
 			logger.logLn(0, "[Fehler]");
-			logger.logLn("Die ID %d ist kleiner oder gleich 0".formatted(idUnterrichtStart));
-			logger.modifyIndent(-2);
-			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID %d für die erster Unterricht ID ist kleiner oder gleich 0.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Es existiert kein Schuljahresabschnitt mit der ID %d".formatted(idSchuljahresabschnitt));
 		}
 		logger.logLn("[OK]");
-
-		logger.log("Lade das Ergebnis aus der Datenbank... ");
-		final GostBlockungsergebnisManager ergebnisManager;
-		final GostBlockungsdatenManager datenManager;
-		try {
-			ergebnisManager = DataGostBlockungsergebnisse.getErgebnismanagerFromID(conn, idBlockungsergebnis);
-			datenManager = ergebnisManager.getParent();
-		} catch (final Exception e) {
+		// Lese die Unterrichte aus der übergebenen GPU002 ein und erzeuge eine Map für den schnellen Zugriff auf diese Unterrichte
+		logger.logLn("Lese die Unterrichte aus der übergebenen GPU002 ein ... ");
+		if (params.strings.size() != 1) {
 			logger.logLn(0, "[Fehler]");
-			if (e instanceof final ApiOperationException aoe) {
-				logger.logLn(aoe.getMessage());
-				logger.modifyIndent(-2);
-				throw aoe;
-			}
-			logger.modifyIndent(-2);
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Unerwarteter Fehler beim Einlesen der Blockung");
+			throw new ApiOperationException(Status.BAD_REQUEST, "Es muss genau ein String mit der GPU002 übergeben werden.");
 		}
-		logger.logLn("[OK]");
-
-		logger.log("Lade die Informationen zu den Schülern der Blockung aus der Datenbank... ");
-		final List<Schueler> schueler = datenManager.schuelerGetListe();
-		final List<Long> idsSchueler = schueler.stream().map(s -> s.id).toList();
-		if (idsSchueler.isEmpty()) {
-			logger.logLn("Keine Schüler in der Blockung vorhanden. Der Export wird abgebrochen.");
-			logger.modifyIndent(-2);
-			throw new ApiOperationException(Status.NOT_FOUND, "Keine Schüler in der Blockung vorhanden.");
-		}
-		final List<DTOSchueler> dtosSchueler = conn.queryByKeyList(DTOSchueler.class, idsSchueler);
-		if (dtosSchueler.size() != idsSchueler.size()) {
-			logger.logLn("Es konnten nicht alle Schüler der Blockung in der Datenbank gefunden werden. Der Export wird abgebrochen.");
-			logger.modifyIndent(-2);
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Es konnten nicht alle Schüler der Blockung in der Datenbank gefunden werden.");
-		}
-		final Map<Long, DTOKlassen> mapKlassenBySchueler = DataKlassendaten.getDTOMapAktuellBySchuelerID(conn, idsSchueler);
-
-		logger.modifyIndent(-2);
-
-		logger.logLn("-> Erstelle Liste der Unterrichte für GPU002.txt");
-		logger.modifyIndent(2);
-		final String csvUnterrichte;
-		final @NotNull Map<@NotNull Long, @NotNull Long> mapKursZuUnterricht = new HashMap<>();
+		final List<UntisGPU002> inputUnterrichte;
 		try {
-			final @NotNull List<@NotNull GostBlockungKurs> kurse = datenManager.kursGetListeSortiertNachKursartFachNummer();
-			long idUnterricht = idUnterrichtStart;
-			final List<UntisGPU002> unterrichte = new ArrayList<>();
-			for (final @NotNull GostBlockungKurs kurs : kurse) {
-				final UntisGPU002 u = new UntisGPU002();
-				u.idUnterricht = idUnterricht++;
-				mapKursZuUnterricht.put(kurs.id, u.idUnterricht);
-				u.wochenstunden = kurs.wochenstunden;
-				u.wochenstundenKlasse = kurs.wochenstunden;
-				u.wochenstundenLehrer = kurs.wochenstunden;
-				u.klasseKuerzel = datenManager.getHalbjahr().jahrgang;
-				u.lehrerKuerzel = kurs.lehrer.isEmpty() ? null : kurs.lehrer.get(0).kuerzel;
-				u.fachKuerzel = datenManager.kursGetName(kurs.id);
-				u.studentenZahl = ergebnisManager.getOfKursAnzahlSchueler(kurs.id);
-				u.wochenTyp = "WA";
-				u.jahreswert = 0.0048;
-				final RGBFarbe fachFarbe = Fach.getBySchluesselOrDefault(ergebnisManager.getFach(kurs.fach_id).kuerzel).getFarbe(schuljahresabschnitt.Jahr);
-				u.farbeHintergrund = "" + ((fachFarbe.red * 65536) + (fachFarbe.green * 256) + fachFarbe.blue);
-				u.kennzeichen = "n";
-				u.doppelStdMin = 1;
-				u.doppelStdMax = 1;
-				u.studentenMaennlich = 0;
-				u.studentenWeiblich = 0;
-				for (final Schueler s : ergebnisManager.getOfKursSchuelermenge(kurs.id)) {
-					switch (Geschlecht.fromValue(s.geschlecht)) {
-						case Geschlecht.M -> u.studentenMaennlich++;
-						case Geschlecht.W -> u.studentenWeiblich++;
-						default -> {
-							/* nicht zu tun */
-						}
-					}
-				}
-				u.eigenwert = "100000";
-				u.eigenwertHunderttausendstel = "1";
-				unterrichte.add(u);
-			}
-			csvUnterrichte = UntisGPU002.writeCSV(unterrichte);
-		} catch (final Exception e) {
-			logger.logLn("Fehler beim Erstellen der Datei GPU002.txt.");
-			logger.modifyIndent(-2);
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen der Datei GPU002.txt.");
-		}
-		logger.logLn("OK");
-		logger.modifyIndent(-2);
-
-		final String csvSchueler = getGPU010(logger, dtosSchueler, mapKlassenBySchueler, idVariante);
-
-		logger.logLn("-> Erstelle Liste der Kurswahlen für GPU015.txt");
-		final String csvKurswahlen;
-		logger.modifyIndent(2);
-		try {
-			final List<UntisGPU015> gpu015 = new ArrayList<>();
-			for (final DTOSchueler dtoSchueler : dtosSchueler) {
-				if (datenManager.schuelerGetListeOfFachwahlen(dtoSchueler.ID).isEmpty())
-					continue;
-				final String schuelerName = UntisSchuelerBezeichner.getBezeichner(idVariante, dtoSchueler.ID, dtoSchueler.Nachname,
-						dtoSchueler.Vorname, dtoSchueler.Geburtsdatum);
-
-				for (final GostBlockungsergebnisKurs k : ergebnisManager.getOfSchuelerKursmenge(dtoSchueler.ID)) {
-					final UntisGPU015 dto = new UntisGPU015();
-					dto.name = schuelerName;
-					dto.idUnterricht = mapKursZuUnterricht.get(k.id);
-					dto.fach = datenManager.kursGetName(k.id);
-					dto.klasse = datenManager.getHalbjahr().jahrgang;
-					dto.statistikKennzeichen = datenManager.schuelerGetOfFachFachwahl(dtoSchueler.ID, k.fachID).istSchriftlich ? "S" : "M";
-					dto.idsUnterrichteAlternativkurse = "";
-					dto.kuerzelAlternativkurse = "";
-					dto.prioAlternativkurse = "";
-					String tilde = "";
-					for (final GostBlockungKurs ak : datenManager.kursGetListeByFachUndKursart(k.fachID, k.kursart)) {
-						final Long idUnterrichtAlternativ = mapKursZuUnterricht.get(ak.id);
-						dto.idsUnterrichteAlternativkurse += tilde + idUnterrichtAlternativ;
-						dto.kuerzelAlternativkurse += tilde + datenManager.kursGetName(ak.id);
-						dto.prioAlternativkurse += tilde + "1";
-						if ("".equals(tilde))
-							tilde = "~";
-					}
-					gpu015.add(dto);
-				}
-			}
-			csvKurswahlen = UntisGPU015.writeCSV(gpu015);
-		} catch (final Exception e) {
-			logger.logLn("Fehler beim Erstellen der Datei GPU015.txt.");
-			logger.modifyIndent(-2);
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen der Datei GPU015.txt.");
-		}
-		logger.logLn("OK");
-		logger.modifyIndent(-2);
-
-		logger.logLn("-> Erstelle Liste der Schienen für GPU019.txt für die Kurs-Schienen-Zuordnung");
-		final String csvSchienen;
-		logger.modifyIndent(2);
-		try {
-			final @NotNull List<@NotNull GostBlockungKurs> kurse = datenManager.kursGetListeSortiertNachKursartFachNummer();
-			final List<UntisGPU019> gpu019 = new ArrayList<>();
-			for (final @NotNull GostBlockungKurs kurs : kurse) {
-				final UntisGPU019 dto = new UntisGPU019();
-				// TODO evtl. Multi-Schienen-Kurse unterstützen
-				final Set<GostBlockungsergebnisSchiene> schienen = ergebnisManager.getOfKursSchienenmenge(kurs.id);
-				final GostBlockungsergebnisSchiene schiene = schienen.iterator().next();
-				dto.name = datenManager.schieneGet(schiene.id).bezeichnung;
-				dto.art = "2";
-				dto.anzahlWochenstunden = kurs.wochenstunden;
-				dto.idUnterricht = mapKursZuUnterricht.get(kurs.id);
-				dto.fach = datenManager.kursGetName(kurs.id);
-				dto.klassen = datenManager.getHalbjahr().jahrgang;
-				gpu019.add(dto);
-			}
-			csvSchienen = UntisGPU019.writeCSV(gpu019);
-		} catch (final Exception e) {
-			logger.logLn("Fehler beim Erstellen der Datei GPU019.txt.");
-			logger.modifyIndent(-2);
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen der Datei GPU019.txt.");
-		}
-		logger.logLn("OK");
-		logger.modifyIndent(-2);
-
-		logger.logLn("-> Erzeuge den Zip-File mit den vier GPU-Dateien...");
-		logger.modifyIndent(2);
-		final String zipname = "BlockungExportUntis.zip";
-		final byte[] zipdata;
-		try {
-			try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-				try (ZipOutputStream zos = new ZipOutputStream(baos)) {
-					zos.putNextEntry(new ZipEntry("GPU002.txt"));
-					zos.write(csvUnterrichte.getBytes(StandardCharsets.UTF_8));
-					zos.closeEntry();
-					baos.flush();
-					zos.putNextEntry(new ZipEntry("GPU010.txt"));
-					zos.write(csvSchueler.getBytes(StandardCharsets.UTF_8));
-					zos.closeEntry();
-					baos.flush();
-					zos.putNextEntry(new ZipEntry("GPU015.txt"));
-					zos.write(csvKurswahlen.getBytes(StandardCharsets.UTF_8));
-					zos.closeEntry();
-					baos.flush();
-					zos.putNextEntry(new ZipEntry("GPU019.txt"));
-					zos.write(csvSchienen.getBytes(StandardCharsets.UTF_8));
-					zos.closeEntry();
-					baos.flush();
-				}
-				zipdata = baos.toByteArray();
-			}
+			inputUnterrichte = UntisGPU002.readCSV(params.strings.getFirst().getBytes(StandardCharsets.UTF_8));
 		} catch (final IOException e) {
-			logger.logLn("Fehler beim Erstellen der Zip-Datei.");
-			logger.modifyIndent(-2);
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen der Zip-Datei");
+			throw new ApiOperationException(Status.BAD_REQUEST, e, "Die übergebene GPU002 konnte nicht gelesen werden. Überprüfen Sie das Dateiformat.");
 		}
-		logger.logLn("Zip-Datei wurde erstellt.");
-		logger.modifyIndent(-2);
-		return Response.ok(zipdata).header("Content-Disposition", "attachment; filename=\"" + zipname + "\"").build();
+		final HashMap2D<String, String, List<UntisGPU002>> mapUnterrichte = getMapUntisGPU002ByKlasseAndFach(inputUnterrichte);
+		long idUnterrichtStart = inputUnterrichte.stream().map(u -> u.idUnterricht).max(Long::compare).orElse(1L);
+		// Iteriere durch die übergebenen Blockungsergebnisse und erzeuge die jeweiligen Datensätze für die GPUs
+		final List<UntisGPU002> neueUnterrichte = new ArrayList<>();
+		final List<UntisGPU015> gpu015 = new ArrayList<>();
+		final List<UntisGPU019> gpu019 = new ArrayList<>();
+		logger.logLn("Lade die Blockungsergebnisse aus der Datenbank und erzeuge die Datensätze für die GPU-Dateien... ");
+		for (final Long idBlockungsergebnis : params.numbers) {
+			if (idBlockungsergebnis == null) {
+				logger.logLn("[Fehler] Null ist für IDs von Blockungsergebnissen unzulässig.");
+				throw new ApiOperationException(Status.BAD_REQUEST, "Null-Werte sind für IDs von Bloockungsergebnissen nicht zulässig.");
+			}
+
+			// Lade die Blockungsergebnisse aus der Datenbank
+			logger.log("Lade die Blockungsergebnisse mit der ID %d... ".formatted(idBlockungsergebnis));
+			final GostBlockungsergebnisManager ergebnisManager;
+			try {
+				ergebnisManager = DataGostBlockungsergebnisse.getErgebnismanagerFromID(conn, idBlockungsergebnis);
+			} catch (final Exception e) {
+				logger.logLn(0, "[Fehler]");
+				if (e instanceof final ApiOperationException aoe) {
+					logger.logLn(aoe.getMessage());
+					logger.modifyIndent(-2);
+					throw aoe;
+				}
+				logger.modifyIndent(-2);
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Unerwarteter Fehler beim Einlesen der Blockung");
+			}
+			logger.logLn("[OK]");
+
+			// Lade die Schülerinformationen aus der Datenbank
+			logger.log("Lade die Informationen zu den Schülern der Blockung aus der Datenbank... ");
+			final List<Schueler> schueler = ergebnisManager.getParent().schuelerGetListe();
+			final List<Long> idsSchueler = schueler.stream().map(s -> s.id).toList();
+			if (idsSchueler.isEmpty()) {
+				logger.logLn("Keine Schüler in der Blockung vorhanden. Der Export wird abgebrochen.");
+				logger.modifyIndent(-2);
+				throw new ApiOperationException(Status.NOT_FOUND, "Keine Schüler in der Blockung vorhanden.");
+			}
+			final List<DTOSchueler> dtosSchueler = conn.queryByKeyList(DTOSchueler.class, idsSchueler);
+			if (dtosSchueler.size() != idsSchueler.size()) {
+				logger.logLn("Es konnten nicht alle Schüler der Blockung in der Datenbank gefunden werden. Der Export wird abgebrochen.");
+				logger.modifyIndent(-2);
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Es konnten nicht alle Schüler der Blockung in der Datenbank gefunden werden.");
+			}
+			logger.modifyIndent(-2);
+
+			// Prüfe, ob die Unterrichte bereits in der übergebenen GPU002 vorhanden sind und lege ggf. neue Unterrichte an.
+			logger.logLn("-> Erstelle Liste der Unterrichte für GPU002.txt");
+			logger.modifyIndent(2);
+			final @NotNull Map<@NotNull Long, @NotNull Long> mapKursZuUnterricht = new HashMap<>();
+			try {
+				idUnterrichtStart = getGPU002ForBlockung(schuljahresabschnitt.schuljahr, idUnterrichtStart, ergebnisManager, neueUnterrichte, mapUnterrichte,
+						mapKursZuUnterricht);
+			} catch (final Exception e) {
+				logger.logLn("Fehler beim Erstellen der Datei GPU002.txt.");
+				logger.modifyIndent(-2);
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen der Datei GPU002.txt.");
+			}
+			logger.logLn("OK");
+			logger.modifyIndent(-2);
+
+			logger.logLn("-> Erstelle Liste der Kurswahlen für GPU015.txt");
+			logger.modifyIndent(2);
+			try {
+				getGPU015ForBlockung(dtosSchueler, idVariante, ergebnisManager, gpu015, mapKursZuUnterricht);
+			} catch (final Exception e) {
+				logger.logLn("Fehler beim Erstellen der Datei GPU015.txt.");
+				logger.modifyIndent(-2);
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen der Datei GPU015.txt.");
+			}
+			logger.logLn("OK");
+			logger.modifyIndent(-2);
+
+			logger.logLn("-> Erstelle Liste der Schienen für GPU019.txt für die Kurs-Schienen-Zuordnung");
+			logger.modifyIndent(2);
+			try {
+				getGPU019ForBlockung(ergebnisManager, gpu019, mapKursZuUnterricht);
+			} catch (final Exception e) {
+				logger.logLn("Fehler beim Erstellen der Datei GPU019.txt.");
+				logger.modifyIndent(-2);
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen der Datei GPU019.txt.");
+			}
+			logger.logLn("OK");
+			logger.modifyIndent(-2);
+		}
+		try {
+			final List<String> daten = List.of(UntisGPU002.writeCSV(neueUnterrichte), UntisGPU015.writeCSV(gpu015), UntisGPU019.writeCSV(gpu019));
+			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		} catch (final IOException e) {
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Unerwarteter Fehler beim Serialisieren der GPU-Dateien.");
+		}
 	}
 
 }

@@ -320,6 +320,7 @@ export { AVLSet } from './core/adt/set/AVLSet';
 export { MinHeap } from './core/adt/tree/MinHeap';
 export { MinHeapIterator } from './core/adt/tree/MinHeapIterator';
 export { BenutzerKennwort } from './core/data/BenutzerKennwort';
+export { LongAndStringLists } from './core/data/LongAndStringLists';
 export { SimpleOperationResponse } from './core/data/SimpleOperationResponse';
 export { AbschlussErgebnis } from './core/data/abschluss/AbschlussErgebnis';
 export { AbschlussErgebnisBerufsbildend } from './core/data/abschluss/AbschlussErgebnisBerufsbildend';

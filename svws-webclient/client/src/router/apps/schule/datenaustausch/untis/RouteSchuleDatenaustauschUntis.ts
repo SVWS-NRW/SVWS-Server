@@ -4,7 +4,6 @@ import type { RouteApp} from "~/router/apps/RouteApp";
 import { RouteDataSchuleDatenaustauschUntis } from "./RouteDataSchuleDatenaustauschUntis";
 import { routeSchuleDatenaustauschUntisStundenplan } from "./RouteSchuleDatenaustauschUntisStundenplan";
 import { routeSchuleDatenaustauschUntisRaeume } from "./RouteSchuleDatenaustauschUntisRaeume";
-import { routeSchuleDatenaustauschUntisBlockungen } from "./RouteSchuleDatenaustauschUntisBlockungen";
 import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
 import { RouteTabNode } from "~/router/RouteTabNode";
 import { routeSchuleDatenaustauschUntisExporte } from "./RouteSchuleDatenaustauschUntisExporte";
@@ -26,7 +25,6 @@ export class RouteSchuleDatenaustauschUntis extends RouteTabNode<RouteDataSchule
 		super.children = [
 			routeSchuleDatenaustauschUntisStundenplan,
 			routeSchuleDatenaustauschUntisRaeume,
-			routeSchuleDatenaustauschUntisBlockungen,
 			routeSchuleDatenaustauschUntisExporte,
 		];
 		super.defaultChild = routeSchuleDatenaustauschUntisStundenplan;
@@ -35,4 +33,3 @@ export class RouteSchuleDatenaustauschUntis extends RouteTabNode<RouteDataSchule
 }
 
 export const routeSchuleDatenaustauschUntis = new RouteSchuleDatenaustauschUntis();
-

@@ -114,6 +114,7 @@ import { LehrerRechtsverhaeltnisKatalogEintrag } from '../asd/data/lehrer/Lehrer
 import { LehrerStammdaten } from '../asd/data/lehrer/LehrerStammdaten';
 import { LehrerZugangsgrundKatalogEintrag } from '../asd/data/lehrer/LehrerZugangsgrundKatalogEintrag';
 import { List } from '../java/util/List';
+import { LongAndStringLists } from '../core/data/LongAndStringLists';
 import { NationalitaetenKatalogEintrag } from '../core/data/schule/NationalitaetenKatalogEintrag';
 import { NoteKatalogEintrag } from '../asd/data/NoteKatalogEintrag';
 import { OAuth2ClientSecret } from '../core/data/oauth2/OAuth2ClientSecret';
@@ -1982,20 +1983,14 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode exportUntisKursblockungAsZip für den Zugriff auf die URL https://{hostname}/db/{schema}/datenaustausch/untis/export/blockung/{ergebnisid : \d+}/zip/{unterrichtid : \d+}/{sidvariante : \d+}
+	 * Implementierung der POST-Methode exportUntisBlockungGPU002GPU015GPU019 für den Zugriff auf die URL https://{hostname}/db/{schema}/datenaustausch/untis/export/blockung/{id : \d+}/{sidvariante : \d+}
 	 *
-	 * Liefert einen Export für das Blockungsergebnis mit der angegebenen ID für Untis ein einer Zip-Datei.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Exportieren besitzt.
+	 * Liefert einen Export für die Blockungsergebnisse als Liste mit drei Strings (GPU002.txt, GPU015.txt, GPU019.txt).Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Exportieren besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Das exportierten Blockungsergebnis in einer Zip-Datei
-	 *     - Mime-Type: application/zip
-	 *     - Rückgabe-Typ: ApiFile
-	 *   Code 400: Die Angaben zur ersten Unterrichts-ID für Untis sind ungültig.
+	 *   Code 200: Die Liste mit den Daten der drei GPUs
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um das Blockungsergebnis zu exportieren.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *     - Rückgabe-Typ: List<String>
 	 *   Code 404: Es wurden nicht alle benötigten Daten für den Export gefunden.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: SimpleOperationResponse
@@ -2003,21 +1998,24 @@ export class ApiServer extends BaseApi {
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *
+	 * @param {LongAndStringLists} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} ergebnisid - der Pfad-Parameter ergebnisid
-	 * @param {number} unterrichtid - der Pfad-Parameter unterrichtid
+	 * @param {number} id - der Pfad-Parameter id
 	 * @param {number} sidvariante - der Pfad-Parameter sidvariante
 	 *
-	 * @returns Das exportierten Blockungsergebnis in einer Zip-Datei
+	 * @returns Die Liste mit den Daten der drei GPUs
 	 */
-	public async exportUntisKursblockungAsZip(schema : string, ergebnisid : number, unterrichtid : number, sidvariante : number) : Promise<ApiFile> {
-		const path = "/db/{schema}/datenaustausch/untis/export/blockung/{ergebnisid : \\d+}/zip/{unterrichtid : \\d+}/{sidvariante : \\d+}"
+	public async exportUntisBlockungGPU002GPU015GPU019(data : LongAndStringLists, schema : string, id : number, sidvariante : number) : Promise<List<string>> {
+		const path = "/db/{schema}/datenaustausch/untis/export/blockung/{id : \\d+}/{sidvariante : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{ergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, ergebnisid.toString())
-			.replace(/{unterrichtid\s*(:[^{}]+({[^{}]+})*)?}/g, unterrichtid.toString())
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
 			.replace(/{sidvariante\s*(:[^{}]+({[^{}]+})*)?}/g, sidvariante.toString());
-		const result : ApiFile = await super.postJSONtoZIP(path, null);
-		return result;
+		const body : string = LongAndStringLists.transpilerToJSON(data);
+		const result : string = await super.postJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<string>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(JSON.parse(text).toString()); });
+		return ret;
 	}
 
 

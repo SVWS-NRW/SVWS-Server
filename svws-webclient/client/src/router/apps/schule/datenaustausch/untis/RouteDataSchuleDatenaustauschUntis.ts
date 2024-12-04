@@ -1,33 +1,15 @@
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { routeSchuleDatenaustauschUntisStundenplan } from "./RouteSchuleDatenaustauschUntisStundenplan";
-import type { ApiFile, GostBlockungListeneintrag, GostBlockungsergebnis, GostJahrgang, List, GostHalbjahr } from "@core";
-import { DeveloperNotificationException, OpenApiError, SimpleOperationResponse, GostBlockungsdatenManager, GostBlockungsdaten, GostFaecherManager, ArrayList } from "@core";
-import { RouteManager } from "~/router/RouteManager";
-import { routeSchuleDatenaustauschUntisBlockungen } from "./RouteSchuleDatenaustauschUntisBlockungen";
+import type { GostBlockungListeneintrag, List} from "@core";
+import { GostHalbjahr, LongAndStringLists } from "@core";
+import { OpenApiError, SimpleOperationResponse } from "@core";
 import { routeApp } from "~/router/apps/RouteApp";
 
 
-interface RouteStateDatenaustauschUntis extends RouteStateInterface {
-	abiturjahrgang: GostJahrgang | undefined;
-	halbjahr: GostHalbjahr | undefined;
-	blockung: GostBlockungListeneintrag | undefined;
-	ergebnis: GostBlockungsergebnis | undefined;
-	mapAbiturjahrgaenge: Map<number, GostJahrgang>;
-	mapBlockungen: Map<number, Map<number, Map<number, GostBlockungListeneintrag>>>;
-	mapBlockung: Map<number, GostBlockungsdaten>;
-	mapErgebnisse: Map<number, List<GostBlockungsergebnis>>;
-}
+type RouteStateDatenaustauschUntis = RouteStateInterface
 
 const defaultState = <RouteStateDatenaustauschUntis> {
-	abiturjahrgang: undefined,
-	halbjahr: undefined,
-	blockung: undefined,
-	ergebnis: undefined,
-	mapAbiturjahrgaenge: new Map(),
-	mapBlockungen: new Map(),
-	mapBlockung: new Map(),
-	mapErgebnisse: new Map(),
 	view: routeSchuleDatenaustauschUntisStundenplan,
 };
 
@@ -36,172 +18,6 @@ export class RouteDataSchuleDatenaustauschUntis extends RouteData<RouteStateDate
 
 	public constructor() {
 		super(defaultState);
-	}
-
-	public get mapAbiturjahrgaenge(): Map<number, GostJahrgang> {
-		return this._state.value.mapAbiturjahrgaenge;
-	}
-
-	public get abiturjahrgang(): GostJahrgang | undefined {
-		return this._state.value.abiturjahrgang;
-	}
-
-	public get halbjahr(): GostHalbjahr | undefined {
-		return this._state.value.halbjahr;
-	}
-
-	public get blockung(): GostBlockungListeneintrag | undefined {
-		return this._state.value.blockung;
-	}
-
-	public get mapBlockung(): Map<number, GostBlockungsdaten> {
-		return this._state.value.mapBlockung;
-	}
-
-	public get ergebnis(): GostBlockungsergebnis | undefined {
-		return this._state.value.ergebnis;
-	}
-
-	public get listErgebnisse(): List<GostBlockungsergebnis> {
-		return (this.blockung && this.mapErgebnisse.get(this.blockung.id)) || new ArrayList();
-	}
-
-	public get mapBlockungen(): Map<number, Map<number, Map<number, GostBlockungListeneintrag>>> {
-		return this._state.value.mapBlockungen;
-	}
-
-	public get listBlockungen(): List<GostBlockungListeneintrag> {
-		const abiturjahr = this.abiturjahrgang?.abiturjahr;
-		const halbjahr = this.halbjahr?.id;
-		const list = new ArrayList<GostBlockungListeneintrag>();
-		if (abiturjahr === undefined || halbjahr === undefined)
-			return list;
-		const mapJahrgang = this.mapBlockungen.get(abiturjahr);
-		if (mapJahrgang === undefined)
-			return list;
-		const mapHalbjahr = mapJahrgang.get(halbjahr);
-		if (mapHalbjahr === undefined)
-			return list;
-		for (const b of mapHalbjahr.values())
-			list.add(b);
-		return list;
-	}
-
-	public get mapErgebnisse(): Map<number, List<GostBlockungsergebnis>> {
-		return this._state.value.mapErgebnisse;
-	}
-
-	public async cleanup() {
-		this.setPatchedDefaultState({ mapAbiturjahrgaenge: this.mapAbiturjahrgaenge });
-	}
-
-	public async ladeAbiturjahrgaenge() {
-		const listAbiturjahrgaenge = await api.server.getGostAbiturjahrgaengeFuerAbschnitt(api.schema, api.schuleStammdaten.idSchuljahresabschnitt);
-		const mapAbiturjahrgaenge = new Map<number, GostJahrgang>();
-		for (const l of listAbiturjahrgaenge)
-			mapAbiturjahrgaenge.set(l.abiturjahr, l);
-		this.setPatchedDefaultState({ mapAbiturjahrgaenge });
-	}
-
-	public gotoAbiturjahrgang = async (abiturjahr: number) => RouteManager.doRoute(routeSchuleDatenaustauschUntisBlockungen.getRoute({ abiturjahr: abiturjahr }));
-
-	public gotoHalbjahr = async (idHalbjahr: number) => {
-		const abiturjahrgang = this.abiturjahrgang;
-		if (abiturjahrgang === undefined)
-			return;
-		return RouteManager.doRoute(routeSchuleDatenaustauschUntisBlockungen.getRoute({ abiturjahr: abiturjahrgang.abiturjahr, halbjahr: idHalbjahr }));
-	}
-
-	public gotoBlockung = async (idBlockung: number) => {
-		const abiturjahrgang = this.abiturjahrgang;
-		const halbjahr = this.halbjahr;
-		if (abiturjahrgang === undefined || halbjahr === undefined)
-			return;
-		return RouteManager.doRoute(routeSchuleDatenaustauschUntisBlockungen.getRoute({ abiturjahr: abiturjahrgang.abiturjahr, halbjahr: halbjahr.id, idblockung: idBlockung }));
-	}
-
-	public gotoErgebnis = async (idErgebnis: number) => {
-		const abiturjahrgang = this.abiturjahrgang;
-		const halbjahr = this.halbjahr;
-		const blockung = this.blockung;
-		if (abiturjahrgang === undefined || halbjahr === undefined || blockung === undefined)
-			return;
-		return RouteManager.doRoute(routeSchuleDatenaustauschUntisBlockungen.getRoute({abiturjahr: abiturjahrgang.abiturjahr, halbjahr: halbjahr.id, idblockung: blockung.id, idergebnis: idErgebnis }));
-	}
-
-	public setAbiturjahrgang = async (abiturjahrgang: GostJahrgang) => {
-		const mapAbiturjahr = this.mapBlockungen.get(abiturjahrgang.abiturjahr);
-		if (mapAbiturjahr === undefined)
-			this.mapBlockungen.set(abiturjahrgang.abiturjahr, new Map());
-		this.setPatchedState({abiturjahrgang, halbjahr: undefined, mapBlockungen: this.mapBlockungen, blockung: undefined, ergebnis: undefined})
-	}
-
-	public setHalbjahr = async (halbjahr: GostHalbjahr) => {
-		const abiturjahr = this.abiturjahrgang?.abiturjahr;
-		if (abiturjahr === undefined)
-			throw new DeveloperNotificationException("Es kann kein Halbjahr ausgewählt werden, wenn zuvor kein Abiturjahrgang ausgewählt wurde.");
-		api.status.start();
-		const mapAbiturjahr = this.mapBlockungen.get(abiturjahr);
-		let blockung = undefined;
-		if (mapAbiturjahr) {
-			const map = mapAbiturjahr.get(halbjahr.id)
-			if (!map) {
-				const listBlockungen = await api.server.getGostAbiturjahrgangBlockungsliste(api.schema, abiturjahr, halbjahr.id);
-				const mapBlockungen: Map<number, GostBlockungListeneintrag> = new Map();
-				if (listBlockungen.size() > 0) {
-					blockung = listBlockungen.getFirst();
-					for (const b of listBlockungen) {
-						mapBlockungen.set(b.id, b);
-						if (b.istAktiv)
-							blockung = b;
-					}
-				}
-				mapAbiturjahr.set(halbjahr.id, mapBlockungen);
-			} else {
-				if (map.size > 0) {
-					blockung = map.values().next().value;
-					for (const b of map.values())
-						if (b.istAktiv)
-							blockung = b;
-				}
-			}
-		}
-		api.status.stop();
-		this.setPatchedState({ halbjahr, mapBlockungen: this.mapBlockungen, blockung, ergebnis: undefined });
-		if (blockung !== undefined)
-			await this.setBlockung(blockung);
-	}
-
-	setBlockung = async (blockung: GostBlockungListeneintrag) => {
-		if (this.abiturjahrgang === undefined)
-			throw new DeveloperNotificationException("Es kann keine Blockung ausgewählt werden, wenn zuvor kein Abiturjahrgang ausgewählt wurde.");
-		api.status.start();
-		let ergebnis = undefined;
-		if (!this.mapBlockung.get(blockung.id)) {
-			const blockungsdatenGzip = await api.server.getGostBlockungGZip(api.schema, blockung.id);
-			const blockungsdatenBlob = await new Response(blockungsdatenGzip.data.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
-			const blockungsdaten = GostBlockungsdaten.transpilerFromJSON(await blockungsdatenBlob.text());
-			const listFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, this.abiturjahrgang.abiturjahr);
-			const faecherManager = new GostFaecherManager(this.abiturjahrgang.abiturjahr, listFaecher);
-			const getDatenmanager = new GostBlockungsdatenManager(blockungsdaten, faecherManager);
-			const ergebnisse = getDatenmanager.ergebnisGetListeSortiertNachBewertung();
-			this.mapErgebnisse.set(blockung.id, ergebnisse);
-			this.mapBlockung.set(blockung.id, blockungsdaten);
-		}
-		const ergebnisse = this.mapErgebnisse.get(blockung.id);
-		if (ergebnisse && (ergebnisse.size() > 0)) {
-			ergebnis = ergebnisse.getFirst();
-			for (const e of ergebnisse) {
-				if (e.istAktiv)
-					ergebnis = e;
-			}
-		}
-		api.status.stop();
-		this.setPatchedState({ blockung, ergebnis, mapErgebnisse: this.mapErgebnisse, mapBlockung: this.mapBlockung });
-	}
-
-	public setErgebnis = async (ergebnis: GostBlockungsergebnis) => {
-		this.setPatchedState({ergebnis})
 	}
 
 	public async importUntisGPU(apimethod : () => Promise<SimpleOperationResponse>) : Promise<SimpleOperationResponse> {
@@ -228,48 +44,61 @@ export class RouteDataSchuleDatenaustauschUntis extends RouteData<RouteStateDate
 		return await this.importUntisGPU(() => api.server.importUntisRaeumeGPU005(formData, api.schema));
 	}
 
-	exportUntisBlockungenZIP = async (formData: FormData): Promise<ApiFile> => {
-		const ergebnisID = formData.get('ergebnisID')?.toString();
-		const unterrichtID = formData.get('unterrichtID')?.toString();
-		const sidvariante = formData.get('sidvariante')?.toString();
-		if ((typeof ergebnisID === 'string') && (typeof unterrichtID === 'string') && (typeof sidvariante === 'string'))
-			return await api.server.exportUntisKursblockungAsZip(api.schema, parseInt(ergebnisID), parseInt(unterrichtID), parseInt(sidvariante));
-		throw new DeveloperNotificationException(`Es konnte keine Exportdatei für die ergebnisID ${ergebnisID} und unterrichtID ${unterrichtID} erstellt werden`);
-	}
-
-	exportUntisKlassenGPU003 = async(): Promise<string> => {
+	exportUntisKlassenGPU003 = async(): Promise<string[]> => {
 		const apifile = await api.server.exportUntisKlassenGPU003(api.schema, routeApp.data.aktAbschnitt.value.id);
-		return apifile.data.text();
+		return [ await apifile.data.text() ];
 	}
 
-	exportUntisLehrerGPU004 = async(): Promise<string> => {
+	exportUntisLehrerGPU004 = async(): Promise<string[]> => {
 		const apifile = await api.server.exportUntisLehrerGPU004(api.schema, routeApp.data.aktAbschnitt.value.id);
-		return apifile.data.text();
+		return [ await apifile.data.text() ];
 	}
 
-	exportUntisFaecherGPU006 = async(): Promise<string> => {
+	exportUntisFaecherGPU006 = async(): Promise<string[]> => {
 		const apifile = await api.server.exportUntisFaecherGPU006(api.schema, routeApp.data.aktAbschnitt.value.id);
-		return apifile.data.text();
+		return [ await apifile.data.text() ];
 	}
 
-	exportUntisSchuelerGPU010 = async(sidvariante: number): Promise<string> => {
+	exportUntisSchuelerGPU010 = async(sidvariante: number): Promise<string []> => {
 		const apifile = await api.server.exportUntisSchuelerGPU010(api.schema, routeApp.data.aktAbschnitt.value.id, sidvariante);
-		return apifile.data.text();
+		return [ await apifile.data.text() ];
 	}
 
-	exportUntisFachwahlenGPU015 = async(sidvariante: number, gpu002 : string): Promise<string> => {
+	exportUntisFachwahlenGPU015 = async(sidvariante: number, gpu002 : string): Promise<string[]> => {
 		const apifile = await api.server.exportUntisFachwahlenGPU015(gpu002, api.schema, routeApp.data.aktAbschnitt.value.id, sidvariante);
-		return apifile.data.text();
+		return [ await apifile.data.text() ];
 	}
 
-	exportUntisKlausurenGPU017 = async(sidvariante: number, gpu002 : string): Promise<string> => {
+	exportUntisKlausurenGPU017 = async(sidvariante: number, gpu002 : string): Promise<string[]> => {
 		const apifile = await api.server.exportUntisKlausurenGPU017(gpu002, api.schema, routeApp.data.aktAbschnitt.value.id, sidvariante);
-		return apifile.data.text();
+		return [ await apifile.data.text() ];
 	}
 
-	exportUntisSchienenGPU019 = async(gpu002 : string): Promise<string> => {
+	exportUntisSchienenGPU019 = async(gpu002 : string): Promise<string[]> => {
 		const apifile = await api.server.exportUntisSchienenGPU019(gpu002, api.schema, routeApp.data.aktAbschnitt.value.id);
-		return apifile.data.text();
+		return [ await apifile.data.text() ];
+	}
+
+	ladeBlockungslisten = async(abijahrgaenge : number[]): Promise<Array<List<GostBlockungListeneintrag>>> => {
+		// Bestimme zunächst die Blockungslisten für die übergebenen Abiturjahrgänge
+		const all = [];
+		const schuljahr = routeApp.data.aktAbschnitt.value.schuljahr;
+		const abschnitt = routeApp.data.aktAbschnitt.value.abschnitt;
+		for (const abiturjahr of abijahrgaenge) {
+			const idHalbjahr = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abiturjahr, schuljahr, abschnitt)?.id ?? null;
+			if (idHalbjahr !== null)
+				all.push(api.server.getGostAbiturjahrgangBlockungsliste(api.schema, abiturjahr, idHalbjahr));
+		}
+		return await Promise.all(all);
+	}
+
+	exportUntisBlockung = async(sidvariante: number, gpu002 : string, blockungsergebnisse : number[]): Promise<string[]> => {
+		const data = new LongAndStringLists();
+		const tmp = JSON.stringify(gpu002);
+		data.strings.add(tmp.substring(1, tmp.length-1));
+		for (const idBlockungsergegbnis of blockungsergebnisse)
+			data.numbers.add(idBlockungsergegbnis);
+		return[ ... await api.server.exportUntisBlockungGPU002GPU015GPU019(data, api.schema, routeApp.data.aktAbschnitt.value.id, sidvariante) ];
 	}
 
 }
