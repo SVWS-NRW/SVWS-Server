@@ -113,6 +113,9 @@ const iconPath = {
 	'error-warning-fill': { path: 'System', icon: 'error-warning-fill' }, // i-ri-error-warning-fill
 	'error-warning-line': { path: 'System', icon: 'error-warning-line' }, // i-ri-error-warning-line
 	'expand-height-line': { path: 'Arrows', icon: 'expand-height-line' }, // i-ri-expand-height-line
+	'expand-width-line': { path: 'Arrows', icon: 'expand-width-line' }, // i-ri-expand-width-line
+	'expand-right-line': { path: 'Arrows', icon: 'expand-right-line' }, // i-ri-expand-right-line
+	'contract-left-line': { path: 'Arrows', icon: 'contract-left-line' }, // i-ri-contract-left-line
 	'expand-up-down-fill': { path: 'Arrows', icon: 'expand-up-down-fill' }, // i-ri-expand-up-down-fill
 	'expand-up-down-line': { path: 'Arrows', icon: 'expand-up-down-line' }, // i-ri-expand-up-down-line
 	'eye-line': { path: 'System', icon: 'eye-line' }, // i-ri-eye-line

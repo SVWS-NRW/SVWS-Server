@@ -10,9 +10,6 @@
 									<span>Schiene</span>
 								</div>
 								<div class="flex flex-row gap-2">
-									<svws-ui-button type="transparent" size="small" @click="setBlockungstabelleHidden('schienen')" title="Schienen ausblenden">
-										<span class="icon i-ri-menu-fold-line" />
-									</svws-ui-button>
 									<svws-ui-button type="transparent" size="small" @click="setZeigeSchienenbezeichnungen(!zeigeSchienenbezeichnungen())" :title="zeigeSchienenbezeichnungen() ? 'Zeige nur die Schienenummer':'Zeige den vollständigen Schienennamen'">
 										<span v-if="zeigeSchienenbezeichnungen()" class="icon i-ri-text" />
 										<span v-else class="icon i-ri-expand-height-line" />
@@ -337,13 +334,21 @@
 				</template>
 			</svws-ui-table>
 		</template>
-		<div class="h-fit">
-			<button type="button" @click="toggleBlockungstabelle">
-				<template v-if="blockungstabelleHidden() === 'nichts'">
+		<div class="h-fit rounded-r-md border-r- border-t border-b -ml-5 pl-4 pt-2 flex flex-col gap-2 pr-2">
+			<button type="button" @click="blockungstabelleHidden() !== 'alles' ? setBlockungstabelleHidden('alles') : setBlockungstabelleHidden('nichts')">
+				<template v-if="blockungstabelleHidden() !== 'alles'">
 					<span class="icon i-ri-menu-fold-line inline-block" title="Kurstabelle ausblenden" />
 				</template>
 				<template v-else>
-					<span class="icon i-ri-menu-unfold-line inline-block" :title="blockungstabelleHidden() === 'schienen' ? 'Schienen einblenden' : 'Kurstabelle einblenden'" />
+					<span class="icon i-ri-menu-unfold-line inline-block" :title="'Kurstabelle einblenden'" />
+				</template>
+			</button>
+			<button v-if="blockungstabelleHidden() !== 'alles'" type="button" @click="blockungstabelleHidden() !== 'schienen' ? setBlockungstabelleHidden('schienen') : setBlockungstabelleHidden('nichts')">
+				<template v-if="blockungstabelleHidden() !== 'schienen'">
+					<span class="icon i-ri-contract-left-line inline-block" title="Schienen ausblenden" />
+				</template>
+				<template v-else>
+					<span class="icon i-ri-expand-right-line inline-block" :title="'Schienen einblenden'" />
 				</template>
 			</button>
 		</div>
