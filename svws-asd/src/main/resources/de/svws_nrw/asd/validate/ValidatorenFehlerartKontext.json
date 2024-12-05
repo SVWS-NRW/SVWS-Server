@@ -97,7 +97,7 @@
 			"gueltigBis": null
 		} ]
     }, {
-		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLehrerPersonalabschnittdaten",
+		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLehrerPersonalabschnittsdaten",
 		"historie": [ {
 			"zebras": true,
 			"svws": true,
@@ -108,7 +108,7 @@
 			"gueltigBis": null
 		} ]
     }, {
-		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLehrerPersonalabschnittdatenRechtsverhaeltnisGeburtsdatum",
+		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum",
 		"historie": [ {
 			"zebras": true,
 			"svws": true,
@@ -119,7 +119,7 @@
 			"gueltigBis": null
 		} ]
     }, {
-		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLehrerPersonalabschnittdatenPflichtstundensoll",
+		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll",
 		"historie": [ {
 			"zebras": true,
 			"svws": true,
