@@ -36,7 +36,7 @@ export default {
 			boxShadow,
 			spacing,
 			maxWidth,
-		}
+		},
 	},
 	variants: {
 		extend: {},

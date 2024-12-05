@@ -5,8 +5,8 @@ import { palette } from "./tailwind.colors.palette";
  * @returns {({opacityValue}: {opacityValue: string}) => string}
  */
 function withOpacity(cssVar) {
-	return ({opacityValue}) => {
-		if (opacityValue !== undefined) {
+	return ({ opacityValue }) => {
+		if (opacityValue !== '') {
 			return `rgba(var(${cssVar}), ${opacityValue})`;
 		}
 		return `rgb(var(${cssVar}))`;
@@ -79,7 +79,7 @@ const backgroundColor = {
 		'inverted': 'var(--color-bg-ui-inverted)',
 		'white': 'var(--color-bg-ui-white)',
 		'black': 'var(--color-bg-ui-black)',
-	}
+	},
 }
 
 const textColor = {
@@ -158,7 +158,7 @@ const textColor = {
 		'ondisabled-secondary': 'var(--color-text-ui-ondisabled-secondary)',
 		'white': 'var(--color-bg-ui-white)',
 		'black': 'var(--color-bg-ui-black)',
-	}
+	},
 }
 
 const borderColor = {
@@ -240,7 +240,7 @@ const borderColor = {
 		'gray': 'var(--color-bg-ui-gray)',
 		'dark-gray': 'var(--color-bg-ui-dark-gray)',
 		'black': 'var(--color-bg-ui-black)',
-	}
+	},
 }
 
 const accentColor = {
@@ -263,7 +263,7 @@ const accentColor = {
 		'oncaution': 'var(--color-accent-ui-oncaution)',
 		'onneutral': 'var(--color-accent-ui-onneutral)',
 		'ondisabled': 'var(--color-accent-ui-ondisabled)',
-	}
+	},
 }
 
 const ringColor = {
@@ -276,7 +276,7 @@ const ringColor = {
 		'warning': 'var(--color-ring-ui-warning)',
 		'caution': 'var(--color-ring-ui-caution)',
 		'neutral': 'var(--color-ring-ui-neutral)',
-	}
+	},
 }
 
 const opacity = {
