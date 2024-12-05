@@ -846,7 +846,6 @@ public class ListMap4DLongKeys<V> {
 		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map1234, key));
 	}
 
-
 	/**
 	 * Liefert das zugeordnete Element zum Mapping (key1), falls es genau eines gibt, andernfalls NULL.
 	 *
@@ -854,7 +853,7 @@ public class ListMap4DLongKeys<V> {
 	 *
 	 * @return das zugeordnete Element zum Mapping (key1), falls es genau eines gibt, andernfalls NULL.
 	 */
-	public V getSingleOrNull1(final long key1) {
+	public V getSingle1OrNull(final long key1) {
 		if (_map1 == null)
 			_map1 = _lazyLoad1();
 		return getSingleOrNullHelperLong(_map1, key1);
@@ -867,7 +866,7 @@ public class ListMap4DLongKeys<V> {
 	 *
 	 * @return das zugeordnete Element zum Mapping (key2), falls es genau eines gibt, andernfalls NULL.
 	 */
-	public V getSingleOrNull2(final long key2) {
+	public V getSingle2OrNull(final long key2) {
 		if (_map2 == null)
 			_map2 = _lazyLoad2();
 		return getSingleOrNullHelperLong(_map2, key2);
@@ -880,7 +879,7 @@ public class ListMap4DLongKeys<V> {
 	 *
 	 * @return das zugeordnete Element zum Mapping (key3), falls es genau eines gibt, andernfalls NULL.
 	 */
-	public V getSingleOrNull3(final long key3) {
+	public V getSingle3OrNull(final long key3) {
 		if (_map3 == null)
 			_map3 = _lazyLoad3();
 		return getSingleOrNullHelperLong(_map3, key3);
@@ -893,7 +892,7 @@ public class ListMap4DLongKeys<V> {
 	 *
 	 * @return das zugeordnete Element zum Mapping (key4), falls es genau eines gibt, andernfalls NULL.
 	 */
-	public V getSingleOrNull4(final long key4) {
+	public V getSingle4OrNull(final long key4) {
 		if (_map4 == null)
 			_map4 = _lazyLoad4();
 		return getSingleOrNullHelperLong(_map4, key4);
@@ -907,7 +906,7 @@ public class ListMap4DLongKeys<V> {
 	 *
 	 * @return das zugeordnete Element zum Mapping (key1, key2), falls es genau eines gibt, andernfalls NULL.
 	 */
-	public V getSingleOrNull12(final long key1, final long key2) {
+	public V getSingle12OrNull(final long key1, final long key2) {
 		if (_map12 == null)
 			_map12 = _lazyLoad12();
 		return getSingleOrNullHelperLongArray(_map12, new LongArrayKey(key1, key2));
@@ -921,7 +920,7 @@ public class ListMap4DLongKeys<V> {
 	 *
 	 * @return das zugeordnete Element zum Mapping (key1, key3), falls es genau eines gibt, andernfalls NULL.
 	 */
-	public V getSingleOrNull13(final long key1, final long key3) {
+	public V getSingle13OrNull(final long key1, final long key3) {
 		if (_map13 == null)
 			_map13 = _lazyLoad13();
 		return getSingleOrNullHelperLongArray(_map13, new LongArrayKey(key1, key3));
@@ -935,7 +934,7 @@ public class ListMap4DLongKeys<V> {
 	 *
 	 * @return das zugeordnete Element zum Mapping (key1, key4), falls es genau eines gibt, andernfalls NULL.
 	 */
-	public V getSingleOrNull14(final long key1, final long key4) {
+	public V getSingle14OrNull(final long key1, final long key4) {
 		if (_map14 == null)
 			_map14 = _lazyLoad14();
 		return getSingleOrNullHelperLongArray(_map14, new LongArrayKey(key1, key4));
@@ -949,7 +948,7 @@ public class ListMap4DLongKeys<V> {
 	 *
 	 * @return das zugeordnete Element zum Mapping (key2, key3), falls es genau eines gibt, andernfalls NULL.
 	 */
-	public V getSingleOrNull23(final long key2, final long key3) {
+	public V getSingle23OrNull(final long key2, final long key3) {
 		if (_map23 == null)
 			_map23 = _lazyLoad23();
 		return getSingleOrNullHelperLongArray(_map23, new LongArrayKey(key2, key3));
@@ -963,7 +962,7 @@ public class ListMap4DLongKeys<V> {
 	 *
 	 * @return das zugeordnete Element zum Mapping (key2, key4), falls es genau eines gibt, andernfalls NULL.
 	 */
-	public V getSingleOrNull24(final long key2, final long key4) {
+	public V getSingle24OrNull(final long key2, final long key4) {
 		if (_map24 == null)
 			_map24 = _lazyLoad24();
 		return getSingleOrNullHelperLongArray(_map24, new LongArrayKey(key2, key4));
@@ -977,7 +976,7 @@ public class ListMap4DLongKeys<V> {
 	 *
 	 * @return das zugeordnete Element zum Mapping (key3, key4), falls es genau eines gibt, andernfalls NULL.
 	 */
-	public V getSingleOrNull34(final long key3, final long key4) {
+	public V getSingle34OrNull(final long key3, final long key4) {
 		if (_map34 == null)
 			_map34 = _lazyLoad34();
 		return getSingleOrNullHelperLongArray(_map34, new LongArrayKey(key3, key4));
@@ -992,7 +991,7 @@ public class ListMap4DLongKeys<V> {
 	 *
 	 * @return das zugeordnete Element zum Mapping (key1, key2, key3), falls es genau eines gibt, andernfalls NULL.
 	 */
-	public V getSingleOrNull123(final long key1, final long key2, final long key3) {
+	public V getSingle123OrNull(final long key1, final long key2, final long key3) {
 		if (_map123 == null)
 			_map123 = _lazyLoad123();
 		return getSingleOrNullHelperLongArray(_map123, new LongArrayKey(key1, key2, key3));
@@ -1007,7 +1006,7 @@ public class ListMap4DLongKeys<V> {
 	 *
 	 * @return das zugeordnete Element zum Mapping (key1, key2, key4), falls es genau eines gibt, andernfalls NULL.
 	 */
-	public V getSingleOrNull124(final long key1, final long key2, final long key4) {
+	public V getSingle124OrNull(final long key1, final long key2, final long key4) {
 		if (_map124 == null)
 			_map124 = _lazyLoad124();
 		return getSingleOrNullHelperLongArray(_map124, new LongArrayKey(key1, key2, key4));
@@ -1022,7 +1021,7 @@ public class ListMap4DLongKeys<V> {
 	 *
 	 * @return das zugeordnete Element zum Mapping (key1, key3, key4), falls es genau eines gibt, andernfalls NULL.
 	 */
-	public V getSingleOrNull134(final long key1, final long key3, final long key4) {
+	public V getSingle134OrNull(final long key1, final long key3, final long key4) {
 		if (_map134 == null)
 			_map134 = _lazyLoad134();
 		return getSingleOrNullHelperLongArray(_map134, new LongArrayKey(key1, key3, key4));
@@ -1037,7 +1036,7 @@ public class ListMap4DLongKeys<V> {
 	 *
 	 * @return das zugeordnete Element zum Mapping (key2, key3, key4), falls es genau eines gibt, andernfalls NULL.
 	 */
-	public V getSingleOrNull234(final long key2, final long key3, final long key4) {
+	public V getSingle234OrNull(final long key2, final long key3, final long key4) {
 		if (_map234 == null)
 			_map234 = _lazyLoad234();
 		return getSingleOrNullHelperLongArray(_map234, new LongArrayKey(key2, key3, key4));
@@ -1053,7 +1052,7 @@ public class ListMap4DLongKeys<V> {
 	 *
 	 * @return das zugeordnete Element zum Mapping (key1, key2, key3, key4), falls es genau eines gibt, andernfalls NULL.
 	 */
-	public V getSingleOrNull1234(final long key1, final long key2, final long key3, final long key4) {
+	public V getSingle1234OrNull(final long key1, final long key2, final long key3, final long key4) {
 		return getSingleOrNullHelperLongArray(_map1234, new LongArrayKey(key1, key2, key3, key4));
 	}
 
@@ -1066,8 +1065,8 @@ public class ListMap4DLongKeys<V> {
 	 * @return das zugeordnete Element zum Mapping (key1), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
 	 * @throws DeveloperNotificationException falls nicht genau ein Element zugeordnet ist.
 	 */
-	public @NotNull V getSingleOrException1(final long key1) throws DeveloperNotificationException {
-		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingleOrNull1(key1));
+	public @NotNull V getSingle1OrException(final long key1) throws DeveloperNotificationException {
+		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingle1OrNull(key1));
 	}
 
 	/**
@@ -1078,8 +1077,8 @@ public class ListMap4DLongKeys<V> {
 	 * @return das zugeordnete Element zum Mapping (key2), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
 	 * @throws DeveloperNotificationException falls nicht genau ein Element zugeordnet ist.
 	 */
-	public @NotNull V getSingleOrException2(final long key2) throws DeveloperNotificationException {
-		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingleOrNull2(key2));
+	public @NotNull V getSingle2OrException(final long key2) throws DeveloperNotificationException {
+		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingle2OrNull(key2));
 	}
 
 	/**
@@ -1090,10 +1089,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return das zugeordnete Element zum Mapping (key3), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
 	 * @throws DeveloperNotificationException falls nicht genau ein Element zugeordnet ist.
 	 */
-	public @NotNull V getSingleOrException3(final long key3) throws DeveloperNotificationException {
-		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingleOrNull3(key3));
+	public @NotNull V getSingle3OrException(final long key3) throws DeveloperNotificationException {
+		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingle3OrNull(key3));
 	}
-
 
 	/**
 	 * Liefert das zugeordnete Element zum Mapping (key4), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
@@ -1103,8 +1101,8 @@ public class ListMap4DLongKeys<V> {
 	 * @return das zugeordnete Element zum Mapping (key4), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
 	 * @throws DeveloperNotificationException falls nicht genau ein Element zugeordnet ist.
 	 */
-	public @NotNull V getSingleOrException4(final long key4) throws DeveloperNotificationException {
-		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingleOrNull4(key4));
+	public @NotNull V getSingle4OrException(final long key4) throws DeveloperNotificationException {
+		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingle4OrNull(key4));
 	}
 
 	/**
@@ -1116,8 +1114,8 @@ public class ListMap4DLongKeys<V> {
 	 * @return das zugeordnete Element zum Mapping (key1, key2), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
 	 * @throws DeveloperNotificationException falls nicht genau ein Element zugeordnet ist.
 	 */
-	public @NotNull V getSingleOrException12(final long key1, final long key2) throws DeveloperNotificationException {
-		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingleOrNull12(key1, key2));
+	public @NotNull V getSingle12OrException(final long key1, final long key2) throws DeveloperNotificationException {
+		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingle12OrNull(key1, key2));
 	}
 
 	/**
@@ -1129,8 +1127,8 @@ public class ListMap4DLongKeys<V> {
 	 * @return das zugeordnete Element zum Mapping (key1, key3), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
 	 * @throws DeveloperNotificationException falls nicht genau ein Element zugeordnet ist.
 	 */
-	public @NotNull V getSingleOrException13(final long key1, final long key3) throws DeveloperNotificationException {
-		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingleOrNull13(key1, key3));
+	public @NotNull V getSingle13OrException(final long key1, final long key3) throws DeveloperNotificationException {
+		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingle13OrNull(key1, key3));
 	}
 
 	/**
@@ -1142,8 +1140,8 @@ public class ListMap4DLongKeys<V> {
 	 * @return das zugeordnete Element zum Mapping (key1, key4), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
 	 * @throws DeveloperNotificationException falls nicht genau ein Element zugeordnet ist.
 	 */
-	public @NotNull V getSingleOrException14(final long key1, final long key4) throws DeveloperNotificationException {
-		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingleOrNull14(key1, key4));
+	public @NotNull V getSingle14OrException(final long key1, final long key4) throws DeveloperNotificationException {
+		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingle14OrNull(key1, key4));
 	}
 
 	/**
@@ -1155,8 +1153,8 @@ public class ListMap4DLongKeys<V> {
 	 * @return das zugeordnete Element zum Mapping (key2, key3), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
 	 * @throws DeveloperNotificationException falls nicht genau ein Element zugeordnet ist.
 	 */
-	public @NotNull V getSingleOrException23(final long key2, final long key3) throws DeveloperNotificationException {
-		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingleOrNull23(key2, key3));
+	public @NotNull V getSingle23OrException(final long key2, final long key3) throws DeveloperNotificationException {
+		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingle23OrNull(key2, key3));
 	}
 
 	/**
@@ -1168,8 +1166,8 @@ public class ListMap4DLongKeys<V> {
 	 * @return das zugeordnete Element zum Mapping (key2, key4), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
 	 * @throws DeveloperNotificationException falls nicht genau ein Element zugeordnet ist.
 	 */
-	public @NotNull V getSingleOrException24(final long key2, final long key4) throws DeveloperNotificationException {
-		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingleOrNull24(key2, key4));
+	public @NotNull V getSingle24OrException(final long key2, final long key4) throws DeveloperNotificationException {
+		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingle24OrNull(key2, key4));
 	}
 
 	/**
@@ -1181,8 +1179,8 @@ public class ListMap4DLongKeys<V> {
 	 * @return das zugeordnete Element zum Mapping (key3, key4), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
 	 * @throws DeveloperNotificationException falls nicht genau ein Element zugeordnet ist.
 	 */
-	public @NotNull V getSingleOrException34(final long key3, final long key4) throws DeveloperNotificationException {
-		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingleOrNull34(key3, key4));
+	public @NotNull V getSingle34OrException(final long key3, final long key4) throws DeveloperNotificationException {
+		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingle34OrNull(key3, key4));
 	}
 
 	/**
@@ -1195,8 +1193,8 @@ public class ListMap4DLongKeys<V> {
 	 * @return das zugeordnete Element zum Mapping (key1, key2, key3), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
 	 * @throws DeveloperNotificationException falls nicht genau ein Element zugeordnet ist.
 	 */
-	public @NotNull V getSingleOrException123(final long key1, final long key2, final long key3) throws DeveloperNotificationException {
-		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingleOrNull123(key1, key2, key3));
+	public @NotNull V getSingle123OrException(final long key1, final long key2, final long key3) throws DeveloperNotificationException {
+		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingle123OrNull(key1, key2, key3));
 	}
 
 	/**
@@ -1209,8 +1207,8 @@ public class ListMap4DLongKeys<V> {
 	 * @return das zugeordnete Element zum Mapping (key1, key2, key4), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
 	 * @throws DeveloperNotificationException falls nicht genau ein Element zugeordnet ist.
 	 */
-	public @NotNull V getSingleOrException124(final long key1, final long key2, final long key4) throws DeveloperNotificationException {
-		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingleOrNull124(key1, key2, key4));
+	public @NotNull V getSingle124OrException(final long key1, final long key2, final long key4) throws DeveloperNotificationException {
+		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingle124OrNull(key1, key2, key4));
 	}
 
 	/**
@@ -1223,8 +1221,8 @@ public class ListMap4DLongKeys<V> {
 	 * @return das zugeordnete Element zum Mapping (key1, key3, key4), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
 	 * @throws DeveloperNotificationException falls nicht genau ein Element zugeordnet ist.
 	 */
-	public @NotNull V getSingleOrException134(final long key1, final long key3, final long key4) throws DeveloperNotificationException {
-		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingleOrNull134(key1, key3, key4));
+	public @NotNull V getSingle134OrException(final long key1, final long key3, final long key4) throws DeveloperNotificationException {
+		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingle134OrNull(key1, key3, key4));
 	}
 
 	/**
@@ -1237,8 +1235,8 @@ public class ListMap4DLongKeys<V> {
 	 * @return das zugeordnete Element zum Mapping (key2, key3, key4), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
 	 * @throws DeveloperNotificationException falls nicht genau ein Element zugeordnet ist.
 	 */
-	public @NotNull V getSingleOrException234(final long key2, final long key3, final long key4) throws DeveloperNotificationException {
-		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingleOrNull234(key2, key3, key4));
+	public @NotNull V getSingle234OrException(final long key2, final long key3, final long key4) throws DeveloperNotificationException {
+		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingle234OrNull(key2, key3, key4));
 	}
 
 	/**
@@ -1252,8 +1250,8 @@ public class ListMap4DLongKeys<V> {
 	 * @return das zugeordnete Element zum Mapping (key1, key2, key3, key4), falls es genau eines gibt, andernfalls wird eine Exception geworfen.
 	 * @throws DeveloperNotificationException falls nicht genau ein Element zugeordnet ist.
 	 */
-	public @NotNull V getSingleOrException1234(final long key1, final long key2, final long key3, final long key4) throws DeveloperNotificationException {
-		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingleOrNull1234(key1, key2, key3, key4));
+	public @NotNull V getSingle1234OrException(final long key1, final long key2, final long key3, final long key4) throws DeveloperNotificationException {
+		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingle1234OrNull(key1, key2, key3, key4));
 	}
 
 	/**
@@ -1418,4 +1416,217 @@ public class ListMap4DLongKeys<V> {
 	public @NotNull Set<LongArrayKey> keySet1234() {
 		return _map1234.keySet();
 	}
+
+	/**
+	 * Liefert eine Kopie der Liste aller zugeordneten Values zum Mapping (key1).
+	 *
+	 * @param key1   Der 1. Schlüssel.
+	 *
+	 * @return eine Liste aller Values in dieser Zuordnung.
+	 * @throws DeveloperNotificationException falls es kein Mapping gibt.
+	 */
+	public @NotNull List<V> get1OrException(final long key1) {
+		DeveloperNotificationException.ifTrue("Es keine Liste zugeordnet.", !containsKey1(key1));
+		return get1(key1);
+	}
+
+	/**
+	 * Liefert eine Kopie der Liste aller zugeordneten Values zum Mapping (key2).
+	 *
+	 * @param key2   Der 2. Schlüssel.
+	 *
+	 * @return eine Liste aller Values in dieser Zuordnung.
+	 * @throws DeveloperNotificationException falls es kein Mapping gibt.
+	 */
+	public @NotNull List<V> get2OrException(final long key2) {
+		DeveloperNotificationException.ifTrue("Es keine Liste zugeordnet.", !containsKey2(key2));
+		return get2(key2);
+	}
+
+	/**
+	 * Liefert eine Kopie der Liste aller zugeordneten Values zum Mapping (key3).
+	 *
+	 * @param key3   Der 3. Schlüssel.
+	 *
+	 * @return eine Liste aller Values in dieser Zuordnung.
+	 * @throws DeveloperNotificationException falls es kein Mapping gibt.
+	 */
+	public @NotNull List<V> get3OrException(final long key3) {
+		DeveloperNotificationException.ifTrue("Es keine Liste zugeordnet.", !containsKey3(key3));
+		return get3(key3);
+	}
+
+	/**
+	 * Liefert eine Kopie der Liste aller zugeordneten Values zum Mapping (key4).
+	 *
+	 * @param key4   Der 4. Schlüssel.
+	 *
+	 * @return eine Liste aller Values in dieser Zuordnung.
+	 * @throws DeveloperNotificationException falls es kein Mapping gibt.
+	 */
+	public @NotNull List<V> get4OrException(final long key4) {
+		DeveloperNotificationException.ifTrue("Es keine Liste zugeordnet.", !containsKey4(key4));
+		return get4(key4);
+	}
+
+	/**
+	 * Liefert eine Kopie der Liste aller zugeordneten Values zum Mapping (key1, key2).
+	 *
+	 * @param key1   Der 1. Schlüssel.
+	 * @param key2   Der 2. Schlüssel.
+	 *
+	 * @return eine Liste aller Values in dieser Zuordnung.
+	 * @throws DeveloperNotificationException falls es kein Mapping gibt.
+	 */
+	public @NotNull List<V> get12OrException(final long key1, final long key2) {
+		DeveloperNotificationException.ifTrue("Es keine Liste zugeordnet.", !containsKey12(key1, key2));
+		return get12(key1, key2);
+	}
+
+	/**
+	 * Liefert eine Kopie der Liste aller zugeordneten Values zum Mapping (key1, key3).
+	 *
+	 * @param key1   Der 1. Schlüssel.
+	 * @param key3   Der 3. Schlüssel.
+	 *
+	 * @return eine Liste aller Values in dieser Zuordnung.
+	 * @throws DeveloperNotificationException falls es kein Mapping gibt.
+	 */
+	public @NotNull List<V> get13OrException(final long key1, final long key3) {
+		DeveloperNotificationException.ifTrue("Es keine Liste zugeordnet.", !containsKey13(key1, key3));
+		return get13(key1, key3);
+	}
+
+	/**
+	 * Liefert eine Kopie der Liste aller zugeordneten Values zum Mapping (key1, key4).
+	 *
+	 * @param key1   Der 1. Schlüssel.
+	 * @param key4   Der 4. Schlüssel.
+	 *
+	 * @return eine Liste aller Values in dieser Zuordnung.
+	 * @throws DeveloperNotificationException falls es kein Mapping gibt.
+	 */
+	public @NotNull List<V> get14OrException(final long key1, final long key4) {
+		DeveloperNotificationException.ifTrue("Es keine Liste zugeordnet.", !containsKey14(key1, key4));
+		return get14(key1, key4);
+	}
+
+	/**
+	 * Liefert eine Kopie der Liste aller zugeordneten Values zum Mapping (key2, key3).
+	 *
+	 * @param key2   Der 2. Schlüssel.
+	 * @param key3   Der 3. Schlüssel.
+	 *
+	 * @return eine Liste aller Values in dieser Zuordnung.
+	 * @throws DeveloperNotificationException falls es kein Mapping gibt.
+	 */
+	public @NotNull List<V> get23OrException(final long key2, final long key3) {
+		DeveloperNotificationException.ifTrue("Es keine Liste zugeordnet.", !containsKey23(key2, key3));
+		return get23(key2, key3);
+	}
+
+	/**
+	 * Liefert eine Kopie der Liste aller zugeordneten Values zum Mapping (key2, key4).
+	 *
+	 * @param key2   Der 2. Schlüssel.
+	 * @param key4   Der 4. Schlüssel.
+	 *
+	 * @return eine Liste aller Values in dieser Zuordnung.
+	 * @throws DeveloperNotificationException falls es kein Mapping gibt.
+	 */
+	public @NotNull List<V> get24OrException(final long key2, final long key4) {
+		DeveloperNotificationException.ifTrue("Es keine Liste zugeordnet.", !containsKey24(key2, key4));
+		return get24(key2, key4);
+	}
+
+	/**
+	 * Liefert eine Kopie der Liste aller zugeordneten Values zum Mapping (key3, key4).
+	 *
+	 * @param key3   Der 3. Schlüssel.
+	 * @param key4   Der 4. Schlüssel.
+	 *
+	 * @return eine Liste aller Values in dieser Zuordnung.
+	 * @throws DeveloperNotificationException falls es kein Mapping gibt.
+	 */
+	public @NotNull List<V> get34OrException(final long key3, final long key4) {
+		DeveloperNotificationException.ifTrue("Es keine Liste zugeordnet.", !containsKey34(key3, key4));
+		return get34(key3, key4);
+	}
+
+	/**
+	 * Liefert eine Kopie der Liste aller zugeordneten Values zum Mapping (key1, key2, key3).
+	 *
+	 * @param key1   Der 1. Schlüssel.
+	 * @param key2   Der 2. Schlüssel.
+	 * @param key3   Der 3. Schlüssel.
+	 *
+	 * @return eine Liste aller Values in dieser Zuordnung.
+	 * @throws DeveloperNotificationException falls es kein Mapping gibt.
+	 */
+	public @NotNull List<V> get123OrException(final long key1, final long key2, final long key3) {
+		DeveloperNotificationException.ifTrue("Es keine Liste zugeordnet.", !containsKey123(key1, key2, key3));
+		return get123(key1, key2, key3);
+	}
+
+	/**
+	 * Liefert eine Kopie der Liste aller zugeordneten Values zum Mapping (key1, key2, key4).
+	 *
+	 * @param key1   Der 1. Schlüssel.
+	 * @param key2   Der 2. Schlüssel.
+	 * @param key4   Der 4. Schlüssel.
+	 *
+	 * @return eine Liste aller Values in dieser Zuordnung.
+	 * @throws DeveloperNotificationException falls es kein Mapping gibt.
+	 */
+	public @NotNull List<V> get124OrException(final long key1, final long key2, final long key4) {
+		DeveloperNotificationException.ifTrue("Es keine Liste zugeordnet.", !containsKey124(key1, key2, key4));
+		return get124(key1, key2, key4);
+	}
+
+	/**
+	 * Liefert eine Kopie der Liste aller zugeordneten Values zum Mapping (key1, key3, key4).
+	 *
+	 * @param key1   Der 1. Schlüssel.
+	 * @param key3   Der 3. Schlüssel.
+	 * @param key4   Der 4. Schlüssel.
+	 *
+	 * @return eine Liste aller Values in dieser Zuordnung.
+	 * @throws DeveloperNotificationException falls es kein Mapping gibt.
+	 */
+	public @NotNull List<V> get134OrException(final long key1, final long key3, final long key4) {
+		DeveloperNotificationException.ifTrue("Es keine Liste zugeordnet.", !containsKey134(key1, key3, key4));
+		return get134(key1, key3, key4);
+	}
+
+	/**
+	 * Liefert eine Kopie der Liste aller zugeordneten Values zum Mapping (key2, key3, key4).
+	 *
+	 * @param key2   Der 2. Schlüssel.
+	 * @param key3   Der 3. Schlüssel.
+	 * @param key4   Der 4. Schlüssel.
+	 *
+	 * @return eine Liste aller Values in dieser Zuordnung.
+	 * @throws DeveloperNotificationException falls es kein Mapping gibt.
+	 */
+	public @NotNull List<V> get234OrException(final long key2, final long key3, final long key4) {
+		DeveloperNotificationException.ifTrue("Es keine Liste zugeordnet.", !containsKey234(key2, key3, key4));
+		return get234(key2, key3, key4);
+	}
+
+	/**
+	 * Liefert eine Kopie der Liste aller zugeordneten Values zum Mapping (key1, key2, key3, key4).
+	 *
+	 * @param key1   Der 1. Schlüssel.
+	 * @param key2   Der 2. Schlüssel.
+	 * @param key3   Der 3. Schlüssel.
+	 * @param key4   Der 4. Schlüssel.
+	 *
+	 * @return eine Liste aller Values in dieser Zuordnung.
+	 * @throws DeveloperNotificationException falls es kein Mapping gibt.
+	 */
+	public @NotNull List<V> get1234OrException(final long key1, final long key2, final long key3, final long key4) {
+		DeveloperNotificationException.ifTrue("Es keine Liste zugeordnet.", !containsKey1234(key1, key2, key3, key4));
+		return get1234(key1, key2, key3, key4);
+	}
+
 }
