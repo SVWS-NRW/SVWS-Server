@@ -214,7 +214,8 @@
 	function onBlur(event: Event) {
 		if (props.modelValue !== data.value)
 			emit("change", data.value);
-		emit("blur", data.value);
+		if (!props.readonly)
+			emit("blur", data.value);
 	}
 
 	function onKeyEnter(event: Event) {
@@ -513,6 +514,11 @@
 		left: 0.7em;
 		font-size: 0.78rem;
 	}
+		.text-input--filled.text-input--readonly:not(.text-input--select)
+		.text-input--placeholder:after  {
+			@apply ml-1 h-3 w-3;
+			content: url(remixicon/icons/System/lock-line.svg);
+		}
 
 	.text-input--statistics .text-input--placeholder {
 		@apply text-ui-statistic font-bold;
@@ -552,24 +558,24 @@
 	}
 
 	.text-input--placeholder--required:after {
-		@apply inline-block font-bold relative opacity-50;
-		content: "*";
-		font-size: 1em;
-		margin-bottom: -0.2em;
-		top: -0.2em;
-		left: 0.1em;
+		@apply ml-1 h-3 w-3;
+		content: url(remixicon/icons/Editor/asterisk.svg);
+	}
+
+	.text-input--statistics .text-input--placeholder--required:after {
+		@apply icon-ui-statistic;
 	}
 
 	.text-input--invalid .text-input--placeholder--required:after {
-		@apply text-ui-danger opacity-100;
+		@apply icon-ui-danger;
 	}
 
 	.text-input--statistic-kann .text-input--placeholder--required:after {
-		@apply text-ui-caution opacity-100;
+		@apply icon-ui-caution;
 	}
 
 	.text-input--statistic-hinweis .text-input--placeholder--required:after {
-		@apply text-ui-warning opacity-100;
+		@apply icon-ui-warning;
 	}
 
 	.text-input-component--headless .text-input--control {

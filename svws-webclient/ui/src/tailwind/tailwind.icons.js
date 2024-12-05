@@ -191,6 +191,7 @@ const iconPath = {
 	'message-line': { path: 'Communication', icon: 'message-line' }, // i-ri-message-line
 	'chat-new-line': { path: 'Communication', icon: 'chat-new-line' }, // i-ri-chat-new-line
 	'question-mark': { path: 'Editor', icon: 'question-mark' }, // i-ri-question-mark
+	'asterisk': { path: 'Editor', icon: 'asterisk' }, // i-ri-asterisk
 }
 
 const iconPlugins = [
