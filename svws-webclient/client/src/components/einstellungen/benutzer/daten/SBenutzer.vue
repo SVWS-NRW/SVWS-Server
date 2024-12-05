@@ -84,7 +84,7 @@
 
 <script setup lang="ts">
 
-	import { computed, effect, ref, shallowRef } from 'vue';
+	import { computed, ref, shallowRef } from 'vue';
 	import type { BenutzerProps } from './SBenutzerProps';
 	import { BenutzerKompetenzGruppe, BenutzerTyp } from '@core';
 
@@ -102,8 +102,6 @@
 		else
 			alert("Kennwörter stimmen nicht überein")
 	}
-
-	effect(() => console.log(props.getBenutzerManager().daten().typ))
 
 	const kompetenzgruppen = computed<BenutzerKompetenzGruppe[]>(() => BenutzerKompetenzGruppe.values().filter(gr => gr.daten.id >= 0));
 
