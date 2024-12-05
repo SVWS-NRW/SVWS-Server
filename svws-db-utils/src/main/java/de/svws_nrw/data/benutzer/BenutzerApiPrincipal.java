@@ -200,8 +200,10 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 			user.setPassword(password);
 
 			// Prüfe den Passwort-Hash des Benutzer aus der DB
-			if (!DBBenutzerUtils.pruefePasswort(user, password))
+			final String updatedUsername = DBBenutzerUtils.pruefePasswort(user, password);
+			if (updatedUsername == null)
 				return null;
+			user.setUsername(updatedUsername);
 
 			// Erzeuge nach erfolgreicher Prüfung den Benutzer-spezifischen AES-Schlüssel
 			user.setAES();

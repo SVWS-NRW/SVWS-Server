@@ -2,8 +2,11 @@ package de.svws_nrw.data.benutzer;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
+import java.util.stream.Collectors;
 
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.types.ServerMode;
@@ -77,31 +80,36 @@ public final class DBBenutzerUtils {
 	 * @param user        der Benutzer, bei dem das Kennwort geprüft werden soll
 	 * @param password    das zu prüfende Kennwort
 	 *
-	 * @return true, falls das Kennwort gültig ist, und ansonsten false
+	 * @return der ggf. in Bezug auf Groß- und Kleinschreibung korrigierte Benutzername, falls das Kennwort gültig ist, und ansonsten null
 	 *
 	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	public static boolean pruefePasswort(final Benutzer user, final String password) throws DBException {
+	public static String pruefePasswort(final Benutzer user, final String password) throws DBException {
 		if (user.getUsername() == null)
-			return false;
+			return null;
 		try (DBEntityManager conn = user.getEntityManager()) {
 			if (conn.useDBLogin())
-				return true;
-			final DTOViewBenutzerdetails dbBenutzer = conn
-					.queryList(DTOViewBenutzerdetails.QUERY_BY_BENUTZERNAME, DTOViewBenutzerdetails.class, user.getUsername()).stream()
-					.findFirst().orElse(null);
+				return user.getUsername();
+			// Bestimme den Benutzer
+			final Map<String, DTOViewBenutzerdetails> mapBenutzerdetails = conn.queryAll(DTOViewBenutzerdetails.class).stream()
+					.collect(Collectors.toMap(b -> b.Benutzername.toLowerCase(Locale.GERMAN), b -> b));
+			final DTOViewBenutzerdetails dbBenutzer = mapBenutzerdetails.get(user.getUsername().toLowerCase(Locale.GERMAN));
 			if (dbBenutzer == null)
-				return false;
+				return null;
+			// Überprüfe das Benutzerkennwort
 			final String pwHash = dbBenutzer.PasswordHash;
 			user.setId(dbBenutzer.ID);
 			user.setIdLehrer((dbBenutzer.Typ == BenutzerTyp.LEHRER) ? dbBenutzer.TypID : null);
 			if ((password == null) || ("".equals(password))) {
-				return (pwHash == null) || ("".equals(pwHash));
+				if ((pwHash == null) || ("".equals(pwHash)))
+					return dbBenutzer.Benutzername;
+				return null;
 			}
-			if ((pwHash == null) || ("".equals(pwHash))) {
-				return false;
-			}
-			return BCrypt.checkpw(password, pwHash);
+			if ((pwHash == null) || ("".equals(pwHash)))
+				return null;
+			if (BCrypt.checkpw(password, pwHash))
+				return dbBenutzer.Benutzername;
+			return null;
 		}
 	}
 

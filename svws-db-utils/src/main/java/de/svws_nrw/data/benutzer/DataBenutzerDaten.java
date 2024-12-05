@@ -6,8 +6,10 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -214,6 +216,49 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 		return Response.status(Status.OK).build();
 	}
 
+
+	/**
+	 * Überprüfe, ob der Benutzername gesetzt ist und nicht schon bereits vergeben ist.
+	 *
+	 * @param benutzername   der Benutzername
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	private void pruefeBenutzernameGueltig(final String benutzername) throws ApiOperationException {
+		// Überprüfe, ob der Benutzername gesetzt ist
+		if ((benutzername == null) || (benutzername.isBlank()))
+			throw new ApiOperationException(Status.BAD_REQUEST, "Ein leerer Benutzername ist nicht zulässig!");
+		// Überprüfe auf Whitespace-Characters am Anfang und am Ende des Benutzernamens
+		if (!benutzername.equals(benutzername.trim()))
+			throw new ApiOperationException(Status.BAD_REQUEST, "Leerzeichen und ähnliches sind am Anfang und am Ende des Bentzernamens nicht erlaubt.");
+		// Überprüfe auf Leerzeichen und Tabs im Benutzernamen
+		if (benutzername.contains(" ") || benutzername.contains("\t"))
+			throw new ApiOperationException(Status.BAD_REQUEST, "Leerzeichen und Tabs sind im Benutzernamen nicht zulässig.");
+		// Überprüfe, ob der Benutzername nicht schon bereits vergeben ist.
+		final Set<String> benutzernamenLowerCase = conn.queryAll(DTOCredentials.class).stream().filter(cred -> cred.Benutzername != null)
+				.map(cred -> cred.Benutzername.toLowerCase(Locale.GERMAN)).collect(Collectors.toSet());
+		if (benutzernamenLowerCase.contains(benutzername.toLowerCase(Locale.GERMAN)))
+			throw new ApiOperationException(Status.CONFLICT,
+					"Der Benutzername ist bereits vergeben bzw. es existier ein Benutzername, der sich nur in Groß- und Kleinschreibung unterscheidet.");
+	}
+
+
+	/**
+	 * Überprüfe, ob der Benutzername und das Kennwort gesetzt sind und der Benutzername nicht schon bereits vergeben ist.
+	 *
+	 * @param benutzername   der Benutzername
+	 * @param password        das Kennwort
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	private void pruefeBenutzernameUndKennwortGueltig(final String benutzername, final String password) throws ApiOperationException {
+		// Überprüfe, ob das Kennwort gesetzt ist
+		if ((password == null) || (password.isBlank()))
+			throw new ApiOperationException(Status.BAD_REQUEST, "Ein leeres Kennwort ist nicht zulässig!");
+		pruefeBenutzernameGueltig(benutzername);
+	}
+
+
 	/**
 	 * Erstellt einen neuen Benutzer *
 	 *
@@ -228,8 +273,8 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 		DTOBenutzer benutzer = null;
 		DTOCredentials credential = null;
 
-		if ((cred.benutzername == null) || (cred.password == null) || (cred.benutzername.isBlank()) || (cred.password.isBlank()))
-			throw new ApiOperationException(Status.BAD_REQUEST, "Benuzername oder Passwort leer!");
+		// Überprüfe, ob der Benutzername und das Kennwort gesetzt sind und der Benutzername nicht schon bereits vergeben ist.
+		pruefeBenutzernameUndKennwortGueltig(cred.benutzername, cred.password);
 
 		// Bestimme die ID des Benutzers / Credentials / BenutzerAllgemeins
 		final long idBenutzerAllgemein = conn.transactionGetNextID(DTOBenutzerAllgemein.class);
@@ -284,8 +329,8 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 	 * @throws ApiOperationException   wenn ein Fehler auftritt
 	 */
 	public Response createBenutzerLehrer(final BenutzerLehrerCredentials cred) throws ApiOperationException {
-		if ((cred.benutzername == null) || (cred.password == null) || (cred.benutzername.isBlank()) || (cred.password.isBlank()))
-			throw new ApiOperationException(Status.BAD_REQUEST, "Benuzername oder Passwort leer!");
+		// Überprüfe, ob der Benutzername und das Kennwort gesetzt sind und der Benutzername nicht schon bereits vergeben ist.
+		pruefeBenutzernameUndKennwortGueltig(cred.benutzername, cred.password);
 
 		// Bestimme den Lehrer mit der angegebenen ID aus der Datenbank
 		final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, cred.idLehrer);
@@ -300,10 +345,6 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 		benutzer = new DTOBenutzer(idBenutzer, BenutzerTyp.LEHRER, false);
 		benutzer.Lehrer_ID = cred.idLehrer;
 		conn.transactionPersist(benutzer);
-
-		// Prüfe, ob der Benutzername bereits verwendet wurde
-		if (!conn.queryList(DTOCredentials.QUERY_BY_BENUTZERNAME, DTOCredentials.class, cred.benutzername).isEmpty())
-			throw new ApiOperationException(Status.CONFLICT, "Es existiert bereits ein Benutzer mit dem Benutzernamen \"%s\"!".formatted(cred.benutzername));
 
 		// Prüfe, ob dem Benutzer bereits Credentials zugeordnet sind, wenn ja, dann werden diese überschrieben. Wenn nicht, dann werden neue angelegt
 		DTOCredentials credential;
@@ -766,8 +807,6 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public Response setBenutzername(final Long id, final String name) throws ApiOperationException {
-		if ((name == null) || "".equals(name))
-			throw new ApiOperationException(Status.CONFLICT, "Der Name für die Anmeldung muss gültig sein und darf nicht null oder leer sein");
 		if (id.equals(conn.getUser().getId()))
 			throw new ApiOperationException(Status.CONFLICT, "Der aktuelle Benutzer darf seinen eigenen Benutzernamen nicht ändern.");
 		final DTOViewBenutzerdetails benutzer = getDTO(id);
@@ -777,13 +816,8 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 		final DTOCredentials cred = conn.queryByKey(DTOCredentials.class, benutzer.credentialID);
 		if (cred == null)
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Dem Benutzer sind keine gültigen Credentials zugeordnet.");
-		// Prüfe vorher, ob der Name nicht bereits verwendet wird -> Conflict
-		final List<DTOCredentials> creds = conn.queryAll(DTOCredentials.class);
-		for (final DTOCredentials data : creds) {
-			if (name.trim().equals(data.Benutzername))
-				throw new ApiOperationException(Status.CONFLICT,
-						"Ein Benutzer mit dem Namen existiert bereits - die Umbenennung kann nicht durchgeführt werden");
-		}
+		// Prüfe vorher, ob der Name gültig ist und nicht bereits verwendet wird -> Conflict
+		pruefeBenutzernameGueltig(name);
 		cred.Benutzername = name;
 		conn.transactionPersist(cred);
 		return Response.status(Status.OK).build();
