@@ -42,7 +42,7 @@ public final class ABPFaecher {
 	public boolean IstSprache = false;
 
 	/** Gibt die Unterrichtssprache des Faches an */
-	public String Unterichtssprache = "D";
+	public String Unterrichtssprache = "D";
 
 	/** Gibt an, ob das Fach im 1. Halbjahr der EF unterrichtet wird und wählbar ist */
 	public boolean E1 = false;
@@ -105,7 +105,7 @@ public final class ABPFaecher {
 	private static final String fieldStatistikKrz = "StatistikKrz";
 	private static final String fieldSortierung = "Sortierung";
 	private static final String fieldIstSprache = "IstSprache";
-	private static final String fieldUnterichtssprache = "Unterichtssprache";
+	private static final String fieldUnterrichtssprache = "Unterichtssprache";
 	private static final String fieldE1 = "E1";
 	private static final String fieldE2 = "E2";
 	private static final String fieldQ1 = "Q1";
@@ -145,7 +145,7 @@ public final class ABPFaecher {
 				fach.StatistikKrz = r.getString(fieldStatistikKrz);
 				fach.Sortierung = (r.getInt(fieldSortierung) == null) ? Integer.MAX_VALUE : r.getInt(fieldSortierung);
 				fach.IstSprache = "J".equals(r.getString(fieldIstSprache));
-				fach.Unterichtssprache = (r.getString(fieldUnterichtssprache) == null) ? "D" : r.getString(fieldUnterichtssprache);
+				fach.Unterrichtssprache = (r.getString(fieldUnterrichtssprache) == null) ? "D" : r.getString(fieldUnterrichtssprache);
 				fach.E1 = "J".equals(r.getString(fieldE1));
 				fach.E2 = "J".equals(r.getString(fieldE2));
 				fach.Q1 = "J".equals(r.getString(fieldQ1));
@@ -194,7 +194,7 @@ public final class ABPFaecher {
 					.addColumn(new ColumnBuilder(fieldSortierung, DataType.LONG).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "32000"))
 					.addColumn(new ColumnBuilder(fieldIstSprache, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT,
 							"'N'"))
-					.addColumn(new ColumnBuilder(fieldUnterichtssprache, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP,
+					.addColumn(new ColumnBuilder(fieldUnterrichtssprache, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP,
 							DataType.TEXT, "'D'"))
 					.addColumn(new ColumnBuilder(fieldE1, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
 					.addColumn(new ColumnBuilder(fieldE2, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
@@ -227,7 +227,7 @@ public final class ABPFaecher {
 							fach.StatistikKrz,
 							fach.Sortierung,
 							toStringJN(fach.IstSprache),
-							(fach.Unterichtssprache == null) ? "D" : fach.Unterichtssprache,
+							(fach.Unterrichtssprache == null) ? "D" : fach.Unterrichtssprache,
 							toStringJN(fach.E1),
 							toStringJN(fach.E2),
 							toStringJN(fach.Q1),
@@ -295,7 +295,7 @@ public final class ABPFaecher {
 			lupofach.Sortierung = fach.SortierungAllg;
 			lupofach.IstSprache = fach.IstFremdsprache && (!"PX".equalsIgnoreCase(fach.StatistikKuerzel))
 					&& (!"VX".equalsIgnoreCase(fach.StatistikKuerzel));
-			lupofach.Unterichtssprache = (fach.Unterichtssprache == null) ? "D" : fach.Unterichtssprache;
+			lupofach.Unterrichtssprache = (fach.Unterrichtssprache == null) ? "D" : fach.Unterrichtssprache;
 			lupofach.E1 = fach.IstMoeglichEF1;
 			lupofach.E2 = fach.IstMoeglichEF2;
 			lupofach.Q1 = fach.IstMoeglichQ11;
@@ -324,8 +324,8 @@ public final class ABPFaecher {
 	@Override
 	public String toString() {
 		return "ABPFaecher [ID=" + ID + ", FachKrz=" + FachKrz + ", Bezeichnung=" + Bezeichnung + ", StatistikKrz="
-				+ StatistikKrz + ", Sortierung=" + Sortierung + ", IstSprache=" + IstSprache + ", Unterichtssprache="
-				+ Unterichtssprache + ", E1=" + E1 + ", E2=" + E2 + ", Q1=" + Q1 + ", Q2=" + Q2 + ", Q3=" + Q3 + ", Q4="
+				+ StatistikKrz + ", Sortierung=" + Sortierung + ", IstSprache=" + IstSprache + ", Unterrichtssprache="
+				+ Unterrichtssprache + ", E1=" + E1 + ", E2=" + E2 + ", Q1=" + Q1 + ", Q2=" + Q2 + ", Q3=" + Q3 + ", Q4="
 				+ Q4 + ", Abi_Moegl=" + Abi_Moegl + ", LK_Moegl=" + LK_Moegl + ", AlsNeueFSInSII=" + AlsNeueFSInSII
 				+ ", Leitfach=" + Leitfach + ", Leitfach2=" + Leitfach2 + "]";
 	}

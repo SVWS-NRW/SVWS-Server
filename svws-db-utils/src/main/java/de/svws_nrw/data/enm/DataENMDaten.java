@@ -365,13 +365,13 @@ public final class DataENMDaten extends DataManager<Long> {
 						// Unterscheidung zwischen den beiden Lerngruppen-Typen...
 						if (leistung.Kurs_ID == null) {  // es ist eine Klasse
 							manager.addLerngruppe(strLerngruppenID, dtoKlasse.ID, leistung.Fach_ID, null,
-									fach.Kuerzel, kursartAllg, fach.Unterichtssprache,
+									fach.Kuerzel, kursartAllg, fach.Unterrichtssprache,
 									(leistung.Wochenstunden == null) ? 0 : leistung.Wochenstunden);
 						} else {  // es ist ein Kurs
 							final DTOKurs kurs = mapKurse.get(leistung.Kurs_ID);
 							manager.addLerngruppe(strLerngruppenID, leistung.Kurs_ID, leistung.Fach_ID,
 									(kursart == null) ? -1 : Integer.parseInt(kursart.daten(abschnitt.schuljahr).nummer), kurs.KurzBez, kursartAllg,
-									fach.Unterichtssprache, kurs.WochenStd);
+									fach.Unterrichtssprache, kurs.WochenStd);
 						}
 						lerngruppe = manager.getLerngruppe(strLerngruppenID);
 						lerngruppe.lehrerID.add(leistung.Fachlehrer_ID);

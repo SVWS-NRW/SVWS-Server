@@ -468,7 +468,7 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 			dto.Sichtbar = true;
 			dto.Aenderbar = true;
 			dto.Gewichtung = 1;
-			dto.Unterichtssprache = "D";
+			dto.Unterrichtssprache = "D";
 			dto.IstSchriftlichZK = (fach == Fach.D) || (fach == Fach.M) || (fach == Fach.E);
 			dto.IstSchriftlichBA = false;
 			dto.AufZeugnis = true;

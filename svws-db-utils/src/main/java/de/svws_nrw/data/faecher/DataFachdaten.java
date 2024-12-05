@@ -59,7 +59,7 @@ public final class DataFachdaten extends DataManagerRevised<Long, DTOFach, FachD
 		daten.istPruefungsordnungsRelevant = dtoFach.IstPruefungsordnungsRelevant;
 		daten.istSichtbar = dtoFach.Sichtbar;
 		daten.aufgabenfeld = dtoFach.Aufgabenfeld;
-		daten.bilingualeSprache = dtoFach.Unterichtssprache;
+		daten.bilingualeSprache = dtoFach.Unterrichtssprache;
 		daten.istNachpruefungErlaubt = dtoFach.IstNachpruefungErlaubt;
 		daten.aufZeugnis = dtoFach.AufZeugnis;
 		daten.bezeichnungZeugnis = (dtoFach.BezeichnungZeugnis == null) ? "" : dtoFach.BezeichnungZeugnis;
@@ -92,7 +92,7 @@ public final class DataFachdaten extends DataManagerRevised<Long, DTOFach, FachD
 					value, false, 0, Integer.MAX_VALUE, "sortierung");
 			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false, "istSichtbar");
 			case "aufgabenfeld" -> dto.Aufgabenfeld = JSONMapper.convertToString(value, true, true, 2, "aufgabenfeld");
-			case "bilingualeSprache" -> dto.Unterichtssprache = JSONMapper.convertToString(
+			case "bilingualeSprache" -> dto.Unterrichtssprache = JSONMapper.convertToString(
 					value, true, true, 1, "bilingualeSprache");
 			case "istNachpruefungErlaubt" -> dto.IstNachpruefungErlaubt = JSONMapper.convertToBoolean(value, false, "istNachpruefungErlaubt");
 			case "aufZeugnis" -> dto.AufZeugnis = JSONMapper.convertToBoolean(value, false, "aufZeugnis");

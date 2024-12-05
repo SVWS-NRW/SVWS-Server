@@ -48,8 +48,8 @@ public final class DBUtilsFaecherGost {
 		eintrag.istPruefungsordnungsRelevant = fach.IstPruefungsordnungsRelevant;
 		eintrag.istFremdsprache = fach.IstFremdsprache;
 		eintrag.istFremdSpracheNeuEinsetzend = fach.IstMoeglichAlsNeueFremdspracheInSekII;
-		eintrag.biliSprache = ((fach.Unterichtssprache != null) && (!"".equals(fach.Unterichtssprache)) && (!"D".equals(fach.Unterichtssprache)))
-				? fach.Unterichtssprache.substring(0, 1) : null;
+		eintrag.biliSprache = ((fach.Unterrichtssprache != null) && (!"".equals(fach.Unterrichtssprache)) && (!"D".equals(fach.Unterrichtssprache)))
+				? fach.Unterrichtssprache.substring(0, 1) : null;
 		eintrag.istMoeglichAbiLK = fach.IstMoeglichAbiLK;
 		eintrag.istMoeglichAbiGK = fach.IstMoeglichAbiGK;
 		eintrag.istMoeglichEF1 = fach.IstMoeglichEF1;
@@ -110,8 +110,8 @@ public final class DBUtilsFaecherGost {
 		eintrag.istPruefungsordnungsRelevant = fach.IstPruefungsordnungsRelevant;
 		eintrag.istFremdsprache = fach.IstFremdsprache;
 		eintrag.istFremdSpracheNeuEinsetzend = fach.IstMoeglichAlsNeueFremdspracheInSekII;
-		eintrag.biliSprache = ((fach.Unterichtssprache != null) && (!"".equals(fach.Unterichtssprache)) && (!"D".equals(fach.Unterichtssprache)))
-				? fach.Unterichtssprache.substring(0, 1) : null;
+		eintrag.biliSprache = ((fach.Unterrichtssprache != null) && (!"".equals(fach.Unterrichtssprache)) && (!"D".equals(fach.Unterrichtssprache)))
+				? fach.Unterrichtssprache.substring(0, 1) : null;
 		if (jf != null) { // Ansonsten ist alles mit false initialisiert
 			eintrag.istMoeglichAbiLK = jf.WaehlbarAbiLK;
 			eintrag.istMoeglichAbiGK = jf.WaehlbarAbiGK;

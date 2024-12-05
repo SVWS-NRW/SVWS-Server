@@ -147,7 +147,7 @@ class DataFachdatenTest {
 			case "sortierung" -> assertThat(expectedDTO.SortierungAllg).isEqualTo(value);
 			case "istSichtbar" -> assertThat(expectedDTO.Sichtbar).isEqualTo(value);
 			case "aufgabenfeld" -> assertThat(expectedDTO.Aufgabenfeld).isEqualTo(value);
-			case "bilingualeSprache" -> assertThat(expectedDTO.Unterichtssprache).isEqualTo(value);
+			case "bilingualeSprache" -> assertThat(expectedDTO.Unterrichtssprache).isEqualTo(value);
 			case "istNachpruefungErlaubt" -> assertThat(expectedDTO.IstNachpruefungErlaubt).isEqualTo(value);
 			case "aufZeugnis" -> assertThat(expectedDTO.AufZeugnis).isEqualTo(value);
 			case "bezeichnungZeugnis" -> assertThat(expectedDTO.BezeichnungZeugnis).isEqualTo(value);
@@ -242,7 +242,7 @@ class DataFachdatenTest {
 		dtoFach.IstOberstufenFach = true;
 		dtoFach.Sichtbar = true;
 		dtoFach.Aufgabenfeld = "wertvolle Aufgaben";
-		dtoFach.Unterichtssprache = "sanskrit";
+		dtoFach.Unterrichtssprache = "sanskrit";
 		dtoFach.IstNachpruefungErlaubt = true;
 		dtoFach.AufZeugnis = true;
 		dtoFach.BezeichnungZeugnis = "super";

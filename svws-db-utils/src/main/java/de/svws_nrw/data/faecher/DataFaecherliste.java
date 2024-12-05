@@ -50,7 +50,7 @@ public final class DataFaecherliste extends DataManager<Long> {
 		daten.istPruefungsordnungsRelevant = f.IstPruefungsordnungsRelevant;
 		daten.sortierung = f.SortierungAllg;
 		daten.istSichtbar = f.Sichtbar;
-		daten.bilingualeSprache = f.Unterichtssprache;
+		daten.bilingualeSprache = f.Unterrichtssprache;
 		return daten;
 	};
 

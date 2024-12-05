@@ -21,8 +21,8 @@ public class ProxyReportingFach extends ReportingFach {
 				ersetzeNullDurchEmpty(fach.Bezeichnung),
 				ersetzeNullDurchEmpty(fach.BezeichnungUeberweisungsZeugnis),
 				ersetzeNullDurchEmpty(fach.BezeichnungZeugnis),
-				((fach.Unterichtssprache != null) && (!(fach.Unterichtssprache.isEmpty())) && (!"D".equals(fach.Unterichtssprache)))
-						? fach.Unterichtssprache.substring(0, 1) : "",
+				((fach.Unterrichtssprache != null) && (!(fach.Unterrichtssprache.isEmpty())) && (!"D".equals(fach.Unterrichtssprache)))
+						? fach.Unterrichtssprache.substring(0, 1) : "",
 				null,
 				fach.AbgeschlFaecherHolen,
 				fach.ID,
