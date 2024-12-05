@@ -11,7 +11,14 @@
 								ID: {{ manager().daten().id }}
 							</svws-ui-badge>
 						</h2>
-						<span class="svws-subline">{{ klasse }}</span>
+						<span v-if="klasse !== null" class="svws-subline">{{ klasse.kuerzel }}
+
+							<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
+								<template v-for="l of klasse.klassenLeitungen">
+									{{ manager().lehrer.get(l)?.kuerzel ?? '—' }}&nbsp;
+								</template>
+							</svws-ui-badge>
+						</span>
 					</div>
 					<div v-if="manager().daten().keineAuskunftAnDritte" class="svws-headline-wrapper">
 						<span class="icon-xxl icon-error i-ri-alert-line inline-block" />
@@ -53,6 +60,7 @@
 	import type { SchuelerAppProps } from "./SSchuelerAppProps";
 	import { ViewType } from "@ui";
 	import { useRegionSwitch } from "~/components/useRegionSwitch";
+	import type { KlassenDaten } from "@core";
 
 	const props = defineProps<SchuelerAppProps>();
 
@@ -77,10 +85,10 @@
 		return props.manager().daten().vorname;
 	});
 
-	const klasse = computed<string>(() => {
+	const klasse = computed<KlassenDaten | null>(() => {
 		if (!props.manager().hasDaten())
-			return '—';
-		return props.manager().klassen.get(props.manager().auswahl().idKlasse)?.kuerzel ?? '—';
+			return null;
+		return props.manager().klassen.get(props.manager().auswahl().idKlasse);
 	});
 
 </script>
