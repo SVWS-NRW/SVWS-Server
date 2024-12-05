@@ -106,7 +106,7 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 	 */
 	private DTOViewBenutzerdetails getDTO(final Long id) throws ApiOperationException {
 		if (id == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Die ID des zu änderden Benutzers darf nicht null sein.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Die ID des zu ändernden Benutzers darf nicht null sein.");
 		final DTOViewBenutzerdetails benutzer = conn.queryByKey(DTOViewBenutzerdetails.class, id);
 		if (benutzer == null)
 			throw new ApiOperationException(Status.NOT_FOUND, strBenutzerMitIDExistiertNicht);
@@ -131,7 +131,7 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 	}
 
 	/**
-	 * Überprüft für die Schulform die zulässigkeit der Kompetenzen, die einem Objekt hinzugefügt bzw. entzogen werden.
+	 * Überprüft für die Schulform die Zulässigkeit der Kompetenzen, die einem Objekt hinzugefügt bzw. entzogen werden.
 	 *
 	 * @param kids die IDs der Kompetenzen
 	 *
@@ -173,7 +173,7 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 	 */
 	public Response addAdmin(final Long id) throws ApiOperationException {
 		if (id == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Die ID der zu änderden Benutzer darf nicht null sein.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Die ID des zu ändernden Benutzers darf nicht null sein.");
 		final DTOBenutzer benutzer = conn.queryByKey(DTOBenutzer.class, id);
 		if (benutzer == null)
 			throw new ApiOperationException(Status.NOT_FOUND, strBenutzerMitIDExistiertNicht);
@@ -198,13 +198,13 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 		// Prüft, die Zulässigkeit der Kompetenzen für die Schulform
 		this.istKompetenzZulaessig(kids);
 		if ((id == null) || (kids == null))
-			throw new ApiOperationException(Status.NOT_FOUND, "Die ID der zu änderden Benutzer bzw IDs der Kompetenzen darf bzw. dürfen nicht null sein.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Die ID des zu ändernden Benutzers bzw IDs der Kompetenzen darf bzw. dürfen nicht null sein.");
 		// Prüfe, ob der Benutzer mit der ID existiert.
 		getDTO(id);
 		// Prüfe, ob die Benutzerkompetenzen mit den Ids existieren.
 		for (final Long kid : kids)
 			if (BenutzerKompetenz.getByID(kid) == null)
-				throw new ApiOperationException(Status.NOT_FOUND, "Die Benutzerkompetenz mit der ID " + kid + " existiert nicht!!");
+				throw new ApiOperationException(Status.NOT_FOUND, "Die Benutzerkompetenz mit der ID " + kid + " existiert nicht!");
 		// Füge die Kompetenzen hinzu
 		for (final Long kid : kids) {
 			DTOBenutzerKompetenz bk = conn.queryByKey(DTOBenutzerKompetenz.class, id, kid);
@@ -232,14 +232,14 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 		if (!benutzername.equals(benutzername.trim()))
 			throw new ApiOperationException(Status.BAD_REQUEST, "Leerzeichen und ähnliches sind am Anfang und am Ende des Bentzernamens nicht erlaubt.");
 		// Überprüfe auf Leerzeichen und Tabs im Benutzernamen
-		if (benutzername.contains(" ") || benutzername.contains("\t"))
+		if (!benutzername.matches("\\S+"))
 			throw new ApiOperationException(Status.BAD_REQUEST, "Leerzeichen und Tabs sind im Benutzernamen nicht zulässig.");
 		// Überprüfe, ob der Benutzername nicht schon bereits vergeben ist.
 		final Set<String> benutzernamenLowerCase = conn.queryAll(DTOCredentials.class).stream().filter(cred -> cred.Benutzername != null)
 				.map(cred -> cred.Benutzername.toLowerCase(Locale.GERMAN)).collect(Collectors.toSet());
 		if (benutzernamenLowerCase.contains(benutzername.toLowerCase(Locale.GERMAN)))
 			throw new ApiOperationException(Status.CONFLICT,
-					"Der Benutzername ist bereits vergeben bzw. es existier ein Benutzername, der sich nur in Groß- und Kleinschreibung unterscheidet.");
+					"Der Benutzername ist bereits vergeben bzw. es existiert ein Benutzername, der sich nur in Groß- und Kleinschreibung unterscheidet.");
 	}
 
 
@@ -260,7 +260,7 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 
 
 	/**
-	 * Erstellt einen neuen Benutzer *
+	 * Erstellt einen neuen Benutzer
 	 *
 	 * @param cred       Das JSON-Objekt mit den Daten für Credentials-Obejkt
 	 *
@@ -578,7 +578,7 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 	 */
 	public Response removeAdmin(final Long id) throws ApiOperationException {
 		if (id == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Die ID der zu änderden Benutzer darf nicht null sein.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Die ID des zu ändernden Benutzers darf nicht null sein.");
 		final DTOBenutzer benutzer = conn.queryByKey(DTOBenutzer.class, id);
 		if (benutzer == null)
 			throw new ApiOperationException(Status.NOT_FOUND, strBenutzerMitIDExistiertNicht);
@@ -730,7 +730,7 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 		this.istKompetenzZulaessig(kids);
 
 		if ((id == null) || (kids == null))
-			throw new ApiOperationException(Status.NOT_FOUND, "Die ID der zu änderden Benutzer bzw IDs der Kompetenzen darf bzw. dürfen nicht null sein.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Die ID des zu ändernden Benutzers bzw IDs der Kompetenzen darf bzw. dürfen nicht null sein.");
 		// Prüfe, ob der Benutzer mit der ID existiert.
 		getDTO(id);
 		// Prüfe, ob die Benutzerkompetenzen mit den Ids existieren.
@@ -775,7 +775,7 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 		if ((name == null) || "".equals(name))
 			throw new ApiOperationException(Status.CONFLICT, "Der Anzeigename muss gültig sein und darf nicht null oder leer sein");
 		if (id == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Die ID der zu änderden Benutzer darf nicht null sein.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Die ID des zu ändernden Benutzers darf nicht null sein.");
 		final DTOBenutzerAllgemein benutzerallgemein = conn.queryByKey(DTOBenutzerAllgemein.class, id);
 		if (benutzerallgemein == null)
 			throw new ApiOperationException(Status.NOT_FOUND, strBenutzerMitIDExistiertNicht);

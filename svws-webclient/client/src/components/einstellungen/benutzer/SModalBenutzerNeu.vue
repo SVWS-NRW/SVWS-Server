@@ -6,9 +6,9 @@
 
 		<template #modalContent>
 			<svws-ui-input-wrapper>
-				<svws-ui-text-input v-model="anzeigename" type="text" placeholder="Name (nur für die Anzeige)" />
+				<svws-ui-text-input v-model="anzeigename" placeholder="Anzeigename (z.B. Tim Taler)" />
 				<svws-ui-spacing />
-				<svws-ui-text-input v-model.trim="name" type="text" placeholder="Name (zu Anmeldung)" :valid />
+				<svws-ui-text-input v-model.trim="name" placeholder="Anmeldename (z.B. tim)" :valid />
 				<svws-ui-text-input v-model.trim="passwort1" type="password" placeholder="Passwort" />
 				<svws-ui-text-input v-model.trim="passwort2" type="password" placeholder="Passwort wiederholen" :valid="validPassword2" />
 			</svws-ui-input-wrapper>
@@ -50,7 +50,7 @@
 	const passwort2 = ref("");
 
 	function valid(value: string | null) {
-		return !props.mapBenutzer.values().some(b => b.name === value);
+		return !props.mapBenutzer.values().some(b => (value !== null) && ((b.name.toLocaleLowerCase('de') === value.toLocaleLowerCase('de')) || (/\s/.exec(value) !== null)));
 	}
 
 	function validPassword2(value: string | null) {
