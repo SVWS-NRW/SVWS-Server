@@ -154,7 +154,7 @@ export class StundenplanUnterrichtListeManager extends AuswahlManager<number, St
 
 	/**
 	 * Aktualisiert die einzelnen Filter-Attribute des Managers mithilfe des Stundenplan-Managers in Bezug auf
-	 * die in Unterichten verwendeten Attributwerte. Diese Methode sollten bei allen Änderungen an der Menge der
+	 * die in Unterrichten verwendeten Attributwerte. Diese Methode sollten bei allen Änderungen an der Menge der
 	 * Unterrichte aufgerufen werden.
 	 */
 	public updateAttributAuswahl() : void {

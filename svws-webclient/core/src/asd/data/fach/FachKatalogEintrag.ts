@@ -30,7 +30,7 @@ export class FachKatalogEintrag extends CoreTypeDataNurSchulformenUndSchulgliede
 	public istHKFS : boolean = false;
 
 	/**
-	 * Gibt an, ob das Fach außerhalb des regulären Fachunterichts unterrichtet wird.
+	 * Gibt an, ob das Fach außerhalb des regulären Fachunterrichts unterrichtet wird.
 	 */
 	public istAusRegUFach : boolean = false;
 

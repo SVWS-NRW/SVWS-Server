@@ -17,7 +17,7 @@ public class Tabelle_Stundenplan_Unterricht extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte ID */
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
 			.setNotNull()
-			.setJavaComment("Die eindeutige ID für diese Zuordnung des Untericht-Eintrages zu einem Stundenplan");
+			.setJavaComment("Die eindeutige ID für diese Zuordnung des Unterricht-Eintrages zu einem Stundenplan");
 
 	/** Die Definition der Tabellenspalte Zeitraster_ID */
 	public SchemaTabelleSpalte col_Zeitraster_ID = add("Zeitraster_ID", SchemaDatentypen.BIGINT, false)

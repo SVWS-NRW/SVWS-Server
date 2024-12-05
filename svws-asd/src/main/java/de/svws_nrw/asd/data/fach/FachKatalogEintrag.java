@@ -35,8 +35,8 @@ public class FachKatalogEintrag extends CoreTypeDataNurSchulformenUndSchulgliede
 	@Schema(description = "gibt an, ob es sich um ein Fach der Herkuntftsprache handelt (Unterrichts in der Herkunftssprache oder Herkunftssprache anstelle einer Pflichtfremdsprache)", example = "false")
 	public boolean istHKFS = false;
 
-	/** Gibt an, ob das Fach außerhalb des regulären Fachunterichts unterrichtet wird. */
-	@Schema(description = "gibt an, ob das Fach außerhalb des regulären Fachunterichts unterrichtet wird", example = "false")
+	/** Gibt an, ob das Fach außerhalb des regulären Fachunterrichts unterrichtet wird. */
+	@Schema(description = "gibt an, ob das Fach außerhalb des regulären Fachunterrichts unterrichtet wird", example = "false")
 	public boolean istAusRegUFach = false;
 
 	/** Gibt an, ob es sich bei dem Fach um einen Ersatz für eine Pflichtfremdsprache handelt (siehe auch istHKFS) */
