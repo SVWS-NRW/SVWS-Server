@@ -62,7 +62,7 @@
 				void props.addBenutzerKompetenzGruppe(props.kompetenzgruppe);
 			else
 				void props.removeBenutzerKompetenzGruppe(props.kompetenzgruppe);
-		}
+		},
 	});
 
 	const getTopLevelGruppen4Kompetenz = computed<string>(() => {
