@@ -767,7 +767,7 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 	 * @param id   die ID der Benutzergruppe
 	 * @param name der neue Azeigename
 	 *
-	 * @return die Response 200 bei Erfolg.
+	 * @return die Response 204 bei Erfolg.
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
@@ -791,7 +791,7 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 		// Der Anzeigename wird angepasst...
 		benutzerallgemein.AnzeigeName = name;
 		conn.transactionPersist(benutzerallgemein);
-		return Response.status(Status.OK).build();
+		return Response.status(Status.NO_CONTENT).build();
 	}
 
 
@@ -802,7 +802,7 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 	 * @param id     die ID des Benutzers
 	 * @param name   der neue Benutzername für die Anmeldung
 	 *
-	 * @return die Response 200 bei Erfolg.
+	 * @return die Response 204 bei Erfolg.
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
@@ -820,7 +820,7 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 		pruefeBenutzernameGueltig(name);
 		cred.Benutzername = name;
 		conn.transactionPersist(cred);
-		return Response.status(Status.OK).build();
+		return Response.status(Status.NO_CONTENT).build();
 	}
 
 
