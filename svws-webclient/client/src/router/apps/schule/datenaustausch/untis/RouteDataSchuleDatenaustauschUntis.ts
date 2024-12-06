@@ -1,16 +1,16 @@
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-import { routeSchuleDatenaustauschUntisStundenplan } from "./RouteSchuleDatenaustauschUntisStundenplan";
 import type { GostBlockungListeneintrag, List} from "@core";
 import { GostHalbjahr, LongAndStringLists } from "@core";
 import { OpenApiError, SimpleOperationResponse } from "@core";
 import { routeApp } from "~/router/apps/RouteApp";
+import { routeSchuleDatenaustauschUntisImporte } from "./RouteSchuleDatenaustauschUntisImporte";
 
 
 type RouteStateDatenaustauschUntis = RouteStateInterface
 
 const defaultState = <RouteStateDatenaustauschUntis> {
-	view: routeSchuleDatenaustauschUntisStundenplan,
+	view: routeSchuleDatenaustauschUntisImporte,
 };
 
 

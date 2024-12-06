@@ -2,10 +2,9 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import type { RouteApp} from "~/router/apps/RouteApp";
 import { RouteDataSchuleDatenaustauschUntis } from "./RouteDataSchuleDatenaustauschUntis";
-import { routeSchuleDatenaustauschUntisStundenplan } from "./RouteSchuleDatenaustauschUntisStundenplan";
-import { routeSchuleDatenaustauschUntisRaeume } from "./RouteSchuleDatenaustauschUntisRaeume";
 import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
 import { RouteTabNode } from "~/router/RouteTabNode";
+import { routeSchuleDatenaustauschUntisImporte } from "./RouteSchuleDatenaustauschUntisImporte";
 import { routeSchuleDatenaustauschUntisExporte } from "./RouteSchuleDatenaustauschUntisExporte";
 
 const SSchuleDatenaustauschUntis = () => import("~/components/schule/datenaustausch/untis/SSchuleDatenaustauschUntis.vue");
@@ -23,11 +22,10 @@ export class RouteSchuleDatenaustauschUntis extends RouteTabNode<RouteDataSchule
 		super.text = "Untis";
 		super.menugroup = RouteSchuleMenuGroup.DATENAUSTAUSCH;
 		super.children = [
-			routeSchuleDatenaustauschUntisStundenplan,
-			routeSchuleDatenaustauschUntisRaeume,
+			routeSchuleDatenaustauschUntisImporte,
 			routeSchuleDatenaustauschUntisExporte,
 		];
-		super.defaultChild = routeSchuleDatenaustauschUntisStundenplan;
+		super.defaultChild = routeSchuleDatenaustauschUntisImporte;
 	}
 
 }
