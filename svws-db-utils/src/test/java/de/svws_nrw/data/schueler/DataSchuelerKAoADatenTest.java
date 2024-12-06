@@ -552,14 +552,14 @@ class DataSchuelerKAoADatenTest {
 		wrongIdZusatzmerkmal.put(MERKMAL, 51L);
 		wrongIdZusatzmerkmal.put(ZUSATZMERKMAL, 3500000L);
 		wrongIdZusatzmerkmal.put(BEMERKUNG, "schule ist toll!");
-		final var bemerkungNull = new HashMap<String, Object>();
-		bemerkungNull.put(SCHULJAHRESABSCHNTT, 7L);
-		bemerkungNull.put(JAHRGANG, 8000000L);
-		bemerkungNull.put(KATEGORIE, 10L);
-		bemerkungNull.put(MERKMAL, 51L);
-		bemerkungNull.put(ZUSATZMERKMAL, 68);
-		bemerkungNull.put(EBENE_4, 68);
-		bemerkungNull.put(BEMERKUNG, "");
+		final var bemerkungTooLong = new HashMap<String, Object>();
+		bemerkungTooLong.put(SCHULJAHRESABSCHNTT, 7L);
+		bemerkungTooLong.put(JAHRGANG, 8000000L);
+		bemerkungTooLong.put(KATEGORIE, 10L);
+		bemerkungTooLong.put(MERKMAL, 51L);
+		bemerkungTooLong.put(ZUSATZMERKMAL, 68);
+		bemerkungTooLong.put(BEMERKUNG, "1Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore "
+				+ "magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata");
 		final var idBerufsfeldNull = new HashMap<String, Object>();
 		idBerufsfeldNull.put(SCHULJAHRESABSCHNTT, 7L);
 		idBerufsfeldNull.put(JAHRGANG, 8000000L);
@@ -630,7 +630,7 @@ class DataSchuelerKAoADatenTest {
 				arguments(wrongIdMerkmal, "Kein KAoAMerkmal mit der ID 1000 vorhanden.", Response.Status.NOT_FOUND),
 				arguments(zusatzmerkmalDoesntMatch, "Das KAoAZusatzmerkmal mit der ID 35 passt nicht zum KAoAMerkmal mit der ID 51.", Response.Status.BAD_REQUEST),
 				arguments(wrongIdZusatzmerkmal, "Kein KAoAZusatzmerkmal mit der ID 3500000 vorhanden.", Response.Status.NOT_FOUND),
-				arguments(bemerkungNull, "Bemerkung darf nicht null sein.", Response.Status.BAD_REQUEST),
+				arguments(bemerkungTooLong, "Bemerkung darf nicht mehr als 255 Zeichen beinhalten.", Response.Status.BAD_REQUEST),
 				arguments(idBerufsfeldNull, "idBerufsfeld darf nicht null sein.", Response.Status.BAD_REQUEST),
 				arguments(wrongIdBerufsfeld, "Kein Berufsfeld mit der ID 370000 vorhanden.", Response.Status.NOT_FOUND),
 				arguments(idAnschlussoptionNull, "idAnschlussoption darf nicht null sein.", Response.Status.BAD_REQUEST),

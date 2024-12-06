@@ -3,7 +3,7 @@
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input placeholder="Kürzel" required :max-len="20" :valid="(v) => manager().validateKuerzel(v)" v-model="data.kuerzel" :disabled />
-				<svws-ui-select title="Statistik-Fach" required :items="statistikFachEintraege" :item-filter="statistik_fach_filter"
+				<svws-ui-select title="Statistik-Fach" required :items="statistikFachEintraege" :item-filter="coreTypeDataFilter"
 					v-model="selectedStatistikFach" :item-text="getStatistikfachText" autocomplete />
 				<svws-ui-text-input placeholder="Bezeichnung" required :max-len="255" :valid="(v) => manager().validateBezeichnung(v)" v-model="data.bezeichnung" :disabled />
 				<svws-ui-text-input placeholder="Fachgruppe" :model-value="fachgruppe" disabled />
@@ -47,10 +47,10 @@
 <script setup lang="ts">
 
 	import { computed, ref, watch } from "vue";
-	import { BilingualeSprache, Fach, FachDaten, GostFachbereich, JavaInteger, Schulform } from "@core";
-	import type { FachKatalogEintrag } from "@core";
+	import {BilingualeSprache, Fach, FachDaten, GostFachbereich, JavaInteger, Schulform} from "@core";
+	import type { FachKatalogEintrag, CoreTypeData } from "@core";
 	import type { SchuleFachNeuProps } from "./SSchuleFachNeuProps";
-	import { statistik_fach_filter } from "~/utils/helfer";
+	import { coreTypeDataFilter } from "~/utils/helfer";
 
 	const props = defineProps<SchuleFachNeuProps>();
 
@@ -113,7 +113,7 @@
 		},
 	});
 
-	function getStatistikfachText(fachEintrag: FachKatalogEintrag) {
+	function getStatistikfachText(fachEintrag: CoreTypeData) {
 		return `${fachEintrag.schluessel} : ${fachEintrag.text}`;
 	}
 
