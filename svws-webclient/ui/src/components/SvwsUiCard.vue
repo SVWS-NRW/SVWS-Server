@@ -46,53 +46,19 @@
 		</component>
 
 		<transition name="collapse" @before-enter="emit('update:isOpen', true);" @enter="openCard" @after-enter="afterOpenCard" @before-leave="beforeCloseCard" @leave="closeCard" @after-leave="emit('update:isOpen', false);">
-			<div v-show="isActive" :id="'cardBody' + instanceId" class="svws-ui-card--body-wrapper">
+			<div v-show="isActive" :id="'cardBody' + instanceId" class="svws-ui-card--body-wrapper" ref="bodyWrapperRef">
 				<div class="svws-ui-card--body">
 					<!-- Content Section -->
 					<div class="body--content">
 						<!-- Left Button Section -->
-						<template v-if="showContentLeftButton">
-							<div v-if="buttonMode === 'icon'" class="card--buttons" :class="{ 'flex-col': (buttonOrientation === 'vertical') }">
-								<template v-for="(button, index) in buttons" :key="index">
-									<SvwsUiTooltip :position="(buttonOrientation === 'vertical') ? 'right' : 'top'">
-										<template #content>{{ button.label }}</template>
-										<SvwsUiButton class="card--button" @click="button.click" type="icon" aria-label="Button {{ button.label }}">
-											<span :class="[ button.icon, button.iconType ]" />
-										</SvwsUiButton>
-									</SvwsUiTooltip>
-								</template>
-							</div>
-							<div v-else class="card--buttons" :class="{ 'flex-col': (buttonOrientation === 'vertical') }">
-								<SvwsUiButton v-for="(button, index) in buttons" :key="index" :type="button.type"
-									:size="compact ? 'small' : 'normal'" class="card--button" @click="button.click">
-									<span>{{ button.label }}</span>
-								</SvwsUiButton>
-							</div>
-						</template>
+						<div v-if="showContentLeftButton" id="svws-ui-card--button-content-left" />
 						<slot name="buttonContentLeft" />
 						<!-- Main Section -->
 						<span v-if="showContentMain" class="content--main">{{ content }}</span>
 						<slot name="content" />
 						<!-- Right Button Section -->
-						<template v-if="showContentRightButton">
-							<div v-if="buttonMode === 'icon'" class="card--buttons ml-auto" :class="{ 'flex-col': (buttonOrientation === 'vertical') }">
-								<template v-for="(button, index) in buttons" :key="index">
-									<SvwsUiTooltip :position="(buttonOrientation === 'vertical') ? 'right' : 'top'">
-										<template #content>{{ button.label }}</template>
-										<SvwsUiButton class="card--button" @click="button.click" type="icon" aria-label="Button {{ button.label }}">
-											<span :class="[ button.icon, button.iconType ]" />
-										</SvwsUiButton>
-									</SvwsUiTooltip>
-								</template>
-							</div>
-							<div v-else class="card--buttons ml-auto" :class="{ 'flex-col': (buttonOrientation === 'vertical') }">
-								<SvwsUiButton v-for="(button, index) in buttons" :key="index" :type="button.type"
-									:size="compact ? 'small' : 'normal'" class="card--button" @click="button.click">
-									<span>{{ button.label }}</span>
-								</SvwsUiButton>
-							</div>
-						</template>
-						<div class="ml-auto">
+						<div v-if="showContentRightButton" id="svws-ui-card--button-content-right" />
+						<div v-else class="ml-auto">
 							<slot name="buttonContentRight" />
 						</div>
 					</div>
@@ -102,48 +68,14 @@
 					<!-- Footer Section -->
 					<div v-if="showFooter" class="body--footer">
 						<!-- Left Button Section -->
-						<template v-if="showFooterLeftButton">
-							<div v-if="buttonMode === 'icon'" class="card--buttons" :class="{ 'flex-col': (buttonOrientation === 'vertical') }">
-								<template v-for="(button, index) in buttons" :key="index">
-									<SvwsUiTooltip :position="(buttonOrientation === 'vertical') ? 'right' : 'top'">
-										<template #content>{{ button.label }}</template>
-										<SvwsUiButton class="card--button" @click="button.click" type="icon" aria-label="Button {{ button.label }}">
-											<span :class="[ button.icon, button.iconType ]" />
-										</SvwsUiButton>
-									</SvwsUiTooltip>
-								</template>
-							</div>
-							<div v-else class="card--buttons" :class="{ 'flex-col': (buttonOrientation === 'vertical') }">
-								<SvwsUiButton v-for="(button, index) in buttons" :key="index" :type="button.type"
-									:size="compact ? 'small' : 'normal'" class="card--button" @click="button.click">
-									<span>{{ button.label }}</span>
-								</SvwsUiButton>
-							</div>
-						</template>
+						<div v-if="showFooterLeftButton" id="svws-ui-card--button-footer-left" />
 						<slot name="buttonFooterLeft" />
 						<!-- Footer Main Content -->
 						<span v-if="showFooterMain" class="footer--main"> {{ footer }} </span>
 						<slot name="footer" />
 						<!-- Right Button Section -->
-						<template v-if="showFooterRightButton">
-							<div v-if="buttonMode === 'icon'" class="card--buttons ml-auto" :class="{ 'flex-col': (buttonOrientation === 'vertical') }">
-								<template v-for="(button, index) in buttons" :key="index">
-									<SvwsUiTooltip :position="(buttonOrientation === 'vertical') ? 'right' : 'top'">
-										<template #content>{{ button.label }}</template>
-										<SvwsUiButton class="card--button" @click="button.click" type="icon" aria-label="Button {{ button.label }}">
-											<span :class="[ button.icon, button.iconType ]" />
-										</SvwsUiButton>
-									</SvwsUiTooltip>
-								</template>
-							</div>
-							<div v-else class="card--buttons ml-auto" :class="{ 'flex-col': (buttonOrientation === 'vertical') }">
-								<SvwsUiButton v-for="(button, index) in buttons" :key="index" :type="button.type"
-									:size="compact ? 'small' : 'normal'" class="card--button" @click="button.click">
-									<span>{{ button.label }}</span>
-								</SvwsUiButton>
-							</div>
-						</template>
-						<div class="ml-auto">
+						<div v-if="showFooterRightButton" id="svws-ui-card--button-footer-right" />
+						<div v-else class="ml-auto">
 							<slot name="buttonFooterRight" />
 						</div>
 					</div>
@@ -151,28 +83,52 @@
 			</div>
 		</transition>
 	</div>
+
+	<!-- Buttons -->
+	<Teleport v-if="buttonContainerId && showButtons" defer :to="buttonContainerId">
+		<div class="card--buttons" :class="{ 'flex-col': (buttonOrientation === 'vertical'), 'ml-auto': (buttonPosition === 'right') }">
+			<template v-for="(button) in buttons" :key="button.label">
+				<SvwsUiTooltip :disabled="tooltipDisabled(button)" :position="buttonOrientation === 'vertical' ? 'right' : 'top'" :indicator="false">
+					<template #content>
+						{{ `${button.label}${(button.disabled && (button.disabledReason !== undefined )) ? `: ${button.disabledReason}` : ''}` }}
+					</template>
+					<SvwsUiButton class="card--button" :disabled="button.disabled" @click="button.click"
+						:type="props.buttonMode === 'text' ? button.type : 'icon'" :size="((props.buttonMode === 'text') && compact) ? 'small' : 'normal'"
+						:aria-label="`Button ${button.label}`">
+						<span :class="props.buttonMode === 'icon' ? [button.icon, button.iconType] : ''">
+							{{ props.buttonMode === 'text' ? button.label : '' }}
+						</span>
+					</SvwsUiButton>
+				</SvwsUiTooltip>
+			</template>
+		</div>
+	</Teleport>
 </template>
 
 
 <script lang="ts" setup>
 
-	import { ref, onMounted, computed, useSlots, getCurrentInstance, watch, nextTick, useId } from 'vue';
+	import { ref, onMounted, computed, useSlots, watch, nextTick, useId } from 'vue';
 	import type { ButtonType } from '../types';
 
 	const props = withDefaults(defineProps<{
 		compact?: boolean;
+		/* Collapse Optionen */
 		isOpen?: boolean;
 		collapsible?: boolean;
 		collapseIconPosition?: 'left' | 'right';
 		collapseIconOpened?: string;
 		collapseIconClosed?: string;
+		/* Header Optionen */
 		icon?: string;
 		title?: string;
 		subtitle?: string;
 		info?: string;
+		/* Body Optionen */
 		content?: string;
 		showDivider?: boolean;
 		footer?: string;
+		/* Button Optionen */
 		buttonMode?: 'text' | 'icon';
 		buttonContainer?: 'content' | 'footer';
 		buttonPosition?: 'left' | 'right';
@@ -181,20 +137,33 @@
 		onSave?: () => void;
 		onDelete?: () => void;
 		onCancel?: () => void;
+		editButtonDisabled?: boolean;
+		saveButtonDisabled?: boolean;
+		deleteButtonDisabled?: boolean;
+		cancelButtonDisabled?: boolean;
+		editButtonDisabledReason?: string;
+		saveButtonDisabledReason?: string;
+		deleteButtonDisabledReason?: string;
+		cancelButtonDisabledReason?: string;
+
 	}>(), {
 		compact: false,
+		/* Collapse Optionen */
 		isOpen: undefined,
 		collapsible: true,
 		collapseIconPosition: 'right',
 		collapseIconOpened: 'i-ri-arrow-up-s-line',
 		collapseIconClosed: 'i-ri-arrow-down-s-line',
+		/* Header Optionen */
 		icon: undefined,
 		title: undefined,
 		subtitle: undefined,
 		info: undefined,
+		/* Body Optionen */
 		content: undefined,
 		showDivider: false,
 		footer: undefined,
+		/* Button Optionen */
 		buttonMode: 'text',
 		buttonContainer: 'content',
 		buttonPosition: 'right',
@@ -203,11 +172,21 @@
 		onSave: undefined,
 		onDelete: undefined,
 		onCancel: undefined,
+		editButtonDisabled: false,
+		saveButtonDisabled: false,
+		deleteButtonDisabled: false,
+		cancelButtonDisabled: false,
+		editButtonDisabledReason: undefined,
+		saveButtonDisabledReason: undefined,
+		deleteButtonDisabledReason: undefined,
+		cancelButtonDisabledReason: undefined,
 	});
 
 	const emit = defineEmits<{
 		"update:isOpen": [isOpen: boolean];
 	}>();
+
+	const bodyWrapperRef = ref<HTMLElement>();
 
 	/**
 	 * Berechnungen, wann welches Element angezeigt wird.
@@ -222,15 +201,32 @@
 	const showSubtitle = computed(() => !slots.subtitle && (props.subtitle !== undefined) && (props.subtitle.length !== 0));
 	const showInfo = computed(() => !slots.info && (props.info !== undefined) && (props.info.length !== 0));
 	const showContentMain = computed(() => !slots.content && (props.content !== undefined) && (props.content.length !== 0));
-	const showContentLeftButton = computed(() => !slots.buttonContentLeft && (buttons.value.length !== 0) && (props.buttonPosition === 'left')
+	const showContentLeftButton = computed(() => !slots.buttonContentLeft && showButtons.value && (props.buttonPosition === 'left')
 		&& (props.buttonContainer === 'content'));
-	const showContentRightButton = computed(() => !slots.buttonContentRight && (buttons.value.length !== 0) && (props.buttonPosition === 'right')
+	const showContentRightButton = computed(() => !slots.buttonContentRight && showButtons.value && (props.buttonPosition === 'right')
 		&& (props.buttonContainer === 'content'));
 	const showFooterDivider = computed(() => !slots.footerDivider && props.showDivider);
-	const showFooter = computed(() => slots.footer || slots.buttonFooterLeft || slots.buttonFooterRight || ((props.footer !== undefined) && (props.footer.length !== 0)) || (props.buttonContainer === 'footer'));
+	const showFooter = computed(() => slots.footer || slots.buttonFooterLeft || slots.buttonFooterRight
+		|| ((props.footer !== undefined) && (props.footer.length !== 0)) || (props.buttonContainer === 'footer'));
 	const showFooterMain = computed(() => !slots.footer && (props.footer !== undefined) && (props.footer.length !== 0));
-	const showFooterRightButton = computed(() => !slots.buttonFooterRight && (props.buttonContainer === 'footer') && (props.buttonPosition === 'right'));
-	const showFooterLeftButton = computed(() => !slots.buttonFooterLeft && (props.buttonContainer === 'footer') && (props.buttonPosition === 'left'));
+	const showFooterRightButton = computed(() => !slots.buttonFooterRight && showButtons.value && (props.buttonContainer === 'footer')
+		&& (props.buttonPosition === 'right'));
+	const showFooterLeftButton = computed(() => !slots.buttonFooterLeft && showButtons.value && (props.buttonContainer === 'footer')
+		&& (props.buttonPosition === 'left'));
+	const showButtons = computed (() => buttons.value.length !== 0);
+
+	/**
+	 * Setzt die ID für den Teleport, abhängig von der gewünschten Position der Buttons.
+	 * Diese wird definiert durch die props: buttonContainer und buttonPosition.
+	 */
+	const buttonContainerId = computed (() => {
+		if(!showButtons.value)
+			return undefined;
+		if(props.buttonContainer === "content")
+			return (props.buttonPosition === "left") ? "#svws-ui-card--button-content-left" : "#svws-ui-card--button-content-right";
+		else
+			return (props.buttonPosition === "left") ? "#svws-ui-card--button-footer-left" : "#svws-ui-card--button-footer-right";
+	});
 
 	const ariaExpanded = computed(() => props.collapsible ? isActive.value : undefined);
 
@@ -242,19 +238,33 @@
 		label: string;
 		icon: string;
 		iconType: string;
+		disabled: boolean;
+		disabledReason: string | undefined;
 		click: () => void;
 	}
 
 	const buttons = computed<ButtonConfig[]>(() => {
 		const buttons = new Array<ButtonConfig>();
 		if (props.onSave !== undefined)
-			buttons.push({ type: 'primary', label: 'Speichern', icon: 'i-ri-check-line', iconType: 'icon-primary', click: props.onSave });
+			buttons.push({
+				type: 'primary', label: 'Speichern', icon: 'i-ri-check-line', iconType: 'icon-primary', disabled: props.saveButtonDisabled,
+				disabledReason: props.saveButtonDisabledReason, click: props.onSave,
+			});
 		if (props.onCancel !== undefined)
-			buttons.push({ type: 'secondary', label: 'Abbrechen', icon: 'i-ri-close-line', iconType: 'icon-primary', click: props.onCancel });
+			buttons.push({
+				type: 'secondary', label: 'Abbrechen', icon: 'i-ri-close-line', iconType: 'icon-primary', disabled: props.cancelButtonDisabled,
+				disabledReason: props.cancelButtonDisabledReason, click: props.onCancel,
+			});
 		if (props.onEdit !== undefined)
-			buttons.push({ type: 'primary', label: 'Bearbeiten', icon: 'i-ri-edit-2-line', iconType: 'icon-primary', click: props.onEdit });
+			buttons.push({
+				type: 'primary', label: 'Bearbeiten', icon: 'i-ri-edit-2-line', iconType: 'icon-primary', disabled: props.editButtonDisabled,
+				disabledReason: props.editButtonDisabledReason, click: props.onEdit,
+			});
 		if (props.onDelete !== undefined)
-			buttons.push({ type: 'danger', label: 'Löschen', icon: 'i-ri-delete-bin-line', iconType: 'icon-error', click: props.onDelete });
+			buttons.push({
+				type: 'danger', label: 'Löschen', icon: 'i-ri-delete-bin-line', iconType: 'icon-error', disabled: props.deleteButtonDisabled,
+				disabledReason: props.deleteButtonDisabledReason, click: props.onDelete,
+			});
 		return buttons;
 	});
 
@@ -271,10 +281,15 @@
 	});
 
 	onMounted(() => {
-		if (props.collapsible)
-			setActive((props.isOpen === undefined) ? false : props.isOpen)
-		else
-			setActive(true);
+		if (props.isOpen !== undefined) {
+			setActive(props.isOpen);
+		} else {
+			setActive(!props.collapsible);
+		}
+
+		// Setzt die initiale Größe des collapsible Wrappers, um Transitions korrekt ausführen zu können.
+		if (bodyWrapperRef.value !== undefined)
+			bodyWrapperRef.value.style.maxHeight = isActive.value ? 'auto' : '0';
 	});
 
 	/**
@@ -284,7 +299,6 @@
 	 */
 	async function openCard (content: Element, done: () => void) {
 		const element = content as HTMLElement;
-		element.style.maxHeight = '0';
 		await nextTick(() => {
 			element.style.maxHeight = `${element.scrollHeight}px`;
 			element.addEventListener('transitionend', done, { once: true });
@@ -336,6 +350,18 @@
 			isActive.value = setActive;
 		else
 			isActive.value = !isActive.value;
+	}
+
+	/**
+	 * Berechnet, ob ein Tooltip für den Button angezeigt werden soll. Tooltips werden immer dann angezeigt, wenn die Funktion des Buttons nicht direkt
+	 * ersichtlich ist (Icon-Buttons) oder wenn ein Button disabled ist und der Grund dafür im Tooltip erwähnt wird.
+	 *
+	 * @param button Der Button, für den überprüft wird, ob er ein Tooltip benötigt.
+	 */
+	function tooltipDisabled (button: ButtonConfig) {
+		if (!button.disabled && props.buttonMode === 'text')
+			return true;
+		return false;
 	}
 
 </script>
@@ -438,7 +464,12 @@
 							span {
 								@apply icon;
 							}
+
+							&:disabled {
+								@apply icon-gray bg-transparent;
+							}
 						}
+
 					}
 				}
 			}
@@ -493,15 +524,16 @@
 				@apply border-ui-brand-hover;
 			}
 		}
+
+		.collapse-enter-active,
+		.collapse-leave-active {
+			@apply transition-[max-height] duration-500 delay-[50ms] ease-in-out;
+		}
+
+		.collapse-leave-active {
+			@apply delay-0;
+		}
 	}
 
-	.collapse-enter-active,
-	.collapse-leave-active {
-		@apply transition-[max-height] duration-500 delay-[50ms] ease-in-out;
-	}
-
-	.collapse-leave-active {
-		@apply delay-0;
-	}
 
 </style>

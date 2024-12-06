@@ -28,10 +28,11 @@
 			<div class="p-4">
 				<svws-ui-card :compact="state.compact" :collapsible="false" :collapse-icon-position="state.iconPosition"
 					:icon="state.showIcon ? 'i-ri-settings-2-line' : undefined" :title="state.title" :subtitle="state.subtitle" :info="state.info"
-					:content="state.content" :show-divider="state.showDivider" :footer="state.footer" />
+					:content="state.content" :show-divider="state.showDivider" :footer="state.footer" :is-open="state.isOpen" />
 			</div>
 			<template #controls>
 				<HstCheckbox v-model="state.compact" title="kompakt" />
+				<HstCheckbox v-model="state.isOpen" title="geöffnet" />
 				<div class="text-headline-sm pl-2">Header</div>
 				<HstCheckbox v-model="state.showIcon" title="Icon" />
 				<HstText v-model="state.title" title="Titel" />
@@ -51,7 +52,11 @@
 					:button-container="state.buttonContainer" :button-position="state.buttonPosition" :button-orientation="state.buttonOrientation"
 					:on-edit="state.showEdit ? onEdit : undefined" :on-save="state.showSave ? onSave : undefined"
 					:on-delete="state.showDelete ? onDelete : undefined" :on-cancel="state.showCancel ? onCancel : undefined"
-					@update:is-open="(isOpen) => state.isOpen = isOpen" />
+					:edit-button-disabled="state.disabledEdit" :save-button-disabled="state.disabledSave" :delete-button-disabled="state.disabledDelete"
+					:cancel-button-disabled="state.disabledCancel" :edit-button-disabled-reason="state.disabledEdit ? state.disabledReason : undefined"
+					:save-button-disabled-reason="state.disabledSave ? state.disabledReason : undefined"
+					:delete-button-disabled-reason="state.disabledDelete ? state.disabledReason : undefined"
+					:cancel-button-disabled-reason="state.disabledCancel ? state.disabledReason : undefined" @update:is-open="(isOpen) => state.isOpen = isOpen" />
 			</div>
 			<template #controls>
 				<HstCheckbox v-model="state.compact" title="kompakt" />
@@ -91,6 +96,12 @@
 				<HstCheckbox v-model="state.showCancel" title="Abbrechen" />
 				<HstCheckbox v-model="state.showEdit" title="Bearbeiten" />
 				<HstCheckbox v-model="state.showDelete" title="Löschen" />
+				<div class="font-medium p-2">Disabled</div>
+				<HstCheckbox v-model="state.disabledSave" title="Speichern" />
+				<HstCheckbox v-model="state.disabledCancel" title="Abbrechen" />
+				<HstCheckbox v-model="state.disabledEdit" title="Bearbeiten" />
+				<HstCheckbox v-model="state.disabledDelete" title="Löschen" />
+				<HstText v-model="state.disabledReason" title="Disabled Grund" />
 			</template>
 		</Variant>
 	</Story>
@@ -129,6 +140,11 @@
 		buttonPosition: 'right' as 'left' | 'right',
 		buttonContainer: 'content' as 'content' | 'footer',
 		buttonOrientation: 'horizontal' as 'vertical' | 'horizontal',
+		disabledEdit: false,
+		disabledDelete: false,
+		disabledCancel: false,
+		disabledSave: false,
+		disabledReason: 'Sie benötigen Adminrechte, um diese Aktion ausführen zu können',
 	})
 
 </script>
