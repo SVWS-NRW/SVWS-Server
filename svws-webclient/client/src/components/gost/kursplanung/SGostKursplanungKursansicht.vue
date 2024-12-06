@@ -174,21 +174,6 @@
 										</div>
 									</div>
 								</template>
-								<template v-else>
-									<div role="row" class="svws-ui-tr svws-disabled-soft select-none" :style="{ '--background-color': bgColor(fachwahl) }" :key="fachwahl.kursart.id">
-										<div role="cell" class="svws-ui-td" />
-										<div role="cell" class="svws-ui-td text-black/50">{{ fachwahl.fachwahlen.kuerzel }}-{{ fachwahl.kursart.kuerzel }}</div>
-										<div role="cell" class="svws-ui-td svws-align-center" :style="{'gridColumn': 'span 3' }">
-											<svws-ui-button :disabled="!hatUpdateKompetenz" type="transparent" @click="hatUpdateKompetenz && add_kurs(fachwahl)" title="Kurs anlegen">
-												<span class="inline-flex items-center text-button -mr-0.5">
-													<span class="icon i-ri-book-2-line" />
-													<span class="icon-sm i-ri-add-line -ml-0.5 text-sm" />
-												</span>
-												Kurs anlegen
-											</svws-ui-button>
-										</div>
-									</div>
-								</template>
 							</template>
 							<template v-else>
 								<template v-for="kurs in listeDerKurse(fachwahl)" :key="kurs.id">
