@@ -6,7 +6,7 @@
 				<p><b>Wichtig: </b>Die Zeichenkodierung muss UTF-8 ohne BOM sein. </p>
 			</div>
 			<svws-ui-input-wrapper>
-				<input id="contentFocusField" type="file" accept=".txt,.csv" @change="import_file" :disabled="loading">
+				<input class="contentFocusField" type="file" accept=".txt,.csv" @change="import_file" :disabled="loading">
 				<svws-ui-spinner :spinning="loading" />
 			</svws-ui-input-wrapper>
 			<log-box :logs="logs" :status="status" />

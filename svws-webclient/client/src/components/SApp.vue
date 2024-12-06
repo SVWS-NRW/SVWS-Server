@@ -8,7 +8,6 @@
 					<svws-ui-menu-header :user="username" :schule="schulname" :schema="schemaname" @click="setApp(benutzerprofilApp)" class="cursor-pointer" />
 				</template>
 				<template #default>
-					<div :ref="el => (el !== null) && sectionRefs.set(0, <HTMLElement>el)" tabindex="-1" />
 					<template v-for="item in apps" :key="item.name">
 						<template v-if="item.name !== 'einstellungen'">
 							<svws-ui-menu-item :active="is_active(item)" @click="startSetApp(item)">
@@ -86,7 +85,7 @@
 					<template #header />
 					<template #content>
 						<p v-if="focusSwitchingEnabled" v-show="focusHelpVisible" :id="focusSwitchingEnabled && showSubmenu() ? 'menuFocusNumber' : ''" class="region-enumeration">2</p>
-						<svws-ui-secondary-menu-navigation :id="focusSwitchingEnabled && showSubmenu() ? 'menuFocusBorder' : ''" class="focus-region" :tab-manager="(app.name.startsWith('schule') ? tabManagerSchule : tabManagerEinstellungen)" />
+						<svws-ui-secondary-menu-navigation :id="focusSwitchingEnabled && showSubmenu() ? 'menuFocusBorder' : ''" class="focus-region" :class="{'highlighted': focusHelpVisible}" :tab-manager="(app.name.startsWith('schule') ? tabManagerSchule : tabManagerEinstellungen)" />
 					</template>
 				</svws-ui-secondary-menu>
 			</template>
@@ -103,13 +102,11 @@
 				</svws-ui-secondary-menu>
 			</template>
 			<template v-else>
-				<div :ref="el => (el !== null) && sectionRefs.set(1, <HTMLElement>el)" tabindex="-1" />
 				<router-view :key="app.name" name="liste" />
 			</template>
 		</template>
 		<template #main>
 			<main class="app--page" :class="app.name" role="main">
-				<div :ref="el => (el !== null) && sectionRefs.set(2, <HTMLElement>el)" tabindex="-1" />
 				<div v-show="pendingSetApp" class="page--wrapper" :class="{'svws-api--pending': apiStatus.pending}">
 					<svws-ui-header>
 						<div class="flex items-center">
@@ -125,7 +122,7 @@
 					</svws-ui-header>
 				</div>
 				<p v-if="focusSwitchingEnabled" v-show="focusHelpVisible" id="contentFocusNumber" class="region-enumeration">8</p>
-				<div :id="focusSwitchingEnabled ? 'contentFocusBorder' : ''" v-show="!pendingSetApp" class="page--wrapper" :class="{'svws-api--pending': apiStatus.pending, 'focus-region': focusSwitchingEnabled}">
+				<div :id="focusSwitchingEnabled ? 'contentFocusBorder' : ''" v-show="!pendingSetApp" class="page--wrapper" :class="{'svws-api--pending': apiStatus.pending, 'focus-region': focusSwitchingEnabled, 'highlighted': focusHelpVisible}">
 					<router-view :key="app.name" />
 				</div>
 			</main>
@@ -168,9 +165,6 @@
 	const props = defineProps<AppProps>();
 
 	const { focusHelpVisible, focusSwitchingEnabled , enable, disable } = useRegionSwitch();
-
-	// const nextFocusSection = ref(0);
-	const sectionRefs = ref<Map<number, HTMLElement>>(new Map());
 
 	const schulname = computed<string>(() => {
 		const name = props.schuleStammdaten.bezeichnung1;
@@ -318,17 +312,6 @@
 		const newError: CapturedError = { id: counter.value, name, message, stack: reason.stack?.split("\n") || '', log }
 		errors.value.set(newError.id, newError);
 	}
-
-	// window.addEventListener("keydown", switchFocus);
-	//
-	// function switchFocus(event: KeyboardEvent) {
-	// 	if (!event.repeat && event.ctrlKey && event.altKey && ((event.key === "PageUp") || (event.key === "PageDown"))) {
-	// 		nextFocusSection.value = event.key === "PageUp"
-	// 			? ((nextFocusSection.value + 1) % sectionRefs.value.size)
-	// 			: (nextFocusSection.value === 0 ) ? (sectionRefs.value.size - 1) : (nextFocusSection.value - 1);
-	// 		sectionRefs.value.get(nextFocusSection.value)?.focus();
-	// 	}
-	// }
 
 </script>
 

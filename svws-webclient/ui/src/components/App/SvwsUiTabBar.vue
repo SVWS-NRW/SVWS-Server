@@ -1,7 +1,7 @@
 <template>
 	<div :class="{ 'svws-ui-page': !secondary, 'svws-single-tab': tabManager().tabs.length === 1 }">
 		<div class="svws-ui-tabs" :class="{ 'svws-ui-tabs--secondary': secondary }">
-			<div :id="((tabManager().tabs.length > 1) && focusSwitchingEnabled) ? (secondary ? 'tabsSecondLevelFocusBorder' : 'tabsFirstLevelFocusBorder') : ''" class="svws-ui-tabs--wrapper" :class="{'focus-region': focusSwitchingEnabled}">
+			<div :id="((tabManager().tabs.length > 1) && focusSwitchingEnabled) ? (secondary ? 'tabsSecondLevelFocusBorder' : 'tabsFirstLevelFocusBorder') : ''" class="svws-ui-tabs--wrapper" :class="{'focus-region': focusSwitchingEnabled, 'highlighted': (tabManager().tabs.length > 1) && focusHelpVisible}">
 				<p v-if="(tabManager().tabs.length > 1) && focusHelpVisible && secondary" id="tabsSecondLevelFocusNumber" class="region-enumeration">6</p>
 				<p v-else-if="(tabManager().tabs.length > 1) && focusHelpVisible" id="tabsFirstLevelFocusNumber" class="region-enumeration">5</p>
 				<div v-if="state.scrolled" class="svws-ui-tabs--scroll-button -left-1 pl-1 bg-gradient-to-l" @click="scroll('left')">
@@ -11,10 +11,12 @@
 				</div>
 				<div ref="tabsListElement" class="svws-ui-tabs--list">
 					<template v-for="(tab, index) in props.tabManager().tabs" :key="index">
-						<button :id="tab.name === tabManager().tab.name
-								? (secondary ? 'tabsSecondLevelFocusField' : 'tabsFirstLevelFocusField')
-								: ''" v-if="!(tab.hide === true) && (tab.text !== '')" @click="tabManager().setTab(tab)" class="svws-ui-tab-button flex flex-row"
-							:class="{ 'svws-active': tab.name === tabManager().tab.name }">
+						<button v-if="!(tab.hide === true) && (tab.text !== '')" @click="tabManager().setTab(tab)" class="svws-ui-tab-button flex flex-row"
+							:class="{
+								'svws-active': tab.name === tabManager().tab.name,
+								'tabsFirstLevelFocusField': tab.name === tabManager().tab.name && !secondary,
+								'tabsSecondLevelFocusField': tab.name === tabManager().tab.name && secondary
+							}">
 							<span>{{ tab.text }}</span>
 							<slot name="badge" :tab />
 						</button>
@@ -66,7 +68,7 @@
 		scrolledMax: false,
 		scrollFactor: 4,
 		maxScrollLeft: 0,
-		scrollOffset: 12
+		scrollOffset: 12,
 	});
 
 	onMounted(() => {
@@ -102,7 +104,7 @@
 		tabsListElement.value?.scrollBy({
 			top: 0,
 			left: (dir * tabsListElement.value.scrollWidth) / state.value.scrollFactor,
-			behavior: "smooth"
+			behavior: "smooth",
 		});
 	}
 

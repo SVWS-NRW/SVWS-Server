@@ -3,7 +3,7 @@
 		<div class="flex flex-col gap-12 lg:gap-16">
 			<svws-ui-content-card :title="`Benutzertyp ${BenutzerTyp.getByID(getBenutzerManager().daten().typ)?.bezeichnung}`">
 				<svws-ui-input-wrapper :grid="2">
-					<svws-ui-text-input id="contentFocusField" :model-value="getBenutzerManager().getAnmeldename()" @change="setAnmeldename" placeholder="Benutzername" />
+					<svws-ui-text-input class="contentFocusField" :model-value="getBenutzerManager().getAnmeldename()" @change="setAnmeldename" placeholder="Benutzername" />
 					<svws-ui-text-input :model-value="getBenutzerManager().getAnzeigename()" @change="setAnzeigename" placeholder="Anzeigename" :readonly="getBenutzerManager().daten().typ !== BenutzerTyp.ALLGEMEIN.id" />
 					<svws-ui-text-input v-model.trim="kennwort1" type="password" placeholder="Neues Passwort" />
 					<svws-ui-text-input v-model.trim="kennwort2" type="password" placeholder="Neues Passwort wiederholen" />

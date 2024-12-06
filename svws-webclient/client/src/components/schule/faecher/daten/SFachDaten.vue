@@ -2,7 +2,7 @@
 	<div class="page--content">
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input id="contentFocusField" placeholder="Kürzel" :model-value="manager().daten().kuerzel" @change="kuerzel => patch({ kuerzel: kuerzel ?? undefined })" />
+				<svws-ui-text-input class="contentFocusField" placeholder="Kürzel" :model-value="manager().daten().kuerzel" @change="kuerzel => patch({ kuerzel: kuerzel ?? undefined })" />
 				<svws-ui-select title="Statistik-Fach" :model-value="Fach.getBySchluesselOrDefault(manager().daten().kuerzelStatistik)"
 					@update:model-value="value => patch({ kuerzelStatistik: (value === undefined) || (value === null) ? undefined : value.daten(schuljahr)?.schluessel })"
 					:items="Fach.values()" :item-text="(z: Fach) => z.daten(schuljahr)?.schluessel + ' : ' + z.daten(schuljahr)?.text" />

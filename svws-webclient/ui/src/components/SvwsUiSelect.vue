@@ -7,10 +7,9 @@
 		'svws-danger': danger,
 		'svws-disabled': disabled,
 		'svws-removable': removable,
-		'svws-readonly': readonly
+		'svws-readonly': readonly,
 	}" v-bind="$attrs">
 		<svws-ui-text-input ref="inputEl"
-			:id="focusId"
 			:model-value="dynModelValue"
 			:readonly="!autocomplete || readonly"
 			:is-select-input="!readonly"
@@ -39,7 +38,9 @@
 			@keydown.esc.prevent="toggleListBox"
 			@keydown.space.prevent="onSpace"
 			@keydown.tab="onTab"
-			:focus="autofocus" />
+			:focus="autofocus"
+			:class="{'contentFocusField': focusClass }"
+		/>
 		<button v-if="removable && hasSelected && !readonly" role="button" @click.stop="removeItem" class="svws-remove">
 			<span class="icon i-ri-close-line my-1" />
 		</button>
@@ -86,7 +87,7 @@
 		indeterminate?: boolean;
 		highlightItem?: Item;
 		autofocus?: boolean;
-		focusId?: string;
+		focusClass?: boolean;
 	}>(), {
 		label: '',
 		title: '',
@@ -104,7 +105,7 @@
 		indeterminate: false,
 		highlightItem: undefined,
 		autofocus: false,
-		focusId: "",
+		focusClass: false,
 	})
 
 	const emit = defineEmits<{

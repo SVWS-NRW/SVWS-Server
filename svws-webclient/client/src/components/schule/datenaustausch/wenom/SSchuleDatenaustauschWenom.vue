@@ -36,7 +36,7 @@
 				<div v-else>
 					<svws-ui-content-card title="Zugangsdaten zum Webnotenmanager">
 						<div class="flex items-start gap-3">
-							<svws-ui-text-input id="contentFocusField" v-model.trim="url" type="text" placeholder="URL" />
+							<svws-ui-text-input class="contentFocusField" v-model.trim="url" type="text" placeholder="URL" />
 							<svws-ui-text-input v-model.trim="token" type="text" placeholder="Secret" />
 							<svws-ui-button type="primary" @click="setWenomCredentials(url, token)" :disabled="!url || !token">
 								speichern

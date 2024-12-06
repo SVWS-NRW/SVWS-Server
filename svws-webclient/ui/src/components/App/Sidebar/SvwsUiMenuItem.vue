@@ -1,12 +1,12 @@
 <template>
-	<a :id="active
-			? (secondary ? 'menuFocusField' : 'navigationFocusField')
-			: ''" class="sidebar--menu-item" :class="{
-			'sidebar--menu-item--active': active,
-			'sidebar--menu-item--collapsed': collapsed,
-			'sidebar--menu-item--disabled': disabled,
-			'sidebar--menu-item--statistik': hatlabel === 'Statistik' || statistik,
-		}" href="#" @click.prevent="onClick"
+	<a class="sidebar--menu-item" :class="{
+		'sidebar--menu-item--active': active,
+		'sidebar--menu-item--collapsed': collapsed,
+		'sidebar--menu-item--disabled': disabled,
+		'sidebar--menu-item--statistik': hatlabel === 'Statistik' || statistik,
+		'menuFocusField': active && secondary,
+		'navigationFocusField': active && !secondary,
+	}" href="#" @click.prevent="onClick"
 		:title="disabled ? 'Nicht verfügbar' : hatlabel" ref="menuLink">
 		<span v-if="$slots.icon" class="sidebar--menu-item--icon">
 			<slot name="icon" />

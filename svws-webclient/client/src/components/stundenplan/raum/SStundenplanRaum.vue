@@ -4,8 +4,8 @@
 			<svws-ui-sub-nav>
 				<div class="ml-4 flex gap-0.5 items-center leading-none">
 					<div class="text-button font-bold mr-1 -mt-px">Raum:</div>
-					<svws-ui-select focus-id="contentFocusField" headless title="Raum" v-model="raum" :items="stundenplanManager().raumGetMengeVerwendetAsList()" :item-text="i => i.kuerzel" autocomplete
-						:item-filter="(i, text)=> i.filter(k => k.kuerzel.includes(text.toLocaleLowerCase()))" :item-sort="() => 0" type="transparent" />
+					<svws-ui-select headless title="Raum" v-model="raum" :items="stundenplanManager().raumGetMengeVerwendetAsList()" :item-text="i => i.kuerzel" autocomplete
+						:item-filter="(i, text)=> i.filter(k => k.kuerzel.includes(text.toLocaleLowerCase()))" :item-sort="() => 0" type="transparent" focus-class />
 					<svws-ui-button type="secondary" @click.stop="ignoreEmpty = !ignoreEmpty" title="Ganzen Stundenplan anzeigen, auch leere Stunden" class="h-9">
 						<span class="flex-grow w-32">{{ ignoreEmpty ? 'Keine leeren Stunden':'Alle Stunden' }}</span>
 					</svws-ui-button>

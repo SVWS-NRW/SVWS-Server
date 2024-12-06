@@ -4,7 +4,7 @@
 			<div class="content-card">
 				<div class="content-card--header content-card--headline">Allgemein</div>
 				<div class="content-card--content content-card--content--with-title input-wrapper grid-cols-2">
-					<svws-ui-text-input id="contentFocusField" :disabled="!hatUpdateKompetenz" placeholder="Bezeichnung" :model-value="stundenplanManager().getBezeichnungStundenplan()" @change="bezeichnungStundenplan=> bezeichnungStundenplan && patch({ bezeichnungStundenplan })" type="text" />
+					<svws-ui-text-input class="contentFocusField" :disabled="!hatUpdateKompetenz" placeholder="Bezeichnung" :model-value="stundenplanManager().getBezeichnungStundenplan()" @change="bezeichnungStundenplan=> bezeichnungStundenplan && patch({ bezeichnungStundenplan })" type="text" />
 					<div v-if="hatUpdateKompetenz" :class="{'flex gap-2': showExtraWTM}">
 						<svws-ui-select title="Wochentypmodell" :items="[0,2,3,4,5]" :item-text="i=> wochenTypModell[i] || ''" :model-value="stundenplanManager().getWochenTypModell()" @update:model-value="modell => doPatch(modell)" ref="select" />
 						<svws-ui-input-number v-if="showExtraWTM" placeholder="Wochentypmodell" :model-value="stundenplanManager().getWochenTypModell() < 5 ? 5 : stundenplanManager().getWochenTypModell()" @change="modell => doPatch(modell)" :min="5" :max="100" />

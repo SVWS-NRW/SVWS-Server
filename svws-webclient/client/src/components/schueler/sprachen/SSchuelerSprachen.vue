@@ -2,9 +2,9 @@
 	<div class="page--content">
 		<svws-ui-content-card title="Sprachenfolge">
 			<div v-if="hatUpdateKompetenz && verfuegbareSprachen.length" class="w-1/4 mb-4">
-				<svws-ui-select focus-id="contentFocusField" title="Hinzufügen..." removable :model-value="undefined" @update:model-value="sprache=> hinzufuegen(sprache)"
+				<svws-ui-select title="Hinzufügen..." removable :model-value="undefined" @update:model-value="sprache=> hinzufuegen(sprache)"
 					:items="verfuegbareSprachen" :item-text="i => `${i} - ${Fach.getMapFremdsprachenKuerzelAtomar(schuljahr).get(i)?.daten(schuljahr)?.text ?? '—'}`"
-					ref="selectSprachen" autofocus />
+					ref="selectSprachen" autofocus focus-class />
 			</div>
 			<svws-ui-table v-if="sprachbelegungen().size()" :items="sprachbelegungen()" :columns="colsSprachenfolge" :selectable="hatUpdateKompetenz" v-model="auswahl">
 				<template #cell(sprache)="{ value: kuerzel }">{{ Fach.getMapFremdsprachenKuerzelAtomar(schuljahr).get(kuerzel)?.daten(schuljahr)?.text ?? '—' }} </template>

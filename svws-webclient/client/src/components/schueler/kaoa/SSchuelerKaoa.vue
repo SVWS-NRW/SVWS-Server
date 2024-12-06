@@ -2,7 +2,7 @@
 	<div class="page--content">
 		<svws-ui-content-card class="col-span-full">
 			<div class="grid justify-items-end mr-2">
-				<svws-ui-button id="contentFocusField" v-if="currentMode !== Mode.ADD" title="AddButton" @click="enterAddMode"> Neuer Eintrag </svws-ui-button>
+				<svws-ui-button class="contentFocusField" v-if="currentMode !== Mode.ADD" title="AddButton" @click="enterAddMode"> Neuer Eintrag </svws-ui-button>
 			</div>
 			<!-- UI Card zum Erstellen eines neuen Eintrags  !-->
 			<svws-ui-card v-if="currentMode === Mode.ADD" class="col-span-full" :is-open="true" :collapsible="false"

@@ -3,7 +3,7 @@
 		<!-- Auswahl des Untis-Exportes (linke Seite) -->
 		<div class="h-full min-w-48 w-48 flex flex-col gap-2">
 			<template v-for="(gpu, index) in gpus" :key="gpu.title">
-				<svws-ui-button v-if="isVisible(gpu)" :id="index===0 ? 'contentFocusField' : ''" :type="(aktuell === gpu) ? 'primary' : 'secondary'" @click="onSelect(gpu)">
+				<svws-ui-button v-if="isVisible(gpu)" :class="{'contentFocusField': index===0 }" :type="(aktuell === gpu) ? 'primary' : 'secondary'" @click="onSelect(gpu)">
 					<div class="flex flex-col gap-1">
 						<p class="text-left font-bold ">{{ gpu.title }}</p>
 						<p class="text-left font-normal">{{ gpu.files.join(', ') }}</p>

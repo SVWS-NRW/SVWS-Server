@@ -2,7 +2,7 @@
 	<div class="page--content">
 		<svws-ui-content-card title="Basisdaten">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input id="contentFocusField" placeholder="Name" :model-value="daten.name1" @change="name1=>patch({name1: name1 ?? undefined})" type="text" />
+				<svws-ui-text-input class="contentFocusField" placeholder="Name" :model-value="daten.name1" @change="name1=>patch({name1: name1 ?? undefined})" type="text" />
 				<svws-ui-text-input placeholder="Namensergänzung" :model-value="daten.name2" @change="name2=>patch({name2: name2 ?? undefined})" type="text" />
 				<svws-ui-select title="Beschäftigungsart" :model-value="beschaeftigungsart" :items="mapBeschaeftigungsarten" :item-text="i => i.text ?? ''" />
 				<svws-ui-text-input placeholder="Branche" :model-value="daten.branche" @change="branche=>patch({branche: branche ?? undefined})" title="Branche" type="text" />

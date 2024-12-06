@@ -16,14 +16,14 @@ export function useRegionSwitch() {
 		["Digit8", "contentFocusField"],
 	]);
 
-	const regionBorders = ["navigationFocusBorder", "menuFocusBorder", "filterFocusBorder", "listFocusBorder", "tabsFirstLevelFocusBorder", "tabsSecondLevelFocusBorder", "tabsThirdLevelFocusBorder", "contentFocusBorder"];
-	const regionNumbers = ["navigationFocusNumber", "menuFocusNumber", "filterFocusNumber", "listFocusNumber", "tabsFirstLevelFocusNumber", "tabsSecondLevelFocusNumber", "tabsThirdLevelFocusNumber","contentFocusNumber"]
-
 	function switchRegion(event: KeyboardEvent) {
 		if (event.repeat || !event.altKey)
 			return
 		if (regionMap.has(event.code)) {
-			document.getElementById(regionMap.get(event.code) ?? "")?.focus();
+			event.preventDefault();
+			const htmlElement = document.getElementsByClassName(regionMap.get(event.code) ?? "").item(0);
+			if (htmlElement !== null)
+				(htmlElement as HTMLElement).focus();
 		}
 		else if (event.code === 'Digit0') {
 			toggleHelp();
@@ -32,17 +32,6 @@ export function useRegionSwitch() {
 
 	function toggleHelp() {
 		focusHelpVisible.value = !focusHelpVisible.value;
-		for (let i=0; i<= regionBorders.length; i++) {
-			const borderElement = document.getElementById(regionBorders[i]);
-			const enumerationElement = document.getElementById(regionNumbers[i]);
-			if (focusHelpVisible.value) {
-				borderElement?.classList.add("highlighted");
-				enumerationElement?.classList.add("highlighted");
-			} else {
-				borderElement?.classList.remove("highlighted");
-				enumerationElement?.classList.remove("highlighted");
-			}
-		}
 	}
 
 	function enable() {

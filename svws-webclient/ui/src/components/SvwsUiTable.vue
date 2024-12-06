@@ -1,6 +1,6 @@
 <template>
 	<p v-if="focusSwitchingEnabled && ($slots.search || $slots.filter || $slots.filterAdvanced || toggleColumns)" v-show="focusHelpVisible" id="filterFocusNumber" class="region-enumeration">3</p>
-	<div :id="focusSwitchingEnabled ? 'filterFocusBorder' : ''" v-if="$slots.search || $slots.filter || $slots.filterAdvanced || toggleColumns" class="svws-ui-table-filter focus-region" :class="{'svws-open': $slots.filter && isFilterOpen}">
+	<div :id="focusSwitchingEnabled ? 'filterFocusBorder' : ''" v-if="$slots.search || $slots.filter || $slots.filterAdvanced || toggleColumns" class="svws-ui-table-filter focus-region" :class="{'svws-open': $slots.filter && isFilterOpen, 'highlighted': focusHelpVisible}">
 		<div class="flex w-full gap-0.5 overflow-hidden">
 			<div class="flex-grow" v-if="$slots.search">
 				<slot name="search" />
@@ -63,6 +63,7 @@
 			'overflow-visible': !scroll,
 			'overflow-auto': scroll,
 			'pr-4': scroll && win11FForMacOS,
+			'highlighted': focusHelpVisible,
 		}">
 		<p v-if="focusHelpVisible" id="listFocusNumber" class="region-enumeration">4</p>
 		<div v-if="!disableHeader" class="svws-ui-thead" role="rowgroup" aria-label="Tabellenkopf">
@@ -110,8 +111,8 @@
 				</div>
 				<template v-for="(row, index) in sortedRows">
 					<slot name="rowCustom" :row="row.source">
-						<div :id="isRowClicked(row) ? 'listFocusField' : ''" class="svws-ui-tr" role="row" :key="`table-row_${row}_${index}`" @click.exact="toggleRowClick(row)" :ref="el => itemRefs.set(index, el)"
-							:class="{ 'svws-selected': isRowSelected(row), 'svws-clicked': isRowClicked(row), }" tabindex="0" @keydown.enter="toggleRowClick(row)"
+						<div class="svws-ui-tr" role="row" :key="`table-row_${row}_${index}`" @click.exact="toggleRowClick(row)" :ref="el => itemRefs.set(index, el)"
+							:class="{ 'svws-selected': isRowSelected(row), 'svws-clicked': isRowClicked(row), 'listFocusField': isRowClicked(row)}" tabindex="0" @keydown.enter="toggleRowClick(row)"
 							@keydown.down.prevent="switchElement($event, itemRefs, index, false)" @keydown.up.prevent="switchElement($event, itemRefs, index, true)">
 							<slot name="row" :row="row.source">
 								<template v-if="selectable">

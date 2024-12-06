@@ -2,7 +2,7 @@
 	<div class="page--content">
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input id="contentFocusField" placeholder="Kürzel" :model-value="jahrgangListeManager().daten().kuerzel" @change="patchKuerzel" type="text" :valid="validateKuerzel" :max-len="20" :min-len="1" />
+				<svws-ui-text-input class="contentFocusField" placeholder="Kürzel" :model-value="jahrgangListeManager().daten().kuerzel" @change="patchKuerzel" type="text" :valid="validateKuerzel" :max-len="20" :min-len="1" />
 				<svws-ui-text-input placeholder="Bezeichnung" :model-value="jahrgangListeManager().daten().bezeichnung" @change="bezeichnung => patch({ bezeichnung: bezeichnung ?? '' })" type="text" />
 				<svws-ui-select title="Schulgliederung" v-model="schulgliederung" :items="Schulgliederung.getBySchuljahrAndSchulform(schuljahr, schulform)" :item-text="textSchulgliederung" />
 				<svws-ui-select title="Statistik-Jahrgang" v-model="statistikjahrgang" :items="Jahrgaenge.getListBySchuljahrAndSchulform(schuljahr, schulform)" :item-text="textStatistikJahrgang" :empty-text="() => textStatistikJahrgang(null)" removable statistics />

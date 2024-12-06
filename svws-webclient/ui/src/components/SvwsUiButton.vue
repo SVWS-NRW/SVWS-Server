@@ -1,5 +1,5 @@
 <template>
-	<button :id="filterButton ? 'filterFocusField' : ''" class="button" :class="{
+	<button class="button" :class="{
 		'button--primary': type === 'primary',
 		'button--secondary': type === 'secondary',
 		'button--danger': (type === 'error') || (type === 'danger'),
@@ -8,6 +8,7 @@
 		'button--trash': type === 'trash',
 		'button--small': size === 'small',
 		'button--big': size === 'big',
+		'filterFocusField': filterButton,
 	}" :disabled="disabled" ref="addButton">
 		<slot v-if="type !== 'trash'" />
 		<span v-if="type === 'trash'" class="button--trash-icon">
