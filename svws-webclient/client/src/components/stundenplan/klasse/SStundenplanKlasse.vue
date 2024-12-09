@@ -137,35 +137,13 @@
 			<template v-if="(auswahl !== undefined) && (serverMode === ServerMode.DEV)">
 				<svws-ui-content-card title="Unterricht">
 					<svws-ui-input-wrapper :grid="2">
-						<template v-if="(auswahl instanceof StundenplanKlassenunterricht)">
-							<div>{{ stundenplanManager().fachGetByIdOrException(auswahl.idFach).bezeichnung }}</div>
-							<svws-ui-select v-if="!disabled" label="Raumzuordnung" :items="stundenplanManager().raumGetMengeSortiertNachGueteByKlasseIdAndFachId(klasse.id, auswahl.idFach)" :model-value="undefined" ref="refSelect"
-								@update:model-value="item => auswahl && item && patchUnterrichtRaeume(stundenplanManager().unterrichtGetMengeByKlasseIdAndFachId(klasse.id, auswahl.idFach), [item])" :item-text="r => r.kuerzel" />
-							<template v-for="u of stundenplanManager().unterrichtGetMengeByKlasseIdAndFachId(klasse.id, auswahl.idFach)" :key="u.id">
-								<div>{{ Wochentag.fromIDorException(stundenplanManager().zeitrasterGetByIdOrException(u.idZeitraster).wochentag).beschreibung }} {{ stundenplanManager().zeitrasterGetByIdOrException(u.idZeitraster).unterrichtstunde }}</div>
-								<svws-ui-multi-select label="Raumzuordnung" :items="stundenplanManager().raumGetMengeSortiertNachGueteByUnterrichtListe(ListUtils.create1(u.id))" :model-value="getRaeume(u)"
-									@update:model-value="liste => patchUnterrichtRaeume(ListUtils.create1(u), liste)" :item-text="r => r.kuerzel" :disabled />
-							</template>
-						</template>
-						<template v-else-if="(auswahl instanceof StundenplanUnterricht)">
-							<div>{{ stundenplanManager().fachGetByIdOrException(auswahl.idFach).bezeichnung }}</div>
-							<svws-ui-select v-if="!disabled" label="Raumzuordnung" :items="stundenplanManager().raumGetMengeSortiertNachGueteByUnterrichtListe(getListOfUnterrichte(auswahl))" :model-value="undefined" ref="refSelect"
-								@update:model-value="raum => (auswahl instanceof StundenplanUnterricht) && raum && patchUnterrichtRaeume(stundenplanManager().unterrichtGetMengeByUnterrichtId(auswahl.id), [raum])" :item-text="r => r.kuerzel" />
-							<template v-for="u of stundenplanManager().unterrichtGetMengeByUnterrichtId(auswahl.id)" :key="u.id">
-								<div>{{ Wochentag.fromIDorException(stundenplanManager().zeitrasterGetByIdOrException(u.idZeitraster).wochentag).beschreibung }} {{ stundenplanManager().zeitrasterGetByIdOrException(u.idZeitraster).unterrichtstunde }}</div>
-								<svws-ui-multi-select label="Raumzuordnung" :items="stundenplanManager().raumGetMengeSortiertNachGueteByUnterrichtListe(ListUtils.create1(u.id))" :model-value="getRaeume(u)"
-									@update:model-value="liste => patchUnterrichtRaeume(ListUtils.create1(u), liste)" :item-text="r => r.kuerzel" :disabled />
-							</template>
-						</template>
-						<template v-else>
-							<div>{{ auswahl.bezeichnung }}</div>
-							<svws-ui-select v-if="!disabled" label="Raumzuordnung" :items="stundenplanManager().raumGetMengeSortiertNachGueteByKursId(auswahl.id)" :model-value="undefined" ref="refSelect"
-								@update:model-value="raum => (auswahl instanceof StundenplanKurs) && raum && patchUnterrichtRaeume(stundenplanManager().unterrichtGetMengeByKurs(auswahl.id), [raum])" :item-text="r => r.kuerzel" />
-							<template v-for="u of stundenplanManager().unterrichtGetMengeByKurs(auswahl.id)" :key="u.id">
-								<div>{{ Wochentag.fromIDorException(stundenplanManager().zeitrasterGetByIdOrException(u.idZeitraster).wochentag).beschreibung }} {{ stundenplanManager().zeitrasterGetByIdOrException(u.idZeitraster).unterrichtstunde }}</div>
-								<svws-ui-multi-select label="Raumzuordnung" :items="stundenplanManager().raumGetMengeSortiertNachGueteByUnterrichtListe(ListUtils.create1(u.id))" :model-value="getRaeume(u)"
-									@update:model-value="liste => patchUnterrichtRaeume(ListUtils.create1(u), liste)" :item-text="r => r.kuerzel" :disabled />
-							</template>
+						<div>{{ unterrichtBezeichnung }} ({{ schuelerzahl }} SuS)</div>
+						<svws-ui-select v-if="!disabled" label="Raumzuordnung" :items="raeumeAuswahl" :model-value="undefined" ref="refSelect"
+							@update:model-value="item => auswahl && item && patchUnterrichtRaeume(unterrichteAuswahl, [item])" :item-text="raumInfo" />
+						<template v-for="u of unterrichteAuswahl" :key="u.id">
+							<div>{{ Wochentag.fromIDorException(stundenplanManager().zeitrasterGetByIdOrException(u.idZeitraster).wochentag).beschreibung }} {{ stundenplanManager().zeitrasterGetByIdOrException(u.idZeitraster).unterrichtstunde }}</div>
+							<svws-ui-multi-select label="Raumzuordnung" :items="stundenplanManager().raumGetMengeSortiertNachGueteByUnterrichtListe(ListUtils.create1(u.id))" :model-value="getRaeume(u)"
+								@update:model-value="liste => patchUnterrichtRaeume(ListUtils.create1(u), liste)" :item-text="item => raumInfo(item, ListUtils.create1(u))" :disabled />
 						</template>
 					</svws-ui-input-wrapper>
 				</svws-ui-content-card>
@@ -176,7 +154,7 @@
 
 <script setup lang="ts">
 
-	import { computed, ref, shallowRef, toRaw } from "vue";
+	import { computed, ref, shallowRef, toRaw, watch } from "vue";
 	import type { DataTableColumn } from "@ui";
 	import type { StundenplanAnsichtDragData, StundenplanAnsichtDropZone } from "@comp";
 	import type { StundenplanKlasseProps } from "./SStundenplanKlasseProps";
@@ -209,6 +187,61 @@
 
 	function getBgColor(fach: string): string {
 		return Fach.getBySchluesselOrDefault(fach).getHMTLFarbeRGB(schuljahr.value);
+	}
+
+	const unterrichteAuswahl = ref<List<StundenplanUnterricht>>(new ArrayList());
+	const raeumeAuswahl = ref<List<StundenplanRaum>>(new ArrayList());
+	const schuelerzahl = ref<number>(0);
+	const unterrichtBezeichnung = ref<string>("");
+
+	watch(auswahl, () => {
+		if (auswahl.value instanceof StundenplanKlassenunterricht) {
+			unterrichteAuswahl.value = props.stundenplanManager().unterrichtGetMengeByKlasseIdAndFachId(klasse.value.id, auswahl.value.idFach);
+			raeumeAuswahl.value = props.stundenplanManager().raumGetMengeSortiertNachGueteByKlasseIdAndFachId(klasse.value.id, auswahl.value.idFach);
+			schuelerzahl.value = props.stundenplanManager().schuelerGetAnzahlByKlasseIdOrException(klasse.value.id);
+			unterrichtBezeichnung.value = props.stundenplanManager().fachGetByIdOrException(auswahl.value.idFach).bezeichnung;
+		}
+		else if (auswahl.value instanceof StundenplanUnterricht) {
+			unterrichteAuswahl.value = props.stundenplanManager().unterrichtGetMengeByUnterrichtId(auswahl.value.id);
+			raeumeAuswahl.value = props.stundenplanManager().raumGetMengeSortiertNachGueteByUnterrichtListe(getListOfUnterrichte(auswahl.value));
+			if (auswahl.value.idKurs === null) {
+				schuelerzahl.value = props.stundenplanManager().schuelerGetAnzahlByKlasseIdOrException(klasse.value.id);
+				unterrichtBezeichnung.value = props.stundenplanManager().fachGetByIdOrException(auswahl.value.idFach).bezeichnung;
+			}
+			else {
+				schuelerzahl.value = props.stundenplanManager().schuelerGetAnzahlByKursIdAsListOrException(auswahl.value.id);
+				unterrichtBezeichnung.value = props.stundenplanManager().unterrichtGetByIDStringOfFachOderKursKuerzel(auswahl.value.id);
+			}
+		}
+		else if (auswahl.value instanceof StundenplanKurs) {
+			unterrichteAuswahl.value = props.stundenplanManager().unterrichtGetMengeByKurs(auswahl.value.id);
+			raeumeAuswahl.value = props.stundenplanManager().raumGetMengeSortiertNachGueteByKursId(auswahl.value.id);
+			schuelerzahl.value = props.stundenplanManager().schuelerGetAnzahlByKursIdAsListOrException(auswahl.value.id);
+			unterrichtBezeichnung.value = auswahl.value.bezeichnung;
+		}
+		else {
+			unterrichteAuswahl.value = new ArrayList();
+			raeumeAuswahl.value = new ArrayList();
+			schuelerzahl.value = 0;
+			unterrichtBezeichnung.value = "";
+		}
+	})
+
+	function raumInfo(raum: StundenplanRaum, unterrichte: List<StundenplanUnterricht> = unterrichteAuswahl.value) {
+		const ids = new ArrayList<number>();
+		for (const u of unterrichte)
+			ids.add(u.id);
+		const beschreibung = raum.kuerzel;
+		const groesse = raum.groesse;
+		const kollisionen = props.stundenplanManager().raumGetAnzahlAnKollisionenFuerUnterrichte(raum.id, ids);
+		const sterne = ['*', '**', '***', '****'];
+		if (kollisionen > 0)
+			sterne.pop();
+		if (schuelerzahl.value > groesse) {
+			sterne.pop();
+			sterne.pop();
+		}
+		return `${beschreibung}: ${groesse} (${kollisionen}K) ${sterne.at(-1)}`
 	}
 
 	function wochentypen(): List<number> {
@@ -370,7 +403,7 @@
 	.page--content {
 		@apply grid overflow-y-hidden overflow-x-auto h-full pb-3 pt-6 lg:gap-x-8;
 		grid-auto-rows: 100%;
-		grid-template-columns: minmax(20rem, 0.5fr) 2fr minmax(20rem, 0.5fr) ;
+		grid-template-columns: minmax(20rem, 0.5fr) 2fr minmax(25rem, 0.5fr) ;
 		grid-auto-columns: max-content;
 	}
 
