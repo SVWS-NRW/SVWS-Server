@@ -121,7 +121,7 @@
 </script>
 
 
-<style lang="postcss">
+<style scoped lang="postcss">
 
 	.svws-ui-page {
 		@apply flex flex-col items-start overflow-hidden h-full;
