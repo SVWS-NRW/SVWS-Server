@@ -36,9 +36,9 @@
 			@keyup.enter="onKeyEnter"
 			@blur="onBlur">
 		<span v-if="placeholder && !headless && (type !== 'search')" :id="labelId" class="text-input--placeholder"
-			:class="{ 'text-input--placeholder--required': required, 'text-input--placeholder--prefix': url }">
+			:class="{ 'text-input--placeholder--prefix': url }">
 			<span>{{ placeholder }}</span>
-			<span class="icon-sm i-ri-alert-line ml-0.5 inline-block -mt-0.5 icon-error" v-if="(isValid === false && !required)" />
+			<span v-if="(isValid === false && !required)" class="icon-sm i-ri-alert-line ml-1 inline-block -mt-0.5" />
 			<span v-if="(maxLen !== undefined) || (minLen !== undefined)" class="inline-flex ml-1 gap-1" :class="{'text-ui-danger': !maxLenValid || !minLenValid, 'opacity-50': maxLenValid && minLenValid}">
 				{{ (maxLen !== undefined) && (minLen === undefined) ? ` (max. ${maxLen} Zeichen)` : '' }}
 				{{ (minLen !== undefined) && (maxLen === undefined) ? ` (mind. ${minLen} Zeichen)` : '' }}
@@ -76,6 +76,7 @@
 					</template>
 				</svws-ui-tooltip>
 			</span>
+			<span v-if="required" class="icon-xs i-ri-asterisk ml-1 inline-block " :class="{ 'icon-statistics': statistics }" />
 		</span>
 		<span v-if="removable && (type === 'date') && (!readonly)" @keydown.enter="updateData('')" @click.stop="updateData('')" class="svws-icon--remove icon i-ri-close-line" tabindex="0" />
 		<span v-if="(type === 'date') && !firefox()" class="svws-icon icon i-ri-calendar-2-line" />
@@ -214,8 +215,7 @@
 	function onBlur(event: Event) {
 		if (props.modelValue !== data.value)
 			emit("change", data.value);
-		if (!props.readonly)
-			emit("blur", data.value);
+		emit("blur", data.value);
 	}
 
 	function onKeyEnter(event: Event) {

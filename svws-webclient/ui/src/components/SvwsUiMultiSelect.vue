@@ -157,13 +157,14 @@
 
 	const data = shallowRef(new Set(rawModelValues.value));
 
-	watch(rawModelValues, (value) => updateData(value), { immediate: false });
+	watch(rawModelValues, (value) => updateData(value, true), { immediate: false });
 
-	function updateData(newValueSet: Set<Item>) {
+	function updateData(newValueSet: Set<Item>, fromModelValue: boolean) {
 		if (((data.value.size === newValueSet.size) && (data.value.difference(newValueSet).size === 0)) || props.disabled)
 			return;
 		data.value = newValueSet;
-		emit("update:modelValue", [...newValueSet]);
+		if (!fromModelValue)
+			emit("update:modelValue", [...newValueSet]);
 	}
 
 	const selectedItem = computed({
@@ -178,7 +179,7 @@
 					newSelectedItems.delete(item);
 				else
 					newSelectedItems.add(item);
-				updateData(newSelectedItems);
+				updateData(newSelectedItems, false);
 			}
 		},
 	});

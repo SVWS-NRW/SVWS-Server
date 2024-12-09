@@ -39,8 +39,7 @@
 			@keydown.space.prevent="onSpace"
 			@keydown.tab="onTab"
 			:focus="autofocus"
-			:class="{'contentFocusField': focusClass }"
-		/>
+			:class="{'contentFocusField': focusClass }" />
 		<button v-if="removable && hasSelected && !readonly" role="button" @click.stop="removeItem" class="svws-remove">
 			<span class="icon i-ri-close-line my-1" />
 		</button>
@@ -64,6 +63,7 @@
 	import { computed, nextTick, onMounted, ref, shallowRef, toRaw, watch, useId } from "vue";
 	import SvwsUiDropdownList from "./SvwsUiDropdownList.vue";
 
+	// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 	type SelectDataType = Item | null | undefined;
 
 	const props = withDefaults(defineProps<{

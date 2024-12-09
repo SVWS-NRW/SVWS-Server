@@ -43,9 +43,6 @@ export { default as SvwsUiSecondaryMenuNavigation } from "./components/App/Sideb
 export { default as SvwsUiTabBar } from "./components/App/SvwsUiTabBar.vue";
 export { default as SvwsUiTabBarVertical } from "./components/App/SvwsUiTabBarVertical.vue";
 // DEPRECATED
-export { default as SvwsUiRouterTabBar } from "./components/App/SvwsUiRouterTabBar.vue";
-export { default as SvwsUiRouterTabBarButton } from "./components/App/SvwsUiRouterTabBarButton.vue";
-export { default as SvwsUiRouterVerticalTabBar } from "./components/App/SvwsUiRouterVerticalTabBar.vue";
 
 
 // Type exorts
