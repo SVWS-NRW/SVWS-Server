@@ -33,8 +33,9 @@ export class RouteFachStundenplan extends RouteNode<RouteDataFachStundenplan, Ro
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
 		try {
-			const { id } = RouteNode.getIntParams(to_params, ["id"]);
-			if (isEntering)
+			const { idSchuljahresabschnitt: toIdSchuljahresabschnitt, id } = RouteNode.getIntParams(to_params, ["idSchuljahresabschnitt", "id"]);
+			const { idSchuljahresabschnitt: fromIdSchuljahresabschnitt} = RouteNode.getIntParams(from_params, ["idSchuljahresabschnitt"]);
+			if (isEntering || (toIdSchuljahresabschnitt !== fromIdSchuljahresabschnitt))
 				await routeFachStundenplan.data.ladeListe();
 			// Prüfe, ob ein Fach ausgewählt ist. Wenn nicht dann wechsele in die Fach-Route zurück.
 			if (id === undefined)
@@ -53,7 +54,7 @@ export class RouteFachStundenplan extends RouteNode<RouteDataFachStundenplan, Ro
 
 	public addRouteParamsFromState() : RouteParamsRawGeneric {
 		return {
-			idStundenplan: (this.data.hatAuswahl === true) ? this.data.auswahl.id : undefined,
+			idStundenplan: this.data.hatAuswahl ? this.data.auswahl.id : undefined,
 			wochentyp: this.data.wochentyp,
 			kw: (this.data.kalenderwoche === undefined) ? undefined : this.data.kalenderwoche.jahr + "." + this.data.kalenderwoche.kw,
 		};
@@ -61,7 +62,7 @@ export class RouteFachStundenplan extends RouteNode<RouteDataFachStundenplan, Ro
 
 	public getProps(to: RouteLocationNormalized): StundenplanAuswahlProps {
 		return {
-			stundenplan: this.data.mapStundenplaene.size === 0 ? undefined : this.data.auswahl,
+			stundenplan: ((this.data.mapStundenplaene.size === 0) || !this.data.hasManager) ? undefined : this.data.auswahl,
 			mapStundenplaene: this.data.mapStundenplaene,
 			gotoStundenplan: this.data.gotoStundenplan,
 			gotoWochentyp: this.data.gotoWochentyp,
