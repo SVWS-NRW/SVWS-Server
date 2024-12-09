@@ -3,7 +3,7 @@
 	"description": "SVWS-Server-Projekt: UI-Komponenten",
 	"author": "MSB NRW",
 	"license": "BSD-3-Clause",
-	"version": "1.0.2-SNAPSHOT",
+	"version": "1.0.3-SNAPSHOT",
 	"scripts": {
 		"dev": "histoire dev",
 		"lint": "eslint 'src/**/*.{ts,vue}' --cache",
