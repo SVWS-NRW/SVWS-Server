@@ -289,7 +289,7 @@
 
 		// Setzt die initiale Größe des collapsible Wrappers, um Transitions korrekt ausführen zu können.
 		if (bodyWrapperRef.value !== undefined)
-			bodyWrapperRef.value.style.maxHeight = isActive.value ? 'auto' : '0';
+			bodyWrapperRef.value.style.maxHeight = isActive.value ? 'fit-content' : '0';
 	});
 
 	/**
@@ -299,6 +299,10 @@
 	 */
 	async function openCard (content: Element, done: () => void) {
 		const element = content as HTMLElement;
+		// Wenn die Card bereits geöffnet ist (zum Beispiel initial beim Mounting), dann darf die Funktion nicht ausgeführt werden
+		if (element.style.maxHeight === 'fit-content')
+			return;
+
 		await nextTick(() => {
 			element.style.maxHeight = `${element.scrollHeight}px`;
 			element.addEventListener('transitionend', done, { once: true });
