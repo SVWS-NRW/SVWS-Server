@@ -8,13 +8,12 @@
 		</template>
 		<template #content>
 			<svws-ui-table :clicked="auswahl()" @update:clicked="gotoBenutzer" v-model="selectedItems" :items="rowsFiltered.values()"
-				:columns clickable selectable count scroll scroll-into-view>
+				:columns clickable selectable count scroll scroll-into-view :focus-switching-enabled :focus-help-visible>
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" removable />
 				</template>
 				<template #actions>
-					<s-modal-benutzer-neu :show-delete-icon="selectedItems.length > 0" :create-benutzer-allgemein
-						:delete-benutzer-allgemein :has-focus="rowsFiltered.size === 0" />
+					<s-modal-benutzer-neu :show-delete-icon="selectedItems.length > 0" :create-benutzer-allgemein :delete-benutzer-allgemein :has-focus="rowsFiltered.size === 0" :map-benutzer />
 				</template>
 			</svws-ui-table>
 		</template>
@@ -27,10 +26,12 @@
 	import type { BenutzerListeEintrag} from "@core";
 	import type { BenutzerAuswahlProps } from "./SBenutzerAuswahlProps";
 	import type { DataTableColumn } from "@ui";
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const selectedItems = ref<BenutzerListeEintrag[]>([]);
 
 	const props = defineProps<BenutzerAuswahlProps>();
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const columns: DataTableColumn[] = [
 		{ key: "name", label: "Benutzername", sortable: true },

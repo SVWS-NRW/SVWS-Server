@@ -9,7 +9,12 @@ Seitenumbrüche: Wenn Style angewendet wird, wird davor beim Druck ein Seitenumb
 .start-new-page:first-child {
 	page-break-before: avoid;
 }
-
+.start-new-page-duplex {
+	page-break-after: right;
+}
+.start-new-page-duplex:last-child {
+	page-break-after: avoid;
+}
 
 /*
 ##########################################################################################################################
@@ -19,7 +24,7 @@ Schriftart definieren
 @font-face {
 	/*noinspection CssNoGenericFontName*/
 	font-family: 'liberation';
-	src: local('Liberation Sans')
+	src: local('Liberation Sans');
 }
 
 
@@ -60,7 +65,7 @@ body {
 	font-size: 9pt;
 	margin: 0;
 	padding: 0;
-	overflow: hidden;
+	overflow: scroll;
 }
 
 
@@ -396,6 +401,22 @@ td.head-small-grey {
 	border-bottom: 0.5px solid #808080;
 }
 
+th.head-black-lines {
+	color: black;
+	padding-left: 1mm;
+	padding-right: 1mm;
+	border-top: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+}
+
+td.head-black-lines {
+	color: black;
+	padding-left: 1mm;
+	padding-right: 1mm;
+	border-top: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+}
+
 td.cell-small-grey {
 	font-size: 0.8em;
 	color: #808080;
@@ -439,28 +460,42 @@ Definitionen für Border and Background
 .bo-t-black {
 	border-top: 0.5px solid #000000;
 }
-.bo-t-black-dick {
+.bo-t-black-strong {
 	border-top: 1px solid #000000;
 }
 .bo-b-black {
 	border-bottom: 0.5px solid #000000;
 }
-.bo-b-black-dick {
+.bo-b-black-strong {
 	border-bottom: 1px solid #000000;
 }
 .bo-tb-black {
 	border-top: 0.5px solid #000000;
 	border-bottom: 0.5px solid #000000;
 }
+.bo-tb-black-strong {
+	border-top: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+}
 .bo-l-black {
 	border-left: 0.5px solid #000000;
+}
+.bo-l-black-strong {
+	border-left: 1px solid #000000;
 }
 .bo-r-black {
 	border-right: 0.5px solid #000000;
 }
+.bo-r-black-strong {
+	border-right: 1px solid #000000;
+}
 .bo-lr-black {
 	border-left: 0.5px solid #000000;
 	border-right: 0.5px solid #000000;
+}
+.bo-lr-black {
+	border-left: 1px solid #000000;
+	border-right: 1px solid #000000;
 }
 
 .bg-lightgrey {

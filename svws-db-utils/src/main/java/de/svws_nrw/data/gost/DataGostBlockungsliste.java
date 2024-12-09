@@ -55,6 +55,7 @@ public final class DataGostBlockungsliste extends DataManager<Integer> {
 		daten.gostHalbjahr = blockung.Halbjahr.id;
 		daten.istAktiv = blockung.IstAktiv;
 		daten.anzahlErgebnisse = ergebnisse.size();
+		daten.idAktivesErgebnis = ergebnisse.stream().filter(e -> e.IstAktiv).map(e -> e.ID).findFirst().orElse(null);
 		return daten;
 	}
 

@@ -1,14 +1,4 @@
-import type { LehrerListeManager, ServerMode } from "@core";
-import type { AbschnittAuswahlDaten } from "@comp";
-import type { ViewType } from "@ui";
+import type { LehrerListeManager } from "@core";
+import type { RouteAuswahlListProps } from "~/router/RouteAuswahlNode";
 
-export interface LehrerAuswahlProps {
-	serverMode: ServerMode;
-	lehrerListeManager: () => LehrerListeManager;
-	schuljahresabschnittsauswahl: () => AbschnittAuswahlDaten;
-	gotoDefaultView: (eintragId?: number | null) => Promise<void>;
-	gotoGruppenprozessView: (navigate: boolean) => Promise<void>;
-	gotoHinzufuegenView: (navigate: boolean) => Promise<void>;
-	setFilter: () => Promise<void>;
-	activeViewType: ViewType;
-}
+export type LehrerAuswahlProps = RouteAuswahlListProps<LehrerListeManager>

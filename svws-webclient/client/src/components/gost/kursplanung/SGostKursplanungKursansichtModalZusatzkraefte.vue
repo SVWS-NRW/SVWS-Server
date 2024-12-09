@@ -1,6 +1,6 @@
 <template>
 	<div class="flex flex-col gap-2 my-auto">
-		<svws-ui-modal :show="showModal" size="small" class="hidden">
+		<svws-ui-modal v-model:show="show" size="small" class="hidden">
 			<template #modalTitle>Lehrkräfte für Kurs {{ kursbezeichnung }}</template>
 			<template #modalContent>
 				<svws-ui-table :items="[...getDatenmanager().kursGetLehrkraefteSortiert(kurs.id)]" :columns selectable v-model="selected" count>
@@ -49,8 +49,7 @@
 		mapLehrer: Map<number, LehrerListeEintrag>;
 	}>();
 
-	const _showModal = ref<boolean>(false);
-	const showModal = () => _showModal;
+	const show = ref<boolean>(false);
 	const selected = ref<GostBlockungKursLehrer[]>([]);
 	const select = ref<ComponentExposed<typeof SvwsUiSelect<LehrerListeEintrag>>>();
 
@@ -73,7 +72,7 @@
 	const kursbezeichnung = computed<string>(() => props.getDatenmanager().kursGetName(props.kurs.id));
 
 	function toggle_zusatzkraefte_modal() {
-		showModal().value = !showModal().value;
+		show.value = !show.value;
 	}
 
 	async function remove() {

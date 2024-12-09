@@ -10,7 +10,9 @@ import java.util.Set;
 
 import de.svws_nrw.asd.data.CoreTypeData;
 import de.svws_nrw.asd.data.CoreTypeDataNurSchulformen;
+import de.svws_nrw.asd.data.CoreTypeDataNurSchulformenUndSchulgliederungen;
 import de.svws_nrw.asd.data.CoreTypeException;
+import de.svws_nrw.asd.data.schule.SchulformSchulgliederung;
 import de.svws_nrw.asd.types.CoreType;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.transpiler.annotations.AllowNull;
@@ -181,8 +183,13 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 				// Ergänze die Menge der zulässigen Schulformen, sofern eine Einschränkung vorliegt
 				final Set<Schulform> setSchulformen = new HashSet<>();
 				if (eintrag instanceof CoreTypeDataNurSchulformen) {
-					final @NotNull List<String> listSchulformen = ((CoreTypeDataNurSchulformen) eintrag).schulformen;
-					setSchulformen.addAll(Schulform.data().getWerteByBezeichnerAsSet(listSchulformen));
+					final @NotNull List<String> list = ((CoreTypeDataNurSchulformen) eintrag).schulformen;
+					setSchulformen.addAll(Schulform.data().getWerteByBezeichnerAsSet(list));
+				}
+				if (eintrag instanceof CoreTypeDataNurSchulformenUndSchulgliederungen) {
+					final @NotNull List<SchulformSchulgliederung> list = ((CoreTypeDataNurSchulformenUndSchulgliederungen) eintrag).zulaessig;
+					for (final @NotNull SchulformSchulgliederung sfsgl : list)
+						setSchulformen.add(Schulform.data().getWertByBezeichner(sfsgl.schulform));
 				}
 				_mapSchulformenByID.put(eintrag.id, setSchulformen);
 			}
@@ -289,7 +296,7 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	 * @return das Set der Core-Type-Werte
 	 */
 	public @NotNull Set<U> getWerteByBezeichnerAsSet(final @NotNull List<String> bezeichner) {
-		final @NotNull Set<U> result = new HashSet<U>();
+		final @NotNull Set<U> result = new HashSet<>();
 		for (final @NotNull String b : bezeichner)
 			result.add(getWertByBezeichner(b));
 		return result;
@@ -305,8 +312,8 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	 */
 	public @NotNull Set<U> getWerteByBezeichnerAsNonEmptySet(final @NotNull List<String> bezeichner) {
 		if (bezeichner.isEmpty())
-			throw new CoreTypeException(_name + ": Die Liste der Bezeichner " + bezeichner + " ist leer.");
-		final @NotNull Set<U> result = new HashSet<U>();
+			throw new CoreTypeException(_name + ": Die Liste der Bezeichner ist leer.");
+		final @NotNull Set<U> result = new HashSet<>();
 		for (final @NotNull String b : bezeichner)
 			result.add(getWertByBezeichner(b));
 		return result;

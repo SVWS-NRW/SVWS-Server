@@ -1,13 +1,14 @@
 package de.svws_nrw.module.reporting.types.gost.klausurplanung;
 
 import de.svws_nrw.core.utils.DateUtils;
+import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
 
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostKlausurplanungKursklausur.
  */
-public class ReportingGostKlausurplanungSchuelerklausur {
+public class ReportingGostKlausurplanungSchuelerklausur extends ReportingBaseType {
 
 	/** Die textuelle Bemerkung zur Schülerklausur, sofern vorhanden. */
 	protected String bemerkung;

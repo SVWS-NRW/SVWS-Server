@@ -11,17 +11,17 @@
 		</template>
 		<template #actions v-if="hatUpdateKompetenz">
 			<svws-ui-button @click="removeFachrichtungen(Arrays.asList(selected))" type="trash" :disabled="selected.length <= 0" />
-			<svws-ui-button @click="showModal().value = true" type="icon" title="Fachrichtung hinzufügen"> <span class="icon i-ri-add-line" /> </svws-ui-button>
+			<svws-ui-button @click="show = true" type="icon" title="Fachrichtung hinzufügen"> <span class="icon i-ri-add-line" /> </svws-ui-button>
 		</template>
 	</svws-ui-table>
-	<s-lehrer-personaldaten-fachrichtungen-modal-add v-if="hatUpdateKompetenz" :show="showModal" :id-lehrer="personaldaten.id" :add-fachrichtung :schuljahr />
+	<s-lehrer-personaldaten-fachrichtungen-modal-add v-if="hatUpdateKompetenz" v-model:show="show" :id-lehrer="personaldaten.id" :add-fachrichtung :schuljahr />
 </template>
 
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
 	import type { List, LehrerFachrichtungEintrag, LehrerListeManager, LehrerPersonaldaten} from "@core";
-	import { DeveloperNotificationException, LehrerFachrichtung, LehrerFachrichtungAnerkennung, Arrays } from "@core";
+	import { LehrerFachrichtung, LehrerFachrichtungAnerkennung, Arrays } from "@core";
 
 	const props = defineProps<{
 		hatUpdateKompetenz: boolean;
@@ -34,20 +34,17 @@
 
 	const personaldaten = computed<LehrerPersonaldaten>(() => props.lehrerListeManager().personalDaten());
 
-	const _modal = ref<boolean>(false);
-	const showModal = () => _modal;
+	const show = ref<boolean>(false);
 
 	const selected = ref<LehrerFachrichtungEintrag[]>([]);
 
 	const columns = [
 		{key: 'fachrichtung', label: 'Fachrichtung', span: 1 },
-		{key: 'anerkennung', label: 'Anerkennungsgrund', span: 1 }
+		{key: 'anerkennung', label: 'Anerkennungsgrund', span: 1 },
 	]
 
 	function getFachrichtung(eintrag: LehrerFachrichtungEintrag) : LehrerFachrichtung {
 		const fachrichtung = LehrerFachrichtung.data().getWertByID(eintrag.idFachrichtung);
-		if (fachrichtung === null)
-			throw new DeveloperNotificationException("Die ID der Fachrichtung ist unzulässig. Die vorhandenen Daten sind inkonsistent.");
 		return fachrichtung;
 	}
 

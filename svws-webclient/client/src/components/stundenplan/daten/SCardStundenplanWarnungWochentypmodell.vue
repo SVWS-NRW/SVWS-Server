@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-modal :show="showModal" type="danger" size="medium">
+	<svws-ui-modal v-model:show="show" type="danger" size="medium">
 		<template #modalTitle>Achtung</template>
 		<template #modalContent>
 			Die Umstellung des Wochentyp-Modells auf den Wert {{ wochenTypModell }} {{ wochenTypModell <= 4 ? `(${modelle[wochenTypModell]})` : '' }}
@@ -28,7 +28,6 @@
 		change: [val: boolean | undefined];
 	}>()
 
-	const _showModal = ref<boolean>(true);
-	const showModal = () => _showModal;
+	const show = ref<boolean>(true);
 
 </script>

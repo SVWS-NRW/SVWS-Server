@@ -3,7 +3,7 @@
 		<svws-ui-content-card>
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-select :disabled="!hatUpdateKompetenz" title="Klasse" :items="manager().klasseGetMenge()" :item-text="i => `${i.kuerzel}`" autocomplete statistics
-					:model-value="klasse" @update:model-value="value => patch({ klassenID: ((value === undefined) || (value === null)) ? null : value.id })" autofocus />
+					:model-value="klasse" @update:model-value="value => patch({ klassenID: ((value === undefined) || (value === null)) ? null : value.id })" autofocus focus-class />
 				<svws-ui-select :disabled="!hatUpdateKompetenz" title="Jahrgang" :items="manager().jahrgangGetMenge()" :item-text="i => `${i.kuerzel}`" autocomplete statistics
 					:model-value="jahrgang" @update:model-value="value => patch({ jahrgangID: ((value === undefined) || (value === null)) ? null : value.id })" />
 				<svws-ui-text-input :disabled="!hatUpdateKompetenz" placeholder="Datum von" type="date" statistics
@@ -40,6 +40,11 @@
 				</svws-ui-input-wrapper>
 				<svws-ui-spacing />
 				<svws-ui-input-wrapper :grid="2">
+					<svws-ui-select :disabled="!hatUpdateKompetenz" title="Bilingualer Zweig" :items="bilingualeZweige" :item-text="i => i.daten(schuljahr)?.text ?? '—'" autocomplete removable
+						v-model="bilingualerZweig" />
+				</svws-ui-input-wrapper>
+				<svws-ui-spacing />
+				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-select :disabled="!hatUpdateKompetenz" title="Förderschwerpunkt" :items="manager().foerderschwerpunktGetMenge()" :item-text="i => ((i === undefined) || (i.text === undefined)) ? '—' : i.text " autocomplete statistics
 						v-model="foerderschwerpunkt" />
 					<svws-ui-select :disabled="!hatUpdateKompetenz" title="Weiterer Förderschwerpunkt" :items="manager().foerderschwerpunktGetMenge()" :item-text="i => ((i === undefined) || (i.text === undefined)) ? '—' : i.text" autocomplete statistics
@@ -58,6 +63,7 @@
 
 	import { computed } from 'vue';
 	import type { FoerderschwerpunktEintrag, JahrgangsDaten, KlassenDaten, LehrerListeEintrag, List, OrganisationsformKatalogEintrag } from "@core";
+	import { BilingualeSprache } from "@core";
 	import { AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen, Klassenart, Schulform, Schulgliederung, ArrayList, WeiterbildungskollegOrganisationsformen, DeveloperNotificationException, BenutzerKompetenz } from "@core";
 
 	import type { SchuelerLernabschnittAllgemeinProps } from "./SSchuelerLernabschnittAllgemeinProps";
@@ -65,6 +71,7 @@
 	const props = defineProps<SchuelerLernabschnittAllgemeinProps>();
 
 	const schuljahr = computed<number>(() => props.manager().schuljahrGet());
+	const schulform = computed<Schulform>(() => Schulform.data().getWertByKuerzel(props.schule.schulform) ?? Schulform.G); // Die Schulform muss definiert sein, sonst würde diese Ansicht
 
 	const hatUpdateKompetenz = computed<boolean>(() => {
 		return (props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN))
@@ -155,10 +162,7 @@
 	});
 
 	const klassenarten = computed<List<Klassenart>>(() => {
-		const schulform = Schulform.data().getWertByKuerzel(props.schule.schulform);
-		if (schulform === null)
-			throw new DeveloperNotificationException("Keine gültige Schulform festgelegt");
-		return Klassenart.getBySchuljahrAndSchulform(schuljahr.value, schulform);
+		return Klassenart.getBySchuljahrAndSchulform(schuljahr.value, schulform.value);
 	});
 
 	const klassenart = computed<Klassenart | null>({
@@ -170,10 +174,7 @@
 	});
 
 	const gliederungen = computed<List<Schulgliederung>>(() => {
-		const schulform = Schulform.data().getWertByKuerzel(props.schule.schulform);
-		if (schulform === null)
-			throw new DeveloperNotificationException("Keine gültige Schulform festgelegt");
-		return Schulgliederung.getBySchuljahrAndSchulform(schuljahr.value, schulform);
+		return Schulgliederung.getBySchuljahrAndSchulform(schuljahr.value, schulform.value);
 	});
 
 	const gliederung = computed<Schulgliederung | null>({
@@ -187,14 +188,11 @@
 	});
 
 	const organisationsformen = computed<List<OrganisationsformKatalogEintrag>>(() => {
-		const schulform = Schulform.data().getWertByKuerzel(props.schule.schulform);
-		if (schulform === null)
-			throw new DeveloperNotificationException("Keine gültige Schulform festgelegt");
 		const result = new ArrayList<OrganisationsformKatalogEintrag>();
-		if (schulform === Schulform.WB) {
+		if (schulform.value === Schulform.WB) {
 			for (const orgform of WeiterbildungskollegOrganisationsformen.values())
 				result.add(orgform.daten(schuljahr.value));
-		} else if ((schulform === Schulform.BK) || (schulform === Schulform.SB)) {
+		} else if ((schulform.value === Schulform.BK) || (schulform.value === Schulform.SB)) {
 			for (const orgform of BerufskollegOrganisationsformen.values())
 				result.add(orgform.daten(schuljahr.value));
 		} else {
@@ -208,20 +206,37 @@
 		get: () => {
 			if (props.manager().lernabschnittGet().organisationsform === null)
 				return null;
-			const schulform = Schulform.data().getWertByKuerzel(props.schule.schulform);
-			if (schulform === null)
-				throw new DeveloperNotificationException("Keine gültige Schulform festgelegt");
 			const kuerzel = props.manager().lernabschnittGet().organisationsform;
-			if (schulform === Schulform.WB) {
+			if (schulform.value === Schulform.WB) {
 				return ((kuerzel === null) ? null : WeiterbildungskollegOrganisationsformen.data().getWertByKuerzel(kuerzel)?.daten(schuljahr.value) ?? null);
 			}
-			if ((schulform === Schulform.BK) || (schulform === Schulform.SB)) {
+			if ((schulform.value === Schulform.BK) || (schulform.value === Schulform.SB)) {
 				return ((kuerzel === null) ? null : BerufskollegOrganisationsformen.data().getWertByKuerzel(kuerzel)?.daten(schuljahr.value) ?? null);
 			}
 			return ((kuerzel === null) ? null : AllgemeinbildendOrganisationsformen.data().getWertByKuerzel(kuerzel)?.daten(schuljahr.value) ?? null);
 		},
 		set: (value) => {
 			void props.patch({ organisationsform: value?.kuerzel ?? null });
+		}
+	});
+
+	const bilingualeZweige = computed<List<BilingualeSprache>>(() => BilingualeSprache.data().getListBySchuljahrAndSchulform(schuljahr.value, schulform.value));
+
+	const bilingualerZweig = computed<BilingualeSprache | null>({
+		get: () => {
+			const bilingualerZweig = props.manager().lernabschnittGet().bilingualerZweig;
+			if (bilingualerZweig === null)
+				return null;
+			const schulform = Schulform.data().getWertByKuerzel(props.schule.schulform);
+			if (schulform === null)
+				throw new DeveloperNotificationException("Keine gültige Schulform festgelegt");
+			const bili = BilingualeSprache.data().getWertBySchluessel(bilingualerZweig);
+			if ((bili !== null) && (bili.hatSchulform(schuljahr.value, schulform)))
+				return bili;
+			return null;
+		},
+		set: (value : BilingualeSprache | null) => {
+			void props.patch({ bilingualerZweig: value?.daten(schuljahr.value)?.kuerzel ?? null });
 		}
 	});
 

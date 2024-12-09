@@ -150,4 +150,69 @@ public final class FachListeManager extends AuswahlManager<Long, FachDaten, Fach
 		return this._mapFachByKuerzel.get(kuerzel);
 	}
 
+	/**
+	 * Wenn das Kürzel nicht leer, bislang nicht verwendet und zwischen 1 und 20 Zeichen lang ist,
+	 * wird <code>true</code>, andernfalls <code>false</code> zurückgegeben.
+	 *
+	 * @param kuerzel   das gegebene Kürzel
+	 *
+	 * @return <code>true</code> wenn das Kürzel gültig ist, ansonsten <code>false</code>
+	 */
+	public boolean validateKuerzel(final String kuerzel) {
+		if ((kuerzel == null) || kuerzel.isBlank() || (kuerzel.trim().length() > 20))
+			return false;
+
+		for (final FachDaten fachDaten : this.liste.list()) {
+			if (fachDaten.kuerzel.equals(kuerzel))
+				return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Wenn die Bezeichnung nicht leer, bislang nicht verwendet und zwischen 1 und 255 Zeichen lang ist,
+	 * wird <code>true</code>, andernfalls <code>false</code> zurückgegeben.
+	 *
+	 * @param bezeichnung   die gegebene Bezeichnung
+	 *
+	 * @return <code>true</code> wenn die Bezeichnung gültig ist, ansonsten <code>false</code>
+	 */
+	public boolean validateBezeichnung(final String bezeichnung) {
+		if ((bezeichnung == null) || bezeichnung.isBlank() || (bezeichnung.trim().length() > 255))
+			return false;
+
+		for (final FachDaten fachDaten : this.liste.list()) {
+			if (fachDaten.bezeichnung.equals(bezeichnung))
+				return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Wenn die maxZeichenInFachbemerkungen leer oder einen positiven Wert hat,
+	 * wird <code>true</code>, andernfalls <code>false</code> zurückgegeben.
+	 *
+	 * @param maxZeichenInFachbemerkungen   die gegebene maxZeichenInFachbemerkungen
+	 *
+	 * @return <code>true</code> wenn die maxZeichenInFachbemerkungen gültig sind, ansonsten <code>false</code>
+	 */
+	public boolean validateMaxZeichenInFachbemerkungen(final Integer maxZeichenInFachbemerkungen) {
+		if (maxZeichenInFachbemerkungen == null)
+			return true;
+		return (maxZeichenInFachbemerkungen > 0);
+	}
+
+	/**
+	 * Wenn die Sortierung einen positiven Wert hat,
+	 * wird <code>true</code>, andernfalls <code>false</code> zurückgegeben.
+	 *
+	 * @param sortierung   die gegebene sortierung
+	 *
+	 * @return <code>true</code> wenn die sortierung gültig ist, ansonsten <code>false</code>
+	 */
+	public boolean validateSortierung(final Integer sortierung) {
+		if (sortierung == null)
+			return false;
+		return (sortierung > 0) && (sortierung < Integer.MAX_VALUE);
+	}
 }

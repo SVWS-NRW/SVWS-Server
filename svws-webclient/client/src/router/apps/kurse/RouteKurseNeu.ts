@@ -13,9 +13,9 @@ const SKurseNeu = () => import("~/components/kurse/SKurseNeu.vue");
 export class RouteKurseNeu extends RouteNode<any, RouteKurse> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kurse.neu", "neu", SKurseNeu);
+		super(Schulform.values(), [ BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN ], "kurse.neu", "neu", SKurseNeu);
 		super.types = new Set([ ViewType.HINZUFUEGEN ]);
-		super.mode = ServerMode.STABLE;
+		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Kurs Neu";
 		super.setCheckpoint = true;
@@ -27,7 +27,7 @@ export class RouteKurseNeu extends RouteNode<any, RouteKurse> {
 
 	public getProps(to: RouteLocationNormalized): KurseNeuProps {
 		return {
-			kurseListeManager: () => routeKurse.data.kursListeManager,
+			manager: () => routeKurse.data.manager,
 			schulform: api.schulform,
 			add: routeKurse.data.add,
 			gotoDefaultView: routeKurse.data.gotoDefaultView,

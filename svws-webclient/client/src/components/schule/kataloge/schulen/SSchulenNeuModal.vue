@@ -1,6 +1,6 @@
 <template>
-	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="showModal" class="hidden">
+	<slot :open-modal />
+	<svws-ui-modal v-model:show="show" class="hidden">
 		<template #modalTitle>Schule hinzufügen</template>
 		<template #modalContent>
 			<svws-ui-input-wrapper :grid="2">
@@ -9,7 +9,7 @@
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="showModal().value = false"> Abbrechen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="show = false"> Abbrechen </svws-ui-button>
 			<svws-ui-button type="secondary" @click="importer()" :disabled="!item.name || !valid(item.schulnummer)"> Schule hinzufügen </svws-ui-button>
 		</template>
 	</svws-ui-modal>
@@ -24,19 +24,18 @@
 		addEintrag: (schule: Partial<SchulEintrag>) => Promise<void>;
 	}>();
 
-	const _showModal = ref<boolean>(false);
-	const showModal = () => _showModal;
+	const show = ref<boolean>(false);
 
 	const item = ref<SchulEintrag>(new SchulEintrag());
 
 	const openModal = () => {
-		showModal().value = true;
+		show.value = true;
 	}
 
 	async function importer() {
 		await props.addEintrag({name: item.value.name, schulnummer: item.value.schulnummer});
 		item.value = new SchulEintrag();
-		showModal().value = false;
+		show.value = false;
 	}
 
 	function valid(schulnummer: string | null) {

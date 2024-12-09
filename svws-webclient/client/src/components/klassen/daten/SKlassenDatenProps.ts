@@ -7,7 +7,7 @@ export interface KlassenDatenProps {
 	serverMode: ServerMode;
 	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	patch: (data : Partial<KlassenDaten>) => Promise<void>;
-	klassenListeManager: () => KlassenListeManager;
+	manager: () => KlassenListeManager;
 	mapKlassenVorigerAbschnitt: () => Map<number, KlassenDaten>;
 	mapKlassenFolgenderAbschnitt: () => Map<number, KlassenDaten>;
 	setFilter: () => Promise<void>;

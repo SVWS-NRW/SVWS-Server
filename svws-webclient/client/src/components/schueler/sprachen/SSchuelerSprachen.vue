@@ -4,7 +4,7 @@
 			<div v-if="hatUpdateKompetenz && verfuegbareSprachen.length" class="w-1/4 mb-4">
 				<svws-ui-select title="Hinzufügen..." removable :model-value="undefined" @update:model-value="sprache=> hinzufuegen(sprache)"
 					:items="verfuegbareSprachen" :item-text="i => `${i} - ${Fach.getMapFremdsprachenKuerzelAtomar(schuljahr).get(i)?.daten(schuljahr)?.text ?? '—'}`"
-					ref="selectSprachen" autofocus />
+					ref="selectSprachen" autofocus focus-class />
 			</div>
 			<svws-ui-table v-if="sprachbelegungen().size()" :items="sprachbelegungen()" :columns="colsSprachenfolge" :selectable="hatUpdateKompetenz" v-model="auswahl">
 				<template #cell(sprache)="{ value: kuerzel }">{{ Fach.getMapFremdsprachenKuerzelAtomar(schuljahr).get(kuerzel)?.daten(schuljahr)?.text ?? '—' }} </template>
@@ -227,7 +227,7 @@
 			{ key: "anspruchsniveauId", label: "Anspruchsniveau", tooltip: "Bezeichnung des am Schulabschluss orientierte Anspruchsniveau der Sprachprüfung", minWidth: 4 },
 			{ key: "note", label: "Note", tooltip: "Prüfungsnote", minWidth: 2 },
 			{ key: "referenzniveau", label: "Referenzniveau", tooltip: "Das Kürzel des Referenzniveau nach dem gemeinsamen europäischen Referenznahmen, welches durch die Prüfung erreicht wurde", minWidth: 3 },
-			{ key: "pruefungsdatum", label: "Prüfungsdatum", tooltip: "Prüfungsdatum", minWidth: 3, },
+			{ key: "pruefungsdatum", label: "Prüfungsdatum", tooltip: "Prüfungsdatum", minWidth: 3 },
 		]
 	});
 	const colsSprachpruefungenFP = computed<DataTableColumn[]>(() => {
@@ -240,7 +240,7 @@
 			{ key: "anspruchsniveauId", label: "Anspruchsniveau", tooltip: "Bezeichnung des am Schulabschluss orientierte Anspruchsniveau der Sprachprüfung", minWidth: 4 },
 			{ key: "note", label: "Note", tooltip: "Prüfungsnote", minWidth: 2 },
 			{ key: "referenzniveau", label: "Referenzniveau", tooltip: "Das Kürzel des Referenzniveau nach dem gemeinsamen europäischen Referenznahmen, welches durch die Prüfung erreicht wurde", minWidth: 3 },
-			{ key: "pruefungsdatum", label: "Prüfungsdatum", tooltip: "Prüfungsdatum", minWidth: 3, },
+			{ key: "pruefungsdatum", label: "Prüfungsdatum", tooltip: "Prüfungsdatum", minWidth: 3 },
 		]
 	});
 

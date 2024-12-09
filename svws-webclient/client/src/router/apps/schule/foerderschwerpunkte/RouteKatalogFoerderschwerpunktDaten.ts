@@ -11,7 +11,7 @@ const SFoerderschwerpunktDaten = () => import("~/components/schule/kataloge/foer
 export class RouteKatalogFoerderschwerpunktDaten extends RouteNode<any, RouteKatalogFoerderschwerpunkte> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.foerderschwerpunkte.daten", "daten", SFoerderschwerpunktDaten);
+		super(Schulform.values(), [ BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN ], "schule.foerderschwerpunkte.daten", "daten", SFoerderschwerpunktDaten);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Förderschwerpunkt";

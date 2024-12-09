@@ -73,14 +73,14 @@ public class FachDaten {
 
 	/** Gibt die maximale Anzahl an Zeichen an, doe in Fachbemerkungen genutzt werden dürfen. */
 	@Schema(description = "gibt die maximale Anzahl an Zeichen an, doe in Fachbemerkungen genutzt werden dürfen", example = "100000")
-	public int maxZeichenInFachbemerkungen = -1;
+	public int maxZeichenInFachbemerkungen = Integer.MAX_VALUE;
 
 	/** Gibt an, ob das Fach ein schriftliches Fach für die zentralen Klausuren ist oder nicht. */
 	@Schema(description = "gibt an, ob das Fach ein schriftliches Fach für die zentralen Klausuren ist oder nicht", example = "true")
 	public boolean istSchriftlichZK = false;
 
 	/** Gibt an, ob das Fach als schriftliches Fach für den Berufsabschluss gewertest wird (Berufskolleg). */
-	@Schema(description = "gibt an, ob das Fach als schriftliches Fach für den Berufsabschluss gewertest wird (Berufskolleg)", example = "true")
+	@Schema(description = "gibt an, ob das Fach als schriftliches Fach für den Berufsabschluss gewertet wird (Berufskolleg)", example = "true")
 	public boolean istSchriftlichBA = false;
 
 	/** Gibt an, ob das Fach bei der Berechnung der FHR berücksichtigt wird oder nicht (Berufskolleg). */

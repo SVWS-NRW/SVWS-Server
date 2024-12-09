@@ -4,12 +4,13 @@ package de.svws_nrw.module.reporting.types.stundenplanung;
 import java.util.List;
 
 import de.svws_nrw.core.types.Wochentag;
+import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Stundenplan.
  */
-public class ReportingStundenplanungStundenplan {
+public class ReportingStundenplanungStundenplan extends ReportingBaseType {
 
 	/** Die Beschreibung des Stundenplans. */
 	protected String beschreibung;

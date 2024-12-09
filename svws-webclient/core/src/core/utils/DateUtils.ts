@@ -422,7 +422,7 @@ export class DateUtils extends JavaObject {
 	 */
 	public static toISO8601(time : number) : string | null {
 		const s : StringBuilder | null = new StringBuilder();
-		const days : number = DateUtils.DAYS_FROM_0_TO_1970 + Math.trunc(time / 86400000);
+		const days : number = DateUtils.DAYS_FROM_0_TO_1970 + Math.trunc(time / 86400000) + 1;
 		const years400 : number = Math.trunc(days / DateUtils.DAYS_PER_400_YEARS);
 		const daysLeft400 : number = days - years400 * DateUtils.DAYS_PER_400_YEARS;
 		const years100 : number = Math.trunc((daysLeft400 - 1) / DateUtils.DAYS_PER_100_YEARS);

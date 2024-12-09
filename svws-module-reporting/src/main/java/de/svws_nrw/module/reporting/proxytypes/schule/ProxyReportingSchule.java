@@ -21,32 +21,32 @@ public class ProxyReportingSchule extends ReportingSchule {
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingSchule}.
 	 *
-	 * @param reportingRepository Repository für die Reporting.
+	 * @param reportingRepository Repository für das Reporting.
 	 */
 	public ProxyReportingSchule(final ReportingRepository reportingRepository) {
 		super(null,
 				reportingRepository.schulstammdaten().anzJGS_Jahr,
 				reportingRepository.schulstammdaten().schuleAbschnitte.anzahlAbschnitte,
 				null,
-				reportingRepository.schulstammdaten().bezeichnung1,
-				reportingRepository.schulstammdaten().bezeichnung2,
-				reportingRepository.schulstammdaten().bezeichnung3,
-				reportingRepository.schulstammdaten().schuleAbschnitte.abschnittBez,
+				ersetzeNullDurchEmpty(reportingRepository.schulstammdaten().bezeichnung1),
+				ersetzeNullDurchEmpty(reportingRepository.schulstammdaten().bezeichnung2),
+				ersetzeNullDurchEmpty(reportingRepository.schulstammdaten().bezeichnung3),
+				ersetzeNullDurchEmpty(reportingRepository.schulstammdaten().schuleAbschnitte.abschnittBez),
 				reportingRepository.schulstammdaten().schuleAbschnitte.bezAbschnitte,
 				reportingRepository.schulstammdaten().dauerUnterrichtseinheit,
-				reportingRepository.schulstammdaten().email,
-				reportingRepository.schulstammdaten().fax,
-				reportingRepository.schulstammdaten().hausnummer,
-				reportingRepository.schulstammdaten().hausnummerZusatz,
-				reportingRepository.schulstammdaten().ort,
-				reportingRepository.schulstammdaten().plz,
+				ersetzeNullDurchEmpty(reportingRepository.schulstammdaten().email),
+				ersetzeNullDurchEmpty(reportingRepository.schulstammdaten().fax),
+				ersetzeNullDurchEmpty(reportingRepository.schulstammdaten().hausnummer),
+				ersetzeNullDurchEmpty(reportingRepository.schulstammdaten().hausnummerZusatz),
+				ersetzeNullDurchEmpty(reportingRepository.schulstammdaten().ort),
+				ersetzeNullDurchEmpty(reportingRepository.schulstammdaten().plz),
 				new ArrayList<>(),
-				reportingRepository.schulstammdaten().schulform,
+				ersetzeNullDurchEmpty(reportingRepository.schulstammdaten().schulform),
 				null,
 				reportingRepository.schulstammdaten().schulNr,
-				reportingRepository.schulstammdaten().strassenname,
-				reportingRepository.schulstammdaten().telefon,
-				reportingRepository.schulstammdaten().webAdresse);
+				ersetzeNullDurchEmpty(reportingRepository.schulstammdaten().strassenname),
+				ersetzeNullDurchEmpty(reportingRepository.schulstammdaten().telefon),
+				ersetzeNullDurchEmpty(reportingRepository.schulstammdaten().webAdresse));
 
 		this.reportingRepository = reportingRepository;
 
@@ -63,7 +63,7 @@ public class ProxyReportingSchule extends ReportingSchule {
 	/**
 	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.
 	 *
-	 * @return Repository für die Reporting
+	 * @return Repository für das Reporting
 	 */
 	public ReportingRepository reportingRepository() {
 		return reportingRepository;

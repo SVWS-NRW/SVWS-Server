@@ -2,7 +2,7 @@
 	<label class="radio--label" :class="{
 		'radio--label--disabled': disabled,
 		'radio--statistics': statistics,
-		'radio--label--checked-': forceChecked || modelValue === value || checked,
+		'radio--label--checked-': forceChecked || (modelValue === value) || checked,
 		'radio--label--no-icon': !icon,
 		'radio--label--no-text': !label,
 		'radio--icon-type-view': iconType === 'view'
@@ -19,13 +19,12 @@
 				</slot>
 			</template>
 		</span>
-		<span class="radio--label--text"> {{ label }} <span class="icon i-ri-bar-chart-2-line icon-statistics ml-2 inline-block -my-0.5" v-if="statistics" /> </span>
+		<span class="radio--label--text"> {{ label }} <span class="icon i-ri-bar-chart-2-line icon-ui-statistic inline-block -my-0.5" v-if="statistics" /> </span>
 	</label>
 </template>
 
 <script setup lang='ts'>
 
-	import type { WritableComputedRef} from 'vue';
 	import { computed } from 'vue';
 
 	const props = withDefaults(defineProps<{
@@ -54,9 +53,9 @@
 		(e: 'update:modelValue', value: object | number | string | boolean): void,
 	}>();
 
-	const checked: WritableComputedRef<object | number | boolean | string> = computed({
+	const checked = computed<object | number | boolean | string>({
 		get: () => props.modelValue,
-		set: (value) => emit('update:modelValue', value)
+		set: (value) => emit('update:modelValue', value),
 	})
 
 </script>
@@ -102,14 +101,15 @@
 		@apply bg-ui-hover text-ui-hover;
 	}
 
-	&.radio--statistics .radio--label--text,
-	.page--statistik & .radio--label--text {
-		@apply text-ui-statistic;
+	&.radio--statistics,
+	.page--statistik & {
+		.radio--label--text {
+			@apply text-ui-statistic;
+		}
 	}
 
 	.radio--indicator ~ .radio--indicator-icon {
 		@apply opacity-100;
-		/* TODO: COLORS icon */
 	}
 }
 
@@ -120,15 +120,14 @@
 .radio--indicator:checked ~ .radio--label--text,
 .radio--label--checked .radio--label--text {
 	@apply bg-ui-selected text-ui-onselected;
-	/* TODO: COLORS icon */
 
 	.svws-sub-nav-target & {
-		@apply bg-ui shadow;
+		@apply bg-ui;
 	}
 }
 
 .radio--indicator ~ .radio--indicator-icon {
-	@apply absolute inset-0 opacity-25 pointer-events-none left-1.5 top-1.5 w-5 h-5;
+	@apply absolute inset-0 opacity-70 pointer-events-none left-1.5 top-1.5 w-5 h-5;
 }
 
 .radio--label:not(.radio--label--checked) .radio--indicator-icon .radio--indicator-icon--checked {
@@ -138,12 +137,14 @@
 .radio--indicator:checked ~ .radio--indicator-icon,
 .radio--label--checked .radio--indicator-icon {
 	@apply opacity-100 text-ui-brand;
-	
-	span.icon {
-		-webkit-filter: invert(44%) sepia(52%) saturate(1260%) hue-rotate(173deg) brightness(91%) contrast(86%);
-		filter: invert(44%) sepia(52%) saturate(1260%) hue-rotate(173deg) brightness(91%) contrast(86%);
+
+	.icon {
+		@apply icon-ui-onselected;
+
+		.dark & {
+			@apply icon-ui-onselected--dark;
+		}
 	}
-	/* TODO: COLORS icon */
 
 	.radio--statistics &,
 	.page--statistik & {
@@ -169,17 +170,13 @@
     @apply bg-ui-disabled text-ui-disabled;
   }
 
+  .icon {
+	@apply opacity-50;
+  }
+
   .radio--indicator:checked ~ .radio--indicator-icon,
   &.radio--label--checked .radio--indicator-icon {
 	@apply text-ui-disabled;
-		span.icon {
-			-webkit-filter: invert(23%) sepia(18%) saturate(978%) hue-rotate(158deg) brightness(96%) contrast(91%);
-			filter: invert(23%) sepia(18%) saturate(978%) hue-rotate(158deg) brightness(96%) contrast(91%);
-		}
-		dark:span.icon {
-			-webkit-filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
-			filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
-		}
 
     .radio--statistics &,
     .page--statistik & {

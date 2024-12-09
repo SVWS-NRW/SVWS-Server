@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-table v-if="belegungsHinweise.size()" :no-data="false" :items="[]" :columns="[{key: 'icon', label: ' ', fixedWidth: 1.8},{key: 'beschreibung', label: 'Informationen zur Laufbahn'}]"
-		type="navigation" :scroll>
+		type="navigation" :scroll class="svws-no-mx">
 		<template #header>
 			<div class="svws-ui-tr" role="row">
 				<div class="svws-ui-td col-span-full" role="columnheader">Informationen zur Laufbahn</div>

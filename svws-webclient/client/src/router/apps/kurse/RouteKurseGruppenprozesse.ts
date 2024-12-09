@@ -29,9 +29,8 @@ export class RouteKurseGruppenprozesse extends RouteNode<any, RouteKurse> {
 			serverMode: api.mode,
 			schulform: api.schulform,
 			schulgliederungen: api.schulgliederungen,
-			kurseListeManager: () => routeKurse.data.kursListeManager,
-			deleteKurse: routeKurse.data.deleteKurse,
-			deleteKurseCheck: routeKurse.data.deleteKurseCheck,
+			manager: () => routeKurse.data.manager,
+			deleteKurse: routeKurse.data.delete,
 		};
 	}
 

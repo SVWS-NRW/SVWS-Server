@@ -106,8 +106,9 @@
 			@apply rounded-l-none rounded-r-md px-0.5;
 		}
 
-		/* TODO: COLORS icon darkmode/ .icon {
-		}*/
+		.input-wrapper & .button {
+			@apply mr-0;
+		}
 	}
 </style>
 

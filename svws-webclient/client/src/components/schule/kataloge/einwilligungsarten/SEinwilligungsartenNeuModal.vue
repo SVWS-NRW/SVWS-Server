@@ -1,6 +1,6 @@
 <template>
-	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="showModal" size="medium" class="hidden">
+	<slot :open-modal />
+	<svws-ui-modal v-model:show="show" size="medium" class="hidden">
 		<template #modalTitle>Einwilligungsart hinzufügen</template>
 		<template #modalContent>
 			<svws-ui-input-wrapper :grid="2">
@@ -31,7 +31,7 @@
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="showModal().value = false"> Abbrechen</svws-ui-button>
+			<svws-ui-button type="secondary" @click="show = false"> Abbrechen</svws-ui-button>
 			<svws-ui-button type="primary" @click="saveEntries()" :disabled="!isValidBezeichnung() || !isValidSchluessel()">
 				Speichern
 			</svws-ui-button>
@@ -49,8 +49,7 @@
 		mapKatalogeintraege: Map<number, Einwilligungsart>;
 	}>();
 
-	const _showModal = ref<boolean>(false);
-	const showModal = () => _showModal;
+	const show = ref<boolean>(false);
 
 	const einwilligung = shallowRef(new Einwilligungsart());
 
@@ -145,13 +144,13 @@
 			schluessel: einwilligung.value.schluessel.trim(),
 			beschreibung: einwilligung.value.beschreibung?.trim()
 		});
-		showModal().value = false;
+		show.value = false;
 	}
 
 	const openModal = () => {
 		einwilligung.value = new Einwilligungsart();
 		einwilligung.value.personTyp = PersonTyp.SCHUELER.id;
-		showModal().value = true;
+		show.value = true;
 	}
 
 </script>

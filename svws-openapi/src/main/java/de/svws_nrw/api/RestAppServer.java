@@ -13,7 +13,7 @@ import de.svws_nrw.api.server.APIErzieher;
 import de.svws_nrw.api.server.APIFaecher;
 import de.svws_nrw.api.server.APIGesamtschule;
 import de.svws_nrw.api.server.APIGost;
-import de.svws_nrw.api.server.APIGostDatenaustausch;
+import de.svws_nrw.api.server.APIDatenaustausch;
 import de.svws_nrw.api.server.APIGostKlausuren;
 import de.svws_nrw.api.server.APIGostKursplanung;
 import de.svws_nrw.api.server.APIJahrgaenge;
@@ -61,7 +61,7 @@ public final class RestAppServer extends Application {
 			APIFaecher.class,
 			APISchueler.class,
 			APIGesamtschule.class,
-			APIGostDatenaustausch.class,
+			APIDatenaustausch.class,
 			APIGost.class,
 			APIGostKursplanung.class,
 			APILehrer.class,

@@ -23,7 +23,7 @@ import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.gost.DataGostFaecher;
 import de.svws_nrw.data.gost.DataGostJahrgangSchuelerliste;
-import de.svws_nrw.data.kurse.DataKursliste;
+import de.svws_nrw.data.kurse.DataKurse;
 import de.svws_nrw.data.lehrer.DataLehrerliste;
 import de.svws_nrw.data.schueler.DataSchuelerliste;
 import de.svws_nrw.data.schule.DataSchuljahresabschnitte;
@@ -86,12 +86,12 @@ public final class DataGostKlausuren {
 			if (jg.faecher != null)
 				jg.faecher = DataGostFaecher.getFaecherManager(conn, jg.abiturjahrgang).faecher();
 
-			GostHalbjahr gj = GostHalbjahr.fromID(jg.gostHalbjahr);
+			final GostHalbjahr gj = GostHalbjahr.fromID(jg.gostHalbjahr);
 			final Schuljahresabschnitt sja =
 					DataSchuljahresabschnitte.getFromSchuljahrUndAbschnitt(conn, gj.getSchuljahrFromAbiturjahr(jg.abiturjahrgang), gj.halbjahr);
 			if (sja != null) {
 				jg.schuljahresabschnitt = sja.id;
-				jg.kurse.addAll(DataKursliste.getKursListenFuerAbschnitt(conn, sja.id, true));
+				jg.kurse.addAll(DataKurse.getKursListenFuerAbschnitt(conn, sja.id, true));
 			}
 			jg.raumdata =
 					new DataGostKlausurenSchuelerklausurraumstunde(conn).getSchuelerklausurraumstundenByTerminids(jg.data.termine.stream().map(t -> t.id).toList());
@@ -101,9 +101,10 @@ public final class DataGostKlausuren {
 		// Schüler nachladen, die in der Klausurplanung vorkommen, aber zu keinem Oberstufenjahrgang gehören
 		final List<Long> missingSchuelerIds = jgs.stream().flatMap(jg -> jg.data.schuelerklausuren.stream()).map(sk -> sk.idSchueler)
 				.filter(item -> !schuelerNichtSenden.stream().map(s -> s.id).distinct().toList().contains(item)).toList();
-		if (!missingSchuelerIds.isEmpty())
+		if (!missingSchuelerIds.isEmpty()) {
+			jgs.getFirst().schueler = new ArrayList<>(jgs.getFirst().schueler);
 			jgs.getFirst().schueler.addAll(ladeSchuelerByIds(-1, conn, missingSchuelerIds));
-
+		}
 		data.lehrer.addAll(DataLehrerliste.getLehrerListe(conn));
 		return data;
 	}
@@ -339,6 +340,18 @@ public final class DataGostKlausuren {
 			}
 		}
 		return fehlendData;
+	}
+
+	/**
+	 * Konvertiert einen leeren oder nur aus Leerzeichen bestehenden String in {@code null}.
+	 * Wenn der Eingabestring bereits {@code null} ist, wird ebenfalls {@code null} zurückgegeben.
+	 *
+	 * @param s Der Eingabestring, der überprüft und konvertiert werden soll.
+	 * @return {@code null}, wenn die Eingabe {@code null} ist oder nur aus Leerzeichen besteht;
+	 *         ansonsten der ursprüngliche String.
+	 */
+	public static String convertEmptyStringToNull(final String s) {
+		return (s == null || s.strip().isEmpty()) ? null : s.strip();
 	}
 
 }

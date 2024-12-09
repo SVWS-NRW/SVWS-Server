@@ -1,5 +1,6 @@
 <template>
-	<svws-ui-action-button :title="`Schema „${schema}“ duplizieren`" description="Dupliziert das aktuell ausgewählte Schema in ein neues Schema." icon="i-ri-file-copy-line" action-label="Duplizieren" :action-function :disabled="(user === 'root') || (schemaNeu.length === 0) || (user.length === 0) || (password.length === 0) || (schema === schemaNeu)" :is-loading="loadingFunction().value" :is-active>
+	<svws-ui-action-button :title="`Schema „${schema}“ duplizieren`" description="Dupliziert das aktuell ausgewählte Schema in ein neues Schema." icon="i-ri-file-copy-line" action-label="Duplizieren" :action-function
+		:disabled="(user === 'root') || (schemaNeu.length === 0) || (user.length === 0) || (password.length === 0) || (schema === schemaNeu) || loadingFunction().value" :is-loading="loadingFunction().value" :is-active>
 		<div class="input-wrapper">
 			<svws-ui-text-input v-model.trim="schemaNeu" placeholder="Name des neuen Schemas" />
 			<svws-ui-spacing />

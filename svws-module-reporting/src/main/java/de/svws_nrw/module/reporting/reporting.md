@@ -26,7 +26,7 @@ Die Reporting-Types sind als reine Datentypen-Klassen konzipiert, d. h. sie habe
 
 Auch wenn sie den CoreTypes häufig ähneln, so werden hier unter Umständen nicht alle Felder übernommen oder es werden zusätzliche statische oder berechnete Felder ergänzt. So bleibt das Reporting von Änderungen und die CoreTypes unabhängig voneinander (und damit auch einmal erstellte Templates) und die Reporting-Types können untereinander verwendet werden.
 
-Sie dienen aber als Super-Klasse einer [Proxy-Klasse](#Reporting-Proxy-Types).
+Sie sind alle abgeleitet von der abstrakten Klasse ReportingBase Type und dienen ihrerseits als Super-Klassen der [Proxy-Klassen](#Reporting-Proxy-Types).
 
 ### Reporting-Proxy-Types
 Die Reporting-Proxy-Types erweitern die Reporting-Types im Rahmen einer Vererbung. Während die Reporting-Types als strukturdefinierende Datenklassen konzipiert sind, die keine Abhängigkeit zur Datenbank haben, können Proxy-Types auf die Datenbank zugreifen oder über andere Core- und Data-Klassen gefüllt werden.

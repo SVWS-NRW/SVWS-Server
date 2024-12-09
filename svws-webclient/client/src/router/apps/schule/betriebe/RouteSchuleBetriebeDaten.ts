@@ -14,7 +14,7 @@ const SBetriebeDaten = () => import("~/components/schule/betriebe/daten/SBetrieb
 export class RouteSchuleBetriebeDaten extends RouteNode<any, RouteSchuleBetriebe> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.betriebe.daten", "daten", SBetriebeDaten);
+		super(Schulform.values(), [ BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN ], "schule.betriebe.daten", "daten", SBetriebeDaten);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Betrieb";

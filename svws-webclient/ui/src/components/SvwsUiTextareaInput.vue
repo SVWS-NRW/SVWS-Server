@@ -1,32 +1,30 @@
 <template>
-	<label class="textarea-input"
+	<label :id="idComponent" class="textarea-input"
 		:class="{
-			'textarea-input--filled': data !== null,
-			'textarea-input--invalid': (isValid === false),
+			'textarea-input--filled': data,
+			'textarea-input--invalid': !isValid,
 			'textarea-input--disabled': disabled,
 			'textarea-input--statistics': statistics,
 			'textarea-input--resize-none': resizeable === 'none',
 			'textarea-input--resize-horizontal': resizeable === 'horizontal',
 			'textarea-input--resize-vertical': resizeable === 'vertical',
 			'textarea-input--resize-both': resizeable === 'both',
+			'textarea-input--headless': headless,
 			'col-span-full': span === 'full',
 			'flex-grow': span === 'grow'
 		}">
-		<textarea ref="textarea" v-model="dataOrEmpty" @input="onInput" @keyup.enter="onKeyEnter" @blur="onBlur"
-			:required="required" :disabled="disabled" class="textarea-input--control" :rows="rows" />
-		<span v-if="placeholder"
-			class="textarea-input--placeholder"
-			:class="{
-				'textarea-input--placeholder--required': required
-			}">
+		<textarea ref="textarea" v-model="dataOrEmpty" @input="onInput" @blur="onBlur" class="textarea-input--control" :disabled :required :rows v-bind="{ ...$attrs }" />
+		<span :id="idPlaceholder" v-if="placeholder.length > 0" class="textarea-input--placeholder" :class="{ 'textarea-input--placeholder--required': required }">
 			<span>{{ placeholder }}</span>
-			<span class="icon i-ri-alert-line ml-0.5 -my-0.5 icon-error" v-if="(isValid === false)" />
-			<span v-if="maxLen" class="inline-flex ml-1 gap-1" :class="{'text-ui-danger': !maxLenValid, 'opacity-50': maxLenValid}">{{ maxLen ? ` (${data?.toLocaleString() ? data?.toLocaleString().length + '/' : 'maximal '}${maxLen} Zeichen)` : '' }}</span>
-			<span v-if="statistics" class="cursor-pointer">
+			<span class="icon i-ri-alert-line ml-0.5 -my-0.5 icon-error" v-if="isValid === false" />
+			<span v-if="(maxLen > 0) && (data !== null)" class="inline-flex ml-1 gap-1" :class="maxLenValid ? 'opacity-50' : 'text-ui-danger'">
+				{{ `(${(data.toLocaleString().length > 0) ? data.toLocaleString().length + '/' : 'maximal '}${maxLen} Zeichen)` }}
+			</span>
+			<span :id="idStatistics" v-if="statistics" class="cursor-pointer">
 				<svws-ui-tooltip position="right">
 					<span class="inline-flex items-center">
 						<span class="icon i-ri-bar-chart-2-line icon-statistics pointer-events-auto ml-0.5" />
-						<span class="icon i-ri-alert-fill icon-error" v-if="data === '' || data === null" />
+						<span class="icon i-ri-alert-fill icon-error" v-if="(data === '') || (data === null)" />
 					</span>
 					<template #content>
 						Relevant für die Statistik
@@ -40,7 +38,7 @@
 
 <script setup lang="ts">
 
-	import { ref, computed, watch, nextTick } from 'vue';
+	import { ref, computed, watch, useId, onMounted } from 'vue';
 
 	type ResizableOption = "both" | "horizontal" | "vertical" | "none";
 
@@ -57,6 +55,7 @@
 		rows?: number;
 		maxLen?: number;
 		span?: 'full' | 'grow';
+		headless?: boolean;
 	}>(), {
 		modelValue: "",
 		placeholder: "",
@@ -70,6 +69,7 @@
 		rows: 3,
 		maxLen: undefined,
 		span: undefined,
+		headless: false,
 	})
 
 	const emit = defineEmits<{
@@ -80,16 +80,15 @@
 
 	const data = ref<string | null>(props.modelValue);
 
+	const idComponent = useId();
+	const idPlaceholder = useId();
+	const idStatistics = useId();
 	const dataOrEmpty = computed<string>({
 		get: () => data.value === null ? '' : data.value,
-		set: (value) => data.value = (value === '') ? null : value
+		set: (value) => data.value = (value === '') ? null : value,
 	});
 
 	const textarea = ref<HTMLTextAreaElement | null>(null);
-	watch([data], () => nextTick(() => {
-		if (textarea.value !== null)
-			textarea.value.style.height = textarea.value.scrollHeight > textarea.value.clientHeight ? `${textarea.value.scrollHeight}px`: 'inherit';
-	}), { immediate: true })
 
 	watch(() => props.modelValue, (value: string | null) => updateData(value), { immediate: false });
 
@@ -97,7 +96,7 @@
 		let tmpIsValid = true;
 		if ((props.required === true) && (data.value === null))
 			return false;
-		if ((props.maxLen !== undefined) && (typeof data.value === 'string') && (data.value.toLocaleString().length <= props.maxLen))
+		if (!maxLenValid.value)
 			tmpIsValid = false;
 		if (tmpIsValid && (data.value !== null) && (data.value !== ''))
 			tmpIsValid = props.valid(data.value);
@@ -114,11 +113,14 @@
 	const maxLenValid = computed(() => {
 		if ((props.maxLen === undefined) || (data.value === null))
 			return true;
-		return (typeof data.value === 'string') && (data.value.toLocaleString().length <= props.maxLen);
+		return data.value.toLocaleString().length <= props.maxLen;
 	})
 
 	function onInput(event: Event) {
 		const value = (event.target as HTMLInputElement).value;
+		if(textarea.value) textarea.value.style.height='auto';
+		if (textarea.value !== null)
+			textarea.value.style.height = textarea.value.scrollHeight > textarea.value.clientHeight ? `${textarea.value.scrollHeight}px`: 'inherit';
 		if (value !== data.value)
 			updateData(value);
 	}
@@ -129,10 +131,10 @@
 		emit("blur", data.value);
 	}
 
-	function onKeyEnter() {
-		if (props.modelValue !== data.value)
-			emit("change", data.value);
-	}
+	onMounted(() => {
+		if (textarea.value !== null)
+			textarea.value.style.height = textarea.value.scrollHeight > textarea.value.clientHeight ? `${textarea.value.scrollHeight}px`: 'inherit';
+	});
 
 	defineExpose({ content: data });
 
@@ -146,6 +148,12 @@
 
 		textarea::placeholder {
 			@apply text-ui-secondary;
+		}
+		&.textarea-input--headless {
+			@apply bg-transparent;
+			textarea {
+				@apply bg-transparent border-none ;
+			}
 		}
 	}
 
@@ -223,7 +231,7 @@
 	}
 
 	.textarea-input:not(.textarea-input--filled):not(:focus-within):not(.textarea-input--disabled):hover .textarea-input--placeholder {
-		@apply opacity-100;
+		@apply opacity-80;
 	}
 
 	.textarea-input--statistics.textarea-input--invalid .textarea-input--control {
@@ -238,10 +246,10 @@
 		@apply text-ui-statistic;
 	}
 
-	.textarea-input--focus .textarea-input--placeholder,
-	.textarea-input--filled .textarea-input--placeholder {
-		@apply -translate-y-1/2;
+	.textarea-input--focus:not(.textarea-input--headless) .textarea-input--placeholder,
+	.textarea-input--filled:not(.textarea-input--headless) .textarea-input--placeholder {
 		@apply bg-ui opacity-100;
+		@apply -translate-y-1/2;
 		@apply rounded;
 		@apply px-1;
 
@@ -252,6 +260,10 @@
 		&:after {
 			content: "";
 		}
+	}
+
+	.textarea-input--headless.textarea-input--filled .textarea-input--placeholder {
+		@apply opacity-0;
 	}
 
 	.textarea-input--invalid .textarea-input--placeholder,
@@ -272,5 +284,7 @@
 	.textarea-input--disabled .textarea-input--placeholder {
 		@apply bg-ui text-ui-disabled;
 	}
+
+
 
 </style>

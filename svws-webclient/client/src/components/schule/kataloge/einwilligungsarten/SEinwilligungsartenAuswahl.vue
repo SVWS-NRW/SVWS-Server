@@ -9,7 +9,7 @@
 		<template #header />
 		<template #content>
 			<div class="container">
-				<svws-ui-table :clicked="auswahl()" @update:clicked="gotoEintrag" :items="mapKatalogeintraege.values()" :columns clickable selectable v-model="selected" scroll-into-view>
+				<svws-ui-table :clicked="auswahl()" @update:clicked="gotoEintrag" :items="mapKatalogeintraege.values()" :columns clickable selectable v-model="selected" scroll-into-view :focus-switching-enabled :focus-help-visible>
 					<template #actions>
 						<svws-ui-button @click="doDeleteEintraege()" type="trash" :disabled="selected.length === 0" />
 						<s-einwilligungsarten-neu-modal v-slot="{ openModal }" :add-eintrag :map-katalogeintraege>
@@ -29,8 +29,10 @@
 	import { computed, shallowRef } from "vue";
 	import type { SEinwilligungsartenAuswahlProps } from "./SEinwilligungsartenAuswahlProps";
 	import type { Einwilligungsart } from "@core";
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<SEinwilligungsartenAuswahlProps>();
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 	const selected = shallowRef<Einwilligungsart[]>([]);
 
 	const columns = [

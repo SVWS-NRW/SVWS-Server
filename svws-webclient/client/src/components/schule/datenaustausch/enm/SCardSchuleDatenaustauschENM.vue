@@ -5,7 +5,7 @@
 			<svws-ui-text-input v-model.trim="salt" type="password" placeholder="Salt" />
 			<svws-ui-spacing />
 			<div class="col-span-full">
-				<input type="file" accept=".base64" @change="import_file" :disabled="loading">
+				<input class="contentFocusField" type="file" accept=".base64" @change="import_file" :disabled="loading">
 				<svws-ui-spinner :spinning="loading" />
 			</div>
 			<br>{{

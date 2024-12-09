@@ -184,6 +184,9 @@ public enum KAOAZusatzmerkmal implements CoreType<KAOAZusatzmerkmalKatalogEintra
 	/** KAoA-Zusatzmerkmal: Keine Teilnahme am Betriebspraktikum */
 	SBO_6_1_5,
 
+	/** KAoA-Zusatzmerkmal: Teilnahme am Intensivtraining TASK */
+	SBO_6_2_1,
+
 	/** KAoA-Zusatzmerkmal: Keine Teilnahme am Intensivtraining TASK */
 	SBO_6_2_2,
 

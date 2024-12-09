@@ -1,4 +1,4 @@
-import type { BenutzerDaten, BenutzerKompetenz, List, SchuelerLeistungsdaten, SchuelerLernabschnittManager, SchuelerLernabschnittsdaten, SchuelerListeManager, SchuleStammdaten, Schulform, ServerMode } from "@core";
+import type { BenutzerDaten, BenutzerKompetenz, List, SchuelerLeistungsdaten, SchuelerLernabschnittManager, SchuelerLernabschnittsdaten, SchuelerListeManager, SchuleStammdaten, Schulform, Schuljahresabschnitt, ServerMode } from "@core";
 
 export interface SchuelerLernabschnittLeistungenProps {
 	serverMode: ServerMode;
@@ -7,6 +7,7 @@ export interface SchuelerLernabschnittLeistungenProps {
 	benutzerKompetenzenKlassen: Set<number>;
 	schule: SchuleStammdaten;
 	schulform: Schulform;
+	schuleSchuljahresabschnitt: () => Schuljahresabschnitt;
 	schuelerListeManager: () => SchuelerListeManager;
 	manager: () => SchuelerLernabschnittManager;
 	patch: (data : Partial<SchuelerLernabschnittsdaten>) => Promise<void>;

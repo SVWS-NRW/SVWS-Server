@@ -1,6 +1,6 @@
 <template>
-	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="showModal" size="medium">
+	<slot :open-modal />
+	<svws-ui-modal v-model:show="show" size="medium">
 		<template #modalTitle>Schülerbetrieb hinzufügen</template>
 		<template #modalDescription />
 		<template #modalContent>
@@ -19,7 +19,7 @@
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="showModal().value = false"> Abbrechen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="show = false"> Abbrechen </svws-ui-button>
 			<svws-ui-button type="primary" @click="save"> Speichern </svws-ui-button>
 		</template>
 	</svws-ui-modal>
@@ -40,8 +40,7 @@
 		mapAnsprechpartner: Map<number, BetriebAnsprechpartner>;
 	}>();
 
-	const _showModal = ref<boolean>(false);
-	const showModal = () => _showModal;
+	const show = ref<boolean>(false);
 
 	const schuelerBetriebsdaten = ref<SchuelerBetriebsdaten>(new SchuelerBetriebsdaten());
 
@@ -79,11 +78,11 @@
 	async function save() {
 		schuelerBetriebsdaten.value.schueler_id = props.idSchueler;
 		await props.createSchuelerBetriebsdaten(schuelerBetriebsdaten.value);
-		showModal().value = false;
+		show.value = false;
 	}
 
 	const openModal = () => {
-		showModal().value = true;
+		show.value = true;
 	}
 
 	const listAnpsrechpartner = computed<Map<number, BetriebAnsprechpartner>>(() => {

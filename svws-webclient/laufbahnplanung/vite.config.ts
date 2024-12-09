@@ -9,9 +9,7 @@ export default defineConfig({
 	server: { port: 3000 },
 	base: '',
 	plugins: [
-		Vue({
-			include: [/\.vue$/, /\.md$/]
-		}),
+		Vue({ include: [/\.vue$/, /\.md$/] }),
 		Markdown({}),
 		Components({
 			dirs: [
@@ -28,7 +26,7 @@ export default defineConfig({
 			// Importe können durch ein vorangestelltes `~` absolut gefunden werden
 			"~": resolve(__dirname, "src"),
 			"@json": resolve(__dirname, "../../svws-asd/src/main/resources/de/svws_nrw/asd/types"),
-		}
+		},
 	},
 	build: {
 		outDir: "build/output",
@@ -38,10 +36,10 @@ export default defineConfig({
 		commonjsOptions: {},
 		rollupOptions: {
 			output: {
-				entryFileNames: `assets/[name].js`,
-				chunkFileNames: `assets/[name].js`,
-				assetFileNames: `assets/[name].[ext]`
-			}
-		}
-	}
+				entryFileNames: 'assets/[name].js',
+				chunkFileNames: 'assets/[name].js',
+				assetFileNames: 'assets/[name].[ext]',
+			},
+		},
+	},
 });

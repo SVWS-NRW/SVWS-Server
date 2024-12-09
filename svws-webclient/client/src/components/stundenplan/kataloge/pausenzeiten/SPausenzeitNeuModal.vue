@@ -1,6 +1,6 @@
 <template>
-	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="showModal" class="hidden">
+	<slot :open-modal />
+	<svws-ui-modal v-model:show="show" class="hidden">
 		<template #modalTitle>Pausenzeit hinzufügen</template>
 		<template #modalContent>
 			<div class="flex justify-center flex-wrap items-center gap-2">
@@ -11,7 +11,7 @@
 			</div>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="showModal().value = false"> Abbrechen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="show = false"> Abbrechen </svws-ui-button>
 			<svws-ui-button type="secondary" @click="importer" :disabled="!item.beginn || !item.ende || (item.ende - item.beginn < 1) || !wochentage.length || disabled"> Pausenzeit Hinzufügen </svws-ui-button>
 		</template>
 	</svws-ui-modal>
@@ -28,8 +28,7 @@
 		stundenplanManager: () => StundenplanManager;
 	}>();
 
-	const _showModal = ref<boolean>(false);
-	const showModal = () => _showModal;
+	const show = ref<boolean>(false);
 	const wochentage = ref<Wochentag[]>(props.stundenplanManager().zeitrasterGetWochentageAlsEnumRange());
 
 	const klassen = ref<number[]>([]);
@@ -37,7 +36,7 @@
 	const item = ref<Partial<StundenplanPausenzeit>>({ beginn: 620, ende: 645, bezeichnung: 'Pause' });
 
 	const openModal = () => {
-		showModal().value = true;
+		show.value = true;
 	}
 
 	const disabled = computed<boolean>(() => {
@@ -54,7 +53,7 @@
 			listKlassen.add(klasse);
 		for (const tag of wochentage.value)
 			list.push({wochentag: tag.id, beginn: item.value.beginn, ende: item.value.ende, bezeichnung: 'Pause', klassen: listKlassen})
-		showModal().value = false;
+		show.value = false;
 		await props.addPausenzeiten(list);
 	}
 

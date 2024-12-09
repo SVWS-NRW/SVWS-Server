@@ -12,7 +12,7 @@ interface RouteStateApp {
 export class RouteDataApp {
 
 	private static _defaultState : RouteStateApp = {
-		view: routeSchema
+		view: routeSchema,
 	}
 
 	private _state = shallowRef<RouteStateApp>(RouteDataApp._defaultState);

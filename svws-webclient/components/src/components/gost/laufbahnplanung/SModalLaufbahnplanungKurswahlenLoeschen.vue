@@ -7,7 +7,7 @@
 			<template v-else-if="gostJahrgangsdaten.abiturjahr === -1">Zurücksetzen aus Standardwerte</template>
 			<template v-else>Zurücksetzen auf allg. Vorlage</template>
 		</svws-ui-button>
-		<svws-ui-modal :show="showModal" size="small" type="danger">
+		<svws-ui-modal v-model:show="show" size="small" type="danger">
 			<template #modalTitle>
 				<template v-if="schuelerAnsicht && hatFesteWahlen">Nicht feste Fachwahlen löschen</template>
 				<template v-else-if="schuelerAnsicht">Alle Kurswahlen zurücksetzen</template>
@@ -48,15 +48,14 @@
 		return (jg === "Q1") || (jg === "Q2") || ((jg === "EF") && (props.gostJahrgangsdaten.istBlockungFestgelegt[0]));
 	});
 
-	const _showModal = ref<boolean>(false);
-	const showModal = () => _showModal;
+	const show = ref<boolean>(false);
 
 	function toggle_modal() {
-		_showModal.value = !_showModal.value;
+		show.value = !show.value;
 	}
 
 	async function reset_fachwahlen() {
-		_showModal.value = false;
+		show.value = false;
 		await props.resetFachwahlen();
 	}
 

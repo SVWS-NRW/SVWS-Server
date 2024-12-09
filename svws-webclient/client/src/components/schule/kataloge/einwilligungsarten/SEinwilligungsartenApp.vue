@@ -8,7 +8,7 @@
 				</svws-ui-badge>
 			</div>
 		</svws-ui-header>
-		<svws-ui-tab-bar :tab-manager>
+		<svws-ui-tab-bar :tab-manager :focus-switching-enabled :focus-help-visible>
 			<router-view />
 		</svws-ui-tab-bar>
 	</template>
@@ -21,8 +21,10 @@
 
 	import { computed } from "vue";
 	import type { SEinwilligungsartenAppProps } from "./SEinwilligungsartenAppProps";
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<SEinwilligungsartenAppProps>();
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 	const art = computed(() => props.auswahl())
 
 </script>

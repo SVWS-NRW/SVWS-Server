@@ -25,35 +25,58 @@ public class ProxyReportingJahrgang extends ReportingJahrgang {
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingJahrgang}.
 	 *
-	 * @param reportingRepository Repository für die Reporting.
+	 * @param reportingRepository Repository für das Reporting.
 	 * @param jahrgangsDaten Stammdaten-Objekt aus der DB.
 	 * @param schuljahresabschnitt Der Schuljahresabschnitt zu diesem Jahrgang.
 	 */
 	public ProxyReportingJahrgang(final ReportingRepository reportingRepository, final JahrgangsDaten jahrgangsDaten,
 			final ReportingSchuljahresabschnitt schuljahresabschnitt) {
-		super(jahrgangsDaten.bezeichnung,
+		super(ersetzeNullDurchEmpty(jahrgangsDaten.bezeichnung),
 				jahrgangsDaten.gueltigBis,
 				jahrgangsDaten.gueltigVon,
 				null,
 				jahrgangsDaten.id,
 				jahrgangsDaten.idFolgejahrgang,
 				null,
-				jahrgangsDaten.kuerzel,
-				jahrgangsDaten.kuerzelSchulgliederung,
-				jahrgangsDaten.kuerzelStatistik,
+				ersetzeNullDurchEmpty(jahrgangsDaten.kuerzel),
+				ersetzeNullDurchEmpty(jahrgangsDaten.kuerzelSchulgliederung),
+				ersetzeNullDurchEmpty(jahrgangsDaten.kuerzelStatistik),
 				jahrgangsDaten.istSichtbar,
 				null,
 				schuljahresabschnitt,
 				jahrgangsDaten.sortierung);
+
 		this.reportingRepository = reportingRepository;
 	}
 
 
 
+	// ##### Hash und Equals Methoden #####
+
+	/**
+	 * Hashcode der Klasse
+	 * @return Hashcode der Klasse
+	 */
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
+	/**
+	 * Equals der Klasse
+	 * @param obj Das Vergleichsobjekt
+	 * @return    true, falls es das gleiche Objekt ist, andernfalls false.
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		return super.equals(obj);
+	}
+
+
 	/**
 	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.
 	 *
-	 * @return Repository für die Reporting
+	 * @return Repository für das Reporting
 	 */
 	public ReportingRepository reportingRepository() {
 		return reportingRepository;

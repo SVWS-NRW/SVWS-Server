@@ -100,7 +100,7 @@ export class SchuldateiOrganisationseinheitManager extends JavaObject {
 	 */
 	private validate() : void {
 		if ((this._organisationseinheit.oeart !== null) && (!this._managerSchuldatei.katalogOrganisationseinheitarten.hasEintrag(this._organisationseinheit.oeart)))
-			throw new IllegalArgumentException(JavaString.format("Die Art %s der Organisationseinheit mit der Schulnummer %d hat keinen zugehörigen Katalog-Eintrag.", this._organisationseinheit.oeart, this._organisationseinheit.schulnummer))
+			throw new IllegalArgumentException(JavaString.format("Die Art %s der Organisationseinheit mit der Schulnummer %s hat keinen zugehörigen Katalog-Eintrag.", this._organisationseinheit.oeart, this._organisationseinheit.schulnummer))
 		this.validateGrunddaten();
 		this.validateAdressen();
 		this.validateMerkmale();
@@ -242,7 +242,7 @@ export class SchuldateiOrganisationseinheitManager extends JavaObject {
 	private validateAdressen() : void {
 		for (const adresse of this._organisationseinheit.adressen) {
 			if (this._mapAdressManagerByID.containsKey(adresse.id))
-				throw new IllegalArgumentException(JavaString.format("Die Addressen bei der Organisationseinheit mit der Schulnummer %d hat Duplikate.", this._organisationseinheit.schulnummer))
+				throw new IllegalArgumentException(JavaString.format("Die Addressen bei der Organisationseinheit mit der Schulnummer %s hat Duplikate.", this._organisationseinheit.schulnummer))
 			this._mapAdressManagerByID.put(adresse.id, new SchuldateiOrganisationseinheitAdressManager(this._managerSchuldatei, this, adresse, this._organisationseinheit.erreichbarkeiten));
 		}
 	}
@@ -268,9 +268,9 @@ export class SchuldateiOrganisationseinheitManager extends JavaObject {
 			if ((merkmal.liegenschaft !== 0) && (!this.existsLiegenschaftInAdressen(merkmal.liegenschaft)))
 				throw new IllegalArgumentException("Für die Liegenschaftsnummer " + merkmal.liegenschaft + " bei dem Merkmal mit der ID " + merkmal.id + " existiert keine Adresse mit der gleichen Liegenschaftsnummer bei der Organisationseinheit mit der Schulnummer " + this._organisationseinheit.schulnummer + ".")
 			if (!this._managerSchuldatei.katalogMerkmale.hasEintragInZeitraum(merkmal, merkmal.merkmal))
-				throw new IllegalArgumentException("Das Merkmal " + merkmal.merkmal + JavaString.format(" der Organisationseinheit mit der Schulnummer %d hat keinen zugehörigen Katalog-Eintrag.", this._organisationseinheit.schulnummer))
+				throw new IllegalArgumentException("Das Merkmal " + merkmal.merkmal + JavaString.format(" der Organisationseinheit mit der Schulnummer %s hat keinen zugehörigen Katalog-Eintrag.", this._organisationseinheit.schulnummer))
 			if (!this._managerSchuldatei.katalogAttribute.hasEintragInZeitraum(merkmal, merkmal.attribut))
-				throw new IllegalArgumentException("Das Attribut " + merkmal.attribut + JavaString.format(" der Organisationseinheit mit der Schulnummer %d hat keinen zugehörigen Katalog-Eintrag.", this._organisationseinheit.schulnummer))
+				throw new IllegalArgumentException("Das Attribut " + merkmal.attribut + JavaString.format(" der Organisationseinheit mit der Schulnummer %s hat keinen zugehörigen Katalog-Eintrag.", this._organisationseinheit.schulnummer))
 		}
 	}
 
@@ -288,9 +288,9 @@ export class SchuldateiOrganisationseinheitManager extends JavaObject {
 			if ((erreichbarkeit.liegenschaft !== 0) && !this.existsLiegenschaftInAdressen(erreichbarkeit.liegenschaft))
 				throw new IllegalArgumentException("Für die Liegenschaftsnummer " + erreichbarkeit.liegenschaft + " existiert keine Adresse mit der gleichen Liegenschaftsnummer bei der Organisationseinheit mit Schulnummer " + this._organisationseinheit.schulnummer + ".")
 			if (!this._managerSchuldatei.katalogErreichbarkeiten.hasEintragInZeitraum(erreichbarkeit, erreichbarkeit.codekey))
-				throw new IllegalArgumentException(JavaString.format("Der Typ (codekey) der Erreichbarkeit mit der Id %s in der Organisationseinheit mit der Schulnummer %d hat keinen zugehörigen Katalog-Eintrag.", erreichbarkeit.id, erreichbarkeit.schulnummer))
+				throw new IllegalArgumentException(JavaString.format("Der Typ (codekey) der Erreichbarkeit mit der Id %s in der Organisationseinheit mit der Schulnummer %s hat keinen zugehörigen Katalog-Eintrag.", erreichbarkeit.id, erreichbarkeit.schulnummer))
 			if (!this._managerSchuldatei.katalogKommunikationsgruppen.hasEintragInZeitraum(erreichbarkeit, erreichbarkeit.kommgruppe))
-				throw new IllegalArgumentException(JavaString.format("Die Kommunikationsgruppe >%s< der Erreichbarkeit mit der Id %s in der Organisationseinheit mit der Schulnummer %d hat keinen zugehörigen Katalog-Eintrag.", erreichbarkeit.kommgruppe, erreichbarkeit.id, erreichbarkeit.schulnummer))
+				throw new IllegalArgumentException(JavaString.format("Die Kommunikationsgruppe >%s< der Erreichbarkeit mit der Id %s in der Organisationseinheit mit der Schulnummer %s hat keinen zugehörigen Katalog-Eintrag.", erreichbarkeit.kommgruppe, erreichbarkeit.id, erreichbarkeit.schulnummer))
 		}
 	}
 
@@ -304,7 +304,7 @@ export class SchuldateiOrganisationseinheitManager extends JavaObject {
 			if (!JavaObject.equalsTranspiler(this._organisationseinheit.schulnummer, (eigenschaft.schulnummer)))
 				throw new IllegalArgumentException("Die Schulnummer " + eigenschaft.schulnummer + " bei der Erreichbarkeit passt nicht zu der Schulnummer der Organisationseinheit " + this._organisationseinheit.schulnummer + ".")
 			if (!this._managerSchuldatei.katalogOergangisationseinheitEigenschaften.hasEintragInZeitraum(eigenschaft, eigenschaft.eigenschaft))
-				throw new IllegalArgumentException("Die Eigenschaft " + eigenschaft.eigenschaft + JavaString.format(" mit der Id %d in der Organisationseinheit mit der Schulnummer %d hat keinen zugehörigen Katalog-Eintrag.", eigenschaft.id, this._organisationseinheit.schulnummer))
+				throw new IllegalArgumentException("Die Eigenschaft " + eigenschaft.eigenschaft + JavaString.format(" mit der Id %d in der Organisationseinheit mit der Schulnummer %s hat keinen zugehörigen Katalog-Eintrag.", eigenschaft.id, this._organisationseinheit.schulnummer))
 		}
 	}
 
@@ -320,9 +320,9 @@ export class SchuldateiOrganisationseinheitManager extends JavaObject {
 			if (!JavaObject.equalsTranspiler(this._organisationseinheit.schulnummer, (gliederung.schulnummer)))
 				throw new IllegalArgumentException("Die Schulnummer " + gliederung.schulnummer + " bei der Erreichbarkeit passt nicht zu der Schulnummer der Organisationseinheit " + this._organisationseinheit.schulnummer + ".")
 			if ((!JavaString.isEmpty(gliederung.gliederung)) && (!this._managerSchuldatei.katalogGliederungen.hasEintragInZeitraum(gliederung, gliederung.gliederung)))
-				throw new IllegalArgumentException("Die Gliederung " + gliederung.gliederung + JavaString.format("mit der Id %d in der Organisationseinheit mit der Schulnummer %d hat keinen zugehörigen Katalog-Eintrag.", gliederung.id, this._organisationseinheit.schulnummer))
+				throw new IllegalArgumentException("Die Gliederung " + gliederung.gliederung + JavaString.format("mit der Id %d in der Organisationseinheit mit der Schulnummer %s hat keinen zugehörigen Katalog-Eintrag.", gliederung.id, this._organisationseinheit.schulnummer))
 			if ((!JavaString.isEmpty(gliederung.foerderschwerpunkt)) && (!this._managerSchuldatei.katalogFoerderschwerpunkte.hasEintragInZeitraum(gliederung, gliederung.foerderschwerpunkt)))
-				throw new IllegalArgumentException("Der Förderschwerpunkt " + gliederung.foerderschwerpunkt + JavaString.format("mit der Id %d in der Organisationseinheit mit der Schulnummer %d hat keinen zugehörigen Katalog-Eintrag.", gliederung.id, this._organisationseinheit.schulnummer))
+				throw new IllegalArgumentException("Der Förderschwerpunkt " + gliederung.foerderschwerpunkt + JavaString.format("mit der Id %d in der Organisationseinheit mit der Schulnummer %s hat keinen zugehörigen Katalog-Eintrag.", gliederung.id, this._organisationseinheit.schulnummer))
 		}
 	}
 

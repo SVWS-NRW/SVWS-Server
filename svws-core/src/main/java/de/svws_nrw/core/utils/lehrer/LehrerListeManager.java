@@ -113,6 +113,14 @@ public final class LehrerListeManager extends AuswahlManager<Long, LehrerListeEi
 			eintrag.vorname = daten.vorname;
 			updateEintrag = true;
 		}
+		if (daten.istSichtbar != eintrag.istSichtbar) {
+			eintrag.istSichtbar = daten.istSichtbar;
+			updateEintrag = true;
+		}
+		if (daten.istRelevantFuerStatistik != eintrag.istRelevantFuerStatistik) {
+			eintrag.istRelevantFuerStatistik = daten.istRelevantFuerStatistik;
+			updateEintrag = true;
+		}
 		return updateEintrag;
 	}
 

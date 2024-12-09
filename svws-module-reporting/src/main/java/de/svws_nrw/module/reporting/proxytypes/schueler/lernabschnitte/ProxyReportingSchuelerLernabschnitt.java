@@ -1,29 +1,26 @@
 package de.svws_nrw.module.reporting.proxytypes.schueler.lernabschnitte;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
 import de.svws_nrw.core.data.klassen.KlassenDaten;
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittsdaten;
-import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.data.jahrgaenge.DataJahrgangsdaten;
 import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
-import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
+
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLeistungsdaten;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
-import de.svws_nrw.module.reporting.proxytypes.jahrgang.ProxyReportingJahrgang;
 import de.svws_nrw.module.reporting.proxytypes.lehrer.ProxyReportingLehrer;
-import de.svws_nrw.module.reporting.proxytypes.schueler.ProxyReportingSchueler;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
 import de.svws_nrw.module.reporting.types.klasse.ReportingKlasse;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
-import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLernabschnitt;
-import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 
 /**
  * Proxy-Klasse im Rahmen des Reportings für Daten vom Typ Lernabschnitt und erweitert die Klasse {@link ReportingSchuelerLernabschnitt}.
@@ -38,25 +35,25 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingSchuelerLernabschnitt}.
 	 *
-	 * @param reportingRepository Repository für die Reporting.
+	 * @param reportingRepository Repository für das Reporting.
 	 * @param schuelerLernabschnittsdaten Stammdaten-Objekt aus der DB.
 	 */
 	public ProxyReportingSchuelerLernabschnitt(final ReportingRepository reportingRepository, final SchuelerLernabschnittsdaten schuelerLernabschnittsdaten) {
-		super(schuelerLernabschnittsdaten.abschluss,
+		super(ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.abschluss),
 				schuelerLernabschnittsdaten.abschlussart,
-				schuelerLernabschnittsdaten.abschlussBerufsbildend,
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.abschlussBerufsbildend),
 				schuelerLernabschnittsdaten.anzahlSchulbesuchsjahre,
-				schuelerLernabschnittsdaten.bilingualerZweig,
-				schuelerLernabschnittsdaten.datumAnfang,
-				schuelerLernabschnittsdaten.datumEnde,
-				schuelerLernabschnittsdaten.datumKonferenz,
-				schuelerLernabschnittsdaten.datumZeugnis,
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.bilingualerZweig),
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.datumAnfang),
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.datumEnde),
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.datumKonferenz),
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.datumZeugnis),
 				schuelerLernabschnittsdaten.fehlstundenGesamt,
 				schuelerLernabschnittsdaten.fehlstundenGrenzwert,
 				schuelerLernabschnittsdaten.fehlstundenUnentschuldigt,
 				null,
 				null,
-				schuelerLernabschnittsdaten.bemerkungen.foerderschwerpunkt,
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.bemerkungen.foerderschwerpunkt),
 				null,
 				schuelerLernabschnittsdaten.hatAOSF,
 				schuelerLernabschnittsdaten.hatAutismus,
@@ -80,40 +77,71 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 				schuelerLernabschnittsdaten.istGewertet,
 				schuelerLernabschnittsdaten.istWiederholung,
 				null,
-				schuelerLernabschnittsdaten.Klassenart,
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.Klassenart),
+				new ArrayList<>(),
 				null,
-				null,
-				schuelerLernabschnittsdaten.noteDurchschnitt,
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.noteDurchschnitt),
 				schuelerLernabschnittsdaten.noteLernbereichGSbzwAL,
 				schuelerLernabschnittsdaten.noteLernbereichNW,
-				schuelerLernabschnittsdaten.organisationsform,
-				schuelerLernabschnittsdaten.pruefungsOrdnung,
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.organisationsform),
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.pruefungsOrdnung),
 				null,
-				schuelerLernabschnittsdaten.schulgliederung,
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.schulgliederung),
 				null,
 				null,
-				schuelerLernabschnittsdaten.textErgebnisPruefungsalgorithmus,
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.textErgebnisPruefungsalgorithmus),
 				null,
-				schuelerLernabschnittsdaten.bemerkungen.uebergangESF,
-				schuelerLernabschnittsdaten.bemerkungen.versetzungsentscheidung,
-				schuelerLernabschnittsdaten.versetzungsvermerk,
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.bemerkungen.uebergangESF),
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.bemerkungen.versetzungsentscheidung),
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.versetzungsvermerk),
 				schuelerLernabschnittsdaten.wechselNr,
-				schuelerLernabschnittsdaten.zeugnisart,
-				schuelerLernabschnittsdaten.bemerkungen.zeugnisASV,
-				schuelerLernabschnittsdaten.bemerkungen.zeugnisAUE,
-				schuelerLernabschnittsdaten.bemerkungen.zeugnisAllgemein,
-				schuelerLernabschnittsdaten.bemerkungen.zeugnisLELS);
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.zeugnisart),
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.bemerkungen.zeugnisASV),
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.bemerkungen.zeugnisAUE),
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.bemerkungen.zeugnisAllgemein),
+				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.bemerkungen.zeugnisLELS));
 
 		this.reportingRepository = reportingRepository;
+
 		super.foerderschwerpunkt1 = this.reportingRepository.katalogFoerderschwerpunkte().get(schuelerLernabschnittsdaten.foerderschwerpunkt1ID);
 		super.foerderschwerpunkt2 = this.reportingRepository.katalogFoerderschwerpunkte().get(schuelerLernabschnittsdaten.foerderschwerpunkt2ID);
+
+		super.schuljahresabschnitt = this.reportingRepository.schuljahresabschnitt(super.idSchuljahresabschnitt());
+
+		super.schueler = this.reportingRepository.mapSchueler().get(schuelerLernabschnittsdaten.schuelerID);
+
+		schuelerLernabschnittsdaten.leistungsdaten.forEach(
+				l -> this.reportingRepository.mapAlleLeistungsdaten().add(this.schueler().id(), this.id(), l.id, l));
 	}
+
+
+	// ##### Hash und Equals Methoden #####
+
+	/**
+	 * Hashcode der Klasse
+	 * @return Hashcode der Klasse
+	 */
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
+	/**
+	 * Equals der Klasse
+	 * @param obj Das Vergleichsobjekt
+	 * @return    true, falls es das gleiche Objekt ist, andernfalls false.
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		return super.equals(obj);
+	}
+
 
 
 	/**
 	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.
 	 *
-	 * @return Repository für die Reporting
+	 * @return Repository für das Reporting
 	 */
 	public ReportingRepository reportingRepository() {
 		return reportingRepository;
@@ -156,21 +184,8 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	 */
 	@Override
 	public ReportingJahrgang jahrgang() {
-		if ((super.jahrgang() == null) && (super.idJahrgang() != null) && (super.idJahrgang() >= 0)) {
-			super.jahrgang =
-					new ProxyReportingJahrgang(
-							reportingRepository,
-							reportingRepository.mapJahrgaenge().computeIfAbsent(super.idJahrgang(), k -> {
-								try {
-									return new DataJahrgangsdaten(reportingRepository.conn()).getFromID(super.idJahrgang());
-								} catch (final ApiOperationException e) {
-									ReportingExceptionUtils.putStacktraceInLog(
-											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Daten eines Jahrgangs.", e,
-											reportingRepository.logger(), LogLevel.INFO, 0);
-									return new JahrgangsDaten();
-								}
-							}), this.schuljahresabschnitt());
-		}
+		if ((super.jahrgang == null) && (super.idJahrgang != null) && (super.idJahrgang >= 0))
+			super.jahrgang = super.schuljahresabschnitt.jahrgang(super.idJahrgang);
 		return super.jahrgang();
 	}
 
@@ -181,70 +196,28 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	 */
 	@Override
 	public ReportingKlasse klasse() {
-		if ((super.klasse() == null) && (super.idKlasse() != null) && (super.idKlasse() >= 0)) {
-			if (!this.reportingRepository.mapKlassen().containsKey(super.idKlasse())) {
-				// ID der Klasse ist bekannt, aber sie wurde noch nicht aus der DB geladen. Lade deren Daten und lade dann alle Klassen des Lernabschnitts.
-				final KlassenDaten klassenDaten;
-				try {
-					klassenDaten = new DataKlassendaten(reportingRepository.conn()).getByIdOhneSchueler(super.idKlasse());
-				} catch (final ApiOperationException e) {
-					ReportingExceptionUtils.putStacktraceInLog(
-							"FEHLER: Fehler bei der Ermittlung der Daten für die Klasse des Schülers %s in %s."
-									.formatted(super.schueler().id(), super.schuljahresabschnitt.textSchuljahresabschnittKurz()),
-							e, reportingRepository.logger(), LogLevel.ERROR, 0);
-					return super.klasse();
-				}
-				super.klasse = this.reportingRepository.schuljahresabschnitt(klassenDaten.idSchuljahresabschnitt).klasse(super.idKlasse());
-			} else {
-				// ID der Klasse ist bekannt und die Klasse wurde in einem Lernabschnitt bereits erzeugt, hole sie aus Lernabschnitt.
-				super.klasse = this.reportingRepository.mapKlassen().get(super.idKlasse()).schuljahresabschnitt().klasse(super.idKlasse());
-			}
-		}
+		if ((super.klasse() == null) && (super.idKlasse() != null) && (super.idKlasse() >= 0))
+			super.klasse = super.schuljahresabschnitt.klasse(super.idKlasse);
 		return super.klasse();
 	}
 
-	// TODO Klasse für die Leistungsdaten für die Reporting erzeugen und dann die Daten im überschriebenen Getter hier dynamisch nachladen.
+	/**
+	 * Stellt die Leistungsdaten zur Verfügung, die in diesem Lernabschnitt dem Schüler zugeordnet sind.
+	 *
+	 * @return Die Leistungsdaten des Lernabschnitts.
+	 */
+	@Override
+	public List<ReportingSchuelerLeistungsdaten> leistungsdaten() {
+		if (super.leistungsdaten == null) {
+			super.leistungsdaten = this.reportingRepository.mapAlleLeistungsdaten()
+					.get12(this.schueler().id(), this.id()).stream()
+					.map(l -> (ReportingSchuelerLeistungsdaten) new ProxyReportingSchuelerLeistungsdaten(reportingRepository, this, l))
+					.toList();
+		}
+		return super.leistungsdaten;
+	}
 
 	// TODO Klasse für die Nachprüfungen für die Reporting erzeugen und dann die Daten im überschriebenen Getter hier dynamisch nachladen.
-
-	/**
-	 * Stellt die Daten des Schülers zur Verfügung, dem dieser Lernabschnitt gehört.
-	 *
-	 * @return Daten des Schülers
-	 */
-	@Override
-	public ReportingSchueler schueler() {
-		if ((super.schueler() == null) && (super.idSchueler() >= 0)) {
-			super.schueler =
-					new ProxyReportingSchueler(
-							reportingRepository,
-							reportingRepository.mapSchuelerStammdaten().computeIfAbsent(super.idSchueler(), l -> {
-								try {
-									return new DataSchuelerStammdaten(reportingRepository.conn()).getStammdaten(reportingRepository.conn(), super.idSchueler());
-								} catch (final ApiOperationException e) {
-									ReportingExceptionUtils.putStacktraceInLog(
-											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Schülers.", e,
-											reportingRepository.logger(), LogLevel.INFO, 0);
-									return new SchuelerStammdaten();
-								}
-							}));
-		}
-		return super.schueler();
-	}
-
-	/**
-	 * Stellt die Daten des Schuljahresabschnitts zur Verfügung, in dem dieser Lernabschnitt liegt.
-	 *
-	 * @return Daten des Schuljahresabschnitts
-	 */
-	@Override
-	public ReportingSchuljahresabschnitt schuljahresabschnitt() {
-		if ((super.schuljahresabschnitt() == null) && (super.idSchuljahresabschnitt() >= 0)) {
-			super.schuljahresabschnitt = this.reportingRepository.schuljahresabschnitt(super.idSchuljahresabschnitt());
-		}
-		return super.schuljahresabschnitt();
-	}
-
 
 	/**
 	 * Stellt die Daten des Sonderpädagogen zur Verfügung, der in diesem Lernabschnitt dem Schüler zugeordnet ist.

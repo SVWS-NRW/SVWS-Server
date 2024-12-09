@@ -221,7 +221,7 @@ class SvwsIntelliJPlugin implements Plugin<Project> {
 	 * @param projectParsed Die parsed project file, in die alle Inspections gemerged werden
 	 */
 	private static void mergeInspections(List<Object> configInspections, List<Object> projectInspections, Node projectParsed) {
-		configInspections.forEach(configInspection -> {
+		configInspections.forEach { configInspection ->
 			// Suche in xml, ob die gleiche Konfiguration enthalten ist
 			def matchingProjectInspection = projectInspections.find { projectInspection ->
 				projectInspection.'@class' == configInspection.'@class'
@@ -256,7 +256,7 @@ class SvwsIntelliJPlugin implements Plugin<Project> {
 			if (configInspection.'@level' == 'TEXT ATTRIBUTES' || configInspection.'@level' == 'INFORMATION') {
 				matchingProjectInspection.'@level' = 'TEXT ATTRIBUTES'
 			}
-		})
+		}
 	}
 
 	/**
@@ -273,6 +273,7 @@ class SvwsIntelliJPlugin implements Plugin<Project> {
 	 *
 	 * @param project das Gradle-Projekt, auf das dieses Plugin angewendet wird.
 	 */
+	@Override
 	void apply(Project project) {
 		this.project = project
 

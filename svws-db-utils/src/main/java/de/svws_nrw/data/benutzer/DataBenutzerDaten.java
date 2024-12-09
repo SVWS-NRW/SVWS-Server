@@ -6,8 +6,10 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -16,6 +18,7 @@ import de.svws_nrw.base.crypto.AES;
 import de.svws_nrw.base.crypto.AESException;
 import de.svws_nrw.core.data.benutzer.BenutzerAllgemeinCredentials;
 import de.svws_nrw.core.data.benutzer.BenutzerDaten;
+import de.svws_nrw.core.data.benutzer.BenutzerLehrerCredentials;
 import de.svws_nrw.core.data.benutzer.BenutzergruppeDaten;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.types.benutzer.BenutzerTyp;
@@ -103,7 +106,7 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 	 */
 	private DTOViewBenutzerdetails getDTO(final Long id) throws ApiOperationException {
 		if (id == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Die ID des zu änderden Benutzers darf nicht null sein.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Die ID des zu ändernden Benutzers darf nicht null sein.");
 		final DTOViewBenutzerdetails benutzer = conn.queryByKey(DTOViewBenutzerdetails.class, id);
 		if (benutzer == null)
 			throw new ApiOperationException(Status.NOT_FOUND, strBenutzerMitIDExistiertNicht);
@@ -128,7 +131,7 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 	}
 
 	/**
-	 * Überprüft für die Schulform die zulässigkeit der Kompetenzen, die einem Objekt hinzugefügt bzw. entzogen werden.
+	 * Überprüft für die Schulform die Zulässigkeit der Kompetenzen, die einem Objekt hinzugefügt bzw. entzogen werden.
 	 *
 	 * @param kids die IDs der Kompetenzen
 	 *
@@ -170,7 +173,7 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 	 */
 	public Response addAdmin(final Long id) throws ApiOperationException {
 		if (id == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Die ID der zu änderden Benutzer darf nicht null sein.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Die ID des zu ändernden Benutzers darf nicht null sein.");
 		final DTOBenutzer benutzer = conn.queryByKey(DTOBenutzer.class, id);
 		if (benutzer == null)
 			throw new ApiOperationException(Status.NOT_FOUND, strBenutzerMitIDExistiertNicht);
@@ -195,13 +198,13 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 		// Prüft, die Zulässigkeit der Kompetenzen für die Schulform
 		this.istKompetenzZulaessig(kids);
 		if ((id == null) || (kids == null))
-			throw new ApiOperationException(Status.NOT_FOUND, "Die ID der zu änderden Benutzer bzw IDs der Kompetenzen darf bzw. dürfen nicht null sein.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Die ID des zu ändernden Benutzers bzw IDs der Kompetenzen darf bzw. dürfen nicht null sein.");
 		// Prüfe, ob der Benutzer mit der ID existiert.
 		getDTO(id);
 		// Prüfe, ob die Benutzerkompetenzen mit den Ids existieren.
 		for (final Long kid : kids)
 			if (BenutzerKompetenz.getByID(kid) == null)
-				throw new ApiOperationException(Status.NOT_FOUND, "Die Benutzerkompetenz mit der ID " + kid + " existiert nicht!!");
+				throw new ApiOperationException(Status.NOT_FOUND, "Die Benutzerkompetenz mit der ID " + kid + " existiert nicht!");
 		// Füge die Kompetenzen hinzu
 		for (final Long kid : kids) {
 			DTOBenutzerKompetenz bk = conn.queryByKey(DTOBenutzerKompetenz.class, id, kid);
@@ -213,8 +216,51 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 		return Response.status(Status.OK).build();
 	}
 
+
 	/**
-	 * Erstellt einen neuen Benutzer *
+	 * Überprüfe, ob der Benutzername gesetzt ist und nicht schon bereits vergeben ist.
+	 *
+	 * @param benutzername   der Benutzername
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	private void pruefeBenutzernameGueltig(final String benutzername) throws ApiOperationException {
+		// Überprüfe, ob der Benutzername gesetzt ist
+		if ((benutzername == null) || (benutzername.isBlank()))
+			throw new ApiOperationException(Status.BAD_REQUEST, "Ein leerer Benutzername ist nicht zulässig!");
+		// Überprüfe auf Whitespace-Characters am Anfang und am Ende des Benutzernamens
+		if (!benutzername.equals(benutzername.trim()))
+			throw new ApiOperationException(Status.BAD_REQUEST, "Leerzeichen und ähnliches sind am Anfang und am Ende des Bentzernamens nicht erlaubt.");
+		// Überprüfe auf Leerzeichen und Tabs im Benutzernamen
+		if (!benutzername.matches("\\S+"))
+			throw new ApiOperationException(Status.BAD_REQUEST, "Leerzeichen und Tabs sind im Benutzernamen nicht zulässig.");
+		// Überprüfe, ob der Benutzername nicht schon bereits vergeben ist.
+		final Set<String> benutzernamenLowerCase = conn.queryAll(DTOCredentials.class).stream().filter(cred -> cred.Benutzername != null)
+				.map(cred -> cred.Benutzername.toLowerCase(Locale.GERMAN)).collect(Collectors.toSet());
+		if (benutzernamenLowerCase.contains(benutzername.toLowerCase(Locale.GERMAN)))
+			throw new ApiOperationException(Status.CONFLICT,
+					"Der Benutzername ist bereits vergeben bzw. es existiert ein Benutzername, der sich nur in Groß- und Kleinschreibung unterscheidet.");
+	}
+
+
+	/**
+	 * Überprüfe, ob der Benutzername und das Kennwort gesetzt sind und der Benutzername nicht schon bereits vergeben ist.
+	 *
+	 * @param benutzername   der Benutzername
+	 * @param password        das Kennwort
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	private void pruefeBenutzernameUndKennwortGueltig(final String benutzername, final String password) throws ApiOperationException {
+		// Überprüfe, ob das Kennwort gesetzt ist
+		if ((password == null) || (password.isBlank()))
+			throw new ApiOperationException(Status.BAD_REQUEST, "Ein leeres Kennwort ist nicht zulässig!");
+		pruefeBenutzernameGueltig(benutzername);
+	}
+
+
+	/**
+	 * Erstellt einen neuen Benutzer
 	 *
 	 * @param cred       Das JSON-Objekt mit den Daten für Credentials-Obejkt
 	 *
@@ -227,8 +273,8 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 		DTOBenutzer benutzer = null;
 		DTOCredentials credential = null;
 
-		if ((cred.benutzername == null) || (cred.password == null))
-			throw new ApiOperationException(Status.BAD_REQUEST, "Benuzername oder Passwort leer!");
+		// Überprüfe, ob der Benutzername und das Kennwort gesetzt sind und der Benutzername nicht schon bereits vergeben ist.
+		pruefeBenutzernameUndKennwortGueltig(cred.benutzername, cred.password);
 
 		// Bestimme die ID des Benutzers / Credentials / BenutzerAllgemeins
 		final long idBenutzerAllgemein = conn.transactionGetNextID(DTOBenutzerAllgemein.class);
@@ -276,10 +322,49 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 	/**
 	 * Erstellt einen neuen Benutzer mit dem Benutzertyp Lehrer
 	 *
+	 * @param cred   die Credentials für den neu zu erstellenden Lehrer-Benutzer
+	 *
 	 * @return Eine Response mit dem neuen Benutzer
+	 *
+	 * @throws ApiOperationException   wenn ein Fehler auftritt
 	 */
-	public Response createBenutzerLehrer() {
-		throw new UnsupportedOperationException();
+	public Response createBenutzerLehrer(final BenutzerLehrerCredentials cred) throws ApiOperationException {
+		// Überprüfe, ob der Benutzername und das Kennwort gesetzt sind und der Benutzername nicht schon bereits vergeben ist.
+		pruefeBenutzernameUndKennwortGueltig(cred.benutzername, cred.password);
+
+		// Bestimme den Lehrer mit der angegebenen ID aus der Datenbank
+		final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, cred.idLehrer);
+		if (lehrer == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Kein Lehrer mit der angebenen ID gefunden!");
+
+		// Prüfe, ob für den Lehrer mit der angegebenen ID bereits ein Benutzer angelegt wurde, wenn nicht, dann muss ein neuer Benutzer angelegt werden
+		DTOBenutzer benutzer = conn.queryList(DTOBenutzer.QUERY_BY_LEHRER_ID, DTOBenutzer.class, cred.idLehrer).stream().findFirst().orElse(null);
+		if (benutzer != null)
+			throw new ApiOperationException(Status.CONFLICT, "Es ist bereits ein Lehrer-Benutzer mit der angebenen ID vorhanden!");
+		final long idBenutzer = conn.transactionGetNextID(DTOBenutzer.class);
+		benutzer = new DTOBenutzer(idBenutzer, BenutzerTyp.LEHRER, false);
+		benutzer.Lehrer_ID = cred.idLehrer;
+		conn.transactionPersist(benutzer);
+
+		// Prüfe, ob dem Benutzer bereits Credentials zugeordnet sind, wenn ja, dann werden diese überschrieben. Wenn nicht, dann werden neue angelegt
+		DTOCredentials credential;
+		if (lehrer.CredentialID == null) {
+			final long idCredential = conn.transactionGetNextID(DTOCredentials.class);
+			credential = new DTOCredentials(idCredential, cred.benutzername);
+		} else {
+			credential = conn.queryByKey(DTOCredentials.class, lehrer.CredentialID);
+		}
+		credential.PasswordHash = Benutzer.erstellePasswortHash(cred.password);
+		conn.transactionPersist(credential);
+		conn.transactionFlush();
+
+		if (lehrer.CredentialID == null) {
+			lehrer.CredentialID = credential.ID;
+			conn.transactionPersist(lehrer);
+			conn.transactionFlush();
+		}
+
+		return get(idBenutzer);
 	}
 
 	/**
@@ -429,15 +514,7 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 	}
 
 
-	@Override
-	public Response get(final Long id) throws ApiOperationException {
-		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		if (schule == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Keine Schule angelegt.");
-		final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
-		if (schuljahresabschnitt == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Keine gültiger Schuljahresabschnitt vorhanden.");
-
+	private BenutzerDaten getInternal(final long id) throws ApiOperationException {
 		// Lese die Informationen zu den Gruppen ein
 		final List<Long> gruppenIDs = conn.queryList(DTOBenutzergruppenMitglied.QUERY_BY_BENUTZER_ID, DTOBenutzergruppenMitglied.class, id).stream()
 				.map(g -> g.Gruppe_ID).toList();
@@ -467,12 +544,28 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 					gdaten.kompetenzen.add(kompetenzID);
 			daten.gruppen.add(gdaten);
 		}
-		// Füge die Informationen hinzu, zu welchen Klassen funktionsbezogene Kompetenzen vorliegen oder welche Leitungsfunktionen vorliegen
-		daten.kompetenzenKlassen.addAll(getKlassenFunktionsbezogen(conn, daten.typ, daten.typID));
-		daten.leitungsfunktionen.addAll(getLeitungsfunktionenIDs(schuljahresabschnitt.Jahr, conn, daten.typ, daten.typID));
-		daten.kompetenzenAbiturjahrgaenge.addAll(getBeratungslehrerAbiturjahrgaenge(conn, daten.typ, daten.typID));
+		return daten;
+	}
+
+
+	@Override
+	public Response get(final Long id) throws ApiOperationException {
+		final BenutzerDaten daten = getInternal(id);
+		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
+		if (schule != null) {
+			// Ermittle die restlichen Daten nur, wenn die Schule bereits initialisiert wurde. Wenn nicht, dannn sind diese Daten noch nicht verfügbar
+			final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
+			if (schuljahresabschnitt == null)
+				throw new ApiOperationException(Status.NOT_FOUND, "Keine gültiger Schuljahresabschnitt vorhanden.");
+
+			// Füge die Informationen hinzu, zu welchen Klassen funktionsbezogene Kompetenzen vorliegen oder welche Leitungsfunktionen vorliegen
+			daten.kompetenzenKlassen.addAll(getKlassenFunktionsbezogen(conn, daten.typ, daten.typID));
+			daten.leitungsfunktionen.addAll(getLeitungsfunktionenIDs(schuljahresabschnitt.Jahr, conn, daten.typ, daten.typID));
+			daten.kompetenzenAbiturjahrgaenge.addAll(getBeratungslehrerAbiturjahrgaenge(conn, daten.typ, daten.typID));
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
+
 
 	/**
 	 * Entfernt die Admin-Berechtigung des Benutzers.
@@ -485,7 +578,7 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 	 */
 	public Response removeAdmin(final Long id) throws ApiOperationException {
 		if (id == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Die ID der zu änderden Benutzer darf nicht null sein.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Die ID des zu ändernden Benutzers darf nicht null sein.");
 		final DTOBenutzer benutzer = conn.queryByKey(DTOBenutzer.class, id);
 		if (benutzer == null)
 			throw new ApiOperationException(Status.NOT_FOUND, strBenutzerMitIDExistiertNicht);
@@ -637,7 +730,7 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 		this.istKompetenzZulaessig(kids);
 
 		if ((id == null) || (kids == null))
-			throw new ApiOperationException(Status.NOT_FOUND, "Die ID der zu änderden Benutzer bzw IDs der Kompetenzen darf bzw. dürfen nicht null sein.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Die ID des zu ändernden Benutzers bzw IDs der Kompetenzen darf bzw. dürfen nicht null sein.");
 		// Prüfe, ob der Benutzer mit der ID existiert.
 		getDTO(id);
 		// Prüfe, ob die Benutzerkompetenzen mit den Ids existieren.
@@ -674,7 +767,7 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 	 * @param id   die ID der Benutzergruppe
 	 * @param name der neue Azeigename
 	 *
-	 * @return die Response 200 bei Erfolg.
+	 * @return die Response 204 bei Erfolg.
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
@@ -682,7 +775,7 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 		if ((name == null) || "".equals(name))
 			throw new ApiOperationException(Status.CONFLICT, "Der Anzeigename muss gültig sein und darf nicht null oder leer sein");
 		if (id == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Die ID der zu änderden Benutzer darf nicht null sein.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Die ID des zu ändernden Benutzers darf nicht null sein.");
 		final DTOBenutzerAllgemein benutzerallgemein = conn.queryByKey(DTOBenutzerAllgemein.class, id);
 		if (benutzerallgemein == null)
 			throw new ApiOperationException(Status.NOT_FOUND, strBenutzerMitIDExistiertNicht);
@@ -698,7 +791,7 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 		// Der Anzeigename wird angepasst...
 		benutzerallgemein.AnzeigeName = name;
 		conn.transactionPersist(benutzerallgemein);
-		return Response.status(Status.OK).build();
+		return Response.status(Status.NO_CONTENT).build();
 	}
 
 
@@ -709,13 +802,11 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 	 * @param id     die ID des Benutzers
 	 * @param name   der neue Benutzername für die Anmeldung
 	 *
-	 * @return die Response 200 bei Erfolg.
+	 * @return die Response 204 bei Erfolg.
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public Response setBenutzername(final Long id, final String name) throws ApiOperationException {
-		if ((name == null) || "".equals(name))
-			throw new ApiOperationException(Status.CONFLICT, "Der Name für die Anmeldung muss gültig sein und darf nicht null oder leer sein");
 		if (id.equals(conn.getUser().getId()))
 			throw new ApiOperationException(Status.CONFLICT, "Der aktuelle Benutzer darf seinen eigenen Benutzernamen nicht ändern.");
 		final DTOViewBenutzerdetails benutzer = getDTO(id);
@@ -725,16 +816,11 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 		final DTOCredentials cred = conn.queryByKey(DTOCredentials.class, benutzer.credentialID);
 		if (cred == null)
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Dem Benutzer sind keine gültigen Credentials zugeordnet.");
-		// Prüfe vorher, ob der Name nicht bereits verwendet wird -> Conflict
-		final List<DTOCredentials> creds = conn.queryAll(DTOCredentials.class);
-		for (final DTOCredentials data : creds) {
-			if (name.trim().equals(data.Benutzername))
-				throw new ApiOperationException(Status.CONFLICT,
-						"Ein Benutzer mit dem Namen existiert bereits - die Umbenennung kann nicht durchgeführt werden");
-		}
+		// Prüfe vorher, ob der Name gültig ist und nicht bereits verwendet wird -> Conflict
+		pruefeBenutzernameGueltig(name);
 		cred.Benutzername = name;
 		conn.transactionPersist(cred);
-		return Response.status(Status.OK).build();
+		return Response.status(Status.NO_CONTENT).build();
 	}
 
 

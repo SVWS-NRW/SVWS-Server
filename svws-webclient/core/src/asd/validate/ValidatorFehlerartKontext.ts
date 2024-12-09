@@ -16,17 +16,17 @@ export class ValidatorFehlerartKontext extends JavaObject {
 	public svws : boolean = false;
 
 	/**
-	 * Liste der Schulformen, in denen ein harter Fehler vorliegt
-	 */
-	public hart : List<string> = new ArrayList<string>();
-
-	/**
-	 * Liste der Schulformen, in denen ein harter Fehler vorliegt
+	 * Liste der Schulformen, in denen ein Fehler vorliegt
 	 */
 	public muss : List<string> = new ArrayList<string>();
 
 	/**
-	 * Liste der Schulformen, in denen ein harter Fehler vorliegt
+	 * Liste der Schulformen, in denen wahrscheinlich ein Fehler vorliegt
+	 */
+	public kann : List<string> = new ArrayList<string>();
+
+	/**
+	 * Liste der Schulformen, in denen ein Hinweise auf einen möglichen Fehler erfolgt
 	 */
 	public hinweis : List<string> = new ArrayList<string>();
 
@@ -67,14 +67,14 @@ export class ValidatorFehlerartKontext extends JavaObject {
 		if (obj.svws === undefined)
 			throw new Error('invalid json format, missing attribute svws');
 		result.svws = obj.svws;
-		if (obj.hart !== undefined) {
-			for (const elem of obj.hart) {
-				result.hart.add(elem);
-			}
-		}
 		if (obj.muss !== undefined) {
 			for (const elem of obj.muss) {
 				result.muss.add(elem);
+			}
+		}
+		if (obj.kann !== undefined) {
+			for (const elem of obj.kann) {
+				result.kann.add(elem);
 			}
 		}
 		if (obj.hinweis !== undefined) {
@@ -91,19 +91,19 @@ export class ValidatorFehlerartKontext extends JavaObject {
 		let result = '{';
 		result += '"zebras" : ' + obj.zebras.toString() + ',';
 		result += '"svws" : ' + obj.svws.toString() + ',';
-		result += '"hart" : [ ';
-		for (let i = 0; i < obj.hart.size(); i++) {
-			const elem = obj.hart.get(i);
-			result += '"' + elem + '"';
-			if (i < obj.hart.size() - 1)
-				result += ',';
-		}
-		result += ' ]' + ',';
 		result += '"muss" : [ ';
 		for (let i = 0; i < obj.muss.size(); i++) {
 			const elem = obj.muss.get(i);
 			result += '"' + elem + '"';
 			if (i < obj.muss.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"kann" : [ ';
+		for (let i = 0; i < obj.kann.size(); i++) {
+			const elem = obj.kann.get(i);
+			result += '"' + elem + '"';
+			if (i < obj.kann.size() - 1)
 				result += ',';
 		}
 		result += ' ]' + ',';
@@ -130,22 +130,22 @@ export class ValidatorFehlerartKontext extends JavaObject {
 		if (obj.svws !== undefined) {
 			result += '"svws" : ' + obj.svws.toString() + ',';
 		}
-		if (obj.hart !== undefined) {
-			result += '"hart" : [ ';
-			for (let i = 0; i < obj.hart.size(); i++) {
-				const elem = obj.hart.get(i);
-				result += '"' + elem + '"';
-				if (i < obj.hart.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
-		}
 		if (obj.muss !== undefined) {
 			result += '"muss" : [ ';
 			for (let i = 0; i < obj.muss.size(); i++) {
 				const elem = obj.muss.get(i);
 				result += '"' + elem + '"';
 				if (i < obj.muss.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
+		if (obj.kann !== undefined) {
+			result += '"kann" : [ ';
+			for (let i = 0; i < obj.kann.size(); i++) {
+				const elem = obj.kann.get(i);
+				result += '"' + elem + '"';
+				if (i < obj.kann.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';

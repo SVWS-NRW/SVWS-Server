@@ -5,7 +5,7 @@
 				<div class="ml-4 flex gap-0.5 items-center leading-none select-none">
 					<div class="text-button font-bold mr-1 -mt-px">Klasse:</div>
 					<svws-ui-select headless title="Klasse" v-model="klasse" :items="stundenplanManager().klasseGetMengeAsList()" :item-text="i => i.kuerzel" autocomplete
-						:item-filter="(i, text)=> i.filter(k=>k.kuerzel.includes(text.toLocaleLowerCase()))" :item-sort="() => 0" type="transparent" removable />
+						:item-filter="(i, text)=> i.filter(k=>k.kuerzel.includes(text.toLocaleLowerCase()))" :item-sort="() => 0" type="transparent" removable focus-class />
 				</div>
 			</svws-ui-sub-nav>
 		</Teleport>

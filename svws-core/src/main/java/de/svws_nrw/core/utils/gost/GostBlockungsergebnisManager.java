@@ -468,7 +468,7 @@ public class GostBlockungsergebnisManager {
 		// Bewertungskriterium 3a (kursdifferenzMax) und 3b (kursdifferenzHistogramm)
 		// kursdifferenzMax noch unterteilt in (bewertung3_KD_nur_LK) (bewertung3_KD_nur_GK) (bewertung3_KD_nur_REST)
 		_ergebnis.bewertung.kursdifferenzMax = 0;
-		_ergebnis.bewertung.kursdifferenzHistogramm = new int[_parent.schuelerGetAnzahl() + 1];
+		_ergebnis.bewertung.kursdifferenzHistogramm = new int[_parent.schuelerGetAnzahl() + GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN_MAX + 1];
 		_bewertung3_KD_nur_LK = 0;
 		_bewertung3_KD_nur_GK = 0;
 		_bewertung3_KD_nur_REST = 0;
@@ -1364,9 +1364,9 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert das Blockungsergebnis inklusive ungültiger Schüler-Kurs-Zuordnungen.
+	 * Liefert das Blockungsergebnis, potentiell auch mit Schüler-Kurs-Zuordnungen, die nicht zu den Fachwahlen passen.
 	 *
-	 * @return  das Blockungsergebnis inklusive ungültiger Schüler-Kurs-Zuordnungen.
+	 * @return das Blockungsergebnis, potentiell auch mit Schüler-Kurs-Zuordnungen, die nicht zu den Fachwahlen passen.
 	 */
 	public @NotNull GostBlockungsergebnis getErgebnis() {
 		return _ergebnis;
@@ -6008,6 +6008,16 @@ public class GostBlockungsergebnisManager {
 	private @NotNull Set<GostBlockungsergebnisSchiene> getMengeDerSchienenMitKollisionen() {
 		return CollectionUtils.toFilteredHashSet(_schienenID_to_schiene.values(),
 				(final @NotNull GostBlockungsergebnisSchiene s) -> getOfSchieneHatKollision(s.id));
+	}
+
+	/**
+	 * Liefert TRUE, falls die E-Schiene existiert.
+	 *
+	 * @param idSchiene  Die Datenbank-ID der Schiene.
+	 * @return TRUE, falls die E-Schiene existiert.
+	 */
+	public boolean getOfSchieneExists(final long idSchiene) {
+		return _schienenID_to_schiene.containsKey(idSchiene);
 	}
 
 	/**

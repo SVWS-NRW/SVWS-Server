@@ -20,8 +20,6 @@ import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKurs;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchienenZuordnung;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchienenZuordnungUpdate;
-import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnung;
-import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnungUpdate;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisSchiene;
 import de.svws_nrw.core.data.gost.GostFachwahl;
 import de.svws_nrw.core.kursblockung.KursblockungAlgorithmus;
@@ -207,17 +205,6 @@ class GostBlockungsergebnisManagerTest {
 			check_conistency(mapFaKu, mapScFaKu, out);
 		}
 
-	}
-
-	private static void setSchuelerKurs(final GostBlockungsergebnisManager manager, final long schuelerID, final long kursID, final boolean hinzufuegen) {
-		final Set<GostBlockungsergebnisKursSchuelerZuordnung> z = new HashSet<>();
-		z.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(kursID, schuelerID));
-
-		final GostBlockungsergebnisKursSchuelerZuordnungUpdate update = hinzufuegen
-				? manager.kursSchuelerUpdate_03a_FUEGE_KURS_SCHUELER_PAARE_HINZU(z)
-				: manager.kursSchuelerUpdate_03b_ENTFERNE_KURS_SCHUELER_PAARE(z);
-
-		manager.kursSchuelerUpdateExecute(update);
 	}
 
 	private static void setKursSchiene(final GostBlockungsergebnisManager manager, final long kursID, final long schieneID, final boolean hinzufuegen) {

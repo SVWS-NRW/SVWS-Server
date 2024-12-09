@@ -3,8 +3,8 @@
 		:class="{
 			'text-input--filled': (`${data}`.length > 0 && data !== null) || type === 'date',
 			'text-input--invalid': (isValid === false),
-			'text-input--statistic-hart': ((validator !== undefined) && (!validator().getFehler().isEmpty()) && (validator().getFehlerart() === ValidatorFehlerart.HART)),
 			'text-input--statistic-muss': ((validator !== undefined) && (!validator().getFehler().isEmpty()) && (validator().getFehlerart() === ValidatorFehlerart.MUSS)),
+			'text-input--statistic-kann': ((validator !== undefined) && (!validator().getFehler().isEmpty()) && (validator().getFehlerart() === ValidatorFehlerart.KANN)),
 			'text-input--statistic-hinweis': ((validator !== undefined) && (!validator().getFehler().isEmpty()) && (validator().getFehlerart() === ValidatorFehlerart.HINWEIS)),
 			'text-input--disabled': disabled,
 			'text-input--readonly': readonly,
@@ -36,9 +36,9 @@
 			@keyup.enter="onKeyEnter"
 			@blur="onBlur">
 		<span v-if="placeholder && !headless && (type !== 'search')" :id="labelId" class="text-input--placeholder"
-			:class="{ 'text-input--placeholder--required': required, 'text-input--placeholder--prefix': url }">
+			:class="{ 'text-input--placeholder--prefix': url }">
 			<span>{{ placeholder }}</span>
-			<span class="icon-sm i-ri-alert-line ml-0.5 inline-block -mt-0.5 icon-error" v-if="(isValid === false && !required)" />
+			<span v-if="(isValid === false && !required)" class="icon-sm i-ri-alert-line ml-1 inline-block -mt-0.5" />
 			<span v-if="(maxLen !== undefined) || (minLen !== undefined)" class="inline-flex ml-1 gap-1" :class="{'text-ui-danger': !maxLenValid || !minLenValid, 'opacity-50': maxLenValid && minLenValid}">
 				{{ (maxLen !== undefined) && (minLen === undefined) ? ` (max. ${maxLen} Zeichen)` : '' }}
 				{{ (minLen !== undefined) && (maxLen === undefined) ? ` (mind. ${minLen} Zeichen)` : '' }}
@@ -52,8 +52,8 @@
 							<span class="icon i-ri-alert-fill icon-error" v-if="(data === '') || (data === null) || (data === undefined)" />
 						</template>
 						<template v-else>
-							<span class="icon i-ri-alert-fill icon-danger" v-if="validator().getFehlerart() === ValidatorFehlerart.HART" />
-							<span class="icon i-ri-error-warning-fill icon-caution" v-if="validator().getFehlerart() === ValidatorFehlerart.MUSS" />
+							<span class="icon i-ri-alert-fill icon-danger" v-if="validator().getFehlerart() === ValidatorFehlerart.MUSS" />
+							<span class="icon i-ri-error-warning-fill icon-caution" v-if="validator().getFehlerart() === ValidatorFehlerart.KANN" />
 							<span class="icon i-ri-question-fill icon-warning" v-if="validator().getFehlerart() === ValidatorFehlerart.HINWEIS" />
 						</template>
 					</span>
@@ -62,8 +62,8 @@
 							<div class="text-ui-statistic text-headline-sm text-center pt-1"> Relevant für die Statistik </div>
 							<div v-for="fehler in validator().getFehler()" :key="fehler.hashCode" class="pt-2 pb-2">
 								<div class="rounded pl-2" :class="{
-									'bg-ui-danger': (validator().getFehlerart() === ValidatorFehlerart.HART),
-									'bg-ui-caution': (validator().getFehlerart() === ValidatorFehlerart.MUSS),
+									'bg-ui-danger': (validator().getFehlerart() === ValidatorFehlerart.MUSS),
+									'bg-ui-caution': (validator().getFehlerart() === ValidatorFehlerart.KANN),
 									'bg-ui-warning': (validator().getFehlerart() === ValidatorFehlerart.HINWEIS)}">
 									{{ fehler.getFehlerart() }}
 								</div>
@@ -76,6 +76,7 @@
 					</template>
 				</svws-ui-tooltip>
 			</span>
+			<span v-if="required" class="icon-xs i-ri-asterisk ml-1 inline-block " :class="{ 'icon-statistics': statistics }" />
 		</span>
 		<span v-if="removable && (type === 'date') && (!readonly)" @keydown.enter="updateData('')" @click.stop="updateData('')" class="svws-icon--remove icon i-ri-close-line" tabindex="0" />
 		<span v-if="(type === 'date') && !firefox()" class="svws-icon icon i-ri-calendar-2-line" />
@@ -154,7 +155,7 @@
 		mounted: (el: HTMLInputElement) => {
 			if (props.focus)
 				el.focus();
-		}
+		},
 	};
 
 	const data = ref<string | null>(null);
@@ -283,9 +284,7 @@
 	.htw-dark .text-input-component .icon.svws-icon,
 	.dark .text-input-component .text-input--search-icon,
 	.htw-dark .text-input-component .text-input--search-icon {
-		-webkit-filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
-		filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
-		/* TODO: COLORS icon darkmode */
+		@apply icon-white;
 	}
 
 	.text-input-component .icon.svws-icon {
@@ -296,14 +295,11 @@
 
 			.dark &,
 			.htw-dark & {
-				-webkit-filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
-				filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
-				/* TODO: COLORS icon darkmode */
+				@apply icon-white;
 			}
 
 			&:hover {
-				-webkit-filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
-				filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
+				@apply icon-danger;
 			}
 		}
 	}
@@ -334,23 +330,19 @@
 	}
 
 	.text-input--statistics .svws-icon.icon {
-		@apply text-ui-statistic-secondary;
-		/* TODO: COLORS icon */
+		@apply text-ui-statistic-secondary icon-statistics;
 	}
 
 	.text-input--invalid .svws-icon {
-		@apply text-ui-danger;
-		/* TODO: COLORS icon */
+		@apply text-ui-danger icon-danger;
 	}
 
-	.text-input--statistic-muss .svws-icon {
-		@apply text-ui-caution;
-		/* TODO: COLORS icon */
+	.text-input--statistic-kann .svws-icon {
+		@apply text-ui-caution icon-caution;
 	}
 
 	.text-input--statistic-hinweis .svws-icon {
-		@apply text-ui-warning;
-		/* TODO: COLORS icon */
+		@apply text-ui-warning icon-warning;
 	}
 
 	.text-input--control {
@@ -394,6 +386,21 @@
 		@apply border-ui-statistic;
 	}
 
+	.text-input--invalid.text-input-component:focus-within .text-input--control,
+	.text-input--invalid .text-input--control {
+		@apply border-ui-danger;
+	}
+
+	.text-input--statistic-kann.text-input-component:focus-within .text-input--control,
+	.text-input--statistic-kann .text-input--control {
+		@apply border-ui-caution;
+	}
+
+	.text-input--statistic-hinweis.text-input-component:focus-within .text-input--control,
+	.text-input--statistic-hinweis .text-input--control {
+		@apply border-ui-warning;
+	}
+
 	.text-input--statistics:not(.text-input--filled) .text-input--control {
 		@apply border-ui-statistic-secondary;
 	}
@@ -402,7 +409,7 @@
 		@apply border-ui-danger;
 	}
 
-	.text-input--statistic-muss.text-input--filled:not(:focus-within) .text-input--control {
+	.text-input--statistic-kann.text-input--filled:not(:focus-within) .text-input--control {
 		@apply border-ui-caution;
 	}
 
@@ -417,7 +424,6 @@
 	.text-input--statistics {
 		.tooltip-trigger--triggered span.icon {
 			@apply text-ui-statistic;
-			/* TODO: COLORS icon */
 		}
 	}
 
@@ -432,7 +438,6 @@
 			@apply absolute left-2 opacity-25;
 			top: 50%;
 			transform: translateY(-50%) scale(90%);
-			/* TODO: COLORS icon darkmode */
 
 			.text-input-component:not(.text-input--filled):not(:focus-within):not(.text-input--disabled):hover & {
 				@apply opacity-100;
@@ -461,8 +466,6 @@
 
 	.text-input--readonly .text-input--control {
 		@apply pointer-events-auto cursor-default select-none;
-		/* @apply border-dashed border-ui-secondary;
-		@apply pointer-events-auto cursor-default select-all; */
 	}
 
 	.text-input--placeholder {
@@ -511,6 +514,11 @@
 		left: 0.7em;
 		font-size: 0.78rem;
 	}
+		.text-input--filled.text-input--readonly:not(.text-input--select)
+		.text-input--placeholder:after  {
+			@apply ml-1 h-3 w-3;
+			content: url(remixicon/icons/System/lock-line.svg);
+		}
 
 	.text-input--statistics .text-input--placeholder {
 		@apply text-ui-statistic font-bold;
@@ -521,8 +529,8 @@
 		@apply text-ui-danger;
 	}
 
-	.text-input--statistic-muss .text-input--placeholder,
-	.text-input--statistic-muss:not(:focus-within) .text-input--control {
+	.text-input--statistic-kann .text-input--placeholder,
+	.text-input--statistic-kann:not(:focus-within) .text-input--control {
 		@apply text-ui-caution;
 	}
 
@@ -550,24 +558,24 @@
 	}
 
 	.text-input--placeholder--required:after {
-		@apply inline-block font-bold relative opacity-50;
-		content: "*";
-		font-size: 1em;
-		margin-bottom: -0.2em;
-		top: -0.2em;
-		left: 0.1em;
+		@apply ml-1 h-3 w-3;
+		content: url(remixicon/icons/Editor/asterisk.svg);
+	}
+
+	.text-input--statistics .text-input--placeholder--required:after {
+		@apply icon-ui-statistic;
 	}
 
 	.text-input--invalid .text-input--placeholder--required:after {
-		@apply text-ui-danger opacity-100;
+		@apply icon-ui-danger;
 	}
 
-	.text-input--statistic-muss .text-input--placeholder--required:after {
-		@apply text-ui-caution opacity-100;
+	.text-input--statistic-kann .text-input--placeholder--required:after {
+		@apply icon-ui-caution;
 	}
 
 	.text-input--statistic-hinweis .text-input--placeholder--required:after {
-		@apply text-ui-warning opacity-100;
+		@apply icon-ui-warning;
 	}
 
 	.text-input-component--headless .text-input--control {

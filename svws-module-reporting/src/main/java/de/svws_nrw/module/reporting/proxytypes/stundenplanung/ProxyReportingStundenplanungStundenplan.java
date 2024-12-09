@@ -24,13 +24,13 @@ public class ProxyReportingStundenplanungStundenplan extends ReportingStundenpla
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingStundenplanungStundenplan}.
 	 *
-	 * @param reportingRepository 	Repository für die Reporting.
+	 * @param reportingRepository 	Repository für das Reporting.
 	 * @param stundenplan 			Das Stundenplan-Objekt mit den gesammelten Daten des Stundenplanes.
 	 */
 	public ProxyReportingStundenplanungStundenplan(final ReportingRepository reportingRepository, final Stundenplan stundenplan) {
-		super(stundenplan.bezeichnungStundenplan,
-				stundenplan.gueltigAb,
-				stundenplan.gueltigBis,
+		super(ersetzeNullDurchEmpty(stundenplan.bezeichnungStundenplan),
+				ersetzeNullDurchEmpty(stundenplan.gueltigAb),
+				ersetzeNullDurchEmpty(stundenplan.gueltigBis),
 				stundenplan.id,
 				new ArrayList<>(),
 				null,
@@ -50,7 +50,7 @@ public class ProxyReportingStundenplanungStundenplan extends ReportingStundenpla
 	/**
 	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.
 	 *
-	 * @return Repository für die Reporting
+	 * @return Repository für das Reporting
 	 */
 	public ReportingRepository reportingRepository() {
 		return reportingRepository;

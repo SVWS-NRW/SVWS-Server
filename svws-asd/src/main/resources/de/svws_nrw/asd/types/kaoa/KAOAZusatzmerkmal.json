@@ -1,5 +1,5 @@
 {
-	"version": 1,
+	"version": 2,
 	"daten": [ {
 		"bezeichner": "SBO_2_1_1",
 		"idHistorie": 1,
@@ -724,6 +724,19 @@
 			"text": "Keine Teilnahme am Betriebspraktikum",
 			"schluessel": "SBO 6.1.5",
 			"merkmal": "SBO_6_1",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_6_2_1",
+		"idHistorie": 118,
+		"historie": [ {
+			"id": 130,
+			"kuerzel": "SBO 6.2.1",
+			"text": "Teilnahme am Intensivtraining TASK",
+			"schluessel": "SBO 6.2.1",
+			"merkmal": "SBO_6_2",
 			"optionsart": "FREITEXT",
 			"gueltigVon": null,
 			"gueltigBis": null

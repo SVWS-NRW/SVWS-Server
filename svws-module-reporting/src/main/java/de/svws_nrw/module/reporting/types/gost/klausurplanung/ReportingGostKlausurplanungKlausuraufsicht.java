@@ -1,5 +1,6 @@
 package de.svws_nrw.module.reporting.types.gost.klausurplanung;
 
+import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungZeitrasterstunde;
 
@@ -7,7 +8,7 @@ import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanung
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostKlausurplanungKlausuraufsicht.
  */
-public class ReportingGostKlausurplanungKlausuraufsicht {
+public class ReportingGostKlausurplanungKlausuraufsicht extends ReportingBaseType {
 
 	/** Die Uhrzeit in Minuten seit 0 Uhr, wann die Aufsicht beginnt. NULL bedeutet "noch nicht definiert". */
 	protected Integer aufsichtsbeginn;

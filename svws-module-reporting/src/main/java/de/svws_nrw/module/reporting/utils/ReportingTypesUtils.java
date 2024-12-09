@@ -15,23 +15,23 @@ public final class ReportingTypesUtils {
 	}
 
 	/**
-	 * Die Methode ist primär für die von CoreTypes abgeleitetnen DruckTypes gedacht, da die CoreTypes keine entsprechenden Konstruktoren
+	 * Die Methode ist primär für die von CoreTypes abgeleiteten ReportingTypes gedacht, da die CoreTypes keine entsprechenden Konstruktoren
 	 * enthalten. Daher werden hier die Felder und ihre Inhalte mittels Reflection von einem Quellobjekt auf ein Zielobjekt übertragen,
 	 * aber nur, wenn die Klasse des Quellobjektes eine Superklasse des Zielobjektes ist. Andernfalls findet keine Übertragung statt.
 	 *
-	 * @param Quellobjekt	Quellobjekt der Übertragung. Die Klasse dieses Objektes muss eine Superklasse der Klasse des Zielobjektes sein.
-	 * @param Zielobjekt	Zielobjekt der Übertragung.
+	 * @param quellobjekt	quellobjekt der Übertragung. Die Klasse dieses Objektes muss eine Superklasse der Klasse des Zielobjektes sein.
+	 * @param zielobjekt	Zielobjekt der Übertragung.
 	 */
-	public static void setFelderAusSuperklassenObjekt(final Object Quellobjekt, final Object Zielobjekt) {
+	public static void setFelderAusSuperklassenObjekt(final Object quellobjekt, final Object zielobjekt) {
 		/*
-		Die folgende Übertragung der Felder ist nur dann sicher möglich, wenn das Quellobjekt auf eine
+		Die folgende Übertragung der Felder ist nur dann sicher möglich, wenn das quellobjekt auf eine
 		übergeordnete Klasse des Zielobjektes ist. Prüfe dies zunächst. Andernfalls wird die Methode abgebrochen.
 		*/
-		if ((Quellobjekt == null) || (Zielobjekt == null))
+		if ((quellobjekt == null) || (zielobjekt == null))
 			return;
 
-		final Class<?> klasseQuelle = Quellobjekt.getClass();
-		final Class<?> klasseZiel = Zielobjekt.getClass();
+		final Class<?> klasseQuelle = quellobjekt.getClass();
+		final Class<?> klasseZiel = zielobjekt.getClass();
 
 		boolean istQuelleSuperklasseVonZiel = (klasseQuelle == klasseZiel);
 
@@ -57,7 +57,7 @@ public final class ReportingTypesUtils {
 		Im Folgenden existiert damit garantiert zu jedem Feld des übergebenen Objektes ein
 		gleichnamiges Feld mit gleichem Typ in dieser Klasse.
 		*/
-		final Field[] felderQuellobjekt = Quellobjekt.getClass().getDeclaredFields();
+		final Field[] felderQuellobjekt = quellobjekt.getClass().getDeclaredFields();
 
 		/*
 		Filtere nun aus allen Felder die heraus, die den Modifier Public haben und nicht static sind.
@@ -83,7 +83,7 @@ public final class ReportingTypesUtils {
 		for (final Field feld : editierbareFelder) {
 			try {
 				feld.setAccessible(true);
-				feld.set(Zielobjekt, feld.get(Quellobjekt));
+				feld.set(zielobjekt, feld.get(quellobjekt));
 			} catch (@SuppressWarnings("unused") final IllegalAccessException ignore) {
 				// Gemäß obigen Kommentaren sollte hier kein Fehlerfall auftreten.
 			}

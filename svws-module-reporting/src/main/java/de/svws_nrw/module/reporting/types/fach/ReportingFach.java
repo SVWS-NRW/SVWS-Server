@@ -3,11 +3,12 @@ package de.svws_nrw.module.reporting.types.fach;
 import de.svws_nrw.asd.types.fach.Fachgruppe;
 import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.types.gost.GostFachbereich;
+import de.svws_nrw.module.reporting.types.ReportingBaseType;
 
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Fach.
  */
-public class ReportingFach {
+public class ReportingFach extends ReportingBaseType {
 
 	/** Das Aufgabenfeld am Berufskolleg, zu welchem das Fach gehört */
 	protected String aufgabenfeld;
@@ -131,6 +132,30 @@ public class ReportingFach {
 		this.statistikfach = statistikfach;
 	}
 
+
+
+	/**
+	 * Hashcode der Klasse
+	 * @return Hashcode der Klasse
+	 */
+	public int hashCode() {
+		return 31 + Long.hashCode(id);
+	}
+
+	/**
+	 * Equals der Klasse
+	 * @param obj Das Vergleichsobjekt
+	 * @return	true, falls es das gleiche Objekt ist, andernfalls false.
+	 */
+	public boolean equals(final Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof final ReportingFach other))
+			return false;
+		return (id == other.id);
+	}
 
 
 	/**

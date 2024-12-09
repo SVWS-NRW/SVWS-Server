@@ -1,6 +1,6 @@
 <template>
-	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="showModal" size="small" class="hidden">
+	<slot :open-modal />
+	<svws-ui-modal v-model:show="show" size="small" class="hidden">
 		<template #modalTitle>Unterricht zusammenlegen</template>
 		<template #modalDescription>
 			Sollen die unten angezeigten Unterrichtsgruppen zu einem einzigen Unterricht des Wochentyps 0 (jede Woche) zusammengeführt werden?
@@ -10,7 +10,7 @@
 			</svws-ui-table>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="showModal().value = false">Abbrechen</svws-ui-button>
+			<svws-ui-button type="secondary" @click="show = false">Abbrechen</svws-ui-button>
 			<svws-ui-button type="primary" @click="mergeUnterrichte(selected)">OK</svws-ui-button>
 		</template>
 	</svws-ui-modal>
@@ -27,7 +27,7 @@
 		mergeUnterrichte: (list: Array<List<StundenplanUnterricht>>) => Promise<void>;
 	}>();
 
-	const columns = [{key: 'id', label: 'Untericht'}, {key: 'idZeitraster', label: 'Stunde'}];
+	const columns = [{key: 'id', label: 'Unterricht'}, {key: 'idZeitraster', label: 'Stunde'}];
 
 	const selected = ref([]);
 
@@ -41,11 +41,10 @@
 		return `${Wochentag.fromIDorException(props.stundenplanManager().zeitrasterGetByIdOrException(item.idZeitraster).wochentag).beschreibung}: ${props.stundenplanManager().zeitrasterGetByIdOrException(item.idZeitraster).unterrichtstunde}. Stunde`;
 	}
 
-	const _showModal = ref<boolean>(false);
-	const showModal = () => _showModal;
+	const show = ref<boolean>(false);
 
 	const openModal = () => {
-		showModal().value = true;
+		show.value = true;
 	}
 
 </script>

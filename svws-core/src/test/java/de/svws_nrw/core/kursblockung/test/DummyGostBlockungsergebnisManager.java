@@ -118,7 +118,7 @@ public class DummyGostBlockungsergebnisManager {
 	 * @param idSchiene  Die Datenbank-ID der Schiene.
 	 * @return TRUE, falls die E-Schiene existiert.
 	 */
-	private boolean getOfSchieneExists(final long idSchiene) {
+	public boolean getOfSchieneExists(final long idSchiene) {
 		for (final @NotNull GostBlockungsergebnisSchiene eSchiene : _ergebnis.schienen)
 			if (eSchiene.id == idSchiene)
 				return true;
@@ -150,6 +150,15 @@ public class DummyGostBlockungsergebnisManager {
 	 */
 	public boolean getOfSchieneIstLeer(final long idSchiene) throws DeveloperNotificationException {
 		return getSchieneE(idSchiene).kurse.isEmpty();
+	}
+
+	/**
+	 * Liefert das Blockungsergebnis, potentiell auch mit Schüler-Kurs-Zuordnungen, die nicht zu den Fachwahlen passen.
+	 *
+	 * @return das Blockungsergebnis, potentiell auch mit Schüler-Kurs-Zuordnungen, die nicht zu den Fachwahlen passen.
+	 */
+	public @NotNull GostBlockungsergebnis getErgebnis() {
+		return _ergebnis;
 	}
 
 }

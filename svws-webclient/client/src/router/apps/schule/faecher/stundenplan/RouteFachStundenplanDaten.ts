@@ -56,7 +56,7 @@ export class RouteFachStundenplanDaten extends RouteNode<any, RouteFachStundenpl
 	public getProps(to: RouteLocationNormalized): StundenplanFachProps {
 		return {
 			modePausenaufsichten: 'aus',
-			id: routeSchuleFaecher.data.fachListeManager.daten().id,
+			id: routeSchuleFaecher.data.manager.daten().id,
 			ignoreEmpty: routeFachStundenplan.data.ganzerStundenplan,
 			manager: () => routeFachStundenplan.data.manager,
 			wochentyp: () => routeFachStundenplan.data.wochentyp,
@@ -67,4 +67,3 @@ export class RouteFachStundenplanDaten extends RouteNode<any, RouteFachStundenpl
 }
 
 export const routeFachStundenplanDaten = new RouteFachStundenplanDaten();
-

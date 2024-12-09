@@ -20,7 +20,7 @@ public class ProxyReportingSchuelerSprachbelegung extends ReportingSchuelerSprac
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingSchuelerSprachbelegung}.
 	 *
-	 * @param reportingRepository Repository für die Reporting.
+	 * @param reportingRepository Repository für das Reporting.
 	 * @param sprachbelegung Daten-Objekt der Fachbelegungen aus der Datenbank
 	 */
 	public ProxyReportingSchuelerSprachbelegung(final ReportingRepository reportingRepository, final Sprachbelegung sprachbelegung) {
@@ -34,7 +34,7 @@ public class ProxyReportingSchuelerSprachbelegung extends ReportingSchuelerSprac
 				sprachbelegung.hatLatinum,
 				null,
 				sprachbelegung.reihenfolge,
-				sprachbelegung.sprache,
+				ersetzeNullDurchEmpty(sprachbelegung.sprache),
 				null
 		);
 		this.reportingRepository = reportingRepository;
@@ -48,7 +48,7 @@ public class ProxyReportingSchuelerSprachbelegung extends ReportingSchuelerSprac
 	/**
 	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.
 	 *
-	 * @return Repository für die Reporting
+	 * @return Repository für das Reporting
 	 */
 	public ReportingRepository reportingRepository() {
 		return reportingRepository;

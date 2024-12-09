@@ -1,7 +1,4 @@
-import type { JahrgangsDaten } from "@core";
-import type { TabManager } from "@ui";
+import type { JahrgangListeManager } from "@core";
+import type { RouteAuswahlProps } from "~/router/RouteAuswahlNode";
 
-export interface JahrgaengeAppProps {
-	auswahl: () => JahrgangsDaten | undefined;
-	tabManager: () => TabManager;
-}
+export type JahrgaengeAppProps = RouteAuswahlProps<JahrgangListeManager>

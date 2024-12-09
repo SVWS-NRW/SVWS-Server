@@ -37,12 +37,12 @@
 				'input-number--placeholder--required': required,
 			}">
 			<span>{{ placeholder }}</span>
-			<span class="icon i-ri-alert-line ml-0.5 icon-error" v-if="!isValid" />
+			<span class="icon i-ri-alert-line ml-0.5 icon-ui-danger" v-if="!isValid" />
 			<span v-if="statistics" class="cursor-pointer">
 				<svws-ui-tooltip position="right">
 					<span class="inline-flex items-center">
-						<span class="icon i-ri-bar-chart-2-line icon-statistics pointer-events-auto ml-0.5" />
-						<span class="icon i-ri-alert-fill" v-if="data === null || data === undefined || !isValid" />
+						<span class="icon i-ri-bar-chart-2-line icon-ui-statistic pointer-events-auto ml-0.5" />
+						<span class="icon i-ri-alert-fill icon-ui-danger" v-if="data === null || data === undefined || !isValid" />
 					</span>
 					<template #content>
 						Relevant für die Statistik
@@ -214,35 +214,6 @@
 		}
 	}
 
-	.input-number-component .svws-icon {
-		@apply bg-ui;
-		@apply pointer-events-none absolute top-1 right-1 bottom-1 w-5 rounded inline-flex items-center justify-end pr-1 leading-none;
-
-		span.icon {
-			@apply opacity-25 -mr-0.5;
-		}
-	}
-
-	.input-number-component {
-		&:hover,
-		&:focus-within {
-			.svws-icon span.icon {
-				@apply opacity-50;
-			}
-		}
-	}
-
-	.input-number--statistics .svws-icon {
-		@apply text-ui-statistic;
-
-		span.icon {
-			-webkit-filter: brightness(0) saturate(100%) invert(37%) sepia(71%) saturate(868%) hue-rotate(224deg) brightness(103%) contrast(93%);
-			filter: brightness(0) saturate(100%) invert(37%) sepia(71%) saturate(868%) hue-rotate(224deg) brightness(103%) contrast(93%);
-		}
-
-		/* TODO: COLORS icon darkmode */
-	}
-
 	.input-number--number {
 		input {
 			@apply pr-14;
@@ -275,7 +246,6 @@
 
 				.icon {
 					margin-top: 0.1rem;
-					/* TODO: COLORS icon darkmode */
 				}
 			}
 		}
@@ -283,10 +253,6 @@
 		.input-number--placeholder {
 			max-width: calc(100% - 0.7em);
 		}
-	}
-
-	.input-number--invalid .svws-icon {
-		@apply text-ui-danger;
 	}
 
 	.input-number--control {

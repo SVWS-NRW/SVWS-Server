@@ -15,7 +15,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Diese Klasse dient als DTO für die CSV-Datei {@code GPU015.txt} des
  * Untis-Datenaustausch-Formates und enthält damit eine Beschreibung der
- * Kurswahlen der Stundenten, d.h. der Schüler-Kurs-Zuordnungen.
+ * Kurswahlen der Studenten, d.h. der Schüler-Kurs-Zuordnungen.
  */
 public final class UntisGPU015 {
 
@@ -118,7 +118,6 @@ public final class UntisGPU015 {
 	 *
 	 * @throws IOException falls die CSV-Daten nicht erstellt werden können
 	 */
-	@SuppressWarnings("resource")
 	public static String writeCSV(final @NotNull List<UntisGPU015> dtos) throws IOException {
 		final StringWriter sw = new StringWriter();
 		writer.writeValues(sw).writeAll(dtos).close();

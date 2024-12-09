@@ -1,14 +1,14 @@
 <template>
-	<template v-if="(kursListeManager().hasDaten() && (activeViewType === ViewType.DEFAULT)) || (activeViewType !== ViewType.DEFAULT)">
+	<template v-if="(manager().hasDaten() && (activeViewType === ViewType.DEFAULT)) || (activeViewType !== ViewType.DEFAULT)">
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
 				<template v-if="activeViewType === ViewType.DEFAULT">
 					<div class="svws-headline-wrapper">
 						<h2 class="svws-headline">
-							<span>{{ kursListeManager().daten().kuerzel }}</span>
+							<span>{{ manager().daten().kuerzel }}</span>
 							<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
 								ID:
-								{{ kursListeManager().daten().id }}
+								{{ manager().daten().id }}
 							</svws-ui-badge>
 						</h2>
 						<span class="svws-subline">
@@ -30,7 +30,7 @@
 			</div>
 			<div class="svws-ui-header--actions" />
 		</header>
-		<svws-ui-tab-bar :tab-manager>
+		<svws-ui-tab-bar :tab-manager :focus-switching-enabled :focus-help-visible>
 			<router-view />
 		</svws-ui-tab-bar>
 	</template>
@@ -44,18 +44,21 @@
 	import { computed } from "vue";
 	import type { KurseAppProps } from "./SKurseAppProps";
 	import { ViewType } from "@ui";
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<KurseAppProps>();
 
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
+
 	const lehrerkuerzel = computed<string>(() => {
 		let s = '';
-		if (props.kursListeManager().hasDaten()) {
-			const idLehrer = props.kursListeManager().daten().lehrer;
-			const lehrer = idLehrer === null ? null : props.kursListeManager().lehrer.get(idLehrer);
+		if (props.manager().hasDaten()) {
+			const idLehrer = props.manager().daten().lehrer;
+			const lehrer = idLehrer === null ? null : props.manager().lehrer.get(idLehrer);
 			s = (lehrer === null) ? " " : lehrer.kuerzel;
 			// TODO Zusatzkräfte
-			// for (const idZusatzkraft of props.kursListeManager().daten().zusatzkraefte) {
-			// 	const zusatzkraft = props.kursListeManager().lehrer.get(idZusatzkraft);
+			// for (const idZusatzkraft of props.manager().daten().zusatzkraefte) {
+			// 	const zusatzkraft = props.manager().lehrer.get(idZusatzkraft);
 			// 	if (zusatzkraft !== null) {
 			// 		if (s.length)
 			// 			s += `, ${lehrer.kuerzel}`;
@@ -67,7 +70,7 @@
 	});
 
 	const kurseSubline = computed(() => {
-		const auswahlKurseList = props.kursListeManager().liste.auswahlSorted();
+		const auswahlKurseList = props.manager().liste.auswahlSorted();
 		if (auswahlKurseList.size() > 5)
 			return `${auswahlKurseList.size()} Kurse ausgewählt`;
 		return [...auswahlKurseList].map(k => k.kuerzel).join(', ');

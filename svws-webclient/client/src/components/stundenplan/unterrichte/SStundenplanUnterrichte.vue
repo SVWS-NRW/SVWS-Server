@@ -3,7 +3,7 @@
 		<svws-ui-content-card title="Übersicht aller Unterrichte im Zeitraster" class="page--content-flex-column">
 			<svws-ui-table :items="[]" :no-data="false" has-background :filterReset :filter-open="true" :filtered>
 				<template #filterAdvanced>
-					<svws-ui-multi-select v-model="filterSchueler" title="Schüler" :items="stundenplanUnterrichtListeManager().schueler.list()" :item-text="schueler => `${schueler.nachname}, ${schueler.vorname}`" :item-filter="findSchueler" />
+					<svws-ui-multi-select v-model="filterSchueler" title="Schüler" :items="stundenplanUnterrichtListeManager().schueler.list()" :item-text="schueler => `${schueler.nachname}, ${schueler.vorname}`" :item-filter="findSchueler" focus-class />
 					<svws-ui-multi-select v-model="filterLehrer" title="Lehrer" :items="stundenplanUnterrichtListeManager().lehrer.list()" :item-text="lehrer => `${lehrer.nachname}, ${lehrer.vorname}`" :item-filter="findLehrer" />
 					<svws-ui-multi-select v-model="filterKlassen" title="Klasse" :items="stundenplanUnterrichtListeManager().klassen.list()" :item-text="klasse => klasse.kuerzel" :item-filter="find" />
 					<svws-ui-multi-select v-model="filterKurse" title="Kurs" :items="stundenplanUnterrichtListeManager().kurse.list()" :item-text="kurs => kurs.bezeichnung" :item-filter="findKurs" />

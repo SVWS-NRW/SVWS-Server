@@ -12,6 +12,7 @@ import { BenutzergruppeDaten } from '../core/data/benutzer/BenutzergruppeDaten';
 import { BenutzergruppeListeEintrag } from '../core/data/benutzer/BenutzergruppeListeEintrag';
 import { BenutzerKompetenzGruppenKatalogEintrag } from '../core/data/benutzer/BenutzerKompetenzGruppenKatalogEintrag';
 import { BenutzerKompetenzKatalogEintrag } from '../core/data/benutzer/BenutzerKompetenzKatalogEintrag';
+import { BenutzerLehrerCredentials } from '../core/data/benutzer/BenutzerLehrerCredentials';
 import { BenutzerListeEintrag } from '../core/data/benutzer/BenutzerListeEintrag';
 import { BerufskollegAnlageKatalogEintrag } from '../asd/data/schule/BerufskollegAnlageKatalogEintrag';
 import { BerufskollegBerufsebeneKatalogEintrag } from '../core/data/schule/BerufskollegBerufsebeneKatalogEintrag';
@@ -113,6 +114,7 @@ import { LehrerRechtsverhaeltnisKatalogEintrag } from '../asd/data/lehrer/Lehrer
 import { LehrerStammdaten } from '../asd/data/lehrer/LehrerStammdaten';
 import { LehrerZugangsgrundKatalogEintrag } from '../asd/data/lehrer/LehrerZugangsgrundKatalogEintrag';
 import { List } from '../java/util/List';
+import { LongAndStringLists } from '../core/data/LongAndStringLists';
 import { NationalitaetenKatalogEintrag } from '../core/data/schule/NationalitaetenKatalogEintrag';
 import { NoteKatalogEintrag } from '../asd/data/NoteKatalogEintrag';
 import { OAuth2ClientSecret } from '../core/data/oauth2/OAuth2ClientSecret';
@@ -1092,6 +1094,34 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode createBenutzerLehrer für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/new/lehrer
+	 *
+	 * Erstellt einen neuen Lehrer-Benutzer und gibt ihn zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Benutzers besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Benutzer wurde erfolgreich angelegt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: BenutzerDaten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Benutzer anzulegen.
+	 *   Code 409: Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {BenutzerLehrerCredentials} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Benutzer wurde erfolgreich angelegt.
+	 */
+	public async createBenutzerLehrer(data : BenutzerLehrerCredentials, schema : string) : Promise<BenutzerDaten> {
+		const path = "/db/{schema}/benutzer/new/lehrer"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = BenutzerLehrerCredentials.transpilerToJSON(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return BenutzerDaten.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der DELETE-Methode removeBenutzerMenge für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/remove
 	 *
 	 * Löscht einen oder mehrere Benutzer.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen besitzt.
@@ -1816,6 +1846,471 @@ export class ApiServer extends BaseApi {
 			.replace(/{key\s*(:[^{}]+({[^{}]+})*)?}/g, key);
 		const body : string = JSON.stringify(data);
 		return super.putJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode importKurs42Raeume für den Zugriff auf die URL https://{hostname}/db/{schema}/datenaustausch/gost/kurs42/import/raeume
+	 *
+	 * Importiert die Räume aus Kurs 42 in das Schema mit dem angegebenen Namen.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Log vom Import der Räume aus Kurs 42
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 400: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 403: Der Benutzer hat keine Berechtigung, um die Räume aus Kurs 42 zu importieren.
+	 *   Code 404: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 409: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 500: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {FormData} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Log vom Import der Räume aus Kurs 42
+	 */
+	public async importKurs42Raeume(data : FormData, schema : string) : Promise<SimpleOperationResponse> {
+		const path = "/db/{schema}/datenaustausch/gost/kurs42/import/raeume"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.postMultipart(path, data);
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode importKurs42Blockung für den Zugriff auf die URL https://{hostname}/db/{schema}/datenaustausch/gost/kurs42/import/zip
+	 *
+	 * Importiert die Kurs 42-Blockung aus dem übergebenen ZIP-File in das Schema mit dem angegebenen Namen.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Log vom Import der Kurs 42-Blockung
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 400: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 403: Der Benutzer hat keine Berechtigung, um die Kurs 42-Blockung zu importieren.
+	 *   Code 404: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 409: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 500: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {FormData} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Log vom Import der Kurs 42-Blockung
+	 */
+	public async importKurs42Blockung(data : FormData, schema : string) : Promise<SimpleOperationResponse> {
+		const path = "/db/{schema}/datenaustausch/gost/kurs42/import/zip"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.postMultipart(path, data);
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getGostLupoExportMDBFuerJahrgang für den Zugriff auf die URL https://{hostname}/db/{schema}/datenaustausch/gost/lupo/export/mdb/jahrgang/{jahrgang}
+	 *
+	 * Exportiert die Laufbahndaten für den übergebenen Jahrgang in eine LuPO-Lehrerdatei.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die LuPO-Lehrerdatei
+	 *     - Mime-Type: application/octet-stream
+	 *     - Rückgabe-Typ: ApiFile
+	 *   Code 403: Der Benutzer hat keine Rechter zum Export der Laufbahndaten.
+	 *   Code 500: Ein interner Server-Fehler beim Erzeugen der LuPO-Datei.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {string} jahrgang - der Pfad-Parameter jahrgang
+	 *
+	 * @returns Die LuPO-Lehrerdatei
+	 */
+	public async getGostLupoExportMDBFuerJahrgang(schema : string, jahrgang : string) : Promise<ApiFile> {
+		const path = "/db/{schema}/datenaustausch/gost/lupo/export/mdb/jahrgang/{jahrgang}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{jahrgang\s*(:[^{}]+({[^{}]+})*)?}/g, jahrgang);
+		const data : ApiFile = await super.getOctetStream(path);
+		return data;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode setGostLupoImportMDBFuerJahrgang für den Zugriff auf die URL https://{hostname}/db/{schema}/datenaustausch/gost/lupo/import/mdb/jahrgang/replace/{mode}
+	 *
+	 * Importiert die Laufbahndaten der übergebenen LuPO-Datenbank in das Schema mit dem angegebenen Namen.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Log vom Import der Laufbahndaten
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 400: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 403: Der Benutzer hat keine Berechtigung, um die Laufbahndaten zu importieren.
+	 *   Code 409: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {FormData} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {string} mode - der Pfad-Parameter mode
+	 *
+	 * @returns Der Log vom Import der Laufbahndaten
+	 */
+	public async setGostLupoImportMDBFuerJahrgang(data : FormData, schema : string, mode : string) : Promise<SimpleOperationResponse> {
+		const path = "/db/{schema}/datenaustausch/gost/lupo/import/mdb/jahrgang/replace/{mode}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{mode\s*(:[^{}]+({[^{}]+})*)?}/g, mode);
+		const result : string = await super.postMultipart(path, data);
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode exportUntisBlockungGPU002GPU015GPU019 für den Zugriff auf die URL https://{hostname}/db/{schema}/datenaustausch/untis/export/blockung/{id : \d+}/{sidvariante : \d+}
+	 *
+	 * Liefert einen Export für die Blockungsergebnisse als Liste mit drei Strings (GPU002.txt, GPU015.txt, GPU019.txt).Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Exportieren besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Liste mit den Daten der drei GPUs
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<String>
+	 *   Code 404: Es wurden nicht alle benötigten Daten für den Export gefunden.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 500: Es ist ein unerwarteter Fehler aufgetreten.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {LongAndStringLists} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 * @param {number} sidvariante - der Pfad-Parameter sidvariante
+	 *
+	 * @returns Die Liste mit den Daten der drei GPUs
+	 */
+	public async exportUntisBlockungGPU002GPU015GPU019(data : LongAndStringLists, schema : string, id : number, sidvariante : number) : Promise<List<string>> {
+		const path = "/db/{schema}/datenaustausch/untis/export/blockung/{id : \\d+}/{sidvariante : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
+			.replace(/{sidvariante\s*(:[^{}]+({[^{}]+})*)?}/g, sidvariante.toString());
+		const body : string = LongAndStringLists.transpilerToJSON(data);
+		const result : string = await super.postJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<string>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(JSON.parse(text).toString()); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode exportUntisFachwahlenGPU015 für den Zugriff auf die URL https://{hostname}/db/{schema}/datenaustausch/untis/export/fachwahlen/{id : \d+}/{sidvariante : \d+}
+	 *
+	 * Liefert einen Export für die Fachwahlen eines Schuljahresabschnittes (GPU015.txt).Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Exportieren besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die GPU015.txt
+	 *     - Mime-Type: application/octet-stream
+	 *     - Rückgabe-Typ: ApiFile
+	 *   Code 404: Es wurden nicht alle benötigten Daten für den Export gefunden.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 500: Es ist ein unerwarteter Fehler aufgetreten.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {string | null} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 * @param {number} sidvariante - der Pfad-Parameter sidvariante
+	 *
+	 * @returns Die GPU015.txt
+	 */
+	public async exportUntisFachwahlenGPU015(data : string | null, schema : string, id : number, sidvariante : number) : Promise<ApiFile> {
+		const path = "/db/{schema}/datenaustausch/untis/export/fachwahlen/{id : \\d+}/{sidvariante : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
+			.replace(/{sidvariante\s*(:[^{}]+({[^{}]+})*)?}/g, sidvariante.toString());
+		const body : string = JSON.stringify(data);
+		const result : ApiFile = await super.postJSONtoOctetStream(path, body);
+		return result;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode exportUntisFaecherGPU006 für den Zugriff auf die URL https://{hostname}/db/{schema}/datenaustausch/untis/export/faecher/{id : \d+}
+	 *
+	 * Liefert einen Export für die Fächer- bzw. Kursdaten eines Schuljahresabschnittes (GPU006.txt).Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Exportieren besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die GPU006.txt
+	 *     - Mime-Type: application/octet-stream
+	 *     - Rückgabe-Typ: ApiFile
+	 *   Code 404: Es wurden nicht alle benötigten Daten für den Export gefunden.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 500: Es ist ein unerwarteter Fehler aufgetreten.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die GPU006.txt
+	 */
+	public async exportUntisFaecherGPU006(schema : string, id : number) : Promise<ApiFile> {
+		const path = "/db/{schema}/datenaustausch/untis/export/faecher/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : ApiFile = await super.postJSONtoOctetStream(path, null);
+		return result;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode exportUntisKlassenGPU003 für den Zugriff auf die URL https://{hostname}/db/{schema}/datenaustausch/untis/export/klassen/{id : \d+}
+	 *
+	 * Liefert einen Export für die Klassen eines Schuljahresabschnittes (GPU003.txt).Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Exportieren besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die GPU003.txt
+	 *     - Mime-Type: application/octet-stream
+	 *     - Rückgabe-Typ: ApiFile
+	 *   Code 404: Es wurden nicht alle benötigten Daten für den Export gefunden.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 500: Es ist ein unerwarteter Fehler aufgetreten.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die GPU003.txt
+	 */
+	public async exportUntisKlassenGPU003(schema : string, id : number) : Promise<ApiFile> {
+		const path = "/db/{schema}/datenaustausch/untis/export/klassen/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : ApiFile = await super.postJSONtoOctetStream(path, null);
+		return result;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode exportUntisKlausurenGPU017 für den Zugriff auf die URL https://{hostname}/db/{schema}/datenaustausch/untis/export/klausuren/{id : \d+}/{sidvariante : \d+}
+	 *
+	 * Liefert einen Export für die Klausurdaten eines Schuljahresabschnittes (GPU017.txt).Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Exportieren besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die GPU017.txt
+	 *     - Mime-Type: application/octet-stream
+	 *     - Rückgabe-Typ: ApiFile
+	 *   Code 404: Es wurden nicht alle benötigten Daten für den Export gefunden.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 500: Es ist ein unerwarteter Fehler aufgetreten.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {string | null} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 * @param {number} sidvariante - der Pfad-Parameter sidvariante
+	 *
+	 * @returns Die GPU017.txt
+	 */
+	public async exportUntisKlausurenGPU017(data : string | null, schema : string, id : number, sidvariante : number) : Promise<ApiFile> {
+		const path = "/db/{schema}/datenaustausch/untis/export/klausuren/{id : \\d+}/{sidvariante : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
+			.replace(/{sidvariante\s*(:[^{}]+({[^{}]+})*)?}/g, sidvariante.toString());
+		const body : string = JSON.stringify(data);
+		const result : ApiFile = await super.postJSONtoOctetStream(path, body);
+		return result;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode exportUntisLehrerGPU004 für den Zugriff auf die URL https://{hostname}/db/{schema}/datenaustausch/untis/export/lehrer/{id : \d+}
+	 *
+	 * Liefert einen Export für die Lehrkräfte eines Schuljahresabschnittes (GPU004.txt).Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Exportieren besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die GPU004.txt
+	 *     - Mime-Type: application/octet-stream
+	 *     - Rückgabe-Typ: ApiFile
+	 *   Code 404: Es wurden nicht alle benötigten Daten für den Export gefunden.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 500: Es ist ein unerwarteter Fehler aufgetreten.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die GPU004.txt
+	 */
+	public async exportUntisLehrerGPU004(schema : string, id : number) : Promise<ApiFile> {
+		const path = "/db/{schema}/datenaustausch/untis/export/lehrer/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : ApiFile = await super.postJSONtoOctetStream(path, null);
+		return result;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode exportUntisSchienenGPU019 für den Zugriff auf die URL https://{hostname}/db/{schema}/datenaustausch/untis/export/schienen/{id : \d+}
+	 *
+	 * Liefert einen Export für die Schienenzuordnungen eines Schuljahresabschnittes (GPU019.txt).Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Exportieren besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die GPU019.txt
+	 *     - Mime-Type: application/octet-stream
+	 *     - Rückgabe-Typ: ApiFile
+	 *   Code 404: Es wurden nicht alle benötigten Daten für den Export gefunden.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 500: Es ist ein unerwarteter Fehler aufgetreten.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {string | null} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die GPU019.txt
+	 */
+	public async exportUntisSchienenGPU019(data : string | null, schema : string, id : number) : Promise<ApiFile> {
+		const path = "/db/{schema}/datenaustausch/untis/export/schienen/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = JSON.stringify(data);
+		const result : ApiFile = await super.postJSONtoOctetStream(path, body);
+		return result;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode exportUntisSchuelerGPU010 für den Zugriff auf die URL https://{hostname}/db/{schema}/datenaustausch/untis/export/schueler/{id : \d+}/{sidvariante : \d+}
+	 *
+	 * Liefert einen Export für die Schüler eines Schuljahresabschnittes (GPU010.txt).Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Exportieren besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die GPU010.txt
+	 *     - Mime-Type: application/octet-stream
+	 *     - Rückgabe-Typ: ApiFile
+	 *   Code 404: Es wurden nicht alle benötigten Daten für den Export gefunden.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 500: Es ist ein unerwarteter Fehler aufgetreten.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 * @param {number} sidvariante - der Pfad-Parameter sidvariante
+	 *
+	 * @returns Die GPU010.txt
+	 */
+	public async exportUntisSchuelerGPU010(schema : string, id : number, sidvariante : number) : Promise<ApiFile> {
+		const path = "/db/{schema}/datenaustausch/untis/export/schueler/{id : \\d+}/{sidvariante : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
+			.replace(/{sidvariante\s*(:[^{}]+({[^{}]+})*)?}/g, sidvariante.toString());
+		const result : ApiFile = await super.postJSONtoOctetStream(path, null);
+		return result;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode importStundenplanUntisGPU001 für den Zugriff auf die URL https://{hostname}/db/{schema}/datenaustausch/untis/import/gpu001/{ingore_missing:[01]}
+	 *
+	 * Importiert den Untis-Stundenplan aus der übergebenen GPU001.txt in das Schema mit dem angegebenen Namen.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Log vom Import des Untis-Stundenplans
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 403: Der Benutzer hat keine Berechtigung, um den Untis-Stundenplan zu importieren.
+	 *   Code 404: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 409: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 500: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {FormData} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} ingore_missing - der Pfad-Parameter ingore_missing
+	 *
+	 * @returns Der Log vom Import des Untis-Stundenplans
+	 */
+	public async importStundenplanUntisGPU001(data : FormData, schema : string, ingore_missing : number) : Promise<SimpleOperationResponse> {
+		const path = "/db/{schema}/datenaustausch/untis/import/gpu001/{ingore_missing:[01]}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{ingore_missing\s*(:[^{}]+({[^{}]+})*)?}/g, ingore_missing.toString());
+		const result : string = await super.postMultipart(path, data);
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode importUntisRaeumeGPU005 für den Zugriff auf die URL https://{hostname}/db/{schema}/datenaustausch/untis/import/gpu005
+	 *
+	 * Importiert die Räume aus der Untis-Datei GPU005.txt in das Schema mit dem angegebenen Namen.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Log vom Import der Räume aus der Untis-Datei GPU005.txt
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 400: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 403: Der Benutzer hat keine Berechtigung, um die Räume aus der Untis-Datei GPU005.txt zu importieren.
+	 *   Code 404: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 409: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 500: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {FormData} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Log vom Import der Räume aus der Untis-Datei GPU005.txt
+	 */
+	public async importUntisRaeumeGPU005(data : FormData, schema : string) : Promise<SimpleOperationResponse> {
+		const path = "/db/{schema}/datenaustausch/untis/import/gpu005"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.postMultipart(path, data);
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
 
 
@@ -2658,14 +3153,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @param {Partial<FachDaten>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
 	 *
 	 * @returns Das Fach wurde erfolgreich hinzugefügt.
 	 */
-	public async addFach(data : Partial<FachDaten>, schema : string, id : number) : Promise<FachDaten> {
+	public async addFach(data : Partial<FachDaten>, schema : string) : Promise<FachDaten> {
 		const path = "/db/{schema}/faecher/create"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = FachDaten.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -5856,80 +6349,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode importKurs42Raeume für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/kurs42/import/raeume
-	 *
-	 * Importiert die Räume aus Kurs 42 in das Schema mit dem angegebenen Namen.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Log vom Import der Räume aus Kurs 42
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 400: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 403: Der Benutzer hat keine Berechtigung, um die Räume aus Kurs 42 zu importieren.
-	 *   Code 404: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 409: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 500: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *
-	 * @param {FormData} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Der Log vom Import der Räume aus Kurs 42
-	 */
-	public async importKurs42Raeume(data : FormData, schema : string) : Promise<SimpleOperationResponse> {
-		const path = "/db/{schema}/gost/kurs42/import/raeume"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.postMultipart(path, data);
-		const text = result;
-		return SimpleOperationResponse.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der POST-Methode importKurs42Blockung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/kurs42/import/zip
-	 *
-	 * Importiert die Kurs 42-Blockung aus dem übergebenen ZIP-File in das Schema mit dem angegebenen Namen.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Log vom Import der Kurs 42-Blockung
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 400: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 403: Der Benutzer hat keine Berechtigung, um die Kurs 42-Blockung zu importieren.
-	 *   Code 404: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 409: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 500: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *
-	 * @param {FormData} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Der Log vom Import der Kurs 42-Blockung
-	 */
-	public async importKurs42Blockung(data : FormData, schema : string) : Promise<SimpleOperationResponse> {
-		const path = "/db/{schema}/gost/kurs42/import/zip"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.postMultipart(path, data);
-		const text = result;
-		return SimpleOperationResponse.transpilerFromJSON(text);
-	}
-
-
-	/**
 	 * Implementierung der POST-Methode exportGostSchuelerLaufbahnplanungen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/laufbahnplanung/export
 	 *
 	 * Liest die Laufbahnplanungsdaten der gymnasialen Oberstufe für die angegebenen Schüler aus der Datenbank und liefert diese GZip-komprimiert zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Daten besitzt.
@@ -5977,65 +6396,6 @@ export class ApiServer extends BaseApi {
 	public async importGostSchuelerLaufbahnplanungen(data : FormData, schema : string) : Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/gost/laufbahnplanung/import"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.postMultipart(path, data);
-		const text = result;
-		return SimpleOperationResponse.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getGostLupoExportMDBFuerJahrgang für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/lupo/export/mdb/jahrgang/{jahrgang}
-	 *
-	 * Exportiert die Laufbahndaten für den übergebenen Jahrgang in eine LuPO-Lehrerdatei.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die LuPO-Lehrerdatei
-	 *     - Mime-Type: application/octet-stream
-	 *     - Rückgabe-Typ: ApiFile
-	 *   Code 403: Der Benutzer hat keine Rechter zum Export der Laufbahndaten.
-	 *   Code 500: Ein interner Server-Fehler beim Erzeugen der LuPO-Datei.
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {string} jahrgang - der Pfad-Parameter jahrgang
-	 *
-	 * @returns Die LuPO-Lehrerdatei
-	 */
-	public async getGostLupoExportMDBFuerJahrgang(schema : string, jahrgang : string) : Promise<ApiFile> {
-		const path = "/db/{schema}/gost/lupo/export/mdb/jahrgang/{jahrgang}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{jahrgang\s*(:[^{}]+({[^{}]+})*)?}/g, jahrgang);
-		const data : ApiFile = await super.getOctetStream(path);
-		return data;
-	}
-
-
-	/**
-	 * Implementierung der POST-Methode setGostLupoImportMDBFuerJahrgang für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/lupo/import/mdb/jahrgang/replace/{mode}
-	 *
-	 * Importiert die Laufbahndaten der übergebenen LuPO-Datenbank in das Schema mit dem angegebenen Namen.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Log vom Import der Laufbahndaten
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 400: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 403: Der Benutzer hat keine Berechtigung, um die Laufbahndaten zu importieren.
-	 *   Code 409: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *
-	 * @param {FormData} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {string} mode - der Pfad-Parameter mode
-	 *
-	 * @returns Der Log vom Import der Laufbahndaten
-	 */
-	public async setGostLupoImportMDBFuerJahrgang(data : FormData, schema : string, mode : string) : Promise<SimpleOperationResponse> {
-		const path = "/db/{schema}/gost/lupo/import/mdb/jahrgang/replace/{mode}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{mode\s*(:[^{}]+({[^{}]+})*)?}/g, mode);
 		const result : string = await super.postMultipart(path, data);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
@@ -6394,117 +6754,6 @@ export class ApiServer extends BaseApi {
 			.replace(/{schuelerid\s*(:[^{}]+({[^{}]+})*)?}/g, schuelerid.toString());
 		const body : string = GostLaufbahnplanungBeratungsdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
-	}
-
-
-	/**
-	 * Implementierung der POST-Methode exportUntisKursblockungAsZip für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/untis/export/blockung/{ergebnisid : \d+}/zip/{unterrichtid : \d+}
-	 *
-	 * Liefert einen Export für das Blockungsergebnis mit der angegebenen ID für Untis ein einer Zip-Datei.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Exportieren besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Das exportierten Blockungsergebnis in einer Zip-Datei
-	 *     - Mime-Type: application/zip
-	 *     - Rückgabe-Typ: ApiFile
-	 *   Code 400: Die Angaben zur ersten Unterrichts-ID für Untis sind ungültig.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um das Blockungsergebnis zu exportieren.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 404: Es wurden nicht alle benötigten Daten für den Export gefunden.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 500: Es ist ein unerwarteter Fehler aufgetreten.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} ergebnisid - der Pfad-Parameter ergebnisid
-	 * @param {number} unterrichtid - der Pfad-Parameter unterrichtid
-	 *
-	 * @returns Das exportierten Blockungsergebnis in einer Zip-Datei
-	 */
-	public async exportUntisKursblockungAsZip(schema : string, ergebnisid : number, unterrichtid : number) : Promise<ApiFile> {
-		const path = "/db/{schema}/gost/untis/export/blockung/{ergebnisid : \\d+}/zip/{unterrichtid : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{ergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, ergebnisid.toString())
-			.replace(/{unterrichtid\s*(:[^{}]+({[^{}]+})*)?}/g, unterrichtid.toString());
-		const result : ApiFile = await super.postJSONtoZIP(path, null);
-		return result;
-	}
-
-
-	/**
-	 * Implementierung der POST-Methode importStundenplanUntisGPU001 für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/untis/import/gpu001/{ingore_missing:[01]}
-	 *
-	 * Importiert den Untis-Stundenplan aus der übergebenen GPU001.txt in das Schema mit dem angegebenen Namen.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Log vom Import des Untis-Stundenplans
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 403: Der Benutzer hat keine Berechtigung, um den Untis-Stundenplan zu importieren.
-	 *   Code 404: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 409: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 500: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *
-	 * @param {FormData} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} ingore_missing - der Pfad-Parameter ingore_missing
-	 *
-	 * @returns Der Log vom Import des Untis-Stundenplans
-	 */
-	public async importStundenplanUntisGPU001(data : FormData, schema : string, ingore_missing : number) : Promise<SimpleOperationResponse> {
-		const path = "/db/{schema}/gost/untis/import/gpu001/{ingore_missing:[01]}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{ingore_missing\s*(:[^{}]+({[^{}]+})*)?}/g, ingore_missing.toString());
-		const result : string = await super.postMultipart(path, data);
-		const text = result;
-		return SimpleOperationResponse.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der POST-Methode importUntisRaeumeGPU005 für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/untis/import/gpu005
-	 *
-	 * Importiert die Räume aus der Untis-Datei GPU005.txt in das Schema mit dem angegebenen Namen.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Log vom Import der Räume aus der Untis-Datei GPU005.txt
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 400: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 403: Der Benutzer hat keine Berechtigung, um die Räume aus der Untis-Datei GPU005.txt zu importieren.
-	 *   Code 404: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 409: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 500: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *
-	 * @param {FormData} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Der Log vom Import der Räume aus der Untis-Datei GPU005.txt
-	 */
-	public async importUntisRaeumeGPU005(data : FormData, schema : string) : Promise<SimpleOperationResponse> {
-		const path = "/db/{schema}/gost/untis/import/gpu005"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.postMultipart(path, data);
-		const text = result;
-		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
 
 
@@ -6974,30 +7223,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der DELETE-Methode deleteKlasse für den Zugriff auf die URL https://{hostname}/db/{schema}/klassen/{id : \d+}
-	 *
-	 * Entfernt eine Klasse. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen der Klasse hat.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 204: Die Klasse wurde erfolgreich entfernt.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Klasse zu entfernen.
-	 *   Code 404: Die Klasse ist nicht vorhanden
-	 *   Code 409: Die übergebenen Daten sind fehlerhaft
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 */
-	public async deleteKlasse(schema : string, id : number) : Promise<void> {
-		const path = "/db/{schema}/klassen/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		await super.deleteJSON(path, null);
-		return;
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode getKlassenFuerAbschnitt für den Zugriff auf die URL https://{hostname}/db/{schema}/klassen/abschnitt/{abschnitt : \d+}
 	 *
 	 * Erstellt eine Liste aller in der Datenbank vorhanden Klassen unter Angabe der ID, des Kürzels, der Parallelität, der Kürzel des Klassenlehrers und des zweiten Klassenlehrers, einer Sortierreihenfolge und ob sie in der Anwendung sichtbar sein sollen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Klassendaten besitzt.
@@ -7213,30 +7438,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der DELETE-Methode deleteKurs für den Zugriff auf die URL https://{hostname}/db/{schema}/kurse/{id : \d+}
-	 *
-	 * Entfernt einen Kurs. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen des Kurses hat.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 204: Der Kurs wurde erfolgreich entfernt.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Kurs zu entfernen.
-	 *   Code 404: Der Kurs ist nicht vorhanden
-	 *   Code 409: Die übergebenen Daten sind fehlerhaft
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 */
-	public async deleteKurs(schema : string, id : number) : Promise<void> {
-		const path = "/db/{schema}/kurse/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		await super.deleteJSON(path, null);
-		return;
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode getKurseFuerAbschnitt für den Zugriff auf die URL https://{hostname}/db/{schema}/kurse/abschnitt/{abschnitt : \d+}
 	 *
 	 * Erstellt eine Liste aller in der Datenbank vorhanden Kurse eines Schuljahresabschnittes unter Angabe der ID, des Kürzels, der Parallelität, der Kürzel des Klassenlehrers und des zweiten Klassenlehrers, einer Sortierreihenfolge und ob sie in der Anwendung sichtbar sein sollen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Klassendaten besitzt.
@@ -7317,6 +7518,35 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return KursDaten.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteKurse für den Zugriff auf die URL https://{hostname}/db/{schema}/kurse/delete/multiple
+	 *
+	 * Entfernt mehrere Kurse. Dabei wird geprüft, ob alle Vorbedingungen zum Entfernender Kurse erfüllt sind und der SVWS-Benutzer die notwendige Berechtigung hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Lösch-Operationen wurden ausgeführt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Kurse zu entfernen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Lösch-Operationen wurden ausgeführt.
+	 */
+	public async deleteKurse(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+		const path = "/db/{schema}/kurse/delete/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 

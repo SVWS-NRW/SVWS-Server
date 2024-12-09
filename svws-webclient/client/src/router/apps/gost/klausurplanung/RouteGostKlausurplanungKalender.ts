@@ -34,7 +34,7 @@ export class RouteGostKlausurplanungKalender extends RouteNode<any, RouteGostKla
 		return false;
 	}
 
-	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean, redirected: RouteNode<any, any> | undefined) : Promise<void | Error | RouteLocationRaw> {
 		try {
 			if (!routeGostKlausurplanung.data.manager.stundenplanManagerExistsByAbschnitt(routeGostKlausurplanung.data.abschnitt!.id))
 				return routeGostKlausurplanungVorgaben.getRoute();
@@ -49,7 +49,7 @@ export class RouteGostKlausurplanungKalender extends RouteNode<any, RouteGostKla
 				datumFrom = datumFrom.slice(0, 4) + "-" + datumFrom.slice(4, 6) + "-" + datumFrom.slice(6, 8);
 			const halbjahr = GostHalbjahr.fromID(halbjahrId ?? null);
 			const termin = routeGostKlausurplanung.data.manager.terminGetByIdOrNull(idtermin ?? -1) ?? undefined;
-			routeGostKlausurplanung.data.terminSelected.value = termin ?? undefined;
+			routeGostKlausurplanung.data.terminSelected.value = termin;
 			if ((abiturjahr === undefined) || (halbjahr === null))
 				throw new DeveloperNotificationException("Fehler: Abiturjahr und Halbjahr müssen definiert sein.");
 			if ((datum === undefined) && (datumFrom === undefined)) {
@@ -61,7 +61,7 @@ export class RouteGostKlausurplanungKalender extends RouteNode<any, RouteGostKla
 			} else if ((datum === undefined) && (datumFrom !== undefined)) {
 				return this.getRoute({ datum: datumFrom.replace(/-/g, ""), idtermin: termin === undefined ? undefined : termin.id });
 			} else if (datum !== undefined) {
-				const stundenplan = routeGostKlausurplanung.data.manager.stundenplanManagerGetByAbschnittAndDatumOrClosest(routeGostKlausurplanung.data.abschnitt!.id, datum);
+				// const stundenplan = routeGostKlausurplanung.data.manager.stundenplanManagerGetByAbschnittAndDatumOrClosest(routeGostKlausurplanung.data.abschnitt!.id, datum);
 				routeGostKlausurplanung.data.kalenderdatum.value = datum;
 			}
 		} catch(e) {
@@ -91,11 +91,6 @@ export class RouteGostKlausurplanungKalender extends RouteNode<any, RouteGostKla
 			gotoKalenderdatum: routeGostKlausurplanung.data.gotoKalenderdatum,
 			gotoRaumzeitTermin: routeGostKlausurplanung.data.gotoRaumzeitTermin,
 		}
-	}
-
-	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
-		routeGostKlausurplanung.data.terminSelected.value = undefined;
-		await super.leave(from, from_params);
 	}
 
 }

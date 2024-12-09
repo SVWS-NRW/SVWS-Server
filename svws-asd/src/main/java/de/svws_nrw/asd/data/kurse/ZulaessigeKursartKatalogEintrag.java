@@ -1,10 +1,6 @@
 package de.svws_nrw.asd.data.kurse;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import de.svws_nrw.asd.data.CoreTypeData;
-import de.svws_nrw.asd.data.schule.SchulformSchulgliederung;
+import de.svws_nrw.asd.data.CoreTypeDataNurSchulformenUndSchulgliederungen;
 import de.svws_nrw.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -18,7 +14,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem Katalog der Kursarten.")
 @TranspilerDTO
-public class ZulaessigeKursartKatalogEintrag extends CoreTypeData {
+public class ZulaessigeKursartKatalogEintrag extends CoreTypeDataNurSchulformenUndSchulgliederungen {
 
 	/** Die Nummer der Kursart entsprechend der Vorgaben der amtlichen Schulstatistik */
 	@Schema(description = "die Nummer der Kursart entsprechend der Vorgaben der amtlichen Schulstatistik", example = "71")
@@ -39,10 +35,6 @@ public class ZulaessigeKursartKatalogEintrag extends CoreTypeData {
 	/** Gibt an, ob die Kursart in der Gymnasialen Oberstufe zulässig ist */
 	@Schema(description = "gibt an, ob die Kursart in der Gymnasialen Oberstufe zulässig ist", example = "true")
 	public boolean erlaubtGOSt = false;
-
-	/** Die Informationen zu Schulformen und -gliederungen, wo die Kursart zulässig ist. */
-	@Schema(description = "die Informationen zu Schulformen und -gliederungen, wo die Kursart zulässig ist.")
-	public @NotNull List<SchulformSchulgliederung> zulaessig = new ArrayList<>();
 
 	/**
 	 * Leerer Standardkonstruktor.

@@ -3,10 +3,12 @@
 	"compilerOptions": {
 		"outDir": "./dist",
 		"baseUrl": ".",
+		"resolveJsonModule": true,
 		"paths": {
 			"~/*": ["./src/*"],
 			"@comp": ["../components/src/index.ts"],
 			"@ui": ["../ui/src/index.ts"],
+			"@json/*": ["../../svws-asd/src/main/resources/de/svws_nrw/asd/types/*"],
 		}
 	},
 	"include": [

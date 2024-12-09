@@ -163,32 +163,6 @@ public class APIKlassen {
 
 
 	/**
-	 * Die OpenAPI-Methode für das Entfernen einer Klasse.
-	 *
-	 * @param schema    das Datenbankschema
-	 * @param id        die ID der Klasse
-	 * @param request   die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die HTTP-Antwort mit dem Status
-	 */
-	@DELETE
-	@Path("/{id : \\d+}")
-	@Operation(summary = "Entfernt eine Klasse.",
-			description = "Entfernt eine Klasse. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen der Klasse hat.")
-	@ApiResponse(responseCode = "204", description = "Die Klasse wurde erfolgreich entfernt.")
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Klasse zu entfernen.")
-	@ApiResponse(responseCode = "404", description = "Die Klasse ist nicht vorhanden")
-	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
-	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response deleteKlasse(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassendaten(conn).deleteAsResponse(id),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN);
-	}
-
-
-	/**
 	 * Die OpenAPI-Methode für das Entfernen mehrerer Klassen.
 	 *
 	 * @param schema    das Datenbankschema
@@ -209,7 +183,8 @@ public class APIKlassen {
 			content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(conn -> new DataKlassendaten(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)),
+		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
+				conn -> new DataKlassendaten(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN);
 	}

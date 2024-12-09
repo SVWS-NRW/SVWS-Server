@@ -16,11 +16,11 @@ public class ProxyReportingStundenplanungRaum extends ReportingStundenplanungRau
 	 * @param idStundenplan 	Optional: Die des Stundenplanes, zu dem der Raum mit seiner ID gehört, sonst null.
 	 */
 	public ProxyReportingStundenplanungRaum(final StundenplanRaum raum, final Long idStundenplan) {
-		super(raum.beschreibung,
+		super(ersetzeNullDurchEmpty(raum.beschreibung),
 				raum.id,
 				null,
 				idStundenplan,
 				raum.groesse,
-				raum.kuerzel);
+				ersetzeNullDurchEmpty(raum.kuerzel));
 	}
 }

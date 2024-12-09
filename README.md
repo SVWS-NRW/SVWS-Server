@@ -24,8 +24,7 @@ Dieses Repository enthält den Quellcode des Servers sowie Anleitungen zur Insta
 
 Weitere Informationen findest du in der [offiziellen Dokumentation](https://doku.svws-nrw.de/).
 
-Das Handbuch für den Webclient werden wir hier aufbauen:
-[Anwenderhandbuch](https://help.svws-nrw.de/) 
+Hier werden die technischen Beschreibungen und auch die Anwenderhandbücher zur Verfügung gestellt.
 
 ## Releases
 
@@ -61,7 +60,7 @@ Stelle sicher, dass die folgenden Voraussetzungen erfüllt sind, bevor du mit de
     ```bash
     cd SVWS-Server
     ```
-3. Richte die `svwsconfig.json` und den Keystore ein, gemäß der [Einrichtungsanleitung](https://doku.svws-nrw.de/Deployment/Einrichtung/).
+3. Richte die `svwsconfig.json` und den Keystore ein, gemäß der [Einrichtungsanleitung](https://doku.svws-nrw.de/deployment/Einrichtung/).
 4. Erstelle das Projekt mit Gradle:
     ```bash
     ./gradlew build
@@ -71,7 +70,7 @@ Stelle sicher, dass die folgenden Voraussetzungen erfüllt sind, bevor du mit de
     ./SVWS-Server/svws-server-app/startserver.sh
     ```
 Beispiele für die Installation der Entwicklungsumgebung:
-https://doku.svws-nrw.de/Entwicklungsumgebungen/
+https://doku.svws-nrw.de/admin/Entwicklungsumgebungen/
 
 ## Verwendung
 

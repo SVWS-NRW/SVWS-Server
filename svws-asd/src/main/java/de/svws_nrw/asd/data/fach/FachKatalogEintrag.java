@@ -1,13 +1,8 @@
 package de.svws_nrw.asd.data.fach;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import de.svws_nrw.asd.data.CoreTypeData;
-import de.svws_nrw.asd.data.schule.SchulformSchulgliederung;
+import de.svws_nrw.asd.data.CoreTypeDataNurSchulformenUndSchulgliederungen;
 import de.svws_nrw.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -18,7 +13,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem Katalog der Fächer.")
 @TranspilerDTO
-public class FachKatalogEintrag extends CoreTypeData {
+public class FachKatalogEintrag extends CoreTypeDataNurSchulformenUndSchulgliederungen {
 
 	/** Das Aufgabenfeld, welchem das Fach ggf. zugeordnet ist (1, 2 oder 3) */
 	@Schema(description = "das Aufgabenfeld, welchem das Fach ggf. zugeordnet ist (1, 2 oder 3)", example = "1")
@@ -40,8 +35,8 @@ public class FachKatalogEintrag extends CoreTypeData {
 	@Schema(description = "gibt an, ob es sich um ein Fach der Herkuntftsprache handelt (Unterrichts in der Herkunftssprache oder Herkunftssprache anstelle einer Pflichtfremdsprache)", example = "false")
 	public boolean istHKFS = false;
 
-	/** Gibt an, ob das Fach außerhalb des regulären Fachunterichts unterrichtet wird. */
-	@Schema(description = "gibt an, ob das Fach außerhalb des regulären Fachunterichts unterrichtet wird", example = "false")
+	/** Gibt an, ob das Fach außerhalb des regulären Fachunterrichts unterrichtet wird. */
+	@Schema(description = "gibt an, ob das Fach außerhalb des regulären Fachunterrichts unterrichtet wird", example = "false")
 	public boolean istAusRegUFach = false;
 
 	/** Gibt an, ob es sich bei dem Fach um einen Ersatz für eine Pflichtfremdsprache handelt (siehe auch istHKFS) */
@@ -59,10 +54,6 @@ public class FachKatalogEintrag extends CoreTypeData {
 	/** Gibt an, ob das Fach bei Export der amtlichen Schulstatistik berücksichtigt werden soll oder nicht. */
 	@Schema(description = "gibt an, ob das Fach bei Export der amtlichen Schulstatistik berücksichtigt werden soll oder nicht", example = "true")
 	public boolean exportASD = false;
-
-	/** Die Informationen zu Schulformen und -gliederungen, wo das Fach zulässig ist. */
-	@Schema(description = "die Informationen zu Schulformen und -gliederungen, wo das Fach zulässig ist.")
-	public @NotNull List<SchulformSchulgliederung> zulaessig = new ArrayList<>();
 
 	/**
 	 * Leerer Standardkonstruktor.

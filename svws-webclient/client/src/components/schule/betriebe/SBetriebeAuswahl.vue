@@ -8,7 +8,8 @@
 		</template>
 		<template #header />
 		<template #content>
-			<svws-ui-table :clicked="auswahl" @update:clicked="gotoEintrag" :items="rowsFiltered" :columns clickable scroll-into-view selectable :model-value="selected" @update:model-value="selected=$event" count>
+			<svws-ui-table :clicked="auswahl" @update:clicked="gotoEintrag" :items="rowsFiltered" :columns clickable scroll-into-view selectable :model-value="selected" @update:model-value="selected=$event" count
+				:focus-switching-enabled :focus-help-visible>
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" removable />
 				</template>
@@ -31,8 +32,10 @@
 	import { computed, ref } from "vue";
 	import type { BetriebeAuswahlProps } from "./SBetriebeAuswahlProps";
 	import type { BetriebListeEintrag } from "@core";
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<BetriebeAuswahlProps>();
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 	const search = ref("");
 	const selected = ref<BetriebListeEintrag[]>([]);
 

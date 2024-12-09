@@ -37,7 +37,7 @@ public final class DataLehrerLehramt extends DataManager<Long> {
 		daten.id = l.Lehrer_ID;
 		final LehrerLehramt lehramt = LehrerLehramt.data().getWertByKuerzel(l.LehramtKrz);
 		final LehrerLehramtKatalogEintrag eintragLehramt = (lehramt == null) ? null : lehramt.daten(schuljahr);
-		daten.idLehramt = (eintragLehramt == null) ? null : eintragLehramt.id;
+		daten.idLehramt = (eintragLehramt == null) ? -1 : eintragLehramt.id;
 		final LehrerLehramtAnerkennung anerkennung = LehrerLehramtAnerkennung.data().getWertByKuerzel(l.LehramtAnerkennungKrz);
 		final LehrerLehramtAnerkennungKatalogEintrag eintragAnerkennung = (anerkennung == null) ? null : anerkennung.daten(schuljahr);
 		daten.idAnerkennungsgrund = (eintragAnerkennung == null) ? null : eintragAnerkennung.id;

@@ -1,14 +1,13 @@
 <template>
 	<svws-ui-app-layout :no-secondary-menu="!showSubmenu()" :tertiary-menu="showAuswahlliste()" secondary-menu-small>
 		<template #sidebar>
-			<svws-ui-menu>
+			<svws-ui-menu :focus-switching-enabled :focus-help-visible>
 				<template #header>
 					<!--<span v-if="apiStatus?.pending">...</span>-->
 					<!--TODO: Statt Name den vollen Anzeigenamen anzeigen (erstellt dann automatisch eine Ausgabe der Initialien-->
 					<svws-ui-menu-header :user="username" :schule="schulname" :schema="schemaname" @click="setApp(benutzerprofilApp)" class="cursor-pointer" />
 				</template>
 				<template #default>
-					<div :ref="el => (el !== null) && sectionRefs.set(0, <HTMLElement>el)" tabindex="-1" />
 					<template v-for="item in apps" :key="item.name">
 						<template v-if="item.name !== 'einstellungen'">
 							<svws-ui-menu-item :active="is_active(item)" @click="startSetApp(item)">
@@ -85,7 +84,8 @@
 					</template>
 					<template #header />
 					<template #content>
-						<svws-ui-secondary-menu-navigation :tab-manager="(app.name.startsWith('schule') ? tabManagerSchule : tabManagerEinstellungen)" />
+						<p v-if="focusSwitchingEnabled" v-show="focusHelpVisible" :id="focusSwitchingEnabled && showSubmenu() ? 'menuFocusNumber' : ''" class="region-enumeration">2</p>
+						<svws-ui-secondary-menu-navigation :id="focusSwitchingEnabled && showSubmenu() ? 'menuFocusBorder' : ''" class="focus-region" :class="{'highlighted': focusHelpVisible}" :tab-manager="(app.name.startsWith('schule') ? tabManagerSchule : tabManagerEinstellungen)" />
 					</template>
 				</svws-ui-secondary-menu>
 			</template>
@@ -102,13 +102,11 @@
 				</svws-ui-secondary-menu>
 			</template>
 			<template v-else>
-				<div :ref="el => (el !== null) && sectionRefs.set(1, <HTMLElement>el)" tabindex="-1" />
 				<router-view :key="app.name" name="liste" />
 			</template>
 		</template>
 		<template #main>
 			<main class="app--page" :class="app.name" role="main">
-				<div :ref="el => (el !== null) && sectionRefs.set(2, <HTMLElement>el)" tabindex="-1" />
 				<div v-show="pendingSetApp" class="page--wrapper" :class="{'svws-api--pending': apiStatus.pending}">
 					<svws-ui-header>
 						<div class="flex items-center">
@@ -123,7 +121,8 @@
 						</div>
 					</svws-ui-header>
 				</div>
-				<div v-show="!pendingSetApp" class="page--wrapper" :class="{'svws-api--pending': apiStatus.pending}">
+				<p v-if="focusSwitchingEnabled" v-show="focusHelpVisible" id="contentFocusNumber" class="region-enumeration">8</p>
+				<div :id="focusSwitchingEnabled ? 'contentFocusBorder' : ''" v-show="!pendingSetApp" class="page--wrapper" :class="{'svws-api--pending': apiStatus.pending, 'focus-region': focusSwitchingEnabled, 'highlighted': focusHelpVisible}">
 					<router-view :key="app.name" />
 				</div>
 			</main>
@@ -153,7 +152,7 @@
 
 <script setup lang="ts">
 
-	import { computed, ref, onErrorCaptured } from "vue";
+	import { computed, onMounted, onUnmounted, ref, onErrorCaptured } from "vue";
 	import type { TabData } from "@ui";
 	import type { AppProps } from './SAppProps';
 	import type { SimpleOperationResponse } from '@core';
@@ -161,11 +160,11 @@
 	import { githash } from '../../githash';
 	import { version } from '../../version';
 	import { api } from '~/router/Api';
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<AppProps>();
 
-	const nextFocusSection = ref(0);
-	const sectionRefs = ref<Map<number, HTMLElement>>(new Map());
+	const { focusHelpVisible, focusSwitchingEnabled , enable, disable } = useRegionSwitch();
 
 	const schulname = computed<string>(() => {
 		const name = props.schuleStammdaten.bezeichnung1;
@@ -197,7 +196,7 @@
 
 	const hideAuswahlliste = new Set<string>([ "statistik", "einstellungen",
 		"schule", "schule.stammdaten", "schule.datenaustausch.kurs42", "schule.datenaustausch.untis", "schule.datenaustausch.enm",
-		"schule.datenaustausch.laufbahnplanung", "schule.datenaustausch.schulbewerbung", "schule.datenaustausch.wenom"
+		"schule.datenaustausch.laufbahnplanung", "schule.datenaustausch.schulbewerbung", "schule.datenaustausch.wenom",
 	]);
 
 	function showAuswahlliste() : boolean {
@@ -273,6 +272,14 @@
 		return false;
 	});
 
+	onMounted(() => {
+		enable();
+	})
+
+	onUnmounted(() => {
+		disable();
+	})
+
 	async function createCapturedError(reason: Error) {
 		console.warn(reason);
 		counter.value++;
@@ -306,17 +313,6 @@
 		errors.value.set(newError.id, newError);
 	}
 
-	window.addEventListener("keydown", switchFocus);
-
-	function switchFocus(event: KeyboardEvent) {
-		if (!event.repeat && event.ctrlKey && event.altKey && ((event.key === "PageUp") || (event.key === "PageDown"))) {
-			nextFocusSection.value = event.key === "PageUp"
-				? ((nextFocusSection.value + 1) % sectionRefs.value.size)
-				: (nextFocusSection.value === 0 ) ? (sectionRefs.value.size - 1) : (nextFocusSection.value - 1);
-			sectionRefs.value.get(nextFocusSection.value)?.focus();
-		}
-	}
-
 </script>
 
 <style lang="postcss">
@@ -335,6 +331,12 @@
 
 	.page--flex {
 		@apply flex flex-col w-full h-full;
+	}
+
+	span.icon, span.icon-lg {
+		.dark & {
+			@apply icon-white;
+		}
 	}
 
 </style>

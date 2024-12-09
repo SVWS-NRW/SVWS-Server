@@ -33,14 +33,14 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 		super.setView("gost_child_auswahl", SGostKursplanungAuswahl, (route) => this.getAuswahlProps(route));
 		super.text = "Kursplanung";
 		super.children = [
-			routeGostKursplanungSchueler
+			routeGostKursplanungSchueler,
 		];
 		super.defaultChild = routeGostKursplanungSchueler;
 		this.isHidden = (params?: RouteParams) => {
 			return this.checkHidden(params);
 		}
 		api.config.addElements([
-			new ConfigElement("gost.kursplanung.kursansicht.ausgeblendet", "user", "false"),
+			new ConfigElement("gost.kursplanung.kursansicht.ausgeblendet", "user", "nichts"), // nichts, alles, schienen
 			new ConfigElement("gost.kursplanung.kursansicht.sortierung", "user", "kursart"),
 			new ConfigElement("gost.kursplanung.kursansicht.zeigeSchienenbezeichnung", "user", "false"),
 			new ConfigElement("gost.kursplanung.umkursen.fixierteVerschieben", "user", "false"),
@@ -83,8 +83,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			// Prüfe den Abiturjahrgang und setze diesen ggf.
 			if (abiturjahr === undefined)
 				throw new DeveloperNotificationException("Fehler: Der Abiturjahrgang darf an dieser Stelle nicht undefined sein.");
-			const isReallyEntering = isEntering && ((redirected === undefined) || (!redirected.name.startsWith(this.name)));
-			const abiturjahrwechsel = await this.data.setAbiturjahr(abiturjahr, isReallyEntering);
+			const abiturjahrwechsel = await this.data.setAbiturjahr(abiturjahr, isEntering);
 			// Prüfe das Halbjahr und setzte dieses ggf.
 			if ((abiturjahrwechsel) || (halbjahr === null)) {
 				let hj = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abiturjahr, routeApp.data.aktAbschnitt.value.schuljahr, routeApp.data.aktAbschnitt.value.abschnitt);

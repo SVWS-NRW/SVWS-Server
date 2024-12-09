@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-modal :show="show">
+	<svws-ui-modal :show="show" @update:show="value => emit('update:show', value)">
 		<template #modalTitle>Fachrichtung hinzufügen</template>
 		<template #modalContent>
 			<svws-ui-input-wrapper>
@@ -7,7 +7,7 @@
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="show().value = false"> Abbrechen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="emit('update:show', false)"> Abbrechen </svws-ui-button>
 			<svws-ui-button type="secondary" @click="add" :disabled="fachrichtung === undefined"> Fachrichtung hinzufügen </svws-ui-button>
 		</template>
 	</svws-ui-modal>
@@ -15,15 +15,18 @@
 
 <script setup lang="ts">
 
-	import type { Ref } from "vue";
 	import { ref } from "vue";
 	import { DeveloperNotificationException, LehrerFachrichtung, LehrerFachrichtungEintrag } from "@core";
 
 	const props = defineProps<{
-		show: () => Ref<boolean>;
+		show: boolean;
 		idLehrer: number;
 		schuljahr: number;
 		addFachrichtung: (eintrag: LehrerFachrichtungEintrag) => Promise<void>;
+	}>();
+
+	const emit = defineEmits<{
+		"update:show": [show: boolean];
 	}>();
 
 	const fachrichtung = ref<LehrerFachrichtung | undefined>(undefined);
@@ -38,7 +41,7 @@
 		l.idAnerkennungsgrund = null;
 		void props.addFachrichtung(l);
 		fachrichtung.value = undefined;
-		props.show().value = false;
+		emit('update:show', false)
 	}
 
 </script>

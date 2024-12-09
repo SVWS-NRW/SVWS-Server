@@ -27,7 +27,17 @@ public class ProxyReportingGostLaufbahnplanungFachwahl extends ReportingGostLauf
 	public ProxyReportingGostLaufbahnplanungFachwahl(final String abiturfach, final String belegungEF1, final String belegungEF2, final String belegungQ11,
 			final String belegungQ12, final String belegungQ21, final String belegungQ22, final ReportingFach fach, final Boolean fachIstBelegtInGOSt,
 			final Boolean fachIstFortfuehrbareFremdspracheInGOSt, final String jahrgangFremdsprachenbeginn, final String positionFremdsprachenfolge) {
-		super(abiturfach, belegungEF1, belegungEF2, belegungQ11, belegungQ12, belegungQ21, belegungQ22, fach, fachIstBelegtInGOSt,
-				fachIstFortfuehrbareFremdspracheInGOSt, jahrgangFremdsprachenbeginn, positionFremdsprachenfolge);
+		super(ersetzeNullDurchEmpty(abiturfach),
+				ersetzeNullDurchEmpty(belegungEF1),
+				ersetzeNullDurchEmpty(belegungEF2),
+				ersetzeNullDurchEmpty(belegungQ11),
+				ersetzeNullDurchEmpty(belegungQ12),
+				ersetzeNullDurchEmpty(belegungQ21),
+				ersetzeNullDurchEmpty(belegungQ22),
+				fach,
+				fachIstBelegtInGOSt,
+				fachIstFortfuehrbareFremdspracheInGOSt,
+				ersetzeNullDurchEmpty(jahrgangFremdsprachenbeginn),
+				ersetzeNullDurchEmpty(positionFremdsprachenfolge));
 	}
 }

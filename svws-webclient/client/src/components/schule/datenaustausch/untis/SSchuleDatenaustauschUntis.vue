@@ -8,7 +8,7 @@
 				<span class="i-ri-upload-2-line icon-xl" />
 			</span>
 		</svws-ui-header>
-		<svws-ui-tab-bar :tab-manager>
+		<svws-ui-tab-bar :tab-manager :focus-switching-enabled :focus-help-visible>
 			<router-view />
 		</svws-ui-tab-bar>
 	</div>
@@ -16,8 +16,10 @@
 
 <script setup lang="ts">
 
-	import type { SchuleDatenaustauschUntisProps } from './SSchuleDatenaustauschUntisProps';
+	import type { RouteTabProps } from '~/router/RouteTabNode';
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
-	const props = defineProps<SchuleDatenaustauschUntisProps>();
+	const props = defineProps<RouteTabProps>();
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 </script>

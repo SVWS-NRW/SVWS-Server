@@ -12,6 +12,7 @@ export { default as SvwsUiSpinner } from "./components/SvwsUiSpinner.vue";
 export { default as SvwsUiSpacing } from "./components/SvwsUiSpacing.vue";
 export { default as SvwsUiDashboardTile } from "./components/SvwsUiDashboardTile.vue";
 export { default as SvwsUiTodo } from "./components/SvwsUiTodo.vue";
+export { default as SvwsUiCard } from "./components/SvwsUiCard.vue";
 // Forms
 export { default as SvwsUiInputWrapper } from "./components/SvwsUiInputWrapper.vue";
 export { default as SvwsUiCheckbox } from "./components/SvwsUiCheckbox.vue";
@@ -42,9 +43,6 @@ export { default as SvwsUiSecondaryMenuNavigation } from "./components/App/Sideb
 export { default as SvwsUiTabBar } from "./components/App/SvwsUiTabBar.vue";
 export { default as SvwsUiTabBarVertical } from "./components/App/SvwsUiTabBarVertical.vue";
 // DEPRECATED
-export { default as SvwsUiRouterTabBar } from "./components/App/SvwsUiRouterTabBar.vue";
-export { default as SvwsUiRouterTabBarButton } from "./components/App/SvwsUiRouterTabBarButton.vue";
-export { default as SvwsUiRouterVerticalTabBar } from "./components/App/SvwsUiRouterVerticalTabBar.vue";
 
 
 // Type exorts

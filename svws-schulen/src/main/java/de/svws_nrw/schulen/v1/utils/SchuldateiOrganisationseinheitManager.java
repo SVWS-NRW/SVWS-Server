@@ -82,7 +82,7 @@ public class SchuldateiOrganisationseinheitManager {
 	 */
 	private void validate() throws IllegalArgumentException {
 		if ((_organisationseinheit.oeart != null) && (!_managerSchuldatei.katalogOrganisationseinheitarten.hasEintrag(_organisationseinheit.oeart)))
-			throw new IllegalArgumentException("Die Art %s der Organisationseinheit mit der Schulnummer %d hat keinen zugehörigen Katalog-Eintrag."
+			throw new IllegalArgumentException("Die Art %s der Organisationseinheit mit der Schulnummer %s hat keinen zugehörigen Katalog-Eintrag."
 					.formatted(_organisationseinheit.oeart, _organisationseinheit.schulnummer));
 		validateGrunddaten();
 		validateAdressen();
@@ -280,7 +280,7 @@ public class SchuldateiOrganisationseinheitManager {
 		for (final @NotNull SchuldateiOrganisationseinheitAdresse adresse : this._organisationseinheit.adressen) {
 			// Prüfe, ob die ID für die Organisationseinheit eindeutig ist und erzeuge den Adress-Manager. Dieser validiert auch die Adresse.
 			if (_mapAdressManagerByID.containsKey(adresse.id))
-				throw new IllegalArgumentException("Die Addressen bei der Organisationseinheit mit der Schulnummer %d hat Duplikate."
+				throw new IllegalArgumentException("Die Addressen bei der Organisationseinheit mit der Schulnummer %s hat Duplikate."
 						.formatted(_organisationseinheit.schulnummer));
 			_mapAdressManagerByID.put(adresse.id,
 					new SchuldateiOrganisationseinheitAdressManager(_managerSchuldatei, this, adresse, this._organisationseinheit.erreichbarkeiten));
@@ -320,13 +320,13 @@ public class SchuldateiOrganisationseinheitManager {
 			// Prüfe, ob die Merkmale im Katalog existieren
 			if (!_managerSchuldatei.katalogMerkmale.hasEintragInZeitraum(merkmal, merkmal.merkmal))
 				throw new IllegalArgumentException(
-						"Das Merkmal " + merkmal.merkmal + " der Organisationseinheit mit der Schulnummer %d hat keinen zugehörigen Katalog-Eintrag."
+						"Das Merkmal " + merkmal.merkmal + " der Organisationseinheit mit der Schulnummer %s hat keinen zugehörigen Katalog-Eintrag."
 								.formatted(_organisationseinheit.schulnummer));
 
 			// Prüfe, ob die Attribute im Katalog existieren
 			if (!_managerSchuldatei.katalogAttribute.hasEintragInZeitraum(merkmal, merkmal.attribut))
 				throw new IllegalArgumentException(
-						"Das Attribut " + merkmal.attribut + " der Organisationseinheit mit der Schulnummer %d hat keinen zugehörigen Katalog-Eintrag."
+						"Das Attribut " + merkmal.attribut + " der Organisationseinheit mit der Schulnummer %s hat keinen zugehörigen Katalog-Eintrag."
 								.formatted(_organisationseinheit.schulnummer));
 		}
 	}
@@ -357,13 +357,13 @@ public class SchuldateiOrganisationseinheitManager {
 			//final @NotNull String codekey = "0" + erreichbarkeit.codekey;
 			if (!_managerSchuldatei.katalogErreichbarkeiten.hasEintragInZeitraum(erreichbarkeit, erreichbarkeit.codekey))
 				throw new IllegalArgumentException(
-						"Der Typ (codekey) der Erreichbarkeit mit der Id %s in der Organisationseinheit mit der Schulnummer %d hat keinen zugehörigen Katalog-Eintrag."
+						"Der Typ (codekey) der Erreichbarkeit mit der Id %s in der Organisationseinheit mit der Schulnummer %s hat keinen zugehörigen Katalog-Eintrag."
 								.formatted(erreichbarkeit.id, erreichbarkeit.schulnummer));
 
 			// prüfe auf existierende kommgruppe
 			if (!_managerSchuldatei.katalogKommunikationsgruppen.hasEintragInZeitraum(erreichbarkeit, erreichbarkeit.kommgruppe))
 				throw new IllegalArgumentException(
-						"Die Kommunikationsgruppe >%s< der Erreichbarkeit mit der Id %s in der Organisationseinheit mit der Schulnummer %d hat keinen zugehörigen Katalog-Eintrag."
+						"Die Kommunikationsgruppe >%s< der Erreichbarkeit mit der Id %s in der Organisationseinheit mit der Schulnummer %s hat keinen zugehörigen Katalog-Eintrag."
 								.formatted(erreichbarkeit.kommgruppe, erreichbarkeit.id, erreichbarkeit.schulnummer));
 		}
 	}
@@ -384,7 +384,7 @@ public class SchuldateiOrganisationseinheitManager {
 			// Prüfe, ob die Eigenschaften der Organisationseinheit im Katalog existieren
 			if (!_managerSchuldatei.katalogOergangisationseinheitEigenschaften.hasEintragInZeitraum(eigenschaft, eigenschaft.eigenschaft))
 				throw new IllegalArgumentException("Die Eigenschaft " + eigenschaft.eigenschaft
-						+ " mit der Id %d in der Organisationseinheit mit der Schulnummer %d hat keinen zugehörigen Katalog-Eintrag."
+						+ " mit der Id %d in der Organisationseinheit mit der Schulnummer %s hat keinen zugehörigen Katalog-Eintrag."
 								.formatted(eigenschaft.id, _organisationseinheit.schulnummer));
 		}
 	}
@@ -407,14 +407,14 @@ public class SchuldateiOrganisationseinheitManager {
 			// Prüfe, ob die Gliederungen der Organisationseinheit im Katalog existieren
 			if ((!gliederung.gliederung.isEmpty()) && (!_managerSchuldatei.katalogGliederungen.hasEintragInZeitraum(gliederung, gliederung.gliederung)))
 				throw new IllegalArgumentException("Die Gliederung " + gliederung.gliederung
-						+ "mit der Id %d in der Organisationseinheit mit der Schulnummer %d hat keinen zugehörigen Katalog-Eintrag."
+						+ "mit der Id %d in der Organisationseinheit mit der Schulnummer %s hat keinen zugehörigen Katalog-Eintrag."
 								.formatted(gliederung.id, _organisationseinheit.schulnummer));
 
 			// Prüfe, ob die Förderschwerpunkte der Organisationseinheit im Katalog existieren
 			if ((!gliederung.foerderschwerpunkt.isEmpty())
 					&& (!_managerSchuldatei.katalogFoerderschwerpunkte.hasEintragInZeitraum(gliederung, gliederung.foerderschwerpunkt)))
 				throw new IllegalArgumentException("Der Förderschwerpunkt " + gliederung.foerderschwerpunkt
-						+ "mit der Id %d in der Organisationseinheit mit der Schulnummer %d hat keinen zugehörigen Katalog-Eintrag."
+						+ "mit der Id %d in der Organisationseinheit mit der Schulnummer %s hat keinen zugehörigen Katalog-Eintrag."
 								.formatted(gliederung.id, _organisationseinheit.schulnummer));
 		}
 	}

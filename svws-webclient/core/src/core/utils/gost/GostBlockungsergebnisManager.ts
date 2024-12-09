@@ -487,7 +487,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	private stateClearErgebnisBewertung3() : void {
 		this._ergebnis.bewertung.kursdifferenzMax = 0;
-		this._ergebnis.bewertung.kursdifferenzHistogramm = Array(this._parent.schuelerGetAnzahl() + 1).fill(0);
+		this._ergebnis.bewertung.kursdifferenzHistogramm = Array(this._parent.schuelerGetAnzahl() + GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN_MAX + 1).fill(0);
 		this._bewertung3_KD_nur_LK = 0;
 		this._bewertung3_KD_nur_GK = 0;
 		this._bewertung3_KD_nur_REST = 0;
@@ -1248,9 +1248,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert das Blockungsergebnis inklusive ungültiger Schüler-Kurs-Zuordnungen.
+	 * Liefert das Blockungsergebnis, potentiell auch mit Schüler-Kurs-Zuordnungen, die nicht zu den Fachwahlen passen.
 	 *
-	 * @return  das Blockungsergebnis inklusive ungültiger Schüler-Kurs-Zuordnungen.
+	 * @return das Blockungsergebnis, potentiell auch mit Schüler-Kurs-Zuordnungen, die nicht zu den Fachwahlen passen.
 	 */
 	public getErgebnis() : GostBlockungsergebnis {
 		return this._ergebnis;
@@ -5174,6 +5174,16 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	private getMengeDerSchienenMitKollisionen() : JavaSet<GostBlockungsergebnisSchiene> {
 		return CollectionUtils.toFilteredHashSet(this._schienenID_to_schiene.values(), { test : (s: GostBlockungsergebnisSchiene) => this.getOfSchieneHatKollision(s.id) });
+	}
+
+	/**
+	 * Liefert TRUE, falls die E-Schiene existiert.
+	 *
+	 * @param idSchiene  Die Datenbank-ID der Schiene.
+	 * @return TRUE, falls die E-Schiene existiert.
+	 */
+	public getOfSchieneExists(idSchiene : number) : boolean {
+		return this._schienenID_to_schiene.containsKey(idSchiene);
 	}
 
 	/**

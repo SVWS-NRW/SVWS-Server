@@ -8,7 +8,7 @@
 				</svws-ui-badge>
 			</div>
 		</svws-ui-header>
-		<svws-ui-tab-bar :tab-manager>
+		<svws-ui-tab-bar :tab-manager :focus-switching-enabled :focus-help-visible>
 			<router-view />
 		</svws-ui-tab-bar>
 	</template>
@@ -21,7 +21,9 @@
 <script setup lang="ts">
 
 	import type { VermerkeAppProps } from "./SVermerkeAppProps";
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	defineProps<VermerkeAppProps>();
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 </script>

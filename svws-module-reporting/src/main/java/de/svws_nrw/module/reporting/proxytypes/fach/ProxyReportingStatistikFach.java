@@ -91,9 +91,9 @@ public class ProxyReportingStatistikFach extends ReportingStatistikFach {
 
 		// Wenn die statistikfachDaten null sind, dann war das Statistikfach wahrscheinlich im angegebenen Schuljahr nicht gültig.
 		if (statistikfachDaten != null) {
-			super.abJahrgang = statistikfachDaten.abJahrgang;
+			super.abJahrgang = ersetzeNullDurchEmpty(statistikfachDaten.abJahrgang);
 			super.aufgabenfeld = statistikfachDaten.aufgabenfeld;
-			super.bezeichnung = statistikfachDaten.text;
+			super.bezeichnung = ersetzeNullDurchEmpty(statistikfachDaten.text);
 			super.exportASD = statistikfachDaten.exportASD;
 			super.fachgruppe = statistikfach.getFachgruppe(schuljahr);
 			super.gueltigBis = statistikfachDaten.gueltigBis;
@@ -105,9 +105,31 @@ public class ProxyReportingStatistikFach extends ReportingStatistikFach {
 			super.istFremdsprache = statistikfachDaten.istFremdsprache;
 			super.istHKFS = statistikfachDaten.istHKFS;
 			super.istKonfKoop = statistikfachDaten.istKonfKoop;
-			super.kuerzel = statistikfachDaten.kuerzel;
-			super.kuerzelASD = statistikfachDaten.schluessel;
+			super.kuerzel = ersetzeNullDurchEmpty(statistikfachDaten.kuerzel);
+			super.kuerzelASD = ersetzeNullDurchEmpty(statistikfachDaten.schluessel);
 			super.nurSII = statistikfachDaten.nurSII;
 		}
 	}
+
+	// ##### Hash und Equals Methoden #####
+
+	/**
+	 * Hashcode der Klasse
+	 * @return Hashcode der Klasse
+	 */
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
+	/**
+	 * Equals der Klasse
+	 * @param obj Das Vergleichsobjekt
+	 * @return    true, falls es das gleiche Objekt ist, andernfalls false.
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		return super.equals(obj);
+	}
+
 }

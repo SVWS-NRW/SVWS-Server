@@ -14,18 +14,28 @@
 			<div class="svws-ui-header--actions" />
 		</header>
 		<div class="page--content">
-			Diese Seite befindet sich im Aufbau und wird Anpassungen an einigen Konfigurationseinstellungen des SVWS-Servers ermöglichen.
+			<svws-ui-content-card title="Im Aufbau">
+				Diese Seite befindet sich im Aufbau und wird Anpassungen an einigen Konfigurationseinstellungen des SVWS-Servers ermöglichen.
+				<svws-ui-spacing :size="2" />
+				<svws-ui-button type="primary" @click="downloadZertifikat"><span class="icon-sm i-ri-upload-2-line icon-white" />Zertifikat exportieren</svws-ui-button>
+			</svws-ui-content-card>
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
 
-	import { computed } from "vue";
 	import type { ConfigAppProps } from "./SConfigAppProps";
 
 	const props = defineProps<ConfigAppProps>();
 
-	// const info = computed(() => props.schuleInfo())
-
+	async function downloadZertifikat() {
+		const { data, name } = await props.getCert();
+		const link = document.createElement("a");
+		link.href = URL.createObjectURL(data);
+		link.download = name;
+		link.target = "_blank";
+		link.click();
+		URL.revokeObjectURL(link.href);
+	}
 </script>

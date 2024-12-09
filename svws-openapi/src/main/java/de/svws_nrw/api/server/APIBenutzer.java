@@ -8,6 +8,7 @@ import de.svws_nrw.core.data.benutzer.BenutzerDaten;
 import de.svws_nrw.core.data.benutzer.BenutzerEMailDaten;
 import de.svws_nrw.core.data.benutzer.BenutzerKompetenzGruppenKatalogEintrag;
 import de.svws_nrw.core.data.benutzer.BenutzerKompetenzKatalogEintrag;
+import de.svws_nrw.core.data.benutzer.BenutzerLehrerCredentials;
 import de.svws_nrw.core.data.benutzer.BenutzerListeEintrag;
 import de.svws_nrw.core.data.benutzer.BenutzergruppeDaten;
 import de.svws_nrw.core.data.benutzer.BenutzergruppeListeEintrag;
@@ -701,6 +702,34 @@ public class APIBenutzer {
 							schema = @Schema(implementation = BenutzerAllgemeinCredentials.class))) final BenutzerAllgemeinCredentials cred,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataBenutzerDaten(conn).createBenutzerAllgemein(cred),
+				request, ServerMode.STABLE, BenutzerKompetenz.ADMIN);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Erstellen eines neuen Lehrer-Benutzers mit seinen Credentials und einem Anzeigenamen.
+	 *
+	 * @param schema    das Datenbankschema, in welchem der Benutzer erstellt wird
+	 * @param cred      die Benutzer-Credentials des Lehrer-Benutzers und dessen ID
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Daten-Objekt zum neu angelegten Benutzer
+	 */
+	@POST
+	@Path("/new/lehrer")
+	@Operation(summary = "Erstellt einen neuen Lehrer-Benutzer und gibt ihn zurück.",
+			description = "Erstellt einen neuen Lehrer-Benutzer und gibt ihn zurück."
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Benutzers besitzt.")
+	@ApiResponse(responseCode = "200", description = "Benutzer wurde erfolgreich angelegt.", content = @Content(mediaType = MediaType.APPLICATION_JSON,
+			schema = @Schema(implementation = BenutzerDaten.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Benutzer anzulegen.")
+	@ApiResponse(responseCode = "409", description = "Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response createBenutzerLehrer(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die Credentials und die Lehrer-ID", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					schema = @Schema(implementation = BenutzerLehrerCredentials.class))) final BenutzerLehrerCredentials cred,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataBenutzerDaten(conn).createBenutzerLehrer(cred),
 				request, ServerMode.STABLE, BenutzerKompetenz.ADMIN);
 	}
 

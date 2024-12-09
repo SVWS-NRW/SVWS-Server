@@ -1,0 +1,81 @@
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+	<head th:with="mediaPrint = ${Parameter.ausgabeformat == 2}">
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width"/>
+		<title>Schülerliste mit Schülerstammdaten</title>
+		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-pdf.css}" href="../../css/reporting-pdf.css" />
+		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-A4-hoch-koepfe-fuesse.css}" href="../../css/reporting-A4-hoch-koepfe-fuesse.css" />
+		<link rel="stylesheet" th:href="@{css/reporting-styles.css}" href="../../css/reporting-styles.css" />
+		<link rel="stylesheet" th:href="@{schueler/stammdaten/SchuelerStammdatenliste.css}" href="../../schueler/stammdaten/SchuelerStammdatenliste.css" />
+	</head>
+
+	<body th:with="mediaPrint = ${Parameter.ausgabeformat == 2}">
+		<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+		<th:block th:if="${mediaPrint}">
+			<div class="pageTopLeft" th:utext="${Schule.bezeichnungSchuleMehrzeiligHtml}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
+			<div class="pageTopRight" th:utext="'Schülerliste ' + ${Schule.auswahlSchuljahresabschnitt().textSchuljahresabschnittKurz()} + '<br/>Schulnummer: ' + ${Schule.schulnummer()}">Klausurplanung<br/><br/>Schulnummer: 123456</div>
+			<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')}">Gedruckt am: 02.02.2022</div>
+			<div class="pageBottomRight"><span class="page-nums-print">Seite </span></div>
+		</th:block>
+		<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+		<table class="fixed-100 p-0">
+			<colgroup>
+				<col style="width: 14%;" />
+				<col style="width: 2%;" />
+				<col style="width: 20%;" />
+				<col style="width: 2%;" />
+				<col style="width: 10%;" />
+				<col style="width: 2%;" />
+				<col style="width: 10%;" />
+				<col style="width: 2%;" />
+				<col style="width: 38%;" />
+			</colgroup>
+			<thead>
+			<tr>
+				<td colspan="9" class="bo-b-grey"><h2>Schülerliste</h2></td>
+			</tr>
+			</thead>
+			<tbody>
+			<tr><td colspan="9" class="p-t-25of100"></td></tr>
+			</tbody>
+		</table>
+
+		<table class="fixed-100 p-0">
+			<colgroup>
+				<col style="width: 4%;"/>
+				<col style="width: 14%;"/>
+				<col style="width: 15%;"/>
+				<col style="width: 4%;"/>
+				<col style="width: 10%;"/>
+				<col style="width: 24%;"/>
+				<col style="width: 8%;"/>
+				<col style="width: 14%;"/>
+				<col style="width: 7%;"/>
+			</colgroup>
+			<thead>
+			<tr>
+				<td class="head-small-grey"></td>
+				<td class="head-small-grey">Name</td>
+				<td class="head-small-grey">Vorname</td>
+				<td class="head-small-grey ta-c">Ges.</td>
+				<td class="head-small-grey">Geb. am</td>
+				<td class="head-small-grey">Straße</td>
+				<td class="head-small-grey ta-r">PLZ</td>
+				<td class="head-small-grey">Ort</td>
+				<td class="head-small-grey ta-r">Klasse</td>
+			</tr>
+			</thead>
+			<tr th:each="schueler,iterationVarSchueler : ${Schueler}" th:classappend="${iterationVarSchueler.odd} ? 'bg-lightgrey'">
+				<td class="f-small ta-r bo-t-grey p-tb-0-lr-1" th:text="${iterationVarSchueler.count + '. '}">1. </td>
+				<td class="f-small bo-t-grey p-tb-0-lr-1" th:text="${schueler.nachname()}">Mustermann</td>
+				<td class="f-small bo-t-grey p-tb-0-lr-1" th:text="${Parameter.detailLevel == 0 ? schueler.vorname() : schueler.vornamen()}">Maximilian Moritz</td>
+				<td class="f-small bo-t-grey p-tb-0-lr-1 ta-c" th:text="${schueler.geschlecht().kuerzel}">m</td>
+				<td class="f-small bo-t-grey p-tb-0-lr-1" th:text="${#convert.toDateDE(schueler.geburtsdatum())}">07.08.2010</td>
+				<td class="f-small bo-t-grey p-tb-0-lr-1" th:text="${schueler.strassennameHausnummer()}">Musterstraße 13a</td>
+				<td class="f-small bo-t-grey p-tb-0-lr-1 ta-r" th:text="${schueler.wohnort().plz}">12345</td>
+				<td class="f-small bo-t-grey p-tb-0-lr-1" th:text="${schueler.wohnort().ortsname}">Musterstadt</td>
+				<td class="f-small bo-t-grey p-tb-0-lr-1 ta-r" th:text="${(schueler.auswahlLernabschnitt().klasse().kuerzel())}">07A</td>
+			</tr>
+		</table>
+	</body>
+</html>

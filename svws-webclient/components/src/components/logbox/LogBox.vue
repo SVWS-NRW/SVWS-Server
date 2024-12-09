@@ -1,5 +1,5 @@
 <template>
-	<div v-if="logs != null" class="w-full overflow-x-auto overflow-y-hidden mt-4">
+	<div v-if="logs !== null" class="w-full overflow-x-auto overflow-y-hidden mt-4">
 		<div>
 			<span class="flex mb-2 text-headline-md gap-1 items-center">
 				<span class="icon i-ri-checkbox-circle-fill mr-3 icon-success" v-if="(status === true)" />

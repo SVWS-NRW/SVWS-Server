@@ -65,7 +65,7 @@ public class Tabelle_FachKatalog extends SchemaTabelle {
 			.setDefault("0")
 			.setNotNull()
 			.setConverter(Boolean01Converter.class)
-			.setJavaComment("Gibt an, ob das Fach außerhalb des regulären Fachunterichts unterrichtet wird");
+			.setJavaComment("Gibt an, ob das Fach außerhalb des regulären Fachunterrichts unterrichtet wird");
 
 	/** Die Definition der Tabellenspalte IstErsatzPflichtFS */
 	public SchemaTabelleSpalte col_IstErsatzPflichtFS = add("IstErsatzPflichtFS", SchemaDatentypen.INT, false)

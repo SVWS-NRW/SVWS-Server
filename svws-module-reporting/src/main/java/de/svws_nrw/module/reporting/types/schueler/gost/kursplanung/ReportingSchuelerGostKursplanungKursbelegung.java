@@ -1,11 +1,12 @@
 package de.svws_nrw.module.reporting.types.schueler.gost.kursplanung;
 
+import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungKurs;
 
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostKursplanungKurs.
  */
-public class ReportingSchuelerGostKursplanungKursbelegung {
+public class ReportingSchuelerGostKursplanungKursbelegung extends ReportingBaseType {
 
 	/** Nummer des Abiturfaches, sofern das Fach des Kurses ein Abiturfach des Schülers ist. */
 	protected String abiturfach;

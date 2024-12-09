@@ -1,9 +1,9 @@
 <template>
 	<Story title="Modal" id="svws-ui-modal" group="app" :layout="{type: 'grid', width: '45%'}" icon="ri:fullscreen-line">
 		<Variant title="Default" id="Default">
-			<svws-ui-button @click="show().value = true">Open Modal</svws-ui-button>
+			<svws-ui-button @click="show = true">Open Modal</svws-ui-button>
 
-			<svws-ui-modal :show="show" size="small">
+			<svws-ui-modal v-model:show="show" size="small">
 				<template #modalTitle>Schüler hinzufügen</template>
 				<template #modalDescription>
 					Welches Schuljahr soll bei den neu aufzunehmenden Schülern gesetzt
@@ -22,16 +22,16 @@
 				</template>
 
 				<template #modalActions>
-					<svws-ui-button type="secondary" @click="show().value = false">Abbrechen</svws-ui-button>
+					<svws-ui-button type="secondary" @click="show = false">Abbrechen</svws-ui-button>
 					<svws-ui-button @click="onClick">Weiter</svws-ui-button>
 				</template>
 			</svws-ui-modal>
 		</Variant>
 
 		<Variant title="Danger" id="Danger">
-			<svws-ui-button @click="showDanger().value = true" type="danger">Dangerous Action</svws-ui-button>
+			<svws-ui-button @click="showDanger = true" type="danger">Dangerous Action</svws-ui-button>
 
-			<svws-ui-modal :show="showDanger" size="small" type="danger">
+			<svws-ui-modal v-model:show="showDanger" size="small" type="danger">
 				<template #modalTitle>Schüler hinzufügen</template>
 				<template #modalDescription>
 					Welches Schuljahr soll bei den neu aufzunehmenden Schülern gesetzt
@@ -50,7 +50,7 @@
 				</template>
 
 				<template #modalActions>
-					<svws-ui-button type="secondary" @click="showDanger().value = false">Abbrechen</svws-ui-button>
+					<svws-ui-button type="secondary" @click="showDanger = false">Abbrechen</svws-ui-button>
 					<svws-ui-button @click="onClick">Weiter</svws-ui-button>
 				</template>
 			</svws-ui-modal>
@@ -63,11 +63,8 @@
 	import { ref } from 'vue';
 	import { logEvent } from 'histoire/client';
 
-	const _show = ref<boolean>(false);
-	const show = () => _show;
-
-	const _showDanger = ref<boolean>(false);
-	const showDanger = () => _showDanger;
+	const show = ref<boolean>(false);
+	const showDanger = ref<boolean>(false);
 
 	function onClick(event: Event) {
 		logEvent('click', event);

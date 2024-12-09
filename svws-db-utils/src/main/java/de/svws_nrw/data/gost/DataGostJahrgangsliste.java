@@ -33,7 +33,6 @@ import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
-import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -166,18 +165,17 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 	 */
 	public Response create(final long jahrgang_id) throws ApiOperationException {
 		// Prüfe die Schuldaten
-		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
-		final Schulform schulform = Schulform.data().getWertByKuerzel(schule.SchulformKuerzel);
-		final DTOSchuljahresabschnitte aktuellerAbschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
-		if (aktuellerAbschnitt == null)
-			throw new ApiOperationException(Status.NOT_FOUND);
+		if (!conn.getUser().schuleHatGymOb())
+			throw new ApiOperationException(Status.NOT_FOUND, "Die Schule hat eine Schulform ohne gymnasiale Oberstufe.");
+		final Schulform schulform = conn.getUser().schuleGetSchulform();
+		final int aktuellesSchuljahr = conn.getUser().schuleGetSchuljahr();
 
 		// Ermittle die Jahrgangsdaten und bestimme das Abiturjahr
 		final DTOJahrgang jahrgang = conn.queryByKey(DTOJahrgang.class, jahrgang_id);
 		if (jahrgang == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 		final Integer abiturjahr = GostAbiturjahrUtils.getGostAbiturjahr(schulform, Schulgliederung.data().getWertByKuerzel(jahrgang.GliederungKuerzel),
-				aktuellerAbschnitt.Jahr, jahrgang.ASDJahrgang);
+				aktuellesSchuljahr, jahrgang.ASDJahrgang);
 		if (abiturjahr == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 
@@ -311,27 +309,27 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 							switch (halbjahr) {
 								case EF1 -> {
 									fachbelegung.EF1_Kursart = funcGetKursart.apply(sld, halbjahr);
-									fachbelegung.EF1_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz, aktuellerAbschnitt.Jahr);
+									fachbelegung.EF1_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz, aktuellesSchuljahr);
 								}
 								case EF2 -> {
 									fachbelegung.EF2_Kursart = funcGetKursart.apply(sld, halbjahr);
-									fachbelegung.EF2_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz, aktuellerAbschnitt.Jahr);
+									fachbelegung.EF2_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz, aktuellesSchuljahr);
 								}
 								case Q11 -> {
 									fachbelegung.Q11_Kursart = funcGetKursart.apply(sld, halbjahr);
-									fachbelegung.Q11_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz, aktuellerAbschnitt.Jahr);
+									fachbelegung.Q11_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz, aktuellesSchuljahr);
 								}
 								case Q12 -> {
 									fachbelegung.Q12_Kursart = funcGetKursart.apply(sld, halbjahr);
-									fachbelegung.Q12_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz, aktuellerAbschnitt.Jahr);
+									fachbelegung.Q12_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz, aktuellesSchuljahr);
 								}
 								case Q21 -> {
 									fachbelegung.Q21_Kursart = funcGetKursart.apply(sld, halbjahr);
-									fachbelegung.Q21_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz, aktuellerAbschnitt.Jahr);
+									fachbelegung.Q21_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz, aktuellesSchuljahr);
 								}
 								case Q22 -> {
 									fachbelegung.Q22_Kursart = funcGetKursart.apply(sld, halbjahr);
-									fachbelegung.Q22_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz, aktuellerAbschnitt.Jahr);
+									fachbelegung.Q22_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz, aktuellesSchuljahr);
 								}
 							}
 						}

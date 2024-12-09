@@ -17,7 +17,7 @@
 	</div>
 	<svws-ui-sub-nav>
 		<svws-ui-button type="transparent" @click="export_laufbahnplanung"><span class="icon-sm i-ri-upload-2-line" />Exportieren</svws-ui-button>
-		<svws-ui-button type="transparent" @click="showModalImport().value = true"><span class="icon-sm i-ri-download-2-line" /> Importieren…</svws-ui-button>
+		<svws-ui-button type="transparent" @click="showModalImport = true"><span class="icon-sm i-ri-download-2-line" /> Importieren…</svws-ui-button>
 		<s-laufbahnplanung-import-modal :show="showModalImport" :import-laufbahnplanung="import_laufbahnplanung" />
 		<svws-ui-button :type="zwischenspeicher === undefined ? 'transparent' : 'error'" @click="saveLaufbahnplanung">Planung merken</svws-ui-button>
 		<svws-ui-button type="danger" @click="restoreLaufbahnplanung" v-if="zwischenspeicher !== undefined">Planung wiederherstellen</svws-ui-button>
@@ -49,8 +49,7 @@
 
 	const props = defineProps<LaufbahnplanungOberstufeProps>();
 
-	const _showModalImport = ref<boolean>(false);
-	const showModalImport = () => _showModalImport;
+	const showModalImport = ref<boolean>(false);
 
 	const faecherAnzeigen = ref<'alle'|'nur_waehlbare'|'nur_gewaehlt'>('alle');
 

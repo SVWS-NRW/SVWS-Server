@@ -10,7 +10,7 @@
 		</div>
 		<div class="svws-ui-header--actions" />
 	</header>
-	<svws-ui-tab-bar :tab-manager>
+	<svws-ui-tab-bar :tab-manager :focus-switching-enabled :focus-help-visible>
 		<div class="page--content page--content--flex-row">
 			<router-view name="eintraege" />
 			<router-view />
@@ -21,8 +21,10 @@
 <script setup lang="ts">
 
 	import type { StundenplanKatalogeAppProps } from './SStundenplanKatalogeAppProps';
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<StundenplanKatalogeAppProps>();
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 </script>
 

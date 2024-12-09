@@ -35,7 +35,7 @@ import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
  */
 public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKlausurplanungKlausurplan {
 
-	/** Repository für die Reporting. */
+	/** Repository für das Reporting. */
 	@JsonIgnore
 	private final ReportingRepository reportingRepository;
 
@@ -47,7 +47,7 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingGostKlausurplanungKlausurplan}.
 	 *
-	 * @param reportingRepository	Repository für die Reporting.
+	 * @param reportingRepository	Repository für das Reporting.
 	 * @param klausurtermine		Eine Liste, die alle Termine des Klausurplanes beinhaltet.
 	 * @param kurse 				Eine Liste, die alle Kurse des Klausurplanes beinhaltet.
 	 * @param kursklausuren 		Eine Liste, die alle Kursklausuren des Klausurplanes beinhaltet.
@@ -59,7 +59,12 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 			final List<ReportingGostKlausurplanungKlausurtermin> klausurtermine, final List<ReportingKurs> kurse,
 			final List<ReportingGostKlausurplanungKursklausur> kursklausuren, final List<ReportingSchueler> schueler,
 			final List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausuren, final List<Long> idsFilterSchueler) {
-		super(klausurtermine, kurse, kursklausuren, schueler, schuelerklausuren, idsFilterSchueler);
+		super(klausurtermine,
+				kurse,
+				kursklausuren,
+				schueler,
+				schuelerklausuren,
+				idsFilterSchueler);
 		this.reportingRepository = reportingRepository;
 		this.gostKlausurplanManager = null;
 	}
@@ -68,7 +73,7 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 	/**
 	 * Erstellt ein neues Reporting-Objekt anhand des GostKlausurplanManagers.
 	 *
-	 * @param reportingRepository		Repository für die Reporting.
+	 * @param reportingRepository		Repository für das Reporting.
 	 * @param gostKlausurplanManager 	Der Manager der Klausuren zu diesem Klausurplan
 	 * @param idsFilterSchueler 		Eine Liste, die die schülerbezogene Ausgabe auf die Schüler mit den enthaltenen IDs beschränkt.
 	 */
@@ -163,6 +168,7 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 						.thenComparing(ReportingSchueler::vornamen, colGerman)
 						.thenComparing(ReportingSchueler::id))
 				.toList());
+		this.reportingRepository.mapSchueler().putAll(super.schueler.stream().collect(Collectors.toMap(ReportingSchueler::id, s -> s)));
 	}
 
 	/**
@@ -238,7 +244,7 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 	/**
 	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.
 	 *
-	 * @return Repository für die Reporting
+	 * @return Repository für das Reporting
 	 */
 	@JsonIgnore
 	public ReportingRepository reportingRepository() {

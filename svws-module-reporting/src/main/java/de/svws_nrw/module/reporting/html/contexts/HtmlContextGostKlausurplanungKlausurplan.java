@@ -35,6 +35,7 @@ public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext 
 
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Daten.
+	 *
 	 * @param reportingRepository		Repository mit Parametern, Logger und Daten zum Reporting.
 	 * @param idsFilterSchueler 		Eine Liste, die die schülerbezogene Ausgabe auf die Schüler mit den enthaltenen IDs beschränkt.
 	 *

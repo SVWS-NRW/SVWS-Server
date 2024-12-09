@@ -5,6 +5,7 @@ import java.security.Principal;
 
 import jakarta.ws.rs.core.Response.Status;
 import de.svws_nrw.config.SVWSKonfiguration;
+import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.data.schule.DataSchuleStammdaten;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
@@ -199,8 +200,10 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 			user.setPassword(password);
 
 			// Prüfe den Passwort-Hash des Benutzer aus der DB
-			if (!DBBenutzerUtils.pruefePasswort(user, password))
+			final String updatedUsername = DBBenutzerUtils.pruefePasswort(user, password);
+			if (updatedUsername == null)
 				return null;
+			user.setUsername(updatedUsername);
 
 			// Erzeuge nach erfolgreicher Prüfung den Benutzer-spezifischen AES-Schlüssel
 			user.setAES();
@@ -208,6 +211,10 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 			// Lese die Stammdaten der Schule ein und setze diese beim Benutzer-Objekt
 			try (DBEntityManager conn = user.getEntityManager()) {
 				user.schuleSetStammdaten(DataSchuleStammdaten.getStammdaten(conn));
+			} catch (@SuppressWarnings("unused") final ApiOperationException aoe) {
+				Logger.global().logLn(
+						"Es können bei der Anmeldung noch keine Daten zur Schule eingelesen werden. Bitte prüfen Sie, ob das Schema \"%s\" bereits initialisiert wurde."
+								.formatted(user.getConfig().getDBSchema()));
 			}
 
 			// Lese die Benutzerkompetenzen aus der Datenbank

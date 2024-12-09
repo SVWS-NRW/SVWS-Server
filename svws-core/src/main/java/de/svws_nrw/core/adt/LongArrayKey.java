@@ -1,5 +1,6 @@
 package de.svws_nrw.core.adt;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 import de.svws_nrw.core.adt.map.AVLMap;
@@ -62,6 +63,19 @@ public final class LongArrayKey implements Comparable<LongArrayKey> {
 		_hashcode = calculateHashcode();
 	}
 
+	/**
+	 * Konstruktor für vier Parameter.
+	 *
+	 * @param v1   Der 1. Parameter
+	 * @param v2   Der 2. Parameter
+	 * @param v3   Der 3. Parameter
+	 * @param v4   Der 4. Parameter
+	 */
+	public LongArrayKey(final long v1, final long v2, final long v3, final long v4) {
+		_keys = new long[] {v1, v2, v3, v4};
+		_hashcode = calculateHashcode();
+	}
+
 	private int calculateHashcode() {
 		int hashCode = 1;
 		for (int i = 0; i < _keys.length; i++) {
@@ -69,6 +83,11 @@ public final class LongArrayKey implements Comparable<LongArrayKey> {
 			hashCode = (31 * hashCode) + (int) (value ^ (value >>> 32));
 		}
 		return hashCode;
+	}
+
+	@Override
+	public String toString() {
+		return Arrays.toString(_keys);
 	}
 
 	@Override
@@ -117,6 +136,17 @@ public final class LongArrayKey implements Comparable<LongArrayKey> {
 		}
 
 		return 0;
+	}
+
+	/**
+	 * Liefert den Key-Wert an dem Index.
+	 *
+	 * @param i    der Index
+	 *
+	 * @return den Key-Wert an dem Index.
+	 */
+	public long getKeyAt(final int i) {
+		return _keys[i];
 	}
 
 }

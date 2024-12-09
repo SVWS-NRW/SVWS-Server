@@ -1,6 +1,6 @@
 <template>
-	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="showModal" size="small" type="danger">
+	<slot :open-modal />
+	<svws-ui-modal v-model:show="show" size="small" type="danger">
 		<template #modalTitle>Abiturjahrgang {{ gostJahrgang.abiturjahr }} löschen?</template>
 		<template #modalDescription>
 			<div class="text-left">
@@ -16,7 +16,7 @@
 			</div>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="showModal().value = false">Abbrechen</svws-ui-button>
+			<svws-ui-button type="secondary" @click="show = false">Abbrechen</svws-ui-button>
 			<svws-ui-button type="danger" @click="removeAbiturjahrgang">Ja</svws-ui-button>
 		</template>
 	</svws-ui-modal>
@@ -32,11 +32,10 @@
 		removeAbiturjahrgang: () => Promise<void>;
 	}>();
 
-	const _showModal = ref<boolean>(false);
-	const showModal = () => _showModal;
+	const show = ref<boolean>(false);
 
 	const openModal = () => {
-		showModal().value = true;
+		show.value = true;
 	}
 
 </script>

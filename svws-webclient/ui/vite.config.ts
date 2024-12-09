@@ -5,20 +5,16 @@ import Vue from "@vitejs/plugin-vue";
 import { HstVue } from '@histoire/plugin-vue'
 
 export default defineConfig({
-	server: {
-		fs: {
-			allow: [searchForWorkspaceRoot(process.cwd()),],
-		}
-	},
+	server: { fs: { allow: [searchForWorkspaceRoot(process.cwd())] } },
 	test: {
 		environment: "happy-dom",
 		reporters: ["default", "junit", "verbose"],
 		outputFile: { junit: "build/testresults/junit.xml" },
-		include: [ "src/components/*.test.ts", ],
+		include: [ "src/components/*.test.ts", "src/components/app/*.test.ts" ],
 	},
 	histoire: {
 		setupFile: './src/histoire.setup.ts',
-		plugins: [ HstVue(), ],
+		plugins: [ HstVue() ],
 		theme: {
 			title: 'SVWS UI',
 			colors: {
@@ -33,7 +29,7 @@ export default defineConfig({
 					'700': '#115393',
 					'800': '#12477a',
 					'900': '#153d65',
-				}
+				},
 			},
 			darkClass: 'dark',
 			hideColorSchemeSwitch: false,
@@ -53,26 +49,26 @@ export default defineConfig({
 		],
 		tree: {
 			groups: [
-				{ id: 'top-top', title: '', },
-				{ id: 'top', title: '', },
-				{ title: 'Components', include: file => !file.title.includes('Serialize'), },
-				{ id: 'app', title: 'App', },
-				{ id: 'design-system', title: 'Info', },
+				{ id: 'top-top', title: '' },
+				{ id: 'top', title: '' },
+				{ title: 'Components', include: file => !file.title.includes('Serialize') },
+				{ id: 'app', title: 'App' },
+				{ id: 'design-system', title: 'Info' },
 			],
 		},
 	},
 	plugins: [
 		Vue(),
-		Components({ globs: ["src/components/**/!(*story.vue)*.vue"], }),
+		Components({ globs: ["src/components/**/!(*story.vue)*.vue"] }),
 	],
 	build: {
 		lib: {
 			entry: resolve(__dirname, "src/index.ts"),
-			name: "SvwsUI"
+			name: "SvwsUI",
 		},
 		rollupOptions: {
 			external: ["vue"],
-			output: { globals: { vue: "Vue" } }
-		}
-	}
+			output: { globals: { vue: "Vue" } },
+		},
+	},
 });

@@ -1,13 +1,19 @@
 configurations {
 	implementation.extendsFrom(jackson, resteasy, validation, swagger)
 	transpiler
+	docGenerator
 } 
 
 dependencies {
 	implementation project(':svws-transpile')
 	
 	transpiler fileTree(dir: "$projectDir/src/main/java", includes: ['**/svws_nrw/asd/**/*.java' ],
-			excludes: ['**/svws_nrw/asd/utils/json/**/*.java', '**/svws_nrw/asd/utils/ASDCoreTypeUtils.java', '**/svws_nrw/asd/utils/CoreTypeRessource.java'] )
+			excludes: ['**/svws_nrw/asd/utils/json/**/*.java', '**/svws_nrw/asd/utils/ASDCoreTypeUtils.java', '**/svws_nrw/asd/utils/CoreTypeRessource.java',
+			           '**/svws_nrw/asd/utils/docs/**/*.java'] )
+
+	docGenerator fileTree(dir: "$projectDir/src/main/java/de/svws_nrw/asd/validate", 
+	                      includes: ['**/*.java' ],
+			              excludes: ['**/DateManager.java'],  )
 }
 
 task cleanTranspiled(type: Delete) {
@@ -43,6 +49,17 @@ task transpile(type: JavaExec) {
 		"--tmpdir", "$buildDir/tmp/transpiler/ts",
 		"--files", "$buildDir/transpiler-files.txt"
 	jvmArgs "--add-opens", "jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED"
+}
+
+task generateDocu(type: JavaExec) {
+	group "build"
+	dependsOn compileJava
+	inputs.files configurations.docGenerator.files
+	outputs.dir "$buildDir/docs/validate"
+	description = "Erzeugt die Dokumentation zu den Validatoren"
+	mainClass = "de.svws_nrw.asd.utils.docs.ValidatorDocGenerator"
+    args "--output"    , "build/docs/validate",
+         "--projectdir", "$projectDir"
 }
 
 assemble.dependsOn transpile

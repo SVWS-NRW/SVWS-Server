@@ -5,19 +5,19 @@
 			<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
 		</template>
 		<template #content>
-			<svws-ui-table :clickable="!klassenListeManager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="klassendaten => gotoDefaultView(klassendaten.id)"
-				:items="rowsFiltered" :model-value="[...props.klassenListeManager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)"
-				:columns selectable count :filter-open="true" :filtered="filterChanged()" :filterReset scroll-into-view scroll allow-arrow-key-selection>
+			<svws-ui-table :clickable="!manager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="klassendaten => gotoDefaultView(klassendaten.id)"
+				:items="rowsFiltered" :model-value="[...props.manager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)"
+				:columns selectable count :filter-open="true" :filtered="filterChanged()" :filterReset scroll-into-view scroll allow-arrow-key-selection :focus-switching-enabled :focus-help-visible>
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" removable />
 				</template>
 				<template #filterAdvanced>
-					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="klassenListeManager().jahrgaenge.list()" :item-text="text" :item-filter="find" />
-					<svws-ui-multi-select v-model="filterLehrer" title="Klassenleitung" :items="klassenListeManager().lehrer.list()" :item-text="text" :item-filter="find" />
-					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="klassenListeManager().schulgliederungen.list()" :item-text="text_schulgliederung" />
+					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="manager().jahrgaenge.list()" :item-text="text" :item-filter="find" />
+					<svws-ui-multi-select v-model="filterLehrer" title="Klassenleitung" :items="manager().lehrer.list()" :item-text="text" :item-filter="find" />
+					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="manager().schulgliederungen.list()" :item-text="textSchulgliederung" />
 				</template>
-				<template #cell(schueler)="{value}"> {{ klassengroesse(value) }} </template>
-				<template #cell(klassenLehrer)="{value}">
+				<template #cell(schueler)="{value}"> {{ value.size() }} </template>
+				<template #cell(klassenLeitungen)="{value}">
 					{{ lehrerkuerzel(value) }}
 				</template>
 				<template #actions>
@@ -32,7 +32,7 @@
 								</template>
 							</svws-ui-tooltip>
 						</s-klassen-auswahl-sortierung-modal>
-						<svws-ui-tooltip position="bottom">
+						<svws-ui-tooltip v-if="hatKompetenzAendern" position="bottom">
 							<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="gotoHinzufuegenView(true)" :has-focus="rowsFiltered.length === 0">
 								<span class="icon i-ri-add-line" />
 							</svws-ui-button>
@@ -50,34 +50,30 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { JahrgangsDaten, KlassenDaten, LehrerListeEintrag, List, SchuelerListeEintrag, Schulgliederung } from "@core";
 	import type { KlassenAuswahlProps } from "./SKlassenAuswahlProps";
+	import type{ JahrgangsDaten, KlassenDaten, LehrerListeEintrag, Schulgliederung } from "@core";
+	import { BenutzerKompetenz } from "@core";
 	import { ViewType } from "@ui";
+	import {useRegionSwitch} from "~/components/useRegionSwitch";
 
 	const props = defineProps<KlassenAuswahlProps>();
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const schuljahr = computed<number>(() => props.schuljahresabschnittsauswahl().aktuell.schuljahr);
 
+	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN));
+
 	const columns = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc", span: 0.5 },
-		{ key: "klassenLehrer", label: "Klassenleitung" },
-		{ key: "schueler", label: "Schüler", span: 0.5, sortable: true }
+		{ key: "klassenLeitungen", label: "Klassenleitung" },
+		{ key: "schueler", label: "Schüler", span: 0.5, sortable: true },
 	];
 
-	const klassengroesse = (schueler: List<SchuelerListeEintrag>) => computed(() => {
-		return schueler.size();
-		// let counter = 0;
-		// for (const s of schueler)
-		// 	if ((s.status === 2)|| (s.status === 4)) // aktiv oder extern
-		// 		counter++;
-		// return counter;
-	})
-
-	function text(klasse: LehrerListeEintrag | JahrgangsDaten): string {
-		return klasse.kuerzel ?? "";
+	function text(eintrag: LehrerListeEintrag | JahrgangsDaten): string {
+		return eintrag.kuerzel ?? "";
 	}
 
-	const find = (items: Iterable<LehrerListeEintrag | JahrgangsDaten>, search: string) => {
+	function find(items: Iterable<LehrerListeEintrag | JahrgangsDaten>, search: string) {
 		const list = [];
 		for (const i of items)
 			if ((i.kuerzel !== null) && i.kuerzel.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
@@ -85,45 +81,45 @@
 		return list;
 	}
 
-	function text_schulgliederung(schulgliederung: Schulgliederung): string {
+	function textSchulgliederung(schulgliederung: Schulgliederung): string {
 		return schulgliederung.daten(schuljahr.value)?.kuerzel ?? '—';
 	}
 
 	const filterSchulgliederung = computed<Schulgliederung[]>({
-		get: () => [...props.klassenListeManager().schulgliederungen.auswahl()],
+		get: () => [...props.manager().schulgliederungen.auswahl()],
 		set: (value) => {
-			props.klassenListeManager().schulgliederungen.auswahlClear();
+			props.manager().schulgliederungen.auswahlClear();
 			for (const v of value)
-				props.klassenListeManager().schulgliederungen.auswahlAdd(v);
+				props.manager().schulgliederungen.auswahlAdd(v);
 			void props.setFilter();
-		}
+		},
 	});
 
 	const filterJahrgaenge = computed<JahrgangsDaten[]>({
-		get: () => [...props.klassenListeManager().jahrgaenge.auswahl()],
+		get: () => [...props.manager().jahrgaenge.auswahl()],
 		set: (value) => {
-			props.klassenListeManager().jahrgaenge.auswahlClear();
+			props.manager().jahrgaenge.auswahlClear();
 			for (const v of value)
-				props.klassenListeManager().jahrgaenge.auswahlAdd(v);
+				props.manager().jahrgaenge.auswahlAdd(v);
 			void props.setFilter();
-		}
+		},
 	});
 
 	const filterLehrer = computed<LehrerListeEintrag[]>({
-		get: () => [...props.klassenListeManager().lehrer.auswahl()],
+		get: () => [...props.manager().lehrer.auswahl()],
 		set: (value) => {
-			props.klassenListeManager().lehrer.auswahlClear();
+			props.manager().lehrer.auswahlClear();
 			for (const v of value)
-				props.klassenListeManager().lehrer.auswahlAdd(v);
+				props.manager().lehrer.auswahlAdd(v);
 			void props.setFilter();
-		}
+		},
 	});
 
 	const search = ref<string>("");
 
 	const rowsFiltered = computed<KlassenDaten[]>(() => {
 		const arr = [];
-		for (const e of props.klassenListeManager().filtered())
+		for (const e of props.manager().filtered())
 			if ((e.kuerzel !== null) && e.kuerzel.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()))
 				arr.push(e);
 		arr.sort((a, b) => a.sortierung - b.sortierung);
@@ -131,43 +127,45 @@
 	});
 
 	async function filterReset() {
-		props.klassenListeManager().schulgliederungen.auswahlClear();
-		props.klassenListeManager().lehrer.auswahlClear();
-		props.klassenListeManager().jahrgaenge.auswahlClear();
-		props.klassenListeManager().setFilterNurSichtbar(false);
+		props.manager().schulgliederungen.auswahlClear();
+		props.manager().lehrer.auswahlClear();
+		props.manager().jahrgaenge.auswahlClear();
+		props.manager().setFilterNurSichtbar(false);
 		await props.setFilter();
 	}
 
 	function filterChanged(): boolean {
-		return (props.klassenListeManager().schulgliederungen.auswahlExists()
-			|| props.klassenListeManager().lehrer.auswahlExists()
-			|| props.klassenListeManager().jahrgaenge.auswahlExists());
+		return (props.manager().schulgliederungen.auswahlExists()
+			|| props.manager().lehrer.auswahlExists()
+			|| props.manager().jahrgaenge.auswahlExists());
 	}
 
-	const clickedEintrag = computed(() => ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN)) ? null
-		: (props.klassenListeManager().hasDaten() ? props.klassenListeManager().auswahl() : null));
+	const clickedEintrag = computed(() => {
+		if ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN))
+			return null;
+		return props.manager().hasDaten() ? props.manager().auswahl() : null;
+	});
 
 	async function setAuswahl(items : KlassenDaten[]) {
-		props.klassenListeManager().liste.auswahlClear();
+		props.manager().liste.auswahlClear();
 		for (const item of items)
-			if (props.klassenListeManager().liste.hasValue(item))
-				props.klassenListeManager().liste.auswahlAdd(item);
-		if (props.klassenListeManager().liste.auswahlExists())
+			if (props.manager().liste.hasValue(item))
+				props.manager().liste.auswahlAdd(item);
+		if (props.manager().liste.auswahlExists())
 			await props.gotoGruppenprozessView(true);
 		else
-			await props.gotoDefaultView(props.klassenListeManager().getVorherigeAuswahl()?.id);
+			await props.gotoDefaultView(props.manager().getVorherigeAuswahl()?.id);
 	}
 
 	function lehrerkuerzel(list: number[]) {
 		let s = '';
-		if (props.klassenListeManager().hasDaten())
+		if (props.manager().hasDaten())
 			for (const id of list) {
-				const lehrer = props.klassenListeManager().lehrer.get(id);
-				if (lehrer !== null) {
+				const lehrer = props.manager().lehrer.get(id);
+				if (lehrer !== null)
 					if (s.length > 0)
 						s += `, ${lehrer.kuerzel}`;
 					else s = lehrer.kuerzel;
-				}
 			}
 		return s;
 	}

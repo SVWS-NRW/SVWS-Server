@@ -201,6 +201,33 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> implements CoreType<Jahrgae
 	}
 
 	/**
+	 * Gibt zurück, ob es sich bei diesem Jahrgang um einen Jahrgang der gymnasialen Oberstufe
+	 * handelt oder nicht.
+	 *
+	 * @return true, wenn dieser ein Jahrgang der gymnasialen Oberstufe ist, und ansonsten false
+	 */
+	public istGymOb() : boolean {
+		let _sevar_627718607 : any;
+		const _seexpr_627718607 = (this);
+		if (_seexpr_627718607 === Jahrgaenge.EF) {
+			_sevar_627718607 = true;
+		} else if (_seexpr_627718607 === Jahrgaenge.Q1) {
+			_sevar_627718607 = true;
+		} else if (_seexpr_627718607 === Jahrgaenge.Q2) {
+			_sevar_627718607 = true;
+		} else if (_seexpr_627718607 === Jahrgaenge.JAHRGANG_11) {
+			_sevar_627718607 = true;
+		} else if (_seexpr_627718607 === Jahrgaenge.JAHRGANG_12) {
+			_sevar_627718607 = true;
+		} else if (_seexpr_627718607 === Jahrgaenge.JAHRGANG_13) {
+			_sevar_627718607 = true;
+		} else {
+			_sevar_627718607 = false;
+		}
+		return _sevar_627718607;
+	}
+
+	/**
 	 * Prüft, ob der angegebene Jahrgang bei der angegebenen Schulform und Gliederung ein gültiger Vorgänger-Jahrgang
 	 * dieses Jahrgangs ist.
 	 *

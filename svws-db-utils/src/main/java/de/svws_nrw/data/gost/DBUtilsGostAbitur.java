@@ -7,6 +7,7 @@ import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.GostLeistungen;
 import de.svws_nrw.core.data.gost.GostLeistungenFachbelegung;
 import de.svws_nrw.core.data.gost.GostLeistungenFachwahl;
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.types.gost.AbiturBelegungsart;
@@ -25,8 +26,11 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response.Status;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -56,8 +60,6 @@ public final class DBUtilsGostAbitur {
 		final GostLeistungen leistungen = DBUtilsGost.getLeistungsdaten(conn, id);
 		if (leistungen == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
-
-		// TODO bestimme ggf. einen Teil der Daten aus den LuPO-Wahlen des Schülers
 
 		if (!"Q2".equals(leistungen.aktuellerJahrgang))
 			return null;
@@ -140,18 +142,14 @@ public final class DBUtilsGostAbitur {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static Abiturdaten getAbiturdaten(final DBEntityManager conn, final long id) throws ApiOperationException {
-		// Ermittle für einen Vergleich die Abiturdaten für Block I aus den Leistungsdaten, nutze dafür den entsprechenden Service
-		final Abiturdaten abidatenVergleich = getAbiturdatenAusLeistungsdaten(conn, id);
-
-		// Ermittle nun zunächst die Abiturdaten aus den entsprechenden Tabellen
+		// Prüfe zunächst den Schüler auf Existenz.
 		final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, id);
 		if (dtoSchueler == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 
-		final Map<Long, DTOSchuljahresabschnitte> schuljahresabschnitte =
-				conn.queryAll(DTOSchuljahresabschnitte.class).stream().collect(Collectors.toMap(a -> a.ID, a -> a));
-		final DTOSchuljahresabschnitte dtoAbschnitt = schuljahresabschnitte.get(dtoSchueler.Schuljahresabschnitts_ID);
-		if (dtoAbschnitt == null)
+		// Ermittle für einen Vergleich die Abiturdaten für Block I aus den Leistungsdaten, nutze dafür den entsprechenden Service
+		final Abiturdaten abidatenVergleich = getAbiturdatenAusLeistungsdaten(conn, id);
+		if (abidatenVergleich == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 
 		// Lese die Abiturdaten anhand der ID aus der Datenbank
@@ -159,7 +157,7 @@ public final class DBUtilsGostAbitur {
 		if ((dtosSchuelerAbitur == null) || (dtosSchuelerAbitur.isEmpty()))
 			throw new ApiOperationException(Status.NOT_FOUND);
 		// TODO if (dtosSchuelerAbitur.size() > 1) - Es existieren mehrere Abiturdatensätze für den Schüler mit der ID - TODO neueren Jahrgang auswählen
-		final DTOSchuelerAbitur dtoSchuelerAbitur = dtosSchuelerAbitur.get(0);
+		final DTOSchuelerAbitur dtoSchuelerAbitur = dtosSchuelerAbitur.getFirst();
 		final List<DTOSchuelerAbiturFach> faecher = conn.queryList(DTOSchuelerAbiturFach.QUERY_BY_SCHUELER_ID, DTOSchuelerAbiturFach.class, id);
 		if (faecher == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
@@ -167,7 +165,92 @@ public final class DBUtilsGostAbitur {
 		// Lese beide Tabellen mit den Informationen zu den belegten oder geprüften Sprachen aus.
 		final List<DTOSchuelerSprachenfolge> sprachenfolge = conn.queryList(DTOSchuelerSprachenfolge.QUERY_BY_SCHUELER_ID, DTOSchuelerSprachenfolge.class, id);
 
-		final DTOSchuljahresabschnitte dtoAbschnittPruefung = schuljahresabschnitte.get(dtoSchuelerAbitur.Schuljahresabschnitts_ID);
+		// Map erstellen, um Fächer-Manager zu sammeln und nicht für jeden Schüler anlegen zu müssen.
+		final Map<Integer, GostFaecherManager> mapGostFaecherManager = new HashMap<>();
+
+		// gib die Abiturdaten zurück.
+		return erzeugeAbiturdaten(conn, dtoSchuelerAbitur, abidatenVergleich, sprachenfolge, faecher, mapGostFaecherManager);
+	}
+
+
+	/**
+	 * Ermittelt die für das Abitur relevanten Daten für die Schüler mit den angegebenen IDs aus den in der Datenbank gespeicherten Abiturtabellen.
+	 *
+	 * @param conn        die Datenbank-Verbindung
+	 * @param idsSchueler die IDs der Schüler
+	 *
+	 * @return die für das Abitur relevanten Daten der Schüler als Map zur Schüler-ID.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public static Map<Long, Abiturdaten> getAbiturdatenFromIDs(final DBEntityManager conn, final List<Long> idsSchueler) throws ApiOperationException {
+		// Prüfe zunächst die Schüler auf Existenz.
+		if (idsSchueler == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+
+		final List<Long> idsSchuelerNonNull = new ArrayList<>(idsSchueler.stream().filter(Objects::nonNull).toList());
+		if (idsSchuelerNonNull.isEmpty())
+			throw new ApiOperationException(Status.NOT_FOUND);
+
+		final List<DTOSchueler> dtoSchueler = conn.queryByKeyList(DTOSchueler.class, idsSchuelerNonNull);
+		if ((dtoSchueler == null) || dtoSchueler.isEmpty() || (dtoSchueler.size() != idsSchuelerNonNull.size()))
+			throw new ApiOperationException(Status.NOT_FOUND);
+
+		// Lese die Abiturdaten anhand der IDs aus der Datenbank
+		final Map<Long, List<DTOSchuelerAbitur>> mapDTOsSchuelerAbitur =
+				conn.queryList(DTOSchuelerAbitur.QUERY_LIST_BY_SCHUELER_ID, DTOSchuelerAbitur.class, idsSchuelerNonNull)
+						.stream().collect(Collectors.groupingBy(sAbi -> sAbi.Schueler_ID));
+
+		final Map<Long, List<DTOSchuelerAbiturFach>> mapSchuelerAbiturFaecher =
+				conn.queryList(DTOSchuelerAbiturFach.QUERY_LIST_BY_SCHUELER_ID, DTOSchuelerAbiturFach.class, idsSchuelerNonNull)
+						.stream().collect(Collectors.groupingBy(f -> f.Schueler_ID));
+
+		// Lese beide Tabellen mit den Informationen zu den belegten oder geprüften Sprachen aus.
+		final Map<Long, List<DTOSchuelerSprachenfolge>> mapSchuelerSprachenfolge =
+				conn.queryList(DTOSchuelerSprachenfolge.QUERY_LIST_BY_SCHUELER_ID, DTOSchuelerSprachenfolge.class, idsSchuelerNonNull)
+						.stream().collect(Collectors.groupingBy(sf -> sf.Schueler_ID));
+
+		// Erstelle die Map, in der die Rückgabe Werte gesammelt werden.
+		final Map<Long, Abiturdaten> mapAbiturdaten = new HashMap<>();
+
+		// Map erstellen, um Fächer-Manager zu sammeln und nicht für jeden Schüler anlegen zu müssen.
+		final Map<Integer, GostFaecherManager> mapGostFaecherManager = new HashMap<>();
+
+		for (final Long idSchueler : idsSchuelerNonNull) {
+			// Hole die Abiturdaten zur Schüler-ID aus der Map. Wenn diese nicht existieren, gibt es keine Abiturdaten zum Schüler.
+			if ((mapDTOsSchuelerAbitur.get(idSchueler) == null) || mapDTOsSchuelerAbitur.get(idSchueler).isEmpty())
+				throw new ApiOperationException(Status.NOT_FOUND);
+			// TODO: Hier wird der erste Eintrag verwendet. Hier müsste bei mehreren Einträgen der neuste Eintrag bestimmt werden.
+			final DTOSchuelerAbitur dtoSchuelerAbitur = mapDTOsSchuelerAbitur.get(idSchueler).getFirst();
+
+			// Hole die Abiturfächer zur Schüler-ID aus der Map. Wenn diese nicht existieren, gibt es keine Abiturdaten zum Schüler.
+			if ((mapSchuelerAbiturFaecher.get(idSchueler) == null) || mapSchuelerAbiturFaecher.get(idSchueler).isEmpty())
+				throw new ApiOperationException(Status.NOT_FOUND);
+			final List<DTOSchuelerAbiturFach> faecher = mapSchuelerAbiturFaecher.get(idSchueler);
+
+			// Hole die Sprachenfolge zur Schüler-ID aus der Map.
+			final List<DTOSchuelerSprachenfolge> sprachenfolge = new ArrayList<>();
+			if ((mapSchuelerSprachenfolge.get(idSchueler) != null) && !mapSchuelerSprachenfolge.get(idSchueler).isEmpty())
+				sprachenfolge.addAll(mapSchuelerSprachenfolge.get(idSchueler));
+
+			// Ermittle für einen Vergleich die Abiturdaten für Block I aus den Leistungsdaten, nutze dafür den entsprechenden Service.
+			// TODO: Hier müsste auch die folgende Methode mehrere IDs umgestellt und aus der for-Schleife gezogen werden.
+			final Abiturdaten abidatenVergleich = getAbiturdatenAusLeistungsdaten(conn, idSchueler);
+			if (abidatenVergleich == null)
+				throw new ApiOperationException(Status.NOT_FOUND);
+
+			mapAbiturdaten.put(idSchueler, erzeugeAbiturdaten(conn, dtoSchuelerAbitur, abidatenVergleich, sprachenfolge, faecher, mapGostFaecherManager));
+		}
+
+		// Gibt die Abiturdaten zurück.
+		return mapAbiturdaten;
+	}
+
+	private static Abiturdaten erzeugeAbiturdaten(final DBEntityManager conn, final DTOSchuelerAbitur dtoSchuelerAbitur, final Abiturdaten abidatenVergleich,
+			final List<DTOSchuelerSprachenfolge> sprachenfolge, final List<DTOSchuelerAbiturFach> faecher,
+			final Map<Integer, GostFaecherManager> mapGostFaecherManager)
+			throws ApiOperationException {
+		final Schuljahresabschnitt schuljahresabschnittPruefung = conn.getUser().schuleGetAbschnittById(dtoSchuelerAbitur.Schuljahresabschnitts_ID);
 
 		// Bestimme zunächst das Abiturjahr
 		Integer abiturjahr = null;
@@ -180,12 +263,14 @@ public final class DBUtilsGostAbitur {
 			abiturjahr = abidatenVergleich.abiturjahr;
 
 		// Lese die Oberstufenfächer aus der DB ein, um schnell Daten zu einzelnen Fächern nachschlagen zu können
-		final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(abidatenVergleich.schuljahrAbitur, conn, abiturjahr);
+		if (!mapGostFaecherManager.containsKey(abiturjahr))
+			mapGostFaecherManager.put(abiturjahr, DBUtilsFaecherGost.getFaecherManager(abidatenVergleich.schuljahrAbitur, conn, abiturjahr));
+		final GostFaecherManager gostFaecher = mapGostFaecherManager.get(abiturjahr);
 
 		// Kopiere die DTOs in die Abiturdaten-Klasse
 		final Abiturdaten abidaten = new Abiturdaten();
 		abidaten.schuelerID = dtoSchuelerAbitur.Schueler_ID;
-		abidaten.schuljahrAbitur = (dtoAbschnittPruefung == null) ? null : dtoAbschnittPruefung.Jahr;
+		abidaten.schuljahrAbitur = schuljahresabschnittPruefung.schuljahr;
 		abidaten.abiturjahr = abiturjahr;
 		abidaten.projektKursThema = dtoSchuelerAbitur.ProjektkursThema;
 		abidaten.block1FehlstundenGesamt = (dtoSchuelerAbitur.FehlstundenSumme == null) ? -1 : dtoSchuelerAbitur.FehlstundenSumme;
@@ -193,25 +278,29 @@ public final class DBUtilsGostAbitur {
 				: dtoSchuelerAbitur.FehlstundenSummeUnentschuldigt;
 		abidaten.latinum = false;
 		for (final DTOSchuelerSprachenfolge folge : sprachenfolge)
-			if ((Fach.L == Fach.data().getWertByKuerzel(folge.Sprache)) && (folge.LatinumErreicht != null) && (folge.LatinumErreicht)) {
+			if ((Fach.L == Fach.data().getWertByKuerzel(folge.Sprache)) && (folge.LatinumErreicht != null)
+					&& Boolean.TRUE.equals((folge.LatinumErreicht))) {
 				abidaten.latinum = true;
 				break;
 			}
 		abidaten.kleinesLatinum = false;
 		for (final DTOSchuelerSprachenfolge folge : sprachenfolge)
-			if ((Fach.L == Fach.data().getWertByKuerzel(folge.Sprache)) && (folge.KleinesLatinumErreicht != null) && (folge.KleinesLatinumErreicht)) {
+			if ((Fach.L == Fach.data().getWertByKuerzel(folge.Sprache)) && (folge.KleinesLatinumErreicht != null)
+					&& Boolean.TRUE.equals((folge.KleinesLatinumErreicht))) {
 				abidaten.kleinesLatinum = true;
 				break;
 			}
 		abidaten.graecum = false;
 		for (final DTOSchuelerSprachenfolge folge : sprachenfolge)
-			if ((Fach.G == Fach.data().getWertByKuerzel(folge.Sprache)) && (folge.GraecumErreicht != null) && (folge.GraecumErreicht)) {
+			if ((Fach.G == Fach.data().getWertByKuerzel(folge.Sprache)) && (folge.GraecumErreicht != null)
+					&& Boolean.TRUE.equals((folge.GraecumErreicht))) {
 				abidaten.graecum = true;
 				break;
 			}
 		abidaten.hebraicum = false;
 		for (final DTOSchuelerSprachenfolge folge : sprachenfolge)
-			if ((Fach.H == Fach.data().getWertByKuerzel(folge.Sprache)) && (folge.HebraicumErreicht != null) && (folge.HebraicumErreicht)) {
+			if ((Fach.H == Fach.data().getWertByKuerzel(folge.Sprache)) && (folge.HebraicumErreicht != null)
+					&& Boolean.TRUE.equals((folge.HebraicumErreicht))) {
 				abidaten.hebraicum = true;
 				break;
 			}
@@ -250,9 +339,11 @@ public final class DBUtilsGostAbitur {
 				if (gostFach == null) {
 					final DTOFach dtoFach = conn.queryByKey(DTOFach.class, dto.Fach_ID);
 					final DTOFach dtoLeitfach1 =
-							(dtoFach.ProjektKursLeitfach1_ID == null) ? null : conn.queryByKey(DTOFach.class, dtoFach.ProjektKursLeitfach1_ID);
+							((dtoFach == null) || (dtoFach.ProjektKursLeitfach1_ID == null)) ? null : conn.queryByKey(DTOFach.class,
+									dtoFach.ProjektKursLeitfach1_ID);
 					final DTOFach dtoLeitfach2 =
-							(dtoFach.ProjektKursLeitfach2_ID == null) ? null : conn.queryByKey(DTOFach.class, dtoFach.ProjektKursLeitfach2_ID);
+							((dtoFach == null) || (dtoFach.ProjektKursLeitfach2_ID == null)) ? null : conn.queryByKey(DTOFach.class,
+									dtoFach.ProjektKursLeitfach2_ID);
 					abidaten.projektkursLeitfach1Kuerzel = (dtoLeitfach1 == null) ? null : dtoLeitfach1.Kuerzel;
 					abidaten.projektkursLeitfach2Kuerzel = (dtoLeitfach2 == null) ? null : dtoLeitfach2.Kuerzel;
 				} else {
@@ -369,8 +460,6 @@ public final class DBUtilsGostAbitur {
 				belegung.fehlstundenUnentschuldigt = belegungVergleich.fehlstundenUnentschuldigt;
 			}
 		}
-
-		// gib die Abiturdaten zurück.
 		return abidaten;
 	}
 

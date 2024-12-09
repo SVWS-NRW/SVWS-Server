@@ -3,6 +3,7 @@ package de.svws_nrw.module.reporting.types.schueler.gost.abitur;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.asd.types.fach.Fachgruppe;
+import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.gost.abitur.ReportingGostAbiturFachbelegung;
 
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostAbiturdaten.
  */
-public class ReportingSchuelerGostAbitur {
+public class ReportingSchuelerGostAbitur extends ReportingBaseType {
 
 	/** Das Kalenderjahr, in dem der Schüler sein Abitur ablegt bzw. ablegen wird. */
 	protected int abiturjahr;

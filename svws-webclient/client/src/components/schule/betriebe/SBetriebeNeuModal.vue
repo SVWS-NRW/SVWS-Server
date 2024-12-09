@@ -1,6 +1,6 @@
 <template>
-	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="showModal" size="big" class="hidden">
+	<slot :open-modal />
+	<svws-ui-modal v-model:show="show" size="big" class="hidden" :no-scroll="false">
 		<template #modalTitle>Schülerbetrieb hinzufügen</template>
 		<template #modalDescription />
 		<template #modalContent>
@@ -38,16 +38,19 @@
 					<div class="col-span-2">
 						<svws-ui-textarea-input v-model="betrieb.bemerkungen" placeholder="Bemerkungen" />
 					</div>
-					<svws-ui-checkbox v-model="betrieb.ausbildungsbetrieb"> Ausbildungsbetrieb </svws-ui-checkbox>
-					<svws-ui-checkbox v-model="betrieb.bietetPraktika"> Bietet Praktumsplätze </svws-ui-checkbox>
-					<svws-ui-checkbox v-model="betrieb.Massnahmentraeger"> Maßnahmenträger </svws-ui-checkbox>
-					<svws-ui-checkbox v-model="betrieb.ErwFuehrungszeugnis"> Erweitertes Führungszeugnis notwendig </svws-ui-checkbox>
-					<svws-ui-checkbox v-model="betrieb.BelehrungISG"> Belehrung n. Infektionsschutzgesetz notwendig </svws-ui-checkbox>
+					<svws-ui-spacing />
+					<svws-ui-input-wrapper :grid="2">
+						<svws-ui-checkbox v-model="betrieb.ausbildungsbetrieb"> Ausbildungsbetrieb </svws-ui-checkbox>
+						<svws-ui-checkbox v-model="betrieb.bietetPraktika"> Bietet Praktumsplätze </svws-ui-checkbox>
+						<svws-ui-checkbox v-model="betrieb.Massnahmentraeger"> Maßnahmenträger </svws-ui-checkbox>
+						<svws-ui-checkbox v-model="betrieb.ErwFuehrungszeugnis"> Erweitertes Führungszeugnis notwendig </svws-ui-checkbox>
+						<svws-ui-checkbox v-model="betrieb.BelehrungISG"> Belehrung n. Infektionsschutzgesetz notwendig </svws-ui-checkbox>
+					</svws-ui-input-wrapper>
 				</div>
 			</svws-ui-content-card>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="showModal().value = false"> Abbrechen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="show = false"> Abbrechen </svws-ui-button>
 			<svws-ui-button type="primary" @click="importer()" :disabled="!betrieb.name1"> Speichern </svws-ui-button>
 		</template>
 	</svws-ui-modal>
@@ -68,8 +71,7 @@
 		mapOrtsteile: Map<number, OrtsteilKatalogEintrag>;
 	}>();
 
-	const _showModal = ref<boolean>(false);
-	const showModal = () => _showModal;
+	const show = ref<boolean>(false);
 
 	const betrieb = ref<BetriebStammdaten>(new BetriebStammdaten());
 	const beschaeftigungsart = ref<KatalogEintrag>();
@@ -80,13 +82,13 @@
 	});
 
 	const openModal = () => {
-		showModal().value = true;
+		show.value = true;
 	}
 
 	async function importer() {
 		await props.addEintrag(betrieb.value)
 		betrieb.value = new BetriebStammdaten();
-		showModal().value = false;
+		show.value = false;
 	}
 
 </script>

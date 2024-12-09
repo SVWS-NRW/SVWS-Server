@@ -39,6 +39,7 @@
 							:compact-with-date="terminSelected.value === undefined || terminSelected.value.id !== termin.id"
 							:show-kursklausuren-nachschreiber="true"
 							:goto-kalenderdatum
+							:patch-klausurtermin
 							:goto-raumzeit-termin="gotoTermin"
 							:hide-button-raeume-planen="true">
 							<template #main v-if="terminSelected.value === undefined || terminSelected.value.id !== termin.id"><template /></template>

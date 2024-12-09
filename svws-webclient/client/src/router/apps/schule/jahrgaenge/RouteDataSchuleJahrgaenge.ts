@@ -1,76 +1,60 @@
-import { DeveloperNotificationException, type JahrgangsDaten } from "@core";
+import { ArrayList, JahrgangListeManager, type JahrgangsDaten, type List, type SimpleOperationResponse} from "@core";
 
-import { api } from "~/router/Api";
-import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-import { RouteManager } from "~/router/RouteManager";
-
-import { routeSchuleJahrgaenge } from "./RouteSchuleJahrgaenge";
 import { routeSchuleJahrgaengeDaten } from "./RouteSchuleJahrgaengeDaten";
+import { ViewType } from "@ui";
+import { api } from "~/router/Api";
+import { routeSchuleJahrgangNeu } from "~/router/apps/schule/jahrgaenge/RouteSchuleJahrgangNeu";
+import { routeSchuleJahrgangGruppenprozesse } from "~/router/apps/schule/jahrgaenge/RouteSchuleJahrgangGruppenprozesse";
+import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
+import type {RouteParamsRawGeneric} from "vue-router";
 
-interface RouteStateSchuleJahrgaenge extends RouteStateInterface {
-	auswahl: JahrgangsDaten | undefined;
-	daten: JahrgangsDaten | undefined;
-	mapKatalogeintraege: Map<number, JahrgangsDaten>;
-}
 
-const defaultState = <RouteStateSchuleJahrgaenge> {
-	auswahl: undefined,
-	daten: undefined,
-	mapKatalogeintraege: new Map(),
+const defaultState = {
+	idSchuljahresabschnitt: -1,
+	manager: new JahrgangListeManager(-1, -1, new ArrayList(), null, new ArrayList()),
 	view: routeSchuleJahrgaengeDaten,
+	activeViewType: ViewType.DEFAULT,
+	oldView: undefined,
 };
 
 
-export class RouteDataSchuleJahrgaenge extends RouteData<RouteStateSchuleJahrgaenge> {
+export class RouteDataSchuleJahrgaenge extends RouteDataAuswahl<JahrgangListeManager, RouteStateAuswahlInterface<JahrgangListeManager>> {
 
 	public constructor() {
-		super(defaultState);
+		super(defaultState, routeSchuleJahrgangGruppenprozesse, routeSchuleJahrgangNeu);
 	}
 
-	get auswahl(): JahrgangsDaten | undefined {
-		return this._state.value.auswahl;
+	public addID(param: RouteParamsRawGeneric, id: number): void {
+		param.id = id;
 	}
 
-	get mapKatalogeintraege(): Map<number, JahrgangsDaten> {
-		return this._state.value.mapKatalogeintraege;
+	protected async createManager(_ : number) : Promise<Partial<RouteStateAuswahlInterface<JahrgangListeManager>>> {
+		const jahrgaenge = await api.server.getJahrgaenge(api.schema);
+		const manager = new JahrgangListeManager(api.abschnitt.id, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte, api.schulform, jahrgaenge);
+
+		return { manager };
 	}
 
-	get daten(): JahrgangsDaten {
-		if (this._state.value.daten === undefined)
-			throw new DeveloperNotificationException("Unerwarteter Fehler: Klassendaten nicht initialisiert");
-		return this._state.value.daten;
+	ladeDaten(auswahl: any): Promise<any> {
+		return auswahl;
 	}
 
-	public async ladeListe() {
-		const listKatalogeintraege = await api.server.getJahrgaenge(api.schema);
-		const mapKatalogeintraege = new Map<number, JahrgangsDaten>();
-		const auswahl = listKatalogeintraege.size() > 0 ? listKatalogeintraege.get(0) : undefined;
-		for (const l of listKatalogeintraege)
-			mapKatalogeintraege.set(l.id, l);
-		this.setPatchedDefaultState({ auswahl, mapKatalogeintraege })
+	protected async doPatch(data : Partial<JahrgangsDaten>, id: number) : Promise<void> {
+		await api.server.patchJahrgang(data, api.schema, id);
 	}
 
-	setEintrag = async (auswahl: JahrgangsDaten) => {
-		const daten = await api.server.getJahrgang(api.schema, auswahl.id)
-		this.setPatchedState({ auswahl, daten })
+	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {
+		//  TODO: anpassen auf SimpleOperationResponse
+		// return await api.server.deleteJahrgaenge(ids, api.schema);
+		return new ArrayList();
 	}
 
-	gotoEintrag = async (eintrag: JahrgangsDaten) => {
-		await RouteManager.doRoute(routeSchuleJahrgaenge.getRoute({ id: eintrag.id }));
+	add = async (data: Partial<JahrgangsDaten>): Promise<void> => {
+		// Muss implementiert werden
 	}
 
-	patch = async (data : Partial<JahrgangsDaten>) => {
-		if (this.auswahl === undefined)
-			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		await api.server.patchJahrgang(data, api.schema, this.daten.id);
-		Object.assign(this.daten, data);
-		if (data.kuerzel !== undefined)
-			this.auswahl.kuerzel = data.kuerzel;
-		if (data.bezeichnung !== undefined)
-			this.auswahl.bezeichnung = data.bezeichnung;
-		if (data.anzahlRestabschnitte !== undefined)
-			this.auswahl.anzahlRestabschnitte = data.anzahlRestabschnitte;
-		this.setPatchedState({ auswahl: this.auswahl, daten: this.daten });
+	protected deleteMessage(id: number, jahrgang: JahrgangsDaten | null) : string {
+		return `Jahrgang ${jahrgang?.kuerzel ?? '???'} (ID: ${id}) wurde erfolgreich gelöscht.`;
 	}
 
 }

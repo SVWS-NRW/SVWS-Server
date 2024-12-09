@@ -12,21 +12,21 @@ const SFachDaten = () => import("~/components/schule/faecher/daten/SFachDaten.vu
 export class RouteSchuleFachDaten extends RouteNode<any, RouteSchuleFaecher> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.faecher.daten", "daten", SFachDaten);
+		super(Schulform.values(), [ BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN ], "schule.faecher.daten", "daten", SFachDaten);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Fach";
 	}
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		if (routeSchuleFaecher.data.fachListeManager.auswahlID() === null)
+		if (routeSchuleFaecher.data.manager.auswahlID() === null)
 			return routeSchuleFaecher.getRoute()
 	}
 
 	public getProps(to: RouteLocationNormalized): FachDatenProps {
 		return {
 			patch: routeSchuleFaecher.data.patch,
-			fachListeManager: () => routeSchuleFaecher.data.fachListeManager,
+			manager: () => routeSchuleFaecher.data.manager,
 		};
 	}
 

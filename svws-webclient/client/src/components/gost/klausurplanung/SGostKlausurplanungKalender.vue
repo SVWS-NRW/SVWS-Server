@@ -41,6 +41,7 @@
 									:show-last-klausurtermin="true"
 									:goto-kalenderdatum
 									:goto-raumzeit-termin
+									:patch-klausurtermin
 									drag-icon>
 									<template #datum><span /></template>
 								</s-gost-klausurplanung-termin>
@@ -68,6 +69,7 @@
 						:zeige-alle-jahrgaenge
 						:goto-kalenderdatum
 						:goto-raumzeit-termin
+						:patch-klausurtermin
 						:kalenderwoche
 						:kursklausur-mouse-over="() => kursklausurMouseOver">
 						<template #kwAuswahl>
@@ -155,11 +157,10 @@
 			</svws-ui-content-card>
 		</div>
 	</template>
-	<s-gost-klausurplanung-modal :show="returnModalKlausurHatRaeume()" text="Der Klausurtermin ist Teil einer jahrgangsübergreifenden Raumplanung. Die Aktion hat daher Auswirkungen auf andere Termine." :weiter="verschiebeKlausurTrotzRaumzuweisung" />
+	<s-gost-klausurplanung-modal :show="modalKlausurHatRaeume" text="Der Klausurtermin ist Teil einer jahrgangsübergreifenden Raumplanung. Die Aktion hat daher Auswirkungen auf andere Termine." :weiter="verschiebeKlausurTrotzRaumzuweisung" />
 </template>
 
 <script setup lang="ts">
-	import type { Ref } from "vue";
 	import { ref, onMounted, computed } from "vue";
 	import type { GostKlausurplanungKalenderProps } from "./SGostKlausurplanungKalenderProps";
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
@@ -184,7 +185,7 @@
 			return props.kMan().stundenplanManagerGetByAbschnittAndDatumOrException(props.abschnitt!.id, props.kalenderdatum.value!).kalenderwochenzuordnungGetByDatum(props.kalenderdatum.value!);
 		},
 		set: (value) => {
-			void props.gotoKalenderdatum(DateUtils.gibDatumDesMontagsOfJahrAndKalenderwoche(value.jahr, value.kw));
+			void props.gotoKalenderdatum(DateUtils.gibDatumDesMontagsOfJahrAndKalenderwoche(value.jahr, value.kw), props.terminSelected.value);
 		}
 	});
 
@@ -193,9 +194,6 @@
 	}
 
 	const modalKlausurHatRaeume = ref<boolean>(false);
-	function returnModalKlausurHatRaeume(): () => Ref<boolean> {
-		return () => modalKlausurHatRaeume;
-	}
 
 	let klausurMoveDragData: GostKlausurtermin | undefined = undefined;
 	let klausurMoveDropZone: GostKlausurplanungDropZone = undefined;
@@ -240,7 +238,7 @@
 	}
 
 	async function navKalenderdatum(by: number) {
-		await props.gotoKalenderdatum(berechneKwzDatum(by));
+		await props.gotoKalenderdatum(berechneKwzDatum(by), props.terminSelected.value);
 	}
 
 	function checkDropZoneTerminAuswahl(event: DragEvent) : void {
@@ -276,10 +274,10 @@
 
 	const onDrag = (data: GostKlausurplanungDragData) => {
 		if (data instanceof GostKlausurtermin) {
-			void props.gotoKalenderdatum(data);
+			void props.gotoKalenderdatum(undefined, data);
 			zeitrasterSelected.value = undefined;
 		} else if (data === undefined) {
-			void props.gotoKalenderdatum(data);
+			void props.gotoKalenderdatum(undefined, undefined);
 		}
 	};
 

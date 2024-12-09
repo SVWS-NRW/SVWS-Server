@@ -1,14 +1,14 @@
 <template>
-	<div v-if="(klassenListeManager().hasDaten() && (activeViewType === ViewType.DEFAULT)) || (activeViewType !== ViewType.DEFAULT)" class="page--flex">
+	<div v-if="(manager().hasDaten() && (activeViewType === ViewType.DEFAULT)) || (activeViewType !== ViewType.DEFAULT)" class="page--flex">
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
 				<div class="svws-headline-wrapper">
 					<template v-if="activeViewType === ViewType.DEFAULT">
 						<h2 class="svws-headline">
 							<span>
-								{{ klassenListeManager().daten().kuerzel ? 'Klasse ' + klassenListeManager().daten().kuerzel : '—' }}
+								{{ manager().daten().kuerzel ? 'Klasse ' + manager().daten().kuerzel : '—' }}
 								<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
-									ID: {{ klassenListeManager().daten().id }}
+									ID: {{ manager().daten().id }}
 								</svws-ui-badge>
 							</span>
 						</h2>
@@ -28,7 +28,7 @@
 			<div class="svws-ui-header--actions" />
 		</header>
 
-		<svws-ui-tab-bar :tab-manager>
+		<svws-ui-tab-bar :tab-manager :focus-switching-enabled :focus-help-visible>
 			<router-view />
 		</svws-ui-tab-bar>
 	</div>
@@ -42,22 +42,25 @@
 	import type { KlassenAppProps } from "./SKlassenAppProps";
 	import { computed } from "vue";
 	import { ViewType } from "@ui";
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<KlassenAppProps>();
 
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
+
 	const klassenSubline = computed(() => {
-		const auswahlKlassenList = props.klassenListeManager().liste.auswahlSorted();
+		const auswahlKlassenList = props.manager().liste.auswahlSorted();
 		if (auswahlKlassenList.size() > 5)
 			return `${auswahlKlassenList.size()} Klassen ausgewählt`;
 		return [...auswahlKlassenList].map(k => k.kuerzel).join(', ');
 	})
 
 	const lehrerkuerzel = computed<string>(() => {
-		if (!props.klassenListeManager().hasDaten())
+		if (!props.manager().hasDaten())
 			return '';
 		let lehrerkuerzelStr = '';
-		for (const lehrerId of props.klassenListeManager().daten().klassenLeitungen) {
-			const lehrer = props.klassenListeManager().lehrer.get(lehrerId);
+		for (const lehrerId of props.manager().daten().klassenLeitungen) {
+			const lehrer = props.manager().lehrer.get(lehrerId);
 			if (lehrer === null)
 				continue;
 			lehrerkuerzelStr += (lehrerkuerzelStr.length > 0) ? `, ${lehrer.kuerzel}` : lehrer.kuerzel;

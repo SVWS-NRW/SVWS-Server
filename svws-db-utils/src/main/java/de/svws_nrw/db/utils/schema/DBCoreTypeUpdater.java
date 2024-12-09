@@ -144,29 +144,27 @@ public class DBCoreTypeUpdater {
 	public boolean isUptodate() throws DBException {
 		final DBEntityManager conn = _schemaManager.getConnection();
 		_status.update(conn);
+		long status_revision;
+		try {
+			status_revision = _status.version.getRevision();
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			status_revision = 0;
+		}
+		for (final SchemaTabelle tab : Schema.getTabellen(status_revision)) {
+			if (!tab.hasCoreType())
+				continue;
+			final DTOSchemaCoreTypeVersion v = _status.getCoreTypeVersion(conn, tab.name());
+			if (v == null)
+				return false; // Bisher keine Version gespeichert - Update also nötig
+			if (Long.compare(tab.getCoreType().getCoreTypeVersion(), v.Version) > 0)
+				return false;  // Die Version des Core-Types ist größer als die Version in der DB -> Update also nötig
+		}
+		// TODO unten deprecated, oben aktuell
 		for (final CoreTypeTable entry : tables)
 			if ((entry.name == null) || (!pruefeVersion(conn, entry.name, entry.version)))
 				return false;
 		return true;
 	}
-
-
-	/**
-	 * Prüft, ob die Core-Types aktuell sind, d.h. die Version in den Core-Types mit der
-	 * Version in der Datenbank übereinstimmt.
-	 *
-	 * @param conn   die Datenbankverbindung
-	 *
-	 * @return true, falls die Core-Types in der DB aktuell sind, sonst false
-	 */
-	public boolean isUptodate(final DBEntityManager conn) {
-		_status.update(conn);
-		for (final CoreTypeTable entry : tables)
-			if ((entry.name == null) || (!pruefeVersion(conn, entry.name, entry.version)))
-				return false;
-		return true;
-	}
-
 
 
 	/**

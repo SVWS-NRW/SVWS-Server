@@ -8,25 +8,29 @@
 		</template>
 		<template #header />
 		<template #content>
-			<div class="container">
-				<svws-ui-table :clicked="auswahl()" clickable @update:clicked="gotoEintrag" :items="mapKatalogeintraege().values()" :columns scroll-into-view>
-					<template #cell(bezeichnung)="{ value, rowData }">
-						<div class="flex flex-row w-full">
-							<div class="flex-grow text-ellipsis overflow-hidden whitespace-nowrap">
-								<svws-ui-tooltip :title="value">
-									{{ value }}
-								</svws-ui-tooltip>
-							</div>
-							<div v-if="rowData.anzahlRestabschnitte === null" class="flex-none text-error">
-								<svws-ui-tooltip title="Der Jahrgang hat keine Anzahl für die Restabschnitte definiert.">
-									<span class="icon i-ri-alert-line" />
-								</svws-ui-tooltip>
-							</div>
-						</div>
-					</template>
-					<!-- TODO: Beim Implementieren des '+'-Buttons zum Hinfügen eines Eintrags die property hasFocus auf die svws-ui-button-Komponente setzen. true, wenn Liste leer, sonst false (z.B. :hasFocus="rowsFiltered.length === 0") -->
-				</svws-ui-table>
-			</div>
+			<svws-ui-table :clickable="!manager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="jahrgangsdaten => gotoDefaultView(jahrgangsdaten.id)" :items="manager().filtered()"
+				:model-value="[...manager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)" :columns :filter-open="true" selectable count scroll-into-view scroll allow-arrow-key-selection
+				:focus-switching-enabled :focus-help-visible>
+				<template #cell(bezeichnung)="{ value, rowData }">
+					{{ value }}
+					<svws-ui-tooltip position="bottom" v-if="rowData.anzahlRestabschnitte === null" autosize>
+						<span class="icon i-ri-alert-line" />
+						<template #content>
+							Der Jahrgang hat keine Anzahl für die Restabschnitte definiert.
+						</template>
+					</svws-ui-tooltip>
+				</template>
+				<template #actions>
+					<svws-ui-tooltip position="bottom" v-if="ServerMode.DEV.checkServerMode(serverMode) && hatKompetenzAendern">
+						<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="gotoHinzufuegenView(true)" :has-focus="manager().filtered().size() === 0">
+							<span class="icon i-ri-add-line" />
+						</svws-ui-button>
+						<template #content>
+							Neuen Jahrgang anlegen
+						</template>
+					</svws-ui-tooltip>
+				</template>
+			</svws-ui-table>
 		</template>
 	</svws-ui-secondary-menu>
 </template>
@@ -34,12 +38,36 @@
 <script setup lang="ts">
 
 	import type { JahrgaengeAuswahlProps } from "./SJahrgaengeAuswahlProps";
+	import { computed } from "vue";
+	import { ViewType } from "@ui";
+	import { BenutzerKompetenz, type JahrgangsDaten, ServerMode } from "@core";
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<JahrgaengeAuswahlProps>();
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
+
+	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+
+	const clickedEintrag = computed(() => {
+		if ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN))
+			return null;
+		return props.manager().hasDaten() ? props.manager().auswahl() : null;
+	});
+
+	async function setAuswahl(items : JahrgangsDaten[]) {
+		props.manager().liste.auswahlClear();
+		for (const item of items)
+			if (props.manager().liste.hasValue(item))
+				props.manager().liste.auswahlAdd(item);
+		if (props.manager().liste.auswahlExists())
+			await props.gotoGruppenprozessView(true);
+		else
+			await props.gotoDefaultView(props.manager().getVorherigeAuswahl()?.id);
+	}
 
 	const columns = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc" },
-		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 3 }
+		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 3 },
 	];
 
 </script>

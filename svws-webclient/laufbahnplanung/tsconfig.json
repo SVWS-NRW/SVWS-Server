@@ -3,6 +3,7 @@
 	"compilerOptions": {
 		"outDir": "./dist",
 		"baseUrl": ".",
+		"resolveJsonModule": true,
 		"paths": {
 			"~/*": ["./src/*"],
 			"@json/*": ["../../svws-asd/src/main/resources/de/svws_nrw/asd/types/*"],

@@ -1,4 +1,4 @@
-import type { Erzieherart, KatalogEintrag, LehrerListeEintrag, Nationalitaeten, OrtKatalogEintrag, OrtsteilKatalogEintrag, Verkehrssprache } from "@core";
+import type { Erzieherart, KatalogEintrag, LehrerListeEintrag, Nationalitaeten, OrtKatalogEintrag, OrtsteilKatalogEintrag, Verkehrssprache, CoreTypeData } from "@core";
 
 /** Die Sortierfunktion für den Ortskatalog */
 export function orte_sort(a: OrtKatalogEintrag, b: OrtKatalogEintrag): number {
@@ -153,4 +153,10 @@ export function lehrer_filter(items: Iterable<LehrerListeEintrag>, search: strin
 			|| i.vorname.toLocaleLowerCase("de-DE").startsWith(name.toLocaleLowerCase("de-DE")))
 			list.push(i);
 	return list;
+}
+
+/** Filter für CoreType */
+export function coreTypeDataFilter(items: CoreTypeData[], search: string): CoreTypeData[] {
+	const searchLower = search.trim().toLowerCase();
+	return items.filter(fach => fach.schluessel.toLowerCase().includes(searchLower) || fach.text.toLowerCase().includes(searchLower));
 }

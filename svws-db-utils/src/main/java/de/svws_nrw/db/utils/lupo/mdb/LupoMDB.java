@@ -735,7 +735,7 @@ public class LupoMDB {
 			gostFach.sortierung = lupoFach.Sortierung;
 			gostFach.istFremdsprache = lupoFach.IstSprache;
 			gostFach.istFremdSpracheNeuEinsetzend = lupoFach.AlsNeueFSInSII;
-			gostFach.biliSprache = lupoFach.Unterichtssprache;
+			gostFach.biliSprache = lupoFach.Unterrichtssprache;
 
 			gostFach.istMoeglichAbiLK = lupoFach.LK_Moegl;
 			gostFach.istMoeglichAbiGK = lupoFach.Abi_Moegl;
@@ -833,7 +833,7 @@ public class LupoMDB {
 				fachbelegung.belegungen[0].halbjahrKuerzel = GostHalbjahr.EF1.kuerzel;
 				setFachbelegung(fachbelegung.belegungen[0], lupoSchuelerFach.Kursart_E1, fachKursart, lupoFach.Q_WStd, false);
 				fachbelegung.letzteKursart = fachbelegung.belegungen[0].kursartKuerzel;
-				fachbelegung.belegungen[0].biliSprache = lupoFach.Unterichtssprache;
+				fachbelegung.belegungen[0].biliSprache = lupoFach.Unterrichtssprache;
 				fachbelegung.belegungen[0].notenkuerzel =
 						getNotenkuerzelFromLupoNotenpunkte(lupoSchuelerFach.Punkte_E1).daten(abidaten.schuljahrAbitur).kuerzel;
 			}
@@ -842,7 +842,7 @@ public class LupoMDB {
 				fachbelegung.belegungen[1].halbjahrKuerzel = GostHalbjahr.EF2.kuerzel;
 				setFachbelegung(fachbelegung.belegungen[1], lupoSchuelerFach.Kursart_E2, fachKursart, lupoFach.Q_WStd, false);
 				fachbelegung.letzteKursart = fachbelegung.belegungen[1].kursartKuerzel;
-				fachbelegung.belegungen[1].biliSprache = lupoFach.Unterichtssprache;
+				fachbelegung.belegungen[1].biliSprache = lupoFach.Unterrichtssprache;
 				fachbelegung.belegungen[1].notenkuerzel =
 						getNotenkuerzelFromLupoNotenpunkte(lupoSchuelerFach.Punkte_E2).daten(abidaten.schuljahrAbitur).kuerzel;
 			}
@@ -852,7 +852,7 @@ public class LupoMDB {
 				setFachbelegung(fachbelegung.belegungen[2], lupoSchuelerFach.Kursart_Q1, fachKursart, lupoFach.Q_WStd,
 						"J".equals(lupoSchuelerFach.Markiert_Q1));
 				fachbelegung.letzteKursart = fachbelegung.belegungen[2].kursartKuerzel;
-				fachbelegung.belegungen[2].biliSprache = lupoFach.Unterichtssprache;
+				fachbelegung.belegungen[2].biliSprache = lupoFach.Unterrichtssprache;
 				fachbelegung.belegungen[2].notenkuerzel =
 						getNotenkuerzelFromLupoNotenpunkte(lupoSchuelerFach.Punkte_Q1).daten(abidaten.schuljahrAbitur).kuerzel;
 			}
@@ -862,7 +862,7 @@ public class LupoMDB {
 				setFachbelegung(fachbelegung.belegungen[3], lupoSchuelerFach.Kursart_Q2, fachKursart, lupoFach.Q_WStd,
 						"J".equals(lupoSchuelerFach.Markiert_Q2));
 				fachbelegung.letzteKursart = fachbelegung.belegungen[3].kursartKuerzel;
-				fachbelegung.belegungen[3].biliSprache = lupoFach.Unterichtssprache;
+				fachbelegung.belegungen[3].biliSprache = lupoFach.Unterrichtssprache;
 				fachbelegung.belegungen[3].notenkuerzel =
 						getNotenkuerzelFromLupoNotenpunkte(lupoSchuelerFach.Punkte_Q2).daten(abidaten.schuljahrAbitur).kuerzel;
 			}
@@ -872,7 +872,7 @@ public class LupoMDB {
 				setFachbelegung(fachbelegung.belegungen[4], lupoSchuelerFach.Kursart_Q3, fachKursart, lupoFach.Q_WStd,
 						"J".equals(lupoSchuelerFach.Markiert_Q3));
 				fachbelegung.letzteKursart = fachbelegung.belegungen[4].kursartKuerzel;
-				fachbelegung.belegungen[4].biliSprache = lupoFach.Unterichtssprache;
+				fachbelegung.belegungen[4].biliSprache = lupoFach.Unterrichtssprache;
 				fachbelegung.belegungen[4].notenkuerzel =
 						getNotenkuerzelFromLupoNotenpunkte(lupoSchuelerFach.Punkte_Q3).daten(abidaten.schuljahrAbitur).kuerzel;
 			}
@@ -882,7 +882,7 @@ public class LupoMDB {
 				setFachbelegung(fachbelegung.belegungen[5], lupoSchuelerFach.Kursart_Q4, fachKursart, lupoFach.Q_WStd,
 						"J".equals(lupoSchuelerFach.Markiert_Q4));
 				fachbelegung.letzteKursart = fachbelegung.belegungen[5].kursartKuerzel;
-				fachbelegung.belegungen[5].biliSprache = lupoFach.Unterichtssprache;
+				fachbelegung.belegungen[5].biliSprache = lupoFach.Unterrichtssprache;
 				fachbelegung.belegungen[5].notenkuerzel =
 						getNotenkuerzelFromLupoNotenpunkte(lupoSchuelerFach.Punkte_Q4).daten(abidaten.schuljahrAbitur).kuerzel;
 			}
@@ -984,7 +984,7 @@ public class LupoMDB {
 			belegung.kursartKuerzel = "LK";
 		else if ("ZK".equals(belegungPlanungKursart))
 			belegung.kursartKuerzel = "ZK";
-		belegung.schriftlich = (belegungPlanungKursart == null) ? null : ("LK".equals(belegungPlanungKursart) || "S".equals(belegungPlanungKursart));
+		belegung.schriftlich = (belegungPlanungKursart == null) ? false : ("LK".equals(belegungPlanungKursart) || "S".equals(belegungPlanungKursart));
 		if ("LK".equals(belegungPlanungKursart))
 			belegung.wochenstunden = 5;
 		else if (wochenstunden == null)

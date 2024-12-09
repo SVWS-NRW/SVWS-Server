@@ -63,7 +63,7 @@ public final class DTOStundenplanUnterricht {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Fach_ID */
 	public static final String QUERY_LIST_BY_FACH_ID = "SELECT e FROM DTOStundenplanUnterricht e WHERE e.Fach_ID IN ?1";
 
-	/** Die eindeutige ID für diese Zuordnung des Untericht-Eintrages zu einem Stundenplan */
+	/** Die eindeutige ID für diese Zuordnung des Unterricht-Eintrages zu einem Stundenplan */
 	@Id
 	@Column(name = "ID")
 	@JsonProperty

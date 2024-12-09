@@ -461,6 +461,17 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 		return this._vorherigeAuswahl;
 	}
 
+	/**
+	 * Gibt für den übergebenen Listen-Eintrag die ID zurück.
+	 *
+	 * @param eintrag   der Listen-Eintrag
+	 *
+	 * @return die zugehörige ID
+	 */
+	public getIdByEintrag(eintrag : TAuswahl) : TID {
+		return this._listeToId.apply(eintrag);
+	}
+
 	transpilerCanonicalName(): string {
 		return 'de.svws_nrw.core.utils.AuswahlManager';
 	}

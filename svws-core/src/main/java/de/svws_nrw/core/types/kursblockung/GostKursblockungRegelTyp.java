@@ -140,7 +140,8 @@ public enum GostKursblockungRegelTyp {
 	/**
 	 * Der Regel-Typ(9) zum forcieren, dass ein Kurs mit einer bestimmten Anzahl an Dummy-SuS aufgefüllt wird. <br>
 	 * - Parameter A: Datenbank-ID des 1. Kurses (long) <br>
-	 * - Parameter B: Die Anzahl an Dummy-SuS. Gültige Werte sind im Intervall 1 bis 100.
+	 * - Parameter B: Die Anzahl an Dummy-SuS.
+	 *   Gültige Werte sind im Intervall {#KURS_MIT_DUMMY_SUS_AUFFUELLEN_MIN} und {#KURS_MIT_DUMMY_SUS_AUFFUELLEN_MAX}.
 	 */
 	KURS_MIT_DUMMY_SUS_AUFFUELLEN(9, "Kurs: Fülle mit Dummy-SuS auf", Arrays.asList(
 			GostKursblockungRegelParameterTyp.KURS_ID,
@@ -199,7 +200,8 @@ public enum GostKursblockungRegelTyp {
 	/**
 	 * Der Regel-Typ(15) zum forcieren, dass ein Kurs eine bestimmte Schüleranzahl nicht überschreitet.
 	 * <br>- Parameter A: Datenbank-ID des Kurses (long)
-	 * <br>- Parameter B: Die maximal erlaubte Schüleranzahl. Gültige Werte sind im Intervall 0 bis 100.
+	 * <br>- Parameter B: Die maximal erlaubte Schüleranzahl.
+	 *       Gültige Werte sind im Intervall {#KURS_MAXIMALE_SCHUELERANZAHL_MIN} und {#KURS_MAXIMALE_SCHUELERANZAHL_MAX}.
 	 */
 	KURS_MAXIMALE_SCHUELERANZAHL(15, "Kurs: Maximale Schüleranzahl", Arrays.asList(
 			GostKursblockungRegelParameterTyp.KURS_ID,
@@ -229,13 +231,33 @@ public enum GostKursblockungRegelTyp {
 	 * Der Regel-Typ(18) zum forcieren, dass eine Fachart (Fach + Kursart) eine Obergrenze pro Schiene hat.
 	 * <br>- Parameter A: Datenbank-ID des Faches (long)
 	 * <br>- Parameter B: Datenbank-ID der Kursart (int)
-	 * <br>- Parameter C: Die maximal erlaubte Anzahl (in jeder Schiene). Gültige Werte sind 1 bis 9. (int)
+	 * <br>- Parameter C: Die maximal erlaubte Anzahl (in jeder Schiene).
+	 *       Gültige Werte sind im Intervall {#FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE_MIN} und {#FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE_MAX}.
 	 */
 	FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE(18, "Fachart: Maximale Anzahl pro Schiene", Arrays.asList(
 			GostKursblockungRegelParameterTyp.FACH_ID,
 			GostKursblockungRegelParameterTyp.KURSART,
 			GostKursblockungRegelParameterTyp.GANZZAHL
 	));
+
+	/** Liefert den kleinsten Wert (inklusive) für Regel 9. */
+	public static final int KURS_MIT_DUMMY_SUS_AUFFUELLEN_MIN = 1;
+
+	/** Liefert den größten Wert (inklusive) für Regel 9. */
+	public static final int KURS_MIT_DUMMY_SUS_AUFFUELLEN_MAX = 50;
+
+	/** Liefert den kleinsten Wert (inklusive) für Regel 15. */
+	public static final int KURS_MAXIMALE_SCHUELERANZAHL_MIN = 0;
+
+	/** Liefert den größten Wert (inklusive) für Regel 15. */
+	public static final int KURS_MAXIMALE_SCHUELERANZAHL_MAX = 99;
+
+	/** Liefert den kleinsten Wert (inklusive) für Regel 18. */
+	public static final int FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE_MIN = 1;
+
+	/** Liefert den größten Wert (inklusive) für Regel 18. */
+	public static final int FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE_MAX = 9;
+
 
 	/** Definiert eine Reihenfolge der Regel-Typen bei visuellen Darstellungen. */
 	public static final @NotNull int[] ANZEIGE_REIHENFOLGE = new int[] { 1, 6, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18 };

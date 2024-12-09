@@ -1,6 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, DeveloperNotificationException, SchuelerStatus, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
@@ -15,15 +15,25 @@ const SSchuelerKaoa = () => import("~/components/schueler/kaoa/SSchuelerKaoa.vue
 export class RouteSchuelerKAoA extends RouteNode<RouteDataSchuelerKAoA, RouteSchueler> {
 
 	public constructor() {
-		super(Schulform.values().filter(f => !f.equals(Schulform.G)), [ BenutzerKompetenz.KEINE ], "schueler.kaoa", "kaoa", SSchuelerKaoa, new RouteDataSchuelerKAoA());
+		super(Schulform.values().filter(f => ![Schulform.G, Schulform.FW, Schulform.HI, Schulform.KS].includes(f)), [BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_KAOA_DATEN_AENDERN], "schueler.kaoa", "kaoa", SSchuelerKaoa, new RouteDataSchuelerKAoA());
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "KAoA";
-		this.isHidden = (params?: RouteParams) => {
-			if ((params === undefined) || (params.id instanceof Array))
-				return routeError.getErrorRoute(new DeveloperNotificationException("Fehler: Die Parameter der Route sind nicht gültig gesetzt."));
-			return routeSchueler.data.schuelerListeManager.hasDaten() ? false : routeSchueler.getRouteDefaultChild({ id: parseInt(params.id) });
-		};
+		this.isHidden = (params?: RouteParams) => this.checkHidden(params);
+	}
+
+	protected checkHidden(params: RouteParams = {}) {
+		try {
+			const { id } = RouteNode.getIntParams(params, ["id"]);
+			const schuljahr = routeSchueler.data.schuelerListeManager.getSchuljahr();
+			if (!routeSchueler.data.schuelerListeManager.hasDaten()
+				|| (routeSchueler.data.schuelerListeManager.auswahl().status === SchuelerStatus.EXTERN.daten(schuljahr)?.id)
+				|| (routeSchueler.data.schuelerListeManager.auswahl().status === SchuelerStatus.EHEMALIGE.daten(schuljahr)?.id))
+				return routeSchueler.getRouteDefaultChild({ id });
+			return false;
+		} catch (e) {
+			return routeError.getErrorRoute(e as DeveloperNotificationException);
+		}
 	}
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {

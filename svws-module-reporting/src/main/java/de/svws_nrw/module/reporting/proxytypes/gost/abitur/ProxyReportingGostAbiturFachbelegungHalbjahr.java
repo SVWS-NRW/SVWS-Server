@@ -25,19 +25,19 @@ public class ProxyReportingGostAbiturFachbelegungHalbjahr extends ReportingGostA
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingGostAbiturFachbelegungHalbjahr}.
 	 *
-	 * @param reportingRepository Repository für die Reporting.
+	 * @param reportingRepository Repository für das Reporting.
 	 * @param abiturFachbelegungHalbjahr Daten-Objekt der Halbjahresfachbelegungen aus der Datenbank
 	 */
 	public ProxyReportingGostAbiturFachbelegungHalbjahr(final ReportingRepository reportingRepository,
 			final AbiturFachbelegungHalbjahr abiturFachbelegungHalbjahr) {
-		super(abiturFachbelegungHalbjahr.biliSprache,
+		super(ersetzeNullDurchEmpty(abiturFachbelegungHalbjahr.biliSprache),
 				abiturFachbelegungHalbjahr.block1gewertet,
 				abiturFachbelegungHalbjahr.block1kursAufZeugnis,
 				abiturFachbelegungHalbjahr.fehlstundenGesamt,
 				abiturFachbelegungHalbjahr.fehlstundenUnentschuldigt,
-				abiturFachbelegungHalbjahr.halbjahrKuerzel,
+				ersetzeNullDurchEmpty(abiturFachbelegungHalbjahr.halbjahrKuerzel),
 				abiturFachbelegungHalbjahr.schriftlich,
-				abiturFachbelegungHalbjahr.kursartKuerzel,
+				ersetzeNullDurchEmpty(abiturFachbelegungHalbjahr.kursartKuerzel),
 				null,
 				null,
 				abiturFachbelegungHalbjahr.wochenstunden);
@@ -66,7 +66,7 @@ public class ProxyReportingGostAbiturFachbelegungHalbjahr extends ReportingGostA
 	/**
 	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.
 	 *
-	 * @return Repository für die Reporting
+	 * @return Repository für das Reporting
 	 */
 	public ReportingRepository reportingRepository() {
 		return reportingRepository;

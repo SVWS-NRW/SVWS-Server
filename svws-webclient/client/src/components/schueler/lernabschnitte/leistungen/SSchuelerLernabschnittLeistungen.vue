@@ -139,9 +139,21 @@
 	 * nicht mit einbezogen.
 	 */
 	const hatUpdateKompetenz = computed<boolean>(() => {
-		return (props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN))
-			|| ((props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN))
-				&& props.benutzerKompetenzenKlassen.has(props.schuelerListeManager().auswahl().idKlasse));
+		// Wenn der Benutzer generelle Rechte hat Leistungsdaten zu ändern, dann ist hier keine weitere Prüfung nötig, er hat die allgemeine Update-Kompetenz
+		if (props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN))
+			return true;
+		// Wenn der Benutzer auch keine funktionsbezogenen Rechte hat, dann hat er keine allgemeine Update-Kompetenz
+		if (!props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN))
+			return false;
+		// Wenn er keine funktionsbezogenen Rechte auf die Klasse hat, dann hat er keine allgemeine Update-Kompetenz
+		if (!props.benutzerKompetenzenKlassen.has(props.schuelerListeManager().auswahl().idKlasse))
+			return false;
+		// Wenn der Lernabschnitt nicht der aktuelle der Schule ist oder in der Zukunft liegt, dann hat er keine allgemeine Update-Kompetenz
+		const schuleSchuljahresabschnitt = props.schuleSchuljahresabschnitt();
+		const leistungSchuljahresabschnitt = props.manager().schuljahresabschnittGet();
+		return (schuleSchuljahresabschnitt.schuljahr < leistungSchuljahresabschnitt.schuljahr)
+			|| ((schuleSchuljahresabschnitt.schuljahr === leistungSchuljahresabschnitt.schuljahr)
+				&& (schuleSchuljahresabschnitt.abschnitt <= leistungSchuljahresabschnitt.abschnitt));
 	});
 
 	/// Das Schuljahr der Lernabschnittsdaten
@@ -225,7 +237,7 @@
 			const note = Note.fromNoteSekI(props.manager().lernabschnittGet().noteLernbereichGSbzwAL);
 			return note === null ? undefined : note;
 		},
-		set: (value) => void props.patch({ noteLernbereichGSbzwAL: value === undefined || value === Note.KEINE ? null : value.getNoteSekI(schuljahr.value) })
+		set: (value) => void props.patch({ noteLernbereichGSbzwAL: value === undefined || value === Note.KEINE ? null : value.getNoteSekI(schuljahr.value) }),
 	});
 
 	const lernbereichsnoteNW = computed<Note | undefined>({
@@ -233,7 +245,7 @@
 			const note = Note.fromNoteSekI(props.manager().lernabschnittGet().noteLernbereichNW);
 			return note === null ? undefined : note;
 		},
-		set: (value) => void props.patch({ noteLernbereichNW: value === undefined || value === Note.KEINE ? null : value.getNoteSekI(schuljahr.value) })
+		set: (value) => void props.patch({ noteLernbereichNW: value === undefined || value === Note.KEINE ? null : value.getNoteSekI(schuljahr.value) }),
 	});
 
 	async function patchFach(fach: FachDaten | null, leistung: SchuelerLeistungsdaten) {

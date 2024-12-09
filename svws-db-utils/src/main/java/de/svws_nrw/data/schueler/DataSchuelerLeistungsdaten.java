@@ -1,5 +1,6 @@
 package de.svws_nrw.data.schueler;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +64,7 @@ public final class DataSchuelerLeistungsdaten extends DataManagerRevised<Long, D
 		} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
 			daten.abifach = null;
 		}
-		daten.istZP10oderZK10 = (dto.Prf10Fach != null) && dto.Prf10Fach;
+		daten.istZP10oderZKEF = (dto.Prf10Fach != null) && dto.Prf10Fach;
 		daten.koopSchule = dto.SchulNr;
 		daten.lehrerID = dto.Fachlehrer_ID;
 		daten.wochenstunden = (dto.Wochenstunden == null) ? 0 : dto.Wochenstunden;
@@ -323,6 +324,27 @@ public final class DataSchuelerLeistungsdaten extends DataManagerRevised<Long, D
 		for (final DTOSchuelerLeistungsdaten l : leistungsdaten)
 			list.add(map(l));
 		return true;
+	}
+
+
+	/**
+	 * Ermittelt die Leistungsdaten für den angegebenen Lernabschnitt und fügt diese in die übergebene Liste ein.
+	 *
+	 * @param idsAbschnitte   die IDs der Lernabschnitte, deren Leistungsdaten geladen werden sollen.
+	 *
+	 * @return eine Liste mit der Leistungsdaten des Lernabschnitts
+	 */
+	public List<SchuelerLeistungsdaten> getByLernabschnitten(final List<Long> idsAbschnitte) {
+		final List<SchuelerLeistungsdaten> result = new ArrayList<>();
+		// Bestimme die Leistungsdaten des Lernabschnitts
+		final List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryList(DTOSchuelerLeistungsdaten.QUERY_LIST_BY_ABSCHNITT_ID,
+				DTOSchuelerLeistungsdaten.class, idsAbschnitte);
+		if (leistungsdaten == null)
+			return result;
+		// Konvertiere sie und füge sie zur Liste hinzu
+		for (final DTOSchuelerLeistungsdaten l : leistungsdaten)
+			result.add(map(l));
+		return result;
 	}
 
 }

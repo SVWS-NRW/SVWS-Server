@@ -1,11 +1,12 @@
 package de.svws_nrw.module.reporting.types.gost.kursplanung;
 
+import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostKursplanungFachwahlstatistik.
  */
-public class ReportingGostKursplanungFachwahlstatistik {
+public class ReportingGostKursplanungFachwahlstatistik extends ReportingBaseType {
 
 	/** Die Kursgrößendifferenz des Faches für die Kursart LK. */
 	protected int differenzKursgroessenLK;

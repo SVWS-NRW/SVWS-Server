@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotNull;
  * Sie beschreibt die Credentials eines allgemeinen Benutzers und dessen Anzeigenamen.
  */
 @XmlRootElement
-@Schema(description = "Die Daten eines Account-Credentials.")
+@Schema(description = "Die Credentials eines allgemeinen Benutzers und dessen Anzeigename.")
 @TranspilerDTO
 public class BenutzerAllgemeinCredentials {
 

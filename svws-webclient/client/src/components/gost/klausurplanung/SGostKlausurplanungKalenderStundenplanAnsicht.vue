@@ -109,6 +109,7 @@
 											in-tooltip
 											:goto-kalenderdatum
 											:goto-raumzeit-termin
+											:patch-klausurtermin
 											:k-man>
 											<template #datum><span /></template>
 										</s-gost-klausurplanung-termin>

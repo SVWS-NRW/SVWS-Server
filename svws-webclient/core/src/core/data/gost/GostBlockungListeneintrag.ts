@@ -28,6 +28,11 @@ export class GostBlockungListeneintrag extends JavaObject {
 	 */
 	public anzahlErgebnisse : number = -1;
 
+	/**
+	 * Die ID des Ergebnisses, welches bei der Blockung als aktiv gesetzt wurde, sofern es ein aktives Ergebnis gibt
+	 */
+	public idAktivesErgebnis : number | null = null;
+
 
 	/**
 	 * Leerer Standardkonstruktor.
@@ -64,6 +69,7 @@ export class GostBlockungListeneintrag extends JavaObject {
 		if (obj.anzahlErgebnisse === undefined)
 			throw new Error('invalid json format, missing attribute anzahlErgebnisse');
 		result.anzahlErgebnisse = obj.anzahlErgebnisse;
+		result.idAktivesErgebnis = (obj.idAktivesErgebnis === undefined) ? null : obj.idAktivesErgebnis === null ? null : obj.idAktivesErgebnis;
 		return result;
 	}
 
@@ -74,6 +80,7 @@ export class GostBlockungListeneintrag extends JavaObject {
 		result += '"gostHalbjahr" : ' + obj.gostHalbjahr.toString() + ',';
 		result += '"istAktiv" : ' + obj.istAktiv.toString() + ',';
 		result += '"anzahlErgebnisse" : ' + obj.anzahlErgebnisse.toString() + ',';
+		result += '"idAktivesErgebnis" : ' + ((obj.idAktivesErgebnis === null) ? 'null' : obj.idAktivesErgebnis.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -95,6 +102,9 @@ export class GostBlockungListeneintrag extends JavaObject {
 		}
 		if (obj.anzahlErgebnisse !== undefined) {
 			result += '"anzahlErgebnisse" : ' + obj.anzahlErgebnisse.toString() + ',';
+		}
+		if (obj.idAktivesErgebnis !== undefined) {
+			result += '"idAktivesErgebnis" : ' + ((obj.idAktivesErgebnis === null) ? 'null' : obj.idAktivesErgebnis.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

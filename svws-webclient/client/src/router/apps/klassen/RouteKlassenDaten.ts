@@ -25,7 +25,7 @@ export class RouteKlassenDaten extends RouteNode<any, RouteKlassen> {
 			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			patch: routeKlassen.data.patch,
-			klassenListeManager: () => routeKlassen.data.klassenListeManager,
+			manager: () => routeKlassen.data.manager,
 			setFilter: routeKlassen.data.setFilter,
 			mapKlassenVorigerAbschnitt: () => routeKlassen.data.mapKlassenVorigerAbschnitt,
 			mapKlassenFolgenderAbschnitt: () => routeKlassen.data.mapKlassenFolgenderAbschnitt,

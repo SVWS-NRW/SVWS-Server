@@ -3,7 +3,11 @@
 	"compilerOptions": {
 		"outDir": "./dist",
 		"baseUrl": ".",
-		"types": [ "vite/client" ]
+		"types": [ "vite/client" ],
+		"resolveJsonModule": true,
+		"paths": {
+			"@json/*": ["../../svws-asd/src/main/resources/de/svws_nrw/asd/types/*"],
+		},
 	},
 	"include": [
 		"env.d.ts",

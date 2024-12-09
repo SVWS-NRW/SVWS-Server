@@ -3,7 +3,7 @@ import type { Checkpoint } from "@ui";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface KlassenNeuProps {
-	klassenListeManager: () => KlassenListeManager;
+	manager: () => KlassenListeManager;
 	schulform: Schulform;
 	mapKlassenVorigerAbschnitt: () => Map<number, KlassenDaten>;
 	mapKlassenFolgenderAbschnitt: () => Map<number, KlassenDaten>;

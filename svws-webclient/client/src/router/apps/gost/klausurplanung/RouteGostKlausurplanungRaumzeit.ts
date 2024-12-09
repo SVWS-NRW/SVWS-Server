@@ -44,11 +44,8 @@ export class RouteGostKlausurplanungRaumzeit extends RouteNode<any, RouteGostKla
 				const termin = (routeGostKlausurplanung.data.terminSelected.value !== undefined) && terminList.contains(routeGostKlausurplanung.data.terminSelected.value) ? routeGostKlausurplanung.data.terminSelected.value : terminList.getFirst();
 				return this.getRoute({ idtermin: termin.id });
 			}
-			if (idtermin !== undefined) {
-				const termin = routeGostKlausurplanung.data.manager.terminGetByIdOrException(idtermin);
-				// routeGostKlausurplanung.data.terminSelected.value = termin;
-				routeGostKlausurplanung.data.setRaumTermin(termin);
-			}
+			const termin = routeGostKlausurplanung.data.manager.terminGetByIdOrNull(idtermin ?? -1) ?? undefined;
+			routeGostKlausurplanung.data.setRaumTermin(termin ?? null);
 		} catch (e) {
 			return routeError.getErrorRoute(e instanceof Error ? e : new DeveloperNotificationException("Unbekannter Fehler beim Laden der Klausurplanungsdaten."));
 		}
@@ -67,6 +64,7 @@ export class RouteGostKlausurplanungRaumzeit extends RouteNode<any, RouteGostKla
 			patchKlausurraum: routeGostKlausurplanung.data.patchKlausurraum,
 			setzeRaumZuSchuelerklausuren: routeGostKlausurplanung.data.setzeRaumZuSchuelerklausuren,
 			patchKlausur: routeGostKlausurplanung.data.patchKlausur,
+			patchKlausurtermin: routeGostKlausurplanung.data.patchKlausurtermin,
 			quartalsauswahl: routeGostKlausurplanung.data.quartalsauswahl,
 			setRaumTermin: routeGostKlausurplanung.data.setRaumTermin,
 			terminSelected: routeGostKlausurplanung.data.terminSelected,

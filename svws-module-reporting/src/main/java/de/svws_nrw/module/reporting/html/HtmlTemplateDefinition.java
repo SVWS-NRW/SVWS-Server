@@ -99,6 +99,48 @@ public enum HtmlTemplateDefinition {
 			Arrays.asList(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)),
 
+	/** Report-Vorlage: GOSt - Kursplanung - Kurs - Kurschüler */
+	KLASSEN_v_KLASSE_SCHUELER_STAMMDATENLISTE(
+			ReportingReportvorlage.KLASSEN_v_KLASSE_SCHUELER_STAMMDATENLISTE,
+			"de/svws_nrw/module/reporting/",
+			"klassen/KlasseSchuelerStammdatenliste.html",
+			"Klasse-Schueler-Stammdatenliste",
+			"""
+			        <p th:if="${Klassen.isEmpty()}">Klasse-Schueler-Stammdatenliste"</p>
+			        <th:block th:if="${!Klassen.isEmpty()}" th:each="klasse,iterState : ${Klassen}">
+			            <p th:if="${iterState.first}" th:text="${'Klasse-Schueler-Stammdatenliste_' + #dates.format(#dates.createNow(), 'yyyyMMdd-HHmm')}"></p>
+			        </th:block>
+			""",
+			Arrays.asList(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)),
+
+	/** Report-Vorlage: GOSt - Kursplanung - Kurs - Kurschüler */
+	KURSE_v_KURS_SCHUELER_STAMMDATENLISTE(
+			ReportingReportvorlage.KURSE_v_KURS_SCHUELER_STAMMDATENLISTE,
+			"de/svws_nrw/module/reporting/",
+			"kurse/KursSchuelerStammdatenliste.html",
+			"Kurs-Schueler-Stammdatenliste",
+			"""
+			        <p th:if="${Kurse.isEmpty()}">Kurs-Schueler-Stammdatenliste"</p>
+			        <th:block th:if="${!Kurse.isEmpty()}" th:each="kurs,iterState : ${Kurse}">
+			            <p th:if="${iterState.first}" th:text="${'Kurs-Schueler-Stammdatenliste_' + #dates.format(#dates.createNow(), 'yyyyMMdd-HHmm')}"></p>
+			        </th:block>
+			""",
+			Arrays.asList(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)),
+
+	/** Report-Vorlage: Lehrer - Stammdaten - Liste */
+	LEHRER_v_STAMMDATENLISTE(
+			ReportingReportvorlage.LEHRER_v_STAMMDATENLISTE,
+			"de/svws_nrw/module/reporting/",
+			"lehrer/stammdaten/LehrerStammdatenliste.html",
+			"Lehrer-Stammdatenliste",
+			"""
+			        <p th:if="${Lehrer.isEmpty()}">Lehrer-Stammdatenliste"</p>
+			        <th:block th:if="${!Lehrer.isEmpty()}" th:each="lehrer,iterState : ${Lehrer}">
+			            <p th:if="${iterState.first}" th:text="${'Lehrer-Stammdatenliste' + #dates.format(#dates.createNow(), 'yyyyMMdd-HHmm')}"></p>
+			        </th:block>
+			""",
+			Arrays.asList(BenutzerKompetenz.LEHRERDATEN_ANSEHEN)),
+
 	/** Report-Vorlage: Schüler - GOSt - Abitur - APO - Anlage 12 (Abiturzeugnis) */
 	SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12(
 			ReportingReportvorlage.SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12,
@@ -146,15 +188,15 @@ public enum HtmlTemplateDefinition {
 					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)),
 
 	/** Report-Vorlage: Schüler - Stammdaten - Liste */
-	SCHUELER_v_STAMMDATEN_LISTE(
-			ReportingReportvorlage.SCHUELER_v_STAMMDATEN_LISTE,
+	SCHUELER_v_STAMMDATENLISTE(
+			ReportingReportvorlage.SCHUELER_v_STAMMDATENLISTE,
 			"de/svws_nrw/module/reporting/",
-			"schueler/stammdaten/SchuelerStammdatenListe.html",
-			"Schueler-Liste",
+			"schueler/stammdaten/SchuelerStammdatenliste.html",
+			"Schueler-Stammdatenliste",
 			"""
-			        <p th:if="${Schueler.isEmpty()}">Schueler-Liste"</p>
+			        <p th:if="${Schueler.isEmpty()}">Schueler-Stammdatenliste"</p>
 			        <th:block th:if="${!Schueler.isEmpty()}" th:each="schueler,iterState : ${Schueler}">
-			            <p th:if="${iterState.first}" th:text="${'Schueler-Liste_' + #dates.format(#dates.createNow(), 'yyyyMMdd-HHmm')}"></p>
+			            <p th:if="${iterState.first}" th:text="${'Schueler-Stammdatenliste_' + #dates.format(#dates.createNow(), 'yyyyMMdd-HHmm')}"></p>
 			        </th:block>
 			""",
 			Arrays.asList(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN));

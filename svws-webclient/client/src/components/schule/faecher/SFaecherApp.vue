@@ -1,5 +1,5 @@
 <template>
-	<template v-if="(fachListeManager().hasDaten() && (activeViewType === ViewType.DEFAULT)) || (activeViewType !== ViewType.DEFAULT)">
+	<div v-if="(manager().hasDaten() && (activeViewType === ViewType.DEFAULT)) || (activeViewType !== ViewType.DEFAULT)" class="page--flex">
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
 				<div class="svws-headline-wrapper">
@@ -23,10 +23,10 @@
 			</div>
 			<div class="svws-ui-header--actions" />
 		</header>
-		<svws-ui-tab-bar :tab-manager>
+		<svws-ui-tab-bar :tab-manager :focus-switching-enabled :focus-help-visible>
 			<router-view />
 		</svws-ui-tab-bar>
-	</template>
+	</div>
 	<div v-else class="app--content--placeholder">
 		<span class="icon i-ri-archive-line" />
 	</div>
@@ -38,13 +38,16 @@
 	import type { FaecherAppProps } from "./SFaecherAppProps";
 	import type { FachDaten } from "@core";
 	import { ViewType } from "@ui";
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<FaecherAppProps>();
 
-	const fach = computed<FachDaten>(() => props.fachListeManager().auswahl());
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
+
+	const fach = computed<FachDaten>(() => props.manager().auswahl());
 
 	const faecherSubline = computed(() => {
-		const auswahlFaecherList = props.fachListeManager().liste.auswahlSorted();
+		const auswahlFaecherList = props.manager().liste.auswahlSorted();
 		if (auswahlFaecherList.size() > 5)
 			return `${auswahlFaecherList.size()} Fächer ausgewählt`;
 		return [...auswahlFaecherList].map(k => k.kuerzel).join(', ');

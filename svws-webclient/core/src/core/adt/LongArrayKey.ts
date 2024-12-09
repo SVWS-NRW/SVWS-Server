@@ -1,6 +1,7 @@
 import type { Comparable } from '../../java/lang/Comparable';
 import { JavaObject } from '../../java/lang/JavaObject';
 import { Class } from '../../java/lang/Class';
+import { Arrays } from '../../java/util/Arrays';
 import { System } from '../../java/lang/System';
 
 export class LongArrayKey extends JavaObject implements Comparable<LongArrayKey> {
@@ -42,29 +43,46 @@ export class LongArrayKey extends JavaObject implements Comparable<LongArrayKey>
 	public constructor(v1 : number, v2 : number, v3 : number);
 
 	/**
+	 * Konstruktor für vier Parameter.
+	 *
+	 * @param v1   Der 1. Parameter
+	 * @param v2   Der 2. Parameter
+	 * @param v3   Der 3. Parameter
+	 * @param v4   Der 4. Parameter
+	 */
+	public constructor(v1 : number, v2 : number, v3 : number, v4 : number);
+
+	/**
 	 * Implementation for method overloads of 'constructor'
 	 */
-	public constructor(__param0 : Array<number> | number, __param1? : number, __param2? : number) {
+	public constructor(__param0 : Array<number> | number, __param1? : number, __param2? : number, __param3? : number) {
 		super();
-		if (((__param0 !== undefined) && Array.isArray(__param0)) && (__param1 === undefined) && (__param2 === undefined)) {
+		if (((__param0 !== undefined) && Array.isArray(__param0)) && (__param1 === undefined) && (__param2 === undefined) && (__param3 === undefined)) {
 			const arrayOfKeys : Array<number> = __param0 as unknown as Array<number>;
 			this._keys = Array(arrayOfKeys.length).fill(0);
 			System.arraycopy(arrayOfKeys, 0, this._keys, 0, arrayOfKeys.length);
 			this._hashcode = this.calculateHashcode();
-		} else if (((__param0 !== undefined) && typeof __param0 === "number") && (__param1 === undefined) && (__param2 === undefined)) {
+		} else if (((__param0 !== undefined) && typeof __param0 === "number") && (__param1 === undefined) && (__param2 === undefined) && (__param3 === undefined)) {
 			const v1 : number = __param0 as number;
 			this._keys = [v1];
 			this._hashcode = this.calculateHashcode();
-		} else if (((__param0 !== undefined) && typeof __param0 === "number") && ((__param1 !== undefined) && typeof __param1 === "number") && (__param2 === undefined)) {
+		} else if (((__param0 !== undefined) && typeof __param0 === "number") && ((__param1 !== undefined) && typeof __param1 === "number") && (__param2 === undefined) && (__param3 === undefined)) {
 			const v1 : number = __param0 as number;
 			const v2 : number = __param1 as number;
 			this._keys = [v1, v2];
 			this._hashcode = this.calculateHashcode();
-		} else if (((__param0 !== undefined) && typeof __param0 === "number") && ((__param1 !== undefined) && typeof __param1 === "number") && ((__param2 !== undefined) && typeof __param2 === "number")) {
+		} else if (((__param0 !== undefined) && typeof __param0 === "number") && ((__param1 !== undefined) && typeof __param1 === "number") && ((__param2 !== undefined) && typeof __param2 === "number") && (__param3 === undefined)) {
 			const v1 : number = __param0 as number;
 			const v2 : number = __param1 as number;
 			const v3 : number = __param2 as number;
 			this._keys = [v1, v2, v3];
+			this._hashcode = this.calculateHashcode();
+		} else if (((__param0 !== undefined) && typeof __param0 === "number") && ((__param1 !== undefined) && typeof __param1 === "number") && ((__param2 !== undefined) && typeof __param2 === "number") && ((__param3 !== undefined) && typeof __param3 === "number")) {
+			const v1 : number = __param0 as number;
+			const v2 : number = __param1 as number;
+			const v3 : number = __param2 as number;
+			const v4 : number = __param3 as number;
+			this._keys = [v1, v2, v3, v4];
 			this._hashcode = this.calculateHashcode();
 		} else throw new Error('invalid method overload');
 	}
@@ -76,6 +94,10 @@ export class LongArrayKey extends JavaObject implements Comparable<LongArrayKey>
 			hashCode = (31 * hashCode) + (value ^ (value >>> 32)) as number;
 		}
 		return hashCode;
+	}
+
+	public toString() : string | null {
+		return Arrays.toString(this._keys);
 	}
 
 	public equals(obj : unknown | null) : boolean {
@@ -111,6 +133,17 @@ export class LongArrayKey extends JavaObject implements Comparable<LongArrayKey>
 				return +1;
 		}
 		return 0;
+	}
+
+	/**
+	 * Liefert den Key-Wert an dem Index.
+	 *
+	 * @param i    der Index
+	 *
+	 * @return den Key-Wert an dem Index.
+	 */
+	public getKeyAt(i : number) : number {
+		return this._keys[i];
 	}
 
 	transpilerCanonicalName(): string {

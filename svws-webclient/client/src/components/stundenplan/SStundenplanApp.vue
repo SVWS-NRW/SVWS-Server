@@ -12,7 +12,7 @@
 			</div>
 			<div class="svws-ui-header--actions" />
 		</header>
-		<svws-ui-tab-bar :tab-manager>
+		<svws-ui-tab-bar :tab-manager :focus-switching-enabled :focus-help-visible>
 			<router-view />
 		</svws-ui-tab-bar>
 	</template>
@@ -25,8 +25,10 @@
 
 	import type { StundenplanAppProps } from "./SStundenplanAppProps";
 	import { DateUtils } from "@core";
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	defineProps<StundenplanAppProps>();
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const wochentag = ['So.', 'Mo.', 'Di.', 'Mi.', 'Do.', 'Fr.', 'Sa.', 'So.' ];
 

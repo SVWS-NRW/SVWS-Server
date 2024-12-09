@@ -2,6 +2,7 @@ package de.svws_nrw.module.reporting.types.gost.kursplanung;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
+import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.Map;
  * <p>Diese Klasse ist als reiner Datentyp konzipiert, d. h. sie hat keine Anbindung an die Datenbank. Sie dient als Super-Klasse
  * einer Proxy-Klasse, welche die Getter in Teilen überschreibt und dort die Daten aus der Datenbank nachlädt.</p>
  */
-public class ReportingGostKursplanungBlockungsergebnis {
+public class ReportingGostKursplanungBlockungsergebnis extends ReportingBaseType {
 
 	/** Das Kalenderjahr, in dem die Abiturprüfung des Blockungsergebnisses stattfindet */
 	protected int abiturjahr;

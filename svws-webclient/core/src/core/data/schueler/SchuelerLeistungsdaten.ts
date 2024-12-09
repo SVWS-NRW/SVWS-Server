@@ -34,9 +34,9 @@ export class SchuelerLeistungsdaten extends JavaObject {
 	public abifach : number | null = null;
 
 	/**
-	 * Gibt an, ob es sich um ein Fach der Zentralen Prüfungen 10 handelt oder um ein Fach der Zentralen Klausuren 10 (G8)
+	 * Gibt an, ob es sich um ein Fach der Zentralen Prüfungen 10 handelt oder um ein Fach der Zentralen Klausuren in der EF (G8)
 	 */
-	public istZP10oderZK10 : boolean = false;
+	public istZP10oderZKEF : boolean = false;
 
 	/**
 	 * Die Schulnummer, sofern es sich um Unterricht an einer kooperierenden Schule handelt, ansonsten NULL
@@ -161,9 +161,9 @@ export class SchuelerLeistungsdaten extends JavaObject {
 		result.kursID = (obj.kursID === undefined) ? null : obj.kursID === null ? null : obj.kursID;
 		result.kursart = (obj.kursart === undefined) ? null : obj.kursart === null ? null : obj.kursart;
 		result.abifach = (obj.abifach === undefined) ? null : obj.abifach === null ? null : obj.abifach;
-		if (obj.istZP10oderZK10 === undefined)
-			throw new Error('invalid json format, missing attribute istZP10oderZK10');
-		result.istZP10oderZK10 = obj.istZP10oderZK10;
+		if (obj.istZP10oderZKEF === undefined)
+			throw new Error('invalid json format, missing attribute istZP10oderZKEF');
+		result.istZP10oderZKEF = obj.istZP10oderZKEF;
 		result.koopSchule = (obj.koopSchule === undefined) ? null : obj.koopSchule === null ? null : obj.koopSchule;
 		result.lehrerID = (obj.lehrerID === undefined) ? null : obj.lehrerID === null ? null : obj.lehrerID;
 		if (obj.wochenstunden === undefined)
@@ -213,7 +213,7 @@ export class SchuelerLeistungsdaten extends JavaObject {
 		result += '"kursID" : ' + ((obj.kursID === null) ? 'null' : obj.kursID.toString()) + ',';
 		result += '"kursart" : ' + ((obj.kursart === null) ? 'null' : JSON.stringify(obj.kursart)) + ',';
 		result += '"abifach" : ' + ((obj.abifach === null) ? 'null' : obj.abifach.toString()) + ',';
-		result += '"istZP10oderZK10" : ' + obj.istZP10oderZK10.toString() + ',';
+		result += '"istZP10oderZKEF" : ' + obj.istZP10oderZKEF.toString() + ',';
 		result += '"koopSchule" : ' + ((obj.koopSchule === null) ? 'null' : obj.koopSchule.toString()) + ',';
 		result += '"lehrerID" : ' + ((obj.lehrerID === null) ? 'null' : obj.lehrerID.toString()) + ',';
 		result += '"wochenstunden" : ' + obj.wochenstunden.toString() + ',';
@@ -257,8 +257,8 @@ export class SchuelerLeistungsdaten extends JavaObject {
 		if (obj.abifach !== undefined) {
 			result += '"abifach" : ' + ((obj.abifach === null) ? 'null' : obj.abifach.toString()) + ',';
 		}
-		if (obj.istZP10oderZK10 !== undefined) {
-			result += '"istZP10oderZK10" : ' + obj.istZP10oderZK10.toString() + ',';
+		if (obj.istZP10oderZKEF !== undefined) {
+			result += '"istZP10oderZKEF" : ' + obj.istZP10oderZKEF.toString() + ',';
 		}
 		if (obj.koopSchule !== undefined) {
 			result += '"koopSchule" : ' + ((obj.koopSchule === null) ? 'null' : obj.koopSchule.toString()) + ',';

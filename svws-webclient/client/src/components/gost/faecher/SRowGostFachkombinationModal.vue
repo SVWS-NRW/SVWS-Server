@@ -1,13 +1,13 @@
 <template>
-	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="showModal" size="small">
+	<slot :open-modal />
+	<svws-ui-modal v-model:show="show" size="small">
 		<template #modalTitle>Hinweistext für die Fachkombination</template>
 		<template #modalContent>
 			<svws-ui-text-input placeholder="Eigener Hinweistext" v-model="value" type="text" @keyup.enter="patch()" />
 			<p class="my-4">Standardtext: <strong>{{ hinweistext }}</strong></p>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="showModal().value = false">Abbrechen</svws-ui-button>
+			<svws-ui-button type="secondary" @click="show = false">Abbrechen</svws-ui-button>
 			<svws-ui-button type="primary" @click="patch()">{{ value ? 'Text speichern' : 'Standard verwenden' }}</svws-ui-button>
 		</template>
 	</svws-ui-modal>
@@ -24,13 +24,12 @@
 		patchFachkombination: (data: Partial<GostJahrgangFachkombination>, id : number) => Promise<void>;
 	}>();
 
-	const _showModal = ref<boolean>(false);
-	const showModal = () => _showModal;
+	const show = ref<boolean>(false);
 
 	const value = ref('');
 
-	const openModal = () => {
-		showModal().value = true;
+	function openModal() {
+		show.value = true;
 	}
 
 	async function patch() {

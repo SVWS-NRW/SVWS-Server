@@ -2,6 +2,7 @@ package de.svws_nrw.module.reporting.proxytypes.schueler.gost.laufbahnplanung;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -48,6 +49,7 @@ import de.svws_nrw.module.reporting.types.gost.laufbahnplanung.ReportingGostLauf
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.schueler.gost.laufbahnplanung.ReportingSchuelerGostLaufbahnplanung;
+import jakarta.ws.rs.core.Response;
 
 /**
  * Proxy-Klasse im Rahmen des Reportings für Daten vom Typ SchuelerGostLaufbahnplanung und erweitert die Klasse {@link ReportingSchuelerGostLaufbahnplanung}.
@@ -66,7 +68,7 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingSchuelerGostLaufbahnplanung}.
 	 *
-	 * @param reportingRepository Repository für die Reporting.
+	 * @param reportingRepository Repository für das Reporting.
 	 * @param reportingSchueler	Schüler, dessen GOSt-Laufbahnplanung gelesen werden soll.
 	 */
 	public ProxyReportingSchuelerGostLaufbahnplanung(final ReportingRepository reportingRepository, final ReportingSchueler reportingSchueler) {
@@ -75,59 +77,88 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 
 		this.reportingRepository = reportingRepository;
 		this.auswahlSchuljahr = this.reportingRepository.auswahlSchuljahresabschnitt().schuljahr();
-		final int auswahlSchuljahrAbschnitt = this.reportingRepository.auswahlSchuljahresabschnitt().abschnitt();
 
-		// Abiturdaten zum Schüler holen. Wenn zum Schüler kein Abiturjahr gefunden wird, dann wird er übergangen. Die Daten sind dann die aus der
-		// Initialisierung.
-		final Abiturdaten abiturdaten;
+		// Im Folgenden werden die GOSt-Laufbahnplanungsdaten geladen. Sollten dabei Fehler auftreten, so wird der Vorgang abgebrochen und die Daten des
+		// Objekts sind die aus der Initialisierung.
+
+		// Abiturdaten zum Schüler ermitteln. Wenn zum Schüler keine Daten in den bereits geladenen Daten gefunden werden, dann wird versucht, die Daten
+		// für alle Schüler diese Daten nachzuladen, sofern sie bei diesen noch fehlen sollten.
 		try {
-			abiturdaten = DBUtilsGostLaufbahn.get(this.reportingRepository.conn(), reportingSchueler.id());
+			if (!this.reportingRepository.mapGostBeratungsdatenAbiturdaten().containsKey(reportingSchueler.id())) {
+				// Es wurde ein Schüler gefunden, für den keine Abiturdaten in der Laufbahnplanung vorhanden sind. Prüfe alle Schüler und lade nach.
+				final List<Long> idsFehlendeSchueler = new ArrayList<>();
+				for (final Long idSchueler : this.reportingRepository.mapSchueler().keySet()) {
+					if (!this.reportingRepository.mapGostBeratungsdatenAbiturdaten().containsKey(idSchueler))
+						idsFehlendeSchueler.add(idSchueler);
+				}
+				this.reportingRepository.mapGostBeratungsdatenAbiturdaten().putAll(
+						new HashMap<>(DBUtilsGostLaufbahn.getFromIDsUndSchuljahresabschnitt(this.reportingRepository.conn(), idsFehlendeSchueler,
+								reportingRepository.aktuellerSchuljahresabschnitt().id())));
+			}
 		} catch (final ApiOperationException e) {
 			ReportingExceptionUtils.putStacktraceInLog(
 					"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der GOSt-Laufbahnplanung eines Schülers (Abitur).", e,
 					reportingRepository.logger(), LogLevel.INFO, 0);
 			return;
 		}
-		if (abiturdaten.abiturjahr <= 0) {
+		final Abiturdaten abiturdaten = this.reportingRepository.mapGostBeratungsdatenAbiturdaten().get(reportingSchueler.id());
+		if ((abiturdaten == null) || (abiturdaten.abiturjahr <= 0)) {
 			return;
 		}
 		super.abiturjahr = abiturdaten.abiturjahr;
 
-		// Weitere Datenobjekte erstellen. Prüfe zunächst, ob alle notwendigen Daten ermittelt werden können und speichere sie zwischen.
-		// Im Fehlerfall wird nur das initialisierte Reporting-Objekt zurückgegeben.
-		final GostLaufbahnplanungBeratungsdaten tempGostLaufbahnplanungBeratungsdaten;
-		final GostJahrgangsdaten tempGostJahrgangsdaten;
-		final GostFaecherManager tempGostFaecherManager;
+		// Jahrgangsdaten und Fächer laden, wenn noch nicht geschehen.
 		try {
-			tempGostLaufbahnplanungBeratungsdaten =
-					new DataGostSchuelerLaufbahnplanungBeratungsdaten(this.reportingRepository.conn()).getFromID(reportingSchueler.id());
-			tempGostJahrgangsdaten = DataGostJahrgangsdaten.getJahrgangsdaten(this.reportingRepository.conn(), super.abiturjahr());
-			tempGostFaecherManager =
-					DBUtilsFaecherGost.getFaecherManager(auswahlSchuljahr, this.reportingRepository.conn(),
-							super.abiturjahr());
+			if (!this.reportingRepository.mapGostAbiturjahrgangDaten().containsKey(super.abiturjahr)) {
+				final GostJahrgangsdaten tempGostJahrgangsdaten =
+						DataGostJahrgangsdaten.getJahrgangsdaten(this.reportingRepository.conn(), super.abiturjahr());
+				this.reportingRepository.mapGostAbiturjahrgangDaten().put(super.abiturjahr(), tempGostJahrgangsdaten);
+			}
+			if (!this.reportingRepository.mapGostAbiturjahrgangFaecher().containsKey(super.abiturjahr())) {
+				final GostFaecherManager tempGostFaecherManager =
+						DBUtilsFaecherGost.getFaecherManager(auswahlSchuljahr, this.reportingRepository.conn(), super.abiturjahr());
+				tempGostFaecherManager.addFachkombinationenAll(DataGostJahrgangFachkombinationen.getFachkombinationen(this.reportingRepository.conn(),
+						super.abiturjahr()));
+				this.reportingRepository.mapGostAbiturjahrgangFaecher().put(super.abiturjahr(), tempGostFaecherManager);
+			}
+		} catch (final ApiOperationException e) {
+			ReportingExceptionUtils.putStacktraceInLog("INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der GOSt-Laufbahnplanung "
+					+ "eines Schülers (Fächer und Jahrgänge).", e, reportingRepository.logger(), LogLevel.INFO, 0);
+			return;
+		}
+		final GostJahrgangsdaten gostJahrgangsdaten = this.reportingRepository.mapGostAbiturjahrgangDaten().get(super.abiturjahr());
+		final GostFaecherManager gostFaecherManager = this.reportingRepository.mapGostAbiturjahrgangFaecher().get(super.abiturjahr());
+		final AbiturdatenManager abiturdatenManager = new AbiturdatenManager(abiturdaten, gostJahrgangsdaten, gostFaecherManager, GostBelegpruefungsArt.GESAMT);
+
+		// Daten der GOSt-Laufbahnplanung ermitteln. Wenn zum Schüler keine Daten in den bereits geladenen Daten gefunden werden, dann wird versucht, die Daten
+		// für alle Schüler diese Daten nachzuladen, sofern sie bei diesen noch fehlen sollten.
+
+		try {
+			if (!this.reportingRepository.mapGostBeratungsdaten().containsKey(reportingSchueler.id())) {
+				// Es wurde ein Schüler gefunden, für den keine Beratungsdaten in der Laufbahnplanung vorhanden sind. Prüfe alle Schüler und lade nach.
+				final List<Long> idsFehlendeSchueler = new ArrayList<>();
+				for (final Long idSchueler : this.reportingRepository.mapSchueler().keySet()) {
+					if (!this.reportingRepository.mapGostBeratungsdaten().containsKey(idSchueler))
+						idsFehlendeSchueler.add(idSchueler);
+				}
+				this.reportingRepository.mapGostBeratungsdaten().putAll(
+						new HashMap<>(new DataGostSchuelerLaufbahnplanungBeratungsdaten(this.reportingRepository.conn()).getMapFromIDs(idsFehlendeSchueler)));
+				if (!this.reportingRepository.mapGostBeratungsdaten().containsKey(reportingSchueler.id()))
+					throw new ApiOperationException(Response.Status.NOT_FOUND);
+			}
 		} catch (final ApiOperationException e) {
 			ReportingExceptionUtils.putStacktraceInLog(
-					"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der GOSt-Laufbahnplanung eines Schülers (Manager).", e,
+					"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der GOSt-Laufbahnplanung eines Schülers (Beratungsdaten).", e,
 					reportingRepository.logger(), LogLevel.INFO, 0);
 			return;
 		}
 
 		// Abfragen erfolgreich. Erstelle die Maps und Manager, welche zum Abiturjahr die notwendigen Informationen liefern, und ergänze sie jeweils bei Bedarf.
-		final GostLaufbahnplanungBeratungsdaten schuelerBeratungsdaten =
-				this.reportingRepository.mapGostBeratungsdaten().computeIfAbsent(reportingSchueler.id(), s -> tempGostLaufbahnplanungBeratungsdaten);
-		final GostJahrgangsdaten gostJahrgangsdaten =
-				this.reportingRepository.mapGostAbiturjahrgangDaten().computeIfAbsent(super.abiturjahr(), a -> tempGostJahrgangsdaten);
-		if (!this.reportingRepository.mapGostAbiturjahrgangFaecher().containsKey(super.abiturjahr())) {
-			tempGostFaecherManager.addFachkombinationenAll(DataGostJahrgangFachkombinationen.getFachkombinationen(this.reportingRepository.conn(),
-					super.abiturjahr()));
-			this.reportingRepository.mapGostAbiturjahrgangFaecher().put(super.abiturjahr(), tempGostFaecherManager);
-		}
-		final GostFaecherManager gostFaecherManager = this.reportingRepository.mapGostAbiturjahrgangFaecher().get(super.abiturjahr());
-		final AbiturdatenManager abiturdatenManager = new AbiturdatenManager(abiturdaten, gostJahrgangsdaten, gostFaecherManager, GostBelegpruefungsArt.GESAMT);
+		final GostLaufbahnplanungBeratungsdaten schuelerBeratungsdaten = this.reportingRepository.mapGostBeratungsdaten().get(reportingSchueler.id());
 
 		// ##### Grunddaten und Summen setzen ###############
-		super.beratungsbogenText = gostJahrgangsdaten.textBeratungsbogen;
-		super.emailText = gostJahrgangsdaten.textMailversand;
+		super.beratungsbogenText = ersetzeNullDurchEmpty(gostJahrgangsdaten.textBeratungsbogen);
+		super.emailText = ersetzeNullDurchEmpty(gostJahrgangsdaten.textMailversand);
 
 		// Halbjahre gemäß Abiturjahrgang und Schuljahresabschnitte setzen.
 		eintragBeratungGostHalbjahreErzeugen();
@@ -144,9 +175,9 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 		}
 
 		eintragBeratungslehrkraefteErzeugen(schuelerBeratungsdaten, gostJahrgangsdaten);
-		super.letzterRuecklaufDatum = schuelerBeratungsdaten.ruecklaufdatum;
-		super.letzteBeratungDatum = schuelerBeratungsdaten.beratungsdatum;
-		super.kommentar = schuelerBeratungsdaten.kommentar;
+		super.letzterRuecklaufDatum = ersetzeNullDurchEmpty(schuelerBeratungsdaten.ruecklaufdatum);
+		super.letzteBeratungDatum = ersetzeNullDurchEmpty(schuelerBeratungsdaten.beratungsdatum);
+		super.kommentar = ersetzeNullDurchEmpty(schuelerBeratungsdaten.kommentar);
 
 		final int[] kurse = abiturdatenManager.getAnrechenbareKurse();
 		final int[] wochenstunden = abiturdatenManager.getWochenstunden();
@@ -198,7 +229,7 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 	/**
 	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.
 	 *
-	 * @return Repository für die Reporting
+	 * @return Repository für das Reporting
 	 */
 	public ReportingRepository reportingRepository() {
 		return reportingRepository;

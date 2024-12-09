@@ -1,11 +1,10 @@
-import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
+import type { RouteLocationNormalized } from "vue-router";
 
 import { BenutzerKompetenz, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanung";
 import type { GostKlausurplanungProblemeProps } from "~/components/gost/klausurplanung/SGostKlausurplanungProblemeProps";
-import { routeApp } from "../../RouteApp";
 import { schulformenGymOb } from "~/router/RouteHelper";
 
 const SGostKlausurplanungProbleme = () => import("~/components/gost/klausurplanung/SGostKlausurplanungProbleme.vue");
@@ -36,6 +35,7 @@ export class RouteGostKlausurplanungProbleme extends RouteNode<any, RouteGostKla
 			gotoKalenderdatum: routeGostKlausurplanung.data.gotoKalenderdatum,
 			gotoRaumzeitTermin: routeGostKlausurplanung.data.gotoRaumzeitTermin,
 			gotoNachschreiber: routeGostKlausurplanung.data.gotoNachschreiber,
+			gotoStundenplan: routeGostKlausurplanung.data.gotoStundenplan,
 		}
 	}
 

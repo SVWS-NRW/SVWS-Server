@@ -31,6 +31,7 @@ stages:
     - build
     - integration-tests
     - analyze
+    - build_snapshot_installer
     - build_installer
     - publish
 
@@ -207,3 +208,29 @@ sonarqube_analysis:
     when: manual
     script:
         - ./gradlew sonarqube -Dsonar.projectKey=svws-server -Dsonar.host.url=$SONAR_URL -Dsonar.login=$SONAR_LOGIN -Dsonar.password=$SONAR_PASSWORD --full-stacktrace
+
+build_snapshot_windows:
+    stage: build_snapshot_installer
+    needs:
+        - job: build
+    only:
+        refs:
+            - dev
+    tags:
+        - windows
+    variables:
+        SECURE_FILES_DOWNLOAD_PATH: '/'
+        SVWS_SIGNTOOL_PATH: 'c:\tmp\signtool\signtool'
+    image: svwsnrw/dockerrunner-win
+    script:
+        - ./deployment/setupVersion.ps1
+        - c:/tmp/download-secure-files-windows-amd64.exe
+        - Add-Content -Path ".\gradle.properties" -Value (Get-Content -Path ".\gradle_secure.properties")
+        - dir /builds/svws/SVWS-Server/
+        - ./gradlew :deployment:windows-installer:doZip
+        - mkdir artifacts_windows
+        - copy .\deployment\windows-installer\build\output\win64-installer* .\artifacts_windows\
+    artifacts:
+        paths:
+            - artifacts_windows/
+    when: manual

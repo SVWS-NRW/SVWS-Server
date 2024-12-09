@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-modal :show="show" size="small">
+	<svws-ui-modal :show @update:show="value => emit('update:show', value)" size="small">
 		<template #modalTitle>Laufbahnplanungsdaten importieren</template>
 		<template #modalContent>
 			<input type="file" accept=".lp" :multiple="multiple" @change="import_file" :disabled="loading">
@@ -13,21 +13,23 @@
 			}}
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="show().value = false">{{ status === true ? 'Schließen':'Abbrechen' }}</svws-ui-button>
+			<svws-ui-button type="secondary" @click="emit('update:show', false)">{{ status === true ? 'Schließen':'Abbrechen' }}</svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>
 
 <script setup lang="ts">
-
-	import type { Ref } from 'vue';
 	import { ref } from 'vue';
 	import type { SimpleOperationResponse } from '../../../../../core/src/core/data/SimpleOperationResponse';
 
 	const props = defineProps<{
-		show: () => Ref<boolean>;
+		show: boolean;
 		importLaufbahnplanung: (data: FormData) => Promise<boolean|SimpleOperationResponse>;
 		multiple?: boolean;
+	}>();
+
+	const emit = defineEmits<{
+		"update:show": [show: boolean];
 	}>();
 
 	const status = ref<boolean | undefined>(undefined);
@@ -45,7 +47,7 @@
 		status.value = typeof res === 'boolean' ? res : res.success;
 		loading.value = false;
 		if (status.value === true)
-			props.show().value = false;
+			emit('update:show', false);
 	}
 
 </script>

@@ -27,6 +27,7 @@
 </template>
 
 <script setup lang="ts">
+	import type { ButtonType } from '../types';
 
 	const props = withDefaults(defineProps<{
 		title?: string;
@@ -37,6 +38,8 @@
 		actionDisabled?: boolean;
 		isLoading?: boolean;
 		isActive?: boolean;
+		type?: ButtonType;
+		size?: 'small' | 'normal' | 'big';
 	}>(), {
 		title: '',
 		description: '',
@@ -46,6 +49,8 @@
 		actionDisabled: false,
 		isLoading: false,
 		isActive: false,
+		type: 'primary',
+		size: 'normal',
 	});
 
 	const emit = defineEmits<{
@@ -72,7 +77,7 @@
 			@apply py-4 px-3 text-balance flex gap-3 text-left w-full rounded-lg;
 
 			.icon {
-				@apply block h-[1.05em] w-[1.05em]; /* TODO: COLORS icon */
+				@apply block h-[1.05em] w-[1.05em];
 			}
 
 			.svws-title {
@@ -92,6 +97,14 @@
 			&:focus-visible {
 				@apply border-ui-brand text-ui-hover;
 				@apply outline-none;
+
+				.icon {
+					@apply icon-ui-brand;
+
+					.dark & {
+						@apply icon-ui-brand--dark;
+					}
+				}
 
 				.svws-description {
 					@apply text-ui-onneutral-hover;

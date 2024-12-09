@@ -1,5 +1,5 @@
 <template>
-	<TransitionRoot appear :show="show().value">
+	<TransitionRoot appear :show>
 		<Dialog class="modal--wrapper" @close="autoCloseModal" @keyup.esc="autoCloseModal">
 			<div class="modal--pageWrapper"
 				:class="{ 'modal--pageWrapper--help': size === 'help', }">
@@ -61,11 +61,10 @@
 <script setup lang='ts'>
 
 	import { Dialog, DialogTitle, DialogDescription, TransitionRoot, TransitionChild } from "@headlessui/vue";
-	import type { Ref } from "vue";
 	import type { Size } from "../../types";
 
 	const props = withDefaults(defineProps<{
-		show: () => Ref<boolean>;
+		show: boolean;
 		size?: Extract<Size, 'small' | 'medium' | 'big'> | 'help';
 		type?: 'default' | 'danger';
 		autoClose?: boolean;
@@ -79,13 +78,17 @@
 		noScroll: false,
 	});
 
+	const emit = defineEmits<{
+		"update:show": [show: boolean];
+	}>();
+
 	function autoCloseModal() {
 		if (props.autoClose)
 			closeModal();
 	}
 
 	function closeModal() {
-		props.show().value = false;
+		emit('update:show', false);
 	}
 
 </script>

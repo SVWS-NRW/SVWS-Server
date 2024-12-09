@@ -113,6 +113,24 @@ public final class DataLehrerStammdaten extends DataManager<Long> {
 	}
 
 	/**
+	 * Gibt die Liste der Stammdaten aller Lehrer zurück, die in der angegebenen Liste enthalten sind.
+	 *
+	 * @param conn	die Datenbank-Verbindung
+	 * @param idsLehrer die Liste der IDs der gewünschten Lehrer
+	 *
+	 * @return Liste der Stammdaten der Lehrer zu den IDs, bei einer leeren ID-Liste werden alle Lehrer zurückgegeben.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public List<LehrerStammdaten> getFromIDs(final DBEntityManager conn, final List<Long> idsLehrer) throws ApiOperationException {
+		if ((idsLehrer == null) || idsLehrer.isEmpty())
+			return new ArrayList<LehrerStammdaten>();
+
+		final List<DTOLehrer> lehrer = conn.queryByKeyList(DTOLehrer.class, idsLehrer);
+		return mapLehrerStammdaten(conn, lehrer);
+	}
+
+	/**
 	 * Gibt die Liste der Stammdaten der Lehrer zurück, die sichtbar sind.
 	 *
 	 * @param conn	die Datenbank-Verbindung
@@ -122,8 +140,27 @@ public final class DataLehrerStammdaten extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public List<LehrerStammdaten> getSichtbareLehrerStammdaten(final DBEntityManager conn) throws ApiOperationException {
-		final var result = new ArrayList<LehrerStammdaten>();
 		final List<DTOLehrer> lehrer = conn.queryList(DTOLehrer.QUERY_BY_SICHTBAR, DTOLehrer.class, true);
+		return mapLehrerStammdaten(conn, lehrer);
+	}
+
+
+	/**
+	 * Gibt die Liste der Stammdaten aller Lehrer zurück.
+	 *
+	 * @param conn	die Datenbank-Verbindung
+	 *
+	 * @return Liste der Stammdaten aller Lehrer
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public List<LehrerStammdaten> getAlleLehrerStammdaten(final DBEntityManager conn) throws ApiOperationException {
+		final List<DTOLehrer> lehrer = conn.queryAll(DTOLehrer.class);
+		return mapLehrerStammdaten(conn, lehrer);
+	}
+
+	private ArrayList<LehrerStammdaten> mapLehrerStammdaten(final DBEntityManager conn, final List<DTOLehrer> lehrer) throws ApiOperationException {
+		final var result = new ArrayList<LehrerStammdaten>();
 		if ((lehrer == null) || lehrer.isEmpty())
 			return result;
 		final Map<Long, DTOLehrerFoto> mapFotos = conn.queryByKeyList(DTOLehrerFoto.class, lehrer.stream().map(l -> l.ID).toList())

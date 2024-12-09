@@ -1,6 +1,14 @@
 <template>
-	<div class="svws-ui-select" :class="{ 'svws-open': showList, 'svws-has-value': hasSelected, 'svws-headless': headless, 'svws-statistik': statistics,
-		'svws-danger': danger, 'svws-disabled': disabled, 'svws-removable': removable, 'svws-readonly': readonly }" v-bind="$attrs">
+	<div class="svws-ui-select" :class="{
+		'svws-open': showList,
+		'svws-has-value': hasSelected,
+		'svws-headless': headless,
+		'svws-statistik': statistics,
+		'svws-danger': danger,
+		'svws-disabled': disabled,
+		'svws-removable': removable,
+		'svws-readonly': readonly,
+	}" v-bind="$attrs">
 		<svws-ui-text-input ref="inputEl"
 			:model-value="dynModelValue"
 			:readonly="!autocomplete || readonly"
@@ -30,7 +38,8 @@
 			@keydown.esc.prevent="toggleListBox"
 			@keydown.space.prevent="onSpace"
 			@keydown.tab="onTab"
-			:focus="autofocus" />
+			:focus="autofocus"
+			:class="{'contentFocusField': focusClass }" />
 		<button v-if="removable && hasSelected && !readonly" role="button" @click.stop="removeItem" class="svws-remove">
 			<span class="icon i-ri-close-line my-1" />
 		</button>
@@ -54,6 +63,7 @@
 	import { computed, nextTick, onMounted, ref, shallowRef, toRaw, watch, useId } from "vue";
 	import SvwsUiDropdownList from "./SvwsUiDropdownList.vue";
 
+	// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 	type SelectDataType = Item | null | undefined;
 
 	const props = withDefaults(defineProps<{
@@ -77,6 +87,7 @@
 		indeterminate?: boolean;
 		highlightItem?: Item;
 		autofocus?: boolean;
+		focusClass?: boolean;
 	}>(), {
 		label: '',
 		title: '',
@@ -94,6 +105,7 @@
 		indeterminate: false,
 		highlightItem: undefined,
 		autofocus: false,
+		focusClass: false,
 	})
 
 	const emit = defineEmits<{
@@ -170,7 +182,7 @@
 
 	const selectedItem = computed<SelectDataType>({
 		get: () => data.value,
-		set: (item) => updateData(item, false)
+		set: (item) => updateData(item, false),
 	});
 
 	const selectedItemList = computed<Set<Item>>(() => {
@@ -313,7 +325,7 @@
 		}
 	}
 
-	const { x, y, strategy } = useFloating( inputEl, refList as Readonly<Ref<MaybeElement<HTMLElement>>>, {
+	const { x, y, strategy } = useFloating(inputEl, refList as Readonly<Ref<MaybeElement<HTMLElement>>>, {
 		placement: 'bottom',
 		middleware: [flip(), shift(), offset(2), size({ apply({rects, elements}) { Object.assign(elements.floating.style, { width: `${rects.reference.width}px` }); } })],
 		whileElementsMounted: autoUpdate,
@@ -343,10 +355,6 @@
 		.svws-dropdown-icon,
 		.svws-remove {
 			@apply inline-flex w-5 h-7 absolute text-headline-md top-1 rounded items-center justify-center;
-
-			svg {
-				@apply my-auto;
-			}
 		}
 
 		.svws-dropdown-icon {
@@ -358,6 +366,7 @@
 			&:hover,
 			&:focus-visible,
 			&:focus-within {
+				@apply grow;
 				& ~ .svws-dropdown-icon {
 					@apply bg-ui-neutral-hover border-ui-neutral-hover;
 					/* TODO: COLORS icon */
@@ -367,7 +376,7 @@
 
 		&.svws-statistik {
 			.svws-dropdown-icon {
-				@apply bg-ui-statistic-weak text-ui-statistic border-transparent;
+				@apply bg-ui-statistic-weak text-ui-statistic border-ui-onstatistic-secondary-hover;
 				/* TODO: COLORS icon */
 			}
 

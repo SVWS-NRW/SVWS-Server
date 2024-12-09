@@ -8,9 +8,7 @@ export default defineConfig({
 	test: {},
 	server: { port: 3000 },
 	plugins: [
-		Vue({
-			include: [/\.vue$/, /\.md$/]
-		}),
+		Vue({ include: [/\.vue$/, /\.md$/] }),
 		Markdown({}),
 		Components({
 			dirs: [
@@ -29,20 +27,20 @@ export default defineConfig({
 			"@comp": resolve(__dirname, '../components/src/index.ts'),
 			"@ui": resolve(__dirname, '../ui/src/index.ts'),
 			"@core": resolve(__dirname, '../core/src/index.ts'),
-		}
+		},
 	},
 	build: {
 		outDir: "build/output",
 		emptyOutDir: true,
 		sourcemap: true,
-		minify: true,
+		minify: false,
 		commonjsOptions: {},
 		rollupOptions: {
 			output: {
-				entryFileNames: `assets/[name].js`,
-				chunkFileNames: `assets/[name].js`,
-				assetFileNames: `assets/[name].[ext]`
-			}
-		}
-	}
+				entryFileNames: 'assets/[name].js',
+				chunkFileNames: 'assets/[name].js',
+				assetFileNames: 'assets/[name].[ext]',
+			},
+		},
+	},
 });

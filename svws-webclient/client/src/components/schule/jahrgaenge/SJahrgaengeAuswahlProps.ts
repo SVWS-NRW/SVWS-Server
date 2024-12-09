@@ -1,9 +1,4 @@
-import type { JahrgangsDaten } from "@core";
-import type { AbschnittAuswahlDaten } from "@comp";
+import type { JahrgangListeManager } from "@core";
+import type { RouteAuswahlListProps } from "~/router/RouteAuswahlNode";
 
-export interface JahrgaengeAuswahlProps {
-	auswahl: () => JahrgangsDaten | undefined;
-	mapKatalogeintraege: () => Map<number, JahrgangsDaten>;
-	gotoEintrag: (eintrag: JahrgangsDaten) => Promise<void>;
-	schuljahresabschnittsauswahl: () => AbschnittAuswahlDaten;
-}
+export type JahrgaengeAuswahlProps = RouteAuswahlListProps<JahrgangListeManager>

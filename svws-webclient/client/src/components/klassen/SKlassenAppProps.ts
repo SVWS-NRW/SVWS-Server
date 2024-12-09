@@ -1,8 +1,6 @@
 import type { KlassenListeManager } from "@core";
-import type { TabManager, ViewType } from "@ui";
+import type { RouteAuswahlProps } from "~/router/RouteAuswahlNode";
 
-export interface KlassenAppProps {
-	klassenListeManager: () => KlassenListeManager;
-	tabManager: () => TabManager;
-	activeViewType: ViewType;
+export interface KlassenAppProps extends RouteAuswahlProps<KlassenListeManager> {
+	// ggf weitere Props
 }

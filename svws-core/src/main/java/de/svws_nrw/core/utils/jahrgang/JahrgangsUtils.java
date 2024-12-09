@@ -2,6 +2,7 @@ package de.svws_nrw.core.utils.jahrgang;
 
 import java.util.Comparator;
 
+import de.svws_nrw.asd.data.schule.SchulformKatalogEintrag;
 import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
@@ -129,6 +130,39 @@ public final class JahrgangsUtils {
 			default:
 				return null;
 		}
+	}
+
+
+	/**
+	 * Bestimmt für die angegebene Schulform, die übergebene Schulgliederung (auch beim Schüler eingetragenen Schulgliederung)
+	 * und den angegebenen Jahrgang die restlichen Jahre an der Schule bis zum Abitur.
+	 *
+	 * @param schulform    die Schulform
+	 * @param gliederung   die Schulgliederung
+	 * @param schuljahr    das Schuljahr
+	 * @param jahrgang     der Jahrgang, für den die restlichen Jahre bestimmt werden sollen
+	 *
+	 * @return die restlichen Jahre oder null
+	 */
+	public static Integer getRestlicheJahreBisAbitur(final @NotNull Schulform schulform, final Schulgliederung gliederung, final int schuljahr, final String jahrgang) {
+		final SchulformKatalogEintrag sf = schulform.daten(schuljahr);
+		if ((sf == null) || (!sf.hatGymOb) || (gliederung == null) || (jahrgang == null))
+			return null;
+		return switch (jahrgang) {
+			// DEFAULT (***) wird hier als G8 interpretiert, Ausnahme Jahrgang 10
+			case "05" -> ((schulform == Schulform.GY) && (gliederung.istG8() || (gliederung == Schulgliederung.DEFAULT))) ? 8 : 9;
+			case "06" -> ((schulform == Schulform.GY) && (gliederung.istG8() || (gliederung == Schulgliederung.DEFAULT))) ? 7 : 8;
+			case "07" -> ((schulform == Schulform.GY) && (gliederung.istG8() || (gliederung == Schulgliederung.DEFAULT))) ? 6 : 7;
+			case "08" -> ((schulform == Schulform.GY) && (gliederung.istG8() || (gliederung == Schulgliederung.DEFAULT))) ? 5 : 6;
+			case "09" -> ((schulform == Schulform.GY) && (gliederung.istG8() || (gliederung == Schulgliederung.DEFAULT))) ? 4 : 5;
+			// Jahrgangsstufe 10 gibt es am GY nur im G9, d. h. DEFAULT (***) kann dort immer als G9 interpretiert werden
+			case "10" -> ((schulform == Schulform.GY) && (gliederung.istG8() || (gliederung == Schulgliederung.DEFAULT))) ? null : 4;
+			// Oberstufenjahrgänge, auch die alten, welche bei aktiven SuS an GY und GE seit 2010 nicht mehr verwendet werden
+			case "EF", "11" -> 3;
+			case "Q1", "12" -> 2;
+			case "Q2", "13" -> 1;
+			default -> null;
+		};
 	}
 
 

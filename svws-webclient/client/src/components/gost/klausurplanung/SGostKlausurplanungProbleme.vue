@@ -6,6 +6,17 @@
 		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" :halbjahr="halbjahr" />
 	</Teleport>
 	<div class="page--content">
+		<svws-ui-action-button title="Kein Stundenplan"
+			description="Es existiert kein Stundenplan für diesen Schuljahresabschnitt."
+			v-if="!kMan().stundenplanManagerGeladenAndExistsByAbschnitt(props.abschnitt!.id)"
+			:is-active="currentAction === 'stundenplan_fehlend'"
+			@click="toggleAction('stundenplan_fehlend')"
+			action-label="Zur Stundenplandefinition"
+			:action-function="gotoStundenplan"
+			icon="i-ri-calendar-event-line">
+			<p>Zur Terminierung von Klausurschienen und Raumplanung muss zwingend ein Stundenplan definiert sein.</p>
+		</svws-ui-action-button>
+
 		<svws-ui-action-button title="Fehlende Klausurvorgaben"
 			:description="vorgaben().size() + ' fehlende Klausurvorgaben gefunden.'"
 			v-if="!vorgaben().isEmpty()"
@@ -108,7 +119,7 @@
 			<svws-ui-table :items="termineOhneDatum()"
 				:columns="addStatusColumn(colsTermine)">
 				<template #cell(status)="{rowData}">
-					<svws-ui-button type="transparent" @click="gotoKalenderdatum(rowData)" title="Datum setzen" size="small" :disabled="!kMan().stundenplanManagerExistsByAbschnitt(props.abschnitt!.id)"><span class="icon i-ri-link" /> datieren</svws-ui-button>
+					<svws-ui-button type="transparent" @click="gotoKalenderdatum(undefined, rowData)" title="Datum setzen" size="small" :disabled="!kMan().stundenplanManagerExistsByAbschnitt(props.abschnitt!.id)"><span class="icon i-ri-link" /> datieren</svws-ui-button>
 				</template>
 				<template #cell(kurse)="{rowData}">
 					{{ terminBezeichnung(rowData) }}
@@ -220,7 +231,7 @@
 				:columns="colsKwKonflikte">
 				<template #cell(kw)="{rowData}">
 					<!-- TODO: kw <=9 um führende 0 ergänzen -->
-					<svws-ui-button type="transparent" @click="gotoKalenderdatum(kMan().terminOrExceptionBySchuelerklausurTermin(rowData.b.getFirst()!).datum!)" title="Springe zu Kalenderwoche" size="small"><span class="icon i-ri-link" /> {{ rowData.a.a }}</svws-ui-button>
+					<svws-ui-button type="transparent" @click="gotoKalenderdatum(kMan().terminOrExceptionBySchuelerklausurTermin(rowData.b.getFirst()!).datum!, undefined)" title="Springe zu Kalenderwoche" size="small"><span class="icon i-ri-link" /> {{ rowData.a.a }}</svws-ui-button>
 				</template>
 				<template #cell(schueler)="{rowData}">
 					{{ kMan().schuelerGetByIdOrException(rowData.a.b)?.nachname }}, {{ kMan().schuelerGetByIdOrException(rowData.a.b)?.vorname }}
@@ -246,7 +257,7 @@
 				:columns="colsKwKonflikte">
 				<template #cell(kw)="{rowData}">
 					<!-- TODO: kw <=9 um führende 0 ergänzen -->
-					<svws-ui-button type="transparent" @click="gotoKalenderdatum(kMan().terminOrExceptionBySchuelerklausurTermin(rowData.b.getFirst()!).datum!)" title="Springe zu Kalenderwoche" size="small"><span class="icon i-ri-link" /> {{ rowData.a.a }}</svws-ui-button>
+					<svws-ui-button type="transparent" @click="gotoKalenderdatum(kMan().terminOrExceptionBySchuelerklausurTermin(rowData.b.getFirst()!).datum!, undefined)" title="Springe zu Kalenderwoche" size="small"><span class="icon i-ri-link" /> {{ rowData.a.a }}</svws-ui-button>
 				</template>
 				<template #cell(schueler)="{rowData}">
 					<span>{{ kMan().schuelerGetByIdOrException(rowData.a.b)?.nachname }}, {{ kMan().schuelerGetByIdOrException(rowData.a.b)?.vorname }}</span>
@@ -261,16 +272,14 @@
 		</svws-ui-action-button>
 	</div>
 
-	<s-gost-klausurplanung-modal :show="returnModalVorgaben()" :text="modalError" :jump-to="gotoVorgaben" jump-to_text="Zu den Klausurvorgaben" abbrechen_text="OK" />
+	<s-gost-klausurplanung-modal v-model:show="modalVorgaben" :text="modalError" :jump-to="gotoVorgaben" jump-to_text="Zu den Klausurvorgaben" abbrechen_text="OK" />
 </template>
 
 <script setup lang="ts">
-
-	import type { Ref } from 'vue';
-	import { ref, onMounted, computed } from 'vue';
+	import { ref, onMounted } from 'vue';
 	import type { DataTableColumn } from "@ui";
 	import type {GostKlausurtermin } from "@core";
-	import { DateUtils, GostHalbjahr, ListUtils, OpenApiError, Schuljahresabschnitt} from "@core";
+	import { DateUtils, GostHalbjahr, ListUtils, OpenApiError} from "@core";
 	import { Fach } from "@core";
 	import type { GostKlausurplanungProblemeProps } from "./SGostKlausurplanungProblemeProps";
 
@@ -290,7 +299,10 @@
 
 	const currentAction = ref<string>('');
 	function toggleAction(action: string) {
-		currentAction.value = action;
+		if (currentAction.value === action)
+			currentAction.value = '';
+		else
+			currentAction.value = action;
 	}
 
 	// Check if component is mounted
@@ -351,9 +363,6 @@
 	}
 
 	const modalVorgaben = ref<boolean>(false);
-	function returnModalVorgaben(): () => Ref<boolean> {
-		return () => modalVorgaben;
-	}
 	const modalError = ref<string | undefined>(undefined);
 
 	async function erzeugeKursklausurenAusVorgabenOrModal() {

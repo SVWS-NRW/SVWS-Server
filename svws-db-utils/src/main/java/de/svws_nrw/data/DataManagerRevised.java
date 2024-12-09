@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBEntityManager;
@@ -531,6 +533,86 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 		}
 
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(deletedCoreDTOs).build();
+	}
+
+
+	/**
+	 * Diese Methode muss überschrieben werden, damit die Methode deleteMultipleAsSimpleResponseList genutzt werden kann.
+	 * Sie ermittelt zu den übergeben Datenbank-DTO den long-Wert der zugehörigen ID.
+	 *
+	 * @param dbDTO   das Datenbank-DTO
+	 *
+	 * @return der long-Wert der ID
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	protected long getLongId(final DatabaseDTO dbDTO) throws ApiOperationException {
+		throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Die Methode getLongId() ist standardmäßig nicht implementiert.");
+	}
+
+
+	/**
+	 * Methode prüft vor dem Löschen, ob alle Vorbedingungen zum Löschen erfüllt sind
+	 * und hält das Ergebnis in der Map mit den SimpleOperationsResponses fest.
+	 * Wenn eine Prüfung durchgeführt werden soll, muss diese Methode überschrieben werden.
+	 * Ansonsten wird davon ausgegangen, dass keine Überprüfung nötig ist.
+	 *
+	 * @param dtos           die Datanbank-DTOs, die gelöscht werden sollen
+	 * @param mapResponses   die Map von den IDs auf die zugehörigen SimpleOperationsResponses
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	protected void checkBeforeDeletionWithSimpleOperationResponse(final List<DatabaseDTO> dtos, final Map<Long, SimpleOperationResponse> mapResponses)
+			throws ApiOperationException {
+		// Methode kann überschrieben werden
+	}
+
+
+	/**
+	 * Entfernt die Datenbank-DTOs mit den angegebenen IDs und gibt eine Liste mit
+	 * SimpleOperationResponse-Objekten zu dem Erfolg der Lösch-Operationen zurück.
+	 *
+	 * Hinweis: Zur Nutzung dieser Methode muss die ID der DTOs vom Typ Long sein
+	 *
+	 * @param ids        die IDs
+	 *
+	 * @return die Liste mit den einzelnen SimpleOperationResponse-Objekten
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public Response deleteMultipleAsSimpleResponseList(final List<ID> ids) throws ApiOperationException {
+		if (ids == null)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Für das Löschen müssen IDs angegeben werden. Null ist nicht zulässig.");
+
+		final Map<Long, SimpleOperationResponse> mapResponses = new HashMap<>();
+		if (!ids.isEmpty()) {
+			// DTOs mit Hilfe der IDs ermitteln
+			final List<DatabaseDTO> dbDTOs = conn.queryByKeyList(classDatabaseDTO, ids);
+			if (dbDTOs.isEmpty())
+				throw new ApiOperationException(Status.NOT_FOUND, "Es wurden keine Entitäten zu den IDs gefunden.");
+			// Erstelle die SimpleOperationResponse-Objekte und füge sie in die Map ein.
+			for (final DatabaseDTO dbDTO : dbDTOs) {
+				final Long id = getLongId(dbDTO);
+				final SimpleOperationResponse operationResponse = new SimpleOperationResponse();
+				operationResponse.id = id;
+				operationResponse.success = true;
+				mapResponses.put(id, operationResponse);
+			}
+			// Führe die Prüfung durch, ob die Datenbank-DTOs entfernt werden dürfen
+			checkBeforeDeletionWithSimpleOperationResponse(dbDTOs, mapResponses);
+			for (final DatabaseDTO dbDTO : dbDTOs) {
+				final SimpleOperationResponse operationResponse = mapResponses.get(getLongId(dbDTO));
+				if (operationResponse.success) {
+					try {
+						deleteDatabaseDTO(dbDTO);
+					} catch (final Exception e) {
+						operationResponse.success = false;
+						operationResponse.log.add(e.getMessage());
+					}
+				}
+			}
+		}
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(mapResponses.values()).build();
 	}
 
 

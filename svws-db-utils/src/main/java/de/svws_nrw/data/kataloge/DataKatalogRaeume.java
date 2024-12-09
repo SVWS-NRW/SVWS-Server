@@ -97,7 +97,12 @@ public final class DataKatalogRaeume extends DataManager<Long> {
 				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
 					throw new ApiOperationException(Status.BAD_REQUEST);
 			}),
-			Map.entry("kuerzel", (conn, dto, value, map) -> dto.Kuerzel = JSONMapper.convertToString(value, false, false, 20)),
+			Map.entry("kuerzel", (conn, dto, value, map) -> {
+				dto.Kuerzel = JSONMapper.convertToString(value, false, false, 20).trim();
+				if ("".equals(dto.Kuerzel))
+					throw new ApiOperationException(Status.BAD_REQUEST,
+							"Das Kürzel darf nicht nur aus Leerzeichen bestehen (diese werden am Anfang und am Ende des Kürzels automatisch entfernt.");
+			}),
 			Map.entry("beschreibung", (conn, dto, value, map) -> dto.Beschreibung = JSONMapper.convertToString(value, false, true, 1000)),
 			Map.entry("groesse", (conn, dto, value, map) -> dto.Groesse = JSONMapper.convertToInteger(value, false)));
 

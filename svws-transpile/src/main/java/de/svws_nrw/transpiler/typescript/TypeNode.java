@@ -337,6 +337,39 @@ public class TypeNode {
 	}
 
 
+	/**
+	 * Bestimmt den QualifiedName der Klasse, sofern es dich um eine Klasse handelt.
+	 *
+	 * @return der QualifiedName oder null
+	 */
+	public String getQualifiedName() {
+		if (node != null) {
+			if (node instanceof final IdentifierTree ident) {
+				final ExpressionType type = plugin.getTranspiler().getExpressionType(ident);
+				if (type == null)
+					throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the identifier " + ident.getName().toString());
+				if (type instanceof final ExpressionClassType classType)
+					return classType.getFullQualifiedName();
+				return null;
+			} else if (node instanceof final AnnotatedTypeTree att) {
+				if (att.getUnderlyingType() instanceof ArrayTypeTree)
+					return null;
+				final ExpressionType type = plugin.getTranspiler().getExpressionType(att.getUnderlyingType());
+				if (type == null)
+					throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the annotated type " + att.toString());
+				if (type instanceof final ExpressionClassType classType)
+					return classType.getFullQualifiedName();
+				return null;
+			}
+			if (node instanceof MemberSelectTree)
+				throw new TranspilerException("Transpiler Error: MemberSelectTree nodes not yet supported in Method getQualifiedName()");
+		} else if ((typeMirror != null) && (typeMirror instanceof final DeclaredType dt) && (dt.asElement() instanceof final TypeElement te)) {
+			return te.getQualifiedName().toString();
+		}
+		return null;
+	}
+
+
 
 	/**
 	 * Returns whether the type is a Java collection type (e.g. java.util.ArrayList).

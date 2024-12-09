@@ -7,7 +7,6 @@ import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/
 
 import type { GostKlausurplanungNachschreiberProps } from "~/components/gost/klausurplanung/SGostKlausurplanungNachschreiberProps";
 import { routeError } from "~/router/error/RouteError";
-import { routeApp } from "../../RouteApp";
 import { api } from "~/router/Api";
 import { schulformenGymOb } from "~/router/RouteHelper";
 

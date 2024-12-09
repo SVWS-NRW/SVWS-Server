@@ -111,6 +111,7 @@ public class Tabelle_EigeneSchule_Faecher extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Unterichtssprache */
 	public SchemaTabelleSpalte col_Unterichtssprache = add("Unterichtssprache", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 			.setDefault("D")
+			.setJavaName("Unterrichtssprache")
 			.setJavaComment("Einstelliges Kürzel der Unterrichtssprache (E, F, …)");
 
 	/** Die Definition der Tabellenspalte IstSchriftlich */

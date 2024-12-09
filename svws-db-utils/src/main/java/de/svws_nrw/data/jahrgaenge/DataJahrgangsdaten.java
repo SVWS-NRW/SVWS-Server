@@ -9,17 +9,21 @@ import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.ObjLongConsumer;
+import java.util.stream.Collectors;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
@@ -105,10 +109,10 @@ public final class DataJahrgangsdaten extends DataManager<Long> {
 	private static final Map<String, DataBasicMapper<DTOJahrgang>> patchMappings = Map.ofEntries(
 			Map.entry("id", (conn, dto, value, map) -> {
 				final Long patch_id = JSONMapper.convertToLong(value, true);
-				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+				if ((patch_id == null) || (patch_id != dto.ID))
 					throw new ApiOperationException(Status.BAD_REQUEST);
 			}),
-			Map.entry("kuerzel", (conn, dto, value, map) -> dto.InternKrz = JSONMapper.convertToString(value, true, true, 20)),
+			Map.entry("kuerzel", (conn, dto, value, map) -> dto.InternKrz = JSONMapper.convertToString(value, false, false, 20)),
 			Map.entry("kuerzelStatistik", (conn, dto, value, map) -> {
 				final String strJahrgang = JSONMapper.convertToString(value, true, false, 2);
 				final Jahrgaenge jahrgang = (strJahrgang == null) ? null : Jahrgaenge.data().getWertBySchluessel(strJahrgang);
@@ -181,8 +185,6 @@ public final class DataJahrgangsdaten extends DataManager<Long> {
 	 * @return true, falls der Jahrgang sicher gelöscht werden kann und ansonsten false
 	 */
 	private boolean isDeletable(final Long id) {
-		if (id == null) {
-		}
 		// TODO Prüfe, ob der Jahrgang sicher (true) gelöscht werden kann. Existiert auch nur eine Referenz, so muss dieser erhalten bleiben (false)
 		return false;
 	}
@@ -217,6 +219,33 @@ public final class DataJahrgangsdaten extends DataManager<Long> {
 			if (!isDeletable(id))
 				throw new ApiOperationException(Status.CONFLICT, "Der Jahrgang kann nicht sicher gelöscht werden.");
 		return super.deleteBasicMultiple(ids, DTOJahrgang.class, dtoMapper);
+	}
+
+
+	/**
+	 * Bestimmt zu den übergebenen Klassen die jeweils zugehörigen Jahrgänge aus der Datenbank und gib eine
+	 * Map mit der Zuordnung zurück.
+	 *
+	 * @param conn      die aktuelle Datenbank-Verbindung
+	 * @param klassen   die Klassen
+	 *
+	 * @return die Zuordnung der Jahrgänge zu den Klassen-IDs
+	 */
+	public static Map<Long, DTOJahrgang> getDTOMapByKlassen(final @NotNull DBEntityManager conn, final @NotNull List<DTOKlassen> klassen) {
+		if (klassen.isEmpty())
+			return new HashMap<>();
+		final List<Long> idsJahrgaenge = klassen.stream().filter(kl -> (kl.Jahrgang_ID != null)).map(kl -> kl.Jahrgang_ID).toList();
+		final Map<Long, DTOJahrgang> mapJahrgaenge = idsJahrgaenge.isEmpty() ? new HashMap<>() : conn.queryByKeyList(DTOJahrgang.class, idsJahrgaenge)
+				.stream().collect(Collectors.toMap(j -> j.ID, j -> j));
+		final Map<Long, DTOJahrgang> mapJahrgaengeByKlassenId = new HashMap<>();
+		for (final DTOKlassen klasse : klassen) {
+			if (klasse.Jahrgang_ID == null)
+				continue;
+			final DTOJahrgang jg = mapJahrgaenge.get(klasse.Jahrgang_ID);
+			if (jg != null)
+				mapJahrgaengeByKlassenId.put(klasse.ID, jg);
+		}
+		return mapJahrgaengeByKlassenId;
 	}
 
 }

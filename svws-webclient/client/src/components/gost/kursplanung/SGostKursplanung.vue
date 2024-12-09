@@ -1,5 +1,5 @@
 <template>
-	<div class="page--content page--content--full page--content--gost-grid" :class="{'svws-blockungstabelle-hidden': blockungstabelleHidden()}">
+	<div class="page--content page--content--full page--content--gost-grid" :class="{'svws-blockungstabelle-hidden': (blockungstabelleHidden() === 'alles'), 'svws-blockungstabelle-schienen-hidden': (blockungstabelleHidden() === 'schienen')}">
 		<Teleport to=".svws-ui-header--actions" v-if="isMounted">
 			<svws-ui-button-select v-if="hatBlockung" type="secondary" :dropdown-actions="dropdownList">
 				<template #icon> <svws-ui-spinner spinning v-if="apiStatus.pending" /> <span class="icon-sm i-ri-printer-line" v-else /> </template>
@@ -9,18 +9,7 @@
 		<template v-if="hatBlockung">
 			<Teleport to=".svws-sub-nav-target" v-if="isMounted">
 				<svws-ui-sub-nav>
-					<svws-ui-button type="transparent" @click="toggleBlockungstabelle">
-						<template v-if="blockungstabelleHidden()">
-							<span class="icon-sm i-ri-menu-unfold-line" />
-							Tabelle einblenden
-						</template>
-						<template v-else>
-							<span class="icon-sm i-ri-menu-fold-line" />
-							Tabelle ausblenden
-						</template>
-					</svws-ui-button>
-					<div v-if="hatUpdateKompetenz" class="flex gap-0.5 items-center leading-none">
-						<div class="border-l border-black/10 dark:border-white/10 ml-6 h-5 w-7" />
+					<div v-if="hatUpdateKompetenz" class="flex gap-0.5 items-center leading-none ml-2">
 						<div class="text-button font-normal mr-1 -mt-px">Ergebnis:</div>
 						<svws-ui-button type="transparent" @click.stop="ergebnisAbleiten()" title="Eine neue Blockung auf Grundlage dieses Ergebnisses erstellen." class="text-black dark:text-white">
 							<span class="icon-sm i-ri-file-copy-line" /> Ableiten
@@ -40,8 +29,6 @@
 								<span class="icon-sm i-ri-loop-left-line" /> Synchronisieren
 							</svws-ui-button>
 						</s-gost-kursplanung-kursansicht-modal-ergebnis-synchronisieren>
-					</div>
-					<div v-if="hatUpdateKompetenz" class="flex gap-0.5 items-center leading-none">
 						<div class="border-l border-black/10 dark:border-white/10 ml-6 h-5 w-7" />
 						<div class="text-button font-normal mr-1 -mt-px">Kurse:</div>
 						<s-gost-kursplanung-kursansicht-modal-irrlaeufer v-if="props.getErgebnismanager().getOfSchuelerMapIDzuUngueltigeKurse().size()" :update-kurs-schueler-zuordnungen :get-ergebnismanager v-slot="{ openModal }">
@@ -86,7 +73,7 @@
 							</div>
 						</template>
 					</div>
-					<div class="flex gap-0.5 items-center leading-none">
+					<div class="flex gap-0.5 items-center leading-none" :class="{ 'ml-2': !hatUpdateKompetenz }">
 						<div class="border-l border-black/10 dark:border-white/10 ml-6 h-5 w-7" />
 						<div class="text-button font-normal mr-1 -mt-px">Regeln:</div>
 						<svws-ui-button @click="onToggle" size="small" type="transparent" title="Alle Regeln anzeigen" :class="{'mr-2': regelzahl}">
@@ -96,11 +83,11 @@
 				</svws-ui-sub-nav>
 			</Teleport>
 			<s-gost-kursplanung-kursansicht :zeige-schienenbezeichnungen :set-zeige-schienenbezeichnungen
-				:halbjahr :faecher-manager :hat-ergebnis :ergebnis-hochschreiben :api-status :toggle-blockungstabelle
+				:halbjahr :faecher-manager :hat-ergebnis :ergebnis-hochschreiben :api-status :set-blockungstabelle-hidden
 				:get-datenmanager :get-kursauswahl :set-kursauswahl :get-ergebnismanager :map-fachwahl-statistik :map-lehrer :schueler-filter :kurssortierung
 				:regeln-update :update-kurs-schienen-zuordnung :patch-kurs :add-kurs :remove-kurse :add-kurs-lehrer
 				:patch-schiene :add-schiene :remove-schiene :remove-kurs-lehrer :ergebnis-aktivieren :existiert-schuljahresabschnitt
-				:blockungstabelle-visible="!blockungstabelleHidden()" :add-schiene-kurs :remove-schiene-kurs :combine-kurs :split-kurs :hat-update-kompetenz />
+				:blockungstabelle-hidden :add-schiene-kurs :remove-schiene-kurs :combine-kurs :split-kurs :hat-update-kompetenz />
 			<router-view name="gost_kursplanung_schueler_auswahl" />
 			<router-view />
 			<Teleport to="body">
@@ -145,11 +132,9 @@
 
 	const props = defineProps<GostKursplanungProps>();
 
-	const hatUpdateKompetenz = computed<boolean>(() => {
-		return props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN)
-			|| (props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)
-				&& props.benutzerKompetenzenAbiturjahrgaenge.has(props.jahrgangsdaten().abiturjahr))
-	});
+	const hatUpdateKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN)
+		|| (props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)
+			&& props.benutzerKompetenzenAbiturjahrgaenge.has(props.jahrgangsdaten().abiturjahr)));
 
 	const aktuellesHalbjahr = computed<GostHalbjahr | null>(() => GostHalbjahr.fromJahrgangUndHalbjahr(props.jahrgangsdaten().jahrgang, props.jahrgangsdaten().halbjahr));
 
@@ -175,10 +160,6 @@
 
 	function onToggle() {
 		return collapsed.value = !collapsed.value;
-	}
-
-	function toggleBlockungstabelle() {
-		return props.setBlockungstabelleHidden(!props.blockungstabelleHidden());
 	}
 
 	const dropdownList = [
@@ -306,15 +287,16 @@
 	.page--content {
 		@apply grid overflow-y-hidden overflow-x-auto h-full pb-3 pt-6 lg:gap-x-12;
 		grid-auto-rows: 100%;
-		grid-template-columns: minmax(min-content, 1.5fr) minmax(18rem, 0.4fr) 1fr;
+		grid-template-columns: max-content minmax(18rem, 0.4fr) 1fr;
 		grid-auto-columns: max-content;
 
-		&.svws-blockungstabelle-hidden {
-			grid-template-columns: 0 minmax(20rem, 0.15fr) 1fr;
+		&.svws-blockungstabelle-schienen-hidden {
+			grid-template-columns: min-content minmax(20rem, 0.15fr) 1fr;
+		}
 
-			.s-gost-kursplanung-schueler-auswahl {
-				@apply -ml-8 lg:-ml-12;
-			}
+		&.svws-blockungstabelle-hidden {
+			grid-template-columns: max-content minmax(20rem, 0.15fr) 1fr;
+
 		}
 	}
 

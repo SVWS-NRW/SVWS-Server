@@ -1,11 +1,11 @@
 <template>
 	<div>
 		<svws-ui-button @click="toggle_modal" size="small" type="transparent" class="hover--danger">
-			<span class="icon i-ri-delete-bin-line" />
+			<span class="icon-sm i-ri-delete-bin-line" />
 			<template v-if="hatFesteWahlen">Nicht feste Schüler-Fachwahlen zurücksetzen</template>
 			<template v-else>Alle Schüler-Fachwahlen zurücksetzen</template>
 		</svws-ui-button>
-		<svws-ui-modal :show="showModal" size="medium" type="danger">
+		<svws-ui-modal v-model:show="show" size="medium" type="danger">
 			<template #modalTitle>
 				<template v-if="hatFesteWahlen">Nicht feste Fachwahlen aller Schüler im Abiturjahrgang auf die Vorlage zurücksetzen</template>
 				<template v-else>Die Fachwahlen aller Schüler im Abiturjahrgang auf die Vorlage zurücksetzen</template>
@@ -44,15 +44,14 @@
 		return (jg === "Q1") || (jg === "Q2") || ((jg === "EF") && (props.gostJahrgangsdaten().istBlockungFestgelegt[0]));
 	});
 
-	const _showModal = ref<boolean>(false);
-	const showModal = () => _showModal;
+	const show = ref<boolean>(false);
 
 	function toggle_modal() {
-		showModal().value = !showModal().value;
+		show.value = !show.value;
 	}
 
 	async function reset_fachwahlen() {
-		showModal().value = false;
+		show.value = false;
 		await props.resetFachwahlen();
 	}
 

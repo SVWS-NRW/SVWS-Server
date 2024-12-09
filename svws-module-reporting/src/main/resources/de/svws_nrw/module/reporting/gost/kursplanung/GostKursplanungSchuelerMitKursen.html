@@ -4,7 +4,7 @@
 		<meta name="viewport" content="width=device-width" />
 		<title>Schüler mit Kursen</title>
 		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-pdf.css}" href="../../css/reporting-pdf.css" />
-		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-seite-quer-koepfe-fuesse.css}" href="../../css/reporting-seite-quer-koepfe-fuesse.css" />
+		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-A4-quer-koepfe-fuesse.css}" href="../../css/reporting-A4-quer-koepfe-fuesse.css" />
 		<link rel="stylesheet" th:href="@{css/reporting-styles.css}" href="../../css/reporting-styles.css" />
 		<link rel="stylesheet" th:href="@{gost/kursplanung/GostKursplanungSchuelerMitKursen.css}" href="../../gost/kursplanung/GostKursplanungSchuelerMitKursen.css" />
 	</head>
@@ -38,8 +38,8 @@
 					schriftgroesse = ${kursanzahl <= 12 ? '7.5pt' : '6.5pt'}
 				">
 				<colgroup>
-					<col th:each="i : ${#numbers.sequence(1, spaltenzahl)}" th:style="${'width: ' + spaltenbreite + '%;'}" />
-					<col th:if="${restspaltenbreite > 0}" th:style="${'width: ' + restspaltenbreite + '%;'}" />
+					<col th:each="i : ${#numbers.sequence(1, spaltenzahl)}" th:style="|width: ${spaltenbreite}%;|" />
+					<col th:if="${restspaltenbreite > 0}" th:style="|width: ${restspaltenbreite}%|" />
 				</colgroup>
 				<tr style="height: 5px;">
 					<td></td>

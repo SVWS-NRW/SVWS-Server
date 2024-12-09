@@ -43,7 +43,6 @@ public final class JsonReader {
 	 *
 	 * @throws IOException   falls das Dateisystem für die Ressource nicht erstellt werden kann
 	 */
-	@SuppressWarnings("resource")
 	private static Path getJarPath(final String jarPath, final String jarResource) throws IOException {
 		FileSystem result = mapFilesystems.get(jarPath);
 		if (result == null) {

@@ -1,198 +1,134 @@
 package de.svws_nrw.data.faecher;
 
-import java.io.InputStream;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.function.ObjLongConsumer;
-import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.fach.FachDaten;
-import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.asd.types.fach.Fach;
-import de.svws_nrw.data.DTOMapper;
-import de.svws_nrw.data.DataBasicMapper;
-import de.svws_nrw.data.DataManager;
+import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.utils.ApiOperationException;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
+
+
 /**
- * Diese Klasse erweitert den abstrakten {@link DataManager} für den
+ * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für das
  * Core-DTO {@link FachDaten}.
  */
-public final class DataFachdaten extends DataManager<Long> {
+public final class DataFachdaten extends DataManagerRevised<Long, DTOFach, FachDaten> {
 
 	/**
-	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link FachDaten}.
+	 * Erstellt einen neuen {@link DataManagerRevised} für das Core-DTO {@link FachDaten}.
 	 *
 	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
 	 */
 	public DataFachdaten(final DBEntityManager conn) {
 		super(conn);
-	}
-
-	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOFach} in einen Core-DTO {@link FachDaten}.
-	 */
-	private final DTOMapper<DTOFach, FachDaten> dtoMapperFach = (final DTOFach f) -> {
-		final FachDaten daten = new FachDaten();
-		daten.id = f.ID;
-		daten.kuerzel = (f.Kuerzel == null) ? "" : f.Kuerzel;
-		daten.kuerzelStatistik = f.StatistikKuerzel;
-		daten.bezeichnung = (f.Bezeichnung == null) ? "" : f.Bezeichnung;
-		daten.istOberstufenFach = f.IstOberstufenFach;
-		daten.istPruefungsordnungsRelevant = f.IstPruefungsordnungsRelevant;
-		daten.sortierung = f.SortierungAllg;
-		daten.istSichtbar = f.Sichtbar;
-		daten.aufgabenfeld = f.Aufgabenfeld;
-		daten.bilingualeSprache = f.Unterichtssprache;
-		daten.istNachpruefungErlaubt = f.IstNachpruefungErlaubt;
-		daten.aufZeugnis = f.AufZeugnis;
-		daten.bezeichnungZeugnis = (f.BezeichnungZeugnis == null) ? "" : f.BezeichnungZeugnis;
-		daten.bezeichnungUeberweisungszeugnis = (f.BezeichnungUeberweisungsZeugnis == null) ? "" : f.BezeichnungUeberweisungsZeugnis;
-		daten.maxZeichenInFachbemerkungen = (f.MaxBemZeichen == null) ? Integer.MAX_VALUE : f.MaxBemZeichen;
-		daten.istSchriftlichZK = f.IstSchriftlichZK;
-		daten.istSchriftlichBA = f.IstSchriftlichBA;
-		daten.holeAusAltenLernabschnitten = f.AbgeschlFaecherHolen;
-		daten.istFHRFach = ((f.GewichtungFHR != null) && (f.GewichtungFHR != 0));
-		return daten;
-	};
-
-	@Override
-	public Response getAll() {
-		throw new UnsupportedOperationException();
+		setAttributesNotPatchable("ID");
+		setAttributesRequiredOnCreation("kuerzel", "kuerzelStatistik");
 	}
 
 	@Override
-	public Response getList() {
-		throw new UnsupportedOperationException();
+	protected void initDTO(final DTOFach dto, final Long newId, final Map<String, Object> initAttributes) throws ApiOperationException {
+		dto.ID = newId;
 	}
 
 	@Override
-	public Response get(final Long id) throws ApiOperationException {
-		if (id == null)
-			throw new ApiOperationException(Status.NOT_FOUND);
+	public FachDaten getById(final Long id) throws ApiOperationException {
 		final DTOFach fach = conn.queryByKey(DTOFach.class, id);
 		if (fach == null)
-			throw new ApiOperationException(Status.NOT_FOUND);
-		final FachDaten daten = dtoMapperFach.apply(fach);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine FachDaten mit der ID %d gefunden".formatted(id));
+
+		return map(fach);
 	}
-
-	/**
-	 * Erstellt eine Map, die alle Fächer der DB als Fachdaten-Objekte zur Fach-ID enthält.
-	 *
-	 * @return Map der Fachdaten zur Fach-ID.
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public Map<Long, FachDaten> getFaecherdaten() throws ApiOperationException {
-		return getFaecherdatenFromList(conn.queryAll(DTOFach.class));
-	}
-
-	/**
-	 * Erstellt eine Map auf Basis einer Liste mit Fach-DTO, die alle Fächer als Fachdaten-Objekte zur Fach-ID enthält.
-	 *
-	 * @param listFaecher Liste der Fach-DTOs, aus denen die Map erstellt werden soll.
-	 *
-	 * @return Map der Fachdaten zur Fach-ID.
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public Map<Long, FachDaten> getFaecherdatenFromList(final List<DTOFach> listFaecher) throws ApiOperationException {
-		final Map<Long, FachDaten> mapFaecher = new HashMap<>();
-		if ((listFaecher != null) && !listFaecher.isEmpty()) {
-			for (final DTOFach f : listFaecher) {
-				if (f != null)
-					mapFaecher.put(f.ID, dtoMapperFach.apply(f));
-			}
-		}
-		return mapFaecher;
-	}
-
-	/**
-	 * Erstellt eine Map, die die GOSt-Daten aller Fach-Einträge der DB als GostFach-Objekte zur Fach-ID enthält.
-	 *
-	 * @param schuljahr   das Schuljahr, für welches die Daten bestimmt werden sollen
-	 *
-	 * @return Map der GOSt-Daten aller Fächer der DB zur Fach-ID.
-	 */
-	public Map<Long, GostFach> getFaecherGostdaten(final int schuljahr) {
-		final Map<Long, DTOFach> faecher = conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
-		return faecher.values().stream().collect(Collectors.toMap(f -> f.ID, f -> DBUtilsFaecherGost.mapFromDTOFach(schuljahr, f, faecher)));
-	}
-
-
-	private static final Map<String, DataBasicMapper<DTOFach>> patchMappings = Map.ofEntries(
-			Map.entry("id", (conn, dto, value, map) -> {
-				final Long patch_id = JSONMapper.convertToLong(value, true);
-				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-					throw new ApiOperationException(Status.BAD_REQUEST);
-			}),
-			Map.entry("kuerzel", (conn, dto, value, map) -> dto.Kuerzel = JSONMapper.convertToString(value, false, false, 20)),
-			Map.entry("kuerzelStatistik", (conn, dto, value, map) -> {
-				final String fachKuerzel = JSONMapper.convertToString(value, false, false, 2);
-				final Fach f = Fach.data().getWertBySchluessel(fachKuerzel);
-				if (f == null)
-					throw new ApiOperationException(Status.BAD_REQUEST);
-				dto.StatistikKuerzel = fachKuerzel;
-			}),
-			Map.entry("bezeichnung", (conn, dto, value, map) -> dto.Bezeichnung = JSONMapper.convertToString(value, false, true, 255)),
-			Map.entry("istPruefungsordnungsRelevant", (conn, dto, value, map) -> dto.IstPruefungsordnungsRelevant = JSONMapper.convertToBoolean(value, false)),
-			Map.entry("istOberstufenFach", (conn, dto, value, map) -> dto.IstOberstufenFach = JSONMapper.convertToBoolean(value, false)),
-			Map.entry("sortierung", (conn, dto, value, map) -> dto.SortierungAllg = JSONMapper.convertToIntegerInRange(value, false, 0, Integer.MAX_VALUE)),
-			Map.entry("istSichtbar", (conn, dto, value, map) -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false)),
-			Map.entry("aufgabenfeld", (conn, dto, value, map) -> dto.Aufgabenfeld = JSONMapper.convertToString(value, true, true, 2)),
-			Map.entry("bilingualeSprache", (conn, dto, value, map) -> dto.Unterichtssprache = JSONMapper.convertToString(value, true, true, 1)),
-			Map.entry("istNachpruefungErlaubt", (conn, dto, value, map) -> dto.IstNachpruefungErlaubt = JSONMapper.convertToBoolean(value, false)),
-			Map.entry("aufZeugnis", (conn, dto, value, map) -> dto.AufZeugnis = JSONMapper.convertToBoolean(value, false)),
-			Map.entry("bezeichnungZeugnis", (conn, dto, value, map) -> dto.BezeichnungZeugnis = JSONMapper.convertToString(value, false, true, 255)),
-			Map.entry("bezeichnungUeberweisungszeugnis",
-					(conn, dto, value, map) -> dto.BezeichnungUeberweisungsZeugnis = JSONMapper.convertToString(value, false, true, 255)),
-			Map.entry("maxZeichenInFachbemerkungen", (conn, dto, value, map) -> dto.MaxBemZeichen = JSONMapper.convertToIntegerInRange(value, false, 1, null)),
-			Map.entry("istSchriftlichZK", (conn, dto, value, map) -> dto.IstSchriftlichZK = JSONMapper.convertToBoolean(value, false)),
-			Map.entry("istSchriftlichBA", (conn, dto, value, map) -> dto.IstSchriftlichBA = JSONMapper.convertToBoolean(value, false)),
-			Map.entry("holeAusAltenLernabschnitten", (conn, dto, value, map) -> dto.AbgeschlFaecherHolen = JSONMapper.convertToBoolean(value, false)),
-			Map.entry("istFHRFach", (conn, dto, value, map) -> dto.GewichtungFHR = Boolean.TRUE.equals(JSONMapper.convertToBoolean(value, false)) ? 1 : 0));
 
 	@Override
-	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
-		return super.patchBasic(id, is, DTOFach.class, patchMappings);
+	protected FachDaten map(final DTOFach dtoFach) throws ApiOperationException {
+		final FachDaten daten = new FachDaten();
+		daten.id = dtoFach.ID;
+		daten.kuerzel = (dtoFach.Kuerzel == null) ? "" : dtoFach.Kuerzel;
+		daten.kuerzelStatistik = dtoFach.StatistikKuerzel;
+		daten.bezeichnung = (dtoFach.Bezeichnung == null) ? "" : dtoFach.Bezeichnung;
+		daten.sortierung = dtoFach.SortierungAllg;
+		daten.istOberstufenFach = dtoFach.IstOberstufenFach;
+		daten.istPruefungsordnungsRelevant = dtoFach.IstPruefungsordnungsRelevant;
+		daten.istSichtbar = dtoFach.Sichtbar;
+		daten.aufgabenfeld = dtoFach.Aufgabenfeld;
+		daten.bilingualeSprache = dtoFach.Unterrichtssprache;
+		daten.istNachpruefungErlaubt = dtoFach.IstNachpruefungErlaubt;
+		daten.aufZeugnis = dtoFach.AufZeugnis;
+		daten.bezeichnungZeugnis = (dtoFach.BezeichnungZeugnis == null) ? "" : dtoFach.BezeichnungZeugnis;
+		daten.bezeichnungUeberweisungszeugnis = (dtoFach.BezeichnungUeberweisungsZeugnis == null) ? "" : dtoFach.BezeichnungUeberweisungsZeugnis;
+		daten.maxZeichenInFachbemerkungen = (dtoFach.MaxBemZeichen == null) ? Integer.MAX_VALUE : dtoFach.MaxBemZeichen;
+		daten.istSchriftlichZK = dtoFach.IstSchriftlichZK;
+		daten.istSchriftlichBA = dtoFach.IstSchriftlichBA;
+		daten.holeAusAltenLernabschnitten = dtoFach.AbgeschlFaecherHolen;
+		daten.istFHRFach = ((dtoFach.GewichtungFHR != null) && (dtoFach.GewichtungFHR != 0));
+		return daten;
 	}
 
-	private static final Set<String> requiredCreateAttributes = Set.of("kuerzel", "kuerzelStatistik");
+	@Override
+	protected void mapAttribute(final DTOFach dto, final String name, final Object value, final Map<String, Object> map)
+			throws ApiOperationException {
+		switch (name) {
+			case "kuerzel" -> dto.Kuerzel = JSONMapper.convertToString(value, false, false, 20, "kuerzel");
+			case "kuerzelStatistik" -> {
+				final String fachKuerzel = JSONMapper.convertToString(value, false, false, 2, "kuerzelStatistik");
+				final Fach fach = Fach.data().getWertBySchluessel(fachKuerzel);
+				if (fach == null)
+					throw new ApiOperationException(Status.NOT_FOUND, "Ein Fach mit dem Kuerzel %s wurde nicht gefunden".formatted(fachKuerzel));
+				dto.StatistikKuerzel = fachKuerzel;
+			}
+			case "bezeichnung" -> dto.Bezeichnung = JSONMapper.convertToString(value, false, true, 255, "bezeichnung");
+			case "istPruefungsordnungsRelevant" -> dto.IstPruefungsordnungsRelevant = JSONMapper.convertToBoolean(
+					value, false, "istPruefungsordnungsRelevant");
+			case "istOberstufenFach" -> dto.IstOberstufenFach = JSONMapper.convertToBoolean(value, false, "istOberstufenFach");
+			case "sortierung" -> dto.SortierungAllg = JSONMapper.convertToIntegerInRange(
+					value, false, 0, Integer.MAX_VALUE, "sortierung");
+			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false, "istSichtbar");
+			case "aufgabenfeld" -> dto.Aufgabenfeld = JSONMapper.convertToString(value, true, true, 2, "aufgabenfeld");
+			case "bilingualeSprache" -> dto.Unterrichtssprache = JSONMapper.convertToString(
+					value, true, true, 1, "bilingualeSprache");
+			case "istNachpruefungErlaubt" -> dto.IstNachpruefungErlaubt = JSONMapper.convertToBoolean(value, false, "istNachpruefungErlaubt");
+			case "aufZeugnis" -> dto.AufZeugnis = JSONMapper.convertToBoolean(value, false, "aufZeugnis");
+			case "bezeichnungZeugnis" -> dto.BezeichnungZeugnis = JSONMapper.convertToString(
+					value, false, true, 255, "bezeichnungZeugnis");
+			case "bezeichnungUeberweisungszeugnis" -> dto.BezeichnungUeberweisungsZeugnis = JSONMapper.convertToString(
+					value, false, true, 255, "bezeichnungUeberweisungszeugnis");
+			case "maxZeichenInFachbemerkungen" -> dto.MaxBemZeichen = JSONMapper.convertToIntegerInRange(
+					value, false, 1, null, "maxZeichenInFachbemerkungen");
+			case "istSchriftlichZK" -> dto.IstSchriftlichZK = JSONMapper.convertToBoolean(value, false, "istSchriftlichZK");
+			case "istSchriftlichBA" -> dto.IstSchriftlichBA = JSONMapper.convertToBoolean(value, false, "istSchriftlichBA");
+			case "holeAusAltenLernabschnitten" -> dto.AbgeschlFaecherHolen = JSONMapper.convertToBoolean(
+					value, false, "holeAusAltenLernabschnitten");
+			case "istFHRFach" -> dto.GewichtungFHR = JSONMapper.convertToBoolean(value, false, "istFHRFach") ? 1 : 0;
+			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
+		}
+	}
 
 	/**
-	 * Fügt ein Fach mit den übergebenen JSON-Daten der Datenbank hinzu und gibt das zugehörige CoreDTO
-	 * zurück. Falls ein Fehler auftritt wird ein entsprechender Response-Code zurückgegeben.
+	 * Mappt eine Liste von {@link DTOFach} Objekten zu {@link FachDaten} nach Id
 	 *
-	 * @param is   der InputStream mit den JSON-Daten
+	 * @param dtoFaecher   Liste der Fach-DTOs, aus denen die Map erstellt werden soll.
 	 *
-	 * @return die Response mit den Daten
+	 * @return Map der Fachdaten zur Fach-ID.
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response add(final InputStream is) throws ApiOperationException {
-		// füge den Raum in der Datenbank hinzu und gebe das zugehörige CoreDTO zurück.
-		final ObjLongConsumer<DTOFach> initDTO = (dto, id) -> dto.ID = id;
-		return super.addBasic(is, DTOFach.class, initDTO, dtoMapperFach, requiredCreateAttributes, patchMappings);
-	}
+	public Map<Long, FachDaten> getMapFachdatenFromDTOFachList(final List<DTOFach> dtoFaecher) throws ApiOperationException {
+		if ((dtoFaecher == null) || (dtoFaecher.isEmpty()))
+			return Collections.emptyMap();
 
-	/**
-	 * Löscht ein Fach
-	 *
-	 * @param id   die ID des Faches
-	 *
-	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
-	 */
-	public Response delete(final Long id) {
-		throw new UnsupportedOperationException("Diese Funktion wird zur Zeit noch nicht unterstützt.");
+		final Map<Long, FachDaten> fachdatenMap = new HashMap<>();
+		for (final DTOFach dtoFach : dtoFaecher) {
+			if (dtoFach != null)
+				fachdatenMap.put(dtoFach.ID, map(dtoFach));
+		}
+		return fachdatenMap;
 	}
-
 }

@@ -1,6 +1,6 @@
 <template>
-	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="showModal" class="hidden">
+	<slot :open-modal />
+	<svws-ui-modal v-model:show="show" class="hidden">
 		<template #modalTitle>Pausenzeiten importieren</template>
 		<template #modalContent>
 			Es werden nur Pausenzeiten importiert, deren Start- und Endzeiten noch nicht im Katalog vertreten sind.
@@ -10,7 +10,7 @@
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="showModal().value = false"> Abbrechen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="show = false"> Abbrechen </svws-ui-button>
 			<svws-ui-button type="secondary" @click="import_file"> Importieren </svws-ui-button>
 		</template>
 	</svws-ui-modal>
@@ -24,15 +24,14 @@
 		setKatalogPausenzeitenImportJSON: (formData: FormData) => Promise<void>;
 	}>();
 
-	const _showModal = ref<boolean>(false);
-	const showModal = () => _showModal;
+	const show = ref<boolean>(false);
 
 	const status = ref<boolean | undefined>(undefined);
 	const loading = ref<boolean>(false);
 	const file = ref<File | null>(null);
 
 	const openModal = () => {
-		showModal().value = true;
+		show.value = true;
 	}
 
 	function onFileChanged(event: Event) {
@@ -52,7 +51,7 @@
 		formData.append("data", file.value);
 		try {
 			await props.setKatalogPausenzeitenImportJSON(formData);
-			showModal().value = false;
+			show.value = false;
 		} catch (e) {
 			console.log(e);
 		} finally {

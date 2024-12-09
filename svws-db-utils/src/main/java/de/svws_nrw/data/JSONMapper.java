@@ -391,21 +391,42 @@ public final class JSONMapper {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static Integer convertToIntegerInRange(final Object obj, final boolean nullable, final int lower, final Integer upper) throws ApiOperationException {
+		return convertToIntegerInRange(obj, nullable, lower, upper, null);
+	}
+
+	/**
+	 * Konvertiert das übergebene Objekt in einen Integer-Wert, sofern es sich um ein
+	 * Number-Objekt handelt, welches keinen float oder double-Wert repräsentiert.
+	 * Dabei wird geprüft, ob der wert innerhalb des übergebenen Intervalls [lower, upper[ liegt
+	 *
+	 * @param obj        das zu konvertierende Objekt
+	 * @param nullable   gibt an, ob das Ergebnis auch null sein darf oder nicht
+	 * @param lower      die untere Intervallgrenze (einschließlich)
+	 * @param upper      die obere Intervallgrenze (außschließlich) oder null, wenn es keine
+	 *                   obere Grenze gibt
+	 * @param attrName   der Name des Attributes oder null
+	 *
+	 * @return das konvertierte Integer-Objekt
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public static Integer convertToIntegerInRange(final Object obj, final boolean nullable, final int lower, final Integer upper, final String attrName) throws ApiOperationException {
 		if (obj == null) {
 			if (nullable)
 				return null;
-			throw new ApiOperationException(Status.BAD_REQUEST, "Der Wert null ist nicht erlaubt.");
+			throw new ApiOperationException(Status.BAD_REQUEST, formatMessage("Der Wert null ist nicht erlaubt.", attrName));
 		}
 		if (obj instanceof final Number n) {
 			if ((obj instanceof Float) || (obj instanceof Double))
-				throw new ApiOperationException(Status.BAD_REQUEST, "Fehler beim Konvertieren zu Integer:"
-						+ " Es handelt sich um einen Fließkommawert, obwohl eine Ganzzahl erwartet wird.");
+				throw new ApiOperationException(Status.BAD_REQUEST, formatMessage("Fehler beim Konvertieren zu Integer:"
+						+ " Es handelt sich um einen Fließkommawert, obwohl eine Ganzzahl erwartet wird.", attrName));
 			final int value = n.intValue();
 			if ((value >= lower) && ((upper == null) || (value < upper)))
 				return value;
-			throw new ApiOperationException(Status.BAD_REQUEST, "Fehler beim Konvertieren: Der Zahlwert liegt außerhalb des geforderten Bereichs.");
+			throw new ApiOperationException(Status.BAD_REQUEST, formatMessage(
+					"Fehler beim Konvertieren: Der Zahlwert liegt außerhalb des geforderten Bereichs.", attrName));
 		}
-		throw new ApiOperationException(Status.BAD_REQUEST, "Fehler beim Konvertieren zu Integer: Das Objekt ist keine Zahl.");
+		throw new ApiOperationException(Status.BAD_REQUEST, formatMessage("Fehler beim Konvertieren zu Integer: Das Objekt ist keine Zahl.", attrName));
 	}
 
 
@@ -420,14 +441,29 @@ public final class JSONMapper {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static Boolean convertToBoolean(final Object obj, final boolean nullable) throws ApiOperationException {
+		return convertToBoolean(obj, nullable, null);
+	}
+
+	/**
+	 * Konvertiert das übergebene Objekt in einen Boolean-Wert.
+	 *
+	 * @param obj        das zu konvertierende Objekt
+	 * @param nullable   gibt an, ob das Ergebnis auch null sein darf oder nicht
+	 * @param attrName   der Name des Attributes oder null
+	 *
+	 * @return das konvertierte Boolean-Objekt
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public static Boolean convertToBoolean(final Object obj, final boolean nullable, final String attrName) throws ApiOperationException {
 		if (obj == null) {
 			if (nullable)
 				return null;
-			throw new ApiOperationException(Status.BAD_REQUEST, "Der Wert null ist nicht erlaubt.");
+			throw new ApiOperationException(Status.BAD_REQUEST, formatMessage("Der Wert null ist nicht erlaubt", attrName));
 		}
 		if (obj instanceof final Boolean b)
 			return b;
-		throw new ApiOperationException(Status.BAD_REQUEST, "Fehler beim Konvertieren zu Boolean");
+		throw new ApiOperationException(Status.BAD_REQUEST, formatMessage("Fehler beim Konvertieren zu Boolean", attrName));
 	}
 
 

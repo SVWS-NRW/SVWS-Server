@@ -1,9 +1,9 @@
-import type { Schulform, KlassenListeManager, List, Schulgliederung } from "@core";
+import type { Schulform, KlassenListeManager, List, Schulgliederung, BenutzerKompetenz } from "@core";
 
 export interface KlassenGruppenprozesseProps {
 	schulform: Schulform;
+	benutzerKompetenzen: Set<BenutzerKompetenz>;
 	schulgliederungen: List<Schulgliederung>;
-	klassenListeManager: () => KlassenListeManager;
+	manager: () => KlassenListeManager;
 	deleteKlassen: () => Promise<[boolean, List<string | null>]>;
-	deleteKlassenCheck: () => [boolean, List<string>];
 }

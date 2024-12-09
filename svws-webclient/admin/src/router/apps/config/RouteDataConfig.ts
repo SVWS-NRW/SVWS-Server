@@ -1,4 +1,5 @@
 import { shallowRef } from "vue";
+import { api } from "~/router/Api";
 
 import type { RouteNode } from "~/router/RouteNode";
 
@@ -39,6 +40,10 @@ export class RouteDataConfig {
 			this.setPatchedState({ view });
 		else
 			throw new Error("Diese für die Konfiguration gewählte Ansicht wird nicht unterstützt.");
+	}
+
+	getCert = async () => {
+		return await api.server.getConfigCertificateFile();
 	}
 
 }

@@ -4,19 +4,19 @@
 		<meta name="viewport" content="width=device-width" />
 		<title>Wahlbogen-GOSt-Laufbahnplanung</title>
 		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-pdf.css}" href="../../../css/reporting-pdf.css" />
-		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-seite-hoch-koepfe-fuesse.css}" href="../../../css/reporting-seite-hoch-koepfe-fuesse.css" />
+		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-A4-hoch-koepfe-fuesse.css}" href="../../../css/reporting-A4-hoch-koepfe-fuesse.css" />
 		<link rel="stylesheet" th:href="@{css/reporting-styles.css}" href="../../../css/reporting-styles.css" />
 		<link rel="stylesheet" th:href="@{schueler/gost/laufbahnplanung/SchuelerGostLaufbahnplanungWahlbogen.css}" href="../../../schueler/gost/laufbahnplanung/SchuelerGostLaufbahnplanungWahlbogen.css" />
 	</head>
 
 	<body th:with="mediaPrint = ${Parameter.ausgabeformat == 2}">
-		<div class="start-new-page" th:each="schueler,iterationVarSchueler : ${Schueler}">
+		<div class="reset-page-counter start-new-page" th:each="schueler,iterationVarSchueler : ${Schueler}">
 			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
 			<th:block th:if="${mediaPrint}">
 				<div class="pageTopLeft" th:utext="${Schule.bezeichnungSchuleMehrzeiligHtml}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
 				<div class="pageTopRight" th:utext="'Abitur ' + ${schueler.gostLaufbahnplanung().abiturjahr()} + '<br/> Wahl ab ' +  ${schueler.gostLaufbahnplanung().folgeAuswahlGOStHalbjahr()} + '<br/>' + ${schueler.gostLaufbahnplanung().pruefungsordnung()}">Abitur 2023<br/>Wahl ab Q2.1<br/>APO-GOSt</div>
 				<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')}">Gedruckt am: 02.02.2022</div>
-				<div class="pageBottomRight"><span th:text="'Gesamtdruck Wahlbogen ' + ${iterationVarSchueler.count} + '/' + ${#lists.size(Schueler)}">Gesamtdruck Wahlbogen 13/57</span></div>
+				<div class="pageBottomRight"><span class="page-nums-print" th:text="'Druck ' + ${iterationVarSchueler.count} + '/' + ${#lists.size(Schueler)} + ' - Seite '">Druck 13/57 - Seite </span></div>
 			</th:block>
 			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
 
@@ -51,15 +51,15 @@
 				</colgroup>
 				<thead>
 				<tr>
-					<td colspan="2" class="ta-l f-bold bo-b-black-dick p-tb-0-lr-1 m-0">Fach</td>
-					<td class="ta-c f-bold bo-b-black-dick p-tb-0-lr-1 m-0" style="border-left: 1px grey solid;">Fremdsprache</td>
-					<td class="ta-c f-bold bo-b-black-dick p-tb-0-lr-1 m-0" style="border-left: 1px grey solid;">EF.1</td>
-					<td class="ta-c f-bold bo-b-black-dick p-tb-0-lr-1 m-0">EF.2</td>
-					<td class="ta-c f-bold bo-b-black-dick p-tb-0-lr-1 m-0" style="border-left: 1px grey solid;">Q1.1</td>
-					<td class="ta-c f-bold bo-b-black-dick p-tb-0-lr-1 m-0">Q1.2</td>
-					<td class="ta-c f-bold bo-b-black-dick p-tb-0-lr-1 m-0">Q2.1</td>
-					<td class="ta-c f-bold bo-b-black-dick p-tb-0-lr-1 m-0">Q2.2</td>
-					<td class="ta-c f-bold bo-b-black-dick p-tb-0-lr-1 m-0" style="border-left: 1px grey solid; border-right: 1px grey solid;">Abitur</td>
+					<td colspan="2" class="ta-l f-bold bo-b-black-strong p-tb-0-lr-1 m-0">Fach</td>
+					<td class="ta-c f-bold bo-b-black-strong p-tb-0-lr-1 m-0" style="border-left: 1px grey solid;">Fremdsprache</td>
+					<td class="ta-c f-bold bo-b-black-strong p-tb-0-lr-1 m-0" style="border-left: 1px grey solid;">EF.1</td>
+					<td class="ta-c f-bold bo-b-black-strong p-tb-0-lr-1 m-0">EF.2</td>
+					<td class="ta-c f-bold bo-b-black-strong p-tb-0-lr-1 m-0" style="border-left: 1px grey solid;">Q1.1</td>
+					<td class="ta-c f-bold bo-b-black-strong p-tb-0-lr-1 m-0">Q1.2</td>
+					<td class="ta-c f-bold bo-b-black-strong p-tb-0-lr-1 m-0">Q2.1</td>
+					<td class="ta-c f-bold bo-b-black-strong p-tb-0-lr-1 m-0">Q2.2</td>
+					<td class="ta-c f-bold bo-b-black-strong p-tb-0-lr-1 m-0" style="border-left: 1px grey solid; border-right: 1px grey solid;">Abitur</td>
 				</tr>
 				</thead>
 				<tr th:each="Fachwahl : ${schueler.gostLaufbahnplanung().fachwahlen()}" th:if="${(Parameter.detailLevel > 0 || Fachwahl.fachIstBelegtInGOSt()) && Fachwahl.fach().istPruefungsordnungsRelevant()}"  th:style="'background-color: ' + ${Fachwahl.fach().statistikfach().htmlFarbeRGB()} + ';'">

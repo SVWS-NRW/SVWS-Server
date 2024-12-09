@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.schule.SchuleStammdaten;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
+import de.svws_nrw.core.adt.map.ListMap3DLongKeys;
+import de.svws_nrw.core.data.erzieher.ErzieherStammdaten;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten;
@@ -16,8 +18,10 @@ import de.svws_nrw.core.data.kataloge.OrtKatalogEintrag;
 import de.svws_nrw.core.data.kataloge.OrtsteilKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.data.reporting.ReportingParameter;
+import de.svws_nrw.core.data.schueler.SchuelerLeistungsdaten;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittsdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
+import de.svws_nrw.core.data.schueler.Sprachbelegung;
 import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
 import de.svws_nrw.core.data.schule.ReligionEintrag;
 import de.svws_nrw.core.data.stundenplan.Stundenplan;
@@ -26,6 +30,7 @@ import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
+import de.svws_nrw.data.erzieher.DataErzieherarten;
 import de.svws_nrw.data.jahrgaenge.DataJahrgangsdaten;
 import de.svws_nrw.data.kataloge.DataOrte;
 import de.svws_nrw.data.kataloge.DataOrtsteile;
@@ -38,8 +43,12 @@ import de.svws_nrw.data.stundenplan.DataStundenplanListe;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.proxytypes.schueler.erzieher.ProxyReportingErzieherArt;
 import de.svws_nrw.module.reporting.proxytypes.schule.ProxyReportingSchuljahresabschnitt;
 import de.svws_nrw.module.reporting.types.klasse.ReportingKlasse;
+import de.svws_nrw.module.reporting.types.kurs.ReportingKurs;
+import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
+import de.svws_nrw.module.reporting.types.schueler.erzieher.ReportingErzieherArt;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import jakarta.ws.rs.core.Response.Status;
@@ -67,6 +76,12 @@ public class ReportingRepository {
 	/** Liste, die Einträge aus dem Logger sammelt. */
 	private final LogConsumerList log;
 
+	/** Die ID des aktuellen Schuljahresabschnitts der Schule. */
+	private final Long idAktuellerSchuljahresbaschnitt;
+
+	/** Die ID des in den ReportingParamtern ausgewählten Schuljahresabschnitts. */
+	private final Long idAuswahlSchuljahresbaschnitt;
+
 
 	// #########  Ab hier folgen Objekte aus dem Core. #########
 
@@ -85,11 +100,14 @@ public class ReportingRepository {
 	/** Stellt die Religionen aus dem Katalog der Schule zur Religion-ID zur Verfügung */
 	private Map<Long, ReligionEintrag> katalogReligionen;
 
-	/** Stellt die Daten von bereits abgerufenen aktuellen Lernabschnitten zur Schüler-ID zur Verfügung. */
-	private final Map<Long, SchuelerLernabschnittsdaten> mapAktuelleLernabschnittsdaten = new HashMap<>();
+	/** Stellt die Daten aller bereits abgerufenen Leistungsdaten zur Schüler-, Lernabschnitts- und Leistungsdaten-ID zur Verfügung. */
+	private final ListMap3DLongKeys<SchuelerLeistungsdaten> mapAlleLeistungsdaten = new ListMap3DLongKeys<>();
 
-	/** Stellt die Daten von bereits abgerufenen ausgewählten Lernabschnitten zur Schüler-ID zur Verfügung. */
-	private final Map<Long, SchuelerLernabschnittsdaten> mapAuswahlLernabschnittsdaten = new HashMap<>();
+	/** Stellt die Daten aller bereits abgerufenen Leistungsdaten zur Schüler-, Schuljahresabschnitt- und Lernabschnitts-ID zur Verfügung. */
+	private final ListMap3DLongKeys<SchuelerLernabschnittsdaten> mapAlleLernabschnittsdaten = new ListMap3DLongKeys<>();
+
+	/** Stellt die Stammdaten von bereits abgerufenen Erziehern über eine Map zur Schueler-ID zur Verfügung. */
+	private final Map<Long, List<ErzieherStammdaten>> mapErzieherStammdaten = new HashMap<>();
 
 	/** Stellt alle Fächer der Schule als DTOs zur Fach-ID zur Verfügung. Die Reporting-Fächer -Objekte sind in den Schuljahresabschnitten abrufbar. */
 	private final Map<Long, DTOFach> mapFaecher = new HashMap<>();
@@ -103,6 +121,9 @@ public class ReportingRepository {
 	/** Stellt die Beratungsdaten zur GOSt von bereits abgerufenen Schülern über eine Map zur Schüler-ID zur Verfügung. */
 	private final Map<Long, GostLaufbahnplanungBeratungsdaten> mapGostBeratungsdaten = new HashMap<>();
 
+	/** Stellt die für die Beratungsdaten zur GOSt relevanten Abiturdaten von bereits abgerufenen Schülern über eine Map zur Schüler-ID zur Verfügung. */
+	private final Map<Long, Abiturdaten> mapGostBeratungsdatenAbiturdaten = new HashMap<>();
+
 	/** Stellt die Abiturdaten in der GOSt von bereits abgerufenen Schülern über eine Map zur Schüler-ID zur Verfügung. */
 	private final Map<Long, Abiturdaten> mapGostSchuelerAbiturdaten = new HashMap<>();
 
@@ -111,6 +132,9 @@ public class ReportingRepository {
 
 	/** Stellt die Stammdaten von bereits abgerufenen Lehrkräften über eine Map zur Lehrer-ID zur Verfügung */
 	private Map<Long, LehrerStammdaten> mapLehrerStammdaten;
+
+	/** Stellt die Sprachbelegungen von bereits abgerufenen Schülern über eine Map zur Schüler-ID zur Verfügung */
+	private final Map<Long, List<Sprachbelegung>> mapSchuelerSprachbelegungen = new HashMap<>();
 
 	/** Stellt die Stammdaten von bereits abgerufenen Schülern über eine Map zur Schüler-ID zur Verfügung */
 	private final Map<Long, SchuelerStammdaten> mapSchuelerStammdaten = new HashMap<>();
@@ -124,17 +148,26 @@ public class ReportingRepository {
 
 	// #########  Ab hier folgen Reporting-Objekte. #########
 
-	/** Stellt die Liste aller Schuljahresabschnitte über eine Map zur Schulabschnitts-ID zur Verfügung */
-	private final Map<Long, ReportingSchuljahresabschnitt> mapReportingSchuljahresabschnitte = new HashMap<>();
+//	/** Der aktuelle Schuljahresabschnitt der Schule aus der Datenbankverbindung */
+//	private final ReportingSchuljahresabschnitt aktuellerSchuljahresabschnitt;
+//
+//	/** Der ausgewählte Schuljahresabschnitt, der für die Ausgabe der Reports ausgewählt wurde */
+//	private final ReportingSchuljahresabschnitt auswahlSchuljahresabschnitt;
 
-	/** Der aktuelle Schuljahresabschnitt der Schule aus der Datenbankverbindung */
-	private final ReportingSchuljahresabschnitt aktuellerSchuljahresabschnitt;
-
-	/** Der ausgewählte Schuljahresabschnitt, der für die Ausgabe der Reports ausgewählt wurde */
-	private final ReportingSchuljahresabschnitt auswahlSchuljahresabschnitt;
+	/** Stellt alle Erzieherarten über eine Map zur Erzieherart-ID zur Verfügung */
+	private Map<Long, ReportingErzieherArt> mapReportingErzieherarten;
 
 	/** Stellt alle Klassen in den Schuljahresabschnitten über eine Map zur Klassen-ID zur Verfügung. */
 	private final Map<Long, ReportingKlasse> mapKlassen = new HashMap<>();
+
+	/** Stellt alle Kurse in den Schuljahresabschnitten über eine Map zur Kurs-ID zur Verfügung. */
+	private final Map<Long, ReportingKurs> mapKurse = new HashMap<>();
+
+	/** Stellt die Liste aller Schüler über eine Map zur Schüler-ID zur Verfügung */
+	private final Map<Long, ReportingSchueler> mapSchueler = new HashMap<>();
+
+	/** Stellt die Liste aller Schuljahresabschnitte über eine Map zur Schulabschnitts-ID zur Verfügung */
+	private final Map<Long, ReportingSchuljahresabschnitt> mapSchuljahresabschnitte = new HashMap<>();
 
 
 	/**
@@ -189,23 +222,26 @@ public class ReportingRepository {
 			// Ermittle die Schuljahresabschnitte der Schule und erstelle damit eine Map der ReportingSchuljahresabschnitte
 			final List<Schuljahresabschnitt> datenSchuljahresabschnitte = this.conn.getUser().schuleGetStammdaten().abschnitte;
 			for (final Schuljahresabschnitt datenSchuljahresabschnitt : datenSchuljahresabschnitte) {
-				mapReportingSchuljahresabschnitte.putIfAbsent(datenSchuljahresabschnitt.id,
+				mapSchuljahresabschnitte.putIfAbsent(datenSchuljahresabschnitt.id,
 						new ProxyReportingSchuljahresabschnitt(this, datenSchuljahresabschnitt));
 			}
 
-			aktuellerSchuljahresabschnitt =
-					this.mapReportingSchuljahresabschnitte.values().stream().filter(a -> a.id() == this.schulstammdaten.idSchuljahresabschnitt).toList()
-							.getFirst();
+			idAktuellerSchuljahresbaschnitt = this.schulstammdaten.idSchuljahresabschnitt;
+			idAuswahlSchuljahresbaschnitt = this.reportingParameter.idSchuljahresabschnitt;
 
-			if ((this.reportingParameter.idSchuljahresabschnitt == this.aktuellerSchuljahresabschnitt.id())
-					|| (this.reportingParameter.idSchuljahresabschnitt < 0)
-					|| this.mapReportingSchuljahresabschnitte.values().stream().filter(a -> a.id() == this.reportingParameter.idSchuljahresabschnitt).toList()
-							.isEmpty())
-				auswahlSchuljahresabschnitt = aktuellerSchuljahresabschnitt;
-			else
-				auswahlSchuljahresabschnitt =
-						this.mapReportingSchuljahresabschnitte.values().stream().filter(a -> a.id() == this.reportingParameter.idSchuljahresabschnitt).toList()
-								.getFirst();
+//			aktuellerSchuljahresabschnitt =
+//					this.mapSchuljahresabschnitte.values().stream().filter(a -> a.id() == this.schulstammdaten.idSchuljahresabschnitt).toList()
+//							.getFirst();
+//
+//			if ((this.reportingParameter.idSchuljahresabschnitt == this.aktuellerSchuljahresabschnitt.id())
+//					|| (this.reportingParameter.idSchuljahresabschnitt < 0)
+//					|| this.mapSchuljahresabschnitte.values().stream().filter(a -> a.id() == this.reportingParameter.idSchuljahresabschnitt).toList()
+//							.isEmpty())
+//				auswahlSchuljahresabschnitt = aktuellerSchuljahresabschnitt;
+//			else
+//				auswahlSchuljahresabschnitt =
+//						this.mapSchuljahresabschnitte.values().stream().filter(a -> a.id() == this.reportingParameter.idSchuljahresabschnitt).toList()
+//								.getFirst();
 
 		} catch (final Exception e) {
 			ReportingExceptionUtils.putStacktraceInLog(
@@ -255,6 +291,10 @@ public class ReportingRepository {
 
 			this.katalogReligionen = new DataReligionen(this.conn).getListReligionen().stream().collect(Collectors.toMap(r -> r.id, r -> r));
 			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog Religionen geladen.");
+
+			this.mapReportingErzieherarten = new DataErzieherarten(this.conn).getListErzieherarten().stream().collect(Collectors.toMap(a -> a.id,
+					a -> new ProxyReportingErzieherArt(this, a)));
+			this.logger.logLn(LogLevel.DEBUG, 8, "Liste der Erzieherarten geladen.");
 		} catch (final Exception e) {
 			this.logger.logLn(LogLevel.ERROR, 8, "FEHLER: Die Kataloge der Schule konnten nicht vollständig ermittelt werden.");
 			throw new ApiOperationException(Status.NOT_FOUND, e,
@@ -286,7 +326,7 @@ public class ReportingRepository {
 	private void initLehrerStammdaten() throws ApiOperationException {
 		try {
 			this.logger.logLn(LogLevel.DEBUG, 8, "Ermittle die Lehrerstammdaten.");
-			this.mapLehrerStammdaten = new DataLehrerStammdaten(this.conn).getSichtbareLehrerStammdaten(this.conn).stream()
+			this.mapLehrerStammdaten = new DataLehrerStammdaten(this.conn).getAlleLehrerStammdaten(this.conn).stream()
 					.collect(Collectors.toMap(l -> l.id, l -> l));
 		} catch (final Exception e) {
 			this.mapLehrerStammdaten = new HashMap<>();
@@ -324,8 +364,8 @@ public class ReportingRepository {
 			this.stundenplandefinitionen = DataStundenplanListe.getStundenplaene(this.conn, null);
 			this.logger.logLn(LogLevel.DEBUG, 8, "Ermittle die Stundenpläne für den aktuellen und ausgewählten Schuljahresabschnitt.");
 			final List<StundenplanListeEintrag> filterStundenplandefinitionen =
-					stundenplandefinitionen.stream().filter(d -> ((d.idSchuljahresabschnitt == aktuellerSchuljahresabschnitt.id())
-							|| (d.idSchuljahresabschnitt == auswahlSchuljahresabschnitt.id()))).toList();
+					stundenplandefinitionen.stream().filter(d -> ((d.idSchuljahresabschnitt == idAktuellerSchuljahresbaschnitt)
+							|| (d.idSchuljahresabschnitt == idAuswahlSchuljahresbaschnitt))).toList();
 			if (!filterStundenplandefinitionen.isEmpty()) {
 				for (final StundenplanListeEintrag stundenplandefinition : filterStundenplandefinitionen) {
 					final Stundenplan stundenplan = DataStundenplan.getStundenplan(this.conn, stundenplandefinition.id);
@@ -394,7 +434,7 @@ public class ReportingRepository {
 	 * @return Alle Schuljahresabschnitte der Schule
 	 */
 	public List<ReportingSchuljahresabschnitt> schuljahresabschnitte() {
-		return mapReportingSchuljahresabschnitte.values().stream().sorted(
+		return mapSchuljahresabschnitte.values().stream().sorted(
 				Comparator.comparing(ReportingSchuljahresabschnitt::schuljahr)
 						.thenComparing(ReportingSchuljahresabschnitt::abschnitt))
 				.toList();
@@ -408,7 +448,7 @@ public class ReportingRepository {
 	 * @return Schuljahresabschnitt der Schule zur ID
 	 */
 	public ReportingSchuljahresabschnitt schuljahresabschnitt(final long id) {
-		return mapReportingSchuljahresabschnitte.get(id);
+		return mapSchuljahresabschnitte.get(id);
 	}
 
 	/**
@@ -421,7 +461,7 @@ public class ReportingRepository {
 	 */
 	public ReportingSchuljahresabschnitt schuljahresabschnitt(final int schuljahr, final int abschnitt) {
 		final List<ReportingSchuljahresabschnitt> reportingSchuljahresabschnitte =
-				mapReportingSchuljahresabschnitte.values().stream().filter(a -> (a.schuljahr() == schuljahr) && (a.abschnitt() == abschnitt)).toList();
+				mapSchuljahresabschnitte.values().stream().filter(a -> (a.schuljahr() == schuljahr) && (a.abschnitt() == abschnitt)).toList();
 		if (reportingSchuljahresabschnitte.isEmpty())
 			return null;
 		return reportingSchuljahresabschnitte.getFirst();
@@ -434,7 +474,7 @@ public class ReportingRepository {
 	 * @return Aktueller Schuljahresabschnitt der Schule
 	 */
 	public ReportingSchuljahresabschnitt aktuellerSchuljahresabschnitt() {
-		return aktuellerSchuljahresabschnitt;
+		return this.mapSchuljahresabschnitte.get(idAktuellerSchuljahresbaschnitt);
 	}
 
 	/**
@@ -443,7 +483,7 @@ public class ReportingRepository {
 	 * @return Schuljahresabschnitt der Auswahl für den Druck
 	 */
 	public ReportingSchuljahresabschnitt auswahlSchuljahresabschnitt() {
-		return auswahlSchuljahresabschnitt;
+		return this.mapSchuljahresabschnitte.get(idAuswahlSchuljahresbaschnitt);
 	}
 
 
@@ -486,22 +526,41 @@ public class ReportingRepository {
 	}
 
 
+
 	/**
-	 * Stellt die Daten von bereits abgerufenen aktuellen Lernabschnitten zur Schüler-ID zur Verfügung.
+	 * Stellt die Daten aller bereits abgerufenen Leistungsdaten zur Schüler-, Lernabschnitts- und Leistungsdaten-ID zur Verfügung.
 	 *
-	 * @return Map der Daten von bereits abgerufenen aktuellen Lernabschnitten.
+	 * @return Map der Daten aller bereits abgerufenen Lernabschnitte.
 	 */
-	public Map<Long, SchuelerLernabschnittsdaten> mapAktuelleLernabschnittsdaten() {
-		return mapAktuelleLernabschnittsdaten;
+	public ListMap3DLongKeys<SchuelerLeistungsdaten> mapAlleLeistungsdaten() {
+		return mapAlleLeistungsdaten;
 	}
 
 	/**
-	 * Stellt die Daten von bereits abgerufenen ausgewählten Lernabschnitten zur Schüler-ID zur Verfügung.
+	 * Stellt die Daten aller bereits abgerufenen Lernabschnitte zur Schüler-, Schuljahresabschnitt und Lernabschnitts-ID zur Verfügung.
 	 *
-	 * @return Map der Daten von bereits abgerufenen ausgewählten Lernabschnitten.
+	 * @return Map der Daten aller bereits abgerufenen Lernabschnitte.
 	 */
-	public Map<Long, SchuelerLernabschnittsdaten> mapAuswahlLernabschnittsdaten() {
-		return mapAuswahlLernabschnittsdaten;
+	public ListMap3DLongKeys<SchuelerLernabschnittsdaten> mapAlleLernabschnittsdaten() {
+		return mapAlleLernabschnittsdaten;
+	}
+
+	/**
+	 * Stellt die Stammdaten von bereits abgerufenen Erziehern über eine Map zur Schüler-ID zur Verfügung
+	 *
+	 * @return Inhalt des Feldes mapErzieherStammdaten
+	 */
+	public Map<Long, List<ErzieherStammdaten>> mapErzieherStammdaten() {
+		return mapErzieherStammdaten;
+	}
+
+	/**
+	 * Stellt alle Erzieherarten über eine Map zur Erzieherart-ID zur Verfügung
+	 *
+	 * @return Inhalt des Feldes mapReportingErzieherarten
+	 */
+	public Map<Long, ReportingErzieherArt> mapReportingErzieherarten() {
+		return mapReportingErzieherarten;
 	}
 
 	/**
@@ -541,6 +600,15 @@ public class ReportingRepository {
 	}
 
 	/**
+	 * Stellt die für die Beratungsdaten zur GOSt relevanten Abiturdaten von bereits abgerufenen Schülern über eine Map zur Schüler-ID zur Verfügung.
+	 *
+	 * @return Inhalt des Feldes mapGostBeratungsdatenAbiturdaten
+	 */
+	public Map<Long, Abiturdaten> mapGostBeratungsdatenAbiturdaten() {
+		return mapGostBeratungsdatenAbiturdaten;
+	}
+
+	/**
 	 * Stellt die Abiturdaten in der GOSt von bereits abgerufenen Schülern über eine Map zur Schüler-ID zur Verfügung.
 	 *
 	 * @return Map mit GOSt-Abiturdaten der Schüler
@@ -568,6 +636,15 @@ public class ReportingRepository {
 	}
 
 	/**
+	 * Stellt alle Kurse in den Schuljahresabschnitten über eine Map zur Kurs-ID zur Verfügung.
+	 *
+	 * @return Map der Stammdaten der Kurse.
+	 */
+	public Map<Long, ReportingKurs> mapKurse() {
+		return mapKurse;
+	}
+
+	/**
 	 * Stellt die Stammdaten von bereits abgerufenen Lehrkräften über eine Map zur Lehrer-ID zur Verfügung.
 	 *
 	 * @return Map der Stammdaten von bereits abgerufenen Lehrkräften
@@ -583,6 +660,33 @@ public class ReportingRepository {
 	 */
 	public Map<Long, SchuelerStammdaten> mapSchuelerStammdaten() {
 		return mapSchuelerStammdaten;
+	}
+
+	/**
+	 * Stellt die Liste aller Schüler über eine Map zur Schüler-ID zur Verfügung
+	 *
+	 * @return Inhalt des Feldes mapSchueler
+	 */
+	public Map<Long, ReportingSchueler> mapSchueler() {
+		return mapSchueler;
+	}
+
+	/**
+	 * Stellt die Sprachbelegungen von bereits abgerufenen Schülern über eine Map zur Schüler-ID zur Verfügung
+	 *
+	 * @return Inhalt des Feldes mapSchuelerSprachbelegungen
+	 */
+	public Map<Long, List<Sprachbelegung>> mapSchuelerSprachbelegungen() {
+		return mapSchuelerSprachbelegungen;
+	}
+
+	/**
+	 * Stellt die Liste aller Schuljahresabschnitte über eine Map zur Schulabschnitts-ID zur Verfügung
+	 *
+	 * @return Inhalt des Feldes mapSchuljahresabschnitte
+	 */
+	public Map<Long, ReportingSchuljahresabschnitt> mapSchuljahresabschnitte() {
+		return mapSchuljahresabschnitte;
 	}
 
 	/**

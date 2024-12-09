@@ -1,11 +1,10 @@
-import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
+import type { RouteLocationNormalized } from "vue-router";
 
 import { BenutzerKompetenz, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanung";
 import type { GostKlausurplanungVorgabenProps } from "~/components/gost/klausurplanung/SGostKlausurplanungVorgabenProps";
-import { routeApp } from "../../RouteApp";
 import { api } from "~/router/Api";
 import { schulformenGymOb } from "~/router/RouteHelper";
 

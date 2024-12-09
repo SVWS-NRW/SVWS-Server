@@ -1,5 +1,6 @@
 <template>
-	<svws-ui-action-button title="Leeres Schema" description="Es wird ein leeres neues Schema in der neuesten Revision erzeugt. Dieses kann im Anschluss initialisiert werden" icon="i-ri-add-line" :action-function :action-disabled="(schemaname.length === 0) || (user.length === 0) || (password.length === 0) || (user === 'root')" :is-loading="loadingFunction().value" action-label="Schema anlegen" :is-active>
+	<svws-ui-action-button title="Leeres Schema" description="Es wird ein leeres neues Schema in der neuesten Revision erzeugt. Dieses kann im Anschluss initialisiert werden" icon="i-ri-add-line" :action-function
+		:action-disabled="(schemaname.length === 0) || (user.length === 0) || (password.length === 0) || (user === 'root') || loadingFunction().value" :is-loading="loadingFunction().value" action-label="Schema anlegen" :is-active>
 		<div class="input-wrapper">
 			<svws-ui-text-input v-model.trim="schemaname" required placeholder="Schemaname" :disabled="loadingFunction().value" />
 			<svws-ui-spacing />

@@ -3,7 +3,7 @@ import type { Checkpoint } from "@ui";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface SchuleFachNeuProps {
-	fachListeManager: () => FachListeManager;
+	manager: () => FachListeManager;
 	add: (patchObject: Partial<FachDaten>) => Promise<void>;
 	gotoDefaultView: (eintragId?: number | null) => Promise<void>;
 	checkpoint: Checkpoint;

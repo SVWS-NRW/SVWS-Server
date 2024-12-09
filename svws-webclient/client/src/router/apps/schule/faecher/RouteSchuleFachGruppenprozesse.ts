@@ -13,7 +13,7 @@ const SSchuleFachGruppenprozesse = () => import("~/components/schule/faecher/gru
 export class RouteSchuleFachGruppenprozesse extends RouteNode<any, RouteSchuleFaecher> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN ], "schule.faecher.gruppenprozesse", "gruppenprozesse", SSchuleFachGruppenprozesse);
+		super(Schulform.values(), [ BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN ], "schule.faecher.gruppenprozesse", "gruppenprozesse", SSchuleFachGruppenprozesse);
 		super.types = new Set([ ViewType.GRUPPENPROZESSE ]);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
@@ -26,12 +26,12 @@ export class RouteSchuleFachGruppenprozesse extends RouteNode<any, RouteSchuleFa
 
 	public getProps(to: RouteLocationNormalized): SchuleFachGruppenprozesseProps {
 		return {
-			mode: api.mode,
+			serverMode: api.mode,
 			schulform: api.schulform,
+			benutzerKompetenzen: api.benutzerKompetenzen,
 			schulgliederungen: api.schulgliederungen,
-			fachListeManager: () => routeSchuleFaecher.data.fachListeManager,
-			deleteFaecher: routeSchuleFaecher.data.deleteFaecher,
-			deleteFaecherCheck: routeSchuleFaecher.data.deleteFaecherCheck,
+			manager: () => routeSchuleFaecher.data.manager,
+			deleteFaecher: routeSchuleFaecher.data.delete,
 		};
 	}
 

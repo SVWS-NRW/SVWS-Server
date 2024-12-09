@@ -103,3 +103,23 @@ input[type="file"]:hover::file-selector-button,
 input[type="file"]:focus-visible::file-selector-button {
 	@apply opacity-100;
 }
+
+.focus-region {
+	border: 1px solid transparent;
+	border-radius: 6px;
+
+	&.highlighted {
+		border: 1px solid rgba(255, 0, 0, .5);
+		box-shadow: inset 0 0 3px rgba(255, 0, 0, .5);
+	}
+}
+
+.region-enumeration {
+	position: fixed;
+	z-index: 1000;
+	color: rgba(255, 0, 0, .65);
+	padding: 0 0 0 5px;
+	font-weight: bold;
+	font-size: x-large;
+	pointer-events: none;
+}

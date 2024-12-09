@@ -129,7 +129,10 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
 
 		final List<BenutzerKompetenz> bks = new ArrayList<>();
 		for (final Long kid : kids) {
-			bks.add(BenutzerKompetenz.getByID(kid));
+			final BenutzerKompetenz k = BenutzerKompetenz.getByID(kid);
+			if (k == null)
+				throw new ApiOperationException(Status.BAD_REQUEST, "Es existiert keine Kompetenz mit der ID %d".formatted(kid));
+			bks.add(k);
 		}
 
 		for (final BenutzerKompetenz bk : bks) {
@@ -421,15 +424,23 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
 					case "bezeichnung" ->
 						bg.Bezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_Benutzergruppen.col_Bezeichnung.datenlaenge());
 					case "istAdmin" -> bg.IstAdmin = JSONMapper.convertToBoolean(value, true);
-					case "kompetenzen" -> throw new ApiOperationException(Status.BAD_REQUEST,
-							"Das Setzen der Kompetenten bei dem Erstellen einer Benutzergruppe wird zur Zeit noch nicht unterstützt.");
+					case "kompetenzen" -> { /* Kompetenzen werden ggf. in einem zweiten Schritt erst gesetzt. */ }
 					default -> throw new ApiOperationException(Status.BAD_REQUEST);
 				}
 			}
 			conn.transactionPersist(bg);
+			conn.transactionFlush();
+			// Setze in einem zweiten Schritt die Kompetenzen
+			final Object value = map.get("kompetenzen");
+			if (value != null) {
+				final List<Long> listKompetenzIDs = JSONMapper.convertToListOfLong(value, false);
+				addKompetenzen(id, listKompetenzIDs);
+				conn.transactionFlush();
+			}
 		}
 		if (bg == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
+		// Erstelle das Benutzergruppen-Objekt und gib dieses in der Response zurück.
 		final BenutzergruppeDaten daten = dtoMapper.apply(getDTO(bg.ID));
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}

@@ -129,7 +129,7 @@ describe("HTML Tests SvwsUiInputNumber", () => {
 				headless: false,
 			},
 		});
-		expect(wrapper.find(".icon-error").exists()).toBe(true);
+		expect(wrapper.find(".i-ri-alert-line").exists()).toBe(true);
 	});
 
 	test("Zeigt das Statistiksymbol an, wenn die Statistik true ist", () => {
@@ -141,7 +141,7 @@ describe("HTML Tests SvwsUiInputNumber", () => {
 				headless: false,
 			},
 		});
-		expect(wrapper.find(".icon-statistics").exists()).toBe(true);
+		expect(wrapper.find(".i-ri-bar-chart-2-line").exists()).toBe(true);
 	});
 
 	test("Gibt ein Warnsymbol aus, wenn die Daten null oder undefiniert sind und die Statistik true ist", () => {

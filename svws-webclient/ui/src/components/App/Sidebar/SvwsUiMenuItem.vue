@@ -4,6 +4,8 @@
 		'sidebar--menu-item--collapsed': collapsed,
 		'sidebar--menu-item--disabled': disabled,
 		'sidebar--menu-item--statistik': hatlabel === 'Statistik' || statistik,
+		'menuFocusField': active && secondary,
+		'navigationFocusField': active && !secondary,
 	}" href="#" @click.prevent="onClick"
 		:title="disabled ? 'Nicht verfügbar' : hatlabel" ref="menuLink">
 		<span v-if="$slots.icon" class="sidebar--menu-item--icon">
@@ -31,6 +33,7 @@
 		subline?: string;
 		statistik?: boolean;
 		focus?: boolean;
+		secondary?: boolean;
 	}>(), {
 		active: false,
 		collapsed: false,
@@ -38,6 +41,7 @@
 		subline: '',
 		statistik: false,
 		focus: false,
+		secondary: false,
 	});
 
 	const emit = defineEmits<{
@@ -102,12 +106,7 @@
 		}
 
 		.icon-lg {
-			-webkit-filter: invert(44%) sepia(52%) saturate(1260%) hue-rotate(173deg) brightness(91%) contrast(86%);
-			filter: invert(44%) sepia(52%) saturate(1260%) hue-rotate(173deg) brightness(91%) contrast(86%);
-		} /* TODO: COLORS icon */
-
-		&.sidebar--menu-item--statistik {
-			@apply bg-ui-statistic-weak text-ui-statistic;
+			@apply icon-primary;
 		}
 	}
 }

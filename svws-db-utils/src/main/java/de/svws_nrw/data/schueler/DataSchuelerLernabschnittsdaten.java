@@ -68,15 +68,66 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 
 	@Override
 	public SchuelerLernabschnittsdaten map(final DTOSchuelerLernabschnittsdaten dto) throws ApiOperationException {
-		// Ermittle die Fachbemerkungen
+		// Mappe zunächst die Daten des DTO.
+		final SchuelerLernabschnittsdaten daten = mapInternalDTOSchuelerLernabschnittsdaten(dto);
+
+		// Ermittle die Fachbemerkungen des Lernabschnitts und ergänze sie im daten-Objekt.
 		final List<DTOSchuelerPSFachBemerkungen> bemerkungen = conn.queryList(
 				DTOSchuelerPSFachBemerkungen.QUERY_BY_ABSCHNITT_ID, DTOSchuelerPSFachBemerkungen.class, dto.ID);
 		if (bemerkungen == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Datensatz mit Bemerkungen zur Abschnitt-ID " + dto.ID + " gefunden.");
 		if (bemerkungen.size() > 1)
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Mehr als einen Datensatz mit Bemerkungen zur Abschnitt-ID " + dto.ID + " gefunden.");
-		final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dto.Schuljahresabschnitts_ID);
+		if (!bemerkungen.isEmpty()) {
+			final DTOSchuelerPSFachBemerkungen b = bemerkungen.getFirst();
+			daten.bemerkungen.zeugnisASV = b.ASV;
+			daten.bemerkungen.zeugnisLELS = b.LELS;
+			daten.bemerkungen.zeugnisAUE = b.AUE;
+			daten.bemerkungen.uebergangESF = b.ESF;
+			daten.bemerkungen.foerderschwerpunkt = b.BemerkungFSP;
+			daten.bemerkungen.versetzungsentscheidung = b.BemerkungVersetzung;
+		}
 
+		// Ermittle die Leistungsdaten des Lernabschnitts und ergänze sie im daten-Objekt.
+		if (!(new DataSchuelerLeistungsdaten(conn).getByLernabschnitt(dto.ID, daten.leistungsdaten)))
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Keine Leistungsdaten zur Abschnitt-ID " + dto.ID + " gefunden.");
+
+		return daten;
+	}
+
+	/**
+	 * Überführt nur die reinen Daten des DTO eines Schülerlernabschnitts in ein entsprechendes Core-Data-Objekt.
+	 * Dabei werden keine zum Lernabschnitt ergänzenden Daten wie Fachbemerkungen oder Leistungsdaten geladen und ergänzt.
+	 *
+	 * @param dto das DTO mit den SchuelerLernabschnittsdaten.
+	 *
+	 * @return    ein Core-Data-Objekt mit den reinen SchuelerLernabschnittsdaten.
+	 */
+	public SchuelerLernabschnittsdaten mapNurDTODaten(final DTOSchuelerLernabschnittsdaten dto) {
+		final SchuelerLernabschnittsdaten daten = mapInternalDTOSchuelerLernabschnittsdaten(dto);
+
+		daten.bemerkungen.zeugnisASV = "";
+		daten.bemerkungen.zeugnisLELS = "";
+		daten.bemerkungen.zeugnisAUE = "";
+		daten.bemerkungen.uebergangESF = "";
+		daten.bemerkungen.foerderschwerpunkt = "";
+		daten.bemerkungen.versetzungsentscheidung = "";
+
+		daten.leistungsdaten = new ArrayList<>();
+
+		return daten;
+	}
+
+
+	/**
+	 * Hilfsmethode zum Überführen der reinen Daten des DTO eines Schülerlernabschnitts in ein entsprechendes Core-Data-Objekt.
+	 *
+	 * @param dto das DTO mit den SchuelerLernabschnittsdaten.
+	 *
+	 * @return    ein Core-Data-Objekt mit den reinen SchuelerLernabschnittsdaten.
+	 */
+	private SchuelerLernabschnittsdaten mapInternalDTOSchuelerLernabschnittsdaten(final DTOSchuelerLernabschnittsdaten dto) {
+		final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dto.Schuljahresabschnitts_ID);
 		final SchuelerLernabschnittsdaten daten = new SchuelerLernabschnittsdaten();
 		daten.id = dto.ID;
 		daten.schuelerID = dto.Schueler_ID;
@@ -160,19 +211,6 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 			}
 		}
 		daten.bemerkungen.zeugnisAllgemein = dto.ZeugnisBem;
-		if (!bemerkungen.isEmpty()) {
-			final DTOSchuelerPSFachBemerkungen b = bemerkungen.get(0);
-			daten.bemerkungen.zeugnisASV = b.ASV;
-			daten.bemerkungen.zeugnisLELS = b.LELS;
-			daten.bemerkungen.zeugnisAUE = b.AUE;
-			daten.bemerkungen.uebergangESF = b.ESF;
-			daten.bemerkungen.foerderschwerpunkt = b.BemerkungFSP;
-			daten.bemerkungen.versetzungsentscheidung = b.BemerkungVersetzung;
-		}
-
-		if (!(new DataSchuelerLeistungsdaten(conn).getByLernabschnitt(dto.ID, daten.leistungsdaten)))
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Keine Leistungsdaten zur Abschnitt-ID " + dto.ID + " gefunden.");
-
 		return daten;
 	}
 
@@ -476,33 +514,37 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 
 
 	/**
-	 * Erstellt eine Liste von Lernabschnittsdaten anhand der übergebenen Schüler-IDs.
+	 * Erstellt eine Liste von Lernabschnittsdaten anhand der übergebenen Schüler-IDs gemäß der übergebenen Parameter.
 	 *
-	 * @param schueler_ids           	die Liste mit Schüler-IDs
-	 * @param mitWechseln				legt fest, ob auch die Lernabschnitte berücksichtigt werden soll,
-	 *                                  die durch einen Wechsel entstanden sind, also Abschnitt mit Wechsel-Nr größer 0.
+	 * @param schueler_ids                 die Liste mit Schüler-IDs
+	 * @param mitBemerkungenLeistungsdaten legt fest, ob die erzeugten Objekte bereits die Fachbemerkungen und Leistungsdaten des Lernabschnitts enthalten.
+	 * @param validiereSchueler            legt fest, ob die übergebenen Schüler-IDs validiert werden sollen. Diese Option sollte, stets true sein, sofern
+	 *                                     nicht vorher an der Stelle eine Validierung der IDs vorab stattgefunden hat.
 	 *
 	 * @return die Lernabschnittsdaten zu den übergebenen IDs.
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public List<SchuelerLernabschnittsdaten> getListFromSchuelerIDs(final List<Long> schueler_ids, final boolean mitWechseln) throws ApiOperationException {
+	public List<SchuelerLernabschnittsdaten> getListFromSchuelerIDs(final List<Long> schueler_ids, final boolean mitBemerkungenLeistungsdaten,
+			final boolean validiereSchueler)
+			throws ApiOperationException {
 		// Prüfe, ob die Liste der Schüler-IDs existiert
 		if (schueler_ids == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es sind keine Schueler-ID angegeben worden.");
 		if (schueler_ids.isEmpty())
 			return new ArrayList<>();
 
-		final Map<Long, DTOSchueler> mapSchueler = conn.queryByKeyList(DTOSchueler.class, schueler_ids)
-				.stream().collect(Collectors.toMap(s -> s.ID, s -> s));
-		for (final Long schuelerID : schueler_ids)
-			if (mapSchueler.get(schuelerID) == null)
-				throw new ApiOperationException(Status.NOT_FOUND, "Ein Schüler mit der ID %d existiert nicht.".formatted(schuelerID));
+		if (validiereSchueler) {
+			final Map<Long, DTOSchueler> mapSchueler = conn.queryByKeyList(DTOSchueler.class, schueler_ids)
+					.stream().collect(Collectors.toMap(s -> s.ID, s -> s));
+			for (final Long schuelerID : schueler_ids)
+				if (mapSchueler.get(schuelerID) == null)
+					throw new ApiOperationException(Status.NOT_FOUND, "Ein Schüler mit der ID %d existiert nicht.".formatted(schuelerID));
+		}
 
 		// Hole alle Lernabschnitte der übergebenen Schüler-IDs und filtere sie auf den Schuljahresabschnitt und die Wechsel-Nr.
 		final List<DTOSchuelerLernabschnittsdaten> dtoLernabschnitte = conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_LIST_BY_SCHUELER_ID,
 				DTOSchuelerLernabschnittsdaten.class, schueler_ids).stream()
-				.filter(a -> (mitWechseln ? (a.WechselNr >= 0) : (a.WechselNr == 0)))
 				.sorted(Comparator
 						.comparing((final DTOSchuelerLernabschnittsdaten a) -> a.Schueler_ID)
 						.thenComparing((final DTOSchuelerLernabschnittsdaten a) -> a.Schuljahresabschnitts_ID)
@@ -511,27 +553,8 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 
 		final List<SchuelerLernabschnittsdaten> daten = new ArrayList<>();
 		for (final DTOSchuelerLernabschnittsdaten a : dtoLernabschnitte)
-			daten.add(getById(a.ID));
+			daten.add(mitBemerkungenLeistungsdaten ? map(a) : mapNurDTODaten(a));
 		return daten;
-	}
-
-	/**
-	 * Erstellt eine Liste von Lernabschnittsdaten anhand der übergebenen Schüler-IDs und dem angegebenen Schuljahresabschnitt.
-	 *
-	 * @param schueler_ids           	die Liste mit Schüler-IDs
-	 * @param schuljahresabschnitt_id   der Schuljahresabschnitt
-	 * @param mitWechseln				legt fest, ob auch die Lernabschnitte berücksichtigt werden soll,
-	 *                                  die durch einen Wechsel entstanden sind, also Abschnitt mit Wechsel-Nr größer 0.
-	 *
-	 * @return	die Lernabschnittsdaten zu den übergebenen IDs.
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	public List<SchuelerLernabschnittsdaten> getListFromSchuelerIDsUndSchuljahresabschnittID(final List<Long> schueler_ids, final long schuljahresabschnitt_id,
-			final boolean mitWechseln) throws ApiOperationException {
-		return getListFromSchuelerIDs(schueler_ids, mitWechseln).stream()
-				.filter(a -> a.schuljahresabschnitt == schuljahresabschnitt_id)
-				.toList();
 	}
 
 

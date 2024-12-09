@@ -132,6 +132,7 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 
+	@Override
 	void apply(Project project) {
 		this.project = project;
 		project.pluginManager.apply "java"

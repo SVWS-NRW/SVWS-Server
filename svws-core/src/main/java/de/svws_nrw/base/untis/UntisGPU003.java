@@ -25,7 +25,7 @@ public class UntisGPU003 {
 	/** Die Bezeichnung der Klasse (z.B. "Klasse 05a") */
 	public String bezeichnung;
 
-	/** Statistik */
+	/** Statistik ("N" für nicht zu zählende Unterrichte) */
 	public String statistik;
 
 	/** Das Kürzel des Raumes (z.B. "") */
@@ -59,7 +59,7 @@ public class UntisGPU003 {
 	public String klassenGruppe;
 
 	/** Schulstufe */
-	public Integer schulstufe;
+	public String schulstufe;
 
 	/** Abteilung */
 	public String abteilung;
@@ -134,7 +134,7 @@ public class UntisGPU003 {
 			.addNumberColumn("hauptfolge")
 			.addNumberColumn("hauptfolgeHint")
 			.addColumn("klassenGruppe")
-			.addNumberColumn("schulstufe")
+			.addColumn("schulstufe")
 			.addColumn("abteilung")
 			.addColumn("faktor")
 			.addNumberColumn("studentenM")
@@ -193,7 +193,6 @@ public class UntisGPU003 {
 	 *
 	 * @throws IOException falls die CSV-Daten nicht erstellt werden können
 	 */
-	@SuppressWarnings("resource")
 	public static String writeCSV(final @NotNull List<UntisGPU003> dtos) throws IOException {
 		final StringWriter sw = new StringWriter();
 		writer.writeValues(sw).writeAll(dtos).close();

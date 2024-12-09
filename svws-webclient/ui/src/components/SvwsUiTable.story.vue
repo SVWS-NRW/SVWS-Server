@@ -151,25 +151,25 @@
 
 	function next(id: number) {
 		const el = itemRefs.value.get(id + 1);
-		if (el)
+		if ((el !== null) && (el !== undefined))
 			el.input.focus();
 	}
 
 	function previous(id: number) {
 		const el = itemRefs.value.get(id - 1);
-		if (el)
+		if ((el !== null) && (el !== undefined))
 			el.input.focus();
 	}
 
 	// Funktionen für die Sortierung	// Sortiere nur Name und Fach
 	const cols2 = ref([
-		{key: "name", label: "Name", sortable: true, span: 1,},
+		{key: "name", label: "Name", sortable: true, span: 1},
 		{key: "fach", label: "Fach", sortable: true, span: 0.5},
 		{key: "email", label: "Note"},
 	]);
 	const sortByAndOrder = ref<SortByAndOrder | undefined>()
 
-	const dataSorted = computed(()=>{
+	const dataSorted = computed(() => {
 		const temp = sortByAndOrder.value;
 		if (temp === undefined)
 			return data.value;
@@ -177,7 +177,7 @@
 		arr.sort((a, b) => {
 			switch (temp.key) {
 				case 'name':
-					return a.name.localeCompare(b.name, "de-DE",);
+					return a.name.localeCompare(b.name, "de-DE");
 				case 'fach':
 					return a.fach.localeCompare(b.fach, "de-DE");
 				default:

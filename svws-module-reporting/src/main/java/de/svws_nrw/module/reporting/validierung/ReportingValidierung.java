@@ -8,20 +8,28 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.adt.Pair;
+import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
+import de.svws_nrw.core.data.kurse.KursDaten;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.data.gost.DBUtilsGost;
 import de.svws_nrw.data.gost.DBUtilsGostAbitur;
+import de.svws_nrw.data.gost.DBUtilsGostLaufbahn;
 import de.svws_nrw.data.gost.DataGostBlockungsdaten;
 import de.svws_nrw.data.gost.DataGostBlockungsergebnisse;
 import de.svws_nrw.data.gost.DataGostSchuelerLaufbahnplanungBeratungsdaten;
-import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsdaten;
+import de.svws_nrw.data.klassen.DataKlassendaten;
+import de.svws_nrw.data.kurse.DataKurse;
+import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.proxytypes.kurs.ProxyReportingKurs;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.types.kurs.ReportingKurs;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -37,58 +45,46 @@ public final class ReportingValidierung {
 	 * Validiert von der API übergebene Daten für Schüler. Bei fehlenden oder unstimmigen Daten wird eine ApiOperationException geworfen.
 	 * Über den Parameter cacheDaten kann gesteuert werden, ob bereits abgerufene Daten aus der DB im Repository zwischengespeichert werden soll.
 	 *
-	 * @param reportingRepository		Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung.
-	 * @param idsSchueler   		Liste der IDs der Schüler, die berücksichtigt werden sollen.
-	 * @param mitGostDaten 			Legt fest, ob der Daten zur gymnasialen Oberstufe mit in den Kontext geladen werden sollen.
-	 * @param mitAbiturDaten 		Legt fest, ob die Daten zum Abitur in der gymnasialen Oberstufe mit in den Kontext geladen werden sollen.
-	 * @param cacheDaten 			Legt fest, ob die zur Validierung geladenen Daten im Repository gespeichert werden sollen.
+	 * @param reportingRepository    Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung.
+	 * @param idsSchueler            Liste der IDs der Schüler, die berücksichtigt werden sollen.
+	 * @param mitGostLaufbahnplanung Legt fest, ob der Daten zur gymnasialen Oberstufe mit in den Kontext geladen werden sollen.
+	 * @param mitAbiturDaten         Legt fest, ob die Daten zum Abitur in der gymnasialen Oberstufe mit in den Kontext geladen werden sollen.
 	 *
 	 * @throws ApiOperationException  im Fehlerfall
 	 */
-	public static void validiereDatenFuerSchueler(final ReportingRepository reportingRepository, final List<Long> idsSchueler, final boolean mitGostDaten,
-			final boolean mitAbiturDaten, final boolean cacheDaten) throws ApiOperationException {
+	public static void validiereDatenFuerSchueler(final ReportingRepository reportingRepository, final List<Long> idsSchueler, final boolean mitGostLaufbahnplanung,
+			final boolean mitAbiturDaten) throws ApiOperationException {
 
 		// Grunddaten prüfen.
 		final DBEntityManager conn = reportingRepository.conn();
 
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Beginn der Validierung der Schülerdaten.");
 
-		if ((idsSchueler == null) || idsSchueler.isEmpty()) {
+		if (idsSchueler == null) {
+			reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Es wurden keine Liste mit Schüler-IDs übergeben.");
+			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurden keine Liste mit Schüler-IDs übergeben.");
+		}
+
+		// Entferne null-Elemente und Duplikate
+		final List<Long> idsNonNull = idsSchueler.stream().filter(Objects::nonNull).distinct().toList();
+
+		if (idsNonNull.isEmpty()) {
 			reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Es wurden keine Schüler-IDs übergeben.");
 			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurden keine Schüler-IDs übergeben.");
 		}
 
 		// Prüfe die Schüler-IDs. Erzeuge Maps, damit auch später leicht auf die Schülerdaten zugegriffen werden kann.
 		final Map<Long, SchuelerStammdaten> mapSchueler =
-				DataSchuelerStammdaten.getListStammdaten(conn, idsSchueler).stream().collect(Collectors.toMap(s -> s.id, s -> s));
-		for (final Long sID : idsSchueler)
+				DataSchuelerStammdaten.getListStammdaten(conn, idsNonNull).stream().collect(Collectors.toMap(s -> s.id, s -> s));
+		for (final Long sID : idsNonNull)
 			if (mapSchueler.get(sID) == null) {
 				reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Es wurden ungültige Schüler-IDs übergeben.");
 				throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurden ungültige Schüler-IDs übergeben.");
 			}
 
-		// Nur, wenn Daten zur gymnasialen Oberstufe mit angefordert werden.
-		if (mitGostDaten) {
-			// Schule hat eine gym. Oberstufe? pruefeSchuleMitGOSt wirft eine NOT_FOUND-Exception, wenn die Schule keine GOSt hat.
-			try {
-				DBUtilsGost.pruefeSchuleMitGOSt(conn);
-			} catch (final ApiOperationException aoe) {
-				reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Keine Schule oder Schule ohne GOSt gefunden.");
-				throw new ApiOperationException(Status.NOT_FOUND, aoe, "FEHLER: Keine Schule oder Schule ohne GOSt gefunden.");
-			}
+		reportingRepository.mapSchuelerStammdaten().putAll(mapSchueler);
 
-			final Map<Long, GostLaufbahnplanungBeratungsdaten> mapGostBeratungsdaten =
-					new HashMap<>(new DataGostSchuelerLaufbahnplanungBeratungsdaten(conn).getMapFromIDs(idsSchueler));
-
-			for (final Long sID : idsSchueler)
-				if (mapGostBeratungsdaten.get(sID) == null) {
-					reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Es wurden Schüler-IDs übergeben, die nicht zur GOSt gehören.");
-					throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurden Schüler-IDs übergeben, die nicht zur GOSt gehören.");
-				}
-			reportingRepository.mapGostBeratungsdaten().putAll(mapGostBeratungsdaten);
-		}
-
-		// Nur, wenn Daten zum Abitur in der gymnasialen Oberstufe mit angefordert werden.
+		// Prüfe Daten aus dem Bereich des Abiturs. Das gilt auch für die Laufbahnplanung, da dort Daten wie das Abiturjahr benötigt werden.
 		if (mitAbiturDaten) {
 			// Schule hat eine gym. Oberstufe? pruefeSchuleMitGOSt wirft eine NOT_FOUND-Exception, wenn die Schule keine GOSt hat.
 			try {
@@ -98,33 +94,207 @@ public final class ReportingValidierung {
 				throw new ApiOperationException(Status.NOT_FOUND, aoe, "FEHLER: Keine Schule oder Schule ohne GOSt gefunden.");
 			}
 
-			final Map<Long, Abiturdaten> mapGostSchuelerAbiturdaten = new HashMap<>();
+			final Map<Long, Abiturdaten> mapGostSchuelerAbiturdaten;
 
-			for (final Long sID : idsSchueler) {
-				try {
-					mapGostSchuelerAbiturdaten.put(sID, DBUtilsGostAbitur.getAbiturdaten(conn, sID));
-				} catch (final ApiOperationException aoe) {
-					reportingRepository.logger().logLn(LogLevel.ERROR, 4,
-							"FEHLER: Es wurden Schüler-IDs übergeben, für die keine Abiturdaten in der GOSt existieren.");
-					throw new ApiOperationException(Status.NOT_FOUND, aoe,
-							"FEHLER: Es wurden Schüler-IDs übergeben, für die keine Abiturdaten in der GOSt existieren.");
-				}
+			try {
+				mapGostSchuelerAbiturdaten = new HashMap<>(DBUtilsGostAbitur.getAbiturdatenFromIDs(conn, idsNonNull));
+			} catch (final ApiOperationException aoe) {
+				reportingRepository.logger().logLn(LogLevel.ERROR, 4,
+						"FEHLER: Es wurden Schüler-IDs übergeben, für die keine Abiturdaten in der GOSt existieren.");
+				throw new ApiOperationException(Status.NOT_FOUND, aoe,
+						"FEHLER: Es wurden Schüler-IDs übergeben, für die keine Abiturdaten in der GOSt existieren.");
 			}
 
 			reportingRepository.mapGostSchuelerAbiturdaten().putAll(mapGostSchuelerAbiturdaten);
 		}
 
+		// Prüfe Daten aus dem Bereich der GOSt-Laufbahnplanung.
+		if (mitGostLaufbahnplanung) {
+			try {
+				DBUtilsGost.pruefeSchuleMitGOSt(conn);
+			} catch (final ApiOperationException aoe) {
+				reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Keine Schule oder Schule ohne GOSt gefunden.");
+				throw new ApiOperationException(Status.NOT_FOUND, aoe, "FEHLER: Keine Schule oder Schule ohne GOSt gefunden.");
+			}
+
+			// Lade die Beratungsdaten der Schüler zwecks Prüfung.
+			final Map<Long, GostLaufbahnplanungBeratungsdaten> mapGostBeratungsdaten =
+					new HashMap<>(new DataGostSchuelerLaufbahnplanungBeratungsdaten(conn).getMapFromIDs(idsNonNull));
+			for (final Long sID : idsNonNull)
+				if (mapGostBeratungsdaten.get(sID) == null) {
+					reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Es wurden Schüler-IDs übergeben, die nicht zur GOSt gehören.");
+					throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurden Schüler-IDs übergeben, die nicht zur GOSt gehören.");
+				}
+			reportingRepository.mapGostBeratungsdaten().putAll(mapGostBeratungsdaten);
+
+			// Lade Abiturdaten für die Gost-Laufbahnplanung zwecks Prüfung.
+			final Map<Long, Abiturdaten> mapGostBeratungsdatenAbiturdaten;
+			try {
+				mapGostBeratungsdatenAbiturdaten = new HashMap<>(DBUtilsGostLaufbahn.getFromIDsUndSchuljahresabschnitt(conn, idsNonNull,
+						reportingRepository.aktuellerSchuljahresabschnitt().id()));
+			} catch (final ApiOperationException aoe) {
+				reportingRepository.logger().logLn(LogLevel.ERROR, 4,
+						"FEHLER: Es wurden Schüler-IDs übergeben, für die keine Abiturdaten in der GOSt-Laufbahnplanung existieren.");
+				throw new ApiOperationException(Status.NOT_FOUND, aoe,
+						"FEHLER: Es wurden Schüler-IDs übergeben, für die keine Abiturdaten in der GOSt-Laufbahnplanung existieren.");
+			}
+			for (final Abiturdaten abiturdaten : mapGostBeratungsdatenAbiturdaten.values()) {
+				if ((abiturdaten == null) || (abiturdaten.abiturjahr <= 0)) {
+					reportingRepository.logger().logLn(LogLevel.ERROR, 4,
+							"FEHLER: Es wurden Schüler-IDs übergeben, für die keine Abiturdaten in der GOSt-Laufbahnplanung existieren.");
+					throw new ApiOperationException(Status.NOT_FOUND,
+							"FEHLER: Es wurden Schüler-IDs übergeben, für die keine Abiturdaten in der GOSt-Laufbahnplanung existieren.");
+				}
+			}
+			reportingRepository.mapGostBeratungsdatenAbiturdaten().putAll(mapGostBeratungsdatenAbiturdaten);
+		}
+
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Ende der Validierung der Schülerdaten.");
+	}
+
+
+	/**
+	 * Validiert von der API übergebene Daten für Klassen. Bei fehlenden oder unstimmigen Daten wird eine ApiOperationException geworfen.
+	 * Über den Parameter cacheDaten kann gesteuert werden, ob bereits abgerufene Daten aus der DB im Repository zwischengespeichert werden soll.
+	 *
+	 * @param reportingRepository	Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung.
+	 * @param idsKlassen   			Liste der IDs der Klassen, die berücksichtigt werden sollen.
+	 *
+	 * @throws ApiOperationException  im Fehlerfall
+	 */
+	public static void validiereDatenFuerKlassen(final ReportingRepository reportingRepository, final List<Long> idsKlassen)
+			throws ApiOperationException {
+
+		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Beginn der Validierung der Klassendaten.");
+
+		if (idsKlassen == null) {
+			reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Es wurde keine Liste mit Klassen-IDs übergeben.");
+			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurden keine Liste mit Klassen-IDs übergeben.");
+		}
+
+		// Entferne null-Elemente und Duplikate
+		final List<Long> idsNonNull = idsKlassen.stream().filter(Objects::nonNull).distinct().toList();
+
+		if (idsNonNull.isEmpty()) {
+			reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Es wurden keine Klassen-IDs übergeben.");
+			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurden keine Klassen-IDs übergeben.");
+		}
+
+		// Prüfe die Klassen-IDs. Um die an dieser Stelle nicht notwendige, aber aufwendige Auflösung der vorherigen und nachfolgenden Klasse über die
+		// Schuljahresabschnitte zu  vermeiden, prüfe nur anhand der DTOs zu den IDs, ob diese vorhanden sind.
+		try {
+
+			final List<DTOKlassen> dtoKlassen = new DataKlassendaten(reportingRepository.conn()).getDTOsByIds(idsNonNull);
+			if (dtoKlassen.size() != idsNonNull.size())
+				throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurden ungültige Klassen-IDs übergeben.");
+		} catch (final ApiOperationException aoe) {
+			reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Es wurden ungültige Klassen-IDs übergeben.");
+			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurden ungültige Klassen-IDs übergeben.");
+		}
+
+		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Ende der Validierung der Klassendaten.");
+	}
+
+
+	/**
+	 * Validiert von der API übergebene Daten für Kurse. Bei fehlenden oder unstimmigen Daten wird eine ApiOperationException geworfen.
+	 * Über den Parameter cacheDaten kann gesteuert werden, ob bereits abgerufene Daten aus der DB im Repository zwischengespeichert werden soll.
+	 *
+	 * @param reportingRepository	Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung.
+	 * @param idsKurse   			Liste der IDs der Kurse, die berücksichtigt werden sollen.
+	 * @param cacheDaten 			Legt fest, ob die zur Validierung geladenen Daten im Repository gespeichert werden sollen.
+	 *
+	 * @throws ApiOperationException  im Fehlerfall
+	 */
+	public static void validiereDatenFuerKurse(final ReportingRepository reportingRepository, final List<Long> idsKurse, final boolean cacheDaten)
+			throws ApiOperationException {
+
+		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Beginn der Validierung der Kursdaten.");
+
+		if (idsKurse == null) {
+			reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Es wurde keine Liste mit Kurs-IDs übergeben.");
+			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurden keine Liste mit Kurs-IDs übergeben.");
+		}
+
+		// Entferne null-Elemente und Duplikate
+		final List<Long> idsNonNull = idsKurse.stream().filter(Objects::nonNull).distinct().toList();
+
+		if (idsNonNull.isEmpty()) {
+			reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Es wurden keine Kurs-IDs übergeben.");
+			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurden keine Kurs-IDs übergeben.");
+		}
+
+		// Prüfe die Kurs-IDs. Erzeuge Maps, damit auch später leicht auf die Kursdaten zugegriffen werden kann.
+		final Map<Long, KursDaten> mapKursdaten =
+				new DataKurse(reportingRepository.conn()).getListByIDs(idsNonNull, cacheDaten).stream()
+						.collect(Collectors.toMap(k -> k.id, k -> k));
+		for (final Long kID : idsNonNull)
+			if (mapKursdaten.get(kID) == null) {
+				reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Es wurden ungültige Kurs-IDs übergeben.");
+				throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurden ungültige Kurs-IDs übergeben.");
+			}
+
+		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Ende der Validierung der Kursdaten.");
 
 		// Daten sind valide, speichere diese nun gemäß Parameter im Repository.
 		if (cacheDaten) {
-			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Beginn der Speicherung der Daten aus der Validierung der Schülerdaten im Repository.");
-			reportingRepository.mapSchuelerStammdaten().putAll(mapSchueler);
-			reportingRepository.mapAktuelleLernabschnittsdaten()
-					.putAll(new DataSchuelerLernabschnittsdaten(conn)
-							.getListFromSchuelerIDsUndSchuljahresabschnittID(idsSchueler, reportingRepository.aktuellerSchuljahresabschnitt().id(), false)
-							.stream().collect(Collectors.toMap(l -> l.schuelerID, l -> l)));
-			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Ende der Speicherung der Daten aus der Validierung der Schülerdaten im Repository.");
+			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Beginn der Speicherung der Daten aus der Validierung der Kursdaten im Repository.");
+			final List<ReportingKurs> listeKurse =
+					mapKursdaten.values().stream().map(k -> (ReportingKurs) new ProxyReportingKurs(reportingRepository, k)).toList();
+			listeKurse.forEach(k -> reportingRepository.mapKurse().putIfAbsent(k.id(), k));
+			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Ende der Speicherung der Daten aus der Validierung der Kursdaten im Repository.");
+		}
+	}
+
+
+	/**
+	 * Validiert von der API übergebene Daten für Lehrer. Bei fehlenden oder unstimmigen Daten wird eine ApiOperationException geworfen.
+	 * Über den Parameter cacheDaten kann gesteuert werden, ob bereits abgerufene Daten aus der DB im Repository zwischengespeichert werden soll.
+	 *
+	 * @param reportingRepository	Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung.
+	 * @param idsLehrer   			Liste der IDs der Lehrer, die berücksichtigt werden sollen.
+	 * @param cacheDaten 			Legt fest, ob die zur Validierung geladenen Daten im Repository gespeichert werden sollen.
+	 *
+	 * @throws ApiOperationException  im Fehlerfall
+	 */
+	public static void validiereDatenFuerLehrer(final ReportingRepository reportingRepository, final List<Long> idsLehrer, final boolean cacheDaten)
+			throws ApiOperationException {
+
+		// Grunddaten prüfen.
+		final DBEntityManager conn = reportingRepository.conn();
+
+		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Beginn der Validierung der Lehrerdaten.");
+
+		if (idsLehrer == null) {
+			reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Es wurde keine Liste mit Lehrer-IDs übergeben.");
+			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurden keine Liste mit  Lehrer-IDs übergeben.");
+		}
+
+		// Entferne null-Elemente und Duplikate
+		final List<Long> idsNonNull = idsLehrer.stream().filter(Objects::nonNull).distinct().toList();
+
+		if (idsNonNull.isEmpty()) {
+			reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Es wurden keine Lehrer-IDs übergeben.");
+			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurden keine Lehrer-IDs übergeben.");
+		}
+
+		// Prüfe die Lehrer-IDs. Erzeuge Maps, damit auch später leicht auf die Lehrerdaten zugegriffen werden kann.
+		final Map<Long, LehrerStammdaten> mapLehrer =
+				new DataLehrerStammdaten(reportingRepository.conn()).getFromIDs(conn, idsNonNull).stream()
+						.collect(Collectors.toMap(l -> l.id, l -> l));
+		for (final Long lID : idsNonNull)
+			if (mapLehrer.get(lID) == null) {
+				reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Es wurden ungültige Lehrer-IDs übergeben.");
+				throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurden ungültige Lehrer-IDs übergeben.");
+			}
+
+		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Ende der Validierung der Lehrerdaten.");
+
+		// Daten sind valide, speichere diese nun gemäß Parameter im Repository.
+		if (cacheDaten) {
+			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Beginn der Speicherung der Daten aus der Validierung der Lehrerdaten im Repository.");
+			reportingRepository.mapLehrerStammdaten().putAll(mapLehrer);
+			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Ende der Speicherung der Daten aus der Validierung der Lehrerdaten im Repository.");
 		}
 	}
 
@@ -150,8 +320,9 @@ public final class ReportingValidierung {
 
 		// Prüfe nun, ob es zur angegebenen Blockungsergebnis-ID ein Ergebnis gibt.
 		try {
-			DataGostBlockungsdaten.getBlockungsdatenManagerFromDB(reportingRepository.conn(),
-					DataGostBlockungsergebnisse.getErgebnisFromID(reportingRepository.conn(), idBlockungsergebnis).blockungID);
+			final DBEntityManager conn = reportingRepository.conn();
+			DataGostBlockungsdaten.getBlockungsdatenManagerFromDB(conn,
+					DataGostBlockungsergebnisse.getErgebnisFromID(conn, idBlockungsergebnis).blockungID);
 		} catch (final ApiOperationException e) {
 			throw new ApiOperationException(Status.NOT_FOUND, e, "FEHLER: Mit der angegebenen Blockungsergebnis-ID konnte keine Daten ermittelt werden..");
 		}

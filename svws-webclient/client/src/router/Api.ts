@@ -250,6 +250,13 @@ class Api {
 		return this.conn.config;
 	}
 
+	/**
+	 * Gibt die benutzerspezifische und globale nicht persistierte Konfiguration zurück.
+	 */
+	public get nonPersistentConfig() : Config {
+		return this.conn.nonPersistentConfig;
+	}
+
 	/// --- Informationen zu der Schule, bei der der Benutzer eingeloggt ist
 
 	/**

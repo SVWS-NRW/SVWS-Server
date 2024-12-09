@@ -29,6 +29,6 @@ export interface GostKlausurplanungNachschreiberProps {
 	zeigeAlleJahrgaenge: () => boolean;
 	setZeigeAlleJahrgaenge: (value: boolean) => void;
 	gotoNachschreiber: (abiturjahr: number, halbjahr: GostHalbjahr) => Promise<void>;
-	gotoKalenderdatum: (goto: string | GostKlausurtermin) => Promise<void>;
+	gotoKalenderdatum: (datum: string | undefined, termin: GostKlausurtermin | undefined) => Promise<void>;
 	gotoRaumzeitTermin: (abiturjahr: number, halbjahr: GostHalbjahr, value: number) => Promise<void>;
 }

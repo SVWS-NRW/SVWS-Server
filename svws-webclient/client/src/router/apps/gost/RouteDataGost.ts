@@ -1,6 +1,6 @@
 import type { RouteParams } from "vue-router";
 import type { GostJahrgang, GostJahrgangsdaten, JahrgangsDaten, GostFach } from "@core";
-import { NullPointerException, DeveloperNotificationException, GostAbiturjahrUtils, Schulgliederung, GostFaecherManager, ArrayList, Jahrgaenge } from "@core";
+import { DeveloperNotificationException, GostAbiturjahrUtils, Schulgliederung, GostFaecherManager, ArrayList, Jahrgaenge } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -12,6 +12,7 @@ import { routeGostBeratung } from "~/router/apps/gost/beratung/RouteGostBeratung
 import { RouteNode } from "~/router/RouteNode";
 import { routeGostAbiturjahrNeu } from "./RouteGostAbiturjahrNeu";
 import { routeGostGruppenprozesse } from "./RouteGostGruppenprozesse";
+import type { TabData } from "@ui";
 
 interface RouteStateGost extends RouteStateInterface {
 	params: RouteParams;
@@ -58,6 +59,25 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 		await api.config.setValue('gost.auswahl.filterNurAktuelle', value ? "true" : "false");
 	}
 
+	get abiturjahrFromConfig(): number {
+		return parseInt(api.config.getValue("gost.auswahl.abiturjahr"));
+	}
+
+	setAbiturjahrToConfig = async (value: number) => {
+		await api.config.setValue('gost.auswahl.abiturjahr', value.toString());
+	}
+
+	get selectedTabFromConfig(): TabData {
+		const tab = api.config.getValue("gost.tab.selected");
+		if (tab.length === 0)
+			return { name: this.defaultView.name, text: this.defaultView.text };
+		return JSON.parse(tab) as TabData;
+	}
+
+	setSelectedTabToConfig = async (value: TabData) => {
+		await api.config.setValue('gost.tab.selected', JSON.stringify(value));
+	}
+
 	get creationModeEnabled(): boolean {
 		return this._state.value.creationModeEnabled;
 	}
@@ -102,7 +122,7 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
 		const mapJahrgaenge = new Map<number, JahrgangsDaten>();
 		for (const j of listJahrgaenge) {
-			const jg : Jahrgaenge | null = Jahrgaenge.data().getWertByKuerzel(j.kuerzelStatistik);
+			const jg : Jahrgaenge | null = (j.kuerzelStatistik === null) ? null : Jahrgaenge.data().getWertByKuerzel(j.kuerzelStatistik);
 			if ((jg !== null) && (jg.hatSchulform(schuljahresabschnitt.schuljahr, api.schulform)))
 				mapJahrgaenge.set(j.id, j);
 		}
@@ -253,6 +273,8 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 
 	setAbiturjahrgang = async (jahrgang: GostJahrgang | undefined, isEntering: boolean) => {
 		const daten = await this.ladeDatenFuerAbiturjahrgang(jahrgang, this._state.value, isEntering);
+		if ((jahrgang?.abiturjahr !== undefined) && this.mapAbiturjahrgaenge.has(jahrgang.abiturjahr))
+			await this.setAbiturjahrToConfig(jahrgang.abiturjahr);
 		this.setPatchedDefaultState(daten);
 	}
 
@@ -276,7 +298,8 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 		const schulgliederung: Schulgliederung | null = (jahrgang.kuerzelSchulgliederung === null) ? null : Schulgliederung.data().getWertByKuerzel(jahrgang.kuerzelSchulgliederung);
 		if (schulgliederung === null)
 			throw new DeveloperNotificationException("Dem Jahrgang mit der ID " + idJahrgang + " ist eine unbekannte Schulgliederung " + jahrgang.kuerzelSchulgliederung + " zugeordnet.");
-		const abiturjahr = GostAbiturjahrUtils.getGostAbiturjahr(api.schulform, schulgliederung, routeApp.data.aktAbschnitt.value.schuljahr, jahrgang.kuerzelStatistik);
+		const abiturjahr = (jahrgang.kuerzelStatistik === null) ? null
+			: GostAbiturjahrUtils.getGostAbiturjahr(api.schulform, schulgliederung, routeApp.data.aktAbschnitt.value.schuljahr, jahrgang.kuerzelStatistik);
 		if (abiturjahr === null)
 			return null;
 		return abiturjahr;
@@ -285,7 +308,7 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 	getAbiturjahrFuerJahrgang = (idJahrgang : number) => {
 		const abiturjahr = this.getAbiturjahrFuerJahrgangMitMap(idJahrgang, this._state.value.mapJahrgaenge);
 		if (abiturjahr === null)
-			throw new NullPointerException("Dem Jahrgang mit der ID " + idJahrgang + " konnte kein Abiturjahr zugeordnet werden.");
+			throw new DeveloperNotificationException(`Dem Jahrgang mit der ID ${idJahrgang} konnte kein Abiturjahr zugeordnet werden.`);
 		return abiturjahr;
 	}
 
@@ -304,9 +327,7 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 			await api.server.deleteGostAbiturjahrgang(api.schema, j.abiturjahr);
 			this.mapAbiturjahrgaenge.delete(j.abiturjahr);
 		}
-		// let state = await this.ladeDatenFuerSchuljahresabschnitt(this.idSchuljahresabschnitt);
-		// state = await this.ladeDatenFuerAbiturjahrgang(state.auswahl, state, true);
-		this.setPatchedState({ mapAbiturjahrgaenge: this.mapAbiturjahrgaenge });
+		this.setPatchedState({ mapAbiturjahrgaenge: this.mapAbiturjahrgaenge, selected: [ ] });
 		return [true, new ArrayList<null|string>()];
 	}
 

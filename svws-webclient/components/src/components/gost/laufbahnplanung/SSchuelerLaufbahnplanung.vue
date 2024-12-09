@@ -3,8 +3,8 @@
 		<Teleport v-if="hatUpdateKompetenz" defer to=".svws-sub-nav-target">
 			<svws-ui-sub-nav>
 				<svws-ui-button type="transparent" @click="export_laufbahnplanung"><span class="icon-sm i-ri-upload-2-line" />Exportieren</svws-ui-button>
-				<svws-ui-button type="transparent" @click="showModalImport().value = true"><span class="icon-sm i-ri-download-2-line" /> Importieren…</svws-ui-button>
-				<s-laufbahnplanung-import-modal :show="showModalImport" :import-laufbahnplanung="importLaufbahnplanung" />
+				<svws-ui-button type="transparent" @click="show = true"><span class="icon-sm i-ri-download-2-line" /> Importieren…</svws-ui-button>
+				<s-laufbahnplanung-import-modal v-model:show="show" :import-laufbahnplanung="importLaufbahnplanung" />
 				<svws-ui-button :type="zwischenspeicher === undefined ? 'transparent' : 'error'" @click="saveLaufbahnplanung">Planung merken</svws-ui-button>
 				<svws-ui-button type="danger" @click="restoreLaufbahnplanung" v-if="zwischenspeicher !== undefined">Planung wiederherstellen</svws-ui-button>
 				<svws-ui-button :type="modus === 'normal' ? 'transparent' : 'danger'" @click="switchModus" title="Modus wechseln">
@@ -50,8 +50,7 @@
 
 	const visible = computed<boolean>(() => props.schueler.abiturjahrgang !== null);
 
-	const _showModalImport = ref<boolean>(false);
-	const showModalImport = () => _showModalImport;
+	const show = ref<boolean>(false);
 
 	const updated = ref<boolean>(false);
 	const curId = ref<number | undefined>()

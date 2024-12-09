@@ -22,7 +22,7 @@ const SEinwilligungsartenApp = () => import("~/components/schule/kataloge/einwil
 export class RouteKatalogEinwilligungsarten extends RouteNode<RouteDataKatalogEinwilligungsarten, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.KEINE], "schule.einwilligungsarten", "schule/einwilligungsarten/:id(\\d+)?", SEinwilligungsartenApp, new RouteDataKatalogEinwilligungsarten());
+		super(Schulform.values(), [ BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN ], "schule.einwilligungsarten", "schule/einwilligungsarten/:id(\\d+)?", SEinwilligungsartenApp, new RouteDataKatalogEinwilligungsarten());
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Einwilligungsarten";

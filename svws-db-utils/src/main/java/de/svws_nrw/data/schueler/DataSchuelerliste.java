@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -24,7 +25,7 @@ import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.gost.DataGostJahrgangsliste;
 import de.svws_nrw.data.jahrgaenge.DataJahrgangsliste;
 import de.svws_nrw.data.klassen.DataKlassendaten;
-import de.svws_nrw.data.kurse.DataKursliste;
+import de.svws_nrw.data.kurse.DataKurse;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
@@ -110,9 +111,10 @@ public final class DataSchuelerliste extends DataManager<Long> {
 			final DTOSchuelerLernabschnittsdaten aktAbschnitt, final Map<Long, DTOJahrgang> mapJahrgaenge, final Schulform schulform) {
 		final SchuelerListeEintrag eintrag = new SchuelerListeEintrag();
 		eintrag.id = schueler.ID;
-		eintrag.nachname = (schueler.Nachname == null) ? "" : schueler.Nachname;
-		eintrag.vorname = (schueler.Vorname == null) ? "" : schueler.Vorname;
+		eintrag.nachname = Objects.toString(schueler.Nachname, "");
+		eintrag.vorname = Objects.toString(schueler.Vorname, "");
 		eintrag.geschlecht = (schueler.Geschlecht == null) ? "" : schueler.Geschlecht.kuerzel;
+		eintrag.geburtsdatum = schueler.Geburtsdatum;
 		eintrag.idSchuljahresabschnittSchueler = schueler.Schuljahresabschnitts_ID;
 		if (aktAbschnitt == null) {
 			eintrag.idSchuljahresabschnitt = schueler.Schuljahresabschnitts_ID;
@@ -129,7 +131,7 @@ public final class DataSchuelerliste extends DataManager<Long> {
 				eintrag.jahrgang = "";
 			} else {
 				eintrag.idJahrgang = jg.ID;
-				eintrag.jahrgang = jg.ASDJahrgang;
+				eintrag.jahrgang = Objects.toString(jg.ASDJahrgang, "");
 			}
 			if (aktAbschnitt.Schulgliederung == null) {
 				final Schulgliederung sgl = Schulgliederung.getDefault(schulform);
@@ -350,7 +352,7 @@ public final class DataSchuelerliste extends DataManager<Long> {
 		result.idSchuljahresabschnitt = idSchuljahresabschnitt;
 		result.schueler.addAll(getListeSchueler(conn, idSchuljahresabschnitt, false));
 		result.klassen.addAll(dataKlassendaten.getListBySchuljahresabschnittID(idSchuljahresabschnitt, false));
-		result.kurse.addAll(DataKursliste.getKursListenFuerAbschnitt(conn, idSchuljahresabschnitt, true));
+		result.kurse.addAll(DataKurse.getKursListenFuerAbschnitt(conn, idSchuljahresabschnitt, true));
 		result.jahrgaenge.addAll(DataJahrgangsliste.getJahrgangsliste(conn));
 
 		if (conn.getUser().schuleHatGymOb())

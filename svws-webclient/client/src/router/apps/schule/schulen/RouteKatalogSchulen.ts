@@ -22,7 +22,7 @@ const SSchulenApp = () => import("~/components/schule/kataloge/schulen/SSchulenA
 export class RouteKatalogSchulen extends RouteNode<RouteDataKatalogSchulen, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.schulen", "schule/schulen/:id(\\d+)?", SSchulenApp, new RouteDataKatalogSchulen());
+		super(Schulform.values(), [ BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN ], "schule.schulen", "schule/schulen/:id(\\d+)?", SSchulenApp, new RouteDataKatalogSchulen());
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schulen";

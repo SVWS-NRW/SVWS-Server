@@ -3,7 +3,7 @@
 		<svws-ui-todo title="Kurs anlegen">
 			Dieser Bereich ist noch in Entwicklung. Hier werden später alle initialen Informationen zur Anlage eines neuen Kurses eingepflegt.
 		</svws-ui-todo>
-		<svws-ui-checkpoint-modal :checkpoint :continue-routing="props.continueRoutingAfterCheckpoint" />
+		<svws-ui-checkpoint-modal :checkpoint :continue-routing="continueRoutingAfterCheckpoint" />
 	</div>
 </template>
 

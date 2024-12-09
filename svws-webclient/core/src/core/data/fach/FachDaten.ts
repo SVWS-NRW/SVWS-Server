@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { JavaInteger } from '../../../java/lang/JavaInteger';
 import { Class } from '../../../java/lang/Class';
 
 export class FachDaten extends JavaObject {
@@ -76,7 +77,7 @@ export class FachDaten extends JavaObject {
 	/**
 	 * Gibt die maximale Anzahl an Zeichen an, doe in Fachbemerkungen genutzt werden dürfen.
 	 */
-	public maxZeichenInFachbemerkungen : number = -1;
+	public maxZeichenInFachbemerkungen : number = JavaInteger.MAX_VALUE;
 
 	/**
 	 * Gibt an, ob das Fach ein schriftliches Fach für die zentralen Klausuren ist oder nicht.

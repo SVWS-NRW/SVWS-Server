@@ -2,11 +2,11 @@ package de.svws_nrw.core.kursblockung.test;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
-import java.util.ArrayList;
 import java.util.function.Consumer;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -15,7 +15,9 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
+import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.fach.Fach;
+import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungRegel;
@@ -1055,6 +1057,8 @@ class KursblockungTests {
 
 		final Schueler kbSchueler = new Schueler();
 		kbSchueler.id = 1;
+		kbSchueler.geschlecht = Geschlecht.X.id;
+		kbSchueler.status = SchuelerStatus.AKTIV.ordinal();
 
 		// Fachwahl ohne Kurs!
 		final GostFachwahl kbFachwahl = new GostFachwahl();

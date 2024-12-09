@@ -33,6 +33,7 @@ import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerkl
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenTermine;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenVorgaben;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
+import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -129,6 +130,7 @@ public final class DataGostKlausurenKursklausur extends DataManagerRevised<Long,
 		kk.idKurs = dto.Kurs_ID;
 		kk.idTermin = dto.Termin_ID;
 		kk.startzeit = dto.Startzeit;
+		kk.bemerkung = dto.Bemerkungen;
 		return kk;
 	}
 
@@ -169,6 +171,8 @@ public final class DataGostKlausurenKursklausur extends DataManagerRevised<Long,
 							sja);
 				}
 			}
+			case "bemerkung" -> dto.Bemerkungen =
+					DataGostKlausuren.convertEmptyStringToNull(JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Kursklausuren.col_Bemerkungen.datenlaenge()));
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Das Patchen des Attributes %s wird nicht unterstützt.".formatted(name));
 		}
 	}

@@ -8,6 +8,9 @@
 			</svws-ui-radio-group>
 		</template>
 		<div class="print:hidden">
+			<div v-if="abiturdatenManager().getBiligualenBildungsgang() !== null" class="mb-4">
+				<span class="font-bold">Hinweis:</span> Der Schüler befindet sich aktuell im Bilingualen Zweig ({{ abiturdatenManager().getBiligualenBildungsgang() }})
+			</div>
 			<s-laufbahnplanung-fehler :fehlerliste :belegpruefungs-art="() => abiturdatenManager().getPruefungsArt()" />
 			<s-laufbahnplanung-informationen :fehlerliste />
 			<s-laufbahnplanung-sprachpruefungen v-if="sprachendaten" :schuljahr :sprachendaten="() => abiturdatenManager().getSprachendaten()" />
@@ -35,7 +38,7 @@
 
 	const art = computed<'ef1'|'gesamt'|'auto'>({
 		get: () => props.gostBelegpruefungsArt(),
-		set: (value) => void props.setGostBelegpruefungsArt(value)
+		set: (value) => void props.setGostBelegpruefungsArt(value),
 	});
 
 	const sprachendaten = computed<Sprachendaten | null>(() => props.abiturdatenManager().getSprachendaten());

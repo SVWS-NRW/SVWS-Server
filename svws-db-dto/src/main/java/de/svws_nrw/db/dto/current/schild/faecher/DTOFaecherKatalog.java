@@ -189,7 +189,7 @@ public final class DTOFaecherKatalog {
 	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
 	public Boolean IstHKFS;
 
-	/** Gibt an, ob das Fach außerhalb des regulären Fachunterichts unterrichtet wird */
+	/** Gibt an, ob das Fach außerhalb des regulären Fachunterrichts unterrichtet wird */
 	@Column(name = "IstAusRegUFach")
 	@JsonProperty
 	@Convert(converter = Boolean01Converter.class)

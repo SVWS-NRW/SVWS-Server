@@ -6,6 +6,8 @@ import { Schulform } from '../../asd/types/schule/Schulform';
 import { ArrayList } from '../../java/util/ArrayList';
 import { JavaString } from '../../java/lang/JavaString';
 import { JavaInteger } from '../../java/lang/JavaInteger';
+import { SchulformSchulgliederung } from '../../asd/data/schule/SchulformSchulgliederung';
+import { CoreTypeDataNurSchulformenUndSchulgliederungen, cast_de_svws_nrw_asd_data_CoreTypeDataNurSchulformenUndSchulgliederungen } from '../../asd/data/CoreTypeDataNurSchulformenUndSchulgliederungen';
 import { NullPointerException } from '../../java/lang/NullPointerException';
 import { Class } from '../../java/lang/Class';
 import type { List } from '../../java/util/List';
@@ -166,8 +168,13 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 				this._mapKuerzelToEnum.put(eintrag.kuerzel, coreTypeEntry);
 				const setSchulformen : JavaSet<Schulform> | null = new HashSet<Schulform>();
 				if (((eintrag instanceof JavaObject) && (eintrag.isTranspiledInstanceOf('de.svws_nrw.asd.data.CoreTypeDataNurSchulformen')))) {
-					const listSchulformen : List<string> = (cast_de_svws_nrw_asd_data_CoreTypeDataNurSchulformen(eintrag)).schulformen;
-					setSchulformen.addAll(Schulform.data().getWerteByBezeichnerAsSet(listSchulformen));
+					const list : List<string> = (cast_de_svws_nrw_asd_data_CoreTypeDataNurSchulformen(eintrag)).schulformen;
+					setSchulformen.addAll(Schulform.data().getWerteByBezeichnerAsSet(list));
+				}
+				if (((eintrag instanceof JavaObject) && (eintrag.isTranspiledInstanceOf('de.svws_nrw.asd.data.CoreTypeDataNurSchulformenUndSchulgliederungen')))) {
+					const list : List<SchulformSchulgliederung> = (cast_de_svws_nrw_asd_data_CoreTypeDataNurSchulformenUndSchulgliederungen(eintrag)).zulaessig;
+					for (const sfsgl of list)
+						setSchulformen.add(Schulform.data().getWertByBezeichner(sfsgl.schulform));
 				}
 				this._mapSchulformenByID.put(eintrag.id, setSchulformen);
 			}
@@ -310,7 +317,7 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	 */
 	public getWerteByBezeichnerAsNonEmptySet(bezeichner : List<string>) : JavaSet<U> {
 		if (bezeichner.isEmpty())
-			throw new CoreTypeException(this._name + ": Die Liste der Bezeichner " + bezeichner + " ist leer.")
+			throw new CoreTypeException(this._name + ": Die Liste der Bezeichner ist leer.")
 		const result : JavaSet<U> = new HashSet<U>();
 		for (const b of bezeichner)
 			result.add(this.getWertByBezeichner(b));

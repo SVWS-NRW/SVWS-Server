@@ -15,16 +15,16 @@
 		<svws-ui-content-card title="Klausuren" v-if="hatKlausurManager()">
 			<svws-ui-table :items="kMan().schuelerklausurGetMengeAsList()" :columns="colsKlausuren">
 				<template #cell(quartal)="{ rowData }">
-					{{ kMan().vorgabeBySchuelerklausur(rowData).quartal }}
+					<span class="mt-3 mb-3">{{ kMan().vorgabeBySchuelerklausur(rowData).quartal }}</span>
 				</template>
 				<template #cell(termin)="{ rowData }">
 					<svws-ui-table class="-mb-5" v-if="kMan().terminKursklausurBySchuelerklausur(rowData) !== null && kMan().terminKursklausurBySchuelerklausur(rowData)!.datum !== null" :items="kMan().schuelerklausurterminGetMengeBySchuelerklausur(rowData)" :columns="colsTermine" disable-header>
 						<template #cell(datum)="{ rowData: termin }">
-							{{ kMan().terminOrNullBySchuelerklausurTermin(termin) !== null ? (kMan().terminOrExceptionBySchuelerklausurTermin(termin).datum !== null ? DateUtils.gibDatumGermanFormat(kMan().terminOrExceptionBySchuelerklausurTermin(termin).datum!) : "N.N.") : "N.N." }}
+							<span class="h-full flex justify-center items-center">{{ kMan().terminOrNullBySchuelerklausurTermin(termin) !== null ? (kMan().terminOrExceptionBySchuelerklausurTermin(termin).datum !== null ? DateUtils.gibDatumGermanFormat(kMan().terminOrExceptionBySchuelerklausurTermin(termin).datum!) : "N.N.") : "N.N." }}</span>
 						</template>
 						<template #cell(button)="{ rowData: termin }">
-							<div class="flex space-x-1" v-if="kMan().istSchuelerklausurterminAktuell(termin)">
-								<svws-ui-button class="mt-4" v-if="kMan().terminOrNullBySchuelerklausurTermin(termin) !== null && kMan().terminOrExceptionBySchuelerklausurTermin(termin).datum !== null" @click="terminSelected = termin; showModalTerminGrund().value = true">
+							<div class="flex space-x-1 pl-1" v-if="kMan().istSchuelerklausurterminAktuell(termin)">
+								<svws-ui-button class="" v-if="kMan().terminOrNullBySchuelerklausurTermin(termin) !== null && kMan().terminOrExceptionBySchuelerklausurTermin(termin).datum !== null" @click="terminSelected = termin; showModalTerminGrund = true">
 									<svws-ui-tooltip>
 										<template #content>
 											Klausur nicht mitgeschrieben
@@ -42,17 +42,17 @@
 								</svws-ui-button>
 							</div>
 							<div v-else>
-								{{ termin.bemerkung }}
+								<svws-ui-textarea-input :disabled="!patchSchuelerklausurTermin" :rows="1" resizeable="none" autoresize :placeholder="(termin.bemerkung === null || termin.bemerkung!.trim().length === 0) ? 'Kein Grund angegeben' : ''" :model-value="termin.bemerkung" @change="bemerkung => patchSchuelerklausurTermin(termin.id, {bemerkung})" />
 							</div>
 						</template>
 					</svws-ui-table>
 					<div v-else>Noch kein Termin gesetzt</div>
 				</template>
 				<template #cell(kurs)="{ rowData }">
-					{{ kMan().kursKurzbezeichnungByKursklausur(kMan().kursklausurBySchuelerklausur(rowData)) }}
+					<span class="mt-3">{{ kMan().kursKurzbezeichnungByKursklausur(kMan().kursklausurBySchuelerklausur(rowData)) }}</span>
 				</template>
 				<template #cell(lehrer)="{ rowData }">
-					{{ kMan().kursLehrerKuerzelByKursklausur(kMan().kursklausurBySchuelerklausur(rowData)) }}
+					<span class="mt-3">{{ kMan().kursLehrerKuerzelByKursklausur(kMan().kursklausurBySchuelerklausur(rowData)) }}</span>
 				</template>
 			</svws-ui-table>
 			<div v-if="GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(manager().schuelerGet().abiturjahrgang!, manager().schuljahresabschnittGet().schuljahr, manager().schuljahresabschnittGet().abschnitt) !== null"
@@ -78,8 +78,7 @@
 
 	const props = defineProps<SchuelerLernabschnittGostKlausurenProps>();
 
-	const _showModalTerminGrund = ref<boolean>(false);
-	const showModalTerminGrund = () => _showModalTerminGrund;
+	const showModalTerminGrund = ref<boolean>(false);
 
 	const terminSelected = ref<GostSchuelerklausurTermin>(new GostSchuelerklausurTermin());
 
@@ -88,7 +87,7 @@
 			await props.patchSchuelerklausurTermin(terminSelected.value.id, { bemerkung: terminSelected.value.bemerkung } );
 			await props.createSchuelerklausurTermin(terminSelected.value.idSchuelerklausur);
 		}
-		showModalTerminGrund().value = false;
+		showModalTerminGrund.value = false;
 		terminSelected.value = new GostSchuelerklausurTermin();
 	};
 

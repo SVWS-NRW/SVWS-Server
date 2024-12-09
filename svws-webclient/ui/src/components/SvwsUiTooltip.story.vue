@@ -54,6 +54,14 @@
 				</template>
 			</svws-ui-tooltip>
 		</Variant>
+		<Variant title="Disabled Tooltip" id="Disabled Tooltip">
+			<svws-ui-tooltip disabled>
+				Es wird kein Tooltip angezeigt
+				<template #content>
+					Tooltip Content
+				</template>
+			</svws-ui-tooltip>
+		</Variant>
 		<Variant title="Color Dark" id="Color Dark">
 			<svws-ui-tooltip color="dark">
 				Dark Tooltip

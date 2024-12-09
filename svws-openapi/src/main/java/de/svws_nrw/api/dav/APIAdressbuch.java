@@ -374,7 +374,7 @@ public class APIAdressbuch {
 		final Optional<String> methodName = walker.walk(frames -> frames
 				.skip(n).findFirst()
 				.map(StackWalker.StackFrame::getMethodName));
-		return methodName.get();
+		return methodName.orElse("");
 	}
 
 	private static Logger createLogger() {

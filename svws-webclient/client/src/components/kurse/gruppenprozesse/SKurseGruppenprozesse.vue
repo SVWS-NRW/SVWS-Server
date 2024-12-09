@@ -4,7 +4,7 @@
 			<svws-ui-action-button title="Löschen" description="Ausgewählte Kurse werden gelöscht." icon="i-ri-delete-bin-line"
 				:action-function="entferneKurse" action-label="Löschen" :is-loading="loading" :is-active="currentAction === 'delete'"
 				:action-disabled="!preConditionCheck[0]" @click="toggleDeleteKurse">
-				<span v-if="preConditionCheck[0] === true">Alle ausgewählten Kurse sind bereit zum Löschen.</span>
+				<span v-if="preConditionCheck[0]">Alle ausgewählten Kurse sind bereit zum Löschen.</span>
 				<template v-else v-for="message in preConditionCheck[1]" :key="message">
 					<span class="text-error"> {{ message }} <br> </span>
 				</template>
@@ -16,8 +16,8 @@
 			</log-box>
 		</div>
 		<div v-else>
-			<svws-ui-todo title="Lehrer - Gruppenprozesse">
-				Dieser Bereich ist noch in Entwicklung. Hier werden später Gruppenprozesse zu den Lehrern vorhanden sein.
+			<svws-ui-todo title="Kurse - Gruppenprozesse">
+				Dieser Bereich ist noch in Entwicklung. Hier werden später Gruppenprozesse zu den Kursen vorhanden sein.
 			</svws-ui-todo>
 		</div>
 	</div>
@@ -39,7 +39,7 @@
 
 	const preConditionCheck = computed(() => {
 		if (currentAction.value === 'delete')
-			return props.deleteKurseCheck();
+			return [true, []];
 		return [false, []];
 	})
 

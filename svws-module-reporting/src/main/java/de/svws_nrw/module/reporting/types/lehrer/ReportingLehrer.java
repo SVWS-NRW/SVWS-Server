@@ -4,38 +4,18 @@ import de.svws_nrw.core.data.kataloge.OrtKatalogEintrag;
 import de.svws_nrw.core.data.kataloge.OrtsteilKatalogEintrag;
 import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.core.types.schule.Nationalitaeten;
+import de.svws_nrw.module.reporting.types.person.ReportingPerson;
 
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Lehrer.
  */
-public class ReportingLehrer {
+public class ReportingLehrer extends ReportingPerson {
 
 	/** Ggf. die Amtsbezeichnung des Lehrers. */
 	protected String amtsbezeichnung;
 
-	/** Ggf. die Anrede des Lehrers. */
-	protected String anrede;
-
-	/** Ggf. die dienstliche E-Mail-Adresse des Lehrers. */
-	protected String emailDienstlich;
-
-	/** Ggf. die private Email-Adresse des Lehrers. */
-	protected String emailPrivat;
-
 	/** Ggf. das Foto des Lehrers (jpg, Base64-kodiert des Lehrers.) */
 	protected String foto;
-
-	/** Das Geburtsdatum des Lehrers. */
-	protected String geburtsdatum;
-
-	/** Das Geschlecht des Lehrers */
-	protected Geschlecht geschlecht;
-
-	/** Ggf. die Hausnummer zur Straße im Wohnort des Lehrers. */
-	protected String hausnummer;
-
-	/** Ggf. der Hausnummerzusatz zur Straße im Wohnort des Lehrers. */
-	protected String hausnummerZusatz;
 
 	/** Die ID des Lehrers. */
 	protected long id;
@@ -43,101 +23,78 @@ public class ReportingLehrer {
 	/** Das Kürzel des Lehrers. */
 	protected String kuerzel;
 
-	/** Der Nachname des Lehrers. */
-	protected String nachname;
-
 	/** Die Bezeichnung des Personals-Typs des Lehrers. */
 	protected String personalTyp;
-
-	/** Ggf. die Staatsangehörigkeit des Lehrers. */
-	protected Nationalitaeten staatsangehoerigkeit;
-
-	/** Ggf. der Straßenname im Wohnort des Lehrers. */
-	protected String strassenname;
-
-	/** Ggf. die Telefonnummer des Lehrers. */
-	protected String telefon;
-
-	/** Ggf. die Mobilnummer des Lehrers. */
-	protected String telefonMobil;
-
-	/** Ggf. ein akademischer Grad des Lehrers. */
-	protected String titel;
-
-	/** Der Vorname des Lehrers. */
-	protected String vorname;
-
-	/** Der Wohnort des Lehrers. */
-	protected OrtKatalogEintrag wohnort;
-
-	/** Der Wohnortsname des Lehrers. */
-	protected String wohnortname;
-
-	/** Ggf. der Ortsteil des Wohnortes des Lehrers. */
-	protected OrtsteilKatalogEintrag wohnortsteil;
-
-	/** Ggf. der Ortsteilname des Wohnortes des Lehrers. */
-	protected String wohnortsteilname;
-
-
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
 	 *
 	 * @param amtsbezeichnung Ggf. die Amtsbezeichnung des Lehrers.
-	 * @param anrede Ggf. die Anrede des Lehrers.
-	 * @param emailDienstlich Ggf. die dienstliche E-Mail-Adresse des Lehrers.
-	 * @param emailPrivat Ggf. die private Email-Adresse des Lehrers.
-	 * @param foto Ggf. das Foto des Lehrers (jpg, Base64-kodiert des Lehrers.)
+	 * @param anrede Die Anrede des Lehrers.
+	 * @param emailPrivat Private E-Mail-Adresse des Lehrers.
+	 * @param emailSchule Schulische E-Mail-Adresse des Lehrers.
+	 * @param foto Ggf. das Foto des Lehrers (jpg, Base64-kodiert.)
 	 * @param geburtsdatum Das Geburtsdatum des Lehrers.
-	 * @param geschlecht Das Geschlecht des Lehrers
+	 * @param geburtsland Das Geburtsland des Lehrers.
+	 * @param geburtsname Der Geburtsname des Lehrers.
+	 * @param geburtsort Der Geburtsort des Lehrers.
+	 * @param geschlecht Das Geschlecht des Lehrers.
 	 * @param hausnummer Ggf. die Hausnummer zur Straße im Wohnort des Lehrers.
 	 * @param hausnummerZusatz Ggf. der Hausnummerzusatz zur Straße im Wohnort des Lehrers.
 	 * @param id Die ID des Lehrers.
 	 * @param kuerzel Das Kürzel des Lehrers.
-	 * @param nachname Der Nachname des Lehrers.
+	 * @param nachname Der Name des Lehrers.
 	 * @param personalTyp Die Bezeichnung des Personals-Typs des Lehrers.
-	 * @param staatsangehoerigkeit Ggf. die Staatsangehörigkeit des Lehrers.
+	 * @param staatsangehoerigkeit Die Staatsangehörigkeit des Lehrers.
+	 * @param staatsangehoerigkeit2 Die ggf. zweite Staatsangehörigkeit des Lehrers.
 	 * @param strassenname Ggf. der Straßenname im Wohnort des Lehrers.
-	 * @param telefon Ggf. die Telefonnummer des Lehrers.
-	 * @param telefonMobil Ggf. die Mobilnummer des Lehrers.
-	 * @param titel Ggf. ein akademischer Grad des Lehrers.
+	 * @param telefon Die Telefonnummer des Lehrers.
+	 * @param telefonMobil Die mobile Telefonnummer des Lehrers.
+	 * @param titel Die Titel des Lehrers.
 	 * @param vorname Der Vorname des Lehrers.
+	 * @param vornamen Alle Vornamen des Lehrers
 	 * @param wohnort Der Wohnort des Lehrers.
-	 * @param wohnortname Der Wohnortsname des Lehrers.
 	 * @param wohnortsteil Ggf. der Ortsteil des Wohnortes des Lehrers.
-	 * @param wohnortsteilname Ggf. der Ortsteilname des Wohnortes des Lehrers.
 	 */
-	public ReportingLehrer(final String amtsbezeichnung, final String anrede, final String emailDienstlich, final String emailPrivat, final String foto,
-			final String geburtsdatum, final Geschlecht geschlecht, final String hausnummer, final String hausnummerZusatz, final long id, final String kuerzel,
-			final String nachname, final String personalTyp, final Nationalitaeten staatsangehoerigkeit, final String strassenname, final String telefon,
-			final String telefonMobil, final String titel, final String vorname, final OrtKatalogEintrag wohnort, final String wohnortname,
-			final OrtsteilKatalogEintrag wohnortsteil, final String wohnortsteilname) {
+	public ReportingLehrer(final String amtsbezeichnung, final String anrede, final String emailPrivat, final String emailSchule, final String foto,
+			final String geburtsdatum, final String geburtsland, final String geburtsname, final String geburtsort, final Geschlecht geschlecht,
+			final String hausnummer, final String hausnummerZusatz, final long id, final String kuerzel, final String nachname, final String personalTyp,
+			final Nationalitaeten staatsangehoerigkeit, final Nationalitaeten staatsangehoerigkeit2, final String strassenname, final String telefon,
+			final String telefonMobil, final String titel, final String vorname, final String vornamen, final OrtKatalogEintrag wohnort,
+			final OrtsteilKatalogEintrag wohnortsteil) {
+		super(anrede, emailPrivat, emailSchule, geburtsdatum, geburtsland, geburtsname, geburtsort, geschlecht,	hausnummer, hausnummerZusatz, nachname,
+				staatsangehoerigkeit, staatsangehoerigkeit2, strassenname, telefon, telefonMobil, titel, vorname, vornamen, wohnort, wohnortsteil);
 		this.amtsbezeichnung = amtsbezeichnung;
-		this.anrede = anrede;
-		this.emailDienstlich = emailDienstlich;
-		this.emailPrivat = emailPrivat;
 		this.foto = foto;
-		this.geburtsdatum = geburtsdatum;
-		this.geschlecht = geschlecht;
-		this.hausnummer = hausnummer;
-		this.hausnummerZusatz = hausnummerZusatz;
 		this.id = id;
 		this.kuerzel = kuerzel;
-		this.nachname = nachname;
 		this.personalTyp = personalTyp;
-		this.staatsangehoerigkeit = staatsangehoerigkeit;
-		this.strassenname = strassenname;
-		this.telefon = telefon;
-		this.telefonMobil = telefonMobil;
-		this.titel = titel;
-		this.vorname = vorname;
-		this.wohnort = wohnort;
-		this.wohnortname = wohnortname;
-		this.wohnortsteil = wohnortsteil;
-		this.wohnortsteilname = wohnortsteilname;
 	}
 
+
+
+	/**
+	 * Hashcode der Klasse
+	 * @return Hashcode der Klasse
+	 */
+	public int hashCode() {
+		return 31 + Long.hashCode(id);
+	}
+
+	/**
+	 * Equals der Klasse
+	 * @param obj Das Vergleichsobjekt
+	 * @return	true, falls es das gleiche Objekt ist, andernfalls false.
+	 */
+	public boolean equals(final Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof final ReportingLehrer other))
+			return false;
+		return (id == other.id);
+	}
 
 
 	// ##### Berechnete Felder #####
@@ -161,10 +118,10 @@ public class ReportingLehrer {
 	public String unterschriftfeld(final boolean mitVornameKurz, final boolean mitAmtsbezeichnung) {
 		return ("%s %s %s%s")
 				.formatted(
-						titel,
-						mitVornameKurz ? (vorname.charAt(0) + ".") : vorname,
-						nachname,
-						mitAmtsbezeichnung ? (", " + amtsbezeichnung) : "")
+						this.titel(),
+						mitVornameKurz ? (this.vorname().charAt(0) + ".") : this.vorname(),
+						this.nachname(),
+						mitAmtsbezeichnung ? (", " + this.amtsbezeichnung()) : "")
 				.trim().translateEscapes();
 	}
 
@@ -195,75 +152,12 @@ public class ReportingLehrer {
 	}
 
 	/**
-	 * Ggf. die Anrede des Lehrers.
-	 *
-	 * @return Inhalt des Feldes anrede
-	 */
-	public String anrede() {
-		return anrede;
-	}
-
-	/**
-	 * Ggf. die dienstliche E-Mail-Adresse des Lehrers.
-	 *
-	 * @return Inhalt des Feldes emailDienstlich
-	 */
-	public String emailDienstlich() {
-		return emailDienstlich;
-	}
-
-	/**
-	 * Ggf. die private Email-Adresse des Lehrers.
-	 *
-	 * @return Inhalt des Feldes emailPrivat
-	 */
-	public String emailPrivat() {
-		return emailPrivat;
-	}
-
-	/**
 	 * Ggf. das Foto des Lehrers (jpg, Base64-kodiert des Lehrers.)
 	 *
 	 * @return Inhalt des Feldes foto
 	 */
 	public String foto() {
 		return foto;
-	}
-
-	/**
-	 * Das Geburtsdatum des Lehrers.
-	 *
-	 * @return Inhalt des Feldes geburtsdatum
-	 */
-	public String geburtsdatum() {
-		return geburtsdatum;
-	}
-
-	/**
-	 * Das Geschlecht des Lehrers
-	 *
-	 * @return Inhalt des Feldes geschlecht
-	 */
-	public Geschlecht geschlecht() {
-		return geschlecht;
-	}
-
-	/**
-	 * Ggf. die Hausnummer zur Straße im Wohnort des Lehrers.
-	 *
-	 * @return Inhalt des Feldes hausnummer
-	 */
-	public String hausnummer() {
-		return hausnummer;
-	}
-
-	/**
-	 * Ggf. der Hausnummerzusatz zur Straße im Wohnort des Lehrers.
-	 *
-	 * @return Inhalt des Feldes hausnummerZusatz
-	 */
-	public String hausnummerZusatz() {
-		return hausnummerZusatz;
 	}
 
 	/**
@@ -285,15 +179,6 @@ public class ReportingLehrer {
 	}
 
 	/**
-	 * Der Nachname des Lehrers.
-	 *
-	 * @return Inhalt des Feldes nachname
-	 */
-	public String nachname() {
-		return nachname;
-	}
-
-	/**
 	 * Die Bezeichnung des Personals-Typs des Lehrers.
 	 *
 	 * @return Inhalt des Feldes personalTyp
@@ -301,95 +186,4 @@ public class ReportingLehrer {
 	public String personalTyp() {
 		return personalTyp;
 	}
-
-	/**
-	 * Ggf. die Staatsangehörigkeit des Lehrers.
-	 *
-	 * @return Inhalt des Feldes staatsangehoerigkeit
-	 */
-	public Nationalitaeten staatsangehoerigkeit() {
-		return staatsangehoerigkeit;
-	}
-
-	/**
-	 * Ggf. der Straßenname im Wohnort des Lehrers.
-	 *
-	 * @return Inhalt des Feldes strassenname
-	 */
-	public String strassenname() {
-		return strassenname;
-	}
-
-	/**
-	 * Ggf. die Telefonnummer des Lehrers.
-	 *
-	 * @return Inhalt des Feldes telefon
-	 */
-	public String telefon() {
-		return telefon;
-	}
-
-	/**
-	 * Ggf. die Mobilnummer des Lehrers.
-	 *
-	 * @return Inhalt des Feldes telefonMobil
-	 */
-	public String telefonMobil() {
-		return telefonMobil;
-	}
-
-	/**
-	 * Ggf. ein akademischer Grad des Lehrers.
-	 *
-	 * @return Inhalt des Feldes titel
-	 */
-	public String titel() {
-		return titel;
-	}
-
-	/**
-	 * Der Vorname des Lehrers.
-	 *
-	 * @return Inhalt des Feldes vorname
-	 */
-	public String vorname() {
-		return vorname;
-	}
-
-	/**
-	 * Der Wohnort des Lehrers.
-	 *
-	 * @return Inhalt des Feldes wohnort
-	 */
-	public OrtKatalogEintrag wohnort() {
-		return wohnort;
-	}
-
-	/**
-	 * Der Wohnortsname des Lehrers.
-	 *
-	 * @return Inhalt des Feldes wohnortname
-	 */
-	public String wohnortname() {
-		return wohnortname;
-	}
-
-	/**
-	 * Ggf. der Ortsteil des Wohnortes des Lehrers.
-	 *
-	 * @return Inhalt des Feldes wohnortsteil
-	 */
-	public OrtsteilKatalogEintrag wohnortsteil() {
-		return wohnortsteil;
-	}
-
-	/**
-	 * Ggf. der Ortsteilname des Wohnortes des Lehrers.
-	 *
-	 * @return Inhalt des Feldes wohnortsteilname
-	 */
-	public String wohnortsteilname() {
-		return wohnortsteilname;
-	}
-
 }

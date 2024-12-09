@@ -126,7 +126,7 @@ public class ValidatorFehler<@TsObject T> {
 	 * @return die Fehlerart
 	 */
 	public @NotNull ValidatorFehlerart getFehlerart() {
-		return _validator.getFehlerart();
+		return _validator.getValidatorFehlerart();
 	}
 
 }

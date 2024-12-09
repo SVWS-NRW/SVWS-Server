@@ -146,8 +146,7 @@ public final class DataSchuelerKAoADaten extends DataManagerRevised<Long, DTOSch
 		return schuljahresabschnitt.schuljahr;
 	}
 
-	@NotNull
-	JahrgaengeKatalogEintrag getJahrgaengeKatalogEintrag(final DTOSchuelerKAoADaten schuelerKAoADaten) throws ApiOperationException {
+	@NotNull JahrgaengeKatalogEintrag getJahrgaengeKatalogEintrag(final DTOSchuelerKAoADaten schuelerKAoADaten) throws ApiOperationException {
 		final int schuljahr = getSchuljahrByKAoADaten(schuelerKAoADaten);
 		final Jahrgaenge jahrgang = Jahrgaenge.data().getWertBySchluessel(schuelerKAoADaten.jahrgang);
 		if (jahrgang == null)
@@ -429,15 +428,15 @@ public final class DataSchuelerKAoADaten extends DataManagerRevised<Long, DTOSch
 	}
 
 	/**
-	 * Validiert die Bemerkung.
+	 * Validiert die optionale Bemerkung, insofern vorhanden - es sind maximal 255 Zeichen erlaubt.
 	 *
 	 * @param bemerkung       bemerkung
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	private static void validateBemerkung(final String bemerkung) throws ApiOperationException {
-		if ((bemerkung == null) || bemerkung.trim().isEmpty())
-			throw new ApiOperationException(Status.BAD_REQUEST, "Bemerkung darf nicht null sein.");
+		if ((bemerkung != null) && (bemerkung.length() > 255))
+			throw new ApiOperationException(Status.BAD_REQUEST, "Bemerkung darf nicht mehr als 255 Zeichen beinhalten.");
 	}
 
 	private static KAOAZusatzmerkmaleOptionsarten validateKAoAZusatzmerkmalOptionsarten(final KAOAZusatzmerkmalKatalogEintrag eintragZusatzmerkmal)

@@ -35,7 +35,7 @@ class TestKAOAZusatzmerkmal {
 	@Test
 	@DisplayName("Teste CoreType KAOAZusatzmerkmal: Anzahl der vorhandenen Werte.")
 	void testKAOAZusatzmerkmal_AnzahlEintraege() {
-		assertEquals(117, KAOAZusatzmerkmal.data().getWerte().size());
+		assertEquals(118, KAOAZusatzmerkmal.data().getWerte().size());
 	}
 
 	/**

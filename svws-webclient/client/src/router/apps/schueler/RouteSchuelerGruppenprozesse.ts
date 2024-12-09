@@ -13,7 +13,7 @@ const SSchuelerGruppenprozesse = () => import("~/components/schueler/gruppenproz
 export class RouteSchuelerGruppenprozesse extends RouteNode<any, RouteSchueler> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN ], "schueler.gruppenprozesse", "gruppenprozesse", SSchuelerGruppenprozesse);
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler.gruppenprozesse", "gruppenprozesse", SSchuelerGruppenprozesse);
 		super.types = new Set([ ViewType.GRUPPENPROZESSE ]);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
@@ -28,7 +28,7 @@ export class RouteSchuelerGruppenprozesse extends RouteNode<any, RouteSchueler> 
 		return {
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			schuelerListeManager: () => routeSchueler.data.schuelerListeManager,
-			deleteSchueler: routeSchueler.data.deleteSchueler,
+			deleteSchueler: routeSchueler.data.delete,
 			deleteSchuelerCheck: routeSchueler.data.deleteSchuelerCheck,
 		};
 	}

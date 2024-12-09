@@ -7,12 +7,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.core.data.kurse.KursDaten;
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.logger.LogLevel;
+import de.svws_nrw.data.kurse.DataKurse;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursLehrer;
@@ -42,18 +45,18 @@ public class ProxyReportingKurs extends ReportingKurs {
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingKurs}.
 	 *
-	 * @param reportingRepository Repository für die Reporting.
+	 * @param reportingRepository Repository für das Reporting.
 	 * @param kursDaten Stammdaten-Objekt aus der DB.
 	 */
 	public ProxyReportingKurs(final ReportingRepository reportingRepository, final KursDaten kursDaten) {
-		super(kursDaten.bezeichnungZeugnis,
+		super(ersetzeNullDurchEmpty(kursDaten.bezeichnungZeugnis),
 				null,
 				kursDaten.id,
 				kursDaten.istEpochalunterricht,
 				kursDaten.istSichtbar,
 				new ArrayList<>(),
-				kursDaten.kuerzel,
-				kursDaten.kursartAllg,
+				ersetzeNullDurchEmpty(kursDaten.kuerzel),
+				ersetzeNullDurchEmpty(kursDaten.kursartAllg),
 				kursDaten.schienen,
 				new ArrayList<>(),
 				new ArrayList<>(),
@@ -90,17 +93,17 @@ public class ProxyReportingKurs extends ReportingKurs {
 		// Erstelle die Map zu den Wochenstunden. Prüfe, ob auch Kursleiter bei Zusatzkräften ist und addiere hier die Wochenstunden der Kursleitung.
 		if (kursDaten.lehrer != null) {
 			if (mapKursZusatzkraefte.containsKey(kursDaten.lehrer)) {
-				super.wochenstundenLehrer.put(kursDaten.lehrer, kursDaten.wochenstundenLehrer + mapKursZusatzkraefte.get(kursDaten.lehrer));
+				super.wochenstundenLehrkraefte.put(kursDaten.lehrer, kursDaten.wochenstundenLehrer + mapKursZusatzkraefte.get(kursDaten.lehrer));
 			} else {
-				super.wochenstundenLehrer.put(kursDaten.lehrer, kursDaten.wochenstundenLehrer);
+				super.wochenstundenLehrkraefte.put(kursDaten.lehrer, kursDaten.wochenstundenLehrer);
 				if (!mapKursZusatzkraefte.isEmpty())
-					super.wochenstundenLehrer.putAll(mapKursZusatzkraefte);
+					super.wochenstundenLehrkraefte.putAll(mapKursZusatzkraefte);
 			}
 		} else if (!mapKursZusatzkraefte.isEmpty())
-			super.wochenstundenLehrer.putAll(mapKursZusatzkraefte);
+			super.wochenstundenLehrkraefte.putAll(mapKursZusatzkraefte);
 
 		// Lehrer-Stammdaten aller Kurslehrkräfte initialisieren
-		initLehrer(reportingRepository, kursDaten);
+		initLehrer(reportingRepository, kursDaten.lehrer);
 
 		// Schüler setzen. Fülle nur die Liste der IDs. Die ReportingSchueler-Liste wird per lazy-Loading gefüllt, da nicht immer die Kursschüler benötigt werden.
 		if ((kursDaten.schueler != null) && !kursDaten.schueler.isEmpty()) {
@@ -109,37 +112,28 @@ public class ProxyReportingKurs extends ReportingKurs {
 	}
 
 	// Initialisiert alle Lehrer-Stammdaten des Kurses.
-	private void initLehrer(final ReportingRepository reportingRepository, final KursDaten kursDaten) {
-		// Lehrer setzen, sowohl den Kursleiter aus der Kurstabelle (erster Lehrer) als auch die Lehrer aus der KurseLehrer-Tabelle
-		// Erstelle eine Liste der IDs aller Lehrer des Kurses, wobei der erste Lehrer die Kursleitung darstellt, wenn eingetragen.
-		final List<Long> idsKurslehrer = new ArrayList<>();
-		if (kursDaten.lehrer != null) {
-			idsKurslehrer.add(kursDaten.lehrer);
-			for (final Long idKurslehrer : wochenstundenLehrer.keySet()) {
-				if (!kursDaten.lehrer.equals(idKurslehrer))
-					idsKurslehrer.add(kursDaten.lehrer);
-			}
-		} else if (!wochenstundenLehrer.isEmpty()) {
-			idsKurslehrer.addAll(wochenstundenLehrer.keySet());
-		}
-		// Erstelle jetzt den kursLehrer und die Liste der zusatzLehrer mit Reporting-Lehrer zu den Lehrer-IDs
-		for (final Long idKurslehrer : idsKurslehrer) {
-			if (this.reportingRepository.mapLehrerStammdaten().containsKey(idKurslehrer)) {
-				if (idKurslehrer.equals(kursDaten.lehrer))
-					super.kursLehrer = new ProxyReportingLehrer(this.reportingRepository, this.reportingRepository.mapLehrerStammdaten().get(idKurslehrer));
+	private void initLehrer(final ReportingRepository reportingRepository, final Long idKursleitung) {
+		if (super.wochenstundenLehrkraefte.keySet().stream().filter(Objects::nonNull).toList().isEmpty())
+			return;
+
+		// Erstelle jetzt die Kursleitung und die Liste der zusätzlichen Lehrkräfte als Reporting-Lehrer.
+		for (final Long idLehrer : super.wochenstundenLehrkraefte.keySet().stream().filter(Objects::nonNull).toList()) {
+			if (this.reportingRepository.mapLehrerStammdaten().containsKey(idLehrer)) {
+				if (idLehrer.equals(idKursleitung))
+					super.kursleitung = new ProxyReportingLehrer(this.reportingRepository, this.reportingRepository.mapLehrerStammdaten().get(idLehrer));
 				else
-					super.zusatzLehrer.add(
-							new ProxyReportingLehrer(this.reportingRepository, this.reportingRepository.mapLehrerStammdaten().get(idKurslehrer)));
+					super.zusatzLehrkraefte.add(
+							new ProxyReportingLehrer(this.reportingRepository, this.reportingRepository.mapLehrerStammdaten().get(idLehrer)));
 			} else {
 				try {
-					final LehrerStammdaten lehrerStammdaten = new DataLehrerStammdaten(this.reportingRepository.conn()).getFromID(idKurslehrer);
+					final LehrerStammdaten lehrerStammdaten = new DataLehrerStammdaten(this.reportingRepository.conn()).getFromID(idLehrer);
 					final ReportingLehrer lehrer = new ProxyReportingLehrer(
 							this.reportingRepository,
-							this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(idKurslehrer, l -> lehrerStammdaten));
-					if (idKurslehrer.equals(kursDaten.lehrer))
-						super.kursLehrer = lehrer;
+							this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(idLehrer, l -> lehrerStammdaten));
+					if (idLehrer.equals(idKursleitung))
+						super.kursleitung = lehrer;
 					else
-						super.zusatzLehrer.add(lehrer);
+						super.zusatzLehrkraefte.add(lehrer);
 				} catch (final ApiOperationException e) {
 					ReportingExceptionUtils.putStacktraceInLog(
 							"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Daten eines Lehrers.", e,
@@ -150,10 +144,32 @@ public class ProxyReportingKurs extends ReportingKurs {
 	}
 
 
+	// ##### Hash und Equals Methoden #####
+
+	/**
+	 * Hashcode der Klasse
+	 * @return Hashcode der Klasse
+	 */
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
+	/**
+	 * Equals der Klasse
+	 * @param obj Das Vergleichsobjekt
+	 * @return    true, falls es das gleiche Objekt ist, andernfalls false.
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		return super.equals(obj);
+	}
+
+
 	/**
 	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.
 	 *
-	 * @return Repository für die Reporting
+	 * @return Repository für das Reporting
 	 */
 	public ReportingRepository reportingRepository() {
 		return reportingRepository;
@@ -161,26 +177,41 @@ public class ProxyReportingKurs extends ReportingKurs {
 
 
 	/**
-	 * Stellt eine Liste mit Schülern der Klasse zur Verfügung.
+	 * Stellt eine Liste mit Schülern des Kurses zur Verfügung.
 	 *
 	 * @return	Liste mit Schülern
 	 */
 	@Override
 	public List<ReportingSchueler> schueler() {
-		if (super.schueler.isEmpty() && !super.idsSchueler.isEmpty()) {
-			super.schueler =
-					DataSchuelerStammdaten.getListStammdaten(this.reportingRepository.conn(), super.idsSchueler).stream()
-							.map(s -> this.reportingRepository.mapSchuelerStammdaten().computeIfAbsent(s.id, k -> s))
-							.map(s -> (ReportingSchueler) new ProxyReportingSchueler(
-									this.reportingRepository,
-									s))
-							.sorted(Comparator
-									.comparing(ReportingSchueler::nachname, colGerman)
-									.thenComparing(ReportingSchueler::vorname, colGerman)
-									.thenComparing(ReportingSchueler::vornamen, colGerman)
-									.thenComparing(ReportingSchueler::geburtsdatum, colGerman)
-									.thenComparing(ReportingSchueler::id, colGerman))
-							.toList();
+		if (super.schueler.isEmpty()) {
+			final KursDaten kursDaten;
+			if (super.idsSchueler().isEmpty()) {
+				try {
+					kursDaten = DataKurse.getKursdaten(reportingRepository.conn(), super.id());
+					if ((kursDaten.schueler != null) && !kursDaten.schueler.isEmpty())
+						idsSchueler.addAll(kursDaten.schueler.stream().map(s -> s.id).toList());
+				} catch (final ApiOperationException e) {
+					ReportingExceptionUtils.putStacktraceInLog(
+							"FEHLER: Fehler bei der Ermittlung der Schülerdaten des Kurses %s in %s."
+									.formatted(super.kuerzel, super.schuljahresabschnitt.textSchuljahresabschnittKurz()),
+							e, reportingRepository.logger(), LogLevel.ERROR, 0);
+					return super.schueler();
+				}
+			}
+			if (!idsSchueler.isEmpty()) {
+				final List<SchuelerStammdaten> schuelerStammdaten = DataSchuelerStammdaten.getListStammdaten(this.reportingRepository.conn(),
+						super.idsSchueler);
+				this.reportingRepository.mapSchuelerStammdaten().putAll(schuelerStammdaten.stream().collect(Collectors.toMap(s -> s.id, s -> s)));
+				super.schueler = schuelerStammdaten.stream().map(s -> (ReportingSchueler) new ProxyReportingSchueler(this.reportingRepository, s))
+						.sorted(Comparator
+								.comparing(ReportingSchueler::nachname, colGerman)
+								.thenComparing(ReportingSchueler::vorname, colGerman)
+								.thenComparing(ReportingSchueler::vornamen, colGerman)
+								.thenComparing(ReportingSchueler::geburtsdatum, colGerman)
+								.thenComparing(ReportingSchueler::id, colGerman))
+						.toList();
+				this.reportingRepository.mapSchueler().putAll(super.schueler.stream().collect(Collectors.toMap(ReportingSchueler::id, s -> s)));
+			}
 		}
 		return super.schueler();
 	}

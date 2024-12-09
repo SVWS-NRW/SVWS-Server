@@ -12,12 +12,12 @@ export class ValidatorFehlerart extends JavaEnum<ValidatorFehlerart> {
 	/**
 	 * MUSS-Fehler : verhindert das Absenden der Statistik
 	 */
-	public static readonly HART : ValidatorFehlerart = new ValidatorFehlerart("HART", 0, );
+	public static readonly MUSS : ValidatorFehlerart = new ValidatorFehlerart("MUSS", 0, );
 
 	/**
-	 * KANN-Fehler: Fehler, der erklärt werden muss, aber das Absenden der Statistik nicht verhindert
+	 * KANN-Fehler: Wahrscheinlicher Fehler, der erklärt werden muss, aber das Absenden der Statistik nicht verhindert
 	 */
-	public static readonly MUSS : ValidatorFehlerart = new ValidatorFehlerart("MUSS", 1, );
+	public static readonly KANN : ValidatorFehlerart = new ValidatorFehlerart("KANN", 1, );
 
 	/**
 	 * HINWEIS: auf einen möglichen Fehler

@@ -22,18 +22,28 @@
 			:key="title"
 			:id="title"
 			:title="title">
-			<div class="flex gap-2 p-1">
+			<div class="flex gap-2 p-1 flex-wrap items-start">
 				<svws-ui-button v-bind="props" @click="onClick">
 					<template v-if="props.type !== 'icon'">
-						Button
+						{{ title }}
 					</template>
 					<span class="icon i-ri-settings-3-line" v-else />
 				</svws-ui-button>
-				<div v-if="title === 'Primary' || title === 'Secondary'" class="page--statistik">
+				<template v-if="title === 'Primary' || title === 'Secondary'">
 					<svws-ui-button v-bind="props" @click="onClick">
-						Button
+						<span class="icon i-ri-archive-line"></span>
+						{{ title }}
+					</svws-ui-button>
+					<div class="page--statistik flex gap-2">
+					<svws-ui-button v-bind="props" @click="onClick">
+						{{ title }}
+					</svws-ui-button>
+					<svws-ui-button v-bind="props" @click="onClick">
+						<span class="icon i-ri-archive-line"></span>
+						{{ title }}
 					</svws-ui-button>
 				</div>
+				</template>
 			</div>
 		</Variant>
 	</Story>

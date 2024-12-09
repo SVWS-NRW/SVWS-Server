@@ -37,7 +37,7 @@ public final class DataLehrerLehrbefaehigung extends DataManager<Long> {
 		daten.id = l.Lehrer_ID;
 		final LehrerLehrbefaehigung lehrbefaehigung = LehrerLehrbefaehigung.data().getWertByKuerzel(l.LehrbefKrz);
 		final LehrerLehrbefaehigungKatalogEintrag eintragLehrbefaehigung = (lehrbefaehigung == null) ? null : lehrbefaehigung.daten(schuljahr);
-		daten.idLehrbefaehigung = (eintragLehrbefaehigung == null) ? null : eintragLehrbefaehigung.id;
+		daten.idLehrbefaehigung = (eintragLehrbefaehigung == null) ? -1 : eintragLehrbefaehigung.id;
 		final LehrerLehrbefaehigungAnerkennung anerkennung = LehrerLehrbefaehigungAnerkennung.data().getWertByKuerzel(l.LehrbefAnerkennungKrz);
 		final LehrerLehrbefaehigungAnerkennungKatalogEintrag eintragAnerkennung = (anerkennung == null) ? null : anerkennung.daten(schuljahr);
 		daten.idAnerkennungsgrund = (eintragAnerkennung == null) ? null : eintragAnerkennung.id;

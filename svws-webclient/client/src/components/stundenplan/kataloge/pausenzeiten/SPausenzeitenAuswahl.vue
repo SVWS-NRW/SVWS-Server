@@ -41,7 +41,7 @@
 	import { ref } from "vue";
 	import type { PausenzeitenAuswahlProps } from "./SPausenzeitenAuswahlProps";
 	import { StundenplanPausenzeit } from "@core";
-	import { Wochentag , DateUtils } from "@core";
+	import { Wochentag, DateUtils } from "@core";
 
 	const props = defineProps<PausenzeitenAuswahlProps>();
 	const selected = ref<StundenplanPausenzeit[]>([]);
@@ -60,7 +60,7 @@
 
 	function export_pausenzeiten() {
 		const arr = selected.value.map(r => StundenplanPausenzeit.transpilerToJSON(r));
-		const blob = new Blob(['['+arr.toString()+']'], { type: "application/json", });
+		const blob = new Blob(['['+arr.toString()+']'], { type: "application/json" });
 		const link = document.createElement("a");
 		link.href = URL.createObjectURL(blob);
 		link.download = "ExportPausenzeiten.json";

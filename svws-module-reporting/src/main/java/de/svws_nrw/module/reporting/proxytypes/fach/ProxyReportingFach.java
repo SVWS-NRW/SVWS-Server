@@ -1,8 +1,7 @@
 package de.svws_nrw.module.reporting.proxytypes.fach;
 
-import de.svws_nrw.core.data.fach.FachDaten;
-import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.asd.types.fach.Fach;
+import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 
 /**
@@ -13,42 +12,60 @@ public class ProxyReportingFach extends ReportingFach {
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingFach}.
 	 *
-	 * @param fachDaten 	Die allgemeinen Daten des Faches
-	 * @param fachGostDaten Die GOSt-Daten des Faches
+	 * @param fach 	Die allgemeinen Daten des Faches
 	 * @param schuljahr		Das Schuljahr, aus dem die Statistikdaten des Faches gelesen werden.
 	 */
-	public ProxyReportingFach(final FachDaten fachDaten, final GostFach fachGostDaten, final int schuljahr) {
-		super(fachDaten.aufgabenfeld,
-				fachDaten.aufZeugnis,
-				fachDaten.bezeichnung,
-				fachDaten.bezeichnungUeberweisungszeugnis,
-				fachDaten.bezeichnungZeugnis,
-				fachDaten.bilingualeSprache,
+	public ProxyReportingFach(final DTOFach fach, final int schuljahr) {
+		super(ersetzeNullDurchEmpty(fach.Aufgabenfeld),
+				fach.AufZeugnis,
+				ersetzeNullDurchEmpty(fach.Bezeichnung),
+				ersetzeNullDurchEmpty(fach.BezeichnungUeberweisungsZeugnis),
+				ersetzeNullDurchEmpty(fach.BezeichnungZeugnis),
+				((fach.Unterrichtssprache != null) && (!(fach.Unterrichtssprache.isEmpty())) && (!"D".equals(fach.Unterrichtssprache)))
+						? fach.Unterrichtssprache.substring(0, 1) : "",
 				null,
-				fachDaten.holeAusAltenLernabschnitten,
-				fachDaten.id,
-				fachDaten.istFHRFach,
-				false,
-				false,
-				fachDaten.istOberstufenFach,
-				fachDaten.istNachpruefungErlaubt,
-				fachDaten.istPruefungsordnungsRelevant,
-				fachDaten.istSchriftlichBA,
-				fachDaten.istSchriftlichZK,
-				fachDaten.istSichtbar,
-				fachDaten.kuerzel,
-				fachDaten.maxZeichenInFachbemerkungen,
-				fachDaten.sortierung,
+				fach.AbgeschlFaecherHolen,
+				fach.ID,
+				((fach.GewichtungFHR != null) && (fach.GewichtungFHR != 0)),
+				fach.IstFremdsprache,
+				fach.IstMoeglichAlsNeueFremdspracheInSekII,
+				fach.IstOberstufenFach,
+				fach.IstNachpruefungErlaubt,
+				fach.IstPruefungsordnungsRelevant,
+				fach.IstSchriftlichBA,
+				fach.IstSchriftlichZK,
+				fach.Sichtbar,
+				ersetzeNullDurchEmpty(fach.Kuerzel),
+				((fach.MaxBemZeichen == null) ? Integer.MAX_VALUE : fach.MaxBemZeichen),
+				fach.SortierungAllg,
 				null);
 
-		if ((fachDaten.kuerzelStatistik != null) && !fachDaten.kuerzelStatistik.isEmpty()) {
-			super.statistikfach = new ProxyReportingStatistikFach(Fach.getBySchluesselOrDefault(fachDaten.kuerzelStatistik), schuljahr, true);
+		if ((fach.StatistikKuerzel != null) && !fach.StatistikKuerzel.isEmpty()) {
+			super.statistikfach = new ProxyReportingStatistikFach(Fach.getBySchluesselOrDefault(fach.StatistikKuerzel), schuljahr, true);
 			super.fachgruppe = super.statistikfach().fachgruppe();
 		}
-
-		if (fachGostDaten != null) {
-			this.istFremdsprache = fachGostDaten.istFremdsprache;
-			this.istFremdSpracheNeuEinsetzend = fachGostDaten.istFremdSpracheNeuEinsetzend;
-		}
 	}
+
+	// ##### Hash und Equals Methoden #####
+
+	/**
+	 * Hashcode der Klasse
+	 * @return Hashcode der Klasse
+	 */
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
+	/**
+	 * Equals der Klasse
+	 * @param obj Das Vergleichsobjekt
+	 * @return    true, falls es das gleiche Objekt ist, andernfalls false.
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		return super.equals(obj);
+	}
+
+
 }

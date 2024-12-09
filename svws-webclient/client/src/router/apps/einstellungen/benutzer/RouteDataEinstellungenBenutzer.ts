@@ -1,5 +1,5 @@
 import type { BenutzergruppeListeEintrag, BenutzerKompetenzGruppe, List } from "@core";
-import { BenutzerDaten, BenutzerKompetenz, BenutzerListeEintrag, BenutzerManager, BenutzerAllgemeinCredentials, ArrayList, DeveloperNotificationException } from "@core";
+import { BenutzerDaten, BenutzerKompetenz, BenutzerListeEintrag, BenutzerManager, BenutzerAllgemeinCredentials, ArrayList, DeveloperNotificationException, BenutzerTyp } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -56,7 +56,7 @@ export class RouteDataEinstellungenBenutzer extends RouteData<RouteStateEinstell
 		this.mapBenutzer = mapBenutzer;
 		this.setPatchedState({
 			mapBenutzer : this._state.value.mapBenutzer,
-			listBenutzer: this._state.value.listBenutzer
+			listBenutzer: this._state.value.listBenutzer,
 		})
 	}
 
@@ -75,16 +75,11 @@ export class RouteDataEinstellungenBenutzer extends RouteData<RouteStateEinstell
 			})
 			await this.ladeListe();
 		}
-		const neueAuswahl = benutzer === undefined ? this.firstBenutzer(this.mapBenutzer) : benutzer;
-		const daten = await this.ladeBenutzerDaten(neueAuswahl);
+		const auswahl = benutzer === undefined ? this.firstBenutzer(this.mapBenutzer) : benutzer;
+		const daten = await this.ladeBenutzerDaten(auswahl);
 		const listBenutzergruppen = await api.server.getBenutzergruppenliste(api.schema);
-		const benutzerManager = daten=== undefined ? undefined : new BenutzerManager(daten);
-		this.setPatchedState({
-			auswahl: neueAuswahl,
-			benutzerManager: benutzerManager,
-			listBenutzergruppen: listBenutzergruppen,
-			daten: daten
-		})
+		const benutzerManager = (daten === undefined) ? undefined : new BenutzerManager(daten);
+		this.setPatchedState({ auswahl, benutzerManager, listBenutzergruppen, daten });
 	}
 
 	gotoBenutzer = async (value: BenutzerListeEintrag | undefined) => {
@@ -164,6 +159,8 @@ export class RouteDataEinstellungenBenutzer extends RouteData<RouteStateEinstell
 	 * @returns {Promise<void>}
 	 */
 	setAnzeigename = async (anzeigename : string | null): Promise<void> => {
+		if (this.benutzerManager.daten().typ !== BenutzerTyp.ALLGEMEIN.id)
+			return;
 		await api.server.setAnzeigename(anzeigename, api.schema, this.benutzerManager.getID());
 		for (const benutzer of this.listBenutzer)
 			if ((benutzer.id === this.daten.id) && (anzeigename !== null))
@@ -187,7 +184,7 @@ export class RouteDataEinstellungenBenutzer extends RouteData<RouteStateEinstell
 		this.setPatchedState({
 			auswahl: neueAuswahl,
 			mapBenutzer : this.mapBenutzer,
-			benutzerManager : this.benutzerManager
+			benutzerManager : this.benutzerManager,
 		})
 	}
 
@@ -243,7 +240,7 @@ export class RouteDataEinstellungenBenutzer extends RouteData<RouteStateEinstell
 		}
 		this.setPatchedState({
 			benutzerManager: this._state.value.benutzerManager,
-			listBenutzergruppen: this._state.value.listBenutzergruppen
+			listBenutzergruppen: this._state.value.listBenutzergruppen,
 		});
 	}
 
@@ -276,7 +273,7 @@ export class RouteDataEinstellungenBenutzer extends RouteData<RouteStateEinstell
 		const benutzerManager = (daten === undefined) ? undefined : new BenutzerManager(daten);
 		this.setPatchedState({
 			benutzerManager: benutzerManager,
-			listBenutzergruppen: this._state.value.listBenutzergruppen
+			listBenutzergruppen: this._state.value.listBenutzergruppen,
 		})
 	}
 

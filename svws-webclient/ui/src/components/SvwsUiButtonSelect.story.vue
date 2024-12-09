@@ -1,14 +1,22 @@
 <template>
 	<Story title="Button mit Auswahl" id="svws-ui-button-select" icon="ri:cursor-line" auto-props-disabled>
 		<Variant title="Default">
-			<div class="p-3 flex flex-wrap gap-3">
+			<svws-ui-input-wrapper class="p-2">
 				<svws-ui-button-select @click="() => console.log('Default Button clicked')" :dropdown-actions="dropdownActions" />
-				<div class="w-full" />
+				<svws-ui-button-select type="danger" @click="() => console.log('Default Button clicked')" :dropdown-actions="dropdownActions" />
 				<svws-ui-button-select type="secondary" @click="() => console.log('Default Button clicked')" :dropdown-actions="dropdownActions" />
 				<svws-ui-button-select type="secondary" @click="() => console.log('Default Button clicked')" :dropdown-actions="dropdownActions">
 					<template #icon><span class="icon i-ri-printer-line" /></template>
 				</svws-ui-button-select>
-			</div>
+			</svws-ui-input-wrapper>
+			<svws-ui-input-wrapper class="p-2 page--statistik mt-10">
+				<svws-ui-button-select @click="() => console.log('Default Button clicked')" :dropdown-actions="dropdownActions" />
+				<svws-ui-button-select type="danger" @click="() => console.log('Default Button clicked')" :dropdown-actions="dropdownActions" />
+				<svws-ui-button-select type="secondary" @click="() => console.log('Default Button clicked')" :dropdown-actions="dropdownActions" />
+				<svws-ui-button-select type="secondary" @click="() => console.log('Default Button clicked')" :dropdown-actions="dropdownActions">
+					<template #icon><span class="icon i-ri-printer-line" /></template>
+				</svws-ui-button-select>
+			</svws-ui-input-wrapper>
 			<template #source>
 				{{ `
 <svws-ui-button-select

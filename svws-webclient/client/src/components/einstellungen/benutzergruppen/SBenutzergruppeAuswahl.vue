@@ -8,7 +8,7 @@
 		</template>
 		<template #content>
 			<svws-ui-table :clicked="auswahl()" @update:clicked="gotoBenutzergruppe" v-model="selectedItems" :items="rowsFiltered.values()"
-				:columns="cols" clickable selectable count :unique-key="String(auswahl()?.id)" scroll scroll-into-view>
+				:columns="cols" clickable selectable count :unique-key="String(auswahl()?.id)" scroll scroll-into-view :focus-switching-enabled :focus-help-visible>
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" removable />
 				</template>
@@ -27,13 +27,15 @@
 	import { type DataTableColumn } from "@ui";
 	import { type BenutzergruppeListeEintrag } from "@core";
 	import { type BenutzergruppeAuswahlProps } from "./SBenutzergruppeAuswahlProps";
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<BenutzergruppeAuswahlProps>();
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const selectedItems = ref<BenutzergruppeListeEintrag[]>([]);
 
 	const cols : DataTableColumn[] = [
-		{ key: "bezeichnung", label: "Bezeichnung", sortable: true }
+		{ key: "bezeichnung", label: "Bezeichnung", sortable: true },
 	];
 
 	const search = ref<string>("");

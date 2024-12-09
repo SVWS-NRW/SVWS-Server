@@ -36,6 +36,15 @@ public enum ReportingReportvorlage {
 	/** Report-Vorlage: GOSt - Kursplanung - Schüler-Schienen-Kurse */
 	GOST_KURSPLANUNG_v_SCHUELER_MIT_SCHIENEN_KURSEN("GostKursplanung-SchuelerMitSchienenKursen"),
 
+	/** Report-Vorlage: Klasse - Schülerstammdaten - Liste */
+	KLASSEN_v_KLASSE_SCHUELER_STAMMDATENLISTE("Klasse-Schueler-Stammdatenliste"),
+
+	/** Report-Vorlage: Kurs - Schülerstammdaten - Liste */
+	KURSE_v_KURS_SCHUELER_STAMMDATENLISTE("Kurs-Schueler-Stammdatenliste"),
+
+	/** Report-Vorlage: Lehrer - Stammdaten - Liste */
+	LEHRER_v_STAMMDATENLISTE("Lehrer-Stammdatenliste"),
+
 	/** Report-Vorlage: GOSt - Abitur - APO - Anlage 12 (Abiturzeugnis) */
 	SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12("Schueler-GostAbiturApoAnlage12"),
 
@@ -46,7 +55,7 @@ public enum ReportingReportvorlage {
 	SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN("Schueler-GostLaufbahnplanungWahlbogen"),
 
 	/** Report-Vorlage: Schüler - Stammdaten - Liste */
-	SCHUELER_v_STAMMDATEN_LISTE("Schueler-Stammdatenliste");
+	SCHUELER_v_STAMMDATENLISTE("Schueler-Stammdatenliste");
 
 
 

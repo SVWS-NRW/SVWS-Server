@@ -11,7 +11,7 @@ export default tseslint.config(
 	// globale Einstellung für extends und ignores
 	// betrifft alle vue und ts-Dateien
   {
-    files: ["**/*.ts", "**/*.vue",],
+    files: ["**/*.ts", "**/*.vue", "**/tailwind/*.js"],
 		ignores: ["dist/**", "node_modules/**", "build/**"],
 		// verwende die Basisregeln, die mitgeliefert werden
 		extends: [
@@ -49,7 +49,15 @@ export default tseslint.config(
 			"@stylistic/no-mixed-spaces-and-tabs": "off",
 
 			"@stylistic/arrow-spacing": "warn",
-			//"@stylistic/comma-dangle": ["warn", "always-multiline"],
+			"@stylistic/comma-dangle": ["warn", {
+        "arrays": "always-multiline",
+        "imports": "always-multiline",
+        "exports": "always-multiline",
+        "objects": "always-multiline",
+        "functions": "never",
+        "importAttributes": "never",
+        "dynamicImports": "never"
+    	}],
 			"@stylistic/no-mixed-operators": "error",
 			"@stylistic/no-multi-spaces": "error",
 			"@stylistic/no-trailing-spaces": "error",

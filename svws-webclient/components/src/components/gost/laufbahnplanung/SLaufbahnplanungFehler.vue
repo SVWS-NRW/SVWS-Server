@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-table :items="[]" :no-data="false" no-data-text="" :columns="[{key: 'icon', label: '0', fixedWidth: 1.8, align: 'center'},{key: 'beschreibung', label: 'Laufbahnfehler'}]"
-		type="navigation" :scroll>
+		type="navigation" :scroll class="svws-no-mx">
 		<template #header>
 			<div class="svws-ui-tr" role="row">
 				<div class="svws-ui-td col-span-full" role="columnheader">
@@ -13,7 +13,7 @@
 			<div v-for="fehler in belegungsfehler" :key="fehler.code" class="svws-ui-tr" role="row">
 				<div class="svws-ui-td" role="cell">
 					<svws-ui-tooltip>
-						<span class="icon i-ri-alert-line flex-shrink-0 icon-error text-button mt-0.5" />
+						<span class="icon i-ri-alert-line flex-shrink-0 icon-error text-button" />
 						<template #content>
 							<span class="font-mono">
 								{{ fehler.code }}

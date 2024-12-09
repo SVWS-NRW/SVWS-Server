@@ -1,12 +1,12 @@
 <template>
-	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="showModal" type="danger" class="hidden">
+	<slot :open-modal />
+	<svws-ui-modal v-model:show="show" type="danger" class="hidden">
 		<template #modalTitle>Zeitraster importieren</template>
 		<template #modalContent>
 			Beim Import der Katalogzeitraster werden alle bisher für den Stundenplan angelegten Zeitraster entfernt und durch Zeitraster aus dem Schulkatalog ersetzt.
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="showModal().value = false"> Abbrechen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="show = false"> Abbrechen </svws-ui-button>
 			<svws-ui-button type="danger" @click="importer()"> Importieren </svws-ui-button>
 		</template>
 	</svws-ui-modal>
@@ -23,18 +23,17 @@
 		removeZeitraster: (zeitraster: Iterable<StundenplanZeitraster>) => Promise<void>;
 	}>();
 
-	const _showModal = ref<boolean>(false);
-	const showModal = () => _showModal;
+	const show = ref<boolean>(false);
 
 	const openModal = () => {
-		showModal().value = true;
+		show.value = true;
 	}
 
 	async function importer() {
 		const list = props.stundenplanManager().getListZeitraster();
 		await props.removeZeitraster(list);
 		await props.importZeitraster();
-		showModal().value = false;
+		show.value = false;
 	}
 
 </script>

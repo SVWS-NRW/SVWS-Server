@@ -5,26 +5,26 @@
 			<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
 		</template>
 		<template #content>
-			<svws-ui-table :clickable="!kursListeManager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="kursDaten => gotoDefaultView(kursDaten.id)"
-				:items="rowsFiltered" :model-value="[...props.kursListeManager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)"
+			<svws-ui-table :clickable="!manager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="kursDaten => gotoDefaultView(kursDaten.id)"
+				:items="rowsFiltered" :model-value="[...props.manager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)"
 				:columns selectable count :filter-open="true" :filtered="filterChanged()" :filterReset scroll-into-view scroll
-				v-model:sort-by-and-order="sortByAndOrder" :sort-by-multi allow-arrow-key-selection>
+				v-model:sort-by-and-order="sortByAndOrder" :sort-by-multi allow-arrow-key-selection :focus-switching-enabled :focus-help-visible>
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Kurs" removable />
 				</template>
 				<template #filterAdvanced>
 					<svws-ui-checkbox type="toggle" v-model="filterNurSichtbare">Nur Sichtbare</svws-ui-checkbox>
-					<svws-ui-multi-select v-model="filterSchueler" title="Schüler" :items="kursListeManager().schueler.list()" :item-text="textSchueler" :item-filter="findSchueler" />
-					<svws-ui-multi-select v-model="filterFaecher" title="Fach" :items="kursListeManager().faecher.list()" :item-text="text" :item-filter="find" />
-					<svws-ui-multi-select v-model="filterLehrer" title="Fachlehrer" :items="kursListeManager().lehrer.list()" :item-text="text" :item-filter="find" />
-					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="kursListeManager().jahrgaenge.list()" :item-text="text" :item-filter="find" />
-					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="kursListeManager().schulgliederungen.list()" :item-text="text_schulgliederung" />
+					<svws-ui-multi-select v-model="filterSchueler" title="Schüler" :items="manager().schueler.list()" :item-text="textSchueler" :item-filter="findSchueler" />
+					<svws-ui-multi-select v-model="filterFaecher" title="Fach" :items="manager().faecher.list()" :item-text="text" :item-filter="find" />
+					<svws-ui-multi-select v-model="filterLehrer" title="Fachlehrer" :items="manager().lehrer.list()" :item-text="text" :item-filter="find" />
+					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="manager().jahrgaenge.list()" :item-text="text" :item-filter="find" />
+					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="manager().schulgliederungen.list()" :item-text="text_schulgliederung" />
 				</template>
 				<template #cell(lehrer)="{ value }"> {{ getLehrerKuerzel(value) }} </template>
 				<template #cell(idJahrgaenge)="{ value }"> {{ getJahrgangsKuerzel(value) }} </template>
 				<template #cell(schueler)="{ value }">{{ value.size() }}</template>
 				<template #actions>
-					<svws-ui-tooltip position="bottom" v-if="ServerMode.DEV.checkServerMode(serverMode)">
+					<svws-ui-tooltip position="bottom" v-if="ServerMode.DEV.checkServerMode(serverMode) && hatKompetenzAendern">
 						<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="props.gotoHinzufuegenView(true)" :has-focus="rowsFiltered.length === 0">
 							<span class="icon i-ri-add-line" />
 						</svws-ui-button>
@@ -43,12 +43,16 @@
 	import { ref, computed } from "vue";
 	import type { KurseAuswahlProps } from "./SKurseAuswahlProps";
 	import { ViewType, type DataTableColumn, type SortByAndOrder } from "@ui";
-	import type { ArrayList, FachDaten, JahrgangsDaten, KursDaten, LehrerListeEintrag, SchuelerListeEintrag, Schulgliederung } from "@core";
-	import { ServerMode } from "@core";
+	import type { FachDaten, JahrgangsDaten, KursDaten, LehrerListeEintrag, List, SchuelerListeEintrag, Schulgliederung } from "@core";
+	import { ServerMode, BenutzerKompetenz } from "@core";
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<KurseAuswahlProps>();
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const schuljahr = computed<number>(() => props.schuljahresabschnittsauswahl().aktuell.schuljahr);
+
+	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN));
 
 	const columns: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc"},
@@ -59,7 +63,7 @@
 
 	const sortByMulti = computed<Map<string, boolean>>(() => {
 		const map = new Map<string, boolean>();
-		for (const pair of props.kursListeManager().orderGet())
+		for (const pair of props.manager().orderGet())
 			if (pair.b !== null)
 				map.set(pair.a === "kuerzel" ? "kurse" : pair.a, pair.b);
 		return map;
@@ -67,7 +71,7 @@
 
 	const sortByAndOrder = computed<SortByAndOrder | undefined>({
 		get: () => {
-			const list = props.kursListeManager().orderGet();
+			const list = props.manager().orderGet();
 			if (list.isEmpty())
 				return undefined;
 			else {
@@ -78,16 +82,16 @@
 		set: (value) => {
 			if ((value === undefined) || (value.key === null))
 				return;
-			props.kursListeManager().orderUpdate(value.key, value.order);
+			props.manager().orderUpdate(value.key, value.order);
 			void props.setFilter();
-		}
+		},
 	})
 
 	function text(eintrag: LehrerListeEintrag | JahrgangsDaten | FachDaten): string {
 		return eintrag.kuerzel ?? "";
 	}
 
-	const find = (items: Iterable<LehrerListeEintrag | JahrgangsDaten | FachDaten>, search: string) => {
+	function find(items: Iterable<LehrerListeEintrag | JahrgangsDaten | FachDaten>, search: string) {
 		const list = [];
 		for (const i of items)
 			if ((i.kuerzel !== null) && i.kuerzel.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
@@ -112,61 +116,61 @@
 	}
 
 	const filterNurSichtbare = computed<boolean>({
-		get: () => props.kursListeManager().filterNurSichtbar(),
+		get: () => props.manager().filterNurSichtbar(),
 		set: (value) => {
-			props.kursListeManager().setFilterNurSichtbar(value);
+			props.manager().setFilterNurSichtbar(value);
 			void props.setFilter();
-		}
+		},
 	});
 
 	const filterSchulgliederung = computed<Schulgliederung[]>({
-		get: () => [...props.kursListeManager().schulgliederungen.auswahl()],
+		get: () => [...props.manager().schulgliederungen.auswahl()],
 		set: (value) => {
-			props.kursListeManager().schulgliederungen.auswahlClear();
+			props.manager().schulgliederungen.auswahlClear();
 			for (const v of value)
-				props.kursListeManager().schulgliederungen.auswahlAdd(v);
+				props.manager().schulgliederungen.auswahlAdd(v);
 			void props.setFilter();
-		}
+		},
 	});
 
 	const filterJahrgaenge = computed<JahrgangsDaten[]>({
-		get: () => [...props.kursListeManager().jahrgaenge.auswahl()],
+		get: () => [...props.manager().jahrgaenge.auswahl()],
 		set: (value) => {
-			props.kursListeManager().jahrgaenge.auswahlClear();
+			props.manager().jahrgaenge.auswahlClear();
 			for (const v of value)
-				props.kursListeManager().jahrgaenge.auswahlAdd(v);
+				props.manager().jahrgaenge.auswahlAdd(v);
 			void props.setFilter();
-		}
+		},
 	});
 
 	const filterFaecher = computed<FachDaten[]>({
-		get: () => [...props.kursListeManager().faecher.auswahl()],
+		get: () => [...props.manager().faecher.auswahl()],
 		set: (value) => {
-			props.kursListeManager().faecher.auswahlClear();
+			props.manager().faecher.auswahlClear();
 			for (const v of value)
-				props.kursListeManager().faecher.auswahlAdd(v);
+				props.manager().faecher.auswahlAdd(v);
 			void props.setFilter();
-		}
+		},
 	});
 
 	const filterLehrer = computed<LehrerListeEintrag[]>({
-		get: () => [...props.kursListeManager().lehrer.auswahl()],
+		get: () => [...props.manager().lehrer.auswahl()],
 		set: (value) => {
-			props.kursListeManager().lehrer.auswahlClear();
+			props.manager().lehrer.auswahlClear();
 			for (const v of value)
-				props.kursListeManager().lehrer.auswahlAdd(v);
+				props.manager().lehrer.auswahlAdd(v);
 			void props.setFilter();
-		}
+		},
 	});
 
 	const filterSchueler = computed<SchuelerListeEintrag[]>({
-		get: () => [...props.kursListeManager().schueler.auswahl()],
+		get: () => [...props.manager().schueler.auswahl()],
 		set: (value) => {
-			props.kursListeManager().schueler.auswahlClear();
+			props.manager().schueler.auswahlClear();
 			for (const v of value)
-				props.kursListeManager().schueler.auswahlAdd(v);
+				props.manager().schueler.auswahlAdd(v);
 			void props.setFilter();
-		}
+		},
 	});
 
 
@@ -174,7 +178,7 @@
 
 	const rowsFiltered = computed<KursDaten[]>(() => {
 		const arr = [];
-		for (const e of props.kursListeManager().filtered())
+		for (const e of props.manager().filtered())
 			if (e.kuerzel.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()))
 				arr.push(e);
 		return arr;
@@ -182,39 +186,42 @@
 
 
 	async function filterReset() {
-		props.kursListeManager().schulgliederungen.auswahlClear();
-		props.kursListeManager().lehrer.auswahlClear();
-		props.kursListeManager().schueler.auswahlClear();
-		props.kursListeManager().jahrgaenge.auswahlClear();
-		props.kursListeManager().setFilterNurSichtbar(true);
+		props.manager().schulgliederungen.auswahlClear();
+		props.manager().lehrer.auswahlClear();
+		props.manager().schueler.auswahlClear();
+		props.manager().jahrgaenge.auswahlClear();
+		props.manager().setFilterNurSichtbar(true);
 		await props.setFilter();
 	}
 
 	function filterChanged(): boolean {
-		return (props.kursListeManager().schulgliederungen.auswahlExists()
-			|| props.kursListeManager().lehrer.auswahlExists()
-			|| props.kursListeManager().schueler.auswahlExists()
-			|| props.kursListeManager().jahrgaenge.auswahlExists());
+		return (props.manager().schulgliederungen.auswahlExists()
+			|| props.manager().lehrer.auswahlExists()
+			|| props.manager().schueler.auswahlExists()
+			|| props.manager().jahrgaenge.auswahlExists());
 	}
 
-	const clickedEintrag = computed(() => ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN)) ? null
-		: (props.kursListeManager().hasDaten() ? props.kursListeManager().auswahl() : null));
+	const clickedEintrag = computed(() => {
+		if ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN))
+			return null;
+		return props.manager().hasDaten() ? props.manager().auswahl() : null;
+	});
 
 	async function setAuswahl(items : KursDaten[]) {
-		props.kursListeManager().liste.auswahlClear();
+		props.manager().liste.auswahlClear();
 		for (const item of items)
-			if (props.kursListeManager().liste.hasValue(item))
-				props.kursListeManager().liste.auswahlAdd(item);
-		if (props.kursListeManager().liste.auswahlExists())
+			if (props.manager().liste.hasValue(item))
+				props.manager().liste.auswahlAdd(item);
+		if (props.manager().liste.auswahlExists())
 			await props.gotoGruppenprozessView(true);
 		else
-			await props.gotoDefaultView(props.kursListeManager().getVorherigeAuswahl()?.id);
+			await props.gotoDefaultView(props.manager().getVorherigeAuswahl()?.id);
 	}
 
 
 	// TODO komma-separierte Liste mit Zusatzkräften
 	function getLehrerKuerzel(idLehrer: number) {
-		const lehrer = props.kursListeManager().lehrer.get(idLehrer);
+		const lehrer = props.manager().lehrer.get(idLehrer);
 		if (lehrer === null)
 			return "---";
 		return lehrer.kuerzel;
@@ -224,22 +231,12 @@
 	/**
 	 * Ermittel eine komma-separierte Liste der Kürzel der Jahrgänge mit den übergebenen IDs.
 	 *
-	 * @param jahrgaenge   die Liste von Jahrgangs-IDs
+	 * @param jahrgaengeIds   die Liste von Jahrgangs-IDs
 	 */
-	function getJahrgangsKuerzel(jahrgaenge: ArrayList<number>) : string {
-		// Prüfe zunächst, ob die Liste der Jahrgänge von dem Kurs einen Jahrgang der Map beinhaltet.
-		let found = false;
-		let result = "";
-		for (const jg of jahrgaenge) {
-			const jahrgang = props.kursListeManager().jahrgaenge.get(jg);
-			if ((jahrgang !== null) && (jahrgang.kuerzel !== null)) {
-				if (found)
-					result += ",";
-				result += jahrgang.kuerzel;
-				found = true;
-			}
-		}
-		return result;
+	function getJahrgangsKuerzel(jahrgaengeIds: List<number>): string {
+		return [...jahrgaengeIds].map(jgId => props.manager().jahrgaenge.get(jgId)?.kuerzel)
+			.filter(jgKuerzel => (jgKuerzel !== undefined) && (jgKuerzel !== ''))
+			.join(',');
 	}
 
 </script>

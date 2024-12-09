@@ -22,7 +22,8 @@ export interface GostKlausurplanungProblemeProps {
 	erzeugeKursklausurenAusVorgaben: (quartal: number) => Promise<void>;
 	gotoVorgaben: () => Promise<void>;
 	gotoSchienen: (termin: GostKlausurtermin | undefined) => Promise<void>;
-	gotoKalenderdatum: (goto: string | GostKlausurtermin) => Promise<void>;
+	gotoKalenderdatum: (datum: string | undefined, termin: GostKlausurtermin | undefined) => Promise<void>;
 	gotoRaumzeitTermin: (abiturjahr: number, halbjahr: GostHalbjahr, value: number) => Promise<void>;
 	gotoNachschreiber: (abiturjahr: number, halbjahr: GostHalbjahr) => Promise<void>;
+	gotoStundenplan: () => Promise<void>;
 }

@@ -11,7 +11,7 @@
 				<span class="opacity-40">{{ auswahl.name }}</span>
 			</div>
 		</svws-ui-header>
-		<svws-ui-tab-bar :tab-manager>
+		<svws-ui-tab-bar :tab-manager :focus-switching-enabled :focus-help-visible>
 			<router-view />
 		</svws-ui-tab-bar>
 	</template>
@@ -23,7 +23,9 @@
 <script setup lang="ts">
 
 	import type { SchulenAppProps } from "./SSchulenAppProps";
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<SchulenAppProps>();
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 </script>

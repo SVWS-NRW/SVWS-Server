@@ -1,6 +1,6 @@
 <template>
-	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="showModal" size="medium" class="hidden">
+	<slot :open-modal />
+	<svws-ui-modal v-model:show="show" size="medium" class="hidden">
 		<template #modalTitle>Religion Hinzufügen</template>
 		<template #modalContent>
 			<svws-ui-input-wrapper :grid="2">
@@ -12,7 +12,7 @@
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="showModal().value = false"> Abbrechen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="show = false"> Abbrechen </svws-ui-button>
 			<svws-ui-button type="primary" @click="saveEntries()" :disabled="!religion.kuerzel"> Speichern </svws-ui-button>
 		</template>
 	</svws-ui-modal>
@@ -28,8 +28,7 @@
 		schuljahr: number;
 	}>();
 
-	const _showModal = ref<boolean>(false);
-	const showModal = () => _showModal;
+	const show = ref<boolean>(false);
 
 	const religion = ref(new ReligionEintrag());
 
@@ -44,12 +43,12 @@
 
 	async function saveEntries() {
 		await props.addEintrag(religion.value);
-		showModal().value = false;
+		show.value = false;
 	}
 
 	const openModal = () => {
 		religion.value = new ReligionEintrag();
-		showModal().value = true;
+		show.value = true;
 	}
 
 </script>

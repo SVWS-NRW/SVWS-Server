@@ -22,14 +22,14 @@ import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanung
  */
 public class ProxyReportingGostKlausurplanungKlausurraum extends ReportingGostKlausurplanungKlausurraum {
 
-	/** Repository für die Reporting. */
+	/** Repository für das Reporting. */
 	@JsonIgnore
 	private final ReportingRepository reportingRepository;
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingGostKlausurplanungKlausurraum}.
 	 *
-	 * @param reportingRepository		Repository für die Reporting.
+	 * @param reportingRepository		Repository für das Reporting.
 	 * @param klausurtermin 			Der Klausurtermin, dem dieser Klausurraum zugeordnet ist.
 	 * @param gostKlausurraum 			Der Klausurraum mit Informationen zum Termin und dem Stundeplanraum
 	 * @param gostKlausurraumstunden	Die Raumstunde mit Informationen zum Klausurraum und der Unterrichtsstunde aus dem Zeitraster.
@@ -38,7 +38,7 @@ public class ProxyReportingGostKlausurplanungKlausurraum extends ReportingGostKl
 			final ReportingGostKlausurplanungKlausurtermin klausurtermin, final GostKlausurraum gostKlausurraum,
 			final List<GostKlausurraumstunde> gostKlausurraumstunden) {
 		super(new ArrayList<>(),
-				gostKlausurraum.bemerkung,
+				ersetzeNullDurchEmpty(gostKlausurraum.bemerkung),
 				gostKlausurraum.id,
 				klausurtermin,
 				null);
@@ -73,6 +73,5 @@ public class ProxyReportingGostKlausurplanungKlausurraum extends ReportingGostKl
 				}
 			}
 		}
-
 	}
 }

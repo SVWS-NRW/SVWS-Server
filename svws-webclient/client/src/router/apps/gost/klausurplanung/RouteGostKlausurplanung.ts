@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
+import type { RouteLocationAsRelativeGeneric, RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
 
 import { BenutzerKompetenz, DeveloperNotificationException, GostHalbjahr, ServerMode } from "@core";
 
@@ -190,7 +190,10 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new DeveloperNotificationException("Unbekannte Route");
-		await RouteManager.doRoute(node.getRoute());
+		const nodeRoute = node.getRoute() as RouteLocationAsRelativeGeneric;
+		if ((nodeRoute.params !== undefined))
+			delete nodeRoute.params.idtermin;
+		await RouteManager.doRoute(nodeRoute);
 		this.data.setView(node, this.children);
 	}
 

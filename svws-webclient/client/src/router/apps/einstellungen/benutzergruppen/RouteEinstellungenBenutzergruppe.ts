@@ -14,6 +14,7 @@ import type { TabData } from "@ui";
 import type { BenutzergruppeAuswahlProps } from "~/components/einstellungen/benutzergruppen/SBenutzergruppeAuswahlProps";
 import type { BenutzergruppeAppProps } from "~/components/einstellungen/benutzergruppen/SBenutzergruppeAppProps";
 import { RouteEinstellungenMenuGroup } from "../RouteEinstellungenMenuGroup";
+import { routeError } from "~/router/error/RouteError";
 
 const SBenutzergruppeAuswahl = () => import("~/components/einstellungen/benutzergruppen/SBenutzergruppeAuswahl.vue")
 const SBenutzergruppeApp = () => import("~/components/einstellungen/benutzergruppen/SBenutzergruppeApp.vue")
@@ -28,37 +29,41 @@ export class RouteEinstellungenBenutzergruppe extends RouteNode<RouteDataEinstel
 		super.menugroup = RouteEinstellungenMenuGroup.BENUTZERVERWALTUNG;
 		super.setView("liste", SBenutzergruppeAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
-			routeEinstellungenBenutzergruppeDaten
+			routeEinstellungenBenutzergruppeDaten,
 		];
 		super.defaultChild = routeEinstellungenBenutzergruppeDaten;
 	}
 
 	public async beforeEach(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
-		if (to_params.id instanceof Array)
-			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		const id = !to_params.id ? undefined : parseInt(to_params.id);
-		if (id !== undefined)
-			return routeEinstellungenBenutzergruppeDaten.getRoute({ id });
-		return true;
+		try {
+			const { id } = RouteNode.getIntParams(to_params, ["id"]);
+			if (id !== undefined)
+				return routeEinstellungenBenutzergruppeDaten.getRoute({ id });
+			return true;
+		} catch(e) {
+			return routeError.getErrorRoute(e as DeveloperNotificationException);
+		}
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
-		if (isEntering)
+		try {
+			if (isEntering)
+				await this.data.ladeListe();
+			const { id } = RouteNode.getIntParams(to_params, ["id"]);
 			await this.data.ladeListe();
-		if (to_params.id instanceof Array)
-			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		const id = !to_params.id ? undefined : parseInt(to_params.id);
-		await this.data.ladeListe();
-		if (to.name === this.name) {
-			if (this.data.mapBenutzergruppe.size === 0)
-				return;
-			return this.getRouteDefaultChild({ id: this.data.mapBenutzergruppe.values().next().value?.id });
+			if (to.name === this.name) {
+				if (this.data.mapBenutzergruppe.size === 0)
+					return;
+				return this.getRouteDefaultChild({ id: this.data.mapBenutzergruppe.values().next().value?.id });
+			}
+			// Weiterleitung an das erste Objekt in der Liste, wenn id nicht vorhanden ist.
+			if(id !== undefined && !this.data.mapBenutzergruppe.has(id))
+				return this.getRouteDefaultChild({ id: this.data.mapBenutzergruppe.values().next().value?.id });
+			const eintrag = (id !== undefined) ? this.data.mapBenutzergruppe.get(id) : undefined;
+			await this.data.setBenutzergruppe(eintrag);
+		} catch(e) {
+			return routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
-		// Weiterleitung an das erste Objekt in der Liste, wenn id nicht vorhanden ist.
-		if(id !== undefined && !this.data.mapBenutzergruppe.has(id))
-			return this.getRouteDefaultChild({ id: this.data.mapBenutzergruppe.values().next().value?.id });
-		const eintrag = (id !== undefined) ? this.data.mapBenutzergruppe.get(id) : undefined;
-		await this.data.setBenutzergruppe(eintrag);
 	}
 
 	public addRouteParamsFromState() : RouteParamsRawGeneric {
@@ -85,9 +90,11 @@ export class RouteEinstellungenBenutzergruppe extends RouteNode<RouteDataEinstel
 	}
 
 	private setTab = async (value: TabData) => {
-		if (value.name === this.data.view.name) return;
+		if (value.name === this.data.view.name)
+			return;
 		const node = RouteNode.getNodeByName(value.name);
-		if (node === undefined) throw new DeveloperNotificationException("Unbekannte Route");
+		if (node === undefined)
+			throw new DeveloperNotificationException("Unbekannte Route");
 		await RouteManager.doRoute(node.getRoute());
 		this.data.setView(node, routeEinstellungen.children);
 	};

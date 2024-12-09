@@ -8,7 +8,7 @@
 		</template>
 		<template #header />
 		<template #content>
-			<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="schulen" :columns selectable v-model="liste" scroll-into-view>
+			<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="schulen" :columns selectable v-model="liste" scroll-into-view :focus-switching-enabled :focus-help-visible>
 				<template #cell(kurzbezeichnung)="{ rowData }">
 					<div class="text-ellipsis overflow-hidden whitespace-nowrap" :title="`${rowData.plz || ''} ${rowData.ort || ''}${rowData.ort ? ',': ''} ${rowData.name}`">{{ rowData.kurzbezeichnung }}</div>
 				</template>
@@ -29,8 +29,10 @@
 
 	import { ref, computed } from 'vue';
 	import type { SchulenAuswahlProps } from './SSchulenAuswahlProps';
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<SchulenAuswahlProps>();
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const liste = ref([]);
 

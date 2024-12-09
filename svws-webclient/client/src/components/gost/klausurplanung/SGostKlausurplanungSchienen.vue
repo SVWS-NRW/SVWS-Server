@@ -5,7 +5,7 @@
 	<Teleport to=".router-tab-bar--subnav" v-if="isMounted">
 		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" :halbjahr="halbjahr" />
 	</Teleport>
-	<svws-ui-modal :show="showModalAutomatischBlocken" size="small">
+	<svws-ui-modal v-model:show="showModalAutomatischBlocken" size="small">
 		<template #modalTitle>
 			Automatisch blocken
 		</template>
@@ -23,7 +23,7 @@
 			</svws-ui-checkbox>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="showModalAutomatischBlocken().value = false"> Abbrechen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="showModalAutomatischBlocken = false"> Abbrechen </svws-ui-button>
 			<svws-ui-button type="primary" @click="blocken"> Blocken </svws-ui-button>
 		</template>
 	</svws-ui-modal>
@@ -59,7 +59,28 @@
 						:class="klausurCssClasses(klausur, undefined)">
 						<div class="svws-ui-td">
 							<span v-if="hatKompetenzUpdate" class="icon i-ri-draggable -m-0.5 -ml-4 -mr-1" />
-							<span class="svws-ui-badge" :style="`--background-color: ${kMan().fachHTMLFarbeRgbaByKursklausur(klausur)};`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
+							<svws-ui-tooltip :hover="false" :indicator="false">
+								<template #content>
+									<s-gost-klausurplanung-kursliste :k-man :kursklausur="klausur" :patch-klausur :create-schuelerklausur-termin :benutzer-kompetenzen />
+								</template>
+								<span class="svws-ui-badge hover:opacity-75" :style="`--background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
+								<svws-ui-tooltip>
+									<template #content class="space-y-2">
+										<div v-if="kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe !== null && kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe!.trim().length > 0">
+											<h3 class="border-b text-headline-md">Bemerkung zur Vorgabe</h3>
+											<p>{{ kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe }}</p>
+										</div>
+										<div v-if="klausur.bemerkung !== null && klausur.bemerkung.trim().length > 0">
+											<h3 class="border-b text-headline-md">Bemerkung zur Kursklausur</h3>
+											<p>{{ klausur.bemerkung }}</p>
+										</div>
+									</template>
+									<span class="icon i-ri-edit-2-line icon-primary" v-if="(klausur.bemerkung !== null && klausur.bemerkung.trim().length > 0) || (kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe !== null && kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe!.trim().length > 0)" />
+								</svws-ui-tooltip>
+							</svws-ui-tooltip>
+
+
+							<!-- <span class="svws-ui-badge" :style="`--background-color: ${kMan().fachHTMLFarbeRgbaByKursklausur(klausur)};`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span> -->
 						</div>
 						<div class="svws-ui-td">{{ kMan().kursLehrerKuerzelByKursklausur(klausur) }}</div>
 						<div class="svws-ui-td svws-align-right">{{ kMan().schuelerklausurGetMengeByKursklausur(klausur).size() + "/" + kMan().kursAnzahlSchuelerGesamtByKursklausur(klausur) }}</div>
@@ -77,7 +98,7 @@
 			<div class="flex justify-between items-start mb-5">
 				<div class="flex flex-wrap items-center gap-0.5 w-full">
 					<svws-ui-button :disabled="!hatKompetenzUpdate" @click="erzeugeKlausurtermin(quartalsauswahl.value, true)"><span class="icon i-ri-add-line -ml-1" />Termin<template v-if="termine.size() === 0"> hinzufügen</template></svws-ui-button>
-					<svws-ui-button type="transparent" @click="showModalAutomatischBlocken().value = true" :disabled="!hatKompetenzUpdate || props.kMan().kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value).size() === 0"><span class="icon i-ri-sparkling-line" />Automatisch blocken <svws-ui-spinner :spinning="loading" /></svws-ui-button>
+					<svws-ui-button type="transparent" @click="showModalAutomatischBlocken = true" :disabled="!hatKompetenzUpdate || props.kMan().kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value).size() === 0"><span class="icon i-ri-sparkling-line" />Automatisch blocken <svws-ui-spinner :spinning="loading" /></svws-ui-button>
 					<svws-ui-button type="transparent" :disabled="!hatKompetenzUpdate" class="hover--danger ml-auto" @click="terminSelected.value = undefined; loescheKlausurtermine(termine)" v-if="termine.size() > 0" title="Alle Termine löschen"><span class="icon i-ri-delete-bin-line" />Alle löschen</svws-ui-button>
 				</div>
 			</div>
@@ -85,6 +106,7 @@
 				<template v-if="termine.size()">
 					<s-gost-klausurplanung-schienen-termin v-for="termin of termine" :key="termin.id"
 						:id="'termin' + termin.id"
+						class="gost_klausurtermin"
 						:benutzer-kompetenzen
 						:termin="() => termin"
 						:class="dropOverCssClasses(termin)"
@@ -119,7 +141,7 @@
 						<span class="icon i-ri-alert-fill icon-error -my-0.5" />
 						<span>{{ klausurKonflikte().size() }} Kurse mit Konflikten</span>
 					</template>
-					<template v-else-if="anzahlProKwKonflikte(3).size() > 0">
+					<template v-else-if="anzahlProKwKonflikte(4).size() > 0">
 						<span class="icon i-ri-alert-fill icon-error -my-0.5" />
 						<span> Konflikte</span>
 					</template>
@@ -132,7 +154,7 @@
 					</template>
 				</span>
 			</template>
-			<div v-if="klausurKonflikte().size() > 0" class="mt-5" :class="{'mb-16': anzahlProKwKonflikte(3).size() > 0}">
+			<div v-if="klausurKonflikte().size() > 0" class="mt-5" :class="{'mb-16': anzahlProKwKonflikte(4).size() > 0}">
 				<ul class="flex flex-col gap-3">
 					<li v-for="klausur in klausurKonflikte()" :key="klausur.getKey().id">
 						<span class="svws-ui-badge" :style="`--background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur.getKey()) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur.getKey()) }}</span>
@@ -142,13 +164,13 @@
 					</li>
 				</ul>
 			</div>
-			<div v-if="anzahlProKwKonflikte(3).size() > 0" class="mt-5">
+			<div v-if="anzahlProKwKonflikte(4).size() > 0" class="mt-5">
 				<div class="text-headline-md leading-tight mb-3">
-					<div class="inline-flex gap-1">{{ anzahlProKwKonflikte(3).size() }} Schüler</div>
+					<div class="inline-flex gap-1">{{ anzahlProKwKonflikte(4).size() }} Schüler</div>
 					<div class="opacity-50">Drei oder mehr Klausuren in einer KW</div>
 				</div>
 				<ul class="flex flex-col gap-4">
-					<li v-for="konflikt in anzahlProKwKonflikte(3)" :key="konflikt.getKey()">
+					<li v-for="konflikt in anzahlProKwKonflikte(4)" :key="konflikt.getKey()">
 						<span class="font-bold">{{ kMan().schuelerGetByIdOrException(konflikt.getKey())?.vorname + ' ' + kMan().schuelerGetByIdOrException(konflikt.getKey())?.nachname }}</span>
 						<div class="grid grid-cols-3 gap-x-1 gap-y-2 mt-0.5">
 							<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge flex-col w-full" :style="`--background-color: ${kMan().fachHTMLFarbeRgbaByKursklausur(kMan().kursklausurBySchuelerklausurTermin(klausur))};`">
@@ -163,8 +185,8 @@
 				<span>Klicke auf einen Termin oder verschiebe eine Klausur, um Details zu bestehenden bzw. entstehenden Konflikten anzuzeigen.</span>
 			</div>
 		</svws-ui-content-card>
-		<s-gost-klausurplanung-modal :show="returnModalVorgaben()" :text="modalError" :jump-to="gotoVorgaben" jump-to_text="Zu den Klausurvorgaben" abbrechen_text="OK" />
-		<s-gost-klausurplanung-modal :show="returnModalKlausurHatRaeume()" text="Die Kursklausur hat bereits eine oder mehrere Raumzuweisungen. Beim Fortfahren werden diese gelöscht." :weiter="verschiebeKlausurTrotzRaumzuweisung" />
+		<s-gost-klausurplanung-modal :show="modalVorgaben" :text="modalError" :jump-to="gotoVorgaben" jump-to_text="Zu den Klausurvorgaben" abbrechen_text="OK" />
+		<s-gost-klausurplanung-modal :show="modalKlausurHatRaeume" text="Die Kursklausur hat bereits eine oder mehrere Raumzuweisungen. Beim Fortfahren werden diese gelöscht." :weiter="verschiebeKlausurTrotzRaumzuweisung" />
 	</div>
 </template>
 
@@ -174,13 +196,12 @@
 	import { BenutzerKompetenz, OpenApiError } from "@core";
 	import {GostKursklausur, GostKlausurtermin, HashSet, KlausurterminblockungAlgorithmen, GostKlausurterminblockungDaten, KlausurterminblockungModusKursarten, KlausurterminblockungModusQuartale, DateUtils } from "@core";
 	import type { Ref } from 'vue';
-	import { computed, ref, onMounted } from 'vue';
+	import { computed, ref, onMounted, onUnmounted } from 'vue';
 	import type { GostKlausurplanungSchienenProps } from './SGostKlausurplanungSchienenProps';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type {DataTableColumn} from "@ui";
 
-	const _showModalAutomatischBlocken = ref<boolean>(false);
-	const showModalAutomatischBlocken = () => _showModalAutomatischBlocken;
+	const showModalAutomatischBlocken = ref<boolean>(false);
 
 	const props = defineProps<GostKlausurplanungSchienenProps>();
 
@@ -205,16 +226,10 @@
 	}
 
 	const modalVorgaben = ref<boolean>(false);
-	function returnModalVorgaben(): () => Ref<boolean> {
-		return () => modalVorgaben;
-	}
 
 	let klausurMoveDropZone: GostKlausurplanungDropZone = undefined;
 	let klausurMoveDragData: GostKlausurplanungDragData = undefined;
 	const modalKlausurHatRaeume = ref<boolean>(false);
-	function returnModalKlausurHatRaeume(): () => Ref<boolean> {
-		return () => modalKlausurHatRaeume;
-	}
 
 	const modalError = ref<string | undefined>(undefined);
 
@@ -295,7 +310,7 @@
 
 	const blocken = async () => {
 		loading.value = true;
-		showModalAutomatischBlocken().value = false;
+		showModalAutomatischBlocken.value = false;
 		const daten = new GostKlausurterminblockungDaten();
 		daten.klausuren = props.kMan().kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value);
 		daten.konfiguration.modusQuartale = KlausurterminblockungModusQuartale.GETRENNT.id;
@@ -322,6 +337,11 @@
 			if (scrollToElement)
 				scrollToElement.scrollIntoView({ behavior: 'smooth', block: "nearest" });
 		}
+		window.addEventListener('click', handleClick);
+	});
+
+	onUnmounted(() => {
+		window.removeEventListener('click', handleClick);
 	});
 
 	function calculateColumns() {
@@ -338,6 +358,23 @@
 		}
 
 		return cols;
+	}
+
+	function handleClick(e: MouseEvent) {
+		if (props.terminSelected.value === undefined)
+			return;
+		let target = e.target as HTMLElement | null;
+		let isInsideTermin = false;
+		while (target) {
+			if (target.classList.contains("gost_klausurtermin") || target.classList.contains("tooltip")) {
+				isInsideTermin = true;
+				break;
+			}
+			target = target.parentElement;
+		}
+		if (!isInsideTermin) {
+			void props.gotoSchienen(undefined);
+		}
 	}
 
 	const cols = computed(() => calculateColumns());

@@ -441,7 +441,7 @@ public final class DateUtils {
 	 */
 	public static String toISO8601(final long time) {
 		final StringBuilder s = new StringBuilder();
-		final long days = DAYS_FROM_0_TO_1970 + time / 86400000L;
+		final long days = DAYS_FROM_0_TO_1970 + time / 86400000L + 1;
 		final long years400 = days / DAYS_PER_400_YEARS;  // Die Anzahl der 400-Jahres-Zyklen
 		final long daysLeft400 = days - years400 * DAYS_PER_400_YEARS;  // Die Anzahl der Tage im aktuellen 400-Jahres-Zyklus
 		final long years100 = (daysLeft400 - 1L) / DAYS_PER_100_YEARS;  // Die Anzahl der 100-Jahres-Zyklen im aktuellen 400-Jahres-Zyklus

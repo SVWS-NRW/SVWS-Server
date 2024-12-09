@@ -17,6 +17,7 @@ export interface SGostKlausurplanungKalenderStundenplanAnsichtProps {
 	// kalenderwoche: () => StundenplanKalenderwochenzuordnung | undefined;
 	useDragAndDrop?: boolean;
 	kurseGefiltert: (datum: string, day: Wochentag, stunde: number) => List<number>;
+	patchKlausurtermin: (id: number, termin: Partial<GostKlausurtermin>) => Promise<void>;
 	sumSchreiber: (datum: string, day: Wochentag, stunde: number) => number;
 	dragData: () => GostKlausurplanungDragData;
 	onDrag: (data: GostKlausurplanungDragData) => void;
@@ -24,6 +25,6 @@ export interface SGostKlausurplanungKalenderStundenplanAnsichtProps {
 	checkDropZoneZeitraster: (event: DragEvent, zeitraster: StundenplanZeitraster | undefined) => void;
 	zeigeAlleJahrgaenge: () => boolean;
 	kursklausurMouseOver: () => GostKursklausur | undefined;
-	gotoKalenderdatum: (goto: string | GostKlausurtermin) => Promise<void>;
+	gotoKalenderdatum: (datum: string | undefined, termin: GostKlausurtermin | undefined) => Promise<void>;
 	gotoRaumzeitTermin: (abiturjahr: number, halbjahr: GostHalbjahr, value: number) => Promise<void>;
 }

@@ -36,17 +36,23 @@
 				<template #body>
 					<div v-for="klausur of klausurenImRaum()" :key="klausur.id" class="svws-ui-tr cursor-grab" role="row" :data="klausur" :draggable="hatKompetenzUpdate" @dragstart="onDrag(klausur)"	@dragend="onDrag(undefined)">
 						<div class="svws-ui-td" role="cell">
-							<span v-if="hatKompetenzUpdate" class="icon i-ri-draggable i-ri-draggable -m-0.5 -ml-3" />
+							<span v-if="hatKompetenzUpdate" class="icon i-ri-draggable -m-0.5 -ml-3" />
 						</div>
 						<div class="svws-ui-td" role="cell">
 							{{ GostHalbjahr.fromIDorException(kMan().vorgabeByKursklausur(klausur).halbjahr).jahrgang }}
 						</div>
 						<div class="svws-ui-td" role="cell">
-							<svws-ui-tooltip :hover="false" :indicator="false">
+							<svws-ui-tooltip :hover="false" :indicator="false" autosize>
 								<template #content>
-									<s-gost-klausurplanung-kursliste :k-man :kursklausur="klausur" :termin="kMan().terminOrNullByKursklausur(klausur)!" />
+									<s-gost-klausurplanung-kursliste :k-man :kursklausur="klausur" :termin="kMan().terminOrNullByKursklausur(klausur)!" :benutzer-kompetenzen />
 								</template>
 								<span class="svws-ui-badge hover:opacity-75" :style="`--background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
+								<svws-ui-tooltip>
+									<template #content>
+										Bemerkung: {{ klausur.bemerkung }}
+									</template>
+									<span class="icon i-ri-edit-2-line icon-primary" v-if="klausur.bemerkung !== null && klausur.bemerkung.trim().length > 0" />
+								</svws-ui-tooltip>
 							</svws-ui-tooltip>
 						</div>
 
@@ -66,6 +72,9 @@
 					</div>
 				</template>
 			</svws-ui-table>
+			<div class="mt-3">
+				<svws-ui-textarea-input class="text-sm" :headless="raum.bemerkung === null || raum.bemerkung.trim().length === 0" :rows="1" resizeable="none" autoresize placeholder="Bemerkungen zum Raum" :disabled="!hatKompetenzUpdate" :model-value="raum.bemerkung" @change="bemerkung => patchKlausurraum(raum.id, {bemerkung})" />
+			</div>
 			<span class="mt-auto -mb-3 flex w-full items-center justify-between gap-1 text-sm">
 				<div class="py-3" :class="{'opacity-50': klausurenImRaum().size() === 0}">
 					<span class="font-bold">
@@ -152,7 +161,7 @@
 	const cols: DataTableColumn[] = [
 		{ key: "dragHandle", label: " ", fixedWidth: 1 },
 		{ key: "jgst", label: "Jgst.", fixedWidth: 2 },
-		{ key: "kurs", label: "Kurs" },
+		{ key: "kurs", label: "Kurs", span: 1.5 },
 		{ key: "kuerzel", label: "Lehrkraft", span: 0.75 },
 		{ key: "schriftlich", label: "Schriftlich", span: 0.5, minWidth: 4.75 },
 		{ key: "dauer", label: "Dauer", tooltip: "Dauer in Minuten", span: 0.25, minWidth: 4 },

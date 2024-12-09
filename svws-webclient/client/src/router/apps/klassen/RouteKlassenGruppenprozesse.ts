@@ -27,10 +27,10 @@ export class RouteKlasseGruppenprozesse extends RouteNode<any, RouteKlassen> {
 	public getProps(to: RouteLocationNormalized): KlassenGruppenprozesseProps {
 		return {
 			schulform: api.schulform,
+			benutzerKompetenzen: api.benutzerKompetenzen,
 			schulgliederungen: api.schulgliederungen,
-			klassenListeManager: () => routeKlassen.data.klassenListeManager,
-			deleteKlassen: routeKlassen.data.deleteKlassen,
-			deleteKlassenCheck: routeKlassen.data.deleteKlassenCheck
+			manager: () => routeKlassen.data.manager,
+			deleteKlassen: routeKlassen.data.delete,
 		};
 	}
 

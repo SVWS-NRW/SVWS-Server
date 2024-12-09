@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationNormalized } from "vue-router";
 
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
@@ -14,24 +14,18 @@ const SJahrgangDaten = () => import("~/components/schule/jahrgaenge/daten/SJahrg
 export class RouteSchuleJahrgaengeDaten extends RouteNode<any, RouteSchuleJahrgaenge> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.jahrgaenge.daten", "daten", SJahrgangDaten);
-		super.mode = ServerMode.STABLE;
+		super(Schulform.values(), [ BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN ], "schule.jahrgaenge.daten", "daten", SJahrgangDaten);
+		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Jahrgang";
-	}
-
-	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		if (routeSchuleJahrgaenge.data.auswahl === undefined)
-			return routeSchuleJahrgaenge.getRoute(undefined);
 	}
 
 	public getProps(to: RouteLocationNormalized): JahrgangDatenProps {
 		return {
 			schuljahr: routeApp.data.aktAbschnitt.value.schuljahr,
 			schulform: api.schulform,
+			jahrgangListeManager: () => routeSchuleJahrgaenge.data.manager,
 			patch: routeSchuleJahrgaenge.data.patch,
-			data: () => routeSchuleJahrgaenge.data.daten,
-			mapJahrgaenge: routeSchuleJahrgaenge.data.mapKatalogeintraege,
 		};
 	}
 

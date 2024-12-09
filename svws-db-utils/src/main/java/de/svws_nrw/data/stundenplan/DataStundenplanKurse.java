@@ -10,8 +10,7 @@ import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.kurse.KursDaten;
 import de.svws_nrw.core.data.stundenplan.StundenplanKurs;
 import de.svws_nrw.data.DataManager;
-import de.svws_nrw.data.kurse.DataKursdaten;
-import de.svws_nrw.data.kurse.DataKursliste;
+import de.svws_nrw.data.kurse.DataKurse;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursLehrer;
@@ -90,7 +89,7 @@ public final class DataStundenplanKurse extends DataManager<Long> {
 		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
 		if (stundenplan == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
-		final List<KursDaten> kurse = DataKursliste.getKursListenFuerAbschnitt(conn, stundenplan.Schuljahresabschnitts_ID, false);
+		final List<KursDaten> kurse = DataKurse.getKursListenFuerAbschnitt(conn, stundenplan.Schuljahresabschnitts_ID, false);
 		if (kurse.isEmpty())
 			return new ArrayList<>();
 		final List<Long> kursIDs = kurse.stream().map(k -> k.id).toList();
@@ -144,11 +143,11 @@ public final class DataStundenplanKurse extends DataManager<Long> {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(stundenplanID));
 		if (id == null)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einem Kurs mit der ID null ist unzulässig.");
-		final List<KursDaten> kurse = DataKursliste.getKursListenFuerAbschnitt(conn, stundenplan.Schuljahresabschnitts_ID, false);
+		final List<KursDaten> kurse = DataKurse.getKursListenFuerAbschnitt(conn, stundenplan.Schuljahresabschnitts_ID, false);
 		if (kurse.isEmpty())
 			throw new ApiOperationException(Status.NOT_FOUND,
 					"Es wurden keine Kurse in dem Schuljahresabschnitt mit der ID %d gefunden.".formatted(stundenplan.Schuljahresabschnitts_ID));
-		final KursDaten kurs = DataKursdaten.getKursdaten(conn, id);
+		final KursDaten kurs = DataKurse.getKursdaten(conn, id);
 		if (kurs == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Kurs mit der ID %d gefunden.".formatted(id));
 		if (kurs.idSchuljahresabschnitt != stundenplan.Schuljahresabschnitts_ID)

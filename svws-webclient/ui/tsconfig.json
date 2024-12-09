@@ -2,6 +2,7 @@
 	"extends": "../../tsconfig.base.json",
 	"compilerOptions": {
 		"resolveJsonModule": true,
+		"checkJs": true,
 		"paths": {
 			"~/*": ["src/*"],
 			"@json/*": ["../../svws-asd/src/main/resources/de/svws_nrw/asd/types/*"],
@@ -17,6 +18,7 @@
 		"src/**/*.vue",
 		"components.d.ts",
 		"../core/src/**/*.ts",
+		"src/tailwind/*.js"
 	],
 	"exclude": [
 		"tailwind.config.js",

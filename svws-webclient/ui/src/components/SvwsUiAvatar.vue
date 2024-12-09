@@ -11,7 +11,7 @@
 				<input class="hidden" ref="fileInputEl" type="file" accept="image/*" @change="onFileChanged">
 				<span class="icon i-ri-upload-2-line inline-block" />
 			</svws-ui-button>
-			<svws-ui-button v-if="capture && (currentSnapshot === null)" type="icon" @click="toggleCapturing" tabindex="0" title="Aufnahme starten">
+			<svws-ui-button v-if="capture && (currentSnapshot === null) && hasVideoDevice" type="icon" @click="toggleCapturing" tabindex="0" title="Aufnahme starten">
 				<span class="icon i-ri-camera-fill inline-block" />
 			</svws-ui-button>
 			<svws-ui-button v-if="capture && isCapturing && (currentSnapshot !== null)" type="icon" @click="toggleSnapshot" tabindex="0" title="Aufnahme löschen">
@@ -54,7 +54,7 @@
 </template>
 
 <script setup lang='ts'>
-	import { ref, computed, onUnmounted } from "vue";
+	import { ref, computed, onUnmounted, onMounted } from "vue";
 	import imageFile from "../assets/img/avatar_placeholder.svg";
 
 	const props = withDefaults(defineProps<{
@@ -73,6 +73,16 @@
 		'image:captured': [value: Blob | null];
 		'image:base64': [val: string | null];
 	}>();
+
+	const hasVideoDevice = ref(false);
+
+	onMounted(async () => {
+		// test if media device available
+		const list = await navigator.mediaDevices.enumerateDevices();
+		for (const device of list)
+			if (device.kind === 'videoinput')
+				hasVideoDevice.value = true;
+	})
 
 	const fileInputEl = ref<null | HTMLInputElement>(null);
 	const uploadedImage = ref<string | null>(null);
@@ -125,7 +135,7 @@
 	const capturedImage = ref<Blob | null>(null);
 	const capturingError = ref("");
 	const videoEl = ref<HTMLVideoElement>();
-	const canvasEl = ref<HTMLCanvasElement>();
+	const canvasEl = ref<HTMLCanvasElement | null>(null);
 	const stream = ref<MediaStream>();
 
 	const constraints = {
@@ -147,6 +157,7 @@
 			if (videoEl.value)
 				videoEl.value.srcObject = stream.value;
 		} catch (err) {
+			console.log(err)
 			capturingError.value = (err as { message: string }).message;
 		}
 	}
@@ -158,7 +169,7 @@
 	}
 
 	function takeSnapshot() {
-		if ((canvasEl.value === undefined) || (videoEl.value === undefined))
+		if ((videoEl.value === undefined) || (canvasEl.value === null))
 			return;
 		canvasEl.value.width = constraints.video.width;
 		canvasEl.value.height = videoEl.value.videoHeight / (videoEl.value.videoWidth / constraints.video.width);

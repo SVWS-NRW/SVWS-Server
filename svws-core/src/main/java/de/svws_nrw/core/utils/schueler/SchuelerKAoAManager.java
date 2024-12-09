@@ -215,8 +215,8 @@ public class SchuelerKAoAManager extends AuswahlManager<Long, SchuelerKAoADaten,
 	}
 
 	/**
-	 * Diese Methode gibt eine Liste der Schuljahresabschnitte zurück, in denen es einen Lernabschnitt für den ausgewählten Schüler und entsprechend
-	 * der dazugehörigen Jahrgänge KAOAKategorieEinträge gibt.
+	 * Diese Methode erzeugt die Liste derjenigen Schuljahresabschnitte, in denen es einen Lernabschnitt für den ausgewählten Schüler und
+	 * entsprechend der dazugehörigen Jahrgänge KAOAKategorieEinträge gibt.
 	 */
 	private void processSchuljahresabschnitte() {
 		// Sammeln aller in den KaoaKategorien vorhandener Jahrgänge
@@ -224,7 +224,7 @@ public class SchuelerKAoAManager extends AuswahlManager<Long, SchuelerKAoADaten,
 		for (final KAOAKategorie kategorie : this._kategorien.list()) {
 			final KAOAKategorieKatalogEintrag daten = kategorie.daten(getSchuljahr());
 			if (daten == null)
-				throw new DeveloperNotificationException("keine Kategorie für das Schuljahr gefunden");
+				return;
 			for (final String jahrgang : daten.jahrgaenge)
 				availableKuerzelJahrgang.add(jahrgang.substring(jahrgang.length() - 2));
 		}
@@ -236,7 +236,7 @@ public class SchuelerKAoAManager extends AuswahlManager<Long, SchuelerKAoADaten,
 				filteredEintraege.add(lernabschnitt);
 		}
 		if (filteredEintraege.isEmpty())
-			throw new DeveloperNotificationException("Keine passenden Kategorien für die vorhandenen Lernabschnitte gefunden");
+			return;
 		// Hinzufügen der Schuljahresabschnitte entsprechend der gefilterten Lernabschnitte
 		final Set<Long> schuljahresabschnittIDs = new HashSet<>();
 		for (final SchuelerLernabschnittListeEintrag lernabschnitt : filteredEintraege)

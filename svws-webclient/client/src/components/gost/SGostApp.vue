@@ -25,7 +25,7 @@
 			</div>
 			<div class="svws-ui-header--actions" />
 		</header>
-		<svws-ui-tab-bar :tab-manager :class="`router--tab--${tabManager().tab.name} router--tab--${tabManager().tab.name.replace('.', '_')}`">
+		<svws-ui-tab-bar :tab-manager :class="`router--tab--${tabManager().tab.name} router--tab--${tabManager().tab.name.replace('.', '_')}`" :focus-switching-enabled :focus-help-visible>
 			<router-view />
 		</svws-ui-tab-bar>
 	</template>
@@ -38,8 +38,11 @@
 
 	import { computed } from "vue";
 	import type { GostAppProps } from "./SGostAppProps";
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<GostAppProps>();
+
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const bezeichnung_abiturjahr = computed(() => props.auswahl?.bezeichnung);
 

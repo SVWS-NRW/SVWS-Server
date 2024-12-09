@@ -1,6 +1,6 @@
 <template>
-	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="showModal" :type="listRaeume.size() < 1 ? 'danger' : 'default'" size="medium">
+	<slot :open-modal />
+	<svws-ui-modal v-model:show="show" :type="listRaeume.size() < 1 ? 'danger' : 'default'" size="medium">
 		<template #modalTitle>Räume aus Katalog importieren</template>
 		<template #modalContent>
 			<div class="flex justify-center flex-wrap items-center gap-1">
@@ -11,7 +11,7 @@
 			</div>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="showModal().value = false"> Abbrechen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="show = false"> Abbrechen </svws-ui-button>
 			<svws-ui-button type="secondary" @click="importer" :disabled="selected.length === 0"> Ausgewählte importieren </svws-ui-button>
 		</template>
 	</svws-ui-modal>
@@ -27,8 +27,7 @@
 		listRaeume: List<Raum>;
 	}>();
 
-	const _showModal = ref<boolean>(false);
-	const showModal = () => _showModal;
+	const show = ref<boolean>(false);
 
 	const selected = ref<Raum[]>([]);
 	const raum = ref<Raum>()
@@ -41,12 +40,12 @@
 
 	function openModal() {
 		selected.value = [...props.listRaeume];
-		showModal().value = true;
+		show.value = true;
 	}
 
 	async function importer() {
 		await props.importRaeume(selected.value);
-		showModal().value = false;
+		show.value = false;
 		selected.value = [];
 	}
 

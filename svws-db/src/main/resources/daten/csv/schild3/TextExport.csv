@@ -63,10 +63,9 @@ Lehrer;Tel;Telefon (Festnetz);S;;;;;ALLE
 Lehrer;Titel;Titel;S;;;;;ALLE
 Lehrer;Vorname;Vorname;S;;;;;ALLE
 Lehrer;Vschluessel;Vergütungsschlüssel;S;;;;;ALLE
-Lehrer;MasernImpfnachweis;Masern-Impfnachweis;B;;;;;ALLE
 Lehrer;ID;Pflichtstunden-Soll;S;;;PflichtstdSoll;select LA.PflichtstdSoll from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
 Lehrer;ID;Rechtsverhältnis;S;;;Rechtsverhaeltnis;select LA.Rechtsverhaeltnis from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
-Lehrer;ID;Beschäftigungsart;S;;;Beschaeftigungsart;select LA.PflichtstdSoll from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
+Lehrer;ID;Beschäftigungsart;S;;;Beschaeftigungsart;select LA.Beschaeftigungsart from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
 Lehrer;ID;Einsatzstatus;S;;;Einsatzstatus;select LA.Einsatzstatus from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
 Lehrer;ID;Unterrichtsstunden;S;;;UnterrichtsStd;select LA.UnterrichtsStd from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
 Lehrer;ID;Mehrleistungsstunden;S;;;MehrleistungStd;select LA.MehrleistungStd from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
@@ -232,3 +231,4 @@ Schueler;ID;Schuljahr;S;;;Schuljahr;SELECT CONCAT( SJA.Jahr, '/', SJA.Jahr+1) as
 Schueler;Religionsabmeldung;Religionsabmeldung;D;;;;;ALLE
 Schueler;Religionsanmeldung;Religionsanmeldung;D;;;;;ALLE
 Schueler;ID;Schwerpunkt;S;;;Bezeichnung;SELECT SP.Bezeichnung FROM SchuelerLernabschnittsdaten LA, Schueler S, K_Schwerpunkt SP WHERE S.ID=% and LA.Schueler_ID=S.ID AND LA.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID and LA.WechselNr=0 AND SP.ID=LA.Schwerpunkt_ID;ALLE
+Schueler;ID;Teilstandort;S;;;AdrMerkmal;SELECT K.AdrMerkmal FROM SchuelerLernabschnittsdaten LA, Schueler S, Klassen K WHERE S.ID=% and LA.Schueler_ID=S.ID AND LA.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID and LA.WechselNr=0 AND K.ID=LA.Klassen_ID;ALLE

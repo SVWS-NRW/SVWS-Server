@@ -1,6 +1,6 @@
 <template>
-	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="showModal" size="small" class="hidden" type="danger">
+	<slot :open-modal />
+	<svws-ui-modal v-model:show="show" size="small" class="hidden" type="danger">
 		<template #modalTitle>Übertragung rückgängig machen</template>
 		<template #modalDescription>
 			<div class="text-justify space-y-4">
@@ -9,7 +9,7 @@
 			</div>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="showModal().value = false">Abbrechen</svws-ui-button>
+			<svws-ui-button type="secondary" @click="show = false">Abbrechen</svws-ui-button>
 			<svws-ui-button type="danger" @click="activate_revert">Ja</svws-ui-button>
 		</template>
 	</svws-ui-modal>
@@ -23,16 +23,15 @@
 		revertBlockung: () => Promise<void>;
 	}>();
 
-	const _showModal = ref<boolean>(false);
-	const showModal = () => _showModal;
+	const show = ref<boolean>(false);
 
 	async function activate_revert() {
-		showModal().value = false;
+		show.value = false;
 		await props.revertBlockung();
 	}
 
 	const openModal = () => {
-		showModal().value = true;
+		show.value = true;
 	}
 
 </script>

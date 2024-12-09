@@ -65,11 +65,15 @@
 		arr.sort((a, b) => {
 			switch (temp.key) {
 				case 'nachname':
-					return props.kMan().schuelerGetByIdOrException(props.kMan().schuelerklausurGetByIdOrException(a.idSchuelerklausur).idSchueler).nachname.localeCompare(props.kMan().schuelerGetByIdOrException(props.kMan().schuelerklausurGetByIdOrException(b.idSchuelerklausur).idSchueler).nachname, "de-DE",);
+					return props.kMan().schuelerGetByIdOrException(props.kMan().schuelerklausurGetByIdOrException(a.idSchuelerklausur).idSchueler).nachname.localeCompare(props.kMan().schuelerGetByIdOrException(props.kMan().schuelerklausurGetByIdOrException(b.idSchuelerklausur).idSchueler).nachname, "de-DE");
 				case 'vorname':
-					return props.kMan().schuelerGetByIdOrException(props.kMan().schuelerklausurGetByIdOrException(a.idSchuelerklausur).idSchueler).vorname.localeCompare(props.kMan().schuelerGetByIdOrException(props.kMan().schuelerklausurGetByIdOrException(b.idSchuelerklausur).idSchueler).vorname, "de-DE",);
+					return props.kMan().schuelerGetByIdOrException(props.kMan().schuelerklausurGetByIdOrException(a.idSchuelerklausur).idSchueler).vorname.localeCompare(props.kMan().schuelerGetByIdOrException(props.kMan().schuelerklausurGetByIdOrException(b.idSchuelerklausur).idSchueler).vorname, "de-DE");
 				case 'kurs':
-					return props.kMan().kursKurzbezeichnungByKursklausur(props.kMan().kursklausurBySchuelerklausurTermin(a)).localeCompare(props.kMan().kursKurzbezeichnungByKursklausur(props.kMan().kursklausurBySchuelerklausurTermin(b)), "de-DE",);
+					return props.kMan().kursKurzbezeichnungByKursklausur(props.kMan().kursklausurBySchuelerklausurTermin(a)).localeCompare(props.kMan().kursKurzbezeichnungByKursklausur(props.kMan().kursklausurBySchuelerklausurTermin(b)), "de-DE");
+				case 'datum': {
+					const ord = props.kMan().terminGetByIdOrException(a.idTermin!).datum!.localeCompare(props.kMan().terminGetByIdOrException(b.idTermin!).datum!, "de-DE");
+					return ord !== 0 ? ord : props.kMan().kursKurzbezeichnungByKursklausur(props.kMan().kursklausurBySchuelerklausurTermin(a)).localeCompare(props.kMan().kursKurzbezeichnungByKursklausur(props.kMan().kursklausurBySchuelerklausurTermin(b)), "de-DE");
+				}
 				default:
 					return 0;
 			}
@@ -83,7 +87,7 @@
 			{ key: "vorname", label: "Vorname", minWidth: 8, sortable: true },
 			{ key: "kurs", label: "Kurs", span: 1.25, sortable: true },
 			{ key: "kuerzel", label: "Lehrkraft" },
-			{ key: "datum", label: "Datum" },
+			{ key: "datum", label: "Datum", sortable: true },
 			{ key: "startzeit", label: "Startzeit" },
 			{ key: "dauer", label: "Dauer", tooltip: "Dauer in Minuten", span: 0.5, minWidth: 3.25 },
 			{ key: "raum", label: "Raum" },

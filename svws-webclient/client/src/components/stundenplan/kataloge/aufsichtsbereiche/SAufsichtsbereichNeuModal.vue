@@ -1,6 +1,6 @@
 <template>
-	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="showModal" class="hidden">
+	<slot :open-modal />
+	<svws-ui-modal v-model:show="show" class="hidden">
 		<template #modalTitle>Aufsichtsbereich hinzufügen</template>
 		<template #modalContent>
 			<svws-ui-input-wrapper>
@@ -9,7 +9,7 @@
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="showModal().value = false"> Abbrechen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="show = false"> Abbrechen </svws-ui-button>
 			<svws-ui-button type="secondary" @click="importer()" :disabled="!item.kuerzel"> Hinzufügen </svws-ui-button>
 		</template>
 	</svws-ui-modal>
@@ -24,19 +24,18 @@
 		addAufsichtsbereich: (raum: Aufsichtsbereich) => Promise<void>;
 	}>();
 
-	const _showModal = ref<boolean>(false);
-	const showModal = () => _showModal;
+	const show = ref<boolean>(false);
 
 	const item = ref<Aufsichtsbereich>(new Aufsichtsbereich());
 
 	const openModal = () => {
-		showModal().value = true;
+		show.value = true;
 	}
 
 	async function importer() {
 		await props.addAufsichtsbereich(item.value);
 		item.value = new Aufsichtsbereich();
-		showModal().value = false;
+		show.value = false;
 	}
 
 </script>

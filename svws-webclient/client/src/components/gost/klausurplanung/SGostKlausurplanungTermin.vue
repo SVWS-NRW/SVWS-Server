@@ -34,7 +34,7 @@
 							<template v-if="termin.datum === null">
 								<span class="opacity-25 inline-flex items-center gap-1">
 									<span class="icon i-ri-calendar-2-line" />
-									<svws-ui-button type="transparent" :disabled="!hatKompetenzUpdate" @click="gotoKalenderdatum( termin );$event.stopPropagation()" :title="`Datum setzen`" size="small"><span class="icon i-ri-link" /> Datum setzen</svws-ui-button>
+									<svws-ui-button type="transparent" :disabled="!hatKompetenzUpdate" @click="gotoKalenderdatum(undefined, termin);$event.stopPropagation()" :title="`Datum setzen`" size="small"><span class="icon i-ri-link" /> Datum setzen</svws-ui-button>
 								</span>
 							</template>
 							<template v-else>
@@ -87,11 +87,24 @@
 										{{ GostHalbjahr.fromIDorException(kMan().vorgabeByKursklausur(klausur).halbjahr).jahrgang }}
 									</div>
 									<div class="svws-ui-td" role="cell">
-										<svws-ui-tooltip :hover="false" :indicator="false" :keep-open>
+										<svws-ui-tooltip :hover="false" :indicator="false" :keep-open autosize>
 											<template #content>
-												<s-gost-klausurplanung-kursliste :k-man :kursklausur="klausur" :termin :patch-klausur :create-schuelerklausur-termin @modal="keepOpen = $event" />
+												<s-gost-klausurplanung-kursliste :k-man :kursklausur="klausur" :termin :patch-klausur :create-schuelerklausur-termin @modal="keepOpen = $event" :benutzer-kompetenzen />
 											</template>
 											<span class="svws-ui-badge hover:opacity-75" :style="`--background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
+											<svws-ui-tooltip>
+												<template #content>
+													<div v-if="kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe !== null && kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe!.trim().length > 0">
+														<h3 class="border-b text-headline-md">Bemerkung zur Vorgabe</h3>
+														<p>{{ kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe }}</p>
+													</div>
+													<div v-if="klausur.bemerkung !== null && klausur.bemerkung.trim().length > 0">
+														<h3 class="border-b text-headline-md">Bemerkung zur Kursklausur</h3>
+														<p>{{ klausur.bemerkung }}</p>
+													</div>
+												</template>
+												<span class="icon i-ri-edit-2-line icon-primary" v-if="(klausur.bemerkung !== null && klausur.bemerkung.trim().length > 0) || (kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe !== null && kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe!.trim().length > 0)" />
+											</svws-ui-tooltip>
 										</svws-ui-tooltip>
 									</div>
 									<div class="svws-ui-td" role="cell">{{ kMan().kursLehrerKuerzelByKursklausur(klausur) }}</div>
@@ -125,9 +138,9 @@
 							:patch-klausur
 							:klausur-css-classes />
 					</slot>
-					<!--<div v-else-if="schuelerklausurtermine().size()">
-						{{ schuelerklausurtermine().size() }} Nachschreibklausuren
-					</div>-->
+					<div class="mt-3">
+						<svws-ui-textarea-input class="text-sm" :headless="termin.bemerkung === null || termin.bemerkung.trim().length === 0" :rows="1" resizeable="none" autoresize placeholder="Bemerkungen zum Termin" :disabled="!hatKompetenzUpdate" :model-value="termin.bemerkung" @change="bemerkung => patchKlausurtermin(termin.id, {bemerkung})" @click="$event.stopPropagation()" />
+					</div>
 					<span class="flex w-full justify-between items-center gap-1 text-sm mt-auto pr-2" :class="{'pl-3': inTooltip}">
 						<div class="py-3" :class="{'opacity-50': !kursklausuren().size() && (showSchuelerklausuren && !schuelerklausurtermine().size())}">
 							<span class="font-bold">{{ kMan().schuelerklausurterminAktuellGetMengeByTermin(termin).size() }} Schüler, </span>
@@ -170,8 +183,9 @@
 		hideButtonRaeumePlanen?: boolean;
 		createSchuelerklausurTermin?: (id: number) => Promise<void>;
 		patchKlausur?: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<GostKlausurenCollectionSkrsKrsData>;
+		patchKlausurtermin: (id: number, termin: Partial<GostKlausurtermin>) => Promise<void>;
 		inTooltip?: boolean;
-		gotoKalenderdatum: (goto: string | GostKlausurtermin) => Promise<void>;
+		gotoKalenderdatum: (datum: string | undefined, termin: GostKlausurtermin | undefined) => Promise<void>;
 		gotoRaumzeitTermin: (abiturjahr: number, halbjahr: GostHalbjahr, value: number) => Promise<void>;
 	}>(), {
 		klausurCssClasses: undefined,

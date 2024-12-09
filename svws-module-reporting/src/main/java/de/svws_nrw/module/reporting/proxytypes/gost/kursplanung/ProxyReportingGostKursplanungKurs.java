@@ -49,9 +49,23 @@ public class ProxyReportingGostKursplanungKurs extends ReportingGostKursplanungK
 			final ReportingGostKursplanungFachwahlstatistik fachwahlstatistik, final GostHalbjahr gostHalbjahr,
 			final GostKursart gostKursart, final long id, final List<ReportingLehrer> lehrkraefte, final List<ReportingGostKursplanungSchiene> schienen,
 			final List<ReportingSchueler> schueler) {
-		super(anzahlAB12, anzahlAB3, anzahlAB4, anzahlDummy, anzahlExterne, anzahlSchueler, anzahlSchuelerSchriftlich, bezeichnung, fach,
-				fachwahlstatistik, gostHalbjahr,
-				gostKursart, id, lehrkraefte, schienen, schueler);
+		super(anzahlAB12,
+				anzahlAB3,
+				anzahlAB4,
+				anzahlDummy,
+				anzahlExterne,
+				anzahlSchueler,
+				anzahlSchuelerSchriftlich,
+				ersetzeNullDurchEmpty(bezeichnung),
+				fach,
+				fachwahlstatistik,
+				gostHalbjahr,
+				gostKursart,
+				id,
+				lehrkraefte,
+				schienen,
+				schueler);
+
 		this.reportingGostKursplanungBlockungsergebnis = reportingGostKursplanungBlockungsergebnis;
 	}
 
