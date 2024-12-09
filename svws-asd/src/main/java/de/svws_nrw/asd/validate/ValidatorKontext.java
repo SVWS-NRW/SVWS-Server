@@ -48,7 +48,7 @@ public class ValidatorKontext {
 	 *
 	 * @return die Stammdaten der Schule
 	 */
-	public SchuleStammdaten getSchuleStammdaten() {
+	public @NotNull SchuleStammdaten getSchuleStammdaten() {
 		return _schuleStammdaten;
 	}
 

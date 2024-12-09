@@ -4,7 +4,12 @@ import { JavaString } from '../../../java/lang/JavaString';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
 
-export class ValidatorLehrerStammdatenNachnameVorhanden extends Validator<LehrerStammdaten> {
+export class ValidatorLehrerStammdatenNachnameVorhanden extends Validator {
+
+	/**
+	 * Die Lehrer-Stammdaten
+	 */
+	private readonly daten : LehrerStammdaten;
 
 
 	/**
@@ -14,11 +19,12 @@ export class ValidatorLehrerStammdatenNachnameVorhanden extends Validator<Lehrer
 	 * @param kontext   der Kontext des Validators
 	 */
 	public constructor(daten : LehrerStammdaten, kontext : ValidatorKontext) {
-		super(daten, kontext);
+		super(kontext);
+		this.daten = daten;
 	}
 
 	protected pruefe() : boolean {
-		const nachname : string | null = this.daten().nachname;
+		const nachname : string | null = this.daten.nachname;
 		if ((nachname === null) || (nachname.length === 0)) {
 			this.addFehler("Kein Wert im Feld 'nachname'.");
 			return false;

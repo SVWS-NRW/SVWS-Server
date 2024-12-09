@@ -4,7 +4,12 @@ import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
 
-export class ValidatorLehrerStammdatenGeburtsdatum extends Validator<LehrerStammdaten> {
+export class ValidatorLehrerStammdatenGeburtsdatum extends Validator {
+
+	/**
+	 * Die Lehrer-Stammdaten
+	 */
+	private readonly daten : LehrerStammdaten;
 
 
 	/**
@@ -14,13 +19,14 @@ export class ValidatorLehrerStammdatenGeburtsdatum extends Validator<LehrerStamm
 	 * @param kontext   der Kontext des Validators
 	 */
 	public constructor(daten : LehrerStammdaten, kontext : ValidatorKontext) {
-		super(daten, kontext);
+		super(kontext);
+		this.daten = daten;
 	}
 
 	protected pruefe() : boolean {
 		let geburtsdatum : DateManager;
 		try {
-			geburtsdatum = DateManager.from(this.daten().geburtsdatum);
+			geburtsdatum = DateManager.from(this.daten.geburtsdatum);
 		} catch(e : any) {
 			this.addFehler("Das Geburtsdatum ist ungültig: " + e.getMessage());
 			return false;

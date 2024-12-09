@@ -7,7 +7,7 @@ import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
 import { ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll } from '../../../asd/validate/lehrer/ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll';
 
-export class ValidatorLehrerPersonalabschnittsdaten extends Validator<LehrerPersonalabschnittsdaten> {
+export class ValidatorLehrerPersonalabschnittsdaten extends Validator {
 
 
 	/**
@@ -18,7 +18,7 @@ export class ValidatorLehrerPersonalabschnittsdaten extends Validator<LehrerPers
 	 * @param kontext      der Kontext des Validators
 	 */
 	public constructor(daten : LehrerPersonalabschnittsdaten, stammdaten : LehrerStammdaten, kontext : ValidatorKontext) {
-		super(daten, kontext);
+		super(kontext);
 		this._validatoren.add(new ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll(daten, kontext));
 		try {
 			const geburtsdatum : DateManager = DateManager.from(stammdaten.geburtsdatum);

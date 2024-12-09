@@ -321,7 +321,7 @@ export class ValidatorManager extends JavaObject {
 	 *
 	 * @return die Fehlerart des Validators für das angegebene Schuljahr
 	 */
-	public getFehlerartBySchuljahrAndValidatorClass<T extends Validator<any>>(schuljahr : number, validator : Class<T>) : ValidatorFehlerart {
+	public getFehlerartBySchuljahrAndValidatorClass<T extends Validator>(schuljahr : number, validator : Class<T>) : ValidatorFehlerart {
 		const tmp : ValidatorFehlerart | null = this.getValidatornameToFehlerartCache(schuljahr).get(validator.getCanonicalName());
 		return (tmp === null) ? ValidatorFehlerart.UNGENUTZT : tmp;
 	}

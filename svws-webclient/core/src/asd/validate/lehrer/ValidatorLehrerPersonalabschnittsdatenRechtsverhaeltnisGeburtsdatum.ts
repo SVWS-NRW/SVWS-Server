@@ -6,7 +6,12 @@ import { LehrerRechtsverhaeltnis } from '../../../asd/types/lehrer/LehrerRechtsv
 import { Schuljahresabschnitt } from '../../../asd/data/schule/Schuljahresabschnitt';
 import { Validator } from '../../../asd/validate/Validator';
 
-export class ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum extends Validator<LehrerPersonalabschnittsdaten> {
+export class ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum extends Validator {
+
+	/**
+	 * Die Lehrer-Personalabschnittdaten
+	 */
+	private readonly daten : LehrerPersonalabschnittsdaten;
 
 	/**
 	 * Das Geburtsdatum des Lehrers
@@ -22,16 +27,17 @@ export class ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum
 	 * @param kontext        der Kontext des Validators
 	 */
 	public constructor(daten : LehrerPersonalabschnittsdaten, geburtsdatum : DateManager, kontext : ValidatorKontext) {
-		super(daten, kontext);
+		super(kontext);
+		this.daten = daten;
 		this.geburtsdatum = geburtsdatum;
 	}
 
 	protected pruefe() : boolean {
-		const schuljahresabschnitt : Schuljahresabschnitt | null = this.kontext().getSchuljahresabschnittByID(this.daten().idSchuljahresabschnitt);
+		const schuljahresabschnitt : Schuljahresabschnitt | null = this.kontext().getSchuljahresabschnittByID(this.daten.idSchuljahresabschnitt);
 		if (schuljahresabschnitt === null)
 			return false;
 		const schuljahr : number = schuljahresabschnitt.schuljahr;
-		const rv : LehrerRechtsverhaeltnis | null = LehrerRechtsverhaeltnis.getBySchluessel(this.daten().rechtsverhaeltnis);
+		const rv : LehrerRechtsverhaeltnis | null = LehrerRechtsverhaeltnis.getBySchluessel(this.daten.rechtsverhaeltnis);
 		if (rv === null) {
 			this.addFehler("Kein Wert im Feld 'rechtsverhaeltnis'.");
 			return false;

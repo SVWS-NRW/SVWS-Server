@@ -12,7 +12,10 @@ import jakarta.validation.constraints.NotNull;
  * Dieser Validator führt eine Statistikprüfung auf das Geburtsdatum im Kontext des Rechtsverhältnisses
  * der Abschnittsdaten eines Lehrers einer Schule aus.
  */
-public final class ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum extends Validator<LehrerPersonalabschnittsdaten> {
+public final class ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum extends Validator {
+
+	/** Die Lehrer-Personalabschnittdaten */
+	private final @NotNull LehrerPersonalabschnittsdaten daten;
 
 	/** Das Geburtsdatum des Lehrers */
 	private final @NotNull DateManager geburtsdatum;
@@ -26,7 +29,8 @@ public final class ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburt
 	 */
 	public ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum(final @NotNull LehrerPersonalabschnittsdaten daten,
 			final @NotNull DateManager geburtsdatum, final @NotNull ValidatorKontext kontext) {
-		super(daten, kontext);
+		super(kontext);
+		this.daten = daten;
 		this.geburtsdatum = geburtsdatum;
 	}
 
@@ -34,13 +38,13 @@ public final class ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburt
 	@Override
 	protected boolean pruefe() {
 		// Bestimme das Schuljahr über den Schuljahresabschnitt. Treten dabei Fehler auf, so ist dieser durch einen übergeordneten Validator zu prüfen.
-		final Schuljahresabschnitt schuljahresabschnitt = kontext().getSchuljahresabschnittByID(daten().idSchuljahresabschnitt);
+		final Schuljahresabschnitt schuljahresabschnitt = kontext().getSchuljahresabschnittByID(daten.idSchuljahresabschnitt);
 		if (schuljahresabschnitt == null)
 			return false;
 		final int schuljahr = schuljahresabschnitt.schuljahr;
 
 		// Bestimme das Rechtsverhältnis. Ist dieses nicht angegeben, so wird im Folgenden von einem sonstigen Rechtsverhältnis ausgegangen
-		final LehrerRechtsverhaeltnis rv = LehrerRechtsverhaeltnis.getBySchluessel(daten().rechtsverhaeltnis);
+		final LehrerRechtsverhaeltnis rv = LehrerRechtsverhaeltnis.getBySchluessel(daten.rechtsverhaeltnis);
 		if (rv == null) {
 			addFehler("Kein Wert im Feld 'rechtsverhaeltnis'.");
 			return false;

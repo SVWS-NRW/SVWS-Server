@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
  * Dieser Validator führt eine Statistikprüfung auf die Stammdaten
  * eines Lehrers einer Schule aus.
  */
-public final class ValidatorLehrerStammdaten extends Validator<LehrerStammdaten> {
+public final class ValidatorLehrerStammdaten extends Validator {
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
@@ -18,7 +18,7 @@ public final class ValidatorLehrerStammdaten extends Validator<LehrerStammdaten>
 	 * @param kontext   der Kontext des Validators
 	 */
 	public ValidatorLehrerStammdaten(final @NotNull LehrerStammdaten daten, final @NotNull ValidatorKontext kontext) {
-		super(daten, kontext);
+		super(kontext);
 		_validatoren.add(new ValidatorLehrerStammdatenNachname(daten, kontext));
 		_validatoren.add(new ValidatorLehrerStammdatenVorname(daten, kontext));
 		_validatoren.add(new ValidatorLehrerStammdatenGeburtsdatum(daten, kontext));

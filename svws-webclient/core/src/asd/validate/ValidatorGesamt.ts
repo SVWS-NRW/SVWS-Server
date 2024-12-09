@@ -4,7 +4,9 @@ import { ValidatorKontext } from '../../asd/validate/ValidatorKontext';
 import { Validator, cast_de_svws_nrw_asd_validate_Validator } from '../../asd/validate/Validator';
 import { SchuleStatistikdatenGesamt } from '../../asd/data/schule/SchuleStatistikdatenGesamt';
 
-export class ValidatorGesamt extends Validator<SchuleStatistikdatenGesamt> {
+export class ValidatorGesamt extends Validator {
+
+	private readonly daten : SchuleStatistikdatenGesamt;
 
 
 	/**
@@ -14,8 +16,9 @@ export class ValidatorGesamt extends Validator<SchuleStatistikdatenGesamt> {
 	 * @param kontext   der Kontext des Validators
 	 */
 	public constructor(daten : SchuleStatistikdatenGesamt, kontext : ValidatorKontext) {
-		super(daten, kontext);
-		this._validatoren.add(new ValidatorSchuleStammdaten(daten.stammdaten, kontext));
+		super(kontext);
+		this.daten = daten;
+		this._validatoren.add(new ValidatorSchuleStammdaten(kontext));
 	}
 
 	protected pruefe() : boolean {

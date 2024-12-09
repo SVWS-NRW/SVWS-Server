@@ -86,7 +86,7 @@
 </template>
 
 
-<script setup lang="ts" generic="T extends JavaObject, V extends Validator<T>">
+<script setup lang="ts" generic="V extends Validator">
 
 	import { ref, computed, watch, type ComputedRef, type Ref, onBeforeMount, onMounted, onBeforeUnmount, useId } from "vue";
 	import type { Validator } from "../../../core/src/asd/validate/Validator";

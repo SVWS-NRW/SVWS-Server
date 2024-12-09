@@ -7,7 +7,12 @@ import { JavaString } from '../../../java/lang/JavaString';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
 
-export class ValidatorLehrerStammdatenNachnamePlausibel extends Validator<LehrerStammdaten> {
+export class ValidatorLehrerStammdatenNachnamePlausibel extends Validator {
+
+	/**
+	 * Die Lehrer-Stammdaten
+	 */
+	private readonly daten : LehrerStammdaten;
 
 	/**
 	 *   Namenszusätze in Europa:
@@ -41,7 +46,8 @@ export class ValidatorLehrerStammdatenNachnamePlausibel extends Validator<Lehrer
 	 * @param kontext   der Kontext des Validators
 	 */
 	public constructor(daten : LehrerStammdaten, kontext : ValidatorKontext) {
-		super(daten, kontext);
+		super(kontext);
+		this.daten = daten;
 	}
 
 	/**
@@ -65,7 +71,7 @@ export class ValidatorLehrerStammdatenNachnamePlausibel extends Validator<Lehrer
 	}
 
 	protected pruefe() : boolean {
-		const nachname : string | null = this.daten().nachname;
+		const nachname : string | null = this.daten.nachname;
 		if ((nachname === null) || (nachname.length === 0) || (JavaString.isBlank(nachname)))
 			return true;
 		let success : boolean = true;
