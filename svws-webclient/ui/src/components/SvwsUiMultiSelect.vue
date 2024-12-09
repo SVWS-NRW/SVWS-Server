@@ -61,7 +61,7 @@
 
 <script setup lang="ts" generic="Item">
 
-	import type { ComputedRef, Ref } from "vue";
+	import type { Ref } from "vue";
 	import { computed, nextTick, ref, watch, onMounted, shallowRef, toRaw, useId } from "vue";
 	import type { ComponentExposed } from "vue-component-type-helpers";
 	import type { MaybeElement } from "@floating-ui/vue";
@@ -160,7 +160,7 @@
 	watch(rawModelValues, (value) => updateData(value), { immediate: false });
 
 	function updateData(newValueSet: Set<Item>) {
-		if ((data.value.size === newValueSet.size) && (data.value.difference(newValueSet).size === 0))
+		if (((data.value.size === newValueSet.size) && (data.value.difference(newValueSet).size === 0)) || props.disabled)
 			return;
 		data.value = newValueSet;
 		emit("update:modelValue", [...newValueSet]);
@@ -318,9 +318,7 @@
 
 	const content = computed<Item[]>(() => [...data.value]);
 
-	defineExpose<{
-		content: ComputedRef<Item[]>,
-	}>({content});
+	defineExpose({content});
 
 </script>
 

@@ -6732,7 +6732,7 @@ public class StundenplanManager {
 	/**
 	 * Liefert eine String-Repräsentation der Raummenge des {@link StundenplanUnterricht}.
 	 * <br>Beispiel: "1.01" bei einem Raum und "T1, T2" bei mehreren (z.B. Sporthallen...)
-	 * <br>Laufzeit: O(1)
+	 *
 	 * @param idUnterricht  Die Datenbank-ID des {@link StundenplanUnterricht}.
 	 *
 	 * @return eine String-Repräsentation der Raummenge des {@link StundenplanUnterricht}.
@@ -6740,12 +6740,15 @@ public class StundenplanManager {
 	public @NotNull String unterrichtGetByIDStringOfRaeume(final long idUnterricht) {
 		final @NotNull StundenplanUnterricht unterricht = DeveloperNotificationException.ifMapGetIsNull(_unterricht_by_id, idUnterricht);
 
-		// Klassenkürzel sammeln und sortieren.
-		final @NotNull AVLSet<String> kuerzel = new AVLSet<>();
+		// Klassenkürzel sammeln.
+		final @NotNull List<String> kuerzel = new ArrayList<>();
 		for (final long idRaum : unterricht.raeume) {
 			final @NotNull StundenplanRaum raum = DeveloperNotificationException.ifMapGetIsNull(_raum_by_id, idRaum);
 			kuerzel.add(raum.kuerzel);
 		}
+
+		// Klassenkürzel sortieren.
+		kuerzel.sort((final @NotNull String o1, final @NotNull String o2) -> o1.compareTo(o2));
 
 		return StringUtils.collectionToCommaSeparatedString(kuerzel);
 	}

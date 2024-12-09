@@ -1,17 +1,14 @@
 <template>
-	<stundenplan-ansicht show-schienen hide-zeitachse-pausenzeiten :mode-pausenaufsichten="modePausenaufsichten" :show-zeitachse="showZeitachse" :ignore-empty="ignoreEmpty"
-		:manager="manager" :wochentyp="wochentyp" :kalenderwoche="kalenderwoche" :use-drag-and-drop="useDragAndDrop" :drag-data="dragData"
-		:get-schienen="getSchienen" :get-unterricht="getUnterricht" :zeitraster-hat-unterricht-mit-wochentyp="zeitrasterHatUnterrichtMitWochentyp"
-		:get-pausenzeiten="getPausenzeiten" :schneiden-pausenzeiten-zeitraster="schneidenPausenzeitenZeitraster"
-		:get-pausenzeiten-wochentag="getPausenzeitenWochentag" :get-pausenaufsichten-pausenzeit="getPausenaufsichtenPausenzeit"
-		:on-drag="onDrag" :on-drop="onDrop">
+	<stundenplan-ansicht show-schienen hide-zeitachse-pausenzeiten :mode-pausenaufsichten :show-zeitachse :ignore-empty :use-drag-and-drop
+		:manager :wochentyp :kalenderwoche :drag-data :get-schienen :get-unterricht :zeitraster-hat-unterricht-mit-wochentyp
+		:get-pausenzeiten :schneiden-pausenzeiten-zeitraster :get-pausenzeiten-wochentag :get-pausenaufsichten-pausenzeit :on-drag :on-drop>
 		<template #unterricht="{ unterricht }">
-			<div class="font-bold col-span-2 flex place-items-center group" title="Unterricht">
+			<div class="font-bold col-span-2 flex place-items-center group" title="Unterricht" @click="emit('update:click', unterricht)">
 				<span v-if="useDragAndDrop" class="icon i-ri-draggable inline-block -ml-1 icon-dark opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
 				<span>{{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }}</span>
 			</div>
-			<div class="text-center" title="Lehrkraft"> {{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }} </div>
-			<div class="text-center" title="Raum"> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }} </div>
+			<div class="text-center" title="Lehrkraft" @click="emit('update:click', unterricht)"> {{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }} </div>
+			<div class="text-center" title="Raum" @click="emit('update:click', unterricht)"> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }} </div>
 		</template>
 	</stundenplan-ansicht>
 </template>
@@ -36,6 +33,11 @@
 		onDrag: (data: StundenplanAnsichtDragData, event?: DragEvent) => {},
 		onDrop: (zone: StundenplanAnsichtDropZone, wochentyp?: number) => {},
 	});
+
+	const emit = defineEmits<{
+		"update:click": [value: StundenplanUnterricht];
+	}>();
+
 
 	function getSchienen(wochentag: number, stunde: number, wochentyp: number) : List<StundenplanSchiene> {
 		return props.manager().schieneGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(props.id, wochentag, stunde, wochentyp, false);

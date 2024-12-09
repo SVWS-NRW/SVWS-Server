@@ -6078,18 +6078,19 @@ export class StundenplanManager extends JavaObject {
 	/**
 	 * Liefert eine String-Repräsentation der Raummenge des {@link StundenplanUnterricht}.
 	 * <br>Beispiel: "1.01" bei einem Raum und "T1, T2" bei mehreren (z.B. Sporthallen...)
-	 * <br>Laufzeit: O(1)
+	 *
 	 * @param idUnterricht  Die Datenbank-ID des {@link StundenplanUnterricht}.
 	 *
 	 * @return eine String-Repräsentation der Raummenge des {@link StundenplanUnterricht}.
 	 */
 	public unterrichtGetByIDStringOfRaeume(idUnterricht : number) : string {
 		const unterricht : StundenplanUnterricht = DeveloperNotificationException.ifMapGetIsNull(this._unterricht_by_id, idUnterricht);
-		const kuerzel : AVLSet<string> = new AVLSet<string>();
+		const kuerzel : List<string> = new ArrayList<string>();
 		for (const idRaum of unterricht.raeume) {
 			const raum : StundenplanRaum = DeveloperNotificationException.ifMapGetIsNull(this._raum_by_id, idRaum);
 			kuerzel.add(raum.kuerzel);
 		}
+		kuerzel.sort({ compare : (o1: string, o2: string) => JavaString.compareTo(o1, o2) });
 		return StringUtils.collectionToCommaSeparatedString(kuerzel);
 	}
 

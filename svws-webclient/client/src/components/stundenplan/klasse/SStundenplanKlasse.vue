@@ -1,6 +1,6 @@
 <template>
 	<div class="page--content page--content--full">
-		<Teleport to=".svws-sub-nav-target" v-if="isMounted">
+		<Teleport to=".svws-sub-nav-target" defer>
 			<svws-ui-sub-nav>
 				<div class="ml-4 flex gap-0.5 items-center leading-none">
 					<div class="text-button font-bold mr-1 -mt-px">Klasse:</div>
@@ -41,7 +41,7 @@
 								'text-error font-bold': stundenplanManager().klassenunterrichtGetWochenminutenREST(klasse.id, ku.idFach) < 0,
 								'font-bold': stundenplanManager().klassenunterrichtGetWochenminutenREST(klasse.id, ku.idFach) > 0 }">
 								<div class="ml-1">
-									<div class="svws-ui-badge select-none group cursor-grab flex place-items-center"
+									<div class="svws-ui-badge select-none group cursor-grab flex place-items-center" @click="auswahl !== ku ? auswahl = ku : auswahl = undefined"
 										:class="{ 'cursor-grabbing': dragData !== undefined, '!border-black/5': stundenplanManager().klassenunterrichtGetWochenminutenREST(klasse.id, ku.idFach) <= 0 }" draggable="true">
 										<span class="icon i-ri-draggable inline-block -ml-1 icon-dark opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
 										<span :class="{'font-bold': stundenplanManager().klassenunterrichtGetWochenminutenREST(klasse.id, ku.idFach) > 0}">
@@ -78,7 +78,7 @@
 								</div>
 								<!-- Die Kurszeilen -->
 								<div v-for="kurs in stundenplanManager().kursGetMengeByKlasseIdAndSchieneId(klasse.id, schiene.id)" :key="kurs.id" role="row" class="svws-ui-tr"
-									@dragstart.stop="onDrag(kurs, $event)" @dragend.stop="onDrag(undefined)"
+									@dragstart.stop="onDrag(kurs, $event)" @dragend.stop="onDrag(undefined)" @click="toRaw(auswahl) !== kurs ? auswahl = kurs : auswahl = undefined"
 									:class="{ 'cursor-grabbing': dragData !== undefined, '!border-black/5': stundenplanManager().kursGetWochenstundenREST(kurs.id) <= 0 }"
 									:style="`--background-color: ${(stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0) ? getBgColor(stundenplanManager().fachGetByIdOrException(kurs.idFach).kuerzelStatistik) : ''}`">
 									<div role="cell" class="select-none svws-ui-td" :class="{
@@ -104,7 +104,7 @@
 						</template>
 						<template v-else>
 							<div v-for="kurs in stundenplanManager().kursGetMengeByKlasseIdAsList(klasse.id)" :key="kurs.id" role="row" class="svws-ui-tr"
-								@dragstart="onDrag(kurs, $event)" @dragend="onDrag(undefined)"
+								@dragstart="onDrag(kurs, $event)" @dragend="onDrag(undefined)" @click="toRaw(auswahl) !== kurs ? auswahl = kurs : auswahl = undefined"
 								:style="`--background-color: ${(stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0) ? getBgColor(stundenplanManager().fachGetByIdOrException(kurs.idFach).kuerzelStatistik) : ''}`">
 								<div role="cell" class="select-none svws-ui-td" :class="{
 									'text-error font-bold': stundenplanManager().kursGetWochenstundenREST(kurs.id) < 0,
@@ -132,30 +132,65 @@
 			</div>
 			<!-- Das Zeitraster des Stundenplans, in welches von der linken Seite die Kurs-Unterrichte oder die Klassen-Unterricht hineingezogen werden können.-->
 			<stundenplan-klasse mode-pausenaufsichten="tooltip" :id="klasse.id" :manager="stundenplanManager" :wochentyp="()=>wochentypAnzeige" :kalenderwoche="() => undefined"
-				:use-drag-and-drop="hatUpdateKompetenz" :drag-data="() => dragData" :on-drag :on-drop class="h-full overflow-scroll pr-4" />
+				:use-drag-and-drop="hatUpdateKompetenz" :drag-data="() => dragData" :on-drag :on-drop class="h-full overflow-scroll pr-4" @update:click="u => toRaw(auswahl) !== u ? auswahl = u : auswahl = undefined" />
+			<!-- Card für die zusätzlichen Einstellungen zum Unterricht -->
+			<template v-if="(auswahl !== undefined) && (serverMode === ServerMode.DEV)">
+				<svws-ui-content-card title="Unterricht">
+					<svws-ui-input-wrapper :grid="2">
+						<template v-if="(auswahl instanceof StundenplanKlassenunterricht)">
+							<div>{{ stundenplanManager().fachGetByIdOrException(auswahl.idFach).bezeichnung }}</div>
+							<svws-ui-select v-if="!disabled" label="Raumzuordnung" :items="stundenplanManager().raumGetMengeSortiertNachGueteByKlasseIdAndFachId(klasse.id, auswahl.idFach)" :model-value="undefined" ref="refSelect"
+								@update:model-value="item => auswahl && item && patchUnterrichtRaeume(stundenplanManager().unterrichtGetMengeByKlasseIdAndFachId(klasse.id, auswahl.idFach), [item])" :item-text="r => r.kuerzel" />
+							<template v-for="u of stundenplanManager().unterrichtGetMengeByKlasseIdAndFachId(klasse.id, auswahl.idFach)" :key="u.id">
+								<div>{{ Wochentag.fromIDorException(stundenplanManager().zeitrasterGetByIdOrException(u.idZeitraster).wochentag).beschreibung }} {{ stundenplanManager().zeitrasterGetByIdOrException(u.idZeitraster).unterrichtstunde }}</div>
+								<svws-ui-multi-select label="Raumzuordnung" :items="stundenplanManager().raumGetMengeSortiertNachGueteByUnterrichtListe(ListUtils.create1(u.id))" :model-value="getRaeume(u)"
+									@update:model-value="liste => patchUnterrichtRaeume(ListUtils.create1(u), liste)" :item-text="r => r.kuerzel" :disabled />
+							</template>
+						</template>
+						<template v-else-if="(auswahl instanceof StundenplanUnterricht)">
+							<div>{{ stundenplanManager().fachGetByIdOrException(auswahl.idFach).bezeichnung }}</div>
+							<svws-ui-select v-if="!disabled" label="Raumzuordnung" :items="stundenplanManager().raumGetMengeSortiertNachGueteByUnterrichtListe(getListOfUnterrichte(auswahl))" :model-value="undefined" ref="refSelect"
+								@update:model-value="raum => (auswahl instanceof StundenplanUnterricht) && raum && patchUnterrichtRaeume(stundenplanManager().unterrichtGetMengeByUnterrichtId(auswahl.id), [raum])" :item-text="r => r.kuerzel" />
+							<template v-for="u of stundenplanManager().unterrichtGetMengeByUnterrichtId(auswahl.id)" :key="u.id">
+								<div>{{ Wochentag.fromIDorException(stundenplanManager().zeitrasterGetByIdOrException(u.idZeitraster).wochentag).beschreibung }} {{ stundenplanManager().zeitrasterGetByIdOrException(u.idZeitraster).unterrichtstunde }}</div>
+								<svws-ui-multi-select label="Raumzuordnung" :items="stundenplanManager().raumGetMengeSortiertNachGueteByUnterrichtListe(ListUtils.create1(u.id))" :model-value="getRaeume(u)"
+									@update:model-value="liste => patchUnterrichtRaeume(ListUtils.create1(u), liste)" :item-text="r => r.kuerzel" :disabled />
+							</template>
+						</template>
+						<template v-else>
+							<div>{{ auswahl.bezeichnung }}</div>
+							<svws-ui-select v-if="!disabled" label="Raumzuordnung" :items="stundenplanManager().raumGetMengeSortiertNachGueteByKursId(auswahl.id)" :model-value="undefined" ref="refSelect"
+								@update:model-value="raum => (auswahl instanceof StundenplanKurs) && raum && patchUnterrichtRaeume(stundenplanManager().unterrichtGetMengeByKurs(auswahl.id), [raum])" :item-text="r => r.kuerzel" />
+							<template v-for="u of stundenplanManager().unterrichtGetMengeByKurs(auswahl.id)" :key="u.id">
+								<div>{{ Wochentag.fromIDorException(stundenplanManager().zeitrasterGetByIdOrException(u.idZeitraster).wochentag).beschreibung }} {{ stundenplanManager().zeitrasterGetByIdOrException(u.idZeitraster).unterrichtstunde }}</div>
+								<svws-ui-multi-select label="Raumzuordnung" :items="stundenplanManager().raumGetMengeSortiertNachGueteByUnterrichtListe(ListUtils.create1(u.id))" :model-value="getRaeume(u)"
+									@update:model-value="liste => patchUnterrichtRaeume(ListUtils.create1(u), liste)" :item-text="r => r.kuerzel" :disabled />
+							</template>
+						</template>
+					</svws-ui-input-wrapper>
+				</svws-ui-content-card>
+			</template>
 		</template>
 	</div>
 </template>
 
 <script setup lang="ts">
 
+	import { computed, ref, shallowRef, toRaw } from "vue";
 	import type { DataTableColumn } from "@ui";
-	import type { List, StundenplanKlasse } from "@core";
-	import type { StundenplanKlasseProps } from "./SStundenplanKlasseProps";
 	import type { StundenplanAnsichtDragData, StundenplanAnsichtDropZone } from "@comp";
-	import { ArrayList, StundenplanKurs, StundenplanKlassenunterricht, Fach, StundenplanUnterricht, StundenplanZeitraster, HashSet, StundenplanSchiene, BenutzerKompetenz } from "@core";
-	import { computed, onMounted, shallowRef } from "vue";
-	import { cast_java_util_List } from "../../../../../core/src/java/util/List";
+	import type { StundenplanKlasseProps } from "./SStundenplanKlasseProps";
+	import type { List, StundenplanKlasse, StundenplanRaum } from "@core";
+	import { ArrayList, StundenplanKurs, StundenplanKlassenunterricht, Fach, StundenplanUnterricht, StundenplanZeitraster, HashSet, StundenplanSchiene, BenutzerKompetenz, ListUtils, Wochentag, ServerMode } from "@core";
 
 	const props = defineProps<StundenplanKlasseProps>();
-
-	const isMounted = shallowRef(false);
-	onMounted(() => isMounted.value = true);
 
 	const _klasse = shallowRef<StundenplanKlasse | undefined>(undefined);
 	const wochentypAnzeige = shallowRef<number>(0);
 	const doppelstundenModus = shallowRef<boolean>(false);
 	const schienSortierung = shallowRef<boolean>(true);
+	const auswahl = ref<StundenplanKlassenunterricht|StundenplanUnterricht|StundenplanKurs|undefined>();
+	const refSelect = ref();
 
 	const hatUpdateKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.STUNDENPLAN_AENDERN));
 
@@ -169,7 +204,7 @@
 				} catch (e) { /* empty */ }
 			return props.stundenplanManager().klasseGetMengeAsList().get(0);
 		},
-		set: (value : StundenplanKlasse) => _klasse.value = value
+		set: (value : StundenplanKlasse) => _klasse.value = value,
 	});
 
 	function getBgColor(fach: string): string {
@@ -184,6 +219,33 @@
 		for (let n = 0; n <= modell; n++)
 			result.add(n);
 		return result;
+	}
+
+	function getListOfUnterrichte(unterricht: StundenplanUnterricht) {
+		const liste = new ArrayList<number>();
+		for (const u of props.stundenplanManager().unterrichtGetMengeByUnterrichtId(unterricht.id))
+			liste.add(u.id);
+		return liste;
+	}
+
+	async function patchUnterrichtRaeume(liste: List<StundenplanUnterricht>, raeume: Iterable<StundenplanRaum>) {
+		disabled.value = true;
+		const ids = new ArrayList<number>();
+		for (const r of raeume)
+			ids.add(r.id);
+		for (const u of liste)
+			u.raeume = ids;
+		await props.patchUnterricht(liste);
+		disabled.value = false;
+	}
+
+	const disabled = ref<boolean>(false);
+
+	function getRaeume(u: StundenplanUnterricht) {
+		const arr: StundenplanRaum[] = [];
+		for (const r of u.raeume)
+			arr.push(props.stundenplanManager().raumGetByIdOrException(r));
+		return arr;
 	}
 
 	const dragData = shallowRef<StundenplanAnsichtDragData>(undefined);
@@ -205,8 +267,7 @@
 		if (dragData.value.isTranspiledInstanceOf("java.util.List")) {
 			const listStundenplanUnterricht = new ArrayList<StundenplanUnterricht>();
 			const listStundenplanKurs = new ArrayList<StundenplanKurs>();
-			const casted: List<unknown> = cast_java_util_List(dragData.value);
-			for (const item of casted)
+			for (const item of dragData.value as List<unknown>)
 				if (item instanceof StundenplanUnterricht)
 					listStundenplanUnterricht.add(item);
 				else if ((item instanceof StundenplanKurs) && (zone instanceof StundenplanZeitraster) && (wochentyp !== undefined) && props.stundenplanManager().kursDarfInZelle(item, zone.wochentag, zone.unterrichtstunde, wochentyp))
@@ -295,12 +356,12 @@
 
 	const colsKlassenunterricht: DataTableColumn[] = [
 		{ key: "bezeichnung", label: "Klassenunterrichte", span: 1 },
-		{ key: "wochenstunden", label: "WS", tooltip: "Wochenstunden", fixedWidth: 3, align: "center" }
+		{ key: "wochenstunden", label: "WS", tooltip: "Wochenstunden", fixedWidth: 3, align: "center" },
 	];
 
 	const colsKursunterricht: DataTableColumn[] = [
 		{ key: "bezeichnung", label: "Kursunterrichte", span: 1 },
-		{ key: "wochenstunden", label: "WS", tooltip: "Wochenstunden", fixedWidth: 5, align: "center" }
+		{ key: "wochenstunden", label: "WS", tooltip: "Wochenstunden", fixedWidth: 5, align: "center" },
 	];
 
 </script>
@@ -309,7 +370,7 @@
 	.page--content {
 		@apply grid overflow-y-hidden overflow-x-auto h-full pb-3 pt-6 lg:gap-x-8;
 		grid-auto-rows: 100%;
-		grid-template-columns: minmax(20rem, 0.5fr) 2fr;
+		grid-template-columns: minmax(20rem, 0.5fr) 2fr minmax(20rem, 0.5fr) ;
 		grid-auto-columns: max-content;
 	}
 
