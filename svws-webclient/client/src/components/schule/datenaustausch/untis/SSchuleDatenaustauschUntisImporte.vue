@@ -106,10 +106,10 @@
 					<input id="contentFocusField" type="file" accept=".txt,.csv" @change="(event) => importStundenplanGPU001002(2, event)" :disabled="loading">
 				</div>
 				<div class="mt-8 w-full flex flex-row gap-2">
-					<svws-ui-text-input placeholder="Bezeichner WochenTyp 1" :model-value="wochentypen[0]" @update:model-value="(value) => setWochentypBezeichner(1, value)" />
-					<svws-ui-text-input placeholder="Bezeichner WochenTyp 2" :model-value="wochentypen[1]" @update:model-value="(value) => setWochentypBezeichner(2, value)" />
-					<svws-ui-text-input placeholder="Bezeichner WochenTyp 3" :model-value="wochentypen[2]" @update:model-value="(value) => setWochentypBezeichner(3, value)" />
-					<svws-ui-text-input placeholder="Bezeichner WochenTyp 4" :model-value="wochentypen[3]" @update:model-value="(value) => setWochentypBezeichner(4, value)" />
+					<svws-ui-text-input placeholder="Bezeichner WochenTyp 1" :model-value="wochentypen[0]" @update:model-value="(value) => setWochentypBezeichner(1, value)" required />
+					<svws-ui-text-input placeholder="Bezeichner WochenTyp 2" :model-value="wochentypen[1]" @update:model-value="(value) => setWochentypBezeichner(2, value)" required />
+					<svws-ui-text-input placeholder="Bezeichner WochenTyp 3" :model-value="wochentypen[2]" @update:model-value="(value) => setWochentypBezeichner(3, value)" required />
+					<svws-ui-text-input placeholder="Bezeichner WochenTyp 4" :model-value="wochentypen[3]" @update:model-value="(value) => setWochentypBezeichner(4, value)" required />
 				</div>
 				<div class="mt-2 mb-4 h-64 w-full overflow-scroll grow bg-ui border border-ui-secondary text-ui rounded-md text-base pt-2 pl-2 pr-6 pb-6">
 					<pre>{{ resultGPU001?.asString ?? null }}</pre>
@@ -133,7 +133,6 @@
 	import { onMounted, ref, shallowRef } from 'vue';
 	import type { SchuleDatenaustauschUntisImporteProps } from './SSchuleDatenaustauschUntisImporteProps';
 	import { StundenplanListeEintragMinimal, type Schuljahresabschnitt, type SimpleOperationResponse } from '@core';
-	import type { UntisGPU001, UntisGPU002 } from './UntisGPU';
 	import { UntisGPU001Csv, UntisGPU002Csv } from './UntisGPU';
 
 	const props = defineProps<SchuleDatenaustauschUntisImporteProps>();
@@ -188,15 +187,17 @@
 			return;
 		}
 		const mapWochentypenByUnterrichtID = tmpGPU002.value.getMapWochentypByUnterrichtsID(wochentypen.value);
-		if (mapWochentypenByUnterrichtID.length === 0) {
+		if (mapWochentypenByUnterrichtID.size === 0) {
 			resultGPU001.value = tmpGPU001.value;
 			return;
 		}
 		resultGPU001.value = new UntisGPU001Csv(tmpGPU001.value.asString, mapWochentypenByUnterrichtID);
 	}
 
-	async function setWochentypBezeichner(wt: number, value: string) {
-		wochentypen[wt-1] = value;
+	async function setWochentypBezeichner(wt: number, value: string | null) {
+		if (value === null)
+			return;
+		wochentypen.value[wt-1] = value;
 		await updateStundenplanGPU001002();
 	}
 
