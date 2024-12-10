@@ -63,7 +63,9 @@
 		<template #body>
 			<template v-for="fach in abiturdatenManager().faecher().faecher()" :key="fach.id">
 				<template v-if="fachanzeigen(fach)">
-					<s-laufbahnplanung-fach :abiturdaten-manager :gost-jahrgangsdaten :fach :modus :set-wahl :ignoriere-sprachenfolge :belegung-hat-immer-noten :hat-update-kompetenz />
+					<s-laufbahnplanung-fach :abiturdaten-manager :gost-jahrgangsdaten :fach :modus :set-wahl :ignoriere-sprachenfolge :belegung-hat-immer-noten :hat-update-kompetenz :active-halbjahr-id
+						:active-focus="fach.id === activeFachId" @keydown="switchFocus($event)" @update:focus="(fachId: number, halbjahrId: number) => updateFocusState(fachId, halbjahrId)"
+						@update:focus:impossible="(fachId: number, halbjahrId: number) => retryFocus(fachId, halbjahrId)" />
 				</template>
 				<template v-else><div /></template>
 			</template>
@@ -197,7 +199,7 @@
 
 <script setup lang="ts">
 
-	import { computed } from "vue";
+	import { ref, computed, onMounted } from "vue";
 	import type { AbiturdatenManager } from "../../../../../core/src/core/abschluss/gost/AbiturdatenManager";
 	import type { GostJahrgangsdaten } from "../../../../../core/src/core/data/gost/GostJahrgangsdaten";
 	import type { GostSchuelerFachwahl } from "../../../../../core/src/core/data/gost/GostSchuelerFachwahl";
@@ -264,8 +266,77 @@
 		{ key: "q1_2", label: "Q1.2", align: 'center', fixedWidth: 4.5 },
 		{ key: "q2_1", label: "Q2.1", align: 'center', fixedWidth: 4.5 },
 		{ key: "q2_2", label: "Q2.2", align: 'center', fixedWidth: 4.5 },
-		{ key: "abiturfach", label: "Abiturfach", align: 'center', fixedWidth: 4.5 }
+		{ key: "abiturfach", label: "Abiturfach", align: 'center', fixedWidth: 4.5 },
 	];
+
+	const faecherIds: number[] = [];
+
+	const activeFachId = ref();
+	const activeHalbjahrId = ref(0);
+	const activeDirection = ref<string>("");
+
+	// Aktives Fach und Halbjahr nach emit von "update:focus" durch Kindkomponente setzen
+	function updateFocusState(fachId: number, halbjahrId: number) {
+		activeFachId.value = fachId;
+		activeHalbjahrId.value = halbjahrId;
+	}
+
+	onMounted(() => {
+		// Fächer-IDs zu statischer Liste hinzufügen um Fächer durschalten zu können
+		for (const fach of props.abiturdatenManager().faecher().faecher())
+			faecherIds.push(fach.id);
+	})
+
+	// Fokus setzen: Fach wechseln (hoch/runter) oder Halbjahr wechseln (links/rechts)
+	function switchFocus(event: KeyboardEvent) {
+		if (!["ArrowDown", "ArrowUp", "ArrowRight", "ArrowLeft"].includes(event.key))
+			return;
+		activeDirection.value = event.key;
+		event.preventDefault();
+		switch (event.key) {
+			case "ArrowDown":
+				activeFachId.value = (activeFachId.value === faecherIds[faecherIds.length - 1]) ? faecherIds[0] : faecherIds[getFachIndexById(activeFachId.value) + 1];
+				break;
+			case "ArrowUp":
+				activeFachId.value = (activeFachId.value === faecherIds[0]) ? faecherIds[faecherIds.length - 1] : faecherIds[getFachIndexById(activeFachId.value) - 1];
+				break;
+			case "ArrowRight":
+				activeHalbjahrId.value = (activeHalbjahrId.value + 1) % (GostHalbjahr.values().length + 1);
+				break;
+			case "ArrowLeft":
+				activeHalbjahrId.value = activeHalbjahrId.value === 0 ? GostHalbjahr.values().length : (activeHalbjahrId.value - 1);
+				break;
+		}
+	}
+
+	// Fokus neu setzen, wenn "update:focus:impossible" von der Kindkomponente emitted wurde
+	function retryFocus(fachId: number, halbjahrId: number) {
+		switch (activeDirection.value) {
+			case "ArrowDown":
+				activeFachId.value = (fachId === faecherIds[faecherIds.length - 1]) ? faecherIds[0] : faecherIds[getFachIndexById(fachId) + 1];
+				activeHalbjahrId.value = halbjahrId;
+				break;
+			case "ArrowUp":
+				activeFachId.value = (fachId === faecherIds[0]) ? faecherIds[faecherIds.length - 1] : faecherIds[getFachIndexById(fachId) - 1];
+				activeHalbjahrId.value = halbjahrId;
+				break;
+			case "ArrowRight":
+				activeFachId.value = fachId
+				activeHalbjahrId.value = (halbjahrId + 1) % (GostHalbjahr.values().length + 1);
+				break;
+			case "ArrowLeft":
+				activeFachId.value = fachId
+				activeHalbjahrId.value = halbjahrId === 0 ? GostHalbjahr.values().length : (halbjahrId - 1);
+				break;
+		}
+	}
+
+	function getFachIndexById(fachId: number): number {
+		for (let i=0; i<=faecherIds.length; i++)
+			if (faecherIds[i] === fachId)
+				return i;
+		return -1;
+	}
 
 </script>
 

@@ -28,14 +28,16 @@
 			</template>
 		</div>
 		<template v-for="halbjahr in GostHalbjahr.values()" :key="halbjahr.id">
-			<div role="cell" class="svws-ui-td svws-align-center svws-divider select-none font-medium"
+			<div role="cell" class="laufbahn-cell svws-ui-td svws-align-center svws-divider select-none font-medium"
 				:class="hatUpdateKompetenz ? {
 					'cursor-pointer': istMoeglich[halbjahr.id] && !istBewertet(halbjahr),
 					'cursor-not-allowed': (!istMoeglich[halbjahr.id] || istBewertet(halbjahr) || istFachkombiVerboten[halbjahr.id]),
 					'svws-disabled': !istMoeglich[halbjahr.id],
 					'svws-disabled-soft': istBewertet(halbjahr) && istMoeglich[halbjahr.id],
 				} : {}"
-				@click.stop="stepper(halbjahr)" :title="getTooltipHalbjahr(halbjahr)">
+				@click.stop="stepper(halbjahr)" :title="getTooltipHalbjahr(halbjahr)"
+				:tabindex="istMoeglich[halbjahr.id] ? 0 : -1" @keydown.enter.prevent="handleKeyboardStep($event, halbjahr)" @keydown.space.prevent="handleKeyboardStep($event, halbjahr)"
+				@keydown.delete.prevent="deleteFachwahlPlaceholder(halbjahr)" :ref="el => halbjahrRefs.set(halbjahr.id, el as HTMLElement)" @focus="() => emit('update:focus', fach.id, halbjahr.id)">
 				<div class="inline-flex items-center gap-1 relative w-full">
 					<span class="w-full text-center">
 						<template v-if="wahlen[halbjahr.id] !== '' && wahlen[halbjahr.id] === '6'">0</template>
@@ -58,8 +60,9 @@
 						</template>
 						<template v-else-if="!istMoeglich[halbjahr.id] && (wahlen[halbjahr.id] !== '') && hatUpdateKompetenz">
 							<svws-ui-tooltip :color="istBewertet(halbjahr) ? 'light' : 'danger'">
-								<svws-ui-button type="icon" size="small" :disabled="istBewertet(halbjahr)">
-									<span class="icon i-ri-close-line" @click="deleteFachwahl(halbjahr)" />
+								<svws-ui-button type="icon" size="small" :disabled="istBewertet(halbjahr)" @click="deleteFachwahl(halbjahr)"
+									@keydown.enter.prevent="deleteFachwahl(halbjahr)" @keydown.space.prevent="deleteFachwahl(halbjahr)">
+									<span class="icon i-ri-close-line" />
 								</svws-ui-button>
 								<template #content>
 									<template v-if="istBewertet(halbjahr)">
@@ -73,8 +76,9 @@
 						</template>
 						<template v-else-if="(wahlen[halbjahr.id] !== '') && istBewertet(halbjahr) && ((noten[halbjahr.id] === null) && !belegungHatImmerNoten) && hatUpdateKompetenz">
 							<svws-ui-tooltip :color="'danger'">
-								<svws-ui-button type="icon" size="small">
-									<span class="icon i-ri-close-line" @click="deleteFachwahl(halbjahr)" />
+								<svws-ui-button type="icon" size="small" @click="deleteFachwahl(halbjahr)"
+									@keydown.enter.prevent="deleteFachwahl(halbjahr)" @keydown.space.prevent="deleteFachwahl(halbjahr)">
+									<span class="icon i-ri-close-line" />
 								</svws-ui-button>
 								<template #content>
 									Kurs ist bei den Fachwahlen eingetragen, es liegen aber keine Einträge in den Leistungsdaten vor. <br>
@@ -96,19 +100,21 @@
 				</div>
 			</div>
 		</template>
-		<div role="cell" class="svws-ui-td svws-align-center select-none font-medium"
+		<div role="cell" class="laufbahn-cell svws-ui-td svws-align-center select-none font-medium"
 			:class="hatUpdateKompetenz ? {
 				'cursor-pointer': istMoeglichAbi && !istBewertet(GostHalbjahr.Q22), '': istMoeglichAbi,
 				'cursor-not-allowed': !istMoeglichAbi,
 				'svws-disabled': !istMoeglichAbi,
 				'svws-disabled-soft': istBewertet(GostHalbjahr.Q22) && istMoeglichAbi,
 			} : {}"
-			@click.stop="stepperAbi()">
+			@click.stop="stepperAbi()" :tabindex="istMoeglichAbi ? 0 : -1" @keydown.enter.prevent="stepperAbi()" @keydown.space.prevent="stepperAbi()" @keydown.delete.prevent="deleteFachwahlAbiturPlaceholder()"
+			:ref="el => halbjahrRefs.set(GostHalbjahr.values().length, el as HTMLElement)" @focus="() => emit('update:focus', fach.id, GostHalbjahr.values().length)">
 			<template v-if="abi_wahl"> {{ abi_wahl }} </template>
 			<span v-if="abi_wahl && !istMoeglichAbi && hatUpdateKompetenz" class="absolute -right-0">
 				<svws-ui-tooltip :color="'danger'">
-					<svws-ui-button type="icon" size="small">
-						<span class="icon i-ri-close-line" @click="deleteFachwahlAbitur()" />
+					<svws-ui-button type="icon" size="small" @click="deleteFachwahlAbitur()"
+						@keydown.enter.prevent="deleteFachwahlAbitur()" @keydown.space.prevent="deleteFachwahlAbitur()">
+						<span class="icon i-ri-close-line" />
 					</svws-ui-button>
 					<template #content>
 						Löschen (Nicht als Abiturfach wählbar)
@@ -121,7 +127,7 @@
 
 <script setup lang="ts">
 
-	import { computed } from "vue";
+	import { computed, onUpdated, ref } from "vue";
 	import type { GostJahrgangsdaten } from "../../../../../core/src/core/data/gost/GostJahrgangsdaten";
 	import type { GostFach } from "../../../../../core/src/core/data/gost/GostFach";
 	import type { AbiturFachbelegung } from "../../../../../core/src/core/data/gost/AbiturFachbelegung";
@@ -149,17 +155,46 @@
 		belegungHatImmerNoten?: boolean;
 		hatUpdateKompetenz: boolean;
 		setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>;
+		activeFocus?: boolean;
+		activeHalbjahrId?: number;
 	}>(), {
 		modus: 'normal',
 		ignoriereSprachenfolge: false,
 		belegungHatImmerNoten: false,
+		activeHalbjahrId: 0,
 	});
 
+
+	const emit = defineEmits<{
+		// Beim Fokus (egal ob Pfeiltasten oder Tab) wird aktuelle fachId und halbjahrId an Parent-Komponente emitted
+		"update:focus": [fachId: number, halbjahrId: number];
+		// Ist Fokus nicht möglich, wid das per emit mit fachId und halbjahrId an Parent-Komponente gemeldet
+		"update:focus:impossible": [fachId: number, halbjahrId: number];
+	}>();
+
+	onUpdated(() => {
+		// Prüft, ob die Fach-Komponente aktuell den Fokus hat
+		if(props.activeFocus)
+			doFocusOnHalbjahr();
+	});
+
+	const halbjahrRefs = ref(new Map<number, HTMLElement>());
 	const schuljahr = computed<number>(() => props.abiturdatenManager().getSchuljahr());
 	const fachgruppe = computed<Fachgruppe | null>(() => Fach.getBySchluesselOrDefault(props.fach.kuerzel).getFachgruppe(schuljahr.value) ?? null);
 	const istFremdsprache = computed<boolean>(() => Fach.getBySchluesselOrDefault(props.fach.kuerzel).daten(schuljahr.value)?.istFremdsprache ?? false);
 	const bgColor = computed<string>(() => Fach.getBySchluesselOrDefault(props.fach.kuerzel).getHMTLFarbeRGB(schuljahr.value));
 	const fachbelegung = computed<AbiturFachbelegung | null>(() => props.abiturdatenManager().getFachbelegungByID(props.fach.id));
+
+	// Nächste Halbjahr-Zelle fokussieren, wenn möglich. Sonst "update:focus:impossible" emitten, sodass Parent-Komponente einen Schritt weiter gehen kann
+	function doFocusOnHalbjahr() {
+		const focusCell = halbjahrRefs.value.get(props.activeHalbjahrId);
+		if (istMoeglich.value[props.activeHalbjahrId]
+			|| ((props.activeHalbjahrId !== 6) && (wahlen.value[props.activeHalbjahrId] !== ""))
+			|| istMoeglichAbi.value || (abi_wahl.value !== ""))
+			focusCell?.focus();
+		else
+			emit("update:focus:impossible", props.fach.id, props.activeHalbjahrId);
+	}
 
 	const sprachbelegung = computed<Sprachbelegung | null>(() => {
 		const sprach_kuerzel = Fach.getBySchluesselOrDefault(props.fach.kuerzel).daten(schuljahr.value)?.kuerzel ?? null;
@@ -413,6 +448,33 @@
 		await props.setWahl(props.fach.id, wahl);
 	}
 
+
+	/**
+	 * Lösch-Methode für gültige Fachwahlen
+	 *
+	 * @param halbjahr das Halbjahr, für das die Fachwahl gelöscht werden soll
+	 */
+	function deleteFachwahlPlaceholder(halbjahr: GostHalbjahr | undefined) {
+		// TODO: Implementieren, umbenennen, Methode "deleteFachwahl" umbenennen, möglicherweise Methoden zusammenführen
+		console.log("Methode noch nicht implementiert");
+	}
+
+
+	/**
+	 * Lösch-Methode für gültige Fachwahlen aus Abitur-Spalte
+	 *
+	 */
+	function deleteFachwahlAbiturPlaceholder() {
+		// TODO: Implementieren, umbenennen, Methode "deleteFachwahlAbitur" umbenennen, möglicherweise Methoden zusammenführen
+		console.log("Methode noch nicht implementiert");
+	}
+
+
+	/**
+	 * Lösch-Methode für Spezialfall "Löschen einer nicht erlaubten Fachwahl"
+	 *
+	 * @param halbjahr das Halbjahr, für das die Fachwahl gelöscht werden soll
+	 */
 	async function deleteFachwahl(halbjahr: GostHalbjahr | undefined) {
 		if (halbjahr === undefined)
 			return;
@@ -423,11 +485,17 @@
 		await props.setWahl(props.fach.id, wahl);
 	}
 
+
+	/**
+	 * Lösch-Methode für Spezialfall "Löschen einer nicht erlaubten Fachwahl" aus Abitur-Spalte
+	 *
+	 */
 	async function deleteFachwahlAbitur() {
 		const wahl = props.abiturdatenManager().getSchuelerFachwahl(props.fach.id);
 		wahl.abiturFach = null;
 		await props.setWahl(props.fach.id, wahl);
 	}
+
 
 	async function stepper_manuellAbi() {
 		if (istBewertet(GostHalbjahr.Q22))
@@ -1167,9 +1235,47 @@
 		}
 	}
 
+	// Bei gedrückter ALT-Taste + ENTER-Taste direkt hochschreiben (handleHochschreiben), sonst Schritt weiter gehen (stepper)
+	async function handleKeyboardStep(event: KeyboardEvent, halbjahr: GostHalbjahr) {
+		if (event.altKey)
+			await handleHochschreiben(halbjahr);
+		else
+			await stepper(halbjahr);
+	}
+
+	// Unabhängig vom eingestellten Modus direkt "hochschreiben" ausführen
+	async function handleHochschreiben(halbjahr: GostHalbjahr) {
+		if (!props.hatUpdateKompetenz)
+			return;
+		if ((!istMoeglich.value[halbjahr.id]) || istBewertet(halbjahr))
+			return;
+		const wahl = props.abiturdatenManager().getSchuelerFachwahl(props.fach.id);
+		if (halbjahr === GostHalbjahr.EF1)
+			setEF1WahlHochschreiben(wahl);
+		else if (halbjahr === GostHalbjahr.EF2)
+			setEF2WahlHochschreiben(wahl);
+		else if (halbjahr === GostHalbjahr.Q11)
+			setQ11Wahl(wahl);
+		else if (halbjahr === GostHalbjahr.Q12)
+			setQ12Wahl(wahl);
+		else if (halbjahr === GostHalbjahr.Q21)
+			setQ21Wahl(wahl);
+		else if (halbjahr === GostHalbjahr.Q22)
+			setQ22Wahl(wahl);
+		await props.setWahl(props.fach.id, wahl);
+	}
+
 </script>
 
 <style lang="postcss" scoped>
+
+	.laufbahn-cell {
+		&:focus {
+			outline: none;
+			box-shadow: inset 0 0 0 2px;
+			@apply text-ui-hover;
+		}
+	}
 
 	.data-table__tr {
 		--background-color: #ffffff;
