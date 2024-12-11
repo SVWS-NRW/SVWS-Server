@@ -17,7 +17,7 @@
 				<template #filterAdvanced>
 					<svws-ui-multi-select v-model="filterPersonaltyp" title="Personaltyp" :items="manager().personaltypen.list()" :item-text="textPersonaltyp" class="col-span-full" />
 					<div class="col-span-full flex flex-wrap gap-x-5">
-						<svws-ui-checkbox type="toggle" v-model="filterNurSichtbare">Nur Sichtbare</svws-ui-checkbox>
+						<svws-ui-checkbox type="toggle" v-model="filterNurSichtbar">Nur Sichtbare</svws-ui-checkbox>
 						<svws-ui-checkbox type="toggle" v-model="filterNurStatistikrelevant">Nur Statistik-Relevante</svws-ui-checkbox>
 					</div>
 				</template>
@@ -61,11 +61,12 @@
 		return personaltyp.bezeichnung;
 	}
 
-	const filterNurSichtbare = computed<boolean>({
+	const filterNurSichtbar = computed<boolean>({
 		get: () => props.manager().filterNurSichtbar(),
 		set: (value) => {
 			props.manager().setFilterNurSichtbar(value);
 			void props.setFilter();
+			void props.setFilterNurSichtbar(value);
 		},
 	});
 
@@ -74,6 +75,7 @@
 		set: (value) => {
 			props.manager().setFilterNurStatistikRelevant(value);
 			void props.setFilter();
+			void props.setFilterNurStatistikrelevant(value);
 		},
 	});
 

@@ -13,6 +13,9 @@ import { routeLehrerIndividualdaten } from "~/router/apps/lehrer/RouteLehrerIndi
 import { routeLehrerPersonaldaten } from "~/router/apps/lehrer/RouteLehrerPersonaldaten";
 import { routeLehrerStundenplan } from "./stundenplan/RouteLehrerStundenplan";
 import { routeLehrerUnterrichtsdaten } from "~/router/apps/lehrer/RouteLehrerUnterrichtsdaten";
+import { api } from "~/router/Api";
+import { ConfigElement } from "~/components/Config";
+import { LehrerAuswahlProps } from "~/components/lehrer/SLehrerAuswahlProps";
 
 const SLehrerAuswahl = () => import("~/components/lehrer/SLehrerAuswahl.vue");
 const SLehrerApp = () => import("~/components/lehrer/SLehrerApp.vue");
@@ -33,6 +36,15 @@ export class RouteLehrer extends RouteAuswahlNode<LehrerListeManager, RouteDataL
 		];
 		super.defaultChild = routeLehrerIndividualdaten;
 		super.updateIfTarget = this.doUpdateIfTarget;
+		super.getAuswahlListProps = (props) => (<LehrerAuswahlProps>{
+			...props,
+			setFilterNurSichtbar: this.data.setFilterNurSichtbar,
+			setFilterNurStatistikrelevant: this.data.setFilterNurStatistikrelevant,
+		});
+		api.config.addElements([
+			new ConfigElement("lehrer.auswahl.filterNurSichtbar", "user", "true"),
+			new ConfigElement("lehrer.auswahl.filterNurStatistikrelevant", "user", "true"),
+		]);
 	}
 
 	protected doUpdateIfTarget = async (to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined) => {

@@ -13,7 +13,7 @@
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Kurs" removable />
 				</template>
 				<template #filterAdvanced>
-					<svws-ui-checkbox type="toggle" v-model="filterNurSichtbare">Nur Sichtbare</svws-ui-checkbox>
+					<svws-ui-checkbox type="toggle" v-model="filterNurSichtbar">Nur Sichtbare</svws-ui-checkbox>
 					<svws-ui-multi-select v-model="filterSchueler" title="Schüler" :items="manager().schueler.list()" :item-text="textSchueler" :item-filter="findSchueler" />
 					<svws-ui-multi-select v-model="filterFaecher" title="Fach" :items="manager().faecher.list()" :item-text="text" :item-filter="find" />
 					<svws-ui-multi-select v-model="filterLehrer" title="Fachlehrer" :items="manager().lehrer.list()" :item-text="text" :item-filter="find" />
@@ -115,11 +115,12 @@
 		return schulgliederung.daten(schuljahr.value)?.kuerzel ?? '—';
 	}
 
-	const filterNurSichtbare = computed<boolean>({
+	const filterNurSichtbar = computed<boolean>({
 		get: () => props.manager().filterNurSichtbar(),
 		set: (value) => {
 			props.manager().setFilterNurSichtbar(value);
 			void props.setFilter();
+			void props.setFilterNurSichtbar(value);
 		},
 	});
 
