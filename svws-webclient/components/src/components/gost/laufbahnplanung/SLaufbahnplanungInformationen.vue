@@ -8,7 +8,7 @@
 		</template>
 		<template #body>
 			<div v-for="hinweis in belegungsHinweise" :key="hinweis.code" class="svws-ui-tr" role="row">
-				<div class="svws-ui-td" role="cell">
+				<div class="svws-ui-td self-center" role="cell">
 					<svws-ui-tooltip>
 						<span class="icon i-ri-information-line flex-shrink-0 icon-primary text-button mt-0.5" />
 						<template #content>
@@ -18,7 +18,7 @@
 						</template>
 					</svws-ui-tooltip>
 				</div>
-				<div class="svws-ui-td leading-tight select-all" role="cell">
+				<div class="svws-ui-td select-all" role="cell">
 					{{ hinweis.beschreibung }}
 				</div>
 			</div>
@@ -50,3 +50,9 @@
 	});
 
 </script>
+
+<style lang="postcss" scoped>
+	.svws-ui-td {
+		@apply leading-5 align-middle;
+	}
+</style>

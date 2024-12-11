@@ -20,7 +20,7 @@
 						<span class="icon i-ri-check-line flex-shrink-0 icon-success" v-if="!regelnVerletzt.has(regel)" />
 						<span class="icon i-ri-error-warning-line flex-shrink-0 icon-error text-button mt-0.5" />
 					</div>
-					<div class="svws-ui-td leading-tight select-all" role="cell">
+					<div class="svws-ui-td select-all" role="cell">
 						{{ regel.hinweistext }}
 					</div>
 				</div>
@@ -29,7 +29,7 @@
 						<span class="icon i-ri-check-line flex-shrink-0 icon-success" v-if="!regelnVerletzt.has(regel)" />
 						<span class="icon i-ri-error-warning-line flex-shrink-0 icon-error text-button mt-0.5" />
 					</div>
-					<div class="svws-ui-td leading-tight select-all" role="cell">
+					<div class="svws-ui-td select-all" role="cell">
 						{{ regel.hinweistext }}
 					</div>
 				</div>
@@ -86,3 +86,9 @@
 	}
 
 </script>
+
+<style lang="postcss" scoped>
+	.svws-ui-td {
+		@apply leading-5 align-middle;
+	}
+</style>
