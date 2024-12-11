@@ -400,8 +400,8 @@
 		const schulform = props.schuelerListeManager().schulform();
 		if ((schulform !== Schulform.BK) && (schulform !== Schulform.SB))
 			data.jahrgang = props.schuelerListeManager().jahrgaenge.get(props.schuelerListeManager().auswahl().idJahrgang)?.kuerzelStatistik;
-		if (hsu)
-			data.istHSUPruefung = true;
+		data.istHSUPruefung = hsu;
+		data.istFeststellungspruefung = !hsu;
 		await props.addSprachpruefung(data);
 		selectSprachenPruefung.value.reset();
 	}
