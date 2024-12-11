@@ -1,5 +1,5 @@
 {
-	"version": 2,
+	"version": 3,
 	"daten": [ {
 		"bezeichner": "DEFAULT",
 		"idHistorie": 1,
@@ -3499,11 +3499,11 @@
 			"schluessel": "K02",
 			"istBK": false,
 			"schulformen": [
-				"HI"
+				"HI", "WB"
 			],
 			"istAuslaufend": false,
 			"istAusgelaufen": false,
-			"text": "Hiberniakolleg Semester 1-6",
+			"text": "Bildungsgang Kolleg",
 			"bkAnlage": null,
 			"bkTyp": null,
 			"bkIndex": null,
