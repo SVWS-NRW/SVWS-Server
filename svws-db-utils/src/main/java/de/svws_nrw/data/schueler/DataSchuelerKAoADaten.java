@@ -87,13 +87,12 @@ public final class DataSchuelerKAoADaten extends DataManagerRevised<Long, DTOSch
 				final String fieldName = entry.getKey();
 				final Object fieldValue = entry.getValue();
 				final Field field = clazz.getDeclaredField(fieldName);
-				if (fieldValue == null) {
+				if (fieldValue == null)
 					field.set(schuelerKAoADaten, null);
-				} else if (field.getType().equals(Long.class) || field.getType().equals(long.class)) {
+				else if (field.getType().equals(Long.class) || field.getType().equals(long.class))
 					field.set(schuelerKAoADaten, ((Number) fieldValue).longValue());
-				} else {
+				else
 					field.set(schuelerKAoADaten, fieldValue);
-				}
 			}
 		} catch (final NoSuchFieldException | IllegalAccessException e) {
 			throw new ApiOperationException(Status.BAD_REQUEST, e.getCause(), "Fehler beim patchen des CoreDto: %s".formatted(e.getMessage()));
@@ -241,9 +240,8 @@ public final class DataSchuelerKAoADaten extends DataManagerRevised<Long, DTOSch
 			nonEmptyOptionalAttributeCount++;
 		if ((schuelerKAoADaten.bemerkung != null) && !schuelerKAoADaten.bemerkung.isBlank())
 			nonEmptyOptionalAttributeCount++;
-		if (nonEmptyOptionalAttributeCount > 1) {
+		if (nonEmptyOptionalAttributeCount > 1)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die Anzahl vorhandener optionaler Attribute ist größer 1");
-		}
 	}
 
 	private long getIdLernabschnitt(final long idSchuljahresabschnitt) throws ApiOperationException {

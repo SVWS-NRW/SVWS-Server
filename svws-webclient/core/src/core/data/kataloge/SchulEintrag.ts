@@ -31,7 +31,7 @@ export class SchulEintrag extends JavaObject {
 	/**
 	 * Die ID der Schulform.
 	 */
-	public schulformID : number | null = null;
+	public idSchulform : number | null = null;
 
 	/**
 	 * Der Straßenname der Straße in der die Schule liegt.
@@ -46,7 +46,7 @@ export class SchulEintrag extends JavaObject {
 	/**
 	 * Ggf. der Hausnummerzusatz zur Straße in der die Schule liegt.
 	 */
-	public hausnummerZusatz : string | null = null;
+	public zusatzHausnummer : string | null = null;
 
 	/**
 	 * Die Postleitzahl des Gebietes in dem die Schule liegt.
@@ -120,10 +120,10 @@ export class SchulEintrag extends JavaObject {
 		if (obj.name === undefined)
 			throw new Error('invalid json format, missing attribute name');
 		result.name = obj.name;
-		result.schulformID = (obj.schulformID === undefined) ? null : obj.schulformID === null ? null : obj.schulformID;
+		result.idSchulform = (obj.idSchulform === undefined) ? null : obj.idSchulform === null ? null : obj.idSchulform;
 		result.strassenname = (obj.strassenname === undefined) ? null : obj.strassenname === null ? null : obj.strassenname;
 		result.hausnummer = (obj.hausnummer === undefined) ? null : obj.hausnummer === null ? null : obj.hausnummer;
-		result.hausnummerZusatz = (obj.hausnummerZusatz === undefined) ? null : obj.hausnummerZusatz === null ? null : obj.hausnummerZusatz;
+		result.zusatzHausnummer = (obj.zusatzHausnummer === undefined) ? null : obj.zusatzHausnummer === null ? null : obj.zusatzHausnummer;
 		result.plz = (obj.plz === undefined) ? null : obj.plz === null ? null : obj.plz;
 		result.ort = (obj.ort === undefined) ? null : obj.ort === null ? null : obj.ort;
 		result.telefon = (obj.telefon === undefined) ? null : obj.telefon === null ? null : obj.telefon;
@@ -146,10 +146,10 @@ export class SchulEintrag extends JavaObject {
 		result += '"kurzbezeichnung" : ' + ((obj.kurzbezeichnung === null) ? 'null' : JSON.stringify(obj.kurzbezeichnung)) + ',';
 		result += '"schulnummer" : ' + JSON.stringify(obj.schulnummer) + ',';
 		result += '"name" : ' + JSON.stringify(obj.name) + ',';
-		result += '"schulformID" : ' + ((obj.schulformID === null) ? 'null' : obj.schulformID.toString()) + ',';
+		result += '"idSchulform" : ' + ((obj.idSchulform === null) ? 'null' : obj.idSchulform.toString()) + ',';
 		result += '"strassenname" : ' + ((obj.strassenname === null) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
 		result += '"hausnummer" : ' + ((obj.hausnummer === null) ? 'null' : JSON.stringify(obj.hausnummer)) + ',';
-		result += '"hausnummerZusatz" : ' + ((obj.hausnummerZusatz === null) ? 'null' : JSON.stringify(obj.hausnummerZusatz)) + ',';
+		result += '"zusatzHausnummer" : ' + ((obj.zusatzHausnummer === null) ? 'null' : JSON.stringify(obj.zusatzHausnummer)) + ',';
 		result += '"plz" : ' + ((obj.plz === null) ? 'null' : JSON.stringify(obj.plz)) + ',';
 		result += '"ort" : ' + ((obj.ort === null) ? 'null' : JSON.stringify(obj.ort)) + ',';
 		result += '"telefon" : ' + ((obj.telefon === null) ? 'null' : JSON.stringify(obj.telefon)) + ',';
@@ -180,8 +180,8 @@ export class SchulEintrag extends JavaObject {
 		if (obj.name !== undefined) {
 			result += '"name" : ' + JSON.stringify(obj.name) + ',';
 		}
-		if (obj.schulformID !== undefined) {
-			result += '"schulformID" : ' + ((obj.schulformID === null) ? 'null' : obj.schulformID.toString()) + ',';
+		if (obj.idSchulform !== undefined) {
+			result += '"idSchulform" : ' + ((obj.idSchulform === null) ? 'null' : obj.idSchulform.toString()) + ',';
 		}
 		if (obj.strassenname !== undefined) {
 			result += '"strassenname" : ' + ((obj.strassenname === null) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
@@ -189,8 +189,8 @@ export class SchulEintrag extends JavaObject {
 		if (obj.hausnummer !== undefined) {
 			result += '"hausnummer" : ' + ((obj.hausnummer === null) ? 'null' : JSON.stringify(obj.hausnummer)) + ',';
 		}
-		if (obj.hausnummerZusatz !== undefined) {
-			result += '"hausnummerZusatz" : ' + ((obj.hausnummerZusatz === null) ? 'null' : JSON.stringify(obj.hausnummerZusatz)) + ',';
+		if (obj.zusatzHausnummer !== undefined) {
+			result += '"zusatzHausnummer" : ' + ((obj.zusatzHausnummer === null) ? 'null' : JSON.stringify(obj.zusatzHausnummer)) + ',';
 		}
 		if (obj.plz !== undefined) {
 			result += '"plz" : ' + ((obj.plz === null) ? 'null' : JSON.stringify(obj.plz)) + ',';
