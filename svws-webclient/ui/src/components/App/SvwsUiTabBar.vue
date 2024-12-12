@@ -14,8 +14,8 @@
 						<button v-if="!(tab.hide === true) && (tab.text !== '')" @click="tabManager().setTab(tab)" class="svws-ui-tab-button flex flex-row"
 							:class="{
 								'svws-active': tab.name === tabManager().tab.name,
-								'tabsFirstLevelFocusField': tab.name === tabManager().tab.name && !secondary,
-								'tabsSecondLevelFocusField': tab.name === tabManager().tab.name && secondary
+								'tabsFirstLevelFocusField': (tab.name === tabManager().tab.name) && !secondary,
+								'tabsSecondLevelFocusField': (tab.name === tabManager().tab.name) && secondary
 							}">
 							<span>{{ tab.text }}</span>
 							<slot name="badge" :tab />
