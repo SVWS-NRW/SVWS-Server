@@ -68,8 +68,8 @@ public class Utils {
 	 */
 	public static String switchByType(final @NotNull CoreTypeData data) {
 		return switch (data) {
-			case final @NotNull SchulformKatalogEintrag sfke -> "Schulform: " + sfke.kuerzel;
-			case final @NotNull SchulstufeKatalogEintrag sske -> "Schulstufe: " + sske.kuerzel;
+			case @NotNull final SchulformKatalogEintrag sfke -> "Schulform: " + sfke.kuerzel;
+			case @NotNull final SchulstufeKatalogEintrag sske -> "Schulstufe: " + sske.kuerzel;
 			default -> {
 				yield "None";
 			}
