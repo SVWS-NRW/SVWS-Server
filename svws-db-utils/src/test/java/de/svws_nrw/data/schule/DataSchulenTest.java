@@ -35,7 +35,7 @@ import static org.mockito.Mockito.when;
  */
 @DisplayName("Diese Klasse testet die Klasse DataSchulen")
 @ExtendWith(MockitoExtension.class)
-class DataSchuleTest {
+class DataSchulenTest {
 
 	@Mock
 	private DBEntityManager conn;
