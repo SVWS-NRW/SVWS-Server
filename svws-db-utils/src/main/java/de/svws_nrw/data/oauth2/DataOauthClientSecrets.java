@@ -87,8 +87,7 @@ public final class DataOauthClientSecrets extends DataManager<Long> {
 	 * @return das DB-DTO zu den OAuth2-Secrets
 	 */
 	public DTOSchuleOAuthSecrets getDto(final OAuth2ServerTyp typ) {
-		final DTOSchuleOAuthSecrets dto = conn.queryByKey(DTOSchuleOAuthSecrets.class, typ.getId());
-		return (dto == null) ? null : dto;
+		return conn.queryByKey(DTOSchuleOAuthSecrets.class, typ.getId());
 	}
 
 

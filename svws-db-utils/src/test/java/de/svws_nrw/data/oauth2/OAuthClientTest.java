@@ -10,6 +10,7 @@ import java.util.Base64;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.db.utils.ApiOperationException;
 
 /**
@@ -42,11 +43,11 @@ class OAuthClientTest {
 		final String client_secret = "1IbLT9WQr2JZrXuBcmB8K7bDvTkK2hcrZvfG5V9l";
 
 		final String basicAuth = Base64.getEncoder().encodeToString((client_id + ":" + client_secret).getBytes());
-		final OAuth2Client client = OAuth2Client.getClient("https://wenom2.svws-nrw.de", basicAuth);
+		final OAuth2Client client = OAuth2Client.getClient("https://wenom2.svws-nrw.de", basicAuth, new Logger());
 		assertNotNull(client.getToken());
 		// testet, ob ein nochmals angeforderter Client die gleichen credentials
 		// behält, da das Token noch gültig sein sollte
-		final OAuth2Client client2 = OAuth2Client.getClient("https://wenom2.svws-nrw.de", basicAuth);
+		final OAuth2Client client2 = OAuth2Client.getClient("https://wenom2.svws-nrw.de", basicAuth, new Logger());
 		assertSame(client, client2);
 	}
 

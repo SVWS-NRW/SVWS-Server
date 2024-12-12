@@ -2411,6 +2411,42 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode checkENMServer für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/check
+	 *
+	 * Prüft, ob der ENM-Server mit den hinterlegten Verbindungsdaten erreichbar ist.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Notendaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der ENM-Server ist erreichbar.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 401: Die Authorisierung beim ENM-Server ist fehlgeschlagen.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Operation auszuführen.
+	 *   Code 404: Keine ENM-Serverdaten gefunden.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 500: Interner Serverfehler
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 502: Fehler bei der Verbindung zum ENM-Server, u.U. auch fehlende OAuth-Daten.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der ENM-Server ist erreichbar.
+	 */
+	public async checkENMServer(schema : string) : Promise<SimpleOperationResponse> {
+		const path = "/db/{schema}/enm/check"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode generateENMLehrerCredentials für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/credentials/generate
 	 *
 	 * Generiert Initial-Kennwörter für Lehrer für das externe Notenmodul, sofern diese noch keine haben.
@@ -2487,22 +2523,31 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die Daten des Externen Notenmoduls (ENM) wurden heruntergeladen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: Boolean
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 401: Die Authorisierung beim ENM-Server ist fehlgeschlagen.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.
-	 *   Code 404: Keine WeNoM-Serverdaten gefunden.
-	 *   Code 500: Interner Serverfehler, bspw. beim Lesen in der DB oder Erstellen des Zipfiles.
-	 *   Code 502: Fehler bei der Verbindung zum WeNoM-Server
+	 *   Code 404: Keine ENM-Serverdaten gefunden.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 500: Interner Serverfehler
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 502: Fehler bei der Verbindung zum ENM-Server
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
 	 * @returns Die Daten des Externen Notenmoduls (ENM) wurden heruntergeladen
 	 */
-	public async downloadENMDaten(schema : string) : Promise<boolean | null> {
+	public async downloadENMDaten(schema : string) : Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/enm/download"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const text = result;
-		return (text === "true");
+		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
 
 
@@ -2605,6 +2650,42 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode resetENMServer für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/reset
+	 *
+	 * Leert die Daten des Externen Notenmoduls (ENM).Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Notendaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Daten des Externen Notenmoduls (ENM) wurden geleert.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 401: Die Authorisierung beim ENM-Server ist fehlgeschlagen.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.
+	 *   Code 404: Keine ENM-Serverdaten gefunden.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 500: Interner Serverfehler
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 502: Fehler bei der Verbindung zum ENM-Server, u.U. auch fehlende OAuth-Daten.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Daten des Externen Notenmoduls (ENM) wurden geleert.
+	 */
+	public async resetENMServer(schema : string) : Promise<SimpleOperationResponse> {
+		const path = "/db/{schema}/enm/reset"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode synchronizeENMDaten für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/synchronize
 	 *
 	 * Liest die Daten des Externen Notenmoduls (ENM) aller Lehrer aus der Datenbank und lädt diese als ZIP beim ENM hoch, lädt danach die Daten des ENM runter und speichert diese in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Notendaten besitzt.
@@ -2612,48 +2693,67 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die Daten des Externen Notenmoduls (ENM) wurden synchronisiert
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: Boolean
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 401: Die Authorisierung beim ENM-Server ist fehlgeschlagen.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.
-	 *   Code 404: Keine WeNoM-Serverdaten gefunden.
-	 *   Code 500: Interner Serverfehler, bspw. beim Lesen in der DB oder Erstellen des Zipfiles.
-	 *   Code 502: Fehler bei der Verbindung zum WeNoM-Server
+	 *   Code 404: Keine ENM-Serverdaten gefunden.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 500: Interner Serverfehler
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 502: Fehler bei der Verbindung zum ENM-Server
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
 	 * @returns Die Daten des Externen Notenmoduls (ENM) wurden synchronisiert
 	 */
-	public async synchronizeENMDaten(schema : string) : Promise<boolean | null> {
+	public async synchronizeENMDaten(schema : string) : Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/enm/synchronize"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const text = result;
-		return (text === "true");
+		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
 
 
 	/**
 	 * Implementierung der GET-Methode truncateENMServer für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/truncate
 	 *
-	 * Leert die Daten des Externen Notenmoduls.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Notendaten besitzt.
+	 * Leert die Daten des Externen Notenmoduls (ENM), einschließlich der Benutzerdaten.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Notendaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die Daten des Externen Notenmoduls (ENM) wurden geleert.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: Boolean
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 401: Die Authorisierung beim ENM-Server ist fehlgeschlagen.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.
-	 *   Code 404: Keine WeNoM-Serverdaten gefunden.
-	 *   Code 502: Fehler bei der Verbindung zum WeNoM-Server, u.U. auch fehlende OAuth-Daten.
+	 *   Code 404: Keine ENM-Serverdaten gefunden.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 500: Interner Serverfehler
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 502: Fehler bei der Verbindung zum ENM-Server, u.U. auch fehlende OAuth-Daten.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
 	 * @returns Die Daten des Externen Notenmoduls (ENM) wurden geleert.
 	 */
-	public async truncateENMServer(schema : string) : Promise<boolean | null> {
+	public async truncateENMServer(schema : string) : Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/enm/truncate"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const text = result;
-		return (text === "true");
+		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
 
 
@@ -2665,22 +2765,31 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die Daten des Externen Notenmoduls (ENM) wurden hochgeladen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: Boolean
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 401: Die Authorisierung beim ENM-Server ist fehlgeschlagen.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.
-	 *   Code 404: Keine WeNoM-Serverdaten gefunden.
-	 *   Code 500: Interner Serverfehler, bspw. beim Lesen in der DB oder Erstellen des Zipfiles.
-	 *   Code 502: Fehler bei der Verbindung zum WeNoM-Server
+	 *   Code 404: Keine ENM-Serverdaten gefunden.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 500: Interner Serverfehler
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 502: Fehler bei der Verbindung zum ENM-Server
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
 	 * @returns Die Daten des Externen Notenmoduls (ENM) wurden hochgeladen
 	 */
-	public async uploadENMDaten(schema : string) : Promise<boolean | null> {
+	public async uploadENMDaten(schema : string) : Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/enm/upload"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const text = result;
-		return (text === "true");
+		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
 
 

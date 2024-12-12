@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 import de.svws_nrw.base.compression.CompressionException;
 import de.svws_nrw.base.crypto.Passwords;
+import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.enm.ENMAnkreuzkompetenz;
 import de.svws_nrw.core.data.enm.ENMDaten;
 import de.svws_nrw.core.data.enm.ENMFach;
@@ -32,6 +33,8 @@ import de.svws_nrw.core.data.enm.ENMSchueler;
 import de.svws_nrw.core.data.enm.ENMSchuelerAnkreuzkompetenz;
 import de.svws_nrw.core.data.enm.ENMTeilleistung;
 import de.svws_nrw.core.data.enm.ENMTeilleistungsart;
+import de.svws_nrw.core.logger.LogConsumerList;
+import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.asd.data.kurse.ZulaessigeKursartKatalogEintrag;
 import de.svws_nrw.asd.data.schule.SchuleStammdaten;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
@@ -86,6 +89,8 @@ public final class DataENMDaten extends DataManager<Long> {
 	private static final String ENM_UPLOAD_PATH = "/api/secure/import";
 	private static final String ENM_DOWNLOAD_PATH = "/api/secure/export";
 	private static final String ENM_TRUNCATE_PATH = "/api/secure/truncate";
+	private static final String ENM_RESET_PATH = "/api/secure/reset";
+	private static final String ENM_CHECK_PATH = "/api/secure/check";
 
 
 	/**
@@ -1115,17 +1120,23 @@ public final class DataENMDaten extends DataManager<Long> {
 	/**
 	 * Erstellt mit einer gegebenen Datenbankverbindung einen {@link OAuthClient}
 	 *
-	 * @param conn die Datenbankverbindung
+	 * @param conn    die Datenbankverbindung
+	 * @param logger  der Logger
 	 *
 	 * @return der OAuthClient
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private static OAuth2Client getWenomOAuthClient(final DBEntityManager conn) throws ApiOperationException {
+	private static OAuth2Client getWenomOAuthClient(final DBEntityManager conn, final Logger logger) throws ApiOperationException {
+		logger.logLn("Lese die OAuth2-Client-Secrets für den ENM-Server aus der Datenbank...");
 		final DTOSchuleOAuthSecrets dto = new DataOauthClientSecrets(conn).getDto(OAuth2ServerTyp.WENOM);
 		if (dto == null)
-			throw new ApiOperationException(Status.NOT_FOUND);
-		return OAuth2Client.getClient(dto);
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurden keine OAuth2-Client-Secrets für den ENM-Server in der Datenbank gefunden.");
+		logger.logLn("Prüfe, ob das OAuth2-Token noch gültig ist und fordere ggf. ein neues an...");
+		logger.modifyIndent(2);
+		final OAuth2Client client = OAuth2Client.getClient(dto, logger);
+		logger.modifyIndent(-2);
+		return client;
 	}
 
 
@@ -1133,16 +1144,18 @@ public final class DataENMDaten extends DataManager<Long> {
 	 * Lädt die ENM-Daten über den gegebenen OAuthClient vom ENM-Server und mit dem gegebenen DataManager in die
 	 * Datenbank
 	 *
-	 * @param conn    die Datenbank-Verbindung
-	 * @param client  der OAuthClient
+	 * @param conn     die Datenbank-Verbindung
+	 * @param client   der OAuthClient
+	 * @param logger   der Logger
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private static void downloadENMDaten(final DBEntityManager conn, final OAuth2Client client) throws ApiOperationException {
-		final HttpResponse<byte[]> httpResponse = client.get(ENM_DOWNLOAD_PATH, BodyHandlers.ofByteArray());
-		if (httpResponse.statusCode() != Status.OK.getStatusCode()) {
+	private static void downloadENMDaten(final DBEntityManager conn, final OAuth2Client client, final Logger logger) throws ApiOperationException {
+		logger.logLn("Sende die Anfrage zum Herunderladen der ENM-Daten von dem ENM-Server...");
+		final HttpResponse<byte[]> httpResponse = client.get(ENM_DOWNLOAD_PATH, BodyHandlers.ofByteArray(), logger);
+		if (httpResponse.statusCode() != Status.OK.getStatusCode())
 			throw new ApiOperationException(Status.BAD_GATEWAY, httpResponse.body());
-		}
+		logger.logLn("Schreibe die neuen Daten aus ENM-Daten anhand der Zeitstempel in die Datenbank des SVWS-Servers...");
 		importDatenGZip(conn, httpResponse.body());
 	}
 
@@ -1150,23 +1163,27 @@ public final class DataENMDaten extends DataManager<Long> {
 	/**
 	 * Lädt die ENM-Daten beim ENM-Server hoch
 	 *
-	 * @param conn         die Datenbank-Verbindung
-	 * @param client       der OAuth-Client zur Verbindung mit dem ENM
+	 * @param conn     die Datenbank-Verbindung
+	 * @param client   der OAuth-Client zur Verbindung mit dem ENM
+	 * @param logger   der Logger
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private static void uploadENMDaten(final DBEntityManager conn, final OAuth2Client client) throws ApiOperationException {
+	private static void uploadENMDaten(final DBEntityManager conn, final OAuth2Client client, final Logger logger) throws ApiOperationException {
+		logger.logLn("Bestimme die ENM-Daten aus der Datenbank des SVWS-Servers...");
 		final byte[] daten = getAllGZIPBytes(conn);
-		final HttpResponse<String> response = client.postMultipart(ENM_UPLOAD_PATH, "json.gz", daten,
-				BodyHandlers.ofString());
-		if (response.statusCode() != Status.OK.getStatusCode()) {
+		logger.logLn("Sende die ENM-Daten an den ENM-Server...");
+		logger.modifyIndent(2);
+		final HttpResponse<String> response = client.postMultipart(ENM_UPLOAD_PATH, "json.gz", daten, BodyHandlers.ofString(), logger);
+		logger.modifyIndent(-2);
+		if (response.statusCode() != Status.OK.getStatusCode())
 			throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
-		}
+		logger.logLn("ENM-Daten erfolgreich an den ENM-Server übertragen.");
 	}
 
 
 	/**
-	 * Synchronisiert die Daten des Externen Notenmoduls (ENM) mit dem WeNoM-Server und lädt
+	 * Synchronisiert die Daten des Externen Notenmoduls (ENM) mit dem ENM-Server und lädt
 	 * dabei diese als ZIP beim ENM hoch und anschließend wieder von diesem herunter und speichert
 	 * diese in der Datenbank.
 	 *
@@ -1177,15 +1194,39 @@ public final class DataENMDaten extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static Response synchronize(final DBEntityManager conn) throws ApiOperationException {
-		final OAuth2Client client = getWenomOAuthClient(conn);
-		uploadENMDaten(conn, client);
-		downloadENMDaten(conn, client);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(Boolean.TRUE).build();
+		// Erstelle zunächst einen Logger für die Operation
+		final Logger logger = new Logger();
+		final LogConsumerList log = new LogConsumerList();
+		logger.addConsumer(log);
+		// Führe den Upload und dann den Download aus und gib den Erfolg der Operation als SimpleOperationResponse mit einem Log zurück
+		final SimpleOperationResponse sor = new SimpleOperationResponse();
+		Status status = Status.OK;
+		try {
+			logger.logLn("Führe eine Synchronisation der Daten durch...");
+			logger.modifyIndent(2);
+			final OAuth2Client client = getWenomOAuthClient(conn, logger);
+			uploadENMDaten(conn, client, logger);
+			downloadENMDaten(conn, client, logger);
+			logger.logLn("Die Synchronisation wurde erfolgreich abgeschlossen.");
+			sor.success = true;
+			logger.setIndent(0);
+		} catch (final Exception e) {
+			status = Status.INTERNAL_SERVER_ERROR;
+			if (e instanceof final ApiOperationException aoe) {
+				status = aoe.getStatus();
+			}
+			logger.log("Fehler: " + e.getLocalizedMessage());
+			sor.success = false;
+			logger.setIndent(0);
+		}
+		// Gib den Erfolg der Operation als SimpleOperationResponse mit einem Log zurück
+		sor.log = log.getStrings();
+		return Response.status(status).type(MediaType.APPLICATION_JSON).entity(sor).build();
 	}
 
 
 	/**
-	 * Lädt die ENM-Daten aus der Datenbank zu dem WeNoM-Server hoch.
+	 * Lädt die ENM-Daten aus der Datenbank zu dem ENM-Server hoch.
 	 *
 	 * @param conn   die Datenbank-Verbindung
 	 *
@@ -1194,14 +1235,38 @@ public final class DataENMDaten extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static Response upload(final DBEntityManager conn) throws ApiOperationException {
-		final OAuth2Client client = getWenomOAuthClient(conn);
-		uploadENMDaten(conn, client);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(Boolean.TRUE).build();
+		// Erstelle zunächst einen Logger für die Operation
+		final Logger logger = new Logger();
+		final LogConsumerList log = new LogConsumerList();
+		logger.addConsumer(log);
+		// Führe den Upload aus und gib den Erfolg der Operation als SimpleOperationResponse mit einem Log zurück
+		final SimpleOperationResponse sor = new SimpleOperationResponse();
+		Status status = Status.OK;
+		try {
+			logger.logLn("Führe einen Upload der Daten durch...");
+			logger.modifyIndent(2);
+			final OAuth2Client client = getWenomOAuthClient(conn, logger);
+			uploadENMDaten(conn, client, logger);
+			logger.logLn("Der Upload wurde erfolgreich abgeschlossen.");
+			sor.success = true;
+			logger.setIndent(0);
+		} catch (final Exception e) {
+			status = Status.INTERNAL_SERVER_ERROR;
+			if (e instanceof final ApiOperationException aoe) {
+				status = aoe.getStatus();
+			}
+			logger.log("Fehler: " + e.getLocalizedMessage());
+			sor.success = false;
+			logger.setIndent(0);
+		}
+		// Gib den Erfolg der Operation als SimpleOperationResponse mit einem Log zurück
+		sor.log = log.getStrings();
+		return Response.status(status).type(MediaType.APPLICATION_JSON).entity(sor).build();
 	}
 
 
 	/**
-	 * Importiert die ENM-Daten von dem WeNoM-Server und schreibt diese in die Datenbank.
+	 * Importiert die ENM-Daten von dem ENM-Server und schreibt diese in die Datenbank.
 	 *
 	 * @param conn   die Datenbank-Verbindung
 	 *
@@ -1210,14 +1275,38 @@ public final class DataENMDaten extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static Response download(final DBEntityManager conn) throws ApiOperationException {
-		final OAuth2Client client = getWenomOAuthClient(conn);
-		downloadENMDaten(conn, client);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(Boolean.TRUE).build();
+		// Erstelle zunächst einen Logger für die Operation
+		final Logger logger = new Logger();
+		final LogConsumerList log = new LogConsumerList();
+		logger.addConsumer(log);
+		// Führe den Download aus und gib den Erfolg der Operation als SimpleOperationResponse mit einem Log zurück
+		final SimpleOperationResponse sor = new SimpleOperationResponse();
+		Status status = Status.OK;
+		try {
+			logger.logLn("Führe einen Download der Daten durch...");
+			logger.modifyIndent(2);
+			final OAuth2Client client = getWenomOAuthClient(conn, logger);
+			downloadENMDaten(conn, client, logger);
+			logger.logLn("Der Download wurde erfolgreich abgeschlossen.");
+			sor.success = true;
+			logger.setIndent(0);
+		} catch (final Exception e) {
+			status = Status.INTERNAL_SERVER_ERROR;
+			if (e instanceof final ApiOperationException aoe) {
+				status = aoe.getStatus();
+			}
+			logger.log("Fehler: " + e.getLocalizedMessage());
+			sor.success = false;
+			logger.setIndent(0);
+		}
+		// Gib den Erfolg der Operation als SimpleOperationResponse mit einem Log zurück
+		sor.log = log.getStrings();
+		return Response.status(status).type(MediaType.APPLICATION_JSON).entity(sor).build();
 	}
 
 
 	/**
-	 * Entfernt die ENM-Daten von dem WeNoM-Server.
+	 * Entfernt die ENM-Daten von dem ENM-Server. Dabei werden auch die Benutzerdaten auf dem Server entfernt.
 	 *
 	 * @param conn   die Datenbank-Verbindung
 	 *
@@ -1226,11 +1315,117 @@ public final class DataENMDaten extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static Response truncate(final DBEntityManager conn) throws ApiOperationException {
-		final OAuth2Client client = getWenomOAuthClient(conn);
-		final HttpResponse<String> response = client.postEmpty(ENM_TRUNCATE_PATH, BodyHandlers.ofString());
-		if (response.statusCode() != Status.OK.getStatusCode())
-			throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(Boolean.TRUE).build();
+		// Erstelle zunächst einen Logger für die Operation
+		final Logger logger = new Logger();
+		final LogConsumerList log = new LogConsumerList();
+		logger.addConsumer(log);
+		// Führe den Truncate aus und gib den Erfolg der Operation als SimpleOperationResponse mit einem Log zurück
+		final SimpleOperationResponse sor = new SimpleOperationResponse();
+		Status status = Status.OK;
+		try {
+			logger.logLn("Führe ein Truncate auf dem Server durch...");
+			logger.modifyIndent(2);
+			final OAuth2Client client = getWenomOAuthClient(conn, logger);
+			final HttpResponse<String> response = client.postEmpty(ENM_TRUNCATE_PATH, BodyHandlers.ofString(), logger);
+			if (response.statusCode() != Status.OK.getStatusCode())
+				throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
+			logger.logLn("Die Truncate-Operation wurde erfolgreich abgeschlossen.");
+			sor.success = true;
+			logger.setIndent(0);
+		} catch (final Exception e) {
+			status = Status.INTERNAL_SERVER_ERROR;
+			if (e instanceof final ApiOperationException aoe) {
+				status = aoe.getStatus();
+			}
+			logger.log("Fehler: " + e.getLocalizedMessage());
+			sor.success = false;
+			logger.setIndent(0);
+		}
+		// Gib den Erfolg der Operation als SimpleOperationResponse mit einem Log zurück
+		sor.log = log.getStrings();
+		return Response.status(status).type(MediaType.APPLICATION_JSON).entity(sor).build();
+	}
+
+	/**
+	 * Entfernt die ENM-Daten von dem ENM-Server.
+	 *
+	 * @param conn   die Datenbank-Verbindung
+	 *
+	 * @return die HTTP-Response
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public static Response reset(final DBEntityManager conn) throws ApiOperationException {
+		// Erstelle zunächst einen Logger für die Operation
+		final Logger logger = new Logger();
+		final LogConsumerList log = new LogConsumerList();
+		logger.addConsumer(log);
+		// Führe den Reset aus und gib den Erfolg der Operation als SimpleOperationResponse mit einem Log zurück
+		final SimpleOperationResponse sor = new SimpleOperationResponse();
+		Status status = Status.OK;
+		try {
+			logger.logLn("Führe ein Reset auf dem Server durch...");
+			logger.modifyIndent(2);
+			final OAuth2Client client = getWenomOAuthClient(conn, logger);
+			final HttpResponse<String> response = client.postEmpty(ENM_RESET_PATH, BodyHandlers.ofString(), logger);
+			if (response.statusCode() != Status.OK.getStatusCode())
+				throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
+			logger.logLn("Die Reset-Operation wurde erfolgreich abgeschlossen.");
+			sor.success = true;
+			logger.setIndent(0);
+		} catch (final Exception e) {
+			status = Status.INTERNAL_SERVER_ERROR;
+			if (e instanceof final ApiOperationException aoe) {
+				status = aoe.getStatus();
+			}
+			logger.log("Fehler: " + e.getLocalizedMessage());
+			sor.success = false;
+			logger.setIndent(0);
+		}
+		// Gib den Erfolg der Operation als SimpleOperationResponse mit einem Log zurück
+		sor.log = log.getStrings();
+		return Response.status(status).type(MediaType.APPLICATION_JSON).entity(sor).build();
+	}
+
+	/**
+	 * Prüft, ob der ENM-Server mit den hinterlegten Verbindungsdaten errichbar ist.
+	 *
+	 * @param conn   die Datenbank-Verbindung
+	 *
+	 * @return die HTTP-Response
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public static Response check(final DBEntityManager conn) throws ApiOperationException {
+		// Erstelle zunächst einen Logger für die Operation
+		final Logger logger = new Logger();
+		final LogConsumerList log = new LogConsumerList();
+		logger.addConsumer(log);
+		// Führe den Login aus und gib den Erfolg der Operation als SimpleOperationResponse mit einem Log zurück
+		final SimpleOperationResponse sor = new SimpleOperationResponse();
+		Status status = Status.OK;
+		try {
+			logger.logLn("Prüft, ob der Endpunkt für einen Verbindungstest erreichbar ist...");
+			logger.modifyIndent(2);
+			final OAuth2Client client = getWenomOAuthClient(conn, logger);
+			final HttpResponse<String> response = client.postEmpty(ENM_CHECK_PATH, BodyHandlers.ofString(), logger);
+			if (response.statusCode() != Status.OK.getStatusCode())
+				throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
+			logger.logLn("Der Verbindungstest wurde erfolgreich durchgeführt.");
+			sor.success = true;
+			logger.setIndent(0);
+		} catch (final Exception e) {
+			status = Status.INTERNAL_SERVER_ERROR;
+			if (e instanceof final ApiOperationException aoe) {
+				status = aoe.getStatus();
+			}
+			logger.log("Fehler: " + e.getLocalizedMessage());
+			sor.success = false;
+			logger.setIndent(0);
+		}
+		// Gib den Erfolg der Operation als SimpleOperationResponse mit einem Log zurück
+		sor.log = log.getStrings();
+		return Response.status(status).type(MediaType.APPLICATION_JSON).entity(sor).build();
 	}
 
 }

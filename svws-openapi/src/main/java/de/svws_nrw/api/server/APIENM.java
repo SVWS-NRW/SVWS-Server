@@ -4,6 +4,7 @@ import java.io.InputStream;
 
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
+import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.enm.ENMDaten;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
@@ -220,7 +221,7 @@ public class APIENM {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response setENMLehrerPassword(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@RequestBody(description = "Das Kennwort", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-			schema = @Schema(implementation = String.class))) final InputStream is,
+					schema = @Schema(implementation = String.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> {
 			final String password = JSONMapper.toString(is);
@@ -298,7 +299,7 @@ public class APIENM {
 	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
-	 * @return Die HTTP-Response
+	 * @return die HTTP-Response mit einer SimpleOperationResponse
 	 */
 	@GET
 	@Path("/synchronize")
@@ -307,11 +308,16 @@ public class APIENM {
 					+ "und lädt diese als ZIP beim ENM hoch, lädt danach die Daten des ENM runter und speichert diese in der Datenbank. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Notendaten besitzt.")
 	@ApiResponse(responseCode = "200", description = "Die Daten des Externen Notenmoduls (ENM) wurden synchronisiert",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Boolean.class)))
-	@ApiResponse(responseCode = "500", description = "Interner Serverfehler, bspw. beim Lesen in der DB oder Erstellen des Zipfiles.")
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "500", description = "Interner Serverfehler",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "401", description = "Die Authorisierung beim ENM-Server ist fehlgeschlagen.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.")
-	@ApiResponse(responseCode = "404", description = "Keine WeNoM-Serverdaten gefunden.")
-	@ApiResponse(responseCode = "502", description = "Fehler bei der Verbindung zum WeNoM-Server")
+	@ApiResponse(responseCode = "404", description = "Keine ENM-Serverdaten gefunden.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "502", description = "Fehler bei der Verbindung zum ENM-Server",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	public Response synchronizeENMDaten(@PathParam("schema") final String schema,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(DataENMDaten::synchronize, request,
@@ -326,7 +332,7 @@ public class APIENM {
 	 * @param schema  das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
 	 * @param request die Informationen zur HTTP-Anfrage
 	 *
-	 * @return Die HTTP-Response
+	 * @return die HTTP-Response mit einer SimpleOperationResponse
 	 */
 	@GET
 	@Path("/upload")
@@ -334,11 +340,16 @@ public class APIENM {
 			description = "Liest die Daten des Externen Notenmoduls (ENM) aller Lehrer aus der Datenbank und lädt diese als ZIP beim ENM hoch."
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Notendaten besitzt.")
 	@ApiResponse(responseCode = "200", description = "Die Daten des Externen Notenmoduls (ENM) wurden hochgeladen",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Boolean.class)))
-	@ApiResponse(responseCode = "500", description = "Interner Serverfehler, bspw. beim Lesen in der DB oder Erstellen des Zipfiles.")
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "500", description = "Interner Serverfehler",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "401", description = "Die Authorisierung beim ENM-Server ist fehlgeschlagen.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.")
-	@ApiResponse(responseCode = "404", description = "Keine WeNoM-Serverdaten gefunden.")
-	@ApiResponse(responseCode = "502", description = "Fehler bei der Verbindung zum WeNoM-Server")
+	@ApiResponse(responseCode = "404", description = "Keine ENM-Serverdaten gefunden.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "502", description = "Fehler bei der Verbindung zum ENM-Server",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	public Response uploadENMDaten(@PathParam("schema") final String schema,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(DataENMDaten::upload, request,
@@ -348,12 +359,12 @@ public class APIENM {
 
 
 	/**
-	 * Die OpenAPI-Methode für den Upload von Daten an das Externe Datenmodul (ENM) in Bezug auf alle Lehrer.
+	 * Die OpenAPI-Methode für den Download von Daten aus dem Externe Datenmodul (ENM) in Bezug auf alle Lehrer.
 	 *
 	 * @param schema  das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
 	 * @param request die Informationen zur HTTP-Anfrage
 	 *
-	 * @return true, wenn der Datenimport erfolgreich war
+	 * @return die HTTP-Response mit einer SimpleOperationResponse
 	 */
 	@GET
 	@Path("/download")
@@ -361,11 +372,16 @@ public class APIENM {
 			description = "Importiert die Daten des Externen Notenmoduls und speichert diese in der Datenbank. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Notendaten besitzt.")
 	@ApiResponse(responseCode = "200", description = "Die Daten des Externen Notenmoduls (ENM) wurden heruntergeladen",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Boolean.class)))
-	@ApiResponse(responseCode = "500", description = "Interner Serverfehler, bspw. beim Lesen in der DB oder Erstellen des Zipfiles.")
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "500", description = "Interner Serverfehler",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "401", description = "Die Authorisierung beim ENM-Server ist fehlgeschlagen.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.")
-	@ApiResponse(responseCode = "404", description = "Keine WeNoM-Serverdaten gefunden.")
-	@ApiResponse(responseCode = "502", description = "Fehler bei der Verbindung zum WeNoM-Server")
+	@ApiResponse(responseCode = "404", description = "Keine ENM-Serverdaten gefunden.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "502", description = "Fehler bei der Verbindung zum ENM-Server",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	public Response downloadENMDaten(@PathParam("schema") final String schema,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(DataENMDaten::download, request,
@@ -375,25 +391,90 @@ public class APIENM {
 
 
 	/**
-	 * Die OpenAPI-Methode für den Upload von Daten an das Externe Datenmodul (ENM) in Bezug auf alle Lehrer.
+	 * Die OpenAPI-Methode für das Entfernen aller ENM-Daten aus dem Externen Datenmodul (ENM) - einschließlich der Benutzerdaten.
 	 *
 	 * @param schema  das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
 	 * @param request die Informationen zur HTTP-Anfrage
 	 *
-	 * @return eine Response mit Boolean True, wenn das Truncate erfolgreich war
+	 * @return die HTTP-Response mit einer SimpleOperationResponse
 	 */
 	@GET
 	@Path("/truncate")
-	@Operation(summary = "Leert die Daten des Externen Notenmoduls (ENM).", description = "Leert die Daten des Externen Notenmoduls."
-			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Notendaten besitzt.")
+	@Operation(summary = "Leert die Daten des Externen Notenmoduls (ENM), einschließlich der Benutzerdaten.",
+			description = "Leert die Daten des Externen Notenmoduls (ENM), einschließlich der Benutzerdaten."
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Notendaten besitzt.")
 	@ApiResponse(responseCode = "200", description = "Die Daten des Externen Notenmoduls (ENM) wurden geleert.",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Boolean.class)))
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "500", description = "Interner Serverfehler",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "401", description = "Die Authorisierung beim ENM-Server ist fehlgeschlagen.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.")
-	@ApiResponse(responseCode = "404", description = "Keine WeNoM-Serverdaten gefunden.")
-	@ApiResponse(responseCode = "502", description = "Fehler bei der Verbindung zum WeNoM-Server, u.U. auch fehlende OAuth-Daten.")
+	@ApiResponse(responseCode = "404", description = "Keine ENM-Serverdaten gefunden.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "502", description = "Fehler bei der Verbindung zum ENM-Server, u.U. auch fehlende OAuth-Daten.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	public Response truncateENMServer(@PathParam("schema") final String schema,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(DataENMDaten::truncate, request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
 	}
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen aller ENM-Daten aus dem Externen Datenmodul (ENM).
+	 *
+	 * @param schema  das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Response mit einer SimpleOperationResponse
+	 */
+	@GET
+	@Path("/reset")
+	@Operation(summary = "Leert die Daten des Externen Notenmoduls (ENM).", description = "Leert die Daten des Externen Notenmoduls (ENM)."
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Notendaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Daten des Externen Notenmoduls (ENM) wurden geleert.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "500", description = "Interner Serverfehler",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "401", description = "Die Authorisierung beim ENM-Server ist fehlgeschlagen.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.")
+	@ApiResponse(responseCode = "404", description = "Keine ENM-Serverdaten gefunden.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "502", description = "Fehler bei der Verbindung zum ENM-Server, u.U. auch fehlende OAuth-Daten.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	public Response resetENMServer(@PathParam("schema") final String schema,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(DataENMDaten::reset, request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Überprüfen, ob der ENM-Server mit den hinterlegten Verbindungsdaten erreichbar ist.
+	 *
+	 * @param schema  das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Response mit einer SimpleOperationResponse
+	 */
+	@GET
+	@Path("/check")
+	@Operation(summary = "Prüft, ob der ENM-Server mit den hinterlegten Verbindungsdaten erreichbar ist.",
+			description = "Prüft, ob der ENM-Server mit den hinterlegten Verbindungsdaten erreichbar ist."
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Notendaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Der ENM-Server ist erreichbar.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "500", description = "Interner Serverfehler",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "401", description = "Die Authorisierung beim ENM-Server ist fehlgeschlagen.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Operation auszuführen.")
+	@ApiResponse(responseCode = "404", description = "Keine ENM-Serverdaten gefunden.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "502", description = "Fehler bei der Verbindung zum ENM-Server, u.U. auch fehlende OAuth-Daten.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	public Response checkENMServer(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(DataENMDaten::check, request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
+	}
+
 
 }
