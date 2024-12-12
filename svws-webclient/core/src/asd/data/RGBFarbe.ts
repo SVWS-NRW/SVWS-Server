@@ -22,8 +22,41 @@ export class RGBFarbe extends JavaObject {
 	/**
 	 * Leerer Standardkonstruktor.
 	 */
-	public constructor() {
+	public constructor();
+
+	/**
+	 * Erstellt eine neue Farbe mit den übergebenenen Komponenten
+	 *
+	 * @param red     die Rot-Komponente (0-225)
+	 * @param green   die Grün-Komponente (0-225)
+	 * @param blue    die Blau-Komponente (0-225)
+	 */
+	public constructor(red : number, green : number, blue : number);
+
+	/**
+	 * Implementation for method overloads of 'constructor'
+	 */
+	public constructor(__param0? : number, __param1? : number, __param2? : number) {
 		super();
+		if ((__param0 === undefined) && (__param1 === undefined) && (__param2 === undefined)) {
+			// empty method body
+		} else if (((__param0 !== undefined) && typeof __param0 === "number") && ((__param1 !== undefined) && typeof __param1 === "number") && ((__param2 !== undefined) && typeof __param2 === "number")) {
+			const red : number = __param0 as number;
+			const green : number = __param1 as number;
+			const blue : number = __param2 as number;
+			this.red = red;
+			this.green = green;
+			this.blue = blue;
+		} else throw new Error('invalid method overload');
+	}
+
+	/**
+	 * Gibt die Farbe als komma-separierten String zurück.
+	 *
+	 * @return der String
+	 */
+	public toString() : string | null {
+		return this.red + "," + this.green + "," + this.blue;
 	}
 
 	transpilerCanonicalName(): string {
