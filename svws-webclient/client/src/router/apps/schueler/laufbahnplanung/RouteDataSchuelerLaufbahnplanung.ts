@@ -1,6 +1,5 @@
 import type { Abiturdaten, ApiFile, GostBlockungListeneintrag, GostBlockungsergebnis, GostLaufbahnplanungDaten, GostSchuelerFachwahl, LehrerListeEintrag, SchuelerListeEintrag } from "@core";
 import { AbiturdatenManager, BenutzerTyp, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang, GostJahrgangsdaten, GostLaufbahnplanungBeratungsdaten, GostHalbjahr, DeveloperNotificationException, ArrayList, ReportingReportvorlage, ReportingParameter } from "@core";
-
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
@@ -17,7 +16,7 @@ interface RouteStateSchuelerLaufbahnplanung extends RouteStateInterface {
 	gostJahrgang: GostJahrgang;
 	gostJahrgangsdaten: GostJahrgangsdaten;
 	gostLaufbahnBeratungsdaten: GostLaufbahnplanungBeratungsdaten;
-	mapLehrer: Map<number, LehrerListeEintrag>;
+	listeLehrer: ArrayList<LehrerListeEintrag>;
 	zwischenspeicher: GostLaufbahnplanungDaten | undefined;
 }
 
@@ -30,7 +29,7 @@ const defaultState = <RouteStateSchuelerLaufbahnplanung> {
 	gostJahrgang: new GostJahrgang(),
 	gostJahrgangsdaten: new GostJahrgangsdaten(),
 	gostLaufbahnBeratungsdaten: new GostLaufbahnplanungBeratungsdaten(),
-	mapLehrer: new Map(),
+	listeLehrer: new ArrayList(),
 	zwischenspeicher: undefined,
 };
 
@@ -62,8 +61,8 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 		return this._state.value.gostLaufbahnBeratungsdaten;
 	}
 
-	get mapLehrer(): Map<number, LehrerListeEintrag> {
-		return this._state.value.mapLehrer;
+	get listeLehrer(): ArrayList<LehrerListeEintrag> {
+		return this._state.value.listeLehrer;
 	}
 
 	get faechermanager(): GostFaecherManager {
@@ -237,11 +236,20 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 				const faecherManager = new GostFaecherManager(abiturdaten.schuljahrAbitur, listGostFaecher);
 				const listFachkombinationen	= await api.server.getGostAbiturjahrgangFachkombinationen(api.schema, gostJahrgang.abiturjahr);
 				faecherManager.addFachkombinationenAll(listFachkombinationen);
-				const listLehrer = await api.server.getLehrer(api.schema);
-				const mapLehrer = new Map<number, LehrerListeEintrag>();
-				for (const l of listLehrer)
-					mapLehrer.set(l.id, l);
-				this.setPatchedState({ auswahl, abiturdaten, gostJahrgang, gostJahrgangsdaten, gostLaufbahnBeratungsdaten, faecherManager, mapLehrer, zwischenspeicher: undefined })
+				const tempListLehrer = await api.server.getLehrer(api.schema);
+				const listeLehrer = new ArrayList<LehrerListeEintrag>();
+				const listeLehrerRest = new ArrayList<LehrerListeEintrag>();
+				const idsBeratungslehrer = [];
+				for (const b of gostJahrgangsdaten.beratungslehrer)
+					idsBeratungslehrer.push(b.id);
+				for (const l of tempListLehrer) {
+					if (idsBeratungslehrer.includes(l.id))
+						listeLehrer.add(l)
+					else
+						listeLehrerRest.add(l);
+				}
+				listeLehrer.addAll(listeLehrerRest);
+				this.setPatchedState({ auswahl, abiturdaten, gostJahrgang, gostJahrgangsdaten, gostLaufbahnBeratungsdaten, faecherManager, listeLehrer, zwischenspeicher: undefined })
 				await this.setGostBelegpruefungErgebnis();
 			} catch(error) {
 				throw new DeveloperNotificationException("Die Laufbahndaten konnten nicht eingeholt werden, sind für diesen Schüler Laufbahndaten möglich?")

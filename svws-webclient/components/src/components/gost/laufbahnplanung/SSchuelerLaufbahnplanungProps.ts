@@ -1,3 +1,4 @@
+import type { ArrayList } from "../../../../../core/src";
 import type { ApiFile } from "../../../../../core/src/api/BaseApi";
 import type { Schulform } from "../../../../../core/src/asd/types/schule/Schulform";
 import type { AbiturdatenManager } from "../../../../../core/src/core/abschluss/gost/AbiturdatenManager";
@@ -30,7 +31,7 @@ export interface SchuelerLaufbahnplanungProps {
 	gostBelegpruefungsArt: () => 'ef1'|'gesamt'|'auto';
 	gostBelegpruefungErgebnis: () => GostBelegpruefungErgebnis;
 	abiturdatenManager: () => AbiturdatenManager;
-	mapLehrer: Map<number, LehrerListeEintrag>;
+	listLehrer: ArrayList<LehrerListeEintrag>;
 	id?: number;
 	zwischenspeicher?: GostLaufbahnplanungDaten;
 	saveLaufbahnplanung: () => Promise<void>;

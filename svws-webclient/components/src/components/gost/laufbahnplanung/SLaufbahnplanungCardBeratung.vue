@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-content-card title="Beratung">
 		<svws-ui-input-wrapper :grid="2">
-			<svws-ui-select title="Zuletzt beraten von" :items="mapLehrer.values()" :model-value="getBeratungslehrer"
+			<svws-ui-select title="Zuletzt beraten von" :items="listLehrer" :model-value="getBeratungslehrer"
 				:item-text="i=>`${i.kuerzel} (${i.vorname} ${i.nachname})`"
 				:item-filter="filter" removable autocomplete ref="refLehrer" />
 			<svws-ui-text-input :model-value="beratungsdatum" type="date" placeholder="Datum" ref="refBeratungsdatum" />
@@ -31,11 +31,12 @@
 	import { GostLaufbahnplanungBeratungsdaten } from "../../../../../core/src/core/data/gost/GostLaufbahnplanungBeratungsdaten";
 	import { LehrerListeEintrag } from "../../../../../core/src/core/data/lehrer/LehrerListeEintrag";
 	import type { SchuelerListeEintrag } from "../../../../../core/src/core/data/schueler/SchuelerListeEintrag";
+	import type { ArrayList } from '../../../../../core/src';
 
 	const props = defineProps<{
 		gostLaufbahnBeratungsdaten: () => GostLaufbahnplanungBeratungsdaten;
 		patchBeratungsdaten: (data : Partial<GostLaufbahnplanungBeratungsdaten>) => Promise<void>;
-		mapLehrer: Map<number, LehrerListeEintrag>;
+		listLehrer: ArrayList<LehrerListeEintrag>;
 		schueler: SchuelerListeEintrag;
 		updated?: boolean;
 		id?: number;
@@ -74,7 +75,10 @@
 		let id = props.gostLaufbahnBeratungsdaten().beratungslehrerID;
 		if (id === null)
 			id = (props.id === undefined) ? -1 : props.id;
-		return props.mapLehrer.get(id);
+		for (const l of props.listLehrer)
+			if (l.id === id)
+				return l;
+		return undefined;
 	})
 
 	async function speichern() {
