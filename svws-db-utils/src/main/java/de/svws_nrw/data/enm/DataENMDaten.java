@@ -1408,7 +1408,7 @@ public final class DataENMDaten extends DataManager<Long> {
 			logger.logLn("Prüft, ob der Endpunkt für einen Verbindungstest erreichbar ist...");
 			logger.modifyIndent(2);
 			final OAuth2Client client = getWenomOAuthClient(conn, logger);
-			final HttpResponse<String> response = client.postEmpty(ENM_CHECK_PATH, BodyHandlers.ofString(), logger);
+			final HttpResponse<String> response = client.get(ENM_CHECK_PATH, BodyHandlers.ofString(), logger);
 			if (response.statusCode() != Status.OK.getStatusCode())
 				throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
 			logger.logLn("Der Verbindungstest wurde erfolgreich durchgeführt.");

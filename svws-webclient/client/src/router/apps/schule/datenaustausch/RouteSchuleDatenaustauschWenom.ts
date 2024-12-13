@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationNormalized } from "vue-router";
 
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
@@ -21,19 +21,17 @@ export class RouteSchuleDatenaustauschWenom extends RouteNode<any, RouteApp> {
 		super.menugroup = RouteSchuleMenuGroup.DATENAUSTAUSCH;
 	}
 
-	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
-		if (isEntering)
-			return routeSchule.data.ladeCredentials();
-	}
-
-
 	public getProps(to: RouteLocationNormalized): SchuleDatenaustauschWenomProps {
 		return {
-			secretSet: () => routeSchule.data.secretSet,
-			setWenomCredentials: routeSchule.data.setWenomCredentials,
-			wenomSynchronize: routeSchule.data.wenomSynchronize,
-			wenomTruncate: routeSchule.data.wenomTruncate,
-			wenomRemoveCredentials: routeSchule.data.wenomRemoveCredential,
+			getCredentials: routeSchule.data.wenomGetCredentials,
+			setCredentials: routeSchule.data.wenomSetCredentials,
+			removeCredentials: routeSchule.data.wenomRemoveCredential,
+			synchronize: routeSchule.data.wenomSynchronize,
+			download: routeSchule.data.wenomDownload,
+			upload: routeSchule.data.wenomUpload,
+			truncate: routeSchule.data.wenomTruncate,
+			reset: routeSchule.data.wenomReset,
+			check: routeSchule.data.wenomCheck,
 		};
 	}
 }

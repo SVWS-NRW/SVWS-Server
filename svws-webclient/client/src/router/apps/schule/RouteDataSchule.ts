@@ -9,12 +9,10 @@ import { AESAlgo } from "~/utils/crypto/aesAlgo";
 
 interface RouteStateSchule extends RouteStateInterface {
 	smtpServerKonfiguration: SMTPServerKonfiguration;
-	secretSet: boolean;
 }
 
 const defaultState = <RouteStateSchule> {
 	smtpServerKonfiguration: new SMTPServerKonfiguration(),
-	secretSet: false,
 	view: routeSchuleFaecher,
 };
 
@@ -55,10 +53,6 @@ export class RouteDataSchule extends RouteData<RouteStateSchule> {
 		this.setPatchedState({ smtpServerKonfiguration });
 	}
 
-	public get secretSet() : boolean {
-		return this._state.value.secretSet;
-	}
-
 	setGostLupoImportMDBFuerJahrgang = async (formData: FormData, mode: 'none' | 'schueler' | 'all') : Promise<SimpleOperationResponse> => {
 		try {
 			return await api.server.setGostLupoImportMDBFuerJahrgang(formData, api.schema, mode);
@@ -84,33 +78,132 @@ export class RouteDataSchule extends RouteData<RouteStateSchule> {
 		return true;
 	}
 
-	ladeCredentials = async () => {
-		let res;
+	wenomGetCredentials = async (): Promise<OAuth2ClientSecret | null> => {
 		try {
-			res = await api.server.getOAuthClientSecret(api.schema,1);
-		} catch {
-			console.log("Kein OAuth-Secret vorhanden.");
+			return await api.server.getOAuthClientSecret(api.schema,1);
+		} catch (e) {
+			return null;
 		}
-		this.setPatchedState({secretSet: res !== undefined});
 	}
 
-	setWenomCredentials = async (url: string, token: string) => {
+	wenomSetCredentials = async (url: string, token: string): Promise<OAuth2ClientSecret | null> => {
 		const wenom = OAuth2ServerTyp.WENOM;
 		const oauth = new OAuth2ClientSecret();
 		oauth.id = wenom.getId();
 		oauth.clientID = "1";
 		oauth.authServer = url;
 		oauth.clientSecret = token;
-		await api.server.addOAuthClientSecret(oauth, api.schema);
-		this.setPatchedState({secretSet: true});
+		try {
+			return await api.server.addOAuthClientSecret(oauth, api.schema);
+		} catch (e) {
+			return null;
+		}
 	}
-
-	wenomSynchronize = api.call(async () => {await api.server.synchronizeENMDaten(api.schema)});
-
-	wenomTruncate = api.call(async () => {await api.server.truncateENMServer(api.schema)});
 
 	wenomRemoveCredential = api.call(async () => {
 		await api.server.deleteOAuthSecret(api.schema, 1);
-		this.setPatchedState({secretSet: false});
 	});
+
+	wenomSynchronize = api.call(async () : Promise<SimpleOperationResponse> => {
+		try {
+			return await api.server.synchronizeENMDaten(api.schema);
+		} catch (e) {
+			if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
+				try {
+					const json = await e.response.text();
+					return SimpleOperationResponse.transpilerFromJSON(json);
+				} catch (e) { /* */ }
+			}
+			const res = new SimpleOperationResponse();
+			res.success = false;
+			res.log.add(`Unerwarteter Fehler beim Aufruf der Synchronisationsmethode aufgetreten: ${e instanceof Error ? e.message : 'unbekannt'}`);
+			return res;
+		}
+	});
+
+	wenomDownload = api.call(async () : Promise<SimpleOperationResponse> => {
+		try {
+			return await api.server.downloadENMDaten(api.schema);
+		} catch (e) {
+			if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
+				try {
+					const json = await e.response.text();
+					return SimpleOperationResponse.transpilerFromJSON(json);
+				} catch (e) { /* */ }
+			}
+			const res = new SimpleOperationResponse();
+			res.success = false;
+			res.log.add(`Unerwarteter Fehler beim Aufruf der Downloadmethode aufgetreten: ${e instanceof Error ? e.message : 'unbekannt'}`);
+			return res;
+		}
+	});
+
+	wenomUpload = api.call(async () : Promise<SimpleOperationResponse> => {
+		try {
+			return await api.server.uploadENMDaten(api.schema);
+		} catch (e) {
+			if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
+				try {
+					const json = await e.response.text();
+					return SimpleOperationResponse.transpilerFromJSON(json);
+				} catch (e) { /* */ }
+			}
+			const res = new SimpleOperationResponse();
+			res.success = false;
+			res.log.add(`Unerwarteter Fehler beim Aufruf der Uploadmethode aufgetreten: ${e instanceof Error ? e.message : 'unbekannt'}`);
+			return res;
+		}
+	});
+
+	wenomTruncate = api.call(async () : Promise<SimpleOperationResponse> => {
+		try {
+			return await api.server.truncateENMServer(api.schema);
+		} catch (e) {
+			if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
+				try {
+					const json = await e.response.text();
+					return SimpleOperationResponse.transpilerFromJSON(json);
+				} catch (e) { /* */ }
+			}
+			const res = new SimpleOperationResponse();
+			res.success = false;
+			res.log.add(`Unerwarteter Fehler beim Aufruf der Truncatemethode aufgetreten: ${e instanceof Error ? e.message : 'unbekannt'}`);
+			return res;
+		}
+	});
+
+	wenomReset = api.call(async () : Promise<SimpleOperationResponse> => {
+		try {
+			return await api.server.resetENMServer(api.schema);
+		} catch (e) {
+			if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
+				try {
+					const json = await e.response.text();
+					return SimpleOperationResponse.transpilerFromJSON(json);
+				} catch (e) { /* */ }
+			}
+			const res = new SimpleOperationResponse();
+			res.success = false;
+			res.log.add(`Unerwarteter Fehler beim Aufruf der Resetmethode aufgetreten: ${e instanceof Error ? e.message : 'unbekannt'}`);
+			return res;
+		}
+	});
+
+	wenomCheck = api.call(async () : Promise<SimpleOperationResponse> => {
+		try {
+			return await api.server.checkENMServer(api.schema);
+		} catch (e) {
+			if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
+				try {
+					const json = await e.response.text();
+					return SimpleOperationResponse.transpilerFromJSON(json);
+				} catch (e) { /* */ }
+			}
+			const res = new SimpleOperationResponse();
+			res.success = false;
+			res.log.add(`Unerwarteter Fehler beim Aufruf der Checkmethode aufgetreten: ${e instanceof Error ? e.message : 'unbekannt'}`);
+			return res;
+		}
+	});
+
 }
