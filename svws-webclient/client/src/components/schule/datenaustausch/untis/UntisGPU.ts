@@ -465,3 +465,211 @@ export class UntisGPU002Csv extends UntisGPUCsv<UntisGPU002> {
 	}
 
 }
+
+
+
+/**
+ * Die Schnittstellen-Definition der GPP002-Datei für die aktuellen (!) Unterrichte aus Untis
+ */
+export interface UntisGPP002 {
+
+	/** Das Kürzel des Lehrers (z.B. "BACH") */
+	lehrerKuerzel : string | null;
+
+	/** Das Jahr in dem der Unterricht stattfindet */
+	jahr : number;
+
+	/** Der Monat in dem der Unterricht stattfindet */
+	monat : number;
+
+	/** Der Tag in dem der Unterricht stattfindet */
+	tag : number;
+
+	/** Die Stunde im Zeitraster des Wochentags in dem der Unterricht stattfindet, im Minutenmodus 0 */
+	stunde: number;
+
+	/** Das Kürzel des Fachen (z.B. "D") */
+	fachKuerzel : string;
+
+	/** Das Kürzel der Klasse (z.B. "05A") oder der Klassen (z.B. "05A~05B") */
+	klasseKuerzel : string;
+
+	/** Das Kürzel des Raumes (z.B. "") */
+	raumKuerzel : string | null;
+
+	/** Die Bezahlung der Vertretung (0 - unbezahlt, 1 - bezahlt) */
+	bezahlt : string | null;
+
+	/** Ein leeres Feld */
+	empty : string | null;
+
+	/** Eine numerische ID, welche den Unterricht eindeutig identifiziert (z.B. 42) */
+	idUnterricht : number;
+
+	/** Beginn (hhmm) */
+	beginn : string | null;
+
+	/** Dauer in Minuten */
+	dauer : number | null;
+
+	/** Fachgruppe */
+	fachgruppe : string | null;
+
+	/** Ignorieren - Dummy für das Einlesen der Daten */
+	dummy : string | null;
+
+}
+
+
+/**
+ * Ein Reader für das Einlesen der Daten einer GPP002-Datei
+ */
+export class UntisGPP002Csv extends UntisGPUCsv<UntisGPP002> {
+
+	/**
+	 * Erzeugt einen neuen Reader mit den übergebenen CSV-Daten als UTF-8-String
+	 *
+	 * @param csv   die CSV-Daten
+	 */
+	public constructor(csv: string) {
+		super([
+			{ name: 'lehrerKuerzel', type: 'string', required: false },
+			{ name: 'jahr', type: 'number', required: true },
+			{ name: 'monat', type: 'number', required: true },
+			{ name: 'tag', type: 'number', required: true },
+			{ name: 'stunde', type: 'number', required: true },
+			{ name: 'fachKuerzel', type: 'string', required: true },
+			{ name: 'klasseKuerzel', type: 'string', required: true },
+			{ name: 'raumKuerzel', type: 'string', required: false },
+			{ name: 'bezahlt', type: 'string', required: false },
+			{ name: 'empty', type: 'string', required: false },
+			{ name: 'idUnterricht', type: 'number', required: true },
+			{ name: 'beginn', type: 'string', required: false },
+			{ name: 'dauer', type: 'number', required: false },
+			{ name: 'fachgruppe', type: 'number', required: false },
+			{ name: 'dummy', type: 'string', required: false },
+		], csv);
+	}
+
+}
+
+
+/**
+ * Die Schnittstellen-Definition der GPU014-Datei für die Vertretungen aus Untis
+ */
+export interface UntisGPU014 {
+
+	/** Eine numerische ID, welche die Vertretung eindeutig identifiziert (z.B. 42) */
+	idVertretung : number;
+
+	/** Das Datum im Format "YYYYMMDD" */
+	datum: string;
+
+	/** Die Stunde im Zeitraster des Wochentags an dem der Unterricht stattfindet */
+	stunde: number;
+
+	/** Eine numerische ID, welche die Absenz eindeutig identifiziert (z.B. 42) */
+	idAbsenz : number | null;
+
+	/** Eine numerische ID, welche den Unterricht eindeutig identifiziert (z.B. 42) */
+	idUnterricht : number;
+
+	/** Das Kürzel des Lehrers (z.B. "BACH") */
+	lehrerKuerzelAbsent : string | null;
+
+	/** Das Kürzel des Lehrers (z.B. "BACH") */
+	lehrerKuerzelVertretung : string | null;
+
+	/** Das Kürzel des Faches (z.B. "D") */
+	fachKuerzel : string;
+
+	/** Das Kürzel des Statistik-Faches (z.B. "D") */
+	fachStatistikKuerzel : string | null;
+
+	/** Das Kürzel des Faches (z.B. "D") */
+	fachVertretungKuerzel : string | null;
+
+	/** Das Kürzel des Statistik-Faches (z.B. "D") */
+	fachVertretungStatistikKuerzel : string | null;
+
+	/** Das Kürzel des Raumes (z.B. "") */
+	raumKuerzel : string | null;
+
+	/** Das Kürzel des Raumes (z.B. "") */
+	raumKuerzelVertretung : string | null;
+
+	/** Statistik-Kennzeichen */
+	statistik : string | null;
+
+	/** Das Kürzel der Klasse (z.B. "05A") bzw. der Klassen (z.B. "05A~05B") */
+	klasseKuerzel : string;
+
+	/** Der Grund für die Absenz */
+	grundAbsenz : string | null;
+
+	/** Ein Text für die Vertretung */
+	text : string | null;
+
+	/** Die Art der Vertretung (Bit-Feld: Bit 0 -> Entfall, Bit 1 -> Betreuung, Bit 2 -> Sondereinsatz, Bit 3 -> Wegverlegung, Bit 4 -> Freisetzung,
+	 *      Bit 5 -> Plus als Vertreter, Bit 6 -> Teilvertretung, Bit 7 -> Hinverlegung, Bit 16 -> Raumvertretung, Bit 17 -> Pausenaufsichtsvertretung,
+	 *      Bit 18 -> Stunde ist unterrichtsfrei, Bit 20 -> Kennzeichen nicht drucken, Bit 21 -> Kennzeichen neu */
+	art : number;
+
+	/** Das Kürzel der Vertretungs-Klasse (z.B. "05A") bzw. der Vertretungs-Klassen (z.B. "05A~05B") */
+	klasseVertretungKuerzel : string | null;
+
+	/** Die Art der Vertretung (T - verlegt, F - verlegt von, W - Tausch, S - Betreuung, A - Sondereinsatz, C - Entfall, L - Freisetzung, P - Teil-Vertretung,
+	 *    R - Raumvertretung, B - Pausenaufsichtsvertretung, ~ - Lehrertausch, E - Klausur) */
+	vertretungsart : string;
+
+	/** Der Zeitpunkt der letzten Änderung (YYYYMMDDHHmm) */
+	timestamp: string | null;
+
+	/** Vertretungen/Entfälle zählen */
+	zaehlen: string | null;
+
+	/** Ignorieren - Dummy für das Einlesen der Daten */
+	dummy : string | null;
+
+}
+
+
+/**
+ * Ein Reader für das Einlesen der Daten einer GPU014-Datei
+ */
+export class UntisGPU014Csv extends UntisGPUCsv<UntisGPU014> {
+
+	/**
+	 * Erzeugt einen neuen Reader mit den übergebenen CSV-Daten als UTF-8-String
+	 *
+	 * @param csv   die CSV-Daten
+	 */
+	public constructor(csv: string) {
+		super([
+			{ name: 'idVertretung', type: 'number', required: true },
+			{ name: 'datum', type: 'string', required: true },
+			{ name: 'stunde', type: 'number', required: true },
+			{ name: 'idAbsenz', type: 'number', required: false },
+			{ name: 'idUnterricht', type: 'number', required: true },
+			{ name: 'lehrerKuerzelAbsent', type: 'string', required: false },
+			{ name: 'lehrerKuerzelVertretung', type: 'string', required: false },
+			{ name: 'fachKuerzel', type: 'string', required: true },
+			{ name: 'fachStatistikKuerzel', type: 'string', required: false },
+			{ name: 'fachVertretungKuerzel', type: 'string', required: false },
+			{ name: 'fachVertretungStatistikKuerzel', type: 'string', required: false },
+			{ name: 'raumKuerzel', type: 'string', required: false },
+			{ name: 'raumKuerzelVertretung', type: 'string', required: false },
+			{ name: 'statistik', type: 'string', required: false },
+			{ name: 'klasseKuerzel', type: 'string', required: true },
+			{ name: 'grundAbsenz', type: 'string', required: false },
+			{ name: 'text', type: 'string', required: false },
+			{ name: 'art', type: 'number', required: true },
+			{ name: 'klasseVertretungKuerzel', type: 'string', required: false },
+			{ name: 'vertretungsart', type: 'string', required: true },
+			{ name: 'timestamp', type: 'string', required: false },
+			{ name: 'zaehlen', type: 'string', required: false },
+			{ name: 'dummy', type: 'string', required: false },
+		], csv);
+	}
+
+}
