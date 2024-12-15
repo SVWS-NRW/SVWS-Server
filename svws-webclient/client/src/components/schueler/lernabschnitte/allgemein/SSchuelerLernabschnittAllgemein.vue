@@ -1,11 +1,13 @@
 <template>
-	<div class="content">
+	<div class="w-full h-full grid grid-cols-2">
 		<svws-ui-content-card>
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-select :disabled="!hatUpdateKompetenz" title="Klasse" :items="manager().klasseGetMenge()" :item-text="i => i.kuerzel ?? '—'" autocomplete statistics
-					:model-value="klasse" @update:model-value="value => patch({ klassenID: ((value === undefined) || (value === null)) ? null : value.id })" autofocus focus-class />
-				<svws-ui-select :disabled="!hatUpdateKompetenz" title="Jahrgang" :items="manager().jahrgangGetMenge()" :item-text="i => i.kuerzel ?? '—'" autocomplete statistics
-					:model-value="jahrgang" @update:model-value="value => patch({ jahrgangID: ((value === undefined) || (value === null)) ? null : value.id })" />
+				<svws-ui-select :disabled="!hatUpdateKompetenz" title="Klasse" :items="manager().klasseGetMenge()" :item-text="i => i.kuerzel ?? '—'"
+					:model-value="klasse" @update:model-value="value => patch({ klassenID: ((value === undefined) || (value === null)) ? null : value.id })"
+					autocomplete statistics autofocus focus-class />
+				<svws-ui-select :disabled="!hatUpdateKompetenz" title="Jahrgang" :items="manager().jahrgangGetMenge()" :item-text="i => i.kuerzel ?? '—'"
+					:model-value="jahrgang" @update:model-value="value => patch({ jahrgangID: ((value === undefined) || (value === null)) ? null : value.id })"
+					autocomplete statistics />
 				<svws-ui-text-input :disabled="!hatUpdateKompetenz" placeholder="Datum von" type="date" statistics
 					:model-value="manager().lernabschnittGet().datumAnfang || undefined"
 					@change="datumAnfang => patch({datumAnfang})" />
@@ -23,25 +25,33 @@
 				<div class="flex flex-col gap-3">
 					<svws-ui-select :disabled="!hatUpdateKompetenz" title="Tutor" :items="manager().lehrerGetMenge()" :item-text="getLehrerText" autocomplete
 						:model-value="tutor" @update:model-value="value => patch({ tutorID: ((value === undefined) || (value === null)) ? null : value.id })" />
-					<svws-ui-select :disabled="!hatUpdateKompetenz" title="Sonderpädagoge" :items="manager().lehrerGetMenge()" :item-text="getLehrerText" autocomplete
-						:model-value="sonderpaedagoge" @update:model-value="value => patch({ sonderpaedagogeID: ((value === undefined) || (value === null)) ? null : value.id })" />
+					<svws-ui-select :disabled="!hatUpdateKompetenz" title="Sonderpädagoge" :items="manager().lehrerGetMenge()" :model-value="sonderpaedagoge"
+						@update:model-value="value => patch({ sonderpaedagogeID: ((value === undefined) || (value === null)) ? null : value.id })"
+						:item-text="getLehrerText" autocomplete />
 				</div>
 				<svws-ui-spacing :size="2" />
 				<svws-ui-input-wrapper :grid="2">
-					<svws-ui-select :disabled="!hatUpdateKompetenz" title="Schulgliederung" :items="gliederungen" :item-text="i => `${i.daten(schuljahr)?.kuerzel ?? '—'} - ${i.daten(schuljahr)?.text ?? '—'}`" autocomplete statistics v-model="gliederung" />
-					<svws-ui-text-input :disabled="!hatUpdateKompetenz" placeholder="Prüfungsordnung" :model-value="manager().lernabschnittGet().pruefungsOrdnung || undefined" />
-					<svws-ui-select :disabled="!hatUpdateKompetenz" title="Organisationsform" :items="organisationsformen" :item-text="i => i.text" autocomplete statistics v-model="organisationsform" />
-					<svws-ui-select :disabled="!hatUpdateKompetenz" title="Klassenart" :items="klassenarten" :item-text="i => i.daten(schuljahr)?.text ?? '—'" autocomplete statistics v-model="klassenart" />
+					<svws-ui-select :disabled="!hatUpdateKompetenz" title="Schulgliederung" :items="gliederungen" autocomplete statistics
+						v-model="gliederung" :item-text="i => `${i.daten(schuljahr)?.kuerzel ?? '—'} - ${i.daten(schuljahr)?.text ?? '—'}`" />
+					<svws-ui-text-input :disabled="!hatUpdateKompetenz" placeholder="Prüfungsordnung"
+						:model-value="manager().lernabschnittGet().pruefungsOrdnung || undefined" />
+					<svws-ui-select :disabled="!hatUpdateKompetenz" title="Organisationsform" :items="organisationsformen" autocomplete statistics
+						v-model="organisationsform" :item-text="i => i.text" />
+					<svws-ui-select :disabled="!hatUpdateKompetenz" title="Klassenart" :items="klassenarten" autocomplete statistics
+						v-model="klassenart" :item-text="i => i.daten(schuljahr)?.text ?? '—'" />
 				</svws-ui-input-wrapper>
 				<svws-ui-spacing />
 				<svws-ui-input-wrapper :grid="2">
-					<svws-ui-select :disabled="!hatUpdateKompetenz" title="Bilingualer Zweig" :items="bilingualeZweige" :item-text="i => i.daten(schuljahr)?.text ?? '—'" autocomplete removable v-model="bilingualerZweig" />
+					<svws-ui-select :disabled="!hatUpdateKompetenz" title="Bilingualer Zweig" :items="bilingualeZweige" v-model="bilingualerZweig"
+						:item-text="i => i.daten(schuljahr)?.text ?? '—'" autocomplete removable />
 				</svws-ui-input-wrapper>
 				<svws-ui-spacing />
 				<svws-ui-input-wrapper :grid="2">
-					<svws-ui-select :disabled="!hatUpdateKompetenz" title="Förderschwerpunkt" :items="manager().foerderschwerpunktGetMenge()" :item-text="i => i.text" autocomplete statistics v-model="foerderschwerpunkt" />
-					<svws-ui-select :disabled="!hatUpdateKompetenz" title="Weiterer Förderschwerpunkt" :items="manager().foerderschwerpunktGetMenge()" :item-text="i => i.text" autocomplete statistics v-model="foerderschwerpunkt2" />
-					<svws-ui-checkbox :disabled="!hatUpdateKompetenz" v-model="schwerbehinderung" statistics span="full"> Schwerstbehinderung </svws-ui-checkbox>
+					<svws-ui-select :disabled="!hatUpdateKompetenz" title="Förderschwerpunkt" :items="manager().foerderschwerpunktGetMenge()"
+						:item-text="i => i.text" autocomplete removable statistics v-model="foerderschwerpunkt" />
+					<svws-ui-select :disabled="!hatUpdateKompetenz" title="Weiterer Förderschwerpunkt" :items="manager().foerderschwerpunktGetMenge()"
+						:item-text="i => i.text" autocomplete removable statistics v-model="foerderschwerpunkt2" />
+					<svws-ui-checkbox :disabled="!hatUpdateKompetenz" v-model="schwerbehinderung" statistics span="full">Schwerstbehinderung</svws-ui-checkbox>
 					<svws-ui-checkbox :disabled="!hatUpdateKompetenz" v-model="autismus" span="full"> Autismus </svws-ui-checkbox>
 					<svws-ui-checkbox :disabled="!hatUpdateKompetenz" v-model="aosf" span="full"> AOSF </svws-ui-checkbox>
 					<svws-ui-checkbox :disabled="!hatUpdateKompetenz" v-model="zieldifferentesLernen" span="full"> zieldifferentes Lernen </svws-ui-checkbox>
@@ -55,14 +65,16 @@
 
 	import { computed } from 'vue';
 	import type { FoerderschwerpunktEintrag, JahrgangsDaten, KlassenDaten, LehrerListeEintrag, List, OrganisationsformKatalogEintrag } from "@core";
-	import { BilingualeSprache, AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen, Klassenart, Schulform, Schulgliederung, ArrayList, WeiterbildungskollegOrganisationsformen, DeveloperNotificationException, BenutzerKompetenz } from "@core";
+	import { BilingualeSprache, AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen, Klassenart, Schulform, Schulgliederung, ArrayList,
+		WeiterbildungskollegOrganisationsformen, DeveloperNotificationException, BenutzerKompetenz } from "@core";
 
 	import type { SchuelerLernabschnittAllgemeinProps } from "./SSchuelerLernabschnittAllgemeinProps";
 
 	const props = defineProps<SchuelerLernabschnittAllgemeinProps>();
 
 	const schuljahr = computed<number>(() => props.manager().schuljahrGet());
-	const schulform = computed<Schulform>(() => Schulform.data().getWertByKuerzel(props.schule.schulform) ?? Schulform.G); // Die Schulform muss definiert sein, sonst würde diese Ansicht
+	// Die Schulform muss definiert sein, sonst würde diese Ansicht gar nicht erst aufgerufen werden...
+	const schulform = computed<Schulform>(() => Schulform.data().getWertByKuerzel(props.schule.schulform) ?? Schulform.G);
 
 	const hatUpdateKompetenz = computed<boolean>(() => {
 		return (props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN))
@@ -232,12 +244,3 @@
 	});
 
 </script>
-
-
-<style lang="postcss" scoped>
-
-	.content {
-		@apply w-full h-full grid grid-cols-2;
-	}
-
-</style>
