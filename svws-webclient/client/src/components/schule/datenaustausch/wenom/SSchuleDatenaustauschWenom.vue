@@ -51,9 +51,12 @@
 					</template>
 					<template v-else>
 						<svws-ui-input-wrapper>
-							<div>URL: {{ url }}</div>
+							<div>Adresse: {{ url }}</div>
 							<svws-ui-button type="primary" @click="removeVerbindungsdaten">
-								entfernen
+								Verbindungsdaten entfernen
+							</svws-ui-button>
+							<svws-ui-button type="primary" @click="call(check)">
+								Verbindungsdaten prüfen
 							</svws-ui-button>
 						</svws-ui-input-wrapper>
 					</template>
@@ -171,7 +174,10 @@
 	const clientSecret = shallowRef<OAuth2ClientSecret | null>(null);
 	const connected = ref<boolean>(false);
 
-	onMounted(async () => await checkConnection(await props.getCredentials()));
+	onMounted(async () => {
+		clientSecret.value = await props.getCredentials();
+		await checkConnection();
+	})
 
 	const url = ref<string>("");
 	const token = ref<string>("");
@@ -187,9 +193,8 @@
 		status.value = null;
 	}
 
-	async function checkConnection(secret: OAuth2ClientSecret | null) {
-		clientSecret.value = secret;
-		url.value = secret?.authServer ?? ''; // Die URL soll zu Beginn geladen werden
+	async function checkConnection() {
+		url.value = clientSecret.value?.authServer ?? ''; // Die URL soll zu Beginn geladen werden
 		token.value = ''; // das Token soll nach dem Einlesen oder Setzen nicht mehr sichtbar sein
 		if (clientSecret.value !== null) {
 			const res = await props.check();
@@ -211,8 +216,8 @@
 	async function updateCredentials() {
 		status.value = null;
 		spinning.value = true;
-		const credentials = await props.setCredentials(url.value, token.value);
-		await checkConnection(credentials);
+		clientSecret.value = await props.setCredentials(url.value, token.value);
+		await checkConnection();
 		spinning.value = false;
 	}
 
