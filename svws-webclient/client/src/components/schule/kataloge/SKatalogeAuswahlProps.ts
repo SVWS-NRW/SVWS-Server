@@ -1,5 +1,5 @@
 import type { TabData } from "@ui";
-import type { AbschnittAuswahlDaten } from "@comp";
+import type { AbschnittAuswahlDaten } from "@ui";
 
 export interface KatalogeAuswahlProps {
 	returnToSchule: () => Promise<void>;

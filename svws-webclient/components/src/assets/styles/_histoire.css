@@ -1,9 +1,0 @@
-@media (max-width: 639px) {
-	body {
-		font-size: 0.875rem;
-	}
-}
-
-.histoire-generic-render-story {
-	contain: layout;
-}

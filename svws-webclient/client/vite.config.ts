@@ -13,8 +13,7 @@ export default defineConfig({
 		Components({
 			dirs: [
 				'src/components',
-				resolve(__dirname, '../ui/src/components'),
-				resolve(__dirname, '../components/src/components'),
+				resolve(__dirname, '../ui/src'),
 			],
 			extensions: ['vue', 'md'],
 			include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
@@ -24,7 +23,6 @@ export default defineConfig({
 		alias: {
 			// Importe können durch ein vorangestelltes `~` absolut gefunden werden
 			"~": resolve(__dirname, "src"),
-			"@comp": resolve(__dirname, '../components/src/index.ts'),
 			"@ui": resolve(__dirname, '../ui/src/index.ts'),
 			"@core": resolve(__dirname, '../core/src/index.ts'),
 		},

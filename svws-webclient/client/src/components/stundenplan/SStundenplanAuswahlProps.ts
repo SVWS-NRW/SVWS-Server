@@ -1,5 +1,5 @@
 import type { ServerMode, StundenplanListeEintrag } from "@core";
-import type { AbschnittAuswahlDaten } from "@comp";
+import type { AbschnittAuswahlDaten } from "@ui";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface StundenplanAuswahlProps {

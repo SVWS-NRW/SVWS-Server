@@ -156,7 +156,7 @@
 
 	import { computed, ref, shallowRef, toRaw, watch } from "vue";
 	import type { DataTableColumn } from "@ui";
-	import type { StundenplanAnsichtDragData, StundenplanAnsichtDropZone } from "@comp";
+	import type { StundenplanAnsichtDragData, StundenplanAnsichtDropZone } from "@ui";
 	import type { StundenplanKlasseProps } from "./SStundenplanKlasseProps";
 	import type { List, StundenplanKlasse, StundenplanRaum } from "@core";
 	import { ArrayList, StundenplanKurs, StundenplanKlassenunterricht, Fach, StundenplanUnterricht, StundenplanZeitraster, HashSet, StundenplanSchiene, BenutzerKompetenz, ListUtils, Wochentag, ServerMode } from "@core";

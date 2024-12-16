@@ -1,5 +1,5 @@
 import type { BenutzerListeEintrag} from "@core";
-import type { AbschnittAuswahlDaten } from "@comp";
+import type { AbschnittAuswahlDaten } from "@ui";
 
 export interface BenutzerAuswahlProps {
 	schuljahresabschnittsauswahl: () => AbschnittAuswahlDaten;

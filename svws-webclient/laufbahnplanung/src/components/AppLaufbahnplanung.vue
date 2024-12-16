@@ -25,9 +25,8 @@
 
 <script setup lang="ts">
 
-	import type { AppProps } from './AppProps';
 	import { ref } from "vue";
-	import { version } from '../../version';
+	import type { AppProps } from './AppProps';
 
 	const props = defineProps<AppProps>();
 

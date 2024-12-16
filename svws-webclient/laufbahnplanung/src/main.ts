@@ -15,7 +15,7 @@ app.mixin({
 		const title = this.$options.title;
 		if (title !== undefined)
 			document.title = title;
-	}
+	},
 });
 router.isReady()
 	.then(() => app.mount("#app"))

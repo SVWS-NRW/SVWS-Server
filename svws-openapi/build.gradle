@@ -68,7 +68,7 @@ task assembleTranspiled(type: Copy) {
 	inputs.dir "$buildDir/tsapi"
 	outputs.dir "$rootDir/svws-webclient/core/src"
 	doFirst {
-		delete fileTree(dir: "$rootDir/svws-webclient/core/src", includes: [ "**/*.ts" ], excludes: [ "asd/utils/JsonCore*.ts", "**/test.ts" ])
+		delete fileTree(dir: "$rootDir/svws-webclient/core/src", includes: [ "**/*.ts" ], excludes: [ "asd/utils/JsonCore*.ts", "**/*.test.ts", "test/**/*.ts" ])
 	}
 	from "$rootDir/svws-schulen/build/ts"
 	from "$rootDir/svws-asd/build/ts"

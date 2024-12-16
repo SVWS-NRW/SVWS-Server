@@ -1,4 +1,4 @@
-import type { TabData } from "../../../ui/src/components/App/TabData";
+import type { TabData } from "../../../ui/src/ui/nav/TabData";
 
 export interface AppProps {
 	setApp: (value: TabData) => Promise<void>;

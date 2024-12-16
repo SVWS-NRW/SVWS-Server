@@ -1,7 +1,6 @@
 import type { SchuleStammdaten, Schulform } from "@core";
-import type { TabData, TabManager } from "@ui";
+import type { TabData, TabManager, AbschnittAuswahlDaten } from "@ui";
 import type { ApiStatus } from "./ApiStatus";
-import type { AbschnittAuswahlDaten } from "@comp";
 
 export interface AppProps {
 	schulform: Schulform;

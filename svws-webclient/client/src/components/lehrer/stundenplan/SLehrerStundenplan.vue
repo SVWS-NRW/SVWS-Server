@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 
-	import type { StundenplanAuswahlProps } from "@comp";
+	import type { StundenplanAuswahlProps } from "@ui";
 
 	defineProps<StundenplanAuswahlProps>();
 

@@ -1,3 +1,5 @@
+/// <reference types="histoire" />
+
 import { defineConfig, searchForWorkspaceRoot } from "vite";
 import { resolve } from "path";
 import Components from "unplugin-vue-components/vite";
@@ -10,10 +12,13 @@ export default defineConfig({
 		environment: "happy-dom",
 		reporters: ["default", "junit", "verbose"],
 		outputFile: { junit: "build/testresults/junit.xml" },
-		include: [ "src/components/*.test.ts", "src/components/app/*.test.ts" ],
+		include: [ "src/**/*.test.ts" ],
 	},
 	histoire: {
-		setupFile: './src/histoire.setup.ts',
+		setupFile: './histoire.setup.ts',
+		viteIgnorePlugins: [
+			'unplugin-vue-components',
+		],
 		plugins: [ HstVue() ],
 		theme: {
 			title: 'SVWS UI',
@@ -59,7 +64,7 @@ export default defineConfig({
 	},
 	plugins: [
 		Vue(),
-		Components({ globs: ["src/components/**/!(*story.vue)*.vue"] }),
+		Components({ globs: ["src/**/!(*story.vue)*.vue", "src/**/*Props.ts"] }),
 	],
 	build: {
 		lib: {

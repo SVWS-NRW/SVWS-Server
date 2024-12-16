@@ -8,12 +8,12 @@ import { routeSchemaUebersicht } from "~/router/apps/schema/uebersicht/RouteSche
 
 import { RouteDataSchema } from "~/router/apps/schema/RouteDataSchema";
 
-import type { TabData } from "../../../../../ui/src/components/App/TabData";
-import { TabManager } from "../../../../../ui/src/components/App/TabManager";
 import type { SchemaAppProps } from "~/components/schema/SSchemaAppProps";
 import type { SchemaAuswahlProps } from "~/components/schema/SSchemaAuswahlProps";
 import { api } from "~/router/Api";
 import { ServerMode } from "../../../../../core/src/core/types/ServerMode";
+import { TabManager } from "../../../../../ui/src/ui/nav/TabManager";
+import type { TabData } from "../../../../../ui/src/ui/nav/TabData";
 
 const SSchemaAuswahl = () => import("~/components/schema/SSchemaAuswahl.vue")
 const SSchemaApp = () => import("~/components/schema/SSchemaApp.vue")

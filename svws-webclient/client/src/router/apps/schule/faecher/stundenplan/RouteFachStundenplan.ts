@@ -9,7 +9,7 @@ import { routeSchuleFaecher, type RouteSchuleFaecher } from "~/router/apps/schul
 import { routeFachStundenplanDaten } from "~/router/apps/schule/faecher/stundenplan/RouteFachStundenplanDaten";
 import { RouteDataFachStundenplan } from "~/router/apps/schule/faecher/stundenplan/RouteDataFachStundenplan";
 
-import type { StundenplanAuswahlProps } from "@comp";
+import type { StundenplanAuswahlProps } from "@ui";
 import { ConfigElement } from "~/components/Config";
 import { api } from "~/router/Api";
 

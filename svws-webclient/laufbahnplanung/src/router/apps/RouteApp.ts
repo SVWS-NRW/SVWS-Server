@@ -10,7 +10,7 @@ import { routeLadeDaten } from "~/router/apps/RouteLadeDaten";
 
 import AppLaufbahnplanung from "~/components/AppLaufbahnplanung.vue";
 import { routeLaufbahnplanung } from "./RouteLaufbahnplanung";
-import type { TabData } from "../../../../ui/src/components/App/TabData";
+import type { TabData } from "../../../../ui/src/ui/nav/TabData";
 
 
 export class RouteApp extends RouteNode<RouteData, any> {

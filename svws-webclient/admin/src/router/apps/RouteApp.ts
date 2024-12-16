@@ -1,5 +1,4 @@
 import type { RouteLocationRaw, RouteParams } from "vue-router";
-import type { TabData } from "../../../../ui/src/components/App/TabData";
 import type { AppProps } from "~/components/SAppProps";
 
 import { api } from "~/router/Api";
@@ -16,6 +15,7 @@ import { routeSchemagruppe } from "./schemagruppe/RouteSchemagruppe";
 import { routeSchemaNeu } from "./schemaneu/RouteSchemaNeu";
 import { routeConfig } from "./config/RouteConfig";
 import { ServerMode } from "../../../../core/src/core/types/ServerMode";
+import type { TabData } from "../../../../ui/src/ui/nav/TabData";
 
 
 export class RouteApp extends RouteNode<RouteDataApp, any> {
@@ -29,7 +29,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeSchema,
 			routeSchemagruppe,
 			routeSchemaNeu,
-			routeConfig
+			routeConfig,
 		];
 		super.menu = [
 			routeSchema,

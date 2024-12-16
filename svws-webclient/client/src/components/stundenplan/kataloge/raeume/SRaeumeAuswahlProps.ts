@@ -1,5 +1,5 @@
 import type { Raum, RaumListeManager } from "@core";
-import type { AbschnittAuswahlDaten } from "@comp";
+import type { AbschnittAuswahlDaten } from "@ui";
 
 export interface RaeumeAuswahlProps {
 	raumListeManager: () => RaumListeManager;
