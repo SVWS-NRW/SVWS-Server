@@ -1,3 +1,4 @@
+import { ArrayList, List } from "@core";
 
 /**
  * Eine Schnittstelle für die Schema-Definitionen der Spalten der weiter unten definierten Untis-GPU-Formate
@@ -39,43 +40,71 @@ export class UntisGPUCsv<GPUTYPE> {
 	 * und bestimmt anschließend die einzelnen Datensätze aus den CSV-Daten
 	 *
 	 * @param schema   das Schema der GPU-Daten
-	 * @param csv      die CSV-Daten als UTF-8-String
+	 * @param input    die CSV-Daten als UTF-8-String oder eine Liste mit den CSV-Daten
 	 */
-	public constructor(schema: Array<UntisGPUColumns<GPUTYPE>>, csv: string) {
+	public constructor(schema: Array<UntisGPUColumns<GPUTYPE>>, input: string | Array<GPUTYPE>, seperator: string = ";") {
 		this._schema = schema;
-		this._csv = csv;
 		this._valid = true;
-		this._data = new Array<GPUTYPE>();
-		const rows = csv.replaceAll("\r\n", "\n").split("\n");
-		for (const row of rows) {
-			let tmp = row;
-			if (tmp.trim() === '')
-				continue;
-			const obj = <GPUTYPE>{};
-			for (let index = 0; index < this._schema.length; index++) {
-				if (tmp.at(0) === '"') {
-					const result = /"([^"]|(\\"))*"/.exec(tmp);
-					const str = result?.[0] ?? null;
-					this.getData(obj, str === null ? null : str.substring(1, str.length-1), this._schema.at(index));
-					tmp = tmp.substring((str?.length ?? 0) + 1); // Entferne den String und das Semikolon danach
-				} else {
-					const len = tmp.indexOf(";");
-					if (((len >= 0) && (index === this._schema.length - 1) && (tmp.trim() !== ";")) || ((len === -1) && (index !== this._schema.length - 1))) {
-						this._valid = false;
-						continue;
+		if (typeof input ==='string') {
+			this._csv = input;
+			this._data = new Array<GPUTYPE>();
+			const rows = this._csv.replaceAll("\r\n", "\n").split("\n");
+			for (const row of rows) {
+				let tmp = row;
+				if (tmp.trim() === '')
+					continue;
+				const obj = <GPUTYPE>{};
+				for (let index = 0; index < this._schema.length; index++) {
+					if (tmp.at(0) === '"') {
+						const result = /"([^"]|(\\"))*"/.exec(tmp);
+						const str = result?.[0] ?? null;
+						this.getData(obj, str === null ? null : str.substring(1, str.length-1), this._schema.at(index));
+						tmp = tmp.substring((str?.length ?? 0) + 1); // Entferne den String und das Semikolon danach
+					} else {
+						const len = tmp.indexOf(seperator);
+						if (((len >= 0) && (index === this._schema.length - 1) && (tmp.trim() !== seperator)) || ((len === -1) && (index !== this._schema.length - 1))) {
+							this._valid = false;
+							continue;
+						}
+						const str = (len === -1) ? tmp : tmp.substring(0, len);
+						this.getData(obj, str, this._schema.at(index));
+						tmp = tmp.substring(len + 1);
 					}
-					const str = (len === -1) ? tmp : tmp.substring(0, len);
-					this.getData(obj, str, this._schema.at(index));
-					tmp = tmp.substring(len + 1);
 				}
+				if (this._valid)
+					this._data.push(obj);
 			}
-			if (this._valid)
-				this._data.push(obj);
+		} else {
+			this._data = input;
+			this._csv = "";
+			for (const obj of this._data) {
+				for (let index = 0; index < this._schema.length; index++)
+					this._csv = this.setData(obj, this._csv, this._schema.at(index)) + seperator;
+				this._csv += "\n";
+			}
 		}
 	}
 
 	/**
-	 * Hilfsmethode beim einlesen eines Wertes einer Spalte
+	 * Hilfsmethode beim Schreiben eines Wertes einer Spalte
+	 *
+	 * @param obj   das Objekt, aus dem der Wert entnommen wird
+	 * @param csv   der bisherige CSV-String, an den der Wert angehangen werden soll
+	 * @param col   die Schema-Definition der Spalte
+	 */
+	private setData(obj: any, csv: string, col: UntisGPUColumns<GPUTYPE> | undefined) : string {
+		if (col === undefined)
+			return csv;
+		if ((obj[col.name] === undefined) || (obj[col.name] === null)) {
+			if (col.required)
+				this._valid = false;
+			return csv;
+		}
+		return csv + obj[col.name];
+	}
+
+	/**
+	 * Hilfsmethode beim Einlesen eines Wertes einer Spalte
 	 *
 	 * @param obj     das Objekt, dem der Wert hinzuzufügen ist
 	 * @param value   der hinzuzufügende Wert
@@ -114,7 +143,8 @@ export class UntisGPUCsv<GPUTYPE> {
 				if (index !== 0)
 					result += ';';
 				const col = this._schema[index];
-				result += (col.type === 'string') ? ('"' + row[col.name] + '"') : row[col.name];
+				if (row[col.name] !== null)
+					result += (col.type === 'string') ? ('"' + row[col.name] + '"') : row[col.name];
 			}
 			result += "\n";
 		}
@@ -170,9 +200,10 @@ export class UntisGPU001Csv extends UntisGPUCsv<UntisGPU001> {
 	/**
 	 * Erzeugt einen neuen Reader mit den übergebenen CSV-Daten als UTF-8-String
 	 *
-	 * @param csv   die CSV-Daten
+	 * @param input                        die CSV-Daten oder das Array mit den GPU-Objekten
+	 * @param mapWochentypByUnterrichtID   eine Map mit den Wochentypzuordnungen
 	 */
-	public constructor(csv: string, mapWochentypByUnterrichtID?: Map<number, number>) {
+	public constructor(input: string | Array<UntisGPU001>, mapWochentypByUnterrichtID?: Map<number, number>) {
 		super([
 			{ name: 'idUnterricht', type: 'number', required: true },
 			{ name: 'klasseKuerzel', type: 'string', required: true },
@@ -183,7 +214,7 @@ export class UntisGPU001Csv extends UntisGPUCsv<UntisGPU001> {
 			{ name: 'stunde', type: 'number', required: true },
 			{ name: 'dauer', type: 'number', required: false },
 			{ name: 'wochentyp', type: 'string', required: false },
-		], csv);
+		], input);
 		if ((this.valid) && (mapWochentypByUnterrichtID !== undefined)) {
 			for (const eintrag of this.data) {
 				const wt = mapWochentypByUnterrichtID.get(eintrag.idUnterricht);
@@ -515,9 +546,6 @@ export interface UntisGPP002 {
 	/** Fachgruppe */
 	fachgruppe : string | null;
 
-	/** Ignorieren - Dummy für das Einlesen der Daten */
-	dummy : string | null;
-
 }
 
 
@@ -547,8 +575,144 @@ export class UntisGPP002Csv extends UntisGPUCsv<UntisGPP002> {
 			{ name: 'beginn', type: 'string', required: false },
 			{ name: 'dauer', type: 'number', required: false },
 			{ name: 'fachgruppe', type: 'number', required: false },
-			{ name: 'dummy', type: 'string', required: false },
-		], csv);
+		], csv, ",");
+	}
+
+	public getGPU001(gpu014 : UntisGPU014Csv) : Array<UntisGPU001> {
+		if ((!this.valid) || (!gpu014.valid))
+			return new Array<UntisGPU001>();
+		// Ermittle zunächst alle Datumseinträge aus den beiden Listen
+		const dateStrings = new Set<string>();
+		for (const obj of this.data)
+			dateStrings.add(`${obj.jahr}-${obj.monat < 10 ? "0" + obj.monat : obj.monat}-${obj.tag < 10 ? "0" + obj.tag : obj.tag}`);
+		for (const obj of gpu014.data)
+			dateStrings.add(`${obj.datum.substring(0, 4)}-${obj.datum.substring(4, 6)}-${obj.datum.substring(6)}`);
+		const dates = [...dateStrings].sort();
+		// Bestimme die Wochentypen zu den einzelnen Datumseinträgen
+		const mapDateToWochentyp = new Map<string, number>();
+		let letzterTag : number | null = null;
+		let maxWochentyp = 1;
+		for (const dateStr of dates) {
+			const date = new Date(dateStr);
+			const tag = date.getDay();
+			if ((letzterTag !== null) && (tag < letzterTag))
+				maxWochentyp++;
+			letzterTag = tag;
+			mapDateToWochentyp.set(dateStr, maxWochentyp);
+		}
+		// Bestimme die Unterrichte...
+		const tmpResult = new Array<UntisGPU001>();
+		// ... anhand der aktuellen Unterrichte
+		for (const obj of this.data) {
+			const dateStr = `${obj.jahr}-${obj.monat < 10 ? "0" + obj.monat : obj.monat}-${obj.tag < 10 ? "0" + obj.tag : obj.tag}`;
+			const date = new Date(dateStr);
+			const wochentyp = mapDateToWochentyp.get(dateStr);
+			const gpu001 = <UntisGPU001>{
+				idUnterricht: obj.idUnterricht,
+				klasseKuerzel: obj.klasseKuerzel,
+				lehrerKuerzel: obj.lehrerKuerzel,
+				fachKuerzel: obj.fachKuerzel,
+				raumKuerzel: obj.raumKuerzel,
+				wochentag: date.getDay(),
+				stunde: obj.stunde,
+				dauer: null,
+				wochentyp: wochentyp ?? '',
+			};
+			if (gpu001.wochentag === 0)
+				gpu001.wochentag = 7;
+			tmpResult.push(gpu001);
+		}
+		// ... und zusätzlich anhand der Vertretungsunterrichte
+		for (const obj of gpu014.data) {
+			// Klausuren müssen nicht berücksichtigt werden
+			if ((obj.vertretungsart === 'E') && ((obj.lehrerKuerzelAbsent === null) || (obj.lehrerKuerzelAbsent === "")))
+				continue;
+			// Prüfe andere Vertretungsarten
+			if (obj.lehrerKuerzelAbsent === obj.lehrerKuerzelVertretung) {
+				// TODO Der Lehrer hat sich nicht geändert
+			} else {
+				// Der Lehrer hat sich geändert. Somit muss der Unterricht hinzugefügt werden, da dieser nicht bei den aktuellen Unterrichten auftaucht (z.B. bei Entfall)
+				const dateStr = `${obj.datum.substring(0, 4)}-${obj.datum.substring(4, 6)}-${obj.datum.substring(6)}`;
+				const date = new Date(dateStr);
+				const wochentyp = mapDateToWochentyp.get(dateStr);
+				for (const klassenKuerzel of obj.klasseKuerzel.split("~")) {
+					const gpu001 = <UntisGPU001>{
+						idUnterricht: obj.idUnterricht,
+						klasseKuerzel: klassenKuerzel,
+						lehrerKuerzel: obj.lehrerKuerzelAbsent,
+						fachKuerzel: obj.fachKuerzel,
+						raumKuerzel: obj.raumKuerzel,
+						wochentag: date.getDay(),
+						stunde: obj.stunde,
+						dauer: null,
+						wochentyp: wochentyp ?? '',
+					};
+					if (gpu001.wochentag === 0)
+						gpu001.wochentag = 7;
+					tmpResult.push(gpu001);
+				}
+			}
+		}
+		// Sortieren der Einträge nach Unterrichtsnummer
+		tmpResult.sort((a, b) => {
+			let tmp = a.idUnterricht - b.idUnterricht;
+			if (tmp !== 0)
+				return tmp;
+			tmp = a.klasseKuerzel.localeCompare(b.klasseKuerzel);
+			if (tmp !== 0)
+				return tmp;
+			tmp = a.fachKuerzel.localeCompare(b.fachKuerzel);
+			if (tmp !== 0)
+				return tmp;
+			tmp = a.lehrerKuerzel.localeCompare(b.lehrerKuerzel);
+			if (tmp !== 0)
+				return tmp;
+			return ((a.wochentyp.length === 0) ? 0 : Number(a.wochentyp)) - ((b.wochentyp.length === 0) ? 0 : Number(b.wochentyp));
+		});
+		//... Duplikate entfernen und zusammenfassen
+		const result = new Array<UntisGPU001>();
+		let last : UntisGPU001 | null = null;
+		const wochentypen = new Set<number>();
+		for (const obj of tmpResult) {
+			const curWt = (obj.wochentyp === "") ? 0 : Number(obj.wochentyp);
+			if (last !== null) {
+				if ((last.idUnterricht === obj.idUnterricht) && (last.klasseKuerzel === obj.klasseKuerzel) && (last.fachKuerzel === obj.fachKuerzel)
+					&& (last.lehrerKuerzel === obj.lehrerKuerzel)) {
+					if (curWt !== 0)
+						wochentypen.add(curWt);
+					if ((curWt === 0) || (wochentypen.size === maxWochentyp)) {
+						obj.wochentyp = "";
+						result.push(obj);
+						last = null;
+						wochentypen.clear();
+					}
+					continue;
+				} else {
+					for (const wt of wochentypen) {
+						const clone = { ...last };
+						clone.wochentyp = "" + wt;
+						result.push(clone);
+					}
+					last = null;
+					wochentypen.clear();
+				}
+			}
+			if (curWt === 0) {
+				result.push(obj);
+			} else {
+				wochentypen.add(curWt);
+				last = obj;
+			}
+		}
+		if (last !== null) {
+			for (const wt of wochentypen) {
+				const clone = { ...last };
+				clone.wochentyp = "" + wt;
+				result.push(clone);
+			}
+		}
+		console.log(result);
+		return result;
 	}
 
 }
