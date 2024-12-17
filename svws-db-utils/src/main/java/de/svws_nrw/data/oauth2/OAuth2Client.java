@@ -138,6 +138,18 @@ public final class OAuth2Client {
 
 
 	/**
+	 * Leert den Client-Cache für das übergenene Secret und damit auch das zugehörige Token
+	 *
+	 * @param dto   das Secret, zu welchem die Daten aus dem Cache entfernt werden sollen
+	 */
+	public static void clearClientCache(final DTOSchuleOAuthSecrets dto) {
+		if ((dto == null) || (dto.AuthServer == null) || dto.AuthServer.isBlank())
+			return;
+		OAUTH2_CLIENT_CACHE_BY_URL.remove(dto.AuthServer);
+	}
+
+
+	/**
 	 * Gibt wieder, ob ein Token vorhanden ist, welches nicht abgelaufen ist
 	 *
 	 * @return true, wenn ein nicht abgelaufenes Token vorhanden ist, und ansonsten false
