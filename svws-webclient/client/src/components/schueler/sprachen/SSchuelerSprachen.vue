@@ -75,9 +75,9 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Sprachprüfungen – Herkunftsprachlicher Unterricht">
 			<div v-if="hatUpdateKompetenz && verfuegbareSprachenPruefungenHerkunftsprachlich.length" class="w-1/4 mb-4">
-				<svws-ui-select title="Hinzufügen..." removable :model-value="undefined" @update:model-value="sprache=> hinzufuegenPruefung(sprache, true)"
+				<svws-ui-select title="Hinzufügen..." removable :model-value="undefined" @update:model-value="sprache=> hinzufuegenPruefungHerkunftssprachlich(sprache, true)"
 					:items="verfuegbareSprachenPruefungenHerkunftsprachlich" :item-text="i=> `${i} - ${ Fach.getMapFremdsprachenKuerzelAtomar(schuljahr).get(i)?.daten(schuljahr)?.text ?? '—' }`"
-					ref="selectSprachenPruefung" />
+					ref="selectSprachenPruefungHerkunftsprachlich" />
 			</div>
 			<svws-ui-table v-if="sprachpruefungenHSU.length" :items="sprachpruefungenHSU" :columns="colsSprachpruefungenHSU" :selectable="hatUpdateKompetenz" v-model="auswahlPrHSU">
 				<template #cell(sprache)="{ value: kuerzel }">{{ Fach.getMapFremdsprachenKuerzelAtomar(schuljahr).get(kuerzel)?.daten(schuljahr)?.text }} </template>
@@ -124,8 +124,8 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Sprachprüfungen – Feststellungsprüfungen">
 			<div v-if="hatUpdateKompetenz && verfuegbareSprachenPruefungenFeststellungErsatz.length" class="w-1/4 mb-4">
-				<svws-ui-select title="Hinzufügen..." removable :model-value="undefined" @update:model-value="sprache => hinzufuegenPruefung(sprache, false)" :items="verfuegbareSprachenPruefungenFeststellungErsatz"
-					:item-text="i => `${i} - ${Fach.getMapFremdsprachenKuerzelAtomar(schuljahr).get(i)?.daten(schuljahr)?.text ?? '—'}`" ref="selectSprachenPruefung" />
+				<svws-ui-select title="Hinzufügen..." removable :model-value="undefined" @update:model-value="sprache => hinzufuegenPruefungFeststellung(sprache, false)" :items="verfuegbareSprachenPruefungenFeststellungErsatz"
+					:item-text="i => `${i} - ${Fach.getMapFremdsprachenKuerzelAtomar(schuljahr).get(i)?.daten(schuljahr)?.text ?? '—'}`" ref="selectSprachenPruefungFeststellungErsatz" />
 			</div>
 			<svws-ui-table v-if="sprachpruefungenFP.length" :items="sprachpruefungenFP" :columns="colsSprachpruefungenFP" :selectable="hatUpdateKompetenz" v-model="auswahlPrFP">
 				<template #cell(sprache)="{ value: kuerzel }">{{ Fach.getMapFremdsprachenKuerzelAtomar(schuljahr).get(kuerzel)?.daten(schuljahr)?.text ?? '—' }} </template>
@@ -202,7 +202,8 @@
 	const auswahlPrHSU = ref([]);
 	const auswahlPrFP = ref([]);
 	const selectSprachen = ref<ComponentExposed<typeof SvwsUiSelect<string[]>>>();
-	const selectSprachenPruefung = ref<ComponentExposed<typeof SvwsUiSelect<string[]>>>();
+	const selectSprachenPruefungHerkunftsprachlich = ref<ComponentExposed<typeof SvwsUiSelect<string[]>>>();
+	const selectSprachenPruefungFeststellungErsatz = ref<ComponentExposed<typeof SvwsUiSelect<string[]>>>();
 
 	const colsSprachenfolge = computed<DataTableColumn[]>(() => {
 		const schulgliederung = Schulgliederung.data().getWertByKuerzel(props.schuelerListeManager().auswahl().schulgliederung);
@@ -404,9 +405,10 @@
 		selectSprachen.value.reset();
 	}
 
-	async function hinzufuegenPruefung(sprache: string | undefined | null, hsu: boolean) {
-		if ((verfuegbareSprachenPruefungen.value.length === 0) || (selectSprachenPruefung.value === undefined) || (sprache === null) || (sprache === undefined)) {
-			selectSprachenPruefung.value?.reset();
+	async function hinzufuegenPruefungHerkunftssprachlich(sprache: string | undefined | null, hsu: boolean) {
+		if ((verfuegbareSprachenPruefungenHerkunftsprachlich.value.length === 0) || (selectSprachenPruefungHerkunftsprachlich.value === undefined)
+			|| (sprache === null) || (sprache === undefined)) {
+			selectSprachenPruefungHerkunftsprachlich.value?.reset();
 			return;
 		}
 		const data: Partial<Sprachpruefung> = {};
@@ -417,7 +419,24 @@
 		data.istHSUPruefung = hsu;
 		data.istFeststellungspruefung = !hsu;
 		await props.addSprachpruefung(data);
-		selectSprachenPruefung.value.reset();
+		selectSprachenPruefungHerkunftsprachlich.value.reset();
+	}
+
+	async function hinzufuegenPruefungFeststellung(sprache: string | undefined | null, hsu: boolean) {
+		if ((verfuegbareSprachenPruefungenFeststellungErsatz.value.length === 0) || (selectSprachenPruefungFeststellungErsatz.value === undefined)
+			|| (sprache === null) || (sprache === undefined)) {
+			selectSprachenPruefungFeststellungErsatz.value?.reset();
+			return;
+		}
+		const data: Partial<Sprachpruefung> = {};
+		data.sprache = sprache;
+		const schulform = props.schuelerListeManager().schulform();
+		if ((schulform !== Schulform.BK) && (schulform !== Schulform.SB))
+			data.jahrgang = props.schuelerListeManager().jahrgaenge.get(props.schuelerListeManager().auswahl().idJahrgang)?.kuerzelStatistik;
+		data.istHSUPruefung = hsu;
+		data.istFeststellungspruefung = !hsu;
+		await props.addSprachpruefung(data);
+		selectSprachenPruefungFeststellungErsatz.value.reset();
 	}
 
 	async function removePruefungen(hsu: boolean) {
