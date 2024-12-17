@@ -610,20 +610,28 @@ export class UntisGPP002Csv extends UntisGPUCsv<UntisGPP002> {
 			const dateStr = `${obj.jahr}-${obj.monat < 10 ? "0" + obj.monat : obj.monat}-${obj.tag < 10 ? "0" + obj.tag : obj.tag}`;
 			const date = new Date(dateStr);
 			const wochentyp = mapDateToWochentyp.get(dateStr);
-			const gpu001 = <UntisGPU001>{
-				idUnterricht: obj.idUnterricht,
-				klasseKuerzel: obj.klasseKuerzel,
-				lehrerKuerzel: obj.lehrerKuerzel,
-				fachKuerzel: obj.fachKuerzel,
-				raumKuerzel: obj.raumKuerzel,
-				wochentag: date.getDay(),
-				stunde: obj.stunde,
-				dauer: null,
-				wochentyp: wochentyp ?? '',
-			};
-			if (gpu001.wochentag === 0)
-				gpu001.wochentag = 7;
-			tmpResult.push(gpu001);
+			for (const klassenKuerzel of obj.klasseKuerzel.split("~")) {
+				const gpu001 = <UntisGPU001>{
+					idUnterricht: obj.idUnterricht,
+					klasseKuerzel: klassenKuerzel,
+					lehrerKuerzel: obj.lehrerKuerzel,
+					fachKuerzel: obj.fachKuerzel,
+					raumKuerzel: obj.raumKuerzel,
+					wochentag: date.getDay(),
+					stunde: obj.stunde,
+					dauer: null,
+					wochentyp: wochentyp ?? '',
+				};
+				if (gpu001.wochentag === 0)
+					gpu001.wochentag = 7;
+				tmpResult.push(gpu001);
+			}
+		}
+		// ... baue eine Map für den Zugriff auf die Unterricht auf
+		const mapUnterrichte = new Map<string, UntisGPU001>();
+		for (const obj of tmpResult) {
+			const key = `${obj.klasseKuerzel}|${obj.lehrerKuerzel}|${obj.fachKuerzel}|${obj.raumKuerzel ?? ''}|${obj.wochentag}|${obj.stunde}|${obj.wochentyp}`;
+			mapUnterrichte.set(key, obj);
 		}
 		// ... und zusätzlich anhand der Vertretungsunterrichte
 		for (const obj of gpu014.data) {
@@ -636,35 +644,45 @@ export class UntisGPP002Csv extends UntisGPUCsv<UntisGPP002> {
 			// Klausuren müssen nicht berücksichtigt werden
 			if ((obj.vertretungsart === 'E') && ((obj.lehrerKuerzelAbsent === null) || (obj.lehrerKuerzelAbsent === "")))
 				continue;
-			// Prüfe andere Vertretungsarten
-			if (obj.lehrerKuerzelAbsent === obj.lehrerKuerzelVertretung) {
-				// TODO Der Lehrer hat sich nicht geändert
-			} else {
-				// Der Lehrer hat sich geändert. Somit muss der Unterricht hinzugefügt werden, da dieser nicht bei den aktuellen Unterrichten auftaucht (z.B. bei Entfall)
-				for (const klassenKuerzel of obj.klasseKuerzel.split("~")) {
-					const gpu001 = <UntisGPU001>{
-						idUnterricht: obj.idUnterricht,
-						klasseKuerzel: klassenKuerzel,
-						lehrerKuerzel: obj.lehrerKuerzelAbsent,
-						fachKuerzel: obj.fachKuerzel,
-						raumKuerzel: obj.raumKuerzel,
-						wochentag: date.getDay(),
-						stunde: obj.stunde,
-						dauer: null,
-						wochentyp: wochentyp ?? '',
-					};
-					if (gpu001.wochentag === 0)
-						gpu001.wochentag = 7;
-					tmpResult.push(gpu001);
+			// Die Änderungen an dem aktuellen Untericht müssen anhand der Vertretungsinformationen wiederhergestellt werden
+			if (obj.klasseVertretungKuerzel === null)
+				continue;
+			const lehrer = ((obj.lehrerKuerzelVertretung === null) || (obj.lehrerKuerzelVertretung === '')) ? (obj.lehrerKuerzelAbsent ?? '') : obj.lehrerKuerzelVertretung;
+			const fach = ((obj.fachVertretungKuerzel === null) || (obj.fachVertretungKuerzel === '')) ? (obj.fachKuerzel) : obj.fachVertretungKuerzel;
+			const raum = ((obj.raumKuerzelVertretung === null) || (obj.raumKuerzelVertretung === '')) ? (obj.raumKuerzel ?? '') : obj.raumKuerzelVertretung;
+			const wochentag = date.getDay();
+			const stunde = obj.stunde;
+			for (const klasse of obj.klasseVertretungKuerzel.split("~")) {
+				const key = `${klasse}|${lehrer}|${fach}|${raum}|${wochentag}|${stunde}|${wochentyp ?? ''}`;
+				const modify = mapUnterrichte.get(key);
+				// Unterricht in den aktuellen Unterrichten gefunden - passe diesen an
+				if (modify !== undefined) {
+					modify.klasseKuerzel = klasse;
+					modify.lehrerKuerzel = ((obj.lehrerKuerzelAbsent === null) || (obj.lehrerKuerzelAbsent === '')) ? lehrer : obj.lehrerKuerzelAbsent;
+					modify.fachKuerzel = (obj.fachKuerzel === '') ? fach : obj.fachKuerzel;
+					modify.raumKuerzel = ((obj.raumKuerzel === null) || (obj.raumKuerzel === '')) ? raum : obj.raumKuerzel;
+					continue;
 				}
+				// Unterricht nicht in den aktuellen Unterrichten gefunden - muss neu erzeugt werden
+				const gpu001 = <UntisGPU001>{
+					idUnterricht: obj.idUnterricht,
+					klasseKuerzel: klasse,
+					lehrerKuerzel: obj.lehrerKuerzelAbsent,
+					fachKuerzel: obj.fachKuerzel,
+					raumKuerzel: obj.raumKuerzel,
+					wochentag,
+					stunde,
+					dauer: null,
+					wochentyp: wochentyp ?? '',
+				};
+				if (gpu001.wochentag === 0)
+					gpu001.wochentag = 7;
+				tmpResult.push(gpu001);
 			}
 		}
 		// Sortieren der Einträge nach Unterrichtsnummer
 		tmpResult.sort((a, b) => {
-			let tmp = a.idUnterricht - b.idUnterricht;
-			if (tmp !== 0)
-				return tmp;
-			tmp = a.klasseKuerzel.localeCompare(b.klasseKuerzel);
+			let tmp = a.klasseKuerzel.localeCompare(b.klasseKuerzel);
 			if (tmp !== 0)
 				return tmp;
 			tmp = a.fachKuerzel.localeCompare(b.fachKuerzel);
@@ -691,9 +709,8 @@ export class UntisGPP002Csv extends UntisGPUCsv<UntisGPP002> {
 		for (const obj of tmpResult) {
 			const curWt = (obj.wochentyp === "") ? 0 : Number(obj.wochentyp);
 			if (last !== null) {
-				if ((last.idUnterricht === obj.idUnterricht) && (last.klasseKuerzel === obj.klasseKuerzel) && (last.fachKuerzel === obj.fachKuerzel)
-					&& (last.lehrerKuerzel === obj.lehrerKuerzel) && (last.raumKuerzel === obj.raumKuerzel) && (last.wochentag === obj.wochentag)
-					&& (last.stunde === obj.stunde)) {
+				if ((last.klasseKuerzel === obj.klasseKuerzel) && (last.fachKuerzel === obj.fachKuerzel) && (last.lehrerKuerzel === obj.lehrerKuerzel)
+					&& (last.raumKuerzel === obj.raumKuerzel) && (last.wochentag === obj.wochentag) && (last.stunde === obj.stunde)) {
 					if (curWt !== 0)
 						wochentypen.add(curWt);
 					if ((curWt === 0) || (wochentypen.size === maxWochentyp)) {
@@ -727,7 +744,6 @@ export class UntisGPP002Csv extends UntisGPUCsv<UntisGPP002> {
 				result.push(clone);
 			}
 		}
-		console.log(result);
 		return result;
 	}
 
