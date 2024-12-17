@@ -38,7 +38,7 @@ public class ProxyReportingGostKlausurplanungKlausurraum extends ReportingGostKl
 			final ReportingGostKlausurplanungKlausurtermin klausurtermin, final GostKlausurraum gostKlausurraum,
 			final List<GostKlausurraumstunde> gostKlausurraumstunden) {
 		super(new ArrayList<>(),
-				ersetzeNullDurchEmpty(gostKlausurraum.bemerkung),
+				ersetzeNullBlankTrim(gostKlausurraum.bemerkung),
 				gostKlausurraum.id,
 				klausurtermin,
 				null);

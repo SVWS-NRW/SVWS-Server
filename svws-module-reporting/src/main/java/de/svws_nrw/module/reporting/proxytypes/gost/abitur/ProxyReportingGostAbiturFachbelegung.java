@@ -47,7 +47,7 @@ public class ProxyReportingGostAbiturFachbelegung extends ReportingGostAbiturFac
 				abiturFachbelegung.block2PunkteZwischenstand,
 				null,
 				null,
-				ersetzeNullDurchEmpty(abiturFachbelegung.letzteKursart));
+				ersetzeNullBlankTrim(abiturFachbelegung.letzteKursart));
 		this.reportingRepository = reportingRepository;
 
 		super.block2PruefungNote = Note.fromKuerzel(abiturFachbelegung.block2NotenKuerzelPruefung);

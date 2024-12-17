@@ -91,9 +91,9 @@ public class ProxyReportingStatistikFach extends ReportingStatistikFach {
 
 		// Wenn die statistikfachDaten null sind, dann war das Statistikfach wahrscheinlich im angegebenen Schuljahr nicht gültig.
 		if (statistikfachDaten != null) {
-			super.abJahrgang = ersetzeNullDurchEmpty(statistikfachDaten.abJahrgang);
+			super.abJahrgang = ersetzeNullBlankTrim(statistikfachDaten.abJahrgang);
 			super.aufgabenfeld = statistikfachDaten.aufgabenfeld;
-			super.bezeichnung = ersetzeNullDurchEmpty(statistikfachDaten.text);
+			super.bezeichnung = ersetzeNullBlankTrim(statistikfachDaten.text);
 			super.exportASD = statistikfachDaten.exportASD;
 			super.fachgruppe = statistikfach.getFachgruppe(schuljahr);
 			super.gueltigBis = statistikfachDaten.gueltigBis;
@@ -105,8 +105,8 @@ public class ProxyReportingStatistikFach extends ReportingStatistikFach {
 			super.istFremdsprache = statistikfachDaten.istFremdsprache;
 			super.istHKFS = statistikfachDaten.istHKFS;
 			super.istKonfKoop = statistikfachDaten.istKonfKoop;
-			super.kuerzel = ersetzeNullDurchEmpty(statistikfachDaten.kuerzel);
-			super.kuerzelASD = ersetzeNullDurchEmpty(statistikfachDaten.schluessel);
+			super.kuerzel = ersetzeNullBlankTrim(statistikfachDaten.kuerzel);
+			super.kuerzelASD = ersetzeNullBlankTrim(statistikfachDaten.schluessel);
 			super.nurSII = statistikfachDaten.nurSII;
 		}
 	}

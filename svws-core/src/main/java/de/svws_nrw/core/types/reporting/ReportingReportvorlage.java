@@ -54,6 +54,9 @@ public enum ReportingReportvorlage {
 	/** Report-Vorlage: GOSt - Laufbahnplanung - Wahlbogen */
 	SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN("Schueler-GostLaufbahnplanungWahlbogen"),
 
+	/** Report-Vorlage: Schüler - Schulbescheinigung */
+	SCHUELER_v_SCHULBESCHEINIGUNG("Schueler-Schulbescheinigung"),
+
 	/** Report-Vorlage: Schüler - Stammdaten - Liste */
 	SCHUELER_v_STAMMDATENLISTE("Schueler-Stammdatenliste");
 

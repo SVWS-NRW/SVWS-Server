@@ -50,7 +50,7 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 	 */
 	public ProxyReportingKlasse(final ReportingRepository reportingRepository, final KlassenDaten klassenDaten) {
 		super(klassenDaten.beginnSommersemester,
-				ersetzeNullDurchEmpty(klassenDaten.beschreibung),
+				ersetzeNullBlankTrim(klassenDaten.beschreibung),
 				null,
 				klassenDaten.id,
 				klassenDaten.idAllgemeinbildendOrganisationsform,
@@ -67,15 +67,15 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 				klassenDaten.istSichtbar,
 				null,
 				new ArrayList<>(),
-				ersetzeNullDurchEmpty(klassenDaten.kuerzel),
-				ersetzeNullDurchEmpty(klassenDaten.kuerzelFolgeklasse),
-				ersetzeNullDurchEmpty(klassenDaten.kuerzelVorgaengerklasse),
-				ersetzeNullDurchEmpty(klassenDaten.parallelitaet),
-				ersetzeNullDurchEmpty(klassenDaten.pruefungsordnung),
+				ersetzeNullBlankTrim(klassenDaten.kuerzel),
+				ersetzeNullBlankTrim(klassenDaten.kuerzelFolgeklasse),
+				ersetzeNullBlankTrim(klassenDaten.kuerzelVorgaengerklasse),
+				ersetzeNullBlankTrim(klassenDaten.parallelitaet),
+				ersetzeNullBlankTrim(klassenDaten.pruefungsordnung),
 				new ArrayList<>(),
 				null,
 				klassenDaten.sortierung,
-				ersetzeNullDurchEmpty(klassenDaten.teilstandort),
+				ersetzeNullBlankTrim(klassenDaten.teilstandort),
 				klassenDaten.verwendungAnkreuzkompetenzen,
 				null);
 

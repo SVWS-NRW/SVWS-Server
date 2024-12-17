@@ -72,9 +72,14 @@ export class ReportingReportvorlage extends JavaEnum<ReportingReportvorlage> {
 	public static readonly SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN", 11, "Schueler-GostLaufbahnplanungWahlbogen");
 
 	/**
+	 * Report-Vorlage: Schüler - Schulbescheinigung
+	 */
+	public static readonly SCHUELER_v_SCHULBESCHEINIGUNG : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_SCHULBESCHEINIGUNG", 12, "Schueler-Schulbescheinigung");
+
+	/**
 	 * Report-Vorlage: Schüler - Stammdaten - Liste
 	 */
-	public static readonly SCHUELER_v_STAMMDATENLISTE : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_STAMMDATENLISTE", 12, "Schueler-Stammdatenliste");
+	public static readonly SCHUELER_v_STAMMDATENLISTE : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_STAMMDATENLISTE", 13, "Schueler-Stammdatenliste");
 
 	/**
 	 * Die Bezeichnung der Report-Vorlage

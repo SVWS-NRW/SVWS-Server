@@ -12,6 +12,9 @@ import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
  */
 public class ReportingJahrgang extends ReportingBaseType {
 
+	/** Die Anzahl der verbleibenden Restabschnitte (in der Regel Halbjahre) für einen Schüler des Jahrgangs zu Beginn eines Schuljahres. */
+	protected Integer anzahlRestabschnitte;
+
 	/** Der Name bzw. die Bezeichnung des Jahrgangs. */
 	protected String bezeichnung;
 
@@ -57,6 +60,7 @@ public class ReportingJahrgang extends ReportingBaseType {
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
 	 *
+	 * @param anzahlRestabschnitte Die Anzahl der verbleibenden Restabschnitte (in der Regel Halbjahre) für einen Schüler des Jahrgangs zu Beginn eines Schuljahres.
 	 * @param bezeichnung Der Name bzw. die Bezeichnung des Jahrgangs.
 	 * @param gueltigBis Gibt an, bis zu welchem Schuljahresabschnitt an der Jahrgang gültig ist (einschließlich), null bedeutet bis zum letzten Abschnitt, Ende offen
 	 * @param gueltigVon Gibt an, von welchem Schuljahresabschnitt an der Jahrgang gültig ist (einschließlich), null bedeutet von dem ersten Abschnitt an
@@ -72,10 +76,11 @@ public class ReportingJahrgang extends ReportingBaseType {
 	 * @param schuljahresabschnitt Der Schuljahresabschnitt zu diesem Jahrgang.
 	 * @param sortierung Die Sortierreihenfolge des Jahrgangs in der Liste der Jahrgänge.
 	 */
-	public ReportingJahrgang(final String bezeichnung, final Long gueltigBis, final Long gueltigVon, final ReportingJahrgang folgejahrgang, final long id,
-			final Long idFolgejahrgang, final List<ReportingKlasse> klassen, final String kuerzel, final String kuerzelSchulgliederung,
-			final String kuerzelStatistik, final boolean istSichtbar, final List<ReportingSchueler> schueler,
+	public ReportingJahrgang(final Integer anzahlRestabschnitte, final String bezeichnung, final Long gueltigBis, final Long gueltigVon,
+			final ReportingJahrgang folgejahrgang, final long id, final Long idFolgejahrgang, final List<ReportingKlasse> klassen, final String kuerzel,
+			final String kuerzelSchulgliederung, final String kuerzelStatistik, final boolean istSichtbar, final List<ReportingSchueler> schueler,
 			final ReportingSchuljahresabschnitt schuljahresabschnitt, final int sortierung) {
+		this.anzahlRestabschnitte = anzahlRestabschnitte;
 		this.bezeichnung = bezeichnung;
 		this.gueltigBis = gueltigBis;
 		this.gueltigVon = gueltigVon;
@@ -119,6 +124,15 @@ public class ReportingJahrgang extends ReportingBaseType {
 
 
 	// ##### Getter #####
+
+	/**
+	 * Die Anzahl der verbleibenden Restabschnitte (in der Regel Halbjahre) für einen Schüler des Jahrgangs zu Beginn eines Schuljahres.
+	 *
+	 * @return Inhalt des Feldes anzahlRestabschnitte
+	 */
+	public Integer anzahlRestabschnitte() {
+		return anzahlRestabschnitte;
+	}
 
 	/**
 	 * Der Name bzw. die Bezeichnung des Jahrgangs.

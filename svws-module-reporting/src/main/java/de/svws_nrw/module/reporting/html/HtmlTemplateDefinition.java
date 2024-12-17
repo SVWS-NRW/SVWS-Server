@@ -187,6 +187,21 @@ public enum HtmlTemplateDefinition {
 			Arrays.asList(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)),
 
+	/** Report-Vorlage: Schüler - Schulbescheinigung */
+	SCHUELER_v_SCHULBESCHEINIGUNG(
+			ReportingReportvorlage.SCHUELER_v_SCHULBESCHEINIGUNG,
+			"de/svws_nrw/module/reporting/",
+			"schueler/anschreiben/SchuelerSchulbescheinigung.html",
+			"Schueler-Schulbescheinigung",
+			"""
+			        <p th:if="${Schueler.isEmpty()}">Schulbescheinigung"</p>
+			        <th:block th:if="${!Schueler.isEmpty()}" th:each="schueler,iterState : ${Schueler}">
+			            <p th:if="${iterState.first && (Schueler.size() == 1)}" th:text="${'Schulbescheinigung_' + #strings.replace(schueler.nachname(), ' ', '_') + '__' + #strings.replace(schueler.vorname(), ' ', '_') + '_(' + schueler.id() + ')_' + #dates.format(#dates.createNow(), 'yyyyMMdd-HHmm')}"></p>
+			            <p th:if="${iterState.first && (Schueler.size() > 1)}" th:text="${'Schulbescheinigungen'}"></p>
+			        </th:block>
+			""",
+			Arrays.asList(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)),
+
 	/** Report-Vorlage: Schüler - Stammdaten - Liste */
 	SCHUELER_v_STAMMDATENLISTE(
 			ReportingReportvorlage.SCHUELER_v_STAMMDATENLISTE,

@@ -16,10 +16,10 @@ public abstract class ReportingBaseType {
 		// Standardkonstruktor ohne Inhalt, da Klasse ohne Attribute.
 	}
 
-	protected static String ersetzeNullDurchEmpty(final String value) {
-		if (value == null)
+	protected static String ersetzeNullBlankTrim(final String value) {
+		if ((value == null) || value.isBlank())
 			return "";
-		return value;
+		return value.trim();
 	}
 
 

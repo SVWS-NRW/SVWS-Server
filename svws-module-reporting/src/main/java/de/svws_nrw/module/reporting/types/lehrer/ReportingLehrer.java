@@ -3,6 +3,7 @@ package de.svws_nrw.module.reporting.types.lehrer;
 import de.svws_nrw.core.data.kataloge.OrtKatalogEintrag;
 import de.svws_nrw.core.data.kataloge.OrtsteilKatalogEintrag;
 import de.svws_nrw.asd.types.Geschlecht;
+import de.svws_nrw.core.types.PersonalTyp;
 import de.svws_nrw.core.types.schule.Nationalitaeten;
 import de.svws_nrw.module.reporting.types.person.ReportingPerson;
 
@@ -24,7 +25,7 @@ public class ReportingLehrer extends ReportingPerson {
 	protected String kuerzel;
 
 	/** Die Bezeichnung des Personals-Typs des Lehrers. */
-	protected String personalTyp;
+	protected PersonalTyp personalTyp;
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
@@ -33,6 +34,7 @@ public class ReportingLehrer extends ReportingPerson {
 	 * @param anrede Die Anrede des Lehrers.
 	 * @param emailPrivat Private E-Mail-Adresse des Lehrers.
 	 * @param emailSchule Schulische E-Mail-Adresse des Lehrers.
+	 * @param faxSchule Die schulische Faxnummer des Lehrers.
 	 * @param foto Ggf. das Foto des Lehrers (jpg, Base64-kodiert.)
 	 * @param geburtsdatum Das Geburtsdatum des Lehrers.
 	 * @param geburtsland Das Geburtsland des Lehrers.
@@ -48,22 +50,25 @@ public class ReportingLehrer extends ReportingPerson {
 	 * @param staatsangehoerigkeit Die Staatsangehörigkeit des Lehrers.
 	 * @param staatsangehoerigkeit2 Die ggf. zweite Staatsangehörigkeit des Lehrers.
 	 * @param strassenname Ggf. der Straßenname im Wohnort des Lehrers.
-	 * @param telefon Die Telefonnummer des Lehrers.
-	 * @param telefonMobil Die mobile Telefonnummer des Lehrers.
+	 * @param telefonPrivat Die private Telefonnummer des Lehrers.
+	 * @param telefonPrivatMobil Die private Mobilfunk-Telefonnummer des Lehrers.
+	 * @param telefonSchule Die schulische Telefonnummer des Lehrers.
+	 * @param telefonSchuleMobil Die schulische Mobilfunk-Telefonnummer des Lehrers.
 	 * @param titel Die Titel des Lehrers.
 	 * @param vorname Der Vorname des Lehrers.
 	 * @param vornamen Alle Vornamen des Lehrers
 	 * @param wohnort Der Wohnort des Lehrers.
 	 * @param wohnortsteil Ggf. der Ortsteil des Wohnortes des Lehrers.
 	 */
-	public ReportingLehrer(final String amtsbezeichnung, final String anrede, final String emailPrivat, final String emailSchule, final String foto,
-			final String geburtsdatum, final String geburtsland, final String geburtsname, final String geburtsort, final Geschlecht geschlecht,
-			final String hausnummer, final String hausnummerZusatz, final long id, final String kuerzel, final String nachname, final String personalTyp,
-			final Nationalitaeten staatsangehoerigkeit, final Nationalitaeten staatsangehoerigkeit2, final String strassenname, final String telefon,
-			final String telefonMobil, final String titel, final String vorname, final String vornamen, final OrtKatalogEintrag wohnort,
-			final OrtsteilKatalogEintrag wohnortsteil) {
-		super(anrede, emailPrivat, emailSchule, geburtsdatum, geburtsland, geburtsname, geburtsort, geschlecht,	hausnummer, hausnummerZusatz, nachname,
-				staatsangehoerigkeit, staatsangehoerigkeit2, strassenname, telefon, telefonMobil, titel, vorname, vornamen, wohnort, wohnortsteil);
+	public ReportingLehrer(final String amtsbezeichnung, final String anrede, final String emailPrivat, final String emailSchule, final String faxSchule,
+			final String foto, final String geburtsdatum, final String geburtsland, final String geburtsname, final String geburtsort,
+			final Geschlecht geschlecht, final String hausnummer, final String hausnummerZusatz, final long id, final String kuerzel, final String nachname,
+			final PersonalTyp personalTyp, final Nationalitaeten staatsangehoerigkeit, final Nationalitaeten staatsangehoerigkeit2, final String strassenname,
+			final String telefonPrivat, final String telefonPrivatMobil, final String telefonSchule, final String telefonSchuleMobil, final String titel,
+			final String vorname, final String vornamen, final OrtKatalogEintrag wohnort, final OrtsteilKatalogEintrag wohnortsteil) {
+		super(anrede, emailPrivat, emailSchule, faxSchule, geburtsdatum, geburtsland, geburtsname, geburtsort, geschlecht, hausnummer, hausnummerZusatz,
+				nachname, staatsangehoerigkeit, staatsangehoerigkeit2, strassenname, telefonPrivat, telefonPrivatMobil, telefonSchule, telefonSchuleMobil,
+				titel, vorname,	vornamen, wohnort, wohnortsteil);
 		this.amtsbezeichnung = amtsbezeichnung;
 		this.foto = foto;
 		this.id = id;
@@ -183,7 +188,7 @@ public class ReportingLehrer extends ReportingPerson {
 	 *
 	 * @return Inhalt des Feldes personalTyp
 	 */
-	public String personalTyp() {
+	public PersonalTyp personalTyp() {
 		return personalTyp;
 	}
 }

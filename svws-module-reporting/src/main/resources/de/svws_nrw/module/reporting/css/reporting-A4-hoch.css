@@ -91,6 +91,17 @@
 	color: #808080;
 }
 
+
+/* Seitenumbrüche: Wenn Style angewendet wird, wird beim Druck ein Seitenumbruch eingefügt, evtl. mit Ausnahme.
+############################################################################################################### */
+.start-new-page {
+	page-break-before: always;
+}
+.start-new-page:first-child {
+	page-break-before: avoid;
+}
+
+
 /* Um evtl. Zähler im div einzufügen, ergänze einen span, an den die Zähler angehängt werden.
 ############################################################################################################### */
 span.page-num-print {

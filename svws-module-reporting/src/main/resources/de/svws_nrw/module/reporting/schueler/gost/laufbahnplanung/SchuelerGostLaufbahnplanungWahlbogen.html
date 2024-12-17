@@ -4,7 +4,7 @@
 		<meta name="viewport" content="width=device-width" />
 		<title>Wahlbogen-GOSt-Laufbahnplanung</title>
 		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-pdf.css}" href="../../../css/reporting-pdf.css" />
-		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-A4-hoch-koepfe-fuesse.css}" href="../../../css/reporting-A4-hoch-koepfe-fuesse.css" />
+		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-A4-hoch.css}" href="../../../css/reporting-A4-hoch.css" />
 		<link rel="stylesheet" th:href="@{css/reporting-styles.css}" href="../../../css/reporting-styles.css" />
 		<link rel="stylesheet" th:href="@{schueler/gost/laufbahnplanung/SchuelerGostLaufbahnplanungWahlbogen.css}" href="../../../schueler/gost/laufbahnplanung/SchuelerGostLaufbahnplanungWahlbogen.css" />
 	</head>
@@ -15,7 +15,7 @@
 			<th:block th:if="${mediaPrint}">
 				<div class="pageTopLeft" th:utext="${Schule.bezeichnungSchuleMehrzeiligHtml}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
 				<div class="pageTopRight" th:utext="'Abitur ' + ${schueler.gostLaufbahnplanung().abiturjahr()} + '<br/> Wahl ab ' +  ${schueler.gostLaufbahnplanung().folgeAuswahlGOStHalbjahr()} + '<br/>' + ${schueler.gostLaufbahnplanung().pruefungsordnung()}">Abitur 2023<br/>Wahl ab Q2.1<br/>APO-GOSt</div>
-				<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')}">Gedruckt am: 02.02.2022</div>
+				<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')} + ' von ' + ${Benutzer.benutzername()}">Gedruckt am 02.02.2022 von ABC</div>
 				<div class="pageBottomRight"><span class="page-nums-print" th:text="'Druck ' + ${iterationVarSchueler.count} + '/' + ${#lists.size(Schueler)} + ' - Seite '">Druck 13/57 - Seite </span></div>
 			</th:block>
 			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
@@ -35,7 +35,7 @@
 					<td colspan="2" style="border-bottom: 1px grey solid; text-align: right; vertical-align: middle"><h3 th:text="${schueler.nachname() + ', ' + schueler.vorname()}">Musterfrau, Anna</h3></td>
 				</tr>
 			</table>
-			<p th:if="${!#strings.isEmpty(schueler.gostLaufbahnplanung().beratungsbogenText())}" th:text="${schueler.gostLaufbahnplanung().beratungsbogenText()}">Text der Schule für den Beratungsbogen.</p>
+			<p class="f-small" th:if="${!#strings.isEmpty(schueler.gostLaufbahnplanung().beratungsbogenText())}" th:text="${schueler.gostLaufbahnplanung().beratungsbogenText()}">Text der Schule für den Beratungsbogen.</p>
 			<table class="fixed-100" style="margin-top: 20px; margin-bottom: 20px; border-collapse: collapse;">
 				<colgroup>
 					<col style="width: 8%;" />
@@ -113,31 +113,31 @@
 					</tr>
 					<tr th:if="${Parameter.detailLevel == 0}">
 						<td colspan="10" class="f-tiny" style="font-style: italic">
-							<p>Wählbare Fächer des Abiturjahrgangs: <span th:each="Fachwahl,iterationVarFach : ${schueler.gostLaufbahnplanung().fachwahlen()}" th:text="${Fachwahl.fach().bezeichnung()} + ${iterationVarFach.count != iterationVarFach.size ? ', ' : ''}">Deutsch, Englisch</span></p>
+							<p class="f-small">Wählbare Fächer des Abiturjahrgangs: <span th:each="Fachwahl,iterationVarFach : ${schueler.gostLaufbahnplanung().fachwahlen()}" th:text="${Fachwahl.fach().bezeichnung()} + ${iterationVarFach.count != iterationVarFach.size ? ', ' : ''}">Deutsch, Englisch</span></p>
 						</td>
 					</tr>
 				</tfoot>
 			</table>
 			<div style="page-break-inside: avoid;">
-				<p><u>Bemerkungen der Schule zur Gesamtlaufbahn:</u></p>
-				<p th:if="${#strings.isEmpty(schueler.gostLaufbahnplanung().kommentar()) && #lists.isEmpty(schueler.gostLaufbahnplanung().fehler())}"><i>- keine -</i></p>
-				<ul th:if="${!(#strings.isEmpty(schueler.gostLaufbahnplanung().kommentar()) && #lists.isEmpty(schueler.gostLaufbahnplanung().fehler()))}">
+				<p class="f-small"><u>Bemerkungen der Schule zur Gesamtlaufbahn:</u></p>
+				<p class="f-small" th:if="${#strings.isEmpty(schueler.gostLaufbahnplanung().kommentar()) && #lists.isEmpty(schueler.gostLaufbahnplanung().fehler())}"><i>- keine -</i></p>
+				<ul class="f-small" th:if="${!(#strings.isEmpty(schueler.gostLaufbahnplanung().kommentar()) && #lists.isEmpty(schueler.gostLaufbahnplanung().fehler()))}">
 					<li th:if="${!#lists.isEmpty(schueler.gostLaufbahnplanung().fehler())}" th:each="FehlerBelegung : ${schueler.gostLaufbahnplanung().fehler()}" th:text="${FehlerBelegung.meldung()}">Fehlertext</li>
 					<li th:if="${!#strings.isEmpty(schueler.gostLaufbahnplanung().kommentar())}" th:text="${schueler.gostLaufbahnplanung().kommentar()}">Kommentar</li>
 				</ul>
 			</div>
 			<div style="page-break-inside: avoid;">
-				<p><u>Sonstige Hinweise zur Gesamtlaufbahn:</u></p>
-				<p th:if="${#lists.isEmpty(schueler.gostLaufbahnplanung().hinweise())}"><i>- keine -</i></p>
-				<ul th:if="${!#lists.isEmpty(schueler.gostLaufbahnplanung().hinweise())}">
+				<p class="f-small"><u>Sonstige Hinweise zur Gesamtlaufbahn:</u></p>
+				<p class="f-small" th:if="${#lists.isEmpty(schueler.gostLaufbahnplanung().hinweise())}"><i>- keine -</i></p>
+				<ul class="f-small" th:if="${!#lists.isEmpty(schueler.gostLaufbahnplanung().hinweise())}">
 					<li th:each="HinweisBelegung : ${schueler.gostLaufbahnplanung().hinweise()}" th:text="${HinweisBelegung.meldung()}">Hinweistext</li>
 				</ul>
 			</div>
 			<div style="page-break-inside: avoid;">
-				<p>Die oben aufgeführten Fachwahlen gelten für die weitere Schullaufbahn als verbindlich gewählt, solange keine Änderungswünsche den Beratungslehrkräften mitgeteilt werden.
+				<p class="f-small">Die oben aufgeführten Fachwahlen gelten für die weitere Schullaufbahn als verbindlich gewählt, solange keine Änderungswünsche den Beratungslehrkräften mitgeteilt werden.
 				Änderungen können vor jedem Halbjahreswechsel nach Rücksprache mit den Beratungslehrkräften durchgeführt werden.
 				Schulorganisatorische Gründe können zu einer Änderung der Fachwahlen und der Laufbahn führen.</p>
-				<p th:text="${schueler.gostLaufbahnplanung().letzteBeratungText()}">Die letzte Beratung wurde durchgeführt am 16.05.2022 von M. Mustermann.</p>
+				<p class="f-small" th:text="${schueler.gostLaufbahnplanung().letzteBeratungText()}">Die letzte Beratung wurde durchgeführt am 16.05.2022 von M. Mustermann.</p>
 				<table class="fixed-100 p-0" style="page-break-inside: avoid;">
 					<tr style="height: 3em;">
 						<td style="width: 30%;"> </td>

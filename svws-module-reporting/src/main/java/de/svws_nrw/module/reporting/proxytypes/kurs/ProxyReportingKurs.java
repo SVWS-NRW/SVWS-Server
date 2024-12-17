@@ -49,14 +49,14 @@ public class ProxyReportingKurs extends ReportingKurs {
 	 * @param kursDaten Stammdaten-Objekt aus der DB.
 	 */
 	public ProxyReportingKurs(final ReportingRepository reportingRepository, final KursDaten kursDaten) {
-		super(ersetzeNullDurchEmpty(kursDaten.bezeichnungZeugnis),
+		super(ersetzeNullBlankTrim(kursDaten.bezeichnungZeugnis),
 				null,
 				kursDaten.id,
 				kursDaten.istEpochalunterricht,
 				kursDaten.istSichtbar,
 				new ArrayList<>(),
-				ersetzeNullDurchEmpty(kursDaten.kuerzel),
-				ersetzeNullDurchEmpty(kursDaten.kursartAllg),
+				ersetzeNullBlankTrim(kursDaten.kuerzel),
+				ersetzeNullBlankTrim(kursDaten.kursartAllg),
 				kursDaten.schienen,
 				new ArrayList<>(),
 				new ArrayList<>(),

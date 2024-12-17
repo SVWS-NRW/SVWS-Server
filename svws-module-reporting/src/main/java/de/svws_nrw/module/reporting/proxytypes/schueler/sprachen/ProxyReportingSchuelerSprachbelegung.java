@@ -34,7 +34,7 @@ public class ProxyReportingSchuelerSprachbelegung extends ReportingSchuelerSprac
 				sprachbelegung.hatLatinum,
 				null,
 				sprachbelegung.reihenfolge,
-				ersetzeNullDurchEmpty(sprachbelegung.sprache),
+				ersetzeNullBlankTrim(sprachbelegung.sprache),
 				null
 		);
 		this.reportingRepository = reportingRepository;

@@ -157,8 +157,8 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 		final GostLaufbahnplanungBeratungsdaten schuelerBeratungsdaten = this.reportingRepository.mapGostBeratungsdaten().get(reportingSchueler.id());
 
 		// ##### Grunddaten und Summen setzen ###############
-		super.beratungsbogenText = ersetzeNullDurchEmpty(gostJahrgangsdaten.textBeratungsbogen);
-		super.emailText = ersetzeNullDurchEmpty(gostJahrgangsdaten.textMailversand);
+		super.beratungsbogenText = ersetzeNullBlankTrim(gostJahrgangsdaten.textBeratungsbogen);
+		super.emailText = ersetzeNullBlankTrim(gostJahrgangsdaten.textMailversand);
 
 		// Halbjahre gemäß Abiturjahrgang und Schuljahresabschnitte setzen.
 		eintragBeratungGostHalbjahreErzeugen();
@@ -175,9 +175,9 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 		}
 
 		eintragBeratungslehrkraefteErzeugen(schuelerBeratungsdaten, gostJahrgangsdaten);
-		super.letzterRuecklaufDatum = ersetzeNullDurchEmpty(schuelerBeratungsdaten.ruecklaufdatum);
-		super.letzteBeratungDatum = ersetzeNullDurchEmpty(schuelerBeratungsdaten.beratungsdatum);
-		super.kommentar = ersetzeNullDurchEmpty(schuelerBeratungsdaten.kommentar);
+		super.letzterRuecklaufDatum = ersetzeNullBlankTrim(schuelerBeratungsdaten.ruecklaufdatum);
+		super.letzteBeratungDatum = ersetzeNullBlankTrim(schuelerBeratungsdaten.beratungsdatum);
+		super.kommentar = ersetzeNullBlankTrim(schuelerBeratungsdaten.kommentar);
 
 		final int[] kurse = abiturdatenManager.getAnrechenbareKurse();
 		final int[] wochenstunden = abiturdatenManager.getWochenstunden();

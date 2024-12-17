@@ -29,7 +29,7 @@ public class ProxyReportingGostKlausurplanungSchuelerklausur extends ReportingGo
 			final GostSchuelerklausurTermin gostSchuelerklausurtermin, final ReportingGostKlausurplanungKlausurraum klausurraum,
 			final ReportingGostKlausurplanungKlausurtermin klausurtermin, final ReportingGostKlausurplanungKursklausur kursklausur,
 			final ReportingSchueler schueler) {
-		super(ersetzeNullDurchEmpty(gostSchuelerklausur.bemerkung),
+		super(ersetzeNullBlankTrim(gostSchuelerklausur.bemerkung),
 				gostSchuelerklausur.id,
 				gostSchuelerklausurtermin.id,
 				klausurraum,
