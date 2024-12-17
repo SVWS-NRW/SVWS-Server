@@ -48,10 +48,10 @@
 				<svws-ui-tooltip position="right">
 					<span class="inline-flex items-center ml-1 -mb-2 mt-0.5 pointer-events-auto">
 						<span class="icon i-ri-bar-chart-2-line icon-statistics" />
-						<template v-if="(validator === undefined) || (validator().getFehler().isEmpty()) || (validator().getFehlerart() === ValidatorFehlerart.UNGENUTZT)">
-							<span class="icon i-ri-alert-fill icon-error" v-if="(data === '') || (data === null) || (data === undefined)" />
+						<template v-if="(validator === undefined) || (validator().getFehlerart() === ValidatorFehlerart.UNGENUTZT)">
+							<span class="icon i-ri-alert-fill icon-error" v-if="required && ((data === '') || (data === null) || (data === undefined))" />
 						</template>
-						<template v-else>
+						<template v-else-if="!validator().getFehler().isEmpty()">
 							<span class="icon i-ri-alert-fill icon-danger" v-if="validator().getFehlerart() === ValidatorFehlerart.MUSS" />
 							<span class="icon i-ri-error-warning-fill icon-caution" v-if="validator().getFehlerart() === ValidatorFehlerart.KANN" />
 							<span class="icon i-ri-question-fill icon-warning" v-if="validator().getFehlerart() === ValidatorFehlerart.HINWEIS" />
@@ -90,7 +90,6 @@
 
 	import { ref, computed, watch, type ComputedRef, type Ref, onBeforeMount, onMounted, onBeforeUnmount, useId } from "vue";
 	import type { Validator } from "../../../../core/src/asd/validate/Validator";
-	import type { JavaObject } from "../../../../core/src/java/lang/JavaObject";
 	import { ValidatorFehlerart } from "../../../../core/src/asd/validate/ValidatorFehlerart";
 
 	defineOptions({

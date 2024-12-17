@@ -39,7 +39,7 @@
 			@keydown.space.prevent="onSpace"
 			@keydown.tab="onTab"
 			:focus="autofocus"
-			:class="{'contentFocusField': focusClass }" />
+			:class="{ 'contentFocusField': focusClass }" />
 		<button v-if="removable && hasSelected && !readonly" role="button" @click.stop="removeItem" class="svws-remove">
 			<span class="icon i-ri-close-line my-1" />
 		</button>
