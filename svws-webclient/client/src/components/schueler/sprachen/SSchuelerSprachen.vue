@@ -363,7 +363,7 @@
 					return sprache.hatGraecum;
 			return false;
 		},
-		set: (hatGraecum) => void props.patchSprachbelegung({hatGraecum}, 'G')
+		set: (hatGraecum) => void props.patchSprachbelegung({hatGraecum}, 'G'),
 	});
 
 	const hatHebraicum = computed<boolean>({
@@ -373,7 +373,7 @@
 					return sprache.hatHebraicum;
 			return false;
 		},
-		set: (hatHebraicum) => void props.patchSprachbelegung({hatHebraicum}, 'H')
+		set: (hatHebraicum) => void props.patchSprachbelegung({hatHebraicum}, 'H'),
 	});
 
 	async function remove() {
