@@ -14,7 +14,7 @@
 					<p class="text-left font-normal">GPU001.txt, GPU002.txt</p>
 				</div>
 			</svws-ui-button>
-			<svws-ui-button v-if="serverMode === ServerMode.DEV" id="contentFocusField" :type="(aktuell === 'stundenplanGPP002GPU014') ? 'primary' : 'secondary'" @click="onSelect('stundenplanGPP002GPU014')">
+			<svws-ui-button id="contentFocusField" :type="(aktuell === 'stundenplanGPP002GPU014') ? 'primary' : 'secondary'" @click="onSelect('stundenplanGPP002GPU014')">
 				<div class="flex flex-col gap-1">
 					<p class="text-left font-bold ">Stundenplan</p>
 					<p class="text-left font-normal">GPP002.txt, GPU014.txt</p>
@@ -64,7 +64,8 @@
 							müssen alle Export-Dateien zum gleichen Stand aus Untis heraus erzeugt worden sein. Bei der gpp002.txt muss ein Zeitbereich in
 							Untis gewählt werden. Dieser muss an einem Montag der ersten Woche beginnen und am letzten Freitag (Samstag, Sonntag) der
 							Wochenperiodizität enden, also jede Woche des Mehrwochenplans genau einmal enthalten. In diesem Zeitbereich dürfen grundsätzlich
-							keinefreien Schultage liegen und es muss die Option "Eine Zeile pro Klasse" im Dialog für den Export aktiviert worden sein.
+							keinefreien Schultage liegen und es sollte die Option "Eine Zeile pro Klasse" im Dialog für den Export aktiviert worden sein.
+							Empfehlenswert sind hierbei Wochen, die wenig von Vertretungen und Unterrichtsausfällen betroffen sind.
 						</p>
 					</div>
 					<svws-ui-text-input placeholder="Gültig ab" v-model="gueltigAb" type="date" />

@@ -1,5 +1,3 @@
-import { ArrayList, List } from "@core";
-
 /**
  * Eine Schnittstelle für die Schema-Definitionen der Spalten der weiter unten definierten Untis-GPU-Formate
  */
