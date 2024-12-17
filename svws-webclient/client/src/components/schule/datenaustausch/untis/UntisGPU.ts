@@ -792,9 +792,6 @@ export interface UntisGPU014 {
 	/** Vertretungen/Entfälle zählen */
 	zaehlen: string | null;
 
-	/** Ignorieren - Dummy für das Einlesen der Daten */
-	dummy : string | null;
-
 }
 
 
@@ -832,7 +829,6 @@ export class UntisGPU014Csv extends UntisGPUCsv<UntisGPU014> {
 			{ name: 'vertretungsart', type: 'string', required: true },
 			{ name: 'timestamp', type: 'string', required: false },
 			{ name: 'zaehlen', type: 'string', required: false },
-			{ name: 'dummy', type: 'string', required: false },
 		], csv);
 	}
 

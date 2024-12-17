@@ -145,7 +145,7 @@
 						<svws-ui-tooltip>
 							<span class="font-bold flex flex-row gap-1">GPP002.txt: <span class="icon i-ri-information-line mt-0.5" /></span>
 							<template #content>
-								Die CSV-Datei muss als Textkodierung UTF-8 verwenden. Als Trennzeichen wird das Semikolon verwendet und für die Textbegrenzung doppelte Anführungszeichen (")
+								Die CSV-Datei verwendet die Textkodierung UTF-8 und als Trennzeichen ein Komma. Bei der Textbegrenzung doppelte Anführungszeichen (").
 							</template>
 						</svws-ui-tooltip>
 						von Untis hier hoch, um den Stundenplan zu importieren.
