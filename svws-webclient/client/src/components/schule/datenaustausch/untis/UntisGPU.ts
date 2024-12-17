@@ -673,6 +673,9 @@ export class UntisGPP002Csv extends UntisGPUCsv<UntisGPP002> {
 			tmp = a.lehrerKuerzel.localeCompare(b.lehrerKuerzel);
 			if (tmp !== 0)
 				return tmp;
+			tmp = (a.raumKuerzel ?? "").localeCompare(b.raumKuerzel ?? "");
+			if (tmp !== 0)
+				return tmp;
 			tmp = a.wochentag - b.wochentag;
 			if (tmp !== 0)
 				return tmp;
@@ -689,7 +692,8 @@ export class UntisGPP002Csv extends UntisGPUCsv<UntisGPP002> {
 			const curWt = (obj.wochentyp === "") ? 0 : Number(obj.wochentyp);
 			if (last !== null) {
 				if ((last.idUnterricht === obj.idUnterricht) && (last.klasseKuerzel === obj.klasseKuerzel) && (last.fachKuerzel === obj.fachKuerzel)
-					&& (last.lehrerKuerzel === obj.lehrerKuerzel) && (last.wochentag === obj.wochentag) && (last.stunde === obj.stunde)) {
+					&& (last.lehrerKuerzel === obj.lehrerKuerzel) && (last.raumKuerzel === obj.raumKuerzel) && (last.wochentag === obj.wochentag)
+					&& (last.stunde === obj.stunde)) {
 					if (curWt !== 0)
 						wochentypen.add(curWt);
 					if ((curWt === 0) || (wochentypen.size === maxWochentyp)) {
