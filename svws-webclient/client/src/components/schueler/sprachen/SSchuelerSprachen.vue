@@ -74,9 +74,9 @@
 			</svws-ui-table>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Sprachprüfungen – Herkunftsprachlicher Unterricht">
-			<div v-if="hatUpdateKompetenz && verfuegbareSprachenPruefungen.length" class="w-1/4 mb-4">
+			<div v-if="hatUpdateKompetenz && verfuegbareSprachenPruefungenHerkunftsprachlich.length" class="w-1/4 mb-4">
 				<svws-ui-select title="Hinzufügen..." removable :model-value="undefined" @update:model-value="sprache=> hinzufuegenPruefung(sprache, true)"
-					:items="verfuegbareSprachenPruefungen" :item-text="i=> `${i} - ${ Fach.getMapFremdsprachenKuerzelAtomar(schuljahr).get(i)?.daten(schuljahr)?.text ?? '—' }`"
+					:items="verfuegbareSprachenPruefungenHerkunftsprachlich" :item-text="i=> `${i} - ${ Fach.getMapFremdsprachenKuerzelAtomar(schuljahr).get(i)?.daten(schuljahr)?.text ?? '—' }`"
 					ref="selectSprachenPruefung" />
 			</div>
 			<svws-ui-table v-if="sprachpruefungenHSU.length" :items="sprachpruefungenHSU" :columns="colsSprachpruefungenHSU" :selectable="hatUpdateKompetenz" v-model="auswahlPrHSU">
@@ -123,8 +123,8 @@
 			</svws-ui-table>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Sprachprüfungen – Feststellungsprüfungen">
-			<div v-if="hatUpdateKompetenz && verfuegbareSprachenPruefungen.length" class="w-1/4 mb-4">
-				<svws-ui-select title="Hinzufügen..." removable :model-value="undefined" @update:model-value="sprache => hinzufuegenPruefung(sprache, false)" :items="verfuegbareSprachenPruefungen"
+			<div v-if="hatUpdateKompetenz && verfuegbareSprachenPruefungenFeststellungErsatz.length" class="w-1/4 mb-4">
+				<svws-ui-select title="Hinzufügen..." removable :model-value="undefined" @update:model-value="sprache => hinzufuegenPruefung(sprache, false)" :items="verfuegbareSprachenPruefungenFeststellungErsatz"
 					:item-text="i => `${i} - ${Fach.getMapFremdsprachenKuerzelAtomar(schuljahr).get(i)?.daten(schuljahr)?.text ?? '—'}`" ref="selectSprachenPruefung" />
 			</div>
 			<svws-ui-table v-if="sprachpruefungenFP.length" :items="sprachpruefungenFP" :columns="colsSprachpruefungenFP" :selectable="hatUpdateKompetenz" v-model="auswahlPrFP">
@@ -258,15 +258,29 @@
 		return sprachen;
 	})
 
-	const verfuegbareSprachenPruefungen = computed(() => {
-		const belegungen = new Set();
+	const verfuegbareSprachenPruefungenHerkunftsprachlich = computed(() => {
+		const pruefungenHKFS = new Set();
 		const sprachen = [];
 		for (const p of props.sprachpruefungen())
-			belegungen.add(p.sprache);
+			pruefungenHKFS.add(p.sprache);
 		for (const k of Fach.getListFremdsprachenKuerzelAtomar(schuljahr.value)) {
 			const sprache = Fach.getMapFremdsprachenKuerzelAtomar(schuljahr.value).get(k);
 			const spracheEintrag = sprache?.daten(schuljahr.value) ?? null;
-			if ((spracheEintrag !== null) && !spracheEintrag.istErsatzPflichtFS && !spracheEintrag.istHKFS && !spracheEintrag.istAusRegUFach && !belegungen.has(k))
+			if ((spracheEintrag !== null) && !spracheEintrag.istErsatzPflichtFS && spracheEintrag.istHKFS && !spracheEintrag.istAusRegUFach && !pruefungenHKFS.has(k))
+				sprachen.push(k);
+		}
+		return sprachen;
+	})
+
+	const verfuegbareSprachenPruefungenFeststellungErsatz = computed(() => {
+		const pruefungenFeststellung = new Set();
+		const sprachen = [];
+		for (const p of props.sprachpruefungen())
+			pruefungenFeststellung.add(p.sprache);
+		for (const k of Fach.getListFremdsprachenKuerzelAtomar(schuljahr.value)) {
+			const sprache = Fach.getMapFremdsprachenKuerzelAtomar(schuljahr.value).get(k);
+			const spracheEintrag = sprache?.daten(schuljahr.value) ?? null;
+			if ((spracheEintrag !== null) && spracheEintrag.istErsatzPflichtFS && spracheEintrag.istHKFS && !spracheEintrag.istAusRegUFach && !pruefungenFeststellung.has(k))
 				sprachen.push(k);
 		}
 		return sprachen;
