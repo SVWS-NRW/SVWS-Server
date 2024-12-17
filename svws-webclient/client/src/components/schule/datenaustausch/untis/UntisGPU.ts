@@ -585,19 +585,22 @@ export class UntisGPP002Csv extends UntisGPUCsv<UntisGPP002> {
 		const dateStrings = new Set<string>();
 		for (const obj of this.data)
 			dateStrings.add(`${obj.jahr}-${obj.monat < 10 ? "0" + obj.monat : obj.monat}-${obj.tag < 10 ? "0" + obj.tag : obj.tag}`);
-		for (const obj of gpu014.data)
-			dateStrings.add(`${obj.datum.substring(0, 4)}-${obj.datum.substring(4, 6)}-${obj.datum.substring(6)}`);
 		const dates = [...dateStrings].sort();
 		// Bestimme die Wochentypen zu den einzelnen Datumseinträgen
 		const mapDateToWochentyp = new Map<string, number>();
+		let anfang : number | null = null;
+		let ende : number | null = null;
 		let letzterTag : number | null = null;
 		let maxWochentyp = 1;
 		for (const dateStr of dates) {
 			const date = new Date(dateStr);
 			const tag = date.getDay();
+			if (anfang === null)
+				anfang = date.getTime();
 			if ((letzterTag !== null) && (tag < letzterTag))
 				maxWochentyp++;
 			letzterTag = tag;
+			ende = date.getTime();
 			mapDateToWochentyp.set(dateStr, maxWochentyp);
 		}
 		// Bestimme die Unterrichte...
@@ -624,6 +627,12 @@ export class UntisGPP002Csv extends UntisGPUCsv<UntisGPP002> {
 		}
 		// ... und zusätzlich anhand der Vertretungsunterrichte
 		for (const obj of gpu014.data) {
+			// Prüfe, ob der Eintrag im Zeitbereich des Stundenplans liegt
+			const dateStr = `${obj.datum.substring(0, 4)}-${obj.datum.substring(4, 6)}-${obj.datum.substring(6)}`;
+			const date = new Date(dateStr);
+			const wochentyp = mapDateToWochentyp.get(dateStr);
+			if ((anfang === null) || (ende === null) || (date.getTime() < anfang) || (date.getTime() > ende))
+				continue;
 			// Klausuren müssen nicht berücksichtigt werden
 			if ((obj.vertretungsart === 'E') && ((obj.lehrerKuerzelAbsent === null) || (obj.lehrerKuerzelAbsent === "")))
 				continue;
@@ -632,9 +641,6 @@ export class UntisGPP002Csv extends UntisGPUCsv<UntisGPP002> {
 				// TODO Der Lehrer hat sich nicht geändert
 			} else {
 				// Der Lehrer hat sich geändert. Somit muss der Unterricht hinzugefügt werden, da dieser nicht bei den aktuellen Unterrichten auftaucht (z.B. bei Entfall)
-				const dateStr = `${obj.datum.substring(0, 4)}-${obj.datum.substring(4, 6)}-${obj.datum.substring(6)}`;
-				const date = new Date(dateStr);
-				const wochentyp = mapDateToWochentyp.get(dateStr);
 				for (const klassenKuerzel of obj.klasseKuerzel.split("~")) {
 					const gpu001 = <UntisGPU001>{
 						idUnterricht: obj.idUnterricht,
