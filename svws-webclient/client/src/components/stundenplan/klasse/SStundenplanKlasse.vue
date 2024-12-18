@@ -18,7 +18,7 @@
 						<span class="ml-4">Unterricht:</span>
 						<s-stundenplan-klasse-modal-merge :stundenplan-manager :merge-unterrichte v-slot="{ openModal }">
 							<svws-ui-button type="error" size="small" class="ml-1" @click="openModal()" title="Unterricht, der zusammengelegt werden kann, weil es Doppelungen gibt">
-								<span class="icon-sm icon-error i-ri-error-warning-line" />zusammenlegen
+								<span class="icon icon-error i-ri-error-warning-line" />Zusammenlegen
 							</svws-ui-button>
 						</s-stundenplan-klasse-modal-merge>
 					</template>
