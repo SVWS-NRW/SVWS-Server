@@ -7,7 +7,7 @@
 				<span v-if="useDragAndDrop" class="icon i-ri-draggable inline-block -ml-1 icon-dark opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
 				<span>{{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }}</span>
 			</div>
-			<div class="text-center" title="Lehrkraft" @click="emit('update:click', unterricht)"> {{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }} </div>
+			<div class="text-center flex place-items-center gap-2" title="Lehrkraft" @click="emit('update:click', unterricht)"> {{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }} <span v-if="unterricht.lehrer.size() > 1" class="icon inline-block i-ri-add-circle-line" /></div>
 			<div class="text-center" title="Raum" @click="emit('update:click', unterricht)"> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }} </div>
 		</template>
 	</stundenplan-ansicht>
