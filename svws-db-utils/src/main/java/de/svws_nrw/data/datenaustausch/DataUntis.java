@@ -189,7 +189,7 @@ public final class DataUntis {
 		long next_kid = conn.transactionGetNextID(DTOStundenplanUnterrichtKlasse.class);
 		long next_rid = conn.transactionGetNextID(DTOStundenplanUnterrichtRaum.class);
 		long next_sid = conn.transactionGetNextID(DTOStundenplanUnterrichtSchiene.class);
-		final Map<LongArrayKey, Long> mapKursUnterricht = new HashMap<>();
+		final Map<LongArrayKey, Long> mapUnterrichte = new HashMap<>();
 		int maxWochentyp = 0;
 		for (final UntisGPU001 u : unterrichte) {
 			logger.logLn("-> Importiere Unterricht: " + u.toString());
@@ -232,8 +232,7 @@ public final class DataUntis {
 					throw new ApiOperationException(Status.NOT_FOUND, "Das Fach bzw. der Kurs mit dem Kürzel %s konnte nicht in der Datenbank gefunden werden."
 							.formatted(u.fachKuerzel));
 				}
-				// Erstelle den Klassen-Unterricht ...
-				final long uid = next_uid++;
+				// Prüfe, ob der Kursunterricht schon mit einem früheren Datensatz bearbeitet wurde
 				int wt = 0;
 				if ((u.wochentyp != null) && !u.wochentyp.isBlank()) {
 					try {
@@ -244,10 +243,34 @@ public final class DataUntis {
 						wt = 0;
 					}
 				}
+				final long[] tmpKey = { klasse.ID, fach.id, u.idUnterricht, u.wochentag, u.stunde, wt };
+				final LongArrayKey key = new LongArrayKey(tmpKey);
+				if (mapUnterrichte.containsKey(key)) {
+					// Prüfe, ob der Lehrer bereits dem Unterricht zugeordnet ist, wenn nicht, dann füge diesen als weiteren Lehrer hinzu
+					final long uid = mapUnterrichte.get(key);
+					final List<DTOStundenplanUnterrichtLehrer> listLehrer =
+							conn.queryList(DTOStundenplanUnterrichtLehrer.QUERY_BY_UNTERRICHT_ID + " AND e.Lehrer_ID = ?2",
+									DTOStundenplanUnterrichtLehrer.class, uid, lehrer.id);
+					if (listLehrer.isEmpty()) {
+						logger.logLn(2, "Ergänze Lehrer %s zu bestehendem Klassen-Unterricht.".formatted(lehrer.kuerzel));
+						conn.transactionPersist(new DTOStundenplanUnterrichtLehrer(next_lid++, uid, lehrer.id));
+						conn.transactionFlush();
+						continue;
+					}
+					// Wenn der Lehrer bereits vorhanden ist, dann gibt verwerfe den Eintrag
+					logger.logLn(2,
+							"Unterricht mit der ID %d wurde für das Fach '%s' der Klasse '%s' mit der ID %d bereits für den Wochentag %d und der Stunde %d mit Wochentyp %d mit dem Lehrer mit der ID %d hinzugefügt."
+									.formatted(u.idUnterricht, fach.kuerzel, klasse.Klasse, klasse.ID, u.wochentag, u.stunde, wt, lehrer.id) + " Überspringe diesen Eintrag...");
+					continue;
+				}
+
+				// Erstelle den Klassen-Unterricht ...
+				final long uid = next_uid++;
 				maxWochentyp = (maxWochentyp < wt) ? wt : maxWochentyp;
 				final DTOStundenplanUnterricht dtoUnterricht = new DTOStundenplanUnterricht(uid, zeitraster.id, wt, fach.id);
 				dtoUnterricht.Kurs_ID = null;
 				conn.transactionPersist(dtoUnterricht);
+				mapUnterrichte.put(key, uid);
 				conn.transactionFlush();
 				// ... Lehrer ...
 				if (lehrer != null)
@@ -272,9 +295,9 @@ public final class DataUntis {
 				}
 				final long[] tmpKey = { kurs.id, u.idUnterricht, u.wochentag, u.stunde, wt };
 				final LongArrayKey key = new LongArrayKey(tmpKey);
-				if (mapKursUnterricht.containsKey(key)) {
+				if (mapUnterrichte.containsKey(key)) {
 					// Prüfe, ob der Lehrer bereits dem Unterricht zugeordnet ist, wenn nicht, dann füge diesen als weiteren Lehrer hinzu
-					final long uid = mapKursUnterricht.get(key);
+					final long uid = mapUnterrichte.get(key);
 					final List<DTOStundenplanUnterrichtLehrer> listLehrer =
 							conn.queryList(DTOStundenplanUnterrichtLehrer.QUERY_BY_UNTERRICHT_ID + " AND e.Lehrer_ID = ?2",
 									DTOStundenplanUnterrichtLehrer.class, uid, lehrer.id);
@@ -296,7 +319,7 @@ public final class DataUntis {
 				final DTOStundenplanUnterricht dtoUnterricht = new DTOStundenplanUnterricht(uid, zeitraster.id, wt, kurs.idFach);
 				dtoUnterricht.Kurs_ID = kurs.id;
 				conn.transactionPersist(dtoUnterricht);
-				mapKursUnterricht.put(key, uid);
+				mapUnterrichte.put(key, uid);
 				conn.transactionFlush();
 				// ... Lehrer ...
 				if (lehrer != null)

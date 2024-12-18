@@ -189,7 +189,7 @@
 
 	import { onMounted, ref, shallowRef } from 'vue';
 	import type { SchuleDatenaustauschUntisImporteProps } from './SSchuleDatenaustauschUntisImporteProps';
-	import { ServerMode, StundenplanListeEintragMinimal, type Schuljahresabschnitt, type SimpleOperationResponse } from '@core';
+	import { StundenplanListeEintragMinimal, type Schuljahresabschnitt, type SimpleOperationResponse } from '@core';
 	import { UntisGPP002Csv, UntisGPU001Csv, UntisGPU002Csv, UntisGPU014Csv } from './UntisGPU';
 
 	const props = defineProps<SchuleDatenaustauschUntisImporteProps>();
@@ -236,7 +236,7 @@
 	}
 
 	function onSelect(value : GPU): void {
-		if (aktuell.value === value)
+		if ((aktuell.value === value) && (!((aktuell.value === 'stundenplanGPU001') && (bezeichnung.value === ''))))
 			return;
 		aktuell.value = value;
 		if ([ 'stundenplanGPU001', 'stundenplanGPU001002', 'stundenplanGPP002GPU014' ].includes(aktuell.value))
