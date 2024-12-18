@@ -115,7 +115,7 @@ if [[ "$1" == "--update" ]]; then
     rm -rf $APP_PATH/app/SVWS-Admin-Client*.zip
 
     # Erstelle einen symbolischen Link zur Konfigurationsdatei
-    ln -f $CONF_PATH/svwsconfig.json $APP_PATH/svwsconfig.json
+    ln -sf $CONF_PATH/svwsconfig.json $APP_PATH/svwsconfig.json
 
     cd $script_dir
 
@@ -415,7 +415,7 @@ rm $CONF_PATH/svwsconfig-template.json
 rm $CONF_PATH/svwsconfig-template-nodb.json
 
 # Erstelle einen symbolischen Link zur Konfigurationsdatei
-ln $CONF_PATH/svwsconfig.json $APP_PATH/svwsconfig.json
+ln -s $CONF_PATH/svwsconfig.json $APP_PATH/svwsconfig.json
 
 
 # Prüfen, ob die Installation der MariaDB-Datenbank gewünscht ist
