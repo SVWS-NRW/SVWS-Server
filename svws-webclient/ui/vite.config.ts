@@ -16,9 +16,6 @@ export default defineConfig({
 	},
 	histoire: {
 		setupFile: './histoire.setup.ts',
-		viteIgnorePlugins: [
-			'unplugin-vue-components',
-		],
 		plugins: [ HstVue() ],
 		theme: {
 			title: 'SVWS UI',
