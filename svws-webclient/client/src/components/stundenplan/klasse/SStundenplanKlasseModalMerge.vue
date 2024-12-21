@@ -42,7 +42,7 @@
 
 	function kuerzel(list: List<StundenplanUnterricht>) {
 		const [item] = list;
-		return props.stundenplanManager().unterrichtGetByIDStringOfFachOderKursKuerzel(item.id)
+		return props.stundenplanManager().unterrichtGetByIDStringOfFachOderKurs(item.id, true)
 	}
 
 	function klassen(list: List<StundenplanUnterricht>) {

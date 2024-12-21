@@ -212,7 +212,7 @@
 			}
 			else {
 				schuelerzahl.value = props.stundenplanManager().schuelerGetAnzahlByKursIdAsListOrException(auswahl.value.id);
-				unterrichtBezeichnung.value = props.stundenplanManager().unterrichtGetByIDStringOfFachOderKursKuerzel(auswahl.value.id);
+				unterrichtBezeichnung.value = props.stundenplanManager().unterrichtGetByIDStringOfFachOderKurs(auswahl.value.id, true);
 			}
 		}
 		else if (auswahl.value instanceof StundenplanKurs) {

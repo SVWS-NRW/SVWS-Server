@@ -6686,20 +6686,22 @@ public class StundenplanManager {
 	}
 
 	/**
-	 * Liefert eine String-Repräsentation des das Fach- oder Kurs-Kürzel eines {@link StundenplanUnterricht}.
-	 * <br>Beispiel: "M-LK1-Suffix" bei Kursen und "M" Fachkürzel bei Klassenunterricht.
-	 * <br>Laufzeit: O(1)
-	 * @param idUnterricht  Die Datenbank-ID des {@link StundenplanUnterricht}.
+	 * Liefert eine String-Repräsentation des Faches/Kurses eines {@link StundenplanUnterricht}-Objektes.
+	 * <br> Kurse immer im Format "M-LK1-Suffix".
+	 * <br> Klassenunterricht wahlweise "Mathematik" oder "M".
 	 *
-	 * @return eine String-Repräsentation des das Fach- oder Kurs-Kürzel eines {@link StundenplanUnterricht}.
+	 * @param idUnterricht                  Die Datenbank-ID des {@link StundenplanUnterricht}.
+	 * @param klassenunterrichtDetailliert  TRUE/FALSE führt zu "Deutsch"/"D" (nur beim Klassenunterricht).
+	 *
+	 * @return eine String-Repräsentation des Faches/Kurses eines {@link StundenplanUnterricht}-Objektes.
 	 */
-	public @NotNull String unterrichtGetByIDStringOfFachOderKursKuerzel(final long idUnterricht) {
+	public @NotNull String unterrichtGetByIDStringOfFachOderKurs(final long idUnterricht, final boolean klassenunterrichtDetailliert) {
 		final @NotNull StundenplanUnterricht unterricht = DeveloperNotificationException.ifMapGetIsNull(_unterricht_by_id, idUnterricht);
 
 		// Klassenunterricht?
 		if (unterricht.idKurs == null) {
 			final @NotNull StundenplanFach fach = DeveloperNotificationException.ifMapGetIsNull(_fach_by_id, unterricht.idFach);
-			return fach.kuerzel;
+			return klassenunterrichtDetailliert ? fach.bezeichnung : fach.kuerzel;
 		}
 
 		// Kursunterricht
@@ -6783,7 +6785,7 @@ public class StundenplanManager {
 	 */
 	public @NotNull String unterrichtGetByIDStringOfAll(final long idUnterricht) {
 		String sLe = unterrichtGetByIDLehrerFirstAsStringOrEmpty(idUnterricht);
-		String sFa = unterrichtGetByIDStringOfFachOderKursKuerzel(idUnterricht);
+		String sFa = unterrichtGetByIDStringOfFachOderKurs(idUnterricht, false);
 		String sKl = unterrichtGetByIDStringOfKlassen(idUnterricht);
 		String sRa = unterrichtGetByIDStringOfRaeume(idUnterricht);
 		String sSc = unterrichtGetByIDStringOfSchienen(idUnterricht);

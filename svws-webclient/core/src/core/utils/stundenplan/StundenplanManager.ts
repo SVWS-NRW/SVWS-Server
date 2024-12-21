@@ -6040,18 +6040,20 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert eine String-Repräsentation des das Fach- oder Kurs-Kürzel eines {@link StundenplanUnterricht}.
-	 * <br>Beispiel: "M-LK1-Suffix" bei Kursen und "M" Fachkürzel bei Klassenunterricht.
-	 * <br>Laufzeit: O(1)
-	 * @param idUnterricht  Die Datenbank-ID des {@link StundenplanUnterricht}.
+	 * Liefert eine String-Repräsentation des Faches/Kurses eines {@link StundenplanUnterricht}-Objektes.
+	 * <br> Kurse immer im Format "M-LK1-Suffix".
+	 * <br> Klassenunterricht wahlweise "Mathematik" oder "M".
 	 *
-	 * @return eine String-Repräsentation des das Fach- oder Kurs-Kürzel eines {@link StundenplanUnterricht}.
+	 * @param idUnterricht                  Die Datenbank-ID des {@link StundenplanUnterricht}.
+	 * @param klassenunterrichtDetailliert  TRUE/FALSE führt zu "Deutsch"/"D" (nur beim Klassenunterricht).
+	 *
+	 * @return eine String-Repräsentation des Faches/Kurses eines {@link StundenplanUnterricht}-Objektes.
 	 */
-	public unterrichtGetByIDStringOfFachOderKursKuerzel(idUnterricht : number) : string {
+	public unterrichtGetByIDStringOfFachOderKurs(idUnterricht : number, klassenunterrichtDetailliert : boolean) : string {
 		const unterricht : StundenplanUnterricht = DeveloperNotificationException.ifMapGetIsNull(this._unterricht_by_id, idUnterricht);
 		if (unterricht.idKurs === null) {
 			const fach : StundenplanFach = DeveloperNotificationException.ifMapGetIsNull(this._fach_by_id, unterricht.idFach);
-			return fach.kuerzel;
+			return klassenunterrichtDetailliert ? fach.bezeichnung : fach.kuerzel;
 		}
 		const kurs : StundenplanKurs = DeveloperNotificationException.ifMapGetIsNull(this._kurs_by_id, unterricht.idKurs);
 		return kurs.bezeichnung;
@@ -6121,7 +6123,7 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public unterrichtGetByIDStringOfAll(idUnterricht : number) : string {
 		let sLe : string | null = this.unterrichtGetByIDLehrerFirstAsStringOrEmpty(idUnterricht);
-		let sFa : string | null = this.unterrichtGetByIDStringOfFachOderKursKuerzel(idUnterricht);
+		let sFa : string | null = this.unterrichtGetByIDStringOfFachOderKurs(idUnterricht, false);
 		let sKl : string | null = this.unterrichtGetByIDStringOfKlassen(idUnterricht);
 		let sRa : string | null = this.unterrichtGetByIDStringOfRaeume(idUnterricht);
 		let sSc : string | null = this.unterrichtGetByIDStringOfSchienen(idUnterricht);

@@ -12,7 +12,7 @@
 			<template #body>
 				<div v-for="rowData in stundenplanManager().unterrichtGetMengeByZeitrasterIdAndWochentypOrEmptyList(selected.id, 0)" :key="rowData.id" class="svws-ui-tr" role="row" :style="`--background-color: ${getBgColor(stundenplanManager().fachGetByIdOrException(rowData.idFach).kuerzelStatistik)}`">
 					<div class="svws-ui-td" role="cell">
-						<span class="svws-ui-badge">{{ stundenplanManager().unterrichtGetByIDStringOfFachOderKursKuerzel(rowData.id) }}</span>
+						<span class="svws-ui-badge">{{ stundenplanManager().unterrichtGetByIDStringOfFachOderKurs(rowData.id, true) }}</span>
 					</div>
 					<div class="svws-ui-td" role="cell">
 						<span v-for="jahrgang in stundenplanManager().jahrgangGetMengeByUnterrichtIdAsList(rowData.id)" :key="jahrgang.id" class="line-clamp-1 break-all leading-tight -my-0.5">{{ jahrgang.kuerzel }}</span>
@@ -55,7 +55,7 @@
 		{ key: 'idFach', label: 'Unterricht' },
 		{ key: 'jahrgang', label: 'Jahrgang' },
 		{ key: 'klassen', label: 'Klassen' },
-		{ key: 'raeume', label: 'Räume'}
+		{ key: 'raeume', label: 'Räume'},
 	];
 
 	function getBgColor(fach: string): string {

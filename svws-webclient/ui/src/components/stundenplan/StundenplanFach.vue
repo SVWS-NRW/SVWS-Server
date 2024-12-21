@@ -9,10 +9,10 @@
 			<div class="font-bold flex place-items-center group" title="Unterricht">
 				<span v-if="useDragAndDrop" class="icon i-ri-draggable inline-block icon-dark -ml-1 opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
 				<svws-ui-tooltip v-if="unterricht.schienen.size() > 0">
-					<span class="break-keep">{{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }}&nbsp;({{ schienennummer(unterricht.schienen) }})</span>
+					<span class="break-keep">{{ manager().unterrichtGetByIDStringOfFachOderKurs(unterricht.id, false) }}&nbsp;({{ schienennummer(unterricht.schienen) }})</span>
 					<template #content>{{ schienenbezeichnung(unterricht.schienen) }}</template>
 				</svws-ui-tooltip>
-				<span v-else>{{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }}</span>
+				<span v-else>{{ manager().unterrichtGetByIDStringOfFachOderKurs(unterricht.id, false) }}</span>
 			</div>
 			<div class="text-center">{{ unterricht.idKurs ? [...manager().kursGetByIdOrException(unterricht.idKurs).jahrgaenge].map(j => manager().jahrgangGetByIdOrException(j).kuerzel).join(', ') : [...unterricht.klassen].map(k => manager().klasseGetByIdOrException(k).kuerzel).join(', ') }}</div>
 			<div class="text-center" title="Lehrkraft"> {{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }} </div>
