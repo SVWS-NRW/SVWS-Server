@@ -1,8 +1,3 @@
-<script setup lang="ts">
-	import { ref } from "vue"
-	const checked = ref('value');
-</script>
-
 <template>
 	<Story title="Radio Options" id="svws-ui-radio-option" icon="ri:radio-button-line" :layout="{type: 'grid', width: '45%'}">
 		<Variant title="Horizontal Row" id="Horizontal Row">
@@ -53,3 +48,8 @@
 		</Variant>
 	</Story>
 </template>
+
+<script setup lang="ts">
+	import { ref } from "vue"
+	const checked = ref('value');
+</script>
