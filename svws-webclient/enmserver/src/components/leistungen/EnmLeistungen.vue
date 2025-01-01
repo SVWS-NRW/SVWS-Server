@@ -1,6 +1,6 @@
 <template>
 	<div class="page--content h-full w-full overflow-hidden">
-		<table class="svws-ui-table w-full" role="table" aria-label="Tabelle">
+		<table class="svws-ui-table h-full w-full overflow-hidden" role="table" aria-label="Tabelle">
 			<thead class="svws-ui-thead cursor-pointer mb-1" role="rowgroup" aria-label="Tabellenkopf">
 				<tr class="svws-ui-tr" role="row">
 					<td class="svws-ui-td" role="columnheader"> Klasse </td>
@@ -17,7 +17,7 @@
 					<td class="svws-ui-td" role="columnheader"> Fachbezogene Bemerkungen </td>
 				</tr>
 			</thead>
-			<tbody class="svws-ui-tbody" role="rowgroup" aria-label="Tabelleninhalt">
+			<tbody class="svws-ui-tbody h-full overflow-y-auto" role="rowgroup" aria-label="Tabelleninhalt">
 				<template v-for="schueler of manager.lerngruppenAuswahlGetSchueler()" :key="schueler.id">
 					<template v-for="leistung of manager.leistungenGetOfSchueler(schueler.id)" :key="leistung.id">
 						<tr class="svws-ui-tr" role="row">
@@ -81,10 +81,11 @@
 
 	.svws-ui-tr {
 		grid-template-columns: v-bind(gridTemplateColumnsComputed);
+		min-height: auto;
 	}
 
 	.page--content {
-		grid-template-columns: 1fr;
+		display: inline-block;
 	}
 
 </style>
