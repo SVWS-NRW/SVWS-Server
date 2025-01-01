@@ -34,10 +34,10 @@
 								{{ manager.lerngruppeGetKursbezeichnung(leistung.lerngruppenID) }}
 							</td>
 							<td class="svws-ui-td" role="cell">
-								{{ manager.lerngruppeGetKursartAsString(leistung.lerngruppenID) }}
+								{{ manager.lerngruppeGetKursartAsString(leistung.lerngruppenID) }}{{ (leistung.abiturfach === null) ? "" : ", Abi " + leistung.abiturfach }}
 							</td>
 							<td class="svws-ui-td" role="cell">
-								{{ manager.lerngruppeGetFachlehrerOrNull(leistung.lerngruppenID)?.kuerzel ?? '—' }}
+								{{ manager.lerngruppeGetFachlehrerOrNull(leistung.lerngruppenID) }}
 							</td>
 							<td class="svws-ui-td" role="cell">
 								{{ leistung.noteQuartal }}

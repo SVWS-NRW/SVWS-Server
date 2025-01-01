@@ -424,17 +424,35 @@ export class EnmManager {
 	}
 
 	/**
-	 * Gibt das Lehrer-Objekt zu der Lerngruppen-ID zurück, sofern ein Lehrer zugewiesen ist.
+	 * Gibt die Lehrer-Objekte zu der Lerngruppen-ID zurück.
 	 *
 	 * @param id   die ID der Lerngruppe
 	 *
-	 * @returns das Lehrer-Objekt oder null
+	 * @returns die Lehrer-Objekte
 	 */
-	public lerngruppeGetFachlehrerOrNull(id: number) : ENMLehrer | null {
+	public lerngruppeGetFachlehrer(id: number) : List<ENMLehrer> {
+		const result = new ArrayList<ENMLehrer>();
 		const lerngruppe = this.mapLerngruppen.value.get(id);
 		if (lerngruppe === null)
-			return null;
-		return this.mapLehrer.value.get(lerngruppe.lehrerID);
+			return result;
+		for (const idLehrer of lerngruppe.lehrerID) {
+			const lehrer = this.mapLehrer.value.get(idLehrer);
+			if (lehrer !== null)
+				result.add(lehrer);
+		}
+		return result;
+	}
+
+	/**
+	 * Gibt eine komma-separierten String für die Kürzel der Lehrer einer Lerngruppe zurück.
+	 *
+	 * @param id   die ID der Lerngruppe
+	 *
+	 * @returns der String mit den Kürzeln der Fachlehrer
+	 */
+	public lerngruppeGetFachlehrerOrNull(id: number) : string {
+		const list = this.lerngruppeGetFachlehrer(id);
+		return [...list].map(l => l.kuerzel).join(",");
 	}
 
 	/**
