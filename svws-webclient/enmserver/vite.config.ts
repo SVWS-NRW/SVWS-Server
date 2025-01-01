@@ -6,8 +6,11 @@ import { resolve } from "path";
 
 export default defineConfig({
 	test: {},
-	base: '/admin/',
-	server: { port: 3001 },
+	server: {
+		port: 3003,
+		cors: false,
+	},
+	base: '',
 	plugins: [
 		Vue({ include: [/\.vue$/, /\.md$/] }),
 		Markdown({}),
@@ -24,6 +27,9 @@ export default defineConfig({
 		alias: {
 			// Importe können durch ein vorangestelltes `~` absolut gefunden werden
 			"~": resolve(__dirname, "src"),
+			"@ui": resolve(__dirname, '../ui/src/index.ts'),
+			"@core": resolve(__dirname, '../core/src/index.ts'),
+			"@json": resolve(__dirname, "../../svws-asd/src/main/resources/de/svws_nrw/asd/types"),
 		},
 	},
 	build: {

@@ -9,7 +9,7 @@ export class ENMFloskelgruppe extends JavaObject {
 	/**
 	 * Das Kürzel der Floskelgruppe, z. B. AL1, AL2 oder ASV.
 	 */
-	public kuerzel : string | null = null;
+	public kuerzel : string = "";
 
 	/**
 	 * Die textuelle Bezeichnung der Floskelgruppe, z. B. Allgemeine Floskeln oder Floskeln zum Arbeits- und Sozialverhalten.
@@ -47,7 +47,9 @@ export class ENMFloskelgruppe extends JavaObject {
 	public static transpilerFromJSON(json : string): ENMFloskelgruppe {
 		const obj = JSON.parse(json) as Partial<ENMFloskelgruppe>;
 		const result = new ENMFloskelgruppe();
-		result.kuerzel = (obj.kuerzel === undefined) ? null : obj.kuerzel === null ? null : obj.kuerzel;
+		if (obj.kuerzel === undefined)
+			throw new Error('invalid json format, missing attribute kuerzel');
+		result.kuerzel = obj.kuerzel;
 		result.bezeichnung = (obj.bezeichnung === undefined) ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
 		result.hauptgruppe = (obj.hauptgruppe === undefined) ? null : obj.hauptgruppe === null ? null : obj.hauptgruppe;
 		if (obj.floskeln !== undefined) {
@@ -60,7 +62,7 @@ export class ENMFloskelgruppe extends JavaObject {
 
 	public static transpilerToJSON(obj : ENMFloskelgruppe) : string {
 		let result = '{';
-		result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
 		result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		result += '"hauptgruppe" : ' + ((obj.hauptgruppe === null) ? 'null' : JSON.stringify(obj.hauptgruppe)) + ',';
 		result += '"floskeln" : [ ';
@@ -79,7 +81,7 @@ export class ENMFloskelgruppe extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<ENMFloskelgruppe>) : string {
 		let result = '{';
 		if (obj.kuerzel !== undefined) {
-			result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';

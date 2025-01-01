@@ -1,0 +1,100 @@
+plugins {
+	id 'svws.gradle.node.plugin'
+}
+
+def svwsArtifactVersion = project.ext.latestRelease
+
+task assembleEnmServer(type: NpmRun) {
+	dependsOn rootProject.npmPrepare
+	dependsOn project(':svws-webclient:core').tasks.assemble
+	dependsOn project(':svws-webclient:ui').tasks.assemble
+	group "build"
+	args = ['build']
+	inputs.files fileTree("$rootDir/svws-webclient/core").matching { exclude "build", "dist" },
+		fileTree("$rootDir/svws-webclient/ui").matching { exclude "build", "dist", ".histoire" },
+		fileTree("$projectDir").matching { exclude "build" }
+	outputs.dir file("$buildDir/output")
+}
+
+assemble.dependsOn assembleEnmServer
+
+task doZip(type: Zip) {
+	dependsOn assembleEnmServer
+	archiveFileName = "SVWS-ENMServer-"+svwsArtifactVersion+".zip"
+	destinationDirectory = file("$buildDir")
+	from "$buildDir/output"
+}
+
+build.dependsOn doZip
+
+task cleanEnmServer(type: Delete) {
+	delete file("$buildDir/output")
+}
+
+clean.dependsOn cleanEnmServer
+
+task publishNexusEnmServer(type: NpmPublish) {
+	dependsOn build
+	group "publishing"
+	npmrc = "$rootDir/.npmrc.nexus"
+	repository = "https://artifactory.svws-nrw.de/repository/npm-private/"
+	actor = project.ext.getNexusActor()
+	token = project.ext.getNexusToken()
+	scopePublic = false
+}
+
+task publishNpmEnmServer(type: NpmPublish) {
+	dependsOn build
+	group "publishing"
+	npmrc = "$rootDir/.npmrc.npm"
+	repository = "https://registry.npmjs.org/"
+	token = project.ext.getNpmToken()
+	scopePublic = true
+	tokenOnly = true
+}
+
+publishReleaseAll.dependsOn publishNexusEnmServer
+publishReleaseAll.dependsOn publishNpmEnmServer
+
+
+publishing {
+	repositories {
+		maven {
+			name = "GitHubPackagesSVWSEnmServer"
+			url = "https://maven.pkg.github.com/SVWS-NRW/SVWS-Server"
+			credentials {
+				username = getGithubActor()
+				password = getGithubToken()
+			}
+		}
+	}
+	publications {
+		mavenClientZip(MavenPublication) {
+			artifact doZip
+			artifactId = 'svws-enmserver'
+			pom {
+				name = 'SVWS-ENMServer'
+				description = 'Stellt den ENM-Server des SVWS-Projektes als Webanwendung zur Verfügung.'
+				url = 'http://www.svws.nrw.de'
+				licenses {
+					license {
+						name = 'BSD-3-Clause'
+						url = 'https://opensource.org/licenses/BSD-3-Clause'
+					}
+				}
+				scm {
+					connection = 'scm:git@github.com/SVWS-NRW/SVWS-Server'
+					developerConnection = 'scm:git@github.com/SVWS-NRW/SVWS-Server.git'
+					url = 'https://github.com/SVWS-NRW/SVWS-Server.git'
+				}
+				developers {
+					developer {
+						id = 'svws-nrw'
+						name = 'Schulverwaltung NRW'
+						email = 'npm@svws-nrw.de'
+					}
+				}
+			}
+		}
+	}
+}

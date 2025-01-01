@@ -54,6 +54,7 @@
 		"svws-webclient/client",
 		"svws-webclient/admin",
 		"svws-webclient/browser-test",
-		"svws-webclient/laufbahnplanung"
+		"svws-webclient/laufbahnplanung",
+		"svws-webclient/enmserver"
 	]
 }

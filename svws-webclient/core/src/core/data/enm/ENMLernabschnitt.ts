@@ -45,7 +45,7 @@ export class ENMLernabschnitt extends JavaObject {
 	public lernbereich2note : string | null = null;
 
 	/**
-	 * Das Kürzel des Haupförderschwerpunktes oder null bei keinem Haupförderschwerpunkt
+	 * Das Kürzel des Hauptförderschwerpunktes oder null bei keinem Hauptförderschwerpunkt
 	 */
 	public foerderschwerpunkt1 : string | null = null;
 

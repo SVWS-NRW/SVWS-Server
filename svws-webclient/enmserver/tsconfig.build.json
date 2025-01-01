@@ -1,0 +1,19 @@
+{
+	"extends": "../../tsconfig.base.json",
+	"compilerOptions": {
+		"resolveJsonModule": true,
+		"outDir": "./dist",
+		"baseUrl": ".",
+		"paths": {
+			"~/*": ["./src/*"],
+			"@ui": ["../ui/src/index.ts"],
+			"@core": ["../core/src/index.ts"],
+			"@json/*": ["../../svws-asd/src/main/resources/de/svws_nrw/asd/types/*"],
+		},
+	},
+	"include": [
+		"src/**/*",
+		"components.d.ts",
+	],
+	"exclude": ["**/*.story.vue", "src/histoire.setup.ts"]
+}

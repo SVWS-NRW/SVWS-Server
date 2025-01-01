@@ -1,0 +1,30 @@
+{
+	"name": "@svws-nrw/svws-enmserver",
+	"description": "SVWS-ENM-Server",
+	"author": "MSB NRW",
+	"license": "BSD-3-Clause",
+	"version": "1.0.3-SNAPSHOT",
+	"main": "./dist/index.js",
+	"type": "module",
+	"types": "./dist/index.d.ts",
+	"files": [
+		"./dist/**/*"
+	],
+	"scripts": {
+		"dev": "vite",
+		"lint": "eslint 'src/**/*.{ts,vue}' --cache",
+		"lint-tsc": "vue-tsc --noEmit",
+		"serve": "vite preview",
+		"build": "npm run build-app && npm run build-dts",
+		"build-app": "vite build",
+		"build-dts": "vue-tsc --declaration --emitDeclarationOnly -p tsconfig.build.json",
+		"lint-fix": "eslint 'src/**/*.{ts,vue}' --fix --cache",
+		"check-licenses": "license-checker-rseidelsohn --summary --unknown --production",
+		"genkeys": "openssl req -new -x509 -nodes -days 3560 -newkey rsa:2048 -subj \"/C=DE/ST=NRW/L=Unknown/O=Unknown/CN=localhost\" -keyout localhost.key -out localhost.crt",
+		"php": "php -S localhost:2998 -t src/php/public/ router.php"
+	},
+	"dependencies": {
+		"vue": "^3.3",
+		"vue-router": "^4.1.5"
+	}
+}
