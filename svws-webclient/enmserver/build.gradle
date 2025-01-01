@@ -10,6 +10,17 @@ task assembleEnmServer(type: NpmRun) {
 	dependsOn project(':svws-webclient:ui').tasks.assemble
 	group "build"
 	args = ['build']
+	doLast {
+		copy {
+			from "$projectDir/src/php/"
+			into "$buildDir/output"
+			exclude "db"
+			exclude "config.json"
+			exclude ".gitignore"
+			exclude "index.html"
+		}
+		mkdir "$buildDir/output/db"
+	}
 	inputs.files fileTree("$rootDir/svws-webclient/core").matching { exclude "build", "dist" },
 		fileTree("$rootDir/svws-webclient/ui").matching { exclude "build", "dist", ".histoire" },
 		fileTree("$projectDir").matching { exclude "build" }

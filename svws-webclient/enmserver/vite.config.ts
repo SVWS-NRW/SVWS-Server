@@ -33,7 +33,7 @@ export default defineConfig({
 		},
 	},
 	build: {
-		outDir: "build/output",
+		outDir: "build/output/public",
 		emptyOutDir: true,
 		sourcemap: true,
 		minify: false,
