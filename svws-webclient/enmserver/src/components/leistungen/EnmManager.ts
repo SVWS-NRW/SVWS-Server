@@ -1,6 +1,6 @@
 import { computed, shallowRef, triggerRef } from "vue";
 import type { ShallowRef } from "vue";
-import { Comparator, ENMFach, ENMFloskelgruppe, ENMFoerderschwerpunkt, ENMJahrgang, ENMKlasse, ENMLehrer, ENMLeistung, ENMLerngruppe, ENMSchueler, ENMTeilleistungsart, JavaMap, List, ZulaessigeKursart} from "@core";
+import type { Comparator, ENMFach, ENMFloskelgruppe, ENMFoerderschwerpunkt, ENMJahrgang, ENMKlasse, ENMLehrer, ENMLeistung, ENMLerngruppe, ENMSchueler, ENMTeilleistungsart, JavaMap, List} from "@core";
 import { ArrayList, DeveloperNotificationException, HashMap, HashSet, type ENMDaten } from "@core";
 
 /**
@@ -31,8 +31,11 @@ export class EnmManager {
 	/** Eine Referenz auf die ID des Lehrers, für welchen die ENM-Daten in diesem Manager verwaltet werden */
 	protected idLehrer: ShallowRef<number>;
 
-	/** Eine Referenz auf die aktuelle Auswahl von Lerngruppen des Lehrers, für welchen die ENM-Daten in diesem Manager verwaltet werden */
+	/** Eine Referenz auf die aktuelle Auswahl von Lerngruppen des Lehrers, auf welche in diesem Manager gefiltert wird */
 	protected _filterLerngruppen: ShallowRef<Array<EnmLerngruppenAuswahlEintrag>>;
+
+	/** Eine Refernz auf die aktuelle Auswahl der Leistung zur Bearbeitung in diesem Manager */
+	protected _auswahlLeistung: ShallowRef<ENMLeistung | null>;
 
 
 	/**
@@ -45,6 +48,7 @@ export class EnmManager {
 		this.daten = shallowRef<ENMDaten>(daten);
 		this.idLehrer = shallowRef<number>(idLehrer);
 		this._filterLerngruppen = shallowRef<Array<EnmLerngruppenAuswahlEintrag>>(new Array<EnmLerngruppenAuswahlEintrag>());
+		this._auswahlLeistung = shallowRef<ENMLeistung | null>(null);
 	}
 
 	/**
@@ -62,6 +66,16 @@ export class EnmManager {
 	/** Setzt die aktuelle Auswahl der Lerngruppen. */
 	public set filterLerngruppen(value : Array<EnmLerngruppenAuswahlEintrag>) {
 		this._filterLerngruppen.value = value;
+	}
+
+	/** Gibt die aktuell ausgewählte Leistung zurück */
+	public get auswahlLeistung() : ENMLeistung | null {
+		return this._auswahlLeistung.value;
+	}
+
+	/** Setzt die aktuell ausgewählte Leistung */
+	public set auswahlLeistung(value: ENMLeistung | null) {
+		this._auswahlLeistung.value = value;
 	}
 
 	/** Eine Map von der ID der Förderschwerpunkte auf deren Objekte */
