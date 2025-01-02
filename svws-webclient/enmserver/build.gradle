@@ -17,7 +17,7 @@ task assembleEnmServer(type: NpmRun) {
 			exclude "db"
 			exclude "config.json"
 			exclude ".gitignore"
-			exclude "index.html"
+			exclude "public/index.html"
 		}
 		mkdir "$buildDir/output/db"
 	}
