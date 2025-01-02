@@ -15,7 +15,7 @@
 
 	// ... und gebe dieses zurück
 	header("Content-type: application/json; charset=utf-8");
-	echo json_encode($newToken);
+	echo json_encode($newToken, JSON_UNESCAPED_SLASHES);
 
 ?>
 

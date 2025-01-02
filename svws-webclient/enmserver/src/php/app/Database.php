@@ -307,7 +307,7 @@
 		 * @param object $enmDaten   die zu schreibenden ENM-Daten
 		 */
 		public function writeENMDaten(int $ts, object $enmDaten) {
-			$jsonEnmDaten = json_encode($enmDaten);
+			$jsonEnmDaten = json_encode($enmDaten, JSON_UNESCAPED_SLASHES);
 			$this->insertInto("Daten", "INSERT INTO Daten(ts, schulnummer, daten) VALUES ($ts, $enmDaten->schulnummer, '$jsonEnmDaten')");
 		}
 
@@ -390,7 +390,7 @@
 			$this->beginTransaction();
 			$stmt = $this->prepareStatement("INSERT INTO Lehrer(id, ts, daten, eMailDienstlich, passwordHash, tsPasswordHash) VALUES (:id, :ts, :daten, :email, :pw, :tspw)");
 			foreach ($enmLehrer as $lehrer) {
-				$jsonLehrer = json_encode($lehrer);
+				$jsonLehrer = json_encode($lehrer, JSON_UNESCAPED_SLASHES);
 				$this->bindStatementValue($stmt, ":id", $lehrer->id, PDO::PARAM_INT);
 				$this->bindStatementValue($stmt, ":ts", $ts, PDO::PARAM_INT);
 				$this->bindStatementValue($stmt, ":daten", $jsonLehrer, PDO::PARAM_STR);
@@ -418,12 +418,12 @@
 			$stmtSprachenfolge = $this->prepareStatement("INSERT INTO Sprachenfolge(id, sprache, ts, idSchueler, daten) VALUES (:id, :sprache, :ts, :idSchueler, :daten)");
 			foreach ($enmSchueler as $schueler) {
 				// Erstelle den Schülereintrag mit einem JSON ohne Detaildaten zu der Sprachenfolge, den Leistungsdaten und den Ankreuzkompetenzen ...
-				$tmpJsonSchueler = json_encode($schueler);
+				$tmpJsonSchueler = json_encode($schueler, JSON_UNESCAPED_SLASHES);
 				$tmpSchueler = json_decode($tmpJsonSchueler);
 				$tmpSchueler->leistungsdaten = [];
 				$tmpSchueler->ankreuzkompetenzen = [];
 				$tmpSchueler->sprachenfolge = [];
-				$jsonSchueler = json_encode($tmpSchueler);
+				$jsonSchueler = json_encode($tmpSchueler, JSON_UNESCAPED_SLASHES);
 				$this->bindStatementValue($stmtSchueler, ":id", $schueler->id, PDO::PARAM_INT);
 				$this->bindStatementValue($stmtSchueler, ":ts", $ts, PDO::PARAM_INT);
 				$this->bindStatementValue($stmtSchueler, ":idJahrgang", $schueler->jahrgangID, PDO::PARAM_INT);
@@ -441,10 +441,10 @@
 				$this->executeStatement($stmtSchueler);
 				// ... dann die Leistungsdaten
 				foreach ($schueler->leistungsdaten as $leistung) {
-					$tmpJsonLeistung = json_encode($leistung);
+					$tmpJsonLeistung = json_encode($leistung, JSON_UNESCAPED_SLASHES);
 					$tmpLeistung = json_decode($tmpJsonLeistung);
 					$tmpLeistung->teilleistungen = [];
-					$jsonLeistung = json_encode($tmpLeistung);
+					$jsonLeistung = json_encode($tmpLeistung, JSON_UNESCAPED_SLASHES);
 					$this->bindStatementValue($stmtLeistung, ":id", $leistung->id, PDO::PARAM_INT);
 					$this->bindStatementValue($stmtLeistung, ":ts", $ts, PDO::PARAM_INT);
 					$this->bindStatementValue($stmtLeistung, ":idSchueler", $schueler->id, PDO::PARAM_INT);
@@ -459,7 +459,7 @@
 					$this->executeStatement($stmtLeistung);
 					// ... mit den Teilleistungen
 					foreach ($leistung->teilleistungen as $teilleistung) {
-						$jsonTeilleistung = json_encode($teilleistung);
+						$jsonTeilleistung = json_encode($teilleistung, JSON_UNESCAPED_SLASHES);
 						$this->bindStatementValue($stmtTeilleistung, ":id", $teilleistung->id, PDO::PARAM_INT);
 						$this->bindStatementValue($stmtTeilleistung, ":ts", $ts, PDO::PARAM_INT);
 						$this->bindStatementValue($stmtTeilleistung, ":idLeistung", $leistung->id, PDO::PARAM_INT);
@@ -473,7 +473,7 @@
 				}
 				// ... dann die Ankreuzkompetenzen
 				foreach ($schueler->ankreuzkompetenzen as $komp) {
-					$jsonKompetenz = json_encode($komp);
+					$jsonKompetenz = json_encode($komp, JSON_UNESCAPED_SLASHES);
 					$this->bindStatementValue($stmtAnkreuzkomp, ":id", $komp->id, PDO::PARAM_INT);
 					$this->bindStatementValue($stmtAnkreuzkomp, ":ts", $ts, PDO::PARAM_INT);
 					$this->bindStatementValue($stmtAnkreuzkomp, ":idSchueler", $schueler->id, PDO::PARAM_INT);
@@ -484,7 +484,7 @@
 				}
 				// ... und die Sprachenfolge
 				foreach ($schueler->sprachenfolge as $sprachenfolge) {
-					$jsonSprachenfolge = json_encode($sprachenfolge);
+					$jsonSprachenfolge = json_encode($sprachenfolge, JSON_UNESCAPED_SLASHES);
 					$this->bindStatementValue($stmtSprachenfolge, ":id", $sprachenfolge->id, PDO::PARAM_INT);
 					$this->bindStatementValue($stmtSprachenfolge, ":sprache", $sprachenfolge->sprache, PDO::PARAM_STR);
 					$this->bindStatementValue($stmtSprachenfolge, ":ts", $ts, PDO::PARAM_INT);
@@ -577,7 +577,7 @@
 						$jsonNeu->bemerkungen->foerderbemerkungen = $jsonAlt->bemerkungen->foerderbemerkungen;
 						$jsonNeu->bemerkungen->tsFoerderbemerkungen = $jsonAlt->bemerkungen->tsFoerderbemerkungen;
 					}
-					$updatedData = json_encode($jsonNeu);
+					$updatedData = json_encode($jsonNeu, JSON_UNESCAPED_SLASHES);
 					$update .= "daten='$updatedData' WHERE id=$neu->id and ts=$neu->ts";
 					$this->updateSet('Schueler', $update);
 				}
@@ -649,7 +649,7 @@
 						$jsonNeu->istGemahnt = $jsonAlt->istGemahnt;
 						$jsonNeu->tsIstGemahnt = $jsonAlt->tsIstGemahnt;
 					}
-					$updatedData = json_encode($jsonNeu);
+					$updatedData = json_encode($jsonNeu, JSON_UNESCAPED_SLASHES);
 					$update .= "daten='$updatedData' WHERE id=$neu->id and ts=$neu->ts";
 					$this->updateSet('Leistungsdaten', $update);
 				}
@@ -707,7 +707,7 @@
 						$jsonNeu->note = $jsonAlt->note;
 						$jsonNeu->tsNote = $jsonAlt->tsNote;
 					}
-					$updatedData = json_encode($jsonNeu);
+					$updatedData = json_encode($jsonNeu, JSON_UNESCAPED_SLASHES);
 					$update .= "daten='$updatedData' WHERE id=$neu->id and ts=$neu->ts";
 					$this->updateSet('Teilleistungen', $update);
 				}
@@ -747,7 +747,7 @@
 					$update = "tsStufe='$alt->tsStufe',";
 					$jsonNeu->stufen = $jsonAlt->stufen;
 					$jsonNeu->tsStufe = $jsonAlt->tsStufe;
-					$updatedData = json_encode($jsonNeu);
+					$updatedData = json_encode($jsonNeu, JSON_UNESCAPED_SLASHES);
 					$update .= "daten='$updatedData' WHERE id=$neu->id and ts=$neu->ts";
 					$this->updateSet('Ankreuzkompetenzen', $update);
 				}
@@ -787,7 +787,7 @@
 					$update = "passwordHash='$alt->passwordHash', tsPasswordHash='$alt->tsPasswordHash',";
 					$jsonNeu->passwordHash = $jsonAlt->passwordHash;
 					$jsonNeu->tsPasswordHash = $jsonAlt->tsPasswordHash;
-					$updatedData = json_encode($jsonNeu);
+					$updatedData = json_encode($jsonNeu, JSON_UNESCAPED_SLASHES);
 					$update .= "daten='$updatedData' WHERE id=$neu->id and ts=$neu->ts";
 					$this->updateSet('Lehrer', $update);
 				}
@@ -948,7 +948,7 @@
 				$daten->tsIstGemahnt = $ts;
 			}
 			if (strlen($update) > 0) {
-				$updatedData = json_encode($daten);
+				$updatedData = json_encode($daten, JSON_UNESCAPED_SLASHES);
 				$update .= "daten='$updatedData' WHERE id=$patch->id";
 				$this->updateSet('Leistungsdaten', $update);
 			}

@@ -136,7 +136,7 @@
 			$daten->lehrer = $this->enmLehrer;
 			// ... und die Schüler-Daten
 			$daten->schueler = $this->enmSchueler;
-			return json_encode($daten);
+			return json_encode($daten, JSON_UNESCAPED_SLASHES);
 		}
 
 		/**
@@ -284,7 +284,7 @@
 			}
 			$daten->schueler = $listSchueler;
 			$daten->lehrerID = $lehrer->id;
-			return json_encode($daten);
+			return json_encode($daten, JSON_UNESCAPED_SLASHES);
 		}
 
 

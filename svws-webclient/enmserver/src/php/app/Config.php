@@ -50,7 +50,7 @@
 					'adminUser' => "admin",
 					'adminPassword' => base64_encode(random_bytes(16))
 				];
-				$success = file_put_contents($this->configfile, json_encode($newconfig, JSON_PRETTY_PRINT));
+				$success = file_put_contents($this->configfile, json_encode($newconfig, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
 				if ($success === false)
 					Http::exit500("Config - Konstruktor: Es wurde keine Konfigurationsdatei unter dem Pfad $this->configfile gefunden und es konnte auch keine neue erstellt werden.");
 			}
