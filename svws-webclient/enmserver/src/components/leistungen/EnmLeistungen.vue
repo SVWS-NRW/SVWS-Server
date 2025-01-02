@@ -1,6 +1,7 @@
 <template>
 	<div class="page--content h-full w-full overflow-hidden">
-		<table class="svws-ui-table svws-clickable h-full w-full overflow-hidden" role="table" aria-label="Tabelle">
+		<table class="svws-ui-table svws-clickable h-full w-full overflow-hidden" role="table" aria-label="Tabelle"
+			@keydown.down.prevent.stop="manager.auswahlLeistungNaechste()" @keydown.up.prevent.stop="manager.auswahlLeistungVorherige()">
 			<thead class="svws-ui-thead cursor-pointer mb-1" role="rowgroup" aria-label="Tabellenkopf">
 				<tr class="svws-ui-tr" role="row">
 					<td class="svws-ui-td" role="columnheader"> Klasse </td>
@@ -18,9 +19,9 @@
 				</tr>
 			</thead>
 			<tbody class="svws-ui-tbody h-full overflow-y-auto" role="rowgroup" aria-label="Tabelleninhalt">
-				<template v-for="schueler of manager.lerngruppenAuswahlGetSchueler()" :key="schueler.id">
-					<template v-for="leistung of manager.leistungenGetOfSchueler(schueler.id)" :key="leistung.id">
-						<tr class="svws-ui-tr" role="row" :class="{ 'svws-clicked': manager.auswahlLeistung?.id === leistung.id }" @click.capture.exact="setAuswahlLeistung(leistung)">
+				<template v-for="(schueler, indexSchueler) of manager.lerngruppenAuswahlGetSchueler()" :key="schueler.id">
+					<template v-for="(leistung, indexLeistung) of manager.leistungenGetOfSchueler(schueler.id)" :key="leistung.id">
+						<tr class="svws-ui-tr" role="row" :class="{ 'svws-clicked': manager.auswahlLeistung.leistung === leistung }" @click.capture.exact="setAuswahlLeistung({ indexSchueler, indexLeistung, leistung })">
 							<td class="svws-ui-td" role="cell">
 								{{ manager.schuelerGetKlasse(schueler.id).kuerzelAnzeige }}
 							</td>
@@ -40,23 +41,25 @@
 								{{ manager.lerngruppeGetFachlehrerOrNull(leistung.lerngruppenID) }}
 							</td>
 							<td class="svws-ui-td" role="cell">
-								<!-- TODO click.stop für Kontrollelement zum Setzen der auswahlLeistung -->
 								{{ leistung.noteQuartal }}
 							</td>
 							<td class="svws-ui-td" role="cell">
-								<!-- TODO click.stop für Kontrollelement zum Setzen der auswahlLeistung -->
 								{{ leistung.note }}
 							</td>
 							<td class="svws-ui-td" role="cell">
 								{{ leistung.istGemahnt }}
 							</td>
 							<td class="svws-ui-td" role="cell">
-								<!-- TODO click.stop für Kontrollelement zum Setzen der auswahlLeistung -->
-								{{ leistung.fehlstundenFach }}
+								<svws-ui-input-number v-if="manager.fehlstundenFachbezogen(schueler)" placeholder="Fehlstunden"
+									:model-value="leistung.fehlstundenFach" headless hide-stepper min="0" max="999"
+									@change="fehlstundenFach => patchLeistung(leistung, { fehlstundenFach })" />
+								<span v-else>—</span>
 							</td>
 							<td class="svws-ui-td" role="cell">
-								<!-- TODO click.stop für Kontrollelement zum Setzen der auswahlLeistung -->
-								{{ leistung.fehlstundenUnentschuldigtFach }}
+								<svws-ui-input-number v-if="manager.fehlstundenFachbezogen(schueler)" placeholder="Fehlstunden (unentschuldigt)"
+									:model-value="leistung.fehlstundenUnentschuldigtFach" headless hide-stepper min="0" max="999"
+									@change="fehlstundenUnentschuldigtFach => patchLeistung(leistung, { fehlstundenUnentschuldigtFach })" />
+								<span v-else>—</span>
 							</td>
 							<td class="svws-ui-td" role="cell">
 								{{ leistung.fachbezogeneBemerkungen }}
@@ -73,12 +76,17 @@
 
 	import { computed } from 'vue';
 	import type { EnmLeistungenProps } from './EnmLeistungenProps';
+	import type { EnmLeistungAuswahl } from './EnmManager';
 	import type { ENMLeistung } from '@core';
 
 	const props = defineProps<EnmLeistungenProps>();
 
-	function setAuswahlLeistung(leistung: ENMLeistung) {
-		props.manager.auswahlLeistung = leistung;
+	function setAuswahlLeistung(value: EnmLeistungAuswahl) {
+		props.manager.auswahlLeistung = value;
+	}
+
+	function patchLeistung(leistung: ENMLeistung, patch: Partial<ENMLeistung>) {
+		console.log(leistung, patch);
 	}
 
 	// TODO

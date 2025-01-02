@@ -21,12 +21,29 @@ export interface EnmLerngruppenAuswahlEintrag {
 
 
 /**
+ * Das Interface für eine aktuelle Auswahl einer Leistung
+ */
+export interface EnmLeistungAuswahl {
+
+	/** Der Index der ausgewählten Leistung in der aktuellen Auswahl der Liste der Schüler */
+	indexSchueler: number;
+
+	/** Der Index der ausgewählten Leistung in der aktuellen Auswahl der Liste der Leistungen der aktuellen Auswahl des Schülers */
+	indexLeistung: number;
+
+	/** Die ausgewählte Leistung */
+	leistung: ENMLeistung | null;
+
+}
+
+
+/**
  * Ein Manager für die Verwaltung den ENM-Daten.
  */
 export class EnmManager {
 
 	/** Eine Referenz auf die ENM-Daten */
-	protected daten: ShallowRef<ENMDaten>;
+	protected _daten: ShallowRef<ENMDaten>;
 
 	/** Eine Referenz auf die ID des Lehrers, für welchen die ENM-Daten in diesem Manager verwaltet werden */
 	protected idLehrer: ShallowRef<number>;
@@ -35,7 +52,7 @@ export class EnmManager {
 	protected _filterLerngruppen: ShallowRef<Array<EnmLerngruppenAuswahlEintrag>>;
 
 	/** Eine Refernz auf die aktuelle Auswahl der Leistung zur Bearbeitung in diesem Manager */
-	protected _auswahlLeistung: ShallowRef<ENMLeistung | null>;
+	protected _auswahlLeistung: ShallowRef<EnmLeistungAuswahl>;
 
 
 	/**
@@ -45,17 +62,24 @@ export class EnmManager {
 	 * @param idLehrer   die ID des Lehrers, für welchen die ENM-Daten verwaltet werden
 	 */
 	public constructor(daten: ENMDaten, idLehrer: number) {
-		this.daten = shallowRef<ENMDaten>(daten);
+		this._daten = shallowRef<ENMDaten>(daten);
 		this.idLehrer = shallowRef<number>(idLehrer);
 		this._filterLerngruppen = shallowRef<Array<EnmLerngruppenAuswahlEintrag>>(new Array<EnmLerngruppenAuswahlEintrag>());
-		this._auswahlLeistung = shallowRef<ENMLeistung | null>(null);
+		this._auswahlLeistung = shallowRef<EnmLeistungAuswahl>({ indexSchueler: 0, indexLeistung: 0, leistung: null });
 	}
 
 	/**
 	 * Aktualisiert die Daten dieses Manager, in dem die Reaktivität des Daten-Attributs getriggert wird.
 	 */
 	public update(): void {
-		triggerRef(this.daten);
+		triggerRef(this._daten);
+	}
+
+	/**
+	 * Gibt die aktuell im Manager gespeicherten Daten zurück.
+	 */
+	public get daten(): ENMDaten {
+		return this._daten.value;
 	}
 
 	/** Gibt die aktuelle Auswahl der Lerngruppen zurück. */
@@ -69,19 +93,105 @@ export class EnmManager {
 	}
 
 	/** Gibt die aktuell ausgewählte Leistung zurück */
-	public get auswahlLeistung() : ENMLeistung | null {
+	public get auswahlLeistung() : EnmLeistungAuswahl {
 		return this._auswahlLeistung.value;
 	}
 
 	/** Setzt die aktuell ausgewählte Leistung */
-	public set auswahlLeistung(value: ENMLeistung | null) {
+	public set auswahlLeistung(value: EnmLeistungAuswahl) {
 		this._auswahlLeistung.value = value;
+	}
+
+	/**
+	 * Setzt die aktuell ausgewählte Leistung auf die nächste verfügbare Leistung.
+	 */
+	public auswahlLeistungNaechste(): void {
+		const aktuell = this._auswahlLeistung.value;
+		let valid = (aktuell.leistung !== null);
+		const listSchueler = this.lerngruppenAuswahlGetSchueler();
+		if (listSchueler.isEmpty()) {
+			this._auswahlLeistung.value = { indexSchueler : 0, indexLeistung : 0, leistung: null };
+			return;
+		}
+		if ((aktuell.indexSchueler < 0) || (aktuell.indexSchueler >= listSchueler.size()))
+			valid = false;
+		const schueler = valid ? listSchueler.get(aktuell.indexSchueler) : null;
+		const listLeistungen = (schueler !== null) ? this.leistungenGetOfSchueler(schueler.id) : null;
+		if ((listLeistungen === null) || (aktuell.indexLeistung < 0) || (aktuell.indexLeistung >= listLeistungen.size()))
+			valid = false;
+		const leistung = (listLeistungen !== null) ? listLeistungen.get(aktuell.indexLeistung) : null;
+		if (leistung?.id !== aktuell.leistung?.id)
+			valid = false;
+		let indexLeistung = aktuell.indexLeistung + 1;
+		let indexSchueler = aktuell.indexSchueler;
+		if (valid && (listLeistungen !== null)) {
+			if (indexLeistung >= listLeistungen.size())
+				indexLeistung = 0;
+			if (indexLeistung === 0) {
+				indexSchueler++;
+				if (indexSchueler >= listSchueler.size())
+					return; // Nichts zu tun, da die aktuell ausgewählte Leistung die letzte Leistung der Liste ist
+			}
+		} else {
+			indexSchueler = (schueler !== null) ? aktuell.indexSchueler : 0;
+			indexLeistung = (leistung !== null) ? aktuell.indexLeistung : 0;
+		}
+		const neuSchueler = listSchueler.get(indexSchueler);
+		const neuListLeistung = this.leistungenGetOfSchueler(neuSchueler.id);
+		const neuLeistung = neuListLeistung.get(indexLeistung);
+		this._auswahlLeistung.value = { indexSchueler, indexLeistung, leistung: neuLeistung };
+		return;
+	}
+
+	/**
+	 * Setzt die aktuell ausgewählte Leistung auf die vorherige verfügbare Leistung.
+	 */
+	public auswahlLeistungVorherige(): void {
+		const aktuell = this._auswahlLeistung.value;
+		let valid = (aktuell.leistung !== null);
+		const listSchueler = this.lerngruppenAuswahlGetSchueler();
+		if (listSchueler.isEmpty()) {
+			this._auswahlLeistung.value = { indexSchueler : 0, indexLeistung : 0, leistung: null };
+			return;
+		}
+		if ((aktuell.indexSchueler < 0) || (aktuell.indexSchueler >= listSchueler.size()))
+			valid = false;
+		const schueler = valid ? listSchueler.get(aktuell.indexSchueler) : null;
+		const listLeistungen = (schueler !== null) ? this.leistungenGetOfSchueler(schueler.id) : null;
+		if ((listLeistungen === null) || (aktuell.indexLeistung < 0) || (aktuell.indexLeistung >= listLeistungen.size()))
+			valid = false;
+		const leistung = (listLeistungen !== null) ? listLeistungen.get(aktuell.indexLeistung) : null;
+		if (leistung?.id !== aktuell.leistung?.id)
+			valid = false;
+		let indexLeistung = aktuell.indexLeistung - 1;
+		let indexSchueler = aktuell.indexSchueler;
+		let neuLeistung;
+		if (valid && (listLeistungen !== null)) {
+			if (indexLeistung < 0) {
+				indexSchueler--;
+				if (indexSchueler < 0)
+					return; // Nichts zu tun, da die aktuell ausgewählte Leistung die erste Leistung der Liste ist
+			}
+			const neuSchueler = listSchueler.get(indexSchueler);
+			const neuListLeistung = this.leistungenGetOfSchueler(neuSchueler.id);
+			if (indexLeistung < 0)
+				indexLeistung = neuListLeistung.size() - 1;
+			neuLeistung = neuListLeistung.get(indexLeistung);
+		} else {
+			indexSchueler = (schueler !== null) ? aktuell.indexSchueler : 0;
+			indexLeistung = (leistung !== null) ? aktuell.indexLeistung : 0;
+			const neuSchueler = listSchueler.get(indexSchueler);
+			const neuListLeistung = this.leistungenGetOfSchueler(neuSchueler.id);
+			neuLeistung = neuListLeistung.get(indexLeistung);
+		}
+		this._auswahlLeistung.value = { indexSchueler, indexLeistung, leistung: neuLeistung };
+		return;
 	}
 
 	/** Eine Map von der ID der Förderschwerpunkte auf deren Objekte */
 	protected mapFoerderschwerpunkte = computed<JavaMap<number, ENMFoerderschwerpunkt>>(() => {
 		const result = new HashMap<number, ENMFoerderschwerpunkt>();
-		for (const f of this.daten.value.foerderschwerpunkte)
+		for (const f of this._daten.value.foerderschwerpunkte)
 			result.put(f.id, f);
 		return result;
 	});
@@ -89,7 +199,7 @@ export class EnmManager {
 	/** Eine Map von der ID der Jahrgänge auf deren Objekte */
 	protected mapJahrgaenge = computed<JavaMap<number, ENMJahrgang>>(() => {
 		const result = new HashMap<number, ENMJahrgang>();
-		for (const j of this.daten.value.jahrgaenge)
+		for (const j of this._daten.value.jahrgaenge)
 			result.put(j.id, j);
 		return result;
 	});
@@ -97,7 +207,7 @@ export class EnmManager {
 	/** Eine Map von der ID der Klassen auf deren Objekte */
 	protected mapKlassen = computed<JavaMap<number, ENMKlasse>>(() => {
 		const result = new HashMap<number, ENMKlasse>();
-		for (const k of this.daten.value.klassen)
+		for (const k of this._daten.value.klassen)
 			result.put(k.id, k);
 		return result;
 	});
@@ -105,7 +215,7 @@ export class EnmManager {
 	/** Eine Map von der ID der Floskelgruppen auf deren Objekte */
 	protected mapFloskelgruppen = computed<JavaMap<string, ENMFloskelgruppe>>(() => {
 		const result = new HashMap<string, ENMFloskelgruppe>();
-		for (const f of this.daten.value.floskelgruppen)
+		for (const f of this._daten.value.floskelgruppen)
 			result.put(f.kuerzel, f);
 		return result;
 	});
@@ -113,7 +223,7 @@ export class EnmManager {
 	/** Eine Map von der ID der Lehrer auf deren Objekte */
 	protected mapLehrer = computed<JavaMap<number, ENMLehrer>>(() => {
 		const result = new HashMap<number, ENMLehrer>();
-		for (const l of this.daten.value.lehrer)
+		for (const l of this._daten.value.lehrer)
 			result.put(l.id, l);
 		return result;
 	});
@@ -121,7 +231,7 @@ export class EnmManager {
 	/** Eine Map von der ID der Fächer auf deren Objekte */
 	protected mapFaecher = computed<JavaMap<number, ENMFach>>(() => {
 		const result = new HashMap<number, ENMFach>();
-		for (const f of this.daten.value.faecher)
+		for (const f of this._daten.value.faecher)
 			result.put(f.id, f);
 		return result;
 	});
@@ -129,7 +239,7 @@ export class EnmManager {
 	/** Eine Map von der ID der Teilleistungsarten auf deren Objekte */
 	protected mapTeilleistungsarten = computed<JavaMap<number, ENMTeilleistungsart>>(() => {
 		const result = new HashMap<number, ENMTeilleistungsart>();
-		for (const a of this.daten.value.teilleistungsarten)
+		for (const a of this._daten.value.teilleistungsarten)
 			result.put(a.id, a);
 		return result;
 	});
@@ -137,7 +247,7 @@ export class EnmManager {
 	/** Eine Map von der ID der Lerngruppen auf deren Objekte */
 	protected mapLerngruppen = computed<JavaMap<number, ENMLerngruppe>>(() => {
 		const result = new HashMap<number, ENMLerngruppe>();
-		for (const l of this.daten.value.lerngruppen)
+		for (const l of this._daten.value.lerngruppen)
 			result.put(l.id, l);
 		return result;
 	});
@@ -145,7 +255,7 @@ export class EnmManager {
 	/** Eine Map von der ID der Schüler auf deren Objekte */
 	protected mapSchueler = computed<JavaMap<number, ENMSchueler>>(() => {
 		const result = new HashMap<number, ENMSchueler>();
-		for (const s of this.daten.value.schueler)
+		for (const s of this._daten.value.schueler)
 			result.put(s.id, s);
 		return result;
 	});
@@ -154,10 +264,10 @@ export class EnmManager {
 	protected mapLerngruppenSchueler = computed<JavaMap<number, List<ENMSchueler>>>(() => {
 		const result = new HashMap<number, List<ENMSchueler>>();
 		// Erzeuge zunächst Listen für alle IDs der Lerngruppen
-		for (const lerngruppe of this.daten.value.lerngruppen)
+		for (const lerngruppe of this._daten.value.lerngruppen)
 			result.put(lerngruppe.id, new ArrayList<ENMSchueler>());
 		// Gehe alle Leistungsdaten der Schüler durch, um die Lerngruppen-Zuordnung zu bestimmen
-		for (const schueler of this.daten.value.schueler) {
+		for (const schueler of this._daten.value.schueler) {
 			for (const leistung of schueler.leistungsdaten) {
 				const idLerngruppe = leistung.lerngruppenID;
 				const list = result.get(idLerngruppe);
@@ -172,7 +282,7 @@ export class EnmManager {
 	/** Eine Map, welche einer Lerngruppen-ID die Menge der zugeordneten Jahrgänge zuordnet */
 	protected mapLerngruppeJahrgaenge = computed<JavaMap<number, List<ENMJahrgang>>>(() => {
 		const result = new HashMap<number, List<ENMJahrgang>>();
-		for (const lerngruppe of this.daten.value.lerngruppen) {
+		for (const lerngruppe of this._daten.value.lerngruppen) {
 			const list = new ArrayList<ENMJahrgang>();
 			// Klassen- oder Kursunterricht?
 			if (lerngruppe.kursartID === null) {
@@ -204,7 +314,7 @@ export class EnmManager {
 	/** Eine Map, welche einer Lerngruppen-ID die Menge der zugeordneten Klassen zuordnet */
 	protected mapLerngruppeKlassen = computed<JavaMap<number, List<ENMKlasse>>>(() => {
 		const result = new HashMap<number, List<ENMKlasse>>();
-		for (const lerngruppe of this.daten.value.lerngruppen) {
+		for (const lerngruppe of this._daten.value.lerngruppen) {
 			const list = new ArrayList<ENMKlasse>();
 			const schueler = this.mapLerngruppenSchueler.value.get(lerngruppe.id);
 			const tmpKlassenIDs = new HashSet<number>();
@@ -226,7 +336,7 @@ export class EnmManager {
 	/** Die Menge aller Lerngruppen des Lehrers, sortiert nach den Jahrgängen */
 	protected listLerngruppenLehrer = computed<List<ENMLerngruppe>>(() => {
 		const result = new ArrayList<ENMLerngruppe>();
-		for (const l of this.daten.value.lerngruppen)
+		for (const l of this._daten.value.lerngruppen)
 			if (l.lehrerID.contains(this.idLehrer.value))
 				result.add(l);
 		result.sort(this.comparatorLerngruppen);
@@ -550,6 +660,26 @@ export class EnmManager {
 	 */
 	public leistungenGetOfSchueler(id: number) : List<ENMLeistung> {
 		return this.mapLerngruppenAuswahlSchuelerLeistungen.value.get(id) ?? new ArrayList<ENMLeistung>();
+	}
+
+	/**
+	 * Gibt zurück, ob die Fehlstunden für den übergebenen Schüler fachbezogen ermittelt werden oder nicht.
+	 *
+	 * @param schueler   der Schüler
+	 */
+	public fehlstundenFachbezogen(schueler: ENMSchueler) : boolean {
+		return true;
+		// TODO zukünftig anhand der Konfiguration entscheiden...
+		// if (!this._daten.value.fehlstundenEingabe)
+		// 	return false;
+		// const jahrgang = this.mapJahrgaenge.value.get(schueler.jahrgangID);
+		// if (jahrgang === null)
+		// 	return false;
+		// if (jahrgang.stufe === 'SI')
+		// 	return this._daten.value.fehlstundenSIFachbezogen;
+		// if ((jahrgang.stufe === 'SII-1') || (jahrgang.stufe === 'SII-2') || (jahrgang.stufe === 'SII-3'))
+		// 	return this._daten.value.fehlstundenSIIFachbezogen;
+		// return true;
 	}
 
 }
