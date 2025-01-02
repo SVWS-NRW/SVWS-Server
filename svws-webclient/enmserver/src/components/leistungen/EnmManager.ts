@@ -188,6 +188,16 @@ export class EnmManager {
 		return;
 	}
 
+	/** Gibt das Schuljahr der ENM-Daten zurück. */
+	public get schuljahr(): number {
+		return this._daten.value.schuljahr;
+	}
+
+	/** Gibt das Halbjahr der ENM-Daten zurück. */
+	public get halbjahr(): number {
+		return this._daten.value.aktuellerAbschnitt;
+	}
+
 	/** Eine Map von der ID der Förderschwerpunkte auf deren Objekte */
 	protected mapFoerderschwerpunkte = computed<JavaMap<number, ENMFoerderschwerpunkt>>(() => {
 		const result = new HashMap<number, ENMFoerderschwerpunkt>();
@@ -333,13 +343,21 @@ export class EnmManager {
 		return result;
 	});
 
-	/** Die Menge aller Lerngruppen des Lehrers, sortiert nach den Jahrgängen */
+	/** Die Liste aller Lerngruppen des Lehrers, sortiert nach den Jahrgängen */
 	protected listLerngruppenLehrer = computed<List<ENMLerngruppe>>(() => {
 		const result = new ArrayList<ENMLerngruppe>();
 		for (const l of this._daten.value.lerngruppen)
 			if (l.lehrerID.contains(this.idLehrer.value))
 				result.add(l);
 		result.sort(this.comparatorLerngruppen);
+		return result;
+	});
+
+	/** Die Menge aller Lerngruppen-IDs, wo der Lehrer bei der Lerngruppe als Fachlehrer eingetragen ist. */
+	protected setLerngruppenLehrer = computed<HashSet<number>>(() => {
+		const result = new HashSet<number>();
+		for (const l of this.listLerngruppenLehrer.value)
+			result.add(l.id);
 		return result;
 	});
 
@@ -545,6 +563,17 @@ export class EnmManager {
 		if (klassen.isEmpty())
 			return "—";
 		return [...klassen].map(k => k.kuerzelAnzeige).join(",");
+	}
+
+	/**
+	 * Prüft, ob der Lehrer, zu dem die ENM-Daten gehören Fachlehrer der Lerngruppe mit der übergebenen ID ist.
+	 *
+	 * @param id   die ID der zu prüfenden Lerngruppe
+	 *
+	 * @returns true, falls er Fachlehrer ist, und ansonsten false
+	 */
+	public lerngruppeIstFachlehrer(id: number) : boolean {
+		return this.setLerngruppenLehrer.value.contains(id);
 	}
 
 	/**

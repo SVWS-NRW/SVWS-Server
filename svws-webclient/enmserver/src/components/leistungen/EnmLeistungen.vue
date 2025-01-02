@@ -41,10 +41,18 @@
 								{{ manager.lerngruppeGetFachlehrerOrNull(leistung.lerngruppenID) }}
 							</td>
 							<td class="svws-ui-td" role="cell">
-								{{ leistung.noteQuartal }}
+								<svws-ui-select v-if="manager.lerngruppeIstFachlehrer(leistung.lerngruppenID)" title="—" headless class="w-full"
+									:items="Note.values()" :item-text="(item: Note) => item.daten(manager.schuljahr)?.kuerzel ?? '—'"
+									:model-value="Note.fromKuerzel(leistung.noteQuartal)"
+									@update:model-value="value => patchLeistung(leistung, { noteQuartal: value?.daten(manager.schuljahr)?.kuerzel ?? null })" />
+								<div v-else>{{ leistung.noteQuartal }}</div>
 							</td>
 							<td class="svws-ui-td" role="cell">
-								{{ leistung.note }}
+								<svws-ui-select v-if="manager.lerngruppeIstFachlehrer(leistung.lerngruppenID)" title="—" headless class="w-full"
+									:items="Note.values()" :item-text="(item: Note) => item.daten(manager.schuljahr)?.kuerzel ?? '—'"
+									:model-value="Note.fromKuerzel(leistung.note)"
+									@update:model-value="value => patchLeistung(leistung, { note: value?.daten(manager.schuljahr)?.kuerzel ?? null })" />
+								<div v-else>{{ leistung.note }}</div>
 							</td>
 							<td class="svws-ui-td" role="cell">
 								{{ leistung.istGemahnt }}
@@ -78,6 +86,7 @@
 	import type { EnmLeistungenProps } from './EnmLeistungenProps';
 	import type { EnmLeistungAuswahl } from './EnmManager';
 	import type { ENMLeistung } from '@core';
+	import { Note } from '@core';
 
 	const props = defineProps<EnmLeistungenProps>();
 
