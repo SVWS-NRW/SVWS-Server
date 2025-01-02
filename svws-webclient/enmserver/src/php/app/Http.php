@@ -7,6 +7,36 @@
 	class Http {
 
 		/**
+		 * Liest den Body des HTTP-Requests ein. Tritt dabei ein Fehler auf, so wird
+		 * eine HTTP-Response 400 generiert.
+		 *
+		 * @return string der Body des HTTP-Requests
+		 */
+		public static function getBody() : string {
+			$body = file_get_contents("php://input");
+			if ($body === false)
+				Http::exit400BadRequest("Fehler beim Lesen des HTTP-Body.");
+			return $body;
+		}
+
+		/**
+		 * Liest den Body des HTTP-Requests ein. Tritt dabei ein Fehler auf, so wird
+		 * eine HTTP-Response 400 generiert.
+		 *
+		 * @return string der Body des HTTP-Requests
+		 */
+		public static function getBodyJsonObject() : object {
+			try {
+				$obj = json_decode(HTTP::getBody(), false);
+				if (!is_object($obj))
+					Http::exit400BadRequest("Fehler beim Dekodieren des JSON-Strings des HTTP-Body.");
+				return $obj;
+			} catch (ValueError $e) {
+				Http::exit400BadRequest("Fehler beim Dekodieren des JSON-Strings des HTTP-Body (" + $e->getCode() + "): " + $e->getMessage());
+			}
+		}
+
+		/**
 		 * Ermittelt den Namen der temporären Datei, welche für einen Http-Request in einem Multipart
 		 * Body übergeben wurde.
 		 * 

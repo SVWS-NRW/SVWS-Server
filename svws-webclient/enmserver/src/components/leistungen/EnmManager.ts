@@ -1,7 +1,7 @@
-import { computed, shallowRef, triggerRef } from "vue";
+import { computed, shallowRef } from "vue";
 import type { ShallowRef } from "vue";
 import type { Comparator, ENMFach, ENMFloskelgruppe, ENMFoerderschwerpunkt, ENMJahrgang, ENMKlasse, ENMLehrer, ENMLeistung, ENMLerngruppe, ENMSchueler, ENMTeilleistungsart, JavaMap, List} from "@core";
-import { ArrayList, DeveloperNotificationException, HashMap, HashSet, type ENMDaten } from "@core";
+import { ArrayList, DeveloperNotificationException, ENMDaten, HashMap, HashSet } from "@core";
 
 /**
  * Das Interface für die Einträge der Auswahlliste für die Lerngruppen
@@ -72,7 +72,8 @@ export class EnmManager {
 	 * Aktualisiert die Daten dieses Manager, in dem die Reaktivität des Daten-Attributs getriggert wird.
 	 */
 	public update(): void {
-		triggerRef(this._daten);
+		const tmp = ENMDaten.transpilerToJSON(this._daten.value);
+		this._daten.value = ENMDaten.transpilerFromJSON(tmp);
 	}
 
 	/**

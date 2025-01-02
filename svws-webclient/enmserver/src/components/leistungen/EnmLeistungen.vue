@@ -19,8 +19,8 @@
 				</tr>
 			</thead>
 			<tbody class="svws-ui-tbody h-full overflow-y-auto" role="rowgroup" aria-label="Tabelleninhalt">
-				<template v-for="(schueler, indexSchueler) of manager.lerngruppenAuswahlGetSchueler()" :key="schueler.id">
-					<template v-for="(leistung, indexLeistung) of manager.leistungenGetOfSchueler(schueler.id)" :key="leistung.id">
+				<template v-for="(schueler, indexSchueler) of manager.lerngruppenAuswahlGetSchueler()" :key="schueler">
+					<template v-for="(leistung, indexLeistung) of manager.leistungenGetOfSchueler(schueler.id)" :key="leistung">
 						<tr class="svws-ui-tr" role="row" :class="{ 'svws-clicked': manager.auswahlLeistung.leistung === leistung }" @click.capture.exact="setAuswahlLeistung({ indexSchueler, indexLeistung, leistung })">
 							<td class="svws-ui-td" role="cell">
 								{{ manager.schuelerGetKlasse(schueler.id).kuerzelAnzeige }}
@@ -44,14 +44,14 @@
 								<svws-ui-select v-if="manager.lerngruppeIstFachlehrer(leistung.lerngruppenID)" title="—" headless class="w-full"
 									:items="Note.values()" :item-text="(item: Note) => item.daten(manager.schuljahr)?.kuerzel ?? '—'"
 									:model-value="Note.fromKuerzel(leistung.noteQuartal)"
-									@update:model-value="value => patchLeistung(leistung, { noteQuartal: value?.daten(manager.schuljahr)?.kuerzel ?? null })" />
+									@update:model-value="value => doPatchLeistung(leistung, { noteQuartal: value?.daten(manager.schuljahr)?.kuerzel ?? null })" />
 								<div v-else>{{ leistung.noteQuartal }}</div>
 							</td>
 							<td class="svws-ui-td" role="cell">
 								<svws-ui-select v-if="manager.lerngruppeIstFachlehrer(leistung.lerngruppenID)" title="—" headless class="w-full"
 									:items="Note.values()" :item-text="(item: Note) => item.daten(manager.schuljahr)?.kuerzel ?? '—'"
 									:model-value="Note.fromKuerzel(leistung.note)"
-									@update:model-value="value => patchLeistung(leistung, { note: value?.daten(manager.schuljahr)?.kuerzel ?? null })" />
+									@update:model-value="value => doPatchLeistung(leistung, { note: value?.daten(manager.schuljahr)?.kuerzel ?? null })" />
 								<div v-else>{{ leistung.note }}</div>
 							</td>
 							<td class="svws-ui-td" role="cell">
@@ -60,13 +60,13 @@
 							<td class="svws-ui-td" role="cell">
 								<svws-ui-input-number v-if="manager.fehlstundenFachbezogen(schueler)" placeholder="Fehlstunden"
 									:model-value="leistung.fehlstundenFach" headless hide-stepper min="0" max="999"
-									@change="fehlstundenFach => patchLeistung(leistung, { fehlstundenFach })" />
+									@change="fehlstundenFach => doPatchLeistung(leistung, { fehlstundenFach })" />
 								<span v-else>—</span>
 							</td>
 							<td class="svws-ui-td" role="cell">
 								<svws-ui-input-number v-if="manager.fehlstundenFachbezogen(schueler)" placeholder="Fehlstunden (unentschuldigt)"
 									:model-value="leistung.fehlstundenUnentschuldigtFach" headless hide-stepper min="0" max="999"
-									@change="fehlstundenUnentschuldigtFach => patchLeistung(leistung, { fehlstundenUnentschuldigtFach })" />
+									@change="fehlstundenUnentschuldigtFach => doPatchLeistung(leistung, { fehlstundenUnentschuldigtFach })" />
 								<span v-else>—</span>
 							</td>
 							<td class="svws-ui-td" role="cell">
@@ -94,8 +94,12 @@
 		props.manager.auswahlLeistung = value;
 	}
 
-	function patchLeistung(leistung: ENMLeistung, patch: Partial<ENMLeistung>) {
-		console.log(leistung, patch);
+	async function doPatchLeistung(leistung: ENMLeistung, patch: Partial<ENMLeistung>) {
+		patch.id = leistung.id;
+		const success = await props.patchLeistung(patch);
+		if (success)
+			Object.assign(leistung, patch);
+		props.manager.update();
 	}
 
 	// TODO

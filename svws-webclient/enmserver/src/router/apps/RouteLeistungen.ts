@@ -1,7 +1,7 @@
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
-import type { RouteApp } from "~/router/apps/RouteApp";
+import { routeApp, type RouteApp } from "~/router/apps/RouteApp";
 import { api } from "../Api";
 import type { EnmLeistungenProps } from "~/components/leistungen/EnmLeistungenProps";
 
@@ -21,6 +21,7 @@ export class RouteLeistungen extends RouteNode<any, RouteApp> {
 	public getProps(): EnmLeistungenProps {
 		return {
 			manager: api.manager,
+			patchLeistung: routeApp.data.patchLeistung,
 		};
 	}
 }

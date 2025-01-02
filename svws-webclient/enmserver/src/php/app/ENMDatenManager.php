@@ -35,6 +35,9 @@
 		/** Ein Cache für die Ankreuzkompetenzen */ 
 		protected array | null $mapAnkreuzkompetenzen = null;
 
+		/** Ein Cache für die Schüler */ 
+		protected object | null $mapsSchueler = null;
+
 
 		/**
 		 * Erstellt einen neuen nicht initialisierten Manager zur Verfügung.
@@ -200,6 +203,36 @@
 			return $this->mapAnkreuzkompetenzen;
 		}
 
+		/** 
+		 * Erstelle Maps bezüglich der Schülerdaten, den Leistungsdaten, den Teilleistungen und den Ankreuzkompetenzen,
+		 * jeweils von deren IDs auf das jeweils zugehörige Objekt.
+		 * 
+		 * @return object ein Objekt mit vier Maps unter den Attributen 'schueler', 'leistungen', 'teilleistungen',
+		 *                und 'ankreuzkompetenzen'
+		 */
+		public function getMapsSchueler() : object {
+			if ($this->mapsSchueler === null) {
+				$this->mapsSchueler = (object)[
+					'schueler' => [],
+					'leistungen' => [],
+					'teilleistungen' => [],
+					'ankreuzkompetenzen' => [],
+				];
+				foreach ($this->enmSchueler as $schueler) {
+					$this->mapsSchueler->schueler[$schueler->id] = $schueler;
+					foreach ($schueler->leistungsdaten as $leistung) {
+						$this->mapsSchueler->leistungen[$leistung->id] = $leistung;
+						foreach ($leistung->teilleistungen as $teilleistung)
+							$this->mapsSchueler->teilleistungen[$teilleistung->id] = $teilleistung;
+					}
+					foreach ($schueler->ankreuzkompetenzen as $ankreuzkompetenz)
+						$this->mapsSchueler->ankreuzkompetenzen[$ankreuzkompetenz->id] = $ankreuzkompetenz;
+				}
+			}
+			return $this->mapsSchueler;
+		}
+
+
 		/**
 		 * Erstellt die ENM-Daten angepasst für den den übergebenen Lehrer
 		 *
@@ -252,6 +285,32 @@
 			$daten->schueler = $listSchueler;
 			$daten->lehrerID = $lehrer->id;
 			return json_encode($daten);
+		}
+
+
+		/**
+		 * Führt einen Patch auf ENM-Leistungen durch. Dabei wird die ID aus dem Patch verwendet, um die
+		 * zugehörigen Leistungsdaten aus der Datenbank zu ermitteln. Anschließend werden dies zusammen mit
+		 * dem Patch an die Datenbank zur Durchführung der Update-Methode übergeben.
+		 * 
+		 * @param Database $db     das Datenbank-Objekt
+		 * @param object $lehrer   der angemeldete Lehrer
+		 * @param object $patch    der Patch
+		 */
+		public function patchENMLeistung(Database $db, object $lehrer, object $patch) {
+			// Prüfe, ob eine ID für die Leistungsdaten im Patch vorhanden ist
+			if ($patch->id === null)
+				Http::exit400BadRequest("Es muss eine ID angegeben werden, damit die Leistungsdaten angepasst werden können.");
+			// Prüfe, ob Leistungsdaten für die ID vorhanden sind
+			$mapsSchueler = $this->getMapsSchueler();
+			if (!array_key_exists($patch->id, $mapsSchueler->leistungen))
+				Http::exit404NotFound("Es wurde keine Leistung mit der ID ".$patch->id." gefunden.");
+			$leistung = $mapsSchueler->leistungen[$patch->id];
+			// Prüfe, ob der Lehrer Fachlehrer für die Lerngruppe der Leistungsdaten ist
+			$mapLerngruppenFachlehrer = $this->getMapLerngruppenFachlehrer($lehrer);
+			if (!array_key_exists($leistung->lerngruppenID, $mapLerngruppenFachlehrer))
+				Http::exit403Forbidden("Es wurde keine Lerngruppe für die ID ".$leistung->lerngruppenID." zu der Leistung mit der ID ".$patch->id." gefunden, wo der angemeldete Lehrer Fachlehrer ist.");
+			$db->patchENMLeistung(date('Y-m-d H:i:s.v', time()), $leistung, $patch);
 		}
 
 	}

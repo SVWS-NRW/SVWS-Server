@@ -890,6 +890,69 @@
 			return $result;
 		}
 
+
+		/**
+		 * Prüft, ob die beiden Strings sich unterscheiden. Dabei wird auch auf Null-Werte geprüft.
+		 * 
+		 * @param string | null $a   der erste String
+		 * @param string | null $b   der zweite String
+		 * 
+		 * @return bool   true, wenn die beiden Werte unterschiedlich sind
+		 */
+		protected function diffStringNullable(string | null $a, string | null $b) : bool {
+			if (($a === null) && ($b === null))
+				return false;
+			if (($a === null) || ($b === null))
+				return true;
+			return (strcmp($a, $b) !== 0);
+		}
+
+		/**
+		 * Erstellt einen Update-Befehl für die Datenbank aus den übergebenen Daten für einen
+		 * Patch von Leistungsdaten.
+		 * 
+		 * @param string $ts      der Zeitstempel der neu importierten Daten
+		 * @param object $daten   die Daten aus der Datenbank
+		 * @param object $patch   der Patch für die Daten
+		 */
+		public function patchENMLeistung(string $ts, object $daten, object $patch) {
+			$update = "";
+			if (property_exists($patch, 'note') && $this->diffStringNullable($patch->note, $daten->note) && ($ts > $daten->tsNote)) {
+				$update .= "tsNote='$ts',";
+				$daten->note = $patch->note;
+				$daten->tsNote = $ts;
+			}
+			if (property_exists($patch, 'noteQuartal') && $this->diffStringNullable($patch->noteQuartal, $daten->noteQuartal) && ($ts > $daten->tsNoteQuartal)) {
+				$update .= "tsNoteQuartal='$ts',";
+				$daten->noteQuartal = $patch->noteQuartal;
+				$daten->tsNoteQuartal = $ts;
+			}
+			if (property_exists($patch, 'fehlstundenFach') && ($patch->fehlstundenFach !== $daten->fehlstundenFach) && ($ts > $daten->tsFehlstundenFach)) {
+				$update .= "tsFehlstundenFach='$ts',";
+				$daten->fehlstundenFach = $patch->fehlstundenFach;
+				$daten->tsFehlstundenFach = $ts;
+			}
+			if (property_exists($patch, 'fehlstundenUnentschuldigtFach') && ($patch->fehlstundenUnentschuldigtFach !== $daten->fehlstundenUnentschuldigtFach) && ($ts > $daten->tsFehlstundenUnentschuldigtFach)) {
+				$update .= "tsFehlstundenUnentschuldigtFach='$ts',";
+				$daten->fehlstundenUnentschuldigtFach = $patch->fehlstundenUnentschuldigtFach;
+				$daten->tsFehlstundenUnentschuldigtFach = $ts;
+			}
+			if (property_exists($patch, 'fachbezogeneBemerkungen') && $this->diffStringNullable($patch->fachbezogeneBemerkungen, $daten->fachbezogeneBemerkungen) && ($ts > $daten->tsFachbezogeneBemerkungen)) {
+				$update .= "tsFachbezogeneBemerkungen='$ts',";
+				$daten->fachbezogeneBemerkungen = $patch->fachbezogeneBemerkungen;
+				$daten->tsFachbezogeneBemerkungen = $ts;
+			}
+			if (property_exists($patch, 'istGemahnt') && ($patch->istGemahnt !== $daten->istGemahnt) && ($ts > $daten->tsIstGemahnt)) {
+				$update .= "tsIstGemahnt='$ts',";
+				$daten->istGemahnt = $patch->istGemahnt;
+				$daten->tsIstGemahnt = $ts;
+			}
+			if (strlen($update) > 0) {
+				$updatedData = json_encode($daten);
+				$update .= "daten='$updatedData' WHERE id=$patch->id";
+				$this->updateSet('Leistungsdaten', $update);
+			}
+		}
 	}
 
 ?>

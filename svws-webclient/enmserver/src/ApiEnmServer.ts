@@ -1,4 +1,4 @@
-import type { ApiFile } from '@core';
+import { ApiFile, ENMLeistung } from '@core';
 import { BaseApi } from '@core';
 
 export class ApiEnmServer extends BaseApi {
@@ -35,17 +35,32 @@ export class ApiEnmServer extends BaseApi {
 	}
 
 	/**
-	 * Implementierung der GET-Methode isAlive für den Zugriff auf die URL https://{hostname}/status/alive
+	 * Implementierung der POST-Methode isAlive für den Zugriff auf die URL https://{hostname}/api/alive
 	 *
 	 * Eine Test-Methode zum Prüfen, ob der ENM-Server erreichbar ist.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 204: Der Server wurde gefunden
-	 *
-	 * @returns Der Server ist erreichbar!
 	 */
 	public async isAlive() : Promise<void> {
 		await super.postJSON("/api/alive", "");
+		return;
+	}
+
+	/**
+	 * Implementierung der POST-Methode patchENMLeistung für den Zugriff auf die URL https://{hostname}/api/leistung
+	 *
+	 * Die Methode erlaubt das Patchen von ENM-Leistungsdaten.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Der Patch wurde erfolgreich integriert
+	 *   Code 403: Ein Patch der Leistungsdaten ist durch den aktuelle angemeldeten Lehrer nicht erlaubt
+	 *   Code 404: Die Leistungsdaten zu der übergebenen ID wurden nicht gefunden.
+	 *
+	 * @param {Partial<ENMLeistung>} patch   die zu patchenden Attribut der Leistungsdaten
+	 */
+	public async patchENMLeistung(patch: Partial<ENMLeistung>): Promise<void> {
+		await super.postJSON("/api/leistung", ENMLeistung.transpilerToJSONPatch(patch));
 		return;
 	}
 
