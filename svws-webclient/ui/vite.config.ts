@@ -61,7 +61,7 @@ export default defineConfig({
 	},
 	plugins: [
 		Vue(),
-		Components({ globs: ["src/**/!(*story.vue)*.vue", "src/**/*Props.ts"] }),
+		Components({ globs: ["src/**/*.vue", "src/**/*Props.ts", '!src/**/*.story.*'], types: [] }),
 	],
 	build: {
 		lib: {

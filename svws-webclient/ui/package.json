@@ -34,9 +34,5 @@
 		}
 	},
 	"type": "module",
-	"types": "./dist/index.d.ts",
-	"devDependencies": {
-		"@vue/test-utils": "^2.4.6",
-		"happy-dom": "^15.0.0"
-	}
+	"types": "./dist/index.d.ts"
 }
