@@ -6,6 +6,8 @@
 		"resolveJsonModule": true,
 		"paths": {
 			"~/*": ["./src/*"],
+			"@ui/*": ["../ui/src/*"],
+			"@core/*": ["../core/src/*"],
 			"@json/*": ["../../svws-asd/src/main/resources/de/svws_nrw/asd/types/*"],
 		},
 	},

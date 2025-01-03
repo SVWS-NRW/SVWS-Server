@@ -8,7 +8,7 @@ import { routeLadeDaten } from "./RouteLadeDaten";
 
 import LaufbahnplanungOberstufe from "~/components/LaufbahnplanungOberstufe.vue";
 import { type LaufbahnplanungOberstufeProps } from "~/components/LaufbahnplanungOberstufeProps";
-import { GostLaufbahnplanungDaten } from "../../../../core/src/core/data/gost/GostLaufbahnplanungDaten";
+import { GostLaufbahnplanungDaten } from "@core/core/data/gost/GostLaufbahnplanungDaten";
 
 
 export class RouteLaufbahnplanung extends RouteNode<unknown, RouteApp> {
