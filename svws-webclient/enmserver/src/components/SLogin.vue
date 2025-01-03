@@ -85,12 +85,12 @@
 
 	import { computed, nextTick, onMounted, ref, shallowRef } from "vue";
 	import { type ComponentExposed } from "vue-component-type-helpers";
-	import { DeveloperNotificationException } from "@core";
-	import { SvwsUiTextInput } from "@ui";
 	import { version } from '../../version';
 	import { githash } from '../../githash';
 	import type { LoginProps } from "./SLoginProps";
 	import { JsonCoreTypeReaderStatic } from "../../../core/src/asd/utils/JsonCoreTypeReaderStatic";
+	import SvwsUiTextInput from "@ui/ui/controls/SvwsUiTextInput.vue";
+	import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 
 	const props = defineProps<LoginProps>();
 

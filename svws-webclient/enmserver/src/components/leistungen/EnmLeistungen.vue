@@ -85,15 +85,14 @@
 	import { computed } from 'vue';
 	import type { EnmLeistungenProps } from './EnmLeistungenProps';
 	import type { EnmLeistungAuswahl } from './EnmManager';
-	import type { ENMLeistung } from '@core';
-	import { Note } from '@core';
+	import type { ENMLeistung } from '@core/core/data/enm/ENMLeistung';
+	import { Note } from '@core/asd/types/Note';
 
 	const props = defineProps<EnmLeistungenProps>();
 
 	function setAuswahlLeistung(value: EnmLeistungAuswahl) {
 		props.manager.auswahlLeistung = value;
 	}
-
 	async function doPatchLeistung(leistung: ENMLeistung, patch: Partial<ENMLeistung>) {
 		patch.id = leistung.id;
 		const success = await props.patchLeistung(patch);

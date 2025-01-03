@@ -1,8 +1,8 @@
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { ViewType } from "@ui/ui/nav/ViewType";
 import { type ShallowRef, shallowRef, ref } from "vue";
 
 import { type RouteNode } from "~/router/RouteNode";
-import { DeveloperNotificationException } from "@core";
-import { ViewType } from "@ui";
 
 
 /**

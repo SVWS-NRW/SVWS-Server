@@ -1,8 +1,8 @@
 import { createApp } from "vue";
 import { router } from "./router/RouteManager";
 
-import "../../ui/src/assets/styles/index.css";
-import "../../ui/src/assets/styles/colors.css";
+import "@ui/assets/styles/index.css";
+import "@ui/assets/styles/colors.css";
 import "./main.css";
 
 import SWrapper from "~/components/SWrapper.vue";

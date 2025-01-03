@@ -1,7 +1,5 @@
 import type { RouteLocationRaw, RouteParams } from "vue-router";
-import { type TabData } from "@ui";
 import type { AppProps } from "~/components/SAppProps";
-import { Schulform, BenutzerKompetenz, ServerMode, DeveloperNotificationException } from "@core";
 import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteManager } from "~/router/RouteManager";
@@ -11,6 +9,11 @@ import { routeError } from "~/router/error/RouteError";
 import SApp from "~/components/SApp.vue";
 import { routeLogin } from "~/router/RouteLogin";
 import { routeLeistungen } from "~/router/apps/RouteLeistungen";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import type { TabData } from "@ui/ui/nav/TabData";
 
 
 export class RouteApp extends RouteNode<RouteDataApp, any> {

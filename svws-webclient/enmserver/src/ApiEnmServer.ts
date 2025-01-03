@@ -1,5 +1,5 @@
-import { ApiFile, ENMLeistung } from '@core';
-import { BaseApi } from '@core';
+import { BaseApi, type ApiFile } from "@core/api/BaseApi";
+import { ENMLeistung } from "@core/core/data/enm/ENMLeistung";
 
 export class ApiEnmServer extends BaseApi {
 

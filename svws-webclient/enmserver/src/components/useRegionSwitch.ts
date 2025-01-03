@@ -1,7 +1,7 @@
-import { type Ref, ref } from 'vue'
+import { ref } from 'vue'
 
-const focusSwitchingEnabled: Ref<boolean> = ref(false);
-const focusHelpVisible: Ref<boolean> = ref(false);
+const focusSwitchingEnabled = ref<boolean>(false);
+const focusHelpVisible = ref<boolean>(false);
 
 export function useRegionSwitch() {
 

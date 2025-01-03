@@ -1,9 +1,10 @@
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { routeApp, type RouteApp } from "~/router/apps/RouteApp";
 import { api } from "../Api";
 import type { EnmLeistungenProps } from "~/components/leistungen/EnmLeistungenProps";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 
 const EnmLeistungenAuswahl = () => import("~/components/leistungen/EnmLeistungenAuswahl.vue")
 const EnmLeistungen = () => import("~/components/leistungen/EnmLeistungen.vue")

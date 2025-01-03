@@ -1,7 +1,7 @@
-import type { ENMLeistung } from "@core";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { routeLeistungen } from "~/router/apps/RouteLeistungen";
 import { api } from "~/router/Api";
+import type { ENMLeistung } from "@core/core/data/enm/ENMLeistung";
 
 
 const defaultState = <RouteStateInterface>{

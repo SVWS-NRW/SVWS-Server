@@ -118,14 +118,16 @@
 <script setup lang="ts">
 
 	import { onMounted, onUnmounted, ref, onErrorCaptured } from "vue";
-	import type { TabData } from "@ui";
 	import type { AppProps } from './SAppProps';
-	import type { SimpleOperationResponse } from '@core';
-	import { DeveloperNotificationException, OpenApiError, UserNotificationException } from '@core';
 	import { githash } from '../../githash';
 	import { version } from '../../version';
 	import { api } from '~/router/Api';
 	import { useRegionSwitch } from "~/components/useRegionSwitch";
+	import type { TabData } from "@ui/ui/nav/TabData";
+	import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+	import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+	import { UserNotificationException } from "@core/core/exceptions/UserNotificationException";
+	import { OpenApiError } from "@core/api/OpenApiError";
 
 	const props = defineProps<AppProps>();
 

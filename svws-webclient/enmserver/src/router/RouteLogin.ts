@@ -1,11 +1,11 @@
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { RouteManager } from "~/router/RouteManager";
 import { api } from "~/router/Api";
-
 import SLogin from "~/components/SLogin.vue";
 import type { LoginProps } from "~/components/SLoginProps";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
 
 export class RouteLogin extends RouteNode<any, any> {
 

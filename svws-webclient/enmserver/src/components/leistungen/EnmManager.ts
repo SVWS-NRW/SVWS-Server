@@ -1,7 +1,23 @@
+import { ENMDaten } from "@core/core/data/enm/ENMDaten";
+import type { ENMFach } from "@core/core/data/enm/ENMFach";
+import type { ENMFloskelgruppe } from "@core/core/data/enm/ENMFloskelgruppe";
+import type { ENMFoerderschwerpunkt } from "@core/core/data/enm/ENMFoerderschwerpunkt";
+import type { ENMJahrgang } from "@core/core/data/enm/ENMJahrgang";
+import type { ENMKlasse } from "@core/core/data/enm/ENMKlasse";
+import type { ENMLehrer } from "@core/core/data/enm/ENMLehrer";
+import type { ENMLeistung } from "@core/core/data/enm/ENMLeistung";
+import type { ENMLerngruppe } from "@core/core/data/enm/ENMLerngruppe";
+import type { ENMSchueler } from "@core/core/data/enm/ENMSchueler";
+import type { ENMTeilleistungsart } from "@core/core/data/enm/ENMTeilleistungsart";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { Comparator } from "@core/java/util/Comparator";
+import { HashMap } from "@core/java/util/HashMap";
+import { HashSet } from "@core/java/util/HashSet";
+import type { JavaMap } from "@core/java/util/JavaMap";
+import type { List } from "@core/java/util/List";
 import { computed, shallowRef } from "vue";
 import type { ShallowRef } from "vue";
-import type { Comparator, ENMFach, ENMFloskelgruppe, ENMFoerderschwerpunkt, ENMJahrgang, ENMKlasse, ENMLehrer, ENMLeistung, ENMLerngruppe, ENMSchueler, ENMTeilleistungsart, JavaMap, List} from "@core";
-import { ArrayList, DeveloperNotificationException, ENMDaten, HashMap, HashSet } from "@core";
 
 /**
  * Das Interface für die Einträge der Auswahlliste für die Lerngruppen

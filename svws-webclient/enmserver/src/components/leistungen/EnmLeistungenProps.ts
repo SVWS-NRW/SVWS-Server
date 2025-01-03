@@ -1,4 +1,4 @@
-import type { ENMLeistung } from "@core";
+import type { ENMLeistung } from "@core/core/data/enm/ENMLeistung";
 import type { EnmManager } from "./EnmManager";
 
 export interface EnmLeistungenProps {

@@ -58,8 +58,10 @@
 
 	import { computed, ref } from "vue";
 	import type { ErrorProps } from "./SErrorProps";
-	import type { SimpleOperationResponse} from "@core";
-	import { DeveloperNotificationException, OpenApiError, UserNotificationException } from "@core";
+	import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+	import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+	import { UserNotificationException } from "@core/core/exceptions/UserNotificationException";
+	import { OpenApiError } from "@core/api/OpenApiError";
 
 	type CapturedError = {
 		id: number;
