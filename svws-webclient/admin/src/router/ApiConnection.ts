@@ -1,9 +1,9 @@
 import { ref, shallowRef } from "vue";
-import { ApiPrivileged } from "../../../core/src/api/ApiPrivileged";
-import { ApiServer } from "../../../core/src/api/ApiServer";
-import { ServerMode } from "../../../core/src/core/types/ServerMode";
-import { BenutzerKennwort } from "../../../core/src/core/data/BenutzerKennwort";
-import { UserNotificationException } from "../../../core/src/core/exceptions/UserNotificationException";
+import { ApiPrivileged } from "@core/api/ApiPrivileged";
+import { ApiServer } from "@core/api/ApiServer";
+import { BenutzerKennwort } from "@core/core/data/BenutzerKennwort";
+import { UserNotificationException } from "@core/core/exceptions/UserNotificationException";
+import { ServerMode } from "@core/core/types/ServerMode";
 
 
 export class ApiConnection {

@@ -23,8 +23,8 @@
 
 	import { ref, computed } from "vue";
 	import type { SchemagruppeProps } from "./SSchemagruppeProps";
-	import type { List } from "../../../../core/src/java/util/List";
-	import { ArrayList } from "../../../../core/src/java/util/ArrayList";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import type { List } from "@core/java/util/List";
 
 	const props = defineProps<SchemagruppeProps>();
 

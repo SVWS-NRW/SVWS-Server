@@ -1,12 +1,9 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-
-
 import { RouteNode } from "~/router/RouteNode";
 import { routeSchema, type RouteSchema } from "~/router/apps/schema/RouteSchema";
-
 import type { SchemaUebersichtProps } from "~/components/schema/uebersicht/SSchemaUebersichtProps";
 import { api } from "~/router/Api";
-import { ServerMode } from "../../../../../../core/src/core/types/ServerMode";
+import { ServerMode } from "@core/core/types/ServerMode";
 
 const SSchemaUebersicht = () => import("~/components/schema/uebersicht/SSchemaUebersicht.vue");
 

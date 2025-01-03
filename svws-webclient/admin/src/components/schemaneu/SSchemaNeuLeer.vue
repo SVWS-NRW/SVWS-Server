@@ -13,9 +13,9 @@
 <script setup lang="ts">
 
 	import { type ShallowRef, ref } from "vue";
-	import { BenutzerKennwort } from "../../../../core/src/core/data/BenutzerKennwort";
-	import type { List } from "../../../../core/src/java/util/List";
-	import { SimpleOperationResponse } from "../../../../core/src/core/data/SimpleOperationResponse";
+	import { BenutzerKennwort } from "@core/core/data/BenutzerKennwort";
+	import { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+	import type { List } from "@core/java/util/List";
 
 	const props = defineProps<{
 		addSchema: ((data: BenutzerKennwort, schema: string) => Promise<SimpleOperationResponse>);

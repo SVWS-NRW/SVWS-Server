@@ -8,20 +8,20 @@ import { routeApp } from "../RouteApp";
 import { routeSchema } from "~/router/apps/schema/RouteSchema";
 import { routeSchemaUebersicht } from "~/router/apps/schema/uebersicht/RouteSchemaUebersicht";
 import type { SchemaMigrationQuelle } from "~/components/schema/SchemaMigrationQuelle";
-import { SchemaListeEintrag } from "../../../../../core/src/core/data/db/SchemaListeEintrag";
-import type { SchuleInfo } from "../../../../../core/src/core/data/schule/SchuleInfo";
-import type { SchulenKatalogEintrag } from "../../../../../core/src/core/data/schule/SchulenKatalogEintrag";
-import type { List } from "../../../../../core/src/java/util/List";
-import { ArrayList } from "../../../../../core/src/java/util/ArrayList";
-import type { BenutzerListeEintrag } from "../../../../../core/src/core/data/benutzer/BenutzerListeEintrag";
-import type { Comparator } from "../../../../../core/src/java/util/Comparator";
-import { DeveloperNotificationException } from "../../../../../core/src/core/exceptions/DeveloperNotificationException";
-import type { BenutzerKennwort } from "../../../../../core/src/core/data/BenutzerKennwort";
-import { SimpleOperationResponse } from "../../../../../core/src/core/data/SimpleOperationResponse";
-import { OpenApiError } from "../../../../../core/src/api/OpenApiError";
-import { MigrateBody } from "../../../../../core/src/core/data/db/MigrateBody";
-import { DatenbankVerbindungsdaten } from "../../../../../core/src/core/data/schema/DatenbankVerbindungsdaten";
-import { JavaString } from "../../../../../core/src/java/lang/JavaString";
+import { OpenApiError } from "@core/api/OpenApiError";
+import type { BenutzerListeEintrag } from "@core/core/data/benutzer/BenutzerListeEintrag";
+import type { BenutzerKennwort } from "@core/core/data/BenutzerKennwort";
+import { MigrateBody } from "@core/core/data/db/MigrateBody";
+import { SchemaListeEintrag } from "@core/core/data/db/SchemaListeEintrag";
+import { DatenbankVerbindungsdaten } from "@core/core/data/schema/DatenbankVerbindungsdaten";
+import type { SchuleInfo } from "@core/core/data/schule/SchuleInfo";
+import type { SchulenKatalogEintrag } from "@core/core/data/schule/SchulenKatalogEintrag";
+import { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { JavaString } from "@core/java/lang/JavaString";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { Comparator } from "@core/java/util/Comparator";
+import type { List } from "@core/java/util/List";
 
 
 interface RouteStateSchema {

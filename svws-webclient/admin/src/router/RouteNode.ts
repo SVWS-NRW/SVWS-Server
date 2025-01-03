@@ -5,7 +5,7 @@ import { useRoute } from "vue-router";
 
 import { api } from "~/router/Api";
 import { routerManager } from "./RouteManager";
-import { ServerMode } from "../../../core/src/core/types/ServerMode";
+import { ServerMode } from "@core/core/types/ServerMode";
 
 /**
  * Diese abstrakte Klasse ist die Basisklasse aller Knoten für
@@ -64,7 +64,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 			props: { default: (to) => this.getNoProps(to) },
 			children: undefined,
 			meta: {
-				text: name // Ein Text, welcher zur Darstellung in der GUI genutzt wird (z.B. der Text auf Tabs)
+				text: name, // Ein Text, welcher zur Darstellung in der GUI genutzt wird (z.B. der Text auf Tabs)
 			}
 		};
 		this._children = [];

@@ -7,7 +7,7 @@ import { api } from "~/router/Api";
 import { routeApp } from "~/router/apps/RouteApp";
 import { routeLogin } from "~/router/login/RouteLogin";
 import { routeError } from "~/router/error/RouteError";
-import { ServerMode } from "../../../core/src/core/types/ServerMode";
+import { ServerMode } from "@core/core/types/ServerMode";
 
 interface RouteStateError {
 	code: number | undefined;

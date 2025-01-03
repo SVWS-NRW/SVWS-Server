@@ -38,8 +38,8 @@
 
 	import { type ShallowRef, shallowRef } from "vue";
 	import type { SchemaMigrationQuelle } from "../SchemaMigrationQuelle";
-	import type { List } from "../../../../../core/src/java/util/List";
-	import type { SimpleOperationResponse } from "../../../../../core/src/core/data/SimpleOperationResponse";
+	import type { List } from "@core/java/util/List";
+	import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 
 	const props = defineProps<{
 		migrateSchema: (formData: FormData) => Promise<SimpleOperationResponse>;

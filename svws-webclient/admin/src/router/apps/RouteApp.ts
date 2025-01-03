@@ -1,22 +1,18 @@
 import type { RouteLocationRaw, RouteParams } from "vue-router";
 import type { AppProps } from "~/components/SAppProps";
-
 import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteManager } from "~/router/RouteManager";
-
 import { RouteDataApp } from "~/router/apps/RouteDataApp";
-
 import { routeSchema } from "~/router/apps/schema/RouteSchema";
 import { routeLogin } from "~/router/login/RouteLogin";
-
-import SApp from "~/components/SApp.vue";
 import { routeSchemagruppe } from "./schemagruppe/RouteSchemagruppe";
 import { routeSchemaNeu } from "./schemaneu/RouteSchemaNeu";
 import { routeConfig } from "./config/RouteConfig";
-import { ServerMode } from "../../../../core/src/core/types/ServerMode";
-import type { TabData } from "../../../../ui/src/ui/nav/TabData";
+import { ServerMode } from "@core/core/types/ServerMode";
+import type { TabData } from "@ui/ui/nav/TabData";
 
+const SApp = () => import("~/components/SApp.vue");
 
 export class RouteApp extends RouteNode<RouteDataApp, any> {
 

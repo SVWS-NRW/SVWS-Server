@@ -26,10 +26,10 @@
 
 	import { onErrorCaptured, ref } from 'vue';
 	import { api } from '../router/Api'
-	import type { SimpleOperationResponse } from '../../../core/src/core/data/SimpleOperationResponse';
-	import { DeveloperNotificationException } from '../../../core/src/core/exceptions/DeveloperNotificationException';
-	import { UserNotificationException } from '../../../core/src/core/exceptions/UserNotificationException';
-	import { OpenApiError } from '../../../core/src/api/OpenApiError';
+	import type { SimpleOperationResponse } from '@core/core/data/SimpleOperationResponse';
+	import { DeveloperNotificationException } from '@core/core/exceptions/DeveloperNotificationException';
+	import { UserNotificationException } from '@core/core/exceptions/UserNotificationException';
+	import { OpenApiError } from '@core/api/OpenApiError';
 
 	type CapturedError = {
 		id: number;

@@ -8,7 +8,7 @@ import { routeSchema } from "../schema/RouteSchema";
 import type { SchemaNeuProps } from "~/components/schemaneu/SSchemaNeuProps";
 import type { SchemaAuswahlProps } from "~/components/schema/SSchemaAuswahlProps";
 import { api } from "~/router/Api";
-import { ServerMode } from "../../../../../core/src/core/types/ServerMode";
+import { ServerMode } from "@core/core/types/ServerMode";
 
 const SSchemaAuswahl = () => import("~/components/schema/SSchemaAuswahl.vue")
 const SSchemaNeu = () => import("~/components/schemaneu/SSchemaNeu.vue")

@@ -54,7 +54,7 @@
 
 	import { computed } from "vue";
 	import type { SchemaAuswahlProps } from "./SSchemaAuswahlProps";
-	import type { SchemaListeEintrag } from "../../../../core/src/core/data/db/SchemaListeEintrag";
+	import type { SchemaListeEintrag } from "@core/core/data/db/SchemaListeEintrag";
 
 	const props = defineProps<SchemaAuswahlProps>();
 
@@ -67,7 +67,7 @@
 
 	const selectedItems = computed<Array<SchemaListeEintrag>>({
 		get: () => props.auswahlGruppe,
-		set: (items) => void props.setAuswahlGruppe(items)
+		set: (items) => void props.setAuswahlGruppe(items),
 	});
 
 </script>
