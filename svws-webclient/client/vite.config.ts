@@ -5,18 +5,13 @@ import Markdown from 'unplugin-vue-markdown/vite'
 import { resolve } from "path";
 
 export default defineConfig({
-	test: {},
 	server: { port: 3000 },
 	plugins: [
 		Vue({ include: [/\.vue$/, /\.md$/] }),
 		Markdown({}),
 		Components({
-			dirs: [
-				'src/components',
-				resolve(__dirname, '../ui/src'),
-			],
-			extensions: ['vue', 'md'],
-			include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
+			globs: ["src/**/*.vue", "src/**/*Props.ts", "../ui/src/**/*.vue", "../ui/src/**/*Props.ts", '!../ui/src/**/*.story.*'],
+			types: [],
 		}),
 	],
 	resolve: {
@@ -32,7 +27,6 @@ export default defineConfig({
 		emptyOutDir: true,
 		sourcemap: true,
 		minify: false,
-		commonjsOptions: {},
 		rollupOptions: {
 			output: {
 				entryFileNames: 'assets/[name].js',

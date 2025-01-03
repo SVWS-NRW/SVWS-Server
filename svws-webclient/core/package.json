@@ -13,9 +13,7 @@
 		"test:run": "vitest run --coverage",
 		"test:runAgainstTestEnv": "vitest run --coverage.reporter=html",
 		"lint": "eslint 'src/**/*.{ts,vue}' --cache",
-		"lint-fix": "eslint 'src/**/*.{ts,vue}' --cache --fix",
-		"build": "tsc",
-		"check-licenses": "license-checker-rseidelsohn --summary --unknown"
+		"build": "tsc"
 	},
 	"exports": {
 		".": {
