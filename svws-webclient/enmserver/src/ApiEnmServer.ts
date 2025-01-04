@@ -1,5 +1,6 @@
 import { BaseApi, type ApiFile } from "@core/api/BaseApi";
 import { ENMLeistung } from "@core/core/data/enm/ENMLeistung";
+import { ENMLeistungBemerkungen, ENMLernabschnitt, ENMSchuelerAnkreuzkompetenz, ENMTeilleistung } from "@core/index";
 
 export class ApiEnmServer extends BaseApi {
 
@@ -61,6 +62,76 @@ export class ApiEnmServer extends BaseApi {
 	 */
 	public async patchENMLeistung(patch: Partial<ENMLeistung>): Promise<void> {
 		await super.postJSON("/api/leistung", ENMLeistung.transpilerToJSONPatch(patch));
+		return;
+	}
+
+	/**
+	 * Implementierung der POST-Methode patchENMSchuelerLernabschnitt für den Zugriff auf die URL https://{hostname}/api/lernabschnitt
+	 *
+	 * Die Methode erlaubt das Patchen von ENM-Lernabschnittsdaten.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Der Patch wurde erfolgreich integriert
+	 *   Code 403: Ein Patch der Lernabschnittsdaten ist durch den aktuelle angemeldeten Lehrer nicht erlaubt
+	 *   Code 404: Die Lernabschnittsdaten zu der übergebenen ID wurden nicht gefunden.
+	 *
+	 * @param {Partial<ENMLernabschnitt>} patch   die zu patchenden Attribut der Lernabschnittsdaten
+	 */
+	public async patchENMSchuelerLernabschnitt(patch: Partial<ENMLernabschnitt>): Promise<void> {
+		await super.postJSON("/api/lernabschnitt", ENMLernabschnitt.transpilerToJSONPatch(patch));
+		return;
+	}
+
+	/**
+	 * Implementierung der POST-Methode patchENMSchuelerBemerkungen für den Zugriff auf die URL https://{hostname}/api/bemerkungen
+	 *
+	 * Die Methode erlaubt das Patchen von ENM-Leistungsbemerkungen
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Der Patch wurde erfolgreich integriert
+	 *   Code 403: Ein Patch der Leistungsbemerkungen ist durch den aktuelle angemeldeten Lehrer nicht erlaubt
+	 *   Code 404: Die Leistungsbemerkungen zu der übergebenen ID wurden nicht gefunden.
+	 *
+	 * @param {number} idSchueler                       die IDs des Schülers, dessen Leistungsbemerkungen angepasst werden sollen
+	 * @param {Partial<ENMLeistungBemerkungen>} patch   die zu patchenden Attribut der Leistungsbemerkungen
+	 */
+	public async patchENMSchuelerBemerkungen(idSchueler: number, patch: Partial<ENMLeistungBemerkungen>): Promise<void> {
+		const body = `{ "id": ${idSchueler}, "patch: " ${ENMLeistungBemerkungen.transpilerToJSONPatch(patch)}}`;
+		await super.postJSON("/api/bemerkungen", body);
+		return;
+	}
+
+	/**
+	 * Implementierung der POST-Methode patchENMTeilleistung für den Zugriff auf die URL https://{hostname}/api/teilleistung
+	 *
+	 * Die Methode erlaubt das Patchen von ENM-Teilleistungen
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Der Patch wurde erfolgreich integriert
+	 *   Code 403: Ein Patch der Teilleistung ist durch den aktuelle angemeldeten Lehrer nicht erlaubt
+	 *   Code 404: Die Teilleistung zu der übergebenen ID wurden nicht gefunden.
+	 *
+	 * @param {Partial<ENMTeilleistung>} patch   die zu patchenden Attribut der Teilleistung
+	 */
+	public async patchENMTeilleistung(patch: Partial<ENMTeilleistung>): Promise<void> {
+		await super.postJSON("/api/teilleistung", ENMTeilleistung.transpilerToJSONPatch(patch));
+		return;
+	}
+
+	/**
+	 * Implementierung der POST-Methode patchENMSchuelerAnkreuzkompetenzen für den Zugriff auf die URL https://{hostname}/api/ankreuzkompetenz
+	 *
+	 * Die Methode erlaubt das Patchen von ENM-Schüler-Ankreuzkompetenzen
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Der Patch wurde erfolgreich integriert
+	 *   Code 403: Ein Patch der Ankreuzkompetenz ist durch den aktuelle angemeldeten Lehrer nicht erlaubt
+	 *   Code 404: Die Ankreuzkompetenz zu der übergebenen ID wurden nicht gefunden.
+	 *
+	 * @param {Partial<ENMSchuelerAnkreuzkompetenz>} patch   die zu patchenden Attribut der Ankreuzkompetenz
+	 */
+	public async patchENMSchuelerAnkreuzkompetenzen(patch: Partial<ENMSchuelerAnkreuzkompetenz>): Promise<void> {
+		await super.postJSON("/api/ankreuzkompetenz", ENMSchuelerAnkreuzkompetenz.transpilerToJSONPatch(patch));
 		return;
 	}
 
