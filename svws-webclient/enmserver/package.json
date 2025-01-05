@@ -15,7 +15,11 @@
 		"build": "vite build",
 		"check-licenses": "license-checker-rseidelsohn --summary --unknown --production",
 		"genkeys": "openssl req -new -x509 -nodes -days 3560 -newkey rsa:2048 -subj \"/C=DE/ST=NRW/L=Unknown/O=Unknown/CN=localhost\" -keyout localhost.key -out localhost.crt",
-		"php": "php -S localhost:2998 -t src/php/public/ router.php"
+		"php": "php -S localhost:2998 -t src/php/public/ router.php",
+		"podman-build": "podman build -t enmserver:latest .",
+		"podman": "podman run -p 2998:443 -v ./src/php:/var/www --rm --name php enmserver",
+		"docker-build": "docker build -t enmserver:latest .",
+		"docker": "docker run -p 2998:443 -v ./src/php:/var/www --rm --name php enmserver"
 	},
 	"dependencies": {
 		"vue": "^3.3",
