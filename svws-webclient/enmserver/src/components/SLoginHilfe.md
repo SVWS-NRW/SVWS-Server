@@ -1,10 +1,10 @@
 # Anmeldung
 
-Bei erfolgreicher Verbindung zum SVWS-Client wird das Anmeldefenster angezeigt
+Bei erfolgreicher Verbindung zum ENM-Client wird das Anmeldefenster angezeigt
 
 ## 1 Die Serveradresse
 
-Hier wird die HTTPS-Adresse des Servers angegeben. Dabei muss das `https://` ausgelassen werden, es wird vom SVWS-Client bei der Verbindung automatisch ergänzt. Es sind ausschließlich HTTPS-Verbindungen zum SVWS-Server zulässig.
+Hier wird die HTTPS-Adresse des Servers angegeben. Dabei muss das `https://` ausgelassen werden, es wird vom ENM-Client bei der Verbindung automatisch ergänzt. Es sind ausschließlich HTTPS-Verbindungen zum ENM-Server zulässig.
 
 Der Client versucht schon beim ersten Aufruf in folgender Reihenfolge automatisch eine Verbindung zum Server aufzubauen:
 
@@ -35,4 +35,4 @@ Das Passwort wird verdeckt eingegeben.
 Nach Eingabe des Benutzernamens und Passworts wird das ausgewählte Schema für die Anmeldung am Server verwendet.
 
 ## 7 Versionshinweis
-Die aktuell verwendete Version des SVWS-Clients wird hier angezeigt, ebenso der verwendete Commit, der als Link auf das GitHub-Repository verweist. Das Kopier-Icon an der Seite kann verwendet werden, wenn Fehlermeldungen geschrieben werden. Mit Hilfe der kopierten Daten ist die Fehlersuche für das Entwicklerteam detlich einfacher.
+Die aktuell verwendete Version des ENM-Clients wird hier angezeigt, ebenso der verwendete Commit, der als Link auf das GitHub-Repository verweist. Das Kopier-Icon an der Seite kann verwendet werden, wenn Fehlermeldungen geschrieben werden. Mit Hilfe der kopierten Daten ist die Fehlersuche für das Entwicklerteam detlich einfacher.

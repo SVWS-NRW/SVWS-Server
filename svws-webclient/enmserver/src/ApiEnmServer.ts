@@ -1,6 +1,9 @@
 import { BaseApi, type ApiFile } from "@core/api/BaseApi";
 import { ENMLeistung } from "@core/core/data/enm/ENMLeistung";
-import { ENMLeistungBemerkungen, ENMLernabschnitt, ENMSchuelerAnkreuzkompetenz, ENMTeilleistung } from "@core/index";
+import { ENMLeistungBemerkungen } from "@core/core/data/enm/ENMLeistungBemerkungen";
+import { ENMLernabschnitt } from "@core/core/data/enm/ENMLernabschnitt";
+import { ENMSchuelerAnkreuzkompetenz } from "@core/core/data/enm/ENMSchuelerAnkreuzkompetenz";
+import { ENMTeilleistung } from "@core/core/data/enm/ENMTeilleistung";
 
 export class ApiEnmServer extends BaseApi {
 
