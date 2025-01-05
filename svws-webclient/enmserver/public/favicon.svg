@@ -21,9 +21,9 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="0.08117387"
-     inkscape:cx="129.35197"
-     inkscape:cy="55.436558"
+     inkscape:zoom="0.78"
+     inkscape:cx="135.89744"
+     inkscape:cy="55.769231"
      inkscape:window-width="1504"
      inkscape:window-height="868"
      inkscape:window-x="0"
@@ -37,14 +37,9 @@
      rx="51"
      id="rect1"
      style="fill:#1660cc;fill-opacity:1" />
-  <text
-     xml:space="preserve"
-     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;font-size:128px;font-family:'Helvetica Neue';-inkscape-font-specification:'Helvetica Neue, Bold Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#ffffff;fill-opacity:1"
-     x="9.7788754"
-     y="173.696"
-     id="text16"><tspan
-       sodipodi:role="line"
-       id="tspan16"
-       x="9.7788754"
-       y="173.696">ENM</tspan></text>
+  <path
+     d="m 67.250875,82.303999 h -51.072 V 173.696 h 52.352 v -15.104 h -33.92 v -24.576 h 30.72 v -15.104 h -30.72 V 97.407999 h 32.64 z m 31.744116,0 h -21.248 V 173.696 h 16.896 v -64 h 0.256 l 22.527999,64 h 20.992 V 82.303999 h -16.896 V 144.896 h -0.256 z m 52.607919,0 V 173.696 h 16.896 v -72.96 h 0.256 l 16.256,72.96 h 14.336 l 16.256,-72.96 h 0.256 v 72.96 h 16.896 V 82.303999 h -27.264 l -13.184,64.512001 h -0.256 l -13.056,-64.512001 z"
+     id="text16"
+     style="font-weight:bold;font-stretch:condensed;font-size:128px;font-family:'Helvetica Neue';-inkscape-font-specification:'Helvetica Neue, Bold Condensed';fill:#ffffff"
+     aria-label="ENM" />
 </svg>
