@@ -1,5 +1,22 @@
 <?php
 
+	$inc_memory_limit_success = ini_set('memory_limit', '1024M');
+	$php_max_gzip_buffer = 900000000;
+	if ($inc_memory_limit_success === false) {
+		$inc_memory_limit_success = ini_set('memory_limit', '768M');
+		$php_max_gzip_buffer = 600000000;
+		if ($inc_memory_limit_success === false) {
+			$inc_memory_limit_success = ini_set('memory_limit', '512M');
+			$php_max_gzip_buffer = 400000000;
+			if ($inc_memory_limit_success === false) {
+				$php_max_gzip_buffer = 200000000;
+				$inc_memory_limit_success = ini_set('memory_limit', '256M');
+				if ($inc_memory_limit_success === false)
+					$php_max_gzip_buffer = 100000000;
+			}		
+		}
+	}
+
 	/**
 	 * Diese Klasse stellt Hilfsmethoden für den Zugriff auf HTTP-Requests und das Schreiben
 	 * von Http-Responses zur Verfügung.
@@ -81,15 +98,6 @@
 		}
 
 		/**
-		 * Erhöht das Memory-Limit für aufwendige Operation, welches dem PHP zur Verfügung steht
-		 */
-		public static function increaseMemoryLimit() {
-			$success = ini_set('memory_limit', '1024M');
-			// if ($success === false)
-			// 	Http::exit500("Das Memory-Limit konnte nicht erhöht werden. Überprüfen Sie die Web-Server-Konfiguration.");
-		}
-
-		/**
 		 * Ermittelt den Inhalt der angegebenen Datei aus dem Multipart-Body des HTTP-Requests,
 		 * dekomprimiert deren GZIP-komprimierten Inhalt und gibt dies zurück.
 		 *
@@ -102,7 +110,7 @@
 			$zd = gzopen($tmpFilename, "r");
 			if ($zd == false)
 				Http::exit400BadRequest("Fehler beim Upload der Datei: Die Datei ist nicht im gzip-Format.");
-			$content = gzread($zd, 900000000);
+			$content = gzread($zd, $php_max_gzip_buffer);
 			if ($content == null)
 				Http::exit400BadRequest("Fehler beim Upload der Datei: Die gzip-Datei konnte nicht gelesen werden.");
 			$success = gzclose($zd);
