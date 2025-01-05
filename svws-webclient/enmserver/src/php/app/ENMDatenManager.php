@@ -63,7 +63,7 @@
 			try {
 				$enmDaten = json_decode($jsonEnmDaten, false, 512, JSON_THROW_ON_ERROR);
 			} catch (JsonException $e) {
-				Http::exit400BadRequest("Fehler bei dem Dekodieren der JSON-Daten ".$e->getCode().": ".$e->getMessage()."\n".$e->getTraceAsString());
+				Http::exit400BadRequest("Fehler bei dem Dekodieren der JSON-Daten. Prüfen ie ggf. die php-Konfiguration. Ein zu niedriger Wert bei der Einstellung memory_limit kann evtl. dazu führen. Fehler ".$e->getCode().": ".$e->getMessage()."\n".$e->getTraceAsString());
 			}
 			// Prüfe zunächst die ENM-Revision
 			if ($enmDaten->enmRevision != $manager->enmRevisionRequired)
