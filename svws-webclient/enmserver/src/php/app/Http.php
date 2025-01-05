@@ -81,6 +81,15 @@
 		}
 
 		/**
+		 * Erhöht das Memory-Limit für aufwendige Operation, welches dem PHP zur Verfügung steht
+		 */
+		public static function increaseMemoryLimit() {
+			$success = ini_set('memory_limit', '1024M');
+			if ($success === false)
+				Http::exit500("Das Memory-Limit konnte nicht erhöht werden. Überprüfen Sie die Web-Server-Konfiguration.");
+		}
+
+		/**
 		 * Ermittelt den Inhalt der angegebenen Datei aus dem Multipart-Body des HTTP-Requests,
 		 * dekomprimiert deren GZIP-komprimierten Inhalt und gibt dies zurück.
 		 *
@@ -93,7 +102,7 @@
 			$zd = gzopen($tmpFilename, "r");
 			if ($zd == false)
 				Http::exit400BadRequest("Fehler beim Upload der Datei: Die Datei ist nicht im gzip-Format.");
-			$content = gzread($zd, 10000000);
+			$content = gzread($zd, 900000000);
 			if ($content == null)
 				Http::exit400BadRequest("Fehler beim Upload der Datei: Die gzip-Datei konnte nicht gelesen werden.");
 			$success = gzclose($zd);
@@ -128,11 +137,11 @@
 		 * @param string msg   ein optionaler Parameter, um eine Nachricht als plain text zurückzugeben
 		 */
 		public static function exit400BadRequest(string | null $msg = null) {
+			http_response_code(400);
 			if ($msg != null) {
 				header('Content-Type: text/plain; charset=utf-8');
 				echo $msg;
 			}
-			http_response_code(400);
 			exit;
 		}
 
@@ -140,9 +149,9 @@
 		 * Gibt einen UNAUTHORIZED (401) zurück und beendet das PHP-Skript.
 		 */
 		public static function exit401Unauthorized(string | null $headerinfo = null) {
+			http_response_code(401);
 			if ($headerinfo != null)
 				header($headerinfo);
-			http_response_code(401);
 			exit;
 		}
 
@@ -160,11 +169,11 @@
 		 * @param string msg   ein optionaler Parameter, um eine Nachricht als plain text zurückzugeben
 		 */
 		public static function exit404NotFound(string | null $msg = null) {
+			http_response_code(404);
 			if ($msg != null) {
 				header('Content-Type: text/plain; charset=utf-8');
 				echo $msg;
 			}
-			http_response_code(404);
 			exit;
 		}
 

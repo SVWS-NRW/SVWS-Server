@@ -56,8 +56,15 @@
 		 * @return ENMDatenManager   der initialisierte Manager
 		 */
 		public static function createFromJson(string $jsonEnmDaten): ENMDatenManager {
+			if ($jsonEnmDaten === null)
+				Http::exit500("Fehler bei dem Dekodieren der JSON-Daten: Der JSON-String ist null.");
 			$manager = new ENMDatenManager();
-			$enmDaten = json_decode($jsonEnmDaten);
+			$enmDaten = null;
+			try {
+				$enmDaten = json_decode($jsonEnmDaten, false, 512, JSON_THROW_ON_ERROR);
+			} catch (JsonException $e) {
+				Http::exit400BadRequest("Fehler bei dem Dekodieren der JSON-Daten ".$e->getCode().": ".$e->getMessage()."\n".$e->getTraceAsString());
+			}
 			// Prüfe zunächst die ENM-Revision
 			if ($enmDaten->enmRevision != $manager->enmRevisionRequired)
 				Http::exit400BadRequest("Die Revision der ENM-Daten ist nicht $manager->enmRevisionRequired.");
