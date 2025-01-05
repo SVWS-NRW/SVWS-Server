@@ -85,8 +85,8 @@
 		 */
 		public static function increaseMemoryLimit() {
 			$success = ini_set('memory_limit', '1024M');
-			if ($success === false)
-				Http::exit500("Das Memory-Limit konnte nicht erhöht werden. Überprüfen Sie die Web-Server-Konfiguration.");
+			// if ($success === false)
+			// 	Http::exit500("Das Memory-Limit konnte nicht erhöht werden. Überprüfen Sie die Web-Server-Konfiguration.");
 		}
 
 		/**
