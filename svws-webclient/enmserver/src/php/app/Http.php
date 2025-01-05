@@ -1,18 +1,12 @@
 <?php
 
 	$inc_memory_limit_success = ini_set('memory_limit', '1024M');
-	$php_max_gzip_buffer = 900000000;
 	if ($inc_memory_limit_success === false) {
 		$inc_memory_limit_success = ini_set('memory_limit', '768M');
-		$php_max_gzip_buffer = 600000000;
 		if ($inc_memory_limit_success === false) {
 			$inc_memory_limit_success = ini_set('memory_limit', '512M');
-			$php_max_gzip_buffer = 400000000;
 			if ($inc_memory_limit_success === false) {
-				$php_max_gzip_buffer = 200000000;
 				$inc_memory_limit_success = ini_set('memory_limit', '256M');
-				if ($inc_memory_limit_success === false)
-					$php_max_gzip_buffer = 100000000;
 			}		
 		}
 	}
@@ -107,11 +101,13 @@
 		 */
 		public static function getMultipartGzipFileContent(string $name) : string {
 			$tmpFilename = Http::getMultipartTmpFilename($name);
+			$content = "";
 			$zd = gzopen($tmpFilename, "r");
 			if ($zd == false)
 				Http::exit400BadRequest("Fehler beim Upload der Datei: Die Datei ist nicht im gzip-Format.");
-			$content = gzread($zd, $php_max_gzip_buffer);
-			if ($content == null)
+			while (!gzeof($zd))
+				$content .= gzread($zd, 1000000);
+			if (strcmp($content, "") === 0)
 				Http::exit400BadRequest("Fehler beim Upload der Datei: Die gzip-Datei konnte nicht gelesen werden.");
 			$success = gzclose($zd);
 			if ($success == false)
