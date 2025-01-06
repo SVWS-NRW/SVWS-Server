@@ -14,6 +14,7 @@ import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperN
 import { ServerMode } from "@core/core/types/ServerMode";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import type { TabData } from "@ui/ui/nav/TabData";
+import { routeTeilleistungen } from "./RouteTeilleistungen";
 
 
 export class RouteApp extends RouteNode<RouteDataApp, any> {
@@ -28,6 +29,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		super.text = "ENM-Client";
 		this._menuMain = [
 			routeLeistungen,
+			routeTeilleistungen,
 		];
 		super.children = [
 			...this._menuMain,

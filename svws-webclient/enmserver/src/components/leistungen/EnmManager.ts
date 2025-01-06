@@ -1,3 +1,4 @@
+import { HashMap2D } from "@core/core/adt/map/HashMap2D";
 import { ENMDaten } from "@core/core/data/enm/ENMDaten";
 import type { ENMFach } from "@core/core/data/enm/ENMFach";
 import type { ENMFloskelgruppe } from "@core/core/data/enm/ENMFloskelgruppe";
@@ -8,6 +9,7 @@ import type { ENMLehrer } from "@core/core/data/enm/ENMLehrer";
 import type { ENMLeistung } from "@core/core/data/enm/ENMLeistung";
 import type { ENMLerngruppe } from "@core/core/data/enm/ENMLerngruppe";
 import type { ENMSchueler } from "@core/core/data/enm/ENMSchueler";
+import type { ENMTeilleistung } from "@core/core/data/enm/ENMTeilleistung";
 import type { ENMTeilleistungsart } from "@core/core/data/enm/ENMTeilleistungsart";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { ArrayList } from "@core/java/util/ArrayList";
@@ -445,6 +447,53 @@ export class EnmManager {
 		return result;
 	});
 
+	/** Eine HashMap mit den Schülerteilleistungen der aktuellen Lerngruppenauswahl zugeordnet zur Leistungs-ID */
+	protected mapLerngruppenAuswahlSchuelerTeilleistungen = computed<HashMap2D<number, number, ENMTeilleistung>>(() => {
+		const result = new HashMap2D<number, number, ENMTeilleistung>();
+		for (const schuelerLeistungen of this.mapLerngruppenAuswahlSchuelerLeistungen.value.values())
+			for (const leistung of schuelerLeistungen)
+				for (const teilleistung of leistung.teilleistungen)
+					result.put(leistung.id, teilleistung.id, teilleistung);
+		return result;
+	});
+
+	/** Eine Hashmap mit den IDs der Teilleistungsarten als Menge, zugeordnet zu den Leistungen, bei denen sie vorkommen */
+	protected mapLerngruppenAuswahlLeistungTeilleistungenByTeilleistungsartenId = computed<HashMap<number, HashMap<number, ENMTeilleistung>>>(() => {
+		const result = new HashMap<number, HashMap<number, ENMTeilleistung>>();
+		const tmp = this.mapLerngruppenAuswahlSchuelerTeilleistungen.value;
+		for (const idLeistung of tmp.getKeySet()) {
+			const setTeilleistungsarten = new HashMap<number, ENMTeilleistung>();
+			for (const idTeilleistung of tmp.getKeySetOf(idLeistung)) {
+				const teilleistung = tmp.getOrNull(idLeistung, idTeilleistung);
+				if (teilleistung === null)
+					continue;
+				const teilleistungsart = this.mapTeilleistungsarten.value.get(teilleistung.artID);
+				if (teilleistungsart === null)
+					continue;
+				setTeilleistungsarten.put(teilleistungsart.id, teilleistung);
+			}
+			result.put(idLeistung, setTeilleistungsarten);
+		}
+		return result;
+	});
+
+	/** Eine Liste mit den in Teilleistungen verwendendeten Teilleistungsarten */
+	protected listLerngruppenAuswahlTeilleistungsarten = computed<List<ENMTeilleistungsart>>(() => {
+		const setArten = new HashSet<number>();
+		for (const mapTeilleistungsarten of this.mapLerngruppenAuswahlLeistungTeilleistungenByTeilleistungsartenId.value.values())
+			for (const idTeilleistungsart of mapTeilleistungsarten.keySet())
+				setArten.add(idTeilleistungsart);
+		const result = new ArrayList<ENMTeilleistungsart>();
+		for (const idTeilleistungsart of setArten) {
+			const art = this.mapTeilleistungsarten.value.get(idTeilleistungsart);
+			if (art === null)
+				continue;
+			result.add(art);
+		}
+		result.sort(this.comparatorTeilleistungsarten);
+		return result;
+	});
+
 	/**
 	 * Vergleicht zwei Lerngruppen miteinander und sortiert diese anhand der Jahrgänge als erstes Kriterium und
 	 * anhand der Fachsortierung als zweites Kriterium.
@@ -513,6 +562,48 @@ export class EnmManager {
 
 	/** Definition des Comparators für zwei Klassen */
 	public comparatorKlassen = <Comparator<ENMKlasse>>{ compare: this.compareKlassen };
+
+	/**
+	 * Vergleicht zwei Teilleistungsarten miteinander und sortiert diese.
+	 *
+	 * @param a   die erste Teilleistungsart
+	 * @param b   die zweite Teilleistungsart
+	 *
+	 * @returns der Wert für den Vergleich (< 0, 0 oder >0)
+	 */
+	protected compareTeilleistungsarten = (a : ENMTeilleistungsart | null, b : ENMTeilleistungsart | null) : number => {
+		if ((a === null) && (b === null))
+			return 0;
+		if ((a === null) || (a.sortierung === null))
+			return -1;
+		if ((b === null) || (b.sortierung === null))
+			return 1;
+		return a.sortierung - b.sortierung;
+	}
+
+	/** Definition des Comparators für zwei Teilleistungsarten */
+	public comparatorTeilleistungsarten = <Comparator<ENMTeilleistungsart>>{ compare: this.compareTeilleistungsarten };
+
+	/**
+	 * Vergleicht zwei Teilleistungen miteinander und sortiert diese.
+	 *
+	 * @param a   die erste Teilleistung
+	 * @param b   die zweite Teilleistung
+	 *
+	 * @returns der Wert für den Vergleich (< 0, 0 oder >0)
+	 */
+	protected compareTeilleistungen = (a : ENMTeilleistung, b : ENMTeilleistung) : number => {
+		// Vergleiche zuerst anhand der gesetzten Sortierung der Teilleistungsarten...
+		const aArt = this.mapTeilleistungsarten.value.get(a.artID);
+		const bArt = this.mapTeilleistungsarten.value.get(b.artID);
+		const tmp = this.compareTeilleistungsarten(aArt, bArt);
+		if (tmp !== 0)
+			return tmp;
+		return a.id - b.id;
+	}
+
+	/** Definition des Comparators für zwei Teilleistungen */
+	public comparatorTeilleistungen = <Comparator<ENMTeilleistung>>{ compare: this.compareTeilleistungen };
 
 
 	/** Gibt die Auswahlliste für die Lerngruppen zurück. */
@@ -674,9 +765,46 @@ export class EnmManager {
 
 	/**
 	 * Gibt die Liste der Schüler der aktuellen Lerngruppenauswahl zurück;
+	 *
+	 * @returns die Liste der Schüler der aktuellen Lerngruppenauswahl
 	 */
 	public lerngruppenAuswahlGetSchueler() : List<ENMSchueler> {
 		return this.listLerngruppenAuswahlSchueler.value;
+	}
+
+
+	/**
+	 * Gibt die Liste der vorkommenden Teilleistungsarten der aktuellen Lerngruppenauswahl zurück;
+	 *
+	 * @returns die Liste der vorkommenden Teilleistungsarten der aktuellen Lerngruppenauswahl
+	 */
+	public lerngruppenAuswahlGetTeilleistungsarten() : List<ENMTeilleistungsart> {
+		return this.listLerngruppenAuswahlTeilleistungsarten.value;
+	}
+
+
+	/**
+	 * Prüft, ob die Teilleistungsart mit der übergebenen ID bei der Leistung mit der übergebenen ID vorkommt.
+	 *
+	 * @param idLeistung           die ID der Teilleistungsart
+	 * @param idTeilleistungsart   die ID der Teilleistungsart
+	 *
+	 * @returns true, wenn die Teilleistungsart bei der Leistung existiert, ansonsten false
+	 */
+	public lerngruppenAuswahlLeistungHatTeilleistungsart(idLeistung: number, idTeilleistungsart: number) : boolean {
+		return this.mapLerngruppenAuswahlLeistungTeilleistungenByTeilleistungsartenId.value.get(idLeistung)?.containsKey(idTeilleistungsart) ?? false;
+	}
+
+	/**
+	 * Gibt die Teilleistung für die übergebene Leistungs-ID und die übergebene Teilleistungsart-ID zurück.
+	 *
+	 * @param idLeistung           die ID der Leistung
+	 * @param idTeilleistungsart   die ID der Teilleistungsart
+	 *
+	 * @returns die Teilleistung oder null, falls eine solche Teilleistung nicht existiert.
+	 */
+	public lerngruppenAuswahlGetTeilleistungOrNull(idLeistung: number, idTeilleistungsart: number) : ENMTeilleistung | null {
+		return this.mapLerngruppenAuswahlLeistungTeilleistungenByTeilleistungsartenId.value.get(idLeistung)?.get(idTeilleistungsart) ?? null;
 	}
 
 	/**

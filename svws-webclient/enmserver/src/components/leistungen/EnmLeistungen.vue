@@ -1,6 +1,7 @@
 <template>
 	<div class="page--content h-full w-full overflow-hidden">
 		<enm-leistungen-uebersicht :manager :patch-leistung />
+		<enm-floskeleditor />
 	</div>
 </template>
 
@@ -15,7 +16,8 @@
 <style lang="postcss" scoped>
 
 	.page--content {
-		display: inline-block;
+		@apply grid;
+		grid-template-columns: 2fr 1fr;
 	}
 
 </style>
