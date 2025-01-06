@@ -18,7 +18,7 @@ import { HashMap } from "@core/java/util/HashMap";
 import { HashSet } from "@core/java/util/HashSet";
 import type { JavaMap } from "@core/java/util/JavaMap";
 import type { List } from "@core/java/util/List";
-import { computed, shallowRef } from "vue";
+import { computed, shallowRef, triggerRef } from "vue";
 import type { ShallowRef } from "vue";
 
 /**
@@ -109,6 +109,7 @@ export class EnmManager {
 	/** Setzt die aktuelle Auswahl der Lerngruppen. */
 	public set filterLerngruppen(value : Array<EnmLerngruppenAuswahlEintrag>) {
 		this._filterLerngruppen.value = value;
+		triggerRef(this._filterLerngruppen);
 	}
 
 	/** Gibt die aktuell ausgewählte Leistung zurück */

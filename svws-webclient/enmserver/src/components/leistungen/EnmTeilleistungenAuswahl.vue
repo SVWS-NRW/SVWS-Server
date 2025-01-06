@@ -5,17 +5,27 @@
 		</template>
 		<template #header />
 		<template #content>
-			<svws-ui-table :items="manager.lerngruppenAuswahlliste" :model-value="manager.filterLerngruppen" @update:model-value="items => manager.filterLerngruppen = items"
-				:columns :filter-open="false" selectable count scroll-into-view scroll allow-arrow-key-selection />
+			<svws-ui-table :items="manager.lerngruppenAuswahlliste" clickable @update:clicked="item => manager.filterLerngruppen = [ item ]" :clicked="manager.filterLerngruppen[0]"
+				:columns :filter-open="false" count scroll-into-view scroll allow-arrow-key-selection />
 		</template>
 	</svws-ui-secondary-menu>
 </template>
 
 <script setup lang="ts">
 
+	import { onMounted } from 'vue';
 	import type { EnmTeilleistungenProps } from './EnmTeilleistungenProps';
 
 	const props = defineProps<EnmTeilleistungenProps>();
+
+	onMounted(() => {
+		if (props.manager.filterLerngruppen.length > 0)
+			props.manager.filterLerngruppen = [ props.manager.filterLerngruppen[0] ];
+		else if (!props.manager.lerngruppenAuswahlliste.isEmpty())
+			props.manager.filterLerngruppen = [ props.manager.lerngruppenAuswahlliste.getFirst() ];
+		else
+			props.manager.filterLerngruppen = [];
+	})
 
 	const columns = [
 		{ key: "bezeichnung", label: "Lerngruppe" },
