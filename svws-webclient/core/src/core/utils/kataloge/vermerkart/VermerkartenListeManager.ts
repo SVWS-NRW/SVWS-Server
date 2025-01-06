@@ -32,6 +32,11 @@ export class VermerkartenListeManager extends AuswahlManager<number, VermerkartE
 	private static readonly _schuelerToId : JavaFunction<SchuelerVermerkartZusammenfassung, number> = { apply : (s: SchuelerVermerkartZusammenfassung) => s.id };
 
 	/**
+	 * Das Filter-Attribut auf nur sichtbare Vermerkarten
+	 */
+	private _filterNurSichtbar : boolean = true;
+
+	/**
 	 * Ein Dummy-Event.
 	 */
 	protected static readonly _dummyEvent : Runnable = { run : () => {
@@ -108,6 +113,25 @@ export class VermerkartenListeManager extends AuswahlManager<number, VermerkartE
 		return updateEintrag;
 	}
 
+	/**
+	 * Gibt die aktuelle Filtereinstellung auf nur sichtbare Vermerkarten zurück.
+	 *
+	 * @return true, wenn nur sichtbare Vermerkarten angezeigt werden und ansonsten false
+	 */
+	public filterNurSichtbar() : boolean {
+		return this._filterNurSichtbar;
+	}
+
+	/**
+	 * Setzt die Filtereinstellung auf nur sichtbare Vermerkarten.
+	 *
+	 * @param value   true, wenn der Filter aktiviert werden soll, und ansonsten false
+	 */
+	public setFilterNurSichtbar(value : boolean) : void {
+		this._filterNurSichtbar = value;
+		this._eventHandlerFilterChanged.run();
+	}
+
 	protected onMehrfachauswahlChanged() : void {
 		this.setVermerkartenIDsMitSchuelern.clear();
 		for (const k of this.liste.auswahl())
@@ -143,6 +167,8 @@ export class VermerkartenListeManager extends AuswahlManager<number, VermerkartE
 	}
 
 	protected checkFilter(eintrag : VermerkartEintrag) : boolean {
+		if (this._filterNurSichtbar && !eintrag.istSichtbar)
+			return false;
 		return true;
 	}
 

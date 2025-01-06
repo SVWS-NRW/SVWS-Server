@@ -61,7 +61,7 @@
 							<td class="svws-ui-td" role="cell">
 								<template v-if="manager.lerngruppenAuswahlGetTeilleistungOrNull(leistung.id, art.id) !== null">
 									<svws-ui-select v-if="manager.lerngruppeIstFachlehrer(leistung.lerngruppenID)" title="—" headless class="w-full"
-										:items="Note.values()" :item-text="(item: Note) => item.daten(manager.schuljahr)?.kuerzel ?? '—'"
+										:items="Note.values()" :item-text="item => item.daten(manager.schuljahr)?.kuerzel ?? '—'"
 										:model-value="Note.fromKuerzel(manager.lerngruppenAuswahlGetTeilleistungOrNull(leistung.id, art.id)!.note)"
 										@update:model-value="value => doPatchTeilleistung(manager.lerngruppenAuswahlGetTeilleistungOrNull(leistung.id, art.id)!, { note: value?.daten(manager.schuljahr)?.kuerzel ?? null })" />
 									<div v-else>{{ manager.lerngruppenAuswahlGetTeilleistungOrNull(leistung.id, art.id)!.note }}</div>
@@ -70,14 +70,14 @@
 						</template>
 						<td class="svws-ui-td" role="cell" v-if="colQuartal.sichtbar ?? true">
 							<svws-ui-select v-if="manager.lerngruppeIstFachlehrer(leistung.lerngruppenID)" title="—" headless class="w-full"
-								:items="Note.values()" :item-text="(item: Note) => item.daten(manager.schuljahr)?.kuerzel ?? '—'"
+								:items="Note.values()" :item-text="item => item.daten(manager.schuljahr)?.kuerzel ?? '—'"
 								:model-value="Note.fromKuerzel(leistung.noteQuartal)"
 								@update:model-value="value => doPatchLeistung(leistung, { noteQuartal: value?.daten(manager.schuljahr)?.kuerzel ?? null })" />
 							<div v-else>{{ leistung.noteQuartal }}</div>
 						</td>
 						<td class="svws-ui-td" role="cell" v-if="colNote.sichtbar ?? true">
 							<svws-ui-select v-if="manager.lerngruppeIstFachlehrer(leistung.lerngruppenID)" title="—" headless class="w-full"
-								:items="Note.values()" :item-text="(item: Note) => item.daten(manager.schuljahr)?.kuerzel ?? '—'"
+								:items="Note.values()" :item-text="item => item.daten(manager.schuljahr)?.kuerzel ?? '—'"
 								:model-value="Note.fromKuerzel(leistung.note)"
 								@update:model-value="value => doPatchLeistung(leistung, { note: value?.daten(manager.schuljahr)?.kuerzel ?? null })" />
 							<div v-else>{{ leistung.note }}</div>

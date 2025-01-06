@@ -9,8 +9,11 @@
 		<template #header />
 		<template #content>
 			<div class="container">
-				<svws-ui-table clickable :clicked="clickedEintrag" @update:clicked="eintrag => gotoDefaultView(eintrag.id)" :items="props.manager().liste.list()" :columns selectable
+				<svws-ui-table clickable :clicked="clickedEintrag" @update:clicked="eintrag => gotoDefaultView(eintrag.id)" :items="props.manager().filtered()" :columns selectable
 					:model-value="[...props.manager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)" scroll-into-view :focus-switching-enabled :focus-help-visible>
+					<template #filterAdvanced>
+						<svws-ui-checkbox type="toggle" v-model="filterNurSichtbare">Nur Sichtbare</svws-ui-checkbox>
+					</template>
 					<template #cell(anzahlVermerke)="{ value, rowData }">
 						<div class="inline-flex min-h-5">
 							<div v-if="isRemovable(rowData)" class="inline-flex">
@@ -54,6 +57,14 @@
 	];
 
 	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+
+	const filterNurSichtbare = computed<boolean>({
+		get: () => props.manager().filterNurSichtbar(),
+		set: (value) => {
+			props.manager().setFilterNurSichtbar(value);
+			void props.setFilter();
+		},
+	});
 
 	async function setAuswahl(items : VermerkartEintrag[]) {
 		props.manager().liste.auswahlClear();

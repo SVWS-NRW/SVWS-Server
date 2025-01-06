@@ -30,6 +30,9 @@ public final class VermerkartenListeManager extends AuswahlManager<Long, Vermerk
 	private static final @NotNull Function<SchuelerVermerkartZusammenfassung, @NotNull Long> _schuelerToId =
 			(final @NotNull SchuelerVermerkartZusammenfassung s) -> s.id;
 
+	/** Das Filter-Attribut auf nur sichtbare Vermerkarten */
+	private boolean _filterNurSichtbar = true;
+
 	/** Ein Dummy-Event. */
 	protected static final @NotNull Runnable _dummyEvent = () -> { /* do nothing */	};
 
@@ -103,6 +106,27 @@ public final class VermerkartenListeManager extends AuswahlManager<Long, Vermerk
 		return updateEintrag;
 	}
 
+
+	/**
+	 * Gibt die aktuelle Filtereinstellung auf nur sichtbare Vermerkarten zurück.
+	 *
+	 * @return true, wenn nur sichtbare Vermerkarten angezeigt werden und ansonsten false
+	 */
+	public boolean filterNurSichtbar() {
+		return this._filterNurSichtbar;
+	}
+
+	/**
+	 * Setzt die Filtereinstellung auf nur sichtbare Vermerkarten.
+	 *
+	 * @param value   true, wenn der Filter aktiviert werden soll, und ansonsten false
+	 */
+	public void setFilterNurSichtbar(final boolean value) {
+		this._filterNurSichtbar = value;
+		this._eventHandlerFilterChanged.run();
+	}
+
+
 	@Override
 	protected void onMehrfachauswahlChanged() {
 		this.setVermerkartenIDsMitSchuelern.clear();
@@ -140,7 +164,8 @@ public final class VermerkartenListeManager extends AuswahlManager<Long, Vermerk
 
 	@Override
 	protected boolean checkFilter(final @NotNull VermerkartEintrag eintrag) {
+		if (this._filterNurSichtbar && !eintrag.istSichtbar)
+			return false;
 		return true;
 	}
-
 }
