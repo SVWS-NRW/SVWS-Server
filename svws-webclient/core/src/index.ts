@@ -718,8 +718,7 @@ export { KlausurterminblockungAlgorithmusGreedy3 } from './core/utils/gost/klaus
 export { KlausurterminblockungDynDaten } from './core/utils/gost/klausurplanung/KlausurterminblockungDynDaten';
 export { JahrgangListeManager } from './core/utils/jahrgang/JahrgangListeManager';
 export { JahrgangsUtils } from './core/utils/jahrgang/JahrgangsUtils';
-export { VermerkArtUtils } from './core/utils/kataloge/vermerkart/VermerkArtUtils';
-export { VermerkartenManager } from './core/utils/kataloge/vermerkart/VermerkartenManager';
+export { VermerkartenListeManager } from './core/utils/kataloge/vermerkart/VermerkartenListeManager';
 export { KlassenListeManager } from './core/utils/klassen/KlassenListeManager';
 export { KlassenUtils } from './core/utils/klassen/KlassenUtils';
 export { KursListeManager } from './core/utils/kurse/KursListeManager';

@@ -28,7 +28,7 @@ export class RouteSchuleJahrgangNeu extends RouteNode<any, RouteSchuleJahrgaenge
 
 	public getProps(to: RouteLocationNormalized): SchuleJahrgangNeuProps {
 		return {
-			jahrgangListeManager: () => routeSchuleJahrgaenge.data.jahrgangListeManager,
+			jahrgangListeManager: () => routeSchuleJahrgaenge.data.manager,
 			add: routeSchuleJahrgaenge.data.add,
 			gotoDefaultView: routeSchuleJahrgaenge.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
