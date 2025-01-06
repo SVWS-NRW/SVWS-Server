@@ -431,6 +431,7 @@ export class EnmManager {
 				continue;
 			result.add(schueler);
 		}
+		result.sort(this.comparatorSchueler);
 		return result;
 	});
 
@@ -563,6 +564,48 @@ export class EnmManager {
 
 	/** Definition des Comparators für zwei Klassen */
 	public comparatorKlassen = <Comparator<ENMKlasse>>{ compare: this.compareKlassen };
+
+	/**
+	 * Vergleicht zwei Schüler miteinander und sortiert diese.
+	 *
+	 * @param a   der erste Schüler
+	 * @param b   der zweite Schüler
+	 *
+	 * @returns der Wert für den Vergleich (< 0, 0 oder >0)
+	 */
+	protected compareSchueler = (a : ENMSchueler, b : ENMSchueler) : number => {
+		const aKlasse = this.mapKlassen.value.get(a.klasseID);
+		const bKlasse = this.mapKlassen.value.get(b.klasseID);
+		if ((aKlasse === null) && (bKlasse !== null))
+			return -1;
+		if ((aKlasse !== null) && (bKlasse === null))
+			return 1;
+		if ((aKlasse !== null) && (bKlasse !== null)) {
+			const tmp = this.compareKlassen(aKlasse, bKlasse);
+			if (tmp !== 0)
+				return tmp;
+		}
+		if ((a.nachname !== null) && (b.nachname !== null)) {
+			let tmp = a.nachname.localeCompare(b.nachname);
+			if (tmp !== 0)
+				return tmp;
+			if ((a.vorname !== null) && (b.vorname !== null)) {
+				tmp = a.vorname.localeCompare(b.vorname);
+				if (tmp !== 0)
+					return tmp;
+				return a.id - b.id;
+			}
+			if ((a.vorname === null) && (b.vorname === null))
+				return a.id - b.id;
+			return (a.vorname === null) ? -1 : 1;
+		}
+		if ((a.nachname === null) && (b.nachname === null))
+			return a.id - b.id;
+		return (a.nachname === null) ? -1 : 1;
+	}
+
+	/** Definition des Comparators für zwei Schüler */
+	public comparatorSchueler = <Comparator<ENMSchueler>>{ compare: this.compareSchueler };
 
 	/**
 	 * Vergleicht zwei Teilleistungsarten miteinander und sortiert diese.

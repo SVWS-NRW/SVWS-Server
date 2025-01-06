@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-app-layout no-secondary-menu :tertiary-menu="showAuswahlliste()" secondary-menu-small>
+	<svws-ui-app-layout no-secondary-menu :tertiary-menu="showAuswahlliste()" secondary-menu-small tertiary-menu-small>
 		<template #sidebar>
 			<svws-ui-menu :focus-switching-enabled :focus-help-visible>
 				<template #header>

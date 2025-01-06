@@ -1,7 +1,11 @@
 <template>
 	<div class="page--content h-full w-full overflow-hidden">
-		<enm-leistungen-uebersicht :manager :patch-leistung />
-		<enm-floskeleditor />
+		<div class="w-full h-full overflow-hidden">
+			<enm-leistungen-uebersicht :manager :patch-leistung />
+		</div>
+		<!-- <div class="w-full h-full overflow-hidden">
+			<enm-floskeleditor />
+		</div> -->
 	</div>
 </template>
 
@@ -16,8 +20,7 @@
 <style lang="postcss" scoped>
 
 	.page--content {
-		@apply grid;
-		grid-template-columns: 2fr 1fr;
+		@apply inline-block;
 	}
 
 </style>
