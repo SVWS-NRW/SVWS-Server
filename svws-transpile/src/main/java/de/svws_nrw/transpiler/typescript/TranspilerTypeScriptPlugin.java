@@ -1601,7 +1601,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					final String expression = convertExpression(ms.getExpression());
 					final Set<String> strMethods = Set.of(
 							"contains", "indexOf", "compareTo", "compareToIgnoreCase", "equalsIgnoreCase",
-							"replaceAll", "replaceFirst", "formatted", "format", "length", "isBlank", "isEmpty"
+							"replaceAll", "replace", "replaceFirst", "formatted", "format", "length", "isBlank", "isEmpty"
 					);
 					if (strMethods.contains(ms.getIdentifier().toString())) {
 						transpiler.getTranspilerUnit(node).imports.put("String", "java.lang");
@@ -1619,6 +1619,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 										+ ")";
 							case "replaceAll" ->
 								"JavaString.replaceAll(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
+							case "replace" ->
+								"JavaString.replace(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
 							case "replaceFirst" ->
 								"JavaString.replaceFirst(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
 							case "formatted" ->
@@ -1687,7 +1689,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				// replace System.out and System.err commands
 				if ((type instanceof final ExpressionClassType classType) && ("java.io.PrintStream".equals(classType.getFullQualifiedName()))) {
 					final String expression = convertExpression(ms.getExpression());
-					if (expression.equals("System.out")) {
+					if ("System.out".equals(expression)) {
 						if ("flush".equals(ms.getIdentifier().toString()))
 							return null;
 						if ("print".equals(ms.getIdentifier().toString()) || "println".equals(ms.getIdentifier().toString())) {
@@ -1695,7 +1697,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 								return "console.log(JSON.stringify" + convertMethodInvocationParameters(node.getArguments(), null, null, false) + ")";
 							return "console.log" + convertMethodInvocationParameters(node.getArguments(), null, null, false);
 						}
-					} else if (expression.equals("System.err")) {
+					} else if ("System.err".equals(expression)) {
 						if ("flush".equals(ms.getIdentifier().toString()))
 							return null;
 						if ("print".equals(ms.getIdentifier().toString()) || "println".equals(ms.getIdentifier().toString())) {

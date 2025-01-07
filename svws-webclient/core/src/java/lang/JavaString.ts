@@ -31,6 +31,10 @@ export abstract class JavaString {
 		return s.replace(new RegExp(regex, "g"), replacement);
 	}
 
+	public static replace(s : string, pattern : string, replacement : string): string {
+		return s.replaceAll(pattern, replacement);
+	}
+
 	public static format(s : string, ...args: any[]): string {
 		let i = -1;
 		function handleParam(expression: string, ...formatParams: any[]) : string {
