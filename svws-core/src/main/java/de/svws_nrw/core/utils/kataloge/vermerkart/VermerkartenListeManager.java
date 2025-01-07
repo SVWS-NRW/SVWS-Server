@@ -164,8 +164,7 @@ public final class VermerkartenListeManager extends AuswahlManager<Long, Vermerk
 
 	@Override
 	protected boolean checkFilter(final @NotNull VermerkartEintrag eintrag) {
-		if (this._filterNurSichtbar && !eintrag.istSichtbar)
-			return false;
-		return true;
+		return !(this._filterNurSichtbar && !eintrag.istSichtbar);
 	}
+
 }
