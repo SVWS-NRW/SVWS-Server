@@ -168,7 +168,7 @@ export class ApiEnmServer extends BaseApi {
 	 * @param {string} key - der Pfad-Parameter key
 	 */
 	public async setClientConfigUserKey(data : string | null, key : string) : Promise<void> {
-		const body = `{ "key": ${JSON.stringify(key)}, "value": ${JSON.stringify(data)}`;
+		const body = `{ "key": ${JSON.stringify(key)}, "value": ${JSON.stringify(data)} }`;
 		return super.putJSON("/api/clientconfig", body);
 	}
 
