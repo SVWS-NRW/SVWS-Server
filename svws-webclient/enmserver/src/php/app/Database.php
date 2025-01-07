@@ -130,6 +130,8 @@
 		protected function initDatabase() {
 			$this->createTable('OAuth', 'CREATE TABLE OAuth(clientID INTEGER PRIMARY KEY, secret TEXT, token TEXT, tokenTimestamp INTEGER, tokenValidForSecs INTEGER)');
 			$this->initClientSecret();
+			$this->createTable('ClientConfig', 'CREATE TABLE ClientConfig(schluessel TEXT PRIMARY KEY, wert TEXT)');
+			$this->createTable('ClientLehrerConfig', 'CREATE TABLE ClientLehrerConfig(idLehrer INTEGER, schluessel TEXT, wert TEXT, PRIMARY KEY (idLehrer, schluessel))');
 			$this->createTable('Daten', 'CREATE TABLE Daten(ts INTEGER PRIMARY KEY, schulnummer INTEGER, daten TEXT)');
 			$this->createTable('Schueler', 'CREATE TABLE Schueler(id INTEGER, ts INTEGER, idJahrgang INTEGER, idKlasse INTEGER, daten TEXT, tsFehlstundenGesamt TEXT, tsFehlstundenGesamtUnentschuldigt TEXT, tsASV TEXT, tsAUE TEXT, tsZB TEXT, tsLELS TEXT, tsSchulformEmpf TEXT, tsIndividuelleVersetzungsbemerkungen TEXT, tsFoerderbemerkungen TEXT, PRIMARY KEY(id, ts))');
 			$this->createTable('Leistungsdaten', 'CREATE TABLE Leistungsdaten(id INTEGER, ts INTEGER, idSchueler INTEGER, idLerngruppe INTEGER, daten TEXT, tsNote TEXT, tsNoteQuartal TEXT, tsFehlstundenFach TEXT, tsFehlstundenUnentschuldigtFach TEXT, tsFachbezogeneBemerkungen TEXT, tsIstGemahnt TEXT, PRIMARY KEY(id, ts))');
@@ -792,6 +794,65 @@
 					$this->updateSet('Lehrer', $update);
 				}
 			}
+		}
+
+		/**
+		 * Ermittelt die globale Konfiguration und die benutzerspezifische Konfiguration anhand der
+		 * übergebenen Lehrer-ID und gibt diese als JSON-String zurück.
+		 * 
+		 * @param int $idLehrer   die ID des Lehrers, dessen benutzerspezifische Konfiguration ermittelt wird
+		 * 
+		 * @return string ein JSON mit der globalen und der benutzerspezifischen Konfiguration
+		 */
+		public function getClientConfig(int $idLehrer): string {
+			$configBenutzer = $this->queryAllOrExit500("SELECT schluessel AS key, wert AS value FROM ClientLehrerConfig WHERE idLehrer=$idLehrer", "Fehler Lesen der benutzerspezifischen Kofnigurationsdaten");
+			$configGlobal = $this->queryAllOrExit500("SELECT schluessel AS key, wert AS value FROM ClientConfig", "Fehler Lesen der globalen Kofnigurationsdaten");
+			$jsonBenutzer = json_encode($configBenutzer, JSON_UNESCAPED_SLASHES);
+			$jsonGlobal = json_encode($configGlobal, JSON_UNESCAPED_SLASHES);
+			return "{ \"user\": $jsonBenutzer, \"global\": $jsonGlobal }";
+		}
+
+		/**
+		 * Setzt einen Eintrag in der benutzerspezifischen Konfiguration anhand der übergebenen Lehrer-ID.
+		 * 
+		 * @param int $idLehrer   die ID des Lehrers, dessen benutzerspezifische Konfiguration angepasst wird
+		 * @param string $key     der zu setzende Schlüssel
+		 * @param string $value   der zu setzende Wert für den Schlüssel
+		 */
+		public function putClientUserConfig(int $idLehrer, string $key, string | null $value) {
+			// Prüfe, ob bereits ein Eintrag vorliegt
+			$stmt = $this->prepareStatement("SELECT wert FROM ClientLehrerConfig WHERE idLehrer = :idLehrer AND schluessel = :schluessel");
+			$this->bindStatementValue($stmt, ":idLehrer", $idLehrer, PDO::PARAM_INT);
+			$this->bindStatementValue($stmt, ":schluessel", $key, PDO::PARAM_STR);
+			$this->executeStatement($stmt);
+			$result = $stmt->fetchAll(PDO::FETCH_OBJ);
+			$hatEintrag = (count($result) > 0);
+			// Wenn der Wert null ist und kein Eintrag vorliegt, dann ist ein Einfügen nicht nötig
+			if (!$hatEintrag && ($value === null))
+				return;
+			// Wenn der Wert null ist und ein Eintrag vorliegt, dann muss dieser entfernt werden
+			if ($hatEintrag && ($value === null)) {
+				$stmt = $this->prepareStatement("DELETE FROM ClientLehrerConfig WHERE idLehrer = :idLehrer AND schluessel = :schluessel");
+				$this->bindStatementValue($stmt, ":idLehrer", $idLehrer, PDO::PARAM_INT);
+				$this->bindStatementValue($stmt, ":schluessel", $key, PDO::PARAM_STR);
+				$this->executeStatement($stmt);
+				return;
+			}
+			// Schreibe den Eintrag
+			$this->beginTransaction();
+			$stmt = null;
+			if ($hatEintrag) {
+				// UPDATE...
+				$stmt = $this->prepareStatement("UPDATE ClientLehrerConfig SET wert=:wert WHERE idLehrer = :idLehrer AND schluessel = :schluessel");
+			} else {
+				// INSERT...
+				$stmt = $this->prepareStatement("INSERT INTO ClientLehrerConfig(idLehrer, schluessel, wert) VALUES (:idLehrer, :schluessel, :wert)");
+			}
+			$this->bindStatementValue($stmt, ":idLehrer", $idLehrer, PDO::PARAM_INT);
+			$this->bindStatementValue($stmt, ":schluessel", $key, PDO::PARAM_STR);
+			$this->bindStatementValue($stmt, ":wert", $value, PDO::PARAM_STR);
+			$this->executeStatement($stmt);
+			$this->commitTransaction();
 		}
 
 		/**
