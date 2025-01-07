@@ -10,6 +10,7 @@ import type { ENMDaten } from "@core/core/data/enm/ENMDaten";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import type { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import type { ServerMode } from "@core/core/types/ServerMode";
+import type { Config } from "~/components/Config";
 
 /**
  * Diese Klasse regelt den Zugriff auf die API eines ENM-Servers bezüglich
@@ -176,6 +177,22 @@ class Api {
 				this.status.stop();
 			}
 		}
+	}
+
+	/// --- Die Konfiguration
+
+	/**
+	 * Gibt die benutzerspezifische und globale Konfiguration zurück.
+	 */
+	public get config() : Config {
+		return this.conn.config;
+	}
+
+	/**
+	 * Gibt die benutzerspezifische und globale nicht persistierte Konfiguration zurück.
+	 */
+	public get nonPersistentConfig() : Config {
+		return this.conn.nonPersistentConfig;
 	}
 
 }

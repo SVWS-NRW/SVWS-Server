@@ -67,6 +67,9 @@ export class ApiConnection {
 	protected _mapCoreTypeNameJsonData = ref<Map<string, string> | undefined>(undefined);
 
 
+	/**
+	 * Erstellt ein neues Objekt für die Verwaltung der API-Verbindung.
+	 */
 	public constructor() {
 		this._config.value = new Config(this.setConfigGlobal, this.setConfigUser);
 	}
@@ -142,6 +145,7 @@ export class ApiConnection {
 		return this._config.value as Config;
 	}
 
+	// Gibt die nicht perisstente Konfiguration zurück
 	get nonPersistentConfig(): Config {
 		return this._nonPersistentConfig.value as Config;
 	}

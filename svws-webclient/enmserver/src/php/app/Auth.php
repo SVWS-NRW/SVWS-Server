@@ -136,9 +136,18 @@
 		/**
 		 * Prüft, ob die HTTP-Methode erlaubt ist oder nicht.
 		 */
-		public function pruefeHTTPMethod(string $allowed) {
-			if (strcmp($_SERVER['REQUEST_METHOD'], $allowed) != 0)
-				Http::exit403Forbidden();
+		public function pruefeHTTPMethod(string | array $allowed) {
+			if (strcmp(gettype($allowed), "array") === 0) {
+				$hasMethod = false;
+				foreach ($allowed as $tmp)
+					if (strcmp($_SERVER['REQUEST_METHOD'], $tmp) != 0)
+						$hasMethod = true;
+				if (!$hasMethod)
+					Http::exit403Forbidden();
+			} else {
+				if (strcmp($_SERVER['REQUEST_METHOD'], $allowed) != 0)
+					Http::exit403Forbidden();
+			}
 		}
 
 	}

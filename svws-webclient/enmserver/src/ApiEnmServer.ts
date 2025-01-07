@@ -1,4 +1,5 @@
 import { BaseApi, type ApiFile } from "@core/api/BaseApi";
+import { BenutzerConfig } from "@core/core/data/benutzer/BenutzerConfig";
 import { ENMLeistung } from "@core/core/data/enm/ENMLeistung";
 import { ENMLeistungBemerkungen } from "@core/core/data/enm/ENMLeistungBemerkungen";
 import { ENMLernabschnitt } from "@core/core/data/enm/ENMLernabschnitt";
@@ -99,7 +100,7 @@ export class ApiEnmServer extends BaseApi {
 	 * @param {Partial<ENMLeistungBemerkungen>} patch   die zu patchenden Attribut der Leistungsbemerkungen
 	 */
 	public async patchENMSchuelerBemerkungen(idSchueler: number, patch: Partial<ENMLeistungBemerkungen>): Promise<void> {
-		const body = `{ "id": ${idSchueler}, "patch: " ${ENMLeistungBemerkungen.transpilerToJSONPatch(patch)}}`;
+		const body = `{ "id": ${idSchueler}, "patch": ${ENMLeistungBemerkungen.transpilerToJSONPatch(patch)}}`;
 		await super.postJSON("/api/bemerkungen", body);
 		return;
 	}
@@ -136,6 +137,39 @@ export class ApiEnmServer extends BaseApi {
 	public async patchENMSchuelerAnkreuzkompetenzen(patch: Partial<ENMSchuelerAnkreuzkompetenz>): Promise<void> {
 		await super.postJSON("/api/ankreuzkompetenz", ENMSchuelerAnkreuzkompetenz.transpilerToJSONPatch(patch));
 		return;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getClientConfig für den Zugriff auf die URL https://{hostname}/api/clientconfig
+	 *
+	 * Liest die Konfigurationseinträge aus.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Key-Value-Paare der Konfigurationseinträge als Liste
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: BenutzerConfig
+	 *
+	 * @returns Die Key-Value-Paare der Konfigurationseinträge als Liste
+	 */
+	public async getClientConfig() : Promise<BenutzerConfig> {
+		return BenutzerConfig.transpilerFromJSON(await super.getJSON("/api/clientconfig"));
+	}
+
+	/**
+	 * Implementierung der PUT-Methode setClientConfigUserKey für den Zugriff auf die URL https://{hostname}/api/clientconfig
+	 *
+	 * Schreibt den Konfigurationseintrag für den angebenen Schlüsselwert in die benutzerspezifische Konfiguration.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Der Konfigurationseintrag wurde erfolgreich geschrieben
+	 *
+	 * @param {string | null} data - der Request-Body für die HTTP-Methode
+	 * @param {string} key - der Pfad-Parameter key
+	 */
+	public async setClientConfigUserKey(data : string | null, key : string) : Promise<void> {
+		const body = `{ "key": ${JSON.stringify(key)}, "value": ${JSON.stringify(data)}`;
+		return super.putJSON("/api/clientconfig", body);
 	}
 
 }
