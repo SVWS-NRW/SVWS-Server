@@ -23,77 +23,77 @@ export class Herkunftsschulnummern extends JavaEnum<Herkunftsschulnummern> {
 	/**
 	 * Herkunft Schulnummer : Schule aus Schleswig-Holstein
 	 */
-	public static readonly SCHLESWIG_HOLSTEIN : Herkunftsschulnummern = new Herkunftsschulnummern("SCHLESWIG_HOLSTEIN", 1, [new HerkunftsschulnummerKatalogEintrag(999001000, 999001, "Schule aus Schleswig-Holstein", null, null, null)]);
+	public static readonly SCHLESWIG_HOLSTEIN : Herkunftsschulnummern = new Herkunftsschulnummern("SCHLESWIG_HOLSTEIN", 1, [new HerkunftsschulnummerKatalogEintrag(980001000, 980001, "Schule aus Schleswig-Holstein", null, null, null)]);
 
 	/**
 	 * Herkunft Schulnummer : Schule aus Hamburg
 	 */
-	public static readonly HAMBURG : Herkunftsschulnummern = new Herkunftsschulnummern("HAMBURG", 2, [new HerkunftsschulnummerKatalogEintrag(999002000, 999002, "Schule aus Hamburg", null, null, null)]);
+	public static readonly HAMBURG : Herkunftsschulnummern = new Herkunftsschulnummern("HAMBURG", 2, [new HerkunftsschulnummerKatalogEintrag(980002000, 980002, "Schule aus Hamburg", null, null, null)]);
 
 	/**
 	 * Herkunft Schulnummer : Schule aus Niedersachsen
 	 */
-	public static readonly NIEDERSACHSEN : Herkunftsschulnummern = new Herkunftsschulnummern("NIEDERSACHSEN", 3, [new HerkunftsschulnummerKatalogEintrag(999003000, 999003, "Schule aus Niedersachsen", null, null, null)]);
+	public static readonly NIEDERSACHSEN : Herkunftsschulnummern = new Herkunftsschulnummern("NIEDERSACHSEN", 3, [new HerkunftsschulnummerKatalogEintrag(980003000, 980003, "Schule aus Niedersachsen", null, null, null)]);
 
 	/**
 	 * Herkunft Schulnummer : Schule aus Bremen
 	 */
-	public static readonly BREMEN : Herkunftsschulnummern = new Herkunftsschulnummern("BREMEN", 4, [new HerkunftsschulnummerKatalogEintrag(999004000, 999004, "Schule aus Bremen", null, null, null)]);
+	public static readonly BREMEN : Herkunftsschulnummern = new Herkunftsschulnummern("BREMEN", 4, [new HerkunftsschulnummerKatalogEintrag(980004000, 980004, "Schule aus Bremen", null, null, null)]);
 
 	/**
 	 * Herkunft Schulnummer : Schule aus Hessen
 	 */
-	public static readonly HESSEN : Herkunftsschulnummern = new Herkunftsschulnummern("HESSEN", 5, [new HerkunftsschulnummerKatalogEintrag(999006000, 999006, "Schule aus Hessen", null, null, null)]);
+	public static readonly HESSEN : Herkunftsschulnummern = new Herkunftsschulnummern("HESSEN", 5, [new HerkunftsschulnummerKatalogEintrag(980006000, 980006, "Schule aus Hessen", null, null, null)]);
 
 	/**
 	 * Herkunft Schulnummer : Schule aus Rheinland-Pfalz
 	 */
-	public static readonly RHEINLANDPFALZ : Herkunftsschulnummern = new Herkunftsschulnummern("RHEINLANDPFALZ", 6, [new HerkunftsschulnummerKatalogEintrag(999007000, 999007, "Schule aus Rheinland-Pfalz", null, null, null)]);
+	public static readonly RHEINLANDPFALZ : Herkunftsschulnummern = new Herkunftsschulnummern("RHEINLANDPFALZ", 6, [new HerkunftsschulnummerKatalogEintrag(980007000, 980007, "Schule aus Rheinland-Pfalz", null, null, null)]);
 
 	/**
 	 * Herkunft Schulnummer : Schule aus Baden-Württemberg
 	 */
-	public static readonly BADEN_WUERTTEMBERG : Herkunftsschulnummern = new Herkunftsschulnummern("BADEN_WUERTTEMBERG", 7, [new HerkunftsschulnummerKatalogEintrag(999008000, 999008, "Schule aus Baden-Württemberg", null, null, null)]);
+	public static readonly BADEN_WUERTTEMBERG : Herkunftsschulnummern = new Herkunftsschulnummern("BADEN_WUERTTEMBERG", 7, [new HerkunftsschulnummerKatalogEintrag(980008000, 980008, "Schule aus Baden-Württemberg", null, null, null)]);
 
 	/**
 	 * Herkunft Schulnummer : Schule aus Bayern
 	 */
-	public static readonly BAYERN : Herkunftsschulnummern = new Herkunftsschulnummern("BAYERN", 8, [new HerkunftsschulnummerKatalogEintrag(999009000, 999009, "Schule aus Bayern", null, null, null)]);
+	public static readonly BAYERN : Herkunftsschulnummern = new Herkunftsschulnummern("BAYERN", 8, [new HerkunftsschulnummerKatalogEintrag(980009000, 980009, "Schule aus Bayern", null, null, null)]);
 
 	/**
 	 * Herkunft Schulnummer : Schule aus dem Saarland
 	 */
-	public static readonly SAARLAND : Herkunftsschulnummern = new Herkunftsschulnummern("SAARLAND", 9, [new HerkunftsschulnummerKatalogEintrag(999010000, 999010, "Schule aus dem Saarland", null, null, null)]);
+	public static readonly SAARLAND : Herkunftsschulnummern = new Herkunftsschulnummern("SAARLAND", 9, [new HerkunftsschulnummerKatalogEintrag(980010000, 980010, "Schule aus dem Saarland", null, null, null)]);
 
 	/**
 	 * Herkunft Schulnummer : Schule aus Berlin
 	 */
-	public static readonly BERLIN : Herkunftsschulnummern = new Herkunftsschulnummern("BERLIN", 10, [new HerkunftsschulnummerKatalogEintrag(999011000, 999011, "Schule aus Berlin", null, null, null)]);
+	public static readonly BERLIN : Herkunftsschulnummern = new Herkunftsschulnummern("BERLIN", 10, [new HerkunftsschulnummerKatalogEintrag(980011000, 980011, "Schule aus Berlin", null, null, null)]);
 
 	/**
 	 * Herkunft Schulnummer : Schule aus Brandenburg
 	 */
-	public static readonly BRANDENBURG : Herkunftsschulnummern = new Herkunftsschulnummern("BRANDENBURG", 11, [new HerkunftsschulnummerKatalogEintrag(999012000, 999012, "Schule aus Brandenburg", null, null, null)]);
+	public static readonly BRANDENBURG : Herkunftsschulnummern = new Herkunftsschulnummern("BRANDENBURG", 11, [new HerkunftsschulnummerKatalogEintrag(980012000, 980012, "Schule aus Brandenburg", null, null, null)]);
 
 	/**
 	 * Herkunft Schulnummer : Schule aus Mecklenburg-Vorpommern
 	 */
-	public static readonly MECKLENBURG_VORPOMMERN : Herkunftsschulnummern = new Herkunftsschulnummern("MECKLENBURG_VORPOMMERN", 12, [new HerkunftsschulnummerKatalogEintrag(999013000, 999013, "Schule aus Mecklenburg-Vorpommern", null, null, null)]);
+	public static readonly MECKLENBURG_VORPOMMERN : Herkunftsschulnummern = new Herkunftsschulnummern("MECKLENBURG_VORPOMMERN", 12, [new HerkunftsschulnummerKatalogEintrag(980013000, 980013, "Schule aus Mecklenburg-Vorpommern", null, null, null)]);
 
 	/**
 	 * Herkunft Schulnummer : Schule aus Sachsen
 	 */
-	public static readonly SACHSEN : Herkunftsschulnummern = new Herkunftsschulnummern("SACHSEN", 13, [new HerkunftsschulnummerKatalogEintrag(999014000, 999014, "Schule aus Sachsen", null, null, null)]);
+	public static readonly SACHSEN : Herkunftsschulnummern = new Herkunftsschulnummern("SACHSEN", 13, [new HerkunftsschulnummerKatalogEintrag(980014000, 980014, "Schule aus Sachsen", null, null, null)]);
 
 	/**
 	 * Herkunft Schulnummer : Schule aus Sachsen-Anhalt
 	 */
-	public static readonly SACHSEN_ANHALT : Herkunftsschulnummern = new Herkunftsschulnummern("SACHSEN_ANHALT", 14, [new HerkunftsschulnummerKatalogEintrag(999015000, 999015, "Schule aus Sachsen-Anhalt", null, null, null)]);
+	public static readonly SACHSEN_ANHALT : Herkunftsschulnummern = new Herkunftsschulnummern("SACHSEN_ANHALT", 14, [new HerkunftsschulnummerKatalogEintrag(980015000, 980015, "Schule aus Sachsen-Anhalt", null, null, null)]);
 
 	/**
 	 * Herkunft Schulnummer : Schule aus Thüringen
 	 */
-	public static readonly THUERINGEN : Herkunftsschulnummern = new Herkunftsschulnummern("THUERINGEN", 15, [new HerkunftsschulnummerKatalogEintrag(999016000, 999016, "Schule aus Thüringen", null, null, null)]);
+	public static readonly THUERINGEN : Herkunftsschulnummern = new Herkunftsschulnummern("THUERINGEN", 15, [new HerkunftsschulnummerKatalogEintrag(980016000, 980016, "Schule aus Thüringen", null, null, null)]);
 
 	/**
 	 * Herkunft Schulnummer : Schule aus Belgien
@@ -123,7 +123,7 @@ export class Herkunftsschulnummern extends JavaEnum<Herkunftsschulnummern> {
 	/**
 	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
-	public static readonly VERSION : number = 1;
+	public static readonly VERSION : number = 2;
 
 	/**
 	 * Der aktuellen Daten der Herkunftsschulnummer, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null

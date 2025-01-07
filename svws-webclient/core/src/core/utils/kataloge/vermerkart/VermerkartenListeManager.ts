@@ -167,9 +167,7 @@ export class VermerkartenListeManager extends AuswahlManager<number, VermerkartE
 	}
 
 	protected checkFilter(eintrag : VermerkartEintrag) : boolean {
-		if (this._filterNurSichtbar && !eintrag.istSichtbar)
-			return false;
-		return true;
+		return !(this._filterNurSichtbar && !eintrag.istSichtbar);
 	}
 
 	transpilerCanonicalName(): string {
