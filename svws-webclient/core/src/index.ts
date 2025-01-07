@@ -368,6 +368,7 @@ export { ENMFoerderschwerpunkt } from './core/data/enm/ENMFoerderschwerpunkt';
 export { ENMJahrgang } from './core/data/enm/ENMJahrgang';
 export { ENMKlasse } from './core/data/enm/ENMKlasse';
 export { ENMLehrer } from './core/data/enm/ENMLehrer';
+export { ENMLehrerInitialKennwort } from './core/data/enm/ENMLehrerInitialKennwort';
 export { ENMLeistung } from './core/data/enm/ENMLeistung';
 export { ENMLeistungBemerkungen } from './core/data/enm/ENMLeistungBemerkungen';
 export { ENMLernabschnitt } from './core/data/enm/ENMLernabschnitt';

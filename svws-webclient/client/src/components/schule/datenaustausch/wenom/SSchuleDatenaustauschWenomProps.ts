@@ -1,6 +1,8 @@
-import type { OAuth2ClientSecret, SimpleOperationResponse } from "@core";
+import type { ENMDaten, JavaMap, OAuth2ClientSecret, SimpleOperationResponse } from "@core";
 
 export interface SchuleDatenaustauschWenomProps {
+	getEnmDaten: () => Promise<ENMDaten | null>;
+	getEnmCredentials: () => Promise<JavaMap<number, string>>;
 	getCredentials: () => Promise<OAuth2ClientSecret | null>;
 	setCredentials: (url: string, token: string) => Promise<OAuth2ClientSecret | null>;
 	removeCredentials: () => Promise<void>;

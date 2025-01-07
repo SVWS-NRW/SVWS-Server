@@ -26,6 +26,7 @@ import { DBSchemaListeEintrag } from '../core/data/db/DBSchemaListeEintrag';
 import { EinschulungsartKatalogEintrag } from '../core/data/schule/EinschulungsartKatalogEintrag';
 import { Einwilligungsart } from '../core/data/schule/Einwilligungsart';
 import { ENMDaten } from '../core/data/enm/ENMDaten';
+import { ENMLehrerInitialKennwort } from '../core/data/enm/ENMLehrerInitialKennwort';
 import { Erzieherart } from '../core/data/erzieher/Erzieherart';
 import { ErzieherListeEintrag } from '../core/data/erzieher/ErzieherListeEintrag';
 import { ErzieherStammdaten } from '../core/data/erzieher/ErzieherStammdaten';
@@ -2407,6 +2408,32 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const data : ApiFile = await super.getOctetStream(path);
 		return data;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getENMLehrerInitialKennwoerter für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/alle/initial_kennwoerter
+	 *
+	 * Liefert eine Liste der Lehrer-IDs mit den zugehörigen Initialkennwörtern für Lehrer zurück, welche bei den Daten für das Externe Datenmodul (ENM) vorkommen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zur Administration der Notenmodul-Daten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Liste mit den Initialkennwörtern
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<ENMLehrerInitialKennwort>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Initialkennwörter des ENM zu verwalten.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Liste mit den Initialkennwörtern
+	 */
+	public async getENMLehrerInitialKennwoerter(schema : string) : Promise<List<ENMLehrerInitialKennwort>> {
+		const path = "/db/{schema}/enm/alle/initial_kennwoerter"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<ENMLehrerInitialKennwort>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(ENMLehrerInitialKennwort.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 

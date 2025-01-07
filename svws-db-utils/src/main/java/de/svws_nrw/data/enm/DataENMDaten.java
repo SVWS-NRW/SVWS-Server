@@ -27,6 +27,7 @@ import de.svws_nrw.core.data.enm.ENMFloskelgruppe;
 import de.svws_nrw.core.data.enm.ENMJahrgang;
 import de.svws_nrw.core.data.enm.ENMKlasse;
 import de.svws_nrw.core.data.enm.ENMLehrer;
+import de.svws_nrw.core.data.enm.ENMLehrerInitialKennwort;
 import de.svws_nrw.core.data.enm.ENMLeistung;
 import de.svws_nrw.core.data.enm.ENMLerngruppe;
 import de.svws_nrw.core.data.enm.ENMSchueler;
@@ -645,6 +646,32 @@ public final class DataENMDaten extends DataManager<Long> {
 		}
 	}
 
+	/**
+	 * Gibt für alle Lehrer, welche bei den ENM-Daten vorkommen die Initialkennwörter zurück.
+	 *
+	 * @return eine Response mit der Liste der Initialkennwörter
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public Response getLehrerInitialkennwoerter() throws ApiOperationException {
+		// Erstelle zunächst Initialkennwörter, falls eine Lehrer noch keines hat
+		generateInitialCredentials(this.conn);
+		// Erstelle die ENM-Daten, damit klar ist, für welche Lehrer die Initialkennwörter zurückgegeben werden müssen
+		final ENMDaten enmdaten = getDaten(conn, null);
+		// Bestimme die Menge der Lehrer-IDs und lese dann dafür die Initialkennwörter aus der Datenbank.
+		final List<ENMLehrerInitialKennwort> daten = new ArrayList<>();
+		final List<Long> idsLehrer = enmdaten.lehrer.stream().map(l -> l.id).toList();
+		if (!idsLehrer.isEmpty()) {
+			final List<DTOLehrerNotenmodulCredentials> dtos = conn.queryByKeyList(DTOLehrerNotenmodulCredentials.class, idsLehrer);
+			for (final DTOLehrerNotenmodulCredentials dto : dtos) {
+				final ENMLehrerInitialKennwort cred = new ENMLehrerInitialKennwort();
+				cred.id = dto.Lehrer_ID;
+				cred.initialKennwort = dto.Initialkennwort;
+				daten.add(cred);
+			}
+		}
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+	}
 
 	/**
 	 * Erstellt für alle Lehrer initiale Credentials, sofern ein Lehrer nicht bereits welche besitzt.
@@ -673,6 +700,7 @@ public final class DataENMDaten extends DataManager<Long> {
 			final String hash = BCrypt.hashpw(initial, BCrypt.gensalt());
 			conn.transactionPersist(new DTOLehrerNotenmodulCredentials(id, initial, hash));
 		}
+		conn.transactionFlush();
 	}
 
 

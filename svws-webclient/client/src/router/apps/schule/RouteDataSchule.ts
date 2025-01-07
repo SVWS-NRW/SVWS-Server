@@ -1,4 +1,4 @@
-import { BenutzerKompetenz, OAuth2ClientSecret, OAuth2ServerTyp, OpenApiError, SimpleOperationResponse, SMTPServerKonfiguration, type SchuleStammdaten } from "@core";
+import { ENMDaten, BenutzerKompetenz, OAuth2ClientSecret, OAuth2ServerTyp, OpenApiError, SimpleOperationResponse, SMTPServerKonfiguration, type SchuleStammdaten, JavaMap, HashMap } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -78,9 +78,32 @@ export class RouteDataSchule extends RouteData<RouteStateSchule> {
 		return true;
 	}
 
+	wenomGetEnmDaten = async(): Promise<ENMDaten | null> => {
+		try {
+			const datenGzip = await api.server.getENMDatenGZip(api.schema);
+			const datenBlob = await new Response(datenGzip.data.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
+			return ENMDaten.transpilerFromJSON(await datenBlob.text());
+		} catch (e) {
+			return null;
+		}
+	}
+
+	wenomGetEnmCredentials = async(): Promise<JavaMap<number, string>> => {
+		try {
+			const daten = await api.server.getENMLehrerInitialKennwoerter(api.schema);
+			const result = new HashMap<number, string>();
+			for (const eintrag of daten)
+				if (eintrag.initialKennwort !== null)
+					result.put(eintrag.id, eintrag.initialKennwort);
+			return result;
+		} catch (e) {
+			return new HashMap<number, string>();
+		}
+	}
+
 	wenomGetCredentials = async (): Promise<OAuth2ClientSecret | null> => {
 		try {
-			return await api.server.getOAuthClientSecret(api.schema,1);
+			return await api.server.getOAuthClientSecret(api.schema, 1);
 		} catch (e) {
 			return null;
 		}

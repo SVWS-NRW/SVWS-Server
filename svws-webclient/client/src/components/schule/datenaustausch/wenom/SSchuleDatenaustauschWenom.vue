@@ -8,12 +8,32 @@
 				<span class="i-ri-upload-2-line icon-xl" />
 			</span>
 		</svws-ui-header>
-	</div>
-
-	<div class="page--content page--content--flex-row gap-2 h-full w-full overflow-hidden">
-		<div class="page--content page--content--flex-row gap-2 h-full w-full overflow-hidden">
+		<div class="page--content">
 			<!-- Auswahl des Untis-Importes (linke Seite) -->
 			<div class="h-full min-w-64 w-64 flex flex-col gap-2 m-2">
+				<template v-if="daten !== null">
+					<svws-ui-button id="contentFocusField" :type="((lehrerEmailProbleme > 0) ? 'danger' : ((aktuell === 'creds') ? 'primary' : 'secondary'))" @click="onSelect('creds')">
+						<div class="flex flex-col gap-1">
+							<p class="text-left font-bold ">Zugangsdaten verwalten</p>
+							<p class="text-left font-normal">
+								<span v-if="lehrerEmailProbleme === 0">Ok</span>
+								<svws-ui-tooltip v-else>
+									{{ lehrerEmailProbleme }} Fehler bei den Dienst-Email-Adressen
+									<template #content>
+										<ul>
+											<li v-if="lehrerOhneEmail > 1">{{ lehrerOhneEmail }} fehlende Adressen</li>
+											<li v-if="lehrerOhneEmail === 1">{{ lehrerOhneEmail }} fehlende Adresse</li>
+											<li v-if="lehrerDoppelteEmail > 1">{{ lehrerDoppelteEmail }} Duplikate</li>
+											<li v-if="lehrerDoppelteEmail === 1">{{ lehrerDoppelteEmail }} Duplikat</li>
+											<li v-if="lehrerFehlerhafteEmail > 1">{{ lehrerFehlerhafteEmail }} fehlerhafte Adressen</li>
+											<li v-if="lehrerFehlerhafteEmail === 1">{{ lehrerFehlerhafteEmail }} fehlerhafte Adresse</li>
+										</ul>
+									</template>
+								</svws-ui-tooltip>
+							</p>
+						</div>
+					</svws-ui-button>
+				</template>
 				<svws-ui-button id="contentFocusField" :type="(aktuell === 'setup') ? 'primary' : 'secondary'" @click="onSelect('setup')">
 					<div class="flex flex-col gap-1">
 						<p class="text-left font-bold ">Verbindungsdaten einrichten</p>
@@ -38,6 +58,9 @@
 
 			<!-- Weitere Eingabemöglichkeiten für den zuvor gewählten Untis-Import (rechte Seite - spezielle Ansicht nach Auswahl) -->
 			<div class="flex flex-col gap-8">
+				<div v-if="(aktuell === 'creds') && (daten !== null)" class="h-full w-full overflow-hidden max-w-196">
+					<enm-lehrer-credentials :enm-daten="() => daten ?? new ENMDaten()" :map-initial-kennwoerter="() => mapInitialKennwoerter" />
+				</div>
 				<div v-if="aktuell === 'setup'" class="max-w-196">
 					<div class="text-headline-md mb-4">Verbindung zum Webnotenmanager einrichten</div>
 					<template v-if="clientSecret === null">
@@ -116,67 +139,35 @@
 			</div>
 		</div>
 	</div>
-
-
-	<!-- <div class="svws-ui-page w-full">
-		<div class="svws-ui-tab-content">
-			<div class="page--content page--content--full">
-				<div v-if="secretSet()">
-					<svws-ui-content-card title="Aktuelle Abschnittsdaten sychronisieren">
-						<div class="flex items-start gap-3">
-							<svws-ui-button type="primary" @click="wenomSynchronize">
-								synchronisieren
-							</svws-ui-button>
-						</div>
-					</svws-ui-content-card>
-					<svws-ui-content-card title="Aktuelle Abschnittsdaten löschen">
-						<div class="flex items-start gap-3">
-							<svws-ui-button type="primary" @click="wenomTruncate">
-								Abschnittsdaten löschen
-							</svws-ui-button>
-						</div>
-					</svws-ui-content-card>
-					<svws-ui-content-card title="Zugangsdaten löschen">
-						<div class="flex items-start gap-3">
-							<svws-ui-button type="primary" @click="wenomRemoveCredentials">
-								Zugangsdaten löschen
-							</svws-ui-button>
-						</div>
-					</svws-ui-content-card>
-				</div>
-				<div v-else>
-					<svws-ui-content-card title="Zugangsdaten zum Webnotenmanager">
-						<div class="flex items-start gap-3">
-							<svws-ui-text-input class="contentFocusField" v-model.trim="url" type="text" placeholder="URL" />
-							<svws-ui-text-input v-model.trim="token" type="text" placeholder="Secret" />
-							<svws-ui-button type="primary" @click="setWenomCredentials(url, token)" :disabled="!url || !token">
-								speichern
-							</svws-ui-button>
-						</div>
-					</svws-ui-content-card>
-				</div>
-			</div>
-		</div>
-	</div> -->
 </template>
 
 <script setup lang="ts">
 
-	import { onMounted, ref, shallowRef } from "vue";
+	import { computed, onMounted, ref, shallowRef } from "vue";
 	import type { SchuleDatenaustauschWenomProps } from './SSchuleDatenaustauschWenomProps';
-	import type { OAuth2ClientSecret, SimpleOperationResponse } from "@core";
+	import { ENMDaten, HashMap } from "@core";
+	import type { JavaMap, OAuth2ClientSecret, SimpleOperationResponse } from "@core";
 
 	const props = defineProps<SchuleDatenaustauschWenomProps>();
 
-	type WENOM = 'setup' | 'reset' | 'synchronize';
+	type WENOM = 'creds' | 'setup' | 'reset' | 'synchronize';
 	const aktuell = ref<WENOM>('setup');
 
 	const clientSecret = shallowRef<OAuth2ClientSecret | null>(null);
 	const connected = ref<boolean>(false);
+	const daten = ref<ENMDaten | null>(null);
+	const mapInitialKennwoerter = ref<JavaMap<number, string>>(new HashMap<number, string>());
+	const lehrerOhneEmail = ref<number>(0);
+	const lehrerDoppelteEmail = ref<number>(0);
+	const lehrerFehlerhafteEmail = ref<number>(0);
+	const lehrerEmailProbleme = computed<number>(() => lehrerOhneEmail.value + lehrerDoppelteEmail.value + lehrerFehlerhafteEmail.value);
 
 	onMounted(async () => {
 		clientSecret.value = await props.getCredentials();
 		await checkConnection();
+		daten.value = await props.getEnmDaten();
+		mapInitialKennwoerter.value = await props.getEnmCredentials();
+		checkENMLehrerEMailAdressen();
 	})
 
 	const url = ref<string>("");
@@ -185,6 +176,39 @@
 	const status = ref<SimpleOperationResponse | null>(null);
 	const spinning = ref<boolean>(false);
 
+	const validatorEmail = (value: string | null) : boolean => ((value === null) || (value === '')) ? true : (
+		/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))[^@]?$/.test(value) ||
+		/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(value)
+	);
+
+	function checkENMLehrerEMailAdressen() {
+		if (daten.value !== null) {
+			let emailFehlt = 0;
+			let emailDoppelt = 0;
+			let emailFehlerhaft = 0;
+			const adressen = new Set<string>();
+			for (const lehrer of daten.value.lehrer) {
+				if ((lehrer.eMailDienstlich === null) || (lehrer.eMailDienstlich.trim().length === 0)) {
+					emailFehlt++;
+					continue;
+				}
+				if (adressen.has(lehrer.eMailDienstlich)) {
+					emailDoppelt++;
+					continue;
+				}
+				adressen.add(lehrer.eMailDienstlich);
+				if (!validatorEmail(lehrer.eMailDienstlich))
+					emailFehlerhaft++;
+			}
+			lehrerOhneEmail.value = emailFehlt;
+			lehrerDoppelteEmail.value = emailDoppelt;
+			lehrerFehlerhafteEmail.value = emailFehlerhaft;
+		} else {
+			lehrerOhneEmail.value = 0;
+			lehrerDoppelteEmail.value = 0;
+			lehrerFehlerhafteEmail.value = 0;
+		}
+	}
 
 	function onSelect(value : WENOM): void {
 		if (aktuell.value === value)
@@ -232,3 +256,14 @@
 	}
 
 </script>
+
+<style lang="postcss" scoped>
+
+	.page--content {
+		@apply flex flex-row gap-8;
+		@apply flex-grow w-full overflow-hidden;
+		@apply max-w-full;
+	}
+
+</style>
+

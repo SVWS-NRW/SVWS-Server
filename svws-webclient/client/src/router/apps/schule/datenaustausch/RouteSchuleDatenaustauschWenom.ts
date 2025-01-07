@@ -23,6 +23,8 @@ export class RouteSchuleDatenaustauschWenom extends RouteNode<any, RouteApp> {
 
 	public getProps(to: RouteLocationNormalized): SchuleDatenaustauschWenomProps {
 		return {
+			getEnmDaten: routeSchule.data.wenomGetEnmDaten,
+			getEnmCredentials: routeSchule.data.wenomGetEnmCredentials,
 			getCredentials: routeSchule.data.wenomGetCredentials,
 			setCredentials: routeSchule.data.wenomSetCredentials,
 			removeCredentials: routeSchule.data.wenomRemoveCredential,
