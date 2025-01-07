@@ -5,6 +5,7 @@ import { resolve } from "path";
 import Components from "unplugin-vue-components/vite";
 import Vue from "@vitejs/plugin-vue";
 import { HstVue } from '@histoire/plugin-vue'
+import Markdown from 'unplugin-vue-markdown/vite'
 
 export default defineConfig({
 	server: { fs: { allow: [searchForWorkspaceRoot(process.cwd())] } },
@@ -60,8 +61,9 @@ export default defineConfig({
 		},
 	},
 	plugins: [
-		Vue(),
-		Components({ globs: ["src/**/*.vue", "src/**/*Props.ts", '!src/**/*.story.*'], types: [] }),
+		Vue({ include: [/\.vue$/, /\.md$/] }),
+		Markdown({}),
+		Components({ globs: ["src/**/*.{vue,md}", "src/**/*Props.ts", '!src/**/*.story.*'], types: [] }),
 	],
 	build: {
 		lib: {

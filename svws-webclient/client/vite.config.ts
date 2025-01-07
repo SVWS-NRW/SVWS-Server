@@ -10,7 +10,7 @@ export default defineConfig({
 		Vue({ include: [/\.vue$/, /\.md$/] }),
 		Markdown({}),
 		Components({
-			globs: ["src/**/*.{vue,md}", "src/**/*Props.ts", "../ui/src/**/*.vue", "../ui/src/**/*Props.ts", '!../ui/src/**/*.story.*'],
+			globs: ["src/**/*.{vue,md}", "src/**/*Props.ts", "../ui/src/**/*.{md,vue}", "../ui/src/**/*Props.ts", '!../ui/src/**/*.story.*'],
 			types: [],
 		}),
 	],
