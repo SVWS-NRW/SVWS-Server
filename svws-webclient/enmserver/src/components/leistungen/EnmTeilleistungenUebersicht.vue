@@ -9,7 +9,7 @@
 							<td class="svws-ui-td" role="columnheader"> {{ art.bezeichnung ?? '???' }} </td>
 						</template>
 					</template>
-					<td v-else-if="col.sichtbar ?? true" class="svws-ui-td" role="columnheader">
+					<td v-else-if="colsVisible.get(col.kuerzel) ?? true" class="svws-ui-td" role="columnheader">
 						<svws-ui-tooltip v-if="col.kuerzel !== col.name">
 							{{ col.kuerzel }}
 							<template #content>{{ col.name }}</template>
@@ -19,12 +19,11 @@
 				</template>
 				<td class="svws-ui-td" role="columnheader">
 					<svws-ui-tooltip :hover="false" :show-arrow="false" position="top" class="h-full w-full">
-						<span class="icon inline-block" :class="cols.some(c => c.sichtbar === false) ? 'i-ri-layout-column-fill' : 'i-ri-layout-column-line'" />
-						<template #content>
+						<span class="icon inline-block" :class="[...colsVisible.values()].some(c => c === false) ? 'i-ri-layout-column-fill' : 'i-ri-layout-column-line'" /><span class="icon i-ri-arrow-down-s-line" />						<template #content>
 							<ul class="min-w-[10rem] flex flex-col gap-0.5 pt-1">
 								<template v-for="col of cols" :key="col.name">
-									<li v-if="col.sichtbar !== null">
-										<svws-ui-checkbox :model-value="col.sichtbar" @update:model-value="value => col.sichtbar = value">
+									<li v-if="colsVisible.get(col.kuerzel) !== null">
+										<svws-ui-checkbox :model-value="colsVisible.get(col.kuerzel) ?? false" @update:model-value="value => setColumnsVisible(colsVisible.set(col.kuerzel, value))">
 											{{ col.kuerzel }}
 										</svws-ui-checkbox>
 									</li>
@@ -39,22 +38,22 @@
 			<template v-for="(schueler, indexSchueler) of manager.lerngruppenAuswahlGetSchueler()" :key="schueler">
 				<template v-for="(leistung, indexLeistung) of manager.leistungenGetOfSchueler(schueler.id)" :key="leistung">
 					<tr class="svws-ui-tr" role="row" :class="{ 'svws-clicked': manager.auswahlLeistung.leistung === leistung }" @click.capture.exact="setAuswahlLeistung({ indexSchueler, indexLeistung, leistung })">
-						<td class="svws-ui-td" role="cell" v-if="colKlasse.sichtbar ?? true">
+						<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Klasse') ?? true">
 							{{ manager.schuelerGetKlasse(schueler.id).kuerzelAnzeige }}
 						</td>
-						<td class="svws-ui-td" role="cell" v-if="colName.sichtbar ?? true">
+						<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Name') ?? true">
 							{{ schueler.nachname }}, {{ schueler.vorname }} ({{ schueler.geschlecht }})
 						</td>
-						<td class="svws-ui-td" role="cell" v-if="colFach.sichtbar ?? true">
+						<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Fach') ?? true">
 							{{ manager.lerngruppeGetFachkuerzel(leistung.lerngruppenID) }}
 						</td>
-						<td class="svws-ui-td" role="cell" v-if="colKurs.sichtbar ?? true">
+						<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Kurs') ?? true">
 							{{ manager.lerngruppeGetKursbezeichnung(leistung.lerngruppenID) }}
 						</td>
-						<td class="svws-ui-td" role="cell" v-if="colKursart.sichtbar ?? true">
+						<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Kursart') ?? true">
 							{{ (leistung.abiturfach === null) ? manager.lerngruppeGetKursartAsString(leistung.lerngruppenID) : ((leistung.abiturfach < 3) ? "LK" + leistung.abiturfach : "AB" + leistung.abiturfach) }}
 						</td>
-						<td class="svws-ui-td" role="cell" v-if="colLehrer.sichtbar ?? true">
+						<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Lehrer') ?? true">
 							{{ manager.lerngruppeGetFachlehrerOrNull(leistung.lerngruppenID) }}
 						</td>
 						<template v-for="art of manager.lerngruppenAuswahlGetTeilleistungsarten()" :key="art.id">
@@ -68,14 +67,14 @@
 								</template>
 							</td>
 						</template>
-						<td class="svws-ui-td" role="cell" v-if="colQuartal.sichtbar ?? true">
+						<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Quartal') ?? true">
 							<svws-ui-select v-if="manager.lerngruppeIstFachlehrer(leistung.lerngruppenID)" title="—" headless class="w-full"
 								:items="Note.values()" :item-text="item => item.daten(manager.schuljahr)?.kuerzel ?? '—'"
 								:model-value="Note.fromKuerzel(leistung.noteQuartal)"
 								@update:model-value="value => doPatchLeistung(leistung, { noteQuartal: value?.daten(manager.schuljahr)?.kuerzel ?? null })" />
 							<div v-else>{{ leistung.noteQuartal }}</div>
 						</td>
-						<td class="svws-ui-td" role="cell" v-if="colNote.sichtbar ?? true">
+						<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Note') ?? true">
 							<svws-ui-select v-if="manager.lerngruppeIstFachlehrer(leistung.lerngruppenID)" title="—" headless class="w-full"
 								:items="Note.values()" :item-text="item => item.daten(manager.schuljahr)?.kuerzel ?? '—'"
 								:model-value="Note.fromKuerzel(leistung.note)"
@@ -92,7 +91,7 @@
 
 <script setup lang="ts">
 
-	import { computed, ref } from 'vue';
+	import { computed } from 'vue';
 	import type { EnmLeistungAuswahl } from './EnmManager';
 	import type { EnmTeilleistungenProps } from './EnmTeilleistungenProps';
 	import type { ENMLeistung } from '@core/core/data/enm/ENMLeistung';
@@ -101,17 +100,22 @@
 
 	const props = defineProps<EnmTeilleistungenProps>();
 
-	const colKlasse = { kuerzel: "Klasse", name: "Klasse", sichtbar: null, width: "1fr" };
-	const colName =	{ kuerzel: "Name, Vorname", name: "Name, Vorname", sichtbar: null, width: "3fr" };
-	const colFach =	{ kuerzel: "Fach", name: "Fach", sichtbar: null, width: "1fr" };
-	const colKurs =	{ kuerzel: "Kurs", name: "Kurs", sichtbar: true, width: "1fr" };
-	const colKursart = { kuerzel: "Kursart", name: "Kursart", sichtbar: true, width: "1fr" };
-	const colLehrer = { kuerzel: "Lehrer", name: "Fachlehrer", sichtbar: true, width: "1fr" };
-	const colTeilleistung = { kuerzel: "Teilleistung", name: "Teilleistung", sichtbar: null, width: "" };
-	const colQuartal = { kuerzel: "Quartal", name: "Quartalsnote", sichtbar: true, width: "1fr" };
-	const colNote = { kuerzel: "Note", name: "Note", sichtbar: null, width: "1fr" };
+	const cols = [
+		{ kuerzel: "Klasse", name: "Klasse", width: "1fr" },
+		{ kuerzel: "Name", name: "Name, Vorname", width: "3fr" },
+		{ kuerzel: "Fach", name: "Fach", width: "1fr" },
+		{ kuerzel: "Kurs", name: "Kurs", width: "1fr" },
+		{ kuerzel: "Kursart", name: "Kursart", width: "1fr" },
+		{ kuerzel: "Lehrer", name: "Fachlehrer", width: "1fr" },
+		{ kuerzel: "Teilleistung", name: "Teilleistung", width: "" },
+		{ kuerzel: "Quartal", name: "Quartalsnote", width: "1fr" },
+		{ kuerzel: "Note", name: "Note", width: "1fr" },
+	];
 
-	const cols = ref([ colKlasse, colName, colFach, colKurs, colKursart, colLehrer, colTeilleistung, colQuartal, colNote ]);
+	const colsVisible = computed<Map<string, boolean|null>>({
+		get: () => props.columnsVisible(),
+		set: (value) => void props.setColumnsVisible(value),
+	});
 
 	function setAuswahlLeistung(value: EnmLeistungAuswahl) {
 		props.manager.auswahlLeistung = value;
@@ -137,7 +141,7 @@
 		let frs = " ";
 		for (const art of props.manager.lerngruppenAuswahlGetTeilleistungsarten())
 			frs += "1fr ";
-		return cols.value.filter(c => c.sichtbar ?? true).map(c => c.width).join(" ") + frs + "5em";
+		return cols.filter(c => colsVisible.value.get(c.kuerzel) ?? true).map(c => c.width).join(" ") + frs + " 5em";
 	});
 
 </script>

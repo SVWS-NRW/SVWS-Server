@@ -140,6 +140,7 @@ class Api {
 	 *
 	 * @throws {Error} falls kein Benutzer angemeldet ist
 	 */
+	// eslint-disable-next-line @typescript-eslint/class-literal-property-style
 	public get benutzerIstAdmin(): boolean {
 		// TODO Überprüfung implementieren, ob der Admin-Benutzer angemeldet ist
 		return false;

@@ -1,6 +1,6 @@
 <template>
 	<div class="page--content h-full w-full overflow-hidden">
-		<enm-teilleistungen-uebersicht :manager :patch-leistung :patch-teilleistung />
+		<enm-teilleistungen-uebersicht :manager :patch-leistung :patch-teilleistung :columns-visible :set-columns-visible />
 	</div>
 </template>
 

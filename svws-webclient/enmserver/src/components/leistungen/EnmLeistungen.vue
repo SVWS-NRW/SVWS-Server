@@ -1,7 +1,7 @@
 <template>
 	<div class="page--content">
 		<div class="enm-leistung-uebersicht-bereich">
-			<enm-leistungen-uebersicht :manager :patch-leistung />
+			<enm-leistungen-uebersicht :manager :patch-leistung :columns-visible :set-columns-visible />
 		</div>
 		<div class="enm-floskel-editor-bereich">
 			<enm-floskeleditor />

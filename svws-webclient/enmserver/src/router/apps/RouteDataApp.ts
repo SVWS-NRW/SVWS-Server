@@ -15,6 +15,24 @@ export class RouteDataApp extends RouteData<RouteStateInterface> {
 		super(defaultState);
 	}
 
+	/** Einstellungen für die Tabellen und der Anzeige der Spalten */
+
+	get leistungenColumnsVisible(): Map<string, boolean|null> {
+		return new Map<string, boolean|null>(JSON.parse(api.config.getValue("leistungen.table.columns")));
+	}
+
+	setLeistungenColumnsVisible = async (value: Map<string, boolean|null>) => {
+		await api.config.setValue('leistungen.table.columns', JSON.stringify([...value]));
+	}
+
+	get teilleistungenColumnsVisible(): Map<string, boolean|null> {
+		return new Map<string, boolean|null>(JSON.parse(api.config.getValue("teilleistungen.table.columns")));
+	}
+
+	setTeilleistungenColumnsVisible = async (value: Map<string, boolean|null>) => {
+		await api.config.setValue('teilleistungen.table.columns', JSON.stringify([...value]));
+	}
+
 	/**
 	 * Patch-Methode für ENM-Leistungsdaten.
 	 *

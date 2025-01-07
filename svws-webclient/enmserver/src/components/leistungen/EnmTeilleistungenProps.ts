@@ -6,4 +6,6 @@ export interface EnmTeilleistungenProps {
 	manager: EnmManager;
 	patchLeistung: (patch: Partial<ENMLeistung>) => Promise<boolean>;
 	patchTeilleistung: (patch: Partial<ENMTeilleistung>) => Promise<boolean>;
+	columnsVisible: () => Map<string, boolean|null>;
+	setColumnsVisible: (columns: Map<string, boolean|null>) => Promise<void>;
 }
