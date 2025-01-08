@@ -4,7 +4,7 @@
 			<enm-leistungen-uebersicht :manager :patch-leistung :columns-visible :set-columns-visible />
 		</div>
 		<div class="enm-floskel-editor-bereich">
-			<enm-floskeleditor :manager :patch-leistung />
+			<enm-floskeleditor :manager :patch-leistung :erlaubte-hauptgruppen />
 		</div>
 	</div>
 </template>
@@ -15,6 +15,7 @@
 
 	const props = defineProps<EnmLeistungenProps>();
 
+	const erlaubteHauptgruppen = new Set<'FACH'|'ALLG'>(['FACH', 'ALLG']);
 </script>
 
 <style lang="postcss" scoped>
