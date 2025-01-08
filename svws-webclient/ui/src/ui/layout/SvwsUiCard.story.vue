@@ -53,10 +53,9 @@
 					:on-edit="state.showEdit ? onEdit : undefined" :on-save="state.showSave ? onSave : undefined"
 					:on-delete="state.showDelete ? onDelete : undefined" :on-cancel="state.showCancel ? onCancel : undefined"
 					:edit-button-disabled="state.disabledEdit" :save-button-disabled="state.disabledSave" :delete-button-disabled="state.disabledDelete"
-					:cancel-button-disabled="state.disabledCancel" :edit-button-disabled-reason="state.disabledEdit ? state.disabledReason : undefined"
-					:save-button-disabled-reason="state.disabledSave ? state.disabledReason : undefined"
-					:delete-button-disabled-reason="state.disabledDelete ? state.disabledReason : undefined"
-					:cancel-button-disabled-reason="state.disabledCancel ? state.disabledReason : undefined" @update:is-open="(isOpen) => state.isOpen = isOpen" />
+					:cancel-button-disabled="state.disabledCancel" :edit-button-disabled-reason="state.disabledReason"
+					:save-button-disabled-reason="state.disabledReason" :delete-button-disabled-reason="state.disabledReason"
+					:cancel-button-disabled-reason="state.disabledReason" @update:is-open="(isOpen) => state.isOpen = isOpen" />
 			</div>
 			<template #controls>
 				<HstCheckbox v-model="state.compact" title="kompakt" />

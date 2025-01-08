@@ -58,7 +58,7 @@
 						<slot name="content" />
 						<!-- Right Button Section -->
 						<div v-if="showContentRightButton" id="svws-ui-card--button-content-right" />
-						<div v-else class="ml-auto">
+						<div v-else-if="slots.buttonContentRight" class="ml-auto">
 							<slot name="buttonContentRight" />
 						</div>
 					</div>
@@ -75,7 +75,7 @@
 						<slot name="footer" />
 						<!-- Right Button Section -->
 						<div v-if="showFooterRightButton" id="svws-ui-card--button-footer-right" />
-						<div v-else class="ml-auto">
+						<div v-else-if="slots.buttonFooterRight" class="ml-auto">
 							<slot name="buttonFooterRight" />
 						</div>
 					</div>
@@ -90,7 +90,8 @@
 			<template v-for="(button) in buttons" :key="button.label">
 				<SvwsUiTooltip :disabled="tooltipDisabled(button)" :position="buttonOrientation === 'vertical' ? 'right' : 'top'" :indicator="false">
 					<template #content>
-						{{ `${button.label}${(button.disabled && (button.disabledReason !== undefined )) ? `: ${button.disabledReason}` : ''}` }}
+						{{ `${button.label}${(button.disabled && (button.disabledReason !== undefined ) && button.disabledReason.length !== 0)
+							? `: ${button.disabledReason}` : ''}` }}
 					</template>
 					<SvwsUiButton class="card--button" :disabled="button.disabled" @click="button.click"
 						:type="props.buttonMode === 'text' ? button.type : 'icon'" :size="((props.buttonMode === 'text') && compact) ? 'small' : 'normal'"
@@ -207,7 +208,7 @@
 		&& (props.buttonContainer === 'content'));
 	const showFooterDivider = computed(() => !slots.footerDivider && props.showDivider);
 	const showFooter = computed(() => slots.footer || slots.buttonFooterLeft || slots.buttonFooterRight
-		|| ((props.footer !== undefined) && (props.footer.length !== 0)) || (props.buttonContainer === 'footer'));
+		|| ((props.footer !== undefined) && (props.footer.length !== 0)) || ((props.buttonContainer === 'footer') && showButtons.value));
 	const showFooterMain = computed(() => !slots.footer && (props.footer !== undefined) && (props.footer.length !== 0));
 	const showFooterRightButton = computed(() => !slots.buttonFooterRight && showButtons.value && (props.buttonContainer === 'footer')
 		&& (props.buttonPosition === 'right'));
@@ -289,7 +290,7 @@
 
 		// Setzt die initiale Größe des collapsible Wrappers, um Transitions korrekt ausführen zu können.
 		if (bodyWrapperRef.value !== undefined)
-			bodyWrapperRef.value.style.maxHeight = isActive.value ? 'fit-content' : '0';
+			bodyWrapperRef.value.style.maxHeight = isActive.value ? 'fit-content' : '0px';
 	});
 
 	/**
@@ -302,11 +303,8 @@
 		// Wenn die Card bereits geöffnet ist (zum Beispiel initial beim Mounting), dann darf die Funktion nicht ausgeführt werden
 		if (element.style.maxHeight === 'fit-content')
 			return;
-
-		await nextTick(() => {
-			element.style.maxHeight = `${element.scrollHeight}px`;
-			element.addEventListener('transitionend', done, { once: true });
-		});
+		element.style.maxHeight = `${element.scrollHeight}px`;
+		element.addEventListener('transitionend', done, { once: true });
 	};
 
 	/**
@@ -336,11 +334,8 @@
 	 */
 	async function closeCard (el: Element, done: () => void) {
 		const element = el as HTMLElement;
-		element.style.maxHeight = `${element.scrollHeight}px`;
-		await nextTick(() => {
-			element.style.maxHeight = '0';
-			element.addEventListener('transitionend', done, { once: true });
-		});
+		element.style.maxHeight = '0px';
+		element.addEventListener('transitionend', done, { once: true });
 	};
 
 
@@ -363,9 +358,10 @@
 	 * @param button Der Button, für den überprüft wird, ob er ein Tooltip benötigt.
 	 */
 	function tooltipDisabled (button: ButtonConfig) {
-		if (!button.disabled && props.buttonMode === 'text')
+		if (props.buttonMode === 'icon' || (button.disabled && (button.disabledReason !== undefined)))
+			return false;
+		else
 			return true;
-		return false;
 	}
 
 </script>
