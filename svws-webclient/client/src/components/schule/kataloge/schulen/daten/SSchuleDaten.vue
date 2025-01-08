@@ -2,9 +2,9 @@
 	<div class="page--content">
 		<svws-ui-content-card title="Schulangaben" v-if="auswahl !== undefined">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-checkbox :model-value="auswahl.istSichtbar" @update:model-value="istSichtbar => patch({ istSichtbar })"> Ist sichtbar </svws-ui-checkbox>
+				<svws-ui-checkbox focus-class :model-value="auswahl.istSichtbar" @update:model-value="istSichtbar => patch({ istSichtbar })"> Ist sichtbar </svws-ui-checkbox>
 				<svws-ui-input-number placeholder="Sortierung" :model-value="auswahl.sortierung" @change="sortierung=> sortierung && patch({ sortierung })" />
-				<svws-ui-text-input class="contentFocusField" placeholder="Kürzel" :model-value="auswahl.kuerzel" @change="kuerzel => patch({ kuerzel: kuerzel || null })" />
+				<svws-ui-text-input placeholder="Kürzel" :model-value="auswahl.kuerzel" @change="kuerzel => patch({ kuerzel: kuerzel || null })" />
 				<svws-ui-text-input placeholder="Kurzbezeichnung" :model-value="auswahl.kurzbezeichnung" @change="kurzbezeichnung => patch({ kurzbezeichnung })" />
 				<svws-ui-text-input placeholder="Schulnummer" :model-value="auswahl.schulnummer" @change="schulnummer => patch({ schulnummer: schulnummer ?? undefined })" />
 				<svws-ui-select title="Schulform" :model-value="auswahl.schulformID ? Schulform.data().getWertByID(auswahl.schulformID) : undefined" :items="Schulform.values()" :item-text="i => i.daten(schuljahr)?.text ?? '—'" @update:model-value="schulform => patch({ schulformID: schulform?.daten(schuljahr)?.id ?? null})" removable />

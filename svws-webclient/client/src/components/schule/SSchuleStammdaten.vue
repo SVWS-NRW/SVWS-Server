@@ -27,7 +27,7 @@
 			</svws-ui-content-card>
 			<svws-ui-content-card title="Kontaktinformationen">
 				<svws-ui-input-wrapper :grid="2">
-					<svws-ui-text-input placeholder="Straße" :model-value="strasse" @change="patchStrasse" type="text" span="full" :disabled="!editSchuldaten" />
+					<svws-ui-text-input class="contentFocusField" placeholder="Straße" :model-value="strasse" @change="patchStrasse" type="text" span="full" :disabled="!editSchuldaten" />
 					<!-- TODO PLZ Ort sollte durch den Orstkatalog gehandhabt werden - siehe auch Schüler-Kontaktdaten -->
 					<!-- <svws-ui-select title="Wohnort" v-model="wohnortID" :items="mapOrte" :item-filter="orte_filter" :item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete :disabled="!editSchuldaten" /> -->
 					<svws-ui-text-input placeholder="Telefon" :model-value="schule().telefon" @change="telefon => patch({ telefon })" type="tel" :disabled="!editSchuldaten" />
@@ -40,7 +40,7 @@
 			<!-- TODO Dauer der Unterrichtseinheiten -->
 			<svws-ui-content-card v-if="showSchuldaten" title="E-Mail-Server">
 				<svws-ui-input-wrapper :grid="2">
-					<svws-ui-text-input placeholder="SMTP-Host" :model-value="smptServerKonfiguration().host" @change="host => host && patchSMTPServerKonfiguration({ host })" type="text" :disabled="!editSchuldaten" />
+					<svws-ui-text-input class="contentFocusField" placeholder="SMTP-Host" :model-value="smptServerKonfiguration().host" @change="host => host && patchSMTPServerKonfiguration({ host })" type="text" :disabled="!editSchuldaten" />
 					<svws-ui-input-number placeholder="Port" :model-value="smptServerKonfiguration().port" @change="port => (port !== null) && (port !== undefined) && patchSMTPServerKonfiguration({ port })" />
 					<svws-ui-checkbox type="toggle" :model-value="smptServerKonfiguration().useStartTLS" @update:model-value="value => patchSMTPServerKonfiguration({ useStartTLS : (value === true) ? true : false })" :disabled="!editSchuldaten">Nutze StartTLS</svws-ui-checkbox>
 					<svws-ui-checkbox type="toggle" :model-value="smptServerKonfiguration().useTLS" @update:model-value="value => patchSMTPServerKonfiguration({ useTLS : (value === true) ? true : false })" :disabled="!editSchuldaten">Nutze TLS</svws-ui-checkbox>

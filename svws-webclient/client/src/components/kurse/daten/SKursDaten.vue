@@ -2,10 +2,10 @@
 	<div v-if="manager().hasDaten()" class="page--content">
 		<svws-ui-content-card title="Allgemein">
 			<template #actions>
-				<svws-ui-checkbox v-model="istSichtbar" :disabled="!hatKompetenzUpdate"> Ist sichtbar </svws-ui-checkbox>
+				<svws-ui-checkbox focus-class v-model="istSichtbar" :disabled="!hatKompetenzUpdate"> Ist sichtbar </svws-ui-checkbox>
 			</template>
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input class="contentFocusField" placeholder="Kürzel" :disabled="!hatKompetenzUpdate" :model-value="data().kuerzel" @change="kuerzel => patch({ kuerzel: kuerzel ?? '' })" type="text" />
+				<svws-ui-text-input placeholder="Kürzel" :disabled="!hatKompetenzUpdate" :model-value="data().kuerzel" @change="kuerzel => patch({ kuerzel: kuerzel ?? '' })" type="text" />
 				<svws-ui-select title="Lehrer" :disabled="!hatKompetenzUpdate" v-model="lehrer" :items="manager().lehrer.list()" :item-text="l => l.kuerzel" :empty-text="() => '---'" removable />
 				<svws-ui-select title="Fach" :disabled="!hatKompetenzUpdate" v-model="fach" :items="manager().faecher.list()" :item-text="f => f.kuerzel + ' (' + f.bezeichnung + ')'" />
 				<svws-ui-select title="Kursart" :disabled="!hatKompetenzUpdate" :items="kursarten.keys()" :item-text="k => k + ' (' + (kursarten.get(k) ?? '???') + ')'"

@@ -3,10 +3,10 @@
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-input-wrapper>
-					<svws-ui-checkbox :disabled="!hatUpdateKompetenz" :model-value="data().istSichtbar" @update:model-value="istSichtbar => patch({istSichtbar: istSichtbar === true})"> Ist sichtbar </svws-ui-checkbox>
+					<svws-ui-checkbox focus-class :disabled="!hatUpdateKompetenz" :model-value="data().istSichtbar" @update:model-value="istSichtbar => patch({istSichtbar: istSichtbar === true})"> Ist sichtbar </svws-ui-checkbox>
 					<svws-ui-checkbox :disabled="!hatUpdateKompetenz" :model-value="data().istRelevantFuerStatistik" @update:model-value="istRelevantFuerStatistik => patch({istRelevantFuerStatistik: istRelevantFuerStatistik === true})"> Ist Relevant für Statistik </svws-ui-checkbox>
 				</svws-ui-input-wrapper>
-				<svws-ui-text-input class="contentFocusField" placeholder="Kürzel" :disabled="!hatUpdateKompetenz" :model-value="data().kuerzel" @change="kuerzel => patch({kuerzel: kuerzel ?? undefined})" required focus />
+				<svws-ui-text-input placeholder="Kürzel" :disabled="!hatUpdateKompetenz" :model-value="data().kuerzel" @change="kuerzel => patch({kuerzel: kuerzel ?? undefined})" required focus />
 				<svws-ui-select title="Personal-Typ" :disabled="!hatUpdateKompetenz" v-model="inputPersonalTyp" :items="PersonalTyp.values()" :item-text="i => i.bezeichnung" required />
 				<svws-ui-text-input placeholder="Nachname" :disabled="!hatUpdateKompetenz" :model-value="data().nachname" @change="nachname => patch({nachname: nachname ?? undefined})"
 					required statistics :validator="() => validatorNachname" :do-validate="validateNachname" />
@@ -25,7 +25,7 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Wohnort und Kontaktdaten">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input placeholder="Straße" :disabled="!hatUpdateKompetenz" :model-value="strasse" @change="patchStrasse" type="text" span="full" />
+				<svws-ui-text-input class="contentFocusField" placeholder="Straße" :disabled="!hatUpdateKompetenz" :model-value="strasse" @change="patchStrasse" type="text" span="full" />
 				<svws-ui-select v-model="wohnortID" title="Wohnort" :disabled="!hatUpdateKompetenz" :items="mapOrte" :item-filter="orte_filter" :item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
 				<svws-ui-select v-model="ortsteilID" title="Ortsteil" :disabled="!hatUpdateKompetenz" :items="ortsteile" :item-sort="ortsteilSort" :item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''" removable />
 				<svws-ui-spacing />

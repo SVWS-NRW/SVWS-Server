@@ -15,7 +15,7 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Entlassung von eigener Schule">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input placeholder="Entlassung am" :model-value="data.entlassungDatum" @change="entlassungDatum=>patch({ entlassungDatum })" type="date" />
+				<svws-ui-text-input class="contentFocusField" placeholder="Entlassung am" :model-value="data.entlassungDatum" @change="entlassungDatum=>patch({ entlassungDatum })" type="date" />
 				<svws-ui-text-input placeholder="Entlassjahrgang" :model-value="data.entlassungJahrgang" @change="entlassungJahrgang=>patch({ entlassungJahrgang })" type="text" />
 				<svws-ui-text-input placeholder="Bemerkung oder Entlassgrund" :model-value="data.entlassungGrundID?.toString()" @change="entlassungGrundID=> entlassungGrundID && patch({ entlassungGrundID: parseInt(entlassungGrundID)})" span="full" />
 				<svws-ui-spacing />
@@ -24,7 +24,7 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Wechsel zu aufnehmender Schule">
 			<template #actions>
-				<svws-ui-checkbox :model-value="data.aufnehmdendBestaetigt === true" :indeterminate="data.aufnehmdendBestaetigt === null" @update:model-value="aufnehmdendBestaetigt => patch({ aufnehmdendBestaetigt })">
+				<svws-ui-checkbox focus-class :model-value="data.aufnehmdendBestaetigt === true" :indeterminate="data.aufnehmdendBestaetigt === null" @update:model-value="aufnehmdendBestaetigt => patch({ aufnehmdendBestaetigt })">
 					Aufnahme bestätigt
 				</svws-ui-checkbox>
 			</template>
@@ -35,7 +35,7 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Grundschulbesuch">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-input-number placeholder="Einschulung" :model-value="data.grundschuleEinschulungsjahr" @change="grundschuleEinschulungsjahr => patch({ grundschuleEinschulungsjahr })" :min="1900" :max="2050" />
+				<svws-ui-input-number class="contentFocusField" placeholder="Einschulung" :model-value="data.grundschuleEinschulungsjahr" @change="grundschuleEinschulungsjahr => patch({ grundschuleEinschulungsjahr })" :min="1900" :max="2050" />
 				<svws-ui-input-number placeholder="Einschulungsart" :model-value="data.grundschuleEinschulungsartID" @change="grundschuleEinschulungsartID => patch({ grundschuleEinschulungsartID })" />
 				<svws-ui-input-number placeholder="EP-Jahre" :model-value="data.grundschuleJahreEingangsphase" @change="grundschuleJahreEingangsphase => patch({ grundschuleJahreEingangsphase })" />
 				<svws-ui-input-number placeholder="Übergangsempfehlung Jg. 5" :model-value="data.grundschuleUebergangsempfehlungID" @change="grundschuleUebergangsempfehlungID => patch({ grundschuleUebergangsempfehlungID })" />
@@ -43,7 +43,7 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Sekundarstufe I">
 			<svws-ui-input-wrapper>
-				<svws-ui-input-number placeholder="Jahr Wechsel Sek I" :model-value="data.sekIWechsel" @change="sekIWechsel => patch({ sekIWechsel })" :min="1900" :max="2050" />
+				<svws-ui-input-number class="contentFocusField" placeholder="Jahr Wechsel Sek I" :model-value="data.sekIWechsel" @change="sekIWechsel => patch({ sekIWechsel })" :min="1900" :max="2050" />
 				<svws-ui-text-input placeholder="Erste Schulform Sek I" :model-value="data.sekIErsteSchulform" @change="sekIErsteSchulform=>patch({ sekIErsteSchulform })" type="text" />
 				<svws-ui-input-number placeholder="Jahr Wechsel Sek II" :model-value="data.sekIIWechsel" @change="sekIIWechsel => patch({ sekIIWechsel })" :min="1900" :max="2050" />
 			</svws-ui-input-wrapper>

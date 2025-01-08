@@ -21,7 +21,7 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Wohnort und Kontaktdaten" v-if="hatKompetenzAnsehen">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input placeholder="Straße" :readonly="!hatKompetenzUpdate" :model-value="strasse" @change="patchStrasse" type="text" span="full" />
+				<svws-ui-text-input class="contentFocusField" placeholder="Straße" :readonly="!hatKompetenzUpdate" :model-value="strasse" @change="patchStrasse" type="text" span="full" />
 				<svws-ui-select title="Wohnort" :readonly="!hatKompetenzUpdate" v-model="wohnortID" :items="mapOrte" :item-filter="orte_filter"
 					:item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete statistics />
 				<svws-ui-select title="Ortsteil" :readonly="!hatKompetenzUpdate" v-model="ortsteilID" :items="ortsteile"
@@ -38,7 +38,7 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Staatsangehörigkeit und Konfession" v-if="hatKompetenzAnsehen">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-select title="1. Staatsangehörigkeit" :readonly="!hatKompetenzUpdate" v-model="staatsangehoerigkeit" autocomplete
+				<svws-ui-select focus-class title="1. Staatsangehörigkeit" :readonly="!hatKompetenzUpdate" v-model="staatsangehoerigkeit" autocomplete
 					:items="Nationalitaeten.values()" :item-text="i => i.daten.staatsangehoerigkeit"
 					:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" required statistics />
 				<svws-ui-select title="2. Staatsangehörigkeit" :readonly="!hatKompetenzUpdate" v-model="staatsangehoerigkeit2" autocomplete removable
@@ -56,7 +56,7 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Migrationshintergrund" v-if="hatKompetenzAnsehen">
 			<template #actions>
-				<svws-ui-checkbox :disabled="!hatKompetenzUpdate" class="mt-3 xl:mt-0" :model-value="hatMigrationshintergrund" statistics
+				<svws-ui-checkbox focus-class :disabled="!hatKompetenzUpdate" class="mt-3 xl:mt-0" :model-value="hatMigrationshintergrund" statistics
 					@update:model-value="hatMigrationshintergrund => patch({hatMigrationshintergrund})">
 					Migrationshintergrund vorhanden
 				</svws-ui-checkbox>
@@ -83,7 +83,7 @@
 				<svws-ui-checkbox :disabled="!hatKompetenzUpdate" :model-value="data.istDuplikat" @update:model-value="istDuplikat => patch({istDuplikat})">Ist Duplikat</svws-ui-checkbox>
 			</template>
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-select title="Status" :readonly="!hatKompetenzUpdate" :model-value="SchuelerStatus.data().getWertByKuerzel('' + data.status)"
+				<svws-ui-select focus-class title="Status" :readonly="!hatKompetenzUpdate" :model-value="SchuelerStatus.data().getWertByKuerzel('' + data.status)"
 					@update:model-value="status => (status?.daten(schuljahr)?.id !== undefined) && patch({ status: status?.daten(schuljahr)?.id })"
 					:items="SchuelerStatus.values()" :item-text="i => i.daten(schuljahr)?.text ?? '—'" statistics />
 				<svws-ui-select v-if="schuelerListeManager().daten().status === SchuelerStatus.EXTERN.daten(schuljahr)?.id" :readonly="!hatKompetenzUpdate"

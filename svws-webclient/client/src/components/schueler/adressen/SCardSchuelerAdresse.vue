@@ -8,7 +8,7 @@
 			</svws-ui-button>
 		</template>
 		<svws-ui-input-wrapper :grid="4">
-			<svws-ui-text-input placeholder="Name" :model-value="betriebsStammdaten.name1" @change="name1=>patchBetrieb({name1: name1 ?? undefined}, props.betriebsStammdaten.id)" type="text" span="2" />
+			<svws-ui-text-input class="contentFocusField" placeholder="Name" :model-value="betriebsStammdaten.name1" @change="name1=>patchBetrieb({name1: name1 ?? undefined}, props.betriebsStammdaten.id)" type="text" span="2" />
 			<svws-ui-text-input placeholder="Namensergänzung" :model-value="betriebsStammdaten.name2" @change="name2=>patchBetrieb({name2: name2 ?? undefined}, props.betriebsStammdaten.id)" type="text" />
 			<svws-ui-text-input placeholder="Branche" :model-value="betriebsStammdaten.branche" @change="branche=>patchBetrieb({branche: branche ?? undefined}, props.betriebsStammdaten.id)" title="Branche" type="text" />
 			<svws-ui-text-input placeholder="Straße und Hausnummer" :model-value="betriebsStammdaten.strassenname" @change="strassenname=>patchBetrieb({strassenname: strassenname ?? undefined}, props.betriebsStammdaten.id)" type="text" />

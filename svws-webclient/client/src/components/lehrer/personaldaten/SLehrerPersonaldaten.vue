@@ -21,7 +21,7 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Beschäftigungsdaten">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-select title="Rechtsverhältnis" :disabled="!hatUpdateKompetenz" v-model="rechtsverhaeltnis" :items="LehrerRechtsverhaeltnis.values()"
+				<svws-ui-select title="Rechtsverhältnis" focus-class :disabled="!hatUpdateKompetenz" v-model="rechtsverhaeltnis" :items="LehrerRechtsverhaeltnis.values()"
 					:item-text="(i: LehrerRechtsverhaeltnis) => i.daten(schuljahr)?.text ?? '—'" />
 				<svws-ui-select title="Beschäftigungsart" :disabled="!hatUpdateKompetenz" v-model="beschaeftigungsart" :items="LehrerBeschaeftigungsart.values()"
 					:item-text="(i: LehrerBeschaeftigungsart) => i.daten(schuljahr)?.text ?? '—'" />
@@ -42,7 +42,7 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Mehr- und Minderleistung, Anrechnungsstunden">
 			<svws-ui-input-wrapper>
-				<svws-ui-select title="Mehrleistung" :disabled="!hatUpdateKompetenz" v-model="mehrleistungsgrund" :items="LehrerMehrleistungsarten.values()"
+				<svws-ui-select title="Mehrleistung" focus-class :disabled="!hatUpdateKompetenz" v-model="mehrleistungsgrund" :items="LehrerMehrleistungsarten.values()"
 					:item-text="i => i.daten(schuljahr)?.text ?? '—'" />
 				<svws-ui-select title="Minderleistung" :disabled="!hatUpdateKompetenz" v-model="minderleistungsgrund" :items="LehrerMinderleistungsarten.values()"
 					:item-text="i => i.daten(schuljahr)?.text ?? '—'" />

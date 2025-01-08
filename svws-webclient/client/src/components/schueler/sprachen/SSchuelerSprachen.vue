@@ -77,7 +77,7 @@
 			<div v-if="hatUpdateKompetenz && verfuegbareSprachenPruefungenHerkunftsprachlich.length" class="w-1/4 mb-4">
 				<svws-ui-select title="Hinzufügen..." removable :model-value="undefined" @update:model-value="sprache=> hinzufuegenPruefungHerkunftssprachlich(sprache, true)"
 					:items="verfuegbareSprachenPruefungenHerkunftsprachlich" :item-text="i=> `${i} - ${ Fach.getMapFremdsprachenKuerzelAtomar(schuljahr).get(i)?.daten(schuljahr)?.text ?? '—' }`"
-					ref="selectSprachenPruefungHerkunftsprachlich" />
+					ref="selectSprachenPruefungHerkunftsprachlich" focus-class />
 			</div>
 			<svws-ui-table v-if="sprachpruefungenHSU.length" :items="sprachpruefungenHSU" :columns="colsSprachpruefungenHSU" :selectable="hatUpdateKompetenz" v-model="auswahlPrHSU">
 				<template #cell(sprache)="{ value: kuerzel }">{{ Fach.getMapFremdsprachenKuerzelAtomar(schuljahr).get(kuerzel)?.daten(schuljahr)?.text }} </template>
@@ -125,7 +125,7 @@
 		<svws-ui-content-card title="Sprachprüfungen – Feststellungsprüfungen">
 			<div v-if="hatUpdateKompetenz && verfuegbareSprachenPruefungenFeststellungErsatz.length" class="w-1/4 mb-4">
 				<svws-ui-select title="Hinzufügen..." removable :model-value="undefined" @update:model-value="sprache => hinzufuegenPruefungFeststellung(sprache, false)" :items="verfuegbareSprachenPruefungenFeststellungErsatz"
-					:item-text="i => `${i} - ${Fach.getMapFremdsprachenKuerzelAtomar(schuljahr).get(i)?.daten(schuljahr)?.text ?? '—'}`" ref="selectSprachenPruefungFeststellungErsatz" />
+					:item-text="i => `${i} - ${Fach.getMapFremdsprachenKuerzelAtomar(schuljahr).get(i)?.daten(schuljahr)?.text ?? '—'}`" ref="selectSprachenPruefungFeststellungErsatz" focus-class/>
 			</div>
 			<svws-ui-table v-if="sprachpruefungenFP.length" :items="sprachpruefungenFP" :columns="colsSprachpruefungenFP" :selectable="hatUpdateKompetenz" v-model="auswahlPrFP">
 				<template #cell(sprache)="{ value: kuerzel }">{{ Fach.getMapFremdsprachenKuerzelAtomar(schuljahr).get(kuerzel)?.daten(schuljahr)?.text ?? '—' }} </template>

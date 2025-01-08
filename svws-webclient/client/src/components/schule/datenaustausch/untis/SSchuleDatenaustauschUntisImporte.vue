@@ -2,19 +2,19 @@
 	<div class="page--content page--content--flex-row gap-2 h-full w-full overflow-hidden">
 		<!-- Auswahl des Untis-Importes (linke Seite) -->
 		<div class="h-full min-w-48 w-48 flex flex-col gap-2">
-			<svws-ui-button id="contentFocusField" :type="(aktuell === 'stundenplanGPU001') ? 'primary' : 'secondary'" @click="onSelect('stundenplanGPU001')">
+			<svws-ui-button class="contentFocusField" :type="(aktuell === 'stundenplanGPU001') ? 'primary' : 'secondary'" @click="onSelect('stundenplanGPU001')">
 				<div class="flex flex-col gap-1">
 					<p class="text-left font-bold ">Stundenplan</p>
 					<p class="text-left font-normal">GPU001.txt</p>
 				</div>
 			</svws-ui-button>
-			<svws-ui-button id="contentFocusField" :type="(aktuell === 'stundenplanGPU001002') ? 'primary' : 'secondary'" @click="onSelect('stundenplanGPU001002')">
+			<svws-ui-button :type="(aktuell === 'stundenplanGPU001002') ? 'primary' : 'secondary'" @click="onSelect('stundenplanGPU001002')">
 				<div class="flex flex-col gap-1">
 					<p class="text-left font-bold ">Stundenplan</p>
 					<p class="text-left font-normal">GPU001.txt, GPU002.txt</p>
 				</div>
 			</svws-ui-button>
-			<svws-ui-button id="contentFocusField" :type="(aktuell === 'stundenplanGPP002GPU014') ? 'primary' : 'secondary'" @click="onSelect('stundenplanGPP002GPU014')">
+			<svws-ui-button :type="(aktuell === 'stundenplanGPP002GPU014') ? 'primary' : 'secondary'" @click="onSelect('stundenplanGPP002GPU014')">
 				<div class="flex flex-col gap-1">
 					<p class="text-left font-bold ">Stundenplan</p>
 					<p class="text-left font-normal">GPP002.txt, GPU014.txt</p>
