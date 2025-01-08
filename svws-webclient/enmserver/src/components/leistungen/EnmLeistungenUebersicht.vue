@@ -84,7 +84,7 @@
 							<span v-else>—</span>
 						</td>
 						<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Bemerkung') ?? true">
-							{{ leistung.fachbezogeneBemerkungen }}
+							{{ manager.auswahlLeistung.leistung === leistung ? "…":'' }}{{ leistung.fachbezogeneBemerkungen }}
 						</td>
 						<td class="svws-ui-td" role="cell" />
 					</tr>

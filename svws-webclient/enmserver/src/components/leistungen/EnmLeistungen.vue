@@ -4,7 +4,7 @@
 			<enm-leistungen-uebersicht :manager :patch-leistung :columns-visible :set-columns-visible />
 		</div>
 		<div class="enm-floskel-editor-bereich">
-			<enm-floskeleditor />
+			<enm-floskeleditor :manager :patch-leistung />
 		</div>
 	</div>
 </template>
@@ -20,7 +20,7 @@
 <style lang="postcss" scoped>
 
 	.page--content {
-		@apply flex flex-row gap-2;
+		@apply flex flex-row gap-6;
 		@apply h-full w-full overflow-hidden;
 		@apply max-w-full;
 	}
