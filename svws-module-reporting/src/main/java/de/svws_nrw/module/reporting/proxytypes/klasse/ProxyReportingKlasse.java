@@ -186,7 +186,7 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 					super.idsKlassenleitungen().stream()
 							.map(klId -> this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(klId, l -> {
 								try {
-									return new DataLehrerStammdaten(this.reportingRepository.conn()).getFromID(klId);
+									return new DataLehrerStammdaten(this.reportingRepository.conn()).getById(klId);
 								} catch (final ApiOperationException e) {
 									ReportingExceptionUtils.putStacktraceInLog(
 											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,

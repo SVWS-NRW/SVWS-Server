@@ -305,7 +305,7 @@ public class ReportingRepository {
 	private void initLehrerStammdaten() throws ApiOperationException {
 		try {
 			this.logger.logLn(LogLevel.DEBUG, 8, "Ermittle die Lehrerstammdaten.");
-			this.mapLehrerStammdaten = new DataLehrerStammdaten(this.conn).getAlleLehrerStammdaten(this.conn).stream()
+			this.mapLehrerStammdaten = new DataLehrerStammdaten(this.conn).getAll().stream()
 					.collect(Collectors.toMap(l -> l.id, l -> l));
 		} catch (final Exception e) {
 			this.mapLehrerStammdaten = new HashMap<>();

@@ -26,8 +26,8 @@ public final class DataSchulen extends DataManagerRevised<Long, DTOSchuleNRW, Sc
 	 */
 	public DataSchulen(final DBEntityManager conn) {
 		super(conn);
-		setAttributesNotPatchable("ID");
-		setAttributesRequiredOnCreation("SchulNr");
+		setAttributesNotPatchable("id");
+		setAttributesRequiredOnCreation("schulnummer");
 	}
 
 	@Override

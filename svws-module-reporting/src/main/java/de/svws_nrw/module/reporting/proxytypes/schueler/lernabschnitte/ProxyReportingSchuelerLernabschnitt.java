@@ -232,7 +232,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 							reportingRepository,
 							reportingRepository.mapLehrerStammdaten().computeIfAbsent(super.idSonderpaedagoge(), l -> {
 								try {
-									return new DataLehrerStammdaten(reportingRepository.conn()).getFromID(super.idSonderpaedagoge());
+									return new DataLehrerStammdaten(reportingRepository.conn()).getById(super.idSonderpaedagoge());
 								} catch (final ApiOperationException e) {
 									ReportingExceptionUtils.putStacktraceInLog(
 											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,
@@ -257,7 +257,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 							reportingRepository,
 							reportingRepository.mapLehrerStammdaten().computeIfAbsent(super.idTutor(), l -> {
 								try {
-									return new DataLehrerStammdaten(reportingRepository.conn()).getFromID(super.idTutor());
+									return new DataLehrerStammdaten(reportingRepository.conn()).getById(super.idTutor());
 								} catch (final ApiOperationException e) {
 									ReportingExceptionUtils.putStacktraceInLog(
 											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,

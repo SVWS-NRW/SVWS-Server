@@ -280,7 +280,7 @@ public final class ReportingValidierung {
 
 		// Prüfe die Lehrer-IDs. Erzeuge Maps, damit auch später leicht auf die Lehrerdaten zugegriffen werden kann.
 		final Map<Long, LehrerStammdaten> mapLehrer =
-				new DataLehrerStammdaten(reportingRepository.conn()).getFromIDs(conn, idsNonNull).stream()
+				new DataLehrerStammdaten(reportingRepository.conn()).getListByIDs(idsNonNull).stream()
 						.collect(Collectors.toMap(l -> l.id, l -> l));
 		for (final Long lID : idsNonNull)
 			if (mapLehrer.get(lID) == null) {

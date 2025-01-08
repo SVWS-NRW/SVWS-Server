@@ -291,7 +291,7 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 					this.reportingRepository,
 					this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(gostBeratungsdaten.beratungslehrerID, l -> {
 						try {
-							return new DataLehrerStammdaten(this.reportingRepository.conn()).getFromID(gostBeratungsdaten.beratungslehrerID);
+							return new DataLehrerStammdaten(this.reportingRepository.conn()).getById(gostBeratungsdaten.beratungslehrerID);
 						} catch (final ApiOperationException e) {
 							ReportingExceptionUtils.putStacktraceInLog(
 									"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,
@@ -308,7 +308,7 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 						this.reportingRepository,
 						this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(lehrkraft.id, l -> {
 							try {
-								return new DataLehrerStammdaten(this.reportingRepository.conn()).getFromID(lehrkraft.id);
+								return new DataLehrerStammdaten(this.reportingRepository.conn()).getById(lehrkraft.id);
 							} catch (final ApiOperationException e) {
 								ReportingExceptionUtils.putStacktraceInLog(
 										"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,

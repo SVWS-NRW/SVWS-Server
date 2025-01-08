@@ -50,7 +50,7 @@ public class ProxyReportingGostAbiturFachbelegungHalbjahr extends ReportingGostA
 					this.reportingRepository,
 					this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(abiturFachbelegungHalbjahr.lehrer, l -> {
 						try {
-							return new DataLehrerStammdaten(this.reportingRepository.conn()).getFromID(abiturFachbelegungHalbjahr.lehrer);
+							return new DataLehrerStammdaten(this.reportingRepository.conn()).getById(abiturFachbelegungHalbjahr.lehrer);
 						} catch (final ApiOperationException e) {
 							ReportingExceptionUtils.putStacktraceInLog(
 									"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,

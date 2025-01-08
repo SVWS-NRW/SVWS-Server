@@ -125,7 +125,7 @@ public class APILehrer {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Kein Lehrer-Eintrag mit der angegebenen ID gefunden")
 	public Response getLehrerStammdaten(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerStammdaten(conn).get(id),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerStammdaten(conn).getByIdAsResponse(id),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.LEHRERDATEN_ANSEHEN);
 	}
@@ -158,7 +158,7 @@ public class APILehrer {
 			@RequestBody(description = "Der Patch für die Lehrer-Stammdaten", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LehrerStammdaten.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerStammdaten(conn).patch(id, is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerStammdaten(conn).patchAsResponse(id, is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.LEHRERDATEN_AENDERN);
 	}

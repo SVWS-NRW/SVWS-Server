@@ -126,7 +126,7 @@ public class ProxyReportingKurs extends ReportingKurs {
 							new ProxyReportingLehrer(this.reportingRepository, this.reportingRepository.mapLehrerStammdaten().get(idLehrer)));
 			} else {
 				try {
-					final LehrerStammdaten lehrerStammdaten = new DataLehrerStammdaten(this.reportingRepository.conn()).getFromID(idLehrer);
+					final LehrerStammdaten lehrerStammdaten = new DataLehrerStammdaten(this.reportingRepository.conn()).getById(idLehrer);
 					final ReportingLehrer lehrer = new ProxyReportingLehrer(
 							this.reportingRepository,
 							this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(idLehrer, l -> lehrerStammdaten));

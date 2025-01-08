@@ -100,7 +100,7 @@ public final class HtmlContextLehrer extends HtmlContext {
 		}
 		if (!fehlendeLehrer.isEmpty()) {
 			final List<LehrerStammdaten> fehlendeLehrerStammdaten =
-					new DataLehrerStammdaten(reportingRepository.conn()).getFromIDs(reportingRepository.conn(), fehlendeLehrer);
+					new DataLehrerStammdaten(reportingRepository.conn()).getListByIDs(fehlendeLehrer);
 			fehlendeLehrerStammdaten.forEach(l -> this.reportingRepository.mapLehrerStammdaten().putIfAbsent(l.id, l));
 			mapLehrer.putAll(fehlendeLehrerStammdaten.stream().collect(Collectors.toMap(s -> s.id, s -> s)));
 		}
