@@ -196,6 +196,8 @@ const iconPath = {
 	'asterisk': { path: 'Editor', icon: 'asterisk' }, // i-ri-asterisk
 	'layout-column-line': { path: 'Design', icon: 'layout-column-line' }, // ri-layout-column-line
 	'layout-column-fill': { path: 'Design', icon: 'layout-column-fill' }, // ri-layout-column-fill
+
+	// Achtung: Icons, die nicht in SvwsDocsIcons.story.vue dokumentiert sind, tauchen ggf. nicht in der UI Anwendung auf!
 }
 
 const iconPlugins = [

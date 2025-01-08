@@ -190,8 +190,13 @@
 					</tr>
 					<tr>
 						<th><span class="icon i-ri-arrow-down-s-line" /></th>
-						<td>Ausklapppfeil</td>
+						<td>Zugeklappt Pfeil</td>
 						<td><code>{{ '<' }}span class="icon i-ri-arrow-down-s-line"{{ ' />' }}</code></td>
+					</tr>
+					<tr>
+						<th><span class="icon i-ri-arrow-up-s-line" /></th>
+						<td>Ausgeklappt Pfeil</td>
+						<td><code>{{ '<' }}span class="icon i-ri-arrow-up-s-line"{{ ' />' }}</code></td>
 					</tr>
 				</tbody>
 			</table>
