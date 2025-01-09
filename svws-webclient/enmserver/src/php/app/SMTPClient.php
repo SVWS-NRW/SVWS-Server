@@ -36,7 +36,7 @@
 		/**
 		 * Konstruktor: Initialisiert die SMTP-Parameter.
 		 *
-		 * @param Config $config Konfigurationsobjekt mit SMTP-Daten.
+		 * @param Config $config   Konfigurationsobjekt mit SMTP-Daten.
 		 */
 		public function __construct(Config $config) {
 			$smtpConfig = $config->getSMTPConfig();
@@ -58,9 +58,9 @@
 		/**
 		 * Sendet eine E-Mail über den SMTP-Server.
 		 *
-		 * @param string $to Empfänger-Adresse
-		 * @param string $subject Betreff der E-Mail
-		 * @param string $body Inhalt der E-Mail
+		 * @param string $to        die Empfänger-Adresse
+		 * @param string $subject   der Betreff der E-Mail
+		 * @param string $body      der Inhalt der E-Mail
 		 */
 		public function sendMail(string $to, string $subject, string $body): void {
 			try {
@@ -135,9 +135,9 @@
 		/**
 		 * Sendet die E-Mail an den Empfänger.
 		 *
-		 * @param string $to Empfänger-Adresse
-		 * @param string $subject Betreff der E-Mail
-		 * @param string $body Inhalt der E-Mail
+		 * @param string $to        die Empfänger-Adresse
+		 * @param string $subject   der Betreff der E-Mail
+		 * @param string $body      der Inhalt der E-Mail
 		 */
 		private function send(string $to, string $subject, string $body): void {
 			if (!$this->sendCommand("MAIL FROM:<$this->fromEmail>"))
@@ -173,6 +173,7 @@
 		 * Sendet einen Befehl an den SMTP-Server und prüft die Antwort.
 		 *
 		 * @param string $command Der Befehl, der gesendet werden soll.
+		 *
 		 * @return bool true, wenn der Befehl erfolgreich war, andernfalls false.
 		 */
 		private function sendCommand(string $command): bool {

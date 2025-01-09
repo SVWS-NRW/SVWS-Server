@@ -5,7 +5,7 @@
 	require_once $_SERVER['DOCUMENT_ROOT'].'/../app/ENMDatenManager.php';
 
 	// Prüfe die HTTP-Methode
-	$auth->pruefeHTTPMethod("GET");
+	$auth->pruefeHTTPMethod([ "GET" ]);
 
 	// Prüfe, ob eine Authentifizierung mit einem gültigen Lehrer-Kennwort vorliegt
 	$lehrer = $auth->pruefeLehrerBasicAuth();

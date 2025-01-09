@@ -859,7 +859,7 @@
 		 * Ermittelt den Zeitstempel und die grundlegenden ENM-Daten aus der Datenbank und gibt
 		 * diese in einem Array zurück.
 		 * 
-		 * @return array der Zeitstempel und die ENM-Daten als JSON-Objekt
+		 * @return object der Zeitstempel und die ENM-Daten als JSON-Objekt
 		 */
 		public function getJsonENMDaten(): object {
 			$results = $this->queryAllOrExit500("SELECT ts, daten FROM Daten", "Fehler Lesen der ENM-Daten");
@@ -886,7 +886,7 @@
 		/**
 		 * Ermittelt die Lehrerdaten aus der Datenbank und gibt diese in einem Array zurück.
 		 * 
-		 * @return array die Lehrer-Daten
+		 * @return ?object die Lehrer-Daten
 		 */
 		public function getENMLehrerByEmail(string $email): object | null {
 			// Lese die Email-Adresse zur Vermeidung von SQL-Injection nicht direkt aus der DB

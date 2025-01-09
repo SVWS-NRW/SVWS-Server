@@ -110,7 +110,7 @@
 		/**
 		 * Gibt den Root-Pfad für die Applikation zurück
 		 * 
-		 * @return der root-Pfad
+		 * @return string der root-Pfad
 		 */
 		public function getAppRoot(): string {
 			return $this->app_root;
@@ -119,7 +119,7 @@
 		/**
 		 * Gibt den Speicherort der SQLite-Datenbank zurück
 		 * 
-		 * @return der Speicherort
+		 * @return string der Speicherort
 		 */
 		public function getDatabaseFile(): string {
 			return $this->dbfile;
@@ -128,7 +128,7 @@
 		/**
 		 * Gibt den Benutzernamen des Admin-Benutzers zurück.
 		 * 
-		 * @return der Admin-Benutzername
+		 * @return string der Admin-Benutzername
 		 */
 		public function getAdminUsername(): string {
 			return $this->adminUser;
@@ -137,7 +137,7 @@
 		/**
 		 * Gibt das Kennwort des Admin-Benutzers zurück.
 		 * 
-		 * @return das Kennwort des Admin-Benutzers
+		 * @return string das Kennwort des Admin-Benutzers
 		 */
 		public function getAdminPassword(): string {
 			return $this->adminPassword;
@@ -145,6 +145,8 @@
 
 		/**
 		 * Gibt die SMTP-Konfiguration zurück.
+		 * 
+		 * @return die SMTP-Konfiguration
 		 */
 		public function getSMTPConfig(): array {
 			return $this->smtpConfig;

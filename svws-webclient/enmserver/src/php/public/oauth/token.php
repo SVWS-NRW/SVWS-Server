@@ -3,7 +3,7 @@
 	require_once $_SERVER['DOCUMENT_ROOT'].'/../app/init.php';
 
 	// Prüfe die HTTP-Methode ...
-	$auth->pruefeHTTPMethod("POST");
+	$auth->pruefeHTTPMethod([ "POST" ]);
 
 	// ... dann, ob eine Authentifizierung mit dem Client-Secret vorliegt
 	$clientID = $auth->pruefeClientSecret();

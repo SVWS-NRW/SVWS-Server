@@ -34,7 +34,7 @@
 		 * Liest den Body des HTTP-Requests ein. Tritt dabei ein Fehler auf, so wird
 		 * eine HTTP-Response 400 generiert.
 		 *
-		 * @return string der Body des HTTP-Requests
+		 * @return object der Body des HTTP-Requests
 		 */
 		public static function getBodyJsonObject() : object {
 			try {
@@ -138,9 +138,9 @@
 		/**
 		 * Gibt einen BAD_REQUEST (400) zurück und beendet das PHP-Skript.
 		 * 
-		 * @param string msg   ein optionaler Parameter, um eine Nachricht als plain text zurückzugeben
+		 * @param ?string msg   ein optionaler Parameter, um eine Nachricht als plain text zurückzugeben
 		 */
-		public static function exit400BadRequest(string | null $msg = null) {
+		public static function exit400BadRequest(?string $msg = null) {
 			http_response_code(400);
 			if ($msg != null) {
 				header('Content-Type: text/plain; charset=utf-8');
@@ -152,7 +152,7 @@
 		/**
 		 * Gibt einen UNAUTHORIZED (401) zurück und beendet das PHP-Skript.
 		 */
-		public static function exit401Unauthorized(string | null $headerinfo = null) {
+		public static function exit401Unauthorized(?string $headerinfo = null) {
 			http_response_code(401);
 			if ($headerinfo != null)
 				header($headerinfo);
@@ -172,7 +172,7 @@
 		 * 
 		 * @param string msg   ein optionaler Parameter, um eine Nachricht als plain text zurückzugeben
 		 */
-		public static function exit404NotFound(string | null $msg = null) {
+		public static function exit404NotFound(?string $msg = null) {
 			http_response_code(404);
 			if ($msg != null) {
 				header('Content-Type: text/plain; charset=utf-8');

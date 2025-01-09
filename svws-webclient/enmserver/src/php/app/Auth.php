@@ -67,6 +67,8 @@
 		 * Prüfe den Authorization-Header, ob dieser eine Basic-Authentifizierung mit den Credentials
 		 * des Admin-Benutzers hat.
 		 * Tritt ein Fehler bei der Prüfung auf, so wird ein Fehlercode 401 zurückgegeben.
+		 * 
+		 * @param Config $config   die Konfiguration
 		 */
 		public function pruefeAdminBasicAuth(Config $config) {
 			$this->pruefeBasicAuth($config->getAdminUsername(), $config->getAdminPassword());
@@ -76,6 +78,8 @@
 		 * Prüfe den Authorization-Header, ob dieser eine Basic-Authentifizierung mit den Crendentials
 		 * eines Lehrers hat.
 		 * Tritt ein Fehler bei der Prüfung auf, so wird ein Fehlercode 401 zurückgegeben.
+		 * 
+		 * @return object   das Lehrer-Objekt des angemeldeten Benutzer
 		 */
 		public function pruefeLehrerBasicAuth() : object {
 			if (strcmp($this->authMethod, "Basic") != 0)
@@ -135,19 +139,16 @@
 
 		/**
 		 * Prüft, ob die HTTP-Methode erlaubt ist oder nicht.
+		 * 
+		 * @param array $allowed   die erlaubten HTTP-Methoden
 		 */
-		public function pruefeHTTPMethod(string | array $allowed) {
-			if (strcmp(gettype($allowed), "array") === 0) {
-				$hasMethod = false;
-				foreach ($allowed as $tmp)
-					if (strcmp($_SERVER['REQUEST_METHOD'], $tmp) != 0)
-						$hasMethod = true;
-				if (!$hasMethod)
-					Http::exit403Forbidden();
-			} else {
-				if (strcmp($_SERVER['REQUEST_METHOD'], $allowed) != 0)
-					Http::exit403Forbidden();
-			}
+		public function pruefeHTTPMethod(array $allowed) {
+			$hasMethod = false;
+			foreach ($allowed as $tmp)
+				if (strcmp($_SERVER['REQUEST_METHOD'], $tmp) != 0)
+					$hasMethod = true;
+			if (!$hasMethod)
+				Http::exit403Forbidden();
 		}
 
 	}

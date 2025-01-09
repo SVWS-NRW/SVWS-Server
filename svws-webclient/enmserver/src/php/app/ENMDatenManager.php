@@ -291,7 +291,7 @@
 				$kompetenzen = [];
 				foreach ($schueler->ankreuzkompetenzen as $kompetenz)
 					if ((($kompetenz->istFachkompetenz === true) && ($istKlassenlehrer))
-						|| (($kompetenz->fachID != null) && (setFachIDs[$kompetenz->fachID] != null)))
+						|| (($kompetenz->fachID != null) && ($setFachIDs[$kompetenz->fachID] != null)))
 						$kompetenzen[] = $kompetenz;
 				// Prüfe, ob der Schüler zurückgegeben werden soll
 				if ((count($leistungen) === 0) && (count($kompetenzen) === 0))
@@ -352,7 +352,7 @@
 			$lernabschnitt = $mapsSchueler->lernabschnitte[$patch->id];
 			$schueler = $mapsSchueler->lernabschnittSchueler[$patch->id];
 			// Prüfe, ob der Lehrer Klassenlehrer für den Schüler des Lernabschnittes ist
-			$mapKlassen = $this->getMapKlassen();
+			$mapKlassen = $this->getMapKlassen($lehrer);
 			if (!array_key_exists($schueler->klasseID, $mapKlassen))
 				Http::exit403Forbidden("Der angemeldete Lehrer ist kein Klassenlehrer der Klasse mit der ID ".$schueler->klasseID.".");
 			$db->patchENMSchuelerLernabschnitt(date('Y-m-d H:i:s.v', time()), $lernabschnitt, $patch);
@@ -376,7 +376,7 @@
 			$schueler = $mapsSchueler->schueler[$idSchueler];
 			$bemerkungen = $mapsSchueler->bemerkungen[$idSchueler];
 			// Prüfe, ob der Lehrer Klassenlehrer für den Schüler ist
-			$mapKlassen = $this->getMapKlassen();
+			$mapKlassen = $this->getMapKlassen($lehrer);
 			if (!array_key_exists($schueler->klasseID, $mapKlassen))
 				Http::exit403Forbidden("Der angemeldete Lehrer ist kein Klassenlehrer der Klasse mit der ID ".$schueler->klasseID.".");
 			$db->patchENMSchuelerBemerkungen(date('Y-m-d H:i:s.v', time()), $idSchueler, $bemerkungen, $patch);
@@ -404,7 +404,7 @@
 			// Prüfe, ob der Lehrer Fachlehrer für die Lerngruppe der Leistungsdaten ist
 			$mapLerngruppenFachlehrer = $this->getMapLerngruppenFachlehrer($lehrer);
 			if (!array_key_exists($teilleistungLeistung->lerngruppenID, $mapLerngruppenFachlehrer))
-				Http::exit403Forbidden("Es wurde keine Lerngruppe für die ID ".$leistung->lerngruppenID." zu der Teilleistung mit der ID ".$patch->id." gefunden, wo der angemeldete Lehrer Fachlehrer ist.");
+				Http::exit403Forbidden("Es wurde keine Lerngruppe für die ID ".$teilleistungLeistung->lerngruppenID." zu der Teilleistung mit der ID ".$patch->id." gefunden, wo der angemeldete Lehrer Fachlehrer ist.");
 			$db->patchENMTeilleistung(date('Y-m-d H:i:s.v', time()), $teilleistung, $patch);
 		}
 
@@ -428,10 +428,10 @@
 			$ankreuzkompetenz = $mapsSchueler->ankreuzkompetenzen[$patch->id];
 			$schueler = $mapsSchueler->ankreuzkompetenzSchueler[$patch->id];
 			// Prüfe, ob der Lehrer Klassenlehrer für den Schüler der Ankreuzkompetenz ist
-			$mapKlassen = $this->getMapKlassen();
+			$mapKlassen = $this->getMapKlassen($lehrer);
 			if (!array_key_exists($schueler->klasseID, $mapKlassen))
 				Http::exit403Forbidden("Der angemeldete Lehrer ist kein Klassenlehrer der Klasse mit der ID ".$schueler->klasseID.".");
-			$db->patchENMSchuelerAnkreuzkompetenzen(date('Y-m-d H:i:s.v', time()), $lernabschnitt, $patch);
+			$db->patchENMSchuelerAnkreuzkompetenzen(date('Y-m-d H:i:s.v', time()), $ankreuzkompetenz, $patch);
 		}
 
 	}
