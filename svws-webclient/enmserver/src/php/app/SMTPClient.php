@@ -6,8 +6,8 @@
 	/**
 	 * Diese Klasse stellt die Funktionalität für den Versand von E-Mails über SMTP zur Verfügung.
 	 */
-	class SMTPClient
-	{
+	class SMTPClient {
+
 		// Die Serveradresse des SMTP-Servers
 		protected ?string $host = null;
 
@@ -29,22 +29,22 @@
 		// Der Name des Absenders
 		protected ?string $fromName = null;
 
+		// Die intern genutzte Verbindung zum SMTP-Server
 		private $connection = null;
+
 
 		/**
 		 * Konstruktor: Initialisiert die SMTP-Parameter.
 		 *
 		 * @param Config $config Konfigurationsobjekt mit SMTP-Daten.
 		 */
-		public function __construct(Config $config)
-		{
+		public function __construct(Config $config) {
 			$smtpConfig = $config->getSMTPConfig();
 			$requiredKeys = ['host', 'port', 'username', 'password', 'useTLS', 'fromEmail', 'fromName'];
 
-			foreach ($requiredKeys as $key) {
+			foreach ($requiredKeys as $key)
 				if (empty($smtpConfig[$key]))
 					Http::exit500("SMTP-Konfiguration fehlt: $key");
-			}
 
 			$this->host = $smtpConfig['host'];
 			$this->port = $smtpConfig['port'];
@@ -62,8 +62,7 @@
 		 * @param string $subject Betreff der E-Mail
 		 * @param string $body Inhalt der E-Mail
 		 */
-		public function sendMail(string $to, string $subject, string $body): void
-		{
+		public function sendMail(string $to, string $subject, string $body): void {
 			try {
 				$this->connect();
 				$this->authenticate();
@@ -78,8 +77,7 @@
 		/**
 		 * Stellt die Verbindung zum SMTP-Server her.
 		 */
-		private function connect(): void
-		{
+		private function connect(): void {
 			// Verbindungsprotokoll basierend auf useTLS
 			$protocol = $this->useTLS ? 'ssl://' : 'tcp://';
 			
@@ -120,8 +118,7 @@
 		/**
 		 * Authentifiziert sich beim SMTP-Server.
 		 */
-		private function authenticate(): void
-		{
+		private function authenticate(): void {
 			if (empty($this->username) || empty($this->password))
 				Http::exit400BadRequest("Benutzername oder Passwort ist leer.");
 			
@@ -142,8 +139,7 @@
 		 * @param string $subject Betreff der E-Mail
 		 * @param string $body Inhalt der E-Mail
 		 */
-		private function send(string $to, string $subject, string $body): void
-		{
+		private function send(string $to, string $subject, string $body): void {
 			if (!$this->sendCommand("MAIL FROM:<$this->fromEmail>"))
 				Http::exit400BadRequest("MAIL FROM-Befehl fehlgeschlagen.");
 
@@ -161,8 +157,7 @@
 		/**
 		 * Schließt die Verbindung zum SMTP-Server.
 		 */
-		private function close(): void
-		{
+		private function close(): void {
 			if ($this->connection) {
 				// Versuche den QUIT-Befehl zu senden und überprüfe das Ergebnis
 				if (!$this->sendCommand("QUIT"))
@@ -180,8 +175,7 @@
 		 * @param string $command Der Befehl, der gesendet werden soll.
 		 * @return bool true, wenn der Befehl erfolgreich war, andernfalls false.
 		 */
-		private function sendCommand(string $command): bool
-		{
+		private function sendCommand(string $command): bool {
 			fwrite($this->connection, $command . "\r\n");
 			$response = fgets($this->connection, 512);
 
@@ -189,4 +183,5 @@
 			return str_starts_with($response, "2") || str_starts_with($response, "3");
 		}
 	}
+
 ?>

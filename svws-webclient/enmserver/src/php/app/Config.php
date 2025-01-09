@@ -28,7 +28,7 @@
 		// Das Kennwort des administrativen Benutzers
 		protected $adminPassword = null;
 
-		// SMTP-Konfiguration
+		// Die SMTP-Konfiguration für das Senden von Mails zum Neusetzen des Kennwortes
 		protected $smtpConfig = [];
 
 		/**
@@ -94,7 +94,9 @@
 			// Initialisiere SMTP-Konfiguration
 			$this->smtpConfig = $this->config['smtp'] ?? [];
 			if (empty($this->smtpConfig) || !isset($this->smtpConfig['host'], $this->smtpConfig['port'], $this->smtpConfig['useTLS'])) {
-				Http::exit500("Die SMTP-Konfiguration ist fehlerhaft oder unvollständig.");
+				// Http::exit500("Die SMTP-Konfiguration ist fehlerhaft oder unvollständig.");
+				// TODO Die SMTP-Konfiguration kann unvollständig sein. In diesem Fall sollte die Option des Kennwort-Neu-Setzens im Client nicht angeboten werden
+				// TODO ggf. Endpunkt, um die Existenz einer validen SMTP-Konfiguration abzufragen
 			}
 		}
 
@@ -147,5 +149,7 @@
 		public function getSMTPConfig(): array {
 			return $this->smtpConfig;
 		}
+
 	}
+
 ?>
