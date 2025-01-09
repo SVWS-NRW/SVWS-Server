@@ -10,17 +10,17 @@
 		// Der Root-Pfad für die Applikation
 		protected $app_root = null;
 
-		// Der vollständige Pfad, wo sich die Konfigurationsdatei befindet
-		protected $configfile = null;
-
-		// Die Konfiguration aus der JSON-Datei, mit welcher diese Klasse initialisiert wurde
-		protected $config = null;
-
 		// Der Speicherort der SQLite-Datenbank
 		protected static string $dbfile = "db/app.sqlite";
 
 		// Der Dateiname, wo das Client-Secret für die Verbindung des SVWS-Servers zu dem ENM-Server gespeichert wird
 		protected static string $secretfile = "db/client.sec";
+
+		// Der Dateiname, wo die Information zum Server-Mode gesetzt werden kann. Ist diese Information nicht vorhanden, so wird 'stable' angenommen.
+		protected static string $servermodefile = "db/server.mode";
+
+		// Der Modus, in welchem der Server betrieben wird ('dev', 'alpha', 'beta', 'stable')
+		protected string $serverMode = "stable";
 
 		// Das Client-Secret, sobald es vom Konstruktor eingelesen (und ggf. erzeugt) wurde
 		protected ?string $secret = null;
@@ -28,42 +28,14 @@
 		// Gibt an, ob die Anwendung im Debug-Modus betrieben wird oder nicht
 		protected $debugMode = false;
 
-		// Die SMTP-Konfiguration für das Senden von Mails zum Neusetzen des Kennwortes
-		protected $smtpConfig = [];
 
 		/**
 		 * Erstellt ein neues Konfigurationsobjekt, indem die übergebene JSON-Datei eingelesen
 		 * und überprüft wird.
-		 *
-		 * @param string $jsonfile   der Name der JSON-Datei, ggf. mit Pfad
 		 */
-		public function __construct(string $jsonfile) {
+		public function __construct() {
 			// Bestimme zunächst das Root-Verzeichnis der Anwendung
 			$this->app_root = Config::determineAppRoot();
-
-			// Prüfe dann, ob die JSON-Datei existiert und lese den Inhalt
-			if (!is_string($jsonfile))
-				Http::exit500("Config - Konstruktor: Es wurde für den Dateinamen kein string übergeben.");
-			$this->configfile = "$this->app_root/$jsonfile";
-			
-			if (file_exists($this->configfile) !== 1) {
-				// Versuche eine neue Datei anzulegen...
-				$newconfig = (object)[
-					'debugMode' => "false",
-					'smtp' => (object)[
-						'host' => '',
-						'port' => 587,
-						'username' => '',
-						'password' => '',
-						'useTLS' => false,
-						'fromEmail' => '',
-						'fromName' => ''
-					]
-				];
-				$success = file_put_contents($this->configfile, json_encode($newconfig, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
-				if ($success === false)
-					Http::exit500("Config - Konstruktor: Es wurde keine Konfigurationsdatei unter dem Pfad $this->configfile gefunden und es konnte auch keine neue erstellt werden.");
-			}
 
 			// Lese das Client-Secret ein. Wenn nich keines existiert, dann erzeuge es zuvor 
 			$secretfile = $this->app_root."/".Config::$secretfile;
@@ -76,31 +48,20 @@
 			}
 			$this->secret = file_get_contents($secretfile);
 
-			// Lese die JSON-Datei ein
-			$this->config = json_decode(file_get_contents($this->configfile), true);
-			if (is_null($this->config)) 
-				Http::exit500("Config - Konstruktor: Die Konfigurationsdatei unter dem Pfad $this->configfile ist leer.");
-			
-			// Initialisiere Debugging-Einstellung anhand der Konfiguration
-			$this->debugMode = (!is_null($this->config["debugMode"])) && (strcasecmp($this->config["debugMode"], "true") == 0);
+			// Setze den Server-Mode, welcher auch an den Client weitergegeben wird
+			$servermodefile = $this->app_root."/".Config::$servermodefile;
+			$serverMode = file_exists($servermodefile) ? file_get_contents($servermodefile) : 'stable';
+			$serverMode = strtolower($serverMode);
+			if ((strcmp($serverMode, 'stable') !== 0) && (strcmp($serverMode, 'beta') !== 0) && (strcmp($serverMode, 'alpha') !== 0) && (strcmp($serverMode, 'dev') !== 0))
+				Http::exit500("Der konfigurierte Server-Mode ist ungültig. Überprüfen Sie, die Datei $servermodefile auf dem Web-Server");
+			$this->serverMode = $serverMode;
+
+			// Initialisiere Debugging-Einstellung anhand des Server-Mode
+			$this->debugMode = (strcmp($serverMode, 'stable') !== 0);
 			if ($this->debugMode) {
 				ini_set('display_errors', '1');
 			}
 
-			// Initialisiere SMTP-Konfiguration
-			$this->smtpConfig = $this->config['smtp'] ?? [];
-			if (empty($this->smtpConfig) || !isset($this->smtpConfig['host'], $this->smtpConfig['port'], $this->smtpConfig['useTLS'])) {
-				// Http::exit500("Die SMTP-Konfiguration ist fehlerhaft oder unvollständig.");
-				// TODO Die SMTP-Konfiguration kann unvollständig sein. In diesem Fall sollte die Option des Kennwort-Neu-Setzens im Client nicht angeboten werden
-				// TODO ggf. Endpunkt, um die Existenz einer validen SMTP-Konfiguration abzufragen
-			}
-		}
-
-		/**
-		 * Entlädt das Konfigurationsobject.
-		 */
-		public function __destruct() {
-			$this->config = null;
 		}
 
 		/**
@@ -145,15 +106,6 @@
 		 */
 		public function getClientSecret(): string {
 			return $this->secret;
-		}
-
-		/**
-		 * Gibt die SMTP-Konfiguration zurück.
-		 * 
-		 * @return die SMTP-Konfiguration
-		 */
-		public function getSMTPConfig(): array {
-			return $this->smtpConfig;
 		}
 
 		/**

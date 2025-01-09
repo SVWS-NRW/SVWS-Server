@@ -6,9 +6,9 @@
 	require_once 'Http.php';
 	Http::checkCORS();
 
-	// Lade die Konfiguration der Anwendung - Die Pfadangabe ist relativ zum root-Verzeichnis der Anwendung
+	// Lade die Konfiguration der Anwendung
 	require_once 'Config.php';
-	$config = new Config("config.json");
+	$config = new Config();
 
 	// Initialisiere die Datenbank-Verbindung
 	require_once 'Database.php';

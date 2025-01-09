@@ -10,7 +10,7 @@
 	}
 
 	// Initialisiere die Konfiguration
-	$config = new Config("config.json");
+	$config = new Config();
 
 	// Initialisiere die Datenbank-Verbindung
 	$db = new Database($config);

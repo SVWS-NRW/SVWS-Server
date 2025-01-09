@@ -4,6 +4,35 @@
 	require_once 'Config.php';
 
 	/**
+	 * Das Datentransferobjekt für die SMTP-Konfiguration.
+	 */
+	class SMTPConfig {
+
+		// Die Serveradresse des SMTP-Servers
+		protected ?string $host = null;
+
+		// Der Port des SMTP-Servers
+		protected int $port = 587;
+
+		// Der Benutzername für den SMTP-Login
+		protected ?string $username = null;
+
+		// Das Passwort für den SMTP-Login
+		protected ?string $password = null;
+
+		// Verwendung TLS - true für TLS bzw. false für unverschlüsselt
+		protected bool $useTLS = false;
+
+		// Der Absender der E-Mail
+		protected ?string $fromEmail = null;
+
+		// Der Name des Absenders
+		protected ?string $fromName = null;
+
+	}
+
+
+	/**
 	 * Diese Klasse stellt die Funktionalität für den Versand von E-Mails über SMTP zur Verfügung.
 	 */
 	class SMTPClient {
@@ -36,10 +65,10 @@
 		/**
 		 * Konstruktor: Initialisiert die SMTP-Parameter.
 		 *
-		 * @param Config $config   Konfigurationsobjekt mit SMTP-Daten.
+		 * @param SMTPConfig $config   das Konfigurationsobjekt mit den SMTP-Daten.
 		 */
-		public function __construct(Config $config) {
-			$smtpConfig = $config->getSMTPConfig();
+		public function __construct(SMTPConfig $config) {
+			$smtpConfig = $config;
 			$requiredKeys = ['host', 'port', 'username', 'password', 'useTLS', 'fromEmail', 'fromName'];
 
 			foreach ($requiredKeys as $key)
@@ -58,9 +87,9 @@
 		/**
 		 * Sendet eine E-Mail über den SMTP-Server.
 		 *
-		 * @param string $to        die Empfänger-Adresse
-		 * @param string $subject   der Betreff der E-Mail
-		 * @param string $body      der Inhalt der E-Mail
+		 * @param string $to Empfänger-Adresse
+		 * @param string $subject Betreff der E-Mail
+		 * @param string $body Inhalt der E-Mail
 		 */
 		public function sendMail(string $to, string $subject, string $body): void {
 			try {
@@ -135,9 +164,9 @@
 		/**
 		 * Sendet die E-Mail an den Empfänger.
 		 *
-		 * @param string $to        die Empfänger-Adresse
-		 * @param string $subject   der Betreff der E-Mail
-		 * @param string $body      der Inhalt der E-Mail
+		 * @param string $to Empfänger-Adresse
+		 * @param string $subject Betreff der E-Mail
+		 * @param string $body Inhalt der E-Mail
 		 */
 		private function send(string $to, string $subject, string $body): void {
 			if (!$this->sendCommand("MAIL FROM:<$this->fromEmail>"))
@@ -173,7 +202,6 @@
 		 * Sendet einen Befehl an den SMTP-Server und prüft die Antwort.
 		 *
 		 * @param string $command Der Befehl, der gesendet werden soll.
-		 *
 		 * @return bool true, wenn der Befehl erfolgreich war, andernfalls false.
 		 */
 		private function sendCommand(string $command): bool {
@@ -183,6 +211,7 @@
 			// Akzeptiere Antworten mit Statuscodes 2xx oder 3xx
 			return str_starts_with($response, "2") || str_starts_with($response, "3");
 		}
+
 	}
 
 ?>
