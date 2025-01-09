@@ -145,7 +145,7 @@
 		public function pruefeHTTPMethod(array $allowed) {
 			$hasMethod = false;
 			foreach ($allowed as $tmp)
-				if (strcmp($_SERVER['REQUEST_METHOD'], $tmp) != 0)
+				if (strcmp($_SERVER['REQUEST_METHOD'], $tmp) === 0)
 					$hasMethod = true;
 			if (!$hasMethod)
 				Http::exit403Forbidden();

@@ -1,6 +1,5 @@
 {
 	"debugMode": "true",
-	"database": "db/app.sqlite",
 	"adminUser": "admin",
 	"adminPassword": "StrengGeheim-MussErsetztWerden",
 	"smtp": {
