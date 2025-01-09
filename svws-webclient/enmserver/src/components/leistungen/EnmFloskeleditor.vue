@@ -2,9 +2,17 @@
 	<div class="border-l h-full flex flex-col pl-4 pr-1 gap-4">
 		<div class="text-headline-md">{{ schueler.nachname }}, {{ schueler.vorname }}</div>
 		<svws-ui-textarea-input placeholder="Floskeln auswählen oder manuell eingeben"	:model-value="text" @change="doPatch" autoresize />
-		<div class="flex justify-end gap-2 w-full">
-			<svws-ui-button @click="ersetzeTemplates">Anwenden</svws-ui-button>
-			<svws-ui-button @click="text = ''">Zurücksetzen</svws-ui-button>
+		<div class="flex justify-between gap-2 w-full">
+			<div class="flex gap-2">
+				<div class="w-20">
+					<svws-ui-input-number :model-value="every" :min="1" :max="9" @update:model-value="value => every = value ?? 1" />
+				</div>
+				<span class="mt-2">Vorname jedes {{ every === 1 ? '':`${every}.` }} Mal</span>
+			</div>
+			<div class="flex gap-2">
+				<svws-ui-button @click="ersetzeTemplates">Anwenden</svws-ui-button>
+				<svws-ui-button @click="text = ''">Zurücksetzen</svws-ui-button>
+			</div>
 		</div>
 		<div class="svws-ui-table svws-clickable overflow-hidden" role="table" aria-label="Tabelle">
 			<div class="svws-ui-thead" role="rowgroup" aria-label="Tabellenkopf">
@@ -67,7 +75,6 @@
 	}, { immediate: true })
 
 	const every = ref(3);
-
 	const klein = computed(() => new Map([['m', 'er'], ['w', 'sie'], ['d', schueler.value.vorname ?? '???'], ['x', schueler.value.vorname ?? '???']]));
 	const gross = computed(() => new Map([['m', 'Er'], ['w', 'Sie'], ['d', schueler.value.vorname ?? '???'], ['x', schueler.value.vorname ?? '???']]));
 
@@ -99,7 +106,6 @@
 				const mwdxMap = new Map([['m', arr[0] ?? ''], ['w', arr[1] ?? ''], ['d', arr[2] ?? ''], ['x', arr[3] ?? '']]);
 				return mwdxMap.get((schueler.value.geschlecht ?? 'x') as 'm'|'w'|'d'|'x')!;
 			} else if (kuerzel !== undefined) {
-		console.log('drin', kuerzel, match)
 				for (const floskel of floskeln.value)
 					if (floskel.kuerzel?.toLocaleLowerCase() === kuerzel.toLocaleLowerCase())
 						return floskel.text ?? '???';
@@ -128,6 +134,9 @@
 	.svws-ui-tr {
 		grid-template-columns: 6em 1fr 4em 4em;
 		min-height: auto;
+		.svws-ui-td {
+			@apply leading-5 align-middle;
+		}
 	}
 
 </style>
