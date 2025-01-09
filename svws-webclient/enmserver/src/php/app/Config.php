@@ -17,10 +17,10 @@
 		protected $config = null;
 
 		// Der Speicherort der SQLite-Datenbank
-		protected string $dbfile = "db/app.sqlite";
+		protected static string $dbfile = "db/app.sqlite";
 
 		// Der Dateiname, wo das Client-Secret für die Verbindung des SVWS-Servers zu dem ENM-Server gespeichert wird
-		protected string $secretfile = "db/client.sec";
+		protected static string $secretfile = "db/client.sec";
 
 		// Das Client-Secret, sobald es vom Konstruktor eingelesen (und ggf. erzeugt) wurde
 		protected ?string $secret = null;
@@ -39,7 +39,7 @@
 		 */
 		public function __construct(string $jsonfile) {
 			// Bestimme zunächst das Root-Verzeichnis der Anwendung
-			$this->app_root = substr($_SERVER["DOCUMENT_ROOT"], 0, -strlen("/public"));
+			$this->app_root = Config::determineAppRoot();
 
 			// Prüfe dann, ob die JSON-Datei existiert und lese den Inhalt
 			if (!is_string($jsonfile))
@@ -66,7 +66,7 @@
 			}
 
 			// Lese das Client-Secret ein. Wenn nich keines existiert, dann erzeuge es zuvor 
-			$secretfile = "$this->app_root/$this->secretfile";
+			$secretfile = $this->app_root."/".Config::$secretfile;
 			if (!file_exists($secretfile)) {
 				// Versuche eine neues Secret anzulegen anzulegen...
 				$secret = Config::generateRandomSecret();
@@ -104,6 +104,23 @@
 		}
 
 		/**
+		 * Bestimmt das Verzeichnis, in dem sich die Applikation befindet
+		 * 
+		 * @return string der absolute Pfad, wo sich die Applikation befindet
+		 */
+		protected static function determineAppRoot(): string {
+			return substr($_SERVER["DOCUMENT_ROOT"], 0, -strlen("/public"));
+		}
+
+		/**
+		 * Prüft, ob die Anwendung bereits initialisiert wurde, in dem geprüft wird, ob
+		 * das Client-Secret und die SQLite-Datenbank beide vorliegen.
+		 */
+		public static function isAppInitialized() : bool {
+			return file_exists(Config::determineAppRoot()."/".Config::$secretfile) && file_exists(Config::determineAppRoot()."/".Config::$dbfile);
+		}
+
+		/**
 		 * Gibt den Root-Pfad für die Applikation zurück
 		 * 
 		 * @return string der root-Pfad
@@ -118,7 +135,7 @@
 		 * @return string der Speicherort
 		 */
 		public function getDatabaseFile(): string {
-			return $this->dbfile;
+			return Config::$dbfile;
 		}
 
 		/**
