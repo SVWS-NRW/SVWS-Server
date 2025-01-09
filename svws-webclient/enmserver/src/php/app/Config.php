@@ -16,8 +16,8 @@
 		// Die Konfiguration aus der JSON-Datei, mit welcher diese Klasse initialisiert wurde
 		protected $config = null;
 
-		// Lese den Speicherort der SQLite-Datenbank ein
-		protected $dbfile = null;
+		// Der Speicherort der SQLite-Datenbank
+		protected $dbfile = "db/app.sqlite";
 
 		// Gibt an, ob die Anwendung im Debug-Modus betrieben wird oder nicht
 		protected $debugMode = false;
@@ -50,7 +50,6 @@
 				// Versuche eine neue Datei anzulegen...
 				$newconfig = (object)[
 					'debugMode' => "false",
-					'database' => "db/app.sqlite",
 					'adminUser' => "admin",
 					'adminPassword' => base64_encode(random_bytes(16)),
 					'smtp' => (object)[
@@ -72,11 +71,6 @@
 			$this->config = json_decode(file_get_contents($this->configfile), true);
 			if (is_null($this->config)) 
 				Http::exit500("Config - Konstruktor: Die Konfigurationsdatei unter dem Pfad $this->configfile ist leer.");
-			
-			// Lese den Speicherort für die Datenbank ein
-			if ((is_null($this->config["database"])) || (!is_string($this->config["database"])))
-				Http::exit500("Die Konfiguration ($this->configfile) enhält keine Pfad-Angabe für die SQLite-Datenbank (z.B. \"database\"=\"db/app.sqlite\").");
-			$this->dbfile = $this->config["database"];
 			
 			// Initialisiere Debugging-Einstellung anhand der Konfiguration
 			$this->debugMode = (!is_null($this->config["debugMode"])) && (strcasecmp($this->config["debugMode"], "true") == 0);
