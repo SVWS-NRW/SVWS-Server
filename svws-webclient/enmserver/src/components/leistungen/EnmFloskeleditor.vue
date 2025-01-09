@@ -16,22 +16,20 @@
 				</tr>
 			</div>
 			<div class="svws-ui-tbody overflow-y-scroll" role="rowgroup" aria-label="Tabelleninhalt">
-				<template v-for="gruppe of manager.daten.floskelgruppen" :key="gruppe.kuerzel">
-					<template v-if="(gruppe.hauptgruppe !== null) && (erlaubteHauptgruppen.has(gruppe.hauptgruppe as Hauptgruppen)) && !gruppe.floskeln.isEmpty()">
-						<div class="svws-ui-thead cursor-pointer select-none" role="rowgroup">
-							<div class="svws-ui-td col-span-4 flex items-center gap-1" role="cell" @click="collapsed.set(gruppe, collapsed.get(gruppe) ? false : true)">
-								<span class="icon i-ri-arrow-right-s-line" v-if="collapsed.get(gruppe)" />
-								<span class="icon i-ri-arrow-down-s-line" v-else />
-								<span> {{ gruppe.bezeichnung }}</span>
-							</div>
+				<template v-for="gruppe of gruppen" :key="gruppe.kuerzel">
+					<div class="svws-ui-thead cursor-pointer select-none" role="rowgroup">
+						<div class="svws-ui-td col-span-4 flex items-center gap-1" role="cell" @click="collapsed.set(gruppe, collapsed.get(gruppe) ? false : true)">
+							<span class="icon i-ri-arrow-right-s-line" v-if="collapsed.get(gruppe)" />
+							<span class="icon i-ri-arrow-down-s-line" v-else />
+							<span> {{ gruppe.bezeichnung }}</span>
 						</div>
-						<div v-for="floskel of gruppe.floskeln" :key="floskel.kuerzel ?? 1" class="svws-ui-tr" role="row" v-show="!collapsed.get(gruppe)" @click="ergaenzeFloskel(floskel)">
-							<div class="svws-ui-td" role="cell"> {{ floskel.kuerzel }} </div>
-							<div class="svws-ui-td" role="cell"> {{ floskel.text }} </div>
-							<div class="svws-ui-td" role="cell"> {{ floskel.niveau }} </div>
-							<div class="svws-ui-td" role="cell"> {{ floskel.jahrgangID }} </div>
-						</div>
-					</template>
+					</div>
+					<div v-for="floskel of gruppe.floskeln" :key="floskel.kuerzel ?? 1" class="svws-ui-tr" role="row" v-show="!collapsed.get(gruppe)" @click="ergaenzeFloskel(floskel)">
+						<div class="svws-ui-td" role="cell"> {{ floskel.kuerzel }} </div>
+						<div class="svws-ui-td" role="cell"> {{ floskel.text }} </div>
+						<div class="svws-ui-td" role="cell"> {{ floskel.niveau }} </div>
+						<div class="svws-ui-td" role="cell"> {{ floskel.jahrgangID }} </div>
+					</div>
 				</template>
 			</div>
 		</div>
@@ -40,11 +38,12 @@
 
 <script setup lang="ts">
 
-	import { computed, ref } from 'vue';
+	import { computed, ref, watch } from 'vue';
 	import type { ENMLeistung } from '@core/core/data/enm/ENMLeistung';
 	import type { EnmManager } from './EnmManager';
 	import type { ENMFloskel } from '@core/core/data/enm/ENMFloskel';
 	import type { ENMFloskelgruppe } from '@core/core/data/enm/ENMFloskelgruppe';
+	import { ArrayList } from '@core/index';
 
 	type Hauptgruppen = 'ALLG'|'ASV'|'AUE'|'FACH'|'FÖRD'|'FSP'|'VERM'|'VERS'|'ZB';
 
@@ -56,6 +55,16 @@
 
 	// eslint-disable-next-line vue/no-setup-props-reactivity-loss
 	const text = ref<string>(props.manager.auswahlLeistung.leistung?.fachbezogeneBemerkungen ?? "");
+	const gruppen = ref(new ArrayList<ENMFloskelgruppe>())
+	const floskeln = ref(new ArrayList<ENMFloskel>())
+
+	watch(() => props.manager, () => {
+		for (const gruppe of props.manager.daten.floskelgruppen)
+			if ((gruppe.hauptgruppe !== null) && (props.erlaubteHauptgruppen.has(gruppe.hauptgruppe as Hauptgruppen)) && !gruppe.floskeln.isEmpty()) {
+				gruppen.value.add(gruppe);
+				floskeln.value.addAll(gruppe.floskeln);
+			}
+	}, { immediate: true })
 
 	const every = ref(3);
 
@@ -69,9 +78,9 @@
 	}
 
 	function ersetzeTemplates() {
-		const templates = /\$((Vorname)|(Name|Nachname)|(weibl)|(ein)|(\w*%.*))\$/gi;
+		const templates = /(?:\$(?:(Vorname)|(Name|Nachname)|(weibl)|(ein)|(\w*%.*))\$)|(#\S*)/gi;
 		let counter = -1;
-		text.value = text.value.replaceAll(templates, (match, _, vorname, nachname, weibl, ein, mwdx, _offset, fullString: string, _groups) => {
+		text.value = text.value.replaceAll(templates, (match, vorname, nachname, weibl, ein, mwdx, kuerzel, _offset, fullString: string, _groups) => {
 			if (vorname !== undefined) {
 				counter++;
 				if ((counter % every.value) === 0)
@@ -89,8 +98,13 @@
 				const arr = match.slice(1, -1).split('%')
 				const mwdxMap = new Map([['m', arr[0] ?? ''], ['w', arr[1] ?? ''], ['d', arr[2] ?? ''], ['x', arr[3] ?? '']]);
 				return mwdxMap.get((schueler.value.geschlecht ?? 'x') as 'm'|'w'|'d'|'x')!;
-			} else
-				return '???';
+			} else if (kuerzel !== undefined) {
+		console.log('drin', kuerzel, match)
+				for (const floskel of floskeln.value)
+					if (floskel.kuerzel?.toLocaleLowerCase() === kuerzel.toLocaleLowerCase())
+						return floskel.text ?? '???';
+			}
+			return '???';
 		});
 	}
 
