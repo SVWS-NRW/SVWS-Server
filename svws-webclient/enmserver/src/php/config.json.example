@@ -2,5 +2,14 @@
 	"debugMode": "true",
 	"database": "db/app.sqlite",
 	"adminUser": "admin",
-	"adminPassword": "StrengGeheim-MussErsetztWerden"
+	"adminPassword": "StrengGeheim-MussErsetztWerden",
+	"smtp": {
+		"host": "smtp.example.com",
+		"port": 587,
+		"username": "user@example.com",
+		"password": "password",
+		"useTLS": true,
+		"fromEmail": "noreply@example.com",	
+		"fromName": "Your App"
+	}
 }
