@@ -109,6 +109,7 @@
 		protected function initDatabase() {
 			$this->createTable('OAuth', 'CREATE TABLE OAuth(clientID INTEGER PRIMARY KEY, token TEXT, tokenTimestamp INTEGER, tokenValidForSecs INTEGER)');
 			$this->insertInto('OAuth', "INSERT INTO OAuth(clientID, token, tokenTimestamp, tokenValidForSecs) VALUES (1, NULL, NULL, NULL)");
+			$this->createTable('ServerConfig', 'CREATE TABLE ServerConfig(schluessel TEXT PRIMARY KEY, wert TEXT)');
 			$this->createTable('ClientConfig', 'CREATE TABLE ClientConfig(schluessel TEXT PRIMARY KEY, wert TEXT)');
 			$this->createTable('ClientLehrerConfig', 'CREATE TABLE ClientLehrerConfig(idLehrer INTEGER, schluessel TEXT, wert TEXT, PRIMARY KEY (idLehrer, schluessel))');
 			$this->createTable('Daten', 'CREATE TABLE Daten(ts INTEGER PRIMARY KEY, schulnummer INTEGER, daten TEXT)');
@@ -758,6 +759,23 @@
 		}
 
 		/**
+		 * Lädt die SMTP-Konfiguration aus der Datenbank und initialisiert den SMTP-Client damit.
+		 * 
+		 * @return ?SMTPClient   der SMTP-Client oder null, wenn keine Konfiguration vorliegt
+		 */
+		public function getSMTPClient(): ?SMTPClient {
+			$result = $this->queryAllOrNull("SELECT wert AS value FROM ServerConfig WHERE schluessel='smtp'");
+			if ($result === null)
+				return null;
+			if (count($result) !== 1)
+				return null;
+			$json = $result[0];
+			$client = new SMTPClient($json);
+			// Prüfe noch, ob der Client eine vollständige und plausible Konfiguration hat
+			return $client->isValid() ? $client : null;
+		}
+
+		/**
 		 * Ermittelt die globale Konfiguration und die benutzerspezifische Konfiguration anhand der
 		 * übergebenen Lehrer-ID und gibt diese als JSON-String zurück.
 		 * 
@@ -766,8 +784,8 @@
 		 * @return string ein JSON mit der globalen und der benutzerspezifischen Konfiguration
 		 */
 		public function getClientConfig(int $idLehrer): string {
-			$configBenutzer = $this->queryAllOrExit500("SELECT schluessel AS key, wert AS value FROM ClientLehrerConfig WHERE idLehrer=$idLehrer", "Fehler Lesen der benutzerspezifischen Kofnigurationsdaten");
-			$configGlobal = $this->queryAllOrExit500("SELECT schluessel AS key, wert AS value FROM ClientConfig", "Fehler Lesen der globalen Kofnigurationsdaten");
+			$configBenutzer = $this->queryAllOrExit500("SELECT schluessel AS key, wert AS value FROM ClientLehrerConfig WHERE idLehrer=$idLehrer", "Fehler beim Lesen der benutzerspezifischen Konfigurationsdaten");
+			$configGlobal = $this->queryAllOrExit500("SELECT schluessel AS key, wert AS value FROM ClientConfig", "Fehler beim Lesen der globalen Kofnigurationsdaten");
 			$jsonBenutzer = json_encode($configBenutzer, JSON_UNESCAPED_SLASHES);
 			$jsonGlobal = json_encode($configGlobal, JSON_UNESCAPED_SLASHES);
 			return "{ \"user\": $jsonBenutzer, \"global\": $jsonGlobal }";

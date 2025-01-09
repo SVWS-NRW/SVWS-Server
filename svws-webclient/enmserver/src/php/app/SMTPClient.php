@@ -2,35 +2,7 @@
 
 	require_once 'Http.php';
 	require_once 'Config.php';
-
-	/**
-	 * Das Datentransferobjekt für die SMTP-Konfiguration.
-	 */
-	class SMTPConfig {
-
-		// Die Serveradresse des SMTP-Servers
-		protected ?string $host = null;
-
-		// Der Port des SMTP-Servers
-		protected int $port = 587;
-
-		// Der Benutzername für den SMTP-Login
-		protected ?string $username = null;
-
-		// Das Passwort für den SMTP-Login
-		protected ?string $password = null;
-
-		// Verwendung TLS - true für TLS bzw. false für unverschlüsselt
-		protected bool $useTLS = false;
-
-		// Der Absender der E-Mail
-		protected ?string $fromEmail = null;
-
-		// Der Name des Absenders
-		protected ?string $fromName = null;
-
-	}
-
+	require_once 'SMTPConfig.php';
 
 	/**
 	 * Diese Klasse stellt die Funktionalität für den Versand von E-Mails über SMTP zur Verfügung.
@@ -65,10 +37,10 @@
 		/**
 		 * Konstruktor: Initialisiert die SMTP-Parameter.
 		 *
-		 * @param SMTPConfig $config   das Konfigurationsobjekt mit den SMTP-Daten.
+		 * @param string $config   das Konfigurationsobjekt mit den SMTP-Daten als JSON-String.
 		 */
-		public function __construct(SMTPConfig $config) {
-			$smtpConfig = $config;
+		public function __construct(string $json) {
+			$smtpConfig = json_decode($json);
 			$requiredKeys = ['host', 'port', 'username', 'password', 'useTLS', 'fromEmail', 'fromName'];
 
 			foreach ($requiredKeys as $key)
@@ -82,6 +54,16 @@
 			$this->useTLS = $smtpConfig['useTLS'];
 			$this->fromEmail = $smtpConfig['fromEmail'];
 			$this->fromName = $smtpConfig['fromName'];
+		}
+
+		/**
+		 * Prüft, ob die SMTP-Konfiguration vollständig und plausibel ist. Wenn nicht, dann wird false zurückgegeben.
+		 * 
+		 * @return bool true, wenn die Konfiguration vollständig und plausibel ist und ansonsten false
+		 */
+		public function isValid(): bool {
+			// TODO Methode isValid implementieren
+			return true;
 		}
 
 		/**
