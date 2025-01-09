@@ -16,6 +16,6 @@
 
 	// Bestimme die Informationen zur Authentifizierung
 	require_once 'Auth.php';
-	$auth = new Auth($db);
+	$auth = new Auth($db, $config);
 
 ?>

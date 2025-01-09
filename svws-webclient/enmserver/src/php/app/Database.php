@@ -104,32 +104,11 @@
 		}
 
 		/**
-		 * Erzeugt einen zufälligen String, der für Kennwörter verwendet werden kann.
-		 * 
-		 * @return string das neue Kennwort
-		 */
-		protected function generateRandomSecret() : string {
-			return base64_encode(random_bytes(32));
-		}
-
-
-		/**
-		 * Initialisiert das Client-Secret in der Datenbank.
-		 */
-		protected function initClientSecret() {
-			try {
-				$this->conn->exec("INSERT INTO OAuth(clientID, secret) VALUES (1, '".$this->generateRandomSecret()."')");
-			} catch (PDOException $e) {
-				Http::exit500("Database (".$this->config->getDatabaseFile().") - Fehler beim Anlegen des Client-Secrets (".$e->getCode()."): ".$e->getMessage());
-			}
-		}
-
-		/**
 		 * Initialisiert die Datenbank mit Default-Werten
 		 */
 		protected function initDatabase() {
-			$this->createTable('OAuth', 'CREATE TABLE OAuth(clientID INTEGER PRIMARY KEY, secret TEXT, token TEXT, tokenTimestamp INTEGER, tokenValidForSecs INTEGER)');
-			$this->initClientSecret();
+			$this->createTable('OAuth', 'CREATE TABLE OAuth(clientID INTEGER PRIMARY KEY, token TEXT, tokenTimestamp INTEGER, tokenValidForSecs INTEGER)');
+			$this->insertInto('OAuth', "INSERT INTO OAuth(clientID, token, tokenTimestamp, tokenValidForSecs) VALUES (1, NULL, NULL, NULL)");
 			$this->createTable('ClientConfig', 'CREATE TABLE ClientConfig(schluessel TEXT PRIMARY KEY, wert TEXT)');
 			$this->createTable('ClientLehrerConfig', 'CREATE TABLE ClientLehrerConfig(idLehrer INTEGER, schluessel TEXT, wert TEXT, PRIMARY KEY (idLehrer, schluessel))');
 			$this->createTable('Daten', 'CREATE TABLE Daten(ts INTEGER PRIMARY KEY, schulnummer INTEGER, daten TEXT)');
@@ -147,7 +126,7 @@
 		public function reinitDatbase() {
 			$this->clearENMDaten();
 			$this->clearTable('OAuth');
-			$this->initClientSecret();
+			$this->insertInto('OAuth', "INSERT INTO OAuth(clientID, token, tokenTimestamp, tokenValidForSecs) VALUES (1, NULL, NULL, NULL)");
 		}
 
 		/**
@@ -207,20 +186,6 @@
 		}
 
 		/**
-		 * Gibt das Client-Secret aus der Datenbank zurück.
-		 * 
-		 * @param int $id   die ID für welche das Secret ermittelt werden soll
-		 * 
-		 * @return string das Client-Secret oder null, wenn keines existiert
-		 */
-		public function getClientSecret(int $id): string | null {
-			$result = $this->querySingleOrNull("SELECT secret FROM OAuth WHERE clientID = $id");
-			if ($result === null)
-				return null;
-			return $result->secret;
-		}
-
-		/**
 		 * Erstellt ein neues Token und gibt dieses zurück. Ein zuvor bestendes Token wird dabei ersetzt.
 		 * 
 		 * @param int $id   die ID für welche der Access-Token generiert werden soll
@@ -228,10 +193,7 @@
 		 * @return object die Informationen zum Token oder null, wenn das Erstellen nicht erfolgreich war
 		 */
 		public function createClientAccessToken(int $id): object | null {
-			$result = $this->getClientSecret($id);
-			if ($result == null)
-				return null;
-			$token = $this->generateRandomSecret();
+			$token = Config::generateRandomSecret();
 			$time = time();
 			$validFor = 3600; // eine Stunde (in Sekunden)
 			try {
@@ -258,8 +220,7 @@
 				return null;
 			try {
 				// Verwende $token nicht direkt, um SQL-Injection zu verhindern
-				$sql = "SELECT clientID, secret, token, tokenTimestamp, tokenValidForSecs FROM OAuth";
-				$stmt = $this->conn->query($sql, PDO::FETCH_OBJ);
+				$stmt = $this->conn->query("SELECT clientID, token, tokenTimestamp, tokenValidForSecs FROM OAuth", PDO::FETCH_OBJ);
 				foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $row) {
 					if ($row->token == null)
 						continue;

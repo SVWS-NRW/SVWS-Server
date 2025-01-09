@@ -1,7 +1,5 @@
 {
 	"debugMode": "true",
-	"adminUser": "admin",
-	"adminPassword": "StrengGeheim-MussErsetztWerden",
 	"smtp": {
 		"host": "smtp.example.com",
 		"port": 587,

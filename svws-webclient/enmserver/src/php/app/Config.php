@@ -17,16 +17,16 @@
 		protected $config = null;
 
 		// Der Speicherort der SQLite-Datenbank
-		protected $dbfile = "db/app.sqlite";
+		protected string $dbfile = "db/app.sqlite";
+
+		// Der Dateiname, wo das Client-Secret für die Verbindung des SVWS-Servers zu dem ENM-Server gespeichert wird
+		protected string $secretfile = "db/client.sec";
+
+		// Das Client-Secret, sobald es vom Konstruktor eingelesen (und ggf. erzeugt) wurde
+		protected ?string $secret = null;
 
 		// Gibt an, ob die Anwendung im Debug-Modus betrieben wird oder nicht
 		protected $debugMode = false;
-
-		// Der Benutzername des administrativen Benutzers
-		protected $adminUser = null;
-
-		// Das Kennwort des administrativen Benutzers
-		protected $adminPassword = null;
 
 		// Die SMTP-Konfiguration für das Senden von Mails zum Neusetzen des Kennwortes
 		protected $smtpConfig = [];
@@ -46,12 +46,10 @@
 				Http::exit500("Config - Konstruktor: Es wurde für den Dateinamen kein string übergeben.");
 			$this->configfile = "$this->app_root/$jsonfile";
 			
-			if (file_exists($this->configfile) != 1) {
+			if (file_exists($this->configfile) !== 1) {
 				// Versuche eine neue Datei anzulegen...
 				$newconfig = (object)[
 					'debugMode' => "false",
-					'adminUser' => "admin",
-					'adminPassword' => base64_encode(random_bytes(16)),
 					'smtp' => (object)[
 						'host' => '',
 						'port' => 587,
@@ -67,6 +65,17 @@
 					Http::exit500("Config - Konstruktor: Es wurde keine Konfigurationsdatei unter dem Pfad $this->configfile gefunden und es konnte auch keine neue erstellt werden.");
 			}
 
+			// Lese das Client-Secret ein. Wenn nich keines existiert, dann erzeuge es zuvor 
+			$secretfile = "$this->app_root/$this->secretfile";
+			if (!file_exists($secretfile)) {
+				// Versuche eine neues Secret anzulegen anzulegen...
+				$secret = Config::generateRandomSecret();
+				$success = file_put_contents($secretfile, $secret);
+				if ($success === false)
+					Http::exit500("Es konnte kein Client-Secret unter $this->secretfile generiert werden. Überprüfen Sie, ob die, beim Web-Server, konfigurierten Rechte ausreichend sind, um diese Datei anzulegen.");
+			}
+			$this->secret = file_get_contents($secretfile);
+
 			// Lese die JSON-Datei ein
 			$this->config = json_decode(file_get_contents($this->configfile), true);
 			if (is_null($this->config)) 
@@ -77,13 +86,6 @@
 			if ($this->debugMode) {
 				ini_set('display_errors', '1');
 			}
-
-			// Initialisiere Admin-Daten
-			if ((is_null($this->config["adminUser"])) || (!is_string($this->config["adminUser"]) || (strlen($this->config["adminUser"]) == 0))
-				|| (is_null($this->config["adminPassword"])) || (!is_string($this->config["adminPassword"]) || (strlen($this->config["adminPassword"]) < 10)))
-				Http::exit500("Es wurde kein Admin-Benutzer mit Kennwort für die Anwendung festgelegt. Diese müssen in der Konfiguration unter adminUser und adminPassword festgelegt werden.");
-			$this->adminUser = $this->config["adminUser"];
-			$this->adminPassword = $this->config["adminPassword"];
 
 			// Initialisiere SMTP-Konfiguration
 			$this->smtpConfig = $this->config['smtp'] ?? [];
@@ -120,21 +122,12 @@
 		}
 
 		/**
-		 * Gibt den Benutzernamen des Admin-Benutzers zurück.
+		 * Gibt das Client-Secret zurück.
 		 * 
-		 * @return string der Admin-Benutzername
+		 * @return string das Client-Secret
 		 */
-		public function getAdminUsername(): string {
-			return $this->adminUser;
-		}
-
-		/**
-		 * Gibt das Kennwort des Admin-Benutzers zurück.
-		 * 
-		 * @return string das Kennwort des Admin-Benutzers
-		 */
-		public function getAdminPassword(): string {
-			return $this->adminPassword;
+		public function getClientSecret(): string {
+			return $this->secret;
 		}
 
 		/**
@@ -144,6 +137,15 @@
 		 */
 		public function getSMTPConfig(): array {
 			return $this->smtpConfig;
+		}
+
+		/**
+		 * Erzeugt einen zufälligen String, der für Kennwörter verwendet werden kann.
+		 * 
+		 * @return string das neue Kennwort
+		 */
+		public static function generateRandomSecret() : string {
+			return base64_encode(random_bytes(32));
 		}
 
 	}

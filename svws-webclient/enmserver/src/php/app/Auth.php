@@ -8,7 +8,10 @@
 	 * Diese Klasse stellt die Funktionalität für die Authentifizierung zur Verfügung.
 	 */
 	class Auth {
-		
+
+		// Die Konfiguration
+		protected Config $config;
+
 		// Die Datenbank für die Überprüfung von Credentials
 		protected $db = null;
 
@@ -28,8 +31,9 @@
 		/**
 		 * Erstellt ein neues Authentifizierungsobjekt mit den Informationen aus dem HTTP-Request
 		 */
-		public function __construct(Database $db) {
+		public function __construct(Database $db, Config $config) {
 			$this->db = $db;
+			$this->config = $config;
 			if (!array_key_exists("HTTP_AUTHORIZATION", $_SERVER))
 				Http::exit500("HTTP-Authorization-Header kann nicht gelesen werden. Überprüfen sie die Anfrage oder die Server-Konfiguration.");
 			$parts = explode(" ", $_SERVER["HTTP_AUTHORIZATION"], 2);
@@ -61,17 +65,6 @@
 				|| (strcasecmp($this->authUser, $username) != 0)
 				|| (strcmp($this->authPassword, $password) != 0))
 				Http::exit401Unauthorized('WWW-Authenticate: Basic realm="ENM-Server", charset="UTF-8"');
-		}
-
-		/**
-		 * Prüfe den Authorization-Header, ob dieser eine Basic-Authentifizierung mit den Credentials
-		 * des Admin-Benutzers hat.
-		 * Tritt ein Fehler bei der Prüfung auf, so wird ein Fehlercode 401 zurückgegeben.
-		 * 
-		 * @param Config $config   die Konfiguration
-		 */
-		public function pruefeAdminBasicAuth(Config $config) {
-			$this->pruefeBasicAuth($config->getAdminUsername(), $config->getAdminPassword());
 		}
 
 		/**
@@ -122,7 +115,7 @@
 			$clientID = intval($this->authUser);
 			if ($clientID <= 0)
 				Http::exit401Unauthorized('WWW-Authenticate: Basic realm="ENM-Server", error="invalid_client", error_description="Client is unknown"');
-			$dbSecret = $this->db->getClientSecret($clientID);
+			$dbSecret = $this->config->getClientSecret();
 			if ($dbSecret == null)
 				Http::exit401Unauthorized('WWW-Authenticate: Basic realm="ENM-Server", error="invalid_client", error_description="Client secret does not exist"');
 			if (strcmp($this->authPassword, $dbSecret) != 0)
