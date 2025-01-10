@@ -15,29 +15,35 @@
 			</div>
 		</div>
 	</div>
-	<svws-ui-sub-nav>
-		<svws-ui-button type="transparent" @click="export_laufbahnplanung"><span class="icon-sm i-ri-upload-2-line" />Exportieren</svws-ui-button>
-		<svws-ui-button type="transparent" @click="showModalImport = true"><span class="icon-sm i-ri-download-2-line" /> Importieren…</svws-ui-button>
-		<s-laufbahnplanung-import-modal :show="showModalImport" :import-laufbahnplanung="import_laufbahnplanung" />
-		<svws-ui-button :type="zwischenspeicher === undefined ? 'transparent' : 'error'" @click="saveLaufbahnplanung">Planung merken</svws-ui-button>
-		<svws-ui-button type="danger" @click="restoreLaufbahnplanung" v-if="zwischenspeicher !== undefined">Planung wiederherstellen</svws-ui-button>
-		<svws-ui-button :type="modus === 'normal' ? 'transparent' : 'danger'" @click="switchModus">
-			<span class="icon-sm i-ri-loop-right-line" /> Modus: <span>{{ modus }}</span>
-		</svws-ui-button>
-		<s-modal-laufbahnplanung-kurswahlen-loeschen schueler-ansicht :gost-jahrgangsdaten :reset-fachwahlen />
-		<svws-ui-button type="transparent" @click="switchFaecherAnzeigen()"> {{ "Fächer anzeigen: " + textFaecherAnzeigen() }} </svws-ui-button>
-	</svws-ui-sub-nav>
-	<div v-if="schueler.abiturjahrgang !== null" class="page--content page--content--full page--content--laufbahnplanung">
-		<div class="flex-grow overflow-y-auto overflow-x-hidden min-w-fit">
-			<s-laufbahnplanung-card-planung :abiturdaten-manager :modus :gost-jahrgangsdaten :set-wahl :goto-kursblockung="async () => {}" :faecher-anzeigen belegung-hat-immer-noten />
-		</div>
-		<div class="w-2/5 3xl:w-1/2 min-w-[36rem] overflow-y-auto overflow-x-hidden">
-			<div class="flex flex-col gap-16">
-				<s-laufbahnplanung-card-status :abiturdaten-manager :fehlerliste="() => gostBelegpruefungErgebnis().fehlercodes" :gost-belegpruefungs-art :set-gost-belegpruefungs-art />
+
+	<svws-ui-tab-bar :tab-manager="() => tabManager">
+		<Teleport defer to=".svws-sub-nav-target">
+			<svws-ui-sub-nav>
+				<svws-ui-button type="transparent" @click="export_laufbahnplanung"><span class="icon-sm i-ri-upload-2-line" />Exportieren</svws-ui-button>
+				<svws-ui-button type="transparent" @click="showModalImport = true"><span class="icon-sm i-ri-download-2-line" /> Importieren…</svws-ui-button>
+				<s-laufbahnplanung-import-modal :show="showModalImport" :import-laufbahnplanung="import_laufbahnplanung" />
+				<svws-ui-button :type="zwischenspeicher === undefined ? 'transparent' : 'error'" @click="saveLaufbahnplanung">Planung merken</svws-ui-button>
+				<svws-ui-button type="danger" @click="restoreLaufbahnplanung" v-if="zwischenspeicher !== undefined">Planung wiederherstellen</svws-ui-button>
+				<svws-ui-button :type="modus === 'normal' ? 'transparent' : 'danger'" @click="switchModus">
+					<span class="icon-sm i-ri-loop-right-line" /> Modus: <span>{{ modus }}</span>
+				</svws-ui-button>
+				<s-modal-laufbahnplanung-kurswahlen-loeschen schueler-ansicht :gost-jahrgangsdaten :reset-fachwahlen />
+				<svws-ui-button type="transparent" @click="switchFaecherAnzeigen()"> {{ "Fächer anzeigen: " + textFaecherAnzeigen() }} </svws-ui-button>
+			</svws-ui-sub-nav>
+		</Teleport>
+
+		<div v-if="schueler.abiturjahrgang !== null" class="page--content page--content--full page--content--laufbahnplanung">
+			<div class="flex-grow overflow-y-auto overflow-x-hidden min-w-fit">
+				<s-laufbahnplanung-card-planung :abiturdaten-manager :modus :gost-jahrgangsdaten :set-wahl :goto-kursblockung="async () => {}" :faecher-anzeigen belegung-hat-immer-noten />
+			</div>
+			<div class="w-2/5 3xl:w-1/2 min-w-[36rem] overflow-y-auto overflow-x-hidden">
+				<div class="flex flex-col gap-16">
+					<s-laufbahnplanung-card-status :abiturdaten-manager :fehlerliste="() => gostBelegpruefungErgebnis().fehlercodes" :gost-belegpruefungs-art :set-gost-belegpruefungs-art />
+				</div>
 			</div>
 		</div>
-	</div>
-	<div v-else class="page--content page--content--full">Die Laufbahnplanung hat kein gültiges Abiturjahr, bitte prüfen Sie die importierte Datei.</div>
+		<div v-else class="page--content page--content--full">Die Laufbahnplanung hat kein gültiges Abiturjahr, bitte prüfen Sie die importierte Datei.</div>
+	</svws-ui-tab-bar>
 </template>
 
 <script setup lang="ts">
@@ -46,8 +52,12 @@
 	import type { LaufbahnplanungOberstufeProps } from "./LaufbahnplanungOberstufeProps";
 	import { version } from '../../version';
 	import { githash } from '../../githash';
+	import { TabManager } from "@ui/ui/nav/TabManager";
+	import type { TabData } from "@ui/ui/nav/TabData";
 
 	const props = defineProps<LaufbahnplanungOberstufeProps>();
+
+	const tabManager = new TabManager([], <TabData>{}, async (value: TabData) => {});
 
 	const showModalImport = ref<boolean>(false);
 
