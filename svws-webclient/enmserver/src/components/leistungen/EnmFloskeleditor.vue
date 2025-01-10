@@ -1,7 +1,7 @@
 <template>
 	<div class="border-l h-full flex flex-col pl-4 pr-1 gap-4">
 		<div class="text-headline-md">{{ schueler.nachname }}, {{ schueler.vorname }}</div>
-		<svws-ui-textarea-input placeholder="Floskeln auswählen oder manuell eingeben"	:model-value="text ?? ''" @input="text = $event ?? ''" autoresize />
+		<svws-ui-textarea-input placeholder="Floskeln auswählen oder manuell eingeben" :model-value="text ?? ''" @input="text = $event ?? ''" autoresize />
 		<div class="flex justify-between gap-2 w-full">
 			<div class="flex gap-2">
 				<div class="w-20">
@@ -9,7 +9,7 @@
 				</div>
 				<span class="mt-2">Vorname jedes {{ every === 1 ? '':`${every}.` }} Mal</span>
 			</div>
-			<div v-if="text !== undefined" class="flex gap-2">
+			<div v-if="(text !== undefined) && (text !== props.manager.auswahlLeistung.leistung?.fachbezogeneBemerkungen)" class="flex gap-2">
 				<svws-ui-button @click="doPatchLeistung" :type="clean ? 'primary':'secondary'">{{ clean ? 'Speichern':'Anwenden' }}</svws-ui-button>
 				<svws-ui-button @click="text = ''">Zurücksetzen</svws-ui-button>
 			</div>
@@ -24,7 +24,7 @@
 				</div>
 			</div>
 			<div class="svws-ui-tbody overflow-y-scroll" role="rowgroup" aria-label="Tabelleninhalt">
-				<template v-for="gruppe of gruppen" :key="gruppe.kuerzel">
+				<template v-for="[gruppe, floskeln] of gruppenMap" :key="gruppe.kuerzel">
 					<div class="svws-ui-thead cursor-pointer select-none" role="rowgroup">
 						<div class="svws-ui-td col-span-4 flex items-center gap-1" role="cell" @click="collapsed.set(gruppe, collapsed.get(gruppe) ? false : true)">
 							<span class="icon i-ri-arrow-right-s-line" v-if="collapsed.get(gruppe)" />
@@ -32,7 +32,7 @@
 							<span> {{ gruppe.bezeichnung }}</span>
 						</div>
 					</div>
-					<div v-for="floskel of gruppe.floskeln" :key="floskel.kuerzel ?? 1" class="svws-ui-tr" role="row" v-show="!collapsed.get(gruppe)" @click="ergaenzeFloskel(floskel)">
+					<div v-for="floskel of floskeln" :key="floskel.kuerzel ?? 1" class="svws-ui-tr" role="row" v-show="!collapsed.get(gruppe)" @click="ergaenzeFloskel(floskel)">
 						<div class="svws-ui-td" role="cell"> {{ floskel.kuerzel }} </div>
 						<div class="svws-ui-td" role="cell"> {{ floskel.text }} </div>
 						<div class="svws-ui-td" role="cell"> {{ floskel.niveau }} </div>
@@ -53,37 +53,44 @@
 	import { ArrayList } from '@core/java/util/ArrayList';
 	import type { EnmManager } from './EnmManager';
 
-	type Hauptgruppen = 'ALLG'|'ASV'|'AUE'|'FACH'|'FÖRD'|'FSP'|'VERM'|'VERS'|'ZB';
+	type Hauptgruppe = 'ALLG'|'ASV'|'AUE'|'FACH'|'FÖRD'|'FSP'|'VERM'|'VERS'|'ZB';
 
 	const props = defineProps<{
 		manager: EnmManager;
 		patchLeistung: (patch: Partial<ENMLeistung>) => Promise<boolean>;
-		erlaubteHauptgruppen: Set<Hauptgruppen>;
+		erlaubteHauptgruppen: Set<Hauptgruppe>;
 	}>();
 
 	const text = ref<string>();
 
 	const clean = computed(() => (text.value !== undefined) && !templateRegex.test(text.value));
 
-	const gruppen = computed(() => {
-		const liste = new ArrayList<ENMFloskelgruppe>();
-		for (const gruppe of props.manager.daten.floskelgruppen)
-			if ((gruppe.hauptgruppe !== null) && (props.erlaubteHauptgruppen.has(gruppe.hauptgruppe as Hauptgruppen)) && !gruppe.floskeln.isEmpty())
-				liste.add(gruppe);
+	const gruppenMap = computed(() => {
+		const liste = new Map<ENMFloskelgruppe, ArrayList<ENMFloskel>>();
+		for (const gruppe of props.manager.daten.floskelgruppen) {
+			const floskeln = new ArrayList<ENMFloskel>();
+			for (const floskel of gruppe.floskeln)
+				if ((floskel.fachID === null)
+					|| ((props.manager.lerngruppeByIDOrException(props.manager.auswahlLeistung.leistung?.lerngruppenID ?? 0).fachID === floskel.fachID)
+						&& ((floskel.jahrgangID === null) || (floskel.jahrgangID === schueler.value.jahrgangID))))
+					floskeln.add(floskel);
+			if ((gruppe.hauptgruppe !== null) && (props.erlaubteHauptgruppen.has(gruppe.hauptgruppe as Hauptgruppe)) && !floskeln.isEmpty())
+				liste.set(gruppe, floskeln);
+		}
 		return liste;
 	});
 
 	const floskelMap = computed(() => {
 		const floskeln = new Map<string, ENMFloskel>();
-		for (const gruppe of gruppen.value)
-			for (const floskel of gruppe.floskeln)
+		for (const gruppe of gruppenMap.value.values())
+			for (const floskel of gruppe)
 				if (floskel.kuerzel !== null)
 					floskeln.set(floskel.kuerzel.toLocaleLowerCase(), floskel);
 		return floskeln;
 	});
 
 	watch(() => props.manager.auswahlLeistung.leistung, (neu, alt) => {
-		text.value = neu?.fachbezogeneBemerkungen ?? '';
+		text.value = neu?.fachbezogeneBemerkungen ?? undefined;
 	}, { immediate: true })
 
 	const templateRegex = /(?:\$(?:(Vorname)|(Name|Nachname)|(weibl)|(ein)|(Anrede)|(\w*%.*))\$)|(#\S*)/gi;
@@ -93,18 +100,21 @@
 	const anredeMap = computed(() => new Map([['m', 'Herr'], ['w', 'Frau']]));
 
 	function ergaenzeFloskel(floskel: ENMFloskel) {
-		if (text.value === undefined)
-			text.value = "";
-		else if (text.value.endsWith('.'))
-			text.value += " ";
-		text.value += floskel.text;
+		let tmp = text.value;
+		if (tmp === undefined)
+			tmp = "";
+		else if (tmp.endsWith('.'))
+			tmp += " ";
+		tmp += floskel.text;
+		text.value = tmp;
 	}
 
 	function ersetzeTemplates() {
 		if (text.value === undefined)
 			return;
 		let counter = -1;
-		text.value = text.value.replaceAll(templateRegex, (match, vorname, nachname, weibl, ein, anrede, mwdx, kuerzel, _offset, fullString: string, _groups) => {
+		let tmp = text.value;
+		tmp = tmp.replaceAll(templateRegex, (match, vorname, nachname, weibl, ein, anrede, mwdx, kuerzel, _offset, fullString: string, _groups) => {
 			if (vorname !== undefined) {
 				counter++;
 				if ((counter % every.value) === 0)
@@ -129,6 +139,7 @@
 			}
 			return '???';
 		});
+		text.value = tmp;
 	}
 
 	const schueler = computed(() => {
