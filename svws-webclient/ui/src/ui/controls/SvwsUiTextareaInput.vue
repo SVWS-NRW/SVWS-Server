@@ -76,6 +76,7 @@
 		"update:modelValue": [value: string | null];
 		"change": [value: string | null];
 		"blur": [value: string | null];
+		"input": [value: string];
 	}>();
 
 	// eslint-disable-next-line vue/no-setup-props-reactivity-loss
@@ -119,6 +120,7 @@
 
 	function onInput(event: Event) {
 		const value = (event.target as HTMLInputElement).value;
+		emit("input", value);
 		if(textarea.value) textarea.value.style.height='auto';
 		if (textarea.value !== null)
 			textarea.value.style.height = textarea.value.scrollHeight > textarea.value.clientHeight ? `${textarea.value.scrollHeight}px`: 'inherit';

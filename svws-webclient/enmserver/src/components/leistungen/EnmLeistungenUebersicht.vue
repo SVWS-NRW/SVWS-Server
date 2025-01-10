@@ -33,7 +33,7 @@
 		<tbody class="svws-ui-tbody h-full overflow-y-auto" role="rowgroup" aria-label="Tabelleninhalt">
 			<template v-for="(schueler, indexSchueler) of manager.lerngruppenAuswahlGetSchueler()" :key="schueler">
 				<template v-for="(leistung, indexLeistung) of manager.leistungenGetOfSchueler(schueler.id)" :key="leistung">
-					<tr class="svws-ui-tr" role="row" :class="{ 'svws-clicked': manager.auswahlLeistung.leistung === leistung }" @click.capture.exact="setAuswahlLeistung({ indexSchueler, indexLeistung, leistung })">
+					<tr class="svws-ui-tr" role="row" :class="{ 'svws-clicked': manager.auswahlLeistung.leistung?.id === leistung.id }" @click.capture.exact="setAuswahlLeistung({ indexSchueler, indexLeistung, leistung })">
 						<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Klasse') ?? true">
 							{{ manager.schuelerGetKlasse(schueler.id).kuerzelAnzeige }}
 						</td>
@@ -84,7 +84,7 @@
 							<span v-else>—</span>
 						</td>
 						<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Bemerkung') ?? true">
-							{{ manager.auswahlLeistung.leistung === leistung ? "…":'' }}{{ leistung.fachbezogeneBemerkungen }}
+							{{ manager.auswahlLeistung.leistung?.id === leistung.id ? "…":'' }}{{ leistung.fachbezogeneBemerkungen }}
 						</td>
 						<td class="svws-ui-td" role="cell" />
 					</tr>
