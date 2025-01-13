@@ -1,7 +1,7 @@
 <template>
 	<div class="border-l h-full flex flex-col pl-4 pr-1 gap-4">
 		<div class="text-headline-md">{{ schueler.nachname }}, {{ schueler.vorname }}</div>
-		<svws-ui-textarea-input placeholder="Floskeln auswählen oder manuell eingeben" :model-value="text ?? ''" @input="text = $event ?? ''" autoresize />
+		<svws-ui-textarea-input placeholder="Floskeln auswählen oder manuell eingeben" :model-value="text" @input="onInput" autoresize />
 		<div class="flex justify-between gap-2 w-full">
 			<div class="flex gap-2">
 				<div class="w-20">
@@ -9,9 +9,9 @@
 				</div>
 				<span class="mt-2">Vorname jedes {{ every === 1 ? '':`${every}.` }} Mal</span>
 			</div>
-			<div v-if="(text !== undefined) && (text !== props.manager.auswahlLeistung.leistung?.fachbezogeneBemerkungen)" class="flex gap-2">
+			<div v-if="showButtons" class="flex gap-2">
 				<svws-ui-button @click="doPatchLeistung" :type="clean ? 'primary':'secondary'">{{ clean ? 'Speichern':'Anwenden' }}</svws-ui-button>
-				<svws-ui-button @click="text = ''">Zurücksetzen</svws-ui-button>
+				<svws-ui-button @click="text = bemerkung">Zurücksetzen</svws-ui-button>
 			</div>
 		</div>
 		<div class="svws-ui-table svws-clickable overflow-hidden" role="table" aria-label="Tabelle">
@@ -47,7 +47,6 @@
 <script setup lang="ts">
 
 	import { computed, ref, watch } from 'vue';
-	import type { ENMLeistung } from '@core/core/data/enm/ENMLeistung';
 	import type { ENMFloskel } from '@core/core/data/enm/ENMFloskel';
 	import type { ENMFloskelgruppe } from '@core/core/data/enm/ENMFloskelgruppe';
 	import { ArrayList } from '@core/java/util/ArrayList';
@@ -57,13 +56,23 @@
 
 	const props = defineProps<{
 		manager: EnmManager;
-		patchLeistung: (patch: Partial<ENMLeistung>) => Promise<boolean>;
+		patchLeistung: (value: string|null) => Promise<void>;
 		erlaubteHauptgruppen: Set<Hauptgruppe>;
+		bemerkung: string|null;
 	}>();
 
-	const text = ref<string>();
+	const showButtons = computed(() => {
+		return (text.value !== props.bemerkung)
+	})
+	const text = ref<string|null>(null);
 
-	const clean = computed(() => (text.value !== undefined) && !templateRegex.test(text.value));
+	const clean = computed(() => (text.value === null) || !templateRegex.exec(text.value));
+
+	function onInput(value: string) {
+		if (value.length > 1)
+			text.value = value
+		else text.value = null;
+	}
 
 	const gruppenMap = computed(() => {
 		const liste = new Map<ENMFloskelgruppe, ArrayList<ENMFloskel>>();
@@ -89,11 +98,19 @@
 		return floskeln;
 	});
 
-	watch(() => props.manager.auswahlLeistung.leistung, (neu, alt) => {
-		text.value = neu?.fachbezogeneBemerkungen ?? undefined;
+	watch(() => props.bemerkung, (neu, alt) => {
+		text.value = neu;
 	}, { immediate: true })
 
-	const templateRegex = /(?:\$(?:(Vorname)|(Name|Nachname)|(weibl)|(ein)|(Anrede)|(\w*%.*))\$)|(#\S*)/gi;
+	/**
+	 * Dieses Regex hat zwei Gruppen mit Untergruppen:
+	 * Die erste sucht Templates mit dem Muster $xx$ und $xx%yy%zz$
+	 * die zweite sucht nach dem Muster #tag
+	 * ?: verhindert das Erzeugen von Gruppen, die erste RegexGruppe wäre also Vorname
+	 *  */
+	const query = /(?:\$(?:(Vorname)|(Name|Nachname)|(weibl)|(ein)|(Anrede)|(\S+%\S+))\$)|(#\S+)/;
+	const templateRegexGlobal = new RegExp(query, 'gi');
+	const templateRegex = new RegExp(query, 'i');
 	const every = ref(3);
 	const kleinPronomenMap = computed(() => new Map([['m', 'er'], ['w', 'sie'], ['d', schueler.value.vorname ?? '???'], ['x', schueler.value.vorname ?? '???']]));
 	const grossPronomenMap = computed(() => new Map([['m', 'Er'], ['w', 'Sie'], ['d', schueler.value.vorname ?? '???'], ['x', schueler.value.vorname ?? '???']]));
@@ -101,7 +118,7 @@
 
 	function ergaenzeFloskel(floskel: ENMFloskel) {
 		let tmp = text.value;
-		if (tmp === undefined)
+		if (tmp === null)
 			tmp = "";
 		else if (tmp.endsWith('.'))
 			tmp += " ";
@@ -110,11 +127,11 @@
 	}
 
 	function ersetzeTemplates() {
-		if (text.value === undefined)
+		if (text.value === null)
 			return;
 		let counter = -1;
 		let tmp = text.value;
-		tmp = tmp.replaceAll(templateRegex, (match, vorname, nachname, weibl, ein, anrede, mwdx, kuerzel, _offset, fullString: string, _groups) => {
+		tmp = tmp.replaceAll(templateRegexGlobal, (match, vorname, nachname, weibl, ein, anrede, mwdx, kuerzel, _offset, fullString: string, _groups) => {
 			if (vorname !== undefined) {
 				counter++;
 				if ((counter % every.value) === 0)
@@ -155,12 +172,7 @@
 			return;
 		if (!clean.value)
 			return ersetzeTemplates();
-		const id = props.manager.auswahlLeistung.leistung.id
-		const patch = { id, fachbezogeneBemerkungen: text.value };
-		const success = await props.patchLeistung(patch);
-		if (success)
-			Object.assign(props.manager.auswahlLeistung.leistung, patch);
-		props.manager.update();
+		await props.patchLeistung(text.value);
 	}
 
 </script>

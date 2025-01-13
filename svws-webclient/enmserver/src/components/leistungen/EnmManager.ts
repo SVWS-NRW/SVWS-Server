@@ -1,5 +1,5 @@
 import { HashMap2D } from "@core/core/adt/map/HashMap2D";
-import { ENMDaten } from "@core/core/data/enm/ENMDaten";
+import type { ENMDaten } from "@core/core/data/enm/ENMDaten";
 import type { ENMFach } from "@core/core/data/enm/ENMFach";
 import type { ENMFloskelgruppe } from "@core/core/data/enm/ENMFloskelgruppe";
 import type { ENMFoerderschwerpunkt } from "@core/core/data/enm/ENMFoerderschwerpunkt";
@@ -18,8 +18,8 @@ import { HashMap } from "@core/java/util/HashMap";
 import { HashSet } from "@core/java/util/HashSet";
 import type { JavaMap } from "@core/java/util/JavaMap";
 import type { List } from "@core/java/util/List";
-import { computed, shallowRef, triggerRef } from "vue";
-import type { ShallowRef } from "vue";
+import { computed, ref } from "vue";
+import type { Ref } from "vue";
 
 /**
  * Das Interface für die Einträge der Auswahlliste für die Lerngruppen
@@ -61,16 +61,16 @@ export interface EnmLeistungAuswahl {
 export class EnmManager {
 
 	/** Eine Referenz auf die ENM-Daten */
-	protected _daten: ShallowRef<ENMDaten>;
+	protected _daten: Ref<ENMDaten>;
 
 	/** Eine Referenz auf die ID des Lehrers, für welchen die ENM-Daten in diesem Manager verwaltet werden */
-	protected idLehrer: ShallowRef<number>;
+	protected idLehrer: Ref<number>;
 
 	/** Eine Referenz auf die aktuelle Auswahl von Lerngruppen des Lehrers, auf welche in diesem Manager gefiltert wird */
-	protected _filterLerngruppen: ShallowRef<Array<EnmLerngruppenAuswahlEintrag>>;
+	protected _filterLerngruppen: Ref<Array<EnmLerngruppenAuswahlEintrag>>;
 
 	/** Eine Refernz auf die aktuelle Auswahl der Leistung zur Bearbeitung in diesem Manager */
-	protected _auswahlLeistung: ShallowRef<EnmLeistungAuswahl>;
+	protected _auswahlLeistung: Ref<EnmLeistungAuswahl>;
 
 
 	/**
@@ -80,18 +80,17 @@ export class EnmManager {
 	 * @param idLehrer   die ID des Lehrers, für welchen die ENM-Daten verwaltet werden
 	 */
 	public constructor(daten: ENMDaten, idLehrer: number) {
-		this._daten = shallowRef<ENMDaten>(daten);
-		this.idLehrer = shallowRef<number>(idLehrer);
-		this._filterLerngruppen = shallowRef<Array<EnmLerngruppenAuswahlEintrag>>(new Array<EnmLerngruppenAuswahlEintrag>());
-		this._auswahlLeistung = shallowRef<EnmLeistungAuswahl>({ indexSchueler: 0, indexLeistung: 0, leistung: null });
+		this._daten = ref<ENMDaten>(daten);
+		this.idLehrer = ref<number>(idLehrer);
+		this._filterLerngruppen = ref<Array<EnmLerngruppenAuswahlEintrag>>(new Array<EnmLerngruppenAuswahlEintrag>());
+		this._auswahlLeistung = ref<EnmLeistungAuswahl>({ indexSchueler: 0, indexLeistung: 0, leistung: null });
 	}
 
 	/**
 	 * Aktualisiert die Daten dieses Manager, in dem die Reaktivität des Daten-Attributs getriggert wird.
 	 */
 	public update(): void {
-		const tmp = ENMDaten.transpilerToJSON(this._daten.value);
-		this._daten.value = ENMDaten.transpilerFromJSON(tmp);
+		Object.assign(this._daten.value, this._daten.value)
 	}
 
 	/**
@@ -109,7 +108,6 @@ export class EnmManager {
 	/** Setzt die aktuelle Auswahl der Lerngruppen. */
 	public set filterLerngruppen(value : Array<EnmLerngruppenAuswahlEintrag>) {
 		this._filterLerngruppen.value = value;
-		triggerRef(this._filterLerngruppen);
 	}
 
 	/** Gibt die aktuell ausgewählte Leistung zurück */
