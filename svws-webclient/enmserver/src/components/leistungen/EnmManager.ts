@@ -447,6 +447,15 @@ export class EnmManager {
 		return result;
 	});
 
+	/** Eine HashMap mit den Leistungen der aktuellen Lerngruppenauswahl */
+	protected mapLerngruppenAuswahlLeistungen = computed<HashMap<number, ENMLeistung>>(() => {
+		const result = new HashMap<number, ENMLeistung>();
+		for (const schueler of this.listLerngruppenAuswahlSchueler.value)
+			for (const leistung of schueler.leistungsdaten)
+				result.put(leistung.id, leistung);
+		return result;
+	});
+
 	/** Eine HashMap mit den Schülerteilleistungen der aktuellen Lerngruppenauswahl zugeordnet zur Leistungs-ID */
 	protected mapLerngruppenAuswahlSchuelerTeilleistungen = computed<HashMap2D<number, number, ENMTeilleistung>>(() => {
 		const result = new HashMap2D<number, number, ENMTeilleistung>();
@@ -847,6 +856,17 @@ export class EnmManager {
 	 */
 	public lerngruppenAuswahlGetTeilleistungOrNull(idLeistung: number, idTeilleistungsart: number) : ENMTeilleistung | null {
 		return this.mapLerngruppenAuswahlLeistungTeilleistungenByTeilleistungsartenId.value.get(idLeistung)?.get(idTeilleistungsart) ?? null;
+	}
+
+	/**
+	 * Gibt an, ob es für eine Leistungs-ID eine Leistung in der aktuellen Lerngruppenauswahl gibt
+	 *
+	 * @param idLeistung			die ID der Leistung
+	 *
+	 * @returns die Leistung, wenn in derAuswahl vorhanden, ansonsten null
+	 */
+	public lerngruppenAuswahlGetLeistungOrNull(idLeistung: number|null): ENMLeistung | null {
+		return this.mapLerngruppenAuswahlLeistungen.value.get(idLeistung);
 	}
 
 	/**

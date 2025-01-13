@@ -11,10 +11,16 @@
 
 <script setup lang="ts">
 
-	import { computed } from 'vue';
+	import { computed, watchEffect } from 'vue';
 	import type { EnmLeistungenProps } from './EnmLeistungenProps';
 
 	const props = defineProps<EnmLeistungenProps>();
+
+	watchEffect(() => {
+		if (props.manager.lerngruppenAuswahlGetLeistungOrNull(props.manager.auswahlLeistung.leistung?.id ?? null) !== null)
+			return;
+		props.manager.auswahlLeistungNaechste();
+	})
 
 	const erlaubteHauptgruppen = new Set<'FACH'|'ALLG'>(['FACH', 'ALLG']);
 

@@ -2,16 +2,16 @@
 	<div class="border-l h-full flex flex-col pl-4 pr-1 gap-4">
 		<div class="text-headline-md">{{ schueler.nachname }}, {{ schueler.vorname }}</div>
 		<svws-ui-textarea-input placeholder="Floskeln auswählen oder manuell eingeben" :model-value="text" @input="onInput" autoresize />
-		<div class="flex justify-between gap-2 w-full">
-			<div class="flex gap-2">
+		<div class="flex justify-between gap-2 w-full flex-row-reverse h-40">
+			<div v-if="showButtons" class="flex gap-2">
+				<svws-ui-button @click="doPatchLeistung" :type="clean ? 'primary':'secondary'">{{ clean ? 'Speichern':'Anwenden' }}</svws-ui-button>
+				<svws-ui-button @click="text = bemerkung">Zurücksetzen</svws-ui-button>
+			</div>
+			<div v-if="(text !== null) && /\$Vorname\$/i.exec(text)" class="flex gap-2">
 				<div class="w-20">
 					<svws-ui-input-number :model-value="every" :min="1" :max="9" @update:model-value="value => every = value ?? 1" />
 				</div>
 				<span class="mt-2">Vorname jedes {{ every === 1 ? '':`${every}.` }} Mal</span>
-			</div>
-			<div v-if="showButtons" class="flex gap-2">
-				<svws-ui-button @click="doPatchLeistung" :type="clean ? 'primary':'secondary'">{{ clean ? 'Speichern':'Anwenden' }}</svws-ui-button>
-				<svws-ui-button @click="text = bemerkung">Zurücksetzen</svws-ui-button>
 			</div>
 		</div>
 		<div class="svws-ui-table svws-clickable overflow-hidden" role="table" aria-label="Tabelle">
@@ -98,8 +98,8 @@
 		return floskeln;
 	});
 
-	watch(() => props.bemerkung, (neu, alt) => {
-		text.value = neu;
+	watch(() => props.manager.auswahlLeistung.leistung, (neu, alt) => {
+		text.value = neu?.fachbezogeneBemerkungen ?? null;
 	}, { immediate: true })
 
 	/**
