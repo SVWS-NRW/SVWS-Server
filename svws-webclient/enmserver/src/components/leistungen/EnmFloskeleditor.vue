@@ -1,8 +1,8 @@
 <template>
-	<div class="border-l h-full flex flex-col pl-4 pr-1 gap-4">
+	<div class="border-l h-full flex flex-auto flex-col pl-4 pr-1 gap-4">
 		<div class="text-headline-md">{{ schueler.nachname }}, {{ schueler.vorname }}</div>
 		<svws-ui-textarea-input placeholder="Floskeln auswählen oder manuell eingeben" :model-value="text" @input="onInput" autoresize />
-		<div class="flex justify-between gap-2 w-full flex-row-reverse h-40">
+		<div class="flex justify-between gap-2 w-full flex-row-reverse">
 			<div v-if="showButtons" class="flex gap-2">
 				<svws-ui-button @click="doPatchLeistung" :type="clean ? 'primary':'secondary'">{{ clean ? 'Speichern':'Anwenden' }}</svws-ui-button>
 				<svws-ui-button @click="text = bemerkung">Zurücksetzen</svws-ui-button>
@@ -49,22 +49,46 @@
 	import { computed, ref, watch } from 'vue';
 	import type { ENMFloskel } from '@core/core/data/enm/ENMFloskel';
 	import type { ENMFloskelgruppe } from '@core/core/data/enm/ENMFloskelgruppe';
+	import type { EnmManager, BemerkungenHauptgruppe } from './EnmManager';
 	import { ArrayList } from '@core/java/util/ArrayList';
-	import type { EnmManager } from './EnmManager';
+	import { ENMSchueler } from '@core/core/data/enm/ENMSchueler';
 
-	type Hauptgruppe = 'ALLG'|'ASV'|'AUE'|'FACH'|'FÖRD'|'FSP'|'VERM'|'VERS'|'ZB';
 
 	const props = defineProps<{
 		manager: EnmManager;
-		patchLeistung: (value: string|null) => Promise<void>;
-		erlaubteHauptgruppen: Set<Hauptgruppe>;
-		bemerkung: string|null;
+		patch: (value: string|null) => Promise<void>;
+		erlaubteHauptgruppe: BemerkungenHauptgruppe;
 	}>();
 
-	const showButtons = computed(() => {
-		return (text.value !== props.bemerkung)
-	})
+	const showButtons = computed(() => text.value !== bemerkung.value);
+
 	const text = ref<string|null>(null);
+
+	const bemerkung = computed<string|null>(() => {
+		switch (props.erlaubteHauptgruppe) {
+			case 'FACH':
+				return props.manager.auswahlLeistung.leistung?.fachbezogeneBemerkungen ?? null;
+			case 'ASV':
+				return props.manager.auswahlSchueler?.bemerkungen.ASV ?? null;
+			case 'AUE':
+				return props.manager.auswahlSchueler?.bemerkungen.AUE ?? null;
+			case 'ZB':
+				return props.manager.auswahlSchueler?.bemerkungen.ZB ?? null;
+			default:
+				return null;
+		}
+	});
+
+	watch([bemerkung, () => props.manager.auswahlLeistung.leistung, () => props.manager.auswahlSchueler, () => props.erlaubteHauptgruppe],
+		([neuBemerkung]) => text.value = neuBemerkung);
+
+	const schueler = computed<ENMSchueler>(() => {
+		const index = props.manager.auswahlLeistung.indexSchueler;
+		if (props.erlaubteHauptgruppe === 'FACH')
+			return props.manager.lerngruppenAuswahlGetSchueler().get(index);
+		else
+			return props.manager.auswahlSchueler ?? new ENMSchueler();
+	})
 
 	const clean = computed(() => (text.value === null) || !templateRegex.exec(text.value));
 
@@ -77,13 +101,15 @@
 	const gruppenMap = computed(() => {
 		const liste = new Map<ENMFloskelgruppe, ArrayList<ENMFloskel>>();
 		for (const gruppe of props.manager.daten.floskelgruppen) {
+			if ((gruppe.hauptgruppe !== props.erlaubteHauptgruppe) && (gruppe.hauptgruppe !== 'ALLG'))
+				continue;
 			const floskeln = new ArrayList<ENMFloskel>();
 			for (const floskel of gruppe.floskeln)
 				if ((floskel.fachID === null)
 					|| ((props.manager.lerngruppeByIDOrException(props.manager.auswahlLeistung.leistung?.lerngruppenID ?? 0).fachID === floskel.fachID)
 						&& ((floskel.jahrgangID === null) || (floskel.jahrgangID === schueler.value.jahrgangID))))
 					floskeln.add(floskel);
-			if ((gruppe.hauptgruppe !== null) && (props.erlaubteHauptgruppen.has(gruppe.hauptgruppe as Hauptgruppe)) && !floskeln.isEmpty())
+			if (!floskeln.isEmpty())
 				liste.set(gruppe, floskeln);
 		}
 		return liste;
@@ -97,10 +123,6 @@
 					floskeln.set(floskel.kuerzel.toLocaleLowerCase(), floskel);
 		return floskeln;
 	});
-
-	watch(() => props.manager.auswahlLeistung.leistung, (neu, alt) => {
-		text.value = neu?.fachbezogeneBemerkungen ?? null;
-	}, { immediate: true })
 
 	/**
 	 * Dieses Regex hat zwei Gruppen mit Untergruppen:
@@ -159,11 +181,6 @@
 		text.value = tmp;
 	}
 
-	const schueler = computed(() => {
-		const index = props.manager.auswahlLeistung.indexSchueler;
-		return props.manager.lerngruppenAuswahlGetSchueler().get(index);
-	})
-
 	// eslint-disable-next-line vue/no-setup-props-reactivity-loss
 	const collapsed = ref(new Map<ENMFloskelgruppe, boolean>([...props.manager.daten.floskelgruppen].map(g => [g, false])));
 
@@ -172,7 +189,7 @@
 			return;
 		if (!clean.value)
 			return ersetzeTemplates();
-		await props.patchLeistung(text.value);
+		await props.patch(text.value);
 	}
 
 </script>

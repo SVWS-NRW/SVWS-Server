@@ -4,14 +4,14 @@
 			<enm-leistungen-uebersicht :manager :patch-leistung :columns-visible :set-columns-visible />
 		</div>
 		<div class="enm-floskel-editor-bereich">
-			<enm-floskeleditor :manager :patch-leistung="doPatchLeistung" :erlaubte-hauptgruppen :bemerkung />
+			<enm-floskeleditor :manager :patch="doPatchLeistung" erlaubte-hauptgruppe="FACH" />
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
 
-	import { computed, watchEffect } from 'vue';
+	import { watchEffect } from 'vue';
 	import type { EnmLeistungenProps } from './EnmLeistungenProps';
 
 	const props = defineProps<EnmLeistungenProps>();
@@ -21,8 +21,6 @@
 			return;
 		props.manager.auswahlLeistungNaechste();
 	})
-
-	const erlaubteHauptgruppen = new Set<'FACH'|'ALLG'>(['FACH', 'ALLG']);
 
 	async function doPatchLeistung(fachbezogeneBemerkungen: string|null) {
 		if (props.manager.auswahlLeistung.leistung === null)
@@ -35,9 +33,6 @@
 		props.manager.update();
 	}
 
-	const bemerkung = computed(() => {
-		return props.manager.auswahlLeistung.leistung?.fachbezogeneBemerkungen ?? null;
-	})
 </script>
 
 <style lang="postcss" scoped>
@@ -45,7 +40,7 @@
 	.page--content {
 		@apply flex flex-row gap-6;
 		@apply h-full w-full overflow-hidden;
-		@apply max-w-full;
+		@apply max-w-full pb-4;
 	}
 
 	.enm-leistung-uebersicht-bereich {

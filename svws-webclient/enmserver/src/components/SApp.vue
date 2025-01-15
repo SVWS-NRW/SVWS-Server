@@ -12,6 +12,7 @@
 								<template #icon>
 									<span class="inline-block icon-lg i-ri-book-2-line" v-if="item.name === 'leistungen'" />
 									<span class="inline-block icon-lg i-ri-book-2-line" v-if="item.name === 'teilleistungen'" />
+									<span class="inline-block icon-lg i-ri-book-2-line" v-if="item.name === 'klassenleitung'" />
 								</template>
 								<template #label><span class="text-xs"> {{ item.text }}</span> </template>
 							</svws-ui-menu-item>

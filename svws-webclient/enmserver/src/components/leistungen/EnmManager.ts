@@ -54,6 +54,11 @@ export interface EnmLeistungAuswahl {
 
 }
 
+/**
+ * Der Type für die Zuordnung von Floskelgruppen
+ */
+export type BemerkungenHauptgruppe = 'ASV'|'AUE'|'FACH'|'FÖRD'|'FSP'|'VERM'|'VERS'|'ZB';
+
 
 /**
  * Ein Manager für die Verwaltung den ENM-Daten.
@@ -67,11 +72,16 @@ export class EnmManager {
 	protected idLehrer: Ref<number>;
 
 	/** Eine Referenz auf die aktuelle Auswahl von Lerngruppen des Lehrers, auf welche in diesem Manager gefiltert wird */
+	protected _filterKlassen: Ref<Array<ENMKlasse>>;
+
+	/** Eine Referenz auf die aktuelle Auswahl von Lerngruppen des Lehrers, auf welche in diesem Manager gefiltert wird */
 	protected _filterLerngruppen: Ref<Array<EnmLerngruppenAuswahlEintrag>>;
 
 	/** Eine Refernz auf die aktuelle Auswahl der Leistung zur Bearbeitung in diesem Manager */
 	protected _auswahlLeistung: Ref<EnmLeistungAuswahl>;
 
+	/** Eine Refernz auf die aktuelle Auswahl der Leistung zur Bearbeitung in diesem Manager */
+	protected _auswahlSchueler: Ref<ENMSchueler|null>;
 
 	/**
 	 * Erstellt einen neue Enm-Manager für die übergebenen ENM-Daten
@@ -83,14 +93,16 @@ export class EnmManager {
 		this._daten = ref<ENMDaten>(daten);
 		this.idLehrer = ref<number>(idLehrer);
 		this._filterLerngruppen = ref<Array<EnmLerngruppenAuswahlEintrag>>(new Array<EnmLerngruppenAuswahlEintrag>());
+		this._filterKlassen = ref<Array<ENMKlasse>>(new Array<ENMKlasse>());
 		this._auswahlLeistung = ref<EnmLeistungAuswahl>({ indexSchueler: 0, indexLeistung: 0, leistung: null });
+		this._auswahlSchueler = ref<ENMSchueler|null>(null);
 	}
 
 	/**
 	 * Aktualisiert die Daten dieses Manager, in dem die Reaktivität des Daten-Attributs getriggert wird.
 	 */
 	public update(): void {
-		Object.assign(this._daten.value, this._daten.value)
+		Object.assign(this._daten.value, this._daten.value);
 	}
 
 	/**
@@ -110,6 +122,16 @@ export class EnmManager {
 		this._filterLerngruppen.value = value;
 	}
 
+	/** Gibt die aktuelle Auswahl der Klassen zurück. */
+	public get filterKlassen() : Array<ENMKlasse> {
+		return this._filterKlassen.value;
+	}
+
+	/** Setzt die aktuelle Auswahl der Klassen. */
+	public set filterKlassen(value : Array<ENMKlasse>) {
+		this._filterKlassen.value = value;
+	}
+
 	/** Gibt die aktuell ausgewählte Leistung zurück */
 	public get auswahlLeistung() : EnmLeistungAuswahl {
 		return this._auswahlLeistung.value;
@@ -118,6 +140,66 @@ export class EnmManager {
 	/** Setzt die aktuell ausgewählte Leistung */
 	public set auswahlLeistung(value: EnmLeistungAuswahl) {
 		this._auswahlLeistung.value = value;
+	}
+
+	/** Gibt den aktuell ausgewählten Schüler zurück */
+	public get auswahlSchueler() : ENMSchueler | null {
+		return this._auswahlSchueler.value;
+	}
+
+	/** Setzt den aktuell ausgewählten Schüler */
+	public set auswahlSchueler(value: ENMSchueler | null) {
+		this._auswahlSchueler.value = value;
+	}
+
+	/**
+	 * Setzt den aktuell ausgewählten Schüler auf den nächsten in der Liste
+	 */
+	public auswahlSchuelerNaechster(): void {
+		const aktuell = this._auswahlSchueler.value;
+		const listSchueler = this.klassenAuswahlGetSchueler();
+		if ((aktuell === null) && (!listSchueler.isEmpty())) {
+			this._auswahlSchueler.value = listSchueler.getFirst();
+			return;
+		}
+		if (listSchueler.isEmpty()) {
+			this._auswahlSchueler.value = null;
+			return;
+		}
+		const index = listSchueler.indexOf(aktuell);
+		if (index < 0) {
+			this._auswahlSchueler.value = listSchueler.getFirst();
+			return;
+		}
+		if ((index) <= listSchueler.size())
+			this._auswahlSchueler.value = listSchueler.get(index + 1);
+		else
+			this._auswahlSchueler.value = listSchueler.getFirst();
+	}
+
+	/**
+	 * Setzt den aktuell ausgewählten Schüler auf den vorherigen in der Liste
+	 */
+	public auswahlSchuelerVorheriger(): void {
+		const aktuell = this._auswahlSchueler.value;
+		const listSchueler = this.klassenAuswahlGetSchueler();
+		if ((aktuell === null) && (!listSchueler.isEmpty())) {
+			this._auswahlSchueler.value = listSchueler.getFirst();
+			return;
+		}
+		if (listSchueler.isEmpty()) {
+			this._auswahlSchueler.value = null;
+			return;
+		}
+		const index = listSchueler.indexOf(aktuell);
+		if (index < 0) {
+			this._auswahlSchueler.value = listSchueler.getFirst();
+			return;
+		}
+		if ((index) > 0)
+			this._auswahlSchueler.value = listSchueler.get(index - 1);
+		else
+			this._auswahlSchueler.value = listSchueler.getLast();
 	}
 
 	/**
@@ -339,6 +421,22 @@ export class EnmManager {
 		return result;
 	});
 
+	/** Eine Map, welche einer Klassen-ID die Menge der zugeordneten Schüler zuordnet */
+	protected mapKlassenSchueler = computed<JavaMap<number, List<ENMSchueler>>>(() => {
+		const result = new HashMap<number, List<ENMSchueler>>();
+		// Erzeuge zunächst Listen für alle IDs der Klassen
+		for (const klasse of this._daten.value.klassen)
+			result.put(klasse.id, new ArrayList<ENMSchueler>());
+		// Gehe alle Leistungsdaten der Schüler durch, um die Lerngruppen-Zuordnung zu bestimmen
+		for (const schueler of this._daten.value.schueler) {
+			const list = result.get(schueler.klasseID);
+			if (list === null)
+				throw new DeveloperNotificationException(`Die Klasse mit der ID ${schueler.klasseID} wird in Schülerdaten angegeben, ist aber im Katalog der Klassen nicht vorhanden.`);
+			list.add(schueler);
+		}
+		return result;
+	});
+
 	/** Eine Map, welche einer Lerngruppen-ID die Menge der zugeordneten Klassen zuordnet */
 	protected mapLerngruppeKlassen = computed<JavaMap<number, List<ENMKlasse>>>(() => {
 		const result = new HashMap<number, List<ENMKlasse>>();
@@ -391,6 +489,17 @@ export class EnmManager {
 		return result;
 	});
 
+	/** Die Liste aller Klassen eines Klassenlehrers, sortiert nach Jahrgängen */
+	protected listKlassenKlassenlehrer = computed<List<ENMKlasse>>(() => {
+		const result = new ArrayList<ENMKlasse>();
+		for (const k of this.mapKlassen.value.values())
+			if (k.klassenlehrer.contains(this.idLehrer.value))
+				result.add(k);
+		result.sort(this.comparatorKlassen);
+		return result;
+	});
+
+
 	/** Die aktuelle Auswahl der Lerngruppen */
 	protected listLerngruppenAuswahl = computed<List<ENMLerngruppe>>(() => {
 		const lerngruppen = (this.filterLerngruppen.length === 0) ? this.listLerngruppenAuswahlliste.value : this.filterLerngruppen;
@@ -428,6 +537,41 @@ export class EnmManager {
 			if (schueler === null)
 				continue;
 			result.add(schueler);
+		}
+		result.sort(this.comparatorSchueler);
+		return result;
+	});
+
+
+	/** Die aktuelle Auswahl der Klassen */
+	protected listKlassenAuswahl = computed<List<ENMKlasse>>(() => {
+		const klassen = (this.filterKlassen.length === 0) ? this.listKlassenKlassenlehrer.value : this.filterKlassen;
+		const result = new ArrayList<ENMKlasse>();
+		for (const k of klassen) {
+			const klasse = this.mapKlassen.value.get(k.id);
+			if (klasse === null)
+				continue;
+			result.add(klasse);
+		}
+		return result;
+	});
+
+	/** Die Menge der Lerngruppen-IDs, die zu der Auswahl der aktuellen Lerngruppen gehört */
+	protected setKlassenAuswahlIDs = computed<HashSet<number>>(() => {
+		const result = new HashSet<number>();
+		for (const klasse of this.listKlassenAuswahl.value)
+			result.add(klasse.id);
+		return result;
+	});
+
+	/** Die Liste der Schüler, die durch die aktuelle Klassenauswahl ausgewählt sind */
+	protected listKlassenAuswahlSchueler = computed<List<ENMSchueler>>(() => {
+		const result = new ArrayList<ENMSchueler>();
+		for (const klasse of this.listKlassenAuswahl.value) {
+			const listKlassenSchueler = this.mapKlassenSchueler.value.get(klasse.id);
+			if (listKlassenSchueler === null)
+				continue;
+			result.addAll(listKlassenSchueler);
 		}
 		result.sort(this.comparatorSchueler);
 		return result;
@@ -667,6 +811,11 @@ export class EnmManager {
 		return this.listLerngruppenLehrer.value;
 	}
 
+	/** Gibt die Liste der Klassen eines Klassenlehrers zurück */
+	public get klassenOfKlassenlehrer(): List<ENMKlasse> {
+		return this.listKlassenKlassenlehrer.value;
+	}
+
 	/**
 	 * Bestimmt die Lerngruppe anhand der übergebenen ID
 	 *
@@ -756,7 +905,7 @@ export class EnmManager {
 	}
 
 	/**
-	 * Gibt eine komma-separierten String für die Kürzel der Lehrer einer Lerngruppe zurück.
+	 * Gibt eine kommaseparierten String für die Kürzel der Lehrer einer Lerngruppe zurück.
 	 *
 	 * @param id   die ID der Lerngruppe
 	 *
@@ -821,6 +970,16 @@ export class EnmManager {
 	 */
 	public lerngruppenAuswahlGetSchueler() : List<ENMSchueler> {
 		return this.listLerngruppenAuswahlSchueler.value;
+	}
+
+
+	/**
+	 * Gibt die Liste der Schüler der aktuellen Klassenauswahl zurück;
+	 *
+	 * @returns die Liste der Schüler der aktuellen Klassenauswahl
+	 */
+	public klassenAuswahlGetSchueler() : List<ENMSchueler> {
+		return this.listKlassenAuswahlSchueler.value;
 	}
 
 

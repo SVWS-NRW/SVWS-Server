@@ -15,6 +15,7 @@ import { ServerMode } from "@core/core/types/ServerMode";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import type { TabData } from "@ui/ui/nav/TabData";
 import { routeTeilleistungen } from "./RouteTeilleistungen";
+import { routeKlassenleitung } from "./RouteKlassenleitung";
 
 
 export class RouteApp extends RouteNode<RouteDataApp, any> {
@@ -30,6 +31,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		this._menuMain = [
 			routeLeistungen,
 			routeTeilleistungen,
+			routeKlassenleitung,
 		];
 		super.children = [
 			...this._menuMain,

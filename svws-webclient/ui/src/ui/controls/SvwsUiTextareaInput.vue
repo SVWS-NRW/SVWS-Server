@@ -38,7 +38,7 @@
 
 <script setup lang="ts">
 
-	import { ref, computed, watch, useId, onMounted } from 'vue';
+	import { ref, computed, watch, useId } from 'vue';
 
 	type ResizableOption = "both" | "horizontal" | "vertical" | "none";
 
@@ -118,12 +118,16 @@
 		return data.value.toLocaleString().length <= props.maxLen;
 	})
 
+	watch(data, () => {
+		if (textarea.value !== null) {
+			textarea.value.style.height = 'auto';
+			textarea.value.style.height = `${textarea.value.scrollHeight+12}px`;
+		}
+	}, { immediate: true });
+
 	function onInput(event: Event) {
 		const value = (event.target as HTMLInputElement).value;
 		emit("input", value);
-		if(textarea.value) textarea.value.style.height='auto';
-		if (textarea.value !== null)
-			textarea.value.style.height = textarea.value.scrollHeight > textarea.value.clientHeight ? `${textarea.value.scrollHeight}px`: 'inherit';
 		if (value !== data.value)
 			updateData(value);
 	}
@@ -133,11 +137,6 @@
 			emit("change", data.value);
 		emit("blur", data.value);
 	}
-
-	onMounted(() => {
-		if (textarea.value !== null)
-			textarea.value.style.height = textarea.value.scrollHeight > textarea.value.clientHeight ? `${textarea.value.scrollHeight}px`: 'inherit';
-	});
 
 	defineExpose({ content: data });
 
