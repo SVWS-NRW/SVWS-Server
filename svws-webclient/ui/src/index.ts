@@ -3,7 +3,7 @@ import "./assets/styles/colors.css";
 
 // Regex: \ +(.*):.*'(.*)'\).*
 // Replace: export { default as $1 } from "$2";
-export type { AbschnittAuswahlProps } from "./components/abschnittauswahl/AbschnittAuswahlProps.ts";
+export type { AbschnittAuswahlProps, AbschnittAuswahlDaten } from "./components/abschnittauswahl/AbschnittAuswahlProps.ts";
 export type { SchuelerLaufbahnplanungProps } from "./components/gost/laufbahnplanung/SSchuelerLaufbahnplanungProps";
 export type { StundenplanAnsichtPlanungProps } from "./components/stundenplan/StundenplanAnsichtPlanungProps.ts";
 export type { StundenplanAnsichtProps, StundenplanAnsichtDragData, StundenplanAnsichtDropZone } from "./components/stundenplan/StundenplanAnsichtProps.ts";

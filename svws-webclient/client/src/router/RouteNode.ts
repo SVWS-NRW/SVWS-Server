@@ -93,8 +93,8 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 			children: undefined,
 			meta: {
 				text: name, // Ein Text, welcher zur Darstellung in der GUI genutzt wird (z.B. der Text auf Tabs)
-				menugroup: "" // Die Menu-Gruppe, falls die Route einem Menu zugeordnet ist und dort einer Gruppe
-			}
+				menugroup: "", // Die Menu-Gruppe, falls die Route einem Menu zugeordnet ist und dort einer Gruppe
+			},
 		};
 		this._children = [];
 		this._menu = [];

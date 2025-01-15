@@ -1,6 +1,6 @@
 import { ref } from "vue";
 
-import type { DBSchemaListeEintrag} from "@core";
+import type { DBSchemaListeEintrag, DeveloperNotificationException} from "@core";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
@@ -10,6 +10,7 @@ import { routeInit } from "~/router/init/RouteInit";
 
 import SLogin from "~/components/SLogin.vue";
 import type { LoginProps } from "~/components/SLoginProps";
+import type { RouteParams, RouteLocationRaw } from "vue-router";
 
 export class RouteLogin extends RouteNode<any, any> {
 
@@ -20,10 +21,19 @@ export class RouteLogin extends RouteNode<any, any> {
 	protected schema = ref<string | null>(null);
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "login", "/login/:schemaname?", SLogin);
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "login", "/login/:schema?", SLogin);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps();
 		super.text = "Login";
+	}
+
+	public async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+		try {
+			const { schema } = RouteNode.getStringParams(to_params, ["schema"]);
+			this.schema.value = schema ?? null;
+		} catch (e) {
+			console.log('Es wurde ein falscher Schema-Parameter übergeben, Login trotzdem fortsetzen: ',e)
+		}
 	}
 
 	public login = async (schema: string, username: string, password: string): Promise<void> => {
