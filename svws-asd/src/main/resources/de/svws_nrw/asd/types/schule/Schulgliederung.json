@@ -1,5 +1,5 @@
 {
-	"version": 3,
+	"version": 4,
 	"daten": [ {
 		"bezeichner": "DEFAULT",
 		"idHistorie": 1,
@@ -345,8 +345,7 @@
 			"schluessel": "A11",
 			"istBK": true,
 			"schulformen": [
-				"BK",
-				"SB"
+				"BK"
 			],
 			"istAuslaufend": true,
 			"istAusgelaufen": true,
@@ -457,6 +456,35 @@
 				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_03"}
 			],
 			"gueltigVon": 2017,
+			"gueltigBis": 2019
+		},{
+			"id": 1014001,
+			"kuerzel": "A14",
+			"schluessel": "A14",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Berufsabschluss (nach §50 BBiG/§40 HwO)/Mittlerer Schulabschluss (BAB/FOR; VZ)",
+			"bkAnlage": "A",
+			"bkTyp": "14",
+			"bkIndex": 61,
+			"istVZ": true,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "OA", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "OA", "allgemeinbildend": "MSA", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "OA", "allgemeinbildend": "MSA_Q", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "MSA", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "MSA_Q", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_03"}
+			],
+			"gueltigVon": 2020,
 			"gueltigBis": null
 		}]
 	}, {
@@ -489,6 +517,34 @@
 				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_03"}
 			],
 			"gueltigVon": 2017,
+			"gueltigBis": 2019
+		}, {
+			"id": 1015001,
+			"kuerzel": "A15",
+			"schluessel": "A15",
+			"istBK": true,
+			"schulformen": [
+				"BK"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Berufsabschluss (nach §50 BBiG/§40 HwO)/Fachhochschulreife (BAB/FHR; VZ)",
+			"bkAnlage": "A",
+			"bkTyp": "15",
+			"bkIndex": 62,
+			"istVZ": true,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "OA", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "OA", "allgemeinbildend": "MSA", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "MSA", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "MSA_Q", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "FHR", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_03"}
+			],
+			"gueltigVon": 2020,
 			"gueltigBis": null
 		}]
 	}, {
@@ -522,6 +578,35 @@
 				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_03"}
 			],
 			"gueltigVon": 2017,
+			"gueltigBis": 2019
+		},{
+			"id": 1016001,
+			"kuerzel": "A16",
+			"schluessel": "A16",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Fachklassen (nach §2 BKAZVO) BAB; VZ",
+			"bkAnlage": "A",
+			"bkTyp": "16",
+			"bkIndex": 63,
+			"istVZ": true,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "OA", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "OA", "allgemeinbildend": "MSA", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "MSA", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "MSA_Q", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "FHR", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_03"}
+			],
+			"gueltigVon": 2020,
 			"gueltigBis": null
 		}]
 	}, {
@@ -847,8 +932,7 @@
 			"schluessel": "B05",
 			"istBK": true,
 			"schulformen": [
-				"BK",
-				"SB"
+				"BK"
 			],
 			"istAuslaufend": true,
 			"istAusgelaufen": true,
@@ -1735,8 +1819,7 @@
 			"istBK": true,
 			"schulformen": [
 				"BK",
-				"SB",
-				"WB"
+				"SB"
 			],
 			"istAuslaufend": true,
 			"istAusgelaufen": true,
@@ -1760,8 +1843,7 @@
 			"istBK": true,
 			"schulformen": [
 				"BK",
-				"SB",
-				"WB"
+				"SB"
 			],
 			"istAuslaufend": false,
 			"istAusgelaufen": false,
