@@ -9,12 +9,14 @@ import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.schule.DataSchulleitung;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerFoto;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response.Status;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,7 +40,7 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 	public DataLehrerStammdaten(final DBEntityManager conn) {
 		super(conn);
 		setAttributesNotPatchable("id");
-		setAttributesRequiredOnCreation("Kuerzel", "kuerzelStatistik");
+		setAttributesRequiredOnCreation("kuerzel", "nachname", "geschlecht", "personalTyp");
 	}
 
 	@Override
@@ -103,11 +105,11 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 		daten.id = dtoLehrer.ID;
 		daten.kuerzel = dtoLehrer.Kuerzel;
 		daten.personalTyp = (dtoLehrer.PersonTyp == null) ? "" : dtoLehrer.PersonTyp.kuerzel;
-		daten.anrede = (dtoLehrer.Anrede == null) ? "" : dtoLehrer.Anrede;
-		daten.titel = (dtoLehrer.Titel == null) ? "" : dtoLehrer.Titel;
-		daten.amtsbezeichnung = (dtoLehrer.Amtsbezeichnung == null) ? "" : dtoLehrer.Amtsbezeichnung;
-		daten.nachname = (dtoLehrer.Nachname == null) ? "" : dtoLehrer.Nachname;
-		daten.vorname = (dtoLehrer.Vorname == null) ? "" : dtoLehrer.Vorname;
+		daten.anrede = StringUtils.defaultString(dtoLehrer.Anrede);
+		daten.titel = StringUtils.defaultString(dtoLehrer.Titel);
+		daten.amtsbezeichnung = StringUtils.defaultString(dtoLehrer.Amtsbezeichnung);
+		daten.nachname = StringUtils.defaultString(dtoLehrer.Nachname);
+		daten.vorname = StringUtils.defaultString(dtoLehrer.Vorname);
 		daten.geschlecht = (dtoLehrer.Geschlecht == null) ? -1 : dtoLehrer.Geschlecht.id;
 		daten.geburtsdatum = dtoLehrer.Geburtsdatum;
 		daten.staatsangehoerigkeitID = (dtoLehrer.staatsangehoerigkeit == null) ? null : dtoLehrer.staatsangehoerigkeit.daten.iso3;
@@ -146,12 +148,11 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 	protected void mapAttribute(final DTOLehrer dto, final String name, final Object value, final Map<String, Object> map)
 			throws ApiOperationException {
 		switch (name) {
-			case "kuerzel" -> dto.Kuerzel =
-					JSONMapper.convertToString(value, false, false, Schema.tab_K_Lehrer.col_Kuerzel.datenlaenge(), "kuerzel");
+			case "kuerzel" -> updateKuerzel(dto, value);
 			case "personalTyp" -> dto.PersonTyp =
 					Optional.ofNullable(PersonalTyp.fromKuerzel(JSONMapper.convertToString(value, false, false, null, "personalTyp")))
 							.orElseThrow(() -> new ApiOperationException(Status.CONFLICT, "Ein PersonalTyp mit dem Kuerzel %s wurde nicht gefunden.".formatted(value)));
-			case "anrede" -> dto.Kuerzel =
+			case "anrede" -> dto.Anrede =
 					JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Anrede.datenlaenge(), "anrede");
 			case "titel" -> dto.Titel =
 					JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Titel.datenlaenge(), "titel");
@@ -173,9 +174,9 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 						 JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_HausNr.datenlaenge(), "hausnummer");
 			case "hausnummerZusatz" -> dto.HausNrZusatz =
 					JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_HausNrZusatz.datenlaenge(), "hausnummerZusatz");
-			case "wohnortID" -> setWohnort(conn, dto, JSONMapper.convertToLong(value, true, "wohnortID"),
-					(map.get("ortsteilID") == null) ? dto.Ortsteil_ID : ((Long) map.get("ortsteilID")));
-			case "ortsteilID" -> setWohnort(conn, dto, (map.get("wohnortID") == null) ? dto.Ort_ID : ((Long) map.get("wohnortID")),
+			case "wohnortID" -> setWohnort(dto, JSONMapper.convertToLong(value, true, "wohnortID"),
+					Optional.ofNullable(map.get("ortsteilID")).map(v -> Long.parseLong(v.toString())).orElse(dto.Ortsteil_ID));
+			case "ortsteilID" -> setWohnort(dto, (map.get("wohnortID") == null) ? dto.Ort_ID : (Long.valueOf((Integer) map.get("wohnortID"))),
 					JSONMapper.convertToLong(value, true, "ortsteilID"));
 			case "telefon" -> dto.telefon =
 					JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Tel.datenlaenge(), "telefon");
@@ -192,6 +193,27 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 		}
 	}
 
+	private void updateKuerzel(final DTOLehrer dto, final Object value) throws ApiOperationException {
+		final String kuerzel = JSONMapper.convertToString(value, false, false, Schema.tab_K_Lehrer.col_Kuerzel.datenlaenge(), "kuerzel");
+		// Kuerzel ist unveraendert
+		if (dto.Kuerzel.equals(kuerzel))
+			return;
+
+		// theoretischer Fall, der nicht eintreten sollte
+		final List<DTOLehrer> lehrer = conn.queryList(DTOLehrer.QUERY_BY_KUERZEL, DTOLehrer.class, kuerzel);
+		if (lehrer.size() > 1)
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Mehr als ein Lehrer mit dem gleichen Kuerzel vorhanden");
+
+		// kuerzel bereits vorhanden
+		final DTOLehrer dtoLehrer = lehrer.getFirst();
+		if ((dtoLehrer != null) && (dtoLehrer.ID != dto.ID))
+			throw new ApiOperationException(Status.BAD_REQUEST, "Das Kuerzel %s ist bereits vorhanden.".formatted(value));
+
+		// kuerzel wird gepatched
+		if (lehrer.isEmpty())
+			dto.Kuerzel = JSONMapper.convertToString(kuerzel, false, false, Schema.tab_K_Lehrer.col_Kuerzel.datenlaenge(), "kuerzel");
+	}
+
 	private static void updateStaatsangehoerigkeitID(final DTOLehrer dto, final Object value) throws ApiOperationException {
 		final String id = JSONMapper.convertToString(value, true, true, null, "staatsangehoerigkeitID");
 		if ((id == null) || (id.isBlank()))
@@ -205,19 +227,20 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 	 * Setzt den Wohnort bei den Lehrerdaten und prüft dabei die Angabe des Ortsteils auf Korrektheit in Bezug auf die Ortsteile
 	 * in der Datenbank. Ggf. wird der Ortsteil auf null gesetzt.
 	 *
-	 * @param conn         die aktuelle Datenbankverbindung
 	 * @param lehrer       das Lehrer-DTO der Datenbank
 	 * @param wohnortID    die zu setzende Wohnort-ID
 	 * @param ortsteilID   die zu setzende Ortsteil-ID
 	 *
 	 * @throws ApiOperationException   eine Exception mit dem HTTP-Fehlercode 409, falls die ID negative und damit ungültig ist
 	 */
-	private static void setWohnort(final DBEntityManager conn, final DTOLehrer lehrer, final Long wohnortID, final Long ortsteilID)
+	private void setWohnort(final DTOLehrer lehrer, final Long wohnortID, final Long ortsteilID)
 			throws ApiOperationException {
-		if ((wohnortID != null) && (wohnortID < 0))
+		if (((wohnortID != null) && (wohnortID < 0)) || (conn.queryByKey(DTOOrt.class, wohnortID) == null))
 			throw new ApiOperationException(Status.CONFLICT, "WohnortID %d ungültig.".formatted(wohnortID));
+
 		if ((ortsteilID != null) && (ortsteilID < 0))
 			throw new ApiOperationException(Status.CONFLICT, "OrtsteilID %d ungültig.".formatted(ortsteilID));
+
 		lehrer.Ort_ID = wohnortID;
 		// Prüfe, ob die Ortsteil ID in Bezug auf die WohnortID gültig ist, wähle hierbei null-Verweise auf die K_Ort-Tabelle als überall gültig
 		lehrer.Ortsteil_ID = Optional.ofNullable(ortsteilID)

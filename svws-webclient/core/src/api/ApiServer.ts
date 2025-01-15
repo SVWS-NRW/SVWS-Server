@@ -8198,6 +8198,33 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode addLehrerStammdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/create
+	 *
+	 * Erstellt neue LehrerStammdaten und gibt das erstellte Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen neuer LehrerStammdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die LehrerStammdaten wurden erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: LehrerStammdaten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um LehrerStammdaten anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<LehrerStammdaten>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die LehrerStammdaten wurden erfolgreich hinzugefügt.
+	 */
+	public async addLehrerStammdaten(data : Partial<LehrerStammdaten>, schema : string) : Promise<LehrerStammdaten> {
+		const path = "/db/{schema}/lehrer/create"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = LehrerStammdaten.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return LehrerStammdaten.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getLehrerLeitungsfunktionen für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/leitungsfunktionen
 	 *
 	 * Erstellt eine Liste aller in dem Katalog vorhanden Lehrerleitungsfunktionen unter Angabe der ID und der Bezeichnung. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
