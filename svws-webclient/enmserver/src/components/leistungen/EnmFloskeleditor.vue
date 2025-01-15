@@ -1,6 +1,6 @@
 <template>
 	<div class="border-l h-full flex flex-auto flex-col pl-4 pr-1 gap-4">
-		<div class="text-headline-md">{{ schueler.nachname }}, {{ schueler.vorname }}</div>
+		<div class="text-headline-md flex justify-between"><span>{{ schueler.nachname }}, {{ schueler.vorname }}</span><span>{{ hauptgruppenBezeichnung[erlaubteHauptgruppe] }}</span></div>
 		<svws-ui-textarea-input placeholder="Floskeln auswählen oder manuell eingeben" :model-value="text" @input="onInput" autoresize />
 		<div class="flex justify-between gap-2 w-full flex-row-reverse">
 			<div v-if="showButtons" class="flex gap-2">
@@ -59,6 +59,17 @@
 		patch: (value: string|null) => Promise<void>;
 		erlaubteHauptgruppe: BemerkungenHauptgruppe;
 	}>();
+
+	const hauptgruppenBezeichnung: Record<BemerkungenHauptgruppe, string> = {
+		'ASV': 'Arbeits- und Sozialverhalten',
+		'AUE': 'Außerunterrichtliches Engagement',
+		'FACH': 'Fachbezogene Bemerkungen',
+		'FÖRD': 'Fördermaßnahmen',
+		'FSP': 'Förderschwerpunkt',
+		'VERM': 'Vermerke',
+		'VERS': 'Versetzung',
+		'ZB': 'Zeugnis-Bemerkungen',
+	};
 
 	const showButtons = computed(() => text.value !== bemerkung.value);
 
