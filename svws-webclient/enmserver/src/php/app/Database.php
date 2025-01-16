@@ -785,10 +785,65 @@
 		 */
 		public function getClientConfig(int $idLehrer): string {
 			$configBenutzer = $this->queryAllOrExit500("SELECT schluessel AS key, wert AS value FROM ClientLehrerConfig WHERE idLehrer=$idLehrer", "Fehler beim Lesen der benutzerspezifischen Konfigurationsdaten");
-			$configGlobal = $this->queryAllOrExit500("SELECT schluessel AS key, wert AS value FROM ClientConfig", "Fehler beim Lesen der globalen Kofnigurationsdaten");
+			$configGlobal = $this->queryAllOrExit500("SELECT schluessel AS key, wert AS value FROM ClientConfig", "Fehler beim Lesen der globalen Konfigurationsdaten");
 			$jsonBenutzer = json_encode($configBenutzer, JSON_UNESCAPED_SLASHES);
 			$jsonGlobal = json_encode($configGlobal, JSON_UNESCAPED_SLASHES);
 			return "{ \"user\": $jsonBenutzer, \"global\": $jsonGlobal }";
+		}
+
+		/**
+		 * Ermittelt die Konfiguration des Server, d.h. die Server-sepzifische Konfiguration und die globale Konfiguration für
+		 * den Client und gibt diese als JSON-String zurück.
+		 * 
+		 * @return string ein JSON mit den beiden Konfigurationen
+		 */
+		public function getServerConfig(): string {
+			$configServer = $this->queryAllOrExit500("SELECT schluessel AS key, wert AS value FROM ServerConfig", "Fehler beim Lesen der Server-spezifischen Konfigurationsdaten");
+			$configGlobal = $this->queryAllOrExit500("SELECT schluessel AS key, wert AS value FROM ClientConfig", "Fehler beim Lesen der globalen Konfigurationsdaten");
+			$jsonServer = json_encode($configServer, JSON_UNESCAPED_SLASHES);
+			$jsonGlobal = json_encode($configGlobal, JSON_UNESCAPED_SLASHES);
+			return "{ \"server\": $jsonServer, \"global\": $jsonGlobal }";
+		}
+
+		/**
+		 * Setzt einen Eintrag in der globalen Konfiguration.
+		 * 
+		 * @param bool $nurServer   gibt an, ob der Konfigurationseintrag nur den Server betrifft oder global ist.
+		 * @param string $key       der zu setzende Schlüssel
+		 * @param string $value     der zu setzende Wert für den Schlüssel
+		 */
+		public function putConfig(bool $nurServer, string $key, string | null $value) {
+			$table = $nurServer ? "ServerConfig" : "ClientConfig";
+			// Prüfe, ob bereits ein Eintrag vorliegt
+			$stmt = $this->prepareStatement("SELECT wert FROM $table WHERE schluessel = :schluessel");
+			$this->bindStatementValue($stmt, ":schluessel", $key, PDO::PARAM_STR);
+			$this->executeStatement($stmt);
+			$result = $stmt->fetchAll(PDO::FETCH_OBJ);
+			$hatEintrag = (count($result) > 0);
+			// Wenn der Wert null ist und kein Eintrag vorliegt, dann ist ein Einfügen nicht nötig
+			if (!$hatEintrag && ($value === null))
+				return;
+			// Wenn der Wert null ist und ein Eintrag vorliegt, dann muss dieser entfernt werden
+			if ($hatEintrag && ($value === null)) {
+				$stmt = $this->prepareStatement("DELETE FROM $table WHERE schluessel = :schluessel");
+				$this->bindStatementValue($stmt, ":schluessel", $key, PDO::PARAM_STR);
+				$this->executeStatement($stmt);
+				return;
+			}
+			// Schreibe den Eintrag
+			$this->beginTransaction();
+			$stmt = null;
+			if ($hatEintrag) {
+				// UPDATE...
+				$stmt = $this->prepareStatement("UPDATE $table SET wert=:wert WHERE schluessel = :schluessel");
+			} else {
+				// INSERT...
+				$stmt = $this->prepareStatement("INSERT INTO $table(schluessel, wert) VALUES (:schluessel, :wert)");
+			}
+			$this->bindStatementValue($stmt, ":schluessel", $key, PDO::PARAM_STR);
+			$this->bindStatementValue($stmt, ":wert", $value, PDO::PARAM_STR);
+			$this->executeStatement($stmt);
+			$this->commitTransaction();
 		}
 
 		/**
