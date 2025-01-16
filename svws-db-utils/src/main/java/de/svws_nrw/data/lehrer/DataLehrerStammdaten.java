@@ -166,7 +166,7 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 					Optional.ofNullable(Geschlecht.fromValue(JSONMapper.convertToInteger(value, false, "geschlecht")))
 							.orElseThrow(() -> new ApiOperationException(Status.CONFLICT, "Kein Geschlecht mit dem dem Wert %s vorhanden.".formatted(value)));
 			case "geburtsdatum" -> dto.Geburtsdatum =
-					JSONMapper.convertToString(value, false, false, null, "geburtsdatum"); // TODO convertToDate im JSONMapper
+					JSONMapper.convertToString(value, true, true, null, "geburtsdatum"); // TODO convertToDate im JSONMapper
 			case "staatsangehoerigkeitID" -> updateStaatsangehoerigkeitID(dto, value);
 			case "strassenname" -> dto.Strassenname =
 					JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Strassenname.datenlaenge(), "strassenname");
