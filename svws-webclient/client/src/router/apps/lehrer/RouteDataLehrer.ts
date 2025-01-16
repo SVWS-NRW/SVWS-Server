@@ -240,5 +240,10 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		return [false, new ArrayList()];
 	}
 
+	add = async (data: Partial<LehrerStammdaten>): Promise<void> => {
+		const lehrerStammdaten = await api.server.addLehrerStammdaten(data, api.schema);
+		await this.setSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt, true);
+		await this.gotoDefaultView(lehrerStammdaten.id);
+	}
 }
 

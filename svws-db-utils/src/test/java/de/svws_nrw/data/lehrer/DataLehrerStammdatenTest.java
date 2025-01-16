@@ -338,11 +338,13 @@ class DataLehrerStammdatenTest {
 	@DisplayName("mapList | erfolgreiches Mapping | some Values null")
 	void mapListTest_someValuesNull() throws ApiOperationException {
 		final var dtoLehrer = getDtoLehrer();
+		dtoLehrer.PersonTyp = null;
 		dtoLehrer.Anrede = null;
 		dtoLehrer.Titel = null;
 		dtoLehrer.Amtsbezeichnung = null;
 		dtoLehrer.Nachname = null;
 		dtoLehrer.Vorname = null;
+		dtoLehrer.Geschlecht = null;
 		dtoLehrer.staatsangehoerigkeit = null;
 		dtoLehrer.Sichtbar = null;
 		dtoLehrer.statistikRelevant = null;
@@ -352,11 +354,13 @@ class DataLehrerStammdatenTest {
 				.isNotNull()
 				.allSatisfy(item -> assertThat(item)
 						.isInstanceOf(LehrerStammdaten.class)
+						.hasFieldOrPropertyWithValue("personalTyp", "")
 						.hasFieldOrPropertyWithValue("anrede", "")
 						.hasFieldOrPropertyWithValue("titel", "")
 						.hasFieldOrPropertyWithValue("amtsbezeichnung", "")
 						.hasFieldOrPropertyWithValue("nachname", "")
 						.hasFieldOrPropertyWithValue("vorname", "")
+						.hasFieldOrPropertyWithValue("geschlecht", -1)
 						.hasFieldOrPropertyWithValue("staatsangehoerigkeitID", null)
 						.hasFieldOrPropertyWithValue("istSichtbar", true)
 						.hasFieldOrPropertyWithValue("istRelevantFuerStatistik", true)

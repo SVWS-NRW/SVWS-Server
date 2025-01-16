@@ -161,7 +161,7 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 			case "nachname" -> dto.Nachname =
 					JSONMapper.convertToString(value, false, false, Schema.tab_K_Lehrer.col_Nachname.datenlaenge(), "nachname");
 			case "vorname" -> dto.Vorname =
-					JSONMapper.convertToString(value, false, false, Schema.tab_K_Lehrer.col_Vorname.datenlaenge(), "vorname");
+					JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Vorname.datenlaenge(), "vorname");
 			case "geschlecht" -> dto.Geschlecht =
 					Optional.ofNullable(Geschlecht.fromValue(JSONMapper.convertToInteger(value, false, "geschlecht")))
 							.orElseThrow(() -> new ApiOperationException(Status.CONFLICT, "Kein Geschlecht mit dem dem Wert %s vorhanden.".formatted(value)));
@@ -189,6 +189,9 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false, "istSichtbar");
 			case "istRelevantFuerStatistik" -> dto.statistikRelevant = JSONMapper.convertToBoolean(value, false, "istRelevantFuerStatistik");
 			case "foto" -> updateFoto(dto, value);
+			case "leitungsfunktionen" -> {
+				/* nicht notwendig */
+			}
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
 		}
 	}
@@ -196,22 +199,24 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 	private void updateKuerzel(final DTOLehrer dto, final Object value) throws ApiOperationException {
 		final String kuerzel = JSONMapper.convertToString(value, false, false, Schema.tab_K_Lehrer.col_Kuerzel.datenlaenge(), "kuerzel");
 		// Kuerzel ist unveraendert
-		if (dto.Kuerzel.equals(kuerzel))
+		if ((dto.Kuerzel != null) && dto.Kuerzel.equals(kuerzel))
 			return;
 
 		// theoretischer Fall, der nicht eintreten sollte
 		final List<DTOLehrer> lehrer = conn.queryList(DTOLehrer.QUERY_BY_KUERZEL, DTOLehrer.class, kuerzel);
+
 		if (lehrer.size() > 1)
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Mehr als ein Lehrer mit dem gleichen Kuerzel vorhanden");
 
 		// kuerzel bereits vorhanden
-		final DTOLehrer dtoLehrer = lehrer.getFirst();
-		if ((dtoLehrer != null) && (dtoLehrer.ID != dto.ID))
-			throw new ApiOperationException(Status.BAD_REQUEST, "Das Kuerzel %s ist bereits vorhanden.".formatted(value));
+		if (!lehrer.isEmpty()) {
+			final DTOLehrer dtoLehrer = lehrer.getFirst();
+			if ((dtoLehrer != null) && (dtoLehrer.ID != dto.ID))
+				throw new ApiOperationException(Status.BAD_REQUEST, "Das Kuerzel %s ist bereits vorhanden.".formatted(value));
+		}
 
 		// kuerzel wird gepatched
-		if (lehrer.isEmpty())
-			dto.Kuerzel = JSONMapper.convertToString(kuerzel, false, false, Schema.tab_K_Lehrer.col_Kuerzel.datenlaenge(), "kuerzel");
+		dto.Kuerzel = JSONMapper.convertToString(kuerzel, false, false, Schema.tab_K_Lehrer.col_Kuerzel.datenlaenge(), "kuerzel");
 	}
 
 	private static void updateStaatsangehoerigkeitID(final DTOLehrer dto, final Object value) throws ApiOperationException {
@@ -235,7 +240,7 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 	 */
 	private void setWohnort(final DTOLehrer lehrer, final Long wohnortID, final Long ortsteilID)
 			throws ApiOperationException {
-		if (((wohnortID != null) && (wohnortID < 0)) || (conn.queryByKey(DTOOrt.class, wohnortID) == null))
+		if ((wohnortID != null) && ((wohnortID < 0) || (conn.queryByKey(DTOOrt.class, wohnortID) == null)))
 			throw new ApiOperationException(Status.CONFLICT, "WohnortID %d ungültig.".formatted(wohnortID));
 
 		if ((ortsteilID != null) && (ortsteilID < 0))

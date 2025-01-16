@@ -128,7 +128,7 @@
 	const ortsteile = computed<Array<OrtsteilKatalogEintrag>>(() => {
 		const result : Array<OrtsteilKatalogEintrag> = [];
 		for (const ortsteil of props.mapOrtsteile.values())
-			if ((ortsteil.ort_id === null) || (ortsteil.ort_id === data().wohnortID))
+			if (ortsteil.ort_id === data().wohnortID)
 				result.push(ortsteil);
 		return result;
 	});
