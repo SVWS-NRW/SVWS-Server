@@ -3,7 +3,7 @@
 		<div class="enm-leistung-uebersicht-bereich">
 			<enm-klassenleitung-uebersicht :manager :patch-bemerkungen :patch-lernabschnitt :columns-visible :set-columns-visible @hauptgruppe="erlaubteHauptgruppe = $event" />
 		</div>
-		<div v-if="manager.auswahlSchueler !== null" class="enm-floskel-editor-bereich">
+		<div v-if="floskelEditorVisible" class="enm-floskel-editor-bereich">
 			<enm-floskeleditor :manager :patch="doPatchBemerkungen" :erlaubte-hauptgruppe />
 		</div>
 	</div>
@@ -11,13 +11,20 @@
 
 <script setup lang="ts">
 
-	import { ref, watchEffect } from 'vue';
+	import { computed, ref, watchEffect } from 'vue';
 	import type { BemerkungenHauptgruppe } from './EnmManager';
 	import type { EnmKlassenleitungProps } from './EnmKlassenleitungProps';
 
 	const props = defineProps<EnmKlassenleitungProps>();
 
 	const erlaubteHauptgruppe = ref<BemerkungenHauptgruppe>('ZB');
+
+	const floskelEditorVisible = computed(() => {
+		const cols = props.columnsVisible();
+		return (cols.get('AUE') ?? false)
+			|| (cols.get('ASV') ?? false)
+			|| (cols.get('ZB') ?? false);
+	})
 
 	watchEffect(() => {
 		if (props.manager.klassenAuswahlGetSchueler().contains(props.manager.auswahlSchueler))
@@ -50,7 +57,7 @@
 
 <style lang="postcss" scoped>
 
-	.page--content {
+.page--content {
 		@apply flex flex-row gap-6;
 		@apply h-full w-full overflow-hidden;
 		@apply max-w-full pb-4;
@@ -59,11 +66,10 @@
 	.enm-leistung-uebersicht-bereich {
 		@apply w-full h-full overflow-hidden;
 		@apply flex-grow;
-		@apply max-w-[100rem];
 	}
 
 	.enm-floskel-editor-bereich {
-		@apply w-full h-full overflow-hidden;
+		@apply h-full overflow-hidden;
 		@apply max-w-196;
 	}
 
