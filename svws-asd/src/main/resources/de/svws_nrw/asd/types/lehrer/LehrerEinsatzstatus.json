@@ -1,5 +1,5 @@
 {
-	"version": 1,
+	"version": 2,
 	"daten": [ {
 		"bezeichner": "A",
 		"idHistorie": 1,
@@ -27,8 +27,8 @@
 		"idHistorie": 3,
 		"historie": [ {
 			"id": 3,
-			"schluessel": "3",
-			"kuerzel": "DEFAULT",
+			"schluessel": "*",
+			"kuerzel": "*",
 			"text": "Stammschule, nur hier tätig",
 			"gueltigVon": null,
 			"gueltigBis": null
