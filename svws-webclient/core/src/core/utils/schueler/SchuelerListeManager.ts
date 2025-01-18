@@ -347,7 +347,7 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 		const schueler : SchuelerListeEintrag | null = this.liste.get(idSchueler);
 		if (schueler === null)
 			return "----.-";
-		const schuljahresabschnitt : Schuljahresabschnitt | null = this.schuljahresabschnitte.get(schueler.idSchuljahresabschnitt);
+		const schuljahresabschnitt : Schuljahresabschnitt | null = this.schuljahresabschnitte.get(schueler.idSchuljahresabschnittSchueler);
 		if (schuljahresabschnitt === null)
 			return "----.-";
 		return schuljahresabschnitt.schuljahr + "." + schuljahresabschnitt.abschnitt;

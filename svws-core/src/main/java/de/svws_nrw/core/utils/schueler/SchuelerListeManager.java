@@ -333,7 +333,7 @@ public final class SchuelerListeManager extends AuswahlManager<Long, SchuelerLis
 		final SchuelerListeEintrag schueler = this.liste.get(idSchueler);
 		if (schueler == null)
 			return "----.-";
-		final Schuljahresabschnitt schuljahresabschnitt = this.schuljahresabschnitte.get(schueler.idSchuljahresabschnitt);
+		final Schuljahresabschnitt schuljahresabschnitt = this.schuljahresabschnitte.get(schueler.idSchuljahresabschnittSchueler);
 		if (schuljahresabschnitt == null)
 			return "----.-";
 		return schuljahresabschnitt.schuljahr + "." + schuljahresabschnitt.abschnitt;
