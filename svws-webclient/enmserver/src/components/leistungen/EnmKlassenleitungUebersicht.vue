@@ -48,13 +48,13 @@
 							@change="fehlstundenGesamtUnentschuldigt => doPatchLernabschnitt({ fehlstundenGesamtUnentschuldigt, id: schueler.lernabschnitt.id })" />
 					</td>
 					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('ASV') ?? true" @click="emitBemerkung('ASV')">
-						{{ hauptgruppe === 'ASV' ? "…":'' }}{{ schueler.bemerkungen.ASV }}
+						<span class="text-ellipsis overflow-hidden whitespace-nowrap">{{ schueler.bemerkungen.ASV }}</span>
 					</td>
 					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('AUE') ?? true" @click="emitBemerkung('AUE')">
-						{{ hauptgruppe === 'AUE' ? "…":'' }}{{ schueler.bemerkungen.AUE }}
+						<span class="text-ellipsis overflow-hidden whitespace-nowrap">{{ schueler.bemerkungen.AUE }}</span>
 					</td>
 					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('ZB') ?? true" @click="emitBemerkung('ZB')">
-						{{ hauptgruppe === 'ZB' ? "…":'' }}{{ schueler.bemerkungen.ZB }}
+						<span class="text-ellipsis overflow-hidden whitespace-nowrap">{{ schueler.bemerkungen.ZB }}</span>
 					</td>
 					<td class="svws-ui-td" role="cell" />
 				</tr>
