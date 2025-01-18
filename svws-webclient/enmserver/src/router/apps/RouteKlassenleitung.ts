@@ -18,6 +18,7 @@ export class RouteKlassenleitung extends RouteNode<any, RouteApp> {
 		super.propHandler = (route) => this.getProps();
 		super.text = "Klassenleitung";
 		super.setView("liste", EnmKlassenleitungAuswahl, (route) => this.getProps());
+		this.isHidden = () => api.manager.klassenOfKlassenlehrer.isEmpty() ? routeApp.getRouteDefaultChild() : false;
 		api.config.addElements([
 			new ConfigElement("klassenleitung.table.columns", "user", JSON.stringify([
 				["Klasse", null],

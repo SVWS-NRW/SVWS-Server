@@ -81,10 +81,9 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 
 	private getApps(): TabData[] {
 		const result: TabData[] = [];
-		for (const c of super.menu) {
-			if (c.hatEineKompetenz() && c.hatSchulform())
+		for (const c of super.menu)
+			if (c.hatEineKompetenz() && c.hatSchulform() && (c.hidden() === false))
 				result.push({ name: c.name, text: c.text });
-		}
 		return result;
 	}
 
