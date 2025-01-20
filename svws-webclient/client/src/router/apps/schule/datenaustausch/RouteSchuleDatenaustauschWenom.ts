@@ -34,6 +34,7 @@ export class RouteSchuleDatenaustauschWenom extends RouteNode<any, RouteApp> {
 			truncate: routeSchule.data.wenomTruncate,
 			reset: routeSchule.data.wenomReset,
 			check: routeSchule.data.wenomCheck,
+			setup: routeSchule.data.wenomSetup,
 		};
 	}
 }

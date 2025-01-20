@@ -1,5 +1,5 @@
-import { ENMDaten, BenutzerKompetenz, OAuth2ClientSecret, OAuth2ServerTyp, OpenApiError, SimpleOperationResponse, SMTPServerKonfiguration, type SchuleStammdaten, JavaMap, HashMap } from "@core";
-
+import type { JavaMap, SchuleStammdaten} from "@core";
+import { ENMDaten, BenutzerKompetenz, OAuth2ClientSecret, OAuth2ServerTyp, OpenApiError, SimpleOperationResponse, SMTPServerKonfiguration, HashMap } from "@core";
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { routeSchuleFaecher } from "./faecher/RouteSchuleFaecher";
@@ -215,6 +215,23 @@ export class RouteDataSchule extends RouteData<RouteStateSchule> {
 	wenomCheck = api.call(async () : Promise<SimpleOperationResponse> => {
 		try {
 			return await api.server.checkENMServer(api.schema);
+		} catch (e) {
+			if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
+				try {
+					const json = await e.response.text();
+					return SimpleOperationResponse.transpilerFromJSON(json);
+				} catch (e) { /* */ }
+			}
+			const res = new SimpleOperationResponse();
+			res.success = false;
+			res.log.add(`Unerwarteter Fehler beim Aufruf der Checkmethode aufgetreten: ${e instanceof Error ? e.message : 'unbekannt'}`);
+			return res;
+		}
+	});
+
+	wenomSetup = api.call(async () : Promise<boolean | SimpleOperationResponse> => {
+		try {
+			return (await api.server.setupENMServer(api.schema))!;
 		} catch (e) {
 			if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
 				try {

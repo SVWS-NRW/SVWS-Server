@@ -237,6 +237,13 @@
 		spinning.value = false;
 	}
 
+	async function wenomSetup() {
+		status.value = null;
+		spinning.value = true;
+		await props.setup();
+		spinning.value = false;
+	}
+
 	async function updateCredentials() {
 		status.value = null;
 		spinning.value = true;

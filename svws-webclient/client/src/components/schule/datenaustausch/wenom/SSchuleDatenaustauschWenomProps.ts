@@ -12,5 +12,6 @@ export interface SchuleDatenaustauschWenomProps {
 	truncate: () => Promise<SimpleOperationResponse>;
 	reset: () => Promise<SimpleOperationResponse>;
 	check: () => Promise<SimpleOperationResponse>;
+	setup: () => Promise<boolean|SimpleOperationResponse>;
 }
 

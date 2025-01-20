@@ -16,6 +16,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.asd.data.kurse.ZulaessigeKursartKatalogEintrag;
+import de.svws_nrw.asd.data.schule.SchuleStammdaten;
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
+import de.svws_nrw.asd.types.Note;
+import de.svws_nrw.asd.types.kurse.ZulaessigeKursart;
+import de.svws_nrw.asd.types.schueler.SchuelerStatus;
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.base.compression.CompressionException;
 import de.svws_nrw.base.crypto.Passwords;
 import de.svws_nrw.core.data.SimpleOperationResponse;
@@ -38,13 +45,6 @@ import de.svws_nrw.core.data.enm.ENMTeilleistung;
 import de.svws_nrw.core.data.enm.ENMTeilleistungsart;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
-import de.svws_nrw.asd.data.kurse.ZulaessigeKursartKatalogEintrag;
-import de.svws_nrw.asd.data.schule.SchuleStammdaten;
-import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
-import de.svws_nrw.asd.types.schueler.SchuelerStatus;
-import de.svws_nrw.asd.types.schule.Schulform;
-import de.svws_nrw.asd.types.Note;
-import de.svws_nrw.asd.types.kurse.ZulaessigeKursart;
 import de.svws_nrw.core.types.oauth2.OAuth2ServerTyp;
 import de.svws_nrw.core.utils.enm.ENMDatenManager;
 import de.svws_nrw.data.DataManager;
@@ -95,6 +95,7 @@ public final class DataENMDaten extends DataManager<Long> {
 	private static final String ENM_RESET_PATH = "/api/secure/reset";
 	private static final String ENM_CHECK_PATH = "/api/secure/check";
 	private static final String ENM_CONFIG_PATH = "/api/secure/serverconfig";
+	private static final String ENM_SETUP_PATH = "/api/setup";
 
 
 	/**
@@ -1543,6 +1544,31 @@ public final class DataENMDaten extends DataManager<Long> {
 		// Gib den Erfolg der Operation als SimpleOperationResponse mit einem Log zurück
 		res.log = log.getStrings();
 		return Response.status(status).type(MediaType.APPLICATION_JSON).entity(res).build();
+	}
+
+	/**
+	 * Prüft, ob der ENM-Server bereits initialisiert ist.
+	 *
+	 * @param conn   die Datenbank-Verbindung
+	 *
+	 * @return die HTTP-Response
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public static Response setup(final DBEntityManager conn) throws ApiOperationException {
+		// Erstelle zunächst einen Logger für die Operation
+		final Logger logger = new Logger();
+		try {
+			final OAuth2Client client = getWenomOAuthClient(conn, logger);
+			final HttpResponse<String> response = client.get(ENM_SETUP_PATH, BodyHandlers.ofString(), logger);
+			if ((response.statusCode() != Status.NO_CONTENT.getStatusCode()) || (response.statusCode() != Status.CONFLICT.getStatusCode()))
+				throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
+			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(response.statusCode() == Status.NO_CONTENT.getStatusCode()).build();
+		} catch (final Exception e) {
+			if (e instanceof final ApiOperationException aoe)
+				throw aoe;
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Unerwarteter Fehler aufgetreten: " + e.getMessage());
+		}
 	}
 
 }

@@ -2789,6 +2789,42 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode setupENMServer für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/setup
+	 *
+	 * Dieser Aufruf initialisert den ENM-Server beim ersten Aufruf. Weitere Aufrufe führen zu einem Fehler.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Stand des Setups, true, wurde initialisiert, false ist bereits initialisiert
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Boolean
+	 *   Code 401: Die Authorisierung beim ENM-Server ist fehlgeschlagen.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Operation auszuführen.
+	 *   Code 404: Keine ENM-Serverdaten gefunden.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 500: Interner Serverfehler
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 502: Fehler bei der Verbindung zum ENM-Server, u.U. auch fehlende OAuth-Daten.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Stand des Setups, true, wurde initialisiert, false ist bereits initialisiert
+	 */
+	public async setupENMServer(schema : string) : Promise<boolean | null> {
+		const path = "/db/{schema}/enm/setup"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return (text === "true");
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode synchronizeENMDaten für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/synchronize
 	 *
 	 * Liest die Daten des Externen Notenmoduls (ENM) aller Lehrer aus der Datenbank und lädt diese als ZIP beim ENM hoch, lädt danach die Daten des ENM runter und speichert diese in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Notendaten besitzt.
