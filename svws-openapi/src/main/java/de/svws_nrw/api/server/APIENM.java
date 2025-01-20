@@ -5,8 +5,10 @@ import java.io.InputStream;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 import de.svws_nrw.core.data.SimpleOperationResponse;
+import de.svws_nrw.core.data.enm.ENMConfigResponse;
 import de.svws_nrw.core.data.enm.ENMDaten;
 import de.svws_nrw.core.data.enm.ENMLehrerInitialKennwort;
+import de.svws_nrw.core.data.enm.ENMServerConfigElement;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.JSONMapper;
@@ -502,5 +504,65 @@ public class APIENM {
 		return DBBenutzerUtils.runWithTransaction(DataENMDaten::check, request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
 	}
 
+
+	/**
+	 * Die OpenAPI-Methode für das Holen der ENM-Serverkonfiguration.
+	 *
+	 * @param schema  das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Response mit einer ENMConfigResponse
+	 */
+	@GET
+	@Path("/config")
+	@Operation(summary = "Holt die Konfiguration.",
+			description = "Ein Getter für die ENM-Server-Konfiguration.")
+	@ApiResponse(responseCode = "200", description = "Die Konfiguration konnte erfolgreich abgerufen werden.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ENMConfigResponse.class)))
+	@ApiResponse(responseCode = "500", description = "Interner Serverfehler",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ENMConfigResponse.class)))
+	@ApiResponse(responseCode = "401", description = "Die Authorisierung beim ENM-Server ist fehlgeschlagen.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ENMConfigResponse.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Operation auszuführen.")
+	@ApiResponse(responseCode = "404", description = "Keine ENM-Serverdaten gefunden.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ENMConfigResponse.class)))
+	@ApiResponse(responseCode = "502", description = "Fehler bei der Verbindung zum ENM-Server, u.U. auch fehlende OAuth-Daten.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ENMConfigResponse.class)))
+	public Response getENMServerConfig(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(DataENMDaten::getENMServerConfig, request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Setzen eines Eintrages in dem ENM-Serverkonfiguration, bzw. der globalen
+	 * ENM-Clientkonfiguration.
+	 *
+	 * @param schema  das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param daten   der InputStream mit einem Konfigurationseintrag, der gesetzt werden soll
+	 * @param request Benutzerkonfiguration
+	 *
+	 * @return die HTTP-Response mit einer SimpleOperationResponse
+	 */
+	@POST
+	@Path("/config")
+	@Operation(summary = "Schreibt den Konfigurationseintrag für den angebenen Schlüsselwert in die Konfiguration",
+		description = "Schreibt den Konfigurationseintrag für den angebenen Schlüsselwert in die Konfiguration.")
+	@ApiResponse(responseCode = "204", description = "Der Konfigurationseintrag wurde erfolgreich geschrieben",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "500", description = "Interner Serverfehler",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "401", description = "Die Authorisierung beim ENM-Server ist fehlgeschlagen.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Operation auszuführen.")
+	@ApiResponse(responseCode = "404", description = "Keine ENM-Serverdaten gefunden.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "502", description = "Fehler bei der Verbindung zum ENM-Server, u.U. auch fehlende OAuth-Daten.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	public Response setENMServerConfigElement(@PathParam("schema") final String schema,
+			@RequestBody(description = "Der zu setzende Konfigurationseintrag", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ENMServerConfigElement.class))) final InputStream daten,
+					@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> DataENMDaten.setENMServerConfigElement(conn, daten), request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
+	}
 
 }

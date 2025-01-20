@@ -28,7 +28,7 @@ import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse dient dem Verbinden mit einem OAuth2 Server mit ggf. vorhandenen Token. Das Token wird,
- * sofern nicht im Cache vorhanden oder ungültig über das Client-Secret und Client Id erzeugt.
+ * sofern nicht im Cache vorhanden oder ungültig über das Client-Secret und Client-Id erzeugt.
  *
  * Der Client stellt darüber hinaus HTTP-Methoden zum Verbinden mit OAuth2-Servern bereit.
  */
@@ -318,6 +318,32 @@ public final class OAuth2Client {
 		final URI uri = URI.create(url + path);
 		final HttpRequest request = HttpRequest.newBuilder().uri(uri).timeout(Duration.ofMinutes(2)).GET()
 				.POST(BodyPublishers.ofString("")).header("Content-Type", "application/x-www-form-urlencoded")
+				.header("Accept", "application/json")
+				.header("Authorization", "Bearer " + token.accessToken).build();
+		logger.logLn("Sende die HTTP-Anfrage an den OAuth2-Server...");
+		return send(request, handler);
+	}
+
+
+	/**
+	 * Sendet Daten als PUT mit Content-Type application/json.
+	 *
+	 * @param <T>             generischer Typ des {@link HttpResponse} und {@link BodyHandler}
+	 * @param path            der Pfad als Teil der URL für diesen OauthClient, an den die Daten geschickt werden
+	 * @param handler         der BodyHandler für den Response-Body
+	 * @param logger          der Logger
+	 * @param daten           die Daten
+	 *
+	 * @return die Response
+	 *
+	 * @throws ApiOperationException im Fehlerfall
+	 */
+	public <T> HttpResponse<T> put(final String path, final BodyHandler<T> handler, final Logger logger, final String daten)
+			throws ApiOperationException {
+		logger.logLn("Bereite die HTTP-Anfrage vor...");
+		final URI uri = URI.create(url + path);
+		final HttpRequest request = HttpRequest.newBuilder().uri(uri).timeout(Duration.ofMinutes(2))
+				.PUT(BodyPublishers.ofString(daten)).header("Content-Type", "application/json")
 				.header("Accept", "application/json")
 				.header("Authorization", "Bearer " + token.accessToken).build();
 		logger.logLn("Sende die HTTP-Anfrage an den OAuth2-Server...");

@@ -25,8 +25,10 @@ import { DatenbankVerbindungsdaten } from '../core/data/schema/DatenbankVerbindu
 import { DBSchemaListeEintrag } from '../core/data/db/DBSchemaListeEintrag';
 import { EinschulungsartKatalogEintrag } from '../core/data/schule/EinschulungsartKatalogEintrag';
 import { Einwilligungsart } from '../core/data/schule/Einwilligungsart';
+import { ENMConfigResponse } from '../core/data/enm/ENMConfigResponse';
 import { ENMDaten } from '../core/data/enm/ENMDaten';
 import { ENMLehrerInitialKennwort } from '../core/data/enm/ENMLehrerInitialKennwort';
+import { ENMServerConfigElement } from '../core/data/enm/ENMServerConfigElement';
 import { Erzieherart } from '../core/data/erzieher/Erzieherart';
 import { ErzieherListeEintrag } from '../core/data/erzieher/ErzieherListeEintrag';
 import { ErzieherStammdaten } from '../core/data/erzieher/ErzieherStammdaten';
@@ -2468,6 +2470,80 @@ export class ApiServer extends BaseApi {
 		const path = "/db/{schema}/enm/check"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getENMServerConfig für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/config
+	 *
+	 * Ein Getter für die ENM-Server-Konfiguration.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Konfiguration konnte erfolgreich abgerufen werden.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: ENMConfigResponse
+	 *   Code 401: Die Authorisierung beim ENM-Server ist fehlgeschlagen.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: ENMConfigResponse
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Operation auszuführen.
+	 *   Code 404: Keine ENM-Serverdaten gefunden.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: ENMConfigResponse
+	 *   Code 500: Interner Serverfehler
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: ENMConfigResponse
+	 *   Code 502: Fehler bei der Verbindung zum ENM-Server, u.U. auch fehlende OAuth-Daten.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: ENMConfigResponse
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Konfiguration konnte erfolgreich abgerufen werden.
+	 */
+	public async getENMServerConfig(schema : string) : Promise<ENMConfigResponse> {
+		const path = "/db/{schema}/enm/config"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return ENMConfigResponse.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode setENMServerConfigElement für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/config
+	 *
+	 * Schreibt den Konfigurationseintrag für den angebenen Schlüsselwert in die Konfiguration.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Der Konfigurationseintrag wurde erfolgreich geschrieben
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 401: Die Authorisierung beim ENM-Server ist fehlgeschlagen.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Operation auszuführen.
+	 *   Code 404: Keine ENM-Serverdaten gefunden.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 500: Interner Serverfehler
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 502: Fehler bei der Verbindung zum ENM-Server, u.U. auch fehlende OAuth-Daten.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {ENMServerConfigElement} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Konfigurationseintrag wurde erfolgreich geschrieben
+	 */
+	public async setENMServerConfigElement(data : ENMServerConfigElement, schema : string) : Promise<SimpleOperationResponse> {
+		const path = "/db/{schema}/enm/config"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = ENMServerConfigElement.transpilerToJSON(data);
+		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}

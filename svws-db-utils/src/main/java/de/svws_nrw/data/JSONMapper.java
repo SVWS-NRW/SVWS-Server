@@ -869,4 +869,23 @@ public final class JSONMapper {
 		}
 	}
 
+	/**
+	 * Wandelt die JSON-Daten in das Object vom Typ T um
+	 *
+	 * @param <T>         der Typ des Objekts
+	 * @param daten       die JSON-Daten
+	 * @param valueType   die Klasse des Typs T
+	 *
+	 * @return das Object vom Typ T
+	 *
+	 * @throws ApiOperationException falls beim Dekodieren der Daten ein Fehler auftritt.
+	 */
+	public static <T> T toObject(final byte[] daten, final Class<T> valueType) throws ApiOperationException {
+		try {
+			return mapper.readValue(daten, valueType);
+		} catch (final IOException e) {
+			throw new ApiOperationException(Status.BAD_REQUEST, e, "Fehler beim Deserialisieren der JSON-Daten: " + e.getMessage());
+		}
+	}
+
 }
