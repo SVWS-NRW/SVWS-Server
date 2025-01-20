@@ -39,7 +39,7 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 	public DataLehrerStammdaten(final DBEntityManager conn) {
 		super(conn);
 		setAttributesNotPatchable("id");
-		setAttributesRequiredOnCreation("kuerzel", "nachname", "geschlecht", "personalTyp");
+		setAttributesRequiredOnCreation("kuerzel", "vorname", "nachname", "geschlecht", "personalTyp");
 	}
 
 	@Override
@@ -160,7 +160,7 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 			case "nachname" -> dto.Nachname =
 					JSONMapper.convertToString(value, false, false, Schema.tab_K_Lehrer.col_Nachname.datenlaenge(), "nachname");
 			case "vorname" -> dto.Vorname =
-					JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Vorname.datenlaenge(), "vorname");
+					JSONMapper.convertToString(value, false, false, Schema.tab_K_Lehrer.col_Vorname.datenlaenge(), "vorname");
 			case "geschlecht" -> dto.Geschlecht =
 					Optional.ofNullable(Geschlecht.fromValue(JSONMapper.convertToInteger(value, false, "geschlecht")))
 							.orElseThrow(() -> new ApiOperationException(Status.CONFLICT, "Kein Geschlecht mit dem dem Wert %s vorhanden.".formatted(value)));

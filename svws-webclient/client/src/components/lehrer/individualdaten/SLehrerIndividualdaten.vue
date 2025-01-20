@@ -8,9 +8,9 @@
 				</svws-ui-input-wrapper>
 				<svws-ui-text-input placeholder="Kürzel" :disabled="!hatUpdateKompetenz" :model-value="data().kuerzel" @change="kuerzel => patch({kuerzel: kuerzel ?? undefined})" required focus />
 				<svws-ui-select title="Personal-Typ" :disabled="!hatUpdateKompetenz" v-model="inputPersonalTyp" :items="PersonalTyp.values()" :item-text="i => i.bezeichnung" required />
-				<svws-ui-text-input placeholder="Nachname" :disabled="!hatUpdateKompetenz" :model-value="data().nachname" @change="nachname => patch({nachname: nachname ?? undefined})"
+				<svws-ui-text-input placeholder="Nachname" :disabled="!hatUpdateKompetenz" :model-value="data().nachname" @change="nachname => {if (nachname?.trim()) patch({nachname: nachname ?? undefined})}"
 					required statistics :validator="() => validatorNachname" :do-validate="validateNachname" />
-				<svws-ui-text-input placeholder="Rufname" :disabled="!hatUpdateKompetenz" :model-value="data().vorname" @change="vorname => patch({vorname: vorname ?? undefined})"
+				<svws-ui-text-input placeholder="Rufname" :disabled="!hatUpdateKompetenz" :model-value="data().vorname" @change="vorname => {if (vorname?.trim()) patch({vorname: vorname ?? undefined})}"
 					required statistics :validator="() => validatorVorname" :do-validate="validateVorname" />
 				<svws-ui-spacing />
 				<svws-ui-select title="Geschlecht" :disabled="!hatUpdateKompetenz" v-model="inputGeschlecht" :items="Geschlecht.values()" :item-text="i=>i.text" required />

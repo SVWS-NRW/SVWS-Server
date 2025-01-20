@@ -653,6 +653,96 @@ class DataLehrerStammdatenTest {
 		verify(conn, never()).transactionPersist(any());
 	}
 
+	@ParameterizedTest
+	@DisplayName("mapAttribute | mandatory attributes empty String")
+	@MethodSource("provideMandatoryFieldsEmptyStringMappingAttributes")
+	void mapAttributesTest_mandatoryAttributesEmptyString(final String key, final Object value) {
+		final var throwable = catchThrowable(() -> this.dataLehrerStammdaten.mapAttribute(new DTOLehrer(1L, "ab", "ab"), key, value, null));
+
+		switch (key) {
+			case "kuerzel" -> assertThat(throwable)
+					.isInstanceOf(ApiOperationException.class)
+					.hasMessageStartingWith("Attribut kuerzel: Ein leerer String ist hier nicht erlaubt.")
+					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+			case "nachname" -> assertThat(throwable)
+					.isInstanceOf(ApiOperationException.class)
+					.hasMessageStartingWith("Attribut nachname: Ein leerer String ist hier nicht erlaubt.")
+					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+			case "vorname" -> assertThat(throwable)
+					.isInstanceOf(ApiOperationException.class)
+					.hasMessageStartingWith("Attribut vorname: Ein leerer String ist hier nicht erlaubt.")
+					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+			case "geschlecht" -> assertThat(throwable)
+					.isInstanceOf(ApiOperationException.class)
+					.hasMessageStartingWith("Attribut geschlecht: Fehler beim Konvertieren zu Integer")
+					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+			case "personalTyp" -> assertThat(throwable)
+					.isInstanceOf(ApiOperationException.class)
+					.hasMessageStartingWith("Attribut personalTyp: Ein leerer String ist hier nicht erlaubt.")
+					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+			default -> assertThat(throwable)
+					.isInstanceOf(ApiOperationException.class)
+					.hasMessageStartingWith("Die Daten des Patches enthalten das unbekannte Attribut")
+					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+		}
+
+	}
+
+	private static Stream<Arguments> provideMandatoryFieldsEmptyStringMappingAttributes() {
+		return Stream.of(
+				arguments("kuerzel", ""),
+				arguments("nachname", ""),
+				arguments("vorname", ""),
+				arguments("geschlecht", ""),
+				arguments("personalTyp", "")
+		);
+	}
+
+	@ParameterizedTest
+	@DisplayName("mapAttribute | mandatory attributes null")
+	@MethodSource("provideMandatoryFieldsNullMappingAttributes")
+	void mapAttributesTest_mandatoryAttributesNull(final String key, final Object value) {
+		final var throwable = catchThrowable(() -> this.dataLehrerStammdaten.mapAttribute(new DTOLehrer(1L, "ab", "ab"), key, value, null));
+
+		switch (key) {
+			case "kuerzel" -> assertThat(throwable)
+					.isInstanceOf(ApiOperationException.class)
+					.hasMessageStartingWith("Attribut kuerzel: Der Wert null ist nicht erlaubt.")
+					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+			case "nachname" -> assertThat(throwable)
+					.isInstanceOf(ApiOperationException.class)
+					.hasMessageStartingWith("Attribut nachname: Der Wert null ist nicht erlaubt.")
+					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+			case "vorname" -> assertThat(throwable)
+					.isInstanceOf(ApiOperationException.class)
+					.hasMessageStartingWith("Attribut vorname: Der Wert null ist nicht erlaubt.")
+					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+			case "geschlecht" -> assertThat(throwable)
+					.isInstanceOf(ApiOperationException.class)
+					.hasMessageStartingWith("Attribut geschlecht: Der Wert null ist nicht erlaubt")
+					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+			case "personalTyp" -> assertThat(throwable)
+					.isInstanceOf(ApiOperationException.class)
+					.hasMessageStartingWith("Attribut personalTyp: Der Wert null ist nicht erlaubt.")
+					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+			default -> assertThat(throwable)
+					.isInstanceOf(ApiOperationException.class)
+					.hasMessageStartingWith("Die Daten des Patches enthalten das unbekannte Attribut")
+					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+		}
+
+	}
+
+	private static Stream<Arguments> provideMandatoryFieldsNullMappingAttributes() {
+		return Stream.of(
+				arguments("kuerzel", null),
+				arguments("nachname", null),
+				arguments("vorname", null),
+				arguments("geschlecht", null),
+				arguments("personalTyp", null)
+		);
+	}
+
 	private DTOLehrer getDtoLehrer() {
 		final var dtoLehrer = new DTOLehrer(1L, "abc", "abc");
 		dtoLehrer.PersonTyp = PersonalTyp.LEHRKRAFT;

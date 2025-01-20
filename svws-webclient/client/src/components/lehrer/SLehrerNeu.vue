@@ -11,7 +11,7 @@
 					:model-value="PersonalTyp.fromKuerzel(data.kuerzel) ?? PersonalTyp.LEHRKRAFT" @update:model-value="v => data.personalTyp = v?.kuerzel ?? '' " />
 				<svws-ui-text-input placeholder="Nachname" required :max-len="120" :valid="fieldIsValid('nachname')"
 					v-model="data.nachname" statistics />
-				<svws-ui-text-input placeholder="Rufname" :max-len="80" v-model="data.vorname" :valid="fieldIsValid('vorname')" statistics />
+				<svws-ui-text-input placeholder="Rufname" required :max-len="80" v-model="data.vorname" :valid="fieldIsValid('vorname')" statistics />
 				<svws-ui-spacing />
 				<svws-ui-select title="Geschlecht" required :items="Geschlecht.values()" :item-text="i => i.text" statistics
 					:model-value="Geschlecht.fromValue(data.geschlecht)" @update:model-value="v => data.geschlecht = v?.id ?? -1" />
@@ -82,7 +82,7 @@
 				case 'geschlecht':
 					return Geschlecht.fromValue(data.value.geschlecht) !== null;
 				case 'vorname':
-					return (JavaString.isBlank(data.value.vorname)) || (validateString(data.value.vorname, false, 80));
+					return validateString(data.value.vorname, true, 80);
 				case 'staatsangehoerigkeitID':
 					return (data.value.staatsangehoerigkeitID === null) || (Nationalitaeten.getByISO3(data.value.staatsangehoerigkeitID) !== null);
 				case 'titel':
