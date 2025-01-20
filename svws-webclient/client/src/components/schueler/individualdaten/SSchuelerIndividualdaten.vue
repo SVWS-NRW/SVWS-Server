@@ -38,9 +38,9 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Staatsangehörigkeit und Konfession" v-if="hatKompetenzAnsehen">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-select focus-class title="1. Staatsangehörigkeit" :readonly="!hatKompetenzUpdate" v-model="staatsangehoerigkeit" autocomplete
+				<svws-ui-select title="1. Staatsangehörigkeit" :readonly="!hatKompetenzUpdate" v-model="staatsangehoerigkeit" autocomplete
 					:items="Nationalitaeten.values()" :item-text="i => i.daten.staatsangehoerigkeit"
-					:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" required statistics />
+					:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" required statistics focus-class-content />
 				<svws-ui-select title="2. Staatsangehörigkeit" :readonly="!hatKompetenzUpdate" v-model="staatsangehoerigkeit2" autocomplete removable
 					:items="Nationalitaeten.values()" :item-text="i => i.daten.staatsangehoerigkeit"
 					:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" />
@@ -56,8 +56,8 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Migrationshintergrund" v-if="hatKompetenzAnsehen">
 			<template #actions>
-				<svws-ui-checkbox focus-class :disabled="!hatKompetenzUpdate" class="mt-3 xl:mt-0" :model-value="hatMigrationshintergrund" statistics
-					@update:model-value="hatMigrationshintergrund => patch({hatMigrationshintergrund})">
+				<svws-ui-checkbox :disabled="!hatKompetenzUpdate" class="mt-3 xl:mt-0" :model-value="hatMigrationshintergrund" statistics
+					@update:model-value="hatMigrationshintergrund => patch({hatMigrationshintergrund})" focus-class-content>
 					Migrationshintergrund vorhanden
 				</svws-ui-checkbox>
 			</template>
@@ -83,9 +83,9 @@
 				<svws-ui-checkbox :disabled="!hatKompetenzUpdate" :model-value="data.istDuplikat" @update:model-value="istDuplikat => patch({istDuplikat})">Ist Duplikat</svws-ui-checkbox>
 			</template>
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-select focus-class title="Status" :readonly="!hatKompetenzUpdate" :model-value="SchuelerStatus.data().getWertByKuerzel('' + data.status)"
+				<svws-ui-select title="Status" :readonly="!hatKompetenzUpdate" :model-value="SchuelerStatus.data().getWertByKuerzel('' + data.status)"
 					@update:model-value="status => (status?.daten(schuljahr)?.id !== undefined) && patch({ status: status?.daten(schuljahr)?.id })"
-					:items="SchuelerStatus.values()" :item-text="i => i.daten(schuljahr)?.text ?? '—'" statistics />
+					:items="SchuelerStatus.values()" :item-text="i => i.daten(schuljahr)?.text ?? '—'" statistics focus-class-content />
 				<svws-ui-select v-if="schuelerListeManager().daten().status === SchuelerStatus.EXTERN.daten(schuljahr)?.id" :readonly="!hatKompetenzUpdate"
 					title="Stammschule" v-model="inputStammschule" :items="mapSchulen.values()" :item-text="i => i.kuerzel ?? i.schulnummer" removable />
 				<div v-else />

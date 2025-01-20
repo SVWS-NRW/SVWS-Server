@@ -1,11 +1,11 @@
 <template>
 	<div class="page--content page--content--flex-row">
 		<Teleport to=".svws-sub-nav-target" defer>
-			<svws-ui-sub-nav>
+			<svws-ui-sub-nav :focus-switching-enabled :focus-help-visible>
 				<div class="ml-4 flex gap-0.5 items-center leading-none">
 					<div class="text-button font-bold mr-1 -mt-px">Raum:</div>
 					<svws-ui-select headless title="Raum" v-model="raum" :items="stundenplanManager().raumGetMengeVerwendetAsList()" :item-text="i => i.kuerzel" autocomplete
-						:item-filter="(i, text)=> i.filter(k => k.kuerzel.includes(text.toLocaleLowerCase()))" :item-sort="() => 0" type="transparent" focus-class />
+						:item-filter="(i, text)=> i.filter(k => k.kuerzel.includes(text.toLocaleLowerCase()))" :item-sort="() => 0" type="transparent" focus-class-sub-nav />
 					<svws-ui-button type="secondary" @click.stop="ignoreEmpty = !ignoreEmpty" title="Ganzen Stundenplan anzeigen, auch leere Stunden" class="h-9">
 						<span class="flex-grow w-32">{{ ignoreEmpty ? 'Keine leeren Stunden':'Alle Stunden' }}</span>
 					</svws-ui-button>
@@ -28,8 +28,11 @@
 	import type { StundenplanRaumProps } from "./SStundenplanRaumProps";
 	import type { List, StundenplanRaum } from "@core";
 	import { ArrayList } from "@core";
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<StundenplanRaumProps>();
+
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const _raum = shallowRef<StundenplanRaum | undefined>();
 	const wochentypAnzeige = shallowRef<number>(0);

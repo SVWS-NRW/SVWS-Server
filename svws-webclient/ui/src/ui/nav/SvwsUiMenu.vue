@@ -1,7 +1,6 @@
 <template>
-	<div
-		:id="focusSwitchingEnabled ? 'navigationFocusBorder' : ''" class="sidebar--menu focus-region" :class="{'highlighted': focusHelpVisible}">
-		<p v-if="focusSwitchingEnabled" v-show="focusHelpVisible" id="navigationFocusNumber" class="region-enumeration">1</p>
+	<div class="sidebar--menu focus-region" :class="{'highlighted': focusHelpVisible}">
+		<p v-if="focusSwitchingEnabled" v-show="focusHelpVisible" class="region-enumeration">1</p>
 		<div class="sidebar--menu--header" v-if="$slots.header">
 			<slot name="header" />
 		</div>

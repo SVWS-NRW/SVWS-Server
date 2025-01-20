@@ -1,4 +1,5 @@
 <template>
+	<p v-if="focusSwitchingEnabled && focusHelpVisible" class="region-enumeration sub-nav">7</p>
 	<div class="svws-ui-sub-nav">
 		<div class="svws-ui-sub-nav--wrapper">
 			<div v-if="state.scrolled" class="svws-ui-sub-nav--scroll-button bg-gradient-to-l pl-1" @click="scroll('left', true)">
@@ -6,7 +7,7 @@
 					<span class="icon i-ri-arrow-left-s-line" />
 				</svws-ui-button>
 			</div>
-			<div ref="subNavListElement" class="router-tab-bar--subnav" :class="{'router-tab-bar--subnav--tabs': type === 'tabs'}">
+			<div ref="subNavListElement" class="router-tab-bar--subnav" :class="{'router-tab-bar--subnav--tabs': type === 'tabs', 'focus-region': focusSwitchingEnabled, 'highlighted': focusHelpVisible}">
 				<slot />
 			</div>
 			<div v-if="!state.scrolledMax" class="svws-ui-sub-nav--scroll-button bg-gradient-to-r justify-end -right-1 pr-2" @click="scroll('right', true)">
@@ -23,8 +24,12 @@
 
 	const props = withDefaults(defineProps<{
 		type?: 'default' | 'tabs';
+		focusSwitchingEnabled? : boolean;
+		focusHelpVisible? : boolean;
 	}>(), {
 		type: 'default',
+		focusSwitchingEnabled: false,
+		focusHelpVisible: false,
 	});
 
 	onMounted(() => {

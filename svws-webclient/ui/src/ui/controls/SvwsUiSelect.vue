@@ -39,7 +39,7 @@
 			@keydown.space.prevent="onSpace"
 			@keydown.tab="onTab"
 			:focus="autofocus"
-			:class="{ 'contentFocusField': focusClass }" />
+			:class="{ 'contentFocusField': focusClassContent, 'subNavigationFocusField': focusClassSubNav }" />
 		<button v-if="removable && hasSelected && !readonly" role="button" @click.stop="removeItem" class="svws-remove">
 			<span class="icon i-ri-close-line my-1" />
 		</button>
@@ -87,7 +87,8 @@
 		indeterminate?: boolean;
 		highlightItem?: Item;
 		autofocus?: boolean;
-		focusClass?: boolean;
+		focusClassContent?: boolean;
+		focusClassSubNav?: boolean;
 	}>(), {
 		label: '',
 		title: '',
@@ -105,7 +106,8 @@
 		indeterminate: false,
 		highlightItem: undefined,
 		autofocus: false,
-		focusClass: false,
+		focusClassContent: false,
+		focusClassSubNav: false,
 	})
 
 	const emit = defineEmits<{

@@ -20,7 +20,7 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Zeugnis">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-checkbox focus-class :model-value="manager().daten().aufZeugnis" @update:model-value="value => patch({ aufZeugnis: value === true ? true : false })">
+				<svws-ui-checkbox :model-value="manager().daten().aufZeugnis" @update:model-value="value => patch({ aufZeugnis: value === true ? true : false })" focus-class-content>
 					Auf Zeugnis
 				</svws-ui-checkbox>
 				<svws-ui-text-input placeholder="Bezeichnung (Zeugnis)" :model-value="manager().daten().bezeichnungZeugnis"
@@ -31,7 +31,7 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Sonstiges">
 			<svws-ui-input-wrapper :grid="1">
-				<svws-ui-checkbox focus-class :model-value="manager().daten().istSichtbar" @update:model-value="value => patch({ istSichtbar: value === true ? true : false })">
+				<svws-ui-checkbox :model-value="manager().daten().istSichtbar" @update:model-value="value => patch({ istSichtbar: value === true ? true : false })" focus-class-content>
 					Sichtbar
 				</svws-ui-checkbox>
 				<template v-if="manager().schulform().daten(schuljahr)?.hatGymOb ?? false">

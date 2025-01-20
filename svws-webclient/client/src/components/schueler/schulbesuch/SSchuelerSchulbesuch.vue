@@ -24,7 +24,7 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Wechsel zu aufnehmender Schule">
 			<template #actions>
-				<svws-ui-checkbox focus-class :model-value="data.aufnehmdendBestaetigt === true" :indeterminate="data.aufnehmdendBestaetigt === null" @update:model-value="aufnehmdendBestaetigt => patch({ aufnehmdendBestaetigt })">
+				<svws-ui-checkbox :model-value="data.aufnehmdendBestaetigt === true" :indeterminate="data.aufnehmdendBestaetigt === null" @update:model-value="aufnehmdendBestaetigt => patch({ aufnehmdendBestaetigt })" focus-class-content>
 					Aufnahme bestätigt
 				</svws-ui-checkbox>
 			</template>

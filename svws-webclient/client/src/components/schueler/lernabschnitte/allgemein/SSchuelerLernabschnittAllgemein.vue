@@ -4,7 +4,7 @@
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-select :disabled="!hatUpdateKompetenz" title="Klasse" :items="manager().klasseGetMenge()" :item-text="i => i.kuerzel ?? '—'"
 					:model-value="klasse" @update:model-value="value => patch({ klassenID: ((value === undefined) || (value === null)) ? null : value.id })"
-					autocomplete statistics required autofocus focus-class />
+					autocomplete statistics required autofocus focus-class-content />
 				<svws-ui-select :disabled="!hatUpdateKompetenz" title="Jahrgang" :items="manager().jahrgangGetMenge()" :item-text="i => i.kuerzel ?? '—'"
 					:model-value="jahrgang" @update:model-value="value => patch({ jahrgangID: ((value === undefined) || (value === null)) ? null : value.id })"
 					autocomplete statistics required />

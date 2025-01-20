@@ -3,7 +3,7 @@
 		<div class="flex flex-col gap-y-16 lg:gap-y-20">
 			<svws-ui-content-card title="Allgemein">
 				<template #actions>
-					<svws-ui-checkbox focus-class :model-value="data.istSichtbar" :disabled="!hatKompetenzUpdate" @update:model-value="istSichtbar => patchPartial({ istSichtbar })"> Ist sichtbar </svws-ui-checkbox>
+					<svws-ui-checkbox :model-value="data.istSichtbar" :disabled="!hatKompetenzUpdate" @update:model-value="istSichtbar => patchPartial({ istSichtbar })" focus-class-content> Ist sichtbar </svws-ui-checkbox>
 				</template>
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-text-input placeholder="Kürzel" :disabled="!hatKompetenzUpdate" :required="true" :max-len="15" :valid="validateKuerzel" :model-value="data.kuerzel"

@@ -2,7 +2,7 @@
 	<div v-if="manager().hasDaten()" class="page--content">
 		<svws-ui-content-card title="Allgemein">
 			<template #actions>
-				<svws-ui-checkbox focus-class v-model="istSichtbar" :disabled="!hatKompetenzUpdate"> Ist sichtbar </svws-ui-checkbox>
+				<svws-ui-checkbox v-model="istSichtbar" :disabled="!hatKompetenzUpdate" focus-class-content> Ist sichtbar </svws-ui-checkbox>
 			</template>
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input placeholder="Kürzel" :disabled="!hatKompetenzUpdate" :model-value="data().kuerzel" @change="kuerzel => patch({ kuerzel: kuerzel ?? '' })" type="text" />

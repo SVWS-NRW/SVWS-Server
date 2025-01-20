@@ -8,10 +8,10 @@
 		</Teleport>
 		<template v-if="hatBlockung">
 			<Teleport to=".svws-sub-nav-target" v-if="isMounted">
-				<svws-ui-sub-nav>
+				<svws-ui-sub-nav :focus-switching-enabled :focus-help-visible>
 					<div v-if="hatUpdateKompetenz" class="flex gap-0.5 items-center leading-none ml-2">
 						<div class="text-button font-normal mr-1 -mt-px">Ergebnis:</div>
-						<svws-ui-button type="transparent" @click.stop="ergebnisAbleiten()" title="Eine neue Blockung auf Grundlage dieses Ergebnisses erstellen." class="text-black dark:text-white">
+						<svws-ui-button type="transparent" @click.stop="ergebnisAbleiten()" title="Eine neue Blockung auf Grundlage dieses Ergebnisses erstellen." class="text-black dark:text-white subNavigationFocusField">
 							<span class="icon-sm i-ri-file-copy-line" /> Ableiten
 						</svws-ui-button>
 						<s-gost-kursplanung-kursansicht-modal-blockung-hochschreiben :get-datenmanager :ergebnis-hochschreiben v-slot="{ openModal }">
@@ -129,8 +129,11 @@
 	import type { GostKursplanungProps } from "./SGostKursplanungProps";
 	import type { DownloadPDFTypen } from "./DownloadPDFTypen";
 	import { BenutzerKompetenz, GostHalbjahr, HashSet, SetUtils } from "@core";
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<GostKursplanungProps>();
+
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const hatUpdateKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN)
 		|| (props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)

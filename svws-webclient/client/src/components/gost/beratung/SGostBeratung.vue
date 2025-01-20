@@ -1,8 +1,8 @@
 <template>
 	<div v-if="jahrgangsdaten() !== undefined" class="page--content page--content--full page--content--gost-beratung">
 		<Teleport to=".svws-sub-nav-target" v-if="isMounted && hatUpdateKompetenz">
-			<svws-ui-sub-nav>
-				<svws-ui-button :type="modus === 'normal' ? 'transparent' : 'danger'" @click="switchModus" title="Modus wechseln">
+			<svws-ui-sub-nav :focus-switching-enabled :focus-help-visible>
+				<svws-ui-button class="subNavigationFocusField" :type="modus === 'normal' ? 'transparent' : 'danger'" @click="switchModus" title="Modus wechseln">
 					<span class="icon-sm i-ri-loop-right-line" />
 					Modus: <span>{{ modus }}</span>
 				</svws-ui-button>
@@ -49,8 +49,11 @@
 	import { BenutzerKompetenz, BenutzerTyp, type GostBeratungslehrer, type LehrerListeEintrag } from "@core";
 	import { onMounted, computed, ref } from "vue";
 	import { lehrer_filter } from '~/utils/helfer';
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<GostBeratungProps>();
+
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const selected = ref<GostBeratungslehrer[]>([]);
 

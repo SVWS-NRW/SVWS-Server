@@ -1,7 +1,7 @@
 <template>
 	<div class="inline-flex">
 		<label class="svws-ui-checkbox" :class="{'svws-statistik': statistics, 'svws-bw': bw, 'svws-ui-toggle': type === 'toggle'}" :title :color>
-			<input type="checkbox" v-model="checked" :class="{'svws-headless': headless && type !== 'toggle', 'contentFocusField': focusClass}" :disabled :readonly :indeterminate :color ref="input">
+			<input type="checkbox" v-model="checked" :class="{'svws-headless': headless && type !== 'toggle', 'contentFocusField': focusClassContent}" :disabled :readonly :indeterminate :color ref="input">
 			<span v-if="type === 'toggle'" class="svws-ui-toggle--icon" />
 			<span v-if="$slots.default" class="svws-ui-checkbox--label">
 				<span v-if="statistics" class="-mb-1 inline-block align-top">
@@ -33,7 +33,7 @@
 		readonly?: boolean;
 		color?: 'success' | 'error' | 'warning';
 		autofocus?: boolean;
-		focusClass?: boolean;
+		focusClassContent?: boolean;
 	}>(), {
 		statistics: false,
 		disabled: false,
@@ -45,7 +45,7 @@
 		readonly: false,
 		color: undefined,
 		autofocus: false,
-		focusClass: false,
+		focusClassContent: false,
 	});
 
 	onMounted(() => doFocus())

@@ -14,7 +14,7 @@ export function useRegionSwitch() {
 		["Digit4", "listFocusField"],
 		["Digit5", "tabsFirstLevelFocusField"],
 		["Digit6", "tabsSecondLevelFocusField"],
-		["Digit7", "tabsThirdLevelFocusField"],
+		["Digit7", "subNavigationFocusField"],
 		["Digit8", "contentFocusField"],
 	]);
 

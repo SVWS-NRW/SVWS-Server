@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<svws-ui-button @click="toggle_modal" size="small" type="transparent" class="hover--danger">
+		<svws-ui-button @click="toggle_modal" size="small" type="transparent" class="hover--danger subNavigationFocusField">
 			<span class="icon-sm i-ri-delete-bin-line" />
 			<template v-if="hatFesteWahlen">Nicht feste Schüler-Fachwahlen zurücksetzen</template>
 			<template v-else>Alle Schüler-Fachwahlen zurücksetzen</template>

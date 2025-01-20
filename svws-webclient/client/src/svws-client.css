@@ -122,4 +122,9 @@ input[type="file"]:focus-visible::file-selector-button {
 	font-weight: bold;
 	font-size: x-large;
 	pointer-events: none;
+	margin-top: -4px;
+
+	&.sub-nav {
+		margin-top: -7px;
+	}
 }

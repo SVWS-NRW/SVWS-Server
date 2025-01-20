@@ -3,7 +3,7 @@
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-input-wrapper>
-					<svws-ui-checkbox focus-class :disabled="!hatUpdateKompetenz" :model-value="data().istSichtbar" @update:model-value="istSichtbar => patch({istSichtbar: istSichtbar === true})"> Ist sichtbar </svws-ui-checkbox>
+					<svws-ui-checkbox :disabled="!hatUpdateKompetenz" :model-value="data().istSichtbar" @update:model-value="istSichtbar => patch({istSichtbar: istSichtbar === true})" focus-class-content> Ist sichtbar </svws-ui-checkbox>
 					<svws-ui-checkbox :disabled="!hatUpdateKompetenz" :model-value="data().istRelevantFuerStatistik" @update:model-value="istRelevantFuerStatistik => patch({istRelevantFuerStatistik: istRelevantFuerStatistik === true})"> Ist Relevant für Statistik </svws-ui-checkbox>
 				</svws-ui-input-wrapper>
 				<svws-ui-text-input placeholder="Kürzel" :disabled="!hatUpdateKompetenz" :model-value="data().kuerzel" @change="kuerzel => patch({kuerzel: kuerzel ?? undefined})" required focus />

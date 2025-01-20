@@ -2,7 +2,7 @@
 	<div class="page--content">
 		<svws-ui-content-card title="Schulangaben" v-if="auswahl !== undefined">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-checkbox focus-class :model-value="auswahl.istSichtbar" @update:model-value="istSichtbar => patch({ istSichtbar })"> Ist sichtbar </svws-ui-checkbox>
+				<svws-ui-checkbox :model-value="auswahl.istSichtbar" @update:model-value="istSichtbar => patch({ istSichtbar })" focus-class-content> Ist sichtbar </svws-ui-checkbox>
 				<svws-ui-input-number placeholder="Sortierung" :model-value="auswahl.sortierung" @change="sortierung=> sortierung && patch({ sortierung })" />
 				<svws-ui-text-input placeholder="Kürzel" :model-value="auswahl.kuerzel" @change="kuerzel => patch({ kuerzel: kuerzel || null })" />
 				<svws-ui-text-input placeholder="Kurzbezeichnung" :model-value="auswahl.kurzbezeichnung" @change="kurzbezeichnung => patch({ kurzbezeichnung })" />
