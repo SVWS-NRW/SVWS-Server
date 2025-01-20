@@ -558,7 +558,7 @@ class DataLehrerStammdatenTest {
 		when(conn.queryByKey(DTOOrt.class, 22L)).thenReturn(mock(DTOOrt.class));
 		when(conn.queryByKey(DTOOrtsteil.class, 11L)).thenReturn(dtoOrtsteil);
 
-		this.dataLehrerStammdaten.mapAttribute(expectedDTO, "ortsteilID", 11, Map.of("wohnortID", 22));
+		this.dataLehrerStammdaten.mapAttribute(expectedDTO, "ortsteilID", 11, Map.of("wohnortID", 22L));
 
 		assertThat(expectedDTO).hasFieldOrPropertyWithValue("Ortsteil_ID", 11L);
 	}
@@ -570,7 +570,7 @@ class DataLehrerStammdatenTest {
 		when(conn.queryByKey(DTOOrt.class, 22L)).thenReturn(mock(DTOOrt.class));
 		when(conn.queryByKey(DTOOrtsteil.class, 11L)).thenReturn(new DTOOrtsteil(11L, "abc"));
 
-		this.dataLehrerStammdaten.mapAttribute(expectedDTO, "ortsteilID", 11, Map.of("wohnortID", 22));
+		this.dataLehrerStammdaten.mapAttribute(expectedDTO, "ortsteilID", 11, Map.of("wohnortID", 22L));
 
 		assertThat(expectedDTO).hasFieldOrPropertyWithValue("Ortsteil_ID", null);
 	}
@@ -582,7 +582,7 @@ class DataLehrerStammdatenTest {
 		when(conn.queryByKey(DTOOrt.class, 22L)).thenReturn(mock(DTOOrt.class));
 		when(conn.queryByKey(DTOOrtsteil.class, 11L)).thenReturn(null);
 
-		this.dataLehrerStammdaten.mapAttribute(expectedDTO, "ortsteilID", 11, Map.of("wohnortID", 22));
+		this.dataLehrerStammdaten.mapAttribute(expectedDTO, "ortsteilID", 11, Map.of("wohnortID", 22L));
 
 		assertThat(expectedDTO).hasFieldOrPropertyWithValue("Ortsteil_ID", null);
 	}
@@ -596,7 +596,7 @@ class DataLehrerStammdatenTest {
 		dtoOrtsteil.Ort_ID = 15L;
 		when(conn.queryByKey(DTOOrtsteil.class, 11L)).thenReturn(dtoOrtsteil);
 
-		this.dataLehrerStammdaten.mapAttribute(expectedDTO, "ortsteilID", 11, Map.of("wohnortID", 22));
+		this.dataLehrerStammdaten.mapAttribute(expectedDTO, "ortsteilID", 11, Map.of("wohnortID", 22L));
 
 		assertThat(expectedDTO).hasFieldOrPropertyWithValue("Ortsteil_ID", null);
 	}
@@ -606,7 +606,7 @@ class DataLehrerStammdatenTest {
 	void mapAttributeTest_ortsteilIDNotValid() {
 		when(conn.queryByKey(DTOOrt.class, 22L)).thenReturn(mock(DTOOrt.class));
 
-		final var throwable = catchThrowable(() -> this.dataLehrerStammdaten.mapAttribute(getDtoLehrer(), "ortsteilID", -1, Map.of("wohnortID", 22)));
+		final var throwable = catchThrowable(() -> this.dataLehrerStammdaten.mapAttribute(getDtoLehrer(), "ortsteilID", -1, Map.of("wohnortID", 22L)));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)

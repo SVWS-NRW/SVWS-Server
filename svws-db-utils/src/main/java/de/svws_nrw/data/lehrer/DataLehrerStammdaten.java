@@ -16,7 +16,6 @@ import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerFoto;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response.Status;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -105,11 +104,11 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 		daten.id = dtoLehrer.ID;
 		daten.kuerzel = dtoLehrer.Kuerzel;
 		daten.personalTyp = (dtoLehrer.PersonTyp == null) ? "" : dtoLehrer.PersonTyp.kuerzel;
-		daten.anrede = StringUtils.defaultString(dtoLehrer.Anrede);
-		daten.titel = StringUtils.defaultString(dtoLehrer.Titel);
-		daten.amtsbezeichnung = StringUtils.defaultString(dtoLehrer.Amtsbezeichnung);
-		daten.nachname = StringUtils.defaultString(dtoLehrer.Nachname);
-		daten.vorname = StringUtils.defaultString(dtoLehrer.Vorname);
+		daten.anrede = (dtoLehrer.Anrede == null) ? "" : dtoLehrer.Anrede;
+		daten.titel = (dtoLehrer.Titel == null) ? "" : dtoLehrer.Titel;
+		daten.amtsbezeichnung = (dtoLehrer.Amtsbezeichnung == null) ? "" : dtoLehrer.Amtsbezeichnung;
+		daten.nachname = (dtoLehrer.Nachname == null) ? "" : dtoLehrer.Nachname;
+		daten.vorname = (dtoLehrer.Vorname == null) ? "" : dtoLehrer.Vorname;
 		daten.geschlecht = (dtoLehrer.Geschlecht == null) ? -1 : dtoLehrer.Geschlecht.id;
 		daten.geburtsdatum = dtoLehrer.Geburtsdatum;
 		daten.staatsangehoerigkeitID = (dtoLehrer.staatsangehoerigkeit == null) ? null : dtoLehrer.staatsangehoerigkeit.daten.iso3;
@@ -176,7 +175,7 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 					JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_HausNrZusatz.datenlaenge(), "hausnummerZusatz");
 			case "wohnortID" -> setWohnort(dto, JSONMapper.convertToLong(value, true, "wohnortID"),
 					Optional.ofNullable(map.get("ortsteilID")).map(v -> Long.parseLong(v.toString())).orElse(dto.Ortsteil_ID));
-			case "ortsteilID" -> setWohnort(dto, (map.get("wohnortID") == null) ? dto.Ort_ID : (Long.valueOf((Integer) map.get("wohnortID"))),
+			case "ortsteilID" -> setWohnort(dto, (map.get("wohnortID") == null) ? dto.Ort_ID : (Long) map.get("wohnortID"),
 					JSONMapper.convertToLong(value, true, "ortsteilID"));
 			case "telefon" -> dto.telefon =
 					JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Tel.datenlaenge(), "telefon");

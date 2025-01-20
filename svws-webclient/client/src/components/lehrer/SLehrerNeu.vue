@@ -8,7 +8,7 @@
 				</svws-ui-input-wrapper>
 				<svws-ui-text-input placeholder="Kürzel" required :max-len="10" :valid="fieldIsValid('kuerzel')" v-model="data.kuerzel" statistics />
 				<svws-ui-select title="Personal-Typ" required :items="PersonalTyp.values()" :item-text="i => i.bezeichnung"
-					:model-value="PersonalTyp.fromKuerzel(data.kuerzel)" @update:model-value="v => data.personalTyp = v?.kuerzel ?? '' " />
+					:model-value="PersonalTyp.fromKuerzel(data.kuerzel) ?? PersonalTyp.LEHRKRAFT" @update:model-value="v => data.personalTyp = v?.kuerzel ?? '' " />
 				<svws-ui-text-input placeholder="Nachname" required :max-len="120" :valid="fieldIsValid('nachname')"
 					v-model="data.nachname" statistics />
 				<svws-ui-text-input placeholder="Rufname" :max-len="80" v-model="data.vorname" :valid="fieldIsValid('vorname')" statistics />
@@ -57,7 +57,9 @@
 	import { orte_filter, orte_sort, ortsteilSort, staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort } from "~/utils/helfer";
 
 	const props = defineProps<LehrerNeuProps>();
-	const data = ref<LehrerStammdaten>(new LehrerStammdaten())
+	const data = ref<LehrerStammdaten>(
+		Object.assign(new LehrerStammdaten(), {personalTyp: "LEHRKRAFT"})
+	);
 	const ortsteile = computed<Array<OrtsteilKatalogEintrag>>(() => {
 		const result : Array<OrtsteilKatalogEintrag> = [];
 		for (const ortsteil of props.mapOrtsteile.values())
