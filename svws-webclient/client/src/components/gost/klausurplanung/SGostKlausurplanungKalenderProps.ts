@@ -4,8 +4,6 @@ import type {
 	GostJahrgangsdaten,
 	GostKlausurtermin,
 	GostKlausurplanManager,
-	StundenplanKalenderwochenzuordnung,
-	StundenplanManager,
 	BenutzerKompetenz,
 	Schuljahresabschnitt,
 } from "@core";
