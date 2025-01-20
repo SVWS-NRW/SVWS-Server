@@ -307,7 +307,7 @@ describe("Bedingtes Rendern mit CSS-Prüfung ", () => {
 	});
 });
 
-describe.concurrent("Tests Funktionen/Computeds", () => {
+describe("Tests Funktionen/Computeds", () => {
 	let wrapper: VueWrapper;
 	beforeEach(() => {
 		wrapper = mount(SvwsUiDropdownList, { props: default_props });

@@ -56,7 +56,7 @@ test("Teste die default-Werte der props", () => {
 		expect(wrapper.props()[prop as keyof typeof defaultProps]).toBe(expectedValue);
 });
 
-describe.concurrent("Tests für die CSS-Props", () => {
+describe("Tests für die CSS-Props", () => {
 	// [Propname, Klassen- oder Stylename, Beschreibung, Class(0)Style(1)]
 	test.each([
 		["disabled", "radio--label--disabled", "Prop disabled wird an CSS übergeben"],
