@@ -2,7 +2,7 @@
 	<label :id="idComponent" class="radio--label" :class="{
 		'radio--label--disabled': disabled,
 		'radio--statistics': statistics,
-		'radio--label--checked': forceChecked || (modelValue === value) || checked,
+		// 'radio--label--checked-': forceChecked || (modelValue === value) || checked,
 		'radio--label--no-icon': !icon,
 		'radio--label--no-text': !label,
 		'radio--icon-type-view': iconType === 'view'
