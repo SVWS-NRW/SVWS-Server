@@ -190,6 +190,7 @@ public final class DBUtilsSchuelerLernabschnittsdaten {
 			final DTOSchuelerLernabschnittsdaten sla = createDefault(idSLA, idSchueler, schuljahresabschnitt, klasse, jahrgang);
 			if (slaPrev.Schulbesuchsjahre != null)
 				sla.Schulbesuchsjahre = schuljahrNeu ? (slaPrev.Schulbesuchsjahre + 1) : slaPrev.Schulbesuchsjahre;
+			sla.Hochrechnung = slaPrev.Hochrechnung;
 			sla.BilingualerZweig = slaPrev.BilingualerZweig;
 			sla.Schwerbehinderung = slaPrev.Schwerbehinderung;
 			sla.Foerderschwerpunkt_ID = slaPrev.Foerderschwerpunkt_ID;
