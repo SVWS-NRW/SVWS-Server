@@ -174,8 +174,8 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 			case "hausnummerZusatz" -> dto.HausNrZusatz =
 					JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_HausNrZusatz.datenlaenge(), "hausnummerZusatz");
 			case "wohnortID" -> setWohnort(dto, JSONMapper.convertToLong(value, true, "wohnortID"),
-					Optional.ofNullable(map.get("ortsteilID")).map(v -> Long.parseLong(v.toString())).orElse(dto.Ortsteil_ID));
-			case "ortsteilID" -> setWohnort(dto, (map.get("wohnortID") == null) ? dto.Ort_ID : (Long) map.get("wohnortID"),
+					Optional.ofNullable(map.get("ortsteilID")).map(v -> ((Number) v).longValue()).orElse(dto.Ortsteil_ID));
+			case "ortsteilID" -> setWohnort(dto, (map.get("wohnortID") == null) ? dto.Ort_ID : ((Number) map.get("wohnortID")).longValue(),
 					JSONMapper.convertToLong(value, true, "ortsteilID"));
 			case "telefon" -> dto.telefon =
 					JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Tel.datenlaenge(), "telefon");
