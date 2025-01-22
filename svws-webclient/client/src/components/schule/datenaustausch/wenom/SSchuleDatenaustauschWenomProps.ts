@@ -1,6 +1,7 @@
 import type { ENMDaten, JavaMap, OAuth2ClientSecret, SimpleOperationResponse } from "@core";
 
 export interface SchuleDatenaustauschWenomProps {
+	mapInitialKennwoerter: () => JavaMap<number, string>;
 	getEnmDaten: () => Promise<ENMDaten | null>;
 	getEnmCredentials: () => Promise<JavaMap<number, string>>;
 	getCredentials: () => Promise<OAuth2ClientSecret | null>;

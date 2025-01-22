@@ -59,7 +59,7 @@
 			<!-- Weitere Eingabemöglichkeiten für den zuvor gewählten Untis-Import (rechte Seite - spezielle Ansicht nach Auswahl) -->
 			<div class="flex flex-col gap-8">
 				<div v-if="(aktuell === 'creds') && (daten !== null)" class="h-full w-full overflow-hidden max-w-196">
-					<enm-lehrer-credentials :enm-daten="() => daten ?? new ENMDaten()" :map-initial-kennwoerter="() => mapInitialKennwoerter" />
+					<enm-lehrer-credentials :enm-daten="() => daten ?? new ENMDaten()" :map-initial-kennwoerter />
 				</div>
 				<div v-if="aktuell === 'setup'" class="max-w-196">
 					<div class="text-headline-md mb-4">Verbindung zum Webnotenmanager einrichten</div>
@@ -145,8 +145,8 @@
 
 	import { computed, onMounted, ref, shallowRef } from "vue";
 	import type { SchuleDatenaustauschWenomProps } from './SSchuleDatenaustauschWenomProps';
-	import { ENMDaten, HashMap } from "@core";
-	import type { JavaMap, OAuth2ClientSecret, SimpleOperationResponse } from "@core";
+	import { ENMDaten } from "@core";
+	import type { OAuth2ClientSecret, SimpleOperationResponse } from "@core";
 
 	const props = defineProps<SchuleDatenaustauschWenomProps>();
 
@@ -156,7 +156,6 @@
 	const clientSecret = shallowRef<OAuth2ClientSecret | null>(null);
 	const connected = ref<boolean>(false);
 	const daten = ref<ENMDaten | null>(null);
-	const mapInitialKennwoerter = ref<JavaMap<number, string>>(new HashMap<number, string>());
 	const lehrerOhneEmail = ref<number>(0);
 	const lehrerDoppelteEmail = ref<number>(0);
 	const lehrerFehlerhafteEmail = ref<number>(0);
@@ -166,7 +165,6 @@
 		clientSecret.value = await props.getCredentials();
 		await checkConnection();
 		daten.value = await props.getEnmDaten();
-		mapInitialKennwoerter.value = await props.getEnmCredentials();
 		checkENMLehrerEMailAdressen();
 	})
 

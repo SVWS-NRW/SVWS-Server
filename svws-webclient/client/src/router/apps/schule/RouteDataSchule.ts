@@ -9,11 +9,13 @@ import { AESAlgo } from "~/utils/crypto/aesAlgo";
 
 interface RouteStateSchule extends RouteStateInterface {
 	smtpServerKonfiguration: SMTPServerKonfiguration;
+	mapInitialKennwoerter: JavaMap<number, string>;
 }
 
 const defaultState = <RouteStateSchule> {
 	smtpServerKonfiguration: new SMTPServerKonfiguration(),
 	view: routeSchuleFaecher,
+	mapInitialKennwoerter: new HashMap<number, string>(),
 };
 
 export class RouteDataSchule extends RouteData<RouteStateSchule> {
@@ -44,6 +46,14 @@ export class RouteDataSchule extends RouteData<RouteStateSchule> {
 
 	get smtpServerKonfiguration(): SMTPServerKonfiguration {
 		return this._state.value.smtpServerKonfiguration;
+	}
+
+	get mapInitialKennwoerter(): JavaMap<number, string> {
+		return this._state.value.mapInitialKennwoerter;
+	}
+
+	set mapInitialKennwoerter(value: JavaMap<number, string>) {
+		this._state.value.mapInitialKennwoerter = value;
 	}
 
 	patchSMTServerKonfiguration = async (data : Partial<SMTPServerKonfiguration>) => {
