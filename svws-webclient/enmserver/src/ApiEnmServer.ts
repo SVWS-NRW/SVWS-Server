@@ -5,6 +5,7 @@ import { ENMLeistungBemerkungen } from "@core/core/data/enm/ENMLeistungBemerkung
 import { ENMLernabschnitt } from "@core/core/data/enm/ENMLernabschnitt";
 import { ENMSchuelerAnkreuzkompetenz } from "@core/core/data/enm/ENMSchuelerAnkreuzkompetenz";
 import { ENMTeilleistung } from "@core/core/data/enm/ENMTeilleistung";
+import { ServerMode } from "@core/index";
 
 export class ApiEnmServer extends BaseApi {
 
@@ -17,6 +18,24 @@ export class ApiEnmServer extends BaseApi {
 	 */
 	public constructor(url : string, username : string, password : string) {
 		super(url, username, password);
+	}
+
+	/**
+	 * Implementierung der GET-Methode getServerMode für den Zugriff auf die URL https://{hostname}/api/mode
+	 *
+	 * Liest den Modus aus, in dem der Server betrieben wird.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Ein String, mit dem Server-Mode. Dieser wird direkt in das zugehörige Objekt umgewandelt.
+	 *     - Mime-Type: text/plain
+	 *     - Rückgabe-Typ: ServerMode
+	 *   Code 401: Die Authentifzierung des Benutzers ist fehlgeschlagen
+	 *   Code 500: Ein interner Fehler im ENM-Server ist aufgetreten.
+	 *
+	 * @returns die GZip-komprimierte ENM-JSON-Datei
+	 */
+	public async getServerMode() : Promise<ServerMode> {
+		return ServerMode.getByText(await super.getText("/api/mode"));
 	}
 
 	/**
