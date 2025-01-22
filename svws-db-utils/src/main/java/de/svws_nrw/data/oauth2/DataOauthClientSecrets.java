@@ -107,7 +107,7 @@ public final class DataOauthClientSecrets extends DataManager<Long> {
 				}
 			}),
 			Map.entry("clientID", (conn, dto, value, map) -> dto.ClientID = JSONMapper.convertToString(value, false, false, null)),
-			Map.entry("clientSecret", (conn, dto, value, map) -> dto.ClientSecret = JSONMapper.convertToString(value, false, false, null)));
+			Map.entry("clientSecret", (conn, dto, value, map) -> dto.ClientSecret = JSONMapper.convertToString(value, false, true, null)));
 
 
 	@Override
