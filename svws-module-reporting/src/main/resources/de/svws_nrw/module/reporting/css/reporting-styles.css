@@ -1,23 +1,5 @@
 /*
 ##########################################################################################################################
-Seitenumbrüche: Wenn Style angewendet wird, wird davor beim Druck ein Seitenumbruch eingefügt, außer bei erster Seite.
-##########################################################################################################################
-*/
-.start-new-page {
-	page-break-before: always;
-}
-.start-new-page:first-child {
-	page-break-before: avoid;
-}
-.start-new-page-duplex {
-	page-break-after: right;
-}
-.start-new-page-duplex:last-child {
-	page-break-after: avoid;
-}
-
-/*
-##########################################################################################################################
 Schriftart definieren
 ##########################################################################################################################
  */
@@ -103,11 +85,13 @@ h4 {
 }
 
 p	{
+	font-size: 10pt;
 	margin: 0.25em 0 0;
 	padding: 0;
 }
 
 ul 	{
+	font-size: 10pt;
 	margin: 0.25em 0 0 1em;
 	padding: 0;
 }
@@ -343,6 +327,39 @@ Definitionen für Spacing, Padding, Margin
 }
 .m-r-2 {
 	margin-right: 2mm
+}
+
+
+.m-t-1em {
+	margin-top: 1em;
+}
+
+.m-t-2em {
+	margin-top: 2em;
+}
+
+.m-b-1em {
+	margin-bottom: 1em;
+}
+
+.m-b-2em {
+	margin-bottom: 2em;
+}
+
+.m-l-1em {
+	margin-left: 1em;
+}
+
+.m-l-2em {
+	margin-left: 2em;
+}
+
+.m-r-1em {
+	margin-right: 1em;
+}
+
+.m-r-2em {
+	margin-right: 2em;
 }
 
 

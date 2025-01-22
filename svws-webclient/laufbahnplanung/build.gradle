@@ -8,12 +8,10 @@ task assembleLaufbahnplanung(type: NpmRun) {
 	dependsOn rootProject.npmPrepare
 	dependsOn project(':svws-webclient:core').tasks.assemble
 	dependsOn ':svws-webclient:ui:assemble'
-	dependsOn ':svws-webclient:components:assemble'
 	group "build"
 	args = ['build']
 	inputs.files fileTree("$rootDir/svws-webclient/core").matching { exclude "build", "dist" },
 		fileTree("$rootDir/svws-webclient/ui").matching { exclude "build", "dist", ".histoire" },
-		fileTree("$rootDir/svws-webclient/components").matching { exclude "build", "dist", ".histoire" },
 		fileTree("$projectDir").matching { exclude "build" }
 	outputs.dir file("$buildDir/output")
 }

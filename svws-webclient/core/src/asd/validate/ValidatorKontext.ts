@@ -50,7 +50,7 @@ export class ValidatorKontext extends JavaObject {
 	 *
 	 * @return die Stammdaten der Schule
 	 */
-	public getSchuleStammdaten() : SchuleStammdaten | null {
+	public getSchuleStammdaten() : SchuleStammdaten {
 		return this._schuleStammdaten;
 	}
 

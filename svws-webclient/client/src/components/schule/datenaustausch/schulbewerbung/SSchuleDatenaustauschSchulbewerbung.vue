@@ -23,7 +23,7 @@
 					<div class="flex items-start gap-3">
 						Hier wird zukünftig der Export zu Schulbewerbung.de gehandhabt...
 					</div>
-					<svws-ui-button type="primary" @click="doExport">
+					<svws-ui-button class="contentFocusField" type="primary" @click="doExport">
 						<span class="icon i-ri-upload-2-line" />
 						<span>Export</span>
 					</svws-ui-button>

@@ -1,5 +1,5 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
-import type { StundenplanAuswahlProps } from "@comp";
+import type { StundenplanAuswahlProps } from "@ui";
 
 import type { DeveloperNotificationException} from "@core";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";

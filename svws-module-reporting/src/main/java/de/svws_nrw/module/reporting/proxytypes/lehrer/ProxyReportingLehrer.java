@@ -3,6 +3,7 @@ package de.svws_nrw.module.reporting.proxytypes.lehrer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.asd.types.Geschlecht;
+import de.svws_nrw.core.types.PersonalTyp;
 import de.svws_nrw.core.types.schule.Nationalitaeten;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
@@ -24,30 +25,33 @@ public class ProxyReportingLehrer extends ReportingLehrer {
 	 * @param lehrerStammdaten Stammdaten-Objekt aus der DB.
 	 */
 	public ProxyReportingLehrer(final ReportingRepository reportingRepository, final LehrerStammdaten lehrerStammdaten) {
-		super(ersetzeNullDurchEmpty(lehrerStammdaten.amtsbezeichnung),
-				ersetzeNullDurchEmpty(lehrerStammdaten.anrede),
-				ersetzeNullDurchEmpty(lehrerStammdaten.emailPrivat),
-				ersetzeNullDurchEmpty(lehrerStammdaten.emailDienstlich),
+		super(ersetzeNullBlankTrim(lehrerStammdaten.amtsbezeichnung),
+				ersetzeNullBlankTrim(lehrerStammdaten.anrede),
+				ersetzeNullBlankTrim(lehrerStammdaten.emailPrivat),
+				ersetzeNullBlankTrim(lehrerStammdaten.emailDienstlich),
+				"",
 				lehrerStammdaten.foto,
-				ersetzeNullDurchEmpty(lehrerStammdaten.geburtsdatum),
+				ersetzeNullBlankTrim(lehrerStammdaten.geburtsdatum),
 				"",
 				"",
 				"",
 				Geschlecht.fromValue(lehrerStammdaten.geschlecht),
-				ersetzeNullDurchEmpty(lehrerStammdaten.hausnummer),
-				ersetzeNullDurchEmpty(lehrerStammdaten.hausnummerZusatz),
+				ersetzeNullBlankTrim(lehrerStammdaten.hausnummer),
+				ersetzeNullBlankTrim(lehrerStammdaten.hausnummerZusatz),
 				lehrerStammdaten.id,
-				ersetzeNullDurchEmpty(lehrerStammdaten.kuerzel),
-				ersetzeNullDurchEmpty(lehrerStammdaten.nachname),
-				ersetzeNullDurchEmpty(lehrerStammdaten.personalTyp),
+				ersetzeNullBlankTrim(lehrerStammdaten.kuerzel),
+				ersetzeNullBlankTrim(lehrerStammdaten.nachname),
+				PersonalTyp.fromKuerzel(lehrerStammdaten.personalTyp),
 				Nationalitaeten.getByDESTATIS(lehrerStammdaten.staatsangehoerigkeitID),
 				null,
-				ersetzeNullDurchEmpty(lehrerStammdaten.strassenname),
-				ersetzeNullDurchEmpty(lehrerStammdaten.telefon),
-				ersetzeNullDurchEmpty(lehrerStammdaten.telefonMobil),
-				ersetzeNullDurchEmpty(lehrerStammdaten.titel),
-				ersetzeNullDurchEmpty(lehrerStammdaten.vorname),
-				ersetzeNullDurchEmpty(lehrerStammdaten.vorname),
+				ersetzeNullBlankTrim(lehrerStammdaten.strassenname),
+				ersetzeNullBlankTrim(lehrerStammdaten.telefon),
+				ersetzeNullBlankTrim(lehrerStammdaten.telefonMobil),
+				"",
+				"",
+				ersetzeNullBlankTrim(lehrerStammdaten.titel),
+				ersetzeNullBlankTrim(lehrerStammdaten.vorname),
+				ersetzeNullBlankTrim(lehrerStammdaten.vorname),
 				(lehrerStammdaten.wohnortID != null) ? reportingRepository.katalogOrte().get(lehrerStammdaten.wohnortID) : null,
 				(lehrerStammdaten.ortsteilID != null) ? reportingRepository.katalogOrtsteile().get(lehrerStammdaten.ortsteilID) : null);
 

@@ -8,7 +8,7 @@ import { RouteDataConfig } from "~/router/apps/config/RouteDataConfig";
 
 import type { ConfigAppProps } from "~/components/config/SConfigAppProps";
 import { api } from "~/router/Api";
-import { ServerMode } from "../../../../../core/src/core/types/ServerMode";
+import { ServerMode } from "@core/core/types/ServerMode";
 
 const SConfigApp = () => import("~/components/config/SConfigApp.vue")
 

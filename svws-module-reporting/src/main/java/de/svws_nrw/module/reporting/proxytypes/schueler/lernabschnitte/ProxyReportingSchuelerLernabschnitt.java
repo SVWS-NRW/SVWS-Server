@@ -39,21 +39,21 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	 * @param schuelerLernabschnittsdaten Stammdaten-Objekt aus der DB.
 	 */
 	public ProxyReportingSchuelerLernabschnitt(final ReportingRepository reportingRepository, final SchuelerLernabschnittsdaten schuelerLernabschnittsdaten) {
-		super(ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.abschluss),
+		super(ersetzeNullBlankTrim(schuelerLernabschnittsdaten.abschluss),
 				schuelerLernabschnittsdaten.abschlussart,
-				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.abschlussBerufsbildend),
+				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.abschlussBerufsbildend),
 				schuelerLernabschnittsdaten.anzahlSchulbesuchsjahre,
-				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.bilingualerZweig),
-				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.datumAnfang),
-				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.datumEnde),
-				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.datumKonferenz),
-				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.datumZeugnis),
+				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.bilingualerZweig),
+				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.datumAnfang),
+				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.datumEnde),
+				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.datumKonferenz),
+				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.datumZeugnis),
 				schuelerLernabschnittsdaten.fehlstundenGesamt,
 				schuelerLernabschnittsdaten.fehlstundenGrenzwert,
 				schuelerLernabschnittsdaten.fehlstundenUnentschuldigt,
 				null,
 				null,
-				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.bemerkungen.foerderschwerpunkt),
+				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.bemerkungen.foerderschwerpunkt),
 				null,
 				schuelerLernabschnittsdaten.hatAOSF,
 				schuelerLernabschnittsdaten.hatAutismus,
@@ -77,29 +77,29 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 				schuelerLernabschnittsdaten.istGewertet,
 				schuelerLernabschnittsdaten.istWiederholung,
 				null,
-				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.Klassenart),
+				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.Klassenart),
 				new ArrayList<>(),
 				null,
-				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.noteDurchschnitt),
+				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.noteDurchschnitt),
 				schuelerLernabschnittsdaten.noteLernbereichGSbzwAL,
 				schuelerLernabschnittsdaten.noteLernbereichNW,
-				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.organisationsform),
-				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.pruefungsOrdnung),
+				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.organisationsform),
+				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.pruefungsOrdnung),
 				null,
-				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.schulgliederung),
+				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.schulgliederung),
 				null,
 				null,
-				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.textErgebnisPruefungsalgorithmus),
+				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.textErgebnisPruefungsalgorithmus),
 				null,
-				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.bemerkungen.uebergangESF),
-				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.bemerkungen.versetzungsentscheidung),
-				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.versetzungsvermerk),
+				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.bemerkungen.uebergangESF),
+				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.bemerkungen.versetzungsentscheidung),
+				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.versetzungsvermerk),
 				schuelerLernabschnittsdaten.wechselNr,
-				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.zeugnisart),
-				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.bemerkungen.zeugnisASV),
-				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.bemerkungen.zeugnisAUE),
-				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.bemerkungen.zeugnisAllgemein),
-				ersetzeNullDurchEmpty(schuelerLernabschnittsdaten.bemerkungen.zeugnisLELS));
+				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.zeugnisart),
+				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.bemerkungen.zeugnisASV),
+				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.bemerkungen.zeugnisAUE),
+				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.bemerkungen.zeugnisAllgemein),
+				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.bemerkungen.zeugnisLELS));
 
 		this.reportingRepository = reportingRepository;
 
@@ -232,7 +232,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 							reportingRepository,
 							reportingRepository.mapLehrerStammdaten().computeIfAbsent(super.idSonderpaedagoge(), l -> {
 								try {
-									return new DataLehrerStammdaten(reportingRepository.conn()).getFromID(super.idSonderpaedagoge());
+									return new DataLehrerStammdaten(reportingRepository.conn()).getById(super.idSonderpaedagoge());
 								} catch (final ApiOperationException e) {
 									ReportingExceptionUtils.putStacktraceInLog(
 											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,
@@ -257,7 +257,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 							reportingRepository,
 							reportingRepository.mapLehrerStammdaten().computeIfAbsent(super.idTutor(), l -> {
 								try {
-									return new DataLehrerStammdaten(reportingRepository.conn()).getFromID(super.idTutor());
+									return new DataLehrerStammdaten(reportingRepository.conn()).getById(super.idTutor());
 								} catch (final ApiOperationException e) {
 									ReportingExceptionUtils.putStacktraceInLog(
 											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,

@@ -1,8 +1,8 @@
 <template>
 	<div class="page--content select-none w-full h-full grid-rows-1">
 		<Teleport to=".svws-sub-nav-target" defer v-if="hatUpdateKompetenz">
-			<svws-ui-sub-nav>
-				<svws-ui-button class="contentFocusField" @click="modus = !modus" title="Modus wechseln" type="transparent">
+			<svws-ui-sub-nav :focus-switching-enabled :focus-help-visible>
+				<svws-ui-button class="subNavigationFocusField" @click="modus = !modus" title="Modus wechseln" type="transparent">
 					<span :class="[modus ? 'icon-sm i-ri-play-line' : 'icon-sm i-ri-speed-line']" />
 					Modus: <span>{{ modus ? 'Einzeln bearbeiten':'Fortlaufend bearbeiten' }}</span>
 				</svws-ui-button>
@@ -25,8 +25,11 @@
 	import type { StundenplanKalenderwochenProps } from "./SStundenplanKalenderwochenProps";
 	import type { StundenplanKalenderwochenzuordnung } from "@core";
 	import { ArrayList, BenutzerKompetenz, DateUtils } from "@core";
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<StundenplanKalenderwochenProps>();
+
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const hatUpdateKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.STUNDENPLAN_AENDERN));
 

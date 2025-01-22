@@ -9,6 +9,7 @@ import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.adt.map.HashMap3D;
 import de.svws_nrw.core.adt.map.HashMap4D;
 import de.svws_nrw.core.adt.map.HashMap5D;
+import de.svws_nrw.core.adt.map.ListMap2DLongKeys;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -207,6 +208,26 @@ public class DeveloperNotificationException extends RuntimeException {
 		if (map.containsKey(key))
 			throw new DeveloperNotificationException("PUT von " + key + " --> " + value + " fehlgeschlagen, da bereits " + map.get(key) + " zugeordnet ist!");
 		map.put(key, value);
+	}
+
+	/**
+	 * Fügt das Mapping (key1, key2) --> V der Map hinzu. <br>
+	 * Wirft eine DeveloperNotificationException, falls dem Schlüssel bereits etwas zugeordnet ist.
+	 *
+	 * @param <V>    der Typ des zugeordneten Wertes.
+	 * @param map     die Map.
+	 * @param key1    der 1. Schlüssel.
+	 * @param key2    der 2. Schlüssel.
+	 * @param value   der zugeordnete Wert.
+	 *
+	 * @throws DeveloperNotificationException falls dem Schlüssel K bereits etwas zugeordnet ist.
+	 */
+	public static <V> void ifListMap2DLongKeysPutOverwrites(final @NotNull ListMap2DLongKeys<V> map,
+			final long key1, final long key2, final @NotNull V value) throws DeveloperNotificationException {
+		if (map.getSingle12OrNull(key1, key2) != null)
+			throw new DeveloperNotificationException("PUT von (" + key1 + ", " + key2 + ") --> " + value + " fehlgeschlagen, da bereits "
+					+ map.get12(key1, key2) + " zugeordnet ist!");
+		map.add(key1, key2, value);
 	}
 
 

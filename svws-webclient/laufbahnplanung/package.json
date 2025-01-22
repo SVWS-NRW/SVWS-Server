@@ -3,7 +3,7 @@
 	"description": "SVWS-Server-Projekt: Programm für die Laufbahnplanung Oberstufe",
 	"author": "MSB NRW",
 	"license": "BSD-3-Clause",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"main": "./dist/index.js",
 	"type": "module",
 	"types": "./dist/index.d.ts",
@@ -15,10 +15,7 @@
 		"lint": "eslint 'src/**/*.{ts,vue}' --cache",
 		"lint-tsc": "vue-tsc --noEmit",
 		"serve": "vite preview",
-		"build": "npm run build-app && npm run build-dts",
-		"build-app": "vite build",
-		"build-dts": "vue-tsc --declaration --emitDeclarationOnly -p tsconfig.build.json",
-		"lint-fix": "eslint 'src/**/*.{ts,vue}' --fix --cache",
+		"build": "vite build",
 		"check-licenses": "license-checker-rseidelsohn --summary --unknown --production"
 	},
 	"dependencies": {

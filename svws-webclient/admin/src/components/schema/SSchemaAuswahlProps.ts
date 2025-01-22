@@ -1,8 +1,8 @@
 import type { SchemaMigrationQuelle } from "./SchemaMigrationQuelle";
 import type { ApiStatus } from "../ApiStatus";
-import type { SchemaListeEintrag } from "../../../../core/src/core/data/db/SchemaListeEintrag";
-import type { BenutzerKennwort } from "../../../../core/src/core/data/BenutzerKennwort";
-import type { SimpleOperationResponse } from "../../../../core/src/core/data/SimpleOperationResponse";
+import type { BenutzerKennwort } from "@core/core/data/BenutzerKennwort";
+import type { SchemaListeEintrag } from "@core/core/data/db/SchemaListeEintrag";
+import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 
 export interface SchemaAuswahlProps {
 	hasRootPrivileges: boolean;

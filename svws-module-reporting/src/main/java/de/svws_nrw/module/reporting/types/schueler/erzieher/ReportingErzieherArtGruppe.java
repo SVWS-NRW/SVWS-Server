@@ -44,44 +44,6 @@ public class ReportingErzieherArtGruppe extends ReportingBaseType {
 		this.sortierung = sortierung;
 	}
 
-
-	// ##### Berechnete Felder #####
-	/**
-	 * Erzeugt die formale Anrede ("Sehr geehrte") des Erziehers.
-	 *
-	 * @return Formale Anrede
-	 */
-	public String anredeFormal() {
-		if ((erzieher() == null) || erzieher().isEmpty())
-			return "";
-
-		String result = erzieher().getFirst().anredeFormal();
-
-		// Maximal ein zweiter Erzieher kann noch in der Gruppe sein.
-		if (erzieher().size() > 1)
-			result += "," + erzieher().getLast().anredeFormal().substring(0, 1).toLowerCase() + erzieher().getLast().anredeFormal().substring(1);
-
-		return result;
-	}
-
-	/**
-	 * Erzeugt die persönliche Anrede ("Liebe") des Erziehers.
-	 *
-	 * @return Persönliche Anrede
-	 */
-	public String anredePersoenlich() {
-		if ((erzieher() == null) || erzieher().isEmpty())
-			return "";
-
-		String result = erzieher().getFirst().anredePersoenlich();
-
-		// Maximal ein zweiter Erzieher kann noch in der Gruppe sein.
-		if (erzieher().size() > 1)
-			result += "," + erzieher().getLast().anredePersoenlich().substring(0, 1).toLowerCase() + erzieher().getLast().anredePersoenlich().substring(1);
-
-		return result;
-	}
-
 	/**
 	 * Erzeugt die mehrzeilige Briefanschrift im html-Format.
 	 *
@@ -103,6 +65,44 @@ public class ReportingErzieherArtGruppe extends ReportingBaseType {
 		result += !erzieher().getFirst().wohnortsteilname().isEmpty() ? ("OT " + erzieher().getFirst().wohnortsteilname() + "</br>") : "";
 		result += erzieher().getFirst().strassennameHausnummer() + "</br>";
 		result += erzieher().getFirst().plzOrt();
+
+		return result;
+	}
+
+	// ##### Berechnete Felder #####
+	/**
+	 * Erzeugt die formale Anrede ("Sehr geehrte") des Erziehers.
+	 *
+	 * @return Formale Anrede
+	 */
+	public String briefanredeFormal() {
+		if ((erzieher() == null) || erzieher().isEmpty())
+			return "";
+
+		String result = erzieher().getFirst().briefanredeFormal();
+
+		// Maximal ein zweiter Erzieher kann noch in der Gruppe sein.
+		if (erzieher().size() > 1)
+			result += "," + erzieher().getLast().briefanredeFormal().substring(0, 1).toLowerCase() + erzieher().getLast().briefanredeFormal().substring(1);
+
+		return result;
+	}
+
+	/**
+	 * Erzeugt die persönliche Anrede ("Liebe") des Erziehers.
+	 *
+	 * @return Persönliche Anrede
+	 */
+	public String briefanredePersoenlich() {
+		if ((erzieher() == null) || erzieher().isEmpty())
+			return "";
+
+		String result = erzieher().getFirst().briefanredePersoenlich();
+
+		// Maximal ein zweiter Erzieher kann noch in der Gruppe sein.
+		if (erzieher().size() > 1)
+			result += "," + erzieher().getLast().briefanredePersoenlich().substring(0, 1).toLowerCase()
+					+ erzieher().getLast().briefanredePersoenlich().substring(1);
 
 		return result;
 	}

@@ -6,10 +6,10 @@
 		"resolveJsonModule": true,
 		"paths": {
 			"~/*": ["./src/*"],
-			"@comp": ["../components/src/index.ts"],
-			"@ui": ["../ui/src/index.ts"],
+			"@ui/*": ["../ui/src/*"],
+			"@core/*": ["../core/src/*"],
 			"@json/*": ["../../svws-asd/src/main/resources/de/svws_nrw/asd/types/*"],
-		}
+		},
 	},
 	"include": [
 		"*.ts",
@@ -17,7 +17,6 @@
 		"src/**/*.vue",
 		"components.d.ts",
 		"../ui/src/",
-		"../components/src/",
 		"../core/src/",
 	],
 	"exclude": [

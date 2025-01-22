@@ -4,7 +4,7 @@
 		<meta name="viewport" content="width=device-width" />
 		<title>Schüler-Kurse-Schienen-Zuordnung</title>
 		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-pdf.css}" href="../../css/reporting-pdf.css" />
-		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-A4-quer-koepfe-fuesse.css}" href="../../css/reporting-A4-quer-koepfe-fuesse.css" />
+		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-A4-quer.css}" href="../../css/reporting-A4-quer.css" />
 		<link rel="stylesheet" th:href="@{css/reporting-styles.css}" href="../../css/reporting-styles.css" />
 		<link rel="stylesheet" th:href="@{gost/kursplanung/GostKursplanungSchuelerMitSchienenKursen.css}" href="../../gost/kursplanung/GostKursplanungSchuelerMitSchienenKursen.css" />
 	</head>
@@ -18,7 +18,7 @@
 					<th:block th:if="${mediaPrint}">
 						<div class="pageTopLeft" th:utext="${Schule.bezeichnungSchuleMehrzeiligHtml}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
 						<div class="pageTopRight">Kurse-Schienen-Zuordnung<br/>Abitur <span th:text="${GostBlockungsergebnis.abiturjahr()}">2023</span> - <span th:text="${GostBlockungsergebnis.gostHalbjahr().kuerzel}">Q1.2</span><br/>Gesamt: <span th:text="${GostBlockungsergebnis.anzahlSchueler()}">123</span> SuS<span th:if="${zeigeExtDummy}">, davon <span th:text="${GostBlockungsergebnis.anzahlExterne()}">35</span>/<span th:text="${GostBlockungsergebnis.anzahlDummy()}">40</span> Externe/Platzhalter</span></div>
-						<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')}">Gedruckt am: 02.02.2022</div>
+						<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')} + ' von ' + ${Benutzer.benutzername()}">Gedruckt am 02.02.2022 von ABC</div>
 						<div class="pageBottomCenter" th:text="${GostBlockungsergebnis.bezeichnung() + ' (Erg-ID ' + GostBlockungsergebnis.id() + ') - Angaben zu SuS in den Kursen: Gesamt (Schriftlich,Abiturfach) (Externe,Platzhalter)'}">A23 - Q1.2 (Erg-ID 4) - Angaben zu SuS in den Kursen: Gesamt (Schriftlich, Abiturfach)</div>
 						<div class="pageBottomRight"><span class="page-nums-print" th:text="${#lists.size(GostBlockungsergebnis.schuelerGefiltert(Parameter.idsDetaildaten)) > 0} ? ('Druck ' + ${iterationVarSchueler.count} + '/' + ${#lists.size(GostBlockungsergebnis.schuelerGefiltert(Parameter.idsDetaildaten))} + ' - Seite ') : 'Seite '">Druck 13/57 - Seite </span></div>
 					</th:block>

@@ -8,6 +8,7 @@ import { RouteManager } from "~/router/RouteManager";
 import type { LehrerNeuProps } from "~/components/lehrer/SLehrerNeuProps";
 import type { RouteLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
+import { routeApp } from "~/router/apps/RouteApp";
 
 const SLehrerNeu = () => import("~/components/lehrer/SLehrerNeu.vue");
 
@@ -29,8 +30,12 @@ export class RouteLehrerNeu extends RouteNode<any, RouteLehrer> {
 	public getProps(to: RouteLocationNormalized): LehrerNeuProps {
 		return {
 			lehrerListeManager: () => routeLehrer.data.manager,
+			add: routeLehrer.data.add,
+			gotoDefaultView: routeLehrer.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
+			mapOrte: routeApp.data.mapOrte,
+			mapOrtsteile: routeApp.data.mapOrtsteile
 		};
 	}
 

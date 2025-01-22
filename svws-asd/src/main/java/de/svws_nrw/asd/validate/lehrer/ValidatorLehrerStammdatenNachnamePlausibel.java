@@ -11,7 +11,10 @@ import jakarta.validation.constraints.NotNull;
  * Dieser Validator führt eine Statistikprüfung auf den Nachnamen bei den Stammdaten
  * eines Lehrers einer Schule aus.
  */
-public final class ValidatorLehrerStammdatenNachnamePlausibel extends Validator<LehrerStammdaten> {
+public final class ValidatorLehrerStammdatenNachnamePlausibel extends Validator {
+
+	/** Die Lehrer-Stammdaten */
+	private final @NotNull LehrerStammdaten daten;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
@@ -21,7 +24,8 @@ public final class ValidatorLehrerStammdatenNachnamePlausibel extends Validator<
 	 */
 	public ValidatorLehrerStammdatenNachnamePlausibel(final @NotNull LehrerStammdaten daten,
 			final @NotNull ValidatorKontext kontext) {
-		super(daten, kontext);
+		super(kontext);
+		this.daten = daten;
 	}
 
 	// TODO
@@ -73,7 +77,7 @@ public final class ValidatorLehrerStammdatenNachnamePlausibel extends Validator<
 
 	@Override
 	protected boolean pruefe() {
-		final String nachname = daten().nachname;
+		final String nachname = daten.nachname;
 		// Prüfe zunächst, ob überhaupt ein Name vorhanden ist
 		if ((nachname == null) || (nachname.length() == 0) || (nachname.isBlank()))
 			return true; // Dieser Fall wird von einem anderen Validator gehandhabt, weshalb die Prüfung hier nicht fehlschlägt

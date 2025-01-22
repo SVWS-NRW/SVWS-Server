@@ -1,0 +1,20 @@
+CGIPassAuth on
+
+<IfModule mod_headers.c>
+	Header set Access-Control-Allow-Origin "*"
+	Header set Access-Control-Allow-Headers "*, Authorization"
+	Header set Access-Control-Allow-Methods "GET, POST, PATCH, PUT, DELETE, OPTIONS, HEAD"
+</IfModule>
+
+RewriteEngine on
+RewriteBase /
+
+# respond with 404 on incoming URLs with .php
+RewriteCond %{THE_REQUEST} \s/+(.+?)\.php[\s?] [NC]
+RewriteRule ^ /%0 [R=404,NE,L]
+
+# redirect incoming URLs to .php files
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{DOCUMENT_ROOT}/$1.php -f
+RewriteRule ^(.+?)/?$ $1.php [L]
+

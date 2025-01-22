@@ -3,15 +3,15 @@
 	"compilerOptions": {
 		"resolveJsonModule": true,
 		"isolatedModules": false,
-		"rootDir": "./src",
+		"rootDir": ".",
 		"outDir": "./dist",
 		"baseUrl": ".",
 		"paths": {
-			"~/*": ["./src/*"],
 			"@json/*": ["./../../svws-asd/src/main/resources/de/svws_nrw/asd/types/*"],
 		}
 	},
 	"include": [
+		"./*.ts",
 		"src/**/*",
 	]
 }

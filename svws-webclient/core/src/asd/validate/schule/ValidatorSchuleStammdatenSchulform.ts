@@ -1,25 +1,23 @@
-import { SchuleStammdaten } from '../../../asd/data/schule/SchuleStammdaten';
 import { Schulform } from '../../../asd/types/schule/Schulform';
 import { Class } from '../../../java/lang/Class';
 import { JavaString } from '../../../java/lang/JavaString';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
 
-export class ValidatorSchuleStammdatenSchulform extends Validator<SchuleStammdaten> {
+export class ValidatorSchuleStammdatenSchulform extends Validator {
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param daten     die Daten des Validators
 	 * @param kontext   der Kontext des Validators
 	 */
-	public constructor(daten : SchuleStammdaten, kontext : ValidatorKontext) {
-		super(daten, kontext);
+	public constructor(kontext : ValidatorKontext) {
+		super(kontext);
 	}
 
 	protected pruefe() : boolean {
-		const schulformKrz : string | null = this.daten().schulform;
+		const schulformKrz : string | null = super.kontext().getSchuleStammdaten().schulform;
 		if ((schulformKrz === null) || (JavaString.isBlank(schulformKrz))) {
 			this.addFehler("Die Schulform muss gesetzt sein.");
 			return false;

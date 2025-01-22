@@ -18,9 +18,9 @@ public class ProxyReportingGostKlausurplanungKlausurtermin extends ReportingGost
 	 * @param gostKlausurtermin	Der GostKlausurtermin mit den Daten zum Klausurtermin.
 	 */
 	public ProxyReportingGostKlausurplanungKlausurtermin(final GostKlausurtermin gostKlausurtermin) {
-		super(ersetzeNullDurchEmpty(gostKlausurtermin.bemerkung),
-				ersetzeNullDurchEmpty(gostKlausurtermin.bezeichnung),
-				ersetzeNullDurchEmpty(gostKlausurtermin.datum),
+		super(ersetzeNullBlankTrim(gostKlausurtermin.bemerkung),
+				ersetzeNullBlankTrim(gostKlausurtermin.bezeichnung),
+				ersetzeNullBlankTrim(gostKlausurtermin.datum),
 				GostHalbjahr.fromID(gostKlausurtermin.halbjahr),
 				gostKlausurtermin.id,
 				gostKlausurtermin.istHaupttermin,

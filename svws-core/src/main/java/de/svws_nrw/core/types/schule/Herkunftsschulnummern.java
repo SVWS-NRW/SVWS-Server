@@ -22,77 +22,77 @@ public enum Herkunftsschulnummern {
 
 	/** Herkunft Schulnummer : Schule aus Schleswig-Holstein */
 	SCHLESWIG_HOLSTEIN(new HerkunftsschulnummerKatalogEintrag[] {
-			new HerkunftsschulnummerKatalogEintrag(999001000L, 999001, "Schule aus Schleswig-Holstein", null, null, null)
+			new HerkunftsschulnummerKatalogEintrag(980001000L, 980001, "Schule aus Schleswig-Holstein", null, null, null)
 	}),
 
 	/** Herkunft Schulnummer : Schule aus Hamburg */
 	HAMBURG(new HerkunftsschulnummerKatalogEintrag[] {
-			new HerkunftsschulnummerKatalogEintrag(999002000L, 999002, "Schule aus Hamburg", null, null, null)
+			new HerkunftsschulnummerKatalogEintrag(980002000L, 980002, "Schule aus Hamburg", null, null, null)
 	}),
 
 	/** Herkunft Schulnummer : Schule aus Niedersachsen */
 	NIEDERSACHSEN(new HerkunftsschulnummerKatalogEintrag[] {
-			new HerkunftsschulnummerKatalogEintrag(999003000L, 999003, "Schule aus Niedersachsen", null, null, null)
+			new HerkunftsschulnummerKatalogEintrag(980003000L, 980003, "Schule aus Niedersachsen", null, null, null)
 	}),
 
 	/** Herkunft Schulnummer : Schule aus Bremen */
 	BREMEN(new HerkunftsschulnummerKatalogEintrag[] {
-			new HerkunftsschulnummerKatalogEintrag(999004000L, 999004, "Schule aus Bremen", null, null, null)
+			new HerkunftsschulnummerKatalogEintrag(980004000L, 980004, "Schule aus Bremen", null, null, null)
 	}),
 
 	/** Herkunft Schulnummer : Schule aus Hessen */
 	HESSEN(new HerkunftsschulnummerKatalogEintrag[] {
-			new HerkunftsschulnummerKatalogEintrag(999006000L, 999006, "Schule aus Hessen", null, null, null)
+			new HerkunftsschulnummerKatalogEintrag(980006000L, 980006, "Schule aus Hessen", null, null, null)
 	}),
 
 	/** Herkunft Schulnummer : Schule aus Rheinland-Pfalz */
 	RHEINLANDPFALZ(new HerkunftsschulnummerKatalogEintrag[] {
-			new HerkunftsschulnummerKatalogEintrag(999007000L, 999007, "Schule aus Rheinland-Pfalz", null, null, null)
+			new HerkunftsschulnummerKatalogEintrag(980007000L, 980007, "Schule aus Rheinland-Pfalz", null, null, null)
 	}),
 
 	/** Herkunft Schulnummer : Schule aus Baden-Württemberg */
 	BADEN_WUERTTEMBERG(new HerkunftsschulnummerKatalogEintrag[] {
-			new HerkunftsschulnummerKatalogEintrag(999008000L, 999008, "Schule aus Baden-Württemberg", null, null, null)
+			new HerkunftsschulnummerKatalogEintrag(980008000L, 980008, "Schule aus Baden-Württemberg", null, null, null)
 	}),
 
 	/** Herkunft Schulnummer : Schule aus Bayern */
 	BAYERN(new HerkunftsschulnummerKatalogEintrag[] {
-			new HerkunftsschulnummerKatalogEintrag(999009000L, 999009, "Schule aus Bayern", null, null, null)
+			new HerkunftsschulnummerKatalogEintrag(980009000L, 980009, "Schule aus Bayern", null, null, null)
 	}),
 
 	/** Herkunft Schulnummer : Schule aus dem Saarland */
 	SAARLAND(new HerkunftsschulnummerKatalogEintrag[] {
-			new HerkunftsschulnummerKatalogEintrag(999010000L, 999010, "Schule aus dem Saarland", null, null, null)
+			new HerkunftsschulnummerKatalogEintrag(980010000L, 980010, "Schule aus dem Saarland", null, null, null)
 	}),
 
 	/** Herkunft Schulnummer : Schule aus Berlin */
 	BERLIN(new HerkunftsschulnummerKatalogEintrag[] {
-			new HerkunftsschulnummerKatalogEintrag(999011000L, 999011, "Schule aus Berlin", null, null, null)
+			new HerkunftsschulnummerKatalogEintrag(980011000L, 980011, "Schule aus Berlin", null, null, null)
 	}),
 
 	/** Herkunft Schulnummer : Schule aus Brandenburg */
 	BRANDENBURG(new HerkunftsschulnummerKatalogEintrag[] {
-			new HerkunftsschulnummerKatalogEintrag(999012000L, 999012, "Schule aus Brandenburg", null, null, null)
+			new HerkunftsschulnummerKatalogEintrag(980012000L, 980012, "Schule aus Brandenburg", null, null, null)
 	}),
 
 	/** Herkunft Schulnummer : Schule aus Mecklenburg-Vorpommern */
 	MECKLENBURG_VORPOMMERN(new HerkunftsschulnummerKatalogEintrag[] {
-			new HerkunftsschulnummerKatalogEintrag(999013000L, 999013, "Schule aus Mecklenburg-Vorpommern", null, null, null)
+			new HerkunftsschulnummerKatalogEintrag(980013000L, 980013, "Schule aus Mecklenburg-Vorpommern", null, null, null)
 	}),
 
 	/** Herkunft Schulnummer : Schule aus Sachsen */
 	SACHSEN(new HerkunftsschulnummerKatalogEintrag[] {
-			new HerkunftsschulnummerKatalogEintrag(999014000L, 999014, "Schule aus Sachsen", null, null, null)
+			new HerkunftsschulnummerKatalogEintrag(980014000L, 980014, "Schule aus Sachsen", null, null, null)
 	}),
 
 	/** Herkunft Schulnummer : Schule aus Sachsen-Anhalt */
 	SACHSEN_ANHALT(new HerkunftsschulnummerKatalogEintrag[] {
-			new HerkunftsschulnummerKatalogEintrag(999015000L, 999015, "Schule aus Sachsen-Anhalt", null, null, null)
+			new HerkunftsschulnummerKatalogEintrag(980015000L, 980015, "Schule aus Sachsen-Anhalt", null, null, null)
 	}),
 
 	/** Herkunft Schulnummer : Schule aus Thüringen */
 	THUERINGEN(new HerkunftsschulnummerKatalogEintrag[] {
-			new HerkunftsschulnummerKatalogEintrag(999016000L, 999016, "Schule aus Thüringen", null, null, null)
+			new HerkunftsschulnummerKatalogEintrag(980016000L, 980016, "Schule aus Thüringen", null, null, null)
 	}),
 
 	/** Herkunft Schulnummer : Schule aus Belgien */
@@ -128,7 +128,7 @@ public enum Herkunftsschulnummern {
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static final long VERSION = 1;
+	public static final long VERSION = 2;
 
 	/** Der aktuellen Daten der Herkunftsschulnummer, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null */
 	public final @NotNull HerkunftsschulnummerKatalogEintrag daten;

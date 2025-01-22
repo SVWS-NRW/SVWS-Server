@@ -3,7 +3,8 @@ plugins {
 }
 
 configurations {
-	implementation.extendsFrom(jetty, resteasy, swagger, validation)
+	implementation.extendsFrom(validation, resteasy)
+	testImplementation.extendsFrom(jetty, resteasy, swagger, validation)
 }
  
 dependencies {

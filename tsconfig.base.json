@@ -23,8 +23,4 @@
 		"rootDir": ".",
 		"types": ["vite/client"]
 	},
-	"exclude": [
-		".eslintrc.cjs",
-		"svws-webclient/tailwind.preset.js"
-	]
 }

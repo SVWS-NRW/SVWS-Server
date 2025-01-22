@@ -373,6 +373,22 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	}
 
 
+	// ##### Berechnete Felder #####
+
+	/**
+	 * Bestimmt das voraussichtliche Entlassungsdatum von der Schule auf Basis der Restabschnitte des Jahrgangs und des Schuljahresabschnitts dieses
+	 * Lernabschnitts.
+	 *
+	 * @return Voraussichtliches Entlassungsdatum
+	 */
+	public String jahrVoraussichtlicheEntlassung() {
+		if ((this.jahrgang() == null) || (this.schuljahresabschnitt() == null) || (this.jahrgang.anzahlRestabschnitte() == null))
+			return "";
+
+		return String.valueOf(this.schuljahresabschnitt.schuljahr() + (this.jahrgang.anzahlRestabschnitte() / 2) + (this.schuljahresabschnitt.abschnitt() % 2));
+	}
+
+
 	// ##### Getter #####
 
 	/**

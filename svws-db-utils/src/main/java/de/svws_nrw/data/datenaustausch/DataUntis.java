@@ -6,7 +6,6 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -141,7 +140,7 @@ public final class DataUntis {
 			throw e;
 		}
 		// Bestimme die Lehrer
-		final Map<String, LehrerListeEintrag> mapLehrerByKuerzel = DataLehrerliste.getLehrerListe(conn).stream()
+		final Map<String, LehrerListeEintrag> mapLehrerByKuerzel = new DataLehrerliste(conn).getLehrerListe().stream()
 				.collect(Collectors.toMap(l -> l.kuerzel, l -> l));
 		// Bestimme die Fächer
 		final Map<String, FachDaten> mapFaecherByKuerzel = DataFaecherliste.getFaecherListe(conn).stream().collect(Collectors.toMap(f -> f.kuerzel, f -> f));
@@ -190,7 +189,7 @@ public final class DataUntis {
 		long next_kid = conn.transactionGetNextID(DTOStundenplanUnterrichtKlasse.class);
 		long next_rid = conn.transactionGetNextID(DTOStundenplanUnterrichtRaum.class);
 		long next_sid = conn.transactionGetNextID(DTOStundenplanUnterrichtSchiene.class);
-		final Set<LongArrayKey> setKursUnterricht = new HashSet<>();
+		final Map<LongArrayKey, Long> mapUnterrichte = new HashMap<>();
 		int maxWochentyp = 0;
 		for (final UntisGPU001 u : unterrichte) {
 			logger.logLn("-> Importiere Unterricht: " + u.toString());
@@ -233,8 +232,7 @@ public final class DataUntis {
 					throw new ApiOperationException(Status.NOT_FOUND, "Das Fach bzw. der Kurs mit dem Kürzel %s konnte nicht in der Datenbank gefunden werden."
 							.formatted(u.fachKuerzel));
 				}
-				// Erstelle den Klassen-Unterricht ...
-				final long uid = next_uid++;
+				// Prüfe, ob der Kursunterricht schon mit einem früheren Datensatz bearbeitet wurde
 				int wt = 0;
 				if ((u.wochentyp != null) && !u.wochentyp.isBlank()) {
 					try {
@@ -245,10 +243,34 @@ public final class DataUntis {
 						wt = 0;
 					}
 				}
+				final long[] tmpKey = { klasse.ID, fach.id, u.idUnterricht, u.wochentag, u.stunde, wt };
+				final LongArrayKey key = new LongArrayKey(tmpKey);
+				if (mapUnterrichte.containsKey(key)) {
+					// Prüfe, ob der Lehrer bereits dem Unterricht zugeordnet ist, wenn nicht, dann füge diesen als weiteren Lehrer hinzu
+					final long uid = mapUnterrichte.get(key);
+					final List<DTOStundenplanUnterrichtLehrer> listLehrer =
+							conn.queryList(DTOStundenplanUnterrichtLehrer.QUERY_BY_UNTERRICHT_ID + " AND e.Lehrer_ID = ?2",
+									DTOStundenplanUnterrichtLehrer.class, uid, lehrer.id);
+					if (listLehrer.isEmpty()) {
+						logger.logLn(2, "Ergänze Lehrer %s zu bestehendem Klassen-Unterricht.".formatted(lehrer.kuerzel));
+						conn.transactionPersist(new DTOStundenplanUnterrichtLehrer(next_lid++, uid, lehrer.id));
+						conn.transactionFlush();
+						continue;
+					}
+					// Wenn der Lehrer bereits vorhanden ist, dann gibt verwerfe den Eintrag
+					logger.logLn(2,
+							"Unterricht mit der ID %d wurde für das Fach '%s' der Klasse '%s' mit der ID %d bereits für den Wochentag %d und der Stunde %d mit Wochentyp %d mit dem Lehrer mit der ID %d hinzugefügt."
+									.formatted(u.idUnterricht, fach.kuerzel, klasse.Klasse, klasse.ID, u.wochentag, u.stunde, wt, lehrer.id) + " Überspringe diesen Eintrag...");
+					continue;
+				}
+
+				// Erstelle den Klassen-Unterricht ...
+				final long uid = next_uid++;
 				maxWochentyp = (maxWochentyp < wt) ? wt : maxWochentyp;
 				final DTOStundenplanUnterricht dtoUnterricht = new DTOStundenplanUnterricht(uid, zeitraster.id, wt, fach.id);
 				dtoUnterricht.Kurs_ID = null;
 				conn.transactionPersist(dtoUnterricht);
+				mapUnterrichte.put(key, uid);
 				conn.transactionFlush();
 				// ... Lehrer ...
 				if (lehrer != null)
@@ -271,11 +293,24 @@ public final class DataUntis {
 						wt = 0;
 					}
 				}
-				final long[] key = { kurs.id, u.idUnterricht, u.wochentag, u.stunde, wt };
-				if (!setKursUnterricht.add(new LongArrayKey(key))) {
+				final long[] tmpKey = { kurs.id, u.idUnterricht, u.wochentag, u.stunde, wt };
+				final LongArrayKey key = new LongArrayKey(tmpKey);
+				if (mapUnterrichte.containsKey(key)) {
+					// Prüfe, ob der Lehrer bereits dem Unterricht zugeordnet ist, wenn nicht, dann füge diesen als weiteren Lehrer hinzu
+					final long uid = mapUnterrichte.get(key);
+					final List<DTOStundenplanUnterrichtLehrer> listLehrer =
+							conn.queryList(DTOStundenplanUnterrichtLehrer.QUERY_BY_UNTERRICHT_ID + " AND e.Lehrer_ID = ?2",
+									DTOStundenplanUnterrichtLehrer.class, uid, lehrer.id);
+					if (listLehrer.isEmpty()) {
+						logger.logLn(2, "Ergänze Lehrer %s zu bestehendem Kurs-Unterricht.".formatted(lehrer.kuerzel));
+						conn.transactionPersist(new DTOStundenplanUnterrichtLehrer(next_lid++, uid, lehrer.id));
+						conn.transactionFlush();
+						continue;
+					}
+					// Wenn der Lehrer bereits vorhanden ist, dann gibt verwerfe den Eintrag
 					logger.logLn(2,
-							"Unterricht mit der ID %d wurde für den Kurs '%s' mit der ID %d bereits für den Wochentag %d und der Stunde %d mit Wochentyp %d hinzugefügt."
-									.formatted(u.idUnterricht, kurs.kuerzel, kurs.id, u.wochentag, u.stunde, wt) + " Überspringe diesen Eintrag...");
+							"Unterricht mit der ID %d wurde für den Kurs '%s' mit der ID %d bereits für den Wochentag %d und der Stunde %d mit Wochentyp %d mit dem Lehrer mit der ID %d hinzugefügt."
+									.formatted(u.idUnterricht, kurs.kuerzel, kurs.id, u.wochentag, u.stunde, wt, lehrer.id) + " Überspringe diesen Eintrag...");
 					continue;
 				}
 				// Erstelle den Kurs-Unterricht ...
@@ -284,6 +319,7 @@ public final class DataUntis {
 				final DTOStundenplanUnterricht dtoUnterricht = new DTOStundenplanUnterricht(uid, zeitraster.id, wt, kurs.idFach);
 				dtoUnterricht.Kurs_ID = kurs.id;
 				conn.transactionPersist(dtoUnterricht);
+				mapUnterrichte.put(key, uid);
 				conn.transactionFlush();
 				// ... Lehrer ...
 				if (lehrer != null)
@@ -1715,7 +1751,7 @@ public final class DataUntis {
 				final GostKursart kursart = GostKursart.fromIDorNull(fw.kursartID);
 				dto.statistikKennzeichen = switch (kursart) {
 					case LK -> "" + fw.abiturfach;
-					case GK -> (fw.abiturfach != null) ? ("" + fw.abiturfach) : (fw.istSchriftlich  ? "S" : "M");
+					case GK -> (fw.abiturfach != null) ? ("" + fw.abiturfach) : (fw.istSchriftlich ? "S" : "M");
 					case PJK -> "P";
 					case VTF -> "V";
 					case ZK -> "Z";

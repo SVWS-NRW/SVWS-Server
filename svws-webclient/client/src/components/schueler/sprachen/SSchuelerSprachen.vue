@@ -4,7 +4,7 @@
 			<div v-if="hatUpdateKompetenz && verfuegbareSprachen.length" class="w-1/4 mb-4">
 				<svws-ui-select title="Hinzufügen..." removable :model-value="undefined" @update:model-value="sprache=> hinzufuegen(sprache)"
 					:items="verfuegbareSprachen" :item-text="i => `${i} - ${Fach.getMapFremdsprachenKuerzelAtomar(schuljahr).get(i)?.daten(schuljahr)?.text ?? '—'}`"
-					ref="selectSprachen" autofocus focus-class />
+					ref="selectSprachen" autofocus focus-class-content />
 			</div>
 			<svws-ui-table v-if="sprachbelegungen().size()" :items="sprachbelegungen()" :columns="colsSprachenfolge" :selectable="hatUpdateKompetenz" v-model="auswahl">
 				<template #cell(sprache)="{ value: kuerzel }">{{ Fach.getMapFremdsprachenKuerzelAtomar(schuljahr).get(kuerzel)?.daten(schuljahr)?.text ?? '—' }} </template>
@@ -74,10 +74,10 @@
 			</svws-ui-table>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Sprachprüfungen – Herkunftsprachlicher Unterricht">
-			<div v-if="hatUpdateKompetenz && verfuegbareSprachenPruefungen.length" class="w-1/4 mb-4">
-				<svws-ui-select title="Hinzufügen..." removable :model-value="undefined" @update:model-value="sprache=> hinzufuegenPruefung(sprache, true)"
-					:items="verfuegbareSprachenPruefungen" :item-text="i=> `${i} - ${ Fach.getMapFremdsprachenKuerzelAtomar(schuljahr).get(i)?.daten(schuljahr)?.text ?? '—' }`"
-					ref="selectSprachenPruefung" />
+			<div v-if="hatUpdateKompetenz && verfuegbareSprachenPruefungenHerkunftsprachlich.length" class="w-1/4 mb-4">
+				<svws-ui-select title="Hinzufügen..." removable :model-value="undefined" @update:model-value="sprache=> hinzufuegenPruefungHerkunftssprachlich(sprache, true)"
+					:items="verfuegbareSprachenPruefungenHerkunftsprachlich" :item-text="i=> `${i} - ${ Fach.getMapFremdsprachenKuerzelAtomar(schuljahr).get(i)?.daten(schuljahr)?.text ?? '—' }`"
+					ref="selectSprachenPruefungHerkunftsprachlich" focus-class-content />
 			</div>
 			<svws-ui-table v-if="sprachpruefungenHSU.length" :items="sprachpruefungenHSU" :columns="colsSprachpruefungenHSU" :selectable="hatUpdateKompetenz" v-model="auswahlPrHSU">
 				<template #cell(sprache)="{ value: kuerzel }">{{ Fach.getMapFremdsprachenKuerzelAtomar(schuljahr).get(kuerzel)?.daten(schuljahr)?.text }} </template>
@@ -123,9 +123,9 @@
 			</svws-ui-table>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Sprachprüfungen – Feststellungsprüfungen">
-			<div v-if="hatUpdateKompetenz && verfuegbareSprachenPruefungen.length" class="w-1/4 mb-4">
-				<svws-ui-select title="Hinzufügen..." removable :model-value="undefined" @update:model-value="sprache => hinzufuegenPruefung(sprache, false)" :items="verfuegbareSprachenPruefungen"
-					:item-text="i => `${i} - ${Fach.getMapFremdsprachenKuerzelAtomar(schuljahr).get(i)?.daten(schuljahr)?.text ?? '—'}`" ref="selectSprachenPruefung" />
+			<div v-if="hatUpdateKompetenz && verfuegbareSprachenPruefungenFeststellungErsatz.length" class="w-1/4 mb-4">
+				<svws-ui-select title="Hinzufügen..." removable :model-value="undefined" @update:model-value="sprache => hinzufuegenPruefungFeststellung(sprache, false)" :items="verfuegbareSprachenPruefungenFeststellungErsatz"
+					:item-text="i => `${i} - ${Fach.getMapFremdsprachenKuerzelAtomar(schuljahr).get(i)?.daten(schuljahr)?.text ?? '—'}`" ref="selectSprachenPruefungFeststellungErsatz" focus-class/>
 			</div>
 			<svws-ui-table v-if="sprachpruefungenFP.length" :items="sprachpruefungenFP" :columns="colsSprachpruefungenFP" :selectable="hatUpdateKompetenz" v-model="auswahlPrFP">
 				<template #cell(sprache)="{ value: kuerzel }">{{ Fach.getMapFremdsprachenKuerzelAtomar(schuljahr).get(kuerzel)?.daten(schuljahr)?.text ?? '—' }} </template>
@@ -202,7 +202,8 @@
 	const auswahlPrHSU = ref([]);
 	const auswahlPrFP = ref([]);
 	const selectSprachen = ref<ComponentExposed<typeof SvwsUiSelect<string[]>>>();
-	const selectSprachenPruefung = ref<ComponentExposed<typeof SvwsUiSelect<string[]>>>();
+	const selectSprachenPruefungHerkunftsprachlich = ref<ComponentExposed<typeof SvwsUiSelect<string[]>>>();
+	const selectSprachenPruefungFeststellungErsatz = ref<ComponentExposed<typeof SvwsUiSelect<string[]>>>();
 
 	const colsSprachenfolge = computed<DataTableColumn[]>(() => {
 		const schulgliederung = Schulgliederung.data().getWertByKuerzel(props.schuelerListeManager().auswahl().schulgliederung);
@@ -258,15 +259,29 @@
 		return sprachen;
 	})
 
-	const verfuegbareSprachenPruefungen = computed(() => {
-		const belegungen = new Set();
+	const verfuegbareSprachenPruefungenHerkunftsprachlich = computed(() => {
+		const pruefungenHKFS = new Set();
 		const sprachen = [];
 		for (const p of props.sprachpruefungen())
-			belegungen.add(p.sprache);
+			pruefungenHKFS.add(p.sprache);
 		for (const k of Fach.getListFremdsprachenKuerzelAtomar(schuljahr.value)) {
 			const sprache = Fach.getMapFremdsprachenKuerzelAtomar(schuljahr.value).get(k);
 			const spracheEintrag = sprache?.daten(schuljahr.value) ?? null;
-			if ((spracheEintrag !== null) && !spracheEintrag.istErsatzPflichtFS && !spracheEintrag.istHKFS && !spracheEintrag.istAusRegUFach && !belegungen.has(k))
+			if ((spracheEintrag !== null) && !spracheEintrag.istErsatzPflichtFS && spracheEintrag.istHKFS && !spracheEintrag.istAusRegUFach && !pruefungenHKFS.has(k))
+				sprachen.push(k);
+		}
+		return sprachen;
+	})
+
+	const verfuegbareSprachenPruefungenFeststellungErsatz = computed(() => {
+		const pruefungenFeststellung = new Set();
+		const sprachen = [];
+		for (const p of props.sprachpruefungen())
+			pruefungenFeststellung.add(p.sprache);
+		for (const k of Fach.getListFremdsprachenKuerzelAtomar(schuljahr.value)) {
+			const sprache = Fach.getMapFremdsprachenKuerzelAtomar(schuljahr.value).get(k);
+			const spracheEintrag = sprache?.daten(schuljahr.value) ?? null;
+			if ((spracheEintrag !== null) && spracheEintrag.istErsatzPflichtFS && spracheEintrag.istHKFS && !spracheEintrag.istAusRegUFach && !pruefungenFeststellung.has(k))
 				sprachen.push(k);
 		}
 		return sprachen;
@@ -348,7 +363,7 @@
 					return sprache.hatGraecum;
 			return false;
 		},
-		set: (hatGraecum) => void props.patchSprachbelegung({hatGraecum}, 'G')
+		set: (hatGraecum) => void props.patchSprachbelegung({hatGraecum}, 'G'),
 	});
 
 	const hatHebraicum = computed<boolean>({
@@ -358,7 +373,7 @@
 					return sprache.hatHebraicum;
 			return false;
 		},
-		set: (hatHebraicum) => void props.patchSprachbelegung({hatHebraicum}, 'H')
+		set: (hatHebraicum) => void props.patchSprachbelegung({hatHebraicum}, 'H'),
 	});
 
 	async function remove() {
@@ -390,9 +405,10 @@
 		selectSprachen.value.reset();
 	}
 
-	async function hinzufuegenPruefung(sprache: string | undefined | null, hsu: boolean) {
-		if ((verfuegbareSprachenPruefungen.value.length === 0) || (selectSprachenPruefung.value === undefined) || (sprache === null) || (sprache === undefined)) {
-			selectSprachenPruefung.value?.reset();
+	async function hinzufuegenPruefungHerkunftssprachlich(sprache: string | undefined | null, hsu: boolean) {
+		if ((verfuegbareSprachenPruefungenHerkunftsprachlich.value.length === 0) || (selectSprachenPruefungHerkunftsprachlich.value === undefined)
+			|| (sprache === null) || (sprache === undefined)) {
+			selectSprachenPruefungHerkunftsprachlich.value?.reset();
 			return;
 		}
 		const data: Partial<Sprachpruefung> = {};
@@ -400,10 +416,27 @@
 		const schulform = props.schuelerListeManager().schulform();
 		if ((schulform !== Schulform.BK) && (schulform !== Schulform.SB))
 			data.jahrgang = props.schuelerListeManager().jahrgaenge.get(props.schuelerListeManager().auswahl().idJahrgang)?.kuerzelStatistik;
-		if (hsu)
-			data.istHSUPruefung = true;
+		data.istHSUPruefung = hsu;
+		data.istFeststellungspruefung = !hsu;
 		await props.addSprachpruefung(data);
-		selectSprachenPruefung.value.reset();
+		selectSprachenPruefungHerkunftsprachlich.value.reset();
+	}
+
+	async function hinzufuegenPruefungFeststellung(sprache: string | undefined | null, hsu: boolean) {
+		if ((verfuegbareSprachenPruefungenFeststellungErsatz.value.length === 0) || (selectSprachenPruefungFeststellungErsatz.value === undefined)
+			|| (sprache === null) || (sprache === undefined)) {
+			selectSprachenPruefungFeststellungErsatz.value?.reset();
+			return;
+		}
+		const data: Partial<Sprachpruefung> = {};
+		data.sprache = sprache;
+		const schulform = props.schuelerListeManager().schulform();
+		if ((schulform !== Schulform.BK) && (schulform !== Schulform.SB))
+			data.jahrgang = props.schuelerListeManager().jahrgaenge.get(props.schuelerListeManager().auswahl().idJahrgang)?.kuerzelStatistik;
+		data.istHSUPruefung = hsu;
+		data.istFeststellungspruefung = !hsu;
+		await props.addSprachpruefung(data);
+		selectSprachenPruefungFeststellungErsatz.value.reset();
 	}
 
 	async function removePruefungen(hsu: boolean) {

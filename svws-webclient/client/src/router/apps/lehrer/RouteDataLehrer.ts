@@ -25,6 +25,22 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		super(defaultState, routeLehrerGruppenprozesse, routeLehrerNeu);
 	}
 
+	get filterNurSichtbar(): boolean {
+		return api.config.getValue("lehrer.auswahl.filterNurSichtbar") === 'true';
+	}
+
+	setFilterNurSichtbar = async (value: boolean) => {
+		await api.config.setValue('lehrer.auswahl.filterNurSichtbar', value ? "true" : "false");
+	}
+
+	get filterNurStatistikrelevant(): boolean {
+		return api.config.getValue("lehrer.auswahl.filterNurStatistikrelevant") === 'true';
+	}
+
+	setFilterNurStatistikrelevant = async (value: boolean) => {
+		await api.config.setValue('lehrer.auswahl.filterNurStatistikrelevant', value ? "true" : "false");
+	}
+
 	public addID(param: RouteParamsRawGeneric, id: number): void {
 		param.id = id;
 	}
@@ -41,7 +57,8 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		if (this._state.value.idSchuljahresabschnitt === -1) {
 			// Initiales Setzen der Filter
 			manager.setFilterAuswahlPermitted(true);
-			manager.setFilterNurSichtbar(false);
+			manager.setFilterNurSichtbar(this.filterNurSichtbar);
+			manager.setFilterNurStatistikRelevant(this.filterNurStatistikrelevant);
 		} else {
 			// Filter aus vorherigem Manager übernehmen
 			// TODO manager.useFilter(this._state.value.manager);
@@ -223,5 +240,10 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		return [false, new ArrayList()];
 	}
 
+	add = async (data: Partial<LehrerStammdaten>): Promise<void> => {
+		const lehrerStammdaten = await api.server.addLehrerStammdaten(data, api.schema);
+		await this.setSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt, true);
+		await this.gotoDefaultView(lehrerStammdaten.id);
+	}
 }
 

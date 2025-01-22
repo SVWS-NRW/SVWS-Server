@@ -9,7 +9,7 @@ import { type RouteLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { routeLehrerStundenplanDaten } from "~/router/apps/lehrer/stundenplan/RouteLehrerStundenplanDaten";
 import { RouteDataLehrerStundenplan } from "~/router/apps/lehrer/stundenplan/RouteDataLehrerStundenplan";
 
-import type { StundenplanAuswahlProps } from "@comp";
+import type { StundenplanAuswahlProps } from "@ui";
 import { ConfigElement } from "~/components/Config";
 import { api } from "~/router/Api";
 

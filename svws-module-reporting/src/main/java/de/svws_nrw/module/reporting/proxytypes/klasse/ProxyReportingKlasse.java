@@ -50,7 +50,7 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 	 */
 	public ProxyReportingKlasse(final ReportingRepository reportingRepository, final KlassenDaten klassenDaten) {
 		super(klassenDaten.beginnSommersemester,
-				ersetzeNullDurchEmpty(klassenDaten.beschreibung),
+				ersetzeNullBlankTrim(klassenDaten.beschreibung),
 				null,
 				klassenDaten.id,
 				klassenDaten.idAllgemeinbildendOrganisationsform,
@@ -67,15 +67,15 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 				klassenDaten.istSichtbar,
 				null,
 				new ArrayList<>(),
-				ersetzeNullDurchEmpty(klassenDaten.kuerzel),
-				ersetzeNullDurchEmpty(klassenDaten.kuerzelFolgeklasse),
-				ersetzeNullDurchEmpty(klassenDaten.kuerzelVorgaengerklasse),
-				ersetzeNullDurchEmpty(klassenDaten.parallelitaet),
-				ersetzeNullDurchEmpty(klassenDaten.pruefungsordnung),
+				ersetzeNullBlankTrim(klassenDaten.kuerzel),
+				ersetzeNullBlankTrim(klassenDaten.kuerzelFolgeklasse),
+				ersetzeNullBlankTrim(klassenDaten.kuerzelVorgaengerklasse),
+				ersetzeNullBlankTrim(klassenDaten.parallelitaet),
+				ersetzeNullBlankTrim(klassenDaten.pruefungsordnung),
 				new ArrayList<>(),
 				null,
 				klassenDaten.sortierung,
-				ersetzeNullDurchEmpty(klassenDaten.teilstandort),
+				ersetzeNullBlankTrim(klassenDaten.teilstandort),
 				klassenDaten.verwendungAnkreuzkompetenzen,
 				null);
 
@@ -186,7 +186,7 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 					super.idsKlassenleitungen().stream()
 							.map(klId -> this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(klId, l -> {
 								try {
-									return new DataLehrerStammdaten(this.reportingRepository.conn()).getFromID(klId);
+									return new DataLehrerStammdaten(this.reportingRepository.conn()).getById(klId);
 								} catch (final ApiOperationException e) {
 									ReportingExceptionUtils.putStacktraceInLog(
 											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,

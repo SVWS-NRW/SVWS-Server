@@ -639,9 +639,8 @@ public class ENMDatenManager {
 	 * @return die neue ENM-Leistung
 	 */
 	public @NotNull ENMLeistung addSchuelerLeistungsdaten(final @NotNull ENMSchueler schueler, final long leistungID, final long lerngruppenID,
-			final String note,
-			final String tsNoteQuartal, final String noteQuartal, final String tsNote, final boolean istSchriftlich, final Integer abiturfach,
-			final Integer fehlstundenFach, final String tsFehlstundenFach, final Integer fehlstundenUnentschuldigtFach,
+			final String note, final String tsNote, final String noteQuartal, final String tsNoteQuartal, final boolean istSchriftlich,
+			final Integer abiturfach, final Integer fehlstundenFach, final String tsFehlstundenFach, final Integer fehlstundenUnentschuldigtFach,
 			final String tsFehlstundenUnentschuldigtFach, final String fachbezogeneBemerkungen, final String tsFachbezogeneBemerkungen,
 			final String neueZuweisungKursart, final boolean istGemahnt, final String tsIstGemahnt, final String mahndatum) {
 		final @NotNull ENMLeistung enmLeistung = new ENMLeistung();

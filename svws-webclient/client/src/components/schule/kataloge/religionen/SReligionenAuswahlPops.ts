@@ -1,5 +1,5 @@
 import type { ReligionEintrag, ReligionListeManager } from "@core";
-import type { AbschnittAuswahlDaten } from "@comp";
+import type { AbschnittAuswahlDaten } from "@ui";
 
 export interface ReligionenAuswahlProps {
 	religionListeManager: () => ReligionListeManager;

@@ -35,7 +35,7 @@ export class RouteKlassen extends RouteAuswahlNode<KlassenListeManager, RouteDat
 		super.getAuswahlListProps = (props) => (<KlassenAuswahlProps>{
 			...props,
 			setzeDefaultSortierung: this.data.setzeDefaultSortierung,
-		})
+		});
 	}
 
 	protected doUpdateIfTarget = async (to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined) => {

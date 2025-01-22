@@ -9,7 +9,10 @@ import jakarta.validation.constraints.NotNull;
  * Dieser Validator führt eine Statistikprüfung aus, ob ein Nachname bei den Stammdaten
  * eines Lehrers einer Schule angegeben wurde oder nicht.
  */
-public final class ValidatorLehrerStammdatenNachnameVorhanden extends Validator<LehrerStammdaten> {
+public final class ValidatorLehrerStammdatenNachnameVorhanden extends Validator {
+
+	/** Die Lehrer-Stammdaten */
+	private final @NotNull LehrerStammdaten daten;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
@@ -19,12 +22,13 @@ public final class ValidatorLehrerStammdatenNachnameVorhanden extends Validator<
 	 */
 	public ValidatorLehrerStammdatenNachnameVorhanden(final @NotNull LehrerStammdaten daten,
 			final @NotNull ValidatorKontext kontext) {
-		super(daten, kontext);
+		super(kontext);
+		this.daten = daten;
 	}
 
 	@Override
 	protected boolean pruefe() {
-		final String nachname = daten().nachname;
+		final String nachname = daten.nachname;
 		if ((nachname == null) || (nachname.length() == 0)) {
 			addFehler("Kein Wert im Feld 'nachname'.");
 			return false;

@@ -3,46 +3,33 @@ package de.svws_nrw.asd.validate;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.svws_nrw.transpiler.annotations.TsObject;
 import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse ist die Basisklasse für Validatoren.
- *
- * @param <T>  der Typ der zu validierenden Daten, welcher durch die abgeleitete Klasse bestimmt ist
  */
-public abstract class Validator<@TsObject T> {
-
-	/** Die zu validierenden Daten */
-	private final @NotNull T _daten;
+public abstract class Validator {
 
 	/** Der vom Validator genutzte Kontext */
 	private final @NotNull ValidatorKontext _kontext;
 
 	/** Eine Liste von Validatoren, die bei diesem Validator mitgeprüft werden. */
-	protected final @NotNull List<Validator<?>> _validatoren = new ArrayList<>();
+	protected final @NotNull List<Validator> _validatoren = new ArrayList<>();
 
 	/** Eine Liste mit Fehlern bei der Validierung */
-	private final @NotNull List<ValidatorFehler<?>> _fehler = new ArrayList<>();
+	private final @NotNull List<ValidatorFehler> _fehler = new ArrayList<>();
 
 	/** Die stärkste Fehlerart die bei einem Lauf des Validators vorgekommen ist. */
 	private @NotNull ValidatorFehlerart _fehlerart = ValidatorFehlerart.UNGENUTZT;
-
-	/** Die DTO-Klasse, welche von dem Validator geprüft wurde */
-	private final @NotNull Class<T> _dtoClass;
 
 
 	/**
 	 * Erstellt einen neuen Validator in dem übegebenen Kontext
 	 *
-	 * @param daten     die zu validierenden Daten
 	 * @param kontext   der Kontext, in dem der Validator ausgeführt wird
 	 */
-	@SuppressWarnings("unchecked")
-	protected Validator(final @NotNull T daten, final @NotNull ValidatorKontext kontext) {
-		this._daten = daten;
+	protected Validator(final @NotNull ValidatorKontext kontext) {
 		this._kontext = kontext;
-		this._dtoClass = (@NotNull Class<T>) daten.getClass();
 	}
 
 
@@ -64,25 +51,6 @@ public abstract class Validator<@TsObject T> {
 		return _kontext.getValidatorManager();
 	}
 
-	/**
-	 * Gibt die zu validierenden Daten zurück.
-	 *
-	 * @return die zu validierenden Daten
-	 */
-	public @NotNull T daten() {
-		return _daten;
-	}
-
-
-	/**
-	 * Gibt die Klasse der zu validierenden Daten zurück.
-	 *
-	 * @return die Klasse der zu validierenden Daten
-	 */
-	public @NotNull Class<T> getDTOClass() {
-		return _dtoClass;
-	}
-
 
 	/**
 	 * Führt die Prüfungen des Validators aus. Dabei wird zunächst die Fehlerliste
@@ -94,7 +62,7 @@ public abstract class Validator<@TsObject T> {
 		boolean success = true;
 		_fehler.clear();
 		if (_kontext.getValidatorManager().isValidatorActiveInSchuljahr(_kontext.getSchuljahr(), this.getClass().getCanonicalName())) {
-			for (final @NotNull Validator<?> validator : _validatoren) {
+			for (final @NotNull Validator validator : _validatoren) {
 				if (!validator.run())
 					success = false;
 				_fehler.addAll(validator._fehler);
@@ -130,7 +98,7 @@ public abstract class Validator<@TsObject T> {
 	 * @param fehlermeldung   die Fehlermeldung
 	 */
 	protected void addFehler(final @NotNull String fehlermeldung) {
-		_fehler.add(new ValidatorFehler<>(this, fehlermeldung));
+		_fehler.add(new ValidatorFehler(this, fehlermeldung));
 		updateFehlerart(null);
 	}
 
@@ -139,7 +107,7 @@ public abstract class Validator<@TsObject T> {
 	 *
 	 * @return die Liste der Fehler als unmodifiable List
 	 */
-	public @NotNull List<ValidatorFehler<?>> getFehler() {
+	public @NotNull List<ValidatorFehler> getFehler() {
 		return new ArrayList<>(_fehler);
 	}
 

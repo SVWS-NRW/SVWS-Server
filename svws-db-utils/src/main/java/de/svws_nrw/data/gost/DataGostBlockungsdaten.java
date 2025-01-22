@@ -231,13 +231,13 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		// Regeln hinzufügen.
 		final List<DTOGostBlockungRegel> regeln = conn.queryList(DTOGostBlockungRegel.QUERY_BY_BLOCKUNG_ID, DTOGostBlockungRegel.class, blockung.ID);
 		final Set<Long> regelSchuelerIDs = new HashSet<>();
+		final List<GostBlockungRegel> regelListeAdd = new ArrayList<>();
 		if (!regeln.isEmpty()) {
 			final List<Long> regelIDs = regeln.stream().map(r -> r.ID).toList();
 			final List<DTOGostBlockungRegelParameter> regelParamsDB = conn.queryList(DTOGostBlockungRegelParameter.QUERY_LIST_BY_REGEL_ID,
 					DTOGostBlockungRegelParameter.class, regelIDs);
 			final Map<Long, List<DTOGostBlockungRegelParameter>> regelParams = regelParamsDB.stream()
 					.collect(Collectors.groupingBy(r -> r.Regel_ID));
-			final List<GostBlockungRegel> regelListeAdd = new ArrayList<>();
 			for (final DTOGostBlockungRegel regel : regeln) {
 				final GostBlockungRegel eintrag = new GostBlockungRegel();
 				eintrag.id = regel.ID;
@@ -255,7 +255,6 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 				}
 				regelListeAdd.add(eintrag);
 			}
-			manager.regelAddListe(regelListeAdd);
 		}
 
 		// Schüler des Abiturjahrgangs hinzufügen...
@@ -313,6 +312,9 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		final List<GostFachwahl> fachwahlen =
 				(new DataGostAbiturjahrgangFachwahlen(conn, blockung.Abi_Jahrgang)).getSchuelerFachwahlenHalbjahr(blockung.Halbjahr).fachwahlen;
 		manager.fachwahlAddListe(fachwahlen);
+
+		if (!regelListeAdd.isEmpty())
+			manager.regelAddListe(regelListeAdd);
 
 		return manager;
 	}

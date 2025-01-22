@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
 import { resolve } from "path";
-import typescript from '@rollup/plugin-typescript';
+// import typescript from '@rollup/plugin-typescript';
 
 
 export default defineConfig({
@@ -8,11 +8,11 @@ export default defineConfig({
 	build: {
 		lib: {
 			entry: resolve(__dirname, "src/index.ts"),
-			name: "SvwsCore"
+			name: "SvwsCore",
 		},
 		// muss wegen der impliziten `type`-Imports verwendet werden, esbuild funktioniert so nicht
-		rollupOptions: {
-			plugins: [typescript()]
-		}
+		// rollupOptions: {
+		// 	plugins: [typescript()],
+		// },
 	},
 });

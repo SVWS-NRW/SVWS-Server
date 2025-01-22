@@ -1,5 +1,5 @@
 import type { FoerderschwerpunktEintrag } from "@core";
-import type { AbschnittAuswahlDaten } from "@comp";
+import type { AbschnittAuswahlDaten } from "@ui";
 
 export interface FoerderschwerpunkteAuswahlProps {
 	auswahl: FoerderschwerpunktEintrag | undefined;

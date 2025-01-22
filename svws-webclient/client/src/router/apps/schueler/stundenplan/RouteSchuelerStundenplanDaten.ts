@@ -6,8 +6,8 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeSchuelerStundenplan, type RouteSchuelerStundenplan } from "~/router/apps/schueler/stundenplan/RouteSchuelerStundenplan";
 
-import { StundenplanSchueler } from "@comp";
-import type { StundenplanSchuelerProps } from "@comp";
+import { StundenplanSchueler } from "@ui";
+import type { StundenplanSchuelerProps } from "@ui";
 import { routeApp } from "../../RouteApp";
 import { routeError } from "~/router/error/RouteError";
 

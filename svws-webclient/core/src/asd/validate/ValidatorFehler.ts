@@ -1,15 +1,15 @@
-import { ValidatorFehlerart } from '../../asd/validate/ValidatorFehlerart';
-import { Class, cast_java_lang_Class } from '../../java/lang/Class';
 import { JavaObject } from '../../java/lang/JavaObject';
+import { ValidatorFehlerart } from '../../asd/validate/ValidatorFehlerart';
+import { Class } from '../../java/lang/Class';
 import { ValidatorKontext } from '../../asd/validate/ValidatorKontext';
 import { Validator, cast_de_svws_nrw_asd_validate_Validator } from '../../asd/validate/Validator';
 
-export class ValidatorFehler<T extends JavaObject> extends JavaObject {
+export class ValidatorFehler extends JavaObject {
 
 	/**
 	 * Der Validator bei dem die Validierung fehlgeschlagen ist.
 	 */
-	private readonly _validator : Validator<T>;
+	private readonly _validator : Validator;
 
 	/**
 	 * Die Fehlermeldung, welche vom Validator gemeldet wurde
@@ -23,7 +23,7 @@ export class ValidatorFehler<T extends JavaObject> extends JavaObject {
 	 * @param validator       der Validator bei dem die Validierung fehlgeschlagen ist
 	 * @param fehlermeldung   die Fehlermeldung, welche vom Validator gemeldet wurde
 	 */
-	public constructor(validator : Validator<T>, fehlermeldung : string) {
+	public constructor(validator : Validator, fehlermeldung : string) {
 		super();
 		this._validator = validator;
 		this._fehlermeldung = fehlermeldung;
@@ -52,7 +52,7 @@ export class ValidatorFehler<T extends JavaObject> extends JavaObject {
 	 *
 	 * @return der Validator
 	 */
-	public getValidator() : Validator<T> | null {
+	public getValidator() : Validator | null {
 		return this._validator;
 	}
 
@@ -70,35 +70,8 @@ export class ValidatorFehler<T extends JavaObject> extends JavaObject {
 	 *
 	 * @return die Validator-Klasse
 	 */
-	public getValidatorClass() : Class<Validator<T>> | null {
-		return cast_java_lang_Class(this._validator.getClass());
-	}
-
-	/**
-	 * Das DTO, bei dem die Validierung fehlgeschlagen ist
-	 *
-	 * @return das DTO
-	 */
-	public getDTO() : T | null {
-		return this._validator.daten();
-	}
-
-	/**
-	 * Der Name der DTO-Klasse, bei der die Validierung fehlgeschlagen ist
-	 *
-	 * @return der Name der DTO-Klasse
-	 */
-	public getDTOClassname() : string | null {
-		return this._validator.getDTOClass().getCanonicalName();
-	}
-
-	/**
-	 * Die DTO-Klasse, bei der die Validierung fehlgeschlagen ist
-	 *
-	 * @return die DTO-Klasse
-	 */
-	public getDTOClass() : Class<T> | null {
-		return this._validator.getDTOClass();
+	public getValidatorClass() : Class<Validator> | null {
+		return this._validator.getClass();
 	}
 
 	/**
@@ -127,10 +100,10 @@ export class ValidatorFehler<T extends JavaObject> extends JavaObject {
 		return ['de.svws_nrw.asd.validate.ValidatorFehler'].includes(name);
 	}
 
-	public static class = new Class<ValidatorFehler<any>>('de.svws_nrw.asd.validate.ValidatorFehler');
+	public static class = new Class<ValidatorFehler>('de.svws_nrw.asd.validate.ValidatorFehler');
 
 }
 
-export function cast_de_svws_nrw_asd_validate_ValidatorFehler<T extends JavaObject>(obj : unknown) : ValidatorFehler<T> {
-	return obj as ValidatorFehler<T>;
+export function cast_de_svws_nrw_asd_validate_ValidatorFehler(obj : unknown) : ValidatorFehler {
+	return obj as ValidatorFehler;
 }

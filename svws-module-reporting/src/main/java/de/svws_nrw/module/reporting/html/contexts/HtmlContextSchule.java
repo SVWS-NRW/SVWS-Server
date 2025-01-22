@@ -1,6 +1,7 @@
 package de.svws_nrw.module.reporting.html.contexts;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import de.svws_nrw.module.reporting.proxytypes.schule.ProxyReportingBenutzer;
 import de.svws_nrw.module.reporting.proxytypes.schule.ProxyReportingSchule;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import org.thymeleaf.context.Context;
@@ -32,6 +33,7 @@ public final class HtmlContextSchule extends HtmlContext {
 		final Context context = new Context();
 
 		context.setVariable("Schule", new ProxyReportingSchule(this.reportingRepository));
+		context.setVariable("Benutzer", new ProxyReportingBenutzer(this.reportingRepository));
 		context.setVariable("Parameter", this.reportingRepository.reportingParameter());
 
 		super.setContext(context);

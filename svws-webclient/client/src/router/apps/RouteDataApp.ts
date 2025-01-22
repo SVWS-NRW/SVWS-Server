@@ -5,7 +5,7 @@ import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { api } from "~/router/Api";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteManager, routerManager } from "../RouteManager";
-import type { AbschnittAuswahlDaten } from "@comp";
+import type { AbschnittAuswahlDaten } from "@ui";
 
 
 interface RouteStateApp extends RouteStateInterface {

@@ -31,6 +31,14 @@ export class RouteDataKurse extends RouteDataAuswahl<KursListeManager, RouteStat
 		param.id = id;
 	}
 
+	get filterNurSichtbar(): boolean {
+		return api.config.getValue("kurse.auswahl.filterNurSichtbar") === 'true';
+	}
+
+	setFilterNurSichtbar = async (value: boolean) => {
+		await api.config.setValue('kurse.auswahl.filterNurSichtbar', value ? "true" : "false");
+	}
+
 	protected async createManager(idSchuljahresabschnitt : number) : Promise<Partial<RouteStateKurse>> {
 		const schuljahresabschnitt = api.mapAbschnitte.value.get(idSchuljahresabschnitt);
 		if (schuljahresabschnitt === undefined)
@@ -45,7 +53,7 @@ export class RouteDataKurse extends RouteDataAuswahl<KursListeManager, RouteStat
 			api.schulform, listKurse, listSchueler, listJahrgaenge, listLehrer, listFaecher);
 		if (this._state.value.manager === undefined) {
 			manager.setFilterAuswahlPermitted(true);
-			manager.setFilterNurSichtbar(false);
+			manager.setFilterNurSichtbar(this.filterNurSichtbar);
 		}
 		return { manager };
 	}

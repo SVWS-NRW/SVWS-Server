@@ -6,7 +6,7 @@ import { RouteTabNode } from "./RouteTabNode";
 import type { RouteComponent, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
 import { ViewType } from "@ui";
 import { api } from "./Api";
-import type { AbschnittAuswahlDaten } from "@comp";
+import type { AbschnittAuswahlDaten } from "@ui";
 import { routeApp } from "./apps/RouteApp";
 import { routeError } from "./error/RouteError";
 import { ConfigElement } from "~/components/Config";

@@ -21,6 +21,9 @@ public class ReportingPerson extends ReportingBaseType {
 	/** Die schulische E-Mail-Adresse. */
 	protected String emailSchule;
 
+	/** Die schulische Fax-Nummer. */
+	protected String faxSchule;
+
 	/** Das Geburtsdatum. */
 	protected String geburtsdatum;
 
@@ -54,11 +57,17 @@ public class ReportingPerson extends ReportingBaseType {
 	/** Ggf. der Straßenname im Wohnort. */
 	protected String strassenname;
 
-	/** Die Telefonnummer. */
-	protected String telefon;
+	/** Die private Telefonnummer. */
+	protected String telefonPrivat;
 
-	/** Die mobile Telefonnummer. */
-	protected String telefonMobil;
+	/** Die private Mobilfunk-Telefonnummer. */
+	protected String telefonPrivatMobil;
+
+	/** Die schulische Telefonnummer. */
+	protected String telefonSchule;
+
+	/** Die schulische Mobilifunk-Telefonnummer. */
+	protected String telefonSchuleMobil;
 
 	/** Die Titel. */
 	protected String titel;
@@ -81,6 +90,7 @@ public class ReportingPerson extends ReportingBaseType {
 	 * @param anrede				Die Anrede.
 	 * @param emailPrivat			Die private E-Mail-Adresse.
 	 * @param emailSchule			Die schulische E-Mail-Adresse.
+	 * @param faxSchule 			Die schulische Fax-Nummer.
 	 * @param geburtsdatum			Das Geburtsdatum.
 	 * @param geburtsland			Das Geburtsland.
 	 * @param geburtsname			Der Geburtsname.
@@ -92,23 +102,27 @@ public class ReportingPerson extends ReportingBaseType {
 	 * @param staatsangehoerigkeit	Die Staatsangehörigkeit.
 	 * @param staatsangehoerigkeit2	Eine evtl. vorhandene zweite Staatsangehörigkeit.
 	 * @param strassenname			Ggf. der Straßenname im Wohnort.
-	 * @param telefon				Die Telefonnummer.
-	 * @param telefonMobil			Die mobile Telefonnummer.
+	 * @param telefonPrivat			Die private Telefonnummer.
+	 * @param telefonPrivatMobil	Die private Mobilfunk-Telefonnummer.
+	 * @param telefonSchule			Die schulische Telefonnummer.
+	 * @param telefonSchuleMobil	Die schulische Mobilfunk-Telefonnummer.
 	 * @param titel					Die Titel.
 	 * @param vorname				Der Vorname (Rufname).
 	 * @param vornamen				Alle Vornamen, sofern es mehrere gibt.
 	 * @param wohnort				Der Wohnort.
 	 * @param wohnortsteil			Ggf. der Ortsteil des Wohnortes.
 	 */
-	public ReportingPerson(final String anrede, final String emailPrivat, final String emailSchule, final String geburtsdatum, final String geburtsland,
-			final String geburtsname, final String geburtsort, final Geschlecht geschlecht, final String hausnummer, final String hausnummerZusatz,
-			final String nachname, final Nationalitaeten staatsangehoerigkeit, final Nationalitaeten staatsangehoerigkeit2, final String strassenname,
-			final String telefon, final String telefonMobil, final String titel, final String vorname, final String vornamen, final OrtKatalogEintrag wohnort,
+	public ReportingPerson(final String anrede, final String emailPrivat, final String emailSchule, final String faxSchule, final String geburtsdatum,
+			final String geburtsland, final String geburtsname, final String geburtsort, final Geschlecht geschlecht, final String hausnummer,
+			final String hausnummerZusatz, final String nachname, final Nationalitaeten staatsangehoerigkeit, final Nationalitaeten staatsangehoerigkeit2,
+			final String strassenname, final String telefonPrivat, final String telefonPrivatMobil, final String telefonSchule,
+			final String telefonSchuleMobil, final String titel, final String vorname, final String vornamen, final OrtKatalogEintrag wohnort,
 			final OrtsteilKatalogEintrag wohnortsteil) {
 		super();
 		this.anrede = anrede;
 		this.emailPrivat = emailPrivat;
 		this.emailSchule = emailSchule;
+		this.faxSchule = faxSchule;
 		this.geburtsdatum = geburtsdatum;
 		this.geburtsland = geburtsland;
 		this.geburtsname = geburtsname;
@@ -120,8 +134,10 @@ public class ReportingPerson extends ReportingBaseType {
 		this.staatsangehoerigkeit = staatsangehoerigkeit;
 		this.staatsangehoerigkeit2 = staatsangehoerigkeit2;
 		this.strassenname = strassenname;
-		this.telefon = telefon;
-		this.telefonMobil = telefonMobil;
+		this.telefonPrivat = telefonPrivat;
+		this.telefonPrivatMobil = telefonPrivatMobil;
+		this.telefonSchule = telefonSchule;
+		this.telefonSchuleMobil = telefonSchuleMobil;
 		this.titel = titel;
 		this.vorname = vorname;
 		this.vornamen = vornamen;
@@ -131,71 +147,6 @@ public class ReportingPerson extends ReportingBaseType {
 
 
 // ##### Berechnete Felder #####
-
-	/**
-	 * Erzeugt die formale Anrede ("Sehr geehrte").
-	 *
-	 * @return Formale Anrede
-	 */
-	public String anredeFormal() {
-		switch (anrede) {
-			case "Frau" -> {
-				return "Sehr geehrte Frau " + (!this.titel().isEmpty() ? this.titel() + " " : "") + this.nachname();
-			}
-			case "Herr" -> {
-				return "Sehr geehrter Herr " + (!this.titel().isEmpty() ? this.titel() + " " : "") + this.nachname();
-			}
-			case "Familie" -> {
-				return "Sehr geehrte Familie " + this.nachname();
-			}
-			case null, default -> {
-				switch (geschlecht) {
-					case Geschlecht.W -> {
-						return "Sehr geehrte Frau " + (!this.titel().isEmpty() ? this.titel() + " " : "") + this.nachname();
-					}
-					case Geschlecht.M -> {
-						return "Sehr geehrter Herr " + (!this.titel().isEmpty() ? this.titel() + " " : "") + this.nachname();
-					}
-					case null, default -> {
-						return "Guten Tag " + (!this.titel().isEmpty() ? this.titel() + " " : "")
-								+ (this.vornamen().isEmpty() ? this.vorname() : this.vornamen()) + " " + this.nachname();
-					}
-				}
-			}
-		}
-	}
-
-	/**
-	 * Erzeugt die persönliche Anrede ("Liebe").
-	 *
-	 * @return Persönliche Anrede
-	 */
-	public String anredePersoenlich() {
-		switch (anrede) {
-			case "Frau" -> {
-				return "Liebe Frau " + (!this.titel().isEmpty() ? this.titel() + " " : "") + this.nachname();
-			}
-			case "Herr" -> {
-				return "Lieber Herr " + (!this.titel().isEmpty() ? this.titel() + " " : "") + this.nachname();
-			}
-			case "Familie" -> {
-				return "Liebe Familie " + this.nachname();
-			}
-			case null, default -> {
-				switch (geschlecht) {
-					case Geschlecht.W -> {
-						return "Liebe Frau " + (!this.titel().isEmpty() ? this.titel() + " " : "") + this.nachname();
-					}
-					case Geschlecht.M -> {
-						return "Lieber Herr " + (!this.titel().isEmpty() ? this.titel() + " " : "") + this.nachname();
-					}
-					case null, default -> {
-						return "Hallo " + (!this.titel().isEmpty() ? this.titel() + " " : "") + this.vorname() + " " + this.nachname();
-					}
-				}
-			}
-		}
-	}
 
 	/**
 	 * Erzeugt die mehrzeilige Briefanschrift im html-Format.
@@ -214,7 +165,7 @@ public class ReportingPerson extends ReportingBaseType {
 		result += this.strassennameHausnummer() + "</br>";
 		result += this.plzOrt();
 
-		return result;
+		return result.trim();
 	}
 
 	/**
@@ -234,7 +185,121 @@ public class ReportingPerson extends ReportingBaseType {
 		result += this.strassennameHausnummer() + "</br>";
 		result += this.plzOrt();
 
-		return result;
+		return result.trim();
+	}
+
+	/**
+	 * Erzeugt die Anrede zusammen mit dem Nachnamen.
+	 *
+	 * @return Anrede mit Nachname.
+	 */
+	public String anredeNachname() {
+		switch (anrede) {
+			case "Frau" -> {
+				return ("Frau " + this.nachnameMitTitel()).trim();
+			}
+			case "Herr" -> {
+				return ("Herr " + this.nachnameMitTitel()).trim();
+			}
+			case "Familie" -> {
+				return ("Familie " + this.nachname()).trim();
+			}
+			case null, default -> {
+				switch (geschlecht) {
+					case Geschlecht.W -> {
+						return ("Frau " + this.nachnameMitTitel()).trim();
+					}
+					case Geschlecht.M -> {
+						return ("Herr " + this.nachnameMitTitel()).trim();
+					}
+					case null, default -> {
+						return this.vornameNachnameMitTitel();
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Erzeugt die Anrede zusammen mit dem Vornamen und dem Nachnamen.
+	 *
+	 * @return Anrede mit Vorname und Nachname.
+	 */
+	public String anredeVornameNachname() {
+		switch (anrede) {
+			case "Frau" -> {
+				return ("Frau " + this.vornameNachnameMitTitel()).trim();
+			}
+			case "Herr" -> {
+				return ("Herr " + this.vornameNachnameMitTitel()).trim();
+			}
+			case "Familie" -> {
+				return ("Familie " + this.nachname()).trim();
+			}
+			case null, default -> {
+				switch (geschlecht) {
+					case Geschlecht.W -> {
+						return ("Frau " + this.vornameNachnameMitTitel()).trim();
+					}
+					case Geschlecht.M -> {
+						return ("Herr " + this.vornameNachnameMitTitel()).trim();
+					}
+					case null, default -> {
+						return this.vornameNachnameMitTitel();
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Erzeugt die Anrede zusammen mit den Vornamen und dem Nachnamen.
+	 *
+	 * @return Anrede mit Vornamen und Nachname.
+	 */
+	public String anredeVornamenNachname() {
+		switch (anrede) {
+			case "Frau" -> {
+				return ("Frau " + this.vornamenNachnameMitTitel()).trim();
+			}
+			case "Herr" -> {
+				return ("Herr " + this.vornamenNachnameMitTitel()).trim();
+			}
+			case "Familie" -> {
+				return ("Familie " + this.nachname()).trim();
+			}
+			case null, default -> {
+				switch (geschlecht) {
+					case Geschlecht.W -> {
+						return ("Frau " + this.vornamenNachnameMitTitel()).trim();
+					}
+					case Geschlecht.M -> {
+						return ("Herr " + this.vornamenNachnameMitTitel()).trim();
+					}
+					case null, default -> {
+						return this.vornamenNachnameMitTitel();
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Erzeugt für einen Brief die formale Anrede ("Sehr geehrte").
+	 *
+	 * @return Formale Anrede
+	 */
+	public String briefanredeFormal() {
+		return (this.sehrGeehrteGeehrter() + " " + this.anredeNachname()).trim();
+	}
+
+	/**
+	 * Erzeugt für einen Brief die persönliche Anrede ("Liebe").
+	 *
+	 * @return Persönliche Anrede
+	 */
+	public String briefanredePersoenlich() {
+		return (this.liebeLieber() + " " + this.anredeNachname()).trim();
 	}
 
 	/**
@@ -267,12 +332,21 @@ public class ReportingPerson extends ReportingBaseType {
 	}
 
 	/**
+	 * Erzeugt den Nachnamen mit Titel, Titel zuerst.
+	 *
+	 * @return Titel und Nachname.
+	 */
+	public String nachnameMitTitel() {
+		return ((!this.titel().isEmpty() ? this.titel() + " " : "") + this.nachname()).trim();
+	}
+
+	/**
 	 * Erzeugt den vollständigen Namen, Nachname zuerst.
 	 *
 	 * @return Vollständiger Name.
 	 */
 	public String nachnameVorname() {
-		return this.nachname() + ", " + this.vorname();
+		return (this.nachname() + ", " + this.vorname()).trim();
 	}
 
 	/**
@@ -280,8 +354,8 @@ public class ReportingPerson extends ReportingBaseType {
 	 *
 	 * @return Vollständiger Name.
 	 */
-	public String nachnamenVorname() {
-		return this.nachname() + ", " + (this.vornamen().isEmpty() ? this.vorname() : this.vornamen());
+	public String nachnameVornamen() {
+		return (this.nachname() + ", " + (this.vornamen().isEmpty() ? this.vorname() : this.vornamen())).trim();
 	}
 
 	/**
@@ -290,7 +364,7 @@ public class ReportingPerson extends ReportingBaseType {
 	 * @return Vollständiger Name.
 	 */
 	public String nachnameVornameMitTitel() {
-		return this.nachname() + ", " + this.vorname() + (!this.titel().isEmpty() ? ", " + this.titel() : "");
+		return (this.nachname() + ", " + this.vorname() + (!this.titel().isEmpty() ? ", " + this.titel() : "")).trim();
 	}
 
 	/**
@@ -299,7 +373,8 @@ public class ReportingPerson extends ReportingBaseType {
 	 * @return Vollständiger Name.
 	 */
 	public String nachnameVornamenMitTitel() {
-		return this.nachname() + ", " + (this.vornamen().isEmpty() ? this.vorname() : this.vornamen()) + (!this.titel().isEmpty() ? ", " + this.titel() : "");
+		return (this.nachname() + ", " + (this.vornamen().isEmpty() ? this.vorname() : this.vornamen()) + (!this.titel().isEmpty() ? ", " + this.titel() : ""))
+				.trim();
 	}
 
 	/**
@@ -326,7 +401,7 @@ public class ReportingPerson extends ReportingBaseType {
 		String result = this.wohnort().plz;
 		result += " " + this.wohnort().ortsname;
 
-		return result;
+		return result.trim();
 	}
 
 	/**
@@ -371,7 +446,7 @@ public class ReportingPerson extends ReportingBaseType {
 		result += !this.hausnummer().isEmpty() ? (" " + this.hausnummer()) : "";
 		result += (!this.hausnummer().isEmpty() && !this.hausnummerZusatz().isEmpty()) ? (" " + this.hausnummerZusatz()) : "";
 
-		return result;
+		return result.trim();
 	}
 
 	/**
@@ -380,7 +455,7 @@ public class ReportingPerson extends ReportingBaseType {
 	 * @return Vollständiger Name.
 	 */
 	public String vornameNachname() {
-		return this.vorname() + " " + this.nachname();
+		return (this.vorname() + " " + this.nachname()).trim();
 	}
 
 	/**
@@ -389,7 +464,7 @@ public class ReportingPerson extends ReportingBaseType {
 	 * @return Vollständiger Name.
 	 */
 	public String vornamenNachname() {
-		return (this.vornamen().isEmpty() ? this.vorname() : this.vornamen()) + " " + this.nachname();
+		return ((this.vornamen().isEmpty() ? this.vorname() : this.vornamen()) + " " + this.nachname()).trim();
 	}
 
 	/**
@@ -398,7 +473,7 @@ public class ReportingPerson extends ReportingBaseType {
 	 * @return Vollständiger Name.
 	 */
 	public String vornameNachnameMitTitel() {
-		return (!this.titel().isEmpty() ? this.titel() + " " : "") + this.vorname() + " " + this.nachname();
+		return ((!this.titel().isEmpty() ? this.titel() + " " : "") + this.vorname() + " " + this.nachname()).trim();
 	}
 
 	/**
@@ -407,8 +482,8 @@ public class ReportingPerson extends ReportingBaseType {
 	 * @return Vollständiger Name.
 	 */
 	public String vornamenNachnameMitTitel() {
-		return (!this.titel().isEmpty() ? this.titel() + " " : "")
-				+ (this.vornamen().isEmpty() ? this.vorname() : this.vornamen()) + " " + this.nachname();
+		return ((!this.titel().isEmpty() ? this.titel() + " " : "")
+				+ (this.vornamen().isEmpty() ? this.vorname() : this.vornamen()) + " " + this.nachname()).trim();
 	}
 
 	/**
@@ -438,6 +513,7 @@ public class ReportingPerson extends ReportingBaseType {
 
 
 	// ##### Getter #####
+
 	/**
 	 * Die Anrede.
 	 *
@@ -463,6 +539,15 @@ public class ReportingPerson extends ReportingBaseType {
 	 */
 	public String emailSchule() {
 		return emailSchule;
+	}
+
+	/**
+	 * Die schulische Fax-Nummer.
+	 *
+	 * @return Inhalt des Feldes faxSchule
+	 */
+	public String faxSchule() {
+		return faxSchule;
 	}
 
 	/**
@@ -565,21 +650,39 @@ public class ReportingPerson extends ReportingBaseType {
 	}
 
 	/**
-	 * Die Telefonnummer.
+	 * Die private Telefonnummer.
 	 *
-	 * @return Inhalt des Feldes telefon
+	 * @return Inhalt des Feldes telefonPrivat
 	 */
-	public String telefon() {
-		return telefon;
+	public String telefonPrivat() {
+		return telefonPrivat;
 	}
 
 	/**
-	 * Die mobile Telefonnummer.
+	 * Die private Mobilfunk-Telefonnummer.
 	 *
-	 * @return Inhalt des Feldes telefonMobil
+	 * @return Inhalt des Feldes telefonPrivatMobil
 	 */
-	public String telefonMobil() {
-		return telefonMobil;
+	public String telefonPrivatMobil() {
+		return telefonPrivatMobil;
+	}
+
+	/**
+	 * Die schulische Telefonnummer.
+	 *
+	 * @return Inhalt des Feldes telefonSchule
+	 */
+	public String telefonSchule() {
+		return telefonSchule;
+	}
+
+	/**
+	 * Die schulische Mobilifunk-Telefonnummer.
+	 *
+	 * @return Inhalt des Feldes telefonSchuleMobil
+	 */
+	public String telefonSchuleMobil() {
+		return telefonSchuleMobil;
 	}
 
 	/**

@@ -1,5 +1,5 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import type { SchuelerLaufbahnplanungProps } from "@comp";
+import type { SchuelerLaufbahnplanungProps } from "@ui";
 
 import { BenutzerKompetenz, DeveloperNotificationException, ServerMode } from "@core";
 
@@ -10,7 +10,7 @@ import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteS
 import { RouteDataSchuelerLaufbahnplanung } from "~/router/apps/schueler/laufbahnplanung/RouteDataSchuelerLaufbahnplanung";
 
 import { ConfigElement } from "~/components/Config";
-import { SSchuelerLaufbahnplanung } from "@comp";
+import { SSchuelerLaufbahnplanung } from "@ui";
 import { schulformenGymOb } from "~/router/RouteHelper";
 
 export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLaufbahnplanung, RouteSchueler> {
@@ -96,7 +96,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 			gostBelegpruefungsArt: () => this.data.gostBelegpruefungsArt,
 			gostBelegpruefungErgebnis: () => this.data.gostBelegpruefungErgebnis,
 			abiturdatenManager: () => this.data.abiturdatenManager,
-			mapLehrer: this.data.mapLehrer,
+			listLehrer: this.data.listeLehrer,
 			id: this.data.id,
 			zwischenspeicher: this.data.zwischenspeicher,
 			saveLaufbahnplanung: this.data.saveLaufbahnplanung,

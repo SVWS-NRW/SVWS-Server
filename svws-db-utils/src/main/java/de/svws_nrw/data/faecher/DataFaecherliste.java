@@ -50,7 +50,17 @@ public final class DataFaecherliste extends DataManager<Long> {
 		daten.istPruefungsordnungsRelevant = f.IstPruefungsordnungsRelevant;
 		daten.sortierung = f.SortierungAllg;
 		daten.istSichtbar = f.Sichtbar;
+		daten.aufgabenfeld = f.Aufgabenfeld;
 		daten.bilingualeSprache = f.Unterrichtssprache;
+		daten.istNachpruefungErlaubt = (f.IstNachpruefungErlaubt != null) && f.IstNachpruefungErlaubt;
+		daten.aufZeugnis = (f.AufZeugnis != null) && f.AufZeugnis;
+		daten.bezeichnungZeugnis = (f.BezeichnungZeugnis == null) ? "" : f.BezeichnungZeugnis;
+		daten.bezeichnungUeberweisungszeugnis = (f.BezeichnungUeberweisungsZeugnis == null) ? "" : f.BezeichnungUeberweisungsZeugnis;
+		daten.maxZeichenInFachbemerkungen = (f.MaxBemZeichen == null) ? Integer.MAX_VALUE : f.MaxBemZeichen;
+		daten.istSchriftlichZK = (f.IstSchriftlichZK != null) && f.IstSchriftlichZK;
+		daten.istSchriftlichBA = (f.IstSchriftlichBA != null) && f.IstSchriftlichBA;
+		daten.istFHRFach = false; // TODO Wert bestimmen
+		daten.holeAusAltenLernabschnitten = (f.AbgeschlFaecherHolen != null) && f.AbgeschlFaecherHolen;
 		return daten;
 	};
 

@@ -17,8 +17,8 @@ public class ProxyReportingGostLaufbahnplanungErgebnismeldung extends ReportingG
 	 */
 	public ProxyReportingGostLaufbahnplanungErgebnismeldung(final String code, final ReportingGostLaufbahnplanungErgebnismeldungKategorie kategorie,
 			final String meldung) {
-		super(ersetzeNullDurchEmpty(code),
+		super(ersetzeNullBlankTrim(code),
 				kategorie,
-				ersetzeNullDurchEmpty(meldung));
+				ersetzeNullBlankTrim(meldung));
 	}
 }

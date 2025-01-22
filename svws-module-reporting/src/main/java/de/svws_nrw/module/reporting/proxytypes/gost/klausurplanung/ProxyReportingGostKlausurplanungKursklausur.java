@@ -25,7 +25,7 @@ public class ProxyReportingGostKlausurplanungKursklausur extends ReportingGostKl
 	public ProxyReportingGostKlausurplanungKursklausur(final GostKursklausur gostKursklausur, final GostKlausurvorgabe gostKlausurVorgabe,
 			final ReportingGostKlausurplanungKlausurtermin klausurtermin, final ReportingKurs kurs) {
 		super(gostKlausurVorgabe.auswahlzeit,
-				ersetzeNullDurchEmpty(gostKursklausur.bemerkung),
+				ersetzeNullBlankTrim(gostKursklausur.bemerkung),
 				gostKlausurVorgabe.dauer,
 				gostKursklausur.id,
 				gostKlausurVorgabe.istAudioNotwendig,

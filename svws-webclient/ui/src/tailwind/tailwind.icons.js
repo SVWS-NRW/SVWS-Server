@@ -66,6 +66,8 @@ const iconColors = {
 
 const iconPath = {
 	'add-line': { path: 'System', icon: 'add-line' }, // i-ri-add-line
+	'add-circle-line': { path: 'System', icon: 'add-circle-line' }, // i-ri-add-circle-line
+	'add-circle-fill': { path: 'System', icon: 'add-circle-fill' }, // i-ri-add-circle-fill
 	'alert-fill': { path: 'System', icon: 'alert-fill' }, // i-ri-alert-fill
 	'alert-line': { path: 'System', icon: 'alert-line' }, // i-ri-alert-line
 	'archive-line': { path: 'Business', icon: 'archive-line' }, // i-ri-archive-line
@@ -192,6 +194,10 @@ const iconPath = {
 	'chat-new-line': { path: 'Communication', icon: 'chat-new-line' }, // i-ri-chat-new-line
 	'question-mark': { path: 'Editor', icon: 'question-mark' }, // i-ri-question-mark
 	'asterisk': { path: 'Editor', icon: 'asterisk' }, // i-ri-asterisk
+	'layout-column-line': { path: 'Design', icon: 'layout-column-line' }, // ri-layout-column-line
+	'layout-column-fill': { path: 'Design', icon: 'layout-column-fill' }, // ri-layout-column-fill
+
+	// Achtung: Icons, die nicht in SvwsDocsIcons.story.vue dokumentiert sind, tauchen ggf. nicht in der UI Anwendung auf!
 }
 
 const iconPlugins = [

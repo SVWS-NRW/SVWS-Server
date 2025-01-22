@@ -1,11 +1,12 @@
 import { HashMap2D } from '../../core/adt/map/HashMap2D';
+import type { JavaSet } from '../../java/util/JavaSet';
+import { JavaString } from '../../java/lang/JavaString';
+import { ListMap2DLongKeys } from '../../core/adt/map/ListMap2DLongKeys';
 import { JavaInteger } from '../../java/lang/JavaInteger';
 import { RuntimeException } from '../../java/lang/RuntimeException';
-import type { JavaSet } from '../../java/util/JavaSet';
 import type { Collection } from '../../java/util/Collection';
 import type { List } from '../../java/util/List';
 import { Class } from '../../java/lang/Class';
-import { JavaString } from '../../java/lang/JavaString';
 import type { JavaMap } from '../../java/util/JavaMap';
 import { HashMap5D } from '../../core/adt/map/HashMap5D';
 import { HashMap4D } from '../../core/adt/map/HashMap4D';
@@ -185,6 +186,24 @@ export class DeveloperNotificationException extends RuntimeException {
 		if (map.containsKey(key))
 			throw new DeveloperNotificationException("PUT von " + key + " --> " + value + " fehlgeschlagen, da bereits " + map.get(key) + " zugeordnet ist!")
 		map.put(key, value);
+	}
+
+	/**
+	 * Fügt das Mapping (key1, key2) --> V der Map hinzu. <br>
+	 * Wirft eine DeveloperNotificationException, falls dem Schlüssel bereits etwas zugeordnet ist.
+	 *
+	 * @param <V>    der Typ des zugeordneten Wertes.
+	 * @param map     die Map.
+	 * @param key1    der 1. Schlüssel.
+	 * @param key2    der 2. Schlüssel.
+	 * @param value   der zugeordnete Wert.
+	 *
+	 * @throws DeveloperNotificationException falls dem Schlüssel K bereits etwas zugeordnet ist.
+	 */
+	public static ifListMap2DLongKeysPutOverwrites<V>(map : ListMap2DLongKeys<V>, key1 : number, key2 : number, value : V) : void {
+		if (map.getSingle12OrNull(key1, key2) !== null)
+			throw new DeveloperNotificationException("PUT von (" + key1 + ", " + key2 + ") --> " + value + " fehlgeschlagen, da bereits " + map.get12(key1, key2) + " zugeordnet ist!")
+		map.add(key1, key2, value);
 	}
 
 	/**

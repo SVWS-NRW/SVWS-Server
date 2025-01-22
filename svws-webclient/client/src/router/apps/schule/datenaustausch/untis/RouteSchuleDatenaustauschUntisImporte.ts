@@ -25,6 +25,7 @@ export class RouteSchuleDatenaustauschUntisImporte extends RouteNode<any, RouteS
 
 	public getProps(to: RouteLocationNormalized): SchuleDatenaustauschUntisImporteProps {
 		return {
+			serverMode: api.mode,
 			schulform: api.schulform,
 			schuljahresabschnitt: () => routeApp.data.aktAbschnitt.value,
 			importUntisStundenplanGPU001: routeSchuleDatenaustauschUntis.data.importUntisStundenplanGPU001,

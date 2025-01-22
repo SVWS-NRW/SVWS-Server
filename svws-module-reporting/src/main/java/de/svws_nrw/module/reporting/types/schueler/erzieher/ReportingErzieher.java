@@ -50,8 +50,8 @@ public class ReportingErzieher extends ReportingPerson {
 	 * @param staatsangehoerigkeit Die Staatsangehörigkeit des Erziehers.
 	 * @param staatsangehoerigkeit2 Die ggf. zweite Staatsangehörigkeit des Erziehers.
 	 * @param strassenname Ggf. der Straßenname im Wohnort des Erziehers.
-	 * @param telefon Die Telefonnummer des Erziehers.
-	 * @param telefonMobil Die mobile Telefonnummer des Erziehers.
+	 * @param telefonPrivat Die private Telefonnummer des Erziehers.
+	 * @param telefonPrivatMobil Die private Mobilfunk-Telefonnummer des Erziehers.
 	 * @param titel Die Titel des Erziehers.
 	 * @param vorname Der Vorname des Erziehers.
 	 * @param vornamen Alle Vornamen des Erziehers
@@ -62,10 +62,11 @@ public class ReportingErzieher extends ReportingPerson {
 			final Boolean erhaeltAnschreiben, final String geburtsdatum, final String geburtsland, final String geburtsname, final String geburtsort,
 			final Geschlecht geschlecht, final String hausnummer, final String hausnummerZusatz, final long id, final String nachname,
 			final ReportingSchueler schueler, final Nationalitaeten staatsangehoerigkeit, final Nationalitaeten staatsangehoerigkeit2,
-			final String strassenname, final String telefon, final String telefonMobil, final String titel, final String vorname, final String vornamen,
-			final OrtKatalogEintrag wohnort, final OrtsteilKatalogEintrag wohnortsteil) {
-		super(anrede, emailPrivat, emailSchule, geburtsdatum, geburtsland, geburtsname, geburtsort, geschlecht, hausnummer, hausnummerZusatz, nachname,
-				staatsangehoerigkeit, staatsangehoerigkeit2, strassenname, telefon, telefonMobil, titel, vorname, vornamen, wohnort, wohnortsteil);
+			final String strassenname, final String telefonPrivat, final String telefonPrivatMobil, final String titel, final String vorname,
+			final String vornamen, final OrtKatalogEintrag wohnort, final OrtsteilKatalogEintrag wohnortsteil) {
+		super(anrede, emailPrivat, emailSchule, "", geburtsdatum, geburtsland, geburtsname, geburtsort, geschlecht, hausnummer, hausnummerZusatz,
+				nachname, staatsangehoerigkeit, staatsangehoerigkeit2, strassenname, telefonPrivat, telefonPrivatMobil, "", "", titel, vorname,
+				vornamen, wohnort, wohnortsteil);
 		this.art = art;
 		this.bemerkung = bemerkung;
 		this.erhaeltAnschreiben = erhaeltAnschreiben;

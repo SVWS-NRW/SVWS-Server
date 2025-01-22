@@ -37,7 +37,7 @@ public class SchulEintrag {
 
 	/** Die ID der Schulform. */
 	@Schema(description = "die ID der Schulform", example = "1")
-	public Long schulformID = null;
+	public Long idSchulform = null;
 
 	/** Der Straßenname der Straße in der die Schule liegt. */
 	@Schema(description = "der Straßenname der Straße in der die Schule liegt.", example = "Musterweg")
@@ -49,7 +49,7 @@ public class SchulEintrag {
 
 	/** Ggf. der Hausnummerzusatz zur Straße in der die Schule liegt. */
 	@Schema(description = "Ggf. der Hausnummerzusatz zur Straße in der die Schule liegt.", example = "a-d")
-	public String hausnummerZusatz;
+	public String zusatzHausnummer;
 
 	/** Die Postleitzahl des Gebietes in dem die Schule liegt. */
 	@Schema(description = "die Postleitzahl der Schule", example = "42287")

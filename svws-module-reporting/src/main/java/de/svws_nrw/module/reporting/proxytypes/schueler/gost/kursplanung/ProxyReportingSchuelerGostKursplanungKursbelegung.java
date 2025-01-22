@@ -17,6 +17,6 @@ public class ProxyReportingSchuelerGostKursplanungKursbelegung extends Reporting
 	 * @param kurs 					Der Kurs, der vom Schüler belegt wird.
 	 */
 	public ProxyReportingSchuelerGostKursplanungKursbelegung(final String abiturfach, final boolean hatGueltigeFachwahl, final boolean istSchriftlich, final ReportingGostKursplanungKurs kurs) {
-		super(ersetzeNullDurchEmpty(abiturfach), hatGueltigeFachwahl, istSchriftlich, kurs);
+		super(ersetzeNullBlankTrim(abiturfach), hatGueltigeFachwahl, istSchriftlich, kurs);
 	}
 }

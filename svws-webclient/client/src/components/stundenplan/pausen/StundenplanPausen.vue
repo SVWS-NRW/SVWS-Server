@@ -1,11 +1,11 @@
 <template>
 	<div class="page--content page--content--full select-none">
 		<Teleport to=".svws-sub-nav-target" v-if="isMounted">
-			<svws-ui-sub-nav>
+			<svws-ui-sub-nav :focus-switching-enabled :focus-help-visible>
 				<div class="ml-4 flex gap-0.5 items-center leading-none select-none">
 					<div class="text-button font-bold mr-1 -mt-px">Klasse:</div>
 					<svws-ui-select headless title="Klasse" v-model="klasse" :items="stundenplanManager().klasseGetMengeAsList()" :item-text="i => i.kuerzel" autocomplete
-						:item-filter="(i, text)=> i.filter(k=>k.kuerzel.includes(text.toLocaleLowerCase()))" :item-sort="() => 0" type="transparent" removable focus-class />
+						:item-filter="(i, text)=> i.filter(k=>k.kuerzel.includes(text.toLocaleLowerCase()))" :item-sort="() => 0" type="transparent" removable focus-class-sub-nav />
 				</div>
 			</svws-ui-sub-nav>
 		</Teleport>
@@ -91,10 +91,13 @@
 	import type { StundenplanPausenProps } from "./StundenplanPausenProps";
 	import type { Wochentag, List, StundenplanPausenzeit, StundenplanKlasse, StundenplanPausenaufsicht, StundenplanLehrer} from "@core";
 	import { StundenplanPausenaufsichtBereich, StundenplanPausenaufsichtBereichUpdate, HashMap3D, ArrayList, BenutzerKompetenz } from "@core";
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	type PausenzeitBereichTyp = {pauseID: number; aufsichtsbereichID: number; typ: number, lehrerID?: number};
 
 	const props = defineProps<StundenplanPausenProps>();
+
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const isMounted = ref(false);
 	onMounted(() => isMounted.value = true);

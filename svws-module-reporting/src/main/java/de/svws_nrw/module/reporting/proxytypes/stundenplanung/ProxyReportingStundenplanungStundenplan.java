@@ -28,9 +28,9 @@ public class ProxyReportingStundenplanungStundenplan extends ReportingStundenpla
 	 * @param stundenplan 			Das Stundenplan-Objekt mit den gesammelten Daten des Stundenplanes.
 	 */
 	public ProxyReportingStundenplanungStundenplan(final ReportingRepository reportingRepository, final Stundenplan stundenplan) {
-		super(ersetzeNullDurchEmpty(stundenplan.bezeichnungStundenplan),
-				ersetzeNullDurchEmpty(stundenplan.gueltigAb),
-				ersetzeNullDurchEmpty(stundenplan.gueltigBis),
+		super(ersetzeNullBlankTrim(stundenplan.bezeichnungStundenplan),
+				ersetzeNullBlankTrim(stundenplan.gueltigAb),
+				ersetzeNullBlankTrim(stundenplan.gueltigBis),
 				stundenplan.id,
 				new ArrayList<>(),
 				null,

@@ -167,6 +167,8 @@ def fileVersionTSAdminClient = new File("${rootDir}/svws-webclient/admin/version
 fileVersionTSAdminClient.withWriter { w -> w << 'export const version = "' + config.project.version + '"' }
 def fileVersionTSLaufbahnplanung = new File("${rootDir}/svws-webclient/laufbahnplanung/version.ts")
 fileVersionTSLaufbahnplanung.withWriter { w -> w << 'export const version = "' + config.project.version + '"' }
+def fileVersionTSEnmServer = new File("${rootDir}/svws-webclient/enmserver/version.ts")
+fileVersionTSEnmServer.withWriter { w -> w << 'export const version = "' + config.project.version + '"' }
 
 def tsGitHashStr = (gitHASH == null) ? 'null' : '"' + gitHASH + '"'
 def fileGithashTS = new File("${rootDir}/svws-webclient/client/githash.ts")
@@ -175,6 +177,8 @@ def fileGithashTSAdminClient = new File("${rootDir}/svws-webclient/admin/githash
 fileGithashTSAdminClient.withWriter { w -> w << 'export const githash = ' + tsGitHashStr }
 def fileGithashTSLaufbahnplanung = new File("${rootDir}/svws-webclient/laufbahnplanung/githash.ts")
 fileGithashTSLaufbahnplanung.withWriter { w -> w << 'export const githash = ' + tsGitHashStr }
+def fileGithashTSEnmServer = new File("${rootDir}/svws-webclient/enmserver/githash.ts")
+fileGithashTSEnmServer.withWriter { w -> w << 'export const githash = ' + tsGitHashStr }
 
 
 task npmPrepare(type: NpmInstall) {

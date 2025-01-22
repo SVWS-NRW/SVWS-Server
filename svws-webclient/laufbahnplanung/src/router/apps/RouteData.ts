@@ -6,30 +6,30 @@ import { routeLadeDaten } from "~/router/apps/RouteLadeDaten";
 
 import { RouteManager } from "../RouteManager";
 import { routeLaufbahnplanung } from "./RouteLaufbahnplanung";
-import type { ApiFile } from "../../../../core/src/api/BaseApi";
-import { AbiturdatenManager } from "../../../../core/src/core/abschluss/gost/AbiturdatenManager";
-import { GostBelegpruefungErgebnis } from "../../../../core/src/core/abschluss/gost/GostBelegpruefungErgebnis";
-import { GostBelegpruefungsArt } from "../../../../core/src/core/abschluss/gost/GostBelegpruefungsArt";
-import { AbiturFachbelegung } from "../../../../core/src/core/data/gost/AbiturFachbelegung";
-import { AbiturFachbelegungHalbjahr } from "../../../../core/src/core/data/gost/AbiturFachbelegungHalbjahr";
-import { Abiturdaten } from "../../../../core/src/core/data/gost/Abiturdaten";
-import type { GostBeratungslehrer } from "../../../../core/src/core/data/gost/GostBeratungslehrer";
-import { GostJahrgang } from "../../../../core/src/core/data/gost/GostJahrgang";
-import { GostJahrgangsdaten } from "../../../../core/src/core/data/gost/GostJahrgangsdaten";
-import { GostLaufbahnplanungDaten } from "../../../../core/src/core/data/gost/GostLaufbahnplanungDaten";
-import { GostLaufbahnplanungDatenFachbelegung } from "../../../../core/src/core/data/gost/GostLaufbahnplanungDatenFachbelegung";
-import { GostLaufbahnplanungDatenSchueler } from "../../../../core/src/core/data/gost/GostLaufbahnplanungDatenSchueler";
-import type { GostSchuelerFachwahl } from "../../../../core/src/core/data/gost/GostSchuelerFachwahl";
-import { SchuelerListeEintrag } from "../../../../core/src/core/data/schueler/SchuelerListeEintrag";
-import { SchuleStammdaten } from "../../../../core/src/asd/data/schule/SchuleStammdaten";
-import { DeveloperNotificationException } from "../../../../core/src/core/exceptions/DeveloperNotificationException";
-import { UserNotificationException } from "../../../../core/src/core/exceptions/UserNotificationException";
-import { GostHalbjahr } from "../../../../core/src/core/types/gost/GostHalbjahr";
-import { GostKursart } from "../../../../core/src/core/types/gost/GostKursart";
-import { GostFaecherManager } from "../../../../core/src/core/utils/gost/GostFaecherManager";
-import { ArrayList } from "../../../../core/src/java/util/ArrayList";
-import type { List } from "../../../../core/src/java/util/List";
-import { JsonCoreTypeReaderStatic } from "../../../../core/src/asd/utils/JsonCoreTypeReaderStatic";
+import type { ApiFile } from "@core/api/BaseApi";
+import { SchuleStammdaten } from "@core/asd/data/schule/SchuleStammdaten";
+import { JsonCoreTypeReaderStatic } from "@core/asd/utils/JsonCoreTypeReaderStatic";
+import { AbiturdatenManager } from "@core/core/abschluss/gost/AbiturdatenManager";
+import { GostBelegpruefungErgebnis } from "@core/core/abschluss/gost/GostBelegpruefungErgebnis";
+import { GostBelegpruefungsArt } from "@core/core/abschluss/gost/GostBelegpruefungsArt";
+import { AbiturFachbelegung } from "@core/core/data/gost/AbiturFachbelegung";
+import { AbiturFachbelegungHalbjahr } from "@core/core/data/gost/AbiturFachbelegungHalbjahr";
+import { Abiturdaten } from "@core/core/data/gost/Abiturdaten";
+import type { GostBeratungslehrer } from "@core/core/data/gost/GostBeratungslehrer";
+import { GostJahrgang } from "@core/core/data/gost/GostJahrgang";
+import { GostJahrgangsdaten } from "@core/core/data/gost/GostJahrgangsdaten";
+import { GostLaufbahnplanungDaten } from "@core/core/data/gost/GostLaufbahnplanungDaten";
+import { GostLaufbahnplanungDatenFachbelegung } from "@core/core/data/gost/GostLaufbahnplanungDatenFachbelegung";
+import { GostLaufbahnplanungDatenSchueler } from "@core/core/data/gost/GostLaufbahnplanungDatenSchueler";
+import type { GostSchuelerFachwahl } from "@core/core/data/gost/GostSchuelerFachwahl";
+import { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { UserNotificationException } from "@core/core/exceptions/UserNotificationException";
+import { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
+import { GostKursart } from "@core/core/types/gost/GostKursart";
+import { GostFaecherManager } from "@core/core/utils/gost/GostFaecherManager";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
 
 
 interface RouteState {
@@ -65,7 +65,7 @@ export class RouteData {
 		gostJahrgang: new GostJahrgang(),
 		gostJahrgangsdaten: new GostJahrgangsdaten(),
 		zwischenspeicher: undefined,
-		view: routeLadeDaten
+		view: routeLadeDaten,
 	}
 
 	private _state = shallowRef<RouteState>(RouteData._defaultState);

@@ -23,7 +23,7 @@ public class ProxyReportingErzieherArt extends ReportingErzieherArt {
 	 * @param erzieherart Stammdaten-Objekt aus der DB.
 	 */
 	public ProxyReportingErzieherArt(final ReportingRepository reportingRepository, final Erzieherart erzieherart) {
-		super(ersetzeNullDurchEmpty(erzieherart.bezeichnung),
+		super(ersetzeNullBlankTrim(erzieherart.bezeichnung),
 				erzieherart.id,
 				0
 		);

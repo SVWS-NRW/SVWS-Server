@@ -21,7 +21,7 @@ public class ENMFloskelgruppe {
 
 	/** Das Kürzel der Floskelgruppe, z. B. AL1, AL2 oder ASV. */
 	@Schema(description = "Das Kürzel der Floskelgruppe.", example = "AL1")
-	public String kuerzel;
+	public @NotNull String kuerzel = "";
 
 	/** Die textuelle Bezeichnung der Floskelgruppe, z. B. Allgemeine Floskeln oder Floskeln zum Arbeits- und Sozialverhalten. */
 	@Schema(description = "Die textuelle Bezeichnung der Floskelgruppe, z. B. Allgemeine Floskeln "

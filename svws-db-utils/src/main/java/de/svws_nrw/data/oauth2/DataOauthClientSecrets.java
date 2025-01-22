@@ -87,8 +87,7 @@ public final class DataOauthClientSecrets extends DataManager<Long> {
 	 * @return das DB-DTO zu den OAuth2-Secrets
 	 */
 	public DTOSchuleOAuthSecrets getDto(final OAuth2ServerTyp typ) {
-		final DTOSchuleOAuthSecrets dto = conn.queryByKey(DTOSchuleOAuthSecrets.class, typ.getId());
-		return (dto == null) ? null : dto;
+		return conn.queryByKey(DTOSchuleOAuthSecrets.class, typ.getId());
 	}
 
 
@@ -127,6 +126,12 @@ public final class DataOauthClientSecrets extends DataManager<Long> {
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public Response delete(final Long id) throws ApiOperationException {
+		if (id == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Es muss eine ID angegeben werden. Null ist nicht zulässig.");
+		final DTOSchuleOAuthSecrets dto = conn.queryByKey(DTOSchuleOAuthSecrets.class, id);
+		if (dto == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein DTO mit der ID %s gefunden.".formatted(id));
+		OAuth2Client.clearClientCache(dto);
 		return super.deleteBasic(id, DTOSchuleOAuthSecrets.class, dtoMapper);
 	}
 

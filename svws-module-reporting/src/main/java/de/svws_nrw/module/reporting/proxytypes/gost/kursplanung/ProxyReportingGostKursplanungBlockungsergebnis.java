@@ -77,7 +77,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 		super.anzahlMaxKurseProSchiene = ergebnisManager.getOfSchieneMaxKursanzahl();
 		super.anzahlSchienen = super.schienen().size();
 		super.anzahlSchueler = datenManager.schuelerGetAnzahl();
-		super.bezeichnung = ersetzeNullDurchEmpty(datenManager.daten().name);
+		super.bezeichnung = ersetzeNullBlankTrim(datenManager.daten().name);
 		super.gostHalbjahr = GostHalbjahr.fromID(datenManager.daten().gostHalbjahr);
 
 		// Schülerstammdaten ermitteln und in Listen und Maps einfügen
@@ -139,7 +139,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 								reportingRepository,
 								reportingRepository.mapLehrerStammdaten().computeIfAbsent(l.id, ls -> {
 									try {
-										return new DataLehrerStammdaten(reportingRepository.conn()).getFromID(l.id);
+										return new DataLehrerStammdaten(reportingRepository.conn()).getById(l.id);
 									} catch (final ApiOperationException e) {
 										ReportingExceptionUtils.putStacktraceInLog(
 												"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,

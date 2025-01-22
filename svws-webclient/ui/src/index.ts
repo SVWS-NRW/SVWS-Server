@@ -1,57 +1,92 @@
 import "./assets/styles/index.css";
 import "./assets/styles/colors.css";
 
-export { default as SvwsUiActionButton } from "./components/SvwsUiActionButton.vue"
-export { default as SvwsUiButton } from "./components/SvwsUiButton.vue";
-export { default as SvwsUiButtonSelect } from "./components/SvwsUiButtonSelect.vue";
-export { default as SvwsUiAvatar } from "./components/SvwsUiAvatar.vue";
-export { default as SvwsUiBadge } from "./components/SvwsUiBadge.vue";
-export { default as SvwsUiTooltip } from "./components/SvwsUiTooltip.vue";
-export { default as SvwsUiTable } from "./components/SvwsUiTable.vue";
-export { default as SvwsUiSpinner } from "./components/SvwsUiSpinner.vue";
-export { default as SvwsUiSpacing } from "./components/SvwsUiSpacing.vue";
-export { default as SvwsUiDashboardTile } from "./components/SvwsUiDashboardTile.vue";
-export { default as SvwsUiTodo } from "./components/SvwsUiTodo.vue";
-export { default as SvwsUiCard } from "./components/SvwsUiCard.vue";
-// Forms
-export { default as SvwsUiInputWrapper } from "./components/SvwsUiInputWrapper.vue";
-export { default as SvwsUiCheckbox } from "./components/SvwsUiCheckbox.vue";
-export { default as SvwsUiMultiSelect } from "./components/SvwsUiMultiSelect.vue";
-export { default as SvwsUiSelect } from "./components/SvwsUiSelect.vue";
-export { default as SvwsUiRadioGroup } from "./components/SvwsUiRadioGroup.vue";
-export { default as SvwsUiRadioOption } from "./components/SvwsUiRadioOption.vue";
-export { default as SvwsUiTextareaInput } from "./components/SvwsUiTextareaInput.vue";
-export { default as SvwsUiTextInput } from "./components/SvwsUiTextInput.vue";
-export { default as SvwsUiToggle } from "./components/SvwsUiToggle.vue";
-export { default as SvwsUiInputNumber } from "./components/SvwsUiInputNumber.vue";
-// App
-export { default as SvwsUiNotifications } from "./components/App/SvwsUiNotifications.vue";
-export { default as SvwsUiNotification } from "./components/App/SvwsUiNotification.vue";
-export { default as SvwsUiAppLayout } from "./components/App/SvwsUiAppLayout.vue";
-export { default as SvwsUiHeader } from "./components/App/SvwsUiHeader.vue";
-export { default as SvwsUiSubNav } from "./components/App/SvwsUiSubNav.vue";
-export { default as SvwsUiContentCard } from "./components/App/SvwsUiContentCard.vue";
-export { default as SvwsUiModal } from "./components/App/SvwsUiModal.vue";
-export { default as SvwsUiCheckpointModal } from "./components/App/SvwsUiCheckpointModal.vue";
-// App.Sidebar
-export { default as SvwsUiMenu } from "./components/App/Sidebar/SvwsUiMenu.vue";
-export { default as SvwsUiMenuHeader } from "./components/App/Sidebar/SvwsUiMenuHeader.vue";
-export { default as SvwsUiMenuItem } from "./components/App/Sidebar/SvwsUiMenuItem.vue";
-export { default as SvwsUiSecondaryMenu } from "./components/App/Sidebar/SvwsUiSecondaryMenu.vue";
-export { default as SvwsUiSecondaryMenuNavigation } from "./components/App/Sidebar/SvwsUiSecondaryMenuNavigation.vue";
-// App.Router
-export { default as SvwsUiTabBar } from "./components/App/SvwsUiTabBar.vue";
-export { default as SvwsUiTabBarVertical } from "./components/App/SvwsUiTabBarVertical.vue";
-// DEPRECATED
-
+// Regex: \ +(.*):.*'(.*)'\).*
+// Replace: export { default as $1 } from "$2";
+export type { AbschnittAuswahlProps, AbschnittAuswahlDaten } from "./components/abschnittauswahl/AbschnittAuswahlProps.ts";
+export type { SchuelerLaufbahnplanungProps } from "./components/gost/laufbahnplanung/SSchuelerLaufbahnplanungProps";
+export type { StundenplanAnsichtPlanungProps } from "./components/stundenplan/StundenplanAnsichtPlanungProps.ts";
+export type { StundenplanAnsichtProps, StundenplanAnsichtDragData, StundenplanAnsichtDropZone } from "./components/stundenplan/StundenplanAnsichtProps.ts";
+export type { StundenplanAuswahlProps } from "./components/stundenplan/StundenplanAuswahlProps.ts";
+export type { StundenplanFachProps } from "./components/stundenplan/StundenplanFachProps.ts";
+export type { StundenplanKlasseProps } from "./components/stundenplan/StundenplanKlasseProps.ts";
+export type { StundenplanLehrerProps } from "./components/stundenplan/StundenplanLehrerProps.ts";
+export type { StundenplanRaumProps } from "./components/stundenplan/StundenplanRaumProps.ts";
+export type { StundenplanSchuelerProps } from "./components/stundenplan/StundenplanSchuelerProps.ts";
+export { default as AbschnittAuswahl } from "./components/abschnittauswahl/AbschnittAuswahl.vue";
+export { default as DatenschutzModal } from "./components/modals/DatenschutzModal.vue";
+export { default as FehlermeldungModal } from "./components/modals/FehlermeldungModal.vue";
+export { default as LogBox } from "./components/logbox/LogBox.vue";
+export { default as SLaufbahnplanungCardBeratung } from "./components/gost/laufbahnplanung/SLaufbahnplanungCardBeratung.vue";
+export { default as SLaufbahnplanungCardPlanung } from "./components/gost/laufbahnplanung/SLaufbahnplanungCardPlanung.vue";
+export { default as SLaufbahnplanungCardStatus } from "./components/gost/laufbahnplanung/SLaufbahnplanungCardStatus.vue";
+export { default as SLaufbahnplanungFach } from "./components/gost/laufbahnplanung/SLaufbahnplanungFach.vue";
+export { default as SLaufbahnplanungFachkombinationen } from "./components/gost/laufbahnplanung/SLaufbahnplanungFachkombinationen.vue";
+export { default as SLaufbahnplanungFehler } from "./components/gost/laufbahnplanung/SLaufbahnplanungFehler.vue";
+export { default as SLaufbahnplanungImportModal } from "./components/gost/laufbahnplanung/SLaufbahnplanungImportModal.vue";
+export { default as SLaufbahnplanungInformationen } from "./components/gost/laufbahnplanung/SLaufbahnplanungInformationen.vue";
+export { default as SLaufbahnplanungSprachpruefungen } from "./components/gost/laufbahnplanung/SLaufbahnplanungSprachpruefungen.vue";
+export { default as SModalLaufbahnplanungAlleFachwahlenLoeschen } from "./components/gost/laufbahnplanung/SModalLaufbahnplanungAlleFachwahlenLoeschen.vue";
+export { default as SModalLaufbahnplanungKurswahlenLoeschen } from "./components/gost/laufbahnplanung/SModalLaufbahnplanungKurswahlenLoeschen.vue";
+export { default as SSchuelerLaufbahnplanung } from "./components/gost/laufbahnplanung/SSchuelerLaufbahnplanung.vue";
+export { default as StundenplanAnsicht } from "./components/stundenplan/StundenplanAnsicht.vue";
+export { default as StundenplanAnsichtPausenaufsichten } from "./components/stundenplan/StundenplanAnsichtPausenaufsichten.vue";
+export { default as StundenplanAnsichtPlanung } from "./components/stundenplan/StundenplanAnsichtPlanung.vue";
+export { default as StundenplanAuswahl } from "./components/stundenplan/StundenplanAuswahl.vue";
+export { default as StundenplanFach } from "./components/stundenplan/StundenplanFach.vue";
+export { default as StundenplanKlasse } from "./components/stundenplan/StundenplanKlasse.vue";
+export { default as StundenplanLehrer } from "./components/stundenplan/StundenplanLehrer.vue";
+export { default as StundenplanRaum } from "./components/stundenplan/StundenplanRaum.vue";
+export { default as StundenplanSchueler } from "./components/stundenplan/StundenplanSchueler.vue";
+export { default as StundenplanZeitrasterEinstellungen } from "./components/stundenplan/StundenplanZeitrasterEinstellungen.vue";
+export { default as StundenplanZeitrasterJsonImportModal } from "./components/stundenplan/StundenplanZeitrasterJsonImportModal.vue";
+export { default as SvwsUiActionButton } from "./ui/layout/SvwsUiActionButton.vue";
+export { default as SvwsUiAppLayout } from "./ui/layout/SvwsUiAppLayout.vue";
+export { default as SvwsUiAvatar } from "./ui/SvwsUiAvatar.vue";
+export { default as SvwsUiBadge } from "./ui/SvwsUiBadge.vue";
+export { default as SvwsUiButton } from "./ui/controls/SvwsUiButton.vue";
+export { default as SvwsUiButtonSelect } from "./ui/controls/SvwsUiButtonSelect.vue";
+export { default as SvwsUiCard } from "./ui/layout/SvwsUiCard.vue";
+export { default as SvwsUiCheckbox } from "./ui/controls/SvwsUiCheckbox.vue";
+export { default as SvwsUiCheckpointModal } from "./ui/modal/SvwsUiCheckpointModal.vue";
+export { default as SvwsUiContentCard } from "./ui/layout/SvwsUiContentCard.vue";
+export { default as SvwsUiDashboardTile } from "./ui/layout/SvwsUiDashboardTile.vue";
+export { default as SvwsUiDropdownList } from "./ui/controls/SvwsUiDropdownList.vue";
+export { default as SvwsUiHeader } from "./ui/layout/SvwsUiHeader.vue";
+export { default as SvwsUiInputNumber } from "./ui/controls/SvwsUiInputNumber.vue";
+export { default as SvwsUiInputWrapper } from "./ui/layout/SvwsUiInputWrapper.vue";
+export { default as SvwsUiMenu } from "./ui/nav/SvwsUiMenu.vue";
+export { default as SvwsUiMenuHeader } from "./ui/nav/SvwsUiMenuHeader.vue";
+export { default as SvwsUiMenuItem } from "./ui/nav/SvwsUiMenuItem.vue";
+export { default as SvwsUiModal } from "./ui/modal/SvwsUiModal.vue";
+export { default as SvwsUiModalHilfe } from "./ui/modal/SvwsUiModalHilfe.vue";
+export { default as SvwsUiMultiSelect } from "./ui/controls/SvwsUiMultiSelect.vue";
+export { default as SvwsUiNotification } from "./ui/SvwsUiNotification.vue";
+export { default as SvwsUiNotifications } from "./ui/SvwsUiNotifications.vue";
+export { default as SvwsUiRadioGroup } from "./ui/controls/SvwsUiRadioGroup.vue";
+export { default as SvwsUiRadioOption } from "./ui/controls/SvwsUiRadioOption.vue";
+export { default as SvwsUiSecondaryMenu } from "./ui/nav/SvwsUiSecondaryMenu.vue";
+export { default as SvwsUiSecondaryMenuNavigation } from "./ui/nav/SvwsUiSecondaryMenuNavigation.vue";
+export { default as SvwsUiSelect } from "./ui/controls/SvwsUiSelect.vue";
+export { default as SvwsUiSpacing } from "./ui/layout/SvwsUiSpacing.vue";
+export { default as SvwsUiSpinner } from "./ui/SvwsUiSpinner.vue";
+export { default as SvwsUiSubNav } from "./ui/nav/SvwsUiSubNav.vue";
+export { default as SvwsUiTabBar } from "./ui/nav/SvwsUiTabBar.vue";
+export { default as SvwsUiTabBarVertical } from "./ui/nav/SvwsUiTabBarVertical.vue";
+export { default as SvwsUiTable } from "./ui/layout/SvwsUiTable.vue";
+export { default as SvwsUiTextareaInput } from "./ui/controls/SvwsUiTextareaInput.vue";
+export { default as SvwsUiTextInput } from "./ui/controls/SvwsUiTextInput.vue";
+export { default as SvwsUiTodo } from "./ui/SvwsUiTodo.vue";
+export { default as SvwsUiToggle } from "./ui/controls/SvwsUiToggle.vue";
+export { default as SvwsUiTooltip } from "./ui/SvwsUiTooltip.vue";
 
 // Type exorts
 export type { DataTableColumn, SortByAndOrder } from "./types";
-export type { TabData } from "./components/App/TabData";
+export type { TabData } from "./ui/nav/TabData";
 
 // Class exports
-export { TabManager } from "./components/App/TabManager";
-export { Checkpoint } from "./components/Checkpoint";
+export { TabManager } from "./ui/nav/TabManager";
+export { Checkpoint } from "./ui/modal/Checkpoint";
 
 // Enums
-export { ViewType } from "./components/ViewType";
+export { ViewType } from "./ui/nav/ViewType";

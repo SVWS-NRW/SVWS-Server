@@ -41,8 +41,8 @@
 
 	import { ref, shallowRef } from "vue";
 	import type { SchemaNeuProps } from "./SSchemaNeuProps";
-	import type { List } from "../../../../core/src/java/util/List";
-	import { TabManager } from "../../../../ui/src/components/App/TabManager";
+	import type { List } from "@core/java/util/List";
+	import { TabManager } from "@ui/ui/nav/TabManager";
 
 	const props = defineProps<SchemaNeuProps>();
 

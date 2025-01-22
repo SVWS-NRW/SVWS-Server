@@ -85,20 +85,20 @@
 <script setup lang="ts">
 
 	import { computed, nextTick, onMounted, ref, shallowRef } from "vue";
-	import { type ComponentExposed } from "vue-component-type-helpers";
+	import type { ComponentExposed } from "vue-component-type-helpers";
+	import type { LoginProps } from "./SLoginProps";
 	import type { DBSchemaListeEintrag, List } from "@core";
 	import { ArrayList, DeveloperNotificationException, JsonCoreTypeReader } from "@core";
 	import { SvwsUiTextInput } from "@ui";
 	import { version } from '../../version';
 	import { githash } from '../../githash';
-	import type { LoginProps } from "./SLoginProps";
 
 	const props = defineProps<LoginProps>();
 
 	const refUsername = ref<ComponentExposed<typeof SvwsUiTextInput>>();
 	const firstauth = ref(true);
 	const schema = shallowRef<DBSchemaListeEintrag | undefined>();
-	const username = ref("Admin");
+	const username = ref("");
 	const password = ref("");
 	const error = ref<{name: string; message: string;}|null>(null);
 	const copied = ref<boolean|null>(null);
@@ -128,7 +128,7 @@
 	const connection_failed = ref(false);
 	const authentication_success = ref(false);
 
-	const inputDBSchemata = shallowRef<List<DBSchemaListeEintrag>>(new ArrayList<DBSchemaListeEintrag>());
+	const inputDBSchemata = shallowRef<List<DBSchemaListeEintrag>>(new ArrayList());
 
 	const inputHostname = computed<string>({
 		get: () => props.hostname,
@@ -151,8 +151,9 @@
 		error.value = null;
 		try {
 			inputDBSchemata.value = await props.connectTo(props.hostname);
-			if (inputDBSchemata.value.size() <= 0)
+			if (inputDBSchemata.value.isEmpty())
 				throw new DeveloperNotificationException("Es sind keine Schemata vorhanden.");
+			schema.value = inputDBSchemata.value.get(0);
 			await initCoreTypes();
 		} catch (e) {
 			connection_failed.value = true;
@@ -174,7 +175,6 @@
 			}
 		}
 		if (!hasDefault) {
-			schema.value = inputDBSchemata.value.get(0);
 			const lastSchema = localStorage.getItem("SVWS-Client Last Used Schema");
 			if ((lastSchema !== null) && (lastSchema !== ''))
 				for (const s of inputDBSchemata.value)
@@ -183,6 +183,10 @@
 						break;
 					}
 		}
+		// Der Browser soll sich darum kümmern...
+		// const lastUsername = localStorage.getItem(`SVWS-Client Last Used Username for Schema_${schema.value.name}`);
+		// if (lastUsername !== null)
+		// 	username.value = lastUsername;
 		connection_failed.value = false;
 		connecting.value = false;
 		await nextTick(() => {
@@ -201,8 +205,10 @@
 		firstauth.value = false;
 		if (!props.authenticated)
 			error.value = {name: "Eingabefehler", message: "Passwort oder Benutzername falsch. Bitte achten Sie auch auf die Groß- Kleinschreibung beim Benutzernamen."};
-		else
+		else {
 			localStorage.setItem("SVWS-Client Last Used Schema", schema.value.name);
+			// localStorage.setItem(`SVWS-Client Last Used Username for Schema_${schema.value.name}`, username.value);
+		}
 	}
 
 </script>

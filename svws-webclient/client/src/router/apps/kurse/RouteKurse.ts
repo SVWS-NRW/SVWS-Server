@@ -9,6 +9,9 @@ import { routeKursDaten } from "~/router/apps/kurse/RouteKursDaten";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import { routeKurseGruppenprozesse } from "./RouteKurseGruppenprozesse";
 import { routeKurseNeu } from "./RouteKurseNeu";
+import { KurseAuswahlProps } from "~/components/kurse/SKurseAuswahlProps";
+import { ConfigElement } from "~/components/Config";
+import { api } from "~/router/Api";
 
 
 const SKurseAuswahl = () => import("~/components/kurse/SKurseAuswahl.vue");
@@ -26,6 +29,13 @@ export class RouteKurse extends RouteAuswahlNode<KursListeManager, RouteDataKurs
 			routeKurseNeu,
 		];
 		super.defaultChild = routeKursDaten;
+		super.getAuswahlListProps = (props) => (<KurseAuswahlProps>{
+			...props,
+			setFilterNurSichtbar: this.data.setFilterNurSichtbar,
+		});
+		api.config.addElements([
+			new ConfigElement("kurse.auswahl.filterNurSichtbar", "user", "true"),
+		]);
 	}
 
 }

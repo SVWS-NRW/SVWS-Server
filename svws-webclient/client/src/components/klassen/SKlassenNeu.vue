@@ -62,7 +62,7 @@
 			parallelitaet: null,
 			idSchulgliederung: Schulgliederung.getDefault(props.schulform)?.daten(props.manager().getSchuljahr())?.id ?? -1,
 			idKlassenart: Klassenart.getDefault(props.schulform).daten(props.manager().getSchuljahr())?.id ?? Klassenart.UNDEFINIERT.daten(props.manager().getSchuljahr())?.id,
-			idAllgemeinbildendOrganisationsform: AllgemeinbildendOrganisationsformen.GANZTAG.daten(props.manager().getSchuljahr())?.id ?? null
+			idAllgemeinbildendOrganisationsform: AllgemeinbildendOrganisationsformen.GANZTAG.daten(props.manager().getSchuljahr())?.id ?? null,
 		}
 
 		watch(() => data.value, async () => {
@@ -76,19 +76,19 @@
 
 	const parallelitaet = computed<string | null>({
 		get: () => data.value.parallelitaet ?? '---',
-		set: (value) => data.value.parallelitaet = value
+		set: (value) => data.value.parallelitaet = value,
 	});
 
 	const schulgliederung = computed<Schulgliederung | null>({
 		get: () => (data.value.idSchulgliederung === undefined) ? null : Schulgliederung.data().getWertByID(data.value.idSchulgliederung),
-		set: (value) => data.value.idSchulgliederung = value?.daten(schuljahr.value)?.id
+		set: (value) => data.value.idSchulgliederung = value?.daten(schuljahr.value)?.id,
 	});
 
 	const schulgliederungen = computed(() => Schulgliederung.getBySchuljahrAndSchulform(schuljahr.value, schulform.value));
 
 	const klassenart = computed<Klassenart | null>({
 		get: () => (data.value.idKlassenart === undefined) ? null : Klassenart.data().getWertByID(data.value.idKlassenart),
-		set: (value) => data.value.idKlassenart = value?.daten(schuljahr.value)?.id
+		set: (value) => data.value.idKlassenart = value?.daten(schuljahr.value)?.id,
 	});
 	const klassenarten = computed(() => Klassenart.getBySchuljahrAndSchulform(schuljahr.value, schulform.value));
 
@@ -99,7 +99,7 @@
 				return null;
 			return AllgemeinbildendOrganisationsformen.data().getWertByID(id);
 		},
-		set: (value) => data.value.idAllgemeinbildendOrganisationsform = value?.daten(schuljahr.value)?.id
+		set: (value) => data.value.idAllgemeinbildendOrganisationsform = value?.daten(schuljahr.value)?.id,
 	});
 	const organisationsformen = computed(() => AllgemeinbildendOrganisationsformen.values());
 
@@ -110,7 +110,7 @@
 				return null;
 			return props.manager().jahrgaenge.get(id);
 		},
-		set: (value) => (data.value.idJahrgang = value?.id ?? null)
+		set: (value) => (data.value.idJahrgang = value?.id ?? null),
 	});
 	const jahrgaenge = computed<List<JahrgangsDaten>>(() => {
 		const result = new ArrayList<JahrgangsDaten>();
@@ -127,7 +127,7 @@
 				return null;
 			return props.mapKlassenVorigerAbschnitt().get(id) ?? null;
 		},
-		set: (value) => data.value.idVorgaengerklasse = value?.id ?? null
+		set: (value) => data.value.idVorgaengerklasse = value?.id ?? null,
 	});
 
 	const folgeklasse = computed<KlassenDaten | null>({
@@ -137,7 +137,7 @@
 				return null;
 			return props.mapKlassenFolgenderAbschnitt().get(id) ?? null;
 		},
-		set: (value) => data.value.idFolgeklasse = value?.id ?? null
+		set: (value) => data.value.idFolgeklasse = value?.id ?? null,
 	});
 
 	const kuerzelVorgaengerklasse = computed<string | null>(() => (data.value.kuerzelVorgaengerklasse === null) ? '&nbsp;' : data.value.kuerzelVorgaengerklasse ?? null);

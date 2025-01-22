@@ -37,7 +37,7 @@ public class ProxyReportingGostKursplanungSchiene extends ReportingGostKursplanu
 		super(anzahlDummy,
 				anzahlExterne,
 				anzahlSchueler,
-				ersetzeNullDurchEmpty(bezeichnung),
+				ersetzeNullBlankTrim(bezeichnung),
 				hatKollisionen,
 				id,
 				idsKurseMitKollisionen,

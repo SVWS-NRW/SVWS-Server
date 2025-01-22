@@ -10,10 +10,10 @@
 
 <script setup lang="ts">
 
+	import { BenutzerKennwort } from "@core/core/data/BenutzerKennwort";
+	import { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+	import type { List } from "@core/java/util/List";
 	import { type ShallowRef, ref } from "vue";
-	import { BenutzerKennwort } from "../../../../../core/src/core/data/BenutzerKennwort";
-	import type { List } from "../../../../../core/src/java/util/List";
-	import { SimpleOperationResponse } from "../../../../../core/src/core/data/SimpleOperationResponse";
 
 	const props = defineProps<{
 		addExistingSchemaToConfig: ((data: BenutzerKennwort, schema: string) => Promise<void>);

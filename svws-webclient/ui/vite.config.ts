@@ -1,8 +1,11 @@
+/// <reference types="histoire" />
+
 import { defineConfig, searchForWorkspaceRoot } from "vite";
 import { resolve } from "path";
 import Components from "unplugin-vue-components/vite";
 import Vue from "@vitejs/plugin-vue";
 import { HstVue } from '@histoire/plugin-vue'
+import Markdown from 'unplugin-vue-markdown/vite'
 
 export default defineConfig({
 	server: { fs: { allow: [searchForWorkspaceRoot(process.cwd())] } },
@@ -10,10 +13,10 @@ export default defineConfig({
 		environment: "happy-dom",
 		reporters: ["default", "junit", "verbose"],
 		outputFile: { junit: "build/testresults/junit.xml" },
-		include: [ "src/components/*.test.ts", "src/components/app/*.test.ts" ],
+		include: [ "src/**/*.test.ts" ],
 	},
 	histoire: {
-		setupFile: './src/histoire.setup.ts',
+		setupFile: './histoire.setup.ts',
 		plugins: [ HstVue() ],
 		theme: {
 			title: 'SVWS UI',
@@ -58,8 +61,9 @@ export default defineConfig({
 		},
 	},
 	plugins: [
-		Vue(),
-		Components({ globs: ["src/components/**/!(*story.vue)*.vue"] }),
+		Vue({ include: [/\.vue$/, /\.md$/] }),
+		Markdown({}),
+		Components({ globs: ["src/**/*.{vue,md}", "src/**/*Props.ts", '!src/**/*.story.*'], types: [] }),
 	],
 	build: {
 		lib: {

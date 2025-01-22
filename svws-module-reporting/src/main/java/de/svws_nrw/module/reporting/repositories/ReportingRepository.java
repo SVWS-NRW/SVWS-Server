@@ -148,12 +148,6 @@ public class ReportingRepository {
 
 	// #########  Ab hier folgen Reporting-Objekte. #########
 
-//	/** Der aktuelle Schuljahresabschnitt der Schule aus der Datenbankverbindung */
-//	private final ReportingSchuljahresabschnitt aktuellerSchuljahresabschnitt;
-//
-//	/** Der ausgewählte Schuljahresabschnitt, der für die Ausgabe der Reports ausgewählt wurde */
-//	private final ReportingSchuljahresabschnitt auswahlSchuljahresabschnitt;
-
 	/** Stellt alle Erzieherarten über eine Map zur Erzieherart-ID zur Verfügung */
 	private Map<Long, ReportingErzieherArt> mapReportingErzieherarten;
 
@@ -228,21 +222,6 @@ public class ReportingRepository {
 
 			idAktuellerSchuljahresbaschnitt = this.schulstammdaten.idSchuljahresabschnitt;
 			idAuswahlSchuljahresbaschnitt = this.reportingParameter.idSchuljahresabschnitt;
-
-//			aktuellerSchuljahresabschnitt =
-//					this.mapSchuljahresabschnitte.values().stream().filter(a -> a.id() == this.schulstammdaten.idSchuljahresabschnitt).toList()
-//							.getFirst();
-//
-//			if ((this.reportingParameter.idSchuljahresabschnitt == this.aktuellerSchuljahresabschnitt.id())
-//					|| (this.reportingParameter.idSchuljahresabschnitt < 0)
-//					|| this.mapSchuljahresabschnitte.values().stream().filter(a -> a.id() == this.reportingParameter.idSchuljahresabschnitt).toList()
-//							.isEmpty())
-//				auswahlSchuljahresabschnitt = aktuellerSchuljahresabschnitt;
-//			else
-//				auswahlSchuljahresabschnitt =
-//						this.mapSchuljahresabschnitte.values().stream().filter(a -> a.id() == this.reportingParameter.idSchuljahresabschnitt).toList()
-//								.getFirst();
-
 		} catch (final Exception e) {
 			ReportingExceptionUtils.putStacktraceInLog(
 					"FEHLER: Die Stamm- oder Abschnittsdaten der Schule konnten nicht ermittelt werden oder der Schuljahresabschnitt ist ungültig.",
@@ -326,7 +305,7 @@ public class ReportingRepository {
 	private void initLehrerStammdaten() throws ApiOperationException {
 		try {
 			this.logger.logLn(LogLevel.DEBUG, 8, "Ermittle die Lehrerstammdaten.");
-			this.mapLehrerStammdaten = new DataLehrerStammdaten(this.conn).getAlleLehrerStammdaten(this.conn).stream()
+			this.mapLehrerStammdaten = new DataLehrerStammdaten(this.conn).getAll().stream()
 					.collect(Collectors.toMap(l -> l.id, l -> l));
 		} catch (final Exception e) {
 			this.mapLehrerStammdaten = new HashMap<>();

@@ -20,7 +20,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class LehrerStammdaten {
 
 	/** Die ID des Lehrers. */
-	@Schema(description = "Die ID des Lehrers.", example = "4711")
+	@Schema(description = "Die ID des Lehrers.", example = "4711", accessMode = Schema.AccessMode.READ_ONLY)
 	public long id;
 
 	/** Das Kürzel des Lehrers. */
@@ -112,7 +112,7 @@ public class LehrerStammdaten {
 	public boolean istRelevantFuerStatistik;
 
 	/** Die Liste der Schulleitungsfunktionen, welche der Schule Lehrer an der Schule hat oder hatte. */
-	@ArraySchema(schema = @Schema(implementation = Schulleitung.class))
+	@ArraySchema(schema = @Schema(implementation = Schulleitung.class, accessMode = Schema.AccessMode.READ_ONLY))
 	public final @NotNull List<Schulleitung> leitungsfunktionen = new ArrayList<>();
 
 	/**

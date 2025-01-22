@@ -1,8 +1,8 @@
 import { createApp } from "vue";
 import { router } from "./router/RouteManager";
 
-import "../../ui/src/assets/styles/index.css";
-import "../../ui/src/assets/styles/colors.css";
+import "@ui/assets/styles/index.css";
+import "@ui/assets/styles/colors.css";
 import "./svws-laufbahnplanung.css";
 
 import SWrapper from "~/components/SWrapper.vue";
@@ -15,7 +15,7 @@ app.mixin({
 		const title = this.$options.title;
 		if (title !== undefined)
 			document.title = title;
-	}
+	},
 });
 router.isReady()
 	.then(() => app.mount("#app"))

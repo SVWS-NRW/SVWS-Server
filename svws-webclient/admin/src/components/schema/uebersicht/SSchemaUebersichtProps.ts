@@ -1,12 +1,12 @@
-import type { ApiFile } from "../../../../../core/src/api/BaseApi";
-import type { SchuleStammdaten } from "../../../../../core/src/asd/data/schule/SchuleStammdaten";
-import type { BenutzerListeEintrag } from "../../../../../core/src/core/data/benutzer/BenutzerListeEintrag";
-import type { BenutzerKennwort } from "../../../../../core/src/core/data/BenutzerKennwort";
-import type { SchemaListeEintrag } from "../../../../../core/src/core/data/db/SchemaListeEintrag";
-import type { SchuleInfo } from "../../../../../core/src/core/data/schule/SchuleInfo";
-import type { SchulenKatalogEintrag } from "../../../../../core/src/core/data/schule/SchulenKatalogEintrag";
-import type { SimpleOperationResponse } from "../../../../../core/src/core/data/SimpleOperationResponse";
-import type { List } from "../../../../../core/src/java/util/List";
+import type { ApiFile } from "@core/api/BaseApi";
+import type { SchuleStammdaten } from "@core/asd/data/schule/SchuleStammdaten";
+import type { BenutzerListeEintrag } from "@core/core/data/benutzer/BenutzerListeEintrag";
+import type { BenutzerKennwort } from "@core/core/data/BenutzerKennwort";
+import type { SchemaListeEintrag } from "@core/core/data/db/SchemaListeEintrag";
+import type { SchuleInfo } from "@core/core/data/schule/SchuleInfo";
+import type { SchulenKatalogEintrag } from "@core/core/data/schule/SchulenKatalogEintrag";
+import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+import type { List } from "@core/java/util/List";
 import type { SchemaMigrationQuelle } from "../SchemaMigrationQuelle";
 import type { ApiStatus } from "~/components/ApiStatus";
 

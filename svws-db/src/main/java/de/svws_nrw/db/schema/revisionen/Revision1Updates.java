@@ -64,6 +64,25 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 				""",
 				Schema.tab_Schuljahresabschnitte, Schema.tab_EigeneSchule
 		);
+		add("Ergänze bei Datenbanken im Quartalsmodus ggf. einen weiteren Schuljahresabschnitt",
+				"""
+				INSERT INTO Schuljahresabschnitte(Jahr, Abschnitt, VorigerAbschnitt_ID, FolgeAbschnitt_ID)
+				SELECT Jahr, Abschnitt + 1 AS Abschnitt, ID AS VorigerAbschnitt_ID, null AS FolgeAbschnitt_ID
+				FROM Schuljahresabschnitte WHERE Jahr = (SELECT max(Jahr) FROM Schuljahresabschnitte) AND
+				    Abschnitt = (SELECT max(Abschnitt) FROM Schuljahresabschnitte WHERE Jahr = (SELECT max(Jahr) FROM Schuljahresabschnitte)) AND
+				    (SELECT max(Abschnitt) FROM Schuljahresabschnitte WHERE Jahr = (SELECT max(Jahr) FROM Schuljahresabschnitte)) IN (1,3) AND
+				    (SELECT AnzahlAbschnitte FROM EigeneSchule) = 4
+				""",
+				Schema.tab_Schuljahresabschnitte, Schema.tab_EigeneSchule
+		);
+		add("",
+				"""
+				UPDATE Schuljahresabschnitte
+				SET FolgeAbschnitt_ID = (SELECT ID FROM Schuljahresabschnitte WHERE Jahr = (SELECT max(Jahr) FROM Schuljahresabschnitte) AND Abschnitt = (SELECT max(Abschnitt) FROM Schuljahresabschnitte WHERE Jahr = (SELECT max(Jahr) FROM Schuljahresabschnitte)))
+				WHERE ID = (SELECT VorigerAbschnitt_ID FROM Schuljahresabschnitte WHERE Jahr = (SELECT max(Jahr) FROM Schuljahresabschnitte) AND Abschnitt = (SELECT max(Abschnitt) FROM Schuljahresabschnitte WHERE Jahr = (SELECT max(Jahr) FROM Schuljahresabschnitte)));
+				""",
+				Schema.tab_Schuljahresabschnitte
+		);
 	}
 
 

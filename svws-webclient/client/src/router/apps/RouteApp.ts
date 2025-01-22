@@ -26,7 +26,7 @@ import { routeKatalogEinwilligungsarten } from "./schule/einwilligungsarten/Rout
 import { routeKatalogFoerderschwerpunkte } from "./schule/foerderschwerpunkte/RouteKatalogFoerderschwerpunkte";
 import { routeKatalogReligionen } from "./schule/religionen/RouteKatalogReligionen";
 import { routeKatalogSchulen } from "./schule/schulen/RouteKatalogSchulen";
-import { routeKatalogVermerkarten } from "./schule/vermerke/RouteKatalogVermerkarten";
+import { routeKatalogVermerkarten } from "./schule/vermerkarten/RouteKatalogVermerkarten";
 import { routeEinstellungen } from "./einstellungen/RouteEinstellungen";
 import { routeEinstellungenBenutzer } from "~/router/apps/einstellungen/benutzer/RouteEinstellungenBenutzer";
 import { routeEinstellungenBenutzergruppe } from "~/router/apps/einstellungen/benutzergruppen/RouteEinstellungenBenutzergruppe";

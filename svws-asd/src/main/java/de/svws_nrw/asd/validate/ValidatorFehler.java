@@ -1,17 +1,14 @@
 package de.svws_nrw.asd.validate;
 
-import de.svws_nrw.transpiler.annotations.TsObject;
 import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse beschreibt Fehler, welche durch Validatoren auftreten.
- *
- * @param <T>   der Typ der zu validierenden Daten
  */
-public class ValidatorFehler<@TsObject T> {
+public class ValidatorFehler {
 
 	/** Der Validator bei dem die Validierung fehlgeschlagen ist. */
-	private final @NotNull Validator<T> _validator;
+	private final @NotNull Validator _validator;
 
     /** Die Fehlermeldung, welche vom Validator gemeldet wurde */
     private final @NotNull String _fehlermeldung;
@@ -23,7 +20,7 @@ public class ValidatorFehler<@TsObject T> {
      * @param validator       der Validator bei dem die Validierung fehlgeschlagen ist
      * @param fehlermeldung   die Fehlermeldung, welche vom Validator gemeldet wurde
      */
-    public ValidatorFehler(final @NotNull Validator<T> validator, final @NotNull String fehlermeldung) {
+    public ValidatorFehler(final @NotNull Validator validator, final @NotNull String fehlermeldung) {
     	this._validator = validator;
     	this._fehlermeldung = fehlermeldung;
     }
@@ -54,7 +51,7 @@ public class ValidatorFehler<@TsObject T> {
 	 *
 	 * @return der Validator
 	 */
-	public Validator<T> getValidator() {
+	public Validator getValidator() {
 		return _validator;
 	}
 
@@ -74,39 +71,8 @@ public class ValidatorFehler<@TsObject T> {
 	 *
 	 * @return die Validator-Klasse
 	 */
-	@SuppressWarnings("unchecked")
-	public Class<? extends Validator<T>> getValidatorClass() {
-		return (Class<? extends Validator<T>>) _validator.getClass();
-	}
-
-
-	/**
-	 * Das DTO, bei dem die Validierung fehlgeschlagen ist
-	 *
-	 * @return das DTO
-	 */
-	public T getDTO() {
-		return _validator.daten();
-	}
-
-
-	/**
-	 * Der Name der DTO-Klasse, bei der die Validierung fehlgeschlagen ist
-	 *
-	 * @return der Name der DTO-Klasse
-	 */
-	public String getDTOClassname() {
-		return _validator.getDTOClass().getCanonicalName();
-	}
-
-
-	/**
-	 * Die DTO-Klasse, bei der die Validierung fehlgeschlagen ist
-	 *
-	 * @return die DTO-Klasse
-	 */
-	public Class<T> getDTOClass() {
-		return _validator.getDTOClass();
+	public Class<? extends Validator> getValidatorClass() {
+		return _validator.getClass();
 	}
 
 

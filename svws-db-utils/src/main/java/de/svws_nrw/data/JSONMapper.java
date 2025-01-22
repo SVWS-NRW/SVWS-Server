@@ -316,9 +316,8 @@ public final class JSONMapper {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static Long convertToLong(final Object obj, final boolean nullable, final String attrName) throws ApiOperationException {
-		if ((obj == null) && nullable) {
+		if ((obj == null) && nullable)
 			return null;
-		}
 		return switch (obj) {
 			case final Byte b -> b.longValue();
 			case final Short s -> s.longValue();
@@ -352,26 +351,38 @@ public final class JSONMapper {
 	 *
 	 * @param obj        das zu konvertierende Objekt
 	 * @param nullable   gibt an, ob das Ergebnis auch null sein darf oder nicht
+	 * @param attrName   der Name des Attributes oder null
+	 *
+	 * @return das konvertierte Integer-Objekt
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public static Integer convertToInteger(final Object obj, final boolean nullable, final String attrName) throws ApiOperationException {
+		if ((obj == null) && nullable)
+			return null;
+		return switch (obj) {
+			case final Byte b -> b.intValue();
+			case final Short s -> s.intValue();
+			case final Integer i -> i;
+			case final Long l -> l.intValue();
+			case null -> throw new ApiOperationException(Status.BAD_REQUEST, formatMessage("Der Wert null ist nicht erlaubt", attrName));
+			default -> throw new ApiOperationException(Status.BAD_REQUEST, formatMessage("Fehler beim Konvertieren zu Integer", attrName));
+		};
+	}
+
+	/**
+	 * Konvertiert das übergebene Objekt in einen Integer-Wert, sofern es sich um ein
+	 * Number-Objekt handelt, welches keinen float oder double-Wert repräsentiert.
+	 *
+	 * @param obj        das zu konvertierende Objekt
+	 * @param nullable   gibt an, ob das Ergebnis auch null sein darf oder nicht
 	 *
 	 * @return das konvertierte Integer-Objekt
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static Integer convertToInteger(final Object obj, final boolean nullable) throws ApiOperationException {
-		if (obj == null) {
-			if (nullable)
-				return null;
-			throw new ApiOperationException(Status.BAD_REQUEST, "Der Wert null ist nicht erlaubt.");
-		}
-		if (obj instanceof final Byte b)
-			return b.intValue();
-		if (obj instanceof final Short s)
-			return s.intValue();
-		if (obj instanceof final Integer i)
-			return i.intValue();
-		if (obj instanceof final Long l)
-			return l.intValue();
-		throw new ApiOperationException(Status.BAD_REQUEST, "Fehler beim Konvertieren zu Integer");
+		return convertToInteger(obj, nullable, null);
 	}
 
 
@@ -855,6 +866,25 @@ public final class JSONMapper {
 			if (e instanceof final CompressionException ce)
 				throw ce;
 			throw new CompressionException("Fehler beim Deserialisieren der JSON-Daten.", e);
+		}
+	}
+
+	/**
+	 * Wandelt die JSON-Daten in das Object vom Typ T um
+	 *
+	 * @param <T>         der Typ des Objekts
+	 * @param daten       die JSON-Daten
+	 * @param valueType   die Klasse des Typs T
+	 *
+	 * @return das Object vom Typ T
+	 *
+	 * @throws ApiOperationException falls beim Dekodieren der Daten ein Fehler auftritt.
+	 */
+	public static <T> T toObject(final byte[] daten, final Class<T> valueType) throws ApiOperationException {
+		try {
+			return mapper.readValue(daten, valueType);
+		} catch (final IOException e) {
+			throw new ApiOperationException(Status.BAD_REQUEST, e, "Fehler beim Deserialisieren der JSON-Daten: " + e.getMessage());
 		}
 	}
 

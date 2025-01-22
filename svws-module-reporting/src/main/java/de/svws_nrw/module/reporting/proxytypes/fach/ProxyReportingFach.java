@@ -16,11 +16,11 @@ public class ProxyReportingFach extends ReportingFach {
 	 * @param schuljahr		Das Schuljahr, aus dem die Statistikdaten des Faches gelesen werden.
 	 */
 	public ProxyReportingFach(final DTOFach fach, final int schuljahr) {
-		super(ersetzeNullDurchEmpty(fach.Aufgabenfeld),
+		super(ersetzeNullBlankTrim(fach.Aufgabenfeld),
 				fach.AufZeugnis,
-				ersetzeNullDurchEmpty(fach.Bezeichnung),
-				ersetzeNullDurchEmpty(fach.BezeichnungUeberweisungsZeugnis),
-				ersetzeNullDurchEmpty(fach.BezeichnungZeugnis),
+				ersetzeNullBlankTrim(fach.Bezeichnung),
+				ersetzeNullBlankTrim(fach.BezeichnungUeberweisungsZeugnis),
+				ersetzeNullBlankTrim(fach.BezeichnungZeugnis),
 				((fach.Unterrichtssprache != null) && (!(fach.Unterrichtssprache.isEmpty())) && (!"D".equals(fach.Unterrichtssprache)))
 						? fach.Unterrichtssprache.substring(0, 1) : "",
 				null,
@@ -35,7 +35,7 @@ public class ProxyReportingFach extends ReportingFach {
 				fach.IstSchriftlichBA,
 				fach.IstSchriftlichZK,
 				fach.Sichtbar,
-				ersetzeNullDurchEmpty(fach.Kuerzel),
+				ersetzeNullBlankTrim(fach.Kuerzel),
 				((fach.MaxBemZeichen == null) ? Integer.MAX_VALUE : fach.MaxBemZeichen),
 				fach.SortierungAllg,
 				null);

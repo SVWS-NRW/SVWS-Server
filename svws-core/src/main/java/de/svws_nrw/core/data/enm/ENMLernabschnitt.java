@@ -52,8 +52,8 @@ public class ENMLernabschnitt {
 	@Schema(description = "Das Kürzel der Note für den Lernbereich 2, die vergeben wurde.", example = "2")
 	public String lernbereich2note;
 
-	/** Das Kürzel des Haupförderschwerpunktes oder null bei keinem Haupförderschwerpunkt */
-	@Schema(description = "Das Kürzel des Haupförderschwerpunktes oder null bei keinem Haupförderschwerpunkt.", example = "LB")
+	/** Das Kürzel des Hauptförderschwerpunktes oder null bei keinem Hauptförderschwerpunkt */
+	@Schema(description = "Das Kürzel des Hauptförderschwerpunktes oder null bei keinem Hauptförderschwerpunkt.", example = "LB")
 	public String foerderschwerpunkt1;
 
 	/** Das Kürzel des weiteren Förderschwerpunktes oder null bei keinem weiteren Förderschwerpunkt */

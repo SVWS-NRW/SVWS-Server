@@ -30,14 +30,14 @@ public class ProxyReportingGostAbiturFachbelegungHalbjahr extends ReportingGostA
 	 */
 	public ProxyReportingGostAbiturFachbelegungHalbjahr(final ReportingRepository reportingRepository,
 			final AbiturFachbelegungHalbjahr abiturFachbelegungHalbjahr) {
-		super(ersetzeNullDurchEmpty(abiturFachbelegungHalbjahr.biliSprache),
+		super(ersetzeNullBlankTrim(abiturFachbelegungHalbjahr.biliSprache),
 				abiturFachbelegungHalbjahr.block1gewertet,
 				abiturFachbelegungHalbjahr.block1kursAufZeugnis,
 				abiturFachbelegungHalbjahr.fehlstundenGesamt,
 				abiturFachbelegungHalbjahr.fehlstundenUnentschuldigt,
-				ersetzeNullDurchEmpty(abiturFachbelegungHalbjahr.halbjahrKuerzel),
+				ersetzeNullBlankTrim(abiturFachbelegungHalbjahr.halbjahrKuerzel),
 				abiturFachbelegungHalbjahr.schriftlich,
-				ersetzeNullDurchEmpty(abiturFachbelegungHalbjahr.kursartKuerzel),
+				ersetzeNullBlankTrim(abiturFachbelegungHalbjahr.kursartKuerzel),
 				null,
 				null,
 				abiturFachbelegungHalbjahr.wochenstunden);
@@ -50,7 +50,7 @@ public class ProxyReportingGostAbiturFachbelegungHalbjahr extends ReportingGostA
 					this.reportingRepository,
 					this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(abiturFachbelegungHalbjahr.lehrer, l -> {
 						try {
-							return new DataLehrerStammdaten(this.reportingRepository.conn()).getFromID(abiturFachbelegungHalbjahr.lehrer);
+							return new DataLehrerStammdaten(this.reportingRepository.conn()).getById(abiturFachbelegungHalbjahr.lehrer);
 						} catch (final ApiOperationException e) {
 							ReportingExceptionUtils.putStacktraceInLog(
 									"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,

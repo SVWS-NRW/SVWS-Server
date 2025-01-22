@@ -9,7 +9,7 @@ import { routeKlassen, type RouteKlassen } from "~/router/apps/klassen/RouteKlas
 import { routeKlassenStundenplanDaten } from "~/router/apps/klassen/stundenplan/RouteKlassenStundenplanDaten";
 import { RouteDataKlassenStundenplan } from "~/router/apps/klassen/stundenplan/RouteDataKlassenStundenplan";
 
-import { type StundenplanAuswahlProps } from "@comp";
+import { type StundenplanAuswahlProps } from "@ui";
 import { ConfigElement } from "~/components/Config";
 import { api } from "~/router/Api";
 

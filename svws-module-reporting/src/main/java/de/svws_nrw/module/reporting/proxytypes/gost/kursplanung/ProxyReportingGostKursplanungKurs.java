@@ -56,7 +56,7 @@ public class ProxyReportingGostKursplanungKurs extends ReportingGostKursplanungK
 				anzahlExterne,
 				anzahlSchueler,
 				anzahlSchuelerSchriftlich,
-				ersetzeNullDurchEmpty(bezeichnung),
+				ersetzeNullBlankTrim(bezeichnung),
 				fach,
 				fachwahlstatistik,
 				gostHalbjahr,

@@ -29,7 +29,7 @@ public final class DataFachdaten extends DataManagerRevised<Long, DTOFach, FachD
 	 */
 	public DataFachdaten(final DBEntityManager conn) {
 		super(conn);
-		setAttributesNotPatchable("ID");
+		setAttributesNotPatchable("id");
 		setAttributesRequiredOnCreation("kuerzel", "kuerzelStatistik");
 	}
 

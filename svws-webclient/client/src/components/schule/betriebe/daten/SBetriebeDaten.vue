@@ -21,7 +21,7 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Adresse">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input placeholder="Straße / Hausnummer" :model-value="daten.strassenname" @change="strassenname=>patch({strassenname: strassenname ?? undefined})" type="text" />
+				<svws-ui-text-input class="contentFocusField" placeholder="Straße / Hausnummer" :model-value="daten.strassenname" @change="strassenname=>patch({strassenname: strassenname ?? undefined})" type="text" />
 				<svws-ui-text-input placeholder="Zusatz" :model-value="daten.hausnrzusatz" @change="hausnrzusatz=>patch({hausnrzusatz: hausnrzusatz ?? undefined})" type="text" />
 				<svws-ui-select title="Wohnort" v-model="inputWohnortID" :items="mapOrte" :item-text="i => `${i.plz} ${i.ortsname}`" autocomplete class="col-span-full" />
 				<!-- <svws-ui-select title="Ortsteil" v-model="inputOrtsteilID" :items="mapOrtsteile" :item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''"

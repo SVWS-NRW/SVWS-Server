@@ -1,7 +1,7 @@
 <template>
 	<div class="page--content page--content--gost-laufbahnfehler overflow-x-auto">
 		<Teleport to=".svws-sub-nav-target" v-if="isMounted && hatUpdateKompetenz">
-			<svws-ui-sub-nav>
+			<svws-ui-sub-nav :focus-switching-enabled :focus-help-visible>
 				<s-modal-laufbahnplanung-alle-fachwahlen-loeschen :gost-jahrgangsdaten="jahrgangsdaten" :reset-fachwahlen="resetFachwahlenAlle" />
 				<svws-ui-button :disabled="apiStatus.pending" type="transparent" title="Planung importieren" @click="showModalImport = true"><span class="icon i-ri-download-2-line" /> Importieren…</svws-ui-button>
 				<s-laufbahnplanung-import-modal v-model:show="showModalImport" multiple :import-laufbahnplanung />
@@ -92,8 +92,11 @@
 	import type { DataTableColumn } from '@ui';
 	import type { List, GostBelegpruefungErgebnisFehler, GostBelegpruefungErgebnis} from '@core';
 	import { ArrayList, GostBelegpruefungsArt, GostBelegungsfehlerArt, SchuelerStatus, GostBelegpruefungsErgebnisse, BenutzerKompetenz } from '@core';
+	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<GostLaufbahnfehlerProps>();
+
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const schuljahr = computed<number>(() => props.jahrgangsdaten().abiturjahr - 1);
 

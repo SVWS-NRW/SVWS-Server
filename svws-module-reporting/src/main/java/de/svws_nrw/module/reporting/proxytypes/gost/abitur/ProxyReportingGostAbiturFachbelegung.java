@@ -47,7 +47,7 @@ public class ProxyReportingGostAbiturFachbelegung extends ReportingGostAbiturFac
 				abiturFachbelegung.block2PunkteZwischenstand,
 				null,
 				null,
-				ersetzeNullDurchEmpty(abiturFachbelegung.letzteKursart));
+				ersetzeNullBlankTrim(abiturFachbelegung.letzteKursart));
 		this.reportingRepository = reportingRepository;
 
 		super.block2PruefungNote = Note.fromKuerzel(abiturFachbelegung.block2NotenKuerzelPruefung);
@@ -59,7 +59,7 @@ public class ProxyReportingGostAbiturFachbelegung extends ReportingGostAbiturFac
 							this.reportingRepository,
 							this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(abiturFachbelegung.block2Pruefer, l -> {
 								try {
-									return new DataLehrerStammdaten(this.reportingRepository.conn()).getFromID(abiturFachbelegung.block2Pruefer);
+									return new DataLehrerStammdaten(this.reportingRepository.conn()).getById(abiturFachbelegung.block2Pruefer);
 								} catch (final ApiOperationException e) {
 									ReportingExceptionUtils.putStacktraceInLog(
 											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,

@@ -31,4 +31,28 @@ public class RGBFarbe {
 		// leer
 	}
 
+	/**
+	 * Erstellt eine neue Farbe mit den übergebenenen Komponenten
+	 *
+	 * @param red     die Rot-Komponente (0-225)
+	 * @param green   die Grün-Komponente (0-225)
+	 * @param blue    die Blau-Komponente (0-225)
+	 */
+	public RGBFarbe(final int red, final int green, final int blue) {
+		super();
+		this.red = red;
+		this.green = green;
+		this.blue = blue;
+	}
+
+	/**
+	 * Gibt die Farbe als komma-separierten String zurück.
+	 *
+	 * @return der String
+	 */
+	@Override
+	public String toString() {
+		return red + "," + green + "," + blue;
+	}
+
 }

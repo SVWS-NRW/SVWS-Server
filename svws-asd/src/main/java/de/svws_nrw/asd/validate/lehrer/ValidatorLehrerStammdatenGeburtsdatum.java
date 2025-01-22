@@ -11,7 +11,10 @@ import jakarta.validation.constraints.NotNull;
  * Dieser Validator führt eine Statistikprüfung auf den Nachnamen bei den Stammdaten
  * eines Lehrers einer Schule aus.
  */
-public final class ValidatorLehrerStammdatenGeburtsdatum extends Validator<LehrerStammdaten> {
+public final class ValidatorLehrerStammdatenGeburtsdatum extends Validator {
+
+	/** Die Lehrer-Stammdaten */
+	private final @NotNull LehrerStammdaten daten;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
@@ -21,7 +24,8 @@ public final class ValidatorLehrerStammdatenGeburtsdatum extends Validator<Lehre
 	 */
 	public ValidatorLehrerStammdatenGeburtsdatum(final @NotNull LehrerStammdaten daten,
 			final @NotNull ValidatorKontext kontext) {
-		super(daten, kontext);
+		super(kontext);
+		this.daten = daten;
 	}
 
 	@Override
@@ -29,7 +33,7 @@ public final class ValidatorLehrerStammdatenGeburtsdatum extends Validator<Lehre
 		// Bestimme das Geburtsdatum
 		@NotNull DateManager geburtsdatum;
 		try {
-			geburtsdatum = DateManager.from(daten().geburtsdatum);
+			geburtsdatum = DateManager.from(daten.geburtsdatum);
 		} catch (final InvalidDateException e) {
 			addFehler("Das Geburtsdatum ist ungültig: " + e.getMessage());
 			return false;

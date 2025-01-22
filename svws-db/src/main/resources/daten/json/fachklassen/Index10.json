@@ -1,6 +1,6 @@
 {
 	"index": 10,
-	"version": 2,
+	"version": 3,
 	"fachklassen": [
 		{
 			"schluessel": "101",
@@ -14034,7 +14034,7 @@
 				"bezeichnungM": "Kaufmann für Versicherungen und Finanzen - Versicherung",
 				"bezeichnungW": "Kauffrau für Versicherungen und Finanzen - Versicherung",
 				"gueltigVon": 2006,
-				"gueltigBis": null
+				"gueltigBis": 2023
 			} ]
 		}, {
 			"schluessel": "556",
@@ -14051,7 +14051,7 @@
 				"bezeichnungM": "Kaufmann für Versicherungen und Finanzen - Finanzberatung",
 				"bezeichnungW": "Kauffrau für Versicherungen und Finanzen - Finanzberatung",
 				"gueltigVon": 2006,
-				"gueltigBis": null
+				"gueltigBis": 2023
 			} ]
 		}, {
 			"schluessel": "557",
@@ -15867,6 +15867,193 @@
 				"bezeichnungM": "Kaufmann für Digitalisierungsmanagement",
 				"bezeichnungW": "Kauffrau für Digitalisierungsmanagement",
 				"gueltigVon": 2023,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "636",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2164000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "null",
+				"ebene3": "A3",
+				"bezeichnung": "Umwelttechnologe/Umwelttechnologin für Wasserversorgung",
+				"bezeichnungM": "Umwelttechnologe für Wasserversorgung",
+				"bezeichnungW": "Umwelttechnologin für Wasserversorgung",
+				"gueltigVon": 2024,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "637",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2165000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "null",
+				"ebene3": "A3",
+				"bezeichnung": "Umwelttechnologe/Umwelttechnologin für Abwasserwirtschaft",
+				"bezeichnungM": "Umwelttechnologe für Abwasserwirtschaft",
+				"bezeichnungW": "Umwelttechnologin für Abwasserwirtschaft",
+				"gueltigVon": 2024,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "638",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2166000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "null",
+				"ebene3": "A3",
+				"bezeichnungW": "Umwelttechnologe/Umwelttechnologin für Kreislauf- und Abfallwirtschaft",
+				"bezeichnungM": "Umwelttechnologe für Kreislauf- und Abfallwirtschaft",
+				"bezeichnungW": "Umwelttechnologin für Kreislauf- und Abfallwirtschaft",
+				"gueltigVon": 2024,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "639",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2167000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "null",
+				"ebene3": "A3",
+				"bezeichnung": "Umwelttechnologe/Umwelttechnologin für Rohrleitungsnetze und Industrieanlagen",
+				"bezeichnungM": "Umwelttechnologe für Rohrleitungsnetze und Industrieanlagen",
+				"bezeichnungW": "Umwelttechnologin für Rohrleitungsnetze und Industrieanlagen",
+				"gueltigVon": 2024,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "640",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 2168000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "null",
+				"ebene3": "A3",
+				"bezeichnung": "Kunststoff- und Kautschuktechnologe/Kautschuktechnologin - Formteile",
+				"bezeichnungM": "Kunststoff- und Kautschuktechnologe - Formteile",
+				"bezeichnungW": "Kunststoff- und Kautschuktechnologin - Formteile",
+				"gueltigVon": 2024,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "640",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 2169000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "null",
+				"ebene3": "A3",
+				"bezeichnung": "Kunststoff- und Kautschuktechnologe/Kautschuktechnologin - Halbzeuge",
+				"bezeichnungM": "Kunststoff- und Kautschuktechnologe - Halbzeuge",
+				"bezeichnungW": "Kunststoff- und Kautschuktechnologin - Halbzeuge",
+				"gueltigVon": 2024,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "640",
+			"schluessel2": "03",
+			"historie": [ {
+				"id": 2170000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "null",
+				"ebene3": "A3",
+				"bezeichnung": "Kunststoff- und Kautschuktechnologe/Kautschuktechnologin - Mehrschichtkautschukteile",
+				"bezeichnungM": "Kunststoff- und Kautschuktechnologe - Mehrschichtkautschukteile",
+				"bezeichnungW": "Kunststoff- und Kautschuktechnologin - Mehrschichtkautschukteile",
+				"gueltigVon": 2024,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "640",
+			"schluessel2": "04",
+			"historie": [ {
+				"id": 2171000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "null",
+				"ebene3": "A3",
+				"bezeichnung": "Kunststoff- und Kautschuktechnologe/Kautschuktechnologin - Compound- und Masterbatchherstellung",
+				"bezeichnungM": "Kunststoff- und Kautschuktechnologe - Compound- und Masterbatchherstellung",
+				"bezeichnungW": "Kunststoff- und Kautschuktechnologin - Compound- und Masterbatchherstellung",
+				"gueltigVon": 2024,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "640",
+			"schluessel2": "05",
+			"historie": [ {
+				"id": 2172000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "null",
+				"ebene3": "A3",
+				"bezeichnung": "Kunststoff- und Kautschuktechnologe/Kautschuktechnologin - Bauteile",
+				"bezeichnungM": "Kunststoff- und Kautschuktechnologe - Bauteile",
+				"bezeichnungW": "Kunststoff- und Kautschuktechnologin - Bauteile",
+				"gueltigVon": 2024,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "640",
+			"schluessel2": "06",
+			"historie": [ {
+				"id": 2173000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "null",
+				"ebene3": "A3",
+				"bezeichnung": "Kunststoff- und Kautschuktechnologe/Kautschuktechnologin - Faserverbundtechnologie",
+				"bezeichnungM": "Kunststoff- und Kautschuktechnologe - Faserverbundtechnologie",
+				"bezeichnungW": "Kunststoff- und Kautschuktechnologin - Faserverbundtechnologie",
+				"gueltigVon": 2024,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "640",
+			"schluessel2": "07",
+			"historie": [ {
+				"id": 2174000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "null",
+				"ebene3": "A3",
+				"bezeichnung": "Kunststoff- und Kautschuktechnologe/Kautschuktechnologin - Kunststofffenster",
+				"bezeichnungM": "Kunststoff- und Kautschuktechnologe - Kunststofffenster",
+				"bezeichnungW": "Kunststoff- und Kautschuktechnologin - Kunststofffenster",
+				"gueltigVon": 2024,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -17730,6 +17917,40 @@
 				"bezeichnung": "Fachpraktiker/-in für Büromanagement",
 				"bezeichnungM": "Fachpraktiker für Büromanagement",
 				"bezeichnungW": "Fachpraktikerin für Büromanagement",
+				"gueltigVon": 2024,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "904",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2175000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "GS",
+				"ebene2": "null",
+				"ebene3": "MB",
+				"bezeichnung": "Fachpraktiker/-in Friseur",
+				"bezeichnungM": "Fachpraktiker Friseur",
+				"bezeichnungW": "Fachpraktikerin Friseur",
+				"gueltigVon": 2024,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "905",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2176000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "GS",
+				"ebene2": "null",
+				"ebene3": "MB",
+				"bezeichnung": "Fachpraktiker/-in im Gesundheitswesen",
+				"bezeichnungM": "Fachpraktiker im Gesundheitswesen",
+				"bezeichnungW": "Fachpraktikerin im Gesundheitswesen",
 				"gueltigVon": 2024,
 				"gueltigBis": null
 			} ]

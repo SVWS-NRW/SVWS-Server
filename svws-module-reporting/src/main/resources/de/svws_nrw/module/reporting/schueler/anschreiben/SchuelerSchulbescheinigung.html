@@ -1,0 +1,99 @@
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head th:with="mediaPrint = ${Parameter.ausgabeformat == 2}">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>Schulbescheinigung</title>
+    <link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-pdf.css}" href="../../css/reporting-pdf.css"/>
+    <link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-A4-DIN5008.css}" href="../../css/reporting-A4-DIN5008.css"/>
+    <link rel="stylesheet" th:href="@{css/reporting-styles.css}" href="../../css/reporting-styles.css"/>
+    <link rel="stylesheet" th:href="@{schueler/anschreiben/SchuelerSchulbescheinigung.css}" href="../../schueler/anschreiben/SchuelerSchulbescheinigung.css"/>
+</head>
+
+<body th:with="mediaPrint = ${Parameter.ausgabeformat == 2}">
+<th:block th:each="schueler,iterationVarSchueler : ${Schueler}">
+    <!-- Briefkopfbereich -->
+    <div style="position: absolute; top: 0; left: 0; width: 190mm; height: 35mm;">
+        <!-- Hier kann eine Grafik als Ersatz für den gesamten Briefkopf eingebunden werden. -->
+    </div>
+
+    <!-- Schulbezeichnung und Anschrift -->
+    <div style="position: absolute; top: 0; left: 15mm; width: 85mm; height: 35mm;">
+        <span th:utext="${Schule.anschriftVollstaendigHtml()}">Schulbezeichnung1<br/>Schulbezeichnung2<br/>Schulbezeichnung3<br/>Musterstraße 123A<br/>12345 Musterstadt</span>
+    </div>
+
+    <!-- Schullogo -->
+    <div style="position: absolute; top: 0; left: 115mm; width: 75mm; height: 35mm; text-align: right">
+        <img style="max-height: 100%; max-width: 100%; object-fit: scale-down;" th:src="@{'data:image/png;base64,'+${Schule.schullogo()}}" alt="Schullogo"/>
+    </div>
+
+    <!-- Rücksendeinformationen -->
+    <div class="bo-b-grey" style="position: absolute; top: 37mm; left: 15mm; width: 73mm; height: 5mm;">
+        <p class="f-very-tiny" th:text="${Schule.ruecksendeinformation()}">Adresse der Schule als Rücksendeinformation</p>
+    </div>
+
+    <!-- Versandinformationen -->
+    <div style="position: absolute; top: 42mm; left: 15mm; width: 73mm; height: 5mm;">
+        <!-- Hier müsste man noch einen Parameter und ein Menü zum Setzen der Informationen einführen. -->
+    </div>
+
+    <!-- Anschrift -->
+    <div style="position: absolute; top: 47mm; left: 15mm; width: 73mm; height: 31mm;">
+
+    </div>
+
+    <!-- Infoblock -->
+    <div style="position: absolute; top: 40mm; left: 115mm; width: 75mm; height: 35mm;">
+        <table>
+            <colgroup>
+                <col style="width: 23%;"/>
+                <col style="width: 2%;"/>
+                <col style="width: 75%;"/>
+            </colgroup>
+            <tr>
+                <td>Kontakt:</td>
+                <td></td>
+                <td th:text="${Benutzer.hatLehrkraftdaten() ? Benutzer.lehrer().anredeNachname() : ''}">Herr Mustermann-Schuster</td>
+            </tr>
+            <tr>
+                <td>Telefon:</td>
+                <td></td>
+                <td th:text="${Schule.telefon()}">01234 567 899-0</td>
+            </tr>
+            <tr>
+                <td>Telefax:</td>
+                <td></td>
+                <td th:text="${Schule.fax()}">01234 567 899-99</td>
+            </tr>
+            <tr>
+                <td>Webseite:</td>
+                <td></td>
+                <td th:text="${Schule.webAdresse()}">https://www.die-beste-schule-in-nrw.de</td>
+            </tr>
+            <tr>
+                <td>E-Mail:</td>
+                <td></td>
+                <td th:text="${Benutzer.hatLehrkraftdaten() ? Benutzer.lehrer().emailSchule() : Schule.email()}">sekretariat@schule-email.de</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- OrtUndDatum -->
+    <div style="position: absolute; top: 75mm; left: 115mm; width: 75mm; height: 5mm;">
+        <p th:text="${Schule.ort() + ', den ' + #dates.format(#dates.createNow(), 'dd.MM.yyyy')}">Düsseldorf, den 15.03.2024</p>
+    </div>
+
+    <!-- Schreiben -->
+    <div style="position: absolute; top: 89mm; left: 15mm; width: 165mm;">
+        <p class="f-bold m-b-2em">Schulbescheinigung</p>
+        <p class="m-b-1em">Hiermit wird bescheinigt, dass</p>
+        <p class="m-l-2em" th:text="${schueler.vornamenNachname()} + ', '"></p>
+        <p class="m-l-2em"  th:text="'geboren am ' + ${#convert.toDateDE(schueler.geburtsdatum())} + ' in ' + ${schueler.geburtsort()} + ', '"></p>
+        <p class="m-l-2em m-b-1em" th:text="'wohnhaft in ' + ${schueler.strassennameHausnummer()} + ', ' + ${schueler.plzOrt()} + ', '"></p>
+        <p class="m-b-1em" th:text="'am ' + ${#convert.toDateDE(schueler.aufnahmedatum())} + ' an unserer Schule,'"></p>
+        <p class="m-l-2em m-b-1em" th:utext="${Schule.anschriftVollstaendigHtml()} + ','">Schulbezeichnung1<br/>Schulbezeichnung2<br/>Schulbezeichnung3<br/>Musterstraße 123A<br/>12345 Musterstadt</p>
+        <p class="m-b-1em" th:text="'aufgenommen wurde und aktuell am Unterricht der Jahrgangsstufe ' + ${schueler.aktuellerLernabschnitt().jahrgang().kuerzel()} + ' teilnimmt.'"></p>
+        <p class="m-b-1em" th:text="'Bei einem regulären Verlauf der Schullaufbahn wird diese voraussichtlich am 31.07.' + ${schueler.aktuellerLernabschnitt().jahrVoraussichtlicheEntlassung()} + ' enden.'"></p>
+    </div>
+</th:block>
+</body>
+</html>

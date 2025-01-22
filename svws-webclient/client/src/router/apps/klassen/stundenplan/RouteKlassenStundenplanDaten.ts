@@ -6,8 +6,8 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeKlassen } from "~/router/apps/klassen/RouteKlassen";
 import { routeKlassenStundenplan, type RouteKlassenStundenplan } from "~/router/apps/klassen/stundenplan/RouteKlassenStundenplan";
 
-import { StundenplanKlasse } from "@comp";
-import { type StundenplanKlasseProps } from "@comp";
+import { StundenplanKlasse } from "@ui";
+import { type StundenplanKlasseProps } from "@ui";
 import { routeError } from "~/router/error/RouteError";
 
 export class RouteKlassenStundenplanDaten extends RouteNode<any, RouteKlassenStundenplan> {

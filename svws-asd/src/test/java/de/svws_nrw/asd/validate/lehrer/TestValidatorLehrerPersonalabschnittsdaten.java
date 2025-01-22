@@ -1,6 +1,7 @@
 package de.svws_nrw.asd.validate.lehrer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -32,9 +33,13 @@ import jakarta.validation.constraints.NotNull;
 @DisplayName("Teste den Validator zu LehrerPersonalabschnittsdaten")
 class TestValidatorLehrerPersonalabschnittsdaten {
 
-	static final SchuleStammdaten schuleTestdaten_001 = JsonReader.fromResource("de/svws_nrw/asd/validate/schule/Testdaten_001_SchuleStammdaten.json", SchuleStammdaten.class);
-	static final LehrerStammdaten lsdTestdaten_001 = JsonReader.fromResource("de/svws_nrw/asd/validate/lehrer/Testdaten_001_LehrerStammdaten.json", LehrerStammdaten.class);
-	static final LehrerPersonalabschnittsdaten lpadTestdaten_002 = JsonReader.fromResource("de/svws_nrw/asd/validate/lehrer/Testdaten_002_LehrerPersonalabschnittsdaten.json", LehrerPersonalabschnittsdaten.class);
+	static final SchuleStammdaten schuleTestdaten_001 = JsonReader.fromResource(
+			"de/svws_nrw/asd/validate/schule/Testdaten_001_SchuleStammdaten.json", SchuleStammdaten.class);
+	static final LehrerStammdaten lsdTestdaten_001 = JsonReader.fromResource(
+			"de/svws_nrw/asd/validate/lehrer/Testdaten_001_LehrerStammdaten.json", LehrerStammdaten.class);
+	static final LehrerPersonalabschnittsdaten lpadTestdaten_002 = JsonReader.fromResource(
+			"de/svws_nrw/asd/validate/lehrer/Testdaten_002_LehrerPersonalabschnittsdaten.json",
+			LehrerPersonalabschnittsdaten.class);
 
 	/**
 	 * Initialisiert die Core-Types, damit die Tests ausgeführt werden können.
@@ -150,7 +155,7 @@ class TestValidatorLehrerPersonalabschnittsdaten {
 			final ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum validator = new ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum(lpadTestdaten_002, geburtsdatum, kontext);
 			assertEquals(true, validator.run());
 		} catch (@SuppressWarnings("unused") final InvalidDateException e) {
-			assertEquals(true, false); //darf hier nicht hin
+			assertEquals(true, false); // darf hier nicht hin
 			// Ist kein gültiges Geburtsdatum gesetzt, so werden die Prüfungen übersprungen.
 			// Die eigentliche Validierung des Geburtsdatums erfolgt bei den Lehrer-Stammdaten
 		}
@@ -175,7 +180,7 @@ class TestValidatorLehrerPersonalabschnittsdaten {
 			final ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum validator = new ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum(lpadTestdaten_002, geburtsdatum, kontext);
 			assertEquals(false, validator.run());
 		} catch (@SuppressWarnings("unused") final InvalidDateException e) {
-			assertEquals(true, false); //darf hier nicht hin
+			assertEquals(true, false); // darf hier nicht hin
 			// Ist kein gültiges Geburtsdatum gesetzt, so werden die Prüfungen übersprungen.
 			// Die eigentliche Validierung des Geburtsdatums erfolgt bei den Lehrer-Stammdaten
 		}
@@ -195,18 +200,14 @@ class TestValidatorLehrerPersonalabschnittsdaten {
 		// Erzeuge den Kontext für die Validierung
 		final ValidatorKontext kontext = new ValidatorKontext(schuleTestdaten_001, true);
 
+		// Wir erwarten eine InvalidDateException bei der Übergabe des Datums.
 		try {
 			final @NotNull DateManager geburtsdatum = DateManager.from("01.01.1990");
-			assertEquals(true, false); //darf hier nicht hin
-			final ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum validator = new ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum(lpadTestdaten_002, geburtsdatum, kontext);
-			assertEquals(true, validator.run());
-		} catch (@SuppressWarnings("unused") final InvalidDateException e) {
-			assertEquals(true, true); //soll hier hin laufen
-			// Ist kein gültiges Geburtsdatum gesetzt, so werden die Prüfungen übersprungen.
-			// Die eigentliche Validierung des Geburtsdatums erfolgt bei den Lehrer-Stammdaten
+			new ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum(lpadTestdaten_002, geburtsdatum, kontext);
+		} catch (final InvalidDateException e) {
+			assertTrue(e.getMessage().contains("ist nicht konform zu ISO8601"));
 		}
 	}
-
 
 	/**
 	 * Diese Methode erlaubt das Setzen der gewünschten Werte für den Test im CoreType LehrerPersonalabschnittsdaten

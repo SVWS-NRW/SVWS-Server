@@ -5,7 +5,7 @@ import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
 import { ValidatorLehrerStammdatenNachnamePlausibel } from '../../../asd/validate/lehrer/ValidatorLehrerStammdatenNachnamePlausibel';
 
-export class ValidatorLehrerStammdatenNachname extends Validator<LehrerStammdaten> {
+export class ValidatorLehrerStammdatenNachname extends Validator {
 
 
 	/**
@@ -15,7 +15,7 @@ export class ValidatorLehrerStammdatenNachname extends Validator<LehrerStammdate
 	 * @param kontext   der Kontext des Validators
 	 */
 	public constructor(daten : LehrerStammdaten, kontext : ValidatorKontext) {
-		super(daten, kontext);
+		super(kontext);
 		this._validatoren.add(new ValidatorLehrerStammdatenNachnameVorhanden(daten, kontext));
 		this._validatoren.add(new ValidatorLehrerStammdatenNachnamePlausibel(daten, kontext));
 	}

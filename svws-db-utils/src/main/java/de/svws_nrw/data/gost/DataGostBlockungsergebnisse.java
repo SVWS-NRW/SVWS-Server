@@ -850,7 +850,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 				if (fachwahl == null) // ignoriere Kurse, wo keine Fachwahl vorliegt
 					continue;
 				final DTOSchuelerLeistungsdaten leistung = new DTOSchuelerLeistungsdaten(idLeistungen++, mapLernabschnitte.get(schueler.id), kurs.fach_id);
-				leistung.Hochrechnung = null;
+				leistung.Hochrechnung = 0;
 				leistung.Fachlehrer_ID = kursDTO.Lehrer_ID;
 				leistung.Kursart = switch (halbjahr) {
 					case EF1 -> switch (fachwahl.EF1_Kursart) {

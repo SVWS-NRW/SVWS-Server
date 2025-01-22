@@ -25,10 +25,47 @@ export class SchulgliederungGueltigerAbschluss extends JavaObject {
 
 
 	/**
-	 * Leerer Standardkonstruktor.
+	 * Erstellt einen SchulgliederungGueltigerAbschluss mit Standardwerten
 	 */
-	public constructor() {
+	public constructor();
+
+	/**
+	 * Erstellt ein neue Kombination von Berufsbildendem und Allgemeinbildendem Abschluss, welche
+	 * für die angegebenen Jahrgänge gpltig sind.
+	 *
+	 * @param berufsbildend      der Bezeichner des berufsbildenden Abschlusses
+	 * @param allgemeinbildend   der Bezeichner des allgemeinbildenden Abschlusses
+	 * @param jahrgangVon        der Jahrgang, ab dem die Kombination möglich ist
+	 * @param jahrgangBis        der Jahrgang, bis zu welchem die Kombination möglich ist
+	 */
+	public constructor(berufsbildend : string, allgemeinbildend : string, jahrgangVon : string, jahrgangBis : string);
+
+	/**
+	 * Implementation for method overloads of 'constructor'
+	 */
+	public constructor(__param0? : string, __param1? : string, __param2? : string, __param3? : string) {
 		super();
+		if ((__param0 === undefined) && (__param1 === undefined) && (__param2 === undefined) && (__param3 === undefined)) {
+			// empty method body
+		} else if (((__param0 !== undefined) && (typeof __param0 === "string")) && ((__param1 !== undefined) && (typeof __param1 === "string")) && ((__param2 !== undefined) && (typeof __param2 === "string")) && ((__param3 !== undefined) && (typeof __param3 === "string"))) {
+			const berufsbildend : string = __param0;
+			const allgemeinbildend : string = __param1;
+			const jahrgangVon : string = __param2;
+			const jahrgangBis : string = __param3;
+			this.allgemeinbildend = allgemeinbildend;
+			this.berufsbildend = berufsbildend;
+			this.jahrgangVon = jahrgangVon;
+			this.jahrgangBis = jahrgangBis;
+		} else throw new Error('invalid method overload');
+	}
+
+	/**
+	 * Gibt die Bezeichner der Abschlüsse und Jahrgänge getrennt durch Bindestriche als String aus.
+	 *
+	 * @return der String
+	 */
+	public toString() : string | null {
+		return this.berufsbildend + "-" + this.allgemeinbildend + "-" + this.jahrgangVon + "-" + this.jahrgangBis;
 	}
 
 	transpilerCanonicalName(): string {

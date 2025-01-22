@@ -6,9 +6,9 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
- * Eine Kombination aus einem allgemeinbildenden und einem berufsbildenen Abschluss
- * an einer Schulform des Berufskolleg in Bezug auf die möglichen Jahrgänge für diese
- * Abschlusskombination.
+ * Eine Kombination aus einem allgemeinbildenden und einem berufsbildenen
+ * Abschluss an einer Schulform des Berufskolleg in Bezug auf die möglichen
+ * Jahrgänge für diese Abschlusskombination.
  */
 @XmlRootElement
 @Schema(description = "eine Kombination aus einem allgemeinbildenden und einem berufsbildenen Abschluss an einer Schulform des Berufskolleg in Bezug auf die möglichen Jahrgänge für diese Abschlusskombination.")
@@ -32,10 +32,38 @@ public class SchulgliederungGueltigerAbschluss {
 	public @NotNull String jahrgangBis = "JAHRGANG_13";
 
 	/**
-	 * Leerer Standardkonstruktor.
+	 * Erstellt einen SchulgliederungGueltigerAbschluss mit Standardwerten
 	 */
 	public SchulgliederungGueltigerAbschluss() {
-		// leer
+	}
+
+	/**
+	 * Erstellt ein neue Kombination von Berufsbildendem und Allgemeinbildendem Abschluss, welche
+	 * für die angegebenen Jahrgänge gpltig sind.
+	 *
+	 * @param berufsbildend      der Bezeichner des berufsbildenden Abschlusses
+	 * @param allgemeinbildend   der Bezeichner des allgemeinbildenden Abschlusses
+	 * @param jahrgangVon        der Jahrgang, ab dem die Kombination möglich ist
+	 * @param jahrgangBis        der Jahrgang, bis zu welchem die Kombination möglich ist
+	 */
+	public SchulgliederungGueltigerAbschluss(@NotNull final String berufsbildend,
+			@NotNull final String allgemeinbildend, @NotNull final String jahrgangVon,
+			@NotNull final String jahrgangBis) {
+		super();
+		this.allgemeinbildend = allgemeinbildend;
+		this.berufsbildend = berufsbildend;
+		this.jahrgangVon = jahrgangVon;
+		this.jahrgangBis = jahrgangBis;
+	}
+
+	/**
+	 * Gibt die Bezeichner der Abschlüsse und Jahrgänge getrennt durch Bindestriche als String aus.
+	 *
+	 * @return der String
+	 */
+	@Override
+	public String toString() {
+		return berufsbildend + "-" + allgemeinbildend + "-" + jahrgangVon + "-" + jahrgangBis;
 	}
 
 }

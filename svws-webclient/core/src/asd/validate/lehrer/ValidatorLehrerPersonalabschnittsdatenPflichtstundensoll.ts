@@ -4,7 +4,12 @@ import { LehrerEinsatzstatus } from '../../../asd/types/lehrer/LehrerEinsatzstat
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
 
-export class ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll extends Validator<LehrerPersonalabschnittsdaten> {
+export class ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll extends Validator {
+
+	/**
+	 * Die Lehrer-Personalabschnittsdaten
+	 */
+	private readonly daten : LehrerPersonalabschnittsdaten;
 
 
 	/**
@@ -14,11 +19,12 @@ export class ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll extends Va
 	 * @param kontext   der Kontext des Validators
 	 */
 	public constructor(daten : LehrerPersonalabschnittsdaten, kontext : ValidatorKontext) {
-		super(daten, kontext);
+		super(kontext);
+		this.daten = daten;
 	}
 
 	protected pruefe() : boolean {
-		const pflichtstundensoll : number | null = this.daten().pflichtstundensoll;
+		const pflichtstundensoll : number | null = this.daten.pflichtstundensoll;
 		if (pflichtstundensoll === null) {
 			this.addFehler("Kein Wert im Feld 'pflichtstundensoll'.");
 			return false;
@@ -28,7 +34,7 @@ export class ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll extends Va
 			this.addFehler("Unzulässiger Wert im Feld 'pflichtstundensoll'. Zulässig sind im Stundenmodell Werte im Bereich von 0,00 bis 41,00 Wochenstunden. Im Minutenmodell zwischen 0,00 und 1845,00 Minuten.");
 			success = false;
 		}
-		const einsatzstatus : LehrerEinsatzstatus | null = LehrerEinsatzstatus.getBySchluessel(this.daten().einsatzstatus);
+		const einsatzstatus : LehrerEinsatzstatus | null = LehrerEinsatzstatus.getBySchluessel(this.daten.einsatzstatus);
 		if ((einsatzstatus as unknown === LehrerEinsatzstatus.B as unknown) && (pflichtstundensoll === 0.0)) {
 			this.addFehler("Bei Lehrkräften, die von einer anderen Schule abgeordnet wurden (Einsatzstatus = 'B'), darf das Pflichtstundensoll nicht 0,00 betragen.");
 			success = false;

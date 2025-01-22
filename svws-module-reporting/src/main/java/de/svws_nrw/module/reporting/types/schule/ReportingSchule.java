@@ -162,6 +162,54 @@ public class ReportingSchule extends ReportingBaseType {
 	}
 
 	/**
+	 * Stellt die Anschrift der Schule als ein mehrzeiliges Feld zur Verfügung.
+	 *
+	 * @return Anschrift der Schule
+	 */
+	public String anschrift() {
+		return String.format("%s%s%s".formatted(
+				((bezeichnung1 != null) && !bezeichnung1.isEmpty()) ? bezeichnung1.trim() : "",
+				"%n" + this.strassennameHausnummer(),
+				"%n" + this.plzOrt()));
+	}
+
+	/**
+	 * Stellt die Anschrift der Schule als ein mehrzeiliges Feld im html-Format zur Verfügung.
+	 *
+	 * @return Anschrift der Schule im html-Format
+	 */
+	public String anschriftHtml() {
+		return String.format("%s%s%s".formatted(
+				((bezeichnung1 != null) && !bezeichnung1.isEmpty()) ? bezeichnung1.trim() : "",
+				"<br/>" + this.strassennameHausnummer(),
+				"<br/>" + this.plzOrt()));
+	}
+
+	/**
+	 * Stellt die Anschrift mit vollständiger Bezeichnung der Schule als ein mehrzeiliges Feld zur Verfügung.
+	 *
+	 * @return Anschrift der Schule
+	 */
+	public String anschriftVollstaendig() {
+		return String.format("%s%s%s".formatted(
+				this.bezeichnungSchuleMehrzeilig(),
+				"%n" + this.strassennameHausnummer(),
+				"%n" + this.plzOrt()));
+	}
+
+	/**
+	 * Stellt die Anschrift mit vollständiger Bezeichnung der Schule als ein mehrzeiliges Feld im html-Format zur Verfügung.
+	 *
+	 * @return Anschrift der Schule im html-Format
+	 */
+	public String anschriftVollstaendigHtml() {
+		return String.format("%s%s%s".formatted(
+				this.bezeichnungSchuleMehrzeiligHtml(),
+				"<br/>" + this.strassennameHausnummer(),
+				"<br/>" + this.plzOrt()));
+	}
+
+	/**
 	 * Stellt die drei einzelnen Bezeichnungsfelder der Schule als ein mehrzeiliges Feld zur Verfügung.
 	 *
 	 * @return Mehrzeiliges Bezeichnungsfeld
@@ -185,6 +233,50 @@ public class ReportingSchule extends ReportingBaseType {
 				((bezeichnung3 != null) && !bezeichnung3.isEmpty()) ? ("<br/>" + bezeichnung3.trim()) : "");
 	}
 
+	/**
+	 * Erzeugt die Angabe von Postleitzahl und Wohnort.
+	 *
+	 * @return Postleitzahl und Wohnort
+	 */
+	public String plzOrt() {
+		if ((this.plz == null))
+			return "";
+
+		String result = this.plz;
+		result += " " + this.ort;
+
+		return result.trim();
+	}
+
+	/**
+	 * Stellt die Rücksendeinformation im Fensterumschlag der Schule zur Verfügung.
+	 *
+	 * @return Rücksendeinformation
+	 */
+	public String ruecksendeinformation() {
+		return String.format("%s%s%s%s%s".formatted(
+				((bezeichnung1 != null) && !bezeichnung1.isEmpty()) ? bezeichnung1.trim() : "",
+				(((bezeichnung1 != null) && !bezeichnung1.isEmpty()) && (!this.strassennameHausnummer().isEmpty() || !this.plzOrt().isEmpty())) ? " - " : "",
+				this.strassennameHausnummer(),
+				(!this.strassennameHausnummer().isEmpty() && !this.plzOrt().isEmpty()) ? " - " : "",
+				this.plzOrt()));
+	}
+
+	/**
+	 * Erzeugt die Angabe von Straße und Hausnummer.
+	 *
+	 * @return Straße und Hausnummer
+	 */
+	public String strassennameHausnummer() {
+		if (this.strassenname.isEmpty())
+			return "";
+
+		String result = this.strassenname;
+		result += !this.hausnummer.isEmpty() ? (" " + this.hausnummer) : "";
+		result += (!this.hausnummer.isEmpty() && !this.hausnummerZusatz.isEmpty()) ? (" " + this.hausnummerZusatz) : "";
+
+		return result.trim();
+	}
 
 
 	// ##### Getter #####

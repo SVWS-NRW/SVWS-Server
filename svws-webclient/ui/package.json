@@ -3,13 +3,13 @@
 	"description": "SVWS-Server-Projekt: UI-Komponenten",
 	"author": "MSB NRW",
 	"license": "BSD-3-Clause",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"scripts": {
 		"dev": "histoire dev",
 		"lint": "eslint 'src/**/*.{ts,vue}' --cache",
 		"lint-tsc": "vue-tsc --noEmit",
 		"test": "vitest",
-		"test:run": "vitest run --coverage --coverage.include=src/components/*.vue --coverage.exclude=src/components/*.story.*",
+		"test:run": "vitest run --coverage --coverage.include=src/ui/**/*.vue --coverage.exclude=src/ui/**/*.story.*",
 		"build": "npm run build-lib && npm run build-dts",
 		"build-lib": "vite build",
 		"build-dts": "vue-tsc --declaration --emitDeclarationOnly -p tsconfig.build.json",
@@ -34,9 +34,5 @@
 		}
 	},
 	"type": "module",
-	"types": "./dist/index.d.ts",
-	"devDependencies": {
-		"@vue/test-utils": "^2.4.6",
-		"happy-dom": "^15.0.0"
-	}
+	"types": "./dist/index.d.ts"
 }

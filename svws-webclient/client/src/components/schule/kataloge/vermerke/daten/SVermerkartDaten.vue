@@ -1,7 +1,12 @@
 <template>
 	<div class="page--content">
 		<svws-ui-content-card title="Vermerkart" class="w-full">
-			<svws-ui-text-input class="contentFocusField w-5/5" placeholder="Bezeichnung" :model-value="vermerkartenManager().auswahl().bezeichnung" @change="bezeichnung => patch({ bezeichnung: bezeichnung ?? undefined })" type="text" />
+			<svws-ui-input-wrapper>
+				<svws-ui-text-input class="contentFocusField w-5/5" placeholder="Bezeichnung" :model-value="vermerkartenManager().auswahl().bezeichnung" @change="bezeichnung => patch({ bezeichnung: bezeichnung ?? undefined })" type="text" />
+				<svws-ui-checkbox :model-value="vermerkartenManager().daten().istSichtbar" @update:model-value="value => patch({ istSichtbar: value === true })">
+					Sichtbar
+				</svws-ui-checkbox>
+			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 
 		<svws-ui-content-card :title="'Alle Schüler mit der Vermerkart `' + vermerkartenManager().auswahl().bezeichnung + '`'" class="w-full" v-if="vermerkartenManager().getListSchuelerVermerkartZusammenfassung().list().size() > 0">
@@ -30,6 +35,7 @@
 
 	import type { DataTableColumn } from "@ui";
 	import type { VermerkartDatenProps } from "./SVermerkartDatenProps";
+	import type { SchuelerVermerkartZusammenfassung } from "@core";
 
 	defineProps<VermerkartDatenProps>();
 
@@ -37,7 +43,7 @@
 		{ key: "linkToSchueler", label: " ", fixedWidth: 1.75, align: "center" },
 		{ key: "nachname", label: "Nachname", sortable: true },
 		{ key: "vorname", label: "Vorname", sortable: true },
-		{ key: "anzahlVermerke", label: "Anzahl", fixedWidth: 8.75, sortable: true, span: 0.5 }
+		{ key: "anzahlVermerke", label: "Anzahl", fixedWidth: 8.75, sortable: true, span: 0.5 },
 	];
 
 </script>

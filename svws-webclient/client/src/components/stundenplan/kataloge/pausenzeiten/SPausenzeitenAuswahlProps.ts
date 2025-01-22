@@ -1,5 +1,5 @@
 import type { StundenplanPausenzeit, StundenplanManager, StundenplanKonfiguration } from "@core";
-import type { AbschnittAuswahlDaten } from "@comp";
+import type { AbschnittAuswahlDaten } from "@ui";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface PausenzeitenAuswahlProps {

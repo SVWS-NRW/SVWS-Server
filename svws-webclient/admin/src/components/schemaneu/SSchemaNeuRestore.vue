@@ -18,8 +18,8 @@
 <script setup lang="ts">
 
 	import { ref, type ShallowRef } from "vue";
-	import type { List } from "../../../../core/src/java/util/List";
-	import type { SimpleOperationResponse } from "../../../../core/src/core/data/SimpleOperationResponse";
+	import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+	import type { List } from "@core/java/util/List";
 
 	const props = defineProps<{
 		importSchema: (formData: FormData, schema: string) => Promise<SimpleOperationResponse>;

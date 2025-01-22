@@ -53,6 +53,10 @@ public final class Fachkombinationen extends GostBelegpruefung {
 		// Prüfe nun über alle Halbjahre, ob eine Halbjahresbelegung mit der Kursart die Fachkombination aktiviert und diese ggf. zu einem Fehler führt
 		final AbiturFachbelegung belegung2 = manager.getFachbelegungByID(kombi.fachID2);
 		for (final @NotNull GostHalbjahr halbjahr : halbjahre) {
+			// Prüfe, ob die Regel in dem Halbjahr überhaupt gültig ist
+			if (!kombi.gueltigInHalbjahr[halbjahr.id])
+				continue;
+			// Prüfe die Belegungen
 			final AbiturFachbelegungHalbjahr belegung1Halbjahr = belegung1.belegungen[halbjahr.id];
 			if ((belegung1Halbjahr == null) || (AbiturdatenManager.istNullPunkteBelegungInQPhase(belegung1Halbjahr)))
 				continue;

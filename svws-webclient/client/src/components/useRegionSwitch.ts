@@ -3,6 +3,8 @@ import { type Ref, ref } from 'vue'
 const focusSwitchingEnabled: Ref<boolean> = ref(false);
 const focusHelpVisible: Ref<boolean> = ref(false);
 
+const currentContentIndex = ref(0);
+
 export function useRegionSwitch() {
 
 	const regionMap = new Map<string, string>([
@@ -12,35 +14,51 @@ export function useRegionSwitch() {
 		["Digit4", "listFocusField"],
 		["Digit5", "tabsFirstLevelFocusField"],
 		["Digit6", "tabsSecondLevelFocusField"],
-		["Digit7", "tabsThirdLevelFocusField"],
+		["Digit7", "subNavigationFocusField"],
 		["Digit8", "contentFocusField"],
 	]);
 
-	function switchRegion(event: KeyboardEvent) {
+	function handleKeyEvent(event: KeyboardEvent) {
 		if (event.repeat || !event.altKey)
 			return
-		if (regionMap.has(event.code)) {
-			event.preventDefault();
-			const htmlElement = document.getElementsByClassName(regionMap.get(event.code) ?? "").item(0);
-			if (htmlElement !== null)
-				(htmlElement as HTMLElement).focus();
-		}
-		else if (event.code === 'Digit0') {
-			toggleHelp();
+		if (regionMap.has(event.code))
+			switchRegion(event);
+		else if (event.code === 'Digit0')
+			toggleHelp(event);
+	}
+
+	function switchRegion(event: KeyboardEvent) {
+		event.preventDefault();
+		const htmlElements = document.getElementsByClassName(regionMap.get(event.code) ?? "");
+		if (event.code === 'Digit8')
+			cycleContentFields(htmlElements);
+		else {
+			const focusField = htmlElements.item(0)
+			if (focusField !== null)
+				(focusField as HTMLElement).focus();
+			currentContentIndex.value = 0;
 		}
 	}
 
-	function toggleHelp() {
+	function cycleContentFields(focusFields: HTMLCollection) {
+		const focusField = focusFields.item(currentContentIndex.value);
+		if (focusField !== null)
+			(focusField as HTMLElement).focus();
+		currentContentIndex.value = (currentContentIndex.value + 1) % focusFields.length;
+	}
+
+	function toggleHelp(event: KeyboardEvent) {
+		event.preventDefault();
 		focusHelpVisible.value = !focusHelpVisible.value;
 	}
 
 	function enable() {
-		window.addEventListener('keydown', switchRegion);
+		window.addEventListener('keydown', handleKeyEvent);
 		focusSwitchingEnabled.value = true;
 	}
 
 	function disable() {
-		window.removeEventListener('keydown', switchRegion);
+		window.removeEventListener('keydown', handleKeyEvent);
 		focusSwitchingEnabled.value = false;
 	}
 

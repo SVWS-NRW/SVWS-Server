@@ -6,7 +6,7 @@ import { ValidatorLehrerStammdatenVorname } from '../../../asd/validate/lehrer/V
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
 
-export class ValidatorLehrerStammdaten extends Validator<LehrerStammdaten> {
+export class ValidatorLehrerStammdaten extends Validator {
 
 
 	/**
@@ -16,7 +16,7 @@ export class ValidatorLehrerStammdaten extends Validator<LehrerStammdaten> {
 	 * @param kontext   der Kontext des Validators
 	 */
 	public constructor(daten : LehrerStammdaten, kontext : ValidatorKontext) {
-		super(daten, kontext);
+		super(kontext);
 		this._validatoren.add(new ValidatorLehrerStammdatenNachname(daten, kontext));
 		this._validatoren.add(new ValidatorLehrerStammdatenVorname(daten, kontext));
 		this._validatoren.add(new ValidatorLehrerStammdatenGeburtsdatum(daten, kontext));

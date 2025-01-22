@@ -36,7 +36,7 @@ export class RouteManager {
 	/** Der aktuelle Fehlerstatus der Route */
 	private _errorstate = reactive<RouteStateError>({
 		code: undefined,
-		error: undefined
+		error: undefined,
 	});
 
 	/**
@@ -182,7 +182,7 @@ export class RouteManager {
 		// Ist der Benutzer nicht authentifiziert, so wird er zur Login-Seite weitergeleitet
 		if (!api.authenticated && (to.name !== "login")) {
 			routeLogin.routepath = to.fullPath;
-			return { name: "login", query: { redirect: to.fullPath } };
+			return { name: "login", query: { redirect: to.fullPath }, params: to.params };
 		}
 		// Aktualisiere ggf. den goto-Parameter
 		if (!api.authenticated && (to.name === "login")) {
@@ -391,7 +391,7 @@ export class RouteManager {
 // Initialisiere den Router
 export const router = createRouter({
 	history: createWebHashHistory(import.meta.env.BASE_URL),
-	routes: [ ]
+	routes: [ ],
 });
 
 export const routerManager = RouteManager.create(router);

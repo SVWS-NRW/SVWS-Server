@@ -186,8 +186,8 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @param staatsangehoerigkeit2 Die zweite Staatsangehörigkeit des Schülers.
 	 * @param status Der Status des Schülers.
 	 * @param strassenname Ggf. der Straßenname im Wohnort des Schülers.
-	 * @param telefon Die Telefonnummer des Schülers.
-	 * @param telefonMobil Die Mobilnummer des Schülers.
+	 * @param telefonPrivat Die private Telefonnummer des Schülers.
+	 * @param telefonPrivatMobil Die private Mobilfunk-Telefonnummer des Schülers.
 	 * @param titel Der Titel des Schülers.
 	 * @param verkehrspracheFamilie Die Verkehrssprache der Familie des Schülers.
 	 * @param vorname Der Vorname des Schülers.
@@ -212,12 +212,13 @@ public class ReportingSchueler extends ReportingPerson {
 			final boolean keineAuskunftAnDritte, final List<ReportingSchuelerLernabschnitt> lernabschnitte, final String nachname,
 			final String religionabmeldung, final String religionanmeldung, final ReligionEintrag religion,
 			final List<ReportingSchuelerSprachbelegung> sprachbelegungen, final Nationalitaeten staatsangehoerigkeit,
-			final Nationalitaeten staatsangehoerigkeit2, final SchuelerStatus status, final String strassenname, final String telefon,
-			final String telefonMobil, final String titel, final String verkehrspracheFamilie, final String vorname, final String vornamen,
+			final Nationalitaeten staatsangehoerigkeit2, final SchuelerStatus status, final String strassenname, final String telefonPrivat,
+			final String telefonPrivatMobil, final String titel, final String verkehrspracheFamilie, final String vorname, final String vornamen,
 			final OrtKatalogEintrag wohnort,
 			final OrtsteilKatalogEintrag wohnortsteil, final Integer zuzugsjahr) {
-		super(anrede, emailPrivat, emailSchule, geburtsdatum, geburtsland, geburtsname, geburtsort, geschlecht, hausnummer, hausnummerZusatz, nachname,
-				staatsangehoerigkeit, staatsangehoerigkeit2, strassenname, telefon, telefonMobil, titel, vorname, vornamen, wohnort, wohnortsteil);
+		super(anrede, emailPrivat, emailSchule, "", geburtsdatum, geburtsland, geburtsname, geburtsort, geschlecht, hausnummer, hausnummerZusatz, nachname,
+				staatsangehoerigkeit, staatsangehoerigkeit2, strassenname, telefonPrivat, telefonPrivatMobil, "", "", titel, vorname, vornamen, wohnort,
+				wohnortsteil);
 		this.aktuellerLernabschnitt = aktuellerLernabschnitt;
 		this.anmeldedatum = anmeldedatum;
 		this.aufnahmedatum = aufnahmedatum;

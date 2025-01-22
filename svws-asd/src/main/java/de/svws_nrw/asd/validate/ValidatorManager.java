@@ -337,7 +337,7 @@ public final class ValidatorManager {
 	 *
 	 * @return die Fehlerart des Validators für das angegebene Schuljahr
 	 */
-	public <T extends Validator<?>> @NotNull ValidatorFehlerart getFehlerartBySchuljahrAndValidatorClass(final int schuljahr,
+	public <T extends Validator> @NotNull ValidatorFehlerart getFehlerartBySchuljahrAndValidatorClass(final int schuljahr,
 			final @NotNull Class<T> validator) {
 		final ValidatorFehlerart tmp = getValidatornameToFehlerartCache(schuljahr).get(validator.getCanonicalName());
 		return (tmp == null) ? ValidatorFehlerart.UNGENUTZT : tmp;

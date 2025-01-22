@@ -1,6 +1,6 @@
 import type { BenutzerKompetenz, GostJahrgang, GostJahrgangsdaten, JahrgangsDaten, Schulform, ServerMode } from "@core";
 import type { ApiStatus } from "../ApiStatus";
-import type { AbschnittAuswahlDaten } from "@comp";
+import type { AbschnittAuswahlDaten } from "@ui";
 
 export interface GostAuswahlProps {
 	schulform: Schulform;

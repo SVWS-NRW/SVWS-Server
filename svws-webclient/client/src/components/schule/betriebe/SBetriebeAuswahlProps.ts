@@ -1,5 +1,5 @@
 import type { BetriebListeEintrag, BetriebStammdaten, KatalogEintrag, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
-import type { AbschnittAuswahlDaten } from "@comp";
+import type { AbschnittAuswahlDaten } from "@ui";
 
 export interface BetriebeAuswahlProps{
 	auswahl: BetriebListeEintrag | undefined;

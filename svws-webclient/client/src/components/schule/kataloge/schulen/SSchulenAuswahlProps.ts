@@ -1,5 +1,5 @@
 import type { SchulEintrag } from "@core";
-import type { AbschnittAuswahlDaten } from "@comp";
+import type { AbschnittAuswahlDaten } from "@ui";
 
 export interface SchulenAuswahlProps {
 	auswahl: SchulEintrag | undefined;

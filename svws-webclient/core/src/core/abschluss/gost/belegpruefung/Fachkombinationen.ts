@@ -40,6 +40,8 @@ export class Fachkombinationen extends GostBelegpruefung {
 			return;
 		const belegung2 : AbiturFachbelegung | null = this.manager.getFachbelegungByID(kombi.fachID2);
 		for (const halbjahr of halbjahre) {
+			if (!kombi.gueltigInHalbjahr[halbjahr.id])
+				continue;
 			const belegung1Halbjahr : AbiturFachbelegungHalbjahr | null = belegung1.belegungen[halbjahr.id];
 			if ((belegung1Halbjahr === null) || (AbiturdatenManager.istNullPunkteBelegungInQPhase(belegung1Halbjahr)))
 				continue;
