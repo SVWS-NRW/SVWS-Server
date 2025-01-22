@@ -100,7 +100,7 @@ public class APILehrer {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Lehrer-Einträge gefunden")
 	public Response getLehrer(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerliste(conn).getAll(),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerliste(conn).getAllAsResponse(),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
 	}
