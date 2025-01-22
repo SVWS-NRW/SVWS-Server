@@ -100,6 +100,15 @@
 		}
 
 		/**
+		 * Gibt den Modus zurück, in dem der Server betrieben wird.
+		 * 
+		 * @return string der Modus 'stable', 'beta', 'alpha' oder 'dev'
+		 */
+		public function getServerMode(): string {
+			return $this->serverMode;
+		}
+
+		/**
 		 * Gibt das Client-Secret zurück.
 		 * 
 		 * @return string das Client-Secret
