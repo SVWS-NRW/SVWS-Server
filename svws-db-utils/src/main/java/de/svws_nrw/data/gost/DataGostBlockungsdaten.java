@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
-import de.svws_nrw.core.adt.map.HashMap2D;
+import de.svws_nrw.core.adt.map.HashMap3D;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungKursLehrer;
 import de.svws_nrw.core.data.gost.GostBlockungListeneintrag;
@@ -1129,7 +1129,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		final DTOSchemaAutoInkremente lastKurseID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Kurse");
 		long idKurs = (lastKurseID == null) ? 0 : (lastKurseID.MaxID + 1);
 		final HashMap<Long, Long> mapKursIDs = new HashMap<>(); // Von der Originals-Kurs-ID auf die Blockungs-Kurs-ID
-		final HashMap2D<Long, Integer, Long> mapKursNummern = new HashMap2D<>(); // Von der Fach-ID und der Kursnummer auf die ID des zugehörigen Kurs-DTO - Vermeidung von Duplikaten
+		final HashMap3D<Long, Integer, Integer, Long> mapKursNummern = new HashMap3D<>(); // Von der Fach-ID, die Kursart-ID und der Kursnummer auf die ID des zugehörigen Kurs-DTO - Vermeidung von Duplikaten
 		final HashMap<Long, DTOGostBlockungKurs> mapKurseErstellt = new HashMap<>();
 		for (final DTOKurs kurs : listKurse) {
 			final GostKursart kursart = GostKursart.fromKuerzel(kurs.KursartAllg);
@@ -1144,9 +1144,9 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 					kursNummer = Integer.parseInt(tmpNummer);
 			}
 			// Teste die Kursnummer auf Duplikate bei dem Fach und ersetze sie ggf. durch eine fortlaufende Nummer
-			while (mapKursNummern.contains(kurs.Fach_ID, kursNummer))
+			while (mapKursNummern.contains(kurs.Fach_ID, kursart.id, kursNummer))
 				kursNummer++;
-			mapKursNummern.put(kurs.Fach_ID, kursNummer, kurs.ID);
+			mapKursNummern.put(kurs.Fach_ID, kursart.id, kursNummer, kurs.ID);
 			// Bestimme die zugehörigen Schienen
 			final ArrayList<Long> schienen = new ArrayList<>();
 			if (kurs.Schienen != null) {
