@@ -20,7 +20,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class LehrerStammdaten {
 
 	/** Die ID des Lehrers. */
-	@Schema(description = "Die ID des Lehrers.", example = "4711")
+	@Schema(description = "Die ID des Lehrers.", example = "4711", accessMode = Schema.AccessMode.READ_ONLY)
 	public long id = -1;
 
 	/** Das Kürzel des Lehrers. */

@@ -1,5 +1,5 @@
 configurations {
-	implementation.extendsFrom(database, resteasy, pdf, thymeleaf)
+	implementation.extendsFrom(database, resteasy, swagger, pdf, thymeleaf)
 }
 
 compileJava.dependsOn(":svws-core:assemble")

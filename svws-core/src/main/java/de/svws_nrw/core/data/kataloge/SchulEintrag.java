@@ -16,7 +16,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class SchulEintrag {
 
 	/** Die ID des Katalog-Eintrags. */
-	@Schema(description = "die ID des Katalog-Eintrags", example = "42")
+	@Schema(description = "die ID des Katalog-Eintrags", example = "42", accessMode = Schema.AccessMode.READ_ONLY)
 	public long id = -1;
 
 	/** Ein Kürzel, welches der Schule zugeordnet ist. */
