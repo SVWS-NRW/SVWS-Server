@@ -254,7 +254,7 @@ public final class DataENMDaten extends DataManager<Long> {
 						.collect(Collectors.toMap(t -> t.ID, t -> t));
 		// Durchwandere die Lernabschnitt der Schüler...
 		for (final DTOSchuelerLernabschnittsdaten lernabschnitt : lernabschnitte) {
-			if (lernabschnitt.Klassen_ID == null)
+			if ((lernabschnitt.Klassen_ID == null) || (lernabschnitt.Jahrgang_ID == null))
 				continue;
 			final DTOKlassen dtoKlasse = mapKlassen.get(lernabschnitt.Klassen_ID);
 			if (dtoKlasse == null)
@@ -286,11 +286,11 @@ public final class DataENMDaten extends DataManager<Long> {
 			ENMSchueler enmSchueler = manager.getSchueler(lernabschnitt.Schueler_ID);
 			if (enmSchueler == null) {
 				final var dtoSchueler = mapSchueler.get(lernabschnitt.Schueler_ID);
-				ENMJahrgang enmJahrgang = manager.getJahrgang(lernabschnitt.Jahrgang_ID);
+				ENMJahrgang enmJahrgang = (lernabschnitt.Jahrgang_ID == null) ? null : manager.getJahrgang(lernabschnitt.Jahrgang_ID);
 				if (enmJahrgang == null) {
 					final DTOJahrgang dtoJahrgang = mapJahrgaenge.get(lernabschnitt.Jahrgang_ID);
 					if (dtoJahrgang == null)
-						throw new NullPointerException();
+						throw new NullPointerException("Kein Jahrgang zu der Jahrgangs-ID gefunden.");
 					manager.addJahrgang(dtoJahrgang.ID, dtoJahrgang.ASDJahrgang, dtoJahrgang.InternKrz,
 							dtoJahrgang.ASDBezeichnung, dtoJahrgang.Sekundarstufe, dtoJahrgang.Sortierung);
 					enmJahrgang = manager.getJahrgang(lernabschnitt.Jahrgang_ID);
