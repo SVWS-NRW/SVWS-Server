@@ -1,4 +1,5 @@
-def dockerfileAppDir = "$projectDir/svws/app"
+def dockerfileSWVSAppDir = "$projectDir/svws/app"
+def dockerfileLaufbahnplanungAppDir = "$projectDir/laufbahnplanung"
 
 dependencies {
 	implementation project(':svws-server-app')
@@ -14,11 +15,13 @@ task copyArtifacts(type: Copy) {
 	description = 'Kopieren der aktuellen Artefakte'
 	dependsOn (':svws-webclient:client:doZip')
 	dependsOn (':svws-webclient:admin:doZip')
+	dependsOn (':svws-webclient:laufbahnplanung:doZip')
 	// wenn doZip im build ausgeführt wird, muss dieser Task darauf warten
 	mustRunAfter(':svws-webclient:client:doZip')
 	mustRunAfter(':svws-webclient:admin:doZip')
+	mustRunAfter(':svws-webclient:laufbahnplanung:doZip')
 
-	into dockerfileAppDir
+	into dockerfileSWVSAppDir
 	into ("lib/") {
 		from (configurations.runtimeClasspath) {
 			exclude "svws-*.jar"
@@ -29,6 +32,10 @@ task copyArtifacts(type: Copy) {
 			include "svws-*.jar"
 		}
 		from "../../svws-webclient/client/build/SVWS-Client.zip", "../../svws-webclient/admin/build/SVWS-Admin-Client.zip"
+	}
+	into dockerfileLaufbahnplanungAppDir
+	into ("/") {
+		from "../../svws-webclient/laufbahnplanung/build/SVWS-Laufbahnplanung.zip"
 	}
 }
 
@@ -104,6 +111,12 @@ task dockerBuildTag(type: Exec) {
 	} else {
 		commandLine 'sh', '-c', 'docker build . -t svwsnrw/svws-server:'+project.ext.svwsArtifactVersion
 	}
+	workingDir "$projectDir/laufbahnplanung"
+	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+		commandLine 'cmd', '/c', 'docker build . -t svwsnrw/svws-laufbahnplanung:'+project.ext.svwsArtifactVersion
+	} else {
+		commandLine 'sh', '-c', 'docker build . -t svwsnrw/svws-laufbahnplanung:'+project.ext.svwsArtifactVersion
+	}
 }
 
 /*
@@ -117,6 +130,12 @@ task dockerBuildLatestTag(type: Exec) {
 		commandLine 'cmd', '/c', 'docker build . -t svwsnrw/svws-server:latest'
 	} else {
 		commandLine 'sh', '-c', 'docker build . -t svwsnrw/svws-server:latest'
+	}
+	workingDir "$projectDir/laufbahnplanung"
+	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+		commandLine 'cmd', '/c', 'docker build . -t svwsnrw/svws-laufbahnplanung:latest'
+	} else {
+		commandLine 'sh', '-c', 'docker build . -t svwsnrw/svws-laufbahnplanung:latest'
 	}
 }
 
@@ -134,6 +153,14 @@ task dockerPushDockerhub(type: Exec) {
 		commandLine 'sh', '-c', 'docker login'
 		commandLine 'sh', '-c', 'docker push svwsnrw/svws-server:'+project.ext.svwsArtifactVersion
 	}
+	workingDir "$projectDir/laufbahnplanung"
+	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+		commandLine 'cmd', '/c', 'docker login'
+		commandLine 'cmd', '/c', 'docker push svwsnrw/svws-laufbahnplanung:'+project.ext.svwsArtifactVersion
+	} else {
+		commandLine 'sh', '-c', 'docker login'
+		commandLine 'sh', '-c', 'docker push svwsnrw/svws-laufbahnplanung:'+project.ext.svwsArtifactVersion
+	}
 }
 
 /*
@@ -149,6 +176,14 @@ task dockerPushLatestDockerhub(type: Exec) {
 	} else {
 		commandLine 'sh', '-c', 'docker login'
 		commandLine 'sh', '-c', 'docker push svwsnrw/svws-server:latest'
+	}
+	workingDir "$projectDir/laufbahnplanung"
+	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+		commandLine 'cmd', '/c', 'docker login'
+		commandLine 'cmd', '/c', 'docker push svwsnrw/svws-laufbahnplanung:latest'
+	} else {
+		commandLine 'sh', '-c', 'docker login'
+		commandLine 'sh', '-c', 'docker push svwsnrw/svws-laufbahnplanung:latest'
 	}
 }
 
@@ -248,5 +283,6 @@ task dockerBuildTagAndPublish(type: Exec) {
 */
 
 clean.doLast {
-	file("${dockerfileAppDir}").deleteDir()
+	file("${dockerfileSWVSAppDir}").deleteDir()
+	file("${dockerfileLaufbahnplanungAppDir}").deleteDir()
 }
