@@ -152,16 +152,14 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 		}
 		const setIDs : JavaSet<number> | null = new HashSet<number>();
 		for (const entry of this._mapEnumToHistorie.entrySet()) {
-			let schuljahr : number | null = null;
+			const coreTypeEntry : U = entry.getKey();
+			const historie : List<T> = entry.getValue();
+			CoreTypeDataManager.checkHistorie(setIDs, this._name, coreTypeEntry.name(), historie);
+		}
+		for (const entry of this._mapEnumToHistorie.entrySet()) {
 			const coreTypeEntry : U = entry.getKey();
 			const historie : List<T> = entry.getValue();
 			for (const eintrag of historie) {
-				if ((schuljahr !== null) && ((eintrag.gueltigVon === null) || (eintrag.gueltigVon < 2000) || (JavaInteger.compare(eintrag.gueltigVon, schuljahr) <= 0) || ((eintrag.gueltigBis !== null) && (eintrag.gueltigBis > 3000))))
-					throw new CoreTypeException(this._name + ": Die Historie ist fehlerhaft beim Eintrag für " + coreTypeEntry.name() + ". Neuere Historieneinträge müssen weiter unten in der Liste stehen.")
-				schuljahr = (eintrag.gueltigBis === null) ? JavaInteger.MAX_VALUE : eintrag.gueltigBis;
-				if (setIDs.contains(eintrag.id))
-					throw new CoreTypeException(this._name + ": Die Historie ist fehlerhaft beim Eintrag für " + coreTypeEntry.name() + ". Die ID " + eintrag.id + " kommt mehrfach vor.")
-				setIDs.add(eintrag.id);
 				this._mapIDToEintrag.put(eintrag.id, eintrag);
 				this._mapIDToEnum.put(eintrag.id, coreTypeEntry);
 				this._mapSchluesselToEnum.put(eintrag.schluessel, coreTypeEntry);
@@ -208,6 +206,28 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 		if (manager === null)
 			throw new CoreTypeException("Der Core-Type " + clazz.getSimpleName() + " wurde noch nicht initialisiert.")
 		return manager;
+	}
+
+	/**
+	 * Prüft die übergebene Historie auf Überlappung und ob in der Menge der IDs bereits eine ID auftritt (doppelte Einträge).
+	 * Die zweite Prüfung ist über alle Bezeichner gedacht, so dass bei den Aufrufen die Menge der IDs wiederverwendet wird.
+	 *
+	 * @param <T> - Typ der Historieneinträge
+	 * @param setIDs - die Menge der bereits genutzten IDs für Historieneinträge
+	 * @param coreTypeName - Name des CoreTypes
+	 * @param bezeichnerName - Name des Bezeichners
+	 * @param historie - die Liste der Historieneinträge
+	 */
+	public static checkHistorie<T extends CoreTypeData>(setIDs : JavaSet<number>, coreTypeName : string, bezeichnerName : string, historie : List<T>) : void {
+		let schuljahr : number | null = null;
+		for (const eintrag of historie) {
+			if ((schuljahr !== null) && ((eintrag.gueltigVon === null) || (eintrag.gueltigVon < 2000) || (JavaInteger.compare(eintrag.gueltigVon, schuljahr) <= 0) || ((eintrag.gueltigBis !== null) && (eintrag.gueltigBis > 3000))))
+				throw new CoreTypeException(coreTypeName + ": Die Historie ist fehlerhaft beim Eintrag für " + bezeichnerName + ". Neuere Historieneinträge müssen weiter unten in der Liste stehen.")
+			schuljahr = (eintrag.gueltigBis === null) ? JavaInteger.MAX_VALUE : eintrag.gueltigBis;
+			if (setIDs.contains(eintrag.id))
+				throw new CoreTypeException(coreTypeName + ": Die Historie ist fehlerhaft beim Eintrag für " + bezeichnerName + ". Die ID " + eintrag.id + " kommt mehrfach vor.")
+			setIDs.add(eintrag.id);
+		}
 	}
 
 	/**
