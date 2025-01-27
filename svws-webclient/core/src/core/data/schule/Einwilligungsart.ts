@@ -39,6 +39,16 @@ export class Einwilligungsart extends JavaObject {
 	 */
 	public personTyp : number = PersonTyp.SCHUELER.id;
 
+	/**
+	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
+	 */
+	public istSichtbar : boolean = true;
+
+	/**
+	 * Gibt an, für welche Personengruppe die Einwilligungsart relevant ist.
+	 */
+	public anzahlEinwilligungen : number = 0;
+
 
 	/**
 	 * Leerer Standardkonstruktor.
@@ -79,6 +89,12 @@ export class Einwilligungsart extends JavaObject {
 		if (obj.personTyp === undefined)
 			throw new Error('invalid json format, missing attribute personTyp');
 		result.personTyp = obj.personTyp;
+		if (obj.istSichtbar === undefined)
+			throw new Error('invalid json format, missing attribute istSichtbar');
+		result.istSichtbar = obj.istSichtbar;
+		if (obj.anzahlEinwilligungen === undefined)
+			throw new Error('invalid json format, missing attribute anzahlEinwilligungen');
+		result.anzahlEinwilligungen = obj.anzahlEinwilligungen;
 		return result;
 	}
 
@@ -91,6 +107,8 @@ export class Einwilligungsart extends JavaObject {
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"beschreibung" : ' + ((obj.beschreibung === null) ? 'null' : JSON.stringify(obj.beschreibung)) + ',';
 		result += '"personTyp" : ' + obj.personTyp.toString() + ',';
+		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
+		result += '"anzahlEinwilligungen" : ' + obj.anzahlEinwilligungen.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -118,6 +136,12 @@ export class Einwilligungsart extends JavaObject {
 		}
 		if (obj.personTyp !== undefined) {
 			result += '"personTyp" : ' + obj.personTyp.toString() + ',';
+		}
+		if (obj.istSichtbar !== undefined) {
+			result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
+		}
+		if (obj.anzahlEinwilligungen !== undefined) {
+			result += '"anzahlEinwilligungen" : ' + obj.anzahlEinwilligungen.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

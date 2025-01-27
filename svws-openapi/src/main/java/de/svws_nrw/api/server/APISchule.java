@@ -7,6 +7,7 @@ import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.data.schule.Schulleitung;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.kataloge.SchulEintrag;
+import de.svws_nrw.core.data.schueler.SchuelerEinwilligungsartenZusammenfassung;
 import de.svws_nrw.core.data.schueler.SchuelerVermerkartZusammenfassung;
 import de.svws_nrw.core.data.schule.AbgangsartKatalog;
 import de.svws_nrw.core.data.schule.AllgemeineMerkmaleKatalogEintrag;
@@ -48,6 +49,7 @@ import de.svws_nrw.data.kataloge.DataKatalogPausenzeiten;
 import de.svws_nrw.data.kataloge.DataKatalogRaeume;
 import de.svws_nrw.data.kataloge.DataKatalogZeitraster;
 import de.svws_nrw.data.schueler.DataKatalogSchuelerFoerderschwerpunkte;
+import de.svws_nrw.data.schueler.DataSchuelerEinwilligungsartenZusammenfassung;
 import de.svws_nrw.data.schueler.DataSchuelerVermerkartenZusammenfassung;
 import de.svws_nrw.data.schule.DataKatalogAbgangsartenAllgemeinbildend;
 import de.svws_nrw.data.schule.DataKatalogAbgangsartenBerufsbildend;
@@ -1200,7 +1202,7 @@ public class APISchule {
 			description = "Entfernt mehrere Einwilligungsarten der Schule."
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.")
 	@ApiResponse(responseCode = "200", description = "Die Einwilligungsarten wurden erfolgreich entfernt.",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Einwilligungsart.class))))
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.")
 	@ApiResponse(responseCode = "404", description = "Einwilligungsarten nicht vorhanden")
 	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
@@ -1213,6 +1215,32 @@ public class APISchule {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogEinwilligungsarten(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)),
 				request, ServerMode.DEV,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Liste aller Schüler.
+	 *
+	 * @param schema      das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param einwilligungsart   die ID des Schuljahresabschnitts dessen Schüler zurückgegeben werden sollen
+	 * @param request     die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste mit den einzelnen Schülern
+	 */
+	@GET
+	@Path("/einwilligungsart/{einwilligungsart : \\d+}/schuelerinfos")
+	@Operation(summary = "Gibt eine Übersicht von allen Schülern welche einen Einwilligung mit der angegebenen Einwilligungsart haben zurück.",
+			description = "Erstellt eine Liste aller Schüler der angegebenen Einwilligungsart unter Angabe der ID."
+					+ "Es wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Schüler-Listen-Einträgen",
+			content = @Content(mediaType = "application/json",
+					array = @ArraySchema(schema = @Schema(implementation = SchuelerEinwilligungsartenZusammenfassung.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Schüler-Einträge gefunden")
+	public Response getSchuelerByEinwilligungsartID(@PathParam("schema") final String schema, @PathParam("einwilligungsart") final long einwilligungsart,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerEinwilligungsartenZusammenfassung(conn).getListByEinwilligungsartIdAsResponse(einwilligungsart),
+				request, ServerMode.DEV,
+				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
 	}
 
 	/**

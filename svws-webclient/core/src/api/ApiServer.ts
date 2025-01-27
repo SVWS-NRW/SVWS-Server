@@ -24,6 +24,7 @@ import { BilingualeSpracheKatalogEintrag } from '../asd/data/fach/BilingualeSpra
 import { DatenbankVerbindungsdaten } from '../core/data/schema/DatenbankVerbindungsdaten';
 import { DBSchemaListeEintrag } from '../core/data/db/DBSchemaListeEintrag';
 import { EinschulungsartKatalogEintrag } from '../core/data/schule/EinschulungsartKatalogEintrag';
+import { Einwilligung } from '../core/data/schule/Einwilligung';
 import { Einwilligungsart } from '../core/data/schule/Einwilligungsart';
 import { ENMConfigResponse } from '../core/data/enm/ENMConfigResponse';
 import { ENMDaten } from '../core/data/enm/ENMDaten';
@@ -141,6 +142,7 @@ import { Schild3KatalogEintragPruefungsordnungOption } from '../core/data/schild
 import { Schild3KatalogEintragUnicodeUmwandlung } from '../core/data/schild3/Schild3KatalogEintragUnicodeUmwandlung';
 import { Schild3KatalogEintragVersetzungsvermerke } from '../core/data/schild3/Schild3KatalogEintragVersetzungsvermerke';
 import { SchuelerBetriebsdaten } from '../core/data/schueler/SchuelerBetriebsdaten';
+import { SchuelerEinwilligungsartenZusammenfassung } from '../core/data/schueler/SchuelerEinwilligungsartenZusammenfassung';
 import { SchuelerKAoADaten } from '../core/data/schueler/SchuelerKAoADaten';
 import { SchuelerLeistungsdaten } from '../core/data/schueler/SchuelerLeistungsdaten';
 import { SchuelerLernabschnittBemerkungen } from '../core/data/schueler/SchuelerLernabschnittBemerkungen';
@@ -9232,6 +9234,117 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getEinwilligungen für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/einwilligungen
+	 *
+	 * Liest die Einwilligungen des Schülers zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Einwilligungen des Schülers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Einwilligung>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzusehen.
+	 *   Code 404: Keine Einwilligungen für den Schüler mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Einwilligungen des Schülers
+	 */
+	public async getEinwilligungen(schema : string, id : number) : Promise<List<Einwilligung>> {
+		const path = "/db/{schema}/schueler/{id : \\d+}/einwilligungen"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<Einwilligung>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Einwilligung.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchEinwilligung für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/einwilligungen/{eaId : \d+}
+	 *
+	 * Passt die Einwilligung zu der angegebenen Schüler- und Einwilligungsart-ID an und speichert das Ergebnis in der Datenbank.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schüler-Einwilligungen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich in die Einwilligung integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Einwilligungen der Schüler zu ändern.
+	 *   Code 404: Kein Schüler oder keine Einwilligung der angegebenen Art gefunden.
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde. (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Einwilligung>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 * @param {number} eaId - der Pfad-Parameter eaId
+	 */
+	public async patchEinwilligung(data : Partial<Einwilligung>, schema : string, id : number, eaId : number) : Promise<void> {
+		const path = "/db/{schema}/schueler/{id : \\d+}/einwilligungen/{eaId : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
+			.replace(/{eaId\s*(:[^{}]+({[^{}]+})*)?}/g, eaId.toString());
+		const body : string = Einwilligung.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addEinwilligung für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/einwilligungen/{eaId : \d+}
+	 *
+	 * Erstellt eine neuen Einwilligung für den Schüler mit der angegebenen IDDabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Einwilligungen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die erstellte Einwilligung.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Einwilligung
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Einwilligungen anzulegen.
+	 *
+	 * @param {Partial<Einwilligung>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 * @param {number} eaId - der Pfad-Parameter eaId
+	 *
+	 * @returns Die erstellte Einwilligung.
+	 */
+	public async addEinwilligung(data : Partial<Einwilligung>, schema : string, id : number, eaId : number) : Promise<Einwilligung> {
+		const path = "/db/{schema}/schueler/{id : \\d+}/einwilligungen/{eaId : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
+			.replace(/{eaId\s*(:[^{}]+({[^{}]+})*)?}/g, eaId.toString());
+		const body : string = Einwilligung.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return Einwilligung.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteEinwilligung für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/einwilligungen/{eaId : \d+}
+	 *
+	 * Löscht die Einwilligung mit der angegebenen IDDabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Einwilligungen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Die Einwilligung des Schülers wurde gelöscht
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten zu ändern.
+	 *   Code 404: Keine Einwilligung mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 * @param {number} eaId - der Pfad-Parameter eaId
+	 */
+	public async deleteEinwilligung(schema : string, id : number, eaId : number) : Promise<void> {
+		const path = "/db/{schema}/schueler/{id : \\d+}/einwilligungen/{eaId : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
+			.replace(/{eaId\s*(:[^{}]+({[^{}]+})*)?}/g, eaId.toString());
+		await super.deleteJSON(path, null);
+		return;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getSchuelerErzieher für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/erzieher
 	 *
 	 * Erstellt eine Liste aller in der Datenbank vorhandenen Erzieher unter Angabe der Schüler-IDdes Vor- und Nachnamens, Erzieherart, Kontaktdaten, ob sie in der Anwendung sichtbar bzw. änderbar sein sollen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Erzieherdaten besitzt.
@@ -11270,6 +11383,35 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getSchuelerByEinwilligungsartID für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/einwilligungsart/{einwilligungsart : \d+}/schuelerinfos
+	 *
+	 * Erstellt eine Liste aller Schüler der angegebenen Einwilligungsart unter Angabe der ID.Es wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste von Schüler-Listen-Einträgen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SchuelerEinwilligungsartenZusammenfassung>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.
+	 *   Code 404: Keine Schüler-Einträge gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} einwilligungsart - der Pfad-Parameter einwilligungsart
+	 *
+	 * @returns Eine Liste von Schüler-Listen-Einträgen
+	 */
+	public async getSchuelerByEinwilligungsartID(schema : string, einwilligungsart : number) : Promise<List<SchuelerEinwilligungsartenZusammenfassung>> {
+		const path = "/db/{schema}/schule/einwilligungsart/{einwilligungsart : \\d+}/schuelerinfos"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{einwilligungsart\s*(:[^{}]+({[^{}]+})*)?}/g, einwilligungsart.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SchuelerEinwilligungsartenZusammenfassung>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerEinwilligungsartenZusammenfassung.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getEinwilligungsarten für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/einwilligungsarten
 	 *
 	 * Erstellt eine Liste aller in dem Katalog vorhanden Einwilligungsarten unter Angabe der ID, der Bezeichnung sowie des Schlüssels, einer Sortierreihenfolge und des zugehörigen Personentyps (Schüler, Lehrer, Erzieher). Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
@@ -11386,7 +11528,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die Einwilligungsarten wurden erfolgreich entfernt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<Einwilligungsart>
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.
 	 *   Code 404: Einwilligungsarten nicht vorhanden
 	 *   Code 409: Die übergebenen Daten sind fehlerhaft
@@ -11397,14 +11539,14 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Einwilligungsarten wurden erfolgreich entfernt.
 	 */
-	public async deleteEinwilligungsarten(data : List<number>, schema : string) : Promise<List<Einwilligungsart>> {
+	public async deleteEinwilligungsarten(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/schule/einwilligungsarten/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<Einwilligungsart>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Einwilligungsart.transpilerFromJSON(text)); });
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
 		return ret;
 	}
 

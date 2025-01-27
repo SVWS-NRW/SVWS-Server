@@ -1,11 +1,4 @@
-import type { Einwilligungsart } from "@core";
-import type { AbschnittAuswahlDaten } from "@ui";
+import type {RouteAuswahlListProps} from "~/router/RouteAuswahlNode";
+import type {EinwilligungsartenListeManager} from "@core";
 
-export interface SEinwilligungsartenAuswahlProps {
-	schuljahresabschnittsauswahl: () => AbschnittAuswahlDaten;
-	auswahl: () => Einwilligungsart | undefined;
-	mapKatalogeintraege: Map<number, Einwilligungsart>;
-	addEintrag: (einwilligung: Partial<Einwilligungsart>) => Promise<void>;
-	deleteEintraege: (eintraege: Iterable<Einwilligungsart>) => Promise<void>;
-	gotoEintrag: (einwilligung: Einwilligungsart) => Promise<void>;
-}
+export type EinwilligungenAuswahlProps = RouteAuswahlListProps<EinwilligungsartenListeManager>

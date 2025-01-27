@@ -40,7 +40,7 @@ import jakarta.ws.rs.core.Response.Status;
 public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 
 	/** Die Klasse des zugehörigen Datenbank-DTOs */
-	final Class<DatabaseDTO> classDatabaseDTO;
+	protected final Class<DatabaseDTO> classDatabaseDTO;
 
 	/** Die Datenbank-Verbindung zum Aggregieren der Informationen aus der DB und zum Schreiben der Informationen bzw. Teilinformationen */
 	protected final DBEntityManager conn;
