@@ -122,6 +122,7 @@ class DataLehrerListeTest {
 	}
 
 	@Test
+	@SuppressWarnings("unchecked")
 	@DisplayName("getLehrerListe | mit Referenz Info | Erfolg")
 	void getLehrerListeWithReferenceTest() {
 		when(conn.queryAll(DTOLehrer.class)).thenReturn(List.of(getDtoLehrer()));
@@ -161,6 +162,7 @@ class DataLehrerListeTest {
 	}
 
 	@Test
+	@SuppressWarnings("unchecked")
 	@DisplayName("getAllListe | Erfolg")
 	void getAllTest() {
 		when(conn.queryAll(DTOLehrer.class)).thenReturn(List.of(getDtoLehrer()));
@@ -274,6 +276,7 @@ class DataLehrerListeTest {
 	}
 
 	@Test
+	@SuppressWarnings("unchecked")
 	@DisplayName("checkBeforeDeletionWithSimpleOperationResponseTest | Erfolg")
 	void checkBeforeDeletionWithSimpleOperationResponseTest() {
 		final TypedQuery<Long> queryMock = mock(TypedQuery.class);
@@ -295,6 +298,7 @@ class DataLehrerListeTest {
 	}
 
 	@Test
+	@SuppressWarnings("unchecked")
 	@DisplayName("checkBeforeDeletionWithSimpleOperationResponseTest | Lehrer nicht referenziert | Erfolg")
 	void checkBeforeDeletionWithSimpleOperationResponseTest_lehrerNotReferenced() {
 		final TypedQuery<Long> queryMock = mock(TypedQuery.class);
