@@ -1,5 +1,6 @@
 <template>
-	<template v-if="kMan().stundenplanManagerExistsByAbschnitt(abschnitt!.id) && props.kMan().stundenplanManagerExistsByAbschnittAndKW(props.abschnitt!.id, kalenderwoche().jahr, kalenderwoche().kw)">
+	<!--<template v-if="kMan().stundenplanManagerExistsByAbschnitt(abschnitt!.id) && props.kMan().stundenplanManagerExistsByAbschnittAndKW(props.abschnitt!.id, kalenderwoche().jahr, kalenderwoche().kw)">-->
+	<template v-if="kMan().stundenplanManagerGeladenByAbschnitt(abschnitt!.id) && kMan().stundenplanManagerExistsByAbschnitt(abschnitt!.id) && kMan().stundenplanManagerGetByAbschnittAndDatumOrNull(props.abschnitt!.id, props.kalenderdatum.value!) !== null">
 		<Teleport to=".svws-ui-header--actions" v-if="isMounted">
 			<svws-ui-modal-hilfe class="ml-auto"> <s-gost-klausurplanung-kalender-hilfe /> </svws-ui-modal-hilfe>
 		</Teleport>
