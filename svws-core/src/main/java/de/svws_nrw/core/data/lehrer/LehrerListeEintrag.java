@@ -50,6 +50,10 @@ public class LehrerListeEintrag {
 	@Schema(description = "gibt an, ob der Eintrag für die Schulstatistik relevant ist oder nicht", example = "true")
 	public boolean istRelevantFuerStatistik;
 
+	/** Gibt an, ob der Lehrer in anderen Datenbanktabellen referenziert ist oder nicht. */
+	@Schema(description = "Gibt an, ob der Lehrer in anderen Datenbanktabellen referenziert ist oder nicht.", example = "true")
+	public Boolean referenziertInAnderenTabellen = null;
+
 	/**
 	 * Leerer Standardkonstruktor.
 	 */

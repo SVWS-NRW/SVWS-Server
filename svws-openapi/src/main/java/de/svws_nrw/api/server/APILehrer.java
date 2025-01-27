@@ -17,12 +17,14 @@ import de.svws_nrw.asd.data.lehrer.LehrerMehrleistungsartKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerMinderleistungsartKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerRechtsverhaeltnisKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerZugangsgrundKatalogEintrag;
+import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdaten;
 import de.svws_nrw.asd.data.lehrer.LehrerPersonaldaten;
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
+import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.lehrer.DataKatalogLehrerAbgangsgruende;
 import de.svws_nrw.data.lehrer.DataKatalogLehrerAnrechnungsgruende;
@@ -52,6 +54,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
@@ -103,6 +106,34 @@ public class APILehrer {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerliste(conn).getAllAsResponse(),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen mehrerer Lehrer.
+	 *
+	 * @param schema    das Datenbankschema
+	 * @param is        der InputStream, mit der Liste der zu löschenden IDs
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
+	 */
+	@DELETE
+	@Path("/delete/multiple")
+	@Operation(summary = "Entfernt mehrere Lehrer.", description = "Entfernt mehrere Lehrer. Dabei wird geprüft, ob alle Vorbedingungen zum Entfernen"
+			+ "der Lehrer erfüllt sind und der SVWS-Benutzer die notwendige Berechtigung hat.")
+	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrer zu entfernen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteLehrer(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der zu löschenden Lehrer", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
+				conn -> new DataLehrerliste(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.LEHRERDATEN_LOESCHEN);
 	}
 
 

@@ -48,6 +48,11 @@ export class LehrerListeEintrag extends JavaObject {
 	 */
 	public istRelevantFuerStatistik : boolean = false;
 
+	/**
+	 * Gibt an, ob der Lehrer in anderen Datenbanktabellen referenziert ist oder nicht.
+	 */
+	public referenziertInAnderenTabellen : boolean | null = null;
+
 
 	/**
 	 * Leerer Standardkonstruktor.
@@ -94,6 +99,7 @@ export class LehrerListeEintrag extends JavaObject {
 		if (obj.istRelevantFuerStatistik === undefined)
 			throw new Error('invalid json format, missing attribute istRelevantFuerStatistik');
 		result.istRelevantFuerStatistik = obj.istRelevantFuerStatistik;
+		result.referenziertInAnderenTabellen = (obj.referenziertInAnderenTabellen === undefined) ? null : obj.referenziertInAnderenTabellen === null ? null : obj.referenziertInAnderenTabellen;
 		return result;
 	}
 
@@ -108,6 +114,7 @@ export class LehrerListeEintrag extends JavaObject {
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		result += '"istRelevantFuerStatistik" : ' + obj.istRelevantFuerStatistik.toString() + ',';
+		result += '"referenziertInAnderenTabellen" : ' + ((obj.referenziertInAnderenTabellen === null) ? 'null' : obj.referenziertInAnderenTabellen.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -141,6 +148,9 @@ export class LehrerListeEintrag extends JavaObject {
 		}
 		if (obj.istRelevantFuerStatistik !== undefined) {
 			result += '"istRelevantFuerStatistik" : ' + obj.istRelevantFuerStatistik.toString() + ',';
+		}
+		if (obj.referenziertInAnderenTabellen !== undefined) {
+			result += '"referenziertInAnderenTabellen" : ' + ((obj.referenziertInAnderenTabellen === null) ? 'null' : obj.referenziertInAnderenTabellen.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';
