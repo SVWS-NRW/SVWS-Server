@@ -4,12 +4,11 @@ import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
 import { routeApp } from "~/router/apps/RouteApp";
-import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
-
-import { routeSchuelerStundenplanDaten } from "~/router/apps/schueler/stundenplan/RouteSchuelerStundenplanDaten";
+import { routeSchuelerStundenplan } from "./RouteSchuelerStundenplan";
 
 
 interface RouteStateSchuelerDataStundenplan extends RouteStateInterface {
+	idSchuljahresabschnitt: number;
 	idSchueler: number | undefined;
 	auswahl: StundenplanListeEintrag | undefined;
 	mapStundenplaene: Map<number, StundenplanListeEintrag>;
@@ -19,6 +18,7 @@ interface RouteStateSchuelerDataStundenplan extends RouteStateInterface {
 }
 
 const defaultState = <RouteStateSchuelerDataStundenplan> {
+	idSchuljahresabschnitt: -1,
 	idSchueler: undefined,
 	auswahl: undefined,
 	mapStundenplaene: new Map(),
@@ -54,7 +54,7 @@ export class RouteDataSchuelerStundenplan extends RouteData<RouteStateSchuelerDa
 
 	get manager(): StundenplanManager {
 		if (this._state.value.manager === undefined)
-			throw new DeveloperNotificationException("Unerwarteter Fehler: Stunden-Manager nicht vorhanden, es können keine Informationen zum Stundenplan abgerufen oder eingegeben werden.");
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Stundenplan-Manager nicht vorhanden, es können keine Informationen zum Stundenplan abgerufen oder eingegeben werden.");
 		return this._state.value.manager;
 	}
 
@@ -70,13 +70,27 @@ export class RouteDataSchuelerStundenplan extends RouteData<RouteStateSchuelerDa
 		await api.config.setValue("schueler.stundenplan.ganzerStundenplan", value ? "true" : "false");
 	}
 
-	public async ladeListe() {
-		const listStundenplaene = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, routeApp.data.aktAbschnitt.value.id);
+	public async ladeListe(idSchueler : number) : Promise<boolean> {
+		const idSchuljahresabschnitt = routeApp.data.aktAbschnitt.value.id;
+		if (idSchuljahresabschnitt === this._state.value.idSchuljahresabschnitt)
+			return false;
+		const listStundenplaene = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, idSchuljahresabschnitt);
 		const mapStundenplaene = new Map<number, StundenplanListeEintrag>();
 		const auswahl = listStundenplaene.size() > 0 ? listStundenplaene.get(0) : undefined;
 		for (const l of listStundenplaene)
 			mapStundenplaene.set(l.id, l);
-		this.setPatchedDefaultState({ idSchueler: this._state.value.idSchueler, auswahl, mapStundenplaene });
+		// Lade ggf. den Schüler-Stundenplan
+		let manager = undefined;
+		const wochentyp = 0;
+		let tmpKW = undefined;
+		if (auswahl !== undefined) {
+			const daten = await api.server.getSchuelerStundenplan(api.schema, auswahl.id, idSchueler);
+			manager = new StundenplanManager(daten);
+			// Wochentyp und Kalenderwoche prüfen...
+			tmpKW = this.getKalenderWoche(manager, wochentyp, undefined, undefined);
+		}
+		this.setPatchedDefaultState({ idSchuljahresabschnitt, idSchueler: this._state.value.idSchueler, auswahl, mapStundenplaene, manager, wochentyp: tmpKW?.wochentyp, kalenderwoche: tmpKW?.kalenderwoche });
+		return true;
 	}
 
 	private getKalenderWoche(manager: StundenplanManager, wochentyp: number, kwjahr: number | undefined, kw: number | undefined) : { wochentyp?: number, kalenderwoche?: StundenplanKalenderwochenzuordnung } {
@@ -116,7 +130,7 @@ export class RouteDataSchuelerStundenplan extends RouteData<RouteStateSchuelerDa
 			this.setPatchedState({ idSchueler: undefined, auswahl: undefined, manager: undefined, wochentyp: 0, kalenderwoche: undefined });
 			return;
 		}
-		// Lade den Lehrer-Stundenplan
+		// Lade den Schüler-Stundenplan
 		const daten = await api.server.getSchuelerStundenplan(api.schema, auswahl.id, idSchueler);
 		const manager = new StundenplanManager(daten);
 		// Wochentyp und Kalenderwoche prüfen...
@@ -126,17 +140,17 @@ export class RouteDataSchuelerStundenplan extends RouteData<RouteStateSchuelerDa
 	}
 
 	public gotoStundenplan = async (value: StundenplanListeEintrag) => {
-		await RouteManager.doRoute(routeSchuelerStundenplanDaten.getRoute({ idStundenplan: value.id, wochentyp: 0, kw: "" }));
+		await RouteManager.doRoute(routeSchuelerStundenplan.getRoute({ idStundenplan: value.id, wochentyp: 0, kw: "" }));
 	}
 
 	public gotoWochentyp = async (wochentyp: number) => {
-		await RouteManager.doRoute(routeSchuelerStundenplanDaten.getRoute({ wochentyp }));
+		await RouteManager.doRoute(routeSchuelerStundenplan.getRoute({ wochentyp }));
 	}
 
 	public gotoKalenderwoche = async (value: StundenplanKalenderwochenzuordnung | undefined) => {
 		const kw = (value === undefined) ? "" : value.jahr + "." + value.kw;
 		const wochentyp = (value === undefined) ? "" : value.wochentyp;
-		await RouteManager.doRoute(routeSchuelerStundenplanDaten.getRoute({ wochentyp, kw }));
+		await RouteManager.doRoute(routeSchuelerStundenplan.getRoute({ wochentyp, kw }));
 	}
 
 }
