@@ -26,15 +26,18 @@ public class CoreTypeData {
 	 * hier auch Schlüsselwerte aus der früheren ASD-Statistik angegeben. Diese müssen für ein Jahr der Historie über den
 	 * Katalog eindeutig sein, jedoch nicht im Verlauf der Jahre. In der Historie eines Bezeichners können diese allerdings abweichen.
 	 */
-	@Schema(description = "ein Schlüssel als Zeichenkette, welcher ggf. auf externe Katalog verweist und für ein Jahr der Historie des Katalogs eindeutig sein muss.", example = "17")
+	@Schema(description = "ein Schlüssel als Zeichenkette, welcher ggf. auf externe Katalog verweist und für ein Jahr der Historie des Katalogs eindeutig sein muss.",
+			example = "17")
 	public @NotNull String schluessel = "";
 
 	/** Das Kürzel, welches als Kurztext zu Visualisierung verwendet wird. Sollte nicht als identifizierendes Merkmal verwendet werden. */
-	@Schema(description = "das Kürzel, welches als Kurztext zu Visualisierung verwendet wird. Sollte nicht als identifizierendes Merkmal verwendet werden", example = "GE")
+	@Schema(description = "das Kürzel, welches als Kurztext zu Visualisierung verwendet wird. Sollte nicht als identifizierendes Merkmal verwendet werden",
+			example = "GE")
 	public @NotNull String kuerzel = "";
 
 	/** Die Bezeichnung, welche als Langtext zu Visualisierung verwendet wird. Sollte nicht als identifizierendes Merkmal verwendet werden. */
-	@Schema(description = "die Bezeichnung, welche als Langtext zu Visualisierung verwendet wird. Sollte nicht als identifizierendes Merkmal verwendet werden", example = "Gesamtschule")
+	@Schema(description = "die Bezeichnung, welche als Langtext zu Visualisierung verwendet wird. Sollte nicht als identifizierendes Merkmal verwendet werden",
+			example = "Gesamtschule")
 	public @NotNull String text = "";
 
 	/** Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */

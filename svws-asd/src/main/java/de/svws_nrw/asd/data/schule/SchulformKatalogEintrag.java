@@ -24,5 +24,4 @@ public class SchulformKatalogEintrag extends CoreTypeData {
 	public SchulformKatalogEintrag() {
 		// leer
 	}
-
 }

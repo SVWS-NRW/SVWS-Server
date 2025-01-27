@@ -38,7 +38,8 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	 * @param clazz     die Klassen des Core-Types
 	 * @param manager   der Core-Type-Manager
 	 */
-	public static <T extends CoreTypeData, U extends CoreType<T, U>> void putManager(final @NotNull Class<U> clazz, final @NotNull CoreTypeDataManager<T, U> manager) {
+	public static <T extends CoreTypeData, U extends CoreType<T, U>> void putManager(final @NotNull Class<U> clazz,
+			final @NotNull CoreTypeDataManager<T, U> manager) {
 		_data.put(clazz.getCanonicalName(), manager);
 	}
 
@@ -53,8 +54,7 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	 * @return der Core-Type-Manager
 	 */
 	public static <T extends CoreTypeData, U extends CoreType<T, U>> @NotNull CoreTypeDataManager<T, U> getManager(final @NotNull Class<U> clazz) {
-		@SuppressWarnings("unchecked")
-		final CoreTypeDataManager<T, U> manager = (CoreTypeDataManager<T, U>) _data.get(clazz.getCanonicalName());
+		@SuppressWarnings("unchecked") final CoreTypeDataManager<T, U> manager = (CoreTypeDataManager<T, U>) _data.get(clazz.getCanonicalName());
 		if (manager == null)
 			throw new CoreTypeException("Der Core-Type " + clazz.getSimpleName() + " wurde noch nicht initialisiert.");
 		return manager;
@@ -131,13 +131,14 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	 * @param idsHistorien   die IDs der Historien zu den einzelnen Bezeichnern
 	 */
 	public CoreTypeDataManager(final long version, final @NotNull Class<U> clazz,
-			final @NotNull U@NotNull[] values,
+			final @NotNull U @NotNull [] values,
 			final @NotNull Map<String, List<T>> data,
 			final @NotNull Map<String, Long> idsHistorien) {
 		_name = clazz.getSimpleName();
 		// Prüfe und setze die Version des Core-Types
 		if (version <= 0)
-			throw new CoreTypeException(_name + ": Der Core-Type soll mit einer ungültigen Version (kleiner oder gleich 0) initialisiert werden. Die Daten sind fehlerhaft.");
+			throw new CoreTypeException(
+					_name + ": Der Core-Type soll mit einer ungültigen Version (kleiner oder gleich 0) initialisiert werden. Die Daten sind fehlerhaft.");
 		_version = version;
 		// Erstelle die Map von den Bezeichnern zu den einzelnen Werte des Core-Types
 		this._listWerte = Arrays.asList(values);
@@ -147,34 +148,33 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 			_mapBezeichnerToEnum.put(coreTypeValue.name(), coreTypeValue);
 			final List<T> historie = _mapBezeichnerToHistorie.get(coreTypeValue.name());
 			if (historie == null)
-				throw new CoreTypeException(_name + ": Der Core-Type-Bezeichner " + coreTypeValue.name() + "hat keine Daten zugeordnet. Der Core-Type konnte nicht vollständig initialisiert werden.");
+				throw new CoreTypeException(_name + ": Der Core-Type-Bezeichner " + coreTypeValue.name()
+						+ "hat keine Daten zugeordnet. Der Core-Type konnte nicht vollständig initialisiert werden.");
 			_mapEnumToHistorie.put(coreTypeValue, historie);
 			final Long idHistorie = _mapBezeichnerToHistorienID.get(coreTypeValue.name());
 			if (idHistorie == null)
-				throw new CoreTypeException(_name + ": Der Core-Type-Bezeichner " + coreTypeValue.name() + "hat keine Historien-ID zugeordnet. Der Core-Type konnte nicht vollständig initialisiert werden.");
+				throw new CoreTypeException(_name + ": Der Core-Type-Bezeichner " + coreTypeValue.name()
+						+ "hat keine Historien-ID zugeordnet. Der Core-Type konnte nicht vollständig initialisiert werden.");
 			_mapEnumToHistorienID.put(coreTypeValue, idHistorie);
 		}
 		// Prüfe, ob alle Daten auch als Core-Type-Werte existieren
 		for (final @NotNull String bezeichner : _mapBezeichnerToHistorie.keySet()) {
 			final U coreTypeValue = _mapBezeichnerToEnum.get(bezeichner);
 			if (coreTypeValue == null)
-				throw new CoreTypeException(_name + ": Der Bezeichner " + bezeichner + " kann keinem Core-Type-Wert zugeordnet werden. Der Core-Type konnte nicht vollständig initialisiert werden.");
+				throw new CoreTypeException(_name + ": Der Bezeichner " + bezeichner
+						+ " kann keinem Core-Type-Wert zugeordnet werden. Der Core-Type konnte nicht vollständig initialisiert werden.");
 		}
 		// Prüfe alle Historien-Einträge auf Plausibilität und erzeugen jeweils eine Zuordnung des Core-Type-Wertes bzw. des Historieneintrages zu der ID des Eintrags
 		final Set<Long> setIDs = new HashSet<>();
 		for (final Map.Entry<U, List<T>> entry : _mapEnumToHistorie.entrySet()) {
-			Integer schuljahr = null;
+			final @NotNull U coreTypeEntry = entry.getKey();
+			final @NotNull List<T> historie = entry.getValue();
+			checkHistorie(setIDs, _name, coreTypeEntry.name(), historie);
+		}
+		for (final Map.Entry<U, List<T>> entry : _mapEnumToHistorie.entrySet()) {
 			final @NotNull U coreTypeEntry = entry.getKey();
 			final @NotNull List<T> historie = entry.getValue();
 			for (final @NotNull T eintrag : historie) {
-				// Prüfe zunächst die Historie auf plausible Einträge ...
-				if ((schuljahr != null) && ((eintrag.gueltigVon == null) || (eintrag.gueltigVon < 2000) || (Integer.compare(eintrag.gueltigVon, schuljahr) <= 0) || ((eintrag.gueltigBis != null) && (eintrag.gueltigBis > 3000))))
-					throw new CoreTypeException(_name + ": Die Historie ist fehlerhaft beim Eintrag für " + coreTypeEntry.name() + ". Neuere Historieneinträge müssen weiter unten in der Liste stehen.");
-				schuljahr = (eintrag.gueltigBis == null) ? Integer.MAX_VALUE : eintrag.gueltigBis;
-				// ... dann prüfe, ob die ID doppelt vorkommt ...
-				if (setIDs.contains(eintrag.id))
-					throw new CoreTypeException(_name + ": Die Historie ist fehlerhaft beim Eintrag für " + coreTypeEntry.name() + ". Die ID " + eintrag.id + " kommt mehrfach vor.");
-				setIDs.add(eintrag.id);
 				// ... und befülle dann die beiden Maps
 				_mapIDToEintrag.put(eintrag.id, eintrag);
 				_mapIDToEnum.put(eintrag.id, coreTypeEntry);
@@ -196,6 +196,33 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 		}
 	}
 
+	/**
+	 * Prüft die übergebene Historie auf Überlappung und ob in der Menge der IDs bereits eine ID auftritt (doppelte Einträge).
+	 * Die zweite Prüfung ist über alle Bezeichner gedacht, so dass bei den Aufrufen die Menge der IDs wiederverwendet wird.
+	 *
+	 * @param <T> - Typ der Historieneinträge
+	 * @param setIDs - die Menge der bereits genutzten IDs für Historieneinträge
+	 * @param coreTypeName - Name des CoreTypes
+	 * @param bezeichnerName - Name des Bezeichners
+	 * @param historie - die Liste der Historieneinträge
+	 */
+	public static <T extends CoreTypeData> void checkHistorie(final @NotNull Set<Long> setIDs, final @NotNull String coreTypeName,
+			final @NotNull String bezeichnerName, final @NotNull List<T> historie) {
+		Integer schuljahr = null;
+		for (final @NotNull T eintrag : historie) {
+			// Prüfe zunächst die Historie auf plausible Einträge ...
+			if ((schuljahr != null) && ((eintrag.gueltigVon == null) || (eintrag.gueltigVon < 2000) || (Integer.compare(eintrag.gueltigVon, schuljahr) <= 0)
+					|| ((eintrag.gueltigBis != null) && (eintrag.gueltigBis > 3000))))
+				throw new CoreTypeException(coreTypeName + ": Die Historie ist fehlerhaft beim Eintrag für " + bezeichnerName
+						+ ". Neuere Historieneinträge müssen weiter unten in der Liste stehen.");
+			schuljahr = (eintrag.gueltigBis == null) ? Integer.MAX_VALUE : eintrag.gueltigBis;
+			// ... dann prüfe, ob die ID doppelt vorkommt ...
+			if (setIDs.contains(eintrag.id))
+				throw new CoreTypeException(coreTypeName + ": Die Historie ist fehlerhaft beim Eintrag für " + bezeichnerName + ". Die ID " + eintrag.id
+						+ " kommt mehrfach vor.");
+			setIDs.add(eintrag.id);
+		}
+	}
 
 	/**
 	 * Gibt den Namen des Core-Types zurück.
@@ -476,11 +503,12 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 		// Wenn nicht, dann muss der Cache aufgebaut werden...
 		final @NotNull HashMap<U, T> mapEintraege = new HashMap<>();
 		// Durchwandere die einzelnen Core-Types und suche den zugehörigen Historien-Eintrag des Schuljahres für die Map
-		for (final @NotNull U wert: _listWerte) {
+		for (final @NotNull U wert : _listWerte) {
 			// Bestimme zunächst die Historie des Core-Type-Wertes
 			final @NotNull List<T> historie = getHistorieByWert(wert);
 			for (final @NotNull T eintrag : historie) {
-				if (((eintrag.gueltigVon == null) || (eintrag.gueltigVon <= schuljahr)) && ((eintrag.gueltigBis == null) || (schuljahr <= eintrag.gueltigBis))) {
+				if (((eintrag.gueltigVon == null) || (eintrag.gueltigVon <= schuljahr))
+						&& ((eintrag.gueltigBis == null) || (schuljahr <= eintrag.gueltigBis))) {
 					mapEintraege.put(wert, eintrag);
 					break;
 				}
@@ -506,11 +534,12 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 		// Wenn nicht, dann muss der Cache aufgebaut werden...
 		final @NotNull List<T> result = new ArrayList<>();
 		// Durchwandere die einzelnen Core-Types und suche den zugehörigen Historien-Eintrag des Schuljahres für die Map
-		for (final @NotNull U wert: _listWerte) {
+		for (final @NotNull U wert : _listWerte) {
 			// Bestimme zunächst die Historie des Core-Type-Wertes
 			final @NotNull List<T> historie = getHistorieByWert(wert);
 			for (final @NotNull T eintrag : historie) {
-				if (((eintrag.gueltigVon == null) || (eintrag.gueltigVon <= schuljahr)) && ((eintrag.gueltigBis == null) || (schuljahr <= eintrag.gueltigBis))) {
+				if (((eintrag.gueltigVon == null) || (eintrag.gueltigVon <= schuljahr))
+						&& ((eintrag.gueltigBis == null) || (schuljahr <= eintrag.gueltigBis))) {
 					result.add(eintrag);
 					break;
 				}
@@ -532,7 +561,7 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 		List<U> result = _mapSchuljahrToWerte.get(schuljahr);
 		if (result == null) {
 			result = new ArrayList<>();
-			for (final @NotNull U wert: _listWerte)
+			for (final @NotNull U wert : _listWerte)
 				if (getEintragBySchuljahrUndWert(schuljahr, wert) != null)
 					result.add(wert);
 			_mapSchuljahrToWerte.put(schuljahr, result);
@@ -570,7 +599,8 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 			return null;
 		final Set<Schulform> result = _mapSchulformenByID.get(eintrag.id);
 		if (result == null)
-			throw new CoreTypeException("Fehler beim prüfen der Schulform. Der Core-Type %s ist nicht korrekt initialisiert.".formatted(this.getClass().getSimpleName()));
+			throw new CoreTypeException(
+					"Fehler beim prüfen der Schulform. Der Core-Type %s ist nicht korrekt initialisiert.".formatted(this.getClass().getSimpleName()));
 		return (result.isEmpty() || result.contains(sf)) ? eintrag : null;
 	}
 
@@ -631,5 +661,7 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 		}
 		return mapBySchluessel.get(schluessel);
 	}
+
+
 
 }

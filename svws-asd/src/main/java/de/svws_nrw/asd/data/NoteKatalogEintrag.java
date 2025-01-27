@@ -33,5 +33,4 @@ public class NoteKatalogEintrag extends CoreTypeData {
 	public NoteKatalogEintrag() {
 		// leer
 	}
-
 }

@@ -24,7 +24,8 @@ public class FachKatalogEintrag extends CoreTypeDataNurSchulformenUndSchulgliede
 	public String fachgruppe = "";
 
 	/** Der ASD-Jahrgang, ab dem das Fach zulässig ist (z.B. bei Fremdsprachen) */
-	@Schema(description = "der ASD-Jahrgang, ab dem das Fach zulässig ist (z.B. bei Fremdsprachen) - Teil des Kürzels für die amtliche Schulstatistik", example = "EF")
+	@Schema(description = "der ASD-Jahrgang, ab dem das Fach zulässig ist (z.B. bei Fremdsprachen) - Teil des Kürzels für die amtliche Schulstatistik",
+			example = "EF")
 	public String abJahrgang = "";
 
 	/** Gibt an, ob es sich um eine Fremdsprache handelt */
@@ -32,7 +33,8 @@ public class FachKatalogEintrag extends CoreTypeDataNurSchulformenUndSchulgliede
 	public boolean istFremdsprache = false;
 
 	/** Gibt an, ob es sich um ein Fach der Herkuntftsprache handelt (Unterrichts in der Herkunftssprache oder Herkunftssprache anstelle einer Pflichtfremdsprache) */
-	@Schema(description = "gibt an, ob es sich um ein Fach der Herkuntftsprache handelt (Unterrichts in der Herkunftssprache oder Herkunftssprache anstelle einer Pflichtfremdsprache)", example = "false")
+	@Schema(description = "gibt an, ob es sich um ein Fach der Herkuntftsprache handelt (Unterrichts in der Herkunftssprache oder Herkunftssprache anstelle einer Pflichtfremdsprache)",
+			example = "false")
 	public boolean istHKFS = false;
 
 	/** Gibt an, ob das Fach außerhalb des regulären Fachunterrichts unterrichtet wird. */
@@ -44,7 +46,8 @@ public class FachKatalogEintrag extends CoreTypeDataNurSchulformenUndSchulgliede
 	public boolean istErsatzPflichtFS = false;
 
 	/** Gibt an, ob das Religionsfach konfessionell kooperativ unterrichtet wird oder nicht - Teil des Kürzels für die amtliche Schulstatistik */
-	@Schema(description = "gibt an, ob das Religionsfach konfessionell kooperativ unterrichtet wird oder nicht - Teil des Kürzels für die amtliche Schulstatistik", example = "false")
+	@Schema(description = "gibt an, ob das Religionsfach konfessionell kooperativ unterrichtet wird oder nicht - Teil des Kürzels für die amtliche Schulstatistik",
+			example = "false")
 	public boolean istKonfKoop = false;
 
 	/** Gibt an, ob das Fach nur in der Sekundarstufe II unterrichtet wird. */

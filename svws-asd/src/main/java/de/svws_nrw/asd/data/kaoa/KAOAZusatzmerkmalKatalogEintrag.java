@@ -29,5 +29,4 @@ public class KAOAZusatzmerkmalKatalogEintrag extends CoreTypeData {
 	public KAOAZusatzmerkmalKatalogEintrag() {
 		// leer
 	}
-
 }
