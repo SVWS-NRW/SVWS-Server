@@ -8,9 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
@@ -413,20 +415,48 @@ public final class DataGostKlausurenVorgabe extends DataManagerRevised<Long, DTO
 	}
 
 	private static int berechneApoKlausurdauer(final GostHalbjahr halbjahr, final GostKursart kursart, final GostFach fach) {
-		if (halbjahr.istEinfuehrungsphase())
-			return 90;
-		if (kursart == GostKursart.LK) {
-			if (halbjahr.id <= 3)
-				return 180;
-			if (halbjahr.id == 4)
-				return 225;
-			return fach.istFremdsprache ? 315 : 300;
+	    if (halbjahr.istEinfuehrungsphase())
+	        return 90;
+	    if (halbjahr.id <= 3)
+	        return (kursart == GostKursart.LK) ? 180 : 135;
+	    if (halbjahr.id == 4)
+	        return (kursart == GostKursart.LK) ? 225 : 180;
+	    if (halbjahr.id == 5) // Abiturhalbjahr
+	        return berechneAbiturKlausurdauer(kursart, fach);
+	    throw new DeveloperNotificationException("Berechnung Klausurdauer fehlgeschlagen.");
+	}
+
+	private static int berechneAbiturKlausurdauer(final GostKursart kursart, final GostFach fach) {
+		// Alte Sprachen
+		if (fach.kuerzel.matches("^[GLH]\\d?$")) {
+			if (!fach.istFremdSpracheNeuEinsetzend)
+				return kursart == GostKursart.LK ? 300 : 240; // fortgeführt
+		    return 210; // GK neu einsetzend
 		}
-		if (halbjahr.id <= 3)
-			return 135;
-		if (halbjahr.id == 4)
-			return 180;
-		return fach.istFremdsprache ? 285 : 255;
+
+		// Moderne Fremdsprachen
+		if (fach.istFremdsprache) {
+			if (!fach.istFremdSpracheNeuEinsetzend)
+				return kursart == GostKursart.LK ? 315 : 285; // fortgeführt
+			return 255; // GK neu einsetzend
+		}
+
+		// Naturwissenschaften
+		if (List.of(Fach.BI.toString(), Fach.CH.toString(), Fach.PH.toString()).contains(fach.kuerzel))
+			return kursart == GostKursart.LK ? 300 : 255;
+
+		if (Fach.D.toString().equals(fach.kuerzel))
+			return kursart == GostKursart.LK ? 315 : 255;
+
+		if (Fach.M.toString().equals(fach.kuerzel))
+			return kursart == GostKursart.LK ? 300 : 255;
+
+		// Informatik, Ernährungslehre, Technik
+		if (List.of(Fach.IF.toString(), Fach.EL.toString(), Fach.TC.toString()).contains(fach.kuerzel))
+			return kursart == GostKursart.LK ? 270 : 225;
+
+		// alle anderen Fächer
+		return kursart == GostKursart.LK ? 300 : 240;
 	}
 
 }
