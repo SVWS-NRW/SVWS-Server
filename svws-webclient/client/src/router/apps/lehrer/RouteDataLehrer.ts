@@ -1,5 +1,5 @@
-import type { LehrerFachrichtungAnerkennung, LehrerFachrichtungEintrag, LehrerLehramtAnerkennung, LehrerLehramtEintrag, LehrerLehrbefaehigungAnerkennung, LehrerLehrbefaehigungEintrag, LehrerListeEintrag, LehrerPersonalabschnittsdaten, LehrerPersonaldaten, LehrerStammdaten, List } from "@core";
-import { SimpleOperationResponse, ArrayList, DeveloperNotificationException, LehrerListeManager } from "@core";
+import type { LehrerFachrichtungAnerkennung, LehrerFachrichtungEintrag, LehrerLehramtAnerkennung, LehrerLehramtEintrag, LehrerLehrbefaehigungAnerkennung, LehrerLehrbefaehigungEintrag, LehrerListeEintrag, LehrerPersonalabschnittsdaten, LehrerPersonaldaten, LehrerStammdaten, List ,SimpleOperationResponse} from "@core";
+import { ArrayList, DeveloperNotificationException, LehrerListeManager, BenutzerKompetenz } from "@core";
 
 import { api } from "~/router/Api";
 
@@ -220,16 +220,15 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 
 
 	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {
-		// TODO Implementierung der Delete-Methode analog zu RouteSchueler
-		const responses = new ArrayList<SimpleOperationResponse>();
-		for (const id of ids) {
-			const resp = new SimpleOperationResponse();
-			resp.id = id;
-			resp.success = false;
-			resp.log = new ArrayList<string>();
-			responses.add(resp);
-		}
-		return responses;
+		return await api.server.deleteLehrer(ids, api.schema);
+	}
+
+	protected filterOnDelete(ids: List<number>): List<number> {
+		const list = new ArrayList<number>();
+		for (const id of ids)
+			if (!this.manager.getIdsReferenzierterLehrer().contains(id))
+				list.add(id);
+		return list;
 	}
 
 	protected deleteMessage(id: number, lehrer: LehrerListeEintrag | null) : string {
@@ -237,7 +236,20 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 	}
 
 	deleteLehrerCheck = (): [boolean, List<string>] => {
-		return [false, new ArrayList()];
+		const errorLog = new ArrayList<string>();
+		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.LEHRERDATEN_LOESCHEN))
+			errorLog.add('Es liegt keine Berechtigung zum Löschen von Lehrern vor.');
+
+		if (!this.manager.liste.auswahlExists())
+			errorLog.add('Es wurde kein Lehrer zum Löschen ausgewählt.');
+
+		for (const id of this.manager.getIdsReferenzierterLehrer()) {
+			const lehrer = this.manager.liste.get(id);
+			if (lehrer)
+				errorLog.add(`Die Lehrkraft ${lehrer.vorname} ${lehrer.nachname} ist an anderer Stelle referenziert und kann daher nicht gelöscht werden.`);
+		}
+
+		return [errorLog.isEmpty(), errorLog];
 	}
 
 	add = async (data: Partial<LehrerStammdaten>): Promise<void> => {
