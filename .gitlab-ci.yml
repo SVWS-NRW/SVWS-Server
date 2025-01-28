@@ -159,6 +159,7 @@ sign_artifacts:
     rules:
         - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
     needs:
+        - job: build
         - job: build_windows
         - job: build_linux
     before_script:
