@@ -3,8 +3,7 @@
 		<template #headline>
 			<span>Einwilligungsarten</span>
 		</template>
-		<template #abschnitt>
-		</template>
+		<template #abschnitt />
 		<template #header />
 		<template #content>
 			<div class="container">
@@ -41,10 +40,10 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import type {EinwilligungenAuswahlProps} from "./SEinwilligungsartenAuswahlProps";
+	import type { EinwilligungenAuswahlProps } from "./SEinwilligungsartenAuswahlProps";
 	import type { Einwilligungsart} from "@core";
-	import {BenutzerKompetenz} from "@core";
-	import type {DataTableColumn} from "@ui";
+	import { BenutzerKompetenz } from "@core";
+	import type { DataTableColumn } from "@ui";
 	import { ViewType} from "@ui";
 	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
@@ -84,7 +83,7 @@
 	});
 
 	function isRemovable(rowData: Einwilligungsart) {
-		return [... props.manager().liste.auswahl()].includes(rowData) && (rowData.anzahlEinwilligungen > 0);
+		return props.manager().liste.auswahl().contains(rowData) && (rowData.anzahlEinwilligungen > 0);
 	}
 
 </script>

@@ -22,8 +22,8 @@
 				</svws-ui-input-wrapper>
 				<div class="mt-7 flex flex-row gap-4 justify-end">
 					<svws-ui-button type="secondary" @click="cancel" :disabled="isLoading">Abbrechen</svws-ui-button><svws-ui-button @click="addEinwilligungsart"
-						:disabled="!validatorEinwilligungsartBezeichnung(einwilligungsart.bezeichnung) || !validatorEinwilligungsartSchluessel(einwilligungsart.schluessel) ||
-							isLoading || (einwilligungsart.bezeichnung === '' || einwilligungsart.schluessel === '')">
+						:disabled="((!validatorEinwilligungsartBezeichnung(einwilligungsart.bezeichnung) || !validatorEinwilligungsartSchluessel(einwilligungsart.schluessel)) ||
+							isLoading || (einwilligungsart.bezeichnung === '' || einwilligungsart.schluessel === ''))">
 						Speichern <svws-ui-spinner :spinning="isLoading" />
 					</svws-ui-button>
 				</div>
@@ -34,9 +34,9 @@
 </template>
 
 <script setup lang="ts">
-	import {computed, ref} from "vue";
-	import {Einwilligungsart, PersonTyp} from "@core";
-	import type {SchuleEinwilligungsartenNeuProps} from "~/components/schule/kataloge/einwilligungsarten/SEinwilligungsartenNeuProps";
+	import { computed, ref } from "vue";
+	import { Einwilligungsart, PersonTyp } from "@core";
+	import type { SchuleEinwilligungsartenNeuProps } from "~/components/schule/kataloge/einwilligungsarten/SEinwilligungsartenNeuProps";
 
 
 	const props = defineProps<SchuleEinwilligungsartenNeuProps>();
@@ -53,7 +53,7 @@
 	}
 
 	function validatorEinwilligungsartSchluessel(value: string | null): boolean {
-		if (value === null || value.trim() === "")
+		if ((value === null) || (value.trim() === ""))
 			return true;
 		for (const eintrag of props.manager().liste.list())
 			if (eintrag.schluessel === value.trim())
