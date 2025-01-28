@@ -138,6 +138,23 @@ public final class OAuth2Client {
 
 
 	/**
+	 * Öffentliche Methode um einen OAuth2-Client anhand des {@link DTOSchuleOAuthSecrets} zu erhalten
+	 *
+	 * @param dto      das DTO mit den OAuth2-Secrets der Schule
+	 * @param logger   der Logger
+	 *
+	 * @return den OAuth2-Client
+	 *
+	 * @throws ApiOperationException im Fehlerfall
+	 */
+	public static OAuth2Client getClientWithoutSecret(final DTOSchuleOAuthSecrets dto, final Logger logger) throws ApiOperationException {
+		if ((dto == null) || (dto.AuthServer == null) || dto.AuthServer.isBlank() || (dto.ClientID == null) || dto.ClientID.isBlank())
+			throw new ApiOperationException(Status.NOT_FOUND, "Die OAuth2-Daten aus der Datenbank sind unvollständig.");
+		return OAUTH2_CLIENT_CACHE_BY_URL.computeIfAbsent(dto.AuthServer, s -> new OAuth2Client(dto.AuthServer, OAUTH2_PATH));
+	}
+
+
+	/**
 	 * Leert den Client-Cache für das übergenene Secret und damit auch das zugehörige Token
 	 *
 	 * @param dto   das Secret, zu welchem die Daten aus dem Cache entfernt werden sollen
@@ -369,6 +386,28 @@ public final class OAuth2Client {
 		final HttpRequest request = HttpRequest.newBuilder().uri(uri).timeout(Duration.ofMinutes(2)).GET()
 				.header("Accept", "application/json")
 				.header("Authorization", "Bearer " + token.accessToken).build();
+		logger.logLn("Sende die HTTP-Anfrage an den OAuth2-Server...");
+		return send(request, handler);
+	}
+
+
+	/**
+	 * Führt ein GET-Request gegen den gegebenen Pfad aus ohne Authorization-Header aus
+	 *
+	 * @param <T>       generischer Typ des {@link HttpResponse} und {@link BodyHandler}
+	 * @param path      der Pfad als Teil der URL für diesen OauthClient, an den das GET geschickt wird
+	 * @param handler   der BodyHandler für den Response-Body
+	 * @param logger    der Logger
+	 *
+	 * @return die Response
+	 *
+	 * @throws ApiOperationException im Fehlerfall
+	 */
+	public <T> HttpResponse<T> getUnauthorized(final String path, final BodyHandler<T> handler, final Logger logger) throws ApiOperationException {
+		logger.logLn("Bereite die HTTP-Anfrage vor...");
+		final URI uri = URI.create(url + path);
+		final HttpRequest request = HttpRequest.newBuilder().uri(uri).timeout(Duration.ofMinutes(2)).GET()
+				.header("Accept", "application/json").build();
 		logger.logLn("Sende die HTTP-Anfrage an den OAuth2-Server...");
 		return send(request, handler);
 	}

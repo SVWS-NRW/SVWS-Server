@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteParams } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
@@ -21,11 +21,10 @@ export class RouteSchuleDatenaustauschWenom extends RouteNode<any, RouteApp> {
 		super.menugroup = RouteSchuleMenuGroup.DATENAUSTAUSCH;
 	}
 
-	protected doUpdateIfTarget = async (_to: RouteNode<any, any>, _to_params: RouteParams, _from: RouteNode<any, any> | undefined, _from_params: RouteParams, isEntering: boolean) => {
-		if (!isEntering)
-			return;
-		routeSchule.data.mapInitialKennwoerter = await routeSchule.data.wenomGetEnmCredentials();
-	};
+	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
+		if (isEntering)
+			routeSchule.data.mapInitialKennwoerter = await routeSchule.data.wenomGetEnmCredentials();
+	}
 
 	public getProps(to: RouteLocationNormalized): SchuleDatenaustauschWenomProps {
 		return {

@@ -60,21 +60,18 @@ export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> 
 			if (idSchuljahresabschnitt === undefined)
 				throw new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt.");
 			await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
-			if (id === -1)
+			if ((id === -1) || (this.data.auswahl === undefined))
 				return routeStundenplanKataloge.getRouteDefaultChild();
 			if (id !== undefined) {
 				const eintrag = this.data.mapKatalogeintraege.get(id);
-				if ((eintrag === undefined) && (this.data.auswahl !== undefined))
+				if (eintrag === undefined)
 					return this.getRoute();
 				await this.data.setEintrag(eintrag);
-				if ((this.data.auswahl !== undefined) && (this.data.auswahl.id === -1))
+				if (this.data.auswahl.id === -1)
 					return routeStundenplanKataloge.getRouteDefaultChild();
 			}
-			if (to.name === this.name) {
-				if (this.data.auswahl === undefined)
-					return;
+			if (to.name === this.name)
 				return this.getRouteDefaultChild();
-			}
 			if (!to.name.startsWith(this.data.view.name))
 				for (const child of this.children)
 					if (to.name.startsWith(child.name))

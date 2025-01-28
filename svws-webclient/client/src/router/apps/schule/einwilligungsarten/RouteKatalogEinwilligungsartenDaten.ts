@@ -1,13 +1,13 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-
-import { BenutzerKompetenz, Schulform, ServerMode, Einwilligungsart } from "@core";
-
+import type { RouteLocationNormalized } from "vue-router";
+import type { SchuelerEinwilligungsartenZusammenfassung} from "@core";
+import {BenutzerKompetenz, Schulform, ServerMode} from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { routeKatalogEinwilligungsarten, type RouteKatalogEinwilligungsarten } from "~/router/apps/schule/einwilligungsarten/RouteKatalogEinwilligungsarten";
+import type { EinwilligungsartenDatenProps } from "~/components/schule/kataloge/einwilligungsarten/daten/SEinwilligungsartenDatenProps";
+import {RouteManager} from "~/router/RouteManager";
+import {routeSchuelerEinwilligungen} from "~/router/apps/schueler/einwilligungen/RouteSchuelerEinwilligungen";
 
-import type { EinwilligungsartDatenProps } from "~/components/schule/kataloge/einwilligungsarten/daten/SEinwilligungsartDatenProps";
-
-const SEinwilligungsartDaten = () => import("~/components/schule/kataloge/einwilligungsarten/daten/SEinwilligungsartDaten.vue");
+const SEinwilligungsartDaten = () => import("~/components/schule/kataloge/einwilligungsarten/daten/SEinwilligungsartenDaten.vue");
 
 export class RouteKatalogEinwilligungsartenDaten extends RouteNode<any, RouteKatalogEinwilligungsarten> {
 
@@ -18,15 +18,15 @@ export class RouteKatalogEinwilligungsartenDaten extends RouteNode<any, RouteKat
 		super.text = "Einwilligungsart";
 	}
 
-	public async update(to: RouteNode<any, any>, to_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
-		if (routeKatalogEinwilligungsarten.data.auswahl === undefined)
-			return routeKatalogEinwilligungsarten.getRoute(undefined);
+	gotoSchueler = async (schuelerEinwilligungsartenZusammenfassung: SchuelerEinwilligungsartenZusammenfassung) => {
+		await RouteManager.doRoute(routeSchuelerEinwilligungen.getRoute({ id: schuelerEinwilligungsartenZusammenfassung.id }));
 	}
 
-	public getProps(to: RouteLocationNormalized): EinwilligungsartDatenProps {
+	public getProps(to: RouteLocationNormalized): EinwilligungsartenDatenProps {
 		return {
 			patch: routeKatalogEinwilligungsarten.data.patch,
-			auswahl: () => routeKatalogEinwilligungsarten.data.auswahl ?? new Einwilligungsart(),
+			einwilligungsartenListeManager: () => routeKatalogEinwilligungsarten.data.manager,
+			gotoSchueler: this.gotoSchueler,
 		};
 	}
 

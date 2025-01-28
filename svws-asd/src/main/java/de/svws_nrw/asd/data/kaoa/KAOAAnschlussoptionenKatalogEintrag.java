@@ -32,4 +32,5 @@ public class KAOAAnschlussoptionenKatalogEintrag extends CoreTypeData {
 		// leer
 	}
 
+
 }

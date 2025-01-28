@@ -1,88 +1,64 @@
-import { ArrayList, DeveloperNotificationException, type Einwilligungsart } from "@core";
+import type {List, SimpleOperationResponse} from "@core";
+import {ArrayList, type Einwilligungsart, EinwilligungsartenListeManager} from "@core";
 
 import { api } from "~/router/Api";
-import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-import { RouteManager } from "~/router/RouteManager";
 
 import { routeKatalogEinwilligungsartenDaten } from "./RouteKatalogEinwilligungsartenDaten";
-import { routeKatalogEinwilligungsarten } from "./RouteKatalogEinwilligungsarten";
 
-interface RouteStateKatalogeEinwilligungsarten extends RouteStateInterface {
-	auswahl: Einwilligungsart | undefined;
-	mapKatalogeintraege: Map<number, Einwilligungsart>;
-}
+import {ViewType} from "@ui";
+import type { RouteStateAuswahlInterface} from "~/router/RouteDataAuswahl";
+import {RouteDataAuswahl} from "~/router/RouteDataAuswahl";
+import {routeKatalogEinwilligungsartenGruppenprozesse} from "~/router/apps/schule/einwilligungsarten/RouteKatalogEinwilligungsartenGruppenprozesse";
+import {routeKatalogEinwilligungsartenNeu} from "~/router/apps/schule/einwilligungsarten/RouteKatalogEinwilligungsartenNeu";
+import type {RouteParamsRawGeneric} from "vue-router";
 
-const defaultState = <RouteStateKatalogeEinwilligungsarten>{
-	auswahl: undefined,
-	mapKatalogeintraege: new Map(),
+const defaultState = {
+	idSchuljahresabschnitt: -1,
+	manager: new EinwilligungsartenListeManager(-1, -1, new ArrayList(), null, new ArrayList(), new ArrayList()),
 	view: routeKatalogEinwilligungsartenDaten,
+	activeViewType: ViewType.DEFAULT,
+	oldView: undefined,
 };
 
-export class RouteDataKatalogEinwilligungsarten extends RouteData<RouteStateKatalogeEinwilligungsarten> {
+export class RouteDataKatalogEinwilligungsarten extends RouteDataAuswahl<EinwilligungsartenListeManager, RouteStateAuswahlInterface<EinwilligungsartenListeManager>> {
 
 	public constructor() {
-		super(defaultState);
+		super(defaultState, routeKatalogEinwilligungsartenGruppenprozesse, routeKatalogEinwilligungsartenNeu);
 	}
 
-	get auswahl(): Einwilligungsart | undefined {
-		return this._state.value.auswahl;
+	public addID(param: RouteParamsRawGeneric, id: number): void {
+		param.id = id;
 	}
 
-	get mapKatalogeintraege(): Map<number, Einwilligungsart> {
-		return new Map(this._state.value.mapKatalogeintraege);
+	protected async createManager(_ : number) : Promise<Partial<RouteStateAuswahlInterface<EinwilligungsartenListeManager>>> {
+		const einwilligungsarten = await api.server.getEinwilligungsarten(api.schema);
+		const manager = new EinwilligungsartenListeManager(api.abschnitt.id, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte, api.schulform, einwilligungsarten, new ArrayList());
+		return { manager };
 	}
 
-	public async ladeListe() {
-		const listKatalogeintraege = await api.server.getEinwilligungsarten(api.schema);
-		const mapKatalogeintraege = new Map<number, Einwilligungsart>();
-		const auswahl = listKatalogeintraege.size() > 0 ? listKatalogeintraege.get(0) : undefined;
-		for (const l of listKatalogeintraege)
-			mapKatalogeintraege.set(l.id, l);
-		this.setPatchedDefaultState({ auswahl, mapKatalogeintraege })
+	async ladeDaten(auswahl: Einwilligungsart | null): Promise<Einwilligungsart | null> {
+		if (auswahl === null)
+			return auswahl;
+		const schueler = await api.server.getSchuelerByEinwilligungsartID(api.schema, auswahl.id);
+		this.manager.setListSchuelerEinwilligungsartenZusammenfassung(schueler);
+		return auswahl;
 	}
 
-	setEintrag = (eintrag: Einwilligungsart) => {
-		this.setPatchedState({
-			auswahl: this.mapKatalogeintraege.get(eintrag.id)
-		})
+	protected async doPatch(data : Partial<Einwilligungsart>, id: number) : Promise<void> {
+		await api.server.patchEinwilligungsart(data, api.schema, id);
 	}
 
-	gotoEintrag = async (eintrag: Einwilligungsart) => {
-		await RouteManager.doRoute(routeKatalogEinwilligungsarten.getRoute({ id: eintrag.id }));
+	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {
+		return await api.server.deleteEinwilligungsarten(ids, api.schema);
 	}
 
-	addEintrag = async (eintrag: Partial<Einwilligungsart>) => {
-		delete eintrag.id;
-		const res = await api.server.createEinwilligungsart(eintrag, api.schema);
-		const mapKatalogeintraege = this.mapKatalogeintraege;
-		mapKatalogeintraege.set(res.id, res);
-		this.setPatchedState({ mapKatalogeintraege });
-		await RouteManager.doRoute(routeKatalogEinwilligungsarten.getRoute({ id: res.id }));
+	add = async (data: Partial<Einwilligungsart>): Promise<void> => {
+		const res = await api.server.createEinwilligungsart(data, api.schema);
+		await this.setSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt, true);
+		await this.gotoDefaultView(res.id);
 	}
 
-	patch = async (data: Partial<Einwilligungsart>) => {
-		const auswahl = this.auswahl;
-		if (auswahl === undefined)
-			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		const mapKatalogeintraege = this._state.value.mapKatalogeintraege;
-		await api.server.patchEinwilligungsart(data, api.schema, auswahl.id)
-		Object.assign(auswahl, data);
-		this.setPatchedState({ auswahl, mapKatalogeintraege });
-	}
-
-	deleteEintraege = async (eintraege: Iterable<Einwilligungsart>) => {
-		const mapKatalogeintraege = this.mapKatalogeintraege;
-		const listID = new ArrayList<number>;
-		for (const eintrag of eintraege)
-			listID.add(eintrag.id);
-		if (listID.isEmpty())
-			return;
-		const einwilligungen = await api.server.deleteEinwilligungsarten(listID, api.schema);
-		for (const eintrag of einwilligungen)
-			mapKatalogeintraege.delete(eintrag.id);
-		let auswahl = this.auswahl;
-		if (this.auswahl && mapKatalogeintraege.get(this.auswahl.id) === undefined)
-			auswahl = mapKatalogeintraege.values().next().value;
-		this.setPatchedState({ mapKatalogeintraege, auswahl });
+	protected deleteMessage(id: number, einwilligungsart: Einwilligungsart | null) : string {
+		return `Einwilligungsart ${einwilligungsart?.bezeichnung ?? '???'} (ID: ${id}) wurde erfolgreich gelöscht.`;
 	}
 }

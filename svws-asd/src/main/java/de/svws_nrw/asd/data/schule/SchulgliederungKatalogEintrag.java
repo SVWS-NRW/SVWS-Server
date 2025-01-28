@@ -39,7 +39,8 @@ public class SchulgliederungKatalogEintrag extends CoreTypeDataNurSchulformen {
 	public String bkTyp = null;
 
 	/** Der Index für den Zugriff auf die Fachklassen am Berufskolleg. Dieser kann bei unterschiedlichen Gliederungen identisch sein. */
-	@Schema(description = "der Index für den Zugriff auf die Fachklassen am Berufskolleg. Dieser kann bei unterschiedlichen Gliederungen identisch sein.", example = "10")
+	@Schema(description = "der Index für den Zugriff auf die Fachklassen am Berufskolleg. Dieser kann bei unterschiedlichen Gliederungen identisch sein.",
+			example = "10")
 	public Integer bkIndex = null;
 
 	/** Gibt an, ob es sich um einen Bildungsgang in Vollzeit handelt oder nicht */
@@ -47,7 +48,8 @@ public class SchulgliederungKatalogEintrag extends CoreTypeDataNurSchulformen {
 	public boolean istVZ = false;
 
 	/** Gibt eine Liste von Abschlusskombinationen aus beruflichen und allgemeinbildenden Abschluss an, mit Angabe der zulässigen Jahrgänge */
-	@Schema(description = "gibt die möglichen Abschlusskombinationen (berufsbildend und allgemeinbildend) unter Angabe der zulässigen Jahrgänge", example = "BS")
+	@Schema(description = "gibt die möglichen Abschlusskombinationen (berufsbildend und allgemeinbildend) unter Angabe der zulässigen Jahrgänge",
+			example = "BS")
 	public @NotNull List<SchulgliederungGueltigerAbschluss> abschluesse = new ArrayList<>();
 
 	/**

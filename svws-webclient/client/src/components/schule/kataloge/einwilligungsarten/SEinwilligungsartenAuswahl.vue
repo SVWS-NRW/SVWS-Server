@@ -3,20 +3,33 @@
 		<template #headline>
 			<span>Einwilligungsarten</span>
 		</template>
-		<template #abschnitt>
-			<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
-		</template>
+		<template #abschnitt />
 		<template #header />
 		<template #content>
 			<div class="container">
-				<svws-ui-table :clicked="auswahl()" @update:clicked="gotoEintrag" :items="mapKatalogeintraege.values()" :columns clickable selectable v-model="selected" scroll-into-view :focus-switching-enabled :focus-help-visible>
+				<svws-ui-table clickable :clicked="clickedEintrag" @update:clicked="eintrag => gotoDefaultView(eintrag.id)" :items="props.manager().filtered()" :columns selectable
+					:model-value="[...props.manager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)" scroll-into-view :focus-switching-enabled :focus-help-visible>
+					<template #filterAdvanced>
+						<svws-ui-checkbox type="toggle" v-model="filterNurSichtbare">Nur Sichtbare</svws-ui-checkbox>
+					</template>
+					<template #cell(anzahlEinwilligungen)="{ value, rowData }">
+						<div class="inline-flex min-h-5">
+							<div v-if="isRemovable(rowData)" class="inline-flex">
+								<span class="icon i-ri-alert-line mx-0.5 mr-1" />
+								<p>verwendet</p>
+							</div>
+							<p class="w-8"> {{ value }} </p>
+						</div>
+					</template>
 					<template #actions>
-						<svws-ui-button @click="doDeleteEintraege()" type="trash" :disabled="selected.length === 0" />
-						<s-einwilligungsarten-neu-modal v-slot="{ openModal }" :add-eintrag :map-katalogeintraege>
-							<svws-ui-button type="icon" @click="openModal()" :has-focus="mapKatalogeintraege.size === 0">
+						<svws-ui-tooltip v-if="hatKompetenzAendern" position="bottom">
+							<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="gotoHinzufuegenView(true)" :has-focus="manager().filtered().isEmpty()">
 								<span class="icon i-ri-add-line" />
 							</svws-ui-button>
-						</s-einwilligungsarten-neu-modal>
+							<template #content>
+								Neue Einwilligungsart anlegen
+							</template>
+						</svws-ui-tooltip>
 					</template>
 				</svws-ui-table>
 			</div>
@@ -26,24 +39,51 @@
 
 <script setup lang="ts">
 
-	import { computed, shallowRef } from "vue";
-	import type { SEinwilligungsartenAuswahlProps } from "./SEinwilligungsartenAuswahlProps";
-	import type { Einwilligungsart } from "@core";
+	import { computed } from "vue";
+	import type { EinwilligungenAuswahlProps } from "./SEinwilligungsartenAuswahlProps";
+	import type { Einwilligungsart} from "@core";
+	import { BenutzerKompetenz } from "@core";
+	import type { DataTableColumn } from "@ui";
+	import { ViewType} from "@ui";
 	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
-	const props = defineProps<SEinwilligungsartenAuswahlProps>();
+	const props = defineProps<EinwilligungenAuswahlProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
-	const selected = shallowRef<Einwilligungsart[]>([]);
 
-	const columns = [
-		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, defaultSort: "asc" }
+	const columns : DataTableColumn[] = [
+		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, defaultSort: "asc" },
+		{ key: "anzahlEinwilligungen", label: "Anzahl", sortable: true, defaultSort: "asc", span: 1, align: "right"},
 	];
 
-	const deleteCandidates = computed(() => selected.value);
+	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 
-	async function doDeleteEintraege() {
-		await props.deleteEintraege(deleteCandidates.value);
-		selected.value = [];
+	const filterNurSichtbare = computed<boolean>({
+		get: () => props.manager().filterNurSichtbar(),
+		set: (value) => {
+			props.manager().setFilterNurSichtbar(value);
+			void props.setFilter();
+		},
+	});
+
+	async function setAuswahl(items : Einwilligungsart[]) {
+		props.manager().liste.auswahlClear();
+		for (const item of items)
+			if (props.manager().liste.hasValue(item))
+				props.manager().liste.auswahlAdd(item);
+		if (props.manager().liste.auswahlExists())
+			await props.gotoGruppenprozessView(true);
+		else
+			await props.gotoDefaultView(props.manager().getVorherigeAuswahl()?.id);
+	}
+
+	const clickedEintrag = computed(() => {
+		if ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN))
+			return null;
+		return (props.manager().hasDaten()) ? props.manager().auswahl() : null;
+	});
+
+	function isRemovable(rowData: Einwilligungsart) {
+		return props.manager().liste.auswahl().contains(rowData) && (rowData.anzahlEinwilligungen > 0);
 	}
 
 </script>

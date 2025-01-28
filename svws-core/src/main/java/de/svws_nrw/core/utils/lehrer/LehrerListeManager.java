@@ -3,8 +3,10 @@ package de.svws_nrw.core.utils.lehrer;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 
 import de.svws_nrw.asd.adt.Pair;
@@ -35,6 +37,9 @@ public final class LehrerListeManager extends AuswahlManager<Long, LehrerListeEi
 	private final @NotNull HashMap2D<Boolean, Long, LehrerListeEintrag> _mapKlasseIstSichtbar = new HashMap2D<>();
 	private final @NotNull HashMap2D<Boolean, Long, LehrerListeEintrag> _mapLehrerIstStatistikrelevant = new HashMap2D<>();
 	private final @NotNull HashMap2D<PersonalTyp, Long, LehrerListeEintrag> _mapKlasseHatPersonaltyp = new HashMap2D<>();
+
+	/** Sets mit Listen zur aktuellen Auswahl */
+	private final @NotNull HashSet<Long> idsReferenzierterLehrer = new HashSet<>();
 
 	/** Das Filter-Attribut für die Personal-Typen */
 	public final @NotNull AttributMitAuswahl<Integer, PersonalTyp> personaltypen;
@@ -206,6 +211,22 @@ public final class LehrerListeManager extends AuswahlManager<Long, LehrerListeEi
 			return asc ? cmp : -cmp;
 		}
 		return Long.compare(a.id, b.id);
+	}
+
+	@Override
+	protected void onMehrfachauswahlChanged() {
+		this.idsReferenzierterLehrer.clear();
+		for (final @NotNull LehrerListeEintrag l : this.liste.auswahl())
+			if ((l.referenziertInAnderenTabellen != null) && l.referenziertInAnderenTabellen)
+				this.idsReferenzierterLehrer.add(l.id);
+	}
+
+	/** Gibt das Set mit den LehrerIds zurück, die in der Auswahl sind und in anderen Datenbanktabellen referenziert werden
+	 *
+	 * @return Das Set mit IDs von Lehrern, die in anderen Datenbanktabellen referenziert werden
+	 */
+	public @NotNull Set<Long> getIdsReferenzierterLehrer() {
+		return this.idsReferenzierterLehrer;
 	}
 
 

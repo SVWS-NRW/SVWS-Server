@@ -1,7 +1,4 @@
-import type { SchulEintrag } from "@core";
-import type { TabManager } from "@ui";
+import type { RouteAuswahlProps } from "~/router/RouteAuswahlNode";
+import type { KatalogSchuleListeManager } from "@core";
 
-export interface SchulenAppProps {
-	auswahl: SchulEintrag | undefined;
-	tabManager: () => TabManager;
-}
+export type KatalogSchulenAppProps = RouteAuswahlProps<KatalogSchuleListeManager>

@@ -42,6 +42,14 @@ public class Einwilligungsart {
 	@Schema(description = "gibt an, für welche Personengruppe die Einwilligungsart relevant ist", example = "2")
 	public int personTyp = PersonTyp.SCHUELER.id;
 
+	/** Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. */
+	@Schema(description = "gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht", example = "true")
+	public boolean istSichtbar = true;
+
+	/** Gibt an, für welche Personengruppe die Einwilligungsart relevant ist. */
+	@Schema(description = "gibt an wie viele Einwilligungen dem entsprechenden Einwilligungsart-Eintrag zugeordnet sind", example = "3")
+	public int anzahlEinwilligungen;
+
 	/**
 	 * Leerer Standardkonstruktor.
 	 */

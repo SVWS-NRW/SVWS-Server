@@ -33,118 +33,27 @@ stages:
     - analyze
     - build_snapshot_installer
     - build_installer
+    - sign
     - publish
 
-publish_maven:
-        stage: publish
-        rules:
-            -   if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
-                when: on_success
-        variables:
-            SECURE_FILES_DOWNLOAD_PATH: '/'
-        needs:
-            -   job: build_linux
-            -   job: build_windows
-        script:
-            - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
-            - cat gradle_secure.properties >> gradle.properties
-            - chmod +x ./deployment/setupVersion.sh
-            - ./deployment/setupVersion.sh
-            - ./gradlew signJar publishAllPublicationsToSonatypeRepository closeAndReleaseSonatypeStagingRepository
-
-publish_all:
-    stage: publish
-    rules:
-        -   if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
-            when: on_success
-    variables:
-        SECURE_FILES_DOWNLOAD_PATH: '/'
-    needs:
-        -   job: build_linux
-        -   job: build_windows
-    script:
-        - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
-        - cat gradle_secure.properties >> gradle.properties
-        - chmod +x ./deployment/setupVersion.sh
-        - ./deployment/setupVersion.sh
-        - ./gradlew signJar publishReleaseAll
-
-publish_dockerhub:
-    stage: publish
-    rules:
-        - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
-          when: on_success
-    variables:
-        SECURE_FILES_DOWNLOAD_PATH: '/'
-    needs:
-        - job: build_linux
-        - job: build_windows
-    script:
-        - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
-        - cat gradle_secure.properties >> gradle.properties
-        - cat dockerlogin.txt | docker login --username svwsnrw --password-stdin
-        - chmod +x ./deployment/setupVersion.sh
-        - ./deployment/setupVersion.sh
-        - ./gradlew :deployment:docker:dockerPushAllDockerhub
-
-publish_github:
-    stage: publish
-    rules:
-        - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
-          when: on_success
-    variables:
-        SECURE_FILES_DOWNLOAD_PATH: '/'
-    needs:
-        - job: build_linux
-        - job: build_windows
-    script:
-        - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
-        - cat gradle_secure.properties >> gradle.properties
-        - chmod +x ./deployment/setupVersion.sh
-        - ./deployment/setupVersion.sh
-        - ./gradlew :deployment:githubRelease
-
-build_linux:
-    stage: build_installer
-    rules:
-        - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
-    needs:
-        - job: build
+build:
+    stage: build
     script:
         - chmod +x ./deployment/setupVersion.sh
         - ./deployment/setupVersion.sh
-        - ./gradlew :deployment:linux-installer:buildLinuxInstaller
-        - mkdir artifacts_linux
-        - cp -r ./deployment/linux-installer/build/distributions/ ./artifacts_linux
+        - ./gradlew --build-cache build -Penvironment=build
+    cache:
+        <<: *global_cache
+        policy: pull
     artifacts:
+        when: always
+        reports:
+            junit: ./**/build/test-results/test/**/TEST-*.xml
         paths:
-            - artifacts_linux/
-    when: on_success
-
-build_windows:
-    stage: build_installer
-    rules:
-        - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
-    needs:
-        - job: build
-    tags:
-        - windows
-    variables:
-        SECURE_FILES_DOWNLOAD_PATH: '/'
-        SVWS_SIGNTOOL_PATH: 'c:\tmp\signtool\signtool'
-    image: svwsnrw/dockerrunner-win
-    script:
-        - ./deployment/setupVersion.ps1
-        - c:/tmp/download-secure-files-windows-amd64.exe
-        - Add-Content -Path ".\gradle.properties" -Value (Get-Content -Path ".\gradle_secure.properties")
-        - dir /builds/svws/SVWS-Server/
-        - ./gradlew :deployment:windows-installer:doZip
-        - mkdir artifacts_windows
-        - copy .\deployment\windows-installer\build\output\win64-installer* .\artifacts_windows\
-    artifacts:
-        paths:
-            - artifacts_windows/
-    when: on_success
+            - "./build/**"
+            - "./**/build/**"
+        expire_in: "1 days"
+    when: always
 
 integration-tests:
     dependencies:
@@ -167,7 +76,6 @@ e2e-tests:
     dependencies:
         - build
     stage: integration-tests
-    when: manual
     script:
         - ./gradlew --build-cache svws-webclient:browser-test:playwrightInstallDeps --stacktrace
         - ./gradlew --build-cache testing:svws-browser-test:runBrowserTest --stacktrace -Penvironment=testing -PMDB_PASSWORD=$MDB_PASSWORD -PMariaDB_ROOT_PASSWORD=$MariaDB_ROOT_PASSWORD -PMariaDB_PASSWORD=$MariaDB_PASSWORD -PSVWS_TLS_KEYSTORE_PASSWORD=$SVWS_TLS_KEYSTORE_PASSWORD -PMariaDB_USER=$MariaDB_USER
@@ -178,36 +86,16 @@ e2e-tests:
             junit: "./svws-webclient/browser-test/build/testresults/results.xml"
         paths:
          - "./svws-webclient/browser-test/build/playwright-report/**"
-
-build:
-    stage: build
-    script:
-        - chmod +x ./deployment/setupVersion.sh
-        - ./deployment/setupVersion.sh
-        - ./gradlew --build-cache build -Penvironment=build
-
-    cache:
-        <<: *global_cache
-        policy: pull
-    when: always
-    artifacts:
-        when: always
-        reports:
-            junit: ./**/build/test-results/test/**/TEST-*.xml
-        paths:
-            - "./build/**"
-            - "./**/build/**"
-        expire_in: "1 days"
-
+    when: manual
 
 sonarqube_analysis:
     stage: analyze
     only:
         refs:
             - dev
-    when: manual
     script:
         - ./gradlew sonarqube -Dsonar.projectKey=svws-server -Dsonar.host.url=$SONAR_URL -Dsonar.login=$SONAR_LOGIN -Dsonar.password=$SONAR_PASSWORD --full-stacktrace
+    when: manual
 
 build_snapshot_windows:
     stage: build_snapshot_installer
@@ -218,14 +106,9 @@ build_snapshot_windows:
             - dev
     tags:
         - windows
-    variables:
-        SECURE_FILES_DOWNLOAD_PATH: '/'
-        SVWS_SIGNTOOL_PATH: 'c:\tmp\signtool\signtool'
     image: svwsnrw/dockerrunner-win
     script:
         - ./deployment/setupVersion.ps1
-        - c:/tmp/download-secure-files-windows-amd64.exe
-        - Add-Content -Path ".\gradle.properties" -Value (Get-Content -Path ".\gradle_secure.properties")
         - dir /builds/svws/SVWS-Server/
         - ./gradlew :deployment:windows-installer:doZip
         - mkdir artifacts_windows
@@ -233,4 +116,145 @@ build_snapshot_windows:
     artifacts:
         paths:
             - artifacts_windows/
+    when: manual
+
+build_linux:
+    stage: build_installer
+    rules:
+       - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
+    needs:
+        - job: build
+    script:
+        - chmod +x ./deployment/setupVersion.sh
+        - ./deployment/setupVersion.sh
+        - ./gradlew :deployment:linux-installer:buildLinuxInstaller
+        - mkdir artifacts_linux
+        - cp -r ./deployment/linux-installer/build/distributions/ ./artifacts_linux
+    artifacts:
+        paths:
+            - artifacts_linux/
+
+build_windows:
+    stage: build_installer
+    rules:
+        - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
+    needs:
+        - job: build
+    tags:
+        - windows
+    image: svwsnrw/dockerrunner-win
+    script:
+        - ./deployment/setupVersion.ps1
+        - dir /builds/svws/SVWS-Server/
+        - ./gradlew :deployment:windows-installer:doZip
+        - mkdir artifacts_windows
+        - copy .\deployment\windows-installer\build\output\win64-installer* .\artifacts_windows\
+    artifacts:
+        paths:
+            - artifacts_windows/
+
+sign_artifacts:
+    stage: sign
+    image: svwsnrw/dockerrunner:17
+    rules:
+        - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
+    needs:
+        - job: build
+        - job: build_windows
+        - job: build_linux
+    before_script:
+        - chmod u+x config/signing/*.sh
+    script:
+        - ./gradlew signJars signWindowsInstaller
+    artifacts:
+        paths:
+            - artifacts_windows/
+            - "./build/**"
+            - "./**/build/**"
+        exclude:
+            - "./build/signing/**/*"
+            - "./build/signing"
+
+sign_snapshot_installer:
+    stage: sign
+    image: svwsnrw/dockerrunner:17
+    only:
+        refs:
+            - dev
+    needs:
+        - job: build_snapshot_windows
+    before_script:
+        - chmod u+x config/signing/*.sh
+    script:
+        - ./gradlew signWindowsInstaller
+    artifacts:
+        paths:
+            - artifacts_windows/
+        exclude:
+            - "./build/signing/**/*"
+            - "./build/signing"
+
+publish_all:
+    stage: publish
+    rules:
+        - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
+    variables:
+        SECURE_FILES_DOWNLOAD_PATH: '/'
+    needs:
+        - job: sign_artifacts
+    script:
+        - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
+        - cat gradle_secure.properties >> gradle.properties
+        - chmod +x ./deployment/setupVersion.sh
+        - ./deployment/setupVersion.sh
+        - ./gradlew publishReleaseAll
+    when: manual
+
+publish_maven:
+    stage: publish
+    rules:
+        - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
+    variables:
+        SECURE_FILES_DOWNLOAD_PATH: '/'
+    needs:
+        - job: sign_artifacts
+    script:
+        - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
+        - cat gradle_secure.properties >> gradle.properties
+        - chmod +x ./deployment/setupVersion.sh
+        - ./deployment/setupVersion.sh
+        - ./gradlew publishAllPublicationsToSonatypeRepository closeAndReleaseSonatypeStagingRepository
+    when: manual
+
+publish_dockerhub:
+    stage: publish
+    rules:
+        - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
+    variables:
+        SECURE_FILES_DOWNLOAD_PATH: '/'
+    needs:
+        - job: sign_artifacts
+    script:
+        - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
+        - cat gradle_secure.properties >> gradle.properties
+        - cat dockerlogin.txt | docker login --username svwsnrw --password-stdin
+        - chmod +x ./deployment/setupVersion.sh
+        - ./deployment/setupVersion.sh
+        - ./gradlew :deployment:docker:dockerPushAllDockerhub
+    when: manual
+
+publish_github:
+    stage: publish
+    rules:
+        - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
+    variables:
+        SECURE_FILES_DOWNLOAD_PATH: '/'
+    needs:
+        - job: sign_artifacts
+    script:
+        - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
+        - cat gradle_secure.properties >> gradle.properties
+        - chmod +x ./deployment/setupVersion.sh
+        - ./deployment/setupVersion.sh
+        - ./gradlew :deployment:githubRelease
     when: manual

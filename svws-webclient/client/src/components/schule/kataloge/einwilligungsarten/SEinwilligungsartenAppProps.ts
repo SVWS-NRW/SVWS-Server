@@ -1,7 +1,4 @@
-import type { TabManager } from "@ui";
-import type { Einwilligungsart } from "@core";
+import type {EinwilligungsartenListeManager} from "@core";
+import type {RouteAuswahlProps} from "~/router/RouteAuswahlNode";
 
-export interface SEinwilligungsartenAppProps {
-	auswahl: () => Einwilligungsart | undefined;
-	tabManager: () => TabManager;
-}
+export type EinwilligungsartenAppProps = RouteAuswahlProps<EinwilligungsartenListeManager>;

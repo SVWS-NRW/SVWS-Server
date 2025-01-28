@@ -13,7 +13,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class SchuelerKAoADaten {
 
 	/** Die ID der KAOA Daten in der Datenbank. */
-	@Schema(description = "Die ID der KAOA Daten in der Datenbank", example = "126784")
+	@Schema(description = "Die ID der KAOA Daten in der Datenbank", example = "126784", accessMode = Schema.AccessMode.READ_ONLY)
 	public long id = -1L;
 
 	/** Die ID des Schuljahresabschnitts zu dem diese KAOA Daten gehören. */

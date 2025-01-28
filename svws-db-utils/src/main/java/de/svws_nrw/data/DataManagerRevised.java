@@ -40,7 +40,7 @@ import jakarta.ws.rs.core.Response.Status;
 public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 
 	/** Die Klasse des zugehörigen Datenbank-DTOs */
-	final Class<DatabaseDTO> classDatabaseDTO;
+	protected final Class<DatabaseDTO> classDatabaseDTO;
 
 	/** Die Datenbank-Verbindung zum Aggregieren der Informationen aus der DB und zum Schreiben der Informationen bzw. Teilinformationen */
 	protected final DBEntityManager conn;
@@ -306,6 +306,19 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 
 
 	/**
+	 * Ermittelt das Database-DTO mit der angegebenen ID. Diese Methode sollte bei Bedarf für komplexere
+	 * IDs überschrieben werden.
+	 *
+	 * @param id   die ID
+	 *
+	 * @return das Database-DTO
+	 */
+	public DatabaseDTO getDatabaseDTOByID(final ID id) {
+		return conn.queryByKey(classDatabaseDTO, id);
+	}
+
+
+	/**
 	 * Ermittelt das Core-DTO mit der angegebenen ID.
 	 * Dieses wird im Erfolgsfall als JSON eingebettet in einer HTTP-Response 200 zurückgegeben.
 	 *
@@ -486,7 +499,7 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Für das Löschen muss eine ID angegeben werden. Null ist nicht zulässig.");
 
 		// DTO mit Hilfe der ID ermitteln
-		final DatabaseDTO dbDTO = conn.queryByKey(classDatabaseDTO, id);
+		final DatabaseDTO dbDTO = getDatabaseDTOByID(id);
 		if (dbDTO == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine Entität mit der ID %s gefunden.".formatted(id));
 
@@ -756,7 +769,7 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 			throw new ApiOperationException(Status.BAD_REQUEST, "In dem Patch sind keine Daten enthalten.");
 
 		// zu patchendes DTO mit ID aus der Datenbank laden
-		final DatabaseDTO dto = conn.queryByKey(classDatabaseDTO, id);
+		final DatabaseDTO dto = getDatabaseDTOByID(id);
 		if (dto == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Die Entität für die angegebene ID wurden in der Datenbank nicht gefunden.");
 

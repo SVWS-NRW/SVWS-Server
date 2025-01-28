@@ -9,7 +9,7 @@ export class LehrerStammdaten extends JavaObject {
 	/**
 	 * Die ID des Lehrers.
 	 */
-	public id : number = 0;
+	public id : number = -1;
 
 	/**
 	 * Das Kürzel des Lehrers.

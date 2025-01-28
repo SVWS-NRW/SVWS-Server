@@ -61,8 +61,9 @@ export class RouteGostKlausurplanungKalender extends RouteNode<any, RouteGostKla
 			} else if ((datum === undefined) && (datumFrom !== undefined)) {
 				return this.getRoute({ datum: datumFrom.replace(/-/g, ""), idtermin: termin === undefined ? undefined : termin.id });
 			} else if (datum !== undefined) {
-				// const stundenplan = routeGostKlausurplanung.data.manager.stundenplanManagerGetByAbschnittAndDatumOrClosest(routeGostKlausurplanung.data.abschnitt!.id, datum);
-				routeGostKlausurplanung.data.kalenderdatum.value = datum;
+				const stundenplan = routeGostKlausurplanung.data.manager.stundenplanManagerGetByAbschnittAndDatumOrNull(routeGostKlausurplanung.data.abschnitt!.id, datum);
+				routeGostKlausurplanung.data.kalenderdatum.value = stundenplan === null ? routeGostKlausurplanung.data.manager.stundenplanManagerGetByAbschnittAndDatumOrClosest(routeGostKlausurplanung.data.abschnitt!.id, datum).getGueltigAb() : datum;
+				// routeGostKlausurplanung.data.kalenderdatum.value = datum;
 			}
 		} catch(e) {
 			return routeError.getErrorRoute(e instanceof Error ? e : new DeveloperNotificationException("Unbekannter Fehler beim Laden der Klausurplanungsdaten."));

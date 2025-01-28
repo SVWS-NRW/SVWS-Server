@@ -8,17 +8,18 @@
 		</template>
 		<template #header />
 		<template #content>
-			<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="schulen" :columns selectable v-model="liste" scroll-into-view :focus-switching-enabled :focus-help-visible>
-				<template #cell(kurzbezeichnung)="{ rowData }">
-					<div class="text-ellipsis overflow-hidden whitespace-nowrap" :title="`${rowData.plz || ''} ${rowData.ort || ''}${rowData.ort ? ',': ''} ${rowData.name}`">{{ rowData.kurzbezeichnung }}</div>
-				</template>
+			<svws-ui-table :clickable="!manager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="schulEintrag => gotoDefaultView(schulEintrag.id)" :items="manager().filtered()"
+				:model-value="[...manager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)" :columns :filter-open="true" selectable count scroll-into-view scroll allow-arrow-key-selection
+				:focus-switching-enabled :focus-help-visible>
 				<template #actions>
-					<svws-ui-button @click="remove" type="trash" :disabled="liste.length === 0" />
-					<s-schulen-neu-modal v-slot="{ openModal }" :add-eintrag>
-						<svws-ui-button type="icon" @click="openModal()" :has-focus="schulen.length === 0">
+					<svws-ui-tooltip position="bottom" v-if="ServerMode.DEV.checkServerMode(serverMode) && hatKompetenzAendern">
+						<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="gotoHinzufuegenView(true)" :has-focus="manager().filtered().size() === 0">
 							<span class="icon i-ri-add-line" />
 						</svws-ui-button>
-					</s-schulen-neu-modal>
+						<template #content>
+							Neue Schule anlegen
+						</template>
+					</svws-ui-tooltip>
 				</template>
 			</svws-ui-table>
 		</template>
@@ -27,34 +28,37 @@
 
 <script setup lang="ts">
 
-	import { ref, computed } from 'vue';
+	import { computed } from 'vue';
 	import type { SchulenAuswahlProps } from './SSchulenAuswahlProps';
 	import { useRegionSwitch } from "~/components/useRegionSwitch";
+	import { BenutzerKompetenz, type SchulEintrag, ServerMode } from "@core";
+	import { ViewType } from "@ui";
 
 	const props = defineProps<SchulenAuswahlProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
-	const liste = ref([]);
+	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 
 	const columns = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: 'asc' },
-		{ key: "kurzbezeichnung", label: "Bezeichnung", sortable: true, span: 4 }
+		{ key: "kurzbezeichnung", label: "Bezeichnung", sortable: true, span: 4 },
 	];
 
-	async function remove() {
-		await props.removeEintraege(liste.value);
-		liste.value = [];
-	}
+	const clickedEintrag = computed(() => {
+		if ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN))
+			return null;
+		return props.manager().hasDaten() ? props.manager().auswahl() : null;
+	});
 
-	const schulen = computed(() => {
-		const kuerzel = [];
-		const keinkeurzel = [];
-		for (const schule of props.mapKatalogeintraege().values())
-			if (schule.kuerzel !== null)
-				kuerzel.push(schule);
-			else
-				keinkeurzel.push(schule);
-		return kuerzel.concat(keinkeurzel);
-	})
+	async function setAuswahl(items : SchulEintrag[]) {
+		props.manager().liste.auswahlClear();
+		for (const item of items)
+			if (props.manager().liste.hasValue(item))
+				props.manager().liste.auswahlAdd(item);
+		if (props.manager().liste.auswahlExists())
+			await props.gotoGruppenprozessView(true);
+		else
+			await props.gotoDefaultView(props.manager().getVorherigeAuswahl()?.id);
+	}
 
 </script>

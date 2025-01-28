@@ -4,26 +4,26 @@
 		<svws-ui-modal-hilfe> <hilfe-schueler-stundenplan /> </svws-ui-modal-hilfe>
 	</Teleport>
 	<div class="page--content page--content--flex h-full">
-		<template v-if="stundenplan === undefined">
+		<template v-if="stundenplan() === undefined">
 			<div class="svws-ui-empty">
 				<span class="icon i-ri-calendar-event-line" />
 				<span>Derzeit liegt kein Stundenplan<br>für diesen Lernabschnitt vor.</span>
 			</div>
 		</template>
 		<template v-else>
-			<stundenplan-auswahl :stundenplan :map-stundenplaene :goto-stundenplan :goto-wochentyp :goto-kalenderwoche :manager :wochentyp :kalenderwoche :ganzer-stundenplan :set-ganzer-stundenplan
+			<stundenplan-auswahl :stundenplan="stundenplan()" :map-stundenplaene :goto-stundenplan :goto-wochentyp :goto-kalenderwoche :manager :wochentyp :kalenderwoche :ganzer-stundenplan :set-ganzer-stundenplan
 				autofocus />
-			<router-view :key="$route.hash" />
+			<stundenplan-schueler :id :ignore-empty :manager :wochentyp :kalenderwoche />
 		</template>
 	</div>
 </template>
 
 <script setup lang="ts">
 
-	import type { StundenplanAuswahlProps } from "@ui";
 	import { onMounted, ref } from "vue";
+	import type { SchuelerStundenplanProps } from "./SchuelerStundenplanProps";
 
-	defineProps<StundenplanAuswahlProps>();
+	defineProps<SchuelerStundenplanProps>();
 
 	const print = () => {
 		window.print();

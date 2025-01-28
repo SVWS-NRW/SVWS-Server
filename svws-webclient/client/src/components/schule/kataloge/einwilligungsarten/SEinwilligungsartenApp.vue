@@ -1,30 +1,54 @@
 <template>
-	<template v-if="art">
-		<svws-ui-header>
-			<div>
-				<span class="inline-block mr-3 capitalize">{{ art.bezeichnung }}</span>
-				<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
-					ID: {{ art.id }}
-				</svws-ui-badge>
+	<div v-if="(manager().hasDaten() && (activeViewType === ViewType.DEFAULT)) || (activeViewType !== ViewType.DEFAULT)" class="page--flex">
+		<header class="svws-ui-header">
+			<div class="svws-ui-header--title">
+				<div class="svws-headline-wrapper">
+					<template v-if="activeViewType === ViewType.DEFAULT">
+						<h2 class="svws-headline">
+							<span>
+								{{ manager().daten().bezeichnung }}
+							</span>
+							<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
+								ID: {{ manager().daten().id }}
+							</svws-ui-badge>
+						</h2>
+					</template>
+					<template v-else-if="activeViewType === ViewType.HINZUFUEGEN">
+						<h2 class="svws-headline">Anlegen einer neuen Einwilligungsart</h2>
+					</template>
+					<template v-else-if="activeViewType === ViewType.GRUPPENPROZESSE">
+						<h2 class="svws-headline"> Gruppenprozesse </h2>
+						<span class="svws-subline">{{ einwilligungsartenSubline }}</span>
+					</template>
+				</div>
 			</div>
-		</svws-ui-header>
+			<div class="svws-ui-header--actions" />
+		</header>
+
 		<svws-ui-tab-bar :tab-manager :focus-switching-enabled :focus-help-visible>
 			<router-view />
 		</svws-ui-tab-bar>
-	</template>
+	</div>
 	<div v-else class="app--content--placeholder">
-		<span class="icon i-ri-archive-line" />
+		<span class="icon i-ri-team-line" />
 	</div>
 </template>
 
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import type { SEinwilligungsartenAppProps } from "./SEinwilligungsartenAppProps";
+	import { ViewType } from "@ui";
 	import { useRegionSwitch } from "~/components/useRegionSwitch";
+	import type {EinwilligungsartenAppProps} from "~/components/schule/kataloge/einwilligungsarten/SEinwilligungsartenAppProps";
 
-	const props = defineProps<SEinwilligungsartenAppProps>();
+	const props = defineProps<EinwilligungsartenAppProps>();
+
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
-	const art = computed(() => props.auswahl())
 
+	const einwilligungsartenSubline = computed(() => {
+		const list = props.manager().liste.auswahlSorted();
+		if (list.size() > 5)
+			return `${list.size()} Einwilligungsarten ausgewählt`;
+		return [...list].map(k => k.bezeichnung).join(', ');
+	})
 </script>

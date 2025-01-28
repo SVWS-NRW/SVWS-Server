@@ -36,5 +36,4 @@ public class KAOAMerkmalKatalogEintrag extends CoreTypeData {
 	public KAOAMerkmalKatalogEintrag() {
 		// leer
 	}
-
 }

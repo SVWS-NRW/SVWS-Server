@@ -1,97 +1,59 @@
-import type { SchulEintrag } from "@core";
-import { ArrayList, DeveloperNotificationException } from "@core";
-
+import type { List, SchulEintrag, SimpleOperationResponse } from "@core";
+import type { RouteParamsRawGeneric } from "vue-router";
+import { ArrayList, KatalogSchuleListeManager } from "@core";
 import { api } from "~/router/Api";
-import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-import { RouteManager } from "~/router/RouteManager";
-
 import { routeKatalogSchuleDaten } from "./RouteKatalogSchuleDaten";
-import { routeKatalogSchulen } from "./RouteKatalogSchulen";
+import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
+import { ViewType } from "@ui";
+import { routeKatalogSchuleGruppenprozesse } from "~/router/apps/schule/schulen/RouteKatalogSchuleGruppenprozesse";
+import { routeKatalogSchuleNeu } from "~/router/apps/schule/schulen/RouteKatalogSchuleNeu";
 
-interface RouteStateKatalogSchulen extends RouteStateInterface {
-	auswahl: SchulEintrag | undefined;
-	mapKatalogeintraege: Map<number, SchulEintrag>;
-}
 
-const defaultState = <RouteStateKatalogSchulen> {
-	auswahl: undefined,
-	mapKatalogeintraege: new Map(),
+const defaultState = {
+	idSchuljahresabschnitt: -1,
+	manager: new KatalogSchuleListeManager(-1, -1, new ArrayList(), null, new ArrayList()),
 	view: routeKatalogSchuleDaten,
+	activeViewType: ViewType.DEFAULT,
+	oldView: undefined,
 };
 
-export class RouteDataKatalogSchulen extends RouteData<RouteStateKatalogSchulen> {
+export class RouteDataKatalogSchulen extends RouteDataAuswahl<KatalogSchuleListeManager, RouteStateAuswahlInterface<KatalogSchuleListeManager>> {
 
 	public constructor() {
-		super(defaultState);
+		super(defaultState, routeKatalogSchuleGruppenprozesse, routeKatalogSchuleNeu);
 	}
 
-	get auswahl(): SchulEintrag | undefined {
-		return this._state.value.auswahl;
+
+	public addID(param: RouteParamsRawGeneric, id: number): void {
+		param.id = id;
 	}
 
-	get mapKatalogeintraege(): Map<number, SchulEintrag> {
-		return new Map(this._state.value.mapKatalogeintraege);
+	protected async createManager(_ : number) : Promise<Partial<RouteStateAuswahlInterface<KatalogSchuleListeManager>>> {
+		const schulen = await api.server.getSchulen(api.schema);
+		const manager = new KatalogSchuleListeManager(api.abschnitt.id, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte, api.schulform, schulen);
+
+		return { manager };
 	}
 
-	public async ladeListe() {
-		api.status.start();
-		const listKatalogeintraege = await api.server.getSchulen(api.schema);
-		listKatalogeintraege.sort({ compare: (a: SchulEintrag, b: SchulEintrag) => a.schulnummer.localeCompare(b.schulnummer) });
-		const mapKatalogeintraege = new Map<number, SchulEintrag>();
-		let auswahl;
-		for (const l of listKatalogeintraege) {
-			mapKatalogeintraege.set(l.id, l);
-			if ((auswahl === undefined) && (l.kuerzel !== null))
-				auswahl = l;
-		}
-		if ((auswahl === undefined) && (listKatalogeintraege.size() > 0))
-			auswahl = listKatalogeintraege.get(0);
-		this.setPatchedState({ auswahl, mapKatalogeintraege })
-		api.status.stop();
+	public ladeDaten(auswahl: any): Promise<any> {
+		return auswahl;
 	}
 
-	removeEintraege = async (liste: Iterable<SchulEintrag>) => {
-		api.status.start();
-		const list = new ArrayList<number>();
-		let leave = false;
-		for (const schule of liste) {
-			list.add(schule.id);
-			if (this.auswahl?.id === schule.id)
-				leave = true;
-		}
-		const res = await api.server.deleteSchulenVonKatalog(list, api.schema);
-		for (const s of res)
-			this.mapKatalogeintraege.delete(s.id);
-		this.setPatchedState({ mapKatalogeintraege: this.mapKatalogeintraege })
-		if (leave === true) {
-			this._state.value.auswahl = undefined;
-			await RouteManager.doRoute(routeKatalogSchulen.getRoute(undefined));
-		}
+	protected async doPatch(data : Partial<SchulEintrag>, id: number) : Promise<void> {
+		await api.server.patchSchuleAusKatalog(data, api.schema, id);
 	}
 
-	addEintrag = async (data: Partial<SchulEintrag>) => {
-		api.status.start();
-		const schule = await api.server.addSchuleZuKatalog(data, api.schema);
-		this.mapKatalogeintraege.set(schule.id, schule);
-		api.status.stop();
-		await this.gotoEintrag(schule);
+	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {
+		//  TODO: anpassen auf SimpleOperationResponse
+		// return await api.server.deleteJahrgaenge(ids, api.schema);
+		return new ArrayList();
 	}
 
-	setEintrag = (auswahl: SchulEintrag) => {
-		this.setPatchedState({ auswahl })
+	add = async (data: Partial<SchulEintrag>): Promise<void> => {
+		// Muss implementiert werden
 	}
 
-	gotoEintrag = async (eintrag: SchulEintrag) => {
-		await RouteManager.doRoute(routeKatalogSchulen.getRoute({ id: eintrag.id }));
-	}
-
-	patch = async (data : Partial<SchulEintrag>) => {
-		if (this.auswahl === undefined)
-			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		api.status.start();
-		await api.server.patchSchuleAusKatalog(data, api.schema, this.auswahl.id);
-		Object.assign(this.auswahl, data);
-		this.setPatchedState({auswahl: this.auswahl});
-		api.status.stop();
+	protected deleteMessage(id: number, schule: SchulEintrag | null) : string {
+		return `Schule ${schule?.kuerzel ?? '???'} (ID: ${id}) wurde erfolgreich gelöscht.`;
 	}
 }

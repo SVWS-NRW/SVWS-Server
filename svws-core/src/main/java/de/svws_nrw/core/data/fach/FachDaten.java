@@ -15,7 +15,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class FachDaten {
 
 	/** Die ID des Faches. */
-	@Schema(description = "die ID des Faches", example = "42")
+	@Schema(description = "die ID des Faches", example = "42", accessMode = Schema.AccessMode.READ_ONLY)
 	public long id = -1;
 
 	/** Das eindeutige Kürzel des Faches */

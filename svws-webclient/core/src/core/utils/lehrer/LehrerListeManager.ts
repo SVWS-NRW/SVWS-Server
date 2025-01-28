@@ -1,26 +1,28 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap2D } from '../../../core/adt/map/HashMap2D';
-import { LehrerPersonaldaten } from '../../../asd/data/lehrer/LehrerPersonaldaten';
-import { AttributMitAuswahl } from '../../../core/utils/AttributMitAuswahl';
+import type { JavaSet } from '../../../java/util/JavaSet';
 import { HashMap } from '../../../java/util/HashMap';
 import { Schulform } from '../../../asd/types/schule/Schulform';
-import { LehrerStammdaten } from '../../../asd/data/lehrer/LehrerStammdaten';
 import { JavaString } from '../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
-import { PersonalTyp } from '../../../core/types/PersonalTyp';
 import type { Comparator } from '../../../java/util/Comparator';
-import { AuswahlManager } from '../../../core/utils/AuswahlManager';
 import type { JavaFunction } from '../../../java/util/function/JavaFunction';
 import { LehrerListeEintrag } from '../../../core/data/lehrer/LehrerListeEintrag';
-import { LehrerUtils } from '../../../core/utils/lehrer/LehrerUtils';
 import { LehrerPersonalabschnittsdaten } from '../../../asd/data/lehrer/LehrerPersonalabschnittsdaten';
-import { JavaLong } from '../../../java/lang/JavaLong';
 import type { List } from '../../../java/util/List';
+import { HashSet } from '../../../java/util/HashSet';
+import { Pair } from '../../../asd/adt/Pair';
+import { LehrerPersonaldaten } from '../../../asd/data/lehrer/LehrerPersonaldaten';
+import { AttributMitAuswahl } from '../../../core/utils/AttributMitAuswahl';
+import { LehrerStammdaten } from '../../../asd/data/lehrer/LehrerStammdaten';
+import { PersonalTyp } from '../../../core/types/PersonalTyp';
+import { AuswahlManager } from '../../../core/utils/AuswahlManager';
+import { LehrerUtils } from '../../../core/utils/lehrer/LehrerUtils';
+import { JavaLong } from '../../../java/lang/JavaLong';
 import { Class } from '../../../java/lang/Class';
 import { Arrays } from '../../../java/util/Arrays';
 import type { JavaMap } from '../../../java/util/JavaMap';
 import { Schuljahresabschnitt } from '../../../asd/data/schule/Schuljahresabschnitt';
-import { Pair } from '../../../asd/adt/Pair';
 
 export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintrag, LehrerStammdaten> {
 
@@ -39,6 +41,11 @@ export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintra
 	private readonly _mapLehrerIstStatistikrelevant : HashMap2D<boolean, number, LehrerListeEintrag> = new HashMap2D<boolean, number, LehrerListeEintrag>();
 
 	private readonly _mapKlasseHatPersonaltyp : HashMap2D<PersonalTyp, number, LehrerListeEintrag> = new HashMap2D<PersonalTyp, number, LehrerListeEintrag>();
+
+	/**
+	 * Sets mit Listen zur aktuellen Auswahl
+	 */
+	private readonly idsReferenzierterLehrer : HashSet<number> = new HashSet<number>();
 
 	/**
 	 * Das Filter-Attribut für die Personal-Typen
@@ -206,6 +213,22 @@ export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintra
 			return asc ? cmp : -cmp;
 		}
 		return JavaLong.compare(a.id, b.id);
+	}
+
+	protected onMehrfachauswahlChanged() : void {
+		this.idsReferenzierterLehrer.clear();
+		for (const l of this.liste.auswahl())
+			if ((l.referenziertInAnderenTabellen !== null) && l.referenziertInAnderenTabellen)
+				this.idsReferenzierterLehrer.add(l.id);
+	}
+
+	/**
+	 *Gibt das Set mit den LehrerIds zurück, die in der Auswahl sind und in anderen Datenbanktabellen referenziert werden
+	 *
+	 * @return Das Set mit IDs von Lehrern, die in anderen Datenbanktabellen referenziert werden
+	 */
+	public getIdsReferenzierterLehrer() : JavaSet<number> {
+		return this.idsReferenzierterLehrer;
 	}
 
 	protected checkFilter(eintrag : LehrerListeEintrag) : boolean {

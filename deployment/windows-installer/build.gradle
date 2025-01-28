@@ -116,7 +116,7 @@ task downloadJarsAll(type: Copy) {
 		file("download/svws-" + project.version + "/config_writer.cmd").text =
 			"set outputfile=%1" + System.lineSeparator() +
 			"set clientpath=%2" + System.lineSeparator() +
-			"set adminclientpath=%3" + System.lineSeparator() + 
+			"set adminclientpath=%3" + System.lineSeparator() +
 			"set loggingpath=%4" + System.lineSeparator() +
 			"set temppath=%5" + System.lineSeparator() +
 			"set keystorepath=%6" + System.lineSeparator() +
@@ -291,33 +291,19 @@ task copyInstallerScript(type:Copy) {
 	from("${projectDir}/innosetup/") {
 		include "*.iss"
 		filteringCharset = 'ISO-8859-1'
-		if (System.getenv("SVWS_SIGNTOOL_PATH") && project.hasProperty("jarsign_keystoreFile") && project.hasProperty("jarsign_keystorepass")) {
-			filter(ReplaceTokens, tokens: [
-				version: project.version.replace("-SNAPSHOT", ""),
-				snapshot: project.version.endsWith("-SNAPSHOT") ? "-SNAPSHOT" : "",
-				svws_client_version: svws_version,
-				svws_server_version: svws_version,
-				mariadb_version: mariadb_version,
-				jdk_version: jdk_version + "+" + jdk_fix,
-				windowsservicewrapper_version: windowsservicewrapper_version,
-				curl_version: curl_version,
-				signtool: 'SignTool=signtool \$f',
-				signuninstaller: 'SignedUninstaller=yes'
-			])
-		} else {
-			filter(ReplaceTokens, tokens: [
-				version: project.version.replace("-SNAPSHOT", ""),
-				snapshot: project.version.endsWith("-SNAPSHOT") ? "-SNAPSHOT" : "",
-				svws_client_version: svws_version,
-				svws_server_version: svws_version,
-				mariadb_version: mariadb_version,
-				jdk_version: jdk_version + "+" + jdk_fix,
-				windowsservicewrapper_version: windowsservicewrapper_version,
-				curl_version: curl_version,
-				signtool: '',
-				signuninstaller: ''
-			])
-		}
+		filter(ReplaceTokens, tokens: [
+			version: project.version.replace("-SNAPSHOT", ""),
+			snapshot: project.version.endsWith("-SNAPSHOT") ? "-SNAPSHOT" : "",
+			svws_client_version: svws_version,
+			svws_server_version: svws_version,
+			mariadb_version: mariadb_version,
+			jdk_version: jdk_version + "+" + jdk_fix,
+			windowsservicewrapper_version: windowsservicewrapper_version,
+			curl_version: curl_version,
+			/* TODO: raus nehmen */
+			signtool: '',
+			signuninstaller: ''
+		])
 	}
 	into "${buildDir}/installer/"
 }
@@ -351,11 +337,7 @@ task buildPrepare {
 
 task buildWindowsInstaller(type:Exec) {
 	group 'build'
-	if (System.getenv("SVWS_SIGNTOOL_PATH") && project.hasProperty("jarsign_keystoreFile") && project.hasProperty("jarsign_keystorepass")) {
-		commandLine "cmd", "/c", "${buildDir}/inno/app/iscc.exe", "SVWS_Installer_full.iss", "/Ssigntool=" + System.getenv("SVWS_SIGNTOOL_PATH") + " sign /fd sha256 /f " + jarsign_keystoreFile  + " /p " + jarsign_keystorepass + ' -tr http://timestamp.digicert.com -td sha256 \$f'
-	} else {
-		commandLine "cmd", "/c", "${buildDir}/inno/app/iscc.exe", "SVWS_Installer_full.iss"
-	}
+	commandLine "cmd", "/c", "${buildDir}/inno/app/iscc.exe", "SVWS_Installer_full.iss"
 	dependsOn "buildPrepare"
 	doFirst {
 		mkdir "$buildDir/output"

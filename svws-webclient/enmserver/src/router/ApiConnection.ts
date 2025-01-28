@@ -25,7 +25,7 @@ export class ApiConnection {
 	protected _password = "";
 
 	// Der Modus, in welchem der Server betrieben wird
-	protected _serverMode = shallowRef<ServerMode>(ServerMode.DEV)
+	protected _serverMode = shallowRef<ServerMode>(ServerMode.STABLE);
 
 	// Die Api selbst
 	protected _api: ApiEnmServer | undefined;
@@ -149,7 +149,9 @@ export class ApiConnection {
 			this._username = username;
 			this._password = password;
 			this._api = new ApiEnmServer(this._url, this._username, this._password);
-			// Prüfe, ob die Anmeldedaten korrekt sind, in dem die ENM-Daten geladen werden
+			// Prüfe, ob die Anmeldedaten korrekt sind, indem der Server-Modus abgefragt wird
+			this._serverMode.value = await this._api.getServerMode();
+			// Lade auch die ENM-Daten vom Server...
 			const file = await this._api.getLehrerENMDaten();
 			const blob = await new Response(file.data.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
 			this._daten = ENMDaten.transpilerFromJSON(await blob.text());
@@ -161,6 +163,7 @@ export class ApiConnection {
 			this._authenticated.value = false;
 			this._daten = undefined;
 			this._manager = undefined;
+			this._serverMode.value = ServerMode.STABLE;
 		}
 		return this._authenticated.value;
 	}
@@ -205,6 +208,7 @@ export class ApiConnection {
 		this._api = undefined;
 		this._daten = undefined;
 		this._manager = undefined;
+		this._serverMode.value = ServerMode.STABLE;
 	}
 
 	// Gibt den Modus zurück, in welchem der Server betrieben wird.
