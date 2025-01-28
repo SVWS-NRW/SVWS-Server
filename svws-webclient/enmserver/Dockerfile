@@ -18,8 +18,7 @@ a2ensite default-ssl
 sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 # Setzen der zus. Konfiguration in das conf-Verzeichnis
 echo "<Directory \${ENMROOT}>
-    Options Indexes SymLinksIfOwnerMatch Includes ExecCGI
-    AllowOverride All
+    AllowOverride none
     Require all granted
 </Directory>" > /etc/apache2/conf-enabled/enmserver.conf
 EOF
