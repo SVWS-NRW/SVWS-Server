@@ -1,10 +1,8 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationNormalized } from "vue-router";
 
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { routeKatalogSchulen, type RouteKatalogSchulen } from "~/router/apps/schule/schulen/RouteKatalogSchulen";
-
 import type { SchuleDatenProps } from "~/components/schule/kataloge/schulen/daten/SSchuleDatenProps";
 import { api } from "~/router/Api";
 
@@ -19,17 +17,11 @@ export class RouteKatalogSchuleDaten extends RouteNode<any, RouteKatalogSchulen>
 		super.text = "Schule";
 	}
 
-	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		if (routeKatalogSchulen.data.auswahl === undefined)
-			return routeKatalogSchulen.getRoute(undefined);
-	}
-
 	public getProps(to: RouteLocationNormalized): SchuleDatenProps {
 		return {
 			schuljahr: api.abschnitt.schuljahr,
+			schuleListeManager: () => routeKatalogSchulen.data.manager,
 			patch: routeKatalogSchulen.data.patch,
-			mapKatalogeintraege: routeKatalogSchulen.data.mapKatalogeintraege,
-			auswahl: routeKatalogSchulen.data.auswahl,
 		};
 	}
 
