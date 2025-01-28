@@ -252,7 +252,21 @@ task allJavadoc(type: Javadoc) {
 	options.addStringOption('Xmaxwarns', '10000')
 }
 
+task prepareSigning(type: Exec) {
+	group 'signing'
+	doFirst {
+		mkdir file("${projectDir}/build/signing")
+	}
+	workingDir file("${projectDir}/build/signing")
+	commandLine "${projectDir}/config/signing/prepare_signing.sh"
+}
 
+task signWindowsInstaller(type: Exec) {
+	group 'signing'
+	dependsOn prepareSigning
+	workingDir file("${projectDir}/build/signing")
+	commandLine = ["${projectDir}/config/signing/sign_windows_installer.sh", "${project.version}"]
+}
 
 
 import com.github.jk1.license.render.*
