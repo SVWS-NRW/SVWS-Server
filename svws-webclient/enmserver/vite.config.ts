@@ -9,6 +9,7 @@ export default defineConfig({
 		port: 3003,
 		cors: false,
 	},
+	base: "./", // relateiven Base-Pfad setzen, damit man den Client auch in Unterverzeichnissen hosten kann
 	plugins: [
 		Vue({ include: [/\.vue$/, /\.md$/] }),
 		Markdown({}),
