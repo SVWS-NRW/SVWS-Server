@@ -1,0 +1,41 @@
+# Dies ist ein Template File. In den verschiedenen Subpackage wird jeweils ein docker-compose File hieraus abgeleitet.
+# Die Datei wird durch das Gradle-Script "buildDockercompose" in das Dockerfile des jeweiligen Subpackages kopiert. Während des Kopiervorgangs
+# werden die Platzhalter durch die entsprechenden Werte ersetzt.
+services:
+  #GRADLE_PLACEHOLDER_MARIADB_SERVICE_NAME:
+    #GRADLE_PLACEHOLDER_MARIADB_CONTAINER_NAME
+    image: mariadb:10.7.3
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: #GRADLE_PLACEHOLDER_DEFAULT_SCHEMA
+      MYSQL_USER: svwsadmin
+      MYSQL_PASSWORD: svwsadmin
+    healthcheck:
+      test: mariadb --user=root --password=root -e 'SELECT 1' #ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
+      interval: 5s
+      timeout: 10s
+      retries: 15
+    #GRADLE_PLACEHOLDER_MARIADB_FORWARDING_PORT
+    networks:
+      - gitlab_runner_network
+
+  #GRADLE_PLACEHOLDER_APP_IMAGE_NAME:
+    #GRADLE_PLACEHOLDER_APP_CONTAINER_NAME
+    depends_on:
+      #GRADLE_PLACEHOLDER_MARIADB_SERVICE_NAME:
+        condition: service_healthy
+    links:
+      - #GRADLE_PLACEHOLDER_MARIADB_SERVICE_NAME
+    image: #GRADLE_PLACEHOLDER_APP_IMAGE_NAME
+    healthcheck:
+        test: [ "CMD-SHELL", "curl --insecure --fail --silent --show-error --output /dev/null https://localhost:8443/status/alive || exit 1" ]
+        interval: 30s
+        timeout: 12s
+        retries: 5
+    #GRADLE_PLACEHOLDER_APP_FORWARDING_PORT
+    networks:
+      - gitlab_runner_network
+
+networks:
+    gitlab_runner_network:
+        external: true

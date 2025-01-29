@@ -1,0 +1,23 @@
+{
+	"name": "svws-test",
+	"version": "1.0.5-SNAPSHOT",
+	"description": "",
+	"main": "index.js",
+	"type": "module",
+	"scripts": {
+		"installdeps": "playwright install-deps",
+		"install": "playwright install",
+		"test" : "playwright test",
+		"show": "playwright show-report",
+		"lint": "eslint 'src_old/**/*.ts' --cache",
+		"lint-fix": "eslint 'src_old/**/*.ts' --fix --cache",
+		"check-licenses": "license-checker-rseidelsohn --summary --unknown --production",
+		"codegen": "playwright codegen -o build/codegen/gen_test.ts --ignore-https-errors"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"@playwright/test": "1.49.0"
+	}
+}

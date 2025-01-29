@@ -1,0 +1,33 @@
+# Dies ist ein Template File. In den verschiedenen Subpackage wird jeweils ein Dockerfile hieraus abgeleitet.
+# Die Datei wird durch das Gradle-Script "buildDockerfile" in das Dockerfile des jeweiligen Subpackages kopiert. Während des Kopiervorgangs
+# werden die Platzhalter durch die entsprechenden Werte ersetzt.
+
+# Verwende das offizielle OpenJDK 11 Image und installiere zusätzlich die benötigten Pakete
+FROM eclipse-temurin:21
+RUN apt update && apt-get -y install gettext zip mariadb-client
+
+# Erstelle die Verzeichnisse
+RUN mkdir -p /opt/app/svws/client
+
+# Kopiere die Konfigurationsdateien
+COPY build/tempdocker/appConf/svws_config.json.template.GRADLE_PLACEHOLDER_MARIADB_CONTAINER_NAME /etc/app/svws/conf/svws_config.json.template.GRADLE_PLACEHOLDER_MARIADB_CONTAINER_NAME
+
+# Kopiere die Startskripte
+COPY build/tempdocker/init-scripts/startup.sh /opt/app/svws/startup.sh
+COPY build/tempdocker/init-scripts /etc/app/svws/init-scripts
+
+# Kopiere die Datenbanken
+COPY build/tempdatabases /etc/app/svws/testdatabases
+
+# Kopiere die extLibs (Java Bibliotheken)
+COPY ../build/extLib /opt/app/svws
+
+# Kopiere die Build Artefakte
+COPY /build/SVWS-Client.zip /opt/app/svws
+RUN unzip -d /opt/app/svws/client /opt/app/svws/SVWS-Client.zip
+RUN rm -rf /opt/app/svws/svws-client*.zip
+
+WORKDIR /opt/app/svws
+
+# Starte die Anwendung mit dem startup Script. Diese wurde auch von Gradle kopiert / generiert und enthält die richtigen Platzhalter
+ENTRYPOINT ["/bin/bash", "startup.sh"]

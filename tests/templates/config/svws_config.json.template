@@ -1,0 +1,34 @@
+{
+	"EnableClientProtection": null,
+	"DisableDBRootAccess": false,
+	"DisableAutoUpdates": false,
+	"DisableTLS": null,
+	"PortHTTP": null,
+	"UseHTTPDefaultv11": false,
+	"PortHTTPS": 8443,
+	"PortHTTPPrivilegedAccess": null,
+	"UseCORSHeader": false,
+	"TempPath": "tmp",
+	"TLSKeyAlias": "svwslocaltestcontainer",
+	"TLSKeystorePath": "/etc/app/svws/conf",
+	"TLSKeystorePassword": "changeit",
+	"ClientPath": "./client",
+	"AdminClientPath": "./not/used/at/the/moment",
+	"LoggingEnabled": true,
+	"LoggingPath": "logs",
+	"ServerMode": "GRADLE_PLACEHOLDER_SERVER_MODE",
+	"PrivilegedDatabaseUser": "root",
+	"DBKonfiguration" : {
+		"dbms" : "MARIA_DB",
+		"location" : "GRADLE_PLACEHOLDER_MARIADB_CONTAINER_NAME",
+		"defaultschema" : "GRADLE_PLACEHOLDER_DEFAULT_SCHEMA",
+		"SchemaKonfiguration" : [
+		{
+			"name" : "GRADLE_PLACEHOLDER_DEFAULT_SCHEMA",
+			"svwslogin" : false,
+			"username" : "svwsadmin",
+			"password" : "svwsadmin"
+		}
+		]
+	}
+}

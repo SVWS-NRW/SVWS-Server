@@ -1,0 +1,68 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`APIENM Tests > gegen { schema: 'GymAbi01' } > getLehrerENMDaten 1`] = `
+{
+  "aktuellerAbschnitt": 2,
+  "ankreuzkompetenzen": ENMAnkreuzkompetenzenKatalog {
+    "kompetenzen": ArrayList {
+      "addFirst": [Function],
+      "addLast": [Function],
+      "elementData": [],
+      "getFirst": [Function],
+      "getLast": [Function],
+      "modCount": 0,
+      "removeFirst": [Function],
+      "removeLast": [Function],
+    },
+    "textSonstiges": null,
+    "textStufen": [
+      null,
+      null,
+      null,
+      null,
+      null,
+    ],
+  },
+  "anzahlAbschnitte": 2,
+  "enmRevision": 1,
+  "faecher": Any<ArrayList>,
+  "fehlstundenEingabe": true,
+  "fehlstundenSIFachbezogen": false,
+  "fehlstundenSIIFachbezogen": true,
+  "floskelgruppen": Any<ArrayList>,
+  "foerderschwerpunkte": Any<ArrayList>,
+  "jahrgaenge": Any<ArrayList>,
+  "klassen": Any<ArrayList>,
+  "lehrer": Any<ArrayList>,
+  "lehrerID": 76,
+  "lerngruppen": Any<ArrayList>,
+  "mailadresse": null,
+  "noten": Any<ArrayList>,
+  "publicKey": null,
+  "schueler": Any<ArrayList>,
+  "schulform": "GY",
+  "schuljahr": 2018,
+  "schulnummer": 168890,
+  "teilleistungsarten": Any<ArrayList>,
+}
+`;
+
+exports[`APIENM Tests > gegen { schema: 'GymAbi01' } > getLehrerENMDaten 2`] = `25`;
+
+exports[`APIENM Tests > gegen { schema: 'GymAbi01' } > getLehrerENMDaten 3`] = `10`;
+
+exports[`APIENM Tests > gegen { schema: 'GymAbi01' } > getLehrerENMDaten 4`] = `4`;
+
+exports[`APIENM Tests > gegen { schema: 'GymAbi01' } > getLehrerENMDaten 5`] = `7`;
+
+exports[`APIENM Tests > gegen { schema: 'GymAbi01' } > getLehrerENMDaten 6`] = `9`;
+
+exports[`APIENM Tests > gegen { schema: 'GymAbi01' } > getLehrerENMDaten 7`] = `15`;
+
+exports[`APIENM Tests > gegen { schema: 'GymAbi01' } > getLehrerENMDaten 8`] = `2`;
+
+exports[`APIENM Tests > gegen { schema: 'GymAbi01' } > getLehrerENMDaten 9`] = `7`;
+
+exports[`APIENM Tests > gegen { schema: 'GymAbi01' } > getLehrerENMDaten 10`] = `3`;
+
+exports[`APIENM Tests > gegen { schema: 'GymAbi01' } > getLehrerENMDaten 11`] = `166`;

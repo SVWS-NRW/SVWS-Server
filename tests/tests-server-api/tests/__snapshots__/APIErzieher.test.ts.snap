@@ -1,0 +1,80 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Erzieher Tests > gegen { schema: 'GymAbi01' } > GET: Ein ErzieherStammdaten Objekt 1`] = `
+ErzieherStammdaten {
+  "anrede": "Frau",
+  "bemerkungen": null,
+  "eMail": "Blum@email.de",
+  "erhaeltAnschreiben": true,
+  "hausnummer": "443",
+  "hausnummerZusatz": "",
+  "id": 19941,
+  "idErzieherArt": 5,
+  "idSchueler": 1001,
+  "nachname": "Blum",
+  "ortsteilID": null,
+  "staatsangehoerigkeitID": null,
+  "strassenname": "Militscher Weg",
+  "titel": null,
+  "vorname": "Bianca",
+  "wohnortID": 698,
+}
+`;
+
+exports[`Erzieher Tests > gegen { schema: 'GymAbi01' } > getErzieherArten 1`] = `
+ArrayList {
+  "addFirst": [Function],
+  "addLast": [Function],
+  "elementData": [
+    Erzieherart {
+      "bezeichnung": "Vater",
+      "id": 1,
+    },
+    Erzieherart {
+      "bezeichnung": "Mutter",
+      "id": 2,
+    },
+    Erzieherart {
+      "bezeichnung": "Schüler ist volljährig",
+      "id": 3,
+    },
+    Erzieherart {
+      "bezeichnung": "Schülerin ist volljährig",
+      "id": 4,
+    },
+    Erzieherart {
+      "bezeichnung": "Eltern",
+      "id": 5,
+    },
+    Erzieherart {
+      "bezeichnung": "Sonstige",
+      "id": 6,
+    },
+    Erzieherart {
+      "bezeichnung": "Partner",
+      "id": 7,
+    },
+    Erzieherart {
+      "bezeichnung": "Gastmutter",
+      "id": 8,
+    },
+    Erzieherart {
+      "bezeichnung": "Großeltern",
+      "id": 9,
+    },
+    Erzieherart {
+      "bezeichnung": "Pflegeeltern (Vollzeitpflege)",
+      "id": 10,
+    },
+    Erzieherart {
+      "bezeichnung": "Kinderheim",
+      "id": 11,
+    },
+  ],
+  "getFirst": [Function],
+  "getLast": [Function],
+  "modCount": 11,
+  "removeFirst": [Function],
+  "removeLast": [Function],
+}
+`;

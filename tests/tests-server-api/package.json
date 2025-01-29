@@ -1,0 +1,19 @@
+{
+	"name": "@svws-nrw/svws-vite-api-test",
+	"description": "SVWS-Server-Projekt: API Tests",
+	"author": "MSB NRW",
+	"license": "BSD-3-Clause",
+	"version": "1.0.5-SNAPSHOT",
+	"files": [ "dist" ],
+	"main": "./dist/index.js",
+	"type": "module",
+	"types": "./dist/index.d.ts",
+	"scripts": {
+		"test:local": "vitest run ./tests",
+		"test:tempDockerEnv": "vitest run ./tests --coverage.reporter=html --mode allowDestructiveTests ",
+		"lint": "eslint 'tests/**/*.{ts,vue}' --cache",
+		"lint-fix": "eslint 'tests/**/*.{ts,vue}' --cache --fix",
+		"build": "tsc",
+		"check-licenses": "license-checker-rseidelsohn --summary --unknown"
+	}
+}

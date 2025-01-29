@@ -1,0 +1,78 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Betrieb Tests2 > gegen { schema: 'GymAbi01' } > getBetriebStammdaten 1`] = `
+BetriebStammdaten {
+  "Aenderbar": true,
+  "BelehrungISG": false,
+  "ErwFuehrungszeugnis": false,
+  "ExtID": "100001",
+  "GU_ID": "{077335CF-5E51-4C56-A364-2F5624450DB4}",
+  "Massnahmentraeger": false,
+  "Sichtbar": true,
+  "adressArt": 1,
+  "ansprechpartner": ArrayList {
+    "addFirst": [Function],
+    "addLast": [Function],
+    "elementData": [],
+    "getFirst": [Function],
+    "getLast": [Function],
+    "modCount": 0,
+    "removeFirst": [Function],
+    "removeLast": [Function],
+  },
+  "ausbildungsbetrieb": true,
+  "bemerkungen": null,
+  "bietetPraktika": true,
+  "branche": "Lebensmittel",
+  "email": "rewe@wuppertal.de",
+  "fax": null,
+  "hausnr": "73",
+  "hausnrzusatz": "",
+  "id": 1,
+  "name1": "Rewe Wuppertal",
+  "name2": null,
+  "ort_id": 212,
+  "sortierung": 1,
+  "strassenname": "Sonnbornerstraße",
+  "telefon1": "020212345",
+  "telefon2": "020223456",
+  "zusatz1": null,
+  "zusatz2": null,
+}
+`;
+
+exports[`Betrieb Tests2 > gegen { schema: 'GymAbi01' } > getBetriebe 1`] = `
+ArrayList {
+  "addFirst": [Function],
+  "addLast": [Function],
+  "elementData": [
+    BetriebListeEintrag {
+      "adressArt": 1,
+      "branche": null,
+      "hausnr": "73",
+      "hausnrzusatz": "",
+      "id": 1,
+      "name1": "Rewe Wuppertal",
+      "ort_id": 212,
+      "ortsteil_id": null,
+      "strassenname": "Sonnbornerstraße",
+    },
+    BetriebListeEintrag {
+      "adressArt": 4,
+      "branche": null,
+      "hausnr": "5",
+      "hausnrzusatz": "",
+      "id": 2,
+      "name1": "Schreinerei Weber",
+      "ort_id": 212,
+      "ortsteil_id": null,
+      "strassenname": "Holzstraße",
+    },
+  ],
+  "getFirst": [Function],
+  "getLast": [Function],
+  "modCount": 2,
+  "removeFirst": [Function],
+  "removeLast": [Function],
+}
+`;
