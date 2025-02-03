@@ -1,0 +1,13 @@
+{
+	"extends": "../../tsconfig.base.json",
+	"compilerOptions": {
+		"isolatedModules": false,
+		"moduleResolution": "node16",
+		"outDir": "./dist",
+		"baseUrl": "../vite_tests"
+	},
+	"include": [
+		"./*.ts",
+		"./tests/**/*"
+	]
+}

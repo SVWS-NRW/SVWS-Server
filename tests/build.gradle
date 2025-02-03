@@ -3,7 +3,7 @@ import groovy.json.JsonSlurper
 import groovy.xml.XmlSlurper
 
 def buildDirPath = layout.buildDirectory.get()
-def testConfigPath = "${rootDir}/config/tests/config.json"
+def testConfigPath = "${rootDir}/config/tests/config.json" as String
 def CONFIG = new JsonSlurper().parse(new File(testConfigPath))
 
 /**
@@ -18,7 +18,7 @@ task downloadTestDatabases() {
 		// Erhalte Datum und Uhrzeit wann das Zielrepository mit den Testdatenbanken das letzte mal aktualisiert wurde
 		def connection = new URI(dataBaseRepositoryPrefix).toURL().openConnection()
 		connection.setRequestProperty('User-Agent', 'Gradle Script')
-		def lastRepoUpdate = -1
+		def lastRepoUpdate = "-1"
 		if (connection.responseCode == 200) {
 			def json = new JsonSlurper().parse(connection.inputStream)
 			lastRepoUpdate = json.updated_at
@@ -155,11 +155,13 @@ task integrationTest() {
 	// Weitere Testpackages können hier hinzugefügt werden
 	dependsOn 'tests-server-api:testAgainstDockerEnv' // Vite API Tests
 	dependsOn 'tests-e2e-client:testAgainstDockerEnv' // Playwright E2E Tests
+	dependsOn 'tests-server-dav:testAgainstDockerEnv' // Vite API Dav Tests
 
 	// Stoppe die container für die jeweiligen Testumgebungen nach den Integrationstests
 	// Jeden ausgeführte Testpackage sollte auch hier auftauchen
 	finalizedBy 'tests-server-api:removeTestEnvironmentEntryPoint'
 	finalizedBy 'tests-e2e-client:removeTestEnvironmentEntryPoint'
+	finalizedBy 'tests-server-dav:removeTestEnvironmentEntryPoint'
 
 	// Aggregiere die Informationen aus allen Tests
 	finalizedBy 'checkJUnitResults'
@@ -236,6 +238,7 @@ task integrationTestLocalOnlyNoDocker() {
 
 	dependsOn 'tests-server-api:testLokalAPI' // VITE API Tests
 	dependsOn 'tests-e2e-client:testLokalE2E' // Playwright E2E Tests
+	dependsOn 'tests-server-dav:testLokalAPI' // VITE API DAV Tests
 }
 
 
@@ -252,7 +255,8 @@ task checkJUnitResults {
 	// Die Liste der JUnit Report Files. Hier sollten neue Einträge ergänzt werden wenn weitere Testpackages geschrieben werden.
 	def junitReportFiles = [
 			'tests-server-api/build/test-results/api-test-results.xml',
-			'tests-e2e-client/build/test-results/zusammenfassung/e2e-results.xml'
+			'tests-e2e-client/build/test-results/zusammenfassung/e2e-results.xml',
+			'tests-server-dav/build/test-results/api-test-results.xml'
 	]
 	doLast {
 		int totalTests = 0

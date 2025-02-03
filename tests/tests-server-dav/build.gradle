@@ -1,24 +1,82 @@
-//dependencies {
-//	testImplementation 'io.rest-assured:rest-assured:5.3.0'
-//    testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
-//}
-////apply from: ('../subproject-plugin.gradle')
-//
-//task apiTest(type: Test) {
-//	group 'verification'
-//	description 'Java API-Tests ausführen'
-//	printf("DAS IST EIN TEST")
-//	systemProperty "svws.testing.api.port", project.TESTING_SVWS_PORT
-//	systemProperty "svws.testing.api.host", project.TESTING_SVWS_HOST
-//	// Testergebnisse des letzten Laufs löschen, ApiTests sollen immer durchlaufen,
-//	// auch wenn aktuelle Testergebnisse vorhanden sind, bspw. um zu debuggen
-//	useJUnitPlatform()
-//	outputs.upToDateWhen {false}
-//	testLogging{
-//	    events 'passed', 'skipped', 'failed'
-//    }
-//	// fix for deprecation warning with gradle 9.0
-//	// https://docs.gradle.org/8.2/userguide/upgrading_version_8.html#test_task_default_classpath
-//	testClassesDirs = testing.suites.test.sources.output.classesDirs
-//	classpath = testing.suites.test.sources.runtimeClasspath
-//}
+// Initialisierung der Plugins
+plugins {
+	id 'svws.gradle.node.plugin'
+}
+
+// Führt alle Tasks von subproject-plugin.gradle in diesem Verzeichnis aus
+apply from: ('../subproject-plugin.gradle')
+
+// Erzeuge eine unique JobId welche in den Tasks, temporären Dateien und Container verwendet wird.
+def jobId = UUID.randomUUID().toString().substring(0, 2)
+
+/**
+ * Konfiguration für das Subpackage bzw. die Tests
+ */
+ext {
+	SVWS_SERVERMODE = "dev"
+
+	// Docker Konfiguration
+	APP_CONTAINER_NAME = "app-vite-dav-tests--" + jobId
+	DB_CONTAINER_NAME = "database-vite-dav-tests--" + jobId
+	DB_SERVICE_NAME = "mariadb--" + jobId
+	APP_IMAGE_NAME = "svws-app--" + jobId
+
+	// Auch für Docker. Forwarded Ports, werden nur bei lokal genutzten Container verwendet
+	FORWARDED_DB_PORT = 3319
+	FORWARDED_APP_PORT = 5019
+
+	// Liste der Datenbanken die für die Tests genutzt / geseedet werden sollen
+	TARGET_TEST_DATA_BASES = ['GymAbiDav']
+}
+
+
+/**
+ * Starten der Integrationstests gegen die Docker Umgebung
+ */
+task testAgainstDockerEnv(type: NpmRun) {
+	description = 'Startet die Integrationstests gegen die Docker Umgebung'
+	group 'verification'
+	dependsOn ':svws-webclient:core:assemble'
+	dependsOn 'seedDatabase'
+
+	// Vite darf gegen Server laufen mit selbst signierten Zertifikaten
+	environment NODE_TLS_REJECT_UNAUTHORIZED: 0
+
+	// Falls Exceptions auftreten führen diese nicht zum Abbruch des Scripts
+	ignoreExitValue = true
+
+	doFirst {
+		mkdir file("$projectDir/build/test-results")
+	}
+
+	// Die Ziel-url vom Container mit der Application
+	if (System.getenv('CI_SERVER')) {
+		environment VITE_targetHost: "https://$project.ext.APP_CONTAINER_NAME:8443"
+	} else {
+		environment VITE_targetHost: "https://localhost:$project.ext.FORWARDED_APP_PORT"
+	}
+
+	outputs.dir file("$projectDir/build/test-results")
+	outputs.upToDateWhen { false }
+
+	// npm Kommando
+	args = ['test:tempDockerEnv']
+}
+
+/**
+ * Starten der Tests gegen die lokale Applikation. Hier wird kein Docker gestartet.
+ */
+task testLokalDAV(type: NpmRun) {
+	group 'verification'
+	dependsOn ':testingNeu:checkIfLokalApplikationIsRunning'
+	dependsOn ':testingNeu:checkIfLokalDataBaseIsRunning'
+
+	// Falls Exceptions auftreten führen diese nicht zum Abbruch des Tasks
+	ignoreExitValue = true
+
+	inputs.files fileTree("$projectDir/tests"),
+			fileTree("$rootDir").matching { exclude 'build', 'dist' }
+
+	// npm Kommando
+	args = ['test:local']
+}
