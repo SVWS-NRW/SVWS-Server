@@ -2807,6 +2807,28 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
+	 * Liefert die Anzahl externer SuS und der Dummy-SuS die dem Kurs zugeordnet sind.
+	 *
+	 * @param  idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Anzahl externer SuS und der Dummy-SuS die dem Kurs zugeordnet sind.
+	 */
+	public int getOfKursAnzahlSchuelerExternePlusDummies(final long idKurs) {
+		return getOfKursAnzahlSchuelerExterne(idKurs) +  getOfKursAnzahlSchuelerDummy(idKurs);
+	}
+
+	/**
+	 * Liefert die Anzahl internen SuS. Das sind alle SuS der Kursliste abzüglich der SuS mit Status "extern".
+	 *
+	 * @param  idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Anzahl internen SuS. Das sind alle SuS der Kursliste abzüglich der SuS mit Status "extern".
+	 */
+	public int getOfKursAnzahlSchuelerInterne(final long idKurs) {
+		return getOfKursAnzahlSchueler(idKurs) - getOfKursAnzahlSchuelerExterne(idKurs);
+	}
+
+	/**
 	 * Liefert die Anzahl aller Schüler des Kurses mit Schriftlichkeit {@link GostSchriftlichkeit#SCHRIFTLICH}.
 	 *
 	 * @param idKurs  Die Datenbank-ID des Kurses.

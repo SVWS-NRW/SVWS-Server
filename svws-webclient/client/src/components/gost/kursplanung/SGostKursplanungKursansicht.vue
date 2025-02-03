@@ -240,11 +240,11 @@
 												<div @click="toggleKursAusgewaehlt(kurs)"
 													class="select-none w-full h-full rounded-sm flex justify-around items-center group text-black p-px"
 													:class="istKursAusgewaehlt(kurs).value ? 'bg-white text-black font-bold' : 'bg-white/50'">
-													<svws-ui-tooltip v-if="getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id) + getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id)">
-														<span class="whitespace-nowrap">{{ getErgebnismanager().getOfKursAnzahlSchueler(kurs.id) + getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id) + props.getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id) }}<span class="font-bold">*</span></span>
-														<template #content>{{ getErgebnismanager().getOfKursAnzahlSchueler(kurs.id) }} und {{ getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id) + getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id) }} zusätzliche Kursteilnehmer</template>
+													<svws-ui-tooltip v-if="getErgebnismanager().getOfKursAnzahlSchuelerExternePlusDummies(kurs.id) > 0">
+														<span class="whitespace-nowrap">{{ getErgebnismanager().getOfKursAnzahlSchuelerPlusDummy(kurs.id) }}<span class="font-bold">*</span></span>
+														<template #content>{{ getErgebnismanager().getOfKursAnzahlSchuelerInterne(kurs.id) }} und {{ getErgebnismanager().getOfKursAnzahlSchuelerExternePlusDummies(kurs.id) }} zusätzliche Kursteilnehmer</template>
 													</svws-ui-tooltip>
-													<span v-else>{{ getErgebnismanager().getOfKursAnzahlSchueler(kurs.id) }}</span>
+													<span v-else>{{ getErgebnismanager().getOfKursAnzahlSchuelerPlusDummy(kurs.id) }}</span>
 												</div>
 											</div>
 										</template>
@@ -275,11 +275,11 @@
 															'cursor-grab': !isDragging,
 														}">
 														<span v-if="hatUpdateKompetenz && !istKursFixiertInSchiene(kurs, schiene).value" class="icon-sm group-hover:bg-white rounded-sm i-ri-draggable -my-0.5 opacity-40 group-hover:opacity-100 px-1.5" />
-														<svws-ui-tooltip v-if="getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id) + getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id)">
-															<span class="whitespace-nowrap">{{ getErgebnismanager().getOfKursAnzahlSchueler(kurs.id) + getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id) + props.getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id) }}<span class="font-bold">*</span></span>
-															<template #content>{{ getErgebnismanager().getOfKursAnzahlSchueler(kurs.id) }} und {{ getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id) + getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id) }} zusätzliche Kursteilnehmer</template>
+														<svws-ui-tooltip v-if="getErgebnismanager().getOfKursAnzahlSchuelerExternePlusDummies(kurs.id) > 0">
+															<span class="whitespace-nowrap">{{ getErgebnismanager().getOfKursAnzahlSchuelerPlusDummy(kurs.id) }}<span class="font-bold">*</span></span>
+															<template #content>{{ getErgebnismanager().getOfKursAnzahlSchuelerInterne(kurs.id) }} und {{ getErgebnismanager().getOfKursAnzahlSchuelerExternePlusDummies(kurs.id) }} zusätzliche Kursteilnehmer</template>
 														</svws-ui-tooltip>
-														<span v-else>{{ getErgebnismanager().getOfKursAnzahlSchueler(kurs.id) }}</span>
+														<span v-else>{{ getErgebnismanager().getOfKursAnzahlSchuelerPlusDummy(kurs.id) }}</span>
 														<div v-if="hatUpdateKompetenz || istKursFixiertInSchiene(kurs, schiene).value" class="group" @click.stop="hatUpdateKompetenz && toggleRegelFixiereKursInSchiene(kurs, schiene)">
 															<span v-if="istKursFixiertInSchiene(kurs, schiene).value" class="icon-sm i-ri-pushpin-fill inline-block opacity-75 group-hover:opacity-100 -my-0.5" />
 															<span v-if="hatUpdateKompetenz && !istKursFixiertInSchiene(kurs, schiene).value" class="icon-sm i-ri-pushpin-line inline-block opacity-25 group-hover:opacity-100 -my-0.5" />
