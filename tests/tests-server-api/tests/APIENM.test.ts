@@ -8,7 +8,7 @@ import {
 	ENMLerngruppe,
 	ENMNote,
 	ENMSchueler, ENMTeilleistungsart
-} from "@svws-nrw/svws-core";
+} from "@core";
 
 describe("APIENM Tests", () => {
 	describe.each([{schema: "GymAbi01"}])('gegen %s', ({schema}) => {

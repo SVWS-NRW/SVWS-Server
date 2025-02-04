@@ -1,7 +1,6 @@
 import {describe, expect, test} from "vitest";
 import {getApiServer} from "./utils/TestUtils.js";
-import {BetriebListeEintrag} from "@svws-nrw/svws-core";
-
+import {BetriebListeEintrag} from "@core";
 
 describe("Betrieb Tests2", () => {
 	describe.each([{schema: "GymAbi01"}])('gegen %s', ({schema}) => {

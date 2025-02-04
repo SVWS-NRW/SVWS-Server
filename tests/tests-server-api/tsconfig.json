@@ -6,7 +6,8 @@
 		"outDir": "./dist",
 		"baseUrl": "../vite_tests",
 		"paths": {
-			"~/*": ["./src/*"]
+			"~/*": ["./src/*"],
+			"@core": ["../../svws-webclient/core/src/index.ts"]
 		}
 	},
 	"include": [

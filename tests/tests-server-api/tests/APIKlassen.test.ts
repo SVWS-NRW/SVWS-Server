@@ -1,5 +1,5 @@
 import {describe, test, expect} from 'vitest';
-import {ArrayList} from "@svws-nrw/svws-core";
+import {ArrayList} from "@core";
 import {getApiServer, handleRequest} from "./utils/TestUtils.js";
 
 const allowDestructiveTests = process.env.MODE === 'allowDestructiveTests'

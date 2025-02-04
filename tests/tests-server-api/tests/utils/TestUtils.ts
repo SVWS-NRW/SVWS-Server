@@ -1,4 +1,4 @@
-import {ApiServer, OpenApiError} from "@svws-nrw/svws-core";
+import {ApiServer, OpenApiError} from "@core";
 
 export interface Result<T> {
 	content?: T,

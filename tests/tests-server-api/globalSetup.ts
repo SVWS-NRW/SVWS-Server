@@ -1,5 +1,4 @@
-
-import {JsonCoreTypeReader} from "@svws-nrw/svws-core";
+import {JsonCoreTypeReader} from "@core";
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
