@@ -6133,6 +6133,17 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte einer Klasse.
+	 *
+	 * @param idKlasse   Die Datenbank-ID der Klasse.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte einer Klasse.
+	 */
+	public @NotNull List<StundenplanUnterricht> unterrichtGetMengeByKlasseId(final long idKlasse) {
+		return MapUtils.getOrCreateArrayList(_unterrichtmenge_by_idKlasse, idKlasse);
+	}
+
+	/**
 	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte einer Klasse mit einem bestimmten Wochentyp.
 	 *
 	 * @param idKlasse   Die Datenbank-ID der Klasse.
@@ -6427,6 +6438,17 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte einer Lehrkraft.
+	 *
+	 * @param idLehrer   Die Datenbank-ID der Lehrkraft.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte einer Lehrkraft.
+	 */
+	public @NotNull List<StundenplanUnterricht> unterrichtGetMengeByLehrerId(final long idLehrer) {
+		return MapUtils.getOrCreateArrayList(_unterrichtmenge_by_idLehrer, idLehrer);
+	}
+
+	/**
 	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte der Lehrkraft am "wochentag, stunde, wochentyp" einer bestimmten Schiene.
 	 * Falls der Parameter "inklWoche0" TRUE ist und der "wochentyp" größer als 0 ist, wird der Unterricht des Wochentyps 0 auch hinzugefügt.
 	 *
@@ -6592,6 +6614,17 @@ public class StundenplanManager {
 				list.add(u);
 
 		return list;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte eines Raumes.
+	 *
+	 * @param idRaum   Die ID des {@link StundenplanRaum}-Objektes.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte eines Raumes.
+	 */
+	public @NotNull List<StundenplanUnterricht> unterrichtGetMengeByRaumId(final long idRaum) {
+		return MapUtils.getOrCreateArrayList(_unterrichtmenge_by_idRaum, idRaum);
 	}
 
 	/**

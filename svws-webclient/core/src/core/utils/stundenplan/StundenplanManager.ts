@@ -5574,6 +5574,17 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte einer Klasse.
+	 *
+	 * @param idKlasse   Die Datenbank-ID der Klasse.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte einer Klasse.
+	 */
+	public unterrichtGetMengeByKlasseId(idKlasse : number) : List<StundenplanUnterricht> {
+		return MapUtils.getOrCreateArrayList(this._unterrichtmenge_by_idKlasse, idKlasse);
+	}
+
+	/**
 	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte einer Klasse mit einem bestimmten Wochentyp.
 	 *
 	 * @param idKlasse   Die Datenbank-ID der Klasse.
@@ -5840,6 +5851,17 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte einer Lehrkraft.
+	 *
+	 * @param idLehrer   Die Datenbank-ID der Lehrkraft.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte einer Lehrkraft.
+	 */
+	public unterrichtGetMengeByLehrerId(idLehrer : number) : List<StundenplanUnterricht> {
+		return MapUtils.getOrCreateArrayList(this._unterrichtmenge_by_idLehrer, idLehrer);
+	}
+
+	/**
 	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte der Lehrkraft am "wochentag, stunde, wochentyp" einer bestimmten Schiene.
 	 * Falls der Parameter "inklWoche0" TRUE ist und der "wochentyp" größer als 0 ist, wird der Unterricht des Wochentyps 0 auch hinzugefügt.
 	 *
@@ -5973,6 +5995,17 @@ export class StundenplanManager extends JavaObject {
 			if (this.unterrichtHatSchiene(u, idSchiene) || (idSchiene === -2))
 				list.add(u);
 		return list;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte eines Raumes.
+	 *
+	 * @param idRaum   Die ID des {@link StundenplanRaum}-Objektes.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte eines Raumes.
+	 */
+	public unterrichtGetMengeByRaumId(idRaum : number) : List<StundenplanUnterricht> {
+		return MapUtils.getOrCreateArrayList(this._unterrichtmenge_by_idRaum, idRaum);
 	}
 
 	/**
