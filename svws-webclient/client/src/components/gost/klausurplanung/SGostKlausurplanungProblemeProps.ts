@@ -7,7 +7,6 @@ import type {
 	GostSchuelerklausur,
 	List,
 	Schuljahresabschnitt,
-	StundenplanManager,
 } from "@core";
 import type { WritableComputedRef } from "vue";
 

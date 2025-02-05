@@ -424,6 +424,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		try {
 			const result = await api.server.createGostKlausurenKursklausurenJahrgangHalbjahrQuartal(api.schema, this.abiturjahr, this.halbjahr.id, quartal);
 			this.manager.addKlausurData(result);
+			return result;
 		} finally {
 			this.commit();
 			api.status.stop();

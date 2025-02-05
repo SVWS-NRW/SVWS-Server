@@ -4,7 +4,6 @@ import type {
 	GostJahrgangsdaten,
 	GostKlausurplanManager,
 	Schuljahresabschnitt,
-	StundenplanManager,
 } from "@core";
 import type { WritableComputedRef } from "vue";
 

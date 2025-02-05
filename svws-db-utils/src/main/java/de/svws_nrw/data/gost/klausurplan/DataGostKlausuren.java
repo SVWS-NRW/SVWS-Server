@@ -161,12 +161,14 @@ public final class DataGostKlausuren {
 		final List<DTOGostKlausurenSchuelerklausuren> schuelerklausuren = new ArrayList<>();
 		long idNextKursklausur = conn.transactionGetNextID(DTOGostKlausurenKursklausuren.class);
 
+		final List<DTOKurs> missingVorgaben = new ArrayList<>();
+
 		for (final DTOKurs kurs : kurse) {
 			final List<DTOSchuelerLernabschnittsdaten> laDaten = getLernabschnittsdatenZuKurs(conn, sja.Jahr, kurs);
 			final List<GostKlausurvorgabe> listKursVorgaben = manager.vorgabeGetMengeByHalbjahrAndQuartalAndKursartallgAndFachid(_abiturjahr, halbjahr, quartal,
 					GostKursart.fromKuerzelOrException(kurs.KursartAllg), kurs.Fach_ID);
 			if (listKursVorgaben.isEmpty() && !laDaten.isEmpty())
-				throw new ApiOperationException(Status.NOT_FOUND, "Keine Klausurvorgaben für diesen Kurs definiert: " + kurs.KurzBez);
+				missingVorgaben.add(kurs);
 			for (final GostKlausurvorgabe vorgabe : listKursVorgaben) {
 				if (!(mapKursidVorgabeIdKursklausur.containsKey(kurs.ID) && mapKursidVorgabeIdKursklausur.get(kurs.ID).containsKey(vorgabe.idVorgabe))) {
 					final DTOGostKlausurenKursklausuren kursklausur = new DTOGostKlausurenKursklausuren(idNextKursklausur, vorgabe.idVorgabe, kurs.ID);
@@ -197,6 +199,14 @@ public final class DataGostKlausuren {
 		retKlausuren.kursklausuren = new DataGostKlausurenKursklausur(conn).mapList(kursklausuren);
 		retKlausuren.schuelerklausuren = new DataGostKlausurenSchuelerklausur(conn).mapList(schuelerklausuren);
 		retKlausuren.schuelerklausurtermine = new DataGostKlausurenSchuelerklausurTermin(conn).mapList(sktermine);
+		if (!missingVorgaben.isEmpty()) {
+			final String kursText = missingVorgaben.size() == 1 ? "den Kurs" : "die Kurse";
+			final String kursListe = missingVorgaben.stream().map(k -> k.KurzBez).collect(Collectors.joining(", "));
+			final String wurdeText = missingVorgaben.size() > 1 ? "n" : "";
+			retKlausuren.description = String.format("Für %s %s wurde%s keine Klausur erzeugt, da die entsprechende Klausurvorgabe fehlt.",
+			    kursText, kursListe, wurdeText
+			);
+		}
 		return retKlausuren;
 	}
 

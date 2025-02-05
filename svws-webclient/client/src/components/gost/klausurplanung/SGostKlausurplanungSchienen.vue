@@ -185,7 +185,7 @@
 				<span>Klicke auf einen Termin oder verschiebe eine Klausur, um Details zu bestehenden bzw. entstehenden Konflikten anzuzeigen.</span>
 			</div>
 		</svws-ui-content-card>
-		<s-gost-klausurplanung-modal v-model:show="modalVorgaben" :text="modalError" :jump-to="gotoVorgaben" jump-to_text="Zu den Klausurvorgaben" abbrechen_text="OK" />
+		<s-gost-klausurplanung-modal v-model:show="modalVorgaben" :text="modalError" :jump-to="gotoVorgaben" jump-to-text="Zu den Klausurvorgaben" abbrechen-text="OK" />
 		<s-gost-klausurplanung-modal v-model:show="modalKlausurHatRaeume" text="Die Kursklausur hat bereits eine oder mehrere Raumzuweisungen. Beim Fortfahren werden diese gelöscht." :weiter="verschiebeKlausurTrotzRaumzuweisung" />
 	</div>
 </template>
@@ -193,7 +193,7 @@
 <script setup lang="ts">
 
 	import type { GostSchuelerklausurTermin, JavaMapEntry, JavaSet, List} from "@core";
-	import { BenutzerKompetenz, OpenApiError } from "@core";
+	import { BenutzerKompetenz } from "@core";
 	import {GostKursklausur, GostKlausurtermin, HashSet, KlausurterminblockungAlgorithmen, GostKlausurterminblockungDaten, KlausurterminblockungModusKursarten, KlausurterminblockungModusQuartale, DateUtils } from "@core";
 	import { computed, ref, onMounted, onUnmounted } from 'vue';
 	import type { GostKlausurplanungSchienenProps } from './SGostKlausurplanungSchienenProps';
@@ -233,14 +233,10 @@
 	const modalError = ref<string | undefined>(undefined);
 
 	async function erzeugeKursklausurenAusVorgabenOrModal() {
-		try {
-			await props.erzeugeKursklausurenAusVorgaben(props.quartalsauswahl.value);
-		} catch(err) {
-			if (err instanceof OpenApiError) {
-				modalError.value = await err.response?.text();
-				modalVorgaben.value = true;
-			} else
-				throw err;
+		const ergebnis = await props.erzeugeKursklausurenAusVorgaben(props.quartalsauswahl.value);
+		if (ergebnis.description !== null) {
+			modalError.value = ergebnis.description;
+			modalVorgaben.value = true;
 		}
 	}
 

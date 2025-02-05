@@ -9,6 +9,7 @@ import type {
 	GostSchuelerklausurTermin,
 	List,
 	BenutzerKompetenz,
+	GostKlausurenCollectionData,
 } from "@core";
 import type { WritableComputedRef } from "vue";
 
@@ -22,7 +23,7 @@ export interface GostKlausurplanungSchienenProps {
 	createSchuelerklausurTermin: (id: number) => Promise<void>;
 	erzeugeKlausurtermin: (quartal: number, istHaupttermin: boolean) => Promise<GostKlausurtermin>;
 	loescheKlausurtermine: (termine: List<GostKlausurtermin>) => Promise<void>;
-	erzeugeKursklausurenAusVorgaben: (quartal: number) => Promise<void>;
+	erzeugeKursklausurenAusVorgaben: (quartal: number) => Promise<GostKlausurenCollectionData>;
 	patchKlausurtermin: (id: number, termin: Partial<GostKlausurtermin>) => Promise<void>;
 	blockenKursklausuren: (blockungDaten: GostKlausurterminblockungDaten) => Promise<void>;
 	quartalsauswahl: WritableComputedRef<0 | 1 | 2>;

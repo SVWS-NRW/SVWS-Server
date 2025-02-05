@@ -9,7 +9,6 @@ import type {
 	List,
 	GostKlausurenUpdate,
 	GostJahrgangsdaten,
-	Schuljahresabschnitt,
 	BenutzerKompetenz,
 } from "@core";
 import type { WritableComputedRef } from "vue";

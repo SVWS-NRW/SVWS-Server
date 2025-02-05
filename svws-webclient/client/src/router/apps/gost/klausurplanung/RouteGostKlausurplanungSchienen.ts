@@ -9,7 +9,6 @@ import type { GostKlausurplanungSchienenProps } from "~/components/gost/klausurp
 import { routeError } from "~/router/error/RouteError";
 import { api } from "~/router/Api";
 import { schulformenGymOb } from "~/router/RouteHelper";
-import { RouteManager } from "~/router/RouteManager";
 
 const SGostKlausurplanungSchienen = () => import("~/components/gost/klausurplanung/SGostKlausurplanungSchienen.vue");
 
