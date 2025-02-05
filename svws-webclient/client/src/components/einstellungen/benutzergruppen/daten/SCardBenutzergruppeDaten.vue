@@ -24,7 +24,7 @@
 			if (value === props.getBenutzergruppenManager().istAdmin())
 				return;
 			void props.setIstAdmin(value);
-		}
+		},
 	});
 
 </script>

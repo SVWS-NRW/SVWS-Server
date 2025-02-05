@@ -29,6 +29,7 @@
 </script>
 
 <style lang="postcss" scoped>
+	@reference "../../../../ui/src/assets/styles/index.css"
 
 	.page--content {
 		@apply overflow-y-hidden overflow-x-auto h-full pb-3 pt-6 lg:gap-x-8;

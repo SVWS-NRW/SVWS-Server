@@ -18,7 +18,7 @@
 					{{ kMan().schuelerGetByIdOrException(props.kMan().schuelerklausurGetByIdOrException(rowData.idSchuelerklausur).idSchueler)?.vorname }}
 				</template>
 				<template #cell(kurs)="{ rowData }">
-					<span class="svws-ui-badge" :style="`--background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(kMan().kursklausurBySchuelerklausurTermin(rowData)) };`">{{ kMan().kursKurzbezeichnungByKursklausur(kMan().kursklausurBySchuelerklausurTermin(rowData)) }}</span>
+					<span class="svws-ui-badge" :style="`background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(kMan().kursklausurBySchuelerklausurTermin(rowData)) };`">{{ kMan().kursKurzbezeichnungByKursklausur(kMan().kursklausurBySchuelerklausurTermin(rowData)) }}</span>
 				</template>
 				<template #cell(kuerzel)="{ rowData }">
 					{{ kMan().kursLehrerKuerzelByKursklausur(kMan().kursklausurBySchuelerklausurTermin(rowData)) }}

@@ -41,6 +41,9 @@
 </script>
 
 <style lang="postcss">
+
+	@reference "../../assets/styles/index.css";
+
 	.svws-ui-dashboard {
 		@apply grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4 grid-flow-dense;
 	}
@@ -84,63 +87,63 @@
 			@apply text-base md:text-headline-md font-bold relative mb-1;
 		}
 
-		&--transparent,
-		.page--statistik &--transparent {
-			@apply bg-transparent;
-			@apply px-2;
-		}
-
-		&--dark {
-			@apply bg-ui-brand text-ui-onbrand;
-			@apply font-medium;
-
-			.dashboard-tile--title {
-				@apply text-ui-onbrand-secondary;
-
-				.page--statistik & {
-					@apply text-ui-onstatistic-secondary;
-				}
-			}
-
-			.dashboard-tile--number {
-				@apply text-ui-onbrand-secondary;
-			}
-
-			.page--statistik & {
-				@apply bg-ui-statistic text-ui-onstatistic;
-
-				.dashboard-tile--number {
-					@apply text-ui-onstatistic-secondary;
-				}
-			}
-		}
-
-		&--clickable {
-			@apply cursor-pointer;
-
-			&:hover,
-			&:focus-visible {
-				@apply bg-ui-brand-hover text-ui-onbrand;
-
-				.page--statistik & {
-					@apply bg-ui-statistic-hover text-ui-onstatistic;
-				}
-
-				.dashboard-tile--title {
-					@apply text-ui-onbrand-secondary-hover;
-
-					.page--statistik & {
-						@apply text-ui-onstatistic-secondary-hover;
-					}
-				}
-			}
-		}
-
 		.data-table {
 			@apply text-base;
 
 			.data-table__thead {
 				@apply text-sm;
+			}
+		}
+	}
+
+	.svws-ui-dashboard-tile--transparent,
+	.page--statistik .svws-ui-dashboard-tile--transparent {
+		@apply bg-transparent;
+		@apply px-2;
+	}
+
+	.svws-ui-dashboard-tile--dark {
+		@apply bg-ui-brand text-ui-onbrand;
+		@apply font-medium;
+
+		.dashboard-tile--title {
+			@apply text-ui-onbrand-secondary;
+
+			.page--statistik & {
+				@apply text-ui-onstatistic-secondary;
+			}
+		}
+
+		.dashboard-tile--number {
+			@apply text-ui-onbrand-secondary;
+		}
+
+		.page--statistik & {
+			@apply bg-ui-statistic text-ui-onstatistic;
+
+			.dashboard-tile--number {
+				@apply text-ui-onstatistic-secondary;
+			}
+		}
+	}
+
+	.svws-ui-dashboard-tile--clickable {
+		@apply cursor-pointer;
+
+		&:hover,
+		&:focus-visible {
+			@apply bg-ui-brand-hover text-ui-onbrand;
+
+			.page--statistik & {
+				@apply bg-ui-statistic-hover text-ui-onstatistic;
+			}
+
+			.dashboard-tile--title {
+				@apply text-ui-onbrand-secondary-hover;
+
+				.page--statistik & {
+					@apply text-ui-onstatistic-secondary-hover;
+				}
 			}
 		}
 	}

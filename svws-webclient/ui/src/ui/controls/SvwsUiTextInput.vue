@@ -61,7 +61,7 @@
 						<template v-if="(validator !== undefined) && (!validator().getFehler().isEmpty()) && (validator().getFehlerart() !== ValidatorFehlerart.UNGENUTZT)">
 							<div class="text-ui-statistic text-headline-sm text-center pt-1"> Relevant für die Statistik </div>
 							<div v-for="fehler in validator().getFehler()" :key="fehler.hashCode" class="pt-2 pb-2">
-								<div class="rounded pl-2" :class="{
+								<div class="rounded-sm pl-2" :class="{
 									'bg-ui-danger': (validator().getFehlerart() === ValidatorFehlerart.MUSS),
 									'bg-ui-caution': (validator().getFehlerart() === ValidatorFehlerart.KANN),
 									'bg-ui-warning': (validator().getFehlerart() === ValidatorFehlerart.HINWEIS)}">
@@ -246,6 +246,8 @@
 
 <style lang="postcss">
 
+	@reference "../../assets/styles/index.css";
+
 	.text-input-component {
 		@apply text-ui;
 		@apply flex;
@@ -262,11 +264,11 @@
 		}
 
 		&:focus {
-			@apply outline-none;
+			@apply outline-hidden;
 		}
 
 		input {
-			@apply cursor-text overflow-ellipsis;
+			@apply cursor-text text-ellipsis;
 
 			&[type="email"],
 			&[type="tel"] {
@@ -274,7 +276,7 @@
 			}
 
 			&:focus {
-				@apply outline-none;
+				@apply outline-hidden;
 			}
 		}
 	}
@@ -287,19 +289,20 @@
 	}
 
 	.text-input-component .icon.svws-icon {
-		@apply pointer-events-none absolute top-1 right-1.5 bottom-1 w-5 rounded inline-flex items-center justify-end pr-1 text-base opacity-50 mt-1;
+		@apply pointer-events-none absolute top-1 right-1.5 bottom-1 w-5 rounded-sm inline-flex items-center justify-end pr-1 text-base opacity-50 mt-1;
 
-		&--remove {
-			@apply pointer-events-auto cursor-pointer absolute top-1 right-1 bottom-1 w-5 rounded inline-flex items-center justify-end pr-1 text-base mr-6 mt-1;
+	}
 
-			.dark &,
-			.htw-dark & {
-				@apply icon-white;
-			}
+	.text-input-component .icon.svws-icon--remove {
+		@apply pointer-events-auto cursor-pointer absolute top-1 right-1 bottom-1 w-5 rounded-sm inline-flex items-center justify-end pr-1 text-base mr-6 mt-1;
 
-			&:hover {
-				@apply icon-danger;
-			}
+		.dark &,
+		.htw-dark & {
+			@apply icon-white;
+		}
+
+		&:hover {
+			@apply icon-danger;
 		}
 	}
 
@@ -353,7 +356,7 @@
 		padding: 0.5em 0.7em;
 
 		&:focus {
-			@apply outline-none;
+			@apply outline-hidden;
 		}
 	}
 
@@ -361,7 +364,7 @@
 		padding-left: 4.2em;
 	}
 
-	.text-input--rounded {
+	.text-input--rounded-sm {
 		@apply rounded-full;
 	}
 
@@ -377,7 +380,7 @@
 	}
 
 	.text-input-component .text-input--control:focus-visible {
-		@apply ring ring-ui-neutral;
+		@apply ring-3 ring-ui-contrast-10;
 	}
 
 	.text-input--statistics.text-input-component:focus-within .text-input--control,
@@ -433,28 +436,28 @@
 			@apply text-ui-brand;
 		}
 
-		&-icon {
-			@apply absolute left-2 opacity-25;
-			top: 50%;
-			transform: translateY(-50%) scale(90%);
-
-			.text-input-component:not(.text-input--filled):not(:focus-within):not(.text-input--disabled):hover & {
-				@apply opacity-100;
-			}
-
-			.text-input-component:focus-within &,
-			.text-input--filled & {
-				@apply opacity-100;
-				transform: translateY(-50%) scale(100%);
-			}
-		}
-
 		input {
 			@apply pl-8;
 
 			&::placeholder {
 				@apply text-ui opacity-50 font-normal;
 			}
+		}
+	}
+
+	.text-input--search-icon {
+		@apply absolute left-2 opacity-25;
+		top: 50%;
+		transform: translateY(-50%) scale(90%);
+
+		.text-input-component:not(.text-input--filled):not(:focus-within):not(.text-input--disabled):hover & {
+			@apply opacity-100;
+		}
+
+		.text-input-component:focus-within &,
+		.text-input--filled & {
+			@apply opacity-100;
+			transform: translateY(-50%) scale(100%);
 		}
 	}
 
@@ -585,7 +588,7 @@
 
 	.text-input--headless,
 	.svws-ui-table .text-input--control {
-		@apply w-full whitespace-nowrap border-0 outline-none;
+		@apply w-full whitespace-nowrap border-0 outline-hidden;
 
 		&:not([class*="bg-"]) {
 			background-color: unset;

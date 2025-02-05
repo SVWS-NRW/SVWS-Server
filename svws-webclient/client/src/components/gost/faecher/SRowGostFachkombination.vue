@@ -68,22 +68,22 @@
 
 	const fach1 = computed<GostFach | null>({
 		get: () => props.faecherManager().get(props.kombination.fachID1),
-		set: (value) => void props.patchFachkombination({ fachID1: value?.id }, props.kombination.id)
+		set: (value) => void props.patchFachkombination({ fachID1: value?.id }, props.kombination.id),
 	});
 
 	const kursart1 = computed<GostKursart | null>({
 		get: () => GostKursart.fromKuerzel(props.kombination.kursart1),
-		set: (value) => void props.patchFachkombination({ kursart1: value?.kuerzel ?? null }, props.kombination.id)
+		set: (value) => void props.patchFachkombination({ kursart1: value?.kuerzel ?? null }, props.kombination.id),
 	});
 
 	const fach2 = computed<GostFach | null>({
 		get: () => props.faecherManager().get(props.kombination.fachID2),
-		set: (value) => void props.patchFachkombination({ fachID2: value?.id }, props.kombination.id)
+		set: (value) => void props.patchFachkombination({ fachID2: value?.id }, props.kombination.id),
 	});
 
 	const kursart2 = computed<GostKursart | null>({
 		get: () => GostKursart.fromKuerzel(props.kombination.kursart2),
-		set: (value) => void props.patchFachkombination({ kursart2: value?.kuerzel ?? null }, props.kombination.id)
+		set: (value) => void props.patchFachkombination({ kursart2: value?.kuerzel ?? null }, props.kombination.id),
 	});
 
 	const gueltigEF1 = computed<boolean>({
@@ -92,7 +92,7 @@
 			const result : boolean[] = [...props.kombination.gueltigInHalbjahr];
 			result[GostHalbjahr.EF1.id] = value;
 			void props.patchFachkombination({ gueltigInHalbjahr: result }, props.kombination.id);
-		}
+		},
 	});
 
 	const gueltigEF2 = computed<boolean>({
@@ -101,7 +101,7 @@
 			const result : boolean[] = [...props.kombination.gueltigInHalbjahr];
 			result[GostHalbjahr.EF2.id] = value;
 			void props.patchFachkombination({ gueltigInHalbjahr: result }, props.kombination.id);
-		}
+		},
 	});
 
 	const gueltigQ11 = computed<boolean>({
@@ -110,7 +110,7 @@
 			const result : boolean[] = [...props.kombination.gueltigInHalbjahr];
 			result[GostHalbjahr.Q11.id] = value;
 			void props.patchFachkombination({ gueltigInHalbjahr: result }, props.kombination.id);
-		}
+		},
 	});
 
 	const gueltigQ12 = computed<boolean>({
@@ -119,7 +119,7 @@
 			const result : boolean[] = [...props.kombination.gueltigInHalbjahr];
 			result[GostHalbjahr.Q12.id] = value;
 			void props.patchFachkombination({ gueltigInHalbjahr: result }, props.kombination.id);
-		}
+		},
 	});
 
 	const gueltigQ21 = computed<boolean>({
@@ -128,7 +128,7 @@
 			const result : boolean[] = [...props.kombination.gueltigInHalbjahr];
 			result[GostHalbjahr.Q21.id] = value;
 			void props.patchFachkombination({ gueltigInHalbjahr: result }, props.kombination.id);
-		}
+		},
 	});
 
 	const gueltigQ22 = computed<boolean>({
@@ -137,7 +137,7 @@
 			const result : boolean[] = [...props.kombination.gueltigInHalbjahr];
 			result[GostHalbjahr.Q22.id] = value;
 			void props.patchFachkombination({ gueltigInHalbjahr: result }, props.kombination.id);
-		}
+		},
 	});
 
 	const hinweistext = computed<string>(() => {

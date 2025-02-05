@@ -99,6 +99,8 @@
 
 <style lang="postcss">
 
+	@reference "../../assets/styles/index.css";
+
 	.svws-ui-button-select {
 		@apply flex gap-px;
 
@@ -113,6 +115,8 @@
 </style>
 
 <style lang="postcss" scoped>
+
+	@reference "../../assets/styles/index.css";
 
 	.button {
 		@apply rounded-r-none z-10 relative;

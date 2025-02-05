@@ -2545,7 +2545,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 *
 	 * @return die Anzahl an Schülern die dem Kurs zugeordnet sind plus potentiell zugeordnete Dummy SuS.
 	 */
-	private getOfKursAnzahlSchuelerPlusDummy(idKurs : number) : number {
+	public getOfKursAnzahlSchuelerPlusDummy(idKurs : number) : number {
 		return this.getKursE(idKurs).schueler.size() + DeveloperNotificationException.ifMapGetIsNull(this._kursID_to_dummySuS, idKurs);
 	}
 

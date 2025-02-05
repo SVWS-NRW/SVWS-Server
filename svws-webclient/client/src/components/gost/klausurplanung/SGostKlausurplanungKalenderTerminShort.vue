@@ -1,5 +1,5 @@
 <template>
-	<div class="inline-block rounded bg-dark-20 ml-10 top-10 h-5">
+	<div class="inline-block rounded-sm bg-ui-neutral text-ui-onneutral ml-10 top-10 h-5">
 		{{ klausurBezeichnungen }}
 	</div>
 </template>

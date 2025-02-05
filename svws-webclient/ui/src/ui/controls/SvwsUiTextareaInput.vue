@@ -11,7 +11,7 @@
 			'textarea-input--resize-both': resizeable === 'both',
 			'textarea-input--headless': headless,
 			'col-span-full': span === 'full',
-			'flex-grow': span === 'grow'
+			'grow': span === 'grow'
 		}">
 		<textarea ref="textarea" v-model="dataOrEmpty" @input="onInput" @blur="onBlur" class="textarea-input--control" :disabled :required :rows v-bind="{ ...$attrs }" />
 		<span :id="idPlaceholder" v-if="placeholder.length > 0" class="textarea-input--placeholder" :class="{ 'textarea-input--placeholder--required': required }">
@@ -144,6 +144,9 @@
 
 
 <style lang="postcss">
+
+	@reference "../../assets/styles/index.css";
+
 	.textarea-input {
 		@apply flex;
 		@apply relative;
@@ -170,11 +173,11 @@
 		min-width: 10em;
 
 		&:focus {
-			@apply outline-none;
+			@apply outline-hidden;
 		}
 
 		&:focus-visible {
-			@apply ring ring-ui-neutral;
+			@apply ring-3 ring-ui-neutral;
 		}
 	}
 

@@ -24,11 +24,11 @@
 			@click="toggleAction('vorgaben_fehlend')"
 			action-label="Zur Vorgabenansicht"
 			:action-function="gotoVorgaben"
-			class="border-error"
+			class="border-ui-danger"
 			icon="i-ri-draft-line">
 			<svws-ui-table :items="vorgaben()" :columns="colsVorgaben">
 				<template #cell(idFach)="{ value }">
-					<span class="svws-ui-badge" :style="{ '--background-color': getBgColor(kMan().getFaecherManager(jahrgangsdaten!.abiturjahr-1).get(value)?.kuerzel || null) }">{{ kMan().getFaecherManager(jahrgangsdaten!.abiturjahr-1).get(value)?.bezeichnung }}</span>
+					<span class="svws-ui-badge" :style="{ 'background-color': getBgColor(kMan().getFaecherManager(jahrgangsdaten!.abiturjahr-1).get(value)?.kuerzel || null) }">{{ kMan().getFaecherManager(jahrgangsdaten!.abiturjahr-1).get(value)?.bezeichnung }}</span>
 				</template>
 				<template #cell(quartal)="{value}">
 					{{ value }}
@@ -43,7 +43,7 @@
 			@click="toggleAction('kursklausuren_fehlend')"
 			action-label="Fehlende Kursklausuren erstellen"
 			:action-function="erzeugeKursklausurenAusVorgabenOrModal"
-			class="border-error"
+			class="border-ui-danger"
 			icon="i-ri-book-2-line">
 			<svws-ui-table :items="kursklausuren()"
 				:columns="colsKursklausuren">
@@ -65,7 +65,7 @@
 			:is-active="currentAction === 'schuelerklausurmenge_abweichend'"
 			@click="toggleAction('schuelerklausurmenge_abweichend')"
 			action-disabled
-			class="border-error"
+			class="border-ui-danger"
 			icon="i-ri-group-line">
 			<svws-ui-table :items="schuelerklausuren()"
 				:columns="addStatusColumn(colsSchuelerklausuren)">
@@ -92,7 +92,7 @@
 			@click="toggleAction('kursklausuren_nicht_verteilt')"
 			action-label="Zur Schienenansicht"
 			:action-function="() => gotoSchienen(undefined)"
-			class="border-error"
+			class="border-ui-danger"
 			icon="i-ri-book-2-line">
 			<svws-ui-table :items="kursklausurenNichtVerteilt()"
 				:columns="colsKursklausuren">
@@ -114,7 +114,7 @@
 			:is-active="currentAction === 'termine_ohne_datum'"
 			@click="toggleAction('termine_ohne_datum')"
 			action-disabled
-			class="border-yellow-300"
+			class="border-ui-caution"
 			icon="i-ri-calendar-event-line">
 			<svws-ui-table :items="termineOhneDatum()"
 				:columns="addStatusColumn(colsTermine)">
@@ -136,7 +136,7 @@
 			:is-active="currentAction === 'klausurtermine_mit_schuelerkonflikten'"
 			@click="toggleAction('klausurtermine_mit_schuelerkonflikten')"
 			action-disabled
-			class="border-error"
+			class="border-ui-danger"
 			icon="i-ri-alert-line">
 			<svws-ui-table :items="termineMitKonflikten()"
 				:columns="addStatusColumn(colsTermine)">
@@ -158,7 +158,7 @@
 			:is-active="currentAction === 'termine_ohne_raumplanung'"
 			@click="toggleAction('termine_ohne_raumplanung')"
 			action-disabled
-			class="border-yellow-300"
+			class="border-ui-caution"
 			icon="i-ri-team-line">
 			<svws-ui-table :items="termineUnvollstaendigeRaumzuweisung()"
 				:columns="addStatusColumn(colsTermine)">
@@ -180,7 +180,7 @@
 			:is-active="currentAction === 'termine_raumkapazität'"
 			@click="toggleAction('termine_raumkapazität')"
 			action-disabled
-			class="border-yellow-300"
+			class="border-ui-caution"
 			icon="i-ri-team-line">
 			<svws-ui-table :items="raumkapazitaetUeberschritten()"
 				:columns="addStatusColumn(colsTermine)">
@@ -203,7 +203,7 @@
 			@click="toggleAction('nachschreibklausuren_nicht_zugewiesen')"
 			action-label="Zur Nachschreiberansicht"
 			:action-function="() => gotoNachschreiber(jahrgangsdaten!.abiturjahr, halbjahr)"
-			class="border-yellow-300"
+			class="border-ui-caution"
 			icon="i-ri-spam-3-line">
 			<svws-ui-table :items="nachschreibklausurenNichtZugewiesen()"
 				:columns="colsSchuelerklausuren">
@@ -225,7 +225,7 @@
 			:is-active="currentAction === 'konflikt_drei_wochenklausuren'"
 			@click="toggleAction('konflikt_drei_wochenklausuren')"
 			action-disabled
-			class="border-yellow-300"
+			class="border-ui-caution"
 			icon="i-ri-alert-line">
 			<svws-ui-table :items="klausurenProKwWarning()"
 				:columns="colsKwKonflikte">
@@ -237,7 +237,7 @@
 					{{ kMan().schuelerGetByIdOrException(rowData.a.b)?.nachname }}, {{ kMan().schuelerGetByIdOrException(rowData.a.b)?.vorname }}
 				</template>
 				<template #cell(klausuren)="{rowData}">
-					<span v-for="klausur in rowData.b" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`--background-color: ${kMan().fachHTMLFarbeRgbaByKursklausur(kMan().kursklausurBySchuelerklausurTermin(klausur))};`">
+					<span v-for="klausur in rowData.b" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`background-color: ${kMan().fachHTMLFarbeRgbaByKursklausur(kMan().kursklausurBySchuelerklausurTermin(klausur))};`">
 						<span class="text-button font-medium">{{ kMan().kursKurzbezeichnungByKursklausur(kMan().kursklausurBySchuelerklausurTermin(klausur)) }}</span>
 						<span class="text-sm font-medium">{{ DateUtils.gibDatumGermanFormat(kMan().terminOrExceptionBySchuelerklausurTermin(klausur).datum!) }}</span>
 					</span>
@@ -251,7 +251,7 @@
 			:is-active="currentAction === 'konflikt_vier_wochenklausuren'"
 			@click="toggleAction('konflikt_vier_wochenklausuren')"
 			action-disabled
-			class="border-error"
+			class="border-ui-danger"
 			icon="i-ri-alert-fill">
 			<svws-ui-table :items="klausurenProKwError()"
 				:columns="colsKwKonflikte">
@@ -263,7 +263,7 @@
 					<span>{{ kMan().schuelerGetByIdOrException(rowData.a.b)?.nachname }}, {{ kMan().schuelerGetByIdOrException(rowData.a.b)?.vorname }}</span>
 				</template>
 				<template #cell(klausuren)="{rowData}">
-					<span v-for="klausur in rowData.b" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`--background-color: ${kMan().fachHTMLFarbeRgbaByKursklausur(kMan().kursklausurBySchuelerklausurTermin(klausur))};`">
+					<span v-for="klausur in rowData.b" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`background-color: ${kMan().fachHTMLFarbeRgbaByKursklausur(kMan().kursklausurBySchuelerklausurTermin(klausur))};`">
 						<span class="text-button font-medium">{{ kMan().kursKurzbezeichnungByKursklausur(kMan().kursklausurBySchuelerklausurTermin(klausur)) }}</span>
 						<span class="text-sm font-medium">{{ DateUtils.gibDatumGermanFormat(kMan().terminOrExceptionBySchuelerklausurTermin(klausur).datum!) }}</span>
 					</span>

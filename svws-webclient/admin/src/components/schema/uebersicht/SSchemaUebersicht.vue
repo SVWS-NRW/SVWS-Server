@@ -13,7 +13,7 @@
 					<svws-ui-action-button v-if="revisionNotUpToDate" title="Aktualisieren" :description="`Setzt das Schema auf die aktuelle Revision ${ revision } hoch`"
 						icon="i-ri-speed-line" :action-function="upgradeSchema" action-label="Aktualisierung starten" :is-loading="loading"
 						:is-active="currentAction === 'upgrade'" @click="clickUpgrade">
-						<div v-if="eintrag.isTainted" class="text-error flex">
+						<div v-if="eintrag.isTainted" class="text-ui-danger flex">
 							<span class="icon icon-error i-ri-error-warning-line inline relative mt-0.5 mr-1" />
 							Achtung, auch nach dem Hochsetzen bleibt das Schema „Tainted“.
 						</div>
@@ -213,57 +213,11 @@
 </script>
 
 <style lang="postcss" scoped>
+
+	@reference "../../../../../ui/src/assets/styles/index.css";
+
 	.page--content {
 		grid-template-columns: 2fr 1fr;
-	}
-
-	.svws-ui-content-button {
-		@apply rounded-lg border-light border p-4 text-balance flex gap-1 text-left;
-
-		.icon {
-			@apply block h-[1.2em] w-[1.2em];
-		}
-
-		&.svws-not-active {
-			@apply opacity-50 border-transparent order-1;
-
-			.svws-icon {
-				@apply opacity-25;
-			}
-		}
-
-		&.svws-active {
-			@apply border-transparent text-primary bg-primary/10;
-		}
-
-		&:not(.svws-active):hover,
-		&:not(.svws-active):focus-visible {
-			@apply outline-none bg-black/10 border-black/10 opacity-100;
-
-			.svws-icon {
-				@apply opacity-100;
-			}
-		}
-
-		&:focus {
-			@apply outline-none;
-		}
-
-		&:not(.svws-active):focus-visible {
-			@apply ring ring-primary/50 ring-offset-1;
-		}
-
-		.svws-title {
-			@apply font-bold text-headline-md;
-		}
-
-		.svws-description {
-			@apply opacity-50 leading-tight;
-		}
-
-		.svws-icon {
-			@apply text-headline-xl w-16 text-center;
-		}
 	}
 
 </style>

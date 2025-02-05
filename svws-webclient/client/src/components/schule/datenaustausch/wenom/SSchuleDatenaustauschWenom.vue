@@ -8,9 +8,9 @@
 				<span class="i-ri-upload-2-line icon-xl" />
 			</span>
 		</svws-ui-header>
-		<div class="page--content">
-			<!-- Auswahl des Untis-Importes (linke Seite) -->
-			<div class="h-full min-w-64 w-64 flex flex-col gap-2 m-2">
+		<div class="page page-flex-row">
+			<!-- Auswahl des Einrichtungsschrittes (linke Seite) -->
+			<div class="h-full min-w-64 w-64 max-w-64 flex flex-col gap-2 m-2">
 				<template v-if="daten !== null">
 					<svws-ui-button id="contentFocusField" :type="((lehrerEmailProbleme > 0) ? 'danger' : ((aktuell === 'creds') ? 'primary' : 'secondary'))" @click="onSelect('creds')">
 						<div class="flex flex-col gap-1">
@@ -56,8 +56,8 @@
 				</template>
 			</div>
 
-			<!-- Weitere Eingabemöglichkeiten für den zuvor gewählten Untis-Import (rechte Seite - spezielle Ansicht nach Auswahl) -->
-			<div class="flex flex-col gap-8">
+			<!-- Spezielle Ansicht nach Auswahl des Einrichtungsschrittes -->
+			<div class="min-w-fit flex flex-col gap-8">
 				<div v-if="(aktuell === 'creds') && (daten !== null)" class="h-full w-full overflow-hidden max-w-196">
 					<enm-lehrer-credentials :enm-daten="() => daten ?? new ENMDaten()" :map-initial-kennwoerter />
 				</div>
@@ -134,7 +134,7 @@
 			</div>
 
 			<!-- Die Ausgabe des Logs -->
-			<div v-if="status !== null" class="w-full h-full overflow-hidden flex flex-col gap-4">
+			<div v-if="status !== null" class="min-w-fit grow h-full overflow-hidden flex flex-col gap-4">
 				<log-box :logs="status.log" :status="status.success" />
 			</div>
 		</div>
@@ -261,14 +261,3 @@
 	}
 
 </script>
-
-<style lang="postcss" scoped>
-
-	.page--content {
-		@apply flex flex-row gap-8;
-		@apply flex-grow w-full overflow-hidden;
-		@apply max-w-full;
-	}
-
-</style>
-

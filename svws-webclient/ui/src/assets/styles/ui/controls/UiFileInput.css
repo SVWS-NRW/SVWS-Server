@@ -1,0 +1,52 @@
+@layer base {
+
+	input[type="file"]::file-selector-button {
+		@apply bg-ui-brand text-ui-onbrand font-bold;
+		@apply rounded-md border-0;
+		@apply select-none relative;
+		@apply inline-flex items-center;
+		@apply shadow-none;
+		@apply leading-none;
+		gap: 0.25em;
+		padding: 0.45em 0.75em;
+	}
+
+	input[type="file"] {
+		@apply text-ui-contrast-50 cursor-pointer;
+	}
+
+	input[type="file"]:hover {
+		@apply text-ui-contrast-75;
+	}
+
+	input[type="file"]:hover::file-selector-button {
+		@apply brightness-110;
+	}
+
+	input[type="file"]:focus,
+	input[type="file"]:focus::file-selector-button {
+		@apply outline-hidden;
+	}
+
+	input[type="file"]:focus-visible {
+		@apply ring-3 ring-ui-brand/50 rounded-md;
+	}
+
+	input[type="file"]:focus::file-selector-button {
+		@apply ring-0;
+	}
+
+	input[type="file"]::file-selector-button:active {
+		@apply ring-0 brightness-100;
+	}
+
+	input[type="file"]:invalid {
+		@apply text-ui-danger;
+	}
+
+	input[type="file"]:hover::file-selector-button,
+	input[type="file"]:focus-visible::file-selector-button {
+		@apply opacity-100;
+	}
+
+}

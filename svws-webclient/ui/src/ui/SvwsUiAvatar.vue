@@ -191,41 +191,50 @@
 </script>
 
 <style lang="postcss">
-.svws-ui-avatar {
-	@apply relative;
 
-	.avatar--edit-trigger {
-		@apply bg-ui border border-ui-neutral;
-		@apply w-6 h-6 p-0.5 rounded mt-auto ml-auto -mr-1.5 -mb-0.5;
-		/* TODO: COLORS icon */
+	@reference "../assets/styles/index.css";
+
+	.svws-ui-avatar {
+		@apply relative;
+
+		.avatar--edit-trigger {
+			@apply bg-ui border border-ui-neutral;
+			@apply w-6 h-6 p-0.5 rounded-sm mt-auto ml-auto -mr-1.5 -mb-0.5;
+			/* TODO: COLORS icon */
+		}
 	}
-}
 
-.avatar {
-	@apply bg-ui-neutral border border-ui-secondary;
-	@apply w-full rounded-xl overflow-hidden relative;
-	padding-bottom: 100%;
+	.avatar {
+		@apply bg-ui-neutral border border-ui-secondary;
+		@apply w-full rounded-xl overflow-hidden relative;
+		padding-bottom: 100%;
 
-	&--has-image {
+
+		svg {
+			@apply text-ui-secondary opacity-50;
+			@apply absolute -bottom-0.5 w-full h-5/6;
+			margin-bottom: -5%;
+		}
+
+		img,
+		video {
+			@apply w-full h-full absolute top-0 left-0 object-cover object-center z-10;
+		}
+
+		video {
+			@apply bg-ui-neutral;
+		}
+
+		.is-capturing & {
+			@apply opacity-100;
+		}
+	}
+
+	.avatar--has-image {
 		@apply border-transparent;
 	}
 
-	svg {
-		@apply text-ui-secondary opacity-50;
-		@apply absolute -bottom-0.5 w-full h-5/6;
-		margin-bottom: -5%;
-	}
-
-	img,
-	video {
-		@apply w-full h-full absolute top-0 left-0 object-cover object-center z-10;
-	}
-
-	video {
-		@apply bg-ui-neutral;
-	}
-
-	&--edit {
+	.avatar--edit {
 		@apply absolute top-0 left-0 z-20 w-full h-full;
 		@apply flex items-center justify-center;
 
@@ -244,7 +253,7 @@
 		&:hover,
 		&:focus,
 		&:focus-within {
-			@apply outline-none bg-ui rounded-xl border border-ui-disabled;
+			@apply outline-hidden bg-ui rounded-xl border border-ui-disabled;
 
 			.avatar--edit-trigger {
 				@apply hidden;
@@ -257,31 +266,27 @@
 
 		&:focus-visible {
 			+ .avatar {
-				@apply ring ring-ui-brand;
+				@apply ring-3 ring-ui-brand;
 			}
 		}
 	}
 
-	.is-capturing & {
-		@apply opacity-100;
-	}
-
-	&--capture-control {
+	.avatar--capture-control {
 		@apply flex items-center justify-center gap-1 mt-4;
 	}
-}
 
-.is-capturing {
-	@apply bg-ui;
-	@apply fixed z-50 h-screen;
-	@apply flex flex-col justify-center items-center;
+	.is-capturing {
+		@apply bg-ui;
+		@apply fixed z-50 h-screen;
+		@apply flex flex-col justify-center items-center;
 
-	.avatar {
-		@apply p-0 -order-1 border-none;
-		@apply rounded-3xl;
-		width: 90vmin;
-		height: 90vmin;
-		@apply md:w-[37.5rem] md:h-[37.5rem];
+		.avatar {
+			@apply p-0 -order-1 border-none;
+			@apply rounded-3xl;
+			width: 90vmin;
+			height: 90vmin;
+			@apply md:w-[37.5rem] md:h-[37.5rem];
+		}
 	}
-}
+
 </style>

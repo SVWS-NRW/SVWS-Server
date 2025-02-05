@@ -27,6 +27,8 @@
 
 <style lang="postcss">
 
+	@reference "../../assets/styles/index.css";
+
 	.markdown-body {
 		@apply prose leading-tight bg-ui text-ui;
 

@@ -121,7 +121,9 @@
 </script>
 
 
-<style scoped lang="postcss">
+<style lang="postcss" scoped>
+
+	@reference "../../assets/styles/index.css";
 
 	.svws-ui-page {
 		@apply flex flex-col items-start overflow-hidden h-full;
@@ -133,7 +135,7 @@
 	}
 
 	.svws-ui-tab-content {
-		@apply w-full relative flex-grow overflow-auto;
+		@apply w-full relative grow overflow-auto;
 		.svws-api--pending & {
 			@apply opacity-50 filter grayscale;
 		}
@@ -156,7 +158,7 @@
 
 	.svws-ui-tabs--wrapper {
 		@apply bg-ui;
-		@apply flex items-center -mx-3 px-0.5 w-auto relative z-30 flex-shrink-0 overflow-hidden;
+		@apply flex items-center -mx-3 px-0.5 w-auto relative z-30 shrink-0 overflow-hidden;
 
 		&:before {
 			@apply bg-ui-neutral;
@@ -179,7 +181,7 @@
 		}
 
 		&:focus-visible {
-			@apply outline-none;
+			@apply outline-hidden;
 		}
 	}
 
@@ -192,7 +194,7 @@
 			@apply w-5 h-full p-0 rounded;
 
 			&:focus {
-				@apply outline-none;
+				@apply outline-hidden;
 			}
 
 			&:hover,
@@ -201,13 +203,13 @@
 			}
 
 			&:focus-visible {
-				@apply ring ring-ui;
+				@apply ring-3 ring-ui;
 			}
 		}
 	}
 
 	.svws-sub-nav-target {
-		@apply overflow-x-auto flex-shrink-0;
+		@apply overflow-x-auto shrink-0;
 	}
 
 	.svws-ui-secondary-tabs {
@@ -229,7 +231,7 @@
 		}
 
 		&:focus {
-			@apply outline-none;
+			@apply outline-hidden;
 		}
 
 		&:hover,
@@ -251,7 +253,7 @@
 		}
 
 		&:focus-visible {
-			@apply ring ring-ui;
+			@apply ring-3 ring-ui;
 			@apply z-10;
 
 			.page--statistik & {

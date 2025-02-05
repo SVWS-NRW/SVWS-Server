@@ -7,16 +7,13 @@
 	"main": "./dist/index.js",
 	"type": "module",
 	"types": "./dist/index.d.ts",
-	"files": [
-		"./dist/**/*"
-	],
+	"files": [ "./dist/**/*" ],
 	"scripts": {
 		"dev": "vite",
 		"lint": "eslint 'src/**/*.{ts,vue}' --cache",
 		"lint-tsc": "vue-tsc --noEmit",
 		"serve": "vite preview",
-		"build": "vite build",
-		"check-licenses": "license-checker-rseidelsohn --summary --unknown --production"
+		"build": "vite build"
 	},
 	"dependencies": {
 		"@headlessui/vue": "^1.7.7",

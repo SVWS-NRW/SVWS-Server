@@ -33,6 +33,9 @@
 </template>
 
 <style lang="postcss">
+
+	@reference "../../assets/styles/index.css";
+
 	.content-card {
 		@apply h-fit;
 
@@ -68,53 +71,51 @@
 			}
 		}
 
-		&--content {
-			&--with-title {
-				@apply mt-4;
-			}
-
-			&--overflow-scroll {
-				@apply h-full flex flex-col;
+		&.col-span-full {
+			.content-card--actions {
+				@apply max-xl:w-auto max-xl:mb-0 max-md:w-full max-md:mb-3;
 			}
 		}
 
-		&--headline {
-			@apply text-ui;
-			@apply text-headline-md;
-			@apply flex-shrink-0 max-w-full leading-none;
-
-			&--large {
-				@apply text-headline;
+		&.h-full {
+			.content-card--content {
+				@apply min-h-full;
 			}
 		}
+	}
 
-		&--header {
-			@apply inline-flex items-center justify-between mb-1 py-1 w-auto;
+	.content-card--content--with-title {
+		@apply mt-4;
+	}
 
-			&--has-actions {
-				@apply flex gap-x-8 gap-y-1 w-full items-start flex-wrap mb-0;
+	.content-card--content--overflow-scroll {
+		@apply h-full flex flex-col;
+	}
 
-				.content-card--headline {
-					@apply hyphens-auto sm:flex-grow;
-				}
+	.content-card--headline {
+		@apply text-ui;
+		@apply text-headline-md;
+		@apply shrink-0 max-w-full leading-none;
+		@apply inline-flex items-center justify-between mb-1 py-1 w-auto;
+	}
+	.content-card--headline--large {
+		@apply text-headline;
+	}
+
+	.content-card--header {
+		@apply inline-flex items-center justify-between mb-1 py-1 w-auto;
+	}
+
+	.content-card--header--has-actions{
+		@apply flex gap-x-8 gap-y-1 w-full items-start flex-wrap mb-0;
+
+			.content-card--headline {
+				@apply hyphens-auto sm:grow;
 			}
-		}
+	}
 
-		&--actions {
-			@apply flex items-center gap-x-2 max-xl:w-full max-xl:mb-3 -mt-1;
-		}
-
-    &.col-span-full {
-      .content-card--actions {
-        @apply max-xl:w-auto max-xl:mb-0 max-md:w-full max-md:mb-3;
-      }
-    }
-
-    &.h-full {
-      .content-card--content {
-        @apply min-h-full;
-      }
-    }
+	.content-card--actions {
+		@apply flex items-center gap-x-2 max-xl:w-full max-xl:mb-3 -mt-1;
 	}
 
 	.content-card--wrapper--light-bg .content-card--header {

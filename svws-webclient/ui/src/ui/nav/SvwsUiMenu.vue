@@ -84,82 +84,86 @@
 </script>
 
 <style lang="postcss">
-.sidebar--menu {
-	@apply text-ui;
-	@apply flex min-h-full min-w-fit flex-1 flex-col w-full;
 
-	@media (orientation: portrait) {
-		@apply flex-row min-h-[unset] gap-x-5;
+	@reference "../../assets/styles/index.css";
+
+	.sidebar--menu {
+		@apply text-ui;
+		@apply flex min-h-full min-w-fit flex-1 flex-col w-full;
+
+		@media (orientation: portrait) {
+			@apply flex-row min-h-[unset] gap-x-5;
+		}
 	}
-}
 
-.sidebar--menu--body {
-	@apply flex-1;
+	.sidebar--menu--body {
+		@apply flex-1;
 
-	@media (orientation: portrait) {
-		@apply gap-1;
+		@media (orientation: portrait) {
+			@apply gap-1;
+		}
 	}
-}
 
-.sidebar--menu--body,
-.sidebar--menu--footer {
-	@apply flex flex-col;
+	.sidebar--menu--body,
+	.sidebar--menu--footer {
+		@apply flex flex-col;
 
-	@media (orientation: portrait) {
-		@apply flex-row;
+		@media (orientation: portrait) {
+			@apply flex-row;
+		}
 	}
-}
 
-.sidebar--menu--footer {
-	@apply pt-16;
+	.sidebar--menu--footer {
+		@apply pt-16;
 
-	@media (orientation: portrait) {
-		@apply pt-0 items-center ml-12;
+		@media (orientation: portrait) {
+			@apply pt-0 items-center ml-12;
 
-		.sidebar--menu-item {
-			@apply order-1;
+			.sidebar--menu-item {
+				@apply order-1;
+			}
+
+			.sidebar--menu--footer-credits {
+				@apply order-2 ml-8 min-w-[5rem] mr-3;
+
+				.mb-2 {
+					margin-bottom: 0.25rem;
+				}
+			}
 		}
 
-		.sidebar--menu--footer-credits {
-			@apply order-2 ml-8 min-w-[5rem] mr-3;
+		.text-ellipsis-line-clamp {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			max-width: 100%;
+			display: -webkit-box;
+			-webkit-box-orient: vertical;
+			-webkit-line-clamp: 1;
+			line-clamp: 1;
+			word-break: break-all;
+		}
 
-			.mb-2 {
-				margin-bottom: 0.25rem;
+		.button {
+			@apply px-0.5 inline-flex gap-0.5 w-full justify-center;
+
+			svg {
+				@apply shrink-0;
 			}
 		}
 	}
 
-	.text-ellipsis-line-clamp {
-		overflow: hidden;
-		text-overflow: ellipsis;
-		max-width: 100%;
-		display: -webkit-box;
-		-webkit-box-orient: vertical;
-		-webkit-line-clamp: 1;
-		line-clamp: 1;
-		word-break: break-all;
+	.sidebar--menu--collapsed .sidebar--menu--body,
+	.sidebar--menu--collapsed .sidebar--menu--footer {
+		@apply px-1;
 	}
 
-	.button {
-		@apply px-0.5 inline-flex gap-0.5 w-full justify-center;
+	.app--appearance-settings {
+		@apply mb-3 mt-1;
+		@apply flex flex-col gap-1;
 
-		svg {
-			@apply shrink-0;
+		@media (orientation: portrait) {
+			@apply my-0 py-0 mx-1;
 		}
 	}
-}
 
-.sidebar--menu--collapsed .sidebar--menu--body,
-.sidebar--menu--collapsed .sidebar--menu--footer {
-	@apply px-1;
-}
-
-.app--appearance-settings {
-	@apply mb-3 mt-1;
-	@apply flex flex-col gap-1;
-
-	@media (orientation: portrait) {
-		@apply my-0 py-0 mx-1;
-	}
-}
 </style>

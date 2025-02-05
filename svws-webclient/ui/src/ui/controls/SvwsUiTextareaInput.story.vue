@@ -60,7 +60,7 @@
 			</div>
 			<p class="mt-2 text-ui-secondary">
 				Info: Die Hintergrundfarbe des Headless Inputs ist transparent und zeigt so immer die Hintergrundfarbe des Parent-Elements.<br>
-				Mit <code class="bg-ui-neutral px-2 rounded">bg-ui-xxxx text-ui-xxxx</code> in einem übergeordneten Element kann die Hintergrundfarbe und Textfarbe des Inputs geändert werden.
+				Mit <code class="bg-ui-neutral px-2 rounded-xs">bg-ui-xxxx text-ui-xxxx</code> in einem übergeordneten Element kann die Hintergrundfarbe und Textfarbe des Inputs geändert werden.
 			</p>
 		</Variant>
 	</Story>
@@ -72,7 +72,13 @@
 
 	const modelValue = ref("This is a filled textarea component");
 
-	function onInput(event: Event) {
-		logEvent('input', event);
+	function onInput(value: string | null) {
+		logEvent('input', value);
 	}
 </script>
+
+<style lang="postcss">
+
+	@reference "../../assets/styles/index.css";
+
+</style>

@@ -1,5 +1,5 @@
 <template>
-	<div role="row" class="svws-ui-tr" :style="{ '--background-color': bgColor }">
+	<div role="row" class="svws-ui-tr" :style="{ 'background-color': bgColor }">
 		<div role="cell" class="svws-ui-td select-text">
 			<div class="whitespace-nowrap min-w-fit">
 				{{ fach.kuerzelAnzeige }}
@@ -15,15 +15,15 @@
 		</div>
 		<div role="cell" class="svws-ui-td svws-align-center font-medium" :class="{ 'svws-disabled': !istFremdsprache }">
 			<template v-if="istFremdsprache">
-				<span v-if="ignoriereSprachenfolge" class="text-black/25"> ? </span>
-				<span v-else-if="sprachenfolgeNr === 0 && !sprachenfolgeJahrgang" class="text-black/25"> — </span>
+				<span v-if="ignoriereSprachenfolge" class="text-ui-contrast-25"> ? </span>
+				<span v-else-if="sprachenfolgeNr === 0 && !sprachenfolgeJahrgang" class="text-ui-contrast-25"> — </span>
 				<span v-else> {{ sprachenfolgeNr }} </span>
 			</template>
 		</div>
 		<div role="cell" class="svws-ui-td svws-align-center font-medium svws-divider" :class="{ 'svws-disabled': !istFremdsprache}">
 			<template v-if="istFremdsprache">
-				<span v-if="ignoriereSprachenfolge" class="text-black/25"> ? </span>
-				<span v-else-if="sprachenfolgeNr === 0 && !sprachenfolgeJahrgang" class="text-black/25"> — </span>
+				<span v-if="ignoriereSprachenfolge" class="text-ui-contrast-25"> ? </span>
+				<span v-else-if="sprachenfolgeNr === 0 && !sprachenfolgeJahrgang" class="text-ui-contrast-25"> — </span>
 				<span v-else> {{ sprachenfolgeJahrgang }} </span>
 			</template>
 		</div>
@@ -1269,6 +1269,8 @@
 
 <style lang="postcss" scoped>
 
+	@reference "../../../assets/styles/index.css";
+
 	.laufbahn-cell {
 		&:focus {
 			outline: none;
@@ -1278,10 +1280,10 @@
 	}
 
 	.data-table__tr {
-		--background-color: #ffffff;
+		background-color: #ffffff;
 
 		.data-table__td {
-			background-color: var(--background-color);
+			background-color: var(background-color);
 		}
 
 		&.svws-background-on-hover {
@@ -1291,7 +1293,7 @@
 
 			&:hover {
 				.data-table__td {
-					background-color: var(--background-color);
+					background-color: var(background-color);
 				}
 			}
 		}

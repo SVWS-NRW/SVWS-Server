@@ -115,7 +115,7 @@ describe.concurrent("Tests für die CSS-Props", () => {
 		await wrapper.setProps({ span: "grow" });
 
 		// Testen
-		expect(wrapper.find("label").classes()).toContain("flex-grow");
+		expect(wrapper.find("label").classes()).toContain("grow");
 	})
 
 	test("Prop required mit false wird an CSS übergeben", async () => {

@@ -72,7 +72,7 @@
 						<span>{{ pendingSetApp }}</span>
 					</template>
 					<template #abschnitt>
-						<span class="inline-block h-4 rounded animate-pulse w-16 bg-black/10 dark:bg-white/10 -mb-1" />
+						<span class="inline-block h-4 rounded-sm animate-pulse w-16 -mb-1" />
 					</template>
 				</svws-ui-secondary-menu>
 			</template>
@@ -97,7 +97,7 @@
 						<span>{{ pendingSetApp }}</span>
 					</template>
 					<template #abschnitt>
-						<span class="inline-block h-4 rounded animate-pulse w-16 bg-black/10 dark:bg-white/10 -mb-1" />
+						<span class="inline-block h-4 rounded-sm animate-pulse w-16 -mb-1 bg-ui-contrast-10" />
 					</template>
 				</svws-ui-secondary-menu>
 			</template>
@@ -106,17 +106,17 @@
 			</template>
 		</template>
 		<template #main>
-			<main class="app--page" :class="app.name" role="main">
+			<main class="app--page h-full" :class="app.name" role="main">
 				<div v-show="pendingSetApp" class="page--wrapper" :class="{'svws-api--pending': apiStatus.pending}">
 					<svws-ui-header>
 						<div class="flex items-center">
 							<div class="w-20 mr-6" v-if="(app.name === 'schueler') || (app.name === 'lehrer')">
-								<div class="inline-block h-20 rounded-xl animate-pulse w-20 bg-black/5 dark:bg-white/5" />
+								<div class="inline-block h-20 rounded-xl animate-pulse w-20 bg-ui-contrast-10" />
 							</div>
 							<div>
-								<span class="inline-block h-[1em] rounded animate-pulse w-52 bg-black/10 dark:bg-white/10" />
+								<span class="inline-block h-[1em] rounded-sm animate-pulse w-52 bg-ui-contrast-10" />
 								<br>
-								<span class="inline-block h-[1em] rounded animate-pulse w-20 bg-black/5 dark:bg-white/5" />
+								<span class="inline-block h-[1em] rounded-sm animate-pulse w-20 bg-ui-contrast-10" />
 							</div>
 						</div>
 					</svws-ui-header>
@@ -129,8 +129,8 @@
 		</template>
 	</svws-ui-app-layout>
 	<svws-ui-notifications v-if="errors.size > 0">
-		<div v-if="errors.size > 1" class="bg-white">
-			<svws-ui-button @click="errors.clear()" type="transparent" class="pointer-events-auto ml-auto rounded-lg bg-white border-light fixed right-6 left-0 top-5 z-50 w-[29rem] max-w-[75vw] justify-center">Alle {{ errors.size }} Meldungen schließen</svws-ui-button>
+		<div v-if="errors.size > 1" class="bg-ui-contrast-0">
+			<svws-ui-button @click="errors.clear()" type="transparent" class="pointer-events-auto ml-auto rounded-lg bg-ui-contrast-0 border-ui-contrast-25 fixed right-6 left-0 top-5 z-50 w-[29rem] max-w-[75vw] justify-center">Alle {{ errors.size }} Meldungen schließen</svws-ui-button>
 			<div class="min-h-[1.85rem]" />
 		</div>
 		<template v-for="error of [...errors.values()].reverse().slice(0, 20)" :key="error.id">
@@ -317,16 +317,17 @@
 
 <style lang="postcss">
 
+	@reference "../../../ui/src/assets/styles/index.css"
+
 	.app--page {
-		@apply flex flex-grow flex-col justify-between;
-		@apply h-screen;
+		@apply flex grow flex-col justify-between;
 		@apply overflow-hidden;
 		@apply relative;
-		@apply bg-white dark:bg-black;
+		@apply bg-ui-contrast-0;
 	}
 
 	.page--wrapper {
-		@apply flex flex-col w-full h-full flex-grow;
+		@apply flex flex-col w-full h-full grow;
 	}
 
 	.page--flex {

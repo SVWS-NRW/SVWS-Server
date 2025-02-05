@@ -7,7 +7,7 @@
 				<!-- TODO: Vollständige Vorbedingungsprüfung für das Löschen einbauen -->
 				<span v-if="false">Alle ausgewählten Jahrgänge sind bereit zum Löschen.</span>
 				<template v-else v-for="message in []" :key="message">
-					<span class="text-error"> {{ message }} <br> </span>
+					<span class="text-ui-danger"> {{ message }} <br> </span>
 				</template>
 			</svws-ui-action-button>
 			<log-box :logs :status>

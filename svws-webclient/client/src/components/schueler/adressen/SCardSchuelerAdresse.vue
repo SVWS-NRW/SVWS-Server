@@ -21,7 +21,7 @@
 			<svws-ui-spacing />
 			<svws-ui-select title="Betreuende Lehrkraft" v-model="inputBetreuungslehrer" :items="mapLehrer" :item-text="(i:LehrerListeEintrag) => i.nachname" removable />
 			<div class="flex gap-1 h-min items-center">
-				<div class="flex-grow">
+				<div class="grow">
 					<svws-ui-select v-if="mapAnsprechpartner.size > 0" title="Ansprechpartner" v-model="ansprechpartner"
 						:items="getAnsprechpartnervonBetrieb()" :item-text="(i: BetriebAnsprechpartner) => i.name ??''" removable />
 					<span v-else class="opacity-50">Kein Ansprechpartner</span>
@@ -66,25 +66,25 @@
 
 	const ansprechpartner = computed<BetriebAnsprechpartner | undefined>({
 		get: () => props.betrieb.ansprechpartner_id === null ? undefined : props.mapAnsprechpartner.get(props.betrieb.ansprechpartner_id),
-		set: (value) => void props.patchSchuelerBetriebsdaten({ ansprechpartner_id: value === undefined ? null : value.id }, props.betrieb.id)
+		set: (value) => void props.patchSchuelerBetriebsdaten({ ansprechpartner_id: value === undefined ? null : value.id }, props.betrieb.id),
 	});
 
 	const inputBetreuungslehrer = computed<LehrerListeEintrag | undefined>({
 		get: () => props.betrieb.betreuungslehrer_id === null ? undefined : props.mapLehrer.get(props.betrieb.betreuungslehrer_id),
-		set: (value) => void props.patchSchuelerBetriebsdaten({ betreuungslehrer_id: value === undefined ? null : value.id }, props.betrieb.id)
+		set: (value) => void props.patchSchuelerBetriebsdaten({ betreuungslehrer_id: value === undefined ? null : value.id }, props.betrieb.id),
 	});
 
 	/** Adresse */
 
 	const inputWohnortID = computed<OrtKatalogEintrag | undefined>({
 		get: () => props.betriebsStammdaten.ort_id === null ? undefined : props.mapOrte.get(props.betriebsStammdaten.ort_id),
-		set: (value) => void props.patchBetrieb({ ort_id: value === undefined ? null : value.id }, props.betriebsStammdaten.id)
+		set: (value) => void props.patchBetrieb({ ort_id: value === undefined ? null : value.id }, props.betriebsStammdaten.id),
 	});
 
 
 	const anschreiben = computed<boolean>({
 		get: () => props.betrieb.allgadranschreiben,
-		set: (value) => void props.patchSchuelerBetriebsdaten({ allgadranschreiben: value }, props.betrieb.id)
+		set: (value) => void props.patchSchuelerBetriebsdaten({ allgadranschreiben: value }, props.betrieb.id),
 	});
 
 	function getAnsprechpartnervonBetrieb ( ): Map<number, BetriebAnsprechpartner>{
@@ -100,14 +100,3 @@
 
 </script>
 
-<style scoped>
-
-	.entry-content {
-		@apply grid flex-grow grid-cols-1 gap-4 xl:grid-cols-2;
-	}
-
-	h2 {
-		@apply mb-2 text-sm font-bold;
-	}
-
-</style>

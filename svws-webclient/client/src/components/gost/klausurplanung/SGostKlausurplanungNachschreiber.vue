@@ -63,7 +63,7 @@
 	<div class="page--content page--content--full relative">
 		<div class="content-card h-full flex flex-col">
 			<div class="content-card--headline mb-4">In Planung</div>
-			<div class="content-card--content flex flex-col p-3" @drop="onDrop(undefined)" @dragover="$event.preventDefault()" :class="[(dragData !== undefined && dragData instanceof GostSchuelerklausurTermin && dragData.idTermin !== null) ? 'border-error ring-4 ring-error/10 border-2 rounded-xl border-dashed' : '']">
+			<div class="content-card--content flex flex-col p-3" @drop="onDrop(undefined)" @dragover="$event.preventDefault()" :class="[(dragData !== undefined && dragData instanceof GostSchuelerklausurTermin && dragData.idTermin !== null) ? 'border-ui-danger ring-4 ring-ui-danger/10 border-2 rounded-xl border-dashed' : '']">
 				<s-gost-klausurplanung-schuelerklausur-table :k-man
 					:schuelerklausuren="kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value)"
 					:on-drag
@@ -90,14 +90,14 @@
 				<ul>
 					<li class="flex font-bold">
 						<span>{{ kMan().schuelerklausurterminNtAktuellGetMengeByHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value).size() }} Nachschreiber im akutellen Jahrgang,&nbsp;</span>
-						<span v-if="kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value).size() === 0" class="text-green-500">alle zugewiesen.</span>
-						<span v-else class="text-red-500">nicht alle zugewiesen.</span>
+						<span v-if="kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value).size() === 0" class="text-ui-success">alle zugewiesen.</span>
+						<span v-else class="text-ui-danger">nicht alle zugewiesen.</span>
 					</li>
 					<template v-for="pair in GostKlausurplanManager.halbjahreParallelUndAktivGetMenge(jahrgangsdaten.abiturjahr, halbjahr, false)" :key="pair.a">
 						<li class="flex" v-if="kMan().schuelerklausurterminNtAktuellGetMengeByHalbjahrAndQuartal(pair.a, pair.b, quartalsauswahl.value).size() > 0">
 							<span>{{ kMan().schuelerklausurterminNtAktuellGetMengeByHalbjahrAndQuartal(pair.a, pair.b, quartalsauswahl.value).size() }} Nachschreiber im Jahrgang {{ pair.b.jahrgang }},&nbsp;</span>
-							<span v-if="kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(pair.a, pair.b, quartalsauswahl.value).size() === 0" class="text-green-500">alle zugewiesen.</span>
-							<span v-else class="text-red-500">nicht alle zugewiesen.</span>
+							<span v-if="kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(pair.a, pair.b, quartalsauswahl.value).size() === 0" class="text-ui-success">alle zugewiesen.</span>
+							<span v-else class="text-ui-danger">nicht alle zugewiesen.</span>
 							<svws-ui-button type="icon" @click="gotoNachschreiber(pair.a, pair.b)" :title="`Zur Planung des Jahrgangs`" size="small"><span class="icon i-ri-link" /></svws-ui-button>
 						</li>
 					</template>
@@ -209,15 +209,15 @@
 	const klausurCssClasses = (klausur: GostKlausurplanungDragData, termin: GostKlausurtermin | undefined) => {
 		if (klausur instanceof GostKursklausur && dragData.value !== undefined)
 			return {
-				"bg-red-500": props.kMan().konfliktZuKursklausurBySchuelerklausur((dragData.value as GostSchuelerklausurTermin), klausur),
+				"bg-ui-danger text-ui-ondanger": props.kMan().konfliktZuKursklausurBySchuelerklausur((dragData.value as GostSchuelerklausurTermin), klausur),
 			}
 		else if (klausur instanceof GostSchuelerklausurTermin && dragData.value !== undefined)
 			return {
-				"bg-red-500": props.kMan().schuelerklausurGetByIdOrException(klausur.idSchuelerklausur).idSchueler === props.kMan().schuelerklausurGetByIdOrException((dragData.value as GostSchuelerklausurTermin).idSchuelerklausur).idSchueler,
+				"bg-ui-danger text-ui-ondanger": props.kMan().schuelerklausurGetByIdOrException(klausur.idSchuelerklausur).idSchueler === props.kMan().schuelerklausurGetByIdOrException((dragData.value as GostSchuelerklausurTermin).idSchuelerklausur).idSchueler,
 			}
 		else if (klausur instanceof GostSchuelerklausurTermin && termin !== undefined) {
 			return {
-				"bg-red-200": props.kMan().konfliktPaarGetMengeTerminAndSchuelerklausurtermin(termin, klausur).size() > 0,
+				"bg-ui-danger text-ui-ondanger": props.kMan().konfliktPaarGetMengeTerminAndSchuelerklausurtermin(termin, klausur).size() > 0,
 			}
 		}
 	};
@@ -243,6 +243,9 @@
 </script>
 
 <style lang="postcss" scoped>
+
+@reference "../../../../../ui/src/assets/styles/index.css"
+
 .page--content {
   	@apply grid;
   	grid-template-columns: minmax(44rem, .3fr) 1fr;
@@ -262,11 +265,11 @@
 }
 
 .is-drop-zone {
-	@apply relative bg-primary/5;
+	@apply relative bg-ui-brand/5;
 
 	&:before {
 		content: '';
-		@apply absolute inset-1 border border-svws pointer-events-none rounded-lg ring-4 ring-svws/25;
+		@apply absolute inset-1 border border-ui-brand pointer-events-none rounded-lg ring-4 ring-ui-brand/25;
 	}
 }
 

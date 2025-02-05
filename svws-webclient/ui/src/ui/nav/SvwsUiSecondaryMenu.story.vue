@@ -1,6 +1,3 @@
-<script setup lang="ts">
-</script>
-
 <template>
 	<Story title="Sidebar/Secondary Menu" id="svws-ui-secondary-menu" group="app">
 		<svws-ui-secondary-menu>
@@ -8,3 +5,4 @@
 		</svws-ui-secondary-menu>
 	</Story>
 </template>
+

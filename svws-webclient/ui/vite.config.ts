@@ -6,6 +6,7 @@ import Components from "unplugin-vue-components/vite";
 import Vue from "@vitejs/plugin-vue";
 import { HstVue } from '@histoire/plugin-vue'
 import Markdown from 'unplugin-vue-markdown/vite'
+import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
 	server: { fs: { allow: [searchForWorkspaceRoot(process.cwd())] } },
@@ -60,8 +61,15 @@ export default defineConfig({
 			],
 		},
 	},
+	resolve: {
+		alias: {
+			// Importe können durch ein vorangestelltes `~` absolut gefunden werden
+			"@icons": resolve(__dirname, "../../node_modules/remixicon/icons"),
+		},
+	},
 	plugins: [
 		Vue({ include: [/\.vue$/, /\.md$/] }),
+		tailwindcss(),
 		Markdown({}),
 		Components({ globs: ["src/**/*.{vue,md}", "src/**/*Props.ts", '!src/**/*.story.*'], types: [] }),
 	],

@@ -1,8 +1,8 @@
 <template>
 	<svws-ui-app-layout fullwidth-content class="app--layout--login">
 		<template #main>
-			<div class="login-wrapper">
-				<div class="login-container pt-5">
+			<div class="flex h-full flex-col justify-between">
+				<div class="bg-cover bg-top h-full flex flex-col justify-center items-center px-4 pt-5 bg-[url(@/images/start-hintergrund.jpg)]">
 					<div class="login-form modal modal--sm my-auto">
 						<div class="modal--content-wrapper pb-3">
 							<div class="modal--content px-5">
@@ -87,21 +87,10 @@
 
 <style lang="postcss" scoped>
 
-	.login-wrapper {
-		@apply flex h-full flex-col justify-between;
-	}
+	@reference "../../../ui/src/assets/styles/index.css";
 
 	.app--layout--login {
 		@apply p-0 bg-none bg-transparent;
-	}
-
-	.app--layout--login :global(.app--content-container) {
-		@apply bg-white/5;
-	}
-
-	.login-container {
-		@apply bg-cover bg-top h-full flex flex-col justify-center items-center px-4;
-		background-image: url('/images/start-hintergrund.jpg');
 	}
 
 	.modal {

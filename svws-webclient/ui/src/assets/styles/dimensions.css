@@ -1,0 +1,15 @@
+@utility max-w-modal-sm {
+	max-width: 28rem;
+}
+
+@utility max-w-modal-md {
+	max-width: 58rem;
+}
+
+@utility max-w-modal-lg {
+	max-width: 90rem;
+}
+
+@utility max-w-modal-help {
+	max-width: 47rem;
+}

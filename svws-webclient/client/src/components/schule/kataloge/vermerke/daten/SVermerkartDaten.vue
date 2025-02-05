@@ -35,7 +35,6 @@
 
 	import type { DataTableColumn } from "@ui";
 	import type { VermerkartDatenProps } from "./SVermerkartDatenProps";
-	import type { SchuelerVermerkartZusammenfassung } from "@core";
 
 	defineProps<VermerkartDatenProps>();
 

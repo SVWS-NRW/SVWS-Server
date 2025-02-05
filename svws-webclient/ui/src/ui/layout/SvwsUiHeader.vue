@@ -10,12 +10,15 @@
 </script>
 
 <style lang="postcss">
+
+	@reference "../../assets/styles/index.css";
+
 	.svws-ui-header,
 	.page--header {
 		@apply text-ui;
 		@apply px-6 lg:px-9 3xl:px-12 4xl:px-20;
-		@apply py-2 gap-2;
-		@apply flex-shrink-0 flex flex-col justify-center;
+		@apply gap-2;
+		@apply shrink-0 flex flex-col justify-center;
 		min-height: 6.5rem;
 
 		@media (min-width: 1280px) or (orientation: portrait) {
@@ -51,4 +54,5 @@
 	.svws-ui-header--actions {
 		@apply flex flex-wrap gap-2 min-h-[3rem] items-start;
 	}
+
 </style>

@@ -10,8 +10,6 @@
 		"test" : "playwright test",
 		"show": "playwright show-report",
 		"lint": "eslint 'src_old/**/*.ts' --cache",
-		"lint-fix": "eslint 'src_old/**/*.ts' --fix --cache",
-		"check-licenses": "license-checker-rseidelsohn --summary --unknown --production",
 		"codegen": "playwright codegen -o build/codegen/gen_test.ts --ignore-https-errors"
 	},
 	"keywords": [],

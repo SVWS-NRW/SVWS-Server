@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-table :items="[]" :no-data="false" :columns="cols">
 		<template #header>
-			<div role="row" class="svws-ui-tr" :style="{ '--background-color': fws ? getBgColor(fws) : 'transparent' }">
+			<div role="row" class="svws-ui-tr" :style="{ 'background-color': fws ? getBgColor(fws) : 'transparent' }">
 				<div role="cell" class="svws-ui-td col-span-full">
 					<div class="flex gap-1">
 						<span class="svws-ui-badge">{{ faecherManager.get(props.fachID)?.bezeichnung || "&ndash;" }}</span>
@@ -26,7 +26,7 @@
 				</div>
 				<div role="row" class="svws-ui-tr">
 					<div role="cell" class="flex flex-col svws-ui-td mb-5 leading-tight" v-for="col in [1, 2]" :key="col">
-						<div v-for="schueler in getSchuelerListe(fws.id, col)" :key="schueler.id" class="flex gap-1 py-0.5 px-1 -mx-1 -mt-0.5 hover:bg-black/10 dark:hover:bg-white/10 rounded cursor-pointer" role="link" @click="gotoLaufbahnplanung(schueler.id)">
+						<div v-for="schueler in getSchuelerListe(fws.id, col)" :key="schueler.id" class="flex gap-1 py-0.5 px-1 -mx-1 -mt-0.5 hover:bg-ui-contrast-10 rounded-sm cursor-pointer" role="link" @click="gotoLaufbahnplanung(schueler.id)">
 							<span class="icon i-ri-link" />
 							<span class="line-clamp-1 break-all leading-tight -my-0.5" :title="schueler.nachname + ', ' + schueler.vorname">{{ schueler.nachname + ", " + schueler.vorname }}</span>
 						</div>

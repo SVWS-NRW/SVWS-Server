@@ -22,6 +22,7 @@
 
 <script setup lang='ts'>
 
+	import type { SetupContext } from 'vue';
 	import { computed, useSlots, onMounted, ref, watch } from 'vue';
 
 	const menuLink = ref<HTMLElement>();
@@ -61,7 +62,7 @@
 		emit("click", event);
 	}
 
-	const slots = useSlots();
+	const slots: SetupContext['slots'] = useSlots()
 
 	const hatlabel = computed(() => {
 		const label = slots.label?.()
@@ -73,27 +74,31 @@
 </script>
 
 <style lang="postcss">
-.sidebar--menu-item {
-	@apply flex items-center flex-col cursor-pointer p-1 rounded my-1;
-	padding: 0.25rem 0.1rem;
 
-	@media (orientation: portrait) {
-		@apply my-0 px-1 min-w-[4.5rem] justify-center;
+	@reference "../../assets/styles/index.css";
+
+	.sidebar--menu-item {
+		@apply flex items-center flex-col cursor-pointer p-1 rounded-sm my-1;
+		padding: 0.25rem 0.1rem;
+
+		@media (orientation: portrait) {
+			@apply my-0 px-1 min-w-[4.5rem] justify-center;
+		}
+
+		&:last-child {
+			@apply mb-0;
+		}
+
+		span.icon-lg {
+			@apply -mb-2;
+		}
 	}
 
-	&:last-child {
-		@apply mb-0;
-	}
-
-	span.icon-lg {
-		@apply -mb-2;
-	}
-
-	&--active {
+	.sidebar--menu-item--active {
 		@apply bg-ui-selected text-ui-onselected;
 
 		&:focus {
-			@apply outline-none;
+			@apply outline-hidden;
 		}
 
 		&:hover,
@@ -102,86 +107,86 @@
 		}
 
 		&:focus-visible {
-			@apply ring ring-ui-brand;
+			@apply ring-3 ring-ui-brand;
 		}
 
 		.icon-lg {
 			@apply icon-primary;
 		}
 	}
-}
 
-.sidebar--menu-item:hover,
-.sidebar--menu-item:focus,
-.sidebar--menu--body .sidebar--menu-item:hover,
-.sidebar--menu--body .sidebar--menu-item:focus,
-.sidebar--menu--footer .sidebar--menu-item:hover,
-.sidebar--menu--footer .sidebar--menu-item:focus {
-	&:not(.sidebar--menu-item--active) {
-		@apply bg-ui-hover;
-	}
-}
-
-.sidebar--menu-item--label {
-	@apply text-ellipsis max-w-full overflow-hidden;
-	font-size: 0.78rem;
-}
-
-@media (min-width: 1920px) {
-	.sidebar--menu .sidebar--menu-item--label {
-		font-size: 0.9rem;
-	}
-}
-
-.secondary-menu--content .sidebar--menu-item {
-	@apply text-ui;
-	@apply px-3 inline-block my-1;
-
-	&:focus {
-		@apply outline-none;
+	.sidebar--menu-item:hover,
+	.sidebar--menu-item:focus,
+	.sidebar--menu--body .sidebar--menu-item:hover,
+	.sidebar--menu--body .sidebar--menu-item:focus,
+	.sidebar--menu--footer .sidebar--menu-item:hover,
+	.sidebar--menu--footer .sidebar--menu-item:focus {
+		&:not(.sidebar--menu-item--active) {
+			@apply bg-ui-hover;
+		}
 	}
 
-	&:hover,
-	&:focus-visible {
-		@apply bg-ui-hover;
+	.sidebar--menu-item--label {
+		@apply text-ellipsis max-w-full overflow-hidden;
+		font-size: 0.78rem;
 	}
 
-	&--active {
+	@media (min-width: 1920px) {
+		.sidebar--menu .sidebar--menu-item--label {
+			font-size: 0.9rem;
+		}
+	}
+
+	.secondary-menu--content .sidebar--menu-item {
+		@apply text-ui;
+		@apply px-3 inline-block my-1;
+
+		&:focus {
+			@apply outline-hidden;
+		}
+
+		&:hover,
+		&:focus-visible {
+			@apply bg-ui-hover;
+		}
+	}
+
+	.secondary-menu--content .sidebar--menu-item--active {
 		@apply bg-ui-selected text-ui-onselected;
 	}
-}
 
-.secondary-menu--content .sidebar--menu-item--label {
-	@apply text-base;
-}
-
-.sidebar--menu-item--icon {
-	font-size: 1.2rem;
-
-	@media (min-width: 1280px) {
-		font-size: 1.3rem;
-	}
-
-	@media (min-width: 2000px) {
-		font-size: 1.35rem;
-	}
-}
-
-
-.sidebar--menu-item--subline {
-	@apply text-sm font-normal;
-
-	@media (orientation: portrait) {
+	.secondary-menu--content .sidebar--menu-item--label {
 		@apply text-base;
 	}
-}
 
-.sidebar--menu-item--disabled {
-	&,
-	&:hover,
-	&:focus {
-		@apply bg-ui-disabled text-ui-disabled border-ui-disabled !important;
-		@apply pointer-events-none;
+	.sidebar--menu-item--icon {
+		font-size: 1.2rem;
+
+		@media (min-width: 1280px) {
+			font-size: 1.3rem;
+		}
+
+		@media (min-width: 2000px) {
+			font-size: 1.35rem;
+		}
 	}
-}
+
+
+	.sidebar--menu-item--subline {
+		@apply text-sm font-normal;
+
+		@media (orientation: portrait) {
+			@apply text-base;
+		}
+	}
+
+	.sidebar--menu-item--disabled {
+		&,
+		&:hover,
+		&:focus {
+			@apply bg-ui-disabled text-ui-disabled !border-ui-disabled;
+			@apply pointer-events-none;
+		}
+	}
+
 </style>

@@ -7,7 +7,7 @@
 				<span v-if="alleEinwilligungsartenLeer">Alle ausgewählten Einwilligungsarten sind bereit zum Löschen.</span>
 				<span v-if="leereEinwilligungsartenartenVorhanden">Einige Einwilligungsarten haben noch Schüler, leere Einwilligungsarten können gelöscht werden.</span>
 				<div v-if="!alleEinwilligungsartenLeer">
-					<span v-for="message in nichtAlleEinwilligungsartenLeer" :key="message" class="text-error"> {{ message }} <br> </span>
+					<span v-for="message in nichtAlleEinwilligungsartenLeer" :key="message" class="text-ui-danger"> {{ message }} <br> </span>
 				</div>
 			</svws-ui-action-button>
 			<log-box :logs :status>

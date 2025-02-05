@@ -1,10 +1,10 @@
 <template>
-	<div @dragover="checkDropZone($event)" @drop="onDrop(raum)" class="flex flex-col rounded-xl border bg-white dark:bg-black"
+	<div @dragover="checkDropZone($event)" @drop="onDrop(raum)" class="flex flex-col rounded-xl border bg-ui-contrast-0"
 		:class="{
-			'shadow-lg shadow-black/5 border-black/10 dark:border-white/10': dragData() === undefined,
-			'border-dashed border-svws dark:border-svws ring-4 ring-svws/25': dragData() !== undefined && dragData() instanceof GostKursklausur,
-			'border-red-500': raumHatFehler(),
-			'bg-red-200': raum.idTermin !== terminSelected.id, // TODO Priorität und warum überhaupt???
+			'shadow-lg shadow-ui-contrast-10 border-ui-contrast-10': dragData() === undefined,
+			'border-dashed border-ui-brand dark:border-ui-brand ring-4 ring-ui-brand/25': dragData() !== undefined && dragData() instanceof GostKursklausur,
+			'border-ui-danger': raumHatFehler(),
+			'bg-ui-danger-secondary': raum.idTermin !== terminSelected.id, // TODO Priorität und warum überhaupt???
 		}">
 		<div class="flex h-full flex-col p-3">
 			<div class="svws-raum-title flex justify-between">
@@ -12,12 +12,12 @@
 					:model-value="raum.idStundenplanRaum === null ? undefined : kMan().stundenplanraumGetByKlausurraum(raum)"
 					:disabled="!hatKompetenzUpdate"
 					headless
-					class="flex-grow"
+					class="grow"
 					@update:model-value="(value : StundenplanRaum | undefined) => void patchKlausurraum(raum.id, { idStundenplanRaum: value !== undefined ? value.id : null })"
 					:item-text="(item: StundenplanRaum) => item !== null ? (item.kuerzel + ' (' + item.groesse+ ' Plätze, ' + item.beschreibung + ')') : ''"
 					:items="raeumeVerfuegbar" />
-				<span class="inline-flex items-center flex-shrink-0  -my-1">
-					<svws-ui-tooltip class="text-error font-bold text-headline-md" v-if="raumHatFehler()">
+				<span class="inline-flex items-center shrink-0  -my-1">
+					<svws-ui-tooltip class="text-ui-danger font-bold text-headline-md" v-if="raumHatFehler()">
 						<template #content>
 							<template v-if="!raum.idStundenplanRaum">Keine Raumnummer zugeordnet</template>
 							<template v-else-if="anzahlSuS() > kMan().stundenplanraumGetByKlausurraum(raum).groesse">Derzeitige Raumbelegung überschreitet die Raumkapazität</template>
@@ -46,7 +46,7 @@
 								<template #content>
 									<s-gost-klausurplanung-kursliste :k-man :kursklausur="klausur" :termin="kMan().terminOrNullByKursklausur(klausur)!" :benutzer-kompetenzen />
 								</template>
-								<span class="svws-ui-badge hover:opacity-75" :style="`--background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
+								<span class="svws-ui-badge hover:opacity-75" :style="`background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
 								<svws-ui-tooltip>
 									<template #content>
 										Bemerkung: {{ klausur.bemerkung }}
@@ -78,7 +78,7 @@
 			<span class="mt-auto -mb-3 flex w-full items-center justify-between gap-1 text-sm">
 				<div class="py-3" :class="{'opacity-50': klausurenImRaum().size() === 0}">
 					<span class="font-bold">
-						<span v-if="raum.idStundenplanRaum !== null" :class="anzahlSuS() > kMan().stundenplanraumGetByKlausurraum(raum).groesse ? 'text-error' : ''">{{ anzahlSuS() }}/{{ kMan().stundenplanraumGetByKlausurraum(raum).groesse }} belegt, </span>
+						<span v-if="raum.idStundenplanRaum !== null" :class="anzahlSuS() > kMan().stundenplanraumGetByKlausurraum(raum).groesse ? 'text-ui-danger' : ''">{{ anzahlSuS() }}/{{ kMan().stundenplanraumGetByKlausurraum(raum).groesse }} belegt, </span>
 						<span v-else>{{ anzahlSuS() }} Plätze, </span>
 					</span>
 					<span>{{ anzahlRaumstunden }} Raumstunden benötigt</span>
@@ -171,6 +171,9 @@
 </script>
 
 <style lang="postcss">
+
+@reference "../../../../../ui/src/assets/styles/index.css"
+
 .svws-raum-title {
   .text-input--headless {
     @apply text-headline-md pl-5;

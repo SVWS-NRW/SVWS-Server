@@ -2,10 +2,10 @@
 	<Teleport to=".svws-ui-header--actions" v-if="isMounted">
 		<svws-ui-modal-hilfe> <hilfe-gost-fachwahlen /> </svws-ui-modal-hilfe>
 	</Teleport>
-	<div class="page--content page--content--full h-full overflow-y-hidden">
-		<div title="Übersicht aller Fachwahlen im Jahrgang" class="h-full flex flex-col">
+	<div class="page page-flex-row">
+		<div title="Übersicht aller Fachwahlen im Jahrgang" class="max-w-300 min-w-fit h-full flex flex-col">
 			<div class="flex-0 text-headline-md mb-4">Übersicht aller Fachwahlen im Jahrgang</div>
-			<div class="flex-grow overflow-y-auto pr-3 scrollbar-thin">
+			<div class="grow overflow-y-auto pr-3 scrollbar-thin">
 				<svws-ui-table :items="[]" :no-data="false" :columns="cols" has-background :class="{'svws-fachwahlen--has-selection': selected().bereich !== 'Fach' || selected().idFach}">
 					<template #header>
 						<div role="row" class="svws-ui-tr select-none">
@@ -39,7 +39,7 @@
 						</div>
 					</template>
 					<template #body>
-						<div role="row" v-for="row in fachwahlstatistik" :key="row.id" class="svws-ui-tr" :style="{ '--background-color': getBgColor(row) }">
+						<div role="row" v-for="row in fachwahlstatistik" :key="row.id" class="svws-ui-tr" :style="{ 'background-color': getBgColor(row) }">
 							<template v-for="(heading, index) in colHeadings" :key="heading.text">
 								<div v-for="(h, n) in heading.cols" :key="n" class="svws-ui-td select-none" role="cell" @click="selectData(row, heading.text)"
 									:class="{
@@ -56,9 +56,9 @@
 				</svws-ui-table>
 			</div>
 		</div>
-		<div class="h-full overflow-y-hidden flex flex-col">
+		<div class="min-w-176 h-full overflow-y-hidden flex flex-col">
 			<div class="flex-0 text-headline-md mb-4">Schülerliste</div>
-			<div class="flex-grow h-full overflow-y-auto pr-3 scrollbar-thin">
+			<div class="grow h-full overflow-y-auto pr-3 scrollbar-thin">
 				<router-view />
 			</div>
 		</div>
@@ -212,12 +212,7 @@
 
 <style lang="postcss" scoped>
 
-	.page--content {
-		@apply grid h-full overflow-y-hidden overflow-x-auto pb-3 pt-6 gap-x-4 lg:gap-x-8;
-		grid-auto-rows: 100%;
-		grid-template-columns: minmax(66rem, 1fr) minmax(44rem, 1fr);
-		grid-auto-columns: max-content;
-	}
+	@reference "../../../../../ui/src/assets/styles/index.css"
 
 	.svws-selectable {
 		@apply cursor-pointer;

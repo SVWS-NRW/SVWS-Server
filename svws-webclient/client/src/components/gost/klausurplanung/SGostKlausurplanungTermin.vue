@@ -1,20 +1,20 @@
 <template>
-	<div :id="'gost-klausurtermin-' + termin.id" class="svws-ui-termin h-full flex flex-col group bg-white dark:bg-black rounded-lg"
+	<div :id="'gost-klausurtermin-' + termin.id" class="svws-ui-termin h-full flex flex-col group bg-ui-contrast-0 rounded-lg"
 		:class="{
-			'border shadow-md shadow-black/5': !inTooltip,
-			'border-black/10 dark:border-white/10': !inTooltip && !terminSelected,
+			'border shadow-md shadow-ui-contrast-10': !inTooltip,
+			'border-ui-contrast-10': !inTooltip && !terminSelected,
 			'-mx-2 -my-1': inTooltip,
-			'border-r-2 border-r-svws border-l-transparent': inTooltip && !termin.istHaupttermin,
-			'border-black/50 dark:border-white/50 ring-4 ring-black/10 dark:ring-white/10': termin.istHaupttermin && !inTooltip && terminSelected,
-			'border-svws/50 dark:border-svws/50 ring-4 ring-svws/10 dark:ring-svws/10': !termin.istHaupttermin && !inTooltip && terminSelected,
-			'border-l-svws border-l-2': !termin.istHaupttermin,
+			'border-r-2 border-r-ui-brand border-l-transparent': inTooltip && !termin.istHaupttermin,
+			'border-ui-contrast-500 ring-4 ring-ui-contrast-10': termin.istHaupttermin && !inTooltip && terminSelected,
+			'border-ui-brand/50 ring-4 ring-ui-brand/10': !termin.istHaupttermin && !inTooltip && terminSelected,
+			'border-l-brand border-l-2': !termin.istHaupttermin,
 		}">
 		<slot name="header">
 			<section class="text-headline-md leading-none px-3 pt-3" :class="{'pb-2': !$slots.tableTitle}">
 				<template v-if="!$slots.tableTitle">
 					<slot name="title">
 						<span class="leading-tight inline-flex gap-0.5" :class="{'text-base': compact || compactWithDate}">
-							<span v-if="dragIcon && !compact" class="group-hover:bg-black/10 dark:group-hover:bg-white/10 -ml-1 mr-0.5 rounded">
+							<span v-if="dragIcon && !compact" class="group-hover:bg-ui-contrast-10 -ml-1 mr-0.5 rounded">
 								<span class="icon i-ri-draggable" :class="{'-mx-0.5': !compact}" />
 							</span>
 							<span class="line-clamp-1 break-all">{{ terminBezeichnung() }}</span>
@@ -52,13 +52,13 @@
 			</section>
 		</slot>
 		<slot name="main" v-if="!compact">
-			<section class="flex flex-col flex-grow" :class="{'mt-2': !$slots.tableTitle, 'px-3': !inTooltip}">
+			<section class="flex flex-col grow" :class="{'mt-2': !$slots.tableTitle, 'px-3': !inTooltip}">
 				<slot name="klausuren">
 					<div v-if="kursklausuren().size() === 0 && (schuelerklausurtermine().size() === 0)">
 						Keine Klausuren
 					</div>
 					<slot name="kursklausuren" v-if="kursklausuren().size()">
-						<svws-ui-table :columns="cols" :disable-header="!$slots.tableTitle" :class="{'border-t border-black/25 dark:border-white/25': !$slots.tableTitle}">
+						<svws-ui-table :columns="cols" :disable-header="!$slots.tableTitle" :class="{'border-t border-ui-contrast-25': !$slots.tableTitle}">
 							<template #header>
 								<div class="svws-ui-tr" role="row">
 									<div class="svws-ui-td col-span-full" role="columnheader">
@@ -91,7 +91,7 @@
 											<template #content>
 												<s-gost-klausurplanung-kursliste :k-man :kursklausur="klausur" :termin :patch-klausur :create-schuelerklausur-termin @modal="keepOpen = $event" :benutzer-kompetenzen />
 											</template>
-											<span class="svws-ui-badge hover:opacity-75" :style="`--background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
+											<span class="svws-ui-badge hover:opacity-75" :style="`background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
 											<svws-ui-tooltip>
 												<template #content>
 													<div v-if="kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe !== null && kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe!.trim().length > 0">
@@ -256,6 +256,9 @@
 </script>
 
 <style lang="postcss" scoped>
+
+@reference "../../../../../ui/src/assets/styles/index.css"
+
 .svws-warning {
   .i-ri-draggable {
     @apply opacity-10;
@@ -270,13 +273,16 @@
 </style>
 
 <style lang="postcss">
+
+@reference "../../../../../ui/src/assets/styles/index.css"
+
 .svws-ui-termin {
   .text-input--headless {
     @apply text-headline-md;
 
     &:not(:focus) {
       &::placeholder {
-        @apply text-black dark:text-white;
+        @apply text-ui-contrast-100;
       }
     }
 
@@ -294,13 +300,13 @@
     .text-input--headless {
       &:not(:focus) {
         &::placeholder {
-          @apply text-svws dark:text-svws;
+          @apply text-ui-brand;
         }
       }
 
       &:focus {
         &::placeholder {
-          @apply text-svws/50 dark:text-svws/50;
+          @apply text-ui-brand/50;
         }
       }
     }

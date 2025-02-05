@@ -88,18 +88,21 @@
 
 </script>
 
-<style scoped lang="postcss">
+<style lang="postcss" scoped>
+
+	@reference "../../assets/styles/index.css";
+
 	.svws-ui-sub-nav {
 		@apply w-full;
 		@apply print:hidden;
 
 		.svws-ui-sub-nav--wrapper {
-			@apply flex items-center relative z-30 flex-shrink-0 overflow-hidden;
+			@apply flex items-center relative z-30 shrink-0 overflow-hidden;
 			@apply bg-ui-neutral rounded-md w-full;
 
 			.router-tab-bar--subnav {
 				@apply relative z-10 h-9 py-2 px-[2px] -mt-[2px];
-				@apply flex items-center gap-[2px] flex-shrink-0 overflow-x-scroll;
+				@apply flex items-center gap-[2px] shrink-0 overflow-x-scroll;
 				@apply text-sm w-full;
 
 				-ms-overflow-style: none;
@@ -110,7 +113,7 @@
 				}
 
 				&:focus-visible {
-					@apply outline-none;
+					@apply outline-hidden;
 				}
 
 				&:before {
@@ -118,7 +121,7 @@
 				}
 
 				> * {
-					@apply flex-shrink-0;
+					@apply shrink-0;
 				}
 
 				.button {
@@ -135,7 +138,7 @@
 					@apply w-5 h-full p-0 rounded;
 
 					&:focus {
-						@apply outline-none;
+						@apply outline-hidden;
 					}
 
 					&:hover,
@@ -144,7 +147,7 @@
 					}
 
 					&:focus-visible {
-						@apply ring ring-ui;
+						@apply ring-3 ring-ui;
 					}
 				}
 			}

@@ -20,7 +20,7 @@
 			</svws-ui-button-select>
 			<svws-ui-modal-hilfe> <hilfe-laufbahnplanung /> </svws-ui-modal-hilfe>
 		</Teleport>
-		<div class="flex-grow overflow-y-auto overflow-x-hidden min-w-fit">
+		<div class="grow overflow-y-auto overflow-x-hidden min-w-fit">
 			<s-laufbahnplanung-card-planung v-if="visible" :abiturdaten-manager :modus :gost-jahrgangsdaten :set-wahl :goto-kursblockung :faecher-anzeigen />
 		</div>
 		<div class="w-2/5 3xl:w-1/2 min-w-[36rem] overflow-y-auto overflow-x-hidden">
@@ -162,6 +162,8 @@
 </script>
 
 <style lang="postcss" scoped>
+
+	@reference "../../../assets/styles/index.css";
 
 	.page--content--laufbahnplanung {
 		@apply gap-x-8 2xl:gap-x-12 relative overflow-y-hidden h-full;

@@ -1,5 +1,5 @@
 <template>
-	<div class="page--content">
+	<div class="page page-flex-row">
 		<div class="flex-none w-28 h-full">
 			<svws-ui-table :clicked="lernabschnitt" @update:clicked="gotoLernabschnitt" :columns="[{key: 'schuljahresabschnitt', label: 'Abschnitt'}]" :items="lernabschnitte" clickable type="navigation" class="-mt-1">
 				<template #cell="{ rowData: row }">
@@ -42,15 +42,9 @@
 
 </script>
 
-<style lang="postcss" scoped>
-
-	.page--content {
-		@apply flex gap-x-8;
-	}
-
-</style>
-
 <style lang="postcss">
+
+	@reference "../../../../../ui/src/assets/styles/index.css"
 
 	.svws-select-lernabschnitt .text-input-component {
 		@apply text-headline-md w-fit;

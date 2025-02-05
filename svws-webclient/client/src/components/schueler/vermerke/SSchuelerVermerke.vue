@@ -6,13 +6,13 @@
 				<span class="icon icon-lg i-ri-chat-new-line" />
 			</svws-ui-button>
 			<div v-for="vermerk of schuelerVermerke()" :key="vermerk.id">
-				<svws-ui-action-button class="mb-5 bg-blue-100" @click="activeVermerk = (activeVermerk?.id === vermerk.id) ? undefined : vermerk" icon="i-ri-message-line"
+				<svws-ui-action-button class="mb-5 bg-ui-brand" @click="activeVermerk = (activeVermerk?.id === vermerk.id) ? undefined : vermerk" icon="i-ri-message-line"
 					:title="getTitle(vermerk)" :description="getDescription(vermerk)" :is-active="activeVermerk?.id === vermerk.id">
 					<svws-ui-input-wrapper class="px-6">
 						<svws-ui-textarea-input	v-model="vermerk.bemerkung" :autoresize="true" :rows="4" @change="bemerkung => patch({ bemerkung: String(bemerkung) }, vermerk.id)" />
 						<div class="flex w-144">
 							<p class="my-auto mr-4">Vermerkart:</p>
-							<svws-ui-select class="bg-white" title="Bitte wählen" headless :model-value="mapVermerkArten.get(vermerk.idVermerkart || -1)" :items="mapVermerkArten.values()" :item-text="item => item.bezeichnung"
+							<svws-ui-select class="bg-ui-contrast-0" title="Bitte wählen" headless :model-value="mapVermerkArten.get(vermerk.idVermerkart || -1)" :items="mapVermerkArten.values()" :item-text="item => item.bezeichnung"
 								@update:model-value="art => (art !== null) && patch({ idVermerkart: art?.id ?? -1 }, vermerk.id)" />
 						</div>
 						<div class="w-full flex justify-between">
@@ -71,6 +71,7 @@
 
 
 <style lang="postcss" scoped>
+	@reference "../../../../../ui/src/assets/styles/index.css"
 
 	:deep(.svws-title) {
 		@apply text-ellipsis overflow-hidden whitespace-nowrap w-full;

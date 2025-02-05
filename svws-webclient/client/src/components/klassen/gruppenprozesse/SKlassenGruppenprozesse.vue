@@ -7,7 +7,7 @@
 				<span v-if="alleKlassenLeer">Alle ausgewählten Klassen sind bereit zum Löschen.</span>
 				<span v-if="leereKlassenVorhanden">Einige Klassen haben noch Schüler, leere Klassen können gelöscht werden.</span>
 				<div v-if="!alleKlassenLeer">
-					<span v-for="message in nichtAlleKlassenLeer" :key="message" class="text-error"> {{ message }} <br> </span>
+					<span v-for="message in nichtAlleKlassenLeer" :key="message" class="text-ui-danger"> {{ message }} <br> </span>
 				</div>
 			</svws-ui-action-button>
 			<log-box :logs :status>

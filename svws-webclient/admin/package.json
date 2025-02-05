@@ -12,8 +12,7 @@
 		"lint": "eslint 'src/**/*.{ts,vue}' --cache",
 		"lint-tsc": "vue-tsc --noEmit",
 		"build": "vite build",
-		"serve": "vite preview",
-		"check-licenses": "license-checker-rseidelsohn --summary --unknown --production"
+		"serve": "vite preview"
 	},
 	"dependencies": {
 		"@headlessui/vue": "^1.7.7",

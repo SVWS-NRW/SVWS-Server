@@ -369,6 +369,8 @@
 
 <style lang="postcss" scoped>
 
+	@reference "../../assets/styles/index.css";
+
 	.svws-ui-card {
 		@apply rounded-lg m-2 min-w-fit gap-3;
 
@@ -512,7 +514,7 @@
 		&:focus-visible,
 		&:focus {
 			.svws-ui-card--header {
-				@apply bg-ui-brand-hover border-ui-brand-hover text-white;
+				@apply bg-ui-brand-hover border-ui-brand-hover text-ui-onbrand-hover;
 
 				.header--icon span,
 				.header--collapse-icon span {

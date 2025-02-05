@@ -59,13 +59,13 @@
 			<ul>
 				<li class="flex font-bold">
 					<span>{{ kMan().anzahlBenoetigtePlaetzeAlleKlausurenByTermin(termin, false) }} Klausuren im akutellen Jahrgang,&nbsp;</span>
-					<span v-if="kMan().isTerminAlleSchuelerklausurenVerplant(termin)" class="text-green-500">alle zugewiesen.</span>
-					<span v-else class="text-red-500">nicht alle zugewiesen.</span>
+					<span v-if="kMan().isTerminAlleSchuelerklausurenVerplant(termin)" class="text-ui-success">alle zugewiesen.</span>
+					<span v-else class="text-ui-danger">nicht alle zugewiesen.</span>
 				</li>
 				<li class="flex" v-for="terminFremd in kMan().getFremdTermineByTermin(termin)" :key="terminFremd.id">
 					<span>{{ kMan().anzahlBenoetigtePlaetzeAlleKlausurenByTermin(terminFremd, false) }} Klausuren im Jahrgang {{ GostHalbjahr.fromIDorException(terminFremd.halbjahr).jahrgang }},&nbsp;</span>
-					<span v-if="kMan().isTerminAlleSchuelerklausurenVerplant(terminFremd)" class="text-green-500">alle zugewiesen.</span>
-					<span v-else class="text-red-500">nicht alle zugewiesen.</span>
+					<span v-if="kMan().isTerminAlleSchuelerklausurenVerplant(terminFremd)" class="text-ui-success">alle zugewiesen.</span>
+					<span v-else class="text-ui-danger">nicht alle zugewiesen.</span>
 					<svws-ui-button type="icon" @click="gotoTermin(terminFremd.abijahr, GostHalbjahr.fromIDorException(terminFremd.halbjahr), terminFremd.id)" :title="`Zur Raumplanung des Jahrgangs`" size="small"><span class="icon i-ri-link" /></svws-ui-button>
 				</li>
 			</ul>
@@ -177,6 +177,8 @@
 </script>
 
 <style lang="postcss" scoped>
+
+@reference "../../../../../ui/src/assets/styles/index.css"
 
 .svws-ui-tab-content {
 	@apply overflow-y-hidden items-start;

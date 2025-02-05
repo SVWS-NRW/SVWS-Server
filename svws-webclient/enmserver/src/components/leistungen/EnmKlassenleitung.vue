@@ -57,7 +57,9 @@
 
 <style lang="postcss" scoped>
 
-.page--content {
+	@reference "../../../../ui/src/assets/styles/index.css";
+
+	.page--content {
 		@apply flex flex-row gap-6;
 		@apply h-full w-full overflow-hidden;
 		@apply max-w-full pb-4;
@@ -65,7 +67,7 @@
 
 	.enm-leistung-uebersicht-bereich {
 		@apply w-full h-full overflow-hidden;
-		@apply flex-grow;
+		@apply grow;
 	}
 
 	.enm-floskel-editor-bereich {

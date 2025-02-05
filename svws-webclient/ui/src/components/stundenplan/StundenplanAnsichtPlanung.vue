@@ -6,7 +6,7 @@
 			<div class="inline-flex gap-1 items-center justify-center print:pl-2 print:justify-start opacity-50 text-sm font-bold pb-0.5" />
 			<!-- Daneben werden die einzelnen Wochentage des Stundenplans angezeigt -->
 			<div v-for="wochentag in wochentagRange" :key="wochentag.id" @click="updateSelected(wochentag)" class="svws-wochentag-label" :class="{'svws-selected': selected===wochentag}">
-				<span class="px-2 py-1 rounded"> {{ wochentag.beschreibung }}</span>
+				<span class="px-2 py-1 rounded-xs"> {{ wochentag.beschreibung }}</span>
 			</div>
 		</div>
 		<!-- Die Daten des Stundenplans -->
@@ -34,7 +34,7 @@
 			</div>
 			<div v-for="wochentag in wochentagRange" :key="wochentag.id" class="svws-ui-stundenplan--zeitraster" :class="{'svws-selected': selected === wochentag}">
 				<template v-for="zeitrasterEintrag in manager().getListZeitrasterZuWochentag(wochentag)" :key="zeitrasterEintrag.id">
-					<div class="svws-ui-stundenplan--stunde cursor-pointer" @click="updateSelected(zeitrasterEintrag)" :style="posZeitraster(wochentag, zeitrasterEintrag.unterrichtstunde)" :class="{'svws-selected': (selected === zeitrasterEintrag) || (selected === zeitrasterEintrag.unterrichtstunde), 'bg-highlight': manager().zeitrasterGetIstZustandProblematisch(zeitrasterEintrag)}">
+					<div class="svws-ui-stundenplan--stunde cursor-pointer" @click="updateSelected(zeitrasterEintrag)" :style="posZeitraster(wochentag, zeitrasterEintrag.unterrichtstunde)" :class="{'svws-selected': (selected === zeitrasterEintrag) || (selected === zeitrasterEintrag.unterrichtstunde), 'bg-ui-caution': manager().zeitrasterGetIstZustandProblematisch(zeitrasterEintrag)}">
 						<div class="svws-ui-stundenplan--unterricht">
 							<span>{{ zeitrasterEintrag.unterrichtstunde }}</span>
 							<div class="flex content-start">

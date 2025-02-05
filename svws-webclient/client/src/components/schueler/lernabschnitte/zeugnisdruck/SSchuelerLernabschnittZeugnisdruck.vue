@@ -1,5 +1,5 @@
 <template>
-	<div class="content">
+	<div class="w-full h-full grid grid-cols-2">
 		<svws-ui-content-card>
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input placeholder="Konferenz-Datum" :model-value="manager().lernabschnittGet().datumKonferenz" type="date" disabled />
@@ -34,11 +34,3 @@
 	const props = defineProps<SchuelerLernabschnittZeugnisdruckProps>();
 
 </script>
-
-<style lang="postcss" scoped>
-
-	.content {
-		@apply w-full h-full grid grid-cols-2;
-	}
-
-</style>

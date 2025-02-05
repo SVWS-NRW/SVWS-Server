@@ -14,7 +14,7 @@
 			</div>
 		</div>
 		<div class="svws-ui-td" role="cell" />
-		<div v-if="!getBenutzerManager().istAdmin()" class="svws-ui-td text-black/50 dark:text-white/50" role="cell">
+		<div v-if="!getBenutzerManager().istAdmin()" class="svws-ui-td text-ui-contrast-50" role="cell">
 			<span class="line-clamp-1 break-all leading-tight -my-0.5" :title="getTopLevelGruppen4Kompetenz">{{ getTopLevelGruppen4Kompetenz }}</span>
 		</div>
 		<template v-if="hatSubKompetenzen">
@@ -78,7 +78,9 @@
 
 </script>
 
-<style scoped lang="postcss">
+<style lang="postcss" scoped>
+
+	@reference "../../../../../../ui/src/assets/styles/index.css"
 
 	.svws-ui-tr {
 		grid-template-columns: minmax(4rem, 2fr) 0.15fr minmax(4rem, 1fr);

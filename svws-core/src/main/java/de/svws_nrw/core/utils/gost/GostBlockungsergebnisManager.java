@@ -2778,7 +2778,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return die Anzahl an Schülern die dem Kurs zugeordnet sind plus potentiell zugeordnete Dummy SuS.
 	 */
-	private int getOfKursAnzahlSchuelerPlusDummy(final long idKurs) {
+	public int getOfKursAnzahlSchuelerPlusDummy(final long idKurs) {
 		return getKursE(idKurs).schueler.size() + DeveloperNotificationException.ifMapGetIsNull(_kursID_to_dummySuS, idKurs);
 	}
 

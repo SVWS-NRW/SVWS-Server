@@ -14,8 +14,7 @@
 		"build-lib": "vite build",
 		"build-dts": "vue-tsc --declaration --emitDeclarationOnly -p tsconfig.build.json",
 		"story:build": "histoire build",
-		"story:preview": "histoire preview",
-		"check-licenses": "license-checker-rseidelsohn --summary --unknown --production"
+		"story:preview": "histoire preview"
 	},
 	"files": [
 		"dist"

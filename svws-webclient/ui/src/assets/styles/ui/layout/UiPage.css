@@ -1,0 +1,56 @@
+@layer base {
+
+	@page {
+		size: A4;
+		margin: 12.1mm 12.1mm 5.6mm 12.1mm;
+	}
+
+	.page {
+		@apply h-full w-full;
+		@apply overflow-hidden;
+		@apply px-6 lg:px-9 3xl:px-12 4xl:px-20;
+		@apply pt-8 pb-2;
+	}
+
+	.page-flex-row {
+		@apply flex flex-row gap-8 lg:gap-12 overflow-x-auto;
+	}
+
+	.page-grid {
+		@apply grid overflow-x-auto;
+		@apply gap-x-8 lg:gap-x-12;
+		grid-auto-rows: 100%;
+		grid-auto-columns: max-content;
+	}
+	
+	.page--content {
+		@apply grid grid-cols-1 lg:grid-cols-2 w-full;
+		@apply gap-x-8 gap-y-16 lg:gap-y-20 lg:gap-x-16;
+		@apply px-6 lg:px-9 3xl:px-12 4xl:px-20 pt-8 pb-16;
+		grid-auto-rows: min-content;
+		max-width: 140rem;
+	}
+	
+	.page--content--dashboard {
+		@apply grid grid-cols-2 lg:grid-cols-4 w-full;
+		@apply gap-2 sm:gap-3 lg:gap-4;
+		@apply px-6 lg:px-9 3xl:px-12 4xl:px-20 pt-8 pb-16;
+		@apply overflow-y-auto;
+		grid-auto-rows: min-content;
+		max-width: 140rem;
+	}
+	
+	.page--content--full {
+		@apply flex;
+		max-width: unset;
+	}
+	
+	.page--content--flex {
+		@apply flex flex-col min-h-full gap-y-5;
+	}
+	
+	.page--content--flex-row {
+		@apply flex flex-row min-h-full gap-y-5;
+	}
+
+}

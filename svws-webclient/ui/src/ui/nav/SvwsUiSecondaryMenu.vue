@@ -17,10 +17,9 @@
 	</div>
 </template>
 
-<script setup lang="ts">
-</script>
-
 <style lang="postcss">
+
+	@reference "../../assets/styles/index.css";
 
 	.secondary-menu--headline {
 		@apply py-2 text-headline;
@@ -33,12 +32,12 @@
 	}
 
 	.secondary-menu--header {
-		@apply flex-shrink-0;
+		@apply shrink-0;
 		@apply relative z-10;
 	}
 
 	.secondary-menu--content {
-		@apply flex-grow;
+		@apply grow;
 		@apply overflow-y-auto;
 		@apply relative z-0;
 		@apply flex flex-col;

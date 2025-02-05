@@ -48,7 +48,7 @@
 								<svws-ui-text-input v-if="showFreitext" placeholder="Bemerkung" :max-len="255" :valid="(v) => validateBemerkung(v)"
 									v-model="schuelerKAoADaten.bemerkung" />
 							</div>
-							<div class="flex-grow" />
+							<div class="grow" />
 							<div class="flex gap-2 mt-2 justify-end items-end">
 								<svws-ui-button :disabled="!validateRequiredFieldsFilled()" @click="sendRequest(Mode.ADD)">
 									Speichern
@@ -108,7 +108,7 @@
 								<svws-ui-text-input v-if="showFreitext" placeholder="Bemerkung" :max-len="255" :valid="(v) => validateBemerkung(v)"
 									v-model="schuelerKAoADaten.bemerkung" />
 							</div>
-							<div class="flex-grow" />
+							<div class="grow" />
 							<div class="flex gap-2 mt-2 justify-end items-end">
 								<svws-ui-button :disabled="!validateRequiredFieldsFilled()" @click="sendRequest(Mode.PATCH)">
 									Änderung speichern
@@ -153,7 +153,7 @@
 								<svws-ui-text-input v-if="((kaoaDaten.bemerkung !== null) && (!JavaString.isBlank(kaoaDaten.bemerkung)))" readonly
 									placeholder="Bemerkung" :model-value="kaoaDaten.bemerkung" :max-len="255" :valid="(v) => validateBemerkung(v)" />
 							</div>
-							<div class="flex-grow" />
+							<div class="grow" />
 							<div class="flex gap-2 mt-2  justify-end items-end">
 								<svws-ui-button v-if="idPatchObject !== kaoaDaten.id" @click="enterPatchMode(kaoaDaten)">
 									Bearbeiten

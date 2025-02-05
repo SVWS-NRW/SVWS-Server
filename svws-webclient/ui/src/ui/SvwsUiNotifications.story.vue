@@ -68,11 +68,15 @@
 <script setup lang="ts">
 </script>
 
-<style>
-html {
-	font-size: 16px !important;
-}
-body {
-	font-size: 0.875rem !important;
-}
+<style lang="postcss">
+
+	@reference "../assets/styles/index.css";
+
+	html {
+		font-size: 16px !important;
+	}
+	body {
+		font-size: 0.875rem !important;
+	}
+
 </style>

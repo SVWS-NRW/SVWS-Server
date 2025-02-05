@@ -18,11 +18,8 @@
 		"src/**/*.vue",
 		"components.d.ts",
 		"../core/src/**/*.ts",
-		"src/tailwind/*.js",
 		"histoire.setup.ts"	],
 	"exclude": [
-		"tailwind.config.js",
-		"postcss.config.js",
 		"../core/src/index.ts",
 	]
 }

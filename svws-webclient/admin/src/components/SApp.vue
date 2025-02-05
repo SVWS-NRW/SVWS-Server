@@ -41,7 +41,7 @@
 						<span>{{ pendingSetApp }}</span>
 					</template>
 					<template #abschnitt>
-						<span class="inline-block h-4 rounded animate-pulse w-16 bg-black/10 dark:bg-white/10 -mb-1" />
+						<span class="inline-block h-4 rounded-sm animate-pulse w-16 bg-ui-contrast-10 -mb-1" />
 					</template>
 				</svws-ui-secondary-menu>
 			</template>
@@ -56,9 +56,9 @@
 						<svws-ui-header>
 							<div class="flex items-center">
 								<div>
-									<span class="inline-block h-[1em] rounded animate-pulse w-52 bg-black/10 dark:bg-white/10" />
+									<span class="inline-block h-[1em] rounded-sm animate-pulse w-52 bg-ui-contrast-10" />
 									<br>
-									<span class="inline-block h-[1em] rounded animate-pulse w-20 bg-black/5 dark:bg-white/5" />
+									<span class="inline-block h-[1em] rounded-sm animate-pulse w-20 bg-ui-contrast-10" />
 								</div>
 							</div>
 						</svws-ui-header>
@@ -115,16 +115,18 @@
 
 <style lang="postcss">
 
+	@reference "../../../ui/src/assets/styles/index.css";
+
 	.app--page {
-		@apply flex flex-grow flex-col justify-between;
+		@apply flex grow flex-col justify-between;
 		@apply h-screen;
 		@apply overflow-hidden;
 		@apply relative;
-		@apply bg-white dark:bg-black;
+		@apply bg-ui-contrast-0;
 	}
 
 	.page--wrapper {
-		@apply flex flex-col w-full h-full flex-grow;
+		@apply flex flex-col w-full h-full grow;
 	}
 
 	.page--flex {

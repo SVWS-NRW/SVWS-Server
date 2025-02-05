@@ -1,0 +1,54 @@
+@utility text-base {
+	font-size: 1rem;
+	line-height: 1.33;
+	font-weight: 500;
+}
+
+@utility text-headline-sm {
+	font-size: 1rem;
+	line-height: 1.33;
+	font-weight: 700;
+}
+
+@utility text-headline-md {
+	font-size: 1.125rem;
+	line-height: 1.33;
+	font-weight: 700;
+}
+
+@utility text-headline {
+	font-size: 1.618rem;
+	line-height: 1.1;
+	font-weight: 700;
+}
+
+@utility text-headline-xl {
+	font-size: 2.618rem;
+	line-height: 1.1;
+	font-weight: 700;
+}
+
+@utility text-sm {
+	font-size: 0.833rem;
+	line-height: 1.1;
+	font-weight: 400;
+}
+
+@utility text-sm-bold {
+	font-size: 0.833rem;
+	line-height: 1;
+	font-weight: 700;
+}
+
+@utility text-button {
+	font-size: 0.916rem;
+	line-height: 1;
+	font-weight: 700;
+}
+
+
+@theme {
+	--font-weight-normal: 400;
+	--font-weight-medium: 500;
+	--font-weight-bold: 700;
+}

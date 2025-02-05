@@ -1,5 +1,5 @@
 <template>
-	<div class="svws-ui-tr" role="row" :style="{ '--background-color': bgColor }">
+	<div class="svws-ui-tr" role="row" :style="{ 'background-color': bgColor }">
 		<div role="cell" class="svws-ui-td">
 			<span :title="fach.kuerzelAnzeige || undefined">
 				{{ fach.kuerzelAnzeige }}
@@ -13,7 +13,7 @@
 			<input :disabled="!hatUpdateKompetenz || true" type="checkbox" class="svws-ui-checkbox svws-headless" v-model="fach.istFremdSpracheNeuEinsetzend">
 		</div>
 		<div role="cell" class="svws-ui-td svws-align-center svws-divider svws-no-padding" :class="{ 'cursor-pointer': istProjektkurs && hatUpdateKompetenz }" @click="set_pjk_stunden">
-			<div v-if="istProjektkurs && hatUpdateKompetenz" class="flex items-center gap-0.5 border border-black/25 border-dashed hover:border-black/50 hover:border-solid hover:bg-white my-auto p-[0.1rem] rounded" @keydown.enter="set_pjk_stunden" tabindex="0">
+			<div v-if="istProjektkurs && hatUpdateKompetenz" class="flex items-center gap-0.5 border border-ui-contrast-25 hover:border-ui-contrast-50 border-dashed hover:border-solid hover:bg-ui-contrast-0 my-auto p-[0.1rem] rounded" @keydown.enter="set_pjk_stunden" tabindex="0">
 				<span :class="{ 'opacity-100 font-bold': fach.wochenstundenQualifikationsphase === 2, 'opacity-25 hover:opacity-100 font-medium': fach.wochenstundenQualifikationsphase === 3}">2</span>
 				<span class="opacity-50">/</span>
 				<span :class="{ 'opacity-100 font-bold': fach.wochenstundenQualifikationsphase === 3, 'opacity-25 hover:opacity-100 font-medium': fach.wochenstundenQualifikationsphase === 2}">3</span>
@@ -21,11 +21,11 @@
 			<span v-else class="my-auto">{{ fach.wochenstundenQualifikationsphase }}</span>
 		</div>
 		<div role="cell" class="svws-ui-td">
-			<svws-ui-select v-if="istJahrgangAllgemein && hatLeitfach1 && hatUpdateKompetenz" removable headless v-model="leitfach1" :items="leitfaecher1" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? '–'" />
+			<svws-ui-select v-if="istJahrgangAllgemein && hatLeitfach1 && hatUpdateKompetenz" removable headless v-model="leitfach1" :items="leitfaecher1" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? '—'" />
 			<span v-else class="px-2 text-center w-full" :class="{'opacity-25': !fach.projektKursLeitfach1Kuerzel}">{{ fach.projektKursLeitfach1Kuerzel || '—' }}</span>
 		</div>
 		<div role="cell" class="svws-ui-td svws-divider">
-			<svws-ui-select v-if="istJahrgangAllgemein && istProjektkurs && hatUpdateKompetenz" removable headless v-model="leitfach2" :items="leitfaecher2" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? '–'" />
+			<svws-ui-select v-if="istJahrgangAllgemein && istProjektkurs && hatUpdateKompetenz" removable headless v-model="leitfach2" :items="leitfaecher2" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? '—'" />
 			<span v-else class="px-2 text-center w-full" :class="{'opacity-25': !fach.projektKursLeitfach2Kuerzel}">{{ fach.projektKursLeitfach2Kuerzel || '—' }}</span>
 		</div>
 		<div role="cell" class="svws-ui-td svws-align-center" :class="{'svws-disabled': !ef_moeglich}">
@@ -111,7 +111,7 @@
 			const result = props.faecherManager().get(fach.value.projektKursLeitfach1ID);
 			return result === null ? undefined : result;
 		},
-		set: (value) => void doPatch({ projektKursLeitfach1ID: value?.id ?? null })
+		set: (value) => void doPatch({ projektKursLeitfach1ID: value?.id ?? null }),
 	});
 
 	const leitfach2: WritableComputedRef<GostFach | undefined> = computed({
@@ -121,7 +121,7 @@
 			const result = props.faecherManager().get(fach.value.projektKursLeitfach2ID);
 			return result === null ? undefined : result;
 		},
-		set: (value) => void doPatch({ projektKursLeitfach2ID: value?.id ?? null })
+		set: (value) => void doPatch({ projektKursLeitfach2ID: value?.id ?? null }),
 	});
 
 	const istJahrgangAllgemein: ComputedRef<boolean> = computed(() => props.abiturjahr < 0);
@@ -156,42 +156,42 @@
 
 	const ef1 = computed({
 		get: () => fach.value.istMoeglichEF1,
-		set: (value) => void doPatch({ istMoeglichEF1: !fach.value.istMoeglichEF1 })
+		set: (value) => void doPatch({ istMoeglichEF1: !fach.value.istMoeglichEF1 }),
 	})
 
 	const ef2 = computed({
 		get: () => fach.value.istMoeglichEF2,
-		set: (value) => void doPatch({ istMoeglichEF2: !fach.value.istMoeglichEF2 })
+		set: (value) => void doPatch({ istMoeglichEF2: !fach.value.istMoeglichEF2 }),
 	})
 
 	const q11 = computed({
 		get: () => fach.value.istMoeglichQ11,
-		set: (value) => void doPatch({ istMoeglichQ11: !fach.value.istMoeglichQ11 })
+		set: (value) => void doPatch({ istMoeglichQ11: !fach.value.istMoeglichQ11 }),
 	})
 
 	const q12 = computed({
 		get: () => fach.value.istMoeglichQ12,
-		set: (value) => void doPatch({ istMoeglichQ12: !fach.value.istMoeglichQ12 })
+		set: (value) => void doPatch({ istMoeglichQ12: !fach.value.istMoeglichQ12 }),
 	})
 
 	const q21 = computed({
 		get: () => fach.value.istMoeglichQ21,
-		set: (value) => void doPatch({ istMoeglichQ21: !fach.value.istMoeglichQ21 })
+		set: (value) => void doPatch({ istMoeglichQ21: !fach.value.istMoeglichQ21 }),
 	})
 
 	const q22 = computed({
 		get: () => fach.value.istMoeglichQ22,
-		set: (value) => void doPatch({ istMoeglichQ22: !fach.value.istMoeglichQ22 })
+		set: (value) => void doPatch({ istMoeglichQ22: !fach.value.istMoeglichQ22 }),
 	})
 
 	const abiGK = computed({
 		get: () => fach.value.istMoeglichAbiGK,
-		set: (value) => void doPatch({ istMoeglichAbiGK: !fach.value.istMoeglichAbiGK })
+		set: (value) => void doPatch({ istMoeglichAbiGK: !fach.value.istMoeglichAbiGK }),
 	})
 
 	const abiLK = computed({
 		get: () => fach.value.istMoeglichAbiLK,
-		set: (value) => void doPatch({ istMoeglichAbiLK: !fach.value.istMoeglichAbiLK })
+		set: (value) => void doPatch({ istMoeglichAbiLK: !fach.value.istMoeglichAbiLK }),
 	})
 
 	async function set_pjk_stunden() {

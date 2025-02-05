@@ -1,15 +1,3 @@
-<script setup lang="ts">
-	import { ref } from 'vue';
-	import { logEvent } from 'histoire/client';
-
-	const isCollapsed = ref(false);
-
-	function onToggle(event: Event) {
-		isCollapsed.value = !isCollapsed.value;
-		logEvent("toggle", event);
-	}
-</script>
-
 <template>
 	<Story title="Sidebar/Menu" id="svws-ui-menu" group="app">
 		<svws-ui-menu :collapsed="isCollapsed" @toggle="onToggle">
@@ -29,3 +17,15 @@
 		</svws-ui-menu>
 	</Story>
 </template>
+
+<script setup lang="ts">
+	import { ref } from 'vue';
+	import { logEvent } from 'histoire/client';
+
+	const isCollapsed = ref(false);
+
+	function onToggle(event: Event) {
+		isCollapsed.value = !isCollapsed.value;
+		logEvent("toggle", event);
+	}
+</script>

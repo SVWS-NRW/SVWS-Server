@@ -13,13 +13,11 @@
 		<template #body>
 			<template v-for="fws in fachwahlenstatistik" :key="fws.id">
 				<template v-if="fws !== undefined">
-					<div role="row" class="svws-ui-tr cursor-pointer" :style="{ '--background-color': fws ? getBgColor(fws) : 'transparent' }" @click="onClick(fws)">
+					<div role="row" class="svws-ui-tr cursor-pointer" :style="{ 'background-color': fws ? getBgColor(fws) : 'transparent' }" @click="onClick(fws)">
 						<div role="cell" class="svws-ui-td col-span-full">
-							<div class="-ml-1 mr-0.5">
-								<svws-ui-button type="icon" size="small">
-									<span class="icon i-ri-arrow-right-s-line" v-if="aktuell.fachwahl?.id !== fws.id" />
-									<span class="icon i-ri-arrow-down-s-line" v-else />
-								</svws-ui-button>
+							<div class="-ml-1 mr-0.5 cursor-pointer">
+								<span class="icon i-ri-arrow-right-s-line" v-if="aktuell.fachwahl?.id !== fws.id" />
+								<span class="icon i-ri-arrow-down-s-line" v-else />
 							</div>
 							<span :class="{'svws-ui-badge': aktuell.fachwahl?.id === fws.id}">{{ faecherManager.get(fws.id)?.bezeichnung }}</span>
 						</div>
@@ -34,7 +32,7 @@
 							<div role="row" class="svws-ui-tr">
 								<template v-for="halbjahr in GostHalbjahr.values()" :key="halbjahr.id">
 									<div role="cell" v-if="fws.fachwahlen[halbjahr.id].wahlenLK > 0" class="flex flex-col svws-ui-td mb-5 leading-tight !pl-4">
-										<div v-for="schueler in getSchuelerListe(fws.id, halbjahr)" :key="schueler.id" class="flex gap-1 py-0.5 px-1 -mx-1 -mt-0.5 hover:bg-black/10 dark:hover:bg-white/10 rounded cursor-pointer" role="link" @click="gotoLaufbahnplanung(schueler.id)">
+										<div v-for="schueler in getSchuelerListe(fws.id, halbjahr)" :key="schueler.id" class="flex gap-1 py-0.5 px-1 -mx-1 -mt-0.5 hover:bg-ui-contrast-10 rounded-sm cursor-pointer" role="link" @click="gotoLaufbahnplanung(schueler.id)">
 											<span class="icon i-ri-link" />
 											<span class="line-clamp-1 break-all leading-tight -my-0.5" :title="schueler.nachname + ', ' + schueler.vorname">{{ schueler.nachname + ", " + schueler.vorname }}</span>
 										</div>

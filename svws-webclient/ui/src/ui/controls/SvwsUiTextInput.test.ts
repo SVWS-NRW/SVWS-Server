@@ -82,7 +82,7 @@ describe.concurrent("PropHandhabung läuft korrekt", () => {
 		expect(wrapper.find('input').element).toBe(document.activeElement);
 	});
 
-	test('Prop rounded wird an CSS übergeben', () => {
+	test('Prop rounded-sm wird an CSS übergeben', () => {
 		const wrapper = mount(SvwsUiTextInput, { props: { rounded: true } });
 		expect(wrapper.find('.text-input--rounded').exists()).toBe(true);
 	});

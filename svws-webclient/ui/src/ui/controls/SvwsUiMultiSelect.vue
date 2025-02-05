@@ -326,11 +326,13 @@
 
 <style lang="postcss">
 
+	@reference "../../assets/styles/index.css";
+
 	.svws-ui-select.svws-ui-multiselect {
 		@apply flex-none;
 		&:focus-visible,
 		&:focus-within {
-			@apply ring ring-ui-neutral;
+			@apply ring-3 ring-ui-neutral;
 		}
 		.svws-dropdown-icon {
 			@apply top-[0.175rem] right-[0.19rem];
@@ -390,7 +392,7 @@
 			}
 			.svws-tag {
 				@apply bg-ui border border-ui-secondary;
-				@apply inline-flex items-center gap-0.5 rounded leading-none pl-2 pr-1 text-base;
+				@apply inline-flex items-center gap-0.5 rounded-sm leading-none pl-2 pr-1 text-base;
 			}
 
 		}
@@ -411,6 +413,9 @@
 
 
 <style lang="postcss">
+
+	@reference "../../assets/styles/index.css";
+
 	/* TODO: Doppeltes CSS entfernen, dies ist identisch zum select */
 	.svws-ui-select {
 		@apply relative w-full cursor-pointer flex;
@@ -421,7 +426,7 @@
 
 		.svws-dropdown-icon,
 		.svws-remove {
-			@apply inline-flex w-5 h-7 absolute text-headline-md top-1 rounded items-center justify-center;
+			@apply inline-flex w-5 h-7 absolute text-headline-md top-1 rounded-sm items-center justify-center;
 		}
 
 		.svws-dropdown-icon {
@@ -473,11 +478,11 @@
 
 			&:focus,
 			&:focus-visible {
-				@apply outline-none;
+				@apply outline-hidden;
 			}
 
 			&:focus-visible {
-				@apply ring ring-ui-danger bg-ui-danger text-ui-ondanger;
+				@apply ring-3 ring-ui-danger bg-ui-danger text-ui-ondanger;
 			}
 		}
 
@@ -558,7 +563,7 @@
 				.text-input-component {
 					&:focus-visible {
 						~ .svws-dropdown-icon {
-							@apply ring ring-ui;
+							@apply ring-3 ring-ui;
 						}
 					}
 				}

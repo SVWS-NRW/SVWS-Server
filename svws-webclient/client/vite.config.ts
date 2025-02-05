@@ -3,11 +3,15 @@ import Vue from "@vitejs/plugin-vue";
 import Components from "unplugin-vue-components/vite";
 import Markdown from 'unplugin-vue-markdown/vite'
 import { resolve } from "path";
+import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
-	server: { port: 3000 },
+	server: {
+		port: 3000,
+	},
 	plugins: [
 		Vue({ include: [/\.vue$/, /\.md$/] }),
+		tailwindcss(),
 		Markdown({}),
 		Components({
 			globs: ["src/**/*.{vue,md}", "src/**/*Props.ts", "../ui/src/**/*.{md,vue}", "../ui/src/**/*Props.ts", '!../ui/src/**/*.story.*'],
@@ -20,6 +24,8 @@ export default defineConfig({
 			"~": resolve(__dirname, "src"),
 			"@ui": resolve(__dirname, '../ui/src/index.ts'),
 			"@core": resolve(__dirname, '../core/src/index.ts'),
+			"@images": resolve(__dirname, "images"),
+			"@icons": resolve(__dirname, "../../node_modules/remixicon/icons"),
 		},
 	},
 	build: {

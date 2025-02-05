@@ -6,7 +6,7 @@
 				:action-disabled="!checkIsEnabled[0]" @click="toggleDelete">
 				<span v-if="checkIsEnabled[0] === true">Alle ausgewählten Abiturjahrgänge sind bereit zum Löschen.</span>
 				<template v-else v-for="message in checkIsEnabled[1]" :key="message">
-					<span class="text-error"> {{ message }} <br> </span>
+					<span class="text-ui-danger"> {{ message }} <br> </span>
 				</template>
 			</svws-ui-action-button>
 			<log-box :logs :status>

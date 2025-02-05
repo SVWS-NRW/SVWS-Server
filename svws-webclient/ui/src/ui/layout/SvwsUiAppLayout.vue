@@ -120,6 +120,9 @@
 </script>
 
 <style lang="postcss">
+
+	@reference "../../assets/styles/index.css";
+
 	html {
 		font-size: 10px;
 		@apply bg-ui-neutral text-ui;
@@ -172,7 +175,7 @@
 		@apply bg-ui;
 		@apply h-full rounded-3xl;
 		@apply flex flex-col;
-		@apply overflow-y-auto;
+		@apply overflow-y-hidden;
 	}
 
 	.app--content-container,
@@ -181,7 +184,7 @@
 	}
 
 	.app--sidebar {
-		@apply flex-shrink-0 -mr-2 rounded-r-none p-2 pr-0 h-full border-r-0 relative;
+		@apply shrink-0 -mr-2 rounded-r-none p-2 pr-0 h-full border-r-0 relative;
 		width: 20%;
 		min-width: 24rem;
 		max-width: 30rem;
@@ -202,11 +205,11 @@
 				@apply rounded-lg text-ui-secondary p-0.5 inline-flex flex-col items-center gap-1 text-headline-sm;
 
 				svg {
-					@apply flex-shrink-0 text-headline-md;
+					@apply shrink-0 text-headline-md;
 				}
 
 				&:focus {
-					@apply outline-none;
+					@apply outline-hidden;
 				}
 
 				&:hover,
@@ -215,7 +218,7 @@
 				}
 
 				&:focus-visible {
-					@apply ring ring-ui;
+					@apply ring-3 ring-ui;
 				}
 			}
 
@@ -232,14 +235,14 @@
 	}
 
 	.app--second-sidebar {
-		@apply flex-shrink-0 -mr-2 rounded-r-none p-2 pr-0 h-full border-r-0 relative;
+		@apply shrink-0 -mr-2 rounded-r-none p-2 pr-0 h-full border-r-0 relative;
 		width: 20%;
 		min-width: 24rem;
 		max-width: 30rem;
 
 		.app--second-sidebar-container {
 			@apply rounded-2xl h-full;
-			@apply border border-black/20 dark:border-white/20;
+			@apply border border-ui;
 		}
 
 		.secondary-menu--headline {
@@ -250,15 +253,15 @@
 			@apply absolute right-0 top-0 z-40 pt-4 pr-2 flex flex-col;
 
 			button {
-				@apply rounded-lg text-black/50 dark:text-white/50 p-0.5 inline-flex flex-col items-center gap-1 text-headline-sm;
+				@apply rounded-lg text-ui-contrast-50 p-0.5 inline-flex flex-col items-center gap-1 text-headline-sm;
 
 				svg {
-					@apply flex-shrink-0 text-headline-md;
+					@apply shrink-0 text-headline-md;
 				}
 
 				&:hover,
 				&:focus-visible {
-					@apply bg-black/10 dark:bg-white/10 text-black dark:text-white;
+					@apply bg-ui-contrast-10 text-ui-contrast-100;
 				}
 			}
 
@@ -284,7 +287,7 @@
 
 		.s-sidebar-collapsed {
 			.app--sidebar {
-				@apply w-9 h-auto min-w-0 bg-transparent dark:bg-transparent pointer-events-none z-40 pt-1 px-1 border-0;
+				@apply w-9 h-auto min-w-0 bg-transparent pointer-events-none z-40 pt-1 px-1 border-0;
 				@apply -ml-1 3xl:-ml-0.5 -mr-10 3xl:-mr-11;
 
 				.app--sidebar-container {
@@ -304,7 +307,7 @@
 
 		.s-second-sidebar-collapsed {
 			.app--second-sidebar {
-				@apply w-9 h-auto min-w-0 bg-transparent dark:bg-transparent pointer-events-none z-40 pt-1 px-1 border-0;
+				@apply w-9 h-auto min-w-0 bg-transparent pointer-events-none z-40 pt-1 px-1 border-0;
 				@apply -ml-1 3xl:-ml-0.5 -mr-10 3xl:-mr-11;
 
 				.app--second-sidebar-container {
@@ -319,7 +322,7 @@
 
 		.s-all-sidebars-collapsed {
 			.app--content-container {
-				@apply border border-black/10 dark:border-white/5 rounded-l-2xl;
+				@apply border border-ui-contrast-10 rounded-l-2xl;
 			}
 
 			.s-toggle-second {

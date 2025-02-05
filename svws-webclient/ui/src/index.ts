@@ -1,5 +1,4 @@
 import "./assets/styles/index.css";
-import "./assets/styles/colors.css";
 
 // Regex: \ +(.*):.*'(.*)'\).*
 // Replace: export { default as $1 } from "$2";

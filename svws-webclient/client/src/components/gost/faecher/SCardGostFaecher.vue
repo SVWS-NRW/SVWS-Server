@@ -97,7 +97,7 @@
 		{ key: "Q2.1", label: "Q2.1", align: 'center', span: 0.25, minWidth: 3 },
 		{ key: "Q2.2", label: "Q2.2", align: 'center', span: 0.25, minWidth: 3 },
 		{ key: "GK", label: "GK", align: 'center', span: 0.25, minWidth: 3 },
-		{ key: "LK", label: "LK", align: 'center', span: 0.25, minWidth: 3 }
+		{ key: "LK", label: "LK", align: 'center', span: 0.25, minWidth: 3 },
 	];
 
 </script>

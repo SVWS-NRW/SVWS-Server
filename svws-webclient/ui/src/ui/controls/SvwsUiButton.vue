@@ -53,6 +53,8 @@
 
 <style lang="postcss">
 
+	@reference "../../assets/styles/index.css";
+
 	.button {
 		@apply rounded-md border;
 		@apply select-none relative;
@@ -71,12 +73,12 @@
 		}
 
 		&:focus {
-			@apply outline-none;
+			@apply outline-hidden;
 			@apply ring;
 		}
 
 		&:focus-visible {
-			@apply ring ring-ui-brand;
+			@apply ring-3 ring-ui-brand;
 
 			.page--statistik & {
 				@apply ring-ui-statistic;
@@ -221,7 +223,7 @@
 	}
 
 	.button--trash {
-		@apply rounded relative;
+		@apply rounded-sm relative;
 		@apply py-0 px-2;
 		border: 0 !important;
 		padding: 0.2em !important;
@@ -314,7 +316,7 @@
 
 	.svws-ui-tbody .button--icon.button--small {
 		@apply w-5 h-5 -m-0.5;
-		@apply p-0 !important;
+		@apply !p-0;
 	}
 
 	.button--big {

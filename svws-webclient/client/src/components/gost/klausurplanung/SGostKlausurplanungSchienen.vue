@@ -28,7 +28,7 @@
 		</template>
 	</svws-ui-modal>
 	<div class="page--content page--content--full relative">
-		<div class="flex flex-col p-1" @drop="onDrop(undefined)" @dragover="$event.preventDefault()" :class="[(dragData !== undefined && dragData instanceof GostKursklausur && dragData.idTermin !== null) ? 'ring-offset-8 ring-4 ring-error/20 rounded-xl' : '' ]">
+		<div class="flex flex-col p-1" @drop="onDrop(undefined)" @dragover="$event.preventDefault()" :class="[(dragData !== undefined && dragData instanceof GostKursklausur && dragData.idTermin !== null) ? 'ring-offset-8 ring-4 ring-ui-danger/20 rounded-xl' : '' ]">
 			<h3 class="content-card--headline my-5 mt-8" title="In Planung">In Planung</h3>
 			<svws-ui-table :items="props.kMan().kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value)" :columns="cols">
 				<template #noData>
@@ -63,9 +63,9 @@
 								<template #content>
 									<s-gost-klausurplanung-kursliste :k-man :kursklausur="klausur" :patch-klausur :create-schuelerklausur-termin :benutzer-kompetenzen />
 								</template>
-								<span class="svws-ui-badge hover:opacity-75" :style="`--background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
+								<span class="svws-ui-badge hover:opacity-75" :style="`background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
 								<svws-ui-tooltip>
-									<template #content class="space-y-2">
+									<template #content>
 										<div v-if="kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe !== null && kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe!.trim().length > 0">
 											<h3 class="border-b text-headline-md">Bemerkung zur Vorgabe</h3>
 											<p>{{ kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe }}</p>
@@ -80,7 +80,7 @@
 							</svws-ui-tooltip>
 
 
-							<!-- <span class="svws-ui-badge" :style="`--background-color: ${kMan().fachHTMLFarbeRgbaByKursklausur(klausur)};`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span> -->
+							<!-- <span class="svws-ui-badge" :style="`background-color: ${kMan().fachHTMLFarbeRgbaByKursklausur(klausur)};`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span> -->
 						</div>
 						<div class="svws-ui-td">{{ kMan().kursLehrerKuerzelByKursklausur(klausur) }}</div>
 						<div class="svws-ui-td svws-align-right">{{ kMan().schuelerklausurGetMengeByKursklausur(klausur).size() + "/" + kMan().kursAnzahlSchuelerGesamtByKursklausur(klausur) }}</div>
@@ -146,7 +146,7 @@
 						<span> Konflikte</span>
 					</template>
 					<template v-else-if="terminSelected !== undefined || dragData !== undefined">
-						<span class="icon i-ri-checkbox-circle-fill icon-success -my-1" />
+						<span class="icon i-ri-checkbox-circle-fill icon-ui-success -my-1" />
 						<span>Keine Konflikte</span>
 					</template>
 					<template v-else>
@@ -157,7 +157,7 @@
 			<div v-if="klausurKonflikte().size() > 0" class="mt-5" :class="{'mb-16': anzahlProKwKonflikte(4).size() > 0}">
 				<ul class="flex flex-col gap-3">
 					<li v-for="klausur in klausurKonflikte()" :key="klausur.getKey().id">
-						<span class="svws-ui-badge" :style="`--background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur.getKey()) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur.getKey()) }}</span>
+						<span class="svws-ui-badge" :style="`background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur.getKey()) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur.getKey()) }}</span>
 						<div class="leading-tight">
 							{{ [...klausur.getValue()].map(sid => kMan().schuelerGetByIdOrException(sid)?.vorname + ' ' + kMan().schuelerGetByIdOrException(sid)?.nachname).join(", ") }}
 						</div>
@@ -173,7 +173,7 @@
 					<li v-for="konflikt in anzahlProKwKonflikte(4)" :key="konflikt.getKey()">
 						<span class="font-bold">{{ kMan().schuelerGetByIdOrException(konflikt.getKey())?.vorname + ' ' + kMan().schuelerGetByIdOrException(konflikt.getKey())?.nachname }}</span>
 						<div class="grid grid-cols-3 gap-x-1 gap-y-2 mt-0.5">
-							<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge flex-col w-full" :style="`--background-color: ${kMan().fachHTMLFarbeRgbaByKursklausur(kMan().kursklausurBySchuelerklausurTermin(klausur))};`">
+							<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge flex-col w-full" :style="`background-color: ${kMan().fachHTMLFarbeRgbaByKursklausur(kMan().kursklausurBySchuelerklausurTermin(klausur))};`">
 								<span class="text-button font-medium">{{ kMan().kursKurzbezeichnungByKursklausur(kMan().kursklausurBySchuelerklausurTermin(klausur)) }}</span>
 								<span class="text-sm font-medium">{{ getDatum(kMan().kursklausurBySchuelerklausurTermin(klausur)) }}</span>
 							</span>
@@ -185,8 +185,8 @@
 				<span>Klicke auf einen Termin oder verschiebe eine Klausur, um Details zu bestehenden bzw. entstehenden Konflikten anzuzeigen.</span>
 			</div>
 		</svws-ui-content-card>
-		<s-gost-klausurplanung-modal :show="modalVorgaben" :text="modalError" :jump-to="gotoVorgaben" jump-to_text="Zu den Klausurvorgaben" abbrechen_text="OK" />
-		<s-gost-klausurplanung-modal :show="modalKlausurHatRaeume" text="Die Kursklausur hat bereits eine oder mehrere Raumzuweisungen. Beim Fortfahren werden diese gelöscht." :weiter="verschiebeKlausurTrotzRaumzuweisung" />
+		<s-gost-klausurplanung-modal v-model:show="modalVorgaben" :text="modalError" :jump-to="gotoVorgaben" jump-to_text="Zu den Klausurvorgaben" abbrechen_text="OK" />
+		<s-gost-klausurplanung-modal v-model:show="modalKlausurHatRaeume" text="Die Kursklausur hat bereits eine oder mehrere Raumzuweisungen. Beim Fortfahren werden diese gelöscht." :weiter="verschiebeKlausurTrotzRaumzuweisung" />
 	</div>
 </template>
 
@@ -195,7 +195,6 @@
 	import type { GostSchuelerklausurTermin, JavaMapEntry, JavaSet, List} from "@core";
 	import { BenutzerKompetenz, OpenApiError } from "@core";
 	import {GostKursklausur, GostKlausurtermin, HashSet, KlausurterminblockungAlgorithmen, GostKlausurterminblockungDaten, KlausurterminblockungModusKursarten, KlausurterminblockungModusQuartale, DateUtils } from "@core";
-	import type { Ref } from 'vue';
 	import { computed, ref, onMounted, onUnmounted } from 'vue';
 	import type { GostKlausurplanungSchienenProps } from './SGostKlausurplanungSchienenProps';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
@@ -294,7 +293,7 @@
 
 
 	const dropOverCssClasses = (termin: GostKlausurtermin) => ({
-		"bg-success": dragData.value !== undefined && (props.kMan().vorgabeByKursklausur(dragData.value as GostKursklausur).quartal === termin.quartal || termin.quartal === 0),
+		"bg-ui-success": dragData.value !== undefined && (props.kMan().vorgabeByKursklausur(dragData.value as GostKursklausur).quartal === termin.quartal || termin.quartal === 0),
 		"opacity-25 border-transparent shadow-none": dragData.value !== undefined && (props.kMan().vorgabeByKursklausur(dragData.value as GostKursklausur).quartal !== termin.quartal && termin.quartal !== 0),
 	});
 
@@ -325,7 +324,7 @@
 		const klausur = kl as GostKursklausur;
 		const konfliktZuEigenemTermin = termin === undefined ? false : props.kMan().konflikteAnzahlZuEigenemTerminGetByKursklausur(klausur) > 0;
 		return {
-			"bg-red-200": konfliktZuEigenemTermin,
+			"bg-ui-danger text-ui-ondanger": konfliktZuEigenemTermin,
 		}
 	};
 
@@ -382,6 +381,9 @@
 </script>
 
 <style lang="postcss" scoped>
+
+@reference "../../../../../ui/src/assets/styles/index.css"
+
 .page--content {
   	@apply grid;
   	grid-template-columns: minmax(22rem, 0.2fr) 1fr minmax(22rem, 0.2fr);

@@ -81,7 +81,7 @@
 			<template #body>
 				<div v-for="(s, index) in schuelerFilter().filtered.value" role="row" class="svws-ui-tr" :class="{'svws-clicked': selected === s}" @click="selected = s" :key="index">
 					<div role="cell" class="svws-ui-td svws-align-center pr-0">
-						<div class="leading-none w-5 -mb-1" :class="{ 'text-error': kollision(s.id).value, 'text-black': !kollision(s.id).value && selected !== s, }">
+						<div class="leading-none w-5 -mb-1" :class="{ 'text-ui-danger': kollision(s.id).value, 'text-black': !kollision(s.id).value && selected !== s, }">
 							<svws-ui-tooltip v-if="kollision(s.id).value && !nichtwahl(s.id).value" color="danger">
 								<span class="icon icon-error i-ri-alert-line" />
 								<template #content>

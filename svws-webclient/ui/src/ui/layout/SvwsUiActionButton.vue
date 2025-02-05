@@ -61,6 +61,9 @@
 </script>
 
 <style lang="postcss">
+
+	@reference "../../assets/styles/index.css";
+
 	.svws-ui-action-button + .svws-ui-action-button {
 		@apply mt-2;
 	}
@@ -96,7 +99,7 @@
 			&:hover,
 			&:focus-visible {
 				@apply border-ui-brand text-ui-hover;
-				@apply outline-none;
+				@apply outline-hidden;
 
 				.icon {
 					@apply icon-ui-brand;
@@ -134,7 +137,7 @@
 		}
 
 		&:focus .svws-ui-action-button--button {
-			@apply outline-none;
+			@apply outline-hidden;
 		}
 	}
 </style>

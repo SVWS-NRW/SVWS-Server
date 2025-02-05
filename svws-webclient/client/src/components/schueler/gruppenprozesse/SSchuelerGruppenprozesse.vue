@@ -6,7 +6,7 @@
 				:action-disabled="!preConditionCheck[0]" @click="toggleDeleteSchueler">
 				<span v-if="preConditionCheck[0]">Alle ausgewählten Schüler sind bereit zum Löschen.</span>
 				<template v-else v-for="message in preConditionCheck[1]" :key="message">
-					<span class="text-error"> {{ message }} <br> </span>
+					<span class="text-ui-danger"> {{ message }} <br> </span>
 				</template>
 			</svws-ui-action-button>
 			<log-box :logs :status>

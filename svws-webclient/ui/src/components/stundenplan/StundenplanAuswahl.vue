@@ -1,13 +1,13 @@
 <template>
 	<template v-if="stundenplan !== undefined">
 		<div class="svws-ui-stundenplan--auswahl">
-			<div class="flex-grow">
+			<div class="grow">
 				<h3 class="text-headline-md">{{ stundenplan.bezeichnung }}</h3>
 				<div class="text-headline-md opacity-50">{{ toDateStr(stundenplan.gueltigAb) + '—' + toDateStr(stundenplan.gueltigBis) + ' (KW ' + toKW(stundenplan.gueltigAb) + '—' + toKW(stundenplan.gueltigBis) + ')' }}</div>
 			</div>
 			<div class="svws-ui-stundenplan--auswahl--wrapper">
 				<svws-ui-button class="contentFocusField h-9" type="secondary" @click.stop="ganzerStundenplanAuswahl = !ganzerStundenplanAuswahl" title="Ganzen Stundenplan anzeigen, auch leere Stunden" :autofocus>
-					<span class="flex-grow">{{ ganzerStundenplanAuswahl ? 'Keine leeren Stunden':'Alle Stunden' }}</span>
+					<span class="grow">{{ ganzerStundenplanAuswahl ? 'Keine leeren Stunden':'Alle Stunden' }}</span>
 				</svws-ui-button>
 				<svws-ui-select title="Wochentyp" v-model="wochentypAuswahl" :items="wochentypen()" class="print:hidden" :disabled="wochentypen().size() <= 0" :item-text="wt => manager().stundenplanGetWochenTypAsString(wt)" />
 				<svws-ui-select title="Kalenderwoche" v-model="kwAuswahl" :items="kalenderwochen()" :class="{'print:hidden': !kwAuswahl}" removable :disabled="wochentypen().size() <= 0" :item-text="kw => getKalenderwochenString(kw)" />
@@ -94,12 +94,14 @@
 
 <style lang="postcss">
 
+	@reference "../../assets/styles/index.css";
+
 	.svws-ui-stundenplan--auswahl {
 		@apply flex flex-wrap gap-y-5 gap-x-20;
 	}
 
 	.svws-ui-stundenplan--auswahl--wrapper {
-		@apply flex-grow grid gap-2;
+		@apply grow grid gap-2;
 		grid-template-columns: minmax(10rem, 0.5fr) minmax(8rem, 0.5fr) minmax(12rem, 0.75fr) minmax(12rem, 1.5fr);
 
 		@media print {

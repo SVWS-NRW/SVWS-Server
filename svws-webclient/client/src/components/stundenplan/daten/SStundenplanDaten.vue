@@ -1,6 +1,6 @@
 <template>
-	<div class="page--content">
-		<div class="page--content-flex-column">
+	<div class="page page-flex-row max-w-480">
+		<div class="h-full overflow-y-auto w-full xl:w-1/2 flex flex-col gap-8">
 			<div class="content-card">
 				<div class="content-card--header content-card--headline">Allgemein</div>
 				<div class="content-card--content content-card--content--with-title input-wrapper grid-cols-2">
@@ -45,7 +45,7 @@
 				</svws-ui-table>
 			</svws-ui-action-button>
 		</div>
-		<div class="page--content-flex-column">
+		<div class="h-full overflow-y-auto w-full xl:w-1/2 flex flex-col gap-8">
 			<svws-ui-action-button title="Pausenzeiten" :is-active="actionPausenzeiten" @click="()=>actionPausenzeiten = !actionPausenzeiten" icon="i-ri-archive-line">
 				<div class="flex flex-col gap-4">
 					<svws-ui-table :columns="colsPausenzeiten" :items="pausenzeitenSorted" v-model:clicked="zeit" :selectable="hatUpdateKompetenz" v-model="selectedPausenzeiten" :count="pausenzeitenSorted.length > 0" v-model:sort-by-and-order="sortByAndOrder">
@@ -285,15 +285,3 @@
 		selectedAufsichtsbereiche.value = [];
 	}
 </script>
-
-<style lang="postcss" scoped>
-
-	.page--content {
-		@apply overflow-y-hidden overflow-x-auto h-full pb-3 pt-6 flex flex-row
-	}
-
-	.page--content-flex-column {
-		@apply h-full overflow-y-auto w-full xl:w-1/2 flex flex-col gap-8
-	}
-
-</style>

@@ -11,7 +11,7 @@
 					</ul>
 				</template>
 				<template v-else v-for="message in checkDeletable[1]" :key="message">
-					<span class="text-error"> {{ message }} <br> </span>
+					<span class="text-ui-danger"> {{ message }} <br> </span>
 				</template>
 			</svws-ui-action-button>
 		</div>

@@ -7,7 +7,7 @@
 				<span v-if="alleVermerkartenLeer">Alle ausgewählten Vermerkarten sind bereit zum Löschen.</span>
 				<span v-if="leereVermerkartenVorhanden">Einige Vermerkarten haben noch Schüler, leere Vermerkarten können gelöscht werden.</span>
 				<div v-if="!alleVermerkartenLeer">
-					<span v-for="message in nichtAlleVermerkartenLeer" :key="message" class="text-error"> {{ message }} <br> </span>
+					<span v-for="message in nichtAlleVermerkartenLeer" :key="message" class="text-ui-danger"> {{ message }} <br> </span>
 				</div>
 			</svws-ui-action-button>
 			<log-box :logs :status>

@@ -332,6 +332,8 @@
 
 <style lang="postcss" scoped>
 
+	@reference "../assets/styles/index.css";
+
 	.svws-docs-icon-table {
 		@apply w-full text-ui;
 
@@ -358,7 +360,7 @@
 		}
 
 		code {
-			@apply select-all bg-ui-neutral rounded px-1 -my-0.5;
+			@apply select-all bg-ui-neutral rounded-sm px-1 -my-0.5;
 		}
 
 		th {

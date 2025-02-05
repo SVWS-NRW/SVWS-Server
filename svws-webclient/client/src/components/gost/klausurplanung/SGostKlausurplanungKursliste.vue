@@ -22,7 +22,7 @@
 			<td>
 				<template v-if="termin !== undefined && !kMan().schuelerSchreibtKlausurtermin(kMan().schuelerGetBySchuelerklausurtermin(s).id, termin)">
 					<div>
-						<span class="line-through text-red-500 ">
+						<span class="line-through text-ui-danger">
 							{{ kMan().schuelerGetBySchuelerklausurtermin(s).nachname }}, {{ kMan().schuelerGetBySchuelerklausurtermin(s).vorname }}
 						</span>
 					</div>

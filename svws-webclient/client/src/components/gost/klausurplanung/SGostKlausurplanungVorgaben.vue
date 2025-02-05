@@ -9,7 +9,7 @@
 		<svws-ui-content-card title="Klausurvorgaben">
 			<svws-ui-table id="vorgabenTable" :items="vorgaben()" :columns="cols" v-model:clicked="selectedVorgabeRow" :clickable="hatKompetenzUpdate" @click="startEdit" :no-data="vorgaben().isEmpty()" :no-data-text="'Keine ' + (jahrgangsdaten?.abiturjahr === -1 ? 'Vorlagen für ' : '') + 'Klausurvorgaben für das ' + (quartalsauswahl.value !== 0 ? quartalsauswahl.value + '. Quartal im' : '') + ' Halbjahr ' + halbjahr.kuerzel + ' vorhanden.'">
 				<template #cell(idFach)="{ value }">
-					<span class="svws-ui-badge" :style="{ '--background-color': getBgColor(kMan().getFaecherManager(jahrgangsdaten!.abiturjahr).get(value)?.kuerzel || null) }">{{ kMan().getFaecherManager(jahrgangsdaten!.abiturjahr).get(value)?.bezeichnung }}</span>
+					<span class="svws-ui-badge" :style="{ 'background-color': getBgColor(kMan().getFaecherManager(jahrgangsdaten!.abiturjahr).get(value)?.kuerzel || null) }">{{ kMan().getFaecherManager(jahrgangsdaten!.abiturjahr).get(value)?.bezeichnung }}</span>
 				</template>
 				<template #cell(quartal)="{value}">
 					{{ value }}.
@@ -131,7 +131,7 @@
 		set(val) {
 			if (val !== undefined)
 				activeVorgabe.value.idFach = val.id;
-		}
+		},
 	});
 
 	const faecherSortiert = computed(() => {
@@ -201,7 +201,7 @@
 		{key: 'istMdlPruefung', label: 'M', align: "center", tooltip: 'Mündliche Prüfung', fixedWidth: 2.5},
 		{key: 'istAudioNotwendig', label: 'A', align: "center", tooltip: 'Mit Audioteil', fixedWidth: 2.5},
 		{key: 'istVideoNotwendig', label: 'V', align: "center", tooltip: 'Mit Videoteil', fixedWidth: 2.5},
-		{key: 'bemerkungVorgabe', label: 'Bemerkung', span: 1.25}
+		{key: 'bemerkungVorgabe', label: 'Bemerkung', span: 1.25},
 	];
 
 	function getBgColor(kuerzel: string | null) {
@@ -228,6 +228,9 @@
 </script>
 
 <style lang="postcss" scoped>
+
+@reference "../../../../../ui/src/assets/styles/index.css"
+
 .page--content {
   @apply grid;
   grid-template-columns: 1fr minmax(20rem, 0.25fr);

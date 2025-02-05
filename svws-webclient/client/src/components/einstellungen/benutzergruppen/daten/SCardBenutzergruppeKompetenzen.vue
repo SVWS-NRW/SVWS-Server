@@ -43,7 +43,9 @@
 
 </script>
 
-<style scoped lang="postcss">
+<style lang="postcss" scoped>
+
+	@reference "../../../../../../ui/src/assets/styles/index.css"
 
 	.svws-ui-tr {
 		grid-template-columns: minmax(4rem, 3fr) 0.15fr;

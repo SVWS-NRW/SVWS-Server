@@ -4,7 +4,7 @@
 	<template v-for="pause in getPausenzeitenListeByWochentag(wochentag)" :key="pause">
 		<div class="svws-ui-stundenplan--pause" :style="posPause(pause.id)" @dragover="checkDropZonePausenzeit($event, pause)" @drop="onDrop(pause)">
 			<template v-if="mode === 'normal'">
-				<div v-for="pausenaufsicht in getPausenaufsichten(pause.id)" :key="pausenaufsicht.id" class="svws-ui-stundenplan--pausen-aufsicht flex-grow"
+				<div v-for="pausenaufsicht in getPausenaufsichten(pause.id)" :key="pausenaufsicht.id" class="svws-ui-stundenplan--pausen-aufsicht grow"
 					:class="{'cursor-grab': draggable}"
 					:draggable @dragstart="onDrag(pausenaufsicht)" @dragend="onDrag(undefined)">
 					<div v-if="textPausenzeit !== undefined" class="font-bold col-span-full mb-1"> {{ textPausenzeit }} </div>
@@ -21,7 +21,7 @@
 				</div>
 			</template>
 			<template v-if="mode === 'tooltip'">
-				<div class="svws-ui-stundenplan--pausen-aufsicht flex-grow flex items-center justify-center">
+				<div class="svws-ui-stundenplan--pausen-aufsicht grow flex items-center justify-center">
 					<svws-ui-tooltip>
 						<span class="inline-flex items-center leading-tight" :class="{ 'flex-col' : !kompakt, 'flex-row': kompakt }">
 							<template v-if="kompakt">

@@ -1,5 +1,5 @@
 <template>
-	<div class="content">
+	<div class="w-full h-full grid grid-cols-2">
 		<svws-ui-content-card>
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-todo>TODO: istAbschlussPrognose</svws-ui-todo>
@@ -39,15 +39,7 @@
 				return undefined;
 			return props.manager().klasseGetByIdOrException(id);
 		},
-		set: (value) => void props.patch({ folgeklassenID: (value === undefined) ? null : value.id })
+		set: (value) => void props.patch({ folgeklassenID: (value === undefined) ? null : value.id }),
 	});
 
 </script>
-
-<style lang="postcss" scoped>
-
-	.content {
-		@apply w-full h-full grid grid-cols-2;
-	}
-
-</style>

@@ -35,7 +35,7 @@
 						</span>
 						<span class="icon i-ri-file-copy-line" v-if="copied === null" />
 						<span class="icon i-ri-error-warning-fill" v-else-if="copied === false" />
-						<span class="icon i-ri-check-line icon-success" v-else />
+						<span class="icon i-ri-check-line icon-ui-success" v-else />
 					</button>
 					<button @click="toggleStackOpen" v-if="$slots.stack" class="notification--details-button">
 						<span>Details</span>
@@ -117,9 +117,11 @@
 
 <style lang="postcss">
 
+	@reference "../assets/styles/index.css";
+
 	.notification {
 		@apply bg-ui text-ui border border-ui-neutral;
-		@apply flex flex-col flex-shrink-0;
+		@apply flex flex-col shrink-0;
 		@apply w-full;
 		@apply relative z-40;
 		@apply rounded-lg overflow-hidden;
@@ -143,42 +145,42 @@
 				@apply ring-0 bg-ui;
 			}
 		}
+	}
 
-		&--info {
-			@apply dark:bg-ui-neutral-weak;
+	.notification--info {
+		@apply dark:bg-ui-neutral-weak;
+	}
+
+	.notification--success,
+	.notification--error,
+	.dark .notification--info,
+	.htw-dark .notification--info {
+		span.icon {
+			-webkit-filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
+			filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
 		}
+		/* TODO: COLORS icon */
+	}
 
-		&--success,
-		&--error,
-		.dark &--info,
-		.htw-dark &--info {
-			span.icon {
-				-webkit-filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
-				filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
-			}
-			/* TODO: COLORS icon */
+	.notification--error {
+		@apply bg-ui-danger text-ui-ondanger border-ui-danger;
+
+		.notification--icon {
+			@apply animate-pulse opacity-100;
 		}
+	}
 
-		&--error {
-			@apply bg-ui-danger text-ui-ondanger border-ui-danger;
+	.notification--success {
+		@apply bg-ui-success text-ui-onsuccess border-ui-success;
+	}
 
-			.notification--icon {
-				@apply animate-pulse opacity-100;
-			}
-		}
+	.notification--warning {
+		@apply bg-ui-warning text-ui-onwarning border-ui-warning;
 
-		&--success {
-			@apply bg-ui-success text-ui-onsuccess border-ui-success;
-		}
-
-		&--warning {
-			@apply bg-ui-warning text-ui-onwarning border-ui-warning;
-
-			.dark & span.icon,
-			.htw-dark & span.icon {
-				-webkit-filter: none;
-				filter: none;
-			}
+		.dark & span.icon,
+		.htw-dark & span.icon {
+			-webkit-filter: none;
+			filter: none;
 		}
 	}
 
@@ -193,7 +195,7 @@
 	}
 
 	.notification--content {
-		@apply flex-grow flex flex-wrap gap-x-1;
+		@apply grow flex flex-wrap gap-x-1;
 		@apply px-3 py-2 overflow-hidden;
 
 		.notification--icon {
@@ -202,24 +204,24 @@
 
 		.notification--text {
 			@apply text-base font-bold;
-		};
-
-		&--has-header {
-			.notification--icon {
-				@apply text-headline-sm;
-			}
-
-			.notification--header {
-				@apply w-auto text-headline-sm font-bold mb-0.5;
-			}
-
-			.notification--text {
-				@apply w-full font-medium break-words;
-			}
 		}
 
 		.notification--stack {
 			@apply whitespace-pre-wrap bg-ui-black mt-2 -mb-2 -mx-3 p-3 font-mono overflow-auto min-w-full rounded-b-md;
+		}
+	}
+
+	.notification--content--has-header {
+		.notification--icon {
+			@apply text-headline-sm;
+		}
+
+		.notification--header {
+			@apply w-auto text-headline-sm font-bold mb-0.5;
+		}
+
+		.notification--text {
+			@apply w-full font-medium break-words;
 		}
 	}
 
@@ -272,7 +274,7 @@
 
 			.dark &,
 			.htw-dark & {
-				@apply !border-ui-black;
+				@apply !border-ui-dark-gray;
 			}
 
 			span.icon {

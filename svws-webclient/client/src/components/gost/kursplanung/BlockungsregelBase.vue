@@ -8,7 +8,7 @@
 				</div>
 			</template>
 			<template #[`header(${props.columns.at(0)?.key})`]="{ column }">
-				<span v-if="!aufgeklappt" class="rounded-md bg-primary p-1 text-light cursor-pointer inline-block">{{ regeln.size() }}</span>
+				<span v-if="!aufgeklappt" class="rounded-md bg-ui-brand p-1 text-ui-onbrand cursor-pointer inline-block">{{ regeln.size() }}</span>
 				<span class="line-clamp-1 break-all leading-tight">{{ column.label }}</span>
 			</template>
 			<template #header(entfernen)>
@@ -17,7 +17,7 @@
 				</svws-ui-button>
 			</template>
 			<template #rowCustom="{row: r}">
-				<div :key="r.id" class="svws-ui-tr" :class="{'svws-clicked': modelValue?.id === r.id, 'bg-error text-white hover:text-error': verletzungen.get(r.id)}" role="row" @click="select_regel(r)">
+				<div :key="r.id" class="svws-ui-tr" :class="{'svws-clicked': modelValue?.id === r.id, 'bg-ui-danger text-ui-ondanger hover:text-ui-ondanger-hover': verletzungen.get(r.id)}" role="row" @click="select_regel(r)">
 					<svws-ui-tooltip v-if="verletzungen.get(r.id)" autosize>
 						<div class="svws-ui-td" role="cell">
 							<span class="icon i-ri-information-line" />

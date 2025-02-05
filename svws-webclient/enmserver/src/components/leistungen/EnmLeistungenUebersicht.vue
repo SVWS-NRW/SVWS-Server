@@ -144,6 +144,8 @@
 
 <style lang="postcss" scoped>
 
+	@reference "../../../../ui/src/assets/styles/index.css";
+
 	.svws-ui-tr {
 		grid-template-columns: v-bind(gridTemplateColumnsComputed);
 		min-height: auto;

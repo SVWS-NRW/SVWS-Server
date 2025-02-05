@@ -38,7 +38,10 @@
 	});
 </script>
 
-<style>
+<style lang="postcss">
+
+@reference "../../assets/styles/index.css";
+
 .toggle {
 	@apply cursor-pointer;
 	@apply inline-flex gap-2 items-center;
@@ -48,34 +51,34 @@
 	.data-table__filter-simple & {
 		@apply my-auto;
 	}
+}
 
-	&--disabled {
-		@apply opacity-50;
-		@apply cursor-not-allowed pointer-events-none;
-	}
+.toggle--disabled {
+	@apply opacity-50;
+	@apply cursor-not-allowed pointer-events-none;
 }
 
 .toggle--control {
 	@apply w-0 h-0 absolute opacity-0;
 
 	&:focus-visible ~ .toggle--indicator {
-		@apply ring-svws ring-2 ring-offset-1;
+		@apply ring-ui-brand ring-2 ring-offset-1;
 
 		&:before {
-			@apply bg-svws;
+			@apply bg-ui-brand;
 		}
 	}
 }
 
 .toggle--indicator {
-	@apply bg-white dark:bg-black;
-	@apply rounded-full ring-1 ring-black dark:ring-white;
+	@apply bg-ui-contrast-0;
+	@apply rounded-full ring-1 ring-ui-contrast-100;
 	@apply relative;
 	@apply h-4 w-8;
 
 	&:before {
 		@apply absolute;
-		@apply bg-black dark:bg-white border border-white dark:border-black;
+		@apply bg-ui-contrast-100 border border-ui-contrast-0;
 		@apply block;
 		@apply rounded-full;
 		@apply h-4 w-4;
@@ -85,32 +88,32 @@
 }
 
 .toggle--statistics {
-	@apply text-violet-500;
+	@apply text-ui-statistic;
 
 	.tooltip-trigger--triggered svg {
-		@apply text-violet-800;
+		@apply text-ui-statistic-hover;  /**TODO: passt die Farbe? Ist nicht ganz dieselbe */
 	}
 }
 
 .toggle--statistics .toggle--indicator {
-	@apply border-violet-500;
+	@apply border-ui-statistic;
 }
 
 .toggle--statistics .toggle--indicator:before {
-	@apply bg-violet-500;
+	@apply bg-ui-statistic;
 }
 
 .toggle input:checked+.toggle--indicator {
-	@apply bg-svws dark:bg-svws ring-svws;
+	@apply bg-ui-brand ring-ui-brand;
 
 	&:before {
-		@apply bg-white translate-x-full border-svws;
+		@apply bg-ui-contrast-0 translate-x-full border-ui-brand;
 	}
 }
 
 .toggle.toggle--statistics input:checked+.toggle--indicator {
-	@apply bg-violet-500;
-	@apply border-violet-500;
+	@apply bg-ui-statistic;
+	@apply border-ui-statistic;
 }
 
 .toggle--label {
@@ -131,7 +134,7 @@
 	}
 
 	input:checked+.toggle--indicator {
-		@apply text-primary bg-transparent;
+		@apply text-ui-brand bg-transparent;
 
 		&:before {
 			@apply bg-transparent left-auto right-auto;
@@ -141,10 +144,10 @@
 }
 
 .toggle.toggle--disabled input:checked+.toggle--indicator {
-	@apply bg-black ring-black border-black text-black dark:bg-white dark:ring-white dark:border-white dark:text-white;
+	@apply bg-ui-contrast-100 ring-ui-contrast-100 border-ui-contrast-100 text-ui-contrast-100;
 
 	&:before {
-		@apply border-black;
+		@apply border-ui-contrast-100;
 	}
 }
 </style>

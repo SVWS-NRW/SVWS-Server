@@ -1,35 +1,71 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
+@import "./colors.css";
+@import "./borders.css";
+@import "./dimensions.css";
+@import "./fonts.css";
+@import "./screens.css";
+@import "./icons.css";
+
+@import "./ui/controls/UiFileInput.css";
+@import "./ui/layout/UiPage.css";
+
+@plugin "@tailwindcss/typography";
+
+/* TODO: Prüfen, inwieweit die unteren Definitionen nicht besser bei den UI-Komponenten plaziert werden können. */
 @layer base {
 
-	:root {
-		--color-white: 255, 255, 255; /* #ffffff */
-		--color-black: 44, 44, 44; /* #2C2C2C */
-		--color-gray: 102, 102, 102; /* #666666 */
-		--color-primary: 34, 133, 213; /* #2285d5 */
-		--color-light: 242, 244, 245; /* ##f5f4f2 CONTRAST good, flipped to blue */
-		--color-dark-20: 195, 195, 195; /* #c8d0d6 */
-		--color-dark: 43, 68, 82; /* #2b4452 */
-		--color-error: 225, 29, 72; /* #e11d48 // color-rose-600 */
-		--color-success: 132, 204, 22; /* #84cc16, color-lime-500  */
-		--color-highlight: 255, 246, 147; /* #fff693 */
-		--color-statistics: 139, 92, 246; /* #8b5cf6, color-violet-500 */
+	.secondary-menu--header .input-wrapper {
+		@apply max-2xl:grid-cols-1;
 	}
 
-	@media (prefers-color-scheme: dark) {
-		:root {
-			--color-black: 28, 28, 28; /* #2C2C2C */
+	.focus-region {
+		border: 1px solid transparent;
+		border-radius: 6px;
+	
+		&.highlighted {
+			border: 1px solid rgba(255, 0, 0, .5);
+			box-shadow: inset 0 0 3px rgba(255, 0, 0, .5);
+		}
+	}
+	
+	.region-enumeration {
+		position: fixed;
+		z-index: 1000;
+		color: rgba(255, 0, 0, .65);
+		padding: 0 0 0 5px;
+		font-weight: bold;
+		font-size: x-large;
+		pointer-events: none;
+		margin-top: -4px;
+	
+		&.sub-nav {
+			margin-top: -7px;
 		}
 	}
 
-	html {
-		@apply antialiased text-black dark:text-white;
-	}
+}
 
-	html.dark {
-		--color-black: 28, 28, 28; /* #2C2C2C */
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+	/* *,
+	::after,
+	::before,
+	::backdrop,
+	::file-selector-button {
+		border-color: var(--color-gray-200, currentColor);
+	} */
+
+	html {
+		@apply antialiased text-ui-contrast-100;
 	}
 
 	.text-sm-bold {
@@ -37,12 +73,17 @@
 	}
 
 	hr {
-		@apply border-0 border-t-2 border-solid border-black/10 dark:border-white/10;
+		@apply border-0 border-t-2 border-solid border-ui-contrast-10;
 	}
 
 	.svws-ui-badge {
-		@apply rounded border border-black/10 font-medium text-black line-clamp-1 break-all inline-flex leading-none;
-		background-color: var(--background-color);
+		@apply rounded-sm border border-ui-contrast-10 font-medium text-ui-contrast-100 bg-ui line-clamp-1 break-all inline-flex leading-none;
+		padding: 0.05rem 0.25rem;
+		margin: -0.125rem auto -0.125rem -0.125rem;
+	}
+
+	.svws-ui-badge-transparent {
+		@apply rounded-sm border border-ui-contrast-10 font-medium text-ui-contrast-100 line-clamp-1 break-all inline-flex leading-none;
 		padding: 0.05rem 0.25rem;
 		margin: -0.125rem auto -0.125rem -0.125rem;
 	}
@@ -50,4 +91,80 @@
 	.icon {
 		@apply inline-block;
 	}
+
+
+
+	html {
+		color: var(--color-text-ui);
+	}
+
+	.htw-dark,
+	.dark {
+
+		.icon,
+		.icon-ui {
+			@apply icon-ui--dark;
+		}
+		
+		.icon-ui-brand {
+			@apply icon-ui-brand--dark;
+		}
+		
+		.icon-ui-statistic {
+			@apply icon-ui-statistic--dark;
+		}
+		
+		.icon-ui-danger {
+			@apply icon-ui-danger--dark;
+		}
+		
+		.icon-ui-success {
+			@apply icon-ui-success--dark;
+		}
+		
+		.icon-ui-warning {
+			@apply icon-ui-warning--dark;
+		}
+		
+		.icon-ui-caution {
+			@apply icon-ui-caution--dark;
+		}
+		
+		.icon-ui-neutral {
+			@apply icon-ui-neutral--dark;
+		}
+		
+		.icon-ui-onbrand {
+			@apply icon-ui-onbrand--dark;
+		}
+		
+		.icon-ui-onstatistic {
+			@apply icon-ui-onstatistic--dark;
+		}
+		
+		.icon-ui-onselected {
+			@apply icon-ui-onselected--dark;
+		}
+		
+		.icon-ui-ondanger {
+			@apply icon-ui-ondanger--dark;
+		}
+		
+		.icon-ui-onsuccess {
+			@apply icon-ui-onsuccess--dark;
+		}
+		
+		.icon-ui-onwarning {
+			@apply icon-ui-onwarning--dark;
+		}
+		
+		.icon-ui-oncaution {
+			@apply icon-ui-oncaution--dark;
+		}
+		
+		.icon-ui-onneutral {
+			@apply icon-ui-onneutral--dark;
+		}
+	}
+
 }

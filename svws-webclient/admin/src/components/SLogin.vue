@@ -1,8 +1,8 @@
 <template>
 	<svws-ui-app-layout :fullwidth-content="!authentication_success" :class="{'app--layout--login': !authentication_success}">
 		<template #main>
-			<div class="login-wrapper">
-				<div class="login-container pt-5">
+			<div class="flex h-full flex-col justify-between">
+				<div class="bg-cover bg-top h-full flex flex-col justify-center items-center px-4 pt-5 bg-[url(@images/start-hintergrund.jpg)]">
 					<div class="login-form modal modal--sm my-auto">
 						<div class="modal--content-wrapper pb-3 pt-0">
 							<span class="h-[1rem]" style="background: repeating-linear-gradient( -45deg, #000, #000 10px, #ffff00 10px, #ffff00 20px );" />
@@ -97,7 +97,7 @@
 
 	const inputHostname = computed<string>({
 		get: () => props.hostname,
-		set: (value) => props.setHostname(value)
+		set: (value) => props.setHostname(value),
 	});
 
 	// Versuche zu beim Laden der Komponente automatisch mit Default-Einstellungen eine Verbindung zu dem Server aufzubauen
@@ -142,25 +142,19 @@
 </script>
 
 <style lang="postcss" scoped>
-	.login-wrapper {
-		@apply flex h-full flex-col justify-between;
-	}
+
+	@reference "../../../ui/src/assets/styles/index.css";
 
 	.app--layout--login {
 		@apply p-0 bg-none bg-transparent;
 	}
 
 	.app--layout--login :global(.app--content-container) {
-		@apply bg-white/5;
-	}
-
-	.login-container {
-		@apply bg-cover bg-top h-full flex flex-col justify-center items-center px-4;
-		background-image: url('/images/start-hintergrund.jpg');
+		@apply bg-ui-contrast-10;
 	}
 
 	.modal {
-		@apply shadow-2xl shadow-black/50 rounded-3xl;
+		@apply shadow-2xl shadow-ui-contrast-50 rounded-3xl;
 	}
 
 	.login-footer-link {

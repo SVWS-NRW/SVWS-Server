@@ -188,6 +188,8 @@
 
 <style lang="postcss">
 
+	@reference "../../assets/styles/index.css";
+
 	.input-number-component {
 		@apply flex;
 		@apply relative;
@@ -203,14 +205,14 @@
 		}
 
 		&:focus {
-			@apply outline-none;
+			@apply outline-hidden;
 		}
 
 		input {
-			@apply cursor-text overflow-ellipsis;
+			@apply cursor-text text-ellipsis;
 
 			&:focus {
-				@apply outline-none;
+				@apply outline-hidden;
 			}
 		}
 	}
@@ -226,7 +228,7 @@
 
 			button {
 				@apply bg-ui-neutral border border-ui-secondary;
-				@apply rounded-[0.2rem] focus:outline-none leading-none;
+				@apply rounded-[0.2rem] focus:outline-hidden leading-none;
 
 				&:hover,
 				&:focus-visible {
@@ -234,7 +236,7 @@
 				}
 
 				&:focus-visible {
-					@apply ring ring-ui;
+					@apply ring-3 ring-ui;
 				}
 
 				&.svws-disabled {
@@ -270,18 +272,18 @@
 		}
 	}
 
-	.input-number--rounded {
+	.input-number--rounded-sm {
 		@apply rounded-full;
 	}
 
 	.input-number-component:focus-within .input-number--control,
 	.input-number--filled .input-number--control {
 		@apply border-ui;
-		@apply outline-none;
+		@apply outline-hidden;
 	}
 
 	.input-number-component:focus-within .input-number--control {
-		@apply ring ring-ui-neutral;
+		@apply ring-3 ring-ui-neutral;
 	}
 
 	.input-number--filled:not(:focus-within):not(:hover) .input-number--control {
@@ -382,7 +384,7 @@
 	.input-number-component:focus-within .input-number--placeholder,
 	.input-number--filled .input-number--placeholder {
 		@apply bg-ui;
-		@apply -translate-y-1/2 opacity-100 rounded px-1;
+		@apply -translate-y-1/2 opacity-100 rounded-sm px-1;
 
 		top: 0;
 		left: 0.7em;
@@ -433,7 +435,7 @@
 
 	.input-number--headless,
 	.svws-ui-table .input-number--control {
-		@apply w-full whitespace-nowrap border-0 outline-none;
+		@apply w-full whitespace-nowrap border-0 outline-hidden;
 
 		&:not([class*="bg-"]) {
 			background-color: unset;

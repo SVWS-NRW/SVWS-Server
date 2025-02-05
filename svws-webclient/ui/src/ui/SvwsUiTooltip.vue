@@ -127,6 +127,8 @@
 
 <style lang="postcss">
 
+	@reference "../assets/styles/index.css";
+
 	.tooltip-trigger {
 		.icon--indicator {
 			@apply text-ui;
@@ -143,30 +145,31 @@
 			cursor: auto;
 		}
 
-		&--triggered {
-			.icon--indicator span.icon {
-				-webkit-filter: invert(44%) sepia(52%) saturate(1260%) hue-rotate(173deg) brightness(91%) contrast(86%);
-				filter: invert(44%) sepia(52%) saturate(1260%) hue-rotate(173deg) brightness(91%) contrast(86%);
+	}
 
-				.page--statistik & {
-					@apply text-ui-statistic;
-				}
+	.tooltip-trigger--triggered {
+		.icon--indicator span.icon {
+			-webkit-filter: invert(44%) sepia(52%) saturate(1260%) hue-rotate(173deg) brightness(91%) contrast(86%);
+			filter: invert(44%) sepia(52%) saturate(1260%) hue-rotate(173deg) brightness(91%) contrast(86%);
+
+			.page--statistik & {
+				@apply text-ui-statistic;
 			}
 		}
+	}
 
-		&--danger {
-			span.icon {
-				-webkit-filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
-				filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
-			}
+	.tooltip-trigger--danger {
+		span.icon {
+			-webkit-filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
+			filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
 		}
+	}
 
-		&--underline {
-			@apply underline decoration-black/20 dark:decoration-white/20 decoration-dashed;
+	.tooltip-trigger--underline {
+		@apply underline decoration-black/20 dark:decoration-white/20 decoration-dashed;
 
-			&.tooltip-trigger--triggered {
-				@apply no-underline;
-			}
+		&.tooltip-trigger--triggered {
+			@apply no-underline;
 		}
 	}
 
@@ -175,64 +178,63 @@
 		@apply rounded-md z-50;
 		@apply w-max max-w-[24rem];
 		box-shadow: -8px -8px 25px -3px rgb(0 0 0 / 0.1), 8px 8px 25px -3px rgb(0 0 0 / 0.1), -4px 4px 6px -4px rgb(0 0 0 / 0.1);
+	}
 
-		&-content {
-			@apply px-2 py-0.5 relative z-10 bg-ui rounded-md;
+	.tooltip-content {
+		@apply px-2 py-0.5 relative z-10 bg-ui rounded-md;
+	}
+
+	.tooltip-arrow {
+		@apply border border-ui-secondary;
+	}
+
+	.tooltip--autosize {
+		@apply max-w-none;
+	}
+
+	.tooltip--primary {
+		&,
+		.tooltip-content {
+			@apply bg-ui-brand text-ui-onbrand;
 		}
 
-		&-arrow {
-			@apply border border-ui-secondary;
+		&,
+		.tooltip-arrow {
+			@apply border-ui-brand;
 		}
 
-		&--autosize {
-			@apply max-w-none;
+		.page--statistik &,
+		.page--statistik & .tooltip-content {
+			@apply bg-ui-statistic text-ui-onstatistic;
 		}
 
-		&--primary {
-			&,
-			.tooltip-content {
-				@apply bg-ui-brand text-ui-onbrand;
-			}
-
-			&,
-			.tooltip-arrow {
-				@apply border-ui-brand;
-			}
-
-			.page--statistik &,
-			.page--statistik & .tooltip-content {
-				@apply bg-ui-statistic text-ui-onstatistic;
-			}
-
-			.page--statistik &,
-			.page--statistik & .tooltip-arrow {
-				@apply border-ui-statistic;
-			}
-		}
-
-		&--danger {
-			&,
-			.tooltip-content {
-				@apply bg-ui-danger text-ui-ondanger;
-			}
-
-			&,
-			.tooltip-arrow {
-				@apply border-ui-danger;
-			}
-		}
-
-		&--dark {
-			&,
-			.tooltip-content {
-				@apply bg-ui-danger text-ui-ondanger;
-			}
-
-			&,
-			.tooltip-arrow {
-				@apply border-ui-danger;
-			}
+		.page--statistik &,
+		.page--statistik & .tooltip-arrow {
+			@apply border-ui-statistic;
 		}
 	}
 
+	.tooltip--danger {
+		&,
+		.tooltip-content {
+			@apply bg-ui-danger text-ui-ondanger;
+		}
+
+		&,
+		.tooltip-arrow {
+			@apply border-ui-danger;
+		}
+	}
+
+	.tooltip--dark {
+		&,
+		.tooltip-content {
+			@apply bg-ui-danger text-ui-ondanger;
+		}
+
+		&,
+		.tooltip-arrow {
+			@apply border-ui-danger;
+		}
+	}
 </style>

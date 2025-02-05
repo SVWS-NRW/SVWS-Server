@@ -1,7 +1,7 @@
 <template>
 	<table class="svws-ui-table svws-clickable h-full w-full overflow-hidden" role="table" aria-label="Tabelle">
 		<thead class="svws-ui-thead cursor-pointer mb-1" role="rowgroup" aria-label="Tabellenkopf">
-			<tr class="svws-ui-tr" role="row">
+			<tr class="svws-ui-tr" role="row" style="grid-template-columns: 1fr 5fr 5fr 3fr 1rem; min-height: auto;">
 				<td class="svws-ui-td" role="columnheader">Kürzel</td>
 				<td class="svws-ui-td" role="columnheader">Nachname, Vorname</td>
 				<td class="svws-ui-td" role="columnheader">Dienst-Email</td>
@@ -10,7 +10,7 @@
 		</thead>
 		<tbody class="svws-ui-tbody h-full overflow-y-auto" role="rowgroup" aria-label="Tabelleninhalt">
 			<template v-for="lehrer of lehrerListe" :key="lehrer">
-				<tr class="svws-ui-tr" role="row">
+				<tr class="svws-ui-tr" role="row" style="grid-template-columns: 1fr 5fr 5fr 3fr 1rem; min-height: auto;">
 					<td class="svws-ui-td" role="cell">{{ lehrer.kuerzel }}</td>
 					<td class="svws-ui-td" role="cell">{{ lehrer.nachname }}, {{ lehrer.vorname }}</td>
 					<td class="svws-ui-td" role="cell">
@@ -114,12 +114,3 @@
 	}
 
 </script>
-
-<style lang="postcss" scoped>
-
-	.svws-ui-tr {
-		grid-template-columns: 1fr 5fr 5fr 3fr 1rem;
-		min-height: auto;
-	}
-
-</style>

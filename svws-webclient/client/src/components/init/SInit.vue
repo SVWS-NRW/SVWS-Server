@@ -21,7 +21,7 @@
 												:items="listSchulkatalog" :item-text="i => i.KurzBez ? `${i.SchulNr}: ${i.KurzBez}` : `${i.SchulNr}: Schule ohne Name`"
 												:item-filter required :disabled="isLoading" />
 										</div>
-										<div class="font-bold text-sm text-error mt-2">
+										<div class="font-bold text-sm text-ui-danger mt-2">
 											{{ status === false ? "Fehler beim Initialisieren" : status === true ? "Initialisierung erfolgreich" : "" }}
 										</div>
 									</svws-ui-action-button>
@@ -195,6 +195,7 @@
 </script>
 
 <style lang="postcss">
+	@reference "../../../../ui/src/assets/styles/index.css"
 
 	.init-wrapper {
 		@apply flex h-full flex-col justify-between;
@@ -206,7 +207,7 @@
 	}
 
 	.svws-ui-content-button {
-		@apply rounded-lg border-light border p-4 text-balance flex gap-4 text-left;
+		@apply rounded-lg border-ui-neutral border p-4 text-balance flex gap-4 text-left;
 
 		&.svws-not-active {
 			@apply opacity-50 border-transparent order-1;
@@ -217,12 +218,12 @@
 		}
 
 		&.svws-active {
-			@apply border-transparent text-primary bg-primary/10 pointer-events-none;
+			@apply border-transparent text-ui-brand bg-ui-brand/10 pointer-events-none;
 		}
 
 		&:not(.svws-active):hover,
 		&:not(.svws-active):focus-visible {
-			@apply outline-none bg-black/10 border-black/10 opacity-100;
+			@apply outline-hidden bg-ui-contrast-10 opacity-100;
 
 			.svws-icon {
 				@apply opacity-100;
@@ -230,11 +231,11 @@
 		}
 
 		&:focus {
-			@apply outline-none;
+			@apply outline-hidden;
 		}
 
 		&:not(.svws-active):focus-visible {
-			@apply ring ring-primary/50 ring-offset-1;
+			@apply ring-3 ring-ui-brand/50 ring-offset-1;
 		}
 
 		.svws-title {

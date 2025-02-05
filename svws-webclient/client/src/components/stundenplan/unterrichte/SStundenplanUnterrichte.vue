@@ -1,6 +1,6 @@
 <template>
-	<div class="page--content page--content--full gap-2">
-		<svws-ui-content-card title="Übersicht aller Unterrichte im Zeitraster" class="page--content-flex-column">
+	<div class="page page-flex-row max-w-480">
+		<svws-ui-content-card title="Übersicht aller Unterrichte im Zeitraster" class="min-w-fit max-w-240 h-full overflow-y-auto w-full flex flex-col gap-8">
 			<svws-ui-table :items="[]" :no-data="false" has-background :filterReset :filter-open="true" :filtered>
 				<template #filterAdvanced>
 					<svws-ui-multi-select v-model="filterSchueler" title="Schüler" :items="stundenplanUnterrichtListeManager().schueler.list()" :item-text="schueler => `${schueler.nachname}, ${schueler.vorname}`" :item-filter="findSchueler" />
@@ -16,7 +16,7 @@
 						<div class="svws-ui-td svws-divider svws-align-center cursor-pointer" role="columnheader" @click="filterReset(false)"><span class="icon-sm i-ri-arrow-go-back-line inline-block w-full" /></div>
 						<div v-for="wochentag in stundenplanManager().zeitrasterGetWochentageAlsEnumRange()" :key="wochentag.id" class="svws-ui-td cursor-pointer svws-divider svws-align-center" role="columnheader"
 							@click="filterWochentag(wochentag)"
-							:class="{ 'svws-selected bg-success/20': (stundenplanUnterrichtListeManager().wochentage.auswahlHas(wochentag)) }">
+							:class="{ 'svws-selected bg-ui-success/20': (stundenplanUnterrichtListeManager().wochentage.auswahlHas(wochentag)) }">
 							{{ wochentag.kuerzel }}
 						</div>
 					</div>
@@ -25,13 +25,13 @@
 					<div v-for="stunde in stundenplanManager().zeitrasterGetStundenRange()" :key="stunde" role="row" class="svws-ui-tr select-none cursor-pointer">
 						<div class="svws-ui-td select-none svws-align-center svws-divider svws-selectable" role="cell"
 							@click="filterStunde(stunde)"
-							:class="{ 'svws-selected bg-success/20': stundenplanUnterrichtListeManager().stunden.auswahlHas(stunde) }">
+							:class="{ 'svws-selected bg-ui-success/20': stundenplanUnterrichtListeManager().stunden.auswahlHas(stunde) }">
 							{{ stunde }}
 						</div>
 						<template v-for="wochentag in stundenplanManager().zeitrasterGetWochentageAlsEnumRange()" :key="wochentag.id">
 							<div class="svws-ui-td select-none svws-align-center svws-selectable svws-divider" role="cell"
 								@click="!stundenplanUnterrichtListeManager().stunden.auswahlHas(stunde) && !stundenplanUnterrichtListeManager().wochentage.auswahlHas(wochentag) && filterZeiraster(stundenplanManager().zeitrasterGetByWochentagAndStundeOrNull(wochentag.id, stunde))"
-								:class="{ 'svws-selected bg-success/20':
+								:class="{ 'svws-selected bg-ui-success/20':
 									stundenplanManager().zeitrasterExistsByWochentagAndStunde(wochentag.id, stunde) &&
 									(stundenplanUnterrichtListeManager().zeitraster.auswahlHas(stundenplanManager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde))
 										|| stundenplanUnterrichtListeManager().stunden.auswahlHas(stunde)
@@ -46,7 +46,7 @@
 				</template>
 			</svws-ui-table>
 		</svws-ui-content-card>
-		<svws-ui-content-card title="Unterrichtsliste" class="page--content-flex-column">
+		<svws-ui-content-card title="Unterrichtsliste" class="min-w-fit h-full overflow-y-auto w-full flex flex-col gap-8">
 			<svws-ui-table :items="stundenplanUnterrichtListeManager().filtered()" :columns :no-data="false" has-background>
 				<template #cell(idZeitraster)="{ value }">
 					{{ wochentage[stundenplanManager().zeitrasterGetByIdOrException(value).wochentag] }} {{ stundenplanManager().zeitrasterGetByIdOrException(value).unterrichtstunde }}.
@@ -55,7 +55,7 @@
 					{{ stundenplanManager().stundenplanGetWochenTypAsStringKurz(value) }}
 				</template>
 				<template #cell(idKurs)="{ rowData }">
-					<div class="svws-ui-badge" :style="{'--background-color': getBgColor(stundenplanManager().fachGetByIdOrException(rowData.idFach).kuerzelStatistik)}">{{ rowData.idKurs ? stundenplanManager().kursGetByIdOrException(rowData.idKurs).bezeichnung : stundenplanManager().fachGetByIdOrException(rowData.idFach).bezeichnung }}</div>
+					<div class="svws-ui-badge" :style="{'background-color': getBgColor(stundenplanManager().fachGetByIdOrException(rowData.idFach).kuerzelStatistik)}">{{ rowData.idKurs ? stundenplanManager().kursGetByIdOrException(rowData.idKurs).bezeichnung : stundenplanManager().fachGetByIdOrException(rowData.idFach).bezeichnung }}</div>
 				</template>
 				<template #cell(lehrer)="{ rowData, value }">
 					<svws-ui-multi-select v-if="checkFocusMultiselect({ type: 'lehrer', id: rowData.id })"
@@ -155,7 +155,7 @@
 		{key: 'lehrer', label: 'Lehrer', sortable: true},
 		{key: 'klassen', label: 'Klassen', sortable: true},
 		{key: 'raeume', label: 'Räume', sortable: true},
-		{key: 'schienen', label: 'Schienen', sortable: true}
+		{key: 'schienen', label: 'Schienen', sortable: true},
 	];
 
 	function getBgColor(kuerzel: string | null) {
@@ -204,7 +204,7 @@
 			for (const v of value)
 				props.stundenplanUnterrichtListeManager().schueler.auswahlAdd(v);
 			void props.setFilter();
-		}
+		},
 	});
 
 	const filterLehrer = computed<StundenplanLehrer[]>({
@@ -214,7 +214,7 @@
 			for (const v of value)
 				props.stundenplanUnterrichtListeManager().lehrer.auswahlAdd(v);
 			void props.setFilter();
-		}
+		},
 	});
 
 	const filterKlassen = computed<StundenplanKlasse[]>({
@@ -224,7 +224,7 @@
 			for (const v of value)
 				props.stundenplanUnterrichtListeManager().klassen.auswahlAdd(v);
 			void props.setFilter();
-		}
+		},
 	});
 
 	const filterKurse = computed<StundenplanKurs[]>({
@@ -234,7 +234,7 @@
 			for (const v of value)
 				props.stundenplanUnterrichtListeManager().kurse.auswahlAdd(v);
 			void props.setFilter();
-		}
+		},
 	});
 
 	const filterWochentypen = computed<number[]>({
@@ -244,7 +244,7 @@
 			for (const v of value)
 				props.stundenplanUnterrichtListeManager().wochentypen.auswahlAdd(v);
 			void props.setFilter();
-		}
+		},
 	});
 
 	const filterFaecher = computed<StundenplanFach[]>({
@@ -254,7 +254,7 @@
 			for (const v of value)
 				props.stundenplanUnterrichtListeManager().faecher.auswahlAdd(v);
 			void props.setFilter();
-		}
+		},
 	});
 
 	const filterSchienen = computed<StundenplanSchiene[]>({
@@ -264,7 +264,7 @@
 			for (const v of value)
 				props.stundenplanUnterrichtListeManager().schienen.auswahlAdd(v);
 			void props.setFilter();
-		}
+		},
 	});
 
 	function filterWochentag(wochentag: Wochentag) {
@@ -381,15 +381,3 @@
 	}
 
 </script>
-
-<style lang="postcss" scoped>
-
-	.page--content {
-		@apply overflow-y-hidden overflow-x-auto h-full pb-3 pt-6 flex flex-row
-	}
-
-	.page--content-flex-column {
-		@apply h-full overflow-y-auto w-full flex flex-col gap-8
-	}
-
-</style>

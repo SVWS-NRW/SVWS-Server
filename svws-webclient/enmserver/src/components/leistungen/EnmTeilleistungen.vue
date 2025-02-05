@@ -14,6 +14,8 @@
 
 <style lang="postcss" scoped>
 
+	@reference "../../../../ui/src/assets/styles/index.css";
+
 	.page--content {
 		@apply inline-block;
 	}

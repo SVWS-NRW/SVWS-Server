@@ -1,5 +1,5 @@
 <template>
-	<div class="page--content page--content--gost-laufbahnfehler overflow-x-auto">
+	<div class="page page-flex-row max-w-400">
 		<Teleport to=".svws-sub-nav-target" v-if="isMounted && hatUpdateKompetenz">
 			<svws-ui-sub-nav :focus-switching-enabled :focus-help-visible>
 				<s-modal-laufbahnplanung-alle-fachwahlen-loeschen :gost-jahrgangsdaten="jahrgangsdaten" :reset-fachwahlen="resetFachwahlenAlle" />
@@ -13,7 +13,7 @@
 				<template #icon> <svws-ui-spinner spinning v-if="apiStatus.pending" /> <span class="icon i-ri-printer-line" v-else /> </template>
 			</svws-ui-button-select>
 		</Teleport>
-		<div class="h-full flex flex-col">
+		<div class="min-w-120 h-full flex flex-col">
 			<div class="flex flex-wrap gap-x-10 gap-y-3 items-center justify-between mb-5 content-card--headline">
 				<div class="flex flex-wrap gap-x-5">
 					<svws-ui-checkbox type="toggle" :model-value="filterFehler()" @update:model-value="setFilterFehler">Nur Fehler</svws-ui-checkbox>
@@ -44,7 +44,7 @@
 				</template>
 				<template #cell(name)="{rowData}">
 					<span class="line-clamp-1 leading-tight -my-0.5 break-all">{{ rowData.schueler.nachname }}, {{ rowData.schueler.vorname }}</span>
-					<span v-if="rowData.schueler.status !== 2" class="svws-ui-badge text-sm font-bold !mt-0 !ml-1 !bg-light dark:!bg-white/5">
+					<span v-if="rowData.schueler.status !== 2" class="svws-ui-badge text-sm font-bold mt-0 ml-1 bg-ui-contrast-25">
 						{{ SchuelerStatus.data().getWertByKuerzel("" + rowData.schueler.status)?.daten(schuljahr)?.text ?? '—' }}
 					</span>
 				</template>
@@ -56,9 +56,9 @@
 				</template>
 			</svws-ui-table>
 		</div>
-		<div v-if="!filtered.isEmpty() && schueler" class="h-full overflow-y-hidden flex flex-col">
+		<div v-if="!filtered.isEmpty() && schueler" class="min-w-120 h-full overflow-y-hidden flex flex-col">
 			<div class="flex flex-row w-full mb-2">
-				<div class="flex-grow">
+				<div class="grow">
 					<svws-ui-tooltip :indicator="false">
 						<span class="text-headline-md" title="Zur Laufbahnplanung">{{ `${schueler?.schueler?.vorname} ${schueler?.schueler?.nachname}` }}</span>
 						<template #content>
@@ -73,7 +73,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="h-full flex-grow overflow-y-auto flex flex-col">
+			<div class="h-full grow overflow-y-auto flex flex-col">
 				<div class="pb-2">
 					<s-laufbahnplanung-fehler :fehlerliste="() => schueler.ergebnis.fehlercodes" :belegpruefungs-art="gostBelegpruefungsArt" />
 				</div>
@@ -137,7 +137,7 @@
 		get: () => (schueler_state.value !== undefined) && filtered.value.contains(toRaw(schueler_state.value))
 			? schueler_state.value
 			: filtered.value.isEmpty() ? new GostBelegpruefungsErgebnisse() : filtered.value.get(0),
-		set: (value) => schueler_state.value = value
+		set: (value) => schueler_state.value = value,
 	})
 
 	const art = computed<'ef1'|'gesamt'|'auto'>({
@@ -148,7 +148,7 @@
 			if (value === 'auto')
 				return;
 			void props.setGostBelegpruefungsArt(value === 'ef1' ? GostBelegpruefungsArt.EF1 : GostBelegpruefungsArt.GESAMT);
-		}
+		},
 	});
 
 
@@ -224,6 +224,8 @@
 </script>
 
 <style lang="postcss" scoped>
+
+	@reference "../../../../../ui/src/assets/styles/index.css"
 
 	.page--content {
 		@apply grid overflow-y-hidden overflow-x-auto h-full pb-3 pt-6 gap-x-8 lg:gap-x-12;

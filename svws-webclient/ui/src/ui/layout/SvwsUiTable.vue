@@ -2,10 +2,10 @@
 	<p v-if="focusSwitchingEnabled && ($slots.search || $slots.filter || $slots.filterAdvanced || toggleColumns)" v-show="focusHelpVisible" class="region-enumeration">3</p>
 	<div v-if="$slots.search || $slots.filter || $slots.filterAdvanced || toggleColumns" class="svws-ui-table-filter focus-region" :class="{'svws-open': $slots.filter && isFilterOpen, 'highlighted': focusHelpVisible}">
 		<div class="flex w-full gap-0.5 overflow-hidden">
-			<div class="flex-grow" v-if="$slots.search">
+			<div class="grow" v-if="$slots.search">
 				<slot name="search" />
 			</div>
-			<div v-if="$slots.filter" class="flex flex-shrink-0 items-center gap-1" :class="{'mr-5': $slots.filterAdvanced || toggleColumns, 'ml-2': $slots.search, 'ml-auto': !$slots.search}">
+			<div v-if="$slots.filter" class="flex shrink-0 items-center gap-1" :class="{'mr-5': $slots.filterAdvanced || toggleColumns, 'ml-2': $slots.search, 'ml-auto': !$slots.search}">
 				<slot name="filter" />
 			</div>
 			<div v-if="toggleColumns" :class="{'ml-auto': !$slots.filter}">
@@ -30,7 +30,7 @@
 					</template>
 				</svws-ui-tooltip>
 			</div>
-			<div v-if="$slots.filterAdvanced && filterHide" class="flex flex-shrink-0" :class="{'ml-auto': !$slots.filter && !toggleColumns}">
+			<div v-if="$slots.filterAdvanced && filterHide" class="flex shrink-0" :class="{'ml-auto': !$slots.filter && !toggleColumns}">
 				<svws-ui-button type="transparent" @click="toggleFilterOpen" class="h-full" :class="{'opacity-50 hover:opacity-100 focus-visible:opacity-100': !filtered && isFilterOpen}" filter-button>
 					<template #badge v-if="filtered">
 						<span />
@@ -163,7 +163,7 @@
 						<template v-else-if="someNotAllRowsSelected && modelValue">{{ modelValue.length - selectedItemsNotListed.length }}/<span class="text-ui-secondary">{{ sortedRows.length }}</span> ausgewählt<template v-if="selectedItemsNotListed.length > 0"><svws-ui-button type="transparent" size="small" title="Weitere ausgewählte Einträge, die nicht angezeigt werden. Klicken entfernt aus der Liste." @click="unselectAllNotListedRows"><span class="icon-sm i-ri-close-line" />{{ selectedItemsNotListed.length }} Weitere</svws-ui-button><svws-ui-button type="transparent" size="small" title="Alle ausgwählten Einträge. Klicken, um alle aus der Auswahl zu entfernen." @click="unselectAllRows"><span class="icon-sm i-ri-close-line" />{{ modelValue.length }} insgesamt</svws-ui-button></template></template>
 						<template v-else><span class="text-ui-secondary">{{ sortedRows.length === 1 ? '1 Eintrag': `${sortedRows.length} Einträge` }}</span><template v-if="selectedItemsNotListed.length > 0">, <svws-ui-button type="transparent" size="small"><span class="icon-sm i-ri-close-line" />{{ selectedItemsNotListed.length }} Ausgewählte nicht angezeigt</svws-ui-button></template></template>
 					</div>
-					<div v-if="$slots.actions" class="flex-grow justify-end svws-ui-td" role="cell">
+					<div v-if="$slots.actions" class="grow justify-end svws-ui-td" role="cell">
 						<slot name="actions" />
 					</div>
 				</div>
@@ -556,18 +556,22 @@
 
 <style lang="postcss">
 
+	@reference "../../assets/styles/index.css";
+
 	.svws-ui-table {
-		@apply bg-ui text-ui border-ui-secondary;
+		@apply bg-ui text-ui;
+		/* TODO: Was passiert mit dem Border */
+		/* @apply border-ui-secondary; */
 		@apply flex max-h-full w-full flex-col tabular-nums;
 		--checkbox-width: 1.75rem;
-		--background-color: rgb(var(--color-bg-ui));
+		background-color: rgb(var(--color-bg-ui));
 
 		& + & {
 			@apply mt-10;
 		}
 
 		&.svws-has-background {
-			@apply text-ui-black;
+			@apply text-ui-contrast-100;
 		}
 
 		&.svws-no-data,
@@ -611,7 +615,7 @@
 		}
 
 		.svws-ui-badge {
-			@apply text-ui-black;
+			@apply text-ui-contrast-100;
 
 			&.svws-has-background & {
 				@apply border-transparent;
@@ -653,7 +657,7 @@
 		}
 
 		.svws-ui-badge {
-			@apply text-button font-bold text-ui-black;
+			@apply text-button font-bold text-ui-contrast-100;
 		}
 
 		.svws-no-data & {
@@ -666,7 +670,7 @@
 			@apply items-center pt-0 text-button;
 
 			&.svws-sortable-column {
-				@apply cursor-pointer select-none focus:outline-none;
+				@apply cursor-pointer select-none focus:outline-hidden;
 
 				.tooltip-trigger {
 					@apply cursor-pointer;
@@ -685,7 +689,7 @@
 
 				&:focus-visible {
 					.svws-sorting-icon {
-						@apply bg-ui-hover ring ring-ui;
+						@apply bg-ui-hover ring-3 ring-ui;
 					}
 				}
 
@@ -705,7 +709,7 @@
 			}
 
 			.svws-sorting-icon {
-				@apply relative -my-2 inline-flex h-5 w-5 flex-shrink-0 items-center justify-center rounded border-0;
+				@apply relative -my-2 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-sm border-0;
 
 				.svws-sorting-asc,
 				.svws-sorting-desc {
@@ -769,7 +773,7 @@
 
 		.svws-ui-tr {
 			.svws-ui-table.svws-has-background & {
-				background-color: var(--background-color);
+				background-color: var(background-color);
 			}
 		}
 
@@ -788,7 +792,7 @@
 				@apply text-ui-secondary;
 
 				.svws-ui-badge {
-					@apply text-ui-black opacity-100;
+					@apply text-ui-contrast-100 opacity-100;
 				}
 			}
 		}
@@ -810,7 +814,7 @@
 			@apply flex w-full items-center;
 
 			.svws-ui-td {
-				@apply items-center border-transparent dark:border-transparent;
+				@apply items-center border-transparent;
 			}
 		}
 
@@ -822,7 +826,7 @@
 	}
 
 	.svws-ui-tr {
-		@apply relative grid text-base min-h-[1.7rem] focus:outline-none;
+		@apply relative grid text-base min-h-[1.7rem] focus:outline-hidden;
 		grid-template-columns: v-bind(gridTemplateColumnsComputed);
 		min-width: fit-content;
 
@@ -921,11 +925,12 @@
 				@apply bg-ui-inverted;
 				@apply pointer-events-none absolute inset-0;
 				content: '';
-
-				.svws-ui-table.svws-has-background & {
-					@apply opacity-30;
-				}
 			}
+
+			.svws-ui-table.svws-has-background &:before {
+				@apply opacity-30;
+			}
+
 		}
 
 		&.svws-disabled-soft,
@@ -940,11 +945,9 @@
 				}
 			}
 
-			&:before {
-				.svws-ui-table.svws-has-background & {
-					@apply bg-ui-black opacity-20;
-					box-shadow: 0 0 0 1px rgba(0,0,0,0.2);
-				}
+			.svws-ui-table.svws-has-background &:before {
+				@apply bg-ui-black opacity-20;
+				box-shadow: 0 0 0 1px rgba(0,0,0,0.2);
 			}
 		}
 
@@ -992,7 +995,7 @@
 					@apply border-dashed border-transparent;
 
 					&.svws-divider {
-						@apply border-solid border-r-black/25 dark:border-r-white/25;
+						@apply border-solid border-r border-ui-contrast-25;
 					}
 				}
 			}
@@ -1004,7 +1007,7 @@
 		}
 
 		.svws-toggle-collapse {
-			@apply inline-flex h-5 w-5 items-center justify-center rounded -my-0.5 mx-0.5;
+			@apply inline-flex h-5 w-5 items-center justify-center rounded-sm -my-0.5 mx-0.5;
 
 			&:hover,
 			&:focus-visible {
@@ -1037,7 +1040,7 @@
 		@apply border-x border-t border-ui-secondary;
 
 		&.svws-has-background {
-			@apply border-ui-black;
+			@apply border-ui-contrast-75;
 		}
 
 		.svws-ui-thead,
@@ -1063,7 +1066,7 @@
 			.svws-ui-thead,
 			.svws-ui-tbody {
 				.svws-ui-td:not(:last-child) {
-					@apply border-ui-black;
+					@apply border-ui-contrast-75;
 				}
 			}
 		}

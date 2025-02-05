@@ -80,12 +80,12 @@
 
 	const inputWohnortID = computed<OrtKatalogEintrag | null>({
 		get: () => props.daten.ort_id !== null ? props.mapOrte.get(props.daten.ort_id) ?? null : null,
-		set: (val) =>	void props.patch({ ort_id : val?.id })
+		set: (val) =>	void props.patch({ ort_id : val?.id }),
 	});
 
 	const beschaeftigungsart = computed<KatalogEintrag | null>({
 		get: () => (props.daten.adressArt === null) ? null : props.mapBeschaeftigungsarten.get(props.daten.adressArt) ?? null,
-		set: (value) => void props.patch({ adressArt: value?.id})
+		set: (value) => void props.patch({ adressArt: value?.id}),
 	});
 
 	watch(() => props.daten, () => selected.value = []);
@@ -97,6 +97,7 @@
 </script>
 
 <!-- <style lang="postcss" scoped>
+	@reference "../../../ui/src/assets/styles/index.css"
 	.page--content {
 		@apply grid overflow-y-hidden overflow-x-auto h-full pb-3 pt-6;
 	}

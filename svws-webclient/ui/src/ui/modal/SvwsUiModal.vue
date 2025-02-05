@@ -95,6 +95,8 @@
 
 <style lang="postcss">
 
+	@reference "../../assets/styles/index.css";
+
 	.modal--pageWrapper {
 		@apply flex items-center justify-center;
 		@apply h-screen;
@@ -121,101 +123,101 @@
 		@apply w-full mx-auto;
 		@apply relative z-50;
 		@apply rounded-xl;
+	}
 
-		&--sm {
-			@apply w-full max-w-modal-sm;
+	.modal--sm {
+		@apply w-full max-w-modal-sm;
+	}
+
+	.modal--md {
+		@apply w-full max-w-modal-md;
+		@apply rounded-xl;
+	}
+
+	.modal--lg {
+		@apply w-full max-w-modal-lg;
+		@apply rounded-xl;
+	}
+
+	.modal--help {
+		@apply border border-ui;
+		@apply m-0 h-full;
+		@apply shadow-xl;
+		@apply w-full max-w-modal-help;
+		@apply pointer-events-auto rounded-lg;
+
+		.modal--description,
+		.modal--content {
+			@apply text-left text-base;
+		}
+	}
+
+	.modal--danger {
+		.modal--title {
+			@apply text-ui-danger;
 		}
 
-		&--md {
-			@apply w-full max-w-modal-md;
-			@apply rounded-xl;
+		.button--primary {
+			@apply bg-ui-danger text-ui-ondanger border-ui-danger;
 		}
 
-		&--lg {
-			@apply w-full max-w-modal-lg;
-			@apply rounded-xl;
-		}
-
-		&--help {
-			@apply border border-ui;
-			@apply m-0 h-full;
-			@apply shadow-xl;
-			@apply w-full max-w-modal-help;
-			@apply pointer-events-auto rounded-lg;
-
-			.modal--description,
-			.modal--content {
-				@apply text-left text-base;
-			}
-		}
-
-		&--danger {
-			.modal--title {
-				@apply text-ui-danger;
-			}
-
-			.button--primary {
-				@apply bg-ui-danger text-ui-ondanger border-ui-danger;
-
-				&:focus-visible {
+				/* &:focus-visible {
+					verursacht postcss fehler
 					@apply ring-ui-danger;
-				}
-			}
+				} */
 		}
 
-		.modal--titlebar {
-			@apply border-b border-ui-secondary;
-			@apply p-2;
+	.modal .modal--titlebar {
+		@apply border-b border-ui-secondary;
+		@apply p-2;
 
-			.button {
-				@apply rounded-md;
-
-				&:focus {
-					@apply outline-none ring-0 border-0;
-				}
-			}
+		.button {
+			@apply rounded-md;
 		}
 
-		&--title {
-			@apply flex-grow px-2;
+		.button:focus {
+			@apply outline-hidden ring-0 border-0;
+		}
+	}
+
+	.modal--title {
+			@apply grow px-2;
 			@apply text-headline-sm;
 		}
 
-		&--content-wrapper:not(&--content-noscroll) {
-			@apply h-full overflow-y-auto w-full;
-			-webkit-overflow-scrolling: touch;
-		}
+	.modal--content-wrapper:not(.modal--content-noscroll) {
+		@apply h-full overflow-y-auto w-full;
+		-webkit-overflow-scrolling: touch;
+	}
 
-		&--content-wrapper {
-			@apply h-full overflow-hidden w-full flex flex-col;
-		}
+	.modal--content-wrapper {
+		@apply h-full overflow-hidden w-full flex flex-col;
+	}
 
-		&--description {
-			@apply px-4 py-5 text-headline-sm text-center;
-		}
+	.modal--description {
+		@apply px-4 py-5 text-headline-sm text-center;
+	}
 
-		&--content:not(&--content-noscroll) {
-			@apply w-full text-base px-4 py-5 text-center;
-		}
+	.modal--content:not(.modal--content-noscroll) {
+		@apply w-full text-base px-4 py-5 text-center;
+	}
 
-		&--content {
-			@apply h-full w-full text-base px-4 py-5 text-center overflow-hidden flex flex-col;
-		}
+	.modal--content {
+		@apply h-full w-full text-base px-4 py-5 text-center overflow-hidden flex flex-col;
+	}
 
-		&--wrapper {
-			@apply fixed inset-0 z-50 pointer-events-none;
-			@apply overflow-y-auto;
-			-webkit-overflow-scrolling: touch;
-		}
+	.modal--wrapper {
+		@apply fixed inset-0 z-50 pointer-events-none;
+		@apply overflow-y-auto;
+		-webkit-overflow-scrolling: touch;
+	}
 
-		&--actions {
-			@apply flex items-center justify-center p-4 pb-6 gap-2;
-		}
+	.modal--actions {
+		@apply flex items-center justify-center p-4 pb-6 gap-2;
+	}
 
-		&--logs {
-			@apply flex items-center justify-center p-4 pb-6 gap-2;
-		}
-
+	.modal--logs {
+		@apply flex items-center justify-center p-4 pb-6 gap-2;
 	}
 
 	.modal--description + .modal--content,

@@ -1,5 +1,5 @@
 <template>
-	<div class="svws-ui-tr -mt-px border-y border-black/10  shadow-inner select-none" :style="{ '--background-color': bgColor }">
+	<div class="svws-ui-tr -mt-px border-y border-black/10  shadow-inner select-none" :style="{ 'background-color': bgColor }">
 		<div class=" pr-3 pl-7 pt-3 pb-4 flex justify-between" :style="{'gridColumn': 'span ' + getDatenmanager().schieneGetListe().size()+5}">
 			<div class="flex items-center gap-2">
 				<span class="text-sm font-bold">Kurs:</span>
@@ -82,17 +82,20 @@
 </script>
 
 <style lang="postcss">
+
+	@reference "../../../../../ui/src/assets/styles/index.css"
+
 	.table--row-kursdetail {
-		@apply relative z-10 border-b border-black/25;
+		@apply relative z-10 border-b border-ui-contrast-25;
 		/*box-shadow: inset 0 -4px 5px 0 rgba(0, 0, 0, 0.1);*/
-    @apply shadow-inner shadow-black/10;
+    @apply shadow-inner shadow-ui-contrast-25;
 
 		.data-table__contrast-border & {
-			@apply border-black/50;
+			@apply border-ui-contrast-50;
 		}
 
     .button--secondary {
-      @apply hover:text-black hover:border-black hover:bg-black/10;
+      @apply hover:text-ui-contrast-100 hover:border-ui-contrast-100;
     }
 
     .text-input-component {

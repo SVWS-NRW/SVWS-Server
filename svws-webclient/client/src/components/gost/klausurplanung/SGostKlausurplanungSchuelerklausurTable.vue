@@ -17,7 +17,7 @@
 				class="svws-ui-tr" role="row"
 				:class="[klausurCssClasses === undefined ? '' : klausurCssClasses(schuelertermin, termin)]">
 				<div class="svws-ui-td" role="cell">
-					<span v-if="draggable(schuelertermin, termin!)" class="icon i-ri-draggable i-ri-draggable -m-0.5 -ml-3" />
+					<span v-if="draggable(schuelertermin, termin!)" class="icon i-ri-draggable -m-0.5 -ml-3" />
 					<svws-ui-checkbox v-if="selectedItems !== undefined" :model-value="selectedItems.contains(schuelertermin)" @update:model-value="selectedItems.contains(schuelertermin) ? selectedItems.remove(schuelertermin) : selectedItems.add(schuelertermin)" />
 					{{ kMan().schuelerGetByIdOrException(kMan().schuelerklausurGetByIdOrException(schuelertermin.idSchuelerklausur).idSchueler)?.nachname }}
 				</div>
@@ -25,7 +25,7 @@
 				<div class="svws-ui-td" role="cell">
 					{{ GostHalbjahr.fromIDorException(kMan().vorgabeBySchuelerklausurTermin(schuelertermin).halbjahr).jahrgang }}
 				</div>
-				<div class="svws-ui-td svws-align-left" role="cell"><span class="svws-ui-badge" :style="`--background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(kMan().kursklausurBySchuelerklausurTermin(schuelertermin)) };`">{{ kMan().kursKurzbezeichnungByKursklausur(kMan().kursklausurBySchuelerklausurTermin(schuelertermin)) }}</span></div>
+				<div class="svws-ui-td svws-align-left" role="cell"><span class="svws-ui-badge" :style="`background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(kMan().kursklausurBySchuelerklausurTermin(schuelertermin)) };`">{{ kMan().kursKurzbezeichnungByKursklausur(kMan().kursklausurBySchuelerklausurTermin(schuelertermin)) }}</span></div>
 				<div class="svws-ui-td svws-align-left" role="cell">
 					{{ kMan().datumSchuelerklausurVorgaenger(schuelertermin) !== null ? DateUtils.gibDatumGermanFormat(kMan().datumSchuelerklausurVorgaenger(schuelertermin)!) : "N.N." }}
 

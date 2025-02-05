@@ -35,6 +35,8 @@
 
 <style lang="postcss">
 
+	@reference "../assets/styles/index.css";
+
 	.notifications--wrapper {
 		@apply fixed top-0 right-0 z-50;
 		@apply w-[32rem] max-w-[75vw] h-full;

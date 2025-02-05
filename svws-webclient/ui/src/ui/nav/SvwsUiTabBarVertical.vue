@@ -95,17 +95,19 @@
 
 <style lang="postcss">
 
+	@reference "../../assets/styles/index.css";
+
 	.svws-ui-tabs--vertical {
-		@apply flex flex-row flex-grow items-start;
+		@apply flex flex-row grow items-start;
 		@apply w-full;
 	}
 
 	.tab-bar-vertical--panel {
-		@apply flex-grow overflow-y-auto;
+		@apply grow overflow-y-auto;
 	}
 
 	.tab-bar-vertical--wrapper {
-		@apply flex flex-col flex-shrink items-start;
+		@apply flex flex-col shrink items-start;
 		@apply overflow-hidden;
 		@apply relative;
 		@apply mr-8;
@@ -147,7 +149,7 @@
 		@apply absolute z-20;
 		@apply w-full;
 		@apply pointer-events-none;
-		@apply from-transparent via-light to-light;
+		@apply from-white/0 via-50% via-white to-white dark:from-black/0 dark:via-50% dark:via-black dark:to-black;
 	}
 
 	.tab-bar-vertical--scroll-button-background-down {
@@ -174,7 +176,7 @@
 	}
 
 	.tab-bar-vertical--scroll-button:focus {
-		@apply outline-none ring ring-inset ring-ui;
+		@apply outline-hidden ring-3 ring-inset ring-ui;
 	}
 
 	.tab-bar-vertical--button {
@@ -192,7 +194,7 @@
 		}
 
 		&:focus {
-			@apply outline-none;
+			@apply outline-hidden;
 		}
 
 		&:hover,
@@ -214,7 +216,7 @@
 		}
 
 		&:focus-visible {
-			@apply ring ring-ui;
+			@apply ring-3 ring-ui;
 			@apply z-10;
 
 			.page--statistik & {

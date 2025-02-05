@@ -1,10 +1,10 @@
 <template>
-	<div class="svws-klausurplanung-schienen-termin flex flex-col border bg-white dark:bg-black rounded-xl cursor-pointer" @drop="onDrop(termin())" @dragover="checkDropZone($event)"
+	<div class="svws-klausurplanung-schienen-termin flex flex-col border bg-ui-contrast-0 rounded-xl cursor-pointer" @drop="onDrop(termin())" @dragover="checkDropZone($event)"
 		:class="{
-			'shadow-lg shadow-black/5 border-black/10 dark:border-white/10': dragData() === undefined,
-			'border-dashed border-svws dark:border-svws ring-4 ring-svws/25': (dragData() !== undefined && dragData() instanceof GostKursklausur && (termin().quartal === kMan().vorgabeByKursklausur(dragData() as GostKursklausur).quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur === 0),
-			'border-dashed border-error dark:border-error': (dragData() !== undefined && dragData() instanceof GostKursklausur && (termin().quartal === kMan().vorgabeByKursklausur(dragData() as GostKursklausur).quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur > 0 || konflikteTermin() > 0),
-			'border-svws/50 dark:border-svws/50 svws-selected': terminSelected,
+			'shadow-lg shadow-ui-contrast-50 border-ui-contrast-10': dragData() === undefined,
+			'border-dashed border-ui-brand ring-4 ring-ui-brand/25': (dragData() !== undefined && dragData() instanceof GostKursklausur && (termin().quartal === kMan().vorgabeByKursklausur(dragData() as GostKursklausur).quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur === 0),
+			'border-dashed border-ui-danger': (dragData() !== undefined && dragData() instanceof GostKursklausur && (termin().quartal === kMan().vorgabeByKursklausur(dragData() as GostKursklausur).quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur > 0 || konflikteTermin() > 0),
+			'border-ui-brand/50 svws-selected': terminSelected,
 		}">
 		<s-gost-klausurplanung-termin :termin="termin()"
 			:benutzer-kompetenzen
@@ -23,7 +23,7 @@
 			<template #title>
 				<div class="flex gap-2 w-full mb-1">
 					<svws-ui-text-input :placeholder="((termin().bezeichnung === null || termin().bezeichnung?.trim().length === 0) ? (kMan().kursklausurGetMengeByTermin(termin()).size() ? terminTitel() : 'Neuer Termin') : 'Klausurtermin')" :model-value="termin().bezeichnung" @change="bezeichnung => patchKlausurtermin(termin().id, {bezeichnung})" headless />
-					<span v-if="(dragData() !== undefined && dragData() instanceof GostKursklausur && (termin().quartal === kMan().vorgabeByKursklausur(dragData() as GostKursklausur).quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur > 0) || konflikteTermin()" class="inline-flex items-center flex-shrink-0 text-error font-bold text-headline-md -my-1">
+					<span v-if="(dragData() !== undefined && dragData() instanceof GostKursklausur && (termin().quartal === kMan().vorgabeByKursklausur(dragData() as GostKursklausur).quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur > 0) || konflikteTermin()" class="inline-flex items-center shrink-0 text-ui-danger font-bold text-headline-md -my-1">
 						<span class="icon i-ri-alert-line" />
 						<span>{{ konflikteTerminDragKlausur >= 0 ? konflikteTerminDragKlausur : konflikteTermin() }}</span>
 					</span>

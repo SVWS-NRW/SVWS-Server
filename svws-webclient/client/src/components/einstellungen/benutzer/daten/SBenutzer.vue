@@ -52,7 +52,7 @@
 			<template #actions>
 				<template v-if="getBenutzerManager().istInAdminGruppe()">
 					<span class="inline-flex gap-1 leading-none">
-						<span class="icon i-ri-shield-star-line flex-shrink-0 -mt-0.5" />
+						<span class="icon i-ri-shield-star-line shrink-0 -mt-0.5" />
 						<span>Administrator mit allen Kompetenzen</span>
 					</span>
 				</template>
@@ -69,7 +69,7 @@
 						<div class="svws-ui-td" role="columnheader">
 							<span class="icon cursor-pointer" :class="{ 'i-ri-question-line': !showInfo, 'i-ri-question-fill': showInfo }" @click="toggleShowInfo" />
 						</div>
-						<div v-if="!getBenutzerManager().istAdmin()" class="svws-ui-td !pl-1 text-black/50 dark:text-white/50" role="columnheader">Übernommen aus der Gruppe</div>
+						<div v-if="!getBenutzerManager().istAdmin()" class="svws-ui-td !pl-1 text-ui-contrast-50" role="columnheader">Übernommen aus der Gruppe</div>
 					</div>
 				</template>
 				<template #body>
@@ -120,7 +120,10 @@
 	}
 
 </script>
-<style scoped lang="postcss">
+<style lang="postcss" scoped>
+
+	@reference "../../../../../../ui/src/assets/styles/index.css"
+
 	.gruppen-tr {
 		.svws-ui-tr {
 			grid-template-columns: minmax(3rem, 0.5fr) minmax(4rem, 10fr) var(--checkbox-width) !important;

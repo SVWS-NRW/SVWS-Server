@@ -74,6 +74,9 @@
 </script>
 
 <style lang="postcss">
+
+	@reference "../../assets/styles/index.css";
+
 	.svws-ui-checkbox,
 	input[type="checkbox"] {
 		@apply text-inherit accent-ui;
@@ -135,11 +138,11 @@
 		&:focus,
 		&:focus-visible {
 			@apply ring;
-			@apply outline-none;
+			@apply outline-hidden;
 		}
 
 		&:focus-visible {
-			@apply ring ring-offset-2 ring-ui;
+			@apply ring-3 ring-offset-2 ring-ui;
 
 			&[color="success"] {
 				@apply ring-ui-success;
@@ -175,7 +178,7 @@
 		}
 
 		&.svws-headless {
-			@apply flex appearance-none items-center justify-center rounded border border-transparent font-bold p-0 bg-transparent;
+			@apply flex appearance-none items-center justify-center rounded-sm border border-transparent font-bold p-0 bg-transparent;
 
 			&:before {
 				content: '';
@@ -216,7 +219,7 @@
 	.svws-ui-toggle {
 		.svws-ui-toggle--icon {
 			@apply bg-ui-neutral border border-ui-neutral;
-			@apply -ml-4 flex h-4 w-8 flex-shrink-0 cursor-pointer items-center justify-start overflow-hidden rounded-[0.3rem] shadow-inner p-px;
+			@apply -ml-4 flex h-4 w-8 shrink-0 cursor-pointer items-center justify-start overflow-hidden rounded-[0.3rem] shadow-inner p-px;
 
 			&:before {
 				content: '';
@@ -244,7 +247,7 @@
 			@apply mr-0 !opacity-0;
 
 			&:focus-visible ~ .svws-ui-toggle--icon {
-				@apply ring ring-offset-1 ring-ui-brand;
+				@apply ring-3 ring-offset-1 ring-ui-brand;
 			}
 
 			&:checked ~ .svws-ui-toggle--icon {

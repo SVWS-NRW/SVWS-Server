@@ -26,8 +26,8 @@
 						@drop="onDrop(termin)"
 						:data="termin"
 						:class="{
-							'border bg-white dark:bg-black rounded-lg border-black/10 dark:border-white/10 my-3': terminSelected.value !== undefined && terminSelected.value.id === termin.id,
-							'cursor-pointer hover:bg-black/10 dark:hover:bg-white/10 pb-1 rounded-lg': terminSelected.value !== undefined && terminSelected.value.id !== termin.id,
+							'border bg-ui-contrast-0 rounded-lg border-ui-contrast-10 my-3': terminSelected.value !== undefined && terminSelected.value.id === termin.id,
+							'cursor-pointer hover:bg-ui-contrast-10 pb-1 rounded-lg': terminSelected.value !== undefined && terminSelected.value.id !== termin.id,
 						}">
 						<s-gost-klausurplanung-termin :termin
 							:benutzer-kompetenzen
@@ -74,11 +74,11 @@
 </template>
 
 <script setup lang="ts">
-	import type { List} from '@core';
-	import { ArrayList, BenutzerKompetenz, GostHalbjahr, GostKlausurraumRich, GostSchuelerklausurTermin, ListUtils} from '@core';
-	import { GostKlausurtermin} from '@core';
+	import type { List } from '@core';
+	import { ArrayList, BenutzerKompetenz, GostHalbjahr, GostKlausurraumRich, GostSchuelerklausurTermin, ListUtils } from '@core';
+	import { GostKlausurtermin } from '@core';
 	import { GostKlausurraum, GostKursklausur } from '@core';
-	import { ref, onMounted, computed, useTemplateRef } from 'vue';
+	import { ref, onMounted, computed } from 'vue';
 	import type { GostKlausurplanungRaumzeitProps } from './SGostKlausurplanungRaumzeitProps';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';
 
@@ -96,7 +96,7 @@
 	const calculatCssClassesKlausur = (kl: GostKlausurplanungDragData, termin: GostKlausurtermin | undefined) => {
 		const klausur = kl as GostKursklausur;
 		return {
-			"text-black/50 dark:text-white/50": props.kMan().isKursklausurAlleSchuelerklausurenVerplant(klausur, termin ? termin : null),
+			"text-ui-contrast-50": props.kMan().isKursklausurAlleSchuelerklausurenVerplant(klausur, termin ? termin : null),
 			"": !props.kMan().isKursklausurAlleSchuelerklausurenVerplant(klausur, termin ? termin : null),
 		}
 	};
@@ -175,6 +175,9 @@
 </script>
 
 <style lang="postcss" scoped>
+
+@reference "../../../../../ui/src/assets/styles/index.css"
+
 .page--content {
 	@apply grid;
 	grid-template-columns: minmax(20rem, 0.25fr) 1fr;

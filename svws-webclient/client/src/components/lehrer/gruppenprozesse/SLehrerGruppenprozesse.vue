@@ -6,7 +6,7 @@
 				:action-disabled="lehrerListeManager().getIdsReferenzierterLehrer().size() === lehrerListeManager().liste.auswahlSize()" @click="toggleDeleteLehrer">
 				<span v-if="preConditionCheck[0]">Alle ausgewählten Lehrer sind bereit zum Löschen.</span>
 				<template v-else v-for="message in preConditionCheck[1]" :key="message">
-					<span class="text-error"> {{ message }} <br> </span>
+					<span class="text-ui-danger"> {{ message }} <br> </span>
 				</template>
 				<span v-if="loeschbareLehrerVorhanden">Einige Lehrer sind noch an anderer Stelle referenziert, die Übrigen können gelöscht werden.</span>
 			</svws-ui-action-button>

@@ -1,7 +1,7 @@
 <template>
 	<div v-if="daten().aktiv" class="inline-flex gap-3 items-center">
 		<svws-ui-tooltip :indicator="false" v-if="daten().schule.id !== daten().aktuell.id" position="bottom-start">
-			<span class="cursor-pointer" :class="{'text-error text-headline-md -mr-1': daten().schule.id !== daten().aktuell.id, 'opacity-50 hover:opacity-100 text-base pt-1': daten().schule.id === daten().aktuell.id}">
+			<span class="cursor-pointer" :class="{'text-ui-danger text-headline-md -mr-1': daten().schule.id !== daten().aktuell.id, 'opacity-50 hover:opacity-100 text-base pt-1': daten().schule.id === daten().aktuell.id}">
 				<span class="icon i-ri-alert-line inline-block icon-error -my-1.5 -mr-1 hover:icon-error relative -top-0.5" />
 			</span>
 			<template #content>

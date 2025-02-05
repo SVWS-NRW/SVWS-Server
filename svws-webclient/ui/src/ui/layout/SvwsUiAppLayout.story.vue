@@ -112,7 +112,11 @@
 </script>
 
 <style lang="postcss" scoped>
-.histoire-generic-render-story .app--layout {
-	@apply h-[60vh];
-}
+
+	@reference "../../assets/styles/index.css";
+
+	.histoire-generic-render-story .app--layout {
+		@apply h-[60vh];
+	}
+
 </style>

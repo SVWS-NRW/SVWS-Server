@@ -26,7 +26,7 @@
 							</svws-ui-tooltip>
 						</template>
 						<template #cell(fach)="{value}">
-							<span v-if="value" class="svws-ui-badge" :style="`--background-color: hsl(${(value.length * 42)},90%,80%)`">{{ value }}</span>
+							<span v-if="value" class="svws-ui-badge" :style="`background-color: hsl(${(value.length * 42)},90%,80%)`">{{ value }}</span>
 						</template>
 						<template #cell(name)="{value}">
 							<span class="line-clamp-1 break-all">{{ value }}</span>
@@ -187,6 +187,12 @@
 		return temp.order === true ? arr : arr.reverse();
 	})
 </script>
+
+<style lang="postcss">
+
+	@reference "../../assets/styles/index.css";
+
+</style>
 
 <docs lang="md">
 ## .svws-ui-table

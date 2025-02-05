@@ -22,7 +22,7 @@
 					</div>
 					<div v-if="manager().daten().keineAuskunftAnDritte" class="svws-headline-wrapper">
 						<span class="icon-xxl icon-error i-ri-alert-line inline-block" />
-						<span class="text-error content-center"> Keine Auskunft an Dritte </span>
+						<span class="text-ui-danger content-center"> Keine Auskunft an Dritte </span>
 					</div>
 				</template>
 
