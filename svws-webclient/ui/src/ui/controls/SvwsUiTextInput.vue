@@ -16,7 +16,7 @@
 			'col-span-full': span === 'full',
 			'col-span-2': span === '2',
 		}">
-		<span v-if="url" data-before="https://" class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 opacity-25 before:content-[attr(data-before)]" />
+		<span v-if="url" class="pointer-events-none absolute top-1.5 left-0 flex items-center pl-3 opacity-50">https://</span>
 		<span class="icon i-ri-search-line text-input--search-icon" v-if="type === 'search'" />
 		<div v-if="readonly && !isSelectInput" :class="{ 'text-input--control': !headless, 'text-input--headless': headless, 'text-input--rounded': rounded, 'text-input--prefix': url, }">
 			{{ data }}
