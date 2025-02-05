@@ -218,14 +218,14 @@
 	@reference "../../../ui/src/assets/styles/index.css"
 
 	.login-footer-link {
-		@apply inline-block;
+		display: inline-block;
 	}
 
 	.login-footer-link:hover,
 	.login-footer-link:focus,
 	.login-footer-link:hover .hover-underline,
 	.login-footer-link:focus .hover-underline {
-		@apply underline;
+		text-decoration-line: underline;
 	}
 
 	.v-enter-active,

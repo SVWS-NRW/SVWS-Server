@@ -9,6 +9,8 @@
 
 @import "./ui/controls/UiFileInput.css";
 @import "./ui/layout/UiPage.css";
+@import "./ui/layout/UiAppLayout.css";
+@import "./ui/modal/UiModal.css";
 
 @plugin "@tailwindcss/typography";
 
