@@ -1,8 +1,8 @@
 <template>
 	<svws-ui-app-layout :fullwidth-content="true">
 		<template #main>
-			<div class="init-wrapper">
-				<div class="init-container">
+			<div class="flex h-full flex-col justify-between grow">
+				<div class="bg-cover bg-top rounded-2xl h-full flex flex-col justify-center items-center px-4 bg-[url(@images/placeholder-background-blurred.jpg)]">
 					<div class="init-form modal modal--md">
 						<div class="modal--titlebar">
 							<div class="modal--title inline-flex items-center gap-1">
@@ -195,16 +195,8 @@
 </script>
 
 <style lang="postcss">
+
 	@reference "../../../../ui/src/assets/styles/index.css"
-
-	.init-wrapper {
-		@apply flex h-full flex-col justify-between;
-	}
-
-	.init-container {
-		@apply bg-cover bg-top rounded-2xl h-full flex flex-col justify-center items-center px-4;
-		background-image: url("/images/placeholder-background-blurred.jpg");
-	}
 
 	.svws-ui-content-button {
 		@apply rounded-lg border-ui-neutral border p-4 text-balance flex gap-4 text-left;
