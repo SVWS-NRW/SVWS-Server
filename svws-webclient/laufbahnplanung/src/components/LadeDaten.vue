@@ -2,7 +2,7 @@
 	<svws-ui-app-layout fullwidth-content class="app--layout--login">
 		<template #main>
 			<div class="flex h-full flex-col justify-between">
-				<div class="bg-cover bg-top h-full flex flex-col justify-center items-center px-4 pt-5 bg-[url(@/images/start-hintergrund.jpg)]">
+				<div class="bg-cover bg-top h-full flex flex-col justify-center items-center px-4 pt-5 bg-[url(@images/start-hintergrund.jpg)]">
 					<div class="login-form modal modal--sm my-auto">
 						<div class="modal--content-wrapper pb-3">
 							<div class="modal--content px-5">

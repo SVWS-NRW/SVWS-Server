@@ -3,7 +3,6 @@ import Vue from "@vitejs/plugin-vue";
 import Components from "unplugin-vue-components/vite";
 import Markdown from 'unplugin-vue-markdown/vite'
 import { resolve } from "path";
-import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
 	server: {
@@ -11,7 +10,6 @@ export default defineConfig({
 	},
 	plugins: [
 		Vue({ include: [/\.vue$/, /\.md$/] }),
-		tailwindcss(),
 		Markdown({}),
 		Components({
 			globs: ["src/**/*.{vue,md}", "src/**/*Props.ts", "../ui/src/**/*.{md,vue}", "../ui/src/**/*Props.ts", '!../ui/src/**/*.story.*'],
