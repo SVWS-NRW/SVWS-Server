@@ -4651,7 +4651,7 @@ export class StundenplanManager extends JavaObject {
 		const listRaumGuete2 : List<StundenplanRaum> = new ArrayList<StundenplanRaum>();
 		const listRaumGuete3 : List<StundenplanRaum> = new ArrayList<StundenplanRaum>();
 		const listRaumGuete4 : List<StundenplanRaum> = new ArrayList<StundenplanRaum>();
-		for (const r of this._raummenge_verwendet_sortiert) {
+		for (const r of this._raummenge_sortiert) {
 			const kollisionen : number = this.raumGetAnzahlAnKollisionenFuerUnterrichte(r.id, listUnterrichtIDs);
 			if (r.groesse >= maxSuS) {
 				if (kollisionen <= 0) {

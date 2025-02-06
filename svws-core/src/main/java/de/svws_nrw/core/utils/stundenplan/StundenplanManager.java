@@ -5096,7 +5096,7 @@ public class StundenplanManager {
 		final @NotNull List<StundenplanRaum> listRaumGuete3 = new ArrayList<>();
 		final @NotNull List<StundenplanRaum> listRaumGuete4 = new ArrayList<>();
 
-		for (final @NotNull  StundenplanRaum r : _raummenge_verwendet_sortiert) {
+		for (final @NotNull  StundenplanRaum r : _raummenge_sortiert) {
 			final int kollisionen = raumGetAnzahlAnKollisionenFuerUnterrichte(r.id, listUnterrichtIDs);
 			if (r.groesse >= maxSuS) {
 				if (kollisionen <= 0) {
