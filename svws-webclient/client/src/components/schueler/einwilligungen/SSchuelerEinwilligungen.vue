@@ -1,23 +1,8 @@
 <template>
 	<div class="page--content">
-		<svws-ui-content-card title="" class="col-span-full">
-			<svws-ui-input-wrapper class="w-5/5 min-h-10">
-				<div class="w-full flex justify-end">
-					<div class="w-1/3 ml-auto mr-0 p-3 min-h-10">
-						<svws-ui-select v-model="auswahlEinwilligungsartNeu" label="Bitte eine Einwilligungsart auswählen" :items="filteredEinwilligungsarten"
-							:item-text="i => i.bezeichnung" />
-					</div>
-					<div class="p-3 min-h-10">
-						<svws-ui-button class="ml-auto p-3 min-h-10" :disabled="!auswahlEinwilligungsartNeu" @click="(auswahlEinwilligungsartNeu?.id !== undefined) && addEinwilligung(auswahlEinwilligungsartNeu?.id)">
-							<p class="mr-4">Neue Einwilligung hinzufügen</p>
-							<span class="icon-lg i-ri-chat-new-line" />
-						</svws-ui-button>
-					</div>
-				</div>
-			</svws-ui-input-wrapper>
+		<svws-ui-content-card v-if="einwilligungen().size() > 0" title="Zugeordnete Einwilligungen" class="col-span-full">
 			<div v-for="einwilligung of einwilligungen()" :key="einwilligung.idEinwilligungsart">
-				<svws-ui-card icon="i-ri-message-line" :title="getBezeichnungEinwilligungsart(einwilligung.idEinwilligungsart)"
-					:info="getEinwilligungsstatus(einwilligung)">
+				<svws-ui-card icon="i-ri-message-line" :title="getBezeichnungEinwilligungsart(einwilligung.idEinwilligungsart)" :info="getEinwilligungsstatus(einwilligung)">
 					<template #content>
 						<div class="w-1/5">
 							<p class="text-headline-md mb-1"> Status </p>
@@ -31,10 +16,24 @@
 							Zugestimmt
 						</svws-ui-checkbox>
 					</template>
-					<template #buttonContentRight>
-						<svws-ui-button	type="danger" class="deleteButton" @click="remove(einwilligung.idEinwilligungsart)">
-							Löschen
-						</svws-ui-button>
+				</svws-ui-card>
+			</div>
+		</svws-ui-content-card>
+		<svws-ui-content-card v-if="filteredEinwilligungsarten.length > 0" title="Nicht abgefragt" class="col-span-full">
+			<div v-for="einwilligungsart of filteredEinwilligungsarten" :key="einwilligungsart">
+				<svws-ui-card icon="i-ri-message-line" :title="getBezeichnungEinwilligungsart(einwilligungsart)">
+					<template #content>
+						<div class="w-1/5">
+							<p class="text-headline-md mb-1"> Status </p>
+						</div>
+						<svws-ui-checkbox class="w-2/5" :model-value="false" type="checkbox" title="Abgefragt"
+							@update:model-value="addEinwilligung( einwilligungsart, true, false )">
+							Abgefragt
+						</svws-ui-checkbox>
+						<svws-ui-checkbox class="w-2/5" :model-value="false" type="checkbox" title="Zugestimmt"
+							@update:model-value="addEinwilligung(einwilligungsart, true, true)">
+							Zugestimmt
+						</svws-ui-checkbox>
 					</template>
 				</svws-ui-card>
 			</div>
@@ -44,13 +43,29 @@
 
 <script setup lang="ts">
 
-	import { ref, computed } from "vue";
+
+	import { computed } from "vue";
 	import type { SchuelerEinwilligungenProps } from './SchuelerEinwilligungenProps';
-	import type { Einwilligungsart, Einwilligung } from "@core";
+	import type { Einwilligung } from "@core";
+	import { PersonTyp } from "@core";
 
 	const props = defineProps<SchuelerEinwilligungenProps>();
 
-	const auswahlEinwilligungsartNeu = ref<Einwilligungsart | null>(null);
+	const filteredEinwilligungsarten = computed(() => {
+		const verwendeteEinwilligungsarten = new Set<number>();
+		for (const einwilligung of props.einwilligungen())
+			verwendeteEinwilligungsarten.add(einwilligung.idEinwilligungsart);
+		const result = [];
+		for (const einwilligungsart of props.mapEinwilligungsarten.values())
+			if ((!verwendeteEinwilligungsarten.has(einwilligungsart.id)) && (einwilligungsart.personTyp === PersonTyp.SCHUELER.id))
+				result.push(einwilligungsart.id);
+		return result;
+	});
+
+	async function addEinwilligung(idEinwilligungsart: number, abgefragt: boolean, status: boolean) {
+		const einwilligungNeu: Partial<Einwilligung> = { idEinwilligungsart, abgefragt, status };
+		await props.add(einwilligungNeu, idEinwilligungsart);
+	}
 
 	function getBezeichnungEinwilligungsart(idEinwilligungsart: number): string {
 		return props.mapEinwilligungsarten.get(idEinwilligungsart)?.bezeichnung ?? "";
@@ -65,22 +80,6 @@
 			return 'Abgefragt';
 		else
 			return '';
-	}
-
-	const filteredEinwilligungsarten = computed(() => {
-		const verwendeteEinwilligungsarten = new Set<number>();
-		const result = [];
-		for (const einwilligung of props.einwilligungen())
-			verwendeteEinwilligungsarten.add(einwilligung.idEinwilligungsart);
-		for (const einwilligungsart of props.mapEinwilligungsarten.values())
-			if (!verwendeteEinwilligungsarten.has(einwilligungsart.id))
-				result.push(einwilligungsart);
-		return result;
-	});
-
-	function addEinwilligung(idEinwilligungsart: number) {
-		void props.add(idEinwilligungsart);
-		auswahlEinwilligungsartNeu.value = null;
 	}
 
 </script>

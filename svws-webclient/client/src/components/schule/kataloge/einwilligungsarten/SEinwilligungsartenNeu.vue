@@ -18,12 +18,12 @@
 						</div>
 					</div>
 					<svws-ui-textarea-input v-model="einwilligungsart.beschreibung" type="text" placeholder="Beschreibung" class="col-span-full" />
-					<svws-ui-select v-model="auswahlPersonTyp" :items="personTypen" :item-text="item => item.bezeichnung" placeholder="Personentyp" label="Personentyp" class="col-span-full" />
+					<svws-ui-select v-model="auswahlPersonTyp" :items="personTypen" :item-text="item => item.bezeichnung" placeholder="Personenart" label="Personenart" class="col-span-full" />
 				</svws-ui-input-wrapper>
 				<div class="mt-7 flex flex-row gap-4 justify-end">
 					<svws-ui-button type="secondary" @click="cancel" :disabled="isLoading">Abbrechen</svws-ui-button><svws-ui-button @click="addEinwilligungsart"
 						:disabled="((!validatorEinwilligungsartBezeichnung(einwilligungsart.bezeichnung) || !validatorEinwilligungsartSchluessel(einwilligungsart.schluessel)) ||
-							isLoading || (einwilligungsart.bezeichnung === '' || einwilligungsart.schluessel === ''))">
+							isLoading || (einwilligungsart.bezeichnung === ''))">
 						Speichern <svws-ui-spinner :spinning="isLoading" />
 					</svws-ui-button>
 				</div>
@@ -37,7 +37,6 @@
 	import { computed, ref } from "vue";
 	import { Einwilligungsart, PersonTyp } from "@core";
 	import type { SchuleEinwilligungsartenNeuProps } from "~/components/schule/kataloge/einwilligungsarten/SEinwilligungsartenNeuProps";
-
 
 	const props = defineProps<SchuleEinwilligungsartenNeuProps>();
 	const einwilligungsart = ref(new Einwilligungsart());
@@ -66,7 +65,7 @@
 		await props.gotoDefaultView(null);
 	}
 
-	const personTypen = computed<PersonTyp[]>(() => PersonTyp.values());
+	const personTypen = computed<PersonTyp[]>(() => [PersonTyp.LEHRER, PersonTyp.SCHUELER]);
 
 	const auswahlPersonTyp = computed<PersonTyp>({
 		get: () => PersonTyp.getByID(einwilligungsart.value.personTyp) ?? PersonTyp.SCHUELER,
@@ -85,15 +84,12 @@
 			return;
 		isLoading.value = true;
 		props.checkpoint.active = false;
-		const e: Partial<Einwilligungsart> = einwilligungsart.value;
-		await props.add(
-			{
-				bezeichnung: e.bezeichnung?.trim(),
-				personTyp: e.personTyp,
-				schluessel: e.schluessel?.trim(),
-				beschreibung: e.beschreibung?.trim(),
-			}
-		);
+		await props.add({
+			bezeichnung: einwilligungsart.value.bezeichnung.trim(),
+			personTyp: einwilligungsart.value.personTyp,
+			schluessel: einwilligungsart.value.schluessel.trim(),
+			beschreibung: einwilligungsart.value.beschreibung?.trim(),
+		});
 		einwilligungsart.value = new Einwilligungsart();
 		isLoading.value = false;
 	}

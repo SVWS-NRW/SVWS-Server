@@ -33,7 +33,7 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 	 */
 	public DataKatalogEinwilligungsarten(final DBEntityManager conn) {
 		super(conn);
-		setAttributesRequiredOnCreation("bezeichnung", "schluessel", "personTyp");
+		setAttributesRequiredOnCreation("bezeichnung", "personTyp");
 	}
 
 
@@ -115,7 +115,10 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 
 
 	private String validateSchluessel(final Object value, final PersonTyp personTyp, final String name) throws ApiOperationException {
-		final String schluessel = JSONMapper.convertToString(value, false, false, Schema.tab_K_Datenschutz.col_Schluessel.datenlaenge(), name);
+		final String schluessel = JSONMapper.convertToString(value, true, true, Schema.tab_K_Datenschutz.col_Schluessel.datenlaenge(), name);
+		if (schluessel.isEmpty()) {
+			return schluessel;
+		}
 		final List<DTOKatalogEinwilligungsart> schluesselFiltered = conn.queryList(
 				"SELECT e FROM DTOKatalogEinwilligungsart e WHERE e.Schluessel = ?1 AND e.personTyp = ?2", DTOKatalogEinwilligungsart.class,
 				schluessel, personTyp);
