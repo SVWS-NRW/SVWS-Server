@@ -37,6 +37,7 @@ import type { JavaSet } from '../../../java/util/JavaSet';
 import { LongArrayKey } from '../../../core/adt/LongArrayKey';
 import { Map3DUtils } from '../../../core/utils/Map3DUtils';
 import { StringUtils } from '../../../core/utils/StringUtils';
+import type { JavaIterator } from '../../../java/util/JavaIterator';
 import { StundenplanUnterricht, cast_de_svws_nrw_core_data_stundenplan_StundenplanUnterricht } from '../../../core/data/stundenplan/StundenplanUnterricht';
 import { StundenplanKalenderwochenzuordnung } from '../../../core/data/stundenplan/StundenplanKalenderwochenzuordnung';
 import { HashMap3D } from '../../../core/adt/map/HashMap3D';
@@ -407,6 +408,8 @@ export class StundenplanManager extends JavaObject {
 
 	private _unterrichtmenge : List<StundenplanUnterricht> = new ArrayList<StundenplanUnterricht>();
 
+	private _unterrichtmenge_ungueltig : List<StundenplanUnterricht> = new ArrayList<StundenplanUnterricht>();
+
 	private _unterrichtmenge_by_idFach : HashMap<number, List<StundenplanUnterricht>> = new HashMap<number, List<StundenplanUnterricht>>();
 
 	private _unterrichtmenge_by_idKlasse : HashMap<number, List<StundenplanUnterricht>> = new HashMap<number, List<StundenplanUnterricht>>();
@@ -616,6 +619,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update_all() : void {
+		this.update_unterrichtmenge_ungueltig();
 		this.update_kwzmenge_update_kwz_by_jahr_and_kw();
 		this.update_aufsichtsbereichmenge();
 		this.update_fachmenge();
@@ -727,6 +731,27 @@ export class StundenplanManager extends JavaObject {
 		this.update_pausenzeitHatSchnittMitZeitraster_by_wochentag_idSchueler();
 		this.update_pausenzeitHatSchnittMitZeitraster_by_wochentag_idJahrgang();
 		this.update_pausenzeitHatSchnittMitZeitraster_by_wochentag();
+	}
+
+	/**
+	 * Es kann passieren, dass {@link StundenplanUnterricht}-Objekte existieren, aber nicht die zugehörigen
+	 * {@link StundenplanKlassenunterricht}-Objekte, dann werden die {@link StundenplanUnterricht}-Objekte verschoben in eine Liste.
+	 */
+	private update_unterrichtmenge_ungueltig() : void {
+		for (const u of this._unterrichtmenge_ungueltig)
+			this._unterricht_by_id.put(u.id, u);
+		this._unterrichtmenge_ungueltig = new ArrayList();
+		for (const u of new ArrayList(this._unterricht_by_id.values())) {
+			if (u.idKurs !== null)
+				continue;
+			let ungueltig : boolean = false;
+			for (const idKlasse of u.klassen)
+				ungueltig = ungueltig || !this._klassenunterricht_by_idKlasse_and_idFach.contains(idKlasse, u.idFach);
+			if (ungueltig) {
+				this._unterricht_by_id.remove(u.id);
+				this._unterrichtmenge_ungueltig.add(u);
+			}
+		}
 	}
 
 	private update_pausenzeitHatSchnittMitZeitraster_by_wochentag() : void {
@@ -5530,7 +5555,6 @@ export class StundenplanManager extends JavaObject {
 
 	/**
 	 * Liefert das {@link StundenplanUnterricht}-Objekt zur übergebenen ID.
-	 * <br>Laufzeit: O(1)
 	 * <br>Hinweis: Unnötige Methode, denn man bekommt die Objekte über Zeitraster-Abfragen.
 	 *
 	 * @param idUnterricht  Die Datenbank-ID des Unterrichts.
@@ -5543,12 +5567,21 @@ export class StundenplanManager extends JavaObject {
 
 	/**
 	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte.
-	 * <br> Laufzeit: O(1)
 	 *
 	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte.
 	 */
 	public unterrichtGetMengeAsList() : List<StundenplanUnterricht> {
 		return this._unterrichtmenge;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte, die entfernt wurden,
+	 * da es derzeit kein zu gehöriges {@link StundenplanKlassenunterricht}-Objekt gibt.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte.
+	 */
+	public unterrichtGetMengeUngueltigAsList() : List<StundenplanUnterricht> {
+		return this._unterrichtmenge_ungueltig;
 	}
 
 	/**
@@ -6383,8 +6416,24 @@ export class StundenplanManager extends JavaObject {
 	 * @param listUnterricht  Die Liste der zu entfernenden {@link StundenplanUnterricht}-Objekte.
 	 */
 	public unterrichtRemoveAll(listUnterricht : List<StundenplanUnterricht>) : void {
-		for (const unterricht of listUnterricht)
-			this.unterrichtRemoveByIdOhneUpdate(unterricht.id);
+		for (const u of listUnterricht)
+			this.unterrichtRemoveByIdOhneUpdate(u.id);
+		this.update_all();
+	}
+
+	/**
+	 * Entfernt alle {@link StundenplanUnterricht}-Objekte aus der Liste der ungültigen Unterrichte.
+	 *
+	 * @param listUnterricht  Die Liste der zu entfernenden {@link StundenplanUnterricht}-Objekte.
+	 */
+	public unterrichtRemoveAllUngueltige(listUnterricht : List<StundenplanUnterricht>) : void {
+		const set : HashSet<number> = new HashSet<number>();
+		for (let u of listUnterricht)
+			set.add(u.id);
+		const iter : JavaIterator<StundenplanUnterricht> = this._unterrichtmenge_ungueltig.iterator();
+		while (iter.hasNext())
+			if (set.contains(iter.next().id))
+				iter.remove();
 		this.update_all();
 	}
 

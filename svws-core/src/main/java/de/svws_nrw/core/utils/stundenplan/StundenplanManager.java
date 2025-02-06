@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -351,6 +352,7 @@ public class StundenplanManager {
 	// StundenplanUnterricht
 	private final @NotNull HashMap<Long, StundenplanUnterricht> _unterricht_by_id = new HashMap<>();
 	private @NotNull List<StundenplanUnterricht> _unterrichtmenge = new ArrayList<>();
+	private @NotNull List<StundenplanUnterricht> _unterrichtmenge_ungueltig = new ArrayList<>();
 	private @NotNull HashMap<Long, List<StundenplanUnterricht>> _unterrichtmenge_by_idFach = new HashMap<>();
 	private @NotNull HashMap<Long, List<StundenplanUnterricht>> _unterrichtmenge_by_idKlasse = new HashMap<>();
 	private @NotNull HashMap<Long, List<StundenplanUnterricht>> _unterrichtmenge_by_idRaum = new HashMap<>();
@@ -566,6 +568,8 @@ public class StundenplanManager {
 	}
 
 	private void update_all() {
+		// -1. Ordnung (Sonderfälle)
+		update_unterrichtmenge_ungueltig();
 
 		// 0. Ordnung (Sortierte Mengen als Listen)
 		update_kwzmenge_update_kwz_by_jahr_and_kw();                 // ---
@@ -688,6 +692,35 @@ public class StundenplanManager {
 		update_pausenzeitHatSchnittMitZeitraster_by_wochentag_idSchueler();                  // _pausenzeitmenge_by_idSchueler_and_wochentag
 		update_pausenzeitHatSchnittMitZeitraster_by_wochentag_idJahrgang();                  // _pausenzeitmenge_by_idJahrgang_and_wochentag
 		update_pausenzeitHatSchnittMitZeitraster_by_wochentag();
+	}
+
+	/**
+	 * Es kann passieren, dass {@link StundenplanUnterricht}-Objekte existieren, aber nicht die zugehörigen
+	 * {@link StundenplanKlassenunterricht}-Objekte, dann werden die {@link StundenplanUnterricht}-Objekte verschoben in eine Liste.
+	 */
+	private void update_unterrichtmenge_ungueltig() {
+		// Zunächst alle ungültigen Objekte gültig machen.
+		for (final StundenplanUnterricht u : _unterrichtmenge_ungueltig)
+			_unterricht_by_id.put(u.id, u);
+
+		// Jetzt ungültige Objekte identifizieren
+		_unterrichtmenge_ungueltig = new ArrayList<>();
+		for (final StundenplanUnterricht u : new ArrayList<>(_unterricht_by_id.values())) {
+			// Kursunterricht ignorieren?
+			if (u.idKurs != null)
+				continue;
+
+			// Ungueltig?
+			boolean ungueltig = false;
+			for (final long idKlasse : u.klassen)
+				ungueltig |= !_klassenunterricht_by_idKlasse_and_idFach.contains(idKlasse, u.idFach);
+
+			// Verschieben?
+			if (ungueltig) {
+				_unterricht_by_id.remove(u.id);
+				_unterrichtmenge_ungueltig.add(u);
+			}
+		}
 	}
 
 	private void update_pausenzeitHatSchnittMitZeitraster_by_wochentag() {
@@ -6089,7 +6122,6 @@ public class StundenplanManager {
 
 	/**
 	 * Liefert das {@link StundenplanUnterricht}-Objekt zur übergebenen ID.
-	 * <br>Laufzeit: O(1)
 	 * <br>Hinweis: Unnötige Methode, denn man bekommt die Objekte über Zeitraster-Abfragen.
 	 *
 	 * @param idUnterricht  Die Datenbank-ID des Unterrichts.
@@ -6102,12 +6134,21 @@ public class StundenplanManager {
 
 	/**
 	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte.
-	 * <br> Laufzeit: O(1)
 	 *
 	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte.
 	 */
 	public @NotNull List<StundenplanUnterricht> unterrichtGetMengeAsList() {
 		return _unterrichtmenge;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte, die entfernt wurden,
+	 * da es derzeit kein zu gehöriges {@link StundenplanKlassenunterricht}-Objekt gibt.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte.
+	 */
+	public @NotNull List<StundenplanUnterricht> unterrichtGetMengeUngueltigAsList() {
+		return _unterrichtmenge_ungueltig;
 	}
 
 	/**
@@ -7081,8 +7122,29 @@ public class StundenplanManager {
 	 * @param listUnterricht  Die Liste der zu entfernenden {@link StundenplanUnterricht}-Objekte.
 	 */
 	public void unterrichtRemoveAll(final @NotNull List<StundenplanUnterricht> listUnterricht) {
-		for (final @NotNull StundenplanUnterricht unterricht : listUnterricht)
-			unterrichtRemoveByIdOhneUpdate(unterricht.id);
+		for (final @NotNull StundenplanUnterricht u : listUnterricht)
+			unterrichtRemoveByIdOhneUpdate(u.id);
+
+		update_all();
+	}
+
+
+	/**
+	 * Entfernt alle {@link StundenplanUnterricht}-Objekte aus der Liste der ungültigen Unterrichte.
+	 *
+	 * @param listUnterricht  Die Liste der zu entfernenden {@link StundenplanUnterricht}-Objekte.
+	 */
+	public void unterrichtRemoveAllUngueltige(final @NotNull List<StundenplanUnterricht> listUnterricht) {
+		// Fülle das Set der IDs.
+		final @NotNull HashSet<Long> set = new HashSet<>();
+		for (StundenplanUnterricht u : listUnterricht)
+			set.add(u.id);
+
+		// Entferne aus der Liste über ID vergleich, da Objekt-Referenz nicht zuverlässig ist.
+		final @NotNull Iterator<StundenplanUnterricht> iter = _unterrichtmenge_ungueltig.iterator();
+		while (iter.hasNext())
+			if (set.contains(iter.next().id))
+				iter.remove();
 
 		update_all();
 	}
