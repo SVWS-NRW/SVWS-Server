@@ -11,7 +11,7 @@
 					</svws-ui-button>
 					<template v-if="stundenplanManager().getWochenTypModell() > 0">
 						<div class="text-button font-bold mr-1 -mt-px">Wochentyp:</div>
-						<svws-ui-select headless title="Wochentyp" v-model="wochentypAnzeige" :items="wochentypen()" class="print:hidden" type="transparent"
+						<svws-ui-select headless title="Wochentyp" v-model="wochentypAnzeige" :items="wochentypen()" class="print:!hidden" type="transparent"
 							:disabled="wochentypen().size() <= 0" :item-text="wt => stundenplanManager().stundenplanGetWochenTypAsString(wt)" />
 					</template>
 				</div>

@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-table :items="[]" :no-data="false" :columns="cols">
+	<svws-ui-table :items="[]" :no-data="false">
 		<template #header>
 			<div role="row" class="svws-ui-tr">
 				<div role="cell" class="svws-ui-td col-span-full">
@@ -14,13 +14,13 @@
 			<template v-for="fws in fachwahlstatistik" :key="fws.id">
 				<template v-if="hatFachwahl(fws, halbjahr)">
 					<template v-if="fws !== undefined">
-						<div role="row" class="svws-ui-tr cursor-pointer" :style="{ 'background-color': fws ? getBgColor(fws) : 'transparent' }" @click="onClick(fws)">
-							<div role="cell" class="svws-ui-td col-span-full">
+						<div role="row" class="svws-ui-tr cursor-pointer">
+							<div role="cell" class="svws-ui-td col-span-full" :style="'background-color: ' + getBgColor(fws)" @click="onClick(fws)">
 								<div class="-ml-1 mr-0.5 cursor-pointer">
 									<span class="icon i-ri-arrow-right-s-line" v-if="aktuell?.id !== fws.id" />
 									<span class="icon i-ri-arrow-down-s-line" v-else />
 								</div>
-								<span :class="{'svws-ui-badge': aktuell?.id === fws.id}">{{ faecherManager.get(fws.id)?.bezeichnung }}</span>
+								<span :class="{'font-bold': aktuell?.id === fws.id}">{{ faecherManager.get(fws.id)?.bezeichnung }}</span>
 							</div>
 						</div>
 						<template v-if="aktuell?.id === fws.id">
@@ -54,7 +54,6 @@
 
 <script setup lang="ts">
 
-	import type { DataTableColumn } from "@ui";
 	import type { GostFachwahlenHalbjahrProps } from "./SGostFachwahlenHalbjahrProps";
 	import { computed, ref } from "vue";
 	import { Fach, type GostStatistikFachwahl, type SchuelerListeEintrag, type List, ArrayList, type GostHalbjahr } from "@core";
@@ -67,11 +66,6 @@
 	function onClick(fws : GostStatistikFachwahl): void {
 		aktuell.value = (aktuell.value?.id === fws.id) ? undefined : fws;
 	}
-
-	const cols: DataTableColumn[] = [
-		{ key: "GKS", label: "GKS", span: 1 },
-		{ key: "GKM", label: "GKM", span: 1 },
-	];
 
 	const schuljahr = computed<number>(() => props.faecherManager.getSchuljahr());
 
@@ -112,3 +106,11 @@
 	}
 
 </script>
+
+<style scoped>
+
+	.svws-ui-tr {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+</style>

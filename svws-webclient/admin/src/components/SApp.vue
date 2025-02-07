@@ -50,8 +50,8 @@
 			</template>
 		</template>
 		<template #main>
-			<div class="app--page" :class="app.name">
-				<div class="page--wrapper" :class="{'svws-api--pending': apiStatus.pending}">
+			<div class="app--page h-full" :class="app.name">
+				<div class="page--wrapper h-full w-full flex flex-col" :class="{ 'svws-api--pending': apiStatus.pending }">
 					<template v-if="pendingSetApp">
 						<svws-ui-header>
 							<div class="flex items-center">

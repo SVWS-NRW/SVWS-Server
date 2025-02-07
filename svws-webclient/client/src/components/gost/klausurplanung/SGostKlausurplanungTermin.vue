@@ -58,9 +58,9 @@
 						Keine Klausuren
 					</div>
 					<slot name="kursklausuren" v-if="kursklausuren().size()">
-						<svws-ui-table :columns="cols" :disable-header="!$slots.tableTitle" :class="{'border-t border-ui-contrast-25': !$slots.tableTitle}">
+						<svws-ui-table :disable-header="!$slots.tableTitle" :class="{'border-t border-ui-contrast-25': !$slots.tableTitle}">
 							<template #header>
-								<div class="svws-ui-tr" role="row">
+								<div class="svws-ui-tr" :style="tableRowStyle" role="row">
 									<div class="svws-ui-td col-span-full" role="columnheader">
 										<slot name="tableTitle" />
 									</div>
@@ -73,7 +73,7 @@
 									:draggable="onDrag !== undefined && draggable(klausur, termin)"
 									@dragstart="onDrag && onDrag(klausur);$event.stopPropagation()"
 									@dragend="onDrag && onDrag(undefined);$event.stopPropagation()"
-									class="svws-ui-tr" role="row"
+									class="svws-ui-tr" :style="tableRowStyle" role="row"
 									:class="[
 										props.klausurCssClasses === undefined ? '' : props.klausurCssClasses(klausur, termin),
 										{
@@ -139,7 +139,9 @@
 							:klausur-css-classes />
 					</slot>
 					<div class="mt-3">
-						<svws-ui-textarea-input class="text-sm" :headless="termin.bemerkung === null || termin.bemerkung.trim().length === 0" :rows="1" resizeable="none" autoresize placeholder="Bemerkungen zum Termin" :disabled="!hatKompetenzUpdate" :model-value="termin.bemerkung" @change="bemerkung => patchKlausurtermin(termin.id, {bemerkung})" @click="$event.stopPropagation()" />
+						<svws-ui-textarea-input class="text-sm" :headless="termin.bemerkung === null || termin.bemerkung.trim().length === 0" :rows="1"
+							resizeable="none" autoresize placeholder="Bemerkungen zum Termin" :disabled="!hatKompetenzUpdate" :model-value="termin.bemerkung"
+							@change="bemerkung => patchKlausurtermin(termin.id, {bemerkung})" @click="$event.stopPropagation()" />
 					</div>
 					<span class="flex w-full justify-between items-center gap-1 text-sm mt-auto pr-2" :class="{'pl-3': inTooltip}">
 						<div class="py-3" :class="{'opacity-50': !kursklausuren().size() && (showSchuelerklausuren && !schuelerklausurtermine().size())}">
@@ -226,104 +228,82 @@
 		return "Klausurtermin";
 	}
 
-	function calculateColumns() {
-		const cols: DataTableColumn[] = [
-			{ key: "dragHandle", label: " ", fixedWidth: 1 },
-			{ key: "jgst", label: "Jgst.", fixedWidth: 2 },
-			{ key: "kurs", label: "Kurs", span: 1.25 },
-			{ key: "kuerzel", label: "Lehrkraft" },
-			{ key: "schriftlich", label: "Schriftlich", span: 0.5, align: "right", minWidth: 4.5 },
-			{ key: "dauer", label: "Dauer", tooltip: "Dauer in Minuten", span: 0.5, align: "right", minWidth: 3.25 },
-		];
-
-		if (props.showKursschiene === true) {
-			cols.push({ key: "kursSchiene", label: "S", tooltip: "Schiene", span: 0.25, align: "right", minWidth: 1.75 })
-		}
-
-		if (props.kMan().quartalGetByTermin(props.termin) === -1) {
-			cols.push({ key: "quartal", label: "Q", tooltip: "Quartal", span: 0.25, align: "center", minWidth: 1.75 })
-		}
-
-		if (props.showLastKlausurtermin === true) {
-			cols.push({ key: "lastDate", label: "Vordatum", tooltip: "Datum der letzten Klausur", span: 0.25, align: "center", minWidth: 4.75 })
-		}
-
-		return cols;
-	}
-
-	const cols = computed(() => calculateColumns());
+	const tableRowStyle = computed<string>(() => {
+		let result = "grid-template-columns: 1rem 2rem minmax(4rem, 1.25fr) 4rem minmax(4.5rem, 0.5fr) minmax(3.25rem, 0.5fr)";
+		if (props.showKursschiene === true)
+			result += " minmax(1.75rem, 0.25fr)";
+		if (props.kMan().quartalGetByTermin(props.termin) === -1)
+			result += " minmax(1.75rem, 0.25fr)";
+		if (props.showLastKlausurtermin === true)
+			result += " minmax(4.75rem, 0.25fr)";
+		return result;
+	});
 
 </script>
 
 <style lang="postcss" scoped>
 
-@reference "../../../../../ui/src/assets/styles/index.css"
+	@reference "../../../../../ui/src/assets/styles/index.css"
 
-.svws-warning {
-  .i-ri-draggable {
-    @apply opacity-10;
-  }
+	.svws-warning {
+		.i-ri-draggable {
+			opacity: 10%;
+		}
 
-  &:hover {
-    .i-ri-draggable {
-      @apply opacity-100 text-black dark:text-white;
-    }
-  }
-}
-</style>
-
-<style lang="postcss">
-
-@reference "../../../../../ui/src/assets/styles/index.css"
-
-.svws-ui-termin {
-  .text-input--headless {
-    @apply text-headline-md;
-
-    &:not(:focus) {
-      &::placeholder {
-        @apply text-ui-contrast-100;
-      }
-    }
-
-    &::placeholder {
-      @apply font-bold;
-    }
-  }
-
-  .svws-klausurplanung-schienen-termin & {
-	@apply border-0 rounded-xl;
-
+		&:hover {
+			.i-ri-draggable {
+				@apply opacity-100 text-ui-contrast-100;
+			}
+		}
 	}
 
-  .svws-selected & {
-    .text-input--headless {
-      &:not(:focus) {
-        &::placeholder {
-          @apply text-ui-brand;
-        }
-      }
+	.svws-ui-termin {
+		.text-input--headless {
+			@apply text-headline-md;
 
-      &:focus {
-        &::placeholder {
-          @apply text-ui-brand/50;
-        }
-      }
-    }
-  }
+			&:not(:focus) {
+				&::placeholder {
+					@apply text-ui-contrast-100;
+				}
+			}
 
-}
+			&::placeholder {
+				@apply font-bold;
+			}
+		}
 
-.svws-ui-stundenplan--unterricht .svws-ui-termin {
-  @apply z-10;
+		.svws-klausurplanung-schienen-termin & {
+			@apply border-0 rounded-xl;
+		}
 
-  .px-3 {
-    @apply my-auto;
-    padding: 0 0.25rem;
-  }
+		.svws-selected & {
+			.text-input--headless {
+				&:not(:focus) {
+					&::placeholder {
+						@apply text-ui-brand;
+					}
+				}
 
-  .svws-compact-data {
-    @apply justify-center;
-  }
-}
+				&:focus {
+					&::placeholder {
+						@apply text-ui-brand/50;
+					}
+				}
+			}
+		}
+	}
+
+	.svws-ui-stundenplan--unterricht .svws-ui-termin {
+		@apply z-10;
+
+		.px-3 {
+			@apply my-auto;
+			padding: 0 0.25rem;
+		}
+
+		.svws-compact-data {
+			@apply justify-center;
+		}
+	}
+
 </style>

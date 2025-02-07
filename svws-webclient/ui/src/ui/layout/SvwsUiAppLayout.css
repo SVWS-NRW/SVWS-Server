@@ -246,6 +246,7 @@ html {
 
 .app--content-container {
 	@apply w-full;
+	@apply overflow-hidden;
 }
 
 .app-layout--aside-container {
@@ -310,22 +311,30 @@ html {
 	}
 }
 
-.sidebar--menu--header,
-.secondary-menu--headline,
-.svws-ui-header,
+.sidebar--menu--header {
+	@apply flex flex-col items-start justify-center;
+	min-height: 6.5rem;
+}
+
+.secondary-menu--headline {
+	@apply flex flex-col items-start justify-center;
+	min-height: 6.5rem;
+}
+
 .page--header {
 	@apply flex flex-col items-start justify-center;
 	min-height: 6.5rem;
 }
 
-.svws-ui-header {
-	@apply flex-row items-center justify-between;
-}
-
 @media (min-width: 1280px) or (orientation: portrait) {
-	.sidebar--menu--header,
-	.secondary-menu--headline,
-	.svws-ui-header,
+	.sidebar--menu--header {
+		min-height: 8rem;
+	}
+
+	.secondary-menu--headline {
+		min-height: 8rem;
+	}
+
 	.page--header {
 		min-height: 8rem;
 	}

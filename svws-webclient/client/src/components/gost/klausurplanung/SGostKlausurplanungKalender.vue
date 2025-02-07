@@ -7,8 +7,9 @@
 		<Teleport to=".router-tab-bar--subnav" v-if="isMounted">
 			<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl :halbjahr :zeige-alle-jahrgaenge :set-zeige-alle-jahrgaenge />
 		</Teleport>
-		<div class="page--content page--content--full relative">
-			<svws-ui-content-card title="In Planung">
+		<div class="page page-flex-row">
+			<div class="min-w-88 max-w-88 flex flex-col gap-2">
+				<div class="text-headline-md">In Planung</div>
 				<div class="flex flex-col">
 					<div v-if="jahrgangsdaten?.abiturjahr !== -1"
 						@drop="onDrop(undefined)"
@@ -50,8 +51,8 @@
 						</ul>
 					</div>
 				</div>
-			</svws-ui-content-card>
-			<svws-ui-content-card class="svws-card-stundenplan">
+			</div>
+			<div class="svws-card-stundenplan max-w-480 h-full overflow-auto overflow-y-hidden">
 				<template v-if="kalenderdatum">
 					<s-gost-klausurplanung-kalender-stundenplan-ansicht :benutzer-kompetenzen
 						:id="33"
@@ -86,20 +87,18 @@
 					<svws-ui-select title="Kalenderwoche" v-model="kalenderwochenauswahl" :items="kalenderwochen()"
 						:item-text="(kw: StundenplanKalenderwochenzuordnung) => stundenplanManager().kalenderwochenzuordnungGetWocheAsString(kw)" />
 				</template>
-			</svws-ui-content-card>
-			<svws-ui-content-card>
-				<template #title>
-					<span class="text-headline-md leading-none inline-flex gap-1">
-						<template v-if="anzahlProKwKonflikte2(4, false).length === 0">
-							<span class="icon i-ri-checkbox-circle-fill icon-ui-success -my-1" />
-							<span>Keine Konflikte</span>
-						</template>
-						<template v-else-if="anzahlProKwKonflikte2(4, false).length > 0">
-							<span class="icon i-ri-alert-fill icon-error -my-0.5" />
-							<span> Konflikte</span>
-						</template>
-					</span>
-				</template>
+			</div>
+			<div class="min-w-88 max-w-88 flex flex-col h-full overflow-y-auto">
+				<div class="text-headline-md leading-none inline-flex gap-1">
+					<template v-if="anzahlProKwKonflikte2(4, false).length === 0">
+						<span class="icon i-ri-checkbox-circle-fill icon-ui-success -my-1" />
+						<span>Keine Konflikte</span>
+					</template>
+					<template v-else-if="anzahlProKwKonflikte2(4, false).length > 0">
+						<span class="icon i-ri-alert-fill icon-error -my-0.5" />
+						<span> Konflikte</span>
+					</template>
+				</div>
 				<div class="mb-12">
 					<div v-if="anzahlProKwKonflikte2(4, false).length > 0">
 						<div class="text-headline-sm leading-tight mb-6 -mt-2">
@@ -155,7 +154,7 @@
 						</ul>
 					</div>
 				</div>
-			</svws-ui-content-card>
+			</div>
 		</div>
 	</template>
 	<s-gost-klausurplanung-modal v-model:show="modalKlausurHatRaeume" text="Der Klausurtermin ist Teil einer jahrgangsübergreifenden Raumplanung. Die Aktion hat daher Auswirkungen auf andere Termine." :weiter="verschiebeKlausurTrotzRaumzuweisung" />
@@ -305,81 +304,20 @@
 
 </script>
 
-<style lang="postcss" scoped>
-
-@reference "../../../../../ui/src/assets/styles/index.css"
-
-.page--content {
-  	@apply grid;
-  	grid-template-columns: minmax(22rem, 0.2fr) 1fr minmax(22rem, 0.2fr);
-}
-
-.svws-ui-tab-content {
-	@apply overflow-y-hidden items-start;
-
-	.page--content {
-		@apply h-full py-0 auto-rows-auto;
-
-		.content-card {
-			@apply max-h-full pt-8 pb-16 px-4 -mx-4 overflow-y-auto h-[unset];
-			scrollbar-gutter: stable;
-		}
-	}
-}
-
-.svws-ui-tab-content {
-	@apply overflow-y-hidden items-start;
-
-	.page--content {
-		@apply h-full py-0 auto-rows-auto;
-
-		.content-card {
-			@apply max-h-full pt-8 pb-16 px-4 -mx-4 overflow-y-auto h-[unset];
-			scrollbar-gutter: stable;
-		}
-
-		.svws-card-stundenplan {
-			@apply overflow-y-hidden overflow-x-hidden pb-0;
-			scrollbar-gutter: auto;
-		}
-	}
-}
-</style>
-
 <style lang="postcss">
 
-@reference "../../../../../ui/src/assets/styles/index.css"
+	@reference "../../../../../ui/src/assets/styles/index.css"
 
-.svws-ui-stundenplan--stunde.svws-ui-stundenplan--stunde--klausurplan-opacity {
-	/* CSS_TODO */
-	@apply bg-opacity-20;
-}
+	.svws-kw-auswahl {
+		@apply bg-ui-brand text-white rounded-md h-7 -my-1;
 
-.svws-kw-auswahl {
-	@apply bg-ui-brand text-white rounded-md h-7 -my-1;
+		.text-input--headless {
+			@apply !px-4 !text-button;
+		}
 
-	.text-input--headless {
-		@apply !px-4 !text-button ;
-	}
-
-	.svws-dropdown-icon {
-		@apply !hidden;
-	}
-}
-
-.svws-card-stundenplan {
-	@apply pb-16;
-
-	.content-card--content {
-		@apply h-full overflow-x-scroll overflow-y-auto pt-px;
-	}
-
-	.svws-ui-stundenplan {
-		@apply overflow-visible h-auto pb-8 w-full;
-
-		.svws-ui-stundenplan--unterricht {
-			@apply flex px-1 py-0 border-none;
+		.svws-dropdown-icon {
+			@apply !hidden;
 		}
 	}
-}
+
 </style>

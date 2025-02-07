@@ -45,7 +45,7 @@ export { default as SvwsUiAvatar } from "./ui/SvwsUiAvatar.vue";
 export { default as SvwsUiBadge } from "./ui/SvwsUiBadge.vue";
 export { default as SvwsUiButton } from "./ui/controls/SvwsUiButton.vue";
 export { default as SvwsUiButtonSelect } from "./ui/controls/SvwsUiButtonSelect.vue";
-export { default as SvwsUiCard } from "./ui/layout/SvwsUiCard.vue";
+export { default as UiCard } from "./ui/layout/UiCard.vue";
 export { default as SvwsUiCheckbox } from "./ui/controls/SvwsUiCheckbox.vue";
 export { default as SvwsUiCheckpointModal } from "./ui/modal/SvwsUiCheckpointModal.vue";
 export { default as SvwsUiContentCard } from "./ui/layout/SvwsUiContentCard.vue";

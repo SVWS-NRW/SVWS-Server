@@ -39,7 +39,9 @@
 	</div>
 </template>
 
+
 <script setup lang="ts">
+
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type { GostHalbjahr, GostKlausurenCollectionSkrsKrsData, GostKlausurenUpdate} from "@core";
 	import { BenutzerKompetenz} from "@core";

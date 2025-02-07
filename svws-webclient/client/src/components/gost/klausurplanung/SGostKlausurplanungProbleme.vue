@@ -5,7 +5,7 @@
 	<Teleport to=".router-tab-bar--subnav" v-if="isMounted">
 		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" :halbjahr="halbjahr" />
 	</Teleport>
-	<div class="page--content">
+	<div class="page page-grid-cards">
 		<svws-ui-action-button title="Kein Stundenplan"
 			description="Es existiert kein Stundenplan für diesen Schuljahresabschnitt."
 			v-if="!kMan().stundenplanManagerGeladenAndExistsByAbschnitt(props.abschnitt!.id)"

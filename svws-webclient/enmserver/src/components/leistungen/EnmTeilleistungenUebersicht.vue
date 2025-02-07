@@ -146,9 +146,7 @@
 
 </script>
 
-<style lang="postcss" scoped>
-
-	@reference "../../../../ui/src/assets/styles/index.css";
+<style scoped>
 
 	.svws-ui-tr {
 		grid-template-columns: v-bind(gridTemplateColumnsComputed);

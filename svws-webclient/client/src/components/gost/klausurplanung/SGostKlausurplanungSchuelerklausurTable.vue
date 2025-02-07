@@ -6,7 +6,6 @@
 				&nbsp;
 			</slot>
 		</template>
-
 		<template #body>
 			<div v-for="schuelertermin in schuelerklausuren"
 				:key="schuelertermin.id"
@@ -14,7 +13,7 @@
 				:draggable="onDrag && draggable(schuelertermin, termin!)"
 				@dragstart="onDrag!(schuelertermin);$event.stopPropagation()"
 				@dragend="onDrag!(undefined);$event.stopPropagation()"
-				class="svws-ui-tr" role="row"
+				class="svws-ui-tr" role="row" style="grid-template-columns: minmax(4rem, 15fr) minmax(4rem, 8fr) minmax(4rem, 2fr) minmax(4rem, 8fr) minmax(4rem, 11fr) minmax(4rem, 4fr) minmax(4rem, 2fr);"
 				:class="[klausurCssClasses === undefined ? '' : klausurCssClasses(schuelertermin, termin)]">
 				<div class="svws-ui-td" role="cell">
 					<span v-if="draggable(schuelertermin, termin!)" class="icon i-ri-draggable -m-0.5 -ml-3" />
@@ -48,12 +47,13 @@
 	</svws-ui-table>
 </template>
 
+
 <script setup lang="ts">
+
 	import { DateUtils, GostHalbjahr } from "@core";
 	import type { GostKlausurplanManager, GostSchuelerklausurTermin, List, JavaSet, GostKursklausur, GostKlausurenCollectionSkrsKrsData, GostKlausurtermin } from "@core";
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type {DataTableColumn} from "@ui";
-	import { computed} from "vue";
 
 	const props = withDefaults(defineProps<{
 		kMan: () => GostKlausurplanManager;
@@ -75,22 +75,14 @@
 		klausurCssClasses: undefined,
 	});
 
-
-	function calculateColumns() {
-		const cols: DataTableColumn[] = [
-			{ key: "nachname", label: "Nachame", span: 15 },
-			{ key: "vorname", label: "Vorname", span: 8 },
-			{ key: "stufe", label: "Jg.", span: 2 },
-			{ key: "kurs", label: "Kurs", span: 8 },
-			{ key: "datum", label: "Datum", span: 11 },
-			{ key: "kuerzel", label: "Lehrkraft", span: 4},
-			{ key: "dauer", label: "Dauer", tooltip: "Dauer in Minuten", span: 2, align: "right"},
-		];
-		// { key: "actions", label: "Aktionen", span: 2, align: "right" },
-
-		return cols;
-	}
-
-	const cols = computed(() => calculateColumns());
+	const cols: DataTableColumn[] = [
+		{ key: "nachname", label: "Nachame", span: 15 },
+		{ key: "vorname", label: "Vorname", span: 8 },
+		{ key: "stufe", label: "Jg.", span: 2 },
+		{ key: "kurs", label: "Kurs", span: 8 },
+		{ key: "datum", label: "Datum", span: 11 },
+		{ key: "kuerzel", label: "Lehrkraft", span: 4},
+		{ key: "dauer", label: "Dauer", tooltip: "Dauer in Minuten", span: 2, align: "right"},
+	];
 
 </script>

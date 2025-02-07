@@ -1,6 +1,6 @@
-## SvwsUiCard
+## UiCard
 
-Mit SvwsUiCard lassen sich Informationen in einer Card organisieren, die optional auch collapsible ist. Die Card gliedert sich in zwei Bereiche: Der Header, welcher immer sichtbar ist und der Body, der nur sichtbar ist, wenn die Card geöffnet ist. 
+Mit UiCard lassen sich Informationen in einer Card organisieren, die optional auch collapsible ist. Die Card gliedert sich in zwei Bereiche: Der Header, welcher immer sichtbar ist und der Body, der nur sichtbar ist, wenn die Card geöffnet ist. 
 
 ### Anpassungen
 Die Card kann durch ihre Props und durch Slots angepasst werden:
@@ -205,7 +205,8 @@ Die Card kann durch ihre Props und durch Slots angepasst werden:
   - **Position**: Links im Content-Bereich
   - **Verwendung**: Dient zur Darstellung der 4 vordefinierten Buttons auf der linken Seite des Bodys.
 
-**content**  
+**default**  
+	Der default Slot der Komponente.
   - **Position**: In der Mitte des Content-Bereichs
   - **Verwendung**: Dient zur Darstellung des benutzerdefinierten Inhalts im Body.
 

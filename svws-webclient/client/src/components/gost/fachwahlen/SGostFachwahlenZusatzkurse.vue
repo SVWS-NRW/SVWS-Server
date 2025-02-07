@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-table :items="[]" :no-data="false" :columns="cols">
+	<svws-ui-table :items="[]" :no-data="false">
 		<template #header>
 			<div role="row" class="svws-ui-tr">
 				<div role="cell" class="svws-ui-td col-span-full">
@@ -13,15 +13,15 @@
 		<template #body>
 			<template v-for="fws in fachwahlenstatistik" :key="fws.id">
 				<template v-if="fws !== undefined">
-					<div role="row" class="svws-ui-tr cursor-pointer" :style="{ 'background-color': fws ? getBgColor(fws) : 'transparent' }" @click="onClick(fws)">
-						<div role="cell" class="svws-ui-td col-span-full">
+					<div role="row" class="svws-ui-tr cursor-pointer">
+						<div role="cell" class="svws-ui-td col-span-full" :style="'background-color: ' + getBgColor(fws)" @click="onClick(fws)">
 							<div class="-ml-1 mr-0.5">
 								<svws-ui-button type="icon" size="small">
 									<span class="icon i-ri-arrow-right-s-line" v-if="aktuell.fachwahl?.id !== fws.id" />
 									<span class="icon i-ri-arrow-down-s-line" v-else />
 								</svws-ui-button>
 							</div>
-							<span :class="{'svws-ui-badge': aktuell.fachwahl?.id === fws.id}">{{ faecherManager.get(fws.id)?.bezeichnung }}</span>
+							<span :class="{'font-bold': aktuell.fachwahl?.id === fws.id}">{{ faecherManager.get(fws.id)?.bezeichnung }}</span>
 						</div>
 						<template v-if="aktuell.fachwahl?.id === fws.id">
 							<div role="row" class="svws-ui-tr">
@@ -51,7 +51,6 @@
 
 <script setup lang="ts">
 
-	import type { DataTableColumn } from "@ui";
 	import type { GostFachwahlenZusatzkurseProps } from "./SGostFachwahlenZusatzkurseProps";
 	import type { ComputedRef} from "vue";
 	import { computed, ref } from "vue";
@@ -84,11 +83,6 @@
 			aktuell.value = { fachwahl: fws };
 		}
 	}
-
-	const cols: DataTableColumn[] = [
-		{ key: "ZK1", label: "ZK HJ1", span: 1 },
-		{ key: "ZK2", label: "ZK HJ2", span: 1 },
-	];
 
 	const schuljahr = computed<number>(() => props.faecherManager.getSchuljahr());
 
@@ -130,3 +124,11 @@
 	}
 
 </script>
+
+<style scoped>
+
+	.svws-ui-tr {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+</style>

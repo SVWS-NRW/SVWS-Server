@@ -1,5 +1,5 @@
 <template>
-	<div v-if="manager().hasDaten()" class="page--content">
+	<div v-if="manager().hasDaten()" class="page page-grid-cards">
 		<svws-ui-content-card title="Allgemein">
 			<template #actions>
 				<svws-ui-checkbox v-model="istSichtbar" :disabled="!hatKompetenzUpdate" focus-class-content> Ist sichtbar </svws-ui-checkbox>

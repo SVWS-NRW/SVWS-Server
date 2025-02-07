@@ -1,5 +1,5 @@
 <template>
-	<div class="page--content">
+	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Schulangaben" v-if="schuleListeManager().hasDaten() !== undefined">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-checkbox :model-value="schuleListeManager().daten().istSichtbar" @update:model-value="istSichtbar => patch({ istSichtbar })" focus-class-content> Ist sichtbar </svws-ui-checkbox>

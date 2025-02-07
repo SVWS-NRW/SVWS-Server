@@ -124,7 +124,7 @@
 			const key = value.key === 'idKlasse' ? 'klassen' : value.key;
 			props.manager().orderUpdate(key, value.order);
 			void props.setFilter();
-		}
+		},
 	})
 
 	const cols = [
@@ -154,7 +154,7 @@
 		set: (value) => {
 			props.manager().setFilterNurMitLernabschitt(value);
 			void props.setFilter();
-		}
+		},
 	});
 
 	const filterStatus = computed<SchuelerStatus[]>({
@@ -164,7 +164,7 @@
 			for (const v of value)
 				props.manager().schuelerstatus.auswahlAdd(v);
 			void props.setFilter();
-		}
+		},
 	});
 
 	const filterSchulgliederung = computed<Schulgliederung[]>({
@@ -174,7 +174,7 @@
 			for (const v of value)
 				props.manager().schulgliederungen.auswahlAdd(v);
 			void props.setFilter();
-		}
+		},
 	});
 
 	const filterJahrgaenge = computed<JahrgangsDaten[]>({
@@ -184,7 +184,7 @@
 			for (const v of value)
 				props.manager().jahrgaenge.auswahlAdd(v);
 			void props.setFilter();
-		}
+		},
 	});
 
 	const filterKlassen = computed<KlassenDaten[]>({
@@ -194,7 +194,7 @@
 			for (const v of value)
 				props.manager().klassen.auswahlAdd(v);
 			void props.setFilter();
-		}
+		},
 	});
 
 	const filterKurse = computed<KursDaten[]>({
@@ -204,7 +204,7 @@
 			for (const v of value)
 				props.manager().kurse.auswahlAdd(v);
 			void props.setFilter();
-		}
+		},
 	});
 
 	async function filterReset() {

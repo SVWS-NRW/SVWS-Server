@@ -1,5 +1,5 @@
 <template>
-	<div class="page--content">
+	<div class="page page-grid-cards">
 		<div class="flex flex-col gap-y-16 lg:gap-y-16" v-if="ServerMode.DEV.checkServerMode(serverMode)">
 			<svws-ui-action-button v-if="hatKompetenzLoeschen" title="Löschen" description="Ausgewählte Lehrer werden gelöscht." icon="i-ri-delete-bin-line"
 				:action-function="entferneLehrer" action-label="Löschen" :is-loading="loading" :is-active="currentAction === 'delete'"

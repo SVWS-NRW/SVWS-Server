@@ -316,6 +316,13 @@
 	const lernbereichsnote2Bezeichnung = computed<string | null>(() => props.manager().lernabschnittGetLernbereichsnote2Bezeichnung());
 	const hatLernbereichsnote = computed<boolean>(() => (lernbereichsnote1Bezeichnung.value !== null) || lernbereichsnote2Bezeichnung.value !== null);
 
+	const setRem = computed(() => hatUpdateKompetenz.value ? '1.5rem':'');
 </script>
 
+<style scoped>
 
+	.svws-ui-tr {
+		grid-template-columns: v-bind(setRem) minmax(10rem, 3fr) minmax(10rem, 1fr) minmax(6rem, 1fr) minmax(10rem, 2fr) 5rem 5rem;
+	}
+
+</style>

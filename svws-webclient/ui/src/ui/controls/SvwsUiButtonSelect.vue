@@ -1,5 +1,5 @@
 <template>
-	<div class="svws-ui-button-select" ref="button">
+	<div class="flex gap-px" ref="button">
 		<svws-ui-button ref="inputEl" :type="type">
 			<span v-if="defaultAction !== undefined" @click="noDefault ? dropdownOpen = !dropdownOpen : (defaultAction && action(defaultAction))" class="flex gap-1">
 				<slot name="icon" />{{ defaultAction.text }}
@@ -9,9 +9,9 @@
 			</span>
 			<span v-else class="icon i-ri-menu-line" />
 		</svws-ui-button>
-		<button class="svws-toggle button" :class="`button--${type}`" @click.stop="dropdownOpen = !dropdownOpen" :disabled="listEmpty">
-			<span class="icon i-ri-arrow-down-s-line" v-if="!dropdownOpen" />
-			<span class="icon i-ri-arrow-up-s-line" v-else />
+		<button class="rounded-l-none rounded-r-md px-0.5 z-10 relative border border-ui" :class="`button--${type}`" @click.stop="dropdownOpen = !dropdownOpen" :disabled="listEmpty">
+			<span class="icon mt-1 i-ri-arrow-down-s-line" v-if="!dropdownOpen" />
+			<span class="icon mt-1 i-ri-arrow-up-s-line" v-else />
 		</button>
 		<Teleport to="body">
 			<svws-ui-dropdown-list v-if="dropdownOpen && dropdownActions" ref="refList" :strategy :floating-left :floating-top :filtered-list="dropdownActions">
@@ -97,37 +97,19 @@
 
 </script>
 
-<style lang="postcss">
-
-	@reference "../../assets/styles/index.css";
-
-	.svws-ui-button-select {
-		@apply flex gap-px;
-
-		.svws-toggle.button {
-			@apply rounded-l-none rounded-r-md px-0.5;
-		}
-
-		.input-wrapper & .button {
-			@apply mr-0;
-		}
-	}
-</style>
-
 <style lang="postcss" scoped>
 
 	@reference "../../assets/styles/index.css";
 
 	.button {
-		@apply rounded-r-none z-10 relative;
+		position: relative;
+		border-top-right-radius: 0;
+		border-bottom-right-radius: 0;
+		z-index: 10;
 	}
 
 	.svws-ui-dropdown-list {
-		@apply min-w-fit;
-	}
-
-	.svws-ui-dropdown-list--item {
-		@apply text-button text-ui;
+		min-width: fit-content;
 	}
 
 </style>

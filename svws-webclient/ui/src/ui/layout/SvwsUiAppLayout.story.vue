@@ -26,7 +26,7 @@
 						</svws-ui-menu-item>
 					</template>
 					<template #footer>
-						<svws-ui-menu-item class="print:hidden"
+						<svws-ui-menu-item class="print:!hidden"
 							subline="">
 							<template #label>
 								Abmelden

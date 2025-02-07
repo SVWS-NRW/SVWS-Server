@@ -18,7 +18,8 @@
 						<!-- Die Liste mit den Fachwahlen -->
 						<svws-ui-table :items="[]" :no-data="false" :disable-header="true" type="navigation" has-background class="mt-1">
 							<template #body>
-								<div v-for="fach in fachbelegungen" :key="fach.fachID" role="row" class="svws-ui-tr !w-full" :class="{ 'font-medium': (fachwahlKurszuordnungen.get(fach.fachID) === undefined) }">
+								<div v-for="fach in fachbelegungen" :key="fach.fachID" role="row" class="svws-ui-tr !w-full"
+									:class="{ 'font-medium': (fachwahlKurszuordnungen.get(fach.fachID) === undefined) }">
 									<div role="cell"
 										:draggable="hatUpdateKompetenz && (fachwahlKurszuordnungen.get(fach.fachID) === undefined)"
 										@dragstart="drag_started(fachwahlKurszuordnungen.get(fach.fachID)?.id, fach.fachID, fachwahlKursarten.get(fach.fachID)!.id)"
@@ -71,7 +72,8 @@
 			<div class="grow">
 				<svws-ui-table :items="[]" :columns="cols" :disable-header="true" :no-data="false" class="border-t">
 					<template #body>
-						<div v-for="(schiene, index) in getErgebnismanager().getMengeAllerSchienen()" :key="index" role="row" class="svws-ui-tr">
+						<div v-for="(schiene, index) in getErgebnismanager().getMengeAllerSchienen()" :key="index" role="row" class="svws-ui-tr"
+							:style="gridTemplateColumns">
 							<!-- Informationen zu der Schiene und der Statistik dazu auf der linken Seite der Tabelle -->
 							<div role="cell" class="svws-ui-td svws-divider">
 								<div class="flex flex-col py-1 w-full" :title="getErgebnismanager().getSchieneG(schiene.id).bezeichnung">
@@ -87,14 +89,17 @@
 							<!-- Die Liste der Schüler-Kurse (von links nach rechts), welche der Schiene zugeordnet sind (stehen ggf. für drag und/oder drop zur Verfügung). -->
 							<div role="cell" v-for="kurs of getErgebnismanager().getOfSchieneKursmengeSortiert(schiene.id)" :key="kurs.id"
 								class="svws-ui-td svws-align-center svws-no-padding select-none group relative !p-[2px] svws-divider last:!border-r-0"
-								:class="{ 'is-drop-zone': is_drop_zone(kurs).value, 'cursor-grab': is_draggable(kurs.id).value }"
+								:class="{ 'cursor-grab': is_draggable(kurs.id).value }"
 								:draggable="is_draggable(kurs.id).value"
 								@dragstart="drag_started(kurs.id, kurs.fachID, kurs.kursart)"
 								@dragend="drag_ended()">
 								<div class="w-full h-full flex flex-col justify-center items-center rounded-sm border border-black/10 py-1 px-0.5"
 									:style="{ 'background-color': hatSchieneKollisionen(schiene.id).value && getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id) ? 'var(--color-bg-ui-danger)' : bgColor(kurs.id) }"
-									:class="{ 'text-ui-contrast-0' : hatSchieneKollisionen(schiene.id).value && getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id)}"
-									@dragover="if (is_drop_zone(kurs).value) $event.preventDefault();" @drop="drop_aendere_kurszuordnung(kurs)">
+									:class="{
+										'text-ui-contrast-0' : hatSchieneKollisionen(schiene.id).value && getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id),
+										'bg-ui-brand/10 opacity-75 border-ui-brand rounded-sm ring-3 ring-ui-brand': is_drop_zone(kurs).value,
+									}"
+									@dragover="onDragOver($event, kurs)" @drop="drop_aendere_kurszuordnung(kurs)">
 									<span class="icon-sm i-ri-draggable mt-1 ml-1 opacity-50 group-hover:opacity-100 rounded-xs absolute top-0 left-0" v-if="is_draggable(kurs.id).value" :class="[hatSchieneKollisionen(schiene.id).value && is_draggable(kurs.id).value ? 'group-hover:opacity-25 icon-white' : 'group-hover:opacity-50 icon-black']" />
 									<span class="text-sm opacity-50 relative" title="Schriftlich/Insgesamt im Kurs">
 										{{ getErgebnismanager().getOfKursAnzahlSchuelerSchriftlich(kurs.id) }}/{{ kurs.schueler.size() }}
@@ -189,6 +194,8 @@
 		return cols;
 	})
 
+	const gridTemplateColumns = computed<string>(()=> "grid-template-columns: minmax(8rem, 1fr) repeat(" + props.getErgebnismanager().getOfSchieneMaxKursanzahl() + ", minmax(7rem, 1fr))");
+
 	const hatSchieneKollisionen = (idSchiene: number) => computed<boolean>(() =>
 		props.getErgebnismanager().getOfSchuelerOfSchieneHatKollision(idSchueler.value, idSchiene)
 	);
@@ -227,6 +234,11 @@
 
 	function drag_ended() {
 		dragAndDropData.value = undefined;
+	}
+
+	function onDragOver(event: DragEvent, kurs: GostBlockungsergebnisKurs) {
+		if (is_drop_zone(kurs).value)
+			event.preventDefault();
 	}
 
 	async function drop_aendere_kurszuordnung(kurs_neu: GostBlockungsergebnisKurs) {
@@ -335,20 +347,3 @@
 	}
 
 </script>
-
-
-<style lang="postcss" scoped>
-
-	@reference "../../../../../ui/src/assets/styles/index.css"
-
-	.is-drop-zone {
-		@apply relative;
-	}
-
-	.is-drop-zone:before {
-		content: '';
-		@apply bg-ui-brand/10 opacity-75;
-		@apply absolute inset-1 border border-ui-brand pointer-events-none rounded-sm ring-3 ring-ui-brand;
-	}
-
-</style>

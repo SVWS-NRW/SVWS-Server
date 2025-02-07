@@ -27,9 +27,9 @@
 			<svws-ui-button type="primary" @click="blocken"> Blocken </svws-ui-button>
 		</template>
 	</svws-ui-modal>
-	<div class="page--content page--content--full relative">
-		<div class="flex flex-col p-1" @drop="onDrop(undefined)" @dragover="$event.preventDefault()" :class="[(dragData !== undefined && dragData instanceof GostKursklausur && dragData.idTermin !== null) ? 'ring-offset-8 ring-4 ring-ui-danger/20 rounded-xl' : '' ]">
-			<h3 class="content-card--headline my-5 mt-8" title="In Planung">In Planung</h3>
+	<div class="page page-flex-row">
+		<div class="min-w-fit max-w-fit flex flex-col gap-2" @drop="onDrop(undefined)" @dragover="$event.preventDefault()" :class="[(dragData !== undefined && dragData instanceof GostKursklausur && dragData.idTermin !== null) ? 'ring-offset-8 ring-4 ring-ui-danger/20 rounded-xl' : '' ]">
+			<h3 class="text-headline-md" title="In Planung">In Planung</h3>
 			<svws-ui-table :items="props.kMan().kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value)" :columns="cols">
 				<template #noData>
 					<div class="leading-tight flex flex-col gap-0.5">
@@ -50,82 +50,67 @@
 					</svws-ui-tooltip>
 				</template>
 				<template #body>
-					<div v-for="klausur in props.kMan().kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value)" class="svws-ui-tr cursor-grab active:cursor-grabbing" role="row"
-						:key="klausur.id"
-						:data="klausur"
-						:draggable="draggable(klausur)"
-						@dragstart="onDrag(klausur)"
-						@dragend="onDrag(undefined)"
-						:class="klausurCssClasses(klausur, undefined)">
-						<div class="svws-ui-td">
-							<span v-if="hatKompetenzUpdate" class="icon i-ri-draggable -m-0.5 -ml-4 -mr-1" />
-							<svws-ui-tooltip :hover="false" :indicator="false">
-								<template #content>
-									<s-gost-klausurplanung-kursliste :k-man :kursklausur="klausur" :patch-klausur :create-schuelerklausur-termin :benutzer-kompetenzen />
-								</template>
-								<span class="svws-ui-badge hover:opacity-75" :style="`background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
-								<svws-ui-tooltip>
+					<template v-for="klausur in props.kMan().kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value)" :key="klausur.id">
+						<div class="svws-ui-tr cursor-grab active:cursor-grabbing" role="row" :class="klausurCssClasses(klausur, undefined)" :style="tableRowStyle"
+							:data="klausur" :draggable="draggable(klausur)" @dragstart="onDrag(klausur)" @dragend="onDrag(undefined)">
+							<div class="svws-ui-td">
+								<span v-if="hatKompetenzUpdate" class="icon i-ri-draggable -m-0.5 -ml-4 -mr-1" />
+								<svws-ui-tooltip :hover="false" :indicator="false">
 									<template #content>
-										<div v-if="kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe !== null && kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe!.trim().length > 0">
-											<h3 class="border-b text-headline-md">Bemerkung zur Vorgabe</h3>
-											<p>{{ kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe }}</p>
-										</div>
-										<div v-if="klausur.bemerkung !== null && klausur.bemerkung.trim().length > 0">
-											<h3 class="border-b text-headline-md">Bemerkung zur Kursklausur</h3>
-											<p>{{ klausur.bemerkung }}</p>
-										</div>
+										<s-gost-klausurplanung-kursliste :k-man :kursklausur="klausur" :patch-klausur :create-schuelerklausur-termin :benutzer-kompetenzen />
 									</template>
-									<span class="icon i-ri-edit-2-line icon-primary" v-if="(klausur.bemerkung !== null && klausur.bemerkung.trim().length > 0) || (kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe !== null && kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe!.trim().length > 0)" />
+									<span class="svws-ui-badge hover:opacity-75" :style="`background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
+									<svws-ui-tooltip>
+										<template #content>
+											<div v-if="kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe !== null && kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe!.trim().length > 0">
+												<h3 class="border-b text-headline-md">Bemerkung zur Vorgabe</h3>
+												<p>{{ kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe }}</p>
+											</div>
+											<div v-if="klausur.bemerkung !== null && klausur.bemerkung.trim().length > 0">
+												<h3 class="border-b text-headline-md">Bemerkung zur Kursklausur</h3>
+												<p>{{ klausur.bemerkung }}</p>
+											</div>
+										</template>
+										<span class="icon i-ri-edit-2-line icon-primary" v-if="(klausur.bemerkung !== null && klausur.bemerkung.trim().length > 0) || (kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe !== null && kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe!.trim().length > 0)" />
+									</svws-ui-tooltip>
 								</svws-ui-tooltip>
-							</svws-ui-tooltip>
 
 
-							<!-- <span class="svws-ui-badge" :style="`background-color: ${kMan().fachHTMLFarbeRgbaByKursklausur(klausur)};`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span> -->
+								<!-- <span class="svws-ui-badge" :style="`background-color: ${kMan().fachHTMLFarbeRgbaByKursklausur(klausur)};`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span> -->
+							</div>
+							<div class="svws-ui-td">{{ kMan().kursLehrerKuerzelByKursklausur(klausur) }}</div>
+							<div class="svws-ui-td svws-align-right">{{ kMan().schuelerklausurGetMengeByKursklausur(klausur).size() + "/" + kMan().kursAnzahlSchuelerGesamtByKursklausur(klausur) }}</div>
+							<div class="svws-ui-td svws-align-right">{{ kMan().vorgabeByKursklausur(klausur).dauer }}</div>
+							<div class="svws-ui-td svws-align-right"><span class="opacity-50">{{ kMan().kursSchieneByKursklausur(klausur).isEmpty() ? "-" : kMan().kursSchieneByKursklausur(klausur).get(0) }}</span></div>
+							<div class="svws-ui-td svws-align-right -mr-0.5" v-if="!quartalsauswahl.value"><span class="opacity-50">{{ kMan().vorgabeByKursklausur(klausur).quartal }}.</span></div>
 						</div>
-						<div class="svws-ui-td">{{ kMan().kursLehrerKuerzelByKursklausur(klausur) }}</div>
-						<div class="svws-ui-td svws-align-right">{{ kMan().schuelerklausurGetMengeByKursklausur(klausur).size() + "/" + kMan().kursAnzahlSchuelerGesamtByKursklausur(klausur) }}</div>
-						<div class="svws-ui-td svws-align-right">{{ kMan().vorgabeByKursklausur(klausur).dauer }}</div>
-						<div class="svws-ui-td svws-align-right"><span class="opacity-50">{{ kMan().kursSchieneByKursklausur(klausur).isEmpty() ? "-" : kMan().kursSchieneByKursklausur(klausur).get(0) }}</span></div>
-						<div class="svws-ui-td svws-align-right -mr-0.5" v-if="!quartalsauswahl.value"><span class="opacity-50">{{ kMan().vorgabeByKursklausur(klausur).quartal }}.</span></div>
-					</div>
+					</template>
 				</template>
 				<template #actions>
 					<svws-ui-button :disabled="!hatKompetenzUpdate" class="-mr-3" type="transparent" @click="erzeugeKursklausurenAusVorgabenOrModal" title="Erstelle Klausuren aus den Vorgaben"><span class="icon i-ri-upload-2-line" />Aus Vorgaben erstellen</svws-ui-button>
 				</template>
 			</svws-ui-table>
 		</div>
-		<svws-ui-content-card>
-			<div class="flex justify-between items-start mb-5">
+		<div class="min-w-fit grow h-full flex flex-col gap-4">
+			<div class="flex justify-between items-start">
 				<div class="flex flex-wrap items-center gap-0.5 w-full">
 					<svws-ui-button :disabled="!hatKompetenzUpdate" @click="erzeugeKlausurtermin(quartalsauswahl.value, true)"><span class="icon i-ri-add-line -ml-1" />Termin<template v-if="termine.size() === 0"> hinzufügen</template></svws-ui-button>
 					<svws-ui-button type="transparent" @click="showModalAutomatischBlocken = true" :disabled="!hatKompetenzUpdate || props.kMan().kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value).size() === 0"><span class="icon i-ri-sparkling-line" />Automatisch blocken <svws-ui-spinner :spinning="loading" /></svws-ui-button>
 					<svws-ui-button type="transparent" :disabled="!hatKompetenzUpdate" class="hover--danger ml-auto" @click="terminSelected.value = undefined; loescheKlausurtermine(termine)" v-if="termine.size() > 0" title="Alle Termine löschen"><span class="icon i-ri-delete-bin-line" />Alle löschen</svws-ui-button>
 				</div>
 			</div>
-			<div class="grid grid-cols-[repeat(auto-fill,minmax(22rem,1fr))] gap-4 pt-2 -mt-2">
+			<div class="grow overflow-auto grid gap-4 pt-2 -mt-2" style="grid-template-columns: repeat(auto-fill,minmax(22rem,1fr));">
 				<template v-if="termine.size()">
-					<s-gost-klausurplanung-schienen-termin v-for="termin of termine" :key="termin.id"
-						:id="'termin' + termin.id"
-						class="gost_klausurtermin"
-						:benutzer-kompetenzen
-						:termin="() => termin"
-						:class="dropOverCssClasses(termin)"
-						:k-man
-						:drag-data="() => dragData"
-						@dragover="terminSelected.value=termin"
-						@dragleave="terminSelected.value=undefined"
-						:on-drag
-						:on-drop
-						:draggable
-						:termin-selected="props.terminSelected.value?.id===termin.id"
-						@click="gotoSchienen(props.terminSelected.value?.id===termin.id?undefined:termin);$event.stopPropagation()"
-						:loesche-klausurtermine
-						:patch-klausurtermin
-						:klausur-css-classes
-						:create-schuelerklausur-termin
-						:patch-klausur
-						:goto-kalenderdatum
-						:goto-raumzeit-termin />
+					<template v-for="termin of termine" :key="termin.id">
+						<s-gost-klausurplanung-schienen-termin :id="'termin' + termin.id"
+							class="gost_klausurtermin" :class="dropOverCssClasses(termin)"
+							:draggable :on-drag :on-drop :drag-data="() => dragData"
+							@dragover="terminSelected.value=termin" @dragleave="terminSelected.value=undefined"
+							@click="gotoSchienen(props.terminSelected.value?.id===termin.id?undefined:termin);$event.stopPropagation()"
+							:benutzer-kompetenzen :k-man :termin="() => termin" :termin-selected="props.terminSelected.value?.id===termin.id"
+							:loesche-klausurtermine :patch-klausurtermin :klausur-css-classes :create-schuelerklausur-termin
+							:patch-klausur :goto-kalenderdatum :goto-raumzeit-termin />
+					</template>
 				</template>
 				<template v-else>
 					<div class="shadow-inner rounded-lg h-48" />
@@ -133,27 +118,25 @@
 					<div class="shadow-inner rounded-lg h-48" />
 				</template>
 			</div>
-		</svws-ui-content-card>
-		<svws-ui-content-card class="-ml-4">
-			<template #title>
-				<span class="text-headline-md leading-none inline-flex gap-1">
-					<template v-if="klausurKonflikte().size() > 0">
-						<span class="icon i-ri-alert-fill icon-error -my-0.5" />
-						<span>{{ klausurKonflikte().size() }} Kurse mit Konflikten</span>
-					</template>
-					<template v-else-if="anzahlProKwKonflikte(4).size() > 0">
-						<span class="icon i-ri-alert-fill icon-error -my-0.5" />
-						<span> Konflikte</span>
-					</template>
-					<template v-else-if="terminSelected !== undefined || dragData !== undefined">
-						<span class="icon i-ri-checkbox-circle-fill icon-ui-success -my-1" />
-						<span>Keine Konflikte</span>
-					</template>
-					<template v-else>
-						<span class="opacity-50">Konflikte</span>
-					</template>
-				</span>
-			</template>
+		</div>
+		<div class="min-w-88 max-w-88 flex flex-col h-full overflow-y-auto">
+			<div class="text-headline-md leading-none inline-flex gap-1">
+				<template v-if="klausurKonflikte().size() > 0">
+					<span class="icon i-ri-alert-fill icon-error -my-0.5" />
+					<span>{{ klausurKonflikte().size() }} Kurse mit Konflikten</span>
+				</template>
+				<template v-else-if="anzahlProKwKonflikte(4).size() > 0">
+					<span class="icon i-ri-alert-fill icon-error -my-0.5" />
+					<span> Konflikte</span>
+				</template>
+				<template v-else-if="terminSelected !== undefined || dragData !== undefined">
+					<span class="icon i-ri-checkbox-circle-fill icon-ui-success -my-1" />
+					<span>Keine Konflikte</span>
+				</template>
+				<template v-else>
+					<span class="opacity-50">Konflikte</span>
+				</template>
+			</div>
 			<div v-if="klausurKonflikte().size() > 0" class="mt-5" :class="{'mb-16': anzahlProKwKonflikte(4).size() > 0}">
 				<ul class="flex flex-col gap-3">
 					<li v-for="klausur in klausurKonflikte()" :key="klausur.getKey().id">
@@ -184,7 +167,7 @@
 			<div v-else-if="terminSelected === undefined" class="mt-5 opacity-50 flex flex-col gap-2">
 				<span>Klicke auf einen Termin oder verschiebe eine Klausur, um Details zu bestehenden bzw. entstehenden Konflikten anzuzeigen.</span>
 			</div>
-		</svws-ui-content-card>
+		</div>
 		<s-gost-klausurplanung-modal v-model:show="modalVorgaben" :text="modalError" :jump-to="gotoVorgaben" jump-to-text="Zu den Klausurvorgaben" abbrechen-text="OK" />
 		<s-gost-klausurplanung-modal v-model:show="modalKlausurHatRaeume" text="Die Kursklausur hat bereits eine oder mehrere Raumzuweisungen. Beim Fortfahren werden diese gelöscht." :weiter="verschiebeKlausurTrotzRaumzuweisung" />
 	</div>
@@ -347,13 +330,13 @@
 			{ key: "dauer", label: "Dauer", tooltip: "Dauer in Minuten", span: 0.5, align: "right", minWidth: 3.25 },
 			{ key: "kursSchiene", label: "S", tooltip: "Schiene", span: 0.25, align: "right", minWidth: 2.75 },
 		];
-
-		if (props.quartalsauswahl.value === 0) {
+		if (props.quartalsauswahl.value === 0)
 			cols.push({ key: "quartal", label: "Q", tooltip: "Quartal", span: 0.25, align: "right", minWidth: 2.75 })
-		}
-
 		return cols;
 	}
+
+	const tableRowStyle = computed<string>(() => "grid-template-columns: minmax(6.25rem, 1fr) minmax(4rem, 1fr) minmax(3.25rem, 0.5fr) minmax(3.25rem, 0.5fr) minmax(2.75rem, 0.25fr)"
+		+ ((props.quartalsauswahl.value === 0) ? " minmax(2.75rem, 0.25fr)" : ""));
 
 	function handleClick(e: MouseEvent) {
 		if (props.terminSelected.value === undefined)
@@ -378,23 +361,25 @@
 
 <style lang="postcss" scoped>
 
-@reference "../../../../../ui/src/assets/styles/index.css"
-
-.page--content {
-  	@apply grid;
-  	grid-template-columns: minmax(22rem, 0.2fr) 1fr minmax(22rem, 0.2fr);
-}
-
-.svws-ui-tab-content {
-	@apply overflow-y-hidden items-start;
+	@reference "../../../../../ui/src/assets/styles/index.css"
 
 	.page--content {
-		@apply h-full py-0 auto-rows-auto;
+		display: grid;
+		grid-template-columns: minmax(22rem, 0.2fr) 1fr minmax(22rem, 0.2fr);
+	}
 
-		.content-card {
-			@apply max-h-full pt-8 pb-16 px-4 -mx-4 overflow-y-auto h-[unset];
-			scrollbar-gutter: stable;
+	.svws-ui-tab-content {
+		@apply overflow-y-hidden items-start;
+
+		.page--content {
+			@apply h-full py-0 auto-rows-auto;
+
+			.content-card {
+				@apply max-h-full pt-8 pb-16 px-4 -mx-4 overflow-y-auto;
+				height: unset;
+				scrollbar-gutter: stable;
+			}
 		}
 	}
-}
+
 </style>

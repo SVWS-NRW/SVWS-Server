@@ -1267,15 +1267,13 @@
 
 </script>
 
-<style lang="postcss" scoped>
-
-	@reference "../../../assets/styles/index.css";
+<style scoped>
 
 	.laufbahn-cell {
 		&:focus {
 			outline: none;
 			box-shadow: inset 0 0 0 2px;
-			@apply text-ui-hover;
+			color: var(--color-text-ui-hover);
 		}
 	}
 
@@ -1288,7 +1286,7 @@
 
 		&.svws-background-on-hover {
 			.data-table__td {
-				@apply bg-transparent;
+				background-color: transparent;
 			}
 
 			&:hover {

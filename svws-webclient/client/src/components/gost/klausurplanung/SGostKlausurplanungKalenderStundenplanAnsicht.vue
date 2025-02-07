@@ -1,9 +1,9 @@
 <template>
-	<div class="svws-ui-stundenplan svws-hat-zeitachse svws-zeitraster-5">
+	<div class="svws-ui-stundenplan svws-hat-zeitachse svws-zeitraster-5 overflow-visible h-auto pb-8 w-full">
 		<!-- Die Überschriften des Stundenplan -->
 		<div class="svws-ui-stundenplan--head">
 			<slot name="kwAuswahl">
-				<div class="col-span-2 inline-flex gap-1 items-center justify-center print:pl-2 print:justify-start font-bold text-headline-md pb-0.5">
+				<div class="col-span-2 inline-flex gap-1 items-center justify-center print:!pl-2 print:!justify-start font-bold text-headline-md pb-0.5">
 					KW {{ kalenderwoche().kw || '–' }}
 				</div>
 			</slot>
@@ -300,3 +300,18 @@
 	}
 
 </script>
+
+<style scoped>
+
+	@reference "../../../../../ui/src/assets/styles/index.css"
+
+	.svws-ui-stundenplan--stunde--klausurplan-opacity {
+		/* CSS_TODO */
+		@apply bg-opacity-20;
+	}
+
+	.svws-ui-stundenplan--unterricht {
+		@apply flex px-1 py-0 border-none;
+	}
+
+</style>

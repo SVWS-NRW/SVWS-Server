@@ -3,12 +3,12 @@
 		type="navigation" :scroll class="svws-no-mx">
 		<template #header>
 			<div class="svws-ui-tr" role="row">
-				<div class="svws-ui-td col-span-full" role="columnheader">Informationen zur Laufbahn</div>
+				<div class="svws-ui-td col-span-full leading-5 align-middle" role="columnheader">Informationen zur Laufbahn</div>
 			</div>
 		</template>
 		<template #body>
 			<div v-for="hinweis in belegungsHinweise" :key="hinweis.code" class="svws-ui-tr" role="row">
-				<div class="svws-ui-td self-center" role="cell">
+				<div class="svws-ui-td self-center leading-5 align-middle" role="cell">
 					<svws-ui-tooltip>
 						<span class="icon i-ri-information-line shrink-0 icon-primary text-button mt-0.5" />
 						<template #content>
@@ -18,7 +18,7 @@
 						</template>
 					</svws-ui-tooltip>
 				</div>
-				<div class="svws-ui-td select-all" role="cell">
+				<div class="svws-ui-td select-all leading-5 align-middle" role="cell">
 					{{ hinweis.beschreibung }}
 				</div>
 			</div>
@@ -51,11 +51,10 @@
 
 </script>
 
-<style lang="postcss" scoped>
+<style scoped>
 
-	@reference "../../../assets/styles/index.css";
-
-	.svws-ui-td {
-		@apply leading-5 align-middle;
+	.svws-ui-tr {
+		grid-template-columns: 1.8rem auto;
 	}
+
 </style>

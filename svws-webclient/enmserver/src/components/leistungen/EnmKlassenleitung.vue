@@ -1,9 +1,9 @@
 <template>
-	<div class="page--content">
-		<div class="enm-leistung-uebersicht-bereich">
+	<div class="page page-flex-row">
+		<div class="grow w-full h-full overflow-hidden">
 			<enm-klassenleitung-uebersicht :manager :patch-bemerkungen :patch-lernabschnitt :columns-visible :set-columns-visible @hauptgruppe="erlaubteHauptgruppe = $event" />
 		</div>
-		<div v-if="floskelEditorVisible" class="enm-floskel-editor-bereich">
+		<div v-if="floskelEditorVisible" class="min-w-196 max-w-196 h-full overflow-hidden">
 			<enm-floskeleditor :manager :patch="doPatchBemerkungen" :erlaubte-hauptgruppe />
 		</div>
 	</div>
@@ -54,25 +54,3 @@
 	}
 
 </script>
-
-<style lang="postcss" scoped>
-
-	@reference "../../../../ui/src/assets/styles/index.css";
-
-	.page--content {
-		@apply flex flex-row gap-6;
-		@apply h-full w-full overflow-hidden;
-		@apply max-w-full pb-4;
-	}
-
-	.enm-leistung-uebersicht-bereich {
-		@apply w-full h-full overflow-hidden;
-		@apply grow;
-	}
-
-	.enm-floskel-editor-bereich {
-		@apply h-full overflow-hidden;
-		@apply max-w-196;
-	}
-
-</style>

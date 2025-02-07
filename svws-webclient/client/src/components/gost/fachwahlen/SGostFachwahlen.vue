@@ -6,7 +6,7 @@
 		<div title="Übersicht aller Fachwahlen im Jahrgang" class="max-w-300 min-w-fit h-full flex flex-col">
 			<div class="flex-0 text-headline-md mb-4">Übersicht aller Fachwahlen im Jahrgang</div>
 			<div class="grow overflow-y-auto pr-3 scrollbar-thin">
-				<svws-ui-table :items="[]" :no-data="false" :columns="cols" has-background :class="{'svws-fachwahlen--has-selection': selected().bereich !== 'Fach' || selected().idFach}">
+				<svws-ui-table :items="[]" :no-data="false" has-background :class="{'svws-fachwahlen--has-selection': selected().bereich !== 'Fach' || selected().idFach}">
 					<template #header>
 						<div role="row" class="svws-ui-tr select-none">
 							<div v-for="(heading, index) in colHeadings" :key="heading.text" class="svws-ui-td cursor-pointer" role="columnheader" @click="selectData(undefined, heading.text)"
@@ -69,7 +69,6 @@
 
 	import { onMounted, ref, computed } from "vue";
 	import type { GostFachwahlenProps } from "./SGostFachwahlenProps";
-	import type { DataTableColumn } from "@ui";
 	import type { GostStatistikFachwahl } from "@core";
 	import { Fach, GostHalbjahr } from "@core";
 
@@ -187,35 +186,16 @@
 		{ text: "Abitur", cols: [ { text : "3", center: true }, { text : "4", center: true } ] },
 	]
 
-	const cols: DataTableColumn[] = [
-		{ key: "Kuerzel", label: "Kürzel", minWidth: 4 },
-		{ key: "Fach", label: "Fach", span: 3, minWidth: 12},
-		{ key: "GK", label: "GK", align: 'center', fixedWidth: 3 },
-		{ key: "S", label: "S", align: 'center', fixedWidth: 3 },
-		{ key: "GK", label: "GK", align: 'center', fixedWidth: 3 },
-		{ key: "S", label: "S", align: 'center', fixedWidth: 3 },
-		{ key: "GK", label: "GK", align: 'center', fixedWidth: 3 },
-		{ key: "S", label: "S", align: 'center', fixedWidth: 3 },
-		{ key: "GK", label: "GK", align: 'center', fixedWidth: 3 },
-		{ key: "S", label: "S", align: 'center', fixedWidth: 3 },
-		{ key: "GK", label: "GK", align: 'center', fixedWidth: 3 },
-		{ key: "S", label: "S", align: 'center', fixedWidth: 3 },
-		{ key: "GK", label: "GK", align: 'center', fixedWidth: 3 },
-		{ key: "S", label: "S", align: 'center', fixedWidth: 3 },
-		{ key: "LK", label: "LK", align: 'center', fixedWidth: 3 },
-		{ key: "ZK", label: "ZK", align: 'center', fixedWidth: 3 },
-		{ key: "AB3", label: "3", align: 'center', fixedWidth: 3 },
-		{ key: "AB4", label: "4", align: 'center', fixedWidth: 3 },
-	];
-
 </script>
 
 <style lang="postcss" scoped>
 
-	@reference "../../../../../ui/src/assets/styles/index.css"
+	.svws-ui-tr {
+		grid-template-columns: minmax(4rem, 1fr) minmax(12rem, 3fr) repeat(16, 3rem);
+	}
 
 	.svws-selectable {
-		@apply cursor-pointer;
+		cursor: pointer;
 	}
 
 	.scrollbar-thin {

@@ -82,7 +82,7 @@
 					</svws-ui-tooltip>
 				</div>
 				<div role="cell" class="svws-ui-td svws-align-center svws-no-padding items-center! " v-for="(kurse, i) in kurszahlen" :key="i" :class="{'svws-divider': (i === 1 || i === 5)}">
-					<span class="svws-ergebnis-badge"
+					<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-sm w-full m-0.5"
 						:class="{
 							'svws-ergebnis--not-enough': ((kurse < 10) && (i < 2)) || ((kurse < 9) && (i > 1)),
 							'svws-ergebnis--low': ((kurse > 9) && (kurse < 11) && (i < 2)) || ((kurse > 8) && (kurse < 10) && (i > 1)),
@@ -93,7 +93,7 @@
 					</span>
 				</div>
 				<div role="cell" class="svws-ui-td svws-align-center svws-no-padding items-center!">
-					<span class="svws-ergebnis-badge"
+					<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-sm w-full m-0.5"
 						:class="{
 							'svws-ergebnis--not-enough': (kurse_summe < 38),
 							'svws-ergebnis--low': (kurse_summe > 37) && (kurse_summe < 40),
@@ -115,7 +115,7 @@
 					</svws-ui-tooltip>
 				</div>
 				<div role="cell" class="svws-ui-td svws-align-center svws-no-padding items-center!" v-for="(wst, i) in wochenstunden" :key="i" :class="{'svws-divider': ((i === 1) || (i === 5))}">
-					<span class="svws-ergebnis-badge"
+					<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-sm w-full m-0.5"
 						:class="{
 							'svws-ergebnis--not-enough': (wst < 30),
 							'svws-ergebnis--low': (wst >= 30) && (wst < 33),
@@ -126,7 +126,7 @@
 					</span>
 				</div>
 				<div role="cell" class="svws-ui-td svws-align-center svws-no-padding items-center!">
-					<span class="svws-ergebnis-badge"
+					<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-sm w-full m-0.5"
 						:class="{
 							'svws-ergebnis--not-enough':( wst_summe < 100),
 							'svws-ergebnis--low': (wst_summe >= 100) && (wst_summe < 101),
@@ -148,7 +148,7 @@
 					</svws-ui-tooltip>
 				</div>
 				<div role="cell" class="svws-ui-td svws-align-center svws-no-padding items-center! col-span-2 svws-divider">
-					<span class="svws-ergebnis-badge"
+					<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-sm w-full m-0.5"
 						:class="{
 							'svws-ergebnis--not-enough': (wst_d_ef < 34),
 							'svws-ergebnis--good': (wst_d_ef >= 34) && (wst_d_ef < 37),
@@ -158,7 +158,7 @@
 					</span>
 				</div>
 				<div role="cell" class="svws-ui-td svws-align-center svws-no-padding items-center! col-span-4 svws-divider">
-					<span class="svws-ergebnis-badge"
+					<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-sm w-full m-0.5"
 						:class="{
 							'svws-ergebnis--not-enough':( wst_d_q < 34),
 							'svws-ergebnis--good': (wst_d_q >= 34) && (wst_d_q < 37),
@@ -340,27 +340,22 @@
 
 </script>
 
-<style lang="postcss" scoped>
-
-	@reference "../../../assets/styles/index.css";
-
-	.svws-ergebnis-badge {
-		@apply inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-sm w-full m-0.5;
-	}
+<style scoped>
 
 	.svws-ui-tfoot--data {
 		.tooltip-trigger {
-			@apply -m-2;
+			margin: -0.5rem;
 		}
 	}
 
 	.svws-ergebnis--not-enough {
-		@apply bg-ui-danger text-ui-ondanger;
+		background-color: var(--color-bg-ui-danger);
+		color: var(--color-text-ui-ondanger);
 	}
 
 	.svws-ergebnis--low {
 		background-color: var(--color-palette-warning-400);
-		@apply text-ui-onwarning;
+		color: var(--color-text-ui-onwarning);
 	}
 
 	.svws-ergebnis--good {
@@ -369,7 +364,11 @@
 
 	.svws-ergebnis--more {
 		background-color: var(--color-palette-success-500);
-		@apply text-ui-onsuccess;
+		color: var(--color-text-ui-onsuccess);
+	}
+
+	.svws-ui-tr {
+		grid-template-columns: minmax(5rem, 0.75fr) minmax(12rem, 3fr) 3rem repeat(9, 4.5rem);
 	}
 
 </style>

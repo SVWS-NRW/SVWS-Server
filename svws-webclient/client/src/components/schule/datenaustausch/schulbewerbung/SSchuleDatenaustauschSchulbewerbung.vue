@@ -9,7 +9,7 @@
 	</svws-ui-header>
 	<div class="svws-ui-page w-full">
 		<div class="svws-ui-tab-content">
-			<div class="page--content page--content--full">
+			<div class="page page-flex-row">
 				<svws-ui-content-card title="Import von Schulbewerbung.de">
 					<svws-ui-button class="contentFocusField" type="primary" @click="doImport">
 						<span class="icon i-ri-download-2-line" />

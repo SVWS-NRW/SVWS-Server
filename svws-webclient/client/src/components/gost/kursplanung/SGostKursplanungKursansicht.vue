@@ -3,7 +3,7 @@
 		<template v-if="blockungstabelleHidden() !== 'alles'">
 			<svws-ui-table :items="GostKursart.values()" :columns disable-footer scroll has-background class="pr-4">
 				<template #header v-if="blockungstabelleHidden() === 'nichts'">
-					<div role="row" class="svws-ui-tr select-none">
+					<div role="row" class="svws-ui-tr select-none" :style="gridTemplateColumns">
 						<div role="columnheader" class="svws-ui-td svws-divider" :class="zeigeAufklappzeile ? 'col-span-7' : 'col-span-6'">
 							<div class="flex items-center justify-between w-full -my-2">
 								<div class="flex flex-row gap-2">
@@ -49,7 +49,7 @@
 							</div>
 						</div>
 					</div>
-					<div role="row" class="svws-ui-tr select-none">
+					<div role="row" class="svws-ui-tr select-none" :style="gridTemplateColumns">
 						<div role="columnheader" class="svws-ui-td svws-divider" :class="zeigeAufklappzeile ? 'col-span-7' : 'col-span-6'">
 							Schülerzahl
 						</div>
@@ -60,7 +60,7 @@
 							<span v-else class="opacity-25">0</span>
 						</div>
 					</div>
-					<div role="row" class="svws-ui-tr select-none">
+					<div role="row" class="svws-ui-tr select-none" :style="gridTemplateColumns">
 						<div role="columnheader" class="svws-ui-td svws-divider" :class="zeigeAufklappzeile ? 'col-span-7' : 'col-span-6'">
 							Kollisionen
 						</div>
@@ -81,7 +81,7 @@
 							<span v-else class="opacity-25 font-normal">0</span>
 						</div>
 					</div>
-					<div role="row" class="svws-ui-tr select-none">
+					<div role="row" class="svws-ui-tr select-none" :style="gridTemplateColumns">
 						<div role="columnheader" class="svws-ui-td svws-align-center" aria-label="Alle auswählen">
 							<svws-ui-checkbox :model-value="getDatenmanager().kursGetAnzahl() === getKursauswahl().size()" :indeterminate="(getKursauswahl().size() > 0) && (getKursauswahl().size() < getDatenmanager().kursGetAnzahl())"
 								@update:model-value="updateKursauswahlAlle" headless />
@@ -153,7 +153,7 @@
 						<template v-if="istFachwahlVorhanden(fachwahl.fachwahlen, fachwahl.kursart)">
 							<template v-if="listeDerKurse(fachwahl).isEmpty() && (getAnzahlFachwahlen(fachwahl) !== 0) && istVorlage && hatUpdateKompetenz">
 								<template v-if="blockungstabelleHidden() === 'nichts'">
-									<div role="row" class="svws-ui-tr svws-disabled-soft select-none" :style="{ 'background-color': bgColor(fachwahl) }" :key="fachwahl.kursart.id">
+									<div role="row" class="svws-ui-tr svws-disabled-soft select-none" :style="getGridTemplateColumnsWithBackgroundColor(fachwahl)" :key="fachwahl.kursart.id">
 										<div role="cell" class="svws-ui-td" />
 										<div role="cell" class="svws-ui-td" />
 										<div role="cell" class="svws-ui-td text-ui-contrast-50">{{ fachwahl.fachwahlen.kuerzel }}-{{ fachwahl.kursart.kuerzel }}</div>
@@ -177,7 +177,7 @@
 							</template>
 							<template v-else>
 								<template v-for="kurs in listeDerKurse(fachwahl)" :key="kurs.id">
-									<div role="row" class="svws-ui-tr select-none" :style="{ 'background-color': bgColor(fachwahl) }" :class="{'font-bold': (schuelerFilter().fach === kurs.fach_id) && ((schuelerFilter().kursart?.id === kurs.kursart) || (schuelerFilter().kursart === undefined)), 'svws-expanded': kursdetailAnzeigen === kurs.id}">
+									<div role="row" class="svws-ui-tr select-none" :style="getGridTemplateColumnsWithBackgroundColor(fachwahl)" :class="{'font-bold': (schuelerFilter().fach === kurs.fach_id) && ((schuelerFilter().kursart?.id === kurs.kursart) || (schuelerFilter().kursart === undefined)), 'svws-expanded': kursdetailAnzeigen === kurs.id}">
 										<div role="cell" class="svws-ui-td svws-align-center cursor-pointer">
 											<svws-ui-checkbox :model-value="getKursauswahl().contains(kurs.id)" @update:model-value="updateKursauswahl(kurs)" headless />
 										</div>
@@ -238,12 +238,13 @@
 										<template v-if="blockungstabelleHidden() === 'schienen'">
 											<div role="cell" class="svws-ui-td svws-align-center !p-[2px]">
 												<div @click="toggleKursAusgewaehlt(kurs)"
-													class="select-none w-full h-full rounded-xs flex justify-around items-center group text-ui-contrast-100 p-px"
-													:class="istKursAusgewaehlt(kurs).value ? 'bg-ui-contrast-0 text-ui-contrast-100 font-bold' : 'bg-ui-contrast-100/50'">
+													class="select-none w-full h-full rounded-xs flex justify-around items-center group bg-ui-contrast-0 text-ui-contrast-100 p-px"
+													:class="istKursAusgewaehlt(kurs).value ? 'font-bold' : 'opacity-50'">
 													<svws-ui-tooltip v-if="getErgebnismanager().getOfKursAnzahlSchuelerExternePlusDummies(kurs.id) > 0">
 														<span class="whitespace-nowrap">{{ getErgebnismanager().getOfKursAnzahlSchuelerPlusDummy(kurs.id) }}<span class="font-bold">*</span></span>
 														<template #content>{{ getErgebnismanager().getOfKursAnzahlSchuelerInterne(kurs.id) }} und {{ getErgebnismanager().getOfKursAnzahlSchuelerExternePlusDummies(kurs.id) }} zusätzliche Kursteilnehmer</template>
 													</svws-ui-tooltip>
+													<span v-else>{{ getErgebnismanager().getOfKursAnzahlSchueler(kurs.id) }}</span>
 												</div>
 											</div>
 										</template>
@@ -444,6 +445,16 @@
 		cols.push({ key: "schiene_" + (1), label: "SuS", fixedWidth: 3.75, align: 'center' });
 		return cols;
 	});
+
+	const gridTemplateColumns = computed<string>(() => {
+		const base = "grid-template-columns: 1.5rem" + (zeigeAufklappzeile.value ? " 1.5rem" : "") + " minmax(8rem, 1.75fr) minmax(6rem, 1.5fr)";
+		const count = (props.blockungstabelleHidden() === 'nichts') ? 3 + schienen.value.size() : 2;
+		return base + " repeat(" + count + ", 3.75rem)";
+	});
+
+	function getGridTemplateColumnsWithBackgroundColor(fachwahl: {kursart: GostKursart, fachwahlen: GostStatistikFachwahl}) {
+		return "background-color: " + bgColor(fachwahl) + "; " + gridTemplateColumns.value;
+	}
 
 	const kursdetailAnzeigen = ref<number | undefined>(undefined);
 

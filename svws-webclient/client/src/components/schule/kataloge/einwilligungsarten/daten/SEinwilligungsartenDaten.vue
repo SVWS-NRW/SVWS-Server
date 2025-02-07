@@ -1,5 +1,5 @@
 <template>
-	<div class="page--content">
+	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Einwilligungsart" class="w-full">
 			<svws-ui-input-wrapper>
 				<svws-ui-text-input class="contentFocusField w-5/5" placeholder="Bezeichnung" :model-value="einwilligungsartenListeManager().auswahl().bezeichnung"

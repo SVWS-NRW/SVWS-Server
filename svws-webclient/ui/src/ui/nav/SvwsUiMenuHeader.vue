@@ -46,30 +46,3 @@
 		emit("click", event);
 	}
 </script>
-
-<style lang="postcss">
-
-	@reference "../../assets/styles/index.css";
-
-	.app--menu--initials {
-		@apply flex flex-col items-center w-full justify-center mx-auto relative;
-
-		.app--menu--initials--icon {
-			@apply bg-ui text-ui border border-ui-secondary;
-			@apply flex flex-col items-center w-full justify-center mx-auto relative;
-			@apply rounded-lg overflow-hidden font-bold;
-			@apply w-12 h-12 xl:w-14 xl:h-14;
-
-			&.svws-is-admin-client:before {
-				@apply absolute top-0 left-0 right-0 h-[4px];
-				content: '';
-				background: repeating-linear-gradient(-45deg, #000, #000 5px, #ffff00 5px, #ffff00 10px);
-			}
-		}
-
-		svg {
-			@apply w-3/4 mx-auto hidden;
-		}
-	}
-
-</style>

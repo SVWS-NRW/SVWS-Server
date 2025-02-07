@@ -1,13 +1,15 @@
 <template>
-	<svws-ui-table :items="[]" :no-data="false" :columns="cols">
+	<svws-ui-table :items="[]" :no-data="false">
 		<template #header>
-			<div role="row" class="svws-ui-tr" :style="{ 'background-color': fws ? getBgColor(fws) : 'transparent' }">
-				<div role="cell" class="svws-ui-td col-span-full">
-					<div class="flex gap-1">
-						<span class="svws-ui-badge">{{ faecherManager.get(props.fachID)?.bezeichnung || "&ndash;" }}</span>
-						<span>in der {{ halbjahr.kuerzel }}</span>
+			<div role="row" class="svws-ui-tr">
+				<template v-if="fws !== undefined">
+					<div role="cell" class="svws-ui-td col-span-full" :style="'background-color: ' + getBgColor(fws)">
+						<div class="flex gap-1">
+							<span>{{ faecherManager.get(props.fachID)?.bezeichnung || "&ndash;" }}</span>
+							<span>in der {{ halbjahr.kuerzel }}</span>
+						</div>
 					</div>
-				</div>
+				</template>
 			</div>
 		</template>
 		<template #body>
@@ -39,7 +41,6 @@
 
 <script setup lang="ts">
 
-	import type { DataTableColumn } from "@ui";
 	import type { GostFachwahlenFachHalbjahrProps } from "./SGostFachwahlenFachHalbjahrProps";
 	import type { ComputedRef} from "vue";
 	import { computed } from "vue";
@@ -53,11 +54,6 @@
 				return f;
 		return undefined;
 	});
-
-	const cols: DataTableColumn[] = [
-		{ key: "GKS", label: "GKS", span: 1 },
-		{ key: "GKM", label: "GKM", span: 1 },
-	];
 
 	const schuljahr = computed<number>(() => props.faecherManager.getSchuljahr());
 
@@ -98,3 +94,11 @@
 	}
 
 </script>
+
+<style scoped>
+
+	.svws-ui-tr {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+</style>

@@ -4,7 +4,7 @@
 	<div class="w-1/2">
 		<svws-ui-table :items="[]" :no-data="listBenutzer().size() === 0" no-data-text="Keine Benutzer zugewiesen." :columns="cols" class="overflow-visible">
 			<template #header>
-				<div class="svws-ui-tr">
+				<div class="svws-ui-tr" style="grid-template-columns: 2fr 1fr;">
 					<div class="svws-ui-td">
 						<template v-if="spalteLinks">{{ listBenutzer().size() }} insgesamt</template>
 						<template v-else>{{ listBenutzer().size() }} aktiv zugewiesen</template>
@@ -45,7 +45,7 @@
 		get: () => true,
 		set: (value) => {
 			// TODO
-		}
+		},
 	});
 
 	const cols = [

@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-table :items="[]" :no-data="false" :columns="cols">
+	<svws-ui-table :items="[]" :no-data="false">
 		<template #header>
 			<div role="row" class="svws-ui-tr">
 				<div role="cell" class="svws-ui-td col-span-full">
@@ -32,13 +32,13 @@
 		<template #body>
 			<template v-for="fws in fachwahlstatistik" :key="fws.id">
 				<template v-if="fws !== undefined">
-					<div role="row" class="cursor-pointer svws-ui-tr" :style="{ 'background-color': getBgColor(fws) }">
-						<div role="cell" class="svws-ui-td col-span-full" @click="onClick(fws, undefined)">
+					<div role="row" class="cursor-pointer svws-ui-tr">
+						<div role="cell" class="svws-ui-td col-span-full" :style="'background-color: ' + getBgColor(fws)" @click="onClick(fws, undefined)">
 							<div class="-ml-1 mr-0.5 cursor-pointer">
 								<span class="icon i-ri-arrow-right-s-line" v-if="aktuell.fachwahl?.id !== fws.id" />
 								<span class="icon i-ri-arrow-down-s-line" v-else />
 							</div>
-							<span :class="{'svws-ui-badge': aktuell.fachwahl?.id === fws.id}">{{ faecherManager.get(fws.id)?.bezeichnung }}</span>
+							<span :class="{'font-bold': aktuell.fachwahl?.id === fws.id}">{{ faecherManager.get(fws.id)?.bezeichnung }}</span>
 						</div>
 						<template v-if="aktuell.fachwahl?.id === fws.id">
 							<template v-for="halbjahr in GostHalbjahr.values()" :key="halbjahr.id">
@@ -105,7 +105,6 @@
 
 <script setup lang="ts">
 
-	import type { DataTableColumn } from "@ui";
 	import type { GostFachwahlenAllgemeinProps } from "./SGostFachwahlenAllgemeinProps";
 	import { computed, ref } from "vue";
 	import { Fach, type GostStatistikFachwahl, type SchuelerListeEintrag, type List, ArrayList, GostHalbjahr } from "@core";
@@ -154,15 +153,6 @@
 		}
 	}
 
-	const cols: DataTableColumn[] = [
-		{ key: "HJ", label: "HJ", fixedWidth: 6 },
-		{ key: "GK", label: "GK", span: 1 },
-		{ key: "GKS", label: "GKS", span: 1 },
-		{ key: "GKM", label: "GKM", span: 1 },
-		{ key: "LK", label: "LK", span: 1 },
-		{ key: "ZK", label: "ZK", span: 1 },
-	];
-
 	function getBgColor(fws: GostStatistikFachwahl) : string {
 		if (fws.kuerzelStatistik === null)
 			return 'rgb(220,220,220)';
@@ -206,3 +196,11 @@
 	}
 
 </script>
+
+<style scoped>
+
+	.svws-ui-tr {
+		grid-template-columns: 6rem repeat(5, 1fr);
+	}
+
+</style>

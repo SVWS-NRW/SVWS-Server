@@ -1,5 +1,5 @@
 <template>
-	<div class="page--content">
+	<div class="page page-grid-cards" style="grid-template-columns: 2fr 1fr">
 		<div class="flex flex-col gap-y-16 lg:gap-y-20">
 			<template v-if="eintrag !== undefined">
 				<svws-ui-content-card v-if="(eintrag !== undefined) && (!eintrag.isInConfig)">
@@ -211,13 +211,3 @@
 	};
 
 </script>
-
-<style lang="postcss" scoped>
-
-	@reference "../../../../../ui/src/assets/styles/index.css";
-
-	.page--content {
-		grid-template-columns: 2fr 1fr;
-	}
-
-</style>

@@ -3,9 +3,9 @@
 		:class="`${hideZeitachse ? 'svws-ohne-zeitachse' : 'svws-hat-zeitachse'} svws-zeitraster-${zeitrasterSteps}${hatSchnittPausenzeitenZeitraster ? ' svws-spalte-pausenzeit' : ''}`">
 		<!-- Die Überschriften des Stundenplan -->
 		<div class="svws-ui-stundenplan--head">
-			<span class="icon i-ri-time-line svws-time-icon print:hidden" v-if="!hideZeitachse" />
+			<span class="icon i-ri-time-line svws-time-icon print:!hidden" v-if="!hideZeitachse" />
 			<!-- Das Feld links in der Überschrift beinhaltet den ausgewählten Wochentyp -->
-			<div class="inline-flex gap-1 items-center justify-center print:pl-2 print:justify-start" :class="{'opacity-50 print:invisible': wochentyp() === 0}">
+			<div class="inline-flex gap-1 items-center justify-center print:!pl-2 print:!justify-start" :class="{'opacity-50 print:!invisible': wochentyp() === 0}">
 				{{ manager().stundenplanGetWochenTypAsString(wochentyp()) }}
 			</div>
 			<!-- Daneben werden die einzelnen Wochentage des Stundenplans angezeigt -->
@@ -56,19 +56,24 @@
 							@dragover="checkDropZoneZeitraster($event, wochentag.id, stunde)" @dragleave="onDragLeaveInternal($event, wochentag.id, stunde)"
 							@drop="onDropInternal(manager().zeitrasterGetByWochentagAndStundeOrNull(wochentag.id, stunde) ?? undefined, dragOverPos.wochentyp)">
 							<!-- Unterstütze mehrere Drop-Bereich, um direkt den einzelnen Wochentypen zuweisen zu können ... -->
-							<!-- CSS_TODO BG_OPACITY -->
 							<div v-if="(draggedData !== undefined) && ((hatWochentypen) || (!hatWochentypen && isZeitrasterDropZone.getOrException(wochentag.id, stunde, 0)))"
 								class="absolute pointer-events-none w-[calc(100%-0.5rem)] h-[calc(100%-0.5rem)] flex flex-col gap-1 z-10 text-center select-none rounded-lg"
-								:class="isDragOverPosition(wochentag, stunde) ? ['bg-ui-contrast-10/60']:['opacity-0']">
+								:class="isDragOverPosition(wochentag, stunde) ? ['bg-ui-contrast-10', 'opacity-50']:['opacity-0']">
 								<div class="grow flex justify-center items-center p-2 border-2 border-solid rounded-lg border-ui-contrast-75 hover:font-bold"
-									:class="{ 'bg-ui-success text-ui-onsuccess': dragOverPos.wochentyp === 0, 'opacity-0': !isZeitrasterDropZone.getOrException(wochentag.id, stunde, 0) }">
+									:class="{
+										'bg-ui-success text-ui-onsuccess opacity-50': (dragOverPos.wochentyp === 0) && isZeitrasterDropZone.getOrException(wochentag.id, stunde, 0),
+										'opacity-0': !isZeitrasterDropZone.getOrException(wochentag.id, stunde, 0)
+									}">
 									Jede Woche
 								</div>
 								<div v-if="hatWochentypen" class="h-[calc(50%-0.25rem)] flex flex-row gap-1">
 									<template v-for="wt, wtIndex in manager().getWochenTypModell()" :key="wtIndex">
 										<div class="grow flex justify-center items-center p-2 border-2 border-solid rounded-lg border-ui-contrast-75 hover:font-bold"
-											:class="{ 'bg-ui-success text-ui-onsuccess': wtIndex + 1 === dragOverPos.wochentyp, 'opacity-60': !isZeitrasterDropZone.getOrException(wochentag.id, stunde, wtIndex + 1) }">
-											<span class="w-20">{{ manager().stundenplanGetWochenTypAsString(wtIndex+1) }}</span>
+											:class="{
+												'bg-ui-success text-ui-onsuccess opacity-50': (wtIndex + 1 === dragOverPos.wochentyp) && isZeitrasterDropZone.getOrException(wochentag.id, stunde, wtIndex + 1),
+												'opacity-0': !isZeitrasterDropZone.getOrException(wochentag.id, stunde, wtIndex + 1)
+											}">
+											<span class="w-20">{{ manager().stundenplanGetWochenTypAsString(wtIndex + 1) }}</span>
 										</div>
 									</template>
 								</div>
@@ -88,7 +93,7 @@
 							</template>
 							<template v-else v-for="schiene in [{id: -1}, ...getSchienenListe(wochentag.id, stunde, 0)]" :key="schiene.id">
 								<div :class="{'bg-ui-contrast-10 rounded-md pl-1 pr-1 pb-1 mt-1': schiene.id > -1}">
-									<div v-if="'bezeichnung' in schiene" class="col-span-full text-sm font-bold pt-1 pb-2 print:mb-0 flex place-items-center group ml-2.5" :class="{'cursor-grab': draggable}"
+									<div v-if="'bezeichnung' in schiene" class="col-span-full text-sm font-bold pt-1 pb-2 print:!mb-0 flex place-items-center group ml-2.5" :class="{'cursor-grab': draggable}"
 										:draggable @dragstart.stop="onDrag(getUnterrichte(wochentag.id, stunde, 0, schiene.id), $event)" @dragend.stop="onDrag(undefined)">
 										<span v-if="draggable" class="icon i-ri-draggable inline-block icon-dark -ml-1 opacity-60 group-hover:opacity-10 group-hover:icon-dark" />
 										<span>{{ schiene.bezeichnung }}</span>
@@ -109,7 +114,7 @@
 										<template v-if="!showSchienen">
 											<!-- Diese Ansicht hat keine Anzeige der Schienen (Schüler, Lehrer) -->
 											<template v-if="getUnterrichte(wochentag.id, stunde, wt, null).size() > 0">
-												<div class="col-span-full text-sm font-bold text-center mb-1 py-1 print:mb-0"> {{ manager().stundenplanGetWochenTypAsString(wt) }}</div>
+												<div class="col-span-full text-sm font-bold text-center mb-1 py-1 print:!mb-0"> {{ manager().stundenplanGetWochenTypAsString(wt) }}</div>
 											</template>
 											<div v-for="unterricht in getUnterrichte(wochentag.id, stunde, wt, null)" :key="unterricht.id"
 												class="svws-ui-stundenplan--unterricht"
@@ -121,10 +126,10 @@
 										</template>
 										<template v-else v-for="schiene in [{id: -1}, ...getSchienenListe(wochentag.id, stunde, wt)]" :key="schiene.id">
 											<template v-if="getUnterrichte(wochentag.id, stunde, wt, schiene.id).size() > 0">
-												<div class="col-span-full text-sm font-bold text-center mb-1 py-1 print:mb-0"> {{ manager().stundenplanGetWochenTypAsString(wt) }}</div>
+												<div class="col-span-full text-sm font-bold text-center mb-1 py-1 print:!mb-0"> {{ manager().stundenplanGetWochenTypAsString(wt) }}</div>
 											</template>
 											<div :class="{'bg-ui rounded-md pl-1 pr-1 pb-1 pt-0': schiene.id > -1}">
-												<div v-if="'bezeichnung' in schiene" class="col-span-full text-sm font-bold text-center pt-1 pb-2 print:mb-0" :class="{'cursor-grab': draggable}"
+												<div v-if="'bezeichnung' in schiene" class="col-span-full text-sm font-bold text-center pt-1 pb-2 print:!mb-0" :class="{'cursor-grab': draggable}"
 													:draggable @dragstart.stop="onDrag(getUnterrichte(wochentag.id, stunde, wt, schiene.id), $event)" @dragend.stop="onDrag(undefined)">
 													{{ schiene.bezeichnung }}
 												</div>
@@ -704,217 +709,3 @@
 	}
 
 </script>
-
-<style lang="postcss">
-
-	@reference "../../assets/styles/index.css";
-
-	.svws-ui-stundenplan {
-		@apply flex flex-col h-full min-w-max grow overflow-y-scroll overflow-x-hidden pr-4;
-		--zeitrasterRows: 0;
-	}
-
-	.svws-ui-stundenplan--head,
-	.svws-ui-stundenplan--body {
-		@apply grid grid-flow-col;
-
-		:not(.svws-hat-zeitachse).svws-spalte-pausenzeit & {
-			grid-template-columns: 8rem repeat(auto-fit, minmax(0rem, 1fr) minmax(2rem, 0.2fr));
-		}
-
-		.svws-hat-zeitachse:not(.svws-spalte-pausenzeit) & {
-			@media screen {
-				grid-template-columns: 2rem repeat(auto-fit, minmax(0rem, 1fr));
-			}
-		}
-		.svws-hat-zeitachse.svws-spalte-pausenzeit & {
-			@media screen {
-				grid-template-columns: 2rem 8rem repeat(auto-fit, minmax(0rem, 1fr) minmax(2rem, 0.2fr));
-			}
-		}
-
-	}
-
-	.svws-ui-stundenplan--head {
-		@apply bg-ui-contrast-0 py-1 text-button;
-		@apply h-[2.75rem] sticky -top-px z-20;
-		@apply border border-ui-contrast-25;
-
-		.svws-hat-zeitachse & {
-			@media screen {
-				@apply border-l-0;
-			}
-		}
-
-		.svws-time-icon {
-			@apply opacity-25 text-center self-center w-full;
-		}
-	}
-
-	.svws-ui-stundenplan--body {
-		@apply border-x border-ui-contrast-25 bg-ui-contrast-0 -mt-px print:mt-0 relative;
-
-		.svws-hat-zeitachse & {
-			@media screen {
-				@apply border-l-0;
-			}
-		}
-	}
-
-	.svws-ui-stundenplan--zeitraster {
-		@apply grid grid-cols-1;
-		grid-template-rows: repeat(var(--zeitrasterRows), minmax(0.6rem, 1fr));
-
-		.svws-zeitraster-1 & {
-			grid-template-rows: repeat(var(--zeitrasterRows), minmax(0.1rem, 1fr));
-		}
-
-		&.svws-zeitachse {
-			@apply print:hidden h-full border-b-0 border-r border-ui-contrast-25;
-		}
-	}
-
-	.svws-ui-stundenplan--stunde,
-	.svws-ui-stundenplan--pause {
-		@apply bg-ui-contrast-0 tabular-nums w-full h-full p-1 leading-tight flex flex-col overflow-hidden;
-
-		.svws-multiple {
-			@apply grid h-full grid-flow-col grow;
-			grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
-		}
-
-		.svws-ui-stundenplan--mode-planung & {
-			&:hover,
-			&:focus-visible {
-				.svws-ui-stundenplan--unterricht,
-				.svws-ui-stundenplan--pausen-aufsicht,
-				&.svws-label {
-					@apply bg-ui;
-				}
-			}
-
-			&.svws-selected-stunde {
-				@apply text-ui;
-			}
-		}
-	}
-
-	.svws-ui-stundenplan--stunde {
-		@apply border border-r-0 border-ui-contrast-25;
-
-		.svws-spalte-pausenzeit & {
-			@apply border-r;
-		}
-
-		.svws-ui-stundenplan--zeitangaben & {
-			@apply border-l-0 border-r-0;
-		}
-
-		.svws-ohne-zeitachse & {
-			+ .svws-ui-stundenplan--stunde {
-				@apply border-t-0;
-			}
-		}
-	}
-
-	.svws-ui-stundenplan--pause {
-		@apply border-y-0;
-
-		.svws-ui-stundenplan--mode-planung &:not(.svws-no-hover) {
-			&:hover,
-			&:focus-visible {
-				@apply bg-ui;
-			}
-		}
-	}
-
-	.svws-ui-stundenplan--unterricht,
-	.svws-ui-stundenplan--pausen-aufsicht {
-		@apply rounded-sm grid grid-cols-4 gap-x-2 w-full border border-ui-contrast-10 px-2 py-1 content-center leading-none items-center;
-		grid-template-columns: minmax(min-content, 1fr) minmax(min-content, 0.5fr) minmax(min-content, 1fr) minmax(min-content, 1fr);
-
-		&.svws-compact {
-			@apply grid-cols-2 py-1;
-		}
-
-		.svws-ui-stundenplan--mode-planung & {
-			@apply flex flex-col gap-1 items-center grow justify-center;
-		}
-
-		+ .svws-ui-stundenplan--unterricht,
-		+ .svws-ui-stundenplan--pausen-aufsicht {
-			@apply rounded-t-none;
-		}
-
-		&:not(:last-child) {
-			@apply rounded-b-none;
-		}
-
-		.tooltip-trigger {
-			@apply max-w-[14rem];
-		}
-	}
-
-	.svws-ui-stundenplan--mode-planung {
-		.svws-wochentag-label {
-			@apply font-bold text-center inline-flex items-center w-full justify-center cursor-pointer;
-
-			&:hover,
-			&:focus-visible {
-				span {
-					@apply bg-ui;
-				}
-			}
-
-			&.svws-selected {
-				span {
-					@apply bg-ui-selected text-ui-onselected font-bold border-ui-neutral/25;
-				}
-			}
-		}
-
-		.svws-ui-stundenplan--zeitraster.svws-selected,
-		.svws-ui-stundenplan--stunde.svws-selected,
-		.svws-ui-stundenplan--pause.svws-selected {
-			.svws-ui-stundenplan--unterricht,
-			.svws-ui-stundenplan--pausen-aufsicht {
-				@apply bg-ui-selected text-ui-onselected font-bold;
-			}
-		}
-	}
-
-	.svws-ui-stundenplan--unterricht--warning {
-		@apply flex flex-col gap-2 items-center justify-center text-center bg-ui-danger text-ui-ondanger rounded-sm p-2 grow print:hidden;
-
-		~ .svws-ui-stundenplan--unterricht {
-			@apply grow-0 min-h-[2rem] hidden print:grid;
-
-			&.svws-compact {
-				@apply min-h-[5rem];
-			}
-		}
-
-		&.svws-show {
-			@apply hidden;
-
-			~ .svws-ui-stundenplan--unterricht {
-				@apply grid;
-			}
-		}
-	}
-
-	.svws-ui-stundenplan--einheit {
-		@apply border-t border-ui-contrast-50 w-1/2 pr-1 opacity-50 ml-auto text-right h-px;
-		font-size: 0.66rem;
-		letter-spacing: -0.08em;
-
-		&.svws-small {
-			@apply w-1/2;
-		}
-
-		&.svws-extended {
-			@apply w-full opacity-50;
-		}
-	}
-
-</style>

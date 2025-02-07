@@ -32,7 +32,7 @@
 			</svws-ui-sub-nav>
 		</Teleport>
 
-		<div v-if="schueler.abiturjahrgang !== null" class="page--content page--content--full page--content--laufbahnplanung">
+		<div v-if="schueler.abiturjahrgang !== null" class="page page-flex-row">
 			<div class="grow overflow-y-auto overflow-x-hidden min-w-fit">
 				<s-laufbahnplanung-card-planung :abiturdaten-manager :modus :gost-jahrgangsdaten :set-wahl :goto-kursblockung="async () => {}" :faecher-anzeigen belegung-hat-immer-noten />
 			</div>
@@ -42,7 +42,7 @@
 				</div>
 			</div>
 		</div>
-		<div v-else class="page--content page--content--full">Die Laufbahnplanung hat kein gültiges Abiturjahr, bitte prüfen Sie die importierte Datei.</div>
+		<div v-else class="page page-flex-row">Die Laufbahnplanung hat kein gültiges Abiturjahr, bitte prüfen Sie die importierte Datei.</div>
 	</svws-ui-tab-bar>
 </template>
 
@@ -143,15 +143,3 @@
 	}
 
 </script>
-
-
-<style lang="postcss" scoped>
-
-	@reference "../../../ui/src/assets/styles/index.css";
-
-	.page--content--laufbahnplanung {
-		@apply gap-x-8 2xl:gap-x-12 relative overflow-y-hidden h-full;
-		@apply px-4 lg:px-6 3xl:px-8 4xl:px-12 pt-8 pb-16;
-	}
-
-</style>

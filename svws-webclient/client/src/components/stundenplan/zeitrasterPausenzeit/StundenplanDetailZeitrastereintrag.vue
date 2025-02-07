@@ -10,7 +10,7 @@
 		<svws-ui-spacing :size="2" />
 		<svws-ui-table :items="[]" :columns :no-data="false">
 			<template #body>
-				<div v-for="rowData in stundenplanManager().unterrichtGetMengeByZeitrasterIdAndWochentypOrEmptyList(selected.id, 0)" :key="rowData.id" class="svws-ui-tr" role="row">
+				<div v-for="rowData in stundenplanManager().unterrichtGetMengeByZeitrasterIdAndWochentypOrEmptyList(selected.id, 0)" :key="rowData.id" class="svws-ui-tr" style="grid-template-columns: repeat(4, 1fr);" role="row">
 					<div class="svws-ui-td" role="cell">
 						<span class="svws-ui-badge" :style="`background-color: ${getBgColor(stundenplanManager().fachGetByIdOrException(rowData.idFach).kuerzelStatistik)}`">{{ stundenplanManager().unterrichtGetByIDStringOfFachOderKurs(rowData.id, true) }}</span>
 					</div>

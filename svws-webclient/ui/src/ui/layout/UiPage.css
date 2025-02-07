@@ -12,6 +12,10 @@
 		@apply pt-8 pb-2;
 	}
 
+	.page-flex-col {
+		@apply flex flex-col gap-8 lg:gap-12 overflow-y-auto;
+	}
+
 	.page-flex-row {
 		@apply flex flex-row gap-8 lg:gap-12 overflow-x-auto;
 	}
@@ -22,7 +26,18 @@
 		grid-auto-rows: 100%;
 		grid-auto-columns: max-content;
 	}
-	
+
+	.page-grid-cards {
+		@apply grid grid-cols-1 lg:grid-cols-2;
+		@apply max-w-560 w-full;
+		@apply gap-x-8 lg:gap-x-16;
+		@apply gap-y-16 lg:gap-y-20;
+		@apply px-6 lg:px-9 3xl:px-12 4xl:px-20;
+		@apply pt-8 pb-2;
+		grid-auto-rows: min-content;
+	}
+
+	/** TODO: Deprecated - Erstzen und dann entfernen... */
 	.page--content {
 		@apply grid grid-cols-1 lg:grid-cols-2 w-full;
 		@apply gap-x-8 gap-y-16 lg:gap-y-20 lg:gap-x-16;
@@ -30,7 +45,8 @@
 		grid-auto-rows: min-content;
 		max-width: 140rem;
 	}
-	
+
+	/** TODO: Deprecated - Erstzen und dann entfernen... */
 	.page--content--dashboard {
 		@apply grid grid-cols-2 lg:grid-cols-4 w-full;
 		@apply gap-2 sm:gap-3 lg:gap-4;
@@ -39,16 +55,19 @@
 		grid-auto-rows: min-content;
 		max-width: 140rem;
 	}
-	
+
+	/** TODO: Deprecated - Erstzen und dann entfernen... */
 	.page--content--full {
 		@apply flex;
 		max-width: unset;
 	}
-	
+
+	/** TODO: Deprecated - Erstzen und dann entfernen... */
 	.page--content--flex {
 		@apply flex flex-col min-h-full gap-y-5;
 	}
-	
+
+	/** TODO: Deprecated - Erstzen und dann entfernen... */
 	.page--content--flex-row {
 		@apply flex flex-row min-h-full gap-y-5;
 	}

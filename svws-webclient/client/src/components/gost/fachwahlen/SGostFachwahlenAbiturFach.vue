@@ -1,15 +1,15 @@
 <template>
-	<svws-ui-table :items="[]" :no-data="false" :columns="cols" class="select-none">
+	<svws-ui-table :items="[]" :no-data="false" class="select-none">
 		<template #header>
 			<div role="row" class="svws-ui-tr">
-				<div role="cell" class="svws-ui-td col-span-full">
-					<span class="flex gap-1">
-						<template v-if="fws !== undefined">
-							<span class="svws-ui-badge" :style="{ 'background-color': getBgColor(fws) }">{{ faecherManager.get(fws.id)?.bezeichnung }}</span>
-						</template>
-						im Abitur
-					</span>
-				</div>
+				<template v-if="fws !== undefined">
+					<div role="cell" class="svws-ui-td col-span-full" :style="'background-color: ' + getBgColor(fws)">
+						<span class="flex gap-1">
+							<span :style="{ 'background-color': getBgColor(fws) }">{{ faecherManager.get(fws.id)?.bezeichnung }}</span>
+							im Abitur
+						</span>
+					</div>
+				</template>
 			</div>
 		</template>
 		<template #body>
@@ -46,7 +46,6 @@
 
 <script setup lang="ts">
 
-	import type { DataTableColumn } from "@ui";
 	import type { GostFachwahlenAbiturFachProps } from "./SGostFachwahlenAbiturFachProps";
 	import type { ComputedRef} from "vue";
 	import { computed } from "vue";
@@ -62,12 +61,6 @@
 				return f;
 		return undefined;
 	});
-
-	const cols: DataTableColumn[] = [
-		{ key: "LK", label: "LK", span: 1 },
-		{ key: "AB3", label: "AB3", span: 1 },
-		{ key: "AB4", label: "Ab4", span: 1 },
-	];
 
 	function getBgColor(fws: GostStatistikFachwahl) : string {
 		if (fws.kuerzelStatistik === null)
@@ -103,3 +96,11 @@
 	}
 
 </script>
+
+<style scoped>
+
+	.svws-ui-tr {
+		grid-template-columns: repeat(3, 1fr);
+	}
+
+</style>

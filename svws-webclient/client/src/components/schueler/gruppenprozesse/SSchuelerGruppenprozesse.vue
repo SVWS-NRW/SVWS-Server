@@ -1,5 +1,5 @@
 <template>
-	<div class="page--content">
+	<div class="page page-grid-cards">
 		<div class="flex flex-col gap-y-16 lg:gap-y-16">
 			<svws-ui-action-button v-if="hatKompetenzLoeschen" title="Löschen" description="Bei den ausgewählten Schülern wird ein Löschvermerk gesetzt." icon="i-ri-delete-bin-line"
 				:action-function="entferneSchueler" action-label="Löschen" :is-loading="loading" :is-active="currentAction === 'delete'"

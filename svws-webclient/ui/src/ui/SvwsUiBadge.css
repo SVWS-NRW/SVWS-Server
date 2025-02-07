@@ -1,0 +1,59 @@
+.badge {
+	@apply border;
+	@apply font-bold leading-none;
+	@apply rounded-sm inline-flex items-center align-text-top;
+	font-size: 0.65em;
+	padding: 0.35em 0.5em;
+	gap: 0.25em;
+
+	svg {
+		margin: -0.1em;
+	}
+}
+
+.badge--lg {
+	@apply rounded-md;
+	font-size: 0.8em;
+	padding: 0.25em 0.45em;
+}
+
+.badge--error {
+	@apply bg-ui-danger;
+	@apply border-ui-danger;
+	@apply text-ui-ondanger;
+}
+
+.badge--primary {
+	@apply bg-ui-brand;
+	@apply border-ui-brand;
+	@apply text-ui-onbrand;
+}
+
+.badge--light {
+	@apply bg-ui-neutral;
+	@apply border-ui-secondary;
+	@apply text-ui-onneutral;
+}
+
+.badge--success {
+	@apply bg-ui-success;
+	@apply border-ui-success;
+	@apply text-ui-onsuccess;
+}
+
+.badge--highlight {
+	@apply bg-ui-warning;
+	@apply border-ui-warning;
+	@apply text-ui-onwarning;
+}
+
+.badge--short {
+	@apply overflow-hidden relative line-clamp-1 text-ellipsis w-16 max-w-full break-all;
+}
+
+.badge--small {
+	font-size: 0.5em;
+	margin-top: 0.4em;
+	margin-bottom: -0.5em;
+	padding: 0.25em 0.45em;
+}

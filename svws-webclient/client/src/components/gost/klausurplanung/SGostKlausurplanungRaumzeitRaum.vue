@@ -1,5 +1,5 @@
 <template>
-	<div @dragover="checkDropZone($event)" @drop="onDrop(raum)" class="flex flex-col rounded-xl border bg-ui-contrast-0"
+	<div @dragover="checkDropZone($event)" @drop="onDrop(raum)" class="min-w-120 max-w-120 flex flex-col rounded-xl border bg-ui-contrast-0 h-fit"
 		:class="{
 			'shadow-lg shadow-ui-contrast-10 border-ui-contrast-10': dragData() === undefined,
 			'border-dashed border-ui-brand dark:border-ui-brand ring-4 ring-ui-brand/25': dragData() !== undefined && dragData() instanceof GostKursklausur,
@@ -31,7 +31,7 @@
 					</template>
 				</span>
 			</div>
-			<svws-ui-table :items="[]" :columns="cols" :no-data="klausurenImRaum().size() === 0" no-data-text="Noch keine Klausuren zugewiesen." class="mt-6">
+			<svws-ui-table :items="[]" :columns="cols" :no-data="klausurenImRaum().size() === 0" no-data-text="Noch keine Klausuren zugewiesen." class="mt-4">
 				<template #header><span /></template>
 				<template #body>
 					<div v-for="klausur of klausurenImRaum()" :key="klausur.id" class="svws-ui-tr cursor-grab" role="row" :data="klausur" :draggable="hatKompetenzUpdate" @dragstart="onDrag(klausur)"	@dragend="onDrag(undefined)">
@@ -55,8 +55,6 @@
 								</svws-ui-tooltip>
 							</svws-ui-tooltip>
 						</div>
-
-
 						<div class="svws-ui-td" role="cell">{{ kMan().kursLehrerKuerzelByKursklausur(klausur) }}</div>
 						<div class="svws-ui-td flex" role="cell">
 							<div>
@@ -89,7 +87,9 @@
 	</div>
 </template>
 
+
 <script setup lang="ts">
+
 	import type { StundenplanRaum, GostKlausurplanManager, GostKlausurenCollectionSkrsKrsData, GostKlausurraum, GostKlausurtermin} from '@core';
 	import { BenutzerKompetenz } from '@core';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';
@@ -170,21 +170,10 @@
 
 </script>
 
-<style lang="postcss">
+<style scoped>
 
-@reference "../../../../../ui/src/assets/styles/index.css"
+	.svws-ui-tr {
+		grid-template-columns: 1rem 2rem minmax(4rem, 1.5fr) minmax(4rem, 0.75fr) minmax(4.75rem, 0.5fr) minmax(4rem, 0.25fr) minmax(4rem, 1.25fr) ;
+	}
 
-.svws-raum-title {
-  .text-input--headless {
-    @apply text-headline-md pl-5;
-
-    &::placeholder {
-      @apply font-bold;
-    }
-  }
-
-  .svws-ui-select.svws-headless .svws-dropdown-icon {
-    @apply w-5 h-5 -left-1 text-base top-0.5;
-  }
-}
 </style>

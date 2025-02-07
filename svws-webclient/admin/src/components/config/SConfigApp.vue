@@ -13,7 +13,7 @@
 			</div>
 			<div class="svws-ui-header--actions" />
 		</header>
-		<div class="page--content">
+		<div class="page page-grid-cards">
 			<svws-ui-content-card title="Im Aufbau">
 				Diese Seite befindet sich im Aufbau und wird Anpassungen an einigen Konfigurationseinstellungen des SVWS-Servers ermöglichen.
 				<svws-ui-spacing :size="2" />

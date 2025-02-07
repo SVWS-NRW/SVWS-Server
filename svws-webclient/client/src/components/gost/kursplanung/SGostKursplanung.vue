@@ -285,28 +285,3 @@
 	});
 
 </script>
-
-<style lang="postcss" scoped>
-
-	@reference "../../../../../ui/src/assets/styles/index.css"
-
-	/*
- 	:class="{'svws-blockungstabelle-hidden': (blockungstabelleHidden() === 'alles'), 'svws-blockungstabelle-schienen-hidden': (blockungstabelleHidden() === 'schienen')}"
-	*/
-
-	.page--content {
-		@apply grid overflow-y-hidden overflow-x-auto h-full pb-3 pt-6 lg:gap-x-12;
-		grid-auto-rows: 100%;
-		grid-template-columns: max-content minmax(18rem, 0.4fr) 1fr;
-		grid-auto-columns: max-content;
-
-		&.svws-blockungstabelle-schienen-hidden {
-			grid-template-columns: min-content minmax(20rem, 0.15fr) 1fr;
-		}
-
-		&.svws-blockungstabelle-hidden {
-			grid-template-columns: max-content minmax(20rem, 0.15fr) 1fr;
-		}
-	}
-
-</style>

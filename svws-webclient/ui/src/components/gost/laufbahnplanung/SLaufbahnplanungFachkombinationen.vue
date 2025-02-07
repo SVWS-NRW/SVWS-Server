@@ -3,7 +3,7 @@
 		<svws-ui-table :no-data="false" :items="[]" :columns="[{key: 'icon', label: ' ', fixedWidth: 1.8},{key: 'beschreibung', label: 'Fachkombinationsregeln'}]" type="navigation" class="svws-no-mx">
 			<template #header>
 				<div class="svws-ui-tr" role="row">
-					<div class="svws-ui-td col-span-full" role="columnheader">
+					<div class="svws-ui-td col-span-full leading-5 align-middle" role="columnheader">
 						<span class="icon i-ri-checkbox-circle-fill shrink-0 icon-ui-success -my-1" v-if="regelnVerletzt.size === 0" />
 						<template v-if="regelnVerletzt.size !== 0">
 							{{ regelnVerletzt.size }} Fehler bei Fachkombinationsregeln
@@ -16,20 +16,20 @@
 			</template>
 			<template #body>
 				<div v-for="regel in abiturdatenManager().faecher().getFachkombinationenErforderlich()" :key="regel.id" class="svws-ui-tr" role="row">
-					<div class="svws-ui-td" role="cell">
+					<div class="svws-ui-td leading-5 align-middle" role="cell">
 						<span class="icon i-ri-check-line shrink-0 icon-ui-success" v-if="!regelnVerletzt.has(regel)" />
 						<span class="icon i-ri-error-warning-line shrink-0 icon-error text-button mt-0.5" />
 					</div>
-					<div class="svws-ui-td select-all" role="cell">
+					<div class="svws-ui-td select-all leading-5 align-middle" role="cell">
 						{{ regel.hinweistext }}
 					</div>
 				</div>
 				<div v-for="regel in abiturdatenManager().faecher().getFachkombinationenVerboten()" :key="regel.id" class="svws-ui-tr" role="row">
-					<div class="svws-ui-td" role="cell">
+					<div class="svws-ui-td leading-5 align-middle" role="cell">
 						<span class="icon i-ri-check-line shrink-0 icon-ui-success" v-if="!regelnVerletzt.has(regel)" />
 						<span class="icon i-ri-error-warning-line shrink-0 icon-error text-button mt-0.5" />
 					</div>
-					<div class="svws-ui-td select-all" role="cell">
+					<div class="svws-ui-td select-all leading-5 align-middle" role="cell">
 						{{ regel.hinweistext }}
 					</div>
 				</div>
@@ -87,11 +87,10 @@
 
 </script>
 
-<style lang="postcss" scoped>
+<style scoped>
 
-	@reference "../../../assets/styles/index.css";
-
-	.svws-ui-td {
-		@apply leading-5 align-middle;
+	.svws-ui-tr {
+		grid-template-columns: 1.8rem auto;
 	}
+
 </style>

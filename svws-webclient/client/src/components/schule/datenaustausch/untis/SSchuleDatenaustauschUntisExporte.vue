@@ -15,7 +15,7 @@
 		<!-- Weitere Eingabemöglichkeiten für den zuvor gewählten Untis-Export (rechte Seite - spezielle Ansicht nach Auswahl) -->
 		<div class="flex flex-col">
 			<div v-if="zeigeSchuelerVariantenAuswahl" class="max-w-196">
-				<svws-ui-card :compact="true" :collapsible="false" title="Schema Schüler-IDs" content="Wählen Sie das Schema für das Erzeugen der Schüler-IDs in Untis:">
+				<ui-card :compact="true" :collapsible="false" title="Schema Schüler-IDs" content="Wählen Sie das Schema für das Erzeugen der Schüler-IDs in Untis:">
 					<template #footer>
 						<svws-ui-radio-group>
 							<svws-ui-radio-option value="1" v-model="sidvariante" @update:model-value="setSIDVariante" name="radioInputSchueleridschema" label="SVWS ID-Schema (S-SVWSID)" />
@@ -23,20 +23,18 @@
 							<svws-ui-radio-option value="3" v-model="sidvariante" @update:model-value="setSIDVariante" name="radioInputSchueleridschema" label="Untis ID-Schema lang (Nachname-Vorname-20081023)" />
 						</svws-ui-radio-group>
 					</template>
-				</svws-ui-card>
+				</ui-card>
 			</div>
 			<div v-if="zeigeGPU002Laden" class="max-w-196">
-				<svws-ui-card compact :collapsible="false" title="Upload GPU002.txt" show-divider>
-					<template #content>
-						<div class="text-justify">
-							Laden Sie jetzt die Datei <span class="font-bold">GPU002.txt</span> von Untis hier hoch, um die Klausuren anschließend zu exportieren.
-							Die CSV-Datei muss als Textkodierung UTF-8 verwenden. Als Trennzeichen wird das Semikolon verwendet und für die textbegrenzung doppelte Anführungszeichen (").
-						</div>
-					</template>
+				<ui-card compact :collapsible="false" title="Upload GPU002.txt" show-divider>
+					<div class="text-justify">
+						Laden Sie jetzt die Datei <span class="font-bold">GPU002.txt</span> von Untis hier hoch, um die Klausuren anschließend zu exportieren.
+						Die CSV-Datei muss als Textkodierung UTF-8 verwenden. Als Trennzeichen wird das Semikolon verwendet und für die textbegrenzung doppelte Anführungszeichen (").
+					</div>
 					<template #footer>
 						<input type="file" accept=".txt" @change="importGPU002">
 					</template>
-				</svws-ui-card>
+				</ui-card>
 			</div>
 			<div v-if="aktuell === blockungGPUs" class="mt-8 max-w-196">
 				<p>Wählen Sie die aktiven Blockungsergebnisse aus, welche beim Export berücksichtigt werden sollen: </p>

@@ -1,0 +1,61 @@
+.svws-ui-sub-nav {
+	@apply w-full;
+	@apply print:!hidden;
+
+	.svws-ui-sub-nav--wrapper {
+		@apply flex items-center relative z-30 shrink-0 overflow-hidden;
+		@apply bg-ui-neutral rounded-md w-full;
+
+		.router-tab-bar--subnav {
+			@apply relative z-10 h-9 py-2 px-[2px] -mt-[2px];
+			@apply flex items-center gap-[2px] shrink-0 overflow-x-scroll;
+			@apply text-sm w-full;
+
+			-ms-overflow-style: none;
+			scrollbar-width: none;
+
+			&::-webkit-scrollbar {
+				display: none;
+			}
+
+			&:focus-visible {
+				@apply outline-hidden;
+			}
+
+			&:before {
+				content: '';
+			}
+
+			> * {
+				@apply shrink-0;
+			}
+
+			.button {
+				@apply border-0;
+			}
+		}
+
+		.svws-ui-sub-nav--scroll-button {
+			@apply absolute z-50 text-base h-8 flex items-center w-12 py-1 cursor-pointer;
+			@apply from-white/0 via-50% via-white to-white dark:from-black/0 dark:via-50% dark:via-black dark:to-black;
+
+			.button {
+				@apply bg-ui-neutral border border-ui-secondary;
+				@apply w-5 h-full p-0 rounded;
+
+				&:focus {
+					@apply outline-hidden;
+				}
+
+				&:hover,
+				&:focus-visible {
+					@apply bg-ui-neutral-hover border-ui-neutral-hover;
+				}
+
+				&:focus-visible {
+					@apply ring-3 ring-ui;
+				}
+			}
+		}
+	}
+}

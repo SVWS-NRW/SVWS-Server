@@ -73,7 +73,7 @@
 			</template>
 		</template>
 		<template #main>
-			<main class="app--page" :class="app.name" role="main">
+			<main class="app--page h-full" :class="app.name" role="main">
 				<div v-show="pendingSetApp" class="page--wrapper" :class="{'svws-api--pending': apiStatus.pending}">
 					<svws-ui-header>
 						<div class="flex items-center">
@@ -89,7 +89,7 @@
 					</svws-ui-header>
 				</div>
 				<p v-if="focusSwitchingEnabled" v-show="focusHelpVisible" class="region-enumeration">8</p>
-				<div v-show="!pendingSetApp" class="page--wrapper" :class="{'svws-api--pending': apiStatus.pending, 'focus-region': focusSwitchingEnabled, 'highlighted': focusHelpVisible}">
+				<div v-show="!pendingSetApp" class="page--wrapper h-full w-full flex flex-col" :class="{'svws-api--pending': apiStatus.pending, 'focus-region': focusSwitchingEnabled, 'highlighted': focusHelpVisible}">
 					<router-view :key="app.name" />
 				</div>
 			</main>

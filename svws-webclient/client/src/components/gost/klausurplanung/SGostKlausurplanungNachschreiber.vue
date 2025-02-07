@@ -14,27 +14,28 @@
 			<svws-ui-table :columns="cols">
 				<template #noData>
 					<slot name="noData">
-				&nbsp;
+						&nbsp;
 					</slot>
 				</template>
-
 				<template #body>
-					<div v-for="termin in kMan().terminHtGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value)"
-						:key="termin.id"
-						class="svws-ui-tr" role="row">
-						<div class="svws-ui-td" role="cell">
-							<svws-ui-checkbox :title="kMan().schuelerklausurterminNtGetMengeByTermin(termin).size() > 0 ? 'Termin enthält Nachschreiber' : ''" :disabled="kMan().schuelerklausurterminNtGetMengeByTermin(termin).size() > 0" v-model="termin.nachschreiberZugelassen" @update:model-value="patchKlausurtermin(termin.id, { 'nachschreiberZugelassen': termin.nachschreiberZugelassen } )" />
+					<template v-for="termin in kMan().terminHtGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value)" :key="termin.id">
+						<div class="svws-ui-tr" role="row" style="grid-template-columns: 2rem 8rem 4rem minmax(4rem, 1fr)">
+							<div class="svws-ui-td" role="cell">
+								<svws-ui-checkbox :title="kMan().schuelerklausurterminNtGetMengeByTermin(termin).size() > 0 ? 'Termin enthält Nachschreiber' : ''"
+									:disabled="kMan().schuelerklausurterminNtGetMengeByTermin(termin).size() > 0" v-model="termin.nachschreiberZugelassen"
+									@update:model-value="patchKlausurtermin(termin.id, { 'nachschreiberZugelassen': termin.nachschreiberZugelassen } )" />
+							</div>
+							<div class="svws-ui-td" role="cell">
+								{{ termin.datum !== null ? DateUtils.gibDatumGermanFormat(termin.datum) : "N.N." }}
+							</div>
+							<div class="svws-ui-td" role="cell">
+								{{ kMan().schuelerklausurterminGetMengeByTermin(termin).size() }}
+							</div>
+							<div class="svws-ui-td" role="cell">
+								{{ [...kMan().kursklausurGetMengeByTermin(termin)].map(k => kMan().kursKurzbezeichnungByKursklausur(k)).join(", ") }}
+							</div>
 						</div>
-						<div class="svws-ui-td" role="cell">
-							{{ termin.datum !== null ? DateUtils.gibDatumGermanFormat(termin.datum) : "N.N." }}
-						</div>
-						<div class="svws-ui-td" role="cell">
-							{{ kMan().schuelerklausurterminGetMengeByTermin(termin).size() }}
-						</div>
-						<div class="svws-ui-td" role="cell">
-							{{ [...kMan().kursklausurGetMengeByTermin(termin)].map(k => kMan().kursKurzbezeichnungByKursklausur(k)).join(", ") }}
-						</div>
-					</div>
+					</template>
 				</template>
 			</svws-ui-table>
 		</template>
@@ -60,10 +61,11 @@
 		</template>
 	</svws-ui-modal>
 
-	<div class="page--content page--content--full relative">
-		<div class="content-card h-full flex flex-col">
-			<div class="content-card--headline mb-4">In Planung</div>
-			<div class="content-card--content flex flex-col p-3" @drop="onDrop(undefined)" @dragover="$event.preventDefault()" :class="[(dragData !== undefined && dragData instanceof GostSchuelerklausurTermin && dragData.idTermin !== null) ? 'border-ui-danger ring-4 ring-ui-danger/10 border-2 rounded-xl border-dashed' : '']">
+	<div class="page page-flex-row">
+		<div class="min-w-180 max-w-180 flex flex-col gap-2">
+			<div class="text-headline-md">In Planung</div>
+			<div class="flex flex-col p-3" @drop="onDrop(undefined)" @dragover="$event.preventDefault()"
+				:class="[(dragData !== undefined && dragData instanceof GostSchuelerklausurTermin && dragData.idTermin !== null) ? 'border-ui-danger ring-4 ring-ui-danger/10 border-2 rounded-xl border-dashed' : '']">
 				<s-gost-klausurplanung-schuelerklausur-table :k-man
 					:schuelerklausuren="kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value)"
 					:on-drag
@@ -78,67 +80,69 @@
 				</s-gost-klausurplanung-schuelerklausur-table>
 			</div>
 		</div>
-		<svws-ui-content-card>
-			<svws-ui-content-card class="rounded-lg" v-if="multijahrgang()" :has-background="true">
-				<template #title>
+		<div class="grow flex flex-col gap-8 w-full overflow-hidden">
+			<div class="flex flex-col gap-4 w-full">
+				<div v-if="multijahrgang()" class="flex flex-col gap-4 rounded-lg bg-ui-neutral px-6 py-3 min-w-120 w-fit">
 					<span class="leading-tight text-headline-md gap-1">
 						<span v-if="(!zeigeAlleJahrgaenge() && kMan().terminNtMengeEnthaeltFremdeJgstByAbijahrAndHalbjahrAndQuartalMultijahrgang(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value, true))" class="icon i-ri-alert-fill icon-error px-4" />
 						<span>Jahrgangsübergreifende Planung</span>
 						<span v-if="(!zeigeAlleJahrgaenge() && kMan().terminNtMengeEnthaeltFremdeJgstByAbijahrAndHalbjahrAndQuartalMultijahrgang(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value, true))"> aktiviert, da jahrgangsgemischte Termine existieren</span>
 					</span>
-				</template>
-				<ul>
-					<li class="flex font-bold">
-						<span>{{ kMan().schuelerklausurterminNtAktuellGetMengeByHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value).size() }} Nachschreiber im akutellen Jahrgang,&nbsp;</span>
-						<span v-if="kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value).size() === 0" class="text-ui-success">alle zugewiesen.</span>
-						<span v-else class="text-ui-danger">nicht alle zugewiesen.</span>
-					</li>
-					<template v-for="pair in GostKlausurplanManager.halbjahreParallelUndAktivGetMenge(jahrgangsdaten.abiturjahr, halbjahr, false)" :key="pair.a">
-						<li class="flex" v-if="kMan().schuelerklausurterminNtAktuellGetMengeByHalbjahrAndQuartal(pair.a, pair.b, quartalsauswahl.value).size() > 0">
-							<span>{{ kMan().schuelerklausurterminNtAktuellGetMengeByHalbjahrAndQuartal(pair.a, pair.b, quartalsauswahl.value).size() }} Nachschreiber im Jahrgang {{ pair.b.jahrgang }},&nbsp;</span>
-							<span v-if="kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(pair.a, pair.b, quartalsauswahl.value).size() === 0" class="text-ui-success">alle zugewiesen.</span>
+					<ul>
+						<li class="flex font-bold">
+							<span>{{ kMan().schuelerklausurterminNtAktuellGetMengeByHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value).size() }} Nachschreiber im akutellen Jahrgang,&nbsp;</span>
+							<span v-if="kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value).size() === 0" class="text-ui-success">alle zugewiesen.</span>
 							<span v-else class="text-ui-danger">nicht alle zugewiesen.</span>
-							<svws-ui-button type="icon" @click="gotoNachschreiber(pair.a, pair.b)" :title="`Zur Planung des Jahrgangs`" size="small"><span class="icon i-ri-link" /></svws-ui-button>
 						</li>
-					</template>
-				</ul>
-			</svws-ui-content-card>
-			<div class="flex justify-between items-start mt-5 mb-5">
-				<div class="flex flex-wrap items-center gap-2 w-full">
-					<svws-ui-button :disabled="!hatKompetenzUpdate" @click="erzeugeKlausurtermin(quartalsauswahl.value, false)"><span class="icon i-ri-add-line -ml-1" />Neuer Nachschreibtermin</svws-ui-button>
-					<svws-ui-button :disabled="!hatKompetenzUpdate" type="secondary" @click="showModalTerminGrund = true"><span class="icon i-ri-checkbox-circle-line -ml-1" />Haupttermin zulassen</svws-ui-button>
-					<svws-ui-button type="secondary" :disabled="!hatKompetenzUpdate || selectedNachschreiber.isEmpty()" @click="showModalAutomatischBlocken = true"><span class="icon i-ri-sparkling-line" />Automatisch blocken <svws-ui-spinner :spinning="loading" /></svws-ui-button>
+						<template v-for="pair in GostKlausurplanManager.halbjahreParallelUndAktivGetMenge(jahrgangsdaten.abiturjahr, halbjahr, false)" :key="pair.a">
+							<li class="flex" v-if="kMan().schuelerklausurterminNtAktuellGetMengeByHalbjahrAndQuartal(pair.a, pair.b, quartalsauswahl.value).size() > 0">
+								<span>{{ kMan().schuelerklausurterminNtAktuellGetMengeByHalbjahrAndQuartal(pair.a, pair.b, quartalsauswahl.value).size() }} Nachschreiber im Jahrgang {{ pair.b.jahrgang }},&nbsp;</span>
+								<span v-if="kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(pair.a, pair.b, quartalsauswahl.value).size() === 0" class="text-ui-success">alle zugewiesen.</span>
+								<span v-else class="text-ui-danger">nicht alle zugewiesen.</span>
+								<svws-ui-button type="icon" @click="gotoNachschreiber(pair.a, pair.b)" :title="`Zur Planung des Jahrgangs`" size="small"><span class="icon i-ri-link" /></svws-ui-button>
+							</li>
+						</template>
+					</ul>
+				</div>
+				<div class="flex justify-between items-start">
+					<div class="flex flex-wrap items-center gap-2 w-full">
+						<svws-ui-button :disabled="!hatKompetenzUpdate" @click="erzeugeKlausurtermin(quartalsauswahl.value, false)"><span class="icon i-ri-add-line -ml-1" />Neuer Nachschreibtermin</svws-ui-button>
+						<svws-ui-button :disabled="!hatKompetenzUpdate" type="secondary" @click="showModalTerminGrund = true"><span class="icon i-ri-checkbox-circle-line -ml-1" />Haupttermin zulassen</svws-ui-button>
+						<svws-ui-button type="secondary" :disabled="!hatKompetenzUpdate || selectedNachschreiber.isEmpty()" @click="showModalAutomatischBlocken = true"><span class="icon i-ri-sparkling-line" />Automatisch blocken <svws-ui-spinner :spinning="loading" /></svws-ui-button>
+					</div>
 				</div>
 			</div>
-			<div class="grid grid-cols-[repeat(auto-fill,minmax(45rem,1fr))] gap-4 pt-2 -mt-2">
-				<template v-if="termine.size()">
-					<s-gost-klausurplanung-nachschreiber-termin v-for="termin of termine" :key="termin.id"
-						:benutzer-kompetenzen
-						:termin="() => termin"
-						:class="{'is-drop-zone': dragData !== undefined && kMan().konfliktPaarGetMengeTerminAndSchuelerklausurtermin(termin, dragData as GostSchuelerklausurTermin).isEmpty()}"
-						:k-man
-						:drag-data
-						:on-drag
-						:on-drop
-						:draggable
-						:termin-selected="terminSelected?.id===termin.id"
-						@click="terminSelected=(terminSelected?.id===termin.id?undefined:termin);$event.stopPropagation()"
-						:loesche-klausurtermine
-						:patch-klausurtermin
-						:klausur-css-classes
-						:patch-klausur
-						:update-klausurblockung
-						:show-schuelerklausuren="true"
-						:goto-kalenderdatum
-						:goto-raumzeit-termin />
-				</template>
-				<template v-else>
-					<div class="shadow-inner rounded-lg h-48" />
-					<div class="shadow-inner rounded-lg h-48" />
-					<div class="shadow-inner rounded-lg h-48" />
-				</template>
+			<div class="w-full overflow-hidden">
+				<div class="h-full w-full grow grid gap-4 overflow-y-auto" style="grid-template-columns: repeat(auto-fill, minmax(45rem, 1fr));">
+					<template v-if="termine.size()">
+						<s-gost-klausurplanung-nachschreiber-termin v-for="termin of termine" :key="termin.id"
+							:benutzer-kompetenzen
+							:termin="() => termin"
+							:class="{'is-drop-zone': dragData !== undefined && kMan().konfliktPaarGetMengeTerminAndSchuelerklausurtermin(termin, dragData as GostSchuelerklausurTermin).isEmpty()}"
+							:k-man
+							:drag-data
+							:on-drag
+							:on-drop
+							:draggable
+							:termin-selected="terminSelected?.id===termin.id"
+							@click="terminSelected=(terminSelected?.id===termin.id?undefined:termin);$event.stopPropagation()"
+							:loesche-klausurtermine
+							:patch-klausurtermin
+							:klausur-css-classes
+							:patch-klausur
+							:update-klausurblockung
+							:show-schuelerklausuren="true"
+							:goto-kalenderdatum
+							:goto-raumzeit-termin />
+					</template>
+					<template v-else>
+						<div class="shadow-inner rounded-lg h-48" />
+						<div class="shadow-inner rounded-lg h-48" />
+						<div class="shadow-inner rounded-lg h-48" />
+					</template>
+				</div>
 			</div>
-		</svws-ui-content-card>
+		</div>
 	</div>
 </template>
 
@@ -227,50 +231,39 @@
 		isMounted.value = true;
 	});
 
-	function calculateColumns() {
-		const cols: DataTableColumn[] = [
-			{ key: "id", label: " ", fixedWidth: 2 },
-			{ key: "datum", label: "Datum", fixedWidth: 8 },
-			{ key: "size", label: "#SuS", fixedWidth: 4 },
-			{ key: "faecher", label: "Kurse" },
-		];
-
-		return cols;
-	}
-
-	const cols = computed(() => calculateColumns());
+	const cols: DataTableColumn[] = [
+		{ key: "id", label: " ", fixedWidth: 2 },
+		{ key: "datum", label: "Datum", fixedWidth: 8 },
+		{ key: "size", label: "#SuS", fixedWidth: 4 },
+		{ key: "faecher", label: "Kurse" },
+	];
 
 </script>
 
 <style lang="postcss" scoped>
 
-@reference "../../../../../ui/src/assets/styles/index.css"
+	@reference "../../../../../ui/src/assets/styles/index.css"
 
-.page--content {
-  	@apply grid;
-  	grid-template-columns: minmax(44rem, .3fr) 1fr;
-}
+	.svws-ui-tab-content {
+		@apply overflow-y-hidden items-start;
 
-.svws-ui-tab-content {
-	@apply overflow-y-hidden items-start;
+		.page--content {
+			@apply h-full py-0 auto-rows-auto;
 
-	.page--content {
-		@apply h-full py-0 auto-rows-auto;
-
-		.content-card {
-			@apply max-h-full pt-8 pb-8 px-4 -mx-4 overflow-y-auto h-[unset];
-			scrollbar-gutter: stable;
+			.content-card {
+				@apply max-h-full pt-8 pb-8 px-4 -mx-4 overflow-y-auto h-[unset];
+				scrollbar-gutter: stable;
+			}
 		}
 	}
-}
 
-.is-drop-zone {
-	@apply relative bg-ui-brand/5;
+	.is-drop-zone {
+		@apply relative bg-ui-brand/5;
 
-	&:before {
-		content: '';
-		@apply absolute inset-1 border border-ui-brand pointer-events-none rounded-lg ring-4 ring-ui-brand/25;
+		&:before {
+			content: '';
+			@apply absolute inset-1 border border-ui-brand pointer-events-none rounded-lg ring-4 ring-ui-brand/25;
+		}
 	}
-}
 
 </style>

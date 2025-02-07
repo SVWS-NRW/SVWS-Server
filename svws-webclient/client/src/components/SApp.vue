@@ -122,7 +122,7 @@
 					</svws-ui-header>
 				</div>
 				<p v-if="focusSwitchingEnabled" v-show="focusHelpVisible" class="region-enumeration">8</p>
-				<div v-show="!pendingSetApp" class="page--wrapper" :class="{'svws-api--pending': apiStatus.pending, 'focus-region': focusSwitchingEnabled, 'highlighted': focusHelpVisible}">
+				<div v-show="!pendingSetApp" class="page--wrapper h-full w-full flex flex-col" :class="{'svws-api--pending': apiStatus.pending, 'focus-region': focusSwitchingEnabled, 'highlighted': focusHelpVisible}">
 					<router-view :key="app.name" />
 				</div>
 			</main>

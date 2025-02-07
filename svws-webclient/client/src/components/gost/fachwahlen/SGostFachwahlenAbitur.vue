@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-table :items="[]" :no-data="false" :columns="cols" class="select-none">
+	<svws-ui-table :items="[]" :no-data="false" class="select-none">
 		<template #header>
 			<div role="row" class="svws-ui-tr">
 				<div role="cell" class="svws-ui-td col-span-full">
@@ -13,13 +13,13 @@
 		<template #body>
 			<template v-for="fws in fachwahlstatistik" :key="fws.id">
 				<template v-if="hatAbiFachwahl(fws)">
-					<div role="row" class="cursor-pointer svws-ui-tr" :style="{ 'background-color': getBgColor(fws) }" @click="onClick(fws)">
-						<div role="cell" class="svws-ui-td col-span-full">
+					<div role="row" class="cursor-pointer svws-ui-tr">
+						<div role="cell" class="svws-ui-td col-span-full" :style="'background-color: ' + getBgColor(fws)" @click="onClick(fws)">
 							<div class="-ml-1 mr-0.5 cursor-pointer">
 								<span class="icon i-ri-arrow-right-s-line" v-if="aktuell?.id !== fws.id" />
 								<span class="icon i-ri-arrow-down-s-line" v-else />
 							</div>
-							<span :class="{'svws-ui-badge': aktuell?.id === fws.id}">{{ faecherManager.get(fws.id)?.bezeichnung }}</span>
+							<span :class="{'font-bold': aktuell?.id === fws.id}">{{ faecherManager.get(fws.id)?.bezeichnung }}</span>
 						</div>
 					</div>
 					<div v-if="aktuell?.id === fws.id" role="row" class="svws-ui-tr">
@@ -55,7 +55,6 @@
 
 <script setup lang="ts">
 
-	import type { DataTableColumn } from "@ui";
 	import type { GostFachwahlenAbiturProps } from "./SGostFachwahlenAbiturProps";
 	import { computed, ref } from "vue";
 	import { GostAbiturFach, Fach, type GostStatistikFachwahl, type SchuelerListeEintrag, type List, ArrayList } from "@core";
@@ -63,12 +62,6 @@
 	const props = defineProps<GostFachwahlenAbiturProps>();
 
 	const aktuell = ref<GostStatistikFachwahl | undefined>(undefined); //fachwahlenstatistik.value.length === 0 ? undefined : fachwahlenstatistik.value.at(0)
-
-	const cols: DataTableColumn[] = [
-		{ key: "LK", label: "LK", span: 1 },
-		{ key: "AB3", label: "AB3", span: 1 },
-		{ key: "AB4", label: "Ab4", span: 1 },
-	];
 
 	const schuljahr = computed<number>(() => props.faecherManager.getSchuljahr());
 
@@ -110,3 +103,11 @@
 	}
 
 </script>
+
+<style scoped>
+
+	.svws-ui-tr {
+		grid-template-columns: repeat(3, 1fr);
+	}
+
+</style>

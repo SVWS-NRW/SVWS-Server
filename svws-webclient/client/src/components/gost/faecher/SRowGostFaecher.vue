@@ -1,57 +1,55 @@
 <template>
-	<div class="svws-ui-tr" role="row" :style="{ 'background-color': bgColor }">
-		<div role="cell" class="svws-ui-td">
-			<span :title="fach.kuerzelAnzeige || undefined">
-				{{ fach.kuerzelAnzeige }}
-			</span>
+	<div role="cell" class="svws-ui-td">
+		<span :title="fach.kuerzelAnzeige || undefined">
+			{{ fach.kuerzelAnzeige }}
+		</span>
+	</div>
+	<div role="cell" class="svws-ui-td" :title="fach?.bezeichnung || undefined">
+		<span class="line-clamp-1 break-all leading-tight -my-0.5">{{ fach.bezeichnung }}</span>
+	</div>
+	<div role="cell" class="svws-ui-td svws-align-center">
+		<!-- TODO Dieses Input ist immer disabled? -->
+		<input :disabled="!hatUpdateKompetenz || true" type="checkbox" class="svws-ui-checkbox svws-headless" v-model="fach.istFremdSpracheNeuEinsetzend">
+	</div>
+	<div role="cell" class="svws-ui-td svws-align-center svws-divider svws-no-padding" :class="{ 'cursor-pointer': istProjektkurs && hatUpdateKompetenz }" @click="set_pjk_stunden">
+		<div v-if="istProjektkurs && hatUpdateKompetenz" class="flex items-center gap-0.5 border border-ui-contrast-25 hover:border-ui-contrast-50 border-dashed hover:border-solid hover:bg-ui-contrast-0 my-auto p-[0.1rem] rounded" @keydown.enter="set_pjk_stunden" tabindex="0">
+			<span :class="{ 'opacity-100 font-bold': fach.wochenstundenQualifikationsphase === 2, 'opacity-25 hover:opacity-100 font-medium': fach.wochenstundenQualifikationsphase === 3}">2</span>
+			<span class="opacity-50">/</span>
+			<span :class="{ 'opacity-100 font-bold': fach.wochenstundenQualifikationsphase === 3, 'opacity-25 hover:opacity-100 font-medium': fach.wochenstundenQualifikationsphase === 2}">3</span>
 		</div>
-		<div role="cell" class="svws-ui-td" :title="fach?.bezeichnung || undefined">
-			<span class="line-clamp-1 break-all leading-tight -my-0.5">{{ fach.bezeichnung }}</span>
-		</div>
-		<div role="cell" class="svws-ui-td svws-align-center">
-			<!-- TODO Dieses Input ist immer disabled? -->
-			<input :disabled="!hatUpdateKompetenz || true" type="checkbox" class="svws-ui-checkbox svws-headless" v-model="fach.istFremdSpracheNeuEinsetzend">
-		</div>
-		<div role="cell" class="svws-ui-td svws-align-center svws-divider svws-no-padding" :class="{ 'cursor-pointer': istProjektkurs && hatUpdateKompetenz }" @click="set_pjk_stunden">
-			<div v-if="istProjektkurs && hatUpdateKompetenz" class="flex items-center gap-0.5 border border-ui-contrast-25 hover:border-ui-contrast-50 border-dashed hover:border-solid hover:bg-ui-contrast-0 my-auto p-[0.1rem] rounded" @keydown.enter="set_pjk_stunden" tabindex="0">
-				<span :class="{ 'opacity-100 font-bold': fach.wochenstundenQualifikationsphase === 2, 'opacity-25 hover:opacity-100 font-medium': fach.wochenstundenQualifikationsphase === 3}">2</span>
-				<span class="opacity-50">/</span>
-				<span :class="{ 'opacity-100 font-bold': fach.wochenstundenQualifikationsphase === 3, 'opacity-25 hover:opacity-100 font-medium': fach.wochenstundenQualifikationsphase === 2}">3</span>
-			</div>
-			<span v-else class="my-auto">{{ fach.wochenstundenQualifikationsphase }}</span>
-		</div>
-		<div role="cell" class="svws-ui-td">
-			<svws-ui-select v-if="istJahrgangAllgemein && hatLeitfach1 && hatUpdateKompetenz" removable headless v-model="leitfach1" :items="leitfaecher1" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? '—'" />
-			<span v-else class="px-2 text-center w-full" :class="{'opacity-25': !fach.projektKursLeitfach1Kuerzel}">{{ fach.projektKursLeitfach1Kuerzel || '—' }}</span>
-		</div>
-		<div role="cell" class="svws-ui-td svws-divider">
-			<svws-ui-select v-if="istJahrgangAllgemein && istProjektkurs && hatUpdateKompetenz" removable headless v-model="leitfach2" :items="leitfaecher2" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? '—'" />
-			<span v-else class="px-2 text-center w-full" :class="{'opacity-25': !fach.projektKursLeitfach2Kuerzel}">{{ fach.projektKursLeitfach2Kuerzel || '—' }}</span>
-		</div>
-		<div role="cell" class="svws-ui-td svws-align-center" :class="{'svws-disabled': !ef_moeglich}">
-			<input v-if="ef_moeglich" :disabled="!hatUpdateKompetenz" type="checkbox" class="svws-ui-checkbox svws-headless" v-model="ef1">
-		</div>
-		<div role="cell" class="svws-ui-td svws-align-center svws-divider" :class="{'svws-disabled': !ef_moeglich}">
-			<input v-if="ef_moeglich" :disabled="!hatUpdateKompetenz" type="checkbox" class="svws-ui-checkbox svws-headless" v-model="ef2">
-		</div>
-		<div role="cell" class="svws-ui-td svws-align-center">
-			<input type="checkbox" :disabled="!hatUpdateKompetenz" class="svws-ui-checkbox svws-headless" v-model="q11">
-		</div>
-		<div role="cell" class="svws-ui-td svws-align-center svws-divider">
-			<input type="checkbox" :disabled="!hatUpdateKompetenz" class="svws-ui-checkbox svws-headless" v-model="q12">
-		</div>
-		<div role="cell" class="svws-ui-td svws-align-center">
-			<input type="checkbox" :disabled="!hatUpdateKompetenz" class="svws-ui-checkbox svws-headless" v-model="q21">
-		</div>
-		<div role="cell" class="svws-ui-td svws-align-center svws-divider">
-			<input type="checkbox" :disabled="!hatUpdateKompetenz" class="svws-ui-checkbox svws-headless" v-model="q22">
-		</div>
-		<div role="cell" class="svws-ui-td svws-align-center" :class="{'svws-disabled': !abi_gk_moeglich}">
-			<input v-if="abi_gk_moeglich" :disabled="!hatUpdateKompetenz" type="checkbox" class="svws-ui-checkbox svws-headless" v-model="abiGK">
-		</div>
-		<div role="cell" class="svws-ui-td svws-align-center" :class="{'svws-disabled': !abi_lk_moeglich}">
-			<input v-if="abi_lk_moeglich" :disabled="!hatUpdateKompetenz" type="checkbox" class="svws-ui-checkbox svws-headless" v-model="abiLK">
-		</div>
+		<span v-else class="my-auto">{{ fach.wochenstundenQualifikationsphase }}</span>
+	</div>
+	<div role="cell" class="svws-ui-td">
+		<svws-ui-select v-if="istJahrgangAllgemein && hatLeitfach1 && hatUpdateKompetenz" removable headless v-model="leitfach1" :items="leitfaecher1" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? '—'" />
+		<span v-else class="px-2 text-center w-full" :class="{'opacity-25': !fach.projektKursLeitfach1Kuerzel}">{{ fach.projektKursLeitfach1Kuerzel || '—' }}</span>
+	</div>
+	<div role="cell" class="svws-ui-td svws-divider">
+		<svws-ui-select v-if="istJahrgangAllgemein && istProjektkurs && hatUpdateKompetenz" removable headless v-model="leitfach2" :items="leitfaecher2" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? '—'" />
+		<span v-else class="px-2 text-center w-full" :class="{'opacity-25': !fach.projektKursLeitfach2Kuerzel}">{{ fach.projektKursLeitfach2Kuerzel || '—' }}</span>
+	</div>
+	<div role="cell" class="svws-ui-td svws-align-center" :class="{'svws-disabled': !ef_moeglich}">
+		<input v-if="ef_moeglich" :disabled="!hatUpdateKompetenz" type="checkbox" class="svws-ui-checkbox svws-headless" v-model="ef1">
+	</div>
+	<div role="cell" class="svws-ui-td svws-align-center svws-divider" :class="{'svws-disabled': !ef_moeglich}">
+		<input v-if="ef_moeglich" :disabled="!hatUpdateKompetenz" type="checkbox" class="svws-ui-checkbox svws-headless" v-model="ef2">
+	</div>
+	<div role="cell" class="svws-ui-td svws-align-center">
+		<input type="checkbox" :disabled="!hatUpdateKompetenz" class="svws-ui-checkbox svws-headless" v-model="q11">
+	</div>
+	<div role="cell" class="svws-ui-td svws-align-center svws-divider">
+		<input type="checkbox" :disabled="!hatUpdateKompetenz" class="svws-ui-checkbox svws-headless" v-model="q12">
+	</div>
+	<div role="cell" class="svws-ui-td svws-align-center">
+		<input type="checkbox" :disabled="!hatUpdateKompetenz" class="svws-ui-checkbox svws-headless" v-model="q21">
+	</div>
+	<div role="cell" class="svws-ui-td svws-align-center svws-divider">
+		<input type="checkbox" :disabled="!hatUpdateKompetenz" class="svws-ui-checkbox svws-headless" v-model="q22">
+	</div>
+	<div role="cell" class="svws-ui-td svws-align-center" :class="{'svws-disabled': !abi_gk_moeglich}">
+		<input v-if="abi_gk_moeglich" :disabled="!hatUpdateKompetenz" type="checkbox" class="svws-ui-checkbox svws-headless" v-model="abiGK">
+	</div>
+	<div role="cell" class="svws-ui-td svws-align-center" :class="{'svws-disabled': !abi_lk_moeglich}">
+		<input v-if="abi_lk_moeglich" :disabled="!hatUpdateKompetenz" type="checkbox" class="svws-ui-checkbox svws-headless" v-model="abiLK">
 	</div>
 </template>
 
@@ -132,8 +130,6 @@
 		const fg = Fach.getBySchluesselOrDefault(fach.value.kuerzel).getFachgruppe(schuljahr.value);
 		return (fg === Fachgruppe.FG_VX) || (fg === Fachgruppe.FG_PX);
 	});
-
-	const bgColor: ComputedRef<string> = computed(() => Fach.getBySchluesselOrDefault(fach.value.kuerzel).getHMTLFarbeRGB(schuljahr.value));
 
 	const ef_moeglich: ComputedRef<boolean> = computed(() => {
 		const fg = Fach.getBySchluesselOrDefault(fach.value.kuerzel).getFachgruppe(schuljahr.value);

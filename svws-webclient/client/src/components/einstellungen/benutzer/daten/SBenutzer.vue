@@ -1,5 +1,5 @@
 <template>
-	<div class="page--content">
+	<div class="page page-grid-cards">
 		<div class="flex flex-col gap-12 lg:gap-16">
 			<svws-ui-content-card :title="`Benutzertyp ${BenutzerTyp.getByID(getBenutzerManager().daten().typ)?.bezeichnung}`">
 				<svws-ui-input-wrapper :grid="2">
@@ -13,9 +13,9 @@
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<svws-ui-content-card>
-				<svws-ui-table selectable :items="listBenutzergruppen" :disable-footer="true" :columns class="gruppen-tr">
+				<svws-ui-table selectable :items="listBenutzergruppen" :disable-footer="true" :columns>
 					<template #header>
-						<div role="row" class="svws-ui-tr">
+						<div role="row" class="svws-ui-tr gruppen-tr">
 							<!--<div class="svws-ui-td svws-align-center" role="columnheader" aria-label="Alle auswählen">
 						<svws-ui-checkbox :model-value="selected" />
 					</div>-->
@@ -25,7 +25,7 @@
 						</div>
 					</template>
 					<template #body>
-						<div role="row" class="svws-ui-tr" v-for="row in listBenutzergruppen" :key="row.id">
+						<div role="row" class="svws-ui-tr gruppen-tr" v-for="row in listBenutzergruppen" :key="row.id">
 							<div class="svws-ui-td svws-align-center" role="cell">
 								<svws-ui-checkbox type="toggle" :model-value="getBenutzerManager().istInGruppe(row.id)" @update:model-value="val => val ? addBenutzerToBenutzergruppe(row.id) : removeBenutzerFromBenutzergruppe(row.id)" />
 							</div>
@@ -62,9 +62,9 @@
 					</svws-ui-checkbox>
 				</template>
 			</template>
-			<svws-ui-table :items="kompetenzgruppen" class="kompetenz-tr">
+			<svws-ui-table :items="kompetenzgruppen">
 				<template #header>
-					<div class="svws-ui-tr" role="row">
+					<div class="svws-ui-tr kompetenz-tr" role="row">
 						<div class="svws-ui-td" role="columnheader" :class="{'col-span-2': getBenutzerManager().istAdmin()}">Kompetenz</div>
 						<div class="svws-ui-td" role="columnheader">
 							<span class="icon cursor-pointer" :class="{ 'i-ri-question-line': !showInfo, 'i-ri-question-fill': showInfo }" @click="toggleShowInfo" />
@@ -120,18 +120,11 @@
 	}
 
 </script>
-<style lang="postcss" scoped>
-
-	@reference "../../../../../../ui/src/assets/styles/index.css"
-
+<style scoped>
 	.gruppen-tr {
-		.svws-ui-tr {
-			grid-template-columns: minmax(3rem, 0.5fr) minmax(4rem, 10fr) var(--checkbox-width) !important;
-		}
+		grid-template-columns: minmax(3rem, 0.5fr) minmax(4rem, 10fr) var(--checkbox-width) !important;
 	}
 	.kompetenz-tr {
-		.svws-ui-tr {
-			grid-template-columns: minmax(4rem, 2fr) 0.15fr minmax(4rem, 1fr);
-		}
+		grid-template-columns: minmax(4rem, 2fr) 0.15fr minmax(4rem, 1fr);
 	}
 </style>

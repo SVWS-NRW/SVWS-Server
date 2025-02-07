@@ -222,22 +222,3 @@
 	onMounted(() => isMounted.value = true);
 
 </script>
-
-<style lang="postcss" scoped>
-
-	@reference "../../../../../ui/src/assets/styles/index.css"
-
-	.page--content {
-		@apply grid overflow-y-hidden overflow-x-auto h-full pb-3 pt-6 gap-x-8 lg:gap-x-12;
-		grid-auto-rows: 100%;
-		grid-template-columns: minmax(20rem, 0.5fr) 1fr;
-		grid-auto-columns: max-content;
-	}
-
-	.scrollbar-thin {
-		scrollbar-gutter: stable;
-		scrollbar-width: thin;
-		scrollbar-color: rgba(0,0,0,0.2) transparent;
-	}
-
-</style>

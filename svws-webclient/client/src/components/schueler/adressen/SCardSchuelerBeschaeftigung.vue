@@ -65,3 +65,11 @@
 	}
 
 </script>
+
+<style scoped>
+
+	.svws-ui-tr {
+		grid-template-columns: repeat(2, minmax(4rem, 1fr)) repeat(2, minmax(4rem, 0.5fr)) minmax(4rem, 0.25fr) repeat(3, minmax(4rem, 1fr)) 3rem;
+	}
+
+</style>

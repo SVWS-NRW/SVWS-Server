@@ -1,5 +1,5 @@
 <template>
-	<div class="page--content h-full w-full overflow-hidden">
+	<div class="page page-flex-row">
 		<enm-teilleistungen-uebersicht :manager :patch-leistung :patch-teilleistung :columns-visible :set-columns-visible />
 	</div>
 </template>
@@ -11,13 +11,3 @@
 	const props = defineProps<EnmTeilleistungenProps>();
 
 </script>
-
-<style lang="postcss" scoped>
-
-	@reference "../../../../ui/src/assets/styles/index.css";
-
-	.page--content {
-		@apply inline-block;
-	}
-
-</style>

@@ -207,13 +207,12 @@
 
 <style lang="postcss" scoped>
 
-	@reference "../../../../ui/src/assets/styles/index.css";
-
 	.svws-ui-tr {
 		grid-template-columns: 6em 1fr 4em 4em;
 		min-height: auto;
 		.svws-ui-td {
-			@apply leading-5 align-middle;
+			line-height: 1.25rem;
+			vertical-align: middle;
 		}
 	}
 

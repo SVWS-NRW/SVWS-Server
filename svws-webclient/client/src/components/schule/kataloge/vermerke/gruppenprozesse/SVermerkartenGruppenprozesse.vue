@@ -1,5 +1,5 @@
 <template>
-	<div class="page--content">
+	<div class="page page-grid-cards">
 		<div v-if="ServerMode.DEV.checkServerMode(serverMode)" class="flex flex-col gap-y-16 lg:gap-y-16">
 			<svws-ui-action-button v-if="hatKompetenzLoeschen" title="Löschen" description="Ausgewählte Vermerkarten werden gelöscht." icon="i-ri-delete-bin-line"
 				:action-function="entferneVermerkarten" :action-label="leereVermerkartenVorhanden ? 'Leere Vermerkarten löschen' : 'Löschen'" :is-loading="loading" :is-active="currentAction === 'delete'"

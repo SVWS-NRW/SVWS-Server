@@ -41,13 +41,3 @@
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 </script>
-
-<style lang="postcss">
-
-	@reference "../../../../../ui/src/assets/styles/index.css"
-
-	.svws-select-lernabschnitt .text-input-component {
-		@apply text-headline-md w-fit;
-	}
-
-</style>

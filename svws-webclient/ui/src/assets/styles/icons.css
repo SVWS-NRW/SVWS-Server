@@ -28,7 +28,7 @@
 
 	--icon-color-dark: invert(23%) sepia(18%) saturate(978%) hue-rotate(158deg) brightness(96%) contrast(91%);
 
-	--icon-color-ui: none;
+	--icon-color-ui: brightness(0) saturate(100%) invert(0%) sepia(100%) saturate(14%) hue-rotate(273deg) brightness(104%) contrast(104%);
 	--icon-color-ui-brand: brightness(0) saturate(100%) invert(37%) sepia(100%) saturate(422%) hue-rotate(172deg) brightness(93%) contrast(82%);
 	--icon-color-ui-statistic: brightness(0) saturate(100%) invert(28%) sepia(56%) saturate(3209%) hue-rotate(255deg) brightness(96%) contrast(101%);
 	--icon-color-ui-danger: brightness(0) saturate(100%) invert(26%) sepia(66%) saturate(2654%) hue-rotate(332deg) brightness(87%) contrast(85%);
@@ -36,15 +36,16 @@
 	--icon-color-ui-warning: brightness(0) saturate(100%) invert(56%) sepia(19%) saturate(1401%) hue-rotate(11deg) brightness(95%) contrast(87%);
 	--icon-color-ui-caution: brightness(0) saturate(100%) invert(31%) sepia(43%) saturate(1936%) hue-rotate(347deg) brightness(101%) contrast(90%);
 	--icon-color-ui-neutral: brightness(200%);
-	--icon-color-ui-onbrand: invert(100%);
-	--icon-color-ui-onstatistic: invert(100%);
+	--icon-color-ui-onbrand: brightness(0) saturate(100%) invert(99%) sepia(7%) saturate(0%) hue-rotate(83deg) brightness(115%) contrast(100%);
+	--icon-color-ui-onstatistic: brightness(0) saturate(100%) invert(99%) sepia(7%) saturate(0%) hue-rotate(83deg) brightness(115%) contrast(100%);
 	--icon-color-ui-onselected: brightness(0) saturate(100%) invert(21%) sepia(83%) saturate(516%) hue-rotate(174deg) brightness(97%) contrast(98%);
-	--icon-color-ui-ondanger: invert(100%);
-	--icon-color-ui-onsuccess: invert(100%);
-	--icon-color-ui-onwarning: none;
-	--icon-color-ui-oncaution: none;
-	--icon-color-ui-onneutral: none;
-	--icon-color-ui--dark: invert(100%);
+	--icon-color-ui-ondanger: brightness(0) saturate(100%) invert(99%) sepia(7%) saturate(0%) hue-rotate(83deg) brightness(115%) contrast(100%);
+	--icon-color-ui-onsuccess: brightness(0) saturate(100%) invert(99%) sepia(7%) saturate(0%) hue-rotate(83deg) brightness(115%) contrast(100%);
+	--icon-color-ui-onwarning: brightness(0) saturate(100%) invert(0%) sepia(100%) saturate(14%) hue-rotate(273deg) brightness(104%) contrast(104%);
+	--icon-color-ui-oncaution: brightness(0) saturate(100%) invert(99%) sepia(7%) saturate(0%) hue-rotate(83deg) brightness(115%) contrast(100%);
+	--icon-color-ui-onneutral: brightness(0) saturate(100%) invert(0%) sepia(100%) saturate(14%) hue-rotate(273deg) brightness(104%) contrast(104%);
+	--icon-color-ui-onhover: brightness(0) saturate(100%) invert(90%) sepia(6%) saturate(13%) hue-rotate(214deg) brightness(104%) contrast(102%);
+	--icon-color-ui--dark: brightness(0) saturate(100%) invert(99%) sepia(7%) saturate(0%) hue-rotate(83deg) brightness(115%) contrast(100%);
 	--icon-color-ui-brand--dark: brightness(0) saturate(100%) invert(74%) sepia(30%) saturate(6750%) hue-rotate(187deg) brightness(87%) contrast(88%);
 	--icon-color-ui-statistic--dark: brightness(0) saturate(100%) invert(46%) sepia(48%) saturate(867%) hue-rotate(225deg) brightness(101%) contrast(94%);
 	--icon-color-ui-danger--dark: brightness(0) saturate(100%) invert(52%) sepia(22%) saturate(1384%) hue-rotate(306deg) brightness(94%) contrast(96%);
@@ -56,9 +57,9 @@
 	--icon-color-ui-onstatistic--dark: invert(100%);
 	--icon-color-ui-onselected--dark: brightness(0) saturate(100%) invert(81%) sepia(8%) saturate(1290%) hue-rotate(180deg) brightness(98%) contrast(95%);
 	--icon-color-ui-ondanger--dark: invert(100%);
-	--icon-color-ui-onsuccess--dark: invert(100%);
-	--icon-color-ui-onwarning--dark: none;
-	--icon-color-ui-oncaution--dark: none;
+	--icon-color-ui-onsuccess--dark: brightness(0) saturate(100%) invert(99%) sepia(7%) saturate(0%) hue-rotate(83deg) brightness(115%) contrast(100%);
+	--icon-color-ui-onwarning--dark: brightness(0) saturate(100%) invert(0%) sepia(100%) saturate(14%) hue-rotate(273deg) brightness(104%) contrast(104%);
+	--icon-color-ui-oncaution--dark: brightness(0) saturate(100%) invert(99%) sepia(7%) saturate(0%) hue-rotate(83deg) brightness(115%) contrast(100%);
 	--icon-color-ui-onneutral--dark: invert(100%);
 
 }

@@ -6,11 +6,12 @@ test.use({
 
 const targetHost = process.env.VITE_targetHost ?? "https://localhost"
 
-test('Basic_Navigation_left_menui', async ({page}) => {
+test('Basic_Navigation_left_menu', async ({page}) => {
 	test.setTimeout(25_000);
 	await page.goto(targetHost + '/#/login?redirect=/');
 	await page.getByLabel('Benutzername').click();
 	await page.getByLabel('Benutzername').fill('Admin');
+	await expect(page.getByRole('button', {name: 'Anmelden'})).toContainText('Anmelden');
 	await page.getByRole('button', {name: 'Anmelden'}).click();
 	await expect(page.locator('header')).toContainText('Eleonora Externa');
 	await page.getByRole('link', {name: 'Schule'}).click();
@@ -29,7 +30,7 @@ test('Basic_Navigation_left_menui', async ({page}) => {
 	await expect(page.locator('header')).toContainText('Administrator');
 	await page.getByRole('link', {name: 'Abmelden'}).click();
 	await expect(page.locator('h1')).toContainText('SVWS NRW');
-	await expect(page.getByRole('main')).toContainText('Anmelden');
+	await expect(page.getByRole('button', {name: 'Anmelden'})).toContainText('Anmelden');
 });
 
 

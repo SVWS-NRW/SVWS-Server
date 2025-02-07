@@ -7,14 +7,47 @@
 @import "./screens.css";
 @import "./icons.css";
 
-@import "./ui/controls/UiFileInput.css";
-@import "./ui/layout/UiPage.css";
-@import "./ui/layout/UiAppLayout.css";
-@import "./ui/modal/UiModal.css";
+@import "../../ui/SvwsDocsUiColors.css";
+@import "../../ui/SvwsUiAvatar.css";
+@import "../../ui/SvwsUiBadge.css";
+@import "../../ui/SvwsUiNotification.css";
+@import "../../ui/SvwsUiNotifications.css";
+@import "../../ui/SvwsUiSpinner.css";
+@import "../../ui/SvwsUiTooltip.css";
+@import "../../ui/controls/SvwsUiButton.css";
+@import "../../ui/controls/SvwsUiCheckbox.css";
+@import "../../ui/controls/SvwsUiDropdownList.css";
+@import "../../ui/controls/SvwsUiInputNumber.css";
+@import "../../ui/controls/SvwsUiMultiSelect.css";
+@import "../../ui/controls/SvwsUiRadioOption.css";
+@import "../../ui/controls/SvwsUiSelect.css";
+@import "../../ui/controls/SvwsUiTextareaInput.css";
+@import "../../ui/controls/SvwsUiTextInput.css";
+@import "../../ui/controls/UiFileInput.css";
+@import "../../ui/layout/SvwsUiActionButton.css";
+@import "../../ui/layout/SvwsUiAppLayout.css";
+@import "../../ui/layout/UiCard.css";
+@import "../../ui/layout/SvwsUiContentCard.css";
+@import "../../ui/layout/SvwsUiDashboardTile.css";
+@import "../../ui/layout/SvwsUiHeader.css";
+@import "../../ui/layout/SvwsUiInputWrapper.css";
+@import "../../ui/layout/SvwsUiSpacing.css";
+@import "../../ui/layout/SvwsUiTable.css";
+@import "../../ui/layout/UiPage.css";
+@import "../../ui/modal/SvwsUiModal.css";
+@import "../../ui/nav/SvwsUiMenu.css";
+@import "../../ui/nav/SvwsUiMenuHeader.css";
+@import "../../ui/nav/SvwsUiMenuItem.css";
+@import "../../ui/nav/SvwsUiSecondaryMenu.css";
+@import "../../ui/nav/SvwsUiSubNav.css";
+@import "../../ui/nav/SvwsUiTabBar.css";
+@import "../../ui/nav/SvwsUiTabBarVertical.css";
+
+@import "../../components/stundenplan/StundenplanAnsicht.css";
 
 @plugin "@tailwindcss/typography";
 
-/* TODO: Prüfen, inwieweit die unteren Definitionen nicht besser bei den UI-Komponenten plaziert werden können. */
+/* TODO: Prüfen, inwieweit die unteren Definitionen nicht besser bei den UI-Komponenten platziert werden können. */
 @layer base {
 
 	.secondary-menu--header .input-wrapper {
@@ -106,66 +139,6 @@
 		.icon,
 		.icon-ui {
 			@apply icon-ui--dark;
-		}
-		
-		.icon-ui-brand {
-			@apply icon-ui-brand--dark;
-		}
-		
-		.icon-ui-statistic {
-			@apply icon-ui-statistic--dark;
-		}
-		
-		.icon-ui-danger {
-			@apply icon-ui-danger--dark;
-		}
-		
-		.icon-ui-success {
-			@apply icon-ui-success--dark;
-		}
-		
-		.icon-ui-warning {
-			@apply icon-ui-warning--dark;
-		}
-		
-		.icon-ui-caution {
-			@apply icon-ui-caution--dark;
-		}
-		
-		.icon-ui-neutral {
-			@apply icon-ui-neutral--dark;
-		}
-		
-		.icon-ui-onbrand {
-			@apply icon-ui-onbrand--dark;
-		}
-		
-		.icon-ui-onstatistic {
-			@apply icon-ui-onstatistic--dark;
-		}
-		
-		.icon-ui-onselected {
-			@apply icon-ui-onselected--dark;
-		}
-		
-		.icon-ui-ondanger {
-			@apply icon-ui-ondanger--dark;
-		}
-		
-		.icon-ui-onsuccess {
-			@apply icon-ui-onsuccess--dark;
-		}
-		
-		.icon-ui-onwarning {
-			@apply icon-ui-onwarning--dark;
-		}
-		
-		.icon-ui-oncaution {
-			@apply icon-ui-oncaution--dark;
-		}
-		
-		.icon-ui-onneutral {
-			@apply icon-ui-onneutral--dark;
 		}
 	}
 

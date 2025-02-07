@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-app-layout fullwidth-content>
 		<template #main>
-			<div class="app--page" :class="app.name">
+			<div class="app--page h-full" :class="app.name">
 				<div class="page--wrapper">
 					<template v-if="pendingSetApp !== null">
 						<svws-ui-header>

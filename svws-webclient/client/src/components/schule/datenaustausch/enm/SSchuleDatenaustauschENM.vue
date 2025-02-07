@@ -9,7 +9,7 @@
 	</svws-ui-header>
 	<div class="svws-ui-page w-full">
 		<div class="svws-ui-tab-content">
-			<div class="page--content page--content--full">
+			<div class="page page-flex-row">
 				<s-card-schule-datenaustausch-e-n-m :set-import-e-n-m="setImportENM" />
 			</div>
 		</div>

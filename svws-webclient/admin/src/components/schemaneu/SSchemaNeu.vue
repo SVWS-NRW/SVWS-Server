@@ -1,5 +1,5 @@
 <template>
-	<div class="page--flex">
+	<div class="page page-flex-col">
 		<header class="svws-ui-header max-w-[140rem]">
 			<div class="svws-ui-header--title gap-x-8 lg:gap-x-16 w-full">
 				<div class="svws-headline-wrapper flex-[2]">
@@ -12,7 +12,7 @@
 			<div class="svws-ui-header--actions" />
 		</header>
 		<svws-ui-tab-bar :tab-manager="() => new TabManager([], { name: 'Dummy', text: 'Dummy' }, async (a) => {})">
-			<div class="page--content">
+			<div class="page page-grid-cards">
 				<div class="flex flex-col gap-y-16 lg:gap-y-20">
 					<svws-ui-content-card>
 						<!-- Neues leeres Schema anlegen -->

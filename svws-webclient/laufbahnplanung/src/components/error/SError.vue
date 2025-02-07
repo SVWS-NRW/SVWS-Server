@@ -40,7 +40,7 @@
 				</svws-ui-header>
 				<div class="svws-ui-page" v-if="error !== undefined">
 					<div class="svws-ui-tab-content">
-						<div class="page--content">
+						<div class="page page-grid-cards">
 							<svws-ui-content-card :title="error?.message">
 								<pre>{{ error.stack }}</pre>
 							</svws-ui-content-card>

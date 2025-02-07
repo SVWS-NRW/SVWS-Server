@@ -1,9 +1,9 @@
 <template>
 	<div v-if="manager().getListZeitraster().size()" class="svws-ui-stundenplan svws-ui-stundenplan--mode-planung" :class="`${showZeitachse ? 'svws-hat-zeitachse' : 'svws-ohne-zeitachse'}`">
 		<div class="svws-ui-stundenplan--head">
-			<span class="icon i-ri-time-line svws-time-icon print:hidden" v-if="showZeitachse" />
+			<span class="icon i-ri-time-line svws-time-icon print:!hidden" v-if="showZeitachse" />
 			<!-- Das Feld links in der Überschrift beinhaltet den ausgewählten Wochentyp -->
-			<div class="inline-flex gap-1 items-center justify-center print:pl-2 print:justify-start opacity-50 text-sm font-bold pb-0.5" />
+			<div class="inline-flex gap-1 items-center justify-center print:!pl-2 print:!justify-start opacity-50 text-sm font-bold pb-0.5" />
 			<!-- Daneben werden die einzelnen Wochentage des Stundenplans angezeigt -->
 			<div v-for="wochentag in wochentagRange" :key="wochentag.id" @click="updateSelected(wochentag)" class="svws-wochentag-label" :class="{'svws-selected': selected===wochentag}">
 				<span class="px-2 py-1 rounded-xs"> {{ wochentag.beschreibung }}</span>
@@ -215,6 +215,5 @@
 		link.click();
 		URL.revokeObjectURL(link.href);
 	}
-
 
 </script>

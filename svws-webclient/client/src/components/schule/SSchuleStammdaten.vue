@@ -14,7 +14,7 @@
 			</div>
 			<div class="svws-ui-header--actions" />
 		</header>
-		<div class="page--content">
+		<div class="page page-grid-cards">
 			<svws-ui-content-card title="Stammdaten">
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-text-input class="contentFocusField" placeholder="Bezeichnung 1" :model-value="schule().bezeichnung1" @change="bezeichnung1 => bezeichnung1 && patch({ bezeichnung1 })" type="text" :disabled="!editSchuldaten" />

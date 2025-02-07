@@ -1,8 +1,8 @@
 <template>
-	<Story title="Card" id="svws-ui-card" icon="ri:window-2-fill" :layout="{ type: 'single' }" auto-props-disabled>
+	<Story title="Card" id="ui-card" icon="ri:window-2-fill" :layout="{ type: 'single' }" auto-props-disabled>
 		<Variant title="Collapsible" id="Collapsible" :responsive-disabled="false">
 			<div class="p-4">
-				<svws-ui-card :compact="state.compact" :is-open="state.isOpen" :collapsible="true" :collapse-icon-position="state.iconPosition"
+				<ui-card :compact="state.compact" :is-open="state.isOpen" :collapsible="true" :collapse-icon-position="state.iconPosition"
 					:icon="state.showIcon ? 'i-ri-settings-2-line' : undefined" :title="state.title" :subtitle="state.subtitle" :info="state.info"
 					:content="state.content" :show-divider="state.showDivider" :footer="state.footer" @update:is-open="(isOpen) => state.isOpen = isOpen" />
 			</div>
@@ -26,7 +26,7 @@
 		</Variant>
 		<Variant title="Nicht Collapsible" id="NotCollapsible">
 			<div class="p-4">
-				<svws-ui-card :compact="state.compact" :collapsible="false" :collapse-icon-position="state.iconPosition"
+				<ui-card :compact="state.compact" :collapsible="false" :collapse-icon-position="state.iconPosition"
 					:icon="state.showIcon ? 'i-ri-settings-2-line' : undefined" :title="state.title" :subtitle="state.subtitle" :info="state.info"
 					:content="state.content" :show-divider="state.showDivider" :footer="state.footer" :is-open="state.isOpen" />
 			</div>
@@ -46,7 +46,7 @@
 		</Variant>
 		<Variant title="Collapsible Buttons" id="CollapsibleButtons">
 			<div class="p-4">
-				<svws-ui-card :compact="state.compact" :is-open="state.isOpen" :collapsible="true" :collapse-icon-position="state.iconPosition"
+				<ui-card :compact="state.compact" :is-open="state.isOpen" :collapsible="true" :collapse-icon-position="state.iconPosition"
 					:icon="state.showIcon ? 'i-ri-settings-2-line' : undefined" :title="state.title" :subtitle="state.subtitle" :info="state.info"
 					:content="state.content" :show-divider="state.showDivider" :footer="state.footer" :button-mode="state.buttonMode"
 					:button-container="state.buttonContainer" :button-position="state.buttonPosition" :button-orientation="state.buttonOrientation"
@@ -90,12 +90,12 @@
 					{ label: 'vertikal', value: 'vertical' },
 					{ label: 'horizontal', value: 'horizontal' },
 				]" />
-				<div class="font-medium p-2">Anzeige</div>
+				<div class="font-bold p-2">Anzeige</div>
 				<HstCheckbox v-model="state.showSave" title="Speichern" />
 				<HstCheckbox v-model="state.showCancel" title="Abbrechen" />
 				<HstCheckbox v-model="state.showEdit" title="Bearbeiten" />
 				<HstCheckbox v-model="state.showDelete" title="Löschen" />
-				<div class="font-medium p-2">Disabled</div>
+				<div class="font-bold p-2">Disabled</div>
 				<HstCheckbox v-model="state.disabledSave" title="Speichern" />
 				<HstCheckbox v-model="state.disabledCancel" title="Abbrechen" />
 				<HstCheckbox v-model="state.disabledEdit" title="Bearbeiten" />

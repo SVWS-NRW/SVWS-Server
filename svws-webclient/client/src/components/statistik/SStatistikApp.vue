@@ -1,5 +1,5 @@
 <template>
-	<div v-if="data" class="page--flex page--statistik">
+	<div v-if="data" class="page page-flex-col gap-0 page--statistik">
 		<svws-ui-header>
 			<div class="flex flex-col">
 				<div class="inline-block">{{ schulname }}</div>
@@ -16,7 +16,7 @@
 		</svws-ui-header>
 		<svws-ui-tab-bar :tab-manager :focus-switching-enabled :focus-help-visible>
 			<template v-if="selectedRoute.name === 'dashboard'">
-				<div class="page--content--dashboard">
+				<div class="page page-grid grid-cols-2 lg:grid-cols-4" style="grid-auto-rows: min-content">
 					<svws-ui-dashboard-tile :span="2" color="transparent" title="Adresse">
 						<div class="mt-5 whitespace-pre-line">{{ adresse }}</div>
 						<div class="mt-2 flex gap-1">
@@ -242,4 +242,12 @@
 	const selectedRoute = ref(tabManager().tab);
 
 </script>
+
+<style scoped>
+
+	.svws-ui-tr {
+		grid-template-columns: minmax(5rem, 5rem) minmax(4rem, 0.25fr) minmax(4rem, 0.25fr) minmax(4rem, 2fr) minmax(4rem, 4rem);
+	}
+
+</style>
 

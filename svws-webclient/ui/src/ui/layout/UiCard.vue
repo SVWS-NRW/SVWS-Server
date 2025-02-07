@@ -1,11 +1,11 @@
 <template>
-	<div class="svws-ui-card" :class="{ 'compact' : compact }" tabindex="0">
+	<div class="ui-card" :class="{ 'ui-card--compact' : compact }" tabindex="0">
 		<!-- Header Section -->
-		<component :is="collapsible ? 'button' : 'div'" :type="collapsible ? 'button' : 'text'" :class="{ 'svws-active': isActive }" class="svws-ui-card--header"
+		<component :is="collapsible ? 'button' : 'div'" :type="collapsible ? 'button' : 'text'" :class="{ 'ui-card--active': isActive }" class="ui-card--header"
 			@click="collapsible ? setActive() : null" :aria-expanded="ariaExpanded" :aria-controls="collapsible ? 'cardBody' + instanceId : undefined">
 			<!-- Left Collapse Icon -->
-			<div v-if="showCollapseIconLeft" class="header--collapse-icon">
-				<transition name="icon" mode="out-in">
+			<div v-if="showCollapseIconLeft" class="ui-card--header--collapse-icon">
+				<transition name="ui-card--icon" mode="out-in">
 					<!-- Closed Icon -->
 					<span v-if="!isActive" :class="collapseIconClosed" aria-label="Card geschlossen" />
 					<!-- Opened Icon -->
@@ -15,26 +15,26 @@
 			<slot name="collapseLeft" />
 
 			<!-- Icon Section -->
-			<div v-if="showIcon" class="header--icon"> <span :class="[icon]" /> </div>
+			<div v-if="showIcon" class="ui-card--header--icon "> <span :class="[icon]" /> </div>
 			<slot name="icon" />
 
 			<!-- Title and Subtitle Section -->
-			<div v-if="showTitleWrapper" class="header--title-wrapper">
-				<div v-if="showTitle" class="header--title"> {{ title }} </div>
+			<div v-if="showTitleWrapper" class="ui-card--header--title-wrapper">
+				<div v-if="showTitle" class="ui-card--header--title"> {{ title }} </div>
 				<slot name="title" />
-				<div v-if="showSubtitle" class="header--subtitle"> {{ subtitle }} </div>
+				<div v-if="showSubtitle" class="ui-card--header--subtitle"> {{ subtitle }} </div>
 				<slot name="subtitle" />
 			</div>
 
 			<!-- Right Section -->
-			<div class="header--right-section">
+			<div class="ui-card--header--right-section">
 				<!-- Info Section -->
-				<div v-if="showInfo" class="header--info"> {{ info }} </div>
+				<div v-if="showInfo" class="ui-card--header--info"> {{ info }} </div>
 				<slot name="info" />
 
 				<!-- Right Collapse Icon -->
-				<div v-if="showCollapseIconRight" class="header--collapse-icon">
-					<transition name="icon" mode="out-in">
+				<div v-if="showCollapseIconRight" class="ui-card--header--collapse-icon">
+					<transition name="ui-card--icon" mode="out-in">
 						<!-- Closed Icon -->
 						<span v-if="!isActive" :class="collapseIconClosed" aria-label="Card geschlossen" />
 						<!-- Opened Icon -->
@@ -45,19 +45,19 @@
 			</div>
 		</component>
 
-		<transition name="collapse" @before-enter="emit('update:isOpen', true);" @enter="openCard" @after-enter="afterOpenCard" @before-leave="beforeCloseCard" @leave="closeCard" @after-leave="emit('update:isOpen', false);">
-			<div v-show="isActive" :id="'cardBody' + instanceId" class="svws-ui-card--body-wrapper" ref="bodyWrapperRef">
-				<div class="svws-ui-card--body">
+		<transition name="ui-card--collapse" @before-enter="emit('update:isOpen', true);" @enter="openCard" @after-enter="afterOpenCard" @before-leave="beforeCloseCard" @leave="closeCard" @after-leave="emit('update:isOpen', false);">
+			<div v-show="isActive" :id="'cardBody' + instanceId" class="ui-card--body-wrapper" ref="bodyWrapperRef">
+				<div class="ui-card--body">
 					<!-- Content Section -->
-					<div class="body--content">
+					<div class="ui-card--body--content">
 						<!-- Left Button Section -->
-						<div v-if="showContentLeftButton" id="svws-ui-card--button-content-left" />
+						<div v-if="showContentLeftButton" id="ui-card--button-content-left" />
 						<slot name="buttonContentLeft" />
 						<!-- Main Section -->
-						<span v-if="showContentMain" class="content--main">{{ content }}</span>
-						<slot name="content" />
+						<span v-if="showContentMain" class="ui-card--content--main">{{ content }}</span>
+						<slot />
 						<!-- Right Button Section -->
-						<div v-if="showContentRightButton" id="svws-ui-card--button-content-right" />
+						<div v-if="showContentRightButton" id="ui-card--button-content-right" />
 						<div v-else-if="slots.buttonContentRight" class="ml-auto">
 							<slot name="buttonContentRight" />
 						</div>
@@ -66,15 +66,15 @@
 					<hr v-if="showFooterDivider">
 					<slot name="footerDivider" v-else />
 					<!-- Footer Section -->
-					<div v-if="showFooter" class="body--footer">
+					<div v-if="showFooter" class="ui-card--body--footer">
 						<!-- Left Button Section -->
-						<div v-if="showFooterLeftButton" id="svws-ui-card--button-footer-left" />
+						<div v-if="showFooterLeftButton" id="ui-card--button-footer-left" />
 						<slot name="buttonFooterLeft" />
 						<!-- Footer Main Content -->
-						<span v-if="showFooterMain" class="footer--main"> {{ footer }} </span>
+						<span v-if="showFooterMain" class="ui-card--footer--main"> {{ footer }} </span>
 						<slot name="footer" />
 						<!-- Right Button Section -->
-						<div v-if="showFooterRightButton" id="svws-ui-card--button-footer-right" />
+						<div v-if="showFooterRightButton" id="ui-card--button-footer-right" />
 						<div v-else-if="slots.buttonFooterRight" class="ml-auto">
 							<slot name="buttonFooterRight" />
 						</div>
@@ -86,14 +86,14 @@
 
 	<!-- Buttons -->
 	<Teleport v-if="buttonContainerId && showButtons" defer :to="buttonContainerId">
-		<div class="card--buttons" :class="{ 'flex-col': (buttonOrientation === 'vertical'), 'ml-auto': (buttonPosition === 'right') }">
+		<div class="ui-card--buttons" :class="{ 'flex-col': (buttonOrientation === 'vertical'), 'ml-auto': (buttonPosition === 'right') }">
 			<template v-for="(button) in buttons" :key="button.label">
 				<SvwsUiTooltip :disabled="tooltipDisabled(button)" :position="buttonOrientation === 'vertical' ? 'right' : 'top'" :indicator="false">
 					<template #content>
 						{{ `${button.label}${(button.disabled && (button.disabledReason !== undefined ) && button.disabledReason.length !== 0)
 							? `: ${button.disabledReason}` : ''}` }}
 					</template>
-					<SvwsUiButton class="card--button" :disabled="button.disabled" @click="button.click"
+					<SvwsUiButton class="ui-card--button" :disabled="button.disabled" @click="button.click"
 						:type="props.buttonMode === 'text' ? button.type : 'icon'" :size="((props.buttonMode === 'text') && compact) ? 'small' : 'normal'"
 						:aria-label="`Button ${button.label}`">
 						<span :class="props.buttonMode === 'icon' ? [button.icon, button.iconType] : ''">
@@ -201,7 +201,7 @@
 	const showTitle = computed(() => !slots.title && (props.title !== undefined) && (props.title.length !== 0));
 	const showSubtitle = computed(() => !slots.subtitle && (props.subtitle !== undefined) && (props.subtitle.length !== 0));
 	const showInfo = computed(() => !slots.info && (props.info !== undefined) && (props.info.length !== 0));
-	const showContentMain = computed(() => !slots.content && (props.content !== undefined) && (props.content.length !== 0));
+	const showContentMain = computed(() => !slots.default && (props.content !== undefined) && (props.content.length !== 0));
 	const showContentLeftButton = computed(() => !slots.buttonContentLeft && showButtons.value && (props.buttonPosition === 'left')
 		&& (props.buttonContainer === 'content'));
 	const showContentRightButton = computed(() => !slots.buttonContentRight && showButtons.value && (props.buttonPosition === 'right')
@@ -224,9 +224,9 @@
 		if(!showButtons.value)
 			return undefined;
 		if(props.buttonContainer === "content")
-			return (props.buttonPosition === "left") ? "#svws-ui-card--button-content-left" : "#svws-ui-card--button-content-right";
+			return (props.buttonPosition === "left") ? "#ui-card--button-content-left" : "#ui-card--button-content-right";
 		else
-			return (props.buttonPosition === "left") ? "#svws-ui-card--button-footer-left" : "#svws-ui-card--button-footer-right";
+			return (props.buttonPosition === "left") ? "#ui-card--button-footer-left" : "#ui-card--button-footer-right";
 	});
 
 	const ariaExpanded = computed(() => props.collapsible ? isActive.value : undefined);
@@ -365,177 +365,3 @@
 	}
 
 </script>
-
-
-<style lang="postcss" scoped>
-
-	@reference "../../assets/styles/index.css";
-
-	.svws-ui-card {
-		@apply rounded-lg m-2 min-w-fit gap-3;
-
-		.svws-ui-card--header {
-			@apply p-4 flex items-center gap-3 text-left w-full rounded-lg bg-ui-brand-weak border border-ui-brand transition-[border-radius]
-				duration-100 delay-[450ms] ease-in-out;
-
-			.header--icon span {
-				@apply icon-xl block;
-			}
-
-			.header--title-wrapper {
-				@apply flex flex-col justify-center;
-
-				.header--title {
-					@apply text-headline-md;
-				}
-
-				.header--subtitle {
-					@apply text-sm;
-				}
-			}
-
-			.header--right-section {
-				@apply flex items-center ml-auto gap-3;
-
-				.header--info {
-					@apply font-medium text-headline-sm;
-				}
-			}
-
-			.header--collapse-icon {
-				.icon-enter-active,
-				.icon-leave-active {
-					@apply transition-opacity duration-200 ease-linear;
-				}
-
-				.icon-enter-from {
-					@apply opacity-0;
-				}
-
-				.icon-enter-to {
-					@apply opacity-100;
-				}
-
-				.icon-leave-active {
-					@apply opacity-0;
-				}
-
-				span {
-					@apply icon-lg block;
-				}
-			}
-
-			&.svws-active {
-				@apply rounded-b-none transition-[border-radius] delay-0 duration-100 ease-in-out bg-ui-brand border-ui-brand;
-			}
-		}
-
-		.svws-ui-card--body-wrapper {
-			@apply overflow-hidden rounded-b-lg;
-
-			.svws-ui-card--body {
-				@apply rounded-b-lg p-4 bg-ui-neutral flex gap-3 flex-col border border-ui-brand border-t-0;
-
-				.body--content {
-					@apply flex gap-3 justify-between items-start overflow-auto;
-					scrollbar-width: thin;
-
-					.content--main {
-						@apply text-justify;
-					}
-				}
-
-				.body--footer {
-					@apply flex gap-3 items-center relative overflow-auto;
-					scrollbar-width: thin;
-
-					.footer--main {
-						@apply text-justify text-ui-secondary;
-					}
-				}
-
-				.card--buttons {
-					@apply flex gap-3;
-
-					.card--button {
-						@apply flex justify-center items-center w-auto h-auto;
-
-						&.button--icon {
-							@apply !p-0 mt-1 box-border;
-
-							span {
-								@apply icon;
-							}
-
-							&:disabled {
-								@apply icon-gray bg-transparent;
-							}
-						}
-
-					}
-				}
-			}
-		}
-
-		&.compact {
-			.svws-ui-card--header {
-				@apply p-1 gap-1;
-
-				.header--icon span,
-				.header--collapse-icon span {
-					@apply icon-sm;
-				}
-
-				.header--title-wrapper .header--title {
-					@apply text-headline-sm;
-				}
-
-				.header--right-section {
-					@apply gap-1;
-
-					.header--info {
-						@apply text-sm font-medium;
-					}
-				}
-			}
-
-			.svws-ui-card--body-wrapper .svws-ui-card--body {
-				@apply p-2 gap-1;
-
-				.body--content,
-				.body--footer,
-				.card--buttons {
-					@apply gap-1;
-				}
-			}
-		}
-
-		&:hover,
-		&:focus-visible,
-		&:focus {
-			.svws-ui-card--header {
-				@apply bg-ui-brand-hover border-ui-brand-hover text-ui-onbrand-hover;
-
-				.header--icon span,
-				.header--collapse-icon span {
-					@apply icon-white;
-				}
-			}
-
-			.svws-ui-card--body-wrapper .svws-ui-card--body {
-				@apply border-ui-brand-hover;
-			}
-		}
-
-		.collapse-enter-active,
-		.collapse-leave-active {
-			@apply transition-[max-height] duration-500 delay-[50ms] ease-in-out;
-		}
-
-		.collapse-leave-active {
-			@apply delay-0;
-		}
-	}
-
-
-</style>

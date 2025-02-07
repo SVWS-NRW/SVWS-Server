@@ -3,10 +3,10 @@
 		<svws-ui-button type="secondary" @click="print"><span class="icon i-ri-printer-line" />Drucken</svws-ui-button>
 		<svws-ui-modal-hilfe> <hilfe-klassen-stundenplan /> </svws-ui-modal-hilfe>
 	</Teleport>
-	<div class="page--content page--content--flex h-full">
+	<div class="page page-flex-col overflow-x-auto">
 		<template v-if="stundenplan === undefined">
-			<div class="svws-ui-empty">
-				<span class="icon i-ri-calendar-event-line" />
+			<div class="flex flex-col gap-2 justify-center items-center min-h-full w-full grow text-headline-md text-ui-contrast-50 text-center">
+				<span class="icon-xxl i-ri-calendar-event-line" />
 				<span>Derzeit liegt kein Stundenplan<br>für diesen Lernabschnitt vor.</span>
 			</div>
 		</template>
