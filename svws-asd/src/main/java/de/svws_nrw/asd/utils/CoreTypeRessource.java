@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.svws_nrw.asd.data.CoreTypeData;
+import de.svws_nrw.asd.data.CoreTypeException;
 import de.svws_nrw.asd.data.NoteKatalogEintrag;
 import de.svws_nrw.asd.data.fach.BilingualeSpracheKatalogEintrag;
 import de.svws_nrw.asd.data.fach.FachKatalogEintrag;
@@ -239,6 +240,61 @@ public final class CoreTypeRessource<T extends CoreTypeData, U extends CoreType<
 		// Initialisieren die Core-Types
 		for (final var res : listResources)
 			res.init();
+	}
+
+
+	/**
+	 * Reinitialisieren der Values eines CoreTypeSimple.
+	 *
+	 * @param <S>
+	 * @param jsonCoreTypeData
+	 */
+	@SuppressWarnings("unchecked")
+	private <S extends CoreTypeSimple<T, S>> void reinitSimple(final JsonCoreTypeData<T> jsonCoreTypeData) {
+		final Class<S> typeClassSimple = (Class<S>) typeClass;
+		try {
+			CoreTypeSimple.initValues(typeClassSimple.getConstructor().newInstance(), typeClassSimple, jsonCoreTypeData.getData());
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+				| SecurityException e) {
+			throw new RuntimeException("Fehler beim Initialisieren des CoreTypeSimple %s".formatted(typeClass.getName()), e);
+		}
+		values = (U[]) CoreTypeSimple.valuesByClass(typeClassSimple);
+	}
+
+
+	/**
+	 * Reinitialisieren eines CoreTypes und der zugehörigen Ressource mit neuen Daten.
+	 *
+	 * @param jsonCoreTypeData
+	 */
+	public void reinit(final JsonCoreTypeData<T> jsonCoreTypeData) {
+		data = jsonCoreTypeData;
+		// Ermitteln, ob vom Typ CoreTypeSimple
+		if (!typeClass.isEnum()) {
+			reinitSimple(jsonCoreTypeData);
+		}
+		init();
+	}
+
+
+	/**
+	 * Führt eine Reinitialisierung aller Kataloge mit den übergebenen Daten aus.
+	 *
+	 * @param <V>
+	 * @param <U>
+	 * @param map
+	 */
+	@SuppressWarnings("unchecked")
+	public static <V extends CoreTypeData, U extends CoreType<V, U>> void reinitAll(@NotNull final Map<Class<U>, JsonCoreTypeData<V>> map) {
+		if ((map == null) || map.isEmpty())
+			throw new CoreTypeException("Liste darf nicht leer sein.");
+		// Prüfen auf unbekannte Kataloge
+		for (final Class<U> key : map.keySet())
+			if (!mapResources.containsKey(key))
+				throw new CoreTypeException("Liste enthält Katalog der nicht in den Ressourcen vorhanden ist.");
+		// Reinit für alle Kataloge ausführen
+		for (final Map.Entry<Class<U>, JsonCoreTypeData<V>> entry : map.entrySet())
+			((CoreTypeRessource<V, ?>) mapResources.get(entry.getKey())).reinit(entry.getValue());
 	}
 
 
