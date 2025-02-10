@@ -11,12 +11,12 @@ export class ReligionEintrag extends JavaObject {
 	/**
 	 * Die Bezeichnung bzw. der Name der Religion.
 	 */
-	public text : string | null = "";
+	public bezeichnung : string = "";
 
 	/**
 	 * Die Bezeichnung bzw. der Name der Religion, wie sie auf einem Zeugnis erscheint.
 	 */
-	public textZeugnis : string | null = "";
+	public bezeichnungZeugnis : string | null = "";
 
 	/**
 	 * Das Kürzel des Eintrages für die Statistik.
@@ -57,8 +57,10 @@ export class ReligionEintrag extends JavaObject {
 		if (obj.id === undefined)
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.text = (obj.text === undefined) ? null : obj.text === null ? null : obj.text;
-		result.textZeugnis = (obj.textZeugnis === undefined) ? null : obj.textZeugnis === null ? null : obj.textZeugnis;
+		if (obj.bezeichnung === undefined)
+			throw new Error('invalid json format, missing attribute bezeichnung');
+		result.bezeichnung = obj.bezeichnung;
+		result.bezeichnungZeugnis = (obj.bezeichnungZeugnis === undefined) ? null : obj.bezeichnungZeugnis === null ? null : obj.bezeichnungZeugnis;
 		result.kuerzel = (obj.kuerzel === undefined) ? null : obj.kuerzel === null ? null : obj.kuerzel;
 		if (obj.sortierung === undefined)
 			throw new Error('invalid json format, missing attribute sortierung');
@@ -72,8 +74,8 @@ export class ReligionEintrag extends JavaObject {
 	public static transpilerToJSON(obj : ReligionEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"text" : ' + ((obj.text === null) ? 'null' : JSON.stringify(obj.text)) + ',';
-		result += '"textZeugnis" : ' + ((obj.textZeugnis === null) ? 'null' : JSON.stringify(obj.textZeugnis)) + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		result += '"bezeichnungZeugnis" : ' + ((obj.bezeichnungZeugnis === null) ? 'null' : JSON.stringify(obj.bezeichnungZeugnis)) + ',';
 		result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
@@ -87,11 +89,11 @@ export class ReligionEintrag extends JavaObject {
 		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
-		if (obj.text !== undefined) {
-			result += '"text" : ' + ((obj.text === null) ? 'null' : JSON.stringify(obj.text)) + ',';
+		if (obj.bezeichnung !== undefined) {
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		}
-		if (obj.textZeugnis !== undefined) {
-			result += '"textZeugnis" : ' + ((obj.textZeugnis === null) ? 'null' : JSON.stringify(obj.textZeugnis)) + ',';
+		if (obj.bezeichnungZeugnis !== undefined) {
+			result += '"bezeichnungZeugnis" : ' + ((obj.bezeichnungZeugnis === null) ? 'null' : JSON.stringify(obj.bezeichnungZeugnis)) + ',';
 		}
 		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';

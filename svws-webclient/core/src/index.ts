@@ -737,7 +737,6 @@ export { LehrerUtils } from './core/utils/lehrer/LehrerUtils';
 export { RaumListeManager } from './core/utils/raum/RaumListeManager';
 export { RaumUtils } from './core/utils/raum/RaumUtils';
 export { ReligionListeManager } from './core/utils/religion/ReligionListeManager';
-export { ReligionUtils } from './core/utils/religion/ReligionUtils';
 export { SchuelerKAoAManager } from './core/utils/schueler/SchuelerKAoAManager';
 export { SchuelerLernabschnittManager } from './core/utils/schueler/SchuelerLernabschnittManager';
 export { SchuelerListeManager } from './core/utils/schueler/SchuelerListeManager';

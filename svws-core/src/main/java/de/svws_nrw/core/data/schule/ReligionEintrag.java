@@ -1,5 +1,6 @@
 package de.svws_nrw.core.data.schule;
 
+import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import de.svws_nrw.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -20,11 +21,11 @@ public class ReligionEintrag {
 
 	/** Die Bezeichnung bzw. der Name der Religion. */
 	@Schema(description = "die Bezeichnung bzw. der Name der Religion", example = "röm.-kath.")
-	public String text = "";
+	public @NotNull String bezeichnung = "";
 
 	/** Die Bezeichnung bzw. der Name der Religion, wie sie auf einem Zeugnis erscheint. */
 	@Schema(description = "die Bezeichnung bzw. der Name der Religion, wie sie auf einem Zeugnis erscheint", example = "röm.-kath.")
-	public String textZeugnis = "";
+	public String bezeichnungZeugnis = "";
 
 	/** Das Kürzel des Eintrages für die Statistik. */
 	@Schema(description = "das Kürzel des Eintrages für die Statistik", example = "KR")

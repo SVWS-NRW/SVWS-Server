@@ -1,6 +1,7 @@
 package de.svws_nrw.core.utils.religion;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Function;
@@ -30,6 +31,32 @@ public final class ReligionListeManager extends AuswahlManager<Long, ReligionEin
 	/** Das Filter-Attribut auf nur sichtbare ReligionEintragen */
 	private boolean _filterNurSichtbar = true;
 
+	/** Ein Default-Comparator für den Vergleich von Religion-Einträgen. */
+	public static final @NotNull Comparator<ReligionEintrag> _comparatorKuerzel =
+		(final @NotNull ReligionEintrag a, final @NotNull ReligionEintrag b) -> {
+			int cmp = a.sortierung - b.sortierung;
+			if (cmp != 0)
+				return cmp;
+			if ((a.kuerzel == null) || (b.kuerzel == null)) {
+				if ((a.kuerzel == null) && (b.kuerzel == null))
+					return 0;
+				return (a.kuerzel == null) ? -1 : 1;
+			}
+			cmp = a.kuerzel.compareTo(b.kuerzel);
+			return (cmp == 0) ? Long.compare(a.id, b.id) : cmp;
+		};
+
+	/** Ein Comparator für den Vergleich von Religion-Einträgen anhand ihres Textes. */
+	public static final @NotNull Comparator<ReligionEintrag> _comparatorText =
+		(final @NotNull ReligionEintrag a, final @NotNull ReligionEintrag b) -> {
+			if ((a.bezeichnung == null) || (b.bezeichnung == null)) {
+				if ((a.bezeichnung == null) && (b.bezeichnung == null))
+					return 0;
+				return (a.bezeichnung == null) ? -1 : 1;
+			}
+			final int cmp = a.bezeichnung.compareTo(b.bezeichnung);
+			return (cmp == 0) ? Long.compare(a.id, b.id) : cmp;
+		};
 
 
 	/**
@@ -44,7 +71,7 @@ public final class ReligionListeManager extends AuswahlManager<Long, ReligionEin
 	public ReligionListeManager(final long schuljahresabschnitt, final long schuljahresabschnittSchule,
 			final @NotNull List<Schuljahresabschnitt> schuljahresabschnitte, final Schulform schulform,
 			final @NotNull List<ReligionEintrag> religionen) {
-		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, religionen, ReligionUtils.comparator, _religionToId,
+		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, religionen, _comparatorKuerzel, _religionToId,
 				_religionToId, Arrays.asList());
 		initEintrage();
 	}
@@ -73,8 +100,8 @@ public final class ReligionListeManager extends AuswahlManager<Long, ReligionEin
 			eintrag.kuerzel = daten.kuerzel;
 			updateEintrag = true;
 		}
-		if (!daten.text.equals(eintrag.text)) {
-			eintrag.text = daten.text;
+		if (!daten.bezeichnung.equals(eintrag.bezeichnung)) {
+			eintrag.bezeichnung = daten.bezeichnung;
 			updateEintrag = true;
 		}
 		return updateEintrag;
@@ -117,16 +144,16 @@ public final class ReligionListeManager extends AuswahlManager<Long, ReligionEin
 			final boolean asc = (criteria.b == null) || criteria.b;
 			int cmp = 0;
 			if ("kuerzel".equals(field)) {
-				cmp = ReligionUtils.comparator.compare(a, b);
+				cmp = _comparatorKuerzel.compare(a, b);
 			} else if ("text".equals(field)) {
-				cmp = ReligionUtils.comparatorText.compare(a, b);
+				cmp = _comparatorText.compare(a, b);
 			} else
 				throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt.");
 			if (cmp == 0)
 				continue;
 			return asc ? cmp : -cmp;
 		}
-		return ReligionUtils.comparator.compare(a, b);
+		return _comparatorKuerzel.compare(a, b);
 	}
 
 

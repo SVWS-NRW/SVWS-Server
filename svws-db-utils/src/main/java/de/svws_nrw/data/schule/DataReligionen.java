@@ -38,13 +38,13 @@ public final class DataReligionen extends DataManager<Long> {
 	}
 
 	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOStatkueNationalitaeten} in einen Core-DTO {@link ReligionEintrag}.
+	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOKonfession} in einen Core-DTO {@link ReligionEintrag}.
 	 */
 	private static final DTOMapper<DTOKonfession, ReligionEintrag> dtoMapper = (final DTOKonfession k) -> {
 		final ReligionEintrag daten = new ReligionEintrag();
 		daten.id = k.ID;
-		daten.text = k.Bezeichnung;
-		daten.textZeugnis = k.ZeugnisBezeichnung;
+		daten.bezeichnung = k.Bezeichnung;
+		daten.bezeichnungZeugnis = k.ZeugnisBezeichnung;
 		daten.kuerzel = k.StatistikKrz;
 		daten.sortierung = (k.Sortierung == null) ? 32000 : k.Sortierung;
 		daten.istSichtbar = (k.Sichtbar == null) || k.Sichtbar;
@@ -127,22 +127,25 @@ public final class DataReligionen extends DataManager<Long> {
 	private static final Map<String, DataBasicMapper<DTOKonfession>> patchMappings = Map.ofEntries(
 			Map.entry("id", (conn, dto, value, map) -> {
 				final Long patch_id = JSONMapper.convertToLong(value, true);
-				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+				if ((patch_id == null) || (patch_id != dto.ID))
 					throw new ApiOperationException(Status.BAD_REQUEST);
 			}),
 			Map.entry("kuerzel", (conn, dto, value, map) -> {
-				dto.StatistikKrz = JSONMapper.convertToString(value, true, true, Schema.tab_K_Religion.col_StatistikKrz.datenlaenge());
-				if (dto.StatistikKrz != null) {
-					final Religion r = Religion.data().getWertByKuerzel(dto.StatistikKrz);
-					if (r == null)
-						throw new ApiOperationException(Status.NOT_FOUND,
-								"Eine Religion mit dem  Kürzel " + dto.StatistikKrz + " existiert in der amtlichen Schulstatistik nicht.");
+				final String statistikKrz = JSONMapper.convertToString(value, true, true, Schema.tab_K_Religion.col_StatistikKrz.datenlaenge());
+				if ((dto.StatistikKrz != null) && (Religion.data().getWertByKuerzel(dto.StatistikKrz) == null)) {
+					throw new ApiOperationException(Status.NOT_FOUND, "Eine Religion mit dem  Kürzel " + dto.StatistikKrz + " existiert in der amtlichen Schulstatistik nicht.");
 				}
+				dto.StatistikKrz = statistikKrz;
 			}),
-			Map.entry("text",
-					(conn, dto, value, map) -> dto.Bezeichnung =
-							JSONMapper.convertToString(value, true, true, Schema.tab_K_Religion.col_Bezeichnung.datenlaenge())),
-			Map.entry("textZeugnis",
+			Map.entry("bezeichnung",
+					(conn, dto, value, map) -> {
+						final String bezeichnung = JSONMapper.convertToString(value, false, true, Schema.tab_K_Religion.col_Bezeichnung.datenlaenge());
+						if (bezeichnungExists(conn, bezeichnung)) {
+							throw new ApiOperationException(Status.BAD_REQUEST, "Eine Religion mit der Bezeichnung " + bezeichnung + " existiert bereits. Die Bezeichnung muss eindeutig sein.");
+						}
+						dto.Bezeichnung = bezeichnung;
+					}),
+			Map.entry("bezeichnungZeugnis",
 					(conn, dto, value, map) -> dto.ZeugnisBezeichnung =
 							JSONMapper.convertToString(value, true, true, Schema.tab_K_Religion.col_ZeugnisBezeichnung.datenlaenge())),
 			Map.entry("istSichtbar", (conn, dto, value, map) -> dto.Sichtbar = JSONMapper.convertToBoolean(value, true)),
@@ -155,7 +158,7 @@ public final class DataReligionen extends DataManager<Long> {
 	}
 
 
-	private static final Set<String> requiredCreateAttributes = Set.of("kuerzel");
+	private static final Set<String> requiredCreateAttributes = Set.of("kuerzel", "bezeichnung");
 
 	private final ObjLongConsumer<DTOKonfession> initDTO = (dto, id) -> dto.ID = id;
 
@@ -201,4 +204,7 @@ public final class DataReligionen extends DataManager<Long> {
 		return super.deleteBasicMultiple(ids, DTOKonfession.class, dtoMapper);
 	}
 
+	private static boolean bezeichnungExists(final DBEntityManager conn, final String bezeichnung) {
+		return !conn.query(DTOKonfession.QUERY_BY_BEZEICHNUNG, DTOKonfession.class).setParameter(1, bezeichnung).getResultList().isEmpty();
+	}
 }

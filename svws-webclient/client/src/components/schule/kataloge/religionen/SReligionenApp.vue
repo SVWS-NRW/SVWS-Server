@@ -1,16 +1,28 @@
 <template>
-	<template v-if="religionListeManager().hasDaten()">
-		<svws-ui-header>
-			<div>
-				<span class="inline-block mr-3 capitalize">{{ religionListeManager().auswahl().text }}</span>
-				<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
-					ID: {{ religionListeManager().auswahl().id }}
-				</svws-ui-badge>
+	<template v-if="(manager().hasDaten() && (activeViewType === ViewType.DEFAULT)) || (activeViewType !== ViewType.DEFAULT)">
+		<header class="svws-ui-header">
+			<div class="svws-ui-header--title">
+				<div class="svws-headline-wrapper">
+					<template v-if="activeViewType === ViewType.DEFAULT">
+						<h2 class="svws-headline">
+							<span>{{ manager().auswahl().bezeichnung }}</span>
+							<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
+								ID: {{ manager().auswahl().id }}
+							</svws-ui-badge>
+						</h2>
+						<span class="svws-subline">{{ manager().auswahl().kuerzel }}</span>
+					</template>
+					<template v-else-if="activeViewType === ViewType.HINZUFUEGEN">
+						<h2 class="svws-headline">Anlegen einer neuen Religion...</h2>
+					</template>
+					<template v-else-if="activeViewType === ViewType.GRUPPENPROZESSE">
+						<h2 class="svws-headline"> Gruppenprozesse </h2>
+						<span class="svws-subline">{{ religionenSubline }}</span>
+					</template>
+				</div>
 			</div>
-			<div>
-				<span class="opacity-40">{{ religionListeManager().auswahl().kuerzel }}</span>
-			</div>
-		</svws-ui-header>
+			<div class="svws-ui-header--actions" />
+		</header>
 		<svws-ui-tab-bar :tab-manager :focus-switching-enabled :focus-help-visible>
 			<router-view />
 		</svws-ui-tab-bar>
@@ -22,10 +34,19 @@
 
 <script setup lang="ts">
 
-	import type { ReligionenAppProps } from "./SReligionenAppProps";
+	import { computed } from "vue";
+	import { ViewType } from "@ui";
+	import type { KatalogReligionenAppProps } from "./SReligionenAppProps";
 	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
-	defineProps<ReligionenAppProps>();
+	const props = defineProps<KatalogReligionenAppProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
+
+	const religionenSubline = computed(() => {
+		const auswahlReligionenList = props.manager().liste.auswahlSorted();
+		if (auswahlReligionenList.size() > 5)
+			return `${auswahlReligionenList.size()} Religionen ausgewählt`;
+		return [...auswahlReligionenList].map(k => k.kuerzel).join(', ');
+	})
 
 </script>

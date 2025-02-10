@@ -3,11 +3,13 @@ import { HashMap2D } from '../../../core/adt/map/HashMap2D';
 import { ReligionEintrag } from '../../../core/data/schule/ReligionEintrag';
 import { HashMap } from '../../../java/util/HashMap';
 import { Schulform } from '../../../asd/types/schule/Schulform';
+import { JavaString } from '../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
+import type { Comparator } from '../../../java/util/Comparator';
 import { AuswahlManager } from '../../../core/utils/AuswahlManager';
 import type { JavaFunction } from '../../../java/util/function/JavaFunction';
+import { JavaLong } from '../../../java/lang/JavaLong';
 import type { List } from '../../../java/util/List';
-import { ReligionUtils } from '../../../core/utils/religion/ReligionUtils';
 import { Class } from '../../../java/lang/Class';
 import { Arrays } from '../../../java/util/Arrays';
 import { Schuljahresabschnitt } from '../../../asd/data/schule/Schuljahresabschnitt';
@@ -31,6 +33,35 @@ export class ReligionListeManager extends AuswahlManager<number, ReligionEintrag
 	 */
 	private _filterNurSichtbar : boolean = true;
 
+	/**
+	 * Ein Default-Comparator für den Vergleich von Religion-Einträgen.
+	 */
+	public static readonly _comparatorKuerzel : Comparator<ReligionEintrag> = { compare : (a: ReligionEintrag, b: ReligionEintrag) => {
+		let cmp : number = a.sortierung - b.sortierung;
+		if (cmp !== 0)
+			return cmp;
+		if ((a.kuerzel === null) || (b.kuerzel === null)) {
+			if ((a.kuerzel === null) && (b.kuerzel === null))
+				return 0;
+			return (a.kuerzel === null) ? -1 : 1;
+		}
+		cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
+		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
+	} };
+
+	/**
+	 * Ein Comparator für den Vergleich von Religion-Einträgen anhand ihres Textes.
+	 */
+	public static readonly _comparatorText : Comparator<ReligionEintrag> = { compare : (a: ReligionEintrag, b: ReligionEintrag) => {
+		if ((a.bezeichnung === null) || (b.bezeichnung === null)) {
+			if ((a.bezeichnung === null) && (b.bezeichnung === null))
+				return 0;
+			return (a.bezeichnung === null) ? -1 : 1;
+		}
+		const cmp : number = JavaString.compareTo(a.bezeichnung, b.bezeichnung);
+		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
+	} };
+
 
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
@@ -42,7 +73,7 @@ export class ReligionListeManager extends AuswahlManager<number, ReligionEintrag
 	 * @param religionen                   die Liste der Katalog-Einträge
 	 */
 	public constructor(schuljahresabschnitt : number, schuljahresabschnittSchule : number, schuljahresabschnitte : List<Schuljahresabschnitt>, schulform : Schulform | null, religionen : List<ReligionEintrag>) {
-		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, religionen, ReligionUtils.comparator, ReligionListeManager._religionToId, ReligionListeManager._religionToId, Arrays.asList());
+		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, religionen, ReligionListeManager._comparatorKuerzel, ReligionListeManager._religionToId, ReligionListeManager._religionToId, Arrays.asList());
 		this.initEintrage();
 	}
 
@@ -66,8 +97,8 @@ export class ReligionListeManager extends AuswahlManager<number, ReligionEintrag
 			eintrag.kuerzel = daten.kuerzel;
 			updateEintrag = true;
 		}
-		if (!JavaObject.equalsTranspiler(daten.text, (eintrag.text))) {
-			eintrag.text = daten.text;
+		if (!JavaObject.equalsTranspiler(daten.bezeichnung, (eintrag.bezeichnung))) {
+			eintrag.bezeichnung = daten.bezeichnung;
 			updateEintrag = true;
 		}
 		return updateEintrag;
@@ -106,17 +137,17 @@ export class ReligionListeManager extends AuswahlManager<number, ReligionEintrag
 			const asc : boolean = (criteria.b === null) || criteria.b;
 			let cmp : number = 0;
 			if (JavaObject.equalsTranspiler("kuerzel", (field))) {
-				cmp = ReligionUtils.comparator.compare(a, b);
+				cmp = ReligionListeManager._comparatorKuerzel.compare(a, b);
 			} else
 				if (JavaObject.equalsTranspiler("text", (field))) {
-					cmp = ReligionUtils.comparatorText.compare(a, b);
+					cmp = ReligionListeManager._comparatorText.compare(a, b);
 				} else
 					throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt.")
 			if (cmp === 0)
 				continue;
 			return asc ? cmp : -cmp;
 		}
-		return ReligionUtils.comparator.compare(a, b);
+		return ReligionListeManager._comparatorKuerzel.compare(a, b);
 	}
 
 	protected checkFilter(eintrag : ReligionEintrag) : boolean {
