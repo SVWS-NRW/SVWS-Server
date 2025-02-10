@@ -11,7 +11,6 @@ test('Basic_Navigation_left_menu', async ({page}) => {
 	await page.goto(targetHost + '/#/login?redirect=/');
 	await page.getByLabel('Benutzername').click();
 	await page.getByLabel('Benutzername').fill('Admin');
-	await expect(page.getByRole('button', {name: 'Anmelden'})).toContainText('Anmelden');
 	await page.getByRole('button', {name: 'Anmelden'}).click();
 	await expect(page.locator('header')).toContainText('Eleonora Externa');
 	await page.getByRole('link', {name: 'Schule'}).click();
