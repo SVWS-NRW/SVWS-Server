@@ -16,8 +16,6 @@ plugins {
 
 def downloadDir = "$projectDir/download"
 
-println "Version " + project.ext.svwsArtifactVersion
-
 group = 'de.svws-nrw'
 version = project.ext.svwsArtifactVersion
 java {
