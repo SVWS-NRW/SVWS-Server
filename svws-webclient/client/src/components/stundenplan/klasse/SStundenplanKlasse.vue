@@ -136,20 +136,28 @@
 				:use-drag-and-drop="hatUpdateKompetenz" :drag-data="() => dragData" :on-drag :on-drop class="h-full overflow-scroll pr-4" @update:click="u => toRaw(auswahl) !== u ? auswahl = u : auswahl = undefined" />
 			<!-- Card für die zusätzlichen Einstellungen zum Unterricht -->
 			<template v-if="(auswahl !== undefined) && (serverMode === ServerMode.DEV)">
-				<svws-ui-content-card title="Unterricht">
-					<svws-ui-input-wrapper :grid="2">
-						<div>{{ unterrichtBezeichnung }} ({{ schuelerzahl }} SuS)</div>
+				<div class="flex flex-col gap-4">
+					<div class="text-headline-md">Raumzuordnung {{ unterrichtBezeichnung }} ({{ schuelerzahl }} SuS)</div>
+					<div>{{ auswahl.lehrer.size() > 1 ? 'Lehrkräfte' : 'Lehrkraft' }} {{ [...auswahl.lehrer].map(l => stundenplanManager().lehrerGetByIdOrException(l).kuerzel).join(', ') }}</div>
+					<div class="text-headline-sm">Für alle Unterrichte setzen:</div>
+					<div class="grid grid-cols-2 gap-2">
+						<div />
 						<svws-ui-select v-if="!disabled" label="Raumzuordnung" :items="raeumeAuswahl" :model-value="undefined" ref="refSelect"
 							@update:model-value="item => auswahl && item && patchUnterrichtRaeume(unterrichteAuswahl, [item])" :item-text="raumInfo" />
-						<div>{{ auswahl.lehrer.size() > 1 ? 'Lehrkräfte' : 'Lehrkraft' }}</div>
-						<div>{{ [...auswahl.lehrer].map(l => stundenplanManager().lehrerGetByIdOrException(l).kuerzel).join(', ') }}</div>
+					</div>
+					<div class="text-headline-sm">Einzeln setzen:</div>
+					<div class="grid grid-cols-2 gap-2">
 						<template v-for="u of unterrichteAuswahl" :key="u.id">
-							<div>{{ Wochentag.fromIDorException(stundenplanManager().zeitrasterGetByIdOrException(u.idZeitraster).wochentag).beschreibung }} {{ stundenplanManager().zeitrasterGetByIdOrException(u.idZeitraster).unterrichtstunde }}</div>
+							<div>
+								{{ Wochentag.fromIDorException(stundenplanManager().zeitrasterGetByIdOrException(u.idZeitraster).wochentag).kuerzel }}.,
+								{{ stundenplanManager().zeitrasterGetByIdOrException(u.idZeitraster).unterrichtstunde }}. Std
+								<span v-if="u.wochentyp > 0">({{ stundenplanManager().stundenplanGetWochenTypAsString(u.wochentyp) }})</span>
+							</div>
 							<svws-ui-multi-select label="Raumzuordnung" :items="stundenplanManager().raumGetMengeSortiertNachGueteByUnterrichtListe(ListUtils.create1(u.id))" :model-value="getRaeume(u)"
 								@update:model-value="liste => patchUnterrichtRaeume(ListUtils.create1(u), liste)" :item-text="item => raumInfo(item, ListUtils.create1(u))" :disabled />
 						</template>
-					</svws-ui-input-wrapper>
-				</svws-ui-content-card>
+					</div>
+				</div>
 			</template>
 		</template>
 	</div>
