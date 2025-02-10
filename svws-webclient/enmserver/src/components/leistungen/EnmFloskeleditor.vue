@@ -19,21 +19,19 @@
 			</div>
 		</div>
 		<div class="svws-ui-table svws-clickable overflow-hidden" role="table" aria-label="Tabelle">
-			<div class="svws-ui-thead" role="rowgroup" aria-label="Tabellenkopf">
-				<div class="svws-ui-tr" role="row">
-					<div class="svws-ui-td" role="columnheader">Kürzel</div>
-					<div class="svws-ui-td" role="columnheader">Text</div>
-					<div class="svws-ui-td" role="columnheader">Niveau</div>
-					<div class="svws-ui-td" role="columnheader">Jg</div>
-				</div>
-			</div>
 			<div class="svws-ui-tbody overflow-y-scroll" role="rowgroup" aria-label="Tabelleninhalt">
 				<template v-for="[gruppe, floskeln] of gruppenMap" :key="gruppe.kuerzel">
 					<div class="svws-ui-thead cursor-pointer select-none" role="rowgroup">
 						<div class="svws-ui-td col-span-4 flex items-center gap-1" role="cell" @click="collapsed.set(gruppe, collapsed.get(gruppe) ? false : true)">
 							<span class="icon i-ri-arrow-right-s-line" v-if="collapsed.get(gruppe)" />
 							<span class="icon i-ri-arrow-down-s-line" v-else />
-							<span> {{ gruppe.bezeichnung }}</span>
+							<span class="text-headline-md"> {{ gruppe.bezeichnung }}</span>
+						</div>
+						<div v-if="!collapsed.get(gruppe)" class="svws-ui-tr" role="row">
+							<div class="svws-ui-td" role="columnheader">Kürzel</div>
+							<div class="svws-ui-td" role="columnheader">Text</div>
+							<div class="svws-ui-td" role="columnheader">Niveau</div>
+							<div class="svws-ui-td" role="columnheader">Jg</div>
 						</div>
 					</div>
 					<div v-for="floskel of floskeln" :key="floskel.kuerzel ?? 1" class="svws-ui-tr" role="row" v-show="!collapsed.get(gruppe)" @click="ergaenzeFloskel(floskel)">
@@ -199,7 +197,7 @@
 	}
 
 	// eslint-disable-next-line vue/no-setup-props-reactivity-loss
-	const collapsed = ref(new Map<ENMFloskelgruppe, boolean>([...props.manager.daten.floskelgruppen].map(g => [g, false])));
+	const collapsed = ref(new Map<ENMFloskelgruppe, boolean>([...props.manager.daten.floskelgruppen].map(g => g.hauptgruppe === 'ALLG' ? [g, true] : [g, false])));
 
 	async function doPatchLeistung() {
 		if (props.manager.auswahlLeistung.leistung === null)
