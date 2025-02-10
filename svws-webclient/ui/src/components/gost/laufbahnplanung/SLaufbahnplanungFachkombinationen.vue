@@ -1,6 +1,6 @@
 <template>
 	<template v-if="!abiturdatenManager().faecher().getFachkombinationen().isEmpty()">
-		<svws-ui-table :no-data="false" :items="[]" :columns="[{key: 'icon', label: ' ', fixedWidth: 1.8},{key: 'beschreibung', label: 'Fachkombinationsregeln'}]" type="navigation" class="svws-no-mx">
+		<svws-ui-table :no-data="false" :items="[]" :columns="[{key: 'icon', label: ' ', fixedWidth: 1.8}, {key: 'beschreibung', label: 'Fachkombinationsregeln'}]" type="navigation" class="svws-no-mx">
 			<template #header>
 				<div class="svws-ui-tr" role="row">
 					<div class="svws-ui-td col-span-full leading-5 align-middle" role="columnheader">

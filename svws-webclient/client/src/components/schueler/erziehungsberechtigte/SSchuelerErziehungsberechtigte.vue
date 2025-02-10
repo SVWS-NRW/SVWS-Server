@@ -57,7 +57,7 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, ref } from "vue";
+	import { computed, ref, watch } from "vue";
 	import type { DataTableColumn } from "@ui";
 	import type { SchuelerErziehungsberechtigteProps } from "./SSchuelerErziehungsberechtigteProps";
 	import type { Erzieherart, OrtKatalogEintrag, OrtsteilKatalogEintrag} from "@core";
@@ -67,6 +67,14 @@
 	const props = defineProps<SchuelerErziehungsberechtigteProps>();
 
 	const erzieher = ref<ErzieherStammdaten | undefined>();
+
+	watch(() => props.data(), (neu) => {
+		if (neu.isEmpty())
+			erzieher.value = undefined;
+		else
+			erzieher.value = neu.getFirst();
+	}, { immediate: true });
+
 	const columns: DataTableColumn[] = [
 		{ key: "idErzieherArt", label: "Art"},
 		{ key: "name", label: "Name"},
@@ -88,7 +96,7 @@
 
 	const wohnort = computed<OrtKatalogEintrag | undefined>({
 		get: () => ((erzieher.value === undefined) || (erzieher.value.wohnortID === null)) ? undefined : props.mapOrte.get(erzieher.value.wohnortID),
-		set: (value) => (erzieher.value !== undefined) && void props.patch({ wohnortID: value === undefined ? null : value.id }, erzieher.value.id)
+		set: (value) => (erzieher.value !== undefined) && void props.patch({ wohnortID: value === undefined ? null : value.id }, erzieher.value.id),
 	});
 
 	const ortsteile = computed<Array<OrtsteilKatalogEintrag>>(() => {
@@ -101,17 +109,17 @@
 
 	const ortsteil = computed<OrtsteilKatalogEintrag | undefined>({
 		get: () => ((erzieher.value === undefined) || (erzieher.value.ortsteilID === null)) ? undefined : props.mapOrtsteile.get(erzieher.value.ortsteilID),
-		set: (value) => (erzieher.value !== undefined) && void props.patch({ ortsteilID: value === undefined ? null : value.id }, erzieher.value.id)
+		set: (value) => (erzieher.value !== undefined) && void props.patch({ ortsteilID: value === undefined ? null : value.id }, erzieher.value.id),
 	});
 
 	const staatsangehoerigkeit = computed<Nationalitaeten>({
 		get: () => ((erzieher.value !== undefined) && Nationalitaeten.getByISO3(erzieher.value.staatsangehoerigkeitID)) || Nationalitaeten.DEU,
-		set: (value) => (erzieher.value !== undefined) && void props.patch({ staatsangehoerigkeitID: value.daten.iso3 }, erzieher.value.id)
+		set: (value) => (erzieher.value !== undefined) && void props.patch({ staatsangehoerigkeitID: value.daten.iso3 }, erzieher.value.id),
 	});
 
 	const idErzieherArt = computed<Erzieherart | undefined>({
 		get: () => ((erzieher.value === undefined) || (erzieher.value.idErzieherArt === null)) ? undefined : props.mapErzieherarten.get(erzieher.value.idErzieherArt),
-		set: (value) => (erzieher.value !== undefined) && void props.patch({ idErzieherArt: value === undefined ? null : value.id }, erzieher.value.id)
+		set: (value) => (erzieher.value !== undefined) && void props.patch({ idErzieherArt: value === undefined ? null : value.id }, erzieher.value.id),
 	});
 
 </script>
