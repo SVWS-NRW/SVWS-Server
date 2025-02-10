@@ -147,9 +147,3 @@
 	})
 
 </script>
-
-<style lang="postcss">
-
-	@reference "../../assets/styles/index.css";
-
-</style>

@@ -95,10 +95,3 @@
 		selected.value = [];
 	}
 </script>
-
-<!-- <style lang="postcss" scoped>
-	@reference "../../../ui/src/assets/styles/index.css"
-	.page--content {
-		@apply grid overflow-y-hidden overflow-x-auto h-full pb-3 pt-6;
-	}
-</style> -->

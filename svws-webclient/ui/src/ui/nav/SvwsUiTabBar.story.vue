@@ -53,9 +53,3 @@
 	const selectedRouteVertical = ref(tabManagerVertical().tab);
 
 </script>
-
-<style lang="postcss">
-
-	@reference "../../assets/styles/index.css";
-
-</style>

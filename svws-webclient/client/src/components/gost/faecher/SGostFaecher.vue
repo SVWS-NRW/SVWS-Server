@@ -27,9 +27,7 @@
 
 </script>
 
-<style lang="postcss" scoped>
-
-	@reference "../../../../../ui/src/assets/styles/index.css"
+<style scoped>
 
 	.scrollbar-thin {
 		scrollbar-gutter: stable;

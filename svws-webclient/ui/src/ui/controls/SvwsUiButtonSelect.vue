@@ -97,9 +97,7 @@
 
 </script>
 
-<style lang="postcss" scoped>
-
-	@reference "../../assets/styles/index.css";
+<style scoped>
 
 	.button {
 		position: relative;

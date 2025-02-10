@@ -1,16 +1,16 @@
+.input-number-component input::placeholder {
+	@apply text-ui-secondary;
+}
+
+.placeholder--visible .input-number-component input::placeholder {
+	@apply text-ui;
+}
+
 .input-number-component {
 	@apply flex;
 	@apply relative;
 	@apply w-full min-w-16;
 	@apply overflow-hidden whitespace-nowrap text-base;
-
-	input::placeholder {
-		@apply text-ui-secondary;
-
-		.placeholder--visible & {
-			@apply text-ui;
-		}
-	}
 
 	&:focus {
 		@apply outline-hidden;

@@ -205,7 +205,7 @@
 
 </script>
 
-<style lang="postcss" scoped>
+<style scoped>
 
 	.svws-ui-tr {
 		grid-template-columns: 6em 1fr 4em 4em;

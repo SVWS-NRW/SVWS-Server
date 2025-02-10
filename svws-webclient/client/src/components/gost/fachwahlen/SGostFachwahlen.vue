@@ -188,7 +188,7 @@
 
 </script>
 
-<style lang="postcss" scoped>
+<style scoped>
 
 	.svws-ui-tr {
 		grid-template-columns: minmax(4rem, 1fr) minmax(12rem, 3fr) repeat(16, 3rem);

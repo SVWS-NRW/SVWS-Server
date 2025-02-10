@@ -213,9 +213,7 @@
 
 </script>
 
-<style lang="postcss" scoped>
-
-	@reference "../../../ui/src/assets/styles/index.css"
+<style scoped>
 
 	.login-footer-link {
 		display: inline-block;

@@ -1,17 +1,16 @@
+.placeholder--visible .text-input-component input::placeholder {
+	@apply opacity-100;
+}
+.text-input-component input::placeholder {
+	@apply opacity-30;
+}
+
 .text-input-component {
 	@apply text-ui;
 	@apply flex;
 	@apply relative;
 	@apply w-full;
 	@apply overflow-hidden whitespace-nowrap text-base;
-
-	input::placeholder {
-		@apply opacity-30;
-
-		.placeholder--visible & {
-			@apply opacity-100;
-		}
-	}
 
 	&:focus {
 		@apply outline-hidden;
@@ -269,7 +268,7 @@
 	.text-input--filled.text-input--readonly:not(.text-input--select)
 	.text-input--placeholder:after  {
 		@apply ml-1 h-3 w-3;
-		content: url(remixicon/icons/System/lock-line.svg);
+		content: url(@icons/System/lock-line.svg);
 	}
 
 .text-input--statistics .text-input--placeholder {
@@ -311,7 +310,7 @@
 
 .text-input--placeholder--required:after {
 	@apply ml-1 h-3 w-3;
-	content: url(remixicon/icons/Editor/asterisk.svg);
+	content: url(@icons/Editor/asterisk.svg);
 }
 
 .text-input--statistics .text-input--placeholder--required:after {

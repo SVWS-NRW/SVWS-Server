@@ -133,10 +133,6 @@
 			&:before {
 				@apply absolute -left-[5px] -top-px -bottom-px w-[2px] border-r-2;
 				content: '';
-
-				.page--statistik & {
-					@apply bg-ui-statistic-weak text-ui-statistic;
-				}
 			}
 		}
 
@@ -156,4 +152,7 @@
 	&:disabled {
 		@apply bg-transparent text-ui-disabled pointer-events-none;
 	}
+}
+.page--statistik .svws-ui-tabs--vertical .tab-bar-vertical--button.svws-active:before	{
+	@apply bg-ui-statistic-weak text-ui-statistic;
 }
