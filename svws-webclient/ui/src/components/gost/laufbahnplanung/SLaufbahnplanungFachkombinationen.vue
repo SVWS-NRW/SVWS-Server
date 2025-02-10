@@ -4,7 +4,7 @@
 			<template #header>
 				<div class="svws-ui-tr" role="row">
 					<div class="svws-ui-td col-span-full leading-5 align-middle" role="columnheader">
-						<span class="icon i-ri-checkbox-circle-fill shrink-0 icon-ui-success -my-1" v-if="regelnVerletzt.size === 0" />
+						<span class="icon i-ri-checkbox-circle-fill shrink-0 icon-ui-success" v-if="regelnVerletzt.size === 0" />
 						<template v-if="regelnVerletzt.size !== 0">
 							{{ regelnVerletzt.size }} Fehler bei Fachkombinationsregeln
 						</template>
@@ -17,8 +17,8 @@
 			<template #body>
 				<div v-for="regel in abiturdatenManager().faecher().getFachkombinationenErforderlich()" :key="regel.id" class="svws-ui-tr" role="row">
 					<div class="svws-ui-td leading-5 align-middle" role="cell">
-						<span class="icon i-ri-check-line shrink-0 icon-ui-success" v-if="!regelnVerletzt.has(regel)" />
-						<span class="icon i-ri-error-warning-line shrink-0 icon-error text-button mt-0.5" />
+						<span v-if="!regelnVerletzt.has(regel)" class="icon i-ri-check-line shrink-0 icon-ui-success" />
+						<span v-else class="icon i-ri-error-warning-line shrink-0 icon-error text-button" />
 					</div>
 					<div class="svws-ui-td select-all leading-5 align-middle" role="cell">
 						{{ regel.hinweistext }}
@@ -26,8 +26,8 @@
 				</div>
 				<div v-for="regel in abiturdatenManager().faecher().getFachkombinationenVerboten()" :key="regel.id" class="svws-ui-tr" role="row">
 					<div class="svws-ui-td leading-5 align-middle" role="cell">
-						<span class="icon i-ri-check-line shrink-0 icon-ui-success" v-if="!regelnVerletzt.has(regel)" />
-						<span class="icon i-ri-error-warning-line shrink-0 icon-error text-button mt-0.5" />
+						<span v-if="!regelnVerletzt.has(regel)" class="icon i-ri-check-line shrink-0 icon-ui-success" />
+						<span v-else class="icon i-ri-error-warning-line shrink-0 icon-error text-button" />
 					</div>
 					<div class="svws-ui-td select-all leading-5 align-middle" role="cell">
 						{{ regel.hinweistext }}

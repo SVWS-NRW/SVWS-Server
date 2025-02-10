@@ -4,7 +4,7 @@
 		<template #header>
 			<div class="svws-ui-tr" role="row">
 				<div class="svws-ui-td col-span-full leading-5 align-middle" role="columnheader">
-					<span class="icon i-ri-checkbox-circle-fill shrink-0 icon-ui-success -my-1 -mx-0.5 mr-1" v-if="belegungsfehler.size() === 0" />
+					<span class="icon i-ri-checkbox-circle-fill shrink-0 icon-ui-success" v-if="belegungsfehler.size() === 0" />
 					{{ (belegungsfehler.size() === 0 ? 'Keine' : belegungsfehler.size()) }} {{ 'Laufbahnfehler' }} {{ belegpruefungsArt().kuerzel }}
 				</div>
 			</div>
