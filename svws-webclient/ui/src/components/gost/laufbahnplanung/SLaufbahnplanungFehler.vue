@@ -3,7 +3,7 @@
 		type="navigation" :scroll class="svws-no-mx">
 		<template #header>
 			<div class="svws-ui-tr" role="row">
-				<div class="svws-ui-td col-span-full leading-5 align-middle" role="columnheader">
+				<div class="svws-ui-td col-span-full align-middle" role="columnheader">
 					<span class="icon i-ri-checkbox-circle-fill shrink-0 icon-ui-success" v-if="belegungsfehler.size() === 0" />
 					{{ (belegungsfehler.size() === 0 ? 'Keine' : belegungsfehler.size()) }} {{ 'Laufbahnfehler' }} {{ belegpruefungsArt().kuerzel }}
 				</div>
@@ -11,7 +11,7 @@
 		</template>
 		<template #body v-if="belegungsfehler.size() > 0">
 			<div v-for="fehler in belegungsfehler" :key="fehler.code" class="svws-ui-tr" role="row">
-				<div class="svws-ui-td self-center leading-5 align-middle" role="cell">
+				<div class="svws-ui-td self-center align-middle" role="cell">
 					<svws-ui-tooltip>
 						<span class="icon i-ri-alert-line shrink-0 icon-error text-button" />
 						<template #content>
@@ -21,7 +21,7 @@
 						</template>
 					</svws-ui-tooltip>
 				</div>
-				<div class="svws-ui-td select-all leading-5 align-middle" role="cell">
+				<div class="svws-ui-td select-all leading-5! align-middle" role="cell">
 					{{ fehler.beschreibung }}
 				</div>
 			</div>

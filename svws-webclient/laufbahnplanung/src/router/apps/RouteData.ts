@@ -182,6 +182,7 @@ export class RouteData {
 		if (abiturdatenManager === undefined)
 			throw new UserNotificationException("Belegprüfungsergebnis konnte nicht berechnet werden.");
 		const gostBelegpruefungErgebnis = abiturdatenManager.getBelegpruefungErgebnis();
+		gostJahrgangsdaten.istBlockungFestgelegt = abiturdaten.bewertetesHalbjahr;
 		this.setPatchedDefaultState({
 			schuleStammdaten,
 			auswahl: schueler,
@@ -428,11 +429,23 @@ export class RouteData {
 	}
 
 	resetFachwahlen = async () => {
-		const abidaten = this._state.value.abiturdaten;
-		if (abidaten === undefined)
+		const abiturdaten = this._state.value.abiturdaten;
+		if (abiturdaten === undefined)
 			throw new DeveloperNotificationException("Die Laufbahnplanungsdaten stehen unerwartet nicht zur Verfügung.");
-		abidaten.fachbelegungen.clear();
-		await this.setGostBelegpruefungErgebnis();
+		for (const fachbelegung of abiturdaten.fachbelegungen) {
+			fachbelegung.abiturFach = null;
+			for (let i = 0; i < this.gostJahrgangsdaten.istBlockungFestgelegt.length; i++)
+				if (this.gostJahrgangsdaten.istBlockungFestgelegt[i] === true)
+					continue;
+				else
+					fachbelegung.belegungen[i] = null;
+		}
+		const temp = Abiturdaten.transpilerFromJSON(Abiturdaten.transpilerToJSON(abiturdaten));
+		const abiturdatenManager = this.createAbiturdatenmanager(this._state.value.faecherManager, temp);
+		if (abiturdatenManager === undefined)
+			return;
+		const gostBelegpruefungErgebnis = abiturdatenManager.getBelegpruefungErgebnis();
+		this.setPatchedState({ abiturdaten, abiturdatenManager, gostBelegpruefungErgebnis });
 	}
 
 }

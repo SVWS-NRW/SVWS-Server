@@ -82,7 +82,7 @@
 								</svws-ui-button>
 								<template #content>
 									Kurs ist bei den Fachwahlen eingetragen, es liegen aber keine Einträge in den Leistungsdaten vor. <br>
-									Entfernen Sie entweder die Fachwahl durch klicken oder korrigieren sie dies in den Leistungsdaten
+									Entfernen Sie entweder die Fachwahl durch Klicken oder korrigieren sie dies in den Leistungsdaten.
 								</template>
 							</svws-ui-tooltip>
 						</template>
