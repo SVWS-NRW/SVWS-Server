@@ -1,3 +1,4 @@
+import { shallowRef, type ShallowRef } from "vue";
 import type { TabData } from "./TabData";
 
 /**
@@ -8,7 +9,7 @@ import type { TabData } from "./TabData";
 export class TabManager {
 
 	// Der aktuell ausgewählte Tab
-	private _tab : TabData;
+	private _tab : ShallowRef<TabData>;
 
 	// Das Array mit den verwalteten Tabs (siehe Konstruktor)
 	private _tabs : TabData[];
@@ -35,7 +36,7 @@ export class TabManager {
 	 */
 	public constructor(tabs : TabData[], tab : TabData, setTab: (value: TabData) => Promise<void>, hidden?: boolean[]) {
 		this._tabs = tabs;
-		this._tab = tab;
+		this._tab = shallowRef(tab);
 		this._setTab = setTab;
 		for (let i = 0; (i < this._tabs.length); i++) {
 			if ((hidden !== undefined) && (i < hidden.length))
@@ -63,7 +64,7 @@ export class TabManager {
 	 * Gibt das aktuell ausgewählte Tab zurück.
 	 */
 	public get tab() : TabData {
-		return this._tab;
+		return this._tab.value;
 	}
 
 	/**
@@ -79,7 +80,7 @@ export class TabManager {
 	 * Tab gibt wird das aktuelle Tab zurückgegeben.
 	 */
 	public get nextTab() : TabData {
-		let i = this._mapNameToIndex.get(this._tab.name) ?? -1;
+		let i = this._mapNameToIndex.get(this._tab.value.name) ?? -1;
 		do {
 			i++;
 		} while ((i < this._tabs.length) && (this._tabs[i].hide === true));
@@ -87,7 +88,7 @@ export class TabManager {
 			i = 0;
 		while ((i < this._tabs.length) && (this._tabs[i].hide === true))
 			i++;
-		return (i < this._tabs.length) ? this._tabs[i] : this._tab;
+		return (i < this._tabs.length) ? this._tabs[i] : this._tab.value;
 	}
 
 	/**
@@ -96,7 +97,7 @@ export class TabManager {
 	 * Tab gibt wird das aktuelle Tab zurückgegeben.
 	 */
 	public get prevTab() : TabData {
-		let i = this._mapNameToIndex.get(this._tab.name) ?? -1;
+		let i = this._mapNameToIndex.get(this._tab.value.name) ?? -1;
 		do {
 			i--;
 		} while ((i > -1) && (this._tabs[i].hide === true));
@@ -104,7 +105,7 @@ export class TabManager {
 			i = this._tabs.length - 1;
 		while ((i > -1) && (this._tabs[i].hide === true))
 			i++;
-		return (i > -1) ? this._tabs[i] : this._tab;
+		return (i > -1) ? this._tabs[i] : this._tab.value;
 	}
 
 	/**
@@ -114,7 +115,7 @@ export class TabManager {
 	 */
 	public async setTab(value : TabData) {
 		await this._setTab(value);
-		this._tab = value;
+		this._tab.value = value;
 	}
 
 	/**

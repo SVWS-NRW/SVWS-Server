@@ -15,7 +15,7 @@
 			</div>
 		</svws-ui-header>
 		<svws-ui-tab-bar :tab-manager :focus-switching-enabled :focus-help-visible>
-			<template v-if="selectedRoute.name === 'dashboard'">
+			<template v-if="tabManager().tab.name === 'dashboard'">
 				<div class="page page-grid grid-cols-2 lg:grid-cols-4" style="grid-auto-rows: min-content">
 					<svws-ui-dashboard-tile :span="2" color="transparent" title="Adresse">
 						<div class="mt-5 whitespace-pre-line">{{ adresse }}</div>
@@ -80,7 +80,7 @@
 					</svws-ui-dashboard-tile>
 				</div>
 			</template>
-			<template v-if="selectedRoute.name !== 'dashboard'">
+			<template v-if="tabManager().tab.name !== 'dashboard'">
 				<div class="page--content--dashboard">
 					<svws-ui-dashboard-tile :span="2" color="transparent" :title="`${tabManager().tab.name}daten`">
 						<p>
@@ -165,7 +165,7 @@
 
 <script setup lang="ts">
 
-	import {computed, ref} from "vue";
+	import {computed, shallowRef, triggerRef} from "vue";
 	import type {StatistikAppProps} from "./SStatistikAppProps";
 	import { type TabData, type DataTableColumn, TabManager } from "@ui";
 	import { useRegionSwitch } from "~/components/useRegionSwitch";
@@ -229,17 +229,19 @@
 	];
 
 	async function setTab(tab: TabData) {
-		selectedRoute.value = tab;
 	}
 
-	const tabManager = () => new TabManager([
+	const refTabManager = shallowRef<TabManager>(new TabManager([
 		{ name: "dashboard", text: "Übersicht" },
 		{ name: "Schüler", text: "Schüler" },
 		{ name: "Lehrer", text: "Lehrkräfte" },
 		{ name: "Unterrichts", text: "Unterricht" },
-	], { name: "dashboard", text: "Übersicht" }, setTab);
+	], { name: "dashboard", text: "Übersicht" }, setTab));
 
-	const selectedRoute = ref(tabManager().tab);
+	function tabManager() : TabManager {
+		return refTabManager.value;
+	}
+
 
 </script>
 
