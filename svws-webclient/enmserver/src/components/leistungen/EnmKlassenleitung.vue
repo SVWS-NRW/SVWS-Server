@@ -3,7 +3,7 @@
 		<div class="grow w-full h-full overflow-hidden">
 			<enm-klassenleitung-uebersicht :manager :patch-bemerkungen :patch-lernabschnitt :columns-visible :set-columns-visible @hauptgruppe="erlaubteHauptgruppe = $event" />
 		</div>
-		<div v-if="floskelEditorVisible" class="min-w-196 max-w-196 h-full overflow-hidden">
+		<div v-if="floskelEditorVisible" class="min-w-6 max-w-196 h-full overflow-hidden">
 			<enm-floskeleditor :manager :patch="doPatchBemerkungen" :erlaubte-hauptgruppe />
 		</div>
 	</div>

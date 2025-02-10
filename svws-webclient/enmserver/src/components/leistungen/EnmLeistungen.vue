@@ -3,7 +3,7 @@
 		<div class="grow w-full h-full overflow-hidden">
 			<enm-leistungen-uebersicht :manager :patch-leistung :columns-visible :set-columns-visible />
 		</div>
-		<div v-if="columnsVisible().get('Bemerkung')" class="min-w-196 max-w-196 h-full overflow-hidden">
+		<div v-if="columnsVisible().get('Bemerkung')" class="min-w-6 max-w-196 h-full overflow-hidden">
 			<enm-floskeleditor :manager :patch="doPatchLeistung" erlaubte-hauptgruppe="FACH" />
 		</div>
 	</div>
