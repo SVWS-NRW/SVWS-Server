@@ -1,10 +1,15 @@
 <template>
-	<svws-ui-action-button title="Backup wiederherstellen" description="Daten werden aus einem Backup wiederhergestellt" icon="i-ri-device-recover-line" :action-function action-label="Wiederherstellen" :action-disabled="!file || loadingFunction().value" :is-loading="loadingFunction().value" :is-active>
-		<div class="flex flex-col gap-2">
+	<ui-card icon="i-ri-device-recover-line" title="Backup wiederherstellen" subtitle="Daten werden aus einem Backup wiederhergestellt" :is-open @update:is-open="(open) => emit('opened', open)">
+		<div class="flex flex-col gap-2 mt-2">
 			<div class="font-bold text-button">Quell-Datenbank: SQLite-Datenbank (.sqlite) hochladen</div>
 			<input type="file" @change="onFileChanged" :disabled="loadingFunction().value" accept=".sqlite">
+			<svws-ui-button :disabled="!file || loadingFunction().value" :is-loading="loadingFunction().value" title="Wiederherstellen" @click="actionFunction" class="mt-4 w-fit">
+				<svws-ui-spinner v-if="loadingFunction().value" spinning />
+				<span v-else class="icon i-ri-play-line" />
+				Wiederherstellen
+			</svws-ui-button>
 		</div>
-	</svws-ui-action-button>
+	</ui-card>
 </template>
 
 <script setup lang="ts">
@@ -18,7 +23,11 @@
 		logsFunction: () => ShallowRef<List<string | null> | undefined>;
 		statusFunction: () => ShallowRef<boolean | undefined>;
 		loadingFunction: () => ShallowRef<boolean>;
-		isActive: boolean;
+		isOpen: boolean;
+	}>();
+
+	const emit = defineEmits<{
+		'opened': [value: boolean];
 	}>();
 
 	const file = ref<File | null>(null);
