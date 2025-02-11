@@ -38,7 +38,7 @@
 	const logs = ref<List<string | null> | undefined>();
 	const status = ref<boolean | undefined>();
 
-	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LOESCHEN));
+	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.LEHRERDATEN_LOESCHEN));
 
 	const alleLehrerLoeschbar = computed(() => (currentAction.value === 'delete') && props.lehrerListeManager().getIdsReferenzierterLehrer().isEmpty());
 	const loeschbareLehrerVorhanden = computed(() =>
