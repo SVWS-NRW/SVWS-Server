@@ -1,5 +1,5 @@
 .ui-card {
-	@apply rounded-lg m-2 min-w-fit gap-3;
+	@apply rounded-lg min-w-fit gap-3;
 
 	.ui-card--header {
 		@apply p-4 flex items-center gap-3 text-left w-full rounded-lg bg-ui-brand-weak border border-ui-brand transition-[border-radius]
@@ -55,7 +55,8 @@
 		&.ui-card--active {
 			@apply rounded-b-none transition-[border-radius] delay-0 duration-100 ease-in-out bg-ui-brand text-ui-onbrand border-ui-brand;
 
-			.ui-card--header--icon span {
+			.ui-card--header--icon span,
+			.ui-card--header--collapse-icon span {
 				@apply icon-ui-onbrand;
 			}
 		}
@@ -151,7 +152,8 @@
 			@apply border-ui-brand-hover;
 		}
 
-		.ui-card--header--icon span {
+		.ui-card--header--icon span,
+		.ui-card--header--collapse-icon span {
 			@apply icon-ui-onhover;
 		}
 	}

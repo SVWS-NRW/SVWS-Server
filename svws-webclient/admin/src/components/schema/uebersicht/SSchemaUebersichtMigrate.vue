@@ -1,7 +1,7 @@
 <template>
 	<ui-card icon="i-ri-database-2-line" title="Schild2-Schema migrieren" subtitle="Daten werden über die Auswahl einer existierenden Schild 2-Datenbank importiert"
 		:is-open @update:is-open="(open) => emit('opened', open)">
-		<div class="flex flex-col mt-1">
+		<div class="space-y-2 mt-1">
 			<svws-ui-select v-model="migrationQuellinformationen().dbms" :items="items.keys()" :item-text="i => items.get(i) || ''" title="Datenbank" class="mb-8" />
 			<div class="flex flex-col items-start gap-3">
 				<div v-if="migrationQuellinformationen().dbms !== 'mdb'" class="flex flex-col gap-2">
@@ -31,12 +31,14 @@
 					</svws-ui-input-wrapper>
 				</div>
 			</div>
-			<svws-ui-button :disabled="(migrationQuellinformationen().dbms === 'mdb' && !file) || (zielUsername === 'root') || loadingFunction().value" title="Migrieren" @click="actionFunction" :is-loading="loadingFunction().value" class="mt-4 w-fit">
+		</div>
+		<template #buttonFooterLeft>
+			<svws-ui-button :disabled="(migrationQuellinformationen().dbms === 'mdb' && !file) || (zielUsername === 'root') || loadingFunction().value" title="Migrieren" @click="actionFunction" :is-loading="loadingFunction().value" class="w-fit">
 				<svws-ui-spinner v-if="loadingFunction().value" spinning />
 				<span v-else class="icon i-ri-play-line" />
 				Migrieren
 			</svws-ui-button>
-		</div>
+		</template>
 	</ui-card>
 </template>
 

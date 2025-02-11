@@ -6,12 +6,14 @@
 			<svws-ui-text-input v-model.trim="user" required placeholder="Benutzername" :disabled="loadingFunction().value" :valid="value => value !== 'root'" />
 			<svws-ui-text-input v-model.trim="password" required placeholder="Passwort" :disabled="loadingFunction().value" type="password" />
 			<svws-ui-spacing />
+		</div>
+		<template #buttonFooterLeft>
 			<svws-ui-button :disabled="(props.schema === undefined) || user.length === 0 || (user === 'root') || loadingFunction().value" :is-loading="loadingFunction().value" title="Hinzufügen" @click="actionFunction">
 				<svws-ui-spinner v-if="loadingFunction().value" spinning />
 				<span v-else class="icon i-ri-play-line" />
 				Hinzufügen
 			</svws-ui-button>
-		</div>
+		</template>
 	</ui-card>
 </template>
 

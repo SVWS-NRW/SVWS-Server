@@ -1,13 +1,19 @@
 <template>
-	<svws-ui-action-button title="Leeres Schema" description="Es wird ein leeres neues Schema in der neuesten Revision erzeugt. Dieses kann im Anschluss initialisiert werden" icon="i-ri-add-line" :action-function
-		:action-disabled="(schemaname.length === 0) || (user.length === 0) || (password.length === 0) || (user === 'root') || loadingFunction().value" :is-loading="loadingFunction().value" action-label="Schema anlegen" :is-active>
-		<div class="input-wrapper">
+	<ui-card icon="i-ri-add-line" title="Leeres Schema" subtitle="Es wird ein leeres neues Schema in der neuesten Revision erzeugt. Dieses kann im Anschluss initialisiert werden." :is-open @update:is-open="(open) => emit('opened', open)">
+		<div class="input-wrapper mt-2">
 			<svws-ui-text-input v-model.trim="schemaname" required placeholder="Schemaname" :disabled="loadingFunction().value" />
 			<svws-ui-spacing />
 			<svws-ui-text-input v-model.trim="user" required placeholder="Benutzername" :disabled="loadingFunction().value" :valid="validatorUsername" />
 			<svws-ui-text-input v-model.trim="password" required placeholder="Passwort" :disabled="loadingFunction().value" type="password" />
 		</div>
-	</svws-ui-action-button>
+		<template #buttonFooterLeft>
+			<svws-ui-button :disabled="(schemaname.length === 0) || (user.length === 0) || (password.length === 0) || (user === 'root') || loadingFunction().value" title="Schema anlegen" @click="actionFunction" :is-loading="loadingFunction().value" class="mt-4">
+				<svws-ui-spinner v-if="loadingFunction().value" spinning />
+				<span v-else class="icon i-ri-play-line" />
+				Schema anlegen
+			</svws-ui-button>
+		</template>
+	</ui-card>
 </template>
 
 <script setup lang="ts">
@@ -23,7 +29,11 @@
 		statusFunction: () => ShallowRef<boolean | undefined>;
 		loadingFunction: () => ShallowRef<boolean>;
 		validatorUsername: (username: string | null) => boolean;
-		isActive: boolean;
+		isOpen: boolean;
+	}>();
+
+	const emit = defineEmits<{
+		'opened': [value: boolean];
 	}>();
 
 	const schemaname = ref<string>('');

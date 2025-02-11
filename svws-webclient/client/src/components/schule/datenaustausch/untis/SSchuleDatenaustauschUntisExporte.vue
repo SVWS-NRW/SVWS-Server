@@ -13,7 +13,7 @@
 		</div>
 
 		<!-- Weitere Eingabemöglichkeiten für den zuvor gewählten Untis-Export (rechte Seite - spezielle Ansicht nach Auswahl) -->
-		<div class="flex flex-col">
+		<div class="flex flex-col gap-2">
 			<div v-if="zeigeSchuelerVariantenAuswahl" class="max-w-196">
 				<ui-card :compact="true" :collapsible="false" title="Schema Schüler-IDs" content="Wählen Sie das Schema für das Erzeugen der Schüler-IDs in Untis:">
 					<template #footer>

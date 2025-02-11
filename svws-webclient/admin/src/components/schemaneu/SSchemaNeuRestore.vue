@@ -1,8 +1,7 @@
 <template>
-	<svws-ui-action-button title="Backup importieren" description="Ein SQLite-Backup wird in ein neues Schema wiederhergestellt" icon="i-ri-device-recover-line" action-label="Schema anlegen" :action-function
-		:action-disabled="(schema.length === 0) || (user.length === 0) || (password.length === 0) || (user === 'root') || loadingFunction().value" :is-loading="loadingFunction().value" :is-active>
+	<ui-card icon="i-ri-device-recover-line" title="Backup importieren" subtitle="Ein SQLite-Backup wird in ein neues Schema wiederhergestellt" :is-open @update:is-open="(open) => emit('opened', open)">
 		<div class="input-wrapper">
-			<div class="flex flex-col gap-2 mb-2">
+			<div class="space-y-2">
 				<div class="font-bold text-button">Quell-Datenbank: SQLite-Datei (.sqlite) hochladen</div>
 				<input type="file" @change="onFileChanged" :disabled="loadingFunction().value" accept=".sqlite">
 			</div>
@@ -12,7 +11,14 @@
 			<svws-ui-text-input v-model.trim="user" required placeholder="Benutzername" :valid="validatorUsername" />
 			<svws-ui-text-input v-model.trim="password" required placeholder="Passwort" type="password" />
 		</div>
-	</svws-ui-action-button>
+		<template #buttonFooterLeft>
+			<svws-ui-button :disabled="(schema.length === 0) || (user.length === 0) || (password.length === 0) || (user === 'root') || loadingFunction().value" title="Schema anlegen" @click="actionFunction" :is-loading="loadingFunction().value" class="mt-4">
+				<svws-ui-spinner v-if="loadingFunction().value" spinning />
+				<span v-else class="icon i-ri-play-line" />
+				Schema anlegen
+			</svws-ui-button>
+		</template>
+	</ui-card>
 </template>
 
 <script setup lang="ts">
@@ -27,7 +33,11 @@
 		statusFunction: () => ShallowRef<boolean | undefined>;
 		loadingFunction: () => ShallowRef<boolean>;
 		validatorUsername: (username: string | null) => boolean;
-		isActive: boolean;
+		isOpen: boolean;
+	}>();
+
+	const emit = defineEmits<{
+		'opened': [value: boolean];
 	}>();
 
 	const schema = ref<string>('');

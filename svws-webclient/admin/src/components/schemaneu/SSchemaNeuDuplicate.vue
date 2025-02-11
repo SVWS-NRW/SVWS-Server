@@ -1,13 +1,19 @@
 <template>
-	<svws-ui-action-button :title="`Schema „${schema}“ duplizieren`" description="Dupliziert das aktuell ausgewählte Schema in ein neues Schema." icon="i-ri-file-copy-line" action-label="Duplizieren" :action-function
-		:disabled="(user === 'root') || (schemaNeu.length === 0) || (user.length === 0) || (password.length === 0) || (schema === schemaNeu) || loadingFunction().value" :is-loading="loadingFunction().value" :is-active>
-		<div class="input-wrapper">
+	<ui-card icon="i-ri-file-copy-line" :title="`Schema „${schema}“ duplizieren`" subtitle="Dupliziert das aktuell ausgewählte Schema in ein neues Schema." :is-open @update:is-open="(open) => emit('opened', open)">
+		<div class="input-wrapper mt-2">
 			<svws-ui-text-input v-model.trim="schemaNeu" placeholder="Name des neuen Schemas" />
 			<svws-ui-spacing />
 			<svws-ui-text-input v-model.trim="user" required placeholder="Benutzername" :valid="validatorUsername" />
 			<svws-ui-text-input v-model.trim="password" required placeholder="Passwort" />
 		</div>
-	</svws-ui-action-button>
+		<template #buttonFooterLeft>
+			<svws-ui-button :disabled="(user === 'root') || (schemaNeu.length === 0) || (user.length === 0) || (password.length === 0) || (schema === schemaNeu) || loadingFunction().value" title="Duplizieren" @click="actionFunction" :is-loading="loadingFunction().value" class="mt-4">
+				<svws-ui-spinner v-if="loadingFunction().value" spinning />
+				<span v-else class="icon i-ri-play-line" />
+				Duplizieren
+			</svws-ui-button>
+		</template>
+	</ui-card>
 </template>
 
 <script setup lang="ts">
@@ -22,8 +28,12 @@
 		statusFunction: () => ShallowRef<boolean | undefined>;
 		loadingFunction: () => ShallowRef<boolean>;
 		validatorUsername: (username: string | null) => boolean;
-		isActive: boolean;
+		isOpen: boolean;
 		schema: string;
+	}>();
+
+	const emit = defineEmits<{
+		'opened': [value: boolean];
 	}>();
 
 	const schemaNeu = ref<string>('');

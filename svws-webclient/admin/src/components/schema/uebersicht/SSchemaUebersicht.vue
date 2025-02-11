@@ -7,51 +7,57 @@
 						:is-open="currentAction === 'config'" @opened="(isOpen) => setCurrentAction('config', isOpen)" />
 				</svws-ui-content-card>
 				<svws-ui-content-card v-if="eintrag.isSVWS || revisionNotUpToDate" title="Sicherung">
-					<ui-card v-if="eintrag.isSVWS" icon="i-ri-save-3-line" title="Backup" subtitle="Daten aus dem Schema werden in ein SQLite-Backup übertragen" :is-open="currentAction === 'backup'" @update:is-open="(isOpen) => setCurrentAction('backup', isOpen)">
-						<svws-ui-button :disabled="loading" title="Backup starten" @click="getBackupSchema" :is-loading="loading">
-							<svws-ui-spinner v-if="loading" spinning />
-							<span v-else class="icon i-ri-play-line" />
-							Backup starten
-						</svws-ui-button>
-					</ui-card>
-					<ui-card v-if="revisionNotUpToDate" icon="i-ri-speed-line" title="Aktualisieren" :subtitle="`Setzt das Schema auf die aktuelle Revision ${revision} hoch`" :is-open="currentAction === 'upgrade'" @update:is-open="(isOpen) => setCurrentAction('upgrade', isOpen)">
-						<div>
+					<div class="space-y-2">
+						<ui-card v-if="eintrag.isSVWS" icon="i-ri-save-3-line" title="Backup" subtitle="Daten aus dem Schema werden in ein SQLite-Backup übertragen" :is-open="currentAction === 'backup'" @update:is-open="(isOpen) => setCurrentAction('backup', isOpen)">
+							<svws-ui-button :disabled="loading" title="Backup starten" @click="getBackupSchema" :is-loading="loading">
+								<svws-ui-spinner v-if="loading" spinning />
+								<span v-else class="icon i-ri-play-line" />
+								Backup starten
+							</svws-ui-button>
+						</ui-card>
+						<ui-card v-if="revisionNotUpToDate" icon="i-ri-speed-line" title="Aktualisieren" :subtitle="`Setzt das Schema auf die aktuelle Revision ${revision} hoch`" :is-open="currentAction === 'upgrade'" @update:is-open="(isOpen) => setCurrentAction('upgrade', isOpen)">
 							<div class="flex flex-col space-y-2">
 								<div v-if="eintrag.isTainted" class="text-ui-danger flex items-center">
 									<span class="icon icon-error i-ri-error-warning-line inline relative mt-0.5 mr-1" />
 									Achtung, auch nach dem Hochsetzen bleibt das Schema „Tainted“.
 								</div>
+							</div>
+							<template #buttonFooterLeft>
 								<svws-ui-button :disabled="loading" title="Aktualisierung starten" @click="upgradeSchema" :is-loading="loading" class="w-fit mt-4">
 									<svws-ui-spinner v-if="loading" spinning />
 									<span v-else class="icon i-ri-play-line" />
 									Aktualisierung starten
 								</svws-ui-button>
-							</div>
-						</div>
-					</ui-card>
+							</template>
+						</ui-card>
+					</div>
 				</svws-ui-content-card>
 				<svws-ui-content-card v-if="zeigeInitialisierungMitSchulkatalog || zeigeNeuesSchemaAnlegen || ((eintrag !== undefined) && (eintrag.isInConfig))" title="Initialisieren / Wiederherstellen">
-					<ui-card v-if="zeigeNeuesSchemaAnlegen" icon="i-ri-archive-line" title="Neues Schema" subtitle="Erstellt ein neues leeres Schema, welches im Anschluss initialisiert werden kann" :is-open="currentAction === 'empty'" @update:is-open="(isOpen) => setCurrentAction('empty', isOpen)">
-						<svws-ui-button :disabled="loading" title="Schema Anlegen" @click="createEmptySchema" :is-loading="loading">
-							<svws-ui-spinner v-if="loading" spinning />
-							<span v-else class="icon i-ri-play-line" />
-							Schema Anlegen
-						</svws-ui-button>
-					</ui-card>
-					<ui-card v-if="zeigeInitialisierungMitSchulkatalog" icon="i-ri-archive-line" title="Initialisieren aus Schulkatalog" subtitle="Daten werden über die Auswahl der Schulnummer initialisiert" :is-open="currentAction === 'init'" @update:is-open="(isOpen) => setCurrentAction('init', isOpen)">
-						<div class="w-full">
-							<svws-ui-input-wrapper class="mt-2">
-								<svws-ui-select title="Schulen nach Schulnummer und Ort suchen" v-model="schule" :items="schulen()" :item-text="i=> `${i.SchulNr}: ${i.ABez1 ?? ''} ${i.ABez2 ?? ''} ${i.ABez3 ?? ''}`" autocomplete :item-filter="schulen_filter" />
-							</svws-ui-input-wrapper>
-							<svws-ui-button :disabled="schule === undefined || loading" title="Initialisieren" @click="init" :is-loading="loading" class="mt-4">
+					<div class="space-y-2">
+						<ui-card v-if="zeigeNeuesSchemaAnlegen" icon="i-ri-archive-line" title="Neues Schema" subtitle="Erstellt ein neues leeres Schema, welches im Anschluss initialisiert werden kann" :is-open="currentAction === 'empty'" @update:is-open="(isOpen) => setCurrentAction('empty', isOpen)">
+							<svws-ui-button :disabled="loading" title="Schema Anlegen" @click="createEmptySchema" :is-loading="loading">
 								<svws-ui-spinner v-if="loading" spinning />
 								<span v-else class="icon i-ri-play-line" />
-								Initialisieren
+								Schema Anlegen
 							</svws-ui-button>
-						</div>
-					</ui-card>
-					<s-schema-uebersicht-restore v-if="(eintrag !== undefined) && (eintrag.isInConfig)" :restore-schema :logs-function :loading-function :status-function :is-open="currentAction === 'restore'" @opened="(isOpen) => setCurrentAction('restore', isOpen)" />
-					<s-schema-uebersicht-migrate v-if="(eintrag !== undefined) && (eintrag.isInConfig)" :migrate-schema :target-schema="eintrag.name" :migration-quellinformationen :logs-function :loading-function :status-function :is-open="currentAction === 'migrate'" @opened="(isOpen: boolean) => setCurrentAction('migrate', isOpen)" />
+						</ui-card>
+						<ui-card v-if="zeigeInitialisierungMitSchulkatalog" icon="i-ri-archive-line" title="Initialisieren aus Schulkatalog" subtitle="Daten werden über die Auswahl der Schulnummer initialisiert" :is-open="currentAction === 'init'" @update:is-open="(isOpen) => setCurrentAction('init', isOpen)">
+							<div class="w-full">
+								<svws-ui-input-wrapper class="mt-2">
+									<svws-ui-select title="Schulen nach Schulnummer und Ort suchen" v-model="schule" :items="schulen()" :item-text="i=> `${i.SchulNr}: ${i.ABez1 ?? ''} ${i.ABez2 ?? ''} ${i.ABez3 ?? ''}`" autocomplete :item-filter="schulen_filter" />
+								</svws-ui-input-wrapper>
+							</div>
+							<template #buttonFooterLeft>
+								<svws-ui-button :disabled="schule === undefined || loading" title="Initialisieren" @click="init" :is-loading="loading">
+									<svws-ui-spinner v-if="loading" spinning />
+									<span v-else class="icon i-ri-play-line" />
+									Initialisieren
+								</svws-ui-button>
+							</template>
+						</ui-card>
+						<s-schema-uebersicht-restore v-if="(eintrag !== undefined) && (eintrag.isInConfig)" :restore-schema :logs-function :loading-function :status-function :is-open="currentAction === 'restore'" @opened="(isOpen) => setCurrentAction('restore', isOpen)" />
+						<s-schema-uebersicht-migrate v-if="(eintrag !== undefined) && (eintrag.isInConfig)" :migrate-schema :target-schema="eintrag.name" :migration-quellinformationen :logs-function :loading-function :status-function :is-open="currentAction === 'migrate'" @opened="(isOpen: boolean) => setCurrentAction('migrate', isOpen)" />
+					</div>
 				</svws-ui-content-card>
 			</template>
 		</div>

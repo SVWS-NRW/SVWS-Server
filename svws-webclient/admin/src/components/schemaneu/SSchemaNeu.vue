@@ -15,14 +15,16 @@
 			<div class="page page-grid-cards">
 				<div class="flex flex-col gap-y-16 lg:gap-y-20">
 					<svws-ui-content-card>
-						<!-- Neues leeres Schema anlegen -->
-						<s-schema-neu-leer :add-schema :logs-function :loading-function :status-function :validator-username :is-active="currentAction === 'neu'" @click="clickNeu" />
-						<!-- Backup in neues Schema importieren -->
-						<s-schema-neu-restore :import-schema :logs-function :loading-function :status-function :validator-username :is-active="currentAction === 'restore'" @click="clickRestore" />
-						<!-- In Neues Schema migrieren -->
-						<s-schema-neu-migrate :migrate-schema :migration-quellinformationen :logs-function :loading-function :status-function :validator-username :is-active="currentAction === 'migrate'" @click="clickMigrate" />
-						<!-- Das ausgewählte Schema in ein neues Schema duplizieren -->
-						<s-schema-neu-duplicate v-if="schema !== undefined" :duplicate-schema :logs-function :loading-function :status-function :is-active="currentAction === 'duplicate'" :validator-username @click="clickDuplicate" :schema />
+						<div class="space-y-2">
+							<!-- Neues leeres Schema anlegen -->
+							<s-schema-neu-leer :add-schema :logs-function :loading-function :status-function :validator-username :is-open="currentAction === 'neu'" @opened="(isOpen) => setCurrentAction('neu', isOpen)" />
+							<!-- Backup in neues Schema importieren -->
+							<s-schema-neu-restore :import-schema :logs-function :loading-function :status-function :validator-username :is-open="currentAction === 'restore'" @opened="(isOpen) => setCurrentAction('restore', isOpen)" />
+							<!-- In Neues Schema migrieren -->
+							<s-schema-neu-migrate :migrate-schema :migration-quellinformationen :logs-function :loading-function :status-function :validator-username :is-open="currentAction === 'migrate'" @opened="(isOpen) => setCurrentAction('migrate', isOpen)" />
+							<!-- Das ausgewählte Schema in ein neues Schema duplizieren -->
+							<s-schema-neu-duplicate v-if="schema !== undefined" :duplicate-schema :logs-function :loading-function :status-function :is-open="currentAction === 'duplicate'" @opened="(isOpen) => setCurrentAction('duplicate', isOpen)" :validator-username :schema />
+						</div>
 					</svws-ui-content-card>
 				</div>
 				<div class="col-span-full">
@@ -50,43 +52,30 @@
 	const logs = shallowRef<List<string|null> | undefined>(undefined);
 	const status = shallowRef<boolean | undefined>(undefined);
 	const currentAction = ref<'' | 'neu' | 'restore' | 'migrate' | 'duplicate'>('');
+	const oldAction = ref({
+		name: "",
+		open: false,
+	});
 
 	const logsFunction = () => logs;
 	const loadingFunction = () => loading;
 	const statusFunction = () => status;
 
+	function setCurrentAction(newAction: "neu" | "restore" | "migrate" | "duplicate", open: boolean) {
+		if(newAction === oldAction.value.name && open === oldAction.value.open === false)
+			return;
+		oldAction.value.name = currentAction.value;
+		oldAction.value.open = open;
+		if(open === true)
+			currentAction.value= newAction;
+		else
+			currentAction.value = "";
+	}
+
 	function clearLog() {
 		loading.value = false;
 		logs.value = undefined;
 		status.value = undefined;
-	}
-
-	async function clickNeu() {
-		if (loading.value)
-			return;
-		currentAction.value = (currentAction.value === 'neu') ? '' : 'neu';
-		clearLog();
-	}
-
-	async function clickRestore() {
-		if (loading.value)
-			return;
-		currentAction.value = (currentAction.value === 'restore') ? '' : 'restore';
-		clearLog();
-	}
-
-	async function clickMigrate() {
-		if (loading.value)
-			return;
-		currentAction.value = (currentAction.value === 'migrate') ? '' : 'migrate';
-		clearLog();
-	}
-
-	async function clickDuplicate() {
-		if (loading.value)
-			return;
-		currentAction.value = (currentAction.value === 'duplicate') ? '' : 'duplicate';
-		clearLog();
 	}
 
 	const validatorUsername = (username: string | null) => {

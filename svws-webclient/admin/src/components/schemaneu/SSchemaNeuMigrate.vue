@@ -1,8 +1,6 @@
 <template>
-	<svws-ui-action-button title="Schild2-Datenbank migrieren" description="Eine Schild2-Datenbank wird in ein neues Schema migriert." icon="i-ri-database-2-line" action-label="Migrieren" :action-function
-		:action-disabled="(zielSchema.length === 0) || (zielUsername.length === 0) || (zielUserPassword.length === 0) || loadingFunction().value || (zielUsername === 'root')"
-		:is-loading="loadingFunction().value" :is-active>
-		<div class="input-wrapper">
+	<ui-card icon="i-ri-database-2-line" title="Schild2-Datenbank migrieren" subtitle="Eine Schild2-Datenbank wird in ein neues Schema migriert." :is-open @update:is-open="(open) => emit('opened', open)">
+		<div class="input-wrapper mt-2">
 			<svws-ui-select v-model="migrationQuellinformationen().dbms" :items="items.keys()" :item-text="i => items.get(i) || ''" title="Datenbank-Typ" />
 			<svws-ui-spacing />
 			<template v-if="migrationQuellinformationen().dbms !== 'mdb'">
@@ -27,7 +25,14 @@
 			<svws-ui-text-input v-model.trim="zielUsername" placeholder="Name des Datenbankbenutzers" :valid="value => value !== 'root'" />
 			<svws-ui-text-input v-model.trim="zielUserPassword" placeholder="Passwort des Datenbankbenutzers" type="password" />
 		</div>
-	</svws-ui-action-button>
+		<template #buttonFooterLeft>
+			<svws-ui-button :disabled="(zielSchema.length === 0) || (zielUsername.length === 0) || (zielUserPassword.length === 0) || loadingFunction().value || (zielUsername === 'root')" title="Migrieren" @click="actionFunction" :is-loading="loadingFunction().value" class="mt-4">
+				<svws-ui-spinner v-if="loadingFunction().value" spinning />
+				<span v-else class="icon i-ri-play-line" />
+				Migrieren
+			</svws-ui-button>
+		</template>
+	</ui-card>
 </template>
 
 <script setup lang="ts">
@@ -44,7 +49,11 @@
 		statusFunction: () => ShallowRef<boolean | undefined>;
 		loadingFunction: () => ShallowRef<boolean>;
 		validatorUsername: (username: string | null) => boolean;
-		isActive: boolean;
+		isOpen: boolean;
+	}>();
+
+	const emit = defineEmits<{
+		'opened': [value: boolean];
 	}>();
 
 	const items = new Map<string, string>();
