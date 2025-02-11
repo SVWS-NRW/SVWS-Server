@@ -31,7 +31,7 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Wohnort und Kontaktdaten">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input placeholder="Straße" v-model="data.strassenname" :valid="fieldIsValid('strassenname')" span="full" :max-len="55" />
+				<svws-ui-text-input placeholder="Straße" v-model="adresse" :valid="fieldIsValid('strassenname')" span="full" :max-len="55" />
 				<svws-ui-select title="Wohnort" :items="mapOrte" :item-filter="orte_filter" :item-sort="orte_sort" :item-text="i => `${i.plz} ${i.ortsname}`"
 					:model-value="mapOrte.get(data.wohnortID?? -1)" @update:model-value="v => data.wohnortID = v?.id ?? null" autocomplete removable
 					:valid="fieldIsValid('wohnortID')" />
@@ -53,7 +53,7 @@
 	import { computed, ref, watch } from "vue";
 	import type { LehrerNeuProps } from './SLehrerNeuProps';
 	import type { OrtsteilKatalogEintrag } from "@core";
-	import { Geschlecht, JavaObject, JavaString, LehrerStammdaten, Nationalitaeten, PersonalTyp	} from "@core";
+	import { Geschlecht, JavaObject, JavaString, LehrerStammdaten, Nationalitaeten, PersonalTyp, AdressenUtils } from "@core";
 	import { orte_filter, orte_sort, ortsteilSort, staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort } from "~/utils/helfer";
 
 	const props = defineProps<LehrerNeuProps>();
@@ -67,42 +67,50 @@
 				result.push(ortsteil);
 		return result;
 	});
-
+	const adresse = computed({
+		get: () => AdressenUtils.combineStrasse(data.value.strassenname, data.value.hausnummer, data.value.hausnummerZusatz),
+		set: (adresse : string) => {
+			const vals = AdressenUtils.splitStrasse(adresse);
+			data.value.strassenname = vals[0];
+			data.value.hausnummer = vals[1];
+			data.value.hausnummerZusatz = vals[2];
+		},
+	})
 
 	//validation logic
 	function fieldIsValid(field: keyof LehrerStammdaten | null):(v: string | null) => boolean {
 		return (v: string | null) => {
 			switch (field) {
 				case 'kuerzel':
-					return validateKuerzel(data.value.kuerzel);
+					return kuerzelIsValid(data.value.kuerzel);
 				case 'personalTyp':
 					return !JavaString.isBlank(data.value.personalTyp);
 				case 'nachname':
-					return validateString(data.value.nachname, true, 120);
+					return stringIsValid(data.value.nachname, true, 120);
 				case 'geschlecht':
 					return Geschlecht.fromValue(data.value.geschlecht) !== null;
 				case 'vorname':
-					return validateString(data.value.vorname, true, 80);
+					return stringIsValid(data.value.vorname, true, 80);
 				case 'staatsangehoerigkeitID':
 					return (data.value.staatsangehoerigkeitID === null) || (Nationalitaeten.getByISO3(data.value.staatsangehoerigkeitID) !== null);
 				case 'titel':
-					return (data.value.titel === null) || (validateString(data.value.titel, false, 20));
+					return stringIsValid(data.value.titel, false, 20);
 				case 'amtsbezeichnung':
-					return (data.value.amtsbezeichnung === null) || (validateString(data.value.amtsbezeichnung, false, 15));
+					return stringIsValid(data.value.amtsbezeichnung, false, 15);
 				case 'strassenname':
-					return (data.value.strassenname === null) || (validateString(data.value.strassenname, false, 55));
+					return adresseIsValid();
 				case 'wohnortID':
 					return (data.value.wohnortID === null) || (props.mapOrte.get(data.value.wohnortID) !== undefined);
 				case 'ortsteilID':
-					return (data.value.ortsteilID === null) || (props.mapOrtsteile.get(data.value.ortsteilID) !== undefined)
+					return (data.value.ortsteilID === null) || (props.mapOrtsteile.get(data.value.ortsteilID) !== undefined);
 				case 'telefon':
-					return (data.value.telefon === null) || (validatePhoneNumber(data.value.telefon, false, 20));
+					return phoneNumberIsValid(data.value.telefon, false, 20);
 				case 'telefonMobil':
-					return (data.value.telefonMobil === null) || (validatePhoneNumber(data.value.telefonMobil, false, 20));
+					return phoneNumberIsValid(data.value.telefonMobil, false, 20);
 				case 'emailPrivat':
-					return (data.value.emailPrivat === null) || (validateString(data.value.emailPrivat, false, 100));
+					return stringIsValid(data.value.emailPrivat, false, 100);
 				case 'emailDienstlich':
-					return (data.value.emailDienstlich === null) || (validateString(data.value.emailDienstlich, false, 100));
+					return stringIsValid(data.value.emailDienstlich, false, 100);
 				default:
 					return true;
 			}
@@ -117,7 +125,13 @@
 		});
 	});
 
-	function validateKuerzel(kuerzel : string | null) {
+	function adresseIsValid() {
+		return stringIsValid(data.value.strassenname, false, 55) &&
+			stringIsValid(data.value.hausnummer, false, 10) &&
+			stringIsValid(data.value.hausnummerZusatz, false, 30);
+	}
+
+	function kuerzelIsValid(kuerzel : string | null) {
 		if ((kuerzel === null) || JavaString.isBlank(kuerzel) || (kuerzel.length > 10))
 			return false;
 		for (const lehrerStammdaten of props.lehrerListeManager().liste.list()) {
@@ -127,14 +141,14 @@
 		return true;
 	}
 
-	function validatePhoneNumber(input: string | null, mandatory: boolean, maxLength: number) {
+	function phoneNumberIsValid(input: string | null, mandatory: boolean, maxLength: number) {
 		if ((input === null) || (JavaString.isBlank(input)))
 			return !mandatory;
 		// folgende Formate sind erlaubt: 0151123456, 0151/123456, 0151-123456, +49/176-456456 -> Buchstaben sind nicht erlaubt
 		return /^\+?\d+([-/]?\d+)*$/.test(input) && input.length <= maxLength;
 	}
 
-	function validateString(input: string | null, mandatory: boolean, maxLength: number) {
+	function stringIsValid(input: string | null, mandatory: boolean, maxLength: number) {
 		if (mandatory)
 			return (input !== null) && (!JavaString.isBlank(input)) && (input.length <= maxLength);
 		return (input === null) || (input.length <= maxLength);
