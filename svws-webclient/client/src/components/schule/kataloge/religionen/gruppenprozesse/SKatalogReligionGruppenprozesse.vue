@@ -3,7 +3,7 @@
 		<div class="flex flex-col gap-y-16 lg:gap-y-16" v-if="ServerMode.DEV.checkServerMode(serverMode)">
 			<svws-ui-action-button title="Löschen" description="Ausgewählte Religionen werden gelöscht." icon="i-ri-delete-bin-line"
 				:action-function="deleteReligionen" action-label="Löschen" :is-loading="loading" :is-active="currentAction === 'delete'"
-				:action-disabled="!checkBeforeDelete().isEmpty()" @click="toggleDeleteJahrgaenge">
+				:action-disabled="!checkBeforeDelete().isEmpty()" @click="toggleDeleteReligionen">
 				<span v-if="checkBeforeDelete().isEmpty()">Alle ausgewählten Religionen sind bereit zum Löschen.</span>
 				<template v-else v-for="message in []" :key="message">
 					<span class="text-error"> {{ message }} <br> </span>
@@ -37,7 +37,7 @@
 	const logs = ref<List<string | null> | undefined>();
 	const status = ref<boolean | undefined>();
 
-	function toggleDeleteJahrgaenge() {
+	function toggleDeleteReligionen() {
 		currentAction.value = currentAction.value === 'delete' ? '' : 'delete';
 	}
 

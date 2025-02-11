@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, onMounted, ref, watch } from "vue";
+	import { computed, ref, watch } from "vue";
 	import type { KatalogReligionNeuProps } from "./SKatalogReligionNeuProps";
 	import { ArrayList, type List, Religion, ReligionEintrag } from "@core";
 
@@ -32,15 +32,13 @@
 	const isValid = ref<boolean>(false);
 	const data = ref<ReligionEintrag>(new ReligionEintrag());
 
-	onMounted(() => {
-		watch(() => data.value, async () => {
-			if (isLoading.value)
-				return;
+	watch(() => data.value, async () => {
+		if (isLoading.value)
+			return;
 
-			props.checkpoint.active = true;
-			validateAll();
-		}, { immediate: false, deep: true });
-	})
+		props.checkpoint.active = true;
+		validateAll();
+	}, { immediate: false, deep: true });
 
 	const religionKatalogList = computed<List<ReligionEintrag>>(() => {
 		const religionList = Religion.data().getEintraegeBySchuljahr(props.religionListeManager().getSchuljahr());

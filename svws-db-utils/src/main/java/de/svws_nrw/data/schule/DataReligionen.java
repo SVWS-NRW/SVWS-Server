@@ -1,210 +1,109 @@
 package de.svws_nrw.data.schule;
 
-import de.svws_nrw.core.data.schule.ReligionEintrag;
+import java.util.List;
+import java.util.Map;
+
 import de.svws_nrw.asd.types.schule.Religion;
-import de.svws_nrw.data.DTOMapper;
-import de.svws_nrw.data.DataBasicMapper;
-import de.svws_nrw.data.DataManager;
+import de.svws_nrw.core.data.schule.ReligionEintrag;
+import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKonfession;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
-import jakarta.validation.constraints.NotNull;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.ObjLongConsumer;
-
 /**
- * Diese Klasse erweitert den abstrakten {@link DataManager} für den
+ * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für den
  * Core-DTO {@link ReligionEintrag}.
  */
-public final class DataReligionen extends DataManager<Long> {
+public final class DataReligionen extends DataManagerRevised<Long, DTOKonfession, ReligionEintrag> {
 
 	/**
-	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link ReligionEintrag}.
+	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO {@link ReligionEintrag}.
 	 *
 	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
 	 */
 	public DataReligionen(final DBEntityManager conn) {
 		super(conn);
+		setAttributesNotPatchable("id");
+		setAttributesRequiredOnCreation("kuerzel", "bezeichnung");
 	}
 
-	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOKonfession} in einen Core-DTO {@link ReligionEintrag}.
-	 */
-	private static final DTOMapper<DTOKonfession, ReligionEintrag> dtoMapper = (final DTOKonfession k) -> {
+	@Override
+	protected void initDTO(final DTOKonfession dto, final Long newId, final Map<String, Object> initAttributes) throws ApiOperationException {
+		dto.ID = newId;
+	}
+
+	@Override
+	public List<ReligionEintrag> getAll() {
+		return conn.queryAll(DTOKonfession.class).stream().map(this::map).toList();
+	}
+
+	@Override
+	public ReligionEintrag getById(final Long id) throws ApiOperationException {
+		final DTOKonfession religion = conn.queryByKey(DTOKonfession.class, id);
+		if (religion == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Eintrag im Katalog der Religionen mit der ID %d gefunden.".formatted(id));
+
+		return map(religion);
+	}
+
+	@Override
+	protected ReligionEintrag map(final DTOKonfession dto) {
 		final ReligionEintrag daten = new ReligionEintrag();
-		daten.id = k.ID;
-		daten.bezeichnung = k.Bezeichnung;
-		daten.bezeichnungZeugnis = k.ZeugnisBezeichnung;
-		daten.kuerzel = k.StatistikKrz;
-		daten.sortierung = (k.Sortierung == null) ? 32000 : k.Sortierung;
-		daten.istSichtbar = (k.Sichtbar == null) || k.Sichtbar;
-		return daten;
-	};
-
-	@Override
-	public Response getAll() throws ApiOperationException {
-		final var daten = getReligionen(conn);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
-	}
-
-
-	/**
-	 * Gibt die Liste der Religionen zurück.
-	 *
-	 * @return die Liste der Religionen
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	public List<ReligionEintrag> getListReligionen() throws ApiOperationException {
-		if (this.conn != null)
-			return getReligionen(this.conn);
-		return new ArrayList<>();
-	}
-
-	/**
-	 * Gibt die Liste der Religionen zurück.
-	 *
-	 * @param conn            die Datenbankverbindung
-	 *
-	 * @return die Liste der Religionen
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	public static List<ReligionEintrag> getReligionen(final @NotNull DBEntityManager conn) throws ApiOperationException {
-		final List<DTOKonfession> katalog = conn.queryAll(DTOKonfession.class);
-		if (katalog == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Keine Religion gefunden.");
-		final ArrayList<ReligionEintrag> daten = new ArrayList<>();
-		for (final DTOKonfession r : katalog)
-			daten.add(dtoMapper.apply(r));
+		daten.id = dto.ID;
+		daten.bezeichnung = dto.Bezeichnung;
+		daten.bezeichnungZeugnis = dto.ZeugnisBezeichnung;
+		daten.kuerzel = dto.StatistikKrz;
+		daten.sortierung = (dto.Sortierung == null) ? 32000 : dto.Sortierung;
+		daten.istSichtbar = (dto.Sichtbar == null) || dto.Sichtbar;
 		return daten;
 	}
 
-
 	@Override
-	public Response getList() throws ApiOperationException {
-		return this.getAll();
-	}
-
-
-	/**
-	 * Bestimmt die Religion anhand der angegeben ID.
-	 *
-	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
-	 * @param id     die ID des Religion-Katalog-Eintrags
-	 *
-	 * @return der Eintrag der Religion
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	public static ReligionEintrag getReligion(final @NotNull DBEntityManager conn, final long id) throws ApiOperationException {
-		final DTOKonfession reli = conn.queryByKey(DTOKonfession.class, id);
-		if (reli == null)
-			throw new ApiOperationException(Status.NOT_FOUND);
-		return dtoMapper.apply(reli);
-	}
-
-
-	@Override
-	public Response get(final Long id) throws ApiOperationException {
-		if (id == null)
-			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einer Religion mit der ID null ist unzulässig.");
-		final ReligionEintrag daten = getReligion(conn, id);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
-	}
-
-
-	private static final Map<String, DataBasicMapper<DTOKonfession>> patchMappings = Map.ofEntries(
-			Map.entry("id", (conn, dto, value, map) -> {
-				final Long patch_id = JSONMapper.convertToLong(value, true);
-				if ((patch_id == null) || (patch_id != dto.ID))
-					throw new ApiOperationException(Status.BAD_REQUEST);
-			}),
-			Map.entry("kuerzel", (conn, dto, value, map) -> {
-				final String statistikKrz = JSONMapper.convertToString(value, true, true, Schema.tab_K_Religion.col_StatistikKrz.datenlaenge());
-				if ((dto.StatistikKrz != null) && (Religion.data().getWertByKuerzel(dto.StatistikKrz) == null)) {
-					throw new ApiOperationException(Status.NOT_FOUND, "Eine Religion mit dem  Kürzel " + dto.StatistikKrz + " existiert in der amtlichen Schulstatistik nicht.");
+	protected void mapAttribute(final DTOKonfession dto, final String name, final Object patchValue, final Map<String, Object> map)
+			throws ApiOperationException {
+		switch (name) {
+			case "kuerzel" -> {
+				final String statistikKrz = JSONMapper.convertToString(patchValue, true, true, Schema.tab_K_Religion.col_StatistikKrz.datenlaenge());
+				if ((statistikKrz != null) && (Religion.data().getWertByKuerzel(statistikKrz) == null)) {
+					throw new ApiOperationException(Status.BAD_REQUEST,
+							"Eine Religion mit dem Kürzel " + statistikKrz + " existiert in der amtlichen Schulstatistik nicht.");
 				}
 				dto.StatistikKrz = statistikKrz;
-			}),
-			Map.entry("bezeichnung",
-					(conn, dto, value, map) -> {
-						final String bezeichnung = JSONMapper.convertToString(value, false, true, Schema.tab_K_Religion.col_Bezeichnung.datenlaenge());
-						if (bezeichnungExists(conn, bezeichnung)) {
-							throw new ApiOperationException(Status.BAD_REQUEST, "Eine Religion mit der Bezeichnung " + bezeichnung + " existiert bereits. Die Bezeichnung muss eindeutig sein.");
-						}
-						dto.Bezeichnung = bezeichnung;
-					}),
-			Map.entry("bezeichnungZeugnis",
-					(conn, dto, value, map) -> dto.ZeugnisBezeichnung =
-							JSONMapper.convertToString(value, true, true, Schema.tab_K_Religion.col_ZeugnisBezeichnung.datenlaenge())),
-			Map.entry("istSichtbar", (conn, dto, value, map) -> dto.Sichtbar = JSONMapper.convertToBoolean(value, true)),
-			Map.entry("sortierung", (conn, dto, value, map) -> dto.Sortierung = JSONMapper.convertToInteger(value, true)));
-
+			}
+			case "bezeichnung" -> {
+				final String bezeichnung = JSONMapper.convertToString(patchValue, false, true, Schema.tab_K_Religion.col_Bezeichnung.datenlaenge());
+				if (bezeichnungExists(bezeichnung)) {
+					throw new ApiOperationException(Status.BAD_REQUEST,
+							"Eine Religion mit der Bezeichnung " + bezeichnung + " existiert bereits. Die Bezeichnung muss eindeutig sein.");
+				}
+				dto.Bezeichnung = bezeichnung;
+			}
+			case "bezeichnungZeugnis" ->
+					dto.ZeugnisBezeichnung = JSONMapper.convertToString(patchValue, true, true, Schema.tab_K_Religion.col_ZeugnisBezeichnung.datenlaenge());
+			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(patchValue, true);
+			case "sortierung" -> dto.Sortierung = JSONMapper.convertToInteger(patchValue, true);
+			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Für das Attribut %s existiert kein Patch Mapping.".formatted(name));
+		}
+	}
 
 	@Override
-	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
-		return super.patchBasic(id, is, DTOKonfession.class, patchMappings);
+	protected long getLongId(final DTOKonfession dbDTO) {
+		return dbDTO.ID;
 	}
-
-
-	private static final Set<String> requiredCreateAttributes = Set.of("kuerzel", "bezeichnung");
-
-	private final ObjLongConsumer<DTOKonfession> initDTO = (dto, id) -> dto.ID = id;
-
 
 	/**
-	 * Erstellt eine neue Religion
+	 * Methode prüft, ob bereits ein DTOKonfession Eintrag mit der gegebenen Bezeichnung in der DB existiert.
 	 *
-	 * @param  is					JSON-Objekt mit den Daten
-	 *
-	 * @return Eine Response mit der neuen Religion
-	 *
-	 * @throws ApiOperationException im Fehlerfall
+	 * @param bezeichnung zu prüfende Bezeichnung
+	 * @return <code>true</code>, wenn es bereits ein DTOKonfession mit der Bezeichnung in der DB existiert, ansonsten <code>false</code>
 	 */
-	public Response add(final InputStream is) throws ApiOperationException {
-		return super.addBasic(is, DTOKonfession.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
-	}
-
-
-	/**
-	 * Löscht eine Religion aus dem Katalog
-	 *
-	 * @param id   die ID des Religion-Katalog-Eintrags
-	 *
-	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	public Response delete(final Long id) throws ApiOperationException {
-		return super.deleteBasic(id, DTOKonfession.class, dtoMapper);
-	}
-
-
-	/**
-	 * Löscht mehrere Religion-Katalog-Einträge
-	 *
-	 * @param ids   die IDs der Religion-Katalog-Einträge
-	 *
-	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	public Response deleteMultiple(final List<Long> ids) throws ApiOperationException {
-		return super.deleteBasicMultiple(ids, DTOKonfession.class, dtoMapper);
-	}
-
-	private static boolean bezeichnungExists(final DBEntityManager conn, final String bezeichnung) {
-		return !conn.query(DTOKonfession.QUERY_BY_BEZEICHNUNG, DTOKonfession.class).setParameter(1, bezeichnung).getResultList().isEmpty();
+	boolean bezeichnungExists(final String bezeichnung) {
+		return !conn.query(DTOKonfession.QUERY_BY_BEZEICHNUNG, DTOKonfession.class)
+				.setParameter(1, bezeichnung)
+				.getResultList()
+				.isEmpty();
 	}
 }

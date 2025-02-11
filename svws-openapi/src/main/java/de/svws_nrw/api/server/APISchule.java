@@ -523,7 +523,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Nationalitäten-Katalog-Einträge gefunden")
 	public Response getNationaelitaeten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.run(() -> (new DataKatalogNationalitaeten(null)).getAll(), request,
+		return DBBenutzerUtils.run(() -> new DataKatalogNationalitaeten(null).getAll(), request,
 				ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
 	}
@@ -547,7 +547,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Einschulungsart-Katalog-Einträge gefunden")
 	public Response getEinschulungsarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.run(() -> (new DataKatalogEinschulungsarten(null)).getAll(), request,
+		return DBBenutzerUtils.run(() -> new DataKatalogEinschulungsarten(null).getAll(), request,
 				ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
 	}
@@ -571,7 +571,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Allgemeine-Merkmal-Katalog-Einträge gefunden")
 	public Response getAllgemeineMerkmale(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.run(() -> (new DataKatalogAllgemeineMerkmale(null)).getAll(), request,
+		return DBBenutzerUtils.run(() -> new DataKatalogAllgemeineMerkmale(null).getAll(), request,
 				ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
 	}
@@ -596,7 +596,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Förderschwerpunkt-Katalog-Einträge gefunden")
 	public Response getFoerderschwerpunkte(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.run(() -> (new DataKatalogFoerderschwerpunkte()).getList(), request,
+		return DBBenutzerUtils.run(() -> new DataKatalogFoerderschwerpunkte().getList(), request,
 				ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
 	}
@@ -700,7 +700,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "404", description = "Keine Religion mit der angegebenen ID gefunden")
 	public Response getReligion(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).get(id),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).getByIdAsResponse(id),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
 	}
@@ -727,9 +727,8 @@ public class APISchule {
 	public Response createReligion(@PathParam("schema") final String schema, @RequestBody(description = "Der Post für die Religion-Daten", required = true,
 			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ReligionEintrag.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).add(is),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).addAsResponse(is),
+				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 
 	/**
@@ -758,7 +757,7 @@ public class APISchule {
 			@RequestBody(description = "Der Patch für die Religion-Stammdaten", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ReligionEintrag.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).patch(id, is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).patchAsResponse(id, is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
@@ -783,7 +782,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getReligionen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).getAll(),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).getAllAsResponse(),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
 	}
@@ -811,7 +810,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteReligionEintrag(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).delete(id),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).deleteAsResponse(id),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
@@ -832,7 +831,7 @@ public class APISchule {
 			description = "Entfernt mehrere Religion-Katalog-Einträge der Schule."
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.")
 	@ApiResponse(responseCode = "200", description = "Die Religion-Katalog-Einträge wurde erfolgreich entfernt.",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ReligionEintrag.class))))
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.")
 	@ApiResponse(responseCode = "404", description = "Religion-Katalog-Einträge nicht vorhanden")
 	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
@@ -842,7 +841,7 @@ public class APISchule {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).deleteMultiple(JSONMapper.toListOfLong(is)),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
@@ -1314,7 +1313,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getKatalogOrganisationsformen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.run(() -> (new DataKatalogOrganisationsformen()).getList(),
+		return DBBenutzerUtils.run(() -> new DataKatalogOrganisationsformen().getList(),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
 	}
@@ -1338,7 +1337,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Schulen-Katalog-Einträge gefunden")
 	public Response getKatalogSchulen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.run(() -> (new DataKatalogSchulen()).getList(),
+		return DBBenutzerUtils.run(() -> new DataKatalogSchulen().getList(),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
 	}
@@ -1362,7 +1361,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Schulträger-Katalog-Einträge gefunden")
 	public Response getKatalogSchultraeger(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.run(() -> (new DataKatalogSchultraeger()).getList(),
+		return DBBenutzerUtils.run(() -> new DataKatalogSchultraeger().getList(),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
 	}
@@ -1386,7 +1385,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getKatalogSchuelerStatus(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.run(() -> (new DataSchuelerStatus()).getAll(),
+		return DBBenutzerUtils.run(() -> new DataSchuelerStatus().getAll(),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
 	}
@@ -1411,7 +1410,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getKatalogHerkunftsschulnummern(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.run(() -> (new DataKatalogHerkunftsschulnummern()).getAll(),
+		return DBBenutzerUtils.run(() -> new DataKatalogHerkunftsschulnummern().getAll(),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
 	}

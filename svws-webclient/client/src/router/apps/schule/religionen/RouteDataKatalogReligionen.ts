@@ -41,13 +41,7 @@ export class RouteDataKatalogReligionen extends RouteDataAuswahl<ReligionListeMa
 	}
 
 	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {
-		const deletedReligionen = await api.server.deleteReligionEintraege(ids, api.schema);
-		// TODO: folgende Konvertierung ausbauen sobald Backend auf DataManagerRevised umgestellt wurde
-		const simpleOperationResponses = new ArrayList<SimpleOperationResponse>();
-		for (const religion of deletedReligionen) {
-			simpleOperationResponses.add({ id: religion.id, success: true, log: new ArrayList() } as unknown as SimpleOperationResponse)
-		}
-		return simpleOperationResponses;
+		return await api.server.deleteReligionEintraege(ids, api.schema);
 	}
 
 	add = async (partialReligion: Partial<ReligionEintrag>): Promise<void> => {

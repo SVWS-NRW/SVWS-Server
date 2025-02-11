@@ -5,13 +5,12 @@ import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { routeApp } from "../../RouteApp";
 import { ViewType } from "@ui";
-import { type RouteSchuleJahrgaenge } from "~/router/apps/schule/jahrgaenge/RouteSchuleJahrgaenge";
 import type { KatalogReligionGruppenprozesseProps } from "~/components/schule/kataloge/religionen/gruppenprozesse/SKatalogReligionGruppenprozesseProps";
-import { routeKatalogReligionen } from "~/router/apps/schule/religionen/RouteKatalogReligionen";
+import { type RouteKatalogReligionen, routeKatalogReligionen } from "~/router/apps/schule/religionen/RouteKatalogReligionen";
 
 const SKatalogReligionGruppenprozesse = () => import("~/components/schule/kataloge/religionen/gruppenprozesse/SKatalogReligionGruppenprozesse.vue");
 
-export class RouteKatalogReligionGruppenprozesse extends RouteNode<any, RouteSchuleJahrgaenge> {
+export class RouteKatalogReligionGruppenprozesse extends RouteNode<any, RouteKatalogReligionen> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN ], "schule.religionen.gruppenprozesse", "gruppenprozesse", SKatalogReligionGruppenprozesse);

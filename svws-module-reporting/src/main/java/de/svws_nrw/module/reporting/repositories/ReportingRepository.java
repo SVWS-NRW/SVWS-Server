@@ -268,7 +268,7 @@ public class ReportingRepository {
 			this.katalogOrtsteile = new DataOrtsteile(this.conn).getOrtsteile().stream().collect(Collectors.toMap(o -> o.id, o -> o));
 			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog Ortsteile geladen.");
 
-			this.katalogReligionen = new DataReligionen(this.conn).getListReligionen().stream().collect(Collectors.toMap(r -> r.id, r -> r));
+			this.katalogReligionen = new DataReligionen(this.conn).getAll().stream().collect(Collectors.toMap(r -> r.id, r -> r));
 			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog Religionen geladen.");
 
 			this.mapReportingErzieherarten = new DataErzieherarten(this.conn).getListErzieherarten().stream().collect(Collectors.toMap(a -> a.id,
