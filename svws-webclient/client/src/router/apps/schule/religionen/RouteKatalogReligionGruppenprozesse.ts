@@ -8,7 +8,6 @@ import { ViewType } from "@ui";
 import { type RouteSchuleJahrgaenge } from "~/router/apps/schule/jahrgaenge/RouteSchuleJahrgaenge";
 import type { KatalogReligionGruppenprozesseProps } from "~/components/schule/kataloge/religionen/gruppenprozesse/SKatalogReligionGruppenprozesseProps";
 import { routeKatalogReligionen } from "~/router/apps/schule/religionen/RouteKatalogReligionen";
-import {routeKatalogReligionNeu} from "~/router/apps/schule/religionen/RouteKatalogReligionNeu";
 
 const SKatalogReligionGruppenprozesse = () => import("~/components/schule/kataloge/religionen/gruppenprozesse/SKatalogReligionGruppenprozesse.vue");
 

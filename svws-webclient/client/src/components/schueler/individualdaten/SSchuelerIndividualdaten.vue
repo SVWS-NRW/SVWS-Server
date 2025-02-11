@@ -23,9 +23,9 @@
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input class="contentFocusField" placeholder="Straße" :readonly="!hatKompetenzUpdate" :model-value="strasse" @change="patchStrasse" type="text" span="full" />
 				<svws-ui-select title="Wohnort" :readonly="!hatKompetenzUpdate" v-model="wohnortID" :items="mapOrte" :item-filter="orte_filter"
-					:item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete statistics />
+					:item-sort="orte_sort" :item-text="i => `${i.plz} ${i.ortsname}`" autocomplete statistics />
 				<svws-ui-select title="Ortsteil" :readonly="!hatKompetenzUpdate" v-model="ortsteilID" :items="ortsteile"
-					:item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''" :item-sort="ortsteilSort" :item-filter="ortsteilFilter" removable />
+					:item-text="i => i.ortsteil ?? ''" :item-sort="ortsteilSort" :item-filter="ortsteilFilter" removable />
 				<svws-ui-spacing />
 				<svws-ui-text-input placeholder="Telefon" :readonly="!hatKompetenzUpdate" :model-value="data.telefon" @change="telefon => patch({ telefon })" type="tel" />
 				<svws-ui-text-input placeholder="Mobil oder Fax" :readonly="!hatKompetenzUpdate" :model-value="data.telefonMobil"
@@ -44,7 +44,7 @@
 				<svws-ui-select title="2. Staatsangehörigkeit" :readonly="!hatKompetenzUpdate" v-model="staatsangehoerigkeit2" autocomplete removable
 					:items="Nationalitaeten.values()" :item-text="i => i.daten.staatsangehoerigkeit"
 					:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" />
-				<svws-ui-select title="Konfession" :readonly="!hatKompetenzUpdate" v-model="religion" :items="mapReligionen" :item-text="i=>i.text ?? ''" required statistics />
+				<svws-ui-select title="Konfession" :readonly="!hatKompetenzUpdate" v-model="religion" :items="mapReligionen" :item-text="i => i.bezeichnung ?? ''" required statistics />
 				<div class="flex items-center pl-2">
 					<svws-ui-checkbox v-model="druckeKonfessionAufZeugnisse" :disabled="!hatKompetenzUpdate">Konfession aufs Zeugnis</svws-ui-checkbox>
 				</div>
@@ -161,7 +161,7 @@
 
 	const geschlecht = computed<Geschlecht>({
 		get: () => Geschlecht.fromValue(data.value.geschlecht) ?? Geschlecht.X,
-		set: (value) => void props.patch({ geschlecht: value.id })
+		set: (value) => void props.patch({ geschlecht: value.id }),
 	});
 
 	const strasse = computed(() => AdressenUtils.combineStrasse(data.value.strassenname ?? "", data.value.hausnummer ?? "", data.value.hausnummerZusatz ?? ""))
@@ -178,7 +178,7 @@
 			const id = data.value.wohnortID;
 			return id === null ? undefined : props.mapOrte.get(id)
 		},
-		set: (value) => void props.patch({ wohnortID: value === undefined ? null : value.id })
+		set: (value) => void props.patch({ wohnortID: value === undefined ? null : value.id }),
 	});
 
 	const ortsteile = computed<Array<OrtsteilKatalogEintrag>>(() => {
@@ -194,18 +194,18 @@
 			const id = data.value.ortsteilID;
 			return id === null ? undefined : props.mapOrtsteile.get(id)
 		},
-		set: (value) => void props.patch({ ortsteilID: value === undefined ? null : value.id })
+		set: (value) => void props.patch({ ortsteilID: value === undefined ? null : value.id }),
 	});
 
 
 	const staatsangehoerigkeit = computed<Nationalitaeten>({
 		get: () => Nationalitaeten.getByISO3(data.value.staatsangehoerigkeitID) || Nationalitaeten.DEU,
-		set: (value) => void props.patch({ staatsangehoerigkeitID: value.daten.iso3 })
+		set: (value) => void props.patch({ staatsangehoerigkeitID: value.daten.iso3 }),
 	});
 
 	const staatsangehoerigkeit2 = computed<Nationalitaeten | null>({
 		get: () => Nationalitaeten.getByISO3(data.value.staatsangehoerigkeit2ID),
-		set: (value) => void props.patch({ staatsangehoerigkeit2ID: value?.daten.iso3 ?? null })
+		set: (value) => void props.patch({ staatsangehoerigkeit2ID: value?.daten.iso3 ?? null }),
 	});
 
 	const religion = computed<ReligionEintrag | undefined>({
@@ -213,12 +213,12 @@
 			const id = data.value.religionID;
 			return id === null ? undefined : props.mapReligionen.get(id)
 		},
-		set: (value) => void props.patch({ religionID: value === undefined ? null : value.id })
+		set: (value) => void props.patch({ religionID: value === undefined ? null : value.id }),
 	});
 
 	const druckeKonfessionAufZeugnisse = computed<boolean>({
 		get: () => data.value.druckeKonfessionAufZeugnisse,
-		set: (value) => void props.patch({ druckeKonfessionAufZeugnisse: value })
+		set: (value) => void props.patch({ druckeKonfessionAufZeugnisse: value }),
 	});
 
 
@@ -228,28 +228,28 @@
 
 	const geburtsland = computed<Nationalitaeten>({
 		get: () => Nationalitaeten.getByISO3(data.value.geburtsland) || Nationalitaeten.DEU,
-		set: (value) => void props.patch({ geburtsland: value.daten.iso3 })
+		set: (value) => void props.patch({ geburtsland: value.daten.iso3 }),
 	});
 
 	const geburtslandMutter = computed<Nationalitaeten>({
 		get: () => Nationalitaeten.getByISO3(data.value.geburtslandMutter) || Nationalitaeten.DEU,
-		set: (value) => void props.patch({ geburtslandMutter: value.daten.iso3 })
+		set: (value) => void props.patch({ geburtslandMutter: value.daten.iso3 }),
 	});
 
 	const geburtslandVater = computed<Nationalitaeten>({
 		get: () => Nationalitaeten.getByISO3(data.value.geburtslandVater) || Nationalitaeten.DEU,
-		set: (value) => void props.patch({ geburtslandVater: value.daten.iso3 })
+		set: (value) => void props.patch({ geburtslandVater: value.daten.iso3 }),
 	});
 
 	const verkehrsprache = computed<Verkehrssprache>({
 		get: () => Verkehrssprache.getByKuerzelAuto(data.value.verkehrspracheFamilie) || Verkehrssprache.DEU,
-		set: (value) => void props.patch({ verkehrspracheFamilie: value.daten.kuerzel })
+		set: (value) => void props.patch({ verkehrspracheFamilie: value.daten.kuerzel }),
 	});
 
 
 	const inputStammschule = computed<SchulEintrag | undefined>({
 		get: () => (data.value.externeSchulNr === null) ? undefined : (props.mapSchulen.get(data.value.externeSchulNr) || undefined),
-		set: (value) => void props.patch({ externeSchulNr: value === undefined ? null : value.schulnummer })
+		set: (value) => void props.patch({ externeSchulNr: value === undefined ? null : value.schulnummer }),
 	});
 
 	const inputFahrschuelerArtID = computed<KatalogEintrag | undefined>({
@@ -257,7 +257,7 @@
 			const id = data.value.fahrschuelerArtID;
 			return id === null ? undefined : props.mapFahrschuelerarten.get(id)
 		},
-		set: (value) => void props.patch({ fahrschuelerArtID: value === undefined ? null : value.id })
+		set: (value) => void props.patch({ fahrschuelerArtID: value === undefined ? null : value.id }),
 	});
 
 	const inputHaltestelleID = computed<KatalogEintrag | undefined>({
@@ -265,7 +265,7 @@
 			const id = data.value.haltestelleID;
 			return id === null ? undefined : props.mapHaltestellen.get(id)
 		},
-		set: (value) => void props.patch({ haltestelleID: value === undefined ? null : value.id })
+		set: (value) => void props.patch({ haltestelleID: value === undefined ? null : value.id }),
 	});
 
 </script>
