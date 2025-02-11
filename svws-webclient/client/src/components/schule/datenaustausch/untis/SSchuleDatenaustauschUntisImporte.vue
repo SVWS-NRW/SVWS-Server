@@ -1,5 +1,5 @@
 <template>
-	<div class="page--content page--content--flex-row gap-2 h-full w-full overflow-hidden">
+	<div class="page page-flex-row gap-2">
 		<!-- Auswahl des Untis-Importes (linke Seite) -->
 		<div class="h-full min-w-48 w-48 flex flex-col gap-2">
 			<svws-ui-button class="contentFocusField" :type="(aktuell === 'stundenplanGPU001') ? 'primary' : 'secondary'" @click="onSelect('stundenplanGPU001')">

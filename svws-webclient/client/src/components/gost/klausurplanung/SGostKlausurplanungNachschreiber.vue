@@ -244,19 +244,6 @@
 
 	@reference "../../../../../ui/src/assets/styles/index.css"
 
-	.svws-ui-tab-content {
-		@apply overflow-y-hidden items-start;
-
-		.page--content {
-			@apply h-full py-0 auto-rows-auto;
-
-			.content-card {
-				@apply max-h-full pt-8 pb-8 px-4 -mx-4 overflow-y-auto h-[unset];
-				scrollbar-gutter: stable;
-			}
-		}
-	}
-
 	.is-drop-zone {
 		@apply relative bg-ui-brand/5;
 

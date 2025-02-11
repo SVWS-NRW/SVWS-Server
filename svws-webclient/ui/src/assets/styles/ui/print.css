@@ -76,11 +76,6 @@
 		@apply pt-0;
 	}
 
-	.page--content {
-		@apply !p-0;
-		max-width: unset !important;
-	}
-
 	.text-headline-md {
 		@apply !font-normal;
 	}

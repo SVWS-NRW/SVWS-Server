@@ -1,5 +1,5 @@
 <template>
-	<div v-if="visible" class="page--content">
+	<div v-if="visible" class="page page-grid-cards">
 		<div class="flex flex-col gap-12 lg:gap-16">
 			<s-card-benutzergruppe-daten :set-bezeichnung="setBezeichnung" :set-ist-admin="setIstAdmin" :get-benutzergruppen-manager="getBenutzergruppenManager" />
 			<s-card-benutzergruppe-kompetenzen :get-benutzergruppen-manager="getBenutzergruppenManager"

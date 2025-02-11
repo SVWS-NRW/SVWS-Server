@@ -81,7 +81,7 @@
 				</div>
 			</template>
 			<template v-if="tabManager().tab.name !== 'dashboard'">
-				<div class="page--content--dashboard">
+				<div class="page page-grid-cards grid-cols-2 lg:grid-cols-4 gap-2">
 					<svws-ui-dashboard-tile :span="2" color="transparent" :title="`${tabManager().tab.name}daten`">
 						<p>
 							Dieser Bereich ist aktuell nur eine Vorschau. Alle Inhalte sind Beispiele und keine aktuellen Daten aus dem Client.

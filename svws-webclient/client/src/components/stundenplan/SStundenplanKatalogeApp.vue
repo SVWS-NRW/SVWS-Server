@@ -11,7 +11,7 @@
 		<div class="svws-ui-header--actions" />
 	</header>
 	<svws-ui-tab-bar :tab-manager :focus-switching-enabled :focus-help-visible>
-		<div class="page--content page--content--flex-row">
+		<div class="page page-flex-row">
 			<router-view name="eintraege" />
 			<router-view />
 		</div>
@@ -27,12 +27,3 @@
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 </script>
-
-<style lang="postcss" scoped>
-	@reference "../../../../ui/src/assets/styles/index.css"
-
-	.page--content {
-		@apply overflow-y-hidden overflow-x-auto h-full pb-3 pt-6 lg:gap-x-8;
-	}
-
-</style>
