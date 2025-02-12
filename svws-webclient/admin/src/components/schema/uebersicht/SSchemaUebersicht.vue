@@ -1,12 +1,13 @@
 <template>
-	<div class="page page-grid-cards" style="grid-template-columns: 2fr 1fr">
-		<div class="flex flex-col gap-y-16 lg:gap-y-20">
+	<div class="page page-flex-row">
+		<div class="h-full flex flex-col gap-y-8 overflow-y-auto px-6">
 			<template v-if="eintrag !== undefined">
-				<svws-ui-content-card v-if="(eintrag !== undefined) && (!eintrag.isInConfig)">
+				<div v-if="(eintrag !== undefined) && (!eintrag.isInConfig)" class="flex flex-col gap-4">
 					<s-schema-uebersicht-add-existing :schema="eintrag.name" :add-existing-schema-to-config :logs-function :loading-function :status-function
 						:is-open="currentAction === 'config'" @opened="(isOpen) => setCurrentAction('config', isOpen)" />
-				</svws-ui-content-card>
-				<svws-ui-content-card v-if="eintrag.isSVWS || revisionNotUpToDate" title="Sicherung">
+				</div>
+				<div v-if="eintrag.isSVWS || revisionNotUpToDate" class="flex flex-col gap-4">
+					<div class="text-headline-md">Sicherung</div>
 					<div class="space-y-2">
 						<ui-card v-if="eintrag.isSVWS" icon="i-ri-save-3-line" title="Backup" subtitle="Daten aus dem Schema werden in ein SQLite-Backup übertragen" :is-open="currentAction === 'backup'" @update:is-open="(isOpen) => setCurrentAction('backup', isOpen)">
 							<svws-ui-button :disabled="loading" title="Backup starten" @click="getBackupSchema" :is-loading="loading">
@@ -16,7 +17,7 @@
 							</svws-ui-button>
 						</ui-card>
 						<ui-card v-if="revisionNotUpToDate" icon="i-ri-speed-line" title="Aktualisieren" :subtitle="`Setzt das Schema auf die aktuelle Revision ${revision} hoch`" :is-open="currentAction === 'upgrade'" @update:is-open="(isOpen) => setCurrentAction('upgrade', isOpen)">
-							<div class="flex flex-col space-y-2">
+							<div class="flex flex-col gap-2">
 								<div v-if="eintrag.isTainted" class="text-ui-danger flex items-center">
 									<span class="icon icon-ui-danger i-ri-error-warning-line inline relative mt-0.5 mr-1" />
 									Achtung, auch nach dem Hochsetzen bleibt das Schema „Tainted“.
@@ -31,8 +32,9 @@
 							</template>
 						</ui-card>
 					</div>
-				</svws-ui-content-card>
-				<svws-ui-content-card v-if="zeigeInitialisierungMitSchulkatalog || zeigeNeuesSchemaAnlegen || ((eintrag !== undefined) && (eintrag.isInConfig))" title="Initialisieren / Wiederherstellen">
+				</div>
+				<div v-if="zeigeInitialisierungMitSchulkatalog || zeigeNeuesSchemaAnlegen || ((eintrag !== undefined) && (eintrag.isInConfig))" class="flex flex-col gap-4">
+					<div class="text-headline-md">Initialisieren / Wiederherstellen</div>
 					<div class="space-y-2">
 						<ui-card v-if="zeigeNeuesSchemaAnlegen" icon="i-ri-archive-line" title="Neues Schema" subtitle="Erstellt ein neues leeres Schema, welches im Anschluss initialisiert werden kann" :is-open="currentAction === 'empty'" @update:is-open="(isOpen) => setCurrentAction('empty', isOpen)">
 							<svws-ui-button :disabled="loading" title="Schema Anlegen" @click="createEmptySchema" :is-loading="loading">
@@ -58,15 +60,16 @@
 						<s-schema-uebersicht-restore v-if="(eintrag !== undefined) && (eintrag.isInConfig)" :restore-schema :logs-function :loading-function :status-function :is-open="currentAction === 'restore'" @opened="(isOpen) => setCurrentAction('restore', isOpen)" />
 						<s-schema-uebersicht-migrate v-if="(eintrag !== undefined) && (eintrag.isInConfig)" :migrate-schema :target-schema="eintrag.name" :migration-quellinformationen :logs-function :loading-function :status-function :is-open="currentAction === 'migrate'" @opened="(isOpen: boolean) => setCurrentAction('migrate', isOpen)" />
 					</div>
-				</svws-ui-content-card>
+				</div>
 			</template>
 		</div>
-		<div class="flex flex-col gap-y-16 lg:gap-y-20">
-			<svws-ui-content-card title="Admin-Benutzer">
-				<svws-ui-table :columns="cols" :items="admins()" />
-			</svws-ui-content-card>
+		<div class="flex flex-col gap-y-8 overflow-y-auto px-6">
+			<div class="flex flex-col gap-4">
+				<div class="text-headline-md">Admin-Benutzer</div>
+				<svws-ui-table :columns="cols" :items="admins()" scroll />
+			</div>
 		</div>
-		<div class="col-span-full">
+		<div class="grow min-w-fit">
 			<log-box :logs :status>
 				<template #button>
 					<svws-ui-button v-if="status !== undefined" type="transparent" @click="clearLog" title="Log verwerfen">Log verwerfen </svws-ui-button>

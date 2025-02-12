@@ -12,22 +12,18 @@
 			<div class="svws-ui-header--actions" />
 		</header>
 		<svws-ui-tab-bar :tab-manager="() => new TabManager([], { name: 'Dummy', text: 'Dummy' }, async (a) => {})">
-			<div class="page page-grid-cards">
-				<div class="flex flex-col gap-y-16 lg:gap-y-20">
-					<svws-ui-content-card>
-						<div class="space-y-2">
-							<!-- Neues leeres Schema anlegen -->
-							<s-schema-neu-leer :add-schema :logs-function :loading-function :status-function :validator-username :is-open="currentAction === 'neu'" @opened="(isOpen) => setCurrentAction('neu', isOpen)" />
-							<!-- Backup in neues Schema importieren -->
-							<s-schema-neu-restore :import-schema :logs-function :loading-function :status-function :validator-username :is-open="currentAction === 'restore'" @opened="(isOpen) => setCurrentAction('restore', isOpen)" />
-							<!-- In Neues Schema migrieren -->
-							<s-schema-neu-migrate :migrate-schema :migration-quellinformationen :logs-function :loading-function :status-function :validator-username :is-open="currentAction === 'migrate'" @opened="(isOpen) => setCurrentAction('migrate', isOpen)" />
-							<!-- Das ausgewählte Schema in ein neues Schema duplizieren -->
-							<s-schema-neu-duplicate v-if="schema !== undefined" :duplicate-schema :logs-function :loading-function :status-function :is-open="currentAction === 'duplicate'" @opened="(isOpen) => setCurrentAction('duplicate', isOpen)" :validator-username :schema />
-						</div>
-					</svws-ui-content-card>
+			<div class="page page-flex-row">
+				<div class="min-w-fit flex flex-col gap-y-4 overflow-y-auto px-6">
+					<!-- Neues leeres Schema anlegen -->
+					<s-schema-neu-leer :add-schema :logs-function :loading-function :status-function :validator-username :is-open="currentAction === 'neu'" @opened="(isOpen) => setCurrentAction('neu', isOpen)" />
+					<!-- Backup in neues Schema importieren -->
+					<s-schema-neu-restore :import-schema :logs-function :loading-function :status-function :validator-username :is-open="currentAction === 'restore'" @opened="(isOpen) => setCurrentAction('restore', isOpen)" />
+					<!-- In Neues Schema migrieren -->
+					<s-schema-neu-migrate :migrate-schema :migration-quellinformationen :logs-function :loading-function :status-function :validator-username :is-open="currentAction === 'migrate'" @opened="(isOpen) => setCurrentAction('migrate', isOpen)" />
+					<!-- Das ausgewählte Schema in ein neues Schema duplizieren -->
+					<s-schema-neu-duplicate v-if="schema !== undefined" :duplicate-schema :logs-function :loading-function :status-function :is-open="currentAction === 'duplicate'" @opened="(isOpen) => setCurrentAction('duplicate', isOpen)" :validator-username :schema />
 				</div>
-				<div class="col-span-full">
+				<div class="min-w-fit grow">
 					<log-box :logs="logs" :status="status">
 						<template #button>
 							<svws-ui-button v-if="status !== undefined" type="transparent" @click="clearLog" title="Log verwerfen">Log verwerfen </svws-ui-button>
