@@ -1,10 +1,8 @@
 <template>
-	<svws-ui-content-card>
-		<svws-ui-input-wrapper>
-			<svws-ui-text-input class="contentFocusField" :model-value="getBenutzergruppenManager().getBezeichnung()" @change="setBezeichnung" type="text" placeholder="Bezeichnung" />
-			<svws-ui-checkbox type="toggle" v-model="inputIstAdmin"> Alle Kompetenzen freigeben </svws-ui-checkbox>
-		</svws-ui-input-wrapper>
-	</svws-ui-content-card>
+	<div class="flex flex-col gap-4">
+		<svws-ui-text-input class="contentFocusField" :model-value="getBenutzergruppenManager().getBezeichnung()" @change="setBezeichnung" type="text" placeholder="Bezeichnung" />
+		<svws-ui-checkbox type="toggle" v-model="inputIstAdmin"> Alle Kompetenzen freigeben </svws-ui-checkbox>
+	</div>
 </template>
 
 <script setup lang="ts">

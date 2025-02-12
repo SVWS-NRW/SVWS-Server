@@ -47,7 +47,7 @@
 				</template>
 			</svws-ui-table>
 		</div>
-		<div class="flex flex-col gap-4">
+		<div class="h-full flex flex-col gap-4">
 			<div class="text-headline-md">Einstellungen</div>
 			<div v-if="getBenutzerManager().istInAdminGruppe()">
 				<span class="inline-flex gap-1 leading-none">

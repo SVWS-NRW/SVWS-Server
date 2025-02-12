@@ -1,22 +1,20 @@
 <template>
-	<svws-ui-content-card>
-		<svws-ui-table :items="kompetenzgruppen" :disable-footer="true">
-			<template #header>
-				<div class="svws-ui-tr" role="row">
-					<div class="svws-ui-td" role="columnheader">Kompetenz</div>
-					<div class="svws-ui-td" role="columnheader">
-						<span class="icon cursor-pointer" :class="{ 'i-ri-question-line': !showInfo, 'i-ri-question-fill': showInfo }" @click="toggleShowInfo" />
-					</div>
+	<svws-ui-table :items="kompetenzgruppen" :disable-footer="true" scroll>
+		<template #header>
+			<div class="svws-ui-tr" role="row">
+				<div class="svws-ui-td" role="columnheader">Kompetenz</div>
+				<div class="svws-ui-td" role="columnheader">
+					<span class="icon cursor-pointer" :class="{ 'i-ri-question-line': !showInfo, 'i-ri-question-fill': showInfo }" @click="toggleShowInfo" />
 				</div>
+			</div>
+		</template>
+		<template #body>
+			<template v-for="(kompetenzgruppe, index) in kompetenzgruppen" :key="index">
+				<s-benutzergruppe-kompetenzgruppe :kompetenzgruppe :show-info :ist-admin="getBenutzergruppenManager().istAdmin()"
+					:get-benutzergruppen-manager :add-kompetenz :remove-kompetenz :add-benutzer-kompetenz-gruppe :remove-benutzer-kompetenz-gruppe :benutzer-kompetenzen />
 			</template>
-			<template #body>
-				<template v-for="(kompetenzgruppe, index) in kompetenzgruppen" :key="index">
-					<s-benutzergruppe-kompetenzgruppe :kompetenzgruppe :show-info :ist-admin="getBenutzergruppenManager().istAdmin()"
-						:get-benutzergruppen-manager :add-kompetenz :remove-kompetenz :add-benutzer-kompetenz-gruppe :remove-benutzer-kompetenz-gruppe :benutzer-kompetenzen />
-				</template>
-			</template>
-		</svws-ui-table>
-	</svws-ui-content-card>
+		</template>
+	</svws-ui-table>
 </template>
 
 <script setup lang="ts">

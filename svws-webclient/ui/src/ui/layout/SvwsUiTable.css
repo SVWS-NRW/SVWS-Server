@@ -6,10 +6,6 @@
 	--checkbox-width: 1.75rem;
 	background-color: rgb(var(--color-bg-ui));
 
-	& + & {
-		@apply mt-10;
-	}
-
 	&.svws-has-background {
 		@apply text-ui-contrast-100;
 	}
