@@ -97,7 +97,7 @@ public class APIJahrgaenge {
 	@ApiResponse(responseCode = "404", description = "Kein Jahrgangs-Eintrag mit der angegebenen ID gefunden")
 	public Response getJahrgang(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataJahrgangsdaten(conn).get(id),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataJahrgangsdaten(conn).getByIdAsResponse(id),
 				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
 	}
 
@@ -152,7 +152,7 @@ public class APIJahrgaenge {
 			@RequestBody(description = "Der Patch für den Jahrgang", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = JahrgangsDaten.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataJahrgangsdaten(conn).patch(id, is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataJahrgangsdaten(conn).patchAsResponse(id, is),
 				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 
@@ -180,7 +180,7 @@ public class APIJahrgaenge {
 			@RequestBody(description = "Die Daten des zu erstellenden Jahrgangs ohne ID, welche automatisch generiert wird", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = JahrgangsDaten.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataJahrgangsdaten(conn).add(is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataJahrgangsdaten(conn).addAsResponse(is),
 				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 
@@ -206,7 +206,7 @@ public class APIJahrgaenge {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteJahrgang(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataJahrgangsdaten(conn).delete(id),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataJahrgangsdaten(conn).deleteAsResponse(id),
 				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 
@@ -234,7 +234,7 @@ public class APIJahrgaenge {
 			@RequestBody(description = "Die IDs der zu löschenden Jahrgänge", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataJahrgangsdaten(conn).deleteMultiple(JSONMapper.toListOfLong(is)),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataJahrgangsdaten(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 

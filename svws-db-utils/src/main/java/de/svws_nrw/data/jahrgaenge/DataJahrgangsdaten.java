@@ -1,35 +1,30 @@
 package de.svws_nrw.data.jahrgaenge;
 
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
 import de.svws_nrw.asd.data.jahrgang.JahrgaengeKatalogEintrag;
 import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
-import de.svws_nrw.data.DTOMapper;
-import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
+import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.function.ObjLongConsumer;
 import java.util.stream.Collectors;
 
 /**
- * Diese Klasse erweitert den abstrakten {@link DataManager} für den
+ * Diese Klasse erweitert den abstrakten {@link de.svws_nrw.data.DataManagerRevised} für den
  * Core-DTO {@link JahrgangsDaten}.
  */
-public final class DataJahrgangsdaten extends DataManager<Long> {
+public final class DataJahrgangsdaten extends DataManagerRevised<Long, DTOJahrgang, JahrgangsDaten> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link JahrgangsDaten}.
@@ -38,189 +33,106 @@ public final class DataJahrgangsdaten extends DataManager<Long> {
 	 */
 	public DataJahrgangsdaten(final DBEntityManager conn) {
 		super(conn);
-	}
-
-	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOJahrgang} in einen Core-DTO {@link JahrgangsDaten}.
-	 */
-	private final DTOMapper<DTOJahrgang, JahrgangsDaten> dtoMapper = (final DTOJahrgang jahrgang) -> {
-		final JahrgangsDaten daten = new JahrgangsDaten();
-		daten.id = jahrgang.ID;
-		daten.kuerzel = jahrgang.InternKrz;
-		daten.kuerzelStatistik = jahrgang.ASDJahrgang;
-		daten.bezeichnung = jahrgang.ASDBezeichnung;
-		daten.kuerzelSchulgliederung = jahrgang.GliederungKuerzel;
-		daten.idFolgejahrgang = jahrgang.Folgejahrgang_ID;
-		daten.anzahlRestabschnitte = jahrgang.AnzahlRestabschnitte;
-		daten.sortierung = jahrgang.Sortierung;
-		daten.istSichtbar = jahrgang.Sichtbar;
-		daten.gueltigVon = jahrgang.GueltigVon;
-		daten.gueltigBis = jahrgang.GueltigBis;
-		return daten;
-	};
-
-	@Override
-	public Response getAll() {
-		throw new UnsupportedOperationException();
+		setAttributesNotPatchable("ID");
+		setAttributesRequiredOnCreation("kuerzel", "kuerzelStatistik", "bezeichnung");
 	}
 
 	@Override
-	public Response getList() {
-		throw new UnsupportedOperationException();
+	public JahrgangsDaten map(final DTOJahrgang dtoJahrgang) {
+		final JahrgangsDaten jahrgangsDaten = new JahrgangsDaten();
+		jahrgangsDaten.id = dtoJahrgang.ID;
+		jahrgangsDaten.kuerzel = dtoJahrgang.InternKrz;
+		jahrgangsDaten.kuerzelStatistik = dtoJahrgang.ASDJahrgang;
+		jahrgangsDaten.bezeichnung = (jahrgangsDaten.bezeichnung == null) ? "" : dtoJahrgang.ASDBezeichnung;
+		jahrgangsDaten.kuerzelSchulgliederung = dtoJahrgang.GliederungKuerzel;
+		jahrgangsDaten.idFolgejahrgang = dtoJahrgang.Folgejahrgang_ID;
+		jahrgangsDaten.anzahlRestabschnitte = dtoJahrgang.AnzahlRestabschnitte;
+		jahrgangsDaten.sortierung = (dtoJahrgang.Sortierung == null) ? 32000 : dtoJahrgang.Sortierung;
+		jahrgangsDaten.istSichtbar = (dtoJahrgang.Sichtbar == null) || (dtoJahrgang.Sichtbar);
+		jahrgangsDaten.gueltigVon = dtoJahrgang.GueltigVon;
+		jahrgangsDaten.gueltigBis = dtoJahrgang.GueltigBis;
+		return jahrgangsDaten;
 	}
 
 	@Override
-	public Response get(final Long id) throws ApiOperationException {
-		final JahrgangsDaten daten = getFromID(id);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+	protected void initDTO(final DTOJahrgang dtoJahrgang, final Long newID, final Map<String, Object> initAttributes) throws ApiOperationException {
+		dtoJahrgang.ID = newID;
 	}
 
-	/**
-	 * Gibt die Jahrgangsdaten zur ID eines Jahrgangs zurück.
-	 *
-	 * @param id	Die ID des Jahrgangs.
-	 *
-	 * @return		Die Jahrgangsdaten zur ID.
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public JahrgangsDaten getFromID(final Long id) throws ApiOperationException {
+	@Override
+	public List<JahrgangsDaten> getAll() {
+		final List<DTOJahrgang> dtoJahrgangs = conn.queryAll(DTOJahrgang.class);
+		return dtoJahrgangs.stream().map(this::map).toList();
+	}
+
+	@Override
+	public JahrgangsDaten getById(final Long id) throws ApiOperationException {
 		if (id == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Keine ID für den Jahrgang übergeben.");
+			throw new ApiOperationException(Status.BAD_REQUEST, "Keine ID für den Jahrgang übergeben.");
 		final DTOJahrgang jahrgang = conn.queryByKey(DTOJahrgang.class, id);
 		if (jahrgang == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Kein Jahrgang zur ID " + id + " gefunden.");
-
-		return dtoMapper.apply(jahrgang);
+		return map(jahrgang);
 	}
 
-	/**
-	 * Gibt die Jahrgangsdaten der Schule zurück.
-	 *
-	 * @return		Die Jahrgangsdaten der Schule.
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public List<JahrgangsDaten> getJahrgaenge() throws ApiOperationException {
-		final List<DTOJahrgang> jahrgang = conn.queryAll(DTOJahrgang.class);
-		return DTOMapper.mapList(jahrgang, dtoMapper);
-	}
+	@Override
+	protected void mapAttribute(final DTOJahrgang dtoJahrgang, final String name, final Object value, final Map<String, Object> map)
+			throws ApiOperationException {
+		switch (name) {
+			case "id" -> {
+				final Long id = JSONMapper.convertToLong(value, false, "id");
+				if (id != dtoJahrgang.ID)
+					throw new ApiOperationException(Status.BAD_REQUEST, "Id %d der PatchMap ist ungleich der id %d vom Dto".formatted(id, dtoJahrgang.ID));
+			}
+			case "kuerzel" -> dtoJahrgang.InternKrz = JSONMapper.convertToString(value, false, false, 20, "kuerzel");
+			case "kuerzelStatistik" -> {
+				final String kuerzelStatistikJahrgang = JSONMapper.convertToString(value, true, false, 2, "kuerzelStatistik");
+				final Jahrgaenge jahrgang = (kuerzelStatistikJahrgang == null) ? null : Jahrgaenge.data().getWertBySchluessel(kuerzelStatistikJahrgang);
+				if ((jahrgang == null) && (kuerzelStatistikJahrgang != null))
+					throw new ApiOperationException(Status.NOT_FOUND, "Kein Jahrgang mit zum Küerzel %s gefunden.".formatted(kuerzelStatistikJahrgang));
 
-	private static final Map<String, DataBasicMapper<DTOJahrgang>> patchMappings = Map.ofEntries(
-			Map.entry("id", (conn, dto, value, map) -> {
-				final Long patch_id = JSONMapper.convertToLong(value, true);
-				if ((patch_id == null) || (patch_id != dto.ID))
-					throw new ApiOperationException(Status.BAD_REQUEST);
-			}),
-			Map.entry("kuerzel", (conn, dto, value, map) -> dto.InternKrz = JSONMapper.convertToString(value, false, false, 20)),
-			Map.entry("kuerzelStatistik", (conn, dto, value, map) -> {
-				final String strJahrgang = JSONMapper.convertToString(value, true, false, 2);
-				final Jahrgaenge jahrgang = (strJahrgang == null) ? null : Jahrgaenge.data().getWertBySchluessel(strJahrgang);
-				if ((jahrgang == null) && (strJahrgang != null))
-					throw new ApiOperationException(Status.CONFLICT);
+				if (jahrgang == null) {
+					dtoJahrgang.ASDJahrgang = null;
+					dtoJahrgang.ASDBezeichnung = null;
+					return;
+				}
+
 				final int schuljahr = conn.getUser().schuleGetSchuljahr();
-				dto.ASDJahrgang = (jahrgang == null) ? null : jahrgang.daten(schuljahr).kuerzel;
-				final JahrgaengeKatalogEintrag jke = (jahrgang == null) ? null : jahrgang.getBySchulform(schuljahr, conn.getUser().schuleGetSchulform());
-				dto.ASDBezeichnung = (jke == null) ? null : jke.text;
-			}),
-			Map.entry("bezeichnung", (conn, dto, value, map) -> dto.ASDBezeichnung = JSONMapper.convertToString(value, true, true, 100)),
-			Map.entry("sortierung", (conn, dto, value, map) -> dto.Sortierung = JSONMapper.convertToInteger(value, true)),
-			Map.entry("kuerzelSchulgliederung", (conn, dto, value, map) -> {
-				final String str = JSONMapper.convertToString(value, true, false, null);
-				final Schulgliederung sgl = Schulgliederung.data().getWertByKuerzel(str);
-				if ((sgl == null) && (str != null))
+				final Schulform schulform = conn.getUser().schuleGetSchulform();
+				dtoJahrgang.ASDJahrgang = jahrgang.daten(schuljahr).kuerzel;
+				final JahrgaengeKatalogEintrag jahrgaengeKatalogEintrag = jahrgang.getBySchulform(schuljahr, schulform);
+				dtoJahrgang.ASDBezeichnung = (jahrgaengeKatalogEintrag != null) ? jahrgaengeKatalogEintrag.text : null;
+			}
+			case "bezeichnung" -> dtoJahrgang.ASDBezeichnung = JSONMapper.convertToString(value, true, true, 100, "bezeichnung");
+			case "sortierung" -> dtoJahrgang.Sortierung = JSONMapper.convertToInteger(value, true, "sortierung");
+			case "kuerzelSchulgliederung" -> {
+				final String kuerzelSchuldgliederung = JSONMapper.convertToString(value, true, false, null, "kuerzelSchulgliederung");
+				final Schulgliederung schulgliederung = Schulgliederung.data().getWertByKuerzel(kuerzelSchuldgliederung);
+				if ((schulgliederung == null) && (kuerzelSchuldgliederung != null))
 					throw new ApiOperationException(Status.CONFLICT, "Das Kürzel für die Schulgliederung ist ungültig.");
-				if ((sgl == null) || !sgl.hatSchulform(conn.getUser().schuleGetSchuljahr(), conn.getUser().schuleGetSchulform()))
+
+				if ((schulgliederung == null) || !schulgliederung.hatSchulform(conn.getUser().schuleGetSchuljahr(), conn.getUser().schuleGetSchulform()))
 					throw new ApiOperationException(Status.CONFLICT, "Die Schulgliederung ist für die Schulform nicht gültig.");
-				dto.GliederungKuerzel = str;
-			}),
-			Map.entry("idFolgejahrgang", (conn, dto, value, map) -> {
-				final Long idFolgejahrgang = JSONMapper.convertToLong(value, true);
+				dtoJahrgang.GliederungKuerzel = kuerzelSchuldgliederung;
+			}
+			case "idFolgejahrgang" -> {
+				final Long idFolgejahrgang = JSONMapper.convertToLong(value, true, "idFolgejahrgang");
 				if (idFolgejahrgang != null) {
 					conn.transactionFlush();
 					final DTOJahrgang folgeJahrgang = conn.queryByKey(DTOJahrgang.class, idFolgejahrgang);
 					if (folgeJahrgang == null)
-						throw new ApiOperationException(Status.CONFLICT);
+						throw new ApiOperationException(Status.CONFLICT, "Ein Folgejahrgang mit der ID %d wurde nicht gefunden.".formatted(idFolgejahrgang));
 					conn.transactionFlush();
 				}
-				dto.Folgejahrgang_ID = idFolgejahrgang;
-			}),
-			Map.entry("anzahlRestabschnitte", (conn, dto, value, map) -> dto.AnzahlRestabschnitte = JSONMapper.convertToIntegerInRange(value, true, 0, 40)),
-			Map.entry("istSichtbar", (conn, dto, value, map) -> dto.Sichtbar = JSONMapper.convertToBoolean(value, true)),
-			Map.entry("gueltigVon", (conn, dto, value, map) -> dto.Sortierung = JSONMapper.convertToIntegerInRange(value, true, 1900, 3000)),
-			Map.entry("gueltigBis", (conn, dto, value, map) -> dto.Sortierung = JSONMapper.convertToIntegerInRange(value, true, 1900, 3000)));
-
-
-	@Override
-	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
-		return super.patchBasic(id, is, DTOJahrgang.class, patchMappings);
+				dtoJahrgang.Folgejahrgang_ID = idFolgejahrgang;
+			}
+			case "anzahlRestabschnitte" -> dtoJahrgang.AnzahlRestabschnitte = JSONMapper.convertToInteger(value, true, "anzahlRestabschnitte");
+			case "istSichtbar" -> dtoJahrgang.Sichtbar = JSONMapper.convertToBoolean(value, true, "istSichtbar");
+			case "gueltigVon" -> dtoJahrgang.GueltigVon = JSONMapper.convertToLong(value, true, "gueltigVon");
+			case "gueltigBis" -> dtoJahrgang.GueltigBis = JSONMapper.convertToLong(value, true, "gueltigBis");
+			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
+		}
 	}
-
-
-	private static final Set<String> requiredCreateAttributes = Set.of("kuerzel", "kuerzelStatistik");
-
-	private final ObjLongConsumer<DTOJahrgang> initDTO = (dto, id) -> dto.ID = id;
-
-
-	/**
-	 * Erstellt einen neuen Jahrgang
-	 *
-	 * @param  is	JSON-Objekt mit den Daten
-	 *
-	 * @return Eine Response mit dem neuen Jahrgang
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public Response add(final InputStream is) throws ApiOperationException {
-		return super.addBasic(is, DTOJahrgang.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
-	}
-
-
-	/**
-	 * Prüft, ob der Jahrgang sicher, d.h. ohne Datenverluste an anderer Stelle
-	 * gelöscht werden kann.
-	 *
-	 * @param id   die ID des Jahrgangs
-	 *
-	 * @return true, falls der Jahrgang sicher gelöscht werden kann und ansonsten false
-	 */
-	private boolean isDeletable(final Long id) {
-		// TODO Prüfe, ob der Jahrgang sicher (true) gelöscht werden kann. Existiert auch nur eine Referenz, so muss dieser erhalten bleiben (false)
-		return false;
-	}
-
-	/**
-	 * Löscht einen Jahrgang
-	 *
-	 * @param id   die ID des Jahrgangs
-	 *
-	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public Response delete(final Long id) throws ApiOperationException {
-		if (!isDeletable(id))
-			throw new ApiOperationException(Status.CONFLICT, "Der Jahrgang kann nicht sicher gelöscht werden.");
-		return super.deleteBasic(id, DTOJahrgang.class, dtoMapper);
-	}
-
-
-	/**
-	 * Löscht mehrere Jahrgänge
-	 *
-	 * @param ids   die IDs der Jahrgänge
-	 *
-	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public Response deleteMultiple(final List<Long> ids) throws ApiOperationException {
-		for (final Long id : ids)
-			if (!isDeletable(id))
-				throw new ApiOperationException(Status.CONFLICT, "Der Jahrgang kann nicht sicher gelöscht werden.");
-		return super.deleteBasicMultiple(ids, DTOJahrgang.class, dtoMapper);
-	}
-
 
 	/**
 	 * Bestimmt zu den übergebenen Klassen die jeweils zugehörigen Jahrgänge aus der Datenbank und gib eine
