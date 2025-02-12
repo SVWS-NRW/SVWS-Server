@@ -1,5 +1,5 @@
 <template>
-	<div class="page--flex">
+	<div class="flex flex-col w-full h-full overflow-hidden">
 		<svws-ui-header>
 			<span class="inline-block mr-3">Datenaustausch mit dem Web-Notenmodul</span>
 			<br>

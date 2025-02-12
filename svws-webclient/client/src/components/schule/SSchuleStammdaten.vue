@@ -1,5 +1,5 @@
 <template>
-	<div class="page--flex">
+	<div class="flex flex-col w-full h-full overflow-hidden">
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
 				<div class="svws-headline-wrapper">

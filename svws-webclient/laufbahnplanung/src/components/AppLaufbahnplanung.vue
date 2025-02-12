@@ -49,8 +49,4 @@
 		@apply flex flex-col w-full h-full grow;
 	}
 
-	.page--flex {
-		@apply flex flex-col w-full h-full;
-	}
-
 </style>

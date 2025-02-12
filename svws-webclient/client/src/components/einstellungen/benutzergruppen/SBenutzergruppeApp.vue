@@ -1,5 +1,5 @@
 <template>
-	<div v-if="gruppe" class="page--flex">
+	<div v-if="gruppe" class="flex flex-col w-full h-full overflow-hidden">
 		<svws-ui-header>
 			<div>
 				<span class="inline-block mr-3">{{ gruppe.bezeichnung }}</span>

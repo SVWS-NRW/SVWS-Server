@@ -1,5 +1,5 @@
 <template>
-	<div v-if="auswahl !== undefined" class="page--flex">
+	<div v-if="auswahl !== undefined" class="flex flex-col w-full h-full overflow-hidden">
 		<header class="svws-ui-header max-w-[140rem]">
 			<div class="svws-ui-header--title gap-x-8 lg:gap-x-16 w-full">
 				<div class="svws-headline-wrapper flex-[2]">
