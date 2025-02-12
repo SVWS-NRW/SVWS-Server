@@ -68,7 +68,7 @@
 							<svws-ui-text-input class="contentFocusField" v-model.trim="url" type="text" placeholder="URL" />
 							<svws-ui-text-input v-model.trim="token" type="text" placeholder="Secret" />
 							<svws-ui-button type="primary" @click="updateCredentials" :disabled="(url === '') || (token === '')">
-								speichern
+								Speichern
 							</svws-ui-button>
 						</svws-ui-input-wrapper>
 					</template>
@@ -80,6 +80,19 @@
 							</svws-ui-button>
 							<svws-ui-button type="primary" @click="call(check)">
 								Verbindungsdaten prüfen
+							</svws-ui-button>
+						</svws-ui-input-wrapper>
+						<svws-ui-input-wrapper class="mt-8">
+							<div class="text-headline-sm">SMTP Einstellungen</div>
+							<svws-ui-text-input v-model.trim="smtpConfig.host" placeholder="SMTP-Server" />
+							<svws-ui-input-number v-model="smtpConfig.port" placeholder="Port" :min="1" />
+							<svws-ui-text-input v-model.trim="smtpConfig.username" placeholder="Benutzername" />
+							<svws-ui-text-input v-model.trim="smtpConfig.password" placeholder="Passwort" type="password" />
+							<svws-ui-checkbox v-model="smtpConfig.useTLS">TLS verwenden</svws-ui-checkbox>
+							<svws-ui-text-input v-model.trim="smtpConfig.fromEmail" placeholder="Absenderadresse der Email" />
+							<svws-ui-text-input v-model.trim="smtpConfig.fromName" placeholder="Absendername der Email" />
+							<svws-ui-button type="primary" @click="updateSMTP">
+								Speichern
 							</svws-ui-button>
 						</svws-ui-input-wrapper>
 					</template>
@@ -145,8 +158,8 @@
 
 	import { computed, onMounted, ref, shallowRef } from "vue";
 	import type { SchuleDatenaustauschWenomProps } from './SSchuleDatenaustauschWenomProps';
-	import { ENMDaten } from "@core";
 	import type { OAuth2ClientSecret, SimpleOperationResponse } from "@core";
+	import { ENMDaten, ENMServerConfigElement, ENMServerConfigSMTP } from "@core";
 
 	const props = defineProps<SchuleDatenaustauschWenomProps>();
 
@@ -155,6 +168,7 @@
 
 	const clientSecret = shallowRef<OAuth2ClientSecret | null>(null);
 	const connected = ref<boolean>(false);
+	const hatSetup = ref<boolean>();
 	const daten = ref<ENMDaten | null>(null);
 	const lehrerOhneEmail = ref<number>(0);
 	const lehrerDoppelteEmail = ref<number>(0);
@@ -166,7 +180,14 @@
 		await checkConnection();
 		daten.value = await props.getEnmDaten();
 		checkENMLehrerEMailAdressen();
-	})
+	});
+
+	const smtpConfig = computed(() => {
+		const json = props.serverConfig().get('smtp');
+		if (json !== null)
+			return ENMServerConfigSMTP.transpilerFromJSON(json);
+		return new ENMServerConfigSMTP();
+	});
 
 	const url = ref<string>("");
 	const token = ref<string>("");
@@ -235,11 +256,14 @@
 		spinning.value = false;
 	}
 
-	async function wenomSetup() {
+	async function wenomSetup(): Promise<boolean> {
 		status.value = null;
 		spinning.value = true;
-		await props.setup();
+		const res = await props.setup();
 		spinning.value = false;
+		if (typeof res === 'boolean')
+			return hatSetup.value = res;
+		return false;
 	}
 
 	async function updateCredentials() {
@@ -247,6 +271,17 @@
 		spinning.value = true;
 		clientSecret.value = await props.setCredentials(url.value, token.value);
 		await checkConnection();
+		spinning.value = false;
+	}
+
+	async function updateSMTP() {
+		status.value = null;
+		spinning.value = true;
+		const element = new ENMServerConfigElement();
+		element.key = "smtp";
+		element.value = ENMServerConfigSMTP.transpilerToJSON(smtpConfig.value);
+		element.type = "server";
+		await props.setServerConfigElement(element);
 		spinning.value = false;
 	}
 

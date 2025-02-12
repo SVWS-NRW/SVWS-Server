@@ -1,9 +1,8 @@
-import type { ENMDaten, JavaMap, OAuth2ClientSecret, SimpleOperationResponse } from "@core";
+import type { ENMDaten, ENMServerConfig, ENMServerConfigElement, JavaMap, OAuth2ClientSecret, SimpleOperationResponse } from "@core";
 
 export interface SchuleDatenaustauschWenomProps {
 	mapInitialKennwoerter: () => JavaMap<number, string>;
 	getEnmDaten: () => Promise<ENMDaten | null>;
-	getEnmCredentials: () => Promise<JavaMap<number, string>>;
 	getCredentials: () => Promise<OAuth2ClientSecret | null>;
 	setCredentials: (url: string, token: string) => Promise<OAuth2ClientSecret | null>;
 	removeCredentials: () => Promise<void>;
@@ -14,5 +13,7 @@ export interface SchuleDatenaustauschWenomProps {
 	reset: () => Promise<SimpleOperationResponse>;
 	check: () => Promise<SimpleOperationResponse>;
 	setup: () => Promise<boolean|SimpleOperationResponse>;
+	serverConfig: () => JavaMap<string, string>;
+	setServerConfigElement: (config: ENMServerConfigElement) => Promise<SimpleOperationResponse>
 }
 

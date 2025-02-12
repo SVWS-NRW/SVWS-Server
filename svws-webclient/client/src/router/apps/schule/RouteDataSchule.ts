@@ -1,21 +1,26 @@
-import type { JavaMap, SchuleStammdaten} from "@core";
-import { ENMDaten, BenutzerKompetenz, OAuth2ClientSecret, OAuth2ServerTyp, OpenApiError, SimpleOperationResponse, SMTPServerKonfiguration, HashMap } from "@core";
+import type { ENMServerConfigElement, JavaMap, SchuleStammdaten } from "@core";
+import { ENMDaten, BenutzerKompetenz, OAuth2ClientSecret, OAuth2ServerTyp, OpenApiError, SimpleOperationResponse, SMTPServerKonfiguration, HashMap, DeveloperNotificationException, ENMServerConfig } from "@core";
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { routeSchuleFaecher } from "./faecher/RouteSchuleFaecher";
 import { AES } from "~/utils/crypto/aes";
 import { AESAlgo } from "~/utils/crypto/aesAlgo";
+import { Hash } from "crypto";
 
 
 interface RouteStateSchule extends RouteStateInterface {
 	smtpServerKonfiguration: SMTPServerKonfiguration;
 	mapInitialKennwoerter: JavaMap<number, string>;
+	mapENMServerConfigServer: JavaMap<string, string>;
+	mapENMServerConfigGlobal: JavaMap<string, string>;
 }
 
 const defaultState = <RouteStateSchule> {
 	smtpServerKonfiguration: new SMTPServerKonfiguration(),
 	view: routeSchuleFaecher,
 	mapInitialKennwoerter: new HashMap<number, string>(),
+	mapENMServerConfigServer: new HashMap<string, string>(),
+	mapENMServerConfigGlobal: new HashMap<string, string>(),
 };
 
 export class RouteDataSchule extends RouteData<RouteStateSchule> {
@@ -54,6 +59,10 @@ export class RouteDataSchule extends RouteData<RouteStateSchule> {
 
 	set mapInitialKennwoerter(value: JavaMap<number, string>) {
 		this._state.value.mapInitialKennwoerter = value;
+	}
+
+	get mapENMServerConfigServer(): JavaMap<string, string> {
+		return this._state.value.mapENMServerConfigServer;
 	}
 
 	patchSMTServerKonfiguration = async (data : Partial<SMTPServerKonfiguration>) => {
@@ -98,16 +107,16 @@ export class RouteDataSchule extends RouteData<RouteStateSchule> {
 		}
 	}
 
-	wenomGetEnmCredentials = async(): Promise<JavaMap<number, string>> => {
+	wenomGetEnmCredentials = async(): Promise<void> => {
 		try {
 			const daten = await api.server.getENMLehrerInitialKennwoerter(api.schema);
-			const result = new HashMap<number, string>();
+			const mapInitialKennwoerter = new HashMap<number, string>();
 			for (const eintrag of daten)
 				if (eintrag.initialKennwort !== null)
-					result.put(eintrag.id, eintrag.initialKennwort);
-			return result;
+					mapInitialKennwoerter.put(eintrag.id, eintrag.initialKennwort);
+			this.setPatchedState({ mapInitialKennwoerter });
 		} catch (e) {
-			return new HashMap<number, string>();
+			return;
 		}
 	}
 
@@ -133,9 +142,58 @@ export class RouteDataSchule extends RouteData<RouteStateSchule> {
 		}
 	}
 
+	wenomPatchCredentialsSecret = async (clientSecret: string): Promise<void> => {
+		const wenom = OAuth2ServerTyp.WENOM;
+		try {
+			return await api.server.patchOAuthSecret({ clientSecret }, api.schema, wenom.getId());
+		} catch (e) {
+			return;
+		}
+	}
+
 	wenomRemoveCredential = api.call(async () => {
 		await api.server.deleteOAuthSecret(api.schema, 1);
 	});
+
+	wenomGetServerConfig = api.call(async (): Promise<void> => {
+		try {
+			const res = await api.server.getENMServerConfig(api.schema);
+			if (res.success && (res.config !== null)) {
+				const mapENMServerConfigGlobal = new HashMap<string, string>();
+				const mapENMServerConfigServer = new HashMap<string, string>();
+				for (const element of res.config.global)
+					mapENMServerConfigGlobal.put(element.key, element.value);
+				for (const element of res.config.server)
+					mapENMServerConfigServer.put(element.key, element.value);
+				this.setPatchedState({ mapENMServerConfigGlobal, mapENMServerConfigServer});
+			}
+			else throw new DeveloperNotificationException("Keine Konfiguration geladen");
+		} catch (error) {
+			return;
+		}
+	})
+
+	wenomSetServerConfigElement = api.call(async (data: ENMServerConfigElement): Promise <SimpleOperationResponse> => {
+		try {
+			const res = await api.server.setENMServerConfigElement(data, api.schema);
+			if (data.type === 'server')
+				this._state.value.mapENMServerConfigServer.put(data.key, data.value);
+			else
+				this._state.value.mapENMServerConfigGlobal.put(data.key, data.value);
+			return res;
+		} catch (e) {
+			if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
+				try {
+					const json = await e.response.text();
+					return SimpleOperationResponse.transpilerFromJSON(json);
+				} catch (e) { /* */ }
+			}
+			const res = new SimpleOperationResponse();
+			res.success = false;
+			res.log.add(`Unerwarteter Fehler beim Setzen einer Serverkonfiguration aufgetreten: ${e instanceof Error ? e.message : 'unbekannt'}`);
+			return res;
+		}
+	})
 
 	wenomSynchronize = api.call(async () : Promise<SimpleOperationResponse> => {
 		try {
@@ -251,7 +309,7 @@ export class RouteDataSchule extends RouteData<RouteStateSchule> {
 			}
 			const res = new SimpleOperationResponse();
 			res.success = false;
-			res.log.add(`Unerwarteter Fehler beim Aufruf der Checkmethode aufgetreten: ${e instanceof Error ? e.message : 'unbekannt'}`);
+			res.log.add(`Unerwarteter Fehler beim Aufruf der Setupmethode aufgetreten: ${e instanceof Error ? e.message : 'unbekannt'}`);
 			return res;
 		}
 	});

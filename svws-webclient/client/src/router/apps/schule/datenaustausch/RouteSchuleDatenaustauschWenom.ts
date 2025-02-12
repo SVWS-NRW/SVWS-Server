@@ -22,15 +22,16 @@ export class RouteSchuleDatenaustauschWenom extends RouteNode<any, RouteApp> {
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
-		if (isEntering)
-			routeSchule.data.mapInitialKennwoerter = await routeSchule.data.wenomGetEnmCredentials();
+		if (isEntering) {
+			await routeSchule.data.wenomGetEnmCredentials();
+			await routeSchule.data.wenomGetServerConfig();
+		}
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuleDatenaustauschWenomProps {
 		return {
 			mapInitialKennwoerter: () => routeSchule.data.mapInitialKennwoerter,
 			getEnmDaten: routeSchule.data.wenomGetEnmDaten,
-			getEnmCredentials: routeSchule.data.wenomGetEnmCredentials,
 			getCredentials: routeSchule.data.wenomGetCredentials,
 			setCredentials: routeSchule.data.wenomSetCredentials,
 			removeCredentials: routeSchule.data.wenomRemoveCredential,
@@ -41,6 +42,8 @@ export class RouteSchuleDatenaustauschWenom extends RouteNode<any, RouteApp> {
 			reset: routeSchule.data.wenomReset,
 			check: routeSchule.data.wenomCheck,
 			setup: routeSchule.data.wenomSetup,
+			serverConfig: () => routeSchule.data.mapENMServerConfigServer,
+			setServerConfigElement: routeSchule.data.wenomSetServerConfigElement,
 		};
 	}
 }
