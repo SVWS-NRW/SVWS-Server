@@ -5,7 +5,7 @@
 				<enm-klassenleitung-uebersicht :manager :patch-bemerkungen :patch-lernabschnitt :columns-visible :set-columns-visible @hauptgruppe="erlaubteHauptgruppe = $event" />
 			</div>
 			<template v-if="floskelEditorVisible">
-				<div class="h-full content-center text-center cursor-w-resize min-w-8 max-w-8 lg:min-w-12 lg:max-w-12 bg-ui" draggable="true">
+				<div class="h-full content-center text-center cursor-col-resize min-w-8 max-w-8 lg:min-w-12 lg:max-w-12 bg-ui hover:bg-ui-hover" draggable="true" @dragstart="dragStart">
 					<span class="icon i-ri-arrow-left-s-line" />
 					<span class="icon i-ri-arrow-right-s-line" />
 				</div>
@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 
-	import { computed, onMounted, ref, watchEffect } from 'vue';
+	import { computed, ref, watchEffect } from 'vue';
 	import type { BemerkungenHauptgruppe } from './EnmManager';
 	import type { EnmKlassenleitungProps } from './EnmKlassenleitungProps';
 
@@ -80,6 +80,14 @@
 		// Setze die Position des Dividers nur neu, wenn er stark genug von der alten Position abweicht (mehr als 1 rem) -> Performance
 		if (Math.abs(width - posDivider.value) > 1)
 			posDivider.value = width;
+	}
+
+	function dragStart(event: DragEvent) {
+		// erstelle ein unsichtbares Image
+		const img = document.createElement('img');
+		img.src = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
+		// setze dieses unsichtbare Image als DragImage
+		event.dataTransfer?.setDragImage(img, 0, 0);
 	}
 
 </script>

@@ -5,7 +5,7 @@
 				<enm-leistungen-uebersicht :manager :patch-leistung :columns-visible :set-columns-visible />
 			</div>
 			<template v-if="columnsVisible().get('Bemerkung')">
-				<div class="h-full content-center text-center cursor-w-resize min-w-8 max-w-8 lg:min-w-12 lg:max-w-12 bg-ui" draggable="true">
+				<div class="h-full content-center text-center cursor-col-resize min-w-8 max-w-8 lg:min-w-12 lg:max-w-12 bg-ui hover:bg-ui-hover" draggable="true" @dragstart="dragStart">
 					<span class="icon i-ri-arrow-left-s-line" />
 					<span class="icon i-ri-arrow-right-s-line" />
 				</div>
@@ -60,6 +60,14 @@
 		// Setze die Position des Dividers nur neu, wenn er stark genug von der alten Position abweicht (mehr als 1 rem) -> Performance
 		if (Math.abs(width - posDivider.value) > 1)
 			posDivider.value = width;
+	}
+
+	function dragStart(event: DragEvent) {
+		// erstelle ein unsichtbares Image
+		const img = document.createElement('img');
+		img.src = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
+		// setze dieses unsichtbare Image als DragImage
+		event.dataTransfer?.setDragImage(img, 0, 0);
 	}
 
 </script>
