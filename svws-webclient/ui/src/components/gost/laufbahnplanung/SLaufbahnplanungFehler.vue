@@ -13,7 +13,7 @@
 			<div v-for="fehler in belegungsfehler" :key="fehler.code" class="svws-ui-tr" role="row">
 				<div class="svws-ui-td self-center align-middle" role="cell">
 					<svws-ui-tooltip>
-						<span class="icon i-ri-alert-line shrink-0 icon-error text-button" />
+						<span class="icon i-ri-alert-line shrink-0 icon-ui-danger text-button" />
 						<template #content>
 							<span class="font-mono">
 								{{ fehler.code }}

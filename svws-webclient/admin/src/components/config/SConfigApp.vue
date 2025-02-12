@@ -17,7 +17,7 @@
 			<svws-ui-content-card title="Im Aufbau">
 				Diese Seite befindet sich im Aufbau und wird Anpassungen an einigen Konfigurationseinstellungen des SVWS-Servers ermöglichen.
 				<svws-ui-spacing :size="2" />
-				<svws-ui-button type="primary" @click="downloadZertifikat"><span class="icon-sm i-ri-upload-2-line icon-white" />Zertifikat exportieren</svws-ui-button>
+				<svws-ui-button type="primary" @click="downloadZertifikat"><span class="icon-sm i-ri-upload-2-line" />Zertifikat exportieren</svws-ui-button>
 			</svws-ui-content-card>
 		</div>
 	</div>

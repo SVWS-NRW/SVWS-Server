@@ -95,7 +95,7 @@
 						<span>Keine Konflikte</span>
 					</template>
 					<template v-else-if="anzahlProKwKonflikte2(4, false).length > 0">
-						<span class="icon i-ri-alert-fill icon-error -my-0.5" />
+						<span class="icon i-ri-alert-fill icon-ui-danger -my-0.5" />
 						<span> Konflikte</span>
 					</template>
 				</div>

@@ -100,7 +100,7 @@
 						}
 
 						&:disabled {
-							@apply icon-gray bg-transparent;
+							@apply icon-ui-contrast-50 bg-transparent;
 						}
 					}
 				}
@@ -154,7 +154,7 @@
 
 		.ui-card--header--icon span,
 		.ui-card--header--collapse-icon span {
-			@apply icon-ui-onhover;
+			@apply icon-ui-hover;
 		}
 	}
 

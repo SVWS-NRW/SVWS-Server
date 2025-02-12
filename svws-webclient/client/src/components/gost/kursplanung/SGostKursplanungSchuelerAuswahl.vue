@@ -84,7 +84,7 @@
 						<div role="cell" class="svws-ui-td svws-align-center pr-0">
 							<div class="leading-none w-5 -mb-1" :class="{ 'text-ui-danger': kollision(s.id).value, 'text-black': !kollision(s.id).value && selected !== s, }">
 								<svws-ui-tooltip v-if="kollision(s.id).value && !nichtwahl(s.id).value" color="danger">
-									<span class="icon icon-error i-ri-alert-line" />
+									<span class="icon icon-ui-danger i-ri-alert-line" />
 									<template #content>
 										Kollisionen:
 										<ul>
@@ -101,7 +101,7 @@
 									</template>
 								</svws-ui-tooltip>
 								<svws-ui-tooltip v-else-if="kollision(s.id).value && nichtwahl(s.id).value" color="danger">
-									<span class="icon icon-error i-ri-error-warning-fill" /> <template #content>
+									<span class="icon icon-ui-danger i-ri-error-warning-fill" /> <template #content>
 										<b>Kollision und Nichtverteilt:</b>
 										<br>Kollisionen:
 										<ul>

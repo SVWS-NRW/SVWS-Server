@@ -22,7 +22,7 @@
 							<template v-if="!raum.idStundenplanRaum">Keine Raumnummer zugeordnet</template>
 							<template v-else-if="anzahlSuS() > kMan().stundenplanraumGetByKlausurraum(raum).groesse">Derzeitige Raumbelegung überschreitet die Raumkapazität</template>
 						</template>
-						<span class="icon icon-error i-ri-alert-fill" />
+						<span class="icon icon-ui-danger i-ri-alert-fill" />
 					</svws-ui-tooltip>
 					<!--<span v-if="multijahrgang()" class="text-button">{{ GostHalbjahr.fromIDorException(kMan().terminGetByIdOrException(raum.idTermin).halbjahr).jahrgang }}</span>-->
 					<template v-if="multijahrgang()">
@@ -51,7 +51,7 @@
 									<template #content>
 										Bemerkung: {{ klausur.bemerkung }}
 									</template>
-									<span class="icon i-ri-edit-2-line icon-primary" v-if="klausur.bemerkung !== null && klausur.bemerkung.trim().length > 0" />
+									<span class="icon i-ri-edit-2-line icon-ui-brand" v-if="(klausur.bemerkung !== null) && (klausur.bemerkung.trim().length > 0)" />
 								</svws-ui-tooltip>
 							</svws-ui-tooltip>
 						</div>

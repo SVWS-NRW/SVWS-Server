@@ -38,13 +38,13 @@
 											:title="'Namen bearbeiten (' + s.bezeichnung + ')'" @click="hatUpdateKompetenz && (edit_schienenname = s.id)">
 											{{ s.bezeichnung }}
 										</span>
-										<span v-if="allow_del_schiene(s)" @click="del_schiene(s)" class="icon-sm inline-block i-ri-delete-bin-line cursor-pointer absolute top-1/2 transform -translate-y-1/2 right-px opacity-50 hover:opacity-100 hover:icon-error" />
+										<span v-if="allow_del_schiene(s)" @click="del_schiene(s)" class="icon-sm inline-block i-ri-delete-bin-line cursor-pointer absolute top-1/2 transform -translate-y-1/2 right-px opacity-50 hover:opacity-100 hover:icon-ui-danger" />
 									</div>
 								</template>
 								<template v-else>
 									<span :class="{ 'border-b border-dotted hover:border-transparent': hatUpdateKompetenz }" class="cursor-text normal-nums min-w-[1.5ch] h-full inline-flex items-center justify-center"
 										:title="'Namen bearbeiten (' + s.bezeichnung + ')'" @click="hatUpdateKompetenz && (edit_schienenname = s.id)">{{ s.nummer }}</span>
-									<span v-if="allow_del_schiene(s)" @click="del_schiene(s)" class="icon-sm inline-block i-ri-delete-bin-line cursor-pointer absolute top-1/2 transform -translate-y-1/2 right-px opacity-50 hover:opacity-100 hover:icon-error" />
+									<span v-if="allow_del_schiene(s)" @click="del_schiene(s)" class="icon-sm inline-block i-ri-delete-bin-line cursor-pointer absolute top-1/2 transform -translate-y-1/2 right-px opacity-50 hover:opacity-100 hover:icon-ui-danger" />
 								</template>
 							</div>
 						</div>
@@ -66,7 +66,7 @@
 						</div>
 						<div role="columnheader" class="svws-ui-td svws-align-center !px-0" v-for="(s, index) in schienen" :key="s.id" :class="{'text-ui-danger': (getAnzahlKollisionenSchiene(s.id) > 0), 'svws-divider': (index + 1) < schienen.size()}">
 							<svws-ui-tooltip v-if="getAnzahlKollisionenSchiene(s.id) > 0" autosize>
-								<span class="inline-flex items-center"><span class="icon-sm icon-error i-ri-alert-line" />{{ getAnzahlKollisionenSchiene(s.id) }}</span>
+								<span class="inline-flex items-center"><span class="icon-sm icon-ui-danger i-ri-alert-line" />{{ getAnzahlKollisionenSchiene(s.id) }}</span>
 								<template #content>
 									<template v-for="list, indexTooltip of getErgebnismanager().getOfSchieneTooltipKurskollisionenAsData(s.id)" :key="indexTooltip">
 										<p>

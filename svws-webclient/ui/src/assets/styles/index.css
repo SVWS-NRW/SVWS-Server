@@ -133,13 +133,4 @@
 		color: var(--color-text-ui);
 	}
 
-	.htw-dark,
-	.dark {
-
-		.icon,
-		.icon-ui {
-			@apply icon-ui--dark;
-		}
-	}
-
 }

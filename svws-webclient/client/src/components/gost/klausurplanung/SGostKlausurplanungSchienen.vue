@@ -71,7 +71,7 @@
 												<p>{{ klausur.bemerkung }}</p>
 											</div>
 										</template>
-										<span class="icon i-ri-edit-2-line icon-primary" v-if="(klausur.bemerkung !== null && klausur.bemerkung.trim().length > 0) || (kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe !== null && kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe!.trim().length > 0)" />
+										<span class="icon i-ri-edit-2-line icon-ui-brand" v-if="(klausur.bemerkung !== null && klausur.bemerkung.trim().length > 0) || (kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe !== null && kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe!.trim().length > 0)" />
 									</svws-ui-tooltip>
 								</svws-ui-tooltip>
 
@@ -122,11 +122,11 @@
 		<div class="min-w-88 max-w-88 flex flex-col h-full overflow-y-auto">
 			<div class="text-headline-md leading-none inline-flex gap-1">
 				<template v-if="klausurKonflikte().size() > 0">
-					<span class="icon i-ri-alert-fill icon-error -my-0.5" />
+					<span class="icon i-ri-alert-fill icon-ui-danger -my-0.5" />
 					<span>{{ klausurKonflikte().size() }} Kurse mit Konflikten</span>
 				</template>
 				<template v-else-if="anzahlProKwKonflikte(4).size() > 0">
-					<span class="icon i-ri-alert-fill icon-error -my-0.5" />
+					<span class="icon i-ri-alert-fill icon-ui-danger -my-0.5" />
 					<span> Konflikte</span>
 				</template>
 				<template v-else-if="terminSelected !== undefined || dragData !== undefined">

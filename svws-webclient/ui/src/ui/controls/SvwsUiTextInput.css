@@ -30,13 +30,6 @@
 	}
 }
 
-.dark .text-input-component .icon.svws-icon,
-.htw-dark .text-input-component .icon.svws-icon,
-.dark .text-input-component .text-input--search-icon,
-.htw-dark .text-input-component .text-input--search-icon {
-	@apply icon-white;
-}
-
 .text-input-component .icon.svws-icon {
 	@apply pointer-events-none absolute top-1 right-1.5 bottom-1 w-5 rounded-sm inline-flex items-center justify-end pr-1 text-base opacity-50 mt-1;
 
@@ -45,13 +38,8 @@
 .text-input-component .icon.svws-icon--remove {
 	@apply pointer-events-auto cursor-pointer absolute top-1 right-1 bottom-1 w-5 rounded-sm inline-flex items-center justify-end pr-1 text-base mr-6 mt-1;
 
-	.dark &,
-	.htw-dark & {
-		@apply icon-white;
-	}
-
 	&:hover {
-		@apply icon-danger;
+		@apply icon-ui-danger;
 	}
 }
 
@@ -81,19 +69,19 @@
 }
 
 .text-input--statistics .svws-icon.icon {
-	@apply text-ui-statistic-secondary icon-statistics;
+	@apply text-ui-statistic-secondary icon-ui-statistic;
 }
 
 .text-input--invalid .svws-icon {
-	@apply text-ui-danger icon-danger;
+	@apply text-ui-danger icon-ui-danger;
 }
 
 .text-input--statistic-kann .svws-icon {
-	@apply text-ui-caution icon-caution;
+	@apply text-ui-caution icon-ui-caution;
 }
 
 .text-input--statistic-hinweis .svws-icon {
-	@apply text-ui-warning icon-warning;
+	@apply text-ui-warning icon-ui-warning;
 }
 
 .text-input--control {

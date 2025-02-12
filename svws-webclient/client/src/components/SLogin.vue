@@ -47,7 +47,7 @@
 												<div @click="copyToClipboard" class="cursor-pointer place-items-center flex">
 													<span class="icon-sm i-ri-file-copy-line inline-block" v-if="copied === null" />
 													<span class="icon-sm i-ri-error-warning-fill inline-block" v-else-if="copied === false" />
-													<span class="icon-sm i-ri-check-line icon-primary inline-block" v-else />
+													<span class="icon-sm i-ri-check-line icon-ui-brand inline-block" v-else />
 												</div>
 											</div>
 											<nav class="flex items-center gap-2">

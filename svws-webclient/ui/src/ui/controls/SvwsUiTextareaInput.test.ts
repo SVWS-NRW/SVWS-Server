@@ -230,7 +230,7 @@ describe("Bedingtes Rendern der HTML-Elemenete", () => {
 			//Testen
 			const span_icon=wrapper.find("span.icon. i-ri-alert-line");
 			expect(span_icon.exists()).toBeTruthy();
-			["ml-0.5", "-my-0.5", "icon-error"].forEach((value) => expect(span_icon.classes()).toContain(value));
+			["ml-0.5", "-my-0.5", "icon-ui-danger"].forEach((value) => expect(span_icon.classes()).toContain(value));
 		})
 
 		test("Icon alert-line wird nicht gerendert, wenn isValid() true liefert", async () => {
@@ -305,7 +305,7 @@ describe("Bedingtes Rendern der HTML-Elemenete", () => {
 			expect(tooltip.exists()).toBeTruthy();
 			expect(tooltip.props('position')).toBe("right");
 			const static_icon = tooltip.find("span.icon.i-ri-bar-chart-2-line");
-			["icon-statistics", "pointer-events-auto", "ml-0.5"].forEach((value) => expect(static_icon.classes()).toContain(value));
+			["icon-ui-statistic", "pointer-events-auto", "ml-0.5"].forEach((value) => expect(static_icon.classes()).toContain(value));
 			// TODO #content-Slot testen ?????
 		})
 
@@ -315,7 +315,7 @@ describe("Bedingtes Rendern der HTML-Elemenete", () => {
 			expect(wrapper.vm.$props.modelValue).toBe("");
 
 			// Testen
-			expect(wrapper.find("span.i-ri-alert-fill.icon-error").exists()).toBeTruthy();
+			expect(wrapper.find("span.i-ri-alert-fill.icon-ui-danger").exists()).toBeTruthy();
 		})
 
 		test("span-icon-alert-fill wird gerendert, wenn data null ist", async () => {
@@ -324,7 +324,7 @@ describe("Bedingtes Rendern der HTML-Elemenete", () => {
 			expect(wrapper.vm.$props.modelValue).toBeNull();
 
 			// Testen
-			expect(wrapper.find("span.i-ri-alert-fill.icon-error").exists()).toBeTruthy();
+			expect(wrapper.find("span.i-ri-alert-fill.icon-ui-danger").exists()).toBeTruthy();
 		})
 
 		test("span-icon-alert-fill wird nicht gerendert, wenn data nicht null oder nicht leer ist", async () => {
@@ -333,7 +333,7 @@ describe("Bedingtes Rendern der HTML-Elemenete", () => {
 			expect(wrapper.vm.$props.modelValue).toBe("Test");
 
 			// Testen
-			expect(wrapper.find("span.i-ri-alert-fill.icon-error").exists()).toBeFalsy();
+			expect(wrapper.find("span.i-ri-alert-fill.icon-ui-danger").exists()).toBeFalsy();
 		})
 	})
 })

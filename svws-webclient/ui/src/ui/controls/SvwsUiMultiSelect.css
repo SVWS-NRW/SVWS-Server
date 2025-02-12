@@ -54,10 +54,6 @@
 
 			&:hover .icon {
 				@apply icon-ui-danger;
-
-				.dark & {
-					@apply icon-ui-danger--dark;
-				}
 			}
 		}
 		.svws-tag {

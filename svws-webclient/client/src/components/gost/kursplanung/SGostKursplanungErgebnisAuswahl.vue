@@ -66,23 +66,23 @@
 								</svws-ui-button>
 							</template>
 							<svws-ui-tooltip v-if="ergebnis.istAktiv">
-								<span @click="patchErgebnis({ istAktiv: false }, ergebnis.id)" class="icon icon-primary i-ri-checkbox-circle-fill relative -my-0.5 ml-2 hover:opacity-50" />
+								<span @click="patchErgebnis({ istAktiv: false }, ergebnis.id)" class="icon icon-ui-brand i-ri-checkbox-circle-fill relative -my-0.5 ml-2 hover:opacity-50" />
 								<template #content>Aktiviertes Ergebnis</template>
 							</svws-ui-tooltip>
 							<svws-ui-tooltip v-else>
-								<span @click="patchErgebnis({ istAktiv: true }, ergebnis.id)" class="icon icon-primary i-ri-checkbox-circle-line relative -my-0.5 ml-2 opacity-25 hover:opacity-75" />
+								<span @click="patchErgebnis({ istAktiv: true }, ergebnis.id)" class="icon icon-ui-brand i-ri-checkbox-circle-line relative -my-0.5 ml-2 opacity-25 hover:opacity-75" />
 								<template #content> Ergebnis als aktiv markieren </template>
 							</svws-ui-tooltip>
 						</template>
 						<template v-else>
-							<span v-if="ergebnis.istAktiv" class="icon icon-primary i-ri-checkbox-circle-fill relative -my-0.5 ml-2 hover:opacity-50" title="Aktiviertes Ergebnis" />
+							<span v-if="ergebnis.istAktiv" class="icon icon-ui-brand i-ri-checkbox-circle-fill relative -my-0.5 ml-2 hover:opacity-50" title="Aktiviertes Ergebnis" />
 						</template>
 					</div>
 				</div>
 			</template>
 			<template #actions v-if="selected_ergebnisse.length && hatUpdateKompetenz">
 				<svws-ui-button @click="remove_ergebnisse" type="transparent" :disabled="(getErgebnisse().size() === 0) || (selected_ergebnisse.length >= getErgebnisse().size()) || (selected_ergebnisse.length === 0)" class="text-ui-danger">
-					<span class="icon-sm icon-error i-ri-delete-bin-line" />
+					<span class="icon-sm icon-ui-danger i-ri-delete-bin-line" />
 					<span>{{ selected_ergebnisse.length }} {{ (selected_ergebnisse.length > 1) ? 'Ergebnisse' : 'Ergebnis' }} löschen</span>
 				</svws-ui-button>
 			</template>

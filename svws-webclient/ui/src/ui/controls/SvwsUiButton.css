@@ -51,10 +51,6 @@
 
 	.icon {
 		@apply icon-ui-onbrand;
-
-		.dark & {
-			@apply icon-ui-onbrand--dark;
-		}
 	}
 
 	.page--statistik & {
@@ -62,10 +58,6 @@
 
 		.icon {
 			@apply icon-ui-onstatistic;
-
-			.dark & {
-				@apply icon-ui-onstatistic--dark;
-			}
 		}
 
 		&:hover,
@@ -89,10 +81,6 @@
 
 		.icon {
 			@apply icon-ui-brand;
-
-			.dark & {
-				@apply icon-ui-brand--dark;
-			}
 		}
 
 		.page--statistik & {
@@ -100,10 +88,6 @@
 
 			.icon {
 				@apply icon-ui-statistic;
-
-				.dark & {
-					@apply icon-ui-statistic--dark;
-				}
 			}
 		}
 
@@ -141,10 +125,6 @@
 
 	.icon {
 		@apply icon-ui-danger;
-
-		.dark & {
-			@apply icon-ui-danger--dark;
-		}
 	}
 
 	&:hover,
@@ -153,10 +133,6 @@
 
 		.icon {
 			@apply icon-ui-ondanger;
-
-			.dark & {
-				@apply icon-ui-ondanger--dark;
-			}
 		}
 	}
 

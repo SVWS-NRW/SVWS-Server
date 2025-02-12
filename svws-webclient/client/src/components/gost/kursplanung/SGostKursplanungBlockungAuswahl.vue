@@ -2,7 +2,7 @@
 	<svws-ui-table clickable :clicked="auswahlBlockung" @update:clicked="select_blockungauswahl" :items="listBlockungen" :columns="[{ key: 'name', label: 'Blockungen' }]" no-data-text="Es liegt noch keine Planung für dieses Halbjahr vor.">
 		<template #noData v-if="istBlockungPersistiert">
 			<span class="inline-flex gap-1 leading-tight">
-				<span class="icon-sm icon-error i-ri-error-warning-line shrink-0" />
+				<span class="icon-sm icon-ui-danger i-ri-error-warning-line shrink-0" />
 				<span>Es liegt bereits eine persistierte Blockung vor, die wiederhergestellt werden kann.</span>
 			</span>
 		</template>
@@ -49,17 +49,17 @@
 						</template>
 						<template v-if="hatUpdateKompetenz">
 							<svws-ui-tooltip v-if="blockung.istAktiv">
-								<span class="icon icon-primary i-ri-checkbox-circle-fill ml-2 hover:opacity-50" @click="patchBlockung({ istAktiv: false }, blockung.id)" />
+								<span class="icon icon-ui-brand i-ri-checkbox-circle-fill ml-2 hover:opacity-50" @click="patchBlockung({ istAktiv: false }, blockung.id)" />
 								<template #content> Aktivierte Blockung </template>
 							</svws-ui-tooltip>
 							<svws-ui-tooltip v-else>
-								<span class="icon icon-primary i-ri-checkbox-circle-line ml-2 opacity-25 hover:opacity-75" @click="patchBlockung({ istAktiv: true }, blockung.id)" />
+								<span class="icon icon-ui-brand i-ri-checkbox-circle-line ml-2 opacity-25 hover:opacity-75" @click="patchBlockung({ istAktiv: true }, blockung.id)" />
 								<template #content> Blockung als aktiv markieren </template>
 							</svws-ui-tooltip>
 						</template>
 						<template v-else>
-							<span v-if="blockung.istAktiv" class="icon icon-primary i-ri-checkbox-circle-fill ml-2" />
-							<span v-else class="icon icon-primary i-ri-checkbox-circle-line ml-2 opacity-25" />
+							<span v-if="blockung.istAktiv" class="icon icon-ui-brand i-ri-checkbox-circle-fill ml-2" />
+							<span v-else class="icon icon-ui-brand i-ri-checkbox-circle-line ml-2 opacity-25" />
 						</template>
 					</div>
 				</div>

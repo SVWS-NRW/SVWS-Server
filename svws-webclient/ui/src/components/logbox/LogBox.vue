@@ -3,7 +3,7 @@
 		<div>
 			<span class="flex mb-2 text-headline-md gap-1 items-center">
 				<span class="icon i-ri-checkbox-circle-fill mr-3 icon-ui-success" v-if="(status === true)" />
-				<span class="icon i-ri-alert-fill mr-3 icon-error" v-else-if="(status === false)" />
+				<span class="icon i-ri-alert-fill mr-3 icon-ui-danger" v-else-if="(status === false)" />
 				<svws-ui-button v-if="log !== undefined" type="transparent" @click="copyToClipboard">
 					<template v-if="copied === null">
 						<span class="icon i-ri-file-copy-line" />

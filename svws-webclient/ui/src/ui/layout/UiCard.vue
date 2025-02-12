@@ -248,22 +248,22 @@
 		const buttons = new Array<ButtonConfig>();
 		if (props.onSave !== undefined)
 			buttons.push({
-				type: 'primary', label: 'Speichern', icon: 'i-ri-check-line', iconType: 'icon-primary', disabled: props.saveButtonDisabled,
+				type: 'primary', label: 'Speichern', icon: 'i-ri-check-line', iconType: 'icon-ui-brand', disabled: props.saveButtonDisabled,
 				disabledReason: props.saveButtonDisabledReason, click: props.onSave,
 			});
 		if (props.onCancel !== undefined)
 			buttons.push({
-				type: 'secondary', label: 'Abbrechen', icon: 'i-ri-close-line', iconType: 'icon-primary', disabled: props.cancelButtonDisabled,
+				type: 'secondary', label: 'Abbrechen', icon: 'i-ri-close-line', iconType: 'icon-ui-brand', disabled: props.cancelButtonDisabled,
 				disabledReason: props.cancelButtonDisabledReason, click: props.onCancel,
 			});
 		if (props.onEdit !== undefined)
 			buttons.push({
-				type: 'primary', label: 'Bearbeiten', icon: 'i-ri-edit-2-line', iconType: 'icon-primary', disabled: props.editButtonDisabled,
+				type: 'primary', label: 'Bearbeiten', icon: 'i-ri-edit-2-line', iconType: 'icon-ui-brand', disabled: props.editButtonDisabled,
 				disabledReason: props.editButtonDisabledReason, click: props.onEdit,
 			});
 		if (props.onDelete !== undefined)
 			buttons.push({
-				type: 'danger', label: 'Löschen', icon: 'i-ri-delete-bin-line', iconType: 'icon-error', disabled: props.deleteButtonDisabled,
+				type: 'danger', label: 'Löschen', icon: 'i-ri-delete-bin-line', iconType: 'icon-ui-danger', disabled: props.deleteButtonDisabled,
 				disabledReason: props.deleteButtonDisabledReason, click: props.onDelete,
 			});
 		return buttons;

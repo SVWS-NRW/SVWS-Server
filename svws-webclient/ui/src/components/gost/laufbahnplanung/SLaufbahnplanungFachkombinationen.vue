@@ -18,7 +18,7 @@
 				<div v-for="regel in abiturdatenManager().faecher().getFachkombinationenErforderlich()" :key="regel.id" class="svws-ui-tr" role="row">
 					<div class="svws-ui-td align-middle" role="cell">
 						<span v-if="!regelnVerletzt.has(regel)" class="icon i-ri-check-line shrink-0 icon-ui-success" />
-						<span v-else class="icon i-ri-error-warning-line shrink-0 icon-error text-button" />
+						<span v-else class="icon i-ri-error-warning-line shrink-0 icon-ui-danger text-button" />
 					</div>
 					<div class="svws-ui-td select-all leading-5! align-middle" role="cell">
 						{{ regel.hinweistext }}
@@ -27,7 +27,7 @@
 				<div v-for="regel in abiturdatenManager().faecher().getFachkombinationenVerboten()" :key="regel.id" class="svws-ui-tr" role="row">
 					<div class="svws-ui-td align-middle" role="cell">
 						<span v-if="!regelnVerletzt.has(regel)" class="icon i-ri-check-line shrink-0 icon-ui-success" />
-						<span v-else class="icon i-ri-error-warning-line shrink-0 icon-error text-button" />
+						<span v-else class="icon i-ri-error-warning-line shrink-0 icon-ui-danger text-button" />
 					</div>
 					<div class="svws-ui-td select-all leading-5! align-middle" role="cell">
 						{{ regel.hinweistext }}

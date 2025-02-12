@@ -15,19 +15,19 @@
 					<td class="svws-ui-td" role="cell">{{ lehrer.nachname }}, {{ lehrer.vorname }}</td>
 					<td class="svws-ui-td" role="cell">
 						<svws-ui-tooltip v-if="(lehrer.eMailDienstlich === null) || (lehrer.eMailDienstlich.trim().length === 0)">
-							<span class="icon i-ri-alert-line icon-danger inline-block" />
+							<span class="icon i-ri-alert-line icon-ui-danger inline-block" />
 							<template #content>
 								Eine fehlende dienstliche Email-Adresse ist für den Web-Noten-Manager nicht zulässig. Bitte tragen Sie diese im Lehrerbereich ein
 							</template>
 						</svws-ui-tooltip>
 						<svws-ui-tooltip v-else-if="!validatorEmail(lehrer.eMailDienstlich)">
-							<span class="icon i-ri-alert-line icon-danger inline-block" />
+							<span class="icon i-ri-alert-line icon-ui-danger inline-block" />
 							<template #content>
 								Die dienstliche Email-Adresse ist fehlerhaft. Korrigieren Sie diese im Lehrerbereich
 							</template>
 						</svws-ui-tooltip>
 						<svws-ui-tooltip v-else-if="emailDuplikate.has(lehrer.eMailDienstlich)">
-							<span class="icon i-ri-alert-line icon-danger inline-block" />
+							<span class="icon i-ri-alert-line icon-ui-danger inline-block" />
 							<template #content>
 								Diese dienstliche Email-Adresse ist bei mehreren Lehrern eingetragen. Dies ist für den Web-Noten-Manager nicht zulässig.
 							</template>

@@ -519,10 +519,10 @@ describe("PropHandhabung läuft korrekt für Buttons und Transitions", () => {
 	);
 
 	const buttonIconTypes: Array<[string, string, Record<string, () => void>]> = [
-		["onEdit", "icon-primary", { 'on-edit': () => {} }],
-		["onSave", "icon-primary", { 'on-save': () => {} }],
-		["onDelete", "icon-error", { 'on-delete': () => {} }],
-		["onCancel", "icon-primary", { 'on-cancel': () => {} }],
+		["onEdit", "icon-ui-brand", { 'on-edit': () => {} }],
+		["onSave", "icon-ui-brand", { 'on-save': () => {} }],
+		["onDelete", "icon-ui-danger", { 'on-delete': () => {} }],
+		["onCancel", "icon-ui-brand", { 'on-cancel': () => {} }],
 	];
 
 	test.each(buttonIconTypes)("Mit Props Button Definitionen für %s und 'buttonMode' = 'icon' hat der Button den type 'icon' und span die Klasse: %s",
@@ -1257,7 +1257,7 @@ describe.concurrent("Funktionen werden korrekt ausgeführt", async () => {
 			name: "UiCard",
 		}).vm.tooltipDisabled;
 		const result = tooltipDisabled({
-			type: 'primary', label: 'Speichern', icon: 'i-ri-check-line', iconType: 'icon-primary', disabled: false,
+			type: 'primary', label: 'Speichern', icon: 'i-ri-check-line', iconType: 'icon-ui-brand', disabled: false,
 			disabledReason: undefined, click: () => {},
 		})
 
@@ -1270,7 +1270,7 @@ describe.concurrent("Funktionen werden korrekt ausgeführt", async () => {
 			name: "UiCard",
 		}).vm.tooltipDisabled;
 		const result = tooltipDisabled({
-			type: 'primary', label: 'Speichern', icon: 'i-ri-check-line', iconType: 'icon-primary', disabled: true,
+			type: 'primary', label: 'Speichern', icon: 'i-ri-check-line', iconType: 'icon-ui-brand', disabled: true,
 			disabledReason: 'reason', click: () => {},
 		});
 
@@ -1283,7 +1283,7 @@ describe.concurrent("Funktionen werden korrekt ausgeführt", async () => {
 			name: "UiCard",
 		}).vm.tooltipDisabled;
 		const result = tooltipDisabled({
-			type: 'primary', label: 'Speichern', icon: 'i-ri-check-line', iconType: 'icon-primary', disabled: false,
+			type: 'primary', label: 'Speichern', icon: 'i-ri-check-line', iconType: 'icon-ui-brand', disabled: false,
 			disabledReason: undefined, click: () => {},
 		});
 
@@ -1296,7 +1296,7 @@ describe.concurrent("Funktionen werden korrekt ausgeführt", async () => {
 			name: "UiCard",
 		}).vm.tooltipDisabled;
 		const result = tooltipDisabled({
-			type: 'primary', label: 'Speichern', icon: 'i-ri-check-line', iconType: 'icon-primary', disabled: true,
+			type: 'primary', label: 'Speichern', icon: 'i-ri-check-line', iconType: 'icon-ui-brand', disabled: true,
 			disabledReason: undefined, click: () => {},
 		});
 
@@ -1309,7 +1309,7 @@ describe.concurrent("Funktionen werden korrekt ausgeführt", async () => {
 			name: "UiCard",
 		}).vm.tooltipDisabled;
 		const result = tooltipDisabled({
-			type: 'primary', label: 'Speichern', icon: 'i-ri-check-line', iconType: 'icon-primary', disabled: false,
+			type: 'primary', label: 'Speichern', icon: 'i-ri-check-line', iconType: 'icon-ui-brand', disabled: false,
 			disabledReason: 'reason', click: () => {},
 		});
 
@@ -1323,7 +1323,7 @@ describe.concurrent("Funktionen werden korrekt ausgeführt", async () => {
 			name: "UiCard",
 		}).vm.tooltipDisabled;
 		const result = tooltipDisabled({
-			type: 'primary', label: 'Speichern', icon: 'i-ri-check-line', iconType: 'icon-primary', disabled: false,
+			type: 'primary', label: 'Speichern', icon: 'i-ri-check-line', iconType: 'icon-ui-brand', disabled: false,
 			disabledReason: 'reason', click: () => {},
 		});
 
@@ -1336,7 +1336,7 @@ describe.concurrent("Funktionen werden korrekt ausgeführt", async () => {
 			name: "UiCard",
 		}).vm.tooltipDisabled;
 		const result = tooltipDisabled({
-			type: 'primary', label: 'Speichern', icon: 'i-ri-check-line', iconType: 'icon-primary', disabled: true,
+			type: 'primary', label: 'Speichern', icon: 'i-ri-check-line', iconType: 'icon-ui-brand', disabled: true,
 			disabledReason: undefined, click: () => {},
 		});
 

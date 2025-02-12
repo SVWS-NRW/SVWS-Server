@@ -32,7 +32,7 @@
 	}
 
 	.icon-lg {
-		@apply icon-primary;
+		@apply icon-ui-brand;
 	}
 }
 

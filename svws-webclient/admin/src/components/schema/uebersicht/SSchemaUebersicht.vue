@@ -18,7 +18,7 @@
 						<ui-card v-if="revisionNotUpToDate" icon="i-ri-speed-line" title="Aktualisieren" :subtitle="`Setzt das Schema auf die aktuelle Revision ${revision} hoch`" :is-open="currentAction === 'upgrade'" @update:is-open="(isOpen) => setCurrentAction('upgrade', isOpen)">
 							<div class="flex flex-col space-y-2">
 								<div v-if="eintrag.isTainted" class="text-ui-danger flex items-center">
-									<span class="icon icon-error i-ri-error-warning-line inline relative mt-0.5 mr-1" />
+									<span class="icon icon-ui-danger i-ri-error-warning-line inline relative mt-0.5 mr-1" />
 									Achtung, auch nach dem Hochsetzen bleibt das Schema „Tainted“.
 								</div>
 							</div>

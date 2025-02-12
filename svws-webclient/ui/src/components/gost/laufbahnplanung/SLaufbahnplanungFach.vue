@@ -46,7 +46,7 @@
 					<span class="absolute -right-0 top-0">
 						<template v-if="istFachkombiErforderlich[halbjahr.id] || istFachkombiVerboten[halbjahr.id] || !zkMoeglich(halbjahr)">
 							<svws-ui-tooltip :color="istBewertet(halbjahr) ? 'light' : 'danger'" position="bottom">
-								<span class="icon i-ri-error-warning-line" :class="istBewertet(halbjahr) ? 'icon-dark/50' : 'icon-error'" />
+								<span class="icon i-ri-error-warning-line" :class="istBewertet(halbjahr) ? 'icon-ui-contrast-75' : 'icon-ui-danger'" />
 								<template #content v-if="istFachkombiErforderlich[halbjahr.id]">
 									Fachkombination erforderlich
 								</template>
@@ -89,7 +89,7 @@
 						<template v-else-if="wahlen[halbjahr.id] && wahlen[halbjahr.id] === '6'">
 							<svws-ui-tooltip color="danger" position="bottom">
 								<div class="inline-flex items-center">
-									<span class="icon i-ri-error-warning-line icon-error ml-0.5" />
+									<span class="icon i-ri-error-warning-line icon-ui-danger ml-0.5" />
 								</div>
 								<template #content>
 									Dieser Kurs gilt aufgrund von 0 Punkten als nicht belegt.

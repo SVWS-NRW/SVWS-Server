@@ -47,14 +47,14 @@
 			<span v-if="statistics" class="cursor-pointer inline-block -my-1">
 				<svws-ui-tooltip position="right">
 					<span class="inline-flex items-center ml-1 -mb-2 mt-0.5 pointer-events-auto">
-						<span class="icon i-ri-bar-chart-2-line icon-statistics" />
+						<span class="icon i-ri-bar-chart-2-line icon-ui-statistic" />
 						<template v-if="(validator === undefined) || (validator().getFehlerart() === ValidatorFehlerart.UNGENUTZT)">
-							<span class="icon i-ri-alert-fill icon-error" v-if="required && ((data === '') || (data === null) || (data === undefined))" />
+							<span class="icon i-ri-alert-fill icon-ui-danger" v-if="required && ((data === '') || (data === null) || (data === undefined))" />
 						</template>
 						<template v-else-if="!validator().getFehler().isEmpty()">
-							<span class="icon i-ri-alert-fill icon-danger" v-if="validator().getFehlerart() === ValidatorFehlerart.MUSS" />
-							<span class="icon i-ri-error-warning-fill icon-caution" v-if="validator().getFehlerart() === ValidatorFehlerart.KANN" />
-							<span class="icon i-ri-question-fill icon-warning" v-if="validator().getFehlerart() === ValidatorFehlerart.HINWEIS" />
+							<span class="icon i-ri-alert-fill icon-ui-danger" v-if="validator().getFehlerart() === ValidatorFehlerart.MUSS" />
+							<span class="icon i-ri-error-warning-fill icon-ui-caution" v-if="validator().getFehlerart() === ValidatorFehlerart.KANN" />
+							<span class="icon i-ri-question-fill icon-ui-warning" v-if="validator().getFehlerart() === ValidatorFehlerart.HINWEIS" />
 						</template>
 					</span>
 					<template #content>
@@ -76,7 +76,7 @@
 					</template>
 				</svws-ui-tooltip>
 			</span>
-			<span v-if="required" class="icon-xs i-ri-asterisk ml-1 inline-block " :class="{ 'icon-statistics': statistics }" />
+			<span v-if="required" class="icon-xs i-ri-asterisk ml-1 inline-block " :class="{ 'icon-ui-statistic': statistics }" />
 		</span>
 		<span v-if="removable && (type === 'date') && (!readonly)" @keydown.enter="updateData('')" @click.stop="updateData('')" class="svws-icon--remove icon i-ri-close-line" tabindex="0" />
 		<span v-if="(type === 'date') && !firefox()" class="svws-icon icon i-ri-calendar-2-line" />

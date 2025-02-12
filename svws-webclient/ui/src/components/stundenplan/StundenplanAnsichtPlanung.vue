@@ -46,7 +46,7 @@
 				<template v-for="pause in manager().pausenzeitGetMengeByWochentagOrEmptyList(wochentag.id)" :key="pause.id">
 					<div class="svws-ui-stundenplan--pause cursor-pointer" @click="updateSelected(pause)" :style="posPause(wochentag, pause)" :class="{'svws-selected': selected === pause}">
 						<div v-if="selected===pause" class="svws-ui-stundenplan--pausen-aufsicht">
-							<span class="icon i-ri-cup-line icon-primary" />
+							<span class="icon i-ri-cup-line icon-ui-brand" />
 						</div>
 						<div v-else class="svws-ui-stundenplan--pausen-aufsicht">
 							<span class="icon i-ri-cup-line opacity-20" />

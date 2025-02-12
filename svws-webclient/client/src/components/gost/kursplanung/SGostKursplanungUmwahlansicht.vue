@@ -78,7 +78,7 @@
 							<div role="cell" class="svws-ui-td svws-divider">
 								<div class="flex flex-col py-1 w-full" :title="getErgebnismanager().getSchieneG(schiene.id).bezeichnung">
 									<div class="inline-flex items-center" :class="{'text-ui-danger': hatSchieneKollisionen(schiene.id).value}">
-										<span class="icon icon-error i-ri-alert-line -mt-0.5" v-if="hatSchieneKollisionen(schiene.id).value" />
+										<span class="icon icon-ui-danger i-ri-alert-line -mt-0.5" v-if="hatSchieneKollisionen(schiene.id).value" />
 										<div class="overflow-hidden text-ellipsis whitespace-nowrap w-full"><span class="mb-0.5 text-button">{{ getErgebnismanager().getSchieneG(schiene.id).bezeichnung }}</span></div>
 									</div>
 									<span class="text-sm font-medium opacity-50">{{ schiene.kurse.size() }} Kurs{{ schiene.kurse.size() === 1 ? '' : 'e' }}</span>
@@ -100,7 +100,7 @@
 										'bg-ui-brand/10 opacity-75 border-ui-brand rounded-sm ring-3 ring-ui-brand': is_drop_zone(kurs).value,
 									}"
 									@dragover="onDragOver($event, kurs)" @drop="drop_aendere_kurszuordnung(kurs)">
-									<span class="icon-sm i-ri-draggable mt-1 ml-1 opacity-50 group-hover:opacity-100 rounded-xs absolute top-0 left-0" v-if="is_draggable(kurs.id).value" :class="[hatSchieneKollisionen(schiene.id).value && is_draggable(kurs.id).value ? 'group-hover:opacity-25 icon-white' : 'group-hover:opacity-50 icon-black']" />
+									<span class="icon-sm i-ri-draggable mt-1 ml-1 opacity-50 group-hover:opacity-100 rounded-xs absolute top-0 left-0" v-if="is_draggable(kurs.id).value" :class="[hatSchieneKollisionen(schiene.id).value && is_draggable(kurs.id).value ? 'group-hover:opacity-25 icon-ui-contrast-0' : 'group-hover:opacity-50 icon-ui-contrast-100']" />
 									<span class="text-sm opacity-50 relative" title="Schriftlich/Insgesamt im Kurs">
 										{{ getErgebnismanager().getOfKursAnzahlSchuelerSchriftlich(kurs.id) }}/{{ kurs.schueler.size() }}
 									</span>
@@ -117,9 +117,9 @@
 											</span>
 											<span class="cursor-pointer" @click.stop="fixieren_regel_toggle(kurs.id)" :title="fixier_regel(kurs.id) ? 'Fixiert' : 'Fixieren'">
 												<span class="icon i-ri-pushpin-fill inline-block" v-if="fixier_regel(kurs.id)"
-													:class="[hatSchieneKollisionen(schiene.id).value ? 'icon-white' : '']" />
+													:class="[hatSchieneKollisionen(schiene.id).value ? 'icon-ui-contrast-0' : '']" />
 												<span class="icon i-ri-pushpin-line inline-block opacity-75" v-if="!verbieten_regel(kurs.id) && !fixier_regel(kurs.id)"
-													:class="[hatSchieneKollisionen(schiene.id).value ? 'icon-white' : '']" />
+													:class="[hatSchieneKollisionen(schiene.id).value ? 'icon-ui-contrast-0' : '']" />
 											</span>
 										</template>
 										<template v-else>

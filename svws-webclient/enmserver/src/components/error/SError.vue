@@ -25,7 +25,7 @@
 				<svws-ui-header>
 					<svws-ui-input-wrapper>
 						<div class="flex items-center gap-2">
-							<span class="icon-xl i-ri-alert-fill icon-error" />
+							<span class="icon-xl i-ri-alert-fill icon-ui-danger" />
 							<span>{{ errorDescription }}</span>
 							<br>
 							<span v-if="code !== undefined" class="opacity-40">
@@ -35,7 +35,7 @@
 						<svws-ui-button type="primary" @click="copyToClipboard">
 							<span class="icon i-ri-file-copy-line" v-if="copied === null" />
 							<span class="icon i-ri-error-warning-fill" v-else-if="copied === false" />
-							<span class="icon i-ri-check-line icon-primary" v-else /> Fehlermeldung kopieren
+							<span class="icon i-ri-check-line icon-ui-brand" v-else /> Fehlermeldung kopieren
 						</svws-ui-button>
 					</svws-ui-input-wrapper>
 				</svws-ui-header>

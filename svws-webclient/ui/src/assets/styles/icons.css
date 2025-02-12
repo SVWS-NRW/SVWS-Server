@@ -12,887 +12,972 @@
 
 }
 
-@theme {
-	--icon-color-white: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
-	--icon-color-gray: invert(32%) sepia(97%) saturate(0%) hue-rotate(163deg) brightness(103%) contrast(104%);
-	--icon-color-primary: invert(44%) sepia(52%) saturate(1260%) hue-rotate(173deg) brightness(91%) contrast(86%);
-	--icon-color-light: invert(91%) sepia(3%) saturate(126%) hue-rotate(7deg) brightness(108%) contrast(94%);
-	--icon-color-dark-20: invert(87%) sepia(7%) saturate(231%) hue-rotate(163deg) brightness(97%) contrast(87%);
-	--icon-color-error: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
-	--icon-color-danger: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
-	--icon-color-warning: brightness(0) saturate(100%) invert(75%) sepia(17%) saturate(7311%) hue-rotate(11deg) brightness(97%) contrast(94%);
-	--icon-color-caution: brightness(0) saturate(100%) invert(51%) sepia(100%) saturate(2298%) hue-rotate(355deg) brightness(101%) contrast(101%);
-	--icon-color-success: invert(86%) sepia(40%) saturate(5221%) hue-rotate(37deg) brightness(101%) contrast(83%);
-	--icon-color-highlight: invert(88%) sepia(25%) saturate(695%) hue-rotate(346deg) brightness(107%) contrast(106%);
-	--icon-color-statistics: brightness(0) saturate(100%) invert(37%) sepia(71%) saturate(868%) hue-rotate(224deg) brightness(103%) contrast(93%);
-
-	--icon-color-dark: invert(23%) sepia(18%) saturate(978%) hue-rotate(158deg) brightness(96%) contrast(91%);
-
-	--icon-color-ui: brightness(0) saturate(100%) invert(0%) sepia(100%) saturate(14%) hue-rotate(273deg) brightness(104%) contrast(104%);
-	--icon-color-ui-brand: brightness(0) saturate(100%) invert(37%) sepia(100%) saturate(422%) hue-rotate(172deg) brightness(93%) contrast(82%);
-	--icon-color-ui-statistic: brightness(0) saturate(100%) invert(28%) sepia(56%) saturate(3209%) hue-rotate(255deg) brightness(96%) contrast(101%);
-	--icon-color-ui-danger: brightness(0) saturate(100%) invert(26%) sepia(66%) saturate(2654%) hue-rotate(332deg) brightness(87%) contrast(85%);
-	--icon-color-ui-success: brightness(0) saturate(100%) invert(36%) sepia(34%) saturate(945%) hue-rotate(55deg) brightness(110%) contrast(85%);
-	--icon-color-ui-warning: brightness(0) saturate(100%) invert(56%) sepia(19%) saturate(1401%) hue-rotate(11deg) brightness(95%) contrast(87%);
-	--icon-color-ui-caution: brightness(0) saturate(100%) invert(31%) sepia(43%) saturate(1936%) hue-rotate(347deg) brightness(101%) contrast(90%);
-	--icon-color-ui-neutral: brightness(200%);
-	--icon-color-ui-onbrand: brightness(0) saturate(100%) invert(99%) sepia(7%) saturate(0%) hue-rotate(83deg) brightness(115%) contrast(100%);
-	--icon-color-ui-onstatistic: brightness(0) saturate(100%) invert(99%) sepia(7%) saturate(0%) hue-rotate(83deg) brightness(115%) contrast(100%);
-	--icon-color-ui-onselected: brightness(0) saturate(100%) invert(21%) sepia(83%) saturate(516%) hue-rotate(174deg) brightness(97%) contrast(98%);
-	--icon-color-ui-ondanger: brightness(0) saturate(100%) invert(99%) sepia(7%) saturate(0%) hue-rotate(83deg) brightness(115%) contrast(100%);
-	--icon-color-ui-onsuccess: brightness(0) saturate(100%) invert(99%) sepia(7%) saturate(0%) hue-rotate(83deg) brightness(115%) contrast(100%);
-	--icon-color-ui-onwarning: brightness(0) saturate(100%) invert(0%) sepia(100%) saturate(14%) hue-rotate(273deg) brightness(104%) contrast(104%);
-	--icon-color-ui-oncaution: brightness(0) saturate(100%) invert(99%) sepia(7%) saturate(0%) hue-rotate(83deg) brightness(115%) contrast(100%);
-	--icon-color-ui-onneutral: brightness(0) saturate(100%) invert(0%) sepia(100%) saturate(14%) hue-rotate(273deg) brightness(104%) contrast(104%);
-	--icon-color-ui-onhover: brightness(0) saturate(100%) invert(90%) sepia(6%) saturate(13%) hue-rotate(214deg) brightness(104%) contrast(102%);
-	--icon-color-ui--dark: brightness(0) saturate(100%) invert(99%) sepia(7%) saturate(0%) hue-rotate(83deg) brightness(115%) contrast(100%);
-	--icon-color-ui-brand--dark: brightness(0) saturate(100%) invert(74%) sepia(30%) saturate(6750%) hue-rotate(187deg) brightness(87%) contrast(88%);
-	--icon-color-ui-statistic--dark: brightness(0) saturate(100%) invert(46%) sepia(48%) saturate(867%) hue-rotate(225deg) brightness(101%) contrast(94%);
-	--icon-color-ui-danger--dark: brightness(0) saturate(100%) invert(52%) sepia(22%) saturate(1384%) hue-rotate(306deg) brightness(94%) contrast(96%);
-	--icon-color-ui-success--dark: brightness(0) saturate(100%) invert(56%) sepia(63%) saturate(457%) hue-rotate(48deg) brightness(98%) contrast(90%);
-	--icon-color-ui-warning--dark: brightness(0) saturate(100%) invert(52%) sepia(73%) saturate(390%) hue-rotate(11deg) brightness(90%) contrast(90%);
-	--icon-color-ui-caution--dark: brightness(0) saturate(100%) invert(26%) sepia(72%) saturate(1684%) hue-rotate(354deg) brightness(102%) contrast(82%);
-	--icon-color-ui-neutral--dark: invert(100%);
-	--icon-color-ui-onbrand--dark: invert(100%);
-	--icon-color-ui-onstatistic--dark: invert(100%);
-	--icon-color-ui-onselected--dark: brightness(0) saturate(100%) invert(81%) sepia(8%) saturate(1290%) hue-rotate(180deg) brightness(98%) contrast(95%);
-	--icon-color-ui-ondanger--dark: invert(100%);
-	--icon-color-ui-onsuccess--dark: brightness(0) saturate(100%) invert(99%) sepia(7%) saturate(0%) hue-rotate(83deg) brightness(115%) contrast(100%);
-	--icon-color-ui-onwarning--dark: brightness(0) saturate(100%) invert(0%) sepia(100%) saturate(14%) hue-rotate(273deg) brightness(104%) contrast(104%);
-	--icon-color-ui-oncaution--dark: brightness(0) saturate(100%) invert(99%) sepia(7%) saturate(0%) hue-rotate(83deg) brightness(115%) contrast(100%);
-	--icon-color-ui-onneutral--dark: invert(100%);
-
-}
-
 @utility icon {
 	width: var(--icon-size);
 	height: var(--icon-size);
 	line-height: var(--icon-size);
+	background-color: var(--color-text-ui);
 }
 
 @utility icon-xxs {
 	width: var(--icon-size-xxs);
 	height: var(--icon-size-xxs);
 	line-height: var(--icon-size-xxs);
+	background-color: var(--color-text-ui);
 }
 
 @utility icon-xs {
 	width: var(--icon-size-xs);
 	height: var(--icon-size-xs);
 	line-height: var(--icon-size-xs);
+	background-color: var(--color-text-ui);
 }
 
 @utility icon-sm {
 	width: var(--icon-size-sm);
 	height: var(--icon-size-sm);
 	line-height: var(--icon-size-sm);
+	background-color: var(--color-text-ui);
 }
 
 @utility icon-lg {
 	width: var(--icon-size-lg);
 	height: var(--icon-size-lg);
 	line-height: var(--icon-size-lg);
+	background-color: var(--color-text-ui);
 }
 
 @utility icon-xl {
 	width: var(--icon-size-xl);
 	height: var(--icon-size-xl);
 	line-height: var(--icon-size-xl);
+	background-color: var(--color-text-ui);
 }
 
 @utility icon-xxl {
 	width: var(--icon-size-xxl);
 	height: var(--icon-size-xxl);
 	line-height: var(--icon-size-xxl);
+	background-color: var(--color-text-ui);
 }
 
 @utility icon-* {
-	-webkit-filter: --value(--icon-color-*);
-	filter: --value(--icon-color-*);
+	background-color: --value(--color-*);
 }
 
 @utility i-ri-add-line {
-	background-image: url(@icons/System/add-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/add-line.svg);
+	-webkit-mask-image: url(@icons/System/add-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-add-circle-line {
-	background-image: url(@icons/System/add-circle-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/add-circle-line.svg);
+	-webkit-mask-image: url(@icons/System/add-circle-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-add-circle-fill {
-	background-image: url(@icons/System/add-circle-fill.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/add-circle-fill.svg);
+	-webkit-mask-image: url(@icons/System/add-circle-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-alert-fill {
-	background-image: url(@icons/System/alert-fill.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/alert-fill.svg);
+	-webkit-mask-image: url(@icons/System/alert-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-alert-line {
-	background-image: url(@icons/System/alert-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/alert-line.svg);
+	-webkit-mask-image: url(@icons/System/alert-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-archive-line {
-	background-image: url(@icons/Business/archive-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Business/archive-line.svg);
+	-webkit-mask-image: url(@icons/Business/archive-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-archive-stack-line {
-	background-image: url(@icons/Business/archive-stack-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Business/archive-stack-line.svg);
+	-webkit-mask-image: url(@icons/Business/archive-stack-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-arrow-down-line {
-	background-image: url(@icons/Arrows/arrow-down-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Arrows/arrow-down-line.svg);
+	-webkit-mask-image: url(@icons/Arrows/arrow-down-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-arrow-down-s-line {
-	background-image: url(@icons/Arrows/arrow-down-s-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Arrows/arrow-down-s-line.svg);
+	-webkit-mask-image: url(@icons/Arrows/arrow-down-s-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-arrow-go-back-line {
-	background-image: url(@icons/Arrows/arrow-go-back-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Arrows/arrow-go-back-line.svg);
+	-webkit-mask-image: url(@icons/Arrows/arrow-go-back-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-arrow-left-s-line {
-	background-image: url(@icons/Arrows/arrow-left-s-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Arrows/arrow-left-s-line.svg);
+	-webkit-mask-image: url(@icons/Arrows/arrow-left-s-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-arrow-right-circle-line {
-	background-image: url(@icons/Arrows/arrow-right-circle-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Arrows/arrow-right-circle-line.svg);
+	-webkit-mask-image: url(@icons/Arrows/arrow-right-circle-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-arrow-right-s-line {
-	background-image: url(@icons/Arrows/arrow-right-s-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Arrows/arrow-right-s-line.svg);
+	-webkit-mask-image: url(@icons/Arrows/arrow-right-s-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-arrow-turn-back-line {
-	background-image: url(@icons/Arrows/arrow-turn-back-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Arrows/arrow-turn-back-line.svg);
+	-webkit-mask-image: url(@icons/Arrows/arrow-turn-back-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-arrow-up-down-line {
-	background-image: url(@icons/Arrows/arrow-up-down-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Arrows/arrow-up-down-line.svg);
+	-webkit-mask-image: url(@icons/Arrows/arrow-up-down-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-arrow-up-line {
-	background-image: url(@icons/Arrows/arrow-up-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Arrows/arrow-up-line.svg);
+	-webkit-mask-image: url(@icons/Arrows/arrow-up-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-arrow-up-s-line {
-	background-image: url(@icons/Arrows/arrow-up-s-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Arrows/arrow-up-s-line.svg);
+	-webkit-mask-image: url(@icons/Arrows/arrow-up-s-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-asterisk {
-	background-image: url(@icons/Editor/asterisk.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Editor/asterisk.svg);
+	-webkit-mask-image: url(@icons/Editor/asterisk.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-at-line {
-	background-image: url(@icons/Business/at-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Business/at-line.svg);
+	-webkit-mask-image: url(@icons/Business/at-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-bar-chart-2-line {
-	background-image: url(@icons/Business/bar-chart-2-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Business/bar-chart-2-line.svg);
+	-webkit-mask-image: url(@icons/Business/bar-chart-2-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-book-2-line {
-	background-image: url(@icons/Document/book-2-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Document/book-2-line.svg);
+	-webkit-mask-image: url(@icons/Document/book-2-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-box-3-line {
-	background-image: url(@icons/Others/box-3-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Others/box-3-line.svg);
+	-webkit-mask-image: url(@icons/Others/box-3-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-briefcase-line {
-	background-image: url(@icons/Business/briefcase-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Business/briefcase-line.svg);
+	-webkit-mask-image: url(@icons/Business/briefcase-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-bug-fill {
-	background-image: url(@icons/Development/bug-fill.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Development/bug-fill.svg);
+	-webkit-mask-image: url(@icons/Development/bug-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-calculator-line {
-	background-image: url(@icons/Business/calculator-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Business/calculator-line.svg);
+	-webkit-mask-image: url(@icons/Business/calculator-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-calendar-2-line {
-	background-image: url(@icons/Business/calendar-2-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Business/calendar-2-line.svg);
+	-webkit-mask-image: url(@icons/Business/calendar-2-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-calendar-event-line {
-	background-image: url(@icons/Business/calendar-event-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Business/calendar-event-line.svg);
+	-webkit-mask-image: url(@icons/Business/calendar-event-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-camera-fill {
-	background-image: url(@icons/Media/camera-fill.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Media/camera-fill.svg);
+	-webkit-mask-image: url(@icons/Media/camera-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-camera-line {
-	background-image: url(@icons/Media/camera-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Media/camera-line.svg);
+	-webkit-mask-image: url(@icons/Media/camera-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-camera-off-line {
-	background-image: url(@icons/Media/camera-off-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Media/camera-off-line.svg);
+	-webkit-mask-image: url(@icons/Media/camera-off-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-chat-1-line {
-	background-image: url(@icons/Communication/chat-1-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Communication/chat-1-line.svg);
+	-webkit-mask-image: url(@icons/Communication/chat-1-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-chat-new-line {
-	background-image: url(@icons/Communication/chat-new-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Communication/chat-new-line.svg);
+	-webkit-mask-image: url(@icons/Communication/chat-new-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-check-line {
-	background-image: url(@icons/System/check-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/check-line.svg);
+	-webkit-mask-image: url(@icons/System/check-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-checkbox-blank-circle-line {
-	background-image: url(@icons/System/checkbox-blank-circle-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/checkbox-blank-circle-line.svg);
+	-webkit-mask-image: url(@icons/System/checkbox-blank-circle-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-checkbox-circle-fill {
-	background-image: url(@icons/System/checkbox-circle-fill.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/checkbox-circle-fill.svg);
+	-webkit-mask-image: url(@icons/System/checkbox-circle-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-checkbox-circle-line {
-	background-image: url(@icons/System/checkbox-circle-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/checkbox-circle-line.svg);
+	-webkit-mask-image: url(@icons/System/checkbox-circle-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-close-line {
-	background-image: url(@icons/System/close-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/close-line.svg);
+	-webkit-mask-image: url(@icons/System/close-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-corner-right-up-line {
-	background-image: url(@icons/Arrows/corner-right-up-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Arrows/corner-right-up-line.svg);
+	-webkit-mask-image: url(@icons/Arrows/corner-right-up-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-cup-line {
-	background-image: url(@icons/Food/cup-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Food/cup-line.svg);
+	-webkit-mask-image: url(@icons/Food/cup-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-database-2-line {
-	background-image: url(@icons/Device/database-2-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Device/database-2-line.svg);
+	-webkit-mask-image: url(@icons/Device/database-2-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-delete-bin-fill {
-	background-image: url(@icons/System/delete-bin-fill.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/delete-bin-fill.svg);
+	-webkit-mask-image: url(@icons/System/delete-bin-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-delete-bin-line {
-	background-image: url(@icons/System/delete-bin-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/delete-bin-line.svg);
+	-webkit-mask-image: url(@icons/System/delete-bin-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-device-recover-line {
-	background-image: url(@icons/Device/device-recover-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Device/device-recover-line.svg);
+	-webkit-mask-image: url(@icons/Device/device-recover-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-download-2-line {
-	background-image: url(@icons/System/download-2-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/download-2-line.svg);
+	-webkit-mask-image: url(@icons/System/download-2-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-draft-line {
-	background-image: url(@icons/Document/draft-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Document/draft-line.svg);
+	-webkit-mask-image: url(@icons/Document/draft-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-draggable {
-	background-image: url(@icons/Editor/draggable.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Editor/draggable.svg);
+	-webkit-mask-image: url(@icons/Editor/draggable.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-edit-2-line {
-	background-image: url(@icons/Design/edit-2-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Design/edit-2-line.svg);
+	-webkit-mask-image: url(@icons/Design/edit-2-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-eraser-fill {
-	background-image: url(@icons/Design/eraser-fill.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Design/eraser-fill.svg);
+	-webkit-mask-image: url(@icons/Design/eraser-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-eraser-line {
-	background-image: url(@icons/Design/eraser-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Design/eraser-line.svg);
+	-webkit-mask-image: url(@icons/Design/eraser-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-error-warning-fill {
-	background-image: url(@icons/System/error-warning-fill.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/error-warning-fill.svg);
+	-webkit-mask-image: url(@icons/System/error-warning-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-error-warning-line {
-	background-image: url(@icons/System/error-warning-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/error-warning-line.svg);
+	-webkit-mask-image: url(@icons/System/error-warning-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-expand-height-line {
-	background-image: url(@icons/Arrows/expand-height-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Arrows/expand-height-line.svg);
+	-webkit-mask-image: url(@icons/Arrows/expand-height-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-expand-width-line {
-	background-image: url(@icons/Arrows/expand-width-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Arrows/expand-width-line.svg);
+	-webkit-mask-image: url(@icons/Arrows/expand-width-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-expand-right-line {
-	background-image: url(@icons/Arrows/expand-right-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Arrows/expand-right-line.svg);
+	-webkit-mask-image: url(@icons/Arrows/expand-right-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-contract-left-line {
-	background-image: url(@icons/Arrows/contract-left-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Arrows/contract-left-line.svg);
+	-webkit-mask-image: url(@icons/Arrows/contract-left-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-expand-up-down-fill {
-	background-image: url(@icons/Arrows/expand-up-down-fill.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Arrows/expand-up-down-fill.svg);
+	-webkit-mask-image: url(@icons/Arrows/expand-up-down-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-expand-up-down-line {
-	background-image: url(@icons/Arrows/expand-up-down-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Arrows/expand-up-down-line.svg);
+	-webkit-mask-image: url(@icons/Arrows/expand-up-down-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-eye-line {
-	background-image: url(@icons/System/eye-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/eye-line.svg);
+	-webkit-mask-image: url(@icons/System/eye-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-file-close-line {
-	background-image: url(@icons/Document/file-close-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Document/file-close-line.svg);
+	-webkit-mask-image: url(@icons/Document/file-close-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-file-copy-line {
-	background-image: url(@icons/Document/file-copy-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Document/file-copy-line.svg);
+	-webkit-mask-image: url(@icons/Document/file-copy-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-file-damage-line {
-	background-image: url(@icons/Document/file-damage-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Document/file-damage-line.svg);
+	-webkit-mask-image: url(@icons/Document/file-damage-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-filter-fill {
-	background-image: url(@icons/System/filter-fill.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/filter-fill.svg);
+	-webkit-mask-image: url(@icons/System/filter-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-filter-line {
-	background-image: url(@icons/System/filter-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/filter-line.svg);
+	-webkit-mask-image: url(@icons/System/filter-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-filter-off-line {
-	background-image: url(@icons/System/filter-off-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/filter-off-line.svg);
+	-webkit-mask-image: url(@icons/System/filter-off-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-folder-open-line {
-	background-image: url(@icons/Document/folder-open-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Document/folder-open-line.svg);
+	-webkit-mask-image: url(@icons/Document/folder-open-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-forbid-fill {
-	background-image: url(@icons/System/forbid-fill.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/forbid-fill.svg);
+	-webkit-mask-image: url(@icons/System/forbid-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-forbid-line {
-	background-image: url(@icons/System/forbid-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/forbid-line.svg);
+	-webkit-mask-image: url(@icons/System/forbid-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-fullscreen-line {
-	background-image: url(@icons/Media/fullscreen-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Media/fullscreen-line.svg);
+	-webkit-mask-image: url(@icons/Media/fullscreen-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-graduation-cap-line {
-	background-image: url(@icons/Others/graduation-cap-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Others/graduation-cap-line.svg);
+	-webkit-mask-image: url(@icons/Others/graduation-cap-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-group-line {
-	background-image: url(@icons/User%20&%20Faces/group-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/User%20&%20Faces/group-line.svg);
+	-webkit-mask-image: url(@icons/User%20&%20Faces/group-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-headphone-line {
-	background-image: url(@icons/Media/headphone-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Media/headphone-line.svg);
+	-webkit-mask-image: url(@icons/Media/headphone-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-information-fill {
-	background-image: url(@icons/System/information-fill.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/information-fill.svg);
+	-webkit-mask-image: url(@icons/System/information-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-information-line {
-	background-image: url(@icons/System/information-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/information-line.svg);
+	-webkit-mask-image: url(@icons/System/information-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-layout-column-line {
-	background-image: url(@icons/Design/layout-column-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Design/layout-column-line.svg);
+	-webkit-mask-image: url(@icons/Design/layout-column-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-layout-column-fill {
-	background-image: url(@icons/Design/layout-column-fill.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Design/layout-column-fill.svg);
+	-webkit-mask-image: url(@icons/Design/layout-column-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-lightbulb-line {
-	background-image: url(@icons/Others/lightbulb-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Others/lightbulb-line.svg);
+	-webkit-mask-image: url(@icons/Others/lightbulb-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-link {
-	background-image: url(@icons/Editor/link.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Editor/link.svg);
+	-webkit-mask-image: url(@icons/Editor/link.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-loader-4-line {
-	background-image: url(@icons/System/loader-4-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/loader-4-line.svg);
+	-webkit-mask-image: url(@icons/System/loader-4-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-lock-2-line {
-	background-image: url(@icons/System/lock-2-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/lock-2-line.svg);
+	-webkit-mask-image: url(@icons/System/lock-2-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-lock-fill {
-	background-image: url(@icons/System/lock-fill.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/lock-fill.svg);
+	-webkit-mask-image: url(@icons/System/lock-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-lock-line {
-	background-image: url(@icons/System/lock-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/lock-line.svg);
+	-webkit-mask-image: url(@icons/System/lock-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-lock-unlock-line {
-	background-image: url(@icons/System/lock-unlock-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/lock-unlock-line.svg);
+	-webkit-mask-image: url(@icons/System/lock-unlock-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-login-circle-line {
-	background-image: url(@icons/System/login-circle-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/login-circle-line.svg);
+	-webkit-mask-image: url(@icons/System/login-circle-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-logout-circle-line {
-	background-image: url(@icons/System/logout-circle-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/logout-circle-line.svg);
+	-webkit-mask-image: url(@icons/System/logout-circle-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-loop-left-line {
-	background-image: url(@icons/System/loop-left-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/loop-left-line.svg);
+	-webkit-mask-image: url(@icons/System/loop-left-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-loop-right-line {
-	background-image: url(@icons/System/loop-right-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/loop-right-line.svg);
+	-webkit-mask-image: url(@icons/System/loop-right-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-mail-send-line {
-	background-image: url(@icons/Business/mail-send-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Business/mail-send-line.svg);
+	-webkit-mask-image: url(@icons/Business/mail-send-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-menu-fold-line {
-	background-image: url(@icons/System/menu-fold-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/menu-fold-line.svg);
+	-webkit-mask-image: url(@icons/System/menu-fold-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-menu-line {
-	background-image: url(@icons/System/menu-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/menu-line.svg);
+	-webkit-mask-image: url(@icons/System/menu-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-menu-unfold-line {
-	background-image: url(@icons/System/menu-unfold-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/menu-unfold-line.svg);
+	-webkit-mask-image: url(@icons/System/menu-unfold-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-message-line {
-	background-image: url(@icons/Communication/message-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Communication/message-line.svg);
+	-webkit-mask-image: url(@icons/Communication/message-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-moon-line {
-	background-image: url(@icons/Weather/moon-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Weather/moon-line.svg);
+	-webkit-mask-image: url(@icons/Weather/moon-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-palette-line {
-	background-image: url(@icons/Design/palette-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Design/palette-line.svg);
+	-webkit-mask-image: url(@icons/Design/palette-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-phone-line {
-	background-image: url(@icons/Device/phone-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Device/phone-line.svg);
+	-webkit-mask-image: url(@icons/Device/phone-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-play-line {
-	background-image: url(@icons/Media/play-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Media/play-line.svg);
+	-webkit-mask-image: url(@icons/Media/play-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-presentation-line {
-	background-image: url(@icons/Business/presentation-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Business/presentation-line.svg);
+	-webkit-mask-image: url(@icons/Business/presentation-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-printer-line {
-	background-image: url(@icons/Business/printer-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Business/printer-line.svg);
+	-webkit-mask-image: url(@icons/Business/printer-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-prohibited-fill {
-	background-image: url(@icons/System/prohibited-fill.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/prohibited-fill.svg);
+	-webkit-mask-image: url(@icons/System/prohibited-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-prohibited-line {
-	background-image: url(@icons/System/prohibited-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/prohibited-line.svg);
+	-webkit-mask-image: url(@icons/System/prohibited-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-pushpin-fill {
-	background-image: url(@icons/Map/pushpin-fill.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Map/pushpin-fill.svg);
+	-webkit-mask-image: url(@icons/Map/pushpin-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-pushpin-line {
-	background-image: url(@icons/Map/pushpin-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Map/pushpin-line.svg);
+	-webkit-mask-image: url(@icons/Map/pushpin-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-question-line {
-	background-image: url(@icons/System/question-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/question-line.svg);
+	-webkit-mask-image: url(@icons/System/question-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-question-mark {
-	background-image: url(@icons/Editor/question-mark.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Editor/question-mark.svg);
+	-webkit-mask-image: url(@icons/Editor/question-mark.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-question-fill {
-	background-image: url(@icons/System/question-fill.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/question-fill.svg);
+	-webkit-mask-image: url(@icons/System/question-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-refresh-line {
-	background-image: url(@icons/System/refresh-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/refresh-line.svg);
+	-webkit-mask-image: url(@icons/System/refresh-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-restart-line {
-	background-image: url(@icons/Device/restart-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Device/restart-line.svg);
+	-webkit-mask-image: url(@icons/Device/restart-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-save-3-line {
-	background-image: url(@icons/Device/save-3-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Device/save-3-line.svg);
+	-webkit-mask-image: url(@icons/Device/save-3-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-school-line {
-	background-image: url(@icons/Buildings/school-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Buildings/school-line.svg);
+	-webkit-mask-image: url(@icons/Buildings/school-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-search-line {
-	background-image: url(@icons/System/search-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/search-line.svg);
+	-webkit-mask-image: url(@icons/System/search-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-send-plane-fill {
-	background-image: url(@icons/Business/send-plane-fill.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Business/send-plane-fill.svg);
+	-webkit-mask-image: url(@icons/Business/send-plane-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-settings-2-line {
-	background-image: url(@icons/System/settings-2-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/settings-2-line.svg);
+	-webkit-mask-image: url(@icons/System/settings-2-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-settings-3-line {
-	background-image: url(@icons/System/settings-3-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/settings-3-line.svg);
+	-webkit-mask-image: url(@icons/System/settings-3-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-share-forward-2-line {
-	background-image: url(@icons/System/share-forward-2-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/share-forward-2-line.svg);
+	-webkit-mask-image: url(@icons/System/share-forward-2-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-share-forward-line {
-	background-image: url(@icons/System/share-forward-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/share-forward-line.svg);
+	-webkit-mask-image: url(@icons/System/share-forward-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-shield-star-line {
-	background-image: url(@icons/System/shield-star-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/shield-star-line.svg);
+	-webkit-mask-image: url(@icons/System/shield-star-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-spam-3-line {
-	background-image: url(@icons/System/spam-3-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/spam-3-line.svg);
+	-webkit-mask-image: url(@icons/System/spam-3-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-sparkling-line {
-	background-image: url(@icons/Weather/sparkling-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Weather/sparkling-line.svg);
+	-webkit-mask-image: url(@icons/Weather/sparkling-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-speak-line {
-	background-image: url(@icons/Communication/speak-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Communication/speak-line.svg);
+	-webkit-mask-image: url(@icons/Communication/speak-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-speed-line {
-	background-image: url(@icons/Media/speed-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Media/speed-line.svg);
+	-webkit-mask-image: url(@icons/Media/speed-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-subtract-line {
-	background-image: url(@icons/System/subtract-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/subtract-line.svg);
+	-webkit-mask-image: url(@icons/System/subtract-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-sun-line {
-	background-image: url(@icons/Weather/sun-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Weather/sun-line.svg);
+	-webkit-mask-image: url(@icons/Weather/sun-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-table-line {
-	background-image: url(@icons/Design/table-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Design/table-line.svg);
+	-webkit-mask-image: url(@icons/Design/table-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-team-line {
-	background-image: url(@icons/User%20&%20Faces/team-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/User%20&%20Faces/team-line.svg);
+	-webkit-mask-image: url(@icons/User%20&%20Faces/team-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-text {
-	background-image: url(@icons/Editor/text.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Editor/text.svg);
+	-webkit-mask-image: url(@icons/Editor/text.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-time-line {
-	background-image: url(@icons/System/time-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/time-line.svg);
+	-webkit-mask-image: url(@icons/System/time-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-upload-2-line {
-	background-image: url(@icons/System/upload-2-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/upload-2-line.svg);
+	-webkit-mask-image: url(@icons/System/upload-2-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-user-add-line {
-	background-image: url(@icons/User%20&%20Faces/user-add-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/User%20&%20Faces/user-add-line.svg);
+	-webkit-mask-image: url(@icons/User%20&%20Faces/user-add-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-user-forbid-line {
-	background-image: url(@icons/User%20&%20Faces/user-forbid-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/User%20&%20Faces/user-forbid-line.svg);
+	-webkit-mask-image: url(@icons/User%20&%20Faces/user-forbid-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-vidicon-line {
-	background-image: url(@icons/Media/vidicon-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/Media/vidicon-line.svg);
+	-webkit-mask-image: url(@icons/Media/vidicon-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-zoom-in-line {
-	background-image: url(@icons/System/zoom-in-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/zoom-in-line.svg);
+	-webkit-mask-image: url(@icons/System/zoom-in-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }
 
 @utility i-ri-zoom-out-line {
-	background-image: url(@icons/System/zoom-out-line.svg);
-	background-repeat: no-repeat;
-	background-position: center;
+	mask-image: url(@icons/System/zoom-out-line.svg);
+	-webkit-mask-image: url(@icons/System/zoom-out-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
 }

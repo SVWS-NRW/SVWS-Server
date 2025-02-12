@@ -103,7 +103,7 @@
 														<p>{{ klausur.bemerkung }}</p>
 													</div>
 												</template>
-												<span class="icon i-ri-edit-2-line icon-primary" v-if="(klausur.bemerkung !== null && klausur.bemerkung.trim().length > 0) || (kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe !== null && kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe!.trim().length > 0)" />
+												<span class="icon i-ri-edit-2-line icon-ui-brand" v-if="(klausur.bemerkung !== null && klausur.bemerkung.trim().length > 0) || (kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe !== null && kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe!.trim().length > 0)" />
 											</svws-ui-tooltip>
 										</svws-ui-tooltip>
 									</div>

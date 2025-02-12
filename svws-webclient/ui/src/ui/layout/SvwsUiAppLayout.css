@@ -344,11 +344,8 @@ html {
 	@apply w-full h-full flex justify-center items-center;
 
 	span.icon {
-		@apply w-full h-1/5 icon-light;
+		@apply w-full h-1/5 icon-ui-contrast-25;
 		max-width: 20vw;
-		.dark & {
-			@apply icon-gray;
-		}
 	}
 }
 

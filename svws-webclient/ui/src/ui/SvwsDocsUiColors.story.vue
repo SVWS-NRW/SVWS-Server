@@ -107,7 +107,7 @@
 			</div>
 			<!-- Generate all tailwind colors for icons:
 			 icon-ui icon-ui-brand icon-ui-statistic icon-ui-danger icon-ui-success icon-ui-warning icon-ui-caution icon-ui-neutral icon-ui-onbrand icon-ui-onstatistic icon-ui-onselected icon-ui-ondanger icon-ui-onsuccess icon-ui-onwarning icon-ui-oncaution icon-ui-onneutral
-			 icon-ui--dark icon-ui-brand--dark icon-ui-statistic--dark icon-ui-danger--dark icon-ui-success--dark icon-ui-warning--dark icon-ui-caution--dark icon-ui-neutral--dark icon-ui-onbrand--dark icon-ui-onstatistic--dark icon-ui-onselected--dark icon-ui-ondanger--dark icon-ui-onsuccess--dark icon-ui-onwarning--dark icon-ui-oncaution--dark icon-ui-onneutral--dark -->
+			-->
 		</Variant>
 		<Variant title="Beispiele" source=" " id="beispiele">
 			<div class="htw-prose dark:htw-prose-invert" style="max-width: unset;">

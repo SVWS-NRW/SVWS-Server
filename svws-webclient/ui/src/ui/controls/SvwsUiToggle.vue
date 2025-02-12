@@ -8,7 +8,7 @@
 		<span class="toggle--indicator" />
 		<span v-if="$slots.default || statistics" class="toggle--label">
 			<slot />
-			<span class="icon i-ri-bar-chart-2-line icon-statistics ml-2" v-if="statistics" />
+			<span class="icon i-ri-bar-chart-2-line icon-ui-statistic ml-2" v-if="statistics" />
 		</span>
 	</label>
 </template>
