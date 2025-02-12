@@ -6,7 +6,7 @@
 		<template #header />
 		<template #content>
 			<svws-ui-table :items="manager.klassenOfKlassenlehrer" clickable @update:clicked="item => manager.filterKlassen = [ item ]" :clicked="manager.filterKlassen[0]"
-				:columns :filter-open="false" count scroll-into-view scroll allow-arrow-key-selection />
+				:columns :filter-open="false" count scroll-into-view scroll allow-arrow-key-selection :focus-help-visible :focus-switching-enabled />
 		</template>
 	</svws-ui-secondary-menu>
 </template>
@@ -15,8 +15,11 @@
 
 	import { onMounted } from 'vue';
 	import type { EnmKlassenleitungProps } from './EnmKlassenleitungProps';
+	import { useRegionSwitch } from "~/components/useRegionSwitchEnm";
 
 	const props = defineProps<EnmKlassenleitungProps>();
+
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	onMounted(() => {
 		if (props.manager.filterKlassen.length > 0)

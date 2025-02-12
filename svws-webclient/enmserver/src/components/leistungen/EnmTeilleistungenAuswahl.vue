@@ -6,7 +6,7 @@
 		<template #header />
 		<template #content>
 			<svws-ui-table :items="manager.lerngruppenAuswahlliste" clickable @update:clicked="item => manager.filterLerngruppen = [ item ]" :clicked="manager.filterLerngruppen[0]"
-				:columns :filter-open="false" count scroll-into-view scroll allow-arrow-key-selection />
+				:columns :filter-open="false" count scroll-into-view scroll allow-arrow-key-selection :focus-help-visible :focus-switching-enabled />
 		</template>
 	</svws-ui-secondary-menu>
 </template>
@@ -15,8 +15,11 @@
 
 	import { onMounted } from 'vue';
 	import type { EnmTeilleistungenProps } from './EnmTeilleistungenProps';
+	import { useRegionSwitch } from "~/components/useRegionSwitchEnm";
 
 	const props = defineProps<EnmTeilleistungenProps>();
+
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	onMounted(() => {
 		if (props.manager.filterLerngruppen.length > 0)

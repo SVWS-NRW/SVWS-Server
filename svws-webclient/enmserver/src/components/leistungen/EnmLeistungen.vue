@@ -1,17 +1,25 @@
 <template>
 	<div class="page page-flex-row">
-		<div class="grow w-full h-full overflow-hidden">
-			<enm-leistungen-uebersicht :manager :patch-leistung :columns-visible :set-columns-visible />
-		</div>
-		<div v-if="columnsVisible().get('Bemerkung')" class="min-w-6 max-w-196 h-full overflow-hidden">
-			<enm-floskeleditor :manager :patch="doPatchLeistung" erlaubte-hauptgruppe="FACH" />
+		<div class="flex flex-row h-full w-full overflow-hidden" @dragover="dragOver">
+			<div class="grow w-full h-full overflow-hidden">
+				<enm-leistungen-uebersicht :manager :patch-leistung :columns-visible :set-columns-visible />
+			</div>
+			<template v-if="columnsVisible().get('Bemerkung')">
+				<div class="h-full content-center text-center cursor-w-resize min-w-8 max-w-8 lg:min-w-12 lg:max-w-12 bg-ui" draggable="true">
+					<span class="icon i-ri-arrow-left-s-line" />
+					<span class="icon i-ri-arrow-right-s-line" />
+				</div>
+				<div class="h-full overflow-hidden" :style="{ 'min-width': posDivider + 'rem', 'max-width': posDivider + 'rem' }">
+					<enm-floskeleditor :manager :patch="doPatchLeistung" erlaubte-hauptgruppe="FACH" />
+				</div>
+			</template>
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
 
-	import { watchEffect } from 'vue';
+	import { ref, watchEffect } from 'vue';
 	import type { EnmLeistungenProps } from './EnmLeistungenProps';
 
 	const props = defineProps<EnmLeistungenProps>();
@@ -31,6 +39,27 @@
 		if (success)
 			Object.assign(props.manager.auswahlLeistung.leistung, patch);
 		props.manager.update();
+	}
+
+	// Default-Breite von 49 rem für den Floskel-Editor
+	const posDivider = ref<number>(45);
+
+	function dragOver(event: DragEvent) {
+		// Bestimme die Anzahl der Pixel pro 1 rem
+		const pxPerRem = parseFloat(getComputedStyle(document.documentElement).fontSize);
+		// Bestimme den Abstand vom rechten Rand des Content-Bereich in Pixeln
+		const posFromRight = (event.currentTarget as Element).getBoundingClientRect().right - event.pageX;
+		// Bestimme die neue Breite des Floskel-Editors in rem
+		let width = posFromRight / pxPerRem;
+		// Erlaube dabei eine maximale Breits von 60 rem
+		if (width > 60)
+			width = 60;
+		// Kleinere Werte als 10 rem blenden den Floskel-Editor komplett aus
+		if (width < 10)
+			width = 0;
+		// Setze die Position des Dividers nur neu, wenn er stark genug von der alten Position abweicht (mehr als 1 rem) -> Performance
+		if (Math.abs(width - posDivider.value) > 1)
+			posDivider.value = width;
 	}
 
 </script>

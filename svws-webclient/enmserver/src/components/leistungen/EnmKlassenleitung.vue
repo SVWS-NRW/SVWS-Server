@@ -4,13 +4,15 @@
 			<div class="grow w-full h-full overflow-hidden">
 				<enm-klassenleitung-uebersicht :manager :patch-bemerkungen :patch-lernabschnitt :columns-visible :set-columns-visible @hauptgruppe="erlaubteHauptgruppe = $event" />
 			</div>
-			<div class="h-full content-center text-center cursor-w-resize min-w-8 max-w-8 lg:min-w-12 lg:max-w-12 bg-ui" draggable="true">
-				<span class="icon i-ri-arrow-left-s-line" />
-				<span class="icon i-ri-arrow-right-s-line" />
-			</div>
-			<div v-if="floskelEditorVisible" class="h-full overflow-hidden" :style="{ 'min-width': posDivider + 'rem', 'max-width': posDivider + 'rem' }">
-				<enm-floskeleditor :manager :patch="doPatchBemerkungen" :erlaubte-hauptgruppe />
-			</div>
+			<template v-if="floskelEditorVisible">
+				<div class="h-full content-center text-center cursor-w-resize min-w-8 max-w-8 lg:min-w-12 lg:max-w-12 bg-ui" draggable="true">
+					<span class="icon i-ri-arrow-left-s-line" />
+					<span class="icon i-ri-arrow-right-s-line" />
+				</div>
+				<div class="h-full overflow-hidden" :style="{ 'min-width': posDivider + 'rem', 'max-width': posDivider + 'rem' }">
+					<enm-floskeleditor :manager :patch="doPatchBemerkungen" :erlaubte-hauptgruppe />
+				</div>
+			</template>
 		</div>
 	</div>
 </template>
