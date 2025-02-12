@@ -1,5 +1,5 @@
 <template>
-	<div role="row" class="svws-ui-tr" :style="{ 'background-color': bgColor }">
+	<div role="row" class="svws-ui-tr" :style="{ 'background-color': bgColor }" :class="textColor">
 		<div role="cell" class="svws-ui-td select-text">
 			<div class="whitespace-nowrap min-w-fit">
 				{{ fach.kuerzelAnzeige }}
@@ -15,15 +15,15 @@
 		</div>
 		<div role="cell" class="svws-ui-td svws-align-center font-medium" :class="{ 'svws-disabled': !istFremdsprache }">
 			<template v-if="istFremdsprache">
-				<span v-if="ignoriereSprachenfolge" class="text-ui-contrast-25"> ? </span>
-				<span v-else-if="sprachenfolgeNr === 0 && !sprachenfolgeJahrgang" class="text-ui-contrast-25"> — </span>
+				<span v-if="ignoriereSprachenfolge" :class="textColorWeak"> ? </span>
+				<span v-else-if="sprachenfolgeNr === 0 && !sprachenfolgeJahrgang" :class="textColorWeak"> — </span>
 				<span v-else> {{ sprachenfolgeNr }} </span>
 			</template>
 		</div>
 		<div role="cell" class="svws-ui-td svws-align-center font-medium svws-divider" :class="{ 'svws-disabled': !istFremdsprache}">
 			<template v-if="istFremdsprache">
-				<span v-if="ignoriereSprachenfolge" class="text-ui-contrast-25"> ? </span>
-				<span v-else-if="sprachenfolgeNr === 0 && !sprachenfolgeJahrgang" class="text-ui-contrast-25"> — </span>
+				<span v-if="ignoriereSprachenfolge" :class="textColorWeak"> ? </span>
+				<span v-else-if="sprachenfolgeNr === 0 && !sprachenfolgeJahrgang" :class="textColorWeak"> — </span>
 				<span v-else> {{ sprachenfolgeJahrgang }} </span>
 			</template>
 		</div>
@@ -127,7 +127,7 @@
 
 <script setup lang="ts">
 
-	import { computed, onUpdated, ref } from "vue";
+	import { computed, onBeforeUnmount, onMounted, onUpdated, ref } from "vue";
 	import { AbiturdatenManager } from "../../../../../core/src/core/abschluss/gost/AbiturdatenManager";
 	import type { GostJahrgangsdaten } from "../../../../../core/src/core/data/gost/GostJahrgangsdaten";
 	import type { GostFach } from "../../../../../core/src/core/data/gost/GostFach";
@@ -145,6 +145,7 @@
 	import { GostFachbereich } from "../../../../../core/src/core/types/gost/GostFachbereich";
 	import { GostAbiturFach } from "../../../../../core/src/core/types/gost/GostAbiturFach";
 	import { GostFachUtils } from "../../../../../core/src/core/utils/gost/GostFachUtils";
+	import { Color } from "../../../ui/Color";
 
 	const props = withDefaults(defineProps<{
 		abiturdatenManager: () => AbiturdatenManager;
@@ -184,6 +185,21 @@
 	const istFremdsprache = computed<boolean>(() => Fach.getBySchluesselOrDefault(props.fach.kuerzel).daten(schuljahr.value)?.istFremdsprache ?? false);
 	const bgColor = computed<string>(() => Fach.getBySchluesselOrDefault(props.fach.kuerzel).getHMTLFarbeRGB(schuljahr.value));
 	const fachbelegung = computed<AbiturFachbelegung | null>(() => props.abiturdatenManager().getFachbelegungByID(props.fach.id));
+
+	const isLightMode = ref<boolean>(window.matchMedia('(prefers-color-scheme: light)').matches);
+	onMounted(() => window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', changeColorScheme));
+	onBeforeUnmount(() => window.matchMedia('(prefers-color-scheme: light)').removeEventListener('change', changeColorScheme));
+	function changeColorScheme(event: MediaQueryListEvent) {
+		isLightMode.value = event.matches;
+	}
+	const isPreferWhiteTextColor = computed<boolean>(() => {
+		const bgFarbe = Fach.getBySchluesselOrDefault(props.fach.kuerzel).getFarbe(schuljahr.value);
+		return Color.preferWhiteAsContrastColor(bgFarbe);
+	});
+	const textColor = computed<string>(() => ((isLightMode.value && !isPreferWhiteTextColor.value) || (!isLightMode.value && isPreferWhiteTextColor.value))
+		? 'text-ui' : 'text-ui-contrast-0');
+	const textColorWeak = computed<string>(() => ((isLightMode.value && !isPreferWhiteTextColor.value) || (!isLightMode.value && isPreferWhiteTextColor.value))
+		? 'text-ui-contrast-50' : 'text-ui-contrast-10');
 
 	// Nächste Halbjahr-Zelle fokussieren, wenn möglich. Sonst "update:focus:impossible" emitten, sodass Parent-Komponente einen Schritt weiter gehen kann
 	function doFocusOnHalbjahr() {

@@ -86,6 +86,7 @@ export type { TabData } from "./ui/nav/TabData";
 // Class exports
 export { TabManager } from "./ui/nav/TabManager";
 export { Checkpoint } from "./ui/modal/Checkpoint";
+export { Color } from "./ui/Color";
 
 // Enums
 export { ViewType } from "./ui/nav/ViewType";
