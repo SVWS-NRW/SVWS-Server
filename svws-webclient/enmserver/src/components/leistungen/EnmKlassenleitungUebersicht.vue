@@ -47,13 +47,16 @@
 						<svws-ui-input-number :model-value="schueler.lernabschnitt.fehlstundenGesamtUnentschuldigt" headless hide-stepper min="0" :max="schueler.lernabschnitt.fehlstundenGesamt"
 							@change="fehlstundenGesamtUnentschuldigt => doPatchLernabschnitt({ fehlstundenGesamtUnentschuldigt, id: schueler.lernabschnitt.id })" />
 					</td>
-					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('ASV') ?? true" @click="emitBemerkung('ASV')">
+					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('ASV') ?? true" @click="emitBemerkung('ASV')"
+						:class="{ 'bg-ui-selected-secondary text-ui-onselected-secondary': floskelEditorVisible && (manager.auswahlSchueler?.id === schueler.id) && (hauptgruppe === 'ASV') }">
 						<span class="text-ellipsis overflow-hidden whitespace-nowrap">{{ schueler.bemerkungen.ASV }}</span>
 					</td>
-					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('AUE') ?? true" @click="emitBemerkung('AUE')">
+					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('AUE') ?? true" @click="emitBemerkung('AUE')"
+						:class="{ 'bg-ui-selected-secondary text-ui-onselected-secondary': floskelEditorVisible && (manager.auswahlSchueler?.id === schueler.id) && (hauptgruppe === 'AUE') }">
 						<span class="text-ellipsis overflow-hidden whitespace-nowrap">{{ schueler.bemerkungen.AUE }}</span>
 					</td>
-					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('ZB') ?? true" @click="emitBemerkung('ZB')">
+					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('ZB') ?? true" @click="emitBemerkung('ZB')"
+						:class="{ 'bg-ui-selected-secondary text-ui-onselected-secondary': floskelEditorVisible && (manager.auswahlSchueler?.id === schueler.id) && (hauptgruppe === 'ZB') }">
 						<span class="text-ellipsis overflow-hidden whitespace-nowrap">{{ schueler.bemerkungen.ZB }}</span>
 					</td>
 					<td class="svws-ui-td" role="cell" />

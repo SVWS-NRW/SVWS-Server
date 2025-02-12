@@ -1,9 +1,9 @@
 <template>
-	<div @click="folded = !folded" :class="{'border-l pl-4': folded}">
-		<span v-if="folded" class="icon i-ri-menu-unfold-line cursor-pointer" />
+	<div @click="setFloskelEditorVisible(!floskelEditorVisible)" :class="{'border-l pl-4': floskelEditorVisible}">
+		<span v-if="floskelEditorVisible" class="icon i-ri-menu-unfold-line cursor-pointer" />
 		<span v-else class="icon i-ri-menu-fold-line cursor-pointer" />
 	</div>
-	<div v-if="folded" class="border-l h-full flex flex-auto flex-col pl-4 pr-1 gap-4">
+	<div v-if="floskelEditorVisible" class="border-l h-full flex flex-auto flex-col pl-4 pr-1 gap-4">
 		<div class="text-headline-md flex justify-between"><span>{{ schueler.nachname }}, {{ schueler.vorname }}</span><span>{{ hauptgruppenBezeichnung[erlaubteHauptgruppe] }}</span></div>
 		<svws-ui-textarea-input placeholder="Floskeln auswählen oder manuell eingeben" :model-value="text" @input="onInput" autoresize />
 		<div class="flex justify-between gap-2 w-full flex-row-reverse">
@@ -60,6 +60,8 @@
 		manager: EnmManager;
 		patch: (value: string|null) => Promise<void>;
 		erlaubteHauptgruppe: BemerkungenHauptgruppe;
+		floskelEditorVisible: boolean;
+		setFloskelEditorVisible: (value: boolean) => Promise<void>;
 	}>();
 
 	const hauptgruppenBezeichnung: Record<BemerkungenHauptgruppe, string> = {
@@ -72,8 +74,6 @@
 		'VERS': 'Versetzung',
 		'ZB': 'Zeugnis-Bemerkungen',
 	};
-
-	const folded = ref<boolean>(true);
 
 	const showButtons = computed(() => text.value !== bemerkung.value);
 

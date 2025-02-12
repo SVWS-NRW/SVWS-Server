@@ -20,6 +20,7 @@ export class RouteKlassenleitung extends RouteNode<any, RouteApp> {
 		super.setView("liste", EnmKlassenleitungAuswahl, (route) => this.getProps());
 		this.isHidden = () => api.manager.klassenOfKlassenlehrer.isEmpty() ? routeApp.getRouteDefaultChild() : false;
 		api.config.addElements([
+			new ConfigElement("floskelEditorVisible", "user", 'true'),
 			new ConfigElement("klassenleitung.table.columns", "user", JSON.stringify([
 				["Klasse", null],
 				["Name", null],
@@ -39,6 +40,8 @@ export class RouteKlassenleitung extends RouteNode<any, RouteApp> {
 			patchLernabschnitt: routeApp.data.patchLernabschnitt,
 			columnsVisible: () => routeApp.data.klassenleitungColumnsVisible,
 			setColumnsVisible: routeApp.data.setKlassenleitungColumnsVisible,
+			floskelEditorVisible: routeApp.data.floskelEditorVisible,
+			setFloskelEditorVisible: routeApp.data.setFloskelEditorVisible,
 		};
 	}
 }

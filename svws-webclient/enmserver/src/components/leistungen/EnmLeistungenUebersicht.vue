@@ -83,7 +83,7 @@
 								@change="fehlstundenUnentschuldigtFach => doPatchLeistung(leistung, { fehlstundenUnentschuldigtFach })" />
 							<span v-else>—</span>
 						</td>
-						<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Bemerkung') ?? true">
+						<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Bemerkung') ?? true" :class="{ 'bg-ui-selected-secondary text-ui-onselected-secondary': floskelEditorVisible && (manager.auswahlLeistung.leistung?.id === leistung.id) }">
 							<span class="text-ellipsis overflow-hidden whitespace-nowrap">{{ leistung.fachbezogeneBemerkungen }}</span>
 						</td>
 						<td class="svws-ui-td" role="cell" />

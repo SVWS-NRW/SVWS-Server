@@ -19,6 +19,7 @@ export class RouteLeistungen extends RouteNode<any, RouteApp> {
 		super.text = "Leistungsdaten";
 		super.setView("liste", EnmLeistungenAuswahl, (route) => this.getProps());
 		api.config.addElements([
+			new ConfigElement("floskelEditorVisible", "user", 'true'),
 			new ConfigElement("leistungen.table.columns", "user", JSON.stringify([
 				["Klasse", null],
 				["Name", null],
@@ -42,6 +43,8 @@ export class RouteLeistungen extends RouteNode<any, RouteApp> {
 			patchLeistung: routeApp.data.patchLeistung,
 			columnsVisible: () => routeApp.data.leistungenColumnsVisible,
 			setColumnsVisible: routeApp.data.setLeistungenColumnsVisible,
+			floskelEditorVisible: routeApp.data.floskelEditorVisible,
+			setFloskelEditorVisible: routeApp.data.setFloskelEditorVisible,
 		};
 	}
 }
