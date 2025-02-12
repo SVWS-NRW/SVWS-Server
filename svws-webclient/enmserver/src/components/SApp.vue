@@ -74,7 +74,7 @@
 		</template>
 		<template #main>
 			<main class="app--page h-full" :class="app.name" role="main">
-				<div v-show="pendingSetApp" class="page--wrapper" :class="{'svws-api--pending': apiStatus.pending}">
+				<div v-show="pendingSetApp" class="flex flex-col w-full h-full grow" :class="{'svws-api--pending': apiStatus.pending}">
 					<svws-ui-header>
 						<div class="flex items-center">
 							<div class="w-20 mr-6" v-if="(app.name === 'schueler') || (app.name === 'lehrer')">
@@ -89,7 +89,7 @@
 					</svws-ui-header>
 				</div>
 				<p v-if="focusSwitchingEnabled" v-show="focusHelpVisible" class="region-enumeration">8</p>
-				<div v-show="!pendingSetApp" class="page--wrapper h-full w-full flex flex-col overflow-hidden" :class="{'svws-api--pending': apiStatus.pending, 'focus-region': focusSwitchingEnabled, 'highlighted': focusHelpVisible}">
+				<div v-show="!pendingSetApp" class="flex flex-col w-full h-full grow overflow-hidden" :class="{'svws-api--pending': apiStatus.pending, 'focus-region': focusSwitchingEnabled, 'highlighted': focusHelpVisible}">
 					<router-view :key="app.name" />
 				</div>
 			</main>
@@ -272,10 +272,6 @@
 		@apply overflow-hidden;
 		@apply relative;
 		@apply bg-ui-contrast-0;
-	}
-
-	.page--wrapper {
-		@apply flex flex-col w-full h-full grow;
 	}
 
 </style>

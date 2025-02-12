@@ -2,7 +2,7 @@
 	<svws-ui-app-layout fullwidth-content>
 		<template #main>
 			<div class="app--page h-full" :class="app.name">
-				<div class="page--wrapper">
+				<div class="flex flex-col w-full h-full grow">
 					<template v-if="pendingSetApp !== null">
 						<svws-ui-header>
 							<div class="flex items-center">
@@ -37,16 +37,13 @@
 <style>
 
 	@reference "../../../ui/src/assets/styles/index.css";
+
 	.app--page {
 		@apply flex grow flex-col justify-between;
 		@apply h-screen;
 		@apply overflow-hidden;
 		@apply relative;
 		@apply bg-ui-contrast-0;
-	}
-
-	.page--wrapper {
-		@apply flex flex-col w-full h-full grow;
 	}
 
 </style>

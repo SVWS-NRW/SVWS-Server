@@ -51,7 +51,7 @@
 		</template>
 		<template #main>
 			<div class="app--page h-full" :class="app.name">
-				<div class="page--wrapper h-full w-full flex flex-col" :class="{ 'svws-api--pending': apiStatus.pending }">
+				<div class="h-full w-full flex flex-col grow" :class="{ 'svws-api--pending': apiStatus.pending }">
 					<template v-if="pendingSetApp">
 						<svws-ui-header>
 							<div class="flex items-center">
@@ -123,10 +123,6 @@
 		@apply overflow-hidden;
 		@apply relative;
 		@apply bg-ui-contrast-0;
-	}
-
-	.page--wrapper {
-		@apply flex flex-col w-full h-full grow;
 	}
 
 </style>

@@ -55,16 +55,3 @@
 	}
 
 </script>
-
-<style lang="postcss">
-	@reference "../../../../ui/src/assets/styles/index.css"
-
-	.page--wrapper {
-		@apply flex flex-col h-full;
-	}
-
-	.svws-ui-tab-content {
-		@apply h-full overflow-hidden;
-	}
-
-</style>
