@@ -11,7 +11,7 @@ import { routeKatalogSchuleNeu } from "~/router/apps/schule/schulen/RouteKatalog
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,
-	manager: new KatalogSchuleListeManager(-1, -1, new ArrayList(), null, new ArrayList()),
+	manager: new KatalogSchuleListeManager(-1, -1, new ArrayList(), null, new ArrayList(), new ArrayList()),
 	view: routeKatalogSchuleDaten,
 	activeViewType: ViewType.DEFAULT,
 	oldView: undefined,
@@ -30,8 +30,9 @@ export class RouteDataKatalogSchulen extends RouteDataAuswahl<KatalogSchuleListe
 
 	protected async createManager(_ : number) : Promise<Partial<RouteStateAuswahlInterface<KatalogSchuleListeManager>>> {
 		const schulen = await api.server.getSchulen(api.schema);
-		const manager = new KatalogSchuleListeManager(api.abschnitt.id, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte, api.schulform, schulen);
-
+		const katalogSchulen = await api.server.getKatalogSchulen(api.schema);
+		const manager = new KatalogSchuleListeManager(
+			api.abschnitt.id, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte, api.schulform, schulen, katalogSchulen);
 		return { manager };
 	}
 
@@ -50,10 +51,13 @@ export class RouteDataKatalogSchulen extends RouteDataAuswahl<KatalogSchuleListe
 	}
 
 	add = async (data: Partial<SchulEintrag>): Promise<void> => {
-		// Muss implementiert werden
+		const schule = await api.server.addSchuleZuKatalog(data, api.schema);
+		await this.setSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt, true);
+		await this.gotoDefaultView(schule.id);
 	}
 
 	protected deleteMessage(id: number, schule: SchulEintrag | null) : string {
 		return `Schule ${schule?.kuerzel ?? '???'} (ID: ${id}) wurde erfolgreich gelöscht.`;
 	}
 }
+

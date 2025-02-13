@@ -23,10 +23,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 
@@ -159,10 +159,6 @@ class DataSchulenTest {
 		final var throwable = catchThrowable(() -> this.dataSchulen.mapAttribute(expectedDTO, key, value, null));
 
 		switch (key) {
-			case "id" -> assertThat(throwable)
-					.isInstanceOf(ApiOperationException.class)
-					.hasMessageStartingWith("Id 2 der PatchMap ist ungleich der id 1 vom Dto")
-					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 			case "schulnummer" -> assertThat(expectedDTO.SchulNr).isEqualTo(value);
 			case "kuerzel" -> assertThat(expectedDTO.Kuerzel).isEqualTo(value);
 			case "kurzbezeichnung" -> assertThat(expectedDTO.KurzBez).isEqualTo(value);
@@ -187,14 +183,6 @@ class DataSchulenTest {
 					.hasMessageStartingWith("Die Daten des Patches enthalten das unbekannte Attribut")
 					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 		}
-	}
-
-	@Test
-	@DisplayName("mapAttribute | correct id")
-	void mapAttributeTest_CorrectId() {
-		final var expectedDTO = new DTOSchuleNRW(1L, "123456");
-
-		assertDoesNotThrow(() -> this.dataSchulen.mapAttribute(expectedDTO, "id", 1L, null));
 	}
 
 	@Test
@@ -223,10 +211,45 @@ class DataSchulenTest {
 				.hasFieldOrPropertyWithValue("SchulformNr", null);
 	}
 
+	@Test
+	@DisplayName("mapAttribute | updateSchulnummer | Erfolg")
+	void mapAttributeTest_schulnummer() throws ApiOperationException {
+		final var expectedDTO = new DTOSchuleNRW(1L, "1");
+
+		this.dataSchulen.mapAttribute(expectedDTO, "schulnummer", "2", null);
+
+		assertThat(expectedDTO).hasFieldOrPropertyWithValue("SchulNr", "2");
+	}
+
+	@Test
+	@DisplayName("mapAttribute | updateSchulnummer | unverändert")
+	void mapAttributeTest_schulnummerHasntChanged() throws ApiOperationException {
+		final var expectedDTO = new DTOSchuleNRW(1L, "123456");
+
+		this.dataSchulen.mapAttribute(expectedDTO, "schulnummer", "123456", null);
+
+		assertThat(expectedDTO).hasFieldOrPropertyWithValue("SchulNr", "123456");
+		verifyNoInteractions(this.conn);
+	}
+
+	@Test
+	@DisplayName("mapAttribute | updateSchulnummer | bereits vorhanden")
+	void mapAttributeTest_schulnummerDuplicate() {
+		final var expectedDTO = new DTOSchuleNRW(1L, "1");
+		when(this.conn.queryList(DTOSchuleNRW.QUERY_BY_SCHULNR, DTOSchuleNRW.class, "123456"))
+				.thenReturn(List.of(new DTOSchuleNRW(2L, "123456")));
+
+		final var throwable = catchThrowable(() ->  this.dataSchulen.mapAttribute(expectedDTO, "schulnummer", "123456", null));
+
+		assertThat(throwable)
+				.isInstanceOf(ApiOperationException.class)
+				.hasMessage("Die Schulnummer 123456 ist bereits vergeben")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
 
 	private static Stream<Arguments> provideMappingAttributes() {
 		return Stream.of(
-				arguments("id", 2L),
 				arguments("schulnummer", "123456"),
 				arguments("kuerzel", "1234567890"),
 				arguments("kurzbezeichnung", "eine ganz kurze be"),

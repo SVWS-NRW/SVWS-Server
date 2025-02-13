@@ -1,4 +1,5 @@
 import type { Erzieherart, KatalogEintrag, LehrerListeEintrag, Nationalitaeten, OrtKatalogEintrag, OrtsteilKatalogEintrag, Verkehrssprache, CoreTypeData } from "@core";
+import {SchulenKatalogEintrag} from "@core";
 
 /** Die Sortierfunktion für den Ortskatalog */
 export function orte_sort(a: OrtKatalogEintrag, b: OrtKatalogEintrag): number {
@@ -151,6 +152,16 @@ export function lehrer_filter(items: Iterable<LehrerListeEintrag>, search: strin
 		if (i.kuerzel.toLocaleLowerCase("de-DE").startsWith(name.toLocaleLowerCase("de-DE"))
 			|| i.nachname.toLocaleLowerCase("de-DE").startsWith(name.toLocaleLowerCase("de-DE"))
 			|| i.vorname.toLocaleLowerCase("de-DE").startsWith(name.toLocaleLowerCase("de-DE")))
+			list.push(i);
+	return list;
+}
+
+/** Der Filter für SchulenKatalogEinträge */
+export function filterSchulenKatalogEintraege(items: SchulenKatalogEintrag[], search: string) : SchulenKatalogEintrag[] {
+	const searchLower = search.toLocaleLowerCase()
+	const list = [];
+	for (const i of items)
+		if (i.SchulNr.includes(searchLower) || ((i.KurzBez !== null) && i.KurzBez.toLocaleLowerCase().includes(searchLower)))
 			list.push(i);
 	return list;
 }
