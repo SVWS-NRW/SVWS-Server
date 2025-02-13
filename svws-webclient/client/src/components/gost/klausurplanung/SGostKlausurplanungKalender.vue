@@ -91,11 +91,11 @@
 			<div class="min-w-88 max-w-88 flex flex-col h-full overflow-y-auto">
 				<div class="text-headline-md leading-none inline-flex gap-1">
 					<template v-if="anzahlProKwKonflikte2(4, false).length === 0">
-						<span class="icon i-ri-checkbox-circle-fill icon-ui-success -my-1" />
+						<span class="icon i-ri-checkbox-circle-fill icon-ui-success" />
 						<span>Keine Konflikte</span>
 					</template>
 					<template v-else-if="anzahlProKwKonflikte2(4, false).length > 0">
-						<span class="icon i-ri-alert-fill icon-ui-danger -my-0.5" />
+						<span class="icon i-ri-alert-fill icon-ui-danger" />
 						<span> Konflikte</span>
 					</template>
 				</div>
@@ -124,11 +124,11 @@
 				<div>
 					<span class="text-headline-md leading-none inline-flex gap-1">
 						<template v-if="anzahlProKwKonflikte2(3, true).length === 0">
-							<span class="icon i-ri-checkbox-circle-fill icon-ui-success -my-1" />
+							<span class="icon i-ri-checkbox-circle-fill icon-ui-success" />
 							<span>Keine Warnungen</span>
 						</template>
 						<template v-else-if="anzahlProKwKonflikte2(3, true).length > 0">
-							<span class="icon i-ri-alert-line text-ui-caution -my-0.5" />
+							<span class="icon i-ri-alert-line text-ui-caution" />
 							<span> Warnungen</span>
 						</template>
 					</span>

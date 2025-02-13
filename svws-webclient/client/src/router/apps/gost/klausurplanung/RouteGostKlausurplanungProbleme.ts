@@ -13,7 +13,7 @@ export class RouteGostKlausurplanungProbleme extends RouteNode<any, RouteGostKla
 
 	public constructor() {
 		super(schulformenGymOb, [
-			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN
+			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN,
 		], "gost.klausurplanung.probleme", "probleme", SGostKlausurplanungProbleme);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);

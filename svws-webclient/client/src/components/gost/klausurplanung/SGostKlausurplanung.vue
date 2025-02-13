@@ -9,8 +9,8 @@
 			<svws-ui-tab-bar :tab-manager secondary :focus-switching-enabled :focus-help-visible>
 				<template #badge="{ tab }">
 					<template v-if="(tab.name === 'gost.klausurplanung.probleme') && kMan().hasFehlenddatenZuAbijahrUndHalbjahr(props.jahrgangsdaten!.abiturjahr, halbjahr)">
-						<div class="font-bold text-ui-ondanger bg-ui-danger rounded-full shadow-sm h-5 ml-1 -mt-3 px-1.5 pt-0.5" v-if="numErrors">{{ numErrors }}</div>
-						<div class="font-bold text-ui-oncaution bg-ui-caution rounded-full shadow-sm h-5 ml-1 -mt-3 px-1.5 pt-0.5" v-if="numWarnings">{{ numWarnings }}</div>
+						<div class="font-bold text-ui-ondanger bg-ui-danger rounded-full shadow-sm h-5 ml-1 -mt-2 px-1.5 pt-0.5" v-if="numErrors">{{ numErrors }}</div>
+						<div class="font-bold text-ui-oncaution bg-ui-caution rounded-full shadow-sm h-5 ml-1 -mt-2 px-1.5 pt-0.5" v-if="numWarnings">{{ numWarnings }}</div>
 					</template>
 				</template>
 			</svws-ui-tab-bar>

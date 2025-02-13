@@ -101,7 +101,7 @@
 								<span v-if="zeigeAlleJahrgaenge()" class="absolute top-1.5 right-1.5 z-10 font-bold text-sm opacity-50">{{ GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(termin.abijahr, routeApp.data.aktAbschnitt.value.schuljahr, halbjahr.halbjahr)?.jahrgang }}</span>
 								<svws-ui-tooltip :hover="false" position="right-start" class="!items-start h-full mr-auto" :indicator="false" :class="{'!cursor-grab': termin.abijahr === jahrgangsdaten.abiturjahr, '!cursor-pointer': termin.abijahr !== jahrgangsdaten.abiturjahr}">
 									<span class="z-10 relative p-1 leading-tight cursor-pointer font-medium text-left mt-6 pb-0 hyphens-auto">
-										<span class="line-clamp-4" :class="dragData && dragData() !== undefined ? 'opacity-0' : ''">{{ terminBezeichnung(termin) }}</span>
+										<span class="line-clamp-4 text-ui" :class="dragData && dragData() !== undefined ? 'opacity-0' : ''">{{ terminBezeichnung(termin) }}</span>
 									</span>
 									<template #content>
 										<s-gost-klausurplanung-termin :termin
