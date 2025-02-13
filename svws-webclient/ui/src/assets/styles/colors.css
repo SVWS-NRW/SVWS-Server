@@ -4,7 +4,7 @@
 
 	:root {
 		/* TODO color-scheme: light dark; -> Als default - Browser-Default...*/
-		color-scheme: light dark;
+		color-scheme: light;
 
 		--color-text-ui: light-dark(var(--color-palette-neutral-900), var(--color-palette-neutral-100));
 		--color-text-ui-contrast-0: light-dark(var(--color-palette-neutral-100), var(--color-palette-neutral-900));
