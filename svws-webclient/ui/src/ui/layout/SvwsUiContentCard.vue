@@ -1,4 +1,5 @@
 <script setup lang='ts'>
+	import { useId } from "vue";
 	const props = withDefaults(defineProps<{
 		title?: string;
 		overflowScroll?: boolean;
@@ -10,10 +11,11 @@
 		largeTitle: false,
 		hasBackground: false,
 	});
+	const idComponent = useId();
 </script>
 
 <template>
-	<div class="content-card" :class="{'h-full': overflowScroll, 'svws-has-background': hasBackground}">
+	<div :id="idComponent" class="content-card" :class="{'h-full': overflowScroll, 'svws-has-background': hasBackground}">
 		<div v-if="title || $slots.actions || $slots.title" class="content-card--header" :class="{
 			'content-card--header--has-actions': $slots.actions
 		}">
