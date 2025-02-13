@@ -31,9 +31,5 @@
 
 	&.svws-active {
 		@apply ring-3 ring-ui border-ui-brand z-10;
-
-		.svws-statistik & {
-			@apply ring-ui-statistic border-ui-statistic;
-		}
 	}
 }
