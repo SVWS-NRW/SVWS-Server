@@ -359,7 +359,7 @@
 		}
 
 		.svws-ui-table.svws-has-background &:before {
-			@apply opacity-30;
+			@apply bg-ui-static-inverted opacity-30;
 		}
 
 	}

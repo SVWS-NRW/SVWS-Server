@@ -1,18 +1,18 @@
 <template>
-	<div class="svws-ui-td" :style="{ 'background-color': bgColor1 }" role="cell">
-		<svws-ui-select :disabled="!hatUpdateKompetenz" v-model="fach1" title="Fach" :items="faecher" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" headless />
+	<div class="svws-ui-td text-ui-static" :style="{ 'background-color': bgColor1 }" role="cell">
+		<svws-ui-select :disabled="!hatUpdateKompetenz" v-model="fach1" title="Fach" :items="faecher" :item-text="i => i.kuerzelAnzeige ?? ''" headless />
 	</div>
-	<div class="svws-ui-td svws-divider" :style="{ 'background-color': bgColor1 }" role="cell">
-		<svws-ui-select :disabled="!hatUpdateKompetenz" v-model="kursart1" title="Kursart" :items="kursarten" :item-text="(i: GostKursart) => i.kuerzel" headless />
+	<div class="svws-ui-td text-ui-static svws-divider" :style="{ 'background-color': bgColor1 }" role="cell">
+		<svws-ui-select :disabled="!hatUpdateKompetenz" v-model="kursart1" title="Kursart" :items="kursarten" :item-text="i => i.kuerzel" headless />
 	</div>
-	<div class="svws-ui-td" :style="{ 'background-color': bgColor2 }" role="cell">
+	<div class="svws-ui-td text-ui-static" :style="{ 'background-color': bgColor2 }" role="cell">
 		&nbsp;
 	</div>
-	<div class="svws-ui-td" :style="{ 'background-color': bgColor2 }" role="cell">
-		<svws-ui-select :disabled="!hatUpdateKompetenz" v-model="fach2" title="Fach" :items="faecher" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" headless />
+	<div class="svws-ui-td text-ui-static" :style="{ 'background-color': bgColor2 }" role="cell">
+		<svws-ui-select :disabled="!hatUpdateKompetenz" v-model="fach2" title="Fach" :items="faecher" :item-text="i => i.kuerzelAnzeige ?? ''" headless />
 	</div>
-	<div class="svws-ui-td svws-divider" :style="{ 'background-color': bgColor2 }" role="cell">
-		<svws-ui-select :disabled="!hatUpdateKompetenz" v-model="kursart2" title="Kursart" :items="kursarten" :item-text="(i: GostKursart) => i.kuerzel" headless />
+	<div class="svws-ui-td svws-divider text-ui-static" :style="{ 'background-color': bgColor2 }" role="cell">
+		<svws-ui-select :disabled="!hatUpdateKompetenz" v-model="kursart2" title="Kursart" :items="kursarten" :item-text="i => i.kuerzel" headless />
 	</div>
 	<div class="svws-ui-td svws-align-center" role="cell">
 		<svws-ui-checkbox :disabled="!hatUpdateKompetenz" v-model="gueltigEF1" headless />

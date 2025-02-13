@@ -1,5 +1,5 @@
 <template>
-	<div role="row" class="svws-ui-tr" :style="{ 'background-color': bgColor }" :class="textColor">
+	<div role="row" class="svws-ui-tr text-ui-static" :style="{ 'background-color': bgColor }">
 		<div role="cell" class="svws-ui-td select-text">
 			<div class="whitespace-nowrap min-w-fit">
 				{{ fach.kuerzelAnzeige }}
@@ -15,15 +15,15 @@
 		</div>
 		<div role="cell" class="svws-ui-td svws-align-center font-medium" :class="{ 'svws-disabled': !istFremdsprache }">
 			<template v-if="istFremdsprache">
-				<span v-if="ignoriereSprachenfolge" :class="textColorWeak"> ? </span>
-				<span v-else-if="sprachenfolgeNr === 0 && !sprachenfolgeJahrgang" :class="textColorWeak"> — </span>
+				<span v-if="ignoriereSprachenfolge"> ? </span>
+				<span v-else-if="sprachenfolgeNr === 0 && !sprachenfolgeJahrgang"> — </span>
 				<span v-else> {{ sprachenfolgeNr }} </span>
 			</template>
 		</div>
 		<div role="cell" class="svws-ui-td svws-align-center font-medium svws-divider" :class="{ 'svws-disabled': !istFremdsprache}">
 			<template v-if="istFremdsprache">
-				<span v-if="ignoriereSprachenfolge" :class="textColorWeak"> ? </span>
-				<span v-else-if="sprachenfolgeNr === 0 && !sprachenfolgeJahrgang" :class="textColorWeak"> — </span>
+				<span v-if="ignoriereSprachenfolge"> ? </span>
+				<span v-else-if="sprachenfolgeNr === 0 && !sprachenfolgeJahrgang"> — </span>
 				<span v-else> {{ sprachenfolgeJahrgang }} </span>
 			</template>
 		</div>

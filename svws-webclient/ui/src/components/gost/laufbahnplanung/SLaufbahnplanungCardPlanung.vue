@@ -354,16 +354,17 @@
 	}
 
 	.svws-ergebnis--low {
-		background-color: var(--color-palette-warning-400);
+		background-color: var(--color-bg-ui-warning);
 		color: var(--color-text-ui-onwarning);
 	}
 
 	.svws-ergebnis--good {
-		background-color: var(--color-palette-success-300);
+		background-color: var(--color-bg-ui-success-weak);
+		color: var(--color-text-ui-onsuccess-weak);
 	}
 
 	.svws-ergebnis--more {
-		background-color: var(--color-palette-success-500);
+		background-color: var(--color-bg-ui-success);
 		color: var(--color-text-ui-onsuccess);
 	}
 

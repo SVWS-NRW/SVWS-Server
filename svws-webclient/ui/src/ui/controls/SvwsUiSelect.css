@@ -127,6 +127,13 @@
 			}
 		}
 
+		.svws-ui-select--icon {
+			.svws-ui-table.svws-has-background & {
+				@apply icon-ui-static;
+			}
+
+		}
+
 		.text-input-component {
 			@apply pr-1 my-0;
 
