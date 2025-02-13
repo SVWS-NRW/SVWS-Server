@@ -4,7 +4,7 @@
 
 	:root {
 		/* TODO color-scheme: light dark; -> Als default - Browser-Default...*/
-		color-scheme: light;
+		color-scheme: light dark;
 
 		--color-text-ui: light-dark(var(--color-palette-neutral-900), var(--color-palette-neutral-100));
 		--color-text-ui-contrast-0: light-dark(var(--color-palette-neutral-100), var(--color-palette-neutral-900));
@@ -84,7 +84,7 @@
 		--color-text-ui-onneutral-hover: light-dark(var(--color-palette-brand-500), var(--color-palette-brand-400));
 		--color-text-ui-onneutral-secondary: light-dark(var(--color-palette-neutral-700), var(--color-palette-neutral-400));
 		--color-text-ui-onneutral-secondary-hover: light-dark(var(--color-palette-brand-400), var(--color-palette-brand-200));
-		--color-text-ui-ondisabled: light-dark(var(--color-palette-neutral-600), var(--color-palette-neutral-700));
+		--color-text-ui-ondisabled: light-dark(var(--color-palette-neutral-600), var(--color-palette-neutral-600));
 		--color-text-ui-ondisabled-secondary: light-dark(var(--color-palette-neutral-600), var(--color-palette-neutral-700));
 
 		--color-text-ui-static: var(--color-palette-neutral-900);

@@ -21,7 +21,7 @@
 					:class="{'svws-clicked': modelValue?.id === r.id, 'bg-ui-danger text-ui-ondanger hover:text-ui-ondanger-hover': verletzungen.get(r.id)}">
 					<svws-ui-tooltip v-if="verletzungen.get(r.id)" autosize>
 						<div class="svws-ui-td" role="cell">
-							<span class="icon i-ri-information-line" />
+							<span class="icon-ui-ondanger icon i-ri-information-line" />
 						</div>
 						<template #content> {{ verletzungen.get(r.id) }} </template>
 					</svws-ui-tooltip>

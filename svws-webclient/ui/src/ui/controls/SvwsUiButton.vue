@@ -9,7 +9,7 @@
 		'button--small': size === 'small',
 		'button--big': size === 'big',
 		'filterFocusField': filterButton,
-	}" :disabled="disabled" ref="addButton">
+	}" :disabled ref="addButton">
 		<slot v-if="type !== 'trash'" />
 		<span v-if="type === 'trash'" class="button--trash-icon">
 			<span class="inline-block icon i-ri-delete-bin-line icon--line" />

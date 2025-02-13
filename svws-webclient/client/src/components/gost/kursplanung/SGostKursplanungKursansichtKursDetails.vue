@@ -1,13 +1,13 @@
 <template>
-	<div class="svws-ui-tr -mt-px border-y border-black/10  shadow-inner select-none" :style="{ 'background-color': bgColor }">
+	<div class="svws-ui-tr -mt-px border-y border-black/10  shadow-inner select-none text-ui-static" :style="{ 'background-color': bgColor }">
 		<div class=" pr-3 pl-7 pt-3 pb-4 flex justify-between" :style="{'gridColumn': 'span ' + getDatenmanager().schieneGetListe().size()+5}">
 			<div class="flex items-center gap-2">
 				<span class="text-sm font-bold">Kurs:</span>
 				<svws-ui-button type="icon" @click="removeKurse([kurs.id])" title="Kurs entfernen" class="ml-1" :disabled="apiStatus.pending">
-					<span class="icon i-ri-delete-bin-line" />
+					<span class="icon-ui-static icon i-ri-delete-bin-line" />
 				</svws-ui-button>
-				<svws-ui-button type="secondary" @click="addKurs(kurs.fach_id, kurs.kursart)" title="Kurs hinzufügen" :disabled="apiStatus.pending">Hinzufügen</svws-ui-button>
-				<svws-ui-button type="secondary" @click="splitKurs(kurs)" :disabled="apiStatus.pending">Aufteilen</svws-ui-button>
+				<svws-ui-button type="secondary" @click="addKurs(kurs.fach_id, kurs.kursart)" title="Kurs hinzufügen" :disabled="apiStatus.pending"><div class="text-ui-static">Hinzufügen</div></svws-ui-button>
+				<svws-ui-button type="secondary" @click="splitKurs(kurs)" :disabled="apiStatus.pending"><div class="text-ui-static">Aufteilen</div></svws-ui-button>
 				<div v-if="andereKurse.size > 0" class="w-52">
 					<svws-ui-select :model-value="undefined" @update:model-value="kurs2 => (kurs2 !== undefined && kurs2 !== null) && combineKurs(kurs, kurs2)"
 						title="Zusammenlegen mit" class="" headless :items="andereKurse" :item-text="i => getDatenmanager().kursGetName(i.id)" :disabled="apiStatus.pending" />
@@ -22,11 +22,11 @@
 				<span class="text-sm font-bold">Schienen:</span>
 				<div class="flex gap-1">
 					<svws-ui-button type="icon" @click="removeSchieneKurs(kurs)" size="small" :disabled="(kurs.anzahlSchienen <= 1) || (apiStatus.pending)">
-						<span class="icon-sm i-ri-subtract-line" />
+						<span class="icon-ui-static icon-sm i-ri-subtract-line" />
 					</svws-ui-button>
 					<div class="mx-1">{{ kurs.anzahlSchienen }}</div>
 					<svws-ui-button type="icon" @click="addSchieneKurs(kurs)" size="small" :disabled="apiStatus.pending || (kurs.anzahlSchienen >= getDatenmanager().schieneGetAnzahl())">
-						<span class="icon-sm i-ri-add-line" />
+						<span class="icon-ui-static icon-sm i-ri-add-line" />
 					</svws-ui-button>
 				</div>
 			</div>

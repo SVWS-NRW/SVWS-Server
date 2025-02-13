@@ -18,13 +18,13 @@
 				<svws-ui-button type="secondary" @click="toggle_zusatzkraefte_modal">Schließen</svws-ui-button>
 			</template>
 		</svws-ui-modal>
-		<div class="flex gap-4">
+		<div class="flex gap-4x">
 			<div class="text-sm font-bold">Zusatzkräfte:</div>
 			<div class="inline-flex gap-1" :class="{'-mt-1': anzahl_zusatzkraefte}">
 				<div v-if="anzahl_zusatzkraefte">{{ [...getDatenmanager().kursGetLehrkraefteSortiert(kurs.id)].map(lehrer => lehrer.kuerzel).join(", ") }}</div>
 				<svws-ui-button :type="anzahl_zusatzkraefte ? 'transparent' : 'secondary'" @click="toggle_zusatzkraefte_modal">
-					<template v-if="anzahl_zusatzkraefte"> <span class="icon-sm i-ri-edit-2-line" /> </template>
-					<template v-else> Anlegen </template>
+					<template v-if="anzahl_zusatzkraefte"> <span class="icon-ui-static icon-sm i-ri-edit-2-line" /> </template>
+					<template v-else> <div class="text-ui-static">Anlegen</div> </template>
 				</svws-ui-button>
 			</div>
 		</div>
@@ -61,7 +61,7 @@
 				void props.addLehrerRegel();
 				select.value.reset();
 			}
-		}
+		},
 	});
 
 	const columns = [

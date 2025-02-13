@@ -30,12 +30,12 @@
 										<div class="svws-ui-badge-transparent w-auto grow !h-full items-center m-0">
 											<div class="flex flex-row grow">
 												<template v-if="(fachwahlKurszuordnungen.get(fach.fachID) === undefined) && hatUpdateKompetenz">
-													<span class="icon-sm i-ri-draggable opacity-50 group-hover:opacity-100 rounded-xs" />
+													<span class="icon-ui-static icon-sm i-ri-draggable opacity-50 group-hover:opacity-100 rounded-xs" />
 												</template>
 												<template v-else>
 													<span class="w-3 text-sm">&nbsp;</span>
 												</template>
-												<span class="ml-0.5">
+												<span class="ml-0.5 text-ui-static">
 													{{ getFachwahlKursname(fach.fachID) }}
 													<template v-if="getDatenmanager().getHalbjahr().istQualifikationsphase() && getDatenmanager().schuelerGetOfFachFachwahl(schueler.id, fach.fachID).abiturfach !== null">
 														<span class="text-sm">—</span>
@@ -43,8 +43,8 @@
 													</template>
 												</span>
 											</div>
-											<span v-if="fach.istSchriftlich" class="icon i-ri-draft-line" />
-											<span v-else class="icon i-ri-chat-1-line" />
+											<span v-if="fach.istSchriftlich" class="icon-ui-static icon i-ri-draft-line" />
+											<span v-else class="icon-ui-static icon i-ri-chat-1-line" />
 										</div>
 									</div>
 								</div>
@@ -96,8 +96,9 @@
 								<div class="w-full h-full flex flex-col justify-center items-center rounded-sm border border-black/10 py-1 px-0.5"
 									:style="{ 'background-color': hatSchieneKollisionen(schiene.id).value && getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id) ? 'var(--color-bg-ui-danger)' : bgColor(kurs.id) }"
 									:class="{
-										'text-ui-contrast-0' : hatSchieneKollisionen(schiene.id).value && getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id),
+										'text-ui-ondanger' : hatSchieneKollisionen(schiene.id).value && getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id),
 										'bg-ui-brand/10 opacity-75 border-ui-brand rounded-sm ring-3 ring-ui-brand': is_drop_zone(kurs).value,
+										'text-ui-static': getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id) && !hatSchieneKollisionen(schiene.id).value,
 									}"
 									@dragover="onDragOver($event, kurs)" @drop="drop_aendere_kurszuordnung(kurs)">
 									<span class="icon-sm i-ri-draggable mt-1 ml-1 opacity-50 group-hover:opacity-100 rounded-xs absolute top-0 left-0" v-if="is_draggable(kurs.id).value" :class="[hatSchieneKollisionen(schiene.id).value && is_draggable(kurs.id).value ? 'group-hover:opacity-25 icon-ui-contrast-0' : 'group-hover:opacity-50 icon-ui-contrast-100']" />
@@ -117,9 +118,9 @@
 											</span>
 											<span class="cursor-pointer" @click.stop="fixieren_regel_toggle(kurs.id)" :title="fixier_regel(kurs.id) ? 'Fixiert' : 'Fixieren'">
 												<span class="icon i-ri-pushpin-fill inline-block" v-if="fixier_regel(kurs.id)"
-													:class="[hatSchieneKollisionen(schiene.id).value ? 'icon-ui-contrast-0' : '']" />
+													:class="{'icon-ui-static': getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id) && !hatSchieneKollisionen(schiene.id).value, 'icon-ui-ondanger': getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id) && hatSchieneKollisionen(schiene.id).value}" />
 												<span class="icon i-ri-pushpin-line inline-block opacity-75" v-if="!verbieten_regel(kurs.id) && !fixier_regel(kurs.id)"
-													:class="[hatSchieneKollisionen(schiene.id).value ? 'icon-ui-contrast-0' : '']" />
+													:class="{'icon-ui-static': getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id) && !hatSchieneKollisionen(schiene.id).value, 'icon-ui-ondanger': getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id) && hatSchieneKollisionen(schiene.id).value}" />
 											</span>
 										</template>
 										<template v-else>
@@ -194,7 +195,7 @@
 		return cols;
 	})
 
-	const gridTemplateColumns = computed<string>(()=> "grid-template-columns: minmax(8rem, 1fr) repeat(" + props.getErgebnismanager().getOfSchieneMaxKursanzahl() + ", minmax(7rem, 1fr))");
+	const gridTemplateColumns = computed<string>(() => "grid-template-columns: minmax(8rem, 1fr) repeat(" + props.getErgebnismanager().getOfSchieneMaxKursanzahl() + ", minmax(7rem, 1fr))");
 
 	const hatSchieneKollisionen = (idSchiene: number) => computed<boolean>(() =>
 		props.getErgebnismanager().getOfSchuelerOfSchieneHatKollision(idSchueler.value, idSchiene)
