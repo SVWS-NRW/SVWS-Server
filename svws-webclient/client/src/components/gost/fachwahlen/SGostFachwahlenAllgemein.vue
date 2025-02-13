@@ -32,24 +32,24 @@
 		<template #body>
 			<template v-for="fws in fachwahlstatistik" :key="fws.id">
 				<template v-if="fws !== undefined">
-					<div role="row" class="cursor-pointer svws-ui-tr">
+					<div role="row" class="cursor-pointer svws-ui-tr text-ui-static">
 						<div role="cell" class="svws-ui-td col-span-full" :style="'background-color: ' + getBgColor(fws)" @click="onClick(fws, undefined)">
 							<div class="-ml-1 mr-0.5 cursor-pointer">
-								<span class="icon i-ri-arrow-right-s-line" v-if="aktuell.fachwahl?.id !== fws.id" />
-								<span class="icon i-ri-arrow-down-s-line" v-else />
+								<span class="icon-ui-static icon i-ri-arrow-right-s-line" v-if="aktuell.fachwahl?.id !== fws.id" />
+								<span class="icon-ui-static icon i-ri-arrow-down-s-line" v-else />
 							</div>
 							<span :class="{'font-bold': aktuell.fachwahl?.id === fws.id}">{{ faecherManager.get(fws.id)?.bezeichnung }}</span>
 						</div>
 						<template v-if="aktuell.fachwahl?.id === fws.id">
 							<template v-for="halbjahr in GostHalbjahr.values()" :key="halbjahr.id">
 								<template v-if="hatFachwahl(fws, halbjahr)">
-									<div role="row" class="cursor-pointer svws-ui-tr border-solid! border-ui-contrast-25!" @click="onClick(fws, halbjahr)">
+									<div role="row" class="cursor-pointer svws-ui-tr text-ui border-solid! border-ui-contrast-25!" @click="onClick(fws, halbjahr)">
 										<div role="cell" class="svws-ui-td">
 											<span class="flex gap-1 pl-0.5">
-												<svws-ui-button type="icon" size="small">
+												<div type="icon" size="small">
 													<span class="icon i-ri-arrow-right-s-line" v-if="aktuell.halbjahr?.id !== halbjahr.id" />
 													<span class="icon i-ri-arrow-down-s-line" v-else />
-												</svws-ui-button>
+												</div>
 												<span>{{ halbjahr.kuerzel }}</span>
 											</span>
 										</div>
@@ -84,7 +84,7 @@
 											<span v-else class="opacity-25">—</span>
 										</div>
 									</div>
-									<div class="svws-ui-tr" role="row" v-if="aktuell.halbjahr?.id === halbjahr.id">
+									<div class="svws-ui-tr text-ui" role="row" v-if="aktuell.halbjahr?.id === halbjahr.id">
 										<div role="cell" class="svws-ui-td col-span-2 !pl-4 text-ui-contrast-50 hover:text-ui-contrast-100 focus-within:text-ui-contrast-100" />
 										<div role="cell" class="flex flex-col svws-ui-td mb-5 leading-tight" v-for="col in [1, 2, 3, 4]" :key="col">
 											<div v-for="schueler in getSchuelerListe(fws.id, halbjahr, col)" :key="schueler.id" class="flex gap-1 py-0.5 px-1 -mx-1 -mt-0.5 hover:bg-ui-contrast-10 rounded-sm cursor-pointer" role="link" @click="gotoLaufbahnplanung(schueler.id)">

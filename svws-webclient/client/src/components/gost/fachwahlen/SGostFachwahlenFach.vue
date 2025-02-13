@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-table :items="[]" :no-data="false" :columns="cols">
 		<template #header>
-			<div role="row" class="svws-ui-tr" :style="gridTemplateColumns">
+			<div role="row" class="svws-ui-tr text-ui-static" :style="gridTemplateColumns">
 				<template v-if="fws !== undefined">
 					<div role="cell" class="svws-ui-td col-span-full" :style="'background-color: ' + getBgColor(fws)">
 						<span>{{ faecherManager.get(fws.id)?.bezeichnung ?? "&ndash;" }}</span>
@@ -35,8 +35,8 @@
 						<div role="row" class="cursor-pointer svws-ui-tr" :style="gridTemplateColumns" @click="onClick(halbjahr)">
 							<div role="cell" class="svws-ui-td">
 								<span class="flex gap-1 -ml-1 cursor-pointer">
-									<span class="icon i-ri-arrow-right-s-line" v-if="aktuell?.id !== halbjahr.id" />
-									<span class="icon i-ri-arrow-down-s-line" v-else />
+									<span class="icon-ui-static icon i-ri-arrow-right-s-line" v-if="aktuell?.id !== halbjahr.id" />
+									<span class="icon-ui-static icon i-ri-arrow-down-s-line" v-else />
 									<span>{{ halbjahr.kuerzel }}</span>
 								</span>
 							</div>
@@ -65,7 +65,7 @@
 								<span v-else class="opacity-25">—</span>
 							</div>
 						</div>
-						<div v-if="aktuell?.id === halbjahr.id" role="row" class="svws-ui-tr" :style="gridTemplateColumns">
+						<div v-if="aktuell?.id === halbjahr.id" role="row" class="svws-ui-tr text-ui" :style="gridTemplateColumns">
 							<div> <!----> </div>
 							<div role="cell" class="flex flex-col svws-ui-td mb-5 leading-tight" v-for="col in (istZKMoeglich ? [1, 2, 3, 4] : [1, 2, 3])" :key="col">
 								<div v-for="schueler in getSchuelerListe(fws.id, halbjahr, col)" :key="schueler.id" class="flex gap-1 py-0.5 px-1 -mx-1 -mt-0.5 hover:bg-ui-contrast-10 rounded-sm cursor-pointer" role="link" @click="gotoLaufbahnplanung(schueler.id)">

@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-table :items="[]" :no-data="false" class="select-none">
 		<template #header>
-			<div role="row" class="svws-ui-tr">
+			<div role="row" class="svws-ui-tr text-ui-static">
 				<template v-if="fws !== undefined">
 					<div role="cell" class="svws-ui-td col-span-full" :style="'background-color: ' + getBgColor(fws)">
 						<span class="flex gap-1">
@@ -14,7 +14,7 @@
 		</template>
 		<template #body>
 			<template v-if="fws !== undefined && hatAbiFachwahl(fws)">
-				<div role="row" class="svws-ui-tr">
+				<div role="row" class="svws-ui-tr text-ui">
 					<div role="cell" class="svws-ui-td svws-align-center">
 						<span class="icon i-ri-draft-line  -my-0.5" />
 						<span v-if="fws.fachwahlen[5].wahlenLK > 0">Leistungskurs ({{ fws.fachwahlen[5].wahlenLK }})</span>
@@ -31,7 +31,7 @@
 						<span v-else class="opacity-25">4. Abiturfach (—)</span>
 					</div>
 				</div>
-				<div role="row" class="svws-ui-tr">
+				<div role="row" class="svws-ui-tr text-ui">
 					<div role="cell" class="flex flex-col svws-ui-td mb-5 leading-tight" v-for="abifach in [GostAbiturFach.LK1, GostAbiturFach.AB3, GostAbiturFach.AB4]" :key="abifach.id">
 						<div v-for="schueler in getSchuelerListe(fws.id, abifach)" :key="schueler.id" class="flex gap-1 py-0.5 px-1 -mx-1 -mt-0.5 hover:bg-ui-contrast-10 rounded-sm cursor-pointer" role="link" @click="gotoLaufbahnplanung(schueler.id)">
 							<span class="icon i-ri-link" />

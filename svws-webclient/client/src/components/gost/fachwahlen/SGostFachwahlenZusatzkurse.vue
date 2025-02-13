@@ -13,25 +13,25 @@
 		<template #body>
 			<template v-for="fws in fachwahlenstatistik" :key="fws.id">
 				<template v-if="fws !== undefined">
-					<div role="row" class="svws-ui-tr cursor-pointer">
+					<div role="row" class="svws-ui-tr text-ui-static cursor-pointer">
 						<div role="cell" class="svws-ui-td col-span-full" :style="'background-color: ' + getBgColor(fws)" @click="onClick(fws)">
 							<div class="-ml-1 mr-0.5">
-								<svws-ui-button type="icon" size="small">
-									<span class="icon i-ri-arrow-right-s-line" v-if="aktuell.fachwahl?.id !== fws.id" />
-									<span class="icon i-ri-arrow-down-s-line" v-else />
-								</svws-ui-button>
+								<div type="icon" size="small">
+									<span class="icon-ui-static icon i-ri-arrow-right-s-line" v-if="aktuell.fachwahl?.id !== fws.id" />
+									<span class="icon-ui-static icon i-ri-arrow-down-s-line" v-else />
+								</div>
 							</div>
 							<span :class="{'font-bold': aktuell.fachwahl?.id === fws.id}">{{ faecherManager.get(fws.id)?.bezeichnung }}</span>
 						</div>
 						<template v-if="aktuell.fachwahl?.id === fws.id">
-							<div role="row" class="svws-ui-tr">
+							<div role="row" class="svws-ui-tr text-ui">
 								<template v-for="halbjahr in GostHalbjahr.values()" :key="halbjahr.id">
 									<div role="cell" class="svws-ui-td svws-align-center" v-if="fws.fachwahlen[halbjahr.id].wahlenZK > 0">
 										{{ halbjahr.kuerzel }} ({{ fws.fachwahlen[halbjahr.id].wahlenZK }})
 									</div>
 								</template>
 							</div>
-							<div role="row" class="svws-ui-tr">
+							<div role="row" class="svws-ui-tr text-ui">
 								<template v-for="halbjahr in GostHalbjahr.values()" :key="halbjahr.id">
 									<div role="cell" v-if="fws.fachwahlen[halbjahr.id].wahlenZK > 0" class="flex flex-col svws-ui-td mb-5 leading-tight !pl-4">
 										<div v-for="schueler in getSchuelerListe(fws.id, halbjahr)" :key="schueler.id" class="flex gap-1 py-0.5 px-1 -mx-1 -mt-0.5 hover:bg-ui-contrast-10 rounded-sm cursor-pointer" role="link" @click="gotoLaufbahnplanung(schueler.id)">
@@ -71,7 +71,7 @@
 	}
 
 	const aktuell = ref<Auswahl>({
-		fachwahl: undefined // fachwahlenstatistik.value.length === 0 ? undefined : fachwahlenstatistik.value.at(0)
+		fachwahl: undefined, // fachwahlenstatistik.value.length === 0 ? undefined : fachwahlenstatistik.value.at(0)
 	});
 
 	function onClick(fws : GostStatistikFachwahl): void {

@@ -13,16 +13,16 @@
 		<template #body>
 			<template v-for="fws in fachwahlstatistik" :key="fws.id">
 				<template v-if="hatAbiFachwahl(fws)">
-					<div role="row" class="cursor-pointer svws-ui-tr">
+					<div role="row" class="cursor-pointer svws-ui-tr text-ui-static">
 						<div role="cell" class="svws-ui-td col-span-full" :style="'background-color: ' + getBgColor(fws)" @click="onClick(fws)">
 							<div class="-ml-1 mr-0.5 cursor-pointer">
-								<span class="icon i-ri-arrow-right-s-line" v-if="aktuell?.id !== fws.id" />
-								<span class="icon i-ri-arrow-down-s-line" v-else />
+								<span class="icon-ui-static icon i-ri-arrow-right-s-line" v-if="aktuell?.id !== fws.id" />
+								<span class="icon-ui-static icon i-ri-arrow-down-s-line" v-else />
 							</div>
 							<span :class="{'font-bold': aktuell?.id === fws.id}">{{ faecherManager.get(fws.id)?.bezeichnung }}</span>
 						</div>
 					</div>
-					<div v-if="aktuell?.id === fws.id" role="row" class="svws-ui-tr">
+					<div v-if="aktuell?.id === fws.id" role="row" class="svws-ui-tr text-ui">
 						<div role="cell" class="svws-ui-td svws-align-center">
 							<span class="icon i-ri-draft-line  -my-0.5" />
 							<span v-if="fws.fachwahlen[5].wahlenLK > 0">Leistungskurs ({{ fws.fachwahlen[5].wahlenLK }})</span>
@@ -39,7 +39,7 @@
 							<span v-else class="opacity-25">4. Abiturfach (—)</span>
 						</div>
 					</div>
-					<div v-if="aktuell?.id === fws.id" role="row" class="svws-ui-tr">
+					<div v-if="aktuell?.id === fws.id" role="row" class="svws-ui-tr text-ui">
 						<div role="cell" class="flex flex-col svws-ui-td mb-5 leading-tight" v-for="abifach in [GostAbiturFach.LK1, GostAbiturFach.AB3, GostAbiturFach.AB4]" :key="abifach.id">
 							<div v-for="schueler in getSchuelerListe(fws.id, abifach)" :key="schueler.id" class="flex gap-1 py-0.5 px-4 -mx-1 -mt-0.5 hover:bg-ui-contrast-10 rounded-sm cursor-pointer" role="link" @click="gotoLaufbahnplanung(schueler.id)">
 								<span class="icon i-ri-link" />
