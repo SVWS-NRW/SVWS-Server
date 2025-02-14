@@ -6,7 +6,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
 import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteDataSchuelerSprachen } from "~/router/apps/schueler/sprachen/RouteDataSchuelerSprachen";
-import { type SchuelerSprachenProps } from "~/components/schueler/sprachen/SchuelerSprachenProps";
+import { type SchuelerSprachenProps } from "~/components/schueler/sprachen/SSchuelerSprachenProps";
 import { api } from "~/router/Api";
 
 const SSchuelerSprachen = () => import("~/components/schueler/sprachen/SSchuelerSprachen.vue");
