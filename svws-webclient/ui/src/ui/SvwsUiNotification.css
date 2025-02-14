@@ -16,50 +16,57 @@
 			@apply inline-block -my-1;
 		}
 	}
-
-	.button:not(.button--secondary), .button--icon {
-		@apply rounded-md;
-
-		&:hover {
-			@apply ring-0 bg-ui;
-		}
-	}
-}
-
-.notification--info {
-	@apply dark:bg-ui-neutral-weak;
-}
-
-.notification--success,
-.notification--error,
-.dark .notification--info,
-.htw-dark .notification--info {
-	span.icon {
-		-webkit-filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
-		filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
-	}
-	/* TODO: COLORS icon */
 }
 
 .notification--error {
 	@apply bg-ui-danger text-ui-ondanger border-ui-danger;
 
-	.notification--icon {
-		@apply animate-pulse opacity-100;
+	.notification--icon span.icon {
+		@apply animate-pulse opacity-100 mr-2;
+	}
+	.notification--icon,
+	.notification--close-button,
+	.notification--send-button,
+	.notification--copy-button,
+	.notification--details-button {
+		@apply cursor-pointer opacity-80 hover:opacity-100;
+		span.icon {
+			@apply icon-ui-ondanger;
+		}
 	}
 }
 
 .notification--success {
 	@apply bg-ui-success text-ui-onsuccess border-ui-success;
+	.notification--icon span {
+		@apply animate-pulse opacity-100 mr-2;
+	}
+	.notification--icon,
+	.notification--close-button,
+	.notification--copy-button,
+	.notification--send-button,
+	.notification--details-button {
+		@apply cursor-pointer opacity-80 hover:opacity-100;
+		span.icon {
+			@apply icon-ui-onsuccess text-ui-onsuccess;
+		}
+	}
 }
 
 .notification--warning {
 	@apply bg-ui-warning text-ui-onwarning border-ui-warning;
-
-	.dark & span.icon,
-	.htw-dark & span.icon {
-		-webkit-filter: none;
-		filter: none;
+	.notification--icon span {
+		@apply animate-pulse opacity-100 mr-2;
+	}
+	.notification--icon,
+	.notification--close-button,
+	.notification--copy-button,
+	.notification--send-button,
+	.notification--details-button {
+		@apply cursor-pointer opacity-80 hover:opacity-100;
+		span.icon {
+			@apply icon-ui-onwarning text-ui-onwarning;
+		}
 	}
 }
 
@@ -104,78 +111,11 @@
 	}
 }
 
-.notification .notification--content-wrapper .notification--close-button {
-	@apply w-6 h-6 inline-flex items-center justify-center p-0 opacity-75;
 
-	&:hover,
-	&:focus-visible {
-		@apply bg-ui opacity-100;
-
-		span.icon {
-			-webkit-filter: none;
-			filter: none;
-
-			.dark &,
-			.htw-dark & {
-				-webkit-filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
-				filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
-			}
-		}
-	}
-}
-
-.notification--info .notification--content-wrapper .notification--close-button {
-	@apply border border-transparent;
-
-	&:hover,
-	&:focus-visible {
-		@apply bg-ui-hover border-ui-neutral-hover;
-
-		span.icon {
-			-webkit-filter: none;
-			filter: none;
-
-			.dark &,
-			.htw-dark & {
-				-webkit-filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
-				filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
-			}
-		}
-	}
-}
-
-.notification--send-button,
-.notification--details-button,
-.notification--copy-button {
-	&:hover,
-	&:focus-visible {
-		@apply !bg-ui !text-ui;
-
-		.dark &,
-		.htw-dark & {
-			@apply !border-ui-dark-gray;
-		}
-
-		span.icon {
-			-webkit-filter: none;
-			filter: none;
-
-			.dark &,
-			.htw-dark & {
-				-webkit-filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
-				filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
-			}
-		}
-	}
-}
 
 .notification--details-button,
 .notification--copy-button {
 	@apply flex items-center gap-1 text-sm font-bold px-2 rounded-md;
-
-	span.icon {
-		@apply w-5 h-5 inline-block -mr-1;
-	}
 }
 
 .notification--details-button {
