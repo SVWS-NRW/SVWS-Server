@@ -277,7 +277,7 @@ public class APISchueler {
 	@ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
 	public Response getSchuelerSchulbesuch(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerSchulbesuchsdaten(conn).get(id),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerSchulbesuchsdaten(conn).getByIdAsResponse(id),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
 	}
@@ -309,7 +309,7 @@ public class APISchueler {
 			@RequestBody(description = "Der Patch für die Schulbesuchsdaten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					schema = @Schema(implementation = SchuelerSchulbesuchsdaten.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerSchulbesuchsdaten(conn).patch(id, is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerSchulbesuchsdaten(conn).patchAsResponse(id, is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
 	}

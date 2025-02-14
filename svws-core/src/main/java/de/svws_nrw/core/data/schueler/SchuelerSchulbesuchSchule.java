@@ -10,9 +10,13 @@ import jakarta.validation.constraints.NotNull;
  * Sie beschreibt die Schubesuchsdaten zu einer bisher besuchten Schule.
  */
 @XmlRootElement
-@Schema(description = "Ein Eintrag in der Liste der bisher besuchtn Schulen.")
+@Schema(description = "Ein Eintrag in der Liste der bisher besuchten Schulen.")
 @TranspilerDTO
 public class SchuelerSchulbesuchSchule {
+
+	/** Die ID der Informationen zum vorigen Schulbesuch in der Datenbank. */
+	@Schema(description = "die ID der Informationen zum vorigen Schulbesuch in der Datenbank", example = "226984")
+	public long id;
 
 	/** Die Schulnummer der Schule. */
 	@Schema(description = "die Schulnummer der Schule", example = "178947")

@@ -20,7 +20,7 @@ public class SchuelerSchulbesuchsdaten {
 
 
 	/** Die ID des Schülerdatensatzes. */
-	@Schema(description = "die ID", example = "4711")
+	@Schema(description = "die ID des Schülerdatensatzes", example = "4711")
 	public long id;
 
 
