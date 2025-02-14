@@ -1,6 +1,6 @@
 <template>
 	<div class="page page-flex-row">
-		<div class="h-full flex flex-col gap-y-8 overflow-y-auto px-6">
+		<div class="h-full min-w-128 flex flex-col gap-y-8 overflow-y-auto px-6">
 			<template v-if="eintrag !== undefined">
 				<div v-if="(eintrag !== undefined) && (!eintrag.isInConfig)" class="flex flex-col gap-4">
 					<s-schema-uebersicht-add-existing :schema="eintrag.name" :add-existing-schema-to-config :logs-function :loading-function :status-function
@@ -63,7 +63,7 @@
 				</div>
 			</template>
 		</div>
-		<div class="flex flex-col gap-y-8 overflow-y-auto px-6">
+		<div class="min-w-96 flex flex-col gap-y-8 overflow-y-auto px-6">
 			<div class="flex flex-col gap-4">
 				<div class="text-headline-md">Admin-Benutzer</div>
 				<svws-ui-table :columns="cols" :items="admins()" scroll />
