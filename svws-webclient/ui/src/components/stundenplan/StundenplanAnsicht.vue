@@ -86,7 +86,7 @@
 								<div v-for="unterricht in getUnterrichte(wochentag.id, stunde, 0, null)" :key="unterricht.id"
 									class="svws-ui-stundenplan--unterricht"
 									:class="{ 'cursor-grab': draggable, 'grow': growUnterricht, 'border-ui-contrast-100 bg-ui-danger text-ui-ondanger border-dashed': isDraggedType(unterricht) }"
-									:style="isDraggedType(unterricht) ? '' : `background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)}`"
+									:style="isDraggedType(unterricht) ? '' : `background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)}; color: var(--color-ui-static)`"
 									:draggable @dragstart="onDrag(unterricht)" @dragend="onDrag(undefined)">
 									<slot name="unterricht" :unterricht="unterricht" />
 								</div>
@@ -101,7 +101,7 @@
 									<div v-for="unterricht in getUnterrichte(wochentag.id, stunde, 0, schiene.id)" :key="unterricht.id"
 										class="svws-ui-stundenplan--unterricht"
 										:class="{ 'cursor-grab': draggable, 'grow': growUnterricht, 'border-ui-contrast-100 bg-ui-danger text-ui-ondanger border-dashed ': isDraggedType(unterricht) }"
-										:style="isDraggedType(unterricht) ? '' : `background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)}`"
+										:style="isDraggedType(unterricht) ? '' : `background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)}; color: var(--color-ui-static)`"
 										:draggable @dragstart.stop="onDrag(unterricht)" @dragend.stop="onDrag(undefined)">
 										<slot name="unterricht" :unterricht="unterricht" />
 									</div>
@@ -119,7 +119,7 @@
 											<div v-for="unterricht in getUnterrichte(wochentag.id, stunde, wt, null)" :key="unterricht.id"
 												class="svws-ui-stundenplan--unterricht"
 												:class="{'cursor-grab': draggable, 'grow': growUnterricht, 'svws-compact': !wochentyp(), 'border-ui-contrast-100 bg-ui-danger text-ui-ondanger border-dashed': isDraggedType(unterricht) }"
-												:style="isDraggedType(unterricht) ? '' : `background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)}`"
+												:style="isDraggedType(unterricht) ? '' : `background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)}; color: var(--color-ui-static)`"
 												:draggable @dragstart="onDrag(unterricht)" @dragend="onDrag(undefined)">
 												<slot name="unterricht" :unterricht="unterricht" />
 											</div>
@@ -136,7 +136,7 @@
 												<div v-for="unterricht in getUnterrichte(wochentag.id, stunde, wt, schiene.id)" :key="unterricht.id"
 													class="svws-ui-stundenplan--unterricht"
 													:class="{ 'cursor-grab': draggable, 'grow': growUnterricht, 'svws-compact': !wochentyp(), 'border-ui-contrast-100 bg-ui-danger text-ui-ondanger border-dashed': isDraggedType(unterricht) } "
-													:style="isDraggedType(unterricht) ? '' : `background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)}`"
+													:style="isDraggedType(unterricht) ? '' : `background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)}; color: var(--color-ui-static)`"
 													:draggable @dragstart.stop="onDrag(unterricht)" @dragend.stop="onDrag(undefined)">
 													<slot name="unterricht" :unterricht="unterricht" />
 												</div>

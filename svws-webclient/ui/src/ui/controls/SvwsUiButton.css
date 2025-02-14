@@ -49,14 +49,14 @@
 		@apply bg-ui-brand-hover text-ui-onbrand-hover border-ui-brand-hover;
 	}
 
-	.icon {
+	.icon, .icon-sm {
 		@apply icon-ui-onbrand;
 	}
 
 	.page--statistik & {
 		@apply bg-ui-statistic text-ui-onstatistic border-ui-statistic;
 
-		.icon {
+		.icon, .icon-sm {
 			@apply icon-ui-onstatistic;
 		}
 
@@ -86,7 +86,7 @@
 		.page--statistik & {
 			@apply border-ui-statistic text-ui-statistic;
 
-			.icon {
+			.icon, .icon-sm {
 				@apply icon-ui-statistic;
 			}
 		}
@@ -112,6 +112,10 @@
 	&:hover,
 	&:focus-visible {
 		@apply bg-ui-hover text-ui-onneutral-hover;
+
+		.icon, .icon-sm {
+			@apply icon-ui-brand;
+		}
 	}
 
 	&:active {
@@ -123,7 +127,7 @@
 .button--trash {
 	@apply bg-transparent text-ui-danger border-ui-danger;
 
-	.icon {
+	.icon, .icon-sm {
 		@apply icon-ui-danger;
 	}
 
@@ -131,7 +135,7 @@
 	&:focus-visible {
 		@apply bg-ui-danger text-ui-ondanger;
 
-		.icon {
+		.icon, .icon-sm {
 			@apply icon-ui-ondanger;
 		}
 	}

@@ -24,8 +24,9 @@
 }
 
 .svws-ui-stundenplan--head {
-	@apply bg-ui-contrast-0 py-1 text-button;
-	@apply h-[2.75rem] sticky -top-px z-20;
+	@apply bg-ui;
+	@apply py-1 text-button;
+	@apply h-[2.75rem] sticky top-0 z-20;
 	@apply border border-ui-contrast-25;
 
 	.svws-hat-zeitachse & {
@@ -40,7 +41,7 @@
 }
 
 .svws-ui-stundenplan--body {
-	@apply border-x border-ui-contrast-25 bg-ui-contrast-0 -mt-px print:!mt-0 relative;
+	@apply bg-ui border-x border-ui-contrast-25 -mt-px print:!mt-0 relative;
 
 	.svws-hat-zeitachse & {
 		@media screen {
@@ -64,7 +65,7 @@
 
 .svws-ui-stundenplan--stunde,
 .svws-ui-stundenplan--pause {
-	@apply bg-ui-contrast-0 tabular-nums w-full h-full p-1 leading-tight flex flex-col overflow-hidden;
+	@apply tabular-nums w-full h-full p-1 leading-tight flex flex-col overflow-hidden;
 
 	.svws-multiple {
 		@apply grid h-full grid-flow-col grow;
