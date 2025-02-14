@@ -6,8 +6,6 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import de.svws_nrw.core.data.schueler.SchuelerSchulbesuchMerkmal;
-import de.svws_nrw.core.data.schueler.SchuelerSchulbesuchSchule;
 import de.svws_nrw.core.data.schueler.SchuelerSchulbesuchsdaten;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.DataManagerRevised;
@@ -29,7 +27,7 @@ import jakarta.ws.rs.core.Response.Status;
 public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long, DTOSchueler, SchuelerSchulbesuchsdaten> {
 
 	/** Ein Cache für den schnellen Zugriff auf den Katalog der Entlassarten. */
-	private final Map<String, DTOEntlassarten> entlassarten;
+	private final Map<String, DTOEntlassarten> mapEntlassarten;
 
 
 	/**
@@ -39,18 +37,23 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 	 */
 	public DataSchuelerSchulbesuchsdaten(final DBEntityManager conn) {
 		super(conn);
-		entlassarten = conn.queryAll(DTOEntlassarten.class).stream().collect(Collectors.toMap(e -> e.Bezeichnung, e -> e));
+		mapEntlassarten = conn.queryAll(DTOEntlassarten.class).stream().collect(Collectors.toMap(e -> e.Bezeichnung, e -> e));
 	}
 
 
 	@Override
-	protected long getLongId(final DTOSchueler dtoSchueler) {
-		return dtoSchueler.ID;
+	protected long getLongId(final DTOSchueler dto) {
+		return dto.ID;
 	}
 
 	@Override
 	public SchuelerSchulbesuchsdaten getById(final Long idSchueler) throws ApiOperationException {
-		return map(getDtoSchueler(idSchueler));
+		if (idSchueler == null)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für den Schüler darf nicht null sein.");
+		final DTOSchueler dto = conn.queryByKey(DTOSchueler.class, idSchueler);
+		if (dto == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Schüler mit der Id %d gefunden".formatted(idSchueler));
+		return map(dto);
 	}
 
 	@Override
@@ -73,13 +76,13 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 		daten.vorigeEntlassjahrgang = dtoSchueler.LSJahrgang;
 		daten.vorigeArtLetzteVersetzung = dtoSchueler.LSVersetzung;
 		daten.vorigeBemerkung = dtoSchueler.LSBemerkung;
-		final DTOEntlassarten vorigeEntlassgrund = (dtoSchueler.LSEntlassgrund == null) ? null : this.entlassarten.get(dtoSchueler.LSEntlassgrund);
+		final DTOEntlassarten vorigeEntlassgrund = (dtoSchueler.LSEntlassgrund == null) ? null : this.mapEntlassarten.get(dtoSchueler.LSEntlassgrund);
 		daten.vorigeEntlassgrundID = (vorigeEntlassgrund == null) ? null : vorigeEntlassgrund.ID;
 		daten.vorigeAbschlussartID = dtoSchueler.LSEntlassArt;
 		// Informationen zu der Entlassung von der eigenen Schule
 		daten.entlassungDatum = dtoSchueler.Entlassdatum;
 		daten.entlassungJahrgang = dtoSchueler.Entlassjahrgang;
-		final DTOEntlassarten entlassgrund = (dtoSchueler.Entlassgrund == null) ? null : this.entlassarten.get(dtoSchueler.Entlassgrund);
+		final DTOEntlassarten entlassgrund = (dtoSchueler.Entlassgrund == null) ? null : this.mapEntlassarten.get(dtoSchueler.Entlassgrund);
 		daten.entlassungGrundID = (entlassgrund == null) ? null : entlassgrund.ID;
 		daten.entlassungAbschlussartID = dtoSchueler.Entlassart;
 		// Informationen zu der aufnehmenden Schule nach einem Wechsel zu einer anderen Schule
@@ -96,49 +99,15 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 		daten.sekIErsteSchulform = dtoSchueler.ErsteSchulform_SI;
 		daten.sekIIWechsel = dtoSchueler.JahrWechsel_SII;
 
-		// TODO Mapping einer statischen Map-Funktion verwenden, die in der Data-Klasse für die Schüler-Merkmale verwendet wird (und dort auch von mapInternal genutzt wird)
 		// Informationen zu besonderen Merkmalen für die Statistik
-		daten.merkmale = schuelerMerkmale.stream().map(
-				dto -> {
-					final SchuelerSchulbesuchMerkmal merkmal = new SchuelerSchulbesuchMerkmal();
-					merkmal.id = dto.ID;
-					merkmal.datumVon = dto.DatumVon;
-					merkmal.datumBis = dto.DatumBis;
-					return merkmal;
-				}).toList();
+		daten.merkmale = DataSchuelerMerkmale.mapMultiple(schuelerMerkmale);
 
-		// TODO Mapping einer statischen Map-Funktion verwenden, die in der Data-Klasse für die bisher besuchten Schulen eines Schülers verwendet wird (und dort auch von mapInternal genutzt wird)
-		// TODO Dabei auch Übergabe der Map entlassarten (siehe privates Attribut)
 		// Informationen zu allen bisher besuchten Schulen
-		daten.alleSchulen = schuelerAbgaenge.stream().map(
-				dto -> {
-					final SchuelerSchulbesuchSchule bisherigeSchule = new SchuelerSchulbesuchSchule();
-					bisherigeSchule.id = dto.ID;
-					bisherigeSchule.schulnummer = dto.AbgangsSchulNr;
-					bisherigeSchule.schulgliederung = dto.LSSGL;
-					final DTOEntlassarten tmpEntlassgrund = (dto.BemerkungIntern == null) ? null : this.entlassarten.get(dto.BemerkungIntern);
-					bisherigeSchule.entlassgrundID = (tmpEntlassgrund == null) ? null : tmpEntlassgrund.ID;
-					bisherigeSchule.abschlussartID = dto.LSEntlassArt;
-					bisherigeSchule.organisationsFormID = dto.OrganisationsformKrz;
-					bisherigeSchule.datumVon = dto.LSBeginnDatum;
-					bisherigeSchule.datumBis = dto.LSSchulEntlassDatum;
-					bisherigeSchule.jahrgangVon = dto.LSBeginnJahrgang;
-					bisherigeSchule.jahrgangBis = dto.LSJahrgang;
-					return bisherigeSchule;
-				}).toList();
+		daten.alleSchulen = DataSchuelerSchulbesuchSchule.mapMultiple(schuelerAbgaenge, mapEntlassarten);
+
 		return daten;
 	}
 
-	private DTOSchueler getDtoSchueler(final Long idSchueler) throws ApiOperationException {
-		if (idSchueler == null)
-			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für den Schüler darf nicht null sein.");
-
-		final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, idSchueler);
-		if (dtoSchueler == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Schüler mit der Id %d gefunden".formatted(idSchueler));
-
-		return dtoSchueler;
-	}
 
 	@Override
 	protected void mapAttribute(final DTOSchueler dtoSchueler, final String name, final Object value, final Map<String, Object> map)
@@ -205,7 +174,7 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 			setter.accept(null);
 			return;
 		}
-		final DTOEntlassarten dto = this.entlassarten.get(entlassungGrundID);
+		final DTOEntlassarten dto = this.mapEntlassarten.get(entlassungGrundID);
 		if (dto == null)
 			throw new ApiOperationException(Status.CONFLICT, "keine Entlassart mit der %s %s gefunden.".formatted(key, entlassungGrundID));
 

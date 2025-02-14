@@ -4,6 +4,11 @@ import { Class } from '../../../java/lang/Class';
 export class SchuelerSchulbesuchSchule extends JavaObject {
 
 	/**
+	 * Die ID der Informationen zum vorigen Schulbesuch in der Datenbank.
+	 */
+	public id : number = 0;
+
+	/**
 	 * Die Schulnummer der Schule.
 	 */
 	public schulnummer : string = "";
@@ -69,6 +74,9 @@ export class SchuelerSchulbesuchSchule extends JavaObject {
 	public static transpilerFromJSON(json : string): SchuelerSchulbesuchSchule {
 		const obj = JSON.parse(json) as Partial<SchuelerSchulbesuchSchule>;
 		const result = new SchuelerSchulbesuchSchule();
+		if (obj.id === undefined)
+			throw new Error('invalid json format, missing attribute id');
+		result.id = obj.id;
 		if (obj.schulnummer === undefined)
 			throw new Error('invalid json format, missing attribute schulnummer');
 		result.schulnummer = obj.schulnummer;
@@ -85,6 +93,7 @@ export class SchuelerSchulbesuchSchule extends JavaObject {
 
 	public static transpilerToJSON(obj : SchuelerSchulbesuchSchule) : string {
 		let result = '{';
+		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"schulnummer" : ' + JSON.stringify(obj.schulnummer) + ',';
 		result += '"schulgliederung" : ' + ((obj.schulgliederung === null) ? 'null' : JSON.stringify(obj.schulgliederung)) + ',';
 		result += '"entlassgrundID" : ' + ((obj.entlassgrundID === null) ? 'null' : obj.entlassgrundID.toString()) + ',';
@@ -101,6 +110,9 @@ export class SchuelerSchulbesuchSchule extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<SchuelerSchulbesuchSchule>) : string {
 		let result = '{';
+		if (obj.id !== undefined) {
+			result += '"id" : ' + obj.id.toString() + ',';
+		}
 		if (obj.schulnummer !== undefined) {
 			result += '"schulnummer" : ' + JSON.stringify(obj.schulnummer) + ',';
 		}
