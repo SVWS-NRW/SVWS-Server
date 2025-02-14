@@ -46,10 +46,10 @@
 				<template v-for="pause in manager().pausenzeitGetMengeByWochentagOrEmptyList(wochentag.id)" :key="pause.id">
 					<div class="svws-ui-stundenplan--pause cursor-pointer" @click="updateSelected(pause)" :style="posPause(wochentag, pause)" :class="{'svws-selected': selected === pause}">
 						<div v-if="selected===pause" class="svws-ui-stundenplan--pausen-aufsicht">
-							<span class="icon i-ri-cup-line icon-ui-brand" />
+							<span class="icon i-ri-cup-line" />
 						</div>
 						<div v-else class="svws-ui-stundenplan--pausen-aufsicht">
-							<span class="icon i-ri-cup-line opacity-20" />
+							<span class="icon i-ri-cup-line icon-ui-contrast-25" />
 						</div>
 					</div>
 				</template>
@@ -57,42 +57,40 @@
 		</div>
 	</div>
 	<div v-else class="svws-ui-stundenplan">Es wurden noch keine Zeitraster für diesen Stundenplan angelegt.</div>
-	<aside>
-		<div class="sticky top-8 flex flex-col gap-5">
-			<div class="flex gap-3 flex-wrap justify-stretch">
-				<svws-ui-button class="grow" type="secondary" @click="addStunde">
-					<span class="icon i-ri-calendar-event-line" />
-					<span class="icon i-ri-add-line -ml-1" />{{ manager().zeitrasterGetStundeMax() + (manager().getListZeitraster().size() === 0 ? 0:1) }}. Stunde
-				</svws-ui-button>
-				<svws-ui-button class="grow" type="secondary" @click="addWochentag" v-if="manager().zeitrasterGetWochentagMax() < 7">
-					<span class="icon i-ri-calendar-event-line" />
-					<span class="icon i-ri-add-line -ml-1" />{{ Wochentag.fromIDorException(manager().zeitrasterGetWochentagMaxEnum().id + (manager().getListZeitraster().size() === 0 ? 0:1)) }}
-				</svws-ui-button>
-			</div>
-			<svws-ui-action-button title="Alle Zeitraster erstellen" :is-active="actionZeitraster" @click="()=>actionZeitraster = !actionZeitraster" icon="i-ri-add-line">
-				<stundenplan-zeitraster-einstellungen :manager :set-settings-defaults>
-					<svws-ui-button type="secondary" @click="addBlock" :title="`Alle Zeitraster Montag - Freitag, 1.-${Schulform.G === schulform ? '6':'9'}. Stunde erstellen`">
-						<span class="icon i-ri-calendar-event-line" />
-						<span class="icon i-ri-add-line -ml-1" />Mo-Fr / 1.-{{ Schulform.G === schulform ? '6':'9' }}. erstellen
-					</svws-ui-button>
-				</stundenplan-zeitraster-einstellungen>
-			</svws-ui-action-button>
-			<template v-if="importZeitraster !== undefined">
-				<stundenplan-zeitraster-import-modal :stundenplan-manager="manager" :import-zeitraster :remove-zeitraster v-slot="{ openModal }">
-					<svws-ui-button class="mb-5" type="secondary" @click="openModal()"><span class="icon i-ri-archive-line" /> Aus Katalog importieren</svws-ui-button>
-				</stundenplan-zeitraster-import-modal>
-			</template>
-			<div class="flex gap-3 flex-wrap justify-stretch">
-				<svws-ui-button class="grow" type="secondary" @click="exportJSON" title="Alle Zeitraster als JSON-Datei exportieren">
-					<span class="icon i-ri-upload-2-line" />Exportieren
-				</svws-ui-button>
-				<stundenplan-zeitraster-json-import-modal :stundenplan-manager="manager" :add-zeitraster :remove-zeitraster v-slot="{ openModal }">
-					<svws-ui-button class="grow" type="secondary" @click="openModal" title="Zeitraster aus einer JSON-Datei importieren"> <span class="icon i-ri-download-2-line" /> Importieren… </svws-ui-button>
-				</stundenplan-zeitraster-json-import-modal>
-			</div>
-			<slot />
+	<div class="sticky top-8 flex flex-col gap-5 h-full overflow-y-hidden">
+		<div class="flex gap-3 flex-wrap justify-stretch">
+			<svws-ui-button class="grow" type="secondary" @click="addStunde">
+				<span class="icon i-ri-calendar-event-line" />
+				<span class="icon i-ri-add-line -ml-1" />{{ manager().zeitrasterGetStundeMax() + (manager().getListZeitraster().size() === 0 ? 0:1) }}. Stunde
+			</svws-ui-button>
+			<svws-ui-button class="grow" type="secondary" @click="addWochentag" v-if="manager().zeitrasterGetWochentagMax() < 7">
+				<span class="icon i-ri-calendar-event-line" />
+				<span class="icon i-ri-add-line -ml-1" />{{ Wochentag.fromIDorException(manager().zeitrasterGetWochentagMaxEnum().id + (manager().getListZeitraster().size() === 0 ? 0:1)) }}
+			</svws-ui-button>
 		</div>
-	</aside>
+		<svws-ui-action-button title="Alle Zeitraster erstellen" :is-active="actionZeitraster" @click="()=>actionZeitraster = !actionZeitraster" icon="i-ri-add-line">
+			<stundenplan-zeitraster-einstellungen :manager :set-settings-defaults>
+				<svws-ui-button type="secondary" @click="addBlock" :title="`Alle Zeitraster Montag - Freitag, 1.-${Schulform.G === schulform ? '6':'9'}. Stunde erstellen`">
+					<span class="icon i-ri-calendar-event-line" />
+					<span class="icon i-ri-add-line -ml-1" />Mo-Fr / 1.-{{ Schulform.G === schulform ? '6':'9' }}. erstellen
+				</svws-ui-button>
+			</stundenplan-zeitraster-einstellungen>
+		</svws-ui-action-button>
+		<template v-if="importZeitraster !== undefined">
+			<stundenplan-zeitraster-import-modal :stundenplan-manager="manager" :import-zeitraster :remove-zeitraster v-slot="{ openModal }">
+				<svws-ui-button class="mb-5" type="secondary" @click="openModal()"><span class="icon i-ri-archive-line" /> Aus Katalog importieren</svws-ui-button>
+			</stundenplan-zeitraster-import-modal>
+		</template>
+		<div class="flex gap-3 flex-wrap justify-stretch">
+			<svws-ui-button class="grow" type="secondary" @click="exportJSON" title="Alle Zeitraster als JSON-Datei exportieren">
+				<span class="icon i-ri-upload-2-line" />Exportieren
+			</svws-ui-button>
+			<stundenplan-zeitraster-json-import-modal :stundenplan-manager="manager" :add-zeitraster :remove-zeitraster v-slot="{ openModal }">
+				<svws-ui-button class="grow" type="secondary" @click="openModal" title="Zeitraster aus einer JSON-Datei importieren"> <span class="icon i-ri-download-2-line" /> Importieren… </svws-ui-button>
+			</stundenplan-zeitraster-json-import-modal>
+		</div>
+		<slot />
+	</div>
 </template>
 
 <script setup lang="ts">

@@ -158,6 +158,9 @@
 			span {
 				@apply bg-ui-selected text-ui-onselected font-bold border-ui-neutral/25;
 			}
+			.icon {
+				@apply icon-ui-onselected;
+			}
 		}
 	}
 
@@ -167,6 +170,9 @@
 		.svws-ui-stundenplan--unterricht,
 		.svws-ui-stundenplan--pausen-aufsicht {
 			@apply bg-ui-selected text-ui-onselected font-bold;
+			.icon {
+				@apply icon-ui-onselected;
+			}
 		}
 	}
 }

@@ -1,5 +1,6 @@
 <template>
-	<svws-ui-content-card :title="`${Wochentag.fromIDorException(selected.wochentag)} ${selected.unterrichtstunde}. Stunde`">
+	<div class="h-full overflow-y-hidden">
+		<div class="text-headline-md mt-1 mb-3">{{ `${Wochentag.fromIDorException(selected.wochentag)} ${selected.unterrichtstunde}. Stunde` }}</div>
 		<svws-ui-input-wrapper :grid="2">
 			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(selected.stundenbeginn ?? 0)" required placeholder="Stundenbeginn" @change="patchBeginn" ref="inputBeginn" />
 			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(selected.stundenende ?? 0)" placeholder="Stundenende" @change="patchEnde" ref="inputEnde" />
@@ -8,11 +9,11 @@
 			</div>
 		</svws-ui-input-wrapper>
 		<svws-ui-spacing :size="2" />
-		<svws-ui-table :items="[]" :columns :no-data="false">
+		<svws-ui-table :items="[]" :columns :no-data="false" scroll>
 			<template #body>
 				<div v-for="rowData in stundenplanManager().unterrichtGetMengeByZeitrasterIdAndWochentypOrEmptyList(selected.id, 0)" :key="rowData.id" class="svws-ui-tr" style="grid-template-columns: repeat(4, 1fr);" role="row">
 					<div class="svws-ui-td" role="cell">
-						<span class="svws-ui-badge" :style="`background-color: ${getBgColor(stundenplanManager().fachGetByIdOrException(rowData.idFach).kuerzelStatistik)}`">{{ stundenplanManager().unterrichtGetByIDStringOfFachOderKurs(rowData.id, true) }}</span>
+						<span class="svws-ui-badge" :style="`background-color: ${getBgColor(stundenplanManager().fachGetByIdOrException(rowData.idFach).kuerzelStatistik)}; color: var(--color-text-ui-static)`">{{ stundenplanManager().unterrichtGetByIDStringOfFachOderKurs(rowData.id, true) }}</span>
 					</div>
 					<div class="svws-ui-td" role="cell">
 						<span v-for="jahrgang in stundenplanManager().jahrgangGetMengeByUnterrichtIdAsList(rowData.id)" :key="jahrgang.id" class="line-clamp-1 break-all leading-tight -my-0.5">{{ jahrgang.kuerzel }}</span>
@@ -26,7 +27,7 @@
 				</div>
 			</template>
 		</svws-ui-table>
-	</svws-ui-content-card>
+	</div>
 </template>
 
 <script setup lang="ts">
