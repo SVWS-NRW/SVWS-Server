@@ -349,7 +349,7 @@
 		@apply relative cursor-default;
 
 		.svws-ui-table.svws-has-background & {
-			@apply text-ui-secondary;
+			@apply text-ui-static;
 		}
 
 		&:before {
@@ -369,10 +369,10 @@
 		@apply text-ui;
 
 		.svws-has-background & {
-			@apply text-ui;
+			@apply text-ui-static;
 
 			.button {
-				@apply text-ui;
+				@apply text-ui-static;
 			}
 		}
 

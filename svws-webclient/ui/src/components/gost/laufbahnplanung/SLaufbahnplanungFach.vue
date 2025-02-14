@@ -1289,7 +1289,6 @@
 		&:focus {
 			outline: none;
 			box-shadow: inset 0 0 0 2px;
-			color: var(--color-text-ui-hover);
 		}
 	}
 
