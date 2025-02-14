@@ -379,7 +379,7 @@
 			$mapKlassen = $this->getMapKlassen($lehrer);
 			if (!array_key_exists($schueler->klasseID, $mapKlassen))
 				Http::exit403Forbidden("Der angemeldete Lehrer ist kein Klassenlehrer der Klasse mit der ID ".$schueler->klasseID.".");
-			$db->patchENMSchuelerBemerkungen(date('Y-m-d H:i:s.v', time()), $idSchueler, $bemerkungen, $patch);
+			$db->patchENMSchuelerBemerkungen(date('Y-m-d H:i:s.v', time()), $idSchueler, $schueler, $patch);
 		}
 
 		/**

@@ -1107,46 +1107,46 @@
 		 */
 		public function patchENMSchuelerBemerkungen(string $ts, int $idSchueler, object $daten, object $patch) {
 			$update = "";
-			if (property_exists($patch->bemerkungen, 'ASV') && ($ts > $patch->bemerkungen->tsASV)
-					&& $this->diffStringNullable($patch->bemerkungen->ASV, $patch->bemerkungen->ASV)) {
+			if (property_exists($patch, 'ASV') && ($ts > $daten->bemerkungen->tsASV)
+					&& $this->diffStringNullable($daten->bemerkungen->ASV, $patch->ASV)) {
 				$update .= "tsASV='$ts',";
-				$daten->bemerkungen->ASV = $patch->bemerkungen->ASV;
+				$daten->bemerkungen->ASV = $patch->ASV;
 				$daten->bemerkungen->tsASV = $ts;
 			}
-			if (property_exists($patch->bemerkungen, 'AUE') && ($ts > $patch->bemerkungen->tsAUE)
-					&& $this->diffStringNullable($patch->bemerkungen->AUE, $patch->bemerkungen->AUE)) {
+			if (property_exists($patch, 'AUE') && ($ts > $daten->bemerkungen->tsAUE)
+					&& $this->diffStringNullable($daten->bemerkungen->AUE, $patch->AUE)) {
 				$update .= "tsAUE='$ts',";
-				$daten->bemerkungen->AUE = $patch->bemerkungen->AUE;
+				$daten->bemerkungen->AUE = $patch->AUE;
 				$daten->bemerkungen->tsAUE = $ts;
 			}
-			if (property_exists($patch->bemerkungen, 'ZB') && ($ts > $patch->bemerkungen->tsZB)
-					&& $this->diffStringNullable($patch->bemerkungen->ZB, $patch->bemerkungen->ZB)) {
+			if (property_exists($patch, 'ZB') && ($ts > $daten->bemerkungen->tsZB)
+					&& $this->diffStringNullable($daten->bemerkungen->ZB, $patch->ZB)) {
 				$update .= "tsZB='$ts',";
-				$daten->bemerkungen->ZB = $patch->bemerkungen->ZB;
+				$daten->bemerkungen->ZB = $patch->ZB;
 				$daten->bemerkungen->tsZB = $ts;
 			}
-			if (property_exists($patch->bemerkungen, 'LELS') && ($ts > $patch->bemerkungen->tsLELS)
-					&& $this->diffStringNullable($patch->bemerkungen->LELS, $patch->bemerkungen->LELS)) {
+			if (property_exists($patch, 'LELS') && ($ts > $daten->bemerkungen->tsLELS)
+					&& $this->diffStringNullable($daten->bemerkungen->LELS, $patch->LELS)) {
 				$update .= "tsLELS='$ts',";
-				$daten->bemerkungen->LELS = $patch->bemerkungen->LELS;
+				$daten->bemerkungen->LELS = $patch->LELS;
 				$daten->bemerkungen->tsLELS = $ts;
 			}
-			if (property_exists($patch->bemerkungen, 'schulformEmpf') && ($ts > $patch->bemerkungen->tsSchulformEmpf)
-					&& $this->diffStringNullable($patch->bemerkungen->schulformEmpf, $patch->bemerkungen->schulformEmpf)) {
+			if (property_exists($patch, 'schulformEmpf') && ($ts > $daten->bemerkungen->tsSchulformEmpf)
+					&& $this->diffStringNullable($daten->bemerkungen->schulformEmpf, $patch->schulformEmpf)) {
 				$update .= "tsSchulformEmpf='$ts',";
-				$daten->bemerkungen->schulformEmpf = $patch->bemerkungen->schulformEmpf;
+				$daten->bemerkungen->schulformEmpf = $patch->schulformEmpf;
 				$daten->bemerkungen->tsSchulformEmpf = $ts;
 			}
-			if (property_exists($patch->bemerkungen, 'individuelleVersetzungsbemerkungen') && ($ts > $patch->bemerkungen->tsIndividuelleVersetzungsbemerkungen)
-					&& $this->diffStringNullable($patch->bemerkungen->individuelleVersetzungsbemerkungen, $patch->bemerkungen->individuelleVersetzungsbemerkungen)) {
+			if (property_exists($patch, 'individuelleVersetzungsbemerkungen') && ($ts > $daten->bemerkungen->tsIndividuelleVersetzungsbemerkungen)
+					&& $this->diffStringNullable($daten->bemerkungen->individuelleVersetzungsbemerkungen, $patch->individuelleVersetzungsbemerkungen)) {
 				$update .= "tsIndividuelleVersetzungsbemerkungen='$ts',";
-				$daten->bemerkungen->individuelleVersetzungsbemerkungen = $patch->bemerkungen->individuelleVersetzungsbemerkungen;
+				$daten->bemerkungen->individuelleVersetzungsbemerkungen = $patch->individuelleVersetzungsbemerkungen;
 				$daten->bemerkungen->tsIndividuelleVersetzungsbemerkungen = $ts;
 			}
-			if (property_exists($patch->bemerkungen, 'foerderbemerkungen') && ($ts > $patch->bemerkungen->tsFoerderbemerkungen)
-					&& $this->diffStringNullable($patch->bemerkungen->foerderbemerkungen, $patch->bemerkungen->foerderbemerkungen)) {
+			if (property_exists($patch, 'foerderbemerkungen') && ($ts > $daten->bemerkungen->tsFoerderbemerkungen)
+					&& $this->diffStringNullable($daten->bemerkungen->foerderbemerkungen, $patch->foerderbemerkungen)) {
 				$update .= "tsFoerderbemerkungen='$ts',";
-				$daten->bemerkungen->foerderbemerkungen = $patch->bemerkungen->foerderbemerkungen;
+				$daten->bemerkungen->foerderbemerkungen = $patch->foerderbemerkungen;
 				$daten->bemerkungen->tsFoerderbemerkungen = $ts;
 			}
 			if (strlen($update) > 0) {
