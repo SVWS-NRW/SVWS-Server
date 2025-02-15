@@ -45,6 +45,7 @@
 	});
 
 	const copied = ref<boolean|null>(null);
+	defineSlots();
 
 	const log = computed(() => {
 		if (props.logs === undefined)

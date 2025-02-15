@@ -607,7 +607,7 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		const jahrgang = new StundenplanJahrgang();
 		for (const j of this.listJahrgaenge)
 			if (j.id === id) {
-				jahrgang.kuerzel = j.kuerzel ?? j.kuerzelStatistik;
+				jahrgang.kuerzel = j.kuerzel ?? j.kuerzelStatistik ?? '';
 				jahrgang.id = j.id;
 			}
 		this.stundenplanManager.jahrgangAdd(jahrgang);

@@ -1,19 +1,3 @@
-<script setup lang='ts'>
-	import { useId } from "vue";
-	const props = withDefaults(defineProps<{
-		title?: string;
-		overflowScroll?: boolean;
-		largeTitle?: boolean;
-		hasBackground?: boolean;
-	}>(), {
-		title: '',
-		overflowScroll: false,
-		largeTitle: false,
-		hasBackground: false,
-	});
-	const idComponent = useId();
-</script>
-
 <template>
 	<div :id="idComponent" class="content-card" :class="{'h-full': overflowScroll, 'svws-has-background': hasBackground}">
 		<div v-if="title || $slots.actions || $slots.title" class="content-card--header" :class="{
@@ -33,3 +17,24 @@
 		</div>
 	</div>
 </template>
+
+<script setup lang='ts'>
+
+	import { useId } from "vue";
+
+	const props = withDefaults(defineProps<{
+		title?: string;
+		overflowScroll?: boolean;
+		largeTitle?: boolean;
+		hasBackground?: boolean;
+	}>(), {
+		title: '',
+		overflowScroll: false,
+		largeTitle: false,
+		hasBackground: false,
+	});
+
+	defineSlots();
+	const idComponent = useId();
+
+</script>

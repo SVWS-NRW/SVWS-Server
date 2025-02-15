@@ -39,6 +39,8 @@
 		tabManager: () => TabManager;
 	}>();
 
+	defineSlots();
+
 	type ComponentData = {
 		scrolled: boolean;
 		scrolledMax: boolean;

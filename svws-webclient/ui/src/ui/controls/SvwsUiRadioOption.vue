@@ -49,6 +49,7 @@
 		forceChecked: false,
 	});
 
+	defineSlots();
 	const emit = defineEmits<{
 		(e: 'update:modelValue', value: object | number | string | boolean): void,
 	}>();

@@ -45,6 +45,7 @@
 		secondary: false,
 	});
 
+	defineSlots();
 	const emit = defineEmits<{
 		(e: 'click', event: MouseEvent): void;
 	}>();

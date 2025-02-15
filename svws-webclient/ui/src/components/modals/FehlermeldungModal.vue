@@ -45,6 +45,8 @@
 
 	const show = ref<boolean>(false);
 
+	defineSlots();
+
 	const openModal = (error?: string | Error) => {
 		if (error === undefined)
 			return;

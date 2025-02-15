@@ -184,6 +184,7 @@
 		cancelButtonDisabledReason: undefined,
 	});
 
+	defineSlots();
 	const emit = defineEmits<{
 		"update:isOpen": [isOpen: boolean];
 	}>();

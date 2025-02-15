@@ -31,7 +31,8 @@
 	import type { ButtonType } from '../../types';
 	import { autoUpdate, flip, offset, shift, size, useFloating } from "@floating-ui/vue";
 	import { onClickOutside } from "@vueuse/core";
-	import { ref, computed } from 'vue';
+	import type { ComponentPublicInstance } from 'vue';
+	import { ref, computed, useTemplateRef } from 'vue';
 	import SvwsUiDropdownList from "./SvwsUiDropdownList.vue";
 
 	type Item = {
@@ -54,9 +55,10 @@
 		noDefault: false,
 	});
 
-	const button = ref(null);
-	const inputEl = ref(null);
-	const refList = ref(null);
+	defineSlots();
+	const refList = useTemplateRef<ComponentPublicInstance>('refList');
+	const inputEl = useTemplateRef<ComponentPublicInstance>('inputEl');
+	const button = useTemplateRef('button');
 	const dropdownOpen = ref(false);
 	const defaultItem = ref<Item | undefined>(undefined);
 

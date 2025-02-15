@@ -52,6 +52,7 @@
 		focusHelpVisible: false,
 	});
 
+	defineSlots();
 	type ComponentData = {
 		scrolled: boolean;
 		scrolledMax: boolean;

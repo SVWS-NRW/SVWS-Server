@@ -205,6 +205,8 @@
 		onDrop: (zone: StundenplanAnsichtDropZone, wochentyp?: number) => {},
 	});
 
+	defineSlots();
+
 	const dragOverPos = shallowRef<{
 		wochentag : number | undefined,
 		stunde : number | undefined,

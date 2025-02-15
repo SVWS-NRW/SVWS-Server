@@ -78,6 +78,8 @@
 		noScroll: false,
 	});
 
+	defineSlots();
+
 	const emit = defineEmits<{
 		"update:show": [show: boolean];
 	}>();

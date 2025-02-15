@@ -70,6 +70,7 @@
 		tertiaryMenuSmall: false,
 	});
 
+	defineSlots();
 	const sidebarExpanded = ref<boolean>(true);
 	const secondSidebarExpanded = ref<boolean>(true);
 	const appMenu = ref<HTMLElement | null>(null);

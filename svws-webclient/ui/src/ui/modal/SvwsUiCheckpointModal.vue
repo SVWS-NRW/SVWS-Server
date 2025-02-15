@@ -26,6 +26,7 @@
 		continueRouting: () => Promise<unknown>;
 	}>(),{ });
 
+	defineSlots();
 	const show = ref<boolean>(false);
 
 	onMounted(() => {

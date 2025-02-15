@@ -104,6 +104,7 @@
 	const props = withDefaults(defineProps<{
 		type?: "text" | "date" | "email" | "search" | "tel" | "password";
 		modelValue?: string | null;
+		modelModifiers?: { trim: boolean };
 		placeholder?: string;
 		statistics?: boolean;
 		valid?: (value: string | null) => boolean;
@@ -124,6 +125,7 @@
 	}>(), {
 		type: "text",
 		modelValue: null,
+		modelModifiers: () => ({ trim: false }),
 		placeholder: "",
 		statistics: false,
 		valid: (value: string | null) => true,
@@ -188,6 +190,8 @@
 
 	function updateData(value: string | null) {
 		if (data.value !== value) {
+			// if (value !== null && props.modelModifiers.trim)
+			// 	value = value.trim();
 			data.value = value;
 			emit("update:modelValue", data.value);
 		}

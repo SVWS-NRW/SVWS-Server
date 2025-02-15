@@ -56,7 +56,7 @@
 
 <script setup lang="ts" generic="Item">
 
-	import type { ComputedRef, Ref } from "vue";
+	import type { Ref } from "vue";
 	import type { ComponentExposed } from "vue-component-type-helpers";
 	import type { MaybeElement } from "@floating-ui/vue";
 	import { useFloating, autoUpdate, flip, offset, shift, size } from "@floating-ui/vue";
@@ -339,9 +339,6 @@
 
 	const content = computed<SelectDataType>(() => data.value);
 
-	defineExpose<{
-		content: ComputedRef<SelectDataType>,
-		reset: (originalValue?: boolean) => void,
-	}>({ content, reset });
+	defineExpose({ content, reset });
 
 </script>

@@ -38,4 +38,5 @@
 		number: undefined,
 		numberLabel: undefined,
 	});
+	defineSlots();
 </script>

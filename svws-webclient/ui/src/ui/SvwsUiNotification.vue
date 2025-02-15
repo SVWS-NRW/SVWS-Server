@@ -73,6 +73,7 @@
 		toCopy: undefined,
 	});
 
+	defineSlots();
 	const emit = defineEmits<{
 		click: [id: number];
 	}>()

@@ -53,6 +53,7 @@
 		size: 'normal',
 	});
 
+	defineSlots();
 	const emit = defineEmits<{
 		'click': [value: MouseEvent];
 	}>();

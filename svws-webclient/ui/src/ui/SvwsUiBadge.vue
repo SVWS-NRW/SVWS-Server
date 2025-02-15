@@ -48,4 +48,7 @@
 		size: 'normal',
 		short: false,
 	});
+
+	defineSlots();
+
 </script>

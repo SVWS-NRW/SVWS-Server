@@ -42,6 +42,7 @@
 		filterButton: false,
 	});
 
+	defineSlots();
 	onMounted(() => setAutofocus());
 
 	function setAutofocus() {

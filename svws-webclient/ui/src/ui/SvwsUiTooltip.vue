@@ -57,6 +57,7 @@
 		disabled: false,
 	});
 
+	defineSlots();
 	const emit = defineEmits<{
 		"close": [value: void];
 	}>();

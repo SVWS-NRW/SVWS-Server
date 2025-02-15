@@ -56,6 +56,7 @@
 		focusHelpVisible: false,
 	});
 
+	defineSlots();
 	const show = ref<boolean>(false);
 
 	// function handleBeforePrint() {

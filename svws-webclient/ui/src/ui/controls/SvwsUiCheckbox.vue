@@ -48,6 +48,7 @@
 		focusClassContent: false,
 	});
 
+	defineSlots();
 	onMounted(() => doFocus())
 
 	function doFocus() {
