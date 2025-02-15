@@ -109,7 +109,8 @@
 
 <script lang="ts" setup>
 
-	import { ref, onMounted, computed, useSlots, watch, nextTick, useId } from 'vue';
+	import type { SetupContext } from 'vue';
+	import { ref, onMounted, computed, useSlots, watch, useId } from 'vue';
 	import type { ButtonType } from '../../types';
 
 	const props = withDefaults(defineProps<{
@@ -192,7 +193,7 @@
 	/**
 	 * Berechnungen, wann welches Element angezeigt wird.
 	 */
-	const slots = useSlots();
+	const slots: SetupContext['slots'] = useSlots();
 	const showCollapseIconLeft = computed(() => !slots.collapseLeft && props.collapsible && (props.collapseIconPosition === 'left'));
 	const showCollapseIconRight = computed(() => !slots.collapseRight && props.collapsible && (props.collapseIconPosition === 'right'));
 	const showIcon = computed(() => !slots.icon && (props.icon !== undefined) && (props.icon.length !== 0));
