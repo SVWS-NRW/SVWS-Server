@@ -1,5 +1,7 @@
+
+
 <template>
-	<div class="svws-ui-dashboard-tile"
+	<div :id="idComponent" class="svws-ui-dashboard-tile"
 		:class="{
 			'svws-ui-dashboard-tile--dark': color === 'dark',
 			'svws-ui-dashboard-tile--transparent': color === 'transparent',
@@ -23,6 +25,7 @@
 </template>
 
 <script setup lang='ts'>
+	import { useId } from "vue";
 	const props = withDefaults(defineProps<{
 		color?: 'light' | 'dark' | 'transparent';
 		span?: 1 | 2 | 'full';
@@ -39,4 +42,6 @@
 		numberLabel: undefined,
 	});
 	defineSlots();
+
+	const idComponent = useId();
 </script>
