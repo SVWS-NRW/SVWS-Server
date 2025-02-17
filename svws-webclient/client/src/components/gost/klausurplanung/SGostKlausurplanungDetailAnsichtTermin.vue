@@ -25,7 +25,7 @@
 								<tr class="border-b last:border-b-0 border-ui-contrast-25 border-dashed" v-for="klausur in kMan().kursklausurGetMengeByRaum(raum)" :key="klausur.id">
 									<td class="px-3 py-1" :class="{'w-1/2': kMan().getGemeinsamerKursklausurstartByKlausurraum(raum) !== null && kMan().getGemeinsameKursklausurdauerByKlausurraum(raum) !== null}">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</td>
 									<td class="px-3 py-1" :class="{'w-1/2': kMan().getGemeinsamerKursklausurstartByKlausurraum(raum) !== null && kMan().getGemeinsameKursklausurdauerByKlausurraum(raum) !== null}">{{ kMan().kursLehrerKuerzelByKursklausur(klausur) }}</td>
-									<td class="pl-3 py-1 text-center" v-if="kMan().getGemeinsamerKursklausurstartByKlausurraum(raum) === null"><span class="inline-flex">{{ DateUtils.getStringOfUhrzeitFromMinuten(kMan().startzeitByKursklausurOrException(klausur)) }} Uhr <span class="icon i-ri-alert-fill ml-2 icon-ui-warning" v-if="kMan().hatAbweichendeStartzeitByKursklausur(klausur)" /></span></td>
+									<td class="pl-3 py-1 text-center" v-if="kMan().getGemeinsamerKursklausurstartByKlausurraum(raum) === null"><span class="inline-flex">{{ DateUtils.getStringOfUhrzeitFromMinuten(kMan().startzeitByKursklausurOrException(klausur)) }} Uhr <span class="icon i-ri-alert-fill ml-2 icon-ui-caution" v-if="kMan().hatAbweichendeStartzeitByKursklausur(klausur)" /></span></td>
 									<td class="pl-3 py-1 text-center" v-if="kMan().getGemeinsameKursklausurdauerByKlausurraum(raum) === null">{{ kMan().vorgabeByKursklausur(klausur).dauer }} Min.</td>
 								</tr>
 							</table>
@@ -47,10 +47,10 @@
 					<td :rowspan="kMan().raumGetMengeByTermin(termin).size()" v-if="id===0" class="space-y-3">
 						<div v-if="termin.bemerkung !== null && termin.bemerkung.trim().length > 0" class="px-3 py-1">{{ termin.bemerkung }}</div>
 						<div>
-							<div v-for="raum in kMan().raumGetMengeByTermin(termin)" :key="raum.id">
-								<template v-if="raum.bemerkung !== null && raum.bemerkung.trim().length > 0">
-									<span class="font-bold">Raum {{ kMan().stundenplanraumGetByKlausurraumOrNull(raum) !== null ? kMan().stundenplanraumGetByKlausurraum(raum).kuerzel : "N.N." }}:</span>
-									{{ raum.bemerkung }}
+							<div v-for="r in kMan().raumGetMengeByTermin(termin)" :key="r.id">
+								<template v-if="r.bemerkung !== null && r.bemerkung.trim().length > 0">
+									<span class="font-bold">Raum {{ kMan().stundenplanraumGetByKlausurraumOrNull(r) !== null ? kMan().stundenplanraumGetByKlausurraum(r).kuerzel : "N.N." }}:</span>
+									{{ r.bemerkung }}
 								</template>
 							</div>
 						</div>
@@ -86,6 +86,5 @@
 		colspan += props.kMan().getGemeinsamerKursklausurstartByKlausurraum(raum) !== null ? 0 : 1;
 		return colspan;
 	}
-
 
 </script>

@@ -106,8 +106,8 @@
 				</div>
 				<div class="flex justify-between items-start">
 					<div class="flex flex-wrap items-center gap-2 w-full">
-						<svws-ui-button :disabled="!hatKompetenzUpdate" @click="erzeugeKlausurtermin(quartalsauswahl.value, false)"><span class="icon i-ri-add-line -ml-1" />Neuer Nachschreibtermin</svws-ui-button>
-						<svws-ui-button :disabled="!hatKompetenzUpdate" type="secondary" @click="showModalTerminGrund = true"><span class="icon i-ri-checkbox-circle-line -ml-1" />Haupttermin zulassen</svws-ui-button>
+						<svws-ui-button :disabled="!hatKompetenzUpdate" @click="erzeugeKlausurtermin(quartalsauswahl.value, false)"><span class="icon i-ri-add-line" />Neuer Nachschreibtermin</svws-ui-button>
+						<svws-ui-button :disabled="!hatKompetenzUpdate" type="secondary" @click="showModalTerminGrund = true"><span class="icon i-ri-checkbox-circle-line" />Haupttermin zulassen</svws-ui-button>
 						<svws-ui-button type="secondary" :disabled="!hatKompetenzUpdate || selectedNachschreiber.isEmpty()" @click="showModalAutomatischBlocken = true"><span class="icon i-ri-sparkling-line" />Automatisch blocken <svws-ui-spinner :spinning="loading" /></svws-ui-button>
 					</div>
 				</div>

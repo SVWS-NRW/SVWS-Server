@@ -53,7 +53,7 @@
 							@dragover="checkDropZoneZeitraster($event, manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde))"
 							@dragleave="checkDropZoneZeitraster($event, undefined)"
 							@drop="onDrop(manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde))">
-							<div v-if="kurseGefiltert(manager().datumGetByKwzAndWochentag(kalenderwoche(), wochentag), wochentag, stunde).size()" class="svws-ui-stundenplan--unterricht border-dashed border-ui-contrast-50 flex absolute inset-1 w-auto bg-ui-contrast-0 z-30 pointer-events-none">
+							<div v-if="kurseGefiltert(manager().datumGetByKwzAndWochentag(kalenderwoche(), wochentag), wochentag, stunde).size()" class="svws-ui-stundenplan--unterricht border-dashed border-ui-contrast-50 flex absolute inset-1 w-auto bg-ui-contrast-10 z-30 pointer-events-none">
 								<div class="flex flex-col items-start justify-between mx-auto font-normal w-full opacity-75">
 									<span class="text-button">{{ [...kurseGefiltert(manager().datumGetByKwzAndWochentag(kalenderwoche(), wochentag), wochentag, stunde)].map(kurs => kursInfos(kurs)).join(", ") }}</span>
 									<span v-if="dragData !== undefined && sumSchreiber(manager().datumGetByKwzAndWochentag(kalenderwoche(), wochentag), wochentag, stunde) > 0" class="inline-flex gap-0.5 text-button font-normal"><span class="icon i-ri-group-line" />{{ sumSchreiber(manager().datumGetByKwzAndWochentag(kalenderwoche(), wochentag), wochentag, stunde) }}</span>
@@ -97,7 +97,7 @@
 									'shadow-sm border-ui-contrast-10': dragData === undefined,
 								}">
 								<span class="icon i-ri-draggable absolute top-1 left-0 z-10 opacity-50 group-hover:opacity-100" v-if="termin.abijahr === jahrgangsdaten.abiturjahr && hatKompetenzUpdate" />
-								<div class="absolute inset-0 flex w-full flex-col pointer-events-none opacity-80 bg-ui-contrast-0" :style="{background: kursklausurMouseOver() !== undefined && kursklausurMouseOver()!.idTermin === termin.id ? 'none' : getBgColors(termin)}" />
+								<div class="absolute inset-0 flex w-full flex-col pointer-events-none opacity-80 bg-ui" :style="{background: kursklausurMouseOver() !== undefined && kursklausurMouseOver()!.idTermin === termin.id ? 'none' : getBgColors(termin)}" />
 								<span v-if="zeigeAlleJahrgaenge()" class="absolute top-1.5 right-1.5 z-10 font-bold text-sm opacity-50">{{ GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(termin.abijahr, routeApp.data.aktAbschnitt.value.schuljahr, halbjahr.halbjahr)?.jahrgang }}</span>
 								<svws-ui-tooltip :hover="false" position="right-start" class="!items-start h-full mr-auto" :indicator="false" :class="{'!cursor-grab': termin.abijahr === jahrgangsdaten.abiturjahr, '!cursor-pointer': termin.abijahr !== jahrgangsdaten.abiturjahr}">
 									<span class="z-10 relative p-1 leading-tight cursor-pointer font-medium text-left mt-6 pb-0 hyphens-auto">
@@ -115,7 +115,7 @@
 										</s-gost-klausurplanung-termin>
 									</template>
 								</svws-ui-tooltip>
-								<span class="absolute bottom-0 left-0 py-1.5 pl-1.5 text-sm opacity-50 hidden group-hover:block pointer-events-none">Details</span>
+								<span class="absolute bottom-0 left-0 py-1.5 pl-1.5 text-sm opacity-50 hidden group-hover:block pointer-events-none text-ui-static">Details</span>
 							</div>
 						</div>
 					</template>
@@ -127,10 +127,10 @@
 
 <script setup lang="ts">
 
-	import type { GostKlausurtermin, Wochentag, StundenplanPausenaufsicht } from "@core";
-	import {type List, type StundenplanPausenzeit, DateUtils, Fach, GostHalbjahr, BenutzerKompetenz} from "@core";
 	import { computed } from "vue";
 	import type { SGostKlausurplanungKalenderStundenplanAnsichtProps } from "./SGostKlausurplanungKalenderStundenplanAnsichtProps";
+	import type { GostKlausurtermin, Wochentag, StundenplanPausenaufsicht, List, StundenplanPausenzeit } from "@core";
+	import { DateUtils, Fach, GostHalbjahr, BenutzerKompetenz} from "@core";
 	import { routeApp } from "~/router/apps/RouteApp";
 
 	const wochentage = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag' ];

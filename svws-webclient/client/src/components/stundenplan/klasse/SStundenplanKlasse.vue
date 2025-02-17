@@ -30,7 +30,7 @@
 		</template>
 		<template v-else>
 			<div v-if="hatUpdateKompetenz" @dragover="checkDropZone($event)" @drop="onDrop(undefined, -1)" class="min-w-fit flex flex-col justify-start mb-auto svws-table-offset h-full overflow-y-scroll overflow-x-hidden pr-4 border-2 rounded-xl border-dashed p-1"
-				:class="[dragData === undefined ? 'border-ui-contrast-0' : ' border-ui-danger ring-4 ring-ui-danger/10']">
+				:class="[dragData === undefined ? 'border-transparent' : ' border-ui-danger ring-4 ring-ui-danger/10']">
 				<div class="fixed flex items-center justify-center h-3/4 w-72 z-20 pointer-events-none"><span :class="dragData === undefined ? '':'icon-lg icon-ui-danger opacity-50 i-ri-delete-bin-line scale-[4]'" /></div>
 				<svws-ui-table v-if="!stundenplanManager().klassenunterrichtGetMengeByKlasseIdAsList(klasse.id).isEmpty()" :items="stundenplanManager().klassenunterrichtGetMengeByKlasseIdAsList(klasse.id)" :columns="colsKlassenunterricht">
 					<template #body>
@@ -39,15 +39,13 @@
 								<div role="cell" class="select-none svws-ui-td" :class="{
 									'text-ui-danger font-bold': stundenplanManager().klassenunterrichtGetWochenminutenREST(klasse.id, ku.idFach) < 0,
 									'font-bold': stundenplanManager().klassenunterrichtGetWochenminutenREST(klasse.id, ku.idFach) > 0 }">
-									<div class="ml-1">
-										<div class="svws-ui-badge select-none group cursor-grab flex place-items-center" @click="auswahl !== ku ? auswahl = ku : auswahl = undefined"
-											:style="`background-color: ${stundenplanManager().klassenunterrichtGetWochenminutenREST(klasse.id, ku.idFach) > 0 ? getBgColor(stundenplanManager().fachGetByIdOrException(ku.idFach).kuerzelStatistik) : ''}`"
-											:class="{ 'cursor-grabbing': dragData !== undefined, '!border-black/5': stundenplanManager().klassenunterrichtGetWochenminutenREST(klasse.id, ku.idFach) <= 0 }" draggable="true">
-											<span class="icon i-ri-draggable inline-block -ml-1 icon-ui-contrast-75 opacity-60 group-hover:opacity-100 group-hover:icon-ui-contrast-75" />
-											<span :class="{'font-bold': stundenplanManager().klassenunterrichtGetWochenminutenREST(klasse.id, ku.idFach) > 0}">
-												{{ stundenplanManager().fachGetByIdOrException(ku.idFach).bezeichnung }}
-											</span>
-										</div>
+									<div class="svws-ui-badge select-none group cursor-grab flex place-items-center" @click="auswahl !== ku ? auswahl = ku : auswahl = undefined"
+										:style="stundenplanManager().klassenunterrichtGetWochenminutenREST(klasse.id, ku.idFach) > 0 ? `color: var(--color-text-ui-static); background-color: ${getBgColor(stundenplanManager().fachGetByIdOrException(ku.idFach).kuerzelStatistik)}` : ''"
+										:class="{ 'cursor-grabbing': dragData !== undefined, '!border-black/5': stundenplanManager().klassenunterrichtGetWochenminutenREST(klasse.id, ku.idFach) <= 0 }" draggable="true">
+										<span class="icon i-ri-draggable inline-block icon-ui-contrast-75 opacity-60 group-hover:opacity-100 group-hover:icon-ui-contrast-75" />
+										<span :class="{'font-bold': stundenplanManager().klassenunterrichtGetWochenminutenREST(klasse.id, ku.idFach) > 0}">
+											{{ stundenplanManager().fachGetByIdOrException(ku.idFach).bezeichnung }}
+										</span>
 									</div>
 								</div>
 								<div role="cell" class="select-none svws-ui-td svws-align-center">
@@ -84,12 +82,10 @@
 									<div role="cell" class="select-none svws-ui-td" :class="{
 										'text-ui-danger font-bold': stundenplanManager().kursGetWochenstundenREST(kurs.id) < 0,
 										'font-bold': stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0 }">
-										<div class="ml-3">
-											<div class="svws-ui-badge select-none group cursor-grab flex place-items-center" draggable="true" :class="{ 'cursor-grabbing': dragData !== undefined, '!border-black/5': stundenplanManager().kursGetWochenstundenREST(kurs.id) <= 0 }"
-												:style="`background-color: ${(stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0) ? getBgColor(stundenplanManager().fachGetByIdOrException(kurs.idFach).kuerzelStatistik) : ''}`">
-												<span class="icon i-ri-draggable inline-block -ml-1 icon-ui-contrast-75 opacity-60 group-hover:opacity-100 group-hover:icon-ui-contrast-75" />
-												<span :class="{'font-bold': stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0}">{{ kurs.bezeichnung }}</span>
-											</div>
+										<div class="svws-ui-badge select-none group cursor-grab flex place-items-center" draggable="true" :class="{ 'cursor-grabbing': dragData !== undefined, 'border-black/5!': stundenplanManager().kursGetWochenstundenREST(kurs.id) <= 0 }"
+											:style="stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0 ? `color: var(--color-text-ui-static); background-color: ${getBgColor(stundenplanManager().fachGetByIdOrException(kurs.idFach).kuerzelStatistik)}` : ''">
+											<span class="icon i-ri-draggable inline-block icon-ui-contrast-75 opacity-60 group-hover:opacity-100 group-hover:icon-ui-contrast-75" />
+											<span :class="{'font-bold': stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0}">{{ kurs.bezeichnung }}</span>
 										</div>
 									</div>
 									<div role="cell" class="select-none svws-ui-td svws-align-center">
@@ -106,20 +102,18 @@
 						<template v-else>
 							<div v-for="kurs in stundenplanManager().kursGetMengeByKlasseIdAsList(klasse.id)" :key="kurs.id" role="row" class="svws-ui-tr tr-kursunterricht"
 								@dragstart="onDrag(kurs, $event)" @dragend="onDrag(undefined)" @click="toRaw(auswahl) !== kurs ? auswahl = kurs : auswahl = undefined"
-								:style="`background-color: ${(stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0) ? getBgColor(stundenplanManager().fachGetByIdOrException(kurs.idFach).kuerzelStatistik) : ''}`">
+								:style="stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0 ? `color: var(--color-text-ui-static); background-color: ${getBgColor(stundenplanManager().fachGetByIdOrException(kurs.idFach).kuerzelStatistik)}` : ''">
 								<div role="cell" class="select-none svws-ui-td" :class="{
 									'text-ui-danger font-bold': stundenplanManager().kursGetWochenstundenREST(kurs.id) < 0,
 									'font-bold': stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0 }">
-									<div class="ml-1">
-										<div class="svws-ui-badge select-none group cursor-grab flex place-items-center"
-											:class="{ 'cursor-grabbing': dragData !== undefined, 'border-ui-contrast-10': stundenplanManager().kursGetWochenstundenREST(kurs.id) <= 0 }" draggable="true">
-											<span class="icon i-ri-draggable inline-block -ml-1 icon-ui-contrast-75 opacity-60 group-hover:opacity-100 group-hover:icon-ui-contrast-75" />
-											<span :class="{'font-bold': stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0}">{{ kurs.bezeichnung }}</span>
-										</div>
+									<div class="svws-ui-badge select-none group cursor-grab flex place-items-center"
+										:class="{ 'cursor-grabbing': dragData !== undefined, 'border-ui-contrast-10': stundenplanManager().kursGetWochenstundenREST(kurs.id) <= 0 }" draggable="true">
+										<span class="icon i-ri-draggable inline-block icon-ui-contrast-75 opacity-60 group-hover:opacity-100 group-hover:icon-ui-contrast-75" />
+										<span :class="{'font-bold': stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0}">{{ kurs.bezeichnung }}</span>
 									</div>
 								</div>
 								<div role="cell" class="select-none svws-ui-td svws-align-center">
-									<span class="rounded-sm p-0.5 -m-0.5" :class="{
+									<span class="rounded-sm p-0.5" :class="{
 										'bg-ui-danger text-ui-ondanger font-bold': stundenplanManager().kursGetWochenstundenREST(kurs.id) < 0,
 										'bg-ui-contrast-10': stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0,
 										'bg-ui-success text-ui-onsuccess': stundenplanManager().kursGetWochenstundenREST(kurs.id) === 0 }">

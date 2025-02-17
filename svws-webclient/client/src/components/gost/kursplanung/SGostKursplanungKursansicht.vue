@@ -118,7 +118,7 @@
 										:class="{ 'bg-ui-brand/5 text-ui-onbrand hover:text-ui-onbrand-hover': istDropZoneSchiene(schiene), 'svws-divider': (index + 1) < schienen.size() }">
 										<div :key="schiene.id" @click="openModalRegelKursartSchiene(schiene)" class="select-none text-center" :class="(dragSperreSchiene !== undefined) ? ['cursor-grabbing'] : ['cursor-grab']" :draggable="true" @dragstart="dragSchieneStarted(schiene)" @dragend="dragSchieneEnded">
 											<span class="rounded-xs w-3 absolute top-1 left-1 max-w-[0.75rem]">
-												<span class="icon-sm inline-block i-ri-draggable -ml-0.5 -my-2 opacity-25 group-hover:opacity-100" />
+												<span class="icon-sm inline-block i-ri-draggable opacity-25 group-hover:opacity-100" />
 											</span>
 											<span class="icon inline-block i-ri-lock-unlock-line opacity-25 group-hover:opacity-100" />
 										</div>
@@ -273,7 +273,7 @@
 															'font-bold ring-ui-brand ring-3 text-ui-contrast-100': istKursAusgewaehlt(kurs).value,
 															'cursor-grab': !isDragging,
 														}">
-														<span v-if="hatUpdateKompetenz && !istKursFixiertInSchiene(kurs, schiene).value" class="icon-sm group-hover:icon-ui-contrast-100 opacity-25 rounded-xs i-ri-draggable -my-0.5 group-hover:opacity-100 px-1.5" />
+														<span v-if="hatUpdateKompetenz && !istKursFixiertInSchiene(kurs, schiene).value" class="icon-sm group-hover:icon-ui-contrast-100 opacity-25 rounded-xs i-ri-draggable group-hover:opacity-100 px-1.5" />
 														<svws-ui-tooltip v-if="getErgebnismanager().getOfKursAnzahlSchuelerExternePlusDummies(kurs.id) > 0">
 															<span class="whitespace-nowrap">{{ getErgebnismanager().getOfKursAnzahlSchuelerPlusDummy(kurs.id) }}<span class="font-bold">*</span></span>
 															<template #content>{{ getErgebnismanager().getOfKursAnzahlSchuelerInterne(kurs.id) }} und {{ getErgebnismanager().getOfKursAnzahlSchuelerExternePlusDummies(kurs.id) }} zusätzliche Kursteilnehmer</template>

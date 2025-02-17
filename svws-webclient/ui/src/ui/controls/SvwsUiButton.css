@@ -2,7 +2,7 @@
 	@apply rounded-md border;
 	@apply select-none relative;
 	@apply text-button font-bold;
-	@apply flex items-center;
+	@apply flex items-center justify-center;
 	gap: 0.25em;
 	padding: 0.45em 0.75em;
 
@@ -147,9 +147,8 @@
 
 .button--trash {
 	@apply rounded-sm relative;
-	@apply py-0 px-2;
+	@apply py-0;
 	border: 0 !important;
-	padding: 0.2em !important;
 	width: 1.6em;
 	height: 1.6em;
 

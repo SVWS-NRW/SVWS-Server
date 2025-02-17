@@ -54,12 +54,12 @@
 						<div class="svws-ui-tr cursor-grab active:cursor-grabbing" role="row" :class="klausurCssClasses(klausur, undefined)" :style="tableRowStyle"
 							:data="klausur" :draggable="draggable(klausur)" @dragstart="onDrag(klausur)" @dragend="onDrag(undefined)">
 							<div class="svws-ui-td">
-								<span v-if="hatKompetenzUpdate" class="icon i-ri-draggable -m-0.5 -ml-4 -mr-1" />
+								<span v-if="hatKompetenzUpdate" class="icon i-ri-draggable" />
 								<svws-ui-tooltip :hover="false" :indicator="false">
 									<template #content>
 										<s-gost-klausurplanung-kursliste :k-man :kursklausur="klausur" :patch-klausur :create-schuelerklausur-termin :benutzer-kompetenzen />
 									</template>
-									<span class="svws-ui-badge hover:opacity-75" :style="`background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
+									<span class="svws-ui-badge hover:opacity-75" :style="`color: var(--color-text-ui-static); background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
 									<svws-ui-tooltip>
 										<template #content>
 											<div v-if="kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe !== null && kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe!.trim().length > 0">
@@ -93,7 +93,7 @@
 		</div>
 		<div class="min-w-fit grow h-full flex flex-col gap-4">
 			<div class="flex justify-between items-start">
-				<div class="flex flex-wrap items-center gap-0.5 w-full">
+				<div class="flex flex-wrap items-center gap-2 w-full">
 					<svws-ui-button :disabled="!hatKompetenzUpdate" @click="erzeugeKlausurtermin(quartalsauswahl.value, true)"><span class="icon i-ri-add-line -ml-1" />Termin<template v-if="termine.size() === 0"> hinzufügen</template></svws-ui-button>
 					<svws-ui-button type="transparent" @click="showModalAutomatischBlocken = true" :disabled="!hatKompetenzUpdate || props.kMan().kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value).size() === 0"><span class="icon i-ri-sparkling-line" />Automatisch blocken <svws-ui-spinner :spinning="loading" /></svws-ui-button>
 					<svws-ui-button type="transparent" :disabled="!hatKompetenzUpdate" class="hover--danger ml-auto" @click="terminSelected.value = undefined; loescheKlausurtermine(termine)" v-if="termine.size() > 0" title="Alle Termine löschen"><span class="icon i-ri-delete-bin-line" />Alle löschen</svws-ui-button>
@@ -140,7 +140,7 @@
 			<div v-if="klausurKonflikte().size() > 0" class="mt-5" :class="{'mb-16': anzahlProKwKonflikte(4).size() > 0}">
 				<ul class="flex flex-col gap-3">
 					<li v-for="klausur in klausurKonflikte()" :key="klausur.getKey().id">
-						<span class="svws-ui-badge" :style="`background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur.getKey()) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur.getKey()) }}</span>
+						<span class="svws-ui-badge" :style="`color: var(--color-text-ui-static); background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur.getKey()) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur.getKey()) }}</span>
 						<div class="leading-tight">
 							{{ [...klausur.getValue()].map(sid => kMan().schuelerGetByIdOrException(sid)?.vorname + ' ' + kMan().schuelerGetByIdOrException(sid)?.nachname).join(", ") }}
 						</div>
@@ -156,7 +156,7 @@
 					<li v-for="konflikt in anzahlProKwKonflikte(4)" :key="konflikt.getKey()">
 						<span class="font-bold">{{ kMan().schuelerGetByIdOrException(konflikt.getKey())?.vorname + ' ' + kMan().schuelerGetByIdOrException(konflikt.getKey())?.nachname }}</span>
 						<div class="grid grid-cols-3 gap-x-1 gap-y-2 mt-0.5">
-							<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge flex-col w-full" :style="`background-color: ${kMan().fachHTMLFarbeRgbaByKursklausur(kMan().kursklausurBySchuelerklausurTermin(klausur))};`">
+							<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge flex-col w-full" :style="`color: var(--color-text-ui-static); background-color: ${kMan().fachHTMLFarbeRgbaByKursklausur(kMan().kursklausurBySchuelerklausurTermin(klausur))};`">
 								<span class="text-button font-medium">{{ kMan().kursKurzbezeichnungByKursklausur(kMan().kursklausurBySchuelerklausurTermin(klausur)) }}</span>
 								<span class="text-sm font-medium">{{ getDatum(kMan().kursklausurBySchuelerklausurTermin(klausur)) }}</span>
 							</span>

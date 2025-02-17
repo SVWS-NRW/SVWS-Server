@@ -63,17 +63,17 @@
 						<span>{{ kMan().anzahlBenoetigtePlaetzeAlleKlausurenByTermin(terminFremd, false) }} Klausuren im Jahrgang {{ GostHalbjahr.fromIDorException(terminFremd.halbjahr).jahrgang }},&nbsp;</span>
 						<span v-if="kMan().isTerminAlleSchuelerklausurenVerplant(terminFremd)" class="text-ui-success">alle zugewiesen.</span>
 						<span v-else class="text-ui-danger">nicht alle zugewiesen.</span>
-						<svws-ui-button type="icon" @click="gotoTermin(terminFremd.abijahr, GostHalbjahr.fromIDorException(terminFremd.halbjahr), terminFremd.id)" :title="`Zur Raumplanung des Jahrgangs`" size="small"><span class="icon i-ri-link" /></svws-ui-button>
+						<svws-ui-button type="icon" @click="gotoTermin(terminFremd.abijahr, GostHalbjahr.fromIDorException(terminFremd.halbjahr), terminFremd.id)" title="Zur Raumplanung des Jahrgangs" size="small"><span class="icon i-ri-link" /></svws-ui-button>
 					</li>
 				</ul>
 			</div>
-			<div class="flex flex-wrap gap-1 py-1 w-full">
+			<div class="flex flex-wrap gap-2 py-1 w-full">
 				<svws-ui-button :disabled="!hatKompetenzUpdate" @click="createKlausurraum({idTermin: termin.id})">
-					<span class="icon i-ri-add-line -ml-1" />
+					<span class="icon i-ri-add-line" />
 					{{ kMan().raumGetMengeByTerminIncludingFremdtermine(termin, multijahrgang()).size() ? 'Raum hinzufügen' : 'Klausurraum anlegen' }}
 				</svws-ui-button>
 				<svws-ui-button type="transparent" :disabled="!hatKompetenzUpdate || !kMan().alleRaeumeHabenStundenplanRaumByTermin(termin, multijahrgang(), false) || !kMan().isPlatzkapazitaetAusreichendByTermin(termin, multijahrgang())" @click="showModalAutomatischVerteilen">
-					<span class="icon i-ri-sparkling-line -ml-1 mr-1" />
+					<span class="icon i-ri-sparkling-line mr-1" />
 					{{ kMan().isPlatzkapazitaetAusreichendByTermin(termin, multijahrgang()) && kMan().alleRaeumeHabenStundenplanRaumByTermin(termin, multijahrgang(), false) ? "Automatisch verteilen" : (kMan().alleRaeumeHabenStundenplanRaumByTermin(termin, multijahrgang(), false) ? "Raumkapazität nicht ausreichend" : "Raumnummern nicht zugewiesen") }}
 				</svws-ui-button>
 			</div>

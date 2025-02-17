@@ -32,23 +32,23 @@
 				<template #cell(wert1)="{ rowIndex }">
 					<div class="table-cell">
 						<svws-ui-tooltip v-if="listErgebnismanager.get(rowIndex).getOfBewertung1Wert() > 0" autosize>
-							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung1Farbcode())}">{{ listErgebnismanager.get(rowIndex).getOfBewertung1Wert() }}</span>
+							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="`color: var(--color-text-ui-static); background-color: ${getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung1Farbcode())}`">{{ listErgebnismanager.get(rowIndex).getOfBewertung1Wert() }}</span>
 							<template #content>
 								<pre>{{ listErgebnismanager.get(rowIndex).regelGetTooltipFuerRegelverletzungen() }}</pre>
 							</template>
 						</svws-ui-tooltip>
-						<span v-else class="svws-ui-badge min-w-[2.75rem] text-center justify-center" style="background-color: rgb(128, 255, 128)">0</span>
+						<span v-else class="svws-ui-badge min-w-[2.75rem] text-center justify-center" style="color: var(--color-text-ui-static); background-color: rgb(128, 255, 128)">0</span>
 					</div>
 				</template>
 				<template #cell(wert2)="{ rowIndex }">
 					<div class="table-cell">
 						<svws-ui-tooltip v-if="listErgebnismanager.get(rowIndex).getOfBewertung2Wert() > 0" autosize>
-							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung2Farbcode())}">{{ listErgebnismanager.get(rowIndex).getOfBewertung2Wert() }}</span>
+							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="`color: var(--color-text-ui-static); background-color: ${getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung2Farbcode())}`">{{ listErgebnismanager.get(rowIndex).getOfBewertung2Wert() }}</span>
 							<template #content>
 								<pre>{{ listErgebnismanager.get(rowIndex).regelGetTooltipFuerWahlkonflikte() }}</pre>
 							</template>
 						</svws-ui-tooltip>
-						<span v-else class="svws-ui-badge min-w-[2.75rem] text-center justify-center" style="background-color: rgb(128, 255, 128)">0</span>
+						<span v-else class="svws-ui-badge min-w-[2.75rem] text-center justify-center" style="color: var(--color-text-ui-static); background-color: rgb(128, 255, 128)">0</span>
 					</div>
 				</template>
 				<template #cell(wert3)="{ rowIndex }">
@@ -56,9 +56,9 @@
 						<svws-ui-tooltip autosize>
 							<div class="svws-ui-badge min-w-[2.75rem] px-2 text-center " :class="ausfuehrlicheDarstellungKursdifferenz() ? ['justify-between flex gap-1']:['justify-center']" :style="{'background-color': getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3Farbcode())}">
 								<template v-if="ausfuehrlicheDarstellungKursdifferenz()">
-									<span class="svws-ui-badge min-w-12 text-center justify-center" :style="{'background-color': getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3Farbcode_nur_LK())}"> {{ listErgebnismanager.get(rowIndex).getOfBewertung3Wert_nur_LK() }} </span>
-									<span class="svws-ui-badge min-w-12 text-center justify-center" :style="{'background-color': getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3Farbcode_nur_GK())}"> {{ listErgebnismanager.get(rowIndex).getOfBewertung3Wert_nur_GK() }} </span>
-									<span class="svws-ui-badge min-w-12 text-center justify-center" :style="{'background-color': getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3Farbcode_nur_REST())}"> {{ listErgebnismanager.get(rowIndex).getOfBewertung3Wert_nur_REST() }} </span>
+									<span class="svws-ui-badge min-w-12 text-center justify-center" :style="`color: var(--color-text-ui-static); background-color: ${getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3Farbcode_nur_LK())}`"> {{ listErgebnismanager.get(rowIndex).getOfBewertung3Wert_nur_LK() }} </span>
+									<span class="svws-ui-badge min-w-12 text-center justify-center" :style="`color: var(--color-text-ui-static); background-color: ${getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3Farbcode_nur_GK())}`"> {{ listErgebnismanager.get(rowIndex).getOfBewertung3Wert_nur_GK() }} </span>
+									<span class="svws-ui-badge min-w-12 text-center justify-center" :style="`color: var(--color-text-ui-static); background-color: ${getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3Farbcode_nur_REST())}`"> {{ listErgebnismanager.get(rowIndex).getOfBewertung3Wert_nur_REST() }} </span>
 								</template>
 								<span v-else>{{ listErgebnismanager.get(rowIndex).getOfBewertung3Wert() }}</span>
 							</div>
@@ -71,12 +71,12 @@
 				<template #cell(wert4)="{ rowIndex }">
 					<div class="table-cell">
 						<svws-ui-tooltip v-if="listErgebnismanager.get(rowIndex).getOfBewertung4Wert() > 0" autosize>
-							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung4Farbcode())}">{{ listErgebnismanager.get(rowIndex).getOfBewertung4Wert() }}</span>
+							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="`color: var(--color-text-ui-static); background-color: ${getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung4Farbcode())}`">{{ listErgebnismanager.get(rowIndex).getOfBewertung4Wert() }}</span>
 							<template #content>
 								<pre>{{ listErgebnismanager.get(rowIndex).regelGetTooltipFuerFaecherparallelitaet() }}</pre>
 							</template>
 						</svws-ui-tooltip>
-						<span v-else class="svws-ui-badge min-w-[2.75rem] text-center justify-center" style="background-color: rgb(128, 255, 128)">0</span>
+						<span v-else class="svws-ui-badge min-w-[2.75rem] text-center justify-center" style="color: var(--color-text-ui-static); background-color: rgb(128, 255, 128)">0</span>
 					</div>
 				</template>
 			</svws-ui-table>

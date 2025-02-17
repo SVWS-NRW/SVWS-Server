@@ -14,8 +14,8 @@
 				<template v-if="!$slots.tableTitle">
 					<slot name="title">
 						<span class="leading-tight inline-flex gap-0.5" :class="{'text-base': compact || compactWithDate}">
-							<span v-if="dragIcon && !compact" class="group-hover:bg-ui-contrast-10 -ml-1 mr-0.5 rounded">
-								<span class="icon i-ri-draggable" :class="{'-mx-0.5': !compact}" />
+							<span v-if="dragIcon && !compact" class="group-hover:bg-ui-contrast-10 mr-0.5 rounded">
+								<span class="icon i-ri-draggable" />
 							</span>
 							<span class="line-clamp-1 break-all">{{ terminBezeichnung() }}</span>
 						</span>
@@ -23,7 +23,6 @@
 						<div v-if="compact || compactWithDate" class="svws-compact-data text-sm font-medium flex flex-wrap mt-0.5">
 							<span class="font-bold">{{ kMan().schuelerklausurterminAktuellGetMengeByTermin(termin).size() }} Schüler,&nbsp;</span>
 							<span><span v-if="kMan().minKlausurdauerGetByTermin(termin, true) < kMan().maxKlausurdauerGetByTermin(termin, true)">{{ kMan().minKlausurdauerGetByTermin(termin, true) }} - </span>{{ kMan().maxKlausurdauerGetByTermin(termin, true) }} Minuten</span>
-
 							<span v-if="quartalsauswahl && quartalsauswahl.value === 0">, {{ termin.quartal ? termin.quartal + ' . Quartal' : 'Beide Quartale' }}</span>
 						</div>
 					</slot>
@@ -40,7 +39,7 @@
 							<template v-else>
 								<span class="opacity-50 inline-flex items-center gap-1">
 									<span>{{ DateUtils.gibDatumGermanFormat(termin.datum) }}</span>
-									<svws-ui-button v-if="!hideButtonRaeumePlanen" :disabled="!hatKompetenzUpdate" type="transparent" @click="gotoRaumzeitTermin(termin.abijahr, GostHalbjahr.fromIDorException(termin.halbjahr), termin.id);$event.stopPropagation()" :title="`Räume planen`" size="small"><span class="icon i-ri-link" /> Räume planen</svws-ui-button>
+									<svws-ui-button v-if="!hideButtonRaeumePlanen" :disabled="!hatKompetenzUpdate" type="transparent" @click="gotoRaumzeitTermin(termin.abijahr, GostHalbjahr.fromIDorException(termin.halbjahr), termin.id);$event.stopPropagation()" title="Räume planen" size="small"><span class="icon i-ri-link" /> Räume planen</svws-ui-button>
 								</span>
 							</template>
 						</slot>
@@ -81,7 +80,7 @@
 										}
 									]">
 									<div class="svws-ui-td" role="cell">
-										<span class="icon i-ri-draggable -m-0.5 -ml-3" v-if="onDrag !== undefined && (draggable === undefined || draggable(klausur, termin))" />
+										<span class="icon i-ri-draggable" v-if="onDrag !== undefined && (draggable === undefined || draggable(klausur, termin))" />
 									</div>
 									<div class="svws-ui-td" :class="{'-ml-2': inTooltip}" role="cell">
 										{{ GostHalbjahr.fromIDorException(kMan().vorgabeByKursklausur(klausur).halbjahr).jahrgang }}
@@ -91,7 +90,7 @@
 											<template #content>
 												<s-gost-klausurplanung-kursliste :k-man :kursklausur="klausur" :termin :patch-klausur :create-schuelerklausur-termin @modal="keepOpen = $event" :benutzer-kompetenzen />
 											</template>
-											<span class="svws-ui-badge hover:opacity-75" :style="`background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
+											<span class="svws-ui-badge hover:opacity-75" :style="`color: var(--color-text-ui-static); background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
 											<svws-ui-tooltip>
 												<template #content>
 													<div v-if="kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe !== null && kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe!.trim().length > 0">
@@ -159,7 +158,6 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type {DataTableColumn} from "@ui";
 	import type { GostKlausurplanungDragData } from "./SGostKlausurplanung";
 	import type { GostKlausurplanManager, GostKursklausur, GostKlausurtermin, GostSchuelerklausurTermin, GostKlausurenCollectionSkrsKrsData} from "@core";
 	import { GostHalbjahr, BenutzerKompetenz, DateUtils } from "@core";
@@ -229,7 +227,7 @@
 	}
 
 	const tableRowStyle = computed<string>(() => {
-		let result = "grid-template-columns: 1rem 2rem minmax(4rem, 1.25fr) 4rem minmax(4.5rem, 0.5fr) minmax(3.25rem, 0.5fr)";
+		let result = "grid-template-columns: 1rem 2rem minmax(5rem, 1.25fr) 4rem minmax(4rem, 0.5fr) minmax(3.25rem, 0.5fr)";
 		if (props.showKursschiene === true)
 			result += " minmax(1.75rem, 0.25fr)";
 		if (props.kMan().quartalGetByTermin(props.termin) === -1)

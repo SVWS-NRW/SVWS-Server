@@ -17,7 +17,7 @@
 				<div class="flex gap-2 w-full mb-1">
 					<svws-ui-text-input :disabled="termin().istHaupttermin" :placeholder="(termin().bezeichnung === null ? (props.kMan().kursklausurGetMengeByTermin(termin()).size() ? terminTitel() : 'Neuer Nachschreibtermin') : 'Klausurtermin')" :model-value="termin().bezeichnung" @change="bezeichnung => patchKlausurtermin(termin().id, {bezeichnung})" headless />
 					<span v-if="(dragData !== undefined && dragData instanceof GostSchuelerklausurTermin && (termin().quartal === kMan().vorgabeBySchuelerklausurTermin(dragData).quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur > 0)" class="inline-flex items-center shrink-0 text-ui-danger font-bold text-headline-md -my-1">
-						<span class="icon i-ri-alert-line" />
+						<span class="icon i-ri-alert-line icon-ui-caution" />
 						<span>{{ konflikteTerminDragKlausur >= 0 ? konflikteTerminDragKlausur : 2 }}</span>
 					</span>
 				</div>
@@ -33,7 +33,7 @@
 				</svws-ui-button>
 			</template>
 			<template #loeschen>
-				<svws-ui-button :disabled="!hatKompetenzUpdate" v-if="loescheKlausurtermine !== undefined && termin !== undefined" type="icon" size="small" class="-mr-1" @click="(termin().istHaupttermin ? updateKlausurblockung(kMan().patchKlausurterminNachschreiberZuglassenFalse(termin())) : loescheKlausurtermine(Arrays.asList([termin()])));$event.stopPropagation()"><span class="icon i-ri-delete-bin-line -mx-1.5" /></svws-ui-button>
+				<svws-ui-button :disabled="!hatKompetenzUpdate" v-if="loescheKlausurtermine !== undefined && termin !== undefined" type="trash" size="small" @click="(termin().istHaupttermin ? updateKlausurblockung(kMan().patchKlausurterminNachschreiberZuglassenFalse(termin())) : loescheKlausurtermine(Arrays.asList([termin()])));$event.stopPropagation()" />
 			</template>
 		</s-gost-klausurplanung-termin>
 	</div>

@@ -24,7 +24,7 @@
 										:draggable="hatUpdateKompetenz && (fachwahlKurszuordnungen.get(fach.fachID) === undefined)"
 										@dragstart="drag_started(fachwahlKurszuordnungen.get(fach.fachID)?.id, fach.fachID, fachwahlKursarten.get(fach.fachID)!.id)"
 										@dragend="drag_ended()"
-										class="select-none svws-ui-td svws-no-padding group rounded-sm"
+										class="select-none svws-ui-td svws-no-padding group rounded-sm text-ui-static"
 										:class="hatUpdateKompetenz && (fachwahlKurszuordnungen.get(fach.fachID) === undefined) ? 'cursor-grab' : 'opacity-50'"
 										:style="{ 'background-color': bgColorFachwahl(fach.fachID) }">
 										<div class="svws-ui-badge-transparent w-auto grow !h-full items-center m-0">
