@@ -158,28 +158,3 @@
 	}
 
 </script>
-
-<style scoped>
-
-	.login-footer-link {
-		display: inline-block;
-	}
-
-	.login-footer-link:hover,
-	.login-footer-link:focus,
-	.login-footer-link:hover .hover-underline,
-	.login-footer-link:focus .hover-underline {
-		text-decoration-line: underline;
-	}
-
-	.v-enter-active,
-	.v-leave-active {
-		transition: opacity 0.5s ease;
-	}
-
-	.v-enter-from,
-	.v-leave-to {
-		opacity: 0;
-	}
-
-</style>

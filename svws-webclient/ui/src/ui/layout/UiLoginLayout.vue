@@ -102,3 +102,19 @@
 	});
 
 </script>
+
+
+<style scoped>
+
+	.login-footer-link {
+		display: inline-block;
+	}
+
+	.login-footer-link:hover,
+	.login-footer-link:focus,
+	.login-footer-link:hover .hover-underline,
+	.login-footer-link:focus .hover-underline {
+		text-decoration-line: underline;
+	}
+
+</style>

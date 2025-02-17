@@ -49,20 +49,10 @@
 
 </script>
 
-<style lang="postcss" scoped>
-
-	@reference "../../../ui/src/assets/styles/index.css";
-
-	.app--layout--login {
-		@apply p-0 bg-none bg-transparent;
-	}
-
-	.modal {
-		@apply shadow-2xl shadow-black/50 rounded-3xl;
-	}
+<style scoped>
 
 	input[type="file" i]{ /* the name of the selected file */
-		@apply w-full;
+		width: 100%;
 	}
 
 </style>

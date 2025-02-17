@@ -132,34 +132,3 @@
 	}
 
 </script>
-
-<style lang="postcss" scoped>
-
-	@reference "../../../ui/src/assets/styles/index.css";
-
-	.app--layout--login {
-		@apply p-0 bg-none bg-transparent;
-	}
-
-	.login-footer-link {
-		@apply inline-block;
-	}
-
-	.login-footer-link:hover,
-	.login-footer-link:focus,
-	.login-footer-link:hover .hover-underline,
-	.login-footer-link:focus .hover-underline {
-		@apply underline;
-	}
-
-	.v-enter-active,
-	.v-leave-active {
-		transition: opacity 0.5s ease;
-	}
-
-	.v-enter-from,
-	.v-leave-to {
-		opacity: 0;
-	}
-
-</style>
