@@ -2,7 +2,7 @@
 	<svws-ui-app-layout :fullwidth-content="true">
 		<template #main>
 			<div class="flex h-full flex-col justify-between grow">
-				<div class="bg-cover bg-top rounded-2xl h-full flex flex-col justify-center items-center px-4 bg-[url(@images/placeholder-background-blurred.jpg)]">
+				<div class="bg-cover bg-top rounded-2xl h-full flex flex-col justify-center items-center px-4 bg-[url(@images/bglogin.jpg)]">
 					<div class="modal modal--md">
 						<div class="modal--titlebar">
 							<div class="modal--title inline-flex items-center gap-1">
