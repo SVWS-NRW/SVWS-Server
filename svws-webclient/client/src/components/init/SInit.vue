@@ -1,85 +1,72 @@
 <template>
-	<svws-ui-app-layout :fullwidth-content="true">
+	<ui-login-layout size="lg" hide-header hide-hinweis>
 		<template #main>
-			<div class="flex h-full flex-col justify-between grow">
-				<div class="bg-cover bg-top rounded-2xl h-full flex flex-col justify-center items-center px-4 bg-[url(@images/bglogin.jpg)]">
-					<div class="modal modal--md">
-						<div class="modal--titlebar">
-							<div class="modal--title inline-flex items-center gap-1">
-								<span>Initialisierung der Datenbank</span>
+			<div class="w-full flex flex-col">
+				<div class="w-full pb-2 mb-4 text-headline-md text-left border-b-1">
+					<span>Initialisierung der Datenbank</span>
+				</div>
+				<svws-ui-action-button title="Schulkatalog" description="Daten werden über die Auswahl der Schulnummer ausgwählt"
+					icon="i-ri-archive-line" :action-function="init" :is-loading :action-disabled="schule === undefined"
+					:is-active="source === 'init'" @click="clickInit">
+					<div class="flex gap-2">
+						<svws-ui-select v-model="schule" title="Schule auswählen" autocomplete
+							:items="listSchulkatalog" :item-text="i => i.KurzBez ? `${i.SchulNr}: ${i.KurzBez}` : `${i.SchulNr}: Schule ohne Name`"
+							:item-filter="filterSchulenKatalogEintraege" required :disabled="isLoading" />
+					</div>
+					<div class="font-bold text-sm text-ui-danger mt-2">
+						{{ status === false ? "Fehler beim Initialisieren" : status === true ? "Initialisierung erfolgreich" : "" }}
+					</div>
+				</svws-ui-action-button>
+				<svws-ui-action-button title="Schild 2-Datenbank migrieren" description="Daten werden über die Auswahl einer existierenden Schild 2-Datenbank migriert."
+					icon="i-ri-database-2-line" :action-function="migrate" action-label="Migration starten" :is-loading :action-disabled="(db === 'mdb' && !file) || (user === 'root')"
+					:is-active="source === 'migrate'" @click="clickMigrate">
+					<div class="flex flex-col gap-4">
+						<svws-ui-select :model-value="items.get(db)" :items="items.values()" @update:model-value="set" :item-text="i => i" title="Datenbank" />
+						<div class="flex flex-col gap-6 text-left" v-if="db === 'mdb'">
+							<div class="flex flex-col gap-2 px-2">
+								<span class="font-bold text-button">Access-Datei (.mdb) hochladen</span>
+								<input type="file" @change="onFileChanged" :disabled="isLoading" accept=".mdb">
 							</div>
-							<svws-ui-button type="icon" class="invisible" />
 						</div>
-						<div class="modal--content-wrapper pb-3">
-							<div class="modal--content overflow-y-auto">
-								<div class="flex flex-col">
-									<svws-ui-action-button title="Schulkatalog" description="Daten werden über die Auswahl der Schulnummer ausgwählt"
-										icon="i-ri-archive-line" :action-function="init" :is-loading :action-disabled="schule === undefined"
-										:is-active="source === 'init'" @click="clickInit">
-										<div class="flex gap-2">
-											<svws-ui-select v-model="schule" title="Schule auswählen" autocomplete
-												:items="listSchulkatalog" :item-text="i => i.KurzBez ? `${i.SchulNr}: ${i.KurzBez}` : `${i.SchulNr}: Schule ohne Name`"
-												:item-filter="filterSchulenKatalogEintraege" required :disabled="isLoading" />
-										</div>
-										<div class="font-bold text-sm text-ui-danger mt-2">
-											{{ status === false ? "Fehler beim Initialisieren" : status === true ? "Initialisierung erfolgreich" : "" }}
-										</div>
-									</svws-ui-action-button>
-									<svws-ui-action-button title="Schild 2-Datenbank migrieren" description="Daten werden über die Auswahl einer existierenden Schild 2-Datenbank migriert."
-										icon="i-ri-database-2-line" :action-function="migrate" action-label="Migration starten" :is-loading :action-disabled="(db === 'mdb' && !file) || (user === 'root')"
-										:is-active="source === 'migrate'" @click="clickMigrate">
-										<div class="flex flex-col gap-4">
-											<svws-ui-select :model-value="items.get(db)" :items="items.values()" @update:model-value="set" :item-text="i => i" title="Datenbank" />
-											<div class="flex flex-col gap-6 text-left" v-if="db === 'mdb'">
-												<div class="flex flex-col gap-2 px-2">
-													<span class="font-bold text-button">Access-Datei (.mdb) hochladen</span>
-													<input type="file" @change="onFileChanged" :disabled="isLoading" accept=".mdb">
-												</div>
-											</div>
-											<div class="flex flex-col gap-3" v-if="db !== 'mdb'">
-												<div class="flex flex-col gap-2 mt-2 mb-6">
-													<div class="flex flex-col text-left gap-0.5 pl-3">
-														<span class="opacity-50">Bei Migration aus einer Schild-Zentral-Instanz:</span>
-														<svws-ui-checkbox class="text-left" type="toggle" v-model="schildzentral">Schulnummer angeben</svws-ui-checkbox>
-													</div>
-													<svws-ui-text-input v-if="schildzentral" v-model="schulnummer" placeholder="Schulnummer" />
-												</div>
-												<svws-ui-text-input v-model.trim="location" placeholder="Datenbank-Host" />
-												<svws-ui-text-input v-model.trim="schema" placeholder="Datenbank-Schema" />
-												<svws-ui-text-input v-model.trim="user" placeholder="Datenbank-Benutzer" />
-												<svws-ui-text-input v-model.trim="password" placeholder="Passwort Datenbankbenutzer" type="password" />
-											</div>
-											<div class="text-left font-bold text-sm -mb-5 mt-4">
-												{{ status === false ? "Fehler beim Upload" : status === true ? "Upload erfolgreich" : "" }}
-											</div>
-										</div>
-									</svws-ui-action-button>
-									<svws-ui-action-button title="Wiederherstellen" description="Daten werden aus einem Backup wiederhergestellt" :action-function="restore"
-										action-label="Wiederherstellen" icon="i-ri-device-recover-line" :action-disabled="!file || isLoading" :is-loading
-										:is-active="source === 'restore'" @click="clickRestore">
-										<div class="flex flex-col gap-2 text-left">
-											<span class="font-bold text-button">Quell-Datenbank: SQLite-Datenbank (.sqlite) hochladen</span>
-											<input type="file" @change="onFileChanged" :disabled="isLoading" accept=".sqlite">
-											<div class="font-bold text-sm">
-												{{ status === false ? "Fehler beim Upload" : status === true ? "Upload erfolgreich" : "" }}
-											</div>
-										</div>
-									</svws-ui-action-button>
-									<div class="col-span-full">
-										<log-box :logs :status>
-											<template #button>
-												<svws-ui-button v-if="status !== undefined" type="transparent" @click="clearLog" title="Log verwerfen">Log verwerfen </svws-ui-button>
-											</template>
-										</log-box>
-									</div>
+						<div class="flex flex-col gap-3" v-if="db !== 'mdb'">
+							<div class="flex flex-col gap-2 mt-2 mb-6">
+								<div class="flex flex-col text-left gap-0.5 pl-3">
+									<span class="opacity-50">Bei Migration aus einer Schild-Zentral-Instanz:</span>
+									<svws-ui-checkbox class="text-left" type="toggle" v-model="schildzentral">Schulnummer angeben</svws-ui-checkbox>
 								</div>
+								<svws-ui-text-input v-if="schildzentral" v-model="schulnummer" placeholder="Schulnummer" />
 							</div>
+							<svws-ui-text-input v-model.trim="location" placeholder="Datenbank-Host" />
+							<svws-ui-text-input v-model.trim="schema" placeholder="Datenbank-Schema" />
+							<svws-ui-text-input v-model.trim="user" placeholder="Datenbank-Benutzer" />
+							<svws-ui-text-input v-model.trim="password" placeholder="Passwort Datenbankbenutzer" type="password" />
+						</div>
+						<div class="text-left font-bold text-sm -mb-5 mt-4">
+							{{ status === false ? "Fehler beim Upload" : status === true ? "Upload erfolgreich" : "" }}
 						</div>
 					</div>
+				</svws-ui-action-button>
+				<svws-ui-action-button title="Wiederherstellen" description="Daten werden aus einem Backup wiederhergestellt" :action-function="restore"
+					action-label="Wiederherstellen" icon="i-ri-device-recover-line" :action-disabled="!file || isLoading" :is-loading
+					:is-active="source === 'restore'" @click="clickRestore">
+					<div class="flex flex-col gap-2 text-left">
+						<span class="font-bold text-button">Quell-Datenbank: SQLite-Datenbank (.sqlite) hochladen</span>
+						<input type="file" @change="onFileChanged" :disabled="isLoading" accept=".sqlite">
+						<div class="font-bold text-sm">
+							{{ status === false ? "Fehler beim Upload" : status === true ? "Upload erfolgreich" : "" }}
+						</div>
+					</div>
+				</svws-ui-action-button>
+				<div class="col-span-full">
+					<log-box :logs :status>
+						<template #button>
+							<svws-ui-button v-if="status !== undefined" type="transparent" @click="clearLog" title="Log verwerfen">Log verwerfen </svws-ui-button>
+						</template>
+					</log-box>
 				</div>
 			</div>
 		</template>
-	</svws-ui-app-layout>
+	</ui-login-layout>
 	<s-notifications />
 </template>
 

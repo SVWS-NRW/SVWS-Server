@@ -5,7 +5,7 @@
 				<span v-if="underConstruction" class="h-[1rem] w-full" style="background: repeating-linear-gradient( -45deg, #000, #000 10px, #ffff00 10px, #ffff00 20px );" />
 				<div class="p-4 w-full h-full overflow-hidden text-center flex flex-col gap-4">
 					<!-- Header -->
-					<div class="w-full flex flex-col gap-2">
+					<div v-if="!hideHeader" class="w-full flex flex-col gap-2">
 						<h1 class="text-headline-xl">SVWS NRW</h1>
 						<h2 class="text-headline-sm opacity-50">
 							Schulverwaltung für<br>Nordrhein-Westfalen
@@ -15,11 +15,11 @@
 						</h2>
 					</div>
 					<!-- Hauptbereich des Login (Slot) -->
-					<div class="w-full py-4 min-h-fit overflow-y-auto flex flex-col">
+					<div class="w-full min-h-fit overflow-y-auto flex flex-col" :class="{ 'pb-4': !hideHinweis && (version === undefined), 'pt-4': !hideHeader }">
 						<slot name="main" />
 					</div>
 					<!-- Footer: Version, Impressum und Datenschutz -->
-					<div class="text-sm font-medium">
+					<div v-if="version !== undefined" class="text-sm font-medium">
 						<div class="flex gap-2 items-center opacity-50">
 							<slot name="logo" />
 							<div class="text-left flex flex-col leading-5">
@@ -68,6 +68,7 @@
 		githash?: string;
 		size?: 'sm' | 'md' | 'lg';
 		application?: string;
+		hideHeader?: boolean;
 		hideHinweis?: boolean;
 		underConstruction?: boolean;
 	}>(), {
@@ -75,6 +76,7 @@
 		githash: undefined,
 		size: 'sm',
 		application: undefined,
+		hideHeader: false,
 		hideHinweis: false,
 		underConstruction: false,
 	});
