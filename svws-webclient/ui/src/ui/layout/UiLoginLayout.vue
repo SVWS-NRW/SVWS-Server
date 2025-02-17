@@ -1,8 +1,9 @@
 <template>
 	<div class="h-screen w-screen overflow-hidden bg-ui">
-		<div class="h-full w-full overflow-hidden flex flex-col justify-center items-center bg-top bg-cover bg-[url(@images/placeholder-background.jpg)]">
-			<div class="h-fit max-h-full p-4 w-full overflow-hidden m-auto flex flex-col items-center bg-ui text-ui border border-ui-secondary rounded-xl" :class="classSize">
-				<div class="w-full h-full overflow-hidden text-center flex flex-col gap-4">
+		<div class="h-full w-full overflow-hidden flex flex-col justify-center items-center bg-top bg-cover bg-[url(@images/bglogin.jpg)]">
+			<div class="h-fit max-h-full w-full overflow-hidden m-auto flex flex-col items-center bg-ui text-ui border border-ui-secondary rounded-xl" :class="classSize">
+				<span v-if="underConstruction" class="h-[1rem] w-full" style="background: repeating-linear-gradient( -45deg, #000, #000 10px, #ffff00 10px, #ffff00 20px );" />
+				<div class="p-4 w-full h-full overflow-hidden text-center flex flex-col gap-4">
 					<!-- Header -->
 					<div class="w-full flex flex-col gap-2">
 						<h1 class="text-headline-xl">SVWS NRW</h1>
@@ -68,12 +69,14 @@
 		size?: 'sm' | 'md' | 'lg';
 		application?: string;
 		hideHinweis?: boolean;
+		underConstruction?: boolean;
 	}>(), {
 		version: undefined,
 		githash: undefined,
 		size: 'sm',
 		application: undefined,
 		hideHinweis: false,
+		underConstruction: false,
 	});
 
 	const copied = ref<boolean|null>(null);

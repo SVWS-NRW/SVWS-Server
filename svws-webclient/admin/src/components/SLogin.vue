@@ -1,76 +1,37 @@
 <template>
-	<svws-ui-app-layout :fullwidth-content="!authentication_success" :class="{'app--layout--login': !authentication_success}">
-		<template #main>
-			<div class="flex h-full flex-col justify-between">
-				<div class="bg-cover bg-top h-full flex flex-col justify-center items-center px-4 pt-5 bg-[url(@images/start-hintergrund.jpg)]">
-					<div class="modal modal--sm my-auto">
-						<div class="modal--content-wrapper pb-3">
-							<span class="h-[1rem]" style="background: repeating-linear-gradient( -45deg, #000, #000 10px, #ffff00 10px, #ffff00 20px );" />
-							<div class="modal--content">
-								<div class="mb-6 mt-2">
-									<h1 class="font-bold text-headline-xl leading-none w-full py-2">
-										SVWS NRW
-									</h1>
-									<h2 class="text-headline-sm leading-tight opacity-50">Administrative<br>Verwaltung</h2>
-								</div>
-								<svws-ui-input-wrapper center>
-									<svws-ui-text-input v-model.trim="inputHostname" type="text" url placeholder="Serveradresse" @keyup.enter="connect" @focus="inputFocus = true" />
-									<svws-ui-button type="secondary" @click="connect" :disabled="!(!connected || connecting || inputFocus )" :class="{'opacity-25 hover:opacity-100': connected && !inputFocus}">
-										<span v-if="!connected || connecting || inputFocus">Verbinden</span>
-										<span v-else>Verbunden</span>
-										<svws-ui-spinner :spinning="connecting" />
-										<span class="icon i-ri-check-line" v-if="!connecting && connected && !inputFocus" />
-									</svws-ui-button>
-								</svws-ui-input-wrapper>
-								<Transition>
-									<svws-ui-input-wrapper v-if="connected && !connecting" class="mt-10" center>
-										<svws-ui-text-input v-model.trim="username" type="text" placeholder="Benutzername" @keyup.enter="doLogin" />
-										<svws-ui-text-input v-model.trim="password" type="password" placeholder="Passwort" @keyup.enter="doLogin" />
-										<svws-ui-spacing />
-										<div class="flex gap-2">
-											<svws-ui-button type="transparent" disabled>
-												Hilfe
-											</svws-ui-button>
-											<svws-ui-button @click="doLogin" type="primary" :disabled="authenticating">
-												Anmelden
-												<svws-ui-spinner v-if="authenticating" spinning />
-												<span class="icon i-ri-login-circle-line" v-else />
-											</svws-ui-button>
-										</div>
-									</svws-ui-input-wrapper>
-								</Transition>
-								<div class="mt-16 text-sm font-medium">
-									<div class="flex gap-3 items-center opacity-50">
-										<img src="/images/Wappenzeichen_NRW_bw.svg" alt="Logo NRW" class="h-11">
-										<div class="text-left">
-											<p>
-												Powered by SVWS-NRW
-												<br><span class="font-bold">Version {{ version }}</span>  <span v-if="version.includes('SNAPSHOT')">{{ githash.substring(0, 8) }}</span>
-											</p>
-											<nav class="flex flex-row items-center gap-2 mt-0.5">
-												<a class="login-footer-link" href="#">Impressum</a>
-												<datenschutz-modal v-slot="{ openModal }">
-													<a class="login-footer-link" href="#" @click="openModal()">Datenschutz</a>
-												</datenschutz-modal>
-											</nav>
-										</div>
-									</div>
-									<div class="mt-3 -mb-3 opacity-50">
-										<p class="text-sm text-left">
-											Hinweis: Um eine gute Lesbarkeit zu erzeugen, wird bei SVWS-NRW möglichst auf
-											geschlechtsneutrale Begriffe wie Lehrkräfte, Klassenleitung, Erzieher usw.
-											zurückgegriffen. An Stellen, wo das nicht möglich ist, wird versucht alle
-											Geschlechter gleichermaßen zu berücksichtigen.
-										</p>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+	<ui-login-layout :version :githash application="Administrative Verwaltung" underConstruction>
+		<template #logo>
+			<img src="/images/Wappenzeichen_NRW_bw.svg" alt="Logo NRW" class="h-14">
 		</template>
-	</svws-ui-app-layout>
+		<template #main>
+			<div class="grid grow grid-cols-1 gap-3 justify-items-center">
+				<svws-ui-text-input v-model.trim="inputHostname" type="text" url placeholder="Serveradresse" @keyup.enter="connect" @focus="inputFocus = true" />
+				<svws-ui-button type="secondary" @click="connect" :disabled="!(!connected || connecting || inputFocus )" :class="{'opacity-25 hover:opacity-100': connected && !inputFocus}">
+					<span v-if="!connected || connecting || inputFocus">Verbinden</span>
+					<span v-else>Verbunden</span>
+					<svws-ui-spinner :spinning="connecting" />
+					<span class="icon i-ri-check-line" v-if="!connecting && connected && !inputFocus" />
+				</svws-ui-button>
+			</div>
+			<Transition>
+				<svws-ui-input-wrapper v-if="connected && !connecting" class="mt-10" center>
+					<svws-ui-text-input v-model.trim="username" type="text" placeholder="Benutzername" @keyup.enter="doLogin" />
+					<svws-ui-text-input v-model.trim="password" type="password" placeholder="Passwort" @keyup.enter="doLogin" />
+					<svws-ui-spacing />
+					<div class="flex gap-2">
+						<svws-ui-button type="transparent" disabled>
+							Hilfe
+						</svws-ui-button>
+						<svws-ui-button @click="doLogin" type="primary" :disabled="authenticating">
+							Anmelden
+							<svws-ui-spinner v-if="authenticating" spinning />
+							<span class="icon i-ri-login-circle-line" v-else />
+						</svws-ui-button>
+					</div>
+				</svws-ui-input-wrapper>
+			</Transition>
+		</template>
+	</ui-login-layout>
 </template>
 
 <script setup lang="ts">
