@@ -1,4 +1,5 @@
 import { IllegalFormatException } from '../util/IllegalFormatException';
+import { NullPointerException } from './NullPointerException';
 
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export abstract class JavaString {
@@ -9,11 +10,15 @@ export abstract class JavaString {
 		return str.includes(s);
 	}
 
-	public static isBlank(s: string): boolean {
+	public static isBlank(s: string | null): boolean {
+		if (s === null)
+			throw new NullPointerException();
 		return s.trim().length === 0;
 	}
 
-	public static isEmpty(s: string): boolean {
+	public static isEmpty(s: string | null): boolean {
+		if (s === null)
+			throw new NullPointerException();
 		return s.length === 0;
 	}
 
