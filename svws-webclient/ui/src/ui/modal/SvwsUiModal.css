@@ -82,9 +82,9 @@
 }
 
 .modal--title {
-		@apply grow px-2;
-		@apply text-headline-sm;
-	}
+	@apply grow px-2;
+	@apply text-headline-sm;
+}
 
 .modal--content-wrapper:not(.modal--content-noscroll) {
 	@apply h-full overflow-y-auto w-full;

@@ -3,14 +3,14 @@
 		<template #main>
 			<div class="flex h-full flex-col justify-between grow">
 				<div class="bg-cover bg-top rounded-2xl h-full flex flex-col justify-center items-center px-4 bg-[url(@images/placeholder-background-blurred.jpg)]">
-					<div class="init-form modal modal--md">
+					<div class="modal modal--md">
 						<div class="modal--titlebar">
 							<div class="modal--title inline-flex items-center gap-1">
 								<span>Initialisierung der Datenbank</span>
 							</div>
 							<svws-ui-button type="icon" class="invisible" />
 						</div>
-						<div class="modal--content-wrapper">
+						<div class="modal--content-wrapper pb-3">
 							<div class="modal--content overflow-y-auto">
 								<div class="flex flex-col">
 									<svws-ui-action-button title="Schulkatalog" description="Daten werden über die Auswahl der Schulnummer ausgwählt"

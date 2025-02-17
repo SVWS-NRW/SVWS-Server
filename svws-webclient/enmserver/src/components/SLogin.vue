@@ -3,9 +3,9 @@
 		<template #main>
 			<div class="flex h-full flex-col justify-between">
 				<div class="bg-cover bg-top h-full flex flex-col justify-center items-center px-4 pt-5 bg-[url(@images/placeholder-background.jpg)]">
-					<div class="login-form modal modal--sm my-auto">
+					<div class="modal modal--sm my-auto">
 						<div class="modal--content-wrapper pb-3">
-							<div class="modal--content px-5">
+							<div class="modal--content">
 								<div class="mb-6 mt-2">
 									<h1 class="font-bold text-headline-xl leading-none w-full py-2">
 										Web-Noten-Manager
