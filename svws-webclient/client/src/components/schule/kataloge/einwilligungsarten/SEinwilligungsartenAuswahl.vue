@@ -1,11 +1,10 @@
 <template>
-	<svws-ui-secondary-menu>
-		<template #headline>
-			<span>Einwilligungsarten</span>
-		</template>
-		<template #abschnitt />
-		<template #header />
-		<template #content>
+	<div class="h-full flex flex-col">
+		<div class="secondary-menu--headline">
+			<h1>Einwilligungsarten</h1>
+		</div>
+		<div class="secondary-menu--header" />
+		<div class="secondary-menu--content">
 			<div class="container">
 				<svws-ui-table clickable :clicked="clickedEintrag" @update:clicked="eintrag => gotoDefaultView(eintrag.id)" :items="props.manager().filtered()" :columns selectable
 					:model-value="[...props.manager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)" scroll-into-view :focus-switching-enabled :focus-help-visible>
@@ -33,8 +32,8 @@
 					</template>
 				</svws-ui-table>
 			</div>
-		</template>
-	</svws-ui-secondary-menu>
+		</div>
+	</div>
 </template>
 
 <script setup lang="ts">

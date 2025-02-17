@@ -1,12 +1,15 @@
 <template>
-	<svws-ui-secondary-menu>
-		<template #headline>
-			<span class="select-none">Schüler</span>
-		</template>
-		<template #abschnitt>
-			<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
-		</template>
-		<template #content>
+	<div class="h-full flex flex-col">
+		<div class="secondary-menu--headline">
+			<h1 class="select-none">Schüler</h1>
+			<div class="input--schule-abschnitte">
+				<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
+			</div>
+		</div>
+		<div class="secondary-menu--header">
+			<slot name="header" />
+		</div>
+		<div class="secondary-menu--content">
 			<svws-ui-table :clickable="!manager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="schueler => gotoDefaultView(schueler.id)"
 				:items="rowsFiltered" :model-value="[...manager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)"
 				:columns="cols" selectable count :filter-open="true" :filtered="filterChanged()" :filterReset="filterReset" scroll-into-view scroll
@@ -51,8 +54,8 @@
 					</svws-ui-tooltip>
 				</template>
 			</svws-ui-table>
-		</template>
-	</svws-ui-secondary-menu>
+		</div>
+	</div>
 	<svws-ui-modal v-model:show="showModalGruppenaktionen" size="medium">
 		<template #modalTitle>
 			Aktionen für {{ selectedItems.length }} ausgewählte Schüler

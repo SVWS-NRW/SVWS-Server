@@ -64,7 +64,6 @@ export { default as SvwsUiNotification } from "./ui/SvwsUiNotification.vue";
 export { default as SvwsUiNotifications } from "./ui/SvwsUiNotifications.vue";
 export { default as SvwsUiRadioGroup } from "./ui/controls/SvwsUiRadioGroup.vue";
 export { default as SvwsUiRadioOption } from "./ui/controls/SvwsUiRadioOption.vue";
-export { default as SvwsUiSecondaryMenu } from "./ui/nav/SvwsUiSecondaryMenu.vue";
 export { default as SvwsUiSecondaryMenuNavigation } from "./ui/nav/SvwsUiSecondaryMenuNavigation.vue";
 export { default as SvwsUiSelect } from "./ui/controls/SvwsUiSelect.vue";
 export { default as SvwsUiSpacing } from "./ui/layout/SvwsUiSpacing.vue";

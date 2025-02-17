@@ -1,12 +1,13 @@
 <template>
-	<svws-ui-secondary-menu>
-		<template #headline>
-			<span title="Benutzer">Benutzer</span>
-		</template>
-		<template #abschnitt>
-			<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
-		</template>
-		<template #content>
+	<div class="h-full flex flex-col">
+		<div class="secondary-menu--headline">
+			<h1><span title="Benutzer">Benutzer</span></h1>
+			<div class="input--schule-abschnitte">
+				<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
+			</div>
+		</div>
+		<div class="secondary-menu--header" />
+		<div class="secondary-menu--content">
 			<svws-ui-table :clicked="auswahl()" @update:clicked="gotoBenutzer" v-model="selectedItems" :items="rowsFiltered.values()"
 				:columns clickable selectable count scroll scroll-into-view :focus-switching-enabled :focus-help-visible>
 				<template #search>
@@ -16,8 +17,8 @@
 					<s-modal-benutzer-neu :show-delete-icon="selectedItems.length > 0" :create-benutzer-allgemein :delete-benutzer-allgemein :has-focus="rowsFiltered.size === 0" :map-benutzer />
 				</template>
 			</svws-ui-table>
-		</template>
-	</svws-ui-secondary-menu>
+		</div>
+	</div>
 </template>
 
 <script setup lang="ts">

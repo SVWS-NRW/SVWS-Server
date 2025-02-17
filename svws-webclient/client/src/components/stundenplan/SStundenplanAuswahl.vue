@@ -1,10 +1,13 @@
 <template>
-	<svws-ui-secondary-menu>
-		<template #headline><span class="select-none">Stundenplan</span></template>
-		<template #abschnitt>
-			<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
-		</template>
-		<template #content>
+	<div class="h-full flex flex-col">
+		<div class="secondary-menu--headline">
+			<h1 class="select-none">Stundenplan</h1>
+			<div class="input--schule-abschnitte">
+				<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
+			</div>
+		</div>
+		<div class="secondary-menu--header" />
+		<div class="secondary-menu--content">
 			<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="mapKatalogeintraege().values()" :unselectable :columns selectable v-model="selected" scroll-into-view :focus-switching-enabled :focus-help-visible>
 				<template #actions>
 					<svws-ui-button @click="doDeleteEintraege" type="trash" :disabled="selected.length === 0" />
@@ -13,8 +16,8 @@
 					</svws-ui-button>
 				</template>
 			</svws-ui-table>
-		</template>
-	</svws-ui-secondary-menu>
+		</div>
+	</div>
 </template>
 
 <script setup lang="ts">

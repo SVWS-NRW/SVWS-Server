@@ -1,13 +1,13 @@
 <template>
-	<svws-ui-secondary-menu>
-		<template #headline>
-			<span> Vermerkarten </span>
-		</template>
-		<template #abschnitt>
-			<!-- <abschnitt-auswahl :daten="schuljahresabschnittsauswahl" /> -->
-		</template>
-		<template #header />
-		<template #content>
+	<div class="h-full flex flex-col">
+		<div class="secondary-menu--headline">
+			<h1>Vermerkarten</h1>
+			<div class="input--schule-abschnitte">
+				<!-- <abschnitt-auswahl :daten="schuljahresabschnittsauswahl" /> -->
+			</div>
+		</div>
+		<div class="secondary-menu--header" />
+		<div class="secondary-menu--content">
 			<div class="container">
 				<svws-ui-table clickable :clicked="clickedEintrag" @update:clicked="eintrag => gotoDefaultView(eintrag.id)" :items="props.manager().filtered()" :columns selectable
 					:model-value="[...props.manager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)" scroll-into-view :focus-switching-enabled :focus-help-visible>
@@ -35,8 +35,8 @@
 					</template>
 				</svws-ui-table>
 			</div>
-		</template>
-	</svws-ui-secondary-menu>
+		</div>
+	</div>
 </template>
 
 <script setup lang="ts">

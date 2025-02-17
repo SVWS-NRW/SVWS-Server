@@ -67,39 +67,41 @@
 		</template>
 		<template #secondaryMenu v-if="showSubmenu()">
 			<template v-if="pendingSetApp">
-				<svws-ui-secondary-menu>
-					<template #headline>
-						<span>{{ pendingSetApp }}</span>
-					</template>
-					<template #abschnitt>
-						<span class="inline-block h-4 rounded-sm animate-pulse w-16 -mb-1" />
-					</template>
-				</svws-ui-secondary-menu>
+				<div class="h-full flex flex-col">
+					<div class="secondary-menu--headline">
+						<h1> <span>{{ pendingSetApp }}</span> </h1>
+						<div class="input--schule-abschnitte">
+							<span class="inline-block h-4 rounded-sm animate-pulse w-16 -mb-1" />
+						</div>
+					</div>
+				</div>
 			</template>
 			<template v-else>
-				<svws-ui-secondary-menu>
-					<template #headline> {{ app.name.startsWith('schule') ? "Schule" : "Einstellungen" }} </template>
-					<template #abschnitt v-if="app.name.startsWith('schule')">
-						<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
-					</template>
-					<template #header />
-					<template #content>
+				<div class="h-full flex flex-col">
+					<div class="secondary-menu--headline">
+						<h1> {{ app.name.startsWith('schule') ? "Schule" : "Einstellungen" }}  </h1>
+						<div v-if="app.name.startsWith('schule')" class="input--schule-abschnitte">
+							<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
+						</div>
+					</div>
+					<div class="secondary-menu--header" />
+					<div class="secondary-menu--content">
 						<p v-if="focusSwitchingEnabled" v-show="focusHelpVisible" class="region-enumeration">2</p>
 						<svws-ui-secondary-menu-navigation class="focus-region" :class="{'highlighted': focusHelpVisible}" :tab-manager="(app.name.startsWith('schule') ? tabManagerSchule : tabManagerEinstellungen)" />
-					</template>
-				</svws-ui-secondary-menu>
+					</div>
+				</div>
 			</template>
 		</template>
 		<template #tertiaryMenu v-if="app.hide !== true">
 			<template v-if="pendingSetApp">
-				<svws-ui-secondary-menu>
-					<template #headline>
-						<span>{{ pendingSetApp }}</span>
-					</template>
-					<template #abschnitt>
-						<span class="inline-block h-4 rounded-sm animate-pulse w-16 -mb-1 bg-ui-contrast-10" />
-					</template>
-				</svws-ui-secondary-menu>
+				<div class="h-full flex flex-col">
+					<div class="secondary-menu--headline">
+						<h1><span>{{ pendingSetApp }}</span></h1>
+						<div class="input--schule-abschnitte">
+							<span class="inline-block h-4 rounded-sm animate-pulse w-16 -mb-1 bg-ui-contrast-10" />
+						</div>
+					</div>
+				</div>
 			</template>
 			<template v-else>
 				<router-view :key="app.name" name="liste" />

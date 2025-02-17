@@ -36,14 +36,11 @@
 		</template>
 		<template #secondaryMenu>
 			<template v-if="pendingSetApp">
-				<svws-ui-secondary-menu>
-					<template #headline>
-						<span>{{ pendingSetApp }}</span>
-					</template>
-					<template #abschnitt>
-						<span class="inline-block h-4 rounded-sm animate-pulse w-16 bg-ui-contrast-10 -mb-1" />
-					</template>
-				</svws-ui-secondary-menu>
+				<div class="h-full flex flex-col">
+					<div class="secondary-menu--headline">
+						<h1><span>{{ pendingSetApp }}</span></h1>
+					</div>
+				</div>
 			</template>
 			<template v-else>
 				<router-view :key="app.name" name="liste" />

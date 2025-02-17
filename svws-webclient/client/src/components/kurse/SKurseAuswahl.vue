@@ -1,10 +1,13 @@
 <template>
-	<svws-ui-secondary-menu>
-		<template #headline>Kurse</template>
-		<template #abschnitt>
-			<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
-		</template>
-		<template #content>
+	<div class="h-full flex flex-col">
+		<div class="secondary-menu--headline">
+			<h1>Kurse</h1>
+			<div class="input--schule-abschnitte">
+				<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
+			</div>
+		</div>
+		<div class="secondary-menu--header" />
+		<div class="secondary-menu--content">
 			<svws-ui-table :clickable="!manager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="kursDaten => gotoDefaultView(kursDaten.id)"
 				:items="rowsFiltered" :model-value="[...props.manager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)"
 				:columns selectable count :filter-open="true" :filtered="filterChanged()" :filterReset scroll-into-view scroll
@@ -34,8 +37,8 @@
 					</svws-ui-tooltip>
 				</template>
 			</svws-ui-table>
-		</template>
-	</svws-ui-secondary-menu>
+		</div>
+	</div>
 </template>
 
 <script setup lang="ts">

@@ -54,12 +54,14 @@
 				</svws-ui-menu>
 			</template>
 			<template #secondaryMenu>
-				<svws-ui-secondary-menu>
-					<template #headline>Sidebar Headline</template>
-					<template #header>
+				<div class="h-full flex flex-col">
+					<div class="secondary-menu--headline">
+						<h1>Sidebar Headline</h1>
+					</div>
+					<div class="secondary-menu--header">
 						Sidebar Header
-					</template>
-					<template #content>
+					</div>
+					<div class="secondary-menu--content">
 						<div class="px-6">
 							Sidebar Content
 							<div>
@@ -68,8 +70,8 @@
 								quod ratione reprehenderit sapiente sit sunt temporibus tenetur voluptatum!
 							</div>
 						</div>
-					</template>
-				</svws-ui-secondary-menu>
+					</div>
+				</div>
 			</template>
 			<template #main>
 				<svws-ui-header>

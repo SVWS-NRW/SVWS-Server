@@ -1,38 +1,39 @@
 <template>
-	<svws-ui-secondary-menu>
-		<template #headline><span class="select-none">Oberstufe</span></template>
-		<template #abschnitt>
-			<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
-		</template>
-		<template #content>
-			<svws-ui-table :clicked="auswahl" clickable :model-value="selected()" @update:model-value="setAuswahl" :selectable="hatUpdateKompetenz" :unselectable
-				@update:clicked="gotoAbiturjahrgang" :items :columns :filter-open="false" scroll-into-view :focus-switching-enabled :focus-help-visible>
-				<template #filterAdvanced>
-					<div class="col-span-full flex flex-wrap gap-x-5">
-						<svws-ui-checkbox type="toggle" :model-value="filterNurAktuelle()" @update:model-value="setFilterNurAktuelle">Nur Aktuelle Jahrgänge</svws-ui-checkbox>
-					</div>
-				</template>
-				<template #cell(abiturjahr)="{ value }">
-					<span v-if="value === -1" class="opacity-25"> — </span>
-					<span v-else> {{ value }} </span>
-					<svws-ui-spinner :spinning="(apiStatus.pending && value === (auswahl?.abiturjahr))" />
-				</template>
-				<template #cell(jahrgang)="{ value }">
-					<span v-if="!value" class="opacity-25"> — </span>
-					<span v-else> {{ value }} </span>
-				</template>
-				<template #actions v-if="hatUpdateKompetenz">
-					<svws-ui-tooltip v-if="mapJahrgaengeOhneAbiJahrgang().size > 0" position="bottom">
-						<svws-ui-button type="icon" @click="gotoCreationMode" :has-focus="items.length === 0">
-							<span class="icon i-ri-add-line" />
-						</svws-ui-button>
-						<template #content>Abiturjahr hinzufügen</template>
-					</svws-ui-tooltip>
-				</template>
-			</svws-ui-table>
-			<router-view name="gost_child_auswahl" />
-		</template>
-	</svws-ui-secondary-menu>
+	<div class="h-full flex flex-col">
+		<div class="secondary-menu--headline">
+			<h1><span class="select-none">Oberstufe</span></h1>
+			<div class="input--schule-abschnitte">
+				<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
+			</div>
+		</div>
+		<div class="secondary-menu--header" />
+		<svws-ui-table :clicked="auswahl" clickable :model-value="selected()" @update:model-value="setAuswahl" :selectable="hatUpdateKompetenz" :unselectable
+			@update:clicked="gotoAbiturjahrgang" :items :columns :filter-open="false" scroll-into-view :focus-switching-enabled :focus-help-visible>
+			<template #filterAdvanced>
+				<div class="col-span-full flex flex-wrap gap-x-5">
+					<svws-ui-checkbox type="toggle" :model-value="filterNurAktuelle()" @update:model-value="setFilterNurAktuelle">Nur Aktuelle Jahrgänge</svws-ui-checkbox>
+				</div>
+			</template>
+			<template #cell(abiturjahr)="{ value }">
+				<span v-if="value === -1" class="opacity-25"> — </span>
+				<span v-else> {{ value }} </span>
+				<svws-ui-spinner :spinning="(apiStatus.pending && value === (auswahl?.abiturjahr))" />
+			</template>
+			<template #cell(jahrgang)="{ value }">
+				<span v-if="!value" class="opacity-25"> — </span>
+				<span v-else> {{ value }} </span>
+			</template>
+			<template #actions v-if="hatUpdateKompetenz">
+				<svws-ui-tooltip v-if="mapJahrgaengeOhneAbiJahrgang().size > 0" position="bottom">
+					<svws-ui-button type="icon" @click="gotoCreationMode" :has-focus="items.length === 0">
+						<span class="icon i-ri-add-line" />
+					</svws-ui-button>
+					<template #content>Abiturjahr hinzufügen</template>
+				</svws-ui-tooltip>
+			</template>
+		</svws-ui-table>
+		<router-view name="gost_child_auswahl" />
+	</div>
 </template>
 
 <script setup lang="ts">
