@@ -1,76 +1,175 @@
 <?php
 
-	require_once '../app/Http.php';
+	require_once 'Http.php';
 
+	/**
+	 * Die Klasse ermöglicht die Verbindung zu einem SMTP-Server, das Versenden von 
+	 * E-Mails mit Authentifizierung und optionaler TLS-Verschlüsselung.
+	 * 
+	 * Beispiel zur Nutzung des SMTP-Clients:
+ 	 * 
+ 	 * $config = json_encode([
+ 	 *		'smtpHost' => 'smtp.example.com',
+ 	 *		'smtpPort' => 587,
+ 	 *		'username' => 'user',
+ 	 *		'password' => 'password',
+ 	 *		'useTLS' => true,
+ 	 *		'fromEmail' => 'noreply@example.com',
+ 	 *		'fromName' => 'Mein Name'
+ 	 * ]);
+ 	 *
+ 	 * $mailer = new SMTPClient($config);
+ 	 * if (!$mailer->isValid())
+ 	 * 		die("SMTP-Konfiguration fehlerhaft.");
+ 	 *
+ 	 * $mailer->setEmail('recipient@example.com', 'Betreff', 'Hallo, dies ist eine Test-E-Mail.');
+ 	 * $mailer->sendEmail();
+	 */
 	class SMTPClient {
 
-		// Die Serveradresse des SMTP-Servers
-		private string $smtpHost = "";
+		/**
+		 * Die Serveradresse des SMTP-Servers.
+		 *
+		 * @var string|null
+		 */
+		private ?string $host = null;
 
-		// Der Port des SMTP-Servers (465 oder 587)
-		private int $smtpPort = 465;
+		/**
+		 * Der Port des SMTP-Servers (Standard: 587).
+		 *
+		 * @var int
+		 */
+		private int $port = 587;
 
-		// Der Benutzername für den SMTP-Login
-		private string $username = "";
+		/**
+		 * Der Benutzername für die SMTP-Authentifizierung.
+		 *
+		 * @var string|null
+		 */
+		private ?string $username = null;
 
-		// Das Password für den SMTP-Login
-		private string $password = "";
+		/**
+		 * Das Passwort für die SMTP-Authentifizierung.
+		 *
+		 * @var string|null
+		 */
+		private ?string $password = null;
 
-		// Der Absender der E-Mail
-		private string $fromEmail = "";
+		/**
+		 * Gibt an, ob TLS verwendet werden soll (true für TLS, false für unverschlüsselt).
+		 *
+		 * @var bool
+		 */
+		private bool $useTLS = true;
 
-		// Der Name des Absenders
-		private string $fromName = "Webnotenmanager";
+		/**
+		 * Die E-Mail-Adresse des Absenders.
+		 *
+		 * @var string|null
+		 */
+		private ?string $fromEmail = null;
+
+		/**
+		 * Der Name des Absenders.
+		 *
+		 * @var string|null
+		 */
+		private ?string $fromName = null;
 		
-		// Der Empfänger der E-Mail
-		private string $to = "";
+		/**
+		 * Die Empfänger-E-Mail-Adresse.
+		 *
+		 * @var string|null
+		 */
+		private ?string $to = null;
 
-		// Der Betreffe der E-Mail
-		private string $subject = "";
+		/**
+		 * Der Betreff der E-Mail.
+		 *
+		 * @var string|null
+		 */
+		private ?string $subject = null;
 
-		// Der Text der E-Mail
-		private string $message = "";
+		/**
+		 * Der Nachrichtentext der E-Mail.
+		 *
+		 * @var string|null
+		 */
+		private ?string $message = null;
 
-		// Das Zeichenencoding der E-Mail
-		private string $contentType = "text/plain"; // oder text/html
-
-		// Der MIME-Type des Inhalts
-		private string $charset = "utf-8";
-
-		// Timeout für den Verbindungsaufbau
-		private int $timeout = 30;
-
-		// Die intern genutzte Verbindung zum SMTP-Server
+		/**
+		 * Die interne Verbindung zum SMTP-Server.
+		 *
+		 * @var resource|null
+		 */
 		private $socket = null;
 
 		/**
-		 * Konstruktor: Initialisiert die SMTP-Parameter.
+		 * Konstruktor: Initialisiert die SMTP-Parameter aus einer JSON-Konfigurationsdatei.
 		 *
-		 * @param string $config Das Konfigurationsobjekt mit den SMTP-Daten als JSON-String.
+		 * @param string|null $config Ein JSON-String mit den SMTP-Konfigurationswerten.
 		 */
-		public function __construct(string $json) {
-			$smtpConfig = json_decode($json, true);	//assoziiertes Array
+		public function __construct(?string $config) {
+			// Überprüfen, ob der Parameter null oder leer ist
+			if (empty($config))
+				Http::exit500("Keine SMTP-Konfiguration vorhanden.");
 
-			$this->smtpHost = $smtpConfig['smtpHost'];
-			$this->smtpPort = $smtpConfig['smtpPort'];
+			$smtpConfig = json_decode($config, true);
+
+			$this->host = $smtpConfig['smtpHost'];
+			$this->port = $smtpConfig['smtpPort'];
 			$this->username = $smtpConfig['username'];
 			$this->password = $smtpConfig['password'];
+			$this->useTLS = $smtpConfig['useTLS'];
 			$this->fromEmail = $smtpConfig['fromEmail'];
+			$this->fromName = $smtpConfig['fromName'];
 		}
 
 		/**
-		 * Setzt die Empfängeradresse, den Betreff und den Nachrichtentext für die E-Mail.
+		 * Überprüft, ob die SMTP-Konfiguration vollständig und gültig ist.
+		 * 
+		 * @return bool true, wenn die Konfiguration gültig ist, sonst false.
+		 */
+		public function isValid(): bool {
+			// Überprüfe, ob alle erforderlichen Felder gefüllt sind
+			$requiredFields = [
+				$this->host, 
+				$this->port,
+				$this->username, 
+				$this->password,
+				$this->useTLS, 
+				$this->fromEmail,
+				$this->fromName 
+			];
+
+			foreach ($requiredFields as $field) {
+				if (empty($field))
+					return false;
+			}
+
+			// Überprüfe die Gültigkeit der Host-Adresse
+			if (!filter_var($this->host, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME) && !filter_var($this->host, FILTER_VALIDATE_IP))
+				return false;
+			
+				// Überprüfe die Gültigkeit des Ports (zwischen 1 und 65535)
+			if (!is_int($this->port) || $this->port < 1 || $this->port > 65535)
+				return false;
+			
+			// Überprüfe die Gültigkeit der E-Mail-Adresse
+			if (!filter_var($this->fromEmail, FILTER_VALIDATE_EMAIL))
+				return false;
+			
+			return true;
+		}
+
+		/**
+		 * Setzt die E-Mail-Daten (Empfänger, Betreff und Nachricht).
 		 *
-		 * @param string $to
-		 * @param string $subject
-		 * @param string $message
-		 * @return void
+		 * @param string $to      Die Empfänger-E-Mail-Adresse.
+		 * @param string $subject Der Betreff der E-Mail.
+		 * @param string $message Der Nachrichtentext der E-Mail.
 		 */
 		public function setEmail($to, $subject, $message): void {
-			// Prüfe SMTP-Konfiguration
-			if (!$this->isValid())
-				Http::exit500("Ungültige SMTP-Konfiguration.");
-
 			// Überprüfe die Gültigkeit der E-Mail-Adresse $to
 			if (!filter_var($to, FILTER_VALIDATE_EMAIL))
 				Http::exit500("Ungültige Empfänger E-Mail-Adresse.");
@@ -89,25 +188,28 @@
 		}
 
 		/**
-		 * Verbindungsaufbau zum SMTP-Server uns senden der E-Mail.
-		 *
-		 * @return void
+		 * Baut eine Verbindung zum SMTP-Server auf und sendet die E-Mail.
 		 */
 		public function sendEmail(): void {
-			// Überprüfen, ob der Port 465 (SMTPS) oder 587 (STARTTLS) ist
-			if ($this->smtpPort == 465) {
-				// Verbindung zum SMTP-Server über ssl (oder tls) herstellen
-				$this->socket = stream_socket_client("ssl://$this->smtpHost:$this->smtpPort", $errno, $errstr, $this->timeout);
-				if (!$this->socket) {
-					Http::exit500("Fehler beim Verbinden: $errstr ($errno)");
-				}
-			} elseif ($this->smtpPort == 587) {
-				// Verbindung zum SMTP-Server über tcp herstellen
-				$this->socket = fsockopen($this->smtpHost, $this->smtpPort, $errno, $errstr, $this->timeout);
-				if (!$this->socket) {
-					Http::exit500("Fehler beim Verbinden: $errstr ($errno)");
-				}
-			}
+
+			$contentType = "text/plain"; // alternativ text/html
+			$charset = "utf-8";
+			$timeout = 30;
+
+			// Verbindung basierend auf Port und TLS-Einstellung aufbauen
+			if ($this->useTLS)
+				if ($this->port == 465)
+					// SSL/TLS direkte Verbindung
+					$this->socket = stream_socket_client("ssl://$this->host:$this->port", $errno, $errstr, $timeout);
+				else
+					// Unverschlüsselte Verbindung, später STARTTLS aktivieren
+					$this->socket = fsockopen($this->host, $this->port, $errno, $errstr, $timeout);
+			else
+				// Unverschlüsselte Verbindung
+				$this->socket = fsockopen($this->host, $this->port, $errno, $errstr, $timeout);
+
+			if (!$this->socket)
+				Http::exit500("Fehler beim Verbinden: $errstr ($errno)");
 
 			// Serverantwort lesen und auswerten
 			$this->checkResponse();
@@ -116,15 +218,11 @@
 			$hostname = $this->getHostname();
 			$this->checkResponse("EHLO $hostname\r\n");
 
-			// STARTTLS unterstützen
-			if ($this->smtpPort == 587) {
+			// Falls TLS aktiviert ist und der Port nicht 465 ist, dann STARTTLS starten
+			if ($this->useTLS && $this->port != 465) {
 				$this->checkResponse("STARTTLS\r\n");
-				
-				// TLS aktivieren
 				stream_socket_enable_crypto($this->socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT);
-				
-				// Nach dem Starten von TLS erneut EHLO senden
-				$this->checkResponse("EHLO $hostname\r\n");
+				$this->checkResponse("EHLO $hostname\r\n"); // Nach TLS erneut EHLO senden
 			}
 
 			// Authentifizierung
@@ -143,24 +241,22 @@
 			$emailContent = "Subject: $this->subject\r\n" .
 				"From: \"$this->fromName\" <$this->fromEmail>\r\n" .
 				"To: $this->to\r\n" .
-				"Content-Type: $this->contentType; " .
-				"charset=$this->charset\r\n" . 
+				"Content-Type: $contentType; " .
+				"charset=$charset\r\n" . 
 				"\r\n" . // Leerzeile zwischen Header und Body
 				"$this->message\r\n" .
 				".\r\n"; // Beendet die Nachricht
 			$this->checkResponse($emailContent);
 
-			
 			// Verbindung schließen
 			$this->checkResponse("QUIT\r\n");
 			fclose($this->socket);
 		}
 		
 		/**
-		 * Funktion zum Senden und Überprüfen der Serverantwort
+		 * Sendet einen Befehl an den SMTP-Server und prüft die Antwort.
 		 *
-		 * @param string $command
-		 * @return void
+		 * @param string|null $command Der Befehl, der an den Server gesendet wird (optional).
 		 */
 		private function checkResponse($command = null): void {
 			if (isset($command))
@@ -182,36 +278,10 @@
 		}
 
 		/**
-		 * Prüft, ob die SMTP-Konfiguration vollständig und plausibel ist. Wenn nicht, dann wird false zurückgegeben.
-		 * 
-		 * @return bool true, wenn die Konfiguration vollständig und plausibel ist und ansonsten false.
+		 * Gibt den Hostnamen des aktuellen Systems zurück.
+		 *
+		 * @return string Der Hostname.
 		 */
-		private function isValid(): bool {
-			// Überprüfe, ob alle erforderlichen Felder gefüllt sind
-			$requiredFields = [
-				$this->smtpHost, 
-				$this->smtpPort,
-				$this->username, 
-				$this->password, 
-				$this->fromEmail, 
-			];
-
-			foreach ($requiredFields as $field) {
-				if (empty($field))
-					return false;
-			}
-
-			// Überprüfe die Gültigkeit des Ports (465 und 587)
-			if ($this->smtpPort != 465 && $this->smtpPort != 587)
-				return false;
-			
-			// Überprüfe die Gültigkeit der E-Mail-Adresse
-			if (!filter_var($this->fromEmail, FILTER_VALIDATE_EMAIL))
-				return false;
-			
-			return true;
-		}
-
 		private function getHostname(): string {
 			return gethostname();
 		}
