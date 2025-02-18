@@ -54,6 +54,8 @@ export class RouteDataSchuleFaecher extends RouteDataAuswahl<FachListeManager, R
 	}
 
 	setzeDefaultSortierungSekII = async () => {
+		if (this.manager.liste.list().isEmpty())
+			return;
 		const idSchuljahresabschnitt = this._state.value.idSchuljahresabschnitt;
 		const auswahlId = this.manager.auswahl().id;
 		await api.server.setFaecherSortierungSekII(api.schema);

@@ -15,7 +15,7 @@
 					<svws-ui-checkbox type="toggle" v-model="filterNurSichtbare">Nur Sichtbare</svws-ui-checkbox>
 				</template>
 				<template #actions>
-					<template v-if="manager().schulform().daten(schuljahr)?.hatGymOb ?? false">
+					<template v-if="(manager().liste.size() > 0) && (manager().schulform().daten(schuljahr)?.hatGymOb ?? false)">
 						<s-faecher-auswahl-sortierung-sek-i-i-modal v-slot="{ openModal }" :setze-default-sortierung-sek-i-i :set-filter>
 							<svws-ui-button type="secondary" @click="openModal">Standardsortierung Sek II anwenden …</svws-ui-button>
 						</s-faecher-auswahl-sortierung-sek-i-i-modal>

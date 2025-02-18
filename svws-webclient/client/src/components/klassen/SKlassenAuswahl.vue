@@ -24,16 +24,18 @@
 				</template>
 				<template #actions>
 					<div class="flex gap-5">
-						<s-klassen-auswahl-sortierung-modal v-slot="{ openModal }" :setze-default-sortierung>
-							<svws-ui-tooltip position="bottom">
-								<svws-ui-button type="secondary" @click="openModal">
-									Standardsortierung anwenden&nbsp;...
-								</svws-ui-button>
-								<template #content>
-									Standardsortierung wiederherstellen
-								</template>
-							</svws-ui-tooltip>
-						</s-klassen-auswahl-sortierung-modal>
+						<template v-if="manager().liste.size() > 0">
+							<s-klassen-auswahl-sortierung-modal v-slot="{ openModal }" :setze-default-sortierung>
+								<svws-ui-tooltip position="bottom">
+									<svws-ui-button type="secondary" @click="openModal">
+										Standardsortierung anwenden&nbsp;...
+									</svws-ui-button>
+									<template #content>
+										Standardsortierung wiederherstellen
+									</template>
+								</svws-ui-tooltip>
+							</s-klassen-auswahl-sortierung-modal>
+						</template>
 						<svws-ui-tooltip v-if="hatKompetenzAendern" position="bottom">
 							<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="gotoHinzufuegenView(true)" :has-focus="rowsFiltered.length === 0">
 								<span class="icon i-ri-add-line" />

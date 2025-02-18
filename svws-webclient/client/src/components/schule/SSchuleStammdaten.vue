@@ -9,7 +9,7 @@
 							Schulnummer: {{ schule().schulNr }}
 						</svws-ui-badge>
 					</h2>
-					<span class="svws-subline">{{ schule().bezeichnung2 ?? "" + " " + schule().bezeichnung3 ?? "" }}</span>
+					<span class="svws-subline">{{ `${schule().bezeichnung2 ?? ''} ${schule().bezeichnung3 ?? ''}` }}</span>
 				</div>
 			</div>
 			<div class="svws-ui-header--actions" />
