@@ -35,15 +35,22 @@
 
 	const props = defineProps<SchemagruppeProps>();
 
-	const currentAction = ref<'' | 'delete'>('delete');
+	const currentAction = ref<string>('');
+	const oldAction = ref<{ name: string | undefined; open: boolean }>({
+		name: undefined,
+		open: false,
+	});
 
-	function setCurrentAction(newAction: "delete", open: boolean) {
+	function setCurrentAction(newAction: string, open: boolean) {
+		if(newAction === oldAction.value.name && !open)
+			return;
+		oldAction.value.name = currentAction.value;
+		oldAction.value.open = (currentAction.value === "") ? false : true;
 		if(open === true)
 			currentAction.value= newAction;
 		else
 			currentAction.value = "";
 	}
-
 
 	function toggleDelete() {
 		currentAction.value = currentAction.value === 'delete' ? '' : 'delete';

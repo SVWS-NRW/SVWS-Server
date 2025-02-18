@@ -1,15 +1,23 @@
 <template>
 	<div class="page page-grid-cards">
 		<div class="flex flex-col gap-y-16 lg:gap-y-16" v-if="ServerMode.DEV.checkServerMode(serverMode)">
-			<svws-ui-action-button title="Löschen" description="Ausgewählte Schulen werden gelöscht." icon="i-ri-delete-bin-line"
-				:action-function="deleteSchulen" action-label="Löschen" :is-loading="loading" :is-active="currentAction === 'delete'"
-				:action-disabled="true" @click="toggleDeleteSchulen">
-				<!-- TODO: Vollständige Vorbedingungsprüfung für das Löschen einbauen -->
-				<span v-if="false">Alle ausgewählten Schulen sind bereit zum Löschen.</span>
-				<template v-else v-for="message in []" :key="message">
-					<span class="text-ui-danger"> {{ message }} <br> </span>
+			<ui-card icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Schulen werden gelöscht." :is-open="currentAction === 'delete'"
+				@update:is-open="(isOpen) => setCurrentAction('delete', isOpen)">
+				<div>
+					<!-- TODO: Vollständige Vorbedingungsprüfung für das Löschen einbauen -->
+					<span v-if="false">Alle ausgewählten Schulen sind bereit zum Löschen.</span>
+					<template v-else v-for="message in []" :key="message">
+						<span class="text-ui-danger"> {{ message }} <br> </span>
+					</template>
+				</div>
+				<template #buttonFooterLeft>
+					<svws-ui-button :disabled="true" title="Löschen" @click="deleteSchulen" :is-loading="loading" class="mt-4">
+						<svws-ui-spinner v-if="loading" spinning />
+						<span v-else class="icon i-ri-play-line" />
+						Löschen
+					</svws-ui-button>
 				</template>
-			</svws-ui-action-button>
+			</ui-card>
 			<log-box :logs :status>
 				<template #button>
 					<svws-ui-button v-if="status !== undefined" type="transparent" @click="clearLog" title="Log verwerfen">Log verwerfen</svws-ui-button>
@@ -34,12 +42,23 @@
 	const props = defineProps<KatalogSchuleGruppenprozesseProps>();
 
 	const currentAction = ref<string>('');
+	const oldAction = ref<{ name: string | undefined; open: boolean }>({
+		name: undefined,
+		open: false,
+	});
 	const loading = ref<boolean>(false);
 	const logs = ref<List<string | null> | undefined>();
 	const status = ref<boolean | undefined>();
 
-	function toggleDeleteSchulen() {
-		currentAction.value = currentAction.value === 'delete' ? '' : 'delete';
+	function setCurrentAction(newAction: string, open: boolean) {
+		if(newAction === oldAction.value.name && !open)
+			return;
+		oldAction.value.name = currentAction.value;
+		oldAction.value.open = (currentAction.value === "") ? false : true;
+		if(open === true)
+			currentAction.value= newAction;
+		else
+			currentAction.value = "";
 	}
 
 	function clearLog() {

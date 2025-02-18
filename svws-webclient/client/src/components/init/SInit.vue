@@ -1,26 +1,34 @@
 <template>
 	<ui-login-layout size="lg" hide-header hide-hinweis>
 		<template #main>
-			<div class="w-full flex flex-col">
+			<div class="w-full flex flex-col gap-2">
 				<div class="w-full pb-2 mb-4 text-headline-md text-left border-b-1">
 					<span>Initialisierung der Datenbank</span>
 				</div>
-				<svws-ui-action-button title="Schulkatalog" description="Daten werden über die Auswahl der Schulnummer ausgwählt"
-					icon="i-ri-archive-line" :action-function="init" :is-loading :action-disabled="schule === undefined"
-					:is-active="source === 'init'" @click="clickInit">
-					<div class="flex gap-2">
-						<svws-ui-select v-model="schule" title="Schule auswählen" autocomplete
-							:items="listSchulkatalog" :item-text="i => i.KurzBez ? `${i.SchulNr}: ${i.KurzBez}` : `${i.SchulNr}: Schule ohne Name`"
-							:item-filter="filterSchulenKatalogEintraege" required :disabled="isLoading" />
+				<ui-card icon="i-ri-archive-line" title="Schulkatalog" subtitle="Daten werden über die Auswahl der Schulnummer ausgwählt"
+					:is-open="currentAction === 'init'" @update:is-open="(isOpen) => setCurrentAction('init', isOpen)">
+					<div class="mt-2 w-full">
+						<div class="flex gap-2">
+							<svws-ui-select v-model="schule" title="Schule auswählen" autocomplete
+								:items="listSchulkatalog" :item-text="i => i.KurzBez ? `${i.SchulNr}: ${i.KurzBez}` : `${i.SchulNr}: Schule ohne Name`"
+								:item-filter="filterSchulenKatalogEintraege" required :disabled="isLoading" />
+						</div>
+						<div v-if="status !== undefined" class="font-bold text-sm text-ui-danger mt-2">
+							{{ status === false ? "Fehler beim Initialisieren" : status === true ? "Initialisierung erfolgreich" : "" }}
+						</div>
 					</div>
-					<div class="font-bold text-sm text-ui-danger mt-2">
-						{{ status === false ? "Fehler beim Initialisieren" : status === true ? "Initialisierung erfolgreich" : "" }}
-					</div>
-				</svws-ui-action-button>
-				<svws-ui-action-button title="Schild 2-Datenbank migrieren" description="Daten werden über die Auswahl einer existierenden Schild 2-Datenbank migriert."
-					icon="i-ri-database-2-line" :action-function="migrate" action-label="Migration starten" :is-loading :action-disabled="(db === 'mdb' && !file) || (user === 'root')"
-					:is-active="source === 'migrate'" @click="clickMigrate">
-					<div class="flex flex-col gap-4">
+					<template #buttonFooterLeft>
+						<svws-ui-button :disabled="schule === undefined || isLoading" title="Löschen" @click="init" :is-loading class="mt-4">
+							<svws-ui-spinner v-if="isLoading" spinning />
+							<span v-else class="icon i-ri-play-line" />
+							Ausführen
+						</svws-ui-button>
+					</template>
+				</ui-card>
+
+				<ui-card icon="i-ri-database-2-line" title="Schild 2-Datenbank migrieren" subtitle="Daten werden über die Auswahl einer existierenden Schild 2-Datenbank migriert."
+					:is-open="currentAction === 'migrate'" @update:is-open="(isOpen) => setCurrentAction('migrate', isOpen)">
+					<div class="flex flex-col gap-4 mt-2">
 						<svws-ui-select :model-value="items.get(db)" :items="items.values()" @update:model-value="set" :item-text="i => i" title="Datenbank" />
 						<div class="flex flex-col gap-6 text-left" v-if="db === 'mdb'">
 							<div class="flex flex-col gap-2 px-2">
@@ -28,7 +36,7 @@
 								<input type="file" @change="onFileChanged" :disabled="isLoading" accept=".mdb">
 							</div>
 						</div>
-						<div class="flex flex-col gap-3" v-if="db !== 'mdb'">
+						<div v-if="db !== 'mdb'" class="flex flex-col gap-3">
 							<div class="flex flex-col gap-2 mt-2 mb-6">
 								<div class="flex flex-col text-left gap-0.5 pl-3">
 									<span class="opacity-50">Bei Migration aus einer Schild-Zentral-Instanz:</span>
@@ -45,10 +53,16 @@
 							{{ status === false ? "Fehler beim Upload" : status === true ? "Upload erfolgreich" : "" }}
 						</div>
 					</div>
-				</svws-ui-action-button>
-				<svws-ui-action-button title="Wiederherstellen" description="Daten werden aus einem Backup wiederhergestellt" :action-function="restore"
-					action-label="Wiederherstellen" icon="i-ri-device-recover-line" :action-disabled="!file || isLoading" :is-loading
-					:is-active="source === 'restore'" @click="clickRestore">
+					<template #buttonFooterLeft>
+						<svws-ui-button :disabled="(db === 'mdb' && !file) || (user === 'root') || isLoading" title="Migration starten" @click="migrate" :is-loading class="mt-4">
+							<svws-ui-spinner v-if="isLoading" spinning />
+							<span v-else class="icon i-ri-play-line" />
+							Migration starten
+						</svws-ui-button>
+					</template>
+				</ui-card>
+				<ui-card icon="i-ri-device-recover-line" title="Wiederherstellen" subtitle="Daten werden aus einem Backup wiederhergestellt."
+					:is-open="currentAction === 'restore'" @update:is-open="(isOpen) => setCurrentAction('restore', isOpen)">
 					<div class="flex flex-col gap-2 text-left">
 						<span class="font-bold text-button">Quell-Datenbank: SQLite-Datenbank (.sqlite) hochladen</span>
 						<input type="file" @change="onFileChanged" :disabled="isLoading" accept=".sqlite">
@@ -56,7 +70,14 @@
 							{{ status === false ? "Fehler beim Upload" : status === true ? "Upload erfolgreich" : "" }}
 						</div>
 					</div>
-				</svws-ui-action-button>
+					<template #buttonFooterLeft>
+						<svws-ui-button :disabled="!file || isLoading" title="Wiederherstellen" @click="restore" :is-loading class="mt-4">
+							<svws-ui-spinner v-if="isLoading" spinning />
+							<span v-else class="icon i-ri-play-line" />
+							Wiederherstellen
+						</svws-ui-button>
+					</template>
+				</ui-card>
 				<div class="col-span-full">
 					<log-box :logs :status>
 						<template #button>
@@ -86,25 +107,29 @@
 
 	const file = ref<File | null>(null);
 
+	const db = ref<'mysql'|'mariadb'|'mssql'|'mdb'|undefined>(undefined);
+
+	const currentAction = ref<string>('');
+	const oldAction = ref({
+		name: "",
+		open: false,
+	});
+
+	function setCurrentAction(newAction: string, open: boolean) {
+		if(newAction === oldAction.value.name && !open)
+			return;
+		oldAction.value.name = currentAction.value;
+		oldAction.value.open = (currentAction.value === "") ? false : true;
+		if(open === true)
+			currentAction.value= newAction;
+		else
+			currentAction.value = "";
+	}
+
 	function clearLog() {
 		isLoading.value = false;
 		logs.value = undefined;
 		status.value = undefined;
-	}
-
-	async function clickInit() {
-		await props.setSource('init');
-		clearLog();
-	}
-
-	async function clickRestore() {
-		await props.setSource('restore');
-		clearLog();
-	}
-
-	async function clickMigrate() {
-		await props.setSource('migrate');
-		clearLog();
 	}
 
 	// Restore
@@ -143,7 +168,7 @@
 			return;
 		for (const [k,v] of items.entries()) {
 			if ((v === item) && (k !== undefined)) {
-				await props.setDB(k);
+				db.value = k;
 				break;
 			}
 		}
@@ -159,7 +184,7 @@
 		formData.append('databasePassword', password.value);
 		formData.append('schema', schema.value);
 		formData.append('location', location.value);
-		status.value = await props.migrateDB(formData);
+		status.value = await props.migrateDB(formData, currentAction.value === 'restore', db.value);
 		isLoading.value = false;
 	}
 

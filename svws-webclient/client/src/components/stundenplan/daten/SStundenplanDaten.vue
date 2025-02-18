@@ -14,14 +14,14 @@
 				</div>
 			</div>
 			<s-card-stundenplan-warnung-wochentypmodell v-if="wtmOK === false" :wochen-typ-modell="newWTM" @change="ok => (wtmOK = ok) && doPatch(newWTM)" :stundenplan-manager />
-			<svws-ui-action-button title="Jahrgänge" :is-active="actionJahrgaenge" @click="()=>actionJahrgaenge = !actionJahrgaenge" icon="i-ri-archive-line">
+			<ui-card icon="i-ri-archive-line" title="Jahrgänge" :is-open="actionJahrgaenge" @update:is-open="(isOpen) => actionJahrgaenge = isOpen">
 				<svws-ui-table :items="listJahrgaenge" :no-data="false" :columns="cols">
 					<template #cell(id)="{value}">
 						<svws-ui-checkbox v-if="hatUpdateKompetenz" type="toggle" :model-value="jahrgaenge.includes(value)" headless @update:model-value="updateJahrgaenge(value)" />
 					</template>
 				</svws-ui-table>
-			</svws-ui-action-button>
-			<svws-ui-action-button title="Räume" :is-active="actionRaeume" @click="()=>actionRaeume = !actionRaeume" icon="i-ri-archive-line">
+			</ui-card>
+			<ui-card icon="i-ri-archive-line" title="Räume" :is-open="actionRaeume" @update:is-open="(isOpen) => actionRaeume = isOpen">
 				<svws-ui-table :columns="colsRaeume" :items="listRaeume" v-model:clicked="raum" :selectable="hatUpdateKompetenz" v-model="selectedRaeume" :count="listRaeume.length > 0">
 					<template #cell(kuerzel)="{ rowData }">
 						<svws-ui-text-input :disabled="!hatUpdateKompetenz" :model-value="rowData.kuerzel" @change="kuerzel => kuerzel && patchRaum({kuerzel}, rowData.id)" headless required />
@@ -43,10 +43,10 @@
 						</s-card-stundenplan-add-raum-modal>
 					</template>
 				</svws-ui-table>
-			</svws-ui-action-button>
+			</ui-card>
 		</div>
 		<div class="h-full overflow-y-auto w-full xl:w-1/2 flex flex-col gap-8">
-			<svws-ui-action-button title="Pausenzeiten" :is-active="actionPausenzeiten" @click="()=>actionPausenzeiten = !actionPausenzeiten" icon="i-ri-archive-line">
+			<ui-card icon="i-ri-archive-line" title="Pausenzeiten" :is-open="actionPausenzeiten" @update:is-open="(isOpen) => actionPausenzeiten = isOpen">
 				<div class="flex flex-col gap-4">
 					<svws-ui-table :columns="colsPausenzeiten" :items="pausenzeitenSorted" v-model:clicked="zeit" :selectable="hatUpdateKompetenz" v-model="selectedPausenzeiten" :count="pausenzeitenSorted.length > 0" v-model:sort-by-and-order="sortByAndOrder">
 						<template #cell(wochentag)="{ rowData }">
@@ -72,17 +72,17 @@
 							</s-pausenzeit-neu-modal>
 						</template>
 					</svws-ui-table>
-					<svws-ui-action-button title="Alle Pausenzeiten erstellen" :is-active="subActionPausenzeiten" @click="()=>subActionPausenzeiten = !subActionPausenzeiten" icon="i-ri-add-line">
+					<ui-card icon="i-ri-add-line" title="Alle Pausenzeiten erstellen" :is-open="subActionPausenzeiten" @update:is-open="(isOpen) => subActionPausenzeiten = isOpen">
 						<stundenplan-zeitraster-einstellungen :manager="stundenplanManager" :set-settings-defaults>
 							<svws-ui-button type="secondary" @click="addBlock" title="Alle Pausenzeiten erstellen">
 								<span class="icon i-ri-calendar-event-line" />
 								<span class="icon i-ri-add-line -ml-1" />Alle Pausenzeiten erstellen
 							</svws-ui-button>
 						</stundenplan-zeitraster-einstellungen>
-					</svws-ui-action-button>
+					</ui-card>
 				</div>
-			</svws-ui-action-button>
-			<svws-ui-action-button title="Aufsichtsbereiche" :is-active="actionAufsichtsbereiche" @click="()=>actionAufsichtsbereiche = !actionAufsichtsbereiche" icon="i-ri-archive-line">
+			</ui-card>
+			<ui-card icon="i-ri-archive-line" title="Aufsichtsbereiche" :is-open="actionAufsichtsbereiche" @update:is-open="(isOpen) => actionAufsichtsbereiche = isOpen">
 				<svws-ui-table :columns="colsAufsichtsbereiche" :items="listAufsichtsbereiche" v-model:clicked="bereich" :selectable="hatUpdateKompetenz" v-model="selectedAufsichtsbereiche" :count="listAufsichtsbereiche.length > 0">
 					<template #cell(kuerzel)="{ rowData }">
 						<svws-ui-text-input :disabled="!hatUpdateKompetenz" :model-value="rowData.kuerzel" @change="kuerzel=>kuerzel && patchAufsichtsbereich({kuerzel}, rowData.id)" headless />
@@ -101,7 +101,7 @@
 						</s-card-stundenplan-add-aufsichtsbereich-modal>
 					</template>
 				</svws-ui-table>
-			</svws-ui-action-button>
+			</ui-card>
 		</div>
 	</div>
 </template>

@@ -47,7 +47,8 @@
 	const loading = ref<boolean>(false);
 	const logs = shallowRef<List<string|null> | undefined>(undefined);
 	const status = shallowRef<boolean | undefined>(undefined);
-	const currentAction = ref<'' | 'neu' | 'restore' | 'migrate' | 'duplicate'>('');
+
+	const currentAction = ref<string>('');
 	const oldAction = ref({
 		name: "",
 		open: false,
@@ -57,11 +58,11 @@
 	const loadingFunction = () => loading;
 	const statusFunction = () => status;
 
-	function setCurrentAction(newAction: "neu" | "restore" | "migrate" | "duplicate", open: boolean) {
-		if(newAction === oldAction.value.name && open === oldAction.value.open === false)
+	function setCurrentAction(newAction: string, open: boolean) {
+		if(newAction === oldAction.value.name && !open)
 			return;
 		oldAction.value.name = currentAction.value;
-		oldAction.value.open = open;
+		oldAction.value.open = (currentAction.value === "") ? false : true;
 		if(open === true)
 			currentAction.value= newAction;
 		else

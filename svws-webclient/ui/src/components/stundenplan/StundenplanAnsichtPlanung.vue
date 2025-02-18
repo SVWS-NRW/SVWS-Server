@@ -68,14 +68,14 @@
 				<span class="icon i-ri-add-line -ml-1" />{{ Wochentag.fromIDorException(manager().zeitrasterGetWochentagMaxEnum().id + (manager().getListZeitraster().size() === 0 ? 0:1)) }}
 			</svws-ui-button>
 		</div>
-		<svws-ui-action-button title="Alle Zeitraster erstellen" :is-active="actionZeitraster" @click="()=>actionZeitraster = !actionZeitraster" icon="i-ri-add-line">
+		<ui-card icon="i-ri-add-line" title="Alle Zeitraster erstellen" :is-open="actionZeitraster" @update:is-open="(isOpen) => actionZeitraster = isOpen">
 			<stundenplan-zeitraster-einstellungen :manager :set-settings-defaults>
 				<svws-ui-button type="secondary" @click="addBlock" :title="`Alle Zeitraster Montag - Freitag, 1.-${Schulform.G === schulform ? '6':'9'}. Stunde erstellen`">
 					<span class="icon i-ri-calendar-event-line" />
 					<span class="icon i-ri-add-line -ml-1" />Mo-Fr / 1.-{{ Schulform.G === schulform ? '6':'9' }}. erstellen
 				</svws-ui-button>
 			</stundenplan-zeitraster-einstellungen>
-		</svws-ui-action-button>
+		</ui-card>
 		<template v-if="importZeitraster !== undefined">
 			<stundenplan-zeitraster-import-modal :stundenplan-manager="manager" :import-zeitraster :remove-zeitraster v-slot="{ openModal }">
 				<svws-ui-button class="mb-5" type="secondary" @click="openModal()"><span class="icon i-ri-archive-line" /> Aus Katalog importieren</svws-ui-button>

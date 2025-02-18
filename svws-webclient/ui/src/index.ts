@@ -39,7 +39,6 @@ export { default as StundenplanRaum } from "./components/stundenplan/Stundenplan
 export { default as StundenplanSchueler } from "./components/stundenplan/StundenplanSchueler.vue";
 export { default as StundenplanZeitrasterEinstellungen } from "./components/stundenplan/StundenplanZeitrasterEinstellungen.vue";
 export { default as StundenplanZeitrasterJsonImportModal } from "./components/stundenplan/StundenplanZeitrasterJsonImportModal.vue";
-export { default as SvwsUiActionButton } from "./ui/layout/SvwsUiActionButton.vue";
 export { default as SvwsUiAppLayout } from "./ui/layout/SvwsUiAppLayout.vue";
 export { default as SvwsUiAvatar } from "./ui/SvwsUiAvatar.vue";
 export { default as SvwsUiBadge } from "./ui/SvwsUiBadge.vue";

@@ -102,9 +102,9 @@
 	const loading = ref<boolean>(false);
 	const logs = shallowRef<List<string|null> | undefined>(undefined);
 	const status = shallowRef<boolean | undefined>(undefined);
-	const currentAction = ref<'config' | 'empty' | 'init' | 'restore' | 'migrate' | 'upgrade' | 'backup' | ''>("");
-	const oldAction = ref({
-		name: "",
+	const currentAction = ref<string>('');
+	const oldAction = ref<{ name: string | undefined; open: boolean }>({
+		name: undefined,
 		open: false,
 	});
 
@@ -135,12 +135,11 @@
 		{ key: "name", label: "Benutzername", span: 1, sortable: true },
 	];
 
-
-	function setCurrentAction(newAction: "config" | "upgrade" | "empty" | "backup" | "init" | "restore" | "migrate", open: boolean) {
-		if(newAction === oldAction.value.name && open === oldAction.value.open === false)
+	function setCurrentAction(newAction: string, open: boolean) {
+		if(newAction === oldAction.value.name && !open)
 			return;
 		oldAction.value.name = currentAction.value;
-		oldAction.value.open = open;
+		oldAction.value.open = (currentAction.value === "") ? false : true;
 		if(open === true)
 			currentAction.value= newAction;
 		else

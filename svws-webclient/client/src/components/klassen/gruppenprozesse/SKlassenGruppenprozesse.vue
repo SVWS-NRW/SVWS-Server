@@ -1,15 +1,24 @@
 <template>
 	<div class="page page-grid-cards">
 		<div class="flex flex-col gap-y-16 lg:gap-y-16">
-			<svws-ui-action-button v-if="hatKompetenzLoeschen" title="Löschen" description="Ausgewählte Klassen werden gelöscht." icon="i-ri-delete-bin-line"
-				:action-function="entferneKlassen" :action-label="leereKlassenVorhanden ? 'Leere Klassen löschen' : 'Löschen'" :is-loading="loading" :is-active="currentAction === 'delete'"
-				:action-disabled="manager().getKlassenIDsMitSchuelern().size() === manager().liste.auswahlSize()" @click="toggleDeleteKlassen">
-				<span v-if="alleKlassenLeer">Alle ausgewählten Klassen sind bereit zum Löschen.</span>
-				<span v-if="leereKlassenVorhanden">Einige Klassen haben noch Schüler, leere Klassen können gelöscht werden.</span>
-				<div v-if="!alleKlassenLeer">
-					<span v-for="message in nichtAlleKlassenLeer" :key="message" class="text-ui-danger"> {{ message }} <br> </span>
+			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Klassen werden gelöscht."
+				:is-open="currentAction === 'delete'" @update:is-open="(isOpen) => setCurrentAction('delete', isOpen)">
+				<div class="w-full">
+					<span v-if="alleKlassenLeer">Alle ausgewählten Klassen sind bereit zum Löschen.</span>
+					<span v-if="leereKlassenVorhanden">Einige Klassen haben noch Schüler, leere Klassen können gelöscht werden.</span>
+					<div v-if="!alleKlassenLeer">
+						<span v-for="message in nichtAlleKlassenLeer" :key="message" class="text-ui-danger"> {{ message }} <br> </span>
+					</div>
 				</div>
-			</svws-ui-action-button>
+				<template #buttonFooterLeft>
+					<svws-ui-button :disabled="manager().getKlassenIDsMitSchuelern().size() === manager().liste.auswahlSize() || loading"
+						:title="leereKlassenVorhanden ? 'Leere Klassen löschen' : 'Löschen'" @click="entferneKlassen" :is-loading="loading" class="mt-4">
+						<svws-ui-spinner v-if="loading" spinning />
+						<span v-else class="icon i-ri-play-line" />
+						{{ leereKlassenVorhanden ? 'Leere Klassen löschen' : 'Löschen' }}
+					</svws-ui-button>
+				</template>
+			</ui-card>
 			<log-box :logs :status>
 				<template #button>
 					<svws-ui-button v-if="status !== undefined" type="transparent" @click="clearLog" title="Log verwerfen">Log verwerfen</svws-ui-button>
@@ -30,6 +39,10 @@
 	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN));
 
 	const currentAction = ref<string>('');
+	const oldAction = ref<{ name: string | undefined; open: boolean }>({
+		name: undefined,
+		open: false,
+	});
 	const loading = ref<boolean>(false);
 	const logs = ref<List<string | null> | undefined>();
 	const status = ref<boolean | undefined>();
@@ -47,8 +60,15 @@
 	const leereKlassenVorhanden = computed(() =>
 		!alleKlassenLeer.value && (props.manager().getKlassenIDsMitSchuelern().size() !== props.manager().liste.auswahlSize()));
 
-	function toggleDeleteKlassen() {
-		currentAction.value = currentAction.value === 'delete' ? '' : 'delete';
+	function setCurrentAction(newAction: string, open: boolean) {
+		if(newAction === oldAction.value.name && !open)
+			return;
+		oldAction.value.name = currentAction.value;
+		oldAction.value.open = (currentAction.value === "") ? false : true;
+		if(open === true)
+			currentAction.value= newAction;
+		else
+			currentAction.value = "";
 	}
 
 	function clearLog() {
