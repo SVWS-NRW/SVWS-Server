@@ -446,7 +446,7 @@
 	});
 
 	const gridTemplateColumns = computed<string>(() => {
-		const base = "grid-template-columns: 1.5rem" + (zeigeAufklappzeile.value ? " 1.5rem" : "") + " minmax(8rem, 1.75fr) minmax(6rem, 1.5fr)";
+		const base = "grid-template-columns: 1.5rem" + (zeigeAufklappzeile.value ? " 1.5rem" : "") + " 8rem 6rem";
 		const count = (props.blockungstabelleHidden() === 'nichts') ? 3 + schienen.value.size() : 2;
 		return base + " repeat(" + count + ", 3.75rem)";
 	});
@@ -463,13 +463,6 @@
 
 	function getAnzahlSchuelerSchiene(idSchiene: number): number {
 		return props.hatErgebnis ? props.getErgebnismanager().getOfSchieneAnzahlSchueler(idSchiene) : 0;
-	}
-
-	function toggleBlockungstabelle() {
-		if (props.blockungstabelleHidden() === 'nichts')
-			return props.setBlockungstabelleHidden('alles');
-		else
-			return props.setBlockungstabelleHidden('nichts');
 	}
 
 	const fachwahlListe = computed<List<{ kursart : GostKursart, fachwahlen : GostStatistikFachwahl }>>(() => {
@@ -1012,13 +1005,3 @@
 	}
 
 </script>
-
-<style lang="postcss" scoped>
-
-	@reference "../../../../../ui/src/assets/styles/index.css"
-
-	.svws-expanded + .svws-ui-tr:not(.svws-expanded) {
-		@apply border-t border-black/50;
-	}
-
-</style>
