@@ -392,7 +392,8 @@ if [ "$CREATE_KEYSTORE" = "j" ] || [ "$CREATE_KEYSTORE" = "J" ]; then
 	# Keystore erstellen
 	#mkdir -p $SVWS_TLS_KEYSTORE_PATH
     echo "Erstelle Keystore in $SVWS_TLS_KEYSTORE_PATH/keystore ..."
-    keytool -genkey -noprompt -alias $SVWS_TLS_KEY_ALIAS -validity $validity_days -dname "CN=${INPUT_common_name}, OU=${INPUT_organizational_unit}, O=${INPUT_organization}, L=${INPUT_locality}, S=${INPUT_state}, C=${INPUT_country}" -keystore $SVWS_TLS_KEYSTORE_PATH/keystore -storepass $SVWS_TLS_KEYSTORE_PASSWORD -keypass $SVWS_TLS_KEYSTORE_PASSWORD  -keyalg RSA
+    export HOSTNAME=`hostname`
+    keytool -genkey -noprompt -alias $SVWS_TLS_KEY_ALIAS -validity $validity_days -dname "CN=${INPUT_common_name}, OU=${INPUT_organizational_unit}, O=${INPUT_organization}, L=${INPUT_locality}, S=${INPUT_state}, C=${INPUT_country}" -ext "SAN=DNS:localhost,IP:127.0.0.1,DNS:${HOSTNAME}" -keystore $SVWS_TLS_KEYSTORE_PATH/keystore -storepass $SVWS_TLS_KEYSTORE_PASSWORD -keypass $SVWS_TLS_KEYSTORE_PASSWORD  -keyalg RSA
     keytool -export -keystore $SVWS_TLS_KEYSTORE_PATH/keystore -alias $SVWS_TLS_KEY_ALIAS -file ./SVWS.cer -storepass $SVWS_TLS_KEYSTORE_PASSWORD
 else
 	mv  $SVWS_TLS_KEYSTORE_PATH $APP_PATH
