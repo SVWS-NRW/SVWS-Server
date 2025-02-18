@@ -147,7 +147,6 @@
 	const { focusHelpVisible, focusSwitchingEnabled , enable, disable } = useRegionSwitch();
 
 	watch(() => props.menu.current.name, (m) => {
-		console.log(props.menu.mainEntry.text);
 		const mainText = props.menu.mainEntry.text;
 		const subText = props.menu.current.text;
 		const title = mainText + " - " + ((mainText !== subText) ? subText + " - " : "") + schulname.value;
