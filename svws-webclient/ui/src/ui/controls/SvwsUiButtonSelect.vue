@@ -106,6 +106,7 @@
 		border-top-right-radius: 0;
 		border-bottom-right-radius: 0;
 		z-index: 10;
+		margin-right: 0;
 	}
 
 	.svws-ui-dropdown-list {
