@@ -243,6 +243,10 @@ SG;APO-GOSt01/11-13;APO-GOSt 01: Jahrgänge 11-13;-***-S01-;0;40;-11-12-13-;null
 SG;APO-GOSt(B)10/G8;APO-GOSt(B)10/G8;-***-S01-;0;10;-EF-Q1-Q2-;null;null
 SR;R/APO-SI05/5-10;APO-SI05: Klassen 5-10;-***-R01-;0;10;-05-06-07-08-09-10-;null;null
 V;GE/APO-SI05/5-10;APO-SI 05: Jahrgänge 5-10 (Primus);-***-SI-ST-GS7-GS6-;0;10;-05-06-07-08-09-10-;null;null
+PS;GE/APO-SI05/5-10;APO-SI 05: Jahrgänge 5-10;-***-SI-ST-GS7-GS6-;0;10;-05-06-07-08-09-10-;null;null
+PS;GE/APO-SI20/5-10;APO-SI 20: Jahrgänge 5-10;-***-SI-ST-GS7-GS6-;0;10;-05-06-07-08-09-10-;null;null
+PS;S/AOSF-SI05/5-10;AOSF-SI 05: Jahrgänge 5-10;-***-SI-ST-GS7-GS6-;0;10;-05-06-07-08-09-10-;null;null
+PS;G/AO-GS05/1-4;AO-GS 05: Jahrgänge 1-4;-***-;0;10;-01-02-03-04-E1-E2-E3-EP-;null;null
 V;H/APO-SI05/10B;APO-SI 05: Klasse 10B;-***-;0;20;-10-;null;null
 V;H/APO-SI05/5-9;APO-SI 05: Klassen 5-9;-***-;0;10;-05-06-07-08-09-;null;null
 V;G/AO-GS05/1-4;AO-GS 05: Jahrgänge 1-4;-***-;0;10;-01-02-03-04-E1-E2-E3-EP-;null;null
