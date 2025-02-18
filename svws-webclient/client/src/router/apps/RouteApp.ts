@@ -186,7 +186,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	}
 
 	private getApp(): TabData {
-		return { name: this.data.view.name, text: this.data.view.text, hide: !this.data.view.hasView('liste') };
+		return { name: (this.data.view.name === "stundenplan.kataloge") ? "stundenplan" : this.data.view.name, text: this.data.view.text, hide: !this.data.view.hasView('liste') };
 	}
 
 	private getApps(): TabData[] {
