@@ -93,7 +93,8 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 			children: undefined,
 			meta: {
 				text: name, // Ein Text, welcher zur Darstellung in der GUI genutzt wird (z.B. der Text auf Tabs)
-				menugroup: "", // Die Menu-Gruppe, falls die Route einem Menu zugeordnet ist und dort einer Gruppe
+				menugroup: "", // Die Menu-Gruppe, falls die Route einem Menüeintrag zugeordnet ist und dort einer Gruppe
+				icon: "", // Der Bezeichner eines Icons, falls die Route einem Menüeintrag zugeordnet ist
 			},
 		};
 		this._children = [];
@@ -236,6 +237,20 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 */
 	public set menugroup(menugroup : string) {
 		(this._record.meta as { menugroup: string }).menugroup = menugroup;
+	}
+
+	/**
+	 * Gibt die Menu-Gruppe der Route zurück, welche für die Gruppierung bei Link-Listen verwendet wird
+	 */
+	public get icon() : string {
+		return (this._record.meta as { icon: string }).icon;
+	}
+
+	/**
+	 * Setzt die Menu-Gruppe der Route, welche für die Gruppierung bei Link-Listen verwendet wird
+	 */
+	public set icon(icon : string) {
+		(this._record.meta as { icon: string }).icon = icon;
 	}
 
 	/**
@@ -490,6 +505,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 			if (!this.checkTabVisibility(newTab))
 				continue;
 			newTab.tabgroup = node.menugroup;
+			newTab.image = node.icon;
 			tabs.push(newTab);
 			if (node.name === tabname)
 				tab = newTab;

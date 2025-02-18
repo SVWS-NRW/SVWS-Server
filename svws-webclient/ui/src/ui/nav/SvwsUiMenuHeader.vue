@@ -1,6 +1,5 @@
 <template>
-	<a class="app--menu--initials"
-		href="#" @click.prevent="onClick">
+	<a class="app--menu--initials" href="#" @click.prevent="onClick">
 		<svws-ui-tooltip position="right" v-if="user" :indicator="false">
 			<div class="app--menu--initials--icon" :class="{'svws-is-admin-client': isAdminClient}">
 				<template v-if="user.length > 5">{{ user.split(' ').map((username) => username[0]).join('').toUpperCase() }}</template>

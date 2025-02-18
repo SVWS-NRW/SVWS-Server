@@ -21,6 +21,7 @@ import { routeSchuelerVermerke } from "~/router/apps/schueler/vermerke/RouteSchu
 import { routeSchuelerSprachen } from "./sprachen/RouteSchuelerSprachen";
 import { routeSchuelerAbschluesse } from "./abschluesse/RouteSchuelerAbschluesse";
 import { routeSchuelerEinwilligungen } from "~/router/apps/schueler/einwilligungen/RouteSchuelerEinwilligungen";
+import { AppMenuGroup } from "@ui";
 
 const SSchuelerAuswahl = () => import("~/components/schueler/SSchuelerAuswahl.vue")
 const SSchuelerApp = () => import("~/components/schueler/SSchuelerApp.vue")
@@ -50,6 +51,8 @@ export class RouteSchueler extends RouteAuswahlNode<SchuelerListeManager, RouteD
 		];
 		super.defaultChild = routeSchuelerIndividualdaten;
 		super.updateIfTarget = this.doUpdateIfTarget;
+		super.menugroup = AppMenuGroup.MAIN;
+		super.icon = "i-ri-group-line";
 	}
 
 	protected doUpdateIfTarget = async (to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined) => {

@@ -6,6 +6,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeApp, type RouteApp } from "~/router/apps/RouteApp";
 import { routeEinstellungenBenutzer } from "./benutzer/RouteEinstellungenBenutzer";
 import { api } from "~/router/Api";
+import { AppMenuGroup } from "@ui";
 
 export class RouteEinstellungen extends RouteNode<any, RouteApp> {
 
@@ -14,6 +15,8 @@ export class RouteEinstellungen extends RouteNode<any, RouteApp> {
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getNoProps(route);
 		super.text = "Einstellungen";
+		super.menugroup = AppMenuGroup.EINSTELLUNGEN;
+		super.icon = "i-ri-settings-3-line";
 	}
 
 	protected async update(to: RouteNode<any, any>) {

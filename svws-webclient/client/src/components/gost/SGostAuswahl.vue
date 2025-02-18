@@ -2,9 +2,7 @@
 	<div class="h-full flex flex-col">
 		<div class="secondary-menu--headline">
 			<h1><span class="select-none">Oberstufe</span></h1>
-			<div class="input--schule-abschnitte">
-				<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
-			</div>
+			<div><abschnitt-auswahl :daten="schuljahresabschnittsauswahl" /></div>
 		</div>
 		<div class="secondary-menu--header" />
 		<svws-ui-table :clicked="auswahl" clickable :model-value="selected()" @update:model-value="setAuswahl" :selectable="hatUpdateKompetenz" :unselectable

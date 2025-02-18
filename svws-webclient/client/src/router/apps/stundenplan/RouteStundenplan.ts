@@ -23,6 +23,7 @@ import { routeError } from "~/router/error/RouteError";
 import { routeStundenplanKataloge } from "./RouteStundenplanKataloge";
 import { routeStundenplanRaum } from "./RouteStundenplanRaum";
 import { ConfigElement } from "~/components/Config";
+import { AppMenuGroup } from "@ui";
 
 const SStundenplanAuswahl = () => import("~/components/stundenplan/SStundenplanAuswahl.vue")
 const SStundenplanApp = () => import("~/components/stundenplan/SStundenplanApp.vue")
@@ -48,6 +49,8 @@ export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> 
 			routeStundenplanRaum,
 		];
 		super.defaultChild = routeStundenplanDaten;
+		super.menugroup = AppMenuGroup.MAIN;
+		super.icon = "i-ri-calendar-event-line";
 		const stundenplanConfig = new StundenplanKonfiguration();
 		api.config.addElements([
 			new ConfigElement("stundenplan.settings.defaults", "user", StundenplanKonfiguration.transpilerToJSON(stundenplanConfig)),

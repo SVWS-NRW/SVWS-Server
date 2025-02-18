@@ -13,6 +13,7 @@ import type { KlassenAuswahlProps } from "~/components/klassen/SKlassenAuswahlPr
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import { routeKlasseGruppenprozesse } from "./RouteKlassenGruppenprozesse";
 import { routeKlassenNeu } from "./RouteKlassenNeu";
+import { AppMenuGroup } from "@ui";
 
 
 const SKlassenAuswahl = () => import("~/components/klassen/SKlassenAuswahl.vue")
@@ -31,6 +32,8 @@ export class RouteKlassen extends RouteAuswahlNode<KlassenListeManager, RouteDat
 			routeKlasseGruppenprozesse,
 		];
 		super.defaultChild = routeKlassenDaten;
+		super.menugroup = AppMenuGroup.MAIN;
+		super.icon = "i-ri-team-line";
 		super.updateIfTarget = this.doUpdateIfTarget;
 		super.getAuswahlListProps = (props) => (<KlassenAuswahlProps>{
 			...props,

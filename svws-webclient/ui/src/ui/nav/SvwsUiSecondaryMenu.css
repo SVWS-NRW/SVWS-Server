@@ -41,10 +41,6 @@
 	@apply cursor-pointer;
 }
 
-.input--schule-abschnitte {
-	@apply -mt-0.5;
-}
-
 .secondary-menu--breadcrumbs {
 	@apply flex flex-wrap;
 

@@ -2,7 +2,7 @@
 	<div class="h-full flex flex-col">
 		<div class="secondary-menu--headline">
 			<h1>Fächer</h1>
-			<div class="input--schule-abschnitte">
+			<div>
 				<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
 			</div>
 		</div>

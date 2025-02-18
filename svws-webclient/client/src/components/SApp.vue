@@ -1,44 +1,28 @@
 <template>
-	<svws-ui-app-layout :no-secondary-menu="!showSubmenu()" :tertiary-menu="showAuswahlliste()" secondary-menu-small>
+	<svws-ui-app-layout :no-secondary-menu="!menu.hasSubmenu" :tertiary-menu="menu.hasAuswahlliste" secondary-menu-small>
 		<template #sidebar>
 			<svws-ui-menu :focus-switching-enabled :focus-help-visible>
 				<template #header>
-					<!--<span v-if="apiStatus?.pending">...</span>-->
-					<!--TODO: Statt Name den vollen Anzeigenamen anzeigen (erstellt dann automatisch eine Ausgabe der Initialien-->
-					<svws-ui-menu-header :user="username" :schule="schulname" :schema="schemaname" @click="setApp(benutzerprofilApp)" class="cursor-pointer" />
+					<svws-ui-menu-header v-if="menu.benutzerprofil !== null" :user="username" :schule="schulname" :schema="schemaname" @click="startSetApp(menu.benutzerprofil)" class="cursor-pointer" />
 				</template>
 				<template #default>
-					<template v-for="item in apps" :key="item.name">
-						<template v-if="item.name !== 'einstellungen'">
-							<svws-ui-menu-item :active="is_active(item)" @click="startSetApp(item)">
-								<template #icon>
-									<span class="inline-block icon-lg i-ri-team-line" v-if="item.name === 'klassen'" />
-									<span class="inline-block icon-lg i-ri-group-line" v-else-if="item.name === 'schueler'" />
-									<span class="inline-block icon-lg i-ri-bar-chart-2-line" v-else-if="item.name === 'statistik'" />
-									<span class="inline-block icon-lg i-ri-calendar-event-line" v-else-if="item.name === 'stundenplan'" />
-									<span class="inline-block icon-lg i-ri-school-line" v-else-if="item.name === 'schule'" />
-									<span class="inline-block icon-lg i-ri-archive-line" v-else-if="item.name === 'kataloge'" />
-									<span class="inline-block icon-lg i-ri-briefcase-line" v-else-if="item.name === 'lehrer'" />
-									<span class="inline-block icon-lg i-ri-book-2-line" v-else-if="item.name === 'kurse'" />
-									<span class="inline-block icon-lg i-ri-graduation-cap-line" v-else-if="item.name === 'gost'" />
-								</template>
-								<template #label><span class="text-xs"> {{ item.text }}</span> </template>
-							</svws-ui-menu-item>
-						</template>
+					<template v-for="item in menu.main" :key="item.name">
+						<svws-ui-menu-item :active="menu.mainEntry.name === item.name" @click="startSetApp(item)">
+							<template #icon><span class="inline-block icon-lg" :class="getIcon(item)" /></template>
+							<template #label><span class="text-xs"> {{ item.text }}</span> </template>
+						</svws-ui-menu-item>
 					</template>
 				</template>
 				<template #footer>
-					<template v-for="item in apps" :key="item.name">
-						<template v-if="item.name === 'einstellungen'">
-							<svws-ui-menu-item :active="is_active(item)" @click="startSetApp(item)">
-								<template #icon><span class="inline-block icon-lg i-ri-settings-3-line" /></template>
-								<template #label><span class="text-xs"> {{ item.text }}</span> </template>
-							</svws-ui-menu-item>
-						</template>
+					<template v-if="menu.einstellungen !== null">
+						<svws-ui-menu-item :active="menu.mainEntry.name === menu.einstellungen.name" @click="startSetApp(menu.einstellungen)">
+							<template #icon><span class="inline-block icon-lg" :class="getIcon(menu.einstellungen)" /></template>
+							<template #label><span class="text-xs"> {{ menu.einstellungen.text }}</span> </template>
+						</svws-ui-menu-item>
 					</template>
 					<svws-ui-menu-item subline="" @click="doLogout">
 						<template #label>Abmelden</template>
-						<template #icon> <span class="icon-lg i-ri-logout-circle-line inline-block" /> </template>
+						<template #icon><span class="icon-lg i-ri-logout-circle-line inline-block" /></template>
 					</svws-ui-menu-item>
 				</template>
 				<template #version>
@@ -65,54 +49,48 @@
 				</template>
 			</svws-ui-menu>
 		</template>
-		<template #secondaryMenu v-if="showSubmenu()">
-			<template v-if="pendingSetApp">
-				<div class="h-full flex flex-col">
-					<div class="secondary-menu--headline">
-						<h1> <span>{{ pendingSetApp }}</span> </h1>
-						<div class="input--schule-abschnitte">
-							<span class="inline-block h-4 rounded-sm animate-pulse w-16 -mb-1" />
-						</div>
-					</div>
-				</div>
-			</template>
-			<template v-else>
-				<div class="h-full flex flex-col">
-					<div class="secondary-menu--headline">
-						<h1> {{ app.name.startsWith('schule') ? "Schule" : "Einstellungen" }}  </h1>
-						<div v-if="app.name.startsWith('schule')" class="input--schule-abschnitte">
-							<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
-						</div>
-					</div>
-					<div class="secondary-menu--header" />
-					<div class="secondary-menu--content">
-						<p v-if="focusSwitchingEnabled" v-show="focusHelpVisible" class="region-enumeration">2</p>
-						<svws-ui-secondary-menu-navigation class="focus-region" :class="{'highlighted': focusHelpVisible}" :tab-manager="(app.name.startsWith('schule') ? tabManagerSchule : tabManagerEinstellungen)" />
-					</div>
-				</div>
-			</template>
-		</template>
-		<template #tertiaryMenu v-if="app.hide !== true">
+		<template #secondaryMenu v-if="menu.hasSubmenu">
 			<template v-if="pendingSetApp">
 				<div class="h-full flex flex-col">
 					<div class="secondary-menu--headline">
 						<h1><span>{{ pendingSetApp }}</span></h1>
-						<div class="input--schule-abschnitte">
-							<span class="inline-block h-4 rounded-sm animate-pulse w-16 -mb-1 bg-ui-contrast-10" />
-						</div>
+						<div><span class="inline-block h-4 rounded-sm animate-pulse w-16 -mb-1" /></div>
 					</div>
 				</div>
 			</template>
 			<template v-else>
-				<router-view :key="app.name" name="liste" />
+				<div class="h-full flex flex-col">
+					<div class="secondary-menu--headline">
+						<h1> {{ menu.mainEntry.text }} </h1>
+						<div><abschnitt-auswahl :daten="schuljahresabschnittsauswahl" /></div>
+					</div>
+					<div class="secondary-menu--header" />
+					<div class="secondary-menu--content">
+						<p v-if="focusSwitchingEnabled" v-show="focusHelpVisible" class="region-enumeration">2</p>
+						<svws-ui-secondary-menu-navigation class="focus-region" :class="{'highlighted': focusHelpVisible}" :tab-manager="(menu.current.name.startsWith('schule') ? tabManagerSchule : tabManagerEinstellungen)" />
+					</div>
+				</div>
+			</template>
+		</template>
+		<template #tertiaryMenu v-if="menu.current.hide !== true">
+			<template v-if="pendingSetApp">
+				<div class="h-full flex flex-col">
+					<div class="secondary-menu--headline">
+						<h1><span>{{ pendingSetApp }}</span></h1>
+						<div><span class="inline-block h-4 rounded-sm animate-pulse w-16 -mb-1 bg-ui-contrast-10" /></div>
+					</div>
+				</div>
+			</template>
+			<template v-else>
+				<router-view :key="menu.current.name" name="liste" />
 			</template>
 		</template>
 		<template #main>
-			<main class="app--page h-full" :class="app.name" role="main">
+			<main class="app--page h-full" :class="menu.current.name" role="main">
 				<div v-show="pendingSetApp" class="flex flex-col w-full h-full grow" :class="{'svws-api--pending': apiStatus.pending}">
 					<svws-ui-header>
 						<div class="flex items-center">
-							<div class="w-20 mr-6" v-if="(app.name === 'schueler') || (app.name === 'lehrer')">
+							<div class="w-20 mr-6" v-if="(menu.current.name === 'schueler') || (menu.current.name === 'lehrer')">
 								<div class="inline-block h-20 rounded-xl animate-pulse w-20 bg-ui-contrast-10" />
 							</div>
 							<div>
@@ -125,7 +103,7 @@
 				</div>
 				<p v-if="focusSwitchingEnabled" v-show="focusHelpVisible" class="region-enumeration">8</p>
 				<div v-show="!pendingSetApp" class="flex flex-col w-full h-full grow overflow-hidden" :class="{'svws-api--pending': apiStatus.pending, 'focus-region': focusSwitchingEnabled, 'highlighted': focusHelpVisible}">
-					<router-view :key="app.name" />
+					<router-view :key="menu.current.name" />
 				</div>
 			</main>
 		</template>
@@ -154,7 +132,7 @@
 
 <script setup lang="ts">
 
-	import { computed, onMounted, onUnmounted, ref, onErrorCaptured } from "vue";
+	import { computed, onMounted, onUnmounted, ref, onErrorCaptured, watch } from "vue";
 	import type { TabData } from "@ui";
 	import type { AppProps } from './SAppProps';
 	import type { SimpleOperationResponse } from '@core';
@@ -168,6 +146,15 @@
 
 	const { focusHelpVisible, focusSwitchingEnabled , enable, disable } = useRegionSwitch();
 
+	watch(() => props.menu.current.name, (m) => {
+		console.log(props.menu.mainEntry.text);
+		const mainText = props.menu.mainEntry.text;
+		const subText = props.menu.current.text;
+		const title = mainText + " - " + ((mainText !== subText) ? subText + " - " : "") + schulname.value;
+		if (document.title !== title)
+			document.title = title;
+	});
+
 	const schulname = computed<string>(() => {
 		const name = props.schuleStammdaten.bezeichnung1;
 		return (name.length > 0) ? name : "Fehlende Bezeichnung für die Schule";
@@ -175,6 +162,22 @@
 
 	const pendingSetApp = ref('');
 	const copied = ref<boolean|null>(null);
+
+	function getIcon(menu: TabData) : string {
+		switch(menu.image) {
+			case "i-ri-school-line":
+			case "i-ri-group-line":
+			case "i-ri-briefcase-line":
+			case "i-ri-team-line":
+			case "i-ri-book-2-line":
+			case "i-ri-graduation-cap-line":
+			case "i-ri-bar-chart-2-line":
+			case "i-ri-calendar-event-line":
+			case "i-ri-settings-3-line":
+				return menu.image;
+			default: return "";
+		}
+	}
 
 	async function copyToClipboard() {
 		try {
@@ -185,44 +188,9 @@
 		copied.value = true;
 	}
 
-	const showSubmenus = new Set<string>([
-		"schule", "schule.stammdaten", "schule.betriebe", "schule.einwilligungsarten", "schule.faecher", "schule.foerderschwerpunkte", "schule.jahrgaenge",
-		"schule.vermerkarten", "schule.religionen", "schule.schulen", "schule.datenaustausch.kurs42", "schule.datenaustausch.untis", "schule.datenaustausch.enm",
-		"schule.datenaustausch.laufbahnplanung", "schule.datenaustausch.schulbewerbung", "schule.datenaustausch.wenom", "einstellungen", "einstellungen.benutzer",
-		"einstellungen.benutzergruppen",
-	]);
-
-	function showSubmenu() : boolean {
-		return showSubmenus.has(props.selectedChild.name);
-	}
-
-	const hideAuswahlliste = new Set<string>([ "statistik", "einstellungen",
-		"schule", "schule.stammdaten", "schule.datenaustausch.kurs42", "schule.datenaustausch.untis", "schule.datenaustausch.enm",
-		"schule.datenaustausch.laufbahnplanung", "schule.datenaustausch.schulbewerbung", "schule.datenaustausch.wenom",
-	]);
-
-	function showAuswahlliste() : boolean {
-		return !hideAuswahlliste.has(props.selectedChild.name);
-	}
-
-	function is_active(current: TabData): boolean {
-		const routename = props.app.name.split('.')[0];
-		const title = current.text + " - " + schulname.value;
-
-		if (((props.app.name === 'benutzer') || (props.app.name === 'benutzergruppen')) && (current.name === 'schule'))
-			return true;
-		if (routename !== current.name)
-			return false;
-		if (document.title !== title) {
-			document.title = title;
-			document.querySelector("link[rel~='icon']")?.setAttribute('href', 'favicon' + (props.app.name === 'statistik' ? '-statistik' : '') + '.svg')
-		}
-		return true;
-	}
-
 	async function startSetApp(app: TabData) {
 		pendingSetApp.value = app.text;
-		await props.setApp(app);
+		await props.menu.setEintrag(app);
 		pendingSetApp.value = '';
 	}
 
@@ -316,16 +284,3 @@
 	}
 
 </script>
-
-<style lang="postcss">
-
-	@reference "../../../ui/src/assets/styles/index.css"
-
-	.app--page {
-		@apply flex grow flex-col justify-between;
-		@apply overflow-hidden;
-		@apply relative;
-		@apply bg-ui-contrast-0;
-	}
-
-</style>

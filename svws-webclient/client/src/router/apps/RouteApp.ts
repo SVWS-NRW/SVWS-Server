@@ -1,5 +1,5 @@
 import type { RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
-import { ViewType, type TabData, type TabManager } from "@ui";
+import { AppMenuManager, ViewType, type TabData, type TabManager } from "@ui";
 import type { AppProps } from "~/components/SAppProps";
 import { Schulform, BenutzerKompetenz, ServerMode, DeveloperNotificationException } from "@core";
 import { api } from "~/router/Api";
@@ -45,6 +45,10 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	/** Die Knoten, welche im Haupt-Menu zur Verfügung gestellt werden */
 	private _menuMain: RouteNode<any, any>[];
 
+	public menuHidden() : boolean[] {
+		return super.menu.map(c => c.hidden(routerManager.getRouteParams()) !== false);
+	}
+
 	/** Die Knoten, welche im Menu Einstellungen zur Verfügung gestellt werden */
 	// TODO in abstrahierter Form in RouteNode integrieren...
 	private _menuEinstellungen: RouteNode<any, any>[];
@@ -83,6 +87,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		super.propHandler = (route) => this.getProps();
 		super.text = "SVWS-Client";
 		this._menuMain = [
+			routeBenutzerprofil,
 			routeSchule,
 			routeSchueler,
 			routeLehrer,
@@ -118,7 +123,6 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeSchuleDatenaustauschUntis,
 		];
 		super.children = [
-			routeBenutzerprofil,
 			...this._menuMain,
 			routeStundenplanKataloge,
 			...this._menuSchule,
@@ -167,12 +171,8 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			schulform: api.schulform,
 			schuleStammdaten: api.schuleStammdaten,
 			// Props für die Navigation
-			setApp: this.setApp,
-			app: this.getApp(),
-			selectedChild: this.getSelectedChild(),
+			menu: this.getMenuManager(),
 			benutzerprofilApp: { name: routeBenutzerprofil.name, text: routeBenutzerprofil.text, hide: true },
-			apps: this.getApps(),
-			appsHidden: this.children_hidden().value,
 			apiStatus: api.status,
 			tabManagerSchule: this.getTabManagerSchule,
 			tabManagerEinstellungen: this.getTabManagerEinstellungen,
@@ -213,6 +213,18 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		const result = await RouteManager.doRoute(node.getRoute());
 		if (result === RoutingStatus.SUCCESS)
 			this.data.setView(node, this.children);
+	}
+
+	private getMenuManager() : AppMenuManager {
+		return new AppMenuManager(
+			this.getTabManager(),
+			[ { name: "schule", manager: this.getTabManagerSchule() }, { name: "einstellungen", manager: this.getTabManagerEinstellungen() } ],
+			this.getApp()
+		);
+	}
+
+	private getTabManager() : TabManager {
+		return this.createTabManager(super.menu, this.menuHidden(), this.data.view.name, this.setApp, ViewType.DEFAULT);
 	}
 
 	private getTabManagerEinstellungen = () : TabManager => {

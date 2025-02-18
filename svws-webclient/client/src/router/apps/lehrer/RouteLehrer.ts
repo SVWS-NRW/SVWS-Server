@@ -15,7 +15,8 @@ import { routeLehrerStundenplan } from "./stundenplan/RouteLehrerStundenplan";
 import { routeLehrerUnterrichtsdaten } from "~/router/apps/lehrer/RouteLehrerUnterrichtsdaten";
 import { api } from "~/router/Api";
 import { ConfigElement } from "~/components/Config";
-import { LehrerAuswahlProps } from "~/components/lehrer/SLehrerAuswahlProps";
+import type { LehrerAuswahlProps } from "~/components/lehrer/SLehrerAuswahlProps";
+import { AppMenuGroup } from "@ui";
 
 const SLehrerAuswahl = () => import("~/components/lehrer/SLehrerAuswahl.vue");
 const SLehrerApp = () => import("~/components/lehrer/SLehrerApp.vue");
@@ -35,6 +36,8 @@ export class RouteLehrer extends RouteAuswahlNode<LehrerListeManager, RouteDataL
 			routeLehrerNeu,
 		];
 		super.defaultChild = routeLehrerIndividualdaten;
+		super.menugroup = AppMenuGroup.MAIN;
+		super.icon = "i-ri-briefcase-line";
 		super.updateIfTarget = this.doUpdateIfTarget;
 		super.getAuswahlListProps = (props) => (<LehrerAuswahlProps>{
 			...props,

@@ -2,9 +2,7 @@
 	<div class="h-full flex flex-col">
 		<div class="secondary-menu--headline">
 			<h1 class="select-none">Schüler</h1>
-			<div class="input--schule-abschnitte">
-				<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
-			</div>
+			<div><abschnitt-auswahl :daten="schuljahresabschnittsauswahl" /></div>
 		</div>
 		<div class="secondary-menu--header">
 			<slot name="header" />
