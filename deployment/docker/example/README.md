@@ -7,7 +7,7 @@ Dieses README-Dokument erklärt die verschiedenen Umgebungsvariablen, die in der
 ### INIT_SCRIPTS_DIR
 
 - **Beschreibung**: Das Verzeichnis, in dem Initialisierungsskripte für Ihre Anwendung abgelegt sind.
-- **Default**: `/etc/app/svws/init-scripts`
+- **Default**: `/opt/app/svws/init-scripts`
 - **Hinweis**: `kann per volumen mit eigenen Skripten benutzt werden`
 
 ### MariaDB_ROOT_PASSWORD
