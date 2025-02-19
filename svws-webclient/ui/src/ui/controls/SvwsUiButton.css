@@ -10,11 +10,6 @@
 		min-height: 2.25rem;
 	}
 
-	svg {
-		margin-top: -0.1em;
-		margin-bottom: -0.1em;
-	}
-
 	&:focus {
 		@apply outline-hidden;
 		@apply ring;
@@ -34,10 +29,6 @@
 
 	.svws-ui-tfoot & {
 		@apply h-7 min-h-[unset];
-	}
-
-	span.icon {
-		@apply -my-1;
 	}
 }
 
@@ -152,19 +143,9 @@
 	width: 1.6em;
 	height: 1.6em;
 
-	.icon--fill {
-		@apply hidden;
-	}
-
 	&:hover,
 	&:focus-visible {
-		.icon--line {
-			@apply hidden;
-		}
-
-		.icon--fill {
-			@apply inline-block;
-		}
+		@apply icon-ui-danger-hover;
 	}
 }
 
@@ -174,41 +155,32 @@
 	.svws-ui-tbody & {
 		@apply text-sm font-medium h-6 w-6;
 		padding: 0.3em !important;
-
-		svg {
-			width: 1.2em;
-			height: 1.2em;
-		}
 	}
 
 	.svws-ui-tfoot &.button {
 		@apply text-button h-7 w-7;
 		padding: 0.25em !important;
-
-		svg {
-			width: 1.3em;
-			height: 1.3em;
-		}
 	}
 }
 
 .button--icon {
 	@apply p-1.5 justify-center border-0 items-center;
 	@apply w-9 h-9;
-
-	svg {
-		width: 1.3rem;
-		height: 1.3rem;
-	}
 }
 
 .button:disabled {
+	.button--trash-icon .icon {
+		@apply icon-ui-danger-secondary;
+	}
 	&,
 	&:hover,
 	&:focus,
 	&:focus-visible {
 		@apply bg-ui-disabled text-ui-ondisabled border-ui-disabled;
 		@apply cursor-not-allowed pointer-events-none;
+		.button--trash-icon .icon {
+			@apply icon-ui-danger-secondary-hover;
+		}
 	}
 }
 
