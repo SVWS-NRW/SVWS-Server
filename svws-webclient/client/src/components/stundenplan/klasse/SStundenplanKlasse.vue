@@ -130,17 +130,17 @@
 				:use-drag-and-drop="hatUpdateKompetenz" :drag-data="() => dragData" :on-drag :on-drop class="h-full overflow-scroll pr-4" @update:click="u => toRaw(auswahl) !== u ? auswahl = u : auswahl = undefined" />
 			<!-- Card für die zusätzlichen Einstellungen zum Unterricht -->
 			<template v-if="(auswahl !== undefined) && (serverMode === ServerMode.DEV)">
-				<div class="flex flex-col gap-4">
+				<div class="flex flex-col gap-4 min-w-96">
 					<div class="text-headline-md">Raumzuordnung {{ unterrichtBezeichnung }} ({{ schuelerzahl }} SuS)</div>
 					<div>{{ auswahl.lehrer.size() > 1 ? 'Lehrkräfte' : 'Lehrkraft' }} {{ [...auswahl.lehrer].map(l => stundenplanManager().lehrerGetByIdOrException(l).kuerzel).join(', ') }}</div>
 					<div class="text-headline-sm">Für alle Unterrichte setzen:</div>
-					<div class="grid grid-cols-2 gap-2">
+					<div class="grid gap-2" style="grid-template-columns: 8rem auto;">
 						<div />
 						<svws-ui-select v-if="!disabled" label="Raumzuordnung" :items="raeumeAuswahl" :model-value="undefined" ref="refSelect"
 							@update:model-value="item => auswahl && item && patchUnterrichtRaeume(unterrichteAuswahl, [item])" :item-text="raumInfo" />
 					</div>
 					<div class="text-headline-sm">Einzeln setzen:</div>
-					<div class="grid grid-cols-2 gap-2">
+					<div class="grid items-center gap-2" style="grid-template-columns: 8rem auto;">
 						<template v-for="u of unterrichteAuswahl" :key="u.id">
 							<div>
 								{{ Wochentag.fromIDorException(stundenplanManager().zeitrasterGetByIdOrException(u.idZeitraster).wochentag).kuerzel }}.,

@@ -9,7 +9,7 @@
 		}">
 		<div class="notification--content-wrapper flex justify-between items-start">
 			<div class="notification--content" :class="{'notification--content--has-header': $slots.header}">
-				<div class="notification--header">
+				<div class="notification--header pr-3">
 					<div v-if="icon || type" class="notification--icon">
 						<span class="icon i-ri-lock-2-line" v-if="icon === 'login'" />
 						<span class="icon i-ri-alert-fill" v-else-if="icon === 'error' || type === 'error'" />
@@ -23,7 +23,7 @@
 				<div class="notification--text">
 					<slot />
 				</div>
-				<div class="mt-4 flex flex-wrap gap-1 w-full select-none" v-if="$slots.stack || type === 'bug'">
+				<div class="mt-4 flex flex-wrap gap-1 w-full justify-between select-none" v-if="$slots.stack || type === 'bug'">
 					<div v-if="type === 'bug'" class="notification--send-button">
 						Fehler melden
 						<span class="icon i-ri-send-plane-fill" />

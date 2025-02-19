@@ -9,21 +9,14 @@
 	@apply font-bold;
 	transition: transform 0.2s ease-out;
 
-	.notification--icon {
-		@apply opacity-75;
-
-		span {
-			@apply inline-block -my-1;
-		}
+	.notification--icon span {
+		@apply animate-pulse opacity-100 mr-2 cursor-default;
 	}
 }
 
 .notification--error {
 	@apply bg-ui-danger text-ui-ondanger border-ui-danger;
 
-	.notification--icon span.icon {
-		@apply animate-pulse opacity-100 mr-2;
-	}
 	.notification--icon,
 	.notification--close-button,
 	.notification--send-button,
@@ -38,9 +31,7 @@
 
 .notification--success {
 	@apply bg-ui-success text-ui-onsuccess border-ui-success;
-	.notification--icon span {
-		@apply animate-pulse opacity-100 mr-2;
-	}
+
 	.notification--icon,
 	.notification--close-button,
 	.notification--copy-button,
@@ -55,9 +46,6 @@
 
 .notification--warning {
 	@apply bg-ui-warning text-ui-onwarning border-ui-warning;
-	.notification--icon span {
-		@apply animate-pulse opacity-100 mr-2;
-	}
 	.notification--icon,
 	.notification--close-button,
 	.notification--copy-button,
@@ -85,7 +73,7 @@
 	@apply px-3 py-2 overflow-hidden;
 
 	.notification--icon {
-		@apply inline-block text-base leading-none;
+		@apply inline-block;
 	}
 
 	.notification--text {
@@ -98,10 +86,6 @@
 }
 
 .notification--content--has-header {
-	.notification--icon {
-		@apply text-headline-sm;
-	}
-
 	.notification--header {
 		@apply w-auto text-headline-sm font-bold mb-0.5;
 	}
@@ -116,8 +100,4 @@
 .notification--details-button,
 .notification--copy-button {
 	@apply flex items-center gap-1 text-sm font-bold px-2 rounded-md;
-}
-
-.notification--details-button {
-	@apply ml-auto;
 }
