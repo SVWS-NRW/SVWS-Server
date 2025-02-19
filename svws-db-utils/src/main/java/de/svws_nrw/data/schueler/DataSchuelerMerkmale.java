@@ -2,10 +2,13 @@ package de.svws_nrw.data.schueler;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import de.svws_nrw.core.data.schueler.SchuelerSchulbesuchMerkmal;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.DataManagerRevised;
+import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerMerkmale;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -24,6 +27,13 @@ public final class DataSchuelerMerkmale extends DataManagerRevised<Long, DTOSchu
 	 */
 	public DataSchuelerMerkmale(final DBEntityManager conn) {
 		super(conn);
+		setAttributesNotPatchable("id");
+		setAttributesRequiredOnCreation("idSchueler");
+	}
+
+	@Override
+	protected void initDTO(final DTOSchuelerMerkmale dto, final Long newID, final Map<String, Object> initAttributes) throws ApiOperationException {
+		dto.ID = newID;
 	}
 
 
@@ -43,16 +53,16 @@ public final class DataSchuelerMerkmale extends DataManagerRevised<Long, DTOSchu
 		return map(dto);
 	}
 
-	/**
-	 * Mapped das übergebene Datenbank-DTO auf das zugehörige Core-DTO
-	 *
-	 * @param dto   das Datenbank-DTO
-	 *
-	 * @return das Core-DTO
-	 */
-	public static SchuelerSchulbesuchMerkmal mapDto(final DTOSchuelerMerkmale dto) {
+	@Override
+	protected SchuelerSchulbesuchMerkmal map(final DTOSchuelerMerkmale dto) throws ApiOperationException {
+		return mapDto(dto);
+	}
+
+	private static SchuelerSchulbesuchMerkmal mapDto(final DTOSchuelerMerkmale dto) {
 		final SchuelerSchulbesuchMerkmal merkmal = new SchuelerSchulbesuchMerkmal();
 		merkmal.id = dto.ID;
+		merkmal.idSchueler = dto.Schueler_ID;
+		merkmal.kurztext = dto.Kurztext;
 		merkmal.datumVon = dto.DatumVon;
 		merkmal.datumBis = dto.DatumBis;
 		return merkmal;
@@ -66,12 +76,23 @@ public final class DataSchuelerMerkmale extends DataManagerRevised<Long, DTOSchu
 	 * @return die Core-DTOs
 	 */
 	public static List<SchuelerSchulbesuchMerkmal> mapMultiple(final Collection<DTOSchuelerMerkmale> dtos) {
-		return dtos.stream().map(dto -> mapDto(dto)).toList();
+		return dtos.stream().map(DataSchuelerMerkmale::mapDto).toList();
 	}
 
 	@Override
-	protected SchuelerSchulbesuchMerkmal map(final DTOSchuelerMerkmale dto) throws ApiOperationException {
-		return mapDto(dto);
+	protected void mapAttribute(final DTOSchuelerMerkmale dto, final String name, final Object value, final Map<String, Object> map)
+		throws ApiOperationException {
+		switch (name) {
+			case "id" -> {
+				final Long id = JSONMapper.convertToLong(value, false, "ID");
+				if (!Objects.equals(dto.ID, id))
+					throw new ApiOperationException(Status.BAD_REQUEST, "IdPatch %d ist ungleich dtoId %d".formatted(id, dto.ID));
+			}
+			case "idSchueler" -> dto.Schueler_ID = JSONMapper.convertToLong(value, false, "Schueler_ID");
+			case "kurztext" -> dto.Kurztext = JSONMapper.convertToString(value, true, true, 10, "Kurztext");
+			case "datumVon" -> dto.DatumVon = JSONMapper.convertToString(value, true, true, null, "DatumVon");
+			case "datumBis" -> dto.DatumBis = JSONMapper.convertToString(value, true, true, null, "DatumBis");
+			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
+		}
 	}
-
 }

@@ -8,6 +8,7 @@ import de.svws_nrw.core.data.erzieher.ErzieherStammdaten;
 import de.svws_nrw.core.data.kataloge.KatalogEintrag;
 import de.svws_nrw.core.data.schueler.SchuelerBetriebsdaten;
 import de.svws_nrw.core.data.schueler.SchuelerKAoADaten;
+import de.svws_nrw.core.data.schueler.SchuelerSchulbesuchMerkmal;
 import de.svws_nrw.core.data.schueler.SchuelerVermerke;
 import de.svws_nrw.core.data.schueler.SchuelerLeistungsdaten;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittBemerkungen;
@@ -35,6 +36,7 @@ import de.svws_nrw.data.schueler.DataKatalogUebergangsempfehlung;
 import de.svws_nrw.data.schueler.DataSchuelerBetriebsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerEinwilligungen;
 import de.svws_nrw.data.schueler.DataSchuelerKAoADaten;
+import de.svws_nrw.data.schueler.DataSchuelerMerkmale;
 import de.svws_nrw.data.schueler.DataSchuelerVermerke;
 import de.svws_nrw.data.schueler.DataSchuelerLeistungsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsdaten;
@@ -255,6 +257,108 @@ public class APISchueler {
 	}
 
 
+	/**
+	 * Die OpenAPI-Methode für die Abfrage von SchuelerMerkmalen.
+	 *
+	 * @param schema     das Datenbankschema, auf das die Abfrage ausgeführt werden soll
+	 * @param id         die Datenbank-ID zur Identifikation eines SchülerMerkmals
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das SchuelerMerkmal
+	 */
+	@GET
+	@Path("/{id : \\d+}/merkmal")
+	@Operation(summary = "Liefert das zur ID zugehörige SchuelerMerkmal.",
+			description = "Gibt das SchuelerMerkmal zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
+	@ApiResponse(responseCode = "200", description = "Das SchuelerMerkmal", content = @Content(mediaType = "application/json",
+			schema = @Schema(implementation = SchuelerSchulbesuchMerkmal.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Kein SchuelerMerkmal mit der angegebenen ID gefunden.")
+	public Response getSchuelerMerkmal(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerMerkmale(conn).getByIdAsResponse(id),
+				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Hinzufügen von SchuelerMerkmalen.
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param is           der Input-Stream mit den Daten des SchuelerMerkmals
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem neuen SchuelerMerkmal
+	 */
+	@POST
+	@Path("/merkmal")
+	@Operation(summary = "Erstellt ein neues SchuelerMerkmal und gibt das zugehörige Objekt zurück.",
+			description = "Erstellt neue SchuelerMerkmale, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
+	@ApiResponse(responseCode = "201", description = "Das SchuelerMerkmal wurde erfolgreich hinzugefügt.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerSchulbesuchMerkmal.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um SchuelerMerkmale hinzuzufügen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response addSchuelerMerkmal(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die Daten des zu erstellenden SchuelerMerkmal ohne ID, die automatisch generiert wird", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = SchuelerSchulbesuchMerkmal.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerMerkmale(conn).addAsResponse(is),
+				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Patchen von SchuelerMerkmalen.
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param id        die Datenbank-ID zur Identifikation des Schülermerkmals
+	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/{id : \\d+}/merkmal")
+	@Operation(summary = "Liefert das zur ID zugehörige SchuelerMerkmal.",
+			description = "Patcht und Persistiert SchuelerMerkmale, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
+	@ApiResponse(responseCode = "204", description = "Der Patch wurde erfolgreich ausgeführt.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um SchuelerMerkmale zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein SchuelerMerkmal mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
+			+ " (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response patchSchuelerMerkmal(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@RequestBody(description = "Der Patch für das SchuelerMerkmal", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					schema = @Schema(implementation = SchuelerSchulbesuchMerkmal.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerMerkmale(conn).patchAsResponse(id, is),
+				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen von SchuelerMerkmalen.
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param id           die ID des SchuelerMerkmals
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status und ggf. dem gelöschten SchuelerMerkmal
+	 */
+	@DELETE
+	@Path("/merkmal/{id : \\d+}")
+	@Operation(summary = "Entfernt SchuelerMerkmale.",
+			description = "Entfernt SchuelerMerkmale, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
+	@ApiResponse(responseCode = "200", description = "Ein SchuelerMerkmal wurde erfolgreich entfernt.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchuelerSchulbesuchMerkmal.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um SchuelerMerkmale zu entfernen.")
+	@ApiResponse(responseCode = "404", description = "Das SchuelerMerkmal ist nicht vorhanden")
+	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteSchuelerMerkmal(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerMerkmale(conn).deleteAsResponse(id),
+				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
+	}
 
 
 	/**
@@ -274,7 +378,7 @@ public class APISchueler {
 	@ApiResponse(responseCode = "200", description = "Die Schulbesuchsdaten des Schülers", content = @Content(mediaType = "application/json",
 			schema = @Schema(implementation = SchuelerSchulbesuchsdaten.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden.")
 	public Response getSchuelerSchulbesuch(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerSchulbesuchsdaten(conn).getByIdAsResponse(id),

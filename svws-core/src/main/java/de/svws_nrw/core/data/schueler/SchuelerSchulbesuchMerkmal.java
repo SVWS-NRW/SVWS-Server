@@ -14,8 +14,16 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class SchuelerSchulbesuchMerkmal {
 
 	/** Die ID des besonderen Merkmals für die Statistik. */
-	@Schema(description = "die ID des besonderen Merkmals für die Statistik", example = "3")
+	@Schema(description = "die ID des besonderen Merkmals für die Statistik", example = "3", accessMode = Schema.AccessMode.READ_ONLY)
 	public long id;
+
+	/** Die ID des Schülers. */
+	@Schema(description = "die ID des Schülers", example = "1001")
+	public long idSchueler;
+
+	/** Der Kurztext des Merkmals */
+	@Schema(description = "der Kurztext des Merkmals", example = "kurztext")
+	public String kurztext;
 
 	/** Das Datum, ab dem das Merkmal vorliegt. */
 	@Schema(description = "das Datum, ab dem das Merkmal vorliegt", example = "2007-08-01")
