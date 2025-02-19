@@ -292,6 +292,7 @@
 	const dragData = shallowRef<StundenplanAnsichtDragData>(undefined);
 
 	function onDrag(data: StundenplanAnsichtDragData, event?: DragEvent) {
+		auswahl.value = undefined;
 		dragData.value = data;
 	}
 
