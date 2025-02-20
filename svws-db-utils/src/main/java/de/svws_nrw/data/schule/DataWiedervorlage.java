@@ -183,6 +183,8 @@ public final class DataWiedervorlage extends DataManagerRevised<Long, DTOWiederv
 
 	private DTOWiedervorlage getDTO(final Long id) throws ApiOperationException {
 		final DTOWiedervorlage dto = conn.queryByKey(DTOWiedervorlage.class, id);
+		if (dto == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Eintrag für die Wiedervorlage mit der ID %d gefunden.".formatted(id));
 		checkBenutzer(dto);
 		return dto;
 	}
