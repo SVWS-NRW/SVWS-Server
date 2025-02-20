@@ -161,6 +161,7 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 		this.schulgliederungen = new AttributMitAuswahl(gliederungen, this._schulgliederungToId, SchuelerListeManager._comparatorSchulgliederung, this._eventHandlerFilterChanged);
 		this.schuelerstatus = new AttributMitAuswahl(Arrays.asList(...SchuelerStatus.values()), this._schuelerstatusToId, SchuelerListeManager._comparatorSchuelerStatus, this._eventHandlerFilterChanged);
 		this.lehrer = new AttributMitAuswahl(lehrer, SchuelerListeManager._lehrerToId, LehrerUtils.comparator, this._eventHandlerFilterChanged);
+		this.setFilterAuswahlPermitted(false);
 		this.initSchueler();
 	}
 
@@ -204,6 +205,7 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 		}
 		if (daten.status !== eintrag.status) {
 			eintrag.status = daten.status;
+			this.schuelerstatus.auswahlAdd(SchuelerStatus.data().getWertByID(eintrag.status));
 			updateEintrag = true;
 		}
 		return updateEintrag;

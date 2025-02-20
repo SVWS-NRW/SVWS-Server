@@ -50,7 +50,11 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 	}
 
 	public async ladeDaten(auswahl: SchuelerListeEintrag | null) : Promise<SchuelerStammdaten | null> {
-		return (auswahl === null) ? null : await api.server.getSchuelerStammdaten(api.schema, auswahl.id);
+		if (auswahl === null)
+			return null;
+		const res = await api.server.getSchuelerStammdaten(api.schema, auswahl.id);
+		this.manager.schuelerstatus.auswahlAdd(SchuelerStatus.data().getWertByID(res.status));
+		return res;
 	}
 
 	get schuelerListeManager(): SchuelerListeManager {
