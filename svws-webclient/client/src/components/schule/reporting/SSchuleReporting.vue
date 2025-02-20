@@ -37,7 +37,7 @@
 	"idSchuljahresabschnitt" : ${props.idAbschnitt},
 	"ausgabeformat" : 2,
 	"reportvorlage" : "${report.value?.getBezeichnung() ?? ''}",
-	"idsHauptdaten" : [ 1199 ],
+	"idsHauptdaten" : [  ],
 	"einzelausgabeHauptdaten" : false,
 	"idsDetaildaten" : [  ],
 	"einzelausgabeDetaildaten" : false,
