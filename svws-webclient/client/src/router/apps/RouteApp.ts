@@ -1,16 +1,13 @@
 import type { RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
-import { AppMenuManager, ViewType, type TabData, type TabManager } from "@ui";
 import type { AppProps } from "~/components/SAppProps";
+import { AppMenuManager, ViewType, type TabData, type TabManager } from "@ui";
 import { Schulform, BenutzerKompetenz, ServerMode, DeveloperNotificationException } from "@core";
-import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteManager, routerManager } from "~/router/RouteManager";
 import { RoutingStatus } from "~/router/RoutingStatus";
 import { RouteDataApp } from "~/router/apps/RouteDataApp";
+import { api } from "~/router/Api";
 import { routeBenutzerprofil } from "./benutzerprofil/RouteBenutzerprofil";
-import { routeSchule } from "~/router/apps/schule/RouteSchule";
-import { routeSchuleJahrgaenge } from "~/router/apps/schule/jahrgaenge/RouteSchuleJahrgaenge";
-import { routeSchuleFaecher } from "~/router/apps/schule/faecher/RouteSchuleFaecher";
 import { routeStundenplanKataloge } from "./stundenplan/RouteStundenplanKataloge";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
@@ -21,6 +18,9 @@ import { routeStatistik } from "~/router/apps/statistik/RouteStatistik";
 import { routeStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
 import { routeLogin } from "~/router/login/RouteLogin";
 import { routeError } from "../error/RouteError";
+import { routeSchule } from "~/router/apps/schule/RouteSchule";
+import { routeSchuleJahrgaenge } from "~/router/apps/schule/jahrgaenge/RouteSchuleJahrgaenge";
+import { routeSchuleFaecher } from "~/router/apps/schule/faecher/RouteSchuleFaecher";
 import { routeSchuleBetriebe } from "./schule/betriebe/RouteSchuleBetriebe";
 import { routeKatalogEinwilligungsarten } from "./schule/einwilligungsarten/RouteKatalogEinwilligungsarten";
 import { routeKatalogFoerderschwerpunkte } from "./schule/foerderschwerpunkte/RouteKatalogFoerderschwerpunkte";
@@ -32,12 +32,13 @@ import { routeEinstellungenBenutzer } from "~/router/apps/einstellungen/benutzer
 import { routeEinstellungenBenutzergruppe } from "~/router/apps/einstellungen/benutzergruppen/RouteEinstellungenBenutzergruppe";
 import { routeSchuleDatenaustauschKurs42 } from "./schule/datenaustausch/kurs42/RouteSchuleDatenaustauschKurs42";
 import { routeSchuleDatenaustauschUntis } from "./schule/datenaustausch/untis/RouteSchuleDatenaustauschUntis";
-import SApp from "~/components/SApp.vue";
 import { routeSchuleDatenaustauschENM } from "./schule/datenaustausch/RouteSchuleDatenaustauschENM";
 import { routeSchuleDatenaustauschLaufbahnplanung } from "./schule/datenaustausch/RouteSchuleDatenaustauschLupo";
 import { routeSchuleDatenaustauschSchulbewerbung } from "./schule/datenaustausch/RouteSchuleDatenaustauschSchulbewerbung";
 import { routeSchuleDatenaustauschWenom } from "./schule/datenaustausch/RouteSchuleDatenaustauschWenom";
 import { routeSchuleStammdaten } from "./schule/RouteSchuleStammdaten";
+import { routeSchuleReporting } from "./schule/reporting/RouteSchuleReporting";
+import SApp from "~/components/SApp.vue";
 
 
 export class RouteApp extends RouteNode<RouteDataApp, any> {
@@ -121,6 +122,8 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeSchuleDatenaustauschLaufbahnplanung,
 			routeSchuleDatenaustauschKurs42,
 			routeSchuleDatenaustauschUntis,
+			// Reporting
+			routeSchuleReporting,
 		];
 		super.children = [
 			...this._menuMain,

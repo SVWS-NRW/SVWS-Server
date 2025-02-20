@@ -31,7 +31,7 @@ export class RouteSchuleBetriebe extends RouteNode<RouteDataSchuleBetriebe, Rout
 		super.setView("liste", SBetriebeAuswahl, (route) => this.getAuswahlProps(route));
 
 		super.children = [
-			routeSchuleBetriebeDaten
+			routeSchuleBetriebeDaten,
 		];
 		super.defaultChild = routeSchuleBetriebeDaten;
 
