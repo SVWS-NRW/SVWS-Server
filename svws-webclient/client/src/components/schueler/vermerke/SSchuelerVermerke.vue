@@ -1,12 +1,13 @@
 <template>
-	<div class="page">
-		<svws-ui-content-card title="" class="col-span-full">
-			<svws-ui-button v-autofocus class="contentFocusField ml-auto mr-0 p-3 mb-8 min-h-10" @click="addWrapper">
-				<p style="margin-right: 1rem">Neuen Vermerk hinzufügen</p>
-				<span class="icon-lg i-ri-chat-new-line" />
+	<div class="page page-grid-cards">
+		<div>
+			<svws-ui-checkbox :model-value="filterNurSichtbare" @update:model-value="value => setFilterNurSichtbare(value)">Unsichtbare ausblenden</svws-ui-checkbox>
+			<svws-ui-button v-autofocus class="contentFocusField mt-4" @click="addWrapper">
+				<span class="icon i-ri-chat-new-line" />
+				<span class="ml-2">Neuen Vermerk hinzufügen</span>
 			</svws-ui-button>
-			<div class="space-y-2">
-				<div v-for="vermerk of schuelerVermerke()" :key="vermerk.id">
+			<div class="flex flex-col gap-4 mt-4">
+				<template v-for="vermerk of listVermerke" :key="vermerk.id">
 					<ui-card icon="i-ri-message-line" :title="getTitle(vermerk)" :subtitle="getDescription(vermerk)" :is-open="activeVermerk?.id === vermerk.id"
 						@update:is-open="(isOpen) => setCurrentVermerk(vermerk, isOpen)">
 						<svws-ui-input-wrapper class="px-6">
@@ -35,9 +36,9 @@
 							</svws-ui-button>
 						</template>
 					</ui-card>
-				</div>
+				</template>
 			</div>
-		</svws-ui-content-card>
+		</div>
 	</div>
 </template>
 
@@ -47,14 +48,28 @@
 
 	const props = defineProps<SchuelerVermerkeProps>();
 
-	import { ref } from "vue";
-	import { DateUtils, type SchuelerVermerke } from "@core";
+	import { computed, ref } from "vue";
+	import { ArrayList, DateUtils, type SchuelerVermerke } from "@core";
 
 	const activeVermerk = ref<SchuelerVermerke>();
 	const oldAction = ref<{ vermerk: SchuelerVermerke | undefined; open: boolean }>({
 		vermerk: undefined,
 		open: false,
 	});
+
+	const listVermerke = computed(() => {
+		if (!props.filterNurSichtbare)
+			return props.schuelerVermerke();
+		const liste = new ArrayList<SchuelerVermerke>();
+		for (const item of props.schuelerVermerke()) {
+			if (item.idVermerkart === null)
+				continue;
+			const art = props.mapVermerkArten.get(item.idVermerkart);
+			if (art !== undefined && art.istSichtbar)
+				liste.add(item);
+		}
+		return liste;
+	})
 
 	function setCurrentVermerk(newAction: SchuelerVermerke | undefined, open: boolean) {
 		if(newAction?.id === oldAction.value.vermerk?.id && !open)
@@ -85,13 +100,3 @@
 	}
 
 </script>
-
-
-<style lang="postcss" scoped>
-	@reference "../../../../../ui/src/assets/styles/index.css"
-
-	:deep(.svws-title) {
-		@apply text-ellipsis overflow-hidden whitespace-nowrap w-full;
-	}
-
-</style>

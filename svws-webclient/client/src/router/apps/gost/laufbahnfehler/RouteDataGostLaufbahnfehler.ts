@@ -1,13 +1,5 @@
 import type { ApiFile, GostBelegpruefungsErgebnisse, List} from "@core";
-import {
-	ArrayList,
-	DeveloperNotificationException,
-	GostBelegpruefungsArt,
-	OpenApiError,
-	ReportingParameter,
-	ReportingReportvorlage,
-	SimpleOperationResponse
-} from "@core";
+import { ArrayList, DeveloperNotificationException, GostBelegpruefungsArt, OpenApiError, ReportingParameter, ReportingReportvorlage, SimpleOperationResponse } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -150,4 +142,3 @@ export class RouteDataGostLaufbahnfehler extends RouteData<RouteStateDataGostLau
 	}
 
 }
-

@@ -23,6 +23,14 @@ export class RouteDataSchuelerVermerke extends RouteData<RouteStateSchuelerVerme
 		super(defaultState);
 	}
 
+	get filterNurSichtbare(): boolean {
+		return api.config.getValue("schueler.vermerke.filterNurSichtbare") === 'true';
+	}
+
+	setFilterNurSichtbare = async (value: boolean) => {
+		await api.config.setValue('schueler.vermerke.filterNurSichtbare', value ? "true" : "false");
+	}
+
 	get auswahl(): SchuelerListeEintrag {
 		if (this._state.value.auswahl === undefined)
 			throw new DeveloperNotificationException("Unerwarteter Fehler: Schülerauswahl nicht festgelegt, es können keine Informationen zu Vermerk-Daten abgerufen oder eingegeben werden.");
