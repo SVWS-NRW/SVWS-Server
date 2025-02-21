@@ -1,29 +1,29 @@
 <template>
 	<div class="flex gap-px" ref="button">
-		<svws-ui-button ref="inputEl" :type="type">
-			<span v-if="defaultAction !== undefined" @click="noDefault ? dropdownOpen = !dropdownOpen : (defaultAction && action(defaultAction))" class="flex gap-1">
-				<slot name="icon" />{{ defaultAction.text }}
+		<svws-ui-button ref="inputEl" :type>
+			<span v-if="defaultAction !== undefined" @click="noDefault ? dropdownOpen = !dropdownOpen : (defaultAction && action(defaultAction))" class="flex gap-1 justify-center items-center">
+				<slot name="icon" /><span>{{ defaultAction.text }}</span>
 			</span>
-			<span v-else-if="defaultItem" @click="defaultItem && action(defaultItem)" class="flex gap-1">
-				<slot name="icon" />{{ defaultItem.text }}
+			<span v-else-if="defaultItem" @click="defaultItem && action(defaultItem)" class="flex gap-1 justify-center items-center">
+				<slot name="icon" /><span>{{ defaultItem.text }}</span>
 			</span>
 			<span v-else class="icon i-ri-menu-line" />
 		</svws-ui-button>
-		<button class="rounded-l-none rounded-r-md px-0.5 z-10 relative border border-ui" :class="`button--${type}`" @click.stop="dropdownOpen = !dropdownOpen" :disabled="listEmpty">
+		<button class="rounded-l-none rounded-r-md z-10 border border-ui text-sm-bold" :class="`button--${type}`" @click.stop="dropdownOpen = !dropdownOpen" :disabled="listEmpty">
 			<span class="icon mt-1 i-ri-arrow-down-s-line" v-if="!dropdownOpen" />
 			<span class="icon mt-1 i-ri-arrow-up-s-line" v-else />
 		</button>
-		<Teleport to="body">
-			<svws-ui-dropdown-list v-if="dropdownOpen && dropdownActions" ref="refList" :strategy :floating-left :floating-top :filtered-list="dropdownActions">
-				<template #item="{ item }">
-					<hr v-if="item.separator === true" class="w-full mx-auto my-1 text-ui-neutral">
-					<button v-else class="svws-ui-dropdown-list--item" role="button" @click="action(item)">
-						{{ item.text }}
-					</button>
-				</template>
-			</svws-ui-dropdown-list>
-		</Teleport>
 	</div>
+	<Teleport to="body">
+		<svws-ui-dropdown-list v-if="dropdownOpen && dropdownActions" ref="refList" :strategy :floating-left :floating-top :filtered-list="dropdownActions">
+			<template #item="{ item }">
+				<hr v-if="item.separator === true" class="w-full mx-auto my-1 text-ui-neutral">
+				<button v-else class="svws-ui-dropdown-list--item" role="button" @click="action(item)">
+					{{ item.text }}
+				</button>
+			</template>
+		</svws-ui-dropdown-list>
+	</Teleport>
 </template>
 
 <script lang="ts" setup>
@@ -102,11 +102,9 @@
 <style scoped>
 
 	.button {
-		position: relative;
 		border-top-right-radius: 0;
 		border-bottom-right-radius: 0;
 		z-index: 10;
-		margin-right: 0;
 	}
 
 	.svws-ui-dropdown-list {

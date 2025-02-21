@@ -2,7 +2,7 @@
 	<div class="page page-flex-row">
 		<Teleport to=".svws-ui-header--actions" v-if="isMounted">
 			<svws-ui-button-select v-if="hatBlockung" type="secondary" :dropdown-actions="dropdownList">
-				<template #icon> <svws-ui-spinner spinning v-if="apiStatus.pending" /> <span class="icon-sm i-ri-printer-line" v-else /> </template>
+				<template #icon> <svws-ui-spinner spinning v-if="apiStatus.pending" /> <span class="icon i-ri-printer-line" v-else /> </template>
 			</svws-ui-button-select>
 			<svws-ui-modal-hilfe> <hilfe-kursplanung /> </svws-ui-modal-hilfe>
 		</Teleport>

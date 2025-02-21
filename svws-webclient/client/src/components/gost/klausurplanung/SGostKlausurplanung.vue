@@ -1,7 +1,7 @@
 <template>
 	<Teleport to=".svws-ui-header--actions" v-if="isMounted">
 		<svws-ui-button-select v-if="!kMan().terminGetMengeAsList().isEmpty()" type="secondary" :dropdown-actions="dropdownList">
-			<template #icon> <svws-ui-spinner spinning v-if="apiStatus.pending" /> <span class="icon-sm i-ri-printer-line" v-else /> </template>
+			<template #icon> <svws-ui-spinner spinning v-if="apiStatus.pending" /> <span class="icon i-ri-printer-line" v-else /> </template>
 		</svws-ui-button-select>
 	</Teleport>
 	<Teleport to=".svws-sub-nav-target" defer>

@@ -229,14 +229,7 @@
 	@apply h-5;
 	font-size: 0.8rem;
 
-	.svws-ui-tfoot .button &,
-	.content-card--header .button &,
-	.router-tab-bar--subnav .button & {
 		@apply -mt-0 h-4 -ml-1.5;
 		font-size: 0.75rem;
-	}
 
-	.router-tab-bar--subnav .button & {
-		@apply -ml-3;
-	}
 }
