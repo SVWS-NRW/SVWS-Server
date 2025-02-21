@@ -1,11 +1,11 @@
 <template>
 	<p v-if="focusSwitchingEnabled && ($slots.search || $slots.filter || $slots.filterAdvanced || toggleColumns)" v-show="focusHelpVisible" class="region-enumeration">3</p>
 	<div v-if="$slots.search || $slots.filter || $slots.filterAdvanced || toggleColumns" class="svws-ui-table-filter focus-region" :class="{'svws-open': $slots.filter && isFilterOpen, 'highlighted': focusHelpVisible}">
-		<div class="flex w-full gap-0.5 overflow-hidden">
+		<div class="flex gap-2 p-0.5 w-full overflow-hidden">
 			<div class="grow" v-if="$slots.search">
 				<slot name="search" />
 			</div>
-			<div v-if="$slots.filter" class="flex shrink-0 items-center gap-1" :class="{'mr-5': $slots.filterAdvanced || toggleColumns, 'ml-2': $slots.search, 'ml-auto': !$slots.search}">
+			<div v-if="$slots.filter" class="flex shrink-0 items-center gap-1" :class="{'mr-5': ($slots.filterAdvanced || toggleColumns), 'ml-2': $slots.search, 'ml-auto': !$slots.search}">
 				<slot name="filter" />
 			</div>
 			<div v-if="toggleColumns" :class="{'ml-auto': !$slots.filter}">
