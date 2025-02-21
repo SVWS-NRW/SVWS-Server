@@ -1,5 +1,5 @@
 <template>
-	<Teleport to=".svws-ui-header--actions" v-if="isMounted">
+	<Teleport to=".svws-ui-header--actions" defer>
 		<svws-ui-button type="secondary" @click="print"><span class="icon i-ri-printer-line" />Drucken</svws-ui-button>
 		<svws-ui-modal-hilfe> <hilfe-schueler-stundenplan /> </svws-ui-modal-hilfe>
 	</Teleport>
@@ -11,8 +11,9 @@
 			</div>
 		</template>
 		<template v-else>
-			<stundenplan-auswahl :stundenplan="stundenplan()" :map-stundenplaene :goto-stundenplan :goto-wochentyp :goto-kalenderwoche :manager :wochentyp :kalenderwoche :ganzer-stundenplan :set-ganzer-stundenplan
-				autofocus />
+			<hr>
+			<stundenplan-auswahl :stundenplan="stundenplan()" :map-stundenplaene :goto-stundenplan :goto-wochentyp :goto-kalenderwoche :manager :wochentyp
+				:kalenderwoche :ganzer-stundenplan :set-ganzer-stundenplan autofocus />
 			<stundenplan-schueler :id :ignore-empty :manager :wochentyp :kalenderwoche />
 		</template>
 	</div>
@@ -20,7 +21,6 @@
 
 <script setup lang="ts">
 
-	import { onMounted, ref } from "vue";
 	import type { SchuelerStundenplanProps } from "./SchuelerStundenplanProps";
 
 	defineProps<SchuelerStundenplanProps>();
@@ -28,10 +28,5 @@
 	const print = () => {
 		window.print();
 	};
-
-	const isMounted = ref(false);
-	onMounted(() => {
-		isMounted.value = true;
-	});
 
 </script>

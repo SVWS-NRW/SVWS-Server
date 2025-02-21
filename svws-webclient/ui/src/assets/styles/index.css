@@ -77,9 +77,6 @@
 		}
 	}
 
-}
-
-@layer base {
 	/* Buttons haben seit v4 keinen Pointer mehr: */
 	button:not(:disabled),
 	[role="button"]:not(:disabled) {
@@ -87,7 +84,7 @@
 	}
 
 	html {
-		@apply antialiased text-ui-contrast-100;
+		@apply antialiased text-ui;
 	}
 
 	.text-sm-bold {
@@ -112,12 +109,6 @@
 
 	.icon {
 		@apply inline-block;
-	}
-
-
-
-	html {
-		color: var(--color-text-ui);
 	}
 
 }

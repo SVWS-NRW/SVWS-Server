@@ -1,4 +1,3 @@
-import "./src/assets/styles/index.css";
 import "./src/assets/styles/_histoire.css";
 
 const root = document.getElementsByTagName('html')[0];
