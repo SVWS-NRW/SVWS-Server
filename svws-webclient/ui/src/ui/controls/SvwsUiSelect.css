@@ -63,10 +63,11 @@
 	&.svws-readonly {
 		.text-input--control,
 		.text-input--headless {
-			@apply text-ellipsis break-all cursor-default;
+			@apply text-ellipsis break-all cursor-default overflow-hidden;
 		}
 	}
 
+	&:not(.svws-readonly)
 	.text-input--control {
 		@apply pr-8;
 	}
@@ -75,7 +76,7 @@
 		@apply pl-5;
 	}
 
-	&.svws-removable&.svws-has-value {
+	&.svws-removable.svws-has-value:not(.svws-readonly) {
 		.text-input--control {
 			@apply pr-12;
 		}
