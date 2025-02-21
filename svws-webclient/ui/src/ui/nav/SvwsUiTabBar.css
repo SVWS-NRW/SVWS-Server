@@ -27,6 +27,7 @@
 
 .svws-sub-nav-target {
 	@apply w-full relative z-30;
+	scrollbar-width: none;
 }
 
 .svws-has-sub-nav .svws-ui-tabs--wrapper:before {
