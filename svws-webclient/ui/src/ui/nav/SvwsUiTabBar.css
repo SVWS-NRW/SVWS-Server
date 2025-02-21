@@ -61,7 +61,7 @@
 
 .svws-ui-tabs--scroll-button {
 	@apply absolute z-20 -top-0.5 text-base h-8 flex items-center w-12 py-1 cursor-pointer;
-	@apply from-white/0 via-50% via-white to-white dark:from-black/0 dark:via-50% dark:via-black dark:to-black;
+	@apply from-transparent to-ui;
 
 	.button {
 		@apply bg-ui-neutral border border-ui-secondary;
