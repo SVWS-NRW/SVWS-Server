@@ -11,8 +11,8 @@
 		<div class="page page-flex-row">
 			<!-- Auswahl des Einrichtungsschrittes (linke Seite) -->
 			<div class="h-full min-w-64 w-64 max-w-64 flex flex-col gap-2 m-2">
-				<template v-if="daten !== null">
-					<svws-ui-button id="contentFocusField" :type="((lehrerEmailProbleme > 0) ? 'danger' : ((aktuell === 'creds') ? 'primary' : 'secondary'))" @click="onSelect('creds')">
+				<template v-if="enmDaten !== null">
+					<svws-ui-button id="contentFocusField" :type="((lehrerEmailProbleme > 0) ? 'danger' : ((aktuell === 'creds') ? 'primary' : 'secondary'))" @click="onSelect('creds')" style="justify-content: normal">
 						<div class="flex flex-col gap-1">
 							<p class="text-left font-bold ">Zugangsdaten verwalten</p>
 							<p class="text-left font-normal">
@@ -34,20 +34,20 @@
 						</div>
 					</svws-ui-button>
 				</template>
-				<svws-ui-button id="contentFocusField" :type="(aktuell === 'setup') ? 'primary' : 'secondary'" @click="onSelect('setup')">
+				<svws-ui-button id="contentFocusField" :type="(aktuell === 'setup') ? 'primary' : 'secondary'" @click="onSelect('setup')" style="justify-content: normal">
 					<div class="flex flex-col gap-1">
 						<p class="text-left font-bold ">Verbindungsdaten einrichten</p>
-						<p class="text-left font-normal">{{ (clientSecret !== null) ? 'vorhanden' : 'keine vorhanden' }}{{ (clientSecret !== null) ? (connected ? ', verbunden' : ', nicht verbunden') : '' }}</p>
+						<p class="text-left font-normal">{{ (connInfo !== null) ? 'vorhanden' : 'keine vorhanden' }}{{ (connInfo !== null) ? (connected ? ', verbunden' : ', nicht verbunden') : '' }}</p>
 					</div>
 				</svws-ui-button>
 				<template v-if="connected">
-					<svws-ui-button id="contentFocusField" :type="(aktuell === 'synchronize') ? 'primary' : 'secondary'" @click="onSelect('synchronize')">
+					<svws-ui-button id="contentFocusField" :type="(aktuell === 'synchronize') ? 'primary' : 'secondary'" @click="onSelect('synchronize')" style="justify-content: normal">
 						<div class="flex flex-col gap-1">
 							<p class="text-left font-bold ">Synchronisieren</p>
 							<p class="text-left font-normal">Abgleich der Daten mit dem Webnotenmanager</p>
 						</div>
 					</svws-ui-button>
-					<svws-ui-button :type="(aktuell === 'reset') ? 'primary' : 'secondary'" @click="onSelect('reset')">
+					<svws-ui-button :type="(aktuell === 'reset') ? 'primary' : 'secondary'" @click="onSelect('reset')" style="justify-content: normal">
 						<div class="flex flex-col gap-1">
 							<p class="text-left font-bold ">Zurücksetzen</p>
 							<p class="text-left font-normal">Daten auf dem Webnotenmanager entfernen</p>
@@ -58,12 +58,12 @@
 
 			<!-- Spezielle Ansicht nach Auswahl des Einrichtungsschrittes -->
 			<div class="min-w-fit flex flex-col gap-8">
-				<div v-if="(aktuell === 'creds') && (daten !== null)" class="h-full w-full overflow-hidden max-w-196">
-					<enm-lehrer-credentials :enm-daten="() => daten ?? new ENMDaten()" :map-initial-kennwoerter />
+				<div v-if="(aktuell === 'creds') && (enmDaten !== null)" class="h-full w-full overflow-hidden max-w-196">
+					<enm-lehrer-credentials :enm-daten="() => enmDaten() ?? new ENMDaten()" :map-enm-initial-kennwoerter />
 				</div>
 				<div v-if="aktuell === 'setup'" class="max-w-196">
 					<div class="text-headline-md mb-4">Verbindung zum Webnotenmanager einrichten</div>
-					<template v-if="clientSecret === null">
+					<template v-if="connInfo === null">
 						<svws-ui-input-wrapper>
 							<svws-ui-text-input class="contentFocusField" v-model.trim="url" type="text" placeholder="URL" />
 							<svws-ui-text-input v-model.trim="token" type="text" placeholder="Secret" />
@@ -78,12 +78,21 @@
 							<svws-ui-button type="primary" @click="removeVerbindungsdaten">
 								Verbindungsdaten entfernen
 							</svws-ui-button>
-							<svws-ui-button type="primary" @click="call(check)">
+							<svws-ui-button type="primary" @click="tryConnect">
 								Verbindungsdaten prüfen
 							</svws-ui-button>
 						</svws-ui-input-wrapper>
+						<svws-ui-input-wrapper v-if="connInfo.tlsCertIsKnown === false" class="mt-8">
+							<div class="text-headline-md">TLS-Zertifikat des Servers </div>
+							<div>
+								{{ cert }}
+							</div>
+							<svws-ui-checkbox :model-value="connInfo.tlsCertIsTrusted" @update:model-value="value => trustCertificate(value)">
+								Zertifikat vertrauen
+							</svws-ui-checkbox>
+						</svws-ui-input-wrapper>
 						<svws-ui-input-wrapper class="mt-8">
-							<div class="text-headline-sm">SMTP Einstellungen</div>
+							<div class="text-headline-md">SMTP Einstellungen</div>
 							<svws-ui-text-input v-model.trim="smtpConfig.host" placeholder="SMTP-Server" />
 							<svws-ui-input-number v-model="smtpConfig.port" placeholder="Port" :min="1" />
 							<svws-ui-text-input v-model.trim="smtpConfig.username" placeholder="Benutzername" />
@@ -156,9 +165,9 @@
 
 <script setup lang="ts">
 
-	import { computed, onMounted, ref, shallowRef } from "vue";
+	import { computed, onMounted, ref } from "vue";
 	import type { SchuleDatenaustauschWenomProps } from './SSchuleDatenaustauschWenomProps';
-	import type { OAuth2ClientSecret, SimpleOperationResponse } from "@core";
+	import type { OAuth2ClientConnection, SimpleOperationResponse } from "@core";
 	import { ENMDaten, ENMServerConfigElement, ENMServerConfigSMTP } from "@core";
 
 	const props = defineProps<SchuleDatenaustauschWenomProps>();
@@ -166,20 +175,55 @@
 	type WENOM = 'creds' | 'setup' | 'reset' | 'synchronize';
 	const aktuell = ref<WENOM>('setup');
 
-	const clientSecret = shallowRef<OAuth2ClientSecret | null>(null);
-	const connected = ref<boolean>(false);
-	const hatSetup = ref<boolean>();
-	const daten = ref<ENMDaten | null>(null);
 	const lehrerOhneEmail = ref<number>(0);
 	const lehrerDoppelteEmail = ref<number>(0);
 	const lehrerFehlerhafteEmail = ref<number>(0);
 	const lehrerEmailProbleme = computed<number>(() => lehrerOhneEmail.value + lehrerDoppelteEmail.value + lehrerFehlerhafteEmail.value);
 
 	onMounted(async () => {
-		clientSecret.value = await props.getCredentials();
-		await checkConnection();
-		daten.value = await props.getEnmDaten();
 		checkENMLehrerEMailAdressen();
+		status.value = null;
+		spinning.value = true;
+		await tryConnect();
+		spinning.value = false;
+	});
+
+	const connInfo = computed<OAuth2ClientConnection | null>(() => props.connectionInfo());
+
+	async function updateCredentials() {
+		status.value = null;
+		spinning.value = true;
+		await props.setCredentials(url.value, token.value);
+		await tryConnect();
+		spinning.value = false;
+	}
+
+	async function tryConnect() {
+		const connInfo = props.connectionInfo();
+		url.value = connInfo?.authServer ?? ''; // Die URL soll zu Beginn geladen werden
+		token.value = ''; // das Token soll nach dem Einlesen oder Setzen nicht mehr sichtbar sein
+		if (connInfo !== null) {
+			const res = await props.connect();
+			if (res.success)
+				aktuell.value = 'synchronize';
+			else
+				status.value = res;
+		}
+	}
+
+	const certChain = computed<string[]>(() => {
+		const connInfo = props.connectionInfo();
+		let result : string[] = [];
+		if ((connInfo !== null) && (connInfo.tlsCert !== null)) {
+			result = JSON.parse(connInfo.tlsCert);
+		}
+		return result;
+	});
+
+	const cert = computed<string>(() => {
+		if (certChain.value.length < 1)
+			return "Zertifikat konnte nicht geladen werden.";
+		return atob(certChain.value[0]);
 	});
 
 	const smtpConfig = computed(() => {
@@ -200,13 +244,47 @@
 		/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(value)
 	);
 
+	function onSelect(value : WENOM): void {
+		if (aktuell.value === value)
+			return;
+		aktuell.value = value;
+		status.value = null;
+	}
+
+	async function call(func: () => Promise<SimpleOperationResponse>) {
+		status.value = null;
+		spinning.value = true;
+		status.value = await func();
+		spinning.value = false;
+	}
+
+	async function updateSMTP() {
+		status.value = null;
+		spinning.value = true;
+		const element = new ENMServerConfigElement();
+		element.key = "smtp";
+		element.value = ENMServerConfigSMTP.transpilerToJSON(smtpConfig.value);
+		element.type = "server";
+		await props.setServerConfigElement(element);
+		spinning.value = false;
+	}
+
+	async function removeVerbindungsdaten() {
+		status.value = null;
+		spinning.value = true;
+		await props.removeCredentials();
+		token.value = '';
+		spinning.value = false;
+	}
+
 	function checkENMLehrerEMailAdressen() {
-		if (daten.value !== null) {
+		const enmDaten = props.enmDaten();
+		if (enmDaten !== null) {
 			let emailFehlt = 0;
 			let emailDoppelt = 0;
 			let emailFehlerhaft = 0;
 			const adressen = new Set<string>();
-			for (const lehrer of daten.value.lehrer) {
+			for (const lehrer of enmDaten.lehrer) {
 				if ((lehrer.eMailDienstlich === null) || (lehrer.eMailDienstlich.trim().length === 0)) {
 					emailFehlt++;
 					continue;
@@ -227,72 +305,6 @@
 			lehrerDoppelteEmail.value = 0;
 			lehrerFehlerhafteEmail.value = 0;
 		}
-	}
-
-	function onSelect(value : WENOM): void {
-		if (aktuell.value === value)
-			return;
-		aktuell.value = value;
-		status.value = null;
-	}
-
-	async function checkConnection() {
-		url.value = clientSecret.value?.authServer ?? ''; // Die URL soll zu Beginn geladen werden
-		token.value = ''; // das Token soll nach dem Einlesen oder Setzen nicht mehr sichtbar sein
-		if (clientSecret.value !== null) {
-			const res = await props.check();
-			if (res.success)
-				aktuell.value = 'synchronize';
-			else
-				status.value = res;
-			connected.value = res.success;
-		}
-	}
-
-	async function call(func: () => Promise<SimpleOperationResponse>) {
-		status.value = null;
-		spinning.value = true;
-		status.value = await func();
-		spinning.value = false;
-	}
-
-	async function wenomSetup(): Promise<boolean> {
-		status.value = null;
-		spinning.value = true;
-		const res = await props.setup();
-		spinning.value = false;
-		if (typeof res === 'boolean')
-			return hatSetup.value = res;
-		return false;
-	}
-
-	async function updateCredentials() {
-		status.value = null;
-		spinning.value = true;
-		clientSecret.value = await props.setCredentials(url.value, token.value);
-		await checkConnection();
-		spinning.value = false;
-	}
-
-	async function updateSMTP() {
-		status.value = null;
-		spinning.value = true;
-		const element = new ENMServerConfigElement();
-		element.key = "smtp";
-		element.value = ENMServerConfigSMTP.transpilerToJSON(smtpConfig.value);
-		element.type = "server";
-		await props.setServerConfigElement(element);
-		spinning.value = false;
-	}
-
-	async function removeVerbindungsdaten() {
-		status.value = null;
-		spinning.value = true;
-		await props.removeCredentials();
-		token.value = '';
-		clientSecret.value = null;
-		connected.value = false;
-		spinning.value = false;
 	}
 
 </script>

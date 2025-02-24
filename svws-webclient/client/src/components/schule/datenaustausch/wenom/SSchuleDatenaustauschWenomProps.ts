@@ -1,18 +1,19 @@
-import type { ENMDaten, ENMServerConfig, ENMServerConfigElement, JavaMap, OAuth2ClientSecret, SimpleOperationResponse } from "@core";
+import type { ENMDaten, ENMServerConfig, ENMServerConfigElement, JavaMap, OAuth2ClientConnection, SimpleOperationResponse } from "@core";
 
 export interface SchuleDatenaustauschWenomProps {
-	mapInitialKennwoerter: () => JavaMap<number, string>;
-	getEnmDaten: () => Promise<ENMDaten | null>;
-	getCredentials: () => Promise<OAuth2ClientSecret | null>;
-	setCredentials: (url: string, token: string) => Promise<OAuth2ClientSecret | null>;
+	connected: boolean;
+	connectionInfo: () => OAuth2ClientConnection | null;
+	enmDaten: () => ENMDaten | null;
+	mapEnmInitialKennwoerter: () => JavaMap<number, string>;
+	connect: () => Promise<SimpleOperationResponse>;
+	trustCertificate: (value: boolean) => Promise<void>;
+	setCredentials: (url: string, token: string) => Promise<OAuth2ClientConnection | null>;
 	removeCredentials: () => Promise<void>;
 	synchronize: () => Promise<SimpleOperationResponse>;
 	download: () => Promise<SimpleOperationResponse>;
 	upload: () => Promise<SimpleOperationResponse>;
 	truncate: () => Promise<SimpleOperationResponse>;
 	reset: () => Promise<SimpleOperationResponse>;
-	check: () => Promise<SimpleOperationResponse>;
-	setup: () => Promise<boolean|SimpleOperationResponse>;
 	serverConfig: () => JavaMap<string, string>;
 	setServerConfigElement: (config: ENMServerConfigElement) => Promise<SimpleOperationResponse>
 }

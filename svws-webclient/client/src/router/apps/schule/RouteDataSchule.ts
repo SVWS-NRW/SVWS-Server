@@ -1,26 +1,19 @@
-import type { ENMServerConfigElement, JavaMap, SchuleStammdaten } from "@core";
-import { ENMDaten, BenutzerKompetenz, OAuth2ClientSecret, OAuth2ServerTyp, OpenApiError, SimpleOperationResponse, SMTPServerKonfiguration, HashMap, DeveloperNotificationException, ENMServerConfig } from "@core";
+import type { SchuleStammdaten } from "@core";
+import { BenutzerKompetenz, OpenApiError, SimpleOperationResponse, SMTPServerKonfiguration } from "@core";
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { routeSchuleFaecher } from "./faecher/RouteSchuleFaecher";
 import { AES } from "~/utils/crypto/aes";
 import { AESAlgo } from "~/utils/crypto/aesAlgo";
-import { Hash } from "crypto";
 
 
 interface RouteStateSchule extends RouteStateInterface {
 	smtpServerKonfiguration: SMTPServerKonfiguration;
-	mapInitialKennwoerter: JavaMap<number, string>;
-	mapENMServerConfigServer: JavaMap<string, string>;
-	mapENMServerConfigGlobal: JavaMap<string, string>;
 }
 
 const defaultState = <RouteStateSchule> {
 	smtpServerKonfiguration: new SMTPServerKonfiguration(),
 	view: routeSchuleFaecher,
-	mapInitialKennwoerter: new HashMap<number, string>(),
-	mapENMServerConfigServer: new HashMap<string, string>(),
-	mapENMServerConfigGlobal: new HashMap<string, string>(),
 };
 
 export class RouteDataSchule extends RouteData<RouteStateSchule> {
@@ -51,18 +44,6 @@ export class RouteDataSchule extends RouteData<RouteStateSchule> {
 
 	get smtpServerKonfiguration(): SMTPServerKonfiguration {
 		return this._state.value.smtpServerKonfiguration;
-	}
-
-	get mapInitialKennwoerter(): JavaMap<number, string> {
-		return this._state.value.mapInitialKennwoerter;
-	}
-
-	set mapInitialKennwoerter(value: JavaMap<number, string>) {
-		this._state.value.mapInitialKennwoerter = value;
-	}
-
-	get mapENMServerConfigServer(): JavaMap<string, string> {
-		return this._state.value.mapENMServerConfigServer;
 	}
 
 	patchSMTServerKonfiguration = async (data : Partial<SMTPServerKonfiguration>) => {
@@ -96,222 +77,5 @@ export class RouteDataSchule extends RouteData<RouteStateSchule> {
 		console.log(new TextDecoder().decode(encoded));
 		return true;
 	}
-
-	wenomGetEnmDaten = async(): Promise<ENMDaten | null> => {
-		try {
-			const datenGzip = await api.server.getENMDatenGZip(api.schema);
-			const datenBlob = await new Response(datenGzip.data.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
-			return ENMDaten.transpilerFromJSON(await datenBlob.text());
-		} catch (e) {
-			return null;
-		}
-	}
-
-	wenomGetEnmCredentials = async(): Promise<void> => {
-		try {
-			const daten = await api.server.getENMLehrerInitialKennwoerter(api.schema);
-			const mapInitialKennwoerter = new HashMap<number, string>();
-			for (const eintrag of daten)
-				if (eintrag.initialKennwort !== null)
-					mapInitialKennwoerter.put(eintrag.id, eintrag.initialKennwort);
-			this.setPatchedState({ mapInitialKennwoerter });
-		} catch (e) {
-			return;
-		}
-	}
-
-	wenomGetCredentials = async (): Promise<OAuth2ClientSecret | null> => {
-		try {
-			return await api.server.getOAuthClientSecret(api.schema, 1);
-		} catch (e) {
-			return null;
-		}
-	}
-
-	wenomSetCredentials = async (url: string, token: string): Promise<OAuth2ClientSecret | null> => {
-		const wenom = OAuth2ServerTyp.WENOM;
-		const oauth = new OAuth2ClientSecret();
-		oauth.id = wenom.getId();
-		oauth.clientID = "1";
-		oauth.authServer = url;
-		oauth.clientSecret = token;
-		try {
-			return await api.server.addOAuthClientSecret(oauth, api.schema);
-		} catch (e) {
-			return null;
-		}
-	}
-
-	wenomPatchCredentialsSecret = async (clientSecret: string): Promise<void> => {
-		const wenom = OAuth2ServerTyp.WENOM;
-		try {
-			return await api.server.patchOAuthSecret({ clientSecret }, api.schema, wenom.getId());
-		} catch (e) {
-			return;
-		}
-	}
-
-	wenomRemoveCredential = api.call(async () => {
-		await api.server.deleteOAuthSecret(api.schema, 1);
-	});
-
-	wenomGetServerConfig = api.call(async (): Promise<void> => {
-		try {
-			const res = await api.server.getENMServerConfig(api.schema);
-			if (res.success && (res.config !== null)) {
-				const mapENMServerConfigGlobal = new HashMap<string, string>();
-				const mapENMServerConfigServer = new HashMap<string, string>();
-				for (const element of res.config.global)
-					mapENMServerConfigGlobal.put(element.key, element.value);
-				for (const element of res.config.server)
-					mapENMServerConfigServer.put(element.key, element.value);
-				this.setPatchedState({ mapENMServerConfigGlobal, mapENMServerConfigServer});
-			}
-			else throw new DeveloperNotificationException("Keine Konfiguration geladen");
-		} catch (error) {
-			return;
-		}
-	})
-
-	wenomSetServerConfigElement = api.call(async (data: ENMServerConfigElement): Promise <SimpleOperationResponse> => {
-		try {
-			const res = await api.server.setENMServerConfigElement(data, api.schema);
-			if (data.type === 'server')
-				this._state.value.mapENMServerConfigServer.put(data.key, data.value);
-			else
-				this._state.value.mapENMServerConfigGlobal.put(data.key, data.value);
-			return res;
-		} catch (e) {
-			if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
-				try {
-					const json = await e.response.text();
-					return SimpleOperationResponse.transpilerFromJSON(json);
-				} catch (e) { /* */ }
-			}
-			const res = new SimpleOperationResponse();
-			res.success = false;
-			res.log.add(`Unerwarteter Fehler beim Setzen einer Serverkonfiguration aufgetreten: ${e instanceof Error ? e.message : 'unbekannt'}`);
-			return res;
-		}
-	})
-
-	wenomSynchronize = api.call(async () : Promise<SimpleOperationResponse> => {
-		try {
-			return await api.server.synchronizeENMDaten(api.schema);
-		} catch (e) {
-			if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
-				try {
-					const json = await e.response.text();
-					return SimpleOperationResponse.transpilerFromJSON(json);
-				} catch (e) { /* */ }
-			}
-			const res = new SimpleOperationResponse();
-			res.success = false;
-			res.log.add(`Unerwarteter Fehler beim Aufruf der Synchronisationsmethode aufgetreten: ${e instanceof Error ? e.message : 'unbekannt'}`);
-			return res;
-		}
-	});
-
-	wenomDownload = api.call(async () : Promise<SimpleOperationResponse> => {
-		try {
-			return await api.server.downloadENMDaten(api.schema);
-		} catch (e) {
-			if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
-				try {
-					const json = await e.response.text();
-					return SimpleOperationResponse.transpilerFromJSON(json);
-				} catch (e) { /* */ }
-			}
-			const res = new SimpleOperationResponse();
-			res.success = false;
-			res.log.add(`Unerwarteter Fehler beim Aufruf der Downloadmethode aufgetreten: ${e instanceof Error ? e.message : 'unbekannt'}`);
-			return res;
-		}
-	});
-
-	wenomUpload = api.call(async () : Promise<SimpleOperationResponse> => {
-		try {
-			return await api.server.uploadENMDaten(api.schema);
-		} catch (e) {
-			if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
-				try {
-					const json = await e.response.text();
-					return SimpleOperationResponse.transpilerFromJSON(json);
-				} catch (e) { /* */ }
-			}
-			const res = new SimpleOperationResponse();
-			res.success = false;
-			res.log.add(`Unerwarteter Fehler beim Aufruf der Uploadmethode aufgetreten: ${e instanceof Error ? e.message : 'unbekannt'}`);
-			return res;
-		}
-	});
-
-	wenomTruncate = api.call(async () : Promise<SimpleOperationResponse> => {
-		try {
-			return await api.server.truncateENMServer(api.schema);
-		} catch (e) {
-			if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
-				try {
-					const json = await e.response.text();
-					return SimpleOperationResponse.transpilerFromJSON(json);
-				} catch (e) { /* */ }
-			}
-			const res = new SimpleOperationResponse();
-			res.success = false;
-			res.log.add(`Unerwarteter Fehler beim Aufruf der Truncatemethode aufgetreten: ${e instanceof Error ? e.message : 'unbekannt'}`);
-			return res;
-		}
-	});
-
-	wenomReset = api.call(async () : Promise<SimpleOperationResponse> => {
-		try {
-			return await api.server.resetENMServer(api.schema);
-		} catch (e) {
-			if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
-				try {
-					const json = await e.response.text();
-					return SimpleOperationResponse.transpilerFromJSON(json);
-				} catch (e) { /* */ }
-			}
-			const res = new SimpleOperationResponse();
-			res.success = false;
-			res.log.add(`Unerwarteter Fehler beim Aufruf der Resetmethode aufgetreten: ${e instanceof Error ? e.message : 'unbekannt'}`);
-			return res;
-		}
-	});
-
-	wenomCheck = api.call(async () : Promise<SimpleOperationResponse> => {
-		try {
-			return await api.server.checkENMServer(api.schema);
-		} catch (e) {
-			if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
-				try {
-					const json = await e.response.text();
-					return SimpleOperationResponse.transpilerFromJSON(json);
-				} catch (e) { /* */ }
-			}
-			const res = new SimpleOperationResponse();
-			res.success = false;
-			res.log.add(`Unerwarteter Fehler beim Aufruf der Checkmethode aufgetreten: ${e instanceof Error ? e.message : 'unbekannt'}`);
-			return res;
-		}
-	});
-
-	wenomSetup = api.call(async () : Promise<boolean | SimpleOperationResponse> => {
-		try {
-			return (await api.server.setupENMServer(api.schema))!;
-		} catch (e) {
-			if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
-				try {
-					const json = await e.response.text();
-					return SimpleOperationResponse.transpilerFromJSON(json);
-				} catch (e) { /* */ }
-			}
-			const res = new SimpleOperationResponse();
-			res.success = false;
-			res.log.add(`Unerwarteter Fehler beim Aufruf der Setupmethode aufgetreten: ${e instanceof Error ? e.message : 'unbekannt'}`);
-			return res;
-		}
-	});
 
 }

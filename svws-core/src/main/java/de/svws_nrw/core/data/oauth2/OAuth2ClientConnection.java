@@ -11,7 +11,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @Schema(description = "Ein OAuth2 Client Secret der Schule.")
 @TranspilerDTO
-public class OAuth2ClientSecret {
+public class OAuth2ClientConnection {
 
 	/** Die ID des OAuth2 Client Secrets. */
 	@Schema(description = "die ID des OAuth2 Client Secrets in der Datenbank", example = "126784")
@@ -29,10 +29,23 @@ public class OAuth2ClientSecret {
 	@Schema(description = "Das Client-Secret für die Client ID für diesen Auth-Server.", example = "abc")
 	public String clientSecret;
 
+	/** Das TLS-Zertifikat, welches von dem Auth-Server verwendet wird. */
+	@Schema(description = "Das TLS-Zertifikat, welches von dem Auth-Server verwendet wird.")
+	public String tlsCert;
+
+	/** Gibt an, ob das TLS-Zertifikat von dem SVWS-Server über die Chain automatisch validiert werden kann. */
+	@Schema(description = "gibt an, ob das TLS-Zertifikat von dem SVWS-Server über die Chain automatisch validiert werden kann.", example = "false")
+	public boolean tlsCertIsKnown;
+
+	/** Gibt an, ob dem TLS-Zertifikat von dem SVWS-Server vertraut wird oder nicht. */
+	@Schema(description = "gibt an, ob dem TLS-Zertifikat von dem SVWS-Server vertraut wird oder nicht.", example = "false")
+	public boolean tlsCertIsTrusted;
+
+
 	/**
 	 * Leerer Standardkonstruktor.
 	 */
-	public OAuth2ClientSecret() {
+	public OAuth2ClientConnection() {
 		// leer
 	}
 

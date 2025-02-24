@@ -198,7 +198,10 @@ public enum SchemaRevisionen {
 	REV_30(30, "2024-12-05"),
 
 	/** Ergänzen der Klassen-Tabellen um die Schulgliederung und die Organisationsform, sofern diese über Fachklasse, Vorgänger- oder Nachfolgeklasse ermittelt werden können. */
-	REV_31(31, "2025-01-23");
+	REV_31(31, "2025-01-23"),
+
+	/** Erweitern der OAuth2-Client-Tabelle um die Informationen zum Bearer-Token dem TLS-Zertifikat des Servers. */
+	REV_32(32, "2025-02-25");
 
 
 	/**
@@ -206,14 +209,14 @@ public enum SchemaRevisionen {
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_31;
+	public static final SchemaRevisionen maxRevision = REV_32;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_31;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_32;
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */
 	private static Map<Long, SchemaRevisionen> _mapByNumber = null;

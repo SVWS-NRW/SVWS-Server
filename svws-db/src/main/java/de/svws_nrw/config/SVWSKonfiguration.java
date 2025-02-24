@@ -1,30 +1,17 @@
 package de.svws_nrw.config;
 
-import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.security.Key;
-import java.security.KeyFactory;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
-import java.security.cert.CertificateEncodingException;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.HashSet;
@@ -36,6 +23,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
+import de.svws_nrw.base.crypto.KeyStoreUtils;
 import de.svws_nrw.core.data.db.DBSchemaListeEintrag;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
@@ -957,16 +945,8 @@ public final class SVWSKonfiguration {
 	 *                             Keystore nicht möglich ist.
 	 */
 	public static KeyStore getKeystore() throws KeyStoreException {
-		try {
-			final SVWSKonfiguration config = SVWSKonfiguration.get();
-			try (FileInputStream is = new FileInputStream(config.getTLSKeystorePath() + "/keystore")) {
-				final KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
-				keystore.load(is, config.getTLSKeystorePassword().toCharArray());
-				return keystore;
-			}
-		} catch (KeyStoreException | IOException | NoSuchAlgorithmException | CertificateException e) {
-			throw new KeyStoreException("Zugriff azuf Keystore fehlgeschlagen.", e);
-		}
+		final SVWSKonfiguration config = SVWSKonfiguration.get();
+		return KeyStoreUtils.getKeystore(config.getTLSKeystorePath() + "/keystore", config.getTLSKeystorePassword());
 	}
 
 
@@ -980,16 +960,9 @@ public final class SVWSKonfiguration {
 	 *                             Keystore oder den Private Key nicht möglich ist.
 	 */
 	public static PrivateKey getPrivateKey() throws KeyStoreException {
-		try {
-			final SVWSKonfiguration config = SVWSKonfiguration.get();
-			final KeyStore keystore = getKeystore();
-			final Key key = keystore.getKey(config.getTLSKeyAlias(), config.getTLSKeystorePassword().toCharArray());
-			if (key instanceof final PrivateKey privateKey)
-				return privateKey;
-			throw new KeyStoreException("Konnte keinen privaten Schlüssel auslesen.");
-		} catch (KeyStoreException | UnrecoverableKeyException | NoSuchAlgorithmException e) {
-			throw new KeyStoreException("", e);
-		}
+		final SVWSKonfiguration config = SVWSKonfiguration.get();
+		final KeyStore keystore = getKeystore();
+		return KeyStoreUtils.getPrivateKey(keystore, config.getTLSKeyAlias(), config.getTLSKeystorePassword());
 	}
 
 
@@ -1003,13 +976,9 @@ public final class SVWSKonfiguration {
 	 *                             Keystore oder das Zertifikat nicht möglich ist.
 	 */
 	public static Certificate getCertificate() throws KeyStoreException {
-		try {
-			final SVWSKonfiguration config = SVWSKonfiguration.get();
-			final KeyStore keystore = getKeystore();
-			return keystore.getCertificate(config.getTLSKeyAlias());
-		} catch (final KeyStoreException e) {
-			throw new KeyStoreException("", e);
-		}
+		final SVWSKonfiguration config = SVWSKonfiguration.get();
+		final KeyStore keystore = getKeystore();
+		return KeyStoreUtils.getCertificate(keystore, config.getTLSKeyAlias());
 	}
 
 
@@ -1023,14 +992,9 @@ public final class SVWSKonfiguration {
 	 *                             Keystore oder das Zertifikat nicht möglich ist.
 	 */
 	public static String getCertificateBase64() throws KeyStoreException {
-		try {
-			final SVWSKonfiguration config = SVWSKonfiguration.get();
-			final KeyStore keystore = getKeystore();
-			final Certificate cert = keystore.getCertificate(config.getTLSKeyAlias());
-			return "-----BEGIN CERTIFICATE-----\n" + Base64.getMimeEncoder().encodeToString(cert.getEncoded()) + "\n-----END CERTIFICATE-----\n";
-		} catch (KeyStoreException | CertificateEncodingException e) {
-			throw new KeyStoreException("", e);
-		}
+		final SVWSKonfiguration config = SVWSKonfiguration.get();
+		final KeyStore keystore = getKeystore();
+		return KeyStoreUtils.getCertificateBase64(keystore, config.getTLSKeyAlias());
 	}
 
 
@@ -1059,7 +1023,7 @@ public final class SVWSKonfiguration {
 	 *                             Keystore oder den öffentlichen Schlüssel nicht möglich ist.
 	 */
 	public static String getPublicKeyBase64() throws KeyStoreException {
-		final PublicKey pubKey = SVWSKonfiguration.getPublicKey();
+		final PublicKey pubKey = getPublicKey();
 		return Base64.getMimeEncoder().encodeToString(pubKey.getEncoded());
 	}
 
@@ -1074,74 +1038,16 @@ public final class SVWSKonfiguration {
 	 * @throws SVWSKonfigurationException im Fehlerfall
 	 */
 	public static void setPrivateKeyCertificateBase64(final String alias, final byte[] key, final byte[] cert) throws SVWSKonfigurationException {
-		if ((alias == null) || alias.isBlank())
-			throw new SVWSKonfigurationException("Ein Alias muss angegeben werden.");
-		// Überprüfe den privaten Schlüssel und wandle ihn um
-		if ((key == null) || (key.length == 0))
-			throw new SVWSKonfigurationException("Ein privater Schlüssel muss angegeben werden.");
-		String[] tmp = new String(key, StandardCharsets.UTF_8).split("-----BEGIN PRIVATE KEY-----\r*\n*");
-		if (tmp.length != 2)
-			throw new SVWSKonfigurationException("Der private Schlüssel kann nicht eingelesen werden. Überprüfen sie das Dateiformat.");
-		tmp = tmp[1].split("\r*\n*-----END PRIVATE KEY-----");
-		if (tmp.length != 2)
-			throw new SVWSKonfigurationException("Der private Schlüssel kann nicht eingelesen werden. Überprüfen sie das Dateiformat.");
-		final String keyBase64 = tmp[0];
-		final byte[] keyRaw = Base64.getMimeDecoder().decode(keyBase64);
-		final PrivateKey keyDecoded;
 		try {
-			final KeyFactory kf = KeyFactory.getInstance("RSA");
-			keyDecoded = kf.generatePrivate(new PKCS8EncodedKeySpec(keyRaw));
-		} catch (final NoSuchAlgorithmException | InvalidKeySpecException e) {
-			throw new SVWSKonfigurationException("Fehler beim Dekodieren des RSA-Schlüssels.", e);
+			final SVWSKonfiguration config = SVWSKonfiguration.get();
+			final KeyStore ks = getKeystore();
+			KeyStoreUtils.addPrivateKeyCertificateBase64(ks, config.getTLSKeystorePath() + "/keystore", config.getTLSKeystorePassword(), alias, key, cert);
+			config.setTLSKeyAlias(alias);
+			SVWSKonfiguration.write();
+		} catch (final KeyStoreException kse) {
+			throw new SVWSKonfigurationException(
+					"Der private Schlüssel und das Zertifikat konnten nicht zum Java-Key-Store des SVWS-Servers hinzugefügt werden.", kse);
 		}
-// Alternativer Code zum Einlesen von PKCS12-Dateien
-//		try {
-//			final KeyStore inKeystore = KeyStore.getInstance("PKCS12");
-//			inKeystore.load(new ByteArrayInputStream(key), "geheim".toCharArray());
-//			keyDecoded = (PrivateKey) inKeystore.getKey(inKeystore.aliases().nextElement(), "geheim".toCharArray());
-//		} catch (final KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException | UnrecoverableKeyException e) {
-//			throw new SVWSKonfigurationException("Fehler beim Dekodieren des privaten Schlüssels.", e);
-//		}
-		// Überprüfe das Zertifikat und wandle es um
-		if ((cert == null) || (cert.length == 0))
-			throw new SVWSKonfigurationException("Ein Zertifikat muss angegeben werden.");
-		tmp = new String(cert, StandardCharsets.UTF_8).split("-----BEGIN CERTIFICATE-----\r*\n*");
-		if (tmp.length != 2)
-			throw new SVWSKonfigurationException("Das Zertifikat kann nicht eingelesen werden. Überprüfen sie das Dateiformat.");
-		tmp = tmp[1].split("\r*\n*-----END CERTIFICATE-----");
-		if (tmp.length != 2)
-			throw new SVWSKonfigurationException("Das Zertifikat kann nicht eingelesen werden. Überprüfen sie das Dateiformat.");
-		final String certBase64 = tmp[0];
-		final byte[] certRaw = Base64.getMimeDecoder().decode(certBase64);
-		final Certificate certDecoded;
-		try {
-			final CertificateFactory cf = CertificateFactory.getInstance("X.509");
-			certDecoded = cf.generateCertificate(new ByteArrayInputStream(certRaw));
-		} catch (final CertificateException e) {
-			throw new SVWSKonfigurationException("Fehler beim Dekodieren des Zertifikats.", e);
-		}
-		// Schreibe den privaten Schlüssel und das Zertifikat in den keystore
-		final SVWSKonfiguration config = SVWSKonfiguration.get();
-		KeyStore keystore;
-		try {
-			keystore = getKeystore();
-		} catch (final KeyStoreException e) {
-			throw new SVWSKonfigurationException("Fehler beim Zugriff auf den Keystore", e);
-		}
-		final Certificate[] certChain = new Certificate[1];
-		certChain[0] = certDecoded;
-		try {
-			keystore.setKeyEntry(alias, keyDecoded, config.getTLSKeystorePassword().toCharArray(), certChain);
-		} catch (final KeyStoreException e) {
-			throw new SVWSKonfigurationException("Fehler beim Setzen des Keystore-Eintrags", e);
-		}
-		try (FileOutputStream os = new FileOutputStream(config.getTLSKeystorePath() + "/keystore", false)) {
-			keystore.store(os, config.getTLSKeystorePassword().toCharArray());
-		} catch (KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException e) {
-			throw new SVWSKonfigurationException("Fehler beim Schreiben des Keystores", e);
-		}
-		config.setTLSKeyAlias(alias);
-		SVWSKonfiguration.write();
 	}
 
 }

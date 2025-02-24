@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import de.svws_nrw.core.data.oauth2.OAuth2ClientSecret;
+import de.svws_nrw.core.data.oauth2.OAuth2ClientConnection;
 import de.svws_nrw.core.types.oauth2.OAuth2ServerTyp;
 import de.svws_nrw.data.DTOMapper;
 import de.svws_nrw.data.DataBasicMapper;
@@ -25,23 +25,26 @@ import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den Core-DTO
- * {@link OAuth2ClientSecret}.
+ * {@link OAuth2ClientConnection}.
  */
 public final class DataOauthClientSecrets extends DataManager<Long> {
 
-	/** Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOSchuleOAuthSecrets} in einen Core-DTO {@link OAuth2ClientSecret}. */
-	private static final DTOMapper<DTOSchuleOAuthSecrets, OAuth2ClientSecret> dtoMapper = (final DTOSchuleOAuthSecrets secrets) -> {
-		final OAuth2ClientSecret daten = new OAuth2ClientSecret();
+	/** Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOSchuleOAuthSecrets} in einen Core-DTO {@link OAuth2ClientConnection}. */
+	private static final DTOMapper<DTOSchuleOAuthSecrets, OAuth2ClientConnection> dtoMapper = (final DTOSchuleOAuthSecrets secrets) -> {
+		final OAuth2ClientConnection daten = new OAuth2ClientConnection();
 		daten.id = secrets.ID;
 		daten.authServer = secrets.AuthServer;
 		daten.clientID = secrets.ClientID;
 		daten.clientSecret = secrets.ClientSecret;
+		daten.tlsCert = secrets.TLSCert;
+		daten.tlsCertIsKnown = secrets.TLSCertIsKnown;
+		daten.tlsCertIsTrusted = secrets.TLSCertIsTrusted;
 		return daten;
 	};
 
 
 	/**
-	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link OAuth2ClientSecret}.
+	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link OAuth2ClientConnection}.
 	 *
 	 * @param conn die Datenbank-Verbindung für den Datenbankzugriff
 	 */
@@ -59,7 +62,7 @@ public final class DataOauthClientSecrets extends DataManager<Long> {
 	@Override
 	public Response getList() throws ApiOperationException {
 		final List<DTOSchuleOAuthSecrets> daten = conn.queryAll(DTOSchuleOAuthSecrets.class);
-		final List<OAuth2ClientSecret> result = new ArrayList<>();
+		final List<OAuth2ClientConnection> result = new ArrayList<>();
 		if (daten == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 		for (final DTOSchuleOAuthSecrets secret : daten)
@@ -107,7 +110,8 @@ public final class DataOauthClientSecrets extends DataManager<Long> {
 				}
 			}),
 			Map.entry("clientID", (conn, dto, value, map) -> dto.ClientID = JSONMapper.convertToString(value, false, false, null)),
-			Map.entry("clientSecret", (conn, dto, value, map) -> dto.ClientSecret = JSONMapper.convertToString(value, false, true, null)));
+			Map.entry("clientSecret", (conn, dto, value, map) -> dto.ClientSecret = JSONMapper.convertToString(value, false, true, null)),
+			Map.entry("tlsCertIsTrusted", (conn, dto, value, map) -> dto.TLSCertIsTrusted = JSONMapper.convertToBoolean(value, false, "tlsCertIsTrusted")));
 
 
 	@Override
@@ -131,7 +135,6 @@ public final class DataOauthClientSecrets extends DataManager<Long> {
 		final DTOSchuleOAuthSecrets dto = conn.queryByKey(DTOSchuleOAuthSecrets.class, id);
 		if (dto == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein DTO mit der ID %s gefunden.".formatted(id));
-		OAuth2Client.clearClientCache(dto);
 		return super.deleteBasic(id, DTOSchuleOAuthSecrets.class, dtoMapper);
 	}
 
@@ -149,7 +152,7 @@ public final class DataOauthClientSecrets extends DataManager<Long> {
 	 */
 	public Response add(final InputStream is) throws ApiOperationException {
 		try {
-			final OAuth2ClientSecret data = JSONMapper.mapper.readValue(is, OAuth2ClientSecret.class);
+			final OAuth2ClientConnection data = JSONMapper.mapper.readValue(is, OAuth2ClientConnection.class);
 			final OAuth2ServerTyp serverTyp = OAuth2ServerTyp.getByID(data.id);
 			if (serverTyp == null)
 				throw new ApiOperationException(Status.BAD_REQUEST, "Es existiert kein OAuth2-Servertyp mit der ID %d.".formatted(data.id));

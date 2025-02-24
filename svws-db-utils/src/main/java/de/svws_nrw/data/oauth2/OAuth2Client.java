@@ -9,18 +9,28 @@ import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandler;
 import java.net.http.HttpResponse.BodyHandlers;
+import java.security.GeneralSecurityException;
+import java.security.KeyStore;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Map;
+import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Supplier;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 
+import de.svws_nrw.base.crypto.KeyStoreUtils;
+import de.svws_nrw.base.crypto.TLSUtils;
 import de.svws_nrw.core.logger.Logger;
+import de.svws_nrw.core.types.oauth2.OAuth2ServerTyp;
+import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.svws.auth.DTOSchuleOAuthSecrets;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response.Status;
@@ -34,135 +44,58 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public final class OAuth2Client {
 
-	/** Konstante, um Token früher als nötig zu invalidieren (zum Vermeiden von Varianz zwischen OAuth2-Server generiertem
-	 * expires_in im Vergleich zum lokal erzeugtem {@link #authenticateTimestamp}) */
-	private static final int TOKEN_EXPIRING_MODIFIER = 60000;
-
-	/** Konstante für den POST_CONTENT beim Erzeugen eines Tokens */
-	private static final String POST_CONTENT = "grant_type=client_credentials";
-
-	/** Konstante Map als Cache der bereits erzeugten OAuthclients anhand ihrer URL */
-	private static final Map<String, OAuth2Client> OAUTH2_CLIENT_CACHE_BY_URL = new ConcurrentHashMap<>();
-
 	/** allg. Pfad auf OAuth2-Servern zum Tokenaustausch */
 	private static final String OAUTH2_PATH = "/oauth/token";
 
-	/** Die URL auf die dieser Client verweisen soll */
-	private final String url;
+	/** Dir Datenbank-Verbindung für den Zugriff auf die OAuth2-Verbindungsdaten */
+	private final DBEntityManager conn;
 
-	/** das Oauth Token Objekt aus der Response beim Tokenaustausch */
-	private OAuth2Token token;
+	/** Der zu verwendende Logger */
+	private final Logger logger;
 
-	/** der lokale Timestamp (vgl. {@link System#currentTimeMillis()}) zum Zeitpunkt des Tokenaustausch */
-	private long authenticateTimestamp;
-
-	/** der zu nutzende Pfad für den Tokenaustausch */
-	private final String oauth2Path;
+	/** Das DTO mit den OAuth2-Informationen */
+	private final DTOSchuleOAuthSecrets dto;
 
 
 	/**
-	 * Privater Konstruktor, vgl. {@link OAuth2Client#getClient(String, Supplier)} zum Instantiieren
-	 * des Clients
+	 * Erzeugt einen neuen OAuth2-Client und erneuert ggf. das aktuelle Token.
 	 *
-	 * @param url          die URL mit der dieser Client sich verbinden soll
-	 * @param oauth2Path   der Pfad zum Tokenaustausch
+	 * @param conn         die Datenbankverbindung zur SVWS-DB, um die aktuell gespeicherten OAuth2-Verindungsdaten abzufragen
+	 * @param logger       ein Logger für das Loggen der Kommunikation über diesen Client
+	 * @param serverTyp    der Server-Typ des zu kontaktierenden OAuth2-Servers
+	 * @param updateToken  gibt an, ob das Token überprüft und ggf. erneuert werden soll
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private OAuth2Client(final String url, final String oauth2Path) {
-		this.url = url;
-		this.oauth2Path = oauth2Path;
-	}
-
-
-	/**
-	 * Hilfsmethode prüft, ob für die gegebene URL bereits ein Client im mit validem Token vorhanden ist und gibt diesen
-	 * zurück. Falls kein Client vorhanden ist, wird ein neuer erzeugt. Falls das Token ausgelaufen ist, wird ein neuer
-	 * Tokenaustausch ausgeführt.
-	 *
-	 * @param url          die URL des OAuth2-Servers
-	 * @param oauth2Path   der Pfad zum Tokenaustausch
-	 * @param basicAuth    der BasicAuth String zur Authentifizierung
-	 * @param logger       der Logger
-	 *
-	 * @return der erstellte OAuth2Client mit validem Token
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	private static OAuth2Client getClient(final String url, final String oauth2Path, final String basicAuth, final Logger logger) throws ApiOperationException {
-		logger.logLn("Prüfe, ob ein bestehendes Token wiederverwendet werden kann...");
-		final OAuth2Client client = OAUTH2_CLIENT_CACHE_BY_URL.computeIfAbsent(url, s -> new OAuth2Client(url, oauth2Path));
-		if (client.isTokenValid()) {
-			logger.logLn("Das Token ist noch gültig und wird erneut verwendet.");
-		} else {
-			logger.logLn("Es exitiert kein gültiges Token und ein neues Token muss angefordert werden...");
-			client.requestToken(basicAuth, logger);
+	public OAuth2Client(final DBEntityManager conn, final Logger logger, final OAuth2ServerTyp serverTyp, final boolean updateToken)
+			throws ApiOperationException {
+		this.conn = conn;
+		this.logger = logger;
+		// Lese die Verbindungsdaten aus der Datenbank ein.
+		logger.logLn("Lese die OAuth2-Client-Secrets für den Server-Typ %s aus der Datenbank...".formatted(serverTyp.name()));
+		this.dto = new DataOauthClientSecrets(conn).getDto(serverTyp);
+		if (dto == null)
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"Es wurden keine OAuth2-Client-Secrets den Server-Typ %s in der Datenbank gefunden.".formatted(serverTyp.name()));
+		if ((dto.AuthServer == null) || dto.AuthServer.isBlank())
+			throw new ApiOperationException(Status.NOT_FOUND, "Bei den OAuth2-Daten aus der Datenbank fehlt die Server-URL.");
+		if ((dto.ClientID == null) || dto.ClientID.isBlank())
+			throw new ApiOperationException(Status.NOT_FOUND, "Bei den OAuth2-Daten aus der Datenbank ist keine Client-ID angegeben.");
+		if (!dto.ClientID.equals("" + serverTyp.getId()))
+			throw new ApiOperationException(Status.NOT_FOUND, "Bei den OAuth2-Daten aus der Datenbank ist keine passende Client-ID angegeben.");
+		if (updateToken) {
+			if ((dto.ClientSecret == null) || dto.ClientSecret.isBlank())
+				throw new ApiOperationException(Status.NOT_FOUND, "Die OAuth2-Daten aus der Datenbank enthalten kein Client-Secret.");
+			logger.logLn("Generiere den HTTP-Header für Basic-Auth bestehen aus der Client-ID als User und dem Client-Secret als Kennwort...");
+			final String basicAuth = Base64.getEncoder().encodeToString((dto.ClientID + ":" + dto.ClientSecret).getBytes());
+			logger.logLn("Prüfe, ob ein bestehendes Token wiederverwendet werden kann...");
+			if (isTokenValid()) {
+				logger.logLn("Das Token ist noch gültig und wird erneut verwendet.");
+			} else {
+				logger.logLn("Es exitiert kein gültiges Token und ein neues Token muss angefordert werden...");
+				requestToken(basicAuth, logger);
+			}
 		}
-		return client;
-	}
-
-
-	/**
-	 * Öffentliche Methode, um einen {@link OAuth2Client} für die gegebene URL zu erhalten. vgl.
-	 * {@link #getClient(String, String, String, Logger)} mit {@link #OAUTH2_PATH}
-	 *
-	 * @param url         die URL zu der der OAuth2Client verbunden werden soll
-	 * @param basicAuth   für die Basisauthentifizierung
-	 * @param logger      der Logger
-	 *
-	 * @return den OAuth2Client
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	public static OAuth2Client getClient(final String url, final String basicAuth, final Logger logger) throws ApiOperationException {
-		return getClient(url, OAUTH2_PATH, basicAuth, logger);
-	}
-
-
-	/**
-	 * Öffentliche Methode um einen OAuth2-Client anhand des {@link DTOSchuleOAuthSecrets} zu erhalten
-	 *
-	 * @param dto      das DTO mit den OAuth2-Secrets der Schule
-	 * @param logger   der Logger
-	 *
-	 * @return den OAuth2-Client
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	public static OAuth2Client getClient(final DTOSchuleOAuthSecrets dto, final Logger logger) throws ApiOperationException {
-		if ((dto == null) || (dto.AuthServer == null) || dto.AuthServer.isBlank() || (dto.ClientID == null)
-				|| dto.ClientID.isBlank() || (dto.ClientSecret == null) || dto.ClientSecret.isBlank())
-			throw new ApiOperationException(Status.NOT_FOUND, "Die OAuth2-Daten aus der Datenbank sind unvollständig.");
-		logger.logLn("Generiere den HTTP-Header für Basic-Auth bestehen aus der Client-ID als User und dem Client-Secret als Kennwort...");
-		final String basicAuth = Base64.getEncoder().encodeToString((dto.ClientID + ":" + dto.ClientSecret).getBytes());
-		return getClient(dto.AuthServer, basicAuth, logger);
-	}
-
-
-	/**
-	 * Öffentliche Methode um einen OAuth2-Client anhand des {@link DTOSchuleOAuthSecrets} zu erhalten
-	 *
-	 * @param dto      das DTO mit den OAuth2-Secrets der Schule
-	 * @param logger   der Logger
-	 *
-	 * @return den OAuth2-Client
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	public static OAuth2Client getClientWithoutSecret(final DTOSchuleOAuthSecrets dto, final Logger logger) throws ApiOperationException {
-		if ((dto == null) || (dto.AuthServer == null) || dto.AuthServer.isBlank() || (dto.ClientID == null) || dto.ClientID.isBlank())
-			throw new ApiOperationException(Status.NOT_FOUND, "Die OAuth2-Daten aus der Datenbank sind unvollständig.");
-		return OAUTH2_CLIENT_CACHE_BY_URL.computeIfAbsent(dto.AuthServer, s -> new OAuth2Client(dto.AuthServer, OAUTH2_PATH));
-	}
-
-
-	/**
-	 * Leert den Client-Cache für das übergenene Secret und damit auch das zugehörige Token
-	 *
-	 * @param dto   das Secret, zu welchem die Daten aus dem Cache entfernt werden sollen
-	 */
-	public static void clearClientCache(final DTOSchuleOAuthSecrets dto) {
-		if ((dto == null) || (dto.AuthServer == null) || dto.AuthServer.isBlank())
-			return;
-		OAUTH2_CLIENT_CACHE_BY_URL.remove(dto.AuthServer);
 	}
 
 
@@ -172,16 +105,22 @@ public final class OAuth2Client {
 	 * @return true, wenn ein nicht abgelaufenes Token vorhanden ist, und ansonsten false
 	 */
 	private boolean isTokenValid() {
-		if (this.token == null)
+		if (dto.Token == null)
 			return false;
-		return ((this.token.expiresIn * 1000) + authenticateTimestamp) > (System.currentTimeMillis() - TOKEN_EXPIRING_MODIFIER);
+		// Berechne die Zeit in Millisekunden, wann das Token abläuft
+		final long tsExpiration = ((dto.TokenExpiresIn * 1000) + dto.TokenTimestamp);
+		// Bestimme die aktuelle Zeit zum Vergleich, addiere aber einen Wert darauf, um das Token ggf. früher zu erneuern
+		// (dies umgeht Probleme der unterschiedlichen Zeitstempel von Server und Client und der Netzwerkverzögerung bei der Übertragung des Tokens)
+		final long tsNow = System.currentTimeMillis() + 60000;
+		// Das Token ist noch gültig, wenn der aktuelle Zeitstempel kleiner ist als der Zeitstempel für das Ablaufen des Tokens
+		return (tsNow < tsExpiration);
 	}
 
 
 	/**
 	 * Erzeugt auf Basis eines Basic-Auth Strings ein Token und hinterlegt es an diesem Client
 	 *
-	 * @param basicAuthString   String für die BasicAuth, Base64 encoded clientId:password
+	 * @param basicAuthString   String für die BasicAuth, Base64 encoded "clientId:password"
 	 * @param logger            der zu verwendende Logger
 	 *
 	 * @throws ApiOperationException im Fehlerfall
@@ -190,9 +129,9 @@ public final class OAuth2Client {
 		logger.logLn("Erstelle den HTTP-Header für die Token-Anfrage...");
 		// Bereite des HTTP-Request vor...
 		final String client_secret_b64 = basicAuthString;
-		final URI uri = URI.create(url + oauth2Path);
+		final URI uri = URI.create(dto.AuthServer + OAUTH2_PATH);
 		final HttpRequest request = HttpRequest.newBuilder().uri(uri).timeout(Duration.ofMinutes(2))
-				.POST(BodyPublishers.ofString(POST_CONTENT)).header("Content-Type", "application/x-www-form-urlencoded")
+				.POST(BodyPublishers.ofString("grant_type=client_credentials")).header("Content-Type", "application/x-www-form-urlencoded")
 				.setHeader("Authorization", "Basic " + client_secret_b64).build();
 		// ... sende den Request und warte auf die Antwort ...
 		logger.logLn("Sende die HTTP-Anfrage für eines neues Token...");
@@ -209,9 +148,19 @@ public final class OAuth2Client {
 			throw new ApiOperationException(Status.BAD_GATEWAY, "Verbindung zu dem OAuth2-Server mit dem Status-Code %d fehlgeschlagen.".formatted(statusCode));
 		// ... und validiere im Erfolgsfall die HTTP-Response
 		final String stringResponse = response.body();
-		this.authenticateTimestamp = System.currentTimeMillis();
 		try {
-			this.token = getTokenfromJson(stringResponse);
+			// Wandle dafür die Anwort in ein Java-DTO um ...
+			final ObjectMapper mapper = new ObjectMapper();
+			mapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
+			final OAuth2Token token = mapper.readValue(stringResponse, OAuth2Token.class);
+			// ... und speichere die Informationen zum Token in der Datenbank
+			this.dto.TokenTimestamp = System.currentTimeMillis();
+			this.dto.TokenType = token.tokenType;
+			this.dto.Token = token.accessToken;
+			this.dto.TokenExpiresIn = token.expiresIn;
+			this.dto.TokenScope = token.scope;
+			conn.transactionPersist(this.dto);
+			conn.transactionFlush();
 			logger.logLn("Das Token wurde erfolgreich empfangen.");
 		} catch (@SuppressWarnings("unused") final JsonProcessingException e) {
 			throw new ApiOperationException(Status.BAD_GATEWAY, "Antwort des OAuthServers inkorrekt:\n" + stringResponse);
@@ -231,22 +180,35 @@ public final class OAuth2Client {
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	private static <T> HttpResponse<T> send(final HttpRequest request, final BodyHandler<T> handler) throws ApiOperationException {
-		try (HttpClient client = HttpClient.newBuilder().version(Version.HTTP_1_1).connectTimeout(Duration.ofSeconds(20)).build()) {
-			return client.send(request, handler);
+	private <T> HttpResponse<T> send(final HttpRequest request, final BodyHandler<T> handler) throws ApiOperationException {
+		HttpClient.Builder builder = HttpClient.newBuilder().version(Version.HTTP_1_1).connectTimeout(Duration.ofSeconds(20));
+		if ((dto.TLSCertIsKnown == null) || (!dto.TLSCertIsKnown)) {
+			try {
+				if (dto.TLSCert == null)
+					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "In der Datenbank ist keine TLS-Zertifikatskette des TLS-Servers zur Nutzung hinterlegt.");
+				final List<X509Certificate> certList = TLSUtils.decodeCertListJson(dto.TLSCert);
+				if (certList.isEmpty())
+					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "In der Datenbank ist kein TLS-Zertifikat zur Nutzung hinterlegt.");
+				if (!dto.TLSCertIsTrusted)
+					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Der in der Datenbank zur Nutzung hinterlegten TLS-Zertifikatskette des TLS-Servers wird nicht vertraut.");
+				final KeyStore keystore = KeyStoreUtils.newKeystore();
+				KeyStoreUtils.addCertificate(keystore, dto.AuthServer, certList.getFirst());
+				SSLContext sslContext = TLSUtils.getTLSContextFromKeystore(keystore);
+				builder = builder.sslContext(sslContext);
+			} catch (final ApiOperationException e) {
+				throw e;
+			} catch (GeneralSecurityException e) {
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, e.getMessage());
+			}
+		}
+		try {
+			try (HttpClient client = builder.build()) {
+				return client.send(request, handler);
+			}
 		} catch (IOException | InterruptedException e) {
+			Thread.currentThread().interrupt();
 			throw new ApiOperationException(Status.BAD_GATEWAY, e, "Fehler beim Senden der Informationen: " + e.getLocalizedMessage());
 		}
-	}
-
-
-	/**
-	 * Getter für das {@link OAuth2Token}
-	 *
-	 * @return das {@link OAuth2Token}
-	 */
-	public OAuth2Token getToken() {
-		return this.token;
 	}
 
 
@@ -258,16 +220,15 @@ public final class OAuth2Client {
 	 * @param filename   der Dateiname, der verwendet wird
 	 * @param bytes      die Bytes, die innerhalb des Files gesendet werden
 	 * @param handler    der BodyHandler für die Response
-	 * @param logger     der Logger
 	 *
 	 * @return die Response
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public <T> HttpResponse<T> postMultipart(final String path, final String filename, final byte[] bytes, final BodyHandler<T> handler, final Logger logger)
+	public <T> HttpResponse<T> postMultipart(final String path, final String filename, final byte[] bytes, final BodyHandler<T> handler)
 			throws ApiOperationException {
 		logger.logLn("Bereite die HTTP-Anfrage vor...");
-		final URI uri = URI.create(url + path);
+		final URI uri = URI.create(dto.AuthServer + path);
 		final String actualBoundary = UUID.randomUUID().toString() + "--";
 		final String boundary = "--" + actualBoundary;
 		final byte[] boundaryBytes = ("\r\n" + boundary).getBytes();
@@ -280,7 +241,7 @@ public final class OAuth2Client {
 				.POST(BodyPublishers.ofByteArray(c))
 				.header("Content-Type", "multipart/form-data;boundary=" + actualBoundary)
 				.header("Accept", "application/json")
-				.header("Authorization", "Bearer " + token.accessToken).header("file", "file").build();
+				.header("Authorization", "Bearer " + dto.Token).header("file", "file").build();
 		logger.logLn("Sende die HTTP-Anfrage an den OAuth2-Server...");
 		return send(request, handler);
 	}
@@ -293,17 +254,15 @@ public final class OAuth2Client {
 	 * @param <T>             generischer Typ des {@link HttpResponse} und {@link BodyHandler}
 	 * @param path            der Pfad als Teil der URL für diesen OauthClient, an den die Daten geschickt werden
 	 * @param handler         der BodyHandler für den Response-Body
-	 * @param logger          der Logger
 	 * @param keyValuePairs   Schlüssel-Wert-Paare für die Form-Parameter, gerader Index = Schlüssel, ungerader Index = Wert
 	 *
 	 * @return die Response
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public <T> HttpResponse<T> postFormUrlEncoded(final String path, final BodyHandler<T> handler, final Logger logger, final String... keyValuePairs)
-			throws ApiOperationException {
+	public <T> HttpResponse<T> postFormUrlEncoded(final String path, final BodyHandler<T> handler, final String... keyValuePairs) throws ApiOperationException {
 		logger.logLn("Bereite die HTTP-Anfrage vor...");
-		final URI uri = URI.create(url + path);
+		final URI uri = URI.create(dto.AuthServer + path);
 		if ((keyValuePairs.length % 2) != 0)
 			throw new IllegalArgumentException("Invalid nameValuePairs");
 		String input = "";
@@ -312,7 +271,7 @@ public final class OAuth2Client {
 		final HttpRequest request = HttpRequest.newBuilder().uri(uri).timeout(Duration.ofMinutes(2))
 				.POST(BodyPublishers.ofString(input)).header("Content-Type", "application/x-www-form-urlencoded")
 				.header("Accept", "application/json")
-				.header("Authorization", "Bearer " + token.accessToken).build();
+				.header("Authorization", "Bearer " + dto.Token).build();
 		logger.logLn("Sende die HTTP-Anfrage an den OAuth2-Server...");
 		return send(request, handler);
 	}
@@ -324,19 +283,18 @@ public final class OAuth2Client {
 	 * @param <T>       generischer Typ des {@link HttpResponse} und {@link BodyHandler}
 	 * @param path      der Pfad als Teil der URL für diesen OauthClient, an den das POST geschickt wird
 	 * @param handler   der BodyHandler für den Response-Body
-	 * @param logger    der Logger
 	 *
 	 * @return die Response
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public <T> HttpResponse<T> postEmpty(final String path, final BodyHandler<T> handler, final Logger logger) throws ApiOperationException {
+	public <T> HttpResponse<T> postEmpty(final String path, final BodyHandler<T> handler) throws ApiOperationException {
 		logger.logLn("Bereite die HTTP-Anfrage vor...");
-		final URI uri = URI.create(url + path);
+		final URI uri = URI.create(dto.AuthServer + path);
 		final HttpRequest request = HttpRequest.newBuilder().uri(uri).timeout(Duration.ofMinutes(2)).GET()
 				.POST(BodyPublishers.ofString("")).header("Content-Type", "application/x-www-form-urlencoded")
 				.header("Accept", "application/json")
-				.header("Authorization", "Bearer " + token.accessToken).build();
+				.header("Authorization", "Bearer " + dto.Token).build();
 		logger.logLn("Sende die HTTP-Anfrage an den OAuth2-Server...");
 		return send(request, handler);
 	}
@@ -348,21 +306,20 @@ public final class OAuth2Client {
 	 * @param <T>             generischer Typ des {@link HttpResponse} und {@link BodyHandler}
 	 * @param path            der Pfad als Teil der URL für diesen OauthClient, an den die Daten geschickt werden
 	 * @param handler         der BodyHandler für den Response-Body
-	 * @param logger          der Logger
 	 * @param daten           die Daten
 	 *
 	 * @return die Response
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public <T> HttpResponse<T> put(final String path, final BodyHandler<T> handler, final Logger logger, final String daten)
+	public <T> HttpResponse<T> put(final String path, final BodyHandler<T> handler, final String daten)
 			throws ApiOperationException {
 		logger.logLn("Bereite die HTTP-Anfrage vor...");
-		final URI uri = URI.create(url + path);
+		final URI uri = URI.create(dto.AuthServer + path);
 		final HttpRequest request = HttpRequest.newBuilder().uri(uri).timeout(Duration.ofMinutes(2))
 				.PUT(BodyPublishers.ofString(daten)).header("Content-Type", "application/json")
 				.header("Accept", "application/json")
-				.header("Authorization", "Bearer " + token.accessToken).build();
+				.header("Authorization", "Bearer " + dto.Token).build();
 		logger.logLn("Sende die HTTP-Anfrage an den OAuth2-Server...");
 		return send(request, handler);
 	}
@@ -374,38 +331,36 @@ public final class OAuth2Client {
 	 * @param <T>       generischer Typ des {@link HttpResponse} und {@link BodyHandler}
 	 * @param path      der Pfad als Teil der URL für diesen OauthClient, an den das GET geschickt wird
 	 * @param handler   der BodyHandler für den Response-Body
-	 * @param logger    der Logger
 	 *
 	 * @return die Response
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public <T> HttpResponse<T> get(final String path, final BodyHandler<T> handler, final Logger logger) throws ApiOperationException {
+	public <T> HttpResponse<T> get(final String path, final BodyHandler<T> handler) throws ApiOperationException {
 		logger.logLn("Bereite die HTTP-Anfrage vor...");
-		final URI uri = URI.create(url + path);
+		final URI uri = URI.create(dto.AuthServer + path);
 		final HttpRequest request = HttpRequest.newBuilder().uri(uri).timeout(Duration.ofMinutes(2)).GET()
 				.header("Accept", "application/json")
-				.header("Authorization", "Bearer " + token.accessToken).build();
+				.header("Authorization", "Bearer " + dto.Token).build();
 		logger.logLn("Sende die HTTP-Anfrage an den OAuth2-Server...");
 		return send(request, handler);
 	}
 
 
 	/**
-	 * Führt ein GET-Request gegen den gegebenen Pfad aus ohne Authorization-Header aus
+	 * Führt ein GET-Request gegen den gegebenen Pfad ohne Authorization-Header aus
 	 *
 	 * @param <T>       generischer Typ des {@link HttpResponse} und {@link BodyHandler}
 	 * @param path      der Pfad als Teil der URL für diesen OauthClient, an den das GET geschickt wird
 	 * @param handler   der BodyHandler für den Response-Body
-	 * @param logger    der Logger
 	 *
 	 * @return die Response
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public <T> HttpResponse<T> getUnauthorized(final String path, final BodyHandler<T> handler, final Logger logger) throws ApiOperationException {
+	public <T> HttpResponse<T> getUnauthorized(final String path, final BodyHandler<T> handler) throws ApiOperationException {
 		logger.logLn("Bereite die HTTP-Anfrage vor...");
-		final URI uri = URI.create(url + path);
+		final URI uri = URI.create(dto.AuthServer + path);
 		final HttpRequest request = HttpRequest.newBuilder().uri(uri).timeout(Duration.ofMinutes(2)).GET()
 				.header("Accept", "application/json").build();
 		logger.logLn("Sende die HTTP-Anfrage an den OAuth2-Server...");
@@ -414,18 +369,38 @@ public final class OAuth2Client {
 
 
 	/**
-	 * Wandelt einen JSON-String in ein {@link OAuth2Token} um.
+	 * Prüft das TLS-Zertifikat des Servers mithilfe eines TLS-Handshakes. Weicht dieses von den bisherigen Informationen ab,
+	 * so wird das neue Zertifikat in das Datenbank-DTO geschrieben und persistiert.
 	 *
-	 * @param json   der JSON-String
+	 * @return true, falls das Zertifikat erfolgreich validiert wurde. Ansonsten false.
 	 *
-	 * @return das OAuth2-Token
-	 *
-	 * @throws JsonProcessingException   wenn die Umwandlung fehlschlägt
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public static OAuth2Token getTokenfromJson(final String json) throws JsonProcessingException {
-		final ObjectMapper mapper = new ObjectMapper();
-		mapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
-		return mapper.readValue(json, OAuth2Token.class);
+	public boolean checkCertificate() throws ApiOperationException {
+		try {
+			final List<X509Certificate> chain = new ArrayList<>();
+			boolean isTrusted;
+			isTrusted = TLSUtils.queryServerCertificates(dto.AuthServer, chain);
+			// Fehlerbehandlung: Hat der Server ein Zertifikat zurückgegeben?
+			if (chain.isEmpty())
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Kein gültiges Server-Zertifikat erhalten.");
+			final List<X509Certificate> dtoChain = (dto.TLSCert == null) ? null : TLSUtils.decodeCertListJson(dto.TLSCert);
+			// Prüfe, ob das Zertifikat in der DB gespeichert ist, dann ist relevant, ob diesem vertraut wird
+			if ((dtoChain != null) && (!dtoChain.isEmpty()) && (chain.getFirst().equals(dtoChain.getFirst())))
+				return dto.TLSCertIsTrusted;
+			// Im anderen Fall - kein Zertifikat in der Datenbank hinterlegt ist oder es hat sich geändert,
+			// dann muss dieses einfach nur in der DB eingetragen werden.
+			dto.TLSCert = TLSUtils.encodeCertListJson(chain);
+			dto.TLSCertIsKnown = isTrusted;
+			dto.TLSCertIsTrusted = isTrusted;
+			conn.transactionPersist(dto);
+			return isTrusted;
+		} catch (final SSLException e) {
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim TLS-Handshake.");
+		} catch (final CertificateException e) {
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Auslesen der Server-Zertifikate aus dem TLS-Handshake.");
+		}
 	}
+
 
 }

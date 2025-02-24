@@ -35,7 +35,7 @@
 						<span>{{ lehrer.eMailDienstlich }}</span>
 					</td>
 					<td class="svws-ui-td" role="cell">
-						{{ mapInitialKennwoerter().get(lehrer.id) }}
+						{{ mapEnmInitialKennwoerter().get(lehrer.id) }}
 						<div @click="copyToClipboard(lehrer.id)" class="cursor-pointer place-items-center">
 							<span class="icon-sm i-ri-file-copy-line inline-block" />
 						</div>
@@ -103,7 +103,7 @@
 
 	async function copyToClipboard(idLehrer: number) {
 		try {
-			const kennwort = props.mapInitialKennwoerter().get(idLehrer);
+			const kennwort = props.mapEnmInitialKennwoerter().get(idLehrer);
 			if (kennwort === null)
 				throw new DeveloperNotificationException("Initial-Kennwort ist nicht vorhanden und kann daher nicht in die Zwischenablage kopiert werden.");
 			else

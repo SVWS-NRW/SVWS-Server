@@ -473,7 +473,7 @@ export { SchuelerblockungOutput } from './core/data/kursblockung/Schuelerblockun
 export { SchuelerblockungOutputFachwahlZuKurs } from './core/data/kursblockung/SchuelerblockungOutputFachwahlZuKurs';
 export { KursDaten } from './core/data/kurse/KursDaten';
 export { LehrerListeEintrag } from './core/data/lehrer/LehrerListeEintrag';
-export { OAuth2ClientSecret } from './core/data/oauth2/OAuth2ClientSecret';
+export { OAuth2ClientConnection } from './core/data/oauth2/OAuth2ClientConnection';
 export { ReportingParameter } from './core/data/reporting/ReportingParameter';
 export { DatenbankVerbindungsdaten } from './core/data/schema/DatenbankVerbindungsdaten';
 export { Schild3KatalogEintragAbiturInfos } from './core/data/schild3/Schild3KatalogEintragAbiturInfos';
