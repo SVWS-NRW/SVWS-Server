@@ -24,7 +24,7 @@ export class RouteGostKursplanungSchueler extends RouteNode<any, RouteGostKurspl
 	public constructor() {
 		super(schulformenGymOb, [
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
 		], "gost.kursplanung.schueler", "schueler/:idschueler(\\d+)?", SGostKursplanungUmwahlansicht);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
@@ -35,7 +35,7 @@ export class RouteGostKursplanungSchueler extends RouteNode<any, RouteGostKurspl
 		}
 		api.config.addElements([
 			new ConfigElement("gost.kursplanung.schueler.auswahl.geschlecht", "user", "true"),
-			new ConfigElement("gost.kursplanung.schueler.auswahl.filterOpen", "user", "true")
+			new ConfigElement("gost.kursplanung.schueler.auswahl.filterOpen", "user", "true"),
 		]);
 	}
 
