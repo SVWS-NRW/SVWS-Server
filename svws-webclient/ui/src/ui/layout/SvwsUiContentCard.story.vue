@@ -17,6 +17,3 @@
 		</svws-ui-content-card>
 	</Story>
 </template>
-
-<script setup lang="ts">
-</script>

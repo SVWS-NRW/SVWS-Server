@@ -74,7 +74,7 @@
 </template>
 
 <script setup lang="ts">
-	import type { Ref} from "vue";
+
 	import { ref, reactive, computed } from "vue";
 	import type { DataTableColumn, SortByAndOrder } from "../../types";
 
@@ -142,7 +142,7 @@
 	const docsMultiselectFilterA = ref();
 	const docsMultiselectFilterB = ref();
 	const clickedRow = ref(undefined);
-	const search: Ref<string> = ref("");
+	const search = ref("");
 
 	const filterReset = () => {
 		docsMultiselectFilterA.value = undefined;

@@ -7,6 +7,3 @@
 		</svws-ui-header>
 	</Story>
 </template>
-
-<script setup lang="ts">
-</script>

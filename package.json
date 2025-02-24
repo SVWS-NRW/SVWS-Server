@@ -16,7 +16,7 @@
 		"@histoire/plugin-vue": "^1.0.0-alpha.1",
 		"@stylistic/eslint-plugin": "^4.0.1",
 		"@tailwindcss/typography": "^0.5.9",
-		"@tailwindcss/vite": "^4.0.3",
+		"@tailwindcss/vite": "4.0.7",
 		"@types/eslint__js": "^8.42.3",
 		"@types/node": "^22.9.0",
 		"@typescript-eslint/eslint-plugin": "^8.0.0-alpha.30",

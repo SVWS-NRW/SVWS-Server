@@ -85,10 +85,7 @@
 	</Story>
 </template>
 
-<script setup lang="ts">
-</script>
-
-<style>
+<style scoped>
 
 	html {
 		font-size: 16px !important;
