@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 
-	import type { SchuelerStundenplanProps } from "./SchuelerStundenplanProps";
+	import type { SchuelerStundenplanProps } from "./SSchuelerStundenplanProps";
 
 	defineProps<SchuelerStundenplanProps>();
 

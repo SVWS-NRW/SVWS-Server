@@ -1,15 +1,12 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
-
-import { DeveloperNotificationException} from "@core";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
+import type { SchuelerStundenplanProps } from "~/components/schueler/stundenplan/SSchuelerStundenplanProps";
+import { BenutzerKompetenz, Schulform, ServerMode, DeveloperNotificationException } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
 import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteDataSchuelerStundenplan } from "~/router/apps/schueler/stundenplan/RouteDataSchuelerStundenplan";
 import { ConfigElement } from "~/components/Config";
 import { api } from "~/router/Api";
-import type { SchuelerStundenplanProps } from "~/components/schueler/stundenplan/SchuelerStundenplanProps";
 
 
 const SSchuelerStundenplan = () => import("~/components/schueler/stundenplan/SSchuelerStundenplan.vue");
