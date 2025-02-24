@@ -247,6 +247,24 @@ class DataSchulenTest {
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
+	@Test
+	@DisplayName("mapAttribute | kuerzel doppelt vergeben")
+	void mapAttributeTest_duplicatedKuerzel() {
+		final var schuleXYZ = new DTOSchuleNRW(1L, "1");
+		schuleXYZ.Kuerzel = "xyz";
+		final var schuleABC = new DTOSchuleNRW(2L, "2");
+		schuleABC.Kuerzel = "ABC";
+		when(this.conn.queryList(DTOSchuleNRW.QUERY_BY_KUERZEL, DTOSchuleNRW.class, "ABC"))
+				.thenReturn(List.of(schuleXYZ, schuleABC));
+
+		final var throwable = catchThrowable(() -> this.dataSchulen.mapAttribute(schuleXYZ, "kuerzel", "ABC", null));
+
+		assertThat(throwable)
+				.isInstanceOf(ApiOperationException.class)
+				.hasMessage("Mehr als eine Schule mit dem gleichen Kuerzel vorhanden")
+				.hasFieldOrPropertyWithValue("Status", Response.Status.INTERNAL_SERVER_ERROR);
+	}
+
 
 	private static Stream<Arguments> provideMappingAttributes() {
 		return Stream.of(

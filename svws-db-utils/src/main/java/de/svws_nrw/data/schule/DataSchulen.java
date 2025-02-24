@@ -11,6 +11,7 @@ import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOSchuleNRW;
+import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -92,7 +93,7 @@ public final class DataSchulen extends DataManagerRevised<Long, DTOSchuleNRW, Sc
 					throw new ApiOperationException(Status.BAD_REQUEST, "Id %d der PatchMap ist ungleich der id %d vom Dto".formatted(id, dto.ID));
 			}
 			case "schulnummer" -> updateSchulnummer(dto, value);
-			case "kuerzel" -> dto.Kuerzel = JSONMapper.convertToString(value, true, true, 10, "kuerzel");
+			case "kuerzel" -> updateKuerzel(dto, value);
 			case "kurzbezeichnung" -> dto.KurzBez = JSONMapper.convertToString(value, false, false, 40, "kurzbezeichnung");
 			case "name" -> dto.Name = JSONMapper.convertToString(value, false, false, 120, "name");
 			case "idSchulform" -> {
@@ -140,5 +141,29 @@ public final class DataSchulen extends DataManagerRevised<Long, DTOSchuleNRW, Sc
 		}
 		//schulnummer update
 		dto.SchulNr = schulnummer;
+	}
+
+	private void updateKuerzel(final DTOSchuleNRW dto, final Object value) throws ApiOperationException {
+		final String kuerzel = JSONMapper.convertToString(
+				value, true, true, Schema.tab_K_Schule.col_Kuerzel.datenlaenge(), "kuerzel");
+		// Kuerzel ist unveraendert
+		if ((dto.Kuerzel != null) && dto.Kuerzel.equals(kuerzel))
+			return;
+
+		// theoretischer Fall, der nicht eintreten sollte
+		final List<DTOSchuleNRW> schulen = conn.queryList(DTOSchuleNRW.QUERY_BY_KUERZEL, DTOSchuleNRW.class, kuerzel);
+
+		if (schulen.size() > 1)
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Mehr als eine Schule mit dem gleichen Kuerzel vorhanden");
+
+		// kuerzel bereits vorhanden
+		if (!schulen.isEmpty()) {
+			final DTOSchuleNRW dtoSchule = schulen.getFirst();
+			if ((dtoSchule != null) && (dtoSchule.ID != dto.ID))
+				throw new ApiOperationException(Status.BAD_REQUEST, "Das Kuerzel %s ist bereits vorhanden.".formatted(value));
+		}
+
+		// kuerzel wird gepatched
+		dto.Kuerzel = kuerzel;
 	}
 }

@@ -215,7 +215,7 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 		}
 
 		// kuerzel wird gepatched
-		dto.Kuerzel = JSONMapper.convertToString(kuerzel, false, false, Schema.tab_K_Lehrer.col_Kuerzel.datenlaenge(), "kuerzel");
+		dto.Kuerzel = kuerzel;
 	}
 
 	private static void updateStaatsangehoerigkeitID(final DTOLehrer dto, final Object value) throws ApiOperationException {
