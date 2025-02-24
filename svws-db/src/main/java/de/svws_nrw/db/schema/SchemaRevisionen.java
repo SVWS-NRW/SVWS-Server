@@ -25,6 +25,7 @@ import de.svws_nrw.db.schema.revisionen.Revision29Updates;
 import de.svws_nrw.db.schema.revisionen.Revision2Updates;
 import de.svws_nrw.db.schema.revisionen.Revision30Updates;
 import de.svws_nrw.db.schema.revisionen.Revision31Updates;
+import de.svws_nrw.db.schema.revisionen.Revision33Updates;
 import de.svws_nrw.db.schema.revisionen.Revision3Updates;
 import de.svws_nrw.db.schema.revisionen.Revision4Updates;
 import de.svws_nrw.db.schema.revisionen.Revision6Updates;
@@ -201,7 +202,10 @@ public enum SchemaRevisionen {
 	REV_31(31, "2025-01-23"),
 
 	/** Erweitern der OAuth2-Client-Tabelle um die Informationen zum Bearer-Token dem TLS-Zertifikat des Servers. */
-	REV_32(32, "2025-02-25");
+	REV_32(32, "2025-02-21"),
+
+	/** Ergänzen von evtl. fehlenden Auto-Inkrement-Trigger auf der Tabelle SchuelerMerkmale */
+	REV_33(33, "2025-02-24");
 
 
 	/**
@@ -209,14 +213,14 @@ public enum SchemaRevisionen {
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_32;
+	public static final SchemaRevisionen maxRevision = REV_33;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_32;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_33;
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */
 	private static Map<Long, SchemaRevisionen> _mapByNumber = null;
@@ -300,6 +304,7 @@ public enum SchemaRevisionen {
 				case REV_29 -> new Revision29Updates();
 				case REV_30 -> new Revision30Updates();
 				case REV_31 -> new Revision31Updates();
+				case REV_33 -> new Revision33Updates();
 				default -> new RevisionNoUpdates(this);
 			};
 		}
