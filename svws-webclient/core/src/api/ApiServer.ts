@@ -150,6 +150,7 @@ import { SchuelerLernabschnittListeEintrag } from '../core/data/schueler/Schuele
 import { SchuelerLernabschnittsdaten } from '../core/data/schueler/SchuelerLernabschnittsdaten';
 import { SchuelerListeEintrag } from '../core/data/schueler/SchuelerListeEintrag';
 import { SchuelerSchulbesuchMerkmal } from '../core/data/schueler/SchuelerSchulbesuchMerkmal';
+import { SchuelerSchulbesuchSchule } from '../core/data/schueler/SchuelerSchulbesuchSchule';
 import { SchuelerSchulbesuchsdaten } from '../core/data/schueler/SchuelerSchulbesuchsdaten';
 import { SchuelerStammdaten } from '../asd/data/schueler/SchuelerStammdaten';
 import { SchuelerStatusKatalogEintrag } from '../asd/data/schueler/SchuelerStatusKatalogEintrag';
@@ -9575,59 +9576,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getSchuelerMerkmal für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/merkmal
-	 *
-	 * Gibt das SchuelerMerkmal zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Das SchuelerMerkmal
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SchuelerSchulbesuchMerkmal
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.
-	 *   Code 404: Kein SchuelerMerkmal mit der angegebenen ID gefunden.
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Das SchuelerMerkmal
-	 */
-	public async getSchuelerMerkmal(schema : string, id : number) : Promise<SchuelerSchulbesuchMerkmal> {
-		const path = "/db/{schema}/schueler/{id : \\d+}/merkmal"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
-		const text = result;
-		return SchuelerSchulbesuchMerkmal.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der PATCH-Methode patchSchuelerMerkmal für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/merkmal
-	 *
-	 * Patcht und Persistiert SchuelerMerkmale, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 204: Der Patch wurde erfolgreich ausgeführt.
-	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um SchuelerMerkmale zu ändern.
-	 *   Code 404: Kein SchuelerMerkmal mit der angegebenen ID gefunden
-	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {Partial<SchuelerSchulbesuchMerkmal>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 */
-	public async patchSchuelerMerkmal(data : Partial<SchuelerSchulbesuchMerkmal>, schema : string, id : number) : Promise<void> {
-		const path = "/db/{schema}/schueler/{id : \\d+}/merkmal"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = SchuelerSchulbesuchMerkmal.transpilerToJSONPatch(data);
-		return super.patchJSON(path, body);
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode getSchuelerSchulbesuch für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/schulbesuch
 	 *
 	 * Liest die Schulbesuchsdaten des Schülers zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.
@@ -10081,6 +10029,64 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode addBisherigeSchule für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{idSchueler : \d+}/bisherigeSchule
+	 *
+	 * Erstellt eine bisherige Schule, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die bisher besuchte Schule wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SchuelerSchulbesuchSchule
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um bisherige Schulen hinzuzufügen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<SchuelerSchulbesuchSchule>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idSchueler - der Pfad-Parameter idSchueler
+	 *
+	 * @returns Die bisher besuchte Schule wurde erfolgreich hinzugefügt.
+	 */
+	public async addBisherigeSchule(data : Partial<SchuelerSchulbesuchSchule>, schema : string, idSchueler : number) : Promise<SchuelerSchulbesuchSchule> {
+		const path = "/db/{schema}/schueler/{idSchueler : \\d+}/bisherigeSchule"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idSchueler\s*(:[^{}]+({[^{}]+})*)?}/g, idSchueler.toString());
+		const body : string = SchuelerSchulbesuchSchule.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return SchuelerSchulbesuchSchule.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addSchuelerMerkmal für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{idSchueler : \d+}/merkmal
+	 *
+	 * Erstellt neue SchuelerMerkmale, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Das SchuelerMerkmal wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SchuelerSchulbesuchMerkmal
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um SchuelerMerkmale hinzuzufügen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<SchuelerSchulbesuchMerkmal>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idSchueler - der Pfad-Parameter idSchueler
+	 *
+	 * @returns Das SchuelerMerkmal wurde erfolgreich hinzugefügt.
+	 */
+	public async addSchuelerMerkmal(data : Partial<SchuelerSchulbesuchMerkmal>, schema : string, idSchueler : number) : Promise<SchuelerSchulbesuchMerkmal> {
+		const path = "/db/{schema}/schueler/{idSchueler : \\d+}/merkmal"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idSchueler\s*(:[^{}]+({[^{}]+})*)?}/g, idSchueler.toString());
+		const body : string = SchuelerSchulbesuchMerkmal.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return SchuelerSchulbesuchMerkmal.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getSchuelerFuerAbschnitt für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/abschnitt/{abschnitt : \d+}
 	 *
 	 * Erstellt eine Liste aller Schüler des angegebenen Schuljahresabschnitts unter Angabe der ID, des Vor- und Nachnamens, der Klasse, des Jahrgangs, sein Status (z.B. aktiv), einer Sortierreihenfolge, ob sie in der Anwendung sichtbar bzw. änderbar sein sollen. Die schüler sind anhand der Klasse, des Nchnamens und des Vornamens sortiert.Es wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.
@@ -10240,6 +10246,88 @@ export class ApiServer extends BaseApi {
 		const ret = new ArrayList<UebergangsempfehlungKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(UebergangsempfehlungKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getBisherigeSchule für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/bisherigeSchule/{id : \d+}
+	 *
+	 * Gibt die bisher besuchte Schule zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die bisher besuchte Schule
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SchuelerSchulbesuchSchule
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.
+	 *   Code 404: Keine bisher besuchte Schule mit der angegebenen ID gefunden.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die bisher besuchte Schule
+	 */
+	public async getBisherigeSchule(schema : string, id : number) : Promise<SchuelerSchulbesuchSchule> {
+		const path = "/db/{schema}/schueler/bisherigeSchule/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return SchuelerSchulbesuchSchule.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchBisherigeSchule für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/bisherigeSchule/{id : \d+}
+	 *
+	 * Patcht und Persistiert eine bisher besuchte Schule, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Der Patch wurde erfolgreich ausgeführt.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um bisher besuchte Schulen zu ändern.
+	 *   Code 404: Keine bisher besuchte Schule mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<SchuelerSchulbesuchSchule>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchBisherigeSchule(data : Partial<SchuelerSchulbesuchSchule>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/schueler/bisherigeSchule/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = SchuelerSchulbesuchSchule.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteBisherigeSchule für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/bisherigeSchule/{id : \d+}
+	 *
+	 * Entfernt bisher besuchte Schulen, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine bisher besuchte Schule wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SchuelerSchulbesuchSchule
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um bisher besuchte Schulen zu entfernen.
+	 *   Code 404: Die bisher besuchte Schule ist nicht vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Eine bisher besuchte Schule wurde erfolgreich entfernt.
+	 */
+	public async deleteBisherigeSchule(schema : string, id : number) : Promise<SchuelerSchulbesuchSchule> {
+		const path = "/db/{schema}/schueler/bisherigeSchule/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return SchuelerSchulbesuchSchule.transpilerFromJSON(text);
 	}
 
 
@@ -10550,29 +10638,55 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode addSchuelerMerkmal für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/merkmal
+	 * Implementierung der GET-Methode getSchuelerMerkmal für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/merkmal/{id : \d+}
 	 *
-	 * Erstellt neue SchuelerMerkmale, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
+	 * Gibt das SchuelerMerkmal zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 201: Das SchuelerMerkmal wurde erfolgreich hinzugefügt.
+	 *   Code 200: Das SchuelerMerkmal
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: SchuelerSchulbesuchMerkmal
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um SchuelerMerkmale hinzuzufügen.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.
+	 *   Code 404: Kein SchuelerMerkmal mit der angegebenen ID gefunden.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Das SchuelerMerkmal
+	 */
+	public async getSchuelerMerkmal(schema : string, id : number) : Promise<SchuelerSchulbesuchMerkmal> {
+		const path = "/db/{schema}/schueler/merkmal/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return SchuelerSchulbesuchMerkmal.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchSchuelerMerkmal für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/merkmal/{id : \d+}
+	 *
+	 * Patcht und Persistiert SchuelerMerkmale, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Der Patch wurde erfolgreich ausgeführt.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um SchuelerMerkmale zu ändern.
+	 *   Code 404: Kein SchuelerMerkmal mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
 	 * @param {Partial<SchuelerSchulbesuchMerkmal>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Das SchuelerMerkmal wurde erfolgreich hinzugefügt.
+	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async addSchuelerMerkmal(data : Partial<SchuelerSchulbesuchMerkmal>, schema : string) : Promise<SchuelerSchulbesuchMerkmal> {
-		const path = "/db/{schema}/schueler/merkmal"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+	public async patchSchuelerMerkmal(data : Partial<SchuelerSchulbesuchMerkmal>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/schueler/merkmal/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = SchuelerSchulbesuchMerkmal.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
-		const text = result;
-		return SchuelerSchulbesuchMerkmal.transpilerFromJSON(text);
+		return super.patchJSON(path, body);
 	}
 
 

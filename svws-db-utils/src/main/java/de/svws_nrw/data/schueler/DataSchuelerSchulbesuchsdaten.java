@@ -15,6 +15,7 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOEntlassarten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerAbgaenge;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerMerkmale;
+import de.svws_nrw.db.dto.current.schild.schule.DTOMerkmale;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response.Status;
@@ -29,6 +30,9 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 	/** Ein Cache für den schnellen Zugriff auf den Katalog der Entlassarten. */
 	private final Map<String, DTOEntlassarten> mapEntlassarten;
 
+	/** Ein Cache für den schnellen Zugriff auf den Katalog der Merkmale */
+	private final Map<String, DTOMerkmale> merkmale;
+
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für das Core-DTO {@link SchuelerSchulbesuchsdaten}.
@@ -38,6 +42,7 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 	public DataSchuelerSchulbesuchsdaten(final DBEntityManager conn) {
 		super(conn);
 		mapEntlassarten = conn.queryAll(DTOEntlassarten.class).stream().collect(Collectors.toMap(e -> e.Bezeichnung, e -> e));
+		merkmale = conn.queryAll(DTOMerkmale.class).stream().collect(Collectors.toMap(m -> m.Kurztext, m -> m));
 	}
 
 
@@ -100,7 +105,7 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 		daten.sekIIWechsel = dtoSchueler.JahrWechsel_SII;
 
 		// Informationen zu besonderen Merkmalen für die Statistik
-		daten.merkmale = DataSchuelerMerkmale.mapMultiple(schuelerMerkmale);
+		daten.merkmale = DataSchuelerMerkmale.mapMultiple(schuelerMerkmale, merkmale);
 
 		// Informationen zu allen bisher besuchten Schulen
 		daten.alleSchulen = DataSchuelerSchulbesuchSchule.mapMultiple(schuelerAbgaenge, mapEntlassarten);

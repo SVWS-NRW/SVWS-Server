@@ -9,14 +9,9 @@ export class SchuelerSchulbesuchMerkmal extends JavaObject {
 	public id : number = 0;
 
 	/**
-	 * Die ID des Schülers.
-	 */
-	public idSchueler : number = 0;
-
-	/**
 	 * Der Kurztext des Merkmals
 	 */
-	public kurztext : string | null = null;
+	public idMerkmal : number | null = null;
 
 	/**
 	 * Das Datum, ab dem das Merkmal vorliegt.
@@ -52,10 +47,7 @@ export class SchuelerSchulbesuchMerkmal extends JavaObject {
 		if (obj.id === undefined)
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (obj.idSchueler === undefined)
-			throw new Error('invalid json format, missing attribute idSchueler');
-		result.idSchueler = obj.idSchueler;
-		result.kurztext = (obj.kurztext === undefined) ? null : obj.kurztext === null ? null : obj.kurztext;
+		result.idMerkmal = (obj.idMerkmal === undefined) ? null : obj.idMerkmal === null ? null : obj.idMerkmal;
 		result.datumVon = (obj.datumVon === undefined) ? null : obj.datumVon === null ? null : obj.datumVon;
 		result.datumBis = (obj.datumBis === undefined) ? null : obj.datumBis === null ? null : obj.datumBis;
 		return result;
@@ -64,8 +56,7 @@ export class SchuelerSchulbesuchMerkmal extends JavaObject {
 	public static transpilerToJSON(obj : SchuelerSchulbesuchMerkmal) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"idSchueler" : ' + obj.idSchueler.toString() + ',';
-		result += '"kurztext" : ' + ((obj.kurztext === null) ? 'null' : JSON.stringify(obj.kurztext)) + ',';
+		result += '"idMerkmal" : ' + ((obj.idMerkmal === null) ? 'null' : obj.idMerkmal.toString()) + ',';
 		result += '"datumVon" : ' + ((obj.datumVon === null) ? 'null' : JSON.stringify(obj.datumVon)) + ',';
 		result += '"datumBis" : ' + ((obj.datumBis === null) ? 'null' : JSON.stringify(obj.datumBis)) + ',';
 		result = result.slice(0, -1);
@@ -78,11 +69,8 @@ export class SchuelerSchulbesuchMerkmal extends JavaObject {
 		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
-		if (obj.idSchueler !== undefined) {
-			result += '"idSchueler" : ' + obj.idSchueler.toString() + ',';
-		}
-		if (obj.kurztext !== undefined) {
-			result += '"kurztext" : ' + ((obj.kurztext === null) ? 'null' : JSON.stringify(obj.kurztext)) + ',';
+		if (obj.idMerkmal !== undefined) {
+			result += '"idMerkmal" : ' + ((obj.idMerkmal === null) ? 'null' : obj.idMerkmal.toString()) + ',';
 		}
 		if (obj.datumVon !== undefined) {
 			result += '"datumVon" : ' + ((obj.datumVon === null) ? 'null' : JSON.stringify(obj.datumVon)) + ',';

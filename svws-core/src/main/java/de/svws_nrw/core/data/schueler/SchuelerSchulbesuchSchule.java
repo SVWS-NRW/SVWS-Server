@@ -15,7 +15,7 @@ import jakarta.validation.constraints.NotNull;
 public class SchuelerSchulbesuchSchule {
 
 	/** Die ID der Informationen zum vorigen Schulbesuch in der Datenbank. */
-	@Schema(description = "die ID der Informationen zum vorigen Schulbesuch in der Datenbank", example = "226984")
+	@Schema(description = "die ID der Informationen zum vorigen Schulbesuch in der Datenbank", example = "226984", accessMode = Schema.AccessMode.READ_ONLY)
 	public long id;
 
 	/** Die Schulnummer der Schule. */

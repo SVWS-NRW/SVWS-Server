@@ -65,6 +65,7 @@ public class Tabelle_SchuelerMerkmale extends SchemaTabelle {
 		setJavaSubPackage("schild.schueler");
 		setJavaClassName("DTOSchuelerMerkmale");
 		setJavaComment("Einträge der Merkmale (Individualdaten II) zum Schüler");
+		setPKAutoIncrement();
 	}
 
 }

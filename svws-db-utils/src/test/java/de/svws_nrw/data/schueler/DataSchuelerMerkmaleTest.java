@@ -12,19 +12,17 @@ import de.svws_nrw.core.data.schueler.SchuelerSchulbesuchMerkmal;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerMerkmale;
+import de.svws_nrw.db.dto.current.schild.schule.DTOMerkmale;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
@@ -36,24 +34,47 @@ import static org.mockito.Mockito.when;
 
 
 /** Diese Klasse testet die Klasse {@link DataSchuelerMerkmale} */
-@DisplayName("Diese Klasse testet die Klasse DataSchuelerSchulbesuchMerkmal")
-@ExtendWith(MockitoExtension.class)
+@DisplayName("Diese Klasse testet die Klasse DataSchuelerMerkmale")
 class DataSchuelerMerkmaleTest {
 
-	@Mock
-	private DBEntityManager conn;
+	private final DBEntityManager conn = mock(DBEntityManager.class);
 
-	@InjectMocks
 	private DataSchuelerMerkmale dataSchuelerMerkmale;
 
 	@BeforeAll
-	static void setUp() {
+	static void setUpAll() {
 		ASDCoreTypeUtils.initAll();
+	}
+
+	@BeforeEach
+	void setUp() {
+		final var merkmal = new DTOMerkmale(1L);
+		merkmal.Kurztext = "GANZTAG";
+		when(this.conn.queryAll(DTOMerkmale.class)).thenReturn(List.of(merkmal));
+		dataSchuelerMerkmale = new DataSchuelerMerkmale(conn, 123L);
+	}
+
+	@Test
+	@DisplayName("setAttributesRequiredOnCreation: id")
+	void setAttributesRequiredOnCreationTest() {
+		final var dto = new DTOSchuelerMerkmale(1L, 1001);
+		when(this.conn.queryByKey(DTOSchuelerMerkmale.class, 1L)).thenReturn(dto);
+
+		try (var mapperMock = Mockito.mockStatic(JSONMapper.class)) {
+			mapperMock.when(() -> JSONMapper.toMap(any(InputStream.class))).thenReturn(Map.of("id", 99L));
+
+			final var throwable = catchThrowable(() -> this.dataSchuelerMerkmale.addAsResponse(mock(InputStream.class)));
+
+			assertThat(throwable)
+					.isInstanceOf(ApiOperationException.class)
+					.hasMessage("Es werden weitere Attribute (idMerkmal) benötigt, damit die Entität erstellt werden kann.")
+					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+		}
 	}
 
 	@Test
 	@DisplayName("setAttributesNotPatchable: id")
-	void setAttributesNotPatchableTest() {
+	void setAttributesNotPatchableTest_id() {
 		final var dto = new DTOSchuelerMerkmale(1L, 1001);
 		when(this.conn.queryByKey(DTOSchuelerMerkmale.class, 1L)).thenReturn(dto);
 
@@ -70,19 +91,24 @@ class DataSchuelerMerkmaleTest {
 	}
 
 	@Test
-	@DisplayName("setAttributesRequiredOnCreation: idSchueler")
-	void setAttributesRequiredOnCreationTest() {
-		try (var mapperMock = Mockito.mockStatic(JSONMapper.class)) {
-			mapperMock.when(() -> JSONMapper.toMap(any(InputStream.class))).thenReturn(Map.of("kurztext", "abc"));
+	@DisplayName("setAttributesNotPatchable: idSchueler")
+	void setAttributesNotPatchableTest_idSchueler() {
+		final var dto = new DTOSchuelerMerkmale(1L, 1001);
+		when(this.conn.queryByKey(DTOSchuelerMerkmale.class, 1L)).thenReturn(dto);
 
-			final var throwable = catchThrowable(() -> this.dataSchuelerMerkmale.addAsResponse(mock(InputStream.class)));
+		try (var mapperMock = Mockito.mockStatic(JSONMapper.class)) {
+			mapperMock.when(() -> JSONMapper.toMap(any(InputStream.class))).thenReturn(Map.of("idSchueler", 99L));
+
+			final var throwable = catchThrowable(() -> this.dataSchuelerMerkmale.patchAsResponse(1L, mock(InputStream.class)));
 
 			assertThat(throwable)
 					.isInstanceOf(ApiOperationException.class)
-					.hasMessage("Es werden weitere Attribute (idSchueler) benötigt, damit die Entität erstellt werden kann.")
+					.hasMessage("Folgende Attribute werden für ein Patch nicht zugelassen: idSchueler.")
 					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 		}
 	}
+
+
 
 	@Test
 	@DisplayName("initDTO | Erfolg")
@@ -92,6 +118,20 @@ class DataSchuelerMerkmaleTest {
 		this.dataSchuelerMerkmale.initDTO(dto, 2L, null);
 
 		assertThat(dto.ID).isEqualTo(2L);
+	}
+
+	@Test
+	@DisplayName("initDTO | missing idSchueler")
+	void initDTOTest_idSchuelerMissing() {
+		final var dto = getDtoMerkmal();
+		dataSchuelerMerkmale = new DataSchuelerMerkmale(conn);
+
+		final var throwable = catchThrowable(() -> this.dataSchuelerMerkmale.initDTO(dto, 2L, null));
+
+		assertThat(throwable)
+				.isInstanceOf(ApiOperationException.class)
+				.hasMessage("Die ID des Schuelers darf nicht null sein.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
@@ -143,8 +183,7 @@ class DataSchuelerMerkmaleTest {
 		assertThat(this.dataSchuelerMerkmale.map(dto))
 				.isInstanceOf(SchuelerSchulbesuchMerkmal.class)
 				.hasFieldOrPropertyWithValue("id", dto.ID)
-				.hasFieldOrPropertyWithValue("idSchueler", dto.Schueler_ID)
-				.hasFieldOrPropertyWithValue("kurztext", dto.Kurztext)
+				.hasFieldOrPropertyWithValue("idMerkmal", 1L)
 				.hasFieldOrPropertyWithValue("datumVon", dto.DatumVon)
 				.hasFieldOrPropertyWithValue("datumBis", dto.DatumBis);
 	}
@@ -153,13 +192,13 @@ class DataSchuelerMerkmaleTest {
 	@DisplayName("mapMultiple | Erfolg")
 	void mapMultipleTest() {
 		final var dto = getDtoMerkmal();
-
-		assertThat(DataSchuelerMerkmale.mapMultiple(List.of(dto)))
+		final var merkmal = new DTOMerkmale(1L);
+		merkmal.Kurztext = "GANZTAG";
+		assertThat(DataSchuelerMerkmale.mapMultiple(List.of(dto), Map.of(merkmal.Kurztext, merkmal)))
 				.allSatisfy(item -> assertThat(item)
 						.isInstanceOf(SchuelerSchulbesuchMerkmal.class)
 						.hasFieldOrPropertyWithValue("id", dto.ID)
-						.hasFieldOrPropertyWithValue("idSchueler", dto.Schueler_ID)
-						.hasFieldOrPropertyWithValue("kurztext", dto.Kurztext)
+						.hasFieldOrPropertyWithValue("idMerkmal", 1L)
 						.hasFieldOrPropertyWithValue("datumVon", dto.DatumVon)
 						.hasFieldOrPropertyWithValue("datumBis", dto.DatumBis)
 				);
@@ -168,7 +207,7 @@ class DataSchuelerMerkmaleTest {
 	@Test
 	@DisplayName("mapMultiple | List is empty")
 	void mapMultipleTest_emptyList() {
-		assertThat(DataSchuelerMerkmale.mapMultiple(Collections.emptyList())).isNotNull().isEmpty();
+		assertThat(DataSchuelerMerkmale.mapMultiple(Collections.emptyList(), Collections.emptyMap())).isNotNull().isEmpty();
 	}
 
 	@ParameterizedTest
@@ -185,7 +224,7 @@ class DataSchuelerMerkmaleTest {
 					.hasMessage("IdPatch 35 ist ungleich dtoId 1")
 					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 			case "idSchueler" -> assertThat(expectedDTO.Schueler_ID).isEqualTo(value);
-			case "kurztext" -> assertThat(expectedDTO.Kurztext).isEqualTo(value);
+			case "idMerkmal" -> assertThat(expectedDTO.Kurztext).isEqualTo("GANZTAG");
 			case "datumVon" -> assertThat(expectedDTO.DatumVon).isEqualTo(value);
 			case "datumBis" -> assertThat(expectedDTO.DatumBis).isEqualTo(value);
 			default -> assertThat(throwable)
@@ -199,7 +238,7 @@ class DataSchuelerMerkmaleTest {
 		return Stream.of(
 				arguments("id", 35),
 				arguments("idSchueler", 1001L),
-				arguments("kurztext", "kurztext"),
+				arguments("idMerkmal", 1),
 				arguments("davonVon", "2007-08-01"),
 				arguments("datumBis", "2008-07-31"),
 				arguments("unknownArgument", "oh oh ! das wollen wir auf keinen Fall!")
@@ -215,7 +254,10 @@ class DataSchuelerMerkmaleTest {
 		final var throwable = catchThrowable(() -> this.dataSchuelerMerkmale.mapAttribute(expectedDTO, key, value, null));
 
 		switch (key) {
-			case "kurztext" -> assertThat(expectedDTO.Kurztext).isNull();
+			case "idMerkmal" -> assertThat(throwable)
+					.isInstanceOf(ApiOperationException.class)
+					.hasMessage("Attribut idMerkmal: Der Wert null ist nicht erlaubt")
+					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 			case "datumVon" -> assertThat(expectedDTO.DatumVon).isNull();
 			case "datumBis" -> assertThat(expectedDTO.DatumBis).isNull();
 			default -> assertThat(throwable)
@@ -227,7 +269,7 @@ class DataSchuelerMerkmaleTest {
 
 	private static Stream<Arguments> provideMappingAttributesWithNullValues() {
 		return Stream.of(
-				arguments("kurztext", null),
+				arguments("idMerkmal", null),
 				arguments("davonVon", null),
 				arguments("datumBis", null),
 				arguments("unknownArgument", "oh oh ! das wollen wir auf keinen Fall!")
@@ -240,9 +282,20 @@ class DataSchuelerMerkmaleTest {
 		assertThatNoException().isThrownBy(() -> this.dataSchuelerMerkmale.mapAttribute(getDtoMerkmal(), "id", 1L, null));
 	}
 
+	@Test
+	@DisplayName("mapAttribute | wrong idMerkmal")
+	void mapAttributeTest_wrongIdMerkmal() {
+		final var throwable = catchThrowable(() -> this.dataSchuelerMerkmale.mapAttribute(getDtoMerkmal(), "idMerkmal", 2L, null));
+
+		assertThat(throwable)
+				.isInstanceOf(ApiOperationException.class)
+				.hasMessage("Zur id 2 existiert kein Merkmal.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
 	private DTOSchuelerMerkmale getDtoMerkmal() {
 		final var dto = new DTOSchuelerMerkmale(1L, 1001);
-		dto.Kurztext = "kurztext";
+		dto.Kurztext = "GANZTAG";
 		dto.DatumVon = "2007-08-01";
 		dto.DatumBis = "2008-07-31";
 		return dto;
