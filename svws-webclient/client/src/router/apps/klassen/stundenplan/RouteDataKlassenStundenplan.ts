@@ -4,11 +4,11 @@ import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
 import { routeApp } from "~/router/apps/RouteApp";
-
-import { routeKlassenStundenplanDaten } from "~/router/apps/klassen/stundenplan/RouteKlassenStundenplanDaten";
+import { routeKlassenStundenplan } from "./RouteKlassenStundenplan";
 
 
 interface RouteStateKlassenDataStundenplan extends RouteStateInterface {
+	idSchuljahresabschnitt: number;
 	idKlasse: number | undefined;
 	auswahl: StundenplanListeEintrag | undefined;
 	mapStundenplaene: Map<number, StundenplanListeEintrag>;
@@ -18,6 +18,7 @@ interface RouteStateKlassenDataStundenplan extends RouteStateInterface {
 }
 
 const defaultState = <RouteStateKlassenDataStundenplan> {
+	idSchuljahresabschnitt: -1,
 	idKlasse: undefined,
 	auswahl: undefined,
 	mapStundenplaene: new Map(),
@@ -69,13 +70,27 @@ export class RouteDataKlassenStundenplan extends RouteData<RouteStateKlassenData
 		await api.config.setValue("klasse.stundenplan.ganzerStundenplan", value ? "true" : "false");
 	}
 
-	public async ladeListe() {
-		const listStundenplaene = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, routeApp.data.aktAbschnitt.value.id);
+	public async ladeListe(idKlasse : number) : Promise<boolean> {
+		const idSchuljahresabschnitt = routeApp.data.aktAbschnitt.value.id;
+		if (idSchuljahresabschnitt === this._state.value.idSchuljahresabschnitt)
+			return false;
+		const listStundenplaene = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, idSchuljahresabschnitt);
 		const mapStundenplaene = new Map<number, StundenplanListeEintrag>();
 		const auswahl = listStundenplaene.size() > 0 ? listStundenplaene.get(0) : undefined;
 		for (const l of listStundenplaene)
 			mapStundenplaene.set(l.id, l);
-		this.setPatchedDefaultState({ idKlasse: this._state.value.idKlasse, auswahl, mapStundenplaene });
+		// Lade ggf. den Schüler-Stundenplan
+		let manager = undefined;
+		const wochentyp = 0;
+		let tmpKW = undefined;
+		if (auswahl !== undefined) {
+			const daten = await api.server.getKlassenStundenplan(api.schema, auswahl.id, idKlasse);
+			manager = new StundenplanManager(daten);
+			// Wochentyp und Kalenderwoche prüfen...
+			tmpKW = this.getKalenderWoche(manager, wochentyp, undefined, undefined);
+		}
+		this.setPatchedDefaultState({ idSchuljahresabschnitt, idKlasse: this._state.value.idKlasse, auswahl, mapStundenplaene, manager, wochentyp: tmpKW?.wochentyp, kalenderwoche: tmpKW?.kalenderwoche });
+		return true;
 	}
 
 	private getKalenderWoche(manager: StundenplanManager, wochentyp: number, kwjahr: number | undefined, kw: number | undefined) : { wochentyp?: number, kalenderwoche?: StundenplanKalenderwochenzuordnung } {
@@ -92,13 +107,13 @@ export class RouteDataKlassenStundenplan extends RouteData<RouteStateKlassenData
 		return result;
 	}
 
-	public async setEintrag(idKlasse: number, idStundenplan: number | undefined, wochentyp: number, kwjahr: number | undefined, kw: number | undefined) {
+	public async setEintrag(idKlasse: number, idStundenplan: number | undefined, wochentypNr: number, kwjahr: number | undefined, kw: number | undefined) {
 		// Prüfe, ob die vorge Auswahl mit der neuen Auswahl übereinstimmt. In diesem Fall ist keine Aktion nötig
 		const vorige_auswahl = this._state.value.auswahl;
 		if ((vorige_auswahl !== undefined) && (this._state.value.idKlasse === idKlasse) && (vorige_auswahl.id === idStundenplan)) {
-			if ((wochentyp !== this._state.value.wochentyp) || (kwjahr !== this._state.value.kalenderwoche?.jahr)
+			if ((wochentypNr !== this._state.value.wochentyp) || (kwjahr !== this._state.value.kalenderwoche?.jahr)
 				|| (kw !== this._state.value.kalenderwoche?.kw)) {
-				const tmpKW = this.getKalenderWoche(this.manager, wochentyp, kwjahr, kw);
+				const tmpKW = this.getKalenderWoche(this.manager, wochentypNr, kwjahr, kw);
 				this.setPatchedState({ wochentyp: tmpKW.wochentyp, kalenderwoche: tmpKW.kalenderwoche });
 				return;
 			}
@@ -119,24 +134,23 @@ export class RouteDataKlassenStundenplan extends RouteData<RouteStateKlassenData
 		const daten = await api.server.getKlassenStundenplan(api.schema, auswahl.id, idKlasse);
 		const manager = new StundenplanManager(daten);
 		// Wochentyp und Kalenderwoche prüfen...
-		const tmpKW = this.getKalenderWoche(manager, wochentyp, kwjahr, kw);
+		const { wochentyp, kalenderwoche } = this.getKalenderWoche(manager, wochentypNr, kwjahr, kw);
 		// Und zuletzt den internen State anpassen, um die Raktivität der vue-Komponenten zu triggern
-		this.setPatchedState({ idKlasse, auswahl, manager, wochentyp: tmpKW.wochentyp, kalenderwoche: tmpKW.kalenderwoche });
+		this.setPatchedState({ idKlasse, auswahl, manager, wochentyp, kalenderwoche });
 	}
 
 	public gotoStundenplan = async (value: StundenplanListeEintrag | undefined) => {
-		await RouteManager.doRoute(routeKlassenStundenplanDaten.getRoute({ idStundenplan: value?.id, wochentyp: 0, kw: "" }));
+		await RouteManager.doRoute(routeKlassenStundenplan.getRoute({ idStundenplan: value?.id, wochentyp: 0, kw: "" }));
 	}
 
 	public gotoWochentyp = async (wochentyp: number) => {
-		await RouteManager.doRoute(routeKlassenStundenplanDaten.getRoute({ wochentyp }));
+		await RouteManager.doRoute(routeKlassenStundenplan.getRoute({ wochentyp }));
 	}
 
 	public gotoKalenderwoche = async (value: StundenplanKalenderwochenzuordnung | undefined) => {
 		const kw = (value === undefined) ? "" : value.jahr + "." + value.kw;
 		const wochentyp = (value === undefined) ? "" : value.wochentyp;
-		await RouteManager.doRoute(routeKlassenStundenplanDaten.getRoute({ wochentyp, kw }));
+		await RouteManager.doRoute(routeKlassenStundenplan.getRoute({ wochentyp, kw }));
 	}
 
 }
-

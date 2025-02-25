@@ -15,7 +15,7 @@ export class RouteFachStundenplan extends RouteNode<RouteDataFachStundenplan, Ro
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN ], "schule.faecher.stundenplan", "stundenplan/:idStundenplan(\\d+)?/:wochentyp(\\d+)?/:kw(\\d+\\.\\d+)?", SFachStundenplan, new RouteDataFachStundenplan());
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Stundenplan";
 		super.children = [];

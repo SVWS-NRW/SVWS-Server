@@ -4,7 +4,6 @@ import type { StundenplanRaumProps } from "~/components/stundenplan/raum/SStunde
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
-import { routeApp } from "~/router/apps/RouteApp";
 import { routeStundenplan, type RouteStundenplan } from "./RouteStundenplan";
 import { api } from "~/router/Api";
 import { ConfigElement } from "~/components/Config";

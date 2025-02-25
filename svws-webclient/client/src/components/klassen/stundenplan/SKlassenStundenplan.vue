@@ -11,21 +11,19 @@
 			</div>
 		</template>
 		<template v-else>
-			<stundenplan-auswahl :stundenplan :map-stundenplaene :goto-stundenplan :goto-wochentyp :goto-kalenderwoche :manager :wochentyp :kalenderwoche :ganzer-stundenplan :set-ganzer-stundenplan
-				autofocus />
-			<router-view :key="$route.hash" />
+			<stundenplan-auswahl :stundenplan="stundenplan()" :map-stundenplaene :goto-stundenplan :goto-wochentyp :goto-kalenderwoche :manager :wochentyp
+				:kalenderwoche :ganzer-stundenplan :set-ganzer-stundenplan autofocus />
+			<stundenplan-klasse :id :ignore-empty :manager :wochentyp :kalenderwoche />
 		</template>
 	</div>
 </template>
 
 <script setup lang="ts">
 
-	import type { StundenplanAuswahlProps } from "@ui";
+	import type { KlassenStundenplanProps } from './SKlassenStundenplanProps';
 
-	defineProps<StundenplanAuswahlProps>();
+	defineProps<KlassenStundenplanProps>();
 
-	const print = () => {
-		window.print();
-	};
+	const print = () => window.print();
 
 </script>
