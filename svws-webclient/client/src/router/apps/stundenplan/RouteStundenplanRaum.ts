@@ -17,7 +17,7 @@ export class RouteStundenplanRaum extends RouteNode<any, RouteStundenplan> {
 		super(Schulform.values(), [
 			BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN,
 		], "stundenplan.raum", "raum", SStundenplanRaum);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Räume";
 		api.config.addElements([

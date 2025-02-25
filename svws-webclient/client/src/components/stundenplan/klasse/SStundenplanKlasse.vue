@@ -129,7 +129,7 @@
 			<stundenplan-klasse mode-pausenaufsichten="tooltip" :id="klasse.id" :manager="stundenplanManager" :wochentyp="()=>wochentypAnzeige" :kalenderwoche="() => undefined"
 				:use-drag-and-drop="hatUpdateKompetenz" :drag-data="() => dragData" :on-drag :on-drop class="h-full overflow-scroll pr-4" @update:click="u => toRaw(auswahl) !== u ? auswahl = u : auswahl = undefined" />
 			<!-- Card für die zusätzlichen Einstellungen zum Unterricht -->
-			<template v-if="(auswahl !== undefined) && (serverMode === ServerMode.DEV)">
+			<template v-if="(auswahl !== undefined)">
 				<div class="flex flex-col gap-4 min-w-96">
 					<div class="text-headline-md">Raumzuordnung {{ unterrichtBezeichnung }} ({{ schuelerzahl }} SuS)</div>
 					<div>{{ auswahl.lehrer.size() > 1 ? 'Lehrkräfte' : 'Lehrkraft' }} {{ [...auswahl.lehrer].map(l => stundenplanManager().lehrerGetByIdOrException(l).kuerzel).join(', ') }}</div>
@@ -164,7 +164,7 @@
 	import type { StundenplanAnsichtDragData, StundenplanAnsichtDropZone } from "@ui";
 	import type { StundenplanKlasseProps } from "./SStundenplanKlasseProps";
 	import type { List, StundenplanKlasse, StundenplanRaum } from "@core";
-	import { ArrayList, StundenplanKurs, StundenplanKlassenunterricht, Fach, StundenplanUnterricht, StundenplanZeitraster, HashSet, StundenplanSchiene, BenutzerKompetenz, ListUtils, Wochentag, ServerMode } from "@core";
+	import { ArrayList, StundenplanKurs, StundenplanKlassenunterricht, Fach, StundenplanUnterricht, StundenplanZeitraster, HashSet, StundenplanSchiene, BenutzerKompetenz, ListUtils, Wochentag } from "@core";
 	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<StundenplanKlasseProps>();
