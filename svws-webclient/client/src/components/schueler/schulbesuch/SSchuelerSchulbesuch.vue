@@ -2,22 +2,22 @@
 	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Vor der Aufnahme besucht">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input class="contentFocusField" v-autofocus placeholder="Name der Schule" :model-value="data.vorigeSchulnummer" @change="vorigeSchulnummer=>patch({ vorigeSchulnummer })" type="text" />
-				<svws-ui-text-input placeholder="allgemeine Herkunft" :model-value="data.vorigeAllgHerkunft" @change="vorigeAllgHerkunft=>patch({ vorigeAllgHerkunft })" type="text" />
+				<svws-ui-text-input class="contentFocusField" v-autofocus placeholder="Name der Schule" :model-value="data.vorigeSchulnummer" @change="vorigeSchulnummer=>patch({ vorigeSchulnummer })" />
+				<svws-ui-text-input placeholder="allgemeine Herkunft" :model-value="data.vorigeAllgHerkunft" @change="vorigeAllgHerkunft=>patch({ vorigeAllgHerkunft })" />
 				<svws-ui-text-input placeholder="Entlassen am" :model-value="data.vorigeEntlassdatum" @change="vorigeEntlassdatum=>patch({ vorigeEntlassdatum })" type="date" />
-				<svws-ui-text-input placeholder="Entlassjahrgang" :model-value="data.vorigeEntlassjahrgang" @change="vorigeEntlassjahrgang=>patch({ vorigeEntlassjahrgang })" type="text" />
-				<svws-ui-text-input placeholder="Bemerkung" :model-value="data.vorigeBemerkung" @change="vorigeBemerkung=>patch({ vorigeBemerkung })" type="text" span="full" />
+				<svws-ui-text-input placeholder="Entlassjahrgang" :model-value="data.vorigeEntlassjahrgang" @change="vorigeEntlassjahrgang=>patch({ vorigeEntlassjahrgang })" />
+				<svws-ui-text-input placeholder="Bemerkung" :model-value="data.vorigeBemerkung" @change="vorigeBemerkung=>patch({ vorigeBemerkung })" span="full" />
 				<svws-ui-spacing />
-				<svws-ui-text-input placeholder="Entlassgrund" :model-value="data.vorigeEntlassgrundID?.toString()" @change="vorigeEntlassgrundID => vorigeEntlassgrundID && patch({ vorigeEntlassgrundID: parseInt(vorigeEntlassgrundID) })" type="text" />
-				<svws-ui-text-input placeholder="höchster allg.-bild. Abschluss" :model-value="data.vorigeAbschlussartID" @change="vorigeAbschlussartID=>patch({ vorigeAbschlussartID })" type="text" />
-				<svws-ui-select title="Versetzung" v-model="vorigeArtLetzteVersetzung" :items="herkunftsarten" :item-text="(h: Herkunftsarten) => getBezeichnung(h) + ' (' + h.daten.kuerzel + ')'" :statistics="showstatistic" class="col-span-full" />
+				<svws-ui-text-input placeholder="Entlassgrund" :model-value="data.vorigeEntlassgrundID?.toString()" @change="vorigeEntlassgrundID => vorigeEntlassgrundID && patch({ vorigeEntlassgrundID: parseInt(vorigeEntlassgrundID) })" />
+				<svws-ui-text-input placeholder="höchster allgemeinbildender Abschluss" :model-value="data.vorigeAbschlussartID" @change="vorigeAbschlussartID=>patch({ vorigeAbschlussartID })" />
+				<svws-ui-select title="Versetzung" v-model="vorigeArtLetzteVersetzung" :items="herkunftsarten" :item-text="h => getBezeichnung(h) + ' (' + h.daten.kuerzel + ')'" :statistics="showstatistic" class="col-span-full" removable />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Entlassung von eigener Schule">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input class="contentFocusField" placeholder="Entlassung am" :model-value="data.entlassungDatum" @change="entlassungDatum=>patch({ entlassungDatum })" type="date" />
-				<svws-ui-text-input placeholder="Entlassjahrgang" :model-value="data.entlassungJahrgang" @change="entlassungJahrgang=>patch({ entlassungJahrgang })" type="text" />
-				<svws-ui-text-input placeholder="Bemerkung oder Entlassgrund" :model-value="data.entlassungGrundID?.toString()" @change="entlassungGrundID=> entlassungGrundID && patch({ entlassungGrundID: parseInt(entlassungGrundID)})" span="full" />
+				<svws-ui-text-input placeholder="Entlassjahrgang" :model-value="data.entlassungJahrgang" @change="entlassungJahrgang=>patch({ entlassungJahrgang })" />
+				<svws-ui-text-input placeholder="Bemerkung oder Entlassgrund" :model-value="data.entlassungGrundID?.toString()" @change="entlassungGrundID=> entlassungGrundID && patch({ entlassungGrundID: parseInt(entlassungGrundID)})" span="full" disabled />
 				<svws-ui-spacing />
 				<svws-ui-text-input placeholder="Art des Abschlusses" :model-value="data.entlassungAbschlussartID" @change="entlassungAbschlussartID=>patch({ entlassungAbschlussartID })" span="full" />
 			</svws-ui-input-wrapper>
@@ -29,7 +29,7 @@
 				</svws-ui-checkbox>
 			</template>
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input placeholder="Name der Schule" :model-value="data.aufnehmdendSchulnummer" @change="aufnehmdendSchulnummer=>patch({ aufnehmdendSchulnummer })" type="text" span="full" />
+				<svws-ui-text-input placeholder="Name der Schule" :model-value="data.aufnehmdendSchulnummer" @change="aufnehmdendSchulnummer=>patch({ aufnehmdendSchulnummer })" span="full" />
 				<svws-ui-text-input placeholder="Wechseldatum" :model-value="data.aufnehmdendWechseldatum" @change="aufnehmdendWechseldatum=>patch({ aufnehmdendWechseldatum })" type="date" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
@@ -44,7 +44,7 @@
 		<svws-ui-content-card title="Sekundarstufe I">
 			<svws-ui-input-wrapper>
 				<svws-ui-input-number class="contentFocusField" placeholder="Jahr Wechsel Sek I" :model-value="data.sekIWechsel" @change="sekIWechsel => patch({ sekIWechsel })" :min="1900" :max="2050" />
-				<svws-ui-text-input placeholder="Erste Schulform Sek I" :model-value="data.sekIErsteSchulform" @change="sekIErsteSchulform=>patch({ sekIErsteSchulform })" type="text" />
+				<svws-ui-text-input placeholder="Erste Schulform Sek I" :model-value="data.sekIErsteSchulform" @change="sekIErsteSchulform=>patch({ sekIErsteSchulform })" />
 				<svws-ui-input-number placeholder="Jahr Wechsel Sek II" :model-value="data.sekIIWechsel" @change="sekIIWechsel => patch({ sekIIWechsel })" :min="1900" :max="2050" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
@@ -89,7 +89,7 @@
 			const artID = +props.data.vorigeArtLetzteVersetzung;
 			return Herkunftsarten.getByID(artID) || undefined;
 		},
-		set: (value) => void props.patch({ vorigeArtLetzteVersetzung:  (value === undefined) ? null : "" + value.daten.id })
+		set: (value) => void props.patch({ vorigeArtLetzteVersetzung:  (value === undefined) ? null : "" + value.daten.id }),
 	});
 
 	const herkunftsarten = computed<Herkunftsarten[]>(() => {
