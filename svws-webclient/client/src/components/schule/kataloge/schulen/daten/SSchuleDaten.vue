@@ -7,15 +7,14 @@
 				</svws-ui-checkbox>
 				<svws-ui-input-number placeholder="Sortierung" :model-value="schuleListeManager().daten().sortierung"
 					@change="sortierung => sortierung && patch({ sortierung })" />
+				<svws-ui-text-input placeholder="Schulnummer" :model-value="schuleListeManager().daten().schulnummer" readonly required />
+				<svws-ui-select title="Schulform" :items="Schulform.values()" :item-text="i => i.daten(schuljahr)?.text ?? '—'"
+					:model-value="schuleListeManager().daten().idSchulform ? Schulform.data().getWertByID(schuleListeManager().daten().idSchulform ?? -1) : undefined"
+					@update:model-value="schulform => patch({ idSchulform: schulform?.daten(schuljahr)?.id ?? null})" removable />
 				<svws-ui-text-input class="contentFocusField" placeholder="Kürzel" :model-value="schuleListeManager().daten().kuerzel" :valid="kuerzelIsValid"
 					@change="patchKuerzel" :max-len="10" />
 				<svws-ui-text-input placeholder="Kurzbezeichnung" :model-value="schuleListeManager().daten().kurzbezeichnung" required :max-len="40"
 					@change="patchKurzBezeichnung" :valid="v => mandatoryInputIsValid(v, 40)" />
-				<svws-ui-text-input placeholder="Schulnummer" :model-value="schuleListeManager().daten().schulnummer" :valid="schulnummerIsValid"
-					@change="patchSchulnummer" required :min-len="6" :max-len="6" />
-				<svws-ui-select title="Schulform" :items="Schulform.values()" :item-text="i => i.daten(schuljahr)?.text ?? '—'"
-					:model-value="schuleListeManager().daten().idSchulform ? Schulform.data().getWertByID(schuleListeManager().daten().idSchulform ?? -1) : undefined"
-					@update:model-value="schulform => patch({ idSchulform: schulform?.daten(schuljahr)?.id ?? null})" removable />
 				<svws-ui-text-input placeholder="Schulname" :model-value="schuleListeManager().daten().name" :valid="v => mandatoryInputIsValid(v, 120)"
 					@change="patchSchulname" required :max-len="120" />
 				<svws-ui-text-input placeholder="Schulleitung" :model-value="schuleListeManager().daten().schulleiter" :valid="v => optionalInputIsValid(v, 40)"
@@ -61,21 +60,6 @@
 			return false;
 		for (const schuleintrag of props.schuleListeManager().liste.list()) {
 			if ((schuleintrag.id !== props.schuleListeManager().auswahl().id) && JavaObject.equalsTranspiler(schuleintrag.kuerzel, kuerzel))
-				return false;
-		}
-		return true;
-	}
-
-	function patchSchulnummer(schulnummer : string | null) {
-		if (schulnummerIsValid(schulnummer))
-			void props.patch({ schulnummer: schulnummer ?? undefined });
-	}
-
-	function schulnummerIsValid(schulnummer : string | null) {
-		if ((schulnummer === null) || (JavaString.isBlank(schulnummer)) || (!/^\d{6}$/.test(schulnummer)))
-			return false;
-		for (const schuleintrag of props.schuleListeManager().liste.list()) {
-			if ((schuleintrag.id !== props.schuleListeManager().auswahl().id) && JavaObject.equalsTranspiler(schuleintrag.schulnummer, schulnummer))
 				return false;
 		}
 		return true;

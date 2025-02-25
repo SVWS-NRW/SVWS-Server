@@ -92,7 +92,7 @@ public final class DataSchulen extends DataManagerRevised<Long, DTOSchuleNRW, Sc
 				if (id != dto.ID)
 					throw new ApiOperationException(Status.BAD_REQUEST, "Id %d der PatchMap ist ungleich der id %d vom Dto".formatted(id, dto.ID));
 			}
-			case "schulnummer" -> updateSchulnummer(dto, value);
+			case "schulnummer" -> mapSchulnummer(dto, value);
 			case "kuerzel" -> updateKuerzel(dto, value);
 			case "kurzbezeichnung" -> dto.KurzBez = JSONMapper.convertToString(value, false, false, 40, "kurzbezeichnung");
 			case "name" -> dto.Name = JSONMapper.convertToString(value, false, false, 120, "name");
@@ -126,21 +126,17 @@ public final class DataSchulen extends DataManagerRevised<Long, DTOSchuleNRW, Sc
 		}
 	}
 
-	private void updateSchulnummer(final DTOSchuleNRW dto, final Object value) throws ApiOperationException {
-		// schulnummer ist unveraendert
-		if ((dto.SchulNr != null) && dto.SchulNr.equals(value))
-			return;
-
+	private void mapSchulnummer(final DTOSchuleNRW dto, final Object value) throws ApiOperationException {
 		final String schulnummer = JSONMapper.convertToString(value, false, false, 6, "schulnummer");
-		final List<DTOSchuleNRW> schulen = conn.queryList(DTOSchuleNRW.QUERY_BY_SCHULNR, DTOSchuleNRW.class, schulnummer);
-		// schulnummer bereits vorhanden
-		if (!schulen.isEmpty()) {
-			final DTOSchuleNRW dtoSchule = schulen.getFirst();
-			if ((dtoSchule != null) && (dtoSchule.ID != dto.ID))
-				throw new ApiOperationException(Status.BAD_REQUEST, "Die Schulnummer %s ist bereits vergeben".formatted(schulnummer));
-		}
-		//schulnummer update
-		dto.SchulNr = schulnummer;
+		if (schulnummer.startsWith("1")) {
+			dto.SchulNr = schulnummer;
+			dto.SchulNr_SIM = schulnummer;
+		} else if (schulnummer.startsWith("9")) {
+			dto.SchulNr = String.valueOf(dto.ID + 200000);
+			dto.SchulNr_SIM = schulnummer;
+		} else
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"Die Schulnummer %s ist ungültig. Gültige Schulnummern starten mit der Ziffer 1 (intern) oder 9 (extern).".formatted(schulnummer));
 	}
 
 	private void updateKuerzel(final DTOSchuleNRW dto, final Object value) throws ApiOperationException {

@@ -212,13 +212,40 @@ class DataSchulenTest {
 	}
 
 	@Test
-	@DisplayName("mapAttribute | updateSchulnummer | Erfolg")
-	void mapAttributeTest_schulnummer() throws ApiOperationException {
+	@DisplayName("mapAttribute | updateSchulnummer | interne Schule | Erfolg")
+	void mapAttributeTest_interneSchulnummer() throws ApiOperationException {
 		final var expectedDTO = new DTOSchuleNRW(1L, "1");
 
-		this.dataSchulen.mapAttribute(expectedDTO, "schulnummer", "2", null);
+		this.dataSchulen.mapAttribute(expectedDTO, "schulnummer", "123456", null);
 
-		assertThat(expectedDTO).hasFieldOrPropertyWithValue("SchulNr", "2");
+		assertThat(expectedDTO)
+				.hasFieldOrPropertyWithValue("SchulNr", "123456")
+				.hasFieldOrPropertyWithValue("SchulNr_SIM", "123456");
+	}
+
+	@Test
+	@DisplayName("mapAttribute | updateSchulnummer | externe Schule | Erfolg")
+	void mapAttributeTest_externeSchulnummer() throws ApiOperationException {
+		final var expectedDTO = new DTOSchuleNRW(123L, "1");
+
+		this.dataSchulen.mapAttribute(expectedDTO, "schulnummer", "987654", null);
+
+		assertThat(expectedDTO)
+				.hasFieldOrPropertyWithValue("SchulNr", "200123")
+				.hasFieldOrPropertyWithValue("SchulNr_SIM", "987654");
+	}
+
+	@Test
+	@DisplayName("mapAttribute | updateSchulnummer | falsche Schulnummer")
+	void mapAttributeTest_wrongSchulnummer() {
+		final var expectedDTO = new DTOSchuleNRW(1L, "1");
+
+		final var throwable = catchThrowable(() -> this.dataSchulen.mapAttribute(expectedDTO, "schulnummer", "222333", null));
+
+		assertThat(throwable)
+				.isInstanceOf(ApiOperationException.class)
+				.hasMessage("Die Schulnummer 222333 ist ungültig. Gültige Schulnummern starten mit der Ziffer 1 (intern) oder 9 (extern).")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
@@ -232,20 +259,6 @@ class DataSchulenTest {
 		verifyNoInteractions(this.conn);
 	}
 
-	@Test
-	@DisplayName("mapAttribute | updateSchulnummer | bereits vorhanden")
-	void mapAttributeTest_schulnummerDuplicate() {
-		final var expectedDTO = new DTOSchuleNRW(1L, "1");
-		when(this.conn.queryList(DTOSchuleNRW.QUERY_BY_SCHULNR, DTOSchuleNRW.class, "123456"))
-				.thenReturn(List.of(new DTOSchuleNRW(2L, "123456")));
-
-		final var throwable = catchThrowable(() ->  this.dataSchulen.mapAttribute(expectedDTO, "schulnummer", "123456", null));
-
-		assertThat(throwable)
-				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Die Schulnummer 123456 ist bereits vergeben")
-				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
-	}
 
 	@Test
 	@DisplayName("mapAttribute | kuerzel doppelt vergeben")
