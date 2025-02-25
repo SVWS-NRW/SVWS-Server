@@ -1,10 +1,7 @@
 <template>
-	<stundenplan-ansicht :mode-pausenaufsichten="modePausenaufsichten" :show-zeitachse="showZeitachse" :ignore-empty="ignoreEmpty"
-		:manager="manager" :wochentyp="wochentyp" :kalenderwoche="kalenderwoche" :use-drag-and-drop="useDragAndDrop" :drag-data="dragData"
-		:get-schienen="getSchienen" :get-unterricht="getUnterricht" :zeitraster-hat-unterricht-mit-wochentyp="zeitrasterHatUnterrichtMitWochentyp"
-		:get-pausenzeiten="getPausenzeiten" :schneiden-pausenzeiten-zeitraster="schneidenPausenzeitenZeitraster"
-		:get-pausenzeiten-wochentag="getPausenzeitenWochentag" :get-pausenaufsichten-pausenzeit="getPausenaufsichtenPausenzeit"
-		:on-drag="onDrag" :on-drop="onDrop">
+	<stundenplan-ansicht :mode-pausenaufsichten :show-zeitachse :ignore-empty :manager :wochentyp :kalenderwoche :use-drag-and-drop :drag-data :get-schienen
+		:get-unterricht :zeitraster-hat-unterricht-mit-wochentyp :get-pausenzeiten :schneiden-pausenzeiten-zeitraster :get-pausenzeiten-wochentag
+		:get-pausenaufsichten-pausenzeit :on-drag :on-drop>
 		<template #unterricht="{ unterricht }">
 			<div class="font-bold flex place-items-center group" title="Unterricht">
 				<span v-if="useDragAndDrop" class="icon i-ri-draggable inline-block icon-ui-contrast-75 -ml-1 opacity-60 group-hover:opacity-100 group-hover:icon-ui-contrast-75" />
@@ -35,7 +32,7 @@
 
 	const props = withDefaults(defineProps<StundenplanFachProps>(), {
 		mode: 'schueler',
-		modePausenaufsichten: 'normal',
+		modePausenaufsichten: 'aus',
 		showZeitachse: true,
 		zeitrasterSteps: 5,
 		ignoreEmpty: false,
