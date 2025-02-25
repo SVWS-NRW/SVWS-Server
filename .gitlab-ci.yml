@@ -160,25 +160,6 @@ sign_artifacts:
             - "./build/signing/**/*"
             - "./build/signing"
 
-sign_snapshot_installer:
-    stage: sign
-    image: svwsnrw/dockerrunner:17
-    only:
-        refs:
-            - dev
-    needs:
-        - job: build_snapshot_windows
-    before_script:
-        - chmod u+x config/signing/*.sh
-    script:
-        - ./gradlew signWindowsInstaller
-    artifacts:
-        paths:
-            - artifacts_windows/
-        exclude:
-            - "./build/signing/**/*"
-            - "./build/signing"
-
 publish_all:
     stage: publish
     rules:
