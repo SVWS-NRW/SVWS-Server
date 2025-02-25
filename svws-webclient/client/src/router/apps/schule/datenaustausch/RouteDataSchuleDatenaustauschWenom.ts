@@ -68,6 +68,18 @@ export class RouteDataSchuleDatenaustauschWenom extends RouteData<RouteStateSchu
 		try {
 			return await api.server.getOAuthClientSecret(api.schema, 1);
 		} catch (e) {
+			if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
+				if (e.response.status === 404) {
+					try {
+						const data = new OAuth2ClientConnection();
+						data.id = OAuth2ServerTyp.WENOM.getId();
+						data.clientID = OAuth2ServerTyp.WENOM.getId().toString();
+						return await api.server.addOAuthClientSecret(data, api.schema);
+					} catch {
+						return null;
+					}
+				}
+			}
 			return null;
 		}
 	}
@@ -139,21 +151,21 @@ export class RouteDataSchuleDatenaustauschWenom extends RouteData<RouteStateSchu
 		}
 	}
 
-	wenomSetCredentials = async (url: string, token: string): Promise<OAuth2ClientConnection | null> => {
-		const wenom = OAuth2ServerTyp.WENOM;
-		const oauth = new OAuth2ClientConnection();
-		oauth.id = wenom.getId();
-		oauth.clientID = "1";
-		oauth.authServer = url;
-		oauth.clientSecret = token;
-		let result = null;
+	wenomSetCredentials = async (url: string, token: string): Promise<boolean> => {
+		if (this.connectionInfo === null)
+			return false;
+		const patch = <Partial<OAuth2ClientConnection>>{
+			authServer: url,
+			clientSecret: token,
+		};
+		const id = OAuth2ServerTyp.WENOM.getId();
 		try {
-			result = await api.server.addOAuthClientSecret(oauth, api.schema);
+			await api.server.patchOAuthSecret(patch, api.schema, id);
 		} catch (e) {
-			result = null;
+			return false;
 		}
-		this.setPatchedDefaultState({ connectionInfo: result });
-		return result;
+		this.setPatchedDefaultState({ connectionInfo: Object.assign(patch, this.connectionInfo) });
+		return true;
 	}
 
 	wenomPatchCredentialsSecret = async (clientSecret: string): Promise<void> => {

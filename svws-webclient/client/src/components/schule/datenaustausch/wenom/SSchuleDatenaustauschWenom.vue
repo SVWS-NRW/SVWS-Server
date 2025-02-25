@@ -37,7 +37,7 @@
 				<svws-ui-button id="contentFocusField" :type="(aktuell === 'setup') ? 'primary' : 'secondary'" @click="onSelect('setup')" style="justify-content: normal">
 					<div class="flex flex-col gap-1">
 						<p class="text-left font-bold ">Verbindungsdaten einrichten</p>
-						<p class="text-left font-normal">{{ (connInfo !== null) ? 'vorhanden' : 'keine vorhanden' }}{{ (connInfo !== null) ? (connected ? ', verbunden' : ', nicht verbunden') : '' }}</p>
+						<p class="text-left font-normal">{{ hasConnectionInfo ? 'vorhanden' : 'keine vorhanden' }}{{ hasConnectionInfo ? (connected ? ', verbunden' : ', nicht verbunden') : '' }}</p>
 					</div>
 				</svws-ui-button>
 				<template v-if="connected">
@@ -63,7 +63,7 @@
 				</div>
 				<div v-if="aktuell === 'setup'" class="max-w-196">
 					<div class="text-headline-md mb-4">Verbindung zum Webnotenmanager einrichten</div>
-					<template v-if="connInfo === null">
+					<template v-if="!hasConnectionInfo">
 						<svws-ui-input-wrapper>
 							<svws-ui-text-input class="contentFocusField" v-model.trim="url" type="text" placeholder="URL" />
 							<svws-ui-text-input v-model.trim="token" type="text" placeholder="Secret" />
@@ -78,16 +78,16 @@
 							<svws-ui-button type="primary" @click="removeVerbindungsdaten">
 								Verbindungsdaten entfernen
 							</svws-ui-button>
-							<svws-ui-button type="primary" @click="tryConnect">
+							<svws-ui-button type="primary" @click="tryConnect(connectionInfo()!)">
 								Verbindungsdaten prüfen
 							</svws-ui-button>
 						</svws-ui-input-wrapper>
-						<svws-ui-input-wrapper v-if="connInfo.tlsCertIsKnown === false" class="mt-8">
+						<svws-ui-input-wrapper v-if="connInfo!.tlsCertIsKnown === false" class="mt-8">
 							<div class="text-headline-md">TLS-Zertifikat des Servers </div>
 							<div>
 								{{ cert }}
 							</div>
-							<svws-ui-checkbox :model-value="connInfo.tlsCertIsTrusted" @update:model-value="value => trustCertificate(value)">
+							<svws-ui-checkbox :model-value="connInfo!.tlsCertIsTrusted" @update:model-value="value => trustCertificate(value)">
 								Zertifikat vertrauen
 							</svws-ui-checkbox>
 						</svws-ui-input-wrapper>
@@ -168,7 +168,7 @@
 	import { computed, onMounted, ref } from "vue";
 	import type { SchuleDatenaustauschWenomProps } from './SSchuleDatenaustauschWenomProps';
 	import type { OAuth2ClientConnection, SimpleOperationResponse } from "@core";
-	import { ENMDaten, ENMServerConfigElement, ENMServerConfigSMTP } from "@core";
+	import { ENMDaten, ENMServerConfigElement, ENMServerConfigSMTP, JavaString } from "@core";
 
 	const props = defineProps<SchuleDatenaustauschWenomProps>();
 
@@ -184,31 +184,44 @@
 		checkENMLehrerEMailAdressen();
 		status.value = null;
 		spinning.value = true;
-		await tryConnect();
+		const connInfo = props.connectionInfo();
+		url.value = connInfo?.authServer ?? ''; // Die URL soll zu Beginn geladen werden
+		if (connInfo !== null)
+			await tryConnect(connInfo);
 		spinning.value = false;
+	});
+
+	const hasConnectionInfo = computed<boolean>(() => {
+		const connInfo = props.connectionInfo();
+		return (connInfo !== null) && (!JavaString.isBlank(connInfo.authServer)) && (!JavaString.isBlank(connInfo.clientSecret));
 	});
 
 	const connInfo = computed<OAuth2ClientConnection | null>(() => props.connectionInfo());
 
 	async function updateCredentials() {
+		const connInfo = props.connectionInfo();
+		if (connInfo === null)
+			return;
 		status.value = null;
 		spinning.value = true;
-		await props.setCredentials(url.value, token.value);
-		await tryConnect();
+		const success = await props.setCredentials(url.value, token.value);
+		if (success) {
+			connInfo.authServer = url.value;
+			connInfo.clientSecret = token.value;
+			token.value = ''; // das Token soll nach dem Einlesen oder Setzen nicht mehr sichtbar sein
+			await tryConnect(connInfo);
+		}
 		spinning.value = false;
 	}
 
-	async function tryConnect() {
-		const connInfo = props.connectionInfo();
-		url.value = connInfo?.authServer ?? ''; // Die URL soll zu Beginn geladen werden
-		token.value = ''; // das Token soll nach dem Einlesen oder Setzen nicht mehr sichtbar sein
-		if (connInfo !== null) {
-			const res = await props.connect();
-			if (res.success)
-				aktuell.value = 'synchronize';
-			else
-				status.value = res;
-		}
+	async function tryConnect(connInfo : OAuth2ClientConnection) {
+		if (JavaString.isBlank(connInfo.authServer) || JavaString.isBlank(connInfo.clientSecret))
+			return;
+		const res = await props.connect();
+		if (res.success)
+			aktuell.value = 'synchronize';
+		else
+			status.value = res;
 	}
 
 	const certChain = computed<string[]>(() => {

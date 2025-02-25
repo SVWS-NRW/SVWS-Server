@@ -6,22 +6,22 @@ export class OAuth2ClientConnection extends JavaObject {
 	/**
 	 * Die ID des OAuth2 Client Secrets.
 	 */
-	public id : number = 0;
+	public id : number = -1;
 
 	/**
 	 * Die URL des Auth-Servers.
 	 */
-	public authServer : string | null = null;
+	public authServer : string | null = "";
 
 	/**
 	 * Die Client-ID für diesen Auth-Server.
 	 */
-	public clientID : string | null = null;
+	public clientID : string | null = "";
 
 	/**
 	 * Das Client-Secret für die Client ID für diesen Auth-Server.
 	 */
-	public clientSecret : string | null = null;
+	public clientSecret : string | null = "";
 
 	/**
 	 * Das TLS-Zertifikat, welches von dem Auth-Server verwendet wird.

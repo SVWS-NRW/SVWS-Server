@@ -160,6 +160,9 @@ public final class DataOauthClientSecrets extends DataManager<Long> {
 				throw new ApiOperationException(Status.CONFLICT, "Es existiert bereits ein Datensatz für den OAuth2-Servertyp %s."
 						.formatted(serverTyp.toString()));
 			final DTOSchuleOAuthSecrets toPersist = new DTOSchuleOAuthSecrets(data.id, data.authServer, data.clientID, data.clientSecret);
+			toPersist.TLSCert = data.tlsCert;
+			toPersist.TLSCertIsKnown = data.tlsCertIsKnown;
+			toPersist.TLSCertIsTrusted = data.tlsCertIsTrusted;
 			// Persistiere das DTO in der Datenbank
 			if (!conn.transactionPersist(toPersist)) {
 				conn.transactionRollback();

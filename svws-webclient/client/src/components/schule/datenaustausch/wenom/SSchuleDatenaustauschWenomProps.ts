@@ -7,7 +7,7 @@ export interface SchuleDatenaustauschWenomProps {
 	mapEnmInitialKennwoerter: () => JavaMap<number, string>;
 	connect: () => Promise<SimpleOperationResponse>;
 	trustCertificate: (value: boolean) => Promise<void>;
-	setCredentials: (url: string, token: string) => Promise<OAuth2ClientConnection | null>;
+	setCredentials: (url: string, token: string) => Promise<boolean>;
 	removeCredentials: () => Promise<void>;
 	synchronize: () => Promise<SimpleOperationResponse>;
 	download: () => Promise<SimpleOperationResponse>;
