@@ -3,8 +3,7 @@
 		<div class="h-full min-w-128 flex flex-col gap-y-8 overflow-y-auto px-6">
 			<template v-if="eintrag !== undefined">
 				<div v-if="(eintrag !== undefined) && (!eintrag.isInConfig)" class="flex flex-col gap-4">
-					<s-schema-uebersicht-add-existing :schema="eintrag.name" :add-existing-schema-to-config :set-logs :loading :set-loading :set-status
-						:is-open="currentAction === 'config'" @opened="(isOpen) => setCurrentAction('config', isOpen)" />
+					<s-schema-uebersicht-add-existing :schema="eintrag.name" :add-existing-schema-to-config :loading :set-status :is-open="currentAction === 'config'" @opened="(isOpen) => setCurrentAction('config', isOpen)" />
 				</div>
 				<div v-if="eintrag.isSVWS || revisionNotUpToDate" class="flex flex-col gap-4">
 					<div class="text-headline-md">Sicherung</div>
@@ -57,8 +56,8 @@
 								</svws-ui-button>
 							</template>
 						</ui-card>
-						<s-schema-uebersicht-restore v-if="(eintrag !== undefined) && (eintrag.isInConfig)" :restore-schema :set-logs :loading :set-loading :set-status :is-open="currentAction === 'restore'" @opened="(isOpen) => setCurrentAction('restore', isOpen)" />
-						<s-schema-uebersicht-migrate v-if="(eintrag !== undefined) && (eintrag.isInConfig)" :migrate-schema :target-schema="eintrag.name" :migration-quellinformationen :set-logs :loading :set-loading :set-status :is-open="currentAction === 'migrate'" @opened="(isOpen: boolean) => setCurrentAction('migrate', isOpen)" />
+						<s-schema-uebersicht-restore v-if="(eintrag !== undefined) && (eintrag.isInConfig)" :restore-schema :loading :set-status :is-open="currentAction === 'restore'" @opened="(isOpen) => setCurrentAction('restore', isOpen)" />
+						<s-schema-uebersicht-migrate v-if="(eintrag !== undefined) && (eintrag.isInConfig)" :migrate-schema :target-schema="eintrag.name" :migration-quellinformationen :loading :set-status :is-open="currentAction === 'migrate'" @opened="isOpen => setCurrentAction('migrate', isOpen)" />
 					</div>
 				</div>
 			</template>
@@ -108,14 +107,10 @@
 		open: false,
 	});
 
-	function setLogs(value: List<string | null> | undefined) {
-		return logs.value = value;
-	}
-	function setLoading(value: boolean) {
-		return loading.value = value;
-	}
-	function setStatus(value: boolean | undefined) {
-		return status.value = value;
+	function setStatus(loadingV: boolean, statusV?: boolean, logsV?: List<string | null>) {
+		logs.value = logsV;
+		loading.value = loadingV;
+		status.value = statusV;
 	}
 
 	function clear() {

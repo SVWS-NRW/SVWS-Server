@@ -24,10 +24,8 @@
 
 	const props = defineProps<{
 		duplicateSchema: (formData: FormData, schema: string) => Promise<SimpleOperationResponse>;
-		setLogs: (value: List<string | null> | undefined) => void;
-		setStatus: (value: boolean | undefined) => void;
 		loading: boolean;
-		setLoading: (value: boolean) => void;
+		setStatus: (loading: boolean, status?: boolean, logs?: List<string | null>) => void;
 		validatorUsername: (username: string | null) => boolean;
 		isOpen: boolean;
 		schema: string;
@@ -42,15 +40,13 @@
 	const password = ref<string>('');
 
 	async function actionFunction() {
-		props.setLoading(true);
+		props.setStatus(true);
 		const formData = new FormData();
 		formData.append('schemaUsername', user.value);
 		formData.append('schemaUserPassword', password.value);
 		const result = await props.duplicateSchema(formData, schemaNeu.value);
-		props.setLogs(result.log);
-		props.setStatus(result.success);
-		props.setLoading(false);
 		schemaNeu.value = '';
+		props.setStatus(false, result.success, result.log);
 	}
 
 </script>

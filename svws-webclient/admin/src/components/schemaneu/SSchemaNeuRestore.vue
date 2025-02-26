@@ -29,10 +29,8 @@
 
 	const props = defineProps<{
 		importSchema: (formData: FormData, schema: string) => Promise<SimpleOperationResponse>;
-		setLogs: (value: List<string | null> | undefined) => void;
-		setStatus: (value: boolean | undefined) => void;
+		setStatus: (loading: boolean, status?: boolean, logs?: List<string | null>) => void;
 		loading: boolean;
-		setLoading: (value: boolean) => void;
 		validatorUsername: (username: string | null) => boolean;
 		isOpen: boolean;
 	}>();
@@ -56,18 +54,16 @@
 	async function actionFunction() {
 		if (file.value === null)
 			return;
-		props.setLoading(true);
+		props.setStatus(true);
 		const formData = new FormData();
 		formData.append("database", file.value);
 		formData.append('schemaUsername', user.value);
 		formData.append('schemaUserPassword', password.value);
 		const result = await props.importSchema(formData, schema.value);
-		props.setLogs(result.log);
-		props.setStatus(result.success);
-		props.setLoading(false);
 		schema.value = '';
 		user.value = '';
 		password.value = '';
+		props.setStatus(false, result.success, result.log);
 	}
 
 </script>

@@ -53,10 +53,8 @@
 		migrateSchema: (formData: FormData) => Promise<SimpleOperationResponse>;
 		targetSchema?: string;
 		migrationQuellinformationen: () => SchemaMigrationQuelle;
-		setLogs: (value: List<string | null> | undefined) => void;
-		setStatus: (value: boolean | undefined) => void;
+		setStatus: (loading: boolean, status?: boolean, logs?: List<string | null>) => void;
 		loading: boolean;
-		setLoading: (value: boolean) => void;
 		isOpen: boolean;
 	}>();
 
@@ -77,7 +75,7 @@
 	const zielUserPassword = shallowRef("");
 
 	async function actionFunction() {
-		props.setLoading(true);
+		props.setStatus(true);
 		const formData = new FormData();
 		if (file.value !== null) {
 			formData.append("database", file.value);
@@ -94,8 +92,7 @@
 		formData.append('schemaUserPassword', zielUserPassword.value);
 		try {
 			const result = await props.migrateSchema(formData);
-			props.setLogs(result.log);
-			props.setStatus(result.success);
+			props.setStatus(false, result.success, result.log);
 			if (result.success) {
 				zielSchema.value = '';
 				zielUserPassword.value = '';
@@ -105,7 +102,6 @@
 			console.log(e);
 			props.setStatus(false);
 		}
-		props.setLoading(false);
 	}
 
 	const file = shallowRef<File | null>(null);
@@ -114,13 +110,6 @@
 		const target = event.target as HTMLInputElement;
 		if (target.files)
 			file.value = target.files[0];
-		clear();
-	}
-
-	function clear() {
-		props.setLoading(false);
-		props.setLogs(undefined);
-		props.setStatus(undefined);
 	}
 
 </script>

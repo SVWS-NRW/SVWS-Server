@@ -27,10 +27,8 @@
 	const props = defineProps<{
 		addExistingSchemaToConfig: ((data: BenutzerKennwort, schema: string) => Promise<void>);
 		schema: string;
-		setLogs: (value: List<string | null> | undefined) => void;
-		setStatus: (value: boolean | undefined) => void;
+		setStatus: (loading: boolean, status?: boolean, logs?: List<string | null>) => void;
 		loading: boolean;
-		setLoading: (value: boolean) => void;
 		isOpen: boolean;
 	}>();
 
@@ -42,7 +40,7 @@
 	const password = ref<string>('');
 
 	async function actionFunction() {
-		props.setLoading(true);
+		props.setStatus(true);
 		const data = new BenutzerKennwort();
 		data.user = user.value;
 		data.password = password.value;
@@ -51,16 +49,7 @@
 		await props.addExistingSchemaToConfig(data, props.schema);
 		user.value = '';
 		password.value = '';
-		props.setLoading(false);
-		clear();
-	}
-
-	function clear() {
-		props.setLogs(undefined);
-		props.setStatus(undefined);
-		props.setLoading(false);
-		user.value = '';
-		password.value = '';
+		props.setStatus(false);
 	}
 
 </script>

@@ -25,10 +25,8 @@
 
 	const props = defineProps<{
 		addSchema: ((data: BenutzerKennwort, schema: string) => Promise<SimpleOperationResponse>);
-		setLogs: (value: List<string | null> | undefined) => void;
-		setStatus: (value: boolean | undefined) => void;
+		setStatus: (loading: boolean, status?: boolean, logs?: List<string | null>) => void;
 		loading: boolean;
-		setLoading: (value: boolean) => void;
 		validatorUsername: (username: string | null) => boolean;
 		isOpen: boolean;
 	}>();
@@ -42,18 +40,16 @@
 	const password = ref<string>('');
 
 	async function actionFunction() {
-		props.setLoading(true);
+		props.setStatus(true);
 		const data = new BenutzerKennwort();
 		data.user = user.value;
 		data.password = password.value;
 		let result = new SimpleOperationResponse();
 		result = await props.addSchema(data, schemaname.value);
-		props.setLogs(result.log);
-		props.setStatus(result.success);
 		schemaname.value = '';
 		user.value = '';
 		password.value = '';
-		props.setLoading(false);
+		props.setStatus(false, result.success, result.log);
 	}
 
 </script>

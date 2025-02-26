@@ -22,10 +22,8 @@
 
 	const props = defineProps<{
 		restoreSchema: (formData: FormData) => Promise<SimpleOperationResponse>;
-		setLogs: (value: List<string | null> | undefined) => void;
-		setStatus: (value: boolean | undefined) => void;
+		setStatus: (loading: boolean, status?: boolean, logs?: List<string | null>) => void;
 		loading: boolean;
-		setLoading: (value: boolean) => void;
 		isOpen: boolean;
 	}>();
 
@@ -40,26 +38,18 @@
 		if (target.files) {
 			file.value = target.files[0];
 		}
-		clear();
+		props.setStatus(false);
 	}
 
 	async function actionFunction() {
 		if (file.value === null)
 			return;
-		props.setLoading(true);
+		props.setStatus(true);
 		const formData = new FormData();
 		formData.append("database", file.value);
 		const result = await props.restoreSchema(formData);
-		props.setLogs(result.log);
-		props.setStatus(result.success);
 		file.value = null;
-		props.setLoading(false);
-	}
-
-	function clear() {
-		props.setLoading(false);
-		props.setLogs(undefined);
-		props.setStatus(undefined);
+		props.setStatus(false, result.success, result.log);
 	}
 
 </script>
