@@ -21,7 +21,7 @@
 					</svws-ui-input-wrapper>
 					<div v-else class="flex flex-col gap-2 -mt-5">
 						<div class="font-bold text-button">Quell-Datenbank: Access-Datei (.mdb) hochladen</div>
-						<input type="file" @change="onFileChanged" :disabled="loadingFunction().value" accept=".mdb">
+						<input type="file" @change="onFileChanged" :disabled="loading" accept=".mdb">
 					</div>
 					<svws-ui-input-wrapper v-if="targetSchema === undefined">
 						<div class="text-button -mb-1 mt-2">Ziel-Datenbank (wird erstellt)</div>
@@ -33,8 +33,8 @@
 			</div>
 		</div>
 		<template #buttonFooterLeft>
-			<svws-ui-button :disabled="(migrationQuellinformationen().dbms === 'mdb' && !file) || (zielUsername === 'root') || loadingFunction().value" title="Migrieren" @click="actionFunction" :is-loading="loadingFunction().value" class="w-fit">
-				<svws-ui-spinner v-if="loadingFunction().value" spinning />
+			<svws-ui-button :disabled="(migrationQuellinformationen().dbms === 'mdb' && !file) || (zielUsername === 'root') || loading" title="Migrieren" @click="actionFunction" :is-loading="loading" class="w-fit">
+				<svws-ui-spinner v-if="loading" spinning />
 				<span v-else class="icon i-ri-play-line" />
 				Migrieren
 			</svws-ui-button>
@@ -44,7 +44,7 @@
 
 <script setup lang="ts">
 
-	import { type ShallowRef, shallowRef } from "vue";
+	import { shallowRef } from "vue";
 	import type { SchemaMigrationQuelle } from "../SchemaMigrationQuelle";
 	import type { List } from "@core/java/util/List";
 	import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
@@ -53,9 +53,10 @@
 		migrateSchema: (formData: FormData) => Promise<SimpleOperationResponse>;
 		targetSchema?: string;
 		migrationQuellinformationen: () => SchemaMigrationQuelle;
-		logsFunction: () => ShallowRef<List<string | null> | undefined>;
-		statusFunction: () => ShallowRef<boolean | undefined>;
-		loadingFunction: () => ShallowRef<boolean>;
+		setLogs: (value: List<string | null> | undefined) => void;
+		setStatus: (value: boolean | undefined) => void;
+		loading: boolean;
+		setLoading: (value: boolean) => void;
 		isOpen: boolean;
 	}>();
 
@@ -76,7 +77,7 @@
 	const zielUserPassword = shallowRef("");
 
 	async function actionFunction() {
-		props.loadingFunction().value = true;
+		props.setLoading(true);
 		const formData = new FormData();
 		if (file.value !== null) {
 			formData.append("database", file.value);
@@ -93,8 +94,8 @@
 		formData.append('schemaUserPassword', zielUserPassword.value);
 		try {
 			const result = await props.migrateSchema(formData);
-			props.logsFunction().value = result.log;
-			props.statusFunction().value = result.success;
+			props.setLogs(result.log);
+			props.setStatus(result.success);
 			if (result.success) {
 				zielSchema.value = '';
 				zielUserPassword.value = '';
@@ -102,9 +103,9 @@
 			}
 		} catch (e) {
 			console.log(e);
-			props.statusFunction().value = false;
+			props.setStatus(false);
 		}
-		props.loadingFunction().value = false;
+		props.setLoading(false);
 	}
 
 	const file = shallowRef<File | null>(null);
@@ -117,9 +118,9 @@
 	}
 
 	function clear() {
-		props.loadingFunction().value = false;
-		props.logsFunction().value = undefined;
-		props.statusFunction().value = undefined;
+		props.setLoading(false);
+		props.setLogs(undefined);
+		props.setStatus(undefined);
 	}
 
 </script>

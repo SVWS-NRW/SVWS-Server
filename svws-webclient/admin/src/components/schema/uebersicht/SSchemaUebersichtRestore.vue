@@ -2,11 +2,11 @@
 	<ui-card icon="i-ri-device-recover-line" title="Backup wiederherstellen" subtitle="Daten werden aus einem Backup wiederhergestellt" :is-open @update:is-open="(open) => emit('opened', open)">
 		<div class="space-y-4">
 			<div class="font-bold text-button">Quell-Datenbank: SQLite-Datenbank (.sqlite) hochladen</div>
-			<input type="file" @change="onFileChanged" :disabled="loadingFunction().value" accept=".sqlite">
+			<input type="file" @change="onFileChanged" :disabled="loading" accept=".sqlite">
 		</div>
 		<template #buttonFooterLeft>
-			<svws-ui-button :disabled="!file || loadingFunction().value" :is-loading="loadingFunction().value" title="Wiederherstellen" @click="actionFunction" class="mt-4 w-fit">
-				<svws-ui-spinner v-if="loadingFunction().value" spinning />
+			<svws-ui-button :disabled="!file || loading" :is-loading="loading" title="Wiederherstellen" @click="actionFunction" class="mt-4 w-fit">
+				<svws-ui-spinner v-if="loading" spinning />
 				<span v-else class="icon i-ri-play-line" />
 				Wiederherstellen
 			</svws-ui-button>
@@ -16,15 +16,16 @@
 
 <script setup lang="ts">
 
+	import { ref } from "vue";
 	import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 	import type { List } from "@core/java/util/List";
-	import { type ShallowRef, ref } from "vue";
 
 	const props = defineProps<{
 		restoreSchema: (formData: FormData) => Promise<SimpleOperationResponse>;
-		logsFunction: () => ShallowRef<List<string | null> | undefined>;
-		statusFunction: () => ShallowRef<boolean | undefined>;
-		loadingFunction: () => ShallowRef<boolean>;
+		setLogs: (value: List<string | null> | undefined) => void;
+		setStatus: (value: boolean | undefined) => void;
+		loading: boolean;
+		setLoading: (value: boolean) => void;
 		isOpen: boolean;
 	}>();
 
@@ -45,20 +46,20 @@
 	async function actionFunction() {
 		if (file.value === null)
 			return;
-		props.loadingFunction().value = true;
+		props.setLoading(true);
 		const formData = new FormData();
 		formData.append("database", file.value);
 		const result = await props.restoreSchema(formData);
-		props.logsFunction().value = result.log;
-		props.statusFunction().value = result.success;
+		props.setLogs(result.log);
+		props.setStatus(result.success);
 		file.value = null;
-		props.loadingFunction().value = false;
+		props.setLoading(false);
 	}
 
 	function clear() {
-		props.loadingFunction().value = false;
-		props.logsFunction().value = undefined;
-		props.statusFunction().value = undefined;
+		props.setLoading(false);
+		props.setLogs(undefined);
+		props.setStatus(undefined);
 	}
 
 </script>

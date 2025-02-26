@@ -7,8 +7,8 @@
 			<svws-ui-text-input v-model.trim="password" required placeholder="Passwort" />
 		</div>
 		<template #buttonFooterLeft>
-			<svws-ui-button :disabled="(user === 'root') || (schemaNeu.length === 0) || (user.length === 0) || (password.length === 0) || (schema === schemaNeu) || loadingFunction().value" title="Duplizieren" @click="actionFunction" :is-loading="loadingFunction().value" class="mt-4">
-				<svws-ui-spinner v-if="loadingFunction().value" spinning />
+			<svws-ui-button :disabled="(user === 'root') || (schemaNeu.length === 0) || (user.length === 0) || (password.length === 0) || (schema === schemaNeu) || loading" title="Duplizieren" @click="actionFunction" :is-loading="loading" class="mt-4">
+				<svws-ui-spinner v-if="loading" spinning />
 				<span v-else class="icon i-ri-play-line" />
 				Duplizieren
 			</svws-ui-button>
@@ -18,15 +18,16 @@
 
 <script setup lang="ts">
 
-	import { ref, type ShallowRef } from "vue";
+	import { ref } from "vue";
 	import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 	import type { List } from "@core/java/util/List";
 
 	const props = defineProps<{
 		duplicateSchema: (formData: FormData, schema: string) => Promise<SimpleOperationResponse>;
-		logsFunction: () => ShallowRef<List<string | null> | undefined>;
-		statusFunction: () => ShallowRef<boolean | undefined>;
-		loadingFunction: () => ShallowRef<boolean>;
+		setLogs: (value: List<string | null> | undefined) => void;
+		setStatus: (value: boolean | undefined) => void;
+		loading: boolean;
+		setLoading: (value: boolean) => void;
 		validatorUsername: (username: string | null) => boolean;
 		isOpen: boolean;
 		schema: string;
@@ -41,14 +42,14 @@
 	const password = ref<string>('');
 
 	async function actionFunction() {
-		props.loadingFunction().value = true;
+		props.setLoading(true);
 		const formData = new FormData();
 		formData.append('schemaUsername', user.value);
 		formData.append('schemaUserPassword', password.value);
 		const result = await props.duplicateSchema(formData, schemaNeu.value);
-		props.logsFunction().value = result.log;
-		props.statusFunction().value = result.success;
-		props.loadingFunction().value = false;
+		props.setLogs(result.log);
+		props.setStatus(result.success);
+		props.setLoading(false);
 		schemaNeu.value = '';
 	}
 

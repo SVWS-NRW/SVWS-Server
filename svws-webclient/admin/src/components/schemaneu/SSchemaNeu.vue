@@ -15,18 +15,18 @@
 			<div class="page page-flex-row">
 				<div class="min-w-fit flex flex-col gap-y-4 overflow-y-auto px-6">
 					<!-- Neues leeres Schema anlegen -->
-					<s-schema-neu-leer :add-schema :logs-function :loading-function :status-function :validator-username :is-open="currentAction === 'neu'" @opened="(isOpen) => setCurrentAction('neu', isOpen)" />
+					<s-schema-neu-leer :add-schema :set-logs :loading :set-loading :set-status :validator-username :is-open="currentAction === 'neu'" @opened="(isOpen) => setCurrentAction('neu', isOpen)" />
 					<!-- Backup in neues Schema importieren -->
-					<s-schema-neu-restore :import-schema :logs-function :loading-function :status-function :validator-username :is-open="currentAction === 'restore'" @opened="(isOpen) => setCurrentAction('restore', isOpen)" />
+					<s-schema-neu-restore :import-schema :set-logs :loading :set-loading :set-status :validator-username :is-open="currentAction === 'restore'" @opened="(isOpen) => setCurrentAction('restore', isOpen)" />
 					<!-- In Neues Schema migrieren -->
-					<s-schema-neu-migrate :migrate-schema :migration-quellinformationen :logs-function :loading-function :status-function :validator-username :is-open="currentAction === 'migrate'" @opened="(isOpen) => setCurrentAction('migrate', isOpen)" />
+					<s-schema-neu-migrate :migrate-schema :migration-quellinformationen :set-logs :loading :set-loading :set-status :validator-username :is-open="currentAction === 'migrate'" @opened="(isOpen) => setCurrentAction('migrate', isOpen)" />
 					<!-- Das ausgewählte Schema in ein neues Schema duplizieren -->
-					<s-schema-neu-duplicate v-if="schema !== undefined" :duplicate-schema :logs-function :loading-function :status-function :is-open="currentAction === 'duplicate'" @opened="(isOpen) => setCurrentAction('duplicate', isOpen)" :validator-username :schema />
+					<s-schema-neu-duplicate v-if="schema !== undefined" :duplicate-schema :set-logs :loading :set-loading :set-status :is-open="currentAction === 'duplicate'" @opened="(isOpen) => setCurrentAction('duplicate', isOpen)" :validator-username :schema />
 				</div>
 				<div class="min-w-fit grow">
 					<log-box :logs="logs" :status="status">
 						<template #button>
-							<svws-ui-button v-if="status !== undefined" type="transparent" @click="clearLog" title="Log verwerfen">Log verwerfen </svws-ui-button>
+							<svws-ui-button v-if="status !== undefined" type="transparent" @click="clear" title="Log verwerfen">Log verwerfen </svws-ui-button>
 						</template>
 					</log-box>
 				</div>
@@ -54,9 +54,15 @@
 		open: false,
 	});
 
-	const logsFunction = () => logs;
-	const loadingFunction = () => loading;
-	const statusFunction = () => status;
+	function setLogs(value: List<string | null> | undefined) {
+		return logs.value = value;
+	}
+	function setLoading(value: boolean) {
+		return loading.value = value;
+	}
+	function setStatus(value: boolean | undefined) {
+		return status.value = value;
+	}
 
 	function setCurrentAction(newAction: string, open: boolean) {
 		if(newAction === oldAction.value.name && !open)
@@ -69,7 +75,7 @@
 			currentAction.value = "";
 	}
 
-	function clearLog() {
+	function clear() {
 		loading.value = false;
 		logs.value = undefined;
 		status.value = undefined;

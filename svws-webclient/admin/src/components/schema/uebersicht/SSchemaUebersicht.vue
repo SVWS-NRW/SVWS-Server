@@ -3,7 +3,7 @@
 		<div class="h-full min-w-128 flex flex-col gap-y-8 overflow-y-auto px-6">
 			<template v-if="eintrag !== undefined">
 				<div v-if="(eintrag !== undefined) && (!eintrag.isInConfig)" class="flex flex-col gap-4">
-					<s-schema-uebersicht-add-existing :schema="eintrag.name" :add-existing-schema-to-config :logs-function :loading-function :status-function
+					<s-schema-uebersicht-add-existing :schema="eintrag.name" :add-existing-schema-to-config :set-logs :loading :set-loading :set-status
 						:is-open="currentAction === 'config'" @opened="(isOpen) => setCurrentAction('config', isOpen)" />
 				</div>
 				<div v-if="eintrag.isSVWS || revisionNotUpToDate" class="flex flex-col gap-4">
@@ -57,8 +57,8 @@
 								</svws-ui-button>
 							</template>
 						</ui-card>
-						<s-schema-uebersicht-restore v-if="(eintrag !== undefined) && (eintrag.isInConfig)" :restore-schema :logs-function :loading-function :status-function :is-open="currentAction === 'restore'" @opened="(isOpen) => setCurrentAction('restore', isOpen)" />
-						<s-schema-uebersicht-migrate v-if="(eintrag !== undefined) && (eintrag.isInConfig)" :migrate-schema :target-schema="eintrag.name" :migration-quellinformationen :logs-function :loading-function :status-function :is-open="currentAction === 'migrate'" @opened="(isOpen: boolean) => setCurrentAction('migrate', isOpen)" />
+						<s-schema-uebersicht-restore v-if="(eintrag !== undefined) && (eintrag.isInConfig)" :restore-schema :set-logs :loading :set-loading :set-status :is-open="currentAction === 'restore'" @opened="(isOpen) => setCurrentAction('restore', isOpen)" />
+						<s-schema-uebersicht-migrate v-if="(eintrag !== undefined) && (eintrag.isInConfig)" :migrate-schema :target-schema="eintrag.name" :migration-quellinformationen :set-logs :loading :set-loading :set-status :is-open="currentAction === 'migrate'" @opened="(isOpen: boolean) => setCurrentAction('migrate', isOpen)" />
 					</div>
 				</div>
 			</template>
@@ -72,7 +72,7 @@
 		<div class="grow min-w-fit">
 			<log-box :logs :status>
 				<template #button>
-					<svws-ui-button v-if="status !== undefined" type="transparent" @click="clearLog" title="Log verwerfen">Log verwerfen </svws-ui-button>
+					<svws-ui-button v-if="status !== undefined" type="transparent" @click="clear" title="Log verwerfen">Log verwerfen </svws-ui-button>
 				</template>
 			</log-box>
 		</div>
@@ -95,7 +95,7 @@
 			return;
 		if ((newEintrag !== undefined) && (oldEintrag !== undefined) && (newEintrag.name === oldEintrag.name))
 			return;
-		clearLog();
+		clear();
 	});
 
 	const schule = ref<SchulenKatalogEintrag>()
@@ -108,11 +108,17 @@
 		open: false,
 	});
 
-	const logsFunction = () => logs;
-	const loadingFunction = () => loading;
-	const statusFunction = () => status;
+	function setLogs(value: List<string | null> | undefined) {
+		return logs.value = value;
+	}
+	function setLoading(value: boolean) {
+		return loading.value = value;
+	}
+	function setStatus(value: boolean | undefined) {
+		return status.value = value;
+	}
 
-	function clearLog() {
+	function clear() {
 		loading.value = false;
 		logs.value = undefined;
 		status.value = undefined;

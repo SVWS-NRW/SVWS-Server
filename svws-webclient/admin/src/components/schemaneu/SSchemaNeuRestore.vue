@@ -3,7 +3,7 @@
 		<div class="input-wrapper">
 			<div class="space-y-2">
 				<div class="font-bold text-button">Quell-Datenbank: SQLite-Datei (.sqlite) hochladen</div>
-				<input type="file" @change="onFileChanged" :disabled="loadingFunction().value" accept=".sqlite">
+				<input type="file" @change="onFileChanged" :disabled="loading" accept=".sqlite">
 			</div>
 			<svws-ui-spacing />
 			<div class="font-bold text-button">Ziel-Datenbank (wird erstellt):</div>
@@ -12,8 +12,8 @@
 			<svws-ui-text-input v-model.trim="password" required placeholder="Passwort" type="password" />
 		</div>
 		<template #buttonFooterLeft>
-			<svws-ui-button :disabled="(schema.length === 0) || (user.length === 0) || (password.length === 0) || (user === 'root') || loadingFunction().value" title="Schema anlegen" @click="actionFunction" :is-loading="loadingFunction().value" class="mt-4">
-				<svws-ui-spinner v-if="loadingFunction().value" spinning />
+			<svws-ui-button :disabled="(schema.length === 0) || (user.length === 0) || (password.length === 0) || (user === 'root') || loading" title="Schema anlegen" @click="actionFunction" :is-loading="loading" class="mt-4">
+				<svws-ui-spinner v-if="loading" spinning />
 				<span v-else class="icon i-ri-play-line" />
 				Schema anlegen
 			</svws-ui-button>
@@ -23,15 +23,16 @@
 
 <script setup lang="ts">
 
-	import { ref, type ShallowRef } from "vue";
+	import { ref } from "vue";
 	import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 	import type { List } from "@core/java/util/List";
 
 	const props = defineProps<{
 		importSchema: (formData: FormData, schema: string) => Promise<SimpleOperationResponse>;
-		logsFunction: () => ShallowRef<List<string | null> | undefined>;
-		statusFunction: () => ShallowRef<boolean | undefined>;
-		loadingFunction: () => ShallowRef<boolean>;
+		setLogs: (value: List<string | null> | undefined) => void;
+		setStatus: (value: boolean | undefined) => void;
+		loading: boolean;
+		setLoading: (value: boolean) => void;
 		validatorUsername: (username: string | null) => boolean;
 		isOpen: boolean;
 	}>();
@@ -55,15 +56,15 @@
 	async function actionFunction() {
 		if (file.value === null)
 			return;
-		props.loadingFunction().value = true;
+		props.setLoading(true);
 		const formData = new FormData();
 		formData.append("database", file.value);
 		formData.append('schemaUsername', user.value);
 		formData.append('schemaUserPassword', password.value);
 		const result = await props.importSchema(formData, schema.value);
-		props.logsFunction().value = result.log;
-		props.statusFunction().value = result.success;
-		props.loadingFunction().value = false;
+		props.setLogs(result.log);
+		props.setStatus(result.success);
+		props.setLoading(false);
 		schema.value = '';
 		user.value = '';
 		password.value = '';
