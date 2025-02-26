@@ -95,14 +95,16 @@
 			const result = await props.migrateSchema(formData);
 			props.logsFunction().value = result.log;
 			props.statusFunction().value = result.success;
+			if (result.success) {
+				zielSchema.value = '';
+				zielUserPassword.value = '';
+				zielUsername.value = '';
+			}
 		} catch (e) {
 			console.log(e);
 			props.statusFunction().value = false;
 		}
 		props.loadingFunction().value = false;
-		zielSchema.value = '';
-		zielUserPassword.value = '';
-		zielUsername.value = '';
 	}
 
 	const file = shallowRef<File | null>(null);
