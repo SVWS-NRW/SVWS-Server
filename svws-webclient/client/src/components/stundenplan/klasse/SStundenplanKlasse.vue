@@ -17,7 +17,7 @@
 					<template v-if="(stundenplanManager().unterrichtsgruppenMergeableGet().size() > 0) && hatUpdateKompetenz">
 						<span class="ml-4">Unterricht:</span>
 						<s-stundenplan-klasse-modal-merge :stundenplan-manager :merge-unterrichte v-slot="{ openModal }">
-							<svws-ui-button type="error" size="small" class="ml-1" @click="openModal()" title="Unterricht, der zusammengelegt werden kann, weil es Doppelungen gibt">
+							<svws-ui-button type="error" size="small" class="ml-1" @click="openMerge(openModal)" title="Unterricht, der zusammengelegt werden kann, weil es Doppelungen gibt">
 								<span class="icon icon-ui-danger i-ri-error-warning-line" />Zusammenlegen
 							</svws-ui-button>
 						</s-stundenplan-klasse-modal-merge>
@@ -394,6 +394,11 @@
 	function checkDropZone(event: DragEvent) {
 		if (isDropZone())
 			event.preventDefault();
+	}
+
+	function openMerge(openModal: () => void) {
+		openModal();
+		auswahl.value = undefined;
 	}
 
 	const colsKlassenunterricht: DataTableColumn[] = [
