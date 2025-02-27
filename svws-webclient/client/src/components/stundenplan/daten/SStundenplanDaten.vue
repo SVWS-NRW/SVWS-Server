@@ -1,6 +1,6 @@
 <template>
 	<div class="page page-flex-row max-w-480">
-		<div class="h-full overflow-y-auto w-full xl:w-1/2 flex flex-col gap-8">
+		<div class="h-full overflow-y-auto w-full xl:w-1/2 flex flex-col gap-8 pr-4">
 			<div class="content-card">
 				<div class="content-card--header content-card--headline">Allgemein</div>
 				<div class="content-card--content content-card--content--with-title input-wrapper grid-cols-2">
@@ -45,7 +45,7 @@
 				</svws-ui-table>
 			</ui-card>
 		</div>
-		<div class="h-full overflow-y-auto w-full xl:w-1/2 flex flex-col gap-8">
+		<div class="h-full overflow-y-auto w-full xl:w-1/2 flex flex-col gap-8 pr-4">
 			<ui-card icon="i-ri-archive-line" title="Pausenzeiten" :is-open="actionPausenzeiten" @update:is-open="isOpen => actionPausenzeiten = isOpen">
 				<div class="flex flex-col gap-4">
 					<svws-ui-table :columns="colsPausenzeiten" :items="pausenzeitenSorted" v-model:clicked="zeit" :selectable="hatUpdateKompetenz" v-model="selectedPausenzeiten" :count="pausenzeitenSorted.length > 0" v-model:sort-by-and-order="sortByAndOrder">
