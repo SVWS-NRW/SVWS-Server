@@ -14,10 +14,15 @@
 					<svws-ui-button v-if="hatUpdateKompetenz" type="transparent" @click.stop="doppelstundenModus = !doppelstundenModus" title="Doppelstundenmodus ein- und ausschalten" class="text-ui-contrast-100">
 						{{ doppelstundenModus ? 'Doppelstundenmodus' : 'Einzelstundenmodus' }}
 					</svws-ui-button>
-					<template v-if="(stundenplanManager().unterrichtsgruppenMergeableGet().size() > 0) && hatUpdateKompetenz">
+					<template v-if="(stundenplanManager().unterrichtsgruppenMergeableGet().size() > 0) || (stundenplanManager().unterrichtGetMengeUngueltigAsList().size() > 0) && hatUpdateKompetenz">
 						<span class="ml-4">Unterricht:</span>
-						<s-stundenplan-klasse-modal-merge :stundenplan-manager :merge-unterrichte v-slot="{ openModal }">
-							<svws-ui-button type="error" size="small" class="ml-1" @click="openMerge(openModal)" title="Unterricht, der zusammengelegt werden kann, weil es Doppelungen gibt">
+						<s-stundenplan-klasse-modal-ungueltige v-if="stundenplanManager().unterrichtGetMengeUngueltigAsList().size() > 0" :stundenplan-manager :remove-unterrichte v-slot="{ openModal }">
+							<svws-ui-button type="error" size="small" class="ml-1" @click="openTheModal(openModal)" title="Unterricht, der entfernt werden kann, weil es keinen Klassenunterricht dazu gibt">
+								<span class="icon icon-ui-danger i-ri-error-warning-line" />ungültige&nbsp;entfernen
+							</svws-ui-button>
+						</s-stundenplan-klasse-modal-ungueltige>
+						<s-stundenplan-klasse-modal-merge v-if="stundenplanManager().unterrichtsgruppenMergeableGet().size() > 0" :stundenplan-manager :merge-unterrichte v-slot="{ openModal }">
+							<svws-ui-button type="error" size="small" class="ml-1" @click="openTheModal(openModal)" title="Unterricht, der zusammengelegt werden kann, weil es Doppelungen gibt">
 								<span class="icon icon-ui-danger i-ri-error-warning-line" />Zusammenlegen
 							</svws-ui-button>
 						</s-stundenplan-klasse-modal-merge>
@@ -276,7 +281,7 @@
 			ids.add(r.id);
 		for (const u of liste)
 			u.raeume = ids;
-		await props.patchUnterricht(liste);
+		await props.patchUnterrichte(liste);
 		disabled.value = false;
 	}
 
@@ -302,7 +307,7 @@
 			return;
 		// Fall StundenplanUnterricht -> StundenplanZeitraster
 		if ((dragData.value instanceof StundenplanUnterricht) && (zone instanceof StundenplanZeitraster) && (wochentyp !== undefined))
-			return await props.patchUnterricht([dragData.value], zone, wochentyp);
+			return await props.patchUnterrichte([dragData.value], zone, wochentyp);
 		// Fall List<StundenplanUnterricht> -> StundenplanZeitraster
 		// Fall List<StundenplanKurs> -> StundenplanZeitraster
 		// Fall List<StundenplanUnterricht> -> undefined
@@ -315,12 +320,12 @@
 				else if ((item instanceof StundenplanKurs) && (zone instanceof StundenplanZeitraster) && (wochentyp !== undefined) && props.stundenplanManager().kursDarfInZelle(item, zone.wochentag, zone.unterrichtstunde, wochentyp))
 					listStundenplanKurs.add(item);
 			if (listStundenplanKurs.size() > 0)
-				return await props.addUnterrichtKlasse(listStundenplanKurs);
+				return await props.addUnterrichte(listStundenplanKurs);
 			if (listStundenplanUnterricht.size() > 0)
 				if ((zone instanceof StundenplanZeitraster) && (wochentyp !== undefined))
-					return await props.patchUnterricht(listStundenplanUnterricht, zone, wochentyp);
+					return await props.patchUnterrichte(listStundenplanUnterricht, zone, wochentyp);
 				else if (zone === undefined)
-					return await props.removeUnterrichtKlasse(listStundenplanUnterricht);
+					return await props.removeUnterrichte(listStundenplanUnterricht);
 		}
 		// Fall StundenplanKlassenunterricht -> StundenplanZeitraster
 		if ((dragData.value instanceof StundenplanKlassenunterricht) && (zone instanceof StundenplanZeitraster) && (wochentyp !== undefined) && props.stundenplanManager().klassenunterrichtDarfInZelle(dragData.value, zone.wochentag, zone.unterrichtstunde, wochentyp)) {
@@ -334,12 +339,12 @@
 				if (next && props.stundenplanManager().klassenunterrichtDarfInZelle(dragData.value, zone.wochentag, next.unterrichtstunde, wochentyp))
 					arr.push({ idZeitraster: next.id, wochentyp, idKurs: null, idFach: dragData.value.idFach, klassen, lehrer: dragData.value.lehrer, schienen: dragData.value.schienen });
 			}
-			await props.addUnterrichtKlasse(arr);
+			await props.addUnterrichte(arr);
 			return;
 		}
 		// Fall StundenplanUnterricht -> undefined
 		if ((dragData.value instanceof StundenplanUnterricht) && (zone === undefined))
-			return await props.removeUnterrichtKlasse([dragData.value]);
+			return await props.removeUnterrichte([dragData.value]);
 		// TODO Fall StundenplanKurs -> StundenplanZeitraster
 		if ((dragData.value instanceof StundenplanKurs) && (zone instanceof StundenplanZeitraster) && (wochentyp !== undefined) && props.stundenplanManager().kursDarfInZelle(dragData.value, zone.wochentag, zone.unterrichtstunde, wochentyp)) {
 			const klassen = new HashSet<number>();
@@ -355,7 +360,7 @@
 				if (next && props.stundenplanManager().kursDarfInZelle(dragData.value, zone.wochentag, next.unterrichtstunde, wochentyp))
 					arr.push({ idZeitraster: next.id, wochentyp, idKurs: dragData.value.id, idFach: dragData.value.idFach, klassen: new ArrayList(klassen), schienen: dragData.value.schienen, lehrer: dragData.value.lehrer });
 			}
-			return await props.addUnterrichtKlasse(arr);
+			return await props.addUnterrichte(arr);
 		}
 		// Fall StundenplanSchiene -> StundenplanZeitraster
 		if (dragData.value instanceof StundenplanSchiene) {
@@ -376,7 +381,7 @@
 					}
 				}
 			}
-			await props.addUnterrichtKlasse(arr);
+			await props.addUnterrichte(arr);
 			return;
 		}
 		// TODO Fall StundenplanZeitraster -> undefined
@@ -396,7 +401,7 @@
 			event.preventDefault();
 	}
 
-	function openMerge(openModal: () => void) {
+	function openTheModal(openModal: () => void) {
 		openModal();
 		auswahl.value = undefined;
 	}

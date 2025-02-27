@@ -541,7 +541,7 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		await this.setEintrag(this.auswahl);
 	}
 
-	addUnterrichtKlasse = async (data: Iterable<Partial<StundenplanUnterricht>>) => {
+	addUnterrichte = async (data: Iterable<Partial<StundenplanUnterricht>>) => {
 		api.status.start();
 		const list = new ArrayList<Partial<StundenplanUnterricht>>();
 		for (const datum of data)
@@ -552,7 +552,7 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		api.status.stop();
 	}
 
-	patchUnterricht = async (data: Iterable<StundenplanUnterricht>, zeitraster?: StundenplanZeitraster, wochentyp?: number) => {
+	patchUnterrichte = async (data: Iterable<StundenplanUnterricht>, zeitraster?: StundenplanZeitraster, wochentyp?: number) => {
 		api.status.start();
 		const list: List<StundenplanUnterricht> = new ArrayList();
 		if ((zeitraster !== undefined) && (wochentyp !== undefined))
@@ -572,7 +572,7 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		api.status.stop();
 	}
 
-	removeUnterrichtKlasse = async (unterrichte: Iterable<StundenplanUnterricht>) => {
+	removeUnterrichte = async (unterrichte: Iterable<StundenplanUnterricht>) => {
 		const id = this._state.value.auswahl?.id;
 		if (id === undefined)
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
@@ -588,21 +588,21 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		api.status.stop();
 	}
 
-	mergeUnterrichte = async (list: Array<List<StundenplanUnterricht>>) => {
+	mergeUnterrichte = async (list: Iterable<List<StundenplanUnterricht>>) => {
 		api.status.start();
 		const listRemove = new ArrayList<StundenplanUnterricht>();
 		const listAdd = new ArrayList<Partial<StundenplanUnterricht>>();
 		for (const unterricht of list) {
 			if (unterricht.isEmpty())
 				continue;
-			const add: Partial<StundenplanUnterricht> = unterricht.get(0).clone() as StundenplanUnterricht;
+			const add = <Partial<StundenplanUnterricht>>unterricht.get(0).clone();
 			delete add.id;
 			add.wochentyp = 0;
 			listAdd.add(add);
 			listRemove.addAll(unterricht);
 		}
-		await this.removeUnterrichtKlasse(listRemove);
-		await this.addUnterrichtKlasse(listAdd);
+		await this.removeUnterrichte(listRemove);
+		await this.addUnterrichte(listAdd);
 		api.status.stop();
 	}
 

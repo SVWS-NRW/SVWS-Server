@@ -27,9 +27,9 @@ export class RouteStundenplanKlasse extends RouteNode<any, RouteStundenplan> {
 			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			stundenplanManager: () => routeStundenplan.data.stundenplanManager,
-			patchUnterricht: routeStundenplan.data.patchUnterricht,
-			addUnterrichtKlasse: routeStundenplan.data.addUnterrichtKlasse,
-			removeUnterrichtKlasse: routeStundenplan.data.removeUnterrichtKlasse,
+			patchUnterrichte: routeStundenplan.data.patchUnterrichte,
+			addUnterrichte: routeStundenplan.data.addUnterrichte,
+			removeUnterrichte: routeStundenplan.data.removeUnterrichte,
 			mergeUnterrichte: routeStundenplan.data.mergeUnterrichte,
 		};
 	}

@@ -27,7 +27,7 @@
 
 	const props = defineProps<{
 		stundenplanManager: () => StundenplanManager;
-		mergeUnterrichte: (list: Array<List<StundenplanUnterricht>>) => Promise<void>;
+		mergeUnterrichte: (list: Iterable<List<StundenplanUnterricht>>) => Promise<void>;
 	}>();
 
 	const columns = [
@@ -76,8 +76,6 @@
 
 	const show = ref<boolean>(false);
 
-	const openModal = () => {
-		show.value = true;
-	}
+	const openModal = () => show.value = true;
 
 </script>
