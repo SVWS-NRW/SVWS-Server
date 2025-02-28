@@ -2,7 +2,7 @@
 	"version": 1,
 	"daten": [ {
 		"bezeichner": "SL",
-		"idHistorie": 1,
+		"idStatistik": "1",
 		"historie": [ {
 			"id": 1,
 			"schluessel": "SL",
@@ -13,7 +13,7 @@
 		} ]
 	}, {
 		"bezeichner": "SL_STV",
-		"idHistorie": 2,
+		"idStatistik": "2",
 		"historie": [ {
 			"id": 2,
 			"schluessel": "Stv. SL",

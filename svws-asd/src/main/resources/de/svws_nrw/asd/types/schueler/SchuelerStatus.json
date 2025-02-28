@@ -2,7 +2,7 @@
 	"version": 1,
 	"daten": [ {
 		"bezeichner": "NEUAUFNAHME",
-		"idHistorie": 1,
+		"idStatistik": "1",
 		"historie": [ {
 			"id": 0,
 			"schluessel": "0",
@@ -13,7 +13,7 @@
 		} ]
 	}, {
 		"bezeichner": "WARTELISTE",
-		"idHistorie": 2,
+		"idStatistik": "2",
 		"historie": [ {
 			"id": 1,
 			"schluessel": "1",
@@ -24,7 +24,7 @@
 		} ]
 	}, {
 		"bezeichner": "AKTIV",
-		"idHistorie": 3,
+		"idStatistik": "3",
 		"historie": [ {
 			"id": 2,
 			"schluessel": "2",
@@ -35,7 +35,7 @@
 		} ]
 	}, {
 		"bezeichner": "BEURLAUBT",
-		"idHistorie": 4,
+		"idStatistik": "4",
 		"historie": [ {
 			"id": 3,
 			"schluessel": "3",
@@ -46,7 +46,7 @@
 		} ]
 	}, {
 		"bezeichner": "EXTERN",
-		"idHistorie": 5,
+		"idStatistik": "5",
 		"historie": [ {
 			"id": 6,
 			"schluessel": "6",
@@ -57,7 +57,7 @@
 		} ]
 	}, {
 		"bezeichner": "ABSCHLUSS",
-		"idHistorie": 6,
+		"idStatistik": "6",
 		"historie": [ {
 			"id": 8,
 			"schluessel": "8",
@@ -68,7 +68,7 @@
 		} ]
 	}, {
 		"bezeichner": "ABGANG",
-		"idHistorie": 7,
+		"idStatistik": "7",
 		"historie": [ {
 			"id": 9,
 			"schluessel": "9",
@@ -79,7 +79,7 @@
 		} ]
 	}, {
 		"bezeichner": "EHEMALIGE",
-		"idHistorie": 8,
+		"idStatistik": "8",
 		"historie": [ {
 			"id": 10,
 			"schluessel": "10",

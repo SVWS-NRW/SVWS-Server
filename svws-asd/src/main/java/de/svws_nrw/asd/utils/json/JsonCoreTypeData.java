@@ -44,8 +44,8 @@ public class JsonCoreTypeData<T extends CoreTypeData> {
 	/** Eine Map mit den Bezeichnern und den zugeordneten Daten des Core-Types (Historien) */
 	private final Map<String, List<T>> _mapData = new LinkedHashMap<>();
 
-	/** Eine Map mit den Bezeichnern und den zugeordneten Historien-IDs */
-	private final Map<String, Long> _mapHistorienIDs = new LinkedHashMap<>();
+	/** Eine Map mit den Bezeichnern und den zugeordneten Statistik-IDs */
+	private final Map<String, String> _mapStatistikIDs = new LinkedHashMap<>();
 
 
 	/**
@@ -70,20 +70,20 @@ public class JsonCoreTypeData<T extends CoreTypeData> {
 			throw new IOException("Die JSON-Datei muss eine gültige Versionsnummer haben.");
 		if (!daten.isArray())
 			throw new IOException("Die JSON-Datei muss bei dem Attribut \"daten\" ein Array aufweisen.");
-		final Set<Long> idsHistorien = new HashSet<>();
+		final Set<String> idsStatistik = new HashSet<>();
 		for (final JsonNode eintrag : daten) {
 			final JsonNode bezeichner = eintrag.findValue("bezeichner");
 			final JsonNode historie = eintrag.findValue("historie");
-			final JsonNode idHistorie = eintrag.findValue("idHistorie");
-			if ((eintrag.size() != 3) || (bezeichner == null) || (idHistorie == null) || (historie == null) || (!historie.isArray()))
+			final JsonNode idStatistik = eintrag.findValue("idStatistik");
+			if ((eintrag.size() != 3) || (bezeichner == null) || (idStatistik == null) || (historie == null) || (!historie.isArray()))
 				throw new IOException(
-						"Die JSON-Datei muss bei den Einträgen im Daten-Array jeweils ein Objekt mit zwei Attributen \"bezeichner\", \"idHistorie\" und \"historie\" haben, wobei die Historie eine Array von Objekten sein muss.");
-			final long tmpIdHistorie = idHistorie.asLong();
-			if (idsHistorien.contains(tmpIdHistorie))
+						"Die JSON-Datei muss bei den Einträgen im Daten-Array jeweils ein Objekt mit zwei Attributen \"bezeichner\", \"idStatistik\" und \"historie\" haben, wobei die Historie eine Array von Objekten sein muss.");
+			final String tmpIdStatistik = idStatistik.asText();
+			if (idsStatistik.contains(tmpIdStatistik))
 				throw new IOException(
-						"Die JSON-Datei muss bei den IDs der Historien eindeutige Werte verwenden. Der Wert " + tmpIdHistorie + " kommt mehrfach vor.");
-			idsHistorien.add(tmpIdHistorie);
-			this._mapHistorienIDs.put(bezeichner.asText(), tmpIdHistorie);
+						"Die JSON-Datei muss bei den IDs der Historien eindeutige Werte verwenden. Der Wert " + tmpIdStatistik + " kommt mehrfach vor.");
+			idsStatistik.add(tmpIdStatistik);
+			this._mapStatistikIDs.put(bezeichner.asText(), tmpIdStatistik);
 			final var list = new ArrayList<T>();
 			this._mapData.put(bezeichner.asText(), list);
 			for (final JsonNode obj : historie)
@@ -110,12 +110,12 @@ public class JsonCoreTypeData<T extends CoreTypeData> {
 	}
 
 	/**
-	 * Gibt die Map zurück, welche den Bezeichner die ID der zugeordneten Historie zuordnet.
+	 * Gibt die Map zurück, welche den Bezeichner die Statistik-ID zuordnet.
 	 *
-	 * @return die Map mit der Zuordnung von Historien-IDs zu den Bezeichnern des Core-Types
+	 * @return die Map mit der Zuordnung von Statistik-IDs zu den Bezeichnern des Core-Types
 	 */
-	public Map<String, Long> getHistorienIDs() {
-		return this._mapHistorienIDs;
+	public Map<String, String> getStatistikIDs() {
+		return this._mapStatistikIDs;
 	}
 
 	/**
@@ -150,7 +150,7 @@ public class JsonCoreTypeData<T extends CoreTypeData> {
 			CoreTypeDataManager.checkHistorie(setIDs, _clazz.getSimpleName(), bezeichner, listDatenZumBezeichner);
 			final ObjectNode datenNode = mapper.createObjectNode();
 			datenNode.put("bezeichner", bezeichner);
-			datenNode.put("idHistorie", this._mapHistorienIDs.get(bezeichner));
+			datenNode.put("idStatistik", this._mapStatistikIDs.get(bezeichner));
 			datenNode.set("historie", mapper.valueToTree(listDatenZumBezeichner));
 			datenArrayNode.add(datenNode);
 		}

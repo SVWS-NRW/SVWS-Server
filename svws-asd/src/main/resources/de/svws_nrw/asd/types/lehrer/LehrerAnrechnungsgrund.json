@@ -2,7 +2,7 @@
 	"version": 2,
 	"daten": [ {
 		"bezeichner": "ID_310",
-		"idHistorie": 1,
+		"idStatistik": "1",
 		"historie": [ {
 			"id": 310000,
 			"schluessel": "310",
@@ -13,7 +13,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_315",
-		"idHistorie": 2,
+		"idStatistik": "2",
 		"historie": [ {
 			"id": 315000,
 			"schluessel": "315",
@@ -24,7 +24,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_320",
-		"idHistorie": 3,
+		"idStatistik": "3",
 		"historie": [ {
 			"id": 320000,
 			"schluessel": "320",
@@ -35,7 +35,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_325",
-		"idHistorie": 4,
+		"idStatistik": "4",
 		"historie": [ {
 			"id": 325000,
 			"schluessel": "325",
@@ -46,7 +46,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_326",
-		"idHistorie": 81,
+		"idStatistik": "81",
 		"historie": [ {
 			"id": 326000,
 			"schluessel": "326",
@@ -57,7 +57,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_330",
-		"idHistorie": 5,
+		"idStatistik": "5",
 		"historie": [ {
 			"id": 330000,
 			"schluessel": "330",
@@ -68,7 +68,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_340",
-		"idHistorie": 6,
+		"idStatistik": "6",
 		"historie": [ {
 			"id": 340000,
 			"schluessel": "340",
@@ -79,7 +79,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_500",
-		"idHistorie": 7,
+		"idStatistik": "7",
 		"historie": [ {
 			"id": 500000,
 			"schluessel": "500",
@@ -90,7 +90,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_510",
-		"idHistorie": 8,
+		"idStatistik": "8",
 		"historie": [ {
 			"id": 510000,
 			"schluessel": "510",
@@ -101,7 +101,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_520",
-		"idHistorie": 9,
+		"idStatistik": "9",
 		"historie": [ {
 			"id": 520000,
 			"schluessel": "520",
@@ -112,7 +112,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_530",
-		"idHistorie": 10,
+		"idStatistik": "10",
 		"historie": [ {
 			"id": 530000,
 			"schluessel": "530",
@@ -123,7 +123,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_540",
-		"idHistorie": 11,
+		"idStatistik": "11",
 		"historie": [ {
 			"id": 540000,
 			"schluessel": "540",
@@ -134,7 +134,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_550",
-		"idHistorie": 12,
+		"idStatistik": "12",
 		"historie": [ {
 			"id": 550000,
 			"schluessel": "550",
@@ -145,7 +145,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_590",
-		"idHistorie": 13,
+		"idStatistik": "13",
 		"historie": [ {
 			"id": 590000,
 			"schluessel": "590",
@@ -156,7 +156,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_600",
-		"idHistorie": 14,
+		"idStatistik": "14",
 		"historie": [ {
 			"id": 600000,
 			"schluessel": "600",
@@ -174,7 +174,7 @@
 	} ]
 	},{
 		"bezeichner": "ID_605",
-		"idHistorie": 15,
+		"idStatistik": "15",
 		"historie": [ {
 			"id": 605000,
 			"schluessel": "605",
@@ -185,7 +185,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_610",
-		"idHistorie": 16,
+		"idStatistik": "16",
 		"historie": [ {
 			"id": 610000,
 			"schluessel": "610",
@@ -196,7 +196,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_615",
-		"idHistorie": 17,
+		"idStatistik": "17",
 		"historie": [ {
 			"id": 615000,
 			"schluessel": "615",
@@ -207,7 +207,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_620",
-		"idHistorie": 18,
+		"idStatistik": "18",
 		"historie": [ {
 			"id": 620000,
 			"schluessel": "620",
@@ -218,7 +218,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_625",
-    	"idHistorie": 19,
+    	"idStatistik": "19",
 		"historie": [ {
 			"id": 625000,
 			"schluessel": "625",
@@ -236,7 +236,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_630",
-		"idHistorie": 20,
+		"idStatistik": "20",
 		"historie": [ {
 			"id": 630000,
 			"schluessel": "630",
@@ -247,7 +247,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_635",
-		"idHistorie": 21,
+		"idStatistik": "21",
 		"historie": [ {
 			"id": 635000,
 			"schluessel": "635",
@@ -258,7 +258,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_640",
-		"idHistorie": 22,
+		"idStatistik": "22",
 		"historie": [ {
 			"id": 640000,
 			"schluessel": "640",
@@ -269,7 +269,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_645",
-		"idHistorie": 23,
+		"idStatistik": "23",
 		"historie": [ {
 			"id": 645000,
 			"schluessel": "645",
@@ -280,7 +280,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_650",
-		"idHistorie": 24,
+		"idStatistik": "24",
 		"historie": [ {
 			"id": 650000,
 			"schluessel": "650",
@@ -291,7 +291,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_655",
-		"idHistorie": 25,
+		"idStatistik": "25",
 		"historie": [ {
 			"id": 655000,
 			"schluessel": "655",
@@ -302,7 +302,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_665",
-		"idHistorie": 26,
+		"idStatistik": "26",
 		"historie": [ {
 			"id": 665000,
 			"schluessel": "665",
@@ -320,7 +320,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_670",
-		"idHistorie": 27,
+		"idStatistik": "27",
 		"historie": [ {
 			"id": 670000,
 			"schluessel": "670",
@@ -331,7 +331,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_675",
-		"idHistorie": 28,
+		"idStatistik": "28",
 		"historie": [ {
 			"id": 675000,
 			"schluessel": "675",
@@ -342,7 +342,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_680",
-		"idHistorie": 29,
+		"idStatistik": "29",
 		"historie": [ {
 			"id": 680000,
 			"schluessel": "680",
@@ -353,7 +353,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_685",
-		"idHistorie": 30,
+		"idStatistik": "30",
 		"historie": [ {
 			"id": 685000,
 			"schluessel": "685",
@@ -364,7 +364,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_690",
-		"idHistorie": 31,
+		"idStatistik": "31",
 		"historie": [ {
 			"id": 690000,
 			"schluessel": "690",
@@ -375,7 +375,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_695",
-		"idHistorie": 32,
+		"idStatistik": "32",
 		"historie": [ {
 			"id": 695000,
 			"schluessel": "695",
@@ -386,7 +386,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_700",
-		"idHistorie": 33,
+		"idStatistik": "33",
 		"historie": [ {
 			"id": 700000,
 			"schluessel": "700",
@@ -397,7 +397,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_705",
-		"idHistorie": 34,
+		"idStatistik": "34",
 		"historie": [ {
 			"id": 705000,
 			"schluessel": "705",
@@ -408,7 +408,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_710",
-		"idHistorie": 35,
+		"idStatistik": "35",
 		"historie": [ {
 			"id": 710000,
 			"schluessel": "710",
@@ -419,7 +419,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_715",
-		"idHistorie": 36,
+		"idStatistik": "36",
 		"historie": [ {
 			"id": 715000,
 			"schluessel": "715",
@@ -437,7 +437,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_720",
-		"idHistorie": 37,
+		"idStatistik": "37",
 		"historie": [ {
 			"id": 720000,
 			"schluessel": "720",
@@ -448,7 +448,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_725",
-		"idHistorie": 38,
+		"idStatistik": "38",
 		"historie": [ {
 			"id": 725000,
 			"schluessel": "725",
@@ -459,7 +459,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_730",
-		"idHistorie": 39,
+		"idStatistik": "39",
 		"historie": [ {
 			"id": 730000,
 			"schluessel": "730",
@@ -470,7 +470,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_735",
-		"idHistorie": 40,
+		"idStatistik": "40",
 		"historie": [ {
 			"id": 735000,
 			"schluessel": "735",
@@ -481,7 +481,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_740",
-		"idHistorie": 41,
+		"idStatistik": "41",
 		"historie": [ {
 			"id": 740000,
 			"schluessel": "740",
@@ -492,7 +492,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_745",
-		"idHistorie": 42,
+		"idStatistik": "42",
 		"historie": [ {
 			"id": 745000,
 			"schluessel": "745",
@@ -503,7 +503,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_750",
-		"idHistorie": 43,
+		"idStatistik": "43",
 		"historie": [ {
 			"id": 750000,
 			"schluessel": "750",
@@ -514,7 +514,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_765",
-		"idHistorie": 44,
+		"idStatistik": "44",
 		"historie": [ {
 			"id": 765000,
 			"schluessel": "765",
@@ -525,7 +525,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_766",
-		"idHistorie": 82,
+		"idStatistik": "82",
 		"historie": [ {
 			"id": 766000,
 			"schluessel": "766",
@@ -536,7 +536,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_770",
-		"idHistorie": 45,
+		"idStatistik": "45",
 		"historie": [ {
 			"id": 770000,
 			"schluessel": "770",
@@ -547,7 +547,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_771",
-		"idHistorie": 46,
+		"idStatistik": "46",
 		"historie": [ {
 			"id": 771000,
 			"schluessel": "771",
@@ -558,7 +558,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_772",
-		"idHistorie": 47,
+		"idStatistik": "47",
 		"historie": [ {
 			"id": 772000,
 			"schluessel": "772",
@@ -569,7 +569,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_773",
-		"idHistorie": 48,
+		"idStatistik": "48",
 		"historie": [ {
 			"id": 773000,
 			"schluessel": "773",
@@ -580,7 +580,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_774",
-		"idHistorie": 49,
+		"idStatistik": "49",
 		"historie": [ {
 			"id": 774000,
 			"schluessel": "774",
@@ -591,7 +591,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_775",
-		"idHistorie": 50,
+		"idStatistik": "50",
 		"historie": [ {
 			"id": 775000,
 			"schluessel": "775",
@@ -602,7 +602,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_776",
-		"idHistorie": 51,
+		"idStatistik": "51",
 		"historie": [ {
 			"id": 776000,
 			"schluessel": "776",
@@ -613,7 +613,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_777",
-		"idHistorie": 52,
+		"idStatistik": "52",
 		"historie": [ {
 			"id": 777000,
 			"schluessel": "777",
@@ -624,7 +624,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_778",
-		"idHistorie": 53,
+		"idStatistik": "53",
 		"historie": [ {
 			"id": 778000,
 			"schluessel": "778",
@@ -635,7 +635,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_779",
-		"idHistorie": 54,
+		"idStatistik": "54",
 		"historie": [ {
 			"id": 779000,
 			"schluessel": "779",
@@ -646,7 +646,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_800",
-		"idHistorie": 55,
+		"idStatistik": "55",
 		"historie": [ {
 			"id": 800000,
 			"schluessel": "800",
@@ -657,7 +657,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_805",
-		"idHistorie": 56,
+		"idStatistik": "56",
 		"historie": [ {
 			"id": 805000,
 			"schluessel": "805",
@@ -668,7 +668,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_815",
-		"idHistorie": 57,
+		"idStatistik": "57",
 		"historie": [ {
 			"id": 815000,
 			"schluessel": "815",
@@ -679,7 +679,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_820",
-		"idHistorie": 58,
+		"idStatistik": "58",
 		"historie": [ {
 			"id": 820000,
 			"schluessel": "820",
@@ -690,7 +690,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_850",
-		"idHistorie": 59,
+		"idStatistik": "59",
 		"historie": [ {
 			"id": 850000,
 			"schluessel": "850",
@@ -701,7 +701,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_855",
-		"idHistorie": 60,
+		"idStatistik": "60",
 		"historie": [ {
 			"id": 855000,
 			"schluessel": "855",
@@ -712,7 +712,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_860",
-		"idHistorie": 61,
+		"idStatistik": "61",
 		"historie": [ {
 			"id": 860000,
 			"schluessel": "860",
@@ -723,7 +723,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_875",
-		"idHistorie": 62,
+		"idStatistik": "62",
 		"historie": [ {
 			"id": 875000,
 			"schluessel": "875",
@@ -734,7 +734,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_880",
-		"idHistorie": 63,
+		"idStatistik": "63",
 		"historie": [ {
 			"id": 880000,
 			"schluessel": "880",
@@ -745,7 +745,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_885",
-		"idHistorie": 64,
+		"idStatistik": "64",
 		"historie": [ {
 			"id": 885000,
 			"schluessel": "885",
@@ -756,7 +756,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_900",
-		"idHistorie": 65,
+		"idStatistik": "65",
 		"historie": [ {
 			"id": 900000,
 			"schluessel": "900",
@@ -767,7 +767,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_910",
-		"idHistorie": 66,
+		"idStatistik": "66",
 		"historie": [ {
 			"id": 910000,
 			"schluessel": "910",
@@ -778,7 +778,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_915",
-		"idHistorie": 67,
+		"idStatistik": "67",
 		"historie": [ {
 			"id": 915000,
 			"schluessel": "915",
@@ -789,7 +789,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_920",
-		"idHistorie": 68,
+		"idStatistik": "68",
 		"historie": [ {
 			"id": 920000,
 			"schluessel": "920",
@@ -800,7 +800,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_930",
-		"idHistorie": 69,
+		"idStatistik": "69",
 		"historie": [ {
 			"id": 930000,
 			"schluessel": "930",
@@ -811,7 +811,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_932",
-		"idHistorie": 83,
+		"idStatistik": "83",
 		"historie": [ {
 			"id": 932000,
 			"schluessel": "932",
@@ -822,7 +822,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_935",
-		"idHistorie": 70,
+		"idStatistik": "70",
 		"historie": [ {
 			"id": 935000,
 			"schluessel": "935",
@@ -833,7 +833,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_936",
-		"idHistorie": 71,
+		"idStatistik": "71",
 		"historie": [ {
 			"id": 936000,
 			"schluessel": "936",
@@ -844,7 +844,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_940",
-		"idHistorie": 72,
+		"idStatistik": "72",
 		"historie": [ {
 			"id": 940000,
 			"schluessel": "940",
@@ -855,7 +855,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_945",
-		"idHistorie": 73,
+		"idStatistik": "73",
 		"historie": [ {
 			"id": 945000,
 			"schluessel": "945",
@@ -866,7 +866,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_950",
-		"idHistorie": 74,
+		"idStatistik": "74",
 		"historie": [ {
 			"id": 950000,
 			"schluessel": "950",
@@ -877,7 +877,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_955",
-		"idHistorie": 75,
+		"idStatistik": "75",
 		"historie": [ {
 			"id": 955000,
 			"schluessel": "955",
@@ -888,7 +888,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_960",
-		"idHistorie": 76,
+		"idStatistik": "76",
 		"historie": [ {
 			"id": 960000,
 			"schluessel": "960",
@@ -899,7 +899,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_965",
-		"idHistorie": 77,
+		"idStatistik": "77",
 		"historie": [ {
 			"id": 965000,
 			"schluessel": "965",
@@ -910,7 +910,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_970",
-		"idHistorie": 78,
+		"idStatistik": "78",
 		"historie": [ {
 			"id": 970000,
 			"schluessel": "970",
@@ -921,7 +921,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_975",
-		"idHistorie": 79,
+		"idStatistik": "79",
 		"historie": [ {
 			"id": 975000,
 			"schluessel": "975",
@@ -932,7 +932,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_985",
-		"idHistorie": 80,
+		"idStatistik": "80",
 		"historie": [ {
 			"id": 985000,
 			"schluessel": "985",

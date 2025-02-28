@@ -2,7 +2,7 @@
 	"version": 1,
 	"daten": [ {
 		"bezeichner": "BE",
-		"idHistorie": 1,
+		"idStatistik": "1",
 		"historie": [ {
 			"id": 22,
 			"kuerzel": "BE",
@@ -15,7 +15,7 @@
 		} ]
 	}, {
 		"bezeichner": "GY",
-		"idHistorie": 2,
+		"idStatistik": "2",
 		"historie": [ {
 			"id": 23,
 			"kuerzel": "GY",
@@ -28,7 +28,7 @@
 		} ]
 	}, {
 		"bezeichner": "AV",
-		"idHistorie": 3,
+		"idStatistik": "3",
 		"historie": [ {
 			"id": 24,
 			"kuerzel": "AV",
@@ -41,7 +41,7 @@
 		} ]
 	}, {
 		"bezeichner": "BFSI",
-		"idHistorie": 4,
+		"idStatistik": "4",
 		"historie": [ {
 			"id": 25,
 			"kuerzel": "BFSI",
@@ -54,7 +54,7 @@
 		} ]
 	}, {
 		"bezeichner": "BFSII",
-		"idHistorie": 5,
+		"idStatistik": "5",
 		"historie": [ {
 			"id": 26,
 			"kuerzel": "BFSII",
@@ -67,7 +67,7 @@
 		} ]
 	}, {
 		"bezeichner": "HOEBFS",
-		"idHistorie": 6,
+		"idStatistik": "6",
 		"historie": [ {
 			"id": 27,
 			"kuerzel": "HÖBFS",
@@ -80,7 +80,7 @@
 		} ]
 	}, {
 		"bezeichner": "FOS",
-		"idHistorie": 7,
+		"idStatistik": "7",
 		"historie": [ {
 			"id": 28,
 			"kuerzel": "FOS",
@@ -93,7 +93,7 @@
 		} ]
 	}, {
 		"bezeichner": "BERUFGY",
-		"idHistorie": 8,
+		"idStatistik": "8",
 		"historie": [ {
 			"id": 29,
 			"kuerzel": "BERUFGY",
@@ -106,7 +106,7 @@
 		} ]
 	}, {
 		"bezeichner": "DUAL",
-		"idHistorie": 9,
+		"idStatistik": "9",
 		"historie": [ {
 			"id": 30,
 			"kuerzel": "DUAL",
@@ -133,7 +133,7 @@
 		} ]
 	}, {
 		"bezeichner": "SCHUAUS",
-		"idHistorie": 10,
+		"idStatistik": "10",
 		"historie": [ {
 			"id": 31,
 			"kuerzel": "SCHUAUS",
@@ -156,7 +156,7 @@
 		} ]
 	}, {
 		"bezeichner": "SCHUGA",
-		"idHistorie": 11,
+		"idStatistik": "11",
 		"historie": [ {
 			"id": 32,
 			"kuerzel": "SCHUGA",
@@ -179,7 +179,7 @@
 		} ]
 	}, {
 		"bezeichner": "BAE",
-		"idHistorie": 12,
+		"idStatistik": "12",
 		"historie": [ {
 			"id": 33,
 			"kuerzel": "BAE",
@@ -192,7 +192,7 @@
 		} ]
 	}, {
 		"bezeichner": "FACHAUS",
-		"idHistorie": 13,
+		"idStatistik": "13",
 		"historie": [ {
 			"id": 34,
 			"kuerzel": "FACHAUS",
@@ -205,7 +205,7 @@
 		} ]
 	}, {
 		"bezeichner": "BVB",
-		"idHistorie": 14,
+		"idStatistik": "14",
 		"historie": [ {
 			"id": 35,
 			"kuerzel": "BVB",
@@ -229,7 +229,7 @@
 		} ]
 	}, {
 		"bezeichner": "EQ",
-		"idHistorie": 15,
+		"idStatistik": "15",
 		"historie": [ {
 			"id": 36,
 			"kuerzel": "EQ",
@@ -254,7 +254,7 @@
 		} ]
 	}, {
 		"bezeichner": "WERK",
-		"idHistorie": 16,
+		"idStatistik": "16",
 		"historie": [ {
 			"id": 37,
 			"kuerzel": "WERK",
@@ -278,7 +278,7 @@
 		} ]
 	}, {
 		"bezeichner": "JUWERK",
-		"idHistorie": 17,
+		"idStatistik": "17",
 		"historie": [ {
 			"id": 38,
 			"kuerzel": "JUWERK",
@@ -302,7 +302,7 @@
 		} ]
 	}, {
 		"bezeichner": "MASS",
-		"idHistorie": 18,
+		"idStatistik": "18",
 		"historie": [ {
 			"id": 39,
 			"kuerzel": "MASS",
@@ -326,7 +326,7 @@
 		} ]
 	}, {
 		"bezeichner": "VHS",
-		"idHistorie": 19,
+		"idStatistik": "19",
 		"historie": [ {
 			"id": 40,
 			"kuerzel": "VHS",
@@ -339,7 +339,7 @@
 		} ]
 	}, {
 		"bezeichner": "PRAKT",
-		"idHistorie": 20,
+		"idStatistik": "20",
 		"historie": [ {
 			"id": 41,
 			"kuerzel": "PRAKT",
@@ -366,7 +366,7 @@
 		} ]
 	}, {
 		"bezeichner": "FREI",
-		"idHistorie": 21,
+		"idStatistik": "21",
 		"historie": [ {
 			"id": 42,
 			"kuerzel": "FREI",
@@ -393,7 +393,7 @@
 		} ]
 	}, {
 		"bezeichner": "SVP",
-		"idHistorie": 22,
+		"idStatistik": "22",
 		"historie": [ {
 			"id": 43,
 			"kuerzel": "SVP",
@@ -420,7 +420,7 @@
 		} ]
 	}, {
 		"bezeichner": "BBW",
-		"idHistorie": 23,
+		"idStatistik": "23",
 		"historie": [ {
 			"id": 44,
 			"kuerzel": "BBW",
@@ -433,7 +433,7 @@
 		} ]
 	}, {
 		"bezeichner": "BBA",
-		"idHistorie": 24,
+		"idStatistik": "24",
 		"historie": [ {
 			"id": 45,
 			"kuerzel": "BBA",
@@ -446,7 +446,7 @@
 		} ]
 	}, {
 		"bezeichner": "UB",
-		"idHistorie": 25,
+		"idStatistik": "25",
 		"historie": [ {
 			"id": 46,
 			"kuerzel": "UB",
@@ -459,7 +459,7 @@
 		} ]
 	}, {
 		"bezeichner": "DIAAM",
-		"idHistorie": 26,
+		"idStatistik": "26",
 		"historie": [ {
 			"id": 47,
 			"kuerzel": "DIAAM",
@@ -472,7 +472,7 @@
 		} ]
 	}, {
 		"bezeichner": "WFBM",
-		"idHistorie": 27,
+		"idStatistik": "27",
 		"historie": [ {
 			"id": 48,
 			"kuerzel": "WFBM",
@@ -485,7 +485,7 @@
 		} ]
 	}, {
 		"bezeichner": "TAG",
-		"idHistorie": 28,
+		"idStatistik": "28",
 		"historie": [ {
 			"id": 49,
 			"kuerzel": "TAG",
@@ -498,7 +498,7 @@
 		} ]
 	}, {
 		"bezeichner": "HAUSE",
-		"idHistorie": 29,
+		"idStatistik": "29",
 		"historie": [ {
 			"id": 50,
 			"kuerzel": "HAUSE",
@@ -511,7 +511,7 @@
 		} ]
 	}, {
 		"bezeichner": "REHA",
-		"idHistorie": 30,
+		"idStatistik": "30",
 		"historie": [ {
 			"id": 51,
 			"kuerzel": "REHA",
@@ -524,7 +524,7 @@
 		} ]
 	}, {
 		"bezeichner": "MINI",
-		"idHistorie": 31,
+		"idStatistik": "31",
 		"historie": [ {
 			"id": 52,
 			"kuerzel": "MINI",
@@ -549,7 +549,7 @@
 		} ]
 	}, {
 		"bezeichner": "SCHWAN",
-		"idHistorie": 32,
+		"idStatistik": "32",
 		"historie": [ {
 			"id": 53,
 			"kuerzel": "SCHWAN",
@@ -574,7 +574,7 @@
 		} ]
 	}, {
 		"bezeichner": "ABSENZ",
-		"idHistorie": 33,
+		"idStatistik": "33",
 		"historie": [ {
 			"id": 54,
 			"kuerzel": "ABSENZ",
@@ -599,7 +599,7 @@
 		} ]
 	}, {
 		"bezeichner": "UNBE",
-		"idHistorie": 34,
+		"idStatistik": "34",
 		"historie": [ {
 			"id": 55,
 			"kuerzel": "UNBE",
@@ -626,7 +626,7 @@
 		} ]
 	}, {
 		"bezeichner": "NOKEAN",
-		"idHistorie": 35,
+		"idStatistik": "35",
 		"historie": [ {
 			"id": 56,
 			"kuerzel": "NOKEAN",
@@ -653,7 +653,7 @@
 		} ]
 	}, {
 		"bezeichner": "DUASTUD",
-		"idHistorie": 36,
+		"idStatistik": "36",
 		"historie": [ {
 			"id": 57,
 			"kuerzel": "DUASTUD",
@@ -666,7 +666,7 @@
 		} ]
 	}, {
 		"bezeichner": "STUD",
-		"idHistorie": 37,
+		"idStatistik": "37",
 		"historie": [ {
 			"id": 58,
 			"kuerzel": "STUD",

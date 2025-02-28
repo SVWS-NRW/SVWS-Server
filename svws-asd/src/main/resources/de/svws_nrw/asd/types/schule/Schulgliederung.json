@@ -2,7 +2,7 @@
 	"version": 4,
 	"daten": [ {
 		"bezeichner": "DEFAULT",
-		"idHistorie": 1,
+		"idStatistik": "1",
 		"historie": [ {
 			"id": 0,
 			"kuerzel": "***",
@@ -36,7 +36,7 @@
 		} ]
 	}, {
 		"bezeichner": "A01",
-		"idHistorie": 2,
+		"idStatistik": "2",
 		"historie": [ {
 			"id": 1001000,
 			"kuerzel": "A01",
@@ -67,7 +67,7 @@
 		}]
 	}, {
 		"bezeichner": "A02",
-		"idHistorie": 3,
+		"idStatistik": "3",
 		"historie": [ {
 			"id": 1002000,
 			"kuerzel": "A02",
@@ -99,7 +99,7 @@
 		}]
 	}, {
 		"bezeichner": "A03",
-		"idHistorie": 4,
+		"idStatistik": "4",
 		"historie": [ {
 			"id": 1003000,
 			"kuerzel": "A03",
@@ -130,7 +130,7 @@
 		}]
 	}, {
 		"bezeichner": "A04",
-		"idHistorie": 5,
+		"idStatistik": "5",
 		"historie": [ {
 			"id": 1004000,
 			"kuerzel": "A04",
@@ -161,7 +161,7 @@
 		}]
 	}, {
 		"bezeichner": "A05",
-		"idHistorie": 6,
+		"idStatistik": "6",
 		"historie": [ {
 			"id": 1005000,
 			"kuerzel": "A05",
@@ -190,7 +190,7 @@
 		}]
 	}, {
 		"bezeichner": "A06",
-		"idHistorie": 7,
+		"idStatistik": "7",
 		"historie": [ {
 			"id": 1006000,
 			"kuerzel": "A06",
@@ -221,7 +221,7 @@
 		}]
 	}, {
 		"bezeichner": "A07",
-		"idHistorie": 8,
+		"idStatistik": "8",
 		"historie": [ {
 			"id": 1007000,
 			"kuerzel": "A07",
@@ -249,7 +249,7 @@
 		}]
 	}, {
 		"bezeichner": "A08",
-		"idHistorie": 9,
+		"idStatistik": "9",
 		"historie": [ {
 			"id": 1008000,
 			"kuerzel": "A08",
@@ -277,7 +277,7 @@
 		}]
 	}, {
 		"bezeichner": "A09",
-		"idHistorie": 10,
+		"idStatistik": "10",
 		"historie": [ {
 			"id": 1009000,
 			"kuerzel": "A09",
@@ -305,7 +305,7 @@
 		}]
 	}, {
 		"bezeichner": "A10",
-		"idHistorie": 11,
+		"idStatistik": "11",
 		"historie": [ {
 			"id": 1010000,
 			"kuerzel": "A10",
@@ -338,7 +338,7 @@
 		}]
 	}, {
 		"bezeichner": "A11",
-		"idHistorie": 12,
+		"idStatistik": "12",
 		"historie": [ {
 			"id": 1011000,
 			"kuerzel": "A11",
@@ -370,7 +370,7 @@
 		}]
 	}, {
 		"bezeichner": "A12",
-		"idHistorie": 13,
+		"idStatistik": "13",
 		"historie": [ {
 			"id": 1012000,
 			"kuerzel": "A12",
@@ -399,7 +399,7 @@
 		}]
 	}, {
 		"bezeichner": "A13",
-		"idHistorie": 14,
+		"idStatistik": "14",
 		"historie": [ {
 			"id": 1013000,
 			"kuerzel": "A13",
@@ -427,7 +427,7 @@
 		}]
 	}, {
 		"bezeichner": "A14",
-		"idHistorie": 15,
+		"idStatistik": "15",
 		"historie": [ {
 			"id": 1014000,
 			"kuerzel": "A14",
@@ -489,7 +489,7 @@
 		}]
 	}, {
 		"bezeichner": "A15",
-		"idHistorie": 16,
+		"idStatistik": "16",
 		"historie": [ {
 			"id": 1015000,
 			"kuerzel": "A15",
@@ -549,7 +549,7 @@
 		}]
 	}, {
 		"bezeichner": "A16",
-		"idHistorie": 17,
+		"idStatistik": "17",
 		"historie": [ {
 			"id": 1016000,
 			"kuerzel": "A16",
@@ -611,7 +611,7 @@
 		}]
 	}, {
 		"bezeichner": "AB",
-		"idHistorie": 18,
+		"idStatistik": "18",
 		"historie": [ {
 			"id": 90001000,
 			"kuerzel": "AB",
@@ -659,7 +659,7 @@
 		} ]
 	}, {
 		"bezeichner": "B01",
-		"idHistorie": 19,
+		"idStatistik": "19",
 		"historie": [ {
 			"id": 2001000,
 			"kuerzel": "B01",
@@ -720,7 +720,7 @@
 		}]
 	}, {
 		"bezeichner": "B02",
-		"idHistorie": 20,
+		"idStatistik": "20",
 		"historie": [ {
 			"id": 2002000,
 			"kuerzel": "B02",
@@ -805,7 +805,7 @@
 		} ]
 	}, {
 		"bezeichner": "B03",
-		"idHistorie": 21,
+		"idStatistik": "21",
 		"historie": [ {
 			"id": 2003000,
 			"kuerzel": "B03",
@@ -834,7 +834,7 @@
 		} ]
 	}, {
 		"bezeichner": "B04",
-		"idHistorie": 22,
+		"idStatistik": "22",
 		"historie": [ {
 			"id": 2004000,
 			"kuerzel": "B04",
@@ -895,7 +895,7 @@
 		} ]
 	}, {
 		"bezeichner": "B05",
-		"idHistorie": 23,
+		"idStatistik": "23",
 		"historie": [ {
 			"id": 2005000,
 			"kuerzel": "B05",
@@ -983,7 +983,7 @@
 		} ]
 	}, {
 		"bezeichner": "B06",
-		"idHistorie": 24,
+		"idStatistik": "24",
 		"historie": [ {
 			"id": 2006000,
 			"kuerzel": "B06",
@@ -1033,7 +1033,7 @@
 		} ]
 	}, {
 		"bezeichner": "B07",
-		"idHistorie": 25,
+		"idStatistik": "25",
 		"historie": [ {
 			"id": 2007000,
 			"kuerzel": "B07",
@@ -1063,7 +1063,7 @@
 		}]
 	}, {
 		"bezeichner": "B08",
-		"idHistorie": 26,
+		"idStatistik": "26",
 		"historie": [ {
 			"id": 2008000,
 			"kuerzel": "B08",
@@ -1125,7 +1125,7 @@
 		}]
 	}, {
 		"bezeichner": "B09",
-		"idHistorie": 27,
+		"idStatistik": "27",
 		"historie": [ {
 			"id": 2009000,
 			"kuerzel": "B09",
@@ -1187,7 +1187,7 @@
 		}]
 	}, {
 		"bezeichner": "B10",
-		"idHistorie": 28,
+		"idStatistik": "28",
 		"historie": [ {
 			"id": 2010000,
 			"kuerzel": "B10",
@@ -1249,7 +1249,7 @@
 		}]
 	}, {
 		"bezeichner": "B11",
-		"idHistorie": 89,
+		"idStatistik": "89",
 		"historie": [ {
 			"id": 2011000,
 			"kuerzel": "B11",
@@ -1282,7 +1282,7 @@
 		}]
 	}, {
 		"bezeichner": "BT",
-		"idHistorie": 29,
+		"idStatistik": "29",
 		"historie": [ {
 			"id": 90002000,
 			"kuerzel": "BT",
@@ -1330,7 +1330,7 @@
 		}]
 	}, {
 		"bezeichner": "BV",
-		"idHistorie": 30,
+		"idStatistik": "30",
 		"historie": [ {
 			"id": 90003000,
 			"kuerzel": "BV",
@@ -1378,7 +1378,7 @@
 		}]
 	}, {
 		"bezeichner": "C01",
-		"idHistorie": 31,
+		"idStatistik": "31",
 		"historie": [ {
 			"id": 3001000,
 			"kuerzel": "C01",
@@ -1434,7 +1434,7 @@
 		}]
 	}, {
 		"bezeichner": "C02",
-		"idHistorie": 32,
+		"idStatistik": "32",
 		"historie": [ {
 			"id": 3002000,
 			"kuerzel": "C02",
@@ -1461,7 +1461,7 @@
 		}]
 	}, {
 		"bezeichner": "C03",
-		"idHistorie": 33,
+		"idStatistik": "33",
 		"historie": [ {
 			"id": 3003000,
 			"kuerzel": "C03",
@@ -1635,7 +1635,7 @@
 		} ]
 	}, {
 		"bezeichner": "C04",
-		"idHistorie": 34,
+		"idStatistik": "34",
 		"historie": [ {
 			"id": 3004000,
 			"kuerzel": "C04",
@@ -1685,7 +1685,7 @@
 		} ]
 	}, {
 		"bezeichner": "C05",
-		"idHistorie": 35,
+		"idStatistik": "35",
 		"historie": [ {
 			"id": 3005000,
 			"kuerzel": "C05",
@@ -1737,7 +1737,7 @@
 		} ]
 	}, {
 		"bezeichner": "C06",
-		"idHistorie": 36,
+		"idStatistik": "36",
 		"historie": [ {
 			"id": 3006000,
 			"kuerzel": "C06",
@@ -1811,7 +1811,7 @@
 		} ]
 	}, {
 		"bezeichner": "C07",
-		"idHistorie": 37,
+		"idStatistik": "37",
 		"historie": [ {
 			"id": 3007000,
 			"kuerzel": "C07",
@@ -1865,7 +1865,7 @@
 		} ]
 	}, {
 		"bezeichner": "C08",
-		"idHistorie": 38,
+		"idStatistik": "38",
 		"historie": [ {
 			"id": 3008000,
 			"kuerzel": "C08",
@@ -1919,7 +1919,7 @@
 		} ]
 	}, {
 		"bezeichner": "C09",
-		"idHistorie": 39,
+		"idStatistik": "39",
 		"historie": [ {
 			"id": 3009000,
 			"kuerzel": "C09",
@@ -1948,7 +1948,7 @@
 		}]
 	}, {
 		"bezeichner": "C10",
-		"idHistorie": 40,
+		"idStatistik": "40",
 		"historie": [ {
 			"id": 3010000,
 			"kuerzel": "C10",
@@ -1977,7 +1977,7 @@
 		}]
 	}, {
 		"bezeichner": "C11",
-		"idHistorie": 41,
+		"idStatistik": "41",
 		"historie": [ {
 			"id": 3011000,
 			"kuerzel": "C11",
@@ -2006,7 +2006,7 @@
 		}]
 	}, {
 		"bezeichner": "C12",
-		"idHistorie": 42,
+		"idStatistik": "42",
 		"historie": [ {
 			"id": 3012000,
 			"kuerzel": "C12",
@@ -2037,7 +2037,7 @@
 		}]
 	}, {
 		"bezeichner": "C13",
-		"idHistorie": 43,
+		"idStatistik": "43",
 		"historie": [ {
 			"id": 3013000,
 			"kuerzel": "C13",
@@ -2069,7 +2069,7 @@
 		}]
 	}, {
 		"bezeichner": "D01",
-		"idHistorie": 44,
+		"idStatistik": "44",
 		"historie": [ {
 			"id": 4001000,
 			"kuerzel": "D01",
@@ -2215,7 +2215,7 @@
 		} ]
 	}, {
 		"bezeichner": "D02",
-		"idHistorie": 45,
+		"idStatistik": "45",
 		"historie": [ {
 			"id": 4002000,
 			"kuerzel": "D02",
@@ -2355,7 +2355,7 @@
 		} ]
 	}, {
 		"bezeichner": "D03",
-		"idHistorie": 46,
+		"idStatistik": "46",
 		"historie": [ {
 			"id": 4003000,
 			"kuerzel": "D03",
@@ -2386,7 +2386,7 @@
 		}]
 	}, {
 		"bezeichner": "D04",
-		"idHistorie": 47,
+		"idStatistik": "47",
 		"historie": [ {
 			"id": 4004000,
 			"kuerzel": "D04",
@@ -2417,7 +2417,7 @@
 		}]
 	}, {
 		"bezeichner": "D05",
-		"idHistorie": 48,
+		"idStatistik": "48",
 		"historie": [ {
 			"id": 4005000,
 			"kuerzel": "D05",
@@ -2495,7 +2495,7 @@
 		} ]
 	}, {
 		"bezeichner": "D06",
-		"idHistorie": 49,
+		"idStatistik": "49",
 		"historie": [ {
 			"id": 4006000,
 			"kuerzel": "D06",
@@ -2573,7 +2573,7 @@
 		} ]
 	}, {
 		"bezeichner": "E01",
-		"idHistorie": 50,
+		"idStatistik": "50",
 		"historie": [ {
 			"id": 5001000,
 			"kuerzel": "E01",
@@ -2601,7 +2601,7 @@
 		}]
 	}, {
 		"bezeichner": "E02",
-		"idHistorie": 51,
+		"idStatistik": "51",
 		"historie": [ {
 			"id": 5002000,
 			"kuerzel": "E02",
@@ -2630,7 +2630,7 @@
 		}]
 	}, {
 		"bezeichner": "E03",
-		"idHistorie": 52,
+		"idStatistik": "52",
 		"historie": [ {
 			"id": 5003000,
 			"kuerzel": "E03",
@@ -2702,7 +2702,7 @@
 		} ]
 	}, {
 		"bezeichner": "E04",
-		"idHistorie": 53,
+		"idStatistik": "53",
 		"historie": [ {
 			"id": 5004000,
 			"kuerzel": "E04",
@@ -2774,7 +2774,7 @@
 		} ]
 	}, {
 		"bezeichner": "E05",
-		"idHistorie": 54,
+		"idStatistik": "54",
 		"historie": [ {
 			"id": 5005000,
 			"kuerzel": "E05",
@@ -2802,7 +2802,7 @@
 		}]
 	}, {
 		"bezeichner": "E06",
-		"idHistorie": 55,
+		"idStatistik": "55",
 		"historie": [ {
 			"id": 5006000,
 			"kuerzel": "E06",
@@ -2831,7 +2831,7 @@
 		}]
 	}, {
 		"bezeichner": "E07",
-		"idHistorie": 56,
+		"idStatistik": "56",
 		"historie": [ {
 			"id": 5007000,
 			"kuerzel": "E07",
@@ -2859,7 +2859,7 @@
 		}]
 	}, {
 		"bezeichner": "E08",
-		"idHistorie": 57,
+		"idStatistik": "57",
 		"historie": [ {
 			"id": 5008000,
 			"kuerzel": "E08",
@@ -2888,7 +2888,7 @@
 		}]
 	}, {
 		"bezeichner": "E09",
-		"idHistorie": 58,
+		"idStatistik": "58",
 		"historie": [ {
 			"id": 5009000,
 			"kuerzel": "E09",
@@ -2917,7 +2917,7 @@
 		}]
 	}, {
 		"bezeichner": "E10",
-		"idHistorie": 59,
+		"idStatistik": "59",
 		"historie": [ {
 			"id": 5010000,
 			"kuerzel": "E10",
@@ -2946,7 +2946,7 @@
 		}]
 	}, {
 		"bezeichner": "E11",
-		"idHistorie": 60,
+		"idStatistik": "60",
 		"historie": [ {
 			"id": 5011000,
 			"kuerzel": "E11",
@@ -2975,7 +2975,7 @@
 		}]
 	}, {
 		"bezeichner": "E12",
-		"idHistorie": 61,
+		"idStatistik": "61",
 		"historie": [ {
 			"id": 5012000,
 			"kuerzel": "E12",
@@ -3004,7 +3004,7 @@
 		}]
 	}, {
 		"bezeichner": "E13",
-		"idHistorie": 62,
+		"idStatistik": "62",
 		"historie": [ {
 			"id": 5013000,
 			"kuerzel": "E13",
@@ -3032,7 +3032,7 @@
 		}]
 	}, {
 		"bezeichner": "ER",
-		"idHistorie": 63,
+		"idStatistik": "63",
 		"historie": [ {
 			"id": 14001000,
 			"kuerzel": "ER",
@@ -3054,7 +3054,7 @@
 		} ]
 	}, {
 		"bezeichner": "EVB",
-		"idHistorie": 64,
+		"idStatistik": "64",
 		"historie": [ {
 			"id": 80001000,
 			"kuerzel": "EVB",
@@ -3094,7 +3094,7 @@
 		} ]
 	}, {
 		"bezeichner": "G01",
-		"idHistorie": 65,
+		"idStatistik": "65",
 		"historie": [ {
 			"id": 60001000,
 			"kuerzel": "G01",
@@ -3116,7 +3116,7 @@
 		} ]
 	}, {
 		"bezeichner": "G02",
-		"idHistorie": 66,
+		"idStatistik": "66",
 		"historie": [ {
 			"id": 18001000,
 			"kuerzel": "G02",
@@ -3138,7 +3138,7 @@
 		} ]
 	}, {
 		"bezeichner": "GGS",
-		"idHistorie": 67,
+		"idStatistik": "67",
 		"historie": [ {
 			"id": 15001000,
 			"kuerzel": "GGS",
@@ -3160,7 +3160,7 @@
 		} ]
 	}, {
 		"bezeichner": "GGY",
-		"idHistorie": 68,
+		"idStatistik": "68",
 		"historie": [ {
 			"id": 15002000,
 			"kuerzel": "GGY",
@@ -3182,7 +3182,7 @@
 		} ]
 	}, {
 		"bezeichner": "GMS",
-		"idHistorie": 69,
+		"idStatistik": "69",
 		"historie": [ {
 			"id": 80002000,
 			"kuerzel": "GMS",
@@ -3222,7 +3222,7 @@
 		} ]
 	}, {
 		"bezeichner": "GR",
-		"idHistorie": 70,
+		"idStatistik": "70",
 		"historie": [ {
 			"id": 15003000,
 			"kuerzel": "GR",
@@ -3244,7 +3244,7 @@
 		} ]
 	}, {
 		"bezeichner": "GRH",
-		"idHistorie": 71,
+		"idStatistik": "71",
 		"historie": [ {
 			"id": 15004000,
 			"kuerzel": "GRH",
@@ -3266,7 +3266,7 @@
 		} ]
 	}, {
 		"bezeichner": "GS",
-		"idHistorie": 72,
+		"idStatistik": "72",
 		"historie": [ {
 			"id": 50001000,
 			"kuerzel": "GS",
@@ -3288,7 +3288,7 @@
 		} ]
 	}, {
 		"bezeichner": "GY",
-		"idHistorie": 73,
+		"idStatistik": "73",
 		"historie": [ {
 			"id": 15005000,
 			"kuerzel": "GY",
@@ -3386,7 +3386,7 @@
 		} ]
 	}, {
 		"bezeichner": "GY8",
-		"idHistorie": 74,
+		"idStatistik": "74",
 		"historie": [ {
 			"id": 60002000,
 			"kuerzel": "GY8",
@@ -3427,7 +3427,7 @@
  		} ]
 	}, {
 		"bezeichner": "GY9",
-		"idHistorie": 75,
+		"idStatistik": "75",
 		"historie": [ {
 			"id": 60003000,
 			"kuerzel": "GY9",
@@ -3450,7 +3450,7 @@
 		} ]
 	}, {
 		"bezeichner": "H",
-		"idHistorie": 76,
+		"idStatistik": "76",
 		"historie": [ {
 			"id": 10001000,
 			"kuerzel": "H",
@@ -3530,7 +3530,7 @@
 		} ]
 	}, {
 		"bezeichner": "H01",
-		"idHistorie": 77,
+		"idStatistik": "77",
 		"historie": [ {
 			"id": 17001000,
 			"kuerzel": "H01",
@@ -3552,7 +3552,7 @@
 		} ]
 	}, {
 		"bezeichner": "H02",
-		"idHistorie": 78,
+		"idStatistik": "78",
 		"historie": [ {
 			"id": 17002000,
 			"kuerzel": "H02",
@@ -3574,7 +3574,7 @@
 		} ]
 	}, {
 		"bezeichner": "K02",
-		"idHistorie": 79,
+		"idStatistik": "79",
 		"historie": [ {
 			"id": 18002000,
 			"kuerzel": "K02",
@@ -3596,7 +3596,7 @@
 		} ]
 	}, {
 		"bezeichner": "R",
-		"idHistorie": 80,
+		"idStatistik": "80",
 		"historie": [ {
 			"id": 10002000,
 			"kuerzel": "R",
@@ -3676,7 +3676,7 @@
 		} ]
 	}, {
 		"bezeichner": "R00",
-		"idHistorie": 81,
+		"idStatistik": "81",
 		"historie": [ {
 			"id": 10003000,
 			"kuerzel": "R00",
@@ -3718,7 +3718,7 @@
 		} ]
 	}, {
 		"bezeichner": "R01",
-		"idHistorie": 82,
+		"idStatistik": "82",
 		"historie": [ {
 			"id": 10004000,
 			"kuerzel": "R01",
@@ -3760,7 +3760,7 @@
 		} ]
 	}, {
 		"bezeichner": "R02",
-		"idHistorie": 83,
+		"idStatistik": "83",
 		"historie": [ {
 			"id": 18003000,
 			"kuerzel": "R02",
@@ -3782,7 +3782,7 @@
 		} ]
 	}, {
 		"bezeichner": "RH",
-		"idHistorie": 84,
+		"idStatistik": "84",
 		"historie": [ {
 			"id": 10005000,
 			"kuerzel": "RH",
@@ -3823,7 +3823,7 @@
 		} ]
 	}, {
 		"bezeichner": "RKB",
-		"idHistorie": 85,
+		"idStatistik": "85",
 		"historie": [ {
 			"id": 80003000,
 			"kuerzel": "RKB",
@@ -3863,7 +3863,7 @@
 		} ]
 	}, {
 		"bezeichner": "SRH",
-		"idHistorie": 86,
+		"idStatistik": "86",
 		"historie": [ {
 			"id": 10006000,
 			"kuerzel": "SRH",
@@ -3885,7 +3885,7 @@
 		} ]
 	}, {
 		"bezeichner": "SSI",
-		"idHistorie": 87,
+		"idStatistik": "87",
 		"historie": [ {
 			"id": 10007000,
 			"kuerzel": "SSI",
@@ -3907,7 +3907,7 @@
 		} ]
 	}, {
 		"bezeichner": "Y8",
-		"idHistorie": 88,
+		"idStatistik": "88",
 		"historie": [ {
 			"id": 10008000,
 			"kuerzel": "Y8",

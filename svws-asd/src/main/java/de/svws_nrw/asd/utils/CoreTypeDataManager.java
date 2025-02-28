@@ -72,8 +72,8 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	/** Die Liste aller zulässigen Werte des Core-Types, d.h. der Enumeration */
 	private final @NotNull List<U> _listWerte;
 
-	/** Die Zuordnung der Liste mit den Historien-IDs zu den Bezeichnern des Core-Types */
-	private final @NotNull Map<String, Long> _mapBezeichnerToHistorienID;
+	/** Die Zuordnung der Liste mit den Statistik-IDs zu den Bezeichnern des Core-Types */
+	private final @NotNull Map<String, String> _mapBezeichnerToStatistikID;
 
 	/** Die Daten des Core-Types mit der Zuordnung der Liste mit den Historien-Einträgen zu den Bezeichnern des Core-Types */
 	private final @NotNull Map<String, List<T>> _mapBezeichnerToHistorie;
@@ -81,8 +81,8 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	/** Eine Map mit der Zuordnung der Enum-Einträge zu den Bezeichnern */
 	private final @NotNull Map<String, U> _mapBezeichnerToEnum = new HashMap<>();
 
-	/** Eine Map mit der Zuordnung der Historien-IDs zu den Enum-Einträgen */
-	private final @NotNull Map<U, Long> _mapEnumToHistorienID = new HashMap<>();
+	/** Eine Map mit der Zuordnung der Statistik-IDs zu den Enum-Einträgen */
+	private final @NotNull Map<U, String> _mapEnumToStatistikID = new HashMap<>();
 
 	/** Eine Map mit der Zuordnung der Historieneinträge zu den Enum-Einträgen */
 	private final @NotNull Map<U, List<T>> _mapEnumToHistorie = new HashMap<>();
@@ -128,12 +128,12 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	 * @param clazz     die Core-Type-Klasse
 	 * @param values    ein Array mit allen Werten des Core-Types
 	 * @param data      die Daten für den Core-Type
-	 * @param idsHistorien   die IDs der Historien zu den einzelnen Bezeichnern
+	 * @param idsStatistik   die IDs der Historien zu den einzelnen Bezeichnern
 	 */
 	public CoreTypeDataManager(final long version, final @NotNull Class<U> clazz,
 			final @NotNull U @NotNull [] values,
 			final @NotNull Map<String, List<T>> data,
-			final @NotNull Map<String, Long> idsHistorien) {
+			final @NotNull Map<String, String> idsStatistik) {
 		_name = clazz.getSimpleName();
 		// Prüfe und setze die Version des Core-Types
 		if (version <= 0)
@@ -143,7 +143,7 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 		// Erstelle die Map von den Bezeichnern zu den einzelnen Werte des Core-Types
 		this._listWerte = Arrays.asList(values);
 		this._mapBezeichnerToHistorie = data;
-		this._mapBezeichnerToHistorienID = idsHistorien;
+		this._mapBezeichnerToStatistikID = idsStatistik;
 		for (final @NotNull U coreTypeValue : values) {
 			_mapBezeichnerToEnum.put(coreTypeValue.name(), coreTypeValue);
 			final List<T> historie = _mapBezeichnerToHistorie.get(coreTypeValue.name());
@@ -151,11 +151,11 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 				throw new CoreTypeException(_name + ": Der Core-Type-Bezeichner " + coreTypeValue.name()
 						+ "hat keine Daten zugeordnet. Der Core-Type konnte nicht vollständig initialisiert werden.");
 			_mapEnumToHistorie.put(coreTypeValue, historie);
-			final Long idHistorie = _mapBezeichnerToHistorienID.get(coreTypeValue.name());
-			if (idHistorie == null)
+			final String idStatistik = _mapBezeichnerToStatistikID.get(coreTypeValue.name());
+			if (idStatistik == null)
 				throw new CoreTypeException(_name + ": Der Core-Type-Bezeichner " + coreTypeValue.name()
-						+ "hat keine Historien-ID zugeordnet. Der Core-Type konnte nicht vollständig initialisiert werden.");
-			_mapEnumToHistorienID.put(coreTypeValue, idHistorie);
+						+ "hat keine Statistik-ID zugeordnet. Der Core-Type konnte nicht vollständig initialisiert werden.");
+			_mapEnumToStatistikID.put(coreTypeValue, idStatistik);
 		}
 		// Prüfe, ob alle Daten auch als Core-Type-Werte existieren
 		for (final @NotNull String bezeichner : _mapBezeichnerToHistorie.keySet()) {
@@ -256,16 +256,16 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 
 
 	/**
-	 * Gibt die Historien-ID für den angegebenen Bezeichner zurück.
+	 * Gibt die Statistik-ID für den angegebenen Bezeichner zurück.
 	 *
 	 * @param bezeichner   der Bezeichner
 	 *
-	 * @return die Historien-ID
+	 * @return die Statistik-ID
 	 */
-	public long getHistorienIdByBezeichner(final String bezeichner) {
-		final Long tmp = _mapBezeichnerToHistorienID.get(bezeichner);
+	public String getStatistikIdByBezeichner(final String bezeichner) {
+		final String tmp = _mapBezeichnerToStatistikID.get(bezeichner);
 		if (tmp == null)
-			throw new CoreTypeException(_name + ": Keine Historien-ID für den Bezeichner " + bezeichner + " gefunden.");
+			throw new CoreTypeException(_name + ": Keine Statistik-ID für den Bezeichner " + bezeichner + " gefunden.");
 		return tmp;
 	}
 
@@ -348,18 +348,18 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 
 
 	/**
-	 * Gibt die Historien-ID für den angegebenen Core-Type Wert zurück.
+	 * Gibt die Statistik-ID für den angegebenen Core-Type Wert zurück.
 	 *
 	 * @param value   der Core-Type-Wert
 	 *
-	 * @return die Historien-ID
+	 * @return die Statistik-ID
 	 */
-	public long getHistorienIdByWert(final @NotNull U value) {
+	public @NotNull String getStatistikIdByWert(final @NotNull U value) {
 		if (value == null)
-			throw new CoreTypeException("Ein Zugriff auf eine Historien-ID ist mit null nicht möglich.");
-		final Long tmp = _mapEnumToHistorienID.get(value);
+			throw new CoreTypeException("Ein Zugriff auf eine Statistik-ID ist mit null nicht möglich.");
+		final String tmp = _mapEnumToStatistikID.get(value);
 		if (tmp == null)
-			throw new CoreTypeException(_name + ": Keine Historien-ID für den Bezeichner " + value.name() + " gefunden.");
+			throw new CoreTypeException(_name + ": Keine Statistik-ID für den Bezeichner " + value.name() + " gefunden.");
 		return tmp;
 	}
 

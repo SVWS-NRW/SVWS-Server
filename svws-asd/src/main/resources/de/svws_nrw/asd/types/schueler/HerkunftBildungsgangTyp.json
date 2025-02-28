@@ -2,7 +2,7 @@
 	"version": 1,
 	"daten": [ {
 		"bezeichner": "AG",
-		"idHistorie": 1,
+		"idStatistik": "1",
 		"historie": [ {
 			"id": 1000,
 			"kuerzel": "AG",
@@ -14,7 +14,7 @@
 		} ]
 	}, {
 		"bezeichner": "AR",
-		"idHistorie": 2,
+		"idStatistik": "2",
 		"historie": [ {
 			"id": 2000,
 			"kuerzel": "AR",
@@ -26,7 +26,7 @@
 		} ]
 	}, {
 		"bezeichner": "KL",
-		"idHistorie": 3,
+		"idStatistik": "3",
 		"historie": [ {
 			"id": 3000,
 			"kuerzel": "KL",
@@ -38,7 +38,7 @@
 		} ]
 	}, {
 		"bezeichner": "BF",
-		"idHistorie": 4,
+		"idStatistik": "4",
 		"historie": [ {
 			"id": 10000,
 			"kuerzel": "BF",
@@ -50,7 +50,7 @@
 		} ]
 	}, {
 		"bezeichner": "BS",
-		"idHistorie": 5,
+		"idStatistik": "5",
 		"historie": [ {
 			"id": 11000,
 			"kuerzel": "BS",
@@ -62,7 +62,7 @@
 		} ]
 	}, {
 		"bezeichner": "BY",
-		"idHistorie": 6,
+		"idStatistik": "6",
 		"historie": [ {
 			"id": 12000,
 			"kuerzel": "BY",
@@ -74,7 +74,7 @@
 		} ]
 	}, {
 		"bezeichner": "FO",
-		"idHistorie": 7,
+		"idStatistik": "7",
 		"historie": [ {
 			"id": 13000,
 			"kuerzel": "FO",
@@ -86,7 +86,7 @@
 		} ]
 	}, {
 		"bezeichner": "FS",
-		"idHistorie": 8,
+		"idStatistik": "8",
 		"historie": [ {
 			"id": 14000,
 			"kuerzel": "FS",

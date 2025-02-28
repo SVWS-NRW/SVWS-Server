@@ -221,7 +221,7 @@ public final class CoreTypeRessource<T extends CoreTypeData, U extends CoreType<
 	 * Initialisiert den Core-Type. Die Daten müssen zuvor geladen sein (siehe initAll)
 	 */
 	private void init() {
-		dataManager = new CoreTypeDataManager<>(data.getVersion(), typeClass, values, data.getData(), data.getHistorienIDs());
+		dataManager = new CoreTypeDataManager<>(data.getVersion(), typeClass, values, data.getData(), data.getStatistikIDs());
 		try {
 			final Method method = typeClass.getMethod("init", CoreTypeDataManager.class);
 			method.invoke(null, dataManager);

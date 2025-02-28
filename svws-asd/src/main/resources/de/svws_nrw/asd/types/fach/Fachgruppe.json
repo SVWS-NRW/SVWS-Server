@@ -2,7 +2,7 @@
 	"version": 1,
 	"daten": [ {	
 		"bezeichner": "FG_D",
-		"idHistorie": 1,
+		"idStatistik": "1",
 		"historie": [ {
 			"id": 1,
 			"nummer": 1,
@@ -18,7 +18,7 @@
 		} ]
 	}, {
 		"bezeichner": "FG_AL",
-		"idHistorie": 2,
+		"idStatistik": "2",
 		"historie": [ {
 			"id": 2,
 			"nummer": 2,
@@ -34,7 +34,7 @@
 		} ]
 	}, {
 		"bezeichner": "FG_FS",
-		"idHistorie": 3,
+		"idStatistik": "3",
 		"historie": [ {
 			"id": 3,
 			"nummer": 2,
@@ -50,7 +50,7 @@
 		} ]
 	}, {
 		"bezeichner": "FG_MS",
-		"idHistorie": 4,
+		"idStatistik": "4",
 		"historie": [ {
 			"id": 4,
 			"nummer": 3,
@@ -66,7 +66,7 @@
 		} ]
 	}, {
 		"bezeichner": "FG_ME",
-		"idHistorie": 5,
+		"idStatistik": "5",
 		"historie": [ {
 			"id": 5,
 			"nummer": 4,
@@ -82,7 +82,7 @@
 		} ]
 	}, {
 		"bezeichner": "FG_GS",
-		"idHistorie": 6,
+		"idStatistik": "6",
 		"historie": [ {
 			"id": 6,
 			"nummer": 5,
@@ -98,7 +98,7 @@
 		} ]
 	}, {
 		"bezeichner": "FG_PL",
-		"idHistorie": 7,
+		"idStatistik": "7",
 		"historie": [ {
 			"id": 7,
 			"nummer": 5,
@@ -114,7 +114,7 @@
 		} ]
 	}, {
 		"bezeichner": "FG_RE",
-		"idHistorie": 8,
+		"idStatistik": "8",
 		"historie": [ {
 			"id": 8,
 			"nummer": 6,
@@ -130,7 +130,7 @@
 		} ]
 	}, {
 		"bezeichner": "FG_M",
-		"idHistorie": 9,
+		"idStatistik": "9",
 		"historie": [ {
 			"id": 9,
 			"nummer": 7,
@@ -146,7 +146,7 @@
 		} ]
 	}, {
 		"bezeichner": "FG_NW",
-		"idHistorie": 10,
+		"idStatistik": "10",
 		"historie": [ {
 			"id": 10,
 			"nummer": 8,
@@ -162,7 +162,7 @@
 		} ]
 	}, {
 		"bezeichner": "FG_WN",
-		"idHistorie": 11,
+		"idStatistik": "11",
 		"historie": [ {
 			"id": 11,
 			"nummer": 8,
@@ -178,7 +178,7 @@
 		} ]
 	}, {
 		"bezeichner": "FG_SP",
-		"idHistorie": 12,
+		"idStatistik": "12",
 		"historie": [ {
 			"id": 12,
 			"nummer": 9,
@@ -194,7 +194,7 @@
 		} ]
 	}, {
 		"bezeichner": "FG_VX",
-		"idHistorie": 13,
+		"idStatistik": "13",
 		"historie": [ {
 			"id": 13,
 			"nummer": 10,
@@ -210,7 +210,7 @@
 		} ]
 	}, {
 		"bezeichner": "FG_PX",
-		"idHistorie": 14,
+		"idStatistik": "14",
 		"historie": [ {
 			"id": 14,
 			"nummer": 11,
@@ -226,7 +226,7 @@
 		} ]
 	}, {
 		"bezeichner": "FG_BUE",
-		"idHistorie": 15,
+		"idStatistik": "15",
 		"historie": [ {
 			"id": 15,
 			"nummer": null,
@@ -242,7 +242,7 @@
 		} ]
 	}, {
 		"bezeichner": "FG_BBS",
-		"idHistorie": 16,
+		"idStatistik": "16",
 		"historie": [ {
 			"id": 16,
 			"nummer": null,
@@ -258,7 +258,7 @@
 		} ]
 	}, {
 		"bezeichner": "FG_BBS_SCHWERPUNKT",
-		"idHistorie": 17,
+		"idStatistik": "17",
 		"historie": [ {
 			"id": 17,
 			"nummer": null,
@@ -274,7 +274,7 @@
 		} ]
 	}, {
 		"bezeichner": "FG_DF",
-		"idHistorie": 18,
+		"idStatistik": "18",
 		"historie": [ {
 			"id": 18,
 			"nummer": null,
@@ -290,7 +290,7 @@
 		} ]
 	}, {
 		"bezeichner": "FG_BP",
-		"idHistorie": 19,
+		"idStatistik": "19",
 		"historie": [ {
 			"id": 19,
 			"nummer": null,
@@ -306,7 +306,7 @@
 		} ]
 	}, {
 		"bezeichner": "FG_BLL",
-		"idHistorie": 20,
+		"idStatistik": "20",
 		"historie": [ {
 			"id": 20,
 			"nummer": null,
@@ -322,7 +322,7 @@
 		} ]
 	}, {
 		"bezeichner": "FG_WP",
-		"idHistorie": 21,
+		"idStatistik": "21",
 		"historie": [ {
 			"id": 21,
 			"nummer": null,
@@ -338,7 +338,7 @@
 		} ]
 	}, {
 		"bezeichner": "FG_ZUV",
-		"idHistorie": 22,
+		"idStatistik": "22",
 		"historie": [ {
 			"id": 22,
 			"nummer": null,
@@ -354,7 +354,7 @@
 		} ]
 	}, {
 		"bezeichner": "FG_ANG",
-		"idHistorie": 23,
+		"idStatistik": "23",
 		"historie": [ {
 			"id": 23,
 			"nummer": null,
@@ -370,7 +370,7 @@
 		} ]
 	}, {
 		"bezeichner": "FG_D_SP",
-		"idHistorie": 24,
+		"idStatistik": "24",
 		"historie": [ {
 			"id": 24,
 			"nummer": null,
@@ -386,7 +386,7 @@
 		} ]
 	}, {
 		"bezeichner": "FG_SU",
-		"idHistorie": 25,
+		"idStatistik": "25",
 		"historie": [ {
 			"id": 25,
 			"nummer": null,
@@ -402,7 +402,7 @@
 		} ]
 	}, {
 		"bezeichner": "FG_FOE",
-		"idHistorie": 26,
+		"idStatistik": "26",
 		"historie": [ {
 			"id": 26,
 			"nummer": null,
@@ -418,7 +418,7 @@
 		} ]
 	}, {
 		"bezeichner": "FG_ABA",
-		"idHistorie": 27,
+		"idStatistik": "27",
 		"historie": [ {
 			"id": 27,
 			"nummer": null,
@@ -434,7 +434,7 @@
 		} ]
 	}, {
 		"bezeichner": "FG_PA",
-		"idHistorie": 28,
+		"idStatistik": "28",
 		"historie": [ {
 			"id": 28,
 			"nummer": null,
@@ -450,7 +450,7 @@
 		} ]
 	}, {
 		"bezeichner": "FG_IF",
-		"idHistorie": 29,
+		"idStatistik": "29",
 		"historie": [ {
 			"id": 29,
 			"nummer": null,

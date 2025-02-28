@@ -2,7 +2,7 @@
 	"version": 1,
 	"daten": [ {
 		"bezeichner": "KEINE",
-		"idHistorie": 1,
+		"idStatistik": "1",
 		"historie": [ {
 			"id": 1,
 			"kuerzel": "",
@@ -13,7 +13,7 @@
 		} ]
 	}, {
 		"bezeichner": "ANSCHLUSSOPTION",
-		"idHistorie": 2,
+		"idStatistik": "2",
 		"historie": [ {
 			"id": 2,
 			"kuerzel": "Anschlussoption",
@@ -24,7 +24,7 @@
 		} ]
 	}, {
 		"bezeichner": "BERUFSFELD",
-		"idHistorie": 3,
+		"idStatistik": "3",
 		"historie": [ {
 			"id": 3,
 			"kuerzel": "Berufsfeld",
@@ -35,7 +35,7 @@
 		} ]
 	}, {
 		"bezeichner": "FREITEXT",
-		"idHistorie": 4,
+		"idStatistik": "4",
 		"historie": [ {
 			"id": 4,
 			"kuerzel": "Freitext",
@@ -46,7 +46,7 @@
 		} ]
 	}, {
 		"bezeichner": "FREITEXT_BERUF",
-		"idHistorie": 5,
+		"idStatistik": "5",
 		"historie": [ {
 			"id": 5,
 			"kuerzel": "Freitext Beruf",
@@ -57,7 +57,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_EBENE_4",
-		"idHistorie": 6,
+		"idStatistik": "6",
 		"historie": [ {
 			"id": 6,
 			"kuerzel": "SBO EB4",

@@ -2,7 +2,7 @@
 	"version": 1,
 	"daten": [ {
 		"bezeichner": "A",
-		"idHistorie": 1,
+		"idStatistik": "1",
 		"historie": [ {
 			"id" : 1000,
 			"schluessel": "1", 
@@ -13,7 +13,7 @@
 		} ]
 	}, {	
 		"bezeichner": "B",
-		"idHistorie": 2,
+		"idStatistik": "2",
 		"historie": [ {
 			"id" : 2000,
 			"schluessel": "2",
@@ -24,7 +24,7 @@
 		} ]
 	}, {
 		"bezeichner": "C",
-		"idHistorie": 3,
+		"idStatistik": "3",
 		"historie": [ {
 			"id": 3000,
 			"schluessel": "3",
@@ -35,7 +35,7 @@
 		} ]
 	}, {
 		"bezeichner": "D",
-		"idHistorie": 4,
+		"idStatistik": "4",
 		"historie": [ {
 			"id": 4000,
 			"schluessel": "4",
@@ -46,7 +46,7 @@
 		} ]
 	}, {
 		"bezeichner": "E",
-		"idHistorie": 5,
+		"idStatistik": "5",
 		"historie": [ {
 			"id": 5000,
 			"schluessel": "5",
@@ -57,7 +57,7 @@
 		} ]
 	}, {
 		"bezeichner": "H",
-		"idHistorie": 6,
+		"idStatistik": "6",
 		"historie": [ {
 			"id": 7000,
 			"schluessel": "7",
@@ -68,7 +68,7 @@
 		} ]
 	}, {
 		"bezeichner": "X",
-		"idHistorie": 7,
+		"idStatistik": "7",
 		"historie": [ {
 			"id": 24000,
 			"schluessel": "24",
@@ -79,7 +79,7 @@
 		} ]
 	}, {
 		"bezeichner": "Z",
-		"idHistorie": 8,
+		"idStatistik": "8",
 		"historie": [ {
 			"id": 26000,
 			"schluessel": "26",

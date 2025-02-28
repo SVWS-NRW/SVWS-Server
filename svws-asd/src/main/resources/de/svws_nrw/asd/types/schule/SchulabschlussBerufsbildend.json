@@ -2,7 +2,7 @@
 	"version": 2,
 	"daten": [ {
 		"bezeichner": "OA",
-		"idHistorie": 1,
+		"idStatistik": "1",
 		"historie": [ {
 			"id": 0,
 			"schluessel": "0",
@@ -13,7 +13,7 @@
 		} ]
 	}, {
 		"bezeichner": "VORB",
-		"idHistorie": 2,
+		"idStatistik": "2",
 		"historie": [ {
 			"id": 100000,
 			"schluessel": "1",
@@ -24,7 +24,7 @@
 		} ]
 	}, {
 		"bezeichner": "VERS",
-		"idHistorie": 3,
+		"idStatistik": "3",
 		"historie": [ {
 			"id": 110000,
 			"schluessel": "1",
@@ -35,7 +35,7 @@
 		} ]
 	}, {
 		"bezeichner": "AUFB",
-		"idHistorie": 4,
+		"idStatistik": "4",
 		"historie": [ {
 			"id": 120000,
 			"schluessel": "1",
@@ -46,7 +46,7 @@
 		} ]
 	}, {
 		"bezeichner": "BV",
-		"idHistorie": 5,
+		"idStatistik": "5",
 		"historie": [ {
 			"id": 130000,
 			"schluessel": "1",
@@ -57,7 +57,7 @@
 		} ]
 	}, {
 		"bezeichner": "VP",
-		"idHistorie": 6,
+		"idStatistik": "6",
 		"historie": [ {
 			"id": 140000,
 			"schluessel": "1",
@@ -68,7 +68,7 @@
 		} ]
 	}, {
 		"bezeichner": "BP",
-		"idHistorie": 7,
+		"idStatistik": "7",
 		"historie": [ {
 			"id": 150000,
 			"schluessel": "1",
@@ -79,7 +79,7 @@
 		} ]
 	}, {
 		"bezeichner": "ASZBK",
-		"idHistorie": 16,
+		"idStatistik": "16",
 		"historie": [ {
 			"id": 160000,
 			"schluessel": "1",
@@ -111,7 +111,7 @@
 		} ]
 	}, {
 		"bezeichner": "BG",
-		"idHistorie": 8,
+		"idStatistik": "8",
 		"historie": [ {
 			"id": 200000,
 			"schluessel": "2",
@@ -122,7 +122,7 @@
 		} ]
 	}, {
 		"bezeichner": "BS",
-		"idHistorie": 9,
+		"idStatistik": "9",
 		"historie": [ {
 			"id": 300000,
 			"schluessel": "3",
@@ -133,7 +133,7 @@
 		} ]
 	}, {
 		"bezeichner": "BK",
-		"idHistorie": 10,
+		"idStatistik": "10",
 		"historie": [ {
 			"id": 400000,
 			"schluessel": "4",
@@ -151,7 +151,7 @@
 		} ]
 	}, {
 		"bezeichner": "BAB",
-		"idHistorie": 11,
+		"idStatistik": "11",
 		"historie": [ {
 			"id": 500000,
 			"schluessel": "5",
@@ -162,7 +162,7 @@
 		} ]
 	}, {
 		"bezeichner": "BW",
-		"idHistorie": 12,
+		"idStatistik": "12",
 		"historie": [ {
 			"id": 600000,
 			"schluessel": "6",
@@ -173,7 +173,7 @@
 		} ]
 	}, {
 		"bezeichner": "EBK",
-		"idHistorie": 15,
+		"idStatistik": "15",
 		"historie": [ {
 			"id": 700000,
 			"schluessel": "7",
@@ -184,7 +184,7 @@
 		} ]
 	}, {
 		"bezeichner": "VBK",
-		"idHistorie": 13,
+		"idStatistik": "13",
 		"historie": [ {
 			"id": 800000,
 			"schluessel": "8",
@@ -202,7 +202,7 @@
 		} ]
 	}, {
 		"bezeichner": "WECHSEL",
-		"idHistorie": 14,
+		"idStatistik": "14",
 		"historie": [ {
 			"id": 900000,
 			"schluessel": "9",

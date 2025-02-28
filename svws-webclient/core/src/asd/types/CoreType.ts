@@ -51,12 +51,12 @@ export function de_svws_nrw_asd_types_CoreType_daten<T extends CoreTypeData, U e
 }
 
 /**
- * Gibt die Historien-ID zu diesem Core-Type zurück.
+ * Gibt die Statistik-ID zu diesem Core-Type zurück.
  *
- * @return die Historien-ID
+ * @return die Statistik ID
  */
-export function de_svws_nrw_asd_types_CoreType_historienId<T extends CoreTypeData, U extends CoreType<T, U>>(transpiledThis : any) : number {
-	return transpiledThis.getManager().getHistorienIdByWert(transpiledThis as unknown as U);
+export function de_svws_nrw_asd_types_CoreType_statistikId<T extends CoreTypeData, U extends CoreType<T, U>>(transpiledThis : any) : string | null {
+	return transpiledThis.getManager().getStatistikIdByWert(transpiledThis as unknown as U);
 }
 
 /**

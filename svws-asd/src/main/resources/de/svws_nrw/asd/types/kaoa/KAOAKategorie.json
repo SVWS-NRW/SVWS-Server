@@ -2,7 +2,7 @@
 	"version": 1,
 	"daten": [ {
 		"bezeichner": "SBO_2",
-		"idHistorie": 1,
+		"idStatistik": "1",
 		"historie": [ {
 			"id": 6,
 			"kuerzel": "SBO 2",
@@ -14,7 +14,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_3",
-		"idHistorie": 2,
+		"idStatistik": "2",
 		"historie": [ {
 			"id": 7,
 			"kuerzel": "SBO 3",
@@ -26,7 +26,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_4",
-		"idHistorie": 3,
+		"idStatistik": "3",
 		"historie": [ {
 			"id": 8,
 			"kuerzel": "SBO 4",
@@ -38,7 +38,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_5",
-		"idHistorie": 4,
+		"idStatistik": "4",
 		"historie": [ {
 			"id": 9,
 			"kuerzel": "SBO 5",
@@ -50,7 +50,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_6",
-		"idHistorie": 5,
+		"idStatistik": "5",
 		"historie": [ {
 			"id": 10,
 			"kuerzel": "SBO 6",
@@ -62,7 +62,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_7",
-		"idHistorie": 6,
+		"idStatistik": "6",
 		"historie": [ {
 			"id": 11,
 			"kuerzel": "SBO 7",
@@ -74,7 +74,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_8",
-		"idHistorie": 7,
+		"idStatistik": "7",
 		"historie": [ {
 			"id": 12,
 			"kuerzel": "SBO 8",
@@ -86,7 +86,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_9",
-		"idHistorie": 8,
+		"idStatistik": "8",
 		"historie": [ {
 			"id": 13,
 			"kuerzel": "SBO 9",
@@ -98,7 +98,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_10",
-		"idHistorie": 9,
+		"idStatistik": "9",
 		"historie": [ {
 			"id": 14,
 			"kuerzel": "SBO 10",
