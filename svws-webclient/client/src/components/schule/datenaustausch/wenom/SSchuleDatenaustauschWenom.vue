@@ -84,11 +84,18 @@
 						</svws-ui-input-wrapper>
 						<svws-ui-input-wrapper v-if="connInfo!.tlsCertIsKnown === false" class="mt-8">
 							<div class="text-headline-md">TLS-Zertifikat des Servers </div>
-							<div>
-								{{ cert }}
+							<div v-if="cert === null">Kein Zertifikat angegeben.</div>
+							<div v-else>
+								<div class="text-headline-sm">Inhaber:</div>
+								<div class="pl-4">{{ cert.subject }}</div>
+								<div class="text-headline-sm">Aussteller:</div>
+								<div class="pl-4">{{ cert.issuer }}</div>
+								<div class="text-headline-sm">Gültigkeit</div>
+								<div class="pl-4">von: {{ cert.validSince }}</div>
+								<div class="pl-4">bis: {{ cert.validUntil }}</div>
 							</div>
 							<svws-ui-checkbox :model-value="connInfo!.tlsCertIsTrusted" @update:model-value="value => trustCertificate(value)">
-								Zertifikat vertrauen
+								Zertifikat vertrauen?
 							</svws-ui-checkbox>
 						</svws-ui-input-wrapper>
 						<svws-ui-input-wrapper class="mt-8">
@@ -167,7 +174,7 @@
 
 	import { computed, onMounted, ref } from "vue";
 	import type { SchuleDatenaustauschWenomProps } from './SSchuleDatenaustauschWenomProps';
-	import type { OAuth2ClientConnection, SimpleOperationResponse } from "@core";
+	import type { List, OAuth2ClientConnection, SimpleOperationResponse, TLSCertificate } from "@core";
 	import { ENMDaten, ENMServerConfigElement, ENMServerConfigSMTP, JavaString } from "@core";
 
 	const props = defineProps<SchuleDatenaustauschWenomProps>();
@@ -224,19 +231,11 @@
 			status.value = res;
 	}
 
-	const certChain = computed<string[]>(() => {
+	const cert = computed<TLSCertificate | null>(() => {
 		const connInfo = props.connectionInfo();
-		let result : string[] = [];
-		if ((connInfo !== null) && (connInfo.tlsCert !== null)) {
-			result = JSON.parse(connInfo.tlsCert);
-		}
-		return result;
-	});
-
-	const cert = computed<string>(() => {
-		if (certChain.value.length < 1)
-			return "Zertifikat konnte nicht geladen werden.";
-		return atob(certChain.value[0]);
+		if ((connInfo === null) || (connInfo.tlsCertChain.size() < 1))
+			return null;
+		return connInfo.tlsCertChain.getFirst();
 	});
 
 	const smtpConfig = computed(() => {

@@ -323,6 +323,7 @@ export { MinHeapIterator } from './core/adt/tree/MinHeapIterator';
 export { BenutzerKennwort } from './core/data/BenutzerKennwort';
 export { LongAndStringLists } from './core/data/LongAndStringLists';
 export { SimpleOperationResponse } from './core/data/SimpleOperationResponse';
+export { TLSCertificate } from './core/data/TLSCertificate';
 export { AbschlussErgebnis } from './core/data/abschluss/AbschlussErgebnis';
 export { AbschlussErgebnisBerufsbildend } from './core/data/abschluss/AbschlussErgebnisBerufsbildend';
 export { GEAbschlussFach } from './core/data/abschluss/GEAbschlussFach';

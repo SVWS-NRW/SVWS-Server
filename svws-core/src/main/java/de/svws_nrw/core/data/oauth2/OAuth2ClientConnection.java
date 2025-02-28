@@ -1,9 +1,13 @@
 package de.svws_nrw.core.data.oauth2;
 
-import com.sun.istack.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
+import de.svws_nrw.core.data.TLSCertificate;
 import de.svws_nrw.transpiler.TranspilerDTO;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -42,6 +46,11 @@ public class OAuth2ClientConnection {
 	/** Gibt an, ob dem TLS-Zertifikat von dem SVWS-Server vertraut wird oder nicht. */
 	@Schema(description = "gibt an, ob dem TLS-Zertifikat von dem SVWS-Server vertraut wird oder nicht.", example = "false")
 	public boolean tlsCertIsTrusted = false;
+
+	/** Die Liste mit den TLS-Zertifikaten der Zertifikatskette des TLS-Servers. */
+	@ArraySchema(schema = @Schema(implementation = TLSCertificate.class,
+			description = "Die Liste mit den TLS-Zertifikaten der Zertifikatskette des TLS-Servers."))
+	public @NotNull List<TLSCertificate> tlsCertChain = new ArrayList<>();
 
 
 	/**

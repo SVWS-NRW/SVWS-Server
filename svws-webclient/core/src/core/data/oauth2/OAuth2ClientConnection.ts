@@ -1,4 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { TLSCertificate } from '../../../core/data/TLSCertificate';
+import { ArrayList } from '../../../java/util/ArrayList';
+import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 
 export class OAuth2ClientConnection extends JavaObject {
@@ -11,17 +14,17 @@ export class OAuth2ClientConnection extends JavaObject {
 	/**
 	 * Die URL des Auth-Servers.
 	 */
-	public authServer : string | null = "";
+	public authServer : string = "";
 
 	/**
 	 * Die Client-ID für diesen Auth-Server.
 	 */
-	public clientID : string | null = "";
+	public clientID : string = "";
 
 	/**
 	 * Das Client-Secret für die Client ID für diesen Auth-Server.
 	 */
-	public clientSecret : string | null = "";
+	public clientSecret : string = "";
 
 	/**
 	 * Das TLS-Zertifikat, welches von dem Auth-Server verwendet wird.
@@ -37,6 +40,11 @@ export class OAuth2ClientConnection extends JavaObject {
 	 * Gibt an, ob dem TLS-Zertifikat von dem SVWS-Server vertraut wird oder nicht.
 	 */
 	public tlsCertIsTrusted : boolean = false;
+
+	/**
+	 * Die Liste mit den TLS-Zertifikaten der Zertifikatskette des TLS-Servers.
+	 */
+	public tlsCertChain : List<TLSCertificate> = new ArrayList<TLSCertificate>();
 
 
 	/**
@@ -62,9 +70,15 @@ export class OAuth2ClientConnection extends JavaObject {
 		if (obj.id === undefined)
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.authServer = (obj.authServer === undefined) ? null : obj.authServer === null ? null : obj.authServer;
-		result.clientID = (obj.clientID === undefined) ? null : obj.clientID === null ? null : obj.clientID;
-		result.clientSecret = (obj.clientSecret === undefined) ? null : obj.clientSecret === null ? null : obj.clientSecret;
+		if (obj.authServer === undefined)
+			throw new Error('invalid json format, missing attribute authServer');
+		result.authServer = obj.authServer;
+		if (obj.clientID === undefined)
+			throw new Error('invalid json format, missing attribute clientID');
+		result.clientID = obj.clientID;
+		if (obj.clientSecret === undefined)
+			throw new Error('invalid json format, missing attribute clientSecret');
+		result.clientSecret = obj.clientSecret;
 		result.tlsCert = (obj.tlsCert === undefined) ? null : obj.tlsCert === null ? null : obj.tlsCert;
 		if (obj.tlsCertIsKnown === undefined)
 			throw new Error('invalid json format, missing attribute tlsCertIsKnown');
@@ -72,18 +86,31 @@ export class OAuth2ClientConnection extends JavaObject {
 		if (obj.tlsCertIsTrusted === undefined)
 			throw new Error('invalid json format, missing attribute tlsCertIsTrusted');
 		result.tlsCertIsTrusted = obj.tlsCertIsTrusted;
+		if (obj.tlsCertChain !== undefined) {
+			for (const elem of obj.tlsCertChain) {
+				result.tlsCertChain.add(TLSCertificate.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
 		return result;
 	}
 
 	public static transpilerToJSON(obj : OAuth2ClientConnection) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"authServer" : ' + ((obj.authServer === null) ? 'null' : JSON.stringify(obj.authServer)) + ',';
-		result += '"clientID" : ' + ((obj.clientID === null) ? 'null' : JSON.stringify(obj.clientID)) + ',';
-		result += '"clientSecret" : ' + ((obj.clientSecret === null) ? 'null' : JSON.stringify(obj.clientSecret)) + ',';
+		result += '"authServer" : ' + JSON.stringify(obj.authServer) + ',';
+		result += '"clientID" : ' + JSON.stringify(obj.clientID) + ',';
+		result += '"clientSecret" : ' + JSON.stringify(obj.clientSecret) + ',';
 		result += '"tlsCert" : ' + ((obj.tlsCert === null) ? 'null' : JSON.stringify(obj.tlsCert)) + ',';
 		result += '"tlsCertIsKnown" : ' + obj.tlsCertIsKnown.toString() + ',';
 		result += '"tlsCertIsTrusted" : ' + obj.tlsCertIsTrusted.toString() + ',';
+		result += '"tlsCertChain" : [ ';
+		for (let i = 0; i < obj.tlsCertChain.size(); i++) {
+			const elem = obj.tlsCertChain.get(i);
+			result += TLSCertificate.transpilerToJSON(elem);
+			if (i < obj.tlsCertChain.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -95,13 +122,13 @@ export class OAuth2ClientConnection extends JavaObject {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.authServer !== undefined) {
-			result += '"authServer" : ' + ((obj.authServer === null) ? 'null' : JSON.stringify(obj.authServer)) + ',';
+			result += '"authServer" : ' + JSON.stringify(obj.authServer) + ',';
 		}
 		if (obj.clientID !== undefined) {
-			result += '"clientID" : ' + ((obj.clientID === null) ? 'null' : JSON.stringify(obj.clientID)) + ',';
+			result += '"clientID" : ' + JSON.stringify(obj.clientID) + ',';
 		}
 		if (obj.clientSecret !== undefined) {
-			result += '"clientSecret" : ' + ((obj.clientSecret === null) ? 'null' : JSON.stringify(obj.clientSecret)) + ',';
+			result += '"clientSecret" : ' + JSON.stringify(obj.clientSecret) + ',';
 		}
 		if (obj.tlsCert !== undefined) {
 			result += '"tlsCert" : ' + ((obj.tlsCert === null) ? 'null' : JSON.stringify(obj.tlsCert)) + ',';
@@ -111,6 +138,16 @@ export class OAuth2ClientConnection extends JavaObject {
 		}
 		if (obj.tlsCertIsTrusted !== undefined) {
 			result += '"tlsCertIsTrusted" : ' + obj.tlsCertIsTrusted.toString() + ',';
+		}
+		if (obj.tlsCertChain !== undefined) {
+			result += '"tlsCertChain" : [ ';
+			for (let i = 0; i < obj.tlsCertChain.size(); i++) {
+				const elem = obj.tlsCertChain.get(i);
+				result += TLSCertificate.transpilerToJSON(elem);
+				if (i < obj.tlsCertChain.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';
