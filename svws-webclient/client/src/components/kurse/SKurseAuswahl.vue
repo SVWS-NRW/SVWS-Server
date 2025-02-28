@@ -44,7 +44,7 @@
 	import { ref, computed } from "vue";
 	import type { KurseAuswahlProps } from "./SKurseAuswahlProps";
 	import { ViewType, type DataTableColumn, type SortByAndOrder } from "@ui";
-	import type { FachDaten, JahrgangsDaten, KursDaten, LehrerListeEintrag, List, SchuelerListeEintrag, Schulgliederung } from "@core";
+	import {FachDaten, FaecherListeEintrag, JahrgangsDaten, KursDaten, LehrerListeEintrag, List, SchuelerListeEintrag, Schulgliederung} from "@core";
 	import { ServerMode, BenutzerKompetenz } from "@core";
 	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
@@ -145,7 +145,7 @@
 		},
 	});
 
-	const filterFaecher = computed<FachDaten[]>({
+	const filterFaecher = computed<FaecherListeEintrag[]>({
 		get: () => [...props.manager().faecher.auswahl()],
 		set: (value) => {
 			props.manager().faecher.auswahlClear();

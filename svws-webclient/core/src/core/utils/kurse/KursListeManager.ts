@@ -13,13 +13,13 @@ import type { Comparator } from '../../../java/util/Comparator';
 import { KursDaten } from '../../../core/data/kurse/KursDaten';
 import type { JavaFunction } from '../../../java/util/function/JavaFunction';
 import { LehrerListeEintrag } from '../../../core/data/lehrer/LehrerListeEintrag';
-import { FachDaten } from '../../../core/data/fach/FachDaten';
 import { Schulgliederung } from '../../../asd/types/schule/Schulgliederung';
 import { SchulgliederungKatalogEintrag } from '../../../asd/data/schule/SchulgliederungKatalogEintrag';
 import type { List } from '../../../java/util/List';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 import { Pair } from '../../../asd/adt/Pair';
 import { AttributMitAuswahl } from '../../../core/utils/AttributMitAuswahl';
+import { FaecherListeEintrag } from '../../../core/data/fach/FaecherListeEintrag';
 import { AuswahlManager } from '../../../core/utils/AuswahlManager';
 import { JavaInteger } from '../../../java/lang/JavaInteger';
 import { JahrgangsUtils } from '../../../core/utils/jahrgang/JahrgangsUtils';
@@ -30,7 +30,6 @@ import { JavaLong } from '../../../java/lang/JavaLong';
 import { Class } from '../../../java/lang/Class';
 import { KursUtils } from '../../../core/utils/kurse/KursUtils';
 import { Arrays } from '../../../java/util/Arrays';
-import { FachUtils } from '../../../core/utils/fach/FachUtils';
 import { Schuljahresabschnitt } from '../../../asd/data/schule/Schuljahresabschnitt';
 
 export class KursListeManager extends AuswahlManager<number, KursDaten, KursDaten> {
@@ -74,9 +73,9 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 	/**
 	 * Das Filter-Attribut für die Fächer
 	 */
-	public readonly faecher : AttributMitAuswahl<number, FachDaten>;
+	public readonly faecher : AttributMitAuswahl<number, FaecherListeEintrag>;
 
-	private static readonly _fachToId : JavaFunction<FachDaten, number> = { apply : (f: FachDaten) => f.id };
+	private static readonly _fachToId : JavaFunction<FaecherListeEintrag, number> = { apply : (f: FaecherListeEintrag) => f.id };
 
 	/**
 	 * Das Filter-Attribut für die Schüler
@@ -116,6 +115,17 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 	private static readonly _comparatorSchuelerStatus : Comparator<SchuelerStatus> = { compare : (a: SchuelerStatus, b: SchuelerStatus) => a.ordinal() - b.ordinal() };
 
 	/**
+	 * Ein Default-Comparator für den Vergleich von Fächern in Fächerlisten.
+	 */
+	public static readonly comparatorFaecherListe : Comparator<FaecherListeEintrag> = { compare : (a: FaecherListeEintrag, b: FaecherListeEintrag) => {
+		let cmp : number = a.sortierung - b.sortierung;
+		if (cmp !== 0)
+			return cmp;
+		cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
+		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
+	} };
+
+	/**
 	 * Das Filter-Attribut auf nur sichtbare Kurse
 	 */
 	private _filterNurSichtbar : boolean = true;
@@ -141,13 +151,13 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 	 * @param lehrer        die Liste der Lehrer
 	 * @param faecher       die Liste der Fächer
 	 */
-	public constructor(schuljahresabschnitt : number, schuljahresabschnittSchule : number, schuljahresabschnitte : List<Schuljahresabschnitt>, schulform : Schulform | null, kurse : List<KursDaten>, schueler : List<SchuelerListeEintrag>, jahrgaenge : List<JahrgangsDaten>, lehrer : List<LehrerListeEintrag>, faecher : List<FachDaten>) {
+	public constructor(schuljahresabschnitt : number, schuljahresabschnittSchule : number, schuljahresabschnitte : List<Schuljahresabschnitt>, schulform : Schulform | null, kurse : List<KursDaten>, schueler : List<SchuelerListeEintrag>, jahrgaenge : List<JahrgangsDaten>, lehrer : List<LehrerListeEintrag>, faecher : List<FaecherListeEintrag>) {
 		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, kurse, KursUtils.comparator, KursListeManager._kursToId, KursListeManager._kursToId, Arrays.asList(new Pair("idJahrgaenge", true), new Pair("kuerzel", true)));
 		this.schuelerstatus = new AttributMitAuswahl(Arrays.asList(...SchuelerStatus.values()), this._schuelerstatusToId, KursListeManager._comparatorSchuelerStatus, this._eventHandlerFilterChanged);
 		this.schueler = new AttributMitAuswahl(schueler, KursListeManager._schuelerToId, SchuelerUtils.comparator, this._eventHandlerFilterChanged);
 		this.jahrgaenge = new AttributMitAuswahl(jahrgaenge, KursListeManager._jahrgangToId, JahrgangsUtils.comparator, this._eventHandlerFilterChanged);
 		this.lehrer = new AttributMitAuswahl(lehrer, KursListeManager._lehrerToId, LehrerUtils.comparator, this._eventHandlerFilterChanged);
-		this.faecher = new AttributMitAuswahl(faecher, KursListeManager._fachToId, FachUtils.comparator, this._eventHandlerFilterChanged);
+		this.faecher = new AttributMitAuswahl(faecher, KursListeManager._fachToId, KursListeManager.comparatorFaecherListe, this._eventHandlerFilterChanged);
 		const gliederungen : List<Schulgliederung> = (schulform === null) ? Arrays.asList(...Schulgliederung.values()) : Schulgliederung.getBySchuljahrAndSchulform(this.getSchuljahr(), schulform);
 		this.schulgliederungen = new AttributMitAuswahl(gliederungen, this._schulgliederungToId, KursListeManager._comparatorSchulgliederung, this._eventHandlerFilterChanged);
 		this.initKurse();

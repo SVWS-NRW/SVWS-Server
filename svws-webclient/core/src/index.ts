@@ -389,6 +389,7 @@ export { ErzieherListeEintrag } from './core/data/erzieher/ErzieherListeEintrag'
 export { ErzieherStammdaten } from './core/data/erzieher/ErzieherStammdaten';
 export { Erzieherart } from './core/data/erzieher/Erzieherart';
 export { FachDaten } from './core/data/fach/FachDaten';
+export { FaecherListeEintrag } from './core/data/fach/FaecherListeEintrag';
 export { SprachpruefungsniveauKatalogEintrag } from './core/data/fach/SprachpruefungsniveauKatalogEintrag';
 export { AbiturFachbelegung } from './core/data/gost/AbiturFachbelegung';
 export { AbiturFachbelegungHalbjahr } from './core/data/gost/AbiturFachbelegungHalbjahr';
@@ -689,7 +690,6 @@ export { BenutzergruppenManager } from './core/utils/benutzer/BenutzergruppenMan
 export { EinwilligungsartenListeManager } from './core/utils/einwilligungsart/EinwilligungsartenListeManager';
 export { ENMDatenManager } from './core/utils/enm/ENMDatenManager';
 export { FachListeManager } from './core/utils/fach/FachListeManager';
-export { FachUtils } from './core/utils/fach/FachUtils';
 export { GostAbiturjahrUtils } from './core/utils/gost/GostAbiturjahrUtils';
 export { GostBlockungsdatenManager } from './core/utils/gost/GostBlockungsdatenManager';
 export { GostBlockungsergebnisBewertungComparator } from './core/utils/gost/GostBlockungsergebnisBewertungComparator';

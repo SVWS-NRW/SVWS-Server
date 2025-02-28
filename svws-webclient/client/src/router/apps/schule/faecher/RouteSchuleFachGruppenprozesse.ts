@@ -32,6 +32,7 @@ export class RouteSchuleFachGruppenprozesse extends RouteNode<any, RouteSchuleFa
 			schulgliederungen: api.schulgliederungen,
 			manager: () => routeSchuleFaecher.data.manager,
 			deleteFaecher: routeSchuleFaecher.data.delete,
+			deleteFaecherCheck: routeSchuleFaecher.data.deleteFaecherCheck,
 		};
 	}
 

@@ -11,7 +11,7 @@ import de.svws_nrw.asd.data.schueler.SchuelerStatusKatalogEintrag;
 import de.svws_nrw.asd.data.schule.SchulgliederungKatalogEintrag;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.adt.map.HashMap2D;
-import de.svws_nrw.core.data.fach.FachDaten;
+import de.svws_nrw.core.data.fach.FaecherListeEintrag;
 import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
 import de.svws_nrw.core.data.kurse.KursDaten;
 import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
@@ -23,7 +23,6 @@ import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.core.utils.AttributMitAuswahl;
 import de.svws_nrw.core.utils.AuswahlManager;
-import de.svws_nrw.core.utils.fach.FachUtils;
 import de.svws_nrw.core.utils.jahrgang.JahrgangsUtils;
 import de.svws_nrw.core.utils.lehrer.LehrerUtils;
 import de.svws_nrw.core.utils.schueler.SchuelerUtils;
@@ -56,8 +55,8 @@ public final class KursListeManager extends AuswahlManager<Long, KursDaten, Kurs
 	private static final @NotNull Function<LehrerListeEintrag, Long> _lehrerToId = (final @NotNull LehrerListeEintrag l) -> l.id;
 
 	/** Das Filter-Attribut für die Fächer */
-	public final @NotNull AttributMitAuswahl<Long, FachDaten> faecher;
-	private static final @NotNull Function<FachDaten, Long> _fachToId = (final @NotNull FachDaten f) -> f.id;
+	public final @NotNull AttributMitAuswahl<Long, FaecherListeEintrag> faecher;
+	private static final @NotNull Function<FaecherListeEintrag, Long> _fachToId = (final @NotNull FaecherListeEintrag f) -> f.id;
 
 	/** Das Filter-Attribut für die Schüler */
 	public final @NotNull AttributMitAuswahl<Long, SchuelerListeEintrag> schueler;
@@ -86,6 +85,15 @@ public final class KursListeManager extends AuswahlManager<Long, KursDaten, Kurs
 	private static final @NotNull Comparator<SchuelerStatus> _comparatorSchuelerStatus =
 			(final @NotNull SchuelerStatus a, final @NotNull SchuelerStatus b) -> a.ordinal() - b.ordinal();
 
+	/** Ein Default-Comparator für den Vergleich von Fächern in Fächerlisten. */
+	public static final @NotNull Comparator<FaecherListeEintrag> comparatorFaecherListe = (final @NotNull FaecherListeEintrag a, final @NotNull FaecherListeEintrag b) -> {
+		int cmp = a.sortierung - b.sortierung;
+		if (cmp != 0)
+			return cmp;
+		cmp = a.kuerzel.compareTo(b.kuerzel);
+		return (cmp == 0) ? Long.compare(a.id, b.id) : cmp;
+	};
+
 	/** Das Filter-Attribut auf nur sichtbare Kurse */
 	private boolean _filterNurSichtbar = true;
 
@@ -110,7 +118,7 @@ public final class KursListeManager extends AuswahlManager<Long, KursDaten, Kurs
 			final @NotNull List<SchuelerListeEintrag> schueler,
 			final @NotNull List<JahrgangsDaten> jahrgaenge,
 			final @NotNull List<LehrerListeEintrag> lehrer,
-			final @NotNull List<FachDaten> faecher) {
+			final @NotNull List<FaecherListeEintrag> faecher) {
 		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, kurse, KursUtils.comparator, _kursToId, _kursToId,
 				Arrays.asList(new Pair<>("idJahrgaenge", true), new Pair<>("kuerzel", true)));
 		this.schuelerstatus =
@@ -118,7 +126,7 @@ public final class KursListeManager extends AuswahlManager<Long, KursDaten, Kurs
 		this.schueler = new AttributMitAuswahl<>(schueler, _schuelerToId, SchuelerUtils.comparator, _eventHandlerFilterChanged);
 		this.jahrgaenge = new AttributMitAuswahl<>(jahrgaenge, _jahrgangToId, JahrgangsUtils.comparator, _eventHandlerFilterChanged);
 		this.lehrer = new AttributMitAuswahl<>(lehrer, _lehrerToId, LehrerUtils.comparator, _eventHandlerFilterChanged);
-		this.faecher = new AttributMitAuswahl<>(faecher, _fachToId, FachUtils.comparator, _eventHandlerFilterChanged);
+		this.faecher = new AttributMitAuswahl<>(faecher, _fachToId, comparatorFaecherListe, _eventHandlerFilterChanged);
 		final @NotNull List<Schulgliederung> gliederungen =
 				(schulform == null) ? Arrays.asList(Schulgliederung.values()) : Schulgliederung.getBySchuljahrAndSchulform(getSchuljahr(), schulform);
 		this.schulgliederungen = new AttributMitAuswahl<>(gliederungen, _schulgliederungToId, _comparatorSchulgliederung, _eventHandlerFilterChanged);

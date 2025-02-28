@@ -7,4 +7,5 @@ export interface SchuleFachGruppenprozesseProps {
 	schulgliederungen: List<Schulgliederung>;
 	manager: () => FachListeManager;
 	deleteFaecher: () => Promise<[boolean, List<string | null>]>;
+	deleteFaecherCheck: () => [boolean, List<string>];
 }

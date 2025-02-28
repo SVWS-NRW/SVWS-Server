@@ -1,6 +1,6 @@
 import {describe, expect, test} from "vitest";
 import {getApiServer} from "./utils/TestUtils.js";
-import {FachDaten} from "@core";
+import {FaecherListeEintrag} from "@core";
 
 describe("Feacher Tests", () => {
 	describe.each([{schema: "GymAbi01"}])('gegen %s', ({schema}) => {
@@ -9,7 +9,7 @@ describe("Feacher Tests", () => {
 		test("getFaecher", async () => {
 			const result = await api.getFaecher(schema);
 			expect(result).toMatchSnapshot();
-			expect(result.toArray()[0]).toBeInstanceOf(FachDaten);
+			expect(result.toArray()[0]).toBeInstanceOf(FaecherListeEintrag);
 		});
 
 		test("getFach", async () => {

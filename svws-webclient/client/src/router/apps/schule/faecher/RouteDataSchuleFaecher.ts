@@ -1,5 +1,5 @@
 import type { FachDaten, List, SimpleOperationResponse } from "@core";
-import { ArrayList, FachListeManager } from "@core";
+import { ArrayList, BenutzerKompetenz, FachListeManager } from "@core";
 
 import { api } from "~/router/Api";
 
@@ -45,12 +45,25 @@ export class RouteDataSchuleFaecher extends RouteDataAuswahl<FachListeManager, R
 	}
 
 	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {
-		// TODO: Implementierung der multipleDelete Methode für Fächer
-		return new ArrayList();
+		return await api.server.deleteFaecher(ids, api.schema);
 	}
 
 	protected deleteMessage(id: number, fach: FachDaten | null) : string {
 		return `Fach ${fach?.kuerzel ?? '???'} (ID: ${id}) wurde erfolgreich gelöscht.`;
+	}
+
+	deleteFaecherCheck = (): [boolean, List<string>] => {
+		const errorLog = new ArrayList<string>();
+		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN))
+			errorLog.add('Es kiegt keine Berechtigung zum Löschen von Fächern vor.');
+		if (!this.manager.liste.auswahlExists())
+			errorLog.add('Es wurde kein Fach zum Löschen ausgewählt.');
+		for (const id of this.manager.getIdsReferenzierterFaecher()) {
+			const fach = this.manager.liste.get(id);
+			if (fach)
+				errorLog.add(`Das Fach ${fach.bezeichnung} mit dem Kürzel ${fach.kuerzel} ist an anderer Stelle referenziert und kann daher nicht gelöscht werden.`);
+		}
+		return [errorLog.isEmpty(), errorLog];
 	}
 
 	setzeDefaultSortierungSekII = async () => {

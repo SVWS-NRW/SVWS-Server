@@ -4,14 +4,15 @@
 			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Fächer werden gelöscht."
 				:is-open="currentAction === 'delete'" @update:is-open="(isOpen) => setCurrentAction('delete', isOpen)">
 				<div>
-					<!-- TODO: Implementierung des Löschgruppenprozesses -->
-					<span v-if="false">Alle ausgewählten Fächer sind bereit zum Löschen.</span>
-					<template v-else v-for="message in []" :key="message">
+					<span v-if="preConditionCheck[0]">Alle ausgewählten Fächer sind bereit zum Löschen.</span>
+					<template v-else v-for="message in preConditionCheck[1]" :key="message">
 						<span class="text-ui-danger"> {{ message }} <br> </span>
 					</template>
+					<span v-if="loeschbareFaecherVorhanden">Einige Fächer sind noch an anderer Stelle referenziert, die Übrigen können gelöscht werden.</span>
 				</div>
 				<template #buttonFooterLeft>
-					<svws-ui-button :disabled="true" title="Löschen" @click="entferneFaecher" :is-loading="loading" class="mt-4">
+					<svws-ui-button :disabled="manager().getIdsReferenzierterFaecher().size() === manager().liste.auswahlSize() || loading"
+						title="Löschen" @click="entferneFaecher" :is-loading="loading" class="mt-4">
 						<svws-ui-spinner v-if="loading" spinning />
 						<span v-else class="icon i-ri-play-line" />
 						Löschen
@@ -51,6 +52,16 @@
 	const loading = ref<boolean>(false);
 	const logs = ref<List<string | null> | undefined>();
 	const status = ref<boolean | undefined>();
+
+	const alleFaecherLoeschbar = computed(() => (currentAction.value === 'delete') && props.manager().getIdsReferenzierterFaecher().isEmpty());
+	const loeschbareFaecherVorhanden = computed(() =>
+		!alleFaecherLoeschbar.value && (props.manager().getIdsReferenzierterFaecher().size() !== props.manager().liste.auswahlSize()));
+
+	const preConditionCheck = computed(() => {
+		if (currentAction.value === 'delete')
+			return props.deleteFaecherCheck();
+		return [true, []];
+	})
 
 	function setCurrentAction(newAction: string, open: boolean) {
 		if(newAction === oldAction.value.name && !open)
