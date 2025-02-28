@@ -933,6 +933,37 @@ export class EnmManager {
 	}
 
 	/**
+	 * Gibt die Kursart der Leistung zurück.
+	 *
+	 * @param leistung   die Leistung
+	 *
+	 * @returns die Kursart als String
+	 */
+	public leistungGetKursartAsString(leistung: ENMLeistung) : string {
+		// Bestimme die Lerngruppe zu der Leistung
+		const lerngruppe = this.mapLerngruppen.value.get(leistung.lerngruppenID);
+		if ((lerngruppe === null) || (lerngruppe.kursartID === null) || (lerngruppe.kursartKuerzel === null))
+			return '';
+		// Bei Grundkursen muss die Schriftlichkeit mit angezeigt werden
+		let kuerzel = lerngruppe.kursartKuerzel;
+		if (kuerzel === 'GK')
+			kuerzel = kuerzel + ((leistung.istSchriftlich ?? false) ? "S" : "M");
+		// Handelt es sich nicht um ein Abiturfach, so kann das allgemeine Kürzel zurückgegeben werden
+		if (leistung.abiturfach === null)
+			return kuerzel;
+		// Setze ggf. die Kursart anhand des Abiturfaches
+		const jahrgaenge = this.mapLerngruppeJahrgaenge.value.get(lerngruppe.id);
+		if (jahrgaenge === null)
+			return kuerzel;
+		if (jahrgaenge.size() === 1) {
+			const jahrgang = jahrgaenge.getFirst();
+			if ((jahrgang.kuerzel === 'EF') || (jahrgang.kuerzel === 'S1') || (jahrgang.kuerzel === 'S2'))
+				return kuerzel;
+		}
+		return ((leistung.abiturfach < 3) ? "LK" + leistung.abiturfach : "AB" + leistung.abiturfach);
+	}
+
+	/**
 	 * Gibt die Bezeichnung des Kurses zurück.
 	 *
 	 * @param id   die ID der Lerngruppe

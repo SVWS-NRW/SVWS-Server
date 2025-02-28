@@ -51,7 +51,7 @@
 							{{ manager.lerngruppeGetKursbezeichnung(leistung.lerngruppenID) }}
 						</td>
 						<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Kursart') ?? true">
-							{{ (leistung.abiturfach === null) ? manager.lerngruppeGetKursartAsString(leistung.lerngruppenID) : ((leistung.abiturfach < 3) ? "LK" + leistung.abiturfach : "AB" + leistung.abiturfach) }}
+							{{ manager.leistungGetKursartAsString(leistung) }}
 						</td>
 						<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Lehrer') ?? true">
 							{{ manager.lerngruppeGetFachlehrerOrNull(leistung.lerngruppenID) }}
