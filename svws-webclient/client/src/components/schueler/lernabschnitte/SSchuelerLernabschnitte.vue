@@ -1,5 +1,5 @@
 <template>
-	<div class="page page-flex-row">
+	<div class="page page-flex-row overflow-y-auto">
 		<div class="flex-none w-28 h-full">
 			<svws-ui-table :clicked="lernabschnitt" @update:clicked="gotoLernabschnitt" :columns="[{key: 'schuljahresabschnitt', label: 'Abschnitt'}]" :items="lernabschnitte" clickable type="navigation" class="-mt-1">
 				<template #cell="{ rowData: row }">

@@ -1,5 +1,5 @@
 <template>
-	<div class="w-full h-full flex flex-col gap-8">
+	<div class="page page-flex-col">
 		<svws-ui-table :columns :items="leistungen" has-background class="h-fit col-span-2 -mt-1">
 			<template #header>
 				<div role="row" class="svws-ui-tr">

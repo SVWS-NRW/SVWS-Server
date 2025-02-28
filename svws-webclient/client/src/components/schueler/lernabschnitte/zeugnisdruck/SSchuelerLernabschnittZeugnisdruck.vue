@@ -1,5 +1,5 @@
 <template>
-	<div class="w-full h-full grid grid-cols-2">
+	<div class="page page-grid-cards">
 		<svws-ui-content-card>
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input placeholder="Konferenz-Datum" :model-value="manager().lernabschnittGet().datumKonferenz" type="date" disabled />

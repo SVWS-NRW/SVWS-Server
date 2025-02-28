@@ -1,5 +1,5 @@
 <template>
-	<div class="page">
+	<div class="page page-grid-cards">
 		<svws-ui-content-card v-if="einwilligungen().size() > 0" title="Zugeordnete Einwilligungen" class="col-span-full">
 			<div class="space-y-2">
 				<div v-for="einwilligung of einwilligungen()" :key="einwilligung.idEinwilligungsart">

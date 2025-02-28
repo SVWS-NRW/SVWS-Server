@@ -1,5 +1,5 @@
 <template>
-	<div class="w-full h-full grid grid-cols-2">
+	<div class="page page-grid-cards">
 		<svws-ui-content-card>
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-select :disabled="!hatUpdateKompetenz" title="Klasse" :items="manager().klasseGetMenge()" :item-text="i => i.kuerzel ?? '—'"
