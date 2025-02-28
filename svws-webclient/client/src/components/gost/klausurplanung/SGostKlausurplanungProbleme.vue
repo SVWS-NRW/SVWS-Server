@@ -6,7 +6,7 @@
 		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" :halbjahr="halbjahr" />
 	</Teleport>
 	<div class="page page-flex-col min-w-128 max-w-256">
-		<ui-card v-if="!kMan().stundenplanManagerGeladenAndExistsByAbschnitt(props.abschnitt!.id)" icon="i-ri-calendar-event-line"
+		<ui-card v-if="!kMan().stundenplanManagerGeladenAndExistsByAbschnitt(props.abschnitt!.id)" icon="i-ri-calendar-event-line" :fehler="ValidatorFehlerart.MUSS"
 			title="Kein Stundenplan" subtitle="Es existiert kein Stundenplan für diesen Schuljahresabschnitt." :is-open="currentAction === 'stundenplan_fehlend'"
 			@update:is-open="(isOpen) => setCurrentAction('stundenplan_fehlend', isOpen)">
 			<p>Zur Terminierung von Klausurschienen und Raumplanung muss zwingend ein Stundenplan definiert sein.</p>
@@ -18,7 +18,7 @@
 			</template>
 		</ui-card>
 
-		<ui-card v-if="!vorgaben().isEmpty()" icon="i-ri-draft-line" title="Fehlende Klausurvorgaben"
+		<ui-card v-if="!vorgaben().isEmpty()" icon="i-ri-draft-line" title="Fehlende Klausurvorgaben" :fehler="ValidatorFehlerart.MUSS"
 			:subtitle="vorgaben().size() + ' fehlende Klausurvorgaben gefunden.'" :is-open="currentAction === 'vorgaben_fehlend'"
 			@update:is-open="(isOpen) => setCurrentAction('vorgaben_fehlend', isOpen)">
 			<svws-ui-table :items="vorgaben()" :columns="colsVorgaben">
@@ -37,7 +37,7 @@
 			</template>
 		</ui-card>
 
-		<ui-card v-if="!kursklausuren().isEmpty()" icon="i-ri-book-2-line" title="Fehlende Kursklausuren"
+		<ui-card v-if="!kursklausuren().isEmpty()" icon="i-ri-book-2-line" title="Fehlende Kursklausuren" :fehler="ValidatorFehlerart.MUSS"
 			:subtitle="kursklausuren().size() + ' fehlende Kursklausuren gefunden.'" :is-open="currentAction === 'kursklausuren_fehlend'"
 			@update:is-open="(isOpen) => setCurrentAction('kursklausuren_fehlend', isOpen)">
 			<svws-ui-table :items="kursklausuren()" :columns="colsKursklausuren">
@@ -59,7 +59,7 @@
 			</template>
 		</ui-card>
 
-		<ui-card v-if="!schuelerklausuren().isEmpty()" icon="i-ri-group-line" title="Abweichende Schülerklausurmenge"
+		<ui-card v-if="!schuelerklausuren().isEmpty()" icon="i-ri-group-line" title="Abweichende Schülerklausurmenge" :fehler="ValidatorFehlerart.MUSS"
 			:subtitle="schuelerklausuren().size() + ' Abweichungen gefunden.'" :is-open="currentAction === 'schuelerklausurmenge_abweichend'"
 			@update:is-open="(isOpen) => setCurrentAction('schuelerklausurmenge_abweichend', isOpen)">
 			<svws-ui-table :items="schuelerklausuren()" :columns="addStatusColumn(colsSchuelerklausuren)">
@@ -83,7 +83,7 @@
 			</svws-ui-table>
 		</ui-card>
 
-		<ui-card v-if="!kursklausurenNichtVerteilt().isEmpty()" icon="i-ri-book-2-line" title="Nicht verteilte Kursklausuren"
+		<ui-card v-if="!kursklausurenNichtVerteilt().isEmpty()" icon="i-ri-book-2-line" title="Nicht verteilte Kursklausuren" :fehler="ValidatorFehlerart.MUSS"
 			:subtitle="kursklausurenNichtVerteilt().size() + ' nicht verteilte Kursklausuren gefunden.'"
 			:is-open="currentAction === 'kursklausuren_nicht_verteilt'" @update:is-open="(isOpen) => setCurrentAction('kursklausuren_nicht_verteilt', isOpen)">
 			<svws-ui-table :items="kursklausurenNichtVerteilt()" :columns="colsKursklausuren">
@@ -105,7 +105,7 @@
 			</template>
 		</ui-card>
 
-		<ui-card v-if="!termineOhneDatum().isEmpty()" icon="i-ri-calendar-event-line" title="Klausurtermine ohne Datum"
+		<ui-card v-if="!termineOhneDatum().isEmpty()" icon="i-ri-calendar-event-line" title="Klausurtermine ohne Datum" :fehler="ValidatorFehlerart.KANN"
 			:subtitle="termineOhneDatum().size() + ' Klausurtermine ohne Datum gefunden.'" :is-open="currentAction === 'termine_ohne_datum'"
 			@update:is-open="(isOpen) => setCurrentAction('termine_ohne_datum', isOpen)">
 			<svws-ui-table :items="termineOhneDatum()" :columns="addStatusColumn(colsTermine)">
@@ -125,7 +125,7 @@
 			</svws-ui-table>
 		</ui-card>
 
-		<ui-card v-if="!termineMitKonflikten().isEmpty()" icon="i-ri-alert-line" title="Klausurtermine mit Schülerkonflikten"
+		<ui-card v-if="!termineMitKonflikten().isEmpty()" icon="i-ri-alert-line" title="Klausurtermine mit Schülerkonflikten" :fehler="ValidatorFehlerart.MUSS"
 			:subtitle="termineMitKonflikten().size() + ' Klausurtermine mit Schülerkonflikten gefunden.'"
 			:is-open="currentAction === 'klausurtermine_mit_schuelerkonflikten'"
 			@update:is-open="(isOpen) => setCurrentAction('klausurtermine_mit_schuelerkonflikten', isOpen)">
@@ -145,7 +145,7 @@
 			</svws-ui-table>
 		</ui-card>
 
-		<ui-card v-if="!termineUnvollstaendigeRaumzuweisung().isEmpty()" icon="i-ri-team-line" title="Klausurtermine mit unvollständiger Raumplanung"
+		<ui-card v-if="!termineUnvollstaendigeRaumzuweisung().isEmpty()" icon="i-ri-team-line" title="Klausurtermine mit unvollständiger Raumplanung" :fehler="ValidatorFehlerart.KANN"
 			:subtitle="termineUnvollstaendigeRaumzuweisung().size() + ' Klausurtermine mit unvollständiger Raumplanung gefunden.'"
 			:is-open="currentAction === 'termine_ohne_raumplanung'" @update:is-open="(isOpen) => setCurrentAction('termine_ohne_raumplanung', isOpen)">
 			<svws-ui-table :items="termineUnvollstaendigeRaumzuweisung()" :columns="addStatusColumn(colsTermine)">
@@ -165,7 +165,7 @@
 			</svws-ui-table>
 		</ui-card>
 
-		<ui-card v-if="!raumkapazitaetUeberschritten().isEmpty()" icon="i-ri-team-line" title="Raumkapazität überschritten"
+		<ui-card v-if="!raumkapazitaetUeberschritten().isEmpty()" icon="i-ri-team-line" title="Raumkapazität überschritten" :fehler="ValidatorFehlerart.KANN"
 			:subtitle="raumkapazitaetUeberschritten().size() + ' Klausurtermine mit überschrittener Raumkapazität gefunden.'"
 			:is-open="currentAction === 'termine_raumkapazität'" @update:is-open="(isOpen) => setCurrentAction('termine_raumkapazität', isOpen)">
 			<svws-ui-table :items="raumkapazitaetUeberschritten()" :columns="addStatusColumn(colsTermine)">
@@ -185,7 +185,7 @@
 			</svws-ui-table>
 		</ui-card>
 
-		<ui-card v-if="!nachschreibklausurenNichtZugewiesen().isEmpty()" icon="i-ri-spam-3-line" title="Nicht zugewiesene Nachschreibklausuren"
+		<ui-card v-if="!nachschreibklausurenNichtZugewiesen().isEmpty()" icon="i-ri-spam-3-line" title="Nicht zugewiesene Nachschreibklausuren" :fehler="ValidatorFehlerart.KANN"
 			:subtitle="nachschreibklausurenNichtZugewiesen().size() + ' nicht zugewiesene Nachschreibklausuren gefunden.'"
 			:is-open="currentAction === 'nachschreibklausuren_nicht_zugewiesen'"
 			@update:is-open="(isOpen) => setCurrentAction('nachschreibklausuren_nicht_zugewiesen', isOpen)">
@@ -212,9 +212,24 @@
 			</template>
 		</ui-card>
 
-		<ui-card v-if="!klausurenProKwWarning().isEmpty()" icon="i-ri-alert-line" title="Schüler mit drei Klausuren in einer Woche"
-			:subtitle="klausurenProKwWarning().size() + ' Probleme mit Schülern mit drei Klausuren in einer Woche gefunden.'"
-			:is-open="currentAction === 'konflikt_drei_wochenklausuren'" @update:is-open="(isOpen) => setCurrentAction('konflikt_drei_wochenklausuren', isOpen)">
+		<ui-card icon="i-ri-alert-line" :collapsible="!klausurenProKwWarning().isEmpty()" :fehler="ValidatorFehlerart.KANN"
+			:is-open="!klausurenProKwWarning().isEmpty() && currentAction === 'konflikt_drei_wochenklausuren'" @update:is-open="(isOpen) => setCurrentAction('konflikt_drei_wochenklausuren', isOpen)">
+			<template #title>
+				<div class="ui-card--header--title flex items-center gap-3">
+					Warnung für Schüler mit
+					<div @click.stop>
+						<svws-ui-input-number headless v-model="kwWarnLimit" :min="2" :max="5" />
+					</div>
+					oder mehr Klausuren in einer Woche
+				</div>
+			</template>
+			<template #subtitle>
+				<div class="flex">
+					<span>{{ klausurenProKwWarning().size() }} Probleme bei Schülern mit {{ kwWarnLimit }}&nbsp;</span>
+					<span v-if="kwErrorLimit - 1 > kwWarnLimit">bis {{ kwErrorLimit - 1 }}&nbsp;</span>
+					<span>Klausuren in einer Woche gefunden.</span>
+				</div>
+			</template>
 			<svws-ui-table :items="klausurenProKwWarning()" :columns="colsKwKonflikte">
 				<template #cell(kw)="{ rowData }">
 					<svws-ui-button type="transparent"
@@ -235,9 +250,18 @@
 				</template>
 			</svws-ui-table>
 		</ui-card>
-		<ui-card v-if="!klausurenProKwError().isEmpty()" icon="i-ri-alert-fill" title="Schüler mit vier oder mehr Klausuren in einer Woche"
-			:subtitle="klausurenProKwError().size() + ' Probleme mit Schülern mit vier oder mehr Klausuren in einer Woche gefunden.'"
-			:is-open="currentAction === 'konflikt_vier_wochenklausuren'" @update:is-open="(isOpen) => setCurrentAction('konflikt_vier_wochenklausuren', isOpen)">
+		<ui-card icon="i-ri-alert-fill" :collapsible="!klausurenProKwError().isEmpty()" :fehler="ValidatorFehlerart.MUSS"
+			:subtitle="klausurenProKwError().size() + ' Fehler bei Schülern mit ' + kwErrorLimit + ' oder mehr Klausuren in einer Woche gefunden.'"
+			:is-open="!klausurenProKwError().isEmpty() && currentAction === 'konflikt_vier_wochenklausuren'" @update:is-open="(isOpen) => setCurrentAction('konflikt_vier_wochenklausuren', isOpen)">
+			<template #title>
+				<div class="ui-card--header--title flex items-center gap-3">
+					Fehler für Schüler mit
+					<div @click.stop>
+						<svws-ui-input-number headless v-model="kwErrorLimit" :min="3" :max="5" />
+					</div>
+					oder mehr Klausuren in einer Woche
+				</div>
+			</template>
 			<svws-ui-table :items="klausurenProKwError()" :columns="colsKwKonflikte">
 				<template #cell(kw)="{ rowData }">
 					<svws-ui-button type="transparent"
@@ -266,10 +290,10 @@
 </template>
 
 <script setup lang="ts">
-	import { ref, onMounted } from 'vue';
+	import { ref, onMounted, computed } from 'vue';
 	import type { DataTableColumn } from "@ui";
 	import type {GostKlausurtermin } from "@core";
-	import { DateUtils, GostHalbjahr, ListUtils, OpenApiError} from "@core";
+	import { DateUtils, GostHalbjahr, ListUtils, OpenApiError, ValidatorFehlerart} from "@core";
 	import { Fach } from "@core";
 	import type { GostKlausurplanungProblemeProps } from "./SGostKlausurplanungProblemeProps";
 
@@ -284,14 +308,32 @@
 	const termineUnvollstaendigeRaumzuweisung = () => props.kMan().terminUnvollstaendigeRaumzuweisungGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value);
 	const raumkapazitaetUeberschritten = () => props.kMan().terminUnzureichendePlatzkapazitaetGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value);
 	const nachschreibklausurenNichtZugewiesen = () => props.kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value);
-	const klausurenProKwWarning = () => props.kMan().klausurenProSchueleridExceedingKWThresholdByAbijahrAndHalbjahrAndThreshold(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value, 3, true);
-	const klausurenProKwError = () => props.kMan().klausurenProSchueleridExceedingKWThresholdByAbijahrAndHalbjahrAndThreshold(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value, 4, false);
+	const klausurenProKwWarning = () => props.kMan().klausurenProSchueleridExceedingKWThresholdByAbijahrAndHalbjahrAndThreshold(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value, kwWarnLimit.value, kwErrorLimit.value);
+	const klausurenProKwError = () => props.kMan().klausurenProSchueleridExceedingKWThresholdByAbijahrAndHalbjahrAndThreshold(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value, kwErrorLimit.value, -1);
 
 	const oldAction = ref({
 		name: "",
 		open: false,
 	});
 	const currentAction = ref<string>('');
+
+	const kwWarnLimit = computed<number>({
+		get: () => props.getConfigNumberValue("kwWarnLimit"),
+		set: (value) => {
+			if (value > kwErrorLimit.value)
+				kwErrorLimit.value = value;
+			void props.setConfigValue("kwWarnLimit", value);
+		},
+	});
+
+	const kwErrorLimit = computed<number>({
+		get: () => props.getConfigNumberValue("kwErrorLimit"),
+		set: (value) => {
+			if (value < kwWarnLimit.value)
+				kwWarnLimit.value = value;
+			void props.setConfigValue("kwErrorLimit", value);
+		},
+	});
 
 	function setCurrentAction(newAction: string, open: boolean) {
 		if(newAction === oldAction.value.name && !open)

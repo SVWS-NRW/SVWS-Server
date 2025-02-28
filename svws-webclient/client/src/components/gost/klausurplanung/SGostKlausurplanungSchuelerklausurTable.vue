@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-checkbox class="mb-2" v-if="selectedItems !== undefined && !schuelerklausuren.isEmpty()" :model-value="selectedItems.containsAll(schuelerklausuren)" @update:model-value="selectedItems.containsAll(schuelerklausuren) ? selectedItems.clear() : selectedItems.addAll(schuelerklausuren)">Alle auswählen</svws-ui-checkbox>
-	<svws-ui-table :columns="cols" :disable-header="!$slots.tableTitle">
+	<svws-ui-table :columns="cols" :disable-header="!slots.tableTitle">
 		<template #noData>
 			<slot name="noData">
 				&nbsp;
@@ -74,6 +74,8 @@
 		patchKlausur: undefined,
 		klausurCssClasses: undefined,
 	});
+
+	const slots = defineSlots();
 
 	const cols: DataTableColumn[] = [
 		{ key: "nachname", label: "Nachame", span: 15 },

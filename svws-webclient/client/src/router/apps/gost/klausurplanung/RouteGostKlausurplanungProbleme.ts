@@ -36,6 +36,8 @@ export class RouteGostKlausurplanungProbleme extends RouteNode<any, RouteGostKla
 			gotoRaumzeitTermin: routeGostKlausurplanung.data.gotoRaumzeitTermin,
 			gotoNachschreiber: routeGostKlausurplanung.data.gotoNachschreiber,
 			gotoStundenplan: routeGostKlausurplanung.data.gotoStundenplan,
+			setConfigValue: routeGostKlausurplanung.data.setConfigValue,
+			getConfigNumberValue: routeGostKlausurplanung.data.getConfigNumberValue,
 		}
 	}
 

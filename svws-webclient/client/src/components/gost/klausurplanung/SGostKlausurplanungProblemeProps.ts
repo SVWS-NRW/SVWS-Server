@@ -26,4 +26,6 @@ export interface GostKlausurplanungProblemeProps {
 	gotoRaumzeitTermin: (abiturjahr: number, halbjahr: GostHalbjahr, value: number) => Promise<void>;
 	gotoNachschreiber: (abiturjahr: number, halbjahr: GostHalbjahr) => Promise<void>;
 	gotoStundenplan: () => Promise<void>;
+	getConfigNumberValue: (value: string) => number;
+	setConfigValue: (key: string, value: string | number) => Promise<void>;
 }

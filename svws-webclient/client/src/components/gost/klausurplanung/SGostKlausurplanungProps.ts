@@ -12,4 +12,5 @@ export interface GostKlausurplanungProps {
 	quartalsauswahl: WritableComputedRef<0 | 1 | 2>;
 	halbjahr: GostHalbjahr;
 	tabManager: () => TabManager;
+	getConfigNumberValue: (value: string) => number;
 }

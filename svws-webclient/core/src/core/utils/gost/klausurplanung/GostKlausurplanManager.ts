@@ -3245,22 +3245,22 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @param quartal das Quartal
 	 * @param threshold     der Schwellwert (z.B. 3), der mindestens erreicht sein muss, damit die
 	 *                  Schüler-IDs in die Rückgabe-Map aufgenommen werden
-	 * @param thresholdOnly wenn <code>true</code> wird die Schüler-ID nur bei exaktem Erreichen des <code>threshold</code> in die Rückgabe-Map aufgenommen. Größere Werte werden nicht berücksichtigt.
+	 * @param thresholdMinus der Schwellwert (z.B. 4), dessen Menge von der Threshold-Menge abgezogen wird, damit Warnungen nicht die Fehler enthalten, bei -1 wird nichts abgezogen
 	 *
 	 * @return die Map Schüler-ID -> {@link GostSchuelerklausurTermin}menge, die Schüler-IDs von Schülern enthalten, die in der den Termin
 	 * enthaltenen Kalenderwoche mehr (>=) Klausuren schreiben, als der Schwellwert definiert und die betreffenden {@link GostSchuelerklausurTermin}e.
 	 */
-	public klausurenProSchueleridExceedingKWThresholdByAbijahrAndHalbjahrAndThreshold(abijahr : number, halbjahr : GostHalbjahr, quartal : number, threshold : number, thresholdOnly : boolean) : List<PairNN<PairNN<number, number>, List<GostSchuelerklausurTermin>>> {
+	public klausurenProSchueleridExceedingKWThresholdByAbijahrAndHalbjahrAndThreshold(abijahr : number, halbjahr : GostHalbjahr, quartal : number, threshold : number, thresholdMinus : number) : List<PairNN<PairNN<number, number>, List<GostSchuelerklausurTermin>>> {
 		const schuelerklausurterminaktuellmenge_by_schuelerId : JavaMap<number, JavaMap<number, List<GostSchuelerklausurTermin>>> | null = this._schuelerklausurterminaktuellmenge_by_abijahr_and_kw_and_schuelerId.getMap2OrNull(abijahr);
 		const ergebnis : List<PairNN<PairNN<number, number>, List<GostSchuelerklausurTermin>>> = new ArrayList<PairNN<PairNN<number, number>, List<GostSchuelerklausurTermin>>>();
 		if (schuelerklausurterminaktuellmenge_by_schuelerId === null)
 			return ergebnis;
 		for (const kwEntry of schuelerklausurterminaktuellmenge_by_schuelerId.entrySet()) {
 			for (const schuelerEntry of kwEntry.getValue().entrySet()) {
-				if ((schuelerEntry.getValue().size() === threshold) || ((schuelerEntry.getValue().size() > threshold) && !thresholdOnly))
+				if ((schuelerEntry.getValue().size() >= threshold) && ((thresholdMinus < 0) || (schuelerEntry.getValue().size() < thresholdMinus)))
 					for (const skt of schuelerEntry.getValue()) {
 						const vorgabe : GostKlausurvorgabe = this.vorgabeBySchuelerklausurTermin(skt);
-						if (vorgabe.abiJahrgang === abijahr && vorgabe.halbjahr === halbjahr.id && (quartal === 0 || vorgabe.quartal === quartal)) {
+						if (vorgabe.abiJahrgang === abijahr && vorgabe.halbjahr === halbjahr.id && (quartal === 0 || vorgabe.quartal === quartal) && !(vorgabe.halbjahr === 5 && vorgabe.quartal === 2)) {
 							ergebnis.add(new PairNN<PairNN<number, number>, List<GostSchuelerklausurTermin>>(new PairNN(kwEntry.getKey(), schuelerEntry.getKey()), schuelerEntry.getValue()));
 							break;
 						}
@@ -4831,17 +4831,18 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @param abiJahrgang der Abitur-Jahrgang
 	 * @param halbjahr das {@link GostHalbjahr}
 	 * @param quartal die Nummer des Quartals, 0 für alle Quartale
+	 * @param kwErrorLimit das Errorlimit für die Anzahl der Klausuren pro Schüler und Woche
 	 *
 	 * @return die Anzahl möglicher Probleme in der aktuellen Klausurplanung zum übergebenen {@link GostHalbjahr} und Quartal
 	 */
-	public planungsfehlerGetAnzahlByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number) : number {
+	public planungsfehlerGetAnzahlByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number, kwErrorLimit : number) : number {
 		let anzahl : number = 0;
 		anzahl += this.vorgabefehlendGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += this.kursklausurfehlendGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += this.kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += this.schuelerklausurfehlendGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += this.terminMitKonfliktGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
-		anzahl += this.klausurenProSchueleridExceedingKWThresholdByAbijahrAndHalbjahrAndThreshold(abiJahrgang, halbjahr, quartal, 4, false).size();
+		anzahl += this.klausurenProSchueleridExceedingKWThresholdByAbijahrAndHalbjahrAndThreshold(abiJahrgang, halbjahr, quartal, kwErrorLimit, -1).size();
 		if (!this.stundenplanManagerGeladenAndExistsByAbschnitt(DeveloperNotificationException.ifMap2DGetIsNull(this._schuljahresabschnitt_by_abijahr_and_halbjahr, abiJahrgang, halbjahr.id)))
 			anzahl++;
 		return anzahl;
@@ -4853,16 +4854,18 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @param abiJahrgang der Abitur-Jahrgang
 	 * @param halbjahr das {@link GostHalbjahr}
 	 * @param quartal die Nummer des Quartals, 0 für alle Quartale
+	 * @param kwWarnLimit die Anzahl der Klausuren pro Schüler und Woche, ab der eine Warnung ausgegeben wird
+	 * @param kwErrorLimit die Anzahl der Klausuren pro Schüler und Woche, ab der ein Fehler ausgegeben wird
 	 *
 	 * @return die Anzahl möglicher Probleme in der aktuellen Klausurplanung zum übergebenen {@link GostHalbjahr} und Quartal
 	 */
-	public planungshinweiseGetAnzahlByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number) : number {
+	public planungshinweiseGetAnzahlByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number, kwWarnLimit : number, kwErrorLimit : number) : number {
 		let anzahl : number = 0;
 		anzahl += this.terminOhneDatumGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += this.terminUnvollstaendigeRaumzuweisungGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += this.terminUnzureichendePlatzkapazitaetGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += this.schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
-		anzahl += this.klausurenProSchueleridExceedingKWThresholdByAbijahrAndHalbjahrAndThreshold(abiJahrgang, halbjahr, quartal, 3, true).size();
+		anzahl += this.klausurenProSchueleridExceedingKWThresholdByAbijahrAndHalbjahrAndThreshold(abiJahrgang, halbjahr, quartal, kwWarnLimit, kwErrorLimit).size();
 		return anzahl;
 	}
 
