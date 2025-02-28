@@ -61,8 +61,8 @@
 		--color-text-ui-onstatistic-secondary-hover: light-dark(var(--color-palette-statistic-200), var(--color-palette-statistic-200));
 		--color-text-ui-onselected: light-dark(var(--color-palette-brand-600), var(--color-palette-brand-200));
 		--color-text-ui-onselected-hover: light-dark(var(--color-palette-brand-600), var(--color-palette-brand-200));
-		--color-text-ui-onselected-secondary: light-dark(var(--color-palette-brand-400), var(--color-palette-brand-400));
-		--color-text-ui-onselected-secondary-hover: light-dark(var(--color-palette-brand-400), var(--color-palette-brand-400));
+		--color-text-ui-onselected-secondary: light-dark(var(--color-palette-brand-900), var(--color-palette-brand-900));
+		--color-text-ui-onselected-secondary-hover: light-dark(var(--color-palette-brand-900), var(--color-palette-brand-900));
 		--color-text-ui-ondanger: light-dark(var(--color-palette-neutral-100), var(--color-palette-neutral-100));
 		--color-text-ui-ondanger-hover: light-dark(var(--color-palette-neutral-200), var(--color-palette-neutral-200));
 		--color-text-ui-ondanger-secondary: light-dark(var(--color-palette-danger-200), var(--color-palette-danger-200));
