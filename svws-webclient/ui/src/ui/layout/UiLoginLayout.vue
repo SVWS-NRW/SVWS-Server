@@ -15,11 +15,11 @@
 						</h2>
 					</div>
 					<!-- Hauptbereich des Login (Slot) -->
-					<div class="w-full min-h-fit overflow-y-auto flex flex-col" :class="{ 'pb-4': !hideHinweis && (version === undefined), 'pt-4': !hideHeader }">
+					<div class="w-full min-h-fit overflow-y-auto flex flex-col px-1" :class="{ 'pb-4': !hideHinweis && (version === undefined), 'pt-4': !hideHeader }">
 						<slot name="main" />
 					</div>
 					<!-- Footer: Version, Impressum und Datenschutz -->
-					<div v-if="version !== undefined" class="text-sm font-medium">
+					<div v-if="version !== undefined" class="text-sm font-medium px-1">
 						<div class="flex gap-2 items-center opacity-50">
 							<slot name="logo" />
 							<div class="text-left flex flex-col leading-5">
@@ -47,7 +47,7 @@
 						</div>
 					</div>
 					<!-- Footer: Hinweis zur Lesbarkeit -->
-					<p v-if="!hideHinweis" class="opacity-50 text-sm text-left">
+					<p v-if="!hideHinweis" class="opacity-50 text-sm text-left px-1">
 						Hinweis: Um eine gute Lesbarkeit zu erzeugen, wird bei SVWS-NRW möglichst auf
 						geschlechtsneutrale Begriffe wie Lehrkräfte, Klassenleitung, Erziehungsberechtigte usw.
 						zurückgegriffen. An Stellen, wo das nicht möglich ist, wird versucht alle
