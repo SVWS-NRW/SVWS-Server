@@ -109,9 +109,8 @@ public final class DataStundenplanSchueler extends DataManager<Long> {
 		for (final DTOSchueler s : schuelerListe) {
 			// TODO Filtere alle Schüler, die ein Abgangsdatum haben, welches vor dem Beginn des Stundenplans liegt
 			final Long idKlasse = mapSchuelerKlasse.get(s.ID);
-			if (idKlasse == null)
-				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
-						"Für den Schüler mit der ID %d konnte keine Klassen-ID ermittelt werden.".formatted(s.ID));
+			if (idKlasse == null) // Fehlervermeidung: Schüler ist noch in der Tabelle Kurs_Schueler enthalten, obwohl er keinen Lernabschnitt mehr hat - sollte so eigentlich nicht auftauchen
+				continue;
 			final StundenplanSchueler schueler = dtoMapper.apply(s);
 			schueler.idKlasse = idKlasse;
 			daten.add(schueler);
