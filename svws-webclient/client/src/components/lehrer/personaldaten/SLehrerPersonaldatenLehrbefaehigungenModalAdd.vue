@@ -3,7 +3,7 @@
 		<template #modalTitle>Lehrbefähigung hinzufügen</template>
 		<template #modalContent>
 			<svws-ui-input-wrapper>
-				<svws-ui-select title="Lehrbefähigung" v-model="lehrbefaehigung" :items="LehrerLehrbefaehigung.values()" :item-text="i => i.daten(schuljahr)?.text ?? '—'" headless />
+				<svws-ui-select title="Lehrbefähigung" v-model="lehrbefaehigung" :items="LehrerLehrbefaehigung.data().getWerteBySchuljahr(schuljahr)" :item-text="i => i.daten(schuljahr)?.text ?? '—'" headless />
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 
-	import { ref } from "vue";
+	import { shallowRef } from "vue";
 	import { DeveloperNotificationException, LehrerLehrbefaehigung, LehrerLehrbefaehigungEintrag } from "@core";
 
 	const props = defineProps<{
@@ -29,9 +29,9 @@
 		"update:show": [show: boolean];
 	}>();
 
-	const lehrbefaehigung = ref<LehrerLehrbefaehigung | undefined>(undefined);
+	const lehrbefaehigung = shallowRef<LehrerLehrbefaehigung | undefined>(undefined);
 
-	function add() {
+	async function add() {
 		const daten = lehrbefaehigung.value?.daten(props.schuljahr) ?? null;
 		if (daten === null)
 			throw new DeveloperNotificationException("Die add-Methode darf nur aufgerufen werden, wenn ein gültiger Wert ausgewählt wurde.");
@@ -39,7 +39,7 @@
 		l.id = props.idLehrer;
 		l.idLehrbefaehigung = daten.id;
 		l.idAnerkennungsgrund = null;
-		void props.addLehrbefaehigung(l);
+		await props.addLehrbefaehigung(l);
 		lehrbefaehigung.value = undefined;
 		emit('update:show', false);
 	}

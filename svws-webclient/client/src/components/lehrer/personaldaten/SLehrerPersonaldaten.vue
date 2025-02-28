@@ -3,15 +3,15 @@
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input class="contentFocusField" placeholder="Identnummer" :disabled="!hatUpdateKompetenz" :model-value="personaldaten().identNrTeil1"
-					@change="identNrTeil1 => patch({identNrTeil1})" type="text" span="full" focus />
+					@change="identNrTeil1 => patch({identNrTeil1})" span="full" focus />
 				<svws-ui-text-input placeholder="Seriennummer" :disabled="!hatUpdateKompetenz" :model-value="personaldaten().identNrTeil2SerNr"
-					@change="identNrTeil2SerNr => patch({identNrTeil2SerNr})" type="text" />
+					@change="identNrTeil2SerNr => patch({identNrTeil2SerNr})" />
 				<svws-ui-text-input placeholder="Vergütungsschlüssel" :disabled="!hatUpdateKompetenz" :model-value="personaldaten().lbvVerguetungsschluessel"
-					@change="lbvVerguetungsschluessel => patch({lbvVerguetungsschluessel})" type="text" />
+					@change="lbvVerguetungsschluessel => patch({lbvVerguetungsschluessel})" />
 				<svws-ui-text-input placeholder="PA-Nummer" :disabled="!hatUpdateKompetenz" :model-value="personaldaten().personalaktennummer"
-					@change="personalaktennummer => patch({personalaktennummer})" type="text" />
+					@change="personalaktennummer => patch({personalaktennummer})" />
 				<svws-ui-text-input placeholder="LBV-Personalnummer" :disabled="!hatUpdateKompetenz" :model-value="personaldaten().lbvPersonalnummer"
-					@change="lbvPersonalnummer => patch({lbvPersonalnummer})" type="text" />
+					@change="lbvPersonalnummer => patch({lbvPersonalnummer})" />
 				<svws-ui-spacing />
 				<svws-ui-text-input placeholder="Zugangsdatum" :disabled="!hatUpdateKompetenz" :model-value="personaldaten().zugangsdatum"
 					@change="zugangsdatum => patch({zugangsdatum})" type="date" />
@@ -30,7 +30,7 @@
 				<svws-ui-select title="Einsatzstatus" :disabled="!hatUpdateKompetenz" v-model="einsatzstatus" :items="LehrerEinsatzstatus.values()"
 					:item-text="(i: LehrerEinsatzstatus) => i.daten(schuljahr)?.text ?? '—'" />
 				<svws-ui-text-input placeholder="Stammschule" :disabled="!hatUpdateKompetenz" :model-value="personalabschnittsdaten()?.stammschulnummer"
-					@change="stammschulnummer => patchAbschnittsdaten({ stammschulnummer }, personalabschnittsdaten()?.id ?? -1)" type="text" />
+					@change="stammschulnummer => patchAbschnittsdaten({ stammschulnummer }, personalabschnittsdaten()?.id ?? -1)" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Lehrämter">
@@ -103,7 +103,6 @@
 				void props.patchAbschnittsdaten({ einsatzstatus: val?.daten(schuljahr.value)?.kuerzel }, daten.id);
 		},
 	});
-
 
 	const mehrleistungsgrund = computed<LehrerMehrleistungsarten | undefined>({
 		get(): LehrerMehrleistungsarten | undefined {
