@@ -8,7 +8,7 @@
 			<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl :halbjahr :zeige-alle-jahrgaenge :set-zeige-alle-jahrgaenge />
 		</Teleport>
 		<div class="page page-flex-row">
-			<div class="min-w-88 max-w-88 flex flex-col gap-2">
+			<div class="flex flex-col gap-2 min-w-128">
 				<div class="text-headline-md">In Planung</div>
 				<div class="flex flex-col">
 					<div v-if="jahrgangsdaten?.abiturjahr !== -1"
@@ -52,7 +52,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="svws-card-stundenplan max-w-480 h-full overflow-auto overflow-y-hidden">
+			<div class="svws-card-stundenplan max-w-480 min-w-320 h-full overflow-auto overflow-y-hidden">
 				<template v-if="kalenderdatum">
 					<s-gost-klausurplanung-kalender-stundenplan-ansicht :benutzer-kompetenzen
 						:id="33"
@@ -88,7 +88,7 @@
 						:item-text="kw => stundenplanManager().kalenderwochenzuordnungGetWocheAsString(kw)" />
 				</template>
 			</div>
-			<div class="min-w-88 max-w-88 flex flex-col h-full overflow-y-auto">
+			<div class="flex flex-col h-full overflow-y-auto  min-w-96">
 				<div class="text-headline-md leading-none inline-flex gap-1">
 					<template v-if="anzahlProKwKonflikte2(4, false).length === 0">
 						<span class="icon i-ri-checkbox-circle-fill icon-ui-success" />

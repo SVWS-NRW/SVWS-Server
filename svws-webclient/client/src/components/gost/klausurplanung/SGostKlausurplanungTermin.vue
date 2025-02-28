@@ -13,11 +13,11 @@
 			<section class="text-headline-md leading-none px-3 pt-3" :class="{'pb-2': !$slots.tableTitle}">
 				<template v-if="!$slots.tableTitle">
 					<slot name="title">
-						<span class="leading-tight inline-flex gap-0.5" :class="{'text-base': compact || compactWithDate}">
-							<span v-if="dragIcon && !compact" class="group-hover:bg-ui-contrast-10 mr-0.5 rounded">
+						<span class="leading-tight inline-flex gap-0.5 items-center" :class="{'text-base': compact || compactWithDate}">
+							<span v-if="dragIcon && !compact" class="group-hover:bg-ui-contrast-10 mr-0.5 rounded pt-1">
 								<span class="icon i-ri-draggable" />
 							</span>
-							<span class="line-clamp-1 break-all">{{ terminBezeichnung() }}</span>
+							<span class="break-all">{{ terminBezeichnung() }}</span>
 						</span>
 						<div v-if="compactWithDate && termin.datum" class="mb-1 -mt-0.5 opacity-50 text-base">{{ DateUtils.gibDatumGermanFormat(termin.datum) }}</div>
 						<div v-if="compact || compactWithDate" class="svws-compact-data text-sm font-medium flex flex-wrap mt-0.5">
