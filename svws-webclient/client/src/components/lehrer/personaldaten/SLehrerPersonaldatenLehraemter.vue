@@ -10,8 +10,10 @@
 			<div v-else> {{ getLehramtAnerkennung(rowData)?.daten(schuljahr)?.text ?? '—' }} </div>
 		</template>
 		<template #actions v-if="hatUpdateKompetenz">
-			<svws-ui-button @click="removeLehraemter(Arrays.asList(selected))" type="trash" :disabled="selected.length <= 0" />
-			<svws-ui-button @click="show = true" type="icon" title="Lehramt hinzufügen"> <span class="icon i-ri-add-line" /> </svws-ui-button>
+			<div class="inline-flex gap-4">
+				<svws-ui-button @click="removeLehraemter(Arrays.asList(selected))" type="trash" :disabled="selected.length <= 0" />
+				<svws-ui-button @click="show = true" type="icon" title="Lehramt hinzufügen"> <span class="icon i-ri-add-line" /> </svws-ui-button>
+			</div>
 		</template>
 	</svws-ui-table>
 	<s-lehrer-personaldaten-lehraemter-modal-add v-if="hatUpdateKompetenz" v-model:show="show" :id-lehrer="personaldaten.id" :add-lehramt :schuljahr />
@@ -40,12 +42,11 @@
 
 	const columns = [
 		{key: 'lehramt', label: 'Lehramt', span: 1 },
-		{key: 'anerkennung', label: 'Anerkennungsgrund', span: 1 }
+		{key: 'anerkennung', label: 'Anerkennungsgrund', span: 1 },
 	]
 
 	function getLehramt(eintrag: LehrerLehramtEintrag) : LehrerLehramt {
-		const lehramt = LehrerLehramt.data().getWertByID(eintrag.idLehramt);
-		return lehramt;
+		return LehrerLehramt.data().getWertByID(eintrag.idLehramt);
 	}
 
 	function getLehramtAnerkennung(eintrag: LehrerLehramtEintrag) : LehrerLehramtAnerkennung | null {
