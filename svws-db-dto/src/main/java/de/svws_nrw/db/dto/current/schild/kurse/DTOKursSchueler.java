@@ -27,10 +27,10 @@ public final class DTOKursSchueler {
 	public static final String QUERY_ALL = "SELECT e FROM DTOKursSchueler e";
 
 	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
-	public static final String QUERY_PK = "SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID = ?1 AND e.Schueler_ID = ?2 AND e.LernabschnittWechselNr = ?3 AND e.Leistung_ID = ?4";
+	public static final String QUERY_PK = "SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID = ?1 AND e.Schueler_ID = ?2 AND e.LernabschnittWechselNr = ?3";
 
 	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
-	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID IS NOT NULL AND e.Schueler_ID IS NOT NULL AND e.LernabschnittWechselNr IS NOT NULL AND e.Leistung_ID IS NOT NULL";
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID IS NOT NULL AND e.Schueler_ID IS NOT NULL AND e.LernabschnittWechselNr IS NOT NULL";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Kurs_ID */
 	public static final String QUERY_BY_KURS_ID = "SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID = ?1";
@@ -75,7 +75,6 @@ public final class DTOKursSchueler {
 	public Integer LernabschnittWechselNr;
 
 	/** Die eindeutige ID der Leistungsdaten, in denen die Zuordnung stattgefunden hat */
-	@Id
 	@Column(name = "Leistung_ID")
 	@JsonProperty
 	public long Leistung_ID;
@@ -118,7 +117,7 @@ public final class DTOKursSchueler {
 				return false;
 		} else if (!LernabschnittWechselNr.equals(other.LernabschnittWechselNr))
 			return false;
-		return Leistung_ID == other.Leistung_ID;
+		return true;
 	}
 
 	@Override
@@ -130,8 +129,6 @@ public final class DTOKursSchueler {
 		result = prime * result + Long.hashCode(Schueler_ID);
 
 		result = prime * result + ((LernabschnittWechselNr == null) ? 0 : LernabschnittWechselNr.hashCode());
-
-		result = prime * result + Long.hashCode(Leistung_ID);
 		return result;
 	}
 

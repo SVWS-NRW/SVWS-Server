@@ -33,7 +33,7 @@ public class Tabelle_Kurs_Schueler extends SchemaTabelle {
 					+ " 2=vor dem zweiten Wechsel usw");
 
 	/** Die Definition der Tabellenspalte Leistung_ID */
-	public SchemaTabelleSpalte col_Leistung_ID = add("Leistung_ID", SchemaDatentypen.BIGINT, true)
+	public SchemaTabelleSpalte col_Leistung_ID = add("Leistung_ID", SchemaDatentypen.BIGINT, false)
 			.setNotNull()
 			.setJavaComment("Die eindeutige ID der Leistungsdaten, in denen die Zuordnung stattgefunden hat")
 			.setRevision(SchemaRevisionen.REV_34);
