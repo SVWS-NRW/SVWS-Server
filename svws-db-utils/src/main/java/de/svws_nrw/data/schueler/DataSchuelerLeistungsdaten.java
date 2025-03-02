@@ -167,8 +167,10 @@ public final class DataSchuelerLeistungsdaten extends DataManagerRevised<Long, D
 					throw new ApiOperationException(Status.CONFLICT);
 				final DTOSchuelerLernabschnittsdaten dtoAbschnitt = conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, dto.Abschnitt_ID);
 				final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dtoAbschnitt.Schuljahresabschnitts_ID);
-				dto.Kursart = kursart.daten(abschnitt.schuljahr).kuerzel;
-				dto.KursartAllg = kursart.daten(abschnitt.schuljahr).kuerzelAllg;
+				final String kuerzel = kursart.daten(abschnitt.schuljahr).kuerzel;
+				final String kuerzelAllg = kursart.daten(abschnitt.schuljahr).kuerzelAllg;
+				dto.Kursart = kuerzel;
+				dto.KursartAllg = (kuerzelAllg == null) ? kuerzel : kuerzelAllg;
 			}
 			case "abifach" -> {
 				final Integer abiFach = JSONMapper.convertToInteger(value, true);
