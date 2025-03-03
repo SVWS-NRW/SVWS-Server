@@ -20,9 +20,9 @@
 
 <script setup lang="ts">
 
-	import { ref } from 'vue';
+	import { ref, shallowRef } from 'vue';
 	import type { StundenplanManager, StundenplanUnterricht } from '@core';
-	import { ArrayList, Wochentag } from '@core';
+	import { Wochentag } from '@core';
 
 	const props = defineProps<{
 		stundenplanManager: () => StundenplanManager;
@@ -36,14 +36,13 @@
 		{key: 'raeume', label: 'Räume'},
 	];
 
-	const selected = ref([]);
+	const selected = shallowRef([]);
 
 	async function remove() {
-		const liste = new ArrayList<StundenplanUnterricht>();
-		for (const item of selected.value)
-			liste.add(item);
-		await props.removeUnterrichte(liste);
-		props.stundenplanManager().unterrichtRemoveAllUngueltige(liste);
+		await props.removeUnterrichte(selected.value);
+		selected.value = [];
+		if (props.stundenplanManager().unterrichtGetMengeUngueltigAsList().isEmpty())
+			show.value = false;
 	}
 
 	function klassen(unterricht: StundenplanUnterricht) {
