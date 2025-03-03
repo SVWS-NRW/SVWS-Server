@@ -4,7 +4,7 @@
 			<img src="/images/Wappenzeichen_NRW_bw.svg" alt="Logo NRW" class="h-14">
 		</template>
 		<template #main>
-			<div class="grid grow grid-cols-1 gap-3 justify-items-center">
+			<div class="grid grow grid-cols-1 gap-3 justify-items-center py-0.5">
 				<svws-ui-text-input v-model.trim="inputHostname" type="text" url placeholder="Serveradresse" @keyup.enter="connect" @focus="inputFocus = true" />
 				<svws-ui-button type="secondary" @click="connect" :disabled="!(!connected || connecting || inputFocus )" :class="{'opacity-25 hover:opacity-100': connected && !inputFocus}">
 					<span v-if="!connected || connecting || inputFocus">Verbinden</span>

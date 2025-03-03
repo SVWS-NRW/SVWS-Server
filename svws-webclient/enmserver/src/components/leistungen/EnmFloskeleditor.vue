@@ -22,10 +22,10 @@
 						<span class="mt-2">Vorname jedes {{ every === 1 ? '':`${every}.` }} Mal</span>
 					</div>
 				</div>
-				<div class="svws-ui-table svws-clickable overflow-hidden" role="table" aria-label="Tabelle">
-					<div class="svws-ui-tbody overflow-y-scroll" role="rowgroup" aria-label="Tabelleninhalt">
+				<div class="svws-ui-table svws-clickable" role="table" aria-label="Tabelle">
+					<div class="svws-ui-tbody " role="rowgroup" aria-label="Tabelleninhalt">
 						<template v-for="[gruppe, floskeln] of gruppenMap" :key="gruppe.kuerzel">
-							<div class="svws-ui-thead cursor-pointer select-none" role="rowgroup">
+							<div class="svws-ui-thead cursor-pointer select-none sticky" role="rowgroup">
 								<div class="svws-ui-td col-span-4 flex items-center gap-1" role="cell" @click="collapsed.set(gruppe, collapsed.get(gruppe) ? false : true)">
 									<span class="icon i-ri-arrow-right-s-line" v-if="collapsed.get(gruppe)" />
 									<span class="icon i-ri-arrow-down-s-line" v-else />
