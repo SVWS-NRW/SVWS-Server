@@ -78,29 +78,47 @@ public enum Jahrgaenge implements CoreType<JahrgaengeKatalogEintrag, Jahrgaenge>
 	/** Jahrgang Berufspraxisstufe laut AO-SF für den Förderschwerpunkt Geistige Entwicklung (je nach Organisationsform in Teilzeit (86) und Vollzeit (85) möglich) */
 	BERUFSPRAXISSTUFE,
 
+	/** 91: Abendrealschule Vorkurs, 1. Semester */
+	REALSCHULE_VORKURS_SEMESTER_1,
 
-	/** Jahrgang 91: Vorkurs/ 1. Semester */
+	/** 92: Abendrealschule Vorkurs, 2. Semester */
+	REALSCHULE_VORKURS_SEMESTER_2,
+
+	/** Abendrealschule 1. Semester */
+	REALSCHULE_SEMESTER_01,
+
+	/** Abendrealschule 2. Semester */
+	REALSCHULE_SEMESTER_02,
+
+	/** Abendrealschule 3. Semester */
+	REALSCHULE_SEMESTER_03,
+
+	/** Abendrealschule 4. Semester */
+	REALSCHULE_SEMESTER_04,
+
+
+	/** Abendgymnasium/Kolleg: Vorkurs, 1. Semester */
 	VORKURS_SEMESTER_1,
 
-	/** Jahrgang 92: Vorkurs/ 2. Semester */
+	/** Abendgymnasium/Kolleg: Vorkurs, 2. Semester */
 	VORKURS_SEMESTER_2,
 
-	/** 1. Semester */
+	/** Abendgymnasium/Kolleg: 1. Semester (EF.1) */
 	SEMESTER_01,
 
-	/** 2. Semester */
+	/** Abendgymnasium/Kolleg: 2. Semester (EF.2) */
 	SEMESTER_02,
 
-	/** 3. Semester */
+	/** Abendgymnasium/Kolleg: 3. Semester (Q1.1) */
 	SEMESTER_03,
 
-	/** 4. Semester */
+	/** Abendgymnasium/Kolleg: 4. Semester (Q1.2) */
 	SEMESTER_04,
 
-	/** 5. Semester */
+	/** Abendgymnasium/Kolleg: 5. Semester (Q2.1) */
 	SEMESTER_05,
 
-	/** 6. Semester */
+	/** Abendgymnasium/Kolleg: 6. Semester (Q2.2) */
 	SEMESTER_06;
 
 

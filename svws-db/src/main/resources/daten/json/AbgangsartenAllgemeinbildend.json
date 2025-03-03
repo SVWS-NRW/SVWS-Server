@@ -20,6 +20,7 @@
 				{ "schulform": "SK", "jahrgaenge": ["06","07","08","09","10","1A","1B"] },
 				{ "schulform": "SR", "jahrgaenge": ["06","07","08","09","10"] },
 				{ "schulform": "V", "jahrgaenge": ["06","07","08","09","10","1A","1B"] },
+				{ "schulform": "WB", "jahrgaenge": ["91","92","S1","S2","S3","S4","S5","S6"] },
 				{ "schulform": "WF", "jahrgaenge": ["06","07","08","09","10","11","12","13","71"] }
 			],
 			"gueltigVon": null,
@@ -45,7 +46,7 @@
 				{ "schulform": "SK", "jahrgaenge": ["09","10","1A","1B"] },
 				{ "schulform": "SR", "jahrgaenge": ["09"] },
 				{ "schulform": "V", "jahrgaenge": ["09","10","1A","1B"] },
-				{ "schulform": "WB", "jahrgaenge": ["null"] },
+				{ "schulform": "WB", "jahrgaenge": ["S1","S2"] },
 				{ "schulform": "WF", "jahrgaenge": ["10","11","12","71"] }
 			],
 			"gueltigVon": null,
@@ -69,7 +70,7 @@
 				{ "schulform": "SK", "jahrgaenge": ["09","10","1A","1B"] },
 				{ "schulform": "SR", "jahrgaenge": ["09"] },
 				{ "schulform": "V", "jahrgaenge": ["09","10","1A","1B"] },
-				{ "schulform": "WB", "jahrgaenge": ["null"] },
+				{ "schulform": "WB", "jahrgaenge": ["S1","S2"] },
 				{ "schulform": "WF", "jahrgaenge": ["10","11","12","71"] }
 			],
 			"gueltigVon": 2022,
@@ -137,7 +138,7 @@
 				{ "schulform": "SK", "jahrgaenge": ["10","1A","1B"] },
 				{ "schulform": "SR", "jahrgaenge": ["10"] },
 				{ "schulform": "V", "jahrgaenge": ["10","1A","1B"] },
-				{ "schulform": "WB", "jahrgaenge": ["null"] },
+				{ "schulform": "WB", "jahrgaenge": ["S2","S3"] },
 				{ "schulform": "WF", "jahrgaenge": ["11","12","13","71"] }
 			],
 			"gueltigVon": null,
@@ -161,7 +162,7 @@
 				{ "schulform": "SK", "jahrgaenge": ["10","1A","1B"] },
 				{ "schulform": "SR", "jahrgaenge": ["10"] },
 				{ "schulform": "V", "jahrgaenge": ["10","1A","1B"] },
-				{ "schulform": "WB", "jahrgaenge": ["null"] },
+				{ "schulform": "WB", "jahrgaenge": ["S2","S3"] },
 				{ "schulform": "WF", "jahrgaenge": ["11","12","13","71"] }
 			],
 			"gueltigVon": 2022,
@@ -187,7 +188,7 @@
 				{ "schulform": "SK", "jahrgaenge": ["10","1B"] },
 				{ "schulform": "SR", "jahrgaenge": ["10"] },
 				{ "schulform": "V", "jahrgaenge": ["10","1B"] },
-				{ "schulform": "WB", "jahrgaenge": ["null"] },
+				{ "schulform": "WB", "jahrgaenge": ["S2", "S4"] },
 				{ "schulform": "WF", "jahrgaenge": ["11","12","13","71"] }
 			],
 			"gueltigVon": null,
@@ -204,7 +205,7 @@
 				{ "schulform": "GM", "jahrgaenge": ["Q1","Q2"] },
 				{ "schulform": "GY", "jahrgaenge": ["Q1","Q2"] },
 				{ "schulform": "SG", "jahrgaenge": ["Q1","Q2"] },
-				{ "schulform": "WB", "jahrgaenge": ["null"] },
+				{ "schulform": "WB", "jahrgaenge": ["S4","S5"] },
 				{ "schulform": "WF", "jahrgaenge": ["13","71"] }
 			],
 			"gueltigVon": null,
@@ -234,7 +235,7 @@
 			"id": 9000,
 			"beschreibung": "Fachhochschulreife (nur für Studierende, die bereits den berufsbezogenen Teil der Fachhochschulreife erworben haben)",
 			"zulaessig": [
-				{ "schulform": "WB", "jahrgaenge": ["null"] }
+				{ "schulform": "WB", "jahrgaenge": ["S4","S5"] }
 			],
 			"gueltigVon": null,
 			"gueltigBis": null
@@ -258,7 +259,7 @@
 				{ "schulform": "SK", "jahrgaenge": ["10","1B"] },
 				{ "schulform": "SR", "jahrgaenge": ["10"] },
 				{ "schulform": "V", "jahrgaenge": ["10","1B"] },
-				{ "schulform": "WB", "jahrgaenge": ["null"] },
+				{ "schulform": "WB", "jahrgaenge": ["S2","S4"] },
 				{ "schulform": "WF", "jahrgaenge": ["11","12","13","71"] }
 			],
 			"gueltigVon": null,
@@ -275,7 +276,7 @@
 				{ "schulform": "GM", "jahrgaenge": ["Q2"] },
 				{ "schulform": "GY", "jahrgaenge": ["Q2"] },
 				{ "schulform": "SG", "jahrgaenge": ["Q2"] },
-				{ "schulform": "WB", "jahrgaenge": ["null"] },
+				{ "schulform": "WB", "jahrgaenge": ["S6"] },
 				{ "schulform": "WF", "jahrgaenge": ["13","71"] }
 			],
 			"gueltigVon": null,

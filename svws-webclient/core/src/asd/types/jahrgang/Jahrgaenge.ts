@@ -113,44 +113,74 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> implements CoreType<Jahrgae
 	public static readonly BERUFSPRAXISSTUFE : Jahrgaenge = new Jahrgaenge("BERUFSPRAXISSTUFE", 18, );
 
 	/**
-	 * Jahrgang 91: Vorkurs/ 1. Semester
+	 * 91: Abendrealschule Vorkurs, 1. Semester
 	 */
-	public static readonly VORKURS_SEMESTER_1 : Jahrgaenge = new Jahrgaenge("VORKURS_SEMESTER_1", 19, );
+	public static readonly REALSCHULE_VORKURS_SEMESTER_1 : Jahrgaenge = new Jahrgaenge("REALSCHULE_VORKURS_SEMESTER_1", 19, );
 
 	/**
-	 * Jahrgang 92: Vorkurs/ 2. Semester
+	 * 92: Abendrealschule Vorkurs, 2. Semester
 	 */
-	public static readonly VORKURS_SEMESTER_2 : Jahrgaenge = new Jahrgaenge("VORKURS_SEMESTER_2", 20, );
+	public static readonly REALSCHULE_VORKURS_SEMESTER_2 : Jahrgaenge = new Jahrgaenge("REALSCHULE_VORKURS_SEMESTER_2", 20, );
 
 	/**
-	 * 1. Semester
+	 * Abendrealschule 1. Semester
 	 */
-	public static readonly SEMESTER_01 : Jahrgaenge = new Jahrgaenge("SEMESTER_01", 21, );
+	public static readonly REALSCHULE_SEMESTER_01 : Jahrgaenge = new Jahrgaenge("REALSCHULE_SEMESTER_01", 21, );
 
 	/**
-	 * 2. Semester
+	 * Abendrealschule 2. Semester
 	 */
-	public static readonly SEMESTER_02 : Jahrgaenge = new Jahrgaenge("SEMESTER_02", 22, );
+	public static readonly REALSCHULE_SEMESTER_02 : Jahrgaenge = new Jahrgaenge("REALSCHULE_SEMESTER_02", 22, );
 
 	/**
-	 * 3. Semester
+	 * Abendrealschule 3. Semester
 	 */
-	public static readonly SEMESTER_03 : Jahrgaenge = new Jahrgaenge("SEMESTER_03", 23, );
+	public static readonly REALSCHULE_SEMESTER_03 : Jahrgaenge = new Jahrgaenge("REALSCHULE_SEMESTER_03", 23, );
 
 	/**
-	 * 4. Semester
+	 * Abendrealschule 4. Semester
 	 */
-	public static readonly SEMESTER_04 : Jahrgaenge = new Jahrgaenge("SEMESTER_04", 24, );
+	public static readonly REALSCHULE_SEMESTER_04 : Jahrgaenge = new Jahrgaenge("REALSCHULE_SEMESTER_04", 24, );
 
 	/**
-	 * 5. Semester
+	 * Abendgymnasium/Kolleg: Vorkurs, 1. Semester
 	 */
-	public static readonly SEMESTER_05 : Jahrgaenge = new Jahrgaenge("SEMESTER_05", 25, );
+	public static readonly VORKURS_SEMESTER_1 : Jahrgaenge = new Jahrgaenge("VORKURS_SEMESTER_1", 25, );
 
 	/**
-	 * 6. Semester
+	 * Abendgymnasium/Kolleg: Vorkurs, 2. Semester
 	 */
-	public static readonly SEMESTER_06 : Jahrgaenge = new Jahrgaenge("SEMESTER_06", 26, );
+	public static readonly VORKURS_SEMESTER_2 : Jahrgaenge = new Jahrgaenge("VORKURS_SEMESTER_2", 26, );
+
+	/**
+	 * Abendgymnasium/Kolleg: 1. Semester (EF.1)
+	 */
+	public static readonly SEMESTER_01 : Jahrgaenge = new Jahrgaenge("SEMESTER_01", 27, );
+
+	/**
+	 * Abendgymnasium/Kolleg: 2. Semester (EF.2)
+	 */
+	public static readonly SEMESTER_02 : Jahrgaenge = new Jahrgaenge("SEMESTER_02", 28, );
+
+	/**
+	 * Abendgymnasium/Kolleg: 3. Semester (Q1.1)
+	 */
+	public static readonly SEMESTER_03 : Jahrgaenge = new Jahrgaenge("SEMESTER_03", 29, );
+
+	/**
+	 * Abendgymnasium/Kolleg: 4. Semester (Q1.2)
+	 */
+	public static readonly SEMESTER_04 : Jahrgaenge = new Jahrgaenge("SEMESTER_04", 30, );
+
+	/**
+	 * Abendgymnasium/Kolleg: 5. Semester (Q2.1)
+	 */
+	public static readonly SEMESTER_05 : Jahrgaenge = new Jahrgaenge("SEMESTER_05", 31, );
+
+	/**
+	 * Abendgymnasium/Kolleg: 6. Semester (Q2.2)
+	 */
+	public static readonly SEMESTER_06 : Jahrgaenge = new Jahrgaenge("SEMESTER_06", 32, );
 
 	private constructor(name : string, ordinal : number) {
 		super(name, ordinal);
