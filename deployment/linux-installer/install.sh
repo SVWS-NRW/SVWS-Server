@@ -39,10 +39,7 @@ export CREATE_MariaDB=J
 export CREATE_KEYSTORE=J
 export CREATE_TESTDATA=J
 export MariaDB_ROOT_PASSWORD=${password1}
-export MariaDB_DATABASE=svwsdb
 export MariaDB_HOST=localhost
-export MariaDB_USER=svwsadmin
-export MariaDB_PASSWORD=${password2}
 
 export APP_PATH=/opt/app/svws
 export CONF_PATH=/etc/app/svws/conf
@@ -54,10 +51,6 @@ export SVWS_TLS_KEYSTORE_PASSWORD=test123
 export SVWS_TLS_KEY_ALIAS=
 
 
-export TMP_DIR=/tmp/svws
-export MDBFILE=${MDBFILE:-$TMP_DIR/databases/SVWS-TestMDBs-main/GOST_Abitur/Abi-Test-Daten-01/GymAbi.mdb}
-
-export INIT_EMPTY_DB=N
 
 
 if [[ "$1" == "--update" ]]; then
@@ -157,25 +150,13 @@ else
     	if [ "$CREATE_MariaDB" = "j" ] || [ "$CREATE_MariaDB" = "J" ]; then
     		read -p "MariaDB_ROOT_PASSWORD (default: '${password1}'): " MariaDB_ROOT_PASSWORD
     		export MariaDB_ROOT_PASSWORD=${MariaDB_ROOT_PASSWORD:-${password1}}
-    		read -p "MariaDB_DATABASE (default: 'svwsdb'): " MariaDB_DATABASE
-    		export MariaDB_DATABASE=${MariaDB_DATABASE:-svwsdb}
     		read -p "MariaDB_HOST (default: 'localhost'): " MariaDB_HOST
     		export MariaDB_HOST=${MariaDB_HOST:-localhost}
-    		read -p "MariaDB_USER (default: 'svwsadmin'): " MariaDB_USER
-    		export MariaDB_USER=${MariaDB_USER:-svwsadmin}
-    		read -p "MariaDB_PASSWORD (default: '${password2}'): " MariaDB_PASSWORD
-    		export MariaDB_PASSWORD=${MariaDB_PASSWORD:-${password2}}
     	else
     		read -p "MariaDB_ROOT_PASSWORD: " MariaDB_ROOT_PASSWORD
     		export MariaDB_ROOT_PASSWORD=${MariaDB_ROOT_PASSWORD}
-    		read -p "MariaDB_DATABASE: " MariaDB_DATABASE
-    		export MariaDB_DATABASE=${MariaDB_DATABASE}
     		read -p "MariaDB_HOST: " MariaDB_HOST
     		export MariaDB_HOST=${MariaDB_HOST}
-    		read -p "MariaDB_USER: " MariaDB_USER
-    		export MariaDB_USER=${MariaDB_USER}
-    		read -p "MariaDB_PASSWORD: " MariaDB_PASSWORD
-    		export MariaDB_PASSWORD=${MariaDB_PASSWORD}
     	fi
 
     	echo "Installationspfade:"
@@ -225,19 +206,6 @@ else
     		export SVWS_TLS_KEY_ALIAS=${SVWS_TLS_KEY_ALIAS}
     	fi
 
-    	read -p "Möchten Sie Testdaten importieren? (j/N): " CREATE_TESTDATA
-    	if [ "$CREATE_TESTDATA" = "j" ] || [ "$CREATE_TESTDATA" = "J" ]; then
-    		echo "Testdaten:"
-    		read -p "MDBFILE (default: 'Abitur-Test-Daten.mdb'): " MDBFILE_USER
-    		echo
-    		export TMP_DIR=/tmp/svws
-    		MDBFILE_USER=${MDBFILE_USER:-/databases/SVWS-TestMDBs-main/GOST_Abitur/Abi-Test-Daten-01/GymAbi.mdb}
-    		MDBFILE="${TMP_DIR}${MDBFILE_USER}"
-    	else
-    		if [ "$CREATE_MariaDB" = "j" ] || [ "$CREATE_MariaDB" = "J" ]; then
-    			export INIT_EMPTY_DB=J
-    		fi
-    	fi
 
     	echo ""
     	echo "Installation auf: "
@@ -245,10 +213,6 @@ else
     	echo ""
     	echo "MariaDB-Konfiguration:"
     	echo "  MariaDB_ROOT_PASSWORD: $MariaDB_ROOT_PASSWORD"
-    	echo "  MariaDB_DATABASE: $MariaDB_DATABASE"
-    	echo "  MariaDB_HOST: $MariaDB_HOST"
-    	echo "  MariaDB_USER: $MariaDB_USER"
-    	echo "  MariaDB_PASSWORD: $MariaDB_PASSWORD"
 
     	echo ""
     	echo "Installationspfade:"
@@ -269,12 +233,6 @@ else
 		echo "  Country (C): $INPUT_country"
         echo "  Gültigkeitsdauer des Zertifikats: $validity_days Tage"
 
-		if [ "$CREATE_TESTDATA" = "j" ] || [ "$CREATE_TESTDATA" = "J" ]; then
-			echo ""
-			echo "Testdaten import:"
-			echo "  MDBFILE: $MDBFILE"
-		fi
-
     	read -p "Sind alle Einstellungen korrekt? (j/N): " CONFIRM
 
     	if [ "$CONFIRM" = "n" ] || [ "$CONFIRM" = "N" ] || [ "$CONFIRM" = "" ]; then
@@ -288,12 +246,7 @@ else
     touch .env
     echo "CREATE_MariaDB=$CREATE_MariaDB" >> .env
     echo "CREATE_KEYSTORE=$CREATE_KEYSTORE" >> .env
-    echo "CREATE_TESTDATA=$CREATE_TESTDATA" >> .env
     echo "MariaDB_ROOT_PASSWORD=$MariaDB_ROOT_PASSWORD" >> .env
-    echo "MariaDB_DATABASE=$MariaDB_DATABASE" >> .env
-    echo "MariaDB_HOST=$MariaDB_HOST" >> .env
-    echo "MariaDB_USER=$MariaDB_USER" >> .env
-    echo "MariaDB_PASSWORD=$MariaDB_PASSWORD" >> .env
     echo "APP_PATH=$APP_PATH" >> .env
     echo "CONF_PATH=$CONF_PATH" >> .env
     echo "APP_PORT=$APP_PORT" >> .env
@@ -307,11 +260,6 @@ else
     echo "INPUT_state=$INPUT_state" >> .env
     echo "INPUT_country=$INPUT_country" >> .env
     echo "validity_days=$validity_days" >> .env
-	echo "TMP_DIR=$TMP_DIR" >> .env
-	if [ "$CREATE_TESTDATA" = "j" ] || [ "$CREATE_TESTDATA" = "J" ]; then
-		echo "MDBFILE=$MDBFILE" >> .env
-	fi
-	echo "INIT_EMPTY_DB=$INIT_EMPTY_DB" >> .env
 fi
 
 # Laden von Abhängigkeiten
@@ -402,18 +350,9 @@ fi
 # Erstelle Konfigurationsdatei
 echo "Erstelle Konfiguration ..."
 
-if [ "$CREATE_TESTDATA" = "j" ] || [ "$CREATE_TESTDATA" = "J" ]; then
-	envsubst < $CONF_PATH/svwsconfig-template.json > $CONF_PATH/svwsconfig.json
-else
-	if [ "$CREATE_MariaDB" = "j" ] || [ "$CREATE_MariaDB" = "J" ]; then
-    	envsubst < $CONF_PATH/svwsconfig-template-nodb.json > $CONF_PATH/svwsconfig.json
-    else
-    	envsubst < $CONF_PATH/svwsconfig-template.json > $CONF_PATH/svwsconfig.json
-    fi
-fi
+envsubst < $CONF_PATH/svwsconfig-template.json > $CONF_PATH/svwsconfig.json
 
 rm $CONF_PATH/svwsconfig-template.json
-rm $CONF_PATH/svwsconfig-template-nodb.json
 
 # Erstelle einen symbolischen Link zur Konfigurationsdatei
 ln -s $CONF_PATH/svwsconfig.json $APP_PATH/svwsconfig.json
@@ -426,61 +365,6 @@ if [ "$CREATE_MariaDB" = "j" ] || [ "$CREATE_MariaDB" = "J" ]; then
         mysql < ./init-scripts/init.sql
 fi
 
-# Überprüfe, ob Testdaten erstellt werden sollen
-if [ "$CREATE_TESTDATA" = "j" ] || [ "$CREATE_TESTDATA" = "J" ]; then
-
-    # Erstelle init.sql Datei aus der Vorlage init-template.sql, dabei werden Umgebungsvariablen ersetzt
-    echo "importiere Testdaten ..."
-
-    # Erstelle ein temporäres Verzeichnis
-    mkdir $TMP_DIR
-    cd $TMP_DIR
-
-    # Lade Testdatenbanken von GitHub als zip-Datei herunter
-    echo "Lade Testdatenbanken herunter ..."
-    wget https://github.com/SVWS-NRW/SVWS-TestMDBs/archive/refs/heads/main.zip -O $TMP_DIR/databases.zip
-
-    # Extrahiere Access-Datenbanken aus den heruntergeladenen zip-File
-    echo "Extrahiere Access-Datenbanken ..."
-    unzip $TMP_DIR/databases.zip -d $TMP_DIR/databases "*.mdb"
-    rm -rf $TMP_DIR/databases.zip
-
-    # Führe den Import (MigrateDB) der Access-Datenbank(en) durch ...
-
-    # Setze den Dateinamen der ersten Access-Datenbank
-    MDBFILE= $TMP_DIR$MDBFILE
-
-    # Wechsle in das Verzeichnis der Anwendung
-    cd $APP_PATH
-
-    # Importiere die Datenbank(en) mittels der MigrateDB Klasse
-    echo "Importiere Datenbank: ${MDBFILE} ..."
-    java -cp "svws-server-app-*.jar:${APP_PATH}/app/*:${APP_PATH}/app/lib/*" de.svws_nrw.db.utils.app.MigrateDB -j -r -1 -sd "MDB" \
-       -sl "${MDBFILE}" \
-       -td "MARIA_DB" \
-       -tl ${MariaDB_HOST} \
-       -ts ${MariaDB_DATABASE} \
-       -tu ${MariaDB_USER} \
-       -tp ${MariaDB_PASSWORD} \
-       -tr ${MariaDB_ROOT_PASSWORD}
-fi
-
-# Überprüfe, ob eine leere Datenbank erstellt werden sollen
-if [ "$INIT_EMPTY_DB" = "j" ] || [ "$INIT_EMPTY_DB" = "J" ]; then
-
-	# Wechsle in das Verzeichnis der Anwendung
-	cd $APP_PATH
-
-	# Erstelle leere Datenbank ...
-    echo "Erstelle leere Datenbank ..."
-    java -cp "svws-server-app-*.jar:${APP_PATH}/app/*:${APP_PATH}/app/lib/*" de.svws_nrw.db.utils.app.CreateSchema -j -r -1 \
-       -td "MARIA_DB" \
-       -tl ${MariaDB_HOST} \
-       -ts ${MariaDB_DATABASE} \
-       -tu ${MariaDB_USER} \
-       -tp ${MariaDB_PASSWORD} \
-       -tr ${MariaDB_ROOT_PASSWORD}
-fi
 
 cd $script_dir
 
