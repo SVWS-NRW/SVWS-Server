@@ -53,14 +53,23 @@
 							<p class="text-left font-normal">Daten auf dem Webnotenmanager entfernen</p>
 						</div>
 					</svws-ui-button>
+					<svws-ui-button :type="(aktuell === 'configure') ? 'primary' : 'secondary'" @click="onSelect('configure')" style="justify-content: normal">
+						<div class="flex flex-col gap-1">
+							<p class="text-left font-bold ">Einstellungen</p>
+							<p class="text-left font-normal">Den Webnotenmanager konfigurieren</p>
+						</div>
+					</svws-ui-button>
 				</template>
 			</div>
 
 			<!-- Spezielle Ansicht nach Auswahl des Einrichtungsschrittes -->
 			<div class="min-w-fit flex flex-col gap-8">
+				<!-- Die Lehrer-Credentials -->
 				<div v-if="(aktuell === 'creds') && (enmDaten !== null)" class="h-full w-full overflow-hidden max-w-196">
 					<enm-lehrer-credentials :enm-daten="() => enmDaten() ?? new ENMDaten()" :map-enm-initial-kennwoerter />
 				</div>
+
+				<!-- Den Webnotenmanager einrichten -->
 				<div v-if="aktuell === 'setup'" class="max-w-196">
 					<div class="text-headline-md mb-4">Verbindung zum Webnotenmanager einrichten</div>
 					<template v-if="!hasConnectionInfo">
@@ -86,9 +95,9 @@
 							<div class="text-headline-md">TLS-Zertifikat des Servers </div>
 							<div v-if="cert === null">Kein Zertifikat angegeben.</div>
 							<div v-else>
-								<div class="text-headline-sm">Inhaber:</div>
+								<div class="text-headline-sm">Inhaber</div>
 								<div class="pl-4">{{ cert.subject }}</div>
-								<div class="text-headline-sm">Aussteller:</div>
+								<div class="text-headline-sm">Aussteller</div>
 								<div class="pl-4">{{ cert.issuer }}</div>
 								<div class="text-headline-sm">Gültigkeit</div>
 								<div class="pl-4">von: {{ cert.validSince }}</div>
@@ -98,21 +107,10 @@
 								Zertifikat vertrauen?
 							</svws-ui-checkbox>
 						</svws-ui-input-wrapper>
-						<svws-ui-input-wrapper class="mt-8">
-							<div class="text-headline-md">SMTP Einstellungen</div>
-							<svws-ui-text-input v-model.trim="smtpConfig.host" placeholder="SMTP-Server" />
-							<svws-ui-input-number v-model="smtpConfig.port" placeholder="Port" :min="1" />
-							<svws-ui-text-input v-model.trim="smtpConfig.username" placeholder="Benutzername" />
-							<svws-ui-text-input v-model.trim="smtpConfig.password" placeholder="Passwort" type="password" />
-							<svws-ui-checkbox v-model="smtpConfig.useTLS">TLS verwenden</svws-ui-checkbox>
-							<svws-ui-text-input v-model.trim="smtpConfig.fromEmail" placeholder="Absenderadresse der Email" />
-							<svws-ui-text-input v-model.trim="smtpConfig.fromName" placeholder="Absendername der Email" />
-							<svws-ui-button type="primary" @click="updateSMTP">
-								Speichern
-							</svws-ui-button>
-						</svws-ui-input-wrapper>
 					</template>
 				</div>
+
+				<!-- Daten mit dem Webnotenmanager synchronisieren -->
 				<div v-if="aktuell === 'synchronize'" class="max-w-164">
 					<div class="text-headline-md mb-4">Daten abgleichen</div>
 					<svws-ui-input-wrapper>
@@ -140,6 +138,8 @@
 						</div>
 					</svws-ui-input-wrapper>
 				</div>
+
+				<!-- Den Webnotenmanager zurücksetzen -->
 				<div v-if="aktuell === 'reset'" class="max-w-164">
 					<div class="text-headline-md mb-4">Zurücksetzen der Daten</div>
 					<svws-ui-input-wrapper>
@@ -155,6 +155,24 @@
 								Daten und Benutzer zurücksetzen
 							</svws-ui-button>
 						</div>
+					</svws-ui-input-wrapper>
+				</div>
+
+				<!-- Den Webnotenmanager konfigurieren -->
+				<div v-if="aktuell === 'configure'" class="max-w-164">
+					<div class="text-headline-md mb-4">Webnotenmanager konfigurieren</div>
+					<svws-ui-input-wrapper class="mt-8">
+						<div class="text-headline-md">SMTP Einstellungen</div>
+						<svws-ui-text-input v-model.trim="smtpConfig.host" placeholder="SMTP-Server" />
+						<svws-ui-input-number v-model="smtpConfig.port" placeholder="Port" :min="1" />
+						<svws-ui-text-input v-model.trim="smtpConfig.username" placeholder="Benutzername" />
+						<svws-ui-text-input v-model.trim="smtpConfig.password" placeholder="Passwort" type="password" />
+						<svws-ui-checkbox v-model="smtpConfig.useTLS">TLS verwenden</svws-ui-checkbox>
+						<svws-ui-text-input v-model.trim="smtpConfig.fromEmail" placeholder="Absenderadresse der Email" />
+						<svws-ui-text-input v-model.trim="smtpConfig.fromName" placeholder="Absendername der Email" />
+						<svws-ui-button type="primary" @click="updateSMTP">
+							Speichern
+						</svws-ui-button>
 					</svws-ui-input-wrapper>
 				</div>
 				<div>
@@ -174,12 +192,12 @@
 
 	import { computed, onMounted, ref } from "vue";
 	import type { SchuleDatenaustauschWenomProps } from './SSchuleDatenaustauschWenomProps';
-	import type { List, OAuth2ClientConnection, SimpleOperationResponse, TLSCertificate } from "@core";
+	import type { OAuth2ClientConnection, SimpleOperationResponse, TLSCertificate } from "@core";
 	import { ENMDaten, ENMServerConfigElement, ENMServerConfigSMTP, JavaString } from "@core";
 
 	const props = defineProps<SchuleDatenaustauschWenomProps>();
 
-	type WENOM = 'creds' | 'setup' | 'reset' | 'synchronize';
+	type WENOM = 'creds' | 'setup' | 'reset' | 'synchronize' | 'configure';
 	const aktuell = ref<WENOM>('setup');
 
 	const lehrerOhneEmail = ref<number>(0);
