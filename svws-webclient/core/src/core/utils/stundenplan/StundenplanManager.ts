@@ -410,6 +410,8 @@ export class StundenplanManager extends JavaObject {
 
 	private _unterrichtmenge_ungueltig : List<StundenplanUnterricht> = new ArrayList<StundenplanUnterricht>();
 
+	private _unterrichtmenge_ungueltig_set : HashSet<number> = new HashSet<number>();
+
 	private _unterrichtmenge_by_idFach : HashMap<number, List<StundenplanUnterricht>> = new HashMap<number, List<StundenplanUnterricht>>();
 
 	private _unterrichtmenge_by_idKlasse : HashMap<number, List<StundenplanUnterricht>> = new HashMap<number, List<StundenplanUnterricht>>();
@@ -741,6 +743,7 @@ export class StundenplanManager extends JavaObject {
 		for (const u of this._unterrichtmenge_ungueltig)
 			this._unterricht_by_id.put(u.id, u);
 		this._unterrichtmenge_ungueltig = new ArrayList();
+		this._unterrichtmenge_ungueltig_set = new HashSet();
 		for (const u of new ArrayList(this._unterricht_by_id.values())) {
 			if (u.idKurs !== null)
 				continue;
@@ -750,6 +753,7 @@ export class StundenplanManager extends JavaObject {
 			if (ungueltig) {
 				this._unterricht_by_id.remove(u.id);
 				this._unterrichtmenge_ungueltig.add(u);
+				this._unterrichtmenge_ungueltig_set.add(u.id);
 			}
 		}
 	}
@@ -6397,17 +6401,14 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private unterrichtRemoveByIdOhneUpdate(idUnterricht : number) : void {
-		DeveloperNotificationException.ifMapRemoveFailes(this._unterricht_by_id, idUnterricht);
-	}
-
-	/**
-	 * Entfernt aus dem Stundenplan ein existierendes {@link StundenplanUnterricht}-Objekt.
-	 *
-	 * @param idUnterricht  Die Datenbank-ID des {@link StundenplanUnterricht}-Objekts.
-	 */
-	public unterrichtRemoveById(idUnterricht : number) : void {
-		this.unterrichtRemoveByIdOhneUpdate(idUnterricht);
-		this.update_all();
+		if (this._unterrichtmenge_ungueltig_set.contains(idUnterricht)) {
+			const iter : JavaIterator<StundenplanUnterricht> = this._unterrichtmenge_ungueltig.iterator();
+			while (iter.hasNext())
+				if (iter.next().id === idUnterricht)
+					iter.remove();
+		} else {
+			DeveloperNotificationException.ifMapRemoveFailes(this._unterricht_by_id, idUnterricht);
+		}
 	}
 
 	/**
@@ -6418,22 +6419,6 @@ export class StundenplanManager extends JavaObject {
 	public unterrichtRemoveAll(listUnterricht : List<StundenplanUnterricht>) : void {
 		for (const u of listUnterricht)
 			this.unterrichtRemoveByIdOhneUpdate(u.id);
-		this.update_all();
-	}
-
-	/**
-	 * Entfernt alle {@link StundenplanUnterricht}-Objekte aus der Liste der ungültigen Unterrichte.
-	 *
-	 * @param listUnterricht  Die Liste der zu entfernenden {@link StundenplanUnterricht}-Objekte.
-	 */
-	public unterrichtRemoveAllUngueltige(listUnterricht : List<StundenplanUnterricht>) : void {
-		const set : HashSet<number> = new HashSet<number>();
-		for (let u of listUnterricht)
-			set.add(u.id);
-		const iter : JavaIterator<StundenplanUnterricht> = this._unterrichtmenge_ungueltig.iterator();
-		while (iter.hasNext())
-			if (set.contains(iter.next().id))
-				iter.remove();
 		this.update_all();
 	}
 

@@ -578,19 +578,10 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
 		api.status.start();
 		const listID = new ArrayList<number>();
-		const listUngueltige = new ArrayList<StundenplanUnterricht>();
-		const listGueltige = new ArrayList<StundenplanUnterricht>();
-		for (const item of unterrichte) {
+		for (const item of unterrichte)
 			listID.add(item.id);
-			console.log(this.stundenplanManager.unterrichtGetMengeUngueltigAsList().contains(item), item, this.stundenplanManager.unterrichtGetMengeUngueltigAsList())
-			if (this.stundenplanManager.unterrichtGetMengeUngueltigAsList().contains(item))
-				listUngueltige.add(item);
-			else
-				listGueltige.add(item);
-		}
-		await api.server.deleteStundenplanUnterrichte(listID, api.schema, id);
-		this.stundenplanManager.unterrichtRemoveAll(listGueltige);
-		this.stundenplanManager.unterrichtRemoveAllUngueltige(listUngueltige);
+		const list = await api.server.deleteStundenplanUnterrichte(listID, api.schema, id);
+		this.stundenplanManager.unterrichtRemoveAll(list);
 		if ((this.selected instanceof StundenplanUnterricht) && listID.contains(this.selected.id))
 			this._state.value.selected = undefined;
 		this.commit();

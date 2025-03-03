@@ -353,6 +353,7 @@ public class StundenplanManager {
 	private final @NotNull HashMap<Long, StundenplanUnterricht> _unterricht_by_id = new HashMap<>();
 	private @NotNull List<StundenplanUnterricht> _unterrichtmenge = new ArrayList<>();
 	private @NotNull List<StundenplanUnterricht> _unterrichtmenge_ungueltig = new ArrayList<>();
+	private @NotNull HashSet<Long> _unterrichtmenge_ungueltig_set = new HashSet<>();
 	private @NotNull HashMap<Long, List<StundenplanUnterricht>> _unterrichtmenge_by_idFach = new HashMap<>();
 	private @NotNull HashMap<Long, List<StundenplanUnterricht>> _unterrichtmenge_by_idKlasse = new HashMap<>();
 	private @NotNull HashMap<Long, List<StundenplanUnterricht>> _unterrichtmenge_by_idRaum = new HashMap<>();
@@ -705,6 +706,7 @@ public class StundenplanManager {
 
 		// Jetzt ungültige Objekte identifizieren
 		_unterrichtmenge_ungueltig = new ArrayList<>();
+		_unterrichtmenge_ungueltig_set = new HashSet<>();
 		for (final StundenplanUnterricht u : new ArrayList<>(_unterricht_by_id.values())) {
 			// Kursunterricht ignorieren?
 			if (u.idKurs != null)
@@ -719,6 +721,7 @@ public class StundenplanManager {
 			if (ungueltig) {
 				_unterricht_by_id.remove(u.id);
 				_unterrichtmenge_ungueltig.add(u);
+				_unterrichtmenge_ungueltig_set.add(u.id);
 			}
 		}
 	}
@@ -7102,18 +7105,17 @@ public class StundenplanManager {
 	}
 
 	private void unterrichtRemoveByIdOhneUpdate(final long idUnterricht) {
-		DeveloperNotificationException.ifMapRemoveFailes(_unterricht_by_id, idUnterricht);
-	}
+		if (_unterrichtmenge_ungueltig_set.contains(idUnterricht)) {
+			// Entferne aus der Liste über ID vergleich, da Objekt-Referenz nicht zuverlässig ist.
+			final @NotNull Iterator<StundenplanUnterricht> iter = _unterrichtmenge_ungueltig.iterator();
+			while (iter.hasNext())
+				if (iter.next().id == idUnterricht)
+					iter.remove();
 
-	/**
-	 * Entfernt aus dem Stundenplan ein existierendes {@link StundenplanUnterricht}-Objekt.
-	 *
-	 * @param idUnterricht  Die Datenbank-ID des {@link StundenplanUnterricht}-Objekts.
-	 */
-	public void unterrichtRemoveById(final long idUnterricht) {
-		unterrichtRemoveByIdOhneUpdate(idUnterricht);
-
-		update_all();
+			// Löschen aus dem Set nicht nötig, da updateAll das Set erneuert.
+		} else {
+			DeveloperNotificationException.ifMapRemoveFailes(_unterricht_by_id, idUnterricht);
+		}
 	}
 
 	/**
@@ -7124,27 +7126,6 @@ public class StundenplanManager {
 	public void unterrichtRemoveAll(final @NotNull List<StundenplanUnterricht> listUnterricht) {
 		for (final @NotNull StundenplanUnterricht u : listUnterricht)
 			unterrichtRemoveByIdOhneUpdate(u.id);
-
-		update_all();
-	}
-
-
-	/**
-	 * Entfernt alle {@link StundenplanUnterricht}-Objekte aus der Liste der ungültigen Unterrichte.
-	 *
-	 * @param listUnterricht  Die Liste der zu entfernenden {@link StundenplanUnterricht}-Objekte.
-	 */
-	public void unterrichtRemoveAllUngueltige(final @NotNull List<StundenplanUnterricht> listUnterricht) {
-		// Fülle das Set der IDs.
-		final @NotNull HashSet<Long> set = new HashSet<>();
-		for (StundenplanUnterricht u : listUnterricht)
-			set.add(u.id);
-
-		// Entferne aus der Liste über ID vergleich, da Objekt-Referenz nicht zuverlässig ist.
-		final @NotNull Iterator<StundenplanUnterricht> iter = _unterrichtmenge_ungueltig.iterator();
-		while (iter.hasNext())
-			if (set.contains(iter.next().id))
-				iter.remove();
 
 		update_all();
 	}
