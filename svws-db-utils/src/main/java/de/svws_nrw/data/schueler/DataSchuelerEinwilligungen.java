@@ -8,7 +8,6 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerDatenschutz;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response.Status;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -69,21 +68,6 @@ public final class DataSchuelerEinwilligungen extends DataManagerRevised<Long[],
 		dto.Datenschutz_ID = idArray[1];
 		dto.Status = false;
 		dto.Abgefragt = false;
-	}
-
-	/**
-	 * Fügt eine neue Einwilligung für den aktuellen Schüler hinzu.
-	 *
-	 * @param idEinwilligungsart die ID der Einwilligungsart, zu der die Einwilligung angelegt werden soll
-	 *
-	 * @throws ApiOperationException falls ein Fehler bei der Validierung oder Persistierung auftritt
-	 */
-	public void addEinwilligung(final Long idEinwilligungsart) throws ApiOperationException {
-		final Map<String, Object> attributes = new HashMap<>();
-		attributes.put("idSchueler", this.idSchueler);
-		attributes.put("idEinwilligungsart", idEinwilligungsart);
-		final Long[] newID = getNextID(null, attributes);
-		addBasic(newID, attributes);
 	}
 
 	@Override

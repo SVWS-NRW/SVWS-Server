@@ -16,6 +16,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -109,10 +110,12 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 					"Anlegen der Einwilligung für diesen Personentyp noch nicht implementiert: " + neueEinwilligungsart.personTyp);
 		} else if (neueEinwilligungsart.personTyp == PersonTyp.SCHUELER.id) {
 			final List<Long> schuelerIds = conn.queryList("SELECT e.ID FROM DTOSchueler e", Long.class);
+			final List<DTOSchuelerDatenschutz> schuelerEinwilligungen = new ArrayList<>();
 			for (final Long schuelerId : schuelerIds) {
-				final DataSchuelerEinwilligungen dataSchuelerEinwilligungen = new DataSchuelerEinwilligungen(conn, schuelerId);
-				dataSchuelerEinwilligungen.addEinwilligung(neueEinwilligungsart.id);
+				final DTOSchuelerDatenschutz dto = new DTOSchuelerDatenschutz(schuelerId, neueEinwilligungsart.id, false, false);
+				schuelerEinwilligungen.add(dto);
 			}
+			conn.transactionPersistAll(schuelerEinwilligungen);
 		} else {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Unbekannter Personentyp: " + neueEinwilligungsart.personTyp);
 		}
