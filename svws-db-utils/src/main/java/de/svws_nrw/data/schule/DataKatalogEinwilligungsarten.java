@@ -100,6 +100,25 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 		dto.personTyp = PersonTyp.SCHUELER;
 	}
 
+	@Override
+	protected Einwilligungsart addBasic(final Long newID, final Map<String, Object> initAttributes) throws ApiOperationException {
+		final Einwilligungsart neueEinwilligungsart = super.addBasic(newID, initAttributes);
+		if (neueEinwilligungsart.personTyp == PersonTyp.LEHRER.id) {
+			// TODO Hinzugügen der Einwilligungen für die Lehrer implementieren
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"Anlegen der Einwilligung für diesen Personentyp noch nicht implementiert: " + neueEinwilligungsart.personTyp);
+		} else if (neueEinwilligungsart.personTyp == PersonTyp.SCHUELER.id) {
+			final List<Long> schuelerIds = conn.queryList("SELECT e.ID FROM DTOSchueler e", Long.class);
+			for (final Long schuelerId : schuelerIds) {
+				final DataSchuelerEinwilligungen dataSchuelerEinwilligungen = new DataSchuelerEinwilligungen(conn, schuelerId);
+				dataSchuelerEinwilligungen.addEinwilligung(neueEinwilligungsart.id);
+			}
+		} else {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Unbekannter Personentyp: " + neueEinwilligungsart.personTyp);
+		}
+		return neueEinwilligungsart;
+	}
+
 
 	private String validateBezeichnung(final Object value, final PersonTyp personTyp, final String name) throws ApiOperationException {
 		final String bezeichnung = JSONMapper.convertToString(value, false, false, Schema.tab_K_Datenschutz.col_Bezeichnung.datenlaenge(), name);
