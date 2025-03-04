@@ -343,7 +343,7 @@ public final class Revision35Updates extends SchemaRevisionUpdateSQL {
 
 			// Stundentafel - Aktualisiere die Spalte SGL anhand der Jahrgangstabelle
 			doUpdate(conn, logger, "- Stundentafel: Aktualisiere die Spalte SGL anhand der Jahrgangstabelle.",
-					"UPDATE %s st JOIN %s j ON st.Jahrgang_ID = j.ID AND j.ASDJahrgang IS NOT NULL SET st.SGL = j.ASDJahrgang"
+					"UPDATE %s st JOIN %s j ON st.Jahrgang_ID = j.ID AND j.ASDJahrgang IS NOT NULL SET st.SGL = j.SGL"
 							.formatted(Schema.tab_Stundentafel.name(), Schema.tab_EigeneSchule_Jahrgaenge.name()));
 			conn.transactionFlush();
 
