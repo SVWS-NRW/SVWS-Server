@@ -416,6 +416,9 @@ export class ZulaessigeKursart extends JavaEnum<ZulaessigeKursart> implements Co
 	 */
 	public static init(manager : CoreTypeDataManager<ZulaessigeKursartKatalogEintrag, ZulaessigeKursart>) : void {
 		CoreTypeDataManager.putManager(ZulaessigeKursart.class, manager);
+		ZulaessigeKursart._mapSchulformenByID.clear();
+		ZulaessigeKursart._mapBySchuljahrAndSchulform.clear();
+		ZulaessigeKursart._mapBySchuljahrAndAllgemeinerKursart.clear();
 		for (const ct of ZulaessigeKursart.data().getWerte())
 			for (const e of ct.historie()) {
 				const tmpSet : JavaSet<Schulform> | null = new HashSet<Schulform>();

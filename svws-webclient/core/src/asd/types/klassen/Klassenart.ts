@@ -93,6 +93,8 @@ export class Klassenart extends JavaEnum<Klassenart> implements CoreType<Klassen
 	 */
 	public static init(manager : CoreTypeDataManager<KlassenartKatalogEintrag, Klassenart>) : void {
 		CoreTypeDataManager.putManager(Klassenart.class, manager);
+		Klassenart._mapSchulformenByID.clear();
+		Klassenart._mapBySchuljahrAndSchulform.clear();
 		for (const ct of Klassenart.data().getWerte())
 			for (const e of ct.historie()) {
 				const tmpSet : JavaSet<Schulform> | null = new HashSet<Schulform>();

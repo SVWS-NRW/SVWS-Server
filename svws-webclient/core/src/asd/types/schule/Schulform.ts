@@ -129,6 +129,7 @@ export class Schulform extends JavaEnum<Schulform> implements CoreType<Schulform
 	 */
 	public static init(manager : CoreTypeDataManager<SchulformKatalogEintrag, Schulform>) : void {
 		CoreTypeDataManager.putManager(Schulform.class, manager);
+		Schulform._mapSchuljahrToSchulformenMitGymOb.clear();
 	}
 
 	/**

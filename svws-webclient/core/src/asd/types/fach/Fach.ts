@@ -1505,6 +1505,8 @@ export class Fach extends JavaEnum<Fach> implements CoreType<FachKatalogEintrag,
 	 */
 	public static init(manager : CoreTypeDataManager<FachKatalogEintrag, Fach>) : void {
 		CoreTypeDataManager.putManager(Fach.class, manager);
+		Fach._mapFremdsprachenKuerzelListe.clear();
+		Fach._mapFremdsprachenKuerzelAtomar.clear();
 	}
 
 	/**
