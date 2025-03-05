@@ -908,6 +908,8 @@ public enum Fach implements CoreType<FachKatalogEintrag, Fach> {
 	 */
 	public static void init(final @NotNull CoreTypeDataManager<FachKatalogEintrag, Fach> manager) {
 		CoreTypeDataManager.putManager(Fach.class, manager);
+		_mapFremdsprachenKuerzelListe.clear();
+		_mapFremdsprachenKuerzelAtomar.clear();
 	}
 
 

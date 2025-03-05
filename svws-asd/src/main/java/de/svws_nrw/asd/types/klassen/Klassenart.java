@@ -65,6 +65,8 @@ public enum Klassenart implements CoreType<KlassenartKatalogEintrag, Klassenart>
 	 */
 	public static void init(final @NotNull CoreTypeDataManager<KlassenartKatalogEintrag, Klassenart> manager) {
 		CoreTypeDataManager.putManager(Klassenart.class, manager);
+		_mapSchulformenByID.clear();
+		_mapBySchuljahrAndSchulform.clear();
 		for (final var ct : data().getWerte())
 			for (final var e : ct.historie()) {
 				final Set<Schulform> tmpSet = new HashSet<>();

@@ -87,6 +87,7 @@ public enum Schulform implements @NotNull CoreType<SchulformKatalogEintrag, Schu
 	 */
 	public static void init(final @NotNull CoreTypeDataManager<SchulformKatalogEintrag, Schulform> manager) {
 		CoreTypeDataManager.putManager(Schulform.class, manager);
+		_mapSchuljahrToSchulformenMitGymOb.clear();
 	}
 
 
