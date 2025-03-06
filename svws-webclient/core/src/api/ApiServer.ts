@@ -121,6 +121,7 @@ import { LehrerStammdaten } from '../asd/data/lehrer/LehrerStammdaten';
 import { LehrerZugangsgrundKatalogEintrag } from '../asd/data/lehrer/LehrerZugangsgrundKatalogEintrag';
 import { List } from '../java/util/List';
 import { LongAndStringLists } from '../core/data/LongAndStringLists';
+import { Merkmal } from '../core/data/schule/Merkmal';
 import { NationalitaetenKatalogEintrag } from '../core/data/schule/NationalitaetenKatalogEintrag';
 import { NoteKatalogEintrag } from '../asd/data/NoteKatalogEintrag';
 import { OAuth2ClientConnection } from '../core/data/oauth2/OAuth2ClientConnection';
@@ -12215,6 +12216,33 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = JSON.stringify(data);
 		return super.putJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getMerkmale für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/merkmale
+	 *
+	 * Gibt die Merkmale zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste von Merkmalen.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Merkmal>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Merkmale gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Eine Liste von Merkmalen.
+	 */
+	public async getMerkmale(schema : string) : Promise<List<Merkmal>> {
+		const path = "/db/{schema}/schule/merkmale"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<Merkmal>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Merkmal.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 

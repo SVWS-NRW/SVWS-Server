@@ -9,7 +9,7 @@ export class SchuelerSchulbesuchMerkmal extends JavaObject {
 	public id : number = 0;
 
 	/**
-	 * Der Kurztext des Merkmals
+	 * Die ID des Merkmals
 	 */
 	public idMerkmal : number | null = null;
 

@@ -538,6 +538,7 @@ export { HerkunftSonstigeKatalogEintrag } from './core/data/schule/HerkunftSonst
 export { HerkunftsartKatalogEintrag } from './core/data/schule/HerkunftsartKatalogEintrag';
 export { HerkunftsartKatalogEintragBezeichnung } from './core/data/schule/HerkunftsartKatalogEintragBezeichnung';
 export { HerkunftsschulnummerKatalogEintrag } from './core/data/schule/HerkunftsschulnummerKatalogEintrag';
+export { Merkmal } from './core/data/schule/Merkmal';
 export { NationalitaetenKatalogEintrag } from './core/data/schule/NationalitaetenKatalogEintrag';
 export { PruefungsordnungKatalogEintrag } from './core/data/schule/PruefungsordnungKatalogEintrag';
 export { Raum } from './core/data/schule/Raum';

@@ -1,5 +1,7 @@
 package de.svws_nrw.api.server;
 
+import de.svws_nrw.core.data.schule.Merkmal;
+import de.svws_nrw.data.schule.DataMerkmale;
 import java.io.InputStream;
 
 import de.svws_nrw.asd.data.schule.SchuleStammdaten;
@@ -2762,6 +2764,27 @@ public class APISchule {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchulleitung(conn, null).deleteMultiple(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Merkmale.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste der Merkmale
+	 */
+	@GET
+	@Path("/merkmale")
+	@Operation(summary = "Gibt eine Übersicht der Merkmale im Katalog zurück.",
+			description = "Gibt die Merkmale zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Merkmalen.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Merkmal.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Merkmale gefunden")
+	public Response getMerkmale(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataMerkmale(conn).getAllAsResponse(),
+				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
 	}
 
 }

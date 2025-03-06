@@ -17,7 +17,7 @@ public class SchuelerSchulbesuchMerkmal {
 	@Schema(description = "die ID des besonderen Merkmals für die Statistik", example = "3", accessMode = Schema.AccessMode.READ_ONLY)
 	public long id;
 
-	/** Der Kurztext des Merkmals */
+	/** Die ID des Merkmals */
 	@Schema(description = "die ID des Merkmals", example = "1")
 	public Long idMerkmal;
 
