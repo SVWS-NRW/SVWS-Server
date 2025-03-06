@@ -19,14 +19,14 @@ export class Merkmal extends JavaObject {
 	public istSchuelermerkmal : boolean = false;
 
 	/**
-	 * Der Kurztext des Merkmals
+	 * Das Kuerzel des Merkmals
 	 */
-	public kurztext : string | null = null;
+	public kuerzel : string | null = null;
 
 	/**
-	 * Der Langtext des Merkmals
+	 * Die Bezeichnung des Merkmals
 	 */
-	public langtext : string | null = null;
+	public bezeichnung : string | null = null;
 
 
 	public constructor() {
@@ -55,8 +55,8 @@ export class Merkmal extends JavaObject {
 		if (obj.istSchuelermerkmal === undefined)
 			throw new Error('invalid json format, missing attribute istSchuelermerkmal');
 		result.istSchuelermerkmal = obj.istSchuelermerkmal;
-		result.kurztext = (obj.kurztext === undefined) ? null : obj.kurztext === null ? null : obj.kurztext;
-		result.langtext = (obj.langtext === undefined) ? null : obj.langtext === null ? null : obj.langtext;
+		result.kuerzel = (obj.kuerzel === undefined) ? null : obj.kuerzel === null ? null : obj.kuerzel;
+		result.bezeichnung = (obj.bezeichnung === undefined) ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
 		return result;
 	}
 
@@ -65,8 +65,8 @@ export class Merkmal extends JavaObject {
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"istSchulmerkmal" : ' + obj.istSchulmerkmal.toString() + ',';
 		result += '"istSchuelermerkmal" : ' + obj.istSchuelermerkmal.toString() + ',';
-		result += '"kurztext" : ' + ((obj.kurztext === null) ? 'null' : JSON.stringify(obj.kurztext)) + ',';
-		result += '"langtext" : ' + ((obj.langtext === null) ? 'null' : JSON.stringify(obj.langtext)) + ',';
+		result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
+		result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -83,11 +83,11 @@ export class Merkmal extends JavaObject {
 		if (obj.istSchuelermerkmal !== undefined) {
 			result += '"istSchuelermerkmal" : ' + obj.istSchuelermerkmal.toString() + ',';
 		}
-		if (obj.kurztext !== undefined) {
-			result += '"kurztext" : ' + ((obj.kurztext === null) ? 'null' : JSON.stringify(obj.kurztext)) + ',';
+		if (obj.kuerzel !== undefined) {
+			result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		}
-		if (obj.langtext !== undefined) {
-			result += '"langtext" : ' + ((obj.langtext === null) ? 'null' : JSON.stringify(obj.langtext)) + ',';
+		if (obj.bezeichnung !== undefined) {
+			result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';
