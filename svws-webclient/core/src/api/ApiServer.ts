@@ -104,6 +104,7 @@ import { LehrerAbgangsgrundKatalogEintrag } from '../asd/data/lehrer/LehrerAbgan
 import { LehrerAnrechnungsgrundKatalogEintrag } from '../asd/data/lehrer/LehrerAnrechnungsgrundKatalogEintrag';
 import { LehrerBeschaeftigungsartKatalogEintrag } from '../asd/data/lehrer/LehrerBeschaeftigungsartKatalogEintrag';
 import { LehrerEinsatzstatusKatalogEintrag } from '../asd/data/lehrer/LehrerEinsatzstatusKatalogEintrag';
+import { LehrerEinwilligung } from '../core/data/schule/LehrerEinwilligung';
 import { LehrerFachrichtungAnerkennungKatalogEintrag } from '../asd/data/lehrer/LehrerFachrichtungAnerkennungKatalogEintrag';
 import { LehrerFachrichtungKatalogEintrag } from '../asd/data/lehrer/LehrerFachrichtungKatalogEintrag';
 import { LehrerLehramtAnerkennungKatalogEintrag } from '../asd/data/lehrer/LehrerLehramtAnerkennungKatalogEintrag';
@@ -7994,6 +7995,87 @@ export class ApiServer extends BaseApi {
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = LehrerStammdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getLehrerEinwilligungen für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/{idLehrer : \d+}/einwilligungen
+	 *
+	 * Liest die Einwilligungen des Lehrers zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Einwilligungen des Lehrers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<LehrerEinwilligung>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Lehrerdaten anzusehen.
+	 *   Code 404: Keine Einwilligungen für den Lehrer mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idLehrer - der Pfad-Parameter idLehrer
+	 *
+	 * @returns Die Einwilligungen des Lehrers
+	 */
+	public async getLehrerEinwilligungen(schema : string, idLehrer : number) : Promise<List<LehrerEinwilligung>> {
+		const path = "/db/{schema}/lehrer/{idLehrer : \\d+}/einwilligungen"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idLehrer\s*(:[^{}]+({[^{}]+})*)?}/g, idLehrer.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<LehrerEinwilligung>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerEinwilligung.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchLehrerEinwilligung für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/{idLehrer : \d+}/einwilligungen/{idEinwilligungsart : \d+}
+	 *
+	 * Passt die Einwilligung zu der angegebenen Lehrer- und Einwilligungsart-ID an und speichert das Ergebnis in der Datenbank.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrereinwilligungen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich in die Lehrereinwilligung integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Einwilligungen der Lehrer zu ändern.
+	 *   Code 404: Kein Lehrer oder keine Einwilligung der angegebenen Art gefunden.
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde. (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<LehrerEinwilligung>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idLehrer - der Pfad-Parameter idLehrer
+	 * @param {number} idEinwilligungsart - der Pfad-Parameter idEinwilligungsart
+	 */
+	public async patchLehrerEinwilligung(data : Partial<LehrerEinwilligung>, schema : string, idLehrer : number, idEinwilligungsart : number) : Promise<void> {
+		const path = "/db/{schema}/lehrer/{idLehrer : \\d+}/einwilligungen/{idEinwilligungsart : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idLehrer\s*(:[^{}]+({[^{}]+})*)?}/g, idLehrer.toString())
+			.replace(/{idEinwilligungsart\s*(:[^{}]+({[^{}]+})*)?}/g, idEinwilligungsart.toString());
+		const body : string = LehrerEinwilligung.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteLehrerEinwilligung für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/{idLehrer : \d+}/einwilligungen/{idEinwilligungsart : \d+}
+	 *
+	 * Löscht die Lehrereinwilligung mit der angegebenen IDDabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrereinwilligungen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Die Einwilligung des Lehrers wurde gelöscht
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Lehrerdaten zu ändern.
+	 *   Code 404: Keine Lehrereinwilligung mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idLehrer - der Pfad-Parameter idLehrer
+	 * @param {number} idEinwilligungsart - der Pfad-Parameter idEinwilligungsart
+	 */
+	public async deleteLehrerEinwilligung(schema : string, idLehrer : number, idEinwilligungsart : number) : Promise<void> {
+		const path = "/db/{schema}/lehrer/{idLehrer : \\d+}/einwilligungen/{idEinwilligungsart : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idLehrer\s*(:[^{}]+({[^{}]+})*)?}/g, idLehrer.toString())
+			.replace(/{idEinwilligungsart\s*(:[^{}]+({[^{}]+})*)?}/g, idEinwilligungsart.toString());
+		await super.deleteJSON(path, null);
+		return;
 	}
 
 

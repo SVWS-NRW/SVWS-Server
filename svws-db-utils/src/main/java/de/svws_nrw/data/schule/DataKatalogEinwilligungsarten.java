@@ -9,6 +9,7 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.schueler.DataSchuelerEinwilligungen;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogEinwilligungsart;
+import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerDatenschutz;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerDatenschutz;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -72,7 +73,6 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 		final List<DTOKatalogEinwilligungsart> katalog = conn.queryAll(DTOKatalogEinwilligungsart.class);
 		final Map<Long, Long> mapAnzahlEinwilligungenByEinwilligungsart = conn.queryList(DTOSchuelerDatenschutz.QUERY_ALL.concat(" WHERE e.Datenschutz_ID IS NOT NULL"),
 				DTOSchuelerDatenschutz.class).stream().collect(Collectors.groupingBy(s -> s.Datenschutz_ID, Collectors.counting()));
-
 		return katalog.stream().map(ea -> map(ea, mapAnzahlEinwilligungenByEinwilligungsart.computeIfAbsent(ea.ID, k -> 0L).intValue())).toList();
 	}
 
@@ -105,9 +105,13 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 	protected Einwilligungsart addBasic(final Long newID, final Map<String, Object> initAttributes) throws ApiOperationException {
 		final Einwilligungsart neueEinwilligungsart = super.addBasic(newID, initAttributes);
 		if (neueEinwilligungsart.personTyp == PersonTyp.LEHRER.id) {
-			// TODO Hinzugügen der Einwilligungen für die Lehrer implementieren
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Anlegen der Einwilligung für diesen Personentyp noch nicht implementiert: " + neueEinwilligungsart.personTyp);
+			final List<DTOLehrerDatenschutz> lehrerEinwilligungen = new ArrayList<>();
+			final List<Long> lehrerIds = conn.queryList("SELECT e.ID FROM DTOLehrer e", Long.class);
+			for (final Long lehrerId : lehrerIds) {
+				final DTOLehrerDatenschutz dto = new DTOLehrerDatenschutz(lehrerId, neueEinwilligungsart.id, false, false);
+				lehrerEinwilligungen.add(dto);
+			}
+		conn.transactionPersistAll(lehrerEinwilligungen);
 		} else if (neueEinwilligungsart.personTyp == PersonTyp.SCHUELER.id) {
 			final List<Long> schuelerIds = conn.queryList("SELECT e.ID FROM DTOSchueler e", Long.class);
 			final List<DTOSchuelerDatenschutz> schuelerEinwilligungen = new ArrayList<>();

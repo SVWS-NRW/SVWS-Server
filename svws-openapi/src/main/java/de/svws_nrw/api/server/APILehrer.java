@@ -22,6 +22,7 @@ import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdaten;
 import de.svws_nrw.asd.data.lehrer.LehrerPersonaldaten;
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
+import de.svws_nrw.core.data.schule.LehrerEinwilligung;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.JSONMapper;
@@ -41,6 +42,7 @@ import de.svws_nrw.data.lehrer.DataKatalogLehrerMehrleistungsarten;
 import de.svws_nrw.data.lehrer.DataKatalogLehrerMinderleistungsarten;
 import de.svws_nrw.data.lehrer.DataKatalogLehrerRechtsverhaeltnis;
 import de.svws_nrw.data.lehrer.DataKatalogLehrerZugangsgruende;
+import de.svws_nrw.data.lehrer.DataLehrerEinwilligungen;
 import de.svws_nrw.data.lehrer.DataLehrerPersonalabschnittsdaten;
 import de.svws_nrw.data.lehrer.DataLehrerPersonaldaten;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
@@ -699,6 +701,93 @@ public class APILehrer {
 		return DBBenutzerUtils.run(() -> (new DataKatalogLehrerAnrechnungsgruende()).getList(),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Einwilligungen eines Lehrers.
+	 *
+	 * @param schema       das Datenbankschema, auf welchem die Abfrage ausgeführt werden soll
+	 * @param idLehrer     die Datenbank-ID zur Identifikation des Lehrers
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Einwilligungen des Lehrers
+	 */
+	@GET
+	@Path("/{idLehrer : \\d+}/einwilligungen")
+	@Operation(summary = "Liefert zu der ID des Lehrers die zugehörigen Einwilligungen.",
+			description = "Liest die Einwilligungen des Lehrers zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Einwilligungen des Lehrers",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerEinwilligung.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Lehrerdaten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Einwilligungen für den Lehrer mit der angegebenen ID gefunden")
+	public Response getLehrerEinwilligungen(@PathParam("schema") final String schema, @PathParam("idLehrer") final long idLehrer,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerEinwilligungen(conn, idLehrer).getListAsResponse(),
+				request, ServerMode.DEV,
+				BenutzerKompetenz.LEHRER_PERSONALDATEN_ANSEHEN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Patchen einer Lehrereinwilligung.
+	 *
+	 * @param schema               das Datenbankschema, auf welchem der Patch ausgeführt werden soll
+	 * @param idLehrer             die Lehrer-ID
+	 * @param idEinwilligungsart   die ID der Einwilligungsart, zu welcher die zu patchende Lehrereinwilligung gehört
+	 * @param is                   der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request              die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/{idLehrer : \\d+}/einwilligungen/{idEinwilligungsart : \\d+}")
+	@Operation(summary = "Passt die Lehrereinwilligung zu der angegebenen Lehrer- und Einwilligungsart-ID an.",
+			description = "Passt die Einwilligung zu der angegebenen Lehrer- und Einwilligungsart-ID an und speichert das Ergebnis in der Datenbank."
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrereinwilligungen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Lehrereinwilligung integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Einwilligungen der Lehrer zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Lehrer oder keine Einwilligung der angegebenen Art gefunden.")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde."
+			+ " (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response patchLehrerEinwilligung(@PathParam("schema") final String schema, @PathParam("idLehrer") final long idLehrer,
+			@PathParam("idEinwilligungsart") final long idEinwilligungsart,
+			@RequestBody(description = "Der Patch für die Lehrereinwilligung", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LehrerEinwilligung.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerEinwilligungen(conn, idLehrer)
+						.patchAsResponse(new Long[]{idLehrer, idEinwilligungsart}, is),
+				request, ServerMode.DEV,
+				BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Löschen einer Lehrereinwilligung
+	 *
+	 * @param schema               das Datenbankschema, auf welchem die Abfrage ausgeführt werden soll
+	 * @param idLehrer             die Lehrer-ID
+	 * @param idEinwilligungsart   die Datenbank-ID der Lehrereinwilligung
+	 * @param request              die Informationen zur HTTP-Anfrage
+	 *
+	 * @return HTTP_204, wenn erfolgreich. <br>
+	 *         HTTP_403 bei fehlender Berechtigung,<br>
+	 *         HTTP_404, wenn der Eintrag nicht gefunden wurde
+	 */
+	@DELETE
+	@Path("/{idLehrer : \\d+}/einwilligungen/{idEinwilligungsart : \\d+}")
+	@Operation(summary = "Löscht eine Lehrereinwilligung", description = "Löscht die Lehrereinwilligung mit der angegebenen ID"
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrereinwilligungen besitzt.")
+	@ApiResponse(responseCode = "204", description = "Die Einwilligung des Lehrers wurde gelöscht")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Lehrerdaten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Keine Lehrereinwilligung mit der angegebenen ID gefunden")
+	public Response deleteLehrerEinwilligung(@PathParam("schema") final String schema, @PathParam("idLehrer") final long idLehrer,
+			@PathParam("idEinwilligungsart") final long idEinwilligungsart,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerEinwilligungen(conn, idLehrer)
+						.deleteAsResponse(new Long[]{idLehrer, idEinwilligungsart}),
+				request, ServerMode.DEV,
+				BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN);
 	}
 
 }
