@@ -55,13 +55,10 @@ class DataSchuelerMerkmaleTest {
 	}
 
 	@Test
-	@DisplayName("setAttributesRequiredOnCreation: id")
+	@DisplayName("setAttributesRequiredOnCreation: idMerkmal")
 	void setAttributesRequiredOnCreationTest() {
-		final var dto = new DTOSchuelerMerkmale(1L, 1001);
-		when(this.conn.queryByKey(DTOSchuelerMerkmale.class, 1L)).thenReturn(dto);
-
 		try (var mapperMock = Mockito.mockStatic(JSONMapper.class)) {
-			mapperMock.when(() -> JSONMapper.toMap(any(InputStream.class))).thenReturn(Map.of("id", 99L));
+			mapperMock.when(() -> JSONMapper.toMap(any(InputStream.class))).thenReturn(Map.of("datumVon", "2007-08-01"));
 
 			final var throwable = catchThrowable(() -> this.dataSchuelerMerkmale.addAsResponse(mock(InputStream.class)));
 

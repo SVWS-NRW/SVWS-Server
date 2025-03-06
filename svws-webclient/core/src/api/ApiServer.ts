@@ -95,6 +95,7 @@ import { KatalogEintrag } from '../core/data/kataloge/KatalogEintrag';
 import { KatalogEintragOrte } from '../core/data/kataloge/KatalogEintragOrte';
 import { KatalogEintragOrtsteile } from '../core/data/kataloge/KatalogEintragOrtsteile';
 import { KatalogEintragStrassen } from '../core/data/kataloge/KatalogEintragStrassen';
+import { KatalogEntlassgrund } from '../core/data/kataloge/KatalogEntlassgrund';
 import { KindergartenbesuchKatalogEintrag } from '../asd/data/schule/KindergartenbesuchKatalogEintrag';
 import { KlassenartKatalogEintrag } from '../asd/data/klassen/KlassenartKatalogEintrag';
 import { KlassenDaten } from '../core/data/klassen/KlassenDaten';
@@ -2937,6 +2938,33 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getEntlassgruende für den Zugriff auf die URL https://{hostname}/db/{schema}/entlassgruende
+	 *
+	 * Gibt die Entlassgründe zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste von Entlassgründen.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<KatalogEntlassgrund>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Eine Liste von Entlassgründen.
+	 */
+	public async getEntlassgruende(schema : string) : Promise<List<KatalogEntlassgrund>> {
+		const path = "/db/{schema}/entlassgruende"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<KatalogEntlassgrund>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KatalogEntlassgrund.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 

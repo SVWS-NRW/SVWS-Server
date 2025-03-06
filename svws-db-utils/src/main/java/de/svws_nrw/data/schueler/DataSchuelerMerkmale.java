@@ -8,7 +8,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.schueler.SchuelerSchulbesuchMerkmal;
-import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
@@ -18,7 +17,7 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
- * Diese Klasse erweitert den abstrakten {@link DataManager} für das
+ * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für das
  * Core-DTO {@link SchuelerSchulbesuchMerkmal}.
  */
 public final class DataSchuelerMerkmale extends DataManagerRevised<Long, DTOSchuelerMerkmale, SchuelerSchulbesuchMerkmal> {
@@ -30,7 +29,7 @@ public final class DataSchuelerMerkmale extends DataManagerRevised<Long, DTOSchu
 	private final Long idSchueler;
 
 	/**
-	 * Erstellt einen neuen {@link DataManager} für das Core-DTO {@link SchuelerSchulbesuchMerkmal}.
+	 * Erstellt einen neuen {@link DataManagerRevised} für das Core-DTO {@link SchuelerSchulbesuchMerkmal}.
 	 *
 	 * @param conn         die Datenbank-Verbindung für den Datenbankzugriff
 	 */
@@ -39,7 +38,7 @@ public final class DataSchuelerMerkmale extends DataManagerRevised<Long, DTOSchu
 	}
 
 	/**
-	 * Erstellt einen neuen {@link DataManager} für das Core-DTO {@link SchuelerSchulbesuchMerkmal}.
+	 * Erstellt einen neuen {@link DataManagerRevised} für das Core-DTO {@link SchuelerSchulbesuchMerkmal}.
 	 *
 	 * @param conn         die Datenbank-Verbindung für den Datenbankzugriff
 	 * @param idSchueler   die ID des Schülers - benötigt zum Persistieren neuer DTOSchuelerMerkmale

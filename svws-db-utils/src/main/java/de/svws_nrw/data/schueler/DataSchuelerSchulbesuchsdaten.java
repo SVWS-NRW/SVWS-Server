@@ -7,7 +7,6 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.schueler.SchuelerSchulbesuchsdaten;
-import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
@@ -22,7 +21,7 @@ import jakarta.ws.rs.core.Response.Status;
 
 
 /**
- * Diese Klasse erweitert den abstrakten {@link DataManager} für das
+ * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für das
  * Core-DTO {@link SchuelerSchulbesuchsdaten}.
  */
 public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long, DTOSchueler, SchuelerSchulbesuchsdaten> {
@@ -35,7 +34,7 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 
 
 	/**
-	 * Erstellt einen neuen {@link DataManager} für das Core-DTO {@link SchuelerSchulbesuchsdaten}.
+	 * Erstellt einen neuen {@link DataManagerRevised} für das Core-DTO {@link SchuelerSchulbesuchsdaten}.
 	 *
 	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
 	 */

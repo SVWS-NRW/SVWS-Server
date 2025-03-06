@@ -464,6 +464,7 @@ export { KatalogEintrag } from './core/data/kataloge/KatalogEintrag';
 export { KatalogEintragOrte } from './core/data/kataloge/KatalogEintragOrte';
 export { KatalogEintragOrtsteile } from './core/data/kataloge/KatalogEintragOrtsteile';
 export { KatalogEintragStrassen } from './core/data/kataloge/KatalogEintragStrassen';
+export { KatalogEntlassgrund } from './core/data/kataloge/KatalogEntlassgrund';
 export { OrtKatalogEintrag } from './core/data/kataloge/OrtKatalogEintrag';
 export { OrtsteilKatalogEintrag } from './core/data/kataloge/OrtsteilKatalogEintrag';
 export { SchulEintrag } from './core/data/kataloge/SchulEintrag';
