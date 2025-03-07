@@ -105,13 +105,13 @@
 				</tr>
 				</thead>
 				<tr th:each="Kursschueler,iterationVarSchueler : ${Kurs.schueler()}" th:classappend="${iterationVarSchueler.odd} ? 'bg-lightgrey'">
-					<td class="bo-b-grey p-tb-0-lr-1 f-small c-grey" th:text="${#numbers.formatInteger(iterationVarSchueler.count,2)} + '.'">Nr.</td>
-					<td class="bo-b-grey p-tb-0-lr-1" th:text="${Kursschueler.nachname()} + ', ' + ${Kursschueler.vorname()}">Mustermann, Max</td>
-					<td th:if="(${Kurs.anzahlExterne()} != 0)" class="bo-b-grey p-tb-0-lr-1 ta-c" th:text="${Kursschueler.externeSchulNr()}">123456</td>
-					<td class="bo-b-grey p-tb-0-lr-1 ta-c" th:text="${Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).hatGueltigeFachwahl() ? (Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).istSchriftlich() ? 's' : 'm') : 'ungültig'}">s</td>
-					<td class="bo-b-grey p-tb-0-lr-1 ta-c" th:text="${Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).hatGueltigeFachwahl() ? (#strings.equalsIgnoreCase('E', GostBlockungsergebnis.gostHalbjahr().kuerzel.charAt(0)) ? '' : Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).abiturfach()) : 'ungültig'}">3</td>
-					<td class="bo-b-grey p-tb-0-lr-1 ta-c" th:text="${#convert.toDateDE(Kursschueler.geburtsdatum())}">22.08.2008</td>
-					<td class="bo-b-grey p-tb-0-lr-1 ta-c" th:text="${Kursschueler.geschlecht().kuerzel}">w</td>
+					<td class="bo-b-grey p-tb-0 p-lr-1 f-small c-grey" th:text="${#numbers.formatInteger(iterationVarSchueler.count,2)} + '.'">Nr.</td>
+					<td class="bo-b-grey p-tb-0 p-lr-1" th:text="${Kursschueler.nachname()} + ', ' + ${Kursschueler.vorname()}">Mustermann, Max</td>
+					<td th:if="(${Kurs.anzahlExterne()} != 0)" class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:text="${Kursschueler.externeSchulNr()}">123456</td>
+					<td class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:text="${Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).hatGueltigeFachwahl() ? (Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).istSchriftlich() ? 's' : 'm') : 'ungültig'}">s</td>
+					<td class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:text="${Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).hatGueltigeFachwahl() ? (#strings.equalsIgnoreCase('E', GostBlockungsergebnis.gostHalbjahr().kuerzel.charAt(0)) ? '' : Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).abiturfach()) : 'ungültig'}">3</td>
+					<td class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:text="${#convert.toDateDE(Kursschueler.geburtsdatum())}">22.08.2008</td>
+					<td class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:text="${Kursschueler.geschlecht().kuerzel}">w</td>
 				</tr>
 			</table>
 		</div>

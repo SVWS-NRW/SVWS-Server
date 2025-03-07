@@ -52,7 +52,8 @@ public final class ReportingValidierung {
 	 *
 	 * @throws ApiOperationException  im Fehlerfall
 	 */
-	public static void validiereDatenFuerSchueler(final ReportingRepository reportingRepository, final List<Long> idsSchueler, final boolean mitGostLaufbahnplanung,
+	public static void validiereDatenFuerSchueler(final ReportingRepository reportingRepository, final List<Long> idsSchueler,
+			final boolean mitGostLaufbahnplanung,
 			final boolean mitAbiturDaten) throws ApiOperationException {
 
 		// Grunddaten prüfen.
@@ -260,9 +261,6 @@ public final class ReportingValidierung {
 	public static void validiereDatenFuerLehrer(final ReportingRepository reportingRepository, final List<Long> idsLehrer, final boolean cacheDaten)
 			throws ApiOperationException {
 
-		// Grunddaten prüfen.
-		final DBEntityManager conn = reportingRepository.conn();
-
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Beginn der Validierung der Lehrerdaten.");
 
 		if (idsLehrer == null) {
@@ -309,10 +307,18 @@ public final class ReportingValidierung {
 	public static void validiereDatenFuerGostKursplanungBlockungsergebnis(final ReportingRepository reportingRepository)
 			throws ApiOperationException {
 
+		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Beginn der Validierung der Blockungsergebnisdaten.");
+
+		if ((reportingRepository.reportingParameter().idsHauptdaten == null) || reportingRepository.reportingParameter().idsHauptdaten.isEmpty()) {
+			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "FEHLER: Es wurde keine ID für ein Blockungsergebnis übergeben.");
+			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurde keine ID für ein Blockungsergebnis übergeben.");
+		}
+
 		// Für die GOSt-Kursplanung muss die Schule eine Schule mit GOSt sein.
 		try {
 			DBUtilsGost.pruefeSchuleMitGOSt(reportingRepository.conn());
 		} catch (final ApiOperationException e) {
+			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "FEHLER: Keine Schule oder Schule ohne GOSt gefunden.");
 			throw new ApiOperationException(Status.NOT_FOUND, e, "FEHLER: Keine Schule oder Schule ohne GOSt gefunden.");
 		}
 
@@ -324,8 +330,11 @@ public final class ReportingValidierung {
 			DataGostBlockungsdaten.getBlockungsdatenManagerFromDB(conn,
 					DataGostBlockungsergebnisse.getErgebnisFromID(conn, idBlockungsergebnis).blockungID);
 		} catch (final ApiOperationException e) {
-			throw new ApiOperationException(Status.NOT_FOUND, e, "FEHLER: Mit der angegebenen Blockungsergebnis-ID konnte keine Daten ermittelt werden..");
+			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "FEHLER: Mit der angegebenen Blockungsergebnis-ID konnte keine Daten ermittelt werden.");
+			throw new ApiOperationException(Status.NOT_FOUND, e, "FEHLER: Mit der angegebenen Blockungsergebnis-ID konnte keine Daten ermittelt werden.");
 		}
+
+		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Ende der Validierung der Blockungsergebnisdaten.");
 	}
 
 	/**
@@ -377,6 +386,35 @@ public final class ReportingValidierung {
 						"FEHLER: Die Parameter für Abiturjahrgang und GOSt-Halbjahr konnten nicht gelesen werden oder sind außerhalb des Wertebereichs.");
 			}
 		}
+	}
+
+
+	/**
+	 * Validiert von der API übergebene Daten für GOSt-Klausurplanung. Bei fehlenden oder unstimmigen Daten wird eine ApiOperationException geworfen.
+	 *
+	 * @param reportingRepository		Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung.
+	 *
+	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 */
+	public static void validiereDatenFuerStundenplanung(final ReportingRepository reportingRepository)
+			throws ApiOperationException {
+
+		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Beginn der Validierung der Stundenplanungsdaten.");
+
+		if ((reportingRepository.reportingParameter().idsHauptdaten == null) || reportingRepository.reportingParameter().idsHauptdaten.isEmpty()) {
+			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "FEHLER: Es wurde keine ID für die Stundenplanung übergeben.");
+			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurde keine ID für die Stundenplanung übergeben.");
+		}
+
+		final Long idStundenplan = reportingRepository.reportingParameter().idsHauptdaten.getFirst();
+
+		// Prüfe nun, ob es zur angegebenen Stundenplan-ID einen Stundenplan gibt.
+		if ((idStundenplan == null) || (reportingRepository.stundenplan(idStundenplan) == null)) {
+			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "FEHLER: Mit der angegebenen Stundenplan-ID konnte kein Stundenplan ermittelt werden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Mit der angegebenen Stundenplan-ID konnte kein Stundenplan ermittelt werden.");
+		}
+
+		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Ende der Validierung der Stundenplanungsdaten.");
 	}
 
 }

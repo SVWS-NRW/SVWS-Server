@@ -1,14 +1,15 @@
 package de.svws_nrw.module.reporting.proxytypes.stundenplanung;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import de.svws_nrw.core.data.stundenplan.Stundenplan;
+import de.svws_nrw.core.utils.stundenplan.StundenplanManager;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungPausenzeit;
 import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungRaum;
 import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungStundenplan;
-import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungZeitrasterstunde;
+import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungUnterrichtsrasterstunde;
 
 
 /**
@@ -20,30 +21,70 @@ public class ProxyReportingStundenplanungStundenplan extends ReportingStundenpla
 	@JsonIgnore
 	private final ReportingRepository reportingRepository;
 
+	/** Der Manager für den Stundenplan. */
+	@JsonIgnore
+	private final StundenplanManager stundenplanManager;
+
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingStundenplanungStundenplan}.
 	 *
 	 * @param reportingRepository 	Repository für das Reporting.
-	 * @param stundenplan 			Das Stundenplan-Objekt mit den gesammelten Daten des Stundenplanes.
+	 * @param stundenplanManager	Der Manager für den Stundenplan.
 	 */
-	public ProxyReportingStundenplanungStundenplan(final ReportingRepository reportingRepository, final Stundenplan stundenplan) {
-		super(ersetzeNullBlankTrim(stundenplan.bezeichnungStundenplan),
-				ersetzeNullBlankTrim(stundenplan.gueltigAb),
-				ersetzeNullBlankTrim(stundenplan.gueltigBis),
-				stundenplan.id,
-				new ArrayList<>(),
-				null,
-				new ArrayList<>());
+	public ProxyReportingStundenplanungStundenplan(final ReportingRepository reportingRepository, final StundenplanManager stundenplanManager) {
+		super("", "", "", -1, new ArrayList<>(), new ArrayList<>(), null, 0, new HashMap<>(), new ArrayList<>());
 
 		this.reportingRepository = reportingRepository;
+		this.stundenplanManager = stundenplanManager;
 
-		if (!this.reportingRepository.mapStundenplaene().containsKey(stundenplan.id))
-			this.reportingRepository.mapStundenplaene().put(stundenplan.id, stundenplan);
+		if (this.stundenplanManager == null)
+			return;
 
-		super.schuljahresabschnitt = this.reportingRepository.schuljahresabschnitt(stundenplan.idSchuljahresabschnitt);
+		super.id = this.stundenplanManager.stundenplanGetID();
+		super.beschreibung = ersetzeNullBlankTrim(stundenplanManager.getBezeichnungStundenplan());
+		super.gueltigAb = ersetzeNullBlankTrim(stundenplanManager.getGueltigAb());
+		super.gueltigBis = ersetzeNullBlankTrim(stundenplanManager.getGueltigBis());
+		super.schuljahresabschnitt = this.reportingRepository.schuljahresabschnitt(stundenplanManager.getIDSchuljahresabschnitt());
+		super.wochenperiodizitaet = (this.stundenplanManager.getWochenTypModell() == 0) ? 1 : this.stundenplanManager.getWochenTypModell();
+		for (int i = 1; i <= super.wochenperiodizitaet; i++) {
+			super.mapWochenbezeichnungen.put(i, stundenplanManager.stundenplanGetWochenTypAsStringKurz(i));
+		}
 
-		// Räume und Zeitraster werden per lazy-loading nachgeladen.
+		super.setRaeume(this.stundenplanManager.raumGetMengeAsList().stream()
+				.map(r -> (ReportingStundenplanungRaum) new ProxyReportingStundenplanungRaum(r, this))
+				.toList());
+
+		super.setRasterUnterrichteUndPausen(
+				this.stundenplanManager.getListZeitraster().stream()
+						.map(z -> (ReportingStundenplanungUnterrichtsrasterstunde) new ProxyReportingStundenplanungUnterrichtsrasterstunde(
+								this.reportingRepository, z, this))
+						.toList(),
+				this.stundenplanManager.pausenzeitGetMengeAsList().stream()
+						.map(pz -> (ReportingStundenplanungPausenzeit) new ProxyReportingStundenplanungPausenzeit(this.reportingRepository, pz, this))
+						.toList());
+	}
+
+
+	// ##### Hash und Equals Methoden #####
+
+	/**
+	 * Hashcode der Klasse
+	 * @return Hashcode der Klasse
+	 */
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
+	/**
+	 * Equals der Klasse
+	 * @param obj Das Vergleichsobjekt
+	 * @return    true, falls es das gleiche Objekt ist, andernfalls false.
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		return super.equals(obj);
 	}
 
 
@@ -55,34 +96,4 @@ public class ProxyReportingStundenplanungStundenplan extends ReportingStundenpla
 	public ReportingRepository reportingRepository() {
 		return reportingRepository;
 	}
-
-
-	/**
-	 * Eine Liste aller Räume im Stundenplan.
-	 *
-	 * @return Inhalt des Feldes raeume
-	 */
-	@Override
-	public List<ReportingStundenplanungRaum> raeume() {
-		if (super.raeume().isEmpty()) {
-			super.raeume().addAll(this.reportingRepository.mapStundenplaene().get(this.id).raeume.stream()
-					.map(r -> (ReportingStundenplanungRaum) new ProxyReportingStundenplanungRaum(r, this.id)).toList());
-		}
-		return super.raeume();
-	}
-
-	/**
-	 * Eine Liste aller Räume im Stundenplan.
-	 *
-	 * @return Inhalt des Feldes raeume
-	 */
-	@Override
-	public List<ReportingStundenplanungZeitrasterstunde> zeitraster() {
-		if (super.zeitraster().isEmpty()) {
-			super.zeitraster().addAll(this.reportingRepository.mapStundenplaene().get(this.id).zeitraster.stream()
-					.map(z -> (ReportingStundenplanungZeitrasterstunde) new ProxyReportingStundenplanungZeitrasterstunde(z, this.id)).toList());
-		}
-		return super.zeitraster();
-	}
-
 }

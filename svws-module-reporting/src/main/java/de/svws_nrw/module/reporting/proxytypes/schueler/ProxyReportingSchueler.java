@@ -308,7 +308,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 			if (!this.reportingRepository.mapAlleLernabschnittsdaten().containsKey1(this.id())) {
 				// Wenn zum Schüler keine Lernabschnitte aus der DB gefunden wurden, dann müssen diese nachträglich geladen worden sein oder der Schüler hat keine
 				// Lernabschnitte. Prüfe auf Differenzen und lade nach.
-				getLernabschnitt();
+				getLernabschnitte();
 			}
 
 			// Die Lernabschnitte aller Schüler der Stammdatenabschnitte liegen nun vor. Filtere alle Lernabschnitte des Schülers heraus.
@@ -332,15 +332,15 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 							.thenComparing(ReportingSchuelerLernabschnitt::wechselNr))
 					.toList();
 
-			final List<SchuelerLernabschnittsdaten> aktuelleAbschnitte = this.reportingRepository.mapAlleLernabschnittsdaten().get12(super.id,
-					this.reportingRepository.aktuellerSchuljahresabschnitt().id()).stream().filter(a -> a.wechselNr == 0).toList();
+			final List<SchuelerLernabschnittsdaten> aktuelleAbschnitte =
+					this.reportingRepository.mapAlleLernabschnittsdaten().get123(super.id, this.reportingRepository.aktuellerSchuljahresabschnitt().id(), 0);
 			if (!aktuelleAbschnitte.isEmpty())
 				super.aktuellerLernabschnitt = new ProxyReportingSchuelerLernabschnitt(this.reportingRepository, aktuelleAbschnitte.getFirst());
 			else
 				super.aktuellerLernabschnitt = null;
 
-			final List<SchuelerLernabschnittsdaten> auswahlAbschnitte = this.reportingRepository.mapAlleLernabschnittsdaten().get12(super.id,
-					this.reportingRepository.auswahlSchuljahresabschnitt().id()).stream().filter(a -> a.wechselNr == 0).toList();
+			final List<SchuelerLernabschnittsdaten> auswahlAbschnitte =
+					this.reportingRepository.mapAlleLernabschnittsdaten().get123(super.id, this.reportingRepository.auswahlSchuljahresabschnitt().id(), 0);
 			if (!auswahlAbschnitte.isEmpty())
 				super.auswahlLernabschnitt = new ProxyReportingSchuelerLernabschnitt(this.reportingRepository, auswahlAbschnitte.getFirst());
 			else
@@ -349,7 +349,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 		return super.lernabschnitte;
 	}
 
-	private void getLernabschnitt() {
+	private void getLernabschnitte() {
 		final List<Long> idsSchuelerOhneLernabschnitte = new ArrayList<>(this.reportingRepository.mapSchueler().size());
 
 		for (final long key : this.reportingRepository.mapSchueler().keySet())
@@ -369,10 +369,10 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 			// Lege die Lernabschnittsdaten in den entsprechenden Maps des Repositories ab.
 			if (!schuelerGesamteLernabschnittsdaten.isEmpty()) {
 				for (final SchuelerLernabschnittsdaten la : schuelerGesamteLernabschnittsdaten) {
-					this.reportingRepository.mapAlleLernabschnittsdaten().add(la.schuelerID, la.schuljahresabschnitt, la.id, la);
+					this.reportingRepository.mapAlleLernabschnittsdaten().add(la.schuelerID, la.schuljahresabschnitt, la.wechselNr, la.id, la);
 				}
 			} else {
-				this.reportingRepository.mapAlleLernabschnittsdaten().addEmpty(super.id, -1, -1);
+				this.reportingRepository.mapAlleLernabschnittsdaten().addEmpty(super.id, -1, -1, -1);
 			}
 		}
 	}

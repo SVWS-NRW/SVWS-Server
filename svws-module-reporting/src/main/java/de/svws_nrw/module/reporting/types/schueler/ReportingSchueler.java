@@ -1,6 +1,7 @@
 package de.svws_nrw.module.reporting.types.schueler;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import de.svws_nrw.core.adt.map.ListMap3DLongKeys;
 import de.svws_nrw.core.data.kataloge.OrtKatalogEintrag;
 import de.svws_nrw.core.data.kataloge.OrtsteilKatalogEintrag;
 import de.svws_nrw.core.data.schule.ReligionEintrag;
@@ -16,6 +17,7 @@ import de.svws_nrw.module.reporting.types.schueler.gost.kursplanung.ReportingSch
 import de.svws_nrw.module.reporting.types.schueler.gost.laufbahnplanung.ReportingSchuelerGostLaufbahnplanung;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLernabschnitt;
 import de.svws_nrw.module.reporting.types.schueler.sprachen.ReportingSchuelerSprachbelegung;
+import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -25,6 +27,10 @@ import java.util.Set;
  * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ Schüler.</p>
  */
 public class ReportingSchueler extends ReportingPerson {
+
+	/** Eine Map zum schnellen Zugriff auf die Lernabschnitte nach Schuljahresabschnitt, Wechselnummer und LernabschnittID. */
+	private final ListMap3DLongKeys<ReportingSchuelerLernabschnitt> mapLernabschnitte = new ListMap3DLongKeys<>();
+
 
 	/** Daten des aktuellen Lernabschnitts. */
 	protected ReportingSchuelerLernabschnitt aktuellerLernabschnitt;
@@ -306,6 +312,19 @@ public class ReportingSchueler extends ReportingPerson {
 	// ##### Getter #####
 
 	/**
+	 * Zum gegebenen Schuljahres Abschnitt wird der darin aktive Lernabschnitt (WechselNr. 0) ermittelt
+	 *
+	 * @param schuljahresabschnitt  Der Schuljahresabschnitt, dessen Lernabschnitt ermittelt werden soll.
+	 *
+	 * @return Der Lernabschnitt zum SchuljahresAbschnitt oder null, wenn kein solcher Abschnitt existiert.
+	 */
+	public ReportingSchuelerLernabschnitt aktiverLernabschnittInSchuljahresabschnitt(final ReportingSchuljahresabschnitt schuljahresabschnitt) {
+		if ((this.lernabschnitte() == null) || this.lernabschnitte().isEmpty())
+			return null;
+		return this.mapLernabschnitte().getSingle12OrNull(schuljahresabschnitt.id(), 0);
+	}
+
+	/**
 	 * Daten des aktuellen Lernabschnitts.
 	 *
 	 * @return Inhalt des Feldes aktuellerLernabschnitt
@@ -575,6 +594,22 @@ public class ReportingSchueler extends ReportingPerson {
 	 */
 	public List<ReportingSchuelerLernabschnitt> lernabschnitte() {
 		return lernabschnitte;
+	}
+
+	/**
+	 * Gibt eine Map mit den Lernabschnitten des Schülers nach Schuljahresabschnitt, WechselNr und LernabschnittsID zurück
+	 *
+	 * @return Map der Lernabschnitte oder eine leere Liste.
+	 */
+	public ListMap3DLongKeys<ReportingSchuelerLernabschnitt> mapLernabschnitte() {
+		// Speichere die Lernabschnitte zusätzlich für schnellen Zugriff in einer Map nach Schuljahresabschnitt, Wechselnummer und LernabschnittID.
+		if ((this.lernabschnitte() != null) && !this.lernabschnitte().isEmpty()) {
+			for (final ReportingSchuelerLernabschnitt la : lernabschnitte()) {
+				if (la != null)
+					mapLernabschnitte.add(la.schuljahresabschnitt().id(), la.wechselNr(), la.id(), la);
+			}
+		}
+		return this.mapLernabschnitte;
 	}
 
 	/**

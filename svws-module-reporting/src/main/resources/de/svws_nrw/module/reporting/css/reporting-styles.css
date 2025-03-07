@@ -183,6 +183,9 @@ Definitionen für Spacing, Padding, Margin
 .p-2 {
 	padding: 2mm;
 }
+.p-3 {
+	padding: 3mm;
+}
 .p-4 {
 	padding: 4mm;
 }
@@ -213,13 +216,6 @@ Definitionen für Spacing, Padding, Margin
 	padding-right: 1mm;
 }
 
-.p-tb-0-lr-1 {
-	padding: 0 1mm;
-}
-.p-tb-1-lr-0 {
-	padding: 1mm 0;
-}
-
 .p-t-2 {
 	padding-top: 2mm;
 }
@@ -233,18 +229,17 @@ Definitionen für Spacing, Padding, Margin
 	padding-right: 2mm;
 }
 
-.p-tb-0-lr-2 {
-	padding: 0 2mm;
+.p-t-3 {
+	padding-top: 3mm;
 }
-.p-tb-2-lr-0 {
-	padding: 2mm 0;
+.p-b-3 {
+	padding-bottom: 3mm;
 }
-
-.p-tb-1-lr-2 {
-	padding: 1mm 2mm;
+.p-l-3 {
+	padding-left: 3mm;
 }
-.p-tb-3-lr-2 {
-	padding: 3mm 2mm;
+.p-r-3 {
+	padding-right: 3mm;
 }
 
 .p-t-4 {
@@ -259,11 +254,47 @@ Definitionen für Spacing, Padding, Margin
 .p-r-4 {
 	padding-right: 4mm;
 }
-.p-tb-0-lr-4 {
-	padding: 0 4mm;
+
+.p-tb-0 {
+	padding-top: 0;
+	padding-bottom: 0;
 }
-.p-tb-4-lr-0 {
-	padding: 4mm 0;
+.p-tb-1 {
+	padding-top: 1mm;
+	padding-bottom: 1mm;
+}
+.p-tb-2 {
+	padding-top: 2mm;
+	padding-bottom: 2mm;
+}
+.p-tb-3 {
+	padding-top: 3mm;
+	padding-bottom: 3mm;
+}
+.p-tb-4 {
+	padding-top: 4mm;
+	padding-bottom: 4mm;
+}
+
+.p-lr-0 {
+	padding-left: 0;
+	padding-right: 0;
+}
+.p-lr-1 {
+	padding-left: 1mm;
+	padding-right: 1mm;
+}
+.p-lr-2 {
+	padding-left: 2mm;
+	padding-right: 2mm;
+}
+.p-lr-3 {
+	padding-left: 3mm;
+	padding-right: 3mm;
+}
+.p-lr-4 {
+	padding-left: 4mm;
+	padding-right: 4mm;
 }
 
 .p-t-25of100 {
@@ -432,6 +463,18 @@ td.head-black-lines {
 	padding-right: 1mm;
 	border-top: 1px solid #000000;
 	border-bottom: 1px solid #000000;
+}
+
+th.head-black-lines-small-all {
+	padding-left: 1mm;
+	padding-right: 1mm;
+	border: 0.5px solid #000000;
+}
+
+td.head-black-lines-small-all {
+	padding-left: 1mm;
+	padding-right: 1mm;
+	border: 0.5px solid #000000;
 }
 
 td.cell-small-grey {

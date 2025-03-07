@@ -29,6 +29,7 @@ import de.svws_nrw.module.reporting.html.contexts.HtmlContextKurse;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextLehrer;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextSchueler;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextSchule;
+import de.svws_nrw.module.reporting.html.contexts.HtmlContextStundenplanungLehrerStundenplan;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.validierung.ReportingValidierung;
 import jakarta.ws.rs.core.Response;
@@ -185,6 +186,18 @@ public class HtmlFactory {
 										: new ArrayList<>());
 				mapHtmlContexts.put("GostKlausurplan", htmlContextGostKlausurplan);
 				break;
+			case "STUNDENPLANUNG":
+				// Stundenplan-Context ist Hauptdatenquelle
+				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für einen Stundenplan für die html-Generierung.");
+				ReportingValidierung.validiereDatenFuerStundenplanung(reportingRepository);
+				reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+						"Erzeuge Datenkontext Stundenplan für die html-Generierung mit Template %s.".formatted(htmlTemplateDefinition.name()));
+				final HtmlContextStundenplanungLehrerStundenplan htmlContextLehrerStundenplan =
+						new HtmlContextStundenplanungLehrerStundenplan(reportingRepository,
+								reportingRepository.stundenplan(reportingParameter.idsHauptdaten.getFirst()),
+								reportingParameter.idsDetaildaten);
+				mapHtmlContexts.put("LehrerStundenplaene", htmlContextLehrerStundenplan);
+				break;
 			default:
 				break;
 		}
@@ -305,6 +318,26 @@ public class HtmlFactory {
 								htmlTemplateDefinition.name()));
 				for (final HtmlContextGostKlausurplanungKlausurplan klausurplanSchuelerContext : klausurplanSchuelerContexts) {
 					mapHtmlContexts.put("GostKlausurplan", klausurplanSchuelerContext);
+
+					// Dateiname der Dateien aus den Daten erzeugen.
+					final String dateiname = getDateiname(mapHtmlContexts);
+
+					// html-Builder erstellen und damit das html mit Daten für die html-Datei erzeugen
+					htmlBuilders.add(new HtmlBuilder(htmlTemplateCode, mapHtmlContexts.values().stream().toList(), dateiname));
+				}
+			}
+			if (htmlTemplateDefinition.name().startsWith("STUNDENPLANUNG_v_LEHRER_")) {
+				// Zerlege den Context des Lehrerstundenplans gemäß der anzuzeigenden Lehrer in einzelne Contexts mit jeweils einen Lehrer.
+				reportingRepository.logger().logLn(
+						LogLevel.DEBUG, 4, "Erzeuge einzelne Detail-Kontexte der Lehrerstundenpläne für jeden Lehrer, da einzelne Dateien angefordert wurden.");
+				final List<HtmlContextStundenplanungLehrerStundenplan> lehrerStundenplanContexts =
+						((HtmlContextStundenplanungLehrerStundenplan) mapHtmlContexts.get("LehrerStundenplaene")).getEinzelContexts();
+
+				reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+						"Verarbeite Template (%s) und Daten aus den einzelnen Kontexten zu finalen html-Dateiinhalten.".formatted(
+								htmlTemplateDefinition.name()));
+				for (final HtmlContextStundenplanungLehrerStundenplan lehrerStundenplanContext : lehrerStundenplanContexts) {
+					mapHtmlContexts.put("LehrerStundenplaene", lehrerStundenplanContext);
 
 					// Dateiname der Dateien aus den Daten erzeugen.
 					final String dateiname = getDateiname(mapHtmlContexts);

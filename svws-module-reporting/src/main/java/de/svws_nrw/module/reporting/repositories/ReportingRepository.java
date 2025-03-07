@@ -1,14 +1,18 @@
 package de.svws_nrw.module.reporting.repositories;
 
+import java.text.Collator;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.schule.SchuleStammdaten;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.adt.map.ListMap3DLongKeys;
+import de.svws_nrw.core.adt.map.ListMap4DLongKeys;
 import de.svws_nrw.core.data.erzieher.ErzieherStammdaten;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
@@ -26,10 +30,14 @@ import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
 import de.svws_nrw.core.data.schule.ReligionEintrag;
 import de.svws_nrw.core.data.stundenplan.Stundenplan;
 import de.svws_nrw.core.data.stundenplan.StundenplanListeEintrag;
+import de.svws_nrw.core.data.stundenplan.StundenplanPausenaufsicht;
+import de.svws_nrw.core.data.stundenplan.StundenplanUnterricht;
+import de.svws_nrw.core.data.stundenplan.StundenplanUnterrichtsverteilung;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
+import de.svws_nrw.core.utils.stundenplan.StundenplanManager;
 import de.svws_nrw.data.erzieher.DataErzieherarten;
 import de.svws_nrw.data.jahrgaenge.DataJahrgangsdaten;
 import de.svws_nrw.data.kataloge.DataOrte;
@@ -40,16 +48,24 @@ import de.svws_nrw.data.schule.DataReligionen;
 import de.svws_nrw.data.schule.DataSchuleStammdaten;
 import de.svws_nrw.data.stundenplan.DataStundenplan;
 import de.svws_nrw.data.stundenplan.DataStundenplanListe;
+import de.svws_nrw.data.stundenplan.DataStundenplanPausenaufsichten;
+import de.svws_nrw.data.stundenplan.DataStundenplanUnterricht;
+import de.svws_nrw.data.stundenplan.DataStundenplanUnterrichtsverteilung;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.proxytypes.lehrer.ProxyReportingLehrer;
 import de.svws_nrw.module.reporting.proxytypes.schueler.erzieher.ProxyReportingErzieherArt;
 import de.svws_nrw.module.reporting.proxytypes.schule.ProxyReportingSchuljahresabschnitt;
+import de.svws_nrw.module.reporting.proxytypes.stundenplanung.ProxyReportingStundenplanungStundenplan;
 import de.svws_nrw.module.reporting.types.klasse.ReportingKlasse;
 import de.svws_nrw.module.reporting.types.kurs.ReportingKurs;
+import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
+import de.svws_nrw.module.reporting.types.person.ReportingPerson;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ReportingErzieherArt;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
+import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungStundenplan;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -103,8 +119,8 @@ public class ReportingRepository {
 	/** Stellt die Daten aller bereits abgerufenen Leistungsdaten zur Schüler-, Lernabschnitts- und Leistungsdaten-ID zur Verfügung. */
 	private final ListMap3DLongKeys<SchuelerLeistungsdaten> mapAlleLeistungsdaten = new ListMap3DLongKeys<>();
 
-	/** Stellt die Daten aller bereits abgerufenen Leistungsdaten zur Schüler-, Schuljahresabschnitt- und Lernabschnitts-ID zur Verfügung. */
-	private final ListMap3DLongKeys<SchuelerLernabschnittsdaten> mapAlleLernabschnittsdaten = new ListMap3DLongKeys<>();
+	/** Stellt die Daten aller bereits abgerufenen Lernabschnittsdaten zur Schüler-, Schuljahresabschnitt-, Wechselnummer und Lernabschnitts-ID zur Verfügung. */
+	private final ListMap4DLongKeys<SchuelerLernabschnittsdaten> mapAlleLernabschnittsdaten = new ListMap4DLongKeys<>();
 
 	/** Stellt die Stammdaten von bereits abgerufenen Erziehern über eine Map zur Schueler-ID zur Verfügung. */
 	private final Map<Long, List<ErzieherStammdaten>> mapErzieherStammdaten = new HashMap<>();
@@ -142,8 +158,8 @@ public class ReportingRepository {
 	/** Stelle eine Liste aller Stundenplandefinitionen der Schule zur Verfügung, sortiert nach Schuljahresabschnitt und Gültigkeitsbeginn. */
 	private List<StundenplanListeEintrag> stundenplandefinitionen;
 
-	/** Stelle die bereits eingelesenen Stundenpläne als Map zu ihrer ID zur Verfügung. */
-	private final Map<Long, Stundenplan> mapStundenplaene = new HashMap<>();
+	/** Stelle die bereits erstellte Stundenmanager als Map zu ihrer ID zur Verfügung. */
+	private final Map<Long, StundenplanManager> mapStundenplanManager = new HashMap<>();
 
 
 	// #########  Ab hier folgen Reporting-Objekte. #########
@@ -157,11 +173,18 @@ public class ReportingRepository {
 	/** Stellt alle Kurse in den Schuljahresabschnitten über eine Map zur Kurs-ID zur Verfügung. */
 	private final Map<Long, ReportingKurs> mapKurse = new HashMap<>();
 
+	/** Stellt die Liste aller Lehrer über eine Map zur Lehrer-ID zur Verfügung */
+	private final Map<Long, ReportingLehrer> mapLehrer = new HashMap<>();
+
 	/** Stellt die Liste aller Schüler über eine Map zur Schüler-ID zur Verfügung */
 	private final Map<Long, ReportingSchueler> mapSchueler = new HashMap<>();
 
 	/** Stellt die Liste aller Schuljahresabschnitte über eine Map zur Schulabschnitts-ID zur Verfügung */
 	private final Map<Long, ReportingSchuljahresabschnitt> mapSchuljahresabschnitte = new HashMap<>();
+
+	/** Stellt die Liste aller Stundenpläne über eine Map zur Stundenplan-ID zur Verfügung. */
+	private final Map<Long, ReportingStundenplanungStundenplan> mapStundenplaene = new HashMap<>();
+
 
 
 	/**
@@ -243,7 +266,7 @@ public class ReportingRepository {
 		initJahrgaenge();
 
 		// Ermittle die Stundenpläne zum aktuellen und zum ausgewählten Schuljahresabschnitt.
-		initStundenplaene();
+		initStundenplanDefinitionen();
 
 		this.logger.logLn(LogLevel.DEBUG, 4, "<<< Ende der Erzeugung des Reporting-Repository");
 	}
@@ -332,26 +355,17 @@ public class ReportingRepository {
 	}
 
 	/**
-	 * Initialisiert die Daten der Stundenpläne.
+	 * Initialisiert die Liste der vorhandenen Daten der Stundenpläne der Schule.
 	 *
 	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
-	private void initStundenplaene() throws ApiOperationException {
+	private void initStundenplanDefinitionen() throws ApiOperationException {
 		try {
-			this.logger.logLn(LogLevel.DEBUG, 8, "Ermittle alle Stundenplandefinitionen der Schule.");
+			this.logger.logLn(LogLevel.DEBUG, 8, "Ermittle alle Stundenplan-Definitionen der Schule.");
 			// Ermittle alle Stundenpläne zum aktuellen Schuljahresabschnitt.
-			this.stundenplandefinitionen = DataStundenplanListe.getStundenplaene(this.conn, null);
-			this.logger.logLn(LogLevel.DEBUG, 8, "Ermittle die Stundenpläne für den aktuellen und ausgewählten Schuljahresabschnitt.");
-			final List<StundenplanListeEintrag> filterStundenplandefinitionen =
-					stundenplandefinitionen.stream().filter(d -> ((d.idSchuljahresabschnitt == idAktuellerSchuljahresbaschnitt)
-							|| (d.idSchuljahresabschnitt == idAuswahlSchuljahresbaschnitt))).toList();
-			if (!filterStundenplandefinitionen.isEmpty()) {
-				for (final StundenplanListeEintrag stundenplandefinition : filterStundenplandefinitionen) {
-					final Stundenplan stundenplan = DataStundenplan.getStundenplan(this.conn, stundenplandefinition.id);
-					if (stundenplan != null)
-						this.mapStundenplaene.put(stundenplandefinition.id, stundenplan);
-				}
-			}
+			this.stundenplandefinitionen = new ArrayList<>(DataStundenplanListe.getStundenplaene(this.conn, null));
+			if (!this.stundenplandefinitionen.isEmpty())
+				this.stundenplandefinitionen.sort(Comparator.comparing((StundenplanListeEintrag sle) -> sle.gueltigAb).reversed());
 		} catch (final Exception e) {
 			this.logger.logLn(LogLevel.ERROR, 8, "Die Daten der Stundenpläne konnten nicht ermittelt werden.");
 			throw new ApiOperationException(Status.NOT_FOUND, e,
@@ -516,11 +530,11 @@ public class ReportingRepository {
 	}
 
 	/**
-	 * Stellt die Daten aller bereits abgerufenen Lernabschnitte zur Schüler-, Schuljahresabschnitt und Lernabschnitts-ID zur Verfügung.
+	 * Stellt die Daten aller bereits abgerufenen Lernabschnitte zur Schüler-, Schuljahresabschnitt, Wechselnummer und Lernabschnitts-ID zur Verfügung.
 	 *
 	 * @return Map der Daten aller bereits abgerufenen Lernabschnitte.
 	 */
-	public ListMap3DLongKeys<SchuelerLernabschnittsdaten> mapAlleLernabschnittsdaten() {
+	public ListMap4DLongKeys<SchuelerLernabschnittsdaten> mapAlleLernabschnittsdaten() {
 		return mapAlleLernabschnittsdaten;
 	}
 
@@ -677,14 +691,56 @@ public class ReportingRepository {
 		return stundenplandefinitionen;
 	}
 
+
+	// ##### Reporting Lehrer erzeugen und verwalten #####
+
 	/**
-	 * Stelle die bereits eingelesenen Stundenpläne als Map zu ihrer ID zur Verfügung.
+	 * Liefert ein ReportingLehrer-Objekt basierend auf der gegebenen Lehrer-ID.
+	 * Wenn die ID negativ ist, wird null zurückgegeben.
+	 * Ansonsten wird ein ProxyReportingLehrer erstellt und in der Map gespeichert,
+	 * falls für die ID noch kein Eintrag existiert.
 	 *
-	 * @return Inhalt des Feldes mapStundenplaene
+	 * @param idLehrer Die eindeutige ID des Lehrers
+	 * @return Ein ReportingLehrer-Objekt für die gegebene Lehrer-ID oder null, falls die ID negativ ist
 	 */
-	public Map<Long, Stundenplan> mapStundenplaene() {
-		return mapStundenplaene;
+	public ReportingLehrer lehrer(final long idLehrer) {
+		if (idLehrer < 0)
+			return null;
+
+		return mapLehrer.computeIfAbsent(idLehrer, key -> new ProxyReportingLehrer(this, mapLehrerStammdaten.get(key)));
 	}
+
+	/**
+	 * Erzeugt und sortiert eine Liste von ReportingLehrer-Objekten basierend auf den übergebenen Lehrer-IDs.
+	 * Falls ein Lehrer bereits existiert, wird er aus einem internen Cache abgerufen.
+	 *
+	 * @param idsLehrer Eine Liste von Long-Werten, die die IDs der Lehrer repräsentieren, für die ReportingLehrer-Objekte erstellt werden sollen.
+	 *                  Null- oder negative Werte in der Liste werden ignoriert.
+	 * @return Eine sortierte Liste von ReportingLehrer-Objekten basierend auf Nachname, Vorname, Kürzel und ID.
+	 */
+	public List<ReportingLehrer> lehrer(final List<Long> idsLehrer) {
+
+		final List<ReportingLehrer> resultLehrer = new ArrayList<>();
+
+		// Sofern noch keine Reporting-Objekte der Lehrer existieren erzeuge sie und speichere sie.
+		for (final Long idLehrer : idsLehrer) {
+			if ((idLehrer == null) || (idLehrer < 0)) {
+				continue;
+			}
+			resultLehrer.add(mapLehrer.computeIfAbsent(idLehrer, key -> new ProxyReportingLehrer(this, mapLehrerStammdaten.get(key))));
+		}
+
+		// Sortiere die Lehrerliste für die Rückgabe
+		final Collator colGerman = Collator.getInstance(Locale.GERMAN);
+		return resultLehrer.stream().sorted(Comparator.comparing(ReportingLehrer::nachname, colGerman)
+						.thenComparing(ReportingPerson::vorname, colGerman)
+						.thenComparing(ReportingLehrer::kuerzel, colGerman)
+						.thenComparing(ReportingLehrer::id))
+				.toList();
+	}
+
+
+	// ##### Stundenpläne erzeugen und verwalten #####
 
 	/**
 	 * Ermittelt den zum übergebenen Datum gehörigen Stundenplan und gibt ihn zurück.
@@ -693,28 +749,77 @@ public class ReportingRepository {
 	 *
 	 * @return Der Stundenplan zum Datum, wenn er gefunden wird, sonst null.
 	 */
-	public Stundenplan stundenplan(final String datum) {
+	public ReportingStundenplanungStundenplan stundenplan(final String datum) {
 		if ((datum == null) || (datum.length() != 10) || (stundenplandefinitionen == null) || (stundenplandefinitionen.isEmpty()))
 			return null;
+
 		final StundenplanListeEintrag stundenplandefinitionZuDatum = stundenplandefinitionen.stream()
 				.filter(d -> ((d.gueltigAb != null) && (d.gueltigBis != null) && (datum.compareTo(d.gueltigAb) >= 0) && (datum.compareTo(d.gueltigBis) <= 0)))
 				.findFirst().orElse(null);
-		if (stundenplandefinitionZuDatum != null) {
-			if (mapStundenplaene.containsKey(stundenplandefinitionZuDatum.id))
-				return mapStundenplaene.get(stundenplandefinitionZuDatum.id);
-			try {
-				final Stundenplan stundenplan = DataStundenplan.getStundenplan(this.conn, stundenplandefinitionZuDatum.id);
-				if (stundenplan != null) {
-					this.mapStundenplaene.put(stundenplandefinitionZuDatum.id, stundenplan);
-					return mapStundenplaene.get(stundenplandefinitionZuDatum.id);
-				}
-			} catch (@SuppressWarnings("unused") final Exception ignore) {
-				// Stundenplan konnte nicht aus der Datenbank ermittelt werden. Sollte nicht eintreten, wenn Definition vorhanden ist.
-			}
+
+		if (stundenplandefinitionZuDatum != null)
+			return stundenplan(stundenplandefinitionZuDatum.id);
+		else
+			return null;
+	}
+
+	/**
+	 * Ermittelt den zur übergebenen ID gehörigen Stundenplan und gibt ihn zurück.
+	 *
+	 * @param idStundenplan Die ID des Stundenplans
+	 *
+	 * @return Der Stundenplan zur ID, wenn er gefunden wird, sonst null.
+	 */
+	public ReportingStundenplanungStundenplan stundenplan(final long idStundenplan) {
+		// Prüfe zunächst, ob die Stundenplan-ID auch als Definition in der Datenbank der Schule vorhanden ist.
+		if (stundenplandefinitionen.stream().noneMatch(d -> d.id == idStundenplan))
+			return null;
+
+		// Nutze vorhandene Objekte, falls möglich.
+		if (mapStundenplaene.containsKey(idStundenplan))
+			return mapStundenplaene.get(idStundenplan);
+
+		if (mapStundenplanManager.containsKey(idStundenplan)) {
+			mapStundenplaene.computeIfAbsent(idStundenplan, key -> new ProxyReportingStundenplanungStundenplan(this, mapStundenplanManager.get(key)));
+			return mapStundenplaene.get(idStundenplan);
 		}
-		// Kein Plan gefunden oder Fehler.
+
+		// Sind bisher keine Daten vorhanden, lade die Daten aus der DB nach.
+		try {
+			final StundenplanManager stundenplanManager = stundenplanManager(idStundenplan);
+			if (stundenplanManager != null) {
+				mapStundenplanManager.put(idStundenplan, stundenplanManager);
+				mapStundenplaene.put(idStundenplan, new ProxyReportingStundenplanungStundenplan(this, stundenplanManager));
+				return mapStundenplaene.get(idStundenplan);
+			}
+		} catch (@SuppressWarnings("unused") final Exception ignore) {
+			// Stundenplan konnte nicht aus der Datenbank ermittelt werden. Sollte nicht eintreten, wenn Definition vorhanden ist.
+		}
 		return null;
 	}
 
+	/**
+	 * Ermittelt den zur übergebenen ID passenden StundenplanManager zurück.
+	 *
+	 * @param idStundenplan Die ID des Stundenplans
+	 * @return Der StundenplanManager zur ID, wenn er gefunden wird, sonst null.
+	 */
+	public StundenplanManager stundenplanManager(final long idStundenplan) {
+		mapStundenplanManager.computeIfAbsent(idStundenplan, key -> {
+			try {
+				final Stundenplan stundenplan = DataStundenplan.getStundenplan(this.conn, key);
+				if (stundenplan == null)
+					return null;
+				final List<StundenplanUnterricht> unterrichte = DataStundenplanUnterricht.getUnterrichte(this.conn, key);
+				final List<StundenplanPausenaufsicht> aufsichten = DataStundenplanPausenaufsichten.getAufsichten(this.conn, key);
+				final StundenplanUnterrichtsverteilung unterrichtsverteilung = DataStundenplanUnterrichtsverteilung.getUnterrichtsverteilung(this.conn, key);
+				return new StundenplanManager(stundenplan, unterrichte, aufsichten, unterrichtsverteilung);
+			} catch (final ApiOperationException e) {
+				return null;
+			}
+		});
+
+		return this.mapStundenplanManager.get(idStundenplan);
+	}
 
 }

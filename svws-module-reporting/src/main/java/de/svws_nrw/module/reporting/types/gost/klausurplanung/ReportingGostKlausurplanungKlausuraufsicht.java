@@ -2,7 +2,7 @@ package de.svws_nrw.module.reporting.types.gost.klausurplanung;
 
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
-import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungZeitrasterstunde;
+import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungUnterrichtsrasterstunde;
 
 
 /**
@@ -23,7 +23,7 @@ public class ReportingGostKlausurplanungKlausuraufsicht extends ReportingBaseTyp
 	protected ReportingLehrer lehrer;
 
 	/** Die Unterrichtsstunde (Eintrag im Zeitraster des Stundenplans), die der Aufsicht zugeordnet ist. */
-	protected ReportingStundenplanungZeitrasterstunde unterrichtsstunde;
+	protected ReportingStundenplanungUnterrichtsrasterstunde unterrichtsstunde;
 
 
 	/**
@@ -36,7 +36,7 @@ public class ReportingGostKlausurplanungKlausuraufsicht extends ReportingBaseTyp
 	 * @param unterrichtsstunde	Die Unterrichtsstunde (Eintrag im Zeitraster des Stundenplans), die der Aufsicht zugeordnet ist.
 	 */
 	public ReportingGostKlausurplanungKlausuraufsicht(final Integer aufsichtsbeginn, final Integer aufsichtsende, final String bemerkung,
-			final ReportingLehrer lehrer, final ReportingStundenplanungZeitrasterstunde unterrichtsstunde) {
+			final ReportingLehrer lehrer, final ReportingStundenplanungUnterrichtsrasterstunde unterrichtsstunde) {
 		this.aufsichtsbeginn = aufsichtsbeginn;
 		this.aufsichtsende = aufsichtsende;
 		this.bemerkung = bemerkung;
@@ -88,7 +88,7 @@ public class ReportingGostKlausurplanungKlausuraufsicht extends ReportingBaseTyp
 	 *
 	 * @return Inhalt des Feldes unterrichtsstunde
 	 */
-	public ReportingStundenplanungZeitrasterstunde unterrichtsstunde() {
+	public ReportingStundenplanungUnterrichtsrasterstunde unterrichtsstunde() {
 		return unterrichtsstunde;
 	}
 }

@@ -96,112 +96,112 @@
 											<td colspan="2" class="p-2 ta-cm bo-black">2. Jahr der<br/>Qualifikationsphase (Q2)</td>
 										</tr>
 										<tr>
-											<td class="p-tb-1-lr-2 ta-cm bo-black">1. Halbjahr</td>
-											<td class="p-tb-1-lr-2 ta-cm bo-black">2. Halbjahr</td>
-											<td class="p-tb-1-lr-2 ta-cm bo-black">1. Halbjahr</td>
-											<td class="p-tb-1-lr-2 ta-cm bo-black">2. Halbjahr</td>
+											<td class="p-tb-1 p-lr-2 ta-cm bo-black">1. Halbjahr</td>
+											<td class="p-tb-1 p-lr-2 ta-cm bo-black">2. Halbjahr</td>
+											<td class="p-tb-1 p-lr-2 ta-cm bo-black">1. Halbjahr</td>
+											<td class="p-tb-1 p-lr-2 ta-cm bo-black">2. Halbjahr</td>
 										</tr>
 										<tr>
-											<td colspan="5" style="height: 10mm" class="p-tb-1-lr-2 ta-lb bo-black f-bold">Sprachlich-literarisch-künstlerisches Aufgabenfeld</td>
+											<td colspan="5" style="height: 10mm" class="p-tb-1 p-lr-2 ta-lb bo-black f-bold">Sprachlich-literarisch-künstlerisches Aufgabenfeld</td>
 										</tr>
 										<th:block th:each="fachbelegung : ${schueler.gostAbitur().fachbelegungen()}">
 											<tr th:if="${fachbelegung.fach().aufZeugnis() && fachbelegung.fach().istPruefungsordnungsRelevant() && (#strings.equalsIgnoreCase(fachbelegung.fach().fachgruppe().daten.kuerzel, 'D') || #strings.equalsIgnoreCase(fachbelegung.fach().fachgruppe().daten.kuerzel, 'FS') || #strings.equalsIgnoreCase(fachbelegung.fach().fachgruppe().daten.kuerzel, 'MS') || #strings.equalsIgnoreCase(fachbelegung.fach().fachgruppe().daten.kuerzel, 'ME'))}">
-												<td style="height: 7mm" class="p-tb-1-lr-2 ta-lm bo-black" th:text="${(fachbelegung.abiturFach() != null && fachbelegung.abiturFach() <= 2) ? fachbelegung.fach().bezeichnungZeugnis() + ' (LK/eA)' : fachbelegung.fach().bezeichnungZeugnis()}">Fachbezeichnung</td>
-												<td style="height: 7mm" class="p-tb-1-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[2] == null || !fachbelegung.halbjahresbelegungen()[2].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[2].block1gewertet() ? fachbelegung.halbjahresbelegungen()[2].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[2].note().getNotenpunkteZweistellig() + ')')}">06</td>
-												<td style="height: 7mm" class="p-tb-1-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[3] == null || !fachbelegung.halbjahresbelegungen()[3].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[3].block1gewertet() ? fachbelegung.halbjahresbelegungen()[3].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[3].note().getNotenpunkteZweistellig() + ')')}">07</td>
-												<td style="height: 7mm" class="p-tb-1-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[4] == null || !fachbelegung.halbjahresbelegungen()[4].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[4].block1gewertet() ? fachbelegung.halbjahresbelegungen()[4].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[4].note().getNotenpunkteZweistellig() + ')')}">08</td>
-												<td style="height: 7mm" class="p-tb-1-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[5] == null || !fachbelegung.halbjahresbelegungen()[5].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[5].block1gewertet() ? fachbelegung.halbjahresbelegungen()[5].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[5].note().getNotenpunkteZweistellig() + ')')}">09</td>
+												<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-lm bo-black" th:text="${(fachbelegung.abiturFach() != null && fachbelegung.abiturFach() <= 2) ? fachbelegung.fach().bezeichnungZeugnis() + ' (LK/eA)' : fachbelegung.fach().bezeichnungZeugnis()}">Fachbezeichnung</td>
+												<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[2] == null || !fachbelegung.halbjahresbelegungen()[2].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[2].block1gewertet() ? fachbelegung.halbjahresbelegungen()[2].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[2].note().getNotenpunkteZweistellig() + ')')}">06</td>
+												<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[3] == null || !fachbelegung.halbjahresbelegungen()[3].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[3].block1gewertet() ? fachbelegung.halbjahresbelegungen()[3].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[3].note().getNotenpunkteZweistellig() + ')')}">07</td>
+												<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[4] == null || !fachbelegung.halbjahresbelegungen()[4].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[4].block1gewertet() ? fachbelegung.halbjahresbelegungen()[4].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[4].note().getNotenpunkteZweistellig() + ')')}">08</td>
+												<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[5] == null || !fachbelegung.halbjahresbelegungen()[5].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[5].block1gewertet() ? fachbelegung.halbjahresbelegungen()[5].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[5].note().getNotenpunkteZweistellig() + ')')}">09</td>
 											</tr>
 										</th:block>
 										<tr>
-											<td colspan="5" style="height: 10mm" class="p-tb-1-lr-2 ta-lb bo-black f-bold">Gesellschaftswissenschaftliches Aufgabenfeld</td>
+											<td colspan="5" style="height: 10mm" class="p-tb-1 p-lr-2 ta-lb bo-black f-bold">Gesellschaftswissenschaftliches Aufgabenfeld</td>
 										</tr>
 										<th:block th:each="fachbelegung : ${schueler.gostAbitur().fachbelegungen()}">
 											<tr th:if="${fachbelegung.fach().aufZeugnis() && fachbelegung.fach().istPruefungsordnungsRelevant() && (#strings.equalsIgnoreCase(fachbelegung.fach().fachgruppe().daten.kuerzel, 'GS') || #strings.equalsIgnoreCase(fachbelegung.fach().fachgruppe().daten.kuerzel, 'PL'))}">
-												<td style="height: 7mm" class="p-tb-1-lr-2 ta-lm bo-black" th:text="${(fachbelegung.abiturFach() != null && fachbelegung.abiturFach() <= 2) ? fachbelegung.fach().bezeichnungZeugnis() + ' (LK/eA)' : fachbelegung.fach().bezeichnungZeugnis()}">Fachbezeichnung</td>
-												<td style="height: 7mm" class="p-tb-1-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[2] == null || !fachbelegung.halbjahresbelegungen()[2].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[2].block1gewertet() ? fachbelegung.halbjahresbelegungen()[2].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[2].note().getNotenpunkteZweistellig() + ')')}">06</td>
-												<td style="height: 7mm" class="p-tb-1-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[3] == null || !fachbelegung.halbjahresbelegungen()[3].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[3].block1gewertet() ? fachbelegung.halbjahresbelegungen()[3].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[3].note().getNotenpunkteZweistellig() + ')')}">07</td>
-												<td style="height: 7mm" class="p-tb-1-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[4] == null || !fachbelegung.halbjahresbelegungen()[4].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[4].block1gewertet() ? fachbelegung.halbjahresbelegungen()[4].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[4].note().getNotenpunkteZweistellig() + ')')}">08</td>
-												<td style="height: 7mm" class="p-tb-1-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[5] == null || !fachbelegung.halbjahresbelegungen()[5].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[5].block1gewertet() ? fachbelegung.halbjahresbelegungen()[5].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[5].note().getNotenpunkteZweistellig() + ')')}">09</td>
+												<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-lm bo-black" th:text="${(fachbelegung.abiturFach() != null && fachbelegung.abiturFach() <= 2) ? fachbelegung.fach().bezeichnungZeugnis() + ' (LK/eA)' : fachbelegung.fach().bezeichnungZeugnis()}">Fachbezeichnung</td>
+												<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[2] == null || !fachbelegung.halbjahresbelegungen()[2].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[2].block1gewertet() ? fachbelegung.halbjahresbelegungen()[2].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[2].note().getNotenpunkteZweistellig() + ')')}">06</td>
+												<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[3] == null || !fachbelegung.halbjahresbelegungen()[3].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[3].block1gewertet() ? fachbelegung.halbjahresbelegungen()[3].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[3].note().getNotenpunkteZweistellig() + ')')}">07</td>
+												<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[4] == null || !fachbelegung.halbjahresbelegungen()[4].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[4].block1gewertet() ? fachbelegung.halbjahresbelegungen()[4].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[4].note().getNotenpunkteZweistellig() + ')')}">08</td>
+												<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[5] == null || !fachbelegung.halbjahresbelegungen()[5].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[5].block1gewertet() ? fachbelegung.halbjahresbelegungen()[5].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[5].note().getNotenpunkteZweistellig() + ')')}">09</td>
 											</tr>
 										</th:block>
 										<tr>
-											<td colspan="5" style="height: 10mm" class="p-tb-1-lr-2 ta-lb bo-black f-bold">Mathematisch-naturwissenschaftlich-technisches Aufgabenfeld</td>
+											<td colspan="5" style="height: 10mm" class="p-tb-1 p-lr-2 ta-lb bo-black f-bold">Mathematisch-naturwissenschaftlich-technisches Aufgabenfeld</td>
 										</tr>
 										<th:block th:each="fachbelegung : ${schueler.gostAbitur().fachbelegungen()}">
 											<tr th:if="${fachbelegung.fach().aufZeugnis() && fachbelegung.fach().istPruefungsordnungsRelevant() && (#strings.equalsIgnoreCase(fachbelegung.fach().fachgruppe().daten.kuerzel, 'M') || #strings.equalsIgnoreCase(fachbelegung.fach().fachgruppe().daten.kuerzel, 'NW') || #strings.equalsIgnoreCase(fachbelegung.fach().fachgruppe().daten.kuerzel, 'WN'))}">
-												<td style="height: 7mm" class="p-tb-1-lr-2 ta-lm bo-black" th:text="${(fachbelegung.abiturFach() != null && fachbelegung.abiturFach() <= 2) ? fachbelegung.fach().bezeichnungZeugnis() + ' (LK/eA)' : fachbelegung.fach().bezeichnungZeugnis()}">Fachbezeichnung</td>
-												<td style="height: 7mm" class="p-tb-1-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[2] == null || !fachbelegung.halbjahresbelegungen()[2].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[2].block1gewertet() ? fachbelegung.halbjahresbelegungen()[2].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[2].note().getNotenpunkteZweistellig() + ')')}">06</td>
-												<td style="height: 7mm" class="p-tb-1-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[3] == null || !fachbelegung.halbjahresbelegungen()[3].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[3].block1gewertet() ? fachbelegung.halbjahresbelegungen()[3].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[3].note().getNotenpunkteZweistellig() + ')')}">07</td>
-												<td style="height: 7mm" class="p-tb-1-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[4] == null || !fachbelegung.halbjahresbelegungen()[4].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[4].block1gewertet() ? fachbelegung.halbjahresbelegungen()[4].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[4].note().getNotenpunkteZweistellig() + ')')}">08</td>
-												<td style="height: 7mm" class="p-tb-1-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[5] == null || !fachbelegung.halbjahresbelegungen()[5].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[5].block1gewertet() ? fachbelegung.halbjahresbelegungen()[5].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[5].note().getNotenpunkteZweistellig() + ')')}">09</td>
+												<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-lm bo-black" th:text="${(fachbelegung.abiturFach() != null && fachbelegung.abiturFach() <= 2) ? fachbelegung.fach().bezeichnungZeugnis() + ' (LK/eA)' : fachbelegung.fach().bezeichnungZeugnis()}">Fachbezeichnung</td>
+												<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[2] == null || !fachbelegung.halbjahresbelegungen()[2].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[2].block1gewertet() ? fachbelegung.halbjahresbelegungen()[2].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[2].note().getNotenpunkteZweistellig() + ')')}">06</td>
+												<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[3] == null || !fachbelegung.halbjahresbelegungen()[3].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[3].block1gewertet() ? fachbelegung.halbjahresbelegungen()[3].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[3].note().getNotenpunkteZweistellig() + ')')}">07</td>
+												<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[4] == null || !fachbelegung.halbjahresbelegungen()[4].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[4].block1gewertet() ? fachbelegung.halbjahresbelegungen()[4].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[4].note().getNotenpunkteZweistellig() + ')')}">08</td>
+												<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[5] == null || !fachbelegung.halbjahresbelegungen()[5].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[5].block1gewertet() ? fachbelegung.halbjahresbelegungen()[5].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[5].note().getNotenpunkteZweistellig() + ')')}">09</td>
 											</tr>
 										</th:block>
 										<tr>
-											<td colspan="5" style="height: 10mm" class="p-tb-1-lr-2 ta-lb bo-black"></td>
+											<td colspan="5" style="height: 10mm" class="p-tb-1 p-lr-2 ta-lb bo-black"></td>
 										</tr>
 										<th:block th:if="${schueler.gostAbitur().religionVorhanden()}">
 											<th:block th:each="fachbelegung : ${schueler.gostAbitur().fachbelegungen()}">
 												<tr th:if="${fachbelegung.fach().aufZeugnis() && fachbelegung.fach().istPruefungsordnungsRelevant() && #strings.equalsIgnoreCase(fachbelegung.fach().fachgruppe().daten.kuerzel, 'RE')}">
-													<td style="height: 7mm" class="p-tb-1-lr-2 ta-lm bo-black" th:text="${(fachbelegung.abiturFach() != null && fachbelegung.abiturFach() <= 2) ? fachbelegung.fach().bezeichnungZeugnis() + ' (LK/eA)' : fachbelegung.fach().bezeichnungZeugnis()}">Fachbezeichnung</td>
-													<td style="height: 7mm" class="p-tb-1-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[2] == null || !fachbelegung.halbjahresbelegungen()[2].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[2].block1gewertet() ? fachbelegung.halbjahresbelegungen()[2].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[2].note().getNotenpunkteZweistellig() + ')')}">06</td>
-													<td style="height: 7mm" class="p-tb-1-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[3] == null || !fachbelegung.halbjahresbelegungen()[3].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[3].block1gewertet() ? fachbelegung.halbjahresbelegungen()[3].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[3].note().getNotenpunkteZweistellig() + ')')}">07</td>
-													<td style="height: 7mm" class="p-tb-1-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[4] == null || !fachbelegung.halbjahresbelegungen()[4].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[4].block1gewertet() ? fachbelegung.halbjahresbelegungen()[4].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[4].note().getNotenpunkteZweistellig() + ')')}">08</td>
-													<td style="height: 7mm" class="p-tb-1-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[5] == null || !fachbelegung.halbjahresbelegungen()[5].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[5].block1gewertet() ? fachbelegung.halbjahresbelegungen()[5].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[5].note().getNotenpunkteZweistellig() + ')')}">09</td>
+													<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-lm bo-black" th:text="${(fachbelegung.abiturFach() != null && fachbelegung.abiturFach() <= 2) ? fachbelegung.fach().bezeichnungZeugnis() + ' (LK/eA)' : fachbelegung.fach().bezeichnungZeugnis()}">Fachbezeichnung</td>
+													<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[2] == null || !fachbelegung.halbjahresbelegungen()[2].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[2].block1gewertet() ? fachbelegung.halbjahresbelegungen()[2].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[2].note().getNotenpunkteZweistellig() + ')')}">06</td>
+													<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[3] == null || !fachbelegung.halbjahresbelegungen()[3].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[3].block1gewertet() ? fachbelegung.halbjahresbelegungen()[3].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[3].note().getNotenpunkteZweistellig() + ')')}">07</td>
+													<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[4] == null || !fachbelegung.halbjahresbelegungen()[4].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[4].block1gewertet() ? fachbelegung.halbjahresbelegungen()[4].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[4].note().getNotenpunkteZweistellig() + ')')}">08</td>
+													<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[5] == null || !fachbelegung.halbjahresbelegungen()[5].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[5].block1gewertet() ? fachbelegung.halbjahresbelegungen()[5].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[5].note().getNotenpunkteZweistellig() + ')')}">09</td>
 												</tr>
 											</th:block>
 											<tr>
-												<td colspan="5" style="height: 4mm" class="p-tb-1-lr-2 ta-lb bo-black"></td>
+												<td colspan="5" style="height: 4mm" class="p-tb-1 p-lr-2 ta-lb bo-black"></td>
 											</tr>
 										</th:block>
 										<th:block th:each="fachbelegung : ${schueler.gostAbitur().fachbelegungen()}">
 											<tr th:if="${fachbelegung.fach().aufZeugnis() && fachbelegung.fach().istPruefungsordnungsRelevant() && #strings.equalsIgnoreCase(fachbelegung.fach().fachgruppe().daten.kuerzel, 'SP')}">
-												<td style="height: 7mm" class="p-tb-1-lr-2 ta-lm bo-black" th:text="${(fachbelegung.abiturFach() != null && fachbelegung.abiturFach() <= 2) ? fachbelegung.fach().bezeichnungZeugnis() + ' (LK/eA)' : fachbelegung.fach().bezeichnungZeugnis()}">Fachbezeichnung</td>
-												<td style="height: 7mm" class="p-tb-1-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[2] == null || !fachbelegung.halbjahresbelegungen()[2].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[2].block1gewertet() ? fachbelegung.halbjahresbelegungen()[2].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[2].note().getNotenpunkteZweistellig() + ')')}">06</td>
-												<td style="height: 7mm" class="p-tb-1-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[3] == null || !fachbelegung.halbjahresbelegungen()[3].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[3].block1gewertet() ? fachbelegung.halbjahresbelegungen()[3].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[3].note().getNotenpunkteZweistellig() + ')')}">07</td>
-												<td style="height: 7mm" class="p-tb-1-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[4] == null || !fachbelegung.halbjahresbelegungen()[4].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[4].block1gewertet() ? fachbelegung.halbjahresbelegungen()[4].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[4].note().getNotenpunkteZweistellig() + ')')}">08</td>
-												<td style="height: 7mm" class="p-tb-1-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[5] == null || !fachbelegung.halbjahresbelegungen()[5].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[5].block1gewertet() ? fachbelegung.halbjahresbelegungen()[5].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[5].note().getNotenpunkteZweistellig() + ')')}">09</td>
+												<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-lm bo-black" th:text="${(fachbelegung.abiturFach() != null && fachbelegung.abiturFach() <= 2) ? fachbelegung.fach().bezeichnungZeugnis() + ' (LK/eA)' : fachbelegung.fach().bezeichnungZeugnis()}">Fachbezeichnung</td>
+												<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[2] == null || !fachbelegung.halbjahresbelegungen()[2].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[2].block1gewertet() ? fachbelegung.halbjahresbelegungen()[2].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[2].note().getNotenpunkteZweistellig() + ')')}">06</td>
+												<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[3] == null || !fachbelegung.halbjahresbelegungen()[3].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[3].block1gewertet() ? fachbelegung.halbjahresbelegungen()[3].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[3].note().getNotenpunkteZweistellig() + ')')}">07</td>
+												<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[4] == null || !fachbelegung.halbjahresbelegungen()[4].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[4].block1gewertet() ? fachbelegung.halbjahresbelegungen()[4].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[4].note().getNotenpunkteZweistellig() + ')')}">08</td>
+												<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[5] == null || !fachbelegung.halbjahresbelegungen()[5].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[5].block1gewertet() ? fachbelegung.halbjahresbelegungen()[5].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[5].note().getNotenpunkteZweistellig() + ')')}">09</td>
 											</tr>
 										</th:block>
 										<tr>
-											<td colspan="5" style="height: 4mm" class="p-tb-1-lr-2 ta-lb bo-black f-bold"></td>
+											<td colspan="5" style="height: 4mm" class="p-tb-1 p-lr-2 ta-lb bo-black f-bold"></td>
 										</tr>
 										<th:block th:each="fachbelegung : ${schueler.gostAbitur().fachbelegungen()}">
 											<tr th:if="${schueler.gostAbitur().projektkursVorhanden() && fachbelegung.fach().aufZeugnis() && fachbelegung.fach().istPruefungsordnungsRelevant() && #strings.equalsIgnoreCase(fachbelegung.fach().fachgruppe().daten.kuerzel, 'PX')}">
-												<td style="height: 7mm" class="p-tb-1-lr-2 ta-lm bo-t-black bo-lr-black"><b>Projektkurs</b> <sup>3)</sup></td>
-												<td style="height: 7mm" class="p-tb-1-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[2] == null || !fachbelegung.halbjahresbelegungen()[2].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[2].block1gewertet() ? fachbelegung.halbjahresbelegungen()[2].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[2].note().getNotenpunkteZweistellig() + ')')}">06</td>
-												<td style="height: 7mm" class="p-tb-1-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[3] == null || !fachbelegung.halbjahresbelegungen()[3].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[3].block1gewertet() ? fachbelegung.halbjahresbelegungen()[3].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[3].note().getNotenpunkteZweistellig() + ')')}">07</td>
-												<td style="height: 7mm" class="p-tb-1-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[4] == null || !fachbelegung.halbjahresbelegungen()[4].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[4].block1gewertet() ? fachbelegung.halbjahresbelegungen()[4].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[4].note().getNotenpunkteZweistellig() + ')')}">08</td>
-												<td style="height: 7mm" class="p-tb-1-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[5] == null || !fachbelegung.halbjahresbelegungen()[5].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[5].block1gewertet() ? fachbelegung.halbjahresbelegungen()[5].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[5].note().getNotenpunkteZweistellig() + ')')}">09</td>
+												<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-lm bo-t-black bo-lr-black"><b>Projektkurs</b> <sup>3)</sup></td>
+												<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[2] == null || !fachbelegung.halbjahresbelegungen()[2].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[2].block1gewertet() ? fachbelegung.halbjahresbelegungen()[2].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[2].note().getNotenpunkteZweistellig() + ')')}">06</td>
+												<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[3] == null || !fachbelegung.halbjahresbelegungen()[3].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[3].block1gewertet() ? fachbelegung.halbjahresbelegungen()[3].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[3].note().getNotenpunkteZweistellig() + ')')}">07</td>
+												<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[4] == null || !fachbelegung.halbjahresbelegungen()[4].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[4].block1gewertet() ? fachbelegung.halbjahresbelegungen()[4].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[4].note().getNotenpunkteZweistellig() + ')')}">08</td>
+												<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[5] == null || !fachbelegung.halbjahresbelegungen()[5].block1kursAufZeugnis()) ? '--' : (fachbelegung.halbjahresbelegungen()[5].block1gewertet() ? fachbelegung.halbjahresbelegungen()[5].note().getNotenpunkteZweistellig() : '(' + fachbelegung.halbjahresbelegungen()[5].note().getNotenpunkteZweistellig() + ')')}">09</td>
 											</tr>
 										</th:block>
 										<tr th:if="${schueler.gostAbitur().projektkursVorhanden()}">
-											<td colspan="5" style="height: 7mm" class="p-tb-1-lr-2 ta-lm bo-b-black bo-lr-black f-ital" th:text="${'Thema: ' + schueler.gostAbitur().projektkursThema()}">Thema: Das Thema des Projektkurses aus den fachbezogenen Bemerkungen zum Projektkurs.</td>
+											<td colspan="5" style="height: 7mm" class="p-tb-1 p-lr-2 ta-lm bo-b-black bo-lr-black f-ital" th:text="${'Thema: ' + schueler.gostAbitur().projektkursThema()}">Thema: Das Thema des Projektkurses aus den fachbezogenen Bemerkungen zum Projektkurs.</td>
 										</tr>
 										<tr th:if="${!schueler.gostAbitur().projektkursVorhanden()}">
-											<td style="height: 7mm" class="p-tb-1-lr-2 ta-lm bo-t-black bo-lr-black"><b>Projektkurs</b> <sup>3)</sup></td>
-											<td style="height: 7mm" class="p-tb-1-lr-2 ta-cm bo-black">--</td>
-											<td style="height: 7mm" class="p-tb-1-lr-2 ta-cm bo-black">--</td>
-											<td style="height: 7mm" class="p-tb-1-lr-2 ta-cm bo-black">--</td>
-											<td style="height: 7mm" class="p-tb-1-lr-2 ta-cm bo-black">--</td>
+											<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-lm bo-t-black bo-lr-black"><b>Projektkurs</b> <sup>3)</sup></td>
+											<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black">--</td>
+											<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black">--</td>
+											<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black">--</td>
+											<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black">--</td>
 										</tr>
 										<tr th:if="${!schueler.gostAbitur().projektkursVorhanden()}">
-											<td colspan="5" style="height: 7mm" class="p-tb-1-lr-2 ta-lm bo-b-black bo-lr-black f-ital">Thema: ---</td>
+											<td colspan="5" style="height: 7mm" class="p-tb-1 p-lr-2 ta-lm bo-b-black bo-lr-black f-ital">Thema: ---</td>
 										</tr>
 										<tr>
-											<td colspan="5" style="height: 10mm" class="p-tb-1-lr-2 ta-lb bo-black"><b>Vertiefungsfächer</b></td>
+											<td colspan="5" style="height: 10mm" class="p-tb-1 p-lr-2 ta-lb bo-black"><b>Vertiefungsfächer</b></td>
 										</tr>
 										<th:block th:each="fachbelegung : ${schueler.gostAbitur().fachbelegungen()}">
 											<tr th:if="${fachbelegung.fach().aufZeugnis() && fachbelegung.fach().istPruefungsordnungsRelevant() && schueler.gostAbitur().vertiefungskursVorhanden() && #strings.equalsIgnoreCase(fachbelegung.fach().fachgruppe().daten.kuerzel, 'VX')}">
-												<td style="height: 7mm" class="p-tb-1-lr-2 ta-lm bo-black" th:text="${fachbelegung.fach().bezeichnungZeugnis()}">Fachbezeichnung</td>
-												<td style="height: 7mm" class="p-tb-1-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[2] == null || !fachbelegung.halbjahresbelegungen()[2].block1kursAufZeugnis()) ? '--' : 'teilg.'}">teilg.</td>
-												<td style="height: 7mm" class="p-tb-1-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[3] == null || !fachbelegung.halbjahresbelegungen()[3].block1kursAufZeugnis()) ? '--' : 'teilg.'}">teilg.</td>
-												<td style="height: 7mm" class="p-tb-1-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[4] == null || !fachbelegung.halbjahresbelegungen()[4].block1kursAufZeugnis()) ? '--' : 'teilg.'}">teilg.</td>
-												<td style="height: 7mm" class="p-tb-1-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[5] == null || !fachbelegung.halbjahresbelegungen()[5].block1kursAufZeugnis()) ? '--' : 'teilg.'}">teilg.</td>
+												<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-lm bo-black" th:text="${fachbelegung.fach().bezeichnungZeugnis()}">Fachbezeichnung</td>
+												<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[2] == null || !fachbelegung.halbjahresbelegungen()[2].block1kursAufZeugnis()) ? '--' : 'teilg.'}">teilg.</td>
+												<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[3] == null || !fachbelegung.halbjahresbelegungen()[3].block1kursAufZeugnis()) ? '--' : 'teilg.'}">teilg.</td>
+												<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[4] == null || !fachbelegung.halbjahresbelegungen()[4].block1kursAufZeugnis()) ? '--' : 'teilg.'}">teilg.</td>
+												<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black" th:text="${(fachbelegung.halbjahresbelegungen()[5] == null || !fachbelegung.halbjahresbelegungen()[5].block1kursAufZeugnis()) ? '--' : 'teilg.'}">teilg.</td>
 											</tr>
 										</th:block>
 										<tr th:if="${!schueler.gostAbitur().vertiefungskursVorhanden()}">
-											<td colspan="5" style="height: 7mm" class="p-tb-1-lr-2 ta-lm bo-black">- keine -</td>
+											<td colspan="5" style="height: 7mm" class="p-tb-1 p-lr-2 ta-lm bo-black">- keine -</td>
 										</tr>
 									</table>
 								</td>
@@ -343,39 +343,39 @@
 											<col style="width: 20%" />
 										</colgroup>
 										<tr>
-											<td rowspan="2" class="p-tb-1-lr-2 ta-lb bo-black">Prüfungsfach <sup>4)</sup></td>
-											<td colspan="2" class="p-tb-1-lr-2 ta-cm bo-black">Prüfungsergebnis in einfacher Wertung</td>
+											<td rowspan="2" class="p-tb-1 p-lr-2 ta-lb bo-black">Prüfungsfach <sup>4)</sup></td>
+											<td colspan="2" class="p-tb-1 p-lr-2 ta-cm bo-black">Prüfungsergebnis in einfacher Wertung</td>
 										</tr>
 										<tr>
-											<td class="p-tb-1-lr-2 ta-cm bo-black">schriftlich</td>
-											<td class="p-tb-1-lr-2 ta-cm bo-black">mündlich</td>
+											<td class="p-tb-1 p-lr-2 ta-cm bo-black">schriftlich</td>
+											<td class="p-tb-1 p-lr-2 ta-cm bo-black">mündlich</td>
 										</tr>
 										<th:block th:each="fachbelegung : ${schueler.gostAbitur().fachbelegungen()}">
 											<tr th:if="${fachbelegung.fach().aufZeugnis() && (fachbelegung.abiturFach() != null && fachbelegung.abiturFach() == 1)}">
-												<td style="height: 7mm" class="p-tb-3-lr-2 ta-lm bo-black" th:text="${'1. ' + ((fachbelegung.abiturFach() != null && fachbelegung.abiturFach() <= 2) ? fachbelegung.fach().bezeichnungZeugnis() + ' (LK/eA)' : fachbelegung.fach().bezeichnungZeugnis())}">Fachbezeichnung</td>
-												<td style="height: 7mm" class="p-tb-3-lr-2 ta-cm bo-black" th:text="${fachbelegung.block2PruefungNote().getNotenpunkteZweistellig().isEmpty() ? '--' : fachbelegung.block2PruefungNote().getNotenpunkteZweistellig()}">06</td>
-												<td style="height: 7mm" class="p-tb-3-lr-2 ta-cm bo-black" th:text="${fachbelegung.block2MuendlichePruefungNote().getNotenpunkteZweistellig().isEmpty() ? '--' : fachbelegung.block2MuendlichePruefungNote().getNotenpunkteZweistellig()}">07</td>
+												<td style="height: 7mm" class="p-tb-3 p-lr-2 ta-lm bo-black" th:text="${'1. ' + ((fachbelegung.abiturFach() != null && fachbelegung.abiturFach() <= 2) ? fachbelegung.fach().bezeichnungZeugnis() + ' (LK/eA)' : fachbelegung.fach().bezeichnungZeugnis())}">Fachbezeichnung</td>
+												<td style="height: 7mm" class="p-tb-3 p-lr-2 ta-cm bo-black" th:text="${fachbelegung.block2PruefungNote().getNotenpunkteZweistellig().isEmpty() ? '--' : fachbelegung.block2PruefungNote().getNotenpunkteZweistellig()}">06</td>
+												<td style="height: 7mm" class="p-tb-3 p-lr-2 ta-cm bo-black" th:text="${fachbelegung.block2MuendlichePruefungNote().getNotenpunkteZweistellig().isEmpty() ? '--' : fachbelegung.block2MuendlichePruefungNote().getNotenpunkteZweistellig()}">07</td>
 											</tr>
 										</th:block>
 										<th:block th:each="fachbelegung : ${schueler.gostAbitur().fachbelegungen()}">
 											<tr th:if="${fachbelegung.fach().aufZeugnis() && (fachbelegung.abiturFach() != null && fachbelegung.abiturFach() == 2)}">
-												<td style="height: 7mm" class="p-tb-3-lr-2 ta-lm bo-black" th:text="${'2. ' + ((fachbelegung.abiturFach() != null && fachbelegung.abiturFach() <= 2) ? fachbelegung.fach().bezeichnungZeugnis() + ' (LK/eA)' : fachbelegung.fach().bezeichnungZeugnis())}">Fachbezeichnung</td>
-												<td style="height: 7mm" class="p-tb-3-lr-2 ta-cm bo-black" th:text="${fachbelegung.block2PruefungNote().getNotenpunkteZweistellig().isEmpty() ? '--' : fachbelegung.block2PruefungNote().getNotenpunkteZweistellig()}">06</td>
-												<td style="height: 7mm" class="p-tb-3-lr-2 ta-cm bo-black" th:text="${fachbelegung.block2MuendlichePruefungNote().getNotenpunkteZweistellig().isEmpty() ? '--' : fachbelegung.block2MuendlichePruefungNote().getNotenpunkteZweistellig()}">07</td>
+												<td style="height: 7mm" class="p-tb-3 p-lr-2 ta-lm bo-black" th:text="${'2. ' + ((fachbelegung.abiturFach() != null && fachbelegung.abiturFach() <= 2) ? fachbelegung.fach().bezeichnungZeugnis() + ' (LK/eA)' : fachbelegung.fach().bezeichnungZeugnis())}">Fachbezeichnung</td>
+												<td style="height: 7mm" class="p-tb-3 p-lr-2 ta-cm bo-black" th:text="${fachbelegung.block2PruefungNote().getNotenpunkteZweistellig().isEmpty() ? '--' : fachbelegung.block2PruefungNote().getNotenpunkteZweistellig()}">06</td>
+												<td style="height: 7mm" class="p-tb-3 p-lr-2 ta-cm bo-black" th:text="${fachbelegung.block2MuendlichePruefungNote().getNotenpunkteZweistellig().isEmpty() ? '--' : fachbelegung.block2MuendlichePruefungNote().getNotenpunkteZweistellig()}">07</td>
 											</tr>
 										</th:block>
 										<th:block th:each="fachbelegung : ${schueler.gostAbitur().fachbelegungen()}">
 											<tr th:if="${fachbelegung.fach().aufZeugnis() && (fachbelegung.abiturFach() != null && fachbelegung.abiturFach() == 3)}">
-												<td style="height: 7mm" class="p-tb-3-lr-2 ta-lm bo-black" th:text="${'3. ' + ((fachbelegung.abiturFach() != null && fachbelegung.abiturFach() <= 2) ? fachbelegung.fach().bezeichnungZeugnis() + ' (LK/eA)' : fachbelegung.fach().bezeichnungZeugnis())}">Fachbezeichnung</td>
-												<td style="height: 7mm" class="p-tb-3-lr-2 ta-cm bo-black" th:text="${fachbelegung.block2PruefungNote().getNotenpunkteZweistellig().isEmpty() ? '--' : fachbelegung.block2PruefungNote().getNotenpunkteZweistellig()}">06</td>
-												<td style="height: 7mm" class="p-tb-3-lr-2 ta-cm bo-black" th:text="${fachbelegung.block2MuendlichePruefungNote().getNotenpunkteZweistellig().isEmpty() ? '--' : fachbelegung.block2MuendlichePruefungNote().getNotenpunkteZweistellig()}">07</td>
+												<td style="height: 7mm" class="p-tb-3 p-lr-2 ta-lm bo-black" th:text="${'3. ' + ((fachbelegung.abiturFach() != null && fachbelegung.abiturFach() <= 2) ? fachbelegung.fach().bezeichnungZeugnis() + ' (LK/eA)' : fachbelegung.fach().bezeichnungZeugnis())}">Fachbezeichnung</td>
+												<td style="height: 7mm" class="p-tb-3 p-lr-2 ta-cm bo-black" th:text="${fachbelegung.block2PruefungNote().getNotenpunkteZweistellig().isEmpty() ? '--' : fachbelegung.block2PruefungNote().getNotenpunkteZweistellig()}">06</td>
+												<td style="height: 7mm" class="p-tb-3 p-lr-2 ta-cm bo-black" th:text="${fachbelegung.block2MuendlichePruefungNote().getNotenpunkteZweistellig().isEmpty() ? '--' : fachbelegung.block2MuendlichePruefungNote().getNotenpunkteZweistellig()}">07</td>
 											</tr>
 										</th:block>
 										<th:block th:each="fachbelegung : ${schueler.gostAbitur().fachbelegungen()}">
 											<tr th:if="${fachbelegung.fach().aufZeugnis() && (fachbelegung.abiturFach() != null && fachbelegung.abiturFach() == 4)}">
-												<td style="height: 7mm" class="p-tb-3-lr-2 ta-lm bo-black" th:text="${'4. ' + ((fachbelegung.abiturFach() != null && fachbelegung.abiturFach() <= 2) ? fachbelegung.fach().bezeichnungZeugnis() + ' (LK/eA)' : fachbelegung.fach().bezeichnungZeugnis())}">Fachbezeichnung</td>
-												<td style="height: 7mm" class="p-tb-3-lr-2 ta-cm bo-black">--</td>
-												<td style="height: 7mm" class="p-tb-3-lr-2 ta-cm bo-black" th:text="${fachbelegung.block2PruefungNote().getNotenpunkteZweistellig().isEmpty() ? '--' : fachbelegung.block2PruefungNote().getNotenpunkteZweistellig()}">06</td>
+												<td style="height: 7mm" class="p-tb-3 p-lr-2 ta-lm bo-black" th:text="${'4. ' + ((fachbelegung.abiturFach() != null && fachbelegung.abiturFach() <= 2) ? fachbelegung.fach().bezeichnungZeugnis() + ' (LK/eA)' : fachbelegung.fach().bezeichnungZeugnis())}">Fachbezeichnung</td>
+												<td style="height: 7mm" class="p-tb-3 p-lr-2 ta-cm bo-black">--</td>
+												<td style="height: 7mm" class="p-tb-3 p-lr-2 ta-cm bo-black" th:text="${fachbelegung.block2PruefungNote().getNotenpunkteZweistellig().isEmpty() ? '--' : fachbelegung.block2PruefungNote().getNotenpunkteZweistellig()}">06</td>
 											</tr>
 										</th:block>
 									</table>
@@ -441,16 +441,16 @@
 											<col style="width: 18%" />
 										</colgroup>
 										<tr>
-											<td class="p-tb-1-lr-2 f-bold ta-lm bo-black">Fach</td>
-											<td colspan="2" class="p-tb-1-lr-2 f-bold ta-cm bo-black">Jahrgangsstufe</td>
-											<td class="p-tb-1-lr-2 ta-cm f-bold bo-black">GeR</td>
+											<td class="p-tb-1 p-lr-2 f-bold ta-lm bo-black">Fach</td>
+											<td colspan="2" class="p-tb-1 p-lr-2 f-bold ta-cm bo-black">Jahrgangsstufe</td>
+											<td class="p-tb-1 p-lr-2 ta-cm f-bold bo-black">GeR</td>
 										</tr>
 										<th:block th:each="sprachbelegung : ${schueler.sprachbelegungen()}">
 											<tr>
-												<td class="p-tb-1-lr-2 ta-lm bo-black" th:text="${(sprachbelegung.statistikfach().fach() != null) ? sprachbelegung.statistikfach().fach().bezeichnungZeugnis() : sprachbelegung.statistikfach().bezeichnung()}">Fachbezeichnung</td>
-												<td class="p-tb-1-lr-2 ta-cm bo-black" th:text="${(sprachbelegung.belegungVonJahrgang() == null || sprachbelegung.belegungVonJahrgang().isEmpty()) ? '--' : 'von ' + sprachbelegung.belegungVonJahrgang() + ((sprachbelegung.belegungVonAbschnitt() == null || sprachbelegung.belegungVonAbschnitt() < 1) ? '.1' : '.' + sprachbelegung.belegungBisAbschnitt())}">05.1</td>
-												<td class="p-tb-1-lr-2 ta-cm bo-black" th:text="${(sprachbelegung.belegungBisJahrgang() == null || sprachbelegung.belegungBisJahrgang().isEmpty()) ? '--' : 'bis ' + sprachbelegung.belegungBisJahrgang() + ((sprachbelegung.belegungBisAbschnitt() == null || sprachbelegung.belegungBisAbschnitt() < 1) ? '.1' : '.' + sprachbelegung.belegungBisAbschnitt())}">Q2.2</td>
-												<td class="p-tb-1-lr-2 ta-cm bo-black" th:text="${(sprachbelegung.referenzniveau() == null) ? '--' : sprachbelegung.referenzniveau().daten.kuerzel}">B2/C1</td>
+												<td class="p-tb-1 p-lr-2 ta-lm bo-black" th:text="${(sprachbelegung.statistikfach().fach() != null) ? sprachbelegung.statistikfach().fach().bezeichnungZeugnis() : sprachbelegung.statistikfach().bezeichnung()}">Fachbezeichnung</td>
+												<td class="p-tb-1 p-lr-2 ta-cm bo-black" th:text="${(sprachbelegung.belegungVonJahrgang() == null || sprachbelegung.belegungVonJahrgang().isEmpty()) ? '--' : 'von ' + sprachbelegung.belegungVonJahrgang() + ((sprachbelegung.belegungVonAbschnitt() == null || sprachbelegung.belegungVonAbschnitt() < 1) ? '.1' : '.' + sprachbelegung.belegungBisAbschnitt())}">05.1</td>
+												<td class="p-tb-1 p-lr-2 ta-cm bo-black" th:text="${(sprachbelegung.belegungBisJahrgang() == null || sprachbelegung.belegungBisJahrgang().isEmpty()) ? '--' : 'bis ' + sprachbelegung.belegungBisJahrgang() + ((sprachbelegung.belegungBisAbschnitt() == null || sprachbelegung.belegungBisAbschnitt() < 1) ? '.1' : '.' + sprachbelegung.belegungBisAbschnitt())}">Q2.2</td>
+												<td class="p-tb-1 p-lr-2 ta-cm bo-black" th:text="${(sprachbelegung.referenzniveau() == null) ? '--' : sprachbelegung.referenzniveau().daten.kuerzel}">B2/C1</td>
 											</tr>
 										</th:block>
 									</table>
