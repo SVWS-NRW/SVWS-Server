@@ -403,6 +403,42 @@ public final class Revision35Updates extends SchemaRevisionUpdateSQL {
 					FROM %1$s WHERE FloskelJahrgang = 'S4'
 					""".formatted(Schema.tab_Floskeln.name()));
 			conn.transactionFlush();
+
+			// SchuelerSprachenfolge - ASDJahrgangVon und ASDJahrgangBis anpassen
+			doUpdate(conn, logger, "- SchuelerSprachenfolge: Passe für die Abendrealschule die Spalten ASDJahrgangVon und ASDJahrgangBis an.",
+					"""
+					UPDATE %1$s ssf JOIN %2$s s ON ssf.Schueler_ID = s.ID
+					JOIN %3$s sla ON s.ID = sla.Schueler_ID AND s.Schuljahresabschnitts_ID = sla.Schuljahresabschnitts_ID AND sla.WechselNr = 0
+					AND sla.ASDSchulgliederung IS NOT NULL AND sla.ASDSchulgliederung = 'R02'
+					SET ssf.ASDJahrgangVon = CASE WHEN ssf.ASDJahrgangVon IS NULL THEN NULL WHEN ssf.ASDJahrgangVon IN ('01','02','03','04') THEN CONCAT('R', SUBSTRING(ssf.ASDJahrgangVon, 2)) ELSE ssf.ASDJahrgangVon END,
+					ssf.ASDJahrgangBis = CASE WHEN ssf.ASDJahrgangBis IS NULL THEN NULL WHEN ssf.ASDJahrgangBis IN ('01','02','03','04') THEN CONCAT('R', SUBSTRING(ssf.ASDJahrgangBis, 2)) ELSE ssf.ASDJahrgangBis END
+					""".formatted(Schema.tab_SchuelerSprachenfolge.name(), Schema.tab_Schueler.name(), Schema.tab_SchuelerLernabschnittsdaten.name()));
+			doUpdate(conn, logger, "- SchuelerSprachenfolge: Passe für das Abendgymnasium und das Kolleg die Spalten ASDJahrgangVon und ASDJahrgangBis an.",
+					"""
+					UPDATE %1$s ssf JOIN %2$s s ON ssf.Schueler_ID = s.ID
+					JOIN %3$s sla ON s.ID = sla.Schueler_ID AND s.Schuljahresabschnitts_ID = sla.Schuljahresabschnitts_ID AND sla.WechselNr = 0
+					AND sla.ASDSchulgliederung IS NOT NULL AND sla.ASDSchulgliederung IN ('G02', 'K02') AND ssf.ASDJahrgangVon IN ('91', '92', '01','02','03','04')
+					SET ssf.ASDJahrgangVon = CASE WHEN ssf.ASDJahrgangVon IS NULL THEN NULL WHEN ssf.ASDJahrgangVon IN ('01','02','03','04','05','06') THEN CONCAT('S', SUBSTRING(ssf.ASDJahrgangVon, 2)) WHEN ssf.ASDJahrgangVon IN ('91','92') THEN CONCAT('V', SUBSTRING(ssf.ASDJahrgangVon, 2)) ELSE ssf.ASDJahrgangVon END,
+					ssf.ASDJahrgangBis = CASE WHEN ssf.ASDJahrgangBis IS NULL THEN NULL WHEN ssf.ASDJahrgangBis IN ('01','02','03','04','05','06') THEN CONCAT('S', SUBSTRING(ssf.ASDJahrgangBis, 2)) WHEN ssf.ASDJahrgangBis IN ('91','92') THEN CONCAT('V', SUBSTRING(ssf.ASDJahrgangBis, 2)) ELSE ssf.ASDJahrgangBis END;
+					""".formatted(Schema.tab_SchuelerSprachenfolge.name(), Schema.tab_Schueler.name(), Schema.tab_SchuelerLernabschnittsdaten.name()));
+
+			// SchuelerSprachpruefungen - ASDJahrgang anpassen
+			doUpdate(conn, logger, "- SchuelerSprachpruefungen: Passe für die Abendrealschule an die Spalte ASDJahrgang an.",
+					"""
+					UPDATE %1$s ssp JOIN %2$s s ON ssp.Schueler_ID = s.ID
+					JOIN %3$s sla ON s.ID = sla.Schueler_ID AND s.Schuljahresabschnitts_ID = sla.Schuljahresabschnitts_ID AND sla.WechselNr = 0
+					AND ssp.ASDJahrgang IS NOT NULL AND sla.ASDSchulgliederung IS NOT NULL AND sla.ASDSchulgliederung = 'R02'
+					SET ssp.ASDJahrgang = CASE WHEN ssp.ASDJahrgang IN ('01','02','03','04') THEN CONCAT('R', SUBSTRING(ssp.ASDJahrgang, 2)) ELSE ssp.ASDJahrgang END;
+					""".formatted(Schema.tab_SchuelerSprachpruefungen.name(), Schema.tab_Schueler.name(), Schema.tab_SchuelerLernabschnittsdaten.name()));
+			doUpdate(conn, logger, "- SchuelerSprachpruefungen: Passe für das Abendgymnasium und das Kolleg an die Spalte ASDJahrgang an.",
+					"""
+					UPDATE %1$s ssp JOIN %2$s s ON ssp.Schueler_ID = s.ID
+					JOIN %3$s sla ON s.ID = sla.Schueler_ID AND s.Schuljahresabschnitts_ID = sla.Schuljahresabschnitts_ID AND sla.WechselNr = 0
+					AND ssp.ASDJahrgang IS NOT NULL AND sla.ASDSchulgliederung IS NOT NULL AND sla.ASDSchulgliederung IN ('G02', 'K02') AND ssp.ASDJahrgang IN ('91', '92', '01','02','03','04','05','06')
+					SET ssp.ASDJahrgang = CASE WHEN ssp.ASDJahrgang IN ('01','02','03','04','05','06') THEN CONCAT('S', SUBSTRING(ssp.ASDJahrgang, 2)) WHEN ssp.ASDJahrgang IN ('91','92') THEN CONCAT('V', SUBSTRING(ssp.ASDJahrgang, 2)) ELSE ssp.ASDJahrgang END;
+					""".formatted(Schema.tab_SchuelerSprachpruefungen.name(), Schema.tab_Schueler.name(), Schema.tab_SchuelerLernabschnittsdaten.name()));
+
+			conn.transactionFlush();
 			return true;
 		} catch (final DBException e) {
 			logger.logLn(e.getMessage());
