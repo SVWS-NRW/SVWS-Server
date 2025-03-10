@@ -27,7 +27,7 @@ public final class DataSchulen extends DataManagerRevised<Long, DTOSchuleNRW, Sc
 	 */
 	public DataSchulen(final DBEntityManager conn) {
 		super(conn);
-		setAttributesNotPatchable("id");
+		setAttributesNotPatchable("id", "schulnummerStatistik");
 		setAttributesRequiredOnCreation("schulnummer", "kurzbezeichnung", "name");
 	}
 
@@ -66,6 +66,7 @@ public final class DataSchulen extends DataManagerRevised<Long, DTOSchuleNRW, Sc
 		result.kuerzel = dtoSchuleNRW.Kuerzel;
 		result.kurzbezeichnung = dtoSchuleNRW.KurzBez;
 		result.schulnummer = dtoSchuleNRW.SchulNr;
+		result.schulnummerStatistik = dtoSchuleNRW.SchulNr_SIM;
 		result.name = (dtoSchuleNRW.Name != null) ? dtoSchuleNRW.Name : "";
 		final Schulform schulform = (dtoSchuleNRW.SchulformNr != null) ? Schulform.data().getWertBySchluessel(dtoSchuleNRW.SchulformNr) : null;
 		final SchulformKatalogEintrag schulformEintrag = (schulform != null) ? schulform.daten(conn.getUser().schuleGetSchuljahr()) : null;

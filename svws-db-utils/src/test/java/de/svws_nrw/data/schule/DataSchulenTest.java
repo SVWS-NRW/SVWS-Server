@@ -119,6 +119,7 @@ class DataSchulenTest {
 				.isInstanceOf(SchulEintrag.class)
 				.hasFieldOrPropertyWithValue("id", 1L)
 				.hasFieldOrPropertyWithValue("schulnummer", "123")
+				.hasFieldOrPropertyWithValue("schulnummerStatistik", "456")
 				.hasFieldOrPropertyWithValue("idSchulform", 10000L)
 				.hasFieldOrPropertyWithValue("strassenname", "RollercoasterRoad")
 				.hasFieldOrPropertyWithValue("hausnummer", "42")
@@ -303,6 +304,7 @@ class DataSchulenTest {
 
 	private static DTOSchuleNRW getDtoSchuleNRW() {
 		final var dtoSchuleNRW = new DTOSchuleNRW(1L, "123");
+		dtoSchuleNRW.SchulNr_SIM = "456";
 		dtoSchuleNRW.Name = "Schöne Schule";
 		dtoSchuleNRW.SchulformNr = "10";
 		dtoSchuleNRW.Strassenname = "RollercoasterRoad";
