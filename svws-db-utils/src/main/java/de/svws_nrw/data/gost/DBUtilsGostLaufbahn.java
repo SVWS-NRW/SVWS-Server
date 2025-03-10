@@ -160,6 +160,7 @@ public final class DBUtilsGostLaufbahn {
 		abidaten.schuelerID = id;
 		abidaten.abiturjahr = abiturjahr;
 		abidaten.schuljahrAbitur = abidaten.abiturjahr - 1;
+		abidaten.schulform = conn.getUser().schuleGetSchulform().name();
 		abidaten.sprachendaten = leistungen.sprachendaten;
 		abidaten.bilingualeSprache = leistungen.bilingualeSprache;
 		abidaten.projektKursThema = leistungen.projektkursThema;
@@ -387,6 +388,7 @@ public final class DBUtilsGostLaufbahn {
 			abidaten.schuelerID = idSchueler;
 			abidaten.abiturjahr = abiturjahr;
 			abidaten.schuljahrAbitur = abidaten.abiturjahr - 1;
+			abidaten.schulform = conn.getUser().schuleGetSchulform().name();
 			abidaten.sprachendaten = leistungen.sprachendaten;
 			abidaten.bilingualeSprache = leistungen.bilingualeSprache;
 			abidaten.projektKursThema = leistungen.projektkursThema;
@@ -550,6 +552,7 @@ public final class DBUtilsGostLaufbahn {
 		abidaten.schuelerID = -1;
 		abidaten.abiturjahr = abijahr;
 		abidaten.schuljahrAbitur = abijahr - 1;
+		abidaten.schulform = conn.getUser().schuleGetSchulform().name();
 		// Erstelle Fake-Einträge für die Sprachenfolge, da die konkrete Belegung der Schüler in der Sprachenfolge unklar ist
 		abidaten.bilingualeSprache = null;               // TODO ggf. auch ein alternatives Defaulting für den bilingualen Zweig erlauben
 		abidaten.sprachendaten.schuelerID = -1;
@@ -763,6 +766,7 @@ public final class DBUtilsGostLaufbahn {
 			abidaten.schuelerID = idSchueler;
 			abidaten.abiturjahr = abiturjahr;
 			abidaten.schuljahrAbitur = abidaten.abiturjahr - 1;
+			abidaten.schulform = conn.getUser().schuleGetSchulform().name();
 			abidaten.sprachendaten = leistungen.sprachendaten;
 			abidaten.bilingualeSprache = leistungen.bilingualeSprache;
 			abidaten.projektKursThema = leistungen.projektkursThema;

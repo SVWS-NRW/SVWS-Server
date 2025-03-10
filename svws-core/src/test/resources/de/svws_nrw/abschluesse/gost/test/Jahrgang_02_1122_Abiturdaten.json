@@ -1,5 +1,6 @@
 {
   "schuelerID" : 1122,
+  "schulform" : "GY",
   "abiturjahr" : 2020,
   "schuljahrAbitur" : 2019,
   "fachbelegungen" : [ {
