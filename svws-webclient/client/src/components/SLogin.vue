@@ -150,7 +150,7 @@
 		authenticating.value = false;
 		firstauth.value = false;
 		if (!props.authenticated)
-			error.value = {name: "Eingabefehler", message: "Passwort oder Benutzername falsch. Bitte achten Sie auch auf die Groß- Kleinschreibung beim Benutzernamen."};
+			error.value = {name: "Eingabefehler", message: "Passwort oder Benutzername falsch."};
 		else {
 			localStorage.setItem("SVWS-Client Last Used Schema", schema.value.name);
 			// localStorage.setItem(`SVWS-Client Last Used Username for Schema_${schema.value.name}`, username.value);
