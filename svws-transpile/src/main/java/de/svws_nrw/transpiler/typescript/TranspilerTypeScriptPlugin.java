@@ -777,7 +777,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 						if (!isBlock)
 							sb.append(getIndent()).append(tmpVar).append(" = ");
 						switch (ct.getBody()) {
-							case final BlockTree bt -> sb.append(convertBlock(bt, false, tmpExprVar));
+							case final BlockTree bt -> sb.append(convertBlock(bt, false, tmpVar));
 							case final StatementTree st -> sb.append(convertStatement(st, true));
 							case final ExpressionTree et -> sb.append(convertExpression(et));
 							default -> throw new TranspilerException("Transpiler Exception: Body Type not yet supported");
@@ -813,7 +813,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 							if (!isBlock)
 								sb.append(getIndent()).append(tmpVar).append(" = ");
 							switch (ct.getBody()) {
-								case final BlockTree bt -> sb.append(convertBlock(bt, false, tmpExprVar));
+								case final BlockTree bt -> sb.append(convertBlock(bt, false, tmpVar));
 								case final StatementTree st -> sb.append(convertStatement(st, true));
 								case final ExpressionTree et -> sb.append(convertExpression(et));
 								default -> throw new TranspilerException("Transpiler Exception: Body Type not yet supported");
