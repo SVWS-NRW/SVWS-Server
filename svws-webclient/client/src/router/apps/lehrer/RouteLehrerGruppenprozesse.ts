@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteParamsRawGeneric } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParamsRawGeneric } from "vue-router";
 
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
@@ -25,8 +25,15 @@ export class RouteLehrerGruppenprozesse extends RouteNode<any, RouteLehrer> {
 		return { id : "" };
 	}
 
+	protected async update() : Promise<void | Error | RouteLocationRaw> {
+		await routeLehrer.data.updateMapStundenplaene();
+	}
+
 	public getProps(to: RouteLocationNormalized): LehrerGruppenprozesseProps {
 		return {
+			apiStatus: api.status,
+			getPDF: routeLehrer.data.getPDF,
+			mapStundenplaene: routeLehrer.data.mapStundenplaene,
 			benutzerKompetenzen : api.benutzerKompetenzen,
 			serverMode: api.mode,
 			schulform: api.schulform,

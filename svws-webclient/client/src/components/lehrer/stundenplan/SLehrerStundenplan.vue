@@ -1,6 +1,8 @@
 <template>
 	<Teleport defer to=".svws-ui-header--actions">
-		<svws-ui-button type="secondary" @click="print"><span class="icon i-ri-printer-line" />Drucken</svws-ui-button>
+		<svws-ui-button-select type="secondary" :dropdown-actions>
+			<template #icon> <svws-ui-spinner spinning v-if="apiStatus.pending" /> <span class="icon i-ri-printer-line" v-else /> </template>
+		</svws-ui-button-select>
 		<svws-ui-modal-hilfe> <hilfe-lehrer-stundenplan /> </svws-ui-modal-hilfe>
 	</Teleport>
 	<div class="page page-flex-col overflow-x-auto">
@@ -20,12 +22,24 @@
 
 <script setup lang="ts">
 
-	import type { LehrerStundenplanProps } from './SLehrerStundenplanProps';
+	import type { LehrerStundenplanProps, DownloadPDFTypen } from './SLehrerStundenplanProps';
 
-	defineProps<LehrerStundenplanProps>();
+	const props = defineProps<LehrerStundenplanProps>();
 
-	const print = () => {
-		window.print();
-	};
+	const dropdownActions = [
+		{ text: "Stundenplan", action: () => downloadPDF("Stundenplan"), default: true },
+		{ text: "Stundenplan mit Pausenaufsichten", action: () => downloadPDF("Stundenplan mit Pausenaufsichten") },
+		{ text: "Stundenplan mit Pausenzeiten", action: () => downloadPDF("Stundenplan mit Pausenzeiten") },
+	];
+
+	async function downloadPDF(title: DownloadPDFTypen) {
+		const { data, name } = await props.getPDF(title);
+		const link = document.createElement("a");
+		link.href = URL.createObjectURL(data);
+		link.download = name;
+		link.target = "_blank";
+		link.click();
+		URL.revokeObjectURL(link.href);
+	}
 
 </script>

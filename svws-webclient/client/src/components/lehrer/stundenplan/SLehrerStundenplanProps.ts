@@ -1,8 +1,10 @@
-import type { StundenplanKalenderwochenzuordnung } from "../../../../../core/src/core/data/stundenplan/StundenplanKalenderwochenzuordnung";
-import type { StundenplanListeEintrag } from "../../../../../core/src/core/data/stundenplan/StundenplanListeEintrag";
-import type { StundenplanManager } from "../../../../../core/src/core/utils/stundenplan/StundenplanManager";
+import type { ApiFile, StundenplanListeEintrag, StundenplanKalenderwochenzuordnung, StundenplanManager } from "@core";
+import type { ApiStatus } from "~/components/ApiStatus";
+
 
 export interface LehrerStundenplanProps {
+	apiStatus: ApiStatus;
+	getPDF: (title: DownloadPDFTypen) => Promise<ApiFile>;
 	ignoreEmpty?: boolean;
 	id: number,
 	stundenplan: () => StundenplanListeEintrag | undefined;
@@ -17,3 +19,5 @@ export interface LehrerStundenplanProps {
 	setGanzerStundenplan: (value: boolean) => Promise<void>;
 	autofocus?: boolean;
 }
+
+export type DownloadPDFTypen = "Stundenplan" | "Stundenplan mit Pausenaufsichten" | "Stundenplan mit Pausenzeiten";
