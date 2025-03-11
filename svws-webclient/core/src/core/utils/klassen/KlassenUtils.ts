@@ -1,6 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { IllegalStateException } from '../../../java/lang/IllegalStateException';
-import { KlassenDaten } from '../../../core/data/klassen/KlassenDaten';
+import { KlassenDaten } from '../../../asd/data/klassen/KlassenDaten';
 import { JavaLong } from '../../../java/lang/JavaLong';
 import { Class } from '../../../java/lang/Class';
 import { JavaString } from '../../../java/lang/JavaString';

@@ -1,5 +1,5 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
-import { KursDaten } from '../../../../core/data/kurse/KursDaten';
+import { KursDaten } from '../../../../asd/data/kurse/KursDaten';
 import { GostKlausurenCollectionRaumData } from '../../../../core/data/gost/klausurplanung/GostKlausurenCollectionRaumData';
 import { GostFach } from '../../../../core/data/gost/GostFach';
 import { SchuelerListeEintrag } from '../../../../core/data/schueler/SchuelerListeEintrag';

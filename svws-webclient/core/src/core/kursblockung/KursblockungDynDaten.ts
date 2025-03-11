@@ -28,7 +28,7 @@ import { LinkedCollection } from '../../core/adt/collection/LinkedCollection';
 import { ArrayMap } from '../../core/adt/map/ArrayMap';
 import { MapUtils } from '../../core/utils/MapUtils';
 import { GostBlockungsergebnisKursSchuelerZuordnungUpdate } from '../../core/data/gost/GostBlockungsergebnisKursSchuelerZuordnungUpdate';
-import { Schueler } from '../../core/data/schueler/Schueler';
+import { Schueler } from '../../asd/data/schueler/Schueler';
 import { KursblockungDynSchueler } from '../../core/kursblockung/KursblockungDynSchueler';
 import { Class } from '../../java/lang/Class';
 import { ListUtils } from '../../core/utils/ListUtils';

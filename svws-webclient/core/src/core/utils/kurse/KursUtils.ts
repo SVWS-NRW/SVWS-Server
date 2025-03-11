@@ -1,5 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { KursDaten } from '../../../core/data/kurse/KursDaten';
+import { KursDaten } from '../../../asd/data/kurse/KursDaten';
 import { IllegalStateException } from '../../../java/lang/IllegalStateException';
 import { JavaLong } from '../../../java/lang/JavaLong';
 import { Class } from '../../../java/lang/Class';

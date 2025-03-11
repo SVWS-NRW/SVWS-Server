@@ -1,8 +1,8 @@
 package de.svws_nrw.data.schueler;
 
-import de.svws_nrw.core.data.schueler.SchuelerLernabschnittNachpruefung;
-import de.svws_nrw.core.data.schueler.SchuelerLernabschnittNachpruefungsdaten;
-import de.svws_nrw.core.data.schueler.SchuelerLernabschnittsdaten;
+import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittNachpruefung;
+import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittNachpruefungsdaten;
+import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittsdaten;
 import de.svws_nrw.asd.data.schule.SchulgliederungKatalogEintrag;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.Note;

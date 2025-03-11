@@ -6,8 +6,9 @@ import java.util.HashMap;
 import java.util.Locale;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import de.svws_nrw.asd.data.schueler.SchuelerLeistungsdaten;
 import de.svws_nrw.asd.types.Note;
-import de.svws_nrw.core.data.schueler.SchuelerLeistungsdaten;
 import de.svws_nrw.module.reporting.proxytypes.lehrer.ProxyReportingLehrer;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLeistungsdaten;

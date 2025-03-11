@@ -15,6 +15,7 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
+import de.svws_nrw.asd.data.schueler.Schueler;
 import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
@@ -25,7 +26,6 @@ import de.svws_nrw.core.data.gost.GostBlockungSchiene;
 import de.svws_nrw.core.data.gost.GostBlockungsdaten;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.GostFachwahl;
-import de.svws_nrw.core.data.schueler.Schueler;
 import de.svws_nrw.core.kursblockung.KursblockungAlgorithmus;
 import de.svws_nrw.core.kursblockung.KursblockungMatrix;
 import de.svws_nrw.core.kursblockung.KursblockungStatic;

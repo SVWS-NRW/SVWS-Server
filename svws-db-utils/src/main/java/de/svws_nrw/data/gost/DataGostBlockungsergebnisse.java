@@ -1,6 +1,7 @@
 package de.svws_nrw.data.gost;
 
 import de.svws_nrw.asd.adt.Pair;
+import de.svws_nrw.asd.data.schueler.Schueler;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
@@ -13,7 +14,6 @@ import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnung;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnungUpdate;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisSchiene;
 import de.svws_nrw.core.data.gost.GostFach;
-import de.svws_nrw.core.data.schueler.Schueler;
 import de.svws_nrw.core.types.KursFortschreibungsart;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;

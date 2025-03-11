@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
-import de.svws_nrw.core.data.kurse.KursDaten;
-import de.svws_nrw.core.data.schueler.Schueler;
+import de.svws_nrw.asd.data.kurse.KursDaten;
+import de.svws_nrw.asd.data.schueler.Schueler;
 import de.svws_nrw.core.types.KursFortschreibungsart;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.DataManagerRevised;
@@ -404,7 +404,7 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 	 * @return die Liste der Kurse
 	 */
 	public static Response getKurslistenFuerAbschnittAsResponse(final DBEntityManager conn, final Long idSchuljahresabschnitt, final boolean mitSchuelerListe) {
-		final @NotNull List<@NotNull KursDaten> daten = DataKurse.getKursListenFuerAbschnitt(conn, idSchuljahresabschnitt, mitSchuelerListe);
+		final @NotNull List<de.svws_nrw.asd.data.kurse.KursDaten> daten = DataKurse.getKursListenFuerAbschnitt(conn, idSchuljahresabschnitt, mitSchuelerListe);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

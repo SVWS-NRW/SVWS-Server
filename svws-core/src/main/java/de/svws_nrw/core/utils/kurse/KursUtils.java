@@ -2,7 +2,7 @@ package de.svws_nrw.core.utils.kurse;
 
 import java.util.Comparator;
 
-import de.svws_nrw.core.data.kurse.KursDaten;
+import de.svws_nrw.asd.data.kurse.KursDaten;
 import jakarta.validation.constraints.NotNull;
 
 /**

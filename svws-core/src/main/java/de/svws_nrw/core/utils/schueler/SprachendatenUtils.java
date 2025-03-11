@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-import de.svws_nrw.core.data.schueler.Sprachbelegung;
-import de.svws_nrw.core.data.schueler.Sprachendaten;
-import de.svws_nrw.core.data.schueler.Sprachpruefung;
+import de.svws_nrw.asd.data.schueler.Sprachbelegung;
+import de.svws_nrw.asd.data.schueler.Sprachendaten;
+import de.svws_nrw.asd.data.schueler.Sprachpruefung;
 import de.svws_nrw.core.types.fach.Sprachpruefungniveau;
 
 import jakarta.validation.constraints.NotNull;

@@ -1,6 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap2D } from '../../../core/adt/map/HashMap2D';
-import { KlassenDaten } from '../../../core/data/klassen/KlassenDaten';
+import { KlassenDaten } from '../../../asd/data/klassen/KlassenDaten';
 import { SchuelerListeEintrag } from '../../../core/data/schueler/SchuelerListeEintrag';
 import { SchuelerStatusKatalogEintrag } from '../../../asd/data/schueler/SchuelerStatusKatalogEintrag';
 import { HashMap } from '../../../java/util/HashMap';
@@ -13,7 +13,7 @@ import { JavaString } from '../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { SchuelerStatus } from '../../../asd/types/schueler/SchuelerStatus';
 import type { Comparator } from '../../../java/util/Comparator';
-import { KursDaten } from '../../../core/data/kurse/KursDaten';
+import { KursDaten } from '../../../asd/data/kurse/KursDaten';
 import type { JavaFunction } from '../../../java/util/function/JavaFunction';
 import { LehrerListeEintrag } from '../../../core/data/lehrer/LehrerListeEintrag';
 import { SchuelerListe } from '../../../core/data/schueler/SchuelerListe';

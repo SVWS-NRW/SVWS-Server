@@ -24,7 +24,7 @@ import { MapUtils } from '../../../core/utils/MapUtils';
 import { GostKursblockungRegelParameterTyp } from '../../../core/types/kursblockung/GostKursblockungRegelParameterTyp';
 import { Map2DUtils } from '../../../core/utils/Map2DUtils';
 import { GostBlockungsergebnisKursSchuelerZuordnungUpdate } from '../../../core/data/gost/GostBlockungsergebnisKursSchuelerZuordnungUpdate';
-import { Schueler } from '../../../core/data/schueler/Schueler';
+import { Schueler } from '../../../asd/data/schueler/Schueler';
 import { PairNN } from '../../../asd/adt/PairNN';
 import { Class } from '../../../java/lang/Class';
 import { DTOUtils } from '../../../core/utils/DTOUtils';

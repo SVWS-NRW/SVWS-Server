@@ -1,6 +1,6 @@
 package de.svws_nrw.module.reporting.types.schueler.lernabschnitte;
 
-import de.svws_nrw.core.data.schueler.SchuelerLernabschnittNachpruefungsdaten;
+import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittNachpruefungsdaten;
 import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;

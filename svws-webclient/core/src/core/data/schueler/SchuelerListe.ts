@@ -1,6 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { KursDaten } from '../../../core/data/kurse/KursDaten';
-import { KlassenDaten } from '../../../core/data/klassen/KlassenDaten';
+import { KursDaten } from '../../../asd/data/kurse/KursDaten';
+import { KlassenDaten } from '../../../asd/data/klassen/KlassenDaten';
 import { SchuelerListeEintrag } from '../../../core/data/schueler/SchuelerListeEintrag';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';

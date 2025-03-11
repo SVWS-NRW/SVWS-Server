@@ -135,7 +135,7 @@
 	import { Fachgruppe } from "../../../../../core/src/asd/types/fach/Fachgruppe";
 	import { Fach } from "../../../../../core/src/asd/types/fach/Fach";
 	import type { AbiturFachbelegung } from "../../../../../core/src/core/data/gost/AbiturFachbelegung";
-	import type { Sprachbelegung } from "../../../../../core/src/core/data/schueler/Sprachbelegung";
+	import type { Sprachbelegung } from "../../../../../core/src/asd/data/schueler/Sprachbelegung";
 	import { SprachendatenUtils } from "../../../../../core/src/core/utils/schueler/SprachendatenUtils";
 	import { GostHalbjahr } from "../../../../../core/src/core/types/gost/GostHalbjahr";
 	import { AbiturFachbelegungHalbjahr } from "../../../../../core/src/core/data/gost/AbiturFachbelegungHalbjahr";

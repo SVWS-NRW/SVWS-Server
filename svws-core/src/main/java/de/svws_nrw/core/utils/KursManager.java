@@ -5,8 +5,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
+import de.svws_nrw.asd.data.kurse.KursDaten;
 import de.svws_nrw.core.data.gost.GostFach;
-import de.svws_nrw.core.data.kurse.KursDaten;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import jakarta.validation.constraints.NotNull;
 

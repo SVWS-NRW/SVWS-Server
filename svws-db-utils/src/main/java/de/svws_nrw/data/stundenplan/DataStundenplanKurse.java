@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.asd.data.kurse.KursDaten;
 import de.svws_nrw.core.adt.map.HashMap2D;
-import de.svws_nrw.core.data.kurse.KursDaten;
 import de.svws_nrw.core.data.stundenplan.StundenplanKurs;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.kurse.DataKurse;

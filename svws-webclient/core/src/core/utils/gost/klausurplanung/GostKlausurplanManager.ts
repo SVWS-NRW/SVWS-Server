@@ -37,7 +37,7 @@ import { HashMap4D } from '../../../../core/adt/map/HashMap4D';
 import { HashMap2D } from '../../../../core/adt/map/HashMap2D';
 import type { JavaSet } from '../../../../java/util/JavaSet';
 import { ListMap3DLongKeys } from '../../../../core/adt/map/ListMap3DLongKeys';
-import { KursDaten } from '../../../../core/data/kurse/KursDaten';
+import { KursDaten } from '../../../../asd/data/kurse/KursDaten';
 import { Map3DUtils } from '../../../../core/utils/Map3DUtils';
 import { KursManager } from '../../../../core/utils/KursManager';
 import { LehrerListeEintrag } from '../../../../core/data/lehrer/LehrerListeEintrag';

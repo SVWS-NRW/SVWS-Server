@@ -14,6 +14,7 @@ import java.util.function.Predicate;
 
 import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.asd.adt.PairNN;
+import de.svws_nrw.asd.data.schueler.Schueler;
 import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.core.adt.LongArrayKey;
@@ -37,7 +38,6 @@ import de.svws_nrw.core.data.kursblockung.SchuelerblockungInput;
 import de.svws_nrw.core.data.kursblockung.SchuelerblockungInputKurs;
 import de.svws_nrw.core.data.kursblockung.SchuelerblockungOutput;
 import de.svws_nrw.core.data.kursblockung.SchuelerblockungOutputFachwahlZuKurs;
-import de.svws_nrw.core.data.schueler.Schueler;
 import de.svws_nrw.core.data.stundenplan.StundenplanKurs;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.exceptions.UserNotificationException;

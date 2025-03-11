@@ -1,6 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { GostBlockungsergebnis } from '../../../core/data/gost/GostBlockungsergebnis';
-import { Schueler } from '../../../core/data/schueler/Schueler';
+import { Schueler } from '../../../asd/data/schueler/Schueler';
 import { GostBlockungSchiene } from '../../../core/data/gost/GostBlockungSchiene';
 import { GostHalbjahr } from '../../../core/types/gost/GostHalbjahr';
 import { ArrayList } from '../../../java/util/ArrayList';

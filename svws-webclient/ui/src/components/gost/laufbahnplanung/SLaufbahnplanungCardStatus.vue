@@ -26,7 +26,7 @@
 	import type { AbiturdatenManager } from "../../../../../core/src/core/abschluss/gost/AbiturdatenManager";
 	import type { GostBelegpruefungErgebnisFehler } from "../../../../../core/src/core/abschluss/gost/GostBelegpruefungErgebnisFehler";
 	import type { List } from "../../../../../core/src/java/util/List";
-	import type { Sprachendaten } from "../../../../../core/src/core/data/schueler/Sprachendaten";
+	import type { Sprachendaten } from "../../../../../core/src/asd/data/schueler/Sprachendaten";
 
 	const props = defineProps<{
 		abiturdatenManager: () => AbiturdatenManager;

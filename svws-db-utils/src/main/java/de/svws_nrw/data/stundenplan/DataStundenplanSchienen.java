@@ -11,8 +11,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.adt.Pair;
+import de.svws_nrw.asd.data.kurse.KursDaten;
 import de.svws_nrw.core.adt.map.HashMap2D;
-import de.svws_nrw.core.data.kurse.KursDaten;
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
 import de.svws_nrw.core.data.stundenplan.StundenplanSchiene;
 import de.svws_nrw.data.DataBasicMapper;

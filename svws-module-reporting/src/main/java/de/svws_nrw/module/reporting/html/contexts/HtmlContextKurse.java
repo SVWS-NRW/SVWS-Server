@@ -9,7 +9,8 @@ import java.util.Locale;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import de.svws_nrw.core.data.kurse.KursDaten;
+
+import de.svws_nrw.asd.data.kurse.KursDaten;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.data.kurse.DataKurse;
 import de.svws_nrw.db.utils.ApiOperationException;

@@ -1,13 +1,13 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { JavaInteger } from '../../../java/lang/JavaInteger';
 import { IllegalStateException } from '../../../java/lang/IllegalStateException';
-import { Sprachbelegung } from '../../../core/data/schueler/Sprachbelegung';
+import { Sprachbelegung } from '../../../asd/data/schueler/Sprachbelegung';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { Sprachpruefung } from '../../../core/data/schueler/Sprachpruefung';
+import { Sprachpruefung } from '../../../asd/data/schueler/Sprachpruefung';
 import { Sprachpruefungniveau } from '../../../core/types/fach/Sprachpruefungniveau';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
-import { Sprachendaten } from '../../../core/data/schueler/Sprachendaten';
+import { Sprachendaten } from '../../../asd/data/schueler/Sprachendaten';
 import type { Comparator } from '../../../java/util/Comparator';
 
 export class SprachendatenUtils extends JavaObject {

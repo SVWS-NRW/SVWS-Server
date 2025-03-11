@@ -8,6 +8,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.ArrayList;
 
+import de.svws_nrw.asd.data.schueler.Schueler;
 import de.svws_nrw.core.adt.LongArrayKey;
 import de.svws_nrw.core.adt.collection.LinkedCollection;
 import de.svws_nrw.core.adt.map.ArrayMap;
@@ -22,7 +23,6 @@ import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnung;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnungUpdate;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.GostFachwahl;
-import de.svws_nrw.core.data.schueler.Schueler;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.exceptions.UserNotificationException;
 import de.svws_nrw.core.logger.Logger;
