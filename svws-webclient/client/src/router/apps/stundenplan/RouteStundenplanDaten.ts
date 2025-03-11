@@ -48,7 +48,7 @@ export class RouteStundenplanDaten extends RouteNode<any, RouteStundenplan> {
 			removeAufsichtsbereiche: routeStundenplan.data.removeAufsichtsbereiche,
 			importAufsichtsbereiche: routeStundenplan.data.importAufsichtsbereiche,
 			listAufsichtsbereiche: () => routeStundenplan.data.listAufsichtsbereiche,
-			gotoKatalog: routeStundenplan.data.gotoKatalog,
+			gotoVorlage: routeStundenplan.data.gotoKatalog,
 			setSettingsDefaults: routeStundenplan.data.setSettingsDefaults,
 		};
 	}

@@ -1,12 +1,12 @@
 <template>
 	<slot :open-modal />
 	<svws-ui-modal v-model:show="show" :type="listAufsichtsbereiche.size() < 1 ? 'danger' : 'default'" size="medium">
-		<template #modalTitle>Aufsichtsbereiche aus Katalog importieren</template>
+		<template #modalTitle>Aufsichtsbereiche aus Vorlage importieren</template>
 		<template #modalContent>
 			<div class="flex justify-center flex-wrap items-center gap-1">
 				<svws-ui-table v-if="listAufsichtsbereiche.size()" :items="listAufsichtsbereiche" clickable :clicked="aufsichtsbereich" selectable v-model="selected" />
-				<div v-else>Importieren nicht möglich, keine (zusätzlichen) Einträge im Aufsichtsbereiche-Katalog hinterlegt.</div>
-				<div>Neue Einträge im Aufsichtsbereiche-Katalog können unter Schule angelegt werden</div>
+				<div v-else>Importieren nicht möglich, keine (zusätzlichen) Einträge in der Aufsichtsbereiche-Vorlage hinterlegt.</div>
+				<div>Neue Einträge in der Aufsichtsbereiche-Vorlage können unter Schule angelegt werden</div>
 				<!-- TODO Link einfügen und Beschreibung anpassen -->
 			</div>
 		</template>

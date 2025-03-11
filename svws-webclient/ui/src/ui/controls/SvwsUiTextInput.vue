@@ -88,7 +88,7 @@
 
 <script setup lang="ts" generic="V extends Validator">
 
-	import { ref, computed, watch, type ComputedRef, type Ref, onBeforeMount, onMounted, onBeforeUnmount, useId } from "vue";
+	import { ref, computed, watch, onBeforeMount, onMounted, onBeforeUnmount, useId } from "vue";
 	import type { Validator } from "../../../../core/src/asd/validate/Validator";
 	import { ValidatorFehlerart } from "../../../../core/src/asd/validate/ValidatorFehlerart";
 
@@ -238,11 +238,6 @@
 
 	const content = computed<string | null>(() => data.value);
 
-	defineExpose<{
-		content: ComputedRef<string | null>,
-		input: Ref<HTMLInputElement | null>,
-		reset: () => void;
-		doFocus: () => void;
-	}>({ content, input, reset, doFocus });
+	defineExpose({ content, input, reset, doFocus });
 
 </script>
