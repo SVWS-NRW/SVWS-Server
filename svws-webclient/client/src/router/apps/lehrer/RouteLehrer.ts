@@ -17,6 +17,7 @@ import { api } from "~/router/Api";
 import { ConfigElement } from "~/components/Config";
 import type { LehrerAuswahlProps } from "~/components/lehrer/SLehrerAuswahlProps";
 import { AppMenuGroup } from "@ui";
+import {routeLehrerEinwilligungen} from "~/router/apps/lehrer/einwilligungen/RouteLehrerEinwilligungen";
 
 const SLehrerAuswahl = () => import("~/components/lehrer/SLehrerAuswahl.vue");
 const SLehrerApp = () => import("~/components/lehrer/SLehrerApp.vue");
@@ -32,6 +33,7 @@ export class RouteLehrer extends RouteAuswahlNode<LehrerListeManager, RouteDataL
 			routeLehrerPersonaldaten,
 			routeLehrerStundenplan,
 			routeLehrerUnterrichtsdaten,
+			routeLehrerEinwilligungen,
 			routeLehrerGruppenprozesse,
 			routeLehrerNeu,
 		];

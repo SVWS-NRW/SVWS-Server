@@ -65,8 +65,7 @@
 		await props.gotoDefaultView(null);
 	}
 
-	// TODO PersonenTyp.Lehrer hinzufügen
-	const personTypen = computed<PersonTyp[]>(() => [PersonTyp.SCHUELER]);
+	const personTypen = computed<PersonTyp[]>(() => [PersonTyp.LEHRER, PersonTyp.SCHUELER]);
 
 	const auswahlPersonTyp = computed<PersonTyp>({
 		get: () => PersonTyp.getByID(einwilligungsart.value.personTyp) ?? PersonTyp.SCHUELER,

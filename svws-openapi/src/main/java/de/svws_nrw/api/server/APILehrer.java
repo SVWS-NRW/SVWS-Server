@@ -762,32 +762,4 @@ public class APILehrer {
 				BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN);
 	}
 
-	/**
-	 * Die OpenAPI-Methode für das Löschen einer Lehrereinwilligung
-	 *
-	 * @param schema               das Datenbankschema, auf welchem die Abfrage ausgeführt werden soll
-	 * @param idLehrer             die Lehrer-ID
-	 * @param idEinwilligungsart   die Datenbank-ID der Lehrereinwilligung
-	 * @param request              die Informationen zur HTTP-Anfrage
-	 *
-	 * @return HTTP_204, wenn erfolgreich. <br>
-	 *         HTTP_403 bei fehlender Berechtigung,<br>
-	 *         HTTP_404, wenn der Eintrag nicht gefunden wurde
-	 */
-	@DELETE
-	@Path("/{idLehrer : \\d+}/einwilligungen/{idEinwilligungsart : \\d+}")
-	@Operation(summary = "Löscht eine Lehrereinwilligung", description = "Löscht die Lehrereinwilligung mit der angegebenen ID"
-			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrereinwilligungen besitzt.")
-	@ApiResponse(responseCode = "204", description = "Die Einwilligung des Lehrers wurde gelöscht")
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Lehrerdaten zu ändern.")
-	@ApiResponse(responseCode = "404", description = "Keine Lehrereinwilligung mit der angegebenen ID gefunden")
-	public Response deleteLehrerEinwilligung(@PathParam("schema") final String schema, @PathParam("idLehrer") final long idLehrer,
-			@PathParam("idEinwilligungsart") final long idEinwilligungsart,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerEinwilligungen(conn, idLehrer)
-						.deleteAsResponse(new Long[]{idLehrer, idEinwilligungsart}),
-				request, ServerMode.DEV,
-				BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN);
-	}
-
 }

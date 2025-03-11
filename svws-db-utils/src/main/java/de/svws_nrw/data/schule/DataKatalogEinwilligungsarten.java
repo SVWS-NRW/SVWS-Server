@@ -6,6 +6,7 @@ import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.schule.PersonTyp;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.data.lehrer.DataLehrerEinwilligungen;
 import de.svws_nrw.data.schueler.DataSchuelerEinwilligungen;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogEinwilligungsart;
@@ -71,9 +72,18 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 	@Override
 	public List<Einwilligungsart> getAll() throws ApiOperationException {
 		final List<DTOKatalogEinwilligungsart> katalog = conn.queryAll(DTOKatalogEinwilligungsart.class);
-		final Map<Long, Long> mapAnzahlEinwilligungenByEinwilligungsart = conn.queryList(DTOSchuelerDatenschutz.QUERY_ALL.concat(" WHERE e.Datenschutz_ID IS NOT NULL"),
+		final Map<Long, Long> mapSchuelerEinwilligungen = conn.queryList(DTOSchuelerDatenschutz.QUERY_ALL.concat(" WHERE e.Datenschutz_ID IS NOT NULL"),
 				DTOSchuelerDatenschutz.class).stream().collect(Collectors.groupingBy(s -> s.Datenschutz_ID, Collectors.counting()));
-		return katalog.stream().map(ea -> map(ea, mapAnzahlEinwilligungenByEinwilligungsart.computeIfAbsent(ea.ID, k -> 0L).intValue())).toList();
+		final Map<Long, Long> mapLehrerEinwilligugen = conn.queryList(DTOLehrerDatenschutz.QUERY_ALL.concat(" WHERE e.DatenschutzID IS NOT NULL"),
+				DTOLehrerDatenschutz.class).stream().collect(Collectors.groupingBy(l -> l.DatenschutzID, Collectors.counting()));
+		return katalog.stream().map(ea -> {
+			int anzahlEinwilligungen = 0;
+			if (ea.personTyp == PersonTyp.SCHUELER)
+				anzahlEinwilligungen = mapSchuelerEinwilligungen.computeIfAbsent(ea.ID, a -> 0L).intValue();
+			else if (ea.personTyp == PersonTyp.LEHRER)
+				anzahlEinwilligungen = mapLehrerEinwilligugen.computeIfAbsent(ea.ID, a -> 0L).intValue();
+			return map(ea, anzahlEinwilligungen);
+		}).toList();
 	}
 
 
@@ -84,8 +94,13 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 		final DTOKatalogEinwilligungsart einwilligung = conn.queryByKey(DTOKatalogEinwilligungsart.class, id);
 		if (einwilligung == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Die Einwilligungsart mit der ID %d wurde nicht gefunden.".formatted(id));
-		final int anzahlEinwilligungen = conn.queryList(DTOSchuelerDatenschutz.QUERY_BY_DATENSCHUTZ_ID.replace("SELECT e ", "SELECT COUNT(e) "),
+		int anzahlEinwilligungen = 0;
+		if (einwilligung.personTyp == PersonTyp.SCHUELER)
+			anzahlEinwilligungen = conn.queryList(DTOSchuelerDatenschutz.QUERY_BY_DATENSCHUTZ_ID.replace("SELECT e ", "SELECT COUNT(e) "),
 				DTOSchuelerDatenschutz.class, einwilligung.ID).size();
+		else if (einwilligung.personTyp == PersonTyp.LEHRER)
+			anzahlEinwilligungen = conn.queryList(DTOLehrerDatenschutz.QUERY_BY_DATENSCHUTZID.replace("SELECT e ", "SELECT COUNT(e) "),
+					DTOLehrerDatenschutz.class, einwilligung.ID).size();
 		return map(einwilligung, anzahlEinwilligungen);
 	}
 
@@ -228,11 +243,16 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 		operationResponse.id = dtoEinwilligungsArt.ID;
 
 		// Kein Schüler darf Einwilligungen dieser Einwilligungsart haben
-		final List<Long> einwilligungIds = new DataSchuelerEinwilligungen(conn, 1L).getIDsByEinwilligungsartId(dtoEinwilligungsArt.ID);
-		if (!einwilligungIds.isEmpty())
+		final List<Long> schuelerEinwilligungIds = new DataSchuelerEinwilligungen(conn, 1L).getIDsByEinwilligungsartId(dtoEinwilligungsArt.ID);
+		if (!schuelerEinwilligungIds.isEmpty())
 			operationResponse.log.add(
-					"Einwilligungsart %s (ID: %d) hat noch %d verknüpfte(n) Einwilligungen.".formatted(dtoEinwilligungsArt.Bezeichnung, dtoEinwilligungsArt.ID, einwilligungIds.size()));
+					"Einwilligungsart %s (ID: %d) hat noch %d verknüpfte(n) Schülereinwilligungen.".formatted(dtoEinwilligungsArt.Bezeichnung, dtoEinwilligungsArt.ID, schuelerEinwilligungIds.size()));
 
+		// Kein Lehrer darf Einwilligungen dieser Einwilligungsart haben
+		final List<Long> lehrerEinwilligungIds = new DataLehrerEinwilligungen(conn, 1L).getIDsByEinwilligungsartId(dtoEinwilligungsArt.ID);
+		if (!lehrerEinwilligungIds.isEmpty())
+			operationResponse.log.add(
+					"Einwilligungsart %s (ID: %d) hat noch %d verknüpfte(n) Lehrereinwilligungen.".formatted(dtoEinwilligungsArt.Bezeichnung, dtoEinwilligungsArt.ID, lehrerEinwilligungIds.size()));
 		return operationResponse;
 	}
 }

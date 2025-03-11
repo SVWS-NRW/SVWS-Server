@@ -8056,30 +8056,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der DELETE-Methode deleteLehrerEinwilligung für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/{idLehrer : \d+}/einwilligungen/{idEinwilligungsart : \d+}
-	 *
-	 * Löscht die Lehrereinwilligung mit der angegebenen IDDabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrereinwilligungen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 204: Die Einwilligung des Lehrers wurde gelöscht
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Lehrerdaten zu ändern.
-	 *   Code 404: Keine Lehrereinwilligung mit der angegebenen ID gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} idLehrer - der Pfad-Parameter idLehrer
-	 * @param {number} idEinwilligungsart - der Pfad-Parameter idEinwilligungsart
-	 */
-	public async deleteLehrerEinwilligung(schema : string, idLehrer : number, idEinwilligungsart : number) : Promise<void> {
-		const path = "/db/{schema}/lehrer/{idLehrer : \\d+}/einwilligungen/{idEinwilligungsart : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{idLehrer\s*(:[^{}]+({[^{}]+})*)?}/g, idLehrer.toString())
-			.replace(/{idEinwilligungsart\s*(:[^{}]+({[^{}]+})*)?}/g, idEinwilligungsart.toString());
-		await super.deleteJSON(path, null);
-		return;
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode getLehrerAbgangsgruende für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/allgemein/abgangsgruende
 	 *
 	 * Erstellt eine Liste aller in dem Katalog vorhanden Lehrerabgangsgründe unter Angabe der ID, der Bezeichnung und des Statistikschlüssels. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
