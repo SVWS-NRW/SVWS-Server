@@ -6,20 +6,20 @@ import { routeApp } from "../RouteApp";
 import { RouteManager } from "~/router/RouteManager";
 import { routeStundenplan } from "./RouteStundenplan";
 
-interface RouteStateStundenplanKataloge extends RouteStateInterface {
+interface RouteStateStundenplanVorlage extends RouteStateInterface {
 	idSchuljahresabschnitt: number;
 	auswahl: StundenplanListeEintrag | undefined;
 	mapKatalogeintraege: Map<number, StundenplanListeEintrag>;
 }
 
-const defaultState = <RouteStateStundenplanKataloge> {
+const defaultState = <RouteStateStundenplanVorlage> {
 	idSchuljahresabschnitt: -1,
 	auswahl: undefined,
 	mapKatalogeintraege: new Map(),
 	view: routeKatalogZeitraster,
 };
 
-export class RouteDataStundenplanKataloge extends RouteData<RouteStateStundenplanKataloge> {
+export class RouteDataStundenplanVorlage extends RouteData<RouteStateStundenplanVorlage> {
 
 	private vorlageEintrag : StundenplanListeEintrag;
 

@@ -1,7 +1,7 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { TabData } from "@ui";
-import type { StundenplanKatalogeAppProps } from "~/components/stundenplan/SStundenplanKatalogeAppProps";
 import type { StundenplanAuswahlProps } from "~/components/stundenplan/SStundenplanAuswahlProps";
+import type { StundenplanVorlageProps } from "~/components/stundenplan/SStundenplanVorlageProps";
 
 import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
 
@@ -10,24 +10,24 @@ import { RouteNode } from "~/router/RouteNode";
 
 import { routeApp } from "~/router/apps/RouteApp";
 
+import type { RouteStundenplan } from "./RouteStundenplan";
 import { routeKatalogPausenzeiten } from "./kataloge/RouteKatalogPausenzeiten";
 import { routeKatalogAufsichtsbereiche } from "./kataloge/RouteKatalogAufsichtsbereiche";
 import { routeKatalogRaeume } from "./kataloge/RouteKatalogRaeume";
 import { routeKatalogZeitraster } from "./kataloge/RouteKatalogZeitraster";
-import type { RouteStundenplan } from "./RouteStundenplan";
 import { api } from "~/router/Api";
-import { RouteDataStundenplanKataloge } from "./RouteDataStundenplanKataloge";
+import { RouteDataStundenplanVorlage } from "./RouteDataStundenplanVorlage";
 
-const SStundenplanAuswahl = () => import("~/components/stundenplan/SStundenplanAuswahl.vue")
-const SStundenplanKatalogeApp = () => import("~/components/stundenplan/SStundenplanKatalogeApp.vue")
+const SStundenplanAuswahl = () => import("~/components/stundenplan/SStundenplanAuswahl.vue");
+const SStundenplanVorlage = () => import("~/components/stundenplan/SStundenplanVorlage.vue");
 
-export class RouteStundenplanKataloge extends RouteNode<RouteDataStundenplanKataloge, RouteStundenplan> {
+export class RouteStundenplanVorlage extends RouteNode<RouteDataStundenplanVorlage, RouteStundenplan> {
 
 	public constructor() {
 		super(Schulform.values(), [
 			BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN,
 			BenutzerKompetenz.STUNDENPLAN_FUNKTIONSBEZOGEN_ANSEHEN,
-		], "stundenplan.kataloge", "stundenplan/kataloge", SStundenplanKatalogeApp, new RouteDataStundenplanKataloge());
+		], "stundenplan.kataloge", "stundenplan/kataloge", SStundenplanVorlage, new RouteDataStundenplanVorlage());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Kataloge";
@@ -66,7 +66,7 @@ export class RouteStundenplanKataloge extends RouteNode<RouteDataStundenplanKata
 		};
 	}
 
-	public getProps(to: RouteLocationNormalized): StundenplanKatalogeAppProps {
+	public getProps(to: RouteLocationNormalized): StundenplanVorlageProps {
 		return {
 			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab),
 		};
@@ -84,4 +84,4 @@ export class RouteStundenplanKataloge extends RouteNode<RouteDataStundenplanKata
 
 }
 
-export const routeStundenplanKataloge = new RouteStundenplanKataloge();
+export const routeStundenplanVorlage = new RouteStundenplanVorlage();

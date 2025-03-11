@@ -20,7 +20,7 @@ import { routeStundenplanKlasse } from "~/router/apps/stundenplan/RouteStundenpl
 import { routeStundenplanUnterrichte } from "./RouteStundenplanUnterrichte";
 import { RouteDataStundenplan } from "~/router/apps/stundenplan/RouteDataStundenplan";
 import { routeError } from "~/router/error/RouteError";
-import { routeStundenplanKataloge } from "./RouteStundenplanKataloge";
+import { routeStundenplanVorlage } from "./RouteStundenplanVorlage";
 import { routeStundenplanRaum } from "./RouteStundenplanRaum";
 import { ConfigElement } from "~/components/Config";
 import { AppMenuGroup } from "@ui";
@@ -64,14 +64,14 @@ export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> 
 				throw new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt.");
 			await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
 			if ((id === -1) || (this.data.auswahl === undefined))
-				return routeStundenplanKataloge.getRouteDefaultChild();
+				return routeStundenplanVorlage.getRouteDefaultChild();
 			if (id !== undefined) {
 				const eintrag = this.data.mapKatalogeintraege.get(id);
 				if (eintrag === undefined)
 					return this.getRoute();
 				await this.data.setEintrag(eintrag);
 				if (this.data.auswahl.id === -1)
-					return routeStundenplanKataloge.getRouteDefaultChild();
+					return routeStundenplanVorlage.getRouteDefaultChild();
 			}
 			if (to.name === this.name)
 				return this.getRouteDefaultChild();

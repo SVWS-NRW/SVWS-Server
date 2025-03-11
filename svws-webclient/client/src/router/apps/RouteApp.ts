@@ -8,7 +8,7 @@ import { RoutingStatus } from "~/router/RoutingStatus";
 import { RouteDataApp } from "~/router/apps/RouteDataApp";
 import { api } from "~/router/Api";
 import { routeBenutzerprofil } from "./benutzerprofil/RouteBenutzerprofil";
-import { routeStundenplanKataloge } from "./stundenplan/RouteStundenplanKataloge";
+import { routeStundenplanVorlage } from "./stundenplan/RouteStundenplanVorlage";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { routeKlassen } from "~/router/apps/klassen/RouteKlassen";
@@ -127,7 +127,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		];
 		super.children = [
 			...this._menuMain,
-			routeStundenplanKataloge,
+			routeStundenplanVorlage,
 			...this._menuSchule,
 			...this._menuEinstellungen,
 		];
