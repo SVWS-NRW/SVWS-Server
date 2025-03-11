@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@source "./../../ui";
 
 @import "./colors.css";
 @import "./borders.css";
