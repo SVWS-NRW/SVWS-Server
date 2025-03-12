@@ -1,0 +1,61 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Clientconfig können bearbeitet werden > Clientconfig 1`] = `"{ "user": [], "global": [] }"`;
+
+exports[`Clientconfig können bearbeitet werden > Clientconfig 2`] = `"{ "user": [{"key":"testkey","value":"testvalue"}], "global": [] }"`;
+
+exports[`Leistung und Teilleistung können bearbeitet werden > Leistungen 1`] = `
+[
+  1390,
+  null,
+  null,
+  false,
+  0,
+  null,
+]
+`;
+
+exports[`Leistung und Teilleistung können bearbeitet werden > Leistungen 2`] = `
+[
+  1390,
+  "NB",
+  "6",
+  true,
+  3,
+  "ist ein test",
+]
+`;
+
+exports[`Leistung und Teilleistung können bearbeitet werden > Teilleistungen 1`] = `
+[
+  {
+    "id": 10931,
+    "note": null,
+  },
+  {
+    "id": 10932,
+    "note": null,
+  },
+  {
+    "id": 10933,
+    "note": null,
+  },
+]
+`;
+
+exports[`Leistung und Teilleistung können bearbeitet werden > Teilleistungen 2`] = `
+[
+  {
+    "id": 10931,
+    "note": "6",
+  },
+  {
+    "id": 10932,
+    "note": "6",
+  },
+  {
+    "id": 10933,
+    "note": "6",
+  },
+]
+`;

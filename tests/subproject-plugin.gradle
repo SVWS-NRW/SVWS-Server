@@ -93,8 +93,8 @@ task generateDockerComposeFile {
 				'GRADLE_PLACEHOLDER_MARIADB_CONTAINER_NAME': "container_name: ${project.ext.DB_CONTAINER_NAME}",
 				'GRADLE_PLACEHOLDER_APP_CONTAINER_NAME'    : "container_name: ${project.ext.APP_CONTAINER_NAME}",
 				'GRADLE_PLACEHOLDER_DEFAULT_SCHEMA'        : "${project.ext.TARGET_TEST_DATA_BASES[0].replace('.sqlite', '')}",
-				'GRADLE_PLACEHOLDER_MARIADB_SERVICE_NAME'        : "${project.ext.DB_SERVICE_NAME}",
-				'GRADLE_PLACEHOLDER_APP_IMAGE_NAME' : "${project.ext.APP_IMAGE_NAME}",
+				'GRADLE_PLACEHOLDER_MARIADB_SERVICE_NAME'  : "${project.ext.DB_SERVICE_NAME}",
+				'GRADLE_PLACEHOLDER_APP_IMAGE_NAME'        : "${project.ext.APP_IMAGE_NAME}",
 		]
 		def replacementsLokal = [
 				'GRADLE_PLACEHOLDER_MARIADB_FORWARDING_PORT': "ports:\n      - \"${project.ext.FORWARDED_DB_PORT}:3306\"",
@@ -135,9 +135,15 @@ task generateDockerFile {
 	def outputFile = file("$buildDirPath/tempdocker/Dockerfile")
 
 	doLast {
+
+		def enmReplacement = "localhost"
+		if (project.ext.has('ENM_CONTAINER_NAME')) {
+			enmReplacement = "${project.ext.ENM_CONTAINER_NAME}"
+		}
 		// Definiere welche Platzhalter durch welche Werte ersetzt werden sollen.
 		def replacements = [
 				'GRADLE_PLACEHOLDER_MARIADB_CONTAINER_NAME': "${project.ext.DB_CONTAINER_NAME}",
+				'GRADLE_PLACEHOLDER_ENM_HOST'              : "${enmReplacement}"
 		]
 
 		// Lese das Template ein
@@ -158,11 +164,11 @@ task generateDockerFile {
 
 
 /**
-* Dieser Task generiert das Shell-Skript zum Erstellen des Keystores für den SVWS-Server.
-*/
+ * Dieser Task generiert das Shell-Skript zum Erstellen des Keystores für den SVWS-Server.
+ */
 task generateKeyStoreScript() {
 	description = 'Generiert das Shell-Skript zum Erstellen des Keystores für den SVWS-Server'
-	dependsOn 'erzeugeOrdnerFuerTestumgebung'
+	dependsOn 'generateDockerFile'
 
 	doLast {
 		def outputFile = file("$buildDirPath/tempdocker/init-scripts/create-keystore.sh")
@@ -330,11 +336,13 @@ task seedDatabase() {
 
 			// Erstelle einen Trustmanager welche alle Zertifikate erlaubt
 			def trustAllCerts = [
-					new X509TrustManager () {
+					new X509TrustManager() {
 						@Override
 						void checkClientTrusted(X509Certificate[] chain, String authType) {}
+
 						@Override
 						void checkServerTrusted(X509Certificate[] chain, String authType) {}
+
 						@Override
 						X509Certificate[] getAcceptedIssuers() { return new X509Certificate[0] }
 					}

@@ -156,12 +156,15 @@ task integrationTest() {
 	dependsOn 'tests-server-api:testAgainstDockerEnv' // Vite API Tests
 	dependsOn 'tests-e2e-client:testAgainstDockerEnv' // Playwright E2E Tests
 	dependsOn 'tests-server-dav:testAgainstDockerEnv' // Vite API Dav Tests
+	dependsOn 'tests-server-enm:testAgainstDockerEnv' // Vite API ENM Tests
+
 
 	// Stoppe die container für die jeweiligen Testumgebungen nach den Integrationstests
 	// Jeden ausgeführte Testpackage sollte auch hier auftauchen
 	finalizedBy 'tests-server-api:removeTestEnvironmentEntryPoint'
 	finalizedBy 'tests-e2e-client:removeTestEnvironmentEntryPoint'
 	finalizedBy 'tests-server-dav:removeTestEnvironmentEntryPoint'
+ 	finalizedBy 'tests-server-enm:removeTestEnvironmentEntryPoint'
 
 	// Aggregiere die Informationen aus allen Tests
 	finalizedBy 'checkJUnitResults'
@@ -248,15 +251,20 @@ task integrationTestLocalOnlyNoDocker() {
  * @throws GradleException falls ein beliebiger Integrationstest fehlgeschlagen ist.
  */
 task checkJUnitResults {
-	// Die Test sollten komplett abgeschlossen (und rückgebaut) werden bevor die Ergebnisse evaluiert werden
+	// Die Tests sollten komplett abgeschlossen (und rückgebaut) werden bevor die Ergebnisse evaluiert werden
 	mustRunAfter 'tests-server-api:removeTestEnvironmentEntryPoint'
 	mustRunAfter 'tests-e2e-client:removeTestEnvironmentEntryPoint'
+	mustRunAfter 'tests-server-dav:removeTestEnvironmentEntryPoint'
+	mustRunAfter 'tests-server-enm:removeTestEnvironmentEntryPoint'
 
 	// Die Liste der JUnit Report Files. Hier sollten neue Einträge ergänzt werden wenn weitere Testpackages geschrieben werden.
 	def junitReportFiles = [
 			'tests-server-api/build/test-results/api-test-results.xml',
 			'tests-e2e-client/build/test-results/zusammenfassung/e2e-results.xml',
-			'tests-server-dav/build/test-results/api-test-results.xml'
+			'tests-server-dav/build/test-results/api-test-results.xml',
+			'tests-server-enm/build/test-results/after-setup-test-results.xml',
+			'tests-server-enm/build/test-results/setup-test-results.xml',
+			'tests-server-enm/build/test-results/sync-test-results.xml'
 	]
 	doLast {
 		int totalTests = 0

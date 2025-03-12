@@ -16,6 +16,13 @@ COPY build/tempdocker/appConf/svws_config.json.template.GRADLE_PLACEHOLDER_MARIA
 COPY build/tempdocker/init-scripts/startup.sh /opt/app/svws/startup.sh
 COPY build/tempdocker/init-scripts /etc/app/svws/init-scripts
 
+# Kopiere SSL Zertifakte für die JDK
+RUN mkdir /var/ssl
+RUN openssl req -subj '/CN=GRADLE_PLACEHOLDER_ENM_HOST' -new -newkey rsa:2048 -days 3650 -nodes -x509 -keyout /var/ssl/private.key -out /var/ssl/public.pem
+
+# Füge der JDK im Container das Zertifikat hinzu
+RUN keytool -importcert -noprompt -keystore /opt/java/openjdk/lib/security/cacerts -alias localhost -file /var/ssl/public.pem
+
 # Kopiere die Datenbanken
 COPY build/tempdatabases /etc/app/svws/testdatabases
 

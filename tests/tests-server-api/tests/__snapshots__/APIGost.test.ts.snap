@@ -198,6 +198,75 @@ GostJahrgangsdaten {
 }
 `;
 
+exports[`Gesamtschule Tests > gegen { schema: 'GymAbi01' } > getGostAbiturjahrgang 2`] = `
+GostJahrgangsdaten {
+  "abiturjahr": 2021,
+  "anzahlKursblockungen": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+  ],
+  "beginnZusatzkursGE": "Q2.1",
+  "beginnZusatzkursSW": "Q2.1",
+  "beratungslehrer": ArrayList {
+    "addFirst": [Function],
+    "addLast": [Function],
+    "elementData": [
+      GostBeratungslehrer {
+        "id": 9,
+        "kuerzel": "BISZ",
+        "nachname": "Biszkeborn",
+        "vorname": "Stephan",
+      },
+      GostBeratungslehrer {
+        "id": 51,
+        "kuerzel": "LANG",
+        "nachname": "Langes",
+        "vorname": "Antje",
+      },
+      GostBeratungslehrer {
+        "id": 56,
+        "kuerzel": "MAUN",
+        "nachname": "Maunert",
+        "vorname": "Florian",
+      },
+    ],
+    "getFirst": [Function],
+    "getLast": [Function],
+    "modCount": 3,
+    "removeFirst": [Function],
+    "removeLast": [Function],
+  },
+  "bezeichnung": "Abi 2021 (EF)",
+  "existierenNotenInLeistungsdaten": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false,
+  ],
+  "halbjahr": 2,
+  "hatZusatzkursGE": true,
+  "hatZusatzkursSW": true,
+  "istAbgeschlossen": false,
+  "istBlockungFestgelegt": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false,
+  ],
+  "jahrgang": "EF",
+  "textBeratungsbogen": null,
+  "textMailversand": null,
+}
+`;
+
 exports[`Gesamtschule Tests > gegen { schema: 'GymAbi01' } > getGostAbiturjahrgangBlockungsliste 1`] = `
 ArrayList {
   "addFirst": [Function],

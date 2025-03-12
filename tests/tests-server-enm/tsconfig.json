@@ -1,0 +1,16 @@
+{
+	"extends": "../../tsconfig.base.json",
+	"compilerOptions": {
+		"isolatedModules": false,
+		"moduleResolution": "node16",
+		"outDir": "./dist",
+		"baseUrl": "../vite_tests",
+		"paths": {
+			"@core": ["../../svws-webclient/core/src/index.ts"]
+		}
+	},
+	"include": [
+		"./*.ts",
+		"./tests/**/*"
+	]
+}

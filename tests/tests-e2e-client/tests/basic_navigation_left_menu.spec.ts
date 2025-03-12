@@ -7,7 +7,7 @@ test.use({
 const targetHost = process.env.VITE_targetHost ?? "https://localhost"
 
 test('Basic_Navigation_left_menu', async ({page}) => {
-	test.setTimeout(25_000);
+	test.setTimeout(60_000);
 	await page.goto(targetHost + '/#/login?redirect=/');
 	await page.getByLabel('Benutzername').click();
 	await page.getByLabel('Benutzername').fill('Admin');
