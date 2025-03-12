@@ -10,6 +10,7 @@ import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 import de.svws_nrw.module.reporting.types.klasse.ReportingKlasse;
 import de.svws_nrw.module.reporting.types.kurs.ReportingKurs;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
+import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
 
 /**
@@ -234,6 +235,18 @@ public class ReportingStundenplanungUnterricht extends ReportingBaseType {
 	 */
 	public List<Long> schienen() {
 		return schienen;
+	}
+
+	/**
+	 * Gibt die Schüler zurück, die diesem Unterricht durch die Klasse oder den Kurs zugeordnet sind.
+	 *
+	 * @return Die Schüler zu diesem Unterricht.
+	 */
+	public List<ReportingSchueler> schueler() {
+		if (this.kurs != null)
+			return kurs.schueler();
+		else
+			return klassen.stream().flatMap(k -> k.schueler().stream()).toList();
 	}
 
 	/**

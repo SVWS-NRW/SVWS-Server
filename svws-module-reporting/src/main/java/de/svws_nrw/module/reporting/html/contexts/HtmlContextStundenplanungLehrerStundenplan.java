@@ -1,10 +1,13 @@
 package de.svws_nrw.module.reporting.html.contexts;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungLehrerStundenplan;
 import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungStundenplan;
 import org.thymeleaf.context.Context;
@@ -47,9 +50,17 @@ public final class HtmlContextStundenplanungLehrerStundenplan extends HtmlContex
 		this.reportingRepository.lehrer(idsAusgabe)
 				.forEach(lehrer -> stundenplaene.add(new ReportingStundenplanungLehrerStundenplan(lehrer, stundenplan)));
 
+		final List<ReportingLehrer> listeLehrkraefte = new ArrayList<>();
+		stundenplaene.forEach(stundenplanungLehrerStundenplan -> listeLehrkraefte.add(stundenplanungLehrerStundenplan.lehrer()));
+		String auflistungKuerzel = "";
+		if (!listeLehrkraefte.isEmpty())
+			auflistungKuerzel = listeLehrkraefte.stream().sorted(Comparator.comparing(ReportingLehrer::kuerzel))
+					.map(ReportingLehrer::kuerzel).collect(Collectors.joining(","));
+
 		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();
 		context.setVariable("LehrerStundenplaene", stundenplaene);
+		context.setVariable("LehrerStundenplaeneAuflistungKuerzel", auflistungKuerzel);
 
 		super.setContext(context);
 	}

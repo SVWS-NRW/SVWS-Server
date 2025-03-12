@@ -206,15 +206,34 @@ public class ReportingStundenplanungPausenzeit extends ReportingStundenplanungZe
 	 */
 	public List<ReportingStundenplanungPausenaufsicht> pausenaufsichtenByLehrkraftUndWochentyp(final long idLehrkraft, final int wochentyp,
 			final boolean inklusiveWochentyp0) {
+		return pausenaufsichtenByLehrkraeftenUndWochentyp(List.of(idLehrkraft), wochentyp, inklusiveWochentyp0);
+	}
+
+	/**
+	 * Liefert eine Liste von Pausenaufsichten basierend auf den IDs der Lehrkräfte und dem Wochentyp.
+	 * Zusätzlich können Pausenaufsichten des Wochentyps 0 einbezogen werden.
+	 *
+	 * @param idsLehrkraefte      Die IDs der Lehrkräfte, für die die Pausenaufsichten ermittelt werden sollen.
+	 * @param wochentyp           Der Wochentyp, für den die Pausenaufsichten ermittelt werden sollen.
+	 * @param inklusiveWochentyp0 Gibt an, ob auch Pausenaufsichten des Wochentyps 0 berücksichtigt werden sollen.
+	 * @return Eine Liste von {@link ReportingStundenplanungPausenaufsicht}-Objekten, die der angegebenen Lehrkraft-ID und dem Wochentyp entsprechen.
+	 */
+	public List<ReportingStundenplanungPausenaufsicht> pausenaufsichtenByLehrkraeftenUndWochentyp(final List<Long> idsLehrkraefte, final int wochentyp,
+			final boolean inklusiveWochentyp0) {
 		final List<ReportingStundenplanungPausenaufsicht> result = new ArrayList<>();
+
+		if ((idsLehrkraefte == null) || idsLehrkraefte.isEmpty())
+			return result;
 
 		if (this.pausenaufsichten.isEmpty())
 			return result;
 
-		if (inklusiveWochentyp0) {
-			result.addAll(listMapPausenaufsichten.get24(idLehrkraft, 0));
+		for (final long idLehrkraft : idsLehrkraefte) {
+			if (inklusiveWochentyp0) {
+				result.addAll(listMapPausenaufsichten.get24(idLehrkraft, 0));
+			}
+			result.addAll(listMapPausenaufsichten.get24(idLehrkraft, wochentyp));
 		}
-		result.addAll(listMapPausenaufsichten.get24(idLehrkraft, wochentyp));
 
 		return result;
 	}

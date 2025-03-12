@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -199,18 +200,32 @@ public class ProxyReportingKurs extends ReportingKurs {
 				}
 			}
 			if (!idsSchueler.isEmpty()) {
-				final List<SchuelerStammdaten> schuelerStammdaten = DataSchuelerStammdaten.getListStammdaten(this.reportingRepository.conn(),
-						super.idsSchueler);
-				this.reportingRepository.mapSchuelerStammdaten().putAll(schuelerStammdaten.stream().collect(Collectors.toMap(s -> s.id, s -> s)));
-				super.schueler = schuelerStammdaten.stream().map(s -> (ReportingSchueler) new ProxyReportingSchueler(this.reportingRepository, s))
-						.sorted(Comparator
-								.comparing(ReportingSchueler::nachname, colGerman)
+				// Filtere fehlende Schüler-IDs
+				final List<Long> fehlendeSchuelerIDs = idsSchueler.stream()
+						.filter(id -> !this.reportingRepository.mapSchuelerStammdaten().containsKey(id)).toList();
+
+				// Lade fehlende Daten, falls nötig
+				if (!fehlendeSchuelerIDs.isEmpty()) {
+					final List<SchuelerStammdaten> schuelerStammdaten =
+							DataSchuelerStammdaten.getListStammdaten(this.reportingRepository.conn(), fehlendeSchuelerIDs);
+
+					// Aktualisiere die Map
+					this.reportingRepository.mapSchuelerStammdaten()
+							.putAll(schuelerStammdaten.stream().collect(Collectors.toMap(s -> s.id, Function.identity())));
+				}
+
+				// Erstelle und sortiere die Schülerliste in einem Schritt
+				super.schueler = idsSchueler.stream()
+						.filter(id -> this.reportingRepository.mapSchuelerStammdaten().containsKey(id))
+						.map(id -> this.reportingRepository.mapSchueler()
+								.computeIfAbsent(id, s -> new ProxyReportingSchueler(this.reportingRepository,
+										this.reportingRepository.mapSchuelerStammdaten().get(id))))
+						.sorted(Comparator.comparing(ReportingSchueler::nachname, colGerman)
 								.thenComparing(ReportingSchueler::vorname, colGerman)
 								.thenComparing(ReportingSchueler::vornamen, colGerman)
-								.thenComparing(ReportingSchueler::geburtsdatum, colGerman)
-								.thenComparing(ReportingSchueler::id, colGerman))
+								.thenComparing(ReportingSchueler::geburtsdatum)
+								.thenComparingLong(ReportingSchueler::id))
 						.toList();
-				this.reportingRepository.mapSchueler().putAll(super.schueler.stream().collect(Collectors.toMap(ReportingSchueler::id, s -> s)));
 			}
 		}
 		return super.schueler();

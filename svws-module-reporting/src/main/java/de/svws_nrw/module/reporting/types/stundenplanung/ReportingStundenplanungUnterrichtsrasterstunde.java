@@ -6,11 +6,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import de.svws_nrw.core.adt.map.ListMap3DLongKeys;
 import de.svws_nrw.core.types.Wochentag;
 import de.svws_nrw.module.reporting.types.klasse.ReportingKlasse;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
+import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -27,25 +29,32 @@ public class ReportingStundenplanungUnterrichtsrasterstunde extends ReportingStu
 	/** Die Nummer der Stunde am Wochentag aus dem Unterrichtsraster. */
 	protected int stundeImUnterrichtsraster;
 
+	/** Enthält die Unterrichte nach FachID, WochenTyp und UnterrichtsID für diese Stunde aus dem Unterrichtsraster */
+	private ListMap3DLongKeys<ReportingStundenplanungUnterricht> listMapFaecherUnterrichte = new ListMap3DLongKeys<>();
+
 	/** Enthält die Unterrichte nach KlassenID, WochenTyp und UnterrichtsID für diese Stunde aus dem Unterrichtsraster */
 	private ListMap3DLongKeys<ReportingStundenplanungUnterricht> listMapKlassenUnterrichte = new ListMap3DLongKeys<>();
 
 	/** Enthält die Unterrichte nach LehrerID, WochenTyp und UnterrichtsID für diese Stunde aus dem Unterrichtsraster */
 	private ListMap3DLongKeys<ReportingStundenplanungUnterricht> listMapLehrerUnterrichte = new ListMap3DLongKeys<>();
 
-	// TODO: Analog zu den Lehrern weitere ListMaps für Klassen, Raum und Fach erzeugen
+	/** Enthält die Unterrichte nach RaumID, WochenTyp und UnterrichtsID für diese Stunde aus dem Unterrichtsraster */
+	private ListMap3DLongKeys<ReportingStundenplanungUnterricht> listMapRaeumeUnterrichte = new ListMap3DLongKeys<>();
 
-	/** Eine Map, die die Unterrichte dieser Stunde aus dem Unterrichtsraster zur ID abspeichert. */
-	private final Map<Long, ReportingStundenplanungUnterricht> mapUnterrichte = new HashMap<>();
+	/** Enthält die Unterrichte nach SchuelerID, WochenTyp und UnterrichtsID für diese Stunde aus dem Unterrichtsraster */
+	private ListMap3DLongKeys<ReportingStundenplanungUnterricht> listMapSchuelerUnterrichte = new ListMap3DLongKeys<>();
 
 	/** Die Unterrichte aus dem gegebenen Stundenplan, die dieser Stunde aus dem Unterrichtsraster zugeordnet sind. */
 	private final List<ReportingStundenplanungUnterricht> unterrichte = new ArrayList<>();
+
+	/** Eine Map, die die Unterrichte dieser Stunde aus dem Unterrichtsraster zur ID abspeichert. */
+	private final Map<Long, ReportingStundenplanungUnterricht> mapUnterrichte = new HashMap<>();
 
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
 	 *
-	 * @param id				        Die ID der Stunde aus dem Unterrichtsraster.
+	 * @param id				        Die ID der Rasterstunde aus dem Unterrichtsraster.
 	 * @param stundenplan		        Der Stundenplan, zu dem diese Stunde aus dem Unterrichtsraster gehört.
 	 * @param stundenbeginn		        Die Uhrzeit in Minuten seit 0 Uhr, wann diese Stunde aus dem Unterrichtsraster beginnt. NULL bedeutet "noch nicht
 	 *                                  definiert".
@@ -56,7 +65,8 @@ public class ReportingStundenplanungUnterrichtsrasterstunde extends ReportingStu
 	 * @param unterrichte               Die Unterrichte aus dem gegebenen Stundenplan, die dieser Stunde aus dem Unterrichtsraster zugeordnet sind.
 	 */
 	public ReportingStundenplanungUnterrichtsrasterstunde(final long id, final ReportingStundenplanungStundenplan stundenplan, final Integer stundenbeginn,
-			final Integer stundenende, final int stundeImUnterrichtsraster, final Wochentag wochentag, final List<ReportingStundenplanungUnterricht> unterrichte) {
+			final Integer stundenende, final int stundeImUnterrichtsraster, final Wochentag wochentag,
+			final List<ReportingStundenplanungUnterricht> unterrichte) {
 		super(stundenbeginn, stundenende, wochentag);
 		this.id = id;
 		this.stundenplan = stundenplan;
@@ -130,15 +140,22 @@ public class ReportingStundenplanungUnterrichtsrasterstunde extends ReportingStu
 			return;
 
 		this.unterrichte.addAll(unterrichte);
-		for (final ReportingStundenplanungUnterricht uStd : this.unterrichte) {
-			this.mapUnterrichte.put(uStd.id(), uStd);
-			for (final ReportingLehrer lehrkraft : uStd.lehrkraefte()) {
-				this.listMapLehrerUnterrichte.add(lehrkraft.id(), uStd.wochentyp(), uStd.id(), uStd);
+		for (final ReportingStundenplanungUnterricht unterricht : unterrichte) {
+			this.mapUnterrichte.put(unterricht.id(), unterricht);
+			for (final ReportingLehrer lehrkraft : unterricht.lehrkraefte()) {
+				this.listMapLehrerUnterrichte.add(lehrkraft.id(), unterricht.wochentyp(), unterricht.id(), unterricht);
 			}
-			for (final ReportingKlasse klasse : uStd.klassen()) {
-				this.listMapKlassenUnterrichte.add(klasse.id(), uStd.wochentyp(), uStd.id(), uStd);
+			for (final ReportingKlasse klasse : unterricht.klassen()) {
+				this.listMapKlassenUnterrichte.add(klasse.id(), unterricht.wochentyp(), unterricht.id(), unterricht);
 			}
-			// TODO: Die Unterrichtsstunde weiteren Maps zuweisen.
+			for (final ReportingStundenplanungRaum raum : unterricht.raeume()) {
+				this.listMapRaeumeUnterrichte.add(raum.id(), unterricht.wochentyp(), unterricht.id(), unterricht);
+			}
+			if (unterricht.fach() != null)
+				this.listMapFaecherUnterrichte.add(unterricht.fach().id(), unterricht.wochentyp(), unterricht.id(), unterricht);
+			for (final ReportingSchueler schueler : unterricht.schueler()) {
+				this.listMapRaeumeUnterrichte.add(schueler.id(), unterricht.wochentyp(), unterricht.id(), unterricht);
+			}
 		}
 	}
 
@@ -153,9 +170,11 @@ public class ReportingStundenplanungUnterrichtsrasterstunde extends ReportingStu
 	public void setUnterrichte(final List<ReportingStundenplanungUnterricht> unterrichte) {
 		this.unterrichte.clear();
 		this.mapUnterrichte.clear();
+		this.listMapFaecherUnterrichte = new ListMap3DLongKeys<>();
 		this.listMapKlassenUnterrichte = new ListMap3DLongKeys<>();
 		this.listMapLehrerUnterrichte = new ListMap3DLongKeys<>();
-
+		this.listMapRaeumeUnterrichte = new ListMap3DLongKeys<>();
+		this.listMapSchuelerUnterrichte = new ListMap3DLongKeys<>();
 		addUnterrichte(unterrichte);
 	}
 
@@ -167,23 +186,6 @@ public class ReportingStundenplanungUnterrichtsrasterstunde extends ReportingStu
 	 */
 	public ReportingStundenplanungUnterricht unterricht(final long idUnterricht) {
 		return mapUnterrichte.get(idUnterricht);
-	}
-
-	/**
-	 * Liefert den Unterricht eines bestimmten Lehrers basierend auf der Lehrer-ID
-	 * und dem angegebenen Wochentyp. Optional können auch Unterrichte des Wochentyps 0
-	 * einbezogen werden.
-	 *
-	 * @param idLehrer             Die ID des Lehrers, dessen Unterricht abgerufen werden sollen.
-	 * @param wochentyp            Der Wochentyp, für den der Unterricht abgefragt werden.
-	 * @param inklusiveWochentyp0  Gibt an, ob der Unterricht des Wochentyps 0 ebenfalls einbezogen werden sollen.
-	 *
-	 * @return Eine Liste von {@link ReportingStundenplanungUnterricht}, die die Unterrichte des angegebenen Lehrers für den gewünschten Wochentyp
-	 * repräsentiert.
-	 */
-	public List<ReportingStundenplanungUnterricht> unterrichteLehrkraft(final long idLehrer, final int wochentyp,
-			final boolean inklusiveWochentyp0) {
-		return getReportingStundenplanungUnterrichteByIdUndWoche(idLehrer, wochentyp, inklusiveWochentyp0, listMapLehrerUnterrichte);
 	}
 
 	/**
@@ -201,28 +203,97 @@ public class ReportingStundenplanungUnterrichtsrasterstunde extends ReportingStu
 		return getReportingStundenplanungUnterrichteByIdUndWoche(idKlasse, wochentyp, inklusiveWochentyp0, listMapKlassenUnterrichte);
 	}
 
+	/**
+	 * Liefert den Unterricht eines bestimmten Lehrers basierend auf der Lehrer-ID
+	 * und dem angegebenen Wochentyp. Optional können auch Unterrichte des Wochentyps 0
+	 * einbezogen werden.
+	 *
+	 * @param idLehrer             Die ID des Lehrers, dessen Unterricht abgerufen werden sollen.
+	 * @param wochentyp            Der Wochentyp, für den der Unterricht abgefragt werden.
+	 * @param inklusiveWochentyp0  Gibt an, ob der Unterricht des Wochentyps 0 ebenfalls einbezogen werden sollen.
+	 *
+	 * @return Eine Liste von {@link ReportingStundenplanungUnterricht}, die die Unterrichte des angegebenen Lehrers für den gewünschten Wochentyp
+	 * repräsentiert.
+	 */
+	public List<ReportingStundenplanungUnterricht> unterrichteLehrkraft(final long idLehrer, final int wochentyp, final boolean inklusiveWochentyp0) {
+		return getReportingStundenplanungUnterrichteByIdUndWoche(idLehrer, wochentyp, inklusiveWochentyp0, listMapLehrerUnterrichte);
+	}
+
+	/**
+	 * Liefert den Unterricht der Lehrkräfte, basierend auf der Liste der Lehrer-IDs
+	 * und dem angegebenen Wochentyp. Optional können auch Unterrichte des Wochentyps 0
+	 * einbezogen werden.
+	 *
+	 * @param idsLehrer            Die Liste der IDs der Lehrkräfte, deren Unterricht abgerufen werden sollen.
+	 * @param wochentyp            Der Wochentyp, für den der Unterricht abgefragt werden.
+	 * @param inklusiveWochentyp0  Gibt an, ob der Unterricht des Wochentyps 0 ebenfalls einbezogen werden sollen.
+	 *
+	 * @return Eine Liste von {@link ReportingStundenplanungUnterricht}, die die Unterrichte der angegebenen Lehrkräfte für den gewünschten Wochentyp
+	 * repräsentiert.
+	 */
+	public List<ReportingStundenplanungUnterricht> unterrichteLehrkraefte(final List<Long> idsLehrer, final int wochentyp, final boolean inklusiveWochentyp0) {
+		return getReportingStundenplanungUnterrichteByIdsUndWoche(idsLehrer, wochentyp, inklusiveWochentyp0, listMapLehrerUnterrichte);
+	}
+
+	/**
+	 * Liefert den Unterricht eines bestimmten Schülers basierend auf der Schüler-ID
+	 * und dem angegebenen Wochentyp. Optional können auch Unterrichte des Wochentyps 0
+	 * einbezogen werden.
+	 *
+	 * @param idSchueler           Die ID des Schülers, dessen Unterricht abgerufen werden sollen.
+	 * @param wochentyp            Der Wochentyp, für den der Unterricht abgefragt werden.
+	 * @param inklusiveWochentyp0  Gibt an, ob der Unterricht des Wochentyps 0 ebenfalls einbezogen werden sollen.
+	 *
+	 * @return Eine Liste von {@link ReportingStundenplanungUnterricht}, die die Unterrichte des angegebenen Schüelers für den gewünschten Wochentyp
+	 * repräsentiert.
+	 */
+	public List<ReportingStundenplanungUnterricht> unterrichteSchueler(final long idSchueler, final int wochentyp, final boolean inklusiveWochentyp0) {
+		return getReportingStundenplanungUnterrichteByIdUndWoche(idSchueler, wochentyp, inklusiveWochentyp0, listMapSchuelerUnterrichte);
+	}
 
 	/**
 	 * Ermittelt eine Liste von Unterrichten für eine gegebene ID und einen bestimmten Wochentyp.
 	 *
-	 * @param id Die eindeutige ID, für die die Unterrichte abgerufen werden sollen.
-	 * @param wochentyp Der Wochentyp, für den die Unterrichte abgefragt werden.
+	 * @param idObjekt            Die eindeutige ID des Objekts, für die die Unterrichte abgerufen werden sollen.
+	 * @param wochentyp           Der Wochentyp, für den die Unterrichte abgefragt werden.
 	 * @param inklusiveWochentyp0 Gibt an, ob Unterrichte des Wochentyps 0 ebenfalls einbezogen werden sollen.
-	 * @param listMapUnterrichte Eine Datenstruktur vom Typ ListMap3DLongKeys, die die Unterrichte enthält.
+	 * @param listMapUnterrichte  Eine Datenstruktur vom Typ ListMap3DLongKeys, die die Unterrichte enthält.
 	 *
 	 * @return Eine Liste von {@link ReportingStundenplanungUnterricht}, die den Kriterien entsprechen.
 	 */
-	private List<ReportingStundenplanungUnterricht> getReportingStundenplanungUnterrichteByIdUndWoche(final long id, final int wochentyp,
+	private List<ReportingStundenplanungUnterricht> getReportingStundenplanungUnterrichteByIdUndWoche(final long idObjekt, final int wochentyp,
+			final boolean inklusiveWochentyp0, final ListMap3DLongKeys<ReportingStundenplanungUnterricht> listMapUnterrichte) {
+		return getReportingStundenplanungUnterrichteByIdsUndWoche(List.of(idObjekt), wochentyp, inklusiveWochentyp0, listMapUnterrichte);
+	}
+
+	/**
+	 * Ermittelt eine Liste von Unterrichten für eine gegebene ID und einen bestimmten Wochentyp.
+	 *
+	 * @param idsObjekte          Die Liste der eindeutigen IDs der Objekte, für die die Unterrichte abgerufen werden sollen.
+	 * @param wochentyp           Der Wochentyp, für den die Unterrichte abgefragt werden.
+	 * @param inklusiveWochentyp0 Gibt an, ob Unterrichte des Wochentyps 0 ebenfalls einbezogen werden sollen.
+	 * @param listMapUnterrichte  Eine Datenstruktur vom Typ ListMap3DLongKeys, die die Unterrichte enthält.
+	 *
+	 * @return Eine Liste von {@link ReportingStundenplanungUnterricht}, die den Kriterien entsprechen.
+	 */
+	private List<ReportingStundenplanungUnterricht> getReportingStundenplanungUnterrichteByIdsUndWoche(final List<Long> idsObjekte, final int wochentyp,
 			final boolean inklusiveWochentyp0, final ListMap3DLongKeys<ReportingStundenplanungUnterricht> listMapUnterrichte) {
 		final List<ReportingStundenplanungUnterricht> result = new ArrayList<>();
 
-		if (this.unterrichte.isEmpty())
+		if (this.unterrichte.isEmpty() || (idsObjekte == null))
 			return result;
 
-		if (inklusiveWochentyp0) {
-			result.addAll(listMapUnterrichte.get12(id, 0));
+		final List<Long> idsObjekteNonNull = new ArrayList<>(idsObjekte.stream().filter(Objects::nonNull).toList());
+
+		if (idsObjekteNonNull.isEmpty())
+			return result;
+
+		for (final long idObjekt : idsObjekteNonNull) {
+			if (inklusiveWochentyp0) {
+				result.addAll(listMapUnterrichte.get12(idObjekt, 0));
+			}
+			result.addAll(listMapUnterrichte.get12(idObjekt, wochentyp));
 		}
-		result.addAll(listMapUnterrichte.get12(id, wochentyp));
 
 		return result;
 	}

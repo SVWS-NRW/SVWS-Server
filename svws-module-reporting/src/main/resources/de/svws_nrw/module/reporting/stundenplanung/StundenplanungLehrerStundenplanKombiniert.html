@@ -6,19 +6,19 @@
 		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-pdf.css}" href="../css/reporting-pdf.css" />
 		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-A4-hoch.css}" href="../css/reporting-A4-hoch.css" />
 		<link rel="stylesheet" th:href="@{css/reporting-styles.css}" href="../css/reporting-styles.css" />
-		<link rel="stylesheet" th:href="@{stundenplanung/StundenplanungLehrerStundenplan.css}" href="../stundenplanung/StundenplanungLehrerStundenplan.css" />
+		<link rel="stylesheet" th:href="@{stundenplanung/StundenplanungLehrerStundenplan.css}" href="../stundenplanung/StundenplanungLehrerStundenplanKombiniert.css" />
 	</head>
 
 	<body th:with="mediaPrint = ${Parameter.ausgabeformat == 2}">
 		<div class="reset-page-counter start-new-page"
 			 th:with="anzeigeMitPausenaufsichten = ${Parameter.detailLevel >= 1},
-			          anzeigeMitPausenzeiten = ${((Parameter.detailLevel % 4) / 2) >= 1}"
-			 th:each="plan,iterationVarPlan : ${LehrerStundenplaene}">
+			          anzeigeMitPausenzeiten = ${((Parameter.detailLevel % 4) / 2) >= 1},
+					  plan = ${LehrerStundenplaene.get(0)}">
 			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
 			<div class="pageTopLeft" th:utext="${Schule.bezeichnungSchuleMehrzeiligHtml}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
-			<div class="pageTopRight">Stundenplan <span th:text="${plan.stundenplan().schuljahresabschnitt().textSchuljahresabschnittKurz()}">2022.2</span><br/>Gültig ab: <span th:text="${plan.stundenplan().gueltigAb()}">01.02.2022</span><br/>Lehrkraft: <span th:text="${plan.lehrer().kuerzel()}">ABC</span></div>
+			<div class="pageTopRight">Stundenplan <span th:text="${plan.stundenplan().schuljahresabschnitt().textSchuljahresabschnittKurz()}">2022.2</span><br/>Gültig ab: <span th:text="${plan.stundenplan().gueltigAb()}">01.02.2022</span><br/>Lehrkräfte: <span th:text="${LehrerStundenplaeneAuflistungKuerzel}">ABC,DEF,HIJ,KLM</span></div>
 			<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')}">Gedruckt am: 02.02.2022</div>
-			<div class="pageBottomRight"><span class="page-nums-print" th:text="${#lists.size(LehrerStundenplaene) > 0} ? ('Druck ' + ${iterationVarPlan.count} + '/' + ${#lists.size(LehrerStundenplaene)} + ' - Seite ') : 'Seite '">Druck 13/57 - Seite </span></div>
+			<div class="pageBottomRight"><span class="page-nums-print" th:text="${'Seite '}">Seite </span></div>
 			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
 
 			<!-- Für jede Woche, die im Stundenplan definiert, wird ein Block erzeugt. -->
@@ -57,7 +57,7 @@
 								<!-- Zeilenkopf für Pausen ist leer -->
 								<td class="mp-0" style="min-height: 1mm;"></td>
 								<th:block th:each="rasterelementZumTag : ${zeilePausenraster.rasterElemente()}"
-										  th:with="pausenaufsichten = ${rasterelementZumTag.pausenaufsichtenByLehrkraftUndWochentyp(plan.lehrer().id(), wochentyp, true)},
+										  th:with="pausenaufsichten = ${rasterelementZumTag.pausenaufsichtenByLehrkraeftenUndWochentyp(Parameter.idsDetaildaten, wochentyp, true)},
 												   hatPausenaufsichtInElement = ${!pausenaufsichten.isEmpty()}">
 									<td th:class="${hatPausenaufsichtInElement ? 'mp-0 bo-lr-grey c-lightgrey f-small f-bold ta-cm' : ''}">
 										<!-- Pro Zeile wird eine kleine Tabelle mit den Pausenaufsichten eingefügt -->
@@ -72,7 +72,7 @@
 											<th:block th:each="pausenaufsicht,iterationvarPausenaufsicht : ${pausenaufsichten}">
 												<tr>
 													<td class="f-tiny ta-l mp-0"></td>
-													<td colspan="3" class="f-tiny ta-c" th:classappend="${!iterationvarPausenaufsicht.first ? ' bo-t-grey' : ''}" th:text="${pausenaufsicht.aufsichtsbereichKuerzel()}">Mensa</td>
+													<td colspan="3" class="f-tiny ta-c" th:classappend="${!iterationvarPausenaufsicht.first ? ' bo-t-grey' : ''}" th:text="${pausenaufsicht.aufsichtsbereichKuerzel() + ' (' + pausenaufsicht.lehrkraft().kuerzel() + ')' }">Mensa (ABC)</td>
 													<td class="f-tiny ta-r mp-0"></td>
 												</tr>
 											</th:block>
@@ -85,7 +85,7 @@
 								<td class="head-small-grey head-black-lines-small-all ta-cm" style="min-height: 9mm; font-weight: bolder;" th:text="${plan.stundenplan().unterrichtsrasterStundennummern().get(iterationVarZeilePausenraster.index)}">1</td>
 								<td class="bo-black"
 									th:each="rasterelementZumTag : ${zeileUnterrichtsraster.rasterElemente()}"
-									th:with="unterrichte = ${rasterelementZumTag.unterrichtsrasterstunde().unterrichteLehrkraft(plan.lehrer().id(), wochentyp, true)}">
+									th:with="unterrichte = ${rasterelementZumTag.unterrichtsrasterstunde().unterrichteLehrkraefte(Parameter.idsDetaildaten, wochentyp, true)}">
 									<!-- Pro Stunde wird eine kleine Tabelle mit den Unterrichten und Pausen eingefügt -->
 									<table class="fixed-100 p-0">
 										<colgroup>
@@ -105,8 +105,10 @@
 											</tr>
 											<tr>
 												<td></td>
-												<td th:if="${unterricht.kurs() == null}" colspan="3" class="f-small ta-l" th:text="${unterricht.fach().bezeichnung()}">Mathematik</td>
-												<td th:if="${unterricht.kurs() != null}" colspan="3" class="f-small ta-l" th:text="${unterricht.kurs().kuerzel()}">M-GK2</td>
+												<td th:if="${unterricht.kurs() == null}" class="f-small ta-l" th:text="${unterricht.fach().bezeichnung()}">Mathematik</td>
+												<td th:if="${unterricht.kurs() != null}" class="f-small ta-l" th:text="${unterricht.kurs().kuerzel()}">M-GK2</td>
+												<td class="f-small ta-l"></td>
+												<td class="f-small ta-r" th:text="${unterricht.lehrkraefteAuflistung()}">ABC</td>
 												<td></td>
 											</tr>
 										</th:block>

@@ -194,9 +194,10 @@ public class ReportingKurs extends ReportingBaseType {
 	 * @return		Kommaseparierte Liste der Lehrkräfte, beginnend mit der Kursleitung.
 	 */
 	public String auflistungLehrkraefte() {
-		if (lehrkraefte().isEmpty())
+		final List<ReportingLehrer> listeLehrkraefte = lehrkraefte();
+		if (listeLehrkraefte.isEmpty())
 			return "";
-		return this.lehrkraefte().stream().map(ReportingLehrer::kuerzel).collect(Collectors.joining(","));
+		return listeLehrkraefte.stream().map(ReportingLehrer::kuerzel).collect(Collectors.joining(","));
 	}
 
 	/**

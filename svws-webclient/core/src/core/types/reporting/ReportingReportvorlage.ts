@@ -87,6 +87,11 @@ export class ReportingReportvorlage extends JavaEnum<ReportingReportvorlage> {
 	public static readonly STUNDENPLANUNG_v_LEHRER_STUNDENPLAN : ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_v_LEHRER_STUNDENPLAN", 14, "Stundenplanung-LehrerStundenplan");
 
 	/**
+	 * Report-Vorlage: Stundenplanung - Lehrer - Stundenplan - Kombiniert
+	 */
+	public static readonly STUNDENPLANUNG_v_LEHRER_STUNDENPLAN_KOMBINIERT : ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_v_LEHRER_STUNDENPLAN_KOMBINIERT", 15, "Stundenplanung-LehrerStundenplanKombiniert");
+
+	/**
 	 * Die Bezeichnung der Report-Vorlage
 	 */
 	private readonly bezeichnung : string | null;

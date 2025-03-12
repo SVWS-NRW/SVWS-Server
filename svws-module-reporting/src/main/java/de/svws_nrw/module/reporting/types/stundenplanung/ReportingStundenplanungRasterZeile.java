@@ -94,9 +94,23 @@ public class ReportingStundenplanungRasterZeile extends ReportingStundenplanungZ
 	 *
 	 * @return                    Gibt true zurück, wenn mindestens eine Aufsicht für die Lehrkraft in den Rasterelementen der Zeile gefunden wird, sonst false.
 	 */
-	public boolean hatLehrkraftPausenaufsichtInZeile(final int idLehrkraft, final int wochentyp, final boolean inklusiveWochentyp0) {
+	public boolean hatLehrkraftPausenaufsichtInZeile(final long idLehrkraft, final int wochentyp, final boolean inklusiveWochentyp0) {
 		return rasterElemente.stream()
 				.anyMatch(element -> !element.pausenaufsichtenByLehrkraftUndWochentyp(idLehrkraft, wochentyp, inklusiveWochentyp0).isEmpty());
+	}
+
+	/**
+	 * Prüft, ob eine Lehrkraft aus einer Liste von Lehrkräften in dieser Zeile eine Pausenaufsicht hat.
+	 *
+	 * @param idsLehrkraefte      Die IDs der Lehrkräfte, für die die Pausenaufsichten geprüft werden sollen.
+	 * @param wochentyp           Der Wochentyp, für den die Pausenaufsichten geprüft werden sollen.
+	 * @param inklusiveWochentyp0 Gibt an, ob auch Pausenaufsichten des Wochentyps 0 berücksichtigt werden sollen.
+	 *
+	 * @return                    Gibt true zurück, wenn mindestens eine Aufsicht für die Lehrkraft in den Rasterelementen der Zeile gefunden wird, sonst false.
+	 */
+	public boolean habenLehrkraeftePausenaufsichtInZeile(final List<Long> idsLehrkraefte, final int wochentyp, final boolean inklusiveWochentyp0) {
+		return rasterElemente.stream()
+				.anyMatch(element -> !element.pausenaufsichtenByLehrkraeftenUndWochentyp(idsLehrkraefte, wochentyp, inklusiveWochentyp0).isEmpty());
 	}
 
 	/**
