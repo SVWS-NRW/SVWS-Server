@@ -1,0 +1,212 @@
+import { Einschulungsart, Herkunftsarten, Jahrgaenge, PrimarstufeSchuleingangsphaseBesuchsjahre, Schulform, Schulgliederung, Uebergangsempfehlung } from "@core";
+import type { KatalogEntlassgrund, Merkmal, SchulEintrag } from "@core";
+import type { SchuelerListeEintrag, SchuelerSchulbesuchsdaten, Schuljahresabschnitt, List } from "@core";
+import { shallowRef, triggerRef } from "vue";
+import type { ShallowRef } from "vue";
+
+/** Ein Manager für die Verwaltung von Schulbesuchsdaten */
+export class SchuelerSchulbesuchManager {
+
+	/** Eine Referenz auf die SchuelerSchulbesuchsdaten */
+	protected _daten: ShallowRef<SchuelerSchulbesuchsdaten>;
+
+	/** Eine Referenz auf die aktuelle Auswahl des Schülers zur Bearbeitung in diesem Manager */
+	protected _auswahlSchueler: ShallowRef<SchuelerListeEintrag | null>;
+
+	/** Eine Map der Schuljahresabschnitte gemappt nach idSchuljahresAbschnitt */
+	protected _schuljahresabschnitte: Map<number, Schuljahresabschnitt>;
+
+	/** Eine Map der Schulen gemappt nach Schulnummer */
+	protected _schulen: Map<string, SchulEintrag>;
+
+	/** Eine Map der Merkmale gemappt nach id */
+	protected _merkmale: Map<number, Merkmal>;
+
+	/** Eine Map der Entlassgruende gemappt nach id */
+	protected _entlassgruende: Map<number, KatalogEntlassgrund>;
+
+	/** Das Schuljahr vom Schuljahresabschnitts des aktuell ausgewählten Schülers */
+	protected _schuljahr : number;
+
+	/** Die Patch-Methode der SchuelerSchulbesuchsdaten */
+	protected _patch: (data : Partial<SchuelerSchulbesuchsdaten>) => Promise<boolean>
+
+
+	/**
+	 * Erstellt einen neue SchuelerSchulbesuchManager für die übergebenen SchuelerSchulbesuchsdaten
+	 *
+	 * @param daten					   die SchuelerSchulbesuchsdaten
+	 * @param auswahl				   der aktuell, ausgewählte Schüler
+	 * @param schuljahresabschnitte    eine Liste der Schuljahresabschnitte
+	 * @param schulen				   eine Liste der Schulen
+	 * @param merkmale				   eine Liste der Merkmale
+	 * @param entlassgruende		   eine Liste der Entlassgruende
+	 * @param patch					   die PatchMethode der SchuelerSchulbesuchsdaten
+	 */
+	public constructor(daten: SchuelerSchulbesuchsdaten, auswahl : SchuelerListeEintrag, schuljahresabschnitte : List<Schuljahresabschnitt>,
+		schulen : List<SchulEintrag>, merkmale : List<Merkmal>, entlassgruende : List<KatalogEntlassgrund>,
+		patch: (data : Partial<SchuelerSchulbesuchsdaten>) => Promise<boolean>) {
+		this._patch = patch;
+		this._daten = shallowRef<SchuelerSchulbesuchsdaten>(daten);
+		this._auswahlSchueler = shallowRef<SchuelerListeEintrag>(auswahl);
+		this._schuljahresabschnitte = new Map([...schuljahresabschnitte].map(abschnitt => [abschnitt.id, abschnitt]));
+		this._schulen = new Map([...schulen].map(schule => [schule.schulnummer, schule]));
+		this._merkmale = new Map([...merkmale].map(merkmal => [merkmal.id, merkmal]));
+		this._entlassgruende = new Map([...entlassgruende].map(entlassgrund => [entlassgrund.id, entlassgrund]));
+		this._schuljahr = this.calcSchuljahr();
+	}
+
+	/** Gibt die aktuell im Manager gespeicherten SchuelerSchulbesuchsdaten zurück. */
+	public get daten(): SchuelerSchulbesuchsdaten {
+		return this._daten.value;
+	}
+
+	/** Gibt die aktuell im Manager gespeicherten Schulen zurück */
+	public get schulen() : Map<string, SchulEintrag> {
+		return this._schulen;
+	}
+
+	/** Gibt die aktuell im Manager gespeicherten Merkmal zurück */
+	public get merkmale() : Map<number, Merkmal> {
+		return this._merkmale;
+	}
+
+	/** Gibt die aktuell im Manager gespeicherten Entlassgründe zurück */
+	public get entlassgruende() : Map<number, KatalogEntlassgrund> {
+		return this._entlassgruende;
+	}
+
+	/** Gibt das Schuljahr vom Schuljahresabschnitts des aktuell ausgewählten Schülers zurück */
+	public get schuljahr() : number {
+		return this._schuljahr;
+	}
+
+	/** Gibt die vorherige Schule des aktuell ausgewählten Schülers zurück */
+	public getVorigeSchule() : SchulEintrag | undefined {
+		return this.schulen.get(this.daten.vorigeSchulnummer ?? '');
+	}
+
+	/** Gibt die vorherige Versetzungsart des ausgewählten Schülers zurück */
+	public getVorigeArtLetzteVersetzung() : Herkunftsarten | undefined {
+		if (this.daten.vorigeArtLetzteVersetzung === null)
+			return undefined;
+		const artID = Number(this.daten.vorigeArtLetzteVersetzung);
+		return Herkunftsarten.getByID(artID) || undefined;
+	}
+
+	/** Gibt die vorherige AllgHerkunft des ausgewählten Schülers zurück */
+	public getVorigeAllgHerkunft() {
+		if (this.daten.vorigeAllgHerkunft === null)
+			return "";
+		const value = Schulform.data().getWertByKuerzel(this.daten.vorigeAllgHerkunft);
+		if (value === null)
+			return "";
+		const entry = Schulform.data().getEintragBySchuljahrUndWert(this.schuljahr, value);
+		return (entry !== null) ? entry.text : "";
+	}
+
+	/** Gibt die Herkunftsarten der vorherigen Schulform des ausgewählten Schülers zurück */
+	public getHerkunftsarten() : Herkunftsarten[] {
+		return Herkunftsarten.values().filter(
+			h => h.getBezeichnung(this._schuljahr, this.getVorigeSchulform() || Schulform.G) !== null);
+	}
+
+	/** Gibt die vorherige Schulform des ausgewählten Schülers zurück */
+	public getVorigeSchulform() :Schulform | undefined {
+		const vorigeAllgHerkunft = this.daten.vorigeAllgHerkunft;
+		if (vorigeAllgHerkunft === null)
+			return undefined;
+		const sgl = Schulgliederung.data().getWertByKuerzel(vorigeAllgHerkunft);
+		if (sgl !== null)
+			return Schulform.BK;
+		return Schulform.data().getWertByKuerzel(vorigeAllgHerkunft) || undefined;
+	}
+
+	/** Gibt den Entlassjahrgang des ausgewählten Schülers zurück */
+	public getEntlassjahrgang(field: "vorigeEntlassjahrgang" | "entlassungJahrgang") {
+		return Jahrgaenge.values().find(v => v.daten(this.schuljahr)?.kuerzel === this.daten[field]) ?? null;
+	}
+
+	/** Gibt den Entlassgrund des ausgewählten Schülers zurück */
+	public getEntlassgrund(field: "entlassungGrundID" | "vorigeEntlassgrundID") {
+		return this.entlassgruende.get(this.daten[field] ?? -1);
+	}
+
+	/** Gibt die Einschulungsart des ausgewählten Schülers zurück */
+	public getEinschulungsart() : Einschulungsart | undefined {
+		return Einschulungsart.values().find(v => v.daten.id === this.daten.grundschuleEinschulungsartID);
+	}
+
+	/** Gibt die PrimarstufeSchuleingangsphaseBesuchsjahre des ausgewählten Schülers zurück */
+	public getEPJahre() : PrimarstufeSchuleingangsphaseBesuchsjahre | null {
+		return PrimarstufeSchuleingangsphaseBesuchsjahre.data().getWertBySchluessel(this.daten.grundschuleJahreEingangsphase?.toString() ?? '')
+	}
+
+	/** Gibt die Übergangsempfehlung des ausgewählten Schülers zurück */
+	public getUebergangsempfehlung() : Uebergangsempfehlung | null {
+		return Uebergangsempfehlung.data().getWertByKuerzel(this.daten.kuerzelGrundschuleUebergangsempfehlung ?? '')
+	}
+
+	/** Gibt die Sek1 Schulform des ausgewählten Schülers zurück */
+	public getSchulformSek1() : Schulform | null {
+		return Schulform.data().getWertByKuerzel(this.daten.sekIErsteSchulform?? '');
+	}
+
+	// --- patch ---
+
+	/** Die allgemeine Patch-Methode der SchuelerSchulbesuchsdaten */
+	public async doPatch(data : Partial<SchuelerSchulbesuchsdaten>) {
+		if (await this._patch(data)) {
+			this._daten.value = Object.assign(this._daten.value, data);
+		}
+		triggerRef(this._daten);
+	}
+
+	/** Die spezielle Patch-Methode der Entlassgründe */
+	public patchEntlassgrund(v: any, field: "entlassungGrundID" | "vorigeEntlassgrundID") {
+		void this.doPatch({ [field]: v?.id ?? null });
+	}
+
+	/** Die spezielle Patch-Methode der vorigeArtLetzteVersetzung */
+	public patchVorigeArtLetzteVersetzung(value : Herkunftsarten | undefined) {
+		void this.doPatch({ vorigeArtLetzteVersetzung:  (value === undefined) ? null : value.daten.id.toString() });
+	}
+
+	/** Die spezielle Patch-Methode der Schuleinträge */
+	public patchSchule(schule: SchulEintrag | undefined | null, key: string) {
+		if (schule !== undefined && schule !== null) {
+			const patchData: Record<string, any> = {};
+			patchData[key] = schule.schulnummer;
+			void this.doPatch(patchData);
+		}
+	}
+
+	/** Die spezielle Patch-Methode der Entlassjahrgänge */
+	public patchEntlassjahrgang(v: Jahrgaenge | undefined | null, field : "vorigeEntlassjahrgang" | "entlassungJahrgang") {
+		void this.doPatch({ [field]: v?.daten(this.schuljahr)?.kuerzel ?? null });
+	}
+
+	// --- util ---
+
+	private calcSchuljahr(): number {
+		const abschnitt = this._schuljahresabschnitte.get(this._auswahlSchueler.value?.idSchuljahresabschnitt?? -1);
+		return (abschnitt === undefined) ? -1 : abschnitt.schuljahr;
+	}
+
+	// --- filter ---
+
+	/** Die Filter-Methode der Schuleeinträge */
+	public filterSchulen(items: SchulEintrag[], search: string) : SchulEintrag[] {
+		const searchLower = search.toLowerCase()
+		const list = [];
+		for (const i of items) {
+			if (((i.schulnummerStatistik !== null) && i.schulnummerStatistik.includes(searchLower))
+					|| ((i.kurzbezeichnung !== null) && i.kurzbezeichnung.toLowerCase().includes(searchLower))
+					|| i.name.toLowerCase().includes(searchLower) || ((i.ort !== null) && i.ort.toLowerCase().includes(searchLower))
+					|| ((i.kuerzel !== null) && i.kuerzel.toLowerCase().includes(searchLower)))
+				list.push(i);
+		}
+		return list;
+	}
+
+}

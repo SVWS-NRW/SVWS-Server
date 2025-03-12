@@ -62,8 +62,8 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 
 	@Override
 	protected SchuelerSchulbesuchsdaten map(final DTOSchueler dtoSchueler) throws ApiOperationException {
-		final List<DTOSchuelerMerkmale> schuelerMerkmale = conn.queryList(DTOSchuelerMerkmale.QUERY_BY_SCHUELER_ID, DTOSchuelerMerkmale.class, getLongId(dtoSchueler));
-		final List<DTOSchuelerAbgaenge> schuelerAbgaenge = conn.queryList(DTOSchuelerAbgaenge.QUERY_BY_SCHUELER_ID, DTOSchuelerAbgaenge.class, getLongId(dtoSchueler));
+		final List<DTOSchuelerMerkmale> schuelerMerkmale = conn.queryList(DTOSchuelerMerkmale.QUERY_BY_SCHUELER_ID, DTOSchuelerMerkmale.class, dtoSchueler.ID);
+		final List<DTOSchuelerAbgaenge> schuelerAbgaenge = conn.queryList(DTOSchuelerAbgaenge.QUERY_BY_SCHUELER_ID, DTOSchuelerAbgaenge.class, dtoSchueler.ID);
 		return mapInternal(dtoSchueler, schuelerMerkmale, schuelerAbgaenge);
 	}
 
@@ -90,14 +90,14 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 		daten.entlassungGrundID = (entlassgrund == null) ? null : entlassgrund.ID;
 		daten.entlassungAbschlussartID = dtoSchueler.Entlassart;
 		// Informationen zu der aufnehmenden Schule nach einem Wechsel zu einer anderen Schule
-		daten.aufnehmdendSchulnummer = dtoSchueler.SchulwechselNr;
-		daten.aufnehmdendWechseldatum = dtoSchueler.Schulwechseldatum;
-		daten.aufnehmdendBestaetigt = dtoSchueler.WechselBestaetigt;
+		daten.aufnehmendSchulnummer = dtoSchueler.SchulwechselNr;
+		daten.aufnehmendWechseldatum = dtoSchueler.Schulwechseldatum;
+		daten.aufnehmendBestaetigt = dtoSchueler.WechselBestaetigt;
 		// Informationen zu der besuchten Grundschule
 		daten.grundschuleEinschulungsjahr = dtoSchueler.Einschulungsjahr;
 		daten.grundschuleEinschulungsartID = dtoSchueler.Einschulungsart_ID;
 		daten.grundschuleJahreEingangsphase = dtoSchueler.EPJahre;
-		// TODO statkue_schueleruebergangsempfehlung5jg -> daten.grundschuleUebergangsempfehlungID = schueler.Uebergangsempfehlung_JG5;
+		daten.kuerzelGrundschuleUebergangsempfehlung = dtoSchueler.Uebergangsempfehlung_JG5;
 		// Informationen zu dem Besuch der Sekundarstufe I
 		daten.sekIWechsel = dtoSchueler.JahrWechsel_SI;
 		daten.sekIErsteSchulform = dtoSchueler.ErsteSchulform_SI;
@@ -158,8 +158,8 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 					dtoSchueler.Einschulungsart_ID = JSONMapper.convertToLong(value, true, "grundschuleEinschulungsartID");
 			case "grundschuleJahreEingangsphase" -> // TODO Auswahl auf 2 und 3 beschränken?
 					dtoSchueler.EPJahre = JSONMapper.convertToInteger(value, true, "grundschuleJahreEingangsphase");
-			case "grundschuleUebergangsempfehlungID" -> dtoSchueler.Uebergangsempfehlung_JG5 = // TODO Katalog statkue_schueleruebergangsempfehlung5jg
-					JSONMapper.convertToString(value, true, false, null, "grundschuleUebergangsempfehlungID");
+			case "kuerzelGrundschuleUebergangsempfehlung" -> dtoSchueler.Uebergangsempfehlung_JG5 = // TODO Katalog statkue_schueleruebergangsempfehlung5jg
+					JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_Uebergangsempfehlung_JG5.datenlaenge(), "kuerzelGrundschuleUebergangsempfehlung");
 
 			// Informationen zu dem Besuch der Sekundarstufe I
 			case "sekIWechsel" -> dtoSchueler.JahrWechsel_SI = JSONMapper.convertToInteger(value, true, "sekIWechsel"); // TODO Überprüfung des Jahres
@@ -173,16 +173,13 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 
 
 	private void mapEntlassgrundID(final Object value, final String key, final Consumer<String> setter) throws ApiOperationException {
-		final String entlassungGrundID = JSONMapper.convertToString(value, true, true, null, key);
+		final Long entlassungGrundID = JSONMapper.convertToLong(value, true, key);
 		if (entlassungGrundID == null) {
 			setter.accept(null);
 			return;
 		}
-		final DTOEntlassarten dto = this.mapEntlassarten.get(entlassungGrundID);
-		if (dto == null)
-			throw new ApiOperationException(Status.CONFLICT, "keine Entlassart mit der %s %s gefunden.".formatted(key, entlassungGrundID));
-
-		setter.accept(dto.Bezeichnung);
+		this.mapEntlassarten.values().stream().filter(e -> e.ID == entlassungGrundID).findFirst().map(e -> e.Bezeichnung)
+				.ifPresent(setter);
 	}
 
 }

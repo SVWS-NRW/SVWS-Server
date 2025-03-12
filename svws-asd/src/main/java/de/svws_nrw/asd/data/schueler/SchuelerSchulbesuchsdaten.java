@@ -83,15 +83,15 @@ public class SchuelerSchulbesuchsdaten {
 
 	/** Die Schulnummer der aufnehmenden Schule nach einer Entlassung. */
 	@Schema(description = "die Schulnummer der aufnehmenden Schule nach einer Entlassung", example = "187486")
-	public String aufnehmdendSchulnummer;
+	public String aufnehmendSchulnummer;
 
 	/** Das Datum beim Wechsel zu einer aufnehmenden Schule. */
 	@Schema(description = "das Datum beim Wechsel zu einer aufnehmenden Schule", example = "2020-01-01")
-	public String aufnehmdendWechseldatum;
+	public String aufnehmendWechseldatum;
 
 	/** Gibt an, ob die aufnehmende Schule den Wechsel bestätigt hat. */
 	@Schema(description = "gibt an, ob die aufnehmende Schule den Wechsel bestätigt hat", example = "true")
-	public Boolean aufnehmdendBestaetigt;
+	public Boolean aufnehmendBestaetigt;
 
 
 	// **** Informationen zu der besuchten Grundschule
@@ -108,9 +108,9 @@ public class SchuelerSchulbesuchsdaten {
 	@Schema(description = "die Anzahl der Jahre in der Schuleingangsphase der Grundschule", example = "2")
 	public Integer grundschuleJahreEingangsphase;
 
-	/** Die ID für die Übergangsempfehlung der Grundschule in die Sekundarstufe I */
-	@Schema(description = "die ID für die Übergangsempfehlung der Grundschule in die Sekundarstufe I", example = "3")
-	public Long grundschuleUebergangsempfehlungID;
+	/** Das Kürzel für die Übergangsempfehlung der Grundschule in die Sekundarstufe I */
+	@Schema(description = "das Kürzel für die Übergangsempfehlung der Grundschule in die Sekundarstufe I", example = "GY")
+	public String kuerzelGrundschuleUebergangsempfehlung;
 
 
 	// **** Informationen zu dem Besuch der Sekundarstufe I

@@ -1,6 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import type { DeveloperNotificationException} from "@core";
+import type { DeveloperNotificationException } from "@core";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
@@ -10,6 +10,8 @@ import { RouteDataSchuelerSchulbesuch } from "~/router/apps/schueler/schulbesuch
 
 import type { SchuelerSchulbesuchProps } from "~/components/schueler/schulbesuch/SSchuelerSchulbesuchProps";
 import { api } from "~/router/Api";
+import {RouteManager} from "~/router/RouteManager";
+import {routeKatalogSchulen} from "~/router/apps/schule/schulen/RouteKatalogSchulen";
 
 const SSchuelerSchulbesuch = () => import("~/components/schueler/schulbesuch/SSchuelerSchulbesuch.vue");
 
@@ -26,24 +28,26 @@ export class RouteSchuelerSchulbesuch extends RouteNode<RouteDataSchuelerSchulbe
 		try {
 			const { id } = RouteNode.getIntParams(to_params, ["id"]);
 			if (id !== undefined)
-				await this.data.setEintrag(id);
+				await this.data.ladeDaten(routeSchueler.data.schuelerListeManager.liste.get(id));
 		} catch (e) {
 			return routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 
+	goToSchule = async (idSchule : number) => {
+		await RouteManager.doRoute(routeKatalogSchulen.getRoute({id : idSchule}));
+	}
+
 	public getProps(to: RouteLocationNormalized): SchuelerSchulbesuchProps {
 		return {
-			patch: this.data.patch,
-			schuelerListeManager: () => routeSchueler.data.schuelerListeManager,
+			manager: () => this.data.schuelerSchulbesuchManager,
 			schulform: api.schulform,
 			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
-			data: this.data.daten,
-			autofocus: routeSchueler.data.autofocus
+			autofocus: routeSchueler.data.autofocus,
+			goToSchule : this.goToSchule
 		};
 	}
-
 }
 
 export const routeSchuelerSchulbesuch = new RouteSchuelerSchulbesuch();
