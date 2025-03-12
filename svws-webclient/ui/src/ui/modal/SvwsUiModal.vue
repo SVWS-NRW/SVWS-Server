@@ -1,14 +1,14 @@
 <template>
 	<TransitionRoot appear :show>
-		<Dialog class="modal--wrapper" @close="autoCloseModal" @keyup.esc="autoCloseModal">
+		<Dialog :id="idComponent" class="modal--wrapper" @close="autoCloseModal" @keyup.esc="autoCloseModal">
 			<div class="modal--pageWrapper"
 				:class="{ 'modal--pageWrapper--help': size === 'help', }">
-				<TransitionChild v-if="size !== 'help'" as="div"
+				<TransitionChild :id="idTC_overlay" v-if="size !== 'help'" as="div"
 					enter="ease-out duration-200" enter-from="opacity-0" enter-to="opacity-100"
 					leave="ease-in duration-100" leave-from="opacity-100" leave-to="opacity-0">
 					<div class="modal--overlay" @click="autoCloseModal" />
 				</TransitionChild>
-				<TransitionChild as="div"
+				<TransitionChild :id="idTC_div" as="div"
 					enter="ease-out duration-200" enter-from="opacity-0 scale-95" enter-to="opacity-100 scale-100"
 					leave="ease-in duration-100" leave-from="opacity-100 scale-100" leave-to="opacity-0 scale-95"
 					class="modal"
@@ -61,6 +61,7 @@
 <script setup lang='ts'>
 
 	import { Dialog, DialogTitle, DialogDescription, TransitionRoot, TransitionChild } from "@headlessui/vue";
+	import { useId } from "vue";
 	import type { Size } from "../../types";
 
 	const props = withDefaults(defineProps<{
@@ -92,5 +93,10 @@
 	function closeModal() {
 		emit('update:show', false);
 	}
+
+	const idComponent = useId();
+	const idTC_overlay = useId();
+	const idTC_div = useId();
+
 
 </script>
