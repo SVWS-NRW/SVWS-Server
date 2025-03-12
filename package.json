@@ -26,7 +26,7 @@
 		"@vue/test-utils": "^2.4.6",
 		"@vue/tsconfig": "^0.7.0",
 		"eslint": "^9.5.0",
-		"eslint-plugin-vue": "^9.1.1",
+		"eslint-plugin-vue": "^10.0.0",
 		"happy-dom": "^17.0.2",
 		"histoire": "^1.0.0-alpha.1",
 		"license-checker-rseidelsohn": "^4.0.0",
