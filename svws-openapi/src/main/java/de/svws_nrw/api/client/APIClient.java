@@ -496,6 +496,7 @@ public class APIClient {
 				case "LehrerAnrechnungsgrund" -> JsonReader.fromResource("de/svws_nrw/asd/types/lehrer/LehrerAnrechnungsgrund.json");
 				case "LehrerMehrleistungsarten" -> JsonReader.fromResource("de/svws_nrw/asd/types/lehrer/LehrerMehrleistungsarten.json");
 				case "LehrerMinderleistungsarten" -> JsonReader.fromResource("de/svws_nrw/asd/types/lehrer/LehrerMinderleistungsarten.json");
+				case "Nationalitaeten" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/Nationalitaeten.json");
 				case "ValidatorenFehlerartKontext" -> JsonReader.fromResource("de/svws_nrw/asd/validate/ValidatorenFehlerartKontext.json");
 				default -> null;
 			};

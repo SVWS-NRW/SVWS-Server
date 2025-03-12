@@ -1,8 +1,9 @@
 package de.svws_nrw.module.reporting.proxytypes.schueler.erzieher;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.core.data.erzieher.ErzieherStammdaten;
-import de.svws_nrw.core.types.schule.Nationalitaeten;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ReportingErzieher;

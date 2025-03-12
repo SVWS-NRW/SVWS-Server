@@ -221,7 +221,7 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	public static checkHistorie<T extends CoreTypeData>(setIDs : JavaSet<number>, coreTypeName : string, bezeichnerName : string, historie : List<T>) : void {
 		let schuljahr : number | null = null;
 		for (const eintrag of historie) {
-			if ((schuljahr !== null) && ((eintrag.gueltigVon === null) || (eintrag.gueltigVon < 2000) || (JavaInteger.compare(eintrag.gueltigVon, schuljahr) <= 0) || ((eintrag.gueltigBis !== null) && (eintrag.gueltigBis > 3000))))
+			if ((schuljahr !== null) && ((eintrag.gueltigVon === null) || (eintrag.gueltigVon < 1900) || (JavaInteger.compare(eintrag.gueltigVon, schuljahr) <= 0) || ((eintrag.gueltigBis !== null) && (eintrag.gueltigBis > 3000))))
 				throw new CoreTypeException(coreTypeName + ": Die Historie ist fehlerhaft beim Eintrag für " + bezeichnerName + ". Neuere Historieneinträge müssen weiter unten in der Liste stehen.")
 			schuljahr = (eintrag.gueltigBis === null) ? JavaInteger.MAX_VALUE : eintrag.gueltigBis;
 			if (setIDs.contains(eintrag.id))

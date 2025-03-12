@@ -42,19 +42,21 @@ export function orte_filter(items: OrtKatalogEintrag[], search: string): OrtKata
 export function staatsangehoerigkeitKatalogEintragFilter(items: Iterable<Nationalitaeten>, search: string) {
 	const list = [];
 	for (const i of items)
-		if (i.daten.staatsangehoerigkeit.toLocaleLowerCase().includes(search.toLocaleLowerCase())
-			|| i.daten.iso3.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+		if (i.historie().getLast().staatsangehoerigkeit.toLocaleLowerCase().includes(search.toLocaleLowerCase())
+			|| i.historie().getLast().iso3.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
 			list.push(i);
 	return list;
 }
 
 /** Sortierfunktion für Staatsangehörigkeiten */
 export function staatsangehoerigkeitKatalogEintragSort(a: Nationalitaeten, b: Nationalitaeten) {
-	if ((a.daten.staatsangehoerigkeit.length > 0) && (b.daten.staatsangehoerigkeit.length > 0))
-		return a.daten.staatsangehoerigkeit.localeCompare(b.daten.staatsangehoerigkeit);
-	else if ((a.daten.staatsangehoerigkeit.length > 0) && (b.daten.staatsangehoerigkeit.length === 0))
+	const va = a.historie().getLast().staatsangehoerigkeit;
+	const vb = b.historie().getLast().staatsangehoerigkeit;
+	if ((va.length > 0) && (vb.length > 0))
+		return va.localeCompare(vb);
+	else if ((va.length > 0) && (vb.length === 0))
 		return -1;
-	else if ((a.daten.staatsangehoerigkeit.length === 0) && (b.daten.staatsangehoerigkeit.length === 0))
+	else if ((va.length === 0) && (vb.length === 0))
 		return 1;
 	return 0;
 }
@@ -78,15 +80,15 @@ export function verkehrsspracheKatalogEintragSort(a: Verkehrssprache, b: Verkehr
 export function nationalitaetenKatalogEintragFilter(items: Iterable<Nationalitaeten>, search: string) {
 	const list = [];
 	for (const i of items)
-		if (i.daten.bezeichnung.toLocaleLowerCase().includes(search.toLocaleLowerCase())
-			|| i.daten.iso3.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+		if (i.historie().getLast().bezeichnung.toLocaleLowerCase().includes(search.toLocaleLowerCase())
+			|| i.historie().getLast().iso3.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
 			list.push(i);
 	return list;
 }
 
 /** Sortierfunktion für Länder */
 export function nationalitaetenKatalogEintragSort(a: Nationalitaeten, b: Nationalitaeten) {
-	return a.daten.bezeichnung.localeCompare(b.daten.bezeichnung);
+	return a.historie().getLast().bezeichnung.localeCompare(b.historie().getLast().bezeichnung);
 }
 
 export function katalogEintragSort(a: KatalogEintrag | null, b: KatalogEintrag | null) {

@@ -10,7 +10,7 @@ import de.svws_nrw.db.converter.current.NationalitaetenConverter;
 import de.svws_nrw.db.converter.current.VerkehrssprachenConverter;
 
 import de.svws_nrw.asd.types.Geschlecht;
-import de.svws_nrw.core.types.schule.Nationalitaeten;
+import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.core.types.schule.Verkehrssprache;
 
 

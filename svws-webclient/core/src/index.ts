@@ -172,6 +172,7 @@ export { BerufskollegAnlageKatalogEintrag } from './asd/data/schule/Berufskolleg
 export { BildungsgangTypKatalogEintrag } from './asd/data/schule/BildungsgangTypKatalogEintrag';
 export { FoerderschwerpunktKatalogEintrag } from './asd/data/schule/FoerderschwerpunktKatalogEintrag';
 export { KindergartenbesuchKatalogEintrag } from './asd/data/schule/KindergartenbesuchKatalogEintrag';
+export { NationalitaetenKatalogEintrag } from './asd/data/schule/NationalitaetenKatalogEintrag';
 export { OrganisationsformKatalogEintrag } from './asd/data/schule/OrganisationsformKatalogEintrag';
 export { ReligionKatalogEintrag } from './asd/data/schule/ReligionKatalogEintrag';
 export { SchulabschlussAllgemeinbildendKatalogEintrag } from './asd/data/schule/SchulabschlussAllgemeinbildendKatalogEintrag';
@@ -230,6 +231,7 @@ export { BerufskollegBildungsgangTyp } from './asd/types/schule/BerufskollegBild
 export { BerufskollegOrganisationsformen } from './asd/types/schule/BerufskollegOrganisationsformen';
 export { Foerderschwerpunkt } from './asd/types/schule/Foerderschwerpunkt';
 export { Kindergartenbesuch } from './asd/types/schule/Kindergartenbesuch';
+export { Nationalitaeten } from './asd/types/schule/Nationalitaeten';
 export { Religion } from './asd/types/schule/Religion';
 export { SchulabschlussAllgemeinbildend } from './asd/types/schule/SchulabschlussAllgemeinbildend';
 export { SchulabschlussBerufsbildend } from './asd/types/schule/SchulabschlussBerufsbildend';
@@ -540,7 +542,6 @@ export { HerkunftsartKatalogEintragBezeichnung } from './core/data/schule/Herkun
 export { HerkunftsschulnummerKatalogEintrag } from './core/data/schule/HerkunftsschulnummerKatalogEintrag';
 export { LehrerEinwilligung } from './core/data/schule/LehrerEinwilligung';
 export { Merkmal } from './core/data/schule/Merkmal';
-export { NationalitaetenKatalogEintrag } from './core/data/schule/NationalitaetenKatalogEintrag';
 export { PruefungsordnungKatalogEintrag } from './core/data/schule/PruefungsordnungKatalogEintrag';
 export { Raum } from './core/data/schule/Raum';
 export { ReformpaedagogikKatalogEintrag } from './core/data/schule/ReformpaedagogikKatalogEintrag';
@@ -668,7 +669,6 @@ export { BerufskollegBerufsebene1 } from './core/types/schule/BerufskollegBerufs
 export { BerufskollegBerufsebene2 } from './core/types/schule/BerufskollegBerufsebene2';
 export { BerufskollegBerufsebene3 } from './core/types/schule/BerufskollegBerufsebene3';
 export { Herkunftsschulnummern } from './core/types/schule/Herkunftsschulnummern';
-export { Nationalitaeten } from './core/types/schule/Nationalitaeten';
 export { PersonTyp } from './core/types/schule/PersonTyp';
 export { Pruefungsordnung } from './core/types/schule/Pruefungsordnung';
 export { Reformpaedagogik } from './core/types/schule/Reformpaedagogik';

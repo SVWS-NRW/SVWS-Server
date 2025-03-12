@@ -1,0 +1,3982 @@
+{
+	"version": 2,
+	"daten": [ {
+		"bezeichner": "XXA",
+		"idStatistik": "997",
+		"historie": [ {
+			"id" : 88088065,
+			"schluessel": "997",
+			"kuerzel": "XXA",
+			"text": "(staatenlos)",
+			"iso3": "XXA",
+			"iso2": "XA",
+			"isoNumerisch": "997",
+			"codeDEStatis": "997",
+			"bezeichnungSuche": "(staatenlos)",
+			"bezeichnung": "(staatenlos)",
+			"bezeichnungLang": "(staatenlos)",
+			"staatsangehoerigkeit": "(staatenlos)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "XXB",
+		"idStatistik": "998",
+		"historie": [ {
+			"id": 88088066,
+			"schluessel": "998",
+			"kuerzel": "XXB",
+			"text": "(ungeklärt)",
+			"iso3": "XXB",
+			"iso2": "XB",
+			"isoNumerisch": "998",
+			"codeDEStatis": "998",
+			"bezeichnungSuche": "(ungeklärt)",
+			"bezeichnung": "(ungeklärt)",
+			"bezeichnungLang": "(ungeklärt)",
+			"staatsangehoerigkeit": "(ungeklärt)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "XXC",
+		"idStatistik": "999",
+		"historie": [ {
+			"id": 88088067,
+			"schluessel": "999",
+			"kuerzel": "XXC",
+			"text": "(ohne Angabe)",
+			"iso3": "XXC",
+			"iso2": "XC",
+			"isoNumerisch": "999",
+			"codeDEStatis": "999",
+			"bezeichnungSuche": "(ohne Angabe)",
+			"bezeichnung": "(ohne Angabe)",
+			"bezeichnungLang": "(ohne Angabe)",
+			"staatsangehoerigkeit": "(ohne Angabe)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "AFG",
+		"idStatistik": "423",
+		"historie": [ {
+			"id": 65070071,
+			"schluessel": "423",
+			"kuerzel": "AFG",
+			"text": "Afghanistan",
+			"iso3": "AFG",
+			"iso2": "AF",
+			"isoNumerisch": "004",
+			"codeDEStatis": "423",
+			"bezeichnungSuche": "Afghanistan",
+			"bezeichnung": "Afghanistan",
+			"bezeichnungLang": "die Islamische Republik Afghanistan",
+			"staatsangehoerigkeit": "afghanisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "EGY",
+		"idStatistik": "287",
+		"historie": [ {
+			"id": 69071089,
+			"schluessel": "287",
+			"kuerzel": "EGY",
+			"text": "Ägypten",
+			"iso3": "EGY",
+			"iso2": "EG",
+			"isoNumerisch": "818",
+			"codeDEStatis": "287",
+			"bezeichnungSuche": "Ägypten",
+			"bezeichnung": "Ägypten",
+			"bezeichnungLang": "die Arabische Republik Ägypten",
+			"staatsangehoerigkeit": "ägyptisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ALB",
+		"idStatistik": "121",
+		"historie": [ {
+			"id": 65076066,
+			"schluessel": "121",
+			"kuerzel": "ALB",
+			"text": "Albanien",
+			"iso3": "ALB",
+			"iso2": "AL",
+			"isoNumerisch": "008",
+			"codeDEStatis": "121",
+			"bezeichnungSuche": "Albanien",
+			"bezeichnung": "Albanien",
+			"bezeichnungLang": "die Republik Albanien",
+			"staatsangehoerigkeit": "albanisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "DZA",
+		"idStatistik": "221",
+		"historie": [ {
+			"id": 68090065,
+			"schluessel": "221",
+			"kuerzel": "DZA",
+			"text": "Algerien",
+			"iso3": "DZA",
+			"iso2": "DZ",
+			"isoNumerisch": "012",
+			"codeDEStatis": "221",
+			"bezeichnungSuche": "Algerien",
+			"bezeichnung": "Algerien",
+			"bezeichnungLang": "die Demokratische Volksrepublik Algerien",
+			"staatsangehoerigkeit": "algerisch",
+			"gueltigVon": 1961,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "AND",
+		"idStatistik": "123",
+		"historie": [ {
+			"id": 65078068,
+			"schluessel": "123",
+			"kuerzel": "AND",
+			"text": "Andorra",
+			"iso3": "AND",
+			"iso2": "AD",
+			"isoNumerisch": "020",
+			"codeDEStatis": "123",
+			"bezeichnungSuche": "Andorra",
+			"bezeichnung": "Andorra",
+			"bezeichnungLang": "das Fürstentum Andorra",
+			"staatsangehoerigkeit": "andorranisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "AGO",
+		"idStatistik": "223",
+		"historie": [ {
+			"id": 65071079,
+			"schluessel": "223",
+			"kuerzel": "AGO",
+			"text": "Angola",
+			"iso3": "AGO",
+			"iso2": "AO",
+			"isoNumerisch": "024",
+			"codeDEStatis": "223",
+			"bezeichnungSuche": "Angola",
+			"bezeichnung": "Angola",
+			"bezeichnungLang": "die Republik Angola",
+			"staatsangehoerigkeit": "angolanisch",
+			"gueltigVon": 1975,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ATG",
+		"idStatistik": "320",
+		"historie": [ {
+			"id": 65084071,
+			"schluessel": "320",
+			"kuerzel": "ATG",
+			"text": "Antigua und Barbuda",
+			"iso3": "ATG",
+			"iso2": "AG",
+			"isoNumerisch": "028",
+			"codeDEStatis": "320",
+			"bezeichnungSuche": "Antigua und Barbuda",
+			"bezeichnung": "Antigua und Barbuda",
+			"bezeichnungLang": "Antigua und Barbuda",
+			"staatsangehoerigkeit": "antiguanisch",
+			"gueltigVon": 1981,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "GNQ",
+		"idStatistik": "274",
+		"historie": [ {
+			"id": 71078081,
+			"schluessel": "274",
+			"kuerzel": "GNQ",
+			"text": "Äquatorialguinea",
+			"iso3": "GNQ",
+			"iso2": "GQ",
+			"isoNumerisch": "226",
+			"codeDEStatis": "274",
+			"bezeichnungSuche": "Äquatorialguinea",
+			"bezeichnung": "Äquatorialguinea",
+			"bezeichnungLang": "die Republik Äquatorialguinea",
+			"staatsangehoerigkeit": "äquatorialguineisch",
+			"gueltigVon": 1968,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ARG",
+		"idStatistik": "323",
+		"historie": [ {
+			"id": 65082071,
+			"schluessel": "323",
+			"kuerzel": "ARG",
+			"text": "Argentinien",
+			"iso3": "ARG",
+			"iso2": "AR",
+			"isoNumerisch": "032",
+			"codeDEStatis": "323",
+			"bezeichnungSuche": "Argentinien",
+			"bezeichnung": "Argentinien",
+			"bezeichnungLang": "die Argentinische Republik",
+			"staatsangehoerigkeit": "argentinisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ARM",
+		"idStatistik": "422",
+		"historie": [ {
+			"id": 65082077,
+			"schluessel": "422",
+			"kuerzel": "ARM",
+			"text": "Armenien",
+			"iso3": "ARM",
+			"iso2": "AM",
+			"isoNumerisch": "051",
+			"codeDEStatis": "422",
+			"bezeichnungSuche": "Armenien",
+			"bezeichnung": "Armenien",
+			"bezeichnungLang": "die Republik Armenien",
+			"staatsangehoerigkeit": "armenisch",
+			"gueltigVon": 1991,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "AZE",
+		"idStatistik": "425",
+		"historie": [ {
+			"id": 65090069,
+			"schluessel": "425",
+			"kuerzel": "AZE",
+			"text": "Aserbaidschan",
+			"iso3": "AZE",
+			"iso2": "AZ",
+			"isoNumerisch": "031",
+			"codeDEStatis": "425",
+			"bezeichnungSuche": "Aserbaidschan",
+			"bezeichnung": "Aserbaidschan",
+			"bezeichnungLang": "die Republik Aserbaidschan",
+			"staatsangehoerigkeit": "aserbaidschanisch",
+			"gueltigVon": 1991,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ETH",
+		"idStatistik": "225",
+		"historie": [ {
+			"id": 69084072,
+			"schluessel": "225",
+			"kuerzel": "ETH",
+			"text": "Äthiopien",
+			"iso3": "ETH",
+			"iso2": "ET",
+			"isoNumerisch": "231",
+			"codeDEStatis": "225",
+			"bezeichnungSuche": "Äthiopien",
+			"bezeichnung": "Äthiopien",
+			"bezeichnungLang": "die Demokratische Bundesrepublik Äthiopien",
+			"staatsangehoerigkeit": "äthiopisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "AUS",
+		"idStatistik": "523",
+		"historie": [ {
+			"id": 65085083,
+			"schluessel": "523",
+			"kuerzel": "AUS",
+			"text": "Australien",
+			"iso3": "AUS",
+			"iso2": "AU",
+			"isoNumerisch": "036",
+			"codeDEStatis": "523",
+			"bezeichnungSuche": "Australien",
+			"bezeichnung": "Australien",
+			"bezeichnungLang": "Australien",
+			"staatsangehoerigkeit": "australisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BHS",
+		"idStatistik": "324",
+		"historie": [ {
+			"id": 66072083,
+			"schluessel": "324",
+			"kuerzel": "BHS",
+			"text": "Bahamas",
+			"iso3": "BHS",
+			"iso2": "BS",
+			"isoNumerisch": "044",
+			"codeDEStatis": "324",
+			"bezeichnungSuche": "Bahamas",
+			"bezeichnung": "Bahamas",
+			"bezeichnungLang": "das Commonwealth der Bahamas",
+			"staatsangehoerigkeit": "bahamaisch",
+			"gueltigVon": 1972,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BHR",
+		"idStatistik": "424",
+		"historie": [ {
+			"id": 66072082,
+			"schluessel": "424",
+			"kuerzel": "BHR",
+			"text": "Bahrain",
+			"iso3": "BHR",
+			"iso2": "BH",
+			"isoNumerisch": "048",
+			"codeDEStatis": "424",
+			"bezeichnungSuche": "Bahrain",
+			"bezeichnung": "Bahrain",
+			"bezeichnungLang": "das Königreich Bahrain",
+			"staatsangehoerigkeit": "bahrainisch",
+			"gueltigVon": 1971,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BGD",
+		"idStatistik": "460",
+		"historie": [ {
+			"id": 66071068,
+			"schluessel": "460",
+			"kuerzel": "BGD",
+			"text": "Bangladesch",
+			"iso3": "BGD",
+			"iso2": "BD",
+			"isoNumerisch": "050",
+			"codeDEStatis": "460",
+			"bezeichnungSuche": "Bangladesch",
+			"bezeichnung": "Bangladesch",
+			"bezeichnungLang": "die Volksrepublik Bangladesch",
+			"staatsangehoerigkeit": "bangladeschisch",
+			"gueltigVon": 1970,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BRB",
+		"idStatistik": "322",
+		"historie": [ {
+			"id": 66082066,
+			"schluessel": "322",
+			"kuerzel": "BRB",
+			"text": "Barbados",
+			"iso3": "BRB",
+			"iso2": "BB",
+			"isoNumerisch": "052",
+			"codeDEStatis": "322",
+			"bezeichnungSuche": "Barbados",
+			"bezeichnung": "Barbados",
+			"bezeichnungLang": "Barbados",
+			"staatsangehoerigkeit": "barbadisch",
+			"gueltigVon": 1966,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BLR",
+		"idStatistik": "169",
+		"historie": [ {
+			"id": 66076082,
+			"schluessel": "169",
+			"kuerzel": "BLR",
+			"text": "Belarus",
+			"iso3": "BLR",
+			"iso2": "BY",
+			"isoNumerisch": "112",
+			"codeDEStatis": "169",
+			"bezeichnungSuche": "Belarus",
+			"bezeichnung": "Belarus",
+			"bezeichnungLang": "die Republik Belarus",
+			"staatsangehoerigkeit": "belarussisch",
+			"gueltigVon": 1991,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BEL",
+		"idStatistik": "124",
+		"historie": [ {
+			"id": 66069076,
+			"schluessel": "124",
+			"kuerzel": "BEL",
+			"text": "Belgien",
+			"iso3": "BEL",
+			"iso2": "BE",
+			"isoNumerisch": "056",
+			"codeDEStatis": "124",
+			"bezeichnungSuche": "Belgien",
+			"bezeichnung": "Belgien",
+			"bezeichnungLang": "das Königreich Belgien",
+			"staatsangehoerigkeit": "belgisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BLZ",
+		"idStatistik": "330",
+		"historie": [ {
+			"id": 66076090,
+			"schluessel": "330",
+			"kuerzel": "BLZ",
+			"text": "Belize",
+			"iso3": "BLZ",
+			"iso2": "BZ",
+			"isoNumerisch": "084",
+			"codeDEStatis": "330",
+			"bezeichnungSuche": "Belize",
+			"bezeichnung": "Belize",
+			"bezeichnungLang": "Belize",
+			"staatsangehoerigkeit": "belizisch",
+			"gueltigVon": 1981,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BEN",
+		"idStatistik": "229",
+		"historie": [ {
+			"id": 66069078,
+			"schluessel": "229",
+			"kuerzel": "BEN",
+			"text": "Benin",
+			"iso3": "BEN",
+			"iso2": "BJ",
+			"isoNumerisch": "204",
+			"codeDEStatis": "229",
+			"bezeichnungSuche": "Benin",
+			"bezeichnung": "Benin",
+			"bezeichnungLang": "die Republik Benin",
+			"staatsangehoerigkeit": "beninisch",
+			"gueltigVon": 1960,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BTN",
+		"idStatistik": "426",
+		"historie": [ {
+			"id": 66084078,
+			"schluessel": "426",
+			"kuerzel": "BTN",
+			"text": "Bhutan",
+			"iso3": "BTN",
+			"iso2": "BT",
+			"isoNumerisch": "064",
+			"codeDEStatis": "426",
+			"bezeichnungSuche": "Bhutan",
+			"bezeichnung": "Bhutan",
+			"bezeichnungLang": "das Königreich Bhutan",
+			"staatsangehoerigkeit": "bhutanisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BOL",
+		"idStatistik": "326",
+		"historie": [ {
+			"id": 66079076,
+			"schluessel": "326",
+			"kuerzel": "BOL",
+			"text": "Plurinationaler Staat Bolivien",
+			"iso3": "BOL",
+			"iso2": "BO",
+			"isoNumerisch": "068",
+			"codeDEStatis": "326",
+			"bezeichnungSuche": "Bolivien",
+			"bezeichnung": "Plurinationaler Staat Bolivien",
+			"bezeichnungLang": "der Plurinationale Staat Bolivien",
+			"staatsangehoerigkeit": "bolivianisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BIH",
+		"idStatistik": "122",
+		"historie": [ {
+			"id": 66073072,
+			"schluessel": "122",
+			"kuerzel": "BIH",
+			"text": "Bosnien und Herzegowina",
+			"iso3": "BIH",
+			"iso2": "BA",
+			"isoNumerisch": "070",
+			"codeDEStatis": "122",
+			"bezeichnungSuche": "Bosnien und Herzegowina",
+			"bezeichnung": "Bosnien und Herzegowina",
+			"bezeichnungLang": "Bosnien und Herzegowina",
+			"staatsangehoerigkeit": "bosnisch-herzegowinisch",
+			"gueltigVon": 1991,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BWA",
+		"idStatistik": "227",
+		"historie": [ {
+			"id": 66087065,
+			"schluessel": "227",
+			"kuerzel": "BWA",
+			"text": "Botsuana",
+			"iso3": "BWA",
+			"iso2": "BW",
+			"isoNumerisch": "072",
+			"codeDEStatis": "227",
+			"bezeichnungSuche": "Botsuana",
+			"bezeichnung": "Botsuana",
+			"bezeichnungLang": "die Republik Botsuana",
+			"staatsangehoerigkeit": "botsuanisch",
+			"gueltigVon": 1966,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BRA",
+		"idStatistik": "327",
+		"historie": [ {
+			"id": 66082065,
+			"schluessel": "327",
+			"kuerzel": "BRA",
+			"text": "Brasilien",
+			"iso3": "BRA",
+			"iso2": "BR",
+			"isoNumerisch": "076",
+			"codeDEStatis": "327",
+			"bezeichnungSuche": "Brasilien",
+			"bezeichnung": "Brasilien",
+			"bezeichnungLang": "die Föderative Republik Brasilien",
+			"staatsangehoerigkeit": "brasilianisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BRN",
+		"idStatistik": "429",
+		"historie": [ {
+			"id": 66082078,
+			"schluessel": "429",
+			"kuerzel": "BRN",
+			"text": "Brunei Darussalam",
+			"iso3": "BRN",
+			"iso2": "BN",
+			"isoNumerisch": "096",
+			"codeDEStatis": "429",
+			"bezeichnungSuche": "Brunei Darussalam",
+			"bezeichnung": "Brunei Darussalam",
+			"bezeichnungLang": "Brunei Darussalam",
+			"staatsangehoerigkeit": "bruneiisch",
+			"gueltigVon": 1983,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BGR",
+		"idStatistik": "125",
+		"historie": [ {
+			"id": 66071082,
+			"schluessel": "125",
+			"kuerzel": "BGR",
+			"text": "Bulgarien",
+			"iso3": "BGR",
+			"iso2": "BG",
+			"isoNumerisch": "100",
+			"codeDEStatis": "125",
+			"bezeichnungSuche": "Bulgarien",
+			"bezeichnung": "Bulgarien",
+			"bezeichnungLang": "die Republik Bulgarien",
+			"staatsangehoerigkeit": "bulgarisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BFA",
+		"idStatistik": "258",
+		"historie": [ {
+			"id": 66070065,
+			"schluessel": "258",
+			"kuerzel": "BFA",
+			"text": "Burkina Faso",
+			"iso3": "BFA",
+			"iso2": "BF",
+			"isoNumerisch": "854",
+			"codeDEStatis": "258",
+			"bezeichnungSuche": "Burkina Faso",
+			"bezeichnung": "Burkina Faso",
+			"bezeichnungLang": "Burkina Faso",
+			"staatsangehoerigkeit": "burkinisch",
+			"gueltigVon": 1960,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BDI",
+		"idStatistik": "291",
+		"historie": [ {
+			"id": 66068073,
+			"schluessel": "291",
+			"kuerzel": "BDI",
+			"text": "Burundi",
+			"iso3": "BDI",
+			"iso2": "BI",
+			"isoNumerisch": "108",
+			"codeDEStatis": "291",
+			"bezeichnungSuche": "Burundi",
+			"bezeichnung": "Burundi",
+			"bezeichnungLang": "die Republik Burundi",
+			"staatsangehoerigkeit": "burundisch",
+			"gueltigVon": 1961,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "CPV",
+		"idStatistik": "242",
+		"historie": [ {
+			"id": 67080086,
+			"schluessel": "242",
+			"kuerzel": "CPV",
+			"text": "Cabo Verde",
+			"iso3": "CPV",
+			"iso2": "CV",
+			"isoNumerisch": "132",
+			"codeDEStatis": "242",
+			"bezeichnungSuche": "Cabo Verde",
+			"bezeichnung": "Cabo Verde",
+			"bezeichnungLang": "die Republik Cabo Verde",
+			"staatsangehoerigkeit": "cabo-verdisch",
+			"gueltigVon": 1974,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "CHL",
+		"idStatistik": "332",
+		"historie": [ {
+			"id": 67072076,
+			"schluessel": "332",
+			"kuerzel": "CHL",
+			"text": "Chile",
+			"iso3": "CHL",
+			"iso2": "CL",
+			"isoNumerisch": "152",
+			"codeDEStatis": "332",
+			"bezeichnungSuche": "Chile",
+			"bezeichnung": "Chile",
+			"bezeichnungLang": "die Republik Chile",
+			"staatsangehoerigkeit": "chilenisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "CHN",
+		"idStatistik": "479",
+		"historie": [ {
+			"id": 67072078,
+			"schluessel": "479",
+			"kuerzel": "CHN",
+			"text": "China",
+			"iso3": "CHN",
+			"iso2": "CN",
+			"isoNumerisch": "156",
+			"codeDEStatis": "479",
+			"bezeichnungSuche": "China",
+			"bezeichnung": "China",
+			"bezeichnungLang": "die Volksrepublik China",
+			"staatsangehoerigkeit": "chinesisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "COK",
+		"idStatistik": "527",
+		"historie": [ {
+			"id": 67079075,
+			"schluessel": "527",
+			"kuerzel": "COK",
+			"text": "Cookinseln",
+			"iso3": "COK",
+			"iso2": "CK",
+			"isoNumerisch": "184",
+			"codeDEStatis": "527",
+			"bezeichnungSuche": "Cookinseln",
+			"bezeichnung": "Cookinseln",
+			"bezeichnungLang": "die Cookinseln",
+			"staatsangehoerigkeit": "neuseeländisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "CRI",
+		"idStatistik": "334",
+		"historie": [ {
+			"id": 67082073,
+			"schluessel": "334",
+			"kuerzel": "CRI",
+			"text": "Costa Rica",
+			"iso3": "CRI",
+			"iso2": "CR",
+			"isoNumerisch": "188",
+			"codeDEStatis": "334",
+			"bezeichnungSuche": "Costa Rica",
+			"bezeichnung": "Costa Rica",
+			"bezeichnungLang": "die Republik Costa Rica",
+			"staatsangehoerigkeit": "costa-ricanisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "CIV",
+		"idStatistik": "231",
+		"historie": [ {
+			"id": 67073086,
+			"schluessel": "231",
+			"kuerzel": "CIV",
+			"text": "Côte d’Ivoire",
+			"iso3": "CIV",
+			"iso2": "CI",
+			"isoNumerisch": "384",
+			"codeDEStatis": "231",
+			"bezeichnungSuche": "Côte d’Ivoire",
+			"bezeichnung": "Côte d’Ivoire",
+			"bezeichnungLang": "die Republik Côte d’Ivoire",
+			"staatsangehoerigkeit": "ivorisch",
+			"gueltigVon": 1960,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "DNK",
+		"idStatistik": "126",
+		"historie": [ {
+			"id": 68078075,
+			"schluessel": "126",
+			"kuerzel": "DNK",
+			"text": "Dänemark",
+			"iso3": "DNK",
+			"iso2": "DK",
+			"isoNumerisch": "208",
+			"codeDEStatis": "126",
+			"bezeichnungSuche": "Dänemark",
+			"bezeichnung": "Dänemark",
+			"bezeichnungLang": "das Königreich Dänemark",
+			"staatsangehoerigkeit": "dänisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "DEU",
+		"idStatistik": "000",
+		"historie": [ {
+			"id": 68069085,
+			"schluessel": "000",
+			"kuerzel": "DEU",
+			"text": "Deutschland",
+			"iso3": "DEU",
+			"iso2": "DE",
+			"isoNumerisch": "276",
+			"codeDEStatis": "000",
+			"bezeichnungSuche": "Deutschland",
+			"bezeichnung": "Deutschland",
+			"bezeichnungLang": "die Bundesrepublik Deutschland",
+			"staatsangehoerigkeit": "deutsch",
+			"gueltigVon": 1948,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "DMA",
+		"idStatistik": "333",
+		"historie": [ {
+			"id": 68077065,
+			"schluessel": "333",
+			"kuerzel": "DMA",
+			"text": "Dominica",
+			"iso3": "DMA",
+			"iso2": "DM",
+			"isoNumerisch": "212",
+			"codeDEStatis": "333",
+			"bezeichnungSuche": "Dominica",
+			"bezeichnung": "Dominica",
+			"bezeichnungLang": "das Commonwealth Dominica",
+			"staatsangehoerigkeit": "dominicanisch",
+			"gueltigVon": 1978,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "DOM",
+		"idStatistik": "335",
+		"historie": [ {
+			"id": 68079077,
+			"schluessel": "335",
+			"kuerzel": "DOM",
+			"text": "Dominikanische Republik",
+			"iso3": "DOM",
+			"iso2": "DO",
+			"isoNumerisch": "214",
+			"codeDEStatis": "335",
+			"bezeichnungSuche": "Dominikanische Republik",
+			"bezeichnung": "Dominikanische Republik",
+			"bezeichnungLang": "die Dominikanische Republik",
+			"staatsangehoerigkeit": "dominikanisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "DJI",
+		"idStatistik": "230",
+		"historie": [ {
+			"id": 68074073,
+			"schluessel": "230",
+			"kuerzel": "DJI",
+			"text": "Dschibuti",
+			"iso3": "DJI",
+			"iso2": "DJ",
+			"isoNumerisch": "262",
+			"codeDEStatis": "230",
+			"bezeichnungSuche": "Dschibuti",
+			"bezeichnung": "Dschibuti",
+			"bezeichnungLang": "die Republik Dschibuti",
+			"staatsangehoerigkeit": "dschibutisch",
+			"gueltigVon": 1976,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ECU",
+		"idStatistik": "336",
+		"historie": [ {
+			"id": 69067085,
+			"schluessel": "336",
+			"kuerzel": "ECU",
+			"text": "Ecuador",
+			"iso3": "ECU",
+			"iso2": "EC",
+			"isoNumerisch": "218",
+			"codeDEStatis": "336",
+			"bezeichnungSuche": "Ecuador",
+			"bezeichnung": "Ecuador",
+			"bezeichnungLang": "die Republik Ecuador",
+			"staatsangehoerigkeit": "ecuadorianisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SLV",
+		"idStatistik": "337",
+		"historie": [ {
+			"id": 83076086,
+			"schluessel": "337",
+			"kuerzel": "SLV",
+			"text": "El Salvador",
+			"iso3": "SLV",
+			"iso2": "SV",
+			"isoNumerisch": "222",
+			"codeDEStatis": "337",
+			"bezeichnungSuche": "El Salvador",
+			"bezeichnung": "El Salvador",
+			"bezeichnungLang": "die Republik El Salvador",
+			"staatsangehoerigkeit": "salvadorianisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ERI",
+		"idStatistik": "224",
+		"historie": [ {
+			"id": 69082073,
+			"schluessel": "224",
+			"kuerzel": "ERI",
+			"text": "Eritrea",
+			"iso3": "ERI",
+			"iso2": "ER",
+			"isoNumerisch": "232",
+			"codeDEStatis": "224",
+			"bezeichnungSuche": "Eritrea",
+			"bezeichnung": "Eritrea",
+			"bezeichnungLang": "der Staat Eritrea",
+			"staatsangehoerigkeit": "eritreisch",
+			"gueltigVon": 1992,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "EST",
+		"idStatistik": "127",
+		"historie": [ {
+			"id": 69083084,
+			"schluessel": "127",
+			"kuerzel": "EST",
+			"text": "Estland",
+			"iso3": "EST",
+			"iso2": "EE",
+			"isoNumerisch": "233",
+			"codeDEStatis": "127",
+			"bezeichnungSuche": "Estland",
+			"bezeichnung": "Estland",
+			"bezeichnungLang": "die Republik Estland",
+			"staatsangehoerigkeit": "estnisch",
+			"gueltigVon": 1991,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SWZ",
+		"idStatistik": "281",
+		"historie": [ {
+			"id": 83087090,
+			"schluessel": "281",
+			"kuerzel": "SWZ",
+			"text": "Eswatini",
+			"iso3": "SWZ",
+			"iso2": "SZ",
+			"isoNumerisch": "748",
+			"codeDEStatis": "281",
+			"bezeichnungSuche": "Eswatini",
+			"bezeichnung": "Eswatini",
+			"bezeichnungLang": "das Königreich Eswatini",
+			"staatsangehoerigkeit": "eswatinisch",
+			"gueltigVon": 1968,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FJI",
+		"idStatistik": "526",
+		"historie": [ {
+			"id": 70074073,
+			"schluessel": "526",
+			"kuerzel": "FJI",
+			"text": "Fidschi",
+			"iso3": "FJI",
+			"iso2": "FJ",
+			"isoNumerisch": "242",
+			"codeDEStatis": "526",
+			"bezeichnungSuche": "Fidschi",
+			"bezeichnung": "Fidschi",
+			"bezeichnungLang": "die Republik Fidschi",
+			"staatsangehoerigkeit": "fidschianisch",
+			"gueltigVon": 1970,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FIN",
+		"idStatistik": "128",
+		"historie": [ {
+			"id": 70073078,
+			"schluessel": "128",
+			"kuerzel": "FIN",
+			"text": "Finnland",
+			"iso3": "FIN",
+			"iso2": "FI",
+			"isoNumerisch": "246",
+			"codeDEStatis": "128",
+			"bezeichnungSuche": "Finnland",
+			"bezeichnung": "Finnland",
+			"bezeichnungLang": "die Republik Finnland",
+			"staatsangehoerigkeit": "finnisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FRA",
+		"idStatistik": "129",
+		"historie": [ {
+			"id": 70082065,
+			"schluessel": "129",
+			"kuerzel": "FRA",
+			"text": "Frankreich",
+			"iso3": "FRA",
+			"iso2": "FR",
+			"isoNumerisch": "250",
+			"codeDEStatis": "129",
+			"bezeichnungSuche": "Frankreich",
+			"bezeichnung": "Frankreich",
+			"bezeichnungLang": "die Französische Republik",
+			"staatsangehoerigkeit": "französisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "GAB",
+		"idStatistik": "236",
+		"historie": [ {
+			"id": 71065066,
+			"schluessel": "236",
+			"kuerzel": "GAB",
+			"text": "Gabun",
+			"iso3": "GAB",
+			"iso2": "GA",
+			"isoNumerisch": "266",
+			"codeDEStatis": "236",
+			"bezeichnungSuche": "Gabun",
+			"bezeichnung": "Gabun",
+			"bezeichnungLang": "die Gabunische Republik",
+			"staatsangehoerigkeit": "gabunisch",
+			"gueltigVon": 1960,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "GMB",
+		"idStatistik": "237",
+		"historie": [ {
+			"id": 71077066,
+			"schluessel": "237",
+			"kuerzel": "GMB",
+			"text": "Gambia",
+			"iso3": "GMB",
+			"iso2": "GM",
+			"isoNumerisch": "270",
+			"codeDEStatis": "237",
+			"bezeichnungSuche": "Gambia",
+			"bezeichnung": "Gambia",
+			"bezeichnungLang": "die Republik Gambia",
+			"staatsangehoerigkeit": "gambisch",
+			"gueltigVon": 1964,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "GEO",
+		"idStatistik": "430",
+		"historie": [ {
+			"id": 71069079,
+			"schluessel": "430",
+			"kuerzel": "GEO",
+			"text": "Georgien",
+			"iso3": "GEO",
+			"iso2": "GE",
+			"isoNumerisch": "268",
+			"codeDEStatis": "430",
+			"bezeichnungSuche": "Georgien",
+			"bezeichnung": "Georgien",
+			"bezeichnungLang": "Georgien",
+			"staatsangehoerigkeit": "georgisch",
+			"gueltigVon": 1990,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "GHA",
+		"idStatistik": "238",
+		"historie": [ {
+			"id": 71072065,
+			"schluessel": "238",
+			"kuerzel": "GHA",
+			"text": "Ghana",
+			"iso3": "GHA",
+			"iso2": "GH",
+			"isoNumerisch": "288",
+			"codeDEStatis": "238",
+			"bezeichnungSuche": "Ghana",
+			"bezeichnung": "Ghana",
+			"bezeichnungLang": "die Republik Ghana",
+			"staatsangehoerigkeit": "ghanaisch",
+			"gueltigVon": 1956,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "GRD",
+		"idStatistik": "340",
+		"historie": [ {
+			"id": 71082068,
+			"schluessel": "340",
+			"kuerzel": "GRD",
+			"text": "Grenada",
+			"iso3": "GRD",
+			"iso2": "GD",
+			"isoNumerisch": "308",
+			"codeDEStatis": "340",
+			"bezeichnungSuche": "Grenada",
+			"bezeichnung": "Grenada",
+			"bezeichnungLang": "Grenada",
+			"staatsangehoerigkeit": "grenadisch",
+			"gueltigVon": 1973,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "GRC",
+		"idStatistik": "134",
+		"historie": [ {
+			"id": 71082067,
+			"schluessel": "134",
+			"kuerzel": "GRC",
+			"text": "Griechenland",
+			"iso3": "GRC",
+			"iso2": "GR",
+			"isoNumerisch": "300",
+			"codeDEStatis": "134",
+			"bezeichnungSuche": "Griechenland",
+			"bezeichnung": "Griechenland",
+			"bezeichnungLang": "die Hellenische Republik",
+			"staatsangehoerigkeit": "griechisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "GTM",
+		"idStatistik": "345",
+		"historie": [ {
+			"id": 71084077,
+			"schluessel": "345",
+			"kuerzel": "GTM",
+			"text": "Guatemala",
+			"iso3": "GTM",
+			"iso2": "GT",
+			"isoNumerisch": "320",
+			"codeDEStatis": "345",
+			"bezeichnungSuche": "Guatemala",
+			"bezeichnung": "Guatemala",
+			"bezeichnungLang": "die Republik Guatemala",
+			"staatsangehoerigkeit": "guatemaltekisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "GIN",
+		"idStatistik": "261",
+		"historie": [ {
+			"id": 71073078,
+			"schluessel": "261",
+			"kuerzel": "GIN",
+			"text": "Guinea",
+			"iso3": "GIN",
+			"iso2": "GN",
+			"isoNumerisch": "324",
+			"codeDEStatis": "261",
+			"bezeichnungSuche": "Guinea",
+			"bezeichnung": "Guinea",
+			"bezeichnungLang": "die Republik Guinea",
+			"staatsangehoerigkeit": "guineisch",
+			"gueltigVon": 1958,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "GNB",
+		"idStatistik": "259",
+		"historie": [ {
+			"id": 71078066,
+			"schluessel": "259",
+			"kuerzel": "GNB",
+			"text": "Guinea-Bissau",
+			"iso3": "GNB",
+			"iso2": "GW",
+			"isoNumerisch": "624",
+			"codeDEStatis": "259",
+			"bezeichnungSuche": "Guinea-Bissau",
+			"bezeichnung": "Guinea-Bissau",
+			"bezeichnungLang": "die Republik Guinea-Bissau",
+			"staatsangehoerigkeit": "guinea-bissauisch",
+			"gueltigVon": 1973,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "GUY",
+		"idStatistik": "328",
+		"historie": [ {
+			"id": 71085089,
+			"schluessel": "328",
+			"kuerzel": "GUY",
+			"text": "Guyana",
+			"iso3": "GUY",
+			"iso2": "GY",
+			"isoNumerisch": "328",
+			"codeDEStatis": "328",
+			"bezeichnungSuche": "Guyana",
+			"bezeichnung": "Guyana",
+			"bezeichnungLang": "die Kooperative Republik Guyana",
+			"staatsangehoerigkeit": "guyanisch",
+			"gueltigVon": 1965,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "HTI",
+		"idStatistik": "346",
+		"historie": [ {
+			"id": 72084073,
+			"schluessel": "346",
+			"kuerzel": "HTI",
+			"text": "Haiti",
+			"iso3": "HTI",
+			"iso2": "HT",
+			"isoNumerisch": "332",
+			"codeDEStatis": "346",
+			"bezeichnungSuche": "Haiti",
+			"bezeichnung": "Haiti",
+			"bezeichnungLang": "die Republik Haiti",
+			"staatsangehoerigkeit": "haitianisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "HND",
+		"idStatistik": "347",
+		"historie": [ {
+			"id": 72078068,
+			"schluessel": "347",
+			"kuerzel": "HND",
+			"text": "Honduras",
+			"iso3": "HND",
+			"iso2": "HN",
+			"isoNumerisch": "340",
+			"codeDEStatis": "347",
+			"bezeichnungSuche": "Honduras",
+			"bezeichnung": "Honduras",
+			"bezeichnungLang": "die Republik Honduras",
+			"staatsangehoerigkeit": "honduranisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "HKG",
+		"idStatistik": "411",
+		"historie": [ {
+			"id": 72075071,
+			"schluessel": "411",
+			"kuerzel": "HKG",
+			"text": "Hongkong",
+			"iso3": "HKG",
+			"iso2": "HK",
+			"isoNumerisch": "344",
+			"codeDEStatis": "411",
+			"bezeichnungSuche": "Hongkong",
+			"bezeichnung": "Hongkong",
+			"bezeichnungLang": "die Sonderverwaltungsregion Hongkong",
+			"staatsangehoerigkeit": "chinesisch (Hongkong)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "IND",
+		"idStatistik": "436",
+		"historie": [ {
+			"id": 73078068,
+			"schluessel": "436",
+			"kuerzel": "IND",
+			"text": "Indien",
+			"iso3": "IND",
+			"iso2": "IN",
+			"isoNumerisch": "356",
+			"codeDEStatis": "436",
+			"bezeichnungSuche": "Indien",
+			"bezeichnung": "Indien",
+			"bezeichnungLang": "die Republik Indien",
+			"staatsangehoerigkeit": "indisch",
+			"gueltigVon": 1947,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "IDN",
+		"idStatistik": "437",
+		"historie": [ {
+			"id": 73068078,
+			"schluessel": "437",
+			"kuerzel": "IDN",
+			"text": "Indonesien",
+			"iso3": "IDN",
+			"iso2": "ID",
+			"isoNumerisch": "360",
+			"codeDEStatis": "437",
+			"bezeichnungSuche": "Indonesien",
+			"bezeichnung": "Indonesien",
+			"bezeichnungLang": "die Republik Indonesien",
+			"staatsangehoerigkeit": "indonesisch",
+			"gueltigVon": 1945,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "IRQ",
+		"idStatistik": "438",
+		"historie": [ {
+			"id": 73082081,
+			"schluessel": "438",
+			"kuerzel": "IRQ",
+			"text": "Irak",
+			"iso3": "IRQ",
+			"iso2": "IQ",
+			"isoNumerisch": "368",
+			"codeDEStatis": "438",
+			"bezeichnungSuche": "Irak",
+			"bezeichnung": "Irak",
+			"bezeichnungLang": "die Republik Irak",
+			"staatsangehoerigkeit": "irakisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "IRN",
+		"idStatistik": "439",
+		"historie": [ {
+			"id": 73082078,
+			"schluessel": "439",
+			"kuerzel": "IRN",
+			"text": "Islamische Republik Iran",
+			"iso3": "IRN",
+			"iso2": "IR",
+			"isoNumerisch": "364",
+			"codeDEStatis": "439",
+			"bezeichnungSuche": "Iran",
+			"bezeichnung": "Islamische Republik Iran",
+			"bezeichnungLang": "die Islamische Republik Iran",
+			"staatsangehoerigkeit": "iranisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "IRL",
+		"idStatistik": "135",
+		"historie": [ {
+			"id": 73082076,
+			"schluessel": "135",
+			"kuerzel": "IRL",
+			"text": "Irland",
+			"iso3": "IRL",
+			"iso2": "IE",
+			"isoNumerisch": "372",
+			"codeDEStatis": "135",
+			"bezeichnungSuche": "Irland",
+			"bezeichnung": "Irland",
+			"bezeichnungLang": "Irland",
+			"staatsangehoerigkeit": "irisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ISL",
+		"idStatistik": "136",
+		"historie": [ {
+			"id": 73083076,
+			"schluessel": "136",
+			"kuerzel": "ISL",
+			"text": "Island",
+			"iso3": "ISL",
+			"iso2": "IS",
+			"isoNumerisch": "352",
+			"codeDEStatis": "136",
+			"bezeichnungSuche": "Island",
+			"bezeichnung": "Island",
+			"bezeichnungLang": "die Republik Island",
+			"staatsangehoerigkeit": "isländisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ISR",
+		"idStatistik": "441",
+		"historie": [ {
+			"id": 73083082,
+			"schluessel": "441",
+			"kuerzel": "ISR",
+			"text": "Israel",
+			"iso3": "ISR",
+			"iso2": "IL",
+			"isoNumerisch": "376",
+			"codeDEStatis": "441",
+			"bezeichnungSuche": "Israel",
+			"bezeichnung": "Israel",
+			"bezeichnungLang": "der Staat Israel",
+			"staatsangehoerigkeit": "israelisch",
+			"gueltigVon": 1947,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ITA",
+		"idStatistik": "137",
+		"historie": [ {
+			"id": 73084065,
+			"schluessel": "137",
+			"kuerzel": "ITA",
+			"text": "Italien",
+			"iso3": "ITA",
+			"iso2": "IT",
+			"isoNumerisch": "380",
+			"codeDEStatis": "137",
+			"bezeichnungSuche": "Italien",
+			"bezeichnung": "Italien",
+			"bezeichnungLang": "die Italienische Republik",
+			"staatsangehoerigkeit": "italienisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "JAM",
+		"idStatistik": "355",
+		"historie": [ {
+			"id": 74065077,
+			"schluessel": "355",
+			"kuerzel": "JAM",
+			"text": "Jamaika",
+			"iso3": "JAM",
+			"iso2": "JM",
+			"isoNumerisch": "388",
+			"codeDEStatis": "355",
+			"bezeichnungSuche": "Jamaika",
+			"bezeichnung": "Jamaika",
+			"bezeichnungLang": "Jamaika",
+			"staatsangehoerigkeit": "jamaikanisch",
+			"gueltigVon": 1962,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "JPN",
+		"idStatistik": "442",
+		"historie": [ {
+			"id": 74080078,
+			"schluessel": "442",
+			"kuerzel": "JPN",
+			"text": "Japan",
+			"iso3": "JPN",
+			"iso2": "JP",
+			"isoNumerisch": "392",
+			"codeDEStatis": "442",
+			"bezeichnungSuche": "Japan",
+			"bezeichnung": "Japan",
+			"bezeichnungLang": "Japan",
+			"staatsangehoerigkeit": "japanisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "YEM",
+		"idStatistik": "421",
+		"historie": [ {
+			"id": 89069077,
+			"schluessel": "421",
+			"kuerzel": "YEM",
+			"text": "Jemen",
+			"iso3": "YEM",
+			"iso2": "YE",
+			"isoNumerisch": "887",
+			"codeDEStatis": "421",
+			"bezeichnungSuche": "Jemen",
+			"bezeichnung": "Jemen",
+			"bezeichnungLang": "die Republik Jemen",
+			"staatsangehoerigkeit": "jemenitisch",
+			"gueltigVon": 1967,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "JOR",
+		"idStatistik": "445",
+		"historie": [ {
+			"id": 74079082,
+			"schluessel": "445",
+			"kuerzel": "JOR",
+			"text": "Jordanien",
+			"iso3": "JOR",
+			"iso2": "JO",
+			"isoNumerisch": "400",
+			"codeDEStatis": "445",
+			"bezeichnungSuche": "Jordanien",
+			"bezeichnung": "Jordanien",
+			"bezeichnungLang": "das Haschemitische Königreich Jordanien",
+			"staatsangehoerigkeit": "jordanisch",
+			"gueltigVon": 1945,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "YUG",
+		"idStatistik": "138",
+		"historie": [ {
+			"id": 89085071,
+			"schluessel": "120",
+			"kuerzel": "YUG",
+			"text": "Jugoslawien",
+			"iso3": "YUG",
+			"iso2": "YU",
+			"isoNumerisch": "891",
+			"codeDEStatis": "120",
+			"bezeichnungSuche": "Jugoslawien",
+			"bezeichnung": "Jugoslawien",
+			"bezeichnungLang": "die Sozialistische Föderative Republik Jugoslawien",
+			"staatsangehoerigkeit": "jugoslawisch",
+			"gueltigVon": 1945,
+			"gueltigBis": 1991
+		}, {
+			"id": 1089085071,
+			"schluessel": "138",
+			"kuerzel": "YUG",
+			"text": "Jugoslawien",
+			"iso3": "YUG",
+			"iso2": "YU",
+			"isoNumerisch": "891",
+			"codeDEStatis": "138",
+			"bezeichnungSuche": "Jugoslawien",
+			"bezeichnung": "Jugoslawien",
+			"bezeichnungLang": "die Bundesrepublik Jugoslawien",
+			"staatsangehoerigkeit": "jugoslawisch",
+			"gueltigVon": 1992,
+			"gueltigBis": 2002
+		} ]
+	}, {
+		"bezeichner": "KHM",
+		"idStatistik": "446",
+		"historie": [ {
+			"id": 75072077,
+			"schluessel": "446",
+			"kuerzel": "KHM",
+			"text": "Kambodscha",
+			"iso3": "KHM",
+			"iso2": "KH",
+			"isoNumerisch": "116",
+			"codeDEStatis": "446",
+			"bezeichnungSuche": "Kambodscha",
+			"bezeichnung": "Kambodscha",
+			"bezeichnungLang": "das Königreich Kambodscha",
+			"staatsangehoerigkeit": "kambodschanisch",
+			"gueltigVon": 1953,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "CMR",
+		"idStatistik": "262",
+		"historie": [ {
+			"id": 67077082,
+			"schluessel": "262",
+			"kuerzel": "CMR",
+			"text": "Kamerun",
+			"iso3": "CMR",
+			"iso2": "CM",
+			"isoNumerisch": "120",
+			"codeDEStatis": "262",
+			"bezeichnungSuche": "Kamerun",
+			"bezeichnung": "Kamerun",
+			"bezeichnungLang": "die Republik Kamerun",
+			"staatsangehoerigkeit": "kamerunisch",
+			"gueltigVon": 1959,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "CAN",
+		"idStatistik": "348",
+		"historie": [ {
+			"id": 67065078,
+			"schluessel": "348",
+			"kuerzel": "CAN",
+			"text": "Kanada",
+			"iso3": "CAN",
+			"iso2": "CA",
+			"isoNumerisch": "124",
+			"codeDEStatis": "348",
+			"bezeichnungSuche": "Kanada",
+			"bezeichnung": "Kanada",
+			"bezeichnungLang": "Kanada",
+			"staatsangehoerigkeit": "kanadisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "KAZ",
+		"idStatistik": "444",
+		"historie": [ {
+			"id": 75065090,
+			"schluessel": "444",
+			"kuerzel": "KAZ",
+			"text": "Kasachstan",
+			"iso3": "KAZ",
+			"iso2": "KZ",
+			"isoNumerisch": "398",
+			"codeDEStatis": "444",
+			"bezeichnungSuche": "Kasachstan",
+			"bezeichnung": "Kasachstan",
+			"bezeichnungLang": "die Republik Kasachstan",
+			"staatsangehoerigkeit": "kasachisch",
+			"gueltigVon": 1991,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "QAT",
+		"idStatistik": "447",
+		"historie": [ {
+			"id": 81065084,
+			"schluessel": "447",
+			"kuerzel": "QAT",
+			"text": "Katar",
+			"iso3": "QAT",
+			"iso2": "QA",
+			"isoNumerisch": "634",
+			"codeDEStatis": "447",
+			"bezeichnungSuche": "Katar",
+			"bezeichnung": "Katar",
+			"bezeichnungLang": "der Staat Katar",
+			"staatsangehoerigkeit": "katarisch",
+			"gueltigVon": 1971,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "KEN",
+		"idStatistik": "243",
+		"historie": [ {
+			"id": 75069078,
+			"schluessel": "243",
+			"kuerzel": "KEN",
+			"text": "Kenia",
+			"iso3": "KEN",
+			"iso2": "KE",
+			"isoNumerisch": "404",
+			"codeDEStatis": "243",
+			"bezeichnungSuche": "Kenia",
+			"bezeichnung": "Kenia",
+			"bezeichnungLang": "die Republik Kenia",
+			"staatsangehoerigkeit": "kenianisch",
+			"gueltigVon": 1963,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "KGZ",
+		"idStatistik": "450",
+		"historie": [ {
+			"id": 75071090,
+			"schluessel": "450",
+			"kuerzel": "KGZ",
+			"text": "Kirgisistan",
+			"iso3": "KGZ",
+			"iso2": "KG",
+			"isoNumerisch": "417",
+			"codeDEStatis": "450",
+			"bezeichnungSuche": "Kirgisistan",
+			"bezeichnung": "Kirgisistan",
+			"bezeichnungLang": "die Kirgisische Republik",
+			"staatsangehoerigkeit": "kirgisisch",
+			"gueltigVon": 1991,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "KIR",
+		"idStatistik": "530",
+		"historie": [ {
+			"id": 75073082,
+			"schluessel": "530",
+			"kuerzel": "KIR",
+			"text": "Kiribati",
+			"iso3": "KIR",
+			"iso2": "KI",
+			"isoNumerisch": "296",
+			"codeDEStatis": "530",
+			"bezeichnungSuche": "Kiribati",
+			"bezeichnung": "Kiribati",
+			"bezeichnungLang": "die Republik Kiribati",
+			"staatsangehoerigkeit": "kiribatisch",
+			"gueltigVon": 1978,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "COL",
+		"idStatistik": "349",
+		"historie": [ {
+			"id": 67079076,
+			"schluessel": "349",
+			"kuerzel": "COL",
+			"text": "Kolumbien",
+			"iso3": "COL",
+			"iso2": "CO",
+			"isoNumerisch": "170",
+			"codeDEStatis": "349",
+			"bezeichnungSuche": "Kolumbien",
+			"bezeichnung": "Kolumbien",
+			"bezeichnungLang": "die Republik Kolumbien",
+			"staatsangehoerigkeit": "kolumbianisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "COM",
+		"idStatistik": "244",
+		"historie": [ {
+			"id": 67079077,
+			"schluessel": "244",
+			"kuerzel": "COM",
+			"text": "Komoren",
+			"iso3": "COM",
+			"iso2": "KM",
+			"isoNumerisch": "174",
+			"codeDEStatis": "244",
+			"bezeichnungSuche": "Komoren",
+			"bezeichnung": "Komoren",
+			"bezeichnungLang": "die Union der Komoren",
+			"staatsangehoerigkeit": "komorisch",
+			"gueltigVon": 1974,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "COG",
+		"idStatistik": "245",
+		"historie": [ {
+			"id": 67079071,
+			"schluessel": "245",
+			"kuerzel": "COG",
+			"text": "Kongo",
+			"iso3": "COG",
+			"iso2": "CG",
+			"isoNumerisch": "178",
+			"codeDEStatis": "245",
+			"bezeichnungSuche": "Kongo",
+			"bezeichnung": "Kongo",
+			"bezeichnungLang": "die Republik Kongo",
+			"staatsangehoerigkeit": "kongolesisch",
+			"gueltigVon": 1960,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "COD",
+		"idStatistik": "246",
+		"historie": [ {
+			"id": 67079068,
+			"schluessel": "246",
+			"kuerzel": "COD",
+			"text": "Demokratische Republik Kongo",
+			"iso3": "COD",
+			"iso2": "CD",
+			"isoNumerisch": "180",
+			"codeDEStatis": "246",
+			"bezeichnungSuche": "Kongo, Demokratische Republik",
+			"bezeichnung": "Demokratische Republik Kongo",
+			"bezeichnungLang": "die Demokratische Republik Kongo",
+			"staatsangehoerigkeit": "der Demokratischen Republik Kongo",
+			"gueltigVon": 1959,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "PRK",
+		"idStatistik": "434",
+		"historie": [ {
+			"id": 80082075,
+			"schluessel": "434",
+			"kuerzel": "PRK",
+			"text": "Demokratische Volksrepublik Korea",
+			"iso3": "PRK",
+			"iso2": "KP",
+			"isoNumerisch": "408",
+			"codeDEStatis": "434",
+			"bezeichnungSuche": "Korea, Demokratische Volksrepublik",
+			"bezeichnung": "Demokratische Volksrepublik Korea",
+			"bezeichnungLang": "die Demokratische Volksrepublik Korea",
+			"staatsangehoerigkeit": "der Demokratischen Volksrepublik Korea",
+			"gueltigVon": 1948,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "KOR",
+		"idStatistik": "467",
+		"historie": [ {
+			"id": 75079082,
+			"schluessel": "467",
+			"kuerzel": "KOR",
+			"text": "Republik Korea",
+			"iso3": "KOR",
+			"iso2": "KR",
+			"isoNumerisch": "410",
+			"codeDEStatis": "467",
+			"bezeichnungSuche": "Korea, Republik",
+			"bezeichnung": "Republik Korea",
+			"bezeichnungLang": "die Republik Korea",
+			"staatsangehoerigkeit": "der Republik Korea",
+			"gueltigVon": 1948,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "XXK",
+		"idStatistik": "150",
+		"historie": [ {
+			"id": 88088075,
+			"schluessel": "150",
+			"kuerzel": "XXK",
+			"text": "Kosovo",
+			"iso3": "XXK",
+			"iso2": "XK",
+			"isoNumerisch": null,
+			"codeDEStatis": "150",
+			"bezeichnungSuche": "Kosovo",
+			"bezeichnung": "Kosovo",
+			"bezeichnungLang": "die Republik Kosovo",
+			"staatsangehoerigkeit": "kosovarisch",
+			"gueltigVon": 2007,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "HRV",
+		"idStatistik": "130",
+		"historie": [ {
+			"id": 72082086,
+			"schluessel": "130",
+			"kuerzel": "HRV",
+			"text": "Kroatien",
+			"iso3": "HRV",
+			"iso2": "HR",
+			"isoNumerisch": "191",
+			"codeDEStatis": "130",
+			"bezeichnungSuche": "Kroatien",
+			"bezeichnung": "Kroatien",
+			"bezeichnungLang": "die Republik Kroatien",
+			"staatsangehoerigkeit": "kroatisch",
+			"gueltigVon": 1990,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "CUB",
+		"idStatistik": "351",
+		"historie": [ {
+			"id": 67085066,
+			"schluessel": "351",
+			"kuerzel": "CUB",
+			"text": "Kuba",
+			"iso3": "CUB",
+			"iso2": "CU",
+			"isoNumerisch": "192",
+			"codeDEStatis": "351",
+			"bezeichnungSuche": "Kuba",
+			"bezeichnung": "Kuba",
+			"bezeichnungLang": "die Republik Kuba",
+			"staatsangehoerigkeit": "kubanisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "KWT",
+		"idStatistik": "448",
+		"historie": [ {
+			"id": 75087084,
+			"schluessel": "448",
+			"kuerzel": "KWT",
+			"text": "Kuwait",
+			"iso3": "KWT",
+			"iso2": "KW",
+			"isoNumerisch": "414",
+			"codeDEStatis": "448",
+			"bezeichnungSuche": "Kuwait",
+			"bezeichnung": "Kuwait",
+			"bezeichnungLang": "der Staat Kuwait",
+			"staatsangehoerigkeit": "kuwaitisch",
+			"gueltigVon": 1960,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "LAO",
+		"idStatistik": "449",
+		"historie": [ {
+			"id": 76065079,
+			"schluessel": "449",
+			"kuerzel": "LAO",
+			"text": "Demokratische Volksrepublik Laos",
+			"iso3": "LAO",
+			"iso2": "LA",
+			"isoNumerisch": "418",
+			"codeDEStatis": "449",
+			"bezeichnungSuche": "Laos",
+			"bezeichnung": "Demokratische Volksrepublik Laos",
+			"bezeichnungLang": "die Demokratische Volksrepublik Laos",
+			"staatsangehoerigkeit": "laotisch",
+			"gueltigVon": 1953,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "LSO",
+		"idStatistik": "226",
+		"historie": [ {
+			"id": 76083079,
+			"schluessel": "226",
+			"kuerzel": "LSO",
+			"text": "Lesotho",
+			"iso3": "LSO",
+			"iso2": "LS",
+			"isoNumerisch": "426",
+			"codeDEStatis": "226",
+			"bezeichnungSuche": "Lesotho",
+			"bezeichnung": "Lesotho",
+			"bezeichnungLang": "das Königreich Lesotho",
+			"staatsangehoerigkeit": "lesothisch",
+			"gueltigVon": 1966,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "LVA",
+		"idStatistik": "139",
+		"historie": [ {
+			"id": 76086065,
+			"schluessel": "139",
+			"kuerzel": "LVA",
+			"text": "Lettland",
+			"iso3": "LVA",
+			"iso2": "LV",
+			"isoNumerisch": "428",
+			"codeDEStatis": "139",
+			"bezeichnungSuche": "Lettland",
+			"bezeichnung": "Lettland",
+			"bezeichnungLang": "die Republik Lettland",
+			"staatsangehoerigkeit": "lettisch",
+			"gueltigVon": 1991,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "LBN",
+		"idStatistik": "451",
+		"historie": [ {
+			"id": 76066078,
+			"schluessel": "451",
+			"kuerzel": "LBN",
+			"text": "Libanon",
+			"iso3": "LBN",
+			"iso2": "LB",
+			"isoNumerisch": "422",
+			"codeDEStatis": "451",
+			"bezeichnungSuche": "Libanon",
+			"bezeichnung": "Libanon",
+			"bezeichnungLang": "die Libanesische Republik",
+			"staatsangehoerigkeit": "libanesisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "LBR",
+		"idStatistik": "247",
+		"historie": [ {
+			"id": 76066082,
+			"schluessel": "247",
+			"kuerzel": "LBR",
+			"text": "Liberia",
+			"iso3": "LBR",
+			"iso2": "LR",
+			"isoNumerisch": "430",
+			"codeDEStatis": "247",
+			"bezeichnungSuche": "Liberia",
+			"bezeichnung": "Liberia",
+			"bezeichnungLang": "die Republik Liberia",
+			"staatsangehoerigkeit": "liberianisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "LBY",
+		"idStatistik": "248",
+		"historie": [ {
+			"id": 76066089,
+			"schluessel": "248",
+			"kuerzel": "LBY",
+			"text": "Libyen",
+			"iso3": "LBY",
+			"iso2": "LY",
+			"isoNumerisch": "434",
+			"codeDEStatis": "248",
+			"bezeichnungSuche": "Libyen",
+			"bezeichnung": "Libyen",
+			"bezeichnungLang": "der Staat Libyen",
+			"staatsangehoerigkeit": "libysch",
+			"gueltigVon": 1951,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "LIE",
+		"idStatistik": "141",
+		"historie": [ {
+			"id": 76073069,
+			"schluessel": "141",
+			"kuerzel": "LIE",
+			"text": "Liechtenstein",
+			"iso3": "LIE",
+			"iso2": "LI",
+			"isoNumerisch": "438",
+			"codeDEStatis": "141",
+			"bezeichnungSuche": "Liechtenstein",
+			"bezeichnung": "Liechtenstein",
+			"bezeichnungLang": "das Fürstentum Liechtenstein",
+			"staatsangehoerigkeit": "liechtensteinisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "LTU",
+		"idStatistik": "142",
+		"historie": [ {
+			"id": 76084085,
+			"schluessel": "142",
+			"kuerzel": "LTU",
+			"text": "Litauen",
+			"iso3": "LTU",
+			"iso2": "LT",
+			"isoNumerisch": "440",
+			"codeDEStatis": "142",
+			"bezeichnungSuche": "Litauen",
+			"bezeichnung": "Litauen",
+			"bezeichnungLang": "die Republik Litauen",
+			"staatsangehoerigkeit": "litauisch",
+			"gueltigVon": 1989,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "LUX",
+		"idStatistik": "143",
+		"historie": [ {
+			"id": 76085088,
+			"schluessel": "143",
+			"kuerzel": "LUX",
+			"text": "Luxemburg",
+			"iso3": "LUX",
+			"iso2": "LU",
+			"isoNumerisch": "442",
+			"codeDEStatis": "143",
+			"bezeichnungSuche": "Luxemburg",
+			"bezeichnung": "Luxemburg",
+			"bezeichnungLang": "das Großherzogtum Luxemburg",
+			"staatsangehoerigkeit": "luxemburgisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "MAC",
+		"idStatistik": "412",
+		"historie": [ {
+			"id": 77065067,
+			"schluessel": "412",
+			"kuerzel": "MAC",
+			"text": "Macau",
+			"iso3": "MAC",
+			"iso2": "MO",
+			"isoNumerisch": "446",
+			"codeDEStatis": "412",
+			"bezeichnungSuche": "Macau",
+			"bezeichnung": "Macau",
+			"bezeichnungLang": "die Sonderverwaltungsregion Macau",
+			"staatsangehoerigkeit": "chinesisch (Macau)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "MDG",
+		"idStatistik": "249",
+		"historie": [ {
+			"id": 77068071,
+			"schluessel": "249",
+			"kuerzel": "MDG",
+			"text": "Madagaskar",
+			"iso3": "MDG",
+			"iso2": "MG",
+			"isoNumerisch": "450",
+			"codeDEStatis": "249",
+			"bezeichnungSuche": "Madagaskar",
+			"bezeichnung": "Madagaskar",
+			"bezeichnungLang": "die Republik Madagaskar",
+			"staatsangehoerigkeit": "madagassisch",
+			"gueltigVon": 1959,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "MWI",
+		"idStatistik": "256",
+		"historie": [ {
+			"id": 77087073,
+			"schluessel": "256",
+			"kuerzel": "MWI",
+			"text": "Malawi",
+			"iso3": "MWI",
+			"iso2": "MW",
+			"isoNumerisch": "454",
+			"codeDEStatis": "256",
+			"bezeichnungSuche": "Malawi",
+			"bezeichnung": "Malawi",
+			"bezeichnungLang": "die Republik Malawi",
+			"staatsangehoerigkeit": "malawisch",
+			"gueltigVon": 1963,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "MYS",
+		"idStatistik": "482",
+		"historie": [ {
+			"id": 77089083,
+			"schluessel": "482",
+			"kuerzel": "MYS",
+			"text": "Malaysia",
+			"iso3": "MYS",
+			"iso2": "MY",
+			"isoNumerisch": "458",
+			"codeDEStatis": "482",
+			"bezeichnungSuche": "Malaysia",
+			"bezeichnung": "Malaysia",
+			"bezeichnungLang": "Malaysia",
+			"staatsangehoerigkeit": "malaysisch",
+			"gueltigVon": 1957,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "MDV",
+		"idStatistik": "454",
+		"historie": [ {
+			"id": 77068086,
+			"schluessel": "454",
+			"kuerzel": "MDV",
+			"text": "Malediven",
+			"iso3": "MDV",
+			"iso2": "MV",
+			"isoNumerisch": "462",
+			"codeDEStatis": "454",
+			"bezeichnungSuche": "Malediven",
+			"bezeichnung": "Malediven",
+			"bezeichnungLang": "die Republik Malediven",
+			"staatsangehoerigkeit": "maledivisch",
+			"gueltigVon": 1964,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "MLI",
+		"idStatistik": "251",
+		"historie": [ {
+			"id": 77076073,
+			"schluessel": "251",
+			"kuerzel": "MLI",
+			"text": "Mali",
+			"iso3": "MLI",
+			"iso2": "ML",
+			"isoNumerisch": "466",
+			"codeDEStatis": "251",
+			"bezeichnungSuche": "Mali",
+			"bezeichnung": "Mali",
+			"bezeichnungLang": "die Republik Mali",
+			"staatsangehoerigkeit": "malisch",
+			"gueltigVon": 1960,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "MLT",
+		"idStatistik": "145",
+		"historie": [ {
+			"id": 77076084,
+			"schluessel": "145",
+			"kuerzel": "MLT",
+			"text": "Malta",
+			"iso3": "MLT",
+			"iso2": "MT",
+			"isoNumerisch": "470",
+			"codeDEStatis": "145",
+			"bezeichnungSuche": "Malta",
+			"bezeichnung": "Malta",
+			"bezeichnungLang": "die Republik Malta",
+			"staatsangehoerigkeit": "maltesisch",
+			"gueltigVon": 1964,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "MAR",
+		"idStatistik": "252",
+		"historie": [ {
+			"id": 77065082,
+			"schluessel": "252",
+			"kuerzel": "MAR",
+			"text": "Marokko",
+			"iso3": "MAR",
+			"iso2": "MA",
+			"isoNumerisch": "504",
+			"codeDEStatis": "252",
+			"bezeichnungSuche": "Marokko",
+			"bezeichnung": "Marokko",
+			"bezeichnungLang": "das Königreich Marokko",
+			"staatsangehoerigkeit": "marokkanisch",
+			"gueltigVon": 1955,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "MHL",
+		"idStatistik": "544",
+		"historie": [ {
+			"id": 77072076,
+			"schluessel": "544",
+			"kuerzel": "MHL",
+			"text": "Marshallinseln",
+			"iso3": "MHL",
+			"iso2": "MH",
+			"isoNumerisch": "584",
+			"codeDEStatis": "544",
+			"bezeichnungSuche": "Marshallinseln",
+			"bezeichnung": "Marshallinseln",
+			"bezeichnungLang": "die Republik Marshallinseln",
+			"staatsangehoerigkeit": "marshallisch",
+			"gueltigVon": 1990,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "MRT",
+		"idStatistik": "239",
+		"historie": [ {
+			"id": 77082084,
+			"schluessel": "239",
+			"kuerzel": "MRT",
+			"text": "Mauretanien",
+			"iso3": "MRT",
+			"iso2": "MR",
+			"isoNumerisch": "478",
+			"codeDEStatis": "239",
+			"bezeichnungSuche": "Mauretanien",
+			"bezeichnung": "Mauretanien",
+			"bezeichnungLang": "die Islamische Republik Mauretanien",
+			"staatsangehoerigkeit": "mauretanisch",
+			"gueltigVon": 1960,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "MUS",
+		"idStatistik": "253",
+		"historie": [ {
+			"id": 77085083,
+			"schluessel": "253",
+			"kuerzel": "MUS",
+			"text": "Mauritius",
+			"iso3": "MUS",
+			"iso2": "MU",
+			"isoNumerisch": "480",
+			"codeDEStatis": "253",
+			"bezeichnungSuche": "Mauritius",
+			"bezeichnung": "Mauritius",
+			"bezeichnungLang": "die Republik Mauritius",
+			"staatsangehoerigkeit": "mauritisch",
+			"gueltigVon": 1967,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "MEX",
+		"idStatistik": "353",
+		"historie": [ {
+			"id": 77069088,
+			"schluessel": "353",
+			"kuerzel": "MEX",
+			"text": "Mexiko",
+			"iso3": "MEX",
+			"iso2": "MX",
+			"isoNumerisch": "484",
+			"codeDEStatis": "353",
+			"bezeichnungSuche": "Mexiko",
+			"bezeichnung": "Mexiko",
+			"bezeichnungLang": "die Vereinigten Mexikanischen Staaten",
+			"staatsangehoerigkeit": "mexikanisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FSM",
+		"idStatistik": "545",
+		"historie": [ {
+			"id": 70083077,
+			"schluessel": "545",
+			"kuerzel": "FSM",
+			"text": "Föderierte Staaten von Mikronesien",
+			"iso3": "FSM",
+			"iso2": "FM",
+			"isoNumerisch": "583",
+			"codeDEStatis": "545",
+			"bezeichnungSuche": "Mikronesien",
+			"bezeichnung": "Föderierte Staaten von Mikronesien",
+			"bezeichnungLang": "die Föderierten Staaten von Mikronesien",
+			"staatsangehoerigkeit": "mikronesisch",
+			"gueltigVon": 1990,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "MDA",
+		"idStatistik": "146",
+		"historie": [ {
+			"id": 77068065,
+			"schluessel": "146",
+			"kuerzel": "MDA",
+			"text": "Republik Moldau",
+			"iso3": "MDA",
+			"iso2": "MD",
+			"isoNumerisch": "498",
+			"codeDEStatis": "146",
+			"bezeichnungSuche": "Moldau",
+			"bezeichnung": "Republik Moldau",
+			"bezeichnungLang": "die Republik Moldau",
+			"staatsangehoerigkeit": "moldauisch",
+			"gueltigVon": 1991,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "MCO",
+		"idStatistik": "147",
+		"historie": [ {
+			"id": 77067079,
+			"schluessel": "147",
+			"kuerzel": "MCO",
+			"text": "Monaco",
+			"iso3": "MCO",
+			"iso2": "MC",
+			"isoNumerisch": "492",
+			"codeDEStatis": "147",
+			"bezeichnungSuche": "Monaco",
+			"bezeichnung": "Monaco",
+			"bezeichnungLang": "das Fürstentum Monaco",
+			"staatsangehoerigkeit": "monegassisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "MNG",
+		"idStatistik": "457",
+		"historie": [ {
+			"id": 77078071,
+			"schluessel": "457",
+			"kuerzel": "MNG",
+			"text": "Mongolei",
+			"iso3": "MNG",
+			"iso2": "MN",
+			"isoNumerisch": "496",
+			"codeDEStatis": "457",
+			"bezeichnungSuche": "Mongolei",
+			"bezeichnung": "Mongolei",
+			"bezeichnungLang": "die Mongolei",
+			"staatsangehoerigkeit": "mongolisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "MNE",
+		"idStatistik": "140",
+		"historie": [ {
+			"id": 77078069,
+			"schluessel": "140",
+			"kuerzel": "MNE",
+			"text": "Montenegro",
+			"iso3": "MNE",
+			"iso2": "ME",
+			"isoNumerisch": "499",
+			"codeDEStatis": "140",
+			"bezeichnungSuche": "Montenegro",
+			"bezeichnung": "Montenegro",
+			"bezeichnungLang": "Montenegro",
+			"staatsangehoerigkeit": "montenegrinisch",
+			"gueltigVon": 2005,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "MOZ",
+		"idStatistik": "254",
+		"historie": [ {
+			"id": 77079090,
+			"schluessel": "254",
+			"kuerzel": "MOZ",
+			"text": "Mosambik",
+			"iso3": "MOZ",
+			"iso2": "MZ",
+			"isoNumerisch": "508",
+			"codeDEStatis": "254",
+			"bezeichnungSuche": "Mosambik",
+			"bezeichnung": "Mosambik",
+			"bezeichnungLang": "die Republik Mosambik",
+			"staatsangehoerigkeit": "mosambikanisch",
+			"gueltigVon": 1974,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "MMR",
+		"idStatistik": "427",
+		"historie": [ {
+			"id": 77077082,
+			"schluessel": "427",
+			"kuerzel": "MMR",
+			"text": "Myanmar",
+			"iso3": "MMR",
+			"iso2": "MM",
+			"isoNumerisch": "104",
+			"codeDEStatis": "427",
+			"bezeichnungSuche": "Myanmar",
+			"bezeichnung": "Myanmar",
+			"bezeichnungLang": "die Republik der Union Myanmar",
+			"staatsangehoerigkeit": "myanmarisch",
+			"gueltigVon": 1947,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "NAM",
+		"idStatistik": "267",
+		"historie": [ {
+			"id": 78065077,
+			"schluessel": "267",
+			"kuerzel": "NAM",
+			"text": "Namibia",
+			"iso3": "NAM",
+			"iso2": "NA",
+			"isoNumerisch": "516",
+			"codeDEStatis": "267",
+			"bezeichnungSuche": "Namibia",
+			"bezeichnung": "Namibia",
+			"bezeichnungLang": "die Republik Namibia",
+			"staatsangehoerigkeit": "namibisch",
+			"gueltigVon": 1989,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "NRU",
+		"idStatistik": "531",
+		"historie": [ {
+			"id": 78082085,
+			"schluessel": "531",
+			"kuerzel": "NRU",
+			"text": "Nauru",
+			"iso3": "NRU",
+			"iso2": "NR",
+			"isoNumerisch": "520",
+			"codeDEStatis": "531",
+			"bezeichnungSuche": "Nauru",
+			"bezeichnung": "Nauru",
+			"bezeichnungLang": "die Republik Nauru",
+			"staatsangehoerigkeit": "nauruisch",
+			"gueltigVon": 1967,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "NPL",
+		"idStatistik": "458",
+		"historie": [ {
+			"id": 78080076,
+			"schluessel": "458",
+			"kuerzel": "NPL",
+			"text": "Nepal",
+			"iso3": "NPL",
+			"iso2": "NP",
+			"isoNumerisch": "524",
+			"codeDEStatis": "458",
+			"bezeichnungSuche": "Nepal",
+			"bezeichnung": "Nepal",
+			"bezeichnungLang": "Nepal",
+			"staatsangehoerigkeit": "nepalesisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "NZL",
+		"idStatistik": "536",
+		"historie": [ {
+			"id": 78090076,
+			"schluessel": "536",
+			"kuerzel": "NZL",
+			"text": "Neuseeland",
+			"iso3": "NZL",
+			"iso2": "NZ",
+			"isoNumerisch": "554",
+			"codeDEStatis": "536",
+			"bezeichnungSuche": "Neuseeland",
+			"bezeichnung": "Neuseeland",
+			"bezeichnungLang": "Neuseeland",
+			"staatsangehoerigkeit": "neuseeländisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "NIC",
+		"idStatistik": "354",
+		"historie": [ {
+			"id": 78073067,
+			"schluessel": "354",
+			"kuerzel": "NIC",
+			"text": "Nicaragua",
+			"iso3": "NIC",
+			"iso2": "NI",
+			"isoNumerisch": "558",
+			"codeDEStatis": "354",
+			"bezeichnungSuche": "Nicaragua",
+			"bezeichnung": "Nicaragua",
+			"bezeichnungLang": "die Republik Nicaragua",
+			"staatsangehoerigkeit": "nicaraguanisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "NLD",
+		"idStatistik": "148",
+		"historie": [ {
+			"id": 78076068,
+			"schluessel": "148",
+			"kuerzel": "NLD",
+			"text": "Niederlande",
+			"iso3": "NLD",
+			"iso2": "NL",
+			"isoNumerisch": "528",
+			"codeDEStatis": "148",
+			"bezeichnungSuche": "Niederlande",
+			"bezeichnung": "Niederlande",
+			"bezeichnungLang": "das Königreich der Niederlande",
+			"staatsangehoerigkeit": "niederländisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "NER",
+		"idStatistik": "255",
+		"historie": [ {
+			"id": 78069082,
+			"schluessel": "255",
+			"kuerzel": "NER",
+			"text": "Niger",
+			"iso3": "NER",
+			"iso2": "NE",
+			"isoNumerisch": "562",
+			"codeDEStatis": "255",
+			"bezeichnungSuche": "Niger",
+			"bezeichnung": "Niger",
+			"bezeichnungLang": "die Republik Niger",
+			"staatsangehoerigkeit": "nigrisch",
+			"gueltigVon": 1960,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "NGA",
+		"idStatistik": "232",
+		"historie": [ {
+			"id": 78071065,
+			"schluessel": "232",
+			"kuerzel": "NGA",
+			"text": "Nigeria",
+			"iso3": "NGA",
+			"iso2": "NG",
+			"isoNumerisch": "566",
+			"codeDEStatis": "232",
+			"bezeichnungSuche": "Nigeria",
+			"bezeichnung": "Nigeria",
+			"bezeichnungLang": "die Bundesrepublik Nigeria",
+			"staatsangehoerigkeit": "nigerianisch",
+			"gueltigVon": 1960,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "NIU",
+		"idStatistik": "533",
+		"historie": [ {
+			"id": 78073085,
+			"schluessel": "533",
+			"kuerzel": "NIU",
+			"text": "Niue",
+			"iso3": "NIU",
+			"iso2": "NU",
+			"isoNumerisch": "570",
+			"codeDEStatis": "533",
+			"bezeichnungSuche": "Niue",
+			"bezeichnung": "Niue",
+			"bezeichnungLang": "Niue",
+			"staatsangehoerigkeit": "neuseeländisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "MKD",
+		"idStatistik": "144",
+		"historie": [ {
+			"id": 77075068,
+			"schluessel": "144",
+			"kuerzel": "MKD",
+			"text": "Nordmazedonien",
+			"iso3": "MKD",
+			"iso2": "MK",
+			"isoNumerisch": "807",
+			"codeDEStatis": "144",
+			"bezeichnungSuche": "Nordmazedonien",
+			"bezeichnung": "Nordmazedonien",
+			"bezeichnungLang": "die Republik Nordmazedonien",
+			"staatsangehoerigkeit": "mazedonisch/Bürger der Republik Nordmazedonien",
+			"gueltigVon": 1991,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "NOR",
+		"idStatistik": "149",
+		"historie": [ {
+			"id": 78079082,
+			"schluessel": "149",
+			"kuerzel": "NOR",
+			"text": "Norwegen",
+			"iso3": "NOR",
+			"iso2": "NO",
+			"isoNumerisch": "578",
+			"codeDEStatis": "149",
+			"bezeichnungSuche": "Norwegen",
+			"bezeichnung": "Norwegen",
+			"bezeichnungLang": "das Königreich Norwegen",
+			"staatsangehoerigkeit": "norwegisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "OMN",
+		"idStatistik": "456",
+		"historie": [ {
+			"id": 79077078,
+			"schluessel": "456",
+			"kuerzel": "OMN",
+			"text": "Oman",
+			"iso3": "OMN",
+			"iso2": "OM",
+			"isoNumerisch": "512",
+			"codeDEStatis": "456",
+			"bezeichnungSuche": "Oman",
+			"bezeichnung": "Oman",
+			"bezeichnungLang": "das Sultanat Oman",
+			"staatsangehoerigkeit": "omanisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "AUT",
+		"idStatistik": "151",
+		"historie": [ {
+			"id": 65085084,
+			"schluessel": "151",
+			"kuerzel": "AUT",
+			"text": "Österreich",
+			"iso3": "AUT",
+			"iso2": "AT",
+			"isoNumerisch": "040",
+			"codeDEStatis": "151",
+			"bezeichnungSuche": "Österreich",
+			"bezeichnung": "Österreich",
+			"bezeichnungLang": "die Republik Österreich",
+			"staatsangehoerigkeit": "österreichisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "PAK",
+		"idStatistik": "461",
+		"historie": [ {
+			"id": 80065075,
+			"schluessel": "461",
+			"kuerzel": "PAK",
+			"text": "Pakistan",
+			"iso3": "PAK",
+			"iso2": "PK",
+			"isoNumerisch": "586",
+			"codeDEStatis": "461",
+			"bezeichnungSuche": "Pakistan",
+			"bezeichnung": "Pakistan",
+			"bezeichnungLang": "die Islamische Republik Pakistan",
+			"staatsangehoerigkeit": "pakistanisch",
+			"gueltigVon": 1947,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "PLW",
+		"idStatistik": "537",
+		"historie": [ {
+			"id": 80076087,
+			"schluessel": "537",
+			"kuerzel": "PLW",
+			"text": "Palau",
+			"iso3": "PLW",
+			"iso2": "PW",
+			"isoNumerisch": "585",
+			"codeDEStatis": "537",
+			"bezeichnungSuche": "Palau",
+			"bezeichnung": "Palau",
+			"bezeichnungLang": "die Republik Palau",
+			"staatsangehoerigkeit": "palauisch",
+			"gueltigVon": 1994,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "PAN",
+		"idStatistik": "357",
+		"historie": [ {
+			"id": 80065078,
+			"schluessel": "357",
+			"kuerzel": "PAN",
+			"text": "Panama",
+			"iso3": "PAN",
+			"iso2": "PA",
+			"isoNumerisch": "591",
+			"codeDEStatis": "357",
+			"bezeichnungSuche": "Panama",
+			"bezeichnung": "Panama",
+			"bezeichnungLang": "die Republik Panama",
+			"staatsangehoerigkeit": "panamaisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "PNG",
+		"idStatistik": "538",
+		"historie": [ {
+			"id": 80078071,
+			"schluessel": "538",
+			"kuerzel": "PNG",
+			"text": "Papua-Neuguinea",
+			"iso3": "PNG",
+			"iso2": "PG",
+			"isoNumerisch": "598",
+			"codeDEStatis": "538",
+			"bezeichnungSuche": "Papua-Neuguinea",
+			"bezeichnung": "Papua-Neuguinea",
+			"bezeichnungLang": "der Unabhängige Staat Papua-Neuguinea",
+			"staatsangehoerigkeit": "papua-neuguineisch",
+			"gueltigVon": 1975,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "PRY",
+		"idStatistik": "359",
+		"historie": [ {
+			"id": 80082089,
+			"schluessel": "359",
+			"kuerzel": "PRY",
+			"text": "Paraguay",
+			"iso3": "PRY",
+			"iso2": "PY",
+			"isoNumerisch": "600",
+			"codeDEStatis": "359",
+			"bezeichnungSuche": "Paraguay",
+			"bezeichnung": "Paraguay",
+			"bezeichnungLang": "die Republik Paraguay",
+			"staatsangehoerigkeit": "paraguayisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "PER",
+		"idStatistik": "361",
+		"historie": [ {
+			"id": 80069082,
+			"schluessel": "361",
+			"kuerzel": "PER",
+			"text": "Peru",
+			"iso3": "PER",
+			"iso2": "PE",
+			"isoNumerisch": "604",
+			"codeDEStatis": "361",
+			"bezeichnungSuche": "Peru",
+			"bezeichnung": "Peru",
+			"bezeichnungLang": "die Republik Peru",
+			"staatsangehoerigkeit": "peruanisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "PHL",
+		"idStatistik": "462",
+		"historie": [ {
+			"id": 80072076,
+			"schluessel": "462",
+			"kuerzel": "PHL",
+			"text": "Philippinen",
+			"iso3": "PHL",
+			"iso2": "PH",
+			"isoNumerisch": "608",
+			"codeDEStatis": "462",
+			"bezeichnungSuche": "Philippinen",
+			"bezeichnung": "Philippinen",
+			"bezeichnungLang": "die Republik der Philippinen",
+			"staatsangehoerigkeit": "philippinisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "POL",
+		"idStatistik": "152",
+		"historie": [ {
+			"id": 80079076,
+			"schluessel": "152",
+			"kuerzel": "POL",
+			"text": "Polen",
+			"iso3": "POL",
+			"iso2": "PL",
+			"isoNumerisch": "616",
+			"codeDEStatis": "152",
+			"bezeichnungSuche": "Polen",
+			"bezeichnung": "Polen",
+			"bezeichnungLang": "die Republik Polen",
+			"staatsangehoerigkeit": "polnisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "PRT",
+		"idStatistik": "153",
+		"historie": [ {
+			"id": 80082084,
+			"schluessel": "153",
+			"kuerzel": "PRT",
+			"text": "Portugal",
+			"iso3": "PRT",
+			"iso2": "PT",
+			"isoNumerisch": "620",
+			"codeDEStatis": "153",
+			"bezeichnungSuche": "Portugal",
+			"bezeichnung": "Portugal",
+			"bezeichnungLang": "die Portugiesische Republik",
+			"staatsangehoerigkeit": "portugiesisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "RWA",
+		"idStatistik": "265",
+		"historie": [ {
+			"id": 82087065,
+			"schluessel": "265",
+			"kuerzel": "RWA",
+			"text": "Ruanda",
+			"iso3": "RWA",
+			"iso2": "RW",
+			"isoNumerisch": "646",
+			"codeDEStatis": "265",
+			"bezeichnungSuche": "Ruanda",
+			"bezeichnung": "Ruanda",
+			"bezeichnungLang": "die Republik Ruanda",
+			"staatsangehoerigkeit": "ruandisch",
+			"gueltigVon": 1961,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ROU",
+		"idStatistik": "154",
+		"historie": [ {
+			"id": 82079085,
+			"schluessel": "154",
+			"kuerzel": "ROU",
+			"text": "Rumänien",
+			"iso3": "ROU",
+			"iso2": "RO",
+			"isoNumerisch": "642",
+			"codeDEStatis": "154",
+			"bezeichnungSuche": "Rumänien",
+			"bezeichnung": "Rumänien",
+			"bezeichnungLang": "Rumänien",
+			"staatsangehoerigkeit": "rumänisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "RUS",
+		"idStatistik": "160",
+		"historie": [ {
+			"id": 82085083,
+			"schluessel": "160",
+			"kuerzel": "RUS",
+			"text": "Russische Föderation",
+			"iso3": "RUS",
+			"iso2": "RU",
+			"isoNumerisch": "643",
+			"codeDEStatis": "160",
+			"bezeichnungSuche": "Russische Föderation",
+			"bezeichnung": "Russische Föderation",
+			"bezeichnungLang": "die Russische Föderation",
+			"staatsangehoerigkeit": "russisch",
+			"gueltigVon": 1991,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SLB",
+		"idStatistik": "524",
+		"historie": [ {
+			"id": 83076066,
+			"schluessel": "524",
+			"kuerzel": "SLB",
+			"text": "Salomonen",
+			"iso3": "SLB",
+			"iso2": "SB",
+			"isoNumerisch": "090",
+			"codeDEStatis": "524",
+			"bezeichnungSuche": "Salomonen",
+			"bezeichnung": "Salomonen",
+			"bezeichnungLang": "die Salomonen",
+			"staatsangehoerigkeit": "salomonisch",
+			"gueltigVon": 1977,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ZMB",
+		"idStatistik": "257",
+		"historie": [ {
+			"id": 90077066,
+			"schluessel": "257",
+			"kuerzel": "ZMB",
+			"text": "Sambia",
+			"iso3": "ZMB",
+			"iso2": "ZM",
+			"isoNumerisch": "894",
+			"codeDEStatis": "257",
+			"bezeichnungSuche": "Sambia",
+			"bezeichnung": "Sambia",
+			"bezeichnungLang": "die Republik Sambia",
+			"staatsangehoerigkeit": "sambisch",
+			"gueltigVon": 1964,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "WSM",
+		"idStatistik": "543",
+		"historie": [ {
+			"id": 87083077,
+			"schluessel": "543",
+			"kuerzel": "WSM",
+			"text": "Samoa",
+			"iso3": "WSM",
+			"iso2": "WS",
+			"isoNumerisch": "882",
+			"codeDEStatis": "543",
+			"bezeichnungSuche": "Samoa",
+			"bezeichnung": "Samoa",
+			"bezeichnungLang": "der Unabhängige Staat Samoa",
+			"staatsangehoerigkeit": "samoanisch",
+			"gueltigVon": 1961,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SMR",
+		"idStatistik": "156",
+		"historie": [ {
+			"id": 83077082,
+			"schluessel": "156",
+			"kuerzel": "SMR",
+			"text": "San Marino",
+			"iso3": "SMR",
+			"iso2": "SM",
+			"isoNumerisch": "674",
+			"codeDEStatis": "156",
+			"bezeichnungSuche": "San Marino",
+			"bezeichnung": "San Marino",
+			"bezeichnungLang": "die Republik San Marino",
+			"staatsangehoerigkeit": "san-marinesisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "STP",
+		"idStatistik": "268",
+		"historie": [ {
+			"id": 83084080,
+			"schluessel": "268",
+			"kuerzel": "STP",
+			"text": "São Tomé und Príncipe",
+			"iso3": "STP",
+			"iso2": "ST",
+			"isoNumerisch": "678",
+			"codeDEStatis": "268",
+			"bezeichnungSuche": "São Tomé und Príncipe",
+			"bezeichnung": "São Tomé und Príncipe",
+			"bezeichnungLang": "die Demokratische Republik São Tomé und Príncipe",
+			"staatsangehoerigkeit": "são-toméisch",
+			"gueltigVon": 1974,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SAU",
+		"idStatistik": "472",
+		"historie": [ {
+			"id": 83065085,
+			"schluessel": "472",
+			"kuerzel": "SAU",
+			"text": "Saudi-Arabien",
+			"iso3": "SAU",
+			"iso2": "SA",
+			"isoNumerisch": "682",
+			"codeDEStatis": "472",
+			"bezeichnungSuche": "Saudi-Arabien",
+			"bezeichnung": "Saudi-Arabien",
+			"bezeichnungLang": "das Königreich Saudi-Arabien",
+			"staatsangehoerigkeit": "saudi-arabisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SWE",
+		"idStatistik": "157",
+		"historie": [ {
+			"id": 83087069,
+			"schluessel": "157",
+			"kuerzel": "SWE",
+			"text": "Schweden",
+			"iso3": "SWE",
+			"iso2": "SE",
+			"isoNumerisch": "752",
+			"codeDEStatis": "157",
+			"bezeichnungSuche": "Schweden",
+			"bezeichnung": "Schweden",
+			"bezeichnungLang": "das Königreich Schweden",
+			"staatsangehoerigkeit": "schwedisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "CHE",
+		"idStatistik": "158",
+		"historie": [ {
+			"id": 67072069,
+			"schluessel": "158",
+			"kuerzel": "CHE",
+			"text": "Schweiz",
+			"iso3": "CHE",
+			"iso2": "CH",
+			"isoNumerisch": "756",
+			"codeDEStatis": "158",
+			"bezeichnungSuche": "Schweiz",
+			"bezeichnung": "Schweiz",
+			"bezeichnungLang": "die Schweizerische Eidgenossenschaft",
+			"staatsangehoerigkeit": "schweizerisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SEN",
+		"idStatistik": "269",
+		"historie": [ {
+			"id": 83069078,
+			"schluessel": "269",
+			"kuerzel": "SEN",
+			"text": "Senegal",
+			"iso3": "SEN",
+			"iso2": "SN",
+			"isoNumerisch": "686",
+			"codeDEStatis": "269",
+			"bezeichnungSuche": "Senegal",
+			"bezeichnung": "Senegal",
+			"bezeichnungLang": "die Republik Senegal",
+			"staatsangehoerigkeit": "senegalesisch",
+			"gueltigVon": 1960,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SRB",
+		"idStatistik": "170",
+		"historie": [ {
+			"id": 83082066,
+			"schluessel": "133",
+			"kuerzel": "SRB",
+			"text": "Serbien (einschließlich Kosovo)",
+			"iso3": "SRB",
+			"iso2": "RS",
+			"isoNumerisch": "688",
+			"codeDEStatis": "133",
+			"bezeichnungSuche": "Serbien",
+			"bezeichnung": "Serbien (einschließlich Kosovo)",
+			"bezeichnungLang": "die Republik Serbien",
+			"staatsangehoerigkeit": "serbisch",
+			"gueltigVon": 2005,
+			"gueltigBis": 2006
+		}, {
+			"id": 1083082066,
+			"schluessel": "170",
+			"kuerzel": "SRB",
+			"text": "Serbien",
+			"iso3": "SRB",
+			"iso2": "RS",
+			"isoNumerisch": "688",
+			"codeDEStatis": "170",
+			"bezeichnungSuche": "Serbien",
+			"bezeichnung": "Serbien",
+			"bezeichnungLang": "die Republik Serbien",
+			"staatsangehoerigkeit": "serbisch",
+			"gueltigVon": 2007,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SCG",
+		"idStatistik": "132",
+		"historie": [ {
+			"id": 83067071,
+			"schluessel": "132",
+			"kuerzel": "SCG",
+			"text": "Serbien und Montenegro",
+			"iso3": "SCG",
+			"iso2": "CS",
+			"isoNumerisch": "891",
+			"codeDEStatis": "132",
+			"bezeichnungSuche": "Serbien und Montenegro",
+			"bezeichnung": "Serbien und Montenegro",
+			"bezeichnungLang": "Serbien und Montenegro",
+			"staatsangehoerigkeit": "von Serbien und Montenegro",
+			"gueltigVon": 2002,
+			"gueltigBis": 2005
+		} ]
+	}, {
+		"bezeichner": "SYC",
+		"idStatistik": "271",
+		"historie": [ {
+			"id": 83089067,
+			"schluessel": "271",
+			"kuerzel": "SYC",
+			"text": "Seychellen",
+			"iso3": "SYC",
+			"iso2": "SC",
+			"isoNumerisch": "690",
+			"codeDEStatis": "271",
+			"bezeichnungSuche": "Seychellen",
+			"bezeichnung": "Seychellen",
+			"bezeichnungLang": "die Republik Seychellen",
+			"staatsangehoerigkeit": "seychellisch",
+			"gueltigVon": 1975,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SLE",
+		"idStatistik": "272",
+		"historie": [ {
+			"id": 83076069,
+			"schluessel": "272",
+			"kuerzel": "SLE",
+			"text": "Sierra Leone",
+			"iso3": "SLE",
+			"iso2": "SL",
+			"isoNumerisch": "694",
+			"codeDEStatis": "272",
+			"bezeichnungSuche": "Sierra Leone",
+			"bezeichnung": "Sierra Leone",
+			"bezeichnungLang": "die Republik Sierra Leone",
+			"staatsangehoerigkeit": "sierra-leonisch",
+			"gueltigVon": 1960,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ZWE",
+		"idStatistik": "233",
+		"historie": [ {
+			"id": 90087069,
+			"schluessel": "233",
+			"kuerzel": "ZWE",
+			"text": "Simbabwe",
+			"iso3": "ZWE",
+			"iso2": "ZW",
+			"isoNumerisch": "716",
+			"codeDEStatis": "233",
+			"bezeichnungSuche": "Simbabwe",
+			"bezeichnung": "Simbabwe",
+			"bezeichnungLang": "die Republik Simbabwe",
+			"staatsangehoerigkeit": "simbabwisch",
+			"gueltigVon": 1979,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SGP",
+		"idStatistik": "474",
+		"historie": [ {
+			"id": 83071080,
+			"schluessel": "474",
+			"kuerzel": "SGP",
+			"text": "Singapur",
+			"iso3": "SGP",
+			"iso2": "SG",
+			"isoNumerisch": "702",
+			"codeDEStatis": "474",
+			"bezeichnungSuche": "Singapur",
+			"bezeichnung": "Singapur",
+			"bezeichnungLang": "die Republik Singapur",
+			"staatsangehoerigkeit": "singapurisch",
+			"gueltigVon": 1979,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SVK",
+		"idStatistik": "155",
+		"historie": [ {
+			"id": 83086075,
+			"schluessel": "155",
+			"kuerzel": "SVK",
+			"text": "Slowakei",
+			"iso3": "SVK",
+			"iso2": "SK",
+			"isoNumerisch": "703",
+			"codeDEStatis": "155",
+			"bezeichnungSuche": "Slowakei",
+			"bezeichnung": "Slowakei",
+			"bezeichnungLang": "die Slowakische Republik",
+			"staatsangehoerigkeit": "slowakisch",
+			"gueltigVon": 1992,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SVN",
+		"idStatistik": "131",
+		"historie": [ {
+			"id": 83086078,
+			"schluessel": "131",
+			"kuerzel": "SVN",
+			"text": "Slowenien",
+			"iso3": "SVN",
+			"iso2": "SI",
+			"isoNumerisch": "705",
+			"codeDEStatis": "131",
+			"bezeichnungSuche": "Slowenien",
+			"bezeichnung": "Slowenien",
+			"bezeichnungLang": "die Republik Slowenien",
+			"staatsangehoerigkeit": "slowenisch",
+			"gueltigVon": 1990,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SOM",
+		"idStatistik": "273",
+		"historie": [ {
+			"id": 83079077,
+			"schluessel": "273",
+			"kuerzel": "SOM",
+			"text": "Somalia",
+			"iso3": "SOM",
+			"iso2": "SO",
+			"isoNumerisch": "706",
+			"codeDEStatis": "273",
+			"bezeichnungSuche": "Somalia",
+			"bezeichnung": "Somalia",
+			"bezeichnungLang": "die Bundesrepublik Somalia",
+			"staatsangehoerigkeit": "somalisch",
+			"gueltigVon": 1959,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SUN",
+		"idStatistik": "159",
+		"historie": [ {
+			"id": 83085078,
+			"schluessel": "159",
+			"kuerzel": "SUN",
+			"text": "Sowjetunion",
+			"iso3": "SUN",
+			"iso2": "SU",
+			"isoNumerisch": "810",
+			"codeDEStatis": "159",
+			"bezeichnungSuche": "Sowjetunion",
+			"bezeichnung": "Sowjetunion",
+			"bezeichnungLang": "die Union der Sozialistischen Sowjetrepubliken",
+			"staatsangehoerigkeit": "sowjetisch",
+			"gueltigVon": null,
+			"gueltigBis": 1991
+		} ]
+	}, {
+		"bezeichner": "ESP",
+		"idStatistik": "161",
+		"historie": [ {
+			"id": 69083080,
+			"schluessel": "161",
+			"kuerzel": "ESP",
+			"text": "Spanien",
+			"iso3": "ESP",
+			"iso2": "ES",
+			"isoNumerisch": "724",
+			"codeDEStatis": "161",
+			"bezeichnungSuche": "Spanien",
+			"bezeichnung": "Spanien",
+			"bezeichnungLang": "das Königreich Spanien",
+			"staatsangehoerigkeit": "spanisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "LKA",
+		"idStatistik": "431",
+		"historie": [ {
+			"id": 76075065,
+			"schluessel": "431",
+			"kuerzel": "LKA",
+			"text": "Sri Lanka",
+			"iso3": "LKA",
+			"iso2": "LK",
+			"isoNumerisch": "144",
+			"codeDEStatis": "431",
+			"bezeichnungSuche": "Sri Lanka",
+			"bezeichnung": "Sri Lanka",
+			"bezeichnungLang": "die Demokratische Sozialistische Republik Sri Lanka",
+			"staatsangehoerigkeit": "sri-lankisch",
+			"gueltigVon": 1947,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "KNA",
+		"idStatistik": "370",
+		"historie": [ {
+			"id": 75078065,
+			"schluessel": "370",
+			"kuerzel": "KNA",
+			"text": "St. Kitts und Nevis",
+			"iso3": "KNA",
+			"iso2": "KN",
+			"isoNumerisch": "659",
+			"codeDEStatis": "370",
+			"bezeichnungSuche": "St. Kitts und Nevis",
+			"bezeichnung": "St. Kitts und Nevis",
+			"bezeichnungLang": "die Föderation St. Kitts und Nevis",
+			"staatsangehoerigkeit": "von St. Kitts und Nevis",
+			"gueltigVon": 1983,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "LCA",
+		"idStatistik": "366",
+		"historie": [ {
+			"id": 76067065,
+			"schluessel": "366",
+			"kuerzel": "LCA",
+			"text": "St. Lucia",
+			"iso3": "LCA",
+			"iso2": "LC",
+			"isoNumerisch": "662",
+			"codeDEStatis": "366",
+			"bezeichnungSuche": "St. Lucia",
+			"bezeichnung": "St. Lucia",
+			"bezeichnungLang": "St. Lucia",
+			"staatsangehoerigkeit": "lucianisch",
+			"gueltigVon": 1978,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "VCT",
+		"idStatistik": "369",
+		"historie": [ {
+			"id": 86067084,
+			"schluessel": "369",
+			"kuerzel": "VCT",
+			"text": "St. Vincent und die Grenadinen",
+			"iso3": "VCT",
+			"iso2": "VC",
+			"isoNumerisch": "670",
+			"codeDEStatis": "369",
+			"bezeichnungSuche": "St. Vincent und die Grenadinen",
+			"bezeichnung": "St. Vincent und die Grenadinen",
+			"bezeichnungLang": "St. Vincent und die Grenadinen",
+			"staatsangehoerigkeit": "vincentisch",
+			"gueltigVon": 1979,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ZAF",
+		"idStatistik": "263",
+		"historie": [ {
+			"id": 90065070,
+			"schluessel": "263",
+			"kuerzel": "ZAF",
+			"text": "Südafrika",
+			"iso3": "ZAF",
+			"iso2": "ZA",
+			"isoNumerisch": "710",
+			"codeDEStatis": "263",
+			"bezeichnungSuche": "Südafrika",
+			"bezeichnung": "Südafrika",
+			"bezeichnungLang": "die Republik Südafrika",
+			"staatsangehoerigkeit": "südafrikanisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SDN",
+		"idStatistik": "277",
+		"historie": [ {
+			"id": 83068078,
+			"schluessel": "276",
+			"kuerzel": "SDN",
+			"text": "Sudan (einschließlich Südsudan)",
+			"iso3": "SDN",
+			"iso2": "SD",
+			"isoNumerisch": "729",
+			"codeDEStatis": "276",
+			"bezeichnungSuche": "Sudan",
+			"bezeichnung": "Sudan (einschließlich Südsudan)",
+			"bezeichnungLang": "die Republik Sudan",
+			"staatsangehoerigkeit": "sudanesisch",
+			"gueltigVon": 1955,
+			"gueltigBis": 2010
+		}, {
+			"id": 1083068078,
+			"schluessel": "277",
+			"kuerzel": "SDN",
+			"text": "Sudan",
+			"iso3": "SDN",
+			"iso2": "SD",
+			"isoNumerisch": "729",
+			"codeDEStatis": "277",
+			"bezeichnungSuche": "Sudan",
+			"bezeichnung": "Sudan",
+			"bezeichnungLang": "die Republik Sudan",
+			"staatsangehoerigkeit": "sudanesisch",
+			"gueltigVon": 2011,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SSD",
+		"idStatistik": "278",
+		"historie": [ {
+			"id": 83083068,
+			"schluessel": "278",
+			"kuerzel": "SSD",
+			"text": "Südsudan",
+			"iso3": "SSD",
+			"iso2": "SS",
+			"isoNumerisch": "728",
+			"codeDEStatis": "278",
+			"bezeichnungSuche": "Südsudan",
+			"bezeichnung": "Südsudan",
+			"bezeichnungLang": "die Republik Südsudan",
+			"staatsangehoerigkeit": "südsudanesisch",
+			"gueltigVon": 2010,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SUR",
+		"idStatistik": "364",
+		"historie": [ {
+			"id": 83085082,
+			"schluessel": "364",
+			"kuerzel": "SUR",
+			"text": "Suriname",
+			"iso3": "SUR",
+			"iso2": "SR",
+			"isoNumerisch": "740",
+			"codeDEStatis": "364",
+			"bezeichnungSuche": "Suriname",
+			"bezeichnung": "Suriname",
+			"bezeichnungLang": "die Republik Suriname",
+			"staatsangehoerigkeit": "surinamisch",
+			"gueltigVon": 1975,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SYR",
+		"idStatistik": "475",
+		"historie": [ {
+			"id": 83089082,
+			"schluessel": "475",
+			"kuerzel": "SYR",
+			"text": "Arabische Republik Syrien",
+			"iso3": "SYR",
+			"iso2": "SY",
+			"isoNumerisch": "760",
+			"codeDEStatis": "475",
+			"bezeichnungSuche": "Syrien",
+			"bezeichnung": "Arabische Republik Syrien",
+			"bezeichnungLang": "die Arabische Republik Syrien",
+			"staatsangehoerigkeit": "syrisch",
+			"gueltigVon": 1945,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "TJK",
+		"idStatistik": "470",
+		"historie": [ {
+			"id": 84074075,
+			"schluessel": "470",
+			"kuerzel": "TJK",
+			"text": "Tadschikistan",
+			"iso3": "TJK",
+			"iso2": "TJ",
+			"isoNumerisch": "762",
+			"codeDEStatis": "470",
+			"bezeichnungSuche": "Tadschikistan",
+			"bezeichnung": "Tadschikistan",
+			"bezeichnungLang": "die Republik Tadschikistan",
+			"staatsangehoerigkeit": "tadschikisch",
+			"gueltigVon": 1991,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "TWN",
+		"idStatistik": "465",
+		"historie": [ {
+			"id": 84086078,
+			"schluessel": "465",
+			"kuerzel": "TWN",
+			"text": "Taiwan",
+			"iso3": "TWN",
+			"iso2": "TW",
+			"isoNumerisch": "158",
+			"codeDEStatis": "465",
+			"bezeichnungSuche": "Taiwan",
+			"bezeichnung": "Taiwan",
+			"bezeichnungLang": "Taiwan",
+			"staatsangehoerigkeit": "taiwanisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "TZA",
+		"idStatistik": "282",
+		"historie": [ {
+			"id": 84090065,
+			"schluessel": "282",
+			"kuerzel": "TZA",
+			"text": "Vereinigte Republik Tansania",
+			"iso3": "TZA",
+			"iso2": "TZ",
+			"isoNumerisch": "834",
+			"codeDEStatis": "282",
+			"bezeichnungSuche": "Tansania",
+			"bezeichnung": "Vereinigte Republik Tansania",
+			"bezeichnungLang": "die Vereinigte Republik Tansania",
+			"staatsangehoerigkeit": "tansanisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "THA",
+		"idStatistik": "476",
+		"historie": [ {
+			"id": 84072065,
+			"schluessel": "476",
+			"kuerzel": "THA",
+			"text": "Thailand",
+			"iso3": "THA",
+			"iso2": "TH",
+			"isoNumerisch": "764",
+			"codeDEStatis": "476",
+			"bezeichnungSuche": "Thailand",
+			"bezeichnung": "Thailand",
+			"bezeichnungLang": "das Königreich Thailand",
+			"staatsangehoerigkeit": "thailändisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "TLS",
+		"idStatistik": "483",
+		"historie": [ {
+			"id": 84076083,
+			"schluessel": "483",
+			"kuerzel": "TLS",
+			"text": "Timor-Leste",
+			"iso3": "TLS",
+			"iso2": "TL",
+			"isoNumerisch": "626",
+			"codeDEStatis": "483",
+			"bezeichnungSuche": "Timor-Leste",
+			"bezeichnung": "Timor-Leste",
+			"bezeichnungLang": "die Demokratische Republik Timor-Leste",
+			"staatsangehoerigkeit": "von Timor-Leste",
+			"gueltigVon": 2001,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "TGO",
+		"idStatistik": "283",
+		"historie": [ {
+			"id": 84071079,
+			"schluessel": "283",
+			"kuerzel": "TGO",
+			"text": "Togo",
+			"iso3": "TGO",
+			"iso2": "TG",
+			"isoNumerisch": "768",
+			"codeDEStatis": "283",
+			"bezeichnungSuche": "Togo",
+			"bezeichnung": "Togo",
+			"bezeichnungLang": "die Republik Togo",
+			"staatsangehoerigkeit": "togoisch",
+			"gueltigVon": 1959,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "TON",
+		"idStatistik": "541",
+		"historie": [ {
+			"id": 84079078,
+			"schluessel": "541",
+			"kuerzel": "TON",
+			"text": "Tonga",
+			"iso3": "TON",
+			"iso2": "TO",
+			"isoNumerisch": "776",
+			"codeDEStatis": "541",
+			"bezeichnungSuche": "Tonga",
+			"bezeichnung": "Tonga",
+			"bezeichnungLang": "das Königreich Tonga",
+			"staatsangehoerigkeit": "tongaisch",
+			"gueltigVon": 1969,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "TTO",
+		"idStatistik": "371",
+		"historie": [ {
+			"id": 84084079,
+			"schluessel": "371",
+			"kuerzel": "TTO",
+			"text": "Trinidad und Tobago",
+			"iso3": "TTO",
+			"iso2": "TT",
+			"isoNumerisch": "780",
+			"codeDEStatis": "371",
+			"bezeichnungSuche": "Trinidad und Tobago",
+			"bezeichnung": "Trinidad und Tobago",
+			"bezeichnungLang": "die Republik Trinidad und Tobago",
+			"staatsangehoerigkeit": "von Trinidad und Tobago",
+			"gueltigVon": 1962,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "TCD",
+		"idStatistik": "284",
+		"historie": [ {
+			"id": 84067068,
+			"schluessel": "284",
+			"kuerzel": "TCD",
+			"text": "Tschad",
+			"iso3": "TCD",
+			"iso2": "TD",
+			"isoNumerisch": "148",
+			"codeDEStatis": "284",
+			"bezeichnungSuche": "Tschad",
+			"bezeichnung": "Tschad",
+			"bezeichnungLang": "die Republik Tschad",
+			"staatsangehoerigkeit": "tschadisch",
+			"gueltigVon": 1960,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "CZE",
+		"idStatistik": "164",
+		"historie": [ {
+			"id": 67090069,
+			"schluessel": "164",
+			"kuerzel": "CZE",
+			"text": "Tschechien",
+			"iso3": "CZE",
+			"iso2": "CZ",
+			"isoNumerisch": "203",
+			"codeDEStatis": "164",
+			"bezeichnungSuche": "Tschechien",
+			"bezeichnung": "Tschechien",
+			"bezeichnungLang": "die Tschechische Republik",
+			"staatsangehoerigkeit": "tschechisch",
+			"gueltigVon": 1992,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "CSK",
+		"idStatistik": "162",
+		"historie": [ {
+			"id": 67083075,
+			"schluessel": "162",
+			"kuerzel": "CSK",
+			"text": "Tschechoslowakei",
+			"iso3": "CSK",
+			"iso2": "CS",
+			"isoNumerisch": "200",
+			"codeDEStatis": "162",
+			"bezeichnungSuche": "Tschechoslowakei",
+			"bezeichnung": "Tschechoslowakei",
+			"bezeichnungLang": "die Tschechoslowakische Sozialistische Republik",
+			"staatsangehoerigkeit": "tschechoslowakisch",
+			"gueltigVon": null,
+			"gueltigBis": 1992
+		} ]
+	}, {
+		"bezeichner": "TUN",
+		"idStatistik": "285",
+		"historie": [ {
+			"id": 84085078,
+			"schluessel": "285",
+			"kuerzel": "TUN",
+			"text": "Tunesien",
+			"iso3": "TUN",
+			"iso2": "TN",
+			"isoNumerisch": "788",
+			"codeDEStatis": "285",
+			"bezeichnungSuche": "Tunesien",
+			"bezeichnung": "Tunesien",
+			"bezeichnungLang": "die Tunesische Republik",
+			"staatsangehoerigkeit": "tunesisch",
+			"gueltigVon": 1955,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "TUR",
+		"idStatistik": "163",
+		"historie": [ {
+			"id": 84085082,
+			"schluessel": "163",
+			"kuerzel": "TUR",
+			"text": "Türkei",
+			"iso3": "TUR",
+			"iso2": "TR",
+			"isoNumerisch": "792",
+			"codeDEStatis": "163",
+			"bezeichnungSuche": "Türkei",
+			"bezeichnung": "Türkei",
+			"bezeichnungLang": "die Republik Türkei",
+			"staatsangehoerigkeit": "türkisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "TKM",
+		"idStatistik": "471",
+		"historie": [ {
+			"id": 84075077,
+			"schluessel": "471",
+			"kuerzel": "TKM",
+			"text": "Turkmenistan",
+			"iso3": "TKM",
+			"iso2": "TM",
+			"isoNumerisch": "795",
+			"codeDEStatis": "471",
+			"bezeichnungSuche": "Turkmenistan",
+			"bezeichnung": "Turkmenistan",
+			"bezeichnungLang": "Turkmenistan",
+			"staatsangehoerigkeit": "turkmenisch",
+			"gueltigVon": 1991,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "TUV",
+		"idStatistik": "540",
+		"historie": [ {
+			"id": 84085086,
+			"schluessel": "540",
+			"kuerzel": "TUV",
+			"text": "Tuvalu",
+			"iso3": "TUV",
+			"iso2": "TV",
+			"isoNumerisch": "798",
+			"codeDEStatis": "540",
+			"bezeichnungSuche": "Tuvalu",
+			"bezeichnung": "Tuvalu",
+			"bezeichnungLang": "Tuvalu",
+			"staatsangehoerigkeit": "tuvaluisch",
+			"gueltigVon": 1978,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "UGA",
+		"idStatistik": "286",
+		"historie": [ {
+			"id": 85071065,
+			"schluessel": "286",
+			"kuerzel": "UGA",
+			"text": "Uganda",
+			"iso3": "UGA",
+			"iso2": "UG",
+			"isoNumerisch": "800",
+			"codeDEStatis": "286",
+			"bezeichnungSuche": "Uganda",
+			"bezeichnung": "Uganda",
+			"bezeichnungLang": "die Republik Uganda",
+			"staatsangehoerigkeit": "ugandisch",
+			"gueltigVon": 1962,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "UKR",
+		"idStatistik": "166",
+		"historie": [ {
+			"id": 85075082,
+			"schluessel": "166",
+			"kuerzel": "UKR",
+			"text": "Ukraine",
+			"iso3": "UKR",
+			"iso2": "UA",
+			"isoNumerisch": "804",
+			"codeDEStatis": "166",
+			"bezeichnungSuche": "Ukraine",
+			"bezeichnung": "Ukraine",
+			"bezeichnungLang": "die Ukraine",
+			"staatsangehoerigkeit": "ukrainisch",
+			"gueltigVon": 1991,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "HUN",
+		"idStatistik": "165",
+		"historie": [ {
+			"id": 72085078,
+			"schluessel": "165",
+			"kuerzel": "HUN",
+			"text": "Ungarn",
+			"iso3": "HUN",
+			"iso2": "HU",
+			"isoNumerisch": "348",
+			"codeDEStatis": "165",
+			"bezeichnungSuche": "Ungarn",
+			"bezeichnung": "Ungarn",
+			"bezeichnungLang": "Ungarn",
+			"staatsangehoerigkeit": "ungarisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "URY",
+		"idStatistik": "365",
+		"historie": [ {
+			"id": 85082089,
+			"schluessel": "365",
+			"kuerzel": "URY",
+			"text": "Uruguay",
+			"iso3": "URY",
+			"iso2": "UY",
+			"isoNumerisch": "858",
+			"codeDEStatis": "365",
+			"bezeichnungSuche": "Uruguay",
+			"bezeichnung": "Uruguay",
+			"bezeichnungLang": "die Republik Östlich des Uruguay",
+			"staatsangehoerigkeit": "uruguayisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "UZB",
+		"idStatistik": "477",
+		"historie": [ {
+			"id": 85090066,
+			"schluessel": "477",
+			"kuerzel": "UZB",
+			"text": "Usbekistan",
+			"iso3": "UZB",
+			"iso2": "UZ",
+			"isoNumerisch": "860",
+			"codeDEStatis": "477",
+			"bezeichnungSuche": "Usbekistan",
+			"bezeichnung": "Usbekistan",
+			"bezeichnungLang": "die Republik Usbekistan",
+			"staatsangehoerigkeit": "usbekisch",
+			"gueltigVon": 1991,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "VUT",
+		"idStatistik": "532",
+		"historie": [ {
+			"id": 86085084,
+			"schluessel": "532",
+			"kuerzel": "VUT",
+			"text": "Vanuatu",
+			"iso3": "VUT",
+			"iso2": "VU",
+			"isoNumerisch": "548",
+			"codeDEStatis": "532",
+			"bezeichnungSuche": "Vanuatu",
+			"bezeichnung": "Vanuatu",
+			"bezeichnungLang": "die Republik Vanuatu",
+			"staatsangehoerigkeit": "vanuatuisch",
+			"gueltigVon": 1979,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "VAT",
+		"idStatistik": "167",
+		"historie": [ {
+			"id": 86065084,
+			"schluessel": "167",
+			"kuerzel": "VAT",
+			"text": "Vatikanstadt",
+			"iso3": "VAT",
+			"iso2": "VA",
+			"isoNumerisch": "336",
+			"codeDEStatis": "167",
+			"bezeichnungSuche": "Vatikanstadt",
+			"bezeichnung": "Vatikanstadt",
+			"bezeichnungLang": "der Staat Vatikanstadt",
+			"staatsangehoerigkeit": "vatikanisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "VEN",
+		"idStatistik": "367",
+		"historie": [ {
+			"id": 86069078,
+			"schluessel": "367",
+			"kuerzel": "VEN",
+			"text": "Bolivarische Republik Venezuela",
+			"iso3": "VEN",
+			"iso2": "VE",
+			"isoNumerisch": "862",
+			"codeDEStatis": "367",
+			"bezeichnungSuche": "Venezuela",
+			"bezeichnung": "Bolivarische Republik Venezuela",
+			"bezeichnungLang": "die Bolivarische Republik Venezuela",
+			"staatsangehoerigkeit": "venezolanisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ARE",
+		"idStatistik": "469",
+		"historie": [ {
+			"id": 65082069,
+			"schluessel": "469",
+			"kuerzel": "ARE",
+			"text": "Vereinigte Arabische Emirate",
+			"iso3": "ARE",
+			"iso2": "AE",
+			"isoNumerisch": "784",
+			"codeDEStatis": "469",
+			"bezeichnungSuche": "Vereinigte Arabische Emirate",
+			"bezeichnung": "Vereinigte Arabische Emirate",
+			"bezeichnungLang": "die Vereinigten Arabischen Emirate (Abu Dhabi, Adschman, Dubai, Fudschaira, Ras al Chaima, Schardscha, Umm al Kaiwain",
+			"staatsangehoerigkeit": "der Vereinigten Arabischen Emirate",
+			"gueltigVon": 1971,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "USA",
+		"idStatistik": "368",
+		"historie": [ {
+			"id": 85083065,
+			"schluessel": "368",
+			"kuerzel": "USA",
+			"text": "Vereinigte Staaten",
+			"iso3": "USA",
+			"iso2": "US",
+			"isoNumerisch": "840",
+			"codeDEStatis": "368",
+			"bezeichnungSuche": "Vereinigte Staaten",
+			"bezeichnung": "Vereinigte Staaten",
+			"bezeichnungLang": "die Vereinigten Staaten von Amerika",
+			"staatsangehoerigkeit": "amerikanisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "GBR",
+		"idStatistik": "168",
+		"historie": [ {
+			"id": 71066082,
+			"schluessel": "168",
+			"kuerzel": "GBR",
+			"text": "Vereinigtes Königreich",
+			"iso3": "GBR",
+			"iso2": "GB",
+			"isoNumerisch": "826",
+			"codeDEStatis": "168",
+			"bezeichnungSuche": "Vereinigtes Königreich",
+			"bezeichnung": "Vereinigtes Königreich",
+			"bezeichnungLang": "das Vereinigte Königreich Großbritannien und Nordirland",
+			"staatsangehoerigkeit": "britisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "VNM",
+		"idStatistik": "432",
+		"historie": [ {
+			"id": 86078077,
+			"schluessel": "432",
+			"kuerzel": "VNM",
+			"text": "Vietnam",
+			"iso3": "VNM",
+			"iso2": "VN",
+			"isoNumerisch": "704",
+			"codeDEStatis": "432",
+			"bezeichnungSuche": "Vietnam",
+			"bezeichnung": "Vietnam",
+			"bezeichnungLang": "die Sozialistische Republik Vietnam",
+			"staatsangehoerigkeit": "vietnamesisch",
+			"gueltigVon": 1975,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "CAF",
+		"idStatistik": "289",
+		"historie": [ {
+			"id": 67065070,
+			"schluessel": "289",
+			"kuerzel": "CAF",
+			"text": "Zentralafrikanische Republik",
+			"iso3": "CAF",
+			"iso2": "CF",
+			"isoNumerisch": "140",
+			"codeDEStatis": "289",
+			"bezeichnungSuche": "Zentralafrikanische Republik",
+			"bezeichnung": "Zentralafrikanische Republik",
+			"bezeichnungLang": "die Zentralafrikanische Republik",
+			"staatsangehoerigkeit": "zentralafrikanisch",
+			"gueltigVon": 1960,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "IDS",
+		"idStatistik": "181",
+		"historie": [ {
+			"id": 67089080,
+			"schluessel": "181",
+			"kuerzel": "CYP",
+			"text": "Zypern",
+			"iso3": "CYP",
+			"iso2": "CY",
+			"isoNumerisch": "196",
+			"codeDEStatis": "181",
+			"bezeichnungSuche": "Zypern",
+			"bezeichnung": "Zypern",
+			"bezeichnungLang": "die Republik Zypern",
+			"staatsangehoerigkeit": "zyprisch",
+			"gueltigVon": 1960,
+			"gueltigBis": null
+		} ]
+	} ]
+}

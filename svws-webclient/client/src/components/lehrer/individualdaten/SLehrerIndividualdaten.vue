@@ -16,7 +16,7 @@
 				<svws-ui-select title="Geschlecht" :disabled="!hatUpdateKompetenz" v-model="inputGeschlecht" :items="Geschlecht.values()" :item-text="i=>i.text" required />
 				<svws-ui-text-input placeholder="Geburtsdatum" :disabled="!hatUpdateKompetenz" :model-value="data().geburtsdatum" @change="geburtsdatum => geburtsdatum && patch({geburtsdatum})" type="date" required statistics />
 				<svws-ui-select title="Staatsangehörigkeit" :disabled="!hatUpdateKompetenz" v-model="inputStaatsangehoerigkeit" :items="Nationalitaeten.values()"
-					:item-text="i => i.daten.staatsangehoerigkeit" :item-sort="staatsangehoerigkeitKatalogEintragSort"
+					:item-text="i => i.historie().getLast().staatsangehoerigkeit" :item-sort="staatsangehoerigkeitKatalogEintragSort"
 					:item-filter="staatsangehoerigkeitKatalogEintragFilter" required autocomplete />
 				<svws-ui-spacing />
 				<svws-ui-text-input placeholder="Akadademischer Grad" :disabled="!hatUpdateKompetenz" :model-value="data().titel" @change="titel => patch({titel})" type="text" />
@@ -106,8 +106,8 @@
 	});
 
 	const inputStaatsangehoerigkeit = computed<Nationalitaeten>({
-		get: () => Nationalitaeten.getByISO3(data().staatsangehoerigkeitID) || Nationalitaeten.DEU,
-		set: (value) => void props.patch({ staatsangehoerigkeitID: value.daten.iso3 }),
+		get: () => Nationalitaeten.getByISO3(data().staatsangehoerigkeitID) ?? Nationalitaeten.getDEU(),
+		set: (value) => void props.patch({ staatsangehoerigkeitID: value.historie().getLast().iso3 }),
 	});
 
 	const strasse = computed(() => AdressenUtils.combineStrasse(data().strassenname ?? "", data().hausnummer ?? "", data().hausnummerZusatz ?? ""))

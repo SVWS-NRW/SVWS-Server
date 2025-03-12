@@ -123,7 +123,7 @@ import { LehrerZugangsgrundKatalogEintrag } from '../asd/data/lehrer/LehrerZugan
 import { List } from '../java/util/List';
 import { LongAndStringLists } from '../core/data/LongAndStringLists';
 import { Merkmal } from '../core/data/schule/Merkmal';
-import { NationalitaetenKatalogEintrag } from '../core/data/schule/NationalitaetenKatalogEintrag';
+import { NationalitaetenKatalogEintrag } from '../asd/data/schule/NationalitaetenKatalogEintrag';
 import { NoteKatalogEintrag } from '../asd/data/NoteKatalogEintrag';
 import { OAuth2ClientConnection } from '../core/data/oauth2/OAuth2ClientConnection';
 import { OrganisationsformKatalogEintrag } from '../asd/data/schule/OrganisationsformKatalogEintrag';

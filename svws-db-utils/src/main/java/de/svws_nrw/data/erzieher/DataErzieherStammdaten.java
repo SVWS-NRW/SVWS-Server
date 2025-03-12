@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
 
+import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.core.data.erzieher.ErzieherStammdaten;
-import de.svws_nrw.core.types.schule.Nationalitaeten;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
@@ -56,7 +56,7 @@ public final class DataErzieherStammdaten extends DataManager<Long> {
 		eintrag.wohnortID = e.ErzOrt_ID;
 		eintrag.ortsteilID = e.ErzOrtsteil_ID;
 		eintrag.eMail = e.ErzEmail;
-		eintrag.staatsangehoerigkeitID = (e.Erz1StaatKrz == null) ? null : e.Erz1StaatKrz.daten.iso3;
+		eintrag.staatsangehoerigkeitID = (e.Erz1StaatKrz == null) ? null : e.Erz1StaatKrz.historie().getLast().iso3;
 		eintrag.erhaeltAnschreiben = e.ErzAnschreiben;
 		eintrag.bemerkungen = e.Bemerkungen;
 		return eintrag;
@@ -80,7 +80,7 @@ public final class DataErzieherStammdaten extends DataManager<Long> {
 		eintrag.wohnortID = e.ErzOrt_ID;
 		eintrag.ortsteilID = e.ErzOrtsteil_ID;
 		eintrag.eMail = e.ErzEmail2;
-		eintrag.staatsangehoerigkeitID = (e.Erz2StaatKrz == null) ? null : e.Erz2StaatKrz.daten.iso3;
+		eintrag.staatsangehoerigkeitID = (e.Erz2StaatKrz == null) ? null : e.Erz2StaatKrz.historie().getLast().iso3;
 		eintrag.erhaeltAnschreiben = e.ErzAnschreiben;
 		eintrag.bemerkungen = e.Bemerkungen;
 		return eintrag;

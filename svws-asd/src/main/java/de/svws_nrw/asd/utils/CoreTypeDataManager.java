@@ -211,7 +211,7 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 		Integer schuljahr = null;
 		for (final @NotNull T eintrag : historie) {
 			// Prüfe zunächst die Historie auf plausible Einträge ...
-			if ((schuljahr != null) && ((eintrag.gueltigVon == null) || (eintrag.gueltigVon < 2000) || (Integer.compare(eintrag.gueltigVon, schuljahr) <= 0)
+			if ((schuljahr != null) && ((eintrag.gueltigVon == null) || (eintrag.gueltigVon < 1900) || (Integer.compare(eintrag.gueltigVon, schuljahr) <= 0)
 					|| ((eintrag.gueltigBis != null) && (eintrag.gueltigBis > 3000))))
 				throw new CoreTypeException(coreTypeName + ": Die Historie ist fehlerhaft beim Eintrag für " + bezeichnerName
 						+ ". Neuere Historieneinträge müssen weiter unten in der Liste stehen.");

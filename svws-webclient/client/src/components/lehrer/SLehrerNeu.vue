@@ -16,10 +16,10 @@
 				<svws-ui-select title="Geschlecht" required :items="Geschlecht.values()" :item-text="i => i.text" statistics
 					:model-value="Geschlecht.fromValue(data.geschlecht)" @update:model-value="v => data.geschlecht = v?.id ?? -1" />
 				<svws-ui-text-input placeholder="Geburtsdatum" type="date" v-model="data.geburtsdatum" statistics />
-				<svws-ui-select title="Staatsangehörigkeit" :items="Nationalitaeten.values()" :item-text="i => i.daten.staatsangehoerigkeit" statistics
+				<svws-ui-select title="Staatsangehörigkeit" :items="Nationalitaeten.values()" :item-text="i => i.historie().getLast().staatsangehoerigkeit" statistics
 					:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" autocomplete
 					:model-value="Nationalitaeten.getByISO3(data.staatsangehoerigkeitID)" :valid="fieldIsValid('staatsangehoerigkeitID')"
-					@update:model-value="v => data.staatsangehoerigkeitID = v?.daten?.iso3?? null" />
+					@update:model-value="v => data.staatsangehoerigkeitID = v?.historie().getLast().iso3 ?? null" />
 				<svws-ui-spacing />
 				<svws-ui-text-input placeholder="Akademischer Grad" v-model="data.titel" :valid="fieldIsValid('titel')" :max-len="20" />
 				<svws-ui-text-input placeholder="Amtsbezeichnung" v-model="data.amtsbezeichnung" :valid="fieldIsValid('amtsbezeichnung')" :max-len="15" />

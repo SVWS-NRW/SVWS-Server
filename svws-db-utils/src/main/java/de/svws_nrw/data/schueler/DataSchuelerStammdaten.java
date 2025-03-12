@@ -7,7 +7,7 @@ import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
-import de.svws_nrw.core.types.schule.Nationalitaeten;
+import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.core.types.schule.Verkehrssprache;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
@@ -76,8 +76,8 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 		daten.emailPrivat = schueler.Email;
 		daten.emailSchule = schueler.SchulEmail;
 		// Daten zur Staatsangehörigkeit und zur Religion
-		daten.staatsangehoerigkeitID = (schueler.StaatKrz == null) ? null : schueler.StaatKrz.daten.iso3;
-		daten.staatsangehoerigkeit2ID = (schueler.StaatKrz2 == null) ? null : schueler.StaatKrz2.daten.iso3;
+		daten.staatsangehoerigkeitID = (schueler.StaatKrz == null) ? null : schueler.StaatKrz.historie().getLast().iso3;
+		daten.staatsangehoerigkeit2ID = (schueler.StaatKrz2 == null) ? null : schueler.StaatKrz2.historie().getLast().iso3;
 		daten.religionID = schueler.Religion_ID;
 		daten.druckeKonfessionAufZeugnisse = schueler.KonfDruck;
 		daten.religionabmeldung = schueler.Religionsabmeldung;
@@ -86,10 +86,10 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 		// TODO DB-Converter für boolean statt Boolean beim Migrationshintergrund
 		daten.hatMigrationshintergrund = (schueler.Migrationshintergrund != null) && schueler.Migrationshintergrund;
 		daten.zuzugsjahr = (schueler.JahrZuzug == null) ? null : schueler.JahrZuzug;
-		daten.geburtsland = (schueler.GeburtslandSchueler == null) ? null : schueler.GeburtslandSchueler.daten.iso3;
+		daten.geburtsland = (schueler.GeburtslandSchueler == null) ? null : schueler.GeburtslandSchueler.historie().getLast().iso3;
 		daten.verkehrspracheFamilie = (schueler.VerkehrsspracheFamilie == null) ? null : schueler.VerkehrsspracheFamilie.daten.kuerzel;
-		daten.geburtslandVater = (schueler.GeburtslandVater == null) ? null : schueler.GeburtslandVater.daten.iso3;
-		daten.geburtslandMutter = (schueler.GeburtslandMutter == null) ? null : schueler.GeburtslandMutter.daten.iso3;
+		daten.geburtslandVater = (schueler.GeburtslandVater == null) ? null : schueler.GeburtslandVater.historie().getLast().iso3;
+		daten.geburtslandMutter = (schueler.GeburtslandMutter == null) ? null : schueler.GeburtslandMutter.historie().getLast().iso3;
 		// Statusdaten
 		daten.status = schueler.idStatus;
 		daten.istDuplikat = schueler.Duplikat;

@@ -2,8 +2,8 @@ package de.svws_nrw.data.lehrer;
 
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.asd.types.Geschlecht;
+import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.core.types.PersonalTyp;
-import de.svws_nrw.core.types.schule.Nationalitaeten;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
@@ -111,7 +111,7 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 		daten.vorname = (dtoLehrer.Vorname == null) ? "" : dtoLehrer.Vorname;
 		daten.geschlecht = (dtoLehrer.Geschlecht == null) ? -1 : dtoLehrer.Geschlecht.id;
 		daten.geburtsdatum = dtoLehrer.Geburtsdatum;
-		daten.staatsangehoerigkeitID = (dtoLehrer.staatsangehoerigkeit == null) ? null : dtoLehrer.staatsangehoerigkeit.daten.iso3;
+		daten.staatsangehoerigkeitID = (dtoLehrer.staatsangehoerigkeit == null) ? null : dtoLehrer.staatsangehoerigkeit.historie().getLast().iso3;
 		daten.strassenname = dtoLehrer.Strassenname;
 		daten.hausnummer = dtoLehrer.HausNr;
 		daten.hausnummerZusatz = dtoLehrer.HausNrZusatz;

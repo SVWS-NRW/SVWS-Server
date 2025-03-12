@@ -103,6 +103,8 @@ import type { List } from "../../java/util/List";
 import { BaseApi } from "../../api/BaseApi";
 import { ValidatorFehlerartKontext } from "../validate/ValidatorFehlerartKontext";
 import { ValidatorManager } from "../validate/ValidatorManager";
+import { NationalitaetenKatalogEintrag } from "../data/schule/NationalitaetenKatalogEintrag";
+import { Nationalitaeten } from "../types/schule/Nationalitaeten";
 
 interface JsonCoreTypeEntry<T> {
 	bezeichner: string;
@@ -144,7 +146,7 @@ export class JsonCoreTypeReader {
 		"LehrerAbgangsgrund", "LehrerBeschaeftigungsart", "LehrerEinsatzstatus", "LehrerFachrichtung", "LehrerLehrbefaehigung", "LehrerFachrichtungAnerkennung", "LehrerLehramt",
 		"LehrerLehramtAnerkennung", "LehrerLehrbefaehigungAnerkennung", "LehrerLeitungsfunktion", "LehrerRechtsverhaeltnis", "LehrerZugangsgrund", "BilingualeSprache", "KAOABerufsfeld",
 		"KAOAMerkmaleOptionsarten", "KAOAZusatzmerkmaleOptionsarten", "KAOAEbene4", "KAOAZusatzmerkmal", "KAOAAnschlussoptionen", "KAOAKategorie", "KAOAMerkmal", "Klassenart", "Uebergangsempfehlung",
-		"ZulaessigeKursart", "Foerderschwerpunkt", "LehrerAnrechnungsgrund", "LehrerMehrleistungsarten", "LehrerMinderleistungsarten", "ValidatorenFehlerartKontext",
+		"ZulaessigeKursart", "Foerderschwerpunkt", "LehrerAnrechnungsgrund", "LehrerMehrleistungsarten", "LehrerMinderleistungsarten", "Nationalitaeten", "ValidatorenFehlerartKontext",
 	] as const;
 
 	public constructor(url?: string) {
@@ -488,6 +490,13 @@ export class JsonCoreTypeReader {
 		LehrerMinderleistungsarten.init(manager);
 	}
 
+	public readNationalitaeten() {
+		const data = this.read('Nationalitaeten', (json) => NationalitaetenKatalogEintrag.transpilerFromJSON(json));
+		CoreTypeSimple.initValues(new Nationalitaeten(), Nationalitaeten.class, data.mapData);
+		const manager = new CoreTypeDataManager<NationalitaetenKatalogEintrag, Nationalitaeten>(data.version, Nationalitaeten.class, Nationalitaeten.values(), data.mapData, data.mapStatistikIDs);
+		Nationalitaeten.init(manager);
+	}
+
 	public readValidatorenFehlerartKontext() {
 		const name = "ValidatorenFehlerartKontext";
 		const json: string | undefined = this.mapCoreTypeNameJsonData.get(name);
@@ -572,6 +581,7 @@ export class JsonCoreTypeReader {
 			this.readLehrerAnrechnungsgrund();
 			this.readLehrerMehrleistungsarten();
 			this.readLehrerMinderleistungsarten();
+			this.readNationalitaeten();
 			this.readValidatorenFehlerartKontext();
 		} catch (e) {
 			console.log(e)

@@ -39,10 +39,10 @@
 		<svws-ui-content-card title="Staatsangehörigkeit und Konfession" v-if="hatKompetenzAnsehen">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-select title="1. Staatsangehörigkeit" :readonly="!hatKompetenzUpdate" v-model="staatsangehoerigkeit" autocomplete
-					:items="Nationalitaeten.values()" :item-text="i => i.daten.staatsangehoerigkeit"
+					:items="Nationalitaeten.values()" :item-text="i => i.historie().getLast().staatsangehoerigkeit"
 					:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" required statistics focus-class-content />
 				<svws-ui-select title="2. Staatsangehörigkeit" :readonly="!hatKompetenzUpdate" v-model="staatsangehoerigkeit2" autocomplete removable
-					:items="Nationalitaeten.values()" :item-text="i => i.daten.staatsangehoerigkeit"
+					:items="Nationalitaeten.values()" :item-text="i => i.historie().getLast().staatsangehoerigkeit"
 					:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" />
 				<svws-ui-select title="Konfession" :readonly="!hatKompetenzUpdate" v-model="religion" :items="mapReligionen" :item-text="i => i.bezeichnung ?? ''" required statistics />
 				<div class="flex items-center pl-2">
@@ -64,17 +64,17 @@
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-input-number placeholder="Zuzugsjahr" :model-value="data.zuzugsjahr" @change="zuzugsjahr => patch({zuzugsjahr})"
 					:disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate" statistics hide-stepper :min :max />
-				<svws-ui-select title="Geburtsland" v-model="geburtsland" :items="Nationalitaeten.values()" :item-text="i => `${i.daten.bezeichnung} (${i.daten.iso3})`"
+				<svws-ui-select title="Geburtsland" v-model="geburtsland" :items="Nationalitaeten.values()" :item-text="i => `${i.historie().getLast().bezeichnung} (${i.historie().getLast().iso3})`"
 					:item-sort="nationalitaetenKatalogEintragSort" :item-filter="nationalitaetenKatalogEintragFilter"
 					:disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate" autocomplete statistics />
 				<svws-ui-select title="Verkehrssprache" v-model="verkehrsprache" autocomplete :items="Verkehrssprache.values()"
 					:item-text="i => `${i.daten.bezeichnung} (${i.daten.kuerzel})`" :item-sort="verkehrsspracheKatalogEintragSort"
 					:item-filter="verkehrsspracheKatalogEintragFilter" :disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate" class="col-span-full" statistics />
 				<svws-ui-select title="Geburtsland Mutter" v-model="geburtslandMutter" :items="Nationalitaeten.values()"
-					:item-text="i => `${i.daten.bezeichnung} (${i.daten.iso3})`" :item-sort="nationalitaetenKatalogEintragSort"
+					:item-text="i => `${i.historie().getLast().bezeichnung} (${i.historie().getLast().iso3})`" :item-sort="nationalitaetenKatalogEintragSort"
 					:item-filter="nationalitaetenKatalogEintragFilter" :disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate" autocomplete statistics />
 				<svws-ui-select title="Geburtsland Vater" v-model="geburtslandVater" :items="Nationalitaeten.values()"
-					:item-text="i => `${i.daten.bezeichnung} (${i.daten.iso3})`" :item-sort="nationalitaetenKatalogEintragSort"
+					:item-text="i => `${i.historie().getLast().bezeichnung} (${i.historie().getLast().iso3})`" :item-sort="nationalitaetenKatalogEintragSort"
 					:item-filter="nationalitaetenKatalogEintragFilter" :disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate" autocomplete statistics />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
@@ -199,13 +199,13 @@
 
 
 	const staatsangehoerigkeit = computed<Nationalitaeten>({
-		get: () => Nationalitaeten.getByISO3(data.value.staatsangehoerigkeitID) || Nationalitaeten.DEU,
-		set: (value) => void props.patch({ staatsangehoerigkeitID: value.daten.iso3 }),
+		get: () => Nationalitaeten.getByISO3(data.value.staatsangehoerigkeitID) || Nationalitaeten.getDEU(),
+		set: (value) => void props.patch({ staatsangehoerigkeitID: value.historie().getLast().iso3 }),
 	});
 
 	const staatsangehoerigkeit2 = computed<Nationalitaeten | null>({
 		get: () => Nationalitaeten.getByISO3(data.value.staatsangehoerigkeit2ID),
-		set: (value) => void props.patch({ staatsangehoerigkeit2ID: value?.daten.iso3 ?? null }),
+		set: (value) => void props.patch({ staatsangehoerigkeit2ID: value?.historie().getLast().iso3 ?? null }),
 	});
 
 	const religion = computed<ReligionEintrag | undefined>({
@@ -227,18 +227,18 @@
 	const min = max - 100;
 
 	const geburtsland = computed<Nationalitaeten>({
-		get: () => Nationalitaeten.getByISO3(data.value.geburtsland) || Nationalitaeten.DEU,
-		set: (value) => void props.patch({ geburtsland: value.daten.iso3 }),
+		get: () => Nationalitaeten.getByISO3(data.value.geburtsland) || Nationalitaeten.getDEU(),
+		set: (value) => void props.patch({ geburtsland: value.historie().getLast().iso3 }),
 	});
 
 	const geburtslandMutter = computed<Nationalitaeten>({
-		get: () => Nationalitaeten.getByISO3(data.value.geburtslandMutter) || Nationalitaeten.DEU,
-		set: (value) => void props.patch({ geburtslandMutter: value.daten.iso3 }),
+		get: () => Nationalitaeten.getByISO3(data.value.geburtslandMutter) || Nationalitaeten.getDEU(),
+		set: (value) => void props.patch({ geburtslandMutter: value.historie().getLast().iso3 }),
 	});
 
 	const geburtslandVater = computed<Nationalitaeten>({
-		get: () => Nationalitaeten.getByISO3(data.value.geburtslandVater) || Nationalitaeten.DEU,
-		set: (value) => void props.patch({ geburtslandVater: value.daten.iso3 }),
+		get: () => Nationalitaeten.getByISO3(data.value.geburtslandVater) || Nationalitaeten.getDEU(),
+		set: (value) => void props.patch({ geburtslandVater: value.historie().getLast().iso3 }),
 	});
 
 	const verkehrsprache = computed<Verkehrssprache>({
