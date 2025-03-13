@@ -5,7 +5,7 @@
 				<h2 class="svws-headline">
 					Allgemein / Vorlage
 				</h2>
-				<span class="svws-subline">Vorlage für die Nutzung in Stundenplänen</span>
+				<span class="svws-subline">Kataloge für die Nutzung in Stundenplänen</span>
 			</div>
 		</div>
 		<div class="svws-ui-header--actions" />
@@ -20,10 +20,10 @@
 
 <script setup lang="ts">
 
-	import type { StundenplanVorlageProps } from './SStundenplanVorlageProps';
+	import type { StundenplanKatalogeAppProps } from './SStundenplanKatalogeAppProps';
 	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
-	const props = defineProps<StundenplanVorlageProps>();
+	const props = defineProps<StundenplanKatalogeAppProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 </script>

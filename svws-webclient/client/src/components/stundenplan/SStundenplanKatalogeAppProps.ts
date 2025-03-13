@@ -1,5 +1,5 @@
 import type { TabManager } from "@ui";
 
-export interface StundenplanVorlageProps {
+export interface StundenplanKatalogeAppProps {
 	tabManager: () => TabManager;
 }
