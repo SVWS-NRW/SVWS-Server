@@ -2,7 +2,7 @@
 	<template v-if="!getErgebnisse().isEmpty()">
 		<svws-ui-table clickable :clicked="auswahlErgebnis" @update:clicked="gotoErgebnis" v-model="selected_ergebnisse" :selectable="(getErgebnisse().size() > 1) && hatUpdateKompetenz" class="z-20 relative"
 			:columns="[{ key: 'id', label: 'ID', fixedWidth: getErgebnisse().size() > 1 ? 3 : 4.75, align: 'left'}, { key: 'bewertung', label: 'Ergebnis' }]"
-			:items="getErgebnisse()" :count="getErgebnisse().size() > 1">
+			:items="getErgebnisse()" :count="getErgebnisse().size() > 1" scroll>
 			<template #header(id)>
 				<span class="font-mono">ID</span>
 			</template>

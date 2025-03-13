@@ -17,7 +17,7 @@
 /* TODO: COLORS icon close darkmode */
 
 .modal {
-	@apply bg-ui text-ui border border-ui-secondary;
+	@apply bg-ui text-ui border-ui border;
 	@apply align-bottom sm:align-middle my-8 transform transition-all overflow-hidden;
 	@apply max-h-full max-w-modal-sm;
 	@apply flex flex-col items-center;
@@ -69,7 +69,7 @@
 	}
 
 .modal .modal--titlebar {
-	@apply border-b border-ui-secondary;
+	@apply border-b border-ui;
 	@apply p-2;
 
 	.button {
@@ -128,7 +128,7 @@
 }
 
 .modal--overlay {
-	@apply bg-ui-neutral-weak backdrop-filter backdrop-grayscale;
+	@apply bg-ui-neutral/70 backdrop-filter backdrop-grayscale;
 	@apply absolute top-0 left-0;
 	@apply h-full w-full;
 	@apply z-50;
