@@ -154,7 +154,7 @@ public class ReportingStundenplanungUnterrichtsrasterstunde extends ReportingStu
 			if (unterricht.fach() != null)
 				this.listMapFaecherUnterrichte.add(unterricht.fach().id(), unterricht.wochentyp(), unterricht.id(), unterricht);
 			for (final ReportingSchueler schueler : unterricht.schueler()) {
-				this.listMapRaeumeUnterrichte.add(schueler.id(), unterricht.wochentyp(), unterricht.id(), unterricht);
+				this.listMapSchuelerUnterrichte.add(schueler.id(), unterricht.wochentyp(), unterricht.id(), unterricht);
 			}
 		}
 	}

@@ -304,7 +304,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	 */
 	@Override
 	public List<ReportingSchuelerLernabschnitt> lernabschnitte() {
-		if (super.lernabschnitte == null) {
+		if (super.lernabschnitte() == null) {
 			if (!this.reportingRepository.mapAlleLernabschnittsdaten().containsKey1(this.id())) {
 				// Wenn zum Schüler keine Lernabschnitte aus der DB gefunden wurden, dann müssen diese nachträglich geladen worden sein oder der Schüler hat keine
 				// Lernabschnitte. Prüfe auf Differenzen und lade nach.
@@ -317,20 +317,20 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 
 			// Wenn, wie bei einer Neuaufnahme, keine Lernabschnitte vorhanden sind, gebe die leere Liste zurück.
 			if (schuelerLernabschnittsdaten.isEmpty()) {
-				super.lernabschnitte = new ArrayList<>();
+				super.setLernabschnitte(new ArrayList<>());
 				super.aktuellerLernabschnitt = null;
 				super.auswahlLernabschnitt = null;
 				return super.lernabschnitte();
 			}
 
 			// Sortiere die Lernabschnitte dieses Schülers und fülle damit seine Liste von Lernabschnitten.
-			super.lernabschnitte = schuelerLernabschnittsdaten.stream()
+			super.setLernabschnitte(schuelerLernabschnittsdaten.stream()
 					.map(a -> (ReportingSchuelerLernabschnitt) new ProxyReportingSchuelerLernabschnitt(this.reportingRepository, a))
 					.sorted(Comparator
 							.comparing((final ReportingSchuelerLernabschnitt a) -> a.schuljahresabschnitt().schuljahr())
 							.thenComparing((final ReportingSchuelerLernabschnitt a) -> a.schuljahresabschnitt().abschnitt())
 							.thenComparing(ReportingSchuelerLernabschnitt::wechselNr))
-					.toList();
+					.toList());
 
 			final List<SchuelerLernabschnittsdaten> aktuelleAbschnitte =
 					this.reportingRepository.mapAlleLernabschnittsdaten().get123(super.id, this.reportingRepository.aktuellerSchuljahresabschnitt().id(), 0);
@@ -346,7 +346,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 			else
 				super.auswahlLernabschnitt = null;
 		}
-		return super.lernabschnitte;
+		return super.lernabschnitte();
 	}
 
 	private void getLernabschnitte() {

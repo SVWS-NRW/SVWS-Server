@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.asd.data.kurse.KursDaten;
-import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
@@ -22,7 +21,6 @@ import de.svws_nrw.data.gost.DataGostBlockungsergebnisse;
 import de.svws_nrw.data.gost.DataGostSchuelerLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.data.kurse.DataKurse;
-import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
@@ -250,15 +248,13 @@ public final class ReportingValidierung {
 
 	/**
 	 * Validiert von der API übergebene Daten für Lehrer. Bei fehlenden oder unstimmigen Daten wird eine ApiOperationException geworfen.
-	 * Über den Parameter cacheDaten kann gesteuert werden, ob bereits abgerufene Daten aus der DB im Repository zwischengespeichert werden soll.
 	 *
 	 * @param reportingRepository	Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung.
 	 * @param idsLehrer   			Liste der IDs der Lehrer, die berücksichtigt werden sollen.
-	 * @param cacheDaten 			Legt fest, ob die zur Validierung geladenen Daten im Repository gespeichert werden sollen.
 	 *
 	 * @throws ApiOperationException  im Fehlerfall
 	 */
-	public static void validiereDatenFuerLehrer(final ReportingRepository reportingRepository, final List<Long> idsLehrer, final boolean cacheDaten)
+	public static void validiereDatenFuerLehrer(final ReportingRepository reportingRepository, final List<Long> idsLehrer)
 			throws ApiOperationException {
 
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Beginn der Validierung der Lehrerdaten.");
@@ -276,24 +272,14 @@ public final class ReportingValidierung {
 			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurden keine Lehrer-IDs übergeben.");
 		}
 
-		// Prüfe die Lehrer-IDs. Erzeuge Maps, damit auch später leicht auf die Lehrerdaten zugegriffen werden kann.
-		final Map<Long, LehrerStammdaten> mapLehrer =
-				new DataLehrerStammdaten(reportingRepository.conn()).getListByIDs(idsNonNull).stream()
-						.collect(Collectors.toMap(l -> l.id, l -> l));
+		// Prüfe die Lehrer-IDs anhand der Daten aus dem Repository.
 		for (final Long lID : idsNonNull)
-			if (mapLehrer.get(lID) == null) {
+			if (reportingRepository.mapLehrerStammdaten().get(lID) == null) {
 				reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Es wurden ungültige Lehrer-IDs übergeben.");
 				throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurden ungültige Lehrer-IDs übergeben.");
 			}
 
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Ende der Validierung der Lehrerdaten.");
-
-		// Daten sind valide, speichere diese nun gemäß Parameter im Repository.
-		if (cacheDaten) {
-			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Beginn der Speicherung der Daten aus der Validierung der Lehrerdaten im Repository.");
-			reportingRepository.mapLehrerStammdaten().putAll(mapLehrer);
-			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Ende der Speicherung der Daten aus der Validierung der Lehrerdaten im Repository.");
-		}
 	}
 
 

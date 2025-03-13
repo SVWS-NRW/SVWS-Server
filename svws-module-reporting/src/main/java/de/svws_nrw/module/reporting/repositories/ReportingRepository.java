@@ -55,6 +55,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.proxytypes.lehrer.ProxyReportingLehrer;
+import de.svws_nrw.module.reporting.proxytypes.schueler.ProxyReportingSchueler;
 import de.svws_nrw.module.reporting.proxytypes.schueler.erzieher.ProxyReportingErzieherArt;
 import de.svws_nrw.module.reporting.proxytypes.schule.ProxyReportingSchuljahresabschnitt;
 import de.svws_nrw.module.reporting.proxytypes.stundenplanung.ProxyReportingStundenplanungStundenplan;
@@ -733,9 +734,59 @@ public class ReportingRepository {
 		// Sortiere die Lehrerliste für die Rückgabe
 		final Collator colGerman = Collator.getInstance(Locale.GERMAN);
 		return resultLehrer.stream().sorted(Comparator.comparing(ReportingLehrer::nachname, colGerman)
-						.thenComparing(ReportingPerson::vorname, colGerman)
-						.thenComparing(ReportingLehrer::kuerzel, colGerman)
-						.thenComparing(ReportingLehrer::id))
+				.thenComparing(ReportingPerson::vorname, colGerman)
+				.thenComparing(ReportingLehrer::kuerzel, colGerman)
+				.thenComparing(ReportingLehrer::id))
+				.toList();
+	}
+
+
+	// ##### Reporting Schüler erzeugen und verwalten #####
+
+	/**
+	 * Liefert ein ReportingSchueler-Objekt basierend auf der gegebenen Schüler-ID.
+	 * Wenn die ID negativ ist, wird null zurückgegeben.
+	 * Ansonsten wird ein ProxyReportingSchueler erstellt und in der Map gespeichert,
+	 * falls für die ID noch kein Eintrag existiert.
+	 *
+	 * @param idSchueler Die eindeutige ID des Lehrers
+	 *
+	 * @return Ein ReportingLehrer-Objekt für die gegebene Lehrer-ID oder null, falls die ID negativ ist
+	 */
+	public ReportingSchueler schueler(final long idSchueler) {
+		if (idSchueler < 0)
+			return null;
+
+		return mapSchueler.computeIfAbsent(idSchueler, key -> new ProxyReportingSchueler(this, mapSchuelerStammdaten.get(key)));
+	}
+
+	/**
+	 * Erzeugt und sortiert eine Liste von ReportingSchüler-Objekten basierend auf den übergebenen Schüler-IDs.
+	 * Falls ein Schüler bereits existiert, wird er aus einem internen Cache abgerufen.
+	 *
+	 * @param idsSchueler Eine Liste von Long-Werten, die die IDs der Schüler repräsentieren, für die ReportingSchueler-Objekte erstellt werden sollen.
+	 *                    Null- oder negative Werte in der Liste werden ignoriert.
+	 * @return Eine sortierte Liste von ReportingSchueler-Objekten basierend auf Nachname, Vorname, Vornamen, Geburtsdatum und ID.
+	 */
+	public List<ReportingSchueler> schueler(final List<Long> idsSchueler) {
+
+		final List<ReportingSchueler> resultSchueler = new ArrayList<>();
+
+		// Sofern noch keine Reporting-Objekte der Lehrer existieren erzeuge sie und speichere sie.
+		for (final Long idSchueler : idsSchueler) {
+			if ((idSchueler == null) || (idSchueler < 0)) {
+				continue;
+			}
+			resultSchueler.add(mapSchueler.computeIfAbsent(idSchueler, key -> new ProxyReportingSchueler(this, mapSchuelerStammdaten.get(key))));
+		}
+
+		// Sortiere die Schülerliste für die Rückgabe
+		final Collator colGerman = Collator.getInstance(Locale.GERMAN);
+		return resultSchueler.stream().sorted(Comparator.comparing(ReportingSchueler::nachname, colGerman)
+				.thenComparing(ReportingSchueler::vorname, colGerman)
+				.thenComparing(ReportingSchueler::vornamen, colGerman)
+				.thenComparing(ReportingSchueler::geburtsdatum)
+				.thenComparing(ReportingSchueler::id))
 				.toList();
 	}
 

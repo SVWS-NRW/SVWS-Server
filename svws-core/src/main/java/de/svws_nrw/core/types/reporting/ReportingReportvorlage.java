@@ -64,7 +64,10 @@ public enum ReportingReportvorlage {
 	STUNDENPLANUNG_v_LEHRER_STUNDENPLAN("Stundenplanung-LehrerStundenplan"),
 
 	/** Report-Vorlage: Stundenplanung - Lehrer - Stundenplan - Kombiniert */
-	STUNDENPLANUNG_v_LEHRER_STUNDENPLAN_KOMBINIERT("Stundenplanung-LehrerStundenplanKombiniert");
+	STUNDENPLANUNG_v_LEHRER_STUNDENPLAN_KOMBINIERT("Stundenplanung-LehrerStundenplanKombiniert"),
+
+	/** Report-Vorlage: Stundenplanung - Schüler - Stundenplan */
+	STUNDENPLANUNG_v_SCHUELER_STUNDENPLAN("Stundenplanung-SchuelerStundenplan");
 
 
 	/** Die Bezeichnung der Report-Vorlage */

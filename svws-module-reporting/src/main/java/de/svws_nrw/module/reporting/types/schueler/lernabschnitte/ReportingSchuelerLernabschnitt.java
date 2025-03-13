@@ -1,6 +1,7 @@
 package de.svws_nrw.module.reporting.types.schueler.lernabschnitte;
 
 import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittNachpruefungsdaten;
+import de.svws_nrw.core.adt.map.ListMap3DLongKeys;
 import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
@@ -9,6 +10,7 @@ import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -133,9 +135,6 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	/** Das Kürzel der Klassenart in Bezug auf den Schüler (z.B. Regelklasse - siehe Core-Type) */
 	protected String klassenart;
 
-	/** Die Leistungsdaten des Schülers in diesem Lernabschnitt. */
-	protected List<ReportingSchuelerLeistungsdaten> leistungsdaten;
-
 	/** Die Informationen den Nachprüfungen in diesem Lernabschnitt oder null, falls keine vorhanden sind. */
 	protected SchuelerLernabschnittNachpruefungsdaten nachpruefungen;
 
@@ -199,6 +198,11 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	/** Der Text für Zeugnisbemerkungen zur Lernentwicklung in Grundschulen. */
 	protected String zeugnisLELSText;
 
+	/** Die Leistungsdaten des Schülers in diesem Lernabschnitt. */
+	private List<ReportingSchuelerLeistungsdaten> leistungsdaten;
+
+	/** Eine Map zum schnellen Aufrufen der Leistungsdaten nach der ID, ID-Fach und ID-Kurs */
+	private ListMap3DLongKeys<ReportingSchuelerLeistungsdaten> listMapLeistungsdaten = new ListMap3DLongKeys<>();
 
 
 	/**
@@ -752,6 +756,45 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	}
 
 	/**
+	 * Gibt die Leistungsdaten eines Schülers basierend auf der angegebenen ID zurück.
+	 *
+	 * @param id Die ID, die zur Identifikation der Leistungsdaten verwendet wird.
+	 * @return Die Leistungsdaten des Schülers, wenn die ID vorhanden ist. Gibt null zurück, wenn keine
+	 *         entsprechenden Leistungsdaten gefunden werden.
+	 */
+	public ReportingSchuelerLeistungsdaten leistungsdatenZurId(final long id) {
+		if ((id >= 0) && (this.leistungsdaten() != null))
+			return listMapLeistungsdaten.getSingle1OrNull(id);
+		return null;
+	}
+
+	/**
+	 * Liefert eine Liste von Schüler-Leistungsdaten, die zu einer angegebenen Fach-ID gehören.
+	 *
+	 * @param idFach Die ID des Fachs, zu dem die Leistungsdaten abgefragt werden sollen.
+	 * @return Eine Liste von ReportingSchuelerLeistungsdaten, die zu der angegebenen Fach-ID gehören,
+	 * oder eine leere Liste, falls keine Daten gefunden wurden.
+	 */
+	public List<ReportingSchuelerLeistungsdaten> leistungsdatenZurIdFach(final long idFach) {
+		if ((idFach >= 0) && (this.leistungsdaten() != null))
+			return listMapLeistungsdaten.get2(idFach);
+		return new ArrayList<>();
+	}
+
+	/**
+	 * Methode, um die Leistungsdaten eines Schülers anhand der Kurs-ID abzurufen.
+	 *
+	 * @param idKurs Die eindeutige ID des Kurses, für den die Leistungsdaten abgerufen werden sollen.
+	 * @return Ein Objekt vom Typ ReportingSchuelerLeistungsdaten, das die Leistungsdaten des Schülers zu dem angegebenen Kurs enthält,
+	 *         oder null, wenn keine entsprechenden Daten gefunden werden.
+	 */
+	public ReportingSchuelerLeistungsdaten leistungsdatenZurIdKurs(final long idKurs) {
+		if ((idKurs >= 0) && (this.leistungsdaten() != null))
+			return listMapLeistungsdaten.getSingle3OrNull(idKurs);
+		return null;
+	}
+
+	/**
 	 * Die Informationen den Nachprüfungen in diesem Lernabschnitt oder null, falls keine vorhanden sind.
 	 *
 	 * @return Inhalt des Feldes nachpruefungen
@@ -938,6 +981,38 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 */
 	public String zeugnisLELSText() {
 		return zeugnisLELSText;
+	}
+
+
+	// ##### Setter #####
+
+	/**
+	 * Setzt die Leistungsdaten des Schülers in diesem Lernabschnitt neu und aktualisiert die Liste der Leistungsdaten-Map.
+	 *
+	 * @param leistungsdaten Die hinzuzufügenden Leistungsdaten.
+	 */
+	public void setLeistungsdaten(final List<ReportingSchuelerLeistungsdaten> leistungsdaten) {
+		this.leistungsdaten = new ArrayList<>();
+		this.listMapLeistungsdaten = new ListMap3DLongKeys<>();
+		addLeistungsdaten(leistungsdaten);
+	}
+
+	/**
+	 * Fügt Leistungsdaten zu diesem Lernabschnitt hinzu und aktualisiert die Leistungsdaten-Map.
+	 *
+	 * @param leistungsdaten Die hinzuzufügenden Leistungsdaten.
+	 */
+	public void addLeistungsdaten(final List<ReportingSchuelerLeistungsdaten> leistungsdaten) {
+		if (leistungsdaten != null) {
+			for (final ReportingSchuelerLeistungsdaten leistungsdatenElement : leistungsdaten) {
+				if (leistungsdatenElement != null) {
+					final long idFach = (leistungsdatenElement.fach() == null) ? -1 : leistungsdatenElement.fach().id();
+					final long idKurs = (leistungsdatenElement.kurs() == null) ? -1 : leistungsdatenElement.kurs().id();
+					this.leistungsdaten.add(leistungsdatenElement);
+					this.listMapLeistungsdaten.add(leistungsdatenElement.id(), idFach, idKurs, leistungsdatenElement);
+				}
+			}
+		}
 	}
 
 }
