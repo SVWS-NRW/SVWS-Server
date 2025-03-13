@@ -1,12 +1,12 @@
 <template>
 	<slot :open-modal />
 	<svws-ui-modal v-model:show="show" :type="listRaeume.size() < 1 ? 'danger' : 'default'" size="medium">
-		<template #modalTitle>Räume aus Vorlage importieren</template>
+		<template #modalTitle>Räume aus Katalog importieren</template>
 		<template #modalContent>
 			<div class="flex justify-center flex-wrap items-center gap-1">
-				<svws-ui-table v-if="listRaeume.size()" :items="listRaeume" clickable :clicked="raum" selectable v-model="selected" :columns />
-				<div v-else>Importieren nicht möglich, keine (zusätzlichen) Einträge in der Raum-Vorlage hinterlegt.</div>
-				<div>Neue Einträge in der Raum-Vorlage können unter Schule angelegt werden</div>
+				<svws-ui-table v-if="listRaeume.size()" :items="listRaeume" clickable :clicked="raum" selectable v-model="selected" :columns="cols" />
+				<div v-else>Importieren nicht möglich, keine (zusätzlichen) Einträge im Raum-Katalog hinterlegt.</div>
+				<div>Neue Einträge im Raum-Katalog können unter Schule angelegt werden</div>
 				<!-- TODO Link einfügen und Beschreibung anpassen -->
 			</div>
 		</template>
@@ -32,7 +32,7 @@
 	const selected = ref<Raum[]>([]);
 	const raum = ref<Raum>()
 
-	const columns = [
+	const cols = [
 		{key: 'kuerzel', label: 'Kürzel', span: 1},
 		{key: 'beschreibung', label: 'Beschreibung', span: 3},
 		{key: 'groesse', label: 'Größe', span: 1},

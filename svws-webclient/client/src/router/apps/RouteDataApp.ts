@@ -18,7 +18,7 @@ const defaultState = <RouteStateApp>{
 	idSchuljahresabschnitt: -1,
 	mapOrte: new Map(),
 	mapOrtsteile: new Map(),
-	view: routeSchueler,
+	view: routeSchueler
 };
 
 export class RouteDataApp extends RouteData<RouteStateApp> {

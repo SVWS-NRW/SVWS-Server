@@ -60,7 +60,7 @@
 
 <script setup lang="ts">
 
-	import { ref, computed, watch, useId, useAttrs } from "vue";
+	import { ref, computed, watch, type ComputedRef, type Ref, useId, useAttrs } from "vue";
 
 	defineOptions({
 		inheritAttrs: false,
@@ -177,6 +177,10 @@
 
 	const content = computed<number | null>(() => data.value);
 
-	defineExpose({ content, input, reset });
+	defineExpose<{
+		content: ComputedRef<number | null>,
+		input: Ref<HTMLInputElement | null>,
+		reset: () => void;
+	}>({ content, input, reset });
 
 </script>
