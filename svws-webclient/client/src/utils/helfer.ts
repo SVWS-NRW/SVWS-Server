@@ -1,4 +1,4 @@
-import type { Erzieherart, KatalogEintrag, LehrerListeEintrag, Nationalitaeten, OrtKatalogEintrag, OrtsteilKatalogEintrag, Verkehrssprache, CoreTypeData, SchulenKatalogEintrag } from "@core";
+import type { Erzieherart, KatalogEintrag, LehrerListeEintrag, Nationalitaeten, OrtKatalogEintrag, OrtsteilKatalogEintrag, Verkehrssprache, CoreTypeData, SchulenKatalogEintrag, SchulEintrag } from "@core";
 
 /** Die Sortierfunktion für den Ortskatalog */
 export function orte_sort(a: OrtKatalogEintrag, b: OrtKatalogEintrag): number {
@@ -162,8 +162,26 @@ export function filterSchulenKatalogEintraege(items: SchulenKatalogEintrag[], se
 	const searchLower = search.toLocaleLowerCase()
 	const list = [];
 	for (const i of items)
-		if (i.SchulNr.includes(searchLower) || ((i.KurzBez !== null) && i.KurzBez.toLocaleLowerCase().includes(searchLower)))
+		if ((i.SchulNr.includes(searchLower))
+				|| ((i.KurzBez !== null) && i.KurzBez.toLowerCase().includes(searchLower))
+				|| ((i.ABez1 !== null) && i.ABez1.toLowerCase().includes(searchLower))
+				|| ((i.Ort !== null) && i.Ort.toLowerCase().includes(searchLower)))
 			list.push(i);
+	return list;
+}
+
+/** Die Filter-Methode der Schuleeinträge */
+export function filterSchulenEintraege(items: SchulEintrag[], search: string) : SchulEintrag[] {
+	const searchLower = search.toLowerCase()
+	const list = [];
+	for (const i of items) {
+		if (((i.schulnummerStatistik !== null) && i.schulnummerStatistik.includes(searchLower))
+				|| (i.schulnummer.includes(searchLower))
+				|| ((i.kurzbezeichnung !== null) && i.kurzbezeichnung.toLowerCase().includes(searchLower))
+				|| i.name.toLowerCase().includes(searchLower) || ((i.ort !== null) && i.ort.toLowerCase().includes(searchLower))
+				|| ((i.kuerzel !== null) && i.kuerzel.toLowerCase().includes(searchLower)))
+			list.push(i);
+	}
 	return list;
 }
 

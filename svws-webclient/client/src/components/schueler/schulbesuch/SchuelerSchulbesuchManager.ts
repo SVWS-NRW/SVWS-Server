@@ -14,16 +14,16 @@ export class SchuelerSchulbesuchManager {
 	protected _auswahlSchueler: ShallowRef<SchuelerListeEintrag | null>;
 
 	/** Eine Map der Schuljahresabschnitte gemappt nach idSchuljahresAbschnitt */
-	protected _schuljahresabschnitte: Map<number, Schuljahresabschnitt>;
+	protected _schuljahresabschnitte: Map<number, Schuljahresabschnitt> = new Map();
 
 	/** Eine Map der Schulen gemappt nach Schulnummer */
-	protected _schulen: Map<string, SchulEintrag>;
+	protected _schulen: Map<string, SchulEintrag> = new Map();
 
 	/** Eine Map der Merkmale gemappt nach id */
-	protected _merkmale: Map<number, Merkmal>;
+	protected _merkmale: Map<number, Merkmal> = new Map();
 
 	/** Eine Map der Entlassgruende gemappt nach id */
-	protected _entlassgruende: Map<number, KatalogEntlassgrund>;
+	protected _entlassgruende: Map<number, KatalogEntlassgrund> = new Map();
 
 	/** Das Schuljahr vom Schuljahresabschnitts des aktuell ausgewählten Schülers */
 	protected _schuljahr : number;
@@ -49,11 +49,31 @@ export class SchuelerSchulbesuchManager {
 		this._patch = patch;
 		this._daten = shallowRef<SchuelerSchulbesuchsdaten>(daten);
 		this._auswahlSchueler = shallowRef<SchuelerListeEintrag>(auswahl);
-		this._schuljahresabschnitte = new Map([...schuljahresabschnitte].map(abschnitt => [abschnitt.id, abschnitt]));
-		this._schulen = new Map([...schulen].map(schule => [schule.schulnummer, schule]));
-		this._merkmale = new Map([...merkmale].map(merkmal => [merkmal.id, merkmal]));
-		this._entlassgruende = new Map([...entlassgruende].map(entlassgrund => [entlassgrund.id, entlassgrund]));
+		this.mapSchuljahresabschnitte(schuljahresabschnitte);
+		this.mapSchulen(schulen);
+		this.mapMerkmale(merkmale);
+		this.mapEntlassgruende(entlassgruende);
 		this._schuljahr = this.calcSchuljahr();
+	}
+
+	private mapSchuljahresabschnitte(schuljahresabschnitte: List<Schuljahresabschnitt>) {
+		for (const abschnitt of schuljahresabschnitte)
+			this._schuljahresabschnitte.set(abschnitt.id, abschnitt);
+	}
+
+	private mapSchulen(schulen : List<SchulEintrag>) {
+		for (const schule of schulen)
+			this._schulen.set(schule.schulnummer, schule);
+	}
+
+	private mapMerkmale(merkmale : List<Merkmal>) {
+		for (const merkmal of merkmale)
+			this._merkmale.set(merkmal.id, merkmal);
+	}
+
+	private mapEntlassgruende(entlassgruende : List<KatalogEntlassgrund>) {
+		for (const entlassgrund of entlassgruende)
+			this._entlassgruende.set(entlassgrund.id, entlassgrund)
 	}
 
 	/** Gibt die aktuell im Manager gespeicherten SchuelerSchulbesuchsdaten zurück. */
@@ -168,8 +188,8 @@ export class SchuelerSchulbesuchManager {
 	}
 
 	/** Die spezielle Patch-Methode der vorigeArtLetzteVersetzung */
-	public patchVorigeArtLetzteVersetzung(value : Herkunftsarten | undefined) {
-		void this.doPatch({ vorigeArtLetzteVersetzung:  (value === undefined) ? null : value.daten.id.toString() });
+	public patchVorigeArtLetzteVersetzung(value : Herkunftsarten | undefined | null) {
+		void this.doPatch({ vorigeArtLetzteVersetzung: ((value === null) || (value === undefined)) ? null : value.daten.id.toString() });
 	}
 
 	/** Die spezielle Patch-Methode der Schuleinträge */
@@ -192,21 +212,4 @@ export class SchuelerSchulbesuchManager {
 		const abschnitt = this._schuljahresabschnitte.get(this._auswahlSchueler.value?.idSchuljahresabschnitt?? -1);
 		return (abschnitt === undefined) ? -1 : abschnitt.schuljahr;
 	}
-
-	// --- filter ---
-
-	/** Die Filter-Methode der Schuleeinträge */
-	public filterSchulen(items: SchulEintrag[], search: string) : SchulEintrag[] {
-		const searchLower = search.toLowerCase()
-		const list = [];
-		for (const i of items) {
-			if (((i.schulnummerStatistik !== null) && i.schulnummerStatistik.includes(searchLower))
-					|| ((i.kurzbezeichnung !== null) && i.kurzbezeichnung.toLowerCase().includes(searchLower))
-					|| i.name.toLowerCase().includes(searchLower) || ((i.ort !== null) && i.ort.toLowerCase().includes(searchLower))
-					|| ((i.kuerzel !== null) && i.kuerzel.toLowerCase().includes(searchLower)))
-				list.push(i);
-		}
-		return list;
-	}
-
 }

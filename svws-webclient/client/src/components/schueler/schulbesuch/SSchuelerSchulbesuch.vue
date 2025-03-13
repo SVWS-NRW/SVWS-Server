@@ -2,7 +2,7 @@
 	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Vor der Aufnahme besucht">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-select title="Schule" :items="manager().schulen.values()" :item-text="textSchule" autocomplete :item-filter="manager().filterSchulen"
+				<svws-ui-select title="Schule" :items="manager().schulen.values()" :item-text="textSchule" autocomplete :item-filter="filterSchulenEintraege"
 					:model-value="manager().getVorigeSchule()" @update:model-value="v => manager().patchSchule(v, 'vorigeSchulnummer')" removable />
 				<svws-ui-button type="transparent" @click="goToSchule(manager().getVorigeSchule()?.id ?? -1)">
 					<span class="icon i-ri-link" />Zur Schule
@@ -23,7 +23,7 @@
 				<svws-ui-text-input placeholder="höchster Abschluss, der von der anderen Schule mitgebracht wurde" disabled
 					@update:model-value="vorigeAbschlussartID => manager().doPatch({ vorigeAbschlussartID })" :model-value="manager().daten.vorigeAbschlussartID" />
 				<svws-ui-select class="col-span-full" title="Versetzung" :items="manager().getHerkunftsarten()" :item-text="textHerkunftsarten" removable
-					:model-value="manager().getVorigeArtLetzteVersetzung()" @update:model-value="manager().patchVorigeArtLetzteVersetzung" :statistics="true" />
+					:model-value="manager().getVorigeArtLetzteVersetzung()" @update:model-value="v => manager().patchVorigeArtLetzteVersetzung(v)" :statistics="true" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Entlassung von eigener Schule">
@@ -49,7 +49,7 @@
 			</template>
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-select title="Schule" :items="manager().schulen.values()" :item-text="textSchule" autocomplete
-					:model-value="manager().schulen.get(manager().daten.aufnehmendSchulnummer ?? '')" :item-filter="manager().filterSchulen" removable
+					:model-value="manager().schulen.get(manager().daten.aufnehmendSchulnummer ?? '')" :item-filter="filterSchulenEintraege" removable
 					@update:model-value="v => manager().patchSchule(v, 'aufnehmendSchulnummer')" />
 				<svws-ui-button type="transparent" @click="goToSchule(manager().schulen.get(manager().daten.aufnehmendSchulnummer ?? '')?.id ?? -1)">
 					<span class="icon i-ri-link" />Zur Schule
@@ -123,6 +123,7 @@
 	import type { Herkunftsarten, SchulEintrag } from "@core";
 	import type { SchuelerSchulbesuchProps } from './SSchuelerSchulbesuchProps';
 	import type { DataTableColumn } from "@ui";
+	import { filterSchulenEintraege } from "~/utils/helfer";
 
 	const props = defineProps<SchuelerSchulbesuchProps>();
 
