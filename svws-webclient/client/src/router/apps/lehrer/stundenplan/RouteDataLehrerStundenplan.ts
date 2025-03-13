@@ -1,5 +1,4 @@
-import { type StundenplanListeEintrag, type StundenplanKalenderwochenzuordnung, StundenplanManager, DeveloperNotificationException, type ApiFile, ReportingParameter, ArrayList, ReportingReportvorlage} from "@core";
-import type { DownloadPDFTypen } from "~/components/lehrer/stundenplan/SLehrerStundenplanProps";
+import { DeveloperNotificationException, StundenplanManager, type ApiFile, type ReportingParameter, type StundenplanKalenderwochenzuordnung, type StundenplanListeEintrag} from "@core";
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
@@ -164,25 +163,12 @@ export class RouteDataLehrerStundenplan extends RouteData<RouteStateLehrerDataSt
 		await RouteManager.doRoute(routeLehrerStundenplan.getRoute({ wochentyp, kw }));
 	}
 
-	getPDF = api.call(async (title: DownloadPDFTypen): Promise<ApiFile> => {
+	getPDF = api.call(async (reportingParameter: ReportingParameter, idStundenplan: number): Promise<ApiFile> => {
 		if (!this.hasAuswahl)
-			throw new DeveloperNotificationException("Dieser Stundenplan kann nur gedruckt werden, wenn ein Lehrer ausgewählt ist.");
-		const reportingParameter = new ReportingParameter();
-		reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_v_LEHRER_STUNDENPLAN.getBezeichnung();
+			throw new DeveloperNotificationException("Dieser Stundenplan kann nur gedruckt werden, wenn mindestens ein Lehrer ausgewählt ist.");
 		reportingParameter.idSchuljahresabschnitt = this.idSchuljahresabschnitt;
-		reportingParameter.idsHauptdaten.add(this.auswahl.id);
+		reportingParameter.idsHauptdaten.add(idStundenplan);
 		reportingParameter.idsDetaildaten.add(this.idLehrer);
-		reportingParameter.einzelausgabeDetaildaten = true;
-		switch (title) {
-			case "Stundenplan":
-				return await api.server.pdfReport(reportingParameter, api.schema);
-			case "Stundenplan mit Pausenaufsichten":
-				reportingParameter.detailLevel = 1;
-				return await api.server.pdfReport(reportingParameter, api.schema);
-			case "Stundenplan mit Pausenzeiten":
-				reportingParameter.detailLevel = 2;
-				return await api.server.pdfReport(reportingParameter, api.schema);
-		}
+		return await api.server.pdfReport(reportingParameter, api.schema);
 	})
-
 }

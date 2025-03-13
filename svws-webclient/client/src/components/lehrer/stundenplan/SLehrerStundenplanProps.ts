@@ -1,10 +1,10 @@
-import type { ApiFile, StundenplanListeEintrag, StundenplanKalenderwochenzuordnung, StundenplanManager } from "@core";
+import type { ApiFile, StundenplanListeEintrag, StundenplanKalenderwochenzuordnung, StundenplanManager, ReportingParameter } from "@core";
 import type { ApiStatus } from "~/components/ApiStatus";
 
 
 export interface LehrerStundenplanProps {
 	apiStatus: ApiStatus;
-	getPDF: (title: DownloadPDFTypen) => Promise<ApiFile>;
+	getPDF: (parameter: ReportingParameter, idStundenplan: number) => Promise<ApiFile>;
 	ignoreEmpty?: boolean;
 	id: number,
 	stundenplan: () => StundenplanListeEintrag | undefined;
@@ -19,5 +19,3 @@ export interface LehrerStundenplanProps {
 	setGanzerStundenplan: (value: boolean) => Promise<void>;
 	autofocus?: boolean;
 }
-
-export type DownloadPDFTypen = "Stundenplan" | "Stundenplan mit Pausenaufsichten" | "Stundenplan mit Pausenzeiten";

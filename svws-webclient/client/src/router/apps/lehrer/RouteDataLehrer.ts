@@ -1,5 +1,5 @@
-import type { ApiFile, LehrerFachrichtungAnerkennung, LehrerFachrichtungEintrag, LehrerLehramtAnerkennung, LehrerLehramtEintrag, LehrerLehrbefaehigungAnerkennung, LehrerLehrbefaehigungEintrag, LehrerListeEintrag, LehrerPersonalabschnittsdaten, LehrerPersonaldaten, LehrerStammdaten, List ,SimpleOperationResponse, StundenplanListeEintrag} from "@core";
-import { ArrayList, DeveloperNotificationException, LehrerListeManager, BenutzerKompetenz, ReportingParameter, ReportingReportvorlage } from "@core";
+import type { ApiFile, LehrerFachrichtungAnerkennung, LehrerFachrichtungEintrag, LehrerLehramtAnerkennung, LehrerLehramtEintrag, LehrerLehrbefaehigungAnerkennung, LehrerLehrbefaehigungEintrag, LehrerListeEintrag, LehrerPersonalabschnittsdaten, LehrerPersonaldaten, LehrerStammdaten, List ,SimpleOperationResponse, StundenplanListeEintrag, ReportingParameter} from "@core";
+import { ArrayList, DeveloperNotificationException, LehrerListeManager, BenutzerKompetenz, ReportingReportvorlage } from "@core";
 
 import { api } from "~/router/Api";
 
@@ -9,7 +9,6 @@ import { routeLehrerGruppenprozesse } from "~/router/apps/lehrer/RouteLehrerGrup
 import { routeLehrerNeu } from "~/router/apps/lehrer/RouteLehrerNeu";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
-import type { DownloadPDFTypen } from "~/components/lehrer/gruppenprozesse/SLehrerGruppenprozesseProps";
 
 interface RouteStateLehrer extends RouteStateAuswahlInterface<LehrerListeManager> {
 	mapStundenplaene: Map<number, StundenplanListeEintrag>;
@@ -275,26 +274,14 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		await this.gotoDefaultView(lehrerStammdaten.id);
 	}
 
-	getPDF = api.call(async (title: DownloadPDFTypen, idStundenplan: number): Promise<ApiFile> => {
+	getPDF = api.call(async (reportingParameter: ReportingParameter, idStundenplan: number): Promise<ApiFile> => {
 		if (!this.manager.liste.auswahlExists())
 			throw new DeveloperNotificationException("Dieser Stundenplan kann nur gedruckt werden, wenn mindestens ein Lehrer ausgewählt ist.");
-		const reportingParameter = new ReportingParameter();
-		reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_v_LEHRER_STUNDENPLAN.getBezeichnung();
 		reportingParameter.idSchuljahresabschnitt = this.idSchuljahresabschnitt;
 		reportingParameter.idsHauptdaten.add(idStundenplan);
 		for (const l of this.manager.liste.auswahl())
 			reportingParameter.idsDetaildaten.add(l.id);
-		reportingParameter.einzelausgabeDetaildaten = true;
-		switch (title) {
-			case "Stundenplan":
-				return await api.server.pdfReport(reportingParameter, api.schema);
-			case "Stundenplan mit Pausenaufsichten":
-				reportingParameter.detailLevel = 1;
-				return await api.server.pdfReport(reportingParameter, api.schema);
-			case "Stundenplan mit Pausenzeiten":
-				reportingParameter.detailLevel = 2;
-				return await api.server.pdfReport(reportingParameter, api.schema);
-		}
+		return await api.server.pdfReport(reportingParameter, api.schema);
 	})
 }
 
