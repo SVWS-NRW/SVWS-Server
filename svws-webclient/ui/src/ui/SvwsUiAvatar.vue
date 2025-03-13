@@ -5,7 +5,7 @@
 				<span class="icon i-ri-camera-line w-full h-full opacity-50 inline-block" />
 			</span>
 			<svws-ui-button v-if="src && (src.split(',').length > 1)" type="icon" @click="deleteImage" tabindex="0" title="Bild löschen">
-				<span class="icon i-ri-delete-bin-line inline-block" />
+				<span class="icon i-ri-delete-bin-line inline-block" :class="{'icon-ui-caution': stage}" />
 			</svws-ui-button>
 			<svws-ui-button v-if="upload && (uploadedImage === null) && (src.split(',').length < 2)" type="icon" @click="toggleUpload" tabindex="0" title="Bild hochladen">
 				<input class="hidden" ref="fileInputEl" type="file" accept="image/*" @change="onFileChanged">
@@ -76,6 +76,8 @@
 
 	const hasVideoDevice = ref(false);
 
+	const stage = ref<boolean>(false);
+
 	onMounted(async () => {
 		// test if media device available
 		const list = await navigator.mediaDevices.enumerateDevices();
@@ -89,6 +91,9 @@
 	const file = ref<File | null>(null);
 
 	function deleteImage() {
+		stage.value = !stage.value;
+		if (stage.value)
+			return;
 		emit('image:base64', null);
 		emit('image:captured', null);
 	}
