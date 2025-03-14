@@ -60,6 +60,9 @@ public enum ReportingReportvorlage {
 	/** Report-Vorlage: Schüler - Stammdaten - Liste */
 	SCHUELER_v_STAMMDATENLISTE("Schueler-Stammdatenliste"),
 
+	/** Report-Vorlage: Stundenplanung - Klasse - Stundenplan */
+	STUNDENPLANUNG_v_KLASSEN_STUNDENPLAN("Stundenplanung-KlassenStundenplan"),
+
 	/** Report-Vorlage: Stundenplanung - Lehrer - Stundenplan */
 	STUNDENPLANUNG_v_LEHRER_STUNDENPLAN("Stundenplanung-LehrerStundenplan"),
 

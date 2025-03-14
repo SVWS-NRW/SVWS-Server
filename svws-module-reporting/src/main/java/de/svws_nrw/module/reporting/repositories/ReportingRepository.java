@@ -9,6 +9,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.asd.data.klassen.KlassenDaten;
 import de.svws_nrw.asd.data.schule.SchuleStammdaten;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.adt.map.ListMap3DLongKeys;
@@ -42,6 +43,7 @@ import de.svws_nrw.data.erzieher.DataErzieherarten;
 import de.svws_nrw.data.jahrgaenge.DataJahrgangsdaten;
 import de.svws_nrw.data.kataloge.DataOrte;
 import de.svws_nrw.data.kataloge.DataOrtsteile;
+import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.schueler.DataKatalogSchuelerFoerderschwerpunkte;
 import de.svws_nrw.data.schule.DataReligionen;
@@ -693,6 +695,74 @@ public class ReportingRepository {
 	}
 
 
+	// ##### Reporting Klassen erzeugen und verwalten #####
+
+	/**
+	 * Liefert ein ReportingKlasse-Objekt basierend auf der gegebenen Klassen-ID.
+	 * Wenn die ID negativ ist, wird null zurückgegeben.
+	 * Ansonsten wird ein ProxyReportingKlasse erstellt und in der Map gespeichert,
+	 * falls für die ID noch kein Eintrag existiert.
+	 *
+	 * @param idKlasse Die eindeutige ID der Klasse
+	 *
+	 * @return Ein ReportingKlassen-Objekt für die gegebene Klassen-ID oder null, falls die ID negativ ist
+	 */
+	public ReportingKlasse klasse(final long idKlasse) {
+		if (idKlasse < 0)
+			return null;
+
+		// Prüfe, ob die ID der Klasse in der Map der Klassen ist.
+		ergaenzeKlasseInMapKlassen(idKlasse);
+		return mapKlassen.get(idKlasse);
+	}
+
+	/**
+	 * Erzeugt und sortiert eine Liste von ReportingKlassen-Objekten basierend auf den übergebenen Klassen-IDs.
+	 * Falls eine Klasse bereits existiert, wird er aus einem internen Cache abgerufen.
+	 *
+	 * @param idsKlassen Eine Liste von Long-Werten, die die IDs der Klassen repräsentieren, für die ReportingKlasse-Objekte erstellt werden sollen.
+	 *                    Null- oder negative Werte in der Liste werden ignoriert.
+	 * @return Eine sortierte Liste von ReportingKlasse-Objekten basierend auf Klassenkürzel.
+	 */
+	public List<ReportingKlasse> klassen(final List<Long> idsKlassen) {
+
+		final List<ReportingKlasse> resultKlassen = new ArrayList<>();
+
+		// Sofern noch keine Reporting-Objekte der Klassen existieren erzeuge sie und speichere sie.
+		for (final Long idKlasse : idsKlassen) {
+			if ((idKlasse == null) || (idKlasse < 0))
+				continue;
+			ergaenzeKlasseInMapKlassen(idKlasse);
+			resultKlassen.add(mapKlassen.get(idKlasse));
+		}
+
+		// Sortiere die Klassenliste für die Rückgabe
+		return resultKlassen.stream().sorted(Comparator.comparing(ReportingKlasse::kuerzel)).toList();
+	}
+
+	/**
+	 * Ergänzt eine Klassen in der Map der Klassen, wenn diese dort noch nicht existiert. Gleichzeitig werden auch alle anderen Klassen des gleichen
+	 * Schuljahresabschnitts ergänzt.
+	 *
+	 * @param idKlasse Die ID der Klasse, die bei Fehlen in der Map ergänzt wird.
+	 */
+	private void ergaenzeKlasseInMapKlassen(final long idKlasse) {
+		if (!mapKlassen.containsKey(idKlasse)) {
+			final KlassenDaten klassenDaten;
+			try {
+				// Wenn nicht, lade alle Klassen des Schuljahresabschnitts aus der DB nach.
+				klassenDaten = new DataKlassendaten(this.conn()).getById(idKlasse);
+				this.schuljahresabschnitt(klassenDaten.idSchuljahresabschnitt).klasse(idKlasse);
+			} catch (final ApiOperationException e) {
+				ReportingExceptionUtils.putStacktraceInLog(
+						"FEHLER: Fehler bei der Ermittlung der Daten für des Klassen %s.".formatted(idKlasse), e, this.logger(),
+						LogLevel.ERROR,
+						0);
+			}
+		}
+	}
+
+
 	// ##### Reporting Lehrer erzeugen und verwalten #####
 
 	/**
@@ -749,9 +819,9 @@ public class ReportingRepository {
 	 * Ansonsten wird ein ProxyReportingSchueler erstellt und in der Map gespeichert,
 	 * falls für die ID noch kein Eintrag existiert.
 	 *
-	 * @param idSchueler Die eindeutige ID des Lehrers
+	 * @param idSchueler Die eindeutige ID des Schülers
 	 *
-	 * @return Ein ReportingLehrer-Objekt für die gegebene Lehrer-ID oder null, falls die ID negativ ist
+	 * @return Ein ReportingSchueler-Objekt für die gegebene Schüler-ID oder null, falls die ID negativ ist
 	 */
 	public ReportingSchueler schueler(final long idSchueler) {
 		if (idSchueler < 0)
@@ -772,7 +842,7 @@ public class ReportingRepository {
 
 		final List<ReportingSchueler> resultSchueler = new ArrayList<>();
 
-		// Sofern noch keine Reporting-Objekte der Lehrer existieren erzeuge sie und speichere sie.
+		// Sofern noch keine Reporting-Objekte der Schüler existieren erzeuge sie und speichere sie.
 		for (final Long idSchueler : idsSchueler) {
 			if ((idSchueler == null) || (idSchueler < 0)) {
 				continue;

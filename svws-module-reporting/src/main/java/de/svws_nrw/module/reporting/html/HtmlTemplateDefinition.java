@@ -216,6 +216,21 @@ public enum HtmlTemplateDefinition {
 			""",
 			Arrays.asList(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)),
 
+	/** Report-Vorlage: Stundenplanung - Klasse - Stundenplan */
+	STUNDENPLANUNG_v_KLASSEN_STUNDENPLAN(
+			ReportingReportvorlage.STUNDENPLANUNG_v_KLASSEN_STUNDENPLAN,
+			"de/svws_nrw/module/reporting/",
+			"stundenplanung/StundenplanungKlassenStundenplan.html",
+			"Klassen-Stundenplan",
+			"""
+			        <p th:if="${KlassenStundenplaene.isEmpty()}" th:text="${'Klassen-Stundenplaene_' + #strings.replace(#strings.replace(Schule.auswahlSchuljahresabschnitt().textSchuljahresabschnittKurz(), '.', ''), '/', '-')}"></p>
+			        <th:block th:if="${!KlassenStundenplaene.isEmpty()}" th:each="klassenstundenplan,iterState : ${KlassenStundenplaene}">
+			            <p th:if="${iterState.first && (KlassenStundenplaene.size() == 1)}" th:text="${'Klassen-Stundenplan_' + #strings.replace(#strings.replace(klassenstundenplan.stundenplan().schuljahresabschnitt().textSchuljahresabschnittKurz(), '.', ''), '/', '-') + '_' + #strings.replace(klassenstundenplan.klasse().kuerzel(), ' ', '_') + '_' + #dates.format(#dates.createNow(), 'yyyyMMdd-HHmm')}"></p>
+			            <p th:if="${iterState.first && (KlassenStundenplaene.size() > 1)}" th:text="${'Klassen-Stundenplaene_' + #strings.replace(#strings.replace(klassenstundenplan.stundenplan().schuljahresabschnitt().textSchuljahresabschnittKurz(), '.', ''), '/', '-')}"></p>
+			        </th:block>
+			""",
+			Arrays.asList(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN)),
+
 	/** Report-Vorlage: Stundenplanung - Lehrer - Stundenplan */
 	STUNDENPLANUNG_v_LEHRER_STUNDENPLAN(
 			ReportingReportvorlage.STUNDENPLANUNG_v_LEHRER_STUNDENPLAN,

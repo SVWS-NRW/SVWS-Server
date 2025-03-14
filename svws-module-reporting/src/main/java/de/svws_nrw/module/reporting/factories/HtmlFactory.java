@@ -29,6 +29,7 @@ import de.svws_nrw.module.reporting.html.contexts.HtmlContextKurse;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextLehrer;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextSchueler;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextSchule;
+import de.svws_nrw.module.reporting.html.contexts.HtmlContextStundenplanungKlassenStundenplan;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextStundenplanungLehrerStundenplan;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextStundenplanungSchuelerStundenplan;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
@@ -115,7 +116,7 @@ public class HtmlFactory {
 		// Betrachte die Html-Template-Definition und erzeuge damit die korrekten Contexts der Hauptdaten
 		switch (htmlTemplateDefinition.name().substring(0, htmlTemplateDefinition.name().indexOf("_v_"))) {
 			case "SCHUELER":
-//				// Schüler-Context ist Hauptdatenquelle
+				// Schüler-Context ist Hauptdatenquelle
 				initContextSchueler();
 				break;
 			case "KLASSEN":
@@ -263,6 +264,15 @@ public class HtmlFactory {
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
 				"Erzeuge Datenkontext Stundenplan für die html-Generierung mit Template %s.".formatted(htmlTemplateDefinition.name()));
 		switch (htmlTemplateDefinition) {
+			case STUNDENPLANUNG_v_KLASSEN_STUNDENPLAN -> {
+				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten der Klassen für einen Stundenplan für die html-Generierung.");
+				ReportingValidierung.validiereDatenFuerKlassen(reportingRepository, reportingParameter.idsDetaildaten);
+				final HtmlContextStundenplanungKlassenStundenplan htmlContextKlassenStundenplan =
+						new HtmlContextStundenplanungKlassenStundenplan(reportingRepository,
+								reportingRepository.stundenplan(reportingParameter.idsHauptdaten.getFirst()),
+								reportingParameter.idsDetaildaten);
+				mapHtmlContexts.put("KlassenStundenplaene", htmlContextKlassenStundenplan);
+			}
 			case STUNDENPLANUNG_v_LEHRER_STUNDENPLAN, STUNDENPLANUNG_v_LEHRER_STUNDENPLAN_KOMBINIERT -> {
 				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten der Lehrkräfte für einen Stundenplan für die html-Generierung.");
 				ReportingValidierung.validiereDatenFuerLehrer(reportingRepository, reportingParameter.idsDetaildaten);

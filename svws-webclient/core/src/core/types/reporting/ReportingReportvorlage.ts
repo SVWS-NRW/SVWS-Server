@@ -82,19 +82,24 @@ export class ReportingReportvorlage extends JavaEnum<ReportingReportvorlage> {
 	public static readonly SCHUELER_v_STAMMDATENLISTE : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_STAMMDATENLISTE", 13, "Schueler-Stammdatenliste");
 
 	/**
+	 * Report-Vorlage: Stundenplanung - Klasse - Stundenplan
+	 */
+	public static readonly STUNDENPLANUNG_v_KLASSEN_STUNDENPLAN : ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_v_KLASSEN_STUNDENPLAN", 14, "Stundenplanung-KlassenStundenplan");
+
+	/**
 	 * Report-Vorlage: Stundenplanung - Lehrer - Stundenplan
 	 */
-	public static readonly STUNDENPLANUNG_v_LEHRER_STUNDENPLAN : ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_v_LEHRER_STUNDENPLAN", 14, "Stundenplanung-LehrerStundenplan");
+	public static readonly STUNDENPLANUNG_v_LEHRER_STUNDENPLAN : ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_v_LEHRER_STUNDENPLAN", 15, "Stundenplanung-LehrerStundenplan");
 
 	/**
 	 * Report-Vorlage: Stundenplanung - Lehrer - Stundenplan - Kombiniert
 	 */
-	public static readonly STUNDENPLANUNG_v_LEHRER_STUNDENPLAN_KOMBINIERT : ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_v_LEHRER_STUNDENPLAN_KOMBINIERT", 15, "Stundenplanung-LehrerStundenplanKombiniert");
+	public static readonly STUNDENPLANUNG_v_LEHRER_STUNDENPLAN_KOMBINIERT : ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_v_LEHRER_STUNDENPLAN_KOMBINIERT", 16, "Stundenplanung-LehrerStundenplanKombiniert");
 
 	/**
 	 * Report-Vorlage: Stundenplanung - Schüler - Stundenplan
 	 */
-	public static readonly STUNDENPLANUNG_v_SCHUELER_STUNDENPLAN : ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_v_SCHUELER_STUNDENPLAN", 16, "Stundenplanung-SchuelerStundenplan");
+	public static readonly STUNDENPLANUNG_v_SCHUELER_STUNDENPLAN : ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_v_SCHUELER_STUNDENPLAN", 17, "Stundenplanung-SchuelerStundenplan");
 
 	/**
 	 * Die Bezeichnung der Report-Vorlage
