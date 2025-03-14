@@ -6,6 +6,7 @@ ArrayList {
   "addLast": [Function],
   "elementData": [
     DBSchemaListeEintrag {
+      "isDeactivated": false,
       "isDefault": true,
       "name": "GymAbi01",
     },
