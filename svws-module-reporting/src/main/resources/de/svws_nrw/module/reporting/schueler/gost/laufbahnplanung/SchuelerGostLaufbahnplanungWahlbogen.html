@@ -28,7 +28,7 @@
 				</colgroup>
 				<tr>
 					<td colspan="2" style="text-align: left; font-size: 8pt; vertical-align: top;" th:text="'Abitur ' + ${schueler.gostLaufbahnplanung().abiturjahr()} + ' - Wahl ab ' +  ${schueler.gostLaufbahnplanung().folgeAuswahlGOStHalbjahr()} + ' - ' + ${schueler.gostLaufbahnplanung().pruefungsordnung()}">Abitur 2023 - Wahl ab Q2.1 - APO-GOSt</td>
-					<td style="text-align: right; font-size: 8pt; vertical-align: top;" th:text="'Klasse: ' + ${schueler.gostLaufbahnplanung().aktuelleKlasse()}">Klasse: Q1</td>
+					<td style="text-align: right; font-size: 8pt; vertical-align: top;" th:text="${schueler.gostLaufbahnplanung().aktuelleKlasse() != '' ? 'Klasse ' + schueler.gostLaufbahnplanung().aktuelleKlasse() : schueler.status().toString()}">Klasse: Q1</td>
 				</tr>
 				<tr>
 					<td style="border-bottom: 1px grey solid; text-align: left; vertical-align: middle;"><h3>Wahlbogen <span th:if="${Parameter.detailLevel == 0}" class="f-very-tiny">(nur belegte Fächer)</span></h3></td>

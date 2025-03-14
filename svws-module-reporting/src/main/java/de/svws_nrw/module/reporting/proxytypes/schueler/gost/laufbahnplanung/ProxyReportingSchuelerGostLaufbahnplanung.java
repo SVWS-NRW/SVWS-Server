@@ -92,8 +92,7 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 						idsFehlendeSchueler.add(idSchueler);
 				}
 				this.reportingRepository.mapGostBeratungsdatenAbiturdaten().putAll(
-						new HashMap<>(DBUtilsGostLaufbahn.getFromIDsUndSchuljahresabschnitt(this.reportingRepository.conn(), idsFehlendeSchueler,
-								reportingRepository.aktuellerSchuljahresabschnitt().id())));
+						new HashMap<>(DBUtilsGostLaufbahn.getFromIDs(this.reportingRepository.conn(), idsFehlendeSchueler)));
 			}
 		} catch (final ApiOperationException e) {
 			ReportingExceptionUtils.putStacktraceInLog(
