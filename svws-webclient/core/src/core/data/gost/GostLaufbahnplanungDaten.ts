@@ -12,12 +12,7 @@ export class GostLaufbahnplanungDaten extends JavaObject {
 	/**
 	 * Die Revision des LP-Datenformates, um zu überprüfen, ob die Datei in dem richtigen Format vorliegt (-1 für Entwickler-Revisionen und ansonsten aufsteigend ab 1)
 	 */
-	public lpRevision : number = 2;
-
-	/**
-	 * Der Bezeichner der Schulform
-	 */
-	public schulform : string = "GY";
+	public lpRevision : number = 1;
 
 	/**
 	 * Die Schulnummer der Schule, welcher die Laufbahndaten zugeordnet sind.
@@ -124,9 +119,6 @@ export class GostLaufbahnplanungDaten extends JavaObject {
 		if (obj.lpRevision === undefined)
 			throw new Error('invalid json format, missing attribute lpRevision');
 		result.lpRevision = obj.lpRevision;
-		if (obj.schulform === undefined)
-			throw new Error('invalid json format, missing attribute schulform');
-		result.schulform = obj.schulform;
 		if (obj.schulNr === undefined)
 			throw new Error('invalid json format, missing attribute schulNr');
 		result.schulNr = obj.schulNr;
@@ -181,7 +173,6 @@ export class GostLaufbahnplanungDaten extends JavaObject {
 	public static transpilerToJSON(obj : GostLaufbahnplanungDaten) : string {
 		let result = '{';
 		result += '"lpRevision" : ' + obj.lpRevision.toString() + ',';
-		result += '"schulform" : ' + JSON.stringify(obj.schulform) + ',';
 		result += '"schulNr" : ' + obj.schulNr.toString() + ',';
 		result += '"schulBezeichnung1" : ' + JSON.stringify(obj.schulBezeichnung1) + ',';
 		result += '"schulBezeichnung2" : ' + JSON.stringify(obj.schulBezeichnung2) + ',';
@@ -235,9 +226,6 @@ export class GostLaufbahnplanungDaten extends JavaObject {
 		let result = '{';
 		if (obj.lpRevision !== undefined) {
 			result += '"lpRevision" : ' + obj.lpRevision.toString() + ',';
-		}
-		if (obj.schulform !== undefined) {
-			result += '"schulform" : ' + JSON.stringify(obj.schulform) + ',';
 		}
 		if (obj.schulNr !== undefined) {
 			result += '"schulNr" : ' + obj.schulNr.toString() + ',';

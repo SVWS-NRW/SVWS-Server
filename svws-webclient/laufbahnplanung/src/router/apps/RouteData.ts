@@ -115,7 +115,6 @@ export class RouteData {
 		// Lade die Informationen zur Schule
 		const schuleStammdaten = new SchuleStammdaten();
 		schuleStammdaten.schulNr = daten.schulNr;
-		schuleStammdaten.schulform = daten.schulform;
 		schuleStammdaten.bezeichnung1 = daten.schulBezeichnung1;
 		schuleStammdaten.bezeichnung2 = daten.schulBezeichnung2;
 		schuleStammdaten.bezeichnung3 = daten.schulBezeichnung3;
@@ -150,7 +149,6 @@ export class RouteData {
 		schueler.abiturjahrgang = gostJahrgang.abiturjahr;
 		// Erstelle das Abiturdaten-Objekt mit den Fachbelegungen
 		const abiturdaten = new Abiturdaten();
-		abiturdaten.schulform = daten.schulform;
 		abiturdaten.abiturjahr = daten.abiturjahr;
 		abiturdaten.sprachendaten = planungsdaten.sprachendaten;
 		abiturdaten.bilingualeSprache = planungsdaten.bilingualeSprache;
@@ -204,7 +202,6 @@ export class RouteData {
 			throw new UserNotificationException("Es müssen Abiturdaten geladen sein.");
 		const daten = new GostLaufbahnplanungDaten();
 		daten.schulNr = this._state.value.schuleStammdaten.schulNr;
-		daten.schulform = this._state.value.schuleStammdaten.schulform;
 		daten.schulBezeichnung1 = this._state.value.schuleStammdaten.bezeichnung1;
 		daten.schulBezeichnung2 = (this._state.value.schuleStammdaten.bezeichnung2 === null) ? "" : this._state.value.schuleStammdaten.bezeichnung2;
 		daten.schulBezeichnung3 = (this._state.value.schuleStammdaten.bezeichnung3 === null) ? "" : this._state.value.schuleStammdaten.bezeichnung3;
@@ -389,7 +386,7 @@ export class RouteData {
 		try {
 			const rawData = await (new Response(gzData.stream().pipeThrough(ds))).text();
 			const laufbahnplanungsdaten = GostLaufbahnplanungDaten.transpilerFromJSON(rawData);
-			const revRequired = 2;
+			const revRequired = 1;
 			if (laufbahnplanungsdaten.lpRevision !== revRequired)
 				return "Die Revision der Laufbahnplanungsdatei (" + laufbahnplanungsdaten.lpRevision + ") entspricht nicht der unterstützen Revision " + revRequired;
 			await this.ladeDaten(laufbahnplanungsdaten);

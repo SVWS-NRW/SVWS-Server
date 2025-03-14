@@ -66,7 +66,6 @@ public final class DBUtilsGostAbitur {
 		final Abiturdaten abidaten = new Abiturdaten();
 		abidaten.schuelerID = leistungen.id;
 		abidaten.schuljahrAbitur = leistungen.aktuellesSchuljahr;
-		abidaten.schulform = conn.getUser().schuleGetSchulform().name();
 		abidaten.abiturjahr = abidaten.schuljahrAbitur + 1;
 		abidaten.sprachendaten = leistungen.sprachendaten;
 		abidaten.bilingualeSprache = leistungen.bilingualeSprache;
@@ -272,7 +271,6 @@ public final class DBUtilsGostAbitur {
 		final Abiturdaten abidaten = new Abiturdaten();
 		abidaten.schuelerID = dtoSchuelerAbitur.Schueler_ID;
 		abidaten.schuljahrAbitur = schuljahresabschnittPruefung.schuljahr;
-		abidaten.schulform = conn.getUser().schuleGetSchulform().name();
 		abidaten.abiturjahr = abiturjahr;
 		abidaten.projektKursThema = dtoSchuelerAbitur.ProjektkursThema;
 		abidaten.block1FehlstundenGesamt = (dtoSchuelerAbitur.FehlstundenSumme == null) ? -1 : dtoSchuelerAbitur.FehlstundenSumme;

@@ -20,7 +20,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 @Schema(description = "enthält die Informationen der gymnasialen Oberstufe eines Schülers in Bezug auf das Abitur.")
-@JsonPropertyOrder({ "schuelerID", "schulform", "abiturjahr", "schuljahrAbitur", "fachbelegungen", "sprachenfolge", "sprachpruefungen", "bilingualeSprache",
+@JsonPropertyOrder({ "schuelerID", "abiturjahr", "schuljahrAbitur", "fachbelegungen", "sprachenfolge", "sprachpruefungen", "bilingualeSprache",
 		"latinum", "kleinesLatinum", "graecum", "hebraicum",
 		"block1FehlstundenGesamt", "block1FehlstundenUnentschuldigt", "projektKursThema", "projektkursLeitfach1Kuerzel",
 		"projektkursLeitfach2Kuerzel", "besondereLernleistung", "besondereLernleistungNotenKuerzel", "besondereLernleistungThema",
@@ -32,11 +32,7 @@ public class Abiturdaten {
 
 	/** Die eindeutige ID des Schülers */
 	@Schema(description = "Die eindeutige ID des Schülers.", example = "4711")
-	public long schuelerID = -1;
-
-	/** Der Bezeichner der Schulform */
-	@Schema(description = "Der Bezeichner der Schulform.", example = "GY")
-	public @NotNull String schulform = "GY";
+	public long schuelerID;
 
 	/** Das Kalenderjahr, in dem der Schüler sein Abitur ablegt bzw. ablegen wird. */
 	@Schema(description = "Das Kalenderjahr, in dem der Schüler sein Abitur ablegt bzw. ablegen wird.", example = "2025")

@@ -29,7 +29,6 @@ import { Class } from '../../../java/lang/Class';
 import type { JavaMap } from '../../../java/util/JavaMap';
 import { FachWaehlbar } from '../../../core/abschluss/gost/belegpruefung/FachWaehlbar';
 import type { JavaSet } from '../../../java/util/JavaSet';
-import { Schulform } from '../../../asd/types/schule/Schulform';
 import { GostBelegpruefungsArt } from '../../../core/abschluss/gost/GostBelegpruefungsArt';
 import { AbiturFachbelegungHalbjahr } from '../../../core/data/gost/AbiturFachbelegungHalbjahr';
 import { GostBesondereLernleistung } from '../../../core/types/gost/GostBesondereLernleistung';
@@ -231,15 +230,6 @@ export class AbiturdatenManager extends JavaObject {
 	 */
 	public getSprachendaten() : Sprachendaten {
 		return this.abidaten.sprachendaten;
-	}
-
-	/**
-	 * Gibt die Schulform zurück, für welche die Abiturdaten angelegt wurden.
-	 *
-	 * @return die Schulform
-	 */
-	public getSchulform() : Schulform | null {
-		return Schulform.data().getWertByBezeichner(this.abidaten.schulform);
 	}
 
 	/**

@@ -788,7 +788,6 @@ public class LupoMDB {
 			abidaten.schuelerID = lupoSchueler.ID;
 			abidaten.abiturjahr = 2020; // fiktives Schuljahr (in der Lupo-MDB nicht vorhanden
 			abidaten.schuljahrAbitur = 2021; // s.o.
-			abidaten.schulform = Schulform.data().getWertBySchluesselOrException(schuldaten.getFirst().SchulformKrz).name();
 
 			abidaten.bilingualeSprache = lupoSchueler.Bilingual;
 

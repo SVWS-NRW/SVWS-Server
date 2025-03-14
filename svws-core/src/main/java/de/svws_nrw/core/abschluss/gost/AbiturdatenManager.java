@@ -13,7 +13,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.asd.data.schueler.Sprachendaten;
 import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.asd.types.fach.Fach;
-import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.AbiFaecher;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.Allgemeines;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.Deutsch;
@@ -233,15 +232,6 @@ public class AbiturdatenManager {
 		return abidaten.sprachendaten;
 	}
 
-
-	/**
-	 * Gibt die Schulform zurück, für welche die Abiturdaten angelegt wurden.
-	 *
-	 * @return die Schulform
-	 */
-	public Schulform getSchulform() {
-		return Schulform.data().getWertByBezeichner(abidaten.schulform);
-	}
 
 	/**
 	 * Liefert das Abiturjahr

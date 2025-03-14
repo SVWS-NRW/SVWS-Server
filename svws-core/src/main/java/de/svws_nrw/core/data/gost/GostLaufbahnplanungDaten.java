@@ -19,13 +19,9 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class GostLaufbahnplanungDaten {
 
 	/** Die Revision des LP-Datenformates, um zu überprüfen, ob die Datei in dem richtigen Format vorliegt (-1 für Entwickler-Revisionen und ansonsten aufsteigend ab 1) */
-	@Schema(description = "Die Revision des LP-Datenformates, um zu überprüfen, ob die Datei in dem richtigen Format vorliegt (-1 für Entwickler-Revisionen und ansonsten aufsteigend ab 1).",
-			example = "2")
-	public int lpRevision = 2;
-
-	/** Der Bezeichner der Schulform */
-	@Schema(description = "Der Bezeichner der Schulform.", example = "GY")
-	public @NotNull String schulform = "GY";
+	@Schema(description = "Die Revision des ENM-Datenformates, um zu überprüfen, ob die Datei in dem richtigen Format vorliegt (-1 für Entwickler-Revisionen und ansonsten aufsteigend ab 1).",
+			example = "1")
+	public int lpRevision = 1;
 
 	/** Die Schulnummer der Schule, welcher die Laufbahndaten zugeordnet sind. */
 	@Schema(description = "die Schulnummer der Schule, welcher die Laufbahndaten zugeordnet sind", example = "123456")

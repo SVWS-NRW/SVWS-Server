@@ -11,12 +11,7 @@ export class Abiturdaten extends JavaObject {
 	/**
 	 * Die eindeutige ID des Schülers
 	 */
-	public schuelerID : number = -1;
-
-	/**
-	 * Der Bezeichner der Schulform
-	 */
-	public schulform : string = "GY";
+	public schuelerID : number = 0;
 
 	/**
 	 * Das Kalenderjahr, in dem der Schüler sein Abitur ablegt bzw. ablegen wird.
@@ -217,9 +212,6 @@ export class Abiturdaten extends JavaObject {
 		if (obj.schuelerID === undefined)
 			throw new Error('invalid json format, missing attribute schuelerID');
 		result.schuelerID = obj.schuelerID;
-		if (obj.schulform === undefined)
-			throw new Error('invalid json format, missing attribute schulform');
-		result.schulform = obj.schulform;
 		if (obj.abiturjahr === undefined)
 			throw new Error('invalid json format, missing attribute abiturjahr');
 		result.abiturjahr = obj.abiturjahr;
@@ -289,7 +281,6 @@ export class Abiturdaten extends JavaObject {
 	public static transpilerToJSON(obj : Abiturdaten) : string {
 		let result = '{';
 		result += '"schuelerID" : ' + obj.schuelerID.toString() + ',';
-		result += '"schulform" : ' + JSON.stringify(obj.schulform) + ',';
 		result += '"abiturjahr" : ' + obj.abiturjahr.toString() + ',';
 		result += '"schuljahrAbitur" : ' + obj.schuljahrAbitur.toString() + ',';
 		result += '"bewertetesHalbjahr" : [ ';
@@ -348,9 +339,6 @@ export class Abiturdaten extends JavaObject {
 		let result = '{';
 		if (obj.schuelerID !== undefined) {
 			result += '"schuelerID" : ' + obj.schuelerID.toString() + ',';
-		}
-		if (obj.schulform !== undefined) {
-			result += '"schulform" : ' + JSON.stringify(obj.schulform) + ',';
 		}
 		if (obj.abiturjahr !== undefined) {
 			result += '"abiturjahr" : ' + obj.abiturjahr.toString() + ',';
