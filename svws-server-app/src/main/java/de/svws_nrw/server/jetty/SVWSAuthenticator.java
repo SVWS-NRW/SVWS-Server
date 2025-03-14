@@ -104,7 +104,8 @@ public final class SVWSAuthenticator extends LoginAuthenticator {
 			} catch (final WebApplicationException wae) {
 				try (var r = wae.getResponse()) {
 					res.setStatus(r.getStatus());
-					res.write(true, ByteBuffer.wrap(r.getEntity().toString().getBytes()), callback);
+					final String msg = (r.getEntity() == null) ? wae.getMessage() : r.getEntity().toString();
+					res.write(true, ByteBuffer.wrap(msg.getBytes()), callback);
 					return AuthenticationState.SEND_FAILURE;
 				}
 			}
