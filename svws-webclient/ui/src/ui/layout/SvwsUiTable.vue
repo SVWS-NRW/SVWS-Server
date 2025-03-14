@@ -119,7 +119,7 @@
 									<div v-if="row.selectable" class="svws-ui-td svws-align-center" role="cell" :key="`selectable__${row}_${index}`">
 										<input type="checkbox" :checked="isRowSelected(row)" @input="toggleRowSelection(row)" @click.stop :ref="el => selectionRefs.set(index, el)" @keydown.down.prevent.stop="switchElement($event, selectionRefs, index, false)" @keydown.up.prevent.stop="switchElement($event, selectionRefs, index, true)">
 									</div>
-									<div v-else class="svws-ui-td svws-align-center" role="cell" />
+									<div v-else class="w-6" />
 								</template>
 								<slot name="rowSelectable" :row="row.source">
 									<div class="svws-ui-td" role="cell" v-for="cell in row.cells" :key="`table-cell_${cell.column.key + cell.rowIndex}`"
