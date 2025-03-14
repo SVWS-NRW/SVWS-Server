@@ -754,6 +754,7 @@ public final class SVWSKonfiguration {
 					final DBSchemaListeEintrag result = new DBSchemaListeEintrag();
 					result.name = s;
 					result.isDefault = (defaultSchema != null) && (defaultSchema.equals(s));
+					result.isDeactivated = isDeactivatedSchema(s);
 					return result;
 				}).toList();
 
