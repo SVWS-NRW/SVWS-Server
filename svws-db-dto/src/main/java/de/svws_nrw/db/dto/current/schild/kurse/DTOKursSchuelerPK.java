@@ -21,6 +21,9 @@ public final class DTOKursSchuelerPK implements Serializable {
 	/** Wird für Wiederholungen im Laufenden Schuljahresabschnitt genutzt 0=aktueller/neuester Lernabschnitt 1=vor dem ersten Wechsel 2=vor dem zweiten Wechsel usw */
 	public Integer LernabschnittWechselNr;
 
+	/** Die eindeutige ID der Leistungsdaten, in denen die Zuordnung stattgefunden hat */
+	public long Leistung_ID;
+
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOKursSchuelerPK ohne eine Initialisierung der Attribute.
 	 */
@@ -33,14 +36,16 @@ public final class DTOKursSchuelerPK implements Serializable {
 	 * @param Kurs_ID   der Wert für das Attribut Kurs_ID
 	 * @param Schueler_ID   der Wert für das Attribut Schueler_ID
 	 * @param LernabschnittWechselNr   der Wert für das Attribut LernabschnittWechselNr
+	 * @param Leistung_ID   der Wert für das Attribut Leistung_ID
 	 */
-	public DTOKursSchuelerPK(final long Kurs_ID, final long Schueler_ID, final Integer LernabschnittWechselNr) {
+	public DTOKursSchuelerPK(final long Kurs_ID, final long Schueler_ID, final Integer LernabschnittWechselNr, final long Leistung_ID) {
 		this.Kurs_ID = Kurs_ID;
 		this.Schueler_ID = Schueler_ID;
 		if (LernabschnittWechselNr == null) {
 			throw new NullPointerException("LernabschnittWechselNr must not be null");
 		}
 		this.LernabschnittWechselNr = LernabschnittWechselNr;
+		this.Leistung_ID = Leistung_ID;
 	}
 
 
@@ -62,7 +67,7 @@ public final class DTOKursSchuelerPK implements Serializable {
 				return false;
 		} else if (!LernabschnittWechselNr.equals(other.LernabschnittWechselNr))
 			return false;
-		return true;
+		return Leistung_ID == other.Leistung_ID;
 	}
 
 	@Override
@@ -74,6 +79,8 @@ public final class DTOKursSchuelerPK implements Serializable {
 		result = prime * result + Long.hashCode(Schueler_ID);
 
 		result = prime * result + ((LernabschnittWechselNr == null) ? 0 : LernabschnittWechselNr.hashCode());
+
+		result = prime * result + Long.hashCode(Leistung_ID);
 		return result;
 	}
 }
