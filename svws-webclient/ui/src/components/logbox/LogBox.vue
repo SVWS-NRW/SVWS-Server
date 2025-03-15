@@ -1,5 +1,5 @@
 <template>
-	<div v-if="logs !== null" class="w-full overflow-x-auto overflow-y-hidden mt-4">
+	<div v-if="logs !== null" class="w-full h-full overflow-x-auto overflow-y-hidden mt-4">
 		<div>
 			<span class="flex mb-2 text-headline-md gap-1 items-center">
 				<span class="icon i-ri-checkbox-circle-fill mr-3 icon-ui-success" v-if="(status === true)" />
@@ -21,9 +21,9 @@
 				<slot name="button" />
 			</span>
 		</div>
-		<div class="bg-ui-contrast-100 text-ui-contrast-0 rounded-xl overflow-hidden">
-			<div class="overflow-auto max-h-[24rem] w-full">
-				<pre class="py-2 px-3 w-px" v-if="(status !== undefined)">{{ log }}</pre>
+		<div class="bg-ui-contrast-100 text-ui-contrast-0 rounded-xl">
+			<div class="max-h-96 w-full overflow-auto">
+				<pre class="py-2 px-3 w-px" v-if="status !== undefined">{{ log }}</pre>
 			</div>
 		</div>
 	</div>
