@@ -15,7 +15,7 @@
 			</div>
 			<Transition>
 				<svws-ui-input-wrapper v-if="inputDBSchemata.size() > 0 && !connecting" class="mt-10" center>
-					<svws-ui-select v-model="schema" title="Datenbank-Schema" :items="inputDBSchemata" :item-text="i => i.name ?? 'SCHEMANAME FEHLT'" class="w-full" @update:model-value="schema => schema && setSchema(schema)" />
+					<svws-ui-select v-model="schema" title="Datenbank-Schema" :items="inputDBSchemata" :item-text="i => `${i.name ?? 'SCHEMANAME FEHLT'}${i.isDeactivated ? ' (Nicht verfügbar)':''}`" class="w-full" @update:model-value="schema => schema && setSchema(schema)" />
 					<svws-ui-text-input v-model.trim="username" type="text" placeholder="Benutzername" @keyup.enter="doLogin" ref="refUsername" />
 					<svws-ui-text-input v-model.trim="password" type="password" placeholder="Passwort" @keyup.enter="doLogin" />
 					<svws-ui-spacing />
@@ -45,7 +45,7 @@
 	import type { ComponentExposed } from "vue-component-type-helpers";
 	import type { LoginProps } from "./SLoginProps";
 	import type { DBSchemaListeEintrag, List } from "@core";
-	import { ArrayList, DeveloperNotificationException, JsonCoreTypeReader } from "@core";
+	import { ArrayList, DeveloperNotificationException, JsonCoreTypeReader, UserNotificationException } from "@core";
 	import { SvwsUiTextInput } from "@ui";
 	import { version } from '../../version';
 	import { githash } from '../../githash';
@@ -146,15 +146,20 @@
 		if ((schema.value === undefined) || (schema.value.name === null))
 			return error.value = {name: "Eingabefehler", message: "Es muss ein gültiges Schema ausgewählt sein."};
 		authenticating.value = true;
-		await props.login(schema.value.name, username.value, password.value);
-		authenticating.value = false;
-		firstauth.value = false;
-		if (!props.authenticated)
-			error.value = {name: "Eingabefehler", message: "Passwort oder Benutzername falsch."};
-		else {
-			localStorage.setItem("SVWS-Client Last Used Schema", schema.value.name);
-			// localStorage.setItem(`SVWS-Client Last Used Username for Schema_${schema.value.name}`, username.value);
+		try {
+			await props.login(schema.value.name, username.value, password.value);
+			firstauth.value = false;
+			if (!props.authenticated)
+				error.value = {name: "Eingabefehler", message: "Passwort oder Benutzername falsch."};
+			else {
+				localStorage.setItem("SVWS-Client Last Used Schema", schema.value.name);
+				// localStorage.setItem(`SVWS-Client Last Used Username for Schema_${schema.value.name}`, username.value);
+			}
+		} catch (e) {
+			if (e instanceof UserNotificationException)
+				error.value = e;
 		}
+		authenticating.value = false;
 	}
 
 </script>
