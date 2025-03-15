@@ -7,6 +7,7 @@ ArrayList {
   "elementData": [
     SchuelerListeEintrag {
       "abiturjahrgang": null,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2023-10-13",
       "geschlecht": "w",
@@ -34,6 +35,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2023,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2005-01-01",
       "geschlecht": "w",
@@ -61,6 +63,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": null,
       "geschlecht": "m",
@@ -88,6 +91,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1950-06-03",
       "geschlecht": "m",
@@ -115,6 +119,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-04-18",
       "geschlecht": "m",
@@ -142,6 +147,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2004-02-23",
       "geschlecht": "w",
@@ -173,6 +179,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-04-06",
       "geschlecht": "m",
@@ -200,6 +207,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-11",
       "geschlecht": "m",
@@ -231,6 +239,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-27",
       "geschlecht": "w",
@@ -262,6 +271,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-09-13",
       "geschlecht": "m",
@@ -289,6 +299,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-10-26",
       "geschlecht": "m",
@@ -320,6 +331,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-23",
       "geschlecht": "m",
@@ -347,6 +359,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-01-04",
       "geschlecht": "m",
@@ -374,6 +387,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-09-08",
       "geschlecht": "w",
@@ -405,6 +419,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-23",
       "geschlecht": "m",
@@ -432,6 +447,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-08",
       "geschlecht": "w",
@@ -463,6 +479,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-18",
       "geschlecht": "m",
@@ -494,6 +511,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-14",
       "geschlecht": "m",
@@ -525,6 +543,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-09",
       "geschlecht": "w",
@@ -552,6 +571,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-11",
       "geschlecht": "m",
@@ -579,6 +599,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-06",
       "geschlecht": "m",
@@ -610,6 +631,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-27",
       "geschlecht": "m",
@@ -641,6 +663,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-14",
       "geschlecht": "w",
@@ -668,6 +691,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-09-03",
       "geschlecht": "w",
@@ -695,6 +719,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-09-17",
       "geschlecht": "m",
@@ -726,6 +751,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-12",
       "geschlecht": "m",
@@ -757,6 +783,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-22",
       "geschlecht": "m",
@@ -784,6 +811,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-10-06",
       "geschlecht": "m",
@@ -811,6 +839,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-19",
       "geschlecht": "w",
@@ -842,6 +871,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-06-12",
       "geschlecht": "w",
@@ -873,6 +903,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-26",
       "geschlecht": "w",
@@ -904,6 +935,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-03-14",
       "geschlecht": "w",
@@ -931,6 +963,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-26",
       "geschlecht": "m",
@@ -962,6 +995,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-27",
       "geschlecht": "m",
@@ -993,6 +1027,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-29",
       "geschlecht": "w",
@@ -1020,6 +1055,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-09-09",
       "geschlecht": "m",
@@ -1051,6 +1087,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-11-01",
       "geschlecht": "w",
@@ -1082,6 +1119,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-04-27",
       "geschlecht": "m",
@@ -1113,6 +1151,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-08-15",
       "geschlecht": "m",
@@ -1140,6 +1179,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-30",
       "geschlecht": "w",
@@ -1167,6 +1207,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-06-09",
       "geschlecht": "w",
@@ -1198,6 +1239,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-01-10",
       "geschlecht": "w",
@@ -1229,6 +1271,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-10-30",
       "geschlecht": "m",
@@ -1260,6 +1303,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-09-26",
       "geschlecht": "m",
@@ -1291,6 +1335,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-06",
       "geschlecht": "w",
@@ -1322,6 +1367,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-18",
       "geschlecht": "m",
@@ -1353,6 +1399,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-16",
       "geschlecht": "w",
@@ -1384,6 +1431,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-07-22",
       "geschlecht": "w",
@@ -1415,6 +1463,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-11",
       "geschlecht": "m",
@@ -1446,6 +1495,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-07",
       "geschlecht": "w",
@@ -1477,6 +1527,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-07-03",
       "geschlecht": "m",
@@ -1508,6 +1559,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-11-14",
       "geschlecht": "m",
@@ -1539,6 +1591,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-10-17",
       "geschlecht": "m",
@@ -1570,6 +1623,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-06-03",
       "geschlecht": "m",
@@ -1601,6 +1655,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-01",
       "geschlecht": "m",
@@ -1632,6 +1687,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-03",
       "geschlecht": "m",
@@ -1663,6 +1719,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-24",
       "geschlecht": "m",
@@ -1694,6 +1751,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-06",
       "geschlecht": "m",
@@ -1725,6 +1783,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-07-16",
       "geschlecht": "w",
@@ -1756,6 +1815,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-16",
       "geschlecht": "w",
@@ -1787,6 +1847,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-02",
       "geschlecht": "w",
@@ -1818,6 +1879,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-26",
       "geschlecht": "w",
@@ -1849,6 +1911,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-26",
       "geschlecht": "m",
@@ -1880,6 +1943,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-09-12",
       "geschlecht": "m",
@@ -1911,6 +1975,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-21",
       "geschlecht": "w",
@@ -1942,6 +2007,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2004-01-01",
       "geschlecht": "w",
@@ -1973,6 +2039,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-07-22",
       "geschlecht": "m",
@@ -2004,6 +2071,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-07-13",
       "geschlecht": "w",
@@ -2035,6 +2103,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-10",
       "geschlecht": "w",
@@ -2066,6 +2135,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-11-30",
       "geschlecht": "w",
@@ -2097,6 +2167,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-26",
       "geschlecht": "w",
@@ -2128,6 +2199,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-18",
       "geschlecht": "m",
@@ -2159,6 +2231,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-15",
       "geschlecht": "w",
@@ -2190,6 +2263,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-06-16",
       "geschlecht": "w",
@@ -2221,6 +2295,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-09-05",
       "geschlecht": "m",
@@ -2252,6 +2327,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-17",
       "geschlecht": "m",
@@ -2283,6 +2359,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-13",
       "geschlecht": "w",
@@ -2314,6 +2391,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-01",
       "geschlecht": "w",
@@ -2345,6 +2423,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-17",
       "geschlecht": "w",
@@ -2376,6 +2455,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-23",
       "geschlecht": "m",
@@ -2407,6 +2487,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-19",
       "geschlecht": "w",
@@ -2438,6 +2519,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-21",
       "geschlecht": "w",
@@ -2478,6 +2560,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2004-01-01",
       "geschlecht": "w",
@@ -2518,6 +2601,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-07-06",
       "geschlecht": "m",
@@ -2558,6 +2642,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-03",
       "geschlecht": "m",
@@ -2597,6 +2682,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-01-10",
       "geschlecht": "w",
@@ -2637,6 +2723,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-04-18",
       "geschlecht": "m",
@@ -2677,6 +2764,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2004-02-23",
       "geschlecht": "w",
@@ -2717,6 +2805,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2004-04-23",
       "geschlecht": "m",
@@ -2756,6 +2845,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-04-06",
       "geschlecht": "m",
@@ -2796,6 +2886,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-07-22",
       "geschlecht": "m",
@@ -2836,6 +2927,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-11",
       "geschlecht": "m",
@@ -2876,6 +2968,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-10-30",
       "geschlecht": "m",
@@ -2915,6 +3008,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-27",
       "geschlecht": "w",
@@ -2955,6 +3049,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-07-13",
       "geschlecht": "w",
@@ -2995,6 +3090,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-09-26",
       "geschlecht": "m",
@@ -3034,6 +3130,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-09-13",
       "geschlecht": "m",
@@ -3073,6 +3170,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-10-26",
       "geschlecht": "m",
@@ -3113,6 +3211,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-23",
       "geschlecht": "m",
@@ -3152,6 +3251,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-01-04",
       "geschlecht": "m",
@@ -3192,6 +3292,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-09-08",
       "geschlecht": "w",
@@ -3232,6 +3333,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-10",
       "geschlecht": "w",
@@ -3272,6 +3374,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-05-02",
       "geschlecht": "m",
@@ -3312,6 +3415,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-11-30",
       "geschlecht": "w",
@@ -3352,6 +3456,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-23",
       "geschlecht": "m",
@@ -3392,6 +3497,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-08",
       "geschlecht": "w",
@@ -3432,6 +3538,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-18",
       "geschlecht": "m",
@@ -3471,6 +3578,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-06",
       "geschlecht": "w",
@@ -3511,6 +3619,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-14",
       "geschlecht": "m",
@@ -3551,6 +3660,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-10",
       "geschlecht": "w",
@@ -3591,6 +3701,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-09",
       "geschlecht": "w",
@@ -3630,6 +3741,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-11",
       "geschlecht": "m",
@@ -3671,6 +3783,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-06",
       "geschlecht": "m",
@@ -3711,6 +3824,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-18",
       "geschlecht": "m",
@@ -3750,6 +3864,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-26",
       "geschlecht": "w",
@@ -3790,6 +3905,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-07-15",
       "geschlecht": "m",
@@ -3830,6 +3946,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-16",
       "geschlecht": "w",
@@ -3870,6 +3987,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-17",
       "geschlecht": "m",
@@ -3910,6 +4028,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2004-03-24",
       "geschlecht": "m",
@@ -3950,6 +4069,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-27",
       "geschlecht": "m",
@@ -3990,6 +4110,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-07-22",
       "geschlecht": "w",
@@ -4030,6 +4151,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-14",
       "geschlecht": "w",
@@ -4070,6 +4192,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-18",
       "geschlecht": "m",
@@ -4110,6 +4233,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-09-03",
       "geschlecht": "w",
@@ -4149,6 +4273,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-11",
       "geschlecht": "m",
@@ -4188,6 +4313,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-09-17",
       "geschlecht": "m",
@@ -4228,6 +4354,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-07",
       "geschlecht": "w",
@@ -4268,6 +4395,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-07-03",
       "geschlecht": "m",
@@ -4308,6 +4436,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-15",
       "geschlecht": "w",
@@ -4348,6 +4477,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-11-14",
       "geschlecht": "m",
@@ -4388,6 +4518,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-11",
       "geschlecht": "w",
@@ -4427,6 +4558,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-12",
       "geschlecht": "m",
@@ -4467,6 +4599,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-22",
       "geschlecht": "m",
@@ -4507,6 +4640,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-06-16",
       "geschlecht": "w",
@@ -4547,6 +4681,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-19",
       "geschlecht": "m",
@@ -4586,6 +4721,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-26",
       "geschlecht": "w",
@@ -4626,6 +4762,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-02",
       "geschlecht": "m",
@@ -4666,6 +4803,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-10-17",
       "geschlecht": "m",
@@ -4705,6 +4843,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-06-03",
       "geschlecht": "m",
@@ -4744,6 +4883,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-09-05",
       "geschlecht": "m",
@@ -4784,6 +4924,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-10-06",
       "geschlecht": "m",
@@ -4823,6 +4964,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-01",
       "geschlecht": "m",
@@ -4862,6 +5004,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-19",
       "geschlecht": "w",
@@ -4902,6 +5045,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-03",
       "geschlecht": "m",
@@ -4941,6 +5085,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-19",
       "geschlecht": "w",
@@ -4981,6 +5126,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-18",
       "geschlecht": "w",
@@ -5021,6 +5167,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-06-12",
       "geschlecht": "w",
@@ -5061,6 +5208,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-26",
       "geschlecht": "w",
@@ -5101,6 +5249,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-09",
       "geschlecht": "m",
@@ -5141,6 +5290,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-03-14",
       "geschlecht": "w",
@@ -5181,6 +5331,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-26",
       "geschlecht": "m",
@@ -5221,6 +5372,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-24",
       "geschlecht": "m",
@@ -5260,6 +5412,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-06",
       "geschlecht": "m",
@@ -5300,6 +5453,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-27",
       "geschlecht": "m",
@@ -5340,6 +5494,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2004-01-01",
       "geschlecht": "w",
@@ -5367,6 +5522,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-17",
       "geschlecht": "m",
@@ -5407,6 +5563,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-29",
       "geschlecht": "w",
@@ -5447,6 +5604,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-07-16",
       "geschlecht": "w",
@@ -5486,6 +5644,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-16",
       "geschlecht": "w",
@@ -5526,6 +5685,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-05",
       "geschlecht": "w",
@@ -5566,6 +5726,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-13",
       "geschlecht": "w",
@@ -5606,6 +5767,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-01",
       "geschlecht": "w",
@@ -5646,6 +5808,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-22",
       "geschlecht": "w",
@@ -5685,6 +5848,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-09-09",
       "geschlecht": "m",
@@ -5725,6 +5889,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-11-01",
       "geschlecht": "w",
@@ -5764,6 +5929,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-09-08",
       "geschlecht": "m",
@@ -5803,6 +5969,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-02",
       "geschlecht": "w",
@@ -5842,6 +6009,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-17",
       "geschlecht": "w",
@@ -5882,6 +6050,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-26",
       "geschlecht": "w",
@@ -5921,6 +6090,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-11",
       "geschlecht": "m",
@@ -5960,6 +6130,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-04-27",
       "geschlecht": "m",
@@ -5999,6 +6170,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-06",
       "geschlecht": "m",
@@ -6039,6 +6211,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-07",
       "geschlecht": "w",
@@ -6079,6 +6252,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-08-15",
       "geschlecht": "m",
@@ -6119,6 +6293,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-30",
       "geschlecht": "w",
@@ -6159,6 +6334,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-23",
       "geschlecht": "m",
@@ -6198,6 +6374,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-09",
       "geschlecht": "w",
@@ -6238,6 +6415,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-26",
       "geschlecht": "m",
@@ -6277,6 +6455,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-19",
       "geschlecht": "w",
@@ -6317,6 +6496,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-09-12",
       "geschlecht": "m",
@@ -6356,6 +6536,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-06-09",
       "geschlecht": "w",
@@ -6396,6 +6577,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-04-26",
       "geschlecht": "w",
@@ -6435,6 +6617,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-17",
       "geschlecht": "m",
@@ -6474,6 +6657,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-26",
       "geschlecht": "w",
@@ -6512,6 +6696,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-07",
       "geschlecht": "w",
@@ -6550,6 +6735,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-01-12",
       "geschlecht": "w",
@@ -6588,6 +6774,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-31",
       "geschlecht": "w",
@@ -6626,6 +6813,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-02-28",
       "geschlecht": "m",
@@ -6665,6 +6853,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-04-19",
       "geschlecht": "w",
@@ -6704,6 +6893,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-09",
       "geschlecht": "m",
@@ -6743,6 +6933,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-10-27",
       "geschlecht": "w",
@@ -6781,6 +6972,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1999-11-06",
       "geschlecht": "w",
@@ -6819,6 +7011,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-21",
       "geschlecht": "m",
@@ -6857,6 +7050,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-10",
       "geschlecht": "w",
@@ -6896,6 +7090,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-10-21",
       "geschlecht": "w",
@@ -6935,6 +7130,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-09-16",
       "geschlecht": "w",
@@ -6973,6 +7169,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-21",
       "geschlecht": "w",
@@ -7011,6 +7208,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-01-03",
       "geschlecht": "w",
@@ -7050,6 +7248,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-05-10",
       "geschlecht": "w",
@@ -7089,6 +7288,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-22",
       "geschlecht": "m",
@@ -7128,6 +7328,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-03-09",
       "geschlecht": "m",
@@ -7167,6 +7368,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-02-24",
       "geschlecht": "m",
@@ -7206,6 +7408,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-09-18",
       "geschlecht": "w",
@@ -7245,6 +7448,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-10-12",
       "geschlecht": "w",
@@ -7284,6 +7488,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-19",
       "geschlecht": "m",
@@ -7323,6 +7528,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-02-27",
       "geschlecht": "w",
@@ -7362,6 +7568,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-03-25",
       "geschlecht": "w",
@@ -7401,6 +7608,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-29",
       "geschlecht": "w",
@@ -7439,6 +7647,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-03",
       "geschlecht": "m",
@@ -7478,6 +7687,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-02-10",
       "geschlecht": "w",
@@ -7516,6 +7726,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-10-04",
       "geschlecht": "m",
@@ -7555,6 +7766,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-18",
       "geschlecht": "m",
@@ -7594,6 +7806,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-19",
       "geschlecht": "w",
@@ -7632,6 +7845,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-07-26",
       "geschlecht": "m",
@@ -7671,6 +7885,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-02-23",
       "geschlecht": "w",
@@ -7709,6 +7924,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-08",
       "geschlecht": "m",
@@ -7747,6 +7963,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-22",
       "geschlecht": "w",
@@ -7785,6 +8002,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-05-08",
       "geschlecht": "w",
@@ -7823,6 +8041,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-05-11",
       "geschlecht": "w",
@@ -7862,6 +8081,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-08",
       "geschlecht": "w",
@@ -7901,6 +8121,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-02",
       "geschlecht": "m",
@@ -7939,6 +8160,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-09-08",
       "geschlecht": "m",
@@ -7978,6 +8200,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-31",
       "geschlecht": "w",
@@ -8016,6 +8239,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-08-21",
       "geschlecht": "w",
@@ -8055,6 +8279,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-22",
       "geschlecht": "m",
@@ -8093,6 +8318,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-31",
       "geschlecht": "m",
@@ -8132,6 +8358,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-29",
       "geschlecht": "w",
@@ -8171,6 +8398,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-12-08",
       "geschlecht": "m",
@@ -8209,6 +8437,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-02-28",
       "geschlecht": "w",
@@ -8248,6 +8477,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-07-22",
       "geschlecht": "m",
@@ -8286,6 +8516,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-16",
       "geschlecht": "m",
@@ -8324,6 +8555,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-06-24",
       "geschlecht": "m",
@@ -8362,6 +8594,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-02-10",
       "geschlecht": "m",
@@ -8400,6 +8633,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-04-27",
       "geschlecht": "m",
@@ -8439,6 +8673,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-01-22",
       "geschlecht": "w",
@@ -8477,6 +8712,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-10-19",
       "geschlecht": "m",
@@ -8515,6 +8751,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-03-18",
       "geschlecht": "w",
@@ -8554,6 +8791,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-09-30",
       "geschlecht": "w",
@@ -8593,6 +8831,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-05-06",
       "geschlecht": "w",
@@ -8631,6 +8870,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-07-14",
       "geschlecht": "w",
@@ -8670,6 +8910,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-11-11",
       "geschlecht": "m",
@@ -8709,6 +8950,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-22",
       "geschlecht": "w",
@@ -8747,6 +8989,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-04",
       "geschlecht": "m",
@@ -8786,6 +9029,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-01",
       "geschlecht": "m",
@@ -8825,6 +9069,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-10",
       "geschlecht": "w",
@@ -8863,6 +9108,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-01-29",
       "geschlecht": "w",
@@ -8902,6 +9148,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-13",
       "geschlecht": "m",
@@ -8941,6 +9188,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-12-12",
       "geschlecht": "m",
@@ -8979,6 +9227,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-02-25",
       "geschlecht": "m",
@@ -9017,6 +9266,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-09-06",
       "geschlecht": "m",
@@ -9055,6 +9305,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-01",
       "geschlecht": "w",
@@ -9094,6 +9345,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-11-24",
       "geschlecht": "w",
@@ -9133,6 +9385,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-11-29",
       "geschlecht": "w",
@@ -9171,6 +9424,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-10-27",
       "geschlecht": "w",
@@ -9209,6 +9463,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-09-12",
       "geschlecht": "w",
@@ -9248,6 +9503,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-21",
       "geschlecht": "w",
@@ -9287,6 +9543,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-02-20",
       "geschlecht": "m",
@@ -9326,6 +9583,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-20",
       "geschlecht": "w",
@@ -9364,6 +9622,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-07-30",
       "geschlecht": "m",
@@ -9403,6 +9662,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-06",
       "geschlecht": "m",
@@ -9442,6 +9702,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-11-07",
       "geschlecht": "m",
@@ -9481,6 +9742,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-02-28",
       "geschlecht": "m",
@@ -9520,6 +9782,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-07-16",
       "geschlecht": "m",
@@ -9559,6 +9822,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-26",
       "geschlecht": "m",
@@ -9598,6 +9862,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-11-10",
       "geschlecht": "w",
@@ -9636,6 +9901,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-10-18",
       "geschlecht": "m",
@@ -9674,6 +9940,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-15",
       "geschlecht": "w",
@@ -9713,6 +9980,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-16",
       "geschlecht": "m",
@@ -9752,6 +10020,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-03-23",
       "geschlecht": "w",
@@ -9790,6 +10059,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-23",
       "geschlecht": "w",
@@ -9829,6 +10099,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-01-23",
       "geschlecht": "w",
@@ -9868,6 +10139,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1998-12-13",
       "geschlecht": "w",
@@ -9906,6 +10178,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-16",
       "geschlecht": "m",
@@ -9944,6 +10217,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-05-22",
       "geschlecht": "w",
@@ -9983,6 +10257,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-01-23",
       "geschlecht": "w",
@@ -10021,6 +10296,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-04",
       "geschlecht": "m",
@@ -10059,6 +10335,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-04-30",
       "geschlecht": "m",
@@ -10098,6 +10375,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-23",
       "geschlecht": "w",
@@ -10136,6 +10414,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-07-29",
       "geschlecht": "w",
@@ -10175,6 +10454,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-07",
       "geschlecht": "m",
@@ -10214,6 +10494,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-03-27",
       "geschlecht": "w",
@@ -10252,6 +10533,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-07",
       "geschlecht": "w",
@@ -10291,6 +10573,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1999-10-23",
       "geschlecht": "m",
@@ -10329,6 +10612,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-17",
       "geschlecht": "w",
@@ -10368,6 +10652,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-05-07",
       "geschlecht": "m",
@@ -10407,6 +10692,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-02-26",
       "geschlecht": "w",
@@ -10446,6 +10732,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-09-11",
       "geschlecht": "m",
@@ -10484,6 +10771,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-30",
       "geschlecht": "m",
@@ -10522,6 +10810,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-07-28",
       "geschlecht": "w",
@@ -10561,6 +10850,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-11-12",
       "geschlecht": "w",
@@ -10599,6 +10889,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1999-12-30",
       "geschlecht": "m",
@@ -10637,6 +10928,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-10-30",
       "geschlecht": "w",
@@ -10675,6 +10967,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-03-28",
       "geschlecht": "m",
@@ -10713,6 +11006,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-12-18",
       "geschlecht": "m",
@@ -10751,6 +11045,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-04-13",
       "geschlecht": "w",
@@ -10789,6 +11084,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-08-17",
       "geschlecht": "m",
@@ -10827,6 +11123,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-09-30",
       "geschlecht": "w",
@@ -10865,6 +11162,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-08-31",
       "geschlecht": "w",
@@ -10903,6 +11201,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-02-24",
       "geschlecht": "w",
@@ -10941,6 +11240,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-11-15",
       "geschlecht": "m",
@@ -10979,6 +11279,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-08-25",
       "geschlecht": "m",
@@ -11017,6 +11318,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-09-02",
       "geschlecht": "m",
@@ -11055,6 +11357,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-10-08",
       "geschlecht": "w",
@@ -11093,6 +11396,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-05-15",
       "geschlecht": "w",
@@ -11131,6 +11435,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1999-09-16",
       "geschlecht": "m",
@@ -11169,6 +11474,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-12-01",
       "geschlecht": "w",
@@ -11207,6 +11513,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-03-14",
       "geschlecht": "m",
@@ -11245,6 +11552,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-09-05",
       "geschlecht": "w",
@@ -11283,6 +11591,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-01-21",
       "geschlecht": "w",
@@ -11321,6 +11630,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-03-19",
       "geschlecht": "m",
@@ -11359,6 +11669,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-05-03",
       "geschlecht": "m",
@@ -11397,6 +11708,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-06-11",
       "geschlecht": "w",
@@ -11435,6 +11747,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-05-05",
       "geschlecht": "w",
@@ -11473,6 +11786,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-01-04",
       "geschlecht": "w",
@@ -11511,6 +11825,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-09-07",
       "geschlecht": "m",
@@ -11549,6 +11864,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-01-08",
       "geschlecht": "m",
@@ -11587,6 +11903,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-06-06",
       "geschlecht": "w",
@@ -11625,6 +11942,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-08-16",
       "geschlecht": "w",
@@ -11663,6 +11981,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-08-04",
       "geschlecht": "w",
@@ -11701,6 +12020,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-03-03",
       "geschlecht": "w",
@@ -11739,6 +12059,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-03-25",
       "geschlecht": "w",
@@ -11777,6 +12098,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-11-07",
       "geschlecht": "w",
@@ -11815,6 +12137,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-01-12",
       "geschlecht": "m",
@@ -11853,6 +12176,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-08-13",
       "geschlecht": "w",
@@ -11891,6 +12215,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-10-04",
       "geschlecht": "m",
@@ -11929,6 +12254,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-07-16",
       "geschlecht": "w",
@@ -11967,6 +12293,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-03-26",
       "geschlecht": "m",
@@ -12005,6 +12332,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-02-15",
       "geschlecht": "m",
@@ -12043,6 +12371,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-03-28",
       "geschlecht": "w",
@@ -12082,6 +12411,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1999-12-18",
       "geschlecht": "w",
@@ -12120,6 +12450,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-05-22",
       "geschlecht": "m",
@@ -12158,6 +12489,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-01-28",
       "geschlecht": "w",
@@ -12196,6 +12528,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-01-18",
       "geschlecht": "m",
@@ -12234,6 +12567,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1999-08-14",
       "geschlecht": "m",
@@ -12272,6 +12606,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1998-05-30",
       "geschlecht": "w",
@@ -12310,6 +12645,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-09-19",
       "geschlecht": "w",
@@ -12348,6 +12684,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-10-15",
       "geschlecht": "m",
@@ -12386,6 +12723,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1999-09-13",
       "geschlecht": "m",
@@ -12424,6 +12762,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-04-03",
       "geschlecht": "m",
@@ -12462,6 +12801,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-02-03",
       "geschlecht": "m",
@@ -12500,6 +12840,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-03-28",
       "geschlecht": "w",
@@ -12538,6 +12879,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-08-02",
       "geschlecht": "m",
@@ -12576,6 +12918,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-05-23",
       "geschlecht": "m",
@@ -12614,6 +12957,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-08-11",
       "geschlecht": "m",
@@ -12652,6 +12996,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1998-12-07",
       "geschlecht": "w",
@@ -12690,6 +13035,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-03-22",
       "geschlecht": "w",
@@ -12728,6 +13074,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-09-26",
       "geschlecht": "w",
@@ -12766,6 +13113,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-08-11",
       "geschlecht": "w",
@@ -12804,6 +13152,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-04-29",
       "geschlecht": "w",
@@ -12842,6 +13191,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-11-17",
       "geschlecht": "w",
@@ -12880,6 +13230,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-04-04",
       "geschlecht": "m",
@@ -12918,6 +13269,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-11-16",
       "geschlecht": "m",
@@ -12956,6 +13308,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-10-21",
       "geschlecht": "w",
@@ -12994,6 +13347,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-03-19",
       "geschlecht": "w",
@@ -13032,6 +13386,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-04-01",
       "geschlecht": "m",
@@ -13070,6 +13425,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-12-05",
       "geschlecht": "m",
@@ -13108,6 +13464,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-08-29",
       "geschlecht": "m",
@@ -13146,6 +13503,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1999-08-15",
       "geschlecht": "w",
@@ -13184,6 +13542,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-08-27",
       "geschlecht": "w",
@@ -13222,6 +13581,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1999-05-05",
       "geschlecht": "m",
@@ -13260,6 +13620,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-09-30",
       "geschlecht": "m",
@@ -13298,6 +13659,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-02-09",
       "geschlecht": "w",
@@ -13336,6 +13698,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1998-04-07",
       "geschlecht": "w",
@@ -13374,6 +13737,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-01-08",
       "geschlecht": "w",
@@ -13412,6 +13776,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-04-07",
       "geschlecht": "w",
@@ -13450,6 +13815,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-17",
       "geschlecht": "w",
@@ -13488,6 +13854,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-07-14",
       "geschlecht": "w",
@@ -13526,6 +13893,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-09-12",
       "geschlecht": "m",
@@ -13564,6 +13932,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-06-25",
       "geschlecht": "w",
@@ -13602,6 +13971,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-12-18",
       "geschlecht": "m",
@@ -13640,6 +14010,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-03-02",
       "geschlecht": "w",
@@ -13678,6 +14049,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-10-30",
       "geschlecht": "m",
@@ -13716,6 +14088,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-09-10",
       "geschlecht": "m",
@@ -13754,6 +14127,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-05-05",
       "geschlecht": "m",
@@ -13791,6 +14165,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-05-21",
       "geschlecht": "w",
@@ -13829,6 +14204,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-08-02",
       "geschlecht": "m",
@@ -13867,6 +14243,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-04-17",
       "geschlecht": "m",
@@ -13905,6 +14282,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-06-14",
       "geschlecht": "m",
@@ -13943,6 +14321,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-12-13",
       "geschlecht": "w",
@@ -13981,6 +14360,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-12-26",
       "geschlecht": "m",
@@ -14019,6 +14399,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-10-14",
       "geschlecht": "w",
@@ -14057,6 +14438,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-01-20",
       "geschlecht": "m",
@@ -14095,6 +14477,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-03-27",
       "geschlecht": "m",
@@ -14133,6 +14516,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-12-05",
       "geschlecht": "w",
@@ -14171,6 +14555,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-07-30",
       "geschlecht": "m",
@@ -14209,6 +14594,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-02-25",
       "geschlecht": "w",
@@ -14247,6 +14633,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-23",
       "geschlecht": "w",
@@ -14285,6 +14672,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-11-09",
       "geschlecht": "w",
@@ -14323,6 +14711,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-30",
       "geschlecht": "w",
@@ -14361,6 +14750,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-03-30",
       "geschlecht": "m",
@@ -14399,6 +14789,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2004-04-23",
       "geschlecht": "m",
@@ -14430,6 +14821,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-05-02",
       "geschlecht": "m",
@@ -14461,6 +14853,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-10",
       "geschlecht": "w",
@@ -14492,6 +14885,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-07-15",
       "geschlecht": "m",
@@ -14523,6 +14917,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-17",
       "geschlecht": "m",
@@ -14554,6 +14949,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2004-03-24",
       "geschlecht": "m",
@@ -14585,6 +14981,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-11",
       "geschlecht": "w",
@@ -14616,6 +15013,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-19",
       "geschlecht": "m",
@@ -14647,6 +15045,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-26",
       "geschlecht": "w",
@@ -14678,6 +15077,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-02",
       "geschlecht": "m",
@@ -14709,6 +15109,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-19",
       "geschlecht": "w",
@@ -14740,6 +15141,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-18",
       "geschlecht": "w",
@@ -14771,6 +15173,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-09",
       "geschlecht": "m",
@@ -14802,6 +15205,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-05",
       "geschlecht": "w",
@@ -14833,6 +15237,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-22",
       "geschlecht": "w",
@@ -14864,6 +15269,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-09-08",
       "geschlecht": "m",
@@ -14895,6 +15301,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-11",
       "geschlecht": "m",
@@ -14926,6 +15333,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-06",
       "geschlecht": "m",
@@ -14957,6 +15365,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-07",
       "geschlecht": "w",
@@ -14988,6 +15397,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-09",
       "geschlecht": "w",
@@ -15019,6 +15429,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2005-02-01",
       "geschlecht": "w",
@@ -15194,6 +15605,7 @@ ArrayList {
   "elementData": [
     SchuelerListeEintrag {
       "abiturjahrgang": null,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2023-10-13",
       "geschlecht": "w",
@@ -15221,6 +15633,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2023,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2005-01-01",
       "geschlecht": "w",
@@ -15248,6 +15661,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": null,
       "geschlecht": "m",
@@ -15275,6 +15689,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1950-06-03",
       "geschlecht": "m",
@@ -15302,6 +15717,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-04-18",
       "geschlecht": "m",
@@ -15329,6 +15745,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2004-02-23",
       "geschlecht": "w",
@@ -15356,6 +15773,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-04-06",
       "geschlecht": "m",
@@ -15383,6 +15801,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-11",
       "geschlecht": "m",
@@ -15410,6 +15829,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-27",
       "geschlecht": "w",
@@ -15437,6 +15857,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-09-13",
       "geschlecht": "m",
@@ -15464,6 +15885,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-10-26",
       "geschlecht": "m",
@@ -15491,6 +15913,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-23",
       "geschlecht": "m",
@@ -15518,6 +15941,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-01-04",
       "geschlecht": "m",
@@ -15545,6 +15969,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-09-08",
       "geschlecht": "w",
@@ -15572,6 +15997,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-23",
       "geschlecht": "m",
@@ -15599,6 +16025,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-08",
       "geschlecht": "w",
@@ -15626,6 +16053,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-18",
       "geschlecht": "m",
@@ -15653,6 +16081,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-14",
       "geschlecht": "m",
@@ -15680,6 +16109,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-09",
       "geschlecht": "w",
@@ -15707,6 +16137,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-11",
       "geschlecht": "m",
@@ -15734,6 +16165,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-06",
       "geschlecht": "m",
@@ -15761,6 +16193,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-27",
       "geschlecht": "m",
@@ -15788,6 +16221,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-14",
       "geschlecht": "w",
@@ -15815,6 +16249,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-09-03",
       "geschlecht": "w",
@@ -15842,6 +16277,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-09-17",
       "geschlecht": "m",
@@ -15869,6 +16305,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-12",
       "geschlecht": "m",
@@ -15896,6 +16333,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-22",
       "geschlecht": "m",
@@ -15923,6 +16361,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-10-06",
       "geschlecht": "m",
@@ -15950,6 +16389,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-19",
       "geschlecht": "w",
@@ -15977,6 +16417,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-06-12",
       "geschlecht": "w",
@@ -16004,6 +16445,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-26",
       "geschlecht": "w",
@@ -16031,6 +16473,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-03-14",
       "geschlecht": "w",
@@ -16058,6 +16501,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-26",
       "geschlecht": "m",
@@ -16085,6 +16529,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-27",
       "geschlecht": "m",
@@ -16112,6 +16557,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-29",
       "geschlecht": "w",
@@ -16139,6 +16585,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-09-09",
       "geschlecht": "m",
@@ -16166,6 +16613,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-11-01",
       "geschlecht": "w",
@@ -16193,6 +16641,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-04-27",
       "geschlecht": "m",
@@ -16220,6 +16669,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-08-15",
       "geschlecht": "m",
@@ -16247,6 +16697,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-30",
       "geschlecht": "w",
@@ -16274,6 +16725,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-06-09",
       "geschlecht": "w",
@@ -16301,6 +16753,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-01-10",
       "geschlecht": "w",
@@ -16328,6 +16781,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-10-30",
       "geschlecht": "m",
@@ -16355,6 +16809,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-09-26",
       "geschlecht": "m",
@@ -16382,6 +16837,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-06",
       "geschlecht": "w",
@@ -16409,6 +16865,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-18",
       "geschlecht": "m",
@@ -16436,6 +16893,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-16",
       "geschlecht": "w",
@@ -16463,6 +16921,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-07-22",
       "geschlecht": "w",
@@ -16490,6 +16949,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-11",
       "geschlecht": "m",
@@ -16517,6 +16977,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-07",
       "geschlecht": "w",
@@ -16544,6 +17005,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-07-03",
       "geschlecht": "m",
@@ -16571,6 +17033,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-11-14",
       "geschlecht": "m",
@@ -16598,6 +17061,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-10-17",
       "geschlecht": "m",
@@ -16625,6 +17089,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-06-03",
       "geschlecht": "m",
@@ -16652,6 +17117,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-01",
       "geschlecht": "m",
@@ -16679,6 +17145,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-03",
       "geschlecht": "m",
@@ -16706,6 +17173,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-24",
       "geschlecht": "m",
@@ -16733,6 +17201,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-06",
       "geschlecht": "m",
@@ -16760,6 +17229,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-07-16",
       "geschlecht": "w",
@@ -16787,6 +17257,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-16",
       "geschlecht": "w",
@@ -16814,6 +17285,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-02",
       "geschlecht": "w",
@@ -16841,6 +17313,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-26",
       "geschlecht": "w",
@@ -16868,6 +17341,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-26",
       "geschlecht": "m",
@@ -16895,6 +17369,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-09-12",
       "geschlecht": "m",
@@ -16922,6 +17397,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-21",
       "geschlecht": "w",
@@ -16949,6 +17425,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2004-01-01",
       "geschlecht": "w",
@@ -16976,6 +17453,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-07-22",
       "geschlecht": "m",
@@ -17003,6 +17481,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-07-13",
       "geschlecht": "w",
@@ -17030,6 +17509,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-10",
       "geschlecht": "w",
@@ -17057,6 +17537,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-11-30",
       "geschlecht": "w",
@@ -17084,6 +17565,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-26",
       "geschlecht": "w",
@@ -17111,6 +17593,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-18",
       "geschlecht": "m",
@@ -17138,6 +17621,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-15",
       "geschlecht": "w",
@@ -17165,6 +17649,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-06-16",
       "geschlecht": "w",
@@ -17192,6 +17677,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-09-05",
       "geschlecht": "m",
@@ -17219,6 +17705,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-17",
       "geschlecht": "m",
@@ -17246,6 +17733,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-13",
       "geschlecht": "w",
@@ -17273,6 +17761,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-01",
       "geschlecht": "w",
@@ -17300,6 +17789,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-17",
       "geschlecht": "w",
@@ -17327,6 +17817,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-23",
       "geschlecht": "m",
@@ -17354,6 +17845,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-19",
       "geschlecht": "w",
@@ -17381,6 +17873,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-21",
       "geschlecht": "w",
@@ -17408,6 +17901,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2004-01-01",
       "geschlecht": "w",
@@ -17435,6 +17929,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-03",
       "geschlecht": "m",
@@ -17462,6 +17957,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-01-10",
       "geschlecht": "w",
@@ -17489,6 +17985,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-04-18",
       "geschlecht": "m",
@@ -17516,6 +18013,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2004-02-23",
       "geschlecht": "w",
@@ -17543,6 +18041,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2004-04-23",
       "geschlecht": "m",
@@ -17570,6 +18069,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-04-06",
       "geschlecht": "m",
@@ -17597,6 +18097,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-07-22",
       "geschlecht": "m",
@@ -17624,6 +18125,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-11",
       "geschlecht": "m",
@@ -17651,6 +18153,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-10-30",
       "geschlecht": "m",
@@ -17678,6 +18181,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-27",
       "geschlecht": "w",
@@ -17705,6 +18209,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-09-26",
       "geschlecht": "m",
@@ -17732,6 +18237,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-09-13",
       "geschlecht": "m",
@@ -17759,6 +18265,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-10-26",
       "geschlecht": "m",
@@ -17786,6 +18293,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-23",
       "geschlecht": "m",
@@ -17813,6 +18321,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-01-04",
       "geschlecht": "m",
@@ -17840,6 +18349,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-09-08",
       "geschlecht": "w",
@@ -17867,6 +18377,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-10",
       "geschlecht": "w",
@@ -17894,6 +18405,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-05-02",
       "geschlecht": "m",
@@ -17921,6 +18433,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-11-30",
       "geschlecht": "w",
@@ -17948,6 +18461,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-23",
       "geschlecht": "m",
@@ -17975,6 +18489,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-08",
       "geschlecht": "w",
@@ -18002,6 +18517,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-18",
       "geschlecht": "m",
@@ -18029,6 +18545,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-06",
       "geschlecht": "w",
@@ -18056,6 +18573,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-10",
       "geschlecht": "w",
@@ -18083,6 +18601,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-11",
       "geschlecht": "m",
@@ -18110,6 +18629,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-18",
       "geschlecht": "m",
@@ -18137,6 +18657,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-26",
       "geschlecht": "w",
@@ -18164,6 +18685,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-07-15",
       "geschlecht": "m",
@@ -18191,6 +18713,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-16",
       "geschlecht": "w",
@@ -18218,6 +18741,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-17",
       "geschlecht": "m",
@@ -18245,6 +18769,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2004-03-24",
       "geschlecht": "m",
@@ -18272,6 +18797,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-27",
       "geschlecht": "m",
@@ -18299,6 +18825,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-07-22",
       "geschlecht": "w",
@@ -18326,6 +18853,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-14",
       "geschlecht": "w",
@@ -18353,6 +18881,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-18",
       "geschlecht": "m",
@@ -18380,6 +18909,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-11",
       "geschlecht": "m",
@@ -18407,6 +18937,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-09-17",
       "geschlecht": "m",
@@ -18434,6 +18965,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-07",
       "geschlecht": "w",
@@ -18461,6 +18993,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-07-03",
       "geschlecht": "m",
@@ -18488,6 +19021,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-15",
       "geschlecht": "w",
@@ -18515,6 +19049,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-11-14",
       "geschlecht": "m",
@@ -18542,6 +19077,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-11",
       "geschlecht": "w",
@@ -18569,6 +19105,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-12",
       "geschlecht": "m",
@@ -18596,6 +19133,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-22",
       "geschlecht": "m",
@@ -18623,6 +19161,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-06-16",
       "geschlecht": "w",
@@ -18650,6 +19189,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-19",
       "geschlecht": "m",
@@ -18677,6 +19217,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-26",
       "geschlecht": "w",
@@ -18704,6 +19245,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-02",
       "geschlecht": "m",
@@ -18731,6 +19273,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-10-17",
       "geschlecht": "m",
@@ -18758,6 +19301,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-06-03",
       "geschlecht": "m",
@@ -18785,6 +19329,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-10-06",
       "geschlecht": "m",
@@ -18812,6 +19357,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-01",
       "geschlecht": "m",
@@ -18839,6 +19385,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-19",
       "geschlecht": "w",
@@ -18866,6 +19413,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-03",
       "geschlecht": "m",
@@ -18893,6 +19441,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-19",
       "geschlecht": "w",
@@ -18920,6 +19469,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-18",
       "geschlecht": "w",
@@ -18947,6 +19497,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-06-12",
       "geschlecht": "w",
@@ -18974,6 +19525,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-26",
       "geschlecht": "w",
@@ -19001,6 +19553,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-09",
       "geschlecht": "m",
@@ -19028,6 +19581,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-26",
       "geschlecht": "m",
@@ -19055,6 +19609,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-24",
       "geschlecht": "m",
@@ -19082,6 +19637,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-06",
       "geschlecht": "m",
@@ -19109,6 +19665,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-27",
       "geschlecht": "m",
@@ -19136,6 +19693,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2004-01-01",
       "geschlecht": "w",
@@ -19163,6 +19721,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-17",
       "geschlecht": "m",
@@ -19190,6 +19749,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-29",
       "geschlecht": "w",
@@ -19217,6 +19777,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-07-16",
       "geschlecht": "w",
@@ -19244,6 +19805,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-16",
       "geschlecht": "w",
@@ -19271,6 +19833,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-05",
       "geschlecht": "w",
@@ -19298,6 +19861,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-13",
       "geschlecht": "w",
@@ -19325,6 +19889,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-01",
       "geschlecht": "w",
@@ -19352,6 +19917,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-22",
       "geschlecht": "w",
@@ -19379,6 +19945,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-09-09",
       "geschlecht": "m",
@@ -19406,6 +19973,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-11-01",
       "geschlecht": "w",
@@ -19433,6 +20001,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-09-08",
       "geschlecht": "m",
@@ -19460,6 +20029,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-02",
       "geschlecht": "w",
@@ -19487,6 +20057,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-17",
       "geschlecht": "w",
@@ -19514,6 +20085,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-26",
       "geschlecht": "w",
@@ -19541,6 +20113,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-11",
       "geschlecht": "m",
@@ -19568,6 +20141,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-06",
       "geschlecht": "m",
@@ -19595,6 +20169,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-07",
       "geschlecht": "w",
@@ -19622,6 +20197,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-08-15",
       "geschlecht": "m",
@@ -19649,6 +20225,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-30",
       "geschlecht": "w",
@@ -19676,6 +20253,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-23",
       "geschlecht": "m",
@@ -19703,6 +20281,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-09",
       "geschlecht": "w",
@@ -19730,6 +20309,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-26",
       "geschlecht": "m",
@@ -19757,6 +20337,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-19",
       "geschlecht": "w",
@@ -19784,6 +20365,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-09-12",
       "geschlecht": "m",
@@ -19811,6 +20393,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-06-09",
       "geschlecht": "w",
@@ -19838,6 +20421,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-07",
       "geschlecht": "w",
@@ -19865,6 +20449,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-10-27",
       "geschlecht": "w",
@@ -19892,6 +20477,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1999-11-06",
       "geschlecht": "w",
@@ -19919,6 +20505,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-09-18",
       "geschlecht": "w",
@@ -19946,6 +20533,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-02-27",
       "geschlecht": "w",
@@ -19973,6 +20561,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-02-23",
       "geschlecht": "w",
@@ -20000,6 +20589,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-22",
       "geschlecht": "w",
@@ -20027,6 +20617,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-07-22",
       "geschlecht": "m",
@@ -20054,6 +20645,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-10-19",
       "geschlecht": "m",
@@ -20081,6 +20673,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-05-06",
       "geschlecht": "w",
@@ -20108,6 +20701,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-11-11",
       "geschlecht": "m",
@@ -20135,6 +20729,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-22",
       "geschlecht": "w",
@@ -20162,6 +20757,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-02-25",
       "geschlecht": "m",
@@ -20189,6 +20785,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-07-30",
       "geschlecht": "m",
@@ -20216,6 +20813,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-11-07",
       "geschlecht": "m",
@@ -20243,6 +20841,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-11-10",
       "geschlecht": "w",
@@ -20270,6 +20869,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-10-18",
       "geschlecht": "m",
@@ -20297,6 +20897,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1998-12-13",
       "geschlecht": "w",
@@ -20324,6 +20925,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1999-10-23",
       "geschlecht": "m",
@@ -20351,6 +20953,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-04-13",
       "geschlecht": "w",
@@ -20378,6 +20981,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-12-01",
       "geschlecht": "w",
@@ -20405,6 +21009,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-09-05",
       "geschlecht": "w",
@@ -20432,6 +21037,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-03-28",
       "geschlecht": "w",
@@ -20459,6 +21065,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1999-12-18",
       "geschlecht": "w",
@@ -20486,6 +21093,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-05-22",
       "geschlecht": "m",
@@ -20513,6 +21121,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-01-28",
       "geschlecht": "w",
@@ -20540,6 +21149,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1999-08-14",
       "geschlecht": "m",
@@ -20567,6 +21177,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1998-05-30",
       "geschlecht": "w",
@@ -20594,6 +21205,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1998-12-07",
       "geschlecht": "w",
@@ -20621,6 +21233,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-04-29",
       "geschlecht": "w",
@@ -20648,6 +21261,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-04-04",
       "geschlecht": "m",
@@ -20675,6 +21289,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1999-08-15",
       "geschlecht": "w",
@@ -20702,6 +21317,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1999-05-05",
       "geschlecht": "m",
@@ -20729,6 +21345,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1998-04-07",
       "geschlecht": "w",
@@ -20756,6 +21373,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-01-08",
       "geschlecht": "w",
@@ -20783,6 +21401,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-09-12",
       "geschlecht": "m",
@@ -20810,6 +21429,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-03-02",
       "geschlecht": "w",
@@ -20837,6 +21457,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-05-21",
       "geschlecht": "w",
@@ -20864,6 +21485,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-02-25",
       "geschlecht": "w",
@@ -20891,6 +21513,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2004-04-23",
       "geschlecht": "m",
@@ -20918,6 +21541,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-05-02",
       "geschlecht": "m",
@@ -20945,6 +21569,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-10",
       "geschlecht": "w",
@@ -20972,6 +21597,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-07-15",
       "geschlecht": "m",
@@ -20999,6 +21625,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-17",
       "geschlecht": "m",
@@ -21026,6 +21653,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2004-03-24",
       "geschlecht": "m",
@@ -21053,6 +21681,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-11",
       "geschlecht": "w",
@@ -21080,6 +21709,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-19",
       "geschlecht": "m",
@@ -21107,6 +21737,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-26",
       "geschlecht": "w",
@@ -21134,6 +21765,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-02",
       "geschlecht": "m",
@@ -21161,6 +21793,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-19",
       "geschlecht": "w",
@@ -21188,6 +21821,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-18",
       "geschlecht": "w",
@@ -21215,6 +21849,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-09",
       "geschlecht": "m",
@@ -21242,6 +21877,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-05",
       "geschlecht": "w",
@@ -21269,6 +21905,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-22",
       "geschlecht": "w",
@@ -21296,6 +21933,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-09-08",
       "geschlecht": "m",
@@ -21323,6 +21961,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-11",
       "geschlecht": "m",
@@ -21350,6 +21989,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-06",
       "geschlecht": "m",
@@ -21377,6 +22017,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-07",
       "geschlecht": "w",
@@ -21404,6 +22045,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-09",
       "geschlecht": "w",
@@ -21431,6 +22073,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-17",
       "geschlecht": "m",
@@ -21460,6 +22103,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-26",
       "geschlecht": "w",
@@ -21489,6 +22133,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-04-19",
       "geschlecht": "w",
@@ -21518,6 +22163,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-09",
       "geschlecht": "m",
@@ -21547,6 +22193,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-19",
       "geschlecht": "m",
@@ -21576,6 +22223,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-14",
       "geschlecht": "m",
@@ -21605,6 +22253,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-02-10",
       "geschlecht": "w",
@@ -21634,6 +22283,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-19",
       "geschlecht": "w",
@@ -21663,6 +22313,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-08",
       "geschlecht": "m",
@@ -21692,6 +22343,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-05-11",
       "geschlecht": "w",
@@ -21721,6 +22373,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-09-08",
       "geschlecht": "m",
@@ -21750,6 +22403,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-08-21",
       "geschlecht": "w",
@@ -21779,6 +22433,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-22",
       "geschlecht": "m",
@@ -21808,6 +22463,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-31",
       "geschlecht": "m",
@@ -21837,6 +22493,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-02-10",
       "geschlecht": "m",
@@ -21866,6 +22523,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-04-27",
       "geschlecht": "m",
@@ -21895,6 +22553,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-03-18",
       "geschlecht": "w",
@@ -21924,6 +22583,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-07-14",
       "geschlecht": "w",
@@ -21953,6 +22613,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-01",
       "geschlecht": "m",
@@ -21982,6 +22643,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-01-29",
       "geschlecht": "w",
@@ -22011,6 +22673,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-16",
       "geschlecht": "m",
@@ -22040,6 +22703,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-16",
       "geschlecht": "m",
@@ -22069,6 +22733,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-04",
       "geschlecht": "m",
@@ -22098,6 +22763,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-30",
       "geschlecht": "m",
@@ -22127,6 +22793,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-31",
       "geschlecht": "w",
@@ -22156,6 +22823,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-21",
       "geschlecht": "m",
@@ -22185,6 +22853,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-09-16",
       "geschlecht": "w",
@@ -22214,6 +22883,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-22",
       "geschlecht": "m",
@@ -22243,6 +22913,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-03-09",
       "geschlecht": "m",
@@ -22272,6 +22943,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-02-24",
       "geschlecht": "m",
@@ -22301,6 +22973,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-09",
       "geschlecht": "w",
@@ -22330,6 +23003,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-07-26",
       "geschlecht": "m",
@@ -22359,6 +23033,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-02",
       "geschlecht": "m",
@@ -22388,6 +23063,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-31",
       "geschlecht": "w",
@@ -22417,6 +23093,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-01-22",
       "geschlecht": "w",
@@ -22446,6 +23123,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-13",
       "geschlecht": "m",
@@ -22475,6 +23153,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-01",
       "geschlecht": "w",
@@ -22504,6 +23183,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-10-27",
       "geschlecht": "w",
@@ -22533,6 +23213,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-09-12",
       "geschlecht": "w",
@@ -22562,6 +23243,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-06",
       "geschlecht": "m",
@@ -22591,6 +23273,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-07-16",
       "geschlecht": "m",
@@ -22620,6 +23303,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-01-23",
       "geschlecht": "w",
@@ -22649,6 +23333,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-05-22",
       "geschlecht": "w",
@@ -22678,6 +23363,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-04-30",
       "geschlecht": "m",
@@ -22707,6 +23393,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-02-26",
       "geschlecht": "w",
@@ -22736,6 +23423,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-09-11",
       "geschlecht": "m",
@@ -22765,6 +23453,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-04-26",
       "geschlecht": "w",
@@ -22794,6 +23483,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-01-12",
       "geschlecht": "w",
@@ -22823,6 +23513,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-10-21",
       "geschlecht": "w",
@@ -22852,6 +23543,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-21",
       "geschlecht": "w",
@@ -22881,6 +23573,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-01-03",
       "geschlecht": "w",
@@ -22910,6 +23603,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-05-10",
       "geschlecht": "w",
@@ -22939,6 +23633,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-29",
       "geschlecht": "w",
@@ -22968,6 +23663,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-03",
       "geschlecht": "m",
@@ -22997,6 +23693,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-09-03",
       "geschlecht": "w",
@@ -23026,6 +23723,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-08",
       "geschlecht": "w",
@@ -23055,6 +23753,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-29",
       "geschlecht": "w",
@@ -23084,6 +23783,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-06-24",
       "geschlecht": "m",
@@ -23113,6 +23813,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-10",
       "geschlecht": "w",
@@ -23142,6 +23843,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-11-24",
       "geschlecht": "w",
@@ -23171,6 +23873,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-03-14",
       "geschlecht": "w",
@@ -23200,6 +23903,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-21",
       "geschlecht": "w",
@@ -23229,6 +23933,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-26",
       "geschlecht": "m",
@@ -23258,6 +23963,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-15",
       "geschlecht": "w",
@@ -23287,6 +23993,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-23",
       "geschlecht": "w",
@@ -23316,6 +24023,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-03-27",
       "geschlecht": "w",
@@ -23345,6 +24053,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-07",
       "geschlecht": "w",
@@ -23374,6 +24083,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-17",
       "geschlecht": "w",
@@ -23403,6 +24113,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-05-07",
       "geschlecht": "m",
@@ -23432,6 +24143,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-07-28",
       "geschlecht": "w",
@@ -23461,6 +24173,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-11-12",
       "geschlecht": "w",
@@ -23491,6 +24204,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-09-30",
       "geschlecht": "w",
@@ -23521,6 +24235,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-01-08",
       "geschlecht": "m",
@@ -23551,6 +24266,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-03-26",
       "geschlecht": "m",
@@ -23581,6 +24297,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-02-03",
       "geschlecht": "m",
@@ -23611,6 +24328,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-12-08",
       "geschlecht": "m",
@@ -23641,6 +24359,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-08-11",
       "geschlecht": "m",
@@ -23671,6 +24390,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-03-22",
       "geschlecht": "w",
@@ -23701,6 +24421,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-10-21",
       "geschlecht": "w",
@@ -23731,6 +24452,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-17",
       "geschlecht": "w",
@@ -23761,6 +24483,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-12-12",
       "geschlecht": "m",
@@ -23791,6 +24514,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-12-18",
       "geschlecht": "m",
@@ -23821,6 +24545,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-12-26",
       "geschlecht": "m",
@@ -23851,6 +24576,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-01-20",
       "geschlecht": "m",
@@ -23881,6 +24607,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-23",
       "geschlecht": "w",
@@ -23911,6 +24638,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-12-18",
       "geschlecht": "m",
@@ -23941,6 +24669,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-08-25",
       "geschlecht": "m",
@@ -23971,6 +24700,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-09-02",
       "geschlecht": "m",
@@ -24001,6 +24731,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-09-07",
       "geschlecht": "m",
@@ -24031,6 +24762,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-03-25",
       "geschlecht": "w",
@@ -24061,6 +24793,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-07-16",
       "geschlecht": "w",
@@ -24091,6 +24824,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-11-16",
       "geschlecht": "m",
@@ -24121,6 +24855,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-03-19",
       "geschlecht": "w",
@@ -24151,6 +24886,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-08-29",
       "geschlecht": "m",
@@ -24181,6 +24917,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-09-06",
       "geschlecht": "m",
@@ -24211,6 +24948,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-10-30",
       "geschlecht": "m",
@@ -24241,6 +24979,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-09-10",
       "geschlecht": "m",
@@ -24271,6 +25010,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-08-02",
       "geschlecht": "m",
@@ -24301,6 +25041,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-12-13",
       "geschlecht": "w",
@@ -24331,6 +25072,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-10-30",
       "geschlecht": "w",
@@ -24361,6 +25103,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-11-15",
       "geschlecht": "m",
@@ -24391,6 +25134,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-10-08",
       "geschlecht": "w",
@@ -24421,6 +25165,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-05-15",
       "geschlecht": "w",
@@ -24451,6 +25196,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-01-21",
       "geschlecht": "w",
@@ -24481,6 +25227,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-05-03",
       "geschlecht": "m",
@@ -24511,6 +25258,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-06-11",
       "geschlecht": "w",
@@ -24541,6 +25289,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-03-03",
       "geschlecht": "w",
@@ -24571,6 +25320,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-01-12",
       "geschlecht": "m",
@@ -24601,6 +25351,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-01-18",
       "geschlecht": "m",
@@ -24631,6 +25382,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-10-15",
       "geschlecht": "m",
@@ -24661,6 +25413,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-09-26",
       "geschlecht": "w",
@@ -24691,6 +25444,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-11-17",
       "geschlecht": "w",
@@ -24721,6 +25475,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-12-05",
       "geschlecht": "m",
@@ -24751,6 +25506,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-09-30",
       "geschlecht": "m",
@@ -24781,6 +25537,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-07-14",
       "geschlecht": "w",
@@ -24811,6 +25568,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-11-29",
       "geschlecht": "w",
@@ -24841,6 +25599,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-04-17",
       "geschlecht": "m",
@@ -24871,6 +25630,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-30",
       "geschlecht": "w",
@@ -24901,6 +25661,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2018,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-03-28",
       "geschlecht": "m",
@@ -24931,6 +25692,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2018,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-08-17",
       "geschlecht": "m",
@@ -24961,6 +25723,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2018,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1999-09-16",
       "geschlecht": "m",
@@ -24991,6 +25754,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2018,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-10-04",
       "geschlecht": "m",
@@ -25021,6 +25785,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2018,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-04-07",
       "geschlecht": "w",
@@ -25051,6 +25816,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2018,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-03-27",
       "geschlecht": "m",
@@ -25081,6 +25847,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2018,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-03-30",
       "geschlecht": "m",
@@ -25111,6 +25878,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2018,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-02-15",
       "geschlecht": "m",
@@ -25141,6 +25909,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2018,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-05-23",
       "geschlecht": "m",
@@ -25171,6 +25940,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2018,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-05-05",
       "geschlecht": "m",
@@ -25201,6 +25971,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2018,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-07-30",
       "geschlecht": "m",
@@ -25231,6 +26002,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-07-06",
       "geschlecht": "m",
@@ -25260,6 +26032,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-02-28",
       "geschlecht": "m",
@@ -25289,6 +26062,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-07-13",
       "geschlecht": "w",
@@ -25318,6 +26092,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-10",
       "geschlecht": "w",
@@ -25347,6 +26122,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-10-12",
       "geschlecht": "w",
@@ -25376,6 +26152,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-03-25",
       "geschlecht": "w",
@@ -25405,6 +26182,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-10-04",
       "geschlecht": "m",
@@ -25434,6 +26212,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-18",
       "geschlecht": "m",
@@ -25463,6 +26242,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-06",
       "geschlecht": "m",
@@ -25492,6 +26272,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-02-28",
       "geschlecht": "w",
@@ -25521,6 +26302,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-16",
       "geschlecht": "m",
@@ -25550,6 +26332,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-09-05",
       "geschlecht": "m",
@@ -25579,6 +26362,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-04",
       "geschlecht": "m",
@@ -25608,6 +26392,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-02-20",
       "geschlecht": "m",
@@ -25637,6 +26422,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-20",
       "geschlecht": "w",
@@ -25666,6 +26452,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-02-28",
       "geschlecht": "m",
@@ -25695,6 +26482,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-03-23",
       "geschlecht": "w",
@@ -25724,6 +26512,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-23",
       "geschlecht": "w",
@@ -25753,6 +26542,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-01-23",
       "geschlecht": "w",
@@ -25782,6 +26572,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-07-29",
       "geschlecht": "w",
@@ -25811,6 +26602,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-07",
       "geschlecht": "m",
@@ -25840,6 +26632,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-04-27",
       "geschlecht": "m",
@@ -25869,6 +26662,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-08-31",
       "geschlecht": "w",
@@ -25899,6 +26693,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-02-24",
       "geschlecht": "w",
@@ -25929,6 +26724,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-03-14",
       "geschlecht": "m",
@@ -25959,6 +26755,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-03-19",
       "geschlecht": "m",
@@ -25989,6 +26786,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-05-05",
       "geschlecht": "w",
@@ -26019,6 +26817,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-01-04",
       "geschlecht": "w",
@@ -26049,6 +26848,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-06-06",
       "geschlecht": "w",
@@ -26079,6 +26879,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-08-04",
       "geschlecht": "w",
@@ -26109,6 +26910,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-11-07",
       "geschlecht": "w",
@@ -26139,6 +26941,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-08-13",
       "geschlecht": "w",
@@ -26169,6 +26972,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-09-19",
       "geschlecht": "w",
@@ -26199,6 +27003,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-05-08",
       "geschlecht": "w",
@@ -26229,6 +27034,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-04-03",
       "geschlecht": "m",
@@ -26259,6 +27065,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-03-28",
       "geschlecht": "w",
@@ -26289,6 +27096,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-08-02",
       "geschlecht": "m",
@@ -26319,6 +27127,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-08-11",
       "geschlecht": "w",
@@ -26349,6 +27158,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-08-27",
       "geschlecht": "w",
@@ -26379,6 +27189,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-09-30",
       "geschlecht": "w",
@@ -26409,6 +27220,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-02-09",
       "geschlecht": "w",
@@ -26439,6 +27251,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-06-25",
       "geschlecht": "w",
@@ -26469,6 +27282,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-06-14",
       "geschlecht": "m",
@@ -26499,6 +27313,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-10-14",
       "geschlecht": "w",
@@ -26529,6 +27344,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-12-05",
       "geschlecht": "w",
@@ -26559,6 +27375,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-11-09",
       "geschlecht": "w",
@@ -26589,6 +27406,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2018,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1999-12-30",
       "geschlecht": "m",
@@ -26619,6 +27437,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2018,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-08-16",
       "geschlecht": "w",
@@ -26649,6 +27468,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2018,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1999-09-13",
       "geschlecht": "m",
@@ -26679,6 +27499,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2018,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-04-01",
       "geschlecht": "m",
@@ -26709,6 +27530,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2005-02-01",
       "geschlecht": "w",
@@ -26838,6 +27660,7 @@ SchuelerStammdaten {
   "emailSchule": null,
   "erhaeltMeisterBAFOEG": false,
   "erhaeltSchuelerBAFOEG": false,
+  "epJahre": null,
   "externeSchulNr": null,
   "fahrschuelerArtID": null,
   "foto": "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",
