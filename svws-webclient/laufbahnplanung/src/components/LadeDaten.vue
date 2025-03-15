@@ -6,7 +6,7 @@
 		<template #main>
 			<div class="w-full text-left mb-4">Datei öffnen:</div>
 			<svws-ui-input-wrapper center>
-				<input type="file" accept=".lp" @change="import_file" :disabled="loading">
+				<input type="file" accept=".lp" @change="import_file" :disabled="loading" class="w-full">
 				<svws-ui-spinner :spinning="loading" />
 				<br> {{ (typeof status === "string") ? ("Fehler beim Import: " + status) : ((status === null) ? "Import erfolgreich" : "") }}
 			</svws-ui-input-wrapper>
@@ -48,11 +48,3 @@
 	}
 
 </script>
-
-<style scoped>
-
-	input[type="file" i]{ /* the name of the selected file */
-		width: 100%;
-	}
-
-</style>

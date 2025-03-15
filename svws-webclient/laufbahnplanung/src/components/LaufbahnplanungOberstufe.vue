@@ -129,7 +129,6 @@
 	async function export_laufbahnplanung() {
 		const { data, name } = await props.exportLaufbahnplanung();
 		const link = document.createElement("a");
-		console.log(data, name)
 		link.href = URL.createObjectURL(data);
 		link.download = name;
 		link.target = "_blank";
@@ -141,5 +140,8 @@
 		const result = await props.importLaufbahnplanung(formData);
 		return (result === null);
 	}
+
+	// Bugfixing Tailwind. Diese Klassen werden sonst nicht angewendet TODO
+	// col-span-3 col-span-4 col-span-5 col-span-6
 
 </script>

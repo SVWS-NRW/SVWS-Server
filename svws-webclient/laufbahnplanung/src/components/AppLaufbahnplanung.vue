@@ -33,17 +33,3 @@
 	const pendingSetApp = ref<string | null>(null);
 
 </script>
-
-<style>
-
-	@reference "../../../ui/src/assets/styles/index.css";
-
-	.app--page {
-		@apply flex grow flex-col justify-between;
-		@apply h-screen;
-		@apply overflow-hidden;
-		@apply relative;
-		@apply bg-ui-contrast-0;
-	}
-
-</style>

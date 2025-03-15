@@ -33,7 +33,7 @@
 					'cursor-pointer': istMoeglich[halbjahr.id] && !istBewertet(halbjahr),
 					'cursor-not-allowed': (!istMoeglich[halbjahr.id] || istBewertet(halbjahr) || istFachkombiVerboten[halbjahr.id]),
 					'svws-disabled': !istMoeglich[halbjahr.id],
-					'svws-disabled-soft': istBewertet(halbjahr) && istMoeglich[halbjahr.id],
+					'svws-disabled-soft': (istBewertet(halbjahr) && istMoeglich[halbjahr.id]) || (gostHalbjahr.id >= halbjahr.id),
 				} : {}"
 				@click.stop="stepper(halbjahr)" :title="getTooltipHalbjahr(halbjahr)"
 				:tabindex="istMoeglich[halbjahr.id] ? 0 : -1" @keydown.enter.prevent="handleKeyboardStep($event, halbjahr)" @keydown.space.prevent="handleKeyboardStep($event, halbjahr)"
@@ -181,6 +181,7 @@
 
 	const halbjahrRefs = ref(new Map<number, HTMLElement>());
 	const schuljahr = computed<number>(() => props.abiturdatenManager().getSchuljahr());
+	const gostHalbjahr = computed<GostHalbjahr>(() => GostHalbjahr.fromJahrgangUndHalbjahr(props.gostJahrgangsdaten.jahrgang, props.gostJahrgangsdaten.halbjahr) || GostHalbjahr.Q22);
 	const fachgruppe = computed<Fachgruppe | null>(() => Fach.getBySchluesselOrDefault(props.fach.kuerzel).getFachgruppe(schuljahr.value) ?? null);
 	const istFremdsprache = computed<boolean>(() => Fach.getBySchluesselOrDefault(props.fach.kuerzel).daten(schuljahr.value)?.istFremdsprache ?? false);
 	const bgColor = computed<string>(() => Fach.getBySchluesselOrDefault(props.fach.kuerzel).getHMTLFarbeRGB(schuljahr.value));
