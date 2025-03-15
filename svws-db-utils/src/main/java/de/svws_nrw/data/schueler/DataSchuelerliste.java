@@ -120,6 +120,7 @@ public final class DataSchuelerliste extends DataManager<Long> {
 			eintrag.idSchuljahresabschnitt = schueler.Schuljahresabschnitts_ID;
 			eintrag.idKlasse = -1L;
 			eintrag.idJahrgang = -1L;
+			eintrag.epJahre = null;
 			eintrag.jahrgang = "";
 			eintrag.schulgliederung = "";
 		} else {
@@ -133,6 +134,7 @@ public final class DataSchuelerliste extends DataManager<Long> {
 				eintrag.idJahrgang = jg.ID;
 				eintrag.jahrgang = Objects.toString(jg.ASDJahrgang, "");
 			}
+			eintrag.epJahre = aktAbschnitt.EPJahre;
 			if (aktAbschnitt.Schulgliederung == null) {
 				final Schulgliederung sgl = Schulgliederung.getDefault(schulform);
 				final SchulgliederungKatalogEintrag sglke = (sgl == null) ? null : sgl.daten(schuljahr);

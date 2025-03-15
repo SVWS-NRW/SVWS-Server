@@ -51,6 +51,10 @@ public class SchuelerListeEintrag {
 	@Schema(description = "der aktuelle Jahrgang des Schülers", example = "09")
 	public @NotNull String jahrgang = "";
 
+	/** Die bisherige Anzahl der Jahre in der Schuleingangssphase.*/
+	@Schema(description = "die bisherige Anzahl der Jahre in der Schuleingangssphase", example = "2")
+	public Integer epJahre = null;
+
 	/** Der Abiturjahrgang, falls es sich um eine Schule mit Gymnasialer Oberstufe handelt. */
 	@Schema(description = "der Abiturjahrgang, falls es sich um eine Schule mit Gymnasialer Oberstufe handelt", example = "2030")
 	public Integer abiturjahrgang = null;

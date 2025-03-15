@@ -47,6 +47,11 @@ export class SchuelerListeEintrag extends JavaObject {
 	public jahrgang : string = "";
 
 	/**
+	 * Die bisherige Anzahl der Jahre in der Schuleingangssphase.
+	 */
+	public epJahre : number | null = null;
+
+	/**
 	 * Der Abiturjahrgang, falls es sich um eine Schule mit Gymnasialer Oberstufe handelt.
 	 */
 	public abiturjahrgang : number | null = null;
@@ -149,6 +154,7 @@ export class SchuelerListeEintrag extends JavaObject {
 		if (obj.jahrgang === undefined)
 			throw new Error('invalid json format, missing attribute jahrgang');
 		result.jahrgang = obj.jahrgang;
+		result.epJahre = (obj.epJahre === undefined) ? null : obj.epJahre === null ? null : obj.epJahre;
 		result.abiturjahrgang = (obj.abiturjahrgang === undefined) ? null : obj.abiturjahrgang === null ? null : obj.abiturjahrgang;
 		if (obj.schulgliederung === undefined)
 			throw new Error('invalid json format, missing attribute schulgliederung');
@@ -184,6 +190,7 @@ export class SchuelerListeEintrag extends JavaObject {
 		result += '"idKlasse" : ' + obj.idKlasse + ',';
 		result += '"idJahrgang" : ' + obj.idJahrgang + ',';
 		result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang) + ',';
+		result += '"epJahre" : ' + ((obj.epJahre === null) ? 'null' : obj.epJahre.toString()) + ',';
 		result += '"abiturjahrgang" : ' + ((obj.abiturjahrgang === null) ? 'null' : obj.abiturjahrgang.toString()) + ',';
 		result += '"schulgliederung" : ' + JSON.stringify(obj.schulgliederung) + ',';
 		result += '"status" : ' + obj.status.toString() + ',';
@@ -229,6 +236,9 @@ export class SchuelerListeEintrag extends JavaObject {
 		}
 		if (obj.jahrgang !== undefined) {
 			result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang) + ',';
+		}
+		if (obj.epJahre !== undefined) {
+			result += '"epJahre" : ' + ((obj.epJahre === null) ? 'null' : obj.epJahre.toString()) + ',';
 		}
 		if (obj.abiturjahrgang !== undefined) {
 			result += '"abiturjahrgang" : ' + ((obj.abiturjahrgang === null) ? 'null' : obj.abiturjahrgang.toString()) + ',';

@@ -94,6 +94,11 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 	public jahrgangID : number | null = null;
 
 	/**
+	 * Die bisherige Anzahl der Jahre in der Schuleingangssphase
+	 */
+	public epJahre : number | null = null;
+
+	/**
 	 * Die ID der Fachklasse des Schülers an einem Berufskolleg
 	 */
 	public fachklasseID : number | null = null;
@@ -290,6 +295,7 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 		result.folgeklassenID = (obj.folgeklassenID === undefined) ? null : obj.folgeklassenID === null ? null : obj.folgeklassenID;
 		result.schulgliederung = (obj.schulgliederung === undefined) ? null : obj.schulgliederung === null ? null : obj.schulgliederung;
 		result.jahrgangID = (obj.jahrgangID === undefined) ? null : obj.jahrgangID === null ? null : obj.jahrgangID;
+		result.epJahre = (obj.epJahre === undefined) ? null : obj.epJahre === null ? null : obj.epJahre;
 		result.fachklasseID = (obj.fachklasseID === undefined) ? null : obj.fachklasseID === null ? null : obj.fachklasseID;
 		result.schwerpunktID = (obj.schwerpunktID === undefined) ? null : obj.schwerpunktID === null ? null : obj.schwerpunktID;
 		result.organisationsform = (obj.organisationsform === undefined) ? null : obj.organisationsform === null ? null : obj.organisationsform;
@@ -363,6 +369,7 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 		result += '"folgeklassenID" : ' + ((obj.folgeklassenID === null) ? 'null' : obj.folgeklassenID.toString()) + ',';
 		result += '"schulgliederung" : ' + ((obj.schulgliederung === null) ? 'null' : JSON.stringify(obj.schulgliederung)) + ',';
 		result += '"jahrgangID" : ' + ((obj.jahrgangID === null) ? 'null' : obj.jahrgangID.toString()) + ',';
+		result += '"epJahre" : ' + ((obj.epJahre === null) ? 'null' : obj.epJahre.toString()) + ',';
 		result += '"fachklasseID" : ' + ((obj.fachklasseID === null) ? 'null' : obj.fachklasseID.toString()) + ',';
 		result += '"schwerpunktID" : ' + ((obj.schwerpunktID === null) ? 'null' : obj.schwerpunktID.toString()) + ',';
 		result += '"organisationsform" : ' + ((obj.organisationsform === null) ? 'null' : JSON.stringify(obj.organisationsform)) + ',';
@@ -456,6 +463,9 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 		}
 		if (obj.jahrgangID !== undefined) {
 			result += '"jahrgangID" : ' + ((obj.jahrgangID === null) ? 'null' : obj.jahrgangID.toString()) + ',';
+		}
+		if (obj.epJahre !== undefined) {
+			result += '"epJahre" : ' + ((obj.epJahre === null) ? 'null' : obj.epJahre.toString()) + ',';
 		}
 		if (obj.fachklasseID !== undefined) {
 			result += '"fachklasseID" : ' + ((obj.fachklasseID === null) ? 'null' : obj.fachklasseID.toString()) + ',';

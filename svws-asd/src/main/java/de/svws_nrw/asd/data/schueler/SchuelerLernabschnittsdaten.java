@@ -88,6 +88,10 @@ public class SchuelerLernabschnittsdaten {
 	@Schema(description = "die ID des Jahrgangs des Schülers oder null, falls kein Jahrgang zugeordnet ist", example = "78")
 	public Long jahrgangID = null;
 
+	/** Die bisherige Anzahl der Jahre in der Schuleingangssphase */
+	@Schema(description = "die bisherige Anzahl der Jahre in der Schuleingangssphase", example = "2")
+	public Integer epJahre = null;
+
 	/** Die ID der Fachklasse des Schülers an einem Berufskolleg */
 	@Schema(description = "die ID der Fachklasse des Schülers an einem Berufskolleg", example = "null")
 	public Long fachklasseID = null;
