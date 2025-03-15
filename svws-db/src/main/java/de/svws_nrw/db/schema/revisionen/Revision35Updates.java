@@ -133,7 +133,6 @@ public final class Revision35Updates extends SchemaRevisionUpdateSQL {
 			logger.logLn("DBMS wird für dieses Datenbank Revisions-Update nicht unterstützt.");
 			return false;
 		}
-		// Entferne fehlerhaften Trigger, sofern er bereits angelegt wurde
 
 		// Bestimme die Schulform
 		final List<String> rowsSchulformKrz = conn.queryNative("SELECT SchulformKrz FROM EigeneSchule");
