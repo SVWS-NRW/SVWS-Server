@@ -1,5 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { SchuldateiKatalogeintrag } from '../../../schulen/v1/data/SchuldateiKatalogeintrag';
+import { SchuldateiVersion } from '../../../schulen/v1/data/SchuldateiVersion';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
@@ -7,9 +8,14 @@ import { Class } from '../../../java/lang/Class';
 export class SchuldateiKataloge extends JavaObject {
 
 	/**
+	 * Die Version der Schuldatei.
+	 */
+	public version : SchuldateiVersion = new SchuldateiVersion();
+
+	/**
 	 * Die Katalog-Einträge
 	 */
-	public katalog : List<SchuldateiKatalogeintrag> = new ArrayList<SchuldateiKatalogeintrag>();
+	public kataloge : List<SchuldateiKatalogeintrag> = new ArrayList<SchuldateiKatalogeintrag>();
 
 
 	/**
@@ -32,9 +38,12 @@ export class SchuldateiKataloge extends JavaObject {
 	public static transpilerFromJSON(json : string): SchuldateiKataloge {
 		const obj = JSON.parse(json) as Partial<SchuldateiKataloge>;
 		const result = new SchuldateiKataloge();
-		if (obj.katalog !== undefined) {
-			for (const elem of obj.katalog) {
-				result.katalog.add(SchuldateiKatalogeintrag.transpilerFromJSON(JSON.stringify(elem)));
+		if (obj.version === undefined)
+			throw new Error('invalid json format, missing attribute version');
+		result.version = SchuldateiVersion.transpilerFromJSON(JSON.stringify(obj.version));
+		if (obj.kataloge !== undefined) {
+			for (const elem of obj.kataloge) {
+				result.kataloge.add(SchuldateiKatalogeintrag.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -42,11 +51,12 @@ export class SchuldateiKataloge extends JavaObject {
 
 	public static transpilerToJSON(obj : SchuldateiKataloge) : string {
 		let result = '{';
-		result += '"katalog" : [ ';
-		for (let i = 0; i < obj.katalog.size(); i++) {
-			const elem = obj.katalog.get(i);
+		result += '"version" : ' + SchuldateiVersion.transpilerToJSON(obj.version) + ',';
+		result += '"kataloge" : [ ';
+		for (let i = 0; i < obj.kataloge.size(); i++) {
+			const elem = obj.kataloge.get(i);
 			result += SchuldateiKatalogeintrag.transpilerToJSON(elem);
-			if (i < obj.katalog.size() - 1)
+			if (i < obj.kataloge.size() - 1)
 				result += ',';
 		}
 		result += ' ]' + ',';
@@ -57,12 +67,15 @@ export class SchuldateiKataloge extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<SchuldateiKataloge>) : string {
 		let result = '{';
-		if (obj.katalog !== undefined) {
-			result += '"katalog" : [ ';
-			for (let i = 0; i < obj.katalog.size(); i++) {
-				const elem = obj.katalog.get(i);
+		if (obj.version !== undefined) {
+			result += '"version" : ' + SchuldateiVersion.transpilerToJSON(obj.version) + ',';
+		}
+		if (obj.kataloge !== undefined) {
+			result += '"kataloge" : [ ';
+			for (let i = 0; i < obj.kataloge.size(); i++) {
+				const elem = obj.kataloge.get(i);
 				result += SchuldateiKatalogeintrag.transpilerToJSON(elem);
-				if (i < obj.katalog.size() - 1)
+				if (i < obj.kataloge.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';

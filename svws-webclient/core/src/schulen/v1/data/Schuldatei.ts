@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { SchuldateiVersion } from '../../../schulen/v1/data/SchuldateiVersion';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { SchuldateiOrganisationseinheit } from '../../../schulen/v1/data/SchuldateiOrganisationseinheit';
 import type { List } from '../../../java/util/List';
@@ -7,9 +8,14 @@ import { Class } from '../../../java/lang/Class';
 export class Schuldatei extends JavaObject {
 
 	/**
+	 * Die Version der Schuldatei.
+	 */
+	public version : SchuldateiVersion = new SchuldateiVersion();
+
+	/**
 	 * Die Organisationseinheit des Eintrags
 	 */
-	public organisationseinheit : List<SchuldateiOrganisationseinheit> = new ArrayList<SchuldateiOrganisationseinheit>();
+	public organisationseinheiten : List<SchuldateiOrganisationseinheit> = new ArrayList<SchuldateiOrganisationseinheit>();
 
 
 	/**
@@ -32,9 +38,12 @@ export class Schuldatei extends JavaObject {
 	public static transpilerFromJSON(json : string): Schuldatei {
 		const obj = JSON.parse(json) as Partial<Schuldatei>;
 		const result = new Schuldatei();
-		if (obj.organisationseinheit !== undefined) {
-			for (const elem of obj.organisationseinheit) {
-				result.organisationseinheit.add(SchuldateiOrganisationseinheit.transpilerFromJSON(JSON.stringify(elem)));
+		if (obj.version === undefined)
+			throw new Error('invalid json format, missing attribute version');
+		result.version = SchuldateiVersion.transpilerFromJSON(JSON.stringify(obj.version));
+		if (obj.organisationseinheiten !== undefined) {
+			for (const elem of obj.organisationseinheiten) {
+				result.organisationseinheiten.add(SchuldateiOrganisationseinheit.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -42,11 +51,12 @@ export class Schuldatei extends JavaObject {
 
 	public static transpilerToJSON(obj : Schuldatei) : string {
 		let result = '{';
-		result += '"organisationseinheit" : [ ';
-		for (let i = 0; i < obj.organisationseinheit.size(); i++) {
-			const elem = obj.organisationseinheit.get(i);
+		result += '"version" : ' + SchuldateiVersion.transpilerToJSON(obj.version) + ',';
+		result += '"organisationseinheiten" : [ ';
+		for (let i = 0; i < obj.organisationseinheiten.size(); i++) {
+			const elem = obj.organisationseinheiten.get(i);
 			result += SchuldateiOrganisationseinheit.transpilerToJSON(elem);
-			if (i < obj.organisationseinheit.size() - 1)
+			if (i < obj.organisationseinheiten.size() - 1)
 				result += ',';
 		}
 		result += ' ]' + ',';
@@ -57,12 +67,15 @@ export class Schuldatei extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<Schuldatei>) : string {
 		let result = '{';
-		if (obj.organisationseinheit !== undefined) {
-			result += '"organisationseinheit" : [ ';
-			for (let i = 0; i < obj.organisationseinheit.size(); i++) {
-				const elem = obj.organisationseinheit.get(i);
+		if (obj.version !== undefined) {
+			result += '"version" : ' + SchuldateiVersion.transpilerToJSON(obj.version) + ',';
+		}
+		if (obj.organisationseinheiten !== undefined) {
+			result += '"organisationseinheiten" : [ ';
+			for (let i = 0; i < obj.organisationseinheiten.size(); i++) {
+				const elem = obj.organisationseinheiten.get(i);
 				result += SchuldateiOrganisationseinheit.transpilerToJSON(elem);
-				if (i < obj.organisationseinheit.size() - 1)
+				if (i < obj.organisationseinheiten.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';

@@ -51,10 +51,24 @@ public class SchuldateiKatalogManager {
 	 * Einträge eines Kataloges werden in der Schuldatei über die Eigenschaft "wert" referenziert.
 	 * Es können mehrere Einträge eines Kataloges mit demselben Wert vorkommen, wobei sich der Zeitraum unterscheiden muss.
 	 * Die entsprechende Überprüfung führt die Methode validate aus, die auch die Liste der Einträge in _mapEintraegeByWert sortiert.
+
+	 * Wenn die Gültigkeit von Katalogeinträgen innerhalb eines Schuljahres wechseln, so ist der alte Eintrag
+	 * bis zum Ende des Schuljahres gültig und der neue Eintrag erst ab kommenden Schuljahr.
+	 * Eintrag1: "gueltigab": "01.01.1970",	"gueltigbis": "07.03.2022"
+	 * Eintrag2: "gueltigab": "08.03.2022",	"gueltigbis": "31.12.9999"
+	 * Eintrag1 ist dann in den Schuljahren bis 2021 gültig und Eintrag2 ab Schuljahr 2022.
+	 *
+	 * Ein Eintrag, der nur eine Gültigkeit innerhalb eines Schuljahres hat wird verworfen.
 	 *
 	 * @param eintrag   der Eintrag
 	 */
 	void addEintrag(final @NotNull SchuldateiKatalogeintrag eintrag) {
+		// prüfe ob Eintrag nur temporär innerhalb eines Schuljahres gilt. Wird dann nicht übernommen.
+		int schuljahrBis = eintrag.gueltigbis == null ? SchuldateiUtils._immerGueltigBis : SchuldateiUtils.schuljahrGueltigBis(eintrag.gueltigbis);
+		int schuljahrAb  = eintrag.gueltigab  == null ? SchuldateiUtils._immerGueltigAb  : SchuldateiUtils.schuljahrGueltigAb(eintrag.gueltigab);
+		if (schuljahrAb > schuljahrBis)
+			return;
+
 		// Eintrag ablegen
 		_katalogeintraege.add(eintrag);
 
@@ -374,8 +388,8 @@ public class SchuldateiKatalogManager {
 			if (list.size() > 1) {
 				list.sort(SchuldateiUtils._comparatorSchuldateieintragZeitraumDescending);
 				eintrag = list.getFirst();
-				int schuljahrBis = eintrag.gueltigbis == null ? SchuldateiUtils._immerGueltigBis : SchuldateiUtils.schuljahrAusDatum(eintrag.gueltigbis);
-				int schuljahrAb  = eintrag.gueltigab  == null ? SchuldateiUtils._immerGueltigAb  : SchuldateiUtils.schuljahrAusDatum(eintrag.gueltigab);
+				int schuljahrBis = eintrag.gueltigbis == null ? SchuldateiUtils._immerGueltigBis : SchuldateiUtils.schuljahrGueltigBis(eintrag.gueltigbis);
+				int schuljahrAb  = eintrag.gueltigab  == null ? SchuldateiUtils._immerGueltigAb  : SchuldateiUtils.schuljahrGueltigAb(eintrag.gueltigab);
 				for (int i = 1; i < list.size(); i++) {
 					// Wirf Exception, wenn der Zeitraum eines Katalog-Eintrags nicht valide ist
 					if (schuljahrBis < schuljahrAb)

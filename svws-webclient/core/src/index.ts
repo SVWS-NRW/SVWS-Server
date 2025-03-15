@@ -96,6 +96,7 @@ export { SchuldateiOrganisationseinheitGliederung } from './schulen/v1/data/Schu
 export { SchuldateiOrganisationseinheitGrunddaten } from './schulen/v1/data/SchuldateiOrganisationseinheitGrunddaten';
 export { SchuldateiOrganisationseinheitMerkmal } from './schulen/v1/data/SchuldateiOrganisationseinheitMerkmal';
 export { SchuldateiOrganisationseinheitSchulform } from './schulen/v1/data/SchuldateiOrganisationseinheitSchulform';
+export { SchuldateiVersion } from './schulen/v1/data/SchuldateiVersion';
 export { SchuldateiKatalogManager } from './schulen/v1/utils/SchuldateiKatalogManager';
 export { SchuldateiManager } from './schulen/v1/utils/SchuldateiManager';
 export { SchuldateiOrganisationseinheitAdressManager } from './schulen/v1/utils/SchuldateiOrganisationseinheitAdressManager';

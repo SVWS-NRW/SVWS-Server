@@ -1,10 +1,18 @@
 {
-	"katalog": [
+	"version": {
+		"version": "2.0",
+		"name": "Offizielle Schuldatei WebService",
+		"url": "https://schulverwaltung-test.it.nrw.de/SchuldateiDatenService-test/export/{konten|katalog|aenderungen}",
+		"gueltigbis": "31.12.9999",
+		"bemerkung": "Version 1.0 nur noch bis 31.07.2025 gültig"
+	},
+	"kataloge": [
 		{
 			"katalog": "ArtDerAdresse",
 			"schluessel": "",
 			"wert": "0",
 			"bezeichnung": "keine Art der Adresse",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.07.2023",
 			"geaendertam": "19.05.2017 00:00:00"
@@ -14,6 +22,7 @@
 			"schluessel": "",
 			"wert": "1",
 			"bezeichnung": "Schulbetrieb im aktuellen Schuljahr",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "19.05.2017 00:00:00"
@@ -23,6 +32,7 @@
 			"schluessel": "",
 			"wert": "2",
 			"bezeichnung": "kurzfristig kein Schulbetrieb",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.07.2023",
 			"geaendertam": "07.12.2023 15:00:00"
@@ -32,6 +42,7 @@
 			"schluessel": "",
 			"wert": "3",
 			"bezeichnung": "Verwaltungssitz ohne Schulbetrieb",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "19.05.2017 00:00:00"
@@ -41,6 +52,7 @@
 			"schluessel": "",
 			"wert": "4",
 			"bezeichnung": "sonstige Adresse (z.B. Sporthalle)",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "19.05.2017 00:00:00"
@@ -50,6 +62,7 @@
 			"schluessel": "",
 			"wert": "5",
 			"bezeichnung": "dauerhaft aufgegebene Adresse",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.07.2023",
 			"geaendertam": "07.12.2023 15:00:00"
@@ -59,6 +72,7 @@
 			"schluessel": "",
 			"wert": "6",
 			"bezeichnung": "Straßenumbenennung/PLZ-Änderung",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.07.2023",
 			"geaendertam": "22.11.2023 07:00:00"
@@ -68,6 +82,7 @@
 			"schluessel": "",
 			"wert": "7",
 			"bezeichnung": "fehlerhafte Angabe im Vorjahr",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.07.2023",
 			"geaendertam": "22.11.2023 07:00:00"
@@ -77,6 +92,7 @@
 			"schluessel": "",
 			"wert": "8",
 			"bezeichnung": "Postfach",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "06.07.2020 11:43:00"
@@ -86,15 +102,17 @@
 			"schluessel": "",
 			"wert": "9",
 			"bezeichnung": "außerschulischer Lernort",
+			"datentypwert": "",
 			"gueltigab": "01.08.2014",
 			"gueltigbis": "31.12.9999",
-			"geaendertam": "12.10.2022 09:30:00"
+			"geaendertam": "12.09.2024 12:15:00"
 		},
 		{
 			"katalog": "Attribut",
 			"schluessel": "",
 			"wert": "1",
 			"bezeichnung": "Ausgestaltung",
+			"datentypwert": "",
 			"gueltigab": "01.01.1962",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "29.10.2020 09:30:00"
@@ -104,6 +122,7 @@
 			"schluessel": "",
 			"wert": "2",
 			"bezeichnung": "Profil",
+			"datentypwert": "",
 			"gueltigab": "01.03.2019",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "25.03.2019 14:00:00"
@@ -113,6 +132,7 @@
 			"schluessel": "",
 			"wert": "3",
 			"bezeichnung": "Rechtsstatus",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "07.06.2022 10:00:00"
@@ -122,6 +142,7 @@
 			"schluessel": "",
 			"wert": "4",
 			"bezeichnung": "Förderschwerpunkt",
+			"datentypwert": "",
 			"gueltigab": "01.06.2019",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.06.2019 11:00:00"
@@ -131,6 +152,7 @@
 			"schluessel": "",
 			"wert": "5",
 			"bezeichnung": "Veränderung",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.06.2019 11:00:00"
@@ -140,6 +162,7 @@
 			"schluessel": "",
 			"wert": "6",
 			"bezeichnung": "Ausgestaltung (mit Gen)",
+			"datentypwert": "",
 			"gueltigab": "01.08.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "28.02.2022 10:30:00"
@@ -149,6 +172,7 @@
 			"schluessel": "",
 			"wert": "7",
 			"bezeichnung": "Ausgestaltung (ohne Gen)",
+			"datentypwert": "",
 			"gueltigab": "01.08.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "28.02.2022 10:30:00"
@@ -158,6 +182,7 @@
 			"schluessel": "",
 			"wert": "8",
 			"bezeichnung": "Ausgestaltung (erw)",
+			"datentypwert": "",
 			"gueltigab": "01.08.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "28.02.2022 10:30:00"
@@ -167,6 +192,7 @@
 			"schluessel": "",
 			"wert": "11",
 			"bezeichnung": "Förderschwerpunkt emotionale und soziale Entwicklung",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "03.02.2022 14:00:00"
@@ -176,6 +202,7 @@
 			"schluessel": "",
 			"wert": "12",
 			"bezeichnung": "Förderschwerpunkt geistige Entwicklung",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "03.02.2022 14:00:00"
@@ -185,6 +212,7 @@
 			"schluessel": "",
 			"wert": "13",
 			"bezeichnung": "Förderschwerpunkt Hören und Kommunikation",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "03.02.2022 14:00:00"
@@ -194,6 +222,7 @@
 			"schluessel": "",
 			"wert": "14",
 			"bezeichnung": "Förderschwerpunkt körperliche und motorische Entwicklung",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "03.02.2022 14:00:00"
@@ -203,6 +232,7 @@
 			"schluessel": "",
 			"wert": "15",
 			"bezeichnung": "Förderschwerpunkt Lernen",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "03.02.2022 14:00:00"
@@ -212,6 +242,7 @@
 			"schluessel": "",
 			"wert": "16",
 			"bezeichnung": "Förderschwerpunkt Sprache",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "03.02.2022 14:00:00"
@@ -221,6 +252,7 @@
 			"schluessel": "",
 			"wert": "17",
 			"bezeichnung": "Förderschwerpunkt Sehen",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "03.02.2022 14:00:00"
@@ -230,6 +262,7 @@
 			"schluessel": "",
 			"wert": "18",
 			"bezeichnung": "Klinikschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "05.04.2022 07:00:00"
@@ -239,6 +272,7 @@
 			"schluessel": "",
 			"wert": "19",
 			"bezeichnung": "öffentliche Schulen, deren Lehrer Bedienstete des Landes sind",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "01.03.2022 08:30:00"
@@ -248,6 +282,7 @@
 			"schluessel": "",
 			"wert": "20",
 			"bezeichnung": "öffentliche Schulen, deren Lehrer Bedienstete des Schulträgers sind, dem das Land die Kosten erstattet",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "01.03.2022 08:30:00"
@@ -257,6 +292,7 @@
 			"schluessel": "",
 			"wert": "21",
 			"bezeichnung": "öffentliche Schulen, deren Träger eine Landwirtschaftskammer ist",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "01.03.2022 08:30:00"
@@ -266,6 +302,7 @@
 			"schluessel": "",
 			"wert": "22",
 			"bezeichnung": "öffentliche und private Schulen, die der Aufsicht der Abteilung Bergbau und Energie der Bezirksregierung Arnsberg unterstehen",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "01.03.2022 08:30:00"
@@ -275,6 +312,7 @@
 			"schluessel": "",
 			"wert": "23",
 			"bezeichnung": "Verbundschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "24.03.2022 10:00:00"
@@ -284,6 +322,7 @@
 			"schluessel": "",
 			"wert": "24",
 			"bezeichnung": "Grundschulverbund",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "24.03.2022 10:00:00"
@@ -293,6 +332,7 @@
 			"schluessel": "",
 			"wert": "25",
 			"bezeichnung": "Sozialindexstufe 1",
+			"datentypwert": "",
 			"gueltigab": "01.01.2018",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "25.03.2022 09:00:00"
@@ -302,6 +342,7 @@
 			"schluessel": "",
 			"wert": "26",
 			"bezeichnung": "Sozialindexstufe 2",
+			"datentypwert": "",
 			"gueltigab": "01.01.2018",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "25.03.2022 09:00:00"
@@ -311,6 +352,7 @@
 			"schluessel": "",
 			"wert": "27",
 			"bezeichnung": "Sozialindexstufe 3",
+			"datentypwert": "",
 			"gueltigab": "01.01.2018",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "25.03.2022 09:00:00"
@@ -320,6 +362,7 @@
 			"schluessel": "",
 			"wert": "28",
 			"bezeichnung": "Sozialindexstufe 4",
+			"datentypwert": "",
 			"gueltigab": "01.01.2018",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "25.03.2022 09:00:00"
@@ -329,6 +372,7 @@
 			"schluessel": "",
 			"wert": "29",
 			"bezeichnung": "Sozialindexstufe 5",
+			"datentypwert": "",
 			"gueltigab": "01.01.2018",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "25.03.2022 09:00:00"
@@ -338,6 +382,7 @@
 			"schluessel": "",
 			"wert": "30",
 			"bezeichnung": "Sozialindexstufe 6",
+			"datentypwert": "",
 			"gueltigab": "01.01.2018",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "25.03.2022 09:00:00"
@@ -347,6 +392,7 @@
 			"schluessel": "",
 			"wert": "31",
 			"bezeichnung": "Sozialindexstufe 7",
+			"datentypwert": "",
 			"gueltigab": "01.01.2018",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "25.03.2022 09:00:00"
@@ -356,6 +402,7 @@
 			"schluessel": "",
 			"wert": "32",
 			"bezeichnung": "Sozialindexstufe 8",
+			"datentypwert": "",
 			"gueltigab": "01.01.2018",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "25.03.2022 09:00:00"
@@ -365,6 +412,7 @@
 			"schluessel": "",
 			"wert": "33",
 			"bezeichnung": "Sozialindexstufe 9",
+			"datentypwert": "",
 			"gueltigab": "01.01.2018",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "25.03.2022 09:00:00"
@@ -374,6 +422,7 @@
 			"schluessel": "",
 			"wert": "34",
 			"bezeichnung": "Förderschwerpunkt Sehen - Blind",
+			"datentypwert": "",
 			"gueltigab": "01.08.2014",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "04.04.2022 11:00:00"
@@ -383,6 +432,7 @@
 			"schluessel": "",
 			"wert": "35",
 			"bezeichnung": "Förderschwerpunkt Hören und Kommunikation - Gehörlos",
+			"datentypwert": "",
 			"gueltigab": "01.08.2014",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "04.04.2022 11:00:00"
@@ -392,6 +442,7 @@
 			"schluessel": "",
 			"wert": "36",
 			"bezeichnung": "Förderschwerpunkt Hören und Kommunikation - Schwerhörig",
+			"datentypwert": "",
 			"gueltigab": "01.08.2014",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "04.04.2022 11:00:00"
@@ -401,6 +452,7 @@
 			"schluessel": "",
 			"wert": "37",
 			"bezeichnung": "Förderschwerpunkt Sehen - Sehbehindert",
+			"datentypwert": "",
 			"gueltigab": "01.08.2014",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "04.04.2022 11:00:00"
@@ -410,6 +462,7 @@
 			"schluessel": "",
 			"wert": "39",
 			"bezeichnung": "Maria Montessori",
+			"datentypwert": "",
 			"gueltigab": "01.08.1972",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "23.06.2022 12:30:00"
@@ -419,6 +472,7 @@
 			"schluessel": "",
 			"wert": "40",
 			"bezeichnung": "Peter Petersen",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "23.06.2022 12:30:00"
@@ -428,6 +482,7 @@
 			"schluessel": "",
 			"wert": "41",
 			"bezeichnung": "Celestin Freinet",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "23.06.2022 12:30:00"
@@ -437,6 +492,7 @@
 			"schluessel": "",
 			"wert": "42",
 			"bezeichnung": "Janusz Korczak",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "23.06.2022 12:30:00"
@@ -446,6 +502,7 @@
 			"schluessel": "",
 			"wert": "43",
 			"bezeichnung": "Sonstige",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "23.06.2022 12:30:00"
@@ -455,6 +512,7 @@
 			"schluessel": "",
 			"wert": "44",
 			"bezeichnung": "Bildungsziel Haupt- oder Berufsschule wird nicht erreicht",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "04.08.2022 14:00:00"
@@ -464,6 +522,7 @@
 			"schluessel": "",
 			"wert": "45",
 			"bezeichnung": "§ 34 Abs. 3 SchulG: Bildungsziel Hauptschule wird erreicht",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "04.08.2022 14:00:00"
@@ -473,6 +532,7 @@
 			"schluessel": "",
 			"wert": "46",
 			"bezeichnung": "§ 34 Abs. 4 Buchstabe a SchulG: Bildungsziel Berufsschule wird erreicht",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "04.08.2022 14:00:00"
@@ -482,6 +542,7 @@
 			"schluessel": "",
 			"wert": "47",
 			"bezeichnung": "§ 34 Abs. 4 Buchstabe b SchulG: Besuch anstelle der Berufsschule vertretbar",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "04.08.2022 14:00:00"
@@ -491,6 +552,7 @@
 			"schluessel": "",
 			"wert": "48",
 			"bezeichnung": "§ 34 Abs. 5 Satz 2 SchulG: ausnahmsweise Erfüllung Schulpflicht",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "04.08.2022 14:00:00"
@@ -500,6 +562,7 @@
 			"schluessel": "",
 			"wert": "49",
 			"bezeichnung": "Wirtschaft und Verwaltung (auch Informatik, Sprachen)",
+			"datentypwert": "",
 			"gueltigab": "01.08.1949",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "08.08.2022 07:00:00"
@@ -509,6 +572,7 @@
 			"schluessel": "",
 			"wert": "50",
 			"bezeichnung": "Ernährung und Hauswirtschaft (auch Agrarwirtschaft)",
+			"datentypwert": "",
 			"gueltigab": "01.08.1949",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "08.08.2022 07:00:00"
@@ -518,6 +582,7 @@
 			"schluessel": "",
 			"wert": "51",
 			"bezeichnung": "Sozial- und Gesundheitswesen",
+			"datentypwert": "",
 			"gueltigab": "01.08.1949",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "08.08.2022 07:00:00"
@@ -527,6 +592,7 @@
 			"schluessel": "",
 			"wert": "52",
 			"bezeichnung": "Musik, Tanz, Kunst",
+			"datentypwert": "",
 			"gueltigab": "01.08.1949",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "08.08.2022 07:00:00"
@@ -536,6 +602,7 @@
 			"schluessel": "",
 			"wert": "53",
 			"bezeichnung": "Technik",
+			"datentypwert": "",
 			"gueltigab": "01.08.1949",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "08.08.2022 07:00:00"
@@ -545,6 +612,7 @@
 			"schluessel": "",
 			"wert": "54",
 			"bezeichnung": "Sonstiges",
+			"datentypwert": "",
 			"gueltigab": "01.08.1949",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "08.08.2022 07:00:00"
@@ -554,6 +622,7 @@
 			"schluessel": "",
 			"wert": "55",
 			"bezeichnung": "Aufbaugymnasium",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.11.2023 14:30:00"
@@ -563,6 +632,7 @@
 			"schluessel": "",
 			"wert": "56",
 			"bezeichnung": "Aufbaurealschule",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.11.2023 14:30:00"
@@ -572,6 +642,7 @@
 			"schluessel": "",
 			"wert": "57",
 			"bezeichnung": "Bildungsgang Abendgymnasium",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.11.2023 14:30:00"
@@ -581,6 +652,7 @@
 			"schluessel": "",
 			"wert": "58",
 			"bezeichnung": "Bildungsgang Abendrealschule",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.11.2023 14:30:00"
@@ -590,6 +662,7 @@
 			"schluessel": "",
 			"wert": "59",
 			"bezeichnung": "Bildungsgang Kolleg",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.11.2023 14:30:00"
@@ -599,6 +672,7 @@
 			"schluessel": "",
 			"wert": "60",
 			"bezeichnung": "Förderschule",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.11.2023 14:30:00"
@@ -608,6 +682,7 @@
 			"schluessel": "",
 			"wert": "61",
 			"bezeichnung": "Gemeinschaftsschule der Sekundarstufe I (SF 16/16)",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.11.2023 14:30:00"
@@ -617,6 +692,7 @@
 			"schluessel": "",
 			"wert": "62",
 			"bezeichnung": "Gemeinschaftsschule der Sekundarstufe I und der Sekundarstufe II (SF 16/16)",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.11.2023 14:30:00"
@@ -626,6 +702,7 @@
 			"schluessel": "",
 			"wert": "63",
 			"bezeichnung": "Gesamtschule",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.11.2023 14:30:00"
@@ -635,6 +712,7 @@
 			"schluessel": "",
 			"wert": "64",
 			"bezeichnung": "Hauptschule",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.11.2023 14:30:00"
@@ -644,6 +722,7 @@
 			"schluessel": "",
 			"wert": "65",
 			"bezeichnung": "Primusschule integrierte Form, keine Teilstandorte",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.11.2023 14:30:00"
@@ -653,6 +732,7 @@
 			"schluessel": "",
 			"wert": "66",
 			"bezeichnung": "Realschule",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.11.2023 14:30:00"
@@ -662,6 +742,7 @@
 			"schluessel": "",
 			"wert": "67",
 			"bezeichnung": "Sekundarschule integrierte Form, horizontale Teilstandortbildung",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.11.2023 14:30:00"
@@ -671,6 +752,7 @@
 			"schluessel": "",
 			"wert": "68",
 			"bezeichnung": "Sekundarschule integrierte Form, keine Teilstandorte",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.11.2023 14:30:00"
@@ -680,6 +762,7 @@
 			"schluessel": "",
 			"wert": "69",
 			"bezeichnung": "Sekundarschule integrierte Form, vertikale Teilstandortbildung nur zwei Züge",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.11.2023 14:30:00"
@@ -689,6 +772,7 @@
 			"schluessel": "",
 			"wert": "70",
 			"bezeichnung": "Sekundarschule kooperative Form ebenenbasiert, horizontale Teilstandortbildung",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.11.2023 14:30:00"
@@ -698,6 +782,7 @@
 			"schluessel": "",
 			"wert": "71",
 			"bezeichnung": "Sekundarschule kooperative Form ebenenbasiert, keine Teilstandorte",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.11.2023 14:30:00"
@@ -707,6 +792,7 @@
 			"schluessel": "",
 			"wert": "72",
 			"bezeichnung": "Sekundarschule kooperative Form ebenenbasiert, vertikale Teilstandortbildung nur zwei Züge",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.11.2023 14:30:00"
@@ -716,6 +802,7 @@
 			"schluessel": "",
 			"wert": "73",
 			"bezeichnung": "Sekundarschule kooperative Form schulformbasiert, horizontale Teilstandortbildung",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.11.2023 14:30:00"
@@ -725,6 +812,7 @@
 			"schluessel": "",
 			"wert": "74",
 			"bezeichnung": "Sekundarschule teilintegrierte Form, horizontale Teilstandortbildung",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.11.2023 14:30:00"
@@ -734,6 +822,7 @@
 			"schluessel": "",
 			"wert": "75",
 			"bezeichnung": "Sekundarschule teilintegrierte Form, keine Teilstandorte",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.11.2023 14:30:00"
@@ -743,6 +832,7 @@
 			"schluessel": "",
 			"wert": "76",
 			"bezeichnung": "Sekundarschule teilintegrierte Form, vertikale Teilstandortbildung",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.11.2023 14:30:00"
@@ -752,6 +842,7 @@
 			"schluessel": "",
 			"wert": "77",
 			"bezeichnung": "Sekundarschule teilintegrierte Form, vertikale Teilstandortbildung nur zwei Züge",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.11.2023 14:30:00"
@@ -761,6 +852,7 @@
 			"schluessel": "",
 			"wert": "1",
 			"bezeichnung": "Schule hat Schulbetrieb",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -770,6 +862,7 @@
 			"schluessel": "",
 			"wert": "3",
 			"bezeichnung": "Schule nimmt den Schulbetrieb auf ab (Datum)",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -779,6 +872,7 @@
 			"schluessel": "",
 			"wert": "4",
 			"bezeichnung": "Betrieb ruht",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -788,6 +882,7 @@
 			"schluessel": "",
 			"wert": "0",
 			"bezeichnung": "Schule wird zum Ende des laufenden Schuljahres aufgelöst",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -797,6 +892,7 @@
 			"schluessel": "",
 			"wert": "2",
 			"bezeichnung": "Schule wird zu einem späteren Zeitpunkt als zum Ende des laufenden Schuljahres aufgelöst",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -806,6 +902,7 @@
 			"schluessel": "",
 			"wert": "5",
 			"bezeichnung": "Gelöschte Schule, die für die Stellendatei (STD) noch bestehen bleiben muss",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -815,6 +912,7 @@
 			"schluessel": "",
 			"wert": "9",
 			"bezeichnung": "Aufgelöste Schule, die für Zwecke der ASD noch bestehen bleiben muss",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -824,6 +922,7 @@
 			"schluessel": "",
 			"wert": "6",
 			"bezeichnung": "Wie Schulbetriebsschlüssel 1, nimmt jedoch nur an bestimmten Erhebungen teil (nicht ASD). Erhält Schulmail",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -833,6 +932,7 @@
 			"schluessel": "",
 			"wert": "01",
 			"bezeichnung": "E-Mail",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "23.06.2022 14:30:00"
@@ -842,6 +942,7 @@
 			"schluessel": "",
 			"wert": "02",
 			"bezeichnung": "Telefon Festnetz",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "23.06.2022 14:30:00"
@@ -851,6 +952,7 @@
 			"schluessel": "",
 			"wert": "03",
 			"bezeichnung": "Telefon mobil",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "23.06.2022 14:30:00"
@@ -860,6 +962,7 @@
 			"schluessel": "",
 			"wert": "04",
 			"bezeichnung": "Fax",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "23.06.2022 14:30:00"
@@ -869,6 +972,7 @@
 			"schluessel": "",
 			"wert": "05",
 			"bezeichnung": "Instant Messenger",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "23.06.2022 14:30:00"
@@ -878,6 +982,7 @@
 			"schluessel": "",
 			"wert": "06",
 			"bezeichnung": "Pager",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "23.06.2022 14:30:00"
@@ -887,6 +992,7 @@
 			"schluessel": "",
 			"wert": "07",
 			"bezeichnung": "Sonstiges",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "23.06.2022 14:30:00"
@@ -896,6 +1002,7 @@
 			"schluessel": "",
 			"wert": "08",
 			"bezeichnung": "De-Mail",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "23.06.2022 14:30:00"
@@ -905,6 +1012,7 @@
 			"schluessel": "",
 			"wert": "09",
 			"bezeichnung": "Web",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "23.06.2022 14:30:00"
@@ -912,17 +1020,9 @@
 		{
 			"katalog": "Foerderschwerpunkt",
 			"schluessel": "",
-			"wert": "",
-			"bezeichnung": "",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "26.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Foerderschwerpunkt",
-			"schluessel": "",
 			"wert": "EZ",
 			"bezeichnung": "Förderschwerpunkt emotionale und soziale Entwicklung",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "11.05.2021 09:00:00"
@@ -932,6 +1032,7 @@
 			"schluessel": "",
 			"wert": "GB",
 			"bezeichnung": "Förderschwerpunkt geistige Entwicklung",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "11.05.2021 09:00:00"
@@ -941,6 +1042,7 @@
 			"schluessel": "",
 			"wert": "GH",
 			"bezeichnung": "Förderschwerpunkt Hören und Kommunikation - Gehörlos",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "17.07.2023 00:00:00"
@@ -950,6 +1052,7 @@
 			"schluessel": "",
 			"wert": "SG",
 			"bezeichnung": "Förderschwerpunkt Hören und Kommunikation - Schwerhörig",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "17.07.2023 00:00:00"
@@ -959,6 +1062,7 @@
 			"schluessel": "",
 			"wert": "KB",
 			"bezeichnung": "Förderschwerpunkt körperliche und motorische Entwicklung",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "11.05.2021 09:00:00"
@@ -968,6 +1072,7 @@
 			"schluessel": "",
 			"wert": "LB",
 			"bezeichnung": "Förderschwerpunkt Lernen",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "11.05.2021 09:00:00"
@@ -977,6 +1082,7 @@
 			"schluessel": "",
 			"wert": "BL",
 			"bezeichnung": "Förderschwerpunkt Sehen - Blind",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "11.05.2021 09:00:00"
@@ -986,6 +1092,7 @@
 			"schluessel": "",
 			"wert": "SH",
 			"bezeichnung": "Förderschwerpunkt Sehen - Sehbehindert",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "11.05.2021 09:00:00"
@@ -995,6 +1102,7 @@
 			"schluessel": "",
 			"wert": "SB",
 			"bezeichnung": "Förderschwerpunkt Sprache",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "11.05.2021 09:00:00"
@@ -1004,6 +1112,7 @@
 			"schluessel": "",
 			"wert": "XX",
 			"bezeichnung": "kein Förderschwerpunkt",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "26.03.2018 00:00:00"
@@ -1013,6 +1122,7 @@
 			"schluessel": "",
 			"wert": "KR",
 			"bezeichnung": "Klinikschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "05.04.2022 07:00:00"
@@ -1022,6 +1132,7 @@
 			"schluessel": "",
 			"wert": "GY8",
 			"bezeichnung": "(gymnasiale SI G8)",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1031,15 +1142,17 @@
 			"schluessel": "",
 			"wert": "G8A",
 			"bezeichnung": "(gymnasiale SI G8) auslaufend",
+			"datentypwert": "",
 			"gueltigab": "01.02.2019",
 			"gueltigbis": "31.07.2030",
-			"geaendertam": "20.03.2019 00:00:00"
+			"geaendertam": "27.09.2024 07:00:00"
 		},
 		{
 			"katalog": "Gliederung",
 			"schluessel": "",
 			"wert": "GY9",
 			"bezeichnung": "(gymnasiale SI G9)",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "20.03.2019 00:00:00"
@@ -1049,6 +1162,7 @@
 			"schluessel": "",
 			"wert": "G02",
 			"bezeichnung": "Abendgymnasium",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1058,6 +1172,7 @@
 			"schluessel": "",
 			"wert": "R02",
 			"bezeichnung": "Abendrealschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1067,6 +1182,7 @@
 			"schluessel": "",
 			"wert": "G01",
 			"bezeichnung": "Aufbaugymnasium",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1076,6 +1192,7 @@
 			"schluessel": "",
 			"wert": "R01",
 			"bezeichnung": "Aufbaurealschule (Schulen im organisatorischen Verbund)",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1085,6 +1202,7 @@
 			"schluessel": "",
 			"wert": "HA",
 			"bezeichnung": "Auslaufender Hauptschulzweig",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1094,6 +1212,7 @@
 			"schluessel": "",
 			"wert": "RA",
 			"bezeichnung": "Auslaufender Realschulzweig",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1103,6 +1222,7 @@
 			"schluessel": "",
 			"wert": "H02",
 			"bezeichnung": "Berufsbildung nur Jahrgänge 11-12",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "23.06.2022 09:45:00"
@@ -1112,6 +1232,7 @@
 			"schluessel": "",
 			"wert": "H01",
 			"bezeichnung": "Berufsgrundbildung Jahrgänge 7 - 10",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "23.06.2022 09:45:00"
@@ -1121,6 +1242,7 @@
 			"schluessel": "",
 			"wert": "EVB",
 			"bezeichnung": "Evangelische Bekenntnisschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1130,6 +1252,7 @@
 			"schluessel": "",
 			"wert": "C07",
 			"bezeichnung": "Fachoberschule für Wirtschaft",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.07.2017",
 			"geaendertam": "23.06.2022 09:45:00"
@@ -1139,6 +1262,7 @@
 			"schluessel": "",
 			"wert": "GMS",
 			"bezeichnung": "Gemeinschaftsschule (nur Grundschulverbund)",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1148,6 +1272,7 @@
 			"schluessel": "",
 			"wert": "GGY",
 			"bezeichnung": "Gymnasialbildungsgang (entstanden aus GM)",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1156,34 +1281,18 @@
 			"katalog": "Gliederung",
 			"schluessel": "",
 			"wert": "OST",
-			"bezeichnung": "Gymnasiale SII (entstanden aus GM)",
-			"gueltigab": "01.01.2020",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "07.01.2020 10:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "OST2",
-			"bezeichnung": "Gymnasiale SII (nur fortgeführte gymnasiale Oberstufe)",
+			"bezeichnung": "Gymnasiale SII",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "OST3",
-			"bezeichnung": "Gymnasiale SII (OST einer Schule nur zugeordnet, wenn diese über eine eigene gymnasiale Oberstufe verfügt)",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
+			"geaendertam": "17.01.2025 14:00:00"
 		},
 		{
 			"katalog": "Gliederung",
 			"schluessel": "",
 			"wert": "GY",
 			"bezeichnung": "Gymnasium (8jährig)",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1193,33 +1302,27 @@
 			"schluessel": "",
 			"wert": "H",
 			"bezeichnung": "Hauptschule (Schulen im organisatorischen Verbund)",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "K02a",
-			"bezeichnung": "Hiberniakolleg Semester 1-6",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "23.06.2022 09:45:00"
 		},
 		{
 			"katalog": "Gliederung",
 			"schluessel": "",
 			"wert": "SI",
 			"bezeichnung": "Integrierte Form",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
+			"geaendertam": "17.01.2025 14:00:00"
 		},
 		{
 			"katalog": "Gliederung",
 			"schluessel": "",
 			"wert": "GGS",
 			"bezeichnung": "Integrierte Form (entstanden aus GM)",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1229,6 +1332,7 @@
 			"schluessel": "",
 			"wert": "SSI",
 			"bezeichnung": "Integrierte Form (entstanden aus SK)",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1238,6 +1342,7 @@
 			"schluessel": "",
 			"wert": "GS7",
 			"bezeichnung": "Integrierte Form SI ab Jahrgang 7",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1247,6 +1352,7 @@
 			"schluessel": "",
 			"wert": "GS5",
 			"bezeichnung": "Integrierte Form SI im Jahrgang 5",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1256,6 +1362,7 @@
 			"schluessel": "",
 			"wert": "GS6",
 			"bezeichnung": "Integrierte Form SI im Jahrgang 6",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1265,6 +1372,7 @@
 			"schluessel": "",
 			"wert": "RH7",
 			"bezeichnung": "Integrierte Form von Realschul- und Hauptschulzweig ab Jahrgang 7",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1274,6 +1382,7 @@
 			"schluessel": "",
 			"wert": "JUB",
 			"bezeichnung": "Jüdische Bekenntnisschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1283,15 +1392,17 @@
 			"schluessel": "",
 			"wert": "K02",
 			"bezeichnung": "Kolleg",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
+			"geaendertam": "17.01.2025 14:00:00"
 		},
 		{
 			"katalog": "Gliederung",
 			"schluessel": "",
 			"wert": "SKE",
 			"bezeichnung": "Kooperative Form Erweiterungsebene",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1301,6 +1412,7 @@
 			"schluessel": "",
 			"wert": "SKB",
 			"bezeichnung": "Kooperative Form Grundebene im Jahrgang",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1310,6 +1422,7 @@
 			"schluessel": "",
 			"wert": "GY7",
 			"bezeichnung": "Kooperative Form gymnasiale SI G9 ab Jahrgang 7",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1319,6 +1432,7 @@
 			"schluessel": "",
 			"wert": "H7",
 			"bezeichnung": "Kooperative Form Hauptschulzweig ab Jahrgang 7",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1328,6 +1442,7 @@
 			"schluessel": "",
 			"wert": "R7",
 			"bezeichnung": "Kooperative Form Realschulzweig ab Jahrgang 7",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1337,6 +1452,7 @@
 			"schluessel": "",
 			"wert": "SKG",
 			"bezeichnung": "Kooperative Form schulformbezogen gymnasial",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1346,6 +1462,7 @@
 			"schluessel": "",
 			"wert": "SKH",
 			"bezeichnung": "kooperative Form schulformbezogen Hauptschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1355,6 +1472,7 @@
 			"schluessel": "",
 			"wert": "SKR",
 			"bezeichnung": "Kooperative Form schulformbezogen Realschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1364,6 +1482,7 @@
 			"schluessel": "",
 			"wert": "MEB",
 			"bezeichnung": "Mennonitische Bekenntnisschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1373,6 +1492,7 @@
 			"schluessel": "",
 			"wert": "PI",
 			"bezeichnung": "Primarstufe Integrierte Form",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1382,6 +1502,7 @@
 			"schluessel": "",
 			"wert": "P",
 			"bezeichnung": "Primarzweig (Schulversuch Primarzweig an einer Sekundarschule)",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1391,6 +1512,7 @@
 			"schluessel": "",
 			"wert": "R00",
 			"bezeichnung": "Realschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1400,6 +1522,7 @@
 			"schluessel": "",
 			"wert": "R",
 			"bezeichnung": "Realschule (Schulen im organisatorischen Verbund)",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1409,195 +1532,7 @@
 			"schluessel": "",
 			"wert": "RKB",
 			"bezeichnung": "Römisch-katholische Bekenntnisschule",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "SIa",
-			"bezeichnung": "Sekundarstufe Integrierte Form",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "SF 02",
-			"bezeichnung": "SF 02",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "SF 04",
-			"bezeichnung": "SF 04",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "SF 06",
-			"bezeichnung": "SF 06",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "SF 08",
-			"bezeichnung": "SF 08",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "SF 10",
-			"bezeichnung": "SF 10",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "SF 13",
-			"bezeichnung": "SF 13",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "SF 14",
-			"bezeichnung": "SF 14",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "SF 15",
-			"bezeichnung": "SF 15",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "SF 16",
-			"bezeichnung": "SF 16",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "SF 17",
-			"bezeichnung": "SF 17",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "SF 18",
-			"bezeichnung": "SF 18",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "SF 19",
-			"bezeichnung": "SF 19",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "01.02.2021 09:45:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "SF 20",
-			"bezeichnung": "SF 20",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "SF 25",
-			"bezeichnung": "SF 25",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "SF 30",
-			"bezeichnung": "SF 30",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "SF 81",
-			"bezeichnung": "SF 81",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "SF 83",
-			"bezeichnung": "SF 83",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "SF 85",
-			"bezeichnung": "SF 85",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "SF 87",
-			"bezeichnung": "SF 87",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "SF 88",
-			"bezeichnung": "SF 88",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1607,6 +1542,7 @@
 			"schluessel": "",
 			"wert": "ST",
 			"bezeichnung": "Teilintegrierte Form",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1616,6 +1552,7 @@
 			"schluessel": "",
 			"wert": "GRH",
 			"bezeichnung": "Teilintegrierte Form (entstanden aus GM)",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1625,6 +1562,7 @@
 			"schluessel": "",
 			"wert": "SRH",
 			"bezeichnung": "Teilintegrierte Form (entstanden aus SK)",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1634,6 +1572,7 @@
 			"schluessel": "",
 			"wert": "WAS",
 			"bezeichnung": "Weltanschauungsschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1643,6 +1582,7 @@
 			"schluessel": "",
 			"wert": "1",
 			"bezeichnung": "Sitz",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "17.06.2024 00:00:00"
@@ -1652,6 +1592,7 @@
 			"schluessel": "",
 			"wert": "0",
 			"bezeichnung": "kein Sitz",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "17.06.2024 00:00:00"
@@ -1661,6 +1602,7 @@
 			"schluessel": "",
 			"wert": "0",
 			"bezeichnung": "Schule ohne Heim oder Internat",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -1670,6 +1612,7 @@
 			"schluessel": "",
 			"wert": "1",
 			"bezeichnung": "Schule mit Heim oder Internat  für Jungen",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -1679,6 +1622,7 @@
 			"schluessel": "",
 			"wert": "2",
 			"bezeichnung": "Schule mit Heim oder Internat für Mädchen",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -1688,6 +1632,7 @@
 			"schluessel": "",
 			"wert": "3",
 			"bezeichnung": "Schule mit Heim oder Internat für Jungen und Mädchen",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -1697,6 +1642,7 @@
 			"schluessel": "",
 			"wert": "1",
 			"bezeichnung": "Primärdatensatz",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "25.03.2019 15:00:00"
@@ -1706,6 +1652,7 @@
 			"schluessel": "",
 			"wert": "2",
 			"bezeichnung": "weiterer Datensatz",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "25.03.2019 15:00:00"
@@ -1715,6 +1662,7 @@
 			"schluessel": "",
 			"wert": "1",
 			"bezeichnung": "Sitz",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -1724,6 +1672,7 @@
 			"schluessel": "",
 			"wert": "0",
 			"bezeichnung": "weitere Adresse",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -1733,6 +1682,7 @@
 			"schluessel": "",
 			"wert": "1",
 			"bezeichnung": "Talentschule",
+			"datentypwert": "",
 			"gueltigab": "01.03.2019",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "25.03.2019 14:00:00"
@@ -1742,6 +1692,7 @@
 			"schluessel": "",
 			"wert": "2",
 			"bezeichnung": "Schule des gen. Gemeinsamen Lernens",
+			"datentypwert": "",
 			"gueltigab": "01.08.2019",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "11.02.2020 07:30:00"
@@ -1751,15 +1702,17 @@
 			"schluessel": "",
 			"wert": "3",
 			"bezeichnung": "Schwerpunktschule",
-			"gueltigab": "01.06.2015",
+			"datentypwert": "",
+			"gueltigab": "01.08.2014",
 			"gueltigbis": "31.12.9999",
-			"geaendertam": "18.06.2019 11:00:00"
+			"geaendertam": "19.09.2024 09:04:32"
 		},
 		{
 			"katalog": "Merkmal",
 			"schluessel": "",
 			"wert": "4",
 			"bezeichnung": "Gymnasialer Zweig Sek. I G8",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.12.2020 07:00:00"
@@ -1769,6 +1722,7 @@
 			"schluessel": "",
 			"wert": "5",
 			"bezeichnung": "Sport als 4. Abiturfach (gen.)",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "11.02.2020 07:30:00"
@@ -1778,15 +1732,17 @@
 			"schluessel": "",
 			"wert": "6",
 			"bezeichnung": "Studienkolleg für ausländische Studierende",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
-			"geaendertam": "21.12.2022 08:00:00"
+			"geaendertam": "18.09.2024 10:03:29"
 		},
 		{
 			"katalog": "Merkmal",
 			"schluessel": "",
 			"wert": "7",
 			"bezeichnung": "Sinus Projekt",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "20.01.2020 14:00:00"
@@ -1796,6 +1752,7 @@
 			"schluessel": "",
 			"wert": "8",
 			"bezeichnung": "Betrieb und Schule (BUS)",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "04.08.2022 09:05:00"
@@ -1805,6 +1762,7 @@
 			"schluessel": "",
 			"wert": "9",
 			"bezeichnung": "Gymnasialer Zweig Sek. I G9",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.12.2020 07:00:00"
@@ -1814,6 +1772,7 @@
 			"schluessel": "",
 			"wert": "10",
 			"bezeichnung": "Reformpädagogik",
+			"datentypwert": "",
 			"gueltigab": "01.08.1972",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "26.02.2020 14:00:00"
@@ -1823,7 +1782,8 @@
 			"schluessel": "",
 			"wert": "11",
 			"bezeichnung": "Konfessionelle Kooperation",
-			"gueltigab": "01.08.1974",
+			"datentypwert": "",
+			"gueltigab": "01.08.2018",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "23.03.2020 08:00:00"
 		},
@@ -1832,6 +1792,7 @@
 			"schluessel": "",
 			"wert": "12",
 			"bezeichnung": "Europaschule",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "17.04.2020 10:00:00"
@@ -1841,6 +1802,7 @@
 			"schluessel": "",
 			"wert": "13",
 			"bezeichnung": "Schulen gem. § 132c SchulG",
+			"datentypwert": "",
 			"gueltigab": "01.08.2015",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "03.06.2020 13:00:00"
@@ -1850,6 +1812,7 @@
 			"schluessel": "",
 			"wert": "14",
 			"bezeichnung": "Schulversuch Gemeinschaftsschule",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "03.05.2021 11:30:00"
@@ -1859,6 +1822,7 @@
 			"schluessel": "",
 			"wert": "15",
 			"bezeichnung": "Bergschule",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.12.2020 07:00:00"
@@ -1868,15 +1832,17 @@
 			"schluessel": "",
 			"wert": "16",
 			"bezeichnung": "Feststellungsmerkmale",
-			"gueltigab": "01.01.1945",
+			"datentypwert": "",
+			"gueltigab": "01.01.1954",
 			"gueltigbis": "31.12.9999",
-			"geaendertam": "14.10.2022 08:30:00"
+			"geaendertam": "19.09.2024 09:03:11"
 		},
 		{
 			"katalog": "Merkmal",
 			"schluessel": "",
 			"wert": "17",
 			"bezeichnung": "Bildungsziel",
+			"datentypwert": "",
 			"gueltigab": "01.08.1949",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "14.10.2022 08:30:00"
@@ -1886,6 +1852,7 @@
 			"schluessel": "",
 			"wert": "18",
 			"bezeichnung": "Ausbildungsziel",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "14.10.2022 08:30:00"
@@ -1895,6 +1862,7 @@
 			"schluessel": "",
 			"wert": "19",
 			"bezeichnung": "Verbundschule H / R",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "20.08.2020 11:30:00"
@@ -1904,6 +1872,7 @@
 			"schluessel": "",
 			"wert": "20",
 			"bezeichnung": "Verbundschule Ge / Gy",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "20.08.2020 11:30:00"
@@ -1913,6 +1882,7 @@
 			"schluessel": "",
 			"wert": "21",
 			"bezeichnung": "BS - Elektroniker",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "20.08.2020 11:30:00"
@@ -1922,6 +1892,7 @@
 			"schluessel": "",
 			"wert": "22",
 			"bezeichnung": "§ 46 (2) SchpflG - FUE - Nachhilfe",
+			"datentypwert": "",
 			"gueltigab": "01.01.1962",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "29.10.2020 09:30:00"
@@ -1931,6 +1902,7 @@
 			"schluessel": "",
 			"wert": "23",
 			"bezeichnung": "Staatliche Schule",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "05.10.2020 08:35:00"
@@ -1940,6 +1912,7 @@
 			"schluessel": "",
 			"wert": "24",
 			"bezeichnung": "Kolleg (Institut zur Erlangung der Hochschulreife)",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "05.03.2021 08:35:00"
@@ -1949,6 +1922,7 @@
 			"schluessel": "",
 			"wert": "25",
 			"bezeichnung": "Integrative Lerngruppe",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "21.04.2021 14:30:00"
@@ -1958,6 +1932,7 @@
 			"schluessel": "",
 			"wert": "26",
 			"bezeichnung": "Selbständige Schule",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "01.04.2021 16:30:00"
@@ -1967,6 +1942,7 @@
 			"schluessel": "",
 			"wert": "27",
 			"bezeichnung": "Gemeinsamer Unterricht",
+			"datentypwert": "",
 			"gueltigab": "01.08.1971",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "16.12.2021 09:00:00"
@@ -1976,6 +1952,7 @@
 			"schluessel": "",
 			"wert": "28",
 			"bezeichnung": "Schule von 8 bis 1",
+			"datentypwert": "",
 			"gueltigab": "01.08.1971",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "23.06.2022 10:30:00"
@@ -1985,6 +1962,7 @@
 			"schluessel": "",
 			"wert": "29",
 			"bezeichnung": "Schule von 8 bis 1 und 13+",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "23.06.2022 10:30:00"
@@ -1994,6 +1972,7 @@
 			"schluessel": "",
 			"wert": "30",
 			"bezeichnung": "Hauptförderschwerpunkt",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "01.02.2022 10:00:00"
@@ -2003,6 +1982,7 @@
 			"schluessel": "",
 			"wert": "31",
 			"bezeichnung": "Bündelungsgymnasium",
+			"datentypwert": "",
 			"gueltigab": "01.08.2022",
 			"gueltigbis": "31.07.2026",
 			"geaendertam": "07.02.2022 15:00:00"
@@ -2012,6 +1992,7 @@
 			"schluessel": "",
 			"wert": "32",
 			"bezeichnung": "Ganztagsschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "23.06.2022 10:30:00"
@@ -2021,6 +2002,7 @@
 			"schluessel": "",
 			"wert": "33",
 			"bezeichnung": "Offene Ganztagsschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "23.06.2022 10:30:00"
@@ -2030,6 +2012,7 @@
 			"schluessel": "",
 			"wert": "34",
 			"bezeichnung": "Besonderer Status",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "28.02.2022 10:30:00"
@@ -2039,6 +2022,7 @@
 			"schluessel": "",
 			"wert": "35",
 			"bezeichnung": "Verbundschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "24.03.2022 10:00:00"
@@ -2048,6 +2032,7 @@
 			"schluessel": "",
 			"wert": "36",
 			"bezeichnung": "Schulsozialindex",
+			"datentypwert": "",
 			"gueltigab": "01.01.2018",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "25.03.2022 09:00:00"
@@ -2057,6 +2042,7 @@
 			"schluessel": "",
 			"wert": "37",
 			"bezeichnung": "Schulgliederung",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.11.2023 14:30:00"
@@ -2066,6 +2052,7 @@
 			"schluessel": "",
 			"wert": "38",
 			"bezeichnung": "Zukunftsschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.2024",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "27.02.2024 07:00:00"
@@ -2075,6 +2062,7 @@
 			"schluessel": "",
 			"wert": "39",
 			"bezeichnung": "Startchancen-Programm",
+			"datentypwert": "",
 			"gueltigab": "24.05.2024",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "21.05.2024 08:28:48"
@@ -2084,6 +2072,7 @@
 			"schluessel": "",
 			"wert": "1",
 			"bezeichnung": "Schule ruht",
+			"datentypwert": "",
 			"gueltigab": "01.01.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "08.09.2020 00:00:00"
@@ -2093,6 +2082,7 @@
 			"schluessel": "",
 			"wert": "2",
 			"bezeichnung": "Schule nimmt nicht an ASD teil",
+			"datentypwert": "",
 			"gueltigab": "01.01.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "16.10.2020 11:50:00"
@@ -2102,6 +2092,7 @@
 			"schluessel": "",
 			"wert": "3",
 			"bezeichnung": "OZG_XSC_ID",
+			"datentypwert": "",
 			"gueltigab": "02.01.1900",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "16.12.2021 08:00:00"
@@ -2111,6 +2102,7 @@
 			"schluessel": "",
 			"wert": "4",
 			"bezeichnung": "OZG_Bundeslandkennung",
+			"datentypwert": "",
 			"gueltigab": "02.01.1900",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "16.12.2021 08:00:00"
@@ -2120,6 +2112,7 @@
 			"schluessel": "",
 			"wert": "5",
 			"bezeichnung": "Studienkolleg (staatlich genehmigt)",
+			"datentypwert": "",
 			"gueltigab": "01.01.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "16.12.2021 08:00:00"
@@ -2129,6 +2122,7 @@
 			"schluessel": "",
 			"wert": "6",
 			"bezeichnung": "Studienkolleg (staatlich anerkannt)",
+			"datentypwert": "",
 			"gueltigab": "02.01.1900",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "16.12.2021 08:00:00"
@@ -2138,6 +2132,7 @@
 			"schluessel": "",
 			"wert": "7",
 			"bezeichnung": "Amtlicher Regionalsschlüssel",
+			"datentypwert": "",
 			"gueltigab": "02.01.1900",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "16.12.2021 08:00:00"
@@ -2147,6 +2142,7 @@
 			"schluessel": "",
 			"wert": "8",
 			"bezeichnung": "OE_Bez",
+			"datentypwert": "",
 			"gueltigab": "02.01.1900",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "16.12.2021 08:00:00"
@@ -2156,15 +2152,27 @@
 			"schluessel": "",
 			"wert": "9",
 			"bezeichnung": "OE_Kennzeichen",
+			"datentypwert": "",
 			"gueltigab": "02.01.1900",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "09.05.2022 09:40:00"
+		},
+		{
+			"katalog": "OE_Eigenschaften",
+			"schluessel": "",
+			"wert": "10",
+			"bezeichnung": "Servicestelle",
+			"datentypwert": "",
+			"gueltigab": "01.08.1973",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "10.10.2024 15:30:00"
 		},
 		{
 			"katalog": "OrganisationseinheitArt",
 			"schluessel": "",
 			"wert": "1",
 			"bezeichnung": "Schule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2174,6 +2182,7 @@
 			"schluessel": "",
 			"wert": "2",
 			"bezeichnung": "Schulträger",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2183,6 +2192,7 @@
 			"schluessel": "",
 			"wert": "3",
 			"bezeichnung": "Schulaufsichtsbehörde",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2192,6 +2202,7 @@
 			"schluessel": "",
 			"wert": "4",
 			"bezeichnung": "Nachgeordnete Landesbehörde",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "28.02.2020 10:40:00"
@@ -2201,6 +2212,7 @@
 			"schluessel": "",
 			"wert": "5",
 			"bezeichnung": "Schulaufsichtskonto",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2210,6 +2222,7 @@
 			"schluessel": "",
 			"wert": "6",
 			"bezeichnung": "Schulberatungsstelle",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2219,6 +2232,7 @@
 			"schluessel": "",
 			"wert": "7",
 			"bezeichnung": "Zentrum für schulpraktische Lehrerausbildung",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2228,6 +2242,7 @@
 			"schluessel": "",
 			"wert": "8",
 			"bezeichnung": "Seminar (alt)",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.07.2004",
 			"geaendertam": "26.04.2024 15:15:00"
@@ -2237,6 +2252,7 @@
 			"schluessel": "",
 			"wert": "9",
 			"bezeichnung": "Seminar (neu)",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "13.10.2017 00:00:00"
@@ -2246,6 +2262,7 @@
 			"schluessel": "",
 			"wert": "10",
 			"bezeichnung": "Ergänzungsschulen",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "13.10.2017 00:00:00"
@@ -2255,6 +2272,7 @@
 			"schluessel": "",
 			"wert": "11",
 			"bezeichnung": "Freie Unterrichtseinrichtungen",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "13.10.2017 00:00:00"
@@ -2264,6 +2282,7 @@
 			"schluessel": "",
 			"wert": "12",
 			"bezeichnung": "Kontaktgruppe",
+			"datentypwert": "",
 			"gueltigab": "01.05.2021",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "02.09.2021 12:00:00"
@@ -2273,6 +2292,7 @@
 			"schluessel": "",
 			"wert": "13",
 			"bezeichnung": "Kompetenzteam",
+			"datentypwert": "",
 			"gueltigab": "01.01.1980",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "17.02.2022 08:30:00"
@@ -2282,6 +2302,7 @@
 			"schluessel": "",
 			"wert": "14",
 			"bezeichnung": "Schule eines anderen Ressorts",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "16.10.2023 07:00:00"
@@ -2291,6 +2312,7 @@
 			"schluessel": "",
 			"wert": "0",
 			"bezeichnung": "Adresse ohne Anpassungen verortet",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "21.06.2017 00:00:00"
@@ -2300,6 +2322,7 @@
 			"schluessel": "",
 			"wert": "1",
 			"bezeichnung": "Adresse mit Anpassungen verortet",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "21.06.2017 00:00:00"
@@ -2309,6 +2332,7 @@
 			"schluessel": "",
 			"wert": "2",
 			"bezeichnung": "Straße zugeordnet (Hausnummer nicht gefunden)",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "21.06.2017 00:00:00"
@@ -2318,6 +2342,7 @@
 			"schluessel": "",
 			"wert": "3",
 			"bezeichnung": "PLZ zugeordnet (noch nicht implementiert)",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "21.06.2017 00:00:00"
@@ -2327,6 +2352,7 @@
 			"schluessel": "",
 			"wert": "4",
 			"bezeichnung": "Gemeinde zugeordnet (Straße nicht gefunden)",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "21.06.2017 00:00:00"
@@ -2336,6 +2362,7 @@
 			"schluessel": "",
 			"wert": "9",
 			"bezeichnung": "keine Zuordnung",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "10.05.2022 00:00:00"
@@ -2345,6 +2372,7 @@
 			"schluessel": "",
 			"wert": "1",
 			"bezeichnung": "öffentlich",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2354,6 +2382,7 @@
 			"schluessel": "",
 			"wert": "2",
 			"bezeichnung": "privat",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2363,6 +2392,7 @@
 			"schluessel": "",
 			"wert": "053",
 			"bezeichnung": "Schulart 053 bei Schulform 02",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.07.2001",
 			"geaendertam": "20.04.2017 00:00:00"
@@ -2372,6 +2402,7 @@
 			"schluessel": "",
 			"wert": "054",
 			"bezeichnung": "Schulart 054 bei Schulform 02",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.07.2001",
 			"geaendertam": "20.04.2017 00:00:00"
@@ -2381,6 +2412,7 @@
 			"schluessel": "",
 			"wert": "055",
 			"bezeichnung": "Schulart 055 bei Schulform 02",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.07.2001",
 			"geaendertam": "20.04.2017 00:00:00"
@@ -2390,6 +2422,7 @@
 			"schluessel": "",
 			"wert": "JUB",
 			"bezeichnung": "Grundschule als jüdische Bekenntnisschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2399,6 +2432,7 @@
 			"schluessel": "",
 			"wert": "MEB",
 			"bezeichnung": "Grundschule als mennonitische Bekenntnisschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2408,6 +2442,7 @@
 			"schluessel": "",
 			"wert": "ROB",
 			"bezeichnung": "russisch-orthodoxe Bekenntnisgrundschule",
+			"datentypwert": "",
 			"gueltigab": "01.07.2019",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "20.04.2017 00:00:00"
@@ -2417,6 +2452,7 @@
 			"schluessel": "",
 			"wert": "WAS",
 			"bezeichnung": "Weltanschauungsschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2426,6 +2462,7 @@
 			"schluessel": "",
 			"wert": "113",
 			"bezeichnung": "Schulart 113 bei Schulform 04",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.07.2001",
 			"geaendertam": "20.04.2017 00:00:00"
@@ -2435,6 +2472,7 @@
 			"schluessel": "",
 			"wert": "115",
 			"bezeichnung": "Schulart 115 bei Schulform 04",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.07.2001",
 			"geaendertam": "20.04.2017 00:00:00"
@@ -2444,6 +2482,7 @@
 			"schluessel": "",
 			"wert": "EVB",
 			"bezeichnung": "evangelische Bekenntnisschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "08.05.2024 07:00:00"
@@ -2453,15 +2492,17 @@
 			"schluessel": "",
 			"wert": "511",
 			"bezeichnung": "Schulart 511 bei Schulform 06",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.07.2001",
-			"geaendertam": "20.04.2017 00:00:00"
+			"geaendertam": "05.09.2024 10:05:00"
 		},
 		{
 			"katalog": "Schulart",
 			"schluessel": "",
 			"wert": "GMS",
 			"bezeichnung": "Gemeinschaftsschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "08.05.2024 07:00:00"
@@ -2471,6 +2512,7 @@
 			"schluessel": "",
 			"wert": "RKB",
 			"bezeichnung": "katholische Bekenntnisschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "08.05.2024 07:00:00"
@@ -2478,8 +2520,19 @@
 		{
 			"katalog": "Schulart",
 			"schluessel": "",
+			"wert": "653",
+			"bezeichnung": "Schulart 653 bei Schulform 08",
+			"datentypwert": "",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.07.2001",
+			"geaendertam": "20.04.2017 00:00:00"
+		},
+		{
+			"katalog": "Schulart",
+			"schluessel": "",
 			"wert": "611",
 			"bezeichnung": "Schulart 611 bei Schulform 08",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.07.2001",
 			"geaendertam": "20.04.2017 00:00:00"
@@ -2489,6 +2542,7 @@
 			"schluessel": "",
 			"wert": "612",
 			"bezeichnung": "Schulart 612 bei Schulform 08",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.07.2001",
 			"geaendertam": "20.04.2017 00:00:00"
@@ -2498,6 +2552,7 @@
 			"schluessel": "",
 			"wert": "614",
 			"bezeichnung": "Schulart 614 bei Schulform 08",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.07.2001",
 			"geaendertam": "20.04.2017 00:00:00"
@@ -2507,6 +2562,7 @@
 			"schluessel": "",
 			"wert": "615",
 			"bezeichnung": "Schulart 615 bei Schulform 08",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.07.2001",
 			"geaendertam": "20.04.2017 00:00:00"
@@ -2516,6 +2572,7 @@
 			"schluessel": "",
 			"wert": "616",
 			"bezeichnung": "Schulart 616 bei Schulform 08",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.07.2001",
 			"geaendertam": "20.04.2017 00:00:00"
@@ -2525,6 +2582,7 @@
 			"schluessel": "",
 			"wert": "617",
 			"bezeichnung": "Schulart 617 bei Schulform 08",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.07.2001",
 			"geaendertam": "20.04.2017 00:00:00"
@@ -2534,15 +2592,7 @@
 			"schluessel": "",
 			"wert": "621",
 			"bezeichnung": "Schulart 621 bei Schulform 08",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.07.2001",
-			"geaendertam": "20.04.2017 00:00:00"
-		},
-		{
-			"katalog": "Schulart",
-			"schluessel": "",
-			"wert": "653",
-			"bezeichnung": "Schulart 653 bei Schulform 08",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.07.2001",
 			"geaendertam": "20.04.2017 00:00:00"
@@ -2552,6 +2602,7 @@
 			"schluessel": "",
 			"wert": "520",
 			"bezeichnung": "Schulart 520 bei Schulform 12",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.07.2001",
 			"geaendertam": "20.04.2017 00:00:00"
@@ -2561,6 +2612,7 @@
 			"schluessel": "",
 			"wert": "A",
 			"bezeichnung": "Freie Waldorfschule allgemeinbildender Bereich",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2570,24 +2622,7 @@
 			"schluessel": "",
 			"wert": "ABS",
 			"bezeichnung": "Freie Waldorfschule (Zurzeit nicht benutzt)",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "18.04.2016 00:00:00"
-		},
-		{
-			"katalog": "Schulart",
-			"schluessel": "",
-			"wert": "ASFW",
-			"bezeichnung": "Freie Waldorfschule allgemeinbildender und Förderschulbereich",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "18.04.2016 00:00:00"
-		},
-		{
-			"katalog": "Schulart",
-			"schluessel": "",
-			"wert": "SFW",
-			"bezeichnung": "Freie Waldorfschule Förderschulbereich",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2597,6 +2632,7 @@
 			"schluessel": "",
 			"wert": "AB",
 			"bezeichnung": "Freie Waldorfschule (Hiberniaschule 164264)",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2606,6 +2642,7 @@
 			"schluessel": "",
 			"wert": "550",
 			"bezeichnung": "Schulart 550 bei Schulform 22",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.07.2001",
 			"geaendertam": "20.04.2017 00:00:00"
@@ -2615,6 +2652,7 @@
 			"schluessel": "",
 			"wert": "591",
 			"bezeichnung": "Schulart 591 bei Schulform 25",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.07.2001",
 			"geaendertam": "20.04.2017 00:00:00"
@@ -2624,6 +2662,7 @@
 			"schluessel": "",
 			"wert": "FOR",
 			"bezeichnung": "Weiterbildungskolleg Abendrealschule und Fachoberschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2633,6 +2672,7 @@
 			"schluessel": "",
 			"wert": "G",
 			"bezeichnung": "Weiterbildungskolleg Abendgymnasium",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2642,6 +2682,7 @@
 			"schluessel": "",
 			"wert": "GK",
 			"bezeichnung": "Weiterbildungskolleg Abendgymnasium und Kolleg",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2651,6 +2692,7 @@
 			"schluessel": "",
 			"wert": "GKR",
 			"bezeichnung": "Weiterbildungskolleg Abendgymnasium, Kolleg und Abendrealschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2660,6 +2702,7 @@
 			"schluessel": "",
 			"wert": "GR",
 			"bezeichnung": "Weiterbildungskolleg Abendgymnasium und Abendrealschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2669,6 +2712,7 @@
 			"schluessel": "",
 			"wert": "K",
 			"bezeichnung": "Weiterbildungskolleg Kolleg",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2678,6 +2722,7 @@
 			"schluessel": "",
 			"wert": "R",
 			"bezeichnung": "Weiterbildungskolleg Abendrealschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2687,6 +2732,7 @@
 			"schluessel": "",
 			"wert": "RK",
 			"bezeichnung": "Weiterbildungskolleg Abendrealschule und Kolleg",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2695,52 +2741,38 @@
 			"katalog": "Schulart",
 			"schluessel": "",
 			"wert": "S",
-			"bezeichnung": "Förderrealschule für Hörgeschädigte",
+			"bezeichnung": "Förderschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
-			"geaendertam": "18.04.2016 00:00:00"
+			"geaendertam": "17.01.2025 14:00:00"
 		},
 		{
 			"katalog": "Schulart",
 			"schluessel": "",
 			"wert": "AS",
-			"bezeichnung": "Fördergymnasium für Körperbehinderte",
+			"bezeichnung": "Allgemeinbildende Förderschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
-			"geaendertam": "18.04.2016 00:00:00"
+			"geaendertam": "17.01.2025 14:00:00"
 		},
 		{
 			"katalog": "Schulart",
 			"schluessel": "",
 			"wert": "654",
 			"bezeichnung": "Schulart 654 bei Schulform 88",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.07.2001",
 			"geaendertam": "20.04.2017 00:00:00"
-		},
-		{
-			"katalog": "Schulart",
-			"schluessel": "",
-			"wert": "",
-			"bezeichnung": "keine Schulart vorhanden",
-			"gueltigab": "01.01.1980",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.08.2023 13:00:00"
-		},
-		{
-			"katalog": "Schulform",
-			"schluessel": "",
-			"wert": "",
-			"bezeichnung": "keine Schulform vorhanden",
-			"gueltigab": "01.08.1973",
-			"gueltigbis": "31.12.2017",
-			"geaendertam": "24.05.2017 00:00:00"
 		},
 		{
 			"katalog": "Schulform",
 			"schluessel": "00",
 			"wert": "00",
 			"bezeichnung": "Schulträger",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2750,6 +2782,7 @@
 			"schluessel": "02",
 			"wert": "02",
 			"bezeichnung": "Grundschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2759,6 +2792,7 @@
 			"schluessel": "0C",
 			"wert": "4C",
 			"bezeichnung": "Kompetenzteam",
+			"datentypwert": "",
 			"gueltigab": "01.01.1980",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "08.08.2023 14:00:00"
@@ -2768,6 +2802,7 @@
 			"schluessel": "04",
 			"wert": "04",
 			"bezeichnung": "Hauptschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2777,6 +2812,7 @@
 			"schluessel": "06",
 			"wert": "06",
 			"bezeichnung": "Volksschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2785,16 +2821,28 @@
 			"katalog": "Schulform",
 			"schluessel": "08",
 			"wert": "83",
-			"bezeichnung": "Klinikschule",
+			"bezeichnung": "Schule für Kranke",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
+			"gueltigbis": "07.03.2022",
+			"geaendertam": "12.09.2024 12:20:00"
+		},
+		{
+			"katalog": "Schulform",
+			"schluessel": "08",
+			"wert": "83",
+			"bezeichnung": "Klinikschule",
+			"datentypwert": "",
+			"gueltigab": "08.03.2022",
 			"gueltigbis": "31.12.9999",
-			"geaendertam": "05.04.2022 07:00:00"
+			"geaendertam": "12.09.2024 12:20:00"
 		},
 		{
 			"katalog": "Schulform",
 			"schluessel": "08",
 			"wert": "08",
 			"bezeichnung": "Förderschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2804,6 +2852,7 @@
 			"schluessel": "08",
 			"wert": "88",
 			"bezeichnung": "Förderschule im Bildungsbereich Berufskolleg",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2813,6 +2862,7 @@
 			"schluessel": "08",
 			"wert": "87",
 			"bezeichnung": "Förderschule im Bildungsbereich Gymnasium",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2822,6 +2872,7 @@
 			"schluessel": "08",
 			"wert": "85",
 			"bezeichnung": "Förderschule im Bildungsbereich Realschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2831,6 +2882,7 @@
 			"schluessel": "0A",
 			"wert": "0A",
 			"bezeichnung": "Schulaufsicht",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2840,6 +2892,7 @@
 			"schluessel": "10",
 			"wert": "10",
 			"bezeichnung": "Realschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2849,6 +2902,7 @@
 			"schluessel": "12",
 			"wert": "12",
 			"bezeichnung": "Abendrealschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.07.1994",
 			"geaendertam": "20.07.2023 09:00:00"
@@ -2858,6 +2912,7 @@
 			"schluessel": "13",
 			"wert": "13",
 			"bezeichnung": "Schulversuch PRIMUS",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "15.12.2023 00:00:00"
@@ -2867,6 +2922,7 @@
 			"schluessel": "14",
 			"wert": "14",
 			"bezeichnung": "Sekundarschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "15.12.2023 00:00:00"
@@ -2876,6 +2932,7 @@
 			"schluessel": "15",
 			"wert": "15",
 			"bezeichnung": "Gesamtschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2885,6 +2942,7 @@
 			"schluessel": "16",
 			"wert": "16",
 			"bezeichnung": "Gemeinschaftsschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.07.2023",
 			"geaendertam": "15.12.2023 00:00:00"
@@ -2894,6 +2952,7 @@
 			"schluessel": "17",
 			"wert": "17",
 			"bezeichnung": "Freie Waldorfschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2903,6 +2962,7 @@
 			"schluessel": "17",
 			"wert": "18",
 			"bezeichnung": "Hiberniaschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2912,6 +2972,7 @@
 			"schluessel": "17",
 			"wert": "19",
 			"bezeichnung": "Freie Waldorfförderschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "21.01.2021 00:00:00"
@@ -2921,6 +2982,7 @@
 			"schluessel": "20",
 			"wert": "20",
 			"bezeichnung": "Gymnasium",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2930,6 +2992,7 @@
 			"schluessel": "22",
 			"wert": "22",
 			"bezeichnung": "Abendgymnasium",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.07.1999",
 			"geaendertam": "20.07.2023 09:00:00"
@@ -2939,6 +3002,7 @@
 			"schluessel": "25",
 			"wert": "25",
 			"bezeichnung": "Weiterbildungskolleg",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2948,6 +3012,7 @@
 			"schluessel": "27",
 			"wert": "27",
 			"bezeichnung": "Kollegschule",
+			"datentypwert": "",
 			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.07.2015",
 			"geaendertam": "20.07.2023 09:00:00"
@@ -2957,6 +3022,7 @@
 			"schluessel": "30",
 			"wert": "30",
 			"bezeichnung": "Berufskolleg",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2966,6 +3032,7 @@
 			"schluessel": "50",
 			"wert": "50",
 			"bezeichnung": "Zentrum für schulpraktische Lehrerausbildung (Verwaltung)",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2975,6 +3042,7 @@
 			"schluessel": "51",
 			"wert": "51",
 			"bezeichnung": "Seminar für das Lehramt an Grund-, Haupt-, Real- und Gesamtschulen (P)",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2984,6 +3052,7 @@
 			"schluessel": "52",
 			"wert": "52",
 			"bezeichnung": "Seminar für das Lehramt für Sonderpädagogik",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -2993,6 +3062,7 @@
 			"schluessel": "53",
 			"wert": "53",
 			"bezeichnung": "Seminar für das Lehramt an Grund-, Haupt-, Real- und Gesamtschulen (S I)",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -3002,6 +3072,7 @@
 			"schluessel": "56",
 			"wert": "56",
 			"bezeichnung": "Seminar für das Lehramt für die Sek. II (GY+GE)",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -3011,6 +3082,7 @@
 			"schluessel": "58",
 			"wert": "58",
 			"bezeichnung": "Seminar für das Lehramt für die Sek. II (BK)",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -3020,6 +3092,7 @@
 			"schluessel": "70",
 			"wert": "70",
 			"bezeichnung": "Ergänzungsschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -3029,6 +3102,7 @@
 			"schluessel": "71",
 			"wert": "71",
 			"bezeichnung": "Freie Unterrichtseinrichtung",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "20.07.2023 09:00:00"
@@ -3038,6 +3112,7 @@
 			"schluessel": "99",
 			"wert": "99",
 			"bezeichnung": "Sonstige Schule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -3047,6 +3122,7 @@
 			"schluessel": "08",
 			"wert": "81",
 			"bezeichnung": "Schulischer Lernort",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "08.03.2018 00:00:00"
@@ -3056,6 +3132,7 @@
 			"schluessel": "0B",
 			"wert": "0B",
 			"bezeichnung": "Schulberatungsstelle",
+			"datentypwert": "",
 			"gueltigab": "01.01.2013",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "30.10.2019 00:00:00"
@@ -3065,6 +3142,7 @@
 			"schluessel": "0C",
 			"wert": "0C",
 			"bezeichnung": "Nachgeordnete Behörde",
+			"datentypwert": "",
 			"gueltigab": "01.11.2013",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "07.01.2020 11:00:00"
@@ -3074,6 +3152,7 @@
 			"schluessel": "0C",
 			"wert": "5C",
 			"bezeichnung": "Nachgeordnete Behörde (LPA)",
+			"datentypwert": "",
 			"gueltigab": "01.11.2013",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "05.03.2021 09:20:00"
@@ -3083,6 +3162,7 @@
 			"schluessel": "KG",
 			"wert": "KG",
 			"bezeichnung": "Kontaktgruppe",
+			"datentypwert": "",
 			"gueltigab": "01.05.2021",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "02.09.2021 12:00:00"
@@ -3092,6 +3172,7 @@
 			"schluessel": "",
 			"wert": "02",
 			"bezeichnung": "Land Nordrhein Westfalen",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -3101,6 +3182,7 @@
 			"schluessel": "",
 			"wert": "03",
 			"bezeichnung": "kreisfreie Stadt",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -3110,6 +3192,7 @@
 			"schluessel": "",
 			"wert": "04",
 			"bezeichnung": "Kreis",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -3119,6 +3202,7 @@
 			"schluessel": "",
 			"wert": "06",
 			"bezeichnung": "Gemeinde",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -3128,6 +3212,7 @@
 			"schluessel": "",
 			"wert": "08",
 			"bezeichnung": "Schulverband",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -3137,6 +3222,7 @@
 			"schluessel": "",
 			"wert": "09",
 			"bezeichnung": "Landschaftsverband",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -3146,6 +3232,7 @@
 			"schluessel": "",
 			"wert": "10",
 			"bezeichnung": "Landwirtschaftskammer",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -3155,6 +3242,7 @@
 			"schluessel": "",
 			"wert": "11",
 			"bezeichnung": "Industrie- und Handelskammer",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -3164,6 +3252,7 @@
 			"schluessel": "",
 			"wert": "12",
 			"bezeichnung": "Handwerkskammer",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -3173,6 +3262,7 @@
 			"schluessel": "",
 			"wert": "13",
 			"bezeichnung": "sonstige Träger öffentlicher Schulen",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "07.05.2024 11:30:00"
@@ -3182,6 +3272,7 @@
 			"schluessel": "",
 			"wert": "14",
 			"bezeichnung": "Bundesrepublik Deutschland",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -3191,6 +3282,7 @@
 			"schluessel": "",
 			"wert": "31",
 			"bezeichnung": "Einzelperson",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -3200,6 +3292,7 @@
 			"schluessel": "",
 			"wert": "32",
 			"bezeichnung": "Personengesellschaft (BGB Gesellschaft, OHG)",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -3209,6 +3302,7 @@
 			"schluessel": "",
 			"wert": "35",
 			"bezeichnung": "Handelsgesellschaft (KG, GmbH, AG, Genossenschaft, Stiftung)",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -3218,6 +3312,7 @@
 			"schluessel": "",
 			"wert": "36",
 			"bezeichnung": "Schulverein (nicht konfessionell gebundene Einrichtung)",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -3227,6 +3322,7 @@
 			"schluessel": "",
 			"wert": "37",
 			"bezeichnung": "Wirtschaftsunternehmen als Träger einer Betriebsberufsschule",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -3236,6 +3332,7 @@
 			"schluessel": "",
 			"wert": "41",
 			"bezeichnung": "Landeskirchenamt",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -3245,6 +3342,7 @@
 			"schluessel": "",
 			"wert": "42",
 			"bezeichnung": "Kirchenkreis oder -gemeinde",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -3254,6 +3352,7 @@
 			"schluessel": "",
 			"wert": "43",
 			"bezeichnung": "Diakonisches Werk oder Innere Mission",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -3263,6 +3362,7 @@
 			"schluessel": "",
 			"wert": "44",
 			"bezeichnung": "Handelsgesellschaft oder Verein (sonst. ev.-kirchl. Einrichtung)",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -3272,6 +3372,7 @@
 			"schluessel": "",
 			"wert": "51",
 			"bezeichnung": "Erzbistum oder Bistum",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -3281,6 +3382,7 @@
 			"schluessel": "",
 			"wert": "52",
 			"bezeichnung": "Kirchenkreis oder -gemeinde",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -3290,6 +3392,7 @@
 			"schluessel": "",
 			"wert": "53",
 			"bezeichnung": "Orden",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -3299,6 +3402,7 @@
 			"schluessel": "",
 			"wert": "54",
 			"bezeichnung": "Caritasverband oder Kolpingwerk",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -3308,6 +3412,7 @@
 			"schluessel": "",
 			"wert": "55",
 			"bezeichnung": "Handelsgesellschaft oder Verein (sonst. kath.-kirchl. Einrichtung)",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -3317,6 +3422,7 @@
 			"schluessel": "",
 			"wert": "60",
 			"bezeichnung": "Waldorfschulträger als eingetragener Verein",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.04.2016 00:00:00"
@@ -3326,6 +3432,7 @@
 			"schluessel": "",
 			"wert": "70",
 			"bezeichnung": "Bundesrepublik Deutschland",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "07.05.2024 11:30:00"
@@ -3335,6 +3442,7 @@
 			"schluessel": "",
 			"wert": "99",
 			"bezeichnung": "Sonstiger Träger privater Schulen",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "07.05.2024 11:30:00"
@@ -3344,6 +3452,7 @@
 			"schluessel": "",
 			"wert": "00",
 			"bezeichnung": "kein Träger",
+			"datentypwert": "",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "20.04.2017 00:00:00"

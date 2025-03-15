@@ -17,9 +17,13 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @TranspilerDTO
 public class Schuldatei {
 
+	/** Die Version der Schuldatei. */
+	@Schema(description = "die Version")
+	public @NotNull SchuldateiVersion version = new SchuldateiVersion();
+
 	/** Die Organisationseinheit des Eintrags */
 	@ArraySchema(schema = @Schema(implementation = SchuldateiOrganisationseinheit.class))
-	public @NotNull List<SchuldateiOrganisationseinheit> organisationseinheit = new ArrayList<>();
+	public @NotNull List<SchuldateiOrganisationseinheit> organisationseinheiten = new ArrayList<>();
 
 
 	/**

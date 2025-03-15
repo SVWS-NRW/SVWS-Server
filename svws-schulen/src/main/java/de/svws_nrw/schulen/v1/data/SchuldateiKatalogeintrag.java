@@ -30,6 +30,10 @@ public class SchuldateiKatalogeintrag extends SchuldateiEintrag {
 	@Schema(description = "die Bezeichnung")
 	public @NotNull String bezeichnung = "";
 
+	/** Der Datentypwert */
+	@Schema(description = "der Datentyp")
+	public @NotNull String datentypwert = "";
+
 
 	/**
 	 * Erstellt einen neuen Eintrag zu einer Adresse einer Organisationseinheit der Schuldatei
