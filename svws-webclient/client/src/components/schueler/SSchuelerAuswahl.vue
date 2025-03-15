@@ -40,7 +40,7 @@
 						</template>
 					</svws-ui-tooltip>
 				</template>
-
+				<!-- <template v-if="primarstufe" #cell(epJahre)="{ rowData }"> {{ rowData.jahrgang }} </template> -->
 				<template #actions>
 					<svws-ui-tooltip position="bottom" v-if="ServerMode.DEV.checkServerMode(serverMode) && hatKompetenzAendern">
 						<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="startCreationMode" :has-focus="rowsFiltered.length === 0">
@@ -79,13 +79,23 @@
 
 	import { computed, ref, shallowRef, watch } from "vue";
 	import type { SchuelerListeEintrag, JahrgangsDaten, KlassenDaten, Schulgliederung, KursDaten } from "@core";
-	import { ServerMode, SchuelerStatus, BenutzerKompetenz } from "@core";
+	import { ServerMode, SchuelerStatus, BenutzerKompetenz, PrimarstufeSchuleingangsphaseBesuchsjahre, Schulform } from "@core";
 	import type { SortByAndOrder } from "@ui";
 	import { ViewType } from "@ui";
 	import type { SchuelerAuswahlProps } from "./SSchuelerAuswahlProps";
 	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<SchuelerAuswahlProps>();
+
+	// const primarschulformen = new Set([Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.PS, Schulform.S, Schulform.KS, Schulform.V]);
+	// const primarstufe = computed(() => primarschulformen.has(props.schulform));
+
+	// function getEpJahre(ep: number | null) {
+	// 	if (!primarstufe.value || (ep === null))
+	// 		return null;
+	// 	const schuljahr = props.manager().getSchuljahr();
+	// 	return PrimarstufeSchuleingangsphaseBesuchsjahre.data().getWertBySchluesselOrException(ep.toString()).daten(schuljahr)?.kuerzel ?? null;
+	// }
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
@@ -128,11 +138,15 @@
 		},
 	})
 
-	const cols = [
-		{ key: "idKlasse", label: "Klasse", sortable: true, span: 1 },
-		{ key: "nachname", label: "Nachname", sortable: true, span: 2 },
-		{ key: "vorname", label: "Vorname", sortable: true, span: 2 },
-	]
+	const cols = computed(() => {
+		const arr = [{ key: "idKlasse", label: "Klasse", sortable: true, span: 1 },
+			{ key: "nachname", label: "Nachname", sortable: true, span: 2 },
+			{ key: "vorname", label: "Vorname", sortable: true, span: 2 },
+		];
+		// if (primarstufe.value)
+		// 	arr.push({ key: "epJahre", label: "Jg", sortable: false, span: 1 });
+		return arr;
+	})
 
 	watch(() => props.manager().filtered(), async (neu) => {
 		if (props.manager().hasDaten() && !neu.contains(props.manager().auswahl()))

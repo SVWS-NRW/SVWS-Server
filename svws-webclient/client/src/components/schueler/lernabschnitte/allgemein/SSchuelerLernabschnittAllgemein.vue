@@ -1,13 +1,18 @@
 <template>
 	<div class="page page-grid-cards">
 		<svws-ui-content-card>
-			<svws-ui-input-wrapper :grid="2">
+			<div class="flex flex-row gap-4 mb-4">
 				<svws-ui-select :disabled="!hatUpdateKompetenz" title="Klasse" :items="manager().klasseGetMenge()" :item-text="i => i.kuerzel ?? '—'"
 					:model-value="klasse" @update:model-value="value => patch({ klassenID: ((value === undefined) || (value === null)) ? null : value.id })"
 					autocomplete statistics required autofocus focus-class-content />
 				<svws-ui-select :disabled="!hatUpdateKompetenz" title="Jahrgang" :items="manager().jahrgangGetMenge()" :item-text="i => i.kuerzel ?? '—'"
 					:model-value="jahrgang" @update:model-value="value => patch({ jahrgangID: ((value === undefined) || (value === null)) ? null : value.id })"
 					autocomplete statistics required />
+				<svws-ui-select :disabled="!hatUpdateKompetenz" title="EP-Jahre" :items="PrimarstufeSchuleingangsphaseBesuchsjahre.data().getEintraegeBySchuljahr(schuljahr)" :item-text="i => i.kuerzel"
+					:model-value="epJahre" @update:model-value="value => patch({ epJahre: ((value === undefined) || (value === null)) ? null : value.id })"
+					statistics required />
+			</div>
+			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input :disabled="!hatUpdateKompetenz" placeholder="Datum von" type="date" statistics required
 					:model-value="manager().lernabschnittGet().datumAnfang || undefined" @change="datumAnfang => patch({datumAnfang})" />
 				<svws-ui-text-input :disabled="!hatUpdateKompetenz" placeholder="Datum bis" type="date" statistics required
@@ -62,9 +67,10 @@
 <script setup lang="ts">
 
 	import { computed } from 'vue';
-	import type { FoerderschwerpunktEintrag, JahrgangsDaten, KlassenDaten, LehrerListeEintrag, List, OrganisationsformKatalogEintrag } from "@core";
+	import type { FoerderschwerpunktEintrag, JahrgangsDaten, KlassenDaten, LehrerListeEintrag, List, OrganisationsformKatalogEintrag, PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag } from "@core";
 	import { BilingualeSprache, AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen, Klassenart, Schulform, Schulgliederung, ArrayList,
-		WeiterbildungskollegOrganisationsformen, DeveloperNotificationException, BenutzerKompetenz } from "@core";
+		WeiterbildungskollegOrganisationsformen, DeveloperNotificationException, BenutzerKompetenz,
+		PrimarstufeSchuleingangsphaseBesuchsjahre} from "@core";
 
 	import type { SchuelerLernabschnittAllgemeinProps } from "./SSchuelerLernabschnittAllgemeinProps";
 
@@ -73,6 +79,18 @@
 	const schuljahr = computed<number>(() => props.manager().schuljahrGet());
 	// Die Schulform muss definiert sein, sonst würde diese Ansicht gar nicht erst aufgerufen werden...
 	const schulform = computed<Schulform>(() => Schulform.data().getWertByKuerzel(props.schule.schulform) ?? Schulform.G);
+
+	const primarschulformen = new Set([Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.PS, Schulform.S, Schulform.KS, Schulform.V]);
+
+	const epJahre = computed<PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag | null>(() => {
+		if (!primarschulformen.has(schulform.value))
+			return null;
+		const ep = props.manager().schuelerGet().epJahre?.toString() ?? null;
+		if (ep === null)
+			return null;
+		const schuljahr = props.manager().schuljahrGet();
+		return PrimarstufeSchuleingangsphaseBesuchsjahre.data().getWertBySchluesselOrException(ep).daten(schuljahr) ?? null;
+	});
 
 	const hatUpdateKompetenz = computed<boolean>(() => {
 		return (props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN))

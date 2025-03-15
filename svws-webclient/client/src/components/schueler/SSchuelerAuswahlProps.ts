@@ -1,5 +1,7 @@
-import type { SchuelerListeManager } from "@core";
+import type { Schulform, SchuelerListeManager } from "@core";
 import type { RouteAuswahlListProps } from "~/router/RouteAuswahlNode";
 
-export type SchuelerAuswahlProps = RouteAuswahlListProps<SchuelerListeManager>
+export interface SchuelerAuswahlProps extends RouteAuswahlListProps<SchuelerListeManager> {
+	schulform: Schulform;
+}
 

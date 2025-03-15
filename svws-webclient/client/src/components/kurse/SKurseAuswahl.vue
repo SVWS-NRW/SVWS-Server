@@ -44,7 +44,7 @@
 	import { ref, computed } from "vue";
 	import type { KurseAuswahlProps } from "./SKurseAuswahlProps";
 	import { ViewType, type DataTableColumn, type SortByAndOrder } from "@ui";
-	import {FachDaten, FaecherListeEintrag, JahrgangsDaten, KursDaten, LehrerListeEintrag, List, SchuelerListeEintrag, Schulgliederung} from "@core";
+	import type { FachDaten, FaecherListeEintrag, JahrgangsDaten, KursDaten, LehrerListeEintrag, List, SchuelerListeEintrag, Schulgliederung } from "@core";
 	import { ServerMode, BenutzerKompetenz } from "@core";
 	import { useRegionSwitch } from "~/components/useRegionSwitch";
 

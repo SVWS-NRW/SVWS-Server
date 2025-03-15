@@ -1,5 +1,6 @@
 import type { RouteParams } from "vue-router";
 
+import type { SchuelerAuswahlProps } from "~/components/schueler/SSchuelerAuswahlProps";
 import type { SchuelerListeManager} from "@core";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
@@ -22,6 +23,8 @@ import { routeSchuelerSprachen } from "./sprachen/RouteSchuelerSprachen";
 import { routeSchuelerAbschluesse } from "./abschluesse/RouteSchuelerAbschluesse";
 import { routeSchuelerEinwilligungen } from "~/router/apps/schueler/einwilligungen/RouteSchuelerEinwilligungen";
 import { AppMenuGroup } from "@ui";
+import { api } from "~/router/Api";
+import type { SchuelerAppProps } from "~/components/schueler/SSchuelerAppProps";
 
 const SSchuelerAuswahl = () => import("~/components/schueler/SSchuelerAuswahl.vue")
 const SSchuelerApp = () => import("~/components/schueler/SSchuelerApp.vue")
@@ -33,6 +36,14 @@ export class RouteSchueler extends RouteAuswahlNode<SchuelerListeManager, RouteD
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler", "schueler/:id(\\d+)?", SSchuelerApp, SSchuelerAuswahl, new RouteDataSchueler());
 		super.mode = ServerMode.STABLE;
 		super.text = "Schüler";
+		super.getAuswahlListProps = (props) => (<SchuelerAuswahlProps>{
+			...props,
+			schulform: api.schulform,
+		});
+		super.getAuswahlProps = props => (<SchuelerAppProps>{
+			...props,
+			schulform: api.schulform,
+		});
 		super.children = [
 			routeSchuelerIndividualdaten,
 			routeSchuelerVermerke,
