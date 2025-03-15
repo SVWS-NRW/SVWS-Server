@@ -1,7 +1,9 @@
 package de.svws_nrw.module.reporting.types.jahrgang;
 
 import java.util.List;
+import java.util.Set;
 
+import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.klasse.ReportingKlasse;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
@@ -32,6 +34,9 @@ public class ReportingJahrgang extends ReportingBaseType {
 
 	/** Die ID des Folgejahrgangs, sofern einer definiert ist, ansonsten null */
 	protected Long idFolgejahrgang;
+
+	/** Die grundlegende Jahrgangszuordnung zu diesem Jahrgang. */
+	protected Jahrgaenge jahrgang;
 
 	/** Liste der Klassen des Jahrgangs. */
 	protected List<ReportingKlasse> klassen;
@@ -67,6 +72,7 @@ public class ReportingJahrgang extends ReportingBaseType {
 	 * @param folgejahrgang Die Daten des Folgejahrgangs.
 	 * @param id Die ID des Jahrgangs.
 	 * @param idFolgejahrgang Die ID des Folgejahrgangs, sofern einer definiert ist, ansonsten null
+	 * @param jahrgang Die grundlegende Jahrgangszuordnung zu diesem Jahrgang.
 	 * @param klassen Liste der Klassen des Jahrgangs.
 	 * @param kuerzel Das Kürzel des Jahrgangs.
 	 * @param kuerzelSchulgliederung Das Kürzel der Schulgliederung, der der Eintrag zugeordnet ist.
@@ -77,9 +83,9 @@ public class ReportingJahrgang extends ReportingBaseType {
 	 * @param sortierung Die Sortierreihenfolge des Jahrgangs in der Liste der Jahrgänge.
 	 */
 	public ReportingJahrgang(final Integer anzahlRestabschnitte, final String bezeichnung, final Long gueltigBis, final Long gueltigVon,
-			final ReportingJahrgang folgejahrgang, final long id, final Long idFolgejahrgang, final List<ReportingKlasse> klassen, final String kuerzel,
-			final String kuerzelSchulgliederung, final String kuerzelStatistik, final boolean istSichtbar, final List<ReportingSchueler> schueler,
-			final ReportingSchuljahresabschnitt schuljahresabschnitt, final int sortierung) {
+			final ReportingJahrgang folgejahrgang, final long id, final Long idFolgejahrgang, final Jahrgaenge jahrgang, final List<ReportingKlasse> klassen,
+			final String kuerzel, final String kuerzelSchulgliederung, final String kuerzelStatistik, final boolean istSichtbar,
+			final List<ReportingSchueler> schueler, final ReportingSchuljahresabschnitt schuljahresabschnitt, final int sortierung) {
 		this.anzahlRestabschnitte = anzahlRestabschnitte;
 		this.bezeichnung = bezeichnung;
 		this.gueltigBis = gueltigBis;
@@ -87,6 +93,7 @@ public class ReportingJahrgang extends ReportingBaseType {
 		this.folgejahrgang = folgejahrgang;
 		this.id = id;
 		this.idFolgejahrgang = idFolgejahrgang;
+		this.jahrgang = jahrgang;
 		this.klassen = klassen;
 		this.kuerzel = kuerzel;
 		this.kuerzelSchulgliederung = kuerzelSchulgliederung;
@@ -96,7 +103,6 @@ public class ReportingJahrgang extends ReportingBaseType {
 		this.schuljahresabschnitt = schuljahresabschnitt;
 		this.sortierung = sortierung;
 	}
-
 
 
 	/**
@@ -120,6 +126,48 @@ public class ReportingJahrgang extends ReportingBaseType {
 		if (!(obj instanceof final ReportingJahrgang other))
 			return false;
 		return (id == other.id);
+	}
+
+
+	// ##### Berechnete Methoden #####
+
+	/**
+	 * Prüft, ob der angegebene Jahrgang im Bereich der Primarstufe liegt.
+	 *
+	 * @return true, wenn der Jahrgang im Bereich der Primarstufe liegt, andernfalls false.
+	 */
+	public boolean istJahrgangImBereichPrimarstufe() {
+		if (this.jahrgang == null)
+			return false;
+		final Set<Jahrgaenge> erlaubteJahrgaenge =
+				Set.of(Jahrgaenge.HAUSFRUEERZIEHUNG, Jahrgaenge.JAHRGANG_00, Jahrgaenge.JAHRGANG_01, Jahrgaenge.JAHRGANG_02, Jahrgaenge.JAHRGANG_03,
+						Jahrgaenge.JAHRGANG_04);
+		return erlaubteJahrgaenge.contains(this.jahrgang);
+	}
+
+	/**
+	 * Prüft, ob der angegebene Jahrgang im Bereich der Sekundarstufe I liegt.
+	 *
+	 * @return true, wenn der Jahrgang im Bereich der Sekundarstufe I liegt, andernfalls false.
+	 */
+	public boolean istJahrgangImBereichSek1() {
+		if (this.jahrgang == null)
+			return false;
+		final Set<Jahrgaenge> erlaubteJahrgaenge =
+				Set.of(Jahrgaenge.JAHRGANG_05, Jahrgaenge.JAHRGANG_06, Jahrgaenge.JAHRGANG_07, Jahrgaenge.JAHRGANG_08, Jahrgaenge.JAHRGANG_09,
+						Jahrgaenge.JAHRGANG_10);
+		return erlaubteJahrgaenge.contains(this.jahrgang);
+	}
+
+	/**
+	 * Prüft, ob der angegebene Jahrgang im Bereich der Sekundarstufe II oder der Weiterbildung liegt.
+	 *
+	 * @return true, wenn der Jahrgang im Bereich der Sekundarstufe II oder der Weiterbildung liegt, andernfalls false.
+	 */
+	public boolean istJahrgangImBereichSek2OderWeiterbildung() {
+		if (this.jahrgang == null)
+			return false;
+		return !(istJahrgangImBereichPrimarstufe() || istJahrgangImBereichSek1());
 	}
 
 
@@ -231,6 +279,15 @@ public class ReportingJahrgang extends ReportingBaseType {
 	 */
 	public boolean istSichtbar() {
 		return istSichtbar;
+	}
+
+	/**
+	 * Die grundlegende Jahrgangszuordnung zu diesem Jahrgang.
+	 *
+	 * @return Inhalt des Feldes jahrgang
+	 */
+	public Jahrgaenge jahrgang() {
+		return jahrgang;
 	}
 
 	/**

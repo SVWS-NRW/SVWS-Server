@@ -23,7 +23,7 @@
 			<!-- Für jede Woche, die im Stundenplan definiert, wird ein Block erzeugt. -->
 			<th:block th:each="wochennummer : ${#numbers.sequence(1, plan.stundenplan().wochenperiodizitaet())}"
 				 th:with="wochentyp = ${(plan.stundenplan().wochenperiodizitaet() == 1 ? 0 : wochennummer)}">
-				<table class="fixed-100 p-0" style="page-break-inside: avoid;" th:with="
+				<table class="fixed-100 mp-0" style="page-break-inside: avoid;" th:with="
 						spaltenzahl = ${(plan.stundenplan().unterrichtsrasterWochentage().size() + 1)},
 						tageSpaltenbreite = ${95/plan.stundenplan().unterrichtsrasterWochentage().size()},
 						ersteSpaltenbreite = ${100 - (tageSpaltenbreite * plan.stundenplan().unterrichtsrasterWochentage().size())}">
@@ -53,16 +53,16 @@
 						<th:block th:each="zeilePausenraster,iterationVarZeilePausenraster : ${plan.stundenplan().rasterPausenNachStundeUndTagen()}">
 							<tr th:if="${anzeigeMitPausenzeiten && zeilePausenraster.dauerZeileInMinutenUnterrichtOderPausen() > 0}">
 								<!-- Zeilenkopf für Pausen ist leer -->
-								<td class="mp-0" style="min-height: 1mm;"></td>
+								<td class="mp-0 ta-cm" style="min-height: 1mm;"></td>
 							</tr>
 							<tr th:if="${!iterationVarZeilePausenraster.last}" th:with="zeileUnterrichtsraster = ${plan.stundenplan().rasterUnterrichteNachStundeUndTagen().get(iterationVarZeilePausenraster.index)}">
 								<!-- Zeilenkopf für Unterrichtsraster enthält Stundennummer -->
-								<td class="head-small-grey head-black-lines-small-all ta-cm" style="min-height: 9mm; font-weight: bolder;" th:text="${plan.stundenplan().unterrichtsrasterStundennummern().get(iterationVarZeilePausenraster.index)}">1</td>
-								<td class="bo-black"
+								<td class="head-small-grey head-black-lines-small-all ta-cm mp-0" style="min-height: 9mm; font-weight: bolder;" th:text="${plan.stundenplan().unterrichtsrasterStundennummern().get(iterationVarZeilePausenraster.index)}">1</td>
+								<td class="bo-black mp-0"
 									th:each="rasterelementZumTag : ${zeileUnterrichtsraster.rasterElemente()}"
 									th:with="unterrichte = ${rasterelementZumTag.unterrichtsrasterstunde().unterrichteKlasse(plan.klasse().id(), wochentyp, true)}">
 									<!-- Pro Stunde wird eine kleine Tabelle mit den Unterrichten und Pausen eingefügt -->
-									<table class="fixed-100 p-0">
+									<table class="fixed-100 mp-0">
 										<colgroup>
 											<col style="width: 3%;" />
 											<col style="width: 55%;" />
@@ -73,16 +73,16 @@
 										<th:block th:each="unterricht,iterationvarUnterricht : ${unterrichte}"
 												  th:with="fachStattKurskuerzel = ${plan.klasse().jahrgang().kuerzel() < 'EF'}">
 											<tr>
-												<td class="f-small ta-l p-tb-1"></td>
-                                                <td th:if="${unterricht.kurs() == null}" colspan="3" class="f-small ta-l" th:classappend="${!iterationvarUnterricht.first ? ' bo-t-grey' : ''}" th:text="${unterricht.fach().bezeichnung()}">Mathematik</td>
-												<td th:if="${unterricht.kurs() != null}" colspan="3" class="f-small ta-l" th:classappend="${!iterationvarUnterricht.first ? ' bo-t-grey' : ''}" th:text="${fachStattKurskuerzel ? unterricht.kurs().fach().bezeichnung() : unterricht.kurs().kuerzel()}">M-GK2</td>
-												<td class="f-small ta-l p-tb-1"></td>
+												<td class="f-small ta-lm"></td>
+                                                <td th:if="${unterricht.kurs() == null}" colspan="3" class="f-small ta-lm" th:classappend="${!iterationvarUnterricht.first ? ' bo-t-grey' : ''}" th:text="${unterricht.fach().bezeichnung()}">Mathematik</td>
+												<td th:if="${unterricht.kurs() != null}" colspan="3" class="f-small ta-lm" th:classappend="${!iterationvarUnterricht.first ? ' bo-t-grey' : ''}" th:text="${fachStattKurskuerzel ? unterricht.kurs().fach().bezeichnung() : unterricht.kurs().kuerzel()}">M-GK2</td>
+												<td class="f-small ta-lm"></td>
 											</tr>
 											<tr>
 												<td></td>
-												<td class="f-small ta-l" th:text="${unterricht.lehrkraefteAuflistung()}">ABC</td>
-												<td class="f-small ta-c"></td>
-                                                <td class="f-small ta-r" th:text="${unterricht.raeumeAuflistung()}">A123</td>
+												<td class="f-small ta-lm" th:text="${unterricht.lehrkraefteAuflistung()}">ABC</td>
+												<td class="f-small ta-cm"></td>
+                                                <td class="f-small ta-rm" th:text="${unterricht.raeumeAuflistung()}">A123</td>
 												<td></td>
 											</tr>
 										</th:block>

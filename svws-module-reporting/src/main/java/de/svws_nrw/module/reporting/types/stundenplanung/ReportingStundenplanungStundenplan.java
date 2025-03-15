@@ -474,22 +474,21 @@ public class ReportingStundenplanungStundenplan extends ReportingBaseType {
 	 * Ergänzt die Pausenzeiten aus der Liste der Pausenzeiten im Raster der Unterrichte und der Pausen.
 	 */
 	private void setzePausenzeitenInRaster() {
-		for (final ReportingStundenplanungPausenzeit pause : pausenzeiten) {
-			// Durchlaufe alle Pausenzeilen und ergänze die Pausenzeit an der richtigen Stelle.
+		for (final ReportingStundenplanungPausenzeit pausenzeit : pausenzeiten) {
+			// Durchlaufe alle Pausenzeilen und ergänze die Pausenzeit an der richtigen Stelle, d. h. wenn die Pausenzeit sich (teilweise) mit dem
+			// Pausenraster deckt.
 			for (final ReportingStundenplanungRasterZeile pausenZeile : rasterPausen) {
 				for (final ReportingStundenplanungRasterElement element : pausenZeile.rasterElemente()) {
-					if ((element.dauerInMinuten() > 0) && (pause.beginn >= element.beginn) && (pause.ende <= element.ende)
-							&& (pause.wochentag == element.wochentag)) {
-						element.addPausenzeit(pause);
+					if (istPausenzeitInRasterelement(pausenzeit, element)) {
+						element.addPausenzeit(pausenzeit);
 					}
 				}
 			}
 			// Durchlaufe alle Unterrichtszeilen und ergänze die Pausenzeit an der richtigen Stelle, d. h. wenn die Pause also parallel zu Unterricht liegt.
 			for (final ReportingStundenplanungRasterZeile unterrichtsZeile : rasterUnterrichte) {
 				for (final ReportingStundenplanungRasterElement element : unterrichtsZeile.rasterElemente()) {
-					if ((pause.beginn < element.ende) && (pause.ende > element.beginn)
-							&& (pause.wochentag == element.wochentag)) {
-						element.addPausenzeit(pause);
+					if (istPausenzeitInRasterelement(pausenzeit, element)) {
+						element.addPausenzeit(pausenzeit);
 					}
 				}
 			}
@@ -501,5 +500,10 @@ public class ReportingStundenplanungStundenplan extends ReportingBaseType {
 		rasterPausen.getLast().ende = pausenzeiten.stream().mapToInt(p -> p.ende).max().orElse(1440);
 	}
 
-
+	private boolean istPausenzeitInRasterelement(final ReportingStundenplanungPausenzeit pausenzeit, final ReportingStundenplanungRasterElement element) {
+		return (((pausenzeit.dauerInMinuten() > 0) && (element.dauerInMinuten() > 0) && (pausenzeit.wochentag == element.wochentag))
+				&& (((pausenzeit.beginn >= element.beginn) && (pausenzeit.beginn < element.ende))
+						|| ((pausenzeit.ende > element.beginn) && (pausenzeit.ende <= element.ende))
+						|| ((pausenzeit.beginn <= element.beginn) && (pausenzeit.ende >= element.ende))));
+	}
 }
