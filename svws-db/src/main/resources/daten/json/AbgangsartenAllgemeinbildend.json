@@ -1,11 +1,12 @@
 {
-	"version": 2,
+	"version": 3,
 	"eintraege": [ {
 		"kuerzel": "A",
 		"historie": [ {
 			"id": 1000,
 			"beschreibung": "Ohne Abschluss",
 			"zulaessig": [
+				{ "schulform": "BK", "jahrgaenge": ["01","02","03","04","05","06"] },
 				{ "schulform": "FW", "jahrgaenge": ["06","07","08","09","10","11","12","13","71"] },
 				{ "schulform": "GE", "jahrgaenge": ["06","07","08","09","10"] },
 				{ "schulform": "GM", "jahrgaenge": ["06","07","08","09","10","1A","1B"] },
@@ -16,11 +17,12 @@
 				{ "schulform": "PS", "jahrgaenge": ["06","07","08","09","10"] },
 				{ "schulform": "R", "jahrgaenge": ["06","07","08","09","10","1A"] },
 				{ "schulform": "S", "jahrgaenge": ["06","07","08","09","10","71"] },
+				{ "schulform": "SB", "jahrgaenge": ["01","02","03","04","05","06"] },
 				{ "schulform": "SG", "jahrgaenge": ["06","07","08","09","10"] },
 				{ "schulform": "SK", "jahrgaenge": ["06","07","08","09","10","1A","1B"] },
 				{ "schulform": "SR", "jahrgaenge": ["06","07","08","09","10"] },
 				{ "schulform": "V", "jahrgaenge": ["06","07","08","09","10","1A","1B"] },
-				{ "schulform": "WB", "jahrgaenge": ["91","92","S1","S2","S3","S4","S5","S6"] },
+				{ "schulform": "WB", "jahrgaenge": ["91","92","R1","R2","R3","R4","V1","V2","S1","S2","S3","S4","S5","S6"] },
 				{ "schulform": "WF", "jahrgaenge": ["06","07","08","09","10","11","12","13","71"] }
 			],
 			"gueltigVon": null,
@@ -32,6 +34,7 @@
 			"id": 2000,
 			"beschreibung": "Hauptschulabschluss",
 			"zulaessig": [
+				{ "schulform": "BK", "jahrgaenge": ["01","02","03","04"] },
 				{ "schulform": "FW", "jahrgaenge": ["10","11","12","71"] },
 				{ "schulform": "GE", "jahrgaenge": ["09","10"] },
 				{ "schulform": "GM", "jahrgaenge": ["09","10","1A","1B"] },
@@ -42,11 +45,12 @@
 				{ "schulform": "PS", "jahrgaenge": ["09","10"] },
 				{ "schulform": "R", "jahrgaenge": ["09","10","1A"] },
 				{ "schulform": "S", "jahrgaenge": ["09","10","71"] },
+				{ "schulform": "SB", "jahrgaenge": ["01","02","03","04"] },
 				{ "schulform": "SG", "jahrgaenge": ["09"] },
 				{ "schulform": "SK", "jahrgaenge": ["09","10","1A","1B"] },
 				{ "schulform": "SR", "jahrgaenge": ["09"] },
 				{ "schulform": "V", "jahrgaenge": ["09","10","1A","1B"] },
-				{ "schulform": "WB", "jahrgaenge": ["S1","S2"] },
+				{ "schulform": "WB", "jahrgaenge": ["R1","R2","S2"] },
 				{ "schulform": "WF", "jahrgaenge": ["10","11","12","71"] }
 			],
 			"gueltigVon": null,
@@ -56,6 +60,7 @@
 			"id": 2001,
 			"beschreibung": "Erster Schulabschluss",
 			"zulaessig": [
+				{ "schulform": "BK", "jahrgaenge": ["01","02","03","04"] },
 				{ "schulform": "FW", "jahrgaenge": ["10","11","12","71"] },
 				{ "schulform": "GE", "jahrgaenge": ["09","10"] },
 				{ "schulform": "GM", "jahrgaenge": ["09","10","1A","1B"] },
@@ -66,11 +71,12 @@
 				{ "schulform": "PS", "jahrgaenge": ["09","10"] },
 				{ "schulform": "R", "jahrgaenge": ["09","10","1A"] },
 				{ "schulform": "S", "jahrgaenge": ["09","10","71"] },
+				{ "schulform": "SB", "jahrgaenge": ["01","02","03","04"] },
 				{ "schulform": "SG", "jahrgaenge": ["09"] },
 				{ "schulform": "SK", "jahrgaenge": ["09","10","1A","1B"] },
 				{ "schulform": "SR", "jahrgaenge": ["09"] },
 				{ "schulform": "V", "jahrgaenge": ["09","10","1A","1B"] },
-				{ "schulform": "WB", "jahrgaenge": ["S1","S2"] },
+				{ "schulform": "WB", "jahrgaenge": ["R1","R2","S2"] },
 				{ "schulform": "WF", "jahrgaenge": ["10","11","12","71"] }
 			],
 			"gueltigVon": 2022,
@@ -124,6 +130,7 @@
 			"id": 4000,
 			"beschreibung": "Hauptschulabschluss nach Klasse 10",
 			"zulaessig": [
+				{ "schulform": "BK", "jahrgaenge": ["01","02","03","04"] },
 				{ "schulform": "FW", "jahrgaenge": ["11","12","13","71"] },
 				{ "schulform": "GE", "jahrgaenge": ["10"] },
 				{ "schulform": "GM", "jahrgaenge": ["10","1A","1B"] },
@@ -134,11 +141,12 @@
 				{ "schulform": "PS", "jahrgaenge": ["10"] },
 				{ "schulform": "R", "jahrgaenge": ["10","1A"] },
 				{ "schulform": "S", "jahrgaenge": ["10","71"] },
+				{ "schulform": "SB", "jahrgaenge": ["01","02","03","04"] },
 				{ "schulform": "SG", "jahrgaenge": ["10"] },
 				{ "schulform": "SK", "jahrgaenge": ["10","1A","1B"] },
 				{ "schulform": "SR", "jahrgaenge": ["10"] },
 				{ "schulform": "V", "jahrgaenge": ["10","1A","1B"] },
-				{ "schulform": "WB", "jahrgaenge": ["S2","S3"] },
+				{ "schulform": "WB", "jahrgaenge": ["R2","R3","S2"] },
 				{ "schulform": "WF", "jahrgaenge": ["11","12","13","71"] }
 			],
 			"gueltigVon": null,
@@ -148,6 +156,7 @@
 			"id": 4001,
 			"beschreibung": "Erweiterter Erster Schulabschluss",
 			"zulaessig": [
+				{ "schulform": "BK", "jahrgaenge": ["01","02","03","04"] },
 				{ "schulform": "FW", "jahrgaenge": ["11","12","13","71"] },
 				{ "schulform": "GE", "jahrgaenge": ["10"] },
 				{ "schulform": "GM", "jahrgaenge": ["10","1A","1B"] },
@@ -158,11 +167,12 @@
 				{ "schulform": "PS", "jahrgaenge": ["10"] },
 				{ "schulform": "R", "jahrgaenge": ["10","1A"] },
 				{ "schulform": "S", "jahrgaenge": ["10","71"] },
+				{ "schulform": "SB", "jahrgaenge": ["01","02","03","04"] },
 				{ "schulform": "SG", "jahrgaenge": ["10"] },
 				{ "schulform": "SK", "jahrgaenge": ["10","1A","1B"] },
 				{ "schulform": "SR", "jahrgaenge": ["10"] },
 				{ "schulform": "V", "jahrgaenge": ["10","1A","1B"] },
-				{ "schulform": "WB", "jahrgaenge": ["S2","S3"] },
+				{ "schulform": "WB", "jahrgaenge": ["R2","R3","S2"] },
 				{ "schulform": "WF", "jahrgaenge": ["11","12","13","71"] }
 			],
 			"gueltigVon": 2022,
@@ -174,6 +184,7 @@
 			"id": 5000,
 			"beschreibung": "Mittlerer Schulabschluss - Fachoberschulreife ohne Berechtigung zum Besuch der gymnasialen Oberstufe",
 			"zulaessig": [
+				{ "schulform": "BK", "jahrgaenge": ["01","02","03","04","05","06"] },
 				{ "schulform": "FW", "jahrgaenge": ["11","12","13","71"] },
 				{ "schulform": "GE", "jahrgaenge": ["10"] },
 				{ "schulform": "GM", "jahrgaenge": ["10","1B"] },
@@ -184,11 +195,12 @@
 				{ "schulform": "PS", "jahrgaenge": ["10"] },
 				{ "schulform": "R", "jahrgaenge": ["10"] },
 				{ "schulform": "S", "jahrgaenge": ["10","71"] },
+				{ "schulform": "SB", "jahrgaenge": ["01","02","03","04","05","06"] },
 				{ "schulform": "SG", "jahrgaenge": ["10"] },
 				{ "schulform": "SK", "jahrgaenge": ["10","1B"] },
 				{ "schulform": "SR", "jahrgaenge": ["10"] },
 				{ "schulform": "V", "jahrgaenge": ["10","1B"] },
-				{ "schulform": "WB", "jahrgaenge": ["S2", "S4"] },
+				{ "schulform": "WB", "jahrgaenge": ["R4","S2"] },
 				{ "schulform": "WF", "jahrgaenge": ["11","12","13","71"] }
 			],
 			"gueltigVon": null,
@@ -200,10 +212,12 @@
 			"id": 7000,
 			"beschreibung": "Fachhochschulreife (schulischer Teil)",
 			"zulaessig": [
+				{ "schulform": "BK", "jahrgaenge": ["01","02","03"] },
 				{ "schulform": "FW", "jahrgaenge": ["13","71"] },
 				{ "schulform": "GE", "jahrgaenge": ["Q1","Q2"] },
 				{ "schulform": "GM", "jahrgaenge": ["Q1","Q2"] },
 				{ "schulform": "GY", "jahrgaenge": ["Q1","Q2"] },
+				{ "schulform": "SB", "jahrgaenge": ["01","02","03"] },
 				{ "schulform": "SG", "jahrgaenge": ["Q1","Q2"] },
 				{ "schulform": "WB", "jahrgaenge": ["S4","S5"] },
 				{ "schulform": "WF", "jahrgaenge": ["13","71"] }
@@ -235,7 +249,8 @@
 			"id": 9000,
 			"beschreibung": "Fachhochschulreife (nur für Studierende, die bereits den berufsbezogenen Teil der Fachhochschulreife erworben haben)",
 			"zulaessig": [
-				{ "schulform": "WB", "jahrgaenge": ["S4","S5"] }
+				{ "schulform": "BK", "jahrgaenge": ["01","02","03","04","05","06"] },
+				{ "schulform": "SB", "jahrgaenge": ["01","02","03","04","05","06"] }
 			],
 			"gueltigVon": null,
 			"gueltigBis": null
@@ -246,6 +261,7 @@
 			"id": 6000,
 			"beschreibung": "Mittlerer Schulabschluss - Fachoberschulreife mit Berechtigung zum Besuch der gymnasialen Oberstufe",
 			"zulaessig": [
+				{ "schulform": "BK", "jahrgaenge": ["01","02","03","04"] },
 				{ "schulform": "FW", "jahrgaenge": ["11","12","13","71"] },
 				{ "schulform": "GE", "jahrgaenge": ["10","EF"] },
 				{ "schulform": "GM", "jahrgaenge": ["10","1B","EF"] },
@@ -255,11 +271,12 @@
 				{ "schulform": "PS", "jahrgaenge": ["10"] },
 				{ "schulform": "R", "jahrgaenge": ["10"] },
 				{ "schulform": "S", "jahrgaenge": ["10","71"] },
+				{ "schulform": "SB", "jahrgaenge": ["01","02","03","04"] },
 				{ "schulform": "SG", "jahrgaenge": ["10","EF"] },
 				{ "schulform": "SK", "jahrgaenge": ["10","1B"] },
 				{ "schulform": "SR", "jahrgaenge": ["10"] },
 				{ "schulform": "V", "jahrgaenge": ["10","1B"] },
-				{ "schulform": "WB", "jahrgaenge": ["S2","S4"] },
+				{ "schulform": "WB", "jahrgaenge": ["R4","S2"] },
 				{ "schulform": "WF", "jahrgaenge": ["11","12","13","71"] }
 			],
 			"gueltigVon": null,
@@ -271,10 +288,12 @@
 			"id": 10000,
 			"beschreibung": "Abitur (allgemeine Hochschulreife)",
 			"zulaessig": [
+				{ "schulform": "BK", "jahrgaenge": ["01","02","03","04"] },
 				{ "schulform": "FW", "jahrgaenge": ["13","71"] },
 				{ "schulform": "GE", "jahrgaenge": ["Q2"] },
 				{ "schulform": "GM", "jahrgaenge": ["Q2"] },
 				{ "schulform": "GY", "jahrgaenge": ["Q2"] },
+				{ "schulform": "SB", "jahrgaenge": ["01","02","03","04"] },
 				{ "schulform": "SG", "jahrgaenge": ["Q2"] },
 				{ "schulform": "WB", "jahrgaenge": ["S6"] },
 				{ "schulform": "WF", "jahrgaenge": ["13","71"] }
@@ -386,6 +405,42 @@
 			"zulaessig": [
 				{ "schulform": "FW", "jahrgaenge": ["12","13","71"] },
 				{ "schulform": "WF", "jahrgaenge": ["12","13","71"] }
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"kuerzel": "P",
+		"historie": [ {
+			"id": 16000,
+			"beschreibung": "Versetzungszeugnis der Klasse 11 FO",
+			"zulaessig": [
+				{ "schulform": "BK", "jahrgaenge": ["01"] },
+				{ "schulform": "SB", "jahrgaenge": ["01"] }
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"kuerzel": "Q",
+		"historie": [ {
+			"id": 17000,
+			"beschreibung": "Fachgebundene Hochschulreife",
+			"zulaessig": [
+				{ "schulform": "BK", "jahrgaenge": ["01","02"] },
+				{ "schulform": "SB", "jahrgaenge": ["01","02"] }
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"kuerzel": "S",
+		"historie": [ {
+			"id": 18000,
+			"beschreibung": "Erster Schulabschluss mit Berechtigung zum Besuch eines weiterführenden Bildungsgangs im Berufskolleg (nur für Internationale Förderklassen)",
+			"zulaessig": [
+				{ "schulform": "BK", "jahrgaenge": ["01"] },
+				{ "schulform": "SB", "jahrgaenge": ["01"] }
 			],
 			"gueltigVon": null,
 			"gueltigBis": null
