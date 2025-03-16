@@ -68,7 +68,7 @@ public class GostKlausurplanManager {
 	private final @NotNull Map<Integer, GostFaecherManager> _faechermanager_by_abijahr = new HashMap<>();
 	private final @NotNull KursManager _kursManager = new KursManager();
 	private final @NotNull HashMap2D<Long, String, StundenplanManager> _stundenplanmanager_by_schuljahresabschnitt_and_datum = new HashMap2D<>();
-	private final @NotNull HashMap3D<Long, Integer, Integer, StundenplanManager> _stundenplanmanager_by_schuljahresabschnitt_and_kw = new HashMap3D<>();
+//	private final @NotNull HashMap3D<Long, Integer, Integer, StundenplanManager> _stundenplanmanager_by_schuljahresabschnitt_and_kw = new HashMap3D<>();
 	private final @NotNull Map<Long, List<StundenplanManager>> _stundenplanmanagermenge_by_schuljahresabschnitt = new HashMap<>();
 	private final @NotNull Map<Long, LehrerListeEintrag> _lehrerMap = new HashMap<>();
 	private final @NotNull Map<Long, SchuelerListeEintrag> _schuelerlisteeintrag_by_id = new HashMap<>();
@@ -636,18 +636,18 @@ public class GostKlausurplanManager {
 		return liste != null && !liste.isEmpty();
 	}
 
-	/**
-	 * Prüft, ob zu den angegebenen Parametern ein StundenplanManager existiert. Falls noch keine StundenplanManager für den angegebenen Schuljahresabschnitt geladen wurden, wird eine {@link DeveloperNotificationException} geworfen
-	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
-	 * @param jahr das Jahr
-	 * @param kalenderwoche die Kalenderwoche
-	 * @return true, wenn ein StundenplanManager existiert, sonst false
-	 */
-	public boolean stundenplanManagerExistsByAbschnittAndKW(final long idSchuljahresabschnitt, final int jahr, final int kalenderwoche) {
-		if (!stundenplanManagerGeladenByAbschnitt(idSchuljahresabschnitt))
-			throw new DeveloperNotificationException("StundenplanManager für Schuljahresabschnitt " + idSchuljahresabschnitt + " wurde nicht geladen.");
-		return _stundenplanmanager_by_schuljahresabschnitt_and_kw.contains(idSchuljahresabschnitt, jahr, kalenderwoche);
-	}
+//	/**
+//	 * Prüft, ob zu den angegebenen Parametern ein StundenplanManager existiert. Falls noch keine StundenplanManager für den angegebenen Schuljahresabschnitt geladen wurden, wird eine {@link DeveloperNotificationException} geworfen
+//	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
+//	 * @param jahr das Jahr
+//	 * @param kalenderwoche die Kalenderwoche
+//	 * @return true, wenn ein StundenplanManager existiert, sonst false
+//	 */
+//	public boolean stundenplanManagerExistsByAbschnittAndKW(final long idSchuljahresabschnitt, final int jahr, final int kalenderwoche) {
+//		if (!stundenplanManagerGeladenByAbschnitt(idSchuljahresabschnitt))
+//			throw new DeveloperNotificationException("StundenplanManager für Schuljahresabschnitt " + idSchuljahresabschnitt + " wurde nicht geladen.");
+//		return _stundenplanmanager_by_schuljahresabschnitt_and_kw.contains(idSchuljahresabschnitt, jahr, kalenderwoche);
+//	}
 
 	/**
 	 * Prüft, ob zu den angegebenen Parametern ein StundenplanManager existiert. Falls noch keine StundenplanManager für den angegebenen Schuljahresabschnitt geladen wurden, wird eine {@link DeveloperNotificationException} geworfen
@@ -705,14 +705,14 @@ public class GostKlausurplanManager {
 		// TODO: so muss es sein, wenn Stundenpläne sich nicht mehr überscheiden dürfen:
 		// DeveloperNotificationException.ifMap2DPutOverwrites(_stundenplanmanager_by_schuljahresabschnitt_and_datum, idSchuljahresabschnitt, datum, stundenplanManager);
 		_stundenplanmanager_by_schuljahresabschnitt_and_datum.put(idSchuljahresabschnitt, datum, stundenplanManager);
-		final int kwjahr = DateUtils.gibKwJahrDesDatumsISO8601(datum);
-		final int kw = DateUtils.gibKwDesDatumsISO8601(datum);
-		if (_stundenplanmanager_by_schuljahresabschnitt_and_kw.contains(idSchuljahresabschnitt, kwjahr, kw)) {
-			final StundenplanManager managerInMap = _stundenplanmanager_by_schuljahresabschnitt_and_kw.getOrNull(idSchuljahresabschnitt, kwjahr, kw);
-			if ((managerInMap != null) && (managerInMap.stundenplanGetID() != stundenplanManager.stundenplanGetID()))
-				throw new DeveloperNotificationException("Mehrere Stundenpläne innerhalb der Kalenderwoche %d gültig.".formatted(kw));
-		} else
-			_stundenplanmanager_by_schuljahresabschnitt_and_kw.put(idSchuljahresabschnitt, kwjahr, kw, stundenplanManager);
+//		final int kwjahr = DateUtils.gibKwJahrDesDatumsISO8601(datum);
+//		final int kw = DateUtils.gibKwDesDatumsISO8601(datum);
+//		if (_stundenplanmanager_by_schuljahresabschnitt_and_kw.contains(idSchuljahresabschnitt, kwjahr, kw)) {
+//			final StundenplanManager managerInMap = _stundenplanmanager_by_schuljahresabschnitt_and_kw.getOrNull(idSchuljahresabschnitt, kwjahr, kw);
+//			if ((managerInMap != null) && (managerInMap.stundenplanGetID() != stundenplanManager.stundenplanGetID()))
+//				throw new DeveloperNotificationException("Mehrere Stundenpläne innerhalb der Kalenderwoche %d gültig.".formatted(kw));
+//		} else
+//			_stundenplanmanager_by_schuljahresabschnitt_and_kw.put(idSchuljahresabschnitt, kwjahr, kw, stundenplanManager);
 	}
 
 	/**
@@ -823,27 +823,27 @@ public class GostKlausurplanManager {
 		return null;
 	}
 
-	/**
-	 * Liefert das dem Jahr und der Kalenderwoche zugeordnete {@link StundenplanKalenderwochenzuordnung}-Objekt der Auswahl-Menge oder das nächstmöglichste.
-	 * <br>Hinweis: Einige Objekte dieser Menge können die ID = -1 haben, falls sie erzeugt wurden und nicht aus der DB stammen.
-	 * <br>Laufzeit: O(1)
-	 *
-	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
-	 * @param jahr           Das Jahr der Kalenderwoche.
-	 * @param kalenderwoche  Die gewünschte Kalenderwoche.
-	 *
-	 * @return das dem Jahr und der Kalenderwoche zugeordnete {@link StundenplanKalenderwochenzuordnung}-Objekt der Auswahl-Menge oder das nächstmöglichste.
-	 */
-	public @NotNull StundenplanManager stundenplanManagerGetByAbschnittAndJahrAndKWOrClosest(final long idSchuljahresabschnitt, final int jahr,
-			final int kalenderwoche) {
-		if (!stundenplanManagerGeladenByAbschnitt(idSchuljahresabschnitt))
-			throw new DeveloperNotificationException("StundenplanManager für Schuljahresabschnitt " + idSchuljahresabschnitt + " wurde nicht geladen.");
-		final StundenplanManager manager = _stundenplanmanager_by_schuljahresabschnitt_and_kw.getOrNull(idSchuljahresabschnitt, jahr, kalenderwoche);
-		if (manager != null)
-			return manager;
-		final @NotNull String dateOfMonday = DateUtils.gibDatumDesMontagsOfJahrAndKalenderwoche(jahr, kalenderwoche);
-		return stundenplanManagerGetByAbschnittAndDatumOrClosest(idSchuljahresabschnitt, dateOfMonday);
-	}
+//	/**
+//	 * Liefert das dem Jahr und der Kalenderwoche zugeordnete {@link StundenplanKalenderwochenzuordnung}-Objekt der Auswahl-Menge oder das nächstmöglichste.
+//	 * <br>Hinweis: Einige Objekte dieser Menge können die ID = -1 haben, falls sie erzeugt wurden und nicht aus der DB stammen.
+//	 * <br>Laufzeit: O(1)
+//	 *
+//	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
+//	 * @param jahr           Das Jahr der Kalenderwoche.
+//	 * @param kalenderwoche  Die gewünschte Kalenderwoche.
+//	 *
+//	 * @return das dem Jahr und der Kalenderwoche zugeordnete {@link StundenplanKalenderwochenzuordnung}-Objekt der Auswahl-Menge oder das nächstmöglichste.
+//	 */
+//	public @NotNull StundenplanManager stundenplanManagerGetByAbschnittAndJahrAndKWOrClosest(final long idSchuljahresabschnitt, final int jahr,
+//			final int kalenderwoche) {
+//		if (!stundenplanManagerGeladenByAbschnitt(idSchuljahresabschnitt))
+//			throw new DeveloperNotificationException("StundenplanManager für Schuljahresabschnitt " + idSchuljahresabschnitt + " wurde nicht geladen.");
+//		final StundenplanManager manager = _stundenplanmanager_by_schuljahresabschnitt_and_kw.getOrNull(idSchuljahresabschnitt, jahr, kalenderwoche);
+//		if (manager != null)
+//			return manager;
+//		final @NotNull String dateOfMonday = DateUtils.gibDatumDesMontagsOfJahrAndKalenderwoche(jahr, kalenderwoche);
+//		return stundenplanManagerGetByAbschnittAndDatumOrClosest(idSchuljahresabschnitt, dateOfMonday);
+//	}
 
 	/**
 	 * Liefert den {@link StundenplanManager}, zu den übergebenen Parametern, sonst wird eine {@link DeveloperNotificationException} geworfen.

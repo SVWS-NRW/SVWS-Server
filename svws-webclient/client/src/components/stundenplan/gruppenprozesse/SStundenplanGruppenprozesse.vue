@@ -10,7 +10,8 @@
 					<svws-ui-button :disabled="loading"
 						title="Löschen" @click="entferneStundenplaene" :is-loading="loading" class="mt-4">
 						<svws-ui-spinner v-if="loading" spinning />
-						<span v-else class="icon i-ri-play-line" />Löschen</svws-ui-button>
+						<span v-else class="icon i-ri-play-line" />Löschen
+					</svws-ui-button>
 				</template>
 			</ui-card>
 			<log-box :logs :status>

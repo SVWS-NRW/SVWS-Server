@@ -23,7 +23,7 @@
 					</template>
 					<template v-else-if="activeViewType === ViewType.GRUPPENPROZESSE">
 						<h2 class="svws-headline"> Gruppenprozesse </h2>
-						<span class="svws-subline">Subtext</span>
+						<span class="svws-subline">{{ stundenplanSubline }}</span>
 					</template>
 				</div>
 			</div>
@@ -47,11 +47,19 @@
 	import type { StundenplanAppProps } from "./SStundenplanAppProps";
 	import { DateUtils } from "@core";
 	import { ViewType } from "@ui";
+	import { computed } from "vue";
 	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<StundenplanAppProps>();
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
+
+	const stundenplanSubline = computed(() => {
+		const auswahlStundenplanList = props.manager().liste.auswahlSorted();
+		if (auswahlStundenplanList.size() > 5)
+			return `${auswahlStundenplanList.size()} Stundenpläne ausgewählt`;
+		return [...auswahlStundenplanList].map(s => s.bezeichnung).join(', ');
+	})
 
 	const wochentag = ['So.', 'Mo.', 'Di.', 'Mi.', 'Do.', 'Fr.', 'Sa.', 'So.' ];
 

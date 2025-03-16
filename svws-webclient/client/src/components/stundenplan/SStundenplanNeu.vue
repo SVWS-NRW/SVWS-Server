@@ -2,15 +2,16 @@
 	<div class="page page-grid-cards">
 		<div class="flex flex-col gap-y-16 lg:gap-y-20">
 			<svws-ui-content-card title="Allgemein">
-				<svws-ui-text-input class="contentFocusField" :disabled="!hatUpdateKompetenz" placeholder="Bezeichnung" :required="true" :max-len="150" :valid="validateBezeichnung" v-model="data.bezeichnungStundenplan" type="text" />
-				<!-- <div v-if="hatUpdateKompetenz" :class="{'flex gap-2': showExtraWTM}"> -->
-				<svws-ui-select title="Wochentypmodell" :items="[0,2,3,4,5]" :item-text="i=> wochenTypModell[i] || ''" v-model="data.wochenTypModell" ref="select" />
-				<!-- <svws-ui-input-number v-if="showExtraWTM" placeholder="Wochentypmodell" :v-model="data.wochenTypModell! < 5 ? 5 : data.wochenTypModell" :min="5" :max="100" /> -->
-				<!-- </div> -->
-				<svws-ui-text-input :disabled="!hatUpdateKompetenz" placeholder="Gültig ab" :valid="validateGueltigAb" v-model="data.gueltigAb" type="date" />
-				<svws-ui-text-input :disabled="!hatUpdateKompetenz" placeholder="Gültig bis" :valid="validateGueltigBis" v-model="data.gueltigBis" type="date" />
+				<svws-ui-input-wrapper>
+					<svws-ui-text-input class="contentFocusField" :disabled="!hatUpdateKompetenz" placeholder="Bezeichnung" :required="true" :max-len="150" :valid="validateBezeichnung" v-model="data.bezeichnungStundenplan" type="text" />
+					<svws-ui-input-wrapper :grid="2">
+						<svws-ui-select title="Wochentypmodell" :items="[0,2,3,4,5]" :item-text="i=> wochenTypModell[i] || ''" v-model="data.wochenTypModell" ref="select" />
+						<svws-ui-input-number v-if="data.wochenTypModell! > 4" placeholder="Wochentypmodell" :model-value="data.wochenTypModell! < 5 ? 5 : data.wochenTypModell!" @change="modell => { if (modell !== null) data.wochenTypModell = modell }" :min="5" :max="100" />
+					</svws-ui-input-wrapper>
+					<svws-ui-text-input :disabled="!hatUpdateKompetenz" placeholder="Gültig ab" :valid="validateGueltigAb" v-model="data.gueltigAb" type="date" />
+					<svws-ui-text-input :disabled="!hatUpdateKompetenz" placeholder="Gültig bis" :valid="validateGueltigBis" v-model="data.gueltigBis" type="date" />
+				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
-			<!-- <s-card-stundenplan-warnung-wochentypmodell v-if="wtmOK === false" :wochen-typ-modell="newWTM" @change="ok => (wtmOK = ok) && doPatch(newWTM)" :stundenplan-manager /> -->
 
 			<div class="mt-7 flex flex-row gap-4 justify-end">
 				<svws-ui-button type="secondary" @click="cancel" :disabled="isLoading">Abbrechen</svws-ui-button>
