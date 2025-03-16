@@ -14576,30 +14576,59 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode addStundenplan für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/create/{idSchuljahresabschnitt : \d+}
+	 * Implementierung der POST-Methode addStundenplan für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/create
 	 *
-	 * Erstellt einen neuen (leeren) Stundenplan für den angegebenen Schuljahresabschnitt und gibt den zugehörigen Listeneintrag zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Stundenplans besitzt.
+	 * Erstellt einen neuen Stundenplan und gibt die zugehörigen Daten zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Stundenplans besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 201: Der Stundenplan wurde erfolgreich hinzugefügt.
+	 *   Code 201: Der Stundenplan wurde erfolgreich erstellt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: StundenplanListeEintrag
+	 *     - Rückgabe-Typ: Stundenplan
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Stundenplan anzulegen.
-	 *   Code 404: Der Schuljahresabschnitt wurde nicht gefunden
+	 *   Code 404: Benötigte Daten wurden nicht gefunden
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
+	 * @param {Partial<Stundenplan>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} idSchuljahresabschnitt - der Pfad-Parameter idSchuljahresabschnitt
 	 *
-	 * @returns Der Stundenplan wurde erfolgreich hinzugefügt.
+	 * @returns Der Stundenplan wurde erfolgreich erstellt.
 	 */
-	public async addStundenplan(schema : string, idSchuljahresabschnitt : number) : Promise<StundenplanListeEintrag> {
-		const path = "/db/{schema}/stundenplan/create/{idSchuljahresabschnitt : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{idSchuljahresabschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, idSchuljahresabschnitt.toString());
-		const result : string = await super.postJSON(path, null);
+	public async addStundenplan(data : Partial<Stundenplan>, schema : string) : Promise<Stundenplan> {
+		const path = "/db/{schema}/stundenplan/create"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = Stundenplan.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
 		const text = result;
-		return StundenplanListeEintrag.transpilerFromJSON(text);
+		return Stundenplan.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteStundenplaene für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/delete/multiple
+	 *
+	 * Entfernt mehrere Stundenpläne. Dabei wird geprüft, ob alle Vorbedingungen zum Entfernender Stundenpläne erfüllt sind und der SVWS-Benutzer die notwendige Berechtigung hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Lösch-Operationen wurden ausgeführt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Stundenpläne zu entfernen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Lösch-Operationen wurden ausgeführt.
+	 */
+	public async deleteStundenplaene(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+		const path = "/db/{schema}/stundenplan/delete/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 

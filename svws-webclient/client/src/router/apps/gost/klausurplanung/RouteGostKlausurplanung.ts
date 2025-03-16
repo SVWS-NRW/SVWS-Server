@@ -36,7 +36,7 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 		super(schulformenGymOb, [
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION,
-			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN
+			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN,
 		], "gost.klausurplanung", "klausurplanung/:halbjahr([0-5])?", SGostKlausurplanung, new RouteDataGostKlausurplanung());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);

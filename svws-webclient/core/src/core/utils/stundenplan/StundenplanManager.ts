@@ -504,6 +504,8 @@ export class StundenplanManager extends JavaObject {
 
 	private _wertPausenaufsichtAnzahl_by_idLehrkraft_and_wochentyp : HashMap2D<number, number, number> = new HashMap2D<number, number, number>();
 
+	private readonly _stundenplan : Stundenplan;
+
 	private readonly _stundenplanID : number;
 
 	private _stundenplanWochenTypModell : number = 0;
@@ -552,6 +554,7 @@ export class StundenplanManager extends JavaObject {
 			const unterrichtsverteilung : StundenplanUnterrichtsverteilung | null = cast_de_svws_nrw_core_data_stundenplan_StundenplanUnterrichtsverteilung(__param3);
 			this._compKlassenunterricht = this.klassenunterrichtCreateComparator();
 			this._compUnterricht = this.unterrichtCreateComparator();
+			this._stundenplan = daten;
 			this._stundenplanID = daten.id;
 			this._stundenplanWochenTypModell = daten.wochenTypModell;
 			this._stundenplanSchuljahresAbschnittID = daten.idSchuljahresabschnitt;
@@ -571,6 +574,7 @@ export class StundenplanManager extends JavaObject {
 			const stundenplanKomplett : StundenplanKomplett = cast_de_svws_nrw_core_data_stundenplan_StundenplanKomplett(__param0);
 			this._compKlassenunterricht = this.klassenunterrichtCreateComparator();
 			this._compUnterricht = this.unterrichtCreateComparator();
+			this._stundenplan = stundenplanKomplett.daten;
 			this._stundenplanID = stundenplanKomplett.daten.id;
 			this._stundenplanWochenTypModell = stundenplanKomplett.daten.wochenTypModell;
 			this._stundenplanSchuljahresAbschnittID = stundenplanKomplett.daten.idSchuljahresabschnitt;
@@ -5267,6 +5271,16 @@ export class StundenplanManager extends JavaObject {
 		if (wochenTyp <= 0)
 			return "Alle Wochen";
 		return this.stundenplanGetWochenTypAsStringKurz(wochenTyp) + "-Woche";
+	}
+
+	/**
+	 * Liefert das Stundenplan-DTO.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return der Stundenplan.
+	 */
+	public stundenplanGet() : Stundenplan {
+		return this._stundenplan;
 	}
 
 	/**

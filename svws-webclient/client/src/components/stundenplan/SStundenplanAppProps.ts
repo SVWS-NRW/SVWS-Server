@@ -1,7 +1,4 @@
-import type { StundenplanListeEintrag } from "@core";
-import type { TabManager } from "@ui";
+import type { StundenplanListeManager } from "@core";
+import type { RouteAuswahlProps } from "~/router/RouteAuswahlNode";
 
-export interface StundenplanAppProps {
-	auswahl: StundenplanListeEintrag | undefined;
-	tabManager: () => TabManager;
-}
+export type StundenplanAppProps = RouteAuswahlProps<StundenplanListeManager>

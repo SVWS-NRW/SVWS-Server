@@ -46,6 +46,7 @@ public final class DataStundenplanListe extends DataManager<Long> {
 		daten.idSchuljahresabschnitt = s.Schuljahresabschnitts_ID;
 		daten.gueltigAb = s.Beginn;
 		daten.gueltigBis = s.Ende;
+		daten.wochenTypModell = s.WochentypModell;
 		return daten;
 	};
 

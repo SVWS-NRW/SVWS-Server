@@ -1480,7 +1480,7 @@ public final class DataUntis {
 		final List<StundenplanListeEintrag> sleList = DataStundenplanListe.getStundenplaene(conn, schuljahresabschnitt.id);
 		for (final StundenplanListeEintrag sle : sleList) {
 			final StundenplanManager stundenplanManager =
-					new StundenplanManager(DataStundenplan.getStundenplan(conn, sle.id), DataStundenplanUnterricht.getUnterrichte(conn, sle.id),
+					new StundenplanManager(new DataStundenplan(conn).getById(sle.id), DataStundenplanUnterricht.getUnterrichte(conn, sle.id),
 							DataStundenplanPausenaufsichten.getAufsichten(conn, sle.id),
 							DataStundenplanUnterrichtsverteilung.getUnterrichtsverteilung(conn, sle.id));
 			manager.stundenplanManagerAdd(stundenplanManager);

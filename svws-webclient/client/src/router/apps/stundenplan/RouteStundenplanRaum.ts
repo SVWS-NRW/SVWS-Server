@@ -1,10 +1,10 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationNormalized, RouteParams } from "vue-router";
 import type { StundenplanRaumProps } from "~/components/stundenplan/raum/SStundenplanRaumProps";
 
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
-import { routeStundenplan, type RouteStundenplan } from "./RouteStundenplan";
+import { RouteStundenplan, routeStundenplan } from "./RouteStundenplan";
 import { api } from "~/router/Api";
 import { ConfigElement } from "~/components/Config";
 
@@ -19,17 +19,15 @@ export class RouteStundenplanRaum extends RouteNode<any, RouteStundenplan> {
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Räume";
+		this.isHidden = (params?: RouteParams) => RouteStundenplan.katalogeCheckHidden(false, this, params);
 		api.config.addElements([
 			new ConfigElement("stundenplan.raeume.ganzerStundenplan", "user", "true"),
 		]);
 	}
 
-	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
-	}
-
 	public getProps(to: RouteLocationNormalized): StundenplanRaumProps {
 		return {
-			stundenplanManager: () => routeStundenplan.data.stundenplanManager,
+			stundenplanManager: () => routeStundenplan.data.manager.daten(),
 			ganzerStundenplanRaeume: () => routeStundenplan.data.ganzerStundenplanRaum,
 			setGanzerStundenplanRaeume: routeStundenplan.data.setGanzerStundenplanRaum,
 		};

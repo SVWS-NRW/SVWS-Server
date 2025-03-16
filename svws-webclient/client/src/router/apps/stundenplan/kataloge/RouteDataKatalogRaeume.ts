@@ -6,7 +6,7 @@ import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
 
 import { routeKatalogRaeume } from "./RouteKatalogRaeume";
-import { routeApp } from "../../RouteApp";
+import { routeStundenplan } from "../RouteStundenplan";
 
 interface RouteStateKatalogRaeume extends RouteStateInterface {
 	raumListeManager: RaumListeManager;
@@ -49,7 +49,7 @@ export class RouteDataKatalogRaeume extends RouteData<RouteStateKatalogRaeume> {
 	}
 
 	gotoEintrag = async (eintrag: Raum) => {
-		await RouteManager.doRoute(routeKatalogRaeume.getRoute({ id: eintrag.id }));
+		await RouteManager.doRoute(routeKatalogRaeume.getRoute({ idRaum: eintrag.id }));
 	}
 
 	addEintrag = async (eintrag: Partial<Raum>) => {
@@ -59,6 +59,7 @@ export class RouteDataKatalogRaeume extends RouteData<RouteStateKatalogRaeume> {
 		const raum = await api.server.addRaum(eintrag, api.schema);
 		this.raumListeManager.liste.add(raum);
 		this.setPatchedState({ raumListeManager: this.raumListeManager });
+		await routeStundenplan.data.reloadVorlagen();
 		await this.gotoEintrag(raum);
 	}
 
@@ -71,6 +72,7 @@ export class RouteDataKatalogRaeume extends RouteData<RouteStateKatalogRaeume> {
 			return;
 		const raeume = await api.server.deleteRaeume(listID, api.schema);
 		raumListeManager.liste.removeAll(raeume);
+		await routeStundenplan.data.reloadVorlagen();
 		this.setPatchedState({ raumListeManager });
 	}
 
@@ -86,6 +88,7 @@ export class RouteDataKatalogRaeume extends RouteData<RouteStateKatalogRaeume> {
 		const neu = Object.assign(raumListeManager.daten(), eintrag);
 		raumListeManager.liste.remove(alt);
 		raumListeManager.liste.add(neu);
+		await routeStundenplan.data.reloadVorlagen();
 		this.setPatchedState({ raumListeManager });
 	}
 
@@ -106,6 +109,7 @@ export class RouteDataKatalogRaeume extends RouteData<RouteStateKatalogRaeume> {
 			return;
 		const res = await api.server.addRaeume(list, api.schema);
 		raumListeManager.liste.addAll(res);
+		await routeStundenplan.data.reloadVorlagen();
 		this.setPatchedState({ raumListeManager });
 	})
 }

@@ -755,6 +755,7 @@ export { SchuljahresAbschnittsManager } from './core/utils/schule/SchuljahresAbs
 export { SchuljahresabschnittsUtils } from './core/utils/schule/SchuljahresabschnittsUtils';
 export { IntegerComparator } from './core/utils/stundenplan/IntegerComparator';
 export { StundenplanListUtils } from './core/utils/stundenplan/StundenplanListUtils';
+export { StundenplanListeManager } from './core/utils/stundenplan/StundenplanListeManager';
 export { StundenplanManager } from './core/utils/stundenplan/StundenplanManager';
 export { StundenplanUnterrichtListeManager } from './core/utils/stundenplan/StundenplanUnterrichtListeManager';
 export { StundenplanUnterrichtUtils } from './core/utils/stundenplan/StundenplanUnterrichtUtils';

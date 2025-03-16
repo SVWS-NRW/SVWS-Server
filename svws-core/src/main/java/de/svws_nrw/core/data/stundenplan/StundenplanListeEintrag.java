@@ -42,6 +42,11 @@ public class StundenplanListeEintrag {
 	@Schema(description = "das Datum, bis wann der Stundenplan gültig ist", example = "31.7.3218")
 	public @NotNull String gueltigBis = "";
 
+	/** Das Modell für die Wochen des Stundenplans, d.h. ob es sich um einen Stundenplan für jede Woche handelt (0) oder ob es sich um einen unterschiedliche Stundenpläne in Abhängigkeit des Wochentyps handelt - z.B. A-/B-Wochen (2) handelt. Hier wird dann die maximale Anzahl der unterschiedlichen Wochentypen festgelegt. Der Wert 1 ist ungültig!*/
+	@Schema(description = "das Modell für die Wochen an, d.h. ob es sich um einen Stundenplan für jede Woche handelt (0) oder ob es sich um einen unterschiedliche Stundenpläne in Abhängigkeit des Wochentyps handelt - z.B. A-/B-Wochen (2) handelt. Hier wird dann die maximale Anzahl der unterschiedlichen Wochentypen festgelegt. Der Wert 1 ist ungültig!",
+			example = "2")
+	public int wochenTypModell = 0;
+
 	/**
 	 * Leerer Standardkonstruktor.
 	 */

@@ -116,6 +116,39 @@ public final class DateUtils {
 	}
 
 	/**
+	 * Prüft, ob ein gegebenes Datum im ISO-8601-Format (YYYY-MM-DD) gültig ist.
+	 *
+	 * @param datumISO8601 Das zu prüfende Datum als String im Format "YYYY-MM-DD".
+	 * @return {@code true}, wenn das Datum gültig ist, sonst {@code false}.
+	 *
+	 * - Ein Datum ist gültig, wenn:
+	 *   - Es genau drei Teile enthält (Jahr, Monat, Tag).
+	 *   - Das Jahr nicht ungültig ist (geprüft durch {@code gibIstJahrUngueltig(int jahr)}).
+	 *   - Der Monat zwischen 1 und 12 liegt.
+	 *   - Der Tag im Monat zwischen 1 und der maximalen Anzahl an Tagen des Monats liegt
+	 *     (unter Berücksichtigung von Schaltjahren durch {@code daysInMonth(int jahr, int monat)}).
+	 * - Falls {@code null} übergeben wird, das Format ungültig ist oder nicht-numerische Zeichen enthält, wird {@code false} zurückgegeben.
+	 */
+	public static boolean isValidDate(final String datumISO8601) {
+		if (datumISO8601 == null)
+			return false;
+		try {
+			final @NotNull String[] split = datumISO8601.split("-");
+			if (split.length != 3)
+				return false;
+			int jahr = Integer.parseInt(split[0]);
+			int monat = Integer.parseInt(split[1]);
+			int tagImMonat = Integer.parseInt(split[2]);
+			if (gibIstJahrUngueltig(jahr) || monat < 1 || monat > 12)
+				return false;
+			int maxTage = daysInMonth(jahr, monat);
+			return tagImMonat >= 1 && tagImMonat <= maxTage;
+		} catch (NumberFormatException e) {
+			return false;
+		}
+	}
+
+	/**
 	 * Liefert die Anzahl an Kalenderwochen des Jahres (52 oder 53) nach ISO8601.
 	 *
 	 * @param jahr Das Jahr.
@@ -510,61 +543,113 @@ public final class DateUtils {
 	 * @return die Tage zwischen zwei Datumsangaben als String-Array im ISO8601-Format.
 	 */
 	public static @NotNull String[] gibTageAlsDatumZwischen(final @NotNull String startDate, final @NotNull String endDate) {
-        // Zerlege die Start- und Enddaten in Jahr, Monat und Tag
+		// Zerlege die Start- und Enddaten in Jahr, Monat und Tag
 		final @NotNull int[] startDateArray = extractFromDateISO8601(startDate);
 		final @NotNull int[] endDateArray = extractFromDateISO8601(endDate);
 
-        // Liste, um die Daten zu speichern
+		// Liste, um die Daten zu speichern
 		final @NotNull ArrayList<String> dateList = new ArrayList<>();
 
-        // Schleife über jedes Datum bis zum Enddatum
-        while (startDateArray[0] < endDateArray[0] || (startDateArray[0] == endDateArray[0] && (startDateArray[1] < endDateArray[1] || (startDateArray[1] == endDateArray[1] && startDateArray[2] <= endDateArray[2])))) {
-            // Füge das aktuelle Datum zur Liste hinzu
-            dateList.add(String.format("%04d-%02d-%02d", startDateArray[0], startDateArray[1], startDateArray[2]));
+		// Schleife über jedes Datum bis zum Enddatum
+		while (startDateArray[0] < endDateArray[0] || (startDateArray[0] == endDateArray[0]
+				&& (startDateArray[1] < endDateArray[1] || (startDateArray[1] == endDateArray[1] && startDateArray[2] <= endDateArray[2])))) {
+			// Füge das aktuelle Datum zur Liste hinzu
+			dateList.add(String.format("%04d-%02d-%02d", startDateArray[0], startDateArray[1], startDateArray[2]));
 
-            // Inkrementiere das Datum
-            startDateArray[2]++;
+			// Inkrementiere das Datum
+			startDateArray[2]++;
 
-            // Überprüfe, ob der Tag das Monatsende überschritten hat
-            if (startDateArray[2] > daysInMonth(startDateArray[0], startDateArray[1])) {
-                startDateArray[2] = 1; // Setze den Tag auf 1
-                startDateArray[1]++; // Inkrementiere den Monat
+			// Überprüfe, ob der Tag das Monatsende überschritten hat
+			if (startDateArray[2] > daysInMonth(startDateArray[0], startDateArray[1])) {
+				startDateArray[2] = 1; // Setze den Tag auf 1
+				startDateArray[1]++; // Inkrementiere den Monat
 
-                // Überprüfe, ob der Monat das Jahresende überschritten hat
-                if (startDateArray[1] > 12) {
-                    startDateArray[1] = 1; // Setze den Monat auf Januar
-                    startDateArray[0]++; // Inkrementiere das Jahr
-                }
-            }
-        }
+				// Überprüfe, ob der Monat das Jahresende überschritten hat
+				if (startDateArray[1] > 12) {
+					startDateArray[1] = 1; // Setze den Monat auf Januar
+					startDateArray[0]++; // Inkrementiere das Jahr
+				}
+			}
+		}
 
-        // Konvertiere die ArrayList in ein String-Array und gib es zurück
-        return dateList.toArray(new String[0]);
-    }
+		// Konvertiere die ArrayList in ein String-Array und gib es zurück
+		return dateList.toArray(new String[0]);
+	}
 
-    // Hilfsmethode, um die Anzahl der Tage in einem Monat zu bestimmen
-    private static int daysInMonth(final int year, final int month) {
-        switch (month) {
-            case 4: case 6: case 9: case 11:
-                return 30;
-            case 2:
-                // Schaltjahrüberprüfung
-                if (istSchaltjahr(year))
-                    return 29;
-                return 28;
-            default:
-                return 31;
-        }
-    }
+	/**
+	 * Berechnet die Schnittmenge zweier Datumsintervalle und gibt alle Tage im gemeinsamen Zeitraum zurück.
+	 *
+	 * @param zeitraumAab  Startdatum des ersten Intervalls (YYYY-MM-DD)
+	 * @param zeitraumAbis Enddatum des ersten Intervalls (YYYY-MM-DD)
+	 * @param zeitraumBab  Startdatum des zweiten Intervalls (YYYY-MM-DD)
+	 * @param zeitraumBbis Enddatum des zweiten Intervalls (YYYY-MM-DD)
+	 * @return Ein Array von Strings mit allen Tagen im Format YYYY-MM-DD, die in beiden Intervallen enthalten sind.
+	 *         Falls keine Überlappung besteht, wird ein leeres Array zurückgegeben.
+	 */
+	public static @NotNull String[] berechneGemeinsameTage(final @NotNull String zeitraumAab, final @NotNull String zeitraumAbis,
+			final @NotNull String zeitraumBab, final @NotNull String zeitraumBbis) {
+		// Bestimme das spätere Startdatum
+		String start = (zeitraumAab.compareTo(zeitraumBab) >= 0) ? zeitraumAab : zeitraumBab;
 
-    // Hilfsmethode, um zu prüfen, ob ein Jahr ein Schaltjahr ist
-    private static boolean istSchaltjahr(final int year) {
-        if (year % 4 == 0) {
-            if (year % 100 == 0)
-                return year % 400 == 0;
-            return true;
-        }
-        return false;
-    }
+		// Bestimme das frühere Enddatum
+		String end = (zeitraumAbis.compareTo(zeitraumBbis) <= 0) ? zeitraumAbis : zeitraumBbis;
+
+		// Falls kein gültiger Zeitraum existiert, gib ein leeres Array zurück
+		if (start.compareTo(end) > 0) {
+			return new String[0];
+		}
+
+		// Berechne die Schnittmenge der Tage
+		return gibTageAlsDatumZwischen(start, end);
+	}
+
+	// Hilfsmethode, um die Anzahl der Tage in einem Monat zu bestimmen
+	private static int daysInMonth(final int year, final int month) {
+		switch (month) {
+			case 4:
+			case 6:
+			case 9:
+			case 11:
+				return 30;
+			case 2:
+				// Schaltjahrüberprüfung
+				if (istSchaltjahr(year))
+					return 29;
+				return 28;
+			default:
+				return 31;
+		}
+	}
+
+	// Hilfsmethode, um zu prüfen, ob ein Jahr ein Schaltjahr ist
+	private static boolean istSchaltjahr(final int year) {
+		if (year % 4 == 0) {
+			if (year % 100 == 0)
+				return year % 400 == 0;
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Gibt das Datum des Folgetages für ein gegebenes Datum im ISO-8601-Format (YYYY-MM-DD) zurück.
+	 *
+	 * @param datumISO8601 Ein gültiges Datum im Format "YYYY-MM-DD".
+	 * @return Das Datum des Folgetages im selben Format.
+	 */
+	public static @NotNull String gibDatumFolgetag(final @NotNull String datumISO8601) {
+		final int[] info = extractFromDateISO8601(datumISO8601);
+		final int jahr = info[0];
+		final int monat = info[1];
+		final int tagImMonat = info[2];
+		final int tageImMonat = daysInMonth(jahr, monat);
+		if (tagImMonat < tageImMonat) {
+			return String.format("%04d-%02d-%02d", jahr, monat, tagImMonat + 1);
+		} else if (monat < 12) {
+			return String.format("%04d-%02d-%02d", jahr, monat + 1, 1);
+		} else {
+			return String.format("%04d-%02d-%02d", jahr + 1, 1, 1);
+		}
+	}
 
 }

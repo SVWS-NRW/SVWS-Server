@@ -187,7 +187,7 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 		if ((auswahl === null) && (!hatteDaten))
 			return;
 
-		if ((auswahl === null) || (this.manager.liste.list().isEmpty())) {
+		if ((auswahl === null)/* || (this.manager.liste.list().isEmpty())*/) {
 			this.manager.setDaten(null);
 			this.commit();
 			return;

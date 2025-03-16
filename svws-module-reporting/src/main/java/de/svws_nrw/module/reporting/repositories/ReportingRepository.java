@@ -928,7 +928,7 @@ public class ReportingRepository {
 	public StundenplanManager stundenplanManager(final long idStundenplan) {
 		mapStundenplanManager.computeIfAbsent(idStundenplan, key -> {
 			try {
-				final Stundenplan stundenplan = DataStundenplan.getStundenplan(this.conn, key);
+				final Stundenplan stundenplan = new DataStundenplan(conn).getById(key);
 				if (stundenplan == null)
 					return null;
 				final List<StundenplanUnterricht> unterrichte = DataStundenplanUnterricht.getUnterrichte(this.conn, key);

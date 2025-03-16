@@ -409,6 +409,7 @@ public class StundenplanManager {
 	private @NotNull HashMap2D<Long, Integer, Double> _wertPausenaufsichtAnzahl_by_idLehrkraft_and_wochentyp = new HashMap2D<>();
 
 	// Stundenplan
+	private final @NotNull Stundenplan _stundenplan;
 	private final long _stundenplanID;
 	private int _stundenplanWochenTypModell;
 	private final long _stundenplanSchuljahresAbschnittID;
@@ -433,6 +434,7 @@ public class StundenplanManager {
 			final @NotNull List<StundenplanPausenaufsicht> pausenaufsichten, final StundenplanUnterrichtsverteilung unterrichtsverteilung) {
 		_compKlassenunterricht = klassenunterrichtCreateComparator();
 		_compUnterricht = unterrichtCreateComparator();
+		_stundenplan = daten;
 		_stundenplanID = daten.id;
 		_stundenplanWochenTypModell = daten.wochenTypModell;
 		_stundenplanSchuljahresAbschnittID = daten.idSchuljahresabschnitt;
@@ -479,6 +481,7 @@ public class StundenplanManager {
 	public StundenplanManager(final @NotNull StundenplanKomplett stundenplanKomplett) {
 		_compKlassenunterricht = klassenunterrichtCreateComparator();
 		_compUnterricht = unterrichtCreateComparator();
+		_stundenplan = stundenplanKomplett.daten;
 		_stundenplanID = stundenplanKomplett.daten.id;
 		_stundenplanWochenTypModell = stundenplanKomplett.daten.wochenTypModell;
 		_stundenplanSchuljahresAbschnittID = stundenplanKomplett.daten.idSchuljahresabschnitt;
@@ -5806,6 +5809,16 @@ public class StundenplanManager {
 		if (wochenTyp <= 0)
 			return "Alle Wochen";
 		return stundenplanGetWochenTypAsStringKurz(wochenTyp) + "-Woche";
+	}
+
+	/**
+	 * Liefert das Stundenplan-DTO.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return der Stundenplan.
+	 */
+	public @NotNull Stundenplan stundenplanGet() {
+		return _stundenplan;
 	}
 
 	/**

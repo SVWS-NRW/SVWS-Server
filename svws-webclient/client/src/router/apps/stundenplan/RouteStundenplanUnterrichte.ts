@@ -1,8 +1,8 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationNormalized, RouteParams } from "vue-router";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
-import { routeStundenplan, type RouteStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
+import { RouteStundenplan, routeStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
 
 import type { StundenplanUnterrichteProps } from "~/components/stundenplan/unterrichte/SStundenplanUnterrichteProps";
 import { api } from "~/router/Api";
@@ -18,9 +18,7 @@ export class RouteStundenplanUnterrichte extends RouteNode<any, RouteStundenplan
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Unterrichte";
-	}
-
-	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+		this.isHidden = (params?: RouteParams) => RouteStundenplan.katalogeCheckHidden(false, this, params);
 	}
 
 	public getProps(to: RouteLocationNormalized): StundenplanUnterrichteProps {
@@ -28,7 +26,7 @@ export class RouteStundenplanUnterrichte extends RouteNode<any, RouteStundenplan
 			schulform: api.schulform,
 			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
-			stundenplanManager: () => routeStundenplan.data.stundenplanManager,
+			stundenplanManager: () => routeStundenplan.data.manager.daten(),
 			stundenplanUnterrichtListeManager: () => routeStundenplan.data.stundenplanUnterrichtListeManager,
 			setFilter: routeStundenplan.data.setFilter,
 			patchUnterricht: routeStundenplan.data.patchUnterrichte,
