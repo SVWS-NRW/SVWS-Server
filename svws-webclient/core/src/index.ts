@@ -542,6 +542,7 @@ export { HerkunftsartKatalogEintrag } from './core/data/schule/HerkunftsartKatal
 export { HerkunftsartKatalogEintragBezeichnung } from './core/data/schule/HerkunftsartKatalogEintragBezeichnung';
 export { HerkunftsschulnummerKatalogEintrag } from './core/data/schule/HerkunftsschulnummerKatalogEintrag';
 export { LehrerEinwilligung } from './core/data/schule/LehrerEinwilligung';
+export { Lernplattform } from './core/data/schule/Lernplattform';
 export { Merkmal } from './core/data/schule/Merkmal';
 export { PruefungsordnungKatalogEintrag } from './core/data/schule/PruefungsordnungKatalogEintrag';
 export { Raum } from './core/data/schule/Raum';
@@ -739,6 +740,7 @@ export { KursListeManager } from './core/utils/kurse/KursListeManager';
 export { KursUtils } from './core/utils/kurse/KursUtils';
 export { LehrerListeManager } from './core/utils/lehrer/LehrerListeManager';
 export { LehrerUtils } from './core/utils/lehrer/LehrerUtils';
+export { LernplattformListeManager } from './core/utils/lernplattform/LernplattformListeManager';
 export { RaumListeManager } from './core/utils/raum/RaumListeManager';
 export { RaumUtils } from './core/utils/raum/RaumUtils';
 export { ReligionListeManager } from './core/utils/religion/ReligionListeManager';
