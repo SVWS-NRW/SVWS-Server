@@ -62,7 +62,7 @@
 		<svws-ui-content-card title="Grundschulbesuch">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-input-number class="contentFocusField" placeholder="Einschulung" :model-value="manager().daten.grundschuleEinschulungsjahr"
-					@update:model-value="grundschuleEinschulungsjahr => manager().doPatch({ grundschuleEinschulungsjahr })" :min="1900" :max="2050" />
+					@update:model-value="grundschuleEinschulungsjahr => manager().doPatch({ grundschuleEinschulungsjahr })" :min="1900" :max="2100" />
 				<svws-ui-select disabled title="Einschulungsart" :items="Einschulungsart.values()" :model-value="manager().getEinschulungsart()"
 					@update:model-value="v => manager().doPatch({ grundschuleEinschulungsartID : v?.daten.id ?? null })" :item-text="textEinschulungsart" />
 				<svws-ui-select title="EP-Jahre" :items="PrimarstufeSchuleingangsphaseBesuchsjahre.values()" removable :item-text="textEPJahre" :model-value="manager().getEPJahre()"
@@ -75,11 +75,11 @@
 		<svws-ui-content-card title="Sekundarstufe I">
 			<svws-ui-input-wrapper>
 				<svws-ui-input-number class="contentFocusField" placeholder="Jahr Wechsel Sek I" :model-value="manager().daten.sekIWechsel"
-					@update:model-value="sekIWechsel => manager().doPatch({ sekIWechsel })" :min="1900" :max="2050" />
+					@update:model-value="sekIWechsel => manager().doPatch({ sekIWechsel })" :min="1900" :max="2100" />
 				<svws-ui-select title="Erste Schulform Sek I" :items="Schulform.values()" :item-text="textSchulformSek1" :model-value="manager().getSchulformSek1()"
 					@update:model-value="v => manager().doPatch({ sekIErsteSchulform : v?.daten(manager().schuljahr)?.kuerzel ?? null })" />
 				<svws-ui-input-number placeholder="Jahr Wechsel Sek II" :model-value="manager().daten.sekIIWechsel"
-					@update:model-value="sekIIWechsel => manager().doPatch({ sekIIWechsel })" :min="1900" :max="2050" />
+					@update:model-value="sekIIWechsel => manager().doPatch({ sekIIWechsel })" :min="1900" :max="2100" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Besondere Merkmale für die Statistik">

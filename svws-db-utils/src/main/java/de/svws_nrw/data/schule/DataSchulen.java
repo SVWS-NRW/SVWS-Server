@@ -94,6 +94,9 @@ public final class DataSchulen extends DataManagerRevised<Long, DTOSchuleNRW, Sc
 					throw new ApiOperationException(Status.BAD_REQUEST, "Id %d der PatchMap ist ungleich der id %d vom Dto".formatted(id, dto.ID));
 			}
 			case "schulnummer" -> mapSchulnummer(dto, value);
+			case "schulnummerStatistik" -> {
+				// wird im case "schulnummer" vergeben
+			}
 			case "kuerzel" -> updateKuerzel(dto, value);
 			case "kurzbezeichnung" -> dto.KurzBez = JSONMapper.convertToString(value, false, false, 40, "kurzbezeichnung");
 			case "name" -> dto.Name = JSONMapper.convertToString(value, false, false, 120, "name");
