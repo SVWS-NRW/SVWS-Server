@@ -12315,7 +12315,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode createLernplattform für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/lernplattform/new
+	 * Implementierung der POST-Methode addLernplattform für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/lernplattform/new
 	 *
 	 * Erstellt eine neue Lernplattform und gibt sie zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Lernplattform besitzt.
 	 *
@@ -12332,7 +12332,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Lernplattform wurde erfolgreich angelegt.
 	 */
-	public async createLernplattform(data : Partial<Lernplattform>, schema : string) : Promise<Lernplattform> {
+	public async addLernplattform(data : Partial<Lernplattform>, schema : string) : Promise<Lernplattform> {
 		const path = "/db/{schema}/schule/lernplattform/new"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = Lernplattform.transpilerToJSONPatch(data);

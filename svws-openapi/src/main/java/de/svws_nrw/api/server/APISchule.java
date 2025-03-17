@@ -2854,7 +2854,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Lernplattform anzulegen.")
 	@ApiResponse(responseCode = "409", description = "Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response createLernplattform(@PathParam("schema") final String schema,
+	public Response addLernplattform(@PathParam("schema") final String schema,
 			@RequestBody(description = "Der initiale Patch für die neue Lernplattform", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Lernplattform.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
