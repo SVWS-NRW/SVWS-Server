@@ -3,13 +3,17 @@ package de.svws_nrw.data.schule;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
+import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.schule.Lernplattform;
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.svws.auth.DTOLernplattformen;
 import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -32,10 +36,10 @@ public final class DataKatalogLernplattformen extends DataManagerRevised<Long, D
 		final Lernplattform daten = new Lernplattform();
 		daten.id = dtoKatalogLernplattformen.ID;
 		daten.bezeichnung = dtoKatalogLernplattformen.Bezeichnung;
-		daten.benutzernameSuffixLehrer = dtoKatalogLernplattformen.BenutzernameSuffixLehrer;
-		daten.benutzernameSuffixErzieher = dtoKatalogLernplattformen.BenutzernameSuffixErzieher;
-		daten.benutzernameSuffixSchueler = dtoKatalogLernplattformen.BenutzernameSuffixSchueler;
-		daten.konfiguration = dtoKatalogLernplattformen.Konfiguration;
+		daten.benutzernameSuffixLehrer = (dtoKatalogLernplattformen.BenutzernameSuffixLehrer == null) ? "" : dtoKatalogLernplattformen.BenutzernameSuffixLehrer;
+		daten.benutzernameSuffixErzieher = (dtoKatalogLernplattformen.BenutzernameSuffixErzieher == null) ? "" : dtoKatalogLernplattformen.BenutzernameSuffixErzieher;
+		daten.benutzernameSuffixSchueler = (dtoKatalogLernplattformen.BenutzernameSuffixSchueler == null) ? "" :  dtoKatalogLernplattformen.BenutzernameSuffixSchueler;
+		daten.konfiguration = (dtoKatalogLernplattformen.Konfiguration == null) ? "" :  dtoKatalogLernplattformen.Konfiguration;
 		daten.anzahlEinwilligungen = 0;
 		return daten;
 	}
@@ -112,4 +116,27 @@ public final class DataKatalogLernplattformen extends DataManagerRevised<Long, D
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten ein unbekanntes Attribut.");
 		}
 	}
+
+	@Override
+	public Response deleteMultipleAsResponse(final List<Long> ids) {
+		// Bestimme die Datenbank-DTOs der Lernplattformen
+		final List<DTOLernplattformen> lernplattformen = this.conn.queryByKeyList(DTOLernplattformen.class, ids).stream().toList();
+		// Für jedes DTOLernplattformen-Objekt wird ein SimpleOperationResponse ohne Vorab-Prüfung erzeugt.
+		final Map<Long, SimpleOperationResponse> mapResponse = lernplattformen.stream()
+				.collect(Collectors.toMap(dto -> dto.ID, dto -> {
+					final SimpleOperationResponse response = new SimpleOperationResponse();
+					response.id = dto.ID;
+					return response;
+				}));
+		// Lösche die Einwilligungsarten und gib den Erfolg in der Response zurück
+		for (final DTOLernplattformen dto : lernplattformen) {
+			final SimpleOperationResponse operationResponse = mapResponse.get(dto.ID);
+			if (operationResponse == null)
+				throw new DeveloperNotificationException("Das SimpleOperationResponse Objekt zu der ID %d existiert nicht.".formatted(dto.ID));
+			if (operationResponse.log.isEmpty())
+				operationResponse.success = this.conn.transactionRemove(dto);
+		}
+		return Response.ok().entity(mapResponse.values()).build();
+	}
+
 }

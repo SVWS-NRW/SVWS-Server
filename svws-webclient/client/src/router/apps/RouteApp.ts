@@ -26,6 +26,7 @@ import { routeKatalogFoerderschwerpunkte } from "./schule/foerderschwerpunkte/Ro
 import { routeKatalogReligionen } from "./schule/religionen/RouteKatalogReligionen";
 import { routeKatalogSchulen } from "./schule/schulen/RouteKatalogSchulen";
 import { routeKatalogVermerkarten } from "./schule/vermerkarten/RouteKatalogVermerkarten";
+import { routeKatalogLernplattformen } from "~/router/apps/schule/lernplattformen/RouteKatalogLernplattformen";
 import { routeEinstellungen } from "./einstellungen/RouteEinstellungen";
 import { routeEinstellungenBenutzer } from "~/router/apps/einstellungen/benutzer/RouteEinstellungenBenutzer";
 import { routeEinstellungenBenutzergruppe } from "~/router/apps/einstellungen/benutzergruppen/RouteEinstellungenBenutzergruppe";
@@ -111,6 +112,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeKatalogFoerderschwerpunkte,
 			routeSchuleJahrgaenge,
 			routeKatalogVermerkarten,
+			routeKatalogLernplattformen,
 			// Allgemein
 			routeKatalogReligionen,
 			routeKatalogSchulen,
