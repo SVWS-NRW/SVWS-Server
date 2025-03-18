@@ -15,7 +15,7 @@ export class RouteSchuleDatenaustauschWenom extends RouteNode<RouteDataSchuleDat
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.NOTENMODUL_ADMINISTRATION ], "schule.datenaustausch.wenom", "wenom", SSchuleDatenaustauschWenom, new RouteDataSchuleDatenaustauschWenom());
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.ALPHA;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Webnotenmanager";
 		super.menugroup = RouteSchuleMenuGroup.DATENAUSTAUSCH;
