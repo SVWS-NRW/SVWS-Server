@@ -35,7 +35,7 @@ ext.jdk_win_url = (ext.base_url == null)
 	: "${base_url}/OpenJDK${jdk}U-jdk_x64_windows_hotspot_${jdk_version}_${jdk_fix}.zip"
 //ext.jdk_win_url = "https://download.java.net/java/GA/jdk${jdk_version}/e482c34c86bd4bf8b56c0b35558996b9/10/GPL/openjdk-${jdk_version}_windows-x64_bin.zip"
 
-ext.mariadb_version = "11.4.5"
+ext.mariadb_version = "11.4.4"
 ext.mariadb_win_url = (ext.base_url == null)
 	? "https://mirror.netcologne.de/mariadb/mariadb-${mariadb_version}/winx64-packages/mariadb-${mariadb_version}-winx64.zip"
 	: "${base_url}/mariadb-${mariadb_version}-winx64.zip"
