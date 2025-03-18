@@ -375,7 +375,7 @@ export class SchuelerLernabschnittManager extends JavaObject {
 		const fachDaten : FachDaten | null = this.fachGetByLeistungId(idLeistung);
 		if (fachDaten === null)
 			return "rgb(220,220,220)";
-		return Fach.getBySchluesselOrDefault(fachDaten.kuerzel).getHMTLFarbeRGB(this._schuljahresabschnitt.schuljahr);
+		return Fach.getBySchluesselOrDefault(fachDaten.kuerzelStatistik).getHMTLFarbeRGB(this._schuljahresabschnitt.schuljahr);
 	}
 
 	/**

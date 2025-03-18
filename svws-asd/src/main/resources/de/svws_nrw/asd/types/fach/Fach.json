@@ -1,5 +1,5 @@
 {
-	"version": 5,
+	"version": 6,
 	"daten": [ {
 		"bezeichner": "AB",
 		"idStatistik": "1",
@@ -6706,7 +6706,7 @@
 			"text": "Sachunterricht",
 			"kuerzel": "SU",
 			"aufgabenfeld": null,
-			"fachgruppe": null,
+			"fachgruppe": "FG_SU",
 			"abJahrgang": null,
 			"istFremdsprache": false,
 			"istHKFS": false,
