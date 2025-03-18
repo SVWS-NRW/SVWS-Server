@@ -515,6 +515,7 @@ export { SchildReportingSchuelerSprachpruefungen } from './core/data/schild3/rep
 export { SchuelerEinwilligungsartenZusammenfassung } from './core/data/schueler/SchuelerEinwilligungsartenZusammenfassung';
 export { SchuelerKAoADaten } from './core/data/schueler/SchuelerKAoADaten';
 export { SchuelerLernabschnittListeEintrag } from './core/data/schueler/SchuelerLernabschnittListeEintrag';
+export { SchuelerLernplattform } from './core/data/schueler/SchuelerLernplattform';
 export { SchuelerListe } from './core/data/schueler/SchuelerListe';
 export { SchuelerListeEintrag } from './core/data/schueler/SchuelerListeEintrag';
 export { SchuelerVermerkartZusammenfassung } from './core/data/schueler/SchuelerVermerkartZusammenfassung';

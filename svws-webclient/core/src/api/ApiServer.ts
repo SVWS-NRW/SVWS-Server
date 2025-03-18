@@ -153,6 +153,7 @@ import { SchuelerLeistungsdaten } from '../asd/data/schueler/SchuelerLeistungsda
 import { SchuelerLernabschnittBemerkungen } from '../asd/data/schueler/SchuelerLernabschnittBemerkungen';
 import { SchuelerLernabschnittListeEintrag } from '../core/data/schueler/SchuelerLernabschnittListeEintrag';
 import { SchuelerLernabschnittsdaten } from '../asd/data/schueler/SchuelerLernabschnittsdaten';
+import { SchuelerLernplattform } from '../core/data/schueler/SchuelerLernplattform';
 import { SchuelerListeEintrag } from '../core/data/schueler/SchuelerListeEintrag';
 import { SchuelerSchulbesuchMerkmal } from '../asd/data/schueler/SchuelerSchulbesuchMerkmal';
 import { SchuelerSchulbesuchSchule } from '../asd/data/schueler/SchuelerSchulbesuchSchule';
@@ -9661,6 +9662,63 @@ export class ApiServer extends BaseApi {
 		const ret = new ArrayList<SchuelerLernabschnittListeEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerLernabschnittListeEintrag.transpilerFromJSON(text)); });
 		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getSchuelerLernplattformen für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/lernplattformen
+	 *
+	 * Liest die Lernplattformen des Schülers zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Lernplattformen des Schülers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SchuelerLernplattform>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzusehen.
+	 *   Code 404: Keine Lernplattform für den Schüler mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Lernplattformen des Schülers
+	 */
+	public async getSchuelerLernplattformen(schema : string, id : number) : Promise<List<SchuelerLernplattform>> {
+		const path = "/db/{schema}/schueler/{id : \\d+}/lernplattformen"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SchuelerLernplattform>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerLernplattform.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchSchuelerLernplattform für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/lernplattformen/{idLernplattform : \d+}
+	 *
+	 * Passt die Einwilligung zu der angegebenen Schüler- und Einwilligungsart-ID an und speichert das Ergebnis in der Datenbank.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schüler-Einwilligungen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich in die Lernplattform integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lernplattform der Schüler zu ändern.
+	 *   Code 404: Kein Schüler oder keine Lernplattform der angegebenen Art gefunden.
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde. (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<SchuelerLernplattform>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 * @param {number} idLernplattform - der Pfad-Parameter idLernplattform
+	 */
+	public async patchSchuelerLernplattform(data : Partial<SchuelerLernplattform>, schema : string, id : number, idLernplattform : number) : Promise<void> {
+		const path = "/db/{schema}/schueler/{id : \\d+}/lernplattformen/{idLernplattform : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
+			.replace(/{idLernplattform\s*(:[^{}]+({[^{}]+})*)?}/g, idLernplattform.toString());
+		const body : string = SchuelerLernplattform.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
 	}
 
 
