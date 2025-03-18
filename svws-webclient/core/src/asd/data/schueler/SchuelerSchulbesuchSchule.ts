@@ -9,9 +9,9 @@ export class SchuelerSchulbesuchSchule extends JavaObject {
 	public id : number = 0;
 
 	/**
-	 * Die Schulnummer der Schule.
+	 * Die ID der Schule.
 	 */
-	public schulnummer : string = "";
+	public idSchule : number | null = null;
 
 	/**
 	 * Die ID des Bildungsganges/Schulgliederung an der Schule.
@@ -77,9 +77,7 @@ export class SchuelerSchulbesuchSchule extends JavaObject {
 		if (obj.id === undefined)
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (obj.schulnummer === undefined)
-			throw new Error('invalid json format, missing attribute schulnummer');
-		result.schulnummer = obj.schulnummer;
+		result.idSchule = (obj.idSchule === undefined) ? null : obj.idSchule === null ? null : obj.idSchule;
 		result.schulgliederung = (obj.schulgliederung === undefined) ? null : obj.schulgliederung === null ? null : obj.schulgliederung;
 		result.entlassgrundID = (obj.entlassgrundID === undefined) ? null : obj.entlassgrundID === null ? null : obj.entlassgrundID;
 		result.abschlussartID = (obj.abschlussartID === undefined) ? null : obj.abschlussartID === null ? null : obj.abschlussartID;
@@ -94,7 +92,7 @@ export class SchuelerSchulbesuchSchule extends JavaObject {
 	public static transpilerToJSON(obj : SchuelerSchulbesuchSchule) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"schulnummer" : ' + JSON.stringify(obj.schulnummer) + ',';
+		result += '"idSchule" : ' + ((obj.idSchule === null) ? 'null' : obj.idSchule.toString()) + ',';
 		result += '"schulgliederung" : ' + ((obj.schulgliederung === null) ? 'null' : JSON.stringify(obj.schulgliederung)) + ',';
 		result += '"entlassgrundID" : ' + ((obj.entlassgrundID === null) ? 'null' : obj.entlassgrundID.toString()) + ',';
 		result += '"abschlussartID" : ' + ((obj.abschlussartID === null) ? 'null' : JSON.stringify(obj.abschlussartID)) + ',';
@@ -113,8 +111,8 @@ export class SchuelerSchulbesuchSchule extends JavaObject {
 		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
-		if (obj.schulnummer !== undefined) {
-			result += '"schulnummer" : ' + JSON.stringify(obj.schulnummer) + ',';
+		if (obj.idSchule !== undefined) {
+			result += '"idSchule" : ' + ((obj.idSchule === null) ? 'null' : obj.idSchule.toString()) + ',';
 		}
 		if (obj.schulgliederung !== undefined) {
 			result += '"schulgliederung" : ' + ((obj.schulgliederung === null) ? 'null' : JSON.stringify(obj.schulgliederung)) + ',';

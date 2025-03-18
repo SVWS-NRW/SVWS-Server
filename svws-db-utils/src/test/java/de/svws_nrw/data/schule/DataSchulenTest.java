@@ -118,7 +118,6 @@ class DataSchulenTest {
 		assertThat(this.dataSchulen.map(dtoSchuleNRW))
 				.isInstanceOf(SchulEintrag.class)
 				.hasFieldOrPropertyWithValue("id", 1L)
-				.hasFieldOrPropertyWithValue("schulnummer", "123")
 				.hasFieldOrPropertyWithValue("schulnummerStatistik", "456")
 				.hasFieldOrPropertyWithValue("idSchulform", 10000L)
 				.hasFieldOrPropertyWithValue("strassenname", "RollercoasterRoad")
@@ -217,7 +216,7 @@ class DataSchulenTest {
 	void mapAttributeTest_interneSchulnummer() throws ApiOperationException {
 		final var expectedDTO = new DTOSchuleNRW(1L, "1");
 
-		this.dataSchulen.mapAttribute(expectedDTO, "schulnummer", "123456", null);
+		this.dataSchulen.mapAttribute(expectedDTO, "schulnummerStatistik", "123456", null);
 
 		assertThat(expectedDTO)
 				.hasFieldOrPropertyWithValue("SchulNr", "123456")
@@ -229,7 +228,7 @@ class DataSchulenTest {
 	void mapAttributeTest_externeSchulnummer() throws ApiOperationException {
 		final var expectedDTO = new DTOSchuleNRW(123L, "1");
 
-		this.dataSchulen.mapAttribute(expectedDTO, "schulnummer", "987654", null);
+		this.dataSchulen.mapAttribute(expectedDTO, "schulnummerStatistik", "987654", null);
 
 		assertThat(expectedDTO)
 				.hasFieldOrPropertyWithValue("SchulNr", "200123")
@@ -241,7 +240,7 @@ class DataSchulenTest {
 	void mapAttributeTest_wrongSchulnummer() {
 		final var expectedDTO = new DTOSchuleNRW(1L, "1");
 
-		final var throwable = catchThrowable(() -> this.dataSchulen.mapAttribute(expectedDTO, "schulnummer", "222333", null));
+		final var throwable = catchThrowable(() -> this.dataSchulen.mapAttribute(expectedDTO, "schulnummerStatistik", "222333", null));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
@@ -254,7 +253,7 @@ class DataSchulenTest {
 	void mapAttributeTest_schulnummerHasntChanged() throws ApiOperationException {
 		final var expectedDTO = new DTOSchuleNRW(1L, "123456");
 
-		this.dataSchulen.mapAttribute(expectedDTO, "schulnummer", "123456", null);
+		this.dataSchulen.mapAttribute(expectedDTO, "schulnummerStatistik", "123456", null);
 
 		assertThat(expectedDTO).hasFieldOrPropertyWithValue("SchulNr", "123456");
 		verifyNoInteractions(this.conn);

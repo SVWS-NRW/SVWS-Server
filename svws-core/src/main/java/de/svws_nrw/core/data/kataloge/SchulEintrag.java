@@ -27,10 +27,6 @@ public class SchulEintrag {
 	@Schema(description = "eine Kurzbezeichnung für die Schule", example = "Erich-Kästner-Schule")
 	public String kurzbezeichnung;
 
-	/** Die Schulnummer der Schule. */
-	@Schema(description = "die Schulnummer der Schule", example = "100001")
-	public @NotNull String schulnummer = "";
-
 	/** Die Statistik-Schulnummer der Schule */
 	@Schema(description = "Die Statistik-Schulnummer der Schule", example = "989123")
 	public String schulnummerStatistik;

@@ -1,33 +1,29 @@
 package de.svws_nrw.data.schueler;
 
-import java.io.InputStream;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
-
 import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchSchule;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOSchuleNRW;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOEntlassarten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerAbgaenge;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response;
+import java.io.InputStream;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.ThrowableAssert.catchThrowable;
-import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -137,12 +133,19 @@ class DataSchuelerSchulbesuchSchuleTest {
 	@DisplayName("map | Erfolg")
 	void mapTest() throws ApiOperationException {
 		final var dto = getDtoSchuelerAbgaenge();
+		final var schulnummer = "123123";
+		final var idSchule = 111L;
+		final var c = mock(DBEntityManager.class);
+		lenient().when(c.queryAll(DTOSchuleNRW.class)).thenReturn(List.of(new DTOSchuleNRW(idSchule, schulnummer)));
+		lenient().when(c.queryAll(DTOEntlassarten.class)).thenReturn(List.of(new DTOEntlassarten(123L, "Beurlaubung")));
+		final var data = new DataSchuelerSchulbesuchSchule(c);
 
-		assertThat(this.data.map(dto))
+		assertThat(data.map(dto))
 				.isInstanceOf(SchuelerSchulbesuchSchule.class)
 				.hasFieldOrPropertyWithValue("id", dto.ID)
+				.hasFieldOrPropertyWithValue("idSchule", idSchule)
 				.hasFieldOrPropertyWithValue("schulgliederung", dto.LSSGL)
-				.hasFieldOrPropertyWithValue("entlassgrundID", 7L)
+				.hasFieldOrPropertyWithValue("entlassgrundID", 123L)
 				.hasFieldOrPropertyWithValue("abschlussartID", dto.LSEntlassArt)
 				.hasFieldOrPropertyWithValue("organisationsFormID", dto.OrganisationsformKrz)
 				.hasFieldOrPropertyWithValue("datumVon", dto.LSBeginnDatum)
@@ -152,17 +155,30 @@ class DataSchuelerSchulbesuchSchuleTest {
 	}
 
 	@Test
+	@DisplayName("map | schule null")
+	void mapTest_schuleNull() throws ApiOperationException {
+		final var dto = getDtoSchuelerAbgaenge();
+		dto.AbgangsSchulNr = null;
+
+		final var result = this.data.map(dto);
+
+		assertThat(result.idSchule).isNull();
+	}
+
+	@Test
 	@DisplayName("mapMultiple | Erfolg")
 	void mapMultipleTest() {
 		final var dto = getDtoSchuelerAbgaenge();
 		final var entlassart = new DTOEntlassarten(7, "Beurlaubung");
+		final var schule = new DTOSchuleNRW(1L, "123123");
 
-		assertThat(DataSchuelerSchulbesuchSchule.mapMultiple(List.of(dto), Map.of(entlassart.Bezeichnung, entlassart)))
+		assertThat(DataSchuelerSchulbesuchSchule.mapMultiple(List.of(dto), Map.of(entlassart.Bezeichnung, entlassart), Map.of(schule.SchulNr, schule)))
 				.allSatisfy(item -> assertThat(item)
 						.isInstanceOf(SchuelerSchulbesuchSchule.class)
 						.hasFieldOrPropertyWithValue("id", dto.ID)
+						.hasFieldOrPropertyWithValue("idSchule", schule.ID)
 						.hasFieldOrPropertyWithValue("schulgliederung", dto.LSSGL)
-						.hasFieldOrPropertyWithValue("entlassgrundID", 7L)
+						.hasFieldOrPropertyWithValue("entlassgrundID", entlassart.ID)
 						.hasFieldOrPropertyWithValue("abschlussartID", dto.LSEntlassArt)
 						.hasFieldOrPropertyWithValue("organisationsFormID", dto.OrganisationsformKrz)
 						.hasFieldOrPropertyWithValue("datumVon", dto.LSBeginnDatum)
@@ -175,93 +191,9 @@ class DataSchuelerSchulbesuchSchuleTest {
 	@Test
 	@DisplayName("mapMultiple | List is empty")
 	void mapMultipleTest_emptyList() {
-		assertThat(DataSchuelerSchulbesuchSchule.mapMultiple(Collections.emptyList(), Collections.emptyMap())).isNotNull().isEmpty();
+		assertThat(DataSchuelerSchulbesuchSchule.mapMultiple(Collections.emptyList(), Collections.emptyMap(), Collections.emptyMap())).isNotNull().isEmpty();
 	}
 
-	@ParameterizedTest
-	@DisplayName("mapAttribute | Erfolg")
-	@MethodSource("provideMappingAttributes")
-	void mapAttributeTest(final String key, final Object value) {
-		final var expectedDTO = getDtoSchuelerAbgaenge();
-
-		final var throwable = catchThrowable(() -> this.data.mapAttribute(expectedDTO, key, value, null));
-
-		switch (key) {
-			case "id" -> assertThat(throwable)
-					.isInstanceOf(ApiOperationException.class)
-					.hasMessage("PatchId 35 ist ungleich dtoID 1.")
-					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
-			case "idSchueler" -> assertThat(expectedDTO.Schueler_ID).isEqualTo(value);
-			case "schulnummer" -> assertThat(expectedDTO.AbgangsSchulNr).isEqualTo(value);
-			case "schulgliederung" -> assertThat(expectedDTO.LSSGL).isEqualTo(value);
-			case "entlassgrundID" -> assertThat(expectedDTO.BemerkungIntern).isEqualTo("Beurlaubung");
-			case "abschlussartID" -> assertThat(expectedDTO.LSEntlassArt).isEqualTo(value);
-			case "organisationsFormID" -> assertThat(expectedDTO.OrganisationsformKrz).isEqualTo(value);
-			case "datumVon" -> assertThat(expectedDTO.LSBeginnDatum).isEqualTo(value);
-			case "datumBis" -> assertThat(expectedDTO.LSSchulEntlassDatum).isEqualTo(value);
-			case "jahrgangVon" -> assertThat(expectedDTO.LSBeginnJahrgang).isEqualTo(value);
-			case "jahrgangBis" -> assertThat(expectedDTO.LSJahrgang).isEqualTo(value);
-			default -> assertThat(throwable)
-					.isInstanceOf(ApiOperationException.class)
-					.hasMessageStartingWith("Die Daten des Patches enthalten das unbekannte Attribut")
-					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
-		}
-	}
-
-	private static Stream<Arguments> provideMappingAttributes() {
-		return Stream.of(
-				arguments("id", 35L),
-				arguments("idSchueler", 1001L),
-				arguments("schulnummer", "123456"),
-				arguments("schulgliederung", "456789"),
-				arguments("entlassgrundID", 7L),
-				arguments("abschlussartID", "OA"),
-				arguments("organisationsFormID", "1"),
-				arguments("davonVon", "1907-12-01"),
-				arguments("datumBis", "1909-02-03"),
-				arguments("jahrgangVon", "07"),
-				arguments("jahrgangBis", "08"),
-				arguments("unknownArgument", "oh oh ! das wollen wir auf keinen Fall!")
-		);
-	}
-
-	@ParameterizedTest
-	@DisplayName("mapAttribute | optional Values Null")
-	@MethodSource("provideMappingAttributesWithNullValues")
-	void mapAttributeTest_optionalValuesNull(final String key, final Object value) {
-		final var expectedDTO = getDtoSchuelerAbgaenge();
-
-		final var throwable = catchThrowable(() -> this.data.mapAttribute(expectedDTO, key, value, null));
-
-		switch (key) {
-			case "schulgliederung" -> assertThat(expectedDTO.LSSGL).isNull();
-			case "entlassgrundID" -> assertThat(expectedDTO.BemerkungIntern).isNull();
-			case "abschlussartID" -> assertThat(expectedDTO.LSEntlassArt).isNull();
-			case "organisationsFormID" -> assertThat(expectedDTO.OrganisationsformKrz).isNull();
-			case "datumVon" -> assertThat(expectedDTO.LSBeginnDatum).isNull();
-			case "datumBis" -> assertThat(expectedDTO.LSSchulEntlassDatum).isNull();
-			case "jahrgangVon" -> assertThat(expectedDTO.LSBeginnJahrgang).isNull();
-			case "jahrgangBis" -> assertThat(expectedDTO.LSJahrgang).isNull();
-			default -> assertThat(throwable)
-					.isInstanceOf(ApiOperationException.class)
-					.hasMessageStartingWith("Die Daten des Patches enthalten das unbekannte Attribut")
-					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
-		}
-	}
-
-	private static Stream<Arguments> provideMappingAttributesWithNullValues() {
-		return Stream.of(
-				arguments("schulgliederung", null),
-				arguments("entlassgrundID", null),
-				arguments("abschlussartID", null),
-				arguments("organisationsFormID", null),
-				arguments("davonVon", null),
-				arguments("datumBis", null),
-				arguments("jahrgangVon", null),
-				arguments("jahrgangBis", null),
-				arguments("unknownArgument", "oh oh ! das wollen wir auf keinen Fall!")
-		);
-	}
 
 	@Test
 	@DisplayName("mapAttribute | id is correct | nothing thrown")
@@ -270,19 +202,170 @@ class DataSchuelerSchulbesuchSchuleTest {
 	}
 
 	@Test
-	@DisplayName("mapAttribute | wrong entlassart")
-	void mapAttributeTest_entlassartIncorrect() {
-		final var throwable = catchThrowable(() -> this.data.mapAttribute(getDtoSchuelerAbgaenge(), "entlassgrundID", 1L, null));
+	@DisplayName("mapAttribute | id is not correct")
+	void mapAttributeTest_idIsNotCorrect() {
+		final var dto = new DTOSchuelerAbgaenge(1L, 2L);
+
+		final var throwable = catchThrowable(() -> this.data.mapAttribute(dto, "id", 2L, null));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Zur id 1 existiert keine Entlassart")
+				.hasMessage("PatchId 2 ist ungleich dtoID 1.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("mapAttribute | idSchule")
+	void mapAttributeTest_idSchule() throws ApiOperationException {
+		final var dto = new DTOSchuelerAbgaenge(1L, 2L);
+		final var schulnummer = "123123";
+		final var idSchule = 111L;
+		final var c = mock(DBEntityManager.class);
+		lenient().when(c.queryAll(DTOSchuleNRW.class)).thenReturn(List.of(new DTOSchuleNRW(idSchule, schulnummer)));
+		final var data = new DataSchuelerSchulbesuchSchule(c);
+
+		data.mapAttribute(dto, "idSchule", idSchule, null);
+
+		assertThat(dto.AbgangsSchulNr).isEqualTo(schulnummer);
+	}
+
+	@Test
+	@DisplayName("mapAttribute | idSchule | Exception")
+	void mapAttributeTest_idSchuleException() {
+		final var dto = new DTOSchuelerAbgaenge(1L, 2L);
+
+		final var throwable = catchThrowable(() -> this.data.mapAttribute(dto, "idSchule", 37L, null));
+
+		assertThat(throwable)
+				.isInstanceOf(ApiOperationException.class)
+				.hasMessage("Keine Schule mit der ID 37 gefunden.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.NOT_FOUND);
+	}
+
+	@Test
+	@DisplayName("mapAttribute | schulgliederung")
+	final void mapAttributeTest_schulgliederung() throws ApiOperationException {
+		final var dto = new DTOSchuelerAbgaenge(1L, 2L);
+
+		this.data.mapAttribute(dto, "schulgliederung", "123", null);
+
+		assertThat(dto.LSSGL).isEqualTo("123");
+	}
+
+	@Test
+	@DisplayName("mapAttribute | Entlassgrund")
+	final void mapAttributeTest_entlassgrund() throws ApiOperationException {
+		final var dto = new DTOSchuelerAbgaenge(1L, 2L);
+		final var c = mock(DBEntityManager.class);
+		lenient().when(c.queryAll(DTOEntlassarten.class)).thenReturn(List.of(new DTOEntlassarten(123L, "test")));
+		final var data = new DataSchuelerSchulbesuchSchule(c);
+
+		data.mapAttribute(dto, "entlassgrundID", 123L, null);
+
+		assertThat(dto.BemerkungIntern).isEqualTo("test");
+	}
+
+	@Test
+	@DisplayName("mapAttribute | Entlassgrund | Exception")
+	final void mapAttributeTest_entlassgrundException() {
+		final var dto = new DTOSchuelerAbgaenge(1L, 2L);
+
+		final var throwable = catchThrowable(() -> this.data.mapAttribute(dto, "entlassgrundID", 37L, null));
+
+		assertThat(throwable)
+				.isInstanceOf(ApiOperationException.class)
+				.hasMessage("Zur id 37 existiert keine Entlassart")
+				.hasFieldOrPropertyWithValue("status", Response.Status.NOT_FOUND);
+	}
+
+	@Test
+	@DisplayName("mapAttribute | Entlassgrund | null")
+	final void mapAttributeTest_entlassgrundNull() throws ApiOperationException {
+		final var dto = new DTOSchuelerAbgaenge(1L, 2L);
+		dto.BemerkungIntern = "needs to be replaced with null";
+
+		this.data.mapAttribute(dto, "entlassgrundID", null, null);
+
+		assertThat(dto.BemerkungIntern).isNull();
+
+
+
+	}
+
+	@Test
+	@DisplayName("mapAttribute | AbschlussartID")
+	final void mapAttributeTest_AbschlussartID() throws ApiOperationException {
+		final var dto = new DTOSchuelerAbgaenge(1L, 2L);
+
+		this.data.mapAttribute(dto, "abschlussartID", "12", null);
+
+		assertThat(dto.LSEntlassArt).isEqualTo("12");
+	}
+
+	@Test
+	@DisplayName("mapAttribute | organisationsFormID")
+	final void mapAttributeTest_organisationsFormID() throws ApiOperationException {
+		final var dto = new DTOSchuelerAbgaenge(1L, 2L);
+
+		this.data.mapAttribute(dto, "organisationsFormID", "A", null);
+
+		assertThat(dto.OrganisationsformKrz).isEqualTo("A");
+	}
+
+	@Test
+	@DisplayName("mapAttribute | datumVon")
+	final void mapAttributeTest_datumVon() throws ApiOperationException {
+		final var dto = new DTOSchuelerAbgaenge(1L, 2L);
+
+		this.data.mapAttribute(dto, "datumVon", "01-02-2020", null);
+
+		assertThat(dto.LSBeginnDatum).isEqualTo("01-02-2020");
+	}
+
+	@Test
+	@DisplayName("mapAttribute | datumBis")
+	final void mapAttributeTest_datumBis() throws ApiOperationException {
+		final var dto = new DTOSchuelerAbgaenge(1L, 2L);
+
+		this.data.mapAttribute(dto, "datumBis", "01-02-2020", null);
+
+		assertThat(dto.LSSchulEntlassDatum).isEqualTo("01-02-2020");
+	}
+
+	@Test
+	@DisplayName("mapAttribute | jahrgangVon")
+	final void mapAttributeTest_jahrgangVon() throws ApiOperationException {
+		final var dto = new DTOSchuelerAbgaenge(1L, 2L);
+
+		this.data.mapAttribute(dto, "jahrgangVon", "02", null);
+
+		assertThat(dto.LSBeginnJahrgang).isEqualTo("02");
+	}
+
+	@Test
+	@DisplayName("mapAttribute | jahrgangBis")
+	final void mapAttributeTest_jahrgangBis() throws ApiOperationException {
+		final var dto = new DTOSchuelerAbgaenge(1L, 2L);
+
+		this.data.mapAttribute(dto, "jahrgangBis", "02", null);
+
+		assertThat(dto.LSJahrgang).isEqualTo("02");
+	}
+
+	@Test
+	@DisplayName("mapAttribute | unknown")
+	final void mapAttributeTest_unknown() {
+		final var throwable = catchThrowable(() -> this.data.mapAttribute(null, "unknown", null, null));
+
+		assertThat(throwable)
+				.isInstanceOf(ApiOperationException.class)
+				.hasMessage("Die Daten des Patches enthalten das unbekannte Attribut unknown.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	private DTOSchuelerAbgaenge getDtoSchuelerAbgaenge() {
 		final var dto = new DTOSchuelerAbgaenge(1L, 1001);
-		dto.AbgangsSchulNr = "123456";
+		dto.AbgangsSchulNr = "123123";
 		dto.LSSGL = "456789";
 		dto.BemerkungIntern = "Beurlaubung";
 		dto.LSEntlassArt = "OA";

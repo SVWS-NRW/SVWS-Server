@@ -1,5 +1,6 @@
 package de.svws_nrw.data.schueler;
 
+import de.svws_nrw.db.dto.current.schild.katalog.DTOSchuleNRW;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +24,10 @@ import jakarta.ws.rs.core.Response.Status;
 public final class DataSchuelerSchulbesuchSchule extends DataManagerRevised<Long, DTOSchuelerAbgaenge, SchuelerSchulbesuchSchule> {
 
 	/** Ein Cache für den schnellen Zugriff auf den Katalog der Entlassarten. */
-	private final Map<String, DTOEntlassarten> mapEntlassarten;
+	private final Map<String, DTOEntlassarten> entlassartenByBezeichnung;
+
+	/** Ein Cache für den schnellen Zugriff auf den Katalog der Schulen */
+	private final Map<String, DTOSchuleNRW> schulenBySchulnummer;
 
 	/** die Id des Schülers - benötigt zum Persistieren neuer DTOSchuelerAbgaenge */
 	private final Long idSchueler;
@@ -48,7 +52,8 @@ public final class DataSchuelerSchulbesuchSchule extends DataManagerRevised<Long
 		this.idSchueler = idSchueler;
 		setAttributesRequiredOnCreation("schulnummer");
 		setAttributesNotPatchable("id");
-		mapEntlassarten = conn.queryAll(DTOEntlassarten.class).stream().collect(Collectors.toMap(e -> e.Bezeichnung, e -> e));
+		this.entlassartenByBezeichnung = conn.queryAll(DTOEntlassarten.class).stream().collect(Collectors.toMap(e -> e.Bezeichnung, e -> e));
+		this.schulenBySchulnummer = conn.queryAll(DTOSchuleNRW.class).stream().collect(Collectors.toMap(s -> s.SchulNr, s -> s));
 	}
 
 	@Override
@@ -78,15 +83,17 @@ public final class DataSchuelerSchulbesuchSchule extends DataManagerRevised<Long
 
 	@Override
 	protected SchuelerSchulbesuchSchule map(final DTOSchuelerAbgaenge dto) throws ApiOperationException {
-		return map(dto, this.mapEntlassarten);
+		return map(dto, this.entlassartenByBezeichnung, this.schulenBySchulnummer);
 	}
 
-	private static SchuelerSchulbesuchSchule map(final DTOSchuelerAbgaenge dto, final Map<String, DTOEntlassarten> mapEntlassarten) {
+	private static SchuelerSchulbesuchSchule map(final DTOSchuelerAbgaenge dto, final Map<String, DTOEntlassarten> entlassartenByBezeichnung,
+			final Map<String, DTOSchuleNRW> schulenBySchulnummer) {
 		final SchuelerSchulbesuchSchule bisherigeSchule = new SchuelerSchulbesuchSchule();
 		bisherigeSchule.id = dto.ID;
-		bisherigeSchule.schulnummer = dto.AbgangsSchulNr;
+		final DTOSchuleNRW schule = schulenBySchulnummer.get(dto.AbgangsSchulNr);
+		bisherigeSchule.idSchule = (schule != null) ? schule.ID : null;
 		bisherigeSchule.schulgliederung = dto.LSSGL;
-		bisherigeSchule.entlassgrundID = Optional.ofNullable(dto.BemerkungIntern).map(mapEntlassarten::get).map(e -> e.ID).orElse(null);
+		bisherigeSchule.entlassgrundID = Optional.ofNullable(dto.BemerkungIntern).map(entlassartenByBezeichnung::get).map(e -> e.ID).orElse(null);
 		bisherigeSchule.abschlussartID = dto.LSEntlassArt;
 		bisherigeSchule.organisationsFormID = dto.OrganisationsformKrz;
 		bisherigeSchule.datumVon = dto.LSBeginnDatum;
@@ -100,12 +107,14 @@ public final class DataSchuelerSchulbesuchSchule extends DataManagerRevised<Long
 	 * Mapped die übergebenen Datenbank-DTOs auf die zugehörigen Core-DTOs
 	 *
 	 * @param dtos              die Datenbank-DTOs
-	 * @param mapEntlassarten   eine Map mit den Entlassarten für das Mapping
+	 * @param entlassartenByBezeichnung   eine Map mit den Entlassarten für das Mapping
+	 * @param schulenBySchulnummer		  eine Map mit den Schulen für das Mapping
 	 *
 	 * @return die Core-DTOs
 	 */
-	public static List<SchuelerSchulbesuchSchule> mapMultiple(final Collection<DTOSchuelerAbgaenge> dtos, final Map<String, DTOEntlassarten> mapEntlassarten) {
-		return dtos.stream().map(dto -> map(dto, mapEntlassarten)).toList();
+	public static List<SchuelerSchulbesuchSchule> mapMultiple(final Collection<DTOSchuelerAbgaenge> dtos,
+			final Map<String, DTOEntlassarten> entlassartenByBezeichnung, final Map<String, DTOSchuleNRW> schulenBySchulnummer) {
+		return dtos.stream().map(dto -> map(dto, entlassartenByBezeichnung, schulenBySchulnummer)).toList();
 	}
 
 	@Override
@@ -117,17 +126,9 @@ public final class DataSchuelerSchulbesuchSchule extends DataManagerRevised<Long
 				if (!Objects.equals(dto.ID, id))
 					throw new ApiOperationException(Status.BAD_REQUEST, "PatchId %d ist ungleich dtoID %d.".formatted(id, dto.ID));
 			}
-			case "schulnummer" -> dto.AbgangsSchulNr = JSONMapper.convertToString(value, false, false, 6, "schulnummer");
+			case "idSchule" -> mapSchulnummer(dto, value);
 			case "schulgliederung" -> dto.LSSGL = JSONMapper.convertToString(value, true, true, 5, "schulgliederung");
-			case "entlassgrundID" ->  {
-				final Long id = JSONMapper.convertToLong(value, true, "entlassgrundID");
-				if (id == null) {
-					dto.BemerkungIntern = null;
-					return;
-				}
-				dto.BemerkungIntern = mapEntlassarten.values().stream().filter(e -> e.ID == id).findFirst().map(e -> e.Bezeichnung)
-						.orElseThrow(() -> new ApiOperationException(Status.BAD_REQUEST, "Zur id %d existiert keine Entlassart".formatted(id)));
-			}
+			case "entlassgrundID" -> mapEntlassgrund(dto, value);
 			case "abschlussartID" -> dto.LSEntlassArt = JSONMapper.convertToString(value, true, true, 2, "abschlussartID");
 			case "organisationsFormID" -> dto.OrganisationsformKrz = JSONMapper.convertToString(value, true, true, 1, "organisationsformKrz");
 			case "datumVon" -> dto.LSBeginnDatum = JSONMapper.convertToString(value, true, true, null, "datumVon");
@@ -136,5 +137,23 @@ public final class DataSchuelerSchulbesuchSchule extends DataManagerRevised<Long
 			case "jahrgangBis" -> dto.LSJahrgang = JSONMapper.convertToString(value, true, true, 2, "jahrgangBis");
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
 		}
+	}
+
+	private void mapSchulnummer(final DTOSchuelerAbgaenge dto, final Object value) throws ApiOperationException {
+		final Long idSchule = JSONMapper.convertToLong(value, false, "idSchule");
+
+		dto.AbgangsSchulNr = this.schulenBySchulnummer.values().stream().filter(s -> Objects.equals(s.ID, idSchule)).findFirst()
+				.map(s -> s.SchulNr)
+				.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, "Keine Schule mit der ID %d gefunden.".formatted(idSchule)));
+	}
+
+	private void mapEntlassgrund(final DTOSchuelerAbgaenge dto, final Object value) throws ApiOperationException {
+		final Long id = JSONMapper.convertToLong(value, true, "entlassgrundID");
+		if (id == null) {
+			dto.BemerkungIntern = null;
+			return;
+		}
+		dto.BemerkungIntern = entlassartenByBezeichnung.values().stream().filter(e -> e.ID == id).findFirst().map(e -> e.Bezeichnung)
+				.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, "Zur id %d existiert keine Entlassart".formatted(id)));
 	}
 }

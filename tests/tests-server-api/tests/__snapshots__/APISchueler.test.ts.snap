@@ -27577,11 +27577,11 @@ SchuelerSchulbesuchsdaten {
         "datumVon": "2009-03-01",
         "entlassgrundID": 4,
         "id": 5,
+        "idSchule": 51,
         "jahrgangBis": "04",
         "jahrgangVon": "E1",
         "organisationsFormID": null,
         "schulgliederung": "",
-        "schulnummer": "107323",
       },
       SchuelerSchulbesuchSchule {
         "abschlussartID": null,
@@ -27589,11 +27589,11 @@ SchuelerSchulbesuchsdaten {
         "datumVon": "2014-03-02",
         "entlassgrundID": 4,
         "id": 6,
+        "idSchule": 186,
         "jahrgangBis": "06",
         "jahrgangVon": "05",
         "organisationsFormID": "1",
         "schulgliederung": null,
-        "schulnummer": "184305",
       },
       SchuelerSchulbesuchSchule {
         "abschlussartID": null,
@@ -27601,11 +27601,11 @@ SchuelerSchulbesuchsdaten {
         "datumVon": "2014-04-01",
         "entlassgrundID": 6,
         "id": 7,
+        "idSchule": 131,
         "jahrgangBis": "EF",
         "jahrgangVon": "06",
         "organisationsFormID": "1",
         "schulgliederung": null,
-        "schulnummer": "169948",
       },
     ],
     "getFirst": [Function],
@@ -27615,7 +27615,6 @@ SchuelerSchulbesuchsdaten {
     "removeLast": [Function],
   },
   "aufnehmendBestaetigt": false,
-  "aufnehmendSchulnummer": null,
   "aufnehmendWechseldatum": null,
   "entlassungAbschlussartID": null,
   "entlassungDatum": null,
@@ -27625,6 +27624,8 @@ SchuelerSchulbesuchsdaten {
   "grundschuleEinschulungsjahr": 2009,
   "grundschuleJahreEingangsphase": 2,
   "id": 1199,
+  "idAufnehmendeSchule": null,
+  "idVorherigeSchule": 51,
   "kuerzelGrundschuleUebergangsempfehlung": null,
   "merkmale": ArrayList {
     "addFirst": [Function],
@@ -27646,7 +27647,6 @@ SchuelerSchulbesuchsdaten {
   "vorigeEntlassdatum": "2013-07-31",
   "vorigeEntlassgrundID": 4,
   "vorigeEntlassjahrgang": "04",
-  "vorigeSchulnummer": "107323",
 }
 `;
 

@@ -34,13 +34,13 @@ import jakarta.ws.rs.core.Response.Status;
 public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long, DTOSchueler, SchuelerSchulbesuchsdaten> {
 
 	/** Ein Cache für den schnellen Zugriff auf den Katalog der Entlassarten. */
-	private final Map<String, DTOEntlassarten> mapEntlassarten;
+	private final Map<String, DTOEntlassarten> entlassartenByBezeichnung;
 
 	/** Ein Cache für den schnellen Zugriff auf den Katalog der Merkmale */
-	private final Map<String, DTOMerkmale> merkmale;
+	private final Map<String, DTOMerkmale> merkmaleByKurztext;
 
 	/** Ein Cache für den schnellen Zugriff auf den Katalog der Schulen */
-	private final Map<String, DTOSchuleNRW> schulen;
+	private final Map<String, DTOSchuleNRW> schulenBySchulnummer;
 
 
 	/**
@@ -50,9 +50,9 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 	 */
 	public DataSchuelerSchulbesuchsdaten(final DBEntityManager conn) {
 		super(conn);
-		this.mapEntlassarten = conn.queryAll(DTOEntlassarten.class).stream().collect(Collectors.toMap(e -> e.Bezeichnung, e -> e));
-		this.merkmale = conn.queryAll(DTOMerkmale.class).stream().collect(Collectors.toMap(m -> m.Kurztext, m -> m));
-		this.schulen = conn.queryAll(DTOSchuleNRW.class).stream().collect(Collectors.toMap(s -> s.SchulNr, s -> s));
+		this.entlassartenByBezeichnung = conn.queryAll(DTOEntlassarten.class).stream().collect(Collectors.toMap(e -> e.Bezeichnung, e -> e));
+		this.merkmaleByKurztext = conn.queryAll(DTOMerkmale.class).stream().collect(Collectors.toMap(m -> m.Kurztext, m -> m));
+		this.schulenBySchulnummer = conn.queryAll(DTOSchuleNRW.class).stream().collect(Collectors.toMap(s -> s.SchulNr, s -> s));
 	}
 
 
@@ -85,23 +85,25 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 		// Basisdaten
 		daten.id = getLongId(dtoSchueler);
 		// Informationen zu der Schule, die vor der Aufnahme besucht wurde
-		daten.vorigeSchulnummer = dtoSchueler.LSSchulNr;
+		final DTOSchuleNRW vorherigeSchule = this.schulenBySchulnummer.get(dtoSchueler.LSSchulNr);
+		daten.idVorherigeSchule = (vorherigeSchule != null) ? vorherigeSchule.ID : null;
 		daten.vorigeAllgHerkunft = dtoSchueler.LSSchulform;
 		daten.vorigeEntlassdatum = dtoSchueler.LSSchulEntlassDatum;
 		daten.vorigeEntlassjahrgang = dtoSchueler.LSJahrgang;
 		daten.vorigeArtLetzteVersetzung = dtoSchueler.LSVersetzung;
 		daten.vorigeBemerkung = dtoSchueler.LSBemerkung;
-		final DTOEntlassarten vorigeEntlassgrund = (dtoSchueler.LSEntlassgrund == null) ? null : this.mapEntlassarten.get(dtoSchueler.LSEntlassgrund);
+		final DTOEntlassarten vorigeEntlassgrund = (dtoSchueler.LSEntlassgrund == null) ? null : this.entlassartenByBezeichnung.get(dtoSchueler.LSEntlassgrund);
 		daten.vorigeEntlassgrundID = (vorigeEntlassgrund == null) ? null : vorigeEntlassgrund.ID;
 		daten.vorigeAbschlussartID = dtoSchueler.LSEntlassArt;
 		// Informationen zu der Entlassung von der eigenen Schule
 		daten.entlassungDatum = dtoSchueler.Entlassdatum;
 		daten.entlassungJahrgang = dtoSchueler.Entlassjahrgang;
-		final DTOEntlassarten entlassgrund = (dtoSchueler.Entlassgrund == null) ? null : this.mapEntlassarten.get(dtoSchueler.Entlassgrund);
+		final DTOEntlassarten entlassgrund = (dtoSchueler.Entlassgrund == null) ? null : this.entlassartenByBezeichnung.get(dtoSchueler.Entlassgrund);
 		daten.entlassungGrundID = (entlassgrund == null) ? null : entlassgrund.ID;
 		daten.entlassungAbschlussartID = dtoSchueler.Entlassart;
 		// Informationen zu der aufnehmenden Schule nach einem Wechsel zu einer anderen Schule
-		daten.aufnehmendSchulnummer = dtoSchueler.SchulwechselNr;
+		final DTOSchuleNRW aufnehmendeSchule = this.schulenBySchulnummer.get(dtoSchueler.SchulwechselNr);
+		daten.idAufnehmendeSchule = (aufnehmendeSchule != null) ? aufnehmendeSchule.ID : null;
 		daten.aufnehmendWechseldatum = dtoSchueler.Schulwechseldatum;
 		daten.aufnehmendBestaetigt = dtoSchueler.WechselBestaetigt;
 		// Informationen zu der besuchten Grundschule
@@ -115,10 +117,10 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 		daten.sekIIWechsel = dtoSchueler.JahrWechsel_SII;
 
 		// Informationen zu besonderen Merkmalen für die Statistik
-		daten.merkmale = DataSchuelerMerkmale.mapMultiple(schuelerMerkmale, merkmale);
+		daten.merkmale = DataSchuelerMerkmale.mapMultiple(schuelerMerkmale, merkmaleByKurztext);
 
 		// Informationen zu allen bisher besuchten Schulen
-		daten.alleSchulen = DataSchuelerSchulbesuchSchule.mapMultiple(schuelerAbgaenge, mapEntlassarten);
+		daten.alleSchulen = DataSchuelerSchulbesuchSchule.mapMultiple(schuelerAbgaenge, entlassartenByBezeichnung, schulenBySchulnummer);
 
 		return daten;
 	}
@@ -134,7 +136,7 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 					throw new ApiOperationException(Status.BAD_REQUEST, "IdPatch %d ist ungleich idSchueler %d.".formatted(idPatch, getLongId(dtoSchueler)));
 			}
 			// Informationen zu der Schule, die vor der Aufnahme besucht wurde
-			case "vorigeSchulnummer" -> mapSchulnummer(value, "vorigeSchulnummer", v -> dtoSchueler.LSSchulNr = v);
+			case "idVorherigeSchule" -> mapSchulnummer(value, "idVorherigeSchule", v -> dtoSchueler.LSSchulNr = v);
 			case "vorigeAllgHerkunft" -> { /* TODO zur Zeit noch nicht implementiert */ }
 			case "vorigeEntlassdatum" -> dtoSchueler.LSSchulEntlassDatum = JSONMapper.convertToString(value, true, true, null, "vorigeEntlassdatum");
 			case "vorigeEntlassjahrgang" -> mapJahrgang(value, "vorigeEntlassjahrgang", v -> dtoSchueler.LSJahrgang = v);
@@ -153,7 +155,7 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 					dtoSchueler.Entlassart = JSONMapper.convertToString(value, true, true, null, "entlassungAbschlussartID");
 
 			// Informationen zu der aufnehmenden Schule nach einem Wechsel zu einer anderen Schule
-			case "aufnehmendSchulnummer" -> mapSchulnummer(value, "aufnehmendSchulnummer", v -> dtoSchueler.SchulwechselNr = v);
+			case "idAufnehmendeSchule" -> mapSchulnummer(value, "idAufnehmendeSchule", v -> dtoSchueler.SchulwechselNr = v);
 			case "aufnehmendWechseldatum" -> dtoSchueler.Schulwechseldatum = JSONMapper.convertToString(value, true, true, null, "aufnehmendWechseldatum");
 			case "aufnehmendBestaetigt" -> dtoSchueler.WechselBestaetigt = JSONMapper.convertToBoolean(value, true, "aufnehmendBestaetigt");
 
@@ -223,14 +225,14 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 	}
 
 	private void mapSchulnummer(final Object value, final String key, final Consumer<String> setter) throws ApiOperationException {
-		final String schulnummer = JSONMapper.convertToString(value, true, true, null, key);
-		if (schulnummer == null) {
+		final Long idSchule = JSONMapper.convertToLong(value, true, key);
+		if (idSchule == null) {
 			setter.accept(null);
 			return;
 		}
-		final boolean exists = this.schulen.values().stream().anyMatch(s -> Objects.equals(s.SchulNr, schulnummer));
-		if (!exists)
-			throw new ApiOperationException(Status.NOT_FOUND, "Keine Schule mit Schulnummer %s gefunden.".formatted(schulnummer));
+		final String schulnummer = this.schulenBySchulnummer.values().stream().filter(s -> Objects.equals(s.ID, idSchule)).findFirst()
+				.map(s -> s.SchulNr)
+				.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, "Keine Schule mit der ID %d gefunden.".formatted(idSchule)));
 
 		setter.accept(schulnummer);
 	}
@@ -269,7 +271,7 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 			setter.accept(null);
 			return;
 		}
-		final String bezeichnung = this.mapEntlassarten.values().stream().filter(e -> Objects.equals(e.ID, entlassungGrundID)).findFirst()
+		final String bezeichnung = this.entlassartenByBezeichnung.values().stream().filter(e -> Objects.equals(e.ID, entlassungGrundID)).findFirst()
 				.map(e -> e.Bezeichnung)
 				.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, "Keine Entlassart mit der ID %s gefunden.".formatted(entlassungGrundID)));
 

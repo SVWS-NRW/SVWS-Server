@@ -26,16 +26,16 @@ export class SchuelerSchulbesuchManager {
 	protected _state : ShallowRef<ManagerStateDataSchuelerSchulbesuch>;
 
 	/** Eine Map der Schuljahresabschnitte gemappt nach idSchuljahresAbschnitt */
-	protected _schuljahresabschnitte: Map<number, Schuljahresabschnitt> = new Map();
+	protected _schuljahresabschnitteById: Map<number, Schuljahresabschnitt> = new Map();
 
 	/** Eine Map der Schulen gemappt nach Schulnummer */
-	protected _schulen: Map<string, SchulEintrag> = new Map();
+	protected _schulenById: Map<number, SchulEintrag> = new Map();
 
 	/** Eine Map der Merkmale gemappt nach id */
-	protected _merkmale: Map<number, Merkmal> = new Map();
+	protected _merkmaleById: Map<number, Merkmal> = new Map();
 
 	/** Eine Map der Entlassgruende gemappt nach id */
-	protected _entlassgruende: Map<number, KatalogEntlassgrund> = new Map();
+	protected _entlassgruendeById: Map<number, KatalogEntlassgrund> = new Map();
 
 	/** Das Schuljahr vom Schuljahresabschnitts des aktuell ausgewählten Schülers */
 	protected _schuljahr : number;
@@ -72,22 +72,22 @@ export class SchuelerSchulbesuchManager {
 
 	private mapSchuljahresabschnitte(schuljahresabschnitte: List<Schuljahresabschnitt>) {
 		for (const abschnitt of schuljahresabschnitte)
-			this._schuljahresabschnitte.set(abschnitt.id, abschnitt);
+			this._schuljahresabschnitteById.set(abschnitt.id, abschnitt);
 	}
 
 	private mapSchulen(schulen : List<SchulEintrag>) {
 		for (const schule of schulen)
-			this._schulen.set(schule.schulnummer, schule);
+			this._schulenById.set(schule.id, schule);
 	}
 
 	private mapMerkmale(merkmale : List<Merkmal>) {
 		for (const merkmal of merkmale)
-			this._merkmale.set(merkmal.id, merkmal);
+			this._merkmaleById.set(merkmal.id, merkmal);
 	}
 
 	private mapEntlassgruende(entlassgruende : List<KatalogEntlassgrund>) {
 		for (const entlassgrund of entlassgruende)
-			this._entlassgruende.set(entlassgrund.id, entlassgrund)
+			this._entlassgruendeById.set(entlassgrund.id, entlassgrund)
 	}
 
 	/** Gibt die aktuell im Manager gespeicherten SchuelerSchulbesuchsdaten zurück. */
@@ -96,18 +96,18 @@ export class SchuelerSchulbesuchManager {
 	}
 
 	/** Gibt die aktuell im Manager gespeicherten Schulen zurück */
-	public get schulen() : Map<string, SchulEintrag> {
-		return this._schulen;
+	public get schulenById() : Map<number, SchulEintrag> {
+		return this._schulenById;
 	}
 
 	/** Gibt die aktuell im Manager gespeicherten Merkmal zurück */
-	public get merkmale() : Map<number, Merkmal> {
-		return this._merkmale;
+	public get merkmaleById() : Map<number, Merkmal> {
+		return this._merkmaleById;
 	}
 
 	/** Gibt die aktuell im Manager gespeicherten Entlassgründe zurück */
-	public get entlassgruende() : Map<number, KatalogEntlassgrund> {
-		return this._entlassgruende;
+	public get entlassgruendeById() : Map<number, KatalogEntlassgrund> {
+		return this._entlassgruendeById;
 	}
 
 	/** Gibt das Schuljahr vom Schuljahresabschnitts des aktuell ausgewählten Schülers zurück */
@@ -116,8 +116,8 @@ export class SchuelerSchulbesuchManager {
 	}
 
 	/** Gibt die vorherige Schule des aktuell ausgewählten Schülers zurück */
-	public getVorigeSchule() : SchulEintrag | undefined {
-		return this.schulen.get(this.daten.vorigeSchulnummer ?? '');
+	public getVorherigeSchule() : SchulEintrag | undefined {
+		return this.schulenById.get(this.daten.idVorherigeSchule ?? -1);
 	}
 
 	/** Gibt die vorherige Versetzungsart des ausgewählten Schülers zurück */
@@ -163,7 +163,7 @@ export class SchuelerSchulbesuchManager {
 
 	/** Gibt den Entlassgrund des ausgewählten Schülers zurück */
 	public getEntlassgrund(field: "entlassungGrundID" | "vorigeEntlassgrundID") {
-		return this.entlassgruende.get(this.daten[field] ?? -1);
+		return this.entlassgruendeById.get(this.daten[field] ?? -1);
 	}
 
 	/** Gibt die Einschulungsart des ausgewählten Schülers zurück */
@@ -209,9 +209,10 @@ export class SchuelerSchulbesuchManager {
 	public patchSchule(schule: SchulEintrag | undefined | null, key: string) {
 		const patchData: Record<string, any> = {};
 		if (schule !== undefined && schule !== null)
-			patchData[key] = schule.schulnummer;
+			patchData[key] = schule.id;
 		else
 			patchData[key] = null;
+		console.log(patchData)
 		void this.doPatch(patchData);
 
 	}
@@ -224,7 +225,7 @@ export class SchuelerSchulbesuchManager {
 	// --- util ---
 
 	private calcSchuljahr(): number {
-		const abschnitt = this._schuljahresabschnitte.get(this._state.value.auswahl.idSchuljahresabschnitt?? -1);
+		const abschnitt = this._schuljahresabschnitteById.get(this._state.value.auswahl.idSchuljahresabschnitt);
 		return (abschnitt === undefined) ? -1 : abschnitt.schuljahr;
 	}
 }

@@ -6,7 +6,7 @@
 				<svws-ui-radio-option class="pb-4" v-model="isInternal" :value="false" label=" Externe Schule erstellen " />
 			</div>
 			<svws-ui-select v-if="!isInternal" class="pb-4" title="Schulen außerhalb NRW" :items="Herkunftsschulnummern.all_values_by_name.values()"
-				:model-value="externalSchulnummer" @update:model-value="v => data.schulnummer = v?.daten.schulnummer.toString() ?? ''"
+				:model-value="externalSchulnummer" @update:model-value="v => data.schulnummerStatistik = v?.daten.schulnummer.toString() ?? ''"
 				:item-text=" v => v.daten.bezeichnung" />
 			<svws-ui-select v-if="isInternal" class="pb-4" title="Schulen innerhalb NRW" removable :items="schulenKatalogEintraege" autocomplete :disabled="isLoading"
 				:model-value="selectedSchule" :item-filter="filterSchulenKatalogEintraege" @update:model-value="updateData" :item-text="schulenKatalogEintragText" />
@@ -15,13 +15,14 @@
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-checkbox v-model="data.istSichtbar" :disabled="schuleAlreadyCreated">Ist Sichtbar</svws-ui-checkbox>
 					<svws-ui-input-number placeholder="Sortierung" v-model="data.sortierung" :disabled="schuleAlreadyCreated" />
-					<svws-ui-text-input placeholder="Schulnummer" required :valid="fieldIsValid('schulnummer')" :model-value="data.schulnummer" readonly />
 					<svws-ui-select title="Schulform" :items="Schulform.values()" :item-text="i => i.daten(schuljahr)?.text?? '_'" removable
 						v-model="selectedSchulform" />
+					<svws-ui-text-input placeholder="Statistik-Schulnummer" required :valid="fieldIsValid('schulnummerStatistik')" readonly
+						:model-value="data.schulnummerStatistik" />
 					<svws-ui-text-input placeholder="Kürzel" :max-len="10" :valid="fieldIsValid('kuerzel')" v-model="data.kuerzel" />
+					<svws-ui-text-input placeholder="Schulname" required :max-len="120" :valid="fieldIsValid('name')" v-model="data.name" />
 					<svws-ui-text-input placeholder="Kurzbezeichnung" required :max-len="40" :valid="fieldIsValid('kurzbezeichnung')"
 						v-model="data.kurzbezeichnung" />
-					<svws-ui-text-input placeholder="Schulname" required :max-len="120" :valid="fieldIsValid('name')" v-model="data.name" />
 					<svws-ui-text-input placeholder="Schulleitung" :max-len="40" :valid="fieldIsValid('schulleiter')" v-model="data.schulleiter" />
 					<svws-ui-text-input placeholder="Straße" :max-len="55" :valid="fieldIsValid('strassenname')" v-model="adresse" />
 					<svws-ui-text-input placeholder="PLZ" :max-len="10" :valid="fieldIsValid('plz')" v-model="data.plz" />
@@ -89,7 +90,7 @@
 		selectedSchule.value = schule;
 		// Felder füllen
 		data.value.kurzbezeichnung = schule.KurzBez?? "";
-		data.value.schulnummer = schule.SchulNr;
+		data.value.schulnummerStatistik = schule.SchulNr;
 		data.value.name = (schule.ABez1?? "") + (schule.ABez2?? "") + (schule.ABez3?? "");
 		selectedSchulform.value = Schulform.data().getWertBySchluessel(schule.SF?? "");
 		adresse.value = schule.Strasse;
@@ -127,7 +128,7 @@
 	// ---util---
 
 	const schuleAlreadyCreated = computed(() => findSchuleByPredicate(
-		schuleintrag => JavaObject.equalsTranspiler(schuleintrag.schulnummer, selectedSchule.value?.SchulNr)) !== null
+		(schuleintrag : SchulEintrag) => JavaObject.equalsTranspiler(schuleintrag.schulnummerStatistik, selectedSchule.value?.SchulNr)) !== null
 	)
 
 	function resetForm() {
@@ -137,8 +138,8 @@
 
 	function navigateToSelectedSchule() {
 		props.checkpoint.active = false;
-		const schuleintrag = findSchuleByPredicate(schuleintrag =>
-			JavaObject.equalsTranspiler(schuleintrag.schulnummer, selectedSchule.value?.SchulNr));
+		const schuleintrag = findSchuleByPredicate((schuleintrag : SchulEintrag) =>
+			JavaObject.equalsTranspiler(schuleintrag.schulnummerStatistik, selectedSchule.value?.SchulNr));
 		if (schuleintrag)
 			void props.gotoDefaultView(schuleintrag.id);
 	}
@@ -173,8 +174,8 @@
 					return kuerzelIsValid(data.value.kuerzel);
 				case 'kurzbezeichnung':
 					return mandatoryInputIsValid(data.value.kurzbezeichnung, 40);
-				case 'schulnummer':
-					return mandatoryInputIsValid(data.value.schulnummer, null);
+				case 'schulnummerStatistik':
+					return mandatoryInputIsValid(data.value.schulnummerStatistik, 6);
 				case 'name':
 					return mandatoryInputIsValid(data.value.name, 120);
 				case 'schulleiter':

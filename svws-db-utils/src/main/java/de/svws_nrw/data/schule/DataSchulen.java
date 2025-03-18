@@ -28,7 +28,7 @@ public final class DataSchulen extends DataManagerRevised<Long, DTOSchuleNRW, Sc
 	public DataSchulen(final DBEntityManager conn) {
 		super(conn);
 		setAttributesNotPatchable("id", "schulnummerStatistik");
-		setAttributesRequiredOnCreation("schulnummer", "kurzbezeichnung", "name");
+		setAttributesRequiredOnCreation("schulnummerStatistik", "kurzbezeichnung", "name");
 	}
 
 	@Override
@@ -65,7 +65,6 @@ public final class DataSchulen extends DataManagerRevised<Long, DTOSchuleNRW, Sc
 		result.id = dtoSchuleNRW.ID;
 		result.kuerzel = dtoSchuleNRW.Kuerzel;
 		result.kurzbezeichnung = dtoSchuleNRW.KurzBez;
-		result.schulnummer = dtoSchuleNRW.SchulNr;
 		result.schulnummerStatistik = dtoSchuleNRW.SchulNr_SIM;
 		result.name = (dtoSchuleNRW.Name != null) ? dtoSchuleNRW.Name : "";
 		final Schulform schulform = (dtoSchuleNRW.SchulformNr != null) ? Schulform.data().getWertBySchluessel(dtoSchuleNRW.SchulformNr) : null;
@@ -93,10 +92,7 @@ public final class DataSchulen extends DataManagerRevised<Long, DTOSchuleNRW, Sc
 				if (id != dto.ID)
 					throw new ApiOperationException(Status.BAD_REQUEST, "Id %d der PatchMap ist ungleich der id %d vom Dto".formatted(id, dto.ID));
 			}
-			case "schulnummer" -> mapSchulnummer(dto, value);
-			case "schulnummerStatistik" -> {
-				// wird im case "schulnummer" vergeben
-			}
+			case "schulnummerStatistik" -> mapSchulnummer(dto, value);
 			case "kuerzel" -> updateKuerzel(dto, value);
 			case "kurzbezeichnung" -> dto.KurzBez = JSONMapper.convertToString(value, false, false, 40, "kurzbezeichnung");
 			case "name" -> dto.Name = JSONMapper.convertToString(value, false, false, 120, "name");

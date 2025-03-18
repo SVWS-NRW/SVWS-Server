@@ -2,14 +2,14 @@
 	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Vor der Aufnahme besucht">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-select title="Schule" :items="manager().schulen.values()" :item-text="textSchule" autocomplete :item-filter="filterSchulenEintraege"
-					:model-value="manager().getVorigeSchule()" @update:model-value="v => manager().patchSchule(v, 'vorigeSchulnummer')" removable />
-				<svws-ui-button type="transparent" @click="goToSchule(manager().getVorigeSchule()?.id ?? -1)">
+				<svws-ui-select title="Schule" :items="manager().schulenById.values()" :item-text="textSchule" autocomplete :item-filter="filterSchulenEintraege"
+					:model-value="manager().getVorherigeSchule()" @update:model-value="v => manager().patchSchule(v, 'idVorherigeSchule')" removable />
+				<svws-ui-button type="transparent" @click="goToSchule(manager().daten.idVorherigeSchule ?? -1)">
 					<span class="icon i-ri-link" />Zur Schule
 				</svws-ui-button>
 				<svws-ui-text-input placeholder="allgemeine Herkunft" :model-value="manager().getVorigeAllgHerkunft()" readonly />
 				<svws-ui-text-input v-autofocus placeholder="Statistik-Schulnummer" :statistics="true" readonly
-					:model-value="manager().getVorigeSchule()?.schulnummerStatistik ?? ' - '" />
+					:model-value="manager().getVorherigeSchule()?.schulnummerStatistik ?? ' - '" />
 				<svws-ui-text-input placeholder="Entlassen am" type="date" :model-value="manager().daten.vorigeEntlassdatum"
 					@change="vorigeEntlassdatum => manager().doPatch({ vorigeEntlassdatum })" />
 				<svws-ui-select title="Entlassjahrgang" :items="Jahrgaenge.values()" :model-value="manager().getEntlassjahrgang('vorigeEntlassjahrgang')"
@@ -17,7 +17,7 @@
 				<svws-ui-text-input placeholder="Bemerkung" span="full" :model-value="manager().daten.vorigeBemerkung" :max-len="255"
 					@change="v => { if ((v ?? '').length <= 255) manager().doPatch({ vorigeBemerkung : v }) } " />
 				<svws-ui-spacing />
-				<svws-ui-select title="Entlassgrund" :items="manager().entlassgruende" :item-text="v => v.bezeichnung" removable
+				<svws-ui-select title="Entlassgrund" :items="manager().entlassgruendeById" :item-text="v => v.bezeichnung" removable
 					:model-value="manager().getEntlassgrund('vorigeEntlassgrundID')"
 					@update:model-value="v => manager().patchEntlassgrund(v, 'vorigeEntlassgrundID')" />
 				<svws-ui-text-input placeholder="höchster Abschluss, der von der anderen Schule mitgebracht wurde" disabled
@@ -32,7 +32,7 @@
 					@change="entlassungDatum => manager().doPatch({ entlassungDatum })" />
 				<svws-ui-select title="Entlassjahrgang" :items="Jahrgaenge.values()" :model-value="manager().getEntlassjahrgang('entlassungJahrgang')"
 					@update:model-value="v => manager().patchEntlassjahrgang(v, 'entlassungJahrgang')" :item-text="textJahrgang" removable />
-				<svws-ui-select title="Entlassgrund" :items="manager().entlassgruende" :item-text="v => v.bezeichnung" removable
+				<svws-ui-select title="Entlassgrund" :items="manager().entlassgruendeById" :item-text="v => v.bezeichnung" removable
 					:model-value="manager().getEntlassgrund('entlassungGrundID')"
 					@update:model-value="v => manager().patchEntlassgrund(v, 'entlassungGrundID')" />
 				<svws-ui-spacing />
@@ -48,10 +48,10 @@
 				</svws-ui-checkbox>
 			</template>
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-select title="Schule" :items="manager().schulen.values()" :item-text="textSchule" autocomplete
-					:model-value="manager().schulen.get(manager().daten.aufnehmendSchulnummer ?? '')" :item-filter="filterSchulenEintraege" removable
-					@update:model-value="v => manager().patchSchule(v, 'aufnehmendSchulnummer')" />
-				<svws-ui-button type="transparent" @click="goToSchule(manager().schulen.get(manager().daten.aufnehmendSchulnummer ?? '')?.id ?? -1)">
+				<svws-ui-select title="Schule" :items="manager().schulenById.values()" :item-text="textSchule" autocomplete
+					:model-value="manager().schulenById.get(manager().daten.idAufnehmendeSchule ?? -1)" :item-filter="filterSchulenEintraege" removable
+					@update:model-value="v => manager().patchSchule(v, 'idAufnehmendeSchule')" />
+				<svws-ui-button type="transparent" @click="goToSchule(manager().daten.idAufnehmendeSchule ?? -1)">
 					<span class="icon i-ri-link" />Zur Schule
 				</svws-ui-button>
 
@@ -85,7 +85,7 @@
 		<svws-ui-content-card title="Besondere Merkmale für die Statistik">
 			<svws-ui-table :columns="colsMerkmale" :items="manager().daten.merkmale">
 				<template #cell(merkmal)="{ rowData: s }">
-					<span>{{ manager().merkmale.get(s.idMerkmal ?? -1)?.bezeichnung ?? " - " }}</span>
+					<span>{{ manager().merkmaleById.get(s.idMerkmal ?? -1)?.bezeichnung ?? " - " }}</span>
 				</template>
 				<template #cell(datumVon)="{ rowData: s }">
 					<span>{{ formatDate(s.datumVon) }}</span>
@@ -98,10 +98,10 @@
 		<svws-ui-content-card title="Alle bisher besuchten Schulen" class="col-span-full">
 			<svws-ui-table :columns="colsSchulen" :items="manager().daten.alleSchulen">
 				<template #cell(schulform)="{ rowData: s}">
-					<span>{{ Schulform.data().getEintragByID(manager().schulen.get(s.schulnummer)?.idSchulform ?? -1)?.kuerzel ?? " - " }}</span>
+					<span>{{ Schulform.data().getEintragByID(manager().schulenById.get(s.id)?.idSchulform ?? -1)?.kuerzel ?? " - " }}</span>
 				</template>
 				<template #cell(schulname)="{ rowData: s }">
-					<span>{{ manager().schulen.get(s.schulnummer)?.name ?? " - " }}</span>
+					<span>{{ manager().schulenById.get(s.id)?.name ?? " - " }}</span>
 				</template>
 				<template #cell(datumVon)="{ rowData: s }">
 					<span>{{ formatDate(s.datumVon) }}</span>
@@ -110,7 +110,7 @@
 					<span>{{ formatDate(s.datumBis) }}</span>
 				</template>
 				<template #cell(entlassart)="{ rowData: s }">
-					<span>{{ manager().entlassgruende.get(s.entlassgrundID ?? -1)?.bezeichnung ?? " - " }}</span>
+					<span>{{ manager().entlassgruendeById.get(s.entlassgrundID ?? -1)?.bezeichnung ?? " - " }}</span>
 				</template>
 			</svws-ui-table>
 		</svws-ui-content-card>

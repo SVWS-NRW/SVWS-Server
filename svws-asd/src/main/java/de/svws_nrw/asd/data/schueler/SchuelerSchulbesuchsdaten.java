@@ -26,9 +26,9 @@ public class SchuelerSchulbesuchsdaten {
 
 	// **** Informationen zu der Schule, die vor der Aufnahme besucht wurde
 
-	/** Die Schulnummer der vorher besuchten Schule. */
-	@Schema(description = "die Schulnummer der vorher besuchten Schule", example = "178947")
-	public String vorigeSchulnummer;
+	/** Die ID der vorher besuchten Schule. */
+	@Schema(description = "die ID der vorher besuchten Schule", example = "12")
+	public Long idVorherigeSchule;
 
 	/** Die allgemeine Herkunftsart des Schüler in Bezug auf die schulform der zuvor besuchten Schule. */
 	@Schema(description = "die allgemeine Herkunftsart des Schüler in Bezug auf die schulform der zuvor besuchten Schule",
@@ -81,9 +81,9 @@ public class SchuelerSchulbesuchsdaten {
 
 	// **** Informationen zu der aufnehmenden Schule nach einem Wechsel zu einer anderen Schule
 
-	/** Die Schulnummer der aufnehmenden Schule nach einer Entlassung. */
-	@Schema(description = "die Schulnummer der aufnehmenden Schule nach einer Entlassung", example = "187486")
-	public String aufnehmendSchulnummer;
+	/** Die ID der aufnehmenden Schule nach einer Entlassung. */
+	@Schema(description = "die ID der aufnehmenden Schule nach einer Entlassung", example = "12")
+	public Long idAufnehmendeSchule;
 
 	/** Das Datum beim Wechsel zu einer aufnehmenden Schule. */
 	@Schema(description = "das Datum beim Wechsel zu einer aufnehmenden Schule", example = "2020-01-01")

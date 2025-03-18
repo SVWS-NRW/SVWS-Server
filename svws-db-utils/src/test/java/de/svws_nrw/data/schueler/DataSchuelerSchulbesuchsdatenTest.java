@@ -87,78 +87,80 @@ class DataSchuelerSchulbesuchsdatenTest {
 	/** --- mapAttribute Tests ---*/
 
 	@Test
-	@DisplayName("mapAttribute | vorigeSchulnummer | Erfolg")
-	void mapAttributeTest_vorigeSchulnummer() throws ApiOperationException {
+	@DisplayName("mapAttribute | idVorherigeSchule | Erfolg")
+	void mapAttributeTest_idVorherigeSchule() throws ApiOperationException {
 		final var dtoSchueler = new DTOSchueler(1L, "1", true);
 		final var schulnummer = "123123";
+		final var idSchule = 111L;
 		final var c = mock(DBEntityManager.class);
-		lenient().when(c.queryAll(DTOSchuleNRW.class)).thenReturn(List.of(new DTOSchuleNRW(123L, schulnummer)));
+		lenient().when(c.queryAll(DTOSchuleNRW.class)).thenReturn(List.of(new DTOSchuleNRW(idSchule, schulnummer)));
 		final var data = new DataSchuelerSchulbesuchsdaten(c);
 
-		data.mapAttribute(dtoSchueler, "vorigeSchulnummer", "123123", null);
+		data.mapAttribute(dtoSchueler, "idVorherigeSchule", idSchule, null);
 
-		assertThat(dtoSchueler.LSSchulNr).isEqualTo("123123");
+		assertThat(dtoSchueler.LSSchulNr).isEqualTo(schulnummer);
 	}
 
 	@Test
-	@DisplayName("mapAttribute | vorigeSchulnummer | value is null")
-	void mapAttributeTest_vorigeSchulnummer_null() throws ApiOperationException {
+	@DisplayName("mapAttribute | idVorherigeSchule | value is null")
+	void mapAttributeTest_idVorherigeSchule_null() throws ApiOperationException {
 		final var dtoSchueler = new DTOSchueler(1L, "1", true);
 		dtoSchueler.LSSchulNr = "soll mit null ueberschrieben werden";
 
-		this.schulbesuchsdaten.mapAttribute(dtoSchueler, "vorigeSchulnummer", null, null);
+		this.schulbesuchsdaten.mapAttribute(dtoSchueler, "idVorherigeSchule", null, null);
 
 		assertThat(dtoSchueler.LSSchulNr).isNull();
 	}
 
 	@Test
-	@DisplayName("mapAttribute | vorigeSchulnummer | value nicht im Katalog")
-	void mapAttributeTest_vorigeSchulnummer_exception() {
+	@DisplayName("mapAttribute | idVorherigeSchule | value nicht im Katalog")
+	void mapAttributeTest_idVorherigeSchule_exception() {
 		final var dtoSchueler = new DTOSchueler(1L, "1", true);
 
-		final var throwable = catchThrowable(() -> this.schulbesuchsdaten.mapAttribute(dtoSchueler, "vorigeSchulnummer", "123", null));
+		final var throwable = catchThrowable(() -> this.schulbesuchsdaten.mapAttribute(dtoSchueler, "idVorherigeSchule", "123", null));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Keine Schule mit Schulnummer 123 gefunden.")
+				.hasMessage("Keine Schule mit der ID 123 gefunden.")
 				.hasFieldOrPropertyWithValue(STATUS, Response.Status.NOT_FOUND);
 	}
 
 	@Test
-	@DisplayName("mapAttribute | aufnehmendSchulnummer | Erfolg")
-	void mapAttributeTest_aufnehmendSchulnummer() throws ApiOperationException {
+	@DisplayName("mapAttribute | idAufnehmendeSchule | Erfolg")
+	void mapAttributeTest_idAufnehmendeSchule() throws ApiOperationException {
 		final var dtoSchueler = new DTOSchueler(1L, "1", true);
 		final var schulnummer = "123123";
+		final var idSchule = 111L;
 		final var c = mock(DBEntityManager.class);
-		lenient().when(c.queryAll(DTOSchuleNRW.class)).thenReturn(List.of(new DTOSchuleNRW(123L, schulnummer)));
+		lenient().when(c.queryAll(DTOSchuleNRW.class)).thenReturn(List.of(new DTOSchuleNRW(idSchule, schulnummer)));
 		final var data = new DataSchuelerSchulbesuchsdaten(c);
 
-		data.mapAttribute(dtoSchueler, "aufnehmendSchulnummer", "123123", null);
+		data.mapAttribute(dtoSchueler, "idAufnehmendeSchule", idSchule, null);
 
-		assertThat(dtoSchueler.SchulwechselNr).isEqualTo("123123");
+		assertThat(dtoSchueler.SchulwechselNr).isEqualTo(schulnummer);
 	}
 
 	@Test
-	@DisplayName("mapAttribute | aufnehmendSchulnummer | value is null")
-	void mapAttributeTest_aufnehmendSchulnummer_null() throws ApiOperationException {
+	@DisplayName("mapAttribute | idAufnehmendeSchule | value is null")
+	void mapAttributeTest_idAufnehmendeSchule_null() throws ApiOperationException {
 		final var dtoSchueler = new DTOSchueler(1L, "1", true);
 		dtoSchueler.SchulwechselNr = "soll mit null ueberschrieben werden";
 
-		this.schulbesuchsdaten.mapAttribute(dtoSchueler, "aufnehmendSchulnummer", null, null);
+		this.schulbesuchsdaten.mapAttribute(dtoSchueler, "idAufnehmendeSchule", null, null);
 
 		assertThat(dtoSchueler.SchulwechselNr).isNull();
 	}
 
 	@Test
-	@DisplayName("mapAttribute | aufnehmendSchulnummer | value nicht im Katalog")
-	void mapAttributeTest_aufnehmendSchulnummer_exception() {
+	@DisplayName("mapAttribute | idAufnehmendeSchule | value nicht im Katalog")
+	void mapAttributeTest_idAufnehmendeSchule_exception() {
 		final var dtoSchueler = new DTOSchueler(1L, "1", true);
 
-		final var throwable = catchThrowable(() -> this.schulbesuchsdaten.mapAttribute(dtoSchueler, "aufnehmendSchulnummer", "123", null));
+		final var throwable = catchThrowable(() -> this.schulbesuchsdaten.mapAttribute(dtoSchueler, "idAufnehmendeSchule", 123, null));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Keine Schule mit Schulnummer 123 gefunden.")
+				.hasMessage("Keine Schule mit der ID 123 gefunden.")
 				.hasFieldOrPropertyWithValue(STATUS, Response.Status.NOT_FOUND);
 	}
 

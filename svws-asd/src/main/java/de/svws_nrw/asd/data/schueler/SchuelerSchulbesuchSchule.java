@@ -3,7 +3,6 @@ package de.svws_nrw.asd.data.schueler;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import de.svws_nrw.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
@@ -18,9 +17,9 @@ public class SchuelerSchulbesuchSchule {
 	@Schema(description = "die ID der Informationen zum vorigen Schulbesuch in der Datenbank", example = "226984", accessMode = Schema.AccessMode.READ_ONLY)
 	public long id;
 
-	/** Die Schulnummer der Schule. */
-	@Schema(description = "die Schulnummer der Schule", example = "178947")
-	public @NotNull String schulnummer = "";
+	/** Die ID der Schule. */
+	@Schema(description = "Die ID der Schule", example = "178947")
+	public Long idSchule;
 
 	/** Die ID des Bildungsganges/Schulgliederung an der Schule. */
 	@Schema(description = "die ID des Bildungsganges/Schulgliederung an der Schule", example = "***")
