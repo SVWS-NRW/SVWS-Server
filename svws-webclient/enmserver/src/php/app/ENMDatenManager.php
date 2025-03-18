@@ -289,10 +289,15 @@
 				}
 				// Bestimme die Ankreuzkompetenzen, die dem Lehrer über einen Leistungsdatensatz zugeordnet sind
 				$kompetenzen = [];
-				foreach ($schueler->ankreuzkompetenzen as $kompetenz)
+				foreach ($schueler->ankreuzkompetenzen as $schuelerkompetenz) {
+					$kompetenzVorhanden = array_key_exists($schuelerkompetenz->kompetenzID, $mapAnkreuzkompetenzen);
+					if (!$kompetenzVorhanden)
+						continue;
+					$kompetenz = $mapAnkreuzkompetenzen[$schuelerkompetenz->kompetenzID];
 					if ((($kompetenz->istFachkompetenz === true) && ($istKlassenlehrer))
-						|| (($kompetenz->fachID != null) && ($setFachIDs[$kompetenz->fachID] != null)))
-						$kompetenzen[] = $kompetenz;
+						|| (($kompetenz->fachID != null) && (array_key_exists($kompetenz->fachID, $setFachIDs))))
+						$kompetenzen[] = $schuelerkompetenz;
+				}
 				// Prüfe, ob der Schüler zurückgegeben werden soll
 				if ((count($leistungen) === 0) && (count($kompetenzen) === 0))
 					continue;
