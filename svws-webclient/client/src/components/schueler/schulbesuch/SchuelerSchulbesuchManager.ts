@@ -1,17 +1,29 @@
-import { Einschulungsart, Herkunftsarten, Jahrgaenge, PrimarstufeSchuleingangsphaseBesuchsjahre, Schulform, Schulgliederung, Uebergangsempfehlung } from "@core";
+import { Einschulungsart, Herkunftsarten, Jahrgaenge, PrimarstufeSchuleingangsphaseBesuchsjahre, Schulform, Schulgliederung, Uebergangsempfehlung,
+	SchuelerSchulbesuchsdaten, SchuelerListeEintrag } from "@core";
 import type { KatalogEntlassgrund, Merkmal, SchulEintrag } from "@core";
-import type { SchuelerListeEintrag, SchuelerSchulbesuchsdaten, Schuljahresabschnitt, List } from "@core";
-import { shallowRef, triggerRef } from "vue";
+import type { Schuljahresabschnitt, List } from "@core";
+import { shallowRef } from "vue";
 import type { ShallowRef } from "vue";
+
+
+interface ManagerStateDataSchuelerSchulbesuch {
+	auswahl: SchuelerListeEintrag;
+	daten: SchuelerSchulbesuchsdaten;
+}
+
+const defaultState = <ManagerStateDataSchuelerSchulbesuch> {
+	auswahl: new SchuelerListeEintrag(),
+	daten: new SchuelerSchulbesuchsdaten(),
+};
 
 /** Ein Manager für die Verwaltung von Schulbesuchsdaten */
 export class SchuelerSchulbesuchManager {
 
-	/** Eine Referenz auf die SchuelerSchulbesuchsdaten */
-	protected _daten: ShallowRef<SchuelerSchulbesuchsdaten>;
+	/** Der Default-State, welcher über den Konstruktor gesetzt wird */
+	protected _defaultState : ManagerStateDataSchuelerSchulbesuch;
 
-	/** Eine Referenz auf die aktuelle Auswahl des Schülers zur Bearbeitung in diesem Manager */
-	protected _auswahlSchueler: ShallowRef<SchuelerListeEintrag | null>;
+	/** Der aktuelle State */
+	protected _state : ShallowRef<ManagerStateDataSchuelerSchulbesuch>;
 
 	/** Eine Map der Schuljahresabschnitte gemappt nach idSchuljahresAbschnitt */
 	protected _schuljahresabschnitte: Map<number, Schuljahresabschnitt> = new Map();
@@ -29,7 +41,7 @@ export class SchuelerSchulbesuchManager {
 	protected _schuljahr : number;
 
 	/** Die Patch-Methode der SchuelerSchulbesuchsdaten */
-	protected _patch: (data : Partial<SchuelerSchulbesuchsdaten>) => Promise<boolean>
+	protected _patch: (data : Partial<SchuelerSchulbesuchsdaten>) => Promise<void>
 
 
 	/**
@@ -45,10 +57,12 @@ export class SchuelerSchulbesuchManager {
 	 */
 	public constructor(daten: SchuelerSchulbesuchsdaten, auswahl : SchuelerListeEintrag, schuljahresabschnitte : List<Schuljahresabschnitt>,
 		schulen : List<SchulEintrag>, merkmale : List<Merkmal>, entlassgruende : List<KatalogEntlassgrund>,
-		patch: (data : Partial<SchuelerSchulbesuchsdaten>) => Promise<boolean>) {
+		patch: (data : Partial<SchuelerSchulbesuchsdaten>) => Promise<void>) {
+		this._defaultState = defaultState;
+		this._state = shallowRef<ManagerStateDataSchuelerSchulbesuch>(this._defaultState);
+		this._state.value.daten = daten;
+		this._state.value.auswahl = auswahl;
 		this._patch = patch;
-		this._daten = shallowRef<SchuelerSchulbesuchsdaten>(daten);
-		this._auswahlSchueler = shallowRef<SchuelerListeEintrag>(auswahl);
 		this.mapSchuljahresabschnitte(schuljahresabschnitte);
 		this.mapSchulen(schulen);
 		this.mapMerkmale(merkmale);
@@ -78,7 +92,7 @@ export class SchuelerSchulbesuchManager {
 
 	/** Gibt die aktuell im Manager gespeicherten SchuelerSchulbesuchsdaten zurück. */
 	public get daten(): SchuelerSchulbesuchsdaten {
-		return this._daten.value;
+		return this._state.value.daten;
 	}
 
 	/** Gibt die aktuell im Manager gespeicherten Schulen zurück */
@@ -175,11 +189,10 @@ export class SchuelerSchulbesuchManager {
 	// --- patch ---
 
 	/** Die allgemeine Patch-Methode der SchuelerSchulbesuchsdaten */
-	public async doPatch(data : Partial<SchuelerSchulbesuchsdaten>) {
-		if (await this._patch(data)) {
-			this._daten.value = Object.assign(this._daten.value, data);
-		}
-		triggerRef(this._daten);
+	public async doPatch(daten : Partial<SchuelerSchulbesuchsdaten>) {
+		await this._patch(daten)
+		const patchedDaten = Object.assign(this.daten, daten);
+		this._state.value = Object.assign({ ...this._state.value}, { daten: patchedDaten });
 	}
 
 	/** Die spezielle Patch-Methode der Entlassgründe */
@@ -194,11 +207,13 @@ export class SchuelerSchulbesuchManager {
 
 	/** Die spezielle Patch-Methode der Schuleinträge */
 	public patchSchule(schule: SchulEintrag | undefined | null, key: string) {
-		if (schule !== undefined && schule !== null) {
-			const patchData: Record<string, any> = {};
+		const patchData: Record<string, any> = {};
+		if (schule !== undefined && schule !== null)
 			patchData[key] = schule.schulnummer;
-			void this.doPatch(patchData);
-		}
+		else
+			patchData[key] = null;
+		void this.doPatch(patchData);
+
 	}
 
 	/** Die spezielle Patch-Methode der Entlassjahrgänge */
@@ -209,7 +224,7 @@ export class SchuelerSchulbesuchManager {
 	// --- util ---
 
 	private calcSchuljahr(): number {
-		const abschnitt = this._schuljahresabschnitte.get(this._auswahlSchueler.value?.idSchuljahresabschnitt?? -1);
+		const abschnitt = this._schuljahresabschnitte.get(this._state.value.auswahl.idSchuljahresabschnitt?? -1);
 		return (abschnitt === undefined) ? -1 : abschnitt.schuljahr;
 	}
 }

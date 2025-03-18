@@ -33,9 +33,8 @@ export class RouteDataSchuelerSchulbesuch extends RouteData<RouteStateDataSchuel
 		return this._state.value.schuelerSchulbesuchManager;
 	}
 
-	patch = async (data : Partial<SchuelerSchulbesuchsdaten>) : Promise<boolean> => {
+	patch = async (data : Partial<SchuelerSchulbesuchsdaten>) : Promise<void> => {
 		await api.server.patchSchuelerSchulbesuch(data, api.schema, this.auswahl.id);
-		return true;
 	}
 
 	public async ladeDaten(auswahl: SchuelerListeEintrag | null) {

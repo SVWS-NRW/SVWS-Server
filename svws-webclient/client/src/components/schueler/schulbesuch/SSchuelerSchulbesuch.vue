@@ -11,17 +11,17 @@
 				<svws-ui-text-input v-autofocus placeholder="Statistik-Schulnummer" :statistics="true" readonly
 					:model-value="manager().getVorigeSchule()?.schulnummerStatistik ?? ' - '" />
 				<svws-ui-text-input placeholder="Entlassen am" type="date" :model-value="manager().daten.vorigeEntlassdatum"
-					@update:model-value="vorigeEntlassdatum => manager().doPatch({ vorigeEntlassdatum })" />
+					@change="vorigeEntlassdatum => manager().doPatch({ vorigeEntlassdatum })" />
 				<svws-ui-select title="Entlassjahrgang" :items="Jahrgaenge.values()" :model-value="manager().getEntlassjahrgang('vorigeEntlassjahrgang')"
 					@update:model-value="v => manager().patchEntlassjahrgang(v, 'vorigeEntlassjahrgang')" :item-text="textJahrgang" removable />
 				<svws-ui-text-input placeholder="Bemerkung" span="full" :model-value="manager().daten.vorigeBemerkung" :max-len="255"
-					@update:model-value="v => { if ((v ?? '').length <= 255) manager().doPatch({ vorigeBemerkung : v }) } " />
+					@change="v => { if ((v ?? '').length <= 255) manager().doPatch({ vorigeBemerkung : v }) } " />
 				<svws-ui-spacing />
 				<svws-ui-select title="Entlassgrund" :items="manager().entlassgruende" :item-text="v => v.bezeichnung" removable
 					:model-value="manager().getEntlassgrund('vorigeEntlassgrundID')"
 					@update:model-value="v => manager().patchEntlassgrund(v, 'vorigeEntlassgrundID')" />
 				<svws-ui-text-input placeholder="höchster Abschluss, der von der anderen Schule mitgebracht wurde" disabled
-					@update:model-value="vorigeAbschlussartID => manager().doPatch({ vorigeAbschlussartID })" :model-value="manager().daten.vorigeAbschlussartID" />
+					@change="vorigeAbschlussartID => manager().doPatch({ vorigeAbschlussartID })" :model-value="manager().daten.vorigeAbschlussartID" />
 				<svws-ui-select class="col-span-full" title="Versetzung" :items="manager().getHerkunftsarten()" :item-text="textHerkunftsarten" removable
 					:model-value="manager().getVorigeArtLetzteVersetzung()" @update:model-value="v => manager().patchVorigeArtLetzteVersetzung(v)" :statistics="true" />
 			</svws-ui-input-wrapper>
@@ -29,7 +29,7 @@
 		<svws-ui-content-card title="Entlassung von eigener Schule">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input class="contentFocusField" placeholder="Entlassen am" type="date" :model-value="manager().daten.entlassungDatum"
-					@update:model-value="entlassungDatum => manager().doPatch({ entlassungDatum })" />
+					@change="entlassungDatum => manager().doPatch({ entlassungDatum })" />
 				<svws-ui-select title="Entlassjahrgang" :items="Jahrgaenge.values()" :model-value="manager().getEntlassjahrgang('entlassungJahrgang')"
 					@update:model-value="v => manager().patchEntlassjahrgang(v, 'entlassungJahrgang')" :item-text="textJahrgang" removable />
 				<svws-ui-select title="Entlassgrund" :items="manager().entlassgruende" :item-text="v => v.bezeichnung" removable
@@ -37,7 +37,7 @@
 					@update:model-value="v => manager().patchEntlassgrund(v, 'entlassungGrundID')" />
 				<svws-ui-spacing />
 				<svws-ui-text-input placeholder="Art des Abschlusses" span="full" :model-value="manager().daten.entlassungAbschlussartID" disabled
-					@update:model-value="entlassungAbschlussartID => manager().doPatch({ entlassungAbschlussartID })" />
+					@change="entlassungAbschlussartID => manager().doPatch({ entlassungAbschlussartID })" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Wechsel zu aufnehmender Schule">
@@ -56,13 +56,13 @@
 				</svws-ui-button>
 
 				<svws-ui-text-input placeholder="Wechseldatum" :model-value="manager().daten.aufnehmendWechseldatum"
-					@update:model-value="aufnehmendWechseldatum => manager().doPatch({ aufnehmendWechseldatum })" type="date" />
+					@change="aufnehmendWechseldatum => manager().doPatch({ aufnehmendWechseldatum })" type="date" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Grundschulbesuch">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-input-number class="contentFocusField" placeholder="Einschulung" :model-value="manager().daten.grundschuleEinschulungsjahr"
-					@update:model-value="grundschuleEinschulungsjahr => manager().doPatch({ grundschuleEinschulungsjahr })" :min="1900" :max="2100" />
+					@change="grundschuleEinschulungsjahr => manager().doPatch({ grundschuleEinschulungsjahr })" :min="1900" :max="2100" />
 				<svws-ui-select disabled title="Einschulungsart" :items="Einschulungsart.values()" :model-value="manager().getEinschulungsart()"
 					@update:model-value="v => manager().doPatch({ grundschuleEinschulungsartID : v?.daten.id ?? null })" :item-text="textEinschulungsart" />
 				<svws-ui-select title="EP-Jahre" :items="PrimarstufeSchuleingangsphaseBesuchsjahre.values()" removable :item-text="textEPJahre" :model-value="manager().getEPJahre()"
@@ -75,11 +75,11 @@
 		<svws-ui-content-card title="Sekundarstufe I">
 			<svws-ui-input-wrapper>
 				<svws-ui-input-number class="contentFocusField" placeholder="Jahr Wechsel Sek I" :model-value="manager().daten.sekIWechsel"
-					@update:model-value="sekIWechsel => manager().doPatch({ sekIWechsel })" :min="1900" :max="2100" />
+					@change="sekIWechsel => manager().doPatch({ sekIWechsel })" :min="1900" :max="2100" />
 				<svws-ui-select title="Erste Schulform Sek I" :items="Schulform.values()" :item-text="textSchulformSek1" :model-value="manager().getSchulformSek1()"
 					@update:model-value="v => manager().doPatch({ sekIErsteSchulform : v?.daten(manager().schuljahr)?.kuerzel ?? null })" />
 				<svws-ui-input-number placeholder="Jahr Wechsel Sek II" :model-value="manager().daten.sekIIWechsel"
-					@update:model-value="sekIIWechsel => manager().doPatch({ sekIIWechsel })" :min="1900" :max="2100" />
+					@change="sekIIWechsel => manager().doPatch({ sekIIWechsel })" :min="1900" :max="2100" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Besondere Merkmale für die Statistik">
