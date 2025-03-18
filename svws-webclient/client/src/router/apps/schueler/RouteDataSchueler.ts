@@ -1,5 +1,5 @@
-import type { List, SchuelerListeEintrag, SchuelerStammdaten, SimpleOperationResponse } from "@core";
-import { BenutzerKompetenz, ArrayList, SchuelerListe, SchuelerListeManager, SchuelerStatus } from "@core";
+import type { ApiFile, List, ReportingParameter, SchuelerListeEintrag, SchuelerStammdaten, SimpleOperationResponse, StundenplanListeEintrag } from "@core";
+import { BenutzerKompetenz, ArrayList, SchuelerListe, SchuelerListeManager, SchuelerStatus, DeveloperNotificationException } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
@@ -10,13 +10,16 @@ import { routeSchuelerGruppenprozesse } from "~/router/apps/schueler/RouteSchuel
 import type { RouteParamsRawGeneric } from "vue-router";
 
 
-type RouteStateSchueler = RouteStateAuswahlInterface<SchuelerListeManager>;
+interface RouteStateSchueler extends RouteStateAuswahlInterface<SchuelerListeManager>{
+	mapStundenplaene: Map<number, StundenplanListeEintrag>;
+};
 
 const defaultState = <RouteStateSchueler> {
 	idSchuljahresabschnitt: -1,
 	manager: undefined,
 	view: routeSchuelerIndividualdaten,
 	activeViewType: ViewType.DEFAULT,
+	mapStundenplaene: new Map(),
 };
 
 export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, RouteStateSchueler> {
@@ -27,6 +30,14 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 
 	public addID(param: RouteParamsRawGeneric, id: number): void {
 		param.id = id;
+	}
+
+	get idSchuljahresabschnitt(): number {
+		return this._state.value.idSchuljahresabschnitt;
+	}
+
+	get mapStundenplaene(): Map<number, StundenplanListeEintrag> {
+		return this._state.value.mapStundenplaene;
 	}
 
 	protected async createManager(idSchuljahresabschnitt : number) : Promise<Partial<RouteStateSchueler>> {
@@ -57,6 +68,14 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 		return res;
 	}
 
+	public async updateMapStundenplaene() {
+		const listStundenplaene = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, this.idSchuljahresabschnitt);
+		const mapStundenplaene = new Map<number, StundenplanListeEintrag>();
+		for (const l of listStundenplaene)
+			mapStundenplaene.set(l.id, l);
+		this.setPatchedState({ mapStundenplaene });
+	}
+
 	get schuelerListeManager(): SchuelerListeManager {
 		return this.hasManager ? this.manager // oder gib einen Dummy zurück...
 			: new SchuelerListeManager(api.schulform, new SchuelerListe(), new ArrayList(), api.schuleStammdaten.abschnitte, api.schuleStammdaten.idSchuljahresabschnitt);
@@ -84,5 +103,15 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 
 		return [errorLog.isEmpty(), errorLog];
 	}
+
+	getPDF = api.call(async (reportingParameter: ReportingParameter, idStundenplan: number): Promise<ApiFile> => {
+		if (!this.manager.liste.auswahlExists())
+			throw new DeveloperNotificationException("Dieser Stundenplan kann nur gedruckt werden, wenn mindestens eine Klasse ausgewählt ist.");
+		reportingParameter.idSchuljahresabschnitt = this.idSchuljahresabschnitt;
+		reportingParameter.idsHauptdaten.add(idStundenplan);
+		for (const l of this.manager.liste.auswahl())
+			reportingParameter.idsDetaildaten.add(l.id);
+		return await api.server.pdfReport(reportingParameter, api.schema);
+	})
 
 }

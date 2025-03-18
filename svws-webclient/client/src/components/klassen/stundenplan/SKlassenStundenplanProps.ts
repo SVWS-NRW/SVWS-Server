@@ -1,8 +1,9 @@
-import type { StundenplanKalenderwochenzuordnung } from "../../../../../core/src/core/data/stundenplan/StundenplanKalenderwochenzuordnung";
-import type { StundenplanListeEintrag } from "../../../../../core/src/core/data/stundenplan/StundenplanListeEintrag";
-import type { StundenplanManager } from "../../../../../core/src/core/utils/stundenplan/StundenplanManager";
+import type { ReportingParameter, ApiFile, StundenplanListeEintrag, StundenplanKalenderwochenzuordnung, StundenplanManager } from "@core";
+import type { ApiStatus } from "~/components/ApiStatus";
 
 export interface KlassenStundenplanProps {
+	apiStatus: ApiStatus;
+	getPDF: (parameter: ReportingParameter, idStundenplan: number) => Promise<ApiFile>;
 	ignoreEmpty?: boolean;
 	id: number,
 	stundenplan: () => StundenplanListeEintrag | undefined;

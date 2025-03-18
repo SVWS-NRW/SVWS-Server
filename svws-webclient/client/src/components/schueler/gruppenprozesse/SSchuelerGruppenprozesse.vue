@@ -1,6 +1,6 @@
 <template>
 	<div class="page page-grid-cards">
-		<div class="flex flex-col gap-y-16 lg:gap-y-16">
+		<div class="flex flex-col gap-4">
 			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen"
 				subtitle="Bei den ausgewählten Schülern wird ein Löschvermerk gesetzt." :is-open="currentAction === 'delete'"
 				@update:is-open="(isOpen) => setCurrentAction('delete', isOpen)">
@@ -18,6 +18,35 @@
 					</svws-ui-button>
 				</template>
 			</ui-card>
+			<ui-card v-if="hatKompetenzDrucken && (mapStundenplaene.size > 0)" icon="i-ri-printer-line" title="Stundenplan drucken" subtitle="Drucke die Stundenpläne der ausgewählten Schüler."
+				:is-open="currentAction === 'print'" @update:is-open="isOpen => setCurrentAction('print', isOpen)">
+				<div>
+					<svws-ui-input-wrapper :grid="2" class="p-2">
+						<div>
+							<svws-ui-select title="Stundenplan" v-model="stundenplanAuswahl" :items="mapStundenplaene.values()"
+								:item-text="s => s.bezeichnung.replace('Stundenplan ', '') + ': ' + toDateStr(s.gueltigAb) + '—' + toDateStr(s.gueltigBis) + ' (KW ' + toKW(s.gueltigAb) + '—' + toKW(s.gueltigBis) + ')'" />
+						</div>
+						<div class="flex flex-col-gap-4">
+							<div class="text-left">
+								<svws-ui-checkbox v-model="option2">Unterrichte mit Pausenzeiten</svws-ui-checkbox>
+								<svws-ui-checkbox v-model="option4">Unterrichte mit Fach- statt Kursbezeichnungen in der Sek-I </svws-ui-checkbox>
+								<svws-ui-checkbox v-model="option8">Unterrichte mit Anzeige der individuellen Kursart</svws-ui-checkbox>
+							</div>
+							<svws-ui-radio-group>
+								<svws-ui-radio-option :value="false" v-model="gruppe2" name="Ausgabe" label="Gesamtausdruck" />
+								<svws-ui-radio-option :value="true" v-model="gruppe2" name="Ausgabe" label="Einzelausdruck" />
+							</svws-ui-radio-group>
+						</div>
+					</svws-ui-input-wrapper>
+				</div>
+				<template #buttonFooterLeft>
+					<svws-ui-button :disabled="stundenplanAuswahl === undefined" @click="downloadPDF" :is-loading="loading" class="mt-4">
+						<svws-ui-spinner v-if="loading" spinning />
+						<span v-else class="icon i-ri-play-line" />
+						Drucken
+					</svws-ui-button>
+				</template>
+			</ui-card>
 			<log-box :logs :status>
 				<template #button>
 					<svws-ui-button v-if="status !== undefined" type="transparent" @click="clearLog" title="Log verwerfen">Log verwerfen</svws-ui-button>
@@ -31,11 +60,14 @@
 
 	import { ref, computed } from "vue";
 	import type { SchuelerGruppenprozesseProps } from "./SSchuelerGruppenprozesseProps";
-	import { ArrayList, BenutzerKompetenz, type List } from "@core";
+	import type { StundenplanListeEintrag, List } from "@core";
+	import { ArrayList, BenutzerKompetenz, DateUtils, ReportingParameter, ReportingReportvorlage } from "@core";
+
+	type Action = 'print' | 'delete' | '';
 
 	const props = defineProps<SchuelerGruppenprozesseProps>();
 
-	const currentAction = ref<string>('');
+	const currentAction = ref<Action>('');
 	const oldAction = ref<{ name: string | undefined; open: boolean }>({
 		name: undefined,
 		open: false,
@@ -45,6 +77,7 @@
 	const status = ref<boolean | undefined>();
 
 	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LOESCHEN));
+	const hatKompetenzDrucken = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN));
 
 	const preConditionCheck = computed(() => {
 		if (currentAction.value === 'delete')
@@ -52,7 +85,7 @@
 		return [true, new ArrayList<string>()];
 	})
 
-	function setCurrentAction(newAction: string, open: boolean) {
+	function setCurrentAction(newAction: Action, open: boolean) {
 		if(newAction === oldAction.value.name && !open)
 			return;
 		oldAction.value.name = currentAction.value;
@@ -78,4 +111,39 @@
 		loading.value = false;
 	}
 
+	const stundenplanAuswahl = ref<StundenplanListeEintrag>();
+	const option2 = ref(false);
+	const option4 = ref(false);
+	const option8 = ref(false);
+	const gruppe2 = ref(false);
+
+	async function downloadPDF() {
+		if (stundenplanAuswahl.value === undefined)
+			return;
+		loading.value = true;
+		const reportingParameter = new ReportingParameter();
+		reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_v_SCHUELER_STUNDENPLAN.getBezeichnung();
+		reportingParameter.einzelausgabeDetaildaten = gruppe2.value;
+		reportingParameter.detailLevel = (option2.value ? 2:0);
+		const { data, name } = await props.getPDF(reportingParameter, stundenplanAuswahl.value.id);
+		const link = document.createElement("a");
+		link.href = URL.createObjectURL(data);
+		link.download = name;
+		link.target = "_blank";
+		link.click();
+		URL.revokeObjectURL(link.href);
+		loading.value = false;
+	}
+
+	const wochentag = ['So.', 'Mo.', 'Di.', 'Mi.', 'Do.', 'Fr.', 'Sa.', 'So.' ];
+
+	function toDateStr(iso: string) : string {
+		const date = DateUtils.extractFromDateISO8601(iso);
+		return wochentag[date[3] % 7] + " " + date[2] + "." + date[1] + "." + date[0];
+	}
+
+	function toKW(iso: string) : string {
+		const date = DateUtils.extractFromDateISO8601(iso);
+		return "" + date[5];
+	}
 </script>

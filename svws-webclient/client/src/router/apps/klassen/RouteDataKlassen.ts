@@ -1,5 +1,5 @@
 
-import type { KlassenDaten, Schueler, List, LehrerListeEintrag, SimpleOperationResponse } from "@core";
+import type { KlassenDaten, Schueler, List, LehrerListeEintrag, SimpleOperationResponse, ApiFile, ReportingParameter, StundenplanListeEintrag } from "@core";
 import { ArrayList, DeveloperNotificationException, KlassenListeManager } from "@core";
 
 import { api } from "~/router/Api";
@@ -17,6 +17,7 @@ import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
 
 interface RouteStateKlassen extends RouteStateAuswahlInterface<KlassenListeManager> {
+	mapStundenplaene: Map<number, StundenplanListeEintrag>;
 	mapKlassenVorigerAbschnitt: Map<number, KlassenDaten>;
 	mapKlassenFolgenderAbschnitt: Map<number, KlassenDaten>;
 	oldView?: RouteNode<any, any>;
@@ -25,6 +26,7 @@ interface RouteStateKlassen extends RouteStateAuswahlInterface<KlassenListeManag
 const defaultState: RouteStateKlassen = {
 	idSchuljahresabschnitt: -1,
 	manager: undefined,
+	mapStundenplaene: new Map(),
 	mapKlassenVorigerAbschnitt: new Map<number, KlassenDaten>(),
 	mapKlassenFolgenderAbschnitt: new Map<number, KlassenDaten>(),
 	view: routeKlassenDaten,
@@ -42,12 +44,20 @@ export class RouteDataKlassen extends RouteDataAuswahl<KlassenListeManager, Rout
 		param.id = id;
 	}
 
+	get idSchuljahresabschnitt(): number {
+		return this._state.value.idSchuljahresabschnitt;
+	}
+
 	get mapKlassenVorigerAbschnitt(): Map<number, KlassenDaten> {
 		return this._state.value.mapKlassenVorigerAbschnitt;
 	}
 
 	get mapKlassenFolgenderAbschnitt(): Map<number, KlassenDaten> {
 		return this._state.value.mapKlassenFolgenderAbschnitt;
+	}
+
+	get mapStundenplaene(): Map<number, StundenplanListeEintrag> {
+		return this._state.value.mapStundenplaene;
 	}
 
 	protected async createManager(idSchuljahresabschnitt : number) : Promise<Partial<RouteStateKlassen>> {
@@ -100,6 +110,14 @@ export class RouteDataKlassen extends RouteDataAuswahl<KlassenListeManager, Rout
 
 	protected deleteMessage(id: number, klasse: KlassenDaten | null) : string {
 		return `Klasse ${klasse?.kuerzel ?? '???'} (ID: ${id}) wurde erfolgreich gelöscht.`;
+	}
+
+	public async updateMapStundenplaene() {
+		const listStundenplaene = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, this.idSchuljahresabschnitt);
+		const mapStundenplaene = new Map<number, StundenplanListeEintrag>();
+		for (const l of listStundenplaene)
+			mapStundenplaene.set(l.id, l);
+		this.setPatchedState({ mapStundenplaene });
 	}
 
 	addKlassenleitung = async (idLehrer : number, idKlasse : number) : Promise<void> => {
@@ -179,4 +197,13 @@ export class RouteDataKlassen extends RouteDataAuswahl<KlassenListeManager, Rout
 		await RouteManager.doRoute(routeLehrer.getRoute({ id: eintrag.id }));
 	}
 
+	getPDF = api.call(async (reportingParameter: ReportingParameter, idStundenplan: number): Promise<ApiFile> => {
+		if (!this.manager.liste.auswahlExists())
+			throw new DeveloperNotificationException("Dieser Stundenplan kann nur gedruckt werden, wenn mindestens eine Klasse ausgewählt ist.");
+		reportingParameter.idSchuljahresabschnitt = this.idSchuljahresabschnitt;
+		reportingParameter.idsHauptdaten.add(idStundenplan);
+		for (const l of this.manager.liste.auswahl())
+			reportingParameter.idsDetaildaten.add(l.id);
+		return await api.server.pdfReport(reportingParameter, api.schema);
+	})
 }

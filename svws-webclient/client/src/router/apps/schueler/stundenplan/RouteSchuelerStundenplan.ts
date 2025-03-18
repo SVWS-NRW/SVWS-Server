@@ -67,6 +67,8 @@ export class RouteSchuelerStundenplan extends RouteNode<RouteDataSchuelerStunden
 
 	public getProps(to: RouteLocationNormalized): SchuelerStundenplanProps {
 		return {
+			apiStatus: api.status,
+			getPDF: this.data.getPDF,
 			id: routeSchueler.data.schuelerListeManager.daten().id,
 			ignoreEmpty: this.data.ganzerStundenplan,
 			stundenplan: () => (this.data.mapStundenplaene.size === 0) ? undefined : this.data.auswahl,
