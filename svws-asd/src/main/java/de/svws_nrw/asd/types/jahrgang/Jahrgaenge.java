@@ -18,7 +18,7 @@ import jakarta.validation.constraints.NotNull;
 public enum Jahrgaenge implements CoreType<JahrgaengeKatalogEintrag, Jahrgaenge> {
 
 	/** Jahrgang 90: Hausfrüherziehung für Hör- bzw. Sehgeschädigte */
-	HAUSFRUEERZIEHUNG,
+	HAUSFRUEHERZIEHUNG,
 
 	/** Jahrgang 00: Frühkindliche Förderung, Förderschulkindergarten */
 	JAHRGANG_00,
@@ -215,7 +215,7 @@ public enum Jahrgaenge implements CoreType<JahrgaengeKatalogEintrag, Jahrgaenge>
 			case JAHRGANG_12 -> (vergleichsjahrgang == JAHRGANG_11);
 			case JAHRGANG_13 -> (vergleichsjahrgang == JAHRGANG_12);
 			case BERUFSPRAXISSTUFE -> (vergleichsjahrgang == null);
-			case HAUSFRUEERZIEHUNG -> (vergleichsjahrgang == null);
+			case HAUSFRUEHERZIEHUNG -> (vergleichsjahrgang == null);
 			case VORKURS_SEMESTER_1 -> (vergleichsjahrgang == null);
 			case VORKURS_SEMESTER_2 -> (vergleichsjahrgang == VORKURS_SEMESTER_1);
 			case EF -> (gl == Schulgliederung.GY8) ? (vergleichsjahrgang == JAHRGANG_09) : (vergleichsjahrgang == JAHRGANG_10);
@@ -263,7 +263,7 @@ public enum Jahrgaenge implements CoreType<JahrgaengeKatalogEintrag, Jahrgaenge>
 			case JAHRGANG_12 -> (vergleichsjahrgang == JAHRGANG_13);
 			case JAHRGANG_13 -> (vergleichsjahrgang == null);
 			case BERUFSPRAXISSTUFE -> (vergleichsjahrgang == null);
-			case HAUSFRUEERZIEHUNG -> (vergleichsjahrgang == null);
+			case HAUSFRUEHERZIEHUNG -> (vergleichsjahrgang == null);
 			case VORKURS_SEMESTER_1 -> (vergleichsjahrgang == VORKURS_SEMESTER_2);
 			case VORKURS_SEMESTER_2 -> (vergleichsjahrgang == null);
 			case EF -> (vergleichsjahrgang == Q1);
@@ -302,7 +302,7 @@ public enum Jahrgaenge implements CoreType<JahrgaengeKatalogEintrag, Jahrgaenge>
 			case JAHRGANG_12 -> (vergleichsjahrgang == JAHRGANG_11);
 			case JAHRGANG_13 -> (vergleichsjahrgang == JAHRGANG_12);
 			case BERUFSPRAXISSTUFE -> (vergleichsjahrgang == null);
-			case HAUSFRUEERZIEHUNG -> (vergleichsjahrgang == null);
+			case HAUSFRUEHERZIEHUNG -> (vergleichsjahrgang == null);
 			case VORKURS_SEMESTER_1 -> (vergleichsjahrgang == null);
 			case VORKURS_SEMESTER_2 -> (vergleichsjahrgang == VORKURS_SEMESTER_1);
 			case EF -> (vergleichsjahrgang == JAHRGANG_09) || (vergleichsjahrgang == JAHRGANG_10);
@@ -341,7 +341,7 @@ public enum Jahrgaenge implements CoreType<JahrgaengeKatalogEintrag, Jahrgaenge>
 			case JAHRGANG_12 -> (vergleichsjahrgang == JAHRGANG_13);
 			case JAHRGANG_13 -> (vergleichsjahrgang == null);
 			case BERUFSPRAXISSTUFE -> (vergleichsjahrgang == null);
-			case HAUSFRUEERZIEHUNG -> (vergleichsjahrgang == null);
+			case HAUSFRUEHERZIEHUNG -> (vergleichsjahrgang == null);
 			case VORKURS_SEMESTER_1 -> (vergleichsjahrgang == VORKURS_SEMESTER_2);
 			case VORKURS_SEMESTER_2 -> (vergleichsjahrgang == null);
 			case EF -> (vergleichsjahrgang == Q1);

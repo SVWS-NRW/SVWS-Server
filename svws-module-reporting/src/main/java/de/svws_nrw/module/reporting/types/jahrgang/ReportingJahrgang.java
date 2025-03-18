@@ -109,6 +109,7 @@ public class ReportingJahrgang extends ReportingBaseType {
 	 * Hashcode der Klasse
 	 * @return Hashcode der Klasse
 	 */
+	@Override
 	public int hashCode() {
 		return 31 + Long.hashCode(id);
 	}
@@ -118,6 +119,7 @@ public class ReportingJahrgang extends ReportingBaseType {
 	 * @param obj Das Vergleichsobjekt
 	 * @return	true, falls es das gleiche Objekt ist, andernfalls false.
 	 */
+	@Override
 	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
@@ -140,7 +142,7 @@ public class ReportingJahrgang extends ReportingBaseType {
 		if (this.jahrgang == null)
 			return false;
 		final Set<Jahrgaenge> erlaubteJahrgaenge =
-				Set.of(Jahrgaenge.HAUSFRUEERZIEHUNG, Jahrgaenge.JAHRGANG_00, Jahrgaenge.JAHRGANG_01, Jahrgaenge.JAHRGANG_02, Jahrgaenge.JAHRGANG_03,
+				Set.of(Jahrgaenge.HAUSFRUEHERZIEHUNG, Jahrgaenge.JAHRGANG_00, Jahrgaenge.JAHRGANG_01, Jahrgaenge.JAHRGANG_02, Jahrgaenge.JAHRGANG_03,
 						Jahrgaenge.JAHRGANG_04);
 		return erlaubteJahrgaenge.contains(this.jahrgang);
 	}
