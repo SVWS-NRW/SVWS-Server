@@ -4,7 +4,7 @@
 <!-- Ggf. anpassen und/oder weitere hinzufügen. -->
 /assign me
 
-## Fachlicher Hintergund
+## Fachlicher Hintergrund
  
 Ansprechperson SVWS: <!-- Bitte eintragen. -->
 
