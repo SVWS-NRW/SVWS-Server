@@ -224,7 +224,6 @@ public class APILehrer {
 	}
 
 
-
 	/**
 	 * Die OpenAPI-Methode für die Abfrage der Personaldaten eines Lehrers.
 	 *
@@ -245,7 +244,7 @@ public class APILehrer {
 	@ApiResponse(responseCode = "404", description = "Kein Lehrer-Eintrag mit der angegebenen ID gefunden")
 	public Response getLehrerPersonaldaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerPersonaldaten(conn).get(id),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerPersonaldaten(conn).getByIdAsResponse(id),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.LEHRER_PERSONALDATEN_ANSEHEN);
 	}
@@ -277,7 +276,7 @@ public class APILehrer {
 			@RequestBody(description = "Der Patch für die Lehrer-Personaldaten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					schema = @Schema(implementation = LehrerPersonaldaten.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerPersonaldaten(conn).patch(id, is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerPersonaldaten(conn).patchAsResponse(id, is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN);
 	}
