@@ -10,7 +10,7 @@
 						<template #content>Relevant für die Statistik</template>
 					</svws-ui-tooltip>
 				</span>
-				<slot>{{ label }}</slot>
+				<slot />
 			</span>
 		</label>
 	</div>
@@ -34,7 +34,6 @@
 		color?: 'success' | 'error' | 'warning';
 		autofocus?: boolean;
 		focusClassContent?: boolean;
-		label?: string;
 	}>(), {
 		statistics: false,
 		disabled: false,
@@ -47,7 +46,6 @@
 		color: undefined,
 		autofocus: false,
 		focusClassContent: false,
-		label: '',
 	});
 
 	defineSlots();
