@@ -379,7 +379,6 @@
 			if (!array_key_exists($idSchueler, $mapsSchueler->bemerkungen) || !array_key_exists($idSchueler, $mapsSchueler->schueler))
 				Http::exit404NotFound("Es wurden kein Schüler mit der ID ".$idSchueler." bzw. Bemerkungen für einen solchen Schüler gefunden.");
 			$schueler = $mapsSchueler->schueler[$idSchueler];
-			$bemerkungen = $mapsSchueler->bemerkungen[$idSchueler];
 			// Prüfe, ob der Lehrer Klassenlehrer für den Schüler ist
 			$mapKlassen = $this->getMapKlassen($lehrer);
 			if (!array_key_exists($schueler->klasseID, $mapKlassen))

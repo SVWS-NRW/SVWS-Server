@@ -1061,6 +1061,9 @@
 				$daten->tsIstGemahnt = $ts;
 			}
 			if (strlen($update) > 0) {
+				// Stelle sicher in der Datenbanktabelle nicht Objekte auftauchen die woanders in der Datenbank gespeichert werden
+				$daten->teilleistungen = [];
+				// Schreibe das gepatchte JSON in die Datenbank zurück
 				$updatedData = json_encode($daten, JSON_UNESCAPED_SLASHES);
 				$update .= "daten='$updatedData' WHERE id=$patch->id";
 				$this->updateSet('Leistungsdaten', $update);
@@ -1090,6 +1093,10 @@
 				$daten->lernabschnitt->tsFehlstundenGesamtUnentschuldigt = $ts;
 			}
 			if (strlen($update) > 0) {
+				// Stelle sicher in der Datenbanktabelle nicht Objekte auftauchen die woanders in der Datenbank gespeichert werden
+				$daten->ankreuzkompetenzen = [];
+				$daten->leistungsdaten = [];
+				// Schreibe das gepatchte JSON in die Datenbank zurück
 				$updatedData = json_encode($daten, JSON_UNESCAPED_SLASHES);
 				$update .= "daten='$updatedData' WHERE id=$patch->id";
 				$this->updateSet('Schueler', $update);
@@ -1150,6 +1157,10 @@
 				$daten->bemerkungen->tsFoerderbemerkungen = $ts;
 			}
 			if (strlen($update) > 0) {
+				// Stelle sicher in der Datenbanktabelle nicht Objekte auftauchen die woanders in der Datenbank gespeichert werden
+				$daten->ankreuzkompetenzen = [];
+				$daten->leistungsdaten = [];
+				// Schreibe das gepatchte JSON in die Datenbank zurück
 				$updatedData = json_encode($daten, JSON_UNESCAPED_SLASHES);
 				$update .= "daten='$updatedData' WHERE id=$idSchueler";
 				$this->updateSet('Schueler', $update);
