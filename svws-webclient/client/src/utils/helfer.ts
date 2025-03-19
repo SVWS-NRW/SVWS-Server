@@ -176,7 +176,7 @@ export function filterSchulenEintraege(items: SchulEintrag[], search: string) : 
 	const list = [];
 	for (const i of items) {
 		if (((i.schulnummerStatistik !== null) && i.schulnummerStatistik.includes(searchLower))
-				|| (i.schulnummer.includes(searchLower))
+				|| ((i.schulnummerStatistik !== null) && i.schulnummerStatistik.includes(searchLower))
 				|| ((i.kurzbezeichnung !== null) && i.kurzbezeichnung.toLowerCase().includes(searchLower))
 				|| i.name.toLowerCase().includes(searchLower) || ((i.ort !== null) && i.ort.toLowerCase().includes(searchLower))
 				|| ((i.kuerzel !== null) && i.kuerzel.toLowerCase().includes(searchLower)))

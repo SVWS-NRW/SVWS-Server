@@ -1,4 +1,4 @@
-import { HashMap, Schulform } from "@core";
+import { Schulform } from "@core";
 import type { FoerderschwerpunktEintrag, KatalogEintrag, ReligionEintrag, SchulEintrag, SchulformKatalogEintrag } from "@core";
 
 import { api } from "~/router/Api";
@@ -10,7 +10,7 @@ interface RouteStateDataSchuelerIndividualdaten extends RouteStateInterface {
 	mapFoerderschwerpunkte: Map<number, FoerderschwerpunktEintrag>;
 	mapHaltestellen: Map<number, KatalogEintrag>;
 	mapReligionen: Map<number, ReligionEintrag>;
-	mapSchulen: HashMap<string, SchulEintrag>;
+	mapSchulen: Map<string, SchulEintrag>;
 }
 
 const defaultState = <RouteStateDataSchuelerIndividualdaten> {
@@ -18,7 +18,7 @@ const defaultState = <RouteStateDataSchuelerIndividualdaten> {
 	mapFoerderschwerpunkte: new Map(),
 	mapHaltestellen: new Map(),
 	mapReligionen: new Map(),
-	mapSchulen: new HashMap<string, SchulEintrag>(),
+	mapSchulen: new Map<string, SchulEintrag>(),
 };
 
 
@@ -44,7 +44,7 @@ export class RouteDataSchuelerIndividualdaten extends RouteData<RouteStateDataSc
 		return this._state.value.mapReligionen;
 	}
 
-	get mapSchulen(): HashMap<string, SchulEintrag> {
+	get mapSchulen(): Map<string, SchulEintrag> {
 		return this._state.value.mapSchulen;
 	}
 
@@ -72,22 +72,14 @@ export class RouteDataSchuelerIndividualdaten extends RouteData<RouteStateDataSc
 			mapReligionen.set(r.id, r);
 		// Ermittle den Katalog der Schulen, welche ein Kürzel haben und als Stammschulen für Schüler in Frage kommen
 		const schulen = await api.server.getSchulen(api.schema);
-		const mapSchulen = new HashMap<string, SchulEintrag>();
+		const mapSchulen = new Map<string, SchulEintrag>();
 		for (const schule of schulen) {
-			if (schule.kuerzel === null)
+			if (schule.schulnummerStatistik === null)
 				continue;
 			const sfEintrag : SchulformKatalogEintrag | null = schule.idSchulform === null ? null : Schulform.data().getEintragByID(schule.idSchulform);
 			const sf : Schulform | null = sfEintrag === null ? null : Schulform.data().getWertBySchluessel(sfEintrag.schluessel);
 			if (sf === api.schulform)
-				mapSchulen.put(schule.schulnummer, schule);
-		}
-		for (const schule of schulen) {
-			if (schule.kuerzel !== null)
-				continue;
-			const sfEintrag : SchulformKatalogEintrag | null = schule.idSchulform === null ? null : Schulform.data().getEintragByID(schule.idSchulform);
-			const sf : Schulform | null = sfEintrag === null ? null : Schulform.data().getWertBySchluessel(sfEintrag.schluessel);
-			if (sf === api.schulform)
-				mapSchulen.put(schule.schulnummer, schule);
+				mapSchulen.set(schule.schulnummerStatistik, schule);
 		}
 		this.setPatchedDefaultState({ mapFahrschuelerarten, mapFoerderschwerpunkte, mapHaltestellen, mapReligionen, mapSchulen })
 	}
