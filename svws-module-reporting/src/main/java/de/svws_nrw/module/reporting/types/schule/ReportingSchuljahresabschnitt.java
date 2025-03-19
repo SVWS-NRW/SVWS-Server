@@ -1,7 +1,9 @@
 package de.svws_nrw.module.reporting.types.schule;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
@@ -111,6 +113,24 @@ public class ReportingSchuljahresabschnitt extends ReportingBaseType {
 	}
 
 	/**
+	 * Gibt die Fächer zu den IDs aus der Liste der Fächer des Schuljahresabschnitts zurück
+	 *
+	 * @param ids	Die IDs der Fächer
+	 *
+	 * @return 		Die Fächer zu den IDs oder eine leere Liste, wenn kein Fach vorhanden ist.
+	 */
+	public List<ReportingFach> faecher(final List<Long> ids) {
+		final List<ReportingFach> result = new ArrayList<>();
+		if (ids == null)
+			return result;
+		final List<Long> idsNonNull =  ids.stream().filter(Objects::nonNull).distinct().toList();
+		if (idsNonNull.isEmpty())
+			return result;
+		idsNonNull.forEach(idFach -> result.add(fach(idFach)));
+		return result;
+	}
+
+	/**
 	 * Gibt den Jahrgang zur ID aus der Liste der Jahrgänge des Schuljahresabschnitts zurück
 	 *
 	 * @param id	Die ID des Jahrgangs
@@ -130,6 +150,15 @@ public class ReportingSchuljahresabschnitt extends ReportingBaseType {
 	 */
 	public ReportingKlasse klasse(final long id) {
 		return mapKlassen().get(id);
+	}
+
+	/**
+	 * Die Klassen des Schuljahresabschnitts
+	 *
+	 * @return Inhalt des Feldes klassen
+	 */
+	public List<ReportingKlasse> klassen() {
+		return mapKlassen.values().stream().toList();
 	}
 
 	/**
@@ -159,15 +188,6 @@ public class ReportingSchuljahresabschnitt extends ReportingBaseType {
 	 */
 	public List<ReportingJahrgang> jahrgaenge() {
 		return mapJahrgaenge.values().stream().toList();
-	}
-
-	/**
-	 * Die Klassen des Schuljahresabschnitts
-	 *
-	 * @return Inhalt des Feldes klassen
-	 */
-	public List<ReportingKlasse> klassen() {
-		return mapKlassen.values().stream().toList();
 	}
 
 	/**

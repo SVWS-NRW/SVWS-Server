@@ -125,7 +125,7 @@ public final class HtmlContextKurse extends HtmlContext {
 	 *
 	 * @return	Liste der Einzel-Contexts.
 	 */
-	public List<HtmlContextKurse> getEinzelKursContexts() {
+	public List<HtmlContextKurse> getEinzelContexts() {
 		final List<HtmlContextKurse> resultContexts = new ArrayList<>();
 
 		for (final ReportingKurs reportingKurs : kurse) {

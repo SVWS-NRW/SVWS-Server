@@ -8,11 +8,11 @@
 					<svws-ui-select title="Stundenplan" v-model="stundenplanAuswahl" :items="mapStundenplaene.values()"
 						:item-text="s => s.bezeichnung.replace('Stundenplan ', '') + ': ' + toDateStr(s.gueltigAb) + '—' + toDateStr(s.gueltigBis) + ' (KW ' + toKW(s.gueltigAb) + '—' + toKW(s.gueltigBis) + ')'" />
 				</div>
-				<svws-ui-checkbox v-model="option2" name="Unterrichte">Unterrichte mit Pausenzeiten</svws-ui-checkbox>
-				<svws-ui-radio-group>
-					<svws-ui-radio-option :value="false" v-model="gruppe2" name="Ausgabe" label="Gesamtausdruck" />
-					<svws-ui-radio-option :value="true" v-model="gruppe2" name="Ausgabe" label="Einzelausdruck" />
-				</svws-ui-radio-group>
+				<div class="text-left">
+					<svws-ui-checkbox v-model="option2" name="Pausenzeiten">Pausenzeiten anzeigen</svws-ui-checkbox><br>
+					<svws-ui-checkbox v-model="option4" name="Fachbezeichnungen">Fach- statt Kursbezeichnung verwenden (nicht Sek-II)</svws-ui-checkbox><br>
+					<svws-ui-checkbox v-model="option8" name="Fachkuerzel">Fachkürzel statt Fachbezeichnung verwenden</svws-ui-checkbox>
+				</div>
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
@@ -46,7 +46,8 @@
 	const loading = ref<boolean>(false);
 	const stundenplanAuswahl = ref<StundenplanListeEintrag>();
 	const option2 = ref(false);
-	const gruppe2 = ref(false);
+	const option4 = ref(false);
+	const option8 = ref(false);
 
 	async function downloadPDF() {
 		if (stundenplanAuswahl.value === undefined)
@@ -54,8 +55,8 @@
 		loading.value = true;
 		const reportingParameter = new ReportingParameter();
 		reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_v_KLASSEN_STUNDENPLAN.getBezeichnung();
-		reportingParameter.einzelausgabeDetaildaten = gruppe2.value;
-		reportingParameter.detailLevel = (option2.value ? 2:0);
+		reportingParameter.einzelausgabeDetaildaten = false;
+		reportingParameter.detailLevel = (option2.value ? 2 : 0) + (option4.value ? 4 : 0) + (option8.value ? 8 : 0);
 		const { data, name } = await props.getPDF(reportingParameter, stundenplanAuswahl.value.id);
 		const link = document.createElement("a");
 		link.href = URL.createObjectURL(data);

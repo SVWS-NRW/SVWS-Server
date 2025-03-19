@@ -13,6 +13,7 @@
 		<div class="reset-page-counter start-new-page"
 			 th:with="anzeigeMitPausenaufsichten = ${Parameter.detailLevel >= 1},
 			          anzeigeMitPausenzeiten = ${((Parameter.detailLevel % 4) / 2) >= 1},
+					  anzeigeFachkuerzelStattFachbezeichnung = ${(((Parameter.detailLevel % 16) / 8) >= 1)},
 					  plan = ${LehrerStundenplaene.get(0)}">
 			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
 			<div class="pageTopLeft" th:utext="${Schule.bezeichnungSchuleMehrzeiligHtml}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
@@ -106,7 +107,7 @@
 											</tr>
 											<tr>
 												<td></td>
-												<td th:if="${unterricht.kurs() == null}" class="f-small ta-l" th:text="${unterricht.fach().bezeichnung()}">Mathematik</td>
+												<td th:if="${unterricht.kurs() == null}" class="f-small ta-l" th:text="${anzeigeFachkuerzelStattFachbezeichnung ? unterricht.fach().kuerzel() : unterricht.fach().bezeichnung()}">Mathematik</td>
 												<td th:if="${unterricht.kurs() != null}" class="f-small ta-l" th:text="${unterricht.kurs().kuerzel()}">M-GK2</td>
 												<td class="f-small ta-l"></td>
 												<td class="f-small ta-r" th:text="${unterricht.lehrkraefteAuflistung()}">ABC</td>

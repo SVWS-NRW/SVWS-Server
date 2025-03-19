@@ -189,6 +189,21 @@ public class ReportingStundenplanungUnterrichtsrasterstunde extends ReportingStu
 	}
 
 	/**
+	 * Liefert den Unterricht eines bestimmten Faches basierend auf der Fach-ID
+	 * und dem angegebenen Wochentyp. Optional können auch Unterrichte des Wochentyps 0
+	 * einbezogen werden.
+	 *
+	 * @param idFach               Die ID des Faches, deren Unterrichte abgerufen werden sollen.
+	 * @param wochentyp            Der Wochentyp, für den die Unterrichte abgefragt werden.
+	 * @param inklusiveWochentyp0  Gibt an, ob der Unterricht des Wochentyps 0 ebenfalls einbezogen werden sollen.
+	 *
+	 * @return Eine Liste von {@link ReportingStundenplanungUnterricht}, die die Unterrichte des angegebenen Faches für den gewünschten Wochentyp repräsentiert.
+	 */
+	public List<ReportingStundenplanungUnterricht> unterrichteFach(final long idFach, final int wochentyp, final boolean inklusiveWochentyp0) {
+		return getReportingStundenplanungUnterrichteByIdUndWoche(idFach, wochentyp, inklusiveWochentyp0, listMapFaecherUnterrichte);
+	}
+
+	/**
 	 * Liefert den Unterricht einer bestimmten Klasse basierend auf der Klassen-ID
 	 * und dem angegebenen Wochentyp. Optional können auch Unterrichte des Wochentyps 0
 	 * einbezogen werden.
@@ -233,6 +248,21 @@ public class ReportingStundenplanungUnterrichtsrasterstunde extends ReportingStu
 	 */
 	public List<ReportingStundenplanungUnterricht> unterrichteLehrkraefte(final List<Long> idsLehrer, final int wochentyp, final boolean inklusiveWochentyp0) {
 		return getReportingStundenplanungUnterrichteByIdsUndWoche(idsLehrer, wochentyp, inklusiveWochentyp0, listMapLehrerUnterrichte);
+	}
+
+	/**
+	 * Liefert den Unterricht eines bestimmten Raumes basierend auf der Raum-ID
+	 * und dem angegebenen Wochentyp. Optional können auch Unterrichte des Wochentyps 0
+	 * einbezogen werden.
+	 *
+	 * @param idRaum               Die ID des Raumes, deren Unterrichte abgerufen werden sollen.
+	 * @param wochentyp            Der Wochentyp, für den die Unterrichte abgefragt werden.
+	 * @param inklusiveWochentyp0  Gibt an, ob der Unterricht des Wochentyps 0 ebenfalls einbezogen werden sollen.
+	 *
+	 * @return Eine Liste von {@link ReportingStundenplanungUnterricht}, die die Unterrichte des angegebenen Raumes für den gewünschten Wochentyp repräsentiert.
+	 */
+	public List<ReportingStundenplanungUnterricht> unterrichteRaum(final long idRaum, final int wochentyp, final boolean inklusiveWochentyp0) {
+		return getReportingStundenplanungUnterrichteByIdUndWoche(idRaum, wochentyp, inklusiveWochentyp0, listMapRaeumeUnterrichte);
 	}
 
 	/**

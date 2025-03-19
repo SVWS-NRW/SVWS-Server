@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.adt.map.ListMap2DLongKeys;
@@ -168,6 +169,24 @@ public class ReportingStundenplanungStundenplan extends ReportingBaseType {
 		if (id == null)
 			return null;
 		return this.mapRaeume.get(id);
+	}
+
+	/**
+	 * Gibt die Räume zu den übergebenen IDs aus dem Stundenplan zurück.
+	 *
+	 * @param ids Die IDs der Räume im Stundenplan.
+	 *
+	 * @return Räume zu den IDs oder eine leere Liste, wenn es zu den IDs keine Räume im Stundenplan gibt.
+	 */
+	public List<ReportingStundenplanungRaum> raeume(final List<Long> ids) {
+		final List<ReportingStundenplanungRaum> result = new ArrayList<>();
+		if (ids == null)
+			return result;
+		final List<Long> idsNonNull =  ids.stream().filter(Objects::nonNull).distinct().toList();
+		if (idsNonNull.isEmpty())
+			return result;
+		idsNonNull.forEach(idRaum -> result.add(raum(idRaum)));
+		return result;
 	}
 
 	/**

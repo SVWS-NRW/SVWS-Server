@@ -2,24 +2,22 @@
 	<head th:with="mediaPrint = ${Parameter.ausgabeformat == 2}">
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width" />
-		<title>Klassen-Stundenplan</title>
+		<title>Raum-Stundenplan</title>
 		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-pdf.css}" href="../css/reporting-pdf.css" />
 		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-A4-hoch.css}" href="../css/reporting-A4-hoch.css" />
 		<link rel="stylesheet" th:href="@{css/reporting-styles.css}" href="../css/reporting-styles.css" />
-		<link rel="stylesheet" th:href="@{stundenplanung/StundenplanungKlassenStundenplan.css}" href="StundenplanungKlassenStundenplan.css" />
+		<link rel="stylesheet" th:href="@{stundenplanung/StundenplanungRaumStundenplan.css}" href="StundenplanungRaumStundenplan.css" />
 	</head>
 
 	<body th:with="mediaPrint = ${Parameter.ausgabeformat == 2}">
 		<div class="reset-page-counter start-new-page"
-			 th:each="plan,iterationVarPlan : ${KlassenStundenplaene}"
-			 th:with="anzeigeMitPausenzeiten = ${((Parameter.detailLevel % 4) / 2) >= 1},
-					  anzeigeFachStattKursbezeichnung = ${(((Parameter.detailLevel % 8) / 4) >= 1) && !plan.klasse().jahrgang().istJahrgangImBereichSek2OderWeiterbildung()},
-					  anzeigeFachkuerzelStattFachbezeichnung = ${(((Parameter.detailLevel % 16) / 8) >= 1)}">
+			 th:each="plan,iterationVarPlan : ${RaeumeStundenplaene}"
+			 th:with="anzeigeMitPausenzeiten = ${((Parameter.detailLevel % 4) / 2) >= 1}">
 			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
 			<div class="pageTopLeft" th:utext="${Schule.bezeichnungSchuleMehrzeiligHtml}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
-			<div class="pageTopRight">Stundenplan <span th:text="${plan.stundenplan().schuljahresabschnitt().textSchuljahresabschnittKurz()}">2022.2</span><br/>Gültig ab: <span th:text="${plan.stundenplan().gueltigAb()}">01.02.2022</span><br/><span th:text="${'Klasse: ' + plan.klasse().kuerzel()}">Klasse: 10A)</span></div>
+			<div class="pageTopRight">Stundenplan <span th:text="${plan.stundenplan().schuljahresabschnitt().textSchuljahresabschnittKurz()}">2022.2</span><br/>Gültig ab: <span th:text="${plan.stundenplan().gueltigAb()}">01.02.2022</span><br/><span th:text="${'Raum: ' + plan.raum().kuerzel()}">Raum: E</span></div>
 			<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')}">Gedruckt am: 02.02.2022</div>
-			<div class="pageBottomRight"><span class="page-nums-print" th:text="${#lists.size(KlassenStundenplaene) > 0} ? ('Druck ' + ${iterationVarPlan.count} + '/' + ${#lists.size(KlassenStundenplaene)} + ' - Seite ') : 'Seite '">Druck 13/57 - Seite </span></div>
+			<div class="pageBottomRight"><span class="page-nums-print" th:text="${#lists.size(RaeumeStundenplaene) > 0} ? ('Druck ' + ${iterationVarPlan.count} + '/' + ${#lists.size(RaeumeStundenplaene)} + ' - Seite ') : 'Seite '">Druck 13/57 - Seite </span></div>
 			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
 
 			<!-- Für jede Woche, die im Stundenplan definiert, wird ein Block erzeugt. -->
@@ -36,7 +34,7 @@
 					<thead>
 						<!-- Angaben zum Schüler und Wochen -->
 						<tr th:if="${wochennummer == 1}">
-							<th th:colspan="${spaltenzahl}" style="border-bottom: 1px grey solid; vertical-align: middle"><h3 class="m-t-0" th:text="${'Klasse: ' + plan.klasse().kuerzel()}">Klasse: 10A</h3></th>
+							<th th:colspan="${spaltenzahl}" style="border-bottom: 1px grey solid; vertical-align: middle"><h3 class="m-t-0" th:text="${plan.raum().kuerzel()}">A123</h3></th>
 						</tr>
 						<tr th:if="${wochennummer == 1}" style="height: 3px;">
 							<th th:colspan="${spaltenzahl}"></th>
@@ -62,7 +60,7 @@
 								<td class="head-small-grey head-black-lines-small-all ta-cm mp-0" style="min-height: 9mm; font-weight: bolder;" th:text="${plan.stundenplan().unterrichtsrasterStundennummern().get(iterationVarZeilePausenraster.index)}">1</td>
 								<td class="bo-black mp-0"
 									th:each="rasterelementZumTag : ${zeileUnterrichtsraster.rasterElemente()}"
-									th:with="unterrichte = ${rasterelementZumTag.unterrichtsrasterstunde().unterrichteKlasse(plan.klasse().id(), wochentyp, true)}">
+									th:with="unterrichte = ${rasterelementZumTag.unterrichtsrasterstunde().unterrichteRaum(plan.raum().id(), wochentyp, true)}">
 									<!-- Pro Stunde wird eine kleine Tabelle mit den Unterrichten und Pausen eingefügt -->
 									<table class="fixed-100 mp-0">
 										<colgroup>
@@ -75,15 +73,15 @@
 										<th:block th:each="unterricht,iterationvarUnterricht : ${unterrichte}">
 											<tr>
 												<td class="f-small ta-lm"></td>
-                                                <td th:if="${unterricht.kurs() == null}" colspan="3" class="f-small ta-lm" th:classappend="${!iterationvarUnterricht.first ? ' bo-t-grey' : ''}" th:text="${anzeigeFachkuerzelStattFachbezeichnung ? unterricht.fach().kuerzel() : unterricht.fach().bezeichnung()}">Mathematik</td>
-												<td th:if="${unterricht.kurs() != null}" colspan="3" class="f-small ta-lm" th:classappend="${!iterationvarUnterricht.first ? ' bo-t-grey' : ''}" th:text="${anzeigeFachStattKursbezeichnung ? (anzeigeFachkuerzelStattFachbezeichnung ? unterricht.kurs().fach().kuerzel() : unterricht.kurs().fach().bezeichnung()) : unterricht.kurs().kuerzel()}">M-GK2</td>
+                                                <td th:if="${unterricht.kurs() == null}" colspan="3" class="f-small ta-lm" th:classappend="${!iterationvarUnterricht.first ? ' bo-t-grey' : ''}" th:text="${unterricht.klassenAuflistungJahrgangParallelitaetKurz()}">09ABC</td>
+												<td th:if="${unterricht.kurs() != null}" colspan="3" class="f-small ta-lm" th:classappend="${!iterationvarUnterricht.first ? ' bo-t-grey' : ''}" th:text="${unterricht.klassenAuflistungJahrgangParallelitaetKurz() + ' (' + unterricht.kurs().kuerzel() + ')'}">09ABC (IF-WPI)</td>
 												<td class="f-small ta-lm"></td>
 											</tr>
 											<tr>
 												<td></td>
 												<td class="f-small ta-lm" th:text="${unterricht.lehrkraefteAuflistung()}">ABC</td>
 												<td class="f-small ta-cm"></td>
-                                                <td class="f-small ta-rm" th:text="${unterricht.raeumeAuflistung()}">A123</td>
+                                                <td class="f-small ta-rm" th:text="${unterricht.fach().kuerzel()}">D</td>
 												<td></td>
 											</tr>
 										</th:block>

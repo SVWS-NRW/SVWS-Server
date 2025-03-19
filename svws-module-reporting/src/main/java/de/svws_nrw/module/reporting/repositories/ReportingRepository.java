@@ -129,7 +129,7 @@ public class ReportingRepository {
 	private final Map<Long, List<ErzieherStammdaten>> mapErzieherStammdaten = new HashMap<>();
 
 	/** Stellt alle Fächer der Schule als DTOs zur Fach-ID zur Verfügung. Die Reporting-Fächer -Objekte sind in den Schuljahresabschnitten abrufbar. */
-	private final Map<Long, DTOFach> mapFaecher = new HashMap<>();
+	private final Map<Long, DTOFach> mapFachdaten = new HashMap<>();
 
 	/** Stellt die Daten der Abiturjahrgänge über eine Map zum Abiturjahr Verfügung. */
 	private final Map<Integer, GostJahrgangsdaten> mapGostAbiturjahrgangDaten = new HashMap<>();
@@ -168,7 +168,7 @@ public class ReportingRepository {
 	// #########  Ab hier folgen Reporting-Objekte. #########
 
 	/** Stellt alle Erzieherarten über eine Map zur Erzieherart-ID zur Verfügung */
-	private Map<Long, ReportingErzieherArt> mapReportingErzieherarten;
+	private Map<Long, ReportingErzieherArt> mapErzieherarten;
 
 	/** Stellt alle Klassen in den Schuljahresabschnitten über eine Map zur Klassen-ID zur Verfügung. */
 	private final Map<Long, ReportingKlasse> mapKlassen = new HashMap<>();
@@ -297,7 +297,7 @@ public class ReportingRepository {
 			this.katalogReligionen = new DataReligionen(this.conn).getAll().stream().collect(Collectors.toMap(r -> r.id, r -> r));
 			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog Religionen geladen.");
 
-			this.mapReportingErzieherarten = new DataErzieherarten(this.conn).getListErzieherarten().stream().collect(Collectors.toMap(a -> a.id,
+			this.mapErzieherarten = new DataErzieherarten(this.conn).getListErzieherarten().stream().collect(Collectors.toMap(a -> a.id,
 					a -> new ProxyReportingErzieherArt(this, a)));
 			this.logger.logLn(LogLevel.DEBUG, 8, "Liste der Erzieherarten geladen.");
 		} catch (final Exception e) {
@@ -315,7 +315,7 @@ public class ReportingRepository {
 	private void initFachdaten() throws ApiOperationException {
 		try {
 			this.logger.logLn(LogLevel.DEBUG, 8, "Ermittle Fächer.");
-			mapFaecher.putAll(conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f)));
+			mapFachdaten.putAll(conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f)));
 		} catch (final Exception e) {
 			this.logger.logLn(LogLevel.ERROR, 8, "FEHLER: Die Fächer konnten nicht ermittelt werden.");
 			throw new ApiOperationException(Status.NOT_FOUND, e,
@@ -556,7 +556,7 @@ public class ReportingRepository {
 	 * @return Inhalt des Feldes mapReportingErzieherarten
 	 */
 	public Map<Long, ReportingErzieherArt> mapReportingErzieherarten() {
-		return mapReportingErzieherarten;
+		return mapErzieherarten;
 	}
 
 	/**
@@ -565,7 +565,7 @@ public class ReportingRepository {
 	 * @return Map der Fächer-DTO
 	 */
 	public Map<Long, DTOFach> mapFaecher() {
-		return mapFaecher;
+		return mapFachdaten;
 	}
 
 	/**

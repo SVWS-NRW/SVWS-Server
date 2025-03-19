@@ -8,17 +8,16 @@
 					<svws-ui-select title="Stundenplan" v-model="stundenplanAuswahl" :items="mapStundenplaene.values()"
 						:item-text="s => s.bezeichnung.replace('Stundenplan ', '') + ': ' + toDateStr(s.gueltigAb) + '—' + toDateStr(s.gueltigBis) + ' (KW ' + toKW(s.gueltigAb) + '—' + toKW(s.gueltigBis) + ')'" />
 				</div>
-				<div class="flex flex-col gap-4">
+				<div>
 					<svws-ui-radio-group>
 						<svws-ui-radio-option :value="0" v-model="gruppe1" name="Unterrichte" label="Unterrichte" />
-						<svws-ui-radio-option :value="1" v-model="gruppe1" name="Unterrichte" label="Unterrichte mit Pausenaufsichten" />
-						<svws-ui-radio-option :value="2" v-model="gruppe1" name="Unterrichte" label="Unterrichte mit Pausenzeiten" />
+						<svws-ui-radio-option :value="1" v-model="gruppe1" name="Unterrichte" label="Unterrichte und Pausenaufsichten" />
+						<svws-ui-radio-option :value="2" v-model="gruppe1" name="Unterrichte" label="Unterrichte und Pausenzeiten" />
 					</svws-ui-radio-group>
-					<svws-ui-radio-group>
-						<svws-ui-radio-option :value="0" v-model="gruppe2" name="Ausgabe" label="Gesamtausdruck" />
-						<svws-ui-radio-option :value="1" v-model="gruppe2" name="Ausgabe" label="Einzelausdruck" />
-						<svws-ui-radio-option :value="2" v-model="gruppe2" name="Ausgabe" label="Kombinierter Ausdruck" />
-					</svws-ui-radio-group>
+				</div>
+				<div class="text-left">
+					<svws-ui-checkbox v-model="option4">Fach- statt Kursbezeichnung verwenden (nicht Sek-II)</svws-ui-checkbox><br>
+					<svws-ui-checkbox v-model="option8">Fachkürzel statt Fachbezeichnung verwenden</svws-ui-checkbox>
 				</div>
 			</svws-ui-input-wrapper>
 		</template>
@@ -53,20 +52,17 @@
 	const loading = ref<boolean>(false);
 	const stundenplanAuswahl = ref<StundenplanListeEintrag>();
 	const gruppe1 = ref<0|1|2>(0);
-	const gruppe2 = ref<0|1|2>(0);
+	const option4 = ref(false);
+	const option8 = ref(false);
 
 	async function downloadPDF() {
 		if (stundenplanAuswahl.value === undefined)
 			return;
 		loading.value = true;
 		const reportingParameter = new ReportingParameter();
-		if (gruppe2.value === 2)
-			reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_v_LEHRER_STUNDENPLAN_KOMBINIERT.getBezeichnung();
-		else
-			reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_v_LEHRER_STUNDENPLAN.getBezeichnung();
-		if (gruppe2.value === 1)
-			reportingParameter.einzelausgabeDetaildaten = true;
-		reportingParameter.detailLevel = gruppe1.value;
+		reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_v_LEHRER_STUNDENPLAN.getBezeichnung();
+		reportingParameter.einzelausgabeDetaildaten = false;
+		reportingParameter.detailLevel = gruppe1.value + (option4.value ? 4 : 0) + (option8.value ? 8 : 0);
 		const { data, name } = await props.getPDF(reportingParameter, stundenplanAuswahl.value.id);
 		const link = document.createElement("a");
 		link.href = URL.createObjectURL(data);

@@ -85,7 +85,7 @@ public final class ReportingFactory {
 			this.reportingParameter.idsHauptdaten = new ArrayList<>();
 		} else {
 			// Evtl. vorhandene null-Elemente in der Liste entfernen.
-			this.reportingParameter.idsHauptdaten.removeIf(Objects::isNull);
+			this.reportingParameter.idsHauptdaten = new ArrayList<>(reportingParameter.idsHauptdaten.stream().filter(Objects::nonNull).distinct().toList());
 		}
 		if (this.reportingParameter.idsHauptdaten.isEmpty())
 			this.logger.logLn(LogLevel.INFO, 4, "HINWEIS: Die Liste der Hauptdaten ist leer an die Reporting-Factory übergeben worden.");
@@ -95,7 +95,7 @@ public final class ReportingFactory {
 			this.reportingParameter.idsDetaildaten = new ArrayList<>();
 		else {
 			// Evtl. vorhandene null-Elemente in der Liste entfernen.
-			this.reportingParameter.idsDetaildaten.removeIf(Objects::isNull);
+			this.reportingParameter.idsDetaildaten = new ArrayList<>(reportingParameter.idsDetaildaten.stream().filter(Objects::nonNull).distinct().toList());
 		}
 
 		this.logger.logLn(LogLevel.DEBUG, 4, "Erzeugung des Reporting-Repository");

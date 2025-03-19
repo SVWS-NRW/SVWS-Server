@@ -129,7 +129,7 @@ public final class HtmlContextKlassen extends HtmlContext {
 	 *
 	 * @return	Liste der Einzel-Contexts.
 	 */
-	public List<HtmlContextKlassen> getEinzelKlasseContexts() {
+	public List<HtmlContextKlassen> getEinzelContexts() {
 		final List<HtmlContextKlassen> resultContexts = new ArrayList<>();
 
 		for (final ReportingKlasse reportingKlasse : klassen) {

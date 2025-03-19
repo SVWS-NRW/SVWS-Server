@@ -39,7 +39,7 @@ public class ProxyReportingStundenplanungPausenzeit extends ReportingStundenplan
 			final StundenplanPausenzeit pausenzeit, final ReportingStundenplanungStundenplan stundenplan) {
 		super(pausenzeit.id,
 				stundenplan,
-				pausenzeit.bezeichnung,
+				ersetzeNullBlankTrim(pausenzeit.bezeichnung),
 				pausenzeit.beginn,
 				pausenzeit.ende,
 				new ArrayList<>(),

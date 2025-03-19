@@ -200,11 +200,10 @@ public final class ReportingValidierung {
 	 *
 	 * @param reportingRepository	Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung.
 	 * @param idsKurse   			Liste der IDs der Kurse, die berücksichtigt werden sollen.
-	 * @param cacheDaten 			Legt fest, ob die zur Validierung geladenen Daten im Repository gespeichert werden sollen.
 	 *
 	 * @throws ApiOperationException  im Fehlerfall
 	 */
-	public static void validiereDatenFuerKurse(final ReportingRepository reportingRepository, final List<Long> idsKurse, final boolean cacheDaten)
+	public static void validiereDatenFuerKurse(final ReportingRepository reportingRepository, final List<Long> idsKurse)
 			throws ApiOperationException {
 
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Beginn der Validierung der Kursdaten.");
@@ -224,7 +223,7 @@ public final class ReportingValidierung {
 
 		// Prüfe die Kurs-IDs. Erzeuge Maps, damit auch später leicht auf die Kursdaten zugegriffen werden kann.
 		final Map<Long, KursDaten> mapKursdaten =
-				new DataKurse(reportingRepository.conn()).getListByIDs(idsNonNull, cacheDaten).stream()
+				new DataKurse(reportingRepository.conn()).getListByIDs(idsNonNull, true).stream()
 						.collect(Collectors.toMap(k -> k.id, k -> k));
 		for (final Long kID : idsNonNull)
 			if (mapKursdaten.get(kID) == null) {
@@ -232,16 +231,13 @@ public final class ReportingValidierung {
 				throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurden ungültige Kurs-IDs übergeben.");
 			}
 
-		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Ende der Validierung der Kursdaten.");
-
 		// Daten sind valide, speichere diese nun gemäß Parameter im Repository.
-		if (cacheDaten) {
-			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Beginn der Speicherung der Daten aus der Validierung der Kursdaten im Repository.");
-			final List<ReportingKurs> listeKurse =
-					mapKursdaten.values().stream().map(k -> (ReportingKurs) new ProxyReportingKurs(reportingRepository, k)).toList();
-			listeKurse.forEach(k -> reportingRepository.mapKurse().putIfAbsent(k.id(), k));
-			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Ende der Speicherung der Daten aus der Validierung der Kursdaten im Repository.");
-		}
+		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Speicherung der Daten aus der Validierung der Kursdaten im Repository.");
+		mapKursdaten.values().stream()
+				.map(k -> (ReportingKurs) new ProxyReportingKurs(reportingRepository, k))
+				.forEach(k -> reportingRepository.mapKurse().putIfAbsent(k.id(), k));
+
+		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Ende der Validierung der Kursdaten.");
 	}
 
 
@@ -272,11 +268,10 @@ public final class ReportingValidierung {
 		}
 
 		// Prüfe die Lehrer-IDs anhand der Daten aus dem Repository.
-		for (final Long lID : idsNonNull)
-			if (reportingRepository.mapLehrerStammdaten().get(lID) == null) {
-				reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Es wurden ungültige Lehrer-IDs übergeben.");
-				throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurden ungültige Lehrer-IDs übergeben.");
-			}
+		if (idsNonNull.stream().anyMatch(id -> reportingRepository.mapLehrerStammdaten().get(id) == null)) {
+			reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Es wurden ungültige Lehrer-IDs übergeben.");
+			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurden ungültige Lehrer-IDs übergeben.");
+		}
 
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Ende der Validierung der Lehrerdaten.");
 	}

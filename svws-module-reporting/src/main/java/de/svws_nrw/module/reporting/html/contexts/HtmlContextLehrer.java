@@ -95,7 +95,7 @@ public final class HtmlContextLehrer extends HtmlContext {
 	 *
 	 * @return	Liste der Einzel-Contexts.
 	 */
-	public List<HtmlContextLehrer> getEinzelLehrerContexts() {
+	public List<HtmlContextLehrer> getEinzelContexts() {
 		final List<HtmlContextLehrer> resultContexts = new ArrayList<>();
 
 		for (final ReportingLehrer reportingLehrer : lehrer) {

@@ -60,6 +60,9 @@ public enum ReportingReportvorlage {
 	/** Report-Vorlage: Schüler - Stammdaten - Liste */
 	SCHUELER_v_STAMMDATENLISTE("Schueler-Stammdatenliste"),
 
+	/** Report-Vorlage: Stundenplanung - Fach - Stundenplan */
+	STUNDENPLANUNG_v_FACH_STUNDENPLAN("Stundenplanung-FachStundenplan"),
+
 	/** Report-Vorlage: Stundenplanung - Klasse - Stundenplan */
 	STUNDENPLANUNG_v_KLASSEN_STUNDENPLAN("Stundenplanung-KlassenStundenplan"),
 
@@ -68,6 +71,9 @@ public enum ReportingReportvorlage {
 
 	/** Report-Vorlage: Stundenplanung - Lehrer - Stundenplan - Kombiniert */
 	STUNDENPLANUNG_v_LEHRER_STUNDENPLAN_KOMBINIERT("Stundenplanung-LehrerStundenplanKombiniert"),
+
+	/** Report-Vorlage: Stundenplanung - Fach - Stundenplan */
+	STUNDENPLANUNG_v_RAUM_STUNDENPLAN("Stundenplanung-RaumStundenplan"),
 
 	/** Report-Vorlage: Stundenplanung - Schüler - Stundenplan */
 	STUNDENPLANUNG_v_SCHUELER_STUNDENPLAN("Stundenplanung-SchuelerStundenplan");
