@@ -141,7 +141,4 @@
 		return (result === null);
 	}
 
-	// Bugfixing Tailwind. Diese Klassen werden sonst nicht angewendet TODO
-	// col-span-3 col-span-4 col-span-5 col-span-6
-
 </script>
