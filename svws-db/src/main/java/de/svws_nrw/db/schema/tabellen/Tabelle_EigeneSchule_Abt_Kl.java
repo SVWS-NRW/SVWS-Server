@@ -67,7 +67,7 @@ public class Tabelle_EigeneSchule_Abt_Kl extends SchemaTabelle {
 
 
 	/**
-	 * Erstellt die Schema-Defintion für die Tabelle EigeneSchule_Abt_Kl.
+	 * Erstellt die Schema-Definition für die Tabelle EigeneSchule_Abt_Kl.
 	 */
 	public Tabelle_EigeneSchule_Abt_Kl() {
 		super("EigeneSchule_Abt_Kl", SchemaRevisionen.REV_0);

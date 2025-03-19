@@ -1,6 +1,8 @@
 import { BaseApi, type ApiFile } from '../api/BaseApi';
 import { AbgangsartKatalog } from '../core/data/schule/AbgangsartKatalog';
 import { Abiturdaten } from '../core/data/gost/Abiturdaten';
+import { Abteilung } from '../core/data/schule/Abteilung';
+import { AbteilungKlassenzuordnung } from '../core/data/schule/AbteilungKlassenzuordnung';
 import { AllgemeineMerkmaleKatalogEintrag } from '../core/data/schule/AllgemeineMerkmaleKatalogEintrag';
 import { ArrayList } from '../java/util/ArrayList';
 import { Aufsichtsbereich } from '../core/data/schule/Aufsichtsbereich';
@@ -10944,6 +10946,204 @@ export class ApiServer extends BaseApi {
 		const ret = new ArrayList<SchuelerVermerke>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerVermerke.transpilerFromJSON(text)); });
 		return ret;
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchAbteilung für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/abteilungen/{id : \d+}
+	 *
+	 * Passt die Abteilung mit der angegebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Abteilungen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Abteilung>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchAbteilung(data : Partial<Abteilung>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/schule/abteilungen/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = Abteilung.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteAbteilung für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/abteilungen/{id : \d+}
+	 *
+	 * Entfernt eine Abteilung. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen eines Abteilung hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Abteilung wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Abteilung
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Keine Abteilung vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft)
+	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Abteilung wurde erfolgreich entfernt.
+	 */
+	public async deleteAbteilung(schema : string, id : number) : Promise<Abteilung> {
+		const path = "/db/{schema}/schule/abteilungen/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return Abteilung.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getAbteilungenByIdJahresAbschnitt für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/abteilungen/{idSchuljahresabschnitts : \d+}
+	 *
+	 * Erstellt eine Liste aller in der Datenbank vorhanden Abteilungen für die angegebene Id des Schuljahresabschnittes unter Angabe der ID, der Bezeichnung, der ID des Schuljahresabschnitts, der Lehrer-ID des Abteilungsleiters, die Bezeichnung des Raums des Abteilungsleiters, die eMail-Adresse des Abteilungsleiters, die interne telefonische Durchwahl des Abteilungsleiters, einer Sortierreihenfolge und und die Zuordnungen der Klassen zu der Abteilung.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Abteilungen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste von Abteilung-Listen-Einträgen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Abteilung>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Abteilungen anzusehen.
+	 *   Code 404: Keine Abteilung-Einträge gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idSchuljahresabschnitts - der Pfad-Parameter idSchuljahresabschnitts
+	 *
+	 * @returns Eine Liste von Abteilung-Listen-Einträgen
+	 */
+	public async getAbteilungenByIdJahresAbschnitt(schema : string, idSchuljahresabschnitts : number) : Promise<List<Abteilung>> {
+		const path = "/db/{schema}/schule/abteilungen/{idSchuljahresabschnitts : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idSchuljahresabschnitts\s*(:[^{}]+({[^{}]+})*)?}/g, idSchuljahresabschnitts.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<Abteilung>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Abteilung.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addAbteilung für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/abteilungen/{idSchuljahresabschnitts : \d+}
+	 *
+	 * Erstellt eine neue Abteilung und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Abteilungen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Abteilung wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Abteilung
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
+	 *
+	 * @param {Abteilung} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idSchuljahresabschnitts - der Pfad-Parameter idSchuljahresabschnitts
+	 *
+	 * @returns Die Abteilung wurde erfolgreich hinzugefügt.
+	 */
+	public async addAbteilung(data : Abteilung, schema : string, idSchuljahresabschnitts : number) : Promise<Abteilung> {
+		const path = "/db/{schema}/schule/abteilungen/{idSchuljahresabschnitts : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idSchuljahresabschnitts\s*(:[^{}]+({[^{}]+})*)?}/g, idSchuljahresabschnitts.toString());
+		const body : string = Abteilung.transpilerToJSON(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return Abteilung.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addAbteilungKlassenzuordnung für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/abteilungen/klassenzuordnung
+	 *
+	 * Erstellt eine neue AbteilungenKlassenzuordnungen und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von AbteilungKlassenzuordnungen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die AbteilungenKlassenzuordnungen wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: AbteilungKlassenzuordnung
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
+	 *
+	 * @param {List<AbteilungKlassenzuordnung>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die AbteilungenKlassenzuordnungen wurde erfolgreich hinzugefügt.
+	 */
+	public async addAbteilungKlassenzuordnung(data : List<AbteilungKlassenzuordnung>, schema : string) : Promise<AbteilungKlassenzuordnung> {
+		const path = "/db/{schema}/schule/abteilungen/klassenzuordnung"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<AbteilungKlassenzuordnung>).map(d => AbteilungKlassenzuordnung.transpilerToJSON(d)).join() + "]";
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return AbteilungKlassenzuordnung.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteAbteilungKlassenzuordnung für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/abteilungen/klassenzuordnung/{id : \d+}
+	 *
+	 * Entfernt eine AbteilungenKlassenzuordnung. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen einer AbteilungenKlassenzuordnungen hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die AbteilungenKlassenzuordnung wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: AbteilungKlassenzuordnung
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Keine AbteilungenKlassenzuordnung vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft)
+	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die AbteilungenKlassenzuordnung wurde erfolgreich entfernt.
+	 */
+	public async deleteAbteilungKlassenzuordnung(schema : string, id : number) : Promise<AbteilungKlassenzuordnung> {
+		const path = "/db/{schema}/schule/abteilungen/klassenzuordnung/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return AbteilungKlassenzuordnung.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteAbteilungen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/abteilungen/multiple
+	 *
+	 * Entfernt mehrere Abteilungen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen eines Abteilung hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Abteilung wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Abteilung
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Keine Abteilung vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft)
+	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Abteilung wurde erfolgreich entfernt.
+	 */
+	public async deleteAbteilungen(data : List<number>, schema : string) : Promise<Abteilung> {
+		const path = "/db/{schema}/schule/abteilungen/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const text = result;
+		return Abteilung.transpilerFromJSON(text);
 	}
 
 

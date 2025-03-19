@@ -1,121 +1,139 @@
 package de.svws_nrw.data.schule;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.schule.AbteilungKlassenzuordnung;
-import de.svws_nrw.data.DTOMapper;
-import de.svws_nrw.data.DataManager;
+import de.svws_nrw.data.DataManagerRevised;
+import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
+import de.svws_nrw.db.dto.current.schild.schule.DTOAbteilungen;
 import de.svws_nrw.db.dto.current.schild.schule.DTOAbteilungsKlassen;
 import de.svws_nrw.db.utils.ApiOperationException;
-import jakarta.validation.constraints.NotNull;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
- * Diese Klasse erweitert den abstrakten {@link DataManager} für den
+ * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für den
  * Core-DTO {@link AbteilungKlassenzuordnung}.
  */
-public final class DataAbteilungenKlassenzuordnungen extends DataManager<Long> {
-
-	/** Die ID der Abteilung */
-	private final Long idAbteilung;
-
+public final class DataAbteilungenKlassenzuordnungen extends DataManagerRevised<Long, DTOAbteilungsKlassen, AbteilungKlassenzuordnung> {
 	/**
-	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link AbteilungKlassenzuordnung}.
+	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO {@link AbteilungKlassenzuordnung}.
 	 *
 	 * @param conn          die Datenbankverbindung
-	 * @param idAbteilung   die ID der Abteilung, auf die sich die Anfragen beziehen
 	 */
-	public DataAbteilungenKlassenzuordnungen(final DBEntityManager conn, final Long idAbteilung) {
+	public DataAbteilungenKlassenzuordnungen(final DBEntityManager conn) {
 		super(conn);
-		this.idAbteilung = idAbteilung;
+		setAttributesNotPatchable("id");
+		setAttributesRequiredOnCreation("idAbteilung", "idKlasse");
 	}
-
-
-	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOAbteilungsKlassen} in einen Core-DTO {@link AbteilungKlassenzuordnung}.
-	 */
-	public static final DTOMapper<DTOAbteilungsKlassen, AbteilungKlassenzuordnung> dtoMapper = (final DTOAbteilungsKlassen dto) -> {
-		final AbteilungKlassenzuordnung daten = new AbteilungKlassenzuordnung();
-		daten.id = dto.ID;
-		daten.idAbteilung = dto.Abteilung_ID;
-		daten.idKlasse = dto.Klassen_ID;
-		return daten;
-	};
-
 
 	@Override
-	public Response getAll() throws ApiOperationException {
-		return this.getList();
+	protected void initDTO(final DTOAbteilungsKlassen dtoAbteilungsKlassen, final Long newID, final Map<String, Object> initAttributes)
+			throws ApiOperationException {
+		dtoAbteilungsKlassen.ID = newID;
 	}
 
-
-	/**
-	 * Gibt die Liste der Abteilungszuordnungen für die Abteilung mit der angegebenen ID zurück.
-	 *
-	 * @param conn          die Datenbankverbindung
-	 * @param idAbteilung   die ID der Abteilung
-	 *
-	 * @return die Liste der Abteilungen
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	public static List<AbteilungKlassenzuordnung> getZuordnungen(final @NotNull DBEntityManager conn, final long idAbteilung) throws ApiOperationException {
-		final List<DTOAbteilungsKlassen> zuordnungen = conn.queryList(DTOAbteilungsKlassen.QUERY_BY_ABTEILUNG_ID, DTOAbteilungsKlassen.class, idAbteilung);
-		final List<AbteilungKlassenzuordnung> result = new ArrayList<>();
-		for (final DTOAbteilungsKlassen zuordnung : zuordnungen)
-			result.add(dtoMapper.apply(zuordnung));
-		return result;
+	@Override
+	public AbteilungKlassenzuordnung map(final DTOAbteilungsKlassen dtoAbteilungsKlassen) {
+		final AbteilungKlassenzuordnung abteilungKlassenzuordnung = new AbteilungKlassenzuordnung();
+		abteilungKlassenzuordnung.id = dtoAbteilungsKlassen.ID;
+		abteilungKlassenzuordnung.idAbteilung = dtoAbteilungsKlassen.Abteilung_ID;
+		abteilungKlassenzuordnung.idKlasse = dtoAbteilungsKlassen.Klassen_ID;
+		return abteilungKlassenzuordnung;
 	}
 
+	@Override
+	protected void mapAttribute(final DTOAbteilungsKlassen dtoAbteilungsKlassen, final String name, final Object value, final Map<String, Object> map)
+			throws ApiOperationException {
+		switch (name) {
+			case "id" -> {
+				final Long id = JSONMapper.convertToLong(value, false, "id");
+				if (id != dtoAbteilungsKlassen.ID)
+					throw new ApiOperationException(Status.BAD_REQUEST,
+							"Id %d der PatchMap ist ungleich der id %d vom Dto" .formatted(id, dtoAbteilungsKlassen.ID));
+			}
+			case "idAbteilung" -> {
 
-	/**
-	 * Gibt die Klassenzuordnungen für die übergebene ID zurück.
-	 *
-	 * @param conn   die Datenbankverbindung
-	 * @param id     die ID der Abteilung
-	 *
-	 * @return die Klassenzuordnungen
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	public static AbteilungKlassenzuordnung getZuordung(final @NotNull DBEntityManager conn, final long id) throws ApiOperationException {
+				final Long idAbteilung = JSONMapper.convertToLong(value, false, "idAbteilung");
+				if (checkIfAbteilungExistsById(idAbteilung).isPresent()) {
+					dtoAbteilungsKlassen.Abteilung_ID = idAbteilung;
+				} else {
+					throw new ApiOperationException(Status.BAD_REQUEST, "Für die %d wurde keine Abteilung gefunden" .formatted(idAbteilung));
+				}
+			}
+			case "idKlasse" -> {
+				final Long idKlasse = JSONMapper.convertToLong(value, false, "idKlasse");
+				if (checkIfKlasseExistsById(idKlasse).isPresent()) {
+					dtoAbteilungsKlassen.Klassen_ID = idKlasse;
+				} else {
+					throw new ApiOperationException(Status.BAD_REQUEST, "Für die %d wurde keine Klasse gefunden" .formatted(idKlasse));
+				}
+			}
+			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Das Patchen des Attributes %s wird nicht unterstützt." .formatted(name));
+		}
+	}
+
+	private Optional<DTOAbteilungen> checkIfAbteilungExistsById(final Long idAbteilung) {
+		return Optional.ofNullable(conn.queryByKey(DTOAbteilungen.class, idAbteilung));
+	}
+
+	private Optional<DTOKlassen> checkIfKlasseExistsById(final Long idKlassen) {
+		return Optional.ofNullable(conn.queryByKey(DTOKlassen.class, idKlassen));
+	}
+
+	@Override
+	public AbteilungKlassenzuordnung getById(final Long id) throws ApiOperationException {
 		final DTOAbteilungsKlassen zuordnung = conn.queryByKey(DTOAbteilungsKlassen.class, id);
 		if (zuordnung == null)
 			throw new ApiOperationException(Status.NOT_FOUND,
-					"Eine Zuordnung mit der ID %d von einer Klasse zu einer Abteilung konnte nicht gefunden werden.".formatted(id));
-		return dtoMapper.apply(zuordnung);
-	}
-
-
-	@Override
-	public Response getList() throws ApiOperationException {
-		final List<AbteilungKlassenzuordnung> daten = getZuordnungen(conn, this.idAbteilung);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+					"Eine Zuordnung mit der ID %d von einer Klasse zu einer Abteilung konnte nicht gefunden werden." .formatted(id));
+		return map(zuordnung);
 	}
 
 	@Override
-	public Response get(final Long id) throws ApiOperationException {
-		final AbteilungKlassenzuordnung daten = getZuordung(conn, id);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+	public List<AbteilungKlassenzuordnung> getAll() throws ApiOperationException {
+		return getListMappedToAbteilungsKlassenzuordnung(conn.queryList(DTOAbteilungsKlassen.QUERY_ALL, DTOAbteilungsKlassen.class));
 	}
 
-	@Override
-	public Response patch(final Long id, final InputStream is) {
-		// Das Verändern der Zuordnung wird hier nicht unterstützt
-		throw new UnsupportedOperationException();
+	/**
+	 * Gibt eine Liste von {@link AbteilungKlassenzuordnung} zurück für die Id der Abteilung.
+	 * @param idAbteilung            Id für die Abteilung
+	 * @return Liste von AbteilungsKlassenZuordnungen
+	 */
+	public List<AbteilungKlassenzuordnung> getListByIdAbteilung(final Long idAbteilung) throws ApiOperationException {
+		if (idAbteilung == null)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Für das Löschen muss eine ID angegeben werden. Null ist nicht zulässig.");
+
+		return getListMappedToAbteilungsKlassenzuordnung(conn.queryList(DTOAbteilungsKlassen.QUERY_BY_ABTEILUNG_ID, DTOAbteilungsKlassen.class, idAbteilung));
 	}
 
-	// TODO add
+	private List<AbteilungKlassenzuordnung> getListMappedToAbteilungsKlassenzuordnung(final List<DTOAbteilungsKlassen> dtoAbteilungsKlassen) {
+		final List<AbteilungKlassenzuordnung> result = new ArrayList<>();
+		for (final DTOAbteilungsKlassen zuordnung : dtoAbteilungsKlassen)
+			result.add(map(zuordnung));
+		return result;
+	}
 
-	// TODO addMultiple
-
-	// TODO delete
-
-	// TODO deleteMultiple
+	/**
+	 *  Diese Methode erstellt eine Liste von AbteilungKlassenzuordnungen zu deren zugehörigen Id´s der Abteilungen.
+	 *
+	 * @param conn					die Datenbankverbindung
+	 * @param idsAbteilungen		Id´s der Abteilungen zu denen die AbteilungenKlassenzuordnungen gemappt werden sollen
+	 * @return eine gemappte Liste von AbteilungKlassenzuordnungen zu der Id der Abteilungen
+	 */
+	public static Map<Long, List<AbteilungKlassenzuordnung>> getListsByListOfIdAbteilung(final DBEntityManager conn, final List<Long> idsAbteilungen) {
+		final List<DTOAbteilungsKlassen> dtosZuordnungen =
+				conn.queryList(DTOAbteilungsKlassen.QUERY_LIST_BY_ABTEILUNG_ID, DTOAbteilungsKlassen.class, idsAbteilungen);
+		final List<AbteilungKlassenzuordnung> zuordnungen = new ArrayList<>();
+		final DataAbteilungenKlassenzuordnungen dataAbteilungenKlassenzuordnungen = new DataAbteilungenKlassenzuordnungen(conn);
+		for (final DTOAbteilungsKlassen dtoZuordnung : dtosZuordnungen)
+			zuordnungen.add(dataAbteilungenKlassenzuordnungen.map(dtoZuordnung));
+		return zuordnungen.stream().collect(Collectors.groupingBy(z -> z.idAbteilung));
+	}
 
 }

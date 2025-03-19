@@ -86,7 +86,7 @@ public class Tabelle_EigeneSchule_Abteilungen extends SchemaTabelle {
 
 
 	/**
-	 * Erstellt die Schema-Defintion für die Tabelle EigeneSchule_Abteilungen.
+	 * Erstellt die Schema-Definition für die Tabelle EigeneSchule_Abteilungen.
 	 */
 	public Tabelle_EigeneSchule_Abteilungen() {
 		super("EigeneSchule_Abteilungen", SchemaRevisionen.REV_0);

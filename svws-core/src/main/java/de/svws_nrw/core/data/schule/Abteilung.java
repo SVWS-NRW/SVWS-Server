@@ -18,7 +18,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @TranspilerDTO
 public class Abteilung {
 	/** Die ID des Eintrags für die Abteilung */
-	@Schema(description = "die ID des Eintrags für die Abteilung", example = "4711")
+	@Schema(description = "die ID des Eintrags für die Abteilung", example = "4711", accessMode = Schema.AccessMode.READ_ONLY)
 	public long id = -1;
 
 	/** Die Bezeichnung der Abteilung (max. 50 Zeichen) */
@@ -51,7 +51,7 @@ public class Abteilung {
 
 	/** Die Zuordnung der Klassen zu der Abteilung. */
 	@ArraySchema(schema = @Schema(implementation = AbteilungKlassenzuordnung.class, description = "die Zuordnung der Klassen zu der Abteilung."))
-	public final @NotNull List<AbteilungKlassenzuordnung> klassen = new ArrayList<>();
+	public final @NotNull List<AbteilungKlassenzuordnung> klassenzuordnungen = new ArrayList<>();
 
 	/**
 	 * Leerer Standardkonstruktor.

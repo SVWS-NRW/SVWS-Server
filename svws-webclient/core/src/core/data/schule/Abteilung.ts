@@ -49,7 +49,7 @@ export class Abteilung extends JavaObject {
 	/**
 	 * Die Zuordnung der Klassen zu der Abteilung.
 	 */
-	public readonly klassen : List<AbteilungKlassenzuordnung> = new ArrayList<AbteilungKlassenzuordnung>();
+	public readonly klassenzuordnungen : List<AbteilungKlassenzuordnung> = new ArrayList<AbteilungKlassenzuordnung>();
 
 
 	/**
@@ -88,9 +88,9 @@ export class Abteilung extends JavaObject {
 		if (obj.sortierung === undefined)
 			throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
-		if (obj.klassen !== undefined) {
-			for (const elem of obj.klassen) {
-				result.klassen.add(AbteilungKlassenzuordnung.transpilerFromJSON(JSON.stringify(elem)));
+		if (obj.klassenzuordnungen !== undefined) {
+			for (const elem of obj.klassenzuordnungen) {
+				result.klassenzuordnungen.add(AbteilungKlassenzuordnung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -106,11 +106,11 @@ export class Abteilung extends JavaObject {
 		result += '"email" : ' + ((obj.email === null) ? 'null' : JSON.stringify(obj.email)) + ',';
 		result += '"durchwahl" : ' + ((obj.durchwahl === null) ? 'null' : JSON.stringify(obj.durchwahl)) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
-		result += '"klassen" : [ ';
-		for (let i = 0; i < obj.klassen.size(); i++) {
-			const elem = obj.klassen.get(i);
+		result += '"klassenzuordnungen" : [ ';
+		for (let i = 0; i < obj.klassenzuordnungen.size(); i++) {
+			const elem = obj.klassenzuordnungen.get(i);
 			result += AbteilungKlassenzuordnung.transpilerToJSON(elem);
-			if (i < obj.klassen.size() - 1)
+			if (i < obj.klassenzuordnungen.size() - 1)
 				result += ',';
 		}
 		result += ' ]' + ',';
@@ -145,12 +145,12 @@ export class Abteilung extends JavaObject {
 		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		}
-		if (obj.klassen !== undefined) {
-			result += '"klassen" : [ ';
-			for (let i = 0; i < obj.klassen.size(); i++) {
-				const elem = obj.klassen.get(i);
+		if (obj.klassenzuordnungen !== undefined) {
+			result += '"klassenzuordnungen" : [ ';
+			for (let i = 0; i < obj.klassenzuordnungen.size(); i++) {
+				const elem = obj.klassenzuordnungen.get(i);
 				result += AbteilungKlassenzuordnung.transpilerToJSON(elem);
-				if (i < obj.klassen.size() - 1)
+				if (i < obj.klassenzuordnungen.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';

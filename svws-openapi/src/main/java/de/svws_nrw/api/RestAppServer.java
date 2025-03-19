@@ -1,5 +1,6 @@
 package de.svws_nrw.api;
 
+import de.svws_nrw.api.server.APIAbteilungen;
 import de.svws_nrw.api.server.APIAlgoGesamtschuleAbschluss;
 import de.svws_nrw.api.server.APIAlgoGostAbschluss;
 import de.svws_nrw.api.server.APIBenutzer;
@@ -79,6 +80,7 @@ public final class RestAppServer extends Application {
 			APIOAuth.class,
 			APIReporting.class,
 			APIWiedervorlage.class,
+			APIAbteilungen.class,
 			OpenAPICorsFilter.class,
 			OpenApiServer.class);
 
