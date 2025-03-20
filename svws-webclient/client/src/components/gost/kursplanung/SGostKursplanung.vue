@@ -73,7 +73,7 @@
 							</div>
 						</template>
 					</div>
-					<div class="flex gap-0.5 items-center" :class="{ 'ml-2': !hatUpdateKompetenz }">
+					<div class="flex gap-2 items-center" :class="{ 'ml-2': !hatUpdateKompetenz }">
 						<div class="border-l border-ui-contrast-10 ml-6 h-5 w-7" />
 						<div class="text-button font-normal">Regeln:</div>
 						<svws-ui-button @click="onToggle" size="small" type="transparent" title="Alle Regeln anzeigen" :class="{'mr-2': regelzahl}">
