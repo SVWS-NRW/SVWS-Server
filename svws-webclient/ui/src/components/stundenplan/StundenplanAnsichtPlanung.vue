@@ -57,7 +57,7 @@
 		</div>
 	</div>
 	<div v-else class="svws-ui-stundenplan">Es wurden noch keine Zeitraster für diesen Stundenplan angelegt.</div>
-	<div class="sticky top-8 flex flex-col gap-5 h-full overflow-y-hidden">
+	<div class="overflow-auto min-w-156 max-w-156 flex flex-col gap-5">
 		<div class="flex gap-3 flex-wrap justify-stretch">
 			<svws-ui-button class="grow" type="secondary" @click="addStunde">
 				<span class="icon i-ri-calendar-event-line" />

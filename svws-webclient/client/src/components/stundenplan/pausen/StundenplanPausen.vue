@@ -51,26 +51,27 @@
 							<div class="font-bold px-2 py-1" :class="{'bg-ui-brand': lehrerAufsichten.get(pause.id)}"> {{ stundenplanManager().pausenzeitGetByIdStringOfUhrzeitBeginn(pause.id) }} – {{ stundenplanManager().pausenzeitGetByIdStringOfUhrzeitEnde(pause.id) }} {{ pause.bezeichnung }} </div>
 							<div v-if="!pause.klassen.isEmpty()" class="text-sm px-2 mb-2 font-bold"> {{ [...pause.klassen].map(k => " " + stundenplanManager().klasseGetByIdOrException(k).kuerzel).toString() }} </div>
 							<!-- Zeige Wochentypenübersicht nur an, wenn mehr als jede Woche vorhanden ist -->
-							<div v-if="wochentypen.size() > 1" class="svws-ui-stundenplan--pausen-aufsicht font-bold h-full justify-start" :style="`grid-template-columns: 4rem repeat(${wochentypen.size()}, minmax(min-content, 1fr))`">
+							<div v-if="wochentypen.size() > 1" class="grid p-0.5 font-bold h-full" :style="`grid-template-columns: 4rem repeat(${wochentypen.size()}, minmax(min-content, 1fr))`">
 								<div>Bereich</div>
-								<div v-for="typ in wochentypen" :key="typ" class="h-full rounded-xs pl-5" :class="{'bg-ui-success': pause.id === dragOverPausenzeit?.pauseID && typ === dragOverPausenzeit.typ && !bereichGesperrt(pause.id, dragOverPausenzeit.aufsichtsbereichID).value}">
+								<div v-for="typ in wochentypen" :key="typ" class="h-full rounded-xs text-center" :class="{'bg-ui-success text-ui-onsuccess': pause.id === dragOverPausenzeit?.pauseID && typ === dragOverPausenzeit.typ && !bereichGesperrt(pause.id, dragOverPausenzeit.aufsichtsbereichID).value}">
 									{{ stundenplanManager().stundenplanGetWochenTypAsStringKurz(typ) }}
 								</div>
 							</div>
 							<div v-for="aufsichtsbereich in stundenplanManager().aufsichtsbereichGetMengeAsList()" :key="aufsichtsbereich.id" class="svws-ui-stundenplan--pausen-aufsicht"
 								:class="{
 									'bg-ui-selected text-ui-onselected': !isDraggingOver(pause.id, aufsichtsbereich.id).value && mapAufsichtBereichTyp.containsKey1AndKey2(lehrerAufsichten.get(pause.id)?.id || -1, aufsichtsbereich.id),
-									'bg-ui-danger text-ui-ondanger': isDraggingOver(pause.id, aufsichtsbereich.id).value && bereichGesperrt(pause.id, aufsichtsbereich.id).value,
+									'bg-ui-danger text-ui-ondanger': bereichGesperrt(pause.id, aufsichtsbereich.id).value,
 									'bg-ui-success text-ui-onsuccess': isDraggingOver(pause.id, aufsichtsbereich.id).value && !bereichGesperrt(pause.id, aufsichtsbereich.id).value}"
 								:style="`grid-template-columns: 4rem repeat(${wochentypen.size()}, minmax(min-content, 1fr))`">
 								<div> {{ aufsichtsbereich.kuerzel }} </div>
 								<div v-for="typ in wochentypen" :key="typ"
 									@drop.stop="onDrop" class="h-full rounded-xs" @dragover.prevent="setDragOver(pause.id, aufsichtsbereich.id, typ)" @dragleave="setDragLeave"
-									:class="{'bg-ui-success': mapAufsichtBereichTyp.getOrNull(lehrerAufsichten.get(pause.id)?.id || -1, aufsichtsbereich.id, typ)}">
+									:class="{'bg-ui-selected-secondary text-ui-onselected-secondary': mapAufsichtBereichTyp.getOrNull(lehrerAufsichten.get(pause.id)?.id || -1, aufsichtsbereich.id, typ)}">
 									<div v-for="lehrer in stundenplanManager().lehrerGetMengeByPausenzeitIdAndAufsichtsbereichIdAndWochentypAndInklusive(pause.id, aufsichtsbereich.id, typ, false)"
-										:key="lehrer.id" class="rounded-md group flex place-items-center" :class="{'cursor-grab': !dragLehrer && hatUpdateKompetenz, 'hover:bg-ui-contrast-10': hatUpdateKompetenz}"
+										:key="lehrer.id" class="rounded-md group flex place-items-center" :class="{'cursor-grab': !dragLehrer && hatUpdateKompetenz, 'hover:bg-ui-contrast-25 hover:text-ui-contrast-75': hatUpdateKompetenz}"
 										@dragstart.stop="onDrag(lehrer, {pauseID: pause.id, aufsichtsbereichID: aufsichtsbereich.id, typ})" :draggable="hatUpdateKompetenz" @dragend="dragEnd">
-										<span v-if="hatUpdateKompetenz" class="icon i-ri-draggable inline-block icon-ui-contrast-75 opacity-60 group-hover:opacity-100 group-hover:icon-ui-contrast-75 rounded-xs" />
+										<span v-if="hatUpdateKompetenz" class="icon i-ri-draggable inline-block icon-ui-contrast-75 opacity-60 group-hover:opacity-100 group-hover:icon-ui-contrast-75 rounded-xs"
+											:class="{'icon-ui-onsuccess': isDraggingOver(pause.id, aufsichtsbereich.id).value || bereichGesperrt(pause.id, aufsichtsbereich.id).value}" />
 										<span>{{ lehrer.kuerzel }}</span>
 									</div>
 								</div>
