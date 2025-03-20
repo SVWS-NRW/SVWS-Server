@@ -86,7 +86,7 @@ public final class Revision36Updates extends SchemaRevisionUpdateSQL {
 							.formatted(Schema.tab_Klassen.name()));
 			conn.transactionFlush();
 			doUpdate(conn, logger, "- Klassen: 1E in 01 bzw. 2E in 02 in der Spalte ASDKlasse.",
-					"UPDATE %s SET Jahrgang_ID = (SELECT ID FROM %s ej WHERE ej.ASDJahrgang = SUBSTRING(ASDKlasse, 1, 2)) WHERE ASDKlasse LIKE '__%%' AND Jahrgang_ID IS NULL"
+					"UPDATE %s SET Jahrgang_ID = (SELECT ID FROM %s ej WHERE ej.ASDJahrgang = SUBSTRING(ASDKlasse, 1, 2) LIMIT 1) WHERE ASDKlasse LIKE '__%%' AND Jahrgang_ID IS NULL"
 							.formatted(Schema.tab_Klassen.name(), Schema.tab_EigeneSchule_Jahrgaenge.name()));
 			conn.transactionFlush();
 
