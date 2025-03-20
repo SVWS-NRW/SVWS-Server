@@ -5,8 +5,8 @@
 			<!-- Das Feld links in der Überschrift beinhaltet den ausgewählten Wochentyp -->
 			<div class="inline-flex gap-1 items-center justify-center print:!pl-2 print:!justify-start opacity-50 text-sm font-bold pb-0.5" />
 			<!-- Daneben werden die einzelnen Wochentage des Stundenplans angezeigt -->
-			<div v-for="wochentag in wochentagRange" :key="wochentag.id" @click="updateSelected(wochentag)" class="svws-wochentag-label" :class="{'svws-selected': selected===wochentag}">
-				<span class="px-2 py-1 rounded-xs"> {{ wochentag.beschreibung }}</span>
+			<div v-for="wochentag in wochentagRange" :key="wochentag.id" @click="updateSelected(wochentag)" class="svws-wochentag-label group" :class="{'svws-selected': selected===wochentag}">
+				<span class="px-2 py-1 rounded-xs group group-hover:bg-ui-contrast-25!"> {{ wochentag.beschreibung }}</span>
 			</div>
 		</div>
 		<!-- Die Daten des Stundenplans -->
@@ -23,7 +23,7 @@
 			</div>
 			<div class="svws-ui-stundenplan--zeitraster">
 				<!-- Die Zeitraster-Einträge -->
-				<div v-for="stunde in zeitrasterRange" :key="stunde" @click="updateSelected(stunde)" class="svws-ui-stundenplan--stunde svws-label text-center justify-center cursor-pointer" :style="posZeitraster(undefined, stunde)" :class="{'svws-selected-stunde': selected===stunde}">
+				<div v-for="stunde in zeitrasterRange" :key="stunde" @click="updateSelected(stunde)" class="svws-ui-stundenplan--stunde text-center justify-center cursor-pointer" :style="posZeitraster(undefined, stunde)" :class="{'svws-selected-stunde': selected===stunde}">
 					<div class="text-headline-sm">
 						{{ stunde }}.&nbsp;Stunde
 					</div>

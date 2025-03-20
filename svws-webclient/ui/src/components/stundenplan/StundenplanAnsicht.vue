@@ -149,15 +149,13 @@
 					</template>
 					<!-- Darstellung der Pausenzeiten und der zugehörigen Aufsichten -->
 					<template v-if="!hideZeitachse && !hatSchnittPausenzeitenZeitraster && (modePausenaufsichten !== 'aus')">
-						<stundenplan-ansicht-pausenaufsichten :mode="modePausenaufsichten" :kompakt="false" :manager="manager" :wochentag="wochentag.id" :get-pausenzeiten-liste-by-wochentag="getPausenzeitenListeByWochentag"
-							:text-pausenzeit="textPausenzeit" :pos-pause="posPause" :get-pausenaufsichten="getPausenaufsichten" :hide-pausenaufsicht="hidePausenaufsicht" :draggable="draggable"
-							:on-drag="onDrag" :on-drop="onDropInternal" :check-drop-zone-pausenzeit="checkDropZonePausenzeit" />
+						<stundenplan-ansicht-pausenaufsichten :mode="modePausenaufsichten" :kompakt="false" :manager :wochentag="wochentag.id" :get-pausenzeiten-liste-by-wochentag
+							:text-pausenzeit :pos-pause :get-pausenaufsichten :hide-pausenaufsicht :draggable :on-drag :on-drop="onDropInternal" :check-drop-zone-pausenzeit />
 					</template>
 				</div>
 				<div v-if="hatSchnittPausenzeitenZeitraster" class="svws-ui-stundenplan--zeitraster">
-					<stundenplan-ansicht-pausenaufsichten :mode="'tooltip'" :kompakt="true" :manager="manager" :wochentag="wochentag.id" :get-pausenzeiten-liste-by-wochentag="getPausenzeitenListeByWochentag"
-						:text-pausenzeit="textPausenzeit" :pos-pause="posPause" :get-pausenaufsichten="getPausenaufsichten" :hide-pausenaufsicht="hidePausenaufsicht" :draggable="draggable"
-						:on-drag="onDrag" :on-drop="onDropInternal" :check-drop-zone-pausenzeit="checkDropZonePausenzeit" />
+					<stundenplan-ansicht-pausenaufsichten :mode="'tooltip'" :kompakt="true" :manager :wochentag="wochentag.id" :get-pausenzeiten-liste-by-wochentag
+						:text-pausenzeit :pos-pause :get-pausenaufsichten :hide-pausenaufsicht :draggable :on-drag :on-drop="onDropInternal" :check-drop-zone-pausenzeit />
 				</div>
 			</template>
 		</div>

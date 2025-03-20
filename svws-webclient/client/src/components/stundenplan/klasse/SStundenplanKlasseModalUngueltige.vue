@@ -3,7 +3,7 @@
 	<svws-ui-modal v-model:show="show" size="medium" class="hidden">
 		<template #modalTitle>Ungültige Unterrichte entfernen</template>
 		<template #modalDescription>
-			Sollen die unten angezeigten Unterrichte entfernt werden?
+			Sollen die unten angezeigten Unterrichte entfernt werden? Diese Unterrichte sind im Stundenplan eingetragen, haben aber keinen Bezug zum Klassen- oder Kursunterricht mehr.
 			<svws-ui-table selectable v-model="selected" :items="stundenplanManager().unterrichtGetMengeUngueltigAsList()" :columns disable-footer>
 				<template #cell(idZeitraster)="{rowData: unterricht}">{{ zeitraster(unterricht) }}</template>
 				<template #cell(klassen)="{rowData: unterricht}">{{ klassen(unterricht) }}</template>

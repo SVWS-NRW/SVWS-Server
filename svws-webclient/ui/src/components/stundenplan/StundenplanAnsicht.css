@@ -59,7 +59,7 @@
 	}
 
 	&.svws-zeitachse {
-		@apply print:!hidden h-full border-b-0 border-r border-ui-contrast-25;
+		@apply print:!hidden h-full border-b-0 border-r border-ui-contrast-25 cursor-default select-none;
 	}
 }
 
@@ -75,6 +75,7 @@
 	.svws-ui-stundenplan--mode-planung & {
 		&:hover,
 		&:focus-visible {
+			@apply bg-ui-contrast-25 text-ui-contrast-75;
 			.svws-ui-stundenplan--unterricht,
 			.svws-ui-stundenplan--pausen-aufsicht,
 			&.svws-label {
@@ -83,7 +84,7 @@
 		}
 
 		&.svws-selected-stunde {
-			@apply text-ui;
+			@apply bg-ui-selected text-ui-onselected font-bold border-ui-neutral/25;
 		}
 	}
 }
@@ -112,15 +113,18 @@
 	.svws-ui-stundenplan--mode-planung &:not(.svws-no-hover) {
 		&:hover,
 		&:focus-visible {
-			@apply bg-ui;
+			@apply bg-ui-contrast-25 text-ui-contrast-75;
 		}
 	}
 }
 
 .svws-ui-stundenplan--unterricht,
 .svws-ui-stundenplan--pausen-aufsicht {
-	@apply rounded-sm grid grid-cols-4 gap-x-2 w-full border border-ui-contrast-10 px-2 py-1 content-center leading-none items-center;
-	grid-template-columns: minmax(min-content, 1fr) minmax(min-content, 0.5fr) minmax(min-content, 1fr) minmax(min-content, 1fr);
+	@apply rounded-sm w-full border border-ui-contrast-10 px-2 py-1 content-center leading-none items-center;
+	&:not(.tooltip-mode) {
+		@apply grid grid-cols-4 gap-x-2;
+		grid-template-columns: minmax(min-content, 1fr) minmax(min-content, 0.5fr) minmax(min-content, 1fr) minmax(min-content, 1fr);
+	}
 
 	&.svws-compact {
 		@apply grid-cols-2 py-1;
@@ -158,6 +162,7 @@
 		&.svws-selected {
 			span {
 				@apply bg-ui-selected text-ui-onselected font-bold border-ui-neutral/25;
+				@apply hover:bg-ui-contrast-25 hover:text-ui-contrast-75;
 			}
 			.icon {
 				@apply icon-ui-onselected;

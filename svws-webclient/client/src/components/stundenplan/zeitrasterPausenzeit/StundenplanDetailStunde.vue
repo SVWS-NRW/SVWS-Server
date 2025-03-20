@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card :title="`${selected}. Stunde`">
-		<svws-ui-input-wrapper :grid="2">
+		<div class="grid grid-cols-2 gap-4">
 			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(first.stundenbeginn ?? 0)" required placeholder="Stundenbeginn" @change="value => value && (start = value) " />
 			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(first.stundenende ?? 0)" placeholder="Stundenende" @change="value => value && (ende = value)" />
 			<svws-ui-button v-if="!disabled && !ueberschneidung" type="secondary" @click="patchZeiten"> Stundenzeiten aktualisieren </svws-ui-button>
@@ -14,7 +14,7 @@
 			<div class="col-span-full">
 				<svws-ui-button type="danger" @click="removeZeitraster(stundenplanManager().getListZeitrasterZuStunde(props.selected))" class="w-52"> <span class="icon i-ri-delete-bin-line" /> Stunde entfernen </svws-ui-button>
 			</div>
-		</svws-ui-input-wrapper>
+		</div>
 	</svws-ui-content-card>
 </template>
 
