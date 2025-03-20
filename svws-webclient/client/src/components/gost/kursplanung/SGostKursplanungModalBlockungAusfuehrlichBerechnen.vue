@@ -11,7 +11,7 @@
 		</template>
 		<template #modalDescription>
 			<div v-if="workerManager !== undefined" class="text-left flex flex-row justify-between">
-				<div class="flex gap-2">
+				<div v-if="WorkerManagerKursblockung.MAX_WORKER > 1" class="flex gap-2">
 					Anzahl der parallelen Berechnungen:
 					<div class="pl-4 pr-2">
 						<svws-ui-button type="secondary" size="small" title="" @click="removeWorker" :disabled="workerManager.threads === 1">
