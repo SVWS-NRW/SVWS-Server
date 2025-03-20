@@ -9,8 +9,8 @@
 		<template v-if="hatBlockung">
 			<Teleport to=".svws-sub-nav-target" v-if="isMounted">
 				<svws-ui-sub-nav :focus-switching-enabled :focus-help-visible>
-					<div v-if="hatUpdateKompetenz" class="flex gap-0.5 items-center leading-none ml-2">
-						<div class="text-button font-normal mr-1 -mt-px">Ergebnis:</div>
+					<div v-if="hatUpdateKompetenz" class="flex gap-2 items-center">
+						<div class="text-button font-normal">Ergebnis:</div>
 						<svws-ui-button type="transparent" @click.stop="ergebnisAbleiten()" title="Eine neue Blockung auf Grundlage dieses Ergebnisses erstellen." class="text-ui-contrast-100 subNavigationFocusField">
 							<span class="icon-sm i-ri-file-copy-line" /> Ableiten
 						</svws-ui-button>
@@ -30,7 +30,7 @@
 							</svws-ui-button>
 						</s-gost-kursplanung-kursansicht-modal-ergebnis-synchronisieren>
 						<div class="border-l border-ui-contrast-10 ml-6 h-5 w-7" />
-						<div class="text-button font-normal mr-1 -mt-px">Kurse:</div>
+						<div class="text-button font-normal">Kurse:</div>
 						<s-gost-kursplanung-kursansicht-modal-irrlaeufer v-if="props.getErgebnismanager().getOfSchuelerMapIDzuUngueltigeKurse().size()" :update-kurs-schueler-zuordnungen :get-ergebnismanager v-slot="{ openModal }">
 							<svws-ui-button type="error" size="small" @click="openModal()" title="Zeigt ungültige Schüler/Kurs-Zuordnungen, die aufgelöst werden können">
 								<span class="icon-sm i-ri-error-warning-line" /> Ungültige Kurszuordnungen
@@ -73,9 +73,9 @@
 							</div>
 						</template>
 					</div>
-					<div class="flex gap-0.5 items-center leading-none" :class="{ 'ml-2': !hatUpdateKompetenz }">
+					<div class="flex gap-0.5 items-center" :class="{ 'ml-2': !hatUpdateKompetenz }">
 						<div class="border-l border-ui-contrast-10 ml-6 h-5 w-7" />
-						<div class="text-button font-normal mr-1 -mt-px">Regeln:</div>
+						<div class="text-button font-normal">Regeln:</div>
 						<svws-ui-button @click="onToggle" size="small" type="transparent" title="Alle Regeln anzeigen" :class="{'mr-2': regelzahl}">
 							<span class="icon-sm i-ri-settings-3-line" /> Detailansicht&nbsp;<template #badge v-if="regelzahl"> {{ regelzahl }} </template>
 						</svws-ui-button>
@@ -103,22 +103,17 @@
 				</aside>
 			</Teleport>
 		</template>
-		<div v-else class="min-w-fit">
-			<div class="p-3 border-2 border-dashed border-ui-contrast-10 dark:border-white/10 rounded-lg max-w-xl">
-				<div class="text-headline-md mb-5">Keine Blockung ausgewählt</div>
-				<div v-if="hatUpdateKompetenz" class="opacity-75 leading-tight flex flex-col gap-2">
-					<div>
-						<svws-ui-button type="icon" class="inline align-middle" title="Neue Blockung hinzufügen" @click.stop="addBlockung">
-							<span class="icon inline-block i-ri-add-line" />
-						</svws-ui-button>
-						<span class="align-middle">Neue Blockung erstellen</span>
-					</div>
-					<div v-if="persistiert">
-						<svws-ui-button :disabled="apiStatus.pending" type="icon" class="inline align-middle" title="Erstelle eine Blockung aus der Persistierung in den Leistungsdaten" @click.stop="restoreBlockung">
-							<span class="icon-sm inline-block i-ri-arrow-turn-back-line -mb-0.5" />
-						</svws-ui-button>
-						<span class="align-middle">Wiederherstellen einer Blockung aus den bestehenden Leistungsdaten</span>
-					</div>
+		<div v-else>
+			<div class="p-3 border-2 border-dashed border-ui-contrast-10 rounded-lg">
+				<div class="text-headline-md mb-5">Keine Blockung für dieses Halbjahr vorhanden</div>
+				<div v-if="hatUpdateKompetenz">
+					<svws-ui-button type="transparent" @click.stop="addBlockung">
+						<span class="icon i-ri-add-line" /> Neue Blockung hinzufügen
+					</svws-ui-button>
+					<div class="h-2" />
+					<svws-ui-button :disabled="apiStatus.pending" type="transparent" title="Erstelle eine Blockung aus der Persistierung in den Leistungsdaten" @click.stop="restoreBlockung">
+						<span class="icon i-ri-arrow-turn-back-line" /> Wiederherstellen einer Blockung aus den bestehenden Leistungsdaten
+					</svws-ui-button>
 				</div>
 			</div>
 		</div>
