@@ -15,7 +15,7 @@ export class RouteStundenplanUnterrichte extends RouteNode<any, RouteStundenplan
 		super(Schulform.values(), [
 			BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN,
 		], "stundenplan.unterrichte", "unterrichte", SStundenplanUnterrichte);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.ALPHA;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Unterrichte";
 		this.isHidden = (params?: RouteParams) => RouteStundenplan.katalogeCheckHidden(false, this, params);

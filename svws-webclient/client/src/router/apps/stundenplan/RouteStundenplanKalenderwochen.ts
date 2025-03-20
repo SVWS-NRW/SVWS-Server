@@ -15,7 +15,7 @@ export class RouteStundenplanKalenderwochen extends RouteNode<any, RouteStundenp
 		super(Schulform.values(), [
 			BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN,
 		], "stundenplan.kalenderwochen", "kalenderwochen", SStundenplanKalenderwochen);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Kalenderwochen";
 		this.isHidden = (params?: RouteParams) => RouteStundenplan.katalogeCheckHidden(false, this, params);

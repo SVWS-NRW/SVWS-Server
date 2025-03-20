@@ -15,7 +15,7 @@ export class RouteStundenplanNeu extends RouteNode<any, RouteStundenplan> {
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.STUNDENPLAN_AENDERN ], "stundenplan.neu", "neu", SStundenplanNeu);
 		super.types = new Set([ ViewType.HINZUFUEGEN ]);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Stundenplan Neu";
 		super.setCheckpoint = true;
