@@ -9,6 +9,8 @@ import java.util.stream.Stream;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.core.data.schule.Lernplattform;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerLernplattform;
+import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernplattform;
 import de.svws_nrw.db.dto.current.svws.auth.DTOLernplattformen;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response;
@@ -76,7 +78,8 @@ class DataKatalogLernplattformenTest {
 				.hasFieldOrPropertyWithValue("benutzernameSuffixLehrer", "")
 				.hasFieldOrPropertyWithValue("benutzernameSuffixErzieher", "")
 				.hasFieldOrPropertyWithValue("benutzernameSuffixSchueler", "")
-				.hasFieldOrPropertyWithValue("konfiguration", "");
+				.hasFieldOrPropertyWithValue("konfiguration", "")
+				.hasFieldOrPropertyWithValue("anzahlEinwilligungen", 0);
 	}
 
 	@Test
@@ -104,7 +107,8 @@ class DataKatalogLernplattformenTest {
 				.hasFieldOrPropertyWithValue("benutzernameSuffixLehrer", dto1.BenutzernameSuffixLehrer)
 				.hasFieldOrPropertyWithValue("benutzernameSuffixErzieher", dto1.BenutzernameSuffixErzieher)
 				.hasFieldOrPropertyWithValue("benutzernameSuffixSchueler", dto1.BenutzernameSuffixSchueler)
-				.hasFieldOrPropertyWithValue("konfiguration", dto1.Konfiguration);
+				.hasFieldOrPropertyWithValue("konfiguration", dto1.Konfiguration)
+				.hasFieldOrPropertyWithValue("anzahlEinwilligungen", 0);
 
 		assertThat(expectedDto2)
 				.isNotNull()
@@ -113,7 +117,39 @@ class DataKatalogLernplattformenTest {
 				.hasFieldOrPropertyWithValue("benutzernameSuffixLehrer", dto2.BenutzernameSuffixLehrer)
 				.hasFieldOrPropertyWithValue("benutzernameSuffixErzieher", dto2.BenutzernameSuffixErzieher)
 				.hasFieldOrPropertyWithValue("benutzernameSuffixSchueler", dto2.BenutzernameSuffixSchueler)
-				.hasFieldOrPropertyWithValue("konfiguration", dto2.Konfiguration);
+				.hasFieldOrPropertyWithValue("konfiguration", dto2.Konfiguration)
+				.hasFieldOrPropertyWithValue("anzahlEinwilligungen", 0);
+	}
+
+	@Test
+	@DisplayName("getAllAnzahlEinwilligungen | Erfolg")
+	void getAllTest_anzahlEinwilligungen() throws ApiOperationException {
+		final DTOLernplattformen dtoSchueler =  getDTOLernplattform();
+		final DTOLernplattformen dtoLehrer = getDTOLernplattform();
+		dtoLehrer.ID = 2L;
+
+		when(conn.queryAll(DTOLernplattformen.class)).thenReturn(List.of(dtoSchueler, dtoLehrer));
+
+		final DTOSchuelerLernplattform schueler = new DTOSchuelerLernplattform(1L, 1L, false, false, false, false);
+		schueler.LernplattformID = dtoSchueler.ID;
+		when(conn.queryList((DTOSchuelerLernplattform.QUERY_ALL.concat(" WHERE e.LernplattformID IS NOT NULL")), (DTOSchuelerLernplattform.class)))
+				.thenReturn(List.of(schueler));
+
+		final DTOLehrerLernplattform lehrer = new DTOLehrerLernplattform(1L, 1L, false, false, false, false);
+		lehrer.LernplattformID = dtoLehrer.ID;
+		when(conn.queryList((DTOLehrerLernplattform.QUERY_ALL.concat(" WHERE e.LernplattformID IS NOT NULL")), (DTOLehrerLernplattform.class)))
+				.thenReturn(List.of(lehrer, lehrer));
+
+		final List<Lernplattform> result = dataKatalogLernplattformen.getAll();
+		final Lernplattform eaSchueler = result.stream().filter(ea -> ea.id == dtoSchueler.ID).findFirst().orElse(null);
+		final Lernplattform eaLehrer = result.stream().filter(ea -> ea.id == dtoLehrer.ID).findFirst().orElse(null);
+
+		assertThat(eaSchueler)
+				.isNotNull()
+				.hasFieldOrPropertyWithValue("anzahlEinwilligungen", 1);
+		assertThat(eaLehrer)
+				.isNotNull()
+				.hasFieldOrPropertyWithValue("anzahlEinwilligungen", 2);
 	}
 
 	@Test

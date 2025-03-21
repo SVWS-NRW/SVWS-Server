@@ -1,5 +1,6 @@
 package de.svws_nrw.data.schueler;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -9,7 +10,10 @@ import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernplattform;
+import de.svws_nrw.db.dto.current.svws.auth.DTOCredentialsLernplattformen;
 import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -125,4 +129,33 @@ public final class DataSchuelerLernplattformen extends DataManagerRevised<Long[]
 	public DTOSchuelerLernplattform getDatabaseDTOByID(final Long[] id) {
 		return conn.queryByKey(DTOSchuelerLernplattform.class, id[0], id[1]);
 	}
+
+	/**
+	 * Bestimmt die Credentials eines Schülers zu seinen Lernplattformen.
+	 *
+	 * @param idLernplattform   ID der Lernplattform
+	 *
+	 * @return die Credentials zu den Lernplattformen
+	 *
+	 * @throws ApiOperationException im Fehlerfall
+	 */
+	public Response getCredentialsAsResponse(final long idLernplattform) throws ApiOperationException {
+
+		final DTOSchuelerLernplattform schuelerLernplattform = conn.queryByKey(DTOSchuelerLernplattform.class, this.idSchueler, idLernplattform);
+		if ((schuelerLernplattform == null) || (schuelerLernplattform.CredentialID == null)) {
+			throw new ApiOperationException(Status.NOT_FOUND, "Für den Schüler mit ID " + this.idSchueler + " und Lernplattform-ID " + idLernplattform + " wurden keine Credentials gefunden.");
+		}
+
+		final DTOCredentialsLernplattformen credentials = conn.queryByKey(DTOCredentialsLernplattformen.class, schuelerLernplattform.CredentialID);
+		if (credentials == null) {
+			throw new ApiOperationException(Status.NOT_FOUND, "Der Credential-Datensatz mit der ID " + schuelerLernplattform.CredentialID + " wurde nicht gefunden.");
+		}
+
+		final Map<String, Object> payload = new HashMap<>();
+		payload.put("Benutzername", credentials.Benutzername);
+		payload.put("Initialkennwort", credentials.Initialkennwort);
+
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(payload).build();
+	}
+
 }

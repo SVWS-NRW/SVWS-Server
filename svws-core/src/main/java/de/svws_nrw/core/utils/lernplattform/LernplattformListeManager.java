@@ -2,7 +2,9 @@ package de.svws_nrw.core.utils.lernplattform;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 
 import de.svws_nrw.asd.adt.Pair;
@@ -20,6 +22,9 @@ public final class LernplattformListeManager extends AuswahlManager<Long, Lernpl
 
 	/** Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ */
 	private static final @NotNull Function<Lernplattform, Long> _lernplattformenToId = (final @NotNull Lernplattform ea) -> ea.id;
+
+	/** Sets mit Listen zur aktuellen Auswahl */
+	private final @NotNull HashSet<Long> setLernplattformIDsMitPersonen = new HashSet<>();
 
 	/** Ein Default-Comparator für den Vergleich von Lernplattformen in Lernplattformlisten. */
 	public static final @NotNull Comparator<Lernplattform> comparator =
@@ -49,6 +54,14 @@ public final class LernplattformListeManager extends AuswahlManager<Long, Lernpl
 				Arrays.asList(new Pair<>("lernplattform", true)));
 	}
 
+	/** Gibt das Set mit den LernplattformIds zurück, die in der Auswahl sind und Schüler oder Lehrer beinhalten
+	 *
+	 * @return Das Set mit IDs von Lernplattformen, die Schüler oder Lehrer haben
+	 */
+	public @NotNull Set<Long> getLernplattformIDsMitPersonen() {
+		return this.setLernplattformIDsMitPersonen;
+	}
+
 	@Override
 	protected boolean onSetDaten(final @NotNull Lernplattform eintrag, final @NotNull Lernplattform daten) {
 		boolean updateEintrag = false;
@@ -57,6 +70,14 @@ public final class LernplattformListeManager extends AuswahlManager<Long, Lernpl
 			updateEintrag = true;
 		}
 		return updateEintrag;
+	}
+
+	@Override
+	protected void onMehrfachauswahlChanged() {
+		this.setLernplattformIDsMitPersonen.clear();
+		for (final @NotNull Lernplattform l : this.liste.auswahl())
+			if (l.anzahlEinwilligungen != 0)
+				this.setLernplattformIDsMitPersonen.add(l.id);
 	}
 
 	@Override

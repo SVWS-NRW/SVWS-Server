@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import type { JavaSet } from '../../../java/util/JavaSet';
 import { Schulform } from '../../../asd/types/schule/Schulform';
 import { Lernplattform } from '../../../core/data/schule/Lernplattform';
 import { JavaString } from '../../../java/lang/JavaString';
@@ -11,6 +12,7 @@ import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import { Arrays } from '../../../java/util/Arrays';
 import { Schuljahresabschnitt } from '../../../asd/data/schule/Schuljahresabschnitt';
+import { HashSet } from '../../../java/util/HashSet';
 import { Pair } from '../../../asd/adt/Pair';
 
 export class LernplattformListeManager extends AuswahlManager<number, Lernplattform, Lernplattform> {
@@ -19,6 +21,11 @@ export class LernplattformListeManager extends AuswahlManager<number, Lernplattf
 	 * Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ
 	 */
 	private static readonly _lernplattformenToId : JavaFunction<Lernplattform, number> = { apply : (ea: Lernplattform) => ea.id };
+
+	/**
+	 * Sets mit Listen zur aktuellen Auswahl
+	 */
+	private readonly setLernplattformIDsMitPersonen : HashSet<number> = new HashSet<number>();
 
 	/**
 	 * Ein Default-Comparator für den Vergleich von Lernplattformen in Lernplattformlisten.
@@ -47,6 +54,15 @@ export class LernplattformListeManager extends AuswahlManager<number, Lernplattf
 		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, listLernplattform, LernplattformListeManager.comparator, LernplattformListeManager._lernplattformenToId, LernplattformListeManager._lernplattformenToId, Arrays.asList(new Pair("lernplattform", true)));
 	}
 
+	/**
+	 *Gibt das Set mit den LernplattformIds zurück, die in der Auswahl sind und Schüler oder Lehrer beinhalten
+	 *
+	 * @return Das Set mit IDs von Lernplattformen, die Schüler oder Lehrer haben
+	 */
+	public getLernplattformIDsMitPersonen() : JavaSet<number> {
+		return this.setLernplattformIDsMitPersonen;
+	}
+
 	protected onSetDaten(eintrag : Lernplattform, daten : Lernplattform) : boolean {
 		let updateEintrag : boolean = false;
 		if (!JavaObject.equalsTranspiler(daten.bezeichnung, (eintrag.bezeichnung))) {
@@ -54,6 +70,13 @@ export class LernplattformListeManager extends AuswahlManager<number, Lernplattf
 			updateEintrag = true;
 		}
 		return updateEintrag;
+	}
+
+	protected onMehrfachauswahlChanged() : void {
+		this.setLernplattformIDsMitPersonen.clear();
+		for (const l of this.liste.auswahl())
+			if (l.anzahlEinwilligungen !== 0)
+				this.setLernplattformIDsMitPersonen.add(l.id);
 	}
 
 	protected compareAuswahl(a : Lernplattform, b : Lernplattform) : number {

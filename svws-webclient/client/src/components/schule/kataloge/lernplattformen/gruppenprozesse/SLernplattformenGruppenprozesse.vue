@@ -3,6 +3,12 @@
 		<div v-if="ServerMode.DEV.checkServerMode(serverMode)" class="flex flex-col gap-y-16 lg:gap-y-16">
 			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Lernplattformen werden gelöscht."
 				:is-open="currentAction === 'delete'" @update:is-open="(isOpen) => setCurrentAction('delete', isOpen)">
+				<div>
+					<span v-if="alleEinwilligungenLeer">Alle ausgewählten Lernplattformen sind bereit zum Löschen.</span>
+					<div v-if="!alleEinwilligungenLeer">
+						<span class="text-ui-danger"> Diese Lernplattform ist noch Schülern/Lehrern zugeordnet. Wollen Sie es trotzdem löschen?  <br> </span>
+					</div>
+				</div>
 				<template #buttonFooterLeft>
 					<svws-ui-button :disabled="loading"
 						title="Löschen" @click="entferneLernplattformen" :is-loading="loading" class="mt-4">
@@ -44,6 +50,8 @@
 	const loading = ref<boolean>(false);
 	const logs = ref<List<string | null> | undefined>();
 	const status = ref<boolean | undefined>();
+
+	const alleEinwilligungenLeer = computed(() => (currentAction.value === 'delete') && props.manager().getLernplattformIDsMitPersonen().isEmpty());
 
 	function setCurrentAction(newAction: string, open: boolean) {
 		if(newAction === oldAction.value.name && !open)

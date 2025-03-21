@@ -22,6 +22,7 @@ import { routeSchuelerVermerke } from "~/router/apps/schueler/vermerke/RouteSchu
 import { routeSchuelerSprachen } from "./sprachen/RouteSchuelerSprachen";
 import { routeSchuelerAbschluesse } from "./abschluesse/RouteSchuelerAbschluesse";
 import { routeSchuelerEinwilligungen } from "~/router/apps/schueler/einwilligungen/RouteSchuelerEinwilligungen";
+import { routeSchuelerLernplattformen } from "~/router/apps/schueler/lernplattformen/RouteSchuelerLernplattformen";
 import { AppMenuGroup } from "@ui";
 import { api } from "~/router/Api";
 import type { SchuelerAppProps } from "~/components/schueler/SSchuelerAppProps";
@@ -57,6 +58,7 @@ export class RouteSchueler extends RouteAuswahlNode<SchuelerListeManager, RouteD
 			routeSchuelerLaufbahnplanung,
 			routeSchuelerStundenplan,
 			routeSchuelerEinwilligungen,
+			routeSchuelerLernplattformen,
 			routeSchuelerNeu,
 			routeSchuelerGruppenprozesse,
 		];

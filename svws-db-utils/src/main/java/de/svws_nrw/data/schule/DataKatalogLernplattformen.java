@@ -1,5 +1,6 @@
 package de.svws_nrw.data.schule;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -11,6 +12,8 @@ import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerLernplattform;
+import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernplattform;
 import de.svws_nrw.db.dto.current.svws.auth.DTOLernplattformen;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response;
@@ -58,12 +61,23 @@ public final class DataKatalogLernplattformen extends DataManagerRevised<Long, D
 		return lp;
 	}
 
-	//TODO Anzahl der Einwilligungen für alle Personentypen definieren
 	@Override
 	public List<Lernplattform> getAll() throws ApiOperationException {
 		final List<DTOLernplattformen> mapLernplattform = conn.queryAll(DTOLernplattformen.class);
+		final Map<Long, Long> mapSchuelerEinwilligungen = conn.queryList(DTOSchuelerLernplattform.QUERY_ALL.concat(" WHERE e.LernplattformID IS NOT NULL"),
+				DTOSchuelerLernplattform.class).stream().collect(Collectors.groupingBy(s -> s.LernplattformID, Collectors.counting()));
+		final Map<Long, Long> mapLehrerEinwilligungen = conn.queryList(DTOLehrerLernplattform.QUERY_ALL.concat(" WHERE e.LernplattformID IS NOT NULL"),
+				DTOLehrerLernplattform.class).stream().collect(Collectors.groupingBy(l -> l.LernplattformID, Collectors.counting()));
 		return mapLernplattform.stream()
-				.map(this::map).toList();
+				.map(lp -> {
+					final int anzahlEinwilligungenSchueler;
+					final int anzahlEinwilligungenLehrer;
+					final int anzahlEinwilligungenGesamt;
+					anzahlEinwilligungenSchueler = mapSchuelerEinwilligungen.computeIfAbsent(lp.ID, a -> 0L).intValue();
+					anzahlEinwilligungenLehrer = mapLehrerEinwilligungen.computeIfAbsent(lp.ID, a -> 0L).intValue();
+					anzahlEinwilligungenGesamt = anzahlEinwilligungenSchueler + anzahlEinwilligungenLehrer;
+					return map(lp, anzahlEinwilligungenGesamt);
+				}).toList();
 	}
 
 	@Override
@@ -84,6 +98,26 @@ public final class DataKatalogLernplattformen extends DataManagerRevised<Long, D
 		dto.BenutzernameSuffixErzieher = "";
 		dto.BenutzernameSuffixSchueler = "";
 		dto.Konfiguration = "";
+	}
+
+	@Override
+	protected Lernplattform addBasic(final Long newID, final Map<String, Object> initAttributes) throws ApiOperationException {
+		final Lernplattform neueLernplattform = super.addBasic(newID, initAttributes);
+		final List<DTOSchuelerLernplattform> schuelerLernplattformen = new ArrayList<>();
+		final List<Long> schuelerIds = conn.queryList("SELECT e.ID FROM DTOSchueler e", Long.class);
+		for (final Long schuelerId : schuelerIds) {
+			final DTOSchuelerLernplattform dto = new DTOSchuelerLernplattform(schuelerId, neueLernplattform.id, false, false, false, false);
+			schuelerLernplattformen.add(dto);
+		}
+		conn.transactionPersistAll(schuelerLernplattformen);
+		final List<DTOLehrerLernplattform> lehrerLernplattformen = new ArrayList<>();
+		final List<Long> lehrerIds = conn.queryList("SELECT e.ID FROM DTOLehrer e", Long.class);
+		for (final Long lehrerId : lehrerIds) {
+			final DTOLehrerLernplattform dto = new DTOLehrerLernplattform(lehrerId, neueLernplattform.id, false, false, false, false);
+			lehrerLernplattformen.add(dto);
+		}
+		conn.transactionPersistAll(lehrerLernplattformen);
+		return neueLernplattform;
 	}
 
 	private String validateBezeichnung(final Object value, final String name) throws ApiOperationException {
