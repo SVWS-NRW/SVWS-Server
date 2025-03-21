@@ -264,6 +264,11 @@
 						<td><code>{{ '<' }}span class="icon i-ri-expand-up-down-fill"{{ ' />' }}</code></td>
 					</tr>
 					<tr>
+						<th><span class="icon i-ri-expand-up-down-line" /></th>
+						<td>Headless Multiselect Input</td>
+						<td><code>{{ '<' }}span class="icon i-ri-expand-up-down-line"{{ ' />' }}</code></td>
+					</tr>
+					<tr>
 						<th><span class="icon i-ri-filter-line" /></th>
 						<td>Filter</td>
 						<td><code>{{ '<' }}span class="icon i-ri-filter-line"{{ ' />' }}</code></td>

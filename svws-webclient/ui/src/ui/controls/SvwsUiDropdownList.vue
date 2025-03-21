@@ -49,9 +49,9 @@
 		filteredList: Item[] | Iterable<Item>;
 		itemText?: (item: Item) => string;
 		selectItem?: (item: Item) => void;
-		strategy: Strategy;
-		floatingLeft: string;
-		floatingTop: string;
+		strategy?: Strategy;
+		floatingLeft?: string;
+		floatingTop?: string;
 		searchText?: string;
 		highlightItem?: Item;
 	}>(),{
@@ -61,6 +61,9 @@
 		searchText: "",
 		selectedItemList: () => new Set<Item>(),
 		highlightItem: undefined,
+		strategy: undefined,
+		floatingLeft: '',
+		floatingTop: '',
 	});
 
 	const floating = ref<HTMLDivElement | null>(null);

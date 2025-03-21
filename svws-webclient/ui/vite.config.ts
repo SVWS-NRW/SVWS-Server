@@ -65,6 +65,7 @@ export default defineConfig({
 		alias: {
 			// Importe können durch ein vorangestelltes `~` absolut gefunden werden
 			"@icons": resolve(__dirname, "../../node_modules/remixicon/icons"),
+			"@json": resolve(__dirname, "../../svws-asd/src/main/resources/de/svws_nrw/asd/types"),
 		},
 	},
 	plugins: [
