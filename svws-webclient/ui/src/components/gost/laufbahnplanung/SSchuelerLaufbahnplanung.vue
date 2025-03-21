@@ -1,5 +1,5 @@
 <template>
-	<div class="page page-flex-row max-h-480">
+	<div class="page page-flex-row max-w-480">
 		<Teleport v-if="hatUpdateKompetenz" defer to=".svws-sub-nav-target">
 			<svws-ui-sub-nav>
 				<svws-ui-button type="transparent" @click="export_laufbahnplanung"><span class="icon-sm i-ri-upload-2-line" />Exportieren</svws-ui-button>

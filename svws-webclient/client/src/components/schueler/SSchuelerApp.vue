@@ -41,7 +41,7 @@
 					</div>
 				</template>
 			</div>
-			<div class="svws-ui-header--actions" />
+			<div class="svws-ui-header--actions print:!hidden" />
 		</header>
 
 		<svws-ui-tab-bar :tab-manager :focus-switching-enabled :focus-help-visible>

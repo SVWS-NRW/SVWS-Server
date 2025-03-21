@@ -17,20 +17,21 @@
 }
 
 .tooltip-trigger--triggered {
-	.icon--indicator span.icon {
-		-webkit-filter: invert(44%) sepia(52%) saturate(1260%) hue-rotate(173deg) brightness(91%) contrast(86%);
-		filter: invert(44%) sepia(52%) saturate(1260%) hue-rotate(173deg) brightness(91%) contrast(86%);
-
+	span.icon {
 		.page--statistik & {
-			@apply text-ui-statistic;
+			@apply icon-ui-statistic;
 		}
 	}
 }
 
 .tooltip-trigger--danger {
+	&.tooltip-trigger--triggered {
+		span.icon {
+			@apply !icon-ui-danger-hover;
+		}
+	}
 	span.icon {
-		-webkit-filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
-		filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
+		@apply icon-ui-danger;
 	}
 }
 

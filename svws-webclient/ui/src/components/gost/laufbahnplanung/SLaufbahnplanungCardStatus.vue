@@ -1,5 +1,5 @@
 <template>
-	<div class="flex flex-col gap-2">
+	<div class="flex flex-col gap-4">
 		<div class="flex flex-row justify-between">
 			<div class="text-headline-md">Belegprüfungsergebnisse</div>
 			<div class="flex flex-row gap-2">
@@ -8,15 +8,13 @@
 				<svws-ui-radio-option v-model="art" value="auto" name="gesamt" label="Automatisch" />
 			</div>
 		</div>
-		<div class="print:!hidden">
-			<div v-if="abiturdatenManager().getBiligualenBildungsgang() !== null" class="mb-4">
-				<span class="font-bold">Hinweis:</span> Der Schüler befindet sich aktuell im Bilingualen Zweig ({{ abiturdatenManager().getBiligualenBildungsgang() }})
-			</div>
-			<s-laufbahnplanung-fehler :fehlerliste :belegpruefungs-art="() => abiturdatenManager().getPruefungsArt()" />
-			<s-laufbahnplanung-informationen :fehlerliste />
-			<s-laufbahnplanung-sprachpruefungen v-if="sprachendaten" :schuljahr :sprachendaten="() => abiturdatenManager().getSprachendaten()" />
-			<s-laufbahnplanung-fachkombinationen :abiturdaten-manager />
+		<div v-if="abiturdatenManager().getBiligualenBildungsgang() !== null" class="mb-4">
+			<span class="font-bold">Hinweis:</span> Der Schüler befindet sich aktuell im Bilingualen Zweig ({{ abiturdatenManager().getBiligualenBildungsgang() }})
 		</div>
+		<s-laufbahnplanung-fehler :fehlerliste :belegpruefungs-art="() => abiturdatenManager().getPruefungsArt()" />
+		<s-laufbahnplanung-informationen :fehlerliste />
+		<s-laufbahnplanung-sprachpruefungen v-if="sprachendaten" :schuljahr :sprachendaten="() => abiturdatenManager().getSprachendaten()" />
+		<s-laufbahnplanung-fachkombinationen :abiturdaten-manager />
 	</div>
 </template>
 

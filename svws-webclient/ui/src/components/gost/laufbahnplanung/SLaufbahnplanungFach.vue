@@ -5,7 +5,7 @@
 				{{ fach.kuerzelAnzeige }}
 			</div>
 		</div>
-		<div role="cell" class="svws-ui-td select-all" :title="fach.bezeichnung || ''">
+		<div role="cell" class="svws-ui-td select-all">
 			<div class="break-all line-clamp-1 leading-tight -my-0.5">
 				{{ fach.bezeichnung || '' }}
 			</div>
