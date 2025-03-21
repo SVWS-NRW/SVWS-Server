@@ -22,7 +22,7 @@ export class KlassenDaten extends JavaObject {
 	public kuerzel : string | null = null;
 
 	/**
-	 * Die ID des zugeordneten Jahrgangs, dem die Klasse zugeordnet ist
+	 * Die ID des zugeordneten Jahrgangs, dem die Klasse zugeordnet ist, null falls es eine Jahrgangsübergreifende Klasse ist
 	 */
 	public idJahrgang : number | null = null;
 

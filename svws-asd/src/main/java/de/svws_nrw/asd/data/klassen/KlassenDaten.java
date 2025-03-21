@@ -31,8 +31,8 @@ public class KlassenDaten {
 	@Schema(description = "das Kürzel der Klasse", example = "06b")
 	public String kuerzel;
 
-	/** Die ID des zugeordneten Jahrgangs, dem die Klasse zugeordnet ist */
-	@Schema(description = "die ID des zugeordneten Jahrgangs", example = "815")
+	/** Die ID des zugeordneten Jahrgangs, dem die Klasse zugeordnet ist, null falls es eine Jahrgangsübergreifende Klasse ist */
+	@Schema(description = "die ID des zugeordneten Jahrgangs, dem die Klasse zugeordnet ist, null falls es eine Jahrgangsübergreifende Klasse ist", example = "815")
 	public Long idJahrgang;
 
 	/** Das Kürzel für die Parallelität der Klasse innerhalb des Jahrgangs (A-Z). */
