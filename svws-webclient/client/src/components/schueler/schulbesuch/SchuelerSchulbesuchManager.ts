@@ -2,8 +2,7 @@ import { Einschulungsart, Herkunftsarten, Jahrgaenge, PrimarstufeSchuleingangsph
 	SchuelerSchulbesuchsdaten, SchuelerListeEintrag } from "@core";
 import type { KatalogEntlassgrund, Merkmal, SchulEintrag } from "@core";
 import type { Schuljahresabschnitt, List } from "@core";
-import { shallowRef } from "vue";
-import type { ShallowRef } from "vue";
+import { StateManager } from "~/router/StateManager";
 
 
 interface ManagerStateDataSchuelerSchulbesuch {
@@ -17,13 +16,7 @@ const defaultState = <ManagerStateDataSchuelerSchulbesuch> {
 };
 
 /** Ein Manager für die Verwaltung von Schulbesuchsdaten */
-export class SchuelerSchulbesuchManager {
-
-	/** Der Default-State, welcher über den Konstruktor gesetzt wird */
-	protected _defaultState : ManagerStateDataSchuelerSchulbesuch;
-
-	/** Der aktuelle State */
-	protected _state : ShallowRef<ManagerStateDataSchuelerSchulbesuch>;
+export class SchuelerSchulbesuchManager extends StateManager<ManagerStateDataSchuelerSchulbesuch> {
 
 	/** Eine Map der Schuljahresabschnitte gemappt nach idSchuljahresAbschnitt */
 	protected _schuljahresabschnitteById: Map<number, Schuljahresabschnitt> = new Map();
@@ -56,10 +49,8 @@ export class SchuelerSchulbesuchManager {
 	 * @param patch					   die PatchMethode der SchuelerSchulbesuchsdaten
 	 */
 	public constructor(daten: SchuelerSchulbesuchsdaten, auswahl : SchuelerListeEintrag, schuljahresabschnitte : List<Schuljahresabschnitt>,
-		schulen : List<SchulEintrag>, merkmale : List<Merkmal>, entlassgruende : List<KatalogEntlassgrund>,
-		patch: (data : Partial<SchuelerSchulbesuchsdaten>) => Promise<void>) {
-		this._defaultState = defaultState;
-		this._state = shallowRef<ManagerStateDataSchuelerSchulbesuch>(this._defaultState);
+		schulen : List<SchulEintrag>, merkmale : List<Merkmal>, entlassgruende : List<KatalogEntlassgrund>, patch: (data : Partial<SchuelerSchulbesuchsdaten>) => Promise<void>) {
+		super(defaultState)
 		this._state.value.daten = daten;
 		this._state.value.auswahl = auswahl;
 		this._patch = patch;
@@ -190,9 +181,9 @@ export class SchuelerSchulbesuchManager {
 
 	/** Die allgemeine Patch-Methode der SchuelerSchulbesuchsdaten */
 	public async doPatch(daten : Partial<SchuelerSchulbesuchsdaten>) {
-		await this._patch(daten)
+		await this._patch(daten);
 		const patchedDaten = Object.assign(this.daten, daten);
-		this._state.value = Object.assign({ ...this._state.value}, { daten: patchedDaten });
+		this.setPatchedState({ daten: patchedDaten });
 	}
 
 	/** Die spezielle Patch-Methode der Entlassgründe */
@@ -212,7 +203,6 @@ export class SchuelerSchulbesuchManager {
 			patchData[key] = schule.id;
 		else
 			patchData[key] = null;
-		console.log(patchData)
 		void this.doPatch(patchData);
 
 	}
