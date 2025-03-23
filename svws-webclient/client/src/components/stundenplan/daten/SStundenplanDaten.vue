@@ -127,9 +127,9 @@
 	];
 
 	const actionJahrgaenge = ref<boolean>(false);
-	const actionRaeume = ref<boolean>(true);
+	const actionRaeume = ref<boolean>(false);
 	const actionPausenzeiten = ref<boolean>(false);
-	const actionAufsichtsbereiche = ref<boolean>(true);
+	const actionAufsichtsbereiche = ref<boolean>(false);
 
 	const hatUpdateKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.STUNDENPLAN_AENDERN));
 

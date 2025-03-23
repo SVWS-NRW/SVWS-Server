@@ -1,5 +1,5 @@
 import type { List, Raum, JahrgangsDaten, LehrerListeEintrag, StundenplanPausenaufsichtBereichUpdate, StundenplanKalenderwochenzuordnung, SimpleOperationResponse, StundenplanListeEintrag} from "@core";
-import { Stundenplan, StundenplanKomplett} from "@core";
+import { Stundenplan} from "@core";
 import { StundenplanUnterrichtListeManager } from "@core";
 import { StundenplanManager } from "@core";
 import { StundenplanListeManager} from "@core";
@@ -88,7 +88,7 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 		const stundenplanManager = new StundenplanManager(daten, unterrichtsdaten, pausenaufsichten, unterrichtsverteilung);
 		stundenplanManager.stundenplanKonfigSet(this.settingsDefaults);
 		const stundenplanUnterrichtListeManager = new StundenplanUnterrichtListeManager(api.schulform, stundenplanManager, api.schuleStammdaten.abschnitte, daten.idSchuljahresabschnitt);
-		this.setPatchedState({ stundenplanUnterrichtListeManager });
+		this.setPatchedState({ stundenplanUnterrichtListeManager }, false);
 		return stundenplanManager;
 	}
 
@@ -630,10 +630,10 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 		}
 	}
 
-	setFilter = async () => {
-		this.stundenplanUnterrichtListeManager.filterInvalidateCache();
-		this.setPatchedState({ stundenplanUnterrichtListeManager: this.stundenplanUnterrichtListeManager });
-	}
+	// setFilter = async () => {
+	// 	this.stundenplanUnterrichtListeManager.filterInvalidateCache();
+	// 	this.setPatchedState({ stundenplanUnterrichtListeManager: this.stundenplanUnterrichtListeManager });
+	// }
 
 	get ganzerStundenplanRaum(): boolean {
 		return api.config.getValue("stundenplan.raeume.ganzerStundenplan") === 'true';
