@@ -21,7 +21,7 @@ export interface RouteStateInterface {
  * Dabei wird intern ein reaktiver State (ShallowRef von vue.js) genutzt, welcher bei den hier
  * definierten Methoden zum Anpassen des States jeweils einmalig getriggert wird.
  */
-export abstract class RouteData<RouteState extends RouteStateInterface> extends StateManager<RouteStateInterface> {
+export abstract class RouteData<RouteState extends RouteStateInterface> extends StateManager<RouteState> {
 
 	/** Parameter zum automatischen Setzen des Fokus nach der Reiterauswahl */
 	protected _autofocus = ref<boolean>(false);
