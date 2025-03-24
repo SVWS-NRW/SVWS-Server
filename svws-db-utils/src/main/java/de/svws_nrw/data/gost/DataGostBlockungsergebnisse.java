@@ -870,7 +870,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 					case Q11 -> switch (fachwahl.Q11_Kursart) {
 						case null -> null;
 						case "M" -> "GKM";
-						case "S" -> (fachwahl.AbiturFach == null) ? "GKS" : ("AB" + fachwahl.AbiturFach);
+						case "S" -> "GKS";
 						case "LK" -> ((fachwahl.AbiturFach == null) || (fachwahl.AbiturFach == 1)) ? "LK1" : "LK2";
 						case "ZK" -> "ZK";
 						case "AT" -> "GKM";
@@ -879,7 +879,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 					case Q12 -> switch (fachwahl.Q12_Kursart) {
 						case null -> null;
 						case "M" -> "GKM";
-						case "S" -> (fachwahl.AbiturFach == null) ? "GKS" : ("AB" + fachwahl.AbiturFach);
+						case "S" -> "GKS";
 						case "LK" -> ((fachwahl.AbiturFach == null) || (fachwahl.AbiturFach == 1)) ? "LK1" : "LK2";
 						case "ZK" -> "ZK";
 						case "AT" -> "GKM";
@@ -1121,7 +1121,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 					case Q11 -> switch (fachwahl.Q11_Kursart) {
 						case null -> null;
 						case "M" -> "GKM";
-						case "S" -> (fachwahl.AbiturFach == null) ? "GKS" : ("AB" + fachwahl.AbiturFach);
+						case "S" -> "GKS";
 						case "LK" -> ((fachwahl.AbiturFach != null) && (fachwahl.AbiturFach == 1)) ? "LK1" : "LK2";
 						case "ZK" -> "ZK";
 						case "AT" -> "GKM";
@@ -1130,7 +1130,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 					case Q12 -> switch (fachwahl.Q12_Kursart) {
 						case null -> null;
 						case "M" -> "GKM";
-						case "S" -> (fachwahl.AbiturFach == null) ? "GKS" : ("AB" + fachwahl.AbiturFach);
+						case "S" -> "GKS";
 						case "LK" -> ((fachwahl.AbiturFach != null) && (fachwahl.AbiturFach == 1)) ? "LK1" : "LK2";
 						case "ZK" -> "ZK";
 						case "AT" -> "GKM";
