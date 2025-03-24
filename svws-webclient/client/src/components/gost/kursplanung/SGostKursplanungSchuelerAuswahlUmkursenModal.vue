@@ -12,7 +12,7 @@
 							<svws-ui-select :items="schuelerFilter().getKurse()" :item-text="kurs => getErgebnismanager().getOfKursName(kurs.id)" :model-value="toRaw(schuelerFilter().kurs) || setKurs()" @update:model-value="kurs => schuelerFilter().kurs = kurs ?? undefined" headless />
 						</span>
 					</div>
-					<svws-ui-table :items="schuelerFilter().filtered.value" :columns="[{key: 'pin', label: 'Fixierung aller Kurs-Schüler', fixedWidth: 2 }, {key: 'name', label: 'Name'}]" :no-data="schuelerFilter().filtered.value.length <= 0" scroll>
+					<svws-ui-table :items="schuelerFilter().filtered.value" :columns="[{key: 'pin', label: 'Fixierung aller Kurs-Schüler', fixedWidth: 2 }, {key: 'name', label: 'Name'}]" :no-data="schuelerFilter().filtered.value.length <= 0" scroll count>
 						<template #header(pin)>
 							<div v-if="apiStatus.pending">
 								<svws-ui-spinner spinning />
@@ -55,7 +55,7 @@
 				<!-- Die Tabelle mit den Schülern gleicher Fachwahl, aber nicht in diesem Kurs -->
 				<div class="flex flex-col w-128 overflow-y-hidden">
 					<span class="text-headline-sm pb-2">mit Fachwahl {{ fachname }} {{ kursart }}</span>
-					<svws-ui-table :items="fachwahlschueler" :columns="[{key: 'pin', label: 'Fixierung', fixedWidth: 2 }, {key: 'name', label: 'Name'}, {key: 'kurs', label: 'andere Kurszuordnung'}]" :no-data="fachwahlschueler.length <= 0" scroll>
+					<svws-ui-table :items="fachwahlschueler" :columns="[{key: 'pin', label: 'Fixierung', fixedWidth: 2 }, {key: 'name', label: 'Name'}, {key: 'kurs', label: 'andere Kurszuordnung'}]" :no-data="fachwahlschueler.length <= 0" scroll count>
 						<template #header(pin)>
 							&nbsp;
 						</template>
