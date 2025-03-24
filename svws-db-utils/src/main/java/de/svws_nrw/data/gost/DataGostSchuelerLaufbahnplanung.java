@@ -546,7 +546,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 		final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(abidaten.schuljahrAbitur, conn, abidaten.abiturjahr);
 		// Prüfe zunächst, ob der Abiturjahrgang in der Datenbank existiert und mit dem des Schülers übereinstimmt
 		if (abidaten.abiturjahr != laufbahnplanungsdaten.abiturjahr) {
-			logger.logLn("Fehler: Das Abiturjahrgang der Planungsdatei stimmt nicht mit dem Abiturjahrgang des Schülers überein.");
+			logger.logLn("Fehler: Der Abiturjahrgang der Planungsdatei stimmt nicht mit dem Abiturjahrgang des Schülers überein.");
 			return false;
 		}
 		// Bestimme die Daten des Schülers in den Laufbahnplanungsdaten

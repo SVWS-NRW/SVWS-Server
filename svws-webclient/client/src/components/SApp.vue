@@ -145,6 +145,8 @@
 	const props = defineProps<AppProps>();
 
 	const { focusHelpVisible, focusSwitchingEnabled , enable, disable } = useRegionSwitch();
+	onMounted(() => enable());
+	onUnmounted(() => disable());
 
 	watch(() => props.menu.current.name, (m) => {
 		const mainText = props.menu.mainEntry.text;
@@ -241,14 +243,6 @@
 		return false;
 	});
 
-	onMounted(() => {
-		enable();
-	})
-
-	onUnmounted(() => {
-		disable();
-	})
-
 	async function createCapturedError(reason: Error) {
 		console.warn(reason);
 		counter.value++;
@@ -262,23 +256,26 @@
 		else if (reason instanceof OpenApiError) {
 			name = "API-Fehler: Dieser Fehler wird durch eine fehlerhafte Kommunikation mit dem Server verursacht. In der Regel bedeutet das, dass die verschickten Daten nicht den Vorgaben entsprechen."
 			if (reason.response instanceof Response) {
+				const text = await reason.response.text();
 				try {
-					let res;
-					if (reason.response.headers.get('content-type') === 'application/json') {
-						res = await reason.response.json();
-						if ('log' in res && 'success' in res)
-							log = res satisfies SimpleOperationResponse;
-					}
+					const res = JSON.parse(text)
+					if (('log' in res) && ('success' in res))
+						log = res satisfies SimpleOperationResponse;
+				} catch {
+					if (text.length > 0)
+						message = text;
 					else
-						res = await reason.response.text();
-					if (res.length > 0)
-						message = res;
-					else
-						message += ' - Status: '+reason.response.status;
-				} catch(e) { void e }
+						message += ` - Status: ${reason.response.status}`;
+				}
 			}
 		}
-		const newError: CapturedError = { id: counter.value, name, message, stack: reason.stack?.split("\n") || '', log }
+		const newError: CapturedError = {
+			id: counter.value,
+			name,
+			message,
+			stack: reason.stack?.split("\n") || '',
+			log,
+		}
 		errors.value.set(newError.id, newError);
 	}
 

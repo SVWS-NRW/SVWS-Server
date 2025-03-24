@@ -8,7 +8,6 @@ import type { GostLaufbahnplanungDaten } from "../../../../../core/src/core/data
 import type { GostSchuelerFachwahl } from "../../../../../core/src/core/data/gost/GostSchuelerFachwahl";
 import type { LehrerListeEintrag } from "../../../../../core/src/core/data/lehrer/LehrerListeEintrag";
 import type { SchuelerListeEintrag } from "../../../../../core/src/core/data/schueler/SchuelerListeEintrag";
-import type { SimpleOperationResponse } from "../../../../../core/src/core/data/SimpleOperationResponse";
 import type { BenutzerKompetenz } from "../../../../../core/src/core/types/benutzer/BenutzerKompetenz";
 import type { GostHalbjahr } from "../../../../../core/src/core/types/gost/GostHalbjahr";
 import type { ServerMode } from "../../../../../core/src/core/types/ServerMode";
@@ -23,7 +22,7 @@ export interface SchuelerLaufbahnplanungProps {
 	setGostBelegpruefungsArt: (value: 'ef1'|'gesamt'|'auto') => Promise<void>;
 	getPdfWahlbogen: (title: string) => Promise<ApiFile>;
 	exportLaufbahnplanung: () => Promise<ApiFile>;
-	importLaufbahnplanung: (data: FormData) => Promise<boolean|SimpleOperationResponse>;
+	importLaufbahnplanung: (data: FormData) => Promise<void>;
 	schueler: SchuelerListeEintrag,
 	gostJahrgangsdaten: GostJahrgangsdaten;
 	gostLaufbahnBeratungsdaten: () => GostLaufbahnplanungBeratungsdaten;

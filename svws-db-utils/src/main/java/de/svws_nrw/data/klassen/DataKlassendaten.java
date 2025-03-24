@@ -93,7 +93,7 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 			throw new ApiOperationException(Status.BAD_REQUEST, "Es muss mindestens ein Kürzel oder ASD-Kürzel angegeben sein. Das Beide Kürzel dürfen nicht "
 					+ "null sein.");
 		if (halbjahresabschnittId == null)
-			throw new ApiOperationException(Status.BAD_REQUEST, "Es muss eine Halbjahresabschnitt ID angegeben sein. Die Halbjahresabschnitt ID darf nicht "
+			throw new ApiOperationException(Status.BAD_REQUEST, "Es muss eine Halbjahresabschnitt-ID angegeben sein. Die Halbjahresabschnitt-ID darf nicht "
 					+ "null sein.");
 
 		List<DTOKlassen> klassen = new ArrayList<>();
@@ -107,7 +107,7 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 
 		if (klassen.isEmpty())
 			throw new ApiOperationException(Status.NOT_FOUND,
-					"Es wurde keine Klasse mit dem Kürzel %s und der Halbjahresabschnitt ID %d gefunden.".formatted(kuerzel, halbjahresabschnittId));
+					"Es wurde keine Klasse mit dem Kürzel %s und dem Halbjahresabschnitt mit der ID %d gefunden.".formatted(kuerzel, halbjahresabschnittId));
 
 		return klassen.getFirst();
 	}
@@ -341,7 +341,7 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 			if (!klassenLeitungList.contains(lehrerIdEntry)) {
 				if (!conn.transactionRemove(entry))
 					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
-							"Die Klassenleitung mit der ID %d konnte bei der Klasse %d nicht entfernt werden.".formatted(entry.Lehrer_ID, entry.Klassen_ID));
+							"Die Klassenleitung mit der ID %d konnte bei der Klasse mit der ID %d nicht entfernt werden.".formatted(entry.Lehrer_ID, entry.Klassen_ID));
 				conn.transactionFlush();
 			}
 		}
@@ -361,7 +361,7 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 				// Setze den Reihenfolgenwert anhand des Index in der neuen Liste und persistiere die Änderung
 				dtoKlassenLeitung.Reihenfolge = i;
 				if (!conn.transactionPersist(dtoKlassenLeitung))
-					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Klassenleitung konnte nicht geupdatet werden");
+					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Klassenleitung konnte nicht aktualisiert werden");
 			} else {
 				// ... und erstelle eine neue Klassenleitung, welche dann persistiert wird
 				final DTOKlassenLeitung dtoKlassenLeitung = new DTOKlassenLeitung(dto.ID, klassenLeitungList.get(i), i);

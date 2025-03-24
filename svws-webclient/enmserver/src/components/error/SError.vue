@@ -98,20 +98,17 @@
 		let log = null;
 		if (reason instanceof OpenApiError) {
 			if (reason.response instanceof Response) {
+				const text = await reason.response.text();
 				try {
-					let res;
-					if (reason.response.headers.get('content-type') === 'application/json') {
-						res = await reason.response.json();
-						if ('log' in res && 'success' in res)
-							log = res satisfies SimpleOperationResponse;
-					}
+					const res = JSON.parse(text)
+					if (('log' in res) && ('success' in res))
+						log = res satisfies SimpleOperationResponse;
+				} catch {
+					if (text.length > 0)
+						message = text;
 					else
-						res = await reason.response.text();
-					if (res.length > 0)
-						message = res;
-					else
-						message += ' - Status: '+reason.response.status;
-				} catch(e) { void e }
+						message += ` - Status: ${reason.response.status}`;
+				}
 			}
 		}
 		return { id: 0, name, message, stack: reason.stack?.split("\n") || '', log }

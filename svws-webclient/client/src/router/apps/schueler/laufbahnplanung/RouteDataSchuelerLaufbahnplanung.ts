@@ -169,17 +169,14 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 		return await api.server.exportGostSchuelerLaufbahnplanung(api.schema, this.auswahl.id);
 	});
 
-	importLaufbahnplanung = api.call(async (data: FormData): Promise<boolean> => {
-		const res = await api.runSimpleOperation(async () => {
-			return await api.server.importGostSchuelerLaufbahnplanung(data, api.schema, this.auswahl.id);
-		}, [ 409 ]);
+	importLaufbahnplanung = api.call(async (data: FormData): Promise<void> => {
+		await api.server.importGostSchuelerLaufbahnplanung(data, api.schema, this.auswahl.id);
 		const abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, this.auswahl.id);
 		const abiturdatenManager = this.createAbiturdatenmanager(abiturdaten);
 		if (abiturdatenManager === undefined)
-			return false;
+			return;
 		const gostBelegpruefungErgebnis = abiturdatenManager.getBelegpruefungErgebnis();
 		this.setPatchedState({abiturdaten, abiturdatenManager, gostBelegpruefungErgebnis});
-		return res.success;
 	});
 
 	patchBeratungsdaten = api.call(async (data : Partial<GostLaufbahnplanungBeratungsdaten>) => {

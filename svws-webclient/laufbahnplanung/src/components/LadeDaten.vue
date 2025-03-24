@@ -26,6 +26,7 @@
 	import type { LadeDatenProps } from "./LadeDatenProps";
 	import { version } from '../../version';
 	import { githash } from '../../githash';
+	import { UserNotificationException } from "@core/index";
 
 	const props = defineProps<LadeDatenProps>();
 
@@ -43,7 +44,14 @@
 		loading.value = true;
 		const formData = new FormData();
 		formData.append("data", file);
-		status.value = await props.importLaufbahnplanung(formData);
+		try {
+			await props.importLaufbahnplanung(formData);
+		} catch (e) {
+			if (e instanceof UserNotificationException)
+				status.value = e.message;
+			else
+				status.value = "Es gabe einen Fehler beim Import der Laufbahnplanungsdaten"
+		}
 		loading.value = false;
 	}
 

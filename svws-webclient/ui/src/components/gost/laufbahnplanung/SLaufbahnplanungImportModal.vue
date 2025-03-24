@@ -3,28 +3,20 @@
 		<template #modalTitle>Laufbahnplanungsdaten importieren</template>
 		<template #modalContent>
 			<input type="file" accept=".lp" :multiple="multiple" @change="import_file" :disabled="loading">
-			<svws-ui-spinner :spinning="loading" />
-			<br>{{
-				status === false
-					? "Fehler beim Upload"
-					: status === true
-						? "Upload erfolgreich"
-						: ""
-			}}
+			<div v-if="failed" class="mt-4"> Fehler beim Upload </div>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="emit('update:show', false)">{{ status === true ? 'Schließen':'Abbrechen' }}</svws-ui-button>
+			<svws-ui-button type="secondary" @click="emit('update:show', false)">{{ failed === true ? 'Schließen':'Abbrechen' }}</svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>
 
 <script setup lang="ts">
 	import { ref } from 'vue';
-	import type { SimpleOperationResponse } from '../../../../../core/src/core/data/SimpleOperationResponse';
 
 	const props = defineProps<{
 		show: boolean;
-		importLaufbahnplanung: (data: FormData) => Promise<boolean|SimpleOperationResponse>;
+		importLaufbahnplanung: (data: FormData) => Promise<void>;
 		multiple?: boolean;
 	}>();
 
@@ -32,7 +24,7 @@
 		"update:show": [show: boolean];
 	}>();
 
-	const status = ref<boolean | undefined>(undefined);
+	const failed = ref<boolean>(false);
 	const loading = ref<boolean>(false);
 
 	async function import_file(event: Event) {
@@ -42,12 +34,14 @@
 		const formData = new FormData();
 		for (let i = 0; i < target.files.length; i++)
 			formData.append("data", target.files[i]);
-		loading.value = true;
-		const res = await props.importLaufbahnplanung(formData);
-		status.value = typeof res === 'boolean' ? res : res.success;
-		loading.value = false;
-		if (status.value === true)
+		try {
+			await props.importLaufbahnplanung(formData);
 			emit('update:show', false);
+			failed.value = false;
+		} catch (e) {
+			failed.value = true;
+			throw e;
+		}
 	}
 
 </script>
