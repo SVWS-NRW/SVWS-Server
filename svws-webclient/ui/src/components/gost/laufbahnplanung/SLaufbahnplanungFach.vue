@@ -59,8 +59,8 @@
 							</svws-ui-tooltip>
 						</template>
 						<template v-else-if="!istMoeglich[halbjahr.id] && (wahlen[halbjahr.id] !== '') && hatUpdateKompetenz">
-							<svws-ui-tooltip :color="istBewertet(halbjahr) ? 'light' : 'danger'">
-								<svws-ui-button type="icon" size="small" :disabled="istBewertet(halbjahr)" @click="deleteFachwahl(halbjahr)"
+							<svws-ui-tooltip :color="istBewertet(halbjahr) && (noten[halbjahr.id] !== null) ? 'light' : 'danger'">
+								<svws-ui-button type="icon" size="small" :disabled="istBewertet(halbjahr) && (noten[halbjahr.id] !== null)" @click="deleteFachwahl(halbjahr)"
 									@keydown.enter.prevent="deleteFachwahl(halbjahr)" @keydown.space.prevent="deleteFachwahl(halbjahr)">
 									<span class="icon i-ri-close-line" />
 								</svws-ui-button>
