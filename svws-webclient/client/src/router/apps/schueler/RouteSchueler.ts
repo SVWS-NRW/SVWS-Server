@@ -18,11 +18,7 @@ import { routeSchuelerLernabschnitte } from "~/router/apps/schueler/lernabschnit
 import { routeSchuelerSchulbesuch } from "~/router/apps/schueler/schulbesuch/RouteSchuelerSchulbesuch";
 import { routeSchuelerStundenplan } from "~/router/apps/schueler/stundenplan/RouteSchuelerStundenplan";
 import { routeSchuelerKAoA } from "~/router/apps/schueler/kaoa/RouteSchuelerKAoA";
-import { routeSchuelerVermerke } from "~/router/apps/schueler/vermerke/RouteSchuelerVermerke";
 import { routeSchuelerSprachen } from "./sprachen/RouteSchuelerSprachen";
-import { routeSchuelerAbschluesse } from "./abschluesse/RouteSchuelerAbschluesse";
-import { routeSchuelerEinwilligungen } from "~/router/apps/schueler/einwilligungen/RouteSchuelerEinwilligungen";
-import { routeSchuelerLernplattformen } from "~/router/apps/schueler/lernplattformen/RouteSchuelerLernplattformen";
 import { AppMenuGroup } from "@ui";
 import { api } from "~/router/Api";
 import type { SchuelerAppProps } from "~/components/schueler/SSchuelerAppProps";
@@ -53,7 +49,6 @@ export class RouteSchueler extends RouteAuswahlNode<SchuelerListeManager, RouteD
 			routeSchuelerKAoA,
 			routeSchuelerSchulbesuch,
 			routeSchuelerLernabschnitte,
-			routeSchuelerAbschluesse,
 			routeSchuelerSprachen,
 			routeSchuelerLaufbahnplanung,
 			routeSchuelerStundenplan,
