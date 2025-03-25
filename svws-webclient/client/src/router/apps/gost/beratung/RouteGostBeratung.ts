@@ -18,7 +18,7 @@ export class RouteGostBeratung extends RouteNode<RouteDataGostBeratung, RouteGos
 	public constructor() {
 		super(schulformenGymOb, [
 			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 		], "gost.beratung", "beratung", SGostBeratung, new RouteDataGostBeratung());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
@@ -53,7 +53,6 @@ export class RouteGostBeratung extends RouteNode<RouteDataGostBeratung, RouteGos
 			abiturdatenManager: () => this.data.abiturdatenManager,
 			mapLehrer: this.data.mapLehrer,
 			resetFachwahlen: this.data.resetFachwahlen,
-			resetFachwahlenAlle: this.data.resetFachwahlenAlle,
 			beratungslehrer: () => this.data.beratungslehrer,
 			addBeratungslehrer: this.data.addBeratungslehrer,
 			removeBeratungslehrer: this.data.removeBeratungslehrer,

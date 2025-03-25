@@ -1,14 +1,14 @@
 <template>
 	<div class="page page-flex-row max-w-400">
-		<Teleport to=".svws-sub-nav-target" v-if="isMounted && hatUpdateKompetenz">
+		<Teleport to=".svws-sub-nav-target" v-if="hatUpdateKompetenz" defer>
 			<svws-ui-sub-nav :focus-switching-enabled :focus-help-visible>
-				<s-modal-laufbahnplanung-alle-fachwahlen-loeschen :gost-jahrgangsdaten="jahrgangsdaten" :reset-fachwahlen="resetFachwahlenAlle" />
 				<svws-ui-button :disabled="apiStatus.pending" type="transparent" title="Planung importieren" @click="showModalImport = true"><span class="icon i-ri-download-2-line" /> Importieren…</svws-ui-button>
 				<s-laufbahnplanung-import-modal v-model:show="showModalImport" multiple :import-laufbahnplanung />
 				<svws-ui-button :disabled="apiStatus.pending" type="transparent" title="Planung exportieren" @click="export_laufbahnplanung"><span class="icon i-ri-upload-2-line" />Exportiere {{ auswahl.length > 0 ? 'Auswahl':'alle' }}</svws-ui-button>
+				<s-modal-laufbahnplanung-alle-fachwahlen-loeschen :gost-jahrgangsdaten="jahrgangsdaten" :reset-fachwahlen="resetFachwahlenAlle" />
 			</svws-ui-sub-nav>
 		</Teleport>
-		<Teleport to=".svws-ui-header--actions" v-if="isMounted">
+		<Teleport to=".svws-ui-header--actions" defer>
 			<svws-ui-button-select type="secondary" :dropdown-actions :disabled="apiStatus.pending">
 				<template #icon> <svws-ui-spinner spinning v-if="apiStatus.pending" /> <span class="icon i-ri-printer-line" v-else /> </template>
 			</svws-ui-button-select>
@@ -87,7 +87,7 @@
 
 <script setup lang="ts">
 
-	import { computed, ref, toRaw, onMounted } from 'vue';
+	import { computed, ref, shallowRef } from 'vue';
 	import type { GostLaufbahnfehlerProps } from "./SGostLaufbahnfehlerProps";
 	import type { DataTableColumn } from '@ui';
 	import type { List, GostBelegpruefungErgebnisFehler, GostBelegpruefungErgebnis} from '@core';
@@ -132,9 +132,9 @@
 		return a;
 	})
 
-	const schueler_state = ref<GostBelegpruefungsErgebnisse>();
+	const schueler_state = shallowRef<GostBelegpruefungsErgebnisse>();
 	const schueler = computed<GostBelegpruefungsErgebnisse>({
-		get: () => (schueler_state.value !== undefined) && filtered.value.contains(toRaw(schueler_state.value))
+		get: () => (schueler_state.value !== undefined) && filtered.value.contains(schueler_state.value)
 			? schueler_state.value
 			: filtered.value.isEmpty() ? new GostBelegpruefungsErgebnisse() : filtered.value.get(0),
 		set: (value) => schueler_state.value = value,
@@ -187,14 +187,12 @@
 
 	async function downloadPDF(title: string, detaillevel: number, einzelpdfs: boolean) {
 		const list = new ArrayList<number>();
-		if (auswahl.value.length > 0) {
+		if (auswahl.value.length > 0)
 			for (const e of filtered.value)
 				if (auswahl.value.includes(e))
 					list.add(e.schueler.id);
-		}
-		if (list.isEmpty())	{
+		if (list.isEmpty())
 			list.add(schueler.value.schueler.id);
-		}
 		const { data, name } = await props.getPdfLaufbahnplanung(title, list, detaillevel, einzelpdfs);
 		const link = document.createElement("a");
 		link.href = URL.createObjectURL(data);
@@ -217,8 +215,5 @@
 		link.click();
 		URL.revokeObjectURL(link.href);
 	}
-
-	const isMounted = ref(false);
-	onMounted(() => isMounted.value = true);
 
 </script>

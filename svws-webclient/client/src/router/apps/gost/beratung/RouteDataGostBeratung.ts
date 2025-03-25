@@ -159,10 +159,6 @@ export class RouteDataGostBeratung extends RouteData<RouteStateDataGostBeratung>
 		await this.setGostBelegpruefungErgebnis();
 	}
 
-	resetFachwahlenAlle = async () => {
-		await api.server.resetGostAbiturjahrgangSchuelerFachwahlen(api.schema, this.gostJahrgangsdaten.abiturjahr);
-	}
-
 	addBeratungslehrer = async (id: number) => {
 		api.status.start();
 		const lehrer = await api.server.addGostAbiturjahrgangBeratungslehrer(id, api.schema, this.gostJahrgangsdaten.abiturjahr);

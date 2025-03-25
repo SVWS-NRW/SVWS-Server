@@ -1,16 +1,15 @@
 <template>
 	<div v-if="jahrgangsdaten() !== undefined" class="page page-flex-row max-w-480">
-		<Teleport to=".svws-sub-nav-target" v-if="isMounted && hatUpdateKompetenz">
+		<Teleport to=".svws-sub-nav-target" v-if="hatUpdateKompetenz" defer>
 			<svws-ui-sub-nav :focus-switching-enabled :focus-help-visible>
 				<svws-ui-button class="subNavigationFocusField" :type="modus === 'normal' ? 'transparent' : 'danger'" @click="switchModus" title="Modus wechseln">
 					<span class="icon-sm i-ri-loop-right-line" />
 					Modus: <span>{{ modus }}</span>
 				</svws-ui-button>
 				<s-modal-laufbahnplanung-kurswahlen-loeschen :gost-jahrgangsdaten="jahrgangsdaten()" :reset-fachwahlen />
-				<s-modal-laufbahnplanung-alle-fachwahlen-loeschen v-if="jahrgangsdaten().abiturjahr !== -1" :gost-jahrgangsdaten="jahrgangsdaten" :reset-fachwahlen="resetFachwahlenAlle" />
 			</svws-ui-sub-nav>
 		</Teleport>
-		<Teleport to=".svws-ui-header--actions" v-if="isMounted">
+		<Teleport to=".svws-ui-header--actions" defer>
 			<svws-ui-modal-hilfe> <hilfe-gost-beratung /> </svws-ui-modal-hilfe>
 		</Teleport>
 		<div class="min-w-fit grow overflow-y-auto overflow-x-hidden">
@@ -47,7 +46,7 @@
 
 	import type { GostBeratungProps } from "./SGostBeratungProps";
 	import { BenutzerKompetenz, BenutzerTyp, type GostBeratungslehrer, type LehrerListeEintrag } from "@core";
-	import { onMounted, computed, ref } from "vue";
+	import { computed, ref } from "vue";
 	import { lehrer_filter } from '~/utils/helfer';
 	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
@@ -66,7 +65,7 @@
 			}
 		return props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)
 			|| (props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)
-				&& props.benutzerdaten.typ === BenutzerTyp.LEHRER.id && beratungslehrer)
+				&& props.benutzerdaten.typ === BenutzerTyp.LEHRER.id && beratungslehrer);
 	});
 
 	const istAbiturjahrgang = computed<boolean>(() => (props.jahrgangsdaten().abiturjahr > 0));
@@ -93,10 +92,6 @@
 			map.delete(l.id);
 		return map;
 	})
-
-	// Check if component is mounted
-	const isMounted = ref(false);
-	onMounted(() => isMounted.value = true);
 
 </script>
 
