@@ -1,4 +1,12 @@
 <?php
+	/**
+	 * Endpunkt zum exportieren der ENM-Daten Lehrer aus der Datenbank.
+	 *
+	 * @httpMethod GET
+	 * @auth (Basic) Lehrer Username und Kennwort benötigt
+	 *
+	 * @return GZIP mit allen ENM Daten für diesen Lehrer
+	 */
 
 	// Initialisierung
 	require_once $_SERVER['DOCUMENT_ROOT'].'/../app/init.php';

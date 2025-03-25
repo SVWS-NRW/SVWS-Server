@@ -1,4 +1,16 @@
 <?php
+	/**
+	 * Endpunkt für das Fetchen von ENM-Setup. Erstellt beim ersten Aufruf das Client Secret.
+	 * Falls der Endpunkt erneut aufgerufen wird wirft der Endpunkt einen Fehler, falls ein Fehler aufgetreten ist.
+	 *
+	 * @httpMethod GET
+	 *
+	 * @return void
+	 *
+	 * @responseCode 204
+	 * @responseCode 403 Falls die HTTP Methode kein GET ist
+	 * @responseCode 409 Falls der Server bereits initiiert wurde
+ 	 */
 
 	require_once $_SERVER['DOCUMENT_ROOT'].'/../app/Config.php';
 	require_once $_SERVER['DOCUMENT_ROOT'].'/../app/Database.php';

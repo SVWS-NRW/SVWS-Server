@@ -1,4 +1,21 @@
 <?php
+	/**
+	 * Endpunkt welcher die aktuelle Client Config zurück gibt oder aktualisiert.
+	 *
+	 * Bei "GET" wird die gesamte Konfiguration (benutzerspezifisch und global) zurückgegeben.
+	 * Bei "PUT" wird ein Eintrag in der benutzerspezifischen Konfiguration gesetzt oder entfernt.
+	 *
+	 * @httpMethod GET, PUT
+	 * @auth (Basic) Lehrer Username und Kennwort benötigt
+	 * @param {key: der Key, value: die Value} Das Patch-Objekt, das die neue Konfiguration enthält.
+	 *
+	 * @return void (bei PUT)
+	 * @return object Clientconfig Json (bei GET)
+	 *
+	 * @responseCode 200
+	 * @responseCode 400 Error Bei ungültigen Anfragen.
+	 * @responseCode 500 Error Falls HTTP Methode weder GET noch PUT ist
+	 */
 
 	// Initialisierung
 	require_once $_SERVER['DOCUMENT_ROOT'].'/../app/init.php';

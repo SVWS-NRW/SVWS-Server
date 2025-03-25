@@ -1,4 +1,18 @@
 <?php
+	/**
+	 * Endpunkt zum Aktualisieren von Schülerbemerkungen.
+	 *
+	 * Dieser Endpunkt ermöglicht es autorisierten Lehrern, Bemerkungen zu Schülern über einen PATCH-Request zu aktualisieren.
+	 *
+	 * @httpMethod POST
+	 * @auth (Basic) Lehrer Username und Kennwort benötigt
+	 * @param int $id Die ID des Schülers, dessen Bemerkungen aktualisiert werden sollen.
+	 * @param {id: number, patch: {Partial<ENMAnkreuzkompetenzen>}} Das Patch-Objekt, das die zu aktualisierenden Bemerkungen enthält.
+	 * Folgende Werte können durch das Patch Objekt überschrieben werden: ASV, AUE, ZB, LELS, schulformEmpf, individuelleVersetzungsbemerkungen, foerderbemerkungen
+	 *
+	 * @return void
+	 * @responseCode 200
+ 	 */
 
 	// Initialisierung
 	require_once $_SERVER['DOCUMENT_ROOT'].'/../app/init.php';

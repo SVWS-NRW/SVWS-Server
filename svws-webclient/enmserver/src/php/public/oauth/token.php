@@ -1,4 +1,17 @@
 <?php
+	/**
+	 * API-Endpunkt für die Erstellung eines neuen Access Tokens.
+	 *
+	 * Dieser Endpunkt prüft die HTTP-Methode, die Authentifizierung des Clients und erstellt ein neues Access Token.
+	 * Das Token wird dann als JSON-Response zurückgegeben.
+	 *
+	 * HTTP Method: POST
+	 * URL: /path/to/endpoint
+	 *
+	 * @throws Http::exit403Forbidden Wenn die Authentifizierung fehlschlägt oder das Token nicht erstellt werden kann.
+	 *
+	 * @return void
+	 */
 
 	require_once $_SERVER['DOCUMENT_ROOT'].'/../app/init.php';
 
