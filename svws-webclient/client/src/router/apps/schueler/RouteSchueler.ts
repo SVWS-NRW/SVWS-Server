@@ -26,6 +26,7 @@ import { routeSchuelerLernplattformen } from "~/router/apps/schueler/lernplattfo
 import { AppMenuGroup } from "@ui";
 import { api } from "~/router/Api";
 import type { SchuelerAppProps } from "~/components/schueler/SSchuelerAppProps";
+import { routeSchuelerSonstiges } from "./sonstiges/RouteSchuelerSonstiges";
 
 const SSchuelerAuswahl = () => import("~/components/schueler/SSchuelerAuswahl.vue")
 const SSchuelerApp = () => import("~/components/schueler/SSchuelerApp.vue")
@@ -47,7 +48,6 @@ export class RouteSchueler extends RouteAuswahlNode<SchuelerListeManager, RouteD
 		});
 		super.children = [
 			routeSchuelerIndividualdaten,
-			routeSchuelerVermerke,
 			routeSchuelerErziehungsberechtigte,
 			routeSchuelerAusbildungsbetriebe,
 			routeSchuelerKAoA,
@@ -57,8 +57,7 @@ export class RouteSchueler extends RouteAuswahlNode<SchuelerListeManager, RouteD
 			routeSchuelerSprachen,
 			routeSchuelerLaufbahnplanung,
 			routeSchuelerStundenplan,
-			routeSchuelerEinwilligungen,
-			routeSchuelerLernplattformen,
+			routeSchuelerSonstiges,
 			routeSchuelerNeu,
 			routeSchuelerGruppenprozesse,
 		];
