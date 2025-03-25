@@ -44,6 +44,7 @@ export class RouteSchueler extends RouteAuswahlNode<SchuelerListeManager, RouteD
 		});
 		super.children = [
 			routeSchuelerIndividualdaten,
+			routeSchuelerSonstiges,
 			routeSchuelerErziehungsberechtigte,
 			routeSchuelerAusbildungsbetriebe,
 			routeSchuelerKAoA,
@@ -52,7 +53,6 @@ export class RouteSchueler extends RouteAuswahlNode<SchuelerListeManager, RouteD
 			routeSchuelerSprachen,
 			routeSchuelerLaufbahnplanung,
 			routeSchuelerStundenplan,
-			routeSchuelerSonstiges,
 			routeSchuelerNeu,
 			routeSchuelerGruppenprozesse,
 		];
