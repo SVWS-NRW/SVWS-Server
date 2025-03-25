@@ -16,23 +16,21 @@ COPY build/tempdocker/appConf/svws_config.json.template.GRADLE_PLACEHOLDER_MARIA
 COPY build/tempdocker/init-scripts/startup.sh /opt/app/svws/startup.sh
 COPY build/tempdocker/init-scripts /etc/app/svws/init-scripts
 
-# Kopiere SSL Zertifakte für die JDK
-RUN mkdir /var/ssl
-RUN openssl req -subj '/CN=GRADLE_PLACEHOLDER_ENM_HOST' -new -newkey rsa:2048 -days 3650 -nodes -x509 -keyout /var/ssl/private.key -out /var/ssl/public.pem
-
-# Füge der JDK im Container das Zertifikat hinzu
-RUN keytool -importcert -noprompt -keystore /opt/java/openjdk/lib/security/cacerts -alias localhost -file /var/ssl/public.pem
+# Kopiere SSL Zertifakte für die JDK und füge der JDK im Container das Zertifikat hinzu
+RUN mkdir /var/ssl &&\
+	openssl req -subj '/CN=GRADLE_PLACEHOLDER_ENM_HOST' -new -newkey rsa:2048 -days 3650 -nodes -x509 -keyout /var/ssl/private.key -out /var/ssl/public.pem &&\
+	keytool -importcert -noprompt -keystore /opt/java/openjdk/lib/security/cacerts -alias localhost -file /var/ssl/public.pem
 
 # Kopiere die Datenbanken
 COPY build/tempdatabases /etc/app/svws/testdatabases
 
-# Kopiere die extLibs (Java Bibliotheken)
-COPY ../build/extLib /opt/app/svws
+# Kopiere die extLibs (Java Bibliotheken) und die Build Artefakte
+COPY ../build/extLib /build/SVWS-Client.zip /build/SVWS-Admin-Client.zip  /opt/app/svws/
 
-# Kopiere die Build Artefakte
-COPY /build/SVWS-Client.zip /opt/app/svws
-RUN unzip -d /opt/app/svws/client /opt/app/svws/SVWS-Client.zip
-RUN rm -rf /opt/app/svws/svws-client*.zip
+RUN unzip -d /opt/app/svws/client /opt/app/svws/SVWS-Client.zip &&\
+	unzip -d /opt/app/svws/admin /opt/app/svws/SVWS-Admin-Client.zip &&\
+ 	rm -rf /opt/app/svws/SVWS-Client*.zip &&\
+	rm -rf /opt/app/svws/SVWS-Admin-Client*.zip
 
 WORKDIR /opt/app/svws
 

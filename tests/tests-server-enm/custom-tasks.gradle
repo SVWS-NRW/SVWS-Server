@@ -258,7 +258,6 @@ task starteDockerContainerMitTestUmgebungENM() {
 	description = 'Starte den Docker-Container für die Testumgebung des ENM Server'
 	dependsOn 'buildDockerImageENM'
 	doLast {
-		println("COMPOSEDEBUG")
 		new File("$buildDirPath/tempdocker/enm/Docker-compose.yml").eachLine { line ->
 			println line
 		}
@@ -270,8 +269,6 @@ task starteDockerContainerMitTestUmgebungENM() {
 
 			println("Docker Container ${ENM_CONTAINER_NAME} gestartet")
 		}
-		println("Docker debuglogs")
-		println "docker logs ${ENM_CONTAINER_NAME}".execute().text.trim()
 
 	}
 }

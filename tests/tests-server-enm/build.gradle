@@ -30,7 +30,7 @@ ext {
 	FORWARDED_APP_PORT = 5050
 
 	// Liste der Datenbanken die für die Tests genutzt / geseedet werden sollen
-	TARGET_TEST_DATA_BASES = ['Enm2']
+	TARGET_TEST_DATA_BASES = ['EnmA']
 }
 
 /**

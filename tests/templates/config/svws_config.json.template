@@ -13,7 +13,7 @@
 	"TLSKeystorePath": "/etc/app/svws/conf",
 	"TLSKeystorePassword": "changeit",
 	"ClientPath": "./client",
-	"AdminClientPath": "./not/used/at/the/moment",
+	"AdminClientPath": "./admin",
 	"LoggingEnabled": true,
 	"LoggingPath": "logs",
 	"ServerMode": "GRADLE_PLACEHOLDER_SERVER_MODE",

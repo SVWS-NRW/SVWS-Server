@@ -1,12 +1,64 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`Ankreuzkompetenzen können bearbeitet werden > Ankreuzkompetenzen GET 1`] = `
+[
+  18153,
+  146,
+  [
+    false,
+    false,
+    false,
+    false,
+    false,
+  ],
+]
+`;
+
+exports[`Ankreuzkompetenzen können bearbeitet werden > Ankreuzkompetenzen GET 2`] = `
+[
+  18153,
+  146,
+  [
+    true,
+    true,
+    true,
+    true,
+    true,
+  ],
+]
+`;
+
+exports[`Bemerkungen können bearbeitet werden > Bemerkungen 1`] = `
+[
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+]
+`;
+
+exports[`Bemerkungen können bearbeitet werden > Bemerkungen 2`] = `
+[
+  "Test",
+  "Test",
+  "Test",
+  "Test",
+  "Test",
+  "Test",
+  "Test",
+]
+`;
+
 exports[`Clientconfig können bearbeitet werden > Clientconfig 1`] = `"{ "user": [], "global": [] }"`;
 
 exports[`Clientconfig können bearbeitet werden > Clientconfig 2`] = `"{ "user": [{"key":"testkey","value":"testvalue"}], "global": [] }"`;
 
 exports[`Leistung und Teilleistung können bearbeitet werden > Leistungen 1`] = `
 [
-  1390,
+  4060,
   null,
   null,
   false,
@@ -17,7 +69,7 @@ exports[`Leistung und Teilleistung können bearbeitet werden > Leistungen 1`] = 
 
 exports[`Leistung und Teilleistung können bearbeitet werden > Leistungen 2`] = `
 [
-  1390,
+  4060,
   "NB",
   "6",
   true,
@@ -29,15 +81,15 @@ exports[`Leistung und Teilleistung können bearbeitet werden > Leistungen 2`] = 
 exports[`Leistung und Teilleistung können bearbeitet werden > Teilleistungen 1`] = `
 [
   {
-    "id": 10931,
+    "id": 15776,
     "note": null,
   },
   {
-    "id": 10932,
+    "id": 15777,
     "note": null,
   },
   {
-    "id": 10933,
+    "id": 15778,
     "note": null,
   },
 ]
@@ -46,15 +98,15 @@ exports[`Leistung und Teilleistung können bearbeitet werden > Teilleistungen 1`
 exports[`Leistung und Teilleistung können bearbeitet werden > Teilleistungen 2`] = `
 [
   {
-    "id": 10931,
+    "id": 15776,
     "note": "6",
   },
   {
-    "id": 10932,
+    "id": 15777,
     "note": "6",
   },
   {
-    "id": 10933,
+    "id": 15778,
     "note": "6",
   },
 ]

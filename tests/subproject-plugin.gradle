@@ -19,6 +19,16 @@ task copyWebclientBuildArtefacts(type: Copy) {
 	into "./build"
 }
 
+/**
+ * Ein Gradle-Task, der die SVWS-Admin-Build-Artefakte kopiert.
+ */
+task copyAdminclientBuildArtefacts(type: Copy) {
+	description = 'Kopiert die SVWS-Webclient-Build-Artefakte'
+	dependsOn ':svws-webclient:client:doZip'
+	from "../../svws-webclient/admin/build/SVWS-Admin-Client.zip"
+	into "./build"
+}
+
 
 /**
  * Dieser Task kopiert die Laufzeit-Abhängigkeiten in das angegebene Build-Verzeichnis,
@@ -27,6 +37,7 @@ task copyWebclientBuildArtefacts(type: Copy) {
 task copyJavaBuildArtefacts(type: Copy) {
 	description = 'Kopiert die Laufzeit-Abhängigkeiten in das Build-Verzeichnis'
 	dependsOn 'copyWebclientBuildArtefacts'
+	dependsOn 'copyAdminclientBuildArtefacts'
 
 	into "$buildDirPath/extLib"
 

@@ -15,7 +15,6 @@ describe("POST Requests ohne Auth gegen den ENM Server", () => {
 
 	test("ankreuzkompetenz > 401", async () => {
 		const response = await apiServiceNoAuth.post(`/api/ankreuzkompetenz`)
-		console.log(await response.text())
 		expect(response.status).toBe(401);
 	});
 
@@ -79,8 +78,6 @@ describe("GET Requests ohne Auth gegen den ENM Server", () => {
 
 	test("daten > 401", async () => {
 		const response = await apiServiceNoAuth.get(`/api/daten`)
-
-		console.log(await response.text())
 		expect(response.status).toBe(401);
 	});
 
@@ -115,7 +112,6 @@ describe("PUT Requests ohne Auth gegen den ENM Server", () => {
 
 	test("ankreuzkompetenz > 403", async () => {
 		const response = await apiServiceNoAuth.put(`/api/ankreuzkompetenz`)
-		console.log(await response.text())
 		expect(response.status).toBe(403);
 	});
 
@@ -170,7 +166,6 @@ describe("GET Requests mit Auth gegen den ENM Server", () => {
 describe("POST Requests mit Auth gegen den ENM Server", () => {
 	test("ankreuzkompetenz > 400", async () => {
 		const response = await apiServiceAuth.post(`/api/ankreuzkompetenz`)
-		console.log(await response.text())
 		expect(response.status).toBe(400);
 	});
 

@@ -1,11 +1,13 @@
 {
-    "lastRepoUpdate": "2025-02-20T13:30:25Z",
+    "lastRepoUpdate": "2025-03-24T13:33:57Z",
     "GymAbi01": "https://github.com/SVWS-NRW/SVWS-TestMDBs/raw/refs/heads/main/GOST_Abitur/Abi-Test-Daten-01/GymAbi.sqlite",
     "GymAbiDav": "https://github.com/SVWS-NRW/SVWS-TestMDBs/raw/refs/heads/main/GOST_Abitur/Abi-Test-Daten-01/GymAbiDav.sqlite",
     "Enm2": "https://github.com/SVWS-NRW/SVWS-TestMDBs/raw/refs/heads/main/ENM-Json/ENM-Testdaten-02/ENM_SVWS.sqlite",
+    "EnmA": "https://raw.githubusercontent.com/SVWS-NRW/SVWS-TestMDBs/refs/heads/main/ENM-Json/ENM-Testdaten-02/svwsenm2_ankreuz_with_cred.sqlite",
     "testDatenbanken": [
         "GymAbi01",
         "GymAbiDav",
-        "Enm2"
+        "Enm2",
+        "EnmA"
     ]
 }

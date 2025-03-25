@@ -11,6 +11,8 @@ const targetUrlENMServerFORSvwsApp: string = process.env.VITE_ENM_FOR_SVWS_targe
 
 const CLIENT_SECRET = process.env.VITE_CLIENT_SECRET ?? "clientsecret";
 
+const targetDB = "EnmA"
+
 const svwsAppapiService = getApiService('Admin', '', targetUrlSVWSAppServer)
 
 function delay(ms: number) {
@@ -25,7 +27,7 @@ describe("Init and Sync Workflow", () => {
 
 	test("Lösche die aktuelle Einstellung falls eine vorhanden ist", async () => {
 		// falls eine Verbindung besteht, wird diese entfernt
-		const deleteReponse = await svwsAppapiService.delete(`/db/Enm2/oauth/secrets/1`)
+		const deleteReponse = await svwsAppapiService.delete(`/db/${targetDB}/oauth/secrets/1`)
 		expect(deleteReponse.status).toBeOneOf([200, 404]);
 	})
 
@@ -37,7 +39,7 @@ describe("Init and Sync Workflow", () => {
 			clientSecret: CLIENT_SECRET
 		}
 
-		const responsePost = await svwsAppapiService.post(`/db/Enm2/oauth/secrets/create`, {
+		const responsePost = await svwsAppapiService.post(`/db/${targetDB}/oauth/secrets/create`, {
 			body: JSON.stringify(createBody),
 			headers: {"Content-Type": "application/json"}
 		})
@@ -51,7 +53,7 @@ describe("Init and Sync Workflow", () => {
 			clientSecret: CLIENT_SECRET
 		}
 
-		const responsePatch = await svwsAppapiService.patch(`/db/Enm2/oauth/secrets/1`, {
+		const responsePatch = await svwsAppapiService.patch(`/db/${targetDB}/oauth/secrets/1`, {
 			body: JSON.stringify(patchBody),
 			headers: {"Content-Type": "application/json"}
 		})
@@ -59,12 +61,12 @@ describe("Init and Sync Workflow", () => {
 	})
 
 	test("Get Setup > 200", async () => {
-		const responseGet = await svwsAppapiService.get(`/db/Enm2/enm/setup`)
+		const responseGet = await svwsAppapiService.get(`/db/${targetDB}/enm/setup`)
 		expect(responseGet.status).toBe(200);
 	})
 
 	test("Get auf die aktuelle Konfiguration enthält erwartete Secret Informationen inklusive TLS", async () => {
-		const responsePatch = await svwsAppapiService.get(`/db/Enm2/oauth/secrets/1`)
+		const responsePatch = await svwsAppapiService.get(`/db/${targetDB}/oauth/secrets/1`)
 		const secretData = await responsePatch.json()
 		expect(secretData.clientSecret).toBe(CLIENT_SECRET);
 		expect(secretData.tlsCert.length).toBeGreaterThan(100);
@@ -72,25 +74,25 @@ describe("Init and Sync Workflow", () => {
 	})
 
 	test("Check Anfrage > 200", async () => {
-		const responseGetCheck = await svwsAppapiService.get(`/db/Enm2/enm/check`)
+		const responseGetCheck = await svwsAppapiService.get(`/db/${targetDB}/enm/check`)
 		expect(responseGetCheck.status).toBe(200);
 	})
 
 	// Dieser Test kann fehlschlagen, wenn das Client Secret falsch ist
 	test("Sync Anfrage > 200", async () => {
-		const responseGetSync = await svwsAppapiService.get(`/db/Enm2/enm/synchronize`)
+		const responseGetSync = await svwsAppapiService.get(`/db/${targetDB}/enm/synchronize`)
 		expect(responseGetSync.status).toBe(200);
 	})
 
 	// Dieser Test kann fehlschlagen, wenn das Client Secret falsch ist
 	test("Upload Anfrage > 200", async () => {
-		const responseGetUpload = await svwsAppapiService.get(`/db/Enm2/enm/upload`)
+		const responseGetUpload = await svwsAppapiService.get(`/db/${targetDB}/enm/upload`)
 		expect(responseGetUpload.status).toBe(200);
 	})
 
 	// Dieser Test kann fehlschlagen, wenn das Client Secret falsch ist
 	test("Download Anfrage > 200", async () => {
-		const responseGetDownload = await svwsAppapiService.get(`/db/Enm2/enm/download`)
+		const responseGetDownload = await svwsAppapiService.get(`/db/${targetDB}/enm/download`)
 		expect(responseGetDownload.status).toBe(200);
 	})
 })
