@@ -8,7 +8,7 @@
 						<svws-ui-select title="Stundenplan" v-model="stundenplanAuswahl" :items="mapStundenplaene.values()"
 							:item-text="s => s.bezeichnung.replace('Stundenplan ', '') + ': ' + toDateStr(s.gueltigAb) + '—' + toDateStr(s.gueltigBis) + ' (KW ' + toKW(s.gueltigAb) + '—' + toKW(s.gueltigBis) + ')'" />
 					</div>
-					<div></div>
+					<div />
 					<div class="text-left">
 						<svws-ui-checkbox v-model="option2" name="Pausenzeiten">Pausenzeiten anzeigen</svws-ui-checkbox><br>
 						<svws-ui-checkbox v-model="option4" name="Fachbezeichnungen">Fach- statt Kursbezeichnung verwenden (nicht Sek-II)</svws-ui-checkbox><br>
@@ -30,7 +30,7 @@
 				</template>
 			</ui-card>
 			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Klassen werden gelöscht."
-					 :is-open="currentAction === 'delete'" @update:is-open="(isOpen) => setCurrentAction('delete', isOpen)">
+				:is-open="currentAction === 'delete'" @update:is-open="(isOpen) => setCurrentAction('delete', isOpen)">
 				<div class="w-full">
 					<span v-if="alleKlassenLeer">Alle ausgewählten Klassen sind bereit zum Löschen.</span>
 					<span v-if="leereKlassenVorhanden">Einige Klassen haben noch Schüler, leere Klassen können gelöscht werden.</span>
@@ -40,7 +40,7 @@
 				</div>
 				<template #buttonFooterLeft>
 					<svws-ui-button :disabled="manager().getKlassenIDsMitSchuelern().size() === manager().liste.auswahlSize() || loading"
-									:title="leereKlassenVorhanden ? 'Leere Klassen löschen' : 'Löschen'" @click="entferneKlassen" :is-loading="loading" class="mt-4">
+						:title="leereKlassenVorhanden ? 'Leere Klassen löschen' : 'Löschen'" @click="entferneKlassen" :is-loading="loading" class="mt-4">
 						<svws-ui-spinner v-if="loading" spinning />
 						<span v-else class="icon i-ri-play-line" />
 						{{ leereKlassenVorhanden ? 'Leere Klassen löschen' : 'Löschen' }}

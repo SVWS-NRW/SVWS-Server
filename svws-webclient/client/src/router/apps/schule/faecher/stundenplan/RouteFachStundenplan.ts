@@ -66,6 +66,8 @@ export class RouteFachStundenplan extends RouteNode<RouteDataFachStundenplan, Ro
 
 	public getProps(to: RouteLocationNormalized): FachStundenplanProps {
 		return {
+			apiStatus: api.status,
+			getPDF: this.data.getPDF,
 			id: routeSchuleFaecher.data.manager.daten().id,
 			ignoreEmpty: this.data.ganzerStundenplan,
 			stundenplan: () => (this.data.mapStundenplaene.size === 0 || !this.data.hasManager) ? undefined : this.data.auswahl,
