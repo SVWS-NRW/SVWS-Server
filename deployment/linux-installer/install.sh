@@ -35,11 +35,11 @@ CHARS="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
 password2=$(head /dev/urandom | tr -dc $CHARS | fold -w $LENGTH | head -n 1)
 password1=$(head /dev/urandom | tr -dc $CHARS | fold -w $LENGTH | head -n 1)
 
-export CREATE_MariaDB=J
+export CREATE_MARIADB=J
 export CREATE_KEYSTORE=J
 export CREATE_TESTDATA=J
-export MariaDB_ROOT_PASSWORD=${password1}
-export MariaDB_HOST=localhost
+export MARIADB_ROOT_PASSWORD=${password1}
+export MARIADB_HOST=localhost
 
 export APP_PATH=/opt/app/svws
 export CONF_PATH=/etc/app/svws/conf
@@ -145,18 +145,18 @@ else
     	#Konfuguration
     	echo "MariaDB-Konfiguration:"
 
-    	read -p "Möchten Sie MariaDB installieren? (j/N): " CREATE_MariaDB
+    	read -p "Möchten Sie MariaDB installieren? (j/N): " CREATE_MARIADB
 
-    	if [ "$CREATE_MariaDB" = "j" ] || [ "$CREATE_MariaDB" = "J" ]; then
-    		read -p "MariaDB_ROOT_PASSWORD (default: '${password1}'): " MariaDB_ROOT_PASSWORD
-    		export MariaDB_ROOT_PASSWORD=${MariaDB_ROOT_PASSWORD:-${password1}}
-    		read -p "MariaDB_HOST (default: 'localhost'): " MariaDB_HOST
-    		export MariaDB_HOST=${MariaDB_HOST:-localhost}
+    	if [ "$CREATE_MARIADB" = "j" ] || [ "$CREATE_MARIADB" = "J" ]; then
+    		read -p "MARIADB_ROOT_PASSWORD (default: '${password1}'): " MARIADB_ROOT_PASSWORD
+    		export MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD:-${password1}}
+    		read -p "MARIADB_HOST (default: 'localhost'): " MARIADB_HOST
+    		export MARIADB_HOST=${MARIADB_HOST:-localhost}
     	else
-    		read -p "MariaDB_ROOT_PASSWORD: " MariaDB_ROOT_PASSWORD
-    		export MariaDB_ROOT_PASSWORD=${MariaDB_ROOT_PASSWORD}
-    		read -p "MariaDB_HOST: " MariaDB_HOST
-    		export MariaDB_HOST=${MariaDB_HOST}
+    		read -p "MARIADB_ROOT_PASSWORD: " MARIADB_ROOT_PASSWORD
+    		export MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+    		read -p "MARIADB_HOST: " MARIADB_HOST
+    		export MARIADB_HOST=${MARIADB_HOST}
     	fi
 
     	echo "Installationspfade:"
@@ -182,20 +182,20 @@ else
     		read -p "SVWS_TLS_KEY_ALIAS (default: 'alias1'): " SVWS_TLS_KEY_ALIAS
     		export SVWS_TLS_KEY_ALIAS=${SVWS_TLS_KEY_ALIAS:-alias1}
 			echo "Bitte geben Sie die folgenden Informationen für den Distinguished Name (dname) ein:"
-			read -p "Common Name (CN): " INPUT_common_name
-			export INPUT_common_name=${INPUT_common_name}
-			read -p "Organizational Unit (OU): " INPUT_organizational_unit
-			export INPUT_organizational_unit=${INPUT_organizational_unit}
-			read -p "Organization (O): " INPUT_organization
-			export INPUT_organization=${INPUT_organization}
-			read -p "Locality (L): " INPUT_locality
-			export INPUT_locality=${INPUT_locality}
-			read -p "State (S): " INPUT_state
-			export INPUT_state=${INPUT_state}
-			read -p "Country (C): " INPUT_country
-			export INPUT_country=${INPUT_country}
+			read -p "Common NAME (CN): " INPUT_COMMON_NAME
+			export INPUT_COMMON_NAME=${INPUT_COMMON_NAME}
+			read -p "Organizational Unit (OU): " INPUT_ORGANIZATIONAL_UNIT
+			export INPUT_ORGANIZATIONAL_UNIT=${INPUT_ORGANIZATIONAL_UNIT}
+			read -p "Organization (O): " INPUT_ORGANIZATION
+			export INPUT_ORGANIZATION=${INPUT_ORGANIZATION}
+			read -p "Locality (L): " INPUT_LOCALITY
+			export INPUT_LOCALITY=${INPUT_LOCALITY}
+			read -p "State (S): " INPUT_STATE
+			export INPUT_STATE=${INPUT_STATE}
+			read -p "Country (C): " INPUT_COUNTRY
+			export INPUT_COUNTRY=${INPUT_COUNTRY}
 			read -p "Gültigkeitsdauer des Zertifikats in Tagen: " validity_days
-			export validity_days=${validity_days}
+			export VALIDITY_DAYS=${VALIDITY_DAYS}
     	else
     		echo "Keystore für TLS:"
     		read -p "SVWS_TLS_KEYSTORE_PATH: " SVWS_TLS_KEYSTORE_PATH
@@ -212,7 +212,7 @@ else
         echo "Host: $(hostname) - $(hostname -I | cut -d' ' -f1)"
     	echo ""
     	echo "MariaDB-Konfiguration:"
-    	echo "  MariaDB_ROOT_PASSWORD: $MariaDB_ROOT_PASSWORD"
+    	echo "  MARIADB_ROOT_PASSWORD: $MARIADB_ROOT_PASSWORD"
 
     	echo ""
     	echo "Installationspfade:"
@@ -225,12 +225,12 @@ else
     	echo "  SVWS_TLS_KEYSTORE_PATH: $SVWS_TLS_KEYSTORE_PATH"
     	echo "  SVWS_TLS_KEYSTORE_PASSWORD: $SVWS_TLS_KEYSTORE_PASSWORD"
     	echo "  SVWS_TLS_KEY_ALIAS: $SVWS_TLS_KEY_ALIAS"
-		echo "  Common Name (CN): $INPUT_common_name"
-		echo "  Organizational Unit (OU): $INPUT_organizational_unit"
-		echo "  Organization (O): $INPUT_organization"
-		echo "  Locality (L): $INPUT_locality"
-		echo "  State (S): $INPUT_state"
-		echo "  Country (C): $INPUT_country"
+		echo "  Common Name (CN): $INPUT_COMMON_NAME"
+		echo "  Organizational Unit (OU): $INPUT_ORGANIZATIONAL_UNIT"
+		echo "  Organization (O): $INPUT_ORGANIZATION"
+		echo "  Locality (L): $INPUT_LOCALITY"
+		echo "  State (S): $INPUT_STATE"
+		echo "  Country (C): $INPUT_COUNTRY"
         echo "  Gültigkeitsdauer des Zertifikats: $validity_days Tage"
 
     	read -p "Sind alle Einstellungen korrekt? (j/N): " CONFIRM
@@ -244,21 +244,21 @@ else
     # Erstelle .env-Datei und schreibe Konfiguration hinein
     echo "Erstelle .env-Datei und schreibe Konfiguration hinein"
     touch .env
-    echo "CREATE_MariaDB=$CREATE_MariaDB" >> .env
+    echo "CREATE_MARIADB=$CREATE_MARIADB" >> .env
     echo "CREATE_KEYSTORE=$CREATE_KEYSTORE" >> .env
-    echo "MariaDB_ROOT_PASSWORD=$MariaDB_ROOT_PASSWORD" >> .env
+    echo "MARIADB_ROOT_PASSWORD=$MARIADB_ROOT_PASSWORD" >> .env
     echo "APP_PATH=$APP_PATH" >> .env
     echo "CONF_PATH=$CONF_PATH" >> .env
     echo "APP_PORT=$APP_PORT" >> .env
     echo "SVWS_TLS_KEYSTORE_PATH=$SVWS_TLS_KEYSTORE_PATH" >> .env
     echo "SVWS_TLS_KEYSTORE_PASSWORD=$SVWS_TLS_KEYSTORE_PASSWORD" >> .env
     echo "SVWS_TLS_KEY_ALIAS=$SVWS_TLS_KEY_ALIAS" >> .env
-    echo "INPUT_common_name=$INPUT_common_name" >> .env
-    echo "INPUT_organizational_unit=$INPUT_organizational_unit" >> .env
-    echo "INPUT_organization=$INPUT_organization" >> .env
-    echo "INPUT_locality=$INPUT_locality" >> .env
-    echo "INPUT_state=$INPUT_state" >> .env
-    echo "INPUT_country=$INPUT_country" >> .env
+    echo "INPUT_COMMON_NAME=$INPUT_COMMON_NAME" >> .env
+    echo "INPUT_ORGANIZATIONAL_UNIT=$INPUT_ORGANIZATIONAL_UNIT" >> .env
+    echo "INPUT_ORGANIZATION=$INPUT_ORGANIZATION" >> .env
+    echo "INPUT_LOCALITY=$INPUT_LOCALITY" >> .env
+    echo "INPUT_STATE=$INPUT_STATE" >> .env
+    echo "INPUT_COUNTRY=$INPUT_COUNTRY" >> .env
     echo "validity_days=$validity_days" >> .env
 fi
 
@@ -282,7 +282,7 @@ apt -y install temurin-21-jdk
 # Installation der Datenbank
 
 # Prüfen, ob die Installation der MariaDB-Datenbank gewünscht ist
-if [ "$CREATE_MariaDB" = "j" ] || [ "$CREATE_MariaDB" = "J" ]; then
+if [ "$CREATE_MARIADB" = "j" ] || [ "$CREATE_MARIADB" = "J" ]; then
     echo "Lade MariaDB 10.9 ..."
 
     # Herunterladen des Skripts zum Einrichten des MariaDB-Repositorys und Ausführen des Skripts
@@ -341,7 +341,7 @@ if [ "$CREATE_KEYSTORE" = "j" ] || [ "$CREATE_KEYSTORE" = "J" ]; then
 	#mkdir -p $SVWS_TLS_KEYSTORE_PATH
     echo "Erstelle Keystore in $SVWS_TLS_KEYSTORE_PATH/keystore ..."
     export HOSTNAME=`hostname`
-    keytool -genkey -noprompt -alias $SVWS_TLS_KEY_ALIAS -validity $validity_days -dname "CN=${INPUT_common_name}, OU=${INPUT_organizational_unit}, O=${INPUT_organization}, L=${INPUT_locality}, S=${INPUT_state}, C=${INPUT_country}" -ext "SAN=DNS:localhost,IP:127.0.0.1,DNS:${HOSTNAME}" -keystore $SVWS_TLS_KEYSTORE_PATH/keystore -storepass $SVWS_TLS_KEYSTORE_PASSWORD -keypass $SVWS_TLS_KEYSTORE_PASSWORD  -keyalg RSA
+    keytool -genkey -noprompt -alias $SVWS_TLS_KEY_ALIAS -validity $validity_days -dname "CN=${INPUT_COMMON_NAME}, OU=${INPUT_ORGANIZATIONAL_UNIT}, O=${INPUT_ORGANIZATION}, L=${INPUT_LOCALITY}, S=${INPUT_STATE}, C=${INPUT_COUNTRY}" -ext "SAN=DNS:localhost,IP:127.0.0.1,DNS:${HOSTNAME}" -keystore $SVWS_TLS_KEYSTORE_PATH/keystore -storepass $SVWS_TLS_KEYSTORE_PASSWORD -keypass $SVWS_TLS_KEYSTORE_PASSWORD  -keyalg RSA
     keytool -export -keystore $SVWS_TLS_KEYSTORE_PATH/keystore -alias $SVWS_TLS_KEY_ALIAS -file ./SVWS.cer -storepass $SVWS_TLS_KEYSTORE_PASSWORD
 else
 	mv  $SVWS_TLS_KEYSTORE_PATH $APP_PATH
@@ -359,7 +359,7 @@ ln -s $CONF_PATH/svwsconfig.json $APP_PATH/svwsconfig.json
 
 
 # Prüfen, ob die Installation der MariaDB-Datenbank gewünscht ist
-if [ "$CREATE_MariaDB" = "j" ] || [ "$CREATE_MariaDB" = "J" ]; then
+if [ "$CREATE_MARIADB" = "j" ] || [ "$CREATE_MARIADB" = "J" ]; then
 	    envsubst < ./init-scripts/init-template.sql > ./init-scripts/init.sql
         # Importiere die Daten in die MariaDB
         mysql < ./init-scripts/init.sql
