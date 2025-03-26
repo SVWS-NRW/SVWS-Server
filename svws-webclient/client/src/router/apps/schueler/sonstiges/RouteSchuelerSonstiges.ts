@@ -21,7 +21,7 @@ export class RouteSchuelerSonstiges extends RouteNode<RouteDataSchuelerLernabsch
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN ], "schueler.sonstiges", "sonstiges", SchuelerSonstiges, new RouteDataSchuelerLernabschnitte());
-		super.mode = ServerMode.STABLE;
+		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Sonstiges";
 		super.children = [
