@@ -17,6 +17,12 @@
 				</div>
 			</svws-ui-sub-nav>
 		</Teleport>
+		<Teleport to=".svws-ui-header--actions" defer>
+			<s-stundenplan-raum-drucken-modal v-if="raum" v-slot="{ openModal }" :get-p-d-f :api-status :manager="stundenplanManager()" :raum>
+				<svws-ui-button @click="openModal" type="secondary"><span class="icon i-ri-printer-line" /> Stundenplan drucken</svws-ui-button>
+			</s-stundenplan-raum-drucken-modal>
+			<svws-ui-modal-hilfe> <hilfe-raum-stundenplan /> </svws-ui-modal-hilfe>
+		</Teleport>
 		<div v-if="raum === undefined">Dieser Stundenplan hat noch keine Räume</div>
 		<stundenplan-raum v-else class="min-w-fit h-full w-2/3 overflow-scroll pr-4" :id="raum.id" :manager="stundenplanManager"
 			:wochentyp="() => wochentypAnzeige" :kalenderwoche="() => undefined" mode-pausenaufsichten="aus" :ignore-empty />
