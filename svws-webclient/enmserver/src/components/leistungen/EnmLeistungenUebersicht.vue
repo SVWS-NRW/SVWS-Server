@@ -1,6 +1,7 @@
 <template>
 	<table class="svws-ui-table svws-clickable h-full w-full overflow-hidden" role="table" aria-label="Tabelle"
-		@keydown.down.prevent.stop="manager.auswahlLeistungNaechste()" @keydown.up.prevent.stop="manager.auswahlLeistungVorherige()">
+		@keydown.down.prevent.stop="manager.auswahlLeistungNaechste()" @keydown.up.prevent.stop="manager.auswahlLeistungVorherige()"
+		@keydown.right.prevent="nextColumn" @keydown.left.prevent="prevColumn">
 		<thead class="svws-ui-thead cursor-pointer mb-1" role="rowgroup" aria-label="Tabellenkopf">
 			<tr class="svws-ui-tr" role="row">
 				<template v-for="col of cols" :key="col.name">
@@ -30,10 +31,12 @@
 				</td>
 			</tr>
 		</thead>
-		<tbody class="svws-ui-tbody h-full overflow-y-auto" role="rowgroup" aria-label="Tabelleninhalt">
+		<tbody ref="tbodyRef" class="svws-ui-tbody h-full overflow-y-auto" role="rowgroup" aria-label="Tabelleninhalt">
 			<template v-for="(schueler, indexSchueler) of manager.lerngruppenAuswahlGetSchueler()" :key="schueler">
 				<template v-for="(leistung, indexLeistung) of manager.leistungenGetOfSchueler(schueler.id)" :key="leistung">
-					<tr class="svws-ui-tr" role="row" :class="{ 'svws-clicked': manager.auswahlLeistung.leistung?.id === leistung.id }" @click.capture.exact="setAuswahlLeistung({ indexSchueler, indexLeistung, leistung })">
+					<tr class="svws-ui-tr" role="row" :class="{ 'svws-clicked': manager.auswahlLeistung.leistung?.id === leistung.id }"
+						@click.capture.exact="setAuswahlLeistung({ indexSchueler, indexLeistung, leistung })"
+						:ref="el => rowRefs.set(leistung.id, el as HTMLElement)">
 						<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Klasse') ?? true">
 							{{ manager.schuelerGetKlasse(schueler.id).kuerzelAnzeige }}
 						</td>
@@ -56,7 +59,8 @@
 							<svws-ui-select v-if="manager.lerngruppeIstFachlehrer(leistung.lerngruppenID)" title="—" headless class="w-full"
 								:items="Note.values()" :item-text="item => item.daten(manager.schuljahr)?.kuerzel ?? '—'"
 								:model-value="Note.fromKuerzel(leistung.noteQuartal)"
-								@update:model-value="value => doPatchLeistung(leistung, { noteQuartal: value?.daten(manager.schuljahr)?.kuerzel ?? null })" />
+								@update:model-value="value => doPatchLeistung(leistung, { noteQuartal: value?.daten(manager.schuljahr)?.kuerzel ?? null })"
+								:focus-class-content="manager.auswahlLeistung?.leistung?.id === leistung.id" />
 							<div v-else>{{ leistung.noteQuartal }}</div>
 						</td>
 						<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Note') ?? true">
@@ -84,7 +88,7 @@
 							<span v-else>—</span>
 						</td>
 						<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Bemerkung') ?? true" :class="{ 'bg-ui-selected-secondary text-ui-onselected-secondary': floskelEditorVisible && (manager.auswahlLeistung.leistung?.id === leistung.id) }">
-							<span class="text-ellipsis overflow-hidden whitespace-nowrap">{{ leistung.fachbezogeneBemerkungen }}</span>
+							<span class="text-ellipsis overflow-hidden whitespace-nowrap column-focussable" tabindex="0" @keydown.enter.prevent="focusFloskelEditor">{{ leistung.fachbezogeneBemerkungen }}</span>
 						</td>
 						<td class="svws-ui-td" role="cell" />
 					</tr>
@@ -96,13 +100,15 @@
 
 <script setup lang="ts">
 
-	import { computed } from 'vue';
+	import { computed, ref, watch } from 'vue';
 	import type { EnmLeistungenProps } from './EnmLeistungenProps';
 	import type { EnmLeistungAuswahl } from './EnmManager';
 	import type { ENMLeistung } from '@core/core/data/enm/ENMLeistung';
 	import { Note } from '@core/asd/types/Note';
 
 	const props = defineProps<EnmLeistungenProps>();
+	const rowRefs = ref(new Map<number, HTMLElement>());
+	const currentColumn = ref(0);
 
 	const cols = [
 		{ kuerzel: "Klasse", name: "Klasse", width: "1fr" },
@@ -124,8 +130,33 @@
 		set: (value) => void props.setColumnsVisible(value),
 	});
 
+	const columnsComputed = computed<HTMLElement[]>(
+		() => Array.from(rowRefs.value.get(props.manager.auswahlLeistung.leistung!.id)!.querySelectorAll("input, .column-focussable"))
+	);
+
 	function setAuswahlLeistung(value: EnmLeistungAuswahl) {
 		props.manager.auswahlLeistung = value;
+		columnsComputed.value[currentColumn.value].focus();
+	}
+
+	function nextColumn() {
+		if (currentColumn.value === columnsComputed.value.length - 1)
+			currentColumn.value = 0;
+		else
+			currentColumn.value += 1;
+		columnsComputed.value[currentColumn.value].focus();
+	}
+
+	function prevColumn() {
+		if (currentColumn.value === 0)
+			currentColumn.value = columnsComputed.value.length - 1;
+		else
+			currentColumn.value -= 1;
+		columnsComputed.value[currentColumn.value].focus();
+	}
+
+	async function focusFloskelEditor() {
+		await props.setFloskelEditorVisible(true).then(() => (document.getElementsByClassName("floskel-input")[0] as HTMLElement).focus());
 	}
 
 	async function doPatchLeistung(leistung: ENMLeistung, patch: Partial<ENMLeistung>) {
@@ -139,6 +170,13 @@
 	const gridTemplateColumnsComputed = computed<string>(() => {
 		return cols.filter(c => colsVisible.value.get(c.kuerzel) ?? true).map(c => c.width).join(" ") + " 5em";
 	});
+
+	watch(
+		() => props.manager.auswahlLeistung,
+		() => {
+			columnsComputed.value[currentColumn.value].focus();
+		}
+	)
 
 </script>
 

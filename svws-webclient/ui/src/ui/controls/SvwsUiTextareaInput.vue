@@ -13,7 +13,7 @@
 			'col-span-full': span === 'full',
 			'grow': span === 'grow'
 		}">
-		<textarea ref="textarea" v-model="dataOrEmpty" @input="onInput" @blur="onBlur" class="textarea-input--control" :disabled :required :rows v-bind="{ ...$attrs }" />
+		<textarea ref="textarea" v-model="dataOrEmpty" @input="onInput" @blur="onBlur" class="textarea-input--control" :disabled :required :rows v-bind="{ ...$attrs }" :class="{ 'contentFocusField': isContentFocusField }" />
 		<span :id="idPlaceholder" v-if="placeholder.length > 0" class="textarea-input--placeholder" :class="{ 'textarea-input--placeholder--required': required }">
 			<span>{{ placeholder }}</span>
 			<span class="icon i-ri-alert-line ml-0.5 -my-0.5 icon-ui-danger" v-if="isValid === false" />
@@ -56,6 +56,7 @@
 		maxLen?: number;
 		span?: 'full' | 'grow';
 		headless?: boolean;
+		isContentFocusField?: boolean;
 	}>(), {
 		modelValue: "",
 		placeholder: "",
@@ -70,6 +71,7 @@
 		maxLen: undefined,
 		span: undefined,
 		headless: false,
+		isContentFocusField: false,
 	})
 
 	const emit = defineEmits<{

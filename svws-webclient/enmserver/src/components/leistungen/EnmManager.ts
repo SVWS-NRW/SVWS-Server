@@ -171,7 +171,7 @@ export class EnmManager {
 			this._auswahlSchueler.value = listSchueler.getFirst();
 			return;
 		}
-		if ((index) <= listSchueler.size())
+		if ((index + 1) < listSchueler.size())
 			this._auswahlSchueler.value = listSchueler.get(index + 1);
 		else
 			this._auswahlSchueler.value = listSchueler.getFirst();

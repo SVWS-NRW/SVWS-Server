@@ -8,7 +8,7 @@
 		<div v-if="floskelEditorVisible" class="h-full overflow-y-auto">
 			<div class="flex flex-auto flex-col gap-4">
 				<div class="py-4">
-					<svws-ui-textarea-input placeholder="Floskeln auswählen oder manuell eingeben" :model-value="text" @input="onInput" autoresize />
+					<svws-ui-textarea-input class="floskel-input" placeholder="Floskeln auswählen oder manuell eingeben" :model-value="text" @input="onInput" autoresize is-content-focus-field />
 				</div>
 				<div class="flex justify-between gap-2 w-full flex-row-reverse">
 					<div v-if="showButtons" class="flex gap-2">

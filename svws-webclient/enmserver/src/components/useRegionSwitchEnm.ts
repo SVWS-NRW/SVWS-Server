@@ -1,9 +1,10 @@
-import { ref } from 'vue'
+import { type Ref, ref } from 'vue'
 
 const focusSwitchingEnabled = ref<boolean>(false);
 const focusHelpVisible = ref<boolean>(false);
 
 const currentContentIndex = ref(0);
+const currentListIndex = ref(0);
 
 export function useRegionSwitch() {
 
@@ -31,20 +32,23 @@ export function useRegionSwitch() {
 		event.preventDefault();
 		const htmlElements = document.getElementsByClassName(regionMap.get(event.code) ?? "");
 		if (event.code === 'Digit8')
-			cycleContentFields(htmlElements);
+			cycleFocusFields(htmlElements, currentContentIndex);
+		else if (event.code === 'Digit4')
+			cycleFocusFields(htmlElements, currentListIndex);
 		else {
 			const focusField = htmlElements.item(0)
 			if (focusField !== null)
 				(focusField as HTMLElement).focus();
 			currentContentIndex.value = 0;
+			currentListIndex.value = 0;
 		}
 	}
 
-	function cycleContentFields(focusFields: HTMLCollection) {
-		const focusField = focusFields.item(currentContentIndex.value);
+	function cycleFocusFields(focusFields: HTMLCollection, usedIdex: Ref<number>) {
+		const focusField = focusFields.item(usedIdex.value);
 		if (focusField !== null)
 			(focusField as HTMLElement).focus();
-		currentContentIndex.value = (currentContentIndex.value + 1) % focusFields.length;
+		usedIdex.value = (usedIdex.value + 1) % focusFields.length;
 	}
 
 	function toggleHelp(event: KeyboardEvent) {

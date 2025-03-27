@@ -8,7 +8,7 @@
 				<template #default>
 					<template v-for="item in apps" :key="item.name">
 						<template v-if="item.name !== 'einstellungen'">
-							<svws-ui-menu-item :active="is_active(item)" @click="startSetApp(item)">
+							<svws-ui-menu-item :active="is_active(item)" @click="startSetApp(item)" @keydown.enter="startSetApp(item)">
 								<template #icon>
 									<span class="inline-block icon-lg i-ri-book-2-line" v-if="item.name === 'leistungen'" />
 									<span class="inline-block icon-lg i-ri-book-2-line" v-if="item.name === 'teilleistungen'" />
@@ -22,7 +22,7 @@
 				<template #footer>
 					<template v-for="item in apps" :key="item.name">
 						<template v-if="item.name === 'einstellungen'">
-							<svws-ui-menu-item :active="is_active(item)" @click="startSetApp(item)">
+							<svws-ui-menu-item :active="is_active(item)" @click="startSetApp(item)" @keydown.enter="startSetApp(item)">
 								<template #icon><span class="inline-block icon-lg i-ri-settings-3-line" /></template>
 								<template #label><span class="text-xs"> {{ item.text }}</span> </template>
 							</svws-ui-menu-item>

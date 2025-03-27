@@ -112,7 +112,7 @@
 				<template v-for="(row, index) in sortedRows">
 					<slot name="rowCustom" :row="row.source">
 						<div class="svws-ui-tr" :style="getGridTemplateColumns" role="row" :key="`table-row_${row}_${index}`" @click.exact="toggleRowClick(row)" :ref="el => itemRefs.set(index, el)"
-							:class="{ 'svws-selected': isRowSelected(row), 'svws-clicked': isRowClicked(row), 'listFocusField': isRowClicked(row)}" tabindex="0" @keydown.enter="toggleRowClick(row)"
+							:class="{ 'svws-selected': isRowSelected(row), 'svws-clicked': isRowClicked(row), 'listFocusField': isRowClicked(row) || (multiSelectFocusEnabled && isRowSelected(row)) }" tabindex="0" @keydown.enter="toggleRowClick(row)"
 							@keydown.down.prevent="switchElement($event, itemRefs, index, false)" @keydown.up.prevent="switchElement($event, itemRefs, index, true)">
 							<slot name="row" :row="row.source">
 								<template v-if="selectable">
@@ -248,6 +248,7 @@
 			focusFirstElement?: boolean;
 			focusSwitchingEnabled? : boolean;
 			focusHelpVisible? : boolean;
+			multiSelectFocusEnabled?: boolean;
 		}>(),
 		{
 			columns: () => [],
@@ -280,6 +281,7 @@
 			focusFirstElement: false,
 			focusSwitchingEnabled: false,
 			focusHelpVisible: false,
+			multiSelectFocusEnabled: false,
 		}
 	);
 
