@@ -1,4 +1,4 @@
-import type { ApiFile, BenutzerKompetenz, GostBelegpruefungsArt, GostBelegpruefungsErgebnisse, GostJahrgangsdaten, List, Schulform, ServerMode, SimpleOperationResponse } from "@core";
+import type { ApiFile, BenutzerKompetenz, GostBelegpruefungsArt, GostBelegpruefungsErgebnisse, GostJahrgangsdaten, List, Schulform, ServerMode } from "@core";
 import type { ApiStatus } from "~/components/ApiStatus";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 

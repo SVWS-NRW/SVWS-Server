@@ -25,7 +25,7 @@
 				</svws-ui-radio-group>
 			</div>
 			<svws-ui-table :items="filtered" :no-data="filtered.isEmpty()" no-data-html="Keine Laufbahnfehler gefunden."
-				clickable :clicked="schueler" @update:clicked="schueler=$event" :columns selectable v-model="auswahl" scroll>
+				clickable v-model:clicked="schueler" :columns selectable v-model="auswahl" scroll>
 				<template #header(linkToSchueler)>
 					<span class="icon i-ri-group-line" />
 				</template>
@@ -103,7 +103,7 @@
 	const hatUpdateKompetenz = computed<boolean>(() => {
 		return props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN)
 			|| (props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)
-				&& props.benutzerKompetenzenAbiturjahrgaenge.has(props.jahrgangsdaten().abiturjahr))
+				&& props.benutzerKompetenzenAbiturjahrgaenge.has(props.jahrgangsdaten().abiturjahr));
 	});
 
 	const columns: DataTableColumn[] = [
@@ -114,7 +114,6 @@
 	];
 
 	const showModalImport = ref<boolean>(false);
-	const auswahl = ref<GostBelegpruefungsErgebnisse[]>([]);
 
 	const hasFilter = computed<boolean>(() => props.filterFehler() || props.filterExterne());
 
@@ -130,6 +129,22 @@
 			a.add(e);
 		}
 		return a;
+	})
+
+	const ids = ref(new Set<number>());
+	const auswahl = computed<GostBelegpruefungsErgebnisse[]>({
+		get: () => {
+			const list = [];
+			for (const s of filtered.value)
+				if (ids.value.has(s.schueler.id))
+					list.push(s);
+			return list;
+		},
+		set: (value) => {
+			ids.value.clear();
+			for (const s of value)
+				ids.value.add(s.schueler.id);
+		},
 	})
 
 	const schueler_state = shallowRef<GostBelegpruefungsErgebnisse>();
