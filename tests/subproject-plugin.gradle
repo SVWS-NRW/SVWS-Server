@@ -209,9 +209,14 @@ task generateSvwsConfigFile {
 	description = 'Generiert die Konfigurationsdatei für den SVWS-Server'
 	dependsOn 'erzeugeOrdnerFuerTestumgebung'
 
+	doFirst {
+		project.delete(
+				fileTree("$buildDirPath/tempdocker/appConf/svws_config.json.template")
+		)
+	}
 	doLast {
 		def inputFile = file('../templates/config/svws_config.json.template')
-		def outputFile = file("$buildDirPath/tempdocker/appConf/svws_config.json.template.$project.ext.DB_CONTAINER_NAME")
+		def outputFile = file("$buildDirPath/tempdocker/appConf/svws_config.json.template")
 
 		// Definiere welche Platzhalter durch welche Werte ersetzt werden sollen.
 		def replacements = [
@@ -253,7 +258,7 @@ task generateStartupScript {
 			# Dieses Skript wird in jedem Testcontainer ausgeführt sobald dieser gestartet wird,
 
 			# Konfigurationsdatei generieren
-			envsubst < /etc/app/svws/conf/svws_config.json.template.${project.ext.DB_CONTAINER_NAME} > /opt/app/svws/svwsconfig.json
+			envsubst < /etc/app/svws/conf/svws_config.json.template > /opt/app/svws/svwsconfig.json
 
 			/bin/bash "/etc/app/svws/init-scripts/create-keystore.sh"
 
@@ -295,7 +300,7 @@ task buildDockerImage(type: Exec) {
 task starteDockerContainerMitTestUmgebung(type: Exec) {
 	description = 'Starten der Datenbank und des SVWS-Servers im Docker'
 	dependsOn 'buildDockerImage'
-	workingDir "$buildDirPath/tempdocker"
+ 	workingDir "$buildDirPath/tempdocker"
 	executable 'docker'
 	args 'compose', '-p', "svws-$project.name", 'up', '--wait'
 }
