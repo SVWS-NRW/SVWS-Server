@@ -284,7 +284,7 @@
 	);
 
 	const emit = defineEmits<{
-		"update:modelValue": [items: any[]];
+		"update:modelValue": [items: DataTableItem[]];
 		"update:sortByAndOrder": [obj: SortByAndOrder];
 		"update:clicked": [items: DataTableItem];
 		"update:filterOpen": [open: boolean];
