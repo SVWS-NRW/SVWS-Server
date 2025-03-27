@@ -1,10 +1,6 @@
 package de.svws_nrw.schulen.v1.data;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.svws_nrw.transpiler.TranspilerDTO;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -26,6 +22,18 @@ public class SchuldateiOrganisationseinheitGrunddaten extends SchuldateiEintrag 
 	/** Die Schulnummer. */
 	@Schema(description = "die Schulnummer", example = "100001")
 	public @NotNull String schulnummer = "";
+
+	/** Die Amtsbezeichnung der Organisationseinheit */
+	@Schema(description = "Teil1 der amtlichen Bezeichnung der Organisationseinheit", example = "Städt. Gymnasium ....")
+	public @NotNull String amtsbez1 = "";
+
+	/** Die Amtsbezeichnung der Organisationseinheit */
+	@Schema(description = "Teil2 der amtlichen Bezeichnung der Organisationseinheit", example = "Städt. Gymnasium ....")
+	public @NotNull String amtsbez2 = "";
+
+	/** Die Amtsbezeichnung der Organisationseinheit */
+	@Schema(description = "Teil3 der amtlichen Bezeichnung der Organisationseinheit", example = "Städt. Gymnasium ....")
+	public @NotNull String amtsbez3 = "";
 
 	/** Die Kurzbezeichnung der Organisationseinheit */
 	@Schema(description = "die Kurzbezeichnung der Organisationseinheit", example = "Düsseldorf, MSB")
@@ -78,11 +86,6 @@ public class SchuldateiOrganisationseinheitGrunddaten extends SchuldateiEintrag 
 	/** Anzahl der Internatsplätze */
 	@Schema(description = "Anzahl der Internatsplätze")
 	public int internatsplaetze = 0;
-
-	/** Die Schulformen der Organisationseinheit:Schule (zeitl. Verlaufsliste)*/
-	@ArraySchema(schema = @Schema(implementation = SchuldateiOrganisationseinheitSchulform.class))
-	public final @NotNull List<SchuldateiOrganisationseinheitSchulform> schulform = new ArrayList<>();
-
 
 	/**
 	 * Erstellt neue Grunddaten für eine Organiationseinheit der Schuldatei

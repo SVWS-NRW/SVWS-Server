@@ -5,13 +5,15 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import de.svws_nrw.core.data.klassen.KlassenDaten;
+import de.svws_nrw.asd.data.klassen.KlassenDaten;
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
-import de.svws_nrw.core.data.schueler.SchuelerLernabschnittsdaten;
+import de.svws_nrw.asd.data.schueler.SchuelerLeistungsdaten;
+import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittsdaten;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 
+import de.svws_nrw.data.schueler.DataSchuelerLeistungsdaten;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLeistungsdaten;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
@@ -208,13 +210,20 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	 */
 	@Override
 	public List<ReportingSchuelerLeistungsdaten> leistungsdaten() {
-		if (super.leistungsdaten == null) {
-			super.leistungsdaten = this.reportingRepository.mapAlleLeistungsdaten()
+		if (!this.reportingRepository.mapAlleLeistungsdaten().containsKey1(this.schueler.id())) {
+			final List<SchuelerLeistungsdaten> listLeistungsdaten = new ArrayList<>();
+			if (new DataSchuelerLeistungsdaten(this.reportingRepository.conn()).getByLernabschnitt(this.id, listLeistungsdaten)) {
+				listLeistungsdaten.forEach(
+						l -> this.reportingRepository.mapAlleLeistungsdaten().add(this.schueler().id(), this.id(), l.id, l));
+			}
+		}
+		if (super.leistungsdaten().isEmpty()) {
+			super.setLeistungsdaten(this.reportingRepository.mapAlleLeistungsdaten()
 					.get12(this.schueler().id(), this.id()).stream()
 					.map(l -> (ReportingSchuelerLeistungsdaten) new ProxyReportingSchuelerLeistungsdaten(reportingRepository, this, l))
-					.toList();
+					.toList());
 		}
-		return super.leistungsdaten;
+		return super.leistungsdaten();
 	}
 
 	// TODO Klasse für die Nachprüfungen für die Reporting erzeugen und dann die Daten im überschriebenen Getter hier dynamisch nachladen.

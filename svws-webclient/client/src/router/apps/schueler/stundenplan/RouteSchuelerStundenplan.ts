@@ -1,15 +1,12 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
-
-import { DeveloperNotificationException} from "@core";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
+import type { SchuelerStundenplanProps } from "~/components/schueler/stundenplan/SSchuelerStundenplanProps";
+import { BenutzerKompetenz, Schulform, ServerMode, DeveloperNotificationException } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
 import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteDataSchuelerStundenplan } from "~/router/apps/schueler/stundenplan/RouteDataSchuelerStundenplan";
 import { ConfigElement } from "~/components/Config";
 import { api } from "~/router/Api";
-import type { SchuelerStundenplanProps } from "~/components/schueler/stundenplan/SchuelerStundenplanProps";
 
 
 const SSchuelerStundenplan = () => import("~/components/schueler/stundenplan/SSchuelerStundenplan.vue");
@@ -70,6 +67,8 @@ export class RouteSchuelerStundenplan extends RouteNode<RouteDataSchuelerStunden
 
 	public getProps(to: RouteLocationNormalized): SchuelerStundenplanProps {
 		return {
+			apiStatus: api.status,
+			getPDF: this.data.getPDF,
 			id: routeSchueler.data.schuelerListeManager.daten().id,
 			ignoreEmpty: this.data.ganzerStundenplan,
 			stundenplan: () => (this.data.mapStundenplaene.size === 0) ? undefined : this.data.auswahl,

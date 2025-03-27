@@ -2,34 +2,34 @@
 	<div v-if="hatBlockung && hatErgebnis" class="-mt-0.5 s-gost-kursplanung-schueler-auswahl flex flex-col" overflow-scroll>
 		<svws-ui-table :model-value="schuelerFilter().filtered.value" v-model:clicked="selected" clickable scroll :items="undefined"
 			:filter-open="isSchuelerFilterOpen()" @update:filter-open="setIsSchuelerFilterOpen"
-			:filtered="schuelerFilter().kurs_toggle.value === 'kurs' || schuelerFilter().fach_toggle.value === 'fach' || schuelerFilter().radio_filter !== 'alle'"
+			:filtered="(schuelerFilter().kurs_toggle.value === 'kurs') || (schuelerFilter().fach_toggle.value === 'fach') || (schuelerFilter().radio_filter !== 'alle')"
 			:columns :no-data="schuelerFilter().filtered.value.length <= 0" :disable-footer="schuelerFilter().filtered.value.length <= 0">
 			<template #search>
 				<svws-ui-text-input type="search" v-model="schuelerFilter().name" placeholder="Suche" removable />
 			</template>
 			<template #filterAdvanced>
-				<div class="radio radio--row col-span-full">
+				<div class="radio radio--row flex flex-row">
 					<svws-ui-radio-option v-model="schuelerFilter().alle_toggle.value" value="alle" name="Alle" label="&ZeroWidthSpace;">
 						<span class="icon ml-0.5 -mt-0.5 inline-block i-ri-filter-off-line" />
 					</svws-ui-radio-option>
 					<svws-ui-radio-option v-model="schuelerFilter().fach_toggle.value" value="fach" name="Fach" label="Fachfilter" :icon="false" />
 					<svws-ui-radio-option v-model="schuelerFilter().kurs_toggle.value" value="kurs" name="Kurs" label="Kursfilter" :icon="false" />
 				</div>
-				<div class="input-wrapper col-span-full" v-if="schuelerFilter().kurs_toggle.value === 'kurs'">
+				<div class="input-wrapper flex flex-row" v-if="schuelerFilter().kurs_toggle.value === 'kurs'">
 					<svws-ui-select v-model="schuelerFilter().kurs" :items="schuelerFilter().getKurse()"
-						:item-text="(kurs: GostBlockungKurs) => getErgebnismanager().getOfKursName(kurs.id) ?? ''" />
+						:item-text="kurs => getErgebnismanager().getOfKursName(kurs.id) ?? ''" />
 					<div class="svws-ui-spacing" />
 				</div>
-				<div :grid="2" class="input-wrapper input-wrapper--2 col-span-full" v-if="schuelerFilter().fach_toggle.value === 'fach'">
-					<svws-ui-select title="Fach" v-model="fach" :items="faecherManager.faecher()" :item-text="(fach: GostFach) => fach.bezeichnung ?? ''" />
-					<svws-ui-select title="Kursart" v-model="schuelerFilter().kursart" :items="GostKursart.values()" :item-text="(kursart: GostKursart) => kursart.kuerzel" removable />
+				<div :grid="2" class="input-wrapper input-wrapper--2 flex flex-row" v-if="schuelerFilter().fach_toggle.value === 'fach'">
+					<svws-ui-select title="Fach" v-model="fach" :items="faecherManager.faecher()" :item-text="fach => fach.bezeichnung ?? ''" />
+					<svws-ui-select title="Kursart" v-model="schuelerFilter().kursart" :items="GostKursart.values()" :item-text="kursart => kursart.kuerzel" removable />
 					<div class="svws-ui-spacing" />
 				</div>
-				<div class="input-wrapper col-span-full" v-if="schuelerFilter().alle_toggle.value === 'alle'">
+				<div class="input-wrapper flex flex-row" v-if="schuelerFilter().alle_toggle.value === 'alle'">
 					<svws-ui-select disabled :model-value="[]" :items="[]" :item-text="() => ''" />
 					<div class="svws-ui-spacing" />
 				</div>
-				<div class="radio radio--row col-span-full">
+				<div class="radio radio--row flex flex-row">
 					<svws-ui-radio-option v-model="schuelerFilter().radio_filter" value="alle" name="Alle" label="Alle" :icon="false" />
 					<svws-ui-tooltip>
 						<svws-ui-radio-option v-model="schuelerFilter().radio_filter" value="kollisionen" name="Kollisionen" label="K">
@@ -58,7 +58,7 @@
 				</div>
 			</template>
 			<template #header>
-				<div class="svws-ui-tr" role="row">
+				<div class="svws-ui-tr" role="row" :style="gridTemplateColumns">
 					<div class="svws-ui-td col-span-full" role="columnheader">
 						<svws-ui-tooltip v-if="schuelerFilter().filtered.value.length > 0">
 							<span class="icon i-ri-information-line" />
@@ -79,87 +79,89 @@
 				</div>
 			</template>
 			<template #body>
-				<div v-for="(s, index) in schuelerFilter().filtered.value" role="row" class="svws-ui-tr" :class="{'svws-clicked': selected === s}" @click="selected = s" :key="index">
-					<div role="cell" class="svws-ui-td svws-align-center pr-0">
-						<div class="leading-none w-5 -mb-1" :class="{ 'text-error': kollision(s.id).value, 'text-black': !kollision(s.id).value && selected !== s, }">
-							<svws-ui-tooltip v-if="kollision(s.id).value && !nichtwahl(s.id).value" color="danger">
-								<span class="icon icon-error i-ri-alert-line" />
-								<template #content>
-									Kollisionen:
-									<ul>
-										<li v-for="k of getErgebnismanager().getOfSchuelerKursmengeMitKollisionen(s.id).toArray(new Array<GostBlockungsergebnisKurs>())" :key="k.id" class="pl-2">{{ getErgebnismanager().getOfKursName(k.id) }}</li>
-									</ul>
-								</template>
-							</svws-ui-tooltip>
-							<svws-ui-tooltip v-else-if="!kollision(s.id).value && nichtwahl(s.id).value">
-								<span class="icon i-ri-spam-3-line" /> <template #content>
-									Nichtverteilt
-									<ul>
-										<li v-for="f of getErgebnismanager().getOfSchuelerFachwahlmengeOhneKurszuordnung(s.id).toArray(new Array<GostFachwahl>())" :key="f.fachID" class="pl-2">{{ getErgebnismanager().getFach(f.fachID).bezeichnung }}</li>
-									</ul>
-								</template>
-							</svws-ui-tooltip>
-							<svws-ui-tooltip v-else-if="kollision(s.id).value && nichtwahl(s.id).value" color="danger">
-								<span class="icon icon-error i-ri-error-warning-fill" /> <template #content>
-									<b>Kollision und Nichtverteilt:</b>
-									<br>Kollisionen:
-									<ul>
-										<li v-for="k of getErgebnismanager().getOfSchuelerKursmengeMitKollisionen(s.id).toArray(new Array<GostBlockungsergebnisKurs>())" :key="k.id" class="pl-2">{{ getErgebnismanager().getOfKursName(k.id) }}</li>
-									</ul>
-									Nichtverteilt:
-									<ul>
-										<li v-for="f of getErgebnismanager().getOfSchuelerFachwahlmengeOhneKurszuordnung(s.id).toArray(new Array<GostFachwahl>())" :key="f.fachID" class="pl-2">{{ getErgebnismanager().getFach(f.fachID).bezeichnung }}</li>
-									</ul>
-								</template>
-							</svws-ui-tooltip>
+				<template v-for="(s, index) in schuelerFilter().filtered.value" :key="index">
+					<div role="row" class="svws-ui-tr" :class="{'svws-clicked': selected === s}" :style="gridTemplateColumns" @click="selected = s">
+						<div role="cell" class="svws-ui-td svws-align-center pr-0">
+							<div class="leading-none w-5 -mb-1" :class="{ 'text-ui-danger': kollision(s.id).value, 'text-black': !kollision(s.id).value && (selected !== s), }">
+								<svws-ui-tooltip v-if="kollision(s.id).value && !nichtwahl(s.id).value" color="danger">
+									<span class="icon icon-ui-danger i-ri-alert-line" />
+									<template #content>
+										Kollisionen:
+										<ul>
+											<li v-for="k of getErgebnismanager().getOfSchuelerKursmengeMitKollisionen(s.id).toArray(new Array<GostBlockungsergebnisKurs>())" :key="k.id" class="pl-2">{{ getErgebnismanager().getOfKursName(k.id) }}</li>
+										</ul>
+									</template>
+								</svws-ui-tooltip>
+								<svws-ui-tooltip v-else-if="!kollision(s.id).value && nichtwahl(s.id).value">
+									<span class="icon i-ri-spam-3-line" /> <template #content>
+										Nichtverteilt
+										<ul>
+											<li v-for="f of getErgebnismanager().getOfSchuelerFachwahlmengeOhneKurszuordnung(s.id).toArray(new Array<GostFachwahl>())" :key="f.fachID" class="pl-2">{{ getErgebnismanager().getFach(f.fachID).bezeichnung }}</li>
+										</ul>
+									</template>
+								</svws-ui-tooltip>
+								<svws-ui-tooltip v-else-if="kollision(s.id).value && nichtwahl(s.id).value" color="danger">
+									<span class="icon icon-ui-danger i-ri-error-warning-fill" /> <template #content>
+										<b>Kollision und Nichtverteilt:</b>
+										<br>Kollisionen:
+										<ul>
+											<li v-for="k of getErgebnismanager().getOfSchuelerKursmengeMitKollisionen(s.id).toArray(new Array<GostBlockungsergebnisKurs>())" :key="k.id" class="pl-2">{{ getErgebnismanager().getOfKursName(k.id) }}</li>
+										</ul>
+										Nichtverteilt:
+										<ul>
+											<li v-for="f of getErgebnismanager().getOfSchuelerFachwahlmengeOhneKurszuordnung(s.id).toArray(new Array<GostFachwahl>())" :key="f.fachID" class="pl-2">{{ getErgebnismanager().getFach(f.fachID).bezeichnung }}</li>
+										</ul>
+									</template>
+								</svws-ui-tooltip>
+							</div>
 						</div>
-					</div>
-					<div role="cell" class="svws-ui-td svws-align-center" @click="event => fixieren_regel_toggle(fach?.id ?? schuelerFilter().kurs?.fach_id, s.id, event)">
-						<template v-if="fixierRegeln.get(s.id) === undefined">
-							<span class="icon i-ri-pushpin-line -my-0.5 opacity-0 hover:opacity-75" v-if="!((fach === undefined) && (schuelerFilter().kurs === undefined))" />
-						</template>
-						<template v-else>
-							<template v-if="fach !== undefined">
-								<span v-if="fixierRegelFach(fach?.id, s.id).value" class="icon i-ri-pushpin-fill -my-0.5 hover:opacity-75" />
-								<span v-else class="icon i-ri-pushpin-line -my-0.5 opacity-50 hover:opacity-75" />
-							</template>
-							<template v-else-if="schuelerFilter().kurs !== undefined">
-								<span v-if="fixierRegelKurs(schuelerFilter().kurs?.id, s.id).value" class="icon i-ri-pushpin-fill -my-0.5 hover:opacity-75" />
-								<span v-else class="icon i-ri-pushpin-line -my-0.5 opacity-50 hover:opacity-75" />
+						<div role="cell" class="svws-ui-td svws-align-center" @click="event => fixieren_regel_toggle(fach?.id ?? schuelerFilter().kurs?.fach_id, s.id, event)">
+							<template v-if="fixierRegeln.get(s.id) === undefined">
+								<span class="icon i-ri-pushpin-line -my-0.5 opacity-0 hover:opacity-75" v-if="!((fach === undefined) && (schuelerFilter().kurs === undefined))" />
 							</template>
 							<template v-else>
-								<span class="icon i-ri-pushpin-line -my-0.5 opacity-50" />
-							</template>
-						</template>
-					</div>
-					<div role="cell" class="svws-ui-td">
-						<div class="flex flex-row">
-							{{ s.nachname }}, {{ s.vorname }}
-							<template v-if="getDatenmanager().schuelerGet(s.id).abschlussjahrgang !== getDatenmanager().daten().abijahrgang">
-								<span class="ml-1">(Abi {{ getDatenmanager().schuelerGet(s.id).abschlussjahrgang }})</span>
-							</template>
-							<template v-if="s.status !== 2">
-								<span class="ml-1">({{ SchuelerStatus.data().getWertByKuerzel("" + s.status)?.daten(schuljahr)?.text ?? '—' }}{{ s.externeSchulNr ? ` ${s.externeSchulNr}` : '' }})</span>
+								<template v-if="fach !== undefined">
+									<span v-if="fixierRegelFach(fach?.id, s.id).value" class="icon i-ri-pushpin-fill -my-0.5 hover:opacity-75" />
+									<span v-else class="icon i-ri-pushpin-line -my-0.5 opacity-50 hover:opacity-75" />
+								</template>
+								<template v-else-if="schuelerFilter().kurs !== undefined">
+									<span v-if="fixierRegelKurs(schuelerFilter().kurs?.id, s.id).value" class="icon i-ri-pushpin-fill -my-0.5 hover:opacity-75" />
+									<span v-else class="icon i-ri-pushpin-line -my-0.5 opacity-50 hover:opacity-75" />
+								</template>
+								<template v-else>
+									<span class="icon i-ri-pushpin-line -my-0.5 opacity-50" />
+								</template>
 							</template>
 						</div>
+						<div role="cell" class="svws-ui-td">
+							<div class="flex flex-row">
+								{{ s.nachname }}, {{ s.vorname }}
+								<template v-if="getDatenmanager().schuelerGet(s.id).abschlussjahrgang !== getDatenmanager().daten().abijahrgang">
+									<span class="ml-1">(Abi {{ getDatenmanager().schuelerGet(s.id).abschlussjahrgang }})</span>
+								</template>
+								<template v-if="s.status !== 2">
+									<span class="ml-1">({{ SchuelerStatus.data().getWertByKuerzel("" + s.status)?.daten(schuljahr)?.text ?? '—' }}{{ s.externeSchulNr ? ` ${s.externeSchulNr}` : '' }})</span>
+								</template>
+							</div>
+						</div>
+						<div v-if="showGeschlecht()" role="cell" class="svws-ui-td svws-align-center pl-0">
+							<span class="w-full text-center">{{ Geschlecht.fromValue(s.geschlecht)?.kuerzel }}</span>
+						</div>
+						<div v-if="fach !== undefined || schuelerFilter().kurs !== undefined" role="cell" class="svws-ui-td svws-align-center">
+							<span>
+								<span v-if="istSchriftlich(s.id) === 's'" class="icon inline-block i-ri-draft-line -my-0.5" />
+								<span v-else-if="istSchriftlich(s.id) === 'm'" class="icon inline-block i-ri-chat-1-line -my-0.5 opacity-75" />
+								<span v-else class="icon inline-block i-ri-question-mark -my-0.5 opacity-75" />
+							</span>
+						</div>
 					</div>
-					<div v-if="showGeschlecht()" role="cell" class="svws-ui-td svws-align-center pl-0">
-						<span class="w-full text-center">{{ Geschlecht.fromValue(s.geschlecht)?.kuerzel }}</span>
-					</div>
-					<div v-if="fach !== undefined || schuelerFilter().kurs !== undefined" role="cell" class="svws-ui-td svws-align-center">
-						<span>
-							<span v-if="istSchriftlich(s.id) === 's'" class="icon inline-block i-ri-draft-line -my-0.5" />
-							<span v-else-if="istSchriftlich(s.id) === 'm'" class="icon inline-block i-ri-chat-1-line -my-0.5 opacity-75" />
-							<span v-else class="icon inline-block i-ri-question-mark -my-0.5 opacity-75" />
-						</span>
-					</div>
-				</div>
+				</template>
 			</template>
 			<template #footer>
-				<div role="row" class="svws-ui-tr">
+				<div role="row" class="svws-ui-tr" :style="gridTemplateColumns">
 					<div class="svws-ui-td col-span-full w-full">
 						<div class="grid grid-cols-4 w-full gap-y-2 text-button font-medium py-1 normal-nums pl-5" :class="(fach !== undefined) || (schuelerFilter().kurs !== undefined) ? 'pt-2' : 'py-1'">
-							<template v-if="fach !== undefined || schuelerFilter().kurs !== undefined">
+							<template v-if="(fach !== undefined) || (schuelerFilter().kurs !== undefined)">
 								<span class="col-span-2 inline-flex gap-0.5" :class="{'opacity-50 font-medium': !schuelerFilter().statistics.value.schriftlich}">
 									<span class="icon i-ri-draft-line -m-0.5 mr-0.5" />{{ schuelerFilter().statistics.value.schriftlich }} schriftlich
 								</span>
@@ -189,7 +191,7 @@
 	import { computed } from "vue";
 	import type { DataTableColumn } from "@ui";
 	import type { KursplanungSchuelerAuswahlProps } from "./SGostKursplanungSchuelerAuswahlProps";
-	import type { GostBlockungKurs, GostBlockungsergebnisKurs, GostFach, GostFachwahl, Schueler } from "@core";
+	import type { GostBlockungsergebnisKurs, GostFach, GostFachwahl, Schueler } from "@core";
 	import { Geschlecht, GostKursart, GostKursblockungRegelTyp, SchuelerStatus, SetUtils } from "@core";
 
 	const props = defineProps<KursplanungSchuelerAuswahlProps>();
@@ -207,7 +209,14 @@
 	})
 
 	const selected = computed<Schueler | undefined>({
-		get: () => props.schueler,
+		get: () => {
+			if (props.schueler !== undefined && props.schuelerFilter().filtered.value.includes(props.schueler))
+				return props.schueler
+			if (props.schuelerFilter().filtered.value.length > 0) {
+				void props.setSchueler(props.schuelerFilter().filtered.value[0])
+			}
+			return undefined;
+		},
 		set: (value) => {
 			if (value !== undefined)
 				void props.setSchueler(value);
@@ -256,10 +265,13 @@
 		];
 		if (props.showGeschlecht())
 			cols.push({key: 'geschlecht', label: 'G', tooltip: "Geschlecht", fixedWidth: 2, align: "center"});
-		if (fach.value !== undefined || props.schuelerFilter().kurs !== undefined)
+		if ((fach.value !== undefined) || (props.schuelerFilter().kurs !== undefined))
 			cols.push({key: 'schriftlichkeit', label: 'W', tooltip: 'Wahl: schriftlich oder mündlich', fixedWidth: 2, align: "center"});
 		return cols;
 	})
+
+	const gridTemplateColumns = computed<string> (() => "grid-template-columns: 1.75rem 2rem minmax(4rem, 1fr)" + (props.showGeschlecht() ? " 2rem" : "") +
+		(((fach.value !== undefined) || (props.schuelerFilter().kurs !== undefined)) ? " 2rem" : ""));
 
 	const fixierRegeln = computed(() => {
 		const regeln = props.getDatenmanager().regelGetListe();
@@ -323,3 +335,12 @@
 	}
 
 </script>
+
+<style>
+
+	.svws-ui-table-filter--advanced {
+		display: flex;
+		flex-direction: column;
+	}
+
+</style>

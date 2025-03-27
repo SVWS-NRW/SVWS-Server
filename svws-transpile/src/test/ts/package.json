@@ -3,7 +3,7 @@
 	"description": "SVWS-Server-Projekt: Tests für den erzeugten Transpiler-Code",
 	"author": "MSB NRW",
 	"license": "BSD-3-Clause",
-	"version": "1.0.4",
+	"version": "1.0.5",
 	"files": [ "dist" ],
 	"main": "./dist/index.js",
 	"type": "module",
@@ -13,8 +13,6 @@
 		"test:run": "vitest run --coverage",
 		"test:runAgainstTestEnv": "vitest run --coverage.reporter=html",
 		"lint": "eslint 'src/**/*.{ts,vue}' --cache",
-		"lint-fix": "eslint 'src/**/*.{ts,vue}' --cache --fix",
-		"build": "tsc",
-		"check-licenses": "license-checker-rseidelsohn --summary --unknown"
+		"build": "tsc"
 	}
 }

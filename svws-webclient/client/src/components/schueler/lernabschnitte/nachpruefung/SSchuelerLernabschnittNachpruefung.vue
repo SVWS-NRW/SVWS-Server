@@ -1,5 +1,5 @@
 <template>
-	<div class="content">
+	<div class="page page-grid-cards">
 		<svws-ui-content-card>
 			<svws-ui-todo />
 			<div v-if="manager().lernabschnittGet().nachpruefungen !== null">
@@ -23,12 +23,3 @@
 	const props = defineProps<SchuelerLernabschnittNachpruefungProps>();
 
 </script>
-
-
-<style lang="postcss" scoped>
-
-	.content {
-		@apply w-full h-full grid grid-cols-2;
-	}
-
-</style>

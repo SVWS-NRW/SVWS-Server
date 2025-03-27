@@ -83,6 +83,52 @@ export class SchuldateiUtils extends JavaObject {
 	}
 
 	/**
+	 * Ermittlung des Schuljahres in der Zeitpunkt des angegebenen Datumstrings liegt
+	 * Wenn die Gültigkeit von Katalogeinträgen innerhalb eines Schuljahres wechseln, so ist der alte Eintrag
+	 * bis zum Ende des Schuljahres gültig und der neue Eintrag erst ab kommenden Schuljahr.
+	 * Eintrag1: "gueltigab": "01.01.1970",	"gueltigbis": "07.03.2022"
+	 * Eintrag2: "gueltigab": "08.03.2022",	"gueltigbis": "31.12.9999"
+	 * Eintrag1 ist dann in den Schuljahren bis 2021 gültig und Eintrag2 ab Schuljahr 2022.
+	 *
+	 * Ein Eintrag, der nur eine Gültigkeit innerhalb eines Schuljahres hat wird verworfen.
+	 *
+	 *
+	 * @param ab		das gueltigab Datum als String
+	 *
+	 * @return @NotNull INTEGER  , 9999 gilt für immer (Jahr .gte. 3000), sonst das Schuljahr
+	 *
+	 * @throws IllegalArgumentException im Fehlerfall
+	 */
+	public static schuljahrGueltigAb(ab : string) : number {
+		const dmyAb : Array<number> = SchuldateiUtils.splitDate(ab);
+		let jahrAb : number = dmyAb[2];
+		if ((dmyAb[1] > 8) || ((dmyAb[1] === 8) && (dmyAb[0] > 1)))
+			jahrAb++;
+		return jahrAb;
+	}
+
+	/**
+	 * Ermittlung des Schuljahres in der Zeitpunkt des angegebenen Datumstrings liegt
+	 * Wenn die Gültigkeit von Katalogeinträgen innerhalb eines Schuljahres wechseln, so ist der alte Eintrag
+	 * bis zum Ende des Schuljahres gültig und der neue Eintrag erst ab kommenden Schuljahr.
+	 * Eintrag1: "gueltigab": "01.01.1970",	"gueltigbis": "07.03.2022"
+	 * Eintrag2: "gueltigab": "08.03.2022",	"gueltigbis": "31.12.9999"
+	 * Eintrag1 ist dann in den Schuljahren bis 2021 gültig und Eintrag2 ab Schuljahr 2022.
+	 *
+	 * Ein Eintrag, der nur eine Gültigkeit innerhalb eines Schuljahres hat wird verworfen.
+	 *
+	 *
+	 * @param bis		das gueltigbis Datum als String
+	 *
+	 * @return @NotNull INTEGER  , 9999 gilt für immer (Jahr .gte. 3000), sonst das Schuljahr
+	 *
+	 * @throws IllegalArgumentException im Fehlerfall
+	 */
+	public static schuljahrGueltigBis(bis : string) : number {
+		return SchuldateiUtils.schuljahrAusDatum(bis);
+	}
+
+	/**
 	 * Prüft, ob das Datum a früher liegt als das Datum b. Es wird eine Datumsangabe der Form
 	 * 'DD.MM.YYYY' erwartet,
 	 *

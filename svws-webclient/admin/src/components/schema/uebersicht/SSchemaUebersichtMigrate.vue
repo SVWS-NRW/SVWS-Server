@@ -1,6 +1,7 @@
 <template>
-	<svws-ui-action-button title="Schild2-Schema migrieren" description="Daten werden über die Auswahl einer existierenden Schild 2-Datenbank importiert" icon="i-ri-database-2-line" :action-function :action-disabled="(migrationQuellinformationen().dbms === 'mdb' && !file) || (zielUsername === 'root')" :is-loading="loadingFunction().value" action-label="Migrieren" :is-active @click="e => $emit('click', e)">
-		<div class="flex flex-col">
+	<ui-card icon="i-ri-database-2-line" title="Schild2-Schema migrieren" subtitle="Daten werden über die Auswahl einer existierenden Schild 2-Datenbank importiert"
+		:is-open @update:is-open="(open) => emit('opened', open)">
+		<div class="space-y-2 mt-1">
 			<svws-ui-select v-model="migrationQuellinformationen().dbms" :items="items.keys()" :item-text="i => items.get(i) || ''" title="Datenbank" class="mb-8" />
 			<div class="flex flex-col items-start gap-3">
 				<div v-if="migrationQuellinformationen().dbms !== 'mdb'" class="flex flex-col gap-2">
@@ -20,7 +21,7 @@
 					</svws-ui-input-wrapper>
 					<div v-else class="flex flex-col gap-2 -mt-5">
 						<div class="font-bold text-button">Quell-Datenbank: Access-Datei (.mdb) hochladen</div>
-						<input type="file" @change="onFileChanged" :disabled="loadingFunction().value" accept=".mdb">
+						<input type="file" @change="onFileChanged" :disabled="loading" accept=".mdb">
 					</div>
 					<svws-ui-input-wrapper v-if="targetSchema === undefined">
 						<div class="text-button -mb-1 mt-2">Ziel-Datenbank (wird erstellt)</div>
@@ -31,12 +32,19 @@
 				</div>
 			</div>
 		</div>
-	</svws-ui-action-button>
+		<template #buttonFooterLeft>
+			<svws-ui-button :disabled="(migrationQuellinformationen().dbms === 'mdb' && !file) || (zielUsername === 'root') || loading" title="Migrieren" @click="actionFunction" :is-loading="loading" class="w-fit">
+				<svws-ui-spinner v-if="loading" spinning />
+				<span v-else class="icon i-ri-play-line" />
+				Migrieren
+			</svws-ui-button>
+		</template>
+	</ui-card>
 </template>
 
 <script setup lang="ts">
 
-	import { type ShallowRef, shallowRef } from "vue";
+	import { shallowRef } from "vue";
 	import type { SchemaMigrationQuelle } from "../SchemaMigrationQuelle";
 	import type { List } from "@core/java/util/List";
 	import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
@@ -45,15 +53,15 @@
 		migrateSchema: (formData: FormData) => Promise<SimpleOperationResponse>;
 		targetSchema?: string;
 		migrationQuellinformationen: () => SchemaMigrationQuelle;
-		logsFunction: () => ShallowRef<List<string | null> | undefined>;
-		statusFunction: () => ShallowRef<boolean | undefined>;
-		loadingFunction: () => ShallowRef<boolean>;
-		isActive: boolean;
+		setStatus: (loading: boolean, status?: boolean, logs?: List<string | null>) => void;
+		loading: boolean;
+		isOpen: boolean;
 	}>();
 
 	const emit = defineEmits<{
-		'click': [value: MouseEvent];
+		'opened': [value: boolean];
 	}>();
+
 
 	const items = new Map<string, string>();
 
@@ -67,7 +75,7 @@
 	const zielUserPassword = shallowRef("");
 
 	async function actionFunction() {
-		props.loadingFunction().value = true;
+		props.setStatus(true);
 		const formData = new FormData();
 		if (file.value !== null) {
 			formData.append("database", file.value);
@@ -84,16 +92,16 @@
 		formData.append('schemaUserPassword', zielUserPassword.value);
 		try {
 			const result = await props.migrateSchema(formData);
-			props.logsFunction().value = result.log;
-			props.statusFunction().value = result.success;
+			props.setStatus(false, result.success, result.log);
+			if (result.success) {
+				zielSchema.value = '';
+				zielUserPassword.value = '';
+				zielUsername.value = '';
+			}
 		} catch (e) {
 			console.log(e);
-			props.statusFunction().value = false;
+			props.setStatus(false);
 		}
-		props.loadingFunction().value = false;
-		zielSchema.value = '';
-		zielUserPassword.value = '';
-		zielUsername.value = '';
 	}
 
 	const file = shallowRef<File | null>(null);
@@ -102,13 +110,6 @@
 		const target = event.target as HTMLInputElement;
 		if (target.files)
 			file.value = target.files[0];
-		clear();
-	}
-
-	function clear() {
-		props.loadingFunction().value = false;
-		props.logsFunction().value = undefined;
-		props.statusFunction().value = undefined;
 	}
 
 </script>

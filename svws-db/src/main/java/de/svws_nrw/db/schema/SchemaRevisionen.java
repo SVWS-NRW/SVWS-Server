@@ -25,6 +25,10 @@ import de.svws_nrw.db.schema.revisionen.Revision29Updates;
 import de.svws_nrw.db.schema.revisionen.Revision2Updates;
 import de.svws_nrw.db.schema.revisionen.Revision30Updates;
 import de.svws_nrw.db.schema.revisionen.Revision31Updates;
+import de.svws_nrw.db.schema.revisionen.Revision33Updates;
+import de.svws_nrw.db.schema.revisionen.Revision34Updates;
+import de.svws_nrw.db.schema.revisionen.Revision35Updates;
+import de.svws_nrw.db.schema.revisionen.Revision36Updates;
 import de.svws_nrw.db.schema.revisionen.Revision3Updates;
 import de.svws_nrw.db.schema.revisionen.Revision4Updates;
 import de.svws_nrw.db.schema.revisionen.Revision6Updates;
@@ -198,7 +202,22 @@ public enum SchemaRevisionen {
 	REV_30(30, "2024-12-05"),
 
 	/** Ergänzen der Klassen-Tabellen um die Schulgliederung und die Organisationsform, sofern diese über Fachklasse, Vorgänger- oder Nachfolgeklasse ermittelt werden können. */
-	REV_31(31, "2025-01-23");
+	REV_31(31, "2025-01-23"),
+
+	/** Erweitern der OAuth2-Client-Tabelle um die Informationen zum Bearer-Token dem TLS-Zertifikat des Servers. */
+	REV_32(32, "2025-02-21"),
+
+	/** Ergänzen von evtl. fehlenden Auto-Inkrement-Trigger auf der Tabelle SchuelerMerkmale */
+	REV_33(33, "2025-02-24"),
+
+	/** Anpassen der Tabelle Kurs_Schueler: Speichere auch die Leistungs-ID, in der der Kurs zugeordnet wird */
+	REV_34(34, "2025-03-02"),
+
+	/** Anpassungen der ASD-Jahrgangsangaben für das WBK */
+	REV_35(35, "2025-03-03"),
+
+	/** Anpassungen der ASD-Jahrgangsangaben für die GS */
+	REV_36(36, "2025-03-12");
 
 
 	/**
@@ -206,14 +225,14 @@ public enum SchemaRevisionen {
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_31;
+	public static final SchemaRevisionen maxRevision = REV_36;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_31;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_36;
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */
 	private static Map<Long, SchemaRevisionen> _mapByNumber = null;
@@ -297,6 +316,10 @@ public enum SchemaRevisionen {
 				case REV_29 -> new Revision29Updates();
 				case REV_30 -> new Revision30Updates();
 				case REV_31 -> new Revision31Updates();
+				case REV_33 -> new Revision33Updates();
+				case REV_34 -> new Revision34Updates();
+				case REV_35 -> new Revision35Updates();
+				case REV_36 -> new Revision36Updates();
 				default -> new RevisionNoUpdates(this);
 			};
 		}

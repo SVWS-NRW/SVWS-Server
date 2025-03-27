@@ -1,4 +1,15 @@
 <?php
+	/**
+	 * Endpunkt für das Patchen von ENM-Teilleistungen.
+	 *
+	 * @httpMethod POST
+	 * @auth (Basic) Lehrer Username und Kennwort benötigt
+	 * @param {id: number, patch: {Partial<ENMTeilleistung>}} Das Patch-Objekt, das die zu aktualisierenden Teilleistungen enthält.
+	 * Folgende Werte können durch das Patch Objekt überschrieben werden: artID, datum, bemerkung, note
+	 *
+	 * @return void
+	 * @responseCode 200
+	 */
 
 	// Initialisierung
 	require_once $_SERVER['DOCUMENT_ROOT'].'/../app/init.php';
@@ -16,5 +27,5 @@
 	// Lese den Patch aus dem Request ein
 	$patch = Http::getBodyJsonObject();
 	$enmDatenManager->patchENMTeilleistung($db, $lehrer, $patch);
-
+i
 ?>

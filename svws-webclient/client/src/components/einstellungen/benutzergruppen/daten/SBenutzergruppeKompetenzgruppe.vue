@@ -2,12 +2,12 @@
 	<div class="svws-ui-tr" role="row">
 		<div class="svws-ui-td" role="cell">
 			<div class="flex items-center gap-1">
-				<svws-ui-button type="icon" size="small" @click="collapsed = !collapsed" :class="{'pointer-events-none': !hatSubKompetenzen}" :tabindex="!hatSubKompetenzen ? -1 : ''">
+				<div type="icon" size="small" @click="collapsed = !collapsed" :class="hatSubKompetenzen ? 'cursor-pointer' : 'pointer-events-none'" :tabindex="!hatSubKompetenzen ? -1 : ''">
 					<template v-if="hatSubKompetenzen">
 						<span class="icon i-ri-arrow-right-s-line" v-if="collapsed" />
 						<span class="icon i-ri-arrow-down-s-line" v-else />
 					</template>
-				</svws-ui-button>
+				</div>
 				<svws-ui-checkbox v-model="selected" :indeterminate="indeterminate" :disabled="istAdmin">
 					{{ kompetenzgruppe.daten.bezeichnung }}
 				</svws-ui-checkbox>
@@ -55,12 +55,12 @@
 				void props.addBenutzerKompetenzGruppe(props.kompetenzgruppe);
 			else
 				void props.removeBenutzerKompetenzGruppe(props.kompetenzgruppe);
-		}
+		},
 	});
 
 </script>
 
-<style scoped lang="postcss">
+<style scoped>
 
 	.svws-ui-tr {
 		grid-template-columns: minmax(4rem, 3fr) 0.15fr;

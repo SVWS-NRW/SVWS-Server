@@ -1,5 +1,4 @@
 import "./assets/styles/index.css";
-import "./assets/styles/colors.css";
 
 // Regex: \ +(.*):.*'(.*)'\).*
 // Replace: export { default as $1 } from "$2";
@@ -40,13 +39,12 @@ export { default as StundenplanRaum } from "./components/stundenplan/Stundenplan
 export { default as StundenplanSchueler } from "./components/stundenplan/StundenplanSchueler.vue";
 export { default as StundenplanZeitrasterEinstellungen } from "./components/stundenplan/StundenplanZeitrasterEinstellungen.vue";
 export { default as StundenplanZeitrasterJsonImportModal } from "./components/stundenplan/StundenplanZeitrasterJsonImportModal.vue";
-export { default as SvwsUiActionButton } from "./ui/layout/SvwsUiActionButton.vue";
 export { default as SvwsUiAppLayout } from "./ui/layout/SvwsUiAppLayout.vue";
 export { default as SvwsUiAvatar } from "./ui/SvwsUiAvatar.vue";
 export { default as SvwsUiBadge } from "./ui/SvwsUiBadge.vue";
 export { default as SvwsUiButton } from "./ui/controls/SvwsUiButton.vue";
 export { default as SvwsUiButtonSelect } from "./ui/controls/SvwsUiButtonSelect.vue";
-export { default as SvwsUiCard } from "./ui/layout/SvwsUiCard.vue";
+export { default as UiCard } from "./ui/layout/UiCard.vue";
 export { default as SvwsUiCheckbox } from "./ui/controls/SvwsUiCheckbox.vue";
 export { default as SvwsUiCheckpointModal } from "./ui/modal/SvwsUiCheckpointModal.vue";
 export { default as SvwsUiContentCard } from "./ui/layout/SvwsUiContentCard.vue";
@@ -65,7 +63,6 @@ export { default as SvwsUiNotification } from "./ui/SvwsUiNotification.vue";
 export { default as SvwsUiNotifications } from "./ui/SvwsUiNotifications.vue";
 export { default as SvwsUiRadioGroup } from "./ui/controls/SvwsUiRadioGroup.vue";
 export { default as SvwsUiRadioOption } from "./ui/controls/SvwsUiRadioOption.vue";
-export { default as SvwsUiSecondaryMenu } from "./ui/nav/SvwsUiSecondaryMenu.vue";
 export { default as SvwsUiSecondaryMenuNavigation } from "./ui/nav/SvwsUiSecondaryMenuNavigation.vue";
 export { default as SvwsUiSelect } from "./ui/controls/SvwsUiSelect.vue";
 export { default as SvwsUiSpacing } from "./ui/layout/SvwsUiSpacing.vue";
@@ -85,8 +82,11 @@ export type { DataTableColumn, SortByAndOrder } from "./types";
 export type { TabData } from "./ui/nav/TabData";
 
 // Class exports
+export { AppMenuManager } from "./ui/nav/AppMenuManager";
 export { TabManager } from "./ui/nav/TabManager";
 export { Checkpoint } from "./ui/modal/Checkpoint";
+export { Color } from "./ui/Color";
 
 // Enums
+export { AppMenuGroup } from "./ui/nav/AppMenuGroup";
 export { ViewType } from "./ui/nav/ViewType";

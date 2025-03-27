@@ -35,6 +35,8 @@ export class GostKlausurenCollectionData extends JavaObject {
 	 */
 	public termine : List<GostKlausurtermin> = new ArrayList<GostKlausurtermin>();
 
+	public description : string | null = null;
+
 
 	/**
 	 * Default-Konstruktor
@@ -81,6 +83,9 @@ export class GostKlausurenCollectionData extends JavaObject {
 				result.termine.add(GostKlausurtermin.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
+		if (obj.description === undefined)
+			throw new Error('invalid json format, missing attribute description');
+		result.description = obj.description;
 		return result;
 	}
 
@@ -126,6 +131,7 @@ export class GostKlausurenCollectionData extends JavaObject {
 				result += ',';
 		}
 		result += ' ]' + ',';
+		result += '"description" : ' + JSON.stringify(obj.description) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -182,6 +188,9 @@ export class GostKlausurenCollectionData extends JavaObject {
 					result += ',';
 			}
 			result += ' ]' + ',';
+		}
+		if (obj.description !== undefined) {
+			result += '"description" : ' + JSON.stringify(obj.description) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

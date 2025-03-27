@@ -1,8 +1,8 @@
 {
-	"version": 5,
+	"version": 6,
 	"daten": [ {
 		"bezeichner": "AB",
-		"idHistorie": 1,
+		"idStatistik": "1",
 		"historie": [ {
 			"id": 1000000,
 			"schluessel": "AB",
@@ -25,7 +25,7 @@
 		} ]
 	}, {
 		"bezeichner": "AG",
-		"idHistorie": 2,
+		"idStatistik": "2",
 		"historie": [ {
 			"id": 2000000,
 			"schluessel": "AG",
@@ -48,7 +48,7 @@
 		} ]
 	}, {
 		"bezeichner": "AH",
-		"idHistorie": 3,
+		"idStatistik": "3",
 		"historie": [ {
 			"id": 3000000,
 			"schluessel": "AH",
@@ -76,7 +76,7 @@
 		} ]
 	}, {
 		"bezeichner": "AL",
-		"idHistorie": 4,
+		"idStatistik": "4",
 		"historie": [ {
 			"id": 4000000,
 			"schluessel": "AL",
@@ -104,7 +104,7 @@
 		} ]
 	}, {
 		"bezeichner": "AM",
-		"idHistorie": 5,
+		"idStatistik": "5",
 		"historie": [ {
 			"id": 5000000,
 			"schluessel": "AM",
@@ -138,7 +138,7 @@
 		} ]
 	}, {
 		"bezeichner": "AR",
-		"idHistorie": 6,
+		"idStatistik": "6",
 		"historie": [ {
 			"id": 6000000,
 			"schluessel": "AR",
@@ -172,7 +172,7 @@
 		} ]
 	}, {
 		"bezeichner": "AT",
-		"idHistorie": 7,
+		"idStatistik": "7",
 		"historie": [ {
 			"id": 7000000,
 			"schluessel": "AT",
@@ -200,7 +200,7 @@
 		} ]
 	}, {
 		"bezeichner": "AV",
-		"idHistorie": 8,
+		"idStatistik": "8",
 		"historie": [ {
 			"id": 8000000,
 			"schluessel": "AV",
@@ -223,7 +223,7 @@
 		} ]
 	}, {
 		"bezeichner": "AW",
-		"idHistorie": 9,
+		"idStatistik": "9",
 		"historie": [ {
 			"id": 9000000,
 			"schluessel": "AW",
@@ -251,7 +251,7 @@
 		} ]
 	}, {
 		"bezeichner": "AX",
-		"idHistorie": 10,
+		"idStatistik": "10",
 		"historie": [ {
 			"id": 10000000,
 			"schluessel": "AX",
@@ -276,7 +276,7 @@
 		} ]
 	}, {
 		"bezeichner": "AY",
-		"idHistorie": 11,
+		"idStatistik": "11",
 		"historie": [ {
 			"id": 11000000,
 			"schluessel": "AY",
@@ -301,7 +301,7 @@
 		} ]
 	}, {
 		"bezeichner": "BA",
-		"idHistorie": 12,
+		"idStatistik": "12",
 		"historie": [ {
 			"id": 12000000,
 			"schluessel": "BA",
@@ -324,7 +324,7 @@
 		} ]
 	}, {
 		"bezeichner": "BF",
-		"idHistorie": 13,
+		"idStatistik": "13",
 		"historie": [ {
 			"id": 13000000,
 			"schluessel": "BF",
@@ -347,7 +347,7 @@
 		} ]
 	}, {
 		"bezeichner": "BG",
-		"idHistorie": 14,
+		"idStatistik": "14",
 		"historie": [ {
 			"id": 14000000,
 			"schluessel": "BG",
@@ -370,7 +370,7 @@
 		} ]
 	}, {
 		"bezeichner": "BH",
-		"idHistorie": 15,
+		"idStatistik": "15",
 		"historie": [ {
 			"id": 15000000,
 			"schluessel": "BH",
@@ -402,7 +402,7 @@
 		} ]
 	}, {
 		"bezeichner": "BI",
-		"idHistorie": 16,
+		"idStatistik": "16",
 		"historie": [ {
 			"id": 16000000,
 			"schluessel": "BI",
@@ -438,7 +438,7 @@
 		} ]
 	}, {
 		"bezeichner": "BK",
-		"idHistorie": 17,
+		"idStatistik": "17",
 		"historie": [ {
 			"id": 17000000,
 			"schluessel": "BK",
@@ -461,7 +461,7 @@
 		} ]
 	}, {
 		"bezeichner": "BM",
-		"idHistorie": 18,
+		"idStatistik": "18",
 		"historie": [ {
 			"id": 18000000,
 			"schluessel": "BM",
@@ -495,7 +495,7 @@
 		} ]
 	}, {
 		"bezeichner": "BN",
-		"idHistorie": 19,
+		"idStatistik": "19",
 		"historie": [ {
 			"id": 19000000,
 			"schluessel": "BN",
@@ -517,7 +517,7 @@
 		} ]
 	}, {
 		"bezeichner": "BP",
-		"idHistorie": 20,
+		"idStatistik": "20",
 		"historie": [ {
 			"id": 20000000,
 			"schluessel": "BP",
@@ -540,7 +540,7 @@
 		} ]
 	}, {
 		"bezeichner": "BR",
-		"idHistorie": 21,
+		"idStatistik": "21",
 		"historie": [ {
 			"id": 21000000,
 			"schluessel": "BR",
@@ -563,7 +563,7 @@
 		} ]
 	}, {
 		"bezeichner": "BS",
-		"idHistorie": 22,
+		"idStatistik": "22",
 		"historie": [ {
 			"id": 22000000,
 			"schluessel": "BS",
@@ -586,7 +586,7 @@
 		} ]
 	}, {
 		"bezeichner": "BV",
-		"idHistorie": 23,
+		"idStatistik": "23",
 		"historie": [ {
 			"id": 23000000,
 			"schluessel": "BV",
@@ -609,7 +609,7 @@
 		} ]
 	}, {
 		"bezeichner": "BW",
-		"idHistorie": 24,
+		"idStatistik": "24",
 		"historie": [ {
 			"id": 24000000,
 			"schluessel": "BW",
@@ -632,7 +632,7 @@
 		} ]
 	}, {
 		"bezeichner": "BY",
-		"idHistorie": 25,
+		"idStatistik": "25",
 		"historie": [ {
 			"id": 25000000,
 			"schluessel": "BY",
@@ -655,7 +655,7 @@
 		} ]
 	}, {
 		"bezeichner": "C",
-		"idHistorie": 26,
+		"idStatistik": "26",
 		"historie": [ {
 			"id": 26000000,
 			"schluessel": "C",
@@ -679,7 +679,7 @@
 		} ]
 	}, {
 		"bezeichner": "C0",
-		"idHistorie": 27,
+		"idStatistik": "27",
 		"historie": [ {
 			"id": 27000000,
 			"schluessel": "C0",
@@ -725,7 +725,7 @@
 		} ]
 	}, {
 		"bezeichner": "C1",
-		"idHistorie": 28,
+		"idStatistik": "28",
 		"historie": [ {
 			"id": 28000000,
 			"schluessel": "C1",
@@ -751,7 +751,7 @@
 		} ]
 	}, {
 		"bezeichner": "C5",
-		"idHistorie": 29,
+		"idStatistik": "29",
 		"historie": [ {
 			"id": 29000000,
 			"schluessel": "C5",
@@ -780,7 +780,7 @@
 		} ]
 	}, {
 		"bezeichner": "C6",
-		"idHistorie": 30,
+		"idStatistik": "30",
 		"historie": [ {
 			"id": 30000000,
 			"schluessel": "C6",
@@ -809,7 +809,7 @@
 		} ]
 	}, {
 		"bezeichner": "C7",
-		"idHistorie": 31,
+		"idStatistik": "31",
 		"historie": [ {
 			"id": 31000000,
 			"schluessel": "C7",
@@ -837,7 +837,7 @@
 		} ]
 	}, {
 		"bezeichner": "C8",
-		"idHistorie": 32,
+		"idStatistik": "32",
 		"historie": [ {
 			"id": 32000000,
 			"schluessel": "C8",
@@ -866,7 +866,7 @@
 		} ]
 	}, {
 		"bezeichner": "C9",
-		"idHistorie": 33,
+		"idStatistik": "33",
 		"historie": [ {
 			"id": 33000000,
 			"schluessel": "C9",
@@ -893,7 +893,7 @@
 		} ]
 	}, {
 		"bezeichner": "CH",
-		"idHistorie": 34,
+		"idStatistik": "34",
 		"historie": [ {
 			"id": 34000000,
 			"schluessel": "CH",
@@ -929,7 +929,7 @@
 		} ]
 	}, {
 		"bezeichner": "CM",
-		"idHistorie": 35,
+		"idStatistik": "35",
 		"historie": [ {
 			"id": 35000000,
 			"schluessel": "CM",
@@ -963,7 +963,7 @@
 		} ]
 	}, {
 		"bezeichner": "CQ",
-		"idHistorie": 36,
+		"idStatistik": "36",
 		"historie": [ {
 			"id": 36000000,
 			"schluessel": "CQ",
@@ -990,7 +990,7 @@
 		} ]
 	}, {
 		"bezeichner": "D",
-		"idHistorie": 37,
+		"idStatistik": "37",
 		"historie": [ {
 			"id": 37000000,
 			"schluessel": "D",
@@ -1027,7 +1027,7 @@
 		} ]
 	}, {
 		"bezeichner": "DB",
-		"idHistorie": 38,
+		"idStatistik": "38",
 		"historie": [ {
 			"id": 38000000,
 			"schluessel": "DB",
@@ -1050,7 +1050,7 @@
 		} ]
 	}, {
 		"bezeichner": "DH",
-		"idHistorie": 39,
+		"idStatistik": "39",
 		"historie": [ {
 			"id": 39000000,
 			"schluessel": "DH",
@@ -1082,7 +1082,7 @@
 		} ]
 	}, {
 		"bezeichner": "DM",
-		"idHistorie": 40,
+		"idStatistik": "40",
 		"historie": [ {
 			"id": 40000000,
 			"schluessel": "DM",
@@ -1105,7 +1105,7 @@
 		} ]
 	}, {
 		"bezeichner": "DS",
-		"idHistorie": 41,
+		"idStatistik": "41",
 		"historie": [ {
 			"id": 41000000,
 			"schluessel": "DS",
@@ -1131,7 +1131,7 @@
 		} ]
 	}, {
 		"bezeichner": "DV",
-		"idHistorie": 42,
+		"idStatistik": "42",
 		"historie": [ {
 			"id": 42000000,
 			"schluessel": "DV",
@@ -1154,7 +1154,7 @@
 		} ]
 	}, {
 		"bezeichner": "E",
-		"idHistorie": 43,
+		"idStatistik": "43",
 		"historie": [ {
 			"id": 43000000,
 			"schluessel": "E",
@@ -1193,7 +1193,7 @@
 		} ]
 	}, {
 		"bezeichner": "EB",
-		"idHistorie": 44,
+		"idStatistik": "44",
 		"historie": [ {
 			"id": 44000000,
 			"schluessel": "EB",
@@ -1218,7 +1218,7 @@
 		} ]
 	}, {
 		"bezeichner": "EH",
-		"idHistorie": 45,
+		"idStatistik": "45",
 		"historie": [ {
 			"id": 45000000,
 			"schluessel": "EH",
@@ -1250,7 +1250,7 @@
 		} ]
 	}, {
 		"bezeichner": "EK",
-		"idHistorie": 46,
+		"idStatistik": "46",
 		"historie": [ {
 			"id": 46000000,
 			"schluessel": "EK",
@@ -1286,7 +1286,7 @@
 		} ]
 	}, {
 		"bezeichner": "EL",
-		"idHistorie": 47,
+		"idStatistik": "47",
 		"historie": [ {
 			"id": 47000000,
 			"schluessel": "EL",
@@ -1338,7 +1338,7 @@
 		} ]
 	}, {
 		"bezeichner": "EM",
-		"idHistorie": 48,
+		"idStatistik": "48",
 		"historie": [ {
 			"id": 48000000,
 			"schluessel": "EM",
@@ -1372,7 +1372,7 @@
 		} ]
 	}, {
 		"bezeichner": "EN",
-		"idHistorie": 49,
+		"idStatistik": "49",
 		"historie": [ {
 			"id": 49000000,
 			"schluessel": "EN",
@@ -1409,7 +1409,7 @@
 		} ]
 	}, {
 		"bezeichner": "ER",
-		"idHistorie": 50,
+		"idStatistik": "50",
 		"historie": [ {
 			"id": 50000000,
 			"schluessel": "ER",
@@ -1446,7 +1446,7 @@
 		} ]
 	}, {
 		"bezeichner": "F",
-		"idHistorie": 51,
+		"idStatistik": "51",
 		"historie": [ {
 			"id": 51000000,
 			"schluessel": "F",
@@ -1477,7 +1477,7 @@
 		} ]
 	}, {
 		"bezeichner": "F0",
-		"idHistorie": 52,
+		"idStatistik": "52",
 		"historie": [ {
 			"id": 52000000,
 			"schluessel": "F0",
@@ -1523,7 +1523,7 @@
 		} ]
 	}, {
 		"bezeichner": "F1",
-		"idHistorie": 53,
+		"idStatistik": "53",
 		"historie": [ {
 			"id": 53000000,
 			"schluessel": "F1",
@@ -1549,7 +1549,7 @@
 		} ]
 	}, {
 		"bezeichner": "F5",
-		"idHistorie": 54,
+		"idStatistik": "54",
 		"historie": [ {
 			"id": 54000000,
 			"schluessel": "F5",
@@ -1578,7 +1578,7 @@
 		} ]
 	}, {
 		"bezeichner": "F6",
-		"idHistorie": 55,
+		"idStatistik": "55",
 		"historie": [ {
 			"id": 55000000,
 			"schluessel": "F6",
@@ -1607,7 +1607,7 @@
 		} ]
 	}, {
 		"bezeichner": "F7",
-		"idHistorie": 56,
+		"idStatistik": "56",
 		"historie": [ {
 			"id": 56000000,
 			"schluessel": "F7",
@@ -1635,7 +1635,7 @@
 		} ]
 	}, {
 		"bezeichner": "F8",
-		"idHistorie": 57,
+		"idStatistik": "57",
 		"historie": [ {
 			"id": 57000000,
 			"schluessel": "F8",
@@ -1664,7 +1664,7 @@
 		} ]
 	}, {
 		"bezeichner": "F9",
-		"idHistorie": 58,
+		"idStatistik": "58",
 		"historie": [ {
 			"id": 58000000,
 			"schluessel": "F9",
@@ -1693,7 +1693,7 @@
 		} ]
 	}, {
 		"bezeichner": "FB",
-		"idHistorie": 59,
+		"idStatistik": "59",
 		"historie": [ {
 			"id": 59000000,
 			"schluessel": "FB",
@@ -1716,7 +1716,7 @@
 		} ]
 	}, {
 		"bezeichner": "FK",
-		"idHistorie": 60,
+		"idStatistik": "60",
 		"historie": [ {
 			"id": 60000000,
 			"schluessel": "FK",
@@ -1739,7 +1739,7 @@
 		} ]
 	}, {
 		"bezeichner": "FP",
-		"idHistorie": 61,
+		"idStatistik": "61",
 		"historie": [ {
 			"id": 61000000,
 			"schluessel": "FP",
@@ -1762,7 +1762,7 @@
 		} ]
 	}, {
 		"bezeichner": "FQ",
-		"idHistorie": 62,
+		"idStatistik": "62",
 		"historie": [ {
 			"id": 62000000,
 			"schluessel": "FQ",
@@ -1791,7 +1791,7 @@
 		} ]
 	}, {
 		"bezeichner": "FU",
-		"idHistorie": 63,
+		"idStatistik": "63",
 		"historie": [ {
 			"id": 63000000,
 			"schluessel": "FU",
@@ -1817,7 +1817,7 @@
 		} ]
 	}, {
 		"bezeichner": "G",
-		"idHistorie": 64,
+		"idStatistik": "64",
 		"historie": [ {
 			"id": 64000000,
 			"schluessel": "G",
@@ -1843,7 +1843,7 @@
 		} ]
 	}, {
 		"bezeichner": "G0",
-		"idHistorie": 65,
+		"idStatistik": "65",
 		"historie": [ {
 			"id": 65000000,
 			"schluessel": "G0",
@@ -1889,7 +1889,7 @@
 		} ]
 	}, {
 		"bezeichner": "G1",
-		"idHistorie": 66,
+		"idStatistik": "66",
 		"historie": [ {
 			"id": 66000000,
 			"schluessel": "G1",
@@ -1915,7 +1915,7 @@
 		} ]
 	}, {
 		"bezeichner": "G5",
-		"idHistorie": 67,
+		"idStatistik": "67",
 		"historie": [ {
 			"id": 67000000,
 			"schluessel": "G5",
@@ -1942,7 +1942,7 @@
 		} ]
 	}, {
 		"bezeichner": "G6",
-		"idHistorie": 68,
+		"idStatistik": "68",
 		"historie": [ {
 			"id": 68000000,
 			"schluessel": "G6",
@@ -1969,7 +1969,7 @@
 		} ]
 	}, {
 		"bezeichner": "G7",
-		"idHistorie": 69,
+		"idStatistik": "69",
 		"historie": [ {
 			"id": 69000000,
 			"schluessel": "G7",
@@ -1995,7 +1995,7 @@
 		} ]
 	}, {
 		"bezeichner": "G8",
-		"idHistorie": 70,
+		"idStatistik": "70",
 		"historie": [ {
 			"id": 70000000,
 			"schluessel": "G8",
@@ -2022,7 +2022,7 @@
 		} ]
 	}, {
 		"bezeichner": "G9",
-		"idHistorie": 71,
+		"idStatistik": "71",
 		"historie": [ {
 			"id": 71000000,
 			"schluessel": "G9",
@@ -2049,7 +2049,7 @@
 		} ]
 	}, {
 		"bezeichner": "GA",
-		"idHistorie": 72,
+		"idStatistik": "72",
 		"historie": [ {
 			"id": 72000000,
 			"schluessel": "GA",
@@ -2072,7 +2072,7 @@
 		} ]
 	}, {
 		"bezeichner": "GB",
-		"idHistorie": 73,
+		"idStatistik": "73",
 		"historie": [ {
 			"id": 73000000,
 			"schluessel": "GB",
@@ -2095,7 +2095,7 @@
 		} ]
 	}, {
 		"bezeichner": "GE",
-		"idHistorie": 74,
+		"idStatistik": "74",
 		"historie": [ {
 			"id": 74000000,
 			"schluessel": "GE",
@@ -2131,7 +2131,7 @@
 		} ]
 	}, {
 		"bezeichner": "GH",
-		"idHistorie": 75,
+		"idStatistik": "75",
 		"historie": [ {
 			"id": 75000000,
 			"schluessel": "GH",
@@ -2163,7 +2163,7 @@
 		} ]
 	}, {
 		"bezeichner": "GL",
-		"idHistorie": 76,
+		"idStatistik": "76",
 		"historie": [ {
 			"id": 76000000,
 			"schluessel": "GL",
@@ -2190,7 +2190,7 @@
 		} ]
 	}, {
 		"bezeichner": "GM",
-		"idHistorie": 77,
+		"idStatistik": "77",
 		"historie": [ {
 			"id": 77000000,
 			"schluessel": "GM",
@@ -2224,7 +2224,7 @@
 		} ]
 	}, {
 		"bezeichner": "GO",
-		"idHistorie": 78,
+		"idStatistik": "78",
 		"historie": [ {
 			"id": 78000000,
 			"schluessel": "GO",
@@ -2246,7 +2246,7 @@
 		} ]
 	}, {
 		"bezeichner": "GP",
-		"idHistorie": 79,
+		"idStatistik": "79",
 		"historie": [ {
 			"id": 79000000,
 			"schluessel": "GP",
@@ -2269,7 +2269,7 @@
 		} ]
 	}, {
 		"bezeichner": "GQ",
-		"idHistorie": 80,
+		"idStatistik": "80",
 		"historie": [ {
 			"id": 80000000,
 			"schluessel": "GQ",
@@ -2296,7 +2296,7 @@
 		} ]
 	}, {
 		"bezeichner": "GS",
-		"idHistorie": 81,
+		"idStatistik": "81",
 		"historie": [ {
 			"id": 81000000,
 			"schluessel": "GS",
@@ -2319,7 +2319,7 @@
 		} ]
 	}, {
 		"bezeichner": "GU",
-		"idHistorie": 82,
+		"idStatistik": "82",
 		"historie": [ {
 			"id": 82000000,
 			"schluessel": "GU",
@@ -2342,7 +2342,7 @@
 		} ]
 	}, {
 		"bezeichner": "GW",
-		"idHistorie": 83,
+		"idStatistik": "83",
 		"historie": [ {
 			"id": 83000000,
 			"schluessel": "GW",
@@ -2364,7 +2364,7 @@
 		} ]
 	}, {
 		"bezeichner": "H",
-		"idHistorie": 84,
+		"idStatistik": "84",
 		"historie": [ {
 			"id": 84000000,
 			"schluessel": "H",
@@ -2388,7 +2388,7 @@
 		} ]
 	}, {
 		"bezeichner": "H0",
-		"idHistorie": 85,
+		"idStatistik": "85",
 		"historie": [ {
 			"id": 85000000,
 			"schluessel": "H0",
@@ -2434,7 +2434,7 @@
 		} ]
 	}, {
 		"bezeichner": "H1",
-		"idHistorie": 86,
+		"idStatistik": "86",
 		"historie": [ {
 			"id": 86000000,
 			"schluessel": "H1",
@@ -2460,7 +2460,7 @@
 		} ]
 	}, {
 		"bezeichner": "H5",
-		"idHistorie": 87,
+		"idStatistik": "87",
 		"historie": [ {
 			"id": 87000000,
 			"schluessel": "H5",
@@ -2487,7 +2487,7 @@
 		} ]
 	}, {
 		"bezeichner": "H6",
-		"idHistorie": 88,
+		"idStatistik": "88",
 		"historie": [ {
 			"id": 88000000,
 			"schluessel": "H6",
@@ -2514,7 +2514,7 @@
 		} ]
 	}, {
 		"bezeichner": "H7",
-		"idHistorie": 89,
+		"idStatistik": "89",
 		"historie": [ {
 			"id": 89000000,
 			"schluessel": "H7",
@@ -2540,7 +2540,7 @@
 		} ]
 	}, {
 		"bezeichner": "H8",
-		"idHistorie": 90,
+		"idStatistik": "90",
 		"historie": [ {
 			"id": 90000000,
 			"schluessel": "H8",
@@ -2567,7 +2567,7 @@
 		} ]
 	}, {
 		"bezeichner": "H9",
-		"idHistorie": 91,
+		"idStatistik": "91",
 		"historie": [ {
 			"id": 91000000,
 			"schluessel": "H9",
@@ -2594,7 +2594,7 @@
 		} ]
 	}, {
 		"bezeichner": "HH",
-		"idHistorie": 92,
+		"idStatistik": "92",
 		"historie": [ {
 			"id": 92000000,
 			"schluessel": "HH",
@@ -2626,7 +2626,7 @@
 		} ]
 	}, {
 		"bezeichner": "HQ",
-		"idHistorie": 93,
+		"idStatistik": "93",
 		"historie": [ {
 			"id": 93000000,
 			"schluessel": "HQ",
@@ -2653,7 +2653,7 @@
 		} ]
 	}, {
 		"bezeichner": "HR",
-		"idHistorie": 94,
+		"idStatistik": "94",
 		"historie": [ {
 			"id": 94000000,
 			"schluessel": "HR",
@@ -2690,7 +2690,7 @@
 		} ]
 	}, {
 		"bezeichner": "HU",
-		"idHistorie": 95,
+		"idStatistik": "95",
 		"historie": [ {
 			"id": 95000000,
 			"schluessel": "HU",
@@ -2727,7 +2727,7 @@
 		} ]
 	}, {
 		"bezeichner": "HW",
-		"idHistorie": 96,
+		"idStatistik": "96",
 		"historie": [ {
 			"id": 96000000,
 			"schluessel": "HW",
@@ -2759,7 +2759,7 @@
 		} ]
 	}, {
 		"bezeichner": "HY",
-		"idHistorie": 97,
+		"idStatistik": "97",
 		"historie": [ {
 			"id": 97000000,
 			"schluessel": "HY",
@@ -2782,7 +2782,7 @@
 		} ]
 	}, {
 		"bezeichner": "I",
-		"idHistorie": 98,
+		"idStatistik": "98",
 		"historie": [ {
 			"id": 98000000,
 			"schluessel": "I",
@@ -2811,7 +2811,7 @@
 		} ]
 	}, {
 		"bezeichner": "I0",
-		"idHistorie": 99,
+		"idStatistik": "99",
 		"historie": [ {
 			"id": 99000000,
 			"schluessel": "I0",
@@ -2857,7 +2857,7 @@
 		} ]
 	}, {
 		"bezeichner": "I1",
-		"idHistorie": 100,
+		"idStatistik": "100",
 		"historie": [ {
 			"id": 100000000,
 			"schluessel": "I1",
@@ -2883,7 +2883,7 @@
 		} ]
 	}, {
 		"bezeichner": "I5",
-		"idHistorie": 101,
+		"idStatistik": "101",
 		"historie": [ {
 			"id": 101000000,
 			"schluessel": "I5",
@@ -2912,7 +2912,7 @@
 		} ]
 	}, {
 		"bezeichner": "I6",
-		"idHistorie": 102,
+		"idStatistik": "102",
 		"historie": [ {
 			"id": 102000000,
 			"schluessel": "I6",
@@ -2941,7 +2941,7 @@
 		} ]
 	}, {
 		"bezeichner": "I7",
-		"idHistorie": 103,
+		"idStatistik": "103",
 		"historie": [ {
 			"id": 103000000,
 			"schluessel": "I7",
@@ -2969,7 +2969,7 @@
 		} ]
 	}, {
 		"bezeichner": "I8",
-		"idHistorie": 104,
+		"idStatistik": "104",
 		"historie": [ {
 			"id": 104000000,
 			"schluessel": "I8",
@@ -2998,7 +2998,7 @@
 		} ]
 	}, {
 		"bezeichner": "I9",
-		"idHistorie": 105,
+		"idStatistik": "105",
 		"historie": [ {
 			"id": 105000000,
 			"schluessel": "I9",
@@ -3027,7 +3027,7 @@
 		} ]
 	}, {
 		"bezeichner": "IE",
-		"idHistorie": 106,
+		"idStatistik": "106",
 		"historie": [ {
 			"id": 106000000,
 			"schluessel": "IE",
@@ -3058,7 +3058,7 @@
 		} ]
 	}, {
 		"bezeichner": "IF",
-		"idHistorie": 107,
+		"idStatistik": "107",
 		"historie": [ {
 			"id": 107000000,
 			"schluessel": "IF",
@@ -3094,7 +3094,7 @@
 		} ]
 	}, {
 		"bezeichner": "IH",
-		"idHistorie": 108,
+		"idStatistik": "108",
 		"historie": [ {
 			"id": 108000000,
 			"schluessel": "IH",
@@ -3126,7 +3126,7 @@
 		} ]
 	}, {
 		"bezeichner": "IK",
-		"idHistorie": 109,
+		"idStatistik": "109",
 		"historie": [ {
 			"id": 109000000,
 			"schluessel": "IK",
@@ -3157,7 +3157,7 @@
 		} ]
 	}, {
 		"bezeichner": "IL",
-		"idHistorie": 110,
+		"idStatistik": "110",
 		"historie": [ {
 			"id": 110000000,
 			"schluessel": "IL",
@@ -3194,7 +3194,7 @@
 		} ]
 	}, {
 		"bezeichner": "IM",
-		"idHistorie": 111,
+		"idStatistik": "111",
 		"historie": [ {
 			"id": 111000000,
 			"schluessel": "IM",
@@ -3228,7 +3228,7 @@
 		} ]
 	}, {
 		"bezeichner": "IN",
-		"idHistorie": 112,
+		"idStatistik": "112",
 		"historie": [ {
 			"id": 112000000,
 			"schluessel": "IN",
@@ -3254,7 +3254,7 @@
 		} ]
 	}, {
 		"bezeichner": "IQ",
-		"idHistorie": 113,
+		"idStatistik": "113",
 		"historie": [ {
 			"id": 113000000,
 			"schluessel": "IQ",
@@ -3283,7 +3283,7 @@
 		} ]
 	}, {
 		"bezeichner": "JH",
-		"idHistorie": 114,
+		"idStatistik": "114",
 		"historie": [ {
 			"id": 114000000,
 			"schluessel": "JH",
@@ -3314,7 +3314,7 @@
 		} ]
 	}, {
 		"bezeichner": "K",
-		"idHistorie": 115,
+		"idStatistik": "115",
 		"historie": [ {
 			"id": 115000000,
 			"schluessel": "K",
@@ -3338,7 +3338,7 @@
 		} ]
 	}, {
 		"bezeichner": "K0",
-		"idHistorie": 116,
+		"idStatistik": "116",
 		"historie": [ {
 			"id": 116000000,
 			"schluessel": "K0",
@@ -3384,7 +3384,7 @@
 		} ]
 	}, {
 		"bezeichner": "K1",
-		"idHistorie": 117,
+		"idStatistik": "117",
 		"historie": [ {
 			"id": 117000000,
 			"schluessel": "K1",
@@ -3410,7 +3410,7 @@
 		} ]
 	}, {
 		"bezeichner": "K5",
-		"idHistorie": 118,
+		"idStatistik": "118",
 		"historie": [ {
 			"id": 118000000,
 			"schluessel": "K5",
@@ -3439,7 +3439,7 @@
 		} ]
 	}, {
 		"bezeichner": "K6",
-		"idHistorie": 119,
+		"idStatistik": "119",
 		"historie": [ {
 			"id": 119000000,
 			"schluessel": "K6",
@@ -3468,7 +3468,7 @@
 		} ]
 	}, {
 		"bezeichner": "K7",
-		"idHistorie": 120,
+		"idStatistik": "120",
 		"historie": [ {
 			"id": 120000000,
 			"schluessel": "K7",
@@ -3496,7 +3496,7 @@
 		} ]
 	}, {
 		"bezeichner": "K8",
-		"idHistorie": 121,
+		"idStatistik": "121",
 		"historie": [ {
 			"id": 121000000,
 			"schluessel": "K8",
@@ -3525,7 +3525,7 @@
 		} ]
 	}, {
 		"bezeichner": "K9",
-		"idHistorie": 122,
+		"idStatistik": "122",
 		"historie": [ {
 			"id": 122000000,
 			"schluessel": "K9",
@@ -3552,7 +3552,7 @@
 		} ]
 	}, {
 		"bezeichner": "KN",
-		"idHistorie": 123,
+		"idStatistik": "123",
 		"historie": [ {
 			"id": 123000000,
 			"schluessel": "KN",
@@ -3589,7 +3589,7 @@
 		} ]
 	}, {
 		"bezeichner": "KO",
-		"idHistorie": 124,
+		"idStatistik": "124",
 		"historie": [ {
 			"id": 124000000,
 			"schluessel": "KO",
@@ -3612,7 +3612,7 @@
 		} ]
 	}, {
 		"bezeichner": "KQ",
-		"idHistorie": 125,
+		"idStatistik": "125",
 		"historie": [ {
 			"id": 125000000,
 			"schluessel": "KQ",
@@ -3639,7 +3639,7 @@
 		} ]
 	}, {
 		"bezeichner": "KR",
-		"idHistorie": 126,
+		"idStatistik": "126",
 		"historie": [ {
 			"id": 126000000,
 			"schluessel": "KR",
@@ -3676,7 +3676,7 @@
 		} ]
 	}, {
 		"bezeichner": "KS",
-		"idHistorie": 127,
+		"idStatistik": "127",
 		"historie": [ {
 			"id": 127000000,
 			"schluessel": "KS",
@@ -3699,7 +3699,7 @@
 		} ]
 	}, {
 		"bezeichner": "KU",
-		"idHistorie": 128,
+		"idStatistik": "128",
 		"historie": [ {
 			"id": 128000000,
 			"schluessel": "KU",
@@ -3736,7 +3736,7 @@
 		} ]
 	}, {
 		"bezeichner": "L",
-		"idHistorie": 129,
+		"idStatistik": "129",
 		"historie": [ {
 			"id": 129000000,
 			"schluessel": "L",
@@ -3765,7 +3765,7 @@
 		} ]
 	}, {
 		"bezeichner": "L0",
-		"idHistorie": 130,
+		"idStatistik": "130",
 		"historie": [ {
 			"id": 130000000,
 			"schluessel": "L0",
@@ -3811,7 +3811,7 @@
 		} ]
 	}, {
 		"bezeichner": "L1",
-		"idHistorie": 131,
+		"idStatistik": "131",
 		"historie": [ {
 			"id": 131000000,
 			"schluessel": "L1",
@@ -3837,7 +3837,7 @@
 		} ]
 	}, {
 		"bezeichner": "L5",
-		"idHistorie": 132,
+		"idStatistik": "132",
 		"historie": [ {
 			"id": 132000000,
 			"schluessel": "L5",
@@ -3866,7 +3866,7 @@
 		} ]
 	}, {
 		"bezeichner": "L6",
-		"idHistorie": 133,
+		"idStatistik": "133",
 		"historie": [ {
 			"id": 133000000,
 			"schluessel": "L6",
@@ -3895,7 +3895,7 @@
 		} ]
 	}, {
 		"bezeichner": "L7",
-		"idHistorie": 134,
+		"idStatistik": "134",
 		"historie": [ {
 			"id": 134000000,
 			"schluessel": "L7",
@@ -3923,7 +3923,7 @@
 		} ]
 	}, {
 		"bezeichner": "L8",
-		"idHistorie": 135,
+		"idStatistik": "135",
 		"historie": [ {
 			"id": 135000000,
 			"schluessel": "L8",
@@ -3952,7 +3952,7 @@
 		} ]
 	}, {
 		"bezeichner": "L9",
-		"idHistorie": 136,
+		"idStatistik": "136",
 		"historie": [ {
 			"id": 136000000,
 			"schluessel": "L9",
@@ -3981,7 +3981,7 @@
 		} ]
 	}, {
 		"bezeichner": "LH",
-		"idHistorie": 137,
+		"idStatistik": "137",
 		"historie": [ {
 			"id": 137000000,
 			"schluessel": "LH",
@@ -4013,7 +4013,7 @@
 		} ]
 	}, {
 		"bezeichner": "LI",
-		"idHistorie": 138,
+		"idStatistik": "138",
 		"historie": [ {
 			"id": 138000000,
 			"schluessel": "LI",
@@ -4065,7 +4065,7 @@
 		} ]
 	}, {
 		"bezeichner": "LM",
-		"idHistorie": 139,
+		"idStatistik": "139",
 		"historie": [ {
 			"id": 139000000,
 			"schluessel": "LM",
@@ -4099,7 +4099,7 @@
 		} ]
 	}, {
 		"bezeichner": "LQ",
-		"idHistorie": 140,
+		"idStatistik": "140",
 		"historie": [ {
 			"id": 140000000,
 			"schluessel": "LQ",
@@ -4128,7 +4128,7 @@
 		} ]
 	}, {
 		"bezeichner": "M",
-		"idHistorie": 141,
+		"idStatistik": "141",
 		"historie": [ {
 			"id": 141000000,
 			"schluessel": "M",
@@ -4165,7 +4165,7 @@
 		} ]
 	}, {
 		"bezeichner": "MB",
-		"idHistorie": 142,
+		"idStatistik": "142",
 		"historie": [ {
 			"id": 142000000,
 			"schluessel": "MB",
@@ -4201,7 +4201,7 @@
 		} ]
 	}, {
 		"bezeichner": "MD",
-		"idHistorie": 143,
+		"idStatistik": "143",
 		"historie": [ {
 			"id": 143000000,
 			"schluessel": "MD",
@@ -4224,7 +4224,7 @@
 		} ]
 	}, {
 		"bezeichner": "ME",
-		"idHistorie": 144,
+		"idStatistik": "144",
 		"historie": [ {
 			"id": 144000000,
 			"schluessel": "ME",
@@ -4247,7 +4247,7 @@
 		} ]
 	}, {
 		"bezeichner": "MH",
-		"idHistorie": 145,
+		"idStatistik": "145",
 		"historie": [ {
 			"id": 145000000,
 			"schluessel": "MH",
@@ -4279,7 +4279,7 @@
 		} ]
 	}, {
 		"bezeichner": "MM",
-		"idHistorie": 146,
+		"idStatistik": "146",
 		"historie": [ {
 			"id": 146000000,
 			"schluessel": "MM",
@@ -4313,7 +4313,7 @@
 		} ]
 	}, {
 		"bezeichner": "MP",
-		"idHistorie": 147,
+		"idStatistik": "147",
 		"historie": [ {
 			"id": 147000000,
 			"schluessel": "MP",
@@ -4336,7 +4336,7 @@
 		} ]
 	}, {
 		"bezeichner": "MU",
-		"idHistorie": 148,
+		"idStatistik": "148",
 		"historie": [ {
 			"id": 148000000,
 			"schluessel": "MU",
@@ -4373,7 +4373,7 @@
 		} ]
 	}, {
 		"bezeichner": "MW",
-		"idHistorie": 149,
+		"idStatistik": "149",
 		"historie": [ {
 			"id": 149000000,
 			"schluessel": "MW",
@@ -4396,7 +4396,7 @@
 		} ]
 	}, {
 		"bezeichner": "MX",
-		"idHistorie": 150,
+		"idStatistik": "150",
 		"historie": [ {
 			"id": 150000000,
 			"schluessel": "MX",
@@ -4420,7 +4420,7 @@
 		} ]
 	}, {
 		"bezeichner": "MY",
-		"idHistorie": 151,
+		"idStatistik": "151",
 		"historie": [ {
 			"id": 151000000,
 			"schluessel": "MY",
@@ -4443,7 +4443,7 @@
 		} ]
 	}, {
 		"bezeichner": "N",
-		"idHistorie": 152,
+		"idStatistik": "152",
 		"historie": [ {
 			"id": 152000000,
 			"schluessel": "N",
@@ -4470,7 +4470,7 @@
 		} ]
 	}, {
 		"bezeichner": "N0",
-		"idHistorie": 153,
+		"idStatistik": "153",
 		"historie": [ {
 			"id": 153000000,
 			"schluessel": "N0",
@@ -4516,7 +4516,7 @@
 		} ]
 	}, {
 		"bezeichner": "N1",
-		"idHistorie": 154,
+		"idStatistik": "154",
 		"historie": [ {
 			"id": 154000000,
 			"schluessel": "N1",
@@ -4542,7 +4542,7 @@
 		} ]
 	}, {
 		"bezeichner": "N5",
-		"idHistorie": 155,
+		"idStatistik": "155",
 		"historie": [ {
 			"id": 155000000,
 			"schluessel": "N5",
@@ -4571,7 +4571,7 @@
 		} ]
 	}, {
 		"bezeichner": "N6",
-		"idHistorie": 156,
+		"idStatistik": "156",
 		"historie": [ {
 			"id": 156000000,
 			"schluessel": "N6",
@@ -4600,7 +4600,7 @@
 		} ]
 	}, {
 		"bezeichner": "N7",
-		"idHistorie": 157,
+		"idStatistik": "157",
 		"historie": [ {
 			"id": 157000000,
 			"schluessel": "N7",
@@ -4628,7 +4628,7 @@
 		} ]
 	}, {
 		"bezeichner": "N8",
-		"idHistorie": 158,
+		"idStatistik": "158",
 		"historie": [ {
 			"id": 158000000,
 			"schluessel": "N8",
@@ -4657,7 +4657,7 @@
 		} ]
 	}, {
 		"bezeichner": "N9",
-		"idHistorie": 159,
+		"idStatistik": "159",
 		"historie": [ {
 			"id": 159000000,
 			"schluessel": "N9",
@@ -4686,7 +4686,7 @@
 		} ]
 	}, {
 		"bezeichner": "NH",
-		"idHistorie": 160,
+		"idStatistik": "160",
 		"historie": [ {
 			"id": 160000000,
 			"schluessel": "NH",
@@ -4718,7 +4718,7 @@
 		} ]
 	}, {
 		"bezeichner": "NM",
-		"idHistorie": 161,
+		"idStatistik": "161",
 		"historie": [ {
 			"id": 161000000,
 			"schluessel": "NM",
@@ -4753,7 +4753,7 @@
 		} ]
 	}, {
 		"bezeichner": "NQ",
-		"idHistorie": 162,
+		"idStatistik": "162",
 		"historie": [ {
 			"id": 162000000,
 			"schluessel": "NQ",
@@ -4782,7 +4782,7 @@
 		} ]
 	}, {
 		"bezeichner": "NW",
-		"idHistorie": 163,
+		"idStatistik": "163",
 		"historie": [ {
 			"id": 163000000,
 			"schluessel": "NW",
@@ -4813,7 +4813,7 @@
 		} ]
 	}, {
 		"bezeichner": "O",
-		"idHistorie": 164,
+		"idStatistik": "164",
 		"historie": [ {
 			"id": 164000000,
 			"schluessel": "O",
@@ -4836,7 +4836,7 @@
 		} ]
 	}, {
 		"bezeichner": "O0",
-		"idHistorie": 165,
+		"idStatistik": "165",
 		"historie": [ {
 			"id": 165000000,
 			"schluessel": "O0",
@@ -4882,7 +4882,7 @@
 		} ]
 	}, {
 		"bezeichner": "O1",
-		"idHistorie": 166,
+		"idStatistik": "166",
 		"historie": [ {
 			"id": 166000000,
 			"schluessel": "O1",
@@ -4908,7 +4908,7 @@
 		} ]
 	}, {
 		"bezeichner": "O5",
-		"idHistorie": 167,
+		"idStatistik": "167",
 		"historie": [ {
 			"id": 167000000,
 			"schluessel": "O5",
@@ -4937,7 +4937,7 @@
 		} ]
 	}, {
 		"bezeichner": "O6",
-		"idHistorie": 168,
+		"idStatistik": "168",
 		"historie": [ {
 			"id": 168000000,
 			"schluessel": "O6",
@@ -4966,7 +4966,7 @@
 		} ]
 	}, {
 		"bezeichner": "O7",
-		"idHistorie": 169,
+		"idStatistik": "169",
 		"historie": [ {
 			"id": 169000000,
 			"schluessel": "O7",
@@ -4994,7 +4994,7 @@
 		} ]
 	}, {
 		"bezeichner": "O8",
-		"idHistorie": 170,
+		"idStatistik": "170",
 		"historie": [ {
 			"id": 170000000,
 			"schluessel": "O8",
@@ -5023,7 +5023,7 @@
 		} ]
 	}, {
 		"bezeichner": "O9",
-		"idHistorie": 171,
+		"idStatistik": "171",
 		"historie": [ {
 			"id": 171000000,
 			"schluessel": "O9",
@@ -5052,7 +5052,7 @@
 		} ]
 	}, {
 		"bezeichner": "OH",
-		"idHistorie": 172,
+		"idStatistik": "172",
 		"historie": [ {
 			"id": 172000000,
 			"schluessel": "OH",
@@ -5084,7 +5084,7 @@
 		} ]
 	}, {
 		"bezeichner": "OL",
-		"idHistorie": 173,
+		"idStatistik": "173",
 		"historie": [ {
 			"id": 173000000,
 			"schluessel": "OL",
@@ -5107,7 +5107,7 @@
 		} ]
 	}, {
 		"bezeichner": "OM",
-		"idHistorie": 174,
+		"idStatistik": "174",
 		"historie": [ {
 			"id": 174000000,
 			"schluessel": "OM",
@@ -5141,7 +5141,7 @@
 		} ]
 	}, {
 		"bezeichner": "OQ",
-		"idHistorie": 175,
+		"idStatistik": "175",
 		"historie": [ {
 			"id": 175000000,
 			"schluessel": "OQ",
@@ -5170,7 +5170,7 @@
 		} ]
 	}, {
 		"bezeichner": "OR",
-		"idHistorie": 176,
+		"idStatistik": "176",
 		"historie": [ {
 			"id": 176000000,
 			"schluessel": "OR",
@@ -5207,7 +5207,7 @@
 		} ]
 	}, {
 		"bezeichner": "PA",
-		"idHistorie": 177,
+		"idStatistik": "177",
 		"historie": [ {
 			"id": 177000000,
 			"schluessel": "PA",
@@ -5269,7 +5269,7 @@
 		} ]
 	}, {
 		"bezeichner": "PH",
-		"idHistorie": 178,
+		"idStatistik": "178",
 		"historie": [ {
 			"id": 178000000,
 			"schluessel": "PH",
@@ -5305,7 +5305,7 @@
 		} ]
 	}, {
 		"bezeichner": "PK",
-		"idHistorie": 179,
+		"idStatistik": "179",
 		"historie": [ {
 			"id": 179000000,
 			"schluessel": "PK",
@@ -5341,7 +5341,7 @@
 		} ]
 	}, {
 		"bezeichner": "PL",
-		"idHistorie": 180,
+		"idStatistik": "180",
 		"historie": [ {
 			"id": 180000000,
 			"schluessel": "PL",
@@ -5399,7 +5399,7 @@
 		} ]
 	}, {
 		"bezeichner": "PM",
-		"idHistorie": 181,
+		"idStatistik": "181",
 		"historie": [ {
 			"id": 181000000,
 			"schluessel": "PM",
@@ -5433,7 +5433,7 @@
 		} ]
 	}, {
 		"bezeichner": "PP",
-		"idHistorie": 182,
+		"idStatistik": "182",
 		"historie": [ {
 			"id": 182000000,
 			"schluessel": "PP",
@@ -5469,7 +5469,7 @@
 		} ]
 	}, {
 		"bezeichner": "PS",
-		"idHistorie": 183,
+		"idStatistik": "183",
 		"historie": [ {
 			"id": 183000000,
 			"schluessel": "PS",
@@ -5533,7 +5533,7 @@
 		} ]
 	}, {
 		"bezeichner": "PU",
-		"idHistorie": 184,
+		"idStatistik": "184",
 		"historie": [ {
 			"id": 184000000,
 			"schluessel": "PU",
@@ -5556,7 +5556,7 @@
 		} ]
 	}, {
 		"bezeichner": "PW",
-		"idHistorie": 185,
+		"idStatistik": "185",
 		"historie": [ {
 			"id": 185000000,
 			"schluessel": "PW",
@@ -5579,7 +5579,7 @@
 		} ]
 	}, {
 		"bezeichner": "PX",
-		"idHistorie": 186,
+		"idStatistik": "186",
 		"historie": [ {
 			"id": 186000000,
 			"schluessel": "PX",
@@ -5604,7 +5604,7 @@
 		} ]
 	}, {
 		"bezeichner": "POE",
-		"idHistorie": 187,
+		"idStatistik": "187",
 		"historie": [ {
 			"id": 187000000,
 			"schluessel": "PÖ",
@@ -5632,7 +5632,7 @@
 		} ]
 	}, {
 		"bezeichner": "QH",
-		"idHistorie": 188,
+		"idStatistik": "188",
 		"historie": [ {
 			"id": 188000000,
 			"schluessel": "QH",
@@ -5664,7 +5664,7 @@
 		} ]
 	}, {
 		"bezeichner": "QM",
-		"idHistorie": 189,
+		"idStatistik": "189",
 		"historie": [ {
 			"id": 189000000,
 			"schluessel": "QM",
@@ -5699,7 +5699,7 @@
 		} ]
 	}, {
 		"bezeichner": "R",
-		"idHistorie": 190,
+		"idStatistik": "190",
 		"historie": [ {
 			"id": 190000000,
 			"schluessel": "R",
@@ -5729,7 +5729,7 @@
 		} ]
 	}, {
 		"bezeichner": "R0",
-		"idHistorie": 191,
+		"idStatistik": "191",
 		"historie": [ {
 			"id": 191000000,
 			"schluessel": "R0",
@@ -5775,7 +5775,7 @@
 		} ]
 	}, {
 		"bezeichner": "R1",
-		"idHistorie": 192,
+		"idStatistik": "192",
 		"historie": [ {
 			"id": 192000000,
 			"schluessel": "R1",
@@ -5801,7 +5801,7 @@
 		} ]
 	}, {
 		"bezeichner": "R5",
-		"idHistorie": 193,
+		"idStatistik": "193",
 		"historie": [ {
 			"id": 193000000,
 			"schluessel": "R5",
@@ -5830,7 +5830,7 @@
 		} ]
 	}, {
 		"bezeichner": "R6",
-		"idHistorie": 194,
+		"idStatistik": "194",
 		"historie": [ {
 			"id": 194000000,
 			"schluessel": "R6",
@@ -5859,7 +5859,7 @@
 		} ]
 	}, {
 		"bezeichner": "R7",
-		"idHistorie": 195,
+		"idStatistik": "195",
 		"historie": [ {
 			"id": 195000000,
 			"schluessel": "R7",
@@ -5887,7 +5887,7 @@
 		} ]
 	}, {
 		"bezeichner": "R8",
-		"idHistorie": 196,
+		"idStatistik": "196",
 		"historie": [ {
 			"id": 196000000,
 			"schluessel": "R8",
@@ -5916,7 +5916,7 @@
 		} ]
 	}, {
 		"bezeichner": "R9",
-		"idHistorie": 197,
+		"idStatistik": "197",
 		"historie": [ {
 			"id": 197000000,
 			"schluessel": "R9",
@@ -5945,7 +5945,7 @@
 		} ]
 	}, {
 		"bezeichner": "RE",
-		"idHistorie": 198,
+		"idStatistik": "198",
 		"historie": [ {
 			"id": 198000000,
 			"schluessel": "RE",
@@ -5968,7 +5968,7 @@
 		} ]
 	}, {
 		"bezeichner": "RH",
-		"idHistorie": 199,
+		"idStatistik": "199",
 		"historie": [ {
 			"id": 199000000,
 			"schluessel": "RH",
@@ -6000,7 +6000,7 @@
 		} ]
 	}, {
 		"bezeichner": "RK",
-		"idHistorie": 200,
+		"idStatistik": "200",
 		"historie": [ {
 			"id": 200000000,
 			"schluessel": "RK",
@@ -6026,7 +6026,7 @@
 		} ]
 	}, {
 		"bezeichner": "RM",
-		"idHistorie": 201,
+		"idStatistik": "201",
 		"historie": [ {
 			"id": 201000000,
 			"schluessel": "RM",
@@ -6060,7 +6060,7 @@
 		} ]
 	}, {
 		"bezeichner": "RQ",
-		"idHistorie": 202,
+		"idStatistik": "202",
 		"historie": [ {
 			"id": 202000000,
 			"schluessel": "RQ",
@@ -6089,7 +6089,7 @@
 		} ]
 	}, {
 		"bezeichner": "RW",
-		"idHistorie": 203,
+		"idStatistik": "203",
 		"historie": [ {
 			"id": 203000000,
 			"schluessel": "RW",
@@ -6112,7 +6112,7 @@
 		} ]
 	}, {
 		"bezeichner": "S",
-		"idHistorie": 204,
+		"idStatistik": "204",
 		"historie": [ {
 			"id": 204000000,
 			"schluessel": "S",
@@ -6139,7 +6139,7 @@
 		} ]
 	}, {
 		"bezeichner": "S0",
-		"idHistorie": 205,
+		"idStatistik": "205",
 		"historie": [ {
 			"id": 205000000,
 			"schluessel": "S0",
@@ -6185,7 +6185,7 @@
 		} ]
 	}, {
 		"bezeichner": "S1",
-		"idHistorie": 206,
+		"idStatistik": "206",
 		"historie": [ {
 			"id": 206000000,
 			"schluessel": "S1",
@@ -6211,7 +6211,7 @@
 		} ]
 	}, {
 		"bezeichner": "S3",
-		"idHistorie": 207,
+		"idStatistik": "207",
 		"historie": [ {
 			"id": 207000000,
 			"schluessel": "S3",
@@ -6245,7 +6245,7 @@
 		} ]
 	}, {
 		"bezeichner": "S4",
-		"idHistorie": 208,
+		"idStatistik": "208",
 		"historie": [ {
 			"id": 208000000,
 			"schluessel": "S4",
@@ -6279,7 +6279,7 @@
 		} ]
 	}, {
 		"bezeichner": "S5",
-		"idHistorie": 209,
+		"idStatistik": "209",
 		"historie": [ {
 			"id": 209000000,
 			"schluessel": "S5",
@@ -6308,7 +6308,7 @@
 		} ]
 	}, {
 		"bezeichner": "S6",
-		"idHistorie": 210,
+		"idStatistik": "210",
 		"historie": [ {
 			"id": 210000000,
 			"schluessel": "S6",
@@ -6337,7 +6337,7 @@
 		} ]
 	}, {
 		"bezeichner": "S7",
-		"idHistorie": 211,
+		"idStatistik": "211",
 		"historie": [ {
 			"id": 211000000,
 			"schluessel": "S7",
@@ -6365,7 +6365,7 @@
 		} ]
 	}, {
 		"bezeichner": "S8",
-		"idHistorie": 212,
+		"idStatistik": "212",
 		"historie": [ {
 			"id": 212000000,
 			"schluessel": "S8",
@@ -6394,7 +6394,7 @@
 		} ]
 	}, {
 		"bezeichner": "S9",
-		"idHistorie": 213,
+		"idStatistik": "213",
 		"historie": [ {
 			"id": 213000000,
 			"schluessel": "S9",
@@ -6423,7 +6423,7 @@
 		} ]
 	}, {
 		"bezeichner": "SE",
-		"idHistorie": 214,
+		"idStatistik": "214",
 		"historie": [ {
 			"id": 214000000,
 			"schluessel": "SE",
@@ -6446,7 +6446,7 @@
 		} ]
 	}, {
 		"bezeichner": "SG",
-		"idHistorie": 215,
+		"idStatistik": "215",
 		"historie": [ {
 			"id": 215000000,
 			"schluessel": "SG",
@@ -6480,7 +6480,7 @@
 		} ]
 	}, {
 		"bezeichner": "SH",
-		"idHistorie": 216,
+		"idStatistik": "216",
 		"historie": [ {
 			"id": 216000000,
 			"schluessel": "SH",
@@ -6512,7 +6512,7 @@
 		} ]
 	}, {
 		"bezeichner": "SI",
-		"idHistorie": 217,
+		"idStatistik": "217",
 		"historie": [ {
 			"id": 217000000,
 			"schluessel": "SI",
@@ -6537,7 +6537,7 @@
 		} ]
 	}, {
 		"bezeichner": "SL",
-		"idHistorie": 218,
+		"idStatistik": "218",
 		"historie": [ {
 			"id": 218000000,
 			"schluessel": "SL",
@@ -6561,7 +6561,7 @@
 		} ]
 	}, {
 		"bezeichner": "SM",
-		"idHistorie": 219,
+		"idStatistik": "219",
 		"historie": [ {
 			"id": 219000000,
 			"schluessel": "SM",
@@ -6595,7 +6595,7 @@
 		} ]
 	}, {
 		"bezeichner": "SP",
-		"idHistorie": 220,
+		"idStatistik": "220",
 		"historie": [ {
 			"id": 220000000,
 			"schluessel": "SP",
@@ -6632,7 +6632,7 @@
 		} ]
 	}, {
 		"bezeichner": "SQ",
-		"idHistorie": 221,
+		"idStatistik": "221",
 		"historie": [ {
 			"id": 221000000,
 			"schluessel": "SQ",
@@ -6661,7 +6661,7 @@
 		} ]
 	}, {
 		"bezeichner": "SR",
-		"idHistorie": 222,
+		"idStatistik": "222",
 		"historie": [ {
 			"id": 222000000,
 			"schluessel": "SR",
@@ -6699,14 +6699,14 @@
 		} ]
 	}, {
 		"bezeichner": "SU",
-		"idHistorie": 223,
+		"idStatistik": "223",
 		"historie": [ {
 			"id": 223000000,
 			"schluessel": "SU",
 			"text": "Sachunterricht",
 			"kuerzel": "SU",
 			"aufgabenfeld": null,
-			"fachgruppe": null,
+			"fachgruppe": "FG_SU",
 			"abJahrgang": null,
 			"istFremdsprache": false,
 			"istHKFS": false,
@@ -6725,7 +6725,7 @@
 		} ]
 	}, {
 		"bezeichner": "SW",
-		"idHistorie": 224,
+		"idStatistik": "224",
 		"historie": [ {
 			"id": 224000000,
 			"schluessel": "SW",
@@ -6791,7 +6791,7 @@
 		} ]
 	}, {
 		"bezeichner": "SZ",
-		"idHistorie": 225,
+		"idStatistik": "225",
 		"historie": [ {
 			"id": 225000000,
 			"schluessel": "SZ",
@@ -6841,7 +6841,7 @@
 		} ]
 	}, {
 		"bezeichner": "T",
-		"idHistorie": 226,
+		"idStatistik": "226",
 		"historie": [ {
 			"id": 226000000,
 			"schluessel": "T",
@@ -6867,7 +6867,7 @@
 		} ]
 	}, {
 		"bezeichner": "T0",
-		"idHistorie": 227,
+		"idStatistik": "227",
 		"historie": [ {
 			"id": 227000000,
 			"schluessel": "T0",
@@ -6911,7 +6911,7 @@
 		} ]
 	}, {
 		"bezeichner": "T1",
-		"idHistorie": 228,
+		"idStatistik": "228",
 		"historie": [ {
 			"id": 228000000,
 			"schluessel": "T1",
@@ -6937,7 +6937,7 @@
 		} ]
 	}, {
 		"bezeichner": "T5",
-		"idHistorie": 229,
+		"idStatistik": "229",
 		"historie": [ {
 			"id": 229000000,
 			"schluessel": "T5",
@@ -6966,7 +6966,7 @@
 		} ]
 	}, {
 		"bezeichner": "T6",
-		"idHistorie": 230,
+		"idStatistik": "230",
 		"historie": [ {
 			"id": 230000000,
 			"schluessel": "T6",
@@ -6995,7 +6995,7 @@
 		} ]
 	}, {
 		"bezeichner": "T7",
-		"idHistorie": 231,
+		"idStatistik": "231",
 		"historie": [ {
 			"id": 231000000,
 			"schluessel": "T7",
@@ -7023,7 +7023,7 @@
 		} ]
 	}, {
 		"bezeichner": "T8",
-		"idHistorie": 232,
+		"idStatistik": "232",
 		"historie": [ {
 			"id": 232000000,
 			"schluessel": "T8",
@@ -7052,7 +7052,7 @@
 		} ]
 	}, {
 		"bezeichner": "T9",
-		"idHistorie": 233,
+		"idStatistik": "233",
 		"historie": [ {
 			"id": 233000000,
 			"schluessel": "T9",
@@ -7081,7 +7081,7 @@
 		} ]
 	}, {
 		"bezeichner": "TC",
-		"idHistorie": 234,
+		"idStatistik": "234",
 		"historie": [ {
 			"id": 234000000,
 			"schluessel": "TC",
@@ -7115,7 +7115,7 @@
 		} ]
 	}, {
 		"bezeichner": "TG",
-		"idHistorie": 235,
+		"idStatistik": "235",
 		"historie": [ {
 			"id": 235000000,
 			"schluessel": "TG",
@@ -7138,7 +7138,7 @@
 		} ]
 	}, {
 		"bezeichner": "TH",
-		"idHistorie": 236,
+		"idStatistik": "236",
 		"historie": [ {
 			"id": 236000000,
 			"schluessel": "TH",
@@ -7170,7 +7170,7 @@
 		} ]
 	}, {
 		"bezeichner": "TI",
-		"idHistorie": 237,
+		"idStatistik": "237",
 		"historie": [ {
 			"id": 237000000,
 			"schluessel": "TI",
@@ -7193,7 +7193,7 @@
 		} ]
 	}, {
 		"bezeichner": "TM",
-		"idHistorie": 238,
+		"idStatistik": "238",
 		"historie": [ {
 			"id": 238000000,
 			"schluessel": "TM",
@@ -7227,7 +7227,7 @@
 		} ]
 	}, {
 		"bezeichner": "TQ",
-		"idHistorie": 239,
+		"idStatistik": "239",
 		"historie": [ {
 			"id": 239000000,
 			"schluessel": "TQ",
@@ -7256,7 +7256,7 @@
 		} ]
 	}, {
 		"bezeichner": "TV",
-		"idHistorie": 240,
+		"idStatistik": "240",
 		"historie": [ {
 			"id": 240000000,
 			"schluessel": "TV",
@@ -7279,7 +7279,7 @@
 		} ]
 	}, {
 		"bezeichner": "TX",
-		"idHistorie": 241,
+		"idStatistik": "241",
 		"historie": [ {
 			"id": 241000000,
 			"schluessel": "TX",
@@ -7312,7 +7312,7 @@
 		} ]
 	}, {
 		"bezeichner": "TZ",
-		"idHistorie": 242,
+		"idStatistik": "242",
 		"historie": [ {
 			"id": 242000000,
 			"schluessel": "TZ",
@@ -7335,7 +7335,7 @@
 		} ]
 	}, {
 		"bezeichner": "UH",
-		"idHistorie": 243,
+		"idStatistik": "243",
 		"historie": [ {
 			"id": 243000000,
 			"schluessel": "UH",
@@ -7367,7 +7367,7 @@
 		} ]
 	}, {
 		"bezeichner": "UM",
-		"idHistorie": 244,
+		"idStatistik": "244",
 		"historie": [ {
 			"id": 244000000,
 			"schluessel": "UM",
@@ -7402,7 +7402,7 @@
 		} ]
 	}, {
 		"bezeichner": "UU",
-		"idHistorie": 245,
+		"idStatistik": "245",
 		"historie": [ {
 			"id": 245000000,
 			"schluessel": "UU",
@@ -7428,7 +7428,7 @@
 		} ]
 	}, {
 		"bezeichner": "UW",
-		"idHistorie": 246,
+		"idStatistik": "246",
 		"historie": [ {
 			"id": 246000000,
 			"schluessel": "UW",
@@ -7453,7 +7453,7 @@
 		} ]
 	}, {
 		"bezeichner": "VE",
-		"idHistorie": 247,
+		"idStatistik": "247",
 		"historie": [ {
 			"id": 247000000,
 			"schluessel": "VE",
@@ -7476,7 +7476,7 @@
 		} ]
 	}, {
 		"bezeichner": "VF",
-		"idHistorie": 248,
+		"idStatistik": "248",
 		"historie": [ {
 			"id": 248000000,
 			"schluessel": "VF",
@@ -7511,7 +7511,7 @@
 		} ]
 	}, {
 		"bezeichner": "VH",
-		"idHistorie": 249,
+		"idStatistik": "249",
 		"historie": [ {
 			"id": 249000000,
 			"schluessel": "VH",
@@ -7543,7 +7543,7 @@
 		} ]
 	}, {
 		"bezeichner": "VK",
-		"idHistorie": 250,
+		"idStatistik": "250",
 		"historie": [ {
 			"id": 250000000,
 			"schluessel": "VK",
@@ -7566,7 +7566,7 @@
 		} ]
 	}, {
 		"bezeichner": "VM",
-		"idHistorie": 251,
+		"idStatistik": "251",
 		"historie": [ {
 			"id": 251000000,
 			"schluessel": "VM",
@@ -7601,7 +7601,7 @@
 		} ]
 	}, {
 		"bezeichner": "VO",
-		"idHistorie": 252,
+		"idStatistik": "252",
 		"historie": [ {
 			"id": 252000000,
 			"schluessel": "VO",
@@ -7647,7 +7647,7 @@
 		} ]
 	}, {
 		"bezeichner": "VP",
-		"idHistorie": 253,
+		"idStatistik": "253",
 		"historie": [ {
 			"id": 253000000,
 			"schluessel": "VP",
@@ -7670,7 +7670,7 @@
 		} ]
 	}, {
 		"bezeichner": "VT",
-		"idHistorie": 254,
+		"idStatistik": "254",
 		"historie": [ {
 			"id": 254000000,
 			"schluessel": "VT",
@@ -7693,7 +7693,7 @@
 		} ]
 	}, {
 		"bezeichner": "VW",
-		"idHistorie": 255,
+		"idStatistik": "255",
 		"historie": [ {
 			"id": 255000000,
 			"schluessel": "VW",
@@ -7717,7 +7717,7 @@
 		} ]
 	}, {
 		"bezeichner": "VX",
-		"idHistorie": 256,
+		"idStatistik": "256",
 		"historie": [ {
 			"id": 256000000,
 			"schluessel": "VX",
@@ -7742,7 +7742,7 @@
 		} ]
 	}, {
 		"bezeichner": "W",
-		"idHistorie": 257,
+		"idStatistik": "257",
 		"historie": [ {
 			"id": 257000000,
 			"schluessel": "W",
@@ -7765,7 +7765,7 @@
 		} ]
 	}, {
 		"bezeichner": "WG",
-		"idHistorie": 258,
+		"idStatistik": "258",
 		"historie": [ {
 			"id": 258000000,
 			"schluessel": "WG",
@@ -7788,7 +7788,7 @@
 		} ]
 	}, {
 		"bezeichner": "WI",
-		"idHistorie": 259,
+		"idStatistik": "259",
 		"historie": [ {
 			"id": 259000000,
 			"schluessel": "WI",
@@ -7811,7 +7811,7 @@
 		} ]
 	}, {
 		"bezeichner": "WP",
-		"idHistorie": 260,
+		"idStatistik": "260",
 		"historie": [ {
 			"id": 260000000,
 			"schluessel": "WP",
@@ -7844,7 +7844,7 @@
 		} ]
 	}, {
 		"bezeichner": "WW",
-		"idHistorie": 261,
+		"idStatistik": "261",
 		"historie": [ {
 			"id": 261000000,
 			"schluessel": "WW",
@@ -7879,7 +7879,7 @@
 		} ]
 	}, {
 		"bezeichner": "WX",
-		"idHistorie": 262,
+		"idStatistik": "262",
 		"historie": [ {
 			"id": 262000000,
 			"schluessel": "WX",
@@ -7904,7 +7904,7 @@
 		} ]
 	}, {
 		"bezeichner": "WY",
-		"idHistorie": 263,
+		"idStatistik": "263",
 		"historie": [ {
 			"id": 263000000,
 			"schluessel": "WY",
@@ -7929,7 +7929,7 @@
 		} ]
 	}, {
 		"bezeichner": "WZ",
-		"idHistorie": 264,
+		"idStatistik": "264",
 		"historie": [ {
 			"id": 264000000,
 			"schluessel": "WZ",
@@ -7954,7 +7954,7 @@
 		} ]
 	}, {
 		"bezeichner": "XH",
-		"idHistorie": 265,
+		"idStatistik": "265",
 		"historie": [ {
 			"id": 265000000,
 			"schluessel": "XH",
@@ -7986,7 +7986,7 @@
 		} ]
 	}, {
 		"bezeichner": "XM",
-		"idHistorie": 266,
+		"idStatistik": "266",
 		"historie": [ {
 			"id": 266000000,
 			"schluessel": "XM",
@@ -8020,7 +8020,7 @@
 		} ]
 	}, {
 		"bezeichner": "XX",
-		"idHistorie": 267,
+		"idStatistik": "267",
 		"historie": [ {
 			"id": 267000000,
 			"schluessel": "XX",
@@ -8043,7 +8043,7 @@
 		} ]
 	}, {
 		"bezeichner": "YH",
-		"idHistorie": 268,
+		"idStatistik": "268",
 		"historie": [ {
 			"id": 268000000,
 			"schluessel": "YH",
@@ -8075,7 +8075,7 @@
 		} ]
 	}, {
 		"bezeichner": "YM",
-		"idHistorie": 269,
+		"idStatistik": "269",
 		"historie": [ {
 			"id": 269000000,
 			"schluessel": "YM",
@@ -8110,7 +8110,7 @@
 		} ]
 	}, {
 		"bezeichner": "YR",
-		"idHistorie": 270,
+		"idStatistik": "270",
 		"historie": [ {
 			"id": 270000000,
 			"schluessel": "YR",
@@ -8147,7 +8147,7 @@
 		} ]
 	}, {
 		"bezeichner": "Z",
-		"idHistorie": 271,
+		"idStatistik": "271",
 		"historie": [ {
 			"id": 271000000,
 			"schluessel": "Z",
@@ -8172,7 +8172,7 @@
 		} ]
 	}, {
 		"bezeichner": "Z0",
-		"idHistorie": 272,
+		"idStatistik": "272",
 		"historie": [ {
 			"id": 272000000,
 			"schluessel": "Z0",
@@ -8218,7 +8218,7 @@
 		} ]
 	}, {
 		"bezeichner": "Z1",
-		"idHistorie": 273,
+		"idStatistik": "273",
 		"historie": [ {
 			"id": 273000000,
 			"schluessel": "Z1",
@@ -8244,7 +8244,7 @@
 		} ]
 	}, {
 		"bezeichner": "Z5",
-		"idHistorie": 274,
+		"idStatistik": "274",
 		"historie": [ {
 			"id": 274000000,
 			"schluessel": "Z5",
@@ -8273,7 +8273,7 @@
 		} ]
 	}, {
 		"bezeichner": "Z6",
-		"idHistorie": 275,
+		"idStatistik": "275",
 		"historie": [ {
 			"id": 275000000,
 			"schluessel": "Z6",
@@ -8302,7 +8302,7 @@
 		} ]
 	}, {
 		"bezeichner": "Z7",
-		"idHistorie": 276,
+		"idStatistik": "276",
 		"historie": [ {
 			"id": 276000000,
 			"schluessel": "Z7",
@@ -8329,7 +8329,7 @@
 		} ]
 	}, {
 		"bezeichner": "Z8",
-		"idHistorie": 277,
+		"idStatistik": "277",
 		"historie": [ {
 			"id": 277000000,
 			"schluessel": "Z8",
@@ -8358,7 +8358,7 @@
 		} ]
 	}, {
 		"bezeichner": "Z9",
-		"idHistorie": 278,
+		"idStatistik": "278",
 		"historie": [ {
 			"id": 278000000,
 			"schluessel": "Z9",
@@ -8387,7 +8387,7 @@
 		} ]
 	}, {
 		"bezeichner": "ZF",
-		"idHistorie": 279,
+		"idStatistik": "279",
 		"historie": [ {
 			"id": 279000000,
 			"schluessel": "ZF",
@@ -8413,7 +8413,7 @@
 		} ]
 	}, {
 		"bezeichner": "ZH",
-		"idHistorie": 280,
+		"idStatistik": "280",
 		"historie": [ {
 			"id": 280000000,
 			"schluessel": "ZH",
@@ -8445,7 +8445,7 @@
 		} ]
 	}, {
 		"bezeichner": "ZM",
-		"idHistorie": 281,
+		"idStatistik": "281",
 		"historie": [ {
 			"id": 281000000,
 			"schluessel": "ZM",
@@ -8480,7 +8480,7 @@
 		} ]
 	}, {
 		"bezeichner": "ZQ",
-		"idHistorie": 282,
+		"idStatistik": "282",
 		"historie": [ {
 			"id": 282000000,
 			"schluessel": "ZQ",
@@ -8509,7 +8509,7 @@
 		} ]
 	}, {
 		"bezeichner": "ZW",
-		"idHistorie": 283,
+		"idStatistik": "283",
 		"historie": [ {
 			"id": 283000000,
 			"schluessel": "ZW",
@@ -8532,7 +8532,7 @@
 		} ]
 	}, {
 		"bezeichner": "IG",
-		"idHistorie": 284,
+		"idStatistik": "284",
 		"historie": [ {
 			"id": 284000000,
 			"schluessel": "IG",
@@ -8555,7 +8555,7 @@
 		} ]
 	}, {
 		"bezeichner": "AN",
-		"idHistorie": 285,
+		"idStatistik": "285",
 		"historie": [ {
 			"id": 285000000,
 			"schluessel": "AN",
@@ -8589,7 +8589,7 @@
 		} ]
 	}, {
 		"bezeichner": "CN",
-		"idHistorie": 286,
+		"idStatistik": "286",
 		"historie": [ {
 			"id": 286000000,
 			"schluessel": "CN",
@@ -8623,7 +8623,7 @@
 		} ]
 	}, {
 		"bezeichner": "FM",
-		"idHistorie": 287,
+		"idStatistik": "287",
 		"historie": [ {
 			"id": 287000000,
 			"schluessel": "FM",
@@ -8657,7 +8657,7 @@
 		} ]
 	}, {
 		"bezeichner": "JM",
-		"idHistorie": 288,
+		"idStatistik": "288",
 		"historie": [ {
 			"id": 288000000,
 			"schluessel": "JM",
@@ -8691,7 +8691,7 @@
 		} ]
 	}, {
 		"bezeichner": "MN",
-		"idHistorie": 289,
+		"idStatistik": "289",
 		"historie": [ {
 			"id": 289000000,
 			"schluessel": "MN",
@@ -8725,7 +8725,7 @@
 		} ]
 	}, {
 		"bezeichner": "RN",
-		"idHistorie": 290,
+		"idStatistik": "290",
 		"historie": [ {
 			"id": 290000000,
 			"schluessel": "RN",
@@ -8759,7 +8759,7 @@
 		} ]
 	}, {
 		"bezeichner": "TN",
-		"idHistorie": 291,
+		"idStatistik": "291",
 		"historie": [ {
 			"id": 291000000,
 			"schluessel": "TN",
@@ -8793,7 +8793,7 @@
 		} ]
 	}, {
 		"bezeichner": "UN",
-		"idHistorie": 292,
+		"idStatistik": "292",
 		"historie": [ {
 			"id": 292000000,
 			"schluessel": "UN",

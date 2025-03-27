@@ -1,5 +1,5 @@
 <template>
-	<div class="page--content">
+	<div class="page page-grid-cards">
 		<svws-ui-todo title="Schüler anlegen">
 			Dieser Bereich ist noch in Entwicklung. Hier werden später alle initialen Informationen zur Anlage eines neuen Schülers eingepflegt.
 		</svws-ui-todo>

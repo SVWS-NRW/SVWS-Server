@@ -1,0 +1,235 @@
+.button {
+	@apply rounded-md border;
+	@apply select-none relative;
+	@apply text-button font-bold;
+	@apply flex items-center justify-center;
+	gap: 0.25em;
+	padding: 0.45em 0.75em;
+
+	.svws-ui-table-filter & {
+		min-height: 2.25rem;
+	}
+
+	&:focus {
+		@apply outline-hidden;
+		@apply ring;
+	}
+
+	&:focus-visible {
+		@apply ring-3 ring-ui-brand;
+
+		.page--statistik & {
+			@apply ring-ui-statistic;
+		}
+	}
+
+	&:active {
+		@apply ring-0 brightness-110;
+	}
+
+	.svws-ui-tfoot & {
+		@apply h-7 min-h-[unset];
+	}
+}
+
+.button--primary {
+	@apply bg-ui-brand text-ui-onbrand border-ui-brand;
+
+	&:hover,
+	&:focus-visible {
+		@apply bg-ui-brand-hover text-ui-onbrand-hover border-ui-brand-hover;
+	}
+
+	.icon, .icon-sm {
+		@apply icon-ui-onbrand;
+	}
+
+	.page--statistik & {
+		@apply bg-ui-statistic text-ui-onstatistic border-ui-statistic;
+
+		.icon, .icon-sm {
+			@apply icon-ui-onstatistic;
+		}
+
+		&:hover,
+		&:focus-visible {
+			@apply bg-ui-statistic-hover text-ui-onstatistic-hover border-ui-statistic-hover;
+		}
+	}
+}
+
+.button--secondary {
+	@apply bg-transparent text-ui border-ui;
+
+	.notification--error &,
+	.svws-ui-stundenplan--unterricht--warning & {
+		@apply text-ui-ondanger border-ui-ondanger;
+	}
+
+	&:hover,
+	&:focus-visible {
+		@apply border-ui-brand text-ui-brand;
+
+		.icon, .icon-sm {
+			@apply icon-ui-brand;
+		}
+
+		.page--statistik & {
+			@apply border-ui-statistic text-ui-statistic;
+
+			.icon, .icon-sm {
+				@apply icon-ui-statistic;
+			}
+		}
+
+		.notification--error &,
+		.svws-ui-stundenplan--unterricht--warning & {
+			@apply text-ui-ondanger-hover border-ui-ondanger-hover;
+		}
+	}
+
+	&:focus-visible {
+		.notification--error &,
+		.svws-ui-stundenplan--unterricht--warning & {
+			@apply ring-ui-neutral;
+		}
+	}
+}
+
+.button--transparent,
+.button--icon {
+	@apply bg-transparent border-transparent;
+
+	&:hover,
+	&:focus-visible {
+		@apply bg-ui-hover text-ui-onneutral-hover;
+
+		.icon, .icon-sm {
+			@apply icon-ui-brand;
+		}
+	}
+
+	&:active {
+		@apply brightness-95;
+	}
+}
+
+.button--danger,
+.button--trash {
+	@apply bg-transparent text-ui-danger border-ui-danger;
+
+	.icon, .icon-sm {
+		@apply icon-ui-danger;
+	}
+
+	&:hover,
+	&:focus-visible {
+		@apply bg-ui-danger text-ui-ondanger;
+
+		.icon, .icon-sm {
+			@apply icon-ui-ondanger;
+		}
+	}
+
+	&:focus-visible {
+		@apply ring-ui-danger;
+	}
+}
+
+.button--trash {
+	@apply rounded-sm relative;
+	@apply py-0;
+	border: 0 !important;
+	width: 1.6em;
+	height: 1.6em;
+
+	&:hover,
+	&:focus-visible {
+		@apply icon-ui-danger-hover;
+	}
+}
+
+.button--trash,
+.button--icon {
+	&.button--small,
+	.svws-ui-tbody & {
+		@apply text-sm font-medium h-6 w-6;
+		padding: 0.3em !important;
+	}
+
+	.svws-ui-tfoot &.button {
+		@apply text-button h-7 w-7;
+		padding: 0.25em !important;
+	}
+}
+
+.button--icon {
+	@apply p-1.5 justify-center border-0 items-center;
+	@apply w-9 h-9;
+}
+
+.button:disabled {
+	.button--trash-icon .icon {
+		@apply icon-ui-danger-secondary;
+	}
+	&,
+	&:hover,
+	&:focus,
+	&:focus-visible {
+		@apply bg-ui-disabled text-ui-ondisabled border-ui-disabled;
+		@apply cursor-not-allowed pointer-events-none;
+		.button--trash-icon .icon {
+			@apply icon-ui-danger-secondary-hover;
+		}
+	}
+}
+
+.button--small,
+.content-card--header .button,
+.svws-ui-tbody .button,
+.router-tab-bar--subnav .button,
+.router-tab-bar--subnav .radio--label {
+	@apply text-sm font-bold;
+}
+
+.button--small,
+.svws-ui-tbody .button,
+.content-card--header .button,
+.router-tab-bar--subnav .button {
+	padding: 0.3rem 0.65rem;
+}
+
+.svws-ui-tbody .button {
+	@apply -my-2 h-full self-center rounded;
+	padding: 0.1rem 0.5rem;
+
+	&.button--transparent {
+		@apply px-1.5;
+	}
+}
+
+.svws-ui-tbody .button--icon.button--small {
+	@apply w-5 h-5 -m-0.5;
+	@apply !p-0;
+}
+
+.button--big {
+	padding-top: 0.64em;
+	padding-bottom: 0.64em;
+}
+
+.button--badge {
+	@apply bg-ui-brand text-ui-onbrand;
+	@apply absolute top-0 left-[100%];
+	@apply font-bold rounded-full shadow;
+	@apply flex items-center justify-center;
+	@apply pointer-events-none;
+	@apply -mt-3 -ml-3;
+	@apply px-1.5;
+	@apply h-5;
+	font-size: 0.8rem;
+
+		@apply -mt-0 h-4 -ml-1.5;
+		font-size: 0.75rem;
+
+}

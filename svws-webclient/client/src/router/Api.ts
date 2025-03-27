@@ -472,31 +472,6 @@ class Api {
 		}
 	}
 
-
-	/**
-	 * Führt eine "einfache" API-Operation aus, welche mithilfe einer SimpleOperationResponse antwortet.
-	 *
-	 * @param op               die auszuführende API-Operation
-	 * @param errorResponses   ein Array mit den HTTP-Response-Codes, welche direkt eine SimpleOperationResponse vom Server liefern
-	 *
-	 * @returns die SimpleOperationResponse der API-Operation
-	 */
-	public runSimpleOperation = async (op : () => Promise<SimpleOperationResponse>, errorResponses: Array<number>) : Promise<SimpleOperationResponse> => {
-		try {
-			return await op();
-		} catch(e) {
-			if ((e instanceof OpenApiError) && (e.response !== null) && (errorResponses.includes(e.response.status))) {
-				const json : string = await e.response.text();
-				return SimpleOperationResponse.transpilerFromJSON(json);
-			}
-			const result = new SimpleOperationResponse();
-			result.log.add("Fehler bei der Server-Anfrage!");
-			if (e instanceof Error)
-				result.log.add("  " + e.message);
-			return result;
-		}
-	};
-
 }
 
 /** Die Api-Instanz zur Verwendung im SVWS-Client */

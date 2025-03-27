@@ -121,6 +121,39 @@ export class DateUtils extends JavaObject {
 	}
 
 	/**
+	 * Prüft, ob ein gegebenes Datum im ISO-8601-Format (YYYY-MM-DD) gültig ist.
+	 *
+	 * @param datumISO8601 Das zu prüfende Datum als String im Format "YYYY-MM-DD".
+	 * @return {@code true}, wenn das Datum gültig ist, sonst {@code false}.
+	 *
+	 * - Ein Datum ist gültig, wenn:
+	 *   - Es genau drei Teile enthält (Jahr, Monat, Tag).
+	 *   - Das Jahr nicht ungültig ist (geprüft durch {@code gibIstJahrUngueltig(int jahr)}).
+	 *   - Der Monat zwischen 1 und 12 liegt.
+	 *   - Der Tag im Monat zwischen 1 und der maximalen Anzahl an Tagen des Monats liegt
+	 *     (unter Berücksichtigung von Schaltjahren durch {@code daysInMonth(int jahr, int monat)}).
+	 * - Falls {@code null} übergeben wird, das Format ungültig ist oder nicht-numerische Zeichen enthält, wird {@code false} zurückgegeben.
+	 */
+	public static isValidDate(datumISO8601 : string | null) : boolean {
+		if (datumISO8601 === null)
+			return false;
+		try {
+			const split : Array<string | null> = datumISO8601.split("-");
+			if (split.length !== 3)
+				return false;
+			let jahr : number = JavaInteger.parseInt(split[0]);
+			let monat : number = JavaInteger.parseInt(split[1]);
+			let tagImMonat : number = JavaInteger.parseInt(split[2]);
+			if (DateUtils.gibIstJahrUngueltig(jahr) || monat < 1 || monat > 12)
+				return false;
+			let maxTage : number = DateUtils.daysInMonth(jahr, monat);
+			return tagImMonat >= 1 && tagImMonat <= maxTage;
+		} catch(e : any) {
+			return false;
+		}
+	}
+
+	/**
 	 * Liefert die Anzahl an Kalenderwochen des Jahres (52 oder 53) nach ISO8601.
 	 *
 	 * @param jahr Das Jahr.
@@ -508,6 +541,25 @@ export class DateUtils extends JavaObject {
 		return dateList.toArray(Array(0).fill(null));
 	}
 
+	/**
+	 * Berechnet die Schnittmenge zweier Datumsintervalle und gibt alle Tage im gemeinsamen Zeitraum zurück.
+	 *
+	 * @param zeitraumAab  Startdatum des ersten Intervalls (YYYY-MM-DD)
+	 * @param zeitraumAbis Enddatum des ersten Intervalls (YYYY-MM-DD)
+	 * @param zeitraumBab  Startdatum des zweiten Intervalls (YYYY-MM-DD)
+	 * @param zeitraumBbis Enddatum des zweiten Intervalls (YYYY-MM-DD)
+	 * @return Ein Array von Strings mit allen Tagen im Format YYYY-MM-DD, die in beiden Intervallen enthalten sind.
+	 *         Falls keine Überlappung besteht, wird ein leeres Array zurückgegeben.
+	 */
+	public static berechneGemeinsameTage(zeitraumAab : string, zeitraumAbis : string, zeitraumBab : string, zeitraumBbis : string) : Array<string | null> {
+		let start : string | null = (JavaString.compareTo(zeitraumAab, zeitraumBab) >= 0) ? zeitraumAab : zeitraumBab;
+		let end : string | null = (JavaString.compareTo(zeitraumAbis, zeitraumBbis) <= 0) ? zeitraumAbis : zeitraumBbis;
+		if (JavaString.compareTo(start, end) > 0) {
+			return Array(0).fill(null);
+		}
+		return DateUtils.gibTageAlsDatumZwischen(start, end);
+	}
+
 	private static daysInMonth(year : number, month : number) : number {
 		switch (month) {
 			case 4:
@@ -534,6 +586,28 @@ export class DateUtils extends JavaObject {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Gibt das Datum des Folgetages für ein gegebenes Datum im ISO-8601-Format (YYYY-MM-DD) zurück.
+	 *
+	 * @param datumISO8601 Ein gültiges Datum im Format "YYYY-MM-DD".
+	 * @return Das Datum des Folgetages im selben Format.
+	 */
+	public static gibDatumFolgetag(datumISO8601 : string) : string {
+		const info : Array<number> | null = DateUtils.extractFromDateISO8601(datumISO8601);
+		const jahr : number = info[0];
+		const monat : number = info[1];
+		const tagImMonat : number = info[2];
+		const tageImMonat : number = DateUtils.daysInMonth(jahr, monat);
+		if (tagImMonat < tageImMonat) {
+			return JavaString.format("%04d-%02d-%02d", jahr, monat, tagImMonat + 1);
+		} else
+			if (monat < 12) {
+				return JavaString.format("%04d-%02d-%02d", jahr, monat + 1, 1);
+			} else {
+				return JavaString.format("%04d-%02d-%02d", jahr + 1, 1, 1);
+			}
 	}
 
 	transpilerCanonicalName(): string {

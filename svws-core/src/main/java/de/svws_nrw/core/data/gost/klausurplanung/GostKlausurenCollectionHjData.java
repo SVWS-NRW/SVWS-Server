@@ -3,8 +3,8 @@ package de.svws_nrw.core.data.gost.klausurplanung;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.svws_nrw.asd.data.kurse.KursDaten;
 import de.svws_nrw.core.data.gost.GostFach;
-import de.svws_nrw.core.data.kurse.KursDaten;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.ArraySchema;

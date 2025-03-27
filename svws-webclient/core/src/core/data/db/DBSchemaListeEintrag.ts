@@ -13,6 +13,11 @@ export class DBSchemaListeEintrag extends JavaObject {
 	 */
 	public isDefault : boolean = false;
 
+	/**
+	 * Gibt an, ob es sich um ein deaktiviertes Schema in der Konfiguration handelt.
+	 */
+	public isDeactivated : boolean = false;
+
 
 	/**
 	 * Leerer Standardkonstruktor.
@@ -38,6 +43,9 @@ export class DBSchemaListeEintrag extends JavaObject {
 		if (obj.isDefault === undefined)
 			throw new Error('invalid json format, missing attribute isDefault');
 		result.isDefault = obj.isDefault;
+		if (obj.isDeactivated === undefined)
+			throw new Error('invalid json format, missing attribute isDeactivated');
+		result.isDeactivated = obj.isDeactivated;
 		return result;
 	}
 
@@ -45,6 +53,7 @@ export class DBSchemaListeEintrag extends JavaObject {
 		let result = '{';
 		result += '"name" : ' + ((obj.name === null) ? 'null' : JSON.stringify(obj.name)) + ',';
 		result += '"isDefault" : ' + obj.isDefault.toString() + ',';
+		result += '"isDeactivated" : ' + obj.isDeactivated.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -57,6 +66,9 @@ export class DBSchemaListeEintrag extends JavaObject {
 		}
 		if (obj.isDefault !== undefined) {
 			result += '"isDefault" : ' + obj.isDefault.toString() + ',';
+		}
+		if (obj.isDeactivated !== undefined) {
+			result += '"isDeactivated" : ' + obj.isDeactivated.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

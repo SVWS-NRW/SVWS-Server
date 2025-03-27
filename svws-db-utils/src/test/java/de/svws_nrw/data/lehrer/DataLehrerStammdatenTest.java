@@ -8,9 +8,9 @@ import java.util.stream.Stream;
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.asd.data.schule.Schulleitung;
 import de.svws_nrw.asd.types.Geschlecht;
+import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.core.types.PersonalTyp;
-import de.svws_nrw.core.types.schule.Nationalitaeten;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil;
@@ -211,7 +211,7 @@ class DataLehrerStammdatenTest {
 				.hasFieldOrPropertyWithValue("vorname", "abc")
 				.hasFieldOrPropertyWithValue("geschlecht", Geschlecht.M.id)
 				.hasFieldOrPropertyWithValue("geburtsdatum", "abc")
-				.hasFieldOrPropertyWithValue("staatsangehoerigkeitID", Nationalitaeten.DEU.daten.iso3)
+				.hasFieldOrPropertyWithValue("staatsangehoerigkeitID", "DEU")
 				.hasFieldOrPropertyWithValue("strassenname", "abc")
 				.hasFieldOrPropertyWithValue("hausnummer", "abc")
 				.hasFieldOrPropertyWithValue("hausnummerZusatz", "abc")
@@ -300,7 +300,7 @@ class DataLehrerStammdatenTest {
 						.hasFieldOrPropertyWithValue("vorname", "abc")
 						.hasFieldOrPropertyWithValue("geschlecht", Geschlecht.M.id)
 						.hasFieldOrPropertyWithValue("geburtsdatum", "abc")
-						.hasFieldOrPropertyWithValue("staatsangehoerigkeitID", Nationalitaeten.DEU.daten.iso3)
+						.hasFieldOrPropertyWithValue("staatsangehoerigkeitID", "DEU")
 						.hasFieldOrPropertyWithValue("strassenname", "abc")
 						.hasFieldOrPropertyWithValue("hausnummer", "abc")
 						.hasFieldOrPropertyWithValue("hausnummerZusatz", "abc")
@@ -417,7 +417,7 @@ class DataLehrerStammdatenTest {
 				arguments("vorname", "abc"),
 				arguments("geschlecht", Geschlecht.M),
 				arguments("geburtsdatum", "abc"),
-				arguments("staatsangehoerigkeitID", Nationalitaeten.DEU),
+				arguments("staatsangehoerigkeitID", Nationalitaeten.getByISO3("DEU")),
 				arguments("strassenname", "abc"),
 				arguments("hausnummer", "abc"),
 				arguments("hausnummerZusatz", "abc"),
@@ -752,7 +752,7 @@ class DataLehrerStammdatenTest {
 		dtoLehrer.Vorname = "abc";
 		dtoLehrer.Geschlecht = Geschlecht.M;
 		dtoLehrer.Geburtsdatum = "abc";
-		dtoLehrer.staatsangehoerigkeit = Nationalitaeten.DEU;
+		dtoLehrer.staatsangehoerigkeit = Nationalitaeten.getByISO3("DEU");
 		dtoLehrer.Strassenname = "abc";
 		dtoLehrer.HausNr = "abc";
 		dtoLehrer.HausNrZusatz = "abc";
@@ -766,4 +766,5 @@ class DataLehrerStammdatenTest {
 		dtoLehrer.statistikRelevant = true;
 		return dtoLehrer;
 	}
+
 }

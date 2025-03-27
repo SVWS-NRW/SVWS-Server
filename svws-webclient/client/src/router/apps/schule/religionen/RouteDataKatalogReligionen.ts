@@ -1,112 +1,70 @@
-import type { ReligionEintrag} from "@core";
-import { ReligionListeManager } from "@core";
-import { ArrayList, DeveloperNotificationException } from "@core";
-
+import type { List, ReligionEintrag, SimpleOperationResponse } from "@core";
+import { BenutzerKompetenz, ReligionListeManager, ArrayList } from "@core";
 import { api } from "~/router/Api";
-import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-import { RouteManager } from "~/router/RouteManager";
-
 import { routeKatalogReligionDaten } from "./RouteKatalogReligionDaten";
-import { routeKatalogReligionen } from "./RouteKatalogReligionen";
+import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
+import type { RouteParamsRawGeneric } from "vue-router";
+import { routeKatalogReligionGruppenprozesse } from "~/router/apps/schule/religionen/RouteKatalogReligionGruppenprozesse";
+import { routeKatalogReligionNeu } from "~/router/apps/schule/religionen/RouteKatalogReligionNeu";
 
-interface RouteStateKatalogeReligionen extends RouteStateInterface {
-	religionListeManager: ReligionListeManager;
-}
+type RouteStateKatalogeReligionen = RouteStateAuswahlInterface<ReligionListeManager>;
 
-const defaultState = <RouteStateKatalogeReligionen> {
-	religionListeManager: new ReligionListeManager(-1, -1, new ArrayList(), null, new ArrayList()),
+const defaultState: RouteStateKatalogeReligionen = {
+	idSchuljahresabschnitt: -1,
+	manager: undefined,
 	view: routeKatalogReligionDaten,
 };
 
-export class RouteDataKatalogReligionen extends RouteData<RouteStateKatalogeReligionen> {
+export class RouteDataKatalogReligionen extends RouteDataAuswahl<ReligionListeManager, RouteStateKatalogeReligionen> {
 
 	public constructor() {
-		super(defaultState);
+		super(defaultState, routeKatalogReligionGruppenprozesse, routeKatalogReligionNeu);
 	}
 
-	get religionListeManager(): ReligionListeManager {
-		return this._state.value.religionListeManager;
+	public addID(param: RouteParamsRawGeneric, id: number): void {
+		param.id = id;
 	}
 
-	public async ladeListeIntern() {
-		const listKatalogeintraege = await api.server.getReligionen(api.schema);
-		// Bestimme den Eintrag von vorher, um ggf. eine neue ID für das Routing zurückzugeben
-		const hatteAuswahl = (this.religionListeManager.auswahlID() !== null) ? this.religionListeManager.auswahl() : null;
-		const religionListeManager = new ReligionListeManager(-1, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,	api.schulform, listKatalogeintraege);
-		religionListeManager.setFilterAuswahlPermitted(true);
-		// Wählen nun einen Eintrag aus, dabei wird sich ggf. an der alten Auswahl orientiert
-		if (hatteAuswahl && (hatteAuswahl.kuerzel !== null)) {
-			let auswahl = religionListeManager.getByKuerzelOrNull(hatteAuswahl.kuerzel);
-			if ((auswahl === null) && (religionListeManager.liste.size() > 0))
-				auswahl = religionListeManager.liste.list().get(0);
-			if (auswahl !== null)
-				religionListeManager.setDaten(auswahl);
-		} else {
-			if (religionListeManager.liste.size() > 0) {
-				const auswahl = religionListeManager.liste.list().get(0);
-				religionListeManager.setDaten(auswahl);
-			}
-		}
-		return { religionListeManager };
+	protected async createManager(idSchuljahresabschnitt : number) : Promise<Partial<RouteStateKatalogeReligionen>> {
+		const listeReligionen = await api.server.getReligionen(api.schema);
+		const manager = new ReligionListeManager(idSchuljahresabschnitt, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte, api.schulform, listeReligionen);
+		manager.setFilterAuswahlPermitted(true);
+		return { manager };
 	}
 
-	public async ladeListe() : Promise<number | null> {
-		const o = await this.ladeListeIntern();
-		this.setPatchedDefaultState(o);
-		return o.religionListeManager.auswahlID();
+	public async ladeDaten(auswahl: ReligionEintrag | null) : Promise<ReligionEintrag | null> {
+		return auswahl;
 	}
 
-	setEintrag = (eintrag: ReligionEintrag) => {
-		const religionListeManager = this.religionListeManager;
-		religionListeManager.setDaten(eintrag);
-		this.setPatchedState({ religionListeManager });
-	}
-
-	gotoEintrag = async (eintrag: ReligionEintrag) => {
-		await RouteManager.doRoute(routeKatalogReligionen.getRoute({ id: eintrag.id }));
-	}
-
-	addEintrag = async (eintrag: Partial<ReligionEintrag>) => {
-		delete eintrag.id;
-		const res = await api.server.createReligion(eintrag, api.schema);
-		const religionListeManager = this.religionListeManager;
-		religionListeManager.liste.add(res);
-		this.setPatchedState({ religionListeManager });
-		await RouteManager.doRoute(routeKatalogReligionDaten.getRoute({ id: res.id }));
-	}
-
-	patch = async (data : Partial<ReligionEintrag>) => {
-		const id = this.religionListeManager.auswahlID();
-		if (id === null)
-			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+	protected async doPatch(data : Partial<ReligionEintrag>, id: number) : Promise<void> {
 		await api.server.patchReligion(data, api.schema, id);
-		const auswahl = this.religionListeManager.auswahl();
-		Object.assign(auswahl, data);
-		this.religionListeManager.setDaten(auswahl);
-		this.setPatchedState({ religionListeManager: this.religionListeManager });
 	}
 
-	deleteEintraege = async (eintraege: Iterable<ReligionEintrag>) => {
-		const listID = new ArrayList<number>();
-		for (const eintrag of eintraege)
-			listID.add(eintrag.id);
-		if (listID.isEmpty())
-			return;
-		const religionen = await api.server.deleteReligionEintraege(listID, api.schema);
-		this.religionListeManager.liste.removeAll(religionen);
-		await this.setFilter();
+	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {
+		return await api.server.deleteReligionEintraege(ids, api.schema);
 	}
 
-	setFilter = async () => {
-		if (!this.religionListeManager.hasDaten()) {
-			const listFiltered = this.religionListeManager.filtered();
-			if (!listFiltered.isEmpty()) {
-				await this.gotoEintrag(listFiltered.get(0));
-				return;
-			}
-		}
-		const religionListeManager = this.religionListeManager;
-		this.setPatchedState({ religionListeManager });
+	add = async (partialReligion: Partial<ReligionEintrag>): Promise<void> => {
+		delete partialReligion.id;
+		const religion = await api.server.createReligion(partialReligion, api.schema)
+		await this.setSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt, true);
+		await this.gotoDefaultView(religion.id)
 	}
+
+	protected deleteMessage(id: number, religion: ReligionEintrag | null) : string {
+		return `Religion ${religion?.kuerzel} (ID: ${id.toString()}) wurde erfolgreich gelöscht.`;
+	}
+
+	public checkBeforeDelete = (): List<string> => {
+		const errorLog = new ArrayList<string>();
+		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN))
+			errorLog.add('Es liegt keine Berechtigung zum Löschen von Religionen vor.');
+
+		if (!this.manager.liste.auswahlExists())
+			errorLog.add('Es wurde keine Religion zum Löschen ausgewählt.');
+
+		return errorLog;
+	}
+
 
 }

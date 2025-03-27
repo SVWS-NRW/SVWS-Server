@@ -5,17 +5,9 @@
 		row: false,
 	});
 </script>
+
 <template>
-	<div class="radio" :class="{'radio--row': row}">
+	<div class="flex flex-col items-start gap-1" :class="{'flex-row flex-wrap gap-0.5': row}">
 		<slot />
 	</div>
 </template>
-<style lang="postcss">
-	.radio {
-		@apply flex flex-col items-start gap-1;
-	}
-
-	.radio--row {
-		@apply flex-row flex-wrap gap-0.5;
-	}
-</style>

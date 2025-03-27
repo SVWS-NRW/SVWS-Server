@@ -1,5 +1,5 @@
 <template>
-	<div class="page--content page--content--flex">
+	<div class="page page-grid-cards">
 		<svws-ui-todo title="Unterrichtsdaten">
 			Dieser Bereich ist noch in Entwicklung. Hier werden zukünftig die Unterrichtsdaten angezeigt.
 		</svws-ui-todo>

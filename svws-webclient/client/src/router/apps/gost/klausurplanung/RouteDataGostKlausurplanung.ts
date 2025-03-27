@@ -211,9 +211,13 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 	}
 
 	getConfigValue = (key: string) => api.config.getValue("gost.klausurplan." + key);
+	getConfigNumberValue = (key: string) => api.config.getNumberValue("gost.klausurplan." + key);
 
-	setConfigValue = async (key: string, value: string) => {
-		await api.config.setValue('gost.klausurplan.' + key, value);
+	setConfigValue = async (key: string, value: string | number) => {
+		if (typeof value === 'number')
+			await api.config.setNumberValue('gost.klausurplan.' + key, value);
+		else
+			await api.config.setValue('gost.klausurplan.' + key, value);
 	}
 
 	setRaumTermin = (termin: GostKlausurtermin | null) => {
@@ -424,6 +428,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		try {
 			const result = await api.server.createGostKlausurenKursklausurenJahrgangHalbjahrQuartal(api.schema, this.abiturjahr, this.halbjahr.id, quartal);
 			this.manager.addKlausurData(result);
+			return result;
 		} finally {
 			this.commit();
 			api.status.stop();

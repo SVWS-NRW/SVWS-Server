@@ -1,8 +1,9 @@
+
 {
 	"version": 1,
 	"daten": [ {
 		"bezeichner": "KEINE",
-		"idHistorie": 1,
+		"idStatistik": "1",
 		"historie": [ {
 			"sortierung": -1,
 			"schluessel": -1,
@@ -16,7 +17,7 @@
 		} ]
 	}, {
 		"bezeichner": "UNGENUEGEND",
-		"idHistorie": 2,
+		"idStatistik": "2",
 		"historie": [ {
 			"sortierung": 600,
 			"schluessel": 0,
@@ -30,7 +31,7 @@
 		} ]
 	}, {
 		"bezeichner": "MANGELHAFT_MINUS",
-		"idHistorie": 3,
+		"idStatistik": "3",
 		"historie": [ {
 			"sortierung": 501,
 			"schluessel": 1,
@@ -44,7 +45,7 @@
 		} ]
 	}, {
 		"bezeichner": "MANGELHAFT",
-		"idHistorie": 4,
+		"idStatistik": "4",
 		"historie": [ {
 			"sortierung": 500,
 			"schluessel": 2,
@@ -58,7 +59,7 @@
 		} ]
 	}, {
 		"bezeichner": "MANGELHAFT_PLUS",
-		"idHistorie": 5,
+		"idStatistik": "5",
 		"historie": [ {
 			"sortierung": 499,
 			"schluessel": 3,
@@ -72,7 +73,7 @@
 		} ]
 	}, {
 		"bezeichner": "AUSREICHEND_MINUS",
-		"idHistorie": 6,
+		"idStatistik": "6",
 		"historie": [ {
 			"sortierung": 401,
 			"schluessel": 4,
@@ -86,7 +87,7 @@
 		} ]
 	}, {
 		"bezeichner": "AUSREICHEND",
-		"idHistorie": 7,
+		"idStatistik": "7",
 		"historie": [ {
 			"sortierung": 400,
 			"schluessel": 5,
@@ -100,7 +101,7 @@
 		} ]
 	}, {
 		"bezeichner": "AUSREICHEND_PLUS",
-		"idHistorie": 8,
+		"idStatistik": "8",
 		"historie": [ {
 			"sortierung": 399,
 			"schluessel": 6,
@@ -114,7 +115,7 @@
 		} ]
 	}, {
 		"bezeichner": "BEFRIEDIGEND_MINUS",
-		"idHistorie": 9,
+		"idStatistik": "9",
 		"historie": [ {
 			"sortierung": 301,
 			"schluessel": 7,
@@ -128,7 +129,7 @@
 		} ]
 	}, {
 		"bezeichner": "BEFRIEDIGEND",
-		"idHistorie": 10,
+		"idStatistik": "10",
 		"historie": [ {
 			"sortierung": 300,
 			"schluessel": 8,
@@ -142,7 +143,7 @@
 		} ]
 	}, {
 		"bezeichner": "BEFRIEDIGEND_PLUS",
-		"idHistorie": 11,
+		"idStatistik": "11",
 		"historie": [ {
 			"sortierung": 299,
 			"schluessel": 9,
@@ -156,7 +157,7 @@
 		} ]
 	}, {
 		"bezeichner": "GUT_MINUS",
-		"idHistorie": 12,
+		"idStatistik": "12",
 		"historie": [ {
 			"sortierung": 201,
 			"schluessel": 10,
@@ -170,7 +171,7 @@
 		} ]
 	}, {
 		"bezeichner": "GUT",
-		"idHistorie": 13,
+		"idStatistik": "13",
 		"historie": [ {
 			"sortierung": 200,
 			"schluessel": 11,
@@ -184,7 +185,7 @@
 		} ]
 	}, {
 		"bezeichner": "GUT_PLUS",
-		"idHistorie": 14,
+		"idStatistik": "14",
 		"historie": [ {
 			"sortierung": 199,
 			"schluessel": 12,
@@ -198,7 +199,7 @@
 		} ]
 	}, {
 		"bezeichner": "SEHR_GUT_MINUS",
-		"idHistorie": 15,
+		"idStatistik": "15",
 		"historie": [ {
 			"sortierung": 101,
 			"schluessel": 13,
@@ -212,7 +213,7 @@
 		} ]
 	}, {
 		"bezeichner": "SEHR_GUT",
-		"idHistorie": 16,
+		"idStatistik": "16",
 		"historie": [ {
 			"sortierung": 100,
 			"schluessel": 14,
@@ -226,7 +227,7 @@
 		} ]
 	}, {
 		"bezeichner": "SEHR_GUT_PLUS",
-		"idHistorie": 17,
+		"idStatistik": "17",
 		"historie": [ {
 			"sortierung": 99,
 			"schluessel": 15,
@@ -240,7 +241,7 @@
 		} ]
 	}, {
 		"bezeichner": "ATTEST",
-		"idHistorie": 18,
+		"idStatistik": "18",
 		"historie": [ {
 			"sortierung": 2500,
 			"schluessel": 16,
@@ -254,7 +255,7 @@
 		} ]
 	}, {
 		"bezeichner": "E1_MIT_BESONDEREM_ERFOLG_TEILGENOMMEN",
-		"idHistorie": 19,
+		"idStatistik": "19",
 		"historie": [ {
 			"sortierung": 1000,
 			"schluessel": 17,
@@ -268,7 +269,7 @@
 		} ]
 	}, {
 		"bezeichner": "E2_MIT_ERFOLG_TEILGENOMMEN",
-		"idHistorie": 20,
+		"idStatistik": "20",
 		"historie": [ {
 			"sortierung": 1001,
 			"schluessel": 18,
@@ -282,7 +283,7 @@
 		} ]
 	}, {
 		"bezeichner": "E3_TEILGENOMMEN",
-		"idHistorie": 21,
+		"idStatistik": "21",
 		"historie": [ {
 			"sortierung": 1002,
 			"schluessel": 19,
@@ -296,7 +297,7 @@
 		} ]
 	}, {
 		"bezeichner": "NICHT_TEILGENOMMEN",
-		"idHistorie": 22,
+		"idStatistik": "22",
 		"historie": [ {
 			"sortierung": 4010,
 			"schluessel": 20,
@@ -310,7 +311,7 @@
 		} ]
 	}, {
 		"bezeichner": "NICHT_BEURTEILT",
-		"idHistorie": 23,
+		"idStatistik": "23",
 		"historie": [ {
 			"sortierung": 4000,
 			"schluessel": 21,
@@ -324,7 +325,7 @@
 		} ]
 	}, {
 		"bezeichner": "NICHT_ERTEILT",
-		"idHistorie": 24,
+		"idStatistik": "24",
 		"historie": [ {
 			"sortierung": 4020,
 			"schluessel": 22,
@@ -338,7 +339,7 @@
 		} ]
 	}, {
 		"bezeichner": "LEHRERMANGEL",
-		"idHistorie": 25,
+		"idStatistik": "25",
 		"historie": [ {
 			"sortierung": 9000,
 			"schluessel": 23,
@@ -352,7 +353,7 @@
 		} ]
 	}, {
 		"bezeichner": "ABGEMELDET",
-		"idHistorie": 26,
+		"idStatistik": "26",
 		"historie": [ {
 			"sortierung": 2000,
 			"schluessel": 24,

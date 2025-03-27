@@ -1,5 +1,6 @@
 package de.svws_nrw.db.schema.tabellen;
 
+import de.svws_nrw.db.converter.current.Boolean01Converter;
 import de.svws_nrw.db.schema.SchemaDatentypen;
 import de.svws_nrw.db.schema.SchemaRevisionen;
 import de.svws_nrw.db.schema.SchemaTabelle;
@@ -29,6 +30,50 @@ public class Tabelle_SchuleOAuthSecrets extends SchemaTabelle {
 	public SchemaTabelleSpalte col_ClientSecret = add("ClientSecret", SchemaDatentypen.TEXT, false)
 			.setNotNull()
 			.setJavaComment("Das Secret des Clients");
+
+	/** Die Definition der Tabellenspalte TokenType */
+	public SchemaTabelleSpalte col_TokenType = add("TokenType", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
+			.setRevision(SchemaRevisionen.REV_32)
+			.setJavaComment("Der Typ des Tokens");
+
+	/** Die Definition der Tabellenspalte TokenTimestamp */
+	public SchemaTabelleSpalte col_TokenTimestamp = add("TokenTimestamp", SchemaDatentypen.BIGINT, false)
+			.setRevision(SchemaRevisionen.REV_32)
+			.setJavaComment("Ankunftzeitpunkt des Tokens als Zeitstempel in Millisekungen");
+
+	/** Die Definition der Tabellenspalte TokenExpiresIn */
+	public SchemaTabelleSpalte col_TokenExpiresIn = add("TokenExpiresIn", SchemaDatentypen.BIGINT, false)
+			.setRevision(SchemaRevisionen.REV_32)
+			.setJavaComment("Lebensdauer des Tokens in Sekunden");
+
+	/** Die Definition der Tabellenspalte TokenScope */
+	public SchemaTabelleSpalte col_TokenScope = add("TokenScope", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
+			.setRevision(SchemaRevisionen.REV_32)
+			.setJavaComment("Der Gültigkeitsbereich des Tokens");
+
+	/** Die Definition der Tabellenspalte Token */
+	public SchemaTabelleSpalte col_Token = add("Token", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
+			.setRevision(SchemaRevisionen.REV_32)
+			.setJavaComment("Das Token");
+
+	/** Die Definition der Tabellenspalte TLSCert */
+	public SchemaTabelleSpalte col_TLSCert = add("TLSCert", SchemaDatentypen.TEXT, false)
+			.setRevision(SchemaRevisionen.REV_32)
+			.setJavaComment("Das TLS Zertifikat des OAuth2-Servers");
+
+	/** Die Definition der Tabellenspalte TLSCertIsKnown */
+	public SchemaTabelleSpalte col_TLSCertIsKnown = add("TLSCertIsKnown", SchemaDatentypen.INT, false)
+			.setDefault("0")
+			.setConverter(Boolean01Converter.class)
+			.setRevision(SchemaRevisionen.REV_32)
+			.setJavaComment("Gibt an, ob das Zertifikat über den Keystore validiert werden kann.");
+
+	/** Die Definition der Tabellenspalte TLSCertIsTrusted */
+	public SchemaTabelleSpalte col_TLSCertIsTrusted = add("TLSCertIsTrusted", SchemaDatentypen.INT, false)
+			.setDefault("0")
+			.setConverter(Boolean01Converter.class)
+			.setRevision(SchemaRevisionen.REV_32)
+			.setJavaComment("Gibt an, ob dem TLS-Zertifikat vertraut werden darf, entweder weil es bekannt ist oder weil der Benutzer zugestimmt hat.");
 
 
 	/**

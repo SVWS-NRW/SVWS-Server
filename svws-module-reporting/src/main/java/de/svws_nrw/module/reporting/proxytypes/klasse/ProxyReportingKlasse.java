@@ -3,7 +3,7 @@ package de.svws_nrw.module.reporting.proxytypes.klasse;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
-import de.svws_nrw.core.data.klassen.KlassenDaten;
+import de.svws_nrw.asd.data.klassen.KlassenDaten;
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.data.jahrgaenge.DataJahrgangsdaten;
@@ -20,6 +20,7 @@ import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
 import de.svws_nrw.module.reporting.types.klasse.ReportingKlasse;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
+import jakarta.ws.rs.core.Response;
 
 import java.text.Collator;
 import java.util.ArrayList;
@@ -162,7 +163,11 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 							this.reportingRepository,
 							this.reportingRepository.mapJahrgaenge().computeIfAbsent(super.idJahrgang(), j -> {
 								try {
-									return new DataJahrgangsdaten(this.reportingRepository.conn()).getFromID(super.idJahrgang());
+									final DataJahrgangsdaten dataJahrgangsdaten = new DataJahrgangsdaten(this.reportingRepository.conn());
+									final Long idJahrgang = super.idJahrgang();
+									if (idJahrgang == null)
+										throw new ApiOperationException(Response.Status.BAD_REQUEST, "Keine ID für den Jahrgang übergeben.");
+									return dataJahrgangsdaten.getById(idJahrgang);
 								} catch (final ApiOperationException e) {
 									ReportingExceptionUtils.putStacktraceInLog(
 											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Daten eines Jahrgangs.", e,

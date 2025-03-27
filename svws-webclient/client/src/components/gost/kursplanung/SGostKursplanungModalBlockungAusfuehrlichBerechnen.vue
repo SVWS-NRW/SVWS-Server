@@ -1,7 +1,7 @@
 <template>
 	<slot :open-modal />
-	<svws-ui-modal v-model:show="show" size="big" class="hidden" :auto-close="false" :close-in-title="false">
-		<template #modalTitle>Ausführliche Berechnung lokal im Browser</template>
+	<svws-ui-modal v-model:show="show" size="big" class="hidden" :auto-close="false" :close-in-title="false" :type="workerManager === undefined ? 'danger':'default'">
+		<template #modalTitle>Ausführliche Berechnung lokal im Browser {{ workerManager === undefined ? 'nicht möglich':'' }}</template>
 		<template #hilfe>
 			Zum Start auf „Berechnung starten“ klicken. Sobald die Bedingungen erfüllt sind,
 			<br>mit denen die Berechnung durchgeführt wird, wird die Berechnung abgebrochen.
@@ -10,45 +10,47 @@
 			<br>Der „Abbrechen“ Knopf beendet und löscht alle Berechnungen.
 		</template>
 		<template #modalDescription>
-			<div v-if="workerManager !== undefined" class="text-left pb-4 flex flex-row">
-				Anzahl der parallelen Berechnungen:
-				<div class="pl-4 pr-2">
-					<svws-ui-button type="secondary" size="small" title="" @click="removeWorker" :disabled="workerManager.threads === 1">
-						<span class="icon i-ri-subtract-line py-3" />
-					</svws-ui-button>
+			<div v-if="workerManager !== undefined" class="text-left flex flex-row justify-between">
+				<div v-if="WorkerManagerKursblockung.MAX_WORKER > 1" class="flex gap-2">
+					Anzahl der parallelen Berechnungen:
+					<div class="pl-4 pr-2">
+						<svws-ui-button type="secondary" size="small" title="" @click="removeWorker" :disabled="workerManager.threads === 1">
+							<span class="icon i-ri-subtract-line" />
+						</svws-ui-button>
+					</div>
+					<span class="py-1">{{ workerManager.threads }}</span>
+					<div class="pl-2">
+						<svws-ui-button type="secondary" size="small" title="" @click="addWorker" :disabled="workerManager.threads === WorkerManagerKursblockung.MAX_WORKER">
+							<span class="icon i-ri-add-line" />
+						</svws-ui-button>
+					</div>
+					<div class="pl-4"><svws-ui-button type="secondary" size="small" title="Maximum" @click="setWorkerMaximum" :disabled="workerManager.threads === WorkerManagerKursblockung.MAX_WORKER"> Maximum </svws-ui-button></div>
 				</div>
-				<span class="py-1">{{ workerManager.threads }}</span>
-				<div class="pl-2">
-					<svws-ui-button type="secondary" size="small" title="" @click="addWorker" :disabled="workerManager.threads === WorkerManagerKursblockung.MAX_WORKER">
-						<span class="icon i-ri-add-line py-3" />
-					</svws-ui-button>
+				<div class="text-left pb-4 flex flex-row">
+					<svws-ui-checkbox type="toggle" :model-value="ausfuehrlicheDarstellungKursdifferenz()" @update:model-value="setAusfuehrlicheDarstellungKursdifferenz">Ausführliche Darstellung für Kursdifferenz verwenden</svws-ui-checkbox>
 				</div>
-				<div class="pl-4"><svws-ui-button type="secondary" size="small" title="Maximum" @click="setWorkerMaximum" :disabled="workerManager.threads === WorkerManagerKursblockung.MAX_WORKER"> Maximum </svws-ui-button></div>
-			</div>
-			<div class="text-left pb-4 flex flex-row">
-				<svws-ui-checkbox :model-value="ausfuehrlicheDarstellungKursdifferenz()" @update:model-value="setAusfuehrlicheDarstellungKursdifferenz">Ausführliche Darstellung für Kursdifferenz verwenden</svws-ui-checkbox>
 			</div>
 			<svws-ui-table v-if="!items.isEmpty()" clickable v-model="selected" :selectable="!running" class="z-20 relative" :columns :items count>
 				<template #cell(wert1)="{ rowIndex }">
 					<div class="table-cell">
 						<svws-ui-tooltip v-if="listErgebnismanager.get(rowIndex).getOfBewertung1Wert() > 0" autosize>
-							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung1Farbcode())}">{{ listErgebnismanager.get(rowIndex).getOfBewertung1Wert() }}</span>
+							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="`color: var(--color-text-ui-static); background-color: ${getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung1Farbcode())}`">{{ listErgebnismanager.get(rowIndex).getOfBewertung1Wert() }}</span>
 							<template #content>
 								<pre>{{ listErgebnismanager.get(rowIndex).regelGetTooltipFuerRegelverletzungen() }}</pre>
 							</template>
 						</svws-ui-tooltip>
-						<span v-else class="svws-ui-badge min-w-[2.75rem] text-center justify-center" style="background-color: rgb(128, 255, 128)">0</span>
+						<span v-else class="svws-ui-badge min-w-[2.75rem] text-center justify-center" style="color: var(--color-text-ui-static); background-color: rgb(128, 255, 128)">0</span>
 					</div>
 				</template>
 				<template #cell(wert2)="{ rowIndex }">
 					<div class="table-cell">
 						<svws-ui-tooltip v-if="listErgebnismanager.get(rowIndex).getOfBewertung2Wert() > 0" autosize>
-							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung2Farbcode())}">{{ listErgebnismanager.get(rowIndex).getOfBewertung2Wert() }}</span>
+							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="`color: var(--color-text-ui-static); background-color: ${getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung2Farbcode())}`">{{ listErgebnismanager.get(rowIndex).getOfBewertung2Wert() }}</span>
 							<template #content>
 								<pre>{{ listErgebnismanager.get(rowIndex).regelGetTooltipFuerWahlkonflikte() }}</pre>
 							</template>
 						</svws-ui-tooltip>
-						<span v-else class="svws-ui-badge min-w-[2.75rem] text-center justify-center" style="background-color: rgb(128, 255, 128)">0</span>
+						<span v-else class="svws-ui-badge min-w-[2.75rem] text-center justify-center" style="color: var(--color-text-ui-static); background-color: rgb(128, 255, 128)">0</span>
 					</div>
 				</template>
 				<template #cell(wert3)="{ rowIndex }">
@@ -56,9 +58,9 @@
 						<svws-ui-tooltip autosize>
 							<div class="svws-ui-badge min-w-[2.75rem] px-2 text-center " :class="ausfuehrlicheDarstellungKursdifferenz() ? ['justify-between flex gap-1']:['justify-center']" :style="{'background-color': getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3Farbcode())}">
 								<template v-if="ausfuehrlicheDarstellungKursdifferenz()">
-									<span class="svws-ui-badge min-w-12 text-center justify-center" :style="{'background-color': getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3Farbcode_nur_LK())}"> {{ listErgebnismanager.get(rowIndex).getOfBewertung3Wert_nur_LK() }} </span>
-									<span class="svws-ui-badge min-w-12 text-center justify-center" :style="{'background-color': getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3Farbcode_nur_GK())}"> {{ listErgebnismanager.get(rowIndex).getOfBewertung3Wert_nur_GK() }} </span>
-									<span class="svws-ui-badge min-w-12 text-center justify-center" :style="{'background-color': getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3Farbcode_nur_REST())}"> {{ listErgebnismanager.get(rowIndex).getOfBewertung3Wert_nur_REST() }} </span>
+									<span class="svws-ui-badge min-w-12 text-center justify-center" :style="`color: var(--color-text-ui-static); background-color: ${getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3Farbcode_nur_LK())}`"> {{ listErgebnismanager.get(rowIndex).getOfBewertung3Wert_nur_LK() }} </span>
+									<span class="svws-ui-badge min-w-12 text-center justify-center" :style="`color: var(--color-text-ui-static); background-color: ${getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3Farbcode_nur_GK())}`"> {{ listErgebnismanager.get(rowIndex).getOfBewertung3Wert_nur_GK() }} </span>
+									<span class="svws-ui-badge min-w-12 text-center justify-center" :style="`color: var(--color-text-ui-static); background-color: ${getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3Farbcode_nur_REST())}`"> {{ listErgebnismanager.get(rowIndex).getOfBewertung3Wert_nur_REST() }} </span>
 								</template>
 								<span v-else>{{ listErgebnismanager.get(rowIndex).getOfBewertung3Wert() }}</span>
 							</div>
@@ -71,12 +73,12 @@
 				<template #cell(wert4)="{ rowIndex }">
 					<div class="table-cell">
 						<svws-ui-tooltip v-if="listErgebnismanager.get(rowIndex).getOfBewertung4Wert() > 0" autosize>
-							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung4Farbcode())}">{{ listErgebnismanager.get(rowIndex).getOfBewertung4Wert() }}</span>
+							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="`color: var(--color-text-ui-static); background-color: ${getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung4Farbcode())}`">{{ listErgebnismanager.get(rowIndex).getOfBewertung4Wert() }}</span>
 							<template #content>
 								<pre>{{ listErgebnismanager.get(rowIndex).regelGetTooltipFuerFaecherparallelitaet() }}</pre>
 							</template>
 						</svws-ui-tooltip>
-						<span v-else class="svws-ui-badge min-w-[2.75rem] text-center justify-center" style="background-color: rgb(128, 255, 128)">0</span>
+						<span v-else class="svws-ui-badge min-w-[2.75rem] text-center justify-center" style="color: var(--color-text-ui-static); background-color: rgb(128, 255, 128)">0</span>
 					</div>
 				</template>
 			</svws-ui-table>
@@ -93,9 +95,9 @@
 					<svws-ui-button v-else type="danger" @click="closeModal">Alle berechneten Ergebnisse verwerfen und schließen</svws-ui-button>
 				</template>
 				<template v-else>
-					<div class="flex gap-2 w-full">
-						<svws-ui-button v-if="!nachfragen" type="danger" @click="items.size() > 0 ? nachfragen = true : closeModal()">Abbrechen</svws-ui-button>
+					<div class="flex flex-col gap-4">
 						<div>Der Worker zum Berechnen der Blockungen konnte nicht erstellt werden, bitte Fehlermeldungen überprüfen.</div>
+						<svws-ui-button v-if="!nachfragen" class="w-32" type="danger" @click="items.size() > 0 ? nachfragen = true : closeModal()">Abbrechen</svws-ui-button>
 					</div>
 				</template>
 			</div>

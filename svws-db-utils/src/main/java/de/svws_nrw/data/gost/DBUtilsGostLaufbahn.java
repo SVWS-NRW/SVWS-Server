@@ -10,9 +10,9 @@ import de.svws_nrw.core.data.gost.GostJahrgangFachwahlenHalbjahr;
 import de.svws_nrw.core.data.gost.GostLeistungen;
 import de.svws_nrw.core.data.gost.GostLeistungenFachbelegung;
 import de.svws_nrw.core.data.gost.GostLeistungenFachwahl;
-import de.svws_nrw.core.data.schueler.Sprachbelegung;
-import de.svws_nrw.core.data.schueler.Sprachendaten;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
+import de.svws_nrw.asd.data.schueler.Sprachbelegung;
+import de.svws_nrw.asd.data.schueler.Sprachendaten;
 import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.types.gost.GostAbiturFach;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
@@ -295,20 +295,19 @@ public final class DBUtilsGostLaufbahn {
 
 
 	/**
-	 * Ermittelt die für die Laufbahnplanung der gymnasialen Oberstufe relevanten Daten für
-	 * den Schüler mit der angegebenen ID aus den in der Datenbank gespeicherten
-	 * Laufbahnplanungstabellen und ggf. den Abiturtabellen.
+	 * Ermittelt die für die Laufbahnplanung der gymnasialen Oberstufe relevanten Daten für die Schüler mit den angegebenen IDs
+	 * aus den in der Datenbank gespeicherten Laufbahnplanungstabellen und ggf. den Abiturtabellen
+	 * auf Basis des bei den Schülern aktuell angegebenen Schuljahresabschnitts.
 	 *
 	 * @param conn                   die Datenbank-Verbindung
 	 * @param idsSchueler            die IDs der Schüler
-	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts, dessen Lernabschnitt betrachtet werden soll.
 	 *
 	 * @return die für das Abitur relevanten Daten für den Schüler mit der angegebenen ID
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static Map<Long, Abiturdaten> getFromIDsUndSchuljahresabschnitt(final DBEntityManager conn, final List<Long> idsSchueler,
-			final Long idSchuljahresabschnitt) throws ApiOperationException {
+	public static Map<Long, Abiturdaten> getFromIDs(final DBEntityManager conn, final List<Long> idsSchueler)
+			throws ApiOperationException {
 		// Prüfe zunächst die Schüler auf Existenz.
 		if (idsSchueler == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
@@ -320,7 +319,8 @@ public final class DBUtilsGostLaufbahn {
 		final List<DTOSchueler> dtoSchueler = conn.queryByKeyList(DTOSchueler.class, idsSchuelerNonNull);
 		if ((dtoSchueler == null) || dtoSchueler.isEmpty() || (dtoSchueler.size() != idsSchuelerNonNull.size()))
 			throw new ApiOperationException(Status.NOT_FOUND);
-		final Map<Long, DTOSchueler> mapSchueler = dtoSchueler.stream().collect(Collectors.toMap(s -> s.ID, s -> s));
+		final List<Long> idsAktuelleSchuljahresabschnitteSchueler = dtoSchueler.stream().map(s -> s.Schuljahresabschnitts_ID).distinct().toList();
+		final Map<Long, DTOSchueler> mapDtoSchueler = dtoSchueler.stream().collect(Collectors.toMap(s -> s.ID, s -> s));
 
 		// Bestimme die Schulform der Schule.
 		final Schulform schulform = conn.getUser().schuleGetSchulform();
@@ -330,27 +330,43 @@ public final class DBUtilsGostLaufbahn {
 
 		// Bestimme die gültigen Lernabschnitte der Schüler zum übergebenen Schuljahresabschnitt und sammle sie in einer Map.
 		final TypedQuery<DTOSchuelerLernabschnittsdaten> queryLernabschnitte =
-				conn.query(
-						"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID IN :idsSchueler AND e.Schuljahresabschnitts_ID = :idSchuljahresabschnitt"
-								+ " AND e.WechselNr = 0",
+				conn.query("SELECT e FROM DTOSchuelerLernabschnittsdaten e "
+						+ "WHERE e.Schueler_ID IN :idsSchueler "
+						+ "AND e.Schuljahresabschnitts_ID IN :idSchuljahresabschnitt "
+						+ "AND e.WechselNr = 0",
 						DTOSchuelerLernabschnittsdaten.class);
 		final Map<Long, List<DTOSchuelerLernabschnittsdaten>> mapSchuelerLernabschnitte = queryLernabschnitte
 				.setParameter("idsSchueler", idsSchuelerNonNull)
-				.setParameter("idSchuljahresabschnitt", idSchuljahresabschnitt)
+				.setParameter("idSchuljahresabschnitt", idsAktuelleSchuljahresabschnitteSchueler)
 				.getResultList().stream().collect(Collectors.groupingBy(la -> la.Schueler_ID));
 
 		// Map für die GostFaecherManager
 		final Map<Integer, GostFaecherManager> mapGostFaecherManager = new HashMap<>();
 
-		// Map für die zurückzugebenenden Abiturdaten.
+		// Map für die zurückzugebenden Abiturdaten.
 		final Map<Long, Abiturdaten> mapAbiturdaten = new HashMap<>();
 
 		// Durchlaufe die Schüler und bestimme die Abiturdaten.
 		for (final Long idSchueler : idsSchuelerNonNull) {
-			if (!mapSchuelerLernabschnitte.containsKey(idSchueler) || (mapSchuelerLernabschnitte.get(idSchueler) == null)
-					|| (mapSchuelerLernabschnitte.get(idSchueler).isEmpty()))
+			final long idSchuljahresabschnitt = mapDtoSchueler.get(idSchueler).Schuljahresabschnitts_ID;
+			final DTOSchuelerLernabschnittsdaten schuelerLernabschnitt;
+
+			if (mapSchuelerLernabschnitte.containsKey(idSchueler) && (mapSchuelerLernabschnitte.get(idSchueler) != null)
+					&& !mapSchuelerLernabschnitte.get(idSchueler).isEmpty()) {
+				if ((mapSchuelerLernabschnitte.get(idSchueler) == null) || mapSchuelerLernabschnitte.get(idSchueler).isEmpty())
+					throw new ApiOperationException(Status.NOT_FOUND);
+				else if (mapSchuelerLernabschnitte.get(idSchueler).size() == 1)
+					schuelerLernabschnitt = mapSchuelerLernabschnitte.get(idSchueler).getFirst();
+				else
+					schuelerLernabschnitt =
+							mapSchuelerLernabschnitte.get(idSchueler).stream()
+									.filter(la -> la.Schuljahresabschnitts_ID == idSchuljahresabschnitt).findFirst()
+									.orElse(null);
+			} else
 				throw new ApiOperationException(Status.NOT_FOUND);
-			final DTOSchuelerLernabschnittsdaten schuelerLernabschnitt = mapSchuelerLernabschnitte.get(idSchueler).getFirst();
+
+			if (schuelerLernabschnitt == null)
+				throw new ApiOperationException(Status.NOT_FOUND);
 
 			// Bestimme das Abiturjahr
 			final Schulgliederung schulgliederung = (schuelerLernabschnitt.Schulgliederung == null)

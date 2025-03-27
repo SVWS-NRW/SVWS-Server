@@ -5,11 +5,20 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.PublicKey;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
-import de.svws_nrw.core.data.oauth2.OAuth2ClientSecret;
+import de.svws_nrw.base.crypto.TLSUtils;
+import de.svws_nrw.core.data.TLSCertificate;
+import de.svws_nrw.core.data.oauth2.OAuth2ClientConnection;
 import de.svws_nrw.core.types.oauth2.OAuth2ServerTyp;
 import de.svws_nrw.data.DTOMapper;
 import de.svws_nrw.data.DataBasicMapper;
@@ -25,23 +34,61 @@ import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den Core-DTO
- * {@link OAuth2ClientSecret}.
+ * {@link OAuth2ClientConnection}.
  */
 public final class DataOauthClientSecrets extends DataManager<Long> {
 
-	/** Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOSchuleOAuthSecrets} in einen Core-DTO {@link OAuth2ClientSecret}. */
-	private static final DTOMapper<DTOSchuleOAuthSecrets, OAuth2ClientSecret> dtoMapper = (final DTOSchuleOAuthSecrets secrets) -> {
-		final OAuth2ClientSecret daten = new OAuth2ClientSecret();
+	/** Der Formatter für das Umwandeln der Daten, wann ein Zertifikat gültig ist in das ISO-Format */
+	private static final DateTimeFormatter dateFormatter = new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd HH:mm:ss").toFormatter().withZone(ZoneId.systemDefault());
+
+
+	/** Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOSchuleOAuthSecrets} in einen Core-DTO {@link OAuth2ClientConnection}. */
+	private static final DTOMapper<DTOSchuleOAuthSecrets, OAuth2ClientConnection> dtoMapper = (final DTOSchuleOAuthSecrets secrets) -> {
+		final OAuth2ClientConnection daten = new OAuth2ClientConnection();
 		daten.id = secrets.ID;
 		daten.authServer = secrets.AuthServer;
 		daten.clientID = secrets.ClientID;
 		daten.clientSecret = secrets.ClientSecret;
+		// Umwandeln des TLS-Zertifikates, so dass der Client dieses in lesbarer Form erhält
+		try {
+			if (secrets.TLSCert != null) {
+				List<X509Certificate> chain = TLSUtils.decodeCertListJson(secrets.TLSCert);
+				for (final X509Certificate cert : chain) {
+					final TLSCertificate c = new TLSCertificate();
+					c.version = cert.getVersion();
+					c.type = cert.getType();
+					c.subject = cert.getSubjectX500Principal().getName();
+					c.validSince = dateFormatter.format(cert.getNotBefore().toInstant());
+					c.validUntil = dateFormatter.format(cert.getNotAfter().toInstant());
+					// TODO subject unique ID
+					// TODO getSubjectAlternativeNames
+					c.issuer = cert.getIssuerX500Principal().getName();
+					// TODO issue unique ID
+					// TODO getIssuerAlternativeNames
+					c.serialNumber = cert.getSerialNumber().toString(16);
+					c.signatureAlgorithm = cert.getSigAlgName();
+					c.signatureAlgorithmOID = cert.getSigAlgOID();
+					// TODO c.params = cert.getSigAlgParams();
+					c.signature = Base64.getEncoder().encodeToString(cert.getSignature());
+					final PublicKey key = cert.getPublicKey();
+					c.keyAlgorithm = key.getAlgorithm();
+					c.keyFormat = key.getFormat();
+					c.key = Base64.getEncoder().encodeToString(key.getEncoded());
+					daten.tlsCertChain.add(c);
+				}
+			}
+		} catch (CertificateException e) {
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Einlesen der TLS-Zertifikatskette");
+		}
+		daten.tlsCert = secrets.TLSCert;
+		daten.tlsCertIsKnown = secrets.TLSCertIsKnown;
+		daten.tlsCertIsTrusted = secrets.TLSCertIsTrusted;
 		return daten;
 	};
 
 
 	/**
-	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link OAuth2ClientSecret}.
+	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link OAuth2ClientConnection}.
 	 *
 	 * @param conn die Datenbank-Verbindung für den Datenbankzugriff
 	 */
@@ -59,7 +106,7 @@ public final class DataOauthClientSecrets extends DataManager<Long> {
 	@Override
 	public Response getList() throws ApiOperationException {
 		final List<DTOSchuleOAuthSecrets> daten = conn.queryAll(DTOSchuleOAuthSecrets.class);
-		final List<OAuth2ClientSecret> result = new ArrayList<>();
+		final List<OAuth2ClientConnection> result = new ArrayList<>();
 		if (daten == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 		for (final DTOSchuleOAuthSecrets secret : daten)
@@ -107,7 +154,8 @@ public final class DataOauthClientSecrets extends DataManager<Long> {
 				}
 			}),
 			Map.entry("clientID", (conn, dto, value, map) -> dto.ClientID = JSONMapper.convertToString(value, false, false, null)),
-			Map.entry("clientSecret", (conn, dto, value, map) -> dto.ClientSecret = JSONMapper.convertToString(value, false, true, null)));
+			Map.entry("clientSecret", (conn, dto, value, map) -> dto.ClientSecret = JSONMapper.convertToString(value, false, true, null)),
+			Map.entry("tlsCertIsTrusted", (conn, dto, value, map) -> dto.TLSCertIsTrusted = JSONMapper.convertToBoolean(value, false, "tlsCertIsTrusted")));
 
 
 	@Override
@@ -131,7 +179,6 @@ public final class DataOauthClientSecrets extends DataManager<Long> {
 		final DTOSchuleOAuthSecrets dto = conn.queryByKey(DTOSchuleOAuthSecrets.class, id);
 		if (dto == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein DTO mit der ID %s gefunden.".formatted(id));
-		OAuth2Client.clearClientCache(dto);
 		return super.deleteBasic(id, DTOSchuleOAuthSecrets.class, dtoMapper);
 	}
 
@@ -149,7 +196,7 @@ public final class DataOauthClientSecrets extends DataManager<Long> {
 	 */
 	public Response add(final InputStream is) throws ApiOperationException {
 		try {
-			final OAuth2ClientSecret data = JSONMapper.mapper.readValue(is, OAuth2ClientSecret.class);
+			final OAuth2ClientConnection data = JSONMapper.mapper.readValue(is, OAuth2ClientConnection.class);
 			final OAuth2ServerTyp serverTyp = OAuth2ServerTyp.getByID(data.id);
 			if (serverTyp == null)
 				throw new ApiOperationException(Status.BAD_REQUEST, "Es existiert kein OAuth2-Servertyp mit der ID %d.".formatted(data.id));
@@ -157,6 +204,9 @@ public final class DataOauthClientSecrets extends DataManager<Long> {
 				throw new ApiOperationException(Status.CONFLICT, "Es existiert bereits ein Datensatz für den OAuth2-Servertyp %s."
 						.formatted(serverTyp.toString()));
 			final DTOSchuleOAuthSecrets toPersist = new DTOSchuleOAuthSecrets(data.id, data.authServer, data.clientID, data.clientSecret);
+			toPersist.TLSCert = data.tlsCert;
+			toPersist.TLSCertIsKnown = data.tlsCertIsKnown;
+			toPersist.TLSCertIsTrusted = data.tlsCertIsTrusted;
 			// Persistiere das DTO in der Datenbank
 			if (!conn.transactionPersist(toPersist)) {
 				conn.transactionRollback();

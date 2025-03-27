@@ -1,8 +1,5 @@
 package de.svws_nrw.asd.types.kurse;
 
-import de.svws_nrw.asd.types.CoreType;
-import de.svws_nrw.asd.types.schule.Schulform;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,6 +9,8 @@ import java.util.Set;
 
 import de.svws_nrw.asd.data.CoreTypeException;
 import de.svws_nrw.asd.data.kurse.ZulaessigeKursartKatalogEintrag;
+import de.svws_nrw.asd.types.CoreType;
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.utils.CoreTypeDataManager;
 import jakarta.validation.constraints.NotNull;
 
@@ -262,6 +261,9 @@ public enum ZulaessigeKursart implements CoreType<ZulaessigeKursartKatalogEintra
 	 */
 	public static void init(final @NotNull CoreTypeDataManager<ZulaessigeKursartKatalogEintrag, ZulaessigeKursart> manager) {
 		CoreTypeDataManager.putManager(ZulaessigeKursart.class, manager);
+		_mapSchulformenByID.clear();
+		_mapBySchuljahrAndSchulform.clear();
+		_mapBySchuljahrAndAllgemeinerKursart.clear();
 		for (final var ct : data().getWerte())
 			for (final var e : ct.historie()) {
 				final Set<Schulform> tmpSet = new HashSet<>();

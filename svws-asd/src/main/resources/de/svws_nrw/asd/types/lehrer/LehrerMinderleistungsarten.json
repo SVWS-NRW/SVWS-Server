@@ -2,7 +2,7 @@
 	"version": 3,
 	"daten": [ {
 		"bezeichner": "ID_200",
-		"idHistorie": 1,
+		"idStatistik": "1",
 		"historie": [ {
 			"id": 37,
 			"schluessel": "200",
@@ -13,7 +13,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_210",
-		"idHistorie": 2,
+		"idStatistik": "2",
 		"historie": [ {
 			"id": 38,
 			"schluessel": "210",
@@ -24,7 +24,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_220",
-		"idHistorie": 3,
+		"idStatistik": "3",
 		"historie": [ {
 			"id": 39,
 			"schluessel": "220",
@@ -35,7 +35,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_230",
-		"idHistorie": 4,
+		"idStatistik": "4",
 		"historie": [ {
 			"id": 40,
 			"schluessel": "230",
@@ -46,7 +46,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_240",
-		"idHistorie": 5,
+		"idStatistik": "5",
 		"historie": [ {
 			"id": 41,
 			"schluessel": "240",
@@ -57,7 +57,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_250",
-		"idHistorie": 6,
+		"idStatistik": "6",
 		"historie": [ {
 			"id": 42,
 			"schluessel": "250",
@@ -68,7 +68,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_255",
-		"idHistorie": 7,
+		"idStatistik": "7",
 		"historie": [ {
 			"id": 53,
 			"schluessel": "255",
@@ -79,7 +79,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_260",
-		"idHistorie": 8,
+		"idStatistik": "8",
 		"historie": [ {
 			"id": 43,
 			"schluessel": "260",
@@ -90,7 +90,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_270",
-		"idHistorie": 9,
+		"idStatistik": "9",
 		"historie": [ {
 			"id": 44,
 			"schluessel": "270",
@@ -101,7 +101,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_275",
-		"idHistorie": 10,
+		"idStatistik": "10",
 		"historie": [ {
 			"id": 51,
 			"schluessel": "275",
@@ -112,7 +112,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_280",
-		"idHistorie": 11,
+		"idStatistik": "11",
 		"historie": [ {
 			"id": 45,
 			"schluessel": "280",
@@ -123,7 +123,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_290",
-		"idHistorie": 12,
+		"idStatistik": "12",
 		"historie": [ {
 			"id": 46,
 			"schluessel": "290",
@@ -134,7 +134,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_300",
-		"idHistorie": 13,
+		"idStatistik": "13",
 		"historie": [ {
 			"id": 47,
 			"schluessel": "300",
@@ -145,7 +145,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_350",
-		"idHistorie": 14,
+		"idStatistik": "14",
 		"historie": [ {
 			"id": 48,
 			"schluessel": "350",
@@ -156,7 +156,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_360",
-		"idHistorie": 15,
+		"idStatistik": "15",
 		"historie": [ {
 			"id": 49,
 			"schluessel": "360",
@@ -167,7 +167,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_365",
-		"idHistorie": 16,
+		"idStatistik": "16",
 		"historie": [ {
 			"id": 54,
 			"schluessel": "365",
@@ -178,7 +178,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_370",
-		"idHistorie": 17,
+		"idStatistik": "17",
 		"historie": [ {
 			"id": 50,
 			"schluessel": "370",
@@ -189,7 +189,7 @@
 		} ]
 	},{
 		"bezeichner": "ID_380",
-		"idHistorie": 18,
+		"idStatistik": "18",
 		"historie": [ {
 			"id": 52,
 			"schluessel": "380",

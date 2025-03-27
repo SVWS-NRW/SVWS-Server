@@ -9,7 +9,7 @@ import { ArrayList } from '../../../java/util/ArrayList';
 import { GostBelegpruefungErgebnis } from '../../../core/abschluss/gost/GostBelegpruefungErgebnis';
 import { GostKursart } from '../../../core/types/gost/GostKursart';
 import { Latinum } from '../../../core/abschluss/gost/belegpruefung/Latinum';
-import { Sprachendaten } from '../../../core/data/schueler/Sprachendaten';
+import { Sprachendaten } from '../../../asd/data/schueler/Sprachendaten';
 import { GostFachbereich } from '../../../core/types/gost/GostFachbereich';
 import { Allgemeines } from '../../../core/abschluss/gost/belegpruefung/Allgemeines';
 import { Sport } from '../../../core/abschluss/gost/belegpruefung/Sport';

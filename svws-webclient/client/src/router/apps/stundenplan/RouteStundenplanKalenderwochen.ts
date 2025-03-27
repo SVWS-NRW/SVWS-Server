@@ -1,9 +1,9 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationNormalized, RouteParams } from "vue-router";
 import type { StundenplanKalenderwochenProps } from "~/components/stundenplan/kalenderwochen/SStundenplanKalenderwochenProps";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
-import { routeStundenplan, type RouteStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
+import { RouteStundenplan, routeStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
 
 import { api } from "~/router/Api";
 
@@ -15,12 +15,10 @@ export class RouteStundenplanKalenderwochen extends RouteNode<any, RouteStundenp
 		super(Schulform.values(), [
 			BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN,
 		], "stundenplan.kalenderwochen", "kalenderwochen", SStundenplanKalenderwochen);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Kalenderwochen";
-	}
-
-	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+		this.isHidden = (params?: RouteParams) => RouteStundenplan.katalogeCheckHidden(false, this, params);
 	}
 
 	public getProps(to: RouteLocationNormalized): StundenplanKalenderwochenProps {
@@ -28,7 +26,7 @@ export class RouteStundenplanKalenderwochen extends RouteNode<any, RouteStundenp
 			schulform: api.schulform,
 			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
-			stundenplanManager: () => routeStundenplan.data.stundenplanManager,
+			stundenplanManager: () => routeStundenplan.data.manager.daten(),
 			patchKalenderwochenzuordnungen: routeStundenplan.data.patchKalenderwochenzuordnungen,
 			deleteKalenderwochenzuordnungen: routeStundenplan.data.deleteKalenderwochenzuordnungen,
 		};

@@ -3,11 +3,11 @@ package de.svws_nrw.api.server;
 import java.io.InputStream;
 import java.util.List;
 
+import de.svws_nrw.asd.data.schueler.SchuelerBetriebsdaten;
 import de.svws_nrw.core.data.betrieb.BetriebAnsprechpartner;
 import de.svws_nrw.core.data.betrieb.BetriebListeEintrag;
 import de.svws_nrw.core.data.betrieb.BetriebStammdaten;
 import de.svws_nrw.core.data.kataloge.KatalogEintrag;
-import de.svws_nrw.core.data.schueler.SchuelerBetriebsdaten;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;

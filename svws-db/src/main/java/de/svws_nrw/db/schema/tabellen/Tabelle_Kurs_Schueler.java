@@ -32,6 +32,12 @@ public class Tabelle_Kurs_Schueler extends SchemaTabelle {
 			.setJavaComment("Wird für Wiederholungen im Laufenden Schuljahresabschnitt genutzt 0=aktueller/neuester Lernabschnitt 1=vor dem ersten Wechsel"
 					+ " 2=vor dem zweiten Wechsel usw");
 
+	/** Die Definition der Tabellenspalte Leistung_ID */
+	public SchemaTabelleSpalte col_Leistung_ID = add("Leistung_ID", SchemaDatentypen.BIGINT, true)
+			.setNotNull()
+			.setJavaComment("Die eindeutige ID der Leistungsdaten, in denen die Zuordnung stattgefunden hat");
+
+
 	/** Die Definition des Fremdschlüssels KursSchueler_Kurse_FK */
 	public SchemaTabelleFremdschluessel fk_KursSchueler_Kurse_FK = addForeignKey(
 			"KursSchueler_Kurse_FK",
@@ -48,9 +54,17 @@ public class Tabelle_Kurs_Schueler extends SchemaTabelle {
 			new Pair<>(col_Schueler_ID, Schema.tab_Schueler.col_ID)
 	);
 
+	/** Die Definition des Fremdschlüssels KursSchueler_SchuelerLeistungsdaten_FK */
+	public SchemaTabelleFremdschluessel fk_KursSchueler_SchuelerLeistungsdaten_FK = addForeignKey(
+			"KursSchueler_SchuelerLeistungsdaten_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
+			new Pair<>(col_Leistung_ID, Schema.tab_SchuelerLeistungsdaten.col_ID)
+	).setRevision(SchemaRevisionen.REV_34);
 
-	/** Trigger t_INSERT_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER */
-	public SchemaTabelleTrigger trigger_MariaDB_INSERT_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER = addTrigger(
+
+	/** Trigger t_INSERT_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER_VERALTET_REV_34 */
+	public SchemaTabelleTrigger trigger_MariaDB_INSERT_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER_VERALTET_REV_34 = addTrigger(
 			"t_INSERT_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER",
 			DBDriver.MARIA_DB,
 			"""
@@ -65,10 +79,29 @@ public class Tabelle_Kurs_Schueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_Schueler, Schema.tab_SchuelerLernabschnittsdaten)
-			.setRevision(SchemaRevisionen.REV_2);
+			.setRevision(SchemaRevisionen.REV_2)
+			.setVeraltet(SchemaRevisionen.REV_34);
 
-	/** Trigger t_UPDATE_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER */
-	public SchemaTabelleTrigger trigger_MariaDB_UPDATE_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER = addTrigger(
+	/** Trigger t_INSERT_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER */
+	public SchemaTabelleTrigger trigger_MariaDB_INSERT_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER = addTrigger(
+			"t_INSERT_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER",
+			DBDriver.MARIA_DB,
+			"""
+			AFTER INSERT ON SchuelerLeistungsdaten FOR EACH ROW
+			BEGIN
+			    DECLARE schuelerID BIGINT;
+			    DECLARE wechselNr SMALLINT;
+			    IF NEW.Kurs_ID IS NOT NULL THEN
+			        SELECT Schueler.id, SchuelerLernabschnittsdaten.WechselNr INTO schuelerID, wechselNr FROM SchuelerLernabschnittsdaten JOIN Schueler ON SchuelerLernabschnittsdaten.ID = NEW.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID;
+			        INSERT INTO Kurs_Schueler(Kurs_ID, Schueler_ID, LernabschnittWechselNr, Leistung_ID) VALUES (NEW.Kurs_ID, schuelerID, wechselNr, NEW.ID);
+			    END IF;
+			END
+			""",
+			Schema.tab_Schueler, Schema.tab_SchuelerLernabschnittsdaten)
+			.setRevision(SchemaRevisionen.REV_34);
+
+	/** Trigger t_UPDATE_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER_VERALTET_REV_34 */
+	public SchemaTabelleTrigger trigger_MariaDB_UPDATE_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER_VERALTET_REV_34 = addTrigger(
 			"t_UPDATE_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER",
 			DBDriver.MARIA_DB,
 			"""
@@ -95,10 +128,41 @@ public class Tabelle_Kurs_Schueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_Schueler, Schema.tab_SchuelerLernabschnittsdaten)
-			.setRevision(SchemaRevisionen.REV_2);
+			.setRevision(SchemaRevisionen.REV_2)
+			.setVeraltet(SchemaRevisionen.REV_34);
 
-	/** Trigger t_DELETE_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER */
-	public SchemaTabelleTrigger trigger_MariaDB_DELETE_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER = addTrigger(
+	/** Trigger t_UPDATE_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER */
+	public SchemaTabelleTrigger trigger_MariaDB_UPDATE_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER = addTrigger(
+			"t_UPDATE_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER",
+			DBDriver.MARIA_DB,
+			"""
+			AFTER UPDATE ON SchuelerLeistungsdaten FOR EACH ROW
+			BEGIN
+			    DECLARE alteSchuelerID, neueSchuelerID BIGINT;
+			    DECLARE alteWechselNr, neueWechselNr SMALLINT;
+			    IF NEW.Kurs_ID IS NOT NULL AND OLD.Kurs_ID IS NOT NULL AND OLD.Kurs_ID <> NEW.Kurs_ID THEN
+			        SELECT Schueler.id, SchuelerLernabschnittsdaten.WechselNr INTO alteSchuelerID, alteWechselNr FROM SchuelerLernabschnittsdaten JOIN Schueler ON SchuelerLernabschnittsdaten.ID = OLD.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID;
+			        IF OLD.Abschnitt_ID <> NEW.Abschnitt_ID THEN
+			            SELECT Schueler.id, SchuelerLernabschnittsdaten.WechselNr INTO neueSchuelerID, neueWechselNr FROM SchuelerLernabschnittsdaten JOIN Schueler ON SchuelerLernabschnittsdaten.ID = NEW.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID;
+			        ELSE
+			            SET neueSchuelerID := alteSchuelerID;
+			            SET neueWechselNr := alteWechselNr;
+			        END IF;
+			        UPDATE Kurs_Schueler SET Kurs_Schueler.Kurs_ID = NEW.Kurs_ID, Kurs_Schueler.Schueler_ID = neueSchuelerID, Kurs_Schueler.LernabschnittWechselNr = neueWechselNr WHERE Kurs_Schueler.Kurs_ID = OLD.Kurs_ID AND Kurs_Schueler.Schueler_ID = alteSchuelerID AND Kurs_Schueler.LernabschnittWechselNr = alteWechselNr;
+			    ELSEIF NEW.Kurs_ID IS NULL THEN
+			        SELECT Schueler.id, SchuelerLernabschnittsdaten.WechselNr INTO alteSchuelerID, alteWechselNr FROM SchuelerLernabschnittsdaten JOIN Schueler ON SchuelerLernabschnittsdaten.ID = OLD.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID;
+			        DELETE FROM Kurs_Schueler WHERE Kurs_Schueler.Kurs_ID = OLD.Kurs_ID AND Kurs_Schueler.Schueler_ID = alteSchuelerID AND Kurs_Schueler.LernabschnittWechselNr = alteWechselNr;
+			    ELSEIF OLD.Kurs_ID IS NULL THEN
+			        SELECT Schueler.id, SchuelerLernabschnittsdaten.WechselNr INTO neueSchuelerID, neueWechselNr FROM SchuelerLernabschnittsdaten JOIN Schueler ON SchuelerLernabschnittsdaten.ID = NEW.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID;
+			        INSERT INTO Kurs_Schueler(Kurs_ID, Schueler_ID, LernabschnittWechselNr, Leistung_ID) VALUES (NEW.Kurs_ID, neueSchuelerID, neueWechselNr, NEW.ID);
+			    END IF;
+			END
+			""",
+			Schema.tab_Schueler, Schema.tab_SchuelerLernabschnittsdaten)
+			.setRevision(SchemaRevisionen.REV_34);
+
+	/** Trigger t_DELETE_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER_VERALTET_REV_34 */
+	public SchemaTabelleTrigger trigger_MariaDB_DELETE_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER_VERALTET_REV_34 = addTrigger(
 			"t_DELETE_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER",
 			DBDriver.MARIA_DB,
 			"""
@@ -113,10 +177,11 @@ public class Tabelle_Kurs_Schueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_Schueler, Schema.tab_SchuelerLernabschnittsdaten)
-			.setRevision(SchemaRevisionen.REV_2);
+			.setRevision(SchemaRevisionen.REV_2)
+			.setVeraltet(SchemaRevisionen.REV_34);
 
-	/** Trigger t_INSERT_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER */
-	public SchemaTabelleTrigger trigger_SQLite_INSERT_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER = addTrigger(
+	/** Trigger t_INSERT_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER_VERALTET_REV_34 */
+	public SchemaTabelleTrigger trigger_SQLite_INSERT_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER_VERALTET_REV_34 = addTrigger(
 			"t_INSERT_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER",
 			DBDriver.SQLITE,
 			"""
@@ -127,7 +192,22 @@ public class Tabelle_Kurs_Schueler extends SchemaTabelle {
 			END;
 			""",
 			Schema.tab_Schueler, Schema.tab_SchuelerLernabschnittsdaten)
-			.setRevision(SchemaRevisionen.REV_2);
+			.setRevision(SchemaRevisionen.REV_2)
+			.setVeraltet(SchemaRevisionen.REV_34);
+
+	/** Trigger t_INSERT_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER */
+	public SchemaTabelleTrigger trigger_SQLite_INSERT_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER = addTrigger(
+			"t_INSERT_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER",
+			DBDriver.SQLITE,
+			"""
+			AFTER INSERT ON SchuelerLeistungsdaten FOR EACH ROW
+			WHEN NEW.Kurs_ID IS NOT NULL
+			BEGIN
+			    INSERT INTO Kurs_Schueler(Kurs_ID, Schueler_ID, LernabschnittWechselNr, Leistung_ID) VALUES (NEW.Kurs_ID, (SELECT Schueler.ID FROM SchuelerLernabschnittsdaten JOIN Schueler ON SchuelerLernabschnittsdaten.ID = NEW.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID), (SELECT SchuelerLernabschnittsdaten.WechselNr FROM SchuelerLernabschnittsdaten WHERE SchuelerLernabschnittsdaten.ID = NEW.Abschnitt_ID), NEW.ID);
+			END;
+			""",
+			Schema.tab_Schueler, Schema.tab_SchuelerLernabschnittsdaten)
+			.setRevision(SchemaRevisionen.REV_34);
 
 	/** Trigger t_UPDATE_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER_1 */
 	public SchemaTabelleTrigger trigger_SQLite_UPDATE_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER_1 = addTrigger(
@@ -221,8 +301,8 @@ public class Tabelle_Kurs_Schueler extends SchemaTabelle {
 			Schema.tab_Schueler, Schema.tab_SchuelerLernabschnittsdaten)
 			.setRevision(SchemaRevisionen.REV_2);
 
-	/** Trigger t_UPDATE_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER_4 */
-	public SchemaTabelleTrigger trigger_SQLite_UPDATE_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER_4 = addTrigger(
+	/** Trigger t_UPDATE_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER_4_VERALTET_REV_34 */
+	public SchemaTabelleTrigger trigger_SQLite_UPDATE_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER_4_VERALTET_REV_34 = addTrigger(
 			"t_UPDATE_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER_4",
 			DBDriver.SQLITE,
 			"""
@@ -243,10 +323,36 @@ public class Tabelle_Kurs_Schueler extends SchemaTabelle {
 			END;
 			""",
 			Schema.tab_Schueler, Schema.tab_SchuelerLernabschnittsdaten)
-			.setRevision(SchemaRevisionen.REV_2);
+			.setRevision(SchemaRevisionen.REV_2)
+			.setVeraltet(SchemaRevisionen.REV_34);
 
-	/** Trigger t_DELETE_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER */
-	public SchemaTabelleTrigger trigger_SQLite_DELETE_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER = addTrigger(
+	/** Trigger t_UPDATE_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER_4 */
+	public SchemaTabelleTrigger trigger_SQLite_UPDATE_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER_4 = addTrigger(
+			"t_UPDATE_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER_4",
+			DBDriver.SQLITE,
+			"""
+			AFTER UPDATE ON SchuelerLeistungsdaten FOR EACH ROW
+			WHEN NEW.Kurs_ID IS NOT NULL AND
+			    OLD.Kurs_ID IS NULL
+			BEGIN
+			    INSERT INTO Kurs_Schueler(Kurs_ID, Schueler_ID, LernabschnittWechselNr, Leistung_ID)
+			    VALUES (
+			        NEW.Kurs_ID, (
+			            SELECT Schueler.id
+			            FROM SchuelerLernabschnittsdaten JOIN Schueler
+			            ON SchuelerLernabschnittsdaten.ID = NEW.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID
+			        ), (
+			            SELECT SchuelerLernabschnittsdaten.WechselNr FROM SchuelerLernabschnittsdaten WHERE SchuelerLernabschnittsdaten.ID = NEW.Abschnitt_ID
+			        ),
+			        NEW.ID
+			    );
+			END;
+			""",
+			Schema.tab_Schueler, Schema.tab_SchuelerLernabschnittsdaten)
+			.setRevision(SchemaRevisionen.REV_34);
+
+	/** Trigger t_DELETE_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER_VERALTET_REV_34 */
+	public SchemaTabelleTrigger trigger_SQLite_DELETE_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER_VERALTET_REV_34 = addTrigger(
 			"t_DELETE_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER",
 			DBDriver.SQLITE,
 			"""
@@ -268,7 +374,8 @@ public class Tabelle_Kurs_Schueler extends SchemaTabelle {
 			END;
 			""",
 			Schema.tab_Schueler, Schema.tab_SchuelerLernabschnittsdaten)
-			.setRevision(SchemaRevisionen.REV_2);
+			.setRevision(SchemaRevisionen.REV_2)
+			.setVeraltet(SchemaRevisionen.REV_34);
 
 
 	/**

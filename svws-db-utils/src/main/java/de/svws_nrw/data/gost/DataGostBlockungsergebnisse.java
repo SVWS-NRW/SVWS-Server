@@ -1,6 +1,7 @@
 package de.svws_nrw.data.gost;
 
 import de.svws_nrw.asd.adt.Pair;
+import de.svws_nrw.asd.data.schueler.Schueler;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
@@ -13,7 +14,6 @@ import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnung;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnungUpdate;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisSchiene;
 import de.svws_nrw.core.data.gost.GostFach;
-import de.svws_nrw.core.data.schueler.Schueler;
 import de.svws_nrw.core.types.KursFortschreibungsart;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
@@ -870,7 +870,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 					case Q11 -> switch (fachwahl.Q11_Kursart) {
 						case null -> null;
 						case "M" -> "GKM";
-						case "S" -> (fachwahl.AbiturFach == null) ? "GKS" : ("AB" + fachwahl.AbiturFach);
+						case "S" -> "GKS";
 						case "LK" -> ((fachwahl.AbiturFach == null) || (fachwahl.AbiturFach == 1)) ? "LK1" : "LK2";
 						case "ZK" -> "ZK";
 						case "AT" -> "GKM";
@@ -879,7 +879,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 					case Q12 -> switch (fachwahl.Q12_Kursart) {
 						case null -> null;
 						case "M" -> "GKM";
-						case "S" -> (fachwahl.AbiturFach == null) ? "GKS" : ("AB" + fachwahl.AbiturFach);
+						case "S" -> "GKS";
 						case "LK" -> ((fachwahl.AbiturFach == null) || (fachwahl.AbiturFach == 1)) ? "LK1" : "LK2";
 						case "ZK" -> "ZK";
 						case "AT" -> "GKM";
@@ -1121,7 +1121,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 					case Q11 -> switch (fachwahl.Q11_Kursart) {
 						case null -> null;
 						case "M" -> "GKM";
-						case "S" -> (fachwahl.AbiturFach == null) ? "GKS" : ("AB" + fachwahl.AbiturFach);
+						case "S" -> "GKS";
 						case "LK" -> ((fachwahl.AbiturFach != null) && (fachwahl.AbiturFach == 1)) ? "LK1" : "LK2";
 						case "ZK" -> "ZK";
 						case "AT" -> "GKM";
@@ -1130,7 +1130,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 					case Q12 -> switch (fachwahl.Q12_Kursart) {
 						case null -> null;
 						case "M" -> "GKM";
-						case "S" -> (fachwahl.AbiturFach == null) ? "GKS" : ("AB" + fachwahl.AbiturFach);
+						case "S" -> "GKS";
 						case "LK" -> ((fachwahl.AbiturFach != null) && (fachwahl.AbiturFach == 1)) ? "LK1" : "LK2";
 						case "ZK" -> "ZK";
 						case "AT" -> "GKM";

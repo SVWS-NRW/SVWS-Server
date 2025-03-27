@@ -30,7 +30,7 @@ import { Map2DUtils } from '../../../core/utils/Map2DUtils';
 import { JavaInteger } from '../../../java/lang/JavaInteger';
 import { GostBlockungsergebnis } from '../../../core/data/gost/GostBlockungsergebnis';
 import { GostBlockungsdaten } from '../../../core/data/gost/GostBlockungsdaten';
-import { Schueler } from '../../../core/data/schueler/Schueler';
+import { Schueler } from '../../../asd/data/schueler/Schueler';
 import { GostBlockungSchiene } from '../../../core/data/gost/GostBlockungSchiene';
 import { JavaLong } from '../../../java/lang/JavaLong';
 import { Class } from '../../../java/lang/Class';

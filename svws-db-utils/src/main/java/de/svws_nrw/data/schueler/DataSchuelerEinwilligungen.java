@@ -10,6 +10,7 @@ import jakarta.ws.rs.core.Response.Status;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für den
@@ -17,7 +18,7 @@ import java.util.Map;
  */
 public final class DataSchuelerEinwilligungen extends DataManagerRevised<Long[], DTOSchuelerDatenschutz, Einwilligung> {
 
-	private Long idSchueler = -1L;
+	private final Long idSchueler;
 
 	/**
 	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO {@link Einwilligung}.
@@ -28,6 +29,7 @@ public final class DataSchuelerEinwilligungen extends DataManagerRevised<Long[],
 	public DataSchuelerEinwilligungen(final DBEntityManager conn, final Long idSchueler) {
 		super(conn);
 		this.idSchueler = idSchueler;
+		setAttributesNotPatchable("idSchueler", "idEinwilligungsart");
 		setAttributesRequiredOnCreation("idEinwilligungsart");
 	}
 
@@ -69,31 +71,33 @@ public final class DataSchuelerEinwilligungen extends DataManagerRevised<Long[],
 		dto.Status = false;
 		dto.Abgefragt = false;
 	}
+
 	@Override
 	public void checkBeforeCreation(final Long[] newID, final Map<String, Object> initAttributes) throws ApiOperationException {
 		final Long idSchueler = JSONMapper.convertToLong(initAttributes.get("idSchueler"), false, "idSchueler");
 		final Long idEinwilligungsart = JSONMapper.convertToLong(initAttributes.get("idEinwilligungsart"), false, "idEinwilligungsart");
-		if ((idSchueler == null) || (idEinwilligungsart == null)) {
-			throw new ApiOperationException(
-					Status.BAD_REQUEST,
-					"Sowohl die Schüler-ID als auch die Einwilligungsart-ID müssen angegeben werden."
-			);
-		}
 		final DTOSchuelerDatenschutz existingEntry = conn.queryByKey(DTOSchuelerDatenschutz.class, idSchueler, idEinwilligungsart);
-		if (existingEntry != null) {
+		if (existingEntry != null)
 			throw new ApiOperationException(
 					Status.BAD_REQUEST,
 					"Es existiert bereits eine Einwilligung für die Kombination aus Schüler-ID %d und Einwilligungsart-ID %d.".formatted(idSchueler, idEinwilligungsart)
 			);
-		}
 	}
 
 	@Override
 	protected void mapAttribute(final DTOSchuelerDatenschutz dto, final String name, final Object value,
 			final Map<String, Object> map) throws ApiOperationException {
 		switch (name) {
-			case "idSchueler" -> dto.Schueler_ID = JSONMapper.convertToLong(value, false, "idSchueler");
-			case "idEinwilligungsart" -> dto.Datenschutz_ID = JSONMapper.convertToLong(value, false, "idEinwilligungsart");
+			case "idSchueler" -> {
+				final Long idSchueler = JSONMapper.convertToLong(value, false, "idSchueler");
+				if (!Objects.equals(dto.Schueler_ID, idSchueler))
+					throw new ApiOperationException(Status.BAD_REQUEST, "IdPatch %d ist ungleich dtoId %d".formatted(idSchueler, dto.Schueler_ID));
+			}
+			case "idEinwilligungsart" -> {
+				final Long idEinwilligungsart = JSONMapper.convertToLong(value, false, "idEinwilligungsart");
+				if (!Objects.equals(dto.Datenschutz_ID, idEinwilligungsart))
+					throw new ApiOperationException(Status.BAD_REQUEST, "IdPatch %d ist ungleich dtoId %d".formatted(idEinwilligungsart, dto.Datenschutz_ID));
+			}
 			case "status" -> dto.Status = JSONMapper.convertToBoolean(value, false, "status");
 			case "abgefragt" -> dto.Abgefragt = JSONMapper.convertToBoolean(value, false, "abgefragt");
 			default -> throw new ApiOperationException(Status.BAD_REQUEST,  "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));

@@ -1,5 +1,5 @@
 <template>
-	<div class="page--flex">
+	<div class="flex flex-col w-full h-full overflow-hidden">
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
 				<div class="svws-headline-wrapper">
@@ -9,12 +9,12 @@
 							Schulnummer: {{ schule().schulNr }}
 						</svws-ui-badge>
 					</h2>
-					<span class="svws-subline">{{ schule().bezeichnung2 ?? "" + " " + schule().bezeichnung3 ?? "" }}</span>
+					<span class="svws-subline">{{ `${schule().bezeichnung2 ?? ''} ${schule().bezeichnung3 ?? ''}` }}</span>
 				</div>
 			</div>
 			<div class="svws-ui-header--actions" />
 		</header>
-		<div class="page--content">
+		<div class="page page-grid-cards">
 			<svws-ui-content-card title="Stammdaten">
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-text-input class="contentFocusField" placeholder="Bezeichnung 1" :model-value="schule().bezeichnung1" @change="bezeichnung1 => bezeichnung1 && patch({ bezeichnung1 })" type="text" :disabled="!editSchuldaten" />
@@ -62,7 +62,7 @@
 	const showSchuldaten = computed<boolean>(() => props.benutzerIstAdmin || props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_ANSEHEN));
 	const editSchuldaten = computed<boolean>(() => props.benutzerIstAdmin || props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
 
-	const strasse = computed(() => AdressenUtils.combineStrasse(props.schule().strassenname ?? "", props.schule().hausnummer ?? "", props.schule().hausnummerZusatz ?? ""))
+	const strasse = computed(() => AdressenUtils.combineStrasse(props.schule().strassenname ?? "", props.schule().hausnummer ?? "", props.schule().hausnummerZusatz ?? ""));
 
 	const patchStrasse = (value: string | null ) => {
 		if (value !== null) {

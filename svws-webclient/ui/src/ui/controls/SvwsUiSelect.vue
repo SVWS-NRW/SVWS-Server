@@ -41,11 +41,11 @@
 			:focus="autofocus"
 			:class="{ 'contentFocusField': focusClassContent, 'subNavigationFocusField': focusClassSubNav }" />
 		<button v-if="removable && hasSelected && !readonly" role="button" @click.stop="removeItem" class="svws-remove">
-			<span class="icon i-ri-close-line my-1" />
+			<span class="icon i-ri-close-line svws-ui-select--icon my-1" />
 		</button>
 		<button v-if="!readonly" role="button" class="svws-dropdown-icon" tabindex="-1">
-			<span class="icon i-ri-expand-up-down-line" v-if="headless" />
-			<span class="icon i-ri-expand-up-down-fill my-1" v-else />
+			<span class="icon i-ri-expand-up-down-line svws-ui-select--icon" v-if="headless" />
+			<span class="icon i-ri-expand-up-down-fill svws-ui-select--icon my-1" v-else />
 		</button>
 	</div>
 	<Teleport to="body" v-if="isMounted">
@@ -56,7 +56,7 @@
 
 <script setup lang="ts" generic="Item">
 
-	import type { ComputedRef, Ref } from "vue";
+	import type { Ref } from "vue";
 	import type { ComponentExposed } from "vue-component-type-helpers";
 	import type { MaybeElement } from "@floating-ui/vue";
 	import { useFloating, autoUpdate, flip, offset, shift, size } from "@floating-ui/vue";
@@ -339,216 +339,6 @@
 
 	const content = computed<SelectDataType>(() => data.value);
 
-	defineExpose<{
-		content: ComputedRef<SelectDataType>,
-		reset: (originalValue?: boolean) => void,
-	}>({ content, reset });
+	defineExpose({ content, reset });
 
 </script>
-
-
-<style lang="postcss">
-	.svws-ui-select {
-		@apply relative w-full cursor-pointer flex;
-
-		.svws-ui-table & {
-			@apply p-0 -my-0.5;
-		}
-
-		.svws-dropdown-icon,
-		.svws-remove {
-			@apply inline-flex w-5 h-7 absolute text-headline-md top-1 rounded items-center justify-center;
-		}
-
-		.svws-dropdown-icon {
-			@apply bg-ui-neutral border border-ui-secondary;
-			@apply pointer-events-none right-1;
-		}
-
-		.text-input-component {
-			&:hover,
-			&:focus-visible,
-			&:focus-within {
-				@apply grow;
-				& ~ .svws-dropdown-icon {
-					@apply bg-ui-neutral-hover border-ui-neutral-hover;
-					/* TODO: COLORS icon */
-				}
-			}
-		}
-
-		&.svws-statistik {
-			.svws-dropdown-icon {
-				@apply bg-ui-statistic-weak text-ui-statistic border-ui-onstatistic-secondary-hover;
-				/* TODO: COLORS icon */
-			}
-
-			.text-input-component {
-				&:hover,
-				&:focus-visible,
-				&:focus-within {
-					~ .svws-dropdown-icon {
-						@apply border-ui-statistic bg-ui-statistic-weak;
-						/* TODO: COLORS icon */
-					}
-				}
-			}
-		}
-
-		.svws-remove {
-			@apply right-7 top-2 w-5 h-5 text-ui-secondary;
-
-			.icon {
-				margin-top: 0.3rem;
-				/* TODO: COLORS icon */
-			}
-
-			&:hover {
-				@apply text-ui-danger;
-			}
-
-			&:focus,
-			&:focus-visible {
-				@apply outline-none;
-			}
-
-			&:focus-visible {
-				@apply ring ring-ui-danger bg-ui-danger text-ui-ondanger;
-			}
-		}
-
-		&.svws-open {
-			@apply z-50;
-		}
-
-		&:not(.svws-readonly) {
-			.text-input--control,
-			.text-input--headless {
-				@apply text-ellipsis break-all cursor-pointer;
-			}
-		}
-
-		&.svws-readonly {
-			.text-input--control,
-			.text-input--headless {
-				@apply text-ellipsis break-all cursor-default;
-			}
-		}
-
-		.text-input--control {
-			@apply pr-8;
-		}
-
-		.text-input--headless {
-			@apply pl-5;
-		}
-
-		&.svws-removable&.svws-has-value {
-			.text-input--control {
-				@apply pr-12;
-			}
-
-			.text-input--headless {
-				@apply pl-[2.1rem];
-			}
-		}
-
-		&.svws-headless {
-			.svws-dropdown-icon,
-			.svws-remove {
-				@apply right-auto h-5 top-0;
-			}
-
-			.svws-dropdown-icon {
-				@apply text-ui-secondary bg-transparent;
-				@apply w-4 border-0 text-sm;
-				/* TODO: COLORS icon */
-
-				.svws-ui-table .svws-clicked & {
-					@apply text-ui-selected;
-				}
-			}
-
-			.svws-remove {
-				@apply right-auto left-4 inline-flex items-center justify-center w-4;
-
-				svg {
-					@apply -m-px;
-				}
-			}
-
-			.text-input-component {
-				@apply pr-1 my-0;
-
-				&:hover,
-				&:focus-visible,
-				&:focus-within {
-					~ .svws-dropdown-icon {
-						@apply text-ui;
-						/* TODO: COLORS icon */
-					}
-				}
-			}
-
-			&:not(.svws-open) {
-				.text-input-component {
-					&:focus-visible {
-						~ .svws-dropdown-icon {
-							@apply ring ring-ui;
-						}
-					}
-				}
-			}
-
-			&.svws-statistik {
-				.svws-dropdown-icon {
-					@apply text-ui-statistic;
-					/* TODO: COLORS icon */
-				}
-
-				.text-input-component {
-					&:hover,
-					&:focus-visible,
-					&:focus-within {
-						~ .svws-dropdown-icon {
-							@apply bg-ui-statistic-weak;
-						}
-					}
-				}
-			}
-		}
-
-		&.svws-danger {
-			@apply text-ui-danger;
-
-			.text-input--headless {
-				@apply font-bold;
-			}
-
-			&.svws-headless {
-				.svws-dropdown-icon {
-					@apply text-ui-danger;
-					/* TODO: COLORS icon */
-				}
-			}
-		}
-
-		&.svws-disabled {
-			@apply cursor-default pointer-events-none;
-
-			&.svws-headless .text-input--headless,
-			&.svws-removable&.svws-has-value .text-input--headless {
-				@apply opacity-25 pl-5;
-			}
-
-			.svws-dropdown-icon {
-				@apply opacity-10;
-			}
-
-			.svws-remove {
-				@apply hidden;
-			}
-		}
-	}
-
-</style>

@@ -10,9 +10,7 @@ import type { RaeumeProps } from "~/components/stundenplan/kataloge/raeume/SRaeu
 import type { RaeumeAuswahlProps } from "~/components/stundenplan/kataloge/raeume/SRaeumeAuswahlProps";
 import { routeError } from "~/router/error/RouteError";
 import { RouteDataKatalogRaeume } from "./RouteDataKatalogRaeume";
-import type { RouteStundenplan } from "../RouteStundenplan";
-
-
+import { RouteStundenplan } from "../RouteStundenplan";
 
 const SRaeumeAuswahl = () => import("~/components/stundenplan/kataloge/raeume/SRaeumeAuswahl.vue")
 const SRaeume = () => import("~/components/stundenplan/kataloge/raeume/SRaeume.vue")
@@ -20,37 +18,39 @@ const SRaeume = () => import("~/components/stundenplan/kataloge/raeume/SRaeume.v
 export class RouteKatalogRaeume extends RouteNode<RouteDataKatalogRaeume, RouteStundenplan> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "stundenplan.kataloge.raeume", "raeume/:id(\\d+)?", SRaeume, new RouteDataKatalogRaeume());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "stundenplan.kataloge.raeume", "raeume/:idRaum(\\d+)?", SRaeume, new RouteDataKatalogRaeume());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Räume";
+		this.isHidden = (params?: RouteParams) => RouteStundenplan.katalogeCheckHidden(true, this, params);
 		super.setView("eintraege", SRaeumeAuswahl, (route) => this.getAuswahlProps(route));
 	}
 
-	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
+	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean, redirected: RouteNode<any, any> | undefined) : Promise<void | Error | RouteLocationRaw> {
 		try {
 			if (isEntering)
 				await this.data.ladeListe();
-			const { idSchuljahresabschnitt, id } = RouteNode.getIntParams(to_params, [ "idSchuljahresabschnitt", "id" ]);
+			const { idSchuljahresabschnitt, idRaum } = RouteNode.getIntParams(to_params, [ "idSchuljahresabschnitt", "idRaum" ]);
 			if (idSchuljahresabschnitt === undefined)
 				throw new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt.");
-			const eintrag = (id !== undefined) ? this.data.raumListeManager.liste.get(id) : null;
+			const eintrag = (idRaum !== undefined) ? this.data.raumListeManager.liste.get(idRaum) : null;
 			this.data.setEintrag(eintrag);
 			if (!this.data.raumListeManager.hasDaten()) {
-				if (id === undefined) {
+				if (idRaum === undefined) {
 					if (this.data.raumListeManager.filtered().isEmpty())
 						return;
-					return this.getRoute({ id: this.data.raumListeManager.filtered().get(0).id });
+					return this.getRoute({ idRaum: this.data.raumListeManager.filtered().get(0).id });
 				}
 				return;
 			}
 		} catch (e) {
 			return routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
+		return super.update(to, to_params, from, from_params, isEntering, redirected);
 	}
 
 	public addRouteParamsFromState() : RouteParamsRawGeneric {
-		return { id : this.data.raumListeManager.auswahlID() ?? undefined };
+		return { idRaum : this.data.raumListeManager.auswahlID() ?? undefined };
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): RaeumeAuswahlProps {

@@ -1,13 +1,12 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-
 import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
 import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteDataSchuelerVermerke } from "~/router/apps/schueler/vermerke/RouteDataSchuelerVermerke";
 import type { SchuelerVermerkeProps } from "~/components/schueler/vermerke/SSchuelerVermerkeProps";
 import { api } from "~/router/Api";
+import { ConfigElement } from "~/components/Config";
 
 
 const SSchuelerVermerke = () => import("~/components/schueler/vermerke/SSchuelerVermerke.vue");
@@ -22,6 +21,9 @@ export class RouteSchuelerVermerke extends RouteNode<RouteDataSchuelerVermerke, 
 		this.isHidden = (params?: RouteParams) => {
 			return this.checkHidden(params);
 		};
+		api.config.addElements([
+			new ConfigElement("schueler.vermerke.filterNurSichtbare", "user", "true"),
+		]);
 	}
 
 	protected checkHidden(to_params?: RouteParams) {
@@ -57,7 +59,9 @@ export class RouteSchuelerVermerke extends RouteNode<RouteDataSchuelerVermerke, 
 			add: this.data.add,
 			remove: this.data.remove,
 			apiStatus: api.status,
-			autofocus: routeSchueler.data.autofocus
+			autofocus: routeSchueler.data.autofocus,
+			filterNurSichtbare: this.data.filterNurSichtbare,
+			setFilterNurSichtbare: this.data.setFilterNurSichtbare,
 		};
 	}
 

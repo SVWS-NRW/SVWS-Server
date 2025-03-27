@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import de.svws_nrw.core.data.fach.FachDaten;
 import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.data.DataManagerRevised;
@@ -45,6 +44,11 @@ public final class DataFachdaten extends DataManagerRevised<Long, DTOFach, FachD
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine FachDaten mit der ID %d gefunden".formatted(id));
 
 		return map(fach);
+	}
+
+	@Override
+	protected long getLongId(final DTOFach fach) {
+		return fach.ID;
 	}
 
 	@Override

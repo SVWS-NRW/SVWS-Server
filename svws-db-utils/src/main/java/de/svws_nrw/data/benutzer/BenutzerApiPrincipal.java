@@ -184,7 +184,7 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 		if (config.getDBSchema() != null) {
 			if (SVWSKonfiguration.get().isDeactivatedSchema(config.getDBSchema()))
 				throw new ApiOperationException(Status.SERVICE_UNAVAILABLE,
-						"Datenbank-Schema ist zur Zeit deaktviert, da es fehlerhaft ist. Bitte wenden Sie sich an Ihren System-Administrator.");
+						"Datenbank-Schema ist zur Zeit deaktiviert, da es fehlerhaft ist. Bitte wenden Sie sich an Ihren System-Administrator.");
 			if (SVWSKonfiguration.get().isLockedSchema(config.getDBSchema()))
 				throw new ApiOperationException(Status.SERVICE_UNAVAILABLE,
 						"Datenbank-Schema ist zur Zeit aufgrund von internen Operationen gesperrt. Der Zugriff kann später nochmals versucht werden.");

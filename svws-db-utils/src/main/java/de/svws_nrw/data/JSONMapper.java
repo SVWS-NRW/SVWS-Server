@@ -323,6 +323,13 @@ public final class JSONMapper {
 			case final Short s -> s.longValue();
 			case final Integer i -> i.longValue();
 			case final Long l -> l;
+			case final String l -> {
+				try {
+					yield Long.valueOf(l);
+				} catch (final NumberFormatException e) {
+					throw new ApiOperationException(Status.BAD_REQUEST, formatMessage("Der Wert kann nicht in einen Long umgewandelt werden", attrName));
+				}
+			}
 			case null -> throw new ApiOperationException(Status.BAD_REQUEST, formatMessage("Der Wert null ist nicht erlaubt", attrName));
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, formatMessage("Fehler beim Konvertieren zu Long", attrName));
 		};

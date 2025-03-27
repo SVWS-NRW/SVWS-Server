@@ -11,6 +11,7 @@ import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOSchuleNRW;
+import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -26,8 +27,8 @@ public final class DataSchulen extends DataManagerRevised<Long, DTOSchuleNRW, Sc
 	 */
 	public DataSchulen(final DBEntityManager conn) {
 		super(conn);
-		setAttributesNotPatchable("id");
-		setAttributesRequiredOnCreation("schulnummer");
+		setAttributesNotPatchable("id", "schulnummerStatistik");
+		setAttributesRequiredOnCreation("schulnummerStatistik", "kurzbezeichnung", "name");
 	}
 
 	@Override
@@ -64,7 +65,7 @@ public final class DataSchulen extends DataManagerRevised<Long, DTOSchuleNRW, Sc
 		result.id = dtoSchuleNRW.ID;
 		result.kuerzel = dtoSchuleNRW.Kuerzel;
 		result.kurzbezeichnung = dtoSchuleNRW.KurzBez;
-		result.schulnummer = dtoSchuleNRW.SchulNr;
+		result.schulnummerStatistik = dtoSchuleNRW.SchulNr_SIM;
 		result.name = (dtoSchuleNRW.Name != null) ? dtoSchuleNRW.Name : "";
 		final Schulform schulform = (dtoSchuleNRW.SchulformNr != null) ? Schulform.data().getWertBySchluessel(dtoSchuleNRW.SchulformNr) : null;
 		final SchulformKatalogEintrag schulformEintrag = (schulform != null) ? schulform.daten(conn.getUser().schuleGetSchuljahr()) : null;
@@ -91,9 +92,9 @@ public final class DataSchulen extends DataManagerRevised<Long, DTOSchuleNRW, Sc
 				if (id != dto.ID)
 					throw new ApiOperationException(Status.BAD_REQUEST, "Id %d der PatchMap ist ungleich der id %d vom Dto".formatted(id, dto.ID));
 			}
-			case "schulnummer" -> dto.SchulNr = JSONMapper.convertToString(value, true, false, 6, "schulnummer");
-			case "kuerzel" -> dto.Kuerzel = JSONMapper.convertToString(value, true, false, 10, "kuerzel");
-			case "kurzbezeichnung" -> dto.KurzBez = JSONMapper.convertToString(value, true, false, 40, "kurzbezeichnung");
+			case "schulnummerStatistik" -> mapSchulnummer(dto, value);
+			case "kuerzel" -> updateKuerzel(dto, value);
+			case "kurzbezeichnung" -> dto.KurzBez = JSONMapper.convertToString(value, false, false, 40, "kurzbezeichnung");
 			case "name" -> dto.Name = JSONMapper.convertToString(value, false, false, 120, "name");
 			case "idSchulform" -> {
 				final Long id = JSONMapper.convertToLong(value, true, "idSchulform");
@@ -110,18 +111,55 @@ public final class DataSchulen extends DataManagerRevised<Long, DTOSchuleNRW, Sc
 					dto.SchulformNr = eintragByID.schluessel;
 				}
 			}
-			case "strassenname" -> dto.Strassenname = JSONMapper.convertToString(value, false, true, 55, "strassenname");
-			case "hausnummer" -> dto.HausNr = JSONMapper.convertToString(value, false, true, 10, "hausnummer");
-			case "zusatzHausnummer" -> dto.HausNrZusatz = JSONMapper.convertToString(value, false, true, 30, "hausnummerZusatz");
-			case "plz" -> dto.PLZ = JSONMapper.convertToString(value, false, true, 10, "plz");
-			case "ort" -> dto.Ort = JSONMapper.convertToString(value, false, true, 50, "ort");
-			case "telefon" -> dto.Telefon = JSONMapper.convertToString(value, false, true, 20, "telefon");
-			case "fax" -> dto.Fax = JSONMapper.convertToString(value, false, true, 20, "fax");
-			case "email" -> dto.Email = JSONMapper.convertToString(value, false, true, 40, "email");
-			case "schulleiter" -> dto.Schulleiter = JSONMapper.convertToString(value, false, true, 40, "schulleiter");
+			case "strassenname" -> dto.Strassenname = JSONMapper.convertToString(value, true, true, 55, "strassenname");
+			case "hausnummer" -> dto.HausNr = JSONMapper.convertToString(value, true, true, 10, "hausnummer");
+			case "zusatzHausnummer" -> dto.HausNrZusatz = JSONMapper.convertToString(value, true, true, 30, "hausnummerZusatz");
+			case "plz" -> dto.PLZ = JSONMapper.convertToString(value, true, true, 10, "plz");
+			case "ort" -> dto.Ort = JSONMapper.convertToString(value, true, true, 50, "ort");
+			case "telefon" -> dto.Telefon = JSONMapper.convertToString(value, true, true, 20, "telefon");
+			case "fax" -> dto.Fax = JSONMapper.convertToString(value, true, true, 20, "fax");
+			case "email" -> dto.Email = JSONMapper.convertToString(value, true, true, 40, "email");
+			case "schulleiter" -> dto.Schulleiter = JSONMapper.convertToString(value, true, true, 40, "schulleiter");
 			case "sortierung" -> dto.Sortierung = JSONMapper.convertToInteger(value, false, "sortierung");
 			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false, "istSichtbar");
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
 		}
+	}
+
+	private void mapSchulnummer(final DTOSchuleNRW dto, final Object value) throws ApiOperationException {
+		final String schulnummer = JSONMapper.convertToString(value, false, false, 6, "schulnummer");
+		if (schulnummer.startsWith("1")) {
+			dto.SchulNr = schulnummer;
+			dto.SchulNr_SIM = schulnummer;
+		} else if (schulnummer.startsWith("9")) {
+			dto.SchulNr = String.valueOf(dto.ID + 200000);
+			dto.SchulNr_SIM = schulnummer;
+		} else
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"Die Schulnummer %s ist ungültig. Gültige Schulnummern starten mit der Ziffer 1 (intern) oder 9 (extern).".formatted(schulnummer));
+	}
+
+	private void updateKuerzel(final DTOSchuleNRW dto, final Object value) throws ApiOperationException {
+		final String kuerzel = JSONMapper.convertToString(
+				value, true, true, Schema.tab_K_Schule.col_Kuerzel.datenlaenge(), "kuerzel");
+		// Kuerzel ist unveraendert
+		if ((dto.Kuerzel != null) && dto.Kuerzel.equals(kuerzel))
+			return;
+
+		// theoretischer Fall, der nicht eintreten sollte
+		final List<DTOSchuleNRW> schulen = conn.queryList(DTOSchuleNRW.QUERY_BY_KUERZEL, DTOSchuleNRW.class, kuerzel);
+
+		if (schulen.size() > 1)
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Mehr als eine Schule mit dem gleichen Kuerzel vorhanden");
+
+		// kuerzel bereits vorhanden
+		if (!schulen.isEmpty()) {
+			final DTOSchuleNRW dtoSchule = schulen.getFirst();
+			if ((dtoSchule != null) && (dtoSchule.ID != dto.ID))
+				throw new ApiOperationException(Status.BAD_REQUEST, "Das Kuerzel %s ist bereits vorhanden.".formatted(value));
+		}
+
+		// kuerzel wird gepatched
+		dto.Kuerzel = kuerzel;
 	}
 }

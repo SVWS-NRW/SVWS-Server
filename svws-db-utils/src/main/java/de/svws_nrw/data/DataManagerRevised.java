@@ -442,7 +442,7 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 */
 	public Response addAsResponse(final InputStream is) throws ApiOperationException {
 		final Map<String, Object> initAttributes = JSONMapper.toMap(is);
-		final var daten = this.addBasic(getNextID(null, initAttributes), initAttributes);
+		final var daten = this.add(initAttributes);
 		return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

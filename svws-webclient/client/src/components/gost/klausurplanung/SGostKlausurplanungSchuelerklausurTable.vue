@@ -1,12 +1,11 @@
 <template>
 	<svws-ui-checkbox class="mb-2" v-if="selectedItems !== undefined && !schuelerklausuren.isEmpty()" :model-value="selectedItems.containsAll(schuelerklausuren)" @update:model-value="selectedItems.containsAll(schuelerklausuren) ? selectedItems.clear() : selectedItems.addAll(schuelerklausuren)">Alle auswählen</svws-ui-checkbox>
-	<svws-ui-table :columns="cols" :disable-header="!$slots.tableTitle">
+	<svws-ui-table :columns="cols" :disable-header="!slots.tableTitle">
 		<template #noData>
 			<slot name="noData">
 				&nbsp;
 			</slot>
 		</template>
-
 		<template #body>
 			<div v-for="schuelertermin in schuelerklausuren"
 				:key="schuelertermin.id"
@@ -14,10 +13,10 @@
 				:draggable="onDrag && draggable(schuelertermin, termin!)"
 				@dragstart="onDrag!(schuelertermin);$event.stopPropagation()"
 				@dragend="onDrag!(undefined);$event.stopPropagation()"
-				class="svws-ui-tr" role="row"
+				class="svws-ui-tr" role="row" style="grid-template-columns: minmax(4rem, 15fr) minmax(4rem, 8fr) minmax(4rem, 2fr) minmax(4rem, 8fr) minmax(4rem, 11fr) minmax(4rem, 4fr) minmax(4rem, 2fr);"
 				:class="[klausurCssClasses === undefined ? '' : klausurCssClasses(schuelertermin, termin)]">
 				<div class="svws-ui-td" role="cell">
-					<span v-if="draggable(schuelertermin, termin!)" class="icon i-ri-draggable i-ri-draggable -m-0.5 -ml-3" />
+					<span v-if="draggable(schuelertermin, termin!)" class="icon i-ri-draggable" />
 					<svws-ui-checkbox v-if="selectedItems !== undefined" :model-value="selectedItems.contains(schuelertermin)" @update:model-value="selectedItems.contains(schuelertermin) ? selectedItems.remove(schuelertermin) : selectedItems.add(schuelertermin)" />
 					{{ kMan().schuelerGetByIdOrException(kMan().schuelerklausurGetByIdOrException(schuelertermin.idSchuelerklausur).idSchueler)?.nachname }}
 				</div>
@@ -25,7 +24,7 @@
 				<div class="svws-ui-td" role="cell">
 					{{ GostHalbjahr.fromIDorException(kMan().vorgabeBySchuelerklausurTermin(schuelertermin).halbjahr).jahrgang }}
 				</div>
-				<div class="svws-ui-td svws-align-left" role="cell"><span class="svws-ui-badge" :style="`--background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(kMan().kursklausurBySchuelerklausurTermin(schuelertermin)) };`">{{ kMan().kursKurzbezeichnungByKursklausur(kMan().kursklausurBySchuelerklausurTermin(schuelertermin)) }}</span></div>
+				<div class="svws-ui-td svws-align-left" role="cell"><span class="svws-ui-badge" :style="`color: var(--color-text-ui-static); background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(kMan().kursklausurBySchuelerklausurTermin(schuelertermin)) };`">{{ kMan().kursKurzbezeichnungByKursklausur(kMan().kursklausurBySchuelerklausurTermin(schuelertermin)) }}</span></div>
 				<div class="svws-ui-td svws-align-left" role="cell">
 					{{ kMan().datumSchuelerklausurVorgaenger(schuelertermin) !== null ? DateUtils.gibDatumGermanFormat(kMan().datumSchuelerklausurVorgaenger(schuelertermin)!) : "N.N." }}
 
@@ -48,12 +47,13 @@
 	</svws-ui-table>
 </template>
 
+
 <script setup lang="ts">
+
 	import { DateUtils, GostHalbjahr } from "@core";
 	import type { GostKlausurplanManager, GostSchuelerklausurTermin, List, JavaSet, GostKursklausur, GostKlausurenCollectionSkrsKrsData, GostKlausurtermin } from "@core";
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type {DataTableColumn} from "@ui";
-	import { computed} from "vue";
 
 	const props = withDefaults(defineProps<{
 		kMan: () => GostKlausurplanManager;
@@ -75,22 +75,16 @@
 		klausurCssClasses: undefined,
 	});
 
+	const slots = defineSlots();
 
-	function calculateColumns() {
-		const cols: DataTableColumn[] = [
-			{ key: "nachname", label: "Nachame", span: 15 },
-			{ key: "vorname", label: "Vorname", span: 8 },
-			{ key: "stufe", label: "Jg.", span: 2 },
-			{ key: "kurs", label: "Kurs", span: 8 },
-			{ key: "datum", label: "Datum", span: 11 },
-			{ key: "kuerzel", label: "Lehrkraft", span: 4},
-			{ key: "dauer", label: "Dauer", tooltip: "Dauer in Minuten", span: 2, align: "right"},
-		];
-		// { key: "actions", label: "Aktionen", span: 2, align: "right" },
-
-		return cols;
-	}
-
-	const cols = computed(() => calculateColumns());
+	const cols: DataTableColumn[] = [
+		{ key: "nachname", label: "Nachame", span: 15 },
+		{ key: "vorname", label: "Vorname", span: 8 },
+		{ key: "stufe", label: "Jg.", span: 2 },
+		{ key: "kurs", label: "Kurs", span: 8 },
+		{ key: "datum", label: "Datum", span: 11 },
+		{ key: "kuerzel", label: "Lehrkraft", span: 4},
+		{ key: "dauer", label: "Dauer", tooltip: "Dauer in Minuten", span: 2, align: "right"},
+	];
 
 </script>

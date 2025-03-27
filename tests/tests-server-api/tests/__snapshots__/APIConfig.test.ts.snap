@@ -1,0 +1,20 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Config Tests > gegen { schema: 'GymAbi01' } > getConfigDBSchemata: hole Liste mit DBs 1`] = `
+ArrayList {
+  "addFirst": [Function],
+  "addLast": [Function],
+  "elementData": [
+    DBSchemaListeEintrag {
+      "isDeactivated": false,
+      "isDefault": true,
+      "name": "GymAbi01",
+    },
+  ],
+  "getFirst": [Function],
+  "getLast": [Function],
+  "modCount": 1,
+  "removeFirst": [Function],
+  "removeLast": [Function],
+}
+`;

@@ -1,5 +1,9 @@
 package de.svws_nrw.api.server;
 
+import de.svws_nrw.core.data.schule.Lernplattform;
+import de.svws_nrw.core.data.schule.Merkmal;
+import de.svws_nrw.data.schule.DataKatalogLernplattformen;
+import de.svws_nrw.data.schule.DataMerkmale;
 import java.io.InputStream;
 
 import de.svws_nrw.asd.data.schule.SchuleStammdaten;
@@ -21,7 +25,7 @@ import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
 import de.svws_nrw.asd.data.schule.FoerderschwerpunktKatalogEintrag;
 import de.svws_nrw.core.data.schule.HerkunftsschulnummerKatalogEintrag;
 import de.svws_nrw.asd.data.schule.KindergartenbesuchKatalogEintrag;
-import de.svws_nrw.core.data.schule.NationalitaetenKatalogEintrag;
+import de.svws_nrw.asd.data.schule.NationalitaetenKatalogEintrag;
 import de.svws_nrw.asd.data.NoteKatalogEintrag;
 import de.svws_nrw.asd.data.schule.OrganisationsformKatalogEintrag;
 import de.svws_nrw.core.data.schule.PruefungsordnungKatalogEintrag;
@@ -523,7 +527,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Nationalitäten-Katalog-Einträge gefunden")
 	public Response getNationaelitaeten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.run(() -> (new DataKatalogNationalitaeten(null)).getAll(), request,
+		return DBBenutzerUtils.run(() -> new DataKatalogNationalitaeten(null).getAll(), request,
 				ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
 	}
@@ -547,7 +551,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Einschulungsart-Katalog-Einträge gefunden")
 	public Response getEinschulungsarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.run(() -> (new DataKatalogEinschulungsarten(null)).getAll(), request,
+		return DBBenutzerUtils.run(() -> new DataKatalogEinschulungsarten(null).getAll(), request,
 				ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
 	}
@@ -571,7 +575,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Allgemeine-Merkmal-Katalog-Einträge gefunden")
 	public Response getAllgemeineMerkmale(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.run(() -> (new DataKatalogAllgemeineMerkmale(null)).getAll(), request,
+		return DBBenutzerUtils.run(() -> new DataKatalogAllgemeineMerkmale(null).getAll(), request,
 				ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
 	}
@@ -596,7 +600,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Förderschwerpunkt-Katalog-Einträge gefunden")
 	public Response getFoerderschwerpunkte(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.run(() -> (new DataKatalogFoerderschwerpunkte()).getList(), request,
+		return DBBenutzerUtils.run(() -> new DataKatalogFoerderschwerpunkte().getList(), request,
 				ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
 	}
@@ -700,7 +704,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "404", description = "Keine Religion mit der angegebenen ID gefunden")
 	public Response getReligion(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).get(id),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).getByIdAsResponse(id),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
 	}
@@ -727,9 +731,8 @@ public class APISchule {
 	public Response createReligion(@PathParam("schema") final String schema, @RequestBody(description = "Der Post für die Religion-Daten", required = true,
 			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ReligionEintrag.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).add(is),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).addAsResponse(is),
+				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 
 	/**
@@ -758,7 +761,7 @@ public class APISchule {
 			@RequestBody(description = "Der Patch für die Religion-Stammdaten", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ReligionEintrag.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).patch(id, is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).patchAsResponse(id, is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
@@ -783,7 +786,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getReligionen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).getAll(),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).getAllAsResponse(),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
 	}
@@ -811,7 +814,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteReligionEintrag(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).delete(id),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).deleteAsResponse(id),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
@@ -832,7 +835,7 @@ public class APISchule {
 			description = "Entfernt mehrere Religion-Katalog-Einträge der Schule."
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.")
 	@ApiResponse(responseCode = "200", description = "Die Religion-Katalog-Einträge wurde erfolgreich entfernt.",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ReligionEintrag.class))))
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.")
 	@ApiResponse(responseCode = "404", description = "Religion-Katalog-Einträge nicht vorhanden")
 	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
@@ -842,7 +845,7 @@ public class APISchule {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).deleteMultiple(JSONMapper.toListOfLong(is)),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
@@ -1314,7 +1317,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getKatalogOrganisationsformen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.run(() -> (new DataKatalogOrganisationsformen()).getList(),
+		return DBBenutzerUtils.run(() -> new DataKatalogOrganisationsformen().getList(),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
 	}
@@ -1338,7 +1341,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Schulen-Katalog-Einträge gefunden")
 	public Response getKatalogSchulen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.run(() -> (new DataKatalogSchulen()).getList(),
+		return DBBenutzerUtils.run(() -> new DataKatalogSchulen().getList(),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
 	}
@@ -1362,7 +1365,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Schulträger-Katalog-Einträge gefunden")
 	public Response getKatalogSchultraeger(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.run(() -> (new DataKatalogSchultraeger()).getList(),
+		return DBBenutzerUtils.run(() -> new DataKatalogSchultraeger().getList(),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
 	}
@@ -1386,7 +1389,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getKatalogSchuelerStatus(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.run(() -> (new DataSchuelerStatus()).getAll(),
+		return DBBenutzerUtils.run(() -> new DataSchuelerStatus().getAll(),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
 	}
@@ -1411,7 +1414,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getKatalogHerkunftsschulnummern(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.run(() -> (new DataKatalogHerkunftsschulnummern()).getAll(),
+		return DBBenutzerUtils.run(() -> new DataKatalogHerkunftsschulnummern().getAll(),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
 	}
@@ -2765,4 +2768,188 @@ public class APISchule {
 				BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
 	}
 
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Merkmale.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste der Merkmale
+	 */
+	@GET
+	@Path("/merkmale")
+	@Operation(summary = "Gibt eine Übersicht der Merkmale im Katalog zurück.",
+			description = "Gibt die Merkmale zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Merkmalen.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Merkmal.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Merkmale gefunden")
+	public Response getMerkmale(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataMerkmale(conn).getAllAsResponse(),
+				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage des schulspezifischen Kataloges für die Lernplattformen.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return          die Liste mit dem Katalog der Lernplattformen
+	 */
+	@GET
+	@Path("/lernplattformen")
+	@Operation(summary = "Gibt eine Übersicht aller Lernplattformen im Katalog zurück.",
+			description = "Erstellt eine Liste aller in dem Katalog vorhanden Lernplattformen unter Angabe der ID und der Bezeichnung. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Lernplattform.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
+	public Response getLernplattformen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogLernplattformen(conn).getAllAsResponse(),
+				request, ServerMode.DEV, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage einer Lernplattform.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param id        die Datenbank-ID zur Identifikation der Lernplattform
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Daten zur Lernplattform
+	 */
+	@GET
+	@Path("/lernplattform/{id : \\d+}")
+	@Operation(summary = "Liefert zu der ID der Lernplattform die zugehörigen Daten.",
+			description = "Liest die Daten der Lernplattform zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Daten der Lernplattform",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Lernplattform.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalogdaten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Lernplattform mit der angegebenen ID gefunden")
+	public Response getLernplattform(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogLernplattformen(conn).getByIdAsResponse(id),
+				request, ServerMode.DEV,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Erstellen einer neuen Lernplattform.
+	 *
+	 * @param schema       das Datenbankschema, in welchem die Einwilligungsart erstellt wird
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 * @param is           das JSON-Objekt
+	 *
+	 * @return die HTTP-Antwort mit der neuen Lernplattform
+	 */
+	@POST
+	@Path("/lernplattform/new")
+	@Operation(summary = "Erstellt eine neue Lernplattform und gibt sie zurück.",
+			description = "Erstellt eine neue Lernplattform und gibt sie zurück."
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Lernplattform besitzt.")
+	@ApiResponse(responseCode = "201", description = "Lernplattform wurde erfolgreich angelegt.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Lernplattform.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Lernplattform anzulegen.")
+	@ApiResponse(responseCode = "409", description = "Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response addLernplattform(@PathParam("schema") final String schema,
+			@RequestBody(description = "Der initiale Patch für die neue Lernplattform", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Lernplattform.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogLernplattformen(conn).addAsResponse(is),
+				request, ServerMode.DEV,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Patchen einer Lernplattform im angegebenen Schema
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param id        die Datenbank-ID zur Identifikation der Lernplattform
+	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/lernplattform/{id : \\d+}")
+	@Operation(summary = "Passt die zu der ID der Lernplattform zugehörigen Stammdaten an.",
+			description = "Passt die Lernplattform-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern der Daten der Lernplattform besitzt.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Lernplattform-Daten integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lernplattform-Daten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Keine Lernplattform mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
+			+ " (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response patchLernplattform(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@RequestBody(description = "Der Patch für die Lernplattform", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = Lernplattform.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogLernplattformen(conn).patchAsResponse(id, is),
+				request, ServerMode.DEV,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen einer Lernplattform der Schule.
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param id           die ID der Lernplattform
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status und ggf. der gelöschten Lernplattform
+	 */
+	@DELETE
+	@Path("/lernplattform/{id : \\d+}")
+	@Operation(summary = "Entfernt eine Lernplattform der Schule.",
+			description = "Entfernt eine Lernplattform der Schule."
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.")
+	@ApiResponse(responseCode = "200", description = "Die Lernplattform wurde erfolgreich entfernt.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Lernplattform.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.")
+	@ApiResponse(responseCode = "404", description = "Lernplattform nicht vorhanden")
+	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteLernplattform(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogLernplattformen(conn).deleteAsResponse(id),
+				request, ServerMode.DEV,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen mehrerer Lernplattformen der Schule.
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param is           die IDs der Lernplattformen
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
+	 */
+	@DELETE
+	@Path("/lernplattformen/delete/multiple")
+	@Operation(summary = "Entfernt mehrere Lernplattformen der Schule.",
+			description = "Entfernt mehrere Lernplattformen der Schule."
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.")
+	@ApiResponse(responseCode = "200", description = "Die Lernplattformen wurden erfolgreich entfernt.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.")
+	@ApiResponse(responseCode = "404", description = "Lernplattformen nicht vorhanden")
+	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteLernplattformen(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die IDs der zu löschenden Lernplattformen", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogLernplattformen(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)),
+				request, ServerMode.DEV,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
 }

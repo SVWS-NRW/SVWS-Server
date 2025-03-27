@@ -1,44 +1,52 @@
 <template>
-	<div class="border-l h-full flex flex-auto flex-col pl-4 pr-1 gap-4">
-		<div class="text-headline-md flex justify-between"><span>{{ schueler.nachname }}, {{ schueler.vorname }}</span><span>{{ hauptgruppenBezeichnung[erlaubteHauptgruppe] }}</span></div>
-		<svws-ui-textarea-input placeholder="Floskeln auswählen oder manuell eingeben" :model-value="text" @input="onInput" autoresize />
-		<div class="flex justify-between gap-2 w-full flex-row-reverse">
-			<div v-if="showButtons" class="flex gap-2">
-				<svws-ui-button @click="doPatchLeistung" :type="clean ? 'primary':'secondary'">{{ clean ? 'Speichern':'Anwenden' }}</svws-ui-button>
-				<svws-ui-button @click="text = bemerkung">Zurücksetzen</svws-ui-button>
-			</div>
-			<div v-if="(text !== null) && /\$Vorname\$/i.exec(text)" class="flex gap-2">
-				<div class="w-20">
-					<svws-ui-input-number :model-value="every" :min="1" :max="9" @update:model-value="value => every = value ?? 1" />
-				</div>
-				<span class="mt-2">Vorname jedes {{ every === 1 ? '':`${every}.` }} Mal</span>
-			</div>
+	<div class="overflow-hidden h-full flex flex-col" :class="{'border-l pl-4': floskelEditorVisible}">
+		<div @click="setFloskelEditorVisible(!floskelEditorVisible)" class="">
+			<span v-if="floskelEditorVisible" class="icon i-ri-menu-unfold-line cursor-pointer" />
+			<span v-else class="icon i-ri-menu-fold-line cursor-pointer" />
+			<div v-if="floskelEditorVisible" class="text-headline-md flex justify-between pb-2"><span>{{ schueler.nachname }}, {{ schueler.vorname }}</span><span>{{ hauptgruppenBezeichnung[erlaubteHauptgruppe] }}</span></div>
 		</div>
-		<div class="svws-ui-table svws-clickable overflow-hidden" role="table" aria-label="Tabelle">
-			<div class="svws-ui-thead" role="rowgroup" aria-label="Tabellenkopf">
-				<div class="svws-ui-tr" role="row">
-					<div class="svws-ui-td" role="columnheader">Kürzel</div>
-					<div class="svws-ui-td" role="columnheader">Text</div>
-					<div class="svws-ui-td" role="columnheader">Niveau</div>
-					<div class="svws-ui-td" role="columnheader">Jg</div>
+		<div v-if="floskelEditorVisible" class="h-full overflow-y-auto">
+			<div class="flex flex-auto flex-col gap-4">
+				<div class="py-4">
+					<svws-ui-textarea-input class="floskel-input" placeholder="Floskeln auswählen oder manuell eingeben" :model-value="text" @input="onInput" autoresize is-content-focus-field />
 				</div>
-			</div>
-			<div class="svws-ui-tbody overflow-y-scroll" role="rowgroup" aria-label="Tabelleninhalt">
-				<template v-for="[gruppe, floskeln] of gruppenMap" :key="gruppe.kuerzel">
-					<div class="svws-ui-thead cursor-pointer select-none" role="rowgroup">
-						<div class="svws-ui-td col-span-4 flex items-center gap-1" role="cell" @click="collapsed.set(gruppe, collapsed.get(gruppe) ? false : true)">
-							<span class="icon i-ri-arrow-right-s-line" v-if="collapsed.get(gruppe)" />
-							<span class="icon i-ri-arrow-down-s-line" v-else />
-							<span> {{ gruppe.bezeichnung }}</span>
+				<div class="flex justify-between gap-2 w-full flex-row-reverse">
+					<div v-if="showButtons" class="flex gap-2">
+						<svws-ui-button @click="doPatchLeistung" :type="clean ? 'primary':'secondary'">{{ clean ? 'Speichern':'Anwenden' }}</svws-ui-button>
+						<svws-ui-button @click="text = bemerkung">Zurücksetzen</svws-ui-button>
+					</div>
+					<div v-if="(text !== null) && /$Vorname$/i.exec(text)" class="flex gap-2">
+						<div class="w-20">
+							<svws-ui-input-number :model-value="every" :min="1" :max="9" @update:model-value="value => every = value ?? 1" />
 						</div>
+						<span class="mt-2">Vorname jedes {{ every === 1 ? '':`${every}.` }} Mal</span>
 					</div>
-					<div v-for="floskel of floskeln" :key="floskel.kuerzel ?? 1" class="svws-ui-tr" role="row" v-show="!collapsed.get(gruppe)" @click="ergaenzeFloskel(floskel)">
-						<div class="svws-ui-td" role="cell"> {{ floskel.kuerzel }} </div>
-						<div class="svws-ui-td" role="cell"> {{ floskel.text }} </div>
-						<div class="svws-ui-td" role="cell"> {{ floskel.niveau }} </div>
-						<div class="svws-ui-td" role="cell"> {{ floskel.jahrgangID }} </div>
+				</div>
+				<div class="svws-ui-table svws-clickable" role="table" aria-label="Tabelle">
+					<div class="svws-ui-tbody " role="rowgroup" aria-label="Tabelleninhalt">
+						<template v-for="[gruppe, floskeln] of gruppenMap" :key="gruppe.kuerzel">
+							<div class="svws-ui-thead cursor-pointer select-none sticky" role="rowgroup">
+								<div class="svws-ui-td col-span-4 flex items-center gap-1" role="cell" @click="collapsed.set(gruppe, collapsed.get(gruppe) ? false : true)">
+									<span class="icon i-ri-arrow-right-s-line" v-if="collapsed.get(gruppe)" />
+									<span class="icon i-ri-arrow-down-s-line" v-else />
+									<span class="text-headline-md"> {{ gruppe.bezeichnung }}</span>
+								</div>
+								<div v-if="!collapsed.get(gruppe)" class="svws-ui-tr" role="row">
+									<div class="svws-ui-td" role="columnheader">Kürzel</div>
+									<div class="svws-ui-td" role="columnheader">Text</div>
+									<div class="svws-ui-td" role="columnheader">Niveau</div>
+									<div class="svws-ui-td" role="columnheader">Jg</div>
+								</div>
+							</div>
+							<div v-for="floskel of floskeln" :key="floskel.kuerzel ?? 1" class="svws-ui-tr" role="row" v-show="!collapsed.get(gruppe)" @click="ergaenzeFloskel(floskel)">
+								<div class="svws-ui-td" role="cell"> {{ floskel.kuerzel }} </div>
+								<div class="svws-ui-td" role="cell"> {{ floskel.text }} </div>
+								<div class="svws-ui-td" role="cell"> {{ floskel.niveau }} </div>
+								<div class="svws-ui-td" role="cell"> {{ floskel.jahrgangID }} </div>
+							</div>
+						</template>
 					</div>
-				</template>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -58,6 +66,8 @@
 		manager: EnmManager;
 		patch: (value: string|null) => Promise<void>;
 		erlaubteHauptgruppe: BemerkungenHauptgruppe;
+		floskelEditorVisible: boolean;
+		setFloskelEditorVisible: (value: boolean) => Promise<void>;
 	}>();
 
 	const hauptgruppenBezeichnung: Record<BemerkungenHauptgruppe, string> = {
@@ -193,7 +203,7 @@
 	}
 
 	// eslint-disable-next-line vue/no-setup-props-reactivity-loss
-	const collapsed = ref(new Map<ENMFloskelgruppe, boolean>([...props.manager.daten.floskelgruppen].map(g => [g, false])));
+	const collapsed = ref(new Map<ENMFloskelgruppe, boolean>([...props.manager.daten.floskelgruppen].map(g => g.hauptgruppe === 'ALLG' ? [g, true] : [g, false])));
 
 	async function doPatchLeistung() {
 		if (props.manager.auswahlLeistung.leistung === null)
@@ -205,13 +215,14 @@
 
 </script>
 
-<style lang="postcss" scoped>
+<style scoped>
 
 	.svws-ui-tr {
 		grid-template-columns: 6em 1fr 4em 4em;
 		min-height: auto;
 		.svws-ui-td {
-			@apply leading-5 align-middle;
+			line-height: 1.25rem;
+			vertical-align: middle;
 		}
 	}
 

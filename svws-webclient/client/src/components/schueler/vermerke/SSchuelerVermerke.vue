@@ -1,54 +1,73 @@
 <template>
-	<div class="page--content">
-		<svws-ui-content-card title="" class="col-span-full">
-			<svws-ui-button v-autofocus class="contentFocusField ml-auto mr-0 p-3 mb-8 min-h-10" @click="addWrapper">
-				<p style="margin-right: 1rem">Neuen Vermerk hinzufügen</p>
-				<span class="icon icon-lg i-ri-chat-new-line" />
-			</svws-ui-button>
-			<div v-for="vermerk of schuelerVermerke()" :key="vermerk.id">
-				<svws-ui-action-button class="mb-5 bg-blue-100" @click="activeVermerk = (activeVermerk?.id === vermerk.id) ? undefined : vermerk" icon="i-ri-message-line"
-					:title="getTitle(vermerk)" :description="getDescription(vermerk)" :is-active="activeVermerk?.id === vermerk.id">
-					<svws-ui-input-wrapper class="px-6">
-						<svws-ui-textarea-input	v-model="vermerk.bemerkung" :autoresize="true" :rows="4" @change="bemerkung => patch({ bemerkung: String(bemerkung) }, vermerk.id)" />
-						<div class="flex w-144">
-							<p class="my-auto mr-4">Vermerkart:</p>
-							<svws-ui-select class="bg-white" title="Bitte wählen" headless :model-value="mapVermerkArten.get(vermerk.idVermerkart || -1)" :items="mapVermerkArten.values()" :item-text="item => item.bezeichnung"
-								@update:model-value="art => (art !== null) && patch({ idVermerkart: art?.id ?? -1 }, vermerk.id)" />
-						</div>
-						<div class="w-full flex justify-between">
-							<div class="">
-								<p class="text-headline-md mb-1">{{ vermerk.angelegtVon }}</p>
-								<div v-if="apiStatus.pending" class="min-h-8">
-									<svws-ui-spinner :spinning="true" />
-								</div>
-								<div v-else class="subTextContainer">
-									<p v-if="vermerk.geaendertVon">	Zuletzt bearbeitet von {{ vermerk.geaendertVon }} am {{ getDate(vermerk) }}	</p>
-									<p v-else> Erstellt am	{{ getDate(vermerk) }} </p>
-								</div>
-							</div>
-							<div class="mb-0 mt-auto pr-0">
-								<svws-ui-button	type="danger" @click="remove(vermerk.id)">
-									Löschen
-								</svws-ui-button>
-							</div>
-						</div>
-					</svws-ui-input-wrapper>
-				</svws-ui-action-button>
+	<div class="page page-grid-cards">
+		<div>
+			<div class="flex justify-between">
+				<svws-ui-button v-autofocus class="contentFocusField min-h-[32px]" @click="addWrapper">
+					<span class="icon i-ri-chat-new-line" />
+					<span class="ml-2">Neuen Vermerk hinzufügen</span>
+				</svws-ui-button>
+				<svws-ui-checkbox class="self-center" :model-value="filterNurSichtbare" @update:model-value="value => setFilterNurSichtbare(value)">Nur <b>sichtbare</b> Vermerkarten anzeigen</svws-ui-checkbox>
 			</div>
-		</svws-ui-content-card>
+			<div class="flex flex-col gap-4 mt-4">
+				<template v-for="vermerk of listVermerke" :key="vermerk.id">
+					<ui-card icon="i-ri-message-line" :title="getTitle(vermerk)" :subtitle="getDescription(vermerk)" :is-open="activeVermerk?.id === vermerk.id">
+						<svws-ui-input-wrapper class="px-6">
+							<svws-ui-textarea-input	v-model="vermerk.bemerkung" :autoresize="true" :rows="4" @change="bemerkung => patch({ bemerkung: String(bemerkung) }, vermerk.id)" />
+							<div class="flex w-200">
+								<p class="my-auto mr-4">Vermerkart:</p>
+								<svws-ui-select class="bg-ui-contrast-0 mr-4" title="Bitte wählen" headless :model-value="mapVermerkArten.get(vermerk.idVermerkart || -1)" :items="mapVermerkArten.values()" :item-text="item => getItemText(item)"
+									@update:model-value="art => (art !== null) && patch({ idVermerkart: art?.id ?? -1 }, vermerk.id)" />
+							</div>
+							<div class="w-full flex justify-between">
+								<div class="">
+									<p class="text-headline-md mb-1">{{ vermerk.angelegtVon }}</p>
+									<div v-if="apiStatus.pending" class="min-h-8">
+										<svws-ui-spinner :spinning="true" />
+									</div>
+									<div v-else class="subTextContainer">
+										<p v-if="vermerk.geaendertVon">	Zuletzt bearbeitet von {{ vermerk.geaendertVon }} am {{ getDate(vermerk) }}	</p>
+										<p v-else> Erstellt am	{{ getDate(vermerk) }} </p>
+									</div>
+								</div>
+							</div>
+						</svws-ui-input-wrapper>
+						<template #buttonFooterRight>
+							<svws-ui-button type="danger" title="Löschen" @click="remove(vermerk.id)" class="mt-4">
+								Löschen
+							</svws-ui-button>
+						</template>
+					</ui-card>
+				</template>
+			</div>
+		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
 
+	import { computed, ref } from "vue";
 	import type { SchuelerVermerkeProps } from "./SSchuelerVermerkeProps";
+	import { ArrayList, DateUtils, type SchuelerVermerke, type VermerkartEintrag} from "@core";
 
 	const props = defineProps<SchuelerVermerkeProps>();
 
-	import { ref } from "vue";
-	import { DateUtils, type SchuelerVermerke } from "@core";
-
 	const activeVermerk = ref<SchuelerVermerke>();
+
+	const listVermerke = computed(() => {
+		if (!props.filterNurSichtbare)
+			return props.schuelerVermerke();
+		const liste = new ArrayList<SchuelerVermerke>();
+		for (const item of props.schuelerVermerke()) {
+			if (item.idVermerkart === null) {
+				liste.add(item);
+				continue;
+			}
+			const art = props.mapVermerkArten.get(item.idVermerkart);
+			if ((art !== undefined) && art.istSichtbar)
+				liste.add(item);
+		}
+		return liste;
+	})
 
 	function getDate(vermerk: SchuelerVermerke) {
 		return DateUtils.gibDatumGermanFormat(vermerk.datum ?? new Date().toISOString());
@@ -56,11 +75,17 @@
 
 	async function addWrapper() {
 		await props.add();
-		activeVermerk.value = [... props.schuelerVermerke()][props.schuelerVermerke().size() -1];
+		activeVermerk.value = props.schuelerVermerke().getLast();
 	}
 
 	function getTitle(vermerk: SchuelerVermerke) {
-		return `${props.mapVermerkArten.get(vermerk.idVermerkart ?? -1)?.bezeichnung ?? "Neuer Vermerk"}: ${vermerk.bemerkung}`;
+		const title = `${props.mapVermerkArten.get(vermerk.idVermerkart ?? -1)?.bezeichnung ?? "Neuer Vermerk"}: ${vermerk.bemerkung}`
+		return title.length > 50 ? title.substring(0, 50) + "..." : title;
+	}
+
+	function getItemText(item: VermerkartEintrag) {
+		const vermerkArtIsVisible = !item.istSichtbar;
+		return `${item.bezeichnung} ${vermerkArtIsVisible ? '(nicht sichtbar)' : ''}`
 	}
 
 	function getDescription(vermerk: SchuelerVermerke) : string {
@@ -68,12 +93,3 @@
 	}
 
 </script>
-
-
-<style lang="postcss" scoped>
-
-	:deep(.svws-title) {
-		@apply text-ellipsis overflow-hidden whitespace-nowrap w-full;
-	}
-
-</style>

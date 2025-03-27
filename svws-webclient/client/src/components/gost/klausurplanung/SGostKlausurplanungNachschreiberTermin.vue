@@ -1,5 +1,5 @@
 <template>
-	<div class="flex flex-col bg-white dark:bg-black rounded-xl cursor-pointer" @drop="onDrop(termin())" @dragover="checkDropZone($event, termin())" :class="dragData === undefined || isDropZone(termin()) ? '' : 'opacity-35'">
+	<div class="flex flex-col bg-ui-contrast-0 rounded-xl cursor-pointer" @drop="onDrop(termin())" @dragover="checkDropZone($event, termin())" :class="dragData === undefined || isDropZone(termin()) ? '' : 'opacity-35'">
 		<s-gost-klausurplanung-termin :termin="termin()"
 			:benutzer-kompetenzen
 			:k-man
@@ -16,8 +16,8 @@
 			<template #title>
 				<div class="flex gap-2 w-full mb-1">
 					<svws-ui-text-input :disabled="termin().istHaupttermin" :placeholder="(termin().bezeichnung === null ? (props.kMan().kursklausurGetMengeByTermin(termin()).size() ? terminTitel() : 'Neuer Nachschreibtermin') : 'Klausurtermin')" :model-value="termin().bezeichnung" @change="bezeichnung => patchKlausurtermin(termin().id, {bezeichnung})" headless />
-					<span v-if="(dragData !== undefined && dragData instanceof GostSchuelerklausurTermin && (termin().quartal === kMan().vorgabeBySchuelerklausurTermin(dragData).quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur > 0)" class="inline-flex items-center flex-shrink-0 text-error font-bold text-headline-md -my-1">
-						<span class="icon i-ri-alert-line" />
+					<span v-if="(dragData !== undefined && dragData instanceof GostSchuelerklausurTermin && (termin().quartal === kMan().vorgabeBySchuelerklausurTermin(dragData).quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur > 0)" class="inline-flex items-center shrink-0 text-ui-danger font-bold text-headline-md -my-1">
+						<span class="icon i-ri-alert-line icon-ui-caution" />
 						<span>{{ konflikteTerminDragKlausur >= 0 ? konflikteTerminDragKlausur : 2 }}</span>
 					</span>
 				</div>
@@ -33,13 +33,15 @@
 				</svws-ui-button>
 			</template>
 			<template #loeschen>
-				<svws-ui-button :disabled="!hatKompetenzUpdate" v-if="loescheKlausurtermine !== undefined && termin !== undefined" type="icon" size="small" class="-mr-1" @click="(termin().istHaupttermin ? updateKlausurblockung(kMan().patchKlausurterminNachschreiberZuglassenFalse(termin())) : loescheKlausurtermine(Arrays.asList([termin()])));$event.stopPropagation()"><span class="icon i-ri-delete-bin-line -mx-1.5" /></svws-ui-button>
+				<svws-ui-button :disabled="!hatKompetenzUpdate" v-if="loescheKlausurtermine !== undefined && termin !== undefined" type="trash" size="small" @click="(termin().istHaupttermin ? updateKlausurblockung(kMan().patchKlausurterminNachschreiberZuglassenFalse(termin())) : loescheKlausurtermine(Arrays.asList([termin()])));$event.stopPropagation()" />
 			</template>
 		</s-gost-klausurplanung-termin>
 	</div>
 </template>
 
+
 <script setup lang="ts">
+
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type { GostHalbjahr, GostKlausurenCollectionSkrsKrsData, GostKlausurenUpdate} from "@core";
 	import { BenutzerKompetenz} from "@core";

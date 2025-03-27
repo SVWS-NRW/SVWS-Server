@@ -64,7 +64,7 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 
 	/**
 	 * Die Methode muss überschrieben werden und erstellt einen neuen Auswahl-Manager
-	 * für den angegebenen Schuljahresabschnitt. Daber werden benötigte Daten über die API geladen.
+	 * für den angegebenen Schuljahresabschnitt. Daher werden benötigte Daten über die API geladen.
 	 *
 	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
 	 */
@@ -187,7 +187,7 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 		if ((auswahl === null) && (!hatteDaten))
 			return;
 
-		if ((auswahl === null) || (this.manager.liste.list().isEmpty())) {
+		if ((auswahl === null)/* || (this.manager.liste.list().isEmpty())*/) {
 			this.manager.setDaten(null);
 			this.commit();
 			return;

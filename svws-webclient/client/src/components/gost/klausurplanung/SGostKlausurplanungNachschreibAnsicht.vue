@@ -2,7 +2,7 @@
 	<Teleport to=".router-tab-bar--subnav" v-if="isMounted">
 		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" :halbjahr="halbjahr" />
 	</Teleport>
-	<div class="page--content relative flex-col">
+	<div class="page page-flex-col">
 		<svws-ui-content-card class="col-span-full" :title="`Nachschreibplan ${jahrgangsdaten.jahrgang}, ${halbjahr.halbjahr}. Halbjahr${quartalsauswahl.value === 0 ? '' : ', ' + quartalsauswahl.value + '. Quartal'}`">
 			<svws-ui-table v-model:sort-by-and-order="sortByAndOrder" :columns="cols" :items="itemsSorted">
 				<template #noData>
@@ -18,7 +18,7 @@
 					{{ kMan().schuelerGetByIdOrException(props.kMan().schuelerklausurGetByIdOrException(rowData.idSchuelerklausur).idSchueler)?.vorname }}
 				</template>
 				<template #cell(kurs)="{ rowData }">
-					<span class="svws-ui-badge" :style="`--background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(kMan().kursklausurBySchuelerklausurTermin(rowData)) };`">{{ kMan().kursKurzbezeichnungByKursklausur(kMan().kursklausurBySchuelerklausurTermin(rowData)) }}</span>
+					<span class="svws-ui-badge" :style="`color: var(--color-text-ui-static); background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(kMan().kursklausurBySchuelerklausurTermin(rowData)) };`">{{ kMan().kursKurzbezeichnungByKursklausur(kMan().kursklausurBySchuelerklausurTermin(rowData)) }}</span>
 				</template>
 				<template #cell(kuerzel)="{ rowData }">
 					{{ kMan().kursLehrerKuerzelByKursklausur(kMan().kursklausurBySchuelerklausurTermin(rowData)) }}

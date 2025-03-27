@@ -4,7 +4,7 @@
 	<template v-for="pause in getPausenzeitenListeByWochentag(wochentag)" :key="pause">
 		<div class="svws-ui-stundenplan--pause" :style="posPause(pause.id)" @dragover="checkDropZonePausenzeit($event, pause)" @drop="onDrop(pause)">
 			<template v-if="mode === 'normal'">
-				<div v-for="pausenaufsicht in getPausenaufsichten(pause.id)" :key="pausenaufsicht.id" class="svws-ui-stundenplan--pausen-aufsicht flex-grow"
+				<div v-for="pausenaufsicht in getPausenaufsichten(pause.id)" :key="pausenaufsicht.id" class="svws-ui-stundenplan--pausen-aufsicht grow"
 					:class="{'cursor-grab': draggable}"
 					:draggable @dragstart="onDrag(pausenaufsicht)" @dragend="onDrag(undefined)">
 					<div v-if="textPausenzeit !== undefined" class="font-bold col-span-full mb-1"> {{ textPausenzeit }} </div>
@@ -20,31 +20,31 @@
 					<span v-if="!hidePausenaufsicht" title="Lehrkraft" class="max-w-[24ch] leading-none mx-auto">{{ getPausenaufsichtenString(pause.id) }}</span>
 				</div>
 			</template>
-			<template v-if="mode === 'tooltip'">
-				<div class="svws-ui-stundenplan--pausen-aufsicht flex-grow flex items-center justify-center">
-					<svws-ui-tooltip>
-						<span class="inline-flex items-center leading-tight" :class="{ 'flex-col' : !kompakt, 'flex-row': kompakt }">
-							<template v-if="kompakt">
-								<span class="text-sm">{{ getPausenaufsichten(pause.id).size() }}&nbsp;</span>
-								<span class="icon i-ri-cup-line" />
-							</template>
-							<template v-else>
-								<span>{{ pause.bezeichnung }}</span>
-								<span class="text-sm">{{ getPausenaufsichten(pause.id).size() }} Aufsichten</span>
-							</template>
-						</span>
-						<template #content>
-							<div class="font-bold mb-2"> {{ pause.bezeichnung }} </div>
-							<div v-for="pausenaufsicht in getPausenaufsichten(pause.id)" :key="pausenaufsicht.id" class="grid grid-cols-2 gap-2 items-center" :class="{'cursor-grab': draggable}"
-								:draggable @dragstart="onDrag(pausenaufsicht)" @dragend="onDrag(undefined)">
-								<div> <span v-if="!hidePausenaufsicht" title="Lehrkraft"> {{ manager().lehrerGetByIdOrException(pausenaufsicht.idLehrer).kuerzel }} </span> </div>
-								<div title="Aufsichtsbereiche"> {{ getAufsichtsbereicheString(pausenaufsicht) }}</div>
-							</div>
-						</template>
-					</svws-ui-tooltip>
-				</div>
-			</template>
 		</div>
+		<template v-if="mode === 'tooltip'">
+			<div class="tooltip-mode svws-ui-stundenplan--pausen-aufsicht flex justify-center" :style="posPause(pause.id)" @dragover="checkDropZonePausenzeit($event, pause)" @drop="onDrop(pause)">
+				<svws-ui-tooltip>
+					<span class="inline-flex items-center leading-tight" :class="{ 'flex-col' : !kompakt, 'flex-row': kompakt }">
+						<template v-if="kompakt">
+							<span class="text-sm">{{ getPausenaufsichten(pause.id).size() }}&nbsp;</span>
+							<span class="icon i-ri-cup-line" />
+						</template>
+						<template v-else>
+							<span>{{ pause.bezeichnung }}</span>
+							<span class="text-sm">{{ getPausenaufsichten(pause.id).size() }} Aufsichten</span>
+						</template>
+					</span>
+					<template #content>
+						<div class="font-bold mb-2"> {{ pause.bezeichnung }} </div>
+						<div v-for="pausenaufsicht in getPausenaufsichten(pause.id)" :key="pausenaufsicht.id" class="grid grid-cols-2 gap-2 items-center" :class="{'cursor-grab': draggable}"
+							:draggable @dragstart="onDrag(pausenaufsicht)" @dragend="onDrag(undefined)">
+							<div> <span v-if="!hidePausenaufsicht" title="Lehrkraft"> {{ manager().lehrerGetByIdOrException(pausenaufsicht.idLehrer).kuerzel }} </span> </div>
+							<div title="Aufsichtsbereiche"> {{ getAufsichtsbereicheString(pausenaufsicht) }}</div>
+						</div>
+					</template>
+				</svws-ui-tooltip>
+			</div>
+		</template>
 	</template>
 </template>
 

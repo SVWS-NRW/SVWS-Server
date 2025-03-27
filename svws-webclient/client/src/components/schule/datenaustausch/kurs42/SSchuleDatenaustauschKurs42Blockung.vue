@@ -1,5 +1,5 @@
 <template>
-	<div class="page--content">
+	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Blockung aus Kurs42 importieren">
 			<div class="flex flex-col gap-2 mb-4 lg:mb-8">
 				<p><span class="icon i-ri-information-line inline align-text-top" /> Der Import besteht aus den folgenden Text-Dateien, die aus Kurs42 exportiert werden müssen: </p>

@@ -1,0 +1,135 @@
+.modal--pageWrapper {
+	@apply flex items-center justify-center;
+	@apply h-screen;
+	@apply p-6;
+	@apply pointer-events-auto;
+}
+
+.modal--pageWrapper--help {
+	@apply justify-end items-start;
+	@apply pointer-events-none;
+}
+
+.modal--titlebar {
+	@apply flex flex-row items-center justify-between;
+	@apply w-full;
+}
+/* TODO: COLORS icon close darkmode */
+
+.modal {
+	@apply bg-ui text-ui border-ui border;
+	@apply align-bottom sm:align-middle my-8 transform transition-all overflow-hidden;
+	@apply max-h-full max-w-modal-sm;
+	@apply flex flex-col items-center;
+	@apply w-full mx-auto;
+	@apply relative z-50;
+	@apply rounded-xl;
+}
+
+.modal--sm {
+	@apply w-full max-w-modal-sm;
+}
+
+.modal--md {
+	@apply w-full max-w-modal-md;
+	@apply rounded-xl;
+}
+
+.modal--lg {
+	@apply w-full max-w-modal-lg;
+	@apply rounded-xl;
+}
+
+.modal--help {
+	@apply border border-ui;
+	@apply m-0 h-full;
+	@apply shadow-xl;
+	@apply w-full max-w-modal-help;
+	@apply pointer-events-auto rounded-lg;
+
+	.modal--description,
+	.modal--content {
+		@apply text-left text-base;
+	}
+}
+
+.modal--danger {
+	.modal--title {
+		@apply text-ui-danger;
+	}
+
+	.button--primary {
+		@apply bg-ui-danger text-ui-ondanger border-ui-danger;
+	}
+
+			/* &:focus-visible {
+				verursacht postcss fehler
+				@apply ring-ui-danger;
+			} */
+	}
+
+.modal .modal--titlebar {
+	@apply border-b border-ui;
+	@apply p-2;
+
+	.button {
+		@apply rounded-md;
+	}
+
+	.button:focus {
+		@apply outline-hidden ring-0 border-0;
+	}
+}
+
+.modal--title {
+	@apply grow px-2;
+	@apply text-headline-sm;
+}
+
+.modal--content-wrapper:not(.modal--content-noscroll) {
+	@apply h-full overflow-y-auto w-full;
+	-webkit-overflow-scrolling: touch;
+}
+
+.modal--content-wrapper {
+	@apply h-full overflow-hidden w-full flex flex-col;
+}
+
+.modal--description {
+	@apply px-4 py-5 text-headline-sm text-center;
+}
+
+.modal--content:not(.modal--content-noscroll) {
+	@apply w-full text-base px-4 py-5 text-center;
+}
+
+.modal--content {
+	@apply h-full w-full text-base px-4 py-5 text-center overflow-hidden flex flex-col;
+}
+
+.modal--wrapper {
+	@apply fixed inset-0 z-50 pointer-events-none;
+	@apply overflow-y-auto;
+	-webkit-overflow-scrolling: touch;
+}
+
+.modal--actions {
+	@apply flex items-center justify-center p-4 pb-6 gap-2;
+}
+
+.modal--logs {
+	@apply flex items-center justify-center p-4 pb-6 gap-2;
+}
+
+.modal--description + .modal--content,
+.modal--description + .modal--actions,
+.modal--content + .modal--actions{
+	@apply pt-0;
+}
+
+.modal--overlay {
+	@apply bg-ui-neutral/70 backdrop-filter backdrop-grayscale;
+	@apply absolute top-0 left-0;
+	@apply h-full w-full;
+	@apply z-50;
+}

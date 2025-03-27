@@ -132,7 +132,7 @@ public class Tabelle_Wiedervorlage extends SchemaTabelle {
 	 */
 	public Tabelle_Wiedervorlage() {
 		super("Wiedervorlage", SchemaRevisionen.REV_21);
-		setMigrate(false);
+		setMigrate(true);
 		setImportExport(true);
 		setPKAutoIncrement();
 		setJavaSubPackage("schule");

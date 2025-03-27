@@ -14,6 +14,7 @@ import java.util.function.Predicate;
 
 import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.asd.adt.PairNN;
+import de.svws_nrw.asd.data.schueler.Schueler;
 import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.core.adt.LongArrayKey;
@@ -37,7 +38,6 @@ import de.svws_nrw.core.data.kursblockung.SchuelerblockungInput;
 import de.svws_nrw.core.data.kursblockung.SchuelerblockungInputKurs;
 import de.svws_nrw.core.data.kursblockung.SchuelerblockungOutput;
 import de.svws_nrw.core.data.kursblockung.SchuelerblockungOutputFachwahlZuKurs;
-import de.svws_nrw.core.data.schueler.Schueler;
 import de.svws_nrw.core.data.stundenplan.StundenplanKurs;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.exceptions.UserNotificationException;
@@ -2778,7 +2778,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return die Anzahl an Schülern die dem Kurs zugeordnet sind plus potentiell zugeordnete Dummy SuS.
 	 */
-	private int getOfKursAnzahlSchuelerPlusDummy(final long idKurs) {
+	public int getOfKursAnzahlSchuelerPlusDummy(final long idKurs) {
 		return getKursE(idKurs).schueler.size() + DeveloperNotificationException.ifMapGetIsNull(_kursID_to_dummySuS, idKurs);
 	}
 
@@ -2804,6 +2804,28 @@ public class GostBlockungsergebnisManager {
 	public int getOfKursAnzahlSchuelerExterne(final long idKurs) {
 		final @NotNull GostBlockungsergebnisKurs kursE = getKursE(idKurs);
 		return ListUtils.getCountFiltered(kursE.schueler, (final @NotNull Long idSchueler) -> getOfSchuelerHatStatusExtern(idSchueler));
+	}
+
+	/**
+	 * Liefert die Anzahl externer SuS und der Dummy-SuS die dem Kurs zugeordnet sind.
+	 *
+	 * @param  idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Anzahl externer SuS und der Dummy-SuS die dem Kurs zugeordnet sind.
+	 */
+	public int getOfKursAnzahlSchuelerExternePlusDummies(final long idKurs) {
+		return getOfKursAnzahlSchuelerExterne(idKurs) +  getOfKursAnzahlSchuelerDummy(idKurs);
+	}
+
+	/**
+	 * Liefert die Anzahl internen SuS. Das sind alle SuS der Kursliste abzüglich der SuS mit Status "extern".
+	 *
+	 * @param  idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Anzahl internen SuS. Das sind alle SuS der Kursliste abzüglich der SuS mit Status "extern".
+	 */
+	public int getOfKursAnzahlSchuelerInterne(final long idKurs) {
+		return getOfKursAnzahlSchueler(idKurs) - getOfKursAnzahlSchuelerExterne(idKurs);
 	}
 
 	/**

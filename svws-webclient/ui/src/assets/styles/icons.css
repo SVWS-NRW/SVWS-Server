@@ -1,0 +1,983 @@
+@layer base {
+
+	:root {
+		--icon-size: 1.2rem;
+		--icon-size-xxs: 0.5rem;
+		--icon-size-xs: 0.75rem;
+		--icon-size-sm: 1rem;
+		--icon-size-lg: 1.5rem;
+		--icon-size-xl: 2rem;
+		--icon-size-xxl: 4rem;	
+	}
+
+}
+
+@utility icon {
+	width: var(--icon-size);
+	height: var(--icon-size);
+	line-height: var(--icon-size);
+	background-color: var(--color-text-ui);
+}
+
+@utility icon-xxs {
+	width: var(--icon-size-xxs);
+	height: var(--icon-size-xxs);
+	line-height: var(--icon-size-xxs);
+	background-color: var(--color-text-ui);
+}
+
+@utility icon-xs {
+	width: var(--icon-size-xs);
+	height: var(--icon-size-xs);
+	line-height: var(--icon-size-xs);
+	background-color: var(--color-text-ui);
+}
+
+@utility icon-sm {
+	width: var(--icon-size-sm);
+	height: var(--icon-size-sm);
+	line-height: var(--icon-size-sm);
+	background-color: var(--color-text-ui);
+}
+
+@utility icon-lg {
+	width: var(--icon-size-lg);
+	height: var(--icon-size-lg);
+	line-height: var(--icon-size-lg);
+	background-color: var(--color-text-ui);
+}
+
+@utility icon-xl {
+	width: var(--icon-size-xl);
+	height: var(--icon-size-xl);
+	line-height: var(--icon-size-xl);
+	background-color: var(--color-text-ui);
+}
+
+@utility icon-xxl {
+	width: var(--icon-size-xxl);
+	height: var(--icon-size-xxl);
+	line-height: var(--icon-size-xxl);
+	background-color: var(--color-text-ui);
+}
+
+@utility icon-* {
+	background-color: --value(--color-*);
+}
+
+@utility i-ri-add-line {
+	mask-image: url(@icons/System/add-line.svg);
+	-webkit-mask-image: url(@icons/System/add-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-add-circle-line {
+	mask-image: url(@icons/System/add-circle-line.svg);
+	-webkit-mask-image: url(@icons/System/add-circle-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-add-circle-fill {
+	mask-image: url(@icons/System/add-circle-fill.svg);
+	-webkit-mask-image: url(@icons/System/add-circle-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-alert-fill {
+	mask-image: url(@icons/System/alert-fill.svg);
+	-webkit-mask-image: url(@icons/System/alert-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-alert-line {
+	mask-image: url(@icons/System/alert-line.svg);
+	-webkit-mask-image: url(@icons/System/alert-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-archive-line {
+	mask-image: url(@icons/Business/archive-line.svg);
+	-webkit-mask-image: url(@icons/Business/archive-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-archive-stack-line {
+	mask-image: url(@icons/Business/archive-stack-line.svg);
+	-webkit-mask-image: url(@icons/Business/archive-stack-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-arrow-down-line {
+	mask-image: url(@icons/Arrows/arrow-down-line.svg);
+	-webkit-mask-image: url(@icons/Arrows/arrow-down-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-arrow-down-s-line {
+	mask-image: url(@icons/Arrows/arrow-down-s-line.svg);
+	-webkit-mask-image: url(@icons/Arrows/arrow-down-s-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-arrow-go-back-line {
+	mask-image: url(@icons/Arrows/arrow-go-back-line.svg);
+	-webkit-mask-image: url(@icons/Arrows/arrow-go-back-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-arrow-left-s-line {
+	mask-image: url(@icons/Arrows/arrow-left-s-line.svg);
+	-webkit-mask-image: url(@icons/Arrows/arrow-left-s-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-arrow-right-circle-line {
+	mask-image: url(@icons/Arrows/arrow-right-circle-line.svg);
+	-webkit-mask-image: url(@icons/Arrows/arrow-right-circle-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-arrow-right-s-line {
+	mask-image: url(@icons/Arrows/arrow-right-s-line.svg);
+	-webkit-mask-image: url(@icons/Arrows/arrow-right-s-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-arrow-turn-back-line {
+	mask-image: url(@icons/Arrows/arrow-turn-back-line.svg);
+	-webkit-mask-image: url(@icons/Arrows/arrow-turn-back-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-arrow-up-down-line {
+	mask-image: url(@icons/Arrows/arrow-up-down-line.svg);
+	-webkit-mask-image: url(@icons/Arrows/arrow-up-down-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-arrow-up-line {
+	mask-image: url(@icons/Arrows/arrow-up-line.svg);
+	-webkit-mask-image: url(@icons/Arrows/arrow-up-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-arrow-up-s-line {
+	mask-image: url(@icons/Arrows/arrow-up-s-line.svg);
+	-webkit-mask-image: url(@icons/Arrows/arrow-up-s-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-asterisk {
+	mask-image: url(@icons/Editor/asterisk.svg);
+	-webkit-mask-image: url(@icons/Editor/asterisk.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-at-line {
+	mask-image: url(@icons/Business/at-line.svg);
+	-webkit-mask-image: url(@icons/Business/at-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-bar-chart-2-line {
+	mask-image: url(@icons/Business/bar-chart-2-line.svg);
+	-webkit-mask-image: url(@icons/Business/bar-chart-2-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-book-2-line {
+	mask-image: url(@icons/Document/book-2-line.svg);
+	-webkit-mask-image: url(@icons/Document/book-2-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-box-3-line {
+	mask-image: url(@icons/Others/box-3-line.svg);
+	-webkit-mask-image: url(@icons/Others/box-3-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-briefcase-line {
+	mask-image: url(@icons/Business/briefcase-line.svg);
+	-webkit-mask-image: url(@icons/Business/briefcase-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-bug-fill {
+	mask-image: url(@icons/Development/bug-fill.svg);
+	-webkit-mask-image: url(@icons/Development/bug-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-calculator-line {
+	mask-image: url(@icons/Business/calculator-line.svg);
+	-webkit-mask-image: url(@icons/Business/calculator-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-calendar-2-line {
+	mask-image: url(@icons/Business/calendar-2-line.svg);
+	-webkit-mask-image: url(@icons/Business/calendar-2-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-calendar-event-line {
+	mask-image: url(@icons/Business/calendar-event-line.svg);
+	-webkit-mask-image: url(@icons/Business/calendar-event-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-camera-fill {
+	mask-image: url(@icons/Media/camera-fill.svg);
+	-webkit-mask-image: url(@icons/Media/camera-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-camera-line {
+	mask-image: url(@icons/Media/camera-line.svg);
+	-webkit-mask-image: url(@icons/Media/camera-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-camera-off-line {
+	mask-image: url(@icons/Media/camera-off-line.svg);
+	-webkit-mask-image: url(@icons/Media/camera-off-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-chat-1-line {
+	mask-image: url(@icons/Communication/chat-1-line.svg);
+	-webkit-mask-image: url(@icons/Communication/chat-1-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-chat-new-line {
+	mask-image: url(@icons/Communication/chat-new-line.svg);
+	-webkit-mask-image: url(@icons/Communication/chat-new-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-check-line {
+	mask-image: url(@icons/System/check-line.svg);
+	-webkit-mask-image: url(@icons/System/check-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-checkbox-blank-circle-line {
+	mask-image: url(@icons/System/checkbox-blank-circle-line.svg);
+	-webkit-mask-image: url(@icons/System/checkbox-blank-circle-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-checkbox-circle-fill {
+	mask-image: url(@icons/System/checkbox-circle-fill.svg);
+	-webkit-mask-image: url(@icons/System/checkbox-circle-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-checkbox-circle-line {
+	mask-image: url(@icons/System/checkbox-circle-line.svg);
+	-webkit-mask-image: url(@icons/System/checkbox-circle-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-close-line {
+	mask-image: url(@icons/System/close-line.svg);
+	-webkit-mask-image: url(@icons/System/close-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-corner-right-up-line {
+	mask-image: url(@icons/Arrows/corner-right-up-line.svg);
+	-webkit-mask-image: url(@icons/Arrows/corner-right-up-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-cup-line {
+	mask-image: url(@icons/Food/cup-line.svg);
+	-webkit-mask-image: url(@icons/Food/cup-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-database-2-line {
+	mask-image: url(@icons/Device/database-2-line.svg);
+	-webkit-mask-image: url(@icons/Device/database-2-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-delete-bin-fill {
+	mask-image: url(@icons/System/delete-bin-fill.svg);
+	-webkit-mask-image: url(@icons/System/delete-bin-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-delete-bin-line {
+	mask-image: url(@icons/System/delete-bin-line.svg);
+	-webkit-mask-image: url(@icons/System/delete-bin-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-device-recover-line {
+	mask-image: url(@icons/Device/device-recover-line.svg);
+	-webkit-mask-image: url(@icons/Device/device-recover-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-download-2-line {
+	mask-image: url(@icons/System/download-2-line.svg);
+	-webkit-mask-image: url(@icons/System/download-2-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-draft-line {
+	mask-image: url(@icons/Document/draft-line.svg);
+	-webkit-mask-image: url(@icons/Document/draft-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-draggable {
+	mask-image: url(@icons/Editor/draggable.svg);
+	-webkit-mask-image: url(@icons/Editor/draggable.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-edit-2-line {
+	mask-image: url(@icons/Design/edit-2-line.svg);
+	-webkit-mask-image: url(@icons/Design/edit-2-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-eraser-fill {
+	mask-image: url(@icons/Design/eraser-fill.svg);
+	-webkit-mask-image: url(@icons/Design/eraser-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-eraser-line {
+	mask-image: url(@icons/Design/eraser-line.svg);
+	-webkit-mask-image: url(@icons/Design/eraser-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-error-warning-fill {
+	mask-image: url(@icons/System/error-warning-fill.svg);
+	-webkit-mask-image: url(@icons/System/error-warning-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-error-warning-line {
+	mask-image: url(@icons/System/error-warning-line.svg);
+	-webkit-mask-image: url(@icons/System/error-warning-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-expand-height-line {
+	mask-image: url(@icons/Arrows/expand-height-line.svg);
+	-webkit-mask-image: url(@icons/Arrows/expand-height-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-expand-width-line {
+	mask-image: url(@icons/Arrows/expand-width-line.svg);
+	-webkit-mask-image: url(@icons/Arrows/expand-width-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-expand-right-line {
+	mask-image: url(@icons/Arrows/expand-right-line.svg);
+	-webkit-mask-image: url(@icons/Arrows/expand-right-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-contract-left-line {
+	mask-image: url(@icons/Arrows/contract-left-line.svg);
+	-webkit-mask-image: url(@icons/Arrows/contract-left-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-expand-up-down-fill {
+	mask-image: url(@icons/Arrows/expand-up-down-fill.svg);
+	-webkit-mask-image: url(@icons/Arrows/expand-up-down-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-expand-up-down-line {
+	mask-image: url(@icons/Arrows/expand-up-down-line.svg);
+	-webkit-mask-image: url(@icons/Arrows/expand-up-down-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-eye-line {
+	mask-image: url(@icons/System/eye-line.svg);
+	-webkit-mask-image: url(@icons/System/eye-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-file-close-line {
+	mask-image: url(@icons/Document/file-close-line.svg);
+	-webkit-mask-image: url(@icons/Document/file-close-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-file-copy-line {
+	mask-image: url(@icons/Document/file-copy-line.svg);
+	-webkit-mask-image: url(@icons/Document/file-copy-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-file-damage-line {
+	mask-image: url(@icons/Document/file-damage-line.svg);
+	-webkit-mask-image: url(@icons/Document/file-damage-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-filter-fill {
+	mask-image: url(@icons/System/filter-fill.svg);
+	-webkit-mask-image: url(@icons/System/filter-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-filter-line {
+	mask-image: url(@icons/System/filter-line.svg);
+	-webkit-mask-image: url(@icons/System/filter-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-filter-off-line {
+	mask-image: url(@icons/System/filter-off-line.svg);
+	-webkit-mask-image: url(@icons/System/filter-off-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-folder-open-line {
+	mask-image: url(@icons/Document/folder-open-line.svg);
+	-webkit-mask-image: url(@icons/Document/folder-open-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-forbid-fill {
+	mask-image: url(@icons/System/forbid-fill.svg);
+	-webkit-mask-image: url(@icons/System/forbid-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-forbid-line {
+	mask-image: url(@icons/System/forbid-line.svg);
+	-webkit-mask-image: url(@icons/System/forbid-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-fullscreen-line {
+	mask-image: url(@icons/Media/fullscreen-line.svg);
+	-webkit-mask-image: url(@icons/Media/fullscreen-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-graduation-cap-line {
+	mask-image: url(@icons/Others/graduation-cap-line.svg);
+	-webkit-mask-image: url(@icons/Others/graduation-cap-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-group-line {
+	mask-image: url(@icons/User%20&%20Faces/group-line.svg);
+	-webkit-mask-image: url(@icons/User%20&%20Faces/group-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-headphone-line {
+	mask-image: url(@icons/Media/headphone-line.svg);
+	-webkit-mask-image: url(@icons/Media/headphone-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-information-fill {
+	mask-image: url(@icons/System/information-fill.svg);
+	-webkit-mask-image: url(@icons/System/information-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-information-line {
+	mask-image: url(@icons/System/information-line.svg);
+	-webkit-mask-image: url(@icons/System/information-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-layout-column-line {
+	mask-image: url(@icons/Design/layout-column-line.svg);
+	-webkit-mask-image: url(@icons/Design/layout-column-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-layout-column-fill {
+	mask-image: url(@icons/Design/layout-column-fill.svg);
+	-webkit-mask-image: url(@icons/Design/layout-column-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-lightbulb-line {
+	mask-image: url(@icons/Others/lightbulb-line.svg);
+	-webkit-mask-image: url(@icons/Others/lightbulb-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-link {
+	mask-image: url(@icons/Editor/link.svg);
+	-webkit-mask-image: url(@icons/Editor/link.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-loader-4-line {
+	mask-image: url(@icons/System/loader-4-line.svg);
+	-webkit-mask-image: url(@icons/System/loader-4-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-lock-2-line {
+	mask-image: url(@icons/System/lock-2-line.svg);
+	-webkit-mask-image: url(@icons/System/lock-2-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-lock-fill {
+	mask-image: url(@icons/System/lock-fill.svg);
+	-webkit-mask-image: url(@icons/System/lock-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-lock-line {
+	mask-image: url(@icons/System/lock-line.svg);
+	-webkit-mask-image: url(@icons/System/lock-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-lock-unlock-line {
+	mask-image: url(@icons/System/lock-unlock-line.svg);
+	-webkit-mask-image: url(@icons/System/lock-unlock-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-login-circle-line {
+	mask-image: url(@icons/System/login-circle-line.svg);
+	-webkit-mask-image: url(@icons/System/login-circle-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-logout-circle-line {
+	mask-image: url(@icons/System/logout-circle-line.svg);
+	-webkit-mask-image: url(@icons/System/logout-circle-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-loop-left-line {
+	mask-image: url(@icons/System/loop-left-line.svg);
+	-webkit-mask-image: url(@icons/System/loop-left-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-loop-right-line {
+	mask-image: url(@icons/System/loop-right-line.svg);
+	-webkit-mask-image: url(@icons/System/loop-right-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-mail-send-line {
+	mask-image: url(@icons/Business/mail-send-line.svg);
+	-webkit-mask-image: url(@icons/Business/mail-send-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-menu-fold-line {
+	mask-image: url(@icons/System/menu-fold-line.svg);
+	-webkit-mask-image: url(@icons/System/menu-fold-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-menu-line {
+	mask-image: url(@icons/System/menu-line.svg);
+	-webkit-mask-image: url(@icons/System/menu-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-menu-unfold-line {
+	mask-image: url(@icons/System/menu-unfold-line.svg);
+	-webkit-mask-image: url(@icons/System/menu-unfold-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-message-line {
+	mask-image: url(@icons/Communication/message-line.svg);
+	-webkit-mask-image: url(@icons/Communication/message-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-moon-line {
+	mask-image: url(@icons/Weather/moon-line.svg);
+	-webkit-mask-image: url(@icons/Weather/moon-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-palette-line {
+	mask-image: url(@icons/Design/palette-line.svg);
+	-webkit-mask-image: url(@icons/Design/palette-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-phone-line {
+	mask-image: url(@icons/Device/phone-line.svg);
+	-webkit-mask-image: url(@icons/Device/phone-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-play-line {
+	mask-image: url(@icons/Media/play-line.svg);
+	-webkit-mask-image: url(@icons/Media/play-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-presentation-line {
+	mask-image: url(@icons/Business/presentation-line.svg);
+	-webkit-mask-image: url(@icons/Business/presentation-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-printer-line {
+	mask-image: url(@icons/Business/printer-line.svg);
+	-webkit-mask-image: url(@icons/Business/printer-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-prohibited-fill {
+	mask-image: url(@icons/System/prohibited-fill.svg);
+	-webkit-mask-image: url(@icons/System/prohibited-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-prohibited-line {
+	mask-image: url(@icons/System/prohibited-line.svg);
+	-webkit-mask-image: url(@icons/System/prohibited-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-pushpin-fill {
+	mask-image: url(@icons/Map/pushpin-fill.svg);
+	-webkit-mask-image: url(@icons/Map/pushpin-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-pushpin-line {
+	mask-image: url(@icons/Map/pushpin-line.svg);
+	-webkit-mask-image: url(@icons/Map/pushpin-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-question-line {
+	mask-image: url(@icons/System/question-line.svg);
+	-webkit-mask-image: url(@icons/System/question-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-question-mark {
+	mask-image: url(@icons/Editor/question-mark.svg);
+	-webkit-mask-image: url(@icons/Editor/question-mark.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-question-fill {
+	mask-image: url(@icons/System/question-fill.svg);
+	-webkit-mask-image: url(@icons/System/question-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-refresh-line {
+	mask-image: url(@icons/System/refresh-line.svg);
+	-webkit-mask-image: url(@icons/System/refresh-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-restart-line {
+	mask-image: url(@icons/Device/restart-line.svg);
+	-webkit-mask-image: url(@icons/Device/restart-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-save-3-line {
+	mask-image: url(@icons/Device/save-3-line.svg);
+	-webkit-mask-image: url(@icons/Device/save-3-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-school-line {
+	mask-image: url(@icons/Buildings/school-line.svg);
+	-webkit-mask-image: url(@icons/Buildings/school-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-search-line {
+	mask-image: url(@icons/System/search-line.svg);
+	-webkit-mask-image: url(@icons/System/search-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-send-plane-fill {
+	mask-image: url(@icons/Business/send-plane-fill.svg);
+	-webkit-mask-image: url(@icons/Business/send-plane-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-settings-2-line {
+	mask-image: url(@icons/System/settings-2-line.svg);
+	-webkit-mask-image: url(@icons/System/settings-2-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-settings-3-line {
+	mask-image: url(@icons/System/settings-3-line.svg);
+	-webkit-mask-image: url(@icons/System/settings-3-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-share-forward-2-line {
+	mask-image: url(@icons/System/share-forward-2-line.svg);
+	-webkit-mask-image: url(@icons/System/share-forward-2-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-share-forward-line {
+	mask-image: url(@icons/System/share-forward-line.svg);
+	-webkit-mask-image: url(@icons/System/share-forward-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-shield-star-line {
+	mask-image: url(@icons/System/shield-star-line.svg);
+	-webkit-mask-image: url(@icons/System/shield-star-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-spam-3-line {
+	mask-image: url(@icons/System/spam-3-line.svg);
+	-webkit-mask-image: url(@icons/System/spam-3-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-sparkling-line {
+	mask-image: url(@icons/Weather/sparkling-line.svg);
+	-webkit-mask-image: url(@icons/Weather/sparkling-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-speak-line {
+	mask-image: url(@icons/Communication/speak-line.svg);
+	-webkit-mask-image: url(@icons/Communication/speak-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-speed-line {
+	mask-image: url(@icons/Media/speed-line.svg);
+	-webkit-mask-image: url(@icons/Media/speed-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-subtract-line {
+	mask-image: url(@icons/System/subtract-line.svg);
+	-webkit-mask-image: url(@icons/System/subtract-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-sun-line {
+	mask-image: url(@icons/Weather/sun-line.svg);
+	-webkit-mask-image: url(@icons/Weather/sun-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-table-line {
+	mask-image: url(@icons/Design/table-line.svg);
+	-webkit-mask-image: url(@icons/Design/table-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-team-line {
+	mask-image: url(@icons/User%20&%20Faces/team-line.svg);
+	-webkit-mask-image: url(@icons/User%20&%20Faces/team-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-text {
+	mask-image: url(@icons/Editor/text.svg);
+	-webkit-mask-image: url(@icons/Editor/text.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-time-line {
+	mask-image: url(@icons/System/time-line.svg);
+	-webkit-mask-image: url(@icons/System/time-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-upload-2-line {
+	mask-image: url(@icons/System/upload-2-line.svg);
+	-webkit-mask-image: url(@icons/System/upload-2-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-user-add-line {
+	mask-image: url(@icons/User%20&%20Faces/user-add-line.svg);
+	-webkit-mask-image: url(@icons/User%20&%20Faces/user-add-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-user-forbid-line {
+	mask-image: url(@icons/User%20&%20Faces/user-forbid-line.svg);
+	-webkit-mask-image: url(@icons/User%20&%20Faces/user-forbid-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-vidicon-line {
+	mask-image: url(@icons/Media/vidicon-line.svg);
+	-webkit-mask-image: url(@icons/Media/vidicon-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-zoom-in-line {
+	mask-image: url(@icons/System/zoom-in-line.svg);
+	-webkit-mask-image: url(@icons/System/zoom-in-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-zoom-out-line {
+	mask-image: url(@icons/System/zoom-out-line.svg);
+	-webkit-mask-image: url(@icons/System/zoom-out-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}

@@ -6,6 +6,7 @@ import { type RouteApp } from "~/router/apps/RouteApp";
 
 import { RouteDataSchule } from "~/router/apps/schule/RouteDataSchule";
 import { routeSchuleStammdaten } from "./RouteSchuleStammdaten";
+import { AppMenuGroup } from "@ui";
 
 
 export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
@@ -15,6 +16,8 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 		super.text = "Schule";
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getNoProps(route);
+		super.menugroup = AppMenuGroup.MAIN;
+		super.icon = "i-ri-school-line";
 	}
 
 	protected async update(to: RouteNode<any, any>) {

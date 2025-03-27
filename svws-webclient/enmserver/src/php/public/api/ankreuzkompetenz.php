@@ -1,4 +1,17 @@
 <?php
+	/**
+	 * Endpunkt für das Aktualisieren von Schüler-Ankreuzkompetenzen.
+	 *
+	 * Dieser Endpunkt ermöglicht es autorisierten Lehrern, die Ankreuzkompetenzen von Schülern zu aktualisieren.
+	 * Die Aktualisierung erfolgt über eine PATCH-Anfrage, die ein JSON-Objekt mit den zu ändernden Daten enthält.
+	 *
+	 * @httpMethod POST
+	 * @auth (Basic) Lehrer Username und Kennwort benötigt
+	 * @param {id: number, patch: {Partial<ENMAnkreuzkompetenzen>}} Das Patch-Objekt, das die zu aktualisierenden Ankreuzkompetenzen enthält.
+	 * Folgende Werte können durch das Patch Objekt überschrieben werden: Stufen
+	 * @return void
+	 * @responseCode 200
+	 */
 
 	// Initialisierung
 	require_once $_SERVER['DOCUMENT_ROOT'].'/../app/init.php';

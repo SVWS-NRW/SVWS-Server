@@ -2,7 +2,7 @@
 	"version": 1,
 	"daten": [ {
 		"bezeichner": "V",
-		"idHistorie": 1,
+		"idStatistik": "1",
 		"historie": [ {
 			"id": 1,
 			"schluessel": "1",
@@ -13,7 +13,7 @@
 		} ]
 	}, {
 		"bezeichner": "T",
-		"idHistorie": 2,
+		"idStatistik": "2",
 		"historie": [ {
 			"id": 2,
 			"schluessel": "2",
@@ -24,7 +24,7 @@
 		} ]
 	}, {
 		"bezeichner": "AT",
-		"idHistorie": 3,
+		"idStatistik": "3",
 		"historie": [ {
 			"id": 3,
 			"schluessel": "3",
@@ -35,7 +35,7 @@
 		} ]
 	}, {
 		"bezeichner": "TA",
-		"idHistorie": 4,
+		"idStatistik": "4",
 		"historie": [ {
 			"id": 4,
 			"schluessel": "4",
@@ -46,7 +46,7 @@
 		} ]
 	}, {
 		"bezeichner": "VA",
-		"idHistorie": 5,
+		"idStatistik": "5",
 		"historie": [ {
 			"id": 5,
 			"schluessel": "5",
@@ -57,7 +57,7 @@
 		} ]
 	}, {
 		"bezeichner": "TS",
-		"idHistorie": 6,
+		"idStatistik": "6",
 		"historie": [ {
 			"id": 6,
 			"schluessel": "6",
@@ -68,7 +68,7 @@
 		} ]
 	}, {
 		"bezeichner": "SB",
-		"idHistorie": 7,
+		"idStatistik": "7",
 		"historie": [ {
 			"id": 8,
 			"schluessel": "8",
@@ -79,7 +79,7 @@
 		} ]
 	}, {
 		"bezeichner": "GB",
-		"idHistorie": 8,
+		"idStatistik": "8",
 		"historie": [ {
 			"id": 9,
 			"schluessel": "9",
@@ -90,7 +90,7 @@
 		} ]
 	}, {
 		"bezeichner": "ST",
-		"idHistorie": 9,
+		"idStatistik": "9",
 		"historie": [ {
 			"id": 11,
 			"schluessel": "11",
@@ -101,7 +101,7 @@
 		} ]
 	}, {
 		"bezeichner": "NA",
-		"idHistorie": 10,
+		"idStatistik": "10",
 		"historie": [ {
 			"id": 12,
 			"schluessel": "12",
@@ -112,7 +112,7 @@
 		} ]
 	}, {
 		"bezeichner": "G",
-		"idHistorie": 11,
+		"idStatistik": "11",
 		"historie": [ {
 			"id": 13,
 			"schluessel": "13",
@@ -123,7 +123,7 @@
 		} ]
 	}, {
 		"bezeichner": "X",
-		"idHistorie": 12,
+		"idStatistik": "12",
 		"historie": [ {
 			"id": 15,
 			"schluessel": "15",
@@ -134,7 +134,7 @@
 		} ]
 	}, {
 		"bezeichner": "WT",
-		"idHistorie": 13,
+		"idStatistik": "13",
 		"historie": [ {
 			"id": 16,
 			"schluessel": "16",
@@ -145,7 +145,7 @@
 		} ]
 	}, {
 		"bezeichner": "WV",
-		"idHistorie": 14,
+		"idStatistik": "14",
 		"historie": [ {
 			"id": 17,
 			"schluessel": "17",

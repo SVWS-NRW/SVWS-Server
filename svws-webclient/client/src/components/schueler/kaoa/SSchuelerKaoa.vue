@@ -1,16 +1,16 @@
 <template>
-	<div class="page--content">
+	<div class="page">
 		<svws-ui-content-card class="col-span-full">
-			<div class="grid justify-items-end mr-2">
-				<svws-ui-button class="contentFocusField" v-if="currentMode !== Mode.ADD" title="AddButton" @click="enterAddMode"> Neuer Eintrag </svws-ui-button>
-			</div>
-			<!-- UI Card zum Erstellen eines neuen Eintrags  !-->
-			<svws-ui-card v-if="currentMode === Mode.ADD" class="col-span-full" :is-open="true" :collapsible="false"
-				:title="'Standardelement der Berufsorientierung ' + dynamicHeader">
-				<template #info v-if="(schuelerKAoADaten.idSchuljahresabschnitt !== -1) && (schuljahresabschnitt)">
-					{{ schuljahresabschnittText(schuljahresabschnitt) }}
-				</template>
-				<template #content>
+			<div class="space-y-2">
+				<div class="grid justify-items-end mr-2">
+					<svws-ui-button class="contentFocusField" v-if="currentMode !== Mode.ADD" title="AddButton" @click="enterAddMode"> Neuer Eintrag </svws-ui-button>
+				</div>
+				<!-- UI Card zum Erstellen eines neuen Eintrags  !-->
+				<ui-card v-if="currentMode === Mode.ADD" :is-open="true" :collapsible="false"
+					:title="'Standardelement der Berufsorientierung ' + dynamicHeader">
+					<template #info v-if="(schuelerKAoADaten.idSchuljahresabschnitt !== -1) && (schuljahresabschnitt)">
+						{{ schuljahresabschnittText(schuljahresabschnitt) }}
+					</template>
 					<!-- CREATE  !-->
 					<div class="w-full grid grid-cols-2 gap-10">
 						<div class="overflow-hidden flex flex-col gap-2">
@@ -48,7 +48,7 @@
 								<svws-ui-text-input v-if="showFreitext" placeholder="Bemerkung" :max-len="255" :valid="(v) => validateBemerkung(v)"
 									v-model="schuelerKAoADaten.bemerkung" />
 							</div>
-							<div class="flex-grow" />
+							<div class="grow" />
 							<div class="flex gap-2 mt-2 justify-end items-end">
 								<svws-ui-button :disabled="!validateRequiredFieldsFilled()" @click="sendRequest(Mode.ADD)">
 									Speichern
@@ -59,14 +59,11 @@
 							</div>
 						</div>
 					</div>
-				</template>
-			</svws-ui-card>
-
-			<!-- UI Card zum Anzeigen und Patchen !-->
-			<svws-ui-card v-for="kaoaDaten of props.schuelerKaoaManager().liste.list()" class="col-span-full" :key="kaoaDaten.id"
-				:title="(kaoaDaten.id === idPatchObject) ? dynamicHeader : kaoaDatenHeader(kaoaDaten)"
-				:info="schuljahresabschnittTextFromKaoaDaten(kaoaDaten)">
-				<template #content>
+				</ui-card>
+				<!-- UI Card zum Anzeigen und Patchen !-->
+				<ui-card v-for="kaoaDaten of props.schuelerKaoaManager().liste.list()" :key="kaoaDaten.id"
+					:title="(kaoaDaten.id === idPatchObject) ? dynamicHeader : kaoaDatenHeader(kaoaDaten)"
+					:info="schuljahresabschnittTextFromKaoaDaten(kaoaDaten)">
 					<!-- PATCH  !-->
 					<div v-if="(idPatchObject === kaoaDaten.id) && (currentMode === Mode.PATCH)" class="w-full grid grid-cols-2 gap-10">
 						<div class="overflow-hidden flex flex-col gap-2">
@@ -108,7 +105,7 @@
 								<svws-ui-text-input v-if="showFreitext" placeholder="Bemerkung" :max-len="255" :valid="(v) => validateBemerkung(v)"
 									v-model="schuelerKAoADaten.bemerkung" />
 							</div>
-							<div class="flex-grow" />
+							<div class="grow" />
 							<div class="flex gap-2 mt-2 justify-end items-end">
 								<svws-ui-button :disabled="!validateRequiredFieldsFilled()" @click="sendRequest(Mode.PATCH)">
 									Änderung speichern
@@ -122,7 +119,6 @@
 							</div>
 						</div>
 					</div>
-
 					<!-- ANZEIGEN  !-->
 					<div v-if="idPatchObject !== kaoaDaten.id" class="w-full grid grid-cols-2 gap-10">
 						<div class="overflow-hidden flex flex-col gap-2">
@@ -153,7 +149,7 @@
 								<svws-ui-text-input v-if="((kaoaDaten.bemerkung !== null) && (!JavaString.isBlank(kaoaDaten.bemerkung)))" readonly
 									placeholder="Bemerkung" :model-value="kaoaDaten.bemerkung" :max-len="255" :valid="(v) => validateBemerkung(v)" />
 							</div>
-							<div class="flex-grow" />
+							<div class="grow" />
 							<div class="flex gap-2 mt-2  justify-end items-end">
 								<svws-ui-button v-if="idPatchObject !== kaoaDaten.id" @click="enterPatchMode(kaoaDaten)">
 									Bearbeiten
@@ -164,8 +160,8 @@
 							</div>
 						</div>
 					</div>
-				</template>
-			</svws-ui-card>
+				</ui-card>
+			</div>
 		</svws-ui-content-card>
 	</div>
 </template>

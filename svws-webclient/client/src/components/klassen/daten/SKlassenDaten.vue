@@ -1,5 +1,5 @@
 <template>
-	<div class="page--content">
+	<div class="page page-grid-cards">
 		<div class="flex flex-col gap-y-16 lg:gap-y-20">
 			<svws-ui-content-card title="Allgemein">
 				<template #actions>

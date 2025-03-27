@@ -148,6 +148,11 @@ public class Tabelle_SchuelerLernabschnittsdaten extends SchemaTabelle {
 	public SchemaTabelleSpalte col_ASDJahrgang = add("ASDJahrgang", SchemaDatentypen.VARCHAR, false).setDatenlaenge(2)
 			.setJavaComment("ASD-Jahrgang kann alles über ID geregelt werden");
 
+	/** Die Definition der Tabellenspalte EPJahre */
+	public SchemaTabelleSpalte col_EPJahre = add("EPJahre", SchemaDatentypen.INT, false)
+			.setJavaComment("bisherige Anzahl der Jahre in der Schuleingangssphase")
+			.setRevision(SchemaRevisionen.REV_36);
+
 	/** Die Definition der Tabellenspalte Jahrgang_ID */
 	public SchemaTabelleSpalte col_Jahrgang_ID = add("Jahrgang_ID", SchemaDatentypen.BIGINT, false)
 			.setJavaComment("ID des Jahrgangs der zum Report zugeordnet wird");

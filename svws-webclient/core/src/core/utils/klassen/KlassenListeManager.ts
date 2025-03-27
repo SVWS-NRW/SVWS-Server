@@ -1,6 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap2D } from '../../../core/adt/map/HashMap2D';
-import { KlassenDaten } from '../../../core/data/klassen/KlassenDaten';
+import { KlassenDaten } from '../../../asd/data/klassen/KlassenDaten';
 import { SchuelerListeEintrag } from '../../../core/data/schueler/SchuelerListeEintrag';
 import { SchuelerStatusKatalogEintrag } from '../../../asd/data/schueler/SchuelerStatusKatalogEintrag';
 import type { JavaSet } from '../../../java/util/JavaSet';
@@ -27,7 +27,7 @@ import { AuswahlManager } from '../../../core/utils/AuswahlManager';
 import { JavaInteger } from '../../../java/lang/JavaInteger';
 import { JahrgangsUtils } from '../../../core/utils/jahrgang/JahrgangsUtils';
 import { LehrerUtils } from '../../../core/utils/lehrer/LehrerUtils';
-import { Schueler } from '../../../core/data/schueler/Schueler';
+import { Schueler } from '../../../asd/data/schueler/Schueler';
 import type { Runnable } from '../../../java/lang/Runnable';
 import { JavaLong } from '../../../java/lang/JavaLong';
 import { Class } from '../../../java/lang/Class';

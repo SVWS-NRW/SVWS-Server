@@ -1,11 +1,10 @@
-import { type StundenplanListeEintrag, type StundenplanKalenderwochenzuordnung, StundenplanManager, DeveloperNotificationException} from "@core";
-
+import { DeveloperNotificationException, StundenplanManager, type ApiFile, type ReportingParameter, type StundenplanKalenderwochenzuordnung, type StundenplanListeEintrag} from "@core";
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
 import { routeApp } from "~/router/apps/RouteApp";
 
-import { routeLehrerStundenplanDaten } from "~/router/apps/lehrer/stundenplan/RouteLehrerStundenplanDaten";
+import { routeLehrerStundenplan } from "~/router/apps/lehrer/stundenplan/RouteLehrerStundenplan";
 
 
 interface RouteStateLehrerDataStundenplan extends RouteStateInterface {
@@ -51,6 +50,12 @@ export class RouteDataLehrerStundenplan extends RouteData<RouteStateLehrerDataSt
 		return this._state.value.auswahl !== undefined;
 	}
 
+	get idLehrer(): number {
+		if (this._state.value.idLehrer === undefined)
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Lehrer-ID nicht festgelegt, es können keine Informationen zum Stundenplan abgerufen oder eingegeben werden.");
+		return this._state.value.idLehrer;
+	}
+
 	get auswahl(): StundenplanListeEintrag {
 		if (this._state.value.auswahl === undefined)
 			throw new DeveloperNotificationException("Unerwarteter Fehler: Stundenplaneintrag nicht festgelegt, es können keine Informationen zum Stundenplan abgerufen oder eingegeben werden.");
@@ -59,7 +64,7 @@ export class RouteDataLehrerStundenplan extends RouteData<RouteStateLehrerDataSt
 
 	get manager(): StundenplanManager {
 		if (this._state.value.manager === undefined)
-			throw new DeveloperNotificationException("Unerwarteter Fehler: Stunden-Manager nicht vorhanden, es können keine Informationen zum Stundenplan abgerufen oder eingegeben werden.");
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Stundenplan-Manager nicht vorhanden, es können keine Informationen zum Stundenplan abgerufen oder eingegeben werden.");
 		return this._state.value.manager;
 	}
 
@@ -75,12 +80,27 @@ export class RouteDataLehrerStundenplan extends RouteData<RouteStateLehrerDataSt
 		await api.config.setValue("lehrer.stundenplan.ganzerStundenplan", value ? "true" : "false");
 	}
 
-	public async ladeListe() {
-		const listStundenplaene = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, routeApp.data.aktAbschnitt.value.id);
+	public async ladeListe(idLehrer : number): Promise<boolean> {
+		const idSchuljahresabschnitt = routeApp.data.aktAbschnitt.value.id;
+		if (idSchuljahresabschnitt === this._state.value.idSchuljahresabschnitt)
+			return false;
+		const listStundenplaene = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, idSchuljahresabschnitt);
 		const mapStundenplaene = new Map<number, StundenplanListeEintrag>();
+		const auswahl = listStundenplaene.size() > 0 ? listStundenplaene.get(0) : undefined;
 		for (const l of listStundenplaene)
 			mapStundenplaene.set(l.id, l);
-		this.setPatchedDefaultState({ idLehrer: this._state.value.idLehrer, mapStundenplaene, idSchuljahresabschnitt: routeApp.data.aktAbschnitt.value.id })
+		// Lade ggf. den Schüler-Stundenplan
+		let manager = undefined;
+		const wochentyp = 0;
+		let tmpKW = undefined;
+		if (auswahl !== undefined) {
+			const daten = await api.server.getLehrerStundenplan(api.schema, auswahl.id, idLehrer);
+			manager = new StundenplanManager(daten);
+			// Wochentyp und Kalenderwoche prüfen...
+			tmpKW = this.getKalenderWoche(manager, wochentyp, undefined, undefined);
+		}
+		this.setPatchedDefaultState({ idSchuljahresabschnitt, idLehrer: this._state.value.idLehrer, auswahl, mapStundenplaene, manager, wochentyp: tmpKW?.wochentyp, kalenderwoche: tmpKW?.kalenderwoche });
+		return true;
 	}
 
 	private getKalenderWoche(manager: StundenplanManager, wochentyp: number, kwjahr: number | undefined, kw: number | undefined) : { wochentyp?: number, kalenderwoche?: StundenplanKalenderwochenzuordnung } {
@@ -130,18 +150,25 @@ export class RouteDataLehrerStundenplan extends RouteData<RouteStateLehrerDataSt
 	}
 
 	public gotoStundenplan = async (value: StundenplanListeEintrag) => {
-		await RouteManager.doRoute(routeLehrerStundenplanDaten.getRoute({ idStundenplan: value.id, wochentyp: 0, kw: "" }));
+		await RouteManager.doRoute(routeLehrerStundenplan.getRoute({ idStundenplan: value.id, wochentyp: 0, kw: "" }));
 	}
 
 	public gotoWochentyp = async (wochentyp: number) => {
-		await RouteManager.doRoute(routeLehrerStundenplanDaten.getRoute({ wochentyp }));
+		await RouteManager.doRoute(routeLehrerStundenplan.getRoute({ wochentyp }));
 	}
 
 	public gotoKalenderwoche = async (value: StundenplanKalenderwochenzuordnung | undefined) => {
 		const kw = (value === undefined) ? "" : value.jahr + "." + value.kw;
 		const wochentyp = (value === undefined) ? "" : value.wochentyp;
-		await RouteManager.doRoute(routeLehrerStundenplanDaten.getRoute({ wochentyp, kw }));
+		await RouteManager.doRoute(routeLehrerStundenplan.getRoute({ wochentyp, kw }));
 	}
 
+	getPDF = api.call(async (reportingParameter: ReportingParameter, idStundenplan: number): Promise<ApiFile> => {
+		if (!this.hasAuswahl)
+			throw new DeveloperNotificationException("Dieser Stundenplan kann nur gedruckt werden, wenn mindestens ein Lehrer ausgewählt ist.");
+		reportingParameter.idSchuljahresabschnitt = this.idSchuljahresabschnitt;
+		reportingParameter.idsHauptdaten.add(idStundenplan);
+		reportingParameter.idsDetaildaten.add(this.idLehrer);
+		return await api.server.pdfReport(reportingParameter, api.schema);
+	})
 }
-

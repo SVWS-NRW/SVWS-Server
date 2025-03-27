@@ -1,7 +1,6 @@
 import type { GostHalbjahr, GostJahrgangsdaten, GostKursklausur, GostKlausurplanManager, List, StundenplanKalenderwochenzuordnung, Wochentag, BenutzerKompetenz, GostKlausurtermin } from "@core";
 import { type StundenplanManager, type StundenplanZeitraster } from "@core";
 import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
-import type { WritableComputedRef } from "vue";
 
 export interface SGostKlausurplanungKalenderStundenplanAnsichtProps {
 	benutzerKompetenzen: Set<BenutzerKompetenz>,

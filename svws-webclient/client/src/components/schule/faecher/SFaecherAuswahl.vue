@@ -1,13 +1,13 @@
 <template>
-	<svws-ui-secondary-menu>
-		<template #headline>
-			<span>Fächer</span>
-		</template>
-		<template #abschnitt>
-			<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
-		</template>
-		<template #header />
-		<template #content>
+	<div class="h-full flex flex-col">
+		<div class="secondary-menu--headline">
+			<h1>Fächer</h1>
+			<div>
+				<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
+			</div>
+		</div>
+		<div class="secondary-menu--header" />
+		<div class="secondary-menu--content">
 			<svws-ui-table :clickable="!manager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="fachdaten => gotoDefaultView(fachdaten.id)" :items="manager().filtered()"
 				:model-value="[...props.manager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)" :columns :filter-open="true" selectable count scroll-into-view scroll allow-arrow-key-selection
 				:focus-switching-enabled :focus-help-visible>
@@ -15,7 +15,7 @@
 					<svws-ui-checkbox type="toggle" v-model="filterNurSichtbare">Nur Sichtbare</svws-ui-checkbox>
 				</template>
 				<template #actions>
-					<template v-if="manager().schulform().daten(schuljahr)?.hatGymOb ?? false">
+					<template v-if="(manager().liste.size() > 0) && (manager().schulform().daten(schuljahr)?.hatGymOb ?? false)">
 						<s-faecher-auswahl-sortierung-sek-i-i-modal v-slot="{ openModal }" :setze-default-sortierung-sek-i-i :set-filter>
 							<svws-ui-button type="secondary" @click="openModal">Standardsortierung Sek II anwenden …</svws-ui-button>
 						</s-faecher-auswahl-sortierung-sek-i-i-modal>
@@ -30,8 +30,8 @@
 					</svws-ui-tooltip>
 				</template>
 			</svws-ui-table>
-		</template>
-	</svws-ui-secondary-menu>
+		</div>
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -39,7 +39,8 @@
 	import { computed } from "vue";
 	import type { FaecherAuswahlProps } from "./SFaecherAuswahlProps";
 	import { ViewType } from "@ui";
-	import { BenutzerKompetenz, type FachDaten } from "@core";
+	import type { FaecherListeEintrag} from "@core";
+	import { BenutzerKompetenz } from "@core";
 	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<FaecherAuswahlProps>();
@@ -69,7 +70,7 @@
 		return props.manager().hasDaten() ? props.manager().auswahl() : null;
 	});
 
-	async function setAuswahl(items : FachDaten[]) {
+	async function setAuswahl(items : FaecherListeEintrag[]) {
 		props.manager().liste.auswahlClear();
 		for (const item of items)
 			if (props.manager().liste.hasValue(item))

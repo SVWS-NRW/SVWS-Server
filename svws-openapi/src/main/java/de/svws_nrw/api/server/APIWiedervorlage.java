@@ -118,7 +118,7 @@ public class APIWiedervorlage {
 			description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response patchWiedervorlageEintrag(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@RequestBody(description = "Der Patch für die Sprachprüfung", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+			@RequestBody(description = "Der Patch für die Wiedervorlage", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					schema = @Schema(implementation = WiedervorlageEintrag.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataWiedervorlage(conn).patchAsResponse(id, is),

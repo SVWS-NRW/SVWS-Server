@@ -1,0 +1,438 @@
+/*
+* Alle Task in dieser Datei werden in den jeweiligen Unterpaketen ausgeführt.
+*/
+
+dependencies {
+	implementation project(':svws-server-app')
+}
+
+def buildDirPath = layout.buildDirectory.get()
+
+
+/**
+ * Ein Gradle-Task, der die SVWS-Webclient-Build-Artefakte kopiert.
+ */
+task copyWebclientBuildArtefacts(type: Copy) {
+	description = 'Kopiert die SVWS-Webclient-Build-Artefakte'
+	dependsOn ':svws-webclient:client:doZip'
+	from "../../svws-webclient/client/build/SVWS-Client.zip"
+	into "./build"
+}
+
+/**
+ * Ein Gradle-Task, der die SVWS-Admin-Build-Artefakte kopiert.
+ */
+task copyAdminclientBuildArtefacts(type: Copy) {
+	description = 'Kopiert die SVWS-Webclient-Build-Artefakte'
+	dependsOn ':svws-webclient:client:doZip'
+	from "../../svws-webclient/admin/build/SVWS-Admin-Client.zip"
+	into "./build"
+}
+
+
+/**
+ * Dieser Task kopiert die Laufzeit-Abhängigkeiten in das angegebene Build-Verzeichnis,
+ * wobei bestimmte JAR-Dateien ausgeschlossen oder eingeschlossen werden.
+ */
+task copyJavaBuildArtefacts(type: Copy) {
+	description = 'Kopiert die Laufzeit-Abhängigkeiten in das Build-Verzeichnis'
+	dependsOn 'copyWebclientBuildArtefacts'
+	dependsOn 'copyAdminclientBuildArtefacts'
+
+	into "$buildDirPath/extLib"
+
+	into("lib/") {
+		from(configurations.runtimeClasspath) {
+			exclude "svws-*.jar"
+		}
+	}
+	into("/") {
+		from(configurations.runtimeClasspath) {
+			include "svws-*.jar"
+		}
+	}
+}
+
+
+/**
+ * Erstellt die Ordner für die Testumgebung bzw. die Docker Container.
+ */
+task erzeugeOrdnerFuerTestumgebung {
+	description = 'Erstellt die Ordner für die Testumgebung bzw. die Docker Container'
+	dependsOn "copyJavaBuildArtefacts"
+	doFirst {
+		project.mkdir "$buildDirPath/tempdocker"
+		project.mkdir "$buildDirPath/tempdocker/init-scripts"
+		project.mkdir "$buildDirPath/tempdocker/appConf"
+
+		project.mkdir "$buildDirPath/tempdatabases"
+	}
+}
+
+
+/**
+ * Dieser Task kopiert die Testdatenbanken aus dem angegebenen
+ * Quellverzeichnis in das Ziel-Build-Verzeichnis für die Docker Container.
+ */
+task copyTestDatabases() {
+	description = 'Kopiert die Testdatenbanken in das Build-Verzeichnis für die Docker Container'
+	dependsOn 'erzeugeOrdnerFuerTestumgebung'
+	doLast {
+		project.ext.TARGET_TEST_DATA_BASES.each { test_db ->
+			copy {
+				from "$rootDir/download/testDatenbanken/${test_db}.sqlite"
+				into "./build/tempdatabases/"
+			}
+		}
+	}
+}
+
+
+/**
+ * Dieser Task generiert die Docker-Compose-Datei für die Testumgebung. Dabei wird ein Template geladen und entsprechende Platzhalter durch Variablen in Gradle ersetzt.
+ */
+task generateDockerComposeFile {
+	description = 'Generiert die Docker-Compose-Datei für die Testumgebung'
+	dependsOn 'copyTestDatabases'
+
+	def inputFile = file('../templates/docker/docker-compose.yml.template')
+	def outputFile = file("$buildDirPath/tempdocker/docker-compose.yml")
+
+	doLast {
+		// Definiere welche Platzhalter durch welche Werte ersetzt werden sollen
+		def replacements = [
+				'GRADLE_PLACEHOLDER_MARIADB_CONTAINER_NAME': "container_name: ${project.ext.DB_CONTAINER_NAME}",
+				'GRADLE_PLACEHOLDER_APP_CONTAINER_NAME'    : "container_name: ${project.ext.APP_CONTAINER_NAME}",
+				'GRADLE_PLACEHOLDER_DEFAULT_SCHEMA'        : "${project.ext.TARGET_TEST_DATA_BASES[0].replace('.sqlite', '')}",
+				'GRADLE_PLACEHOLDER_MARIADB_SERVICE_NAME'  : "${project.ext.DB_SERVICE_NAME}",
+				'GRADLE_PLACEHOLDER_APP_IMAGE_NAME'        : "${project.ext.APP_IMAGE_NAME}",
+		]
+		def replacementsLokal = [
+				'GRADLE_PLACEHOLDER_MARIADB_FORWARDING_PORT': "ports:\n      - \"${project.ext.FORWARDED_DB_PORT}:3306\"",
+				'GRADLE_PLACEHOLDER_APP_FORWARDING_PORT'    : "ports:\n      - \"${project.ext.FORWARDED_APP_PORT}:8443\"",
+		]
+		// Lese das Template ein
+		def content = inputFile.text
+
+		// Ersetze die Platzhalter mit den entsprechenden Werten
+		replacements.each { placeholder, replacement ->
+			content = content.replace('#' + placeholder, replacement)
+		}
+
+		// Falls in CI, ersetze weitere Platzhalter mit den entsprechenden Werten
+		if (!System.getenv('CI_SERVER')) {
+			replacementsLokal.each { placeholder, replacement ->
+				content = content.replace('#' + placeholder, replacement)
+			}
+		}
+
+		// Überschreibe den Inhalt der Ausgabedatei
+		outputFile.withWriter { writer ->
+			writer.write(content)
+		}
+		println "File content manipulated and saved to ${outputFile.path}"
+	}
+}
+
+
+/**
+ * Dieser Task generiert die Dockerfile-Datei für die Testumgebung. Dabei wird ein Template geladen und entsprechende Platzhalter durch Variablen in Gradle ersetzt.
+ */
+task generateDockerFile {
+	description = 'Generiert die Dockerfile-Datei für die Testumgebung'
+	dependsOn 'generateDockerComposeFile'
+
+	def inputFile = file('../templates/docker/Dockerfile.template')
+	def outputFile = file("$buildDirPath/tempdocker/Dockerfile")
+
+	doLast {
+
+		def enmReplacement = "localhost"
+		if (project.ext.has('ENM_CONTAINER_NAME')) {
+			enmReplacement = "${project.ext.ENM_CONTAINER_NAME}"
+		}
+		// Definiere welche Platzhalter durch welche Werte ersetzt werden sollen.
+		def replacements = [
+				'GRADLE_PLACEHOLDER_MARIADB_CONTAINER_NAME': "${project.ext.DB_CONTAINER_NAME}",
+				'GRADLE_PLACEHOLDER_ENM_HOST'              : "${enmReplacement}"
+		]
+
+		// Lese das Template ein
+		def content = inputFile.text
+
+		// Ersetze die Platzhalter mit den entsprechenden Werten
+		replacements.each { placeholder, replacement ->
+			content = content.replace(placeholder, replacement)
+		}
+
+		// Überschreibe den Inhalt der Ausgabedatei
+		outputFile.withWriter { writer ->
+			writer.write(content)
+		}
+		println "File content manipulated and saved to ${outputFile.path}"
+	}
+}
+
+
+/**
+ * Dieser Task generiert das Shell-Skript zum Erstellen des Keystores für den SVWS-Server.
+ */
+task generateKeyStoreScript() {
+	description = 'Generiert das Shell-Skript zum Erstellen des Keystores für den SVWS-Server'
+	dependsOn 'generateDockerFile'
+
+	doLast {
+		def outputFile = file("$buildDirPath/tempdocker/init-scripts/create-keystore.sh")
+
+		// Definiere welche Platzhalter durch welche Werte ersetzt werden sollen.
+		def targetIp = "";
+		if (System.getenv('CI_SERVER')) {
+			targetIp = "${project.ext.APP_CONTAINER_NAME}"
+		} else {
+			targetIp = "localhost"
+		}
+		def content = "keytool -genkey -noprompt -alias svwslocaltestcontainer -dname \"CN=${targetIp}, OU=test, O=test, L=test, S=test, C=test\" -keystore /etc/app/svws/conf/keystore -storepass changeit -keypass changeit  -keyalg RSA"
+
+		// Überschreibe den Inhalt der Ausgabedatei
+		outputFile.withWriter { writer ->
+			writer.write(content)
+		}
+		println "Script written and saved to ${outputFile.path}"
+	}
+}
+
+
+/**
+ * Dieser Task generiert die Konfigurationsdatei für den SVWS-Server. Dabei wird ein Template geladen und entsprechende Platzhalter durch Variablen in Gradle ersetzt.
+ */
+task generateSvwsConfigFile {
+	description = 'Generiert die Konfigurationsdatei für den SVWS-Server'
+	dependsOn 'erzeugeOrdnerFuerTestumgebung'
+
+	doLast {
+		def inputFile = file('../templates/config/svws_config.json.template')
+		def outputFile = file("$buildDirPath/tempdocker/appConf/svws_config.json.template.$project.ext.DB_CONTAINER_NAME")
+
+		// Definiere welche Platzhalter durch welche Werte ersetzt werden sollen.
+		def replacements = [
+				'GRADLE_PLACEHOLDER_SERVER_MODE'           : "${project.ext.SVWS_SERVERMODE}",
+				'GRADLE_PLACEHOLDER_MARIADB_CONTAINER_NAME': "${project.ext.DB_CONTAINER_NAME}",
+				'GRADLE_PLACEHOLDER_DEFAULT_SCHEMA'        : "${project.ext.TARGET_TEST_DATA_BASES[0].replace('.sqlite', '')}"
+		]
+
+		// Lese das Template ein
+		def content = inputFile.text
+
+		// Ersetze die Platzhalter mit den entsprechenden Werten
+		replacements.each { placeholder, replacement ->
+			content = content.replace(placeholder, replacement)
+		}
+
+		// Überschreibe den Inhalt der Ausgabedatei
+		outputFile.withWriter { writer ->
+			writer.write(content)
+		}
+		println "File content manipulated and saved to ${outputFile.path}"
+	}
+}
+
+
+/**
+ * Dieser Task generiert das Start-Skript für den SVWS-Server.
+ */
+task generateStartupScript {
+	description = 'Generiert das Start-Skript für den SVWS-Server'
+	dependsOn 'erzeugeOrdnerFuerTestumgebung'
+
+	def outputFile = file("$buildDirPath/tempdocker/init-scripts/startup.sh")
+
+	doLast {
+		def content = """
+			#!/bin/bash
+
+			# Dieses Skript wird in jedem Testcontainer ausgeführt sobald dieser gestartet wird,
+
+			# Konfigurationsdatei generieren
+			envsubst < /etc/app/svws/conf/svws_config.json.template.${project.ext.DB_CONTAINER_NAME} > /opt/app/svws/svwsconfig.json
+
+			/bin/bash "/etc/app/svws/init-scripts/create-keystore.sh"
+
+			echo "Starte SVWS-Server ..."
+			java -cp "svws-server-app-*.jar:./*:./lib/*" de.svws_nrw.server.jetty.Main
+			"""
+
+		// Überschreibe den Inhalt der Ausgabedatei
+		outputFile.withWriter { writer ->
+			writer.write(content)
+		}
+		println "File content manipulated and saved to ${outputFile.path}"
+	}
+}
+
+
+// Ansammlung aller Tasks welche die Dateien für die Docker Images bereit stellen.
+task generateScripts() {
+	description = 'Generiert alle Dateien für die Docker-Images'
+	dependsOn 'generateDockerFile'
+	dependsOn 'generateKeyStoreScript'
+	dependsOn 'generateSvwsConfigFile'
+	dependsOn 'generateStartupScript'
+}
+
+
+// Erstellt das Docker-Image für die Testumgebung in den Unterprojekten.
+task buildDockerImage(type: Exec) {
+	description = 'Erstellen des Docker-Images für die Testumgebung'
+	dependsOn 'generateScripts'
+	doFirst {
+		executable 'docker'
+		args 'build', '-t', "${project.ext.APP_IMAGE_NAME}", '-f', "$buildDirPath/tempdocker/Dockerfile", '.'
+	}
+}
+
+
+// Startet die Docker-Container für die Testumgebung.
+task starteDockerContainerMitTestUmgebung(type: Exec) {
+	description = 'Starten der Datenbank und des SVWS-Servers im Docker'
+	dependsOn 'buildDockerImage'
+	workingDir "$buildDirPath/tempdocker"
+	executable 'docker'
+	args 'compose', '-p', "svws-$project.name", 'up', '--wait'
+}
+
+
+// Imports für den Task seedDataBase
+import javax.net.ssl.TrustManager
+import java.net.http.HttpClient
+import java.net.http.HttpRequest
+import java.net.http.HttpResponse
+import javax.net.ssl.SSLContext
+import javax.net.ssl.X509TrustManager
+import java.security.cert.X509Certificate
+
+/**
+ * Seedet die Datenbanken in die Testumgebung. Dabei wird der API Endpunkt des SVWS-Servers aufgerufen, um die Datenbanken zu seeden. Der Server wird mit HTTPS gestartet daher
+ * muss dieser Request mit einem selbst signierten Zertifikat durchgeführt werden und manuell in Gradle konfiguriert werden.
+ *
+ * throw GradleException falls der Request fehlschlägt.
+ */
+task seedDatabase() {
+	description = 'Seedet die Datenbanken in der Testumgebung'
+	dependsOn "starteDockerContainerMitTestUmgebung"
+	doLast {
+		project.ext.TARGET_TEST_DATA_BASES.each { test_db ->
+
+			// Die Target IP wird je nach Umgebung gesetzt
+			def targetIp = ""
+			if (System.getenv('CI_SERVER')) {
+				targetIp = "https://${project.ext.APP_CONTAINER_NAME}:8443/api/schema/root/import/sqlite/${test_db.replace('.sqlite', '')}"
+			} else {
+				targetIp = "https://localhost:${project.ext.FORWARDED_APP_PORT}/api/schema/root/import/sqlite/${test_db.replace('.sqlite', '')}"
+			}
+
+			// Erstelle den Auth Header
+			def auth = 'root:root'
+			def encodedAuth = Base64.getEncoder().encodeToString(auth.bytes)
+
+			def filePath = "$rootDir/download/testDatenbanken/${test_db}.sqlite"
+			def file = new File(filePath)
+
+			// Erstelle die Einträge für den Form Data
+			def boundary = "------${UUID.randomUUID().toString().substring(0, 8)}"
+			def filePartHeader = "--${boundary}\r\nContent-Disposition: form-data; name=\"database\"; filename=\"${file.name}\"\r\nContent-Type: application/octet-stream\r\n\r\n"
+			def filePartFooter = "\r\n"
+			def usernamePart = "--${boundary}\r\nContent-Disposition: form-data; name=\"schemaUsername\"\r\n\r\nsvwsadmin\r\n"
+			def passwordPart = "--${boundary}\r\nContent-Disposition: form-data; name=\"schemaUserPassword\"\r\n\r\nsvwsadmin\r\n"
+			def endBoundary = "--${boundary}--\r\n"
+
+			// Erstelle einen Trustmanager welche alle Zertifikate erlaubt
+			def trustAllCerts = [
+					new X509TrustManager() {
+						@Override
+						void checkClientTrusted(X509Certificate[] chain, String authType) {}
+
+						@Override
+						void checkServerTrusted(X509Certificate[] chain, String authType) {}
+
+						@Override
+						X509Certificate[] getAcceptedIssuers() { return new X509Certificate[0] }
+					}
+			] as TrustManager[]
+
+			// Erstelle einen Webclient der selbst signierte Zertifikate akzeptiert
+			def sslContext = SSLContext.getInstance("TLS")
+			sslContext.init(null, trustAllCerts, new java.security.SecureRandom())
+
+			def client = HttpClient.newBuilder()
+					.version(HttpClient.Version.HTTP_1_1)
+					.sslContext(sslContext)
+					.build()
+
+			def outputStream = new ByteArrayOutputStream()
+
+			// Erstelle den Request Body, inklusive dem Inhalt der SQLite File
+			outputStream.withWriter { writer ->
+				writer << filePartHeader
+				writer.flush()
+
+				file.withInputStream { inputStream ->
+					inputStream.transferTo(outputStream)
+				}
+
+				writer << filePartFooter
+				writer << usernamePart
+				writer << passwordPart
+				writer << endBoundary
+				writer.flush()
+			}
+
+			def request = HttpRequest.newBuilder()
+					.uri(URI.create(targetIp))
+					.header("Content-Type", "multipart/form-data; boundary=" + boundary)
+					.header("Authorization", "Basic ${encodedAuth}")
+					.POST(HttpRequest.BodyPublishers.ofByteArray(outputStream.toByteArray()))
+					.build()
+
+			def response = client.send(request, HttpResponse.BodyHandlers.ofString())
+
+			if (response.statusCode() != 200)
+				throw new GradleException("Seeden der Datenbank:${test_db} auf ${targetIp} fehlgeschlagen (Status: ${response.statusCode()}): ${response.body()}")
+
+			println "Datenbank: ${test_db} erfolgreich geseeded (Status: ${response.statusCode()})"
+		}
+	}
+}
+
+
+/**
+ * Stoppt die Docker-Container für die Testumgebung.
+ */
+task stoppeDockerContainerTestUmgebung(type: Exec) {
+	group = 'testenvironment'
+	description = 'Stoppen der Container der Testumgebung'
+	workingDir "$buildDirPath/tempdocker"
+	executable 'docker'
+	args 'compose', '-p', "svws-$project.name", 'down', '-v'
+}
+
+
+/**
+ * Löscht das Docker-Netzwerk namens gitlab_runner_network.
+ */
+task deleteDockerNetwork() {
+	description = 'Löscht das Docker-Netzwerk namens gitlab_runner_network'
+	dependsOn 'stoppeDockerContainerTestUmgebung'
+	doLast {
+		def process = 'docker network rm gitlab_runner_network'.execute()
+		process.waitFor()
+		println process.text
+	}
+}
+
+
+/**
+ * Einstiegspunkt für den Rückbau der Testumgebung.
+ */
+task removeTestEnvironmentEntryPoint() {
+	dependsOn 'deleteDockerNetwork'
+}

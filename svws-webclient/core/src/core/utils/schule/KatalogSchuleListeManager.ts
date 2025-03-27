@@ -1,9 +1,11 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { Schulform } from '../../../asd/types/schule/Schulform';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { JavaString } from '../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import type { Comparator } from '../../../java/util/Comparator';
 import { AuswahlManager } from '../../../core/utils/AuswahlManager';
+import { SchulenKatalogEintrag } from '../../../core/data/schule/SchulenKatalogEintrag';
 import type { JavaFunction } from '../../../java/util/function/JavaFunction';
 import { JavaLong } from '../../../java/lang/JavaLong';
 import type { List } from '../../../java/util/List';
@@ -18,6 +20,11 @@ export class KatalogSchuleListeManager extends AuswahlManager<number, SchulEintr
 	 * Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ
 	 */
 	private static readonly _schuleToId : JavaFunction<SchulEintrag, number> = { apply : (schulEintrag: SchulEintrag) => schulEintrag.id };
+
+	/**
+	 * die Liste der Schulen aus Gesamt-NRW
+	 */
+	private readonly schulenKatalogEintraege : List<SchulenKatalogEintrag>;
 
 	/**
 	 * Ein Default-Comparator für den Vergleich von Schulen im Schule Katalog.
@@ -42,14 +49,25 @@ export class KatalogSchuleListeManager extends AuswahlManager<number, SchulEintr
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
 	 *
-	 * @param schuljahresabschnitt    der Schuljahresabschnitt, auf den sich die Auswahl bezieht
-	 * @param schuljahresabschnitte        die Liste der Schuljahresabschnitte
-	 * @param schuljahresabschnittSchule   der Schuljahresabschnitt, in welchem sich die Schule aktuell befindet.
-	 * @param schulform     die Schulform der Schule
-	 * @param schulen       die Liste der Schulen
+	 * @param schuljahresabschnitt			 der Schuljahresabschnitt, auf den sich die Auswahl bezieht
+	 * @param schuljahresabschnitte          die Liste der Schuljahresabschnitte
+	 * @param schuljahresabschnittSchule     der Schuljahresabschnitt, in welchem sich die Schule aktuell befindet.
+	 * @param schulform						 die Schulform der Schule
+	 * @param schulen						 die Liste der Schulen
+	 * @param schulenKatalogEintraege        die Liste der Schulen aus Gesamt-NRW
 	 */
-	public constructor(schuljahresabschnitt : number, schuljahresabschnittSchule : number, schuljahresabschnitte : List<Schuljahresabschnitt>, schulform : Schulform | null, schulen : List<SchulEintrag>) {
+	public constructor(schuljahresabschnitt : number, schuljahresabschnittSchule : number, schuljahresabschnitte : List<Schuljahresabschnitt>, schulform : Schulform | null, schulen : List<SchulEintrag>, schulenKatalogEintraege : List<SchulenKatalogEintrag>) {
 		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, schulen, KatalogSchuleListeManager._defaultComparator, KatalogSchuleListeManager._schuleToId, KatalogSchuleListeManager._schuleToId, Arrays.asList());
+		this.schulenKatalogEintraege = schulenKatalogEintraege;
+	}
+
+	/**
+	 * Getter der Gesamtliste der Schulen aus NRW
+	 *
+	 * @return die Liste der Schulen aus Gesamt-NRW
+	 */
+	public getSchulenKatalogEintraege() : List<SchulenKatalogEintrag> {
+		return new ArrayList<SchulenKatalogEintrag>(this.schulenKatalogEintraege);
 	}
 
 	/**

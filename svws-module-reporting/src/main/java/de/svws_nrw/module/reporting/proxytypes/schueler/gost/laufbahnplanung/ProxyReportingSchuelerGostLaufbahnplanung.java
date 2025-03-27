@@ -22,8 +22,8 @@ import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
-import de.svws_nrw.core.data.schueler.Sprachbelegung;
-import de.svws_nrw.core.data.schueler.Sprachpruefung;
+import de.svws_nrw.asd.data.schueler.Sprachbelegung;
+import de.svws_nrw.asd.data.schueler.Sprachpruefung;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
@@ -92,8 +92,7 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 						idsFehlendeSchueler.add(idSchueler);
 				}
 				this.reportingRepository.mapGostBeratungsdatenAbiturdaten().putAll(
-						new HashMap<>(DBUtilsGostLaufbahn.getFromIDsUndSchuljahresabschnitt(this.reportingRepository.conn(), idsFehlendeSchueler,
-								reportingRepository.aktuellerSchuljahresabschnitt().id())));
+						new HashMap<>(DBUtilsGostLaufbahn.getFromIDs(this.reportingRepository.conn(), idsFehlendeSchueler)));
 			}
 		} catch (final ApiOperationException e) {
 			ReportingExceptionUtils.putStacktraceInLog(

@@ -1,9 +1,9 @@
 package de.svws_nrw.core.types.oauth2;
 
-import de.svws_nrw.core.data.oauth2.OAuth2ClientSecret;
+import de.svws_nrw.core.data.oauth2.OAuth2ClientConnection;
 
 /**
- * Eine Liste der möglichen OAuth2-Servertypen, für welche die {@link OAuth2ClientSecret}
+ * Eine Liste der möglichen OAuth2-Servertypen, für welche die {@link OAuth2ClientConnection}
  * in der Datenbank hinterlegt werden können.
  */
 public enum OAuth2ServerTyp {

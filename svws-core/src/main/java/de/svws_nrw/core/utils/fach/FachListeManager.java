@@ -1,14 +1,18 @@
 package de.svws_nrw.core.utils.fach;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 
 import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.fach.FachDaten;
+import de.svws_nrw.core.data.fach.FaecherListeEintrag;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.core.utils.AuswahlManager;
@@ -18,19 +22,30 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Ein Manager zum Verwalten der Fächer-Listen.
  */
-public final class FachListeManager extends AuswahlManager<Long, FachDaten, FachDaten> {
+public final class FachListeManager extends AuswahlManager<Long, FaecherListeEintrag, FachDaten> {
 
 	/** Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ */
-	private static final @NotNull Function<FachDaten, Long> _fachToId = (final @NotNull FachDaten f) -> f.id;
+	private static final @NotNull Function<FaecherListeEintrag, Long> _fachToId = (final @NotNull FaecherListeEintrag f) -> f.id;
+	private static final @NotNull Function<FachDaten, Long> _fachDatenToId = (final @NotNull FachDaten f) -> f.id;
 
 	/** Zusätzliche Maps, welche zum schnellen Zugriff auf Teilmengen der Liste verwendet werden können */
-	private final @NotNull HashMap2D<Boolean, Long, FachDaten> _mapFachIstSichtbar = new HashMap2D<>();
-	private final @NotNull HashMap<String, FachDaten> _mapFachByKuerzel = new HashMap<>();
+	private final @NotNull HashMap2D<Boolean, Long, FaecherListeEintrag> _mapFachIstSichtbar = new HashMap2D<>();
+	private final @NotNull HashMap<String, FaecherListeEintrag> _mapFachByKuerzel = new HashMap<>();
 
 	/** Das Filter-Attribut auf nur sichtbare Fächer */
 	private boolean _filterNurSichtbar = true;
 
+	/** Sets mit Listen zur aktuellen Auswahl */
+	private final @NotNull HashSet<Long> idsReferenzierterFaecher = new HashSet<>();
 
+	/** Ein Default-Comparator für den Vergleich von Fächern in Fächerlisten. */
+	public static final @NotNull Comparator<FaecherListeEintrag> comparator = (final @NotNull FaecherListeEintrag a, final @NotNull FaecherListeEintrag b) -> {
+		int cmp = a.sortierung - b.sortierung;
+		if (cmp != 0)
+			return cmp;
+		cmp = a.kuerzel.compareTo(b.kuerzel);
+		return (cmp == 0) ? Long.compare(a.id, b.id) : cmp;
+	};
 
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
@@ -43,15 +58,15 @@ public final class FachListeManager extends AuswahlManager<Long, FachDaten, Fach
 	 */
 	public FachListeManager(final long schuljahresabschnitt, final long schuljahresabschnittSchule,
 			final @NotNull List<Schuljahresabschnitt> schuljahresabschnitte, final Schulform schulform,
-			final @NotNull List<FachDaten> faecher) {
-		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, faecher, FachUtils.comparator, _fachToId, _fachToId,
+			final @NotNull List<FaecherListeEintrag> faecher) {
+		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, faecher, comparator, _fachToId, _fachDatenToId,
 				Arrays.asList());
 		initFaecher();
 	}
 
 
 	private void initFaecher() {
-		for (final @NotNull FachDaten f : this.liste.list()) {
+		for (final @NotNull FaecherListeEintrag f : this.liste.list()) {
 			this._mapFachIstSichtbar.put(f.istSichtbar, f.id, f);
 			if (f.kuerzel != null)
 				this._mapFachByKuerzel.put(f.kuerzel, f);
@@ -66,7 +81,7 @@ public final class FachListeManager extends AuswahlManager<Long, FachDaten, Fach
 	 * @param daten     das neue Daten-Objekt zu der Auswahl
 	 */
 	@Override
-	protected boolean onSetDaten(final @NotNull FachDaten eintrag, final @NotNull FachDaten daten) {
+	protected boolean onSetDaten(final @NotNull FaecherListeEintrag eintrag, final @NotNull FachDaten daten) {
 		boolean updateEintrag = false;
 		// Passe ggf. die Daten in der Fächerliste an ... (beim Patchen der Daten)
 		if (!daten.kuerzel.equals(eintrag.kuerzel)) {
@@ -111,7 +126,7 @@ public final class FachListeManager extends AuswahlManager<Long, FachDaten, Fach
 	 * @return das Ergebnis des Vergleichs (-1 kleine, 0 gleich und 1 größer)
 	 */
 	@Override
-	protected int compareAuswahl(final @NotNull FachDaten a, final @NotNull FachDaten b) {
+	protected int compareAuswahl(final @NotNull FaecherListeEintrag a, final @NotNull FaecherListeEintrag b) {
 		for (final Pair<String, Boolean> criteria : _order) {
 			final String field = criteria.a;
 			final boolean asc = (criteria.b == null) || criteria.b;
@@ -126,12 +141,27 @@ public final class FachListeManager extends AuswahlManager<Long, FachDaten, Fach
 				continue;
 			return asc ? cmp : -cmp;
 		}
-		return FachUtils.comparator.compare(a, b);
+		return comparator.compare(a, b);
 	}
 
+	@Override
+	protected void onMehrfachauswahlChanged() {
+		this.idsReferenzierterFaecher.clear();
+		for (final @NotNull FaecherListeEintrag f : this.liste.auswahl())
+			if ((f.referenziertInAnderenTabellen != null) && f.referenziertInAnderenTabellen)
+				this.idsReferenzierterFaecher.add(f.id);
+	}
+
+	/** Gibt das Set mit den FächerIds zurück, die in der Auswahl sind und in anderen Datenbanktabellen referenziert werden
+	 *
+	 * @return Das Set mit IDs von Fächern, die in anderen Datenbanktabellen referenziert werden
+	 */
+	public @NotNull Set<Long> getIdsReferenzierterFaecher() {
+		return this.idsReferenzierterFaecher;
+	}
 
 	@Override
-	protected boolean checkFilter(final @NotNull FachDaten eintrag) {
+	protected boolean checkFilter(final @NotNull FaecherListeEintrag eintrag) {
 		if (this._filterNurSichtbar && !eintrag.istSichtbar)
 			return false;
 		return true;
@@ -146,7 +176,7 @@ public final class FachListeManager extends AuswahlManager<Long, FachDaten, Fach
 	 *
 	 * @return die FachDaten oder null
 	 */
-	public FachDaten getByKuerzelOrNull(final @NotNull String kuerzel) {
+	public FaecherListeEintrag getByKuerzelOrNull(final @NotNull String kuerzel) {
 		return this._mapFachByKuerzel.get(kuerzel);
 	}
 
@@ -162,8 +192,8 @@ public final class FachListeManager extends AuswahlManager<Long, FachDaten, Fach
 		if ((kuerzel == null) || kuerzel.isBlank() || (kuerzel.trim().length() > 20))
 			return false;
 
-		for (final FachDaten fachDaten : this.liste.list()) {
-			if (fachDaten.kuerzel.equals(kuerzel))
+		for (final FaecherListeEintrag listeEintrag : this.liste.list()) {
+			if (listeEintrag.kuerzel.equals(kuerzel))
 				return false;
 		}
 		return true;
@@ -181,8 +211,8 @@ public final class FachListeManager extends AuswahlManager<Long, FachDaten, Fach
 		if ((bezeichnung == null) || bezeichnung.isBlank() || (bezeichnung.trim().length() > 255))
 			return false;
 
-		for (final FachDaten fachDaten : this.liste.list()) {
-			if (fachDaten.bezeichnung.equals(bezeichnung))
+		for (final FaecherListeEintrag listeEintrag : this.liste.list()) {
+			if (listeEintrag.bezeichnung.equals(bezeichnung))
 				return false;
 		}
 		return true;

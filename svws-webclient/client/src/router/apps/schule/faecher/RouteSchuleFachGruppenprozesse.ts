@@ -20,18 +20,26 @@ export class RouteSchuleFachGruppenprozesse extends RouteNode<any, RouteSchuleFa
 		super.text = "Gruppenprozesse";
 	}
 
+	protected async update() : Promise<void | Error | RouteLocationRaw> {
+		await routeSchuleFaecher.data.updateMapStundenplaene();
+	}
+
 	public getRoute() : RouteLocationRaw {
 		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: "" }};
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuleFachGruppenprozesseProps {
 		return {
+			apiStatus: api.status,
+			getPDF: routeSchuleFaecher.data.getPDF,
+			mapStundenplaene: routeSchuleFaecher.data.mapStundenplaene,
 			serverMode: api.mode,
 			schulform: api.schulform,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			schulgliederungen: api.schulgliederungen,
 			manager: () => routeSchuleFaecher.data.manager,
 			deleteFaecher: routeSchuleFaecher.data.delete,
+			deleteFaecherCheck: routeSchuleFaecher.data.deleteFaecherCheck,
 		};
 	}
 

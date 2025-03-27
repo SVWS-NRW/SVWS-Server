@@ -8,7 +8,7 @@ Alle API-Anfragen bzw- Antworten sind typsicher mit dieser Bibliothek.
 Beispiel zur Nutzung der CoreTS-Bibliothek:
 
 ```ts
-import { ApiServer, List, DBSchemaListeEintrag, ArrayList, SchuelerListeEintrag } from "@svws-nrw/svws-core"
+import { ApiServer, List, DBSchemaListeEintrag, ArrayList, SchuelerListeEintrag } from "@core"
 
 const url = process.env.SVWS_URL;
 const user = process.env.SVWS_USER;

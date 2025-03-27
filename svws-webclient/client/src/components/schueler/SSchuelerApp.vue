@@ -1,5 +1,5 @@
 <template>
-	<div v-if="(manager().hasDaten() && (activeViewType === ViewType.DEFAULT)) || (activeViewType !== ViewType.DEFAULT)" class="page--flex">
+	<div v-if="(manager().hasDaten() && (activeViewType === ViewType.DEFAULT)) || (activeViewType !== ViewType.DEFAULT)" class="flex flex-col w-full h-full overflow-hidden">
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
 				<template v-if="activeViewType === ViewType.DEFAULT">
@@ -12,17 +12,17 @@
 							</svws-ui-badge>
 						</h2>
 						<span v-if="klasse !== null" class="svws-subline">{{ klasse.kuerzel }}
-
 							<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
 								<template v-for="l of klasse.klassenLeitungen">
 									{{ manager().lehrer.get(l)?.kuerzel ?? '—' }}&nbsp;
 								</template>
 							</svws-ui-badge>
+							<svws-ui-badge v-if="epJahre !== null" type="light" title="EP-Jahre" class="font-mono ml-2" size="small">{{ epJahre }} </svws-ui-badge>
 						</span>
 					</div>
 					<div v-if="manager().daten().keineAuskunftAnDritte" class="svws-headline-wrapper">
-						<span class="icon-xxl icon-error i-ri-alert-line inline-block" />
-						<span class="text-error content-center"> Keine Auskunft an Dritte </span>
+						<span class="icon-xxl icon-ui-danger i-ri-alert-line inline-block" />
+						<span class="text-ui-danger content-center"> Keine Auskunft an Dritte </span>
 					</div>
 				</template>
 
@@ -41,7 +41,7 @@
 					</div>
 				</template>
 			</div>
-			<div class="svws-ui-header--actions" />
+			<div class="svws-ui-header--actions print:!hidden" />
 		</header>
 
 		<svws-ui-tab-bar :tab-manager :focus-switching-enabled :focus-help-visible>
@@ -60,9 +60,21 @@
 	import type { SchuelerAppProps } from "./SSchuelerAppProps";
 	import { ViewType } from "@ui";
 	import { useRegionSwitch } from "~/components/useRegionSwitch";
-	import type { KlassenDaten } from "@core";
+	import { PrimarstufeSchuleingangsphaseBesuchsjahre, Schulform, type KlassenDaten } from "@core";
 
 	const props = defineProps<SchuelerAppProps>();
+
+	const primarschulformen = new Set([Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.PS, Schulform.S, Schulform.KS, Schulform.V]);
+	const primarstufe = computed(() => primarschulformen.has(props.schulform));
+	const epJahre = computed<string | null>(() => {
+		if (!primarstufe.value)
+			return null;
+		const ep = props.manager().auswahl().epJahre?.toString() ?? null;
+		if (ep === null)
+			return null;
+		const schuljahr = props.manager().getSchuljahr();
+		return PrimarstufeSchuleingangsphaseBesuchsjahre.data().getWertBySchluesselOrException(ep).daten(schuljahr)?.kuerzel ?? null;
+	});
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 

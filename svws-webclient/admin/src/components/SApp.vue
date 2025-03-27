@@ -36,29 +36,26 @@
 		</template>
 		<template #secondaryMenu>
 			<template v-if="pendingSetApp">
-				<svws-ui-secondary-menu>
-					<template #headline>
-						<span>{{ pendingSetApp }}</span>
-					</template>
-					<template #abschnitt>
-						<span class="inline-block h-4 rounded animate-pulse w-16 bg-black/10 dark:bg-white/10 -mb-1" />
-					</template>
-				</svws-ui-secondary-menu>
+				<div class="h-full flex flex-col">
+					<div class="secondary-menu--headline">
+						<h1><span>{{ pendingSetApp }}</span></h1>
+					</div>
+				</div>
 			</template>
 			<template v-else>
 				<router-view :key="app.name" name="liste" />
 			</template>
 		</template>
 		<template #main>
-			<div class="app--page" :class="app.name">
-				<div class="page--wrapper" :class="{'svws-api--pending': apiStatus.pending}">
+			<div class="app--page h-full" :class="app.name">
+				<div class="h-full w-full flex flex-col grow" :class="{ 'svws-api--pending': apiStatus.pending }">
 					<template v-if="pendingSetApp">
 						<svws-ui-header>
 							<div class="flex items-center">
 								<div>
-									<span class="inline-block h-[1em] rounded animate-pulse w-52 bg-black/10 dark:bg-white/10" />
+									<span class="inline-block h-[1em] rounded-sm animate-pulse w-52 bg-ui-contrast-10" />
 									<br>
-									<span class="inline-block h-[1em] rounded animate-pulse w-20 bg-black/5 dark:bg-white/5" />
+									<span class="inline-block h-[1em] rounded-sm animate-pulse w-20 bg-ui-contrast-10" />
 								</div>
 							</div>
 						</svws-ui-header>
@@ -115,20 +112,14 @@
 
 <style lang="postcss">
 
+	@reference "../../../ui/src/assets/styles/index.css";
+
 	.app--page {
-		@apply flex flex-grow flex-col justify-between;
+		@apply flex grow flex-col justify-between;
 		@apply h-screen;
 		@apply overflow-hidden;
 		@apply relative;
-		@apply bg-white dark:bg-black;
-	}
-
-	.page--wrapper {
-		@apply flex flex-col w-full h-full flex-grow;
-	}
-
-	.page--flex {
-		@apply flex flex-col w-full h-full;
+		@apply bg-ui-contrast-0;
 	}
 
 </style>

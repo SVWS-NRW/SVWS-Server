@@ -14,11 +14,11 @@ import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.gost.GostJahrgang;
 import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
-import de.svws_nrw.core.data.klassen.KlassenDaten;
-import de.svws_nrw.core.data.kurse.KursDaten;
 import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
 import de.svws_nrw.core.data.schueler.SchuelerListe;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
+import de.svws_nrw.asd.data.klassen.KlassenDaten;
+import de.svws_nrw.asd.data.kurse.KursDaten;
 import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerStatusKatalogEintrag;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
@@ -132,6 +132,7 @@ public final class SchuelerListeManager extends AuswahlManager<Long, SchuelerLis
 		this.schuelerstatus =
 				new AttributMitAuswahl<>(Arrays.asList(SchuelerStatus.values()), _schuelerstatusToId, _comparatorSchuelerStatus, _eventHandlerFilterChanged);
 		this.lehrer = new AttributMitAuswahl<>(lehrer, _lehrerToId, LehrerUtils.comparator, _eventHandlerFilterChanged);
+		this.setFilterAuswahlPermitted(false);
 		initSchueler();
 	}
 
@@ -179,6 +180,7 @@ public final class SchuelerListeManager extends AuswahlManager<Long, SchuelerLis
 		}
 		if (daten.status != eintrag.status) {
 			eintrag.status = daten.status;
+			this.schuelerstatus.auswahlAdd(SchuelerStatus.data().getWertByID(eintrag.status));
 			updateEintrag = true;
 		}
 		return updateEintrag;

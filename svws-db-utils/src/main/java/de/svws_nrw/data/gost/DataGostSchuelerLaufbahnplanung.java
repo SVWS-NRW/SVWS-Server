@@ -36,10 +36,10 @@ import de.svws_nrw.core.data.gost.GostLaufbahnplanungDaten;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungDatenFachbelegung;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungDatenSchueler;
 import de.svws_nrw.core.data.gost.GostSchuelerFachwahl;
-import de.svws_nrw.core.data.schueler.Sprachbelegung;
-import de.svws_nrw.core.data.schueler.Sprachpruefung;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
+import de.svws_nrw.asd.data.schueler.Sprachbelegung;
+import de.svws_nrw.asd.data.schueler.Sprachpruefung;
 import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
@@ -546,7 +546,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 		final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(abidaten.schuljahrAbitur, conn, abidaten.abiturjahr);
 		// Prüfe zunächst, ob der Abiturjahrgang in der Datenbank existiert und mit dem des Schülers übereinstimmt
 		if (abidaten.abiturjahr != laufbahnplanungsdaten.abiturjahr) {
-			logger.logLn("Fehler: Das Abiturjahrgang der Planungsdatei stimmt nicht mit dem Abiturjahrgang des Schülers überein.");
+			logger.logLn("Fehler: Der Abiturjahrgang der Planungsdatei stimmt nicht mit dem Abiturjahrgang des Schülers überein.");
 			return false;
 		}
 		// Bestimme die Daten des Schülers in den Laufbahnplanungsdaten

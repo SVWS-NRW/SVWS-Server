@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card has-background>
-		<svws-ui-table :items="aufgeklappt ? regeln : []" :no-data="false" :columns="[{key: 'information', label: ' ', fixedWidth: 2}, ...columns, {key: 'entfernen', label: ' ', fixedWidth: 3}]" scroll clickable>
+		<svws-ui-table :items="aufgeklappt ? regeln : []" :no-data="false" :columns="cols" scroll clickable>
 			<template #header(information)>
 				<div v-if="regeln.size()" @click.stop="aufgeklappt = !aufgeklappt">
 					<span v-if="aufgeklappt" class="icon i-ri-arrow-down-s-line cursor-pointer inline-block" />
@@ -8,7 +8,7 @@
 				</div>
 			</template>
 			<template #[`header(${props.columns.at(0)?.key})`]="{ column }">
-				<span v-if="!aufgeklappt" class="rounded-md bg-primary p-1 text-light cursor-pointer inline-block">{{ regeln.size() }}</span>
+				<span v-if="!aufgeklappt" class="rounded-md bg-ui-brand p-1 text-ui-onbrand cursor-pointer inline-block">{{ regeln.size() }}</span>
 				<span class="line-clamp-1 break-all leading-tight">{{ column.label }}</span>
 			</template>
 			<template #header(entfernen)>
@@ -17,10 +17,11 @@
 				</svws-ui-button>
 			</template>
 			<template #rowCustom="{row: r}">
-				<div :key="r.id" class="svws-ui-tr" :class="{'svws-clicked': modelValue?.id === r.id, 'bg-error text-white hover:text-error': verletzungen.get(r.id)}" role="row" @click="select_regel(r)">
+				<div :key="r.id" class="svws-ui-tr" role="row" @click="select_regel(r)" :style="gridTemplateColumns"
+					:class="{'svws-clicked': modelValue?.id === r.id, 'bg-ui-danger text-ui-ondanger hover:text-ui-ondanger-hover': verletzungen.get(r.id)}">
 					<svws-ui-tooltip v-if="verletzungen.get(r.id)" autosize>
 						<div class="svws-ui-td" role="cell">
-							<span class="icon i-ri-information-line" />
+							<span class="icon-ui-ondanger icon i-ri-information-line" />
 						</div>
 						<template #content> {{ verletzungen.get(r.id) }} </template>
 					</svws-ui-tooltip>
@@ -76,6 +77,7 @@
 	}>()
 
 	// eslint-Regel wird verletzt. props.regelTyp wird aber nicht geändert, es gibt für jede Regel eine Komponente
+	// eslint-disable-next-line vue/no-setup-props-reactivity-loss
 	const aufgeklappt = ref<boolean>(![GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE, GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE].includes(props.regelTyp));
 
 	const verletzungen = computed(() => props.getErgebnismanager().regelGetMap_regelID_to_verletzungString());
@@ -102,6 +104,18 @@
 		const regel = GostBlockungRegel.transpilerFromJSON(GostBlockungRegel.transpilerToJSON(r));
 		emit('update:modelValue', regel);
 	}
+
+	const cols = computed(() => [ { key: 'information', label: ' ', fixedWidth: 2 }, ...props.columns, { key: 'entfernen', label: ' ', fixedWidth: 3 } ]);
+
+	const gridTemplateColumns = computed<string>(() =>
+		"grid-template-columns: " + cols.value.map(column => {
+			const fixedWidth = Number(column.fixedWidth ?? 0);
+			const minWidth = Number(column.minWidth ?? 0);
+			const span = column.span ?? 1;
+			const min = (fixedWidth > 0) ? (fixedWidth + 'rem') : (minWidth > 0 ? (minWidth + 'rem') : '4rem');
+			const max = (fixedWidth > 0) ? (fixedWidth + 'rem') : span + 'fr';
+			return `minmax(${min}, ${max})`
+		}).join(' '));
 
 </script>
 

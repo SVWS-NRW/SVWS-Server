@@ -136,8 +136,8 @@ public class ReportingGostKlausurplanungKlausurtermin extends ReportingBaseType 
 				temp = temp + " ???";
 			}
 			if (!raum.aufsichten.isEmpty()) {
-				temp = temp + " (Std. " + raum.aufsichten.getFirst().unterrichtsstunde.unterrichtstunde() + "-"
-						+ raum.aufsichten.getLast().unterrichtsstunde.unterrichtstunde() + ")";
+				temp = temp + " (Std. " + raum.aufsichten.getFirst().unterrichtsstunde.stundeImUnterrichtsraster() + "-"
+						+ raum.aufsichten.getLast().unterrichtsstunde.stundeImUnterrichtsraster() + ")";
 			}
 			if (!temp.isEmpty())
 				tempList.add(temp);

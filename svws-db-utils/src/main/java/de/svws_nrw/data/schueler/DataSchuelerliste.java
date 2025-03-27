@@ -12,9 +12,9 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import de.svws_nrw.core.data.schueler.Schueler;
 import de.svws_nrw.core.data.schueler.SchuelerListe;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
+import de.svws_nrw.asd.data.schueler.Schueler;
 import de.svws_nrw.asd.data.schule.SchulgliederungKatalogEintrag;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
@@ -120,6 +120,7 @@ public final class DataSchuelerliste extends DataManager<Long> {
 			eintrag.idSchuljahresabschnitt = schueler.Schuljahresabschnitts_ID;
 			eintrag.idKlasse = -1L;
 			eintrag.idJahrgang = -1L;
+			eintrag.epJahre = null;
 			eintrag.jahrgang = "";
 			eintrag.schulgliederung = "";
 		} else {
@@ -133,6 +134,7 @@ public final class DataSchuelerliste extends DataManager<Long> {
 				eintrag.idJahrgang = jg.ID;
 				eintrag.jahrgang = Objects.toString(jg.ASDJahrgang, "");
 			}
+			eintrag.epJahre = aktAbschnitt.EPJahre;
 			if (aktAbschnitt.Schulgliederung == null) {
 				final Schulgliederung sgl = Schulgliederung.getDefault(schulform);
 				final SchulgliederungKatalogEintrag sglke = (sgl == null) ? null : sgl.daten(schuljahr);

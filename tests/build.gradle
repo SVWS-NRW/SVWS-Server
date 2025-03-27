@@ -1,0 +1,323 @@
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+import groovy.xml.XmlSlurper
+
+def buildDirPath = layout.buildDirectory.get()
+def testConfigPath = "${rootDir}/config/tests/config.json" as String
+def CONFIG = new JsonSlurper().parse(new File(testConfigPath))
+
+/**
+ * Dieser Task lädt die Testdatenbanken herunter, die für die Integrationstests benötigt werden. Dieser Task überprüft auch, ob die Testdatenbanken aktualisiert wurden.
+ */
+task downloadTestDatabases() {
+	description 'Lädt die Testdatenbanken herunter, die für die Integrationstests benötigt werden.'
+	doLast {
+		def dataBaseRepositoryPrefix = 'https://api.github.com/repos/SVWS-NRW/SVWS-TestMDBs'
+		project.mkdir "$rootDir/download/testDatenbanken"
+
+		// Erhalte Datum und Uhrzeit wann das Zielrepository mit den Testdatenbanken das letzte mal aktualisiert wurde
+		def connection = new URI(dataBaseRepositoryPrefix).toURL().openConnection()
+		connection.setRequestProperty('User-Agent', 'Gradle Script')
+		def lastRepoUpdate = "-1"
+		if (connection.responseCode == 200) {
+			def json = new JsonSlurper().parse(connection.inputStream)
+			lastRepoUpdate = json.updated_at
+			println "updated_at: ${json.updated_at}"
+		} else {
+			println "Aktualität der Testdatenbanken konnte nicht ermittelt werden. Fehler: ${connection.responseCode}"
+		}
+
+		// Jede in der Config angegebene Testdatenbanken wird heruntergeladen falls diese noch nicht existiert oder das Github Repository mit den Test Datenbanken aktualisiert wurde
+		CONFIG.testDatenbanken.each { db ->
+			def fileName = db + ".sqlite"
+
+			def file = new File("${rootDir}/download/testDatenbanken/${fileName}")
+			if (lastRepoUpdate == -1 && file.exists()) {
+				// Es konnte nicht geprüft ob die aktuelle Datenbank auf dem neusten Stand ist
+				println 'Warnung: Aktualität der Testdatenbanken konnte nicht geprüft werden.'
+			} else if ((CONFIG.lastRepoUpdate != lastRepoUpdate) || !file.exists()) {
+				// Die remote verfügbare Datenbank ist neuer als die aktuelle oder es existiert keine Lokale. Daher muss die Datenbank downloaded werden.
+				println 'Testdatenbanken wurden aktualisiert oder sind nicht vorhanden und müssen daher neu heruntergeladen werden.'
+
+				// Downloade und erstze lokale Datenbank
+				file.withOutputStream { out ->
+					new URI(CONFIG[db]).toURL().withInputStream { from -> from.transferTo(out) }
+				}
+
+				// Aktualisiert den Zeitstempel des letzten Repository-Updates in der JSON-Datei für die Testeinstellungen.
+				updateDownloadTimeStamp(testConfigPath, lastRepoUpdate)
+
+			} else {
+				if (file.exists()) {
+					println 'Testdatenbank download skipped da vorhanden und aktuell.'
+				}
+			}
+		}
+	}
+}
+
+
+/**
+ * Diese Task vergleicht die Schlüssel der Konfigurationsdateien der SVWS-App und ihrer Docker-Testcontainer.
+ * Wenn Unterschiede festgestellt werden, wird eine GradleException ausgelöst.
+ *
+ * @throws GradleException wenn die Konfigurationsdateien inkonsistent sind.
+ */
+task checkIfConfigFilesAreConsistent {
+	description 'Wirft einen Fehler wenn die Konfigurationstemplates für den Server oder die Container unterschiedlich sind.'
+
+	def appConfigTemplatePath = '../svws-server-app/src/main/resources/svwsconfig.json.example'
+	def dockerTestContainerConfigTemplatePath = './templates/config/svws_config.json.template'
+	def appConfigTemplateFile = file(appConfigTemplatePath)
+	def dockerTestContainerConfigTemplateFile = file(dockerTestContainerConfigTemplatePath)
+
+	doLast {
+		def jsonSlurper = new JsonSlurper()
+		def appConfJson = jsonSlurper.parse(appConfigTemplateFile)
+		def dockerConfJson = jsonSlurper.parse(dockerTestContainerConfigTemplateFile)
+
+		def appConfKeys = appConfJson.keySet()
+		def dockerConfKeys = dockerConfJson.keySet()
+
+		// Erstelle die Menge an Schlüssel die nicht in beiden Dateien vorhanden sind
+		def deltaAppToDocker = appConfKeys - dockerConfKeys
+		def deltaDockerToApp = dockerConfKeys - appConfKeys
+		def mergedDelta = deltaAppToDocker + deltaDockerToApp
+
+		if ((deltaAppToDocker.size() > 0) || (deltaDockerToApp.size() > 0)) {
+			throw new GradleException("Config Files für Svws-App und die ihrer Testcontainer sind inkonsistent, folgende Einträge müssen in der Docker Config in '$dockerTestContainerConfigTemplateFile.absolutePath' überprüft werden: $mergedDelta")
+		}
+	}
+}
+
+
+/**
+ * Gradle-Task zur Überprüfung, ob Docker auf dem Host-System läuft.
+ *
+ * @throws GradleException wenn Docker nicht auf dem Host-System läuft.
+ */
+task checkIfDockerIsRunning {
+	description 'Wirft einen Fehler falls Docker nicht auf dem Host System läuft.'
+	doLast {
+		if ('docker info'.execute().waitFor() != 0) {
+			throw new GradleException('Docker läuft nicht auf dem Host System.')
+		}
+	}
+}
+
+
+/**
+ * Prüft, ob das benötigte Docker Netzwerk `gitlab_runner_network` läuft.
+ * Falls nicht in CI, startet der Task das Netzwerk. Falls in CI, wirft er einen Fehler.
+ *
+ * @throws GradleException wenn Docker nicht auf dem Host-System läuft und der Task innerhalb von CI gestartet wurde.
+ */
+task startTestDockerNetwork {
+	description = 'Prüft ob das benötigte Docker Netzwerk läuft. Falls nicht in CI, startet er den Task. Falls in CI, wirft er einen Fehler.'
+	dependsOn 'checkIfDockerIsRunning'
+	doLast {
+		def networkExists = 'docker network ls --filter name=gitlab_runner_network -q'.execute().text.trim()
+		if (networkExists) {
+			println 'Docker Network `gitlab_runner_network` läuft.'
+		} else {
+			// Fall in CI Pipeline
+			if (System.getenv('CI_SERVER')) {
+				throw new GradleException('Docker Network `gitlab_runner_network` nicht verfügbar')
+			} else {
+				// Falls lokal
+				println 'Docker Network `gitlab_runner_network` läuft nicht und wird gestartet.'
+
+				// Starte das Docker Netzwerk
+				def createNetwork = 'docker network create gitlab_runner_network'.execute()
+				createNetwork.waitFor()
+				println createNetwork.text
+			}
+		}
+	}
+}
+
+
+/**
+ * Führe alle verfügbaren Integrations standardisiert gegen Docker Container aus.
+ * Dieser Task macht sowohl die Vor- als auch die Nachbereitung der Tests.
+ * Einstiegspunkt sowohl für die CI als auch die lokale Ausführung.
+ */
+task integrationTest() {
+	group 'verification'
+	description 'Ausführung aller Integrationstests welche jeweils gegen eine temporäre standardisierte Testumgebung laufen.'
+
+	// Überprüfe ob für die Integrationstests alle Voraussetzungen erfüllt sind
+	dependsOn 'downloadTestDatabases'
+	dependsOn 'startTestDockerNetwork'
+	dependsOn 'checkIfConfigFilesAreConsistent'
+
+	// Tatsächliche Integrationstests welche für jedes Subpackage ausgeführt werden
+	// Weitere Testpackages können hier hinzugefügt werden
+	dependsOn 'tests-server-api:testAgainstDockerEnv' // Vite API Tests
+	dependsOn 'tests-e2e-client:testAgainstDockerEnv' // Playwright E2E Tests
+	dependsOn 'tests-server-dav:testAgainstDockerEnv' // Vite API Dav Tests
+	dependsOn 'tests-server-enm:testAgainstDockerEnv' // Vite API ENM Tests
+
+
+	// Stoppe die container für die jeweiligen Testumgebungen nach den Integrationstests
+	// Jeden ausgeführte Testpackage sollte auch hier auftauchen
+	finalizedBy 'tests-server-api:removeTestEnvironmentEntryPoint'
+	finalizedBy 'tests-e2e-client:removeTestEnvironmentEntryPoint'
+	finalizedBy 'tests-server-dav:removeTestEnvironmentEntryPoint'
+ 	finalizedBy 'tests-server-enm:removeTestEnvironmentEntryPoint'
+
+	// Aggregiere die Informationen aus allen Tests
+	finalizedBy 'checkJUnitResults'
+}
+
+
+/**
+ * Überprüft, ob die lokale SVWS-Anwendung läuft, indem sie eine HTTP-Anfrage an den lokalen Server sendet.
+ * Hierfür wird das curl-Tool verwendet und das Ergebnis in eine temporäre Datei geschrieben welche anschließend ausgelesen und gelöscht wird.
+ *
+ * @throws GradleException Wenn der HTTP-Antwortcode des lokalen Servers nicht 200 ist.
+ */
+task checkIfLokalApplikationIsRunning(type: Exec) {
+	description 'Wirf einen Fehler wenn SVWS Server App auf dem Host System auf Port 443 läuft.'
+	doFirst {
+		def outputFile = file("${buildDirPath}/curlOutput.txt")
+		if (!outputFile.exists()) {
+			outputFile.createNewFile() // Create the file
+		}
+		commandLine 'curl', '-k', '-s', '-o', '/dev/null', '-w', '%{http_code}', 'https://localhost/status/alive'
+		standardOutput = new FileOutputStream(outputFile)
+		ignoreExitValue = true
+
+		def responseCode = outputFile.text.trim()
+		outputFile.delete() // Entferne die temporäre Datei nach dem Lesen
+		if (responseCode == '200') {
+			println 'SVWS Server läuft auf Port 443'
+		} else {
+			throw new GradleException('Es läuft kein SVWS Server auf port 443')
+		}
+	}
+}
+
+
+/**
+ * Überprüft, ob die lokale SVWS-Datenbank läuft, indem sie eine Socket-Anfrage an den lokalen DB-Server sendet.
+ *
+ * @throws GradleException Wenn keine Datenbank mit offenem Socket auf 3306 läuft.
+ */
+task checkIfLokalDataBaseIsRunning {
+	description 'Wirf einen Fehler wenn keine MariaDB auf dem Host System auf Port 3306 läuft.'
+	doLast {
+		def socket = new Socket()
+		try {
+			socket.connect(new InetSocketAddress('localhost', 3306), 2000)
+			println 'MariaDB Database auf port 3306 erreichbar.'
+
+		} catch (IOException e) {
+			throw new GradleException('Es läuft keine MariaDB auf port 3306.')
+
+		} finally {
+			try {
+				socket.close()
+			} catch (IOException ignored) {
+			}
+		}
+	}
+}
+
+
+/**
+ * Integrationstests. Hier werden alle verfügbaren lokal Integrations ausgeführt.
+ *
+ * Dies Test laufen gehen die lokale unabhängig gestartete Datenbank und SVWS App. Es werden keine Docker Container im Hintergrund als Testumgebung gestartet.
+ * Läuft also das Backend oder die Datenbank nicht, kann dieser Task nicht verwendet werden.
+ */
+task integrationTestLocalOnlyNoDocker() {
+	description 'Führt die integrations gegen das laufende Backed + Datenbank aus. Diese werden daher benötigt und sollten vorher manuel gestartet werden'
+	group 'verification'
+
+	// Prüfe ob Voraussetzungen erfüllt sind
+	dependsOn ':tests:checkIfLokalApplikationIsRunning'
+	dependsOn ':tests:checkIfLokalDataBaseIsRunning'
+
+	dependsOn 'tests-server-api:testLokalAPI' // VITE API Tests
+	dependsOn 'tests-e2e-client:testLokalE2E' // Playwright E2E Tests
+	dependsOn 'tests-server-dav:testLokalAPI' // VITE API DAV Tests
+}
+
+
+/**
+ * Untersucht die JUnit-Ergebnisse nach dem Ausführen der Tests. Iteriert durch alle JUnits Reports.
+ *
+ * @throws GradleException falls ein beliebiger Integrationstest fehlgeschlagen ist.
+ */
+task checkJUnitResults {
+	// Die Tests sollten komplett abgeschlossen (und rückgebaut) werden bevor die Ergebnisse evaluiert werden
+	mustRunAfter 'tests-server-api:removeTestEnvironmentEntryPoint'
+	mustRunAfter 'tests-e2e-client:removeTestEnvironmentEntryPoint'
+	mustRunAfter 'tests-server-dav:removeTestEnvironmentEntryPoint'
+	mustRunAfter 'tests-server-enm:removeTestEnvironmentEntryPoint'
+
+	// Die Liste der JUnit Report Files. Hier sollten neue Einträge ergänzt werden wenn weitere Testpackages geschrieben werden.
+	def junitReportFiles = [
+			'tests-server-api/build/test-results/api-test-results.xml',
+			'tests-e2e-client/build/test-results/zusammenfassung/e2e-results.xml',
+			'tests-server-dav/build/test-results/api-test-results.xml',
+			'tests-server-enm/build/test-results/after-setup-test-results.xml',
+			'tests-server-enm/build/test-results/setup-test-results.xml',
+			'tests-server-enm/build/test-results/sync-test-results.xml'
+	]
+	doLast {
+		int totalTests = 0
+		int totalErroredTests = 0
+		int totalSkippedTests = 0
+
+		junitReportFiles.each { filePath ->
+			// Lade die JUnit Report Datei
+			def junitReportFile = file(filePath)
+
+			if (!junitReportFile.exists()) {
+				throw new GradleException("JUnit Report Datei: ${junitReportFile}")
+			}
+
+			// Zähle für jeden JUnit Report file die entsprechenden Einträge
+			def report = new XmlSlurper().parse(junitReportFile)
+			def testCases = report.'**'.findAll { it.name() == 'testcase' }
+			def erroredTests = testCases.findAll { it.error.size() > 0 }
+			def failedTests = testCases.findAll { it.failure.size() > 0 }
+			def skippedTests = testCases.findAll { it.skipped.size() > 0 }
+
+			totalTests += testCases.size()
+			totalErroredTests += erroredTests.size() + failedTests.size()
+			totalSkippedTests += skippedTests.size()
+		}
+
+		// Print Debug Info für die Auswertung der Integrationstests. Fall es Test fehlgeschlagen ist wirf einen Fehler (damit die Pipeline fehlschlägt)
+		if (totalErroredTests > 0) {
+			throw new GradleException("Integrationstests insgesamt: ${totalTests} | Skipped: ${totalSkippedTests} | Error: ${totalErroredTests}")
+		} else {
+
+			// Für farbiges Log benötigt
+			def highlightGreen = { text -> "\033[32m${text}\033[0m" }
+
+			def debugMessage = "Alle ${totalTests} Integrationstests waren fehlerfrei. (Skipped: ${totalSkippedTests})"
+			println("${highlightGreen('\n****************************************************************')}")
+			println("${highlightGreen(debugMessage)}")
+			println("${highlightGreen('****************************************************************\n')}")
+		}
+	}
+}
+
+
+/**
+ * Aktualisiert den Zeitstempel des letzten Repository-Updates in der JSON-Datei für die Testeinstellungen.
+ *
+ * @param filePath Der Pfad zur JSON-Datei, die aktualisiert werden soll.
+ * @param newValue Der neue Wert für das Feld "lastRepoUpdate".
+ */
+def updateDownloadTimeStamp(String filePath, String newValue) {
+	def jsonFile = file(filePath)
+	def json = new JsonSlurper().parseText(jsonFile.text)
+	json['lastRepoUpdate'] = newValue
+	jsonFile.text = JsonOutput.prettyPrint(JsonOutput.toJson(json))
+	println "Updated \"lastRepoUpdate\" to ${newValue} in ${filePath}"
+}

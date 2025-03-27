@@ -2,7 +2,7 @@
 	"version": 1,
 	"daten": [ {
 		"bezeichner": "OA",
-		"idHistorie": 1,
+		"idStatistik": "1",
 		"historie": [ {
 			"id": 0,
 			"schluessel": "A",
@@ -13,7 +13,7 @@
 		} ]
 	}, {
 		"bezeichner": "HA9A",
-		"idHistorie": 2,
+		"idStatistik": "2",
 		"historie": [ {
 			"id": 1000,
 			"kuerzel": "HA9A",
@@ -31,7 +31,7 @@
 		} ]
 	}, {
 		"bezeichner": "HA9",
-		"idHistorie": 3,
+		"idStatistik": "3",
 		"historie": [ {
 			"id": 2000,
 			"schluessel": "C",
@@ -49,7 +49,7 @@
 		} ]
 	}, {
 		"bezeichner": "HA9_FOE",
-		"idHistorie": 4,
+		"idStatistik": "4",
 		"historie": [ {
 			"id": 3000,
 			"schluessel": "S",
@@ -67,7 +67,7 @@
 		} ]
 	}, {
 		"bezeichner": "HA9_Q",
-		"idHistorie": 5,
+		"idStatistik": "5",
 		"historie": [ {
 			"id": 4000,
 			"schluessel": "O",
@@ -85,7 +85,7 @@
 		} ]
 	}, {
 		"bezeichner": "HA10",
-		"idHistorie": 6,
+		"idStatistik": "6",
 		"historie": [ {
 			"id": 5000,
 			"schluessel": "D",
@@ -103,7 +103,7 @@
 		} ]
 	}, {
 		"bezeichner": "HA10_Q",
-		"idHistorie": 7,
+		"idStatistik": "7",
 		"historie": [ {
 			"id": 6000,
 			"schluessel": "U",
@@ -121,7 +121,7 @@
 		} ]
 	}, {
 		"bezeichner": "MSA",
-		"idHistorie": 8,
+		"idStatistik": "8",
 		"historie": [ {
 			"id": 10000,
 			"schluessel": "F",
@@ -132,7 +132,7 @@
 		} ]
 	}, {
 		"bezeichner": "MSA_Q",
-		"idHistorie": 9,
+		"idStatistik": "9",
 		"historie": [ {
 			"id": 11000,
 			"schluessel": "G",
@@ -143,7 +143,7 @@
 		} ]
 	}, {
 		"bezeichner": "MSA_Q1",
-		"idHistorie": 10,
+		"idStatistik": "10",
 		"historie": [ {
 			"id": 12000,
 			"schluessel": "I",
@@ -154,7 +154,7 @@
 		} ]
 	}, {
 		"bezeichner": "VS_11",
-		"idHistorie": 11,
+		"idStatistik": "11",
 		"historie": [ {
 			"id": 13000,
 			"schluessel": "P",
@@ -165,7 +165,7 @@
 		} ]
 	}, {
 		"bezeichner": "FHR_S",
-		"idHistorie": 12,
+		"idStatistik": "12",
 		"historie": [ {
 			"id": 20000,
 			"schluessel": "H",
@@ -176,7 +176,7 @@
 		} ]
 	}, {
 		"bezeichner": "FHR",
-		"idHistorie": 13,
+		"idStatistik": "13",
 		"historie": [ {
 			"id": 21000,
 			"schluessel": "J",
@@ -187,7 +187,7 @@
 		} ]
 	}, {
 		"bezeichner": "FGHR",
-		"idHistorie": 14,
+		"idStatistik": "14",
 		"historie": [ {
 			"id": 22000,
 			"schluessel": "Q",
@@ -198,7 +198,7 @@
 		} ]
 	}, {
 		"bezeichner": "ABITUR",
-		"idHistorie": 15,
+		"idStatistik": "15",
 		"historie": [ {
 			"id": 30000,
 			"schluessel": "K",
@@ -209,7 +209,7 @@
 		} ]
 	}, {
 		"bezeichner": "FOEG",
-		"idHistorie": 16,
+		"idStatistik": "16",
 		"historie": [ {
 			"id": 40000,
 			"schluessel": "M",
@@ -220,7 +220,7 @@
 		} ]
 	}, {
 		"bezeichner": "FOEL",
-		"idHistorie": 17,
+		"idStatistik": "17",
 		"historie": [ {
 			"id": 41000,
 			"schluessel": "V",
@@ -231,7 +231,7 @@
 		} ]
 	}, {
 		"bezeichner": "WALD",
-		"idHistorie": 18,
+		"idStatistik": "18",
 		"historie": [ {
 			"id": 50000,
 			"schluessel": "W",

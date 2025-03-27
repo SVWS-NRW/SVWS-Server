@@ -1,45 +1,29 @@
 <template>
 	<Teleport defer to=".svws-ui-header--actions">
-		<svws-ui-button type="secondary" @click="print"><span class="icon i-ri-printer-line" />Drucken</svws-ui-button>
+		<s-lehrer-stundenplan-drucken-modal v-slot="{ openModal }" :map-stundenplaene :get-p-d-f :api-status>
+			<svws-ui-button @click="openModal" type="secondary"><span class="icon i-ri-printer-line" /> Stundenplan drucken</svws-ui-button>
+		</s-lehrer-stundenplan-drucken-modal>
 		<svws-ui-modal-hilfe> <hilfe-lehrer-stundenplan /> </svws-ui-modal-hilfe>
 	</Teleport>
-	<div class="page--content page--content--flex h-full">
-		<template v-if="stundenplan === undefined">
-			<div class="svws-ui-empty">
-				<span class="icon i-ri-calendar-event-line" />
+	<div class="page page-flex-col overflow-x-auto">
+		<template v-if="stundenplan() === undefined">
+			<div class="flex flex-col gap-2 justify-center items-center min-h-full w-full grow text-headline-md text-ui-contrast-50 text-center">
+				<span class="icon-xxl i-ri-calendar-event-line" />
 				<span>Derzeit liegt kein Stundenplan<br>für diesen Lernabschnitt vor.</span>
 			</div>
 		</template>
 		<template v-else>
-			<stundenplan-auswahl :stundenplan :map-stundenplaene :goto-stundenplan :goto-wochentyp :goto-kalenderwoche :manager :wochentyp :kalenderwoche :ganzer-stundenplan :set-ganzer-stundenplan
-				autofocus />
-			<router-view :key="$route.hash" />
+			<stundenplan-auswahl :stundenplan="stundenplan()" :map-stundenplaene :goto-stundenplan :goto-wochentyp :goto-kalenderwoche :manager :wochentyp
+				:kalenderwoche :ganzer-stundenplan :set-ganzer-stundenplan autofocus />
+			<stundenplan-lehrer :id :ignore-empty :manager :wochentyp :kalenderwoche />
 		</template>
 	</div>
 </template>
 
 <script setup lang="ts">
 
-	import type { StundenplanAuswahlProps } from "@ui";
+	import type { LehrerStundenplanProps } from './SLehrerStundenplanProps';
 
-	defineProps<StundenplanAuswahlProps>();
-
-	const print = () => {
-		window.print();
-	};
+	const props = defineProps<LehrerStundenplanProps>();
 
 </script>
-
-<style lang="postcss">
-
-	.svws-ui-empty {
-		@apply flex flex-col justify-center items-center min-h-full w-full flex-grow;
-		@apply text-headline-md text-black/50 dark:text-white/50 text-center;
-
-		svg {
-			@apply w-full h-1/5 text-light dark:text-white/5 mb-5;
-			max-width: 20vw;
-		}
-	}
-
-</style>

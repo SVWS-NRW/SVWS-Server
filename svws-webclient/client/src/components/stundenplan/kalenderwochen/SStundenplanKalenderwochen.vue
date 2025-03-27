@@ -1,5 +1,5 @@
 <template>
-	<div class="page--content select-none w-full h-full grid-rows-1">
+	<div class="page page-flex-row select-none">
 		<Teleport to=".svws-sub-nav-target" defer v-if="hatUpdateKompetenz">
 			<svws-ui-sub-nav :focus-switching-enabled :focus-help-visible>
 				<svws-ui-button class="subNavigationFocusField" @click="modus = !modus" title="Modus wechseln" type="transparent">
@@ -11,11 +11,13 @@
 				</svws-ui-button>
 			</svws-ui-sub-nav>
 		</Teleport>
-		<div class="w-full h-full flex flex-col">
+		<div class="min-w-fit max-w-280 h-full overflow-hidden">
 			<div v-if="hatUpdateKompetenz">Zum Ändern der Kalenderwoche die jeweilige Zeile anklicken</div>
 			<svws-ui-table :items :columns :clickable="hatUpdateKompetenz" @update:clicked="toggleWochentyp" scroll />
 		</div>
-		<svws-ui-table :items="summen" />
+		<div class="min-w-fit max-w-140 h-full overflow-auto">
+			<svws-ui-table :items="summen" />
+		</div>
 	</div>
 </template>
 
@@ -56,7 +58,7 @@
 		for (let wt = 1; wt <= props.stundenplanManager().getWochenTypModell(); wt++)
 			result.push({
 				wochentyp: props.stundenplanManager().stundenplanGetWochenTypAsString(wt),
-				anzahl: props.stundenplanManager().kalenderwochenzuordnungGetMengeByWochentyp(wt).size()
+				anzahl: props.stundenplanManager().kalenderwochenzuordnungGetMengeByWochentyp(wt).size(),
 			});
 		return result;
 	});
@@ -76,7 +78,7 @@
 				kalenderwoche: zuordnung.kw,
 				montag: DateUtils.gibDatumGermanFormat(DateUtils.gibDatumDesMontagsOfJahrAndKalenderwoche(zuordnung.jahr, zuordnung.kw)),
 				sonntag: DateUtils.gibDatumGermanFormat(DateUtils.gibDatumDesSonntagsOfJahrAndKalenderwoche(zuordnung.jahr, zuordnung.kw)),
-				wochentyp: props.stundenplanManager().stundenplanGetWochenTypAsStringKurz(zuordnung.wochentyp)
+				wochentyp: props.stundenplanManager().stundenplanGetWochenTypAsStringKurz(zuordnung.wochentyp),
 			});
 		return result;
 	});

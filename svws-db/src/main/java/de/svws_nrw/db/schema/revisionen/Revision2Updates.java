@@ -58,7 +58,8 @@ public final class Revision2Updates extends SchemaRevisionUpdateSQL {
 				SELECT DISTINCT
 				    Kurse.ID AS Kurs_ID,
 				    Schueler.ID AS Schueler_ID,
-				    SchuelerLernabschnittsdaten.WechselNr AS LernabschnittWechselNr
+				    SchuelerLernabschnittsdaten.WechselNr AS LernabschnittWechselNr,
+				    SchuelerLeistungsdaten.ID AS Leistung_ID
 				FROM
 				    Kurse JOIN SchuelerLeistungsdaten ON Kurse.ID = SchuelerLeistungsdaten.Kurs_ID
 				        JOIN SchuelerLernabschnittsdaten ON SchuelerLeistungsdaten.Abschnitt_ID = SchuelerLernabschnittsdaten.ID

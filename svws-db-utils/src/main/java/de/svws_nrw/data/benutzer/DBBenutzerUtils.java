@@ -22,6 +22,7 @@ import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerdetails;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.db.utils.ApiUtils;
 import de.svws_nrw.ext.jbcrypt.BCrypt;
+import jakarta.persistence.PersistenceException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -110,6 +111,8 @@ public final class DBBenutzerUtils {
 			if (BCrypt.checkpw(password, pwHash))
 				return dbBenutzer.Benutzername;
 			return null;
+		} catch (final PersistenceException e) {
+			throw new DBException("Fehler beim Lesen der Benutzertabelle: " + e.getMessage(), e);
 		}
 	}
 

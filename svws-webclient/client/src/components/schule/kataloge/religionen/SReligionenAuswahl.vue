@@ -1,66 +1,73 @@
 <template>
-	<svws-ui-secondary-menu>
-		<template #headline>
-			<span>Religionen</span>
-		</template>
-		<template #abschnitt>
-			<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
-		</template>
-		<template #header />
-		<template #content>
-			<svws-ui-table :clicked @update:clicked="gotoEintrag" :items="religionListeManager().filtered()" :columns
-				clickable selectable v-model="selected" :filter-open="true" scroll-into-view :focus-switching-enabled :focus-help-visible>
+	<div class="h-full flex flex-col">
+		<div class="secondary-menu--headline">
+			<h1>Religionen</h1>
+			<div><abschnitt-auswahl :daten="schuljahresabschnittsauswahl" /></div>
+		</div>
+		<div class="secondary-menu--header" />
+		<div class="secondary-menu--content">
+			<svws-ui-table :clickable="!manager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="religionEintrag => gotoDefaultView(religionEintrag.id)" :items="manager().filtered()"
+				:model-value="[...manager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)" :columns :filter-open="true" selectable count scroll-into-view scroll allow-arrow-key-selection
+				:focus-switching-enabled :focus-help-visible>
 				<template #filterAdvanced>
 					<svws-ui-checkbox type="toggle" v-model="filterNurSichtbare">Nur Sichtbare</svws-ui-checkbox>
 				</template>
 				<template #actions>
-					<svws-ui-button @click="doDeleteEintraege()" type="trash" :disabled="selected.length === 0" />
-					<s-religionen-neu-modal v-slot="{ openModal }" :add-eintrag :schuljahr>
-						<svws-ui-button type="icon" @click="openModal()" :has-focus="religionListeManager().filtered().isEmpty()">
+					<svws-ui-tooltip position="bottom" v-if="ServerMode.DEV.checkServerMode(serverMode) && hatKompetenzAendern">
+						<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="gotoHinzufuegenView(true)" :has-focus="manager().filtered().size() === 0">
 							<span class="icon i-ri-add-line" />
 						</svws-ui-button>
-					</s-religionen-neu-modal>
+						<template #content>
+							Neue Religion anlegen
+						</template>
+					</svws-ui-tooltip>
 				</template>
 			</svws-ui-table>
-		</template>
-	</svws-ui-secondary-menu>
+		</div>
+	</div>
 </template>
 
 <script setup lang="ts">
 
-	import { computed, ref } from "vue";
-	import type { ReligionEintrag } from "@core";
-	import type { ReligionenAuswahlProps } from "./SReligionenAuswahlPops";
+	import { computed } from "vue";
+	import {BenutzerKompetenz, type ReligionEintrag, ServerMode} from "@core";
 	import { useRegionSwitch } from "~/components/useRegionSwitch";
+	import type { KatalogReligionAuswahlProps } from "~/components/schule/kataloge/religionen/SReligionenAuswahlPops";
+	import { ViewType } from "@ui";
 
-	const props = defineProps<ReligionenAuswahlProps>();
+	const props = defineProps<KatalogReligionAuswahlProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
-	const schuljahr = computed<number>(() => props.religionListeManager().getSchuljahr());
-
-	const selected = ref<ReligionEintrag[]>([]);
-
-	const clicked = computed<ReligionEintrag | undefined>(() => {
-		const manager = props.religionListeManager();
-		return manager.hasDaten() ? manager.auswahl() : undefined;
-	});
+	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 
 	const columns = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc" },
-		{ key: "text", label: "Bezeichnung", sortable: true, span: 3 },
+		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 3 },
 	];
 
+	const clickedEintrag = computed(() => {
+		if ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN))
+			return null;
+		return props.manager().hasDaten() ? props.manager().auswahl() : null;
+	});
+
+	async function setAuswahl(items : ReligionEintrag[]) {
+		props.manager().liste.auswahlClear();
+		for (const item of items)
+			if (props.manager().liste.hasValue(item))
+				props.manager().liste.auswahlAdd(item);
+		if (props.manager().liste.auswahlExists())
+			await props.gotoGruppenprozessView(true);
+		else
+			await props.gotoDefaultView(props.manager().getVorherigeAuswahl()?.id);
+	}
+
 	const filterNurSichtbare = computed<boolean>({
-		get: () => props.religionListeManager().filterNurSichtbar(),
+		get: () => props.manager().filterNurSichtbar(),
 		set: (value) => {
-			props.religionListeManager().setFilterNurSichtbar(value);
+			props.manager().setFilterNurSichtbar(value);
 			void props.setFilter();
 		},
 	});
-
-	async function doDeleteEintraege() {
-		await props.deleteEintraege(selected.value);
-		selected.value = [];
-	}
 
 </script>

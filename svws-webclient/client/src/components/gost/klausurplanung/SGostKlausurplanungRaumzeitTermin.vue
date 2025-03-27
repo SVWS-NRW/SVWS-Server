@@ -40,65 +40,73 @@
 			<svws-ui-button type="primary" @click="showModalNichtVerteilt = false"> OK </svws-ui-button>
 		</template>
 	</svws-ui-modal>
-	<svws-ui-content-card>
-		<template #title>
+	<div class="grow flex flex-col gap-8 w-full overflow-hidden">
+		<div class="flex flex-col gap-4 w-full">
 			<div class="flex flex-col leading-tight text-headline-md">
 				<span v-if="termin.datum !== null">Klausuren am {{ DateUtils.gibDatumGermanFormat(termin.datum) }}</span>
 				<span v-if="termin.startzeit !== null" class="opacity-50">Startzeit: {{ DateUtils.getStringOfUhrzeitFromMinuten(termin.startzeit) }} Uhr</span>
-				<!--<span>{{ kMan().schueleridsGetMengeByTerminid(termin.id)?.size() }} Klausurschreiber:innen</span>-->
+				<!--<span>{{ kMan().schueleridsGetMengeByTerminid(termin.id)?.size() }} Klausurschreiber</span>-->
 			</div>
-		</template>
-		<svws-ui-content-card class="rounded-lg" v-if="multijahrgang()" :has-background="true">
-			<template #title>
+			<div v-if="multijahrgang()" class="flex flex-col gap-4 rounded-lg bg-ui-neutral px-6 py-3 min-w-120 w-fit">
 				<span class="leading-tight text-headline-md gap-1">
-					<span v-if="(!zeigeAlleJahrgaenge() && kMan().isKlausurenInFremdraeumenByTermin(termin))" class="icon i-ri-alert-fill icon-error px-4" />
+					<span v-if="(!zeigeAlleJahrgaenge() && kMan().isKlausurenInFremdraeumenByTermin(termin))" class="icon i-ri-alert-fill icon-ui-danger px-4" />
 					<span>Jahrgangsübergreifende Planung</span>
 					<span v-if="(!zeigeAlleJahrgaenge() && kMan().isKlausurenInFremdraeumenByTermin(termin))"> aktiviert, da jahrgangsgemischte Räume existieren</span>
 				</span>
-			</template>
-			<ul>
-				<li class="flex font-bold">
-					<span>{{ kMan().anzahlBenoetigtePlaetzeAlleKlausurenByTermin(termin, false) }} Klausuren im akutellen Jahrgang,&nbsp;</span>
-					<span v-if="kMan().isTerminAlleSchuelerklausurenVerplant(termin)" class="text-green-500">alle zugewiesen.</span>
-					<span v-else class="text-red-500">nicht alle zugewiesen.</span>
-				</li>
-				<li class="flex" v-for="terminFremd in kMan().getFremdTermineByTermin(termin)" :key="terminFremd.id">
-					<span>{{ kMan().anzahlBenoetigtePlaetzeAlleKlausurenByTermin(terminFremd, false) }} Klausuren im Jahrgang {{ GostHalbjahr.fromIDorException(terminFremd.halbjahr).jahrgang }},&nbsp;</span>
-					<span v-if="kMan().isTerminAlleSchuelerklausurenVerplant(terminFremd)" class="text-green-500">alle zugewiesen.</span>
-					<span v-else class="text-red-500">nicht alle zugewiesen.</span>
-					<svws-ui-button type="icon" @click="gotoTermin(terminFremd.abijahr, GostHalbjahr.fromIDorException(terminFremd.halbjahr), terminFremd.id)" :title="`Zur Raumplanung des Jahrgangs`" size="small"><span class="icon i-ri-link" /></svws-ui-button>
-				</li>
-			</ul>
-		</svws-ui-content-card>
-		<div class="flex flex-wrap gap-1 my-5 py-1 w-full">
-			<svws-ui-button :disabled="!hatKompetenzUpdate" @click="createKlausurraum({idTermin: termin.id})"><span class="icon i-ri-add-line -ml-1" /> {{ kMan().raumGetMengeByTerminIncludingFremdtermine(termin, multijahrgang()).size() ? 'Raum hinzufügen' : 'Klausurraum anlegen' }}</svws-ui-button>
-			<svws-ui-button type="transparent" :disabled="!hatKompetenzUpdate || !kMan().alleRaeumeHabenStundenplanRaumByTermin(termin, multijahrgang(), false) || !kMan().isPlatzkapazitaetAusreichendByTermin(termin, multijahrgang())" @click="showModalAutomatischVerteilen"><span class="icon i-ri-sparkling-line -ml-1 mr-1" />{{ kMan().isPlatzkapazitaetAusreichendByTermin(termin, multijahrgang()) && kMan().alleRaeumeHabenStundenplanRaumByTermin(termin, multijahrgang(), false) ? "Automatisch verteilen" : (kMan().alleRaeumeHabenStundenplanRaumByTermin(termin, multijahrgang(), false) ? "Raumkapazität nicht ausreichend" : "Raumnummern nicht zugewiesen") }} </svws-ui-button>
+				<ul>
+					<li class="flex font-bold">
+						<span>{{ kMan().anzahlBenoetigtePlaetzeAlleKlausurenByTermin(termin, false) }} Klausuren im aktuellen Jahrgang,&nbsp;</span>
+						<span v-if="kMan().isTerminAlleSchuelerklausurenVerplant(termin)" class="text-ui-success">alle zugewiesen.</span>
+						<span v-else class="text-ui-danger">nicht alle zugewiesen.</span>
+					</li>
+					<li class="flex" v-for="terminFremd in kMan().getFremdTermineByTermin(termin)" :key="terminFremd.id">
+						<span>{{ kMan().anzahlBenoetigtePlaetzeAlleKlausurenByTermin(terminFremd, false) }} Klausuren im Jahrgang {{ GostHalbjahr.fromIDorException(terminFremd.halbjahr).jahrgang }},&nbsp;</span>
+						<span v-if="kMan().isTerminAlleSchuelerklausurenVerplant(terminFremd)" class="text-ui-success">alle zugewiesen.</span>
+						<span v-else class="text-ui-danger">nicht alle zugewiesen.</span>
+						<svws-ui-button type="icon" @click="gotoTermin(terminFremd.abijahr, GostHalbjahr.fromIDorException(terminFremd.halbjahr), terminFremd.id)" title="Zur Raumplanung des Jahrgangs" size="small"><span class="icon i-ri-link" /></svws-ui-button>
+					</li>
+				</ul>
+			</div>
+			<div class="flex flex-wrap gap-2 py-1 w-full">
+				<svws-ui-button :disabled="!hatKompetenzUpdate" @click="createKlausurraum({idTermin: termin.id})">
+					<span class="icon i-ri-add-line" />
+					{{ kMan().raumGetMengeByTerminIncludingFremdtermine(termin, multijahrgang()).size() ? 'Raum hinzufügen' : 'Klausurraum anlegen' }}
+				</svws-ui-button>
+				<svws-ui-button type="transparent" :disabled="!hatKompetenzUpdate || !kMan().alleRaeumeHabenStundenplanRaumByTermin(termin, multijahrgang(), false) || !kMan().isPlatzkapazitaetAusreichendByTermin(termin, multijahrgang())" @click="showModalAutomatischVerteilen">
+					<span class="icon i-ri-sparkling-line mr-1" />
+					{{ kMan().isPlatzkapazitaetAusreichendByTermin(termin, multijahrgang()) && kMan().alleRaeumeHabenStundenplanRaumByTermin(termin, multijahrgang(), false) ? "Automatisch verteilen" : (kMan().alleRaeumeHabenStundenplanRaumByTermin(termin, multijahrgang(), false) ? "Raumkapazität nicht ausreichend" : "Raumnummern nicht zugewiesen") }}
+				</svws-ui-button>
+			</div>
 		</div>
-		<div class="grid grid-cols-[repeat(auto-fill,minmax(26rem,1fr))] gap-4">
-			<!--<template v-if="raummanager().raumGetMengeTerminOnlyAsList(!zeigeAlleJahrgaenge() || !raummanager().isKlausurenInFremdraeumen()).size()">-->
-			<s-gost-klausurplanung-raumzeit-raum v-for="raum in kMan().raumGetMengeByTerminIncludingFremdtermine(termin, zeigeAlleJahrgaenge() || kMan().isKlausurenInFremdraeumenByTermin(termin))"
-				:benutzer-kompetenzen
-				:key="raum.id"
-				:raum
-				:patch-klausurraum
-				:loesche-klausurraum
-				:patch-klausur
-				:k-man
-				:drag-data
-				:on-drag
-				:multijahrgang
-				:on-drop
-				:goto-termin
-				:termin-selected="termin" />
-			<!-- </template>
-			<template v-else>
-				<div class="shadow-inner rounded-lg h-48" />
-			</template> -->
+		<div class="w-full overflow-hidden">
+			<div class="h-full w-full grow grid gap-4 overflow-y-auto" style="grid-template-columns: repeat(auto-fill, minmax(30rem, 1fr));">
+				<!--<template v-if="raummanager().raumGetMengeTerminOnlyAsList(!zeigeAlleJahrgaenge() || !raummanager().isKlausurenInFremdraeumen()).size()">-->
+				<s-gost-klausurplanung-raumzeit-raum v-for="raum in kMan().raumGetMengeByTerminIncludingFremdtermine(termin, zeigeAlleJahrgaenge() || kMan().isKlausurenInFremdraeumenByTermin(termin))"
+					:benutzer-kompetenzen
+					:key="raum.id"
+					:raum
+					:patch-klausurraum
+					:loesche-klausurraum
+					:patch-klausur
+					:k-man
+					:drag-data
+					:on-drag
+					:multijahrgang
+					:on-drop
+					:goto-termin
+					:termin-selected="termin" />
+				<!-- </template>
+				<template v-else>
+					<div class="shadow-inner rounded-lg h-48" />
+				</template> -->
+			</div>
 		</div>
-	</svws-ui-content-card>
+	</div>
 </template>
 
+
 <script setup lang="ts">
+
 	import { computed, ref } from 'vue';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';
 	import type { GostKlausurplanManager, GostKlausurtermin, GostKursklausur, GostKlausurraum, GostKlausurenCollectionSkrsKrsData, List, GostSchuelerklausurTermin, GostSchuelerklausurTerminRich} from '@core';
@@ -175,19 +183,3 @@
 	}
 
 </script>
-
-<style lang="postcss" scoped>
-
-.svws-ui-tab-content {
-	@apply overflow-y-hidden items-start;
-
-	.page--content {
-		@apply h-full py-0 auto-rows-auto;
-
-		.content-card {
-			@apply max-h-full pt-8 pb-8 px-4 -mx-4 overflow-y-auto h-[unset];
-			scrollbar-gutter: stable;
-		}
-	}
-}
-</style>

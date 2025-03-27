@@ -1,10 +1,10 @@
 <template>
-	<div class="page--content page--content--full page--content--laufbahnplanung">
+	<div class="page page-flex-row max-w-480">
 		<Teleport v-if="hatUpdateKompetenz" defer to=".svws-sub-nav-target">
 			<svws-ui-sub-nav>
 				<svws-ui-button type="transparent" @click="export_laufbahnplanung"><span class="icon-sm i-ri-upload-2-line" />Exportieren</svws-ui-button>
 				<svws-ui-button type="transparent" @click="show = true"><span class="icon-sm i-ri-download-2-line" /> Importieren…</svws-ui-button>
-				<s-laufbahnplanung-import-modal v-model:show="show" :import-laufbahnplanung="importLaufbahnplanung" />
+				<s-laufbahnplanung-import-modal v-model:show="show" :import-laufbahnplanung />
 				<svws-ui-button :type="zwischenspeicher === undefined ? 'transparent' : 'error'" @click="saveLaufbahnplanung">Planung merken</svws-ui-button>
 				<svws-ui-button type="danger" @click="restoreLaufbahnplanung" v-if="zwischenspeicher !== undefined">Planung wiederherstellen</svws-ui-button>
 				<svws-ui-button :type="modus === 'normal' ? 'transparent' : 'danger'" @click="switchModus" title="Modus wechseln">
@@ -20,10 +20,10 @@
 			</svws-ui-button-select>
 			<svws-ui-modal-hilfe> <hilfe-laufbahnplanung /> </svws-ui-modal-hilfe>
 		</Teleport>
-		<div class="flex-grow overflow-y-auto overflow-x-hidden min-w-fit">
+		<div class="grow overflow-y-auto overflow-x-hidden min-w-fit">
 			<s-laufbahnplanung-card-planung v-if="visible" :abiturdaten-manager :modus :gost-jahrgangsdaten :set-wahl :goto-kursblockung :faecher-anzeigen />
 		</div>
-		<div class="w-2/5 3xl:w-1/2 min-w-[36rem] overflow-y-auto overflow-x-hidden">
+		<div class="w-2/5 3xl:w-1/2 min-w-144 overflow-y-auto overflow-x-hidden">
 			<div class="flex flex-col gap-y-16 lg:gap-y-20">
 				<s-laufbahnplanung-card-beratung v-if="visible && hatUpdateKompetenz" :gost-laufbahn-beratungsdaten :patch-beratungsdaten="doPatchBeratungsdaten" :list-lehrer :id :schueler :updated />
 				<s-laufbahnplanung-card-status v-if="visible" :abiturdaten-manager :fehlerliste="() => gostBelegpruefungErgebnis().fehlercodes" :gost-belegpruefungs-art :set-gost-belegpruefungs-art />
@@ -160,12 +160,3 @@
 	}
 
 </script>
-
-<style lang="postcss" scoped>
-
-	.page--content--laufbahnplanung {
-		@apply gap-x-8 2xl:gap-x-12 relative overflow-y-hidden h-full;
-		@apply px-4 lg:px-6 3xl:px-8 4xl:px-12 pt-8 pb-8;
-	}
-
-</style>

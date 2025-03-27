@@ -18,6 +18,8 @@ import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 
 import de.svws_nrw.asd.data.RGBFarbe;
 import de.svws_nrw.asd.data.fach.FachgruppeKatalogEintrag;
+import de.svws_nrw.asd.data.kurse.KursDaten;
+import de.svws_nrw.asd.data.schueler.Schueler;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.fach.Fach;
@@ -43,7 +45,7 @@ import de.svws_nrw.core.adt.LongArrayKey;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.LongAndStringLists;
 import de.svws_nrw.core.data.SimpleOperationResponse;
-import de.svws_nrw.core.data.fach.FachDaten;
+import de.svws_nrw.core.data.fach.FaecherListeEintrag;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKurs;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisSchiene;
@@ -55,9 +57,7 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumstunde;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
-import de.svws_nrw.core.data.kurse.KursDaten;
 import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
-import de.svws_nrw.core.data.schueler.Schueler;
 import de.svws_nrw.core.data.stundenplan.StundenplanListeEintrag;
 import de.svws_nrw.core.data.stundenplan.StundenplanListeEintragMinimal;
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
@@ -143,7 +143,7 @@ public final class DataUntis {
 		final Map<String, LehrerListeEintrag> mapLehrerByKuerzel = new DataLehrerliste(conn).getLehrerListe(false).stream()
 				.collect(Collectors.toMap(l -> l.kuerzel, l -> l));
 		// Bestimme die Fächer
-		final Map<String, FachDaten> mapFaecherByKuerzel = DataFaecherliste.getFaecherListe(conn).stream().collect(Collectors.toMap(f -> f.kuerzel, f -> f));
+		final Map<String, FaecherListeEintrag> mapFaecherByKuerzel = new DataFaecherliste(conn).getFaecherListe(false).stream().collect(Collectors.toMap(f -> f.kuerzel, f -> f));
 		// Bestimme die Klassen des Schuljahresabschnitts
 		final List<DTOKlassen> klassen = conn.queryList(DTOKlassen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKlassen.class, schuljahresabschnitt.id);
 		final Map<String, DTOKlassen> mapKlassenByKuerzel = klassen.stream().collect(Collectors.toMap(k -> k.Klasse, k -> k));
@@ -221,7 +221,7 @@ public final class DataUntis {
 			final KursDaten kurs = mapKurseByKuerzelUndJahrgang.getOrNull(u.fachKuerzel, klasse.Jahrgang_ID);
 			if (kurs == null) {
 				// Bestimme das Fach
-				final FachDaten fach = mapFaecherByKuerzel.get(u.fachKuerzel);
+				final FaecherListeEintrag fach = mapFaecherByKuerzel.get(u.fachKuerzel);
 				if (fach == null) {
 					logger.logLn(2, "[Fehler] - Das Fach bzw. der Kurs mit dem Kürzel %s konnte nicht in der Datenbank gefunden werden."
 							.formatted(u.fachKuerzel));
@@ -1480,7 +1480,7 @@ public final class DataUntis {
 		final List<StundenplanListeEintrag> sleList = DataStundenplanListe.getStundenplaene(conn, schuljahresabschnitt.id);
 		for (final StundenplanListeEintrag sle : sleList) {
 			final StundenplanManager stundenplanManager =
-					new StundenplanManager(DataStundenplan.getStundenplan(conn, sle.id), DataStundenplanUnterricht.getUnterrichte(conn, sle.id),
+					new StundenplanManager(new DataStundenplan(conn).getById(sle.id), DataStundenplanUnterricht.getUnterrichte(conn, sle.id),
 							DataStundenplanPausenaufsichten.getAufsichten(conn, sle.id),
 							DataStundenplanUnterrichtsverteilung.getUnterrichtsverteilung(conn, sle.id));
 			manager.stundenplanManagerAdd(stundenplanManager);

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import de.svws_nrw.core.data.schueler.SchuelerLeistungsdaten;
+import de.svws_nrw.asd.data.schueler.SchuelerLeistungsdaten;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
@@ -167,8 +167,10 @@ public final class DataSchuelerLeistungsdaten extends DataManagerRevised<Long, D
 					throw new ApiOperationException(Status.CONFLICT);
 				final DTOSchuelerLernabschnittsdaten dtoAbschnitt = conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, dto.Abschnitt_ID);
 				final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dtoAbschnitt.Schuljahresabschnitts_ID);
-				dto.Kursart = kursart.daten(abschnitt.schuljahr).kuerzel;
-				dto.KursartAllg = kursart.daten(abschnitt.schuljahr).kuerzelAllg;
+				final String kuerzel = kursart.daten(abschnitt.schuljahr).kuerzel;
+				final String kuerzelAllg = kursart.daten(abschnitt.schuljahr).kuerzelAllg;
+				dto.Kursart = kuerzel;
+				dto.KursartAllg = (kuerzelAllg == null) ? kuerzel : kuerzelAllg;
 			}
 			case "abifach" -> {
 				final Integer abiFach = JSONMapper.convertToInteger(value, true);

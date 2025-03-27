@@ -20,7 +20,6 @@
 	"exclude": [
 		"**/*.story.vue",
 		"**/*.test.ts",
-		"src/tailwind/*",
 		"src/histoire.setup.ts"
 	]
 }

@@ -1,5 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { SchuldateiOrganisationseinheitGrunddaten } from '../../../schulen/v1/data/SchuldateiOrganisationseinheitGrunddaten';
+import { SchuldateiOrganisationseinheitSchulform } from '../../../schulen/v1/data/SchuldateiOrganisationseinheitSchulform';
 import { SchuldateiOrganisationseinheitEigenschaft } from '../../../schulen/v1/data/SchuldateiOrganisationseinheitEigenschaft';
 import { SchuldateiOrganisationseinheitMerkmal } from '../../../schulen/v1/data/SchuldateiOrganisationseinheitMerkmal';
 import { SchuldateiOrganisationseinheitAdresse } from '../../../schulen/v1/data/SchuldateiOrganisationseinheitAdresse';
@@ -32,21 +33,6 @@ export class SchuldateiOrganisationseinheit extends JavaObject {
 	public oeart : string = "";
 
 	/**
-	 * Die Amtsbezeichnung der Organisationseinheit
-	 */
-	public amtsbez1 : string = "";
-
-	/**
-	 * Die Amtsbezeichnung der Organisationseinheit
-	 */
-	public amtsbez2 : string = "";
-
-	/**
-	 * Die Amtsbezeichnung der Organisationseinheit
-	 */
-	public amtsbez3 : string = "";
-
-	/**
 	 * Das Errichtungsdatum der Schule.
 	 */
 	public errichtung : string = "";
@@ -60,6 +46,11 @@ export class SchuldateiOrganisationseinheit extends JavaObject {
 	 * Die Grunddaten der Organisationseinheit (zeitl. Verlaufsliste)
 	 */
 	public readonly grunddaten : List<SchuldateiOrganisationseinheitGrunddaten> = new ArrayList<SchuldateiOrganisationseinheitGrunddaten>();
+
+	/**
+	 * Die Schulformen der Organisationseinheit:Schule (zeitl. Verlaufsliste)
+	 */
+	public readonly schulform : List<SchuldateiOrganisationseinheitSchulform> = new ArrayList<SchuldateiOrganisationseinheitSchulform>();
 
 	/**
 	 * Die Adressen der Organisationseinheit (zeitl. Verlaufsliste)
@@ -84,7 +75,7 @@ export class SchuldateiOrganisationseinheit extends JavaObject {
 	/**
 	 * Die Eigenschaften der Organisationseinheit
 	 */
-	public readonly oeEigenschaften : List<SchuldateiOrganisationseinheitEigenschaft> = new ArrayList<SchuldateiOrganisationseinheitEigenschaft>();
+	public readonly oe_eigenschaften : List<SchuldateiOrganisationseinheitEigenschaft> = new ArrayList<SchuldateiOrganisationseinheitEigenschaft>();
 
 
 	/**
@@ -119,15 +110,6 @@ export class SchuldateiOrganisationseinheit extends JavaObject {
 		if (obj.oeart === undefined)
 			throw new Error('invalid json format, missing attribute oeart');
 		result.oeart = obj.oeart;
-		if (obj.amtsbez1 === undefined)
-			throw new Error('invalid json format, missing attribute amtsbez1');
-		result.amtsbez1 = obj.amtsbez1;
-		if (obj.amtsbez2 === undefined)
-			throw new Error('invalid json format, missing attribute amtsbez2');
-		result.amtsbez2 = obj.amtsbez2;
-		if (obj.amtsbez3 === undefined)
-			throw new Error('invalid json format, missing attribute amtsbez3');
-		result.amtsbez3 = obj.amtsbez3;
 		if (obj.errichtung === undefined)
 			throw new Error('invalid json format, missing attribute errichtung');
 		result.errichtung = obj.errichtung;
@@ -137,6 +119,11 @@ export class SchuldateiOrganisationseinheit extends JavaObject {
 		if (obj.grunddaten !== undefined) {
 			for (const elem of obj.grunddaten) {
 				result.grunddaten.add(SchuldateiOrganisationseinheitGrunddaten.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
+		if (obj.schulform !== undefined) {
+			for (const elem of obj.schulform) {
+				result.schulform.add(SchuldateiOrganisationseinheitSchulform.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		if (obj.adressen !== undefined) {
@@ -159,9 +146,9 @@ export class SchuldateiOrganisationseinheit extends JavaObject {
 				result.gliederung.add(SchuldateiOrganisationseinheitGliederung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (obj.oeEigenschaften !== undefined) {
-			for (const elem of obj.oeEigenschaften) {
-				result.oeEigenschaften.add(SchuldateiOrganisationseinheitEigenschaft.transpilerFromJSON(JSON.stringify(elem)));
+		if (obj.oe_eigenschaften !== undefined) {
+			for (const elem of obj.oe_eigenschaften) {
+				result.oe_eigenschaften.add(SchuldateiOrganisationseinheitEigenschaft.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -173,9 +160,6 @@ export class SchuldateiOrganisationseinheit extends JavaObject {
 		result += '"bundeslandkennung" : ' + JSON.stringify(obj.bundeslandkennung) + ',';
 		result += '"xscid" : ' + JSON.stringify(obj.xscid) + ',';
 		result += '"oeart" : ' + JSON.stringify(obj.oeart) + ',';
-		result += '"amtsbez1" : ' + JSON.stringify(obj.amtsbez1) + ',';
-		result += '"amtsbez2" : ' + JSON.stringify(obj.amtsbez2) + ',';
-		result += '"amtsbez3" : ' + JSON.stringify(obj.amtsbez3) + ',';
 		result += '"errichtung" : ' + JSON.stringify(obj.errichtung) + ',';
 		result += '"aufloesung" : ' + JSON.stringify(obj.aufloesung) + ',';
 		result += '"grunddaten" : [ ';
@@ -183,6 +167,14 @@ export class SchuldateiOrganisationseinheit extends JavaObject {
 			const elem = obj.grunddaten.get(i);
 			result += SchuldateiOrganisationseinheitGrunddaten.transpilerToJSON(elem);
 			if (i < obj.grunddaten.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"schulform" : [ ';
+		for (let i = 0; i < obj.schulform.size(); i++) {
+			const elem = obj.schulform.get(i);
+			result += SchuldateiOrganisationseinheitSchulform.transpilerToJSON(elem);
+			if (i < obj.schulform.size() - 1)
 				result += ',';
 		}
 		result += ' ]' + ',';
@@ -218,11 +210,11 @@ export class SchuldateiOrganisationseinheit extends JavaObject {
 				result += ',';
 		}
 		result += ' ]' + ',';
-		result += '"oeEigenschaften" : [ ';
-		for (let i = 0; i < obj.oeEigenschaften.size(); i++) {
-			const elem = obj.oeEigenschaften.get(i);
+		result += '"oe_eigenschaften" : [ ';
+		for (let i = 0; i < obj.oe_eigenschaften.size(); i++) {
+			const elem = obj.oe_eigenschaften.get(i);
 			result += SchuldateiOrganisationseinheitEigenschaft.transpilerToJSON(elem);
-			if (i < obj.oeEigenschaften.size() - 1)
+			if (i < obj.oe_eigenschaften.size() - 1)
 				result += ',';
 		}
 		result += ' ]' + ',';
@@ -245,15 +237,6 @@ export class SchuldateiOrganisationseinheit extends JavaObject {
 		if (obj.oeart !== undefined) {
 			result += '"oeart" : ' + JSON.stringify(obj.oeart) + ',';
 		}
-		if (obj.amtsbez1 !== undefined) {
-			result += '"amtsbez1" : ' + JSON.stringify(obj.amtsbez1) + ',';
-		}
-		if (obj.amtsbez2 !== undefined) {
-			result += '"amtsbez2" : ' + JSON.stringify(obj.amtsbez2) + ',';
-		}
-		if (obj.amtsbez3 !== undefined) {
-			result += '"amtsbez3" : ' + JSON.stringify(obj.amtsbez3) + ',';
-		}
 		if (obj.errichtung !== undefined) {
 			result += '"errichtung" : ' + JSON.stringify(obj.errichtung) + ',';
 		}
@@ -266,6 +249,16 @@ export class SchuldateiOrganisationseinheit extends JavaObject {
 				const elem = obj.grunddaten.get(i);
 				result += SchuldateiOrganisationseinheitGrunddaten.transpilerToJSON(elem);
 				if (i < obj.grunddaten.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
+		if (obj.schulform !== undefined) {
+			result += '"schulform" : [ ';
+			for (let i = 0; i < obj.schulform.size(); i++) {
+				const elem = obj.schulform.get(i);
+				result += SchuldateiOrganisationseinheitSchulform.transpilerToJSON(elem);
+				if (i < obj.schulform.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';
@@ -310,12 +303,12 @@ export class SchuldateiOrganisationseinheit extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (obj.oeEigenschaften !== undefined) {
-			result += '"oeEigenschaften" : [ ';
-			for (let i = 0; i < obj.oeEigenschaften.size(); i++) {
-				const elem = obj.oeEigenschaften.get(i);
+		if (obj.oe_eigenschaften !== undefined) {
+			result += '"oe_eigenschaften" : [ ';
+			for (let i = 0; i < obj.oe_eigenschaften.size(); i++) {
+				const elem = obj.oe_eigenschaften.get(i);
 				result += SchuldateiOrganisationseinheitEigenschaft.transpilerToJSON(elem);
-				if (i < obj.oeEigenschaften.size() - 1)
+				if (i < obj.oe_eigenschaften.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';

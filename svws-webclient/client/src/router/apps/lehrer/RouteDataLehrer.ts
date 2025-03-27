@@ -1,5 +1,5 @@
-import type { LehrerFachrichtungAnerkennung, LehrerFachrichtungEintrag, LehrerLehramtAnerkennung, LehrerLehramtEintrag, LehrerLehrbefaehigungAnerkennung, LehrerLehrbefaehigungEintrag, LehrerListeEintrag, LehrerPersonalabschnittsdaten, LehrerPersonaldaten, LehrerStammdaten, List ,SimpleOperationResponse} from "@core";
-import { ArrayList, DeveloperNotificationException, LehrerListeManager, BenutzerKompetenz } from "@core";
+import type { ApiFile, LehrerFachrichtungAnerkennung, LehrerFachrichtungEintrag, LehrerLehramtAnerkennung, LehrerLehramtEintrag, LehrerLehrbefaehigungAnerkennung, LehrerLehrbefaehigungEintrag, LehrerListeEintrag, LehrerPersonalabschnittsdaten, LehrerPersonaldaten, LehrerStammdaten, List ,SimpleOperationResponse, StundenplanListeEintrag, ReportingParameter} from "@core";
+import { ArrayList, DeveloperNotificationException, LehrerListeManager, BenutzerKompetenz, ReportingReportvorlage } from "@core";
 
 import { api } from "~/router/Api";
 
@@ -10,13 +10,16 @@ import { routeLehrerNeu } from "~/router/apps/lehrer/RouteLehrerNeu";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
 
-type RouteStateLehrer = RouteStateAuswahlInterface<LehrerListeManager>
+interface RouteStateLehrer extends RouteStateAuswahlInterface<LehrerListeManager> {
+	mapStundenplaene: Map<number, StundenplanListeEintrag>;
+}
 
 const defaultState = <RouteStateLehrer>{
 	idSchuljahresabschnitt: -1,
 	manager: new LehrerListeManager(-1, -1, new ArrayList(), null, new ArrayList()),
 	activeViewType: ViewType.DEFAULT,
 	view: routeLehrerIndividualdaten,
+	mapStundenplaene: new Map(),
 };
 
 export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteStateLehrer> {
@@ -39,6 +42,10 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 
 	setFilterNurStatistikrelevant = async (value: boolean) => {
 		await api.config.setValue('lehrer.auswahl.filterNurStatistikrelevant', value ? "true" : "false");
+	}
+
+	get mapStundenplaene(): Map<number, StundenplanListeEintrag> {
+		return this._state.value.mapStundenplaene;
 	}
 
 	public addID(param: RouteParamsRawGeneric, id: number): void {
@@ -73,6 +80,15 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 	protected async updateManager(manager: LehrerListeManager, managerAlt: LehrerListeManager, daten: LehrerStammdaten) {
 		if (managerAlt.hasPersonalDaten())
 			manager.setPersonalDaten(await api.server.getLehrerPersonaldaten(api.schema, daten.id));
+		await this.updateMapStundenplaene();
+	}
+
+	public async updateMapStundenplaene() {
+		const listStundenplaene = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, this.idSchuljahresabschnitt);
+		const mapStundenplaene = new Map<number, StundenplanListeEintrag>();
+		for (const l of listStundenplaene)
+			mapStundenplaene.set(l.id, l);
+		this.setPatchedState({ mapStundenplaene });
 	}
 
 	/**
@@ -257,5 +273,15 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		await this.setSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt, true);
 		await this.gotoDefaultView(lehrerStammdaten.id);
 	}
+
+	getPDF = api.call(async (reportingParameter: ReportingParameter, idStundenplan: number): Promise<ApiFile> => {
+		if (!this.manager.liste.auswahlExists())
+			throw new DeveloperNotificationException("Dieser Stundenplan kann nur gedruckt werden, wenn mindestens ein Lehrer ausgewählt ist.");
+		reportingParameter.idSchuljahresabschnitt = this.idSchuljahresabschnitt;
+		reportingParameter.idsHauptdaten.add(idStundenplan);
+		for (const l of this.manager.liste.auswahl())
+			reportingParameter.idsDetaildaten.add(l.id);
+		return await api.server.pdfReport(reportingParameter, api.schema);
+	})
 }
 

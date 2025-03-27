@@ -1,5 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { KlassenDaten } from '../../../core/data/klassen/KlassenDaten';
+import { KlassenDaten } from '../../../asd/data/klassen/KlassenDaten';
 import { SchuelerListeEintrag } from '../../../core/data/schueler/SchuelerListeEintrag';
 import { HashMap } from '../../../java/util/HashMap';
 import { Schulform } from '../../../asd/types/schule/Schulform';
@@ -9,17 +9,17 @@ import { JahrgangsDaten } from '../../../core/data/jahrgang/JahrgangsDaten';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { JavaString } from '../../../java/lang/JavaString';
 import type { Comparator } from '../../../java/util/Comparator';
-import { KursDaten } from '../../../core/data/kurse/KursDaten';
+import { KursDaten } from '../../../asd/data/kurse/KursDaten';
 import { LehrerListeEintrag } from '../../../core/data/lehrer/LehrerListeEintrag';
 import { FachDaten } from '../../../core/data/fach/FachDaten';
 import { FoerderschwerpunktEintrag } from '../../../core/data/schule/FoerderschwerpunktEintrag';
 import { Schulgliederung } from '../../../asd/types/schule/Schulgliederung';
 import type { List } from '../../../java/util/List';
 import { Fach } from '../../../asd/types/fach/Fach';
-import { SchuelerLeistungsdaten } from '../../../core/data/schueler/SchuelerLeistungsdaten';
+import { SchuelerLeistungsdaten } from '../../../asd/data/schueler/SchuelerLeistungsdaten';
 import { JahrgangsUtils } from '../../../core/utils/jahrgang/JahrgangsUtils';
 import { Jahrgaenge } from '../../../asd/types/jahrgang/Jahrgaenge';
-import { SchuelerLernabschnittsdaten } from '../../../core/data/schueler/SchuelerLernabschnittsdaten';
+import { SchuelerLernabschnittsdaten } from '../../../asd/data/schueler/SchuelerLernabschnittsdaten';
 import { Note } from '../../../asd/types/Note';
 import { JavaLong } from '../../../java/lang/JavaLong';
 import { Class } from '../../../java/lang/Class';
@@ -375,7 +375,7 @@ export class SchuelerLernabschnittManager extends JavaObject {
 		const fachDaten : FachDaten | null = this.fachGetByLeistungId(idLeistung);
 		if (fachDaten === null)
 			return "rgb(220,220,220)";
-		return Fach.getBySchluesselOrDefault(fachDaten.kuerzel).getHMTLFarbeRGB(this._schuljahresabschnitt.schuljahr);
+		return Fach.getBySchluesselOrDefault(fachDaten.kuerzelStatistik).getHMTLFarbeRGB(this._schuljahresabschnitt.schuljahr);
 	}
 
 	/**

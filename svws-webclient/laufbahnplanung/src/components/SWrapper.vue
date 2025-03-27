@@ -7,8 +7,8 @@
 		Bitte aktualisieren Sie Ihren Browser, diese Version kann keine Laufbahndaten laden.
 	</svws-ui-notification>
 	<svws-ui-notifications v-if="errors.size > 0">
-		<div v-if="errors.size > 1" class="bg-white">
-			<svws-ui-button @click="errors.clear()" type="transparent" class="pointer-events-auto ml-auto rounded-lg bg-white border-light fixed right-6 left-0 top-5 z-50 w-[29rem] max-w-[75vw] justify-center">Alle {{ errors.size }} Meldungen schließen</svws-ui-button>
+		<div v-if="errors.size > 1" class="bg-ui-contrast-0">
+			<svws-ui-button @click="errors.clear()" type="transparent" class="pointer-events-auto ml-auto rounded-lg bg-contr0 border-ui-contrast-25 fixed right-6 left-0 top-5 z-50 w-[29rem] max-w-[75vw] justify-center">Alle {{ errors.size }} Meldungen schließen</svws-ui-button>
 			<div class="min-h-[1.85rem]" />
 		</div>
 		<template v-for="error of [...errors.values()].reverse().slice(0, 20)" :key="error.id">
@@ -89,20 +89,17 @@
 		else if (reason instanceof OpenApiError) {
 			name = "API-Fehler: Dieser Fehler wird durch eine fehlerhafte Kommunikation mit dem Server verursacht. In der Regel bedeutet das, dass die verschickten Daten nicht den Vorgaben entsprechen."
 			if (reason.response instanceof Response) {
+				const text = await reason.response.text();
 				try {
-					let res;
-					if (reason.response.headers.get('content-type') === 'application/json') {
-						res = await reason.response.json();
-						if ('log' in res && 'success' in res)
-							log = res satisfies SimpleOperationResponse;
-					}
+					const res = JSON.parse(text)
+					if (('log' in res) && ('success' in res))
+						log = res satisfies SimpleOperationResponse;
+				} catch {
+					if (text.length > 0)
+						message = text;
 					else
-						res = await reason.response.text();
-					if (res.length > 0)
-						message = res;
-					else
-						message += ' - Status: '+reason.response.status;
-				} catch(e) { void e }
+						message += ` - Status: ${reason.response.status}`;
+				}
 			}
 		}
 		const newError: CapturedError = {

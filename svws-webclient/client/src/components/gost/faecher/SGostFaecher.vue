@@ -1,7 +1,7 @@
 <template>
-	<div class="page--content">
-		<s-card-gost-faecher :faecher-manager :abiturjahr="jahrgangsdaten()?.abiturjahr ?? -1" :patch-fach :hat-update-kompetenz />
-		<div class="flex flex-col gap-y-16 lg:gap-y-20 top-8 h-full overflow-y-auto overflow-x-hidden pr-4 scrollbar-thin">
+	<div class="page page-flex-row" style="grid-template-columns: minmax(min-content, 1.5fr) minmax(min-content, 1fr)">
+		<s-card-gost-faecher class="min-w-fit max-w-fit" :faecher-manager :abiturjahr="jahrgangsdaten()?.abiturjahr ?? -1" :patch-fach :hat-update-kompetenz />
+		<div class="min-w-180 max-w-180 flex flex-col gap-y-16 lg:gap-y-20 top-8 h-full overflow-y-auto overflow-x-hidden pr-4 scrollbar-thin">
 			<s-card-gost-fachkombinationen :typ="GostLaufbahnplanungFachkombinationTyp.VERBOTEN" :faecher-manager
 				:map-fachkombinationen :patch-fachkombination :hat-update-kompetenz :add-fachkombination :remove-fachkombination />
 			<s-card-gost-fachkombinationen :typ="GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH" :faecher-manager
@@ -27,14 +27,7 @@
 
 </script>
 
-<style lang="postcss" scoped>
-
-	.page--content {
-		@apply grid overflow-y-hidden overflow-x-auto h-full pb-3 pt-6 lg:gap-x-12;
-		grid-auto-rows: 100%;
-		grid-template-columns: minmax(min-content, 1.5fr) minmax(min-content, 1fr);
-		grid-auto-columns: max-content;
-	}
+<style scoped>
 
 	.scrollbar-thin {
 		scrollbar-gutter: stable;

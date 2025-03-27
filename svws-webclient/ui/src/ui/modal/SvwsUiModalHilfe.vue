@@ -23,18 +23,6 @@
 
 	const show = ref<boolean>(false);
 
+	defineSlots();
+
 </script>
-
-<style lang="postcss">
-
-	.markdown-body {
-		@apply prose leading-tight bg-ui text-ui;
-
-		max-width: 80ch;
-
-		* {
-			@apply first:mt-0;
-		}
-	}
-
-</style>

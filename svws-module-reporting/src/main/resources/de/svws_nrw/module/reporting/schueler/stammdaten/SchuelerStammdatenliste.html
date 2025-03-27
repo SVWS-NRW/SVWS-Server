@@ -66,15 +66,15 @@
 			</tr>
 			</thead>
 			<tr th:each="schueler,iterationVarSchueler : ${Schueler}" th:classappend="${iterationVarSchueler.odd} ? 'bg-lightgrey'">
-				<td class="f-small ta-r bo-t-grey p-tb-0-lr-1" th:text="${iterationVarSchueler.count + '. '}">1. </td>
-				<td class="f-small bo-t-grey p-tb-0-lr-1" th:text="${schueler.nachname()}">Mustermann</td>
-				<td class="f-small bo-t-grey p-tb-0-lr-1" th:text="${Parameter.detailLevel == 0 ? schueler.vorname() : schueler.vornamen()}">Maximilian Moritz</td>
-				<td class="f-small bo-t-grey p-tb-0-lr-1 ta-c" th:text="${schueler.geschlecht().kuerzel}">m</td>
-				<td class="f-small bo-t-grey p-tb-0-lr-1" th:text="${#convert.toDateDE(schueler.geburtsdatum())}">07.08.2010</td>
-				<td class="f-small bo-t-grey p-tb-0-lr-1" th:text="${schueler.strassennameHausnummer()}">Musterstraße 13a</td>
-				<td class="f-small bo-t-grey p-tb-0-lr-1 ta-r" th:text="${schueler.wohnort().plz}">12345</td>
-				<td class="f-small bo-t-grey p-tb-0-lr-1" th:text="${schueler.wohnort().ortsname}">Musterstadt</td>
-				<td class="f-small bo-t-grey p-tb-0-lr-1 ta-r" th:text="${(schueler.auswahlLernabschnitt().klasse().kuerzel())}">07A</td>
+				<td class="f-small ta-r bo-t-grey p-tb-0 p-lr-1" th:text="${iterationVarSchueler.count + '. '}">1. </td>
+				<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${schueler.nachname()}">Mustermann</td>
+				<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${Parameter.detailLevel == 0 ? schueler.vorname() : schueler.vornamen()}">Maximilian Moritz</td>
+				<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-c" th:text="${schueler.geschlecht().kuerzel}">m</td>
+				<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${#convert.toDateDE(schueler.geburtsdatum())}">07.08.2010</td>
+				<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${schueler.strassennameHausnummer()}">Musterstraße 13a</td>
+				<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-r" th:text="${schueler.wohnort().plz}">12345</td>
+				<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${schueler.wohnort().ortsname}">Musterstadt</td>
+				<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-r" th:text="${(schueler.auswahlLernabschnitt().klasse().kuerzel())}">07A</td>
 			</tr>
 		</table>
 	</body>

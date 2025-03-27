@@ -16,8 +16,6 @@ plugins {
 
 def downloadDir = "$projectDir/download"
 
-println "Version " + project.ext.svwsArtifactVersion
-
 group = 'de.svws-nrw'
 version = project.ext.svwsArtifactVersion
 java {
@@ -27,35 +25,40 @@ java {
 
 ext.svws_version = version
 
-ext.base_url = "https://svws.nrw.de/uploads/media/svws-server-downloads/"
+ext.base_url = (project.hasProperty('svws_installer_downloads_base_url')) ? project.svws_installer_downloads_base_url : System.getenv("SVWS_INSTALLER_DOWNLOADS_BASE_URL")  
 
 ext.jdk = "21"
-ext.jdk_version = "21.0.3"
-ext.jdk_fix = "9"
+ext.jdk_version = "21.0.6"
+ext.jdk_fix = "7"
+ext.jdk_win_url = (ext.base_url == null)
+	? "https://github.com/adoptium/temurin${jdk}-binaries/releases/download/jdk-${jdk_version}+${jdk_fix}/OpenJDK${jdk}U-jdk_x64_windows_hotspot_${jdk_version}_${jdk_fix}.zip"
+	: "${base_url}/OpenJDK${jdk}U-jdk_x64_windows_hotspot_${jdk_version}_${jdk_fix}.zip"
 //ext.jdk_win_url = "https://download.java.net/java/GA/jdk${jdk_version}/e482c34c86bd4bf8b56c0b35558996b9/10/GPL/openjdk-${jdk_version}_windows-x64_bin.zip"
-//ext.jdk_win_url = "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.5%2B8/OpenJDK17U-jdk_x64_windows_hotspot_17.0.5_8.zip"
-ext.jdk_win_url = "https://github.com/adoptium/temurin${jdk}-binaries/releases/download/jdk-${jdk_version}+${jdk_fix}/OpenJDK${jdk}U-jdk_x64_windows_hotspot_${jdk_version}_${jdk_fix}.zip"
 
-ext.mariadb_version = "10.6.10"
-//ext.mariadb_win_url = "https://mirror.netcologne.de/mariadb/mariadb-${mariadb_version}/winx64-packages/mariadb-${mariadb_version}-winx64.zip"
-ext.mariadb_win_url = "${base_url}mariadb/${mariadb_version}/mariadb-${mariadb_version}-win.zip"
+ext.mariadb_version = "11.4.4"
+ext.mariadb_win_url = (ext.base_url == null)
+	? "https://mirror.netcologne.de/mariadb/mariadb-${mariadb_version}/winx64-packages/mariadb-${mariadb_version}-winx64.zip"
+	: "${base_url}/mariadb-${mariadb_version}-winx64.zip"
 
 ext.innosetup_version = "6.0.5"
-//ext.innosetup_win_url = "https://files.jrsoftware.org/is/6/innosetup-${innosetup_version}.exe"
-ext.innosetup_win_url = "${base_url}innosetup/${innosetup_version}/innosetup-${innosetup_version}.exe"
+ext.innosetup_win_url = (ext.base_url == null)
+	? "https://files.jrsoftware.org/is/6/innosetup-${innosetup_version}.exe"
+	: "${base_url}/innosetup-${innosetup_version}.exe"
 
 ext.innoextract_version = "1.9"
-//ext.innoextract_win_url = "https://constexpr.org/innoextract/files/innoextract-${innoextract_version}-windows.zip"
-ext.innoextract_win_url = "${base_url}innoextract/${innoextract_version}/innoextract-${innoextract_version}-windows.zip"
+ext.innoextract_win_url = (ext.base_url == null)
+	? "https://constexpr.org/innoextract/files/innoextract-${innoextract_version}-windows.zip"
+	: "${base_url}/innoextract-${innoextract_version}-windows.zip"
 
 ext.windowsservicewrapper_version = "2.10.3"
-//ext.windowsservicewrapper_win_url = "https://github.com/winsw/winsw/releases/download/v${windowsservicewrapper_version}/WinSW.NETCore31.x64.exe"
-ext.windowsservicewrapper_win_url = "${base_url}winsw/${windowsservicewrapper_version}/servicewrapper-v${windowsservicewrapper_version}-windows.exe"
+ext.windowsservicewrapper_win_url = (ext.base_url == null) 
+	? "https://github.com/winsw/winsw/releases/download/v${windowsservicewrapper_version}/WinSW.NETCore31.x64.exe"
+	: "${base_url}/servicewrapper-v${windowsservicewrapper_version}-windows.exe"
 
-//ext.curl_version = "8.10.1_3"
-//ext.curl_win_url = "https://curl.se/windows/dl-${curl_version}/curl-${curl_version}-win64-mingw.zip"
-ext.curl_version = "7.72.0"
-ext.curl_win_url = "${base_url}curl/${curl_version}/curl-${curl_version}-windows.zip"
+ext.curl_version = "8.10.1_3"
+ext.curl_win_url = (ext.base_url == null) 
+	? "https://curl.se/windows/dl-${curl_version}/curl-${curl_version}-win64-mingw.zip"
+	: "${base_url}/curl-${curl_version}-win64-mingw.zip"
 
 configurations {
 	extendedImplementation {
@@ -77,12 +80,14 @@ task printDependencies2 {
 }
 
 task downloadSVWSAdminClient(type: Copy) {
+	dependsOn(':svws-webclient:admin:doZip')
 	from "../../svws-webclient/Admin/build/SVWS-Admin-Client.zip"
 	into "download/svws-" + project.version + "/"
 }
 
 
 task downloadSVWSClient(type: Copy) {
+	dependsOn(':svws-webclient:client:doZip')
 	from "../../svws-webclient/client/build/SVWS-Client.zip"
 	into "download/svws-" + project.version + "/"
 }
@@ -145,13 +150,13 @@ task downloadJDK {
 
 task downloadMariaDB {
 	doLast {
-		def file = new File("${projectDir}/download/svws-${project.version}/mariadb-${mariadb_version}-win.zip")
+		def file = new File("${projectDir}/download/svws-${project.version}/mariadb-${mariadb_version}-winx64.zip")
 		if (file.exists()) {
-			println "Datei mariadb-${mariadb_version}-win.zip wurde bereits heruntergeladen, skipping download"
+			println "Datei mariadb-${mariadb_version}-winx64.zip wurde bereits heruntergeladen, skipping download"
 		} else {
 			mkdir "download/svws-${project.version}"
 			def url = new URL(mariadb_win_url)
-			println "Downloading mariadb-${mariadb_version}-win.zip from $url..."
+			println "Downloading mariadb-${mariadb_version}-winx64.zip from $url..."
 			url.withInputStream { i -> file.withOutputStream { it << i } }
 		}
 	}
@@ -240,7 +245,7 @@ task copyJARs(type:Copy) {
 task extract(type:Copy) {
 	dependsOn "copyJARs"
 	dependsOn "download"
-	from(zipTree("${projectDir}/download/svws-${project.version}/mariadb-${mariadb_version}-win.zip")) {
+	from(zipTree("${projectDir}/download/svws-${project.version}/mariadb-${mariadb_version}-winx64.zip")) {
 		include "mariadb-${mariadb_version}-winx64/bin/mysqld.exe"
 		include "mariadb-${mariadb_version}-winx64/bin/server.dll"
 		include "mariadb-${mariadb_version}-winx64/bin/mariadb-install-db.exe"

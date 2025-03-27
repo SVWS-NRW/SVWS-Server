@@ -5,7 +5,7 @@ import { SchulgliederungKatalogEintrag } from '../../../asd/data/schule/Schulgli
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import type { CoreType } from '../../../asd/types/CoreType';
-import { de_svws_nrw_asd_types_CoreType_getManager, de_svws_nrw_asd_types_CoreType_daten, de_svws_nrw_asd_types_CoreType_historienId, de_svws_nrw_asd_types_CoreType_historie } from '../../../asd/types/CoreType';
+import { de_svws_nrw_asd_types_CoreType_getManager, de_svws_nrw_asd_types_CoreType_daten, de_svws_nrw_asd_types_CoreType_statistikId, de_svws_nrw_asd_types_CoreType_historie } from '../../../asd/types/CoreType';
 
 export class Schulgliederung extends JavaEnum<Schulgliederung> implements CoreType<SchulgliederungKatalogEintrag, Schulgliederung> {
 
@@ -725,8 +725,8 @@ export class Schulgliederung extends JavaEnum<Schulgliederung> implements CoreTy
 		return de_svws_nrw_asd_types_CoreType_daten(this, schuljahr);
 	}
 
-	public historienId() : number {
-		return de_svws_nrw_asd_types_CoreType_historienId(this);
+	public statistikId() : String | null {
+		return de_svws_nrw_asd_types_CoreType_statistikId(this);
 	}
 
 	public historie() : List<SchulgliederungKatalogEintrag> {

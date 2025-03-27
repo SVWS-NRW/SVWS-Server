@@ -26,7 +26,7 @@
 							</svws-ui-tooltip>
 						</template>
 						<template #cell(fach)="{value}">
-							<span v-if="value" class="svws-ui-badge" :style="`--background-color: hsl(${(value.length * 42)},90%,80%)`">{{ value }}</span>
+							<span v-if="value" class="svws-ui-badge" :style="`background-color: hsl(${(value.length * 42)},90%,80%)`">{{ value }}</span>
 						</template>
 						<template #cell(name)="{value}">
 							<span class="line-clamp-1 break-all">{{ value }}</span>
@@ -74,7 +74,7 @@
 </template>
 
 <script setup lang="ts">
-	import type { Ref} from "vue";
+
 	import { ref, reactive, computed } from "vue";
 	import type { DataTableColumn, SortByAndOrder } from "../../types";
 
@@ -142,7 +142,7 @@
 	const docsMultiselectFilterA = ref();
 	const docsMultiselectFilterB = ref();
 	const clickedRow = ref(undefined);
-	const search: Ref<string> = ref("");
+	const search = ref("");
 
 	const filterReset = () => {
 		docsMultiselectFilterA.value = undefined;

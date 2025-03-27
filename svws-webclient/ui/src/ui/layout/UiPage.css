@@ -1,0 +1,40 @@
+@layer base {
+
+	@page {
+		size: A4;
+		margin: 12.1mm 12.1mm 5.6mm 12.1mm;
+	}
+
+	.page {
+		@apply h-full w-full;
+		@apply overflow-hidden;
+		@apply px-6 lg:px-9 3xl:px-12 4xl:px-20;
+		@apply pt-8 pb-2;
+	}
+
+	.page-flex-col {
+		@apply flex flex-col gap-8 lg:gap-12 overflow-y-auto;
+	}
+
+	.page-flex-row {
+		@apply flex flex-row gap-8 lg:gap-12 overflow-x-auto;
+	}
+
+	.page-grid {
+		@apply grid overflow-x-auto;
+		@apply gap-x-8 lg:gap-x-12;
+		grid-auto-rows: 100%;
+		grid-auto-columns: max-content;
+	}
+
+	.page-grid-cards {
+		@apply grid grid-cols-1 lg:grid-cols-2;
+		@apply max-w-560 w-full overflow-y-auto;
+		@apply gap-x-8 lg:gap-x-16;
+		@apply gap-y-16 lg:gap-y-20;
+		@apply px-6 lg:px-9 3xl:px-12 4xl:px-20;
+		@apply pt-8 pb-2;
+		grid-auto-rows: min-content;
+	}
+
+}

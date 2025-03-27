@@ -1,0 +1,350 @@
+.placeholder--visible .text-input-component input::placeholder {
+	@apply opacity-100;
+}
+.text-input-component input::placeholder {
+	@apply opacity-30;
+}
+
+.text-input-component {
+	@apply text-ui;
+	@apply flex;
+	@apply relative;
+	@apply w-full;
+	@apply overflow-hidden whitespace-nowrap text-base;
+
+	&:focus {
+		@apply outline-hidden;
+	}
+
+	input {
+		@apply cursor-text text-ellipsis;
+
+		&[type="email"],
+		&[type="tel"] {
+			@apply pr-[1.6rem];
+		}
+
+		&:focus {
+			@apply outline-hidden;
+		}
+	}
+}
+
+.text-input-component .icon.svws-icon {
+	@apply pointer-events-none absolute top-1 right-1.5 bottom-1 w-5 rounded-sm inline-flex items-center justify-end pr-1 text-base opacity-50 mt-1;
+
+}
+
+.text-input-component .icon.svws-icon--remove {
+	@apply pointer-events-auto cursor-pointer absolute top-1 right-1 bottom-1 w-5 rounded-sm inline-flex items-center justify-end pr-1 text-base mr-6 mt-1;
+
+	&:hover {
+		@apply icon-ui-danger;
+	}
+}
+
+.text-input--date {
+	.svws-ui-table & {
+		input {
+			@apply -my-0.5;
+		}
+	}
+
+	.text-input--control {
+		@apply pr-0;
+	}
+
+	.svws-icon {
+		@apply w-7;
+	}
+
+	&.text-input-component--headless,
+	.svws-ui-table .svws-ui-tbody .svws-ui-td & {
+		@apply my-auto -ml-1;
+
+		.svws-icon.icon {
+			@apply w-6 h-6 -top-1 right-0 relative;
+		}
+	}
+}
+
+.text-input--statistics .svws-icon.icon {
+	@apply text-ui-statistic-secondary icon-ui-statistic;
+}
+
+.text-input--invalid .svws-icon {
+	@apply text-ui-danger icon-ui-danger;
+}
+
+.text-input--statistic-kann .svws-icon {
+	@apply text-ui-caution icon-ui-caution;
+}
+
+.text-input--statistic-hinweis .svws-icon {
+	@apply text-ui-warning icon-ui-warning;
+}
+
+.text-input--control {
+	@apply bg-ui border border-ui-secondary;
+	@apply rounded-md;
+	@apply h-9 w-full;
+	@apply text-base;
+	@apply whitespace-nowrap;
+	padding: 0.5em 0.7em;
+
+	&:focus {
+		@apply outline-hidden;
+	}
+}
+
+.text-input--prefix {
+	padding-left: 4.2em;
+}
+
+.text-input--rounded-sm {
+	@apply rounded-full;
+}
+
+
+.svws-ui-table.svws-has-background .text-input--headless {
+	@apply text-ui-static;
+}
+
+.multiselect-input-component .text-input--control,
+.multiselect-input-component .text-input--headless {
+	@apply overflow-hidden text-ellipsis;
+	padding-right: 3.2rem;
+}
+
+.text-input-component:focus-within .text-input--control,
+.text-input--filled .text-input--control {
+	@apply border-ui;
+}
+
+.text-input-component .text-input--control:focus-visible {
+	@apply ring-3 ring-ui-contrast-10;
+}
+
+.text-input--invalid.text-input-component:focus-within .text-input--control,
+.text-input--invalid .text-input--control {
+	@apply border-ui-danger;
+}
+
+.text-input--statistic-kann.text-input-component:focus-within .text-input--control,
+.text-input--statistic-kann .text-input--control {
+	@apply border-ui-caution;
+}
+
+.text-input--statistic-hinweis.text-input-component:focus-within .text-input--control,
+.text-input--statistic-hinweis .text-input--control {
+	@apply border-ui-warning;
+}
+
+.text-input--invalid.text-input--filled:not(:focus-within) .text-input--control {
+	@apply border-ui-danger;
+}
+
+.text-input--statistic-kann.text-input--filled:not(:focus-within) .text-input--control {
+	@apply border-ui-caution;
+}
+
+.text-input--statistic-hinweis.text-input--filled:not(:focus-within) .text-input--control {
+	@apply border-ui-warning;
+}
+
+.text-input--control--multiselect-tags {
+	@apply border-b-0 rounded-b-none pt-1 pb-0;
+}
+
+.text-input--statistics {
+	.tooltip-trigger--triggered span.icon {
+		@apply text-ui-statistic;
+	}
+}
+
+.text-input--search {
+	@apply relative;
+
+	&.text-input--filled {
+		@apply text-ui-brand;
+	}
+
+	input {
+		@apply pl-8;
+
+		&::placeholder {
+			@apply text-ui opacity-50 font-normal;
+		}
+	}
+}
+
+.text-input--search-icon {
+	@apply absolute left-2 opacity-25;
+	top: 50%;
+	transform: translateY(-50%) scale(90%);
+
+	.text-input-component:not(.text-input--filled):not(:focus-within):not(.text-input--disabled):hover & {
+		@apply opacity-100;
+	}
+
+	.text-input-component:focus-within &,
+	.text-input--filled & {
+		@apply opacity-100;
+		transform: translateY(-50%) scale(100%);
+	}
+}
+
+.text-input--control[type="date"]::-webkit-inner-spin-button,
+.text-input--control[type="date"]::-webkit-calendar-picker-indicator {
+	@apply opacity-0;
+}
+
+.text-input--readonly .text-input--control {
+	@apply pointer-events-auto cursor-default select-none;
+}
+
+.text-input--placeholder {
+	@apply absolute;
+	@apply pointer-events-none;
+	@apply opacity-50 font-medium;
+	@apply transform;
+	@apply flex items-center font-medium;
+
+	top: 0.5em;
+	left: 0.7em;
+	line-height: 1.33;
+}
+
+.text-input-component:not(.text-input--filled):not(:focus-within) .text-input--placeholder {
+	@apply font-normal;
+
+	.wrapper--tag-list &,
+	.wrapper--tag-list:not(.wrapper--filled) & {
+		@apply font-medium;
+	}
+}
+
+.text-input-component:not(.text-input--filled):not(:focus-within):not(.text-input--disabled):not(.text-input--readonly):hover .text-input--placeholder,
+.text-input-component.text-input--search:not(:focus-within):not(.text-input--disabled):hover input::placeholder {
+	@apply opacity-75;
+}
+
+.text-input--placeholder--prefix {
+	left: 4.3em;
+	top: 0.5em;
+}
+
+.multiselect-input-component .text-input--placeholder {
+	top: 0.5em;
+}
+
+.text-input-component:focus-within .text-input--placeholder,
+.text-input--filled .text-input--placeholder {
+	@apply bg-ui opacity-100;
+	@apply -translate-y-1/2;
+	@apply rounded;
+	@apply px-1;
+
+	top: 0;
+	left: 0.7em;
+	font-size: 0.78rem;
+}
+	.text-input--filled.text-input--readonly:not(.text-input--select)
+	.text-input--placeholder:after  {
+		@apply ml-1 h-3 w-3;
+		content: url(@icons/System/lock-line.svg);
+	}
+
+.text-input--statistics .text-input--placeholder {
+	@apply text-ui-statistic font-bold;
+}
+
+.text-input--invalid .text-input--placeholder,
+.text-input--invalid:not(:focus-within) .text-input--control {
+	@apply text-ui-danger;
+}
+
+.text-input--statistic-kann .text-input--placeholder,
+.text-input--statistic-kann:not(:focus-within) .text-input--control {
+	@apply text-ui-caution;
+}
+
+.text-input--statistic-hinweis .text-input--placeholder,
+.text-input--statistic-hinweis:not(:focus-within) .text-input--control {
+	@apply text-ui-warning;
+}
+
+.text-input--control:disabled,
+.text-input--disabled {
+	.text-input--control {
+		@apply bg-ui text-ui-disabled border-ui-disabled;
+		@apply pointer-events-none;
+
+	}
+
+	.text-input--placeholder {
+		@apply bg-ui text-ui-disabled;
+	}
+}
+
+.text-input-component:focus-within,
+.text-input--filled {
+	@apply overflow-visible;
+}
+
+.text-input--placeholder--required:after {
+	@apply ml-1 h-3 w-3;
+	content: url(@icons/Editor/asterisk.svg);
+}
+
+.text-input--statistics .text-input--placeholder--required:after {
+	@apply icon-ui-statistic;
+}
+
+.text-input--invalid .text-input--placeholder--required:after {
+	@apply icon-ui-danger;
+}
+
+.text-input--statistic-kann .text-input--placeholder--required:after {
+	@apply icon-ui-caution;
+}
+
+.text-input--statistic-hinweis .text-input--placeholder--required:after {
+	@apply icon-ui-warning;
+}
+
+.text-input-component--headless .text-input--control {
+	&:not([class*="text-ui"]) {
+		color: inherit;
+	}
+}
+
+.text-input--headless,
+.svws-ui-table .text-input--control {
+	@apply w-full whitespace-nowrap border-0 outline-hidden;
+
+	&:not([class*="bg-"]) {
+		background-color: unset;
+	}
+
+	&:not([class*="text-"]) {
+		color: inherit;
+	}
+
+	&::placeholder {
+		@apply font-normal;
+		color: inherit;
+	}
+
+	&:hover:not(:focus) {
+		@apply underline decoration-dotted underline-offset-2;
+	}
+}
+
+.text-input--inline {
+	@apply cursor-text underline decoration-dotted underline-offset-2;
+}
+
+.text-input-component .icon.svws-icon--remove:focus-visible {
+	@apply icon-ui-danger;
+}

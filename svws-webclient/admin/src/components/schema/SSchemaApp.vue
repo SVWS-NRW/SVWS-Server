@@ -1,5 +1,5 @@
 <template>
-	<div v-if="auswahl !== undefined" class="page--flex">
+	<div v-if="auswahl !== undefined" class="flex flex-col w-full h-full overflow-hidden">
 		<header class="svws-ui-header max-w-[140rem]">
 			<div class="svws-ui-header--title gap-x-8 lg:gap-x-16 w-full">
 				<div class="svws-headline-wrapper flex-[2]">
@@ -12,7 +12,7 @@
 						<span v-if="auswahl.username !== ''">, DB-Benutzer: {{ auswahl.username }} </span>
 					</span>
 				</div>
-				<div v-if="info !== undefined" class="flex-1 flex flex-col bg-light py-2 px-4 rounded-lg text-base -mr-3">
+				<div v-if="info !== undefined" class="flex-1 flex flex-col bg-ui-contrast-10 py-2 px-4 rounded-lg text-base -mr-3">
 					<span class="text-headline-md">{{ info.bezeichnung.split('\n')[0] }}</span>
 					<span class="opacity-50 line-clamp-1" :title="`${info.bezeichnung} (${ info.strassenname } ${ info.hausnummer } ${ info.hausnummerZusatz ?? '' } ${ info.ort })`">{{ info.bezeichnung.split('\n').slice(1).join('\n') }} ({{ info.strassenname }} {{ info.hausnummer }} {{ info.hausnummerZusatz ?? '' }} {{ info.ort }})</span>
 					<span class="opacity-50">{{ info.schulNr }} {{ info.schulform }}</span>

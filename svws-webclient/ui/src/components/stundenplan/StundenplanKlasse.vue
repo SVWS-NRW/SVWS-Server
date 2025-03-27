@@ -4,7 +4,7 @@
 		:get-pausenzeiten :schneiden-pausenzeiten-zeitraster :get-pausenzeiten-wochentag :get-pausenaufsichten-pausenzeit :on-drag :on-drop>
 		<template #unterricht="{ unterricht }">
 			<div class="font-bold col-span-2 flex place-items-center group" title="Unterricht" @click="emit('update:click', unterricht)">
-				<span v-if="useDragAndDrop" class="icon i-ri-draggable inline-block -ml-1 icon-dark opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
+				<span v-if="useDragAndDrop" class="icon i-ri-draggable inline-block icon-ui-contrast-75 opacity-60 group-hover:opacity-100 group-hover:icon-ui-contrast-75" />
 				<span>{{ manager().unterrichtGetByIDStringOfFachOderKurs(unterricht.id, false) }}</span>
 			</div>
 			<div class="text-center flex place-items-center gap-2" title="Lehrkraft" @click="emit('update:click', unterricht)"> {{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }} <span v-if="unterricht.lehrer.size() > 1" class="icon inline-block i-ri-add-circle-line" /></div>

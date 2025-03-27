@@ -1,5 +1,5 @@
 <template>
-	<div class="page--flex">
+	<div class="flex flex-col w-full h-full overflow-hidden">
 		<header class="svws-ui-header max-w-[140rem]">
 			<div class="svws-ui-header--title gap-x-8 lg:gap-x-16 w-full">
 				<div class="svws-headline-wrapper flex-[2]">
@@ -13,11 +13,11 @@
 			</div>
 			<div class="svws-ui-header--actions" />
 		</header>
-		<div class="page--content">
+		<div class="page page-grid-cards">
 			<svws-ui-content-card title="Im Aufbau">
 				Diese Seite befindet sich im Aufbau und wird Anpassungen an einigen Konfigurationseinstellungen des SVWS-Servers ermöglichen.
 				<svws-ui-spacing :size="2" />
-				<svws-ui-button type="primary" @click="downloadZertifikat"><span class="icon-sm i-ri-upload-2-line icon-white" />Zertifikat exportieren</svws-ui-button>
+				<svws-ui-button type="primary" @click="downloadZertifikat"><span class="icon-sm i-ri-upload-2-line" />Zertifikat exportieren</svws-ui-button>
 			</svws-ui-content-card>
 		</div>
 	</div>

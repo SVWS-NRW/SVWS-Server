@@ -3,6 +3,7 @@ package de.svws_nrw.core.kursblockung.test;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import de.svws_nrw.asd.data.schueler.Schueler;
 import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.base.CsvReader;
 import de.svws_nrw.base.kurs42.Kurs42DataBlockplan;
@@ -15,7 +16,6 @@ import de.svws_nrw.core.data.gost.GostBlockungSchiene;
 import de.svws_nrw.core.data.gost.GostBlockungsdaten;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.GostFachwahl;
-import de.svws_nrw.core.data.schueler.Schueler;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelTyp;

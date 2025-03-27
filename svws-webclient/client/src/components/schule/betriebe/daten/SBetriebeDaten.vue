@@ -1,5 +1,5 @@
 <template>
-	<div class="page--content">
+	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Basisdaten">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input class="contentFocusField" placeholder="Name" :model-value="daten.name1" @change="name1=>patch({name1: name1 ?? undefined})" type="text" />
@@ -80,12 +80,12 @@
 
 	const inputWohnortID = computed<OrtKatalogEintrag | null>({
 		get: () => props.daten.ort_id !== null ? props.mapOrte.get(props.daten.ort_id) ?? null : null,
-		set: (val) =>	void props.patch({ ort_id : val?.id })
+		set: (val) =>	void props.patch({ ort_id : val?.id }),
 	});
 
 	const beschaeftigungsart = computed<KatalogEintrag | null>({
 		get: () => (props.daten.adressArt === null) ? null : props.mapBeschaeftigungsarten.get(props.daten.adressArt) ?? null,
-		set: (value) => void props.patch({ adressArt: value?.id})
+		set: (value) => void props.patch({ adressArt: value?.id}),
 	});
 
 	watch(() => props.daten, () => selected.value = []);
@@ -95,9 +95,3 @@
 		selected.value = [];
 	}
 </script>
-
-<!-- <style lang="postcss" scoped>
-	.page--content {
-		@apply grid overflow-y-hidden overflow-x-auto h-full pb-3 pt-6;
-	}
-</style> -->

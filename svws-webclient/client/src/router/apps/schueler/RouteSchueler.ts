@@ -1,5 +1,6 @@
 import type { RouteParams } from "vue-router";
 
+import type { SchuelerAuswahlProps } from "~/components/schueler/SSchuelerAuswahlProps";
 import type { SchuelerListeManager} from "@core";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
@@ -17,10 +18,11 @@ import { routeSchuelerLernabschnitte } from "~/router/apps/schueler/lernabschnit
 import { routeSchuelerSchulbesuch } from "~/router/apps/schueler/schulbesuch/RouteSchuelerSchulbesuch";
 import { routeSchuelerStundenplan } from "~/router/apps/schueler/stundenplan/RouteSchuelerStundenplan";
 import { routeSchuelerKAoA } from "~/router/apps/schueler/kaoa/RouteSchuelerKAoA";
-import { routeSchuelerVermerke } from "~/router/apps/schueler/vermerke/RouteSchuelerVermerke";
 import { routeSchuelerSprachen } from "./sprachen/RouteSchuelerSprachen";
-import { routeSchuelerAbschluesse } from "./abschluesse/RouteSchuelerAbschluesse";
-import { routeSchuelerEinwilligungen } from "~/router/apps/schueler/einwilligungen/RouteSchuelerEinwilligungen";
+import { AppMenuGroup } from "@ui";
+import { api } from "~/router/Api";
+import type { SchuelerAppProps } from "~/components/schueler/SSchuelerAppProps";
+import { routeSchuelerSonstiges } from "./sonstiges/RouteSchuelerSonstiges";
 
 const SSchuelerAuswahl = () => import("~/components/schueler/SSchuelerAuswahl.vue")
 const SSchuelerApp = () => import("~/components/schueler/SSchuelerApp.vue")
@@ -32,24 +34,32 @@ export class RouteSchueler extends RouteAuswahlNode<SchuelerListeManager, RouteD
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler", "schueler/:id(\\d+)?", SSchuelerApp, SSchuelerAuswahl, new RouteDataSchueler());
 		super.mode = ServerMode.STABLE;
 		super.text = "Schüler";
+		super.getAuswahlListProps = (props) => (<SchuelerAuswahlProps>{
+			...props,
+			schulform: api.schulform,
+		});
+		super.getAuswahlProps = props => (<SchuelerAppProps>{
+			...props,
+			schulform: api.schulform,
+		});
 		super.children = [
 			routeSchuelerIndividualdaten,
-			routeSchuelerVermerke,
+			routeSchuelerSonstiges,
 			routeSchuelerErziehungsberechtigte,
 			routeSchuelerAusbildungsbetriebe,
 			routeSchuelerKAoA,
 			routeSchuelerSchulbesuch,
 			routeSchuelerLernabschnitte,
-			routeSchuelerAbschluesse,
 			routeSchuelerSprachen,
 			routeSchuelerLaufbahnplanung,
 			routeSchuelerStundenplan,
-			routeSchuelerEinwilligungen,
 			routeSchuelerNeu,
 			routeSchuelerGruppenprozesse,
 		];
 		super.defaultChild = routeSchuelerIndividualdaten;
 		super.updateIfTarget = this.doUpdateIfTarget;
+		super.menugroup = AppMenuGroup.MAIN;
+		super.icon = "i-ri-group-line";
 	}
 
 	protected doUpdateIfTarget = async (to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined) => {

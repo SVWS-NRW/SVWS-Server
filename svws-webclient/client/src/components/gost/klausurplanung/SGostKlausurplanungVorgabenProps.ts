@@ -1,6 +1,5 @@
 
 import type {
-	GostFaecherManager,
 	GostHalbjahr,
 	GostJahrgangsdaten,
 	GostKlausurvorgabe,

@@ -1,5 +1,5 @@
 <template>
-	<div class="page--content">
+	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input class="contentFocusField" placeholder="Kürzel" :model-value="jahrgangListeManager().daten().kuerzel" @change="patchKuerzel" type="text" :valid="validateKuerzel" :max-len="20" :min-len="1" />

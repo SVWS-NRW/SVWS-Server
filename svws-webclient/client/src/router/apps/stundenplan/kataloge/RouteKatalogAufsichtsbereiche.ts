@@ -12,36 +12,38 @@ import type { AufsichtsbereicheProps } from "~/components/stundenplan/kataloge/a
 import type { AufsichtsbereicheAuswahlProps } from "~/components/stundenplan/kataloge/aufsichtsbereiche/SAufsichtsbereicheAuswahlProps";
 import { RouteDataKatalogAufsichtsbereiche } from "./RouteDataKatalogAufsichtsbereiche";
 import { routeError } from "~/router/error/RouteError";
+import { RouteStundenplan } from "../RouteStundenplan";
 
 
 const SAufsichtsbereicheAuswahl = () => import("~/components/stundenplan/kataloge/aufsichtsbereiche/SAufsichtsbereicheAuswahl.vue");
 const SAufsichtsbereiche = () => import("~/components/stundenplan/kataloge/aufsichtsbereiche/SAufsichtsbereiche.vue");
 
-export class RouteKatalogAufsichtsbereiche extends RouteNode<RouteDataKatalogAufsichtsbereiche, RouteApp> {
+export class RouteKatalogAufsichtsbereiche extends RouteNode<RouteDataKatalogAufsichtsbereiche, RouteStundenplan> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "stundenplan.kataloge.aufsichtsbereiche", "aufsichtsbereiche/:id(\\d+)?", SAufsichtsbereiche, new RouteDataKatalogAufsichtsbereiche());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "stundenplan.kataloge.aufsichtsbereiche", "aufsichtsbereiche/:idAufsichtsbereich(\\d+)?", SAufsichtsbereiche, new RouteDataKatalogAufsichtsbereiche());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Aufsichtsbereiche";
+		this.isHidden = (params?: RouteParams) => RouteStundenplan.katalogeCheckHidden(true, this, params);
 		super.setView("eintraege", SAufsichtsbereicheAuswahl, (route) => this.getAuswahlProps(route));
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
 		try {
-			const { id } = RouteNode.getIntParams(to_params, ["id"]);
+			const { idAufsichtsbereich } = RouteNode.getIntParams(to_params, ["idAufsichtsbereich"]);
 			if (isEntering)
 				await this.data.ladeListe();
 			if (this.data.stundenplanManager.aufsichtsbereichGetMengeAsList().isEmpty())
 				return;
 			let eintrag: StundenplanAufsichtsbereich | undefined;
-			if ((id === undefined) && this.data.auswahl)
+			if ((idAufsichtsbereich === undefined) && this.data.auswahl)
 				return this.getRoute();
-			if (id === undefined) {
+			if (idAufsichtsbereich === undefined) {
 				eintrag = this.data.stundenplanManager.aufsichtsbereichGetMengeAsList().get(0);
 				return this.getRoute({ id: eintrag.id });
 			} else
-				eintrag = this.data.stundenplanManager.aufsichtsbereichGetByIdOrException(id);
+				eintrag = this.data.stundenplanManager.aufsichtsbereichGetByIdOrException(idAufsichtsbereich);
 			await this.data.setEintrag(eintrag);
 		} catch (error) {
 			return routeError.getErrorRoute(error as DeveloperNotificationException);
@@ -49,7 +51,7 @@ export class RouteKatalogAufsichtsbereiche extends RouteNode<RouteDataKatalogAuf
 	}
 
 	public addRouteParamsFromState() : RouteParamsRawGeneric {
-		return { id : this.data.auswahl?.id ?? undefined };
+		return { idAufsichtsbereich : this.data.auswahl?.id ?? undefined };
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): AufsichtsbereicheAuswahlProps {

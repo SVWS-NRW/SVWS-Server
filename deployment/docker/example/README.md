@@ -7,30 +7,30 @@ Dieses README-Dokument erklärt die verschiedenen Umgebungsvariablen, die in der
 ### INIT_SCRIPTS_DIR
 
 - **Beschreibung**: Das Verzeichnis, in dem Initialisierungsskripte für Ihre Anwendung abgelegt sind.
-- **Default**: `/etc/app/svws/init-scripts`
+- **Default**: `/opt/app/svws/init-scripts`
 - **Hinweis**: `kann per volumen mit eigenen Skripten benutzt werden`
 
-### MariaDB_ROOT_PASSWORD
+### MARIADB_ROOT_PASSWORD
 
 - **Beschreibung**: Das Root-Passwort für die MariaDB-Datenbank.
 - **Wert**: Ihr spezifisches MariaDB Root-Passwort (ersetzen Sie `#################` durch Ihr tatsächliches Passwort).
 
-### MariaDB_DATABASE
+### MARIADB_DATABASE
 
 - **Beschreibung**: Der Name der Datenbank, die von der Anwendung verwendet wird.
 - **Wert**: `gymabi`
 
-### MariaDB_HOST
+### MARIADB_HOST
 
 - **Beschreibung**: Der Hostname oder die IP-Adresse, unter der der MariaDB-Dienst erreichbar ist.
 - **Wert**: `mariadb`
 
-### MariaDB_USER
+### MARIADB_USER
 
 - **Beschreibung**: Der Benutzername, der für die Verbindung zur MariaDB-Datenbank verwendet wird.
 - **Wert**: Ihr spezifischer Datenbankbenutzername (ersetzen Sie `#################` durch Ihren tatsächlichen Benutzernamen).
 
-### MariaDB_PASSWORD
+### MARIADB_PASSWORD
 
 - **Beschreibung**: Das Passwort für den Datenbankbenutzer, der für die Verbindung zur MariaDB-Datenbank verwendet wird.
 - **Wert**: Ihr spezifisches Datenbankbenutzerpasswort (ersetzen Sie `#################` durch Ihr tatsächliches Passwort).

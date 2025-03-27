@@ -1,7 +1,7 @@
 <template>
 	<table class="svws-ui-table svws-clickable h-full w-full overflow-hidden" role="table" aria-label="Tabelle">
 		<thead class="svws-ui-thead cursor-pointer mb-1" role="rowgroup" aria-label="Tabellenkopf">
-			<tr class="svws-ui-tr" role="row">
+			<tr class="svws-ui-tr" role="row" style="grid-template-columns: 1fr 5fr 5fr 3fr 1rem; min-height: auto;">
 				<td class="svws-ui-td" role="columnheader">Kürzel</td>
 				<td class="svws-ui-td" role="columnheader">Nachname, Vorname</td>
 				<td class="svws-ui-td" role="columnheader">Dienst-Email</td>
@@ -10,24 +10,24 @@
 		</thead>
 		<tbody class="svws-ui-tbody h-full overflow-y-auto" role="rowgroup" aria-label="Tabelleninhalt">
 			<template v-for="lehrer of lehrerListe" :key="lehrer">
-				<tr class="svws-ui-tr" role="row">
+				<tr class="svws-ui-tr" role="row" style="grid-template-columns: 1fr 5fr 5fr 3fr 1rem; min-height: auto;">
 					<td class="svws-ui-td" role="cell">{{ lehrer.kuerzel }}</td>
 					<td class="svws-ui-td" role="cell">{{ lehrer.nachname }}, {{ lehrer.vorname }}</td>
 					<td class="svws-ui-td" role="cell">
 						<svws-ui-tooltip v-if="(lehrer.eMailDienstlich === null) || (lehrer.eMailDienstlich.trim().length === 0)">
-							<span class="icon i-ri-alert-line icon-danger inline-block" />
+							<span class="icon i-ri-alert-line icon-ui-danger inline-block" />
 							<template #content>
 								Eine fehlende dienstliche Email-Adresse ist für den Web-Noten-Manager nicht zulässig. Bitte tragen Sie diese im Lehrerbereich ein
 							</template>
 						</svws-ui-tooltip>
 						<svws-ui-tooltip v-else-if="!validatorEmail(lehrer.eMailDienstlich)">
-							<span class="icon i-ri-alert-line icon-danger inline-block" />
+							<span class="icon i-ri-alert-line icon-ui-danger inline-block" />
 							<template #content>
 								Die dienstliche Email-Adresse ist fehlerhaft. Korrigieren Sie diese im Lehrerbereich
 							</template>
 						</svws-ui-tooltip>
 						<svws-ui-tooltip v-else-if="emailDuplikate.has(lehrer.eMailDienstlich)">
-							<span class="icon i-ri-alert-line icon-danger inline-block" />
+							<span class="icon i-ri-alert-line icon-ui-danger inline-block" />
 							<template #content>
 								Diese dienstliche Email-Adresse ist bei mehreren Lehrern eingetragen. Dies ist für den Web-Noten-Manager nicht zulässig.
 							</template>
@@ -35,7 +35,7 @@
 						<span>{{ lehrer.eMailDienstlich }}</span>
 					</td>
 					<td class="svws-ui-td" role="cell">
-						{{ mapInitialKennwoerter().get(lehrer.id) }}
+						{{ mapEnmInitialKennwoerter().get(lehrer.id) }}
 						<div @click="copyToClipboard(lehrer.id)" class="cursor-pointer place-items-center">
 							<span class="icon-sm i-ri-file-copy-line inline-block" />
 						</div>
@@ -103,7 +103,7 @@
 
 	async function copyToClipboard(idLehrer: number) {
 		try {
-			const kennwort = props.mapInitialKennwoerter().get(idLehrer);
+			const kennwort = props.mapEnmInitialKennwoerter().get(idLehrer);
 			if (kennwort === null)
 				throw new DeveloperNotificationException("Initial-Kennwort ist nicht vorhanden und kann daher nicht in die Zwischenablage kopiert werden.");
 			else
@@ -114,12 +114,3 @@
 	}
 
 </script>
-
-<style lang="postcss" scoped>
-
-	.svws-ui-tr {
-		grid-template-columns: 1fr 5fr 5fr 3fr 1rem;
-		min-height: auto;
-	}
-
-</style>

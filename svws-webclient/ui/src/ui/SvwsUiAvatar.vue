@@ -5,7 +5,7 @@
 				<span class="icon i-ri-camera-line w-full h-full opacity-50 inline-block" />
 			</span>
 			<svws-ui-button v-if="src && (src.split(',').length > 1)" type="icon" @click="deleteImage" tabindex="0" title="Bild löschen">
-				<span class="icon i-ri-delete-bin-line inline-block" />
+				<span class="icon i-ri-delete-bin-line inline-block" :class="{'icon-ui-caution': stage}" />
 			</svws-ui-button>
 			<svws-ui-button v-if="upload && (uploadedImage === null) && (src.split(',').length < 2)" type="icon" @click="toggleUpload" tabindex="0" title="Bild hochladen">
 				<input class="hidden" ref="fileInputEl" type="file" accept="image/*" @change="onFileChanged">
@@ -76,6 +76,8 @@
 
 	const hasVideoDevice = ref(false);
 
+	const stage = ref<boolean>(false);
+
 	onMounted(async () => {
 		// test if media device available
 		const list = await navigator.mediaDevices.enumerateDevices();
@@ -89,6 +91,9 @@
 	const file = ref<File | null>(null);
 
 	function deleteImage() {
+		stage.value = !stage.value;
+		if (stage.value)
+			return;
 		emit('image:base64', null);
 		emit('image:captured', null);
 	}
@@ -189,99 +194,3 @@
 	}
 
 </script>
-
-<style lang="postcss">
-.svws-ui-avatar {
-	@apply relative;
-
-	.avatar--edit-trigger {
-		@apply bg-ui border border-ui-neutral;
-		@apply w-6 h-6 p-0.5 rounded mt-auto ml-auto -mr-1.5 -mb-0.5;
-		/* TODO: COLORS icon */
-	}
-}
-
-.avatar {
-	@apply bg-ui-neutral border border-ui-secondary;
-	@apply w-full rounded-xl overflow-hidden relative;
-	padding-bottom: 100%;
-
-	&--has-image {
-		@apply border-transparent;
-	}
-
-	svg {
-		@apply text-ui-secondary opacity-50;
-		@apply absolute -bottom-0.5 w-full h-5/6;
-		margin-bottom: -5%;
-	}
-
-	img,
-	video {
-		@apply w-full h-full absolute top-0 left-0 object-cover object-center z-10;
-	}
-
-	video {
-		@apply bg-ui-neutral;
-	}
-
-	&--edit {
-		@apply absolute top-0 left-0 z-20 w-full h-full;
-		@apply flex items-center justify-center;
-
-		.is-capturing & {
-			@apply hidden;
-		}
-
-		.button {
-			@apply hidden;
-		}
-
-		.button--icon {
-			padding: 0.4rem;
-		}
-
-		&:hover,
-		&:focus,
-		&:focus-within {
-			@apply outline-none bg-ui rounded-xl border border-ui-disabled;
-
-			.avatar--edit-trigger {
-				@apply hidden;
-			}
-
-			.button {
-				@apply block;
-			}
-		}
-
-		&:focus-visible {
-			+ .avatar {
-				@apply ring ring-ui-brand;
-			}
-		}
-	}
-
-	.is-capturing & {
-		@apply opacity-100;
-	}
-
-	&--capture-control {
-		@apply flex items-center justify-center gap-1 mt-4;
-	}
-}
-
-.is-capturing {
-	@apply bg-ui;
-	@apply fixed z-50 h-screen;
-	@apply flex flex-col justify-center items-center;
-
-	.avatar {
-		@apply p-0 -order-1 border-none;
-		@apply rounded-3xl;
-		width: 90vmin;
-		height: 90vmin;
-		@apply md:w-[37.5rem] md:h-[37.5rem];
-	}
-}
-</style>

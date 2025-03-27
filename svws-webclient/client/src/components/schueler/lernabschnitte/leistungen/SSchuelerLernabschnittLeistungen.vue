@@ -1,6 +1,6 @@
 <template>
-	<div class="content">
-		<svws-ui-table :columns :items="leistungen" has-background class="col-span-2 -mt-1">
+	<div class="page page-flex-col">
+		<svws-ui-table :columns :items="leistungen" has-background class="h-fit col-span-2 -mt-1">
 			<template #header>
 				<div role="row" class="svws-ui-tr">
 					<div role="columnheader" :class="{ 'col-span-5': hatUpdateKompetenz, 'col-span-4': !hatUpdateKompetenz }" aria-label="Fach" />
@@ -19,7 +19,7 @@
 				</div>
 			</template>
 			<template #rowCustom="{ row: leistung }">
-				<div v-if="leistung.id !== null" class="svws-ui-tr" role="row" :style="{ '--background-color': manager().fachFarbeGetByLeistungsIdOrDefault(leistung.id) }">
+				<div v-if="leistung.id !== null" class="svws-ui-tr" role="row" :style="`color: var(--color-text-ui-static); background-color: ${manager().fachFarbeGetByLeistungsIdOrDefault(leistung.id)}`">
 					<div v-if="hatUpdateKompetenz" class="svws-ui-td svws-align-center cursor-pointer" role="cell">
 						<svws-ui-checkbox :model-value="auswahl.has(leistung)" @update:model-value="auswahl.has(leistung) ? auswahl.delete(leistung) : auswahl.add(leistung)" headless />
 					</div>
@@ -78,15 +78,14 @@
 					<div class="svws-ui-td" role="cell" v-if="auswahl.size > 0">
 						{{ auswahl.size }} ausgewählt
 					</div>
-					<div class="svws-ui-td flex-grow justify-end" role="cell">
+					<div class="svws-ui-td grow justify-end" role="cell">
 						<svws-ui-button @click="deleteAuswahl()" type="trash" :disabled="auswahl.size === 0" />
 						<svws-ui-button v-if="props.manager().fachGetMenge().size() > 0" @click="addLeistung(props.manager().fachGetMenge().get(0).id)" type="icon" title="Neue Leistungsdaten hinzufügen" :autofocus="leistungen.isEmpty()"> <span class="icon i-ri-add-line" /> </svws-ui-button>
 					</div>
 				</div>
 			</template>
 		</svws-ui-table>
-		<svws-ui-spacing :size="2" />
-		<svws-ui-content-card>
+		<svws-ui-content-card class="min-h-fit grow">
 			<svws-ui-input-wrapper :grid="2" v-if="hatLernbereichsnote">
 				<span class="font-bold col-span-full">Lernbereichsnoten</span>
 				<svws-ui-select v-if="hatUpdateKompetenz" title="Gesellschaftswissenschaft" :items="getLernbereichsnoten()" :item-text="i => `${i.daten(schuljahr)?.kuerzel}`" autocomplete v-model="lernbereichsnoteGSbzwAL" />
@@ -317,13 +316,13 @@
 	const lernbereichsnote2Bezeichnung = computed<string | null>(() => props.manager().lernabschnittGetLernbereichsnote2Bezeichnung());
 	const hatLernbereichsnote = computed<boolean>(() => (lernbereichsnote1Bezeichnung.value !== null) || lernbereichsnote2Bezeichnung.value !== null);
 
+	const setRem = computed(() => hatUpdateKompetenz.value ? '1.5rem':'');
 </script>
 
-<style lang="postcss" scoped>
+<style scoped>
 
-	.content {
-		@apply w-full h-full grid grid-cols-2;
+	.svws-ui-tr {
+		grid-template-columns: v-bind(setRem) minmax(10rem, 3fr) minmax(10rem, 1fr) minmax(6rem, 1fr) minmax(10rem, 2fr) 5rem 5rem;
 	}
 
 </style>
-

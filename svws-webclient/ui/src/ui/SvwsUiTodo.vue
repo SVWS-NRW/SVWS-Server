@@ -5,7 +5,7 @@
 			<span class="font-normal">{{ title }}</span>
 		</div>
 		<div class="leading-tight max-w-sm opacity-50 inline-flex gap-0.5">
-			<span class="icon i-ri-box-3-line opacity-75 flex-shrink-0" v-if="!title.length && !hideIcon" />
+			<span class="icon i-ri-box-3-line opacity-75 shrink-0" v-if="!title.length && !hideIcon" />
 			<div>
 				<slot>
 					Dieser Bereich ist noch in Entwicklung.

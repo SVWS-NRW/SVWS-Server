@@ -4,7 +4,7 @@ import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface AufsichtsbereicheAuswahlProps {
 	auswahl: Aufsichtsbereich | undefined;
-	addEintrag: (religion: Aufsichtsbereich) => Promise<void>;
+	addEintrag: (eintrag: Aufsichtsbereich) => Promise<void>;
 	deleteEintraege: (eintraege: Iterable<Aufsichtsbereich>) => Promise<void>;
 	gotoEintrag: (eintrag: Aufsichtsbereich) => Promise<RoutingStatus>;
 	schuljahresabschnittsauswahl: () => AbschnittAuswahlDaten;

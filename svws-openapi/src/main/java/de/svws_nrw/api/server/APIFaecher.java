@@ -3,13 +3,16 @@ package de.svws_nrw.api.server;
 import java.io.InputStream;
 
 import de.svws_nrw.asd.data.fach.BilingualeSpracheKatalogEintrag;
+import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.fach.FachDaten;
 import de.svws_nrw.asd.data.fach.FachKatalogEintrag;
 import de.svws_nrw.asd.data.fach.FachgruppeKatalogEintrag;
+import de.svws_nrw.core.data.fach.FaecherListeEintrag;
 import de.svws_nrw.core.data.fach.SprachpruefungsniveauKatalogEintrag;
 import de.svws_nrw.asd.data.fach.SprachreferenzniveauKatalogEintrag;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
+import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.faecher.DataFachdaten;
 import de.svws_nrw.data.faecher.DataFaecherliste;
@@ -71,11 +74,11 @@ public class APIFaecher {
 					+ "einer Sortierreihenfolge und ob sie in der Anwendung sichtbar bzw. änderbar sein sollen. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Fächerdaten besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von Fächer-Listen-Einträgen",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = FachDaten.class))))
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = FaecherListeEintrag.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Fächerdaten anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Fächer-Einträge gefunden")
 	public Response getFaecher(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataFaecherliste(conn).getAll(),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataFaecherliste(conn).getAllAsResponse(),
 				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
 	}
 
@@ -97,7 +100,7 @@ public class APIFaecher {
 					+ "besitzt.")
 	@ApiResponse(responseCode = "200", description = "Die Daten des Faches",
 			content = @Content(mediaType = "application/json",
-					schema = @Schema(implementation = FachDaten.class)))
+					schema = @Schema(implementation = FaecherListeEintrag.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Fächerdaten anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Kein Fach-Eintrag mit der angegebenen ID gefunden")
 	public Response getFach(@PathParam("schema") final String schema, @PathParam("id") final long id,
@@ -188,6 +191,33 @@ public class APIFaecher {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
 				conn -> new DataFachdaten(conn).deleteAsResponse(id), request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen mehrerer Fächer.
+	 *
+	 * @param schema    das Datenbankschema
+	 * @param is        der InputStream, mit der Liste der zu löschenden IDs
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
+	 */
+	@DELETE
+	@Path("/delete/multiple")
+	@Operation(summary = "Entfernt mehrere Fächer.", description = "Entfernt mehrere Fächer. Dabei wird geprüft, ob alle Vorbedingungen zum Entfernen"
+			+ "der Fächer erfüllt sind und der SVWS-Benutzer die notwendige Berechtigung hat.")
+	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Fächer zu entfernen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteFaecher(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der zu löschenden Fächer", required = true,
+			content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
+				conn -> new DataFaecherliste(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
+				request, ServerMode.DEV,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
 
 

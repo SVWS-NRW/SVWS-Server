@@ -1,85 +1,93 @@
 <template>
-	<svws-ui-app-layout :fullwidth-content="true">
+	<ui-login-layout size="lg" hide-header hide-hinweis>
 		<template #main>
-			<div class="init-wrapper">
-				<div class="init-container">
-					<div class="init-form modal modal--md">
-						<div class="modal--titlebar">
-							<div class="modal--title inline-flex items-center gap-1">
-								<span>Initialisierung der Datenbank</span>
-							</div>
-							<svws-ui-button type="icon" class="invisible" />
+			<div class="w-full flex flex-col gap-2">
+				<div class="w-full pb-2 mb-4 text-headline-md text-left border-b-1">
+					<span>Initialisierung der Datenbank</span>
+				</div>
+				<ui-card icon="i-ri-archive-line" title="Schulkatalog" subtitle="Daten werden über die Auswahl der Schulnummer ausgwählt"
+					:is-open="currentAction === 'init'" @update:is-open="(isOpen) => setCurrentAction('init', isOpen)">
+					<div class="mt-2 w-full">
+						<div class="flex gap-2">
+							<svws-ui-select v-model="schule" title="Schule auswählen" autocomplete
+								:items="listSchulkatalog" :item-text="i => i.KurzBez ? `${i.SchulNr}: ${i.KurzBez}` : `${i.SchulNr}: Schule ohne Name`"
+								:item-filter="filterSchulenKatalogEintraege" required :disabled="isLoading" />
 						</div>
-						<div class="modal--content-wrapper">
-							<div class="modal--content overflow-y-auto">
-								<div class="flex flex-col">
-									<svws-ui-action-button title="Schulkatalog" description="Daten werden über die Auswahl der Schulnummer ausgwählt"
-										icon="i-ri-archive-line" :action-function="init" :is-loading :action-disabled="schule === undefined"
-										:is-active="source === 'init'" @click="clickInit">
-										<div class="flex gap-2">
-											<svws-ui-select v-model="schule" title="Schule auswählen" autocomplete
-												:items="listSchulkatalog" :item-text="i => i.KurzBez ? `${i.SchulNr}: ${i.KurzBez}` : `${i.SchulNr}: Schule ohne Name`"
-												:item-filter required :disabled="isLoading" />
-										</div>
-										<div class="font-bold text-sm text-error mt-2">
-											{{ status === false ? "Fehler beim Initialisieren" : status === true ? "Initialisierung erfolgreich" : "" }}
-										</div>
-									</svws-ui-action-button>
-									<svws-ui-action-button title="Schild 2-Datenbank migrieren" description="Daten werden über die Auswahl einer existierenden Schild 2-Datenbank migriert."
-										icon="i-ri-database-2-line" :action-function="migrate" action-label="Migration starten" :is-loading :action-disabled="(db === 'mdb' && !file) || (user === 'root')"
-										:is-active="source === 'migrate'" @click="clickMigrate">
-										<div class="flex flex-col gap-4">
-											<svws-ui-select :model-value="items.get(db)" :items="items.values()" @update:model-value="set" :item-text="i => i" title="Datenbank" />
-											<div class="flex flex-col gap-6 text-left" v-if="db === 'mdb'">
-												<div class="flex flex-col gap-2 px-2">
-													<span class="font-bold text-button">Access-Datei (.mdb) hochladen</span>
-													<input type="file" @change="onFileChanged" :disabled="isLoading" accept=".mdb">
-												</div>
-											</div>
-											<div class="flex flex-col gap-3" v-if="db !== 'mdb'">
-												<div class="flex flex-col gap-2 mt-2 mb-6">
-													<div class="flex flex-col text-left gap-0.5 pl-3">
-														<span class="opacity-50">Bei Migration aus einer Schild-Zentral-Instanz:</span>
-														<svws-ui-checkbox class="text-left" type="toggle" v-model="schildzentral">Schulnummer angeben</svws-ui-checkbox>
-													</div>
-													<svws-ui-text-input v-if="schildzentral" v-model="schulnummer" placeholder="Schulnummer" />
-												</div>
-												<svws-ui-text-input v-model.trim="location" placeholder="Datenbank-Host" />
-												<svws-ui-text-input v-model.trim="schema" placeholder="Datenbank-Schema" />
-												<svws-ui-text-input v-model.trim="user" placeholder="Datenbank-Benutzer" />
-												<svws-ui-text-input v-model.trim="password" placeholder="Passwort Datenbankbenutzer" type="password" />
-											</div>
-											<div class="text-left font-bold text-sm -mb-5 mt-4">
-												{{ status === false ? "Fehler beim Upload" : status === true ? "Upload erfolgreich" : "" }}
-											</div>
-										</div>
-									</svws-ui-action-button>
-									<svws-ui-action-button title="Wiederherstellen" description="Daten werden aus einem Backup wiederhergestellt" :action-function="restore"
-										action-label="Wiederherstellen" icon="i-ri-device-recover-line" :action-disabled="!file || isLoading" :is-loading
-										:is-active="source === 'restore'" @click="clickRestore">
-										<div class="flex flex-col gap-2 text-left">
-											<span class="font-bold text-button">Quell-Datenbank: SQLite-Datenbank (.sqlite) hochladen</span>
-											<input type="file" @change="onFileChanged" :disabled="isLoading" accept=".sqlite">
-											<div class="font-bold text-sm">
-												{{ status === false ? "Fehler beim Upload" : status === true ? "Upload erfolgreich" : "" }}
-											</div>
-										</div>
-									</svws-ui-action-button>
-									<div class="col-span-full">
-										<log-box :logs :status>
-											<template #button>
-												<svws-ui-button v-if="status !== undefined" type="transparent" @click="clearLog" title="Log verwerfen">Log verwerfen </svws-ui-button>
-											</template>
-										</log-box>
-									</div>
-								</div>
-							</div>
+						<div v-if="status !== undefined" class="font-bold text-sm text-ui-danger mt-2">
+							{{ status === false ? "Fehler beim Initialisieren" : status === true ? "Initialisierung erfolgreich" : "" }}
 						</div>
 					</div>
+					<template #buttonFooterLeft>
+						<svws-ui-button :disabled="schule === undefined || isLoading" title="Löschen" @click="init" :is-loading class="mt-4">
+							<svws-ui-spinner v-if="isLoading" spinning />
+							<span v-else class="icon i-ri-play-line" />
+							Ausführen
+						</svws-ui-button>
+					</template>
+				</ui-card>
+
+				<ui-card icon="i-ri-database-2-line" title="Schild 2-Datenbank migrieren" subtitle="Daten werden über die Auswahl einer existierenden Schild 2-Datenbank migriert."
+					:is-open="currentAction === 'migrate'" @update:is-open="(isOpen) => setCurrentAction('migrate', isOpen)">
+					<div class="flex flex-col gap-4 mt-2">
+						<svws-ui-select :model-value="items.get(db)" :items="items.values()" @update:model-value="set" :item-text="i => i" title="Datenbank" />
+						<div class="flex flex-col gap-6 text-left" v-if="db === 'mdb'">
+							<div class="flex flex-col gap-2 px-2">
+								<span class="font-bold text-button">Access-Datei (.mdb) hochladen</span>
+								<input type="file" @change="onFileChanged" :disabled="isLoading" accept=".mdb">
+							</div>
+						</div>
+						<div v-if="db !== 'mdb'" class="flex flex-col gap-3">
+							<div class="flex flex-col gap-2 mt-2 mb-6">
+								<div class="flex flex-col text-left gap-0.5 pl-3">
+									<span class="opacity-50">Bei Migration aus einer Schild-Zentral-Instanz:</span>
+									<svws-ui-checkbox class="text-left" type="toggle" v-model="schildzentral">Schulnummer angeben</svws-ui-checkbox>
+								</div>
+								<svws-ui-text-input v-if="schildzentral" v-model="schulnummer" placeholder="Schulnummer" />
+							</div>
+							<svws-ui-text-input v-model.trim="location" placeholder="Datenbank-Host" />
+							<svws-ui-text-input v-model.trim="schema" placeholder="Datenbank-Schema" />
+							<svws-ui-text-input v-model.trim="user" placeholder="Datenbank-Benutzer" />
+							<svws-ui-text-input v-model.trim="password" placeholder="Passwort Datenbankbenutzer" type="password" />
+						</div>
+						<div class="text-left font-bold text-sm -mb-5 mt-4">
+							{{ status === false ? "Fehler beim Upload" : status === true ? "Upload erfolgreich" : "" }}
+						</div>
+					</div>
+					<template #buttonFooterLeft>
+						<svws-ui-button :disabled="(db === 'mdb' && !file) || (user === 'root') || isLoading" title="Migration starten" @click="migrate" :is-loading class="mt-4">
+							<svws-ui-spinner v-if="isLoading" spinning />
+							<span v-else class="icon i-ri-play-line" />
+							Migration starten
+						</svws-ui-button>
+					</template>
+				</ui-card>
+				<ui-card icon="i-ri-device-recover-line" title="Wiederherstellen" subtitle="Daten werden aus einem Backup wiederhergestellt."
+					:is-open="currentAction === 'restore'" @update:is-open="(isOpen) => setCurrentAction('restore', isOpen)">
+					<div class="flex flex-col gap-2 text-left">
+						<span class="font-bold text-button">Quell-Datenbank: SQLite-Datenbank (.sqlite) hochladen</span>
+						<input type="file" @change="onFileChanged" :disabled="isLoading" accept=".sqlite">
+						<div class="font-bold text-sm">
+							{{ status === false ? "Fehler beim Upload" : status === true ? "Upload erfolgreich" : "" }}
+						</div>
+					</div>
+					<template #buttonFooterLeft>
+						<svws-ui-button :disabled="!file || isLoading" title="Wiederherstellen" @click="restore" :is-loading class="mt-4">
+							<svws-ui-spinner v-if="isLoading" spinning />
+							<span v-else class="icon i-ri-play-line" />
+							Wiederherstellen
+						</svws-ui-button>
+					</template>
+				</ui-card>
+				<div class="col-span-full">
+					<log-box :logs :status>
+						<template #button>
+							<svws-ui-button v-if="status !== undefined" type="transparent" @click="clearLog" title="Log verwerfen">Log verwerfen </svws-ui-button>
+						</template>
+					</log-box>
 				</div>
 			</div>
 		</template>
-	</svws-ui-app-layout>
+	</ui-login-layout>
 	<s-notifications />
 </template>
 
@@ -88,6 +96,7 @@
 	import { ref } from "vue";
 	import type { InitProps } from "./SInitProps";
 	import type { SchulenKatalogEintrag, List } from "@core";
+	import { filterSchulenKatalogEintraege } from "~/utils/helfer";
 
 	const props = defineProps<InitProps>();
 	const schule = ref<SchulenKatalogEintrag>()
@@ -98,25 +107,29 @@
 
 	const file = ref<File | null>(null);
 
+	const db = ref<'mysql'|'mariadb'|'mssql'|'mdb'|undefined>(undefined);
+
+	const currentAction = ref<string>('');
+	const oldAction = ref({
+		name: "",
+		open: false,
+	});
+
+	function setCurrentAction(newAction: string, open: boolean) {
+		if(newAction === oldAction.value.name && !open)
+			return;
+		oldAction.value.name = currentAction.value;
+		oldAction.value.open = (currentAction.value === "") ? false : true;
+		if(open === true)
+			currentAction.value= newAction;
+		else
+			currentAction.value = "";
+	}
+
 	function clearLog() {
 		isLoading.value = false;
 		logs.value = undefined;
 		status.value = undefined;
-	}
-
-	async function clickInit() {
-		await props.setSource('init');
-		clearLog();
-	}
-
-	async function clickRestore() {
-		await props.setSource('restore');
-		clearLog();
-	}
-
-	async function clickMigrate() {
-		await props.setSource('migrate');
-		clearLog();
 	}
 
 	// Restore
@@ -155,7 +168,7 @@
 			return;
 		for (const [k,v] of items.entries()) {
 			if ((v === item) && (k !== undefined)) {
-				await props.setDB(k);
+				db.value = k;
 				break;
 			}
 		}
@@ -171,18 +184,8 @@
 		formData.append('databasePassword', password.value);
 		formData.append('schema', schema.value);
 		formData.append('location', location.value);
-		status.value = await props.migrateDB(formData);
+		status.value = await props.migrateDB(formData, currentAction.value === 'restore', db.value);
 		isLoading.value = false;
-	}
-
-	// Init
-	const itemFilter = (items: Iterable<SchulenKatalogEintrag>, search: string) => {
-		const list = [];
-		for (const i of items)
-			if (i.SchulNr.includes(search.toLocaleLowerCase())
-				|| ((i.KurzBez !== null) && i.KurzBez.toLocaleLowerCase().includes(search.toLocaleLowerCase())))
-				list.push(i);
-		return list;
 	}
 
 	async function init() {
@@ -196,17 +199,10 @@
 
 <style lang="postcss">
 
-	.init-wrapper {
-		@apply flex h-full flex-col justify-between;
-	}
-
-	.init-container {
-		@apply bg-cover bg-top rounded-2xl h-full flex flex-col justify-center items-center px-4;
-		background-image: url("/images/placeholder-background-blurred.jpg");
-	}
+	@reference "../../../../ui/src/assets/styles/index.css"
 
 	.svws-ui-content-button {
-		@apply rounded-lg border-light border p-4 text-balance flex gap-4 text-left;
+		@apply rounded-lg border-ui-neutral border p-4 text-balance flex gap-4 text-left;
 
 		&.svws-not-active {
 			@apply opacity-50 border-transparent order-1;
@@ -217,12 +213,12 @@
 		}
 
 		&.svws-active {
-			@apply border-transparent text-primary bg-primary/10 pointer-events-none;
+			@apply border-transparent text-ui-brand bg-ui-brand/10 pointer-events-none;
 		}
 
 		&:not(.svws-active):hover,
 		&:not(.svws-active):focus-visible {
-			@apply outline-none bg-black/10 border-black/10 opacity-100;
+			@apply outline-hidden bg-ui-contrast-10 opacity-100;
 
 			.svws-icon {
 				@apply opacity-100;
@@ -230,11 +226,11 @@
 		}
 
 		&:focus {
-			@apply outline-none;
+			@apply outline-hidden;
 		}
 
 		&:not(.svws-active):focus-visible {
-			@apply ring ring-primary/50 ring-offset-1;
+			@apply ring-3 ring-ui-brand/50 ring-offset-1;
 		}
 
 		.svws-title {

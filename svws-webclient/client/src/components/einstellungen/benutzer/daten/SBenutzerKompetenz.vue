@@ -47,7 +47,7 @@
 				void props.addKompetenz(props.kompetenz);
 			else
 				void props.removeKompetenz(props.kompetenz);
-		}
+		},
 	});
 
 </script>

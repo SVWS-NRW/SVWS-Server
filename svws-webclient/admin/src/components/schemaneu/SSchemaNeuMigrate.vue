@@ -1,8 +1,6 @@
 <template>
-	<svws-ui-action-button title="Schild2-Datenbank migrieren" description="Eine Schild2-Datenbank wird in ein neues Schema migriert." icon="i-ri-database-2-line" action-label="Migrieren" :action-function
-		:action-disabled="(zielSchema.length === 0) || (zielUsername.length === 0) || (zielUserPassword.length === 0) || loadingFunction().value || (zielUsername === 'root')"
-		:is-loading="loadingFunction().value" :is-active>
-		<div class="input-wrapper">
+	<ui-card icon="i-ri-database-2-line" title="Schild2-Datenbank migrieren" subtitle="Eine Schild2-Datenbank wird in ein neues Schema migriert." :is-open @update:is-open="(open) => emit('opened', open)">
+		<div class="input-wrapper mt-2">
 			<svws-ui-select v-model="migrationQuellinformationen().dbms" :items="items.keys()" :item-text="i => items.get(i) || ''" title="Datenbank-Typ" />
 			<svws-ui-spacing />
 			<template v-if="migrationQuellinformationen().dbms !== 'mdb'">
@@ -19,7 +17,7 @@
 			</template>
 			<template v-else>
 				<div class="font-bold text-button">Quell-Datenbank: Access-Datei (.mdb) hochladen</div>
-				<input type="file" @change="onFileChanged" :disabled="loadingFunction().value" accept=".mdb">
+				<input type="file" @change="onFileChanged" :disabled="loading" accept=".mdb">
 			</template>
 			<svws-ui-spacing />
 			<div class="font-bold text-button mt-2">Ziel-Datenbank (wird erstellt):</div>
@@ -27,12 +25,19 @@
 			<svws-ui-text-input v-model.trim="zielUsername" placeholder="Name des Datenbankbenutzers" :valid="value => value !== 'root'" />
 			<svws-ui-text-input v-model.trim="zielUserPassword" placeholder="Passwort des Datenbankbenutzers" type="password" />
 		</div>
-	</svws-ui-action-button>
+		<template #buttonFooterLeft>
+			<svws-ui-button :disabled="(zielSchema.length === 0) || (zielUsername.length === 0) || (zielUserPassword.length === 0) || loading || (zielUsername === 'root')" title="Migrieren" @click="actionFunction" :is-loading="loading" class="mt-4">
+				<svws-ui-spinner v-if="loading" spinning />
+				<span v-else class="icon i-ri-play-line" />
+				Migrieren
+			</svws-ui-button>
+		</template>
+	</ui-card>
 </template>
 
 <script setup lang="ts">
 
-	import { type ShallowRef, shallowRef } from "vue";
+	import { shallowRef } from "vue";
 	import { type SchemaMigrationQuelle } from "../schema/SchemaMigrationQuelle";
 	import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 	import type { List } from "@core/java/util/List";
@@ -40,11 +45,14 @@
 	const props = defineProps<{
 		migrateSchema: (formData: FormData) => Promise<SimpleOperationResponse>;
 		migrationQuellinformationen: () => SchemaMigrationQuelle;
-		logsFunction: () => ShallowRef<List<string | null> | undefined>;
-		statusFunction: () => ShallowRef<boolean | undefined>;
-		loadingFunction: () => ShallowRef<boolean>;
+		setStatus: (loading: boolean, status?: boolean, logs?: List<string | null>) => void;
+		loading: boolean;
 		validatorUsername: (username: string | null) => boolean;
-		isActive: boolean;
+		isOpen: boolean;
+	}>();
+
+	const emit = defineEmits<{
+		'opened': [value: boolean];
 	}>();
 
 	const items = new Map<string, string>();
@@ -59,7 +67,7 @@
 	const zielUserPassword = shallowRef("");
 
 	async function actionFunction() {
-		props.loadingFunction().value = true;
+		props.setStatus(true);
 		const formData = new FormData();
 		if (file.value !== null) {
 			formData.append("database", file.value);
@@ -76,16 +84,16 @@
 		formData.append('schemaUserPassword', zielUserPassword.value);
 		try {
 			const result = await props.migrateSchema(formData);
-			props.logsFunction().value = result.log;
-			props.statusFunction().value = result.success;
+			props.setStatus(false, result.success, result.log);
+			if (result.success) {
+				zielSchema.value = '';
+				zielUserPassword.value = '';
+				zielUsername.value = '';
+			}
 		} catch (e) {
 			console.log(e);
-			props.statusFunction().value = false;
+			props.setStatus(false);
 		}
-		props.loadingFunction().value = false;
-		zielSchema.value = '';
-		zielUserPassword.value = '';
-		zielUsername.value = '';
 	}
 
 	const file = shallowRef<File | null>(null);

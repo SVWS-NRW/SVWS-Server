@@ -88,5 +88,4 @@
 		</Variant>
 	</Story>
 </template>
-<script setup lang="ts">
-</script>
+

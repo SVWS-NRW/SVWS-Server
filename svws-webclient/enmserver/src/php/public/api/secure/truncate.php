@@ -1,4 +1,13 @@
 <?php
+	/**
+	 * Löscht alle ENM Daten im ENM Server.
+	 *
+	 * @httpMethod POST
+	 * @auth (Basic) Lehrer Username und Kennwort benötigt
+	 *
+	 * @return void
+	 * @responseCode 200
+	 */
 
 	// Initialisierung
 	require_once $_SERVER['DOCUMENT_ROOT'].'/../app/init.php';

@@ -19,13 +19,13 @@
   "PrivilegedDatabaseUser" : "root",
   "DBKonfiguration" : {
     "dbms" : "MARIA_DB",
-    "location" : "${MariaDB_HOST}",
-    "defaultschema" : "${MariaDB_DATABASE}",
+    "location" : "${MARIADB_HOST}",
+    "defaultschema" : "${MARIADB_DATABASE}",
     "SchemaKonfiguration" : [ {
-      "name" : "${MariaDB_DATABASE}",
+      "name" : "${MARIADB_DATABASE}",
       "svwslogin" : false,
-      "username" : "${MariaDB_USER}",
-      "password" : "${MariaDB_PASSWORD}"
+      "username" : "${MARIADB_USER}",
+      "password" : "${MARIADB_PASSWORD}"
     } ]
   }
 }

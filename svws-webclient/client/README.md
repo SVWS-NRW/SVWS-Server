@@ -1,6 +1,6 @@
 # SVWS-Client
 
-Repository für den Javascript-Client, in dem sich auch die GUIs befinden.
+Repository für den JavaScript-Client
 
 ## Projekt Setup
 

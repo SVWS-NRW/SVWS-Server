@@ -37,7 +37,7 @@ import { HashMap4D } from '../../../../core/adt/map/HashMap4D';
 import { HashMap2D } from '../../../../core/adt/map/HashMap2D';
 import type { JavaSet } from '../../../../java/util/JavaSet';
 import { ListMap3DLongKeys } from '../../../../core/adt/map/ListMap3DLongKeys';
-import { KursDaten } from '../../../../core/data/kurse/KursDaten';
+import { KursDaten } from '../../../../asd/data/kurse/KursDaten';
 import { Map3DUtils } from '../../../../core/utils/Map3DUtils';
 import { KursManager } from '../../../../core/utils/KursManager';
 import { LehrerListeEintrag } from '../../../../core/data/lehrer/LehrerListeEintrag';
@@ -65,8 +65,6 @@ export class GostKlausurplanManager extends JavaObject {
 	private readonly _kursManager : KursManager = new KursManager();
 
 	private readonly _stundenplanmanager_by_schuljahresabschnitt_and_datum : HashMap2D<number, string, StundenplanManager> = new HashMap2D<number, string, StundenplanManager>();
-
-	private readonly _stundenplanmanager_by_schuljahresabschnitt_and_kw : HashMap3D<number, number, number, StundenplanManager> = new HashMap3D<number, number, number, StundenplanManager>();
 
 	private readonly _stundenplanmanagermenge_by_schuljahresabschnitt : JavaMap<number, List<StundenplanManager>> = new HashMap<number, List<StundenplanManager>>();
 
@@ -656,19 +654,6 @@ export class GostKlausurplanManager extends JavaObject {
 	/**
 	 * Prüft, ob zu den angegebenen Parametern ein StundenplanManager existiert. Falls noch keine StundenplanManager für den angegebenen Schuljahresabschnitt geladen wurden, wird eine {@link DeveloperNotificationException} geworfen
 	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
-	 * @param jahr das Jahr
-	 * @param kalenderwoche die Kalenderwoche
-	 * @return true, wenn ein StundenplanManager existiert, sonst false
-	 */
-	public stundenplanManagerExistsByAbschnittAndKW(idSchuljahresabschnitt : number, jahr : number, kalenderwoche : number) : boolean {
-		if (!this.stundenplanManagerGeladenByAbschnitt(idSchuljahresabschnitt))
-			throw new DeveloperNotificationException("StundenplanManager für Schuljahresabschnitt " + idSchuljahresabschnitt + " wurde nicht geladen.")
-		return this._stundenplanmanager_by_schuljahresabschnitt_and_kw.contains(idSchuljahresabschnitt, jahr, kalenderwoche);
-	}
-
-	/**
-	 * Prüft, ob zu den angegebenen Parametern ein StundenplanManager existiert. Falls noch keine StundenplanManager für den angegebenen Schuljahresabschnitt geladen wurden, wird eine {@link DeveloperNotificationException} geworfen
-	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
 	 * @param datum das Datum
 	 * @return true, wenn ein StundenplanManager existiert, sonst false
 	 */
@@ -717,14 +702,6 @@ export class GostKlausurplanManager extends JavaObject {
 	 */
 	public stundenplanManagerAddByAbschnittAndDatum(idSchuljahresabschnitt : number, datum : string, stundenplanManager : StundenplanManager) : void {
 		this._stundenplanmanager_by_schuljahresabschnitt_and_datum.put(idSchuljahresabschnitt, datum, stundenplanManager);
-		const kwjahr : number = DateUtils.gibKwJahrDesDatumsISO8601(datum);
-		const kw : number = DateUtils.gibKwDesDatumsISO8601(datum);
-		if (this._stundenplanmanager_by_schuljahresabschnitt_and_kw.contains(idSchuljahresabschnitt, kwjahr, kw)) {
-			const managerInMap : StundenplanManager | null = this._stundenplanmanager_by_schuljahresabschnitt_and_kw.getOrNull(idSchuljahresabschnitt, kwjahr, kw);
-			if ((managerInMap !== null) && (managerInMap.stundenplanGetID() !== stundenplanManager.stundenplanGetID()))
-				throw new DeveloperNotificationException(JavaString.format("Mehrere Stundenpläne innerhalb der Kalenderwoche %d gültig.", kw))
-		} else
-			this._stundenplanmanager_by_schuljahresabschnitt_and_kw.put(idSchuljahresabschnitt, kwjahr, kw, stundenplanManager);
 	}
 
 	/**
@@ -831,27 +808,6 @@ export class GostKlausurplanManager extends JavaObject {
 				return manager;
 		}
 		return null;
-	}
-
-	/**
-	 * Liefert das dem Jahr und der Kalenderwoche zugeordnete {@link StundenplanKalenderwochenzuordnung}-Objekt der Auswahl-Menge oder das nächstmöglichste.
-	 * <br>Hinweis: Einige Objekte dieser Menge können die ID = -1 haben, falls sie erzeugt wurden und nicht aus der DB stammen.
-	 * <br>Laufzeit: O(1)
-	 *
-	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
-	 * @param jahr           Das Jahr der Kalenderwoche.
-	 * @param kalenderwoche  Die gewünschte Kalenderwoche.
-	 *
-	 * @return das dem Jahr und der Kalenderwoche zugeordnete {@link StundenplanKalenderwochenzuordnung}-Objekt der Auswahl-Menge oder das nächstmöglichste.
-	 */
-	public stundenplanManagerGetByAbschnittAndJahrAndKWOrClosest(idSchuljahresabschnitt : number, jahr : number, kalenderwoche : number) : StundenplanManager {
-		if (!this.stundenplanManagerGeladenByAbschnitt(idSchuljahresabschnitt))
-			throw new DeveloperNotificationException("StundenplanManager für Schuljahresabschnitt " + idSchuljahresabschnitt + " wurde nicht geladen.")
-		const manager : StundenplanManager | null = this._stundenplanmanager_by_schuljahresabschnitt_and_kw.getOrNull(idSchuljahresabschnitt, jahr, kalenderwoche);
-		if (manager !== null)
-			return manager;
-		const dateOfMonday : string = DateUtils.gibDatumDesMontagsOfJahrAndKalenderwoche(jahr, kalenderwoche);
-		return this.stundenplanManagerGetByAbschnittAndDatumOrClosest(idSchuljahresabschnitt, dateOfMonday);
 	}
 
 	/**
@@ -3245,22 +3201,22 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @param quartal das Quartal
 	 * @param threshold     der Schwellwert (z.B. 3), der mindestens erreicht sein muss, damit die
 	 *                  Schüler-IDs in die Rückgabe-Map aufgenommen werden
-	 * @param thresholdOnly wenn <code>true</code> wird die Schüler-ID nur bei exaktem Erreichen des <code>threshold</code> in die Rückgabe-Map aufgenommen. Größere Werte werden nicht berücksichtigt.
+	 * @param thresholdMinus der Schwellwert (z.B. 4), dessen Menge von der Threshold-Menge abgezogen wird, damit Warnungen nicht die Fehler enthalten, bei -1 wird nichts abgezogen
 	 *
 	 * @return die Map Schüler-ID -> {@link GostSchuelerklausurTermin}menge, die Schüler-IDs von Schülern enthalten, die in der den Termin
 	 * enthaltenen Kalenderwoche mehr (>=) Klausuren schreiben, als der Schwellwert definiert und die betreffenden {@link GostSchuelerklausurTermin}e.
 	 */
-	public klausurenProSchueleridExceedingKWThresholdByAbijahrAndHalbjahrAndThreshold(abijahr : number, halbjahr : GostHalbjahr, quartal : number, threshold : number, thresholdOnly : boolean) : List<PairNN<PairNN<number, number>, List<GostSchuelerklausurTermin>>> {
+	public klausurenProSchueleridExceedingKWThresholdByAbijahrAndHalbjahrAndThreshold(abijahr : number, halbjahr : GostHalbjahr, quartal : number, threshold : number, thresholdMinus : number) : List<PairNN<PairNN<number, number>, List<GostSchuelerklausurTermin>>> {
 		const schuelerklausurterminaktuellmenge_by_schuelerId : JavaMap<number, JavaMap<number, List<GostSchuelerklausurTermin>>> | null = this._schuelerklausurterminaktuellmenge_by_abijahr_and_kw_and_schuelerId.getMap2OrNull(abijahr);
 		const ergebnis : List<PairNN<PairNN<number, number>, List<GostSchuelerklausurTermin>>> = new ArrayList<PairNN<PairNN<number, number>, List<GostSchuelerklausurTermin>>>();
 		if (schuelerklausurterminaktuellmenge_by_schuelerId === null)
 			return ergebnis;
 		for (const kwEntry of schuelerklausurterminaktuellmenge_by_schuelerId.entrySet()) {
 			for (const schuelerEntry of kwEntry.getValue().entrySet()) {
-				if ((schuelerEntry.getValue().size() === threshold) || ((schuelerEntry.getValue().size() > threshold) && !thresholdOnly))
+				if ((schuelerEntry.getValue().size() >= threshold) && ((thresholdMinus < 0) || (schuelerEntry.getValue().size() < thresholdMinus)))
 					for (const skt of schuelerEntry.getValue()) {
 						const vorgabe : GostKlausurvorgabe = this.vorgabeBySchuelerklausurTermin(skt);
-						if (vorgabe.abiJahrgang === abijahr && vorgabe.halbjahr === halbjahr.id && (quartal === 0 || vorgabe.quartal === quartal)) {
+						if (vorgabe.abiJahrgang === abijahr && vorgabe.halbjahr === halbjahr.id && (quartal === 0 || vorgabe.quartal === quartal) && !(vorgabe.halbjahr === 5 && vorgabe.quartal === 2)) {
 							ergebnis.add(new PairNN<PairNN<number, number>, List<GostSchuelerklausurTermin>>(new PairNN(kwEntry.getKey(), schuelerEntry.getKey()), schuelerEntry.getValue()));
 							break;
 						}
@@ -4831,17 +4787,18 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @param abiJahrgang der Abitur-Jahrgang
 	 * @param halbjahr das {@link GostHalbjahr}
 	 * @param quartal die Nummer des Quartals, 0 für alle Quartale
+	 * @param kwErrorLimit das Errorlimit für die Anzahl der Klausuren pro Schüler und Woche
 	 *
 	 * @return die Anzahl möglicher Probleme in der aktuellen Klausurplanung zum übergebenen {@link GostHalbjahr} und Quartal
 	 */
-	public planungsfehlerGetAnzahlByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number) : number {
+	public planungsfehlerGetAnzahlByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number, kwErrorLimit : number) : number {
 		let anzahl : number = 0;
 		anzahl += this.vorgabefehlendGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += this.kursklausurfehlendGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += this.kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += this.schuelerklausurfehlendGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += this.terminMitKonfliktGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
-		anzahl += this.klausurenProSchueleridExceedingKWThresholdByAbijahrAndHalbjahrAndThreshold(abiJahrgang, halbjahr, quartal, 4, false).size();
+		anzahl += this.klausurenProSchueleridExceedingKWThresholdByAbijahrAndHalbjahrAndThreshold(abiJahrgang, halbjahr, quartal, kwErrorLimit, -1).size();
 		if (!this.stundenplanManagerGeladenAndExistsByAbschnitt(DeveloperNotificationException.ifMap2DGetIsNull(this._schuljahresabschnitt_by_abijahr_and_halbjahr, abiJahrgang, halbjahr.id)))
 			anzahl++;
 		return anzahl;
@@ -4853,16 +4810,18 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @param abiJahrgang der Abitur-Jahrgang
 	 * @param halbjahr das {@link GostHalbjahr}
 	 * @param quartal die Nummer des Quartals, 0 für alle Quartale
+	 * @param kwWarnLimit die Anzahl der Klausuren pro Schüler und Woche, ab der eine Warnung ausgegeben wird
+	 * @param kwErrorLimit die Anzahl der Klausuren pro Schüler und Woche, ab der ein Fehler ausgegeben wird
 	 *
 	 * @return die Anzahl möglicher Probleme in der aktuellen Klausurplanung zum übergebenen {@link GostHalbjahr} und Quartal
 	 */
-	public planungshinweiseGetAnzahlByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number) : number {
+	public planungshinweiseGetAnzahlByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number, kwWarnLimit : number, kwErrorLimit : number) : number {
 		let anzahl : number = 0;
 		anzahl += this.terminOhneDatumGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += this.terminUnvollstaendigeRaumzuweisungGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += this.terminUnzureichendePlatzkapazitaetGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += this.schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
-		anzahl += this.klausurenProSchueleridExceedingKWThresholdByAbijahrAndHalbjahrAndThreshold(abiJahrgang, halbjahr, quartal, 3, true).size();
+		anzahl += this.klausurenProSchueleridExceedingKWThresholdByAbijahrAndHalbjahrAndThreshold(abiJahrgang, halbjahr, quartal, kwWarnLimit, kwErrorLimit).size();
 		return anzahl;
 	}
 

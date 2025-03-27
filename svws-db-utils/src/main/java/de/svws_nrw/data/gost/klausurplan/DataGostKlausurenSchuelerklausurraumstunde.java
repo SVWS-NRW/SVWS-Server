@@ -296,7 +296,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 			final StundenplanListeEintrag sle = StundenplanListUtils.get(DataStundenplanListe.getStundenplaene(conn, schuljahresabschnitt.id), termin.datum);
 
 			final StundenplanManager stundenplanManager =
-					new StundenplanManager(DataStundenplan.getStundenplan(conn, sle.id), DataStundenplanUnterricht.getUnterrichte(conn, sle.id),
+					new StundenplanManager(new DataStundenplan(conn).getById(sle.id), DataStundenplanUnterricht.getUnterrichte(conn, sle.id),
 							DataStundenplanPausenaufsichten.getAufsichten(conn, sle.id),
 							DataStundenplanUnterrichtsverteilung.getUnterrichtsverteilung(conn, sle.id));
 			manager.stundenplanManagerAdd(stundenplanManager);

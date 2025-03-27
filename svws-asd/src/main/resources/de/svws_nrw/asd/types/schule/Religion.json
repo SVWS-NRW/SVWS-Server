@@ -2,7 +2,7 @@
 	"version": 1,
 	"daten": [ {
 		"bezeichner": "AR",
-		"idHistorie": 1,
+		"idStatistik": "1",
 		"historie": [ {
 			"id": 1000,
 			"schluessel": "AR",
@@ -13,7 +13,7 @@
 		} ]
 	}, {
 		"bezeichner": "ER",
-		"idHistorie": 2,
+		"idStatistik": "2",
 		"historie": [ {
 			"id": 2000,
 			"schluessel": "ER",
@@ -24,7 +24,7 @@
 		} ]
 	}, {
 		"bezeichner": "HR",
-		"idHistorie": 3,
+		"idStatistik": "3",
 		"historie": [ {
 			"id": 3000,
 			"schluessel": "HR",
@@ -35,7 +35,7 @@
 		} ]
 	}, {
 		"bezeichner": "IR",
-		"idHistorie": 4,
+		"idStatistik": "4",
 		"historie": [ {
 			"id": 4000,
 			"schluessel": "IR",
@@ -46,7 +46,7 @@
 		} ]
 	}, {
 		"bezeichner": "KR",
-		"idHistorie": 5,
+		"idStatistik": "5",
 		"historie": [ {
 			"id": 5000,
 			"schluessel": "KR",
@@ -57,7 +57,7 @@
 		} ]
 	}, {
 		"bezeichner": "ME",
-		"idHistorie": 6,
+		"idStatistik": "6",
 		"historie": [ {
 			"id": 6000,
 			"schluessel": "ME",
@@ -68,7 +68,7 @@
 		} ]
 	}, {
 		"bezeichner": "OH",
-		"idHistorie": 7,
+		"idStatistik": "7",
 		"historie": [ {
 			"id": 7000,
 			"schluessel": "OH",
@@ -79,7 +79,7 @@
 		} ]
 	}, {
 		"bezeichner": "OR",
-		"idHistorie": 8,
+		"idStatistik": "8",
 		"historie": [ {
 			"id": 8000,
 			"schluessel": "OR",
@@ -90,7 +90,7 @@
 		} ]
 	}, {
 		"bezeichner": "SO",
-		"idHistorie": 9,
+		"idStatistik": "9",
 		"historie": [ {
 			"id": 9000,
 			"schluessel": "SO",
@@ -101,7 +101,7 @@
 		} ]
 	}, {
 		"bezeichner": "XO",
-		"idHistorie": 10,
+		"idStatistik": "10",
 		"historie": [ {
 			"id": 10000,
 			"schluessel": "XO",
@@ -112,7 +112,7 @@
 		} ]
 	}, {
 		"bezeichner": "XR",
-		"idHistorie": 11,
+		"idStatistik": "11",
 		"historie": [ {
 			"id": 11000,
 			"schluessel": "XR",

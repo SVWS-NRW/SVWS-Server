@@ -24,7 +24,7 @@ import { MapUtils } from '../../../core/utils/MapUtils';
 import { GostKursblockungRegelParameterTyp } from '../../../core/types/kursblockung/GostKursblockungRegelParameterTyp';
 import { Map2DUtils } from '../../../core/utils/Map2DUtils';
 import { GostBlockungsergebnisKursSchuelerZuordnungUpdate } from '../../../core/data/gost/GostBlockungsergebnisKursSchuelerZuordnungUpdate';
-import { Schueler } from '../../../core/data/schueler/Schueler';
+import { Schueler } from '../../../asd/data/schueler/Schueler';
 import { PairNN } from '../../../asd/adt/PairNN';
 import { Class } from '../../../java/lang/Class';
 import { DTOUtils } from '../../../core/utils/DTOUtils';
@@ -2545,7 +2545,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 *
 	 * @return die Anzahl an Schülern die dem Kurs zugeordnet sind plus potentiell zugeordnete Dummy SuS.
 	 */
-	private getOfKursAnzahlSchuelerPlusDummy(idKurs : number) : number {
+	public getOfKursAnzahlSchuelerPlusDummy(idKurs : number) : number {
 		return this.getKursE(idKurs).schueler.size() + DeveloperNotificationException.ifMapGetIsNull(this._kursID_to_dummySuS, idKurs);
 	}
 
@@ -2571,6 +2571,28 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	public getOfKursAnzahlSchuelerExterne(idKurs : number) : number {
 		const kursE : GostBlockungsergebnisKurs = this.getKursE(idKurs);
 		return ListUtils.getCountFiltered(kursE.schueler, { test : (idSchueler: number) => this.getOfSchuelerHatStatusExtern(idSchueler) });
+	}
+
+	/**
+	 * Liefert die Anzahl externer SuS und der Dummy-SuS die dem Kurs zugeordnet sind.
+	 *
+	 * @param  idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Anzahl externer SuS und der Dummy-SuS die dem Kurs zugeordnet sind.
+	 */
+	public getOfKursAnzahlSchuelerExternePlusDummies(idKurs : number) : number {
+		return this.getOfKursAnzahlSchuelerExterne(idKurs) + this.getOfKursAnzahlSchuelerDummy(idKurs);
+	}
+
+	/**
+	 * Liefert die Anzahl internen SuS. Das sind alle SuS der Kursliste abzüglich der SuS mit Status "extern".
+	 *
+	 * @param  idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Anzahl internen SuS. Das sind alle SuS der Kursliste abzüglich der SuS mit Status "extern".
+	 */
+	public getOfKursAnzahlSchuelerInterne(idKurs : number) : number {
+		return this.getOfKursAnzahlSchueler(idKurs) - this.getOfKursAnzahlSchuelerExterne(idKurs);
 	}
 
 	/**

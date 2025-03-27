@@ -3,7 +3,7 @@
 	"description": "SVWS-Server-Projekt: UI-Komponenten",
 	"author": "MSB NRW",
 	"license": "BSD-3-Clause",
-	"version": "1.0.4",
+	"version": "1.0.5",
 	"scripts": {
 		"dev": "histoire dev",
 		"lint": "eslint 'src/**/*.{ts,vue}' --cache",
@@ -14,23 +14,19 @@
 		"build-lib": "vite build",
 		"build-dts": "vue-tsc --declaration --emitDeclarationOnly -p tsconfig.build.json",
 		"story:build": "histoire build",
-		"story:preview": "histoire preview",
-		"check-licenses": "license-checker-rseidelsohn --summary --unknown --production"
+		"story:preview": "histoire preview"
 	},
 	"files": [
 		"dist"
 	],
-	"main": "./dist/svws-ui.umd.cjs",
 	"module": "./dist/svws-ui.js",
 	"exports": {
 		".": {
 			"import": "./dist/svws-ui.js",
-			"types": "./dist/index.d.ts",
-			"require": "./dist/svws-ui.umd.cjs"
+			"types": "./dist/index.d.ts"
 		},
 		"./style.css": {
-			"import": "./dist/style.css",
-			"require": "./dist/style.css"
+			"import": "./dist/style.css"
 		}
 	},
 	"type": "module",

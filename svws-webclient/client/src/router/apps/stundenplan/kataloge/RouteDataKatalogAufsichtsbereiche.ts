@@ -6,6 +6,7 @@ import { RouteManager } from "~/router/RouteManager";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 
 import { routeKatalogAufsichtsbereiche } from "./RouteKatalogAufsichtsbereiche";
+import { routeStundenplan } from "../RouteStundenplan";
 
 interface RouteStateKatalogAufsichtsbereiche extends RouteStateInterface {
 	auswahl: StundenplanAufsichtsbereich | undefined;
@@ -46,7 +47,7 @@ export class RouteDataKatalogAufsichtsbereiche extends RouteData<RouteStateKatal
 
 	setEintrag = async (auswahl: StundenplanAufsichtsbereich) => this.setPatchedState({ auswahl });
 
-	gotoEintrag = async (eintrag: StundenplanAufsichtsbereich) => await RouteManager.doRoute(routeKatalogAufsichtsbereiche.getRoute({ id: eintrag.id }));
+	gotoEintrag = async (eintrag: StundenplanAufsichtsbereich) => await RouteManager.doRoute(routeKatalogAufsichtsbereiche.getRoute({ idAufsichtsbereich: eintrag.id }));
 
 	addEintrag = async (eintrag: Partial<StundenplanAufsichtsbereich>) => {
 		if ((eintrag.kuerzel === undefined) || this.stundenplanManager.aufsichtsbereichExistsByKuerzel(eintrag.kuerzel))
@@ -56,6 +57,7 @@ export class RouteDataKatalogAufsichtsbereiche extends RouteData<RouteStateKatal
 		const stundenplanManager = this.stundenplanManager;
 		stundenplanManager.aufsichtsbereichAdd(aufsichtsbereich);
 		this.setPatchedState({stundenplanManager});
+		await routeStundenplan.data.reloadVorlagen();
 		await this.gotoEintrag(aufsichtsbereich);
 	}
 
@@ -70,6 +72,7 @@ export class RouteDataKatalogAufsichtsbereiche extends RouteData<RouteStateKatal
 		stundenplanManager.aufsichtsbereichRemoveAll(aufsichtsbereiche);
 		const liste = this.stundenplanManager.aufsichtsbereichGetMengeAsList();
 		const auswahl = liste.isEmpty() ? undefined : liste.get(0);
+		await routeStundenplan.data.reloadVorlagen();
 		this.setPatchedState({auswahl, stundenplanManager});
 	}
 
@@ -80,6 +83,7 @@ export class RouteDataKatalogAufsichtsbereiche extends RouteData<RouteStateKatal
 		const auswahl = this.auswahl;
 		Object.assign(auswahl, eintrag);
 		this.stundenplanManager.aufsichtsbereichPatchAttributes(auswahl);
+		await routeStundenplan.data.reloadVorlagen();
 		this.commit();
 	}
 

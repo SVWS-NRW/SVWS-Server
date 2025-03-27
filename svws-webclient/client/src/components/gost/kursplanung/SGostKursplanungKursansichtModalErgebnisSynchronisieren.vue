@@ -5,12 +5,12 @@
 		<template #modalDescription>
 			<div class="prose text-justify">
 				Soll das Ergebnis in {{ blockungsname }} synchronisiert werden?
-				<p><b class="text-black">Warnung:</b> Es werden die Kurse und die Leistungsdaten des aktuellen Schuljahresabschnitts mit den Daten dieses Blockungsergebnisses synchronisiert.</p>
+				<p><b class="text-ui-contrast-100">Warnung:</b> Es werden die Kurse und die Leistungsdaten des aktuellen Schuljahresabschnitts mit den Daten dieses Blockungsergebnisses synchronisiert.</p>
 				<p>Dies bedeutet, dass: </p>
 				<ul>
 					<li>gegebenenfalls neue Kurse angelegt werden</li>
-					<li><b class="text-black">keine</b> leeren Kurse entfernt werden</li>
-					<li>die Kurs-Schüler-Zuordnungen bei <b class="text-black">vorhanden</b> Leistungsdaten zu einem Fach auf die Zuordnungen der Blockungsdaten angepasst werden</li>
+					<li><b class="text-ui-contrast-100">keine</b> leeren Kurse entfernt werden</li>
+					<li>die Kurs-Schüler-Zuordnungen bei <b class="text-ui-contrast-100">vorhanden</b> Leistungsdaten zu einem Fach auf die Zuordnungen der Blockungsdaten angepasst werden</li>
 				</ul>
 				<p>Weitere Anpassungen, wie das Hinzufügen von Fächern in den Leistungsdaten der Schüler oder das Entfernen von Kursen aus der Kursliste müssen bei Bedarf später manuell erfolgen.</p>
 			</div>

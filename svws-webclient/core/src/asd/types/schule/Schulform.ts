@@ -6,7 +6,7 @@ import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import type { CoreType } from '../../../asd/types/CoreType';
-import { de_svws_nrw_asd_types_CoreType_getManager, de_svws_nrw_asd_types_CoreType_daten, de_svws_nrw_asd_types_CoreType_historienId, de_svws_nrw_asd_types_CoreType_historie } from '../../../asd/types/CoreType';
+import { de_svws_nrw_asd_types_CoreType_getManager, de_svws_nrw_asd_types_CoreType_daten, de_svws_nrw_asd_types_CoreType_statistikId, de_svws_nrw_asd_types_CoreType_historie } from '../../../asd/types/CoreType';
 import type { JavaMap } from '../../../java/util/JavaMap';
 
 export class Schulform extends JavaEnum<Schulform> implements CoreType<SchulformKatalogEintrag, Schulform> {
@@ -129,6 +129,7 @@ export class Schulform extends JavaEnum<Schulform> implements CoreType<Schulform
 	 */
 	public static init(manager : CoreTypeDataManager<SchulformKatalogEintrag, Schulform>) : void {
 		CoreTypeDataManager.putManager(Schulform.class, manager);
+		Schulform._mapSchuljahrToSchulformenMitGymOb.clear();
 	}
 
 	/**
@@ -304,8 +305,8 @@ export class Schulform extends JavaEnum<Schulform> implements CoreType<Schulform
 		return de_svws_nrw_asd_types_CoreType_daten(this, schuljahr);
 	}
 
-	public historienId() : number {
-		return de_svws_nrw_asd_types_CoreType_historienId(this);
+	public statistikId() : String | null {
+		return de_svws_nrw_asd_types_CoreType_statistikId(this);
 	}
 
 	public historie() : List<SchulformKatalogEintrag> {

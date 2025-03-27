@@ -1,12 +1,13 @@
 <template>
-	<svws-ui-secondary-menu>
-		<template #headline>
-			<span class="select-none">Schüler</span>
-		</template>
-		<template #abschnitt>
-			<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
-		</template>
-		<template #content>
+	<div class="h-full flex flex-col">
+		<div class="secondary-menu--headline">
+			<h1 class="select-none">Schüler</h1>
+			<div><abschnitt-auswahl :daten="schuljahresabschnittsauswahl" /></div>
+		</div>
+		<div class="secondary-menu--header">
+			<slot name="header" />
+		</div>
+		<div class="secondary-menu--content">
 			<svws-ui-table :clickable="!manager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="schueler => gotoDefaultView(schueler.id)"
 				:items="rowsFiltered" :model-value="[...manager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)"
 				:columns="cols" selectable count :filter-open="true" :filtered="filterChanged()" :filterReset="filterReset" scroll-into-view scroll
@@ -32,14 +33,14 @@
 				<template #cell(idKlasse)="{ rowData, value }">
 					{{ value === null ? "–" : (manager().klasseGetOrNull(value)?.kuerzel) ?? "–" }}
 					<svws-ui-tooltip v-if="!manager().schuelerIstImSchuljahresabschnitt(rowData.id)" autosize>
-						<span v-if="schuljahresabschnittsauswahl().aktuell === schuljahresabschnittsauswahl().schule" class="icon icon-error i-ri-alert-line" />
-						<span v-else class="icon icon-primary i-ri-information-line" />
+						<span v-if="schuljahresabschnittsauswahl().aktuell === schuljahresabschnittsauswahl().schule" class="icon icon-ui-danger i-ri-alert-line" />
+						<span v-else class="icon icon-ui-brand i-ri-information-line" />
 						<template #content>
 							Der Schüler befindet sich nicht in dem ausgewählten Schuljahrsabschnitt, sondern in {{ manager().schuelerSchuljahresabschnittAsString(rowData.id) }}
 						</template>
 					</svws-ui-tooltip>
 				</template>
-
+				<!-- <template v-if="primarstufe" #cell(epJahre)="{ rowData }"> {{ rowData.jahrgang }} </template> -->
 				<template #actions>
 					<svws-ui-tooltip position="bottom" v-if="ServerMode.DEV.checkServerMode(serverMode) && hatKompetenzAendern">
 						<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="startCreationMode" :has-focus="rowsFiltered.length === 0">
@@ -51,8 +52,8 @@
 					</svws-ui-tooltip>
 				</template>
 			</svws-ui-table>
-		</template>
-	</svws-ui-secondary-menu>
+		</div>
+	</div>
 	<svws-ui-modal v-model:show="showModalGruppenaktionen" size="medium">
 		<template #modalTitle>
 			Aktionen für {{ selectedItems.length }} ausgewählte Schüler
@@ -78,13 +79,23 @@
 
 	import { computed, ref, shallowRef, watch } from "vue";
 	import type { SchuelerListeEintrag, JahrgangsDaten, KlassenDaten, Schulgliederung, KursDaten } from "@core";
-	import { ServerMode, SchuelerStatus, BenutzerKompetenz } from "@core";
+	import { ServerMode, SchuelerStatus, BenutzerKompetenz, PrimarstufeSchuleingangsphaseBesuchsjahre, Schulform } from "@core";
 	import type { SortByAndOrder } from "@ui";
 	import { ViewType } from "@ui";
 	import type { SchuelerAuswahlProps } from "./SSchuelerAuswahlProps";
 	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<SchuelerAuswahlProps>();
+
+	// const primarschulformen = new Set([Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.PS, Schulform.S, Schulform.KS, Schulform.V]);
+	// const primarstufe = computed(() => primarschulformen.has(props.schulform));
+
+	// function getEpJahre(ep: number | null) {
+	// 	if (!primarstufe.value || (ep === null))
+	// 		return null;
+	// 	const schuljahr = props.manager().getSchuljahr();
+	// 	return PrimarstufeSchuleingangsphaseBesuchsjahre.data().getWertBySchluesselOrException(ep.toString()).daten(schuljahr)?.kuerzel ?? null;
+	// }
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
@@ -124,14 +135,18 @@
 			const key = value.key === 'idKlasse' ? 'klassen' : value.key;
 			props.manager().orderUpdate(key, value.order);
 			void props.setFilter();
-		}
+		},
 	})
 
-	const cols = [
-		{ key: "idKlasse", label: "Klasse", sortable: true, span: 1 },
-		{ key: "nachname", label: "Nachname", sortable: true, span: 2 },
-		{ key: "vorname", label: "Vorname", sortable: true, span: 2 },
-	]
+	const cols = computed(() => {
+		const arr = [{ key: "idKlasse", label: "Klasse", sortable: true, span: 1 },
+			{ key: "nachname", label: "Nachname", sortable: true, span: 2 },
+			{ key: "vorname", label: "Vorname", sortable: true, span: 2 },
+		];
+		// if (primarstufe.value)
+		// 	arr.push({ key: "epJahre", label: "Jg", sortable: false, span: 1 });
+		return arr;
+	})
 
 	watch(() => props.manager().filtered(), async (neu) => {
 		if (props.manager().hasDaten() && !neu.contains(props.manager().auswahl()))
@@ -154,7 +169,7 @@
 		set: (value) => {
 			props.manager().setFilterNurMitLernabschitt(value);
 			void props.setFilter();
-		}
+		},
 	});
 
 	const filterStatus = computed<SchuelerStatus[]>({
@@ -164,7 +179,7 @@
 			for (const v of value)
 				props.manager().schuelerstatus.auswahlAdd(v);
 			void props.setFilter();
-		}
+		},
 	});
 
 	const filterSchulgliederung = computed<Schulgliederung[]>({
@@ -174,7 +189,7 @@
 			for (const v of value)
 				props.manager().schulgliederungen.auswahlAdd(v);
 			void props.setFilter();
-		}
+		},
 	});
 
 	const filterJahrgaenge = computed<JahrgangsDaten[]>({
@@ -184,7 +199,7 @@
 			for (const v of value)
 				props.manager().jahrgaenge.auswahlAdd(v);
 			void props.setFilter();
-		}
+		},
 	});
 
 	const filterKlassen = computed<KlassenDaten[]>({
@@ -194,7 +209,7 @@
 			for (const v of value)
 				props.manager().klassen.auswahlAdd(v);
 			void props.setFilter();
-		}
+		},
 	});
 
 	const filterKurse = computed<KursDaten[]>({
@@ -204,7 +219,7 @@
 			for (const v of value)
 				props.manager().kurse.auswahlAdd(v);
 			void props.setFilter();
-		}
+		},
 	});
 
 	async function filterReset() {

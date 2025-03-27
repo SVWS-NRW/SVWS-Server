@@ -1,0 +1,109 @@
+.tooltip-trigger {
+	.icon--indicator {
+		@apply text-ui;
+		width: 1em;
+		height: 1em;
+		margin-left: 0.1em;
+	}
+
+	.cursor-pointer & {
+		cursor: pointer;
+	}
+
+	.cursor-auto & {
+		cursor: auto;
+	}
+
+}
+
+.tooltip-trigger--triggered {
+	span.icon {
+		.page--statistik & {
+			@apply icon-ui-statistic;
+		}
+	}
+}
+
+.tooltip-trigger--danger {
+	&.tooltip-trigger--triggered {
+		span.icon {
+			@apply !icon-ui-danger-hover;
+		}
+	}
+	span.icon {
+		@apply icon-ui-danger;
+	}
+}
+
+.tooltip-trigger--underline {
+	@apply underline decoration-black/20 dark:decoration-white/20 decoration-dashed;
+
+	&.tooltip-trigger--triggered {
+		@apply no-underline;
+	}
+}
+
+.tooltip {
+	@apply bg-ui text-ui border border-ui-secondary;
+	@apply rounded-md z-50;
+	@apply w-max max-w-[24rem];
+	box-shadow: -8px -8px 25px -3px rgb(0 0 0 / 0.1), 8px 8px 25px -3px rgb(0 0 0 / 0.1), -4px 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+.tooltip-content {
+	@apply px-2 py-0.5 relative z-10 bg-ui rounded-md;
+}
+
+.tooltip-arrow {
+	@apply border border-ui-secondary;
+}
+
+.tooltip--autosize {
+	@apply max-w-none;
+}
+
+.tooltip--primary {
+	&,
+	.tooltip-content {
+		@apply bg-ui-brand text-ui-onbrand;
+	}
+
+	&,
+	.tooltip-arrow {
+		@apply border-ui-brand;
+	}
+
+	.page--statistik &,
+	.page--statistik & .tooltip-content {
+		@apply bg-ui-statistic text-ui-onstatistic;
+	}
+
+	.page--statistik &,
+	.page--statistik & .tooltip-arrow {
+		@apply border-ui-statistic;
+	}
+}
+
+.tooltip--danger {
+	&,
+	.tooltip-content {
+		@apply bg-ui-danger text-ui-ondanger;
+	}
+
+	&,
+	.tooltip-arrow {
+		@apply border-ui-danger;
+	}
+}
+
+.tooltip--dark {
+	&,
+	.tooltip-content {
+		@apply bg-ui-danger text-ui-ondanger;
+	}
+
+	&,
+	.tooltip-arrow {
+		@apply border-ui-danger;
+	}
+}

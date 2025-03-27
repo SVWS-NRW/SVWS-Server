@@ -46,7 +46,7 @@ describe("Bedingstes Rendern", () => {
 	})
 
 	test("Icon Box ohne Titel wird gerendert, wenn titel leer und hideIcon false sind.", () => {
-		expect(wrapper.find("span.icon.i-ri-box-3-line.opacity-75.flex-shrink-0").exists()).toBeTruthy();
+		expect(wrapper.find("span.icon.i-ri-box-3-line.opacity-75.shrink-0").exists()).toBeTruthy();
 	})
 
 	test("Icon ohne Titel wird nicht gerendert, wenn titel leer und hideIcon true sind.", async() => {
@@ -54,7 +54,7 @@ describe("Bedingstes Rendern", () => {
 		await wrapper.setProps({ hideIcon: true});
 
 		// Testen
-		expect(wrapper.find("span.icon.i-ri-box-3-line.opacity-75.flex-shrink-0").exists()).toBeFalsy();
+		expect(wrapper.find("span.icon.i-ri-box-3-line.opacity-75.shrink-0").exists()).toBeFalsy();
 	})
 
 	test("Default-Slot-Inhalt wird gerendert, wenn kein Slot-Inhalt definiert wird.", async() => {

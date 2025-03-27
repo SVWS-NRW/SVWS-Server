@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-table :items="[]" :no-data="false" :columns="cols">
+	<svws-ui-table :items="[]" :no-data="false">
 		<template #header>
 			<div role="row" class="svws-ui-tr">
 				<div role="cell" class="svws-ui-td col-span-full">
@@ -14,19 +14,17 @@
 			<template v-for="fws in fachwahlstatistik" :key="fws.id">
 				<template v-if="hatFachwahl(fws, halbjahr)">
 					<template v-if="fws !== undefined">
-						<div role="row" class="svws-ui-tr cursor-pointer" :style="{ '--background-color': fws ? getBgColor(fws) : 'transparent' }" @click="onClick(fws)">
-							<div role="cell" class="svws-ui-td col-span-full">
-								<div class="-ml-1 mr-0.5">
-									<svws-ui-button type="icon" size="small">
-										<span class="icon i-ri-arrow-right-s-line" v-if="aktuell?.id !== fws.id" />
-										<span class="icon i-ri-arrow-down-s-line" v-else />
-									</svws-ui-button>
+						<div role="row" class="svws-ui-tr text-ui-static cursor-pointer">
+							<div role="cell" class="svws-ui-td col-span-full" :style="'background-color: ' + getBgColor(fws)" @click="onClick(fws)">
+								<div class="-ml-1 mr-0.5 cursor-pointer">
+									<span class="icon-ui-static icon i-ri-arrow-right-s-line" v-if="aktuell?.id !== fws.id" />
+									<span class="icon-ui-static icon i-ri-arrow-down-s-line" v-else />
 								</div>
-								<span :class="{'svws-ui-badge': aktuell?.id === fws.id}">{{ faecherManager.get(fws.id)?.bezeichnung }}</span>
+								<span :class="{'font-bold': aktuell?.id === fws.id}">{{ faecherManager.get(fws.id)?.bezeichnung }}</span>
 							</div>
 						</div>
 						<template v-if="aktuell?.id === fws.id">
-							<div role="row" class="svws-ui-tr">
+							<div role="row" class="svws-ui-tr text-ui">
 								<div role="cell" class="svws-ui-td svws-align-center">
 									<span class="icon i-ri-draft-line -my-0.5 mr-0.5" />
 									<span v-if="fws.fachwahlen[halbjahr.id].wahlenGKSchriftlich > 0"> Schriftlich ({{ fws.fachwahlen[halbjahr.id].wahlenGKSchriftlich }}) </span>
@@ -38,9 +36,9 @@
 									<span v-else class="opacity-25">Mündlich (—)</span>
 								</div>
 							</div>
-							<div role="row" class="svws-ui-tr">
+							<div role="row" class="svws-ui-tr text-ui">
 								<div role="cell" class="flex flex-col svws-ui-td mb-5 leading-tight" v-for="col in [1, 2]" :key="col">
-									<div v-for="schueler in getSchuelerListe(fws.id, halbjahr, col)" :key="schueler.id" class="flex gap-1 py-0.5 px-1 -mx-1 -mt-0.5 hover:bg-black/10 dark:hover:bg-white/10 rounded cursor-pointer" role="link" @click="gotoLaufbahnplanung(schueler.id)">
+									<div v-for="schueler in getSchuelerListe(fws.id, halbjahr, col)" :key="schueler.id" class="flex gap-1 py-0.5 px-1 -mx-1 -mt-0.5 hover:bg-ui-contrast-10 rounded-sm cursor-pointer" role="link" @click="gotoLaufbahnplanung(schueler.id)">
 										<span class="icon i-ri-link" />
 										<span class="line-clamp-1 break-all leading-tight -my-0.5" :title="schueler.nachname + ', ' + schueler.vorname">{{ schueler.nachname + ", " + schueler.vorname }}</span>
 									</div>
@@ -56,7 +54,6 @@
 
 <script setup lang="ts">
 
-	import type { DataTableColumn } from "@ui";
 	import type { GostFachwahlenHalbjahrProps } from "./SGostFachwahlenHalbjahrProps";
 	import { computed, ref } from "vue";
 	import { Fach, type GostStatistikFachwahl, type SchuelerListeEintrag, type List, ArrayList, type GostHalbjahr } from "@core";
@@ -69,11 +66,6 @@
 	function onClick(fws : GostStatistikFachwahl): void {
 		aktuell.value = (aktuell.value?.id === fws.id) ? undefined : fws;
 	}
-
-	const cols: DataTableColumn[] = [
-		{ key: "GKS", label: "GKS", span: 1 },
-		{ key: "GKM", label: "GKM", span: 1 },
-	];
 
 	const schuljahr = computed<number>(() => props.faecherManager.getSchuljahr());
 
@@ -114,3 +106,11 @@
 	}
 
 </script>
+
+<style scoped>
+
+	.svws-ui-tr {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+</style>

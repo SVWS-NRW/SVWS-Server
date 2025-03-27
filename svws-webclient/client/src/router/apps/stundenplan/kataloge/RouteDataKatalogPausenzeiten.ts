@@ -50,7 +50,7 @@ export class RouteDataKatalogPausenzeiten extends RouteData<RouteStateKatalogPau
 
 	setEintrag = async (auswahl: StundenplanPausenzeit | undefined) => this.setPatchedState({ auswahl });
 
-	gotoEintrag = async (eintrag: StundenplanPausenzeit) => await RouteManager.doRoute(routeKatalogPausenzeiten.getRoute({ id: eintrag.id }));
+	gotoEintrag = async (eintrag: StundenplanPausenzeit) => await RouteManager.doRoute(routeKatalogPausenzeiten.getRoute({ idPausenzeiten: eintrag.id }));
 
 	addPausenzeiten = async (eintraege: Iterable<Partial<StundenplanPausenzeit>>) => {
 		const list = new ArrayList<Partial<StundenplanPausenzeit>>();
@@ -66,6 +66,7 @@ export class RouteDataKatalogPausenzeiten extends RouteData<RouteStateKatalogPau
 		const pausenzeiten = await api.server.addPausenzeiten(list, api.schema);
 		const stundenplanManager = this.stundenplanManager;
 		stundenplanManager.pausenzeitAddAll(pausenzeiten);
+		await routeStundenplan.data.reloadVorlagen();
 		this.setPatchedState({stundenplanManager});
 		await this.gotoEintrag(pausenzeiten.get(0));
 	}
@@ -81,6 +82,7 @@ export class RouteDataKatalogPausenzeiten extends RouteData<RouteStateKatalogPau
 		stundenplanManager.pausenzeitRemoveAll(pausenzeiten);
 		const list = stundenplanManager.pausenzeitGetMengeAsList();
 		const auswahl = list.isEmpty() ? undefined : list.get(0);
+		await routeStundenplan.data.reloadVorlagen();
 		this.setPatchedState({auswahl, stundenplanManager});
 	}
 
@@ -91,6 +93,7 @@ export class RouteDataKatalogPausenzeiten extends RouteData<RouteStateKatalogPau
 		const auswahl = this.auswahl;
 		Object.assign(auswahl, eintrag);
 		this.stundenplanManager.pausenzeitPatchAttributes(auswahl);
+		await routeStundenplan.data.reloadVorlagen();
 		this.commit();
 	}
 
@@ -114,6 +117,7 @@ export class RouteDataKatalogPausenzeiten extends RouteData<RouteStateKatalogPau
 			return;
 		const res = await api.server.addPausenzeiten(list, api.schema);
 		this.stundenplanManager.pausenzeitAddAll(res);
+		await routeStundenplan.data.reloadVorlagen();
 		this.setPatchedState({stundenplanManager: this.stundenplanManager});
 	})
 

@@ -445,6 +445,10 @@ export class ApiConnection {
 			// Wenn Status 404, dann ist das Schema noch nicht initialisiert
 			if ((error instanceof OpenApiError) && (error.response?.status === 404))
 				return;
+			if ((error instanceof OpenApiError) && (error.response?.status === 503)) {
+				const res = await error.response.text();
+				throw new UserNotificationException(res);
+			}
 			// TODO Anmelde-Fehler wird nur in der App angezeigt. Der konkreten Fehler könnte ggf. geloggt werden...
 			this._authenticated.value = false;
 			this._benutzerdaten.value = undefined;

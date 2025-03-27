@@ -25,7 +25,7 @@
 				<svws-ui-header>
 					<svws-ui-input-wrapper>
 						<div class="flex items-center gap-2">
-							<span class="icon-xl i-ri-alert-fill icon-error" />
+							<span class="icon-xl i-ri-alert-fill icon-ui-danger" />
 							<span>{{ errorDescription }}</span>
 							<br>
 							<span v-if="code !== undefined" class="opacity-40">
@@ -35,13 +35,13 @@
 						<svws-ui-button type="primary" @click="copyToClipboard">
 							<span class="icon i-ri-file-copy-line" v-if="copied === null" />
 							<span class="icon i-ri-error-warning-fill" v-else-if="copied === false" />
-							<span class="icon i-ri-check-line icon-primary" v-else /> Fehlermeldung kopieren
+							<span class="icon i-ri-check-line icon-ui-brand" v-else /> Fehlermeldung kopieren
 						</svws-ui-button>
 					</svws-ui-input-wrapper>
 				</svws-ui-header>
 				<div class="svws-ui-page" v-if="error !== undefined">
 					<div class="svws-ui-tab-content">
-						<div class="page--content">
+						<div class="page page-grid-cards">
 							<svws-ui-content-card :title="error.message">
 								<pre>{{ error.stack }}</pre>
 							</svws-ui-content-card>
@@ -96,20 +96,17 @@
 		let log = null;
 		if (reason instanceof OpenApiError) {
 			if (reason.response instanceof Response) {
+				const text = await reason.response.text();
 				try {
-					let res;
-					if (reason.response.headers.get('content-type') === 'application/json') {
-						res = await reason.response.json();
-						if ('log' in res && 'success' in res)
-							log = res satisfies SimpleOperationResponse;
-					}
+					const res = JSON.parse(text)
+					if (('log' in res) && ('success' in res))
+						log = res satisfies SimpleOperationResponse;
+				} catch {
+					if (text.length > 0)
+						message = text;
 					else
-						res = await reason.response.text();
-					if (res.length > 0)
-						message = res;
-					else
-						message += ' - Status: '+reason.response.status;
-				} catch(e) { void e }
+						message += ` - Status: ${reason.response.status}`;
+				}
 			}
 		}
 		return { id: 0, name, message, stack: reason.stack?.split("\n") || '', log }

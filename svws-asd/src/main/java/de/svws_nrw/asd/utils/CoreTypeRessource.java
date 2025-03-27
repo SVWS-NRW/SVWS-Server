@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.svws_nrw.asd.data.CoreTypeData;
+import de.svws_nrw.asd.data.CoreTypeException;
 import de.svws_nrw.asd.data.NoteKatalogEintrag;
 import de.svws_nrw.asd.data.fach.BilingualeSpracheKatalogEintrag;
 import de.svws_nrw.asd.data.fach.FachKatalogEintrag;
@@ -48,6 +49,7 @@ import de.svws_nrw.asd.data.schule.BerufskollegAnlageKatalogEintrag;
 import de.svws_nrw.asd.data.schule.BildungsgangTypKatalogEintrag;
 import de.svws_nrw.asd.data.schule.FoerderschwerpunktKatalogEintrag;
 import de.svws_nrw.asd.data.schule.KindergartenbesuchKatalogEintrag;
+import de.svws_nrw.asd.data.schule.NationalitaetenKatalogEintrag;
 import de.svws_nrw.asd.data.schule.OrganisationsformKatalogEintrag;
 import de.svws_nrw.asd.data.schule.ReligionKatalogEintrag;
 import de.svws_nrw.asd.data.schule.SchulabschlussAllgemeinbildendKatalogEintrag;
@@ -98,6 +100,7 @@ import de.svws_nrw.asd.types.schule.BerufskollegBildungsgangTyp;
 import de.svws_nrw.asd.types.schule.BerufskollegOrganisationsformen;
 import de.svws_nrw.asd.types.schule.Foerderschwerpunkt;
 import de.svws_nrw.asd.types.schule.Kindergartenbesuch;
+import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.asd.types.schule.Religion;
 import de.svws_nrw.asd.types.schule.SchulabschlussAllgemeinbildend;
 import de.svws_nrw.asd.types.schule.SchulabschlussBerufsbildend;
@@ -220,7 +223,7 @@ public final class CoreTypeRessource<T extends CoreTypeData, U extends CoreType<
 	 * Initialisiert den Core-Type. Die Daten müssen zuvor geladen sein (siehe initAll)
 	 */
 	private void init() {
-		dataManager = new CoreTypeDataManager<>(data.getVersion(), typeClass, values, data.getData(), data.getHistorienIDs());
+		dataManager = new CoreTypeDataManager<>(data.getVersion(), typeClass, values, data.getData(), data.getStatistikIDs());
 		try {
 			final Method method = typeClass.getMethod("init", CoreTypeDataManager.class);
 			method.invoke(null, dataManager);
@@ -239,6 +242,61 @@ public final class CoreTypeRessource<T extends CoreTypeData, U extends CoreType<
 		// Initialisieren die Core-Types
 		for (final var res : listResources)
 			res.init();
+	}
+
+
+	/**
+	 * Reinitialisieren der Values eines CoreTypeSimple.
+	 *
+	 * @param <S>
+	 * @param jsonCoreTypeData
+	 */
+	@SuppressWarnings("unchecked")
+	private <S extends CoreTypeSimple<T, S>> void reinitSimple(final JsonCoreTypeData<T> jsonCoreTypeData) {
+		final Class<S> typeClassSimple = (Class<S>) typeClass;
+		try {
+			CoreTypeSimple.initValues(typeClassSimple.getConstructor().newInstance(), typeClassSimple, jsonCoreTypeData.getData());
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+				| SecurityException e) {
+			throw new RuntimeException("Fehler beim Initialisieren des CoreTypeSimple %s".formatted(typeClass.getName()), e);
+		}
+		values = (U[]) CoreTypeSimple.valuesByClass(typeClassSimple);
+	}
+
+
+	/**
+	 * Reinitialisieren eines CoreTypes und der zugehörigen Ressource mit neuen Daten.
+	 *
+	 * @param jsonCoreTypeData
+	 */
+	public void reinit(final JsonCoreTypeData<T> jsonCoreTypeData) {
+		data = jsonCoreTypeData;
+		// Ermitteln, ob vom Typ CoreTypeSimple
+		if (!typeClass.isEnum()) {
+			reinitSimple(jsonCoreTypeData);
+		}
+		init();
+	}
+
+
+	/**
+	 * Führt eine Reinitialisierung aller Kataloge mit den übergebenen Daten aus.
+	 *
+	 * @param <V>
+	 * @param <U>
+	 * @param map
+	 */
+	@SuppressWarnings("unchecked")
+	public static <V extends CoreTypeData, U extends CoreType<V, U>> void reinitAll(@NotNull final Map<Class<U>, JsonCoreTypeData<V>> map) {
+		if ((map == null) || map.isEmpty())
+			throw new CoreTypeException("Liste darf nicht leer sein.");
+		// Prüfen auf unbekannte Kataloge
+		for (final Class<U> key : map.keySet())
+			if (!mapResources.containsKey(key))
+				throw new CoreTypeException("Liste enthält Katalog der nicht in den Ressourcen vorhanden ist.");
+		// Reinit für alle Kataloge ausführen
+		for (final Map.Entry<Class<U>, JsonCoreTypeData<V>> entry : map.entrySet())
+			((CoreTypeRessource<V, ?>) mapResources.get(entry.getKey())).reinit(entry.getValue());
 	}
 
 
@@ -392,6 +450,8 @@ public final class CoreTypeRessource<T extends CoreTypeData, U extends CoreType<
 				"de/svws_nrw/asd/types/lehrer/LehrerMehrleistungsarten.json");
 		addSimple(LehrerMinderleistungsarten.class, LehrerMinderleistungsartKatalogEintrag.class,
 				"de/svws_nrw/asd/types/lehrer/LehrerMinderleistungsarten.json");
+		addSimple(Nationalitaeten.class, NationalitaetenKatalogEintrag.class,
+				"de/svws_nrw/asd/types/schule/Nationalitaeten.json");
 	}
 
 }

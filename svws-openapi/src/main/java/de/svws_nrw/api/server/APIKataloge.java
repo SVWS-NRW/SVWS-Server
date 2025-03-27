@@ -4,12 +4,14 @@ import de.svws_nrw.core.data.kataloge.KatalogEintrag;
 import de.svws_nrw.core.data.kataloge.KatalogEintragOrte;
 import de.svws_nrw.core.data.kataloge.KatalogEintragOrtsteile;
 import de.svws_nrw.core.data.kataloge.KatalogEintragStrassen;
+import de.svws_nrw.core.data.kataloge.KatalogEntlassgrund;
 import de.svws_nrw.core.data.kataloge.OrtKatalogEintrag;
 import de.svws_nrw.core.data.kataloge.OrtsteilKatalogEintrag;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.kataloge.DataHaltestellen;
+import de.svws_nrw.data.kataloge.DataKatalogEntlassgruende;
 import de.svws_nrw.data.kataloge.DataKatalogOrte;
 import de.svws_nrw.data.kataloge.DataKatalogOrtsteile;
 import de.svws_nrw.data.kataloge.DataOrte;
@@ -188,6 +190,27 @@ public class APIKataloge {
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getHaltestellen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataHaltestellen(conn).getList(),
+				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Liste der Entlassgruende.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste der Entlassgruende
+	 */
+	@GET
+	@Path("/entlassgruende")
+	@Operation(summary = "Gibt eine Übersicht der Entlassgruende im Katalog zurück.",
+			description = "Gibt die Entlassgründe zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Entlassgründen.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KatalogEntlassgrund.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
+	public Response getEntlassgruende(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogEntlassgruende(conn).getAllAsResponse(),
 				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
 	}
 

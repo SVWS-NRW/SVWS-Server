@@ -1,0 +1,116 @@
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+	<head th:with="mediaPrint = ${Parameter.ausgabeformat == 2}">
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width" />
+		<title>Schüler-Stundenplan</title>
+		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-pdf.css}" href="../css/reporting-pdf.css" />
+		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-A4-hoch.css}" href="../css/reporting-A4-hoch.css" />
+		<link rel="stylesheet" th:href="@{css/reporting-styles.css}" href="../css/reporting-styles.css" />
+		<link rel="stylesheet" th:href="@{stundenplanung/StundenplanungSchuelerStundenplan.css}" href="../stundenplanung/StundenplanungSchuelerStundenplan.css" />
+	</head>
+
+	<body th:with="mediaPrint = ${Parameter.ausgabeformat == 2}">
+		<div class="reset-page-counter start-new-page"
+			 th:each="plan,iterationVarPlan : ${SchuelerStundenplaene}"
+			 th:with="lernabschnittZumStundenplan =${plan.schueler().aktiverLernabschnittInSchuljahresabschnitt(plan.stundenplan().schuljahresabschnitt())},
+				      istSchuelerSek2oWB = ${lernabschnittZumStundenplan.jahrgang().istJahrgangImBereichSek2OderWeiterbildung()},
+				      anzeigeMitPausenzeiten = ${((Parameter.detailLevel % 4) / 2) >= 1},
+					  anzeigeFachStattKursbezeichnung = ${(((Parameter.detailLevel % 8) / 4) >= 1) && !istSchuelerSek2oWB},
+					  anzeigeFachkuerzelStattFachbezeichnung = ${(((Parameter.detailLevel % 16) / 8) >= 1)},
+					  anzeigeIndividuelleKursart = ${(((Parameter.detailLevel % 32) / 16) >= 1)}">
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			<div class="pageTopLeft" th:utext="${Schule.bezeichnungSchuleMehrzeiligHtml}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
+			<div class="pageTopRight">Stundenplan <span th:text="${plan.stundenplan().schuljahresabschnitt().textSchuljahresabschnittKurz()}">2022.2</span><br/>Gültig ab: <span th:text="${plan.stundenplan().gueltigAb()}">01.02.2022</span><br/><span th:text="${plan.schueler().nachnameVorname() + ' (' + lernabschnittZumStundenplan.klasse().kuerzel() +')'}">Mustermann, Thomas (10A)</span></div>
+			<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')}">Gedruckt am: 02.02.2022</div>
+			<div class="pageBottomRight"><span class="page-nums-print" th:text="${#lists.size(SchuelerStundenplaene) > 0} ? ('Druck ' + ${iterationVarPlan.count} + '/' + ${#lists.size(SchuelerStundenplaene)} + ' - Seite ') : 'Seite '">Druck 13/57 - Seite </span></div>
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+
+			<!-- Für jede Woche, die im Stundenplan definiert, wird ein Block erzeugt. -->
+			<th:block th:each="wochennummer : ${#numbers.sequence(1, plan.stundenplan().wochenperiodizitaet())}"
+				 th:with="wochentyp = ${(plan.stundenplan().wochenperiodizitaet() == 1 ? 0 : wochennummer)}">
+				<table class="fixed-100 mp-0" style="page-break-inside: avoid;" th:with="
+						spaltenzahl = ${(plan.stundenplan().unterrichtsrasterWochentage().size() + 1)},
+						tageSpaltenbreite = ${95/plan.stundenplan().unterrichtsrasterWochentage().size()},
+						ersteSpaltenbreite = ${100 - (tageSpaltenbreite * plan.stundenplan().unterrichtsrasterWochentage().size())}">
+					<colgroup>
+						<col th:style="${'width: ' + ersteSpaltenbreite + '%;'}" />
+						<col th:each="i : ${#numbers.sequence(2, spaltenzahl)}" th:style="${'width: ' + tageSpaltenbreite + '%;'}" />
+					</colgroup>
+					<thead>
+						<!-- Angaben zum Schüler und Wochen -->
+						<tr th:if="${wochennummer == 1}">
+							<th th:colspan="${spaltenzahl - 1}" style="border-bottom: 1px grey solid; vertical-align: middle"><h3 class="m-t-0" th:text="${plan.schueler().nachnameVorname()}">Mustermann, Thomas</h3></th>
+                            <th class="ta-r" style="border-bottom: 1px grey solid; vertical-align: middle"><h3 class="m-t-0" th:text="${lernabschnittZumStundenplan.klasse().kuerzel()}">10A</h3></th>
+						</tr>
+						<tr th:if="${wochennummer == 1}" style="height: 3px;">
+							<th th:colspan="${spaltenzahl}"></th>
+						</tr>
+						<tr th:if="${wochentyp > 0}">
+							<th th:colspan="${spaltenzahl}"><h3 th:text="${plan.stundenplan().wochenbezeichnung(wochennummer) + '-Woche'}">A-Woche</h3></th>
+						</tr>
+						<!-- Spaltenköpfe -->
+						<tr>
+							<th class="head-small-grey head-black-lines-small-all ta-cm"></th>
+							<th class="head-small-grey head-black-lines-small-all ta-cm" style="font-weight: bolder;" th:each="tag : ${plan.stundenplan().unterrichtsrasterWochentage()}" th:text="${tag.beschreibung}">Donnerstag</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- Pro Element im Pausenraster wird eine Pausenzeile und eine Unterrichtszeile ausgegeben. Ausgenommen die letzte Zeile, da wird nur eine Pausenzeile erzeugt. -->
+						<th:block th:each="zeilePausenraster,iterationVarZeilePausenraster : ${plan.stundenplan().rasterPausenNachStundeUndTagen()}">
+							<tr th:if="${anzeigeMitPausenzeiten && zeilePausenraster.dauerZeileInMinutenUnterrichtOderPausen() > 0}">
+								<!-- Zeilenkopf für Pausen ist leer -->
+								<td class="mp-0 ta-cm" style="min-height: 1mm;"></td>
+							</tr>
+							<tr th:if="${!iterationVarZeilePausenraster.last}" th:with="zeileUnterrichtsraster = ${plan.stundenplan().rasterUnterrichteNachStundeUndTagen().get(iterationVarZeilePausenraster.index)}">
+								<!-- Zeilenkopf für Unterrichtsraster enthält Stundennummer -->
+								<td class="head-small-grey head-black-lines-small-all ta-cm mp-0" style="min-height: 7mm; font-weight: bolder;" th:text="${plan.stundenplan().unterrichtsrasterStundennummern().get(iterationVarZeilePausenraster.index)}">1</td>
+								<td class="bo-black mp-0"
+									th:each="rasterelementZumTag : ${zeileUnterrichtsraster.rasterElemente()}"
+									th:with="unterrichte = ${rasterelementZumTag.unterrichtsrasterstunde().unterrichteSchueler(plan.schueler().id(), wochentyp, true)}">
+									<!-- Pro Stunde wird eine kleine Tabelle mit den Unterrichten und Pausen eingefügt -->
+									<table class="fixed-100 mp-0">
+										<colgroup>
+											<col style="width: 3%;" />
+											<col style="width: 55%;" />
+											<col style="width: 4%;" />
+											<col style="width: 35%;" />
+											<col style="width: 3%;" />
+										</colgroup>
+										<th:block th:each="unterricht,iterationvarUnterricht : ${unterrichte}"
+                                                  th:with="istKursInLeistungsdaten = ${(unterricht.kurs() != null) && (lernabschnittZumStundenplan != null) && (lernabschnittZumStundenplan.leistungsdatenZurIdKurs(unterricht.kurs().id()) != null)}">
+											<tr>
+												<td class="f-small ta-lm"></td>
+                                                <td th:if="${unterricht.kurs() == null}" colspan="3" class="f-small ta-l" th:classappend="${!iterationvarUnterricht.first ? ' bo-t-grey' : ''}" th:text="${anzeigeFachkuerzelStattFachbezeichnung ? unterricht.fach().kuerzel() : unterricht.fach().bezeichnung()}">Mathematik</td>
+                                                <th:block th:if="${(unterricht.kurs() != null)}">
+                                                    <th:block th:if="${(anzeigeFachStattKursbezeichnung)}"
+															  th:with="kursFachausgabe = ${anzeigeFachkuerzelStattFachbezeichnung ? unterricht.kurs().fach().kuerzel() : unterricht.kurs().fach().bezeichnung()}">
+														<td th:if="${istKursInLeistungsdaten && anzeigeIndividuelleKursart}" colspan="3" class="f-small ta-lm" th:classappend="${!iterationvarUnterricht.first ? ' bo-t-grey' : ''}"><span th:text="${kursFachausgabe}">Informatik</span><span class="f-very-tiny f-ital" th:text="${' (' + lernabschnittZumStundenplan.leistungsdatenZurIdKurs(unterricht.kurs().id()).kursart() + ')'}"> (WPII)</span></td>
+                                                        <td th:if="${!istKursInLeistungsdaten || !anzeigeIndividuelleKursart}" colspan="3" class="f-small ta-lm" th:classappend="${!iterationvarUnterricht.first ? ' bo-t-grey' : ''}" th:text="${kursFachausgabe}">Informatik</td>
+                                                    </th:block>
+                                                    <th:block th:if="${(!anzeigeFachStattKursbezeichnung)}">
+                                                        <td class="f-small ta-lm" th:classappend="${!iterationvarUnterricht.first ? ' bo-t-grey' : ''}" th:text="${unterricht.kurs().kuerzel()}">M-GK2</td>
+                                                        <td class="f-small ta-cm" th:classappend="${!iterationvarUnterricht.first ? ' bo-t-grey' : ''}"></td>
+                                                        <td th:if="${istKursInLeistungsdaten && anzeigeIndividuelleKursart}" class="f-very-tiny f-ital ta-rm" th:text="${lernabschnittZumStundenplan.leistungsdatenZurIdKurs(unterricht.kurs().id()).kursart()}">GKS</td>
+                                                        <td th:if="${!istKursInLeistungsdaten || !anzeigeIndividuelleKursart}" class="f-very-tiny f-ital ta-rm"></td>
+                                                    </th:block>
+                                                </th:block>
+												<td class="f-small ta-lm"></td>
+											</tr>
+											<tr>
+												<td></td>
+												<td class="f-small ta-lm" th:text="${unterricht.lehrkraefteAuflistung()}">ABC</td>
+												<td class="f-small ta-cm"></td>
+                                                <td class="f-small ta-rm" th:text="${unterricht.raeumeAuflistung()}">A123</td>
+												<td></td>
+											</tr>
+										</th:block>
+									</table>
+								</td>
+							</tr>
+						</th:block>
+					</tbody>
+				</table>
+			</th:block>
+		</div>
+	</body>
+</html>

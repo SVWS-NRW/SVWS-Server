@@ -692,9 +692,6 @@ public final class Schema {
 	/** Tabelle KursLehrer */
 	public static final Tabelle_KursLehrer tab_KursLehrer = add(new Tabelle_KursLehrer());
 
-	/** Tabelle Kurs_Schueler */
-	public static final Tabelle_Kurs_Schueler tab_Kurs_Schueler = add(new Tabelle_Kurs_Schueler());
-
 	/** Tabelle SchuelerAbgaenge */
 	public static final Tabelle_SchuelerAbgaenge tab_SchuelerAbgaenge = add(new Tabelle_SchuelerAbgaenge());
 
@@ -784,6 +781,9 @@ public final class Schema {
 
 	/** Tabelle SchuelerLeistungsdaten */
 	public static final Tabelle_SchuelerLeistungsdaten tab_SchuelerLeistungsdaten = add(new Tabelle_SchuelerLeistungsdaten());
+
+	/** Tabelle Kurs_Schueler */
+	public static final Tabelle_Kurs_Schueler tab_Kurs_Schueler = add(new Tabelle_Kurs_Schueler());
 
 	/** Tabelle SchuelerZuweisungen */
 	public static final Tabelle_SchuelerZuweisungen tab_SchuelerZuweisungen = add(new Tabelle_SchuelerZuweisungen());
@@ -981,7 +981,8 @@ public final class Schema {
 	public static final Tabelle_TimestampsSchuelerTeilleistungen tab_TimestampsSchuelerTeilleistungen = add(new Tabelle_TimestampsSchuelerTeilleistungen());
 
 	/** Tabelle TimestampsSchuelerAnkreuzkompetenzen */
-	public static final Tabelle_TimestampsSchuelerAnkreuzkompetenzen tab_TimestampsSchuelerAnkreuzkompetenzen = add(new Tabelle_TimestampsSchuelerAnkreuzkompetenzen());
+	public static final Tabelle_TimestampsSchuelerAnkreuzkompetenzen tab_TimestampsSchuelerAnkreuzkompetenzen =
+			add(new Tabelle_TimestampsSchuelerAnkreuzkompetenzen());
 
 	/** Tabelle Wiedervorlage */
 	public static final Tabelle_Wiedervorlage tab_Wiedervorlage = add(new Tabelle_Wiedervorlage());

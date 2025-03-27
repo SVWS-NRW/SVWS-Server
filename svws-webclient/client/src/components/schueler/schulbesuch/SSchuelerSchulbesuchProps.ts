@@ -1,11 +1,11 @@
-import type { BenutzerKompetenz, SchuelerListeManager, SchuelerSchulbesuchsdaten, Schulform, ServerMode } from "@core";
+import type { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+import type { SchuelerSchulbesuchManager } from "~/components/schueler/schulbesuch/SchuelerSchulbesuchManager";
 
 export interface SchuelerSchulbesuchProps {
 	schulform: Schulform;
 	serverMode: ServerMode;
 	benutzerKompetenzen: Set<BenutzerKompetenz>,
-	schuelerListeManager: () => SchuelerListeManager;
-	data: SchuelerSchulbesuchsdaten;
-	patch: (data : Partial<SchuelerSchulbesuchsdaten>) => Promise<void>;
+	manager: () => SchuelerSchulbesuchManager;
+	goToSchule : (idSchule : number) => Promise<void>;
 	autofocus: boolean;
 }

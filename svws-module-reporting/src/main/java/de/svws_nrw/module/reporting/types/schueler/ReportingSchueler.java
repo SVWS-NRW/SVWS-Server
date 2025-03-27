@@ -1,12 +1,13 @@
 package de.svws_nrw.module.reporting.types.schueler;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import de.svws_nrw.core.adt.map.ListMap3DLongKeys;
 import de.svws_nrw.core.data.kataloge.OrtKatalogEintrag;
 import de.svws_nrw.core.data.kataloge.OrtsteilKatalogEintrag;
 import de.svws_nrw.core.data.schule.ReligionEintrag;
 import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
-import de.svws_nrw.core.types.schule.Nationalitaeten;
+import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungSchuelerklausur;
 import de.svws_nrw.module.reporting.types.person.ReportingPerson;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ReportingErzieher;
@@ -16,15 +17,25 @@ import de.svws_nrw.module.reporting.types.schueler.gost.kursplanung.ReportingSch
 import de.svws_nrw.module.reporting.types.schueler.gost.laufbahnplanung.ReportingSchuelerGostLaufbahnplanung;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLernabschnitt;
 import de.svws_nrw.module.reporting.types.schueler.sprachen.ReportingSchuelerSprachbelegung;
+import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
  * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ Schüler.</p>
  */
 public class ReportingSchueler extends ReportingPerson {
+
+	/** Daten aller Lernabschnitte. */
+	private List<ReportingSchuelerLernabschnitt> lernabschnitte;
+
+	/** Eine Map zum schnellen Zugriff auf die Lernabschnitte nach Schuljahresabschnitt, Wechselnummer und LernabschnittID. */
+	private ListMap3DLongKeys<ReportingSchuelerLernabschnitt> mapLernabschnitte = new ListMap3DLongKeys<>();
+
 
 	/** Daten des aktuellen Lernabschnitts. */
 	protected ReportingSchuelerLernabschnitt aktuellerLernabschnitt;
@@ -109,9 +120,6 @@ public class ReportingSchueler extends ReportingPerson {
 
 	/** Gibt an, ob über den Schüler eine Auskunft an Dritte erteilt werden darf oder dies unter allen Umständen vermieden werden sollte. */
 	protected boolean keineAuskunftAnDritte;
-
-	/** Daten aller Lernabschnitte. */
-	protected List<ReportingSchuelerLernabschnitt> lernabschnitte;
 
 	/** Das Datum der Religionsabmeldung des Schülers. */
 	protected String religionabmeldung;
@@ -247,7 +255,6 @@ public class ReportingSchueler extends ReportingPerson {
 		this.istSchulpflichtErfuellt = istSchulpflichtErfuellt;
 		this.istVolljaehrig = istVolljaehrig;
 		this.keineAuskunftAnDritte = keineAuskunftAnDritte;
-		this.lernabschnitte = lernabschnitte;
 		this.religionabmeldung = religionabmeldung;
 		this.religionanmeldung = religionanmeldung;
 		this.religion = religion;
@@ -255,6 +262,9 @@ public class ReportingSchueler extends ReportingPerson {
 		this.status = status;
 		this.verkehrspracheFamilie = verkehrspracheFamilie;
 		this.zuzugsjahr = zuzugsjahr;
+
+		if (lernabschnitte != null)
+			this.setLernabschnitte(lernabschnitte);
 	}
 
 	/**
@@ -304,6 +314,19 @@ public class ReportingSchueler extends ReportingPerson {
 
 
 	// ##### Getter #####
+
+	/**
+	 * Zum gegebenen Schuljahres Abschnitt wird der darin aktive Lernabschnitt (WechselNr. 0) ermittelt
+	 *
+	 * @param schuljahresabschnitt  Der Schuljahresabschnitt, dessen Lernabschnitt ermittelt werden soll.
+	 *
+	 * @return Der Lernabschnitt zum SchuljahresAbschnitt oder null, wenn kein solcher Abschnitt existiert.
+	 */
+	public ReportingSchuelerLernabschnitt aktiverLernabschnittInSchuljahresabschnitt(final ReportingSchuljahresabschnitt schuljahresabschnitt) {
+		if ((this.lernabschnitte() == null) || this.lernabschnitte().isEmpty())
+			return null;
+		return this.mapLernabschnitte().getSingle12OrNull(schuljahresabschnitt.id(), 0);
+	}
 
 	/**
 	 * Daten des aktuellen Lernabschnitts.
@@ -578,6 +601,15 @@ public class ReportingSchueler extends ReportingPerson {
 	}
 
 	/**
+	 * Gibt eine Map mit den Lernabschnitten des Schülers nach Schuljahresabschnitt, WechselNr und LernabschnittsID zurück
+	 *
+	 * @return Map der Lernabschnitte oder eine leere Liste.
+	 */
+	public ListMap3DLongKeys<ReportingSchuelerLernabschnitt> mapLernabschnitte() {
+		return mapLernabschnitte;
+	}
+
+	/**
 	 * Das Datum der Religionsabmeldung des Schülers.
 	 *
 	 * @return Inhalt des Feldes religionabmeldung
@@ -638,6 +670,38 @@ public class ReportingSchueler extends ReportingPerson {
 	 */
 	public Integer zuzugsjahr() {
 		return zuzugsjahr;
+	}
+
+
+	// ##### Setter #####
+
+	/**
+	 * Setzt die Liste der Lernabschnitte und aktualisiert die zugehörigen internen Datenstrukturen.
+	 *
+	 * @param lernabschnitte Eine Liste von Lernabschnitten vom Typ ReportingSchuelerLernabschnitt,
+	 *                       die gesetzt werden soll.
+	 */
+	public void setLernabschnitte(final List<ReportingSchuelerLernabschnitt> lernabschnitte) {
+		this.lernabschnitte = new ArrayList<>();
+		this.mapLernabschnitte = new ListMap3DLongKeys<>();
+		addLernabschnitte(lernabschnitte);
+	}
+
+	/**
+	 * Fügt eine Liste von Lernabschnitten zur bestehenden Sammlung hinzu. Nullwerte in der Eingabeliste
+	 * werden ignoriert. Die gültigen Lernabschnitte werden außerdem einer Mapping-Struktur hinzugefügt.
+	 *
+	 * @param lernabschnitte eine Liste von {@link ReportingSchuelerLernabschnitt}, die hinzugefügt werden sollen.
+	 *                        Nullwerte innerhalb der Liste werden ignoriert.
+	 */
+	public void addLernabschnitte(final List<ReportingSchuelerLernabschnitt> lernabschnitte) {
+		if (lernabschnitte == null)
+			return;
+
+		final List<ReportingSchuelerLernabschnitt> lernabschnitteNonNull = new ArrayList<>(lernabschnitte.stream().filter(Objects::nonNull).toList());
+		this.lernabschnitte.addAll(lernabschnitteNonNull);
+
+		lernabschnitteNonNull.forEach(la -> mapLernabschnitte.add(la.schuljahresabschnitt().id(), la.wechselNr(), la.id(), la));
 	}
 
 }

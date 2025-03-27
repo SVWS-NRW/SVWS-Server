@@ -169,7 +169,7 @@ public class ReportingGostKlausurplanungKursklausur extends ReportingBaseType {
 
 		if (!klausurenMitRaumUndStunden.isEmpty())
 			return klausurenMitRaumUndStunden.getFirst().klausurraum.aufsichten.stream()
-					.map(a -> a.unterrichtsstunde.unterrichtstunde()).toList();
+					.map(a -> a.unterrichtsstunde.stundeImUnterrichtsraster()).toList();
 		return new ArrayList<>();
 	}
 

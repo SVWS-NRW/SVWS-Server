@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -29,6 +28,11 @@ import de.svws_nrw.module.reporting.html.contexts.HtmlContextKurse;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextLehrer;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextSchueler;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextSchule;
+import de.svws_nrw.module.reporting.html.contexts.HtmlContextStundenplanungFachStundenplan;
+import de.svws_nrw.module.reporting.html.contexts.HtmlContextStundenplanungKlassenStundenplan;
+import de.svws_nrw.module.reporting.html.contexts.HtmlContextStundenplanungLehrerStundenplan;
+import de.svws_nrw.module.reporting.html.contexts.HtmlContextStundenplanungRaumStundenplan;
+import de.svws_nrw.module.reporting.html.contexts.HtmlContextStundenplanungSchuelerStundenplan;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.validierung.ReportingValidierung;
 import jakarta.ws.rs.core.Response;
@@ -114,82 +118,194 @@ public class HtmlFactory {
 		switch (htmlTemplateDefinition.name().substring(0, htmlTemplateDefinition.name().indexOf("_v_"))) {
 			case "SCHUELER":
 				// Schüler-Context ist Hauptdatenquelle
-				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für Schüler für die html-Generierung.");
-				// Entferne null-Elemente und evtl. Duplikate in der Liste der Hauptdaten-Ids
-				reportingParameter.idsHauptdaten = reportingParameter.idsHauptdaten.stream().filter(Objects::nonNull).distinct().toList();
-				ReportingValidierung.validiereDatenFuerSchueler(reportingRepository, reportingParameter.idsHauptdaten,
-						htmlTemplateDefinition.name().startsWith("SCHUELER_v_GOST_LAUFBAHNPLANUNG_"),
-						htmlTemplateDefinition.name().startsWith("SCHUELER_v_GOST_ABITUR_"));
-				reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
-						("Erzeuge Datenkontext Schüler für die html-Generierung - %d IDs von Schülern wurden übergeben für Template %s.")
-								.formatted(reportingParameter.idsHauptdaten.size(), htmlTemplateDefinition.name()));
-				final HtmlContextSchueler htmlContextSchueler = new HtmlContextSchueler(reportingRepository);
-				mapHtmlContexts.put("Schueler", htmlContextSchueler);
+				initContextSchueler();
 				break;
 			case "KLASSEN":
 				// Klassen-Context ist Hauptdatenquelle
-				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für Klassen für die html-Generierung.");
-				// Entferne null-Elemente und evtl. Duplikate in der Liste der Hauptdaten-Ids
-				reportingParameter.idsHauptdaten = reportingParameter.idsHauptdaten.stream().filter(Objects::nonNull).distinct().toList();
-				ReportingValidierung.validiereDatenFuerKlassen(reportingRepository, reportingParameter.idsHauptdaten);
-				reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
-						("Erzeuge Datenkontext Klassen für die html-Generierung - %d IDs von Klassen wurden übergeben für Template %s.")
-								.formatted(reportingParameter.idsHauptdaten.size(), htmlTemplateDefinition.name()));
-				final HtmlContextKlassen htmlContextKlassen = new HtmlContextKlassen(reportingRepository);
-				mapHtmlContexts.put("Klassen", htmlContextKlassen);
+				initContextKlassen();
 				break;
 			case "KURSE":
 				// Kurse-Context ist Hauptdatenquelle
-				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für Kurse für die html-Generierung.");
-				// Entferne null-Elemente und evtl. Duplikate in der Liste der Hauptdaten-Ids
-				reportingParameter.idsHauptdaten = reportingParameter.idsHauptdaten.stream().filter(Objects::nonNull).distinct().toList();
-				ReportingValidierung.validiereDatenFuerKurse(reportingRepository, reportingParameter.idsHauptdaten, true);
-				reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
-						("Erzeuge Datenkontext Kurse für die html-Generierung - %d IDs von Kursen wurden übergeben für Template %s.")
-								.formatted(reportingParameter.idsHauptdaten.size(), htmlTemplateDefinition.name()));
-				final HtmlContextKurse htmlContextKurse = new HtmlContextKurse(reportingRepository);
-				mapHtmlContexts.put("Kurse", htmlContextKurse);
+				initContextKurse();
 				break;
 			case "LEHRER":
 				// Lehrer-Context ist Hauptdatenquelle
-				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für Lehrer für die html-Generierung.");
-				// Entferne null-Elemente und evtl. Duplikate in der Liste der Hauptdaten-Ids
-				reportingParameter.idsHauptdaten = reportingParameter.idsHauptdaten.stream().filter(Objects::nonNull).distinct().toList();
-				ReportingValidierung.validiereDatenFuerLehrer(reportingRepository, reportingParameter.idsHauptdaten, true);
-				reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
-						("Erzeuge Datenkontext Lehrer für die html-Generierung - %d IDs von Lehrern wurden übergeben für Template %s.")
-								.formatted(reportingParameter.idsHauptdaten.size(), htmlTemplateDefinition.name()));
-				final HtmlContextLehrer htmlContextLehrer = new HtmlContextLehrer(reportingRepository);
-				mapHtmlContexts.put("Lehrer", htmlContextLehrer);
+				initContextLehrer();
 				break;
 			case "GOST_KURSPLANUNG":
 				// GOSt-Kursplanung-Blockungsergebnis-Context ist Hauptdatenquelle
-				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für ein Gost-Blockungsergebnis für die html-Generierung.");
-				ReportingValidierung.validiereDatenFuerGostKursplanungBlockungsergebnis(reportingRepository);
-				reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
-						"Erzeuge Datenkontext Gost-Kursplanung-Blockungsergebnis für die html-Generierung mit ID %s für Template %s."
-								.formatted(reportingParameter.idsHauptdaten.getFirst(), htmlTemplateDefinition.name()));
-				final HtmlContextGostKursplanungBlockungsergebnis htmlContextGostBlockung =
-						new HtmlContextGostKursplanungBlockungsergebnis(reportingRepository);
-				mapHtmlContexts.put("GostBlockungsergebnis", htmlContextGostBlockung);
+				initContextGostKursplanung();
 				break;
 			case "GOST_KLAUSURPLANUNG":
 				// GOSt-Klausurplanung-Klausurplan-Context ist Hauptdatenquelle
-				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für einen Gost-Klausurplan für die html-Generierung.");
-				ReportingValidierung.validiereDatenFuerGostKlausurplanungKlausurplan(reportingRepository);
-				reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
-						"Erzeuge Datenkontext Gost-Klausurplanung für die html-Generierung mit Template %s.".formatted(htmlTemplateDefinition.name()));
-				final HtmlContextGostKlausurplanungKlausurplan htmlContextGostKlausurplan =
-						new HtmlContextGostKlausurplanungKlausurplan(reportingRepository,
-								htmlTemplateDefinition.name().startsWith("GOST_KLAUSURPLANUNG_v_SCHUELER_") ? reportingParameter.idsDetaildaten
-										: new ArrayList<>());
-				mapHtmlContexts.put("GostKlausurplan", htmlContextGostKlausurplan);
+				initContextGostKlausurplanung();
+				break;
+			case "STUNDENPLANUNG":
+				// Stundenplan-Context ist Hauptdatenquelle
+				initContextStundenplanung();
 				break;
 			default:
 				break;
 		}
 
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 0, "<<< Ende der Erzeugung der Datenkontexte für die html-Generierung.");
+	}
+
+	/**
+	 * Initialisiert den Context für Schüler.
+	 *
+	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 */
+	public void initContextSchueler() throws ApiOperationException {
+		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für Schüler für die html-Generierung.");
+
+		final boolean istGostLaufbahnplanung =
+				((htmlTemplateDefinition == HtmlTemplateDefinition.SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN)
+						|| (htmlTemplateDefinition == HtmlTemplateDefinition.SCHUELER_v_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT));
+		final boolean istGostAbitur = (htmlTemplateDefinition == HtmlTemplateDefinition.SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12);
+
+		ReportingValidierung.validiereDatenFuerSchueler(reportingRepository, reportingParameter.idsHauptdaten, istGostLaufbahnplanung, istGostAbitur);
+		reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+				("Erzeuge Datenkontext Schüler für die html-Generierung - %d IDs von Schülern wurden übergeben für Template %s.")
+						.formatted(reportingParameter.idsHauptdaten.size(), htmlTemplateDefinition.name()));
+		final HtmlContextSchueler htmlContextSchueler = new HtmlContextSchueler(reportingRepository);
+		mapHtmlContexts.put("Schueler", htmlContextSchueler);
+	}
+
+	/**
+	 * Initialisiert den Context für Klassen.
+	 *
+	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 */
+	public void initContextKlassen() throws ApiOperationException {
+		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für Klassen für die html-Generierung.");
+		ReportingValidierung.validiereDatenFuerKlassen(reportingRepository, reportingParameter.idsHauptdaten);
+		reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+				("Erzeuge Datenkontext Klassen für die html-Generierung - %d IDs von Klassen wurden übergeben für Template %s.")
+						.formatted(reportingParameter.idsHauptdaten.size(), htmlTemplateDefinition.name()));
+		final HtmlContextKlassen htmlContextKlassen = new HtmlContextKlassen(reportingRepository);
+		mapHtmlContexts.put("Klassen", htmlContextKlassen);
+	}
+
+	/**
+	 * Initialisiert den Context für Kurse.
+	 *
+	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 */
+	public void initContextKurse() throws ApiOperationException {
+		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für Kurse für die html-Generierung.");
+		ReportingValidierung.validiereDatenFuerKurse(reportingRepository, reportingParameter.idsHauptdaten);
+		reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+				("Erzeuge Datenkontext Kurse für die html-Generierung - %d IDs von Kursen wurden übergeben für Template %s.")
+						.formatted(reportingParameter.idsHauptdaten.size(), htmlTemplateDefinition.name()));
+		final HtmlContextKurse htmlContextKurse = new HtmlContextKurse(reportingRepository);
+		mapHtmlContexts.put("Kurse", htmlContextKurse);
+	}
+
+	/**
+	 * Initialisiert den Context für Lehrer.
+	 *
+	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 */
+	public void initContextLehrer() throws ApiOperationException {
+		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für Lehrer für die html-Generierung.");
+		ReportingValidierung.validiereDatenFuerLehrer(reportingRepository, reportingParameter.idsHauptdaten);
+		reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+				("Erzeuge Datenkontext Lehrer für die html-Generierung - %d IDs von Lehrern wurden übergeben für Template %s.")
+						.formatted(reportingParameter.idsHauptdaten.size(), htmlTemplateDefinition.name()));
+		final HtmlContextLehrer htmlContextLehrer = new HtmlContextLehrer(reportingRepository);
+		mapHtmlContexts.put("Lehrer", htmlContextLehrer);
+	}
+
+	/**
+	 * Initialisiert den Context für die GOSt-Kursplanung.
+	 *
+	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 */
+	public void initContextGostKursplanung() throws ApiOperationException {
+		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für ein Gost-Blockungsergebnis für die html-Generierung.");
+		ReportingValidierung.validiereDatenFuerGostKursplanungBlockungsergebnis(reportingRepository);
+		reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+				"Erzeuge Datenkontext Gost-Kursplanung-Blockungsergebnis für die html-Generierung mit ID %s für Template %s."
+						.formatted(reportingParameter.idsHauptdaten.getFirst(), htmlTemplateDefinition.name()));
+		final HtmlContextGostKursplanungBlockungsergebnis htmlContextGostBlockung =
+				new HtmlContextGostKursplanungBlockungsergebnis(reportingRepository);
+		mapHtmlContexts.put("GostBlockungsergebnis", htmlContextGostBlockung);
+	}
+
+	/**
+	 * Initialisiert den Context für die GOSt-Klausurplanung.
+	 *
+	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 */
+	public void initContextGostKlausurplanung() throws ApiOperationException {
+		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für einen Gost-Klausurplan für die html-Generierung.");
+		ReportingValidierung.validiereDatenFuerGostKlausurplanungKlausurplan(reportingRepository);
+		reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+				"Erzeuge Datenkontext Gost-Klausurplanung für die html-Generierung mit Template %s.".formatted(htmlTemplateDefinition.name()));
+		final HtmlContextGostKlausurplanungKlausurplan htmlContextGostKlausurplan =
+				new HtmlContextGostKlausurplanungKlausurplan(reportingRepository,
+						htmlTemplateDefinition.name().startsWith("GOST_KLAUSURPLANUNG_v_SCHUELER_") ? reportingParameter.idsDetaildaten
+								: new ArrayList<>());
+		mapHtmlContexts.put("GostKlausurplan", htmlContextGostKlausurplan);
+	}
+
+	/**
+	 * Initialisiert den Context zur Stundenplanung.
+	 *
+	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 */
+	public void initContextStundenplanung() throws ApiOperationException {
+		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für einen Stundenplan für die html-Generierung.");
+		ReportingValidierung.validiereDatenFuerStundenplanung(reportingRepository);
+		reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+				"Erzeuge Datenkontext Stundenplan für die html-Generierung mit Template %s.".formatted(htmlTemplateDefinition.name()));
+		switch (htmlTemplateDefinition) {
+			case STUNDENPLANUNG_v_FACH_STUNDENPLAN -> {
+				final HtmlContextStundenplanungFachStundenplan htmlContextFachStundenplan =
+						new HtmlContextStundenplanungFachStundenplan(reportingRepository,
+								reportingRepository.stundenplan(reportingParameter.idsHauptdaten.getFirst()),
+								reportingParameter.idsDetaildaten);
+				mapHtmlContexts.put("FaecherStundenplaene", htmlContextFachStundenplan);
+			}
+			case STUNDENPLANUNG_v_KLASSEN_STUNDENPLAN -> {
+				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten der Klassen für einen Stundenplan für die html-Generierung.");
+				ReportingValidierung.validiereDatenFuerKlassen(reportingRepository, reportingParameter.idsDetaildaten);
+				final HtmlContextStundenplanungKlassenStundenplan htmlContextKlassenStundenplan =
+						new HtmlContextStundenplanungKlassenStundenplan(reportingRepository,
+								reportingRepository.stundenplan(reportingParameter.idsHauptdaten.getFirst()),
+								reportingParameter.idsDetaildaten);
+				mapHtmlContexts.put("KlassenStundenplaene", htmlContextKlassenStundenplan);
+			}
+			case STUNDENPLANUNG_v_LEHRER_STUNDENPLAN, STUNDENPLANUNG_v_LEHRER_STUNDENPLAN_KOMBINIERT -> {
+				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten der Lehrkräfte für einen Stundenplan für die html-Generierung.");
+				ReportingValidierung.validiereDatenFuerLehrer(reportingRepository, reportingParameter.idsDetaildaten);
+				final HtmlContextStundenplanungLehrerStundenplan htmlContextLehrerStundenplan =
+						new HtmlContextStundenplanungLehrerStundenplan(reportingRepository,
+								reportingRepository.stundenplan(reportingParameter.idsHauptdaten.getFirst()),
+								reportingParameter.idsDetaildaten);
+				mapHtmlContexts.put("LehrerStundenplaene", htmlContextLehrerStundenplan);
+			}
+			case STUNDENPLANUNG_v_RAUM_STUNDENPLAN -> {
+				final HtmlContextStundenplanungRaumStundenplan htmlContextRaeumeStundenplan =
+						new HtmlContextStundenplanungRaumStundenplan(reportingRepository,
+								reportingRepository.stundenplan(reportingParameter.idsHauptdaten.getFirst()),
+								reportingParameter.idsDetaildaten);
+				mapHtmlContexts.put("RaeumeStundenplaene", htmlContextRaeumeStundenplan);
+			}
+			case STUNDENPLANUNG_v_SCHUELER_STUNDENPLAN -> {
+				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten der Schüler für einen Stundenplan für die html-Generierung.");
+				ReportingValidierung.validiereDatenFuerSchueler(reportingRepository, reportingParameter.idsDetaildaten, false, false);
+				final HtmlContextStundenplanungSchuelerStundenplan htmlContextSchuelerStundenplan =
+						new HtmlContextStundenplanungSchuelerStundenplan(reportingRepository,
+								reportingRepository.stundenplan(reportingParameter.idsHauptdaten.getFirst()),
+								reportingParameter.idsDetaildaten);
+				mapHtmlContexts.put("SchuelerStundenplaene", htmlContextSchuelerStundenplan);
+			}
+			default -> {
+				break;
+			}
+		}
 	}
 
 
@@ -276,7 +392,7 @@ public class HtmlFactory {
 				// Zerlege den Gesamt-Schüler-Context in einzelne Contexts mit jeweils einen Schüler
 				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Erzeuge einzelne Haupt-Kontexte für jeden Schüler, da einzelne Dateien angefordert "
 						+ "wurden.");
-				final List<HtmlContextSchueler> schuelerContexts = ((HtmlContextSchueler) mapHtmlContexts.get("Schueler")).getEinzelSchuelerContexts();
+				final List<HtmlContextSchueler> schuelerContexts = ((HtmlContextSchueler) mapHtmlContexts.get("Schueler")).getEinzelContexts();
 
 				reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
 						"Verarbeite Template (%s) und Daten aus den einzelnen Kontexten zu finalen html-Dateiinhalten.".formatted(
@@ -305,6 +421,107 @@ public class HtmlFactory {
 								htmlTemplateDefinition.name()));
 				for (final HtmlContextGostKlausurplanungKlausurplan klausurplanSchuelerContext : klausurplanSchuelerContexts) {
 					mapHtmlContexts.put("GostKlausurplan", klausurplanSchuelerContext);
+
+					// Dateiname der Dateien aus den Daten erzeugen.
+					final String dateiname = getDateiname(mapHtmlContexts);
+
+					// html-Builder erstellen und damit das html mit Daten für die html-Datei erzeugen
+					htmlBuilders.add(new HtmlBuilder(htmlTemplateCode, mapHtmlContexts.values().stream().toList(), dateiname));
+				}
+			}
+			if (htmlTemplateDefinition == HtmlTemplateDefinition.STUNDENPLANUNG_v_FACH_STUNDENPLAN) {
+				// Zerlege den Context des Fächerstundenplans gemäß der anzuzeigenden Fächer in einzelne Contexts mit jeweils einem Fach.
+				reportingRepository.logger().logLn(
+						LogLevel.DEBUG, 4, "Erzeuge einzelne Detail-Kontexte der Fachstundenpläne für jedes Fach, da einzelne Dateien angefordert wurden.");
+				final List<HtmlContextStundenplanungFachStundenplan> fachStundenplanContexts =
+						((HtmlContextStundenplanungFachStundenplan) mapHtmlContexts.get("FaecherStundenplaene")).getEinzelContexts();
+
+				reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+						"Verarbeite Template (%s) und Daten aus den einzelnen Kontexten zu finalen html-Dateiinhalten.".formatted(
+								htmlTemplateDefinition.name()));
+				for (final HtmlContextStundenplanungFachStundenplan fachStundenplanContext : fachStundenplanContexts) {
+					mapHtmlContexts.put("FaecherStundenplaene", fachStundenplanContext);
+
+					// Dateiname der Dateien aus den Daten erzeugen.
+					final String dateiname = getDateiname(mapHtmlContexts);
+
+					// html-Builder erstellen und damit das html mit Daten für die html-Datei erzeugen
+					htmlBuilders.add(new HtmlBuilder(htmlTemplateCode, mapHtmlContexts.values().stream().toList(), dateiname));
+				}
+			}
+			if (htmlTemplateDefinition == HtmlTemplateDefinition.STUNDENPLANUNG_v_KLASSEN_STUNDENPLAN) {
+				// Zerlege den Context des Lehrerstundenplans gemäß der anzuzeigenden Lehrer in einzelne Contexts mit jeweils einen Lehrer.
+				reportingRepository.logger().logLn(
+						LogLevel.DEBUG, 4, "Erzeuge einzelne Detail-Kontexte der Klassenstundenpläne für jede Klasse, da einzelne Dateien angefordert wurden.");
+				final List<HtmlContextStundenplanungKlassenStundenplan> klassenStundenplanContexts =
+						((HtmlContextStundenplanungKlassenStundenplan) mapHtmlContexts.get("KlassenStundenplaene")).getEinzelContexts();
+
+				reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+						"Verarbeite Template (%s) und Daten aus den einzelnen Kontexten zu finalen html-Dateiinhalten.".formatted(
+								htmlTemplateDefinition.name()));
+				for (final HtmlContextStundenplanungKlassenStundenplan klassenStundenplanContext : klassenStundenplanContexts) {
+					mapHtmlContexts.put("KlassenStundenplaene", klassenStundenplanContext);
+
+					// Dateiname der Dateien aus den Daten erzeugen.
+					final String dateiname = getDateiname(mapHtmlContexts);
+
+					// html-Builder erstellen und damit das html mit Daten für die html-Datei erzeugen
+					htmlBuilders.add(new HtmlBuilder(htmlTemplateCode, mapHtmlContexts.values().stream().toList(), dateiname));
+				}
+			}
+			if (htmlTemplateDefinition == HtmlTemplateDefinition.STUNDENPLANUNG_v_LEHRER_STUNDENPLAN) {
+				// Zerlege den Context des Lehrerstundenplans gemäß der anzuzeigenden Lehrer in einzelne Contexts mit jeweils einen Lehrer.
+				reportingRepository.logger().logLn(
+						LogLevel.DEBUG, 4, "Erzeuge einzelne Detail-Kontexte der Lehrerstundenpläne für jeden Lehrer, da einzelne Dateien angefordert wurden.");
+				final List<HtmlContextStundenplanungLehrerStundenplan> lehrerStundenplanContexts =
+						((HtmlContextStundenplanungLehrerStundenplan) mapHtmlContexts.get("LehrerStundenplaene")).getEinzelContexts();
+
+				reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+						"Verarbeite Template (%s) und Daten aus den einzelnen Kontexten zu finalen html-Dateiinhalten.".formatted(
+								htmlTemplateDefinition.name()));
+				for (final HtmlContextStundenplanungLehrerStundenplan lehrerStundenplanContext : lehrerStundenplanContexts) {
+					mapHtmlContexts.put("LehrerStundenplaene", lehrerStundenplanContext);
+
+					// Dateiname der Dateien aus den Daten erzeugen.
+					final String dateiname = getDateiname(mapHtmlContexts);
+
+					// html-Builder erstellen und damit das html mit Daten für die html-Datei erzeugen
+					htmlBuilders.add(new HtmlBuilder(htmlTemplateCode, mapHtmlContexts.values().stream().toList(), dateiname));
+				}
+			}
+			if (htmlTemplateDefinition == HtmlTemplateDefinition.STUNDENPLANUNG_v_RAUM_STUNDENPLAN) {
+				// Zerlege den Context des Raumstundenplans gemäß der anzuzeigenden Räume in einzelne Contexts mit jeweils einen Raum.
+				reportingRepository.logger().logLn(
+						LogLevel.DEBUG, 4, "Erzeuge einzelne Detail-Kontexte der Raumstundenpläne für jede Klasse, da einzelne Dateien angefordert wurden.");
+				final List<HtmlContextStundenplanungRaumStundenplan> raumStundenplanContexts =
+						((HtmlContextStundenplanungRaumStundenplan) mapHtmlContexts.get("RaeumeStundenplaene")).getEinzelContexts();
+
+				reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+						"Verarbeite Template (%s) und Daten aus den einzelnen Kontexten zu finalen html-Dateiinhalten.".formatted(
+								htmlTemplateDefinition.name()));
+				for (final HtmlContextStundenplanungRaumStundenplan raumStundenplanContext : raumStundenplanContexts) {
+					mapHtmlContexts.put("RaeumeStundenplaene", raumStundenplanContext);
+
+					// Dateiname der Dateien aus den Daten erzeugen.
+					final String dateiname = getDateiname(mapHtmlContexts);
+
+					// html-Builder erstellen und damit das html mit Daten für die html-Datei erzeugen
+					htmlBuilders.add(new HtmlBuilder(htmlTemplateCode, mapHtmlContexts.values().stream().toList(), dateiname));
+				}
+			}
+			if (htmlTemplateDefinition == HtmlTemplateDefinition.STUNDENPLANUNG_v_SCHUELER_STUNDENPLAN) {
+				// Zerlege den Context des Lehrerstundenplans gemäß der anzuzeigenden Lehrer in einzelne Contexts mit jeweils einen Lehrer.
+				reportingRepository.logger().logLn(
+						LogLevel.DEBUG, 4,
+						"Erzeuge einzelne Detail-Kontexte der Schülerstundenpläne für jeden Schüler, da einzelne Dateien angefordert wurden.");
+				final List<HtmlContextStundenplanungSchuelerStundenplan> schuelerStundenplanContexts =
+						((HtmlContextStundenplanungSchuelerStundenplan) mapHtmlContexts.get("SchuelerStundenplaene")).getEinzelContexts();
+
+				reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+						"Verarbeite Template (%s) und Daten aus den einzelnen Kontexten zu finalen html-Dateiinhalten.".formatted(
+								htmlTemplateDefinition.name()));
+				for (final HtmlContextStundenplanungSchuelerStundenplan schuelerStundenplanContext : schuelerStundenplanContexts) {
+					mapHtmlContexts.put("SchuelerStundenplaene", schuelerStundenplanContext);
 
 					// Dateiname der Dateien aus den Daten erzeugen.
 					final String dateiname = getDateiname(mapHtmlContexts);

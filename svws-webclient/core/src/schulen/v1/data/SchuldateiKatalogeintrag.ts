@@ -23,6 +23,11 @@ export class SchuldateiKatalogeintrag extends SchuldateiEintrag {
 	 */
 	public bezeichnung : string = "";
 
+	/**
+	 * Der Datentypwert
+	 */
+	public datentypwert : string = "";
+
 
 	/**
 	 * Erstellt einen neuen Eintrag zu einer Adresse einer Organisationseinheit der Schuldatei
@@ -59,6 +64,9 @@ export class SchuldateiKatalogeintrag extends SchuldateiEintrag {
 		if (obj.bezeichnung === undefined)
 			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
+		if (obj.datentypwert === undefined)
+			throw new Error('invalid json format, missing attribute datentypwert');
+		result.datentypwert = obj.datentypwert;
 		return result;
 	}
 
@@ -71,6 +79,7 @@ export class SchuldateiKatalogeintrag extends SchuldateiEintrag {
 		result += '"schluessel" : ' + JSON.stringify(obj.schluessel) + ',';
 		result += '"wert" : ' + JSON.stringify(obj.wert) + ',';
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		result += '"datentypwert" : ' + JSON.stringify(obj.datentypwert) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -98,6 +107,9 @@ export class SchuldateiKatalogeintrag extends SchuldateiEintrag {
 		}
 		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		}
+		if (obj.datentypwert !== undefined) {
+			result += '"datentypwert" : ' + JSON.stringify(obj.datentypwert) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

@@ -23,13 +23,14 @@
 
 <script setup lang="ts">
 	import { Fach } from '../../../../../core/src/asd/types/fach/Fach';
-	import type { Sprachendaten } from '../../../../../core/src/core/data/schueler/Sprachendaten';
+	import type { Sprachendaten } from '../../../../../core/src/asd/data/schueler/Sprachendaten';
 	import { Sprachpruefungniveau } from '../../../../../core/src/core/types/fach/Sprachpruefungniveau';
 
 	const props = defineProps<{
 		schuljahr: number;
 		sprachendaten: () => Sprachendaten;
 	}>();
+
 	const columns = [{key: 'sprache', label: 'Sprachprüfung'}, {key: 'typ', label: 'Typ'}, {key: 'anspruchsniveauId', label: "Niveau"}, {key: 'ersetzt', label: 'Ersetzt'}, {key: 'note', label: 'Note'}];
 
 </script>

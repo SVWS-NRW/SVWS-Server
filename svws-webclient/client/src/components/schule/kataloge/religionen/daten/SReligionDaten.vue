@@ -1,16 +1,16 @@
 <template>
-	<div class="page--content">
+	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-input-wrapper>
 					<svws-ui-select title="Statistikkürzel" v-model="inputStatistikKuerzel" :items="Religion.values()" :item-text="getStatistikText" required statistics focus-class-content />
 				</svws-ui-input-wrapper>
-				<svws-ui-text-input placeholder="Bezeichnung" :model-value="auswahl.text" @change="text=>patch({text})" type="text" />
-				<svws-ui-text-input placeholder="Zeugnisbezeichnung" :model-value="auswahl.textZeugnis" @change="textZeugnis=>patch({textZeugnis})" type="text" />
+				<svws-ui-text-input placeholder="Bezeichnung" :model-value="auswahl.bezeichnung" @change="bezeichnung => patch({ bezeichnung: bezeichnung ?? '' })" />
+				<svws-ui-text-input placeholder="Zeugnisbezeichnung" :model-value="auswahl.bezeichnungZeugnis" @change="bezeichnungZeugnis => patch({ bezeichnungZeugnis })" />
 				<svws-ui-spacing />
-				<svws-ui-input-number placeholder="Sortierung" :model-value="auswahl.sortierung" @change="value => patch({ sortierung: value === null ? 32000 : value })" />
+				<svws-ui-input-number placeholder="Sortierung" :model-value="auswahl.sortierung" @change="sortierung => patch({ sortierung: sortierung === null ? 32000 : sortierung })" />
 				<svws-ui-spacing />
-				<svws-ui-checkbox :model-value="auswahl.istSichtbar" @update:model-value="value => patch({ istSichtbar: value === true ? true : false })">
+				<svws-ui-checkbox :model-value="auswahl.istSichtbar" @update:model-value="istSichtbar => patch({ istSichtbar })">
 					Sichtbar
 				</svws-ui-checkbox>
 			</svws-ui-input-wrapper>
@@ -32,7 +32,7 @@
 
 	const inputStatistikKuerzel = computed<Religion | null>({
 		get: () => auswahl.value.kuerzel !== null ? Religion.data().getWertByKuerzel(auswahl.value.kuerzel) : null,
-		set: (value) => void props.patch({ kuerzel: value?.daten(schuljahr.value)?.kuerzel ?? null })
+		set: (value) => void props.patch({ kuerzel: value?.daten(schuljahr.value)?.kuerzel ?? null }),
 	});
 
 	function getStatistikText(r: Religion): string {

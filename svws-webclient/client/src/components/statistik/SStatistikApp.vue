@@ -1,5 +1,5 @@
 <template>
-	<div v-if="data" class="page--flex page--statistik">
+	<div v-if="data" class="page page-flex-col gap-0 page--statistik">
 		<svws-ui-header>
 			<div class="flex flex-col">
 				<div class="inline-block">{{ schulname }}</div>
@@ -15,8 +15,8 @@
 			</div>
 		</svws-ui-header>
 		<svws-ui-tab-bar :tab-manager :focus-switching-enabled :focus-help-visible>
-			<template v-if="selectedRoute.name === 'dashboard'">
-				<div class="page--content--dashboard">
+			<template v-if="tabManager().tab.name === 'dashboard'">
+				<div class="page page-grid grid-cols-2 lg:grid-cols-4" style="grid-auto-rows: min-content">
 					<svws-ui-dashboard-tile :span="2" color="transparent" title="Adresse">
 						<div class="mt-5 whitespace-pre-line">{{ adresse }}</div>
 						<div class="mt-2 flex gap-1">
@@ -80,8 +80,8 @@
 					</svws-ui-dashboard-tile>
 				</div>
 			</template>
-			<template v-if="selectedRoute.name !== 'dashboard'">
-				<div class="page--content--dashboard">
+			<template v-if="tabManager().tab.name !== 'dashboard'">
+				<div class="page page-grid-cards grid-cols-2 lg:grid-cols-4 gap-2">
 					<svws-ui-dashboard-tile :span="2" color="transparent" :title="`${tabManager().tab.name}daten`">
 						<p>
 							Dieser Bereich ist aktuell nur eine Vorschau. Alle Inhalte sind Beispiele und keine aktuellen Daten aus dem Client.
@@ -165,7 +165,7 @@
 
 <script setup lang="ts">
 
-	import {computed, ref} from "vue";
+	import {computed, shallowRef, triggerRef} from "vue";
 	import type {StatistikAppProps} from "./SStatistikAppProps";
 	import { type TabData, type DataTableColumn, TabManager } from "@ui";
 	import { useRegionSwitch } from "~/components/useRegionSwitch";
@@ -229,19 +229,27 @@
 	];
 
 	async function setTab(tab: TabData) {
-		selectedRoute.value = tab;
 	}
 
-	const tabManager = () => new TabManager([
+	const refTabManager = shallowRef<TabManager>(new TabManager([
 		{ name: "dashboard", text: "Übersicht" },
 		{ name: "Schüler", text: "Schüler" },
 		{ name: "Lehrer", text: "Lehrkräfte" },
 		{ name: "Unterrichts", text: "Unterricht" },
-	], { name: "dashboard", text: "Übersicht" }, setTab);
+	], { name: "dashboard", text: "Übersicht" }, setTab));
 
-	const selectedRoute = ref(tabManager().tab);
+	function tabManager() : TabManager {
+		return refTabManager.value;
+	}
+
 
 </script>
 
-<style lang="postcss" scoped>
+<style scoped>
+
+	.svws-ui-tr {
+		grid-template-columns: minmax(5rem, 5rem) minmax(4rem, 0.25fr) minmax(4rem, 0.25fr) minmax(4rem, 2fr) minmax(4rem, 4rem);
+	}
+
 </style>
+

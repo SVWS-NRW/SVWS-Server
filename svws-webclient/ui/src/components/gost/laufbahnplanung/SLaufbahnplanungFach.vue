@@ -1,11 +1,11 @@
 <template>
-	<div role="row" class="svws-ui-tr" :style="{ '--background-color': bgColor }">
+	<div role="row" class="svws-ui-tr text-ui-static" :style="{ 'background-color': bgColor }">
 		<div role="cell" class="svws-ui-td select-text">
 			<div class="whitespace-nowrap min-w-fit">
 				{{ fach.kuerzelAnzeige }}
 			</div>
 		</div>
-		<div role="cell" class="svws-ui-td select-all" :title="fach.bezeichnung || ''">
+		<div role="cell" class="svws-ui-td select-all">
 			<div class="break-all line-clamp-1 leading-tight -my-0.5">
 				{{ fach.bezeichnung || '' }}
 			</div>
@@ -15,15 +15,15 @@
 		</div>
 		<div role="cell" class="svws-ui-td svws-align-center font-medium" :class="{ 'svws-disabled': !istFremdsprache }">
 			<template v-if="istFremdsprache">
-				<span v-if="ignoriereSprachenfolge" class="text-black/25"> ? </span>
-				<span v-else-if="sprachenfolgeNr === 0 && !sprachenfolgeJahrgang" class="text-black/25"> — </span>
+				<span v-if="ignoriereSprachenfolge"> ? </span>
+				<span v-else-if="sprachenfolgeNr === 0 && !sprachenfolgeJahrgang"> — </span>
 				<span v-else> {{ sprachenfolgeNr }} </span>
 			</template>
 		</div>
 		<div role="cell" class="svws-ui-td svws-align-center font-medium svws-divider" :class="{ 'svws-disabled': !istFremdsprache}">
 			<template v-if="istFremdsprache">
-				<span v-if="ignoriereSprachenfolge" class="text-black/25"> ? </span>
-				<span v-else-if="sprachenfolgeNr === 0 && !sprachenfolgeJahrgang" class="text-black/25"> — </span>
+				<span v-if="ignoriereSprachenfolge"> ? </span>
+				<span v-else-if="sprachenfolgeNr === 0 && !sprachenfolgeJahrgang"> — </span>
 				<span v-else> {{ sprachenfolgeJahrgang }} </span>
 			</template>
 		</div>
@@ -33,7 +33,7 @@
 					'cursor-pointer': istMoeglich[halbjahr.id] && !istBewertet(halbjahr),
 					'cursor-not-allowed': (!istMoeglich[halbjahr.id] || istBewertet(halbjahr) || istFachkombiVerboten[halbjahr.id]),
 					'svws-disabled': !istMoeglich[halbjahr.id],
-					'svws-disabled-soft': istBewertet(halbjahr) && istMoeglich[halbjahr.id],
+					'svws-disabled-soft': (istBewertet(halbjahr) && istMoeglich[halbjahr.id]) || (((gostHalbjahr !== null) && (gostHalbjahr.id >= halbjahr.id)) && istMoeglich[halbjahr.id]),
 				} : {}"
 				@click.stop="stepper(halbjahr)" :title="getTooltipHalbjahr(halbjahr)"
 				:tabindex="istMoeglich[halbjahr.id] ? 0 : -1" @keydown.enter.prevent="handleKeyboardStep($event, halbjahr)" @keydown.space.prevent="handleKeyboardStep($event, halbjahr)"
@@ -46,7 +46,7 @@
 					<span class="absolute -right-0 top-0">
 						<template v-if="istFachkombiErforderlich[halbjahr.id] || istFachkombiVerboten[halbjahr.id] || !zkMoeglich(halbjahr)">
 							<svws-ui-tooltip :color="istBewertet(halbjahr) ? 'light' : 'danger'" position="bottom">
-								<span class="icon i-ri-error-warning-line" :class="istBewertet(halbjahr) ? 'icon-dark/50' : 'icon-error'" />
+								<span class="icon i-ri-error-warning-line" :class="istBewertet(halbjahr) ? 'icon-ui-contrast-75' : 'icon-ui-danger'" />
 								<template #content v-if="istFachkombiErforderlich[halbjahr.id]">
 									Fachkombination erforderlich
 								</template>
@@ -59,8 +59,8 @@
 							</svws-ui-tooltip>
 						</template>
 						<template v-else-if="!istMoeglich[halbjahr.id] && (wahlen[halbjahr.id] !== '') && hatUpdateKompetenz">
-							<svws-ui-tooltip :color="istBewertet(halbjahr) ? 'light' : 'danger'">
-								<svws-ui-button type="icon" size="small" :disabled="istBewertet(halbjahr)" @click="deleteFachwahl(halbjahr)"
+							<svws-ui-tooltip :color="istBewertet(halbjahr) && (noten[halbjahr.id] !== null) ? 'light' : 'danger'">
+								<svws-ui-button type="icon" size="small" :disabled="istBewertet(halbjahr) && (noten[halbjahr.id] !== null)" @click="deleteFachwahl(halbjahr)"
 									@keydown.enter.prevent="deleteFachwahl(halbjahr)" @keydown.space.prevent="deleteFachwahl(halbjahr)">
 									<span class="icon i-ri-close-line" />
 								</svws-ui-button>
@@ -82,14 +82,14 @@
 								</svws-ui-button>
 								<template #content>
 									Kurs ist bei den Fachwahlen eingetragen, es liegen aber keine Einträge in den Leistungsdaten vor. <br>
-									Entfernen Sie entweder die Fachwahl durch klicken oder korrigieren sie dies in den Leistungsdaten
+									Entfernen Sie entweder die Fachwahl durch Klicken oder korrigieren sie dies in den Leistungsdaten.
 								</template>
 							</svws-ui-tooltip>
 						</template>
 						<template v-else-if="wahlen[halbjahr.id] && wahlen[halbjahr.id] === '6'">
 							<svws-ui-tooltip color="danger" position="bottom">
 								<div class="inline-flex items-center">
-									<span class="icon i-ri-error-warning-line icon-error ml-0.5" />
+									<span class="icon i-ri-error-warning-line icon-ui-danger ml-0.5" />
 								</div>
 								<template #content>
 									Dieser Kurs gilt aufgrund von 0 Punkten als nicht belegt.
@@ -127,7 +127,7 @@
 
 <script setup lang="ts">
 
-	import { computed, onUpdated, ref } from "vue";
+	import { computed, onBeforeUnmount, onMounted, onUpdated, ref } from "vue";
 	import { AbiturdatenManager } from "../../../../../core/src/core/abschluss/gost/AbiturdatenManager";
 	import type { GostJahrgangsdaten } from "../../../../../core/src/core/data/gost/GostJahrgangsdaten";
 	import type { GostFach } from "../../../../../core/src/core/data/gost/GostFach";
@@ -135,7 +135,7 @@
 	import { Fachgruppe } from "../../../../../core/src/asd/types/fach/Fachgruppe";
 	import { Fach } from "../../../../../core/src/asd/types/fach/Fach";
 	import type { AbiturFachbelegung } from "../../../../../core/src/core/data/gost/AbiturFachbelegung";
-	import type { Sprachbelegung } from "../../../../../core/src/core/data/schueler/Sprachbelegung";
+	import type { Sprachbelegung } from "../../../../../core/src/asd/data/schueler/Sprachbelegung";
 	import { SprachendatenUtils } from "../../../../../core/src/core/utils/schueler/SprachendatenUtils";
 	import { GostHalbjahr } from "../../../../../core/src/core/types/gost/GostHalbjahr";
 	import { AbiturFachbelegungHalbjahr } from "../../../../../core/src/core/data/gost/AbiturFachbelegungHalbjahr";
@@ -145,6 +145,7 @@
 	import { GostFachbereich } from "../../../../../core/src/core/types/gost/GostFachbereich";
 	import { GostAbiturFach } from "../../../../../core/src/core/types/gost/GostAbiturFach";
 	import { GostFachUtils } from "../../../../../core/src/core/utils/gost/GostFachUtils";
+	import { Color } from "../../../ui/Color";
 
 	const props = withDefaults(defineProps<{
 		abiturdatenManager: () => AbiturdatenManager;
@@ -180,10 +181,26 @@
 
 	const halbjahrRefs = ref(new Map<number, HTMLElement>());
 	const schuljahr = computed<number>(() => props.abiturdatenManager().getSchuljahr());
+	const gostHalbjahr = computed<GostHalbjahr | null>(() => GostHalbjahr.fromJahrgangUndHalbjahr(props.gostJahrgangsdaten.jahrgang, props.gostJahrgangsdaten.halbjahr));
 	const fachgruppe = computed<Fachgruppe | null>(() => Fach.getBySchluesselOrDefault(props.fach.kuerzel).getFachgruppe(schuljahr.value) ?? null);
 	const istFremdsprache = computed<boolean>(() => Fach.getBySchluesselOrDefault(props.fach.kuerzel).daten(schuljahr.value)?.istFremdsprache ?? false);
 	const bgColor = computed<string>(() => Fach.getBySchluesselOrDefault(props.fach.kuerzel).getHMTLFarbeRGB(schuljahr.value));
 	const fachbelegung = computed<AbiturFachbelegung | null>(() => props.abiturdatenManager().getFachbelegungByID(props.fach.id));
+
+	const isLightMode = ref<boolean>(window.matchMedia('(prefers-color-scheme: light)').matches);
+	onMounted(() => window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', changeColorScheme));
+	onBeforeUnmount(() => window.matchMedia('(prefers-color-scheme: light)').removeEventListener('change', changeColorScheme));
+	function changeColorScheme(event: MediaQueryListEvent) {
+		isLightMode.value = event.matches;
+	}
+	const isPreferWhiteTextColor = computed<boolean>(() => {
+		const bgFarbe = Fach.getBySchluesselOrDefault(props.fach.kuerzel).getFarbe(schuljahr.value);
+		return Color.preferWhiteAsContrastColor(bgFarbe);
+	});
+	const textColor = computed<string>(() => ((isLightMode.value && !isPreferWhiteTextColor.value) || (!isLightMode.value && isPreferWhiteTextColor.value))
+		? 'text-ui' : 'text-ui-contrast-0');
+	const textColorWeak = computed<string>(() => ((isLightMode.value && !isPreferWhiteTextColor.value) || (!isLightMode.value && isPreferWhiteTextColor.value))
+		? 'text-ui-contrast-50' : 'text-ui-contrast-10');
 
 	// Nächste Halbjahr-Zelle fokussieren, wenn möglich. Sonst "update:focus:impossible" emitten, sodass Parent-Komponente einen Schritt weiter gehen kann
 	function doFocusOnHalbjahr() {
@@ -1267,31 +1284,30 @@
 
 </script>
 
-<style lang="postcss" scoped>
+<style scoped>
 
 	.laufbahn-cell {
 		&:focus {
 			outline: none;
 			box-shadow: inset 0 0 0 2px;
-			@apply text-ui-hover;
 		}
 	}
 
 	.data-table__tr {
-		--background-color: #ffffff;
+		background-color: #ffffff;
 
 		.data-table__td {
-			background-color: var(--background-color);
+			background-color: var(background-color);
 		}
 
 		&.svws-background-on-hover {
 			.data-table__td {
-				@apply bg-transparent;
+				background-color: transparent;
 			}
 
 			&:hover {
 				.data-table__td {
-					background-color: var(--background-color);
+					background-color: var(background-color);
 				}
 			}
 		}

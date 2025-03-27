@@ -10,8 +10,10 @@
 			<div v-else> {{ getFachrichtungAnerkennung(rowData)?.daten(schuljahr)?.text ?? '—' }} </div>
 		</template>
 		<template #actions v-if="hatUpdateKompetenz">
-			<svws-ui-button @click="removeFachrichtungen(Arrays.asList(selected))" type="trash" :disabled="selected.length <= 0" />
-			<svws-ui-button @click="show = true" type="icon" title="Fachrichtung hinzufügen"> <span class="icon i-ri-add-line" /> </svws-ui-button>
+			<div class="inline-flex gap-4">
+				<svws-ui-button @click="removeFachrichtungen(Arrays.asList(selected))" type="trash" :disabled="selected.length <= 0" />
+				<svws-ui-button @click="show = true" type="icon" title="Fachrichtung hinzufügen"> <span class="icon i-ri-add-line" /> </svws-ui-button>
+			</div>
 		</template>
 	</svws-ui-table>
 	<s-lehrer-personaldaten-fachrichtungen-modal-add v-if="hatUpdateKompetenz" v-model:show="show" :id-lehrer="personaldaten.id" :add-fachrichtung :schuljahr />

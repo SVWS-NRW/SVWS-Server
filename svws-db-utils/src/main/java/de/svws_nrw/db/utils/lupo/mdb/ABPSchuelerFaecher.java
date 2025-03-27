@@ -18,7 +18,7 @@ import com.healthmarketscience.jackcess.TableBuilder;
 import de.svws_nrw.core.data.gost.GostLeistungen;
 import de.svws_nrw.core.data.gost.GostLeistungenFachbelegung;
 import de.svws_nrw.core.data.gost.GostLeistungenFachwahl;
-import de.svws_nrw.core.data.schueler.Sprachbelegung;
+import de.svws_nrw.asd.data.schueler.Sprachbelegung;
 import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.core.types.gost.GostAbiturFach;
 import de.svws_nrw.core.types.gost.GostHalbjahr;

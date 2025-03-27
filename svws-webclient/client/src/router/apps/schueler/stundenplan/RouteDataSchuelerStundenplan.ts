@@ -1,4 +1,4 @@
-import { type StundenplanKalenderwochenzuordnung, type StundenplanListeEintrag, StundenplanManager, DeveloperNotificationException } from "@core";
+import { type StundenplanKalenderwochenzuordnung, type StundenplanListeEintrag, StundenplanManager, DeveloperNotificationException, type ApiFile, type ReportingParameter } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -34,12 +34,22 @@ export class RouteDataSchuelerStundenplan extends RouteData<RouteStateSchuelerDa
 		super(defaultState);
 	}
 
+	get idSchuljahresabschnitt(): number {
+		return this._state.value.idSchuljahresabschnitt;
+	}
+
 	get wochentyp(): number {
 		return this._state.value.wochentyp;
 	}
 
 	get kalenderwoche(): StundenplanKalenderwochenzuordnung | undefined {
 		return this._state.value.kalenderwoche;
+	}
+
+	get idSchueler(): number {
+		if (this._state.value.idSchueler === undefined)
+			throw new DeveloperNotificationException("Unerwarteter Fehler: SchülerID nicht festgelegt, es können keine Informationen zum Stundenplan abgerufen oder eingegeben werden.");
+		return this._state.value.idSchueler;
 	}
 
 	get hatAuswahl(): boolean {
@@ -152,6 +162,15 @@ export class RouteDataSchuelerStundenplan extends RouteData<RouteStateSchuelerDa
 		const wochentyp = (value === undefined) ? "" : value.wochentyp;
 		await RouteManager.doRoute(routeSchuelerStundenplan.getRoute({ wochentyp, kw }));
 	}
+
+	getPDF = api.call(async (reportingParameter: ReportingParameter, idStundenplan: number): Promise<ApiFile> => {
+		if (!this.hatAuswahl)
+			throw new DeveloperNotificationException("Dieser Stundenplan kann nur gedruckt werden, wenn mindestens ein Lehrer ausgewählt ist.");
+		reportingParameter.idSchuljahresabschnitt = this.idSchuljahresabschnitt;
+		reportingParameter.idsHauptdaten.add(idStundenplan);
+		reportingParameter.idsDetaildaten.add(this.idSchueler);
+		return await api.server.pdfReport(reportingParameter, api.schema);
+	})
 
 }
 

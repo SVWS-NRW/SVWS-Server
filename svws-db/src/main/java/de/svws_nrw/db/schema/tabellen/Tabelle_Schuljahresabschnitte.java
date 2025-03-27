@@ -135,7 +135,7 @@ public class Tabelle_Schuljahresabschnitte extends SchemaTabelle {
 			        IF id IS NULL THEN
 			            INSERT INTO Schuljahresabschnitte(Jahr, Abschnitt) VALUES (NEW.Jahr, NEW.Abschnitt);
 			        END IF;
-			        SET id := (SELECT SchuelerLernabschnittsdaten.ID FROM SchuelerLernabschnittsdaten WHERE SchuelerLernabschnittsdaten.Schueler_ID = NEW.Schueler_ID AND SchuelerLernabschnittsdaten.Jahr = NEW.Jahr AND SchuelerLernabschnittsdaten.Abschnitt = NEW.Abschnitt);
+			        SET id := (SELECT SchuelerLernabschnittsdaten.ID FROM SchuelerLernabschnittsdaten WHERE SchuelerLernabschnittsdaten.Schueler_ID = NEW.Schueler_ID AND SchuelerLernabschnittsdaten.Jahr = NEW.Jahr AND SchuelerLernabschnittsdaten.Abschnitt = NEW.Abschnitt AND SchuelerLernabschnittsdaten.WechselNr = 999);
 			        IF id IS NOT NULL THEN
 			            SET NEW.Abschnitt_ID = id;
 			        END IF;
@@ -200,7 +200,7 @@ public class Tabelle_Schuljahresabschnitte extends SchemaTabelle {
 			        IF id IS NULL THEN
 			            INSERT INTO Schuljahresabschnitte(Jahr, Abschnitt) VALUES (NEW.Jahr, NEW.Abschnitt);
 			        END IF;
-			        SET id := (SELECT SchuelerLernabschnittsdaten.ID FROM SchuelerLernabschnittsdaten WHERE SchuelerLernabschnittsdaten.Schueler_ID = NEW.Schueler_ID AND SchuelerLernabschnittsdaten.Jahr = NEW.Jahr AND SchuelerLernabschnittsdaten.Abschnitt = NEW.Abschnitt);
+			        SET id := (SELECT SchuelerLernabschnittsdaten.ID FROM SchuelerLernabschnittsdaten WHERE SchuelerLernabschnittsdaten.Schueler_ID = NEW.Schueler_ID AND SchuelerLernabschnittsdaten.Jahr = NEW.Jahr AND SchuelerLernabschnittsdaten.Abschnitt = NEW.Abschnitt AND SchuelerLernabschnittsdaten.WechselNr = 999);
 			        IF id IS NOT NULL THEN
 			            SET NEW.Abschnitt_ID = id;
 			        END IF;
@@ -223,7 +223,7 @@ public class Tabelle_Schuljahresabschnitte extends SchemaTabelle {
 			        IF id IS NULL THEN
 			            INSERT INTO Schuljahresabschnitte(Jahr, Abschnitt) VALUES (NEW.Jahr, NEW.Abschnitt);
 			        END IF;
-			        SET id := (SELECT SchuelerLernabschnittsdaten.ID FROM SchuelerLernabschnittsdaten WHERE SchuelerLernabschnittsdaten.Schueler_ID = NEW.Schueler_ID AND SchuelerLernabschnittsdaten.Jahr = NEW.Jahr AND SchuelerLernabschnittsdaten.Abschnitt = NEW.Abschnitt);
+			        SET id := (SELECT SchuelerLernabschnittsdaten.ID FROM SchuelerLernabschnittsdaten WHERE SchuelerLernabschnittsdaten.Schueler_ID = NEW.Schueler_ID AND SchuelerLernabschnittsdaten.Jahr = NEW.Jahr AND SchuelerLernabschnittsdaten.Abschnitt = NEW.Abschnitt AND SchuelerLernabschnittsdaten.WechselNr = 999);
 			        IF id IS NOT NULL THEN
 			            SET NEW.Abschnitt_ID = id;
 			        END IF;

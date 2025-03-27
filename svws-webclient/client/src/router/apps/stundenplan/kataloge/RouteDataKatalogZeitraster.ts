@@ -60,6 +60,7 @@ export class RouteDataKatalogZeitraster extends RouteData<RouteStateKatalogZeitr
 		}
 		const items = await api.server.addZeitrasterEintraege(list, api.schema);
 		this.stundenplanManager.zeitrasterAddAll(items);
+		await routeStundenplan.data.reloadVorlagen();
 		this.commit();
 		api.status.stop();
 	}
@@ -72,6 +73,7 @@ export class RouteDataKatalogZeitraster extends RouteData<RouteStateKatalogZeitr
 		const items = await api.server.deleteZeitrasterEintraege(list, api.schema);
 		this.stundenplanManager.zeitrasterRemoveAll(items);
 		this._state.value.selected = undefined;
+		await routeStundenplan.data.reloadVorlagen();
 		this.commit();
 		api.status.stop();
 	}
@@ -83,6 +85,7 @@ export class RouteDataKatalogZeitraster extends RouteData<RouteStateKatalogZeitr
 			list.add(z);
 		await api.server.patchZeitrasterEintraege(list, api.schema);
 		this.stundenplanManager.zeitrasterPatchAttributesAll(list);
+		await routeStundenplan.data.reloadVorlagen();
 		this.commit();
 		api.status.stop();
 	}

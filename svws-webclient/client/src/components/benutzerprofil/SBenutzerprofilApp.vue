@@ -7,7 +7,7 @@
 			</svws-ui-badge>
 		</div>
 	</svws-ui-header>
-	<div class="page--content">
+	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Passwort ändern">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input class="contentFocusField" placeholder="Erste Eingabe neues Passwort" v-model.trim="erstesPasswort" type="password" />
@@ -41,11 +41,10 @@
 						<svws-ui-radio-option value="light" v-model="themeRef" name="theme" label="Light" @click="updateTheme('light')" />
 						<svws-ui-radio-option value="dark" v-model="themeRef" name="theme" label="Dark (In Entwicklung)" @click="updateTheme('dark')" />
 					</svws-ui-radio-group>
-					<div v-if="themeRef === 'dark'" class="mt-2 text-white/50">
+					<div v-if="themeRef === 'dark'" class="mt-2 text-ui-contrast-25">
 						Achtung! Das Dark-Theme befindet sich gerade noch in der Entwicklung und ist noch nicht
 						vollständig umgesetzt.
-						<span
-							class="font-bold text-white">Es kann an einigen Stellen zu Darstellungsproblemen führen.</span>
+						<span class="font-bold text-ui-contrast-0">Es kann an einigen Stellen zu Darstellungsproblemen führen.</span>span
 					</div>
 				</div>
 			</div>

@@ -1,15 +1,14 @@
-import type { StundenplanKalenderwochenzuordnung, StundenplanListeEintrag, StundenplanPausenaufsicht } from "@core";
+import type { ApiFile, ReportingParameter, StundenplanKalenderwochenzuordnung, StundenplanListeEintrag, StundenplanPausenaufsicht } from "@core";
 import { StundenplanManager, DeveloperNotificationException, ArrayList } from "@core";
-
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
 import { routeApp } from "~/router/apps/RouteApp";
-
-import { routeFachStundenplanDaten } from "~/router/apps/schule/faecher/stundenplan/RouteFachStundenplanDaten";
+import { routeFachStundenplan } from "./RouteFachStundenplan";
 
 
 interface RouteStateFachDataStundenplan extends RouteStateInterface {
+	idSchuljahresabschnitt: number;
 	idFach: number | undefined;
 	auswahl: StundenplanListeEintrag | undefined;
 	mapStundenplaene: Map<number, StundenplanListeEintrag>;
@@ -19,6 +18,7 @@ interface RouteStateFachDataStundenplan extends RouteStateInterface {
 }
 
 const defaultState = <RouteStateFachDataStundenplan> {
+	idSchuljahresabschnitt: -1,
 	idFach: undefined,
 	auswahl: undefined,
 	mapStundenplaene: new Map(),
@@ -32,6 +32,16 @@ export class RouteDataFachStundenplan extends RouteData<RouteStateFachDataStunde
 
 	public constructor() {
 		super(defaultState);
+	}
+
+	get idSchuljahresabschnitt(): number {
+		return this._state.value.idSchuljahresabschnitt;
+	}
+
+	get idFach(): number {
+		if (this._state.value.idFach === undefined)
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Fach-ID nicht festgelegt, es können keine Informationen zum Stundenplan abgerufen oder eingegeben werden.");
+		return this._state.value.idFach;
 	}
 
 	get wochentyp(): number {
@@ -74,13 +84,17 @@ export class RouteDataFachStundenplan extends RouteData<RouteStateFachDataStunde
 		await api.config.setValue("schule.faecher.stundenplan.ganzerStundenplan", value ? "true" : "false");
 	}
 
-	public async ladeListe() {
-		const listStundenplaene = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, routeApp.data.aktAbschnitt.value.id);
+	public async ladeListe() : Promise<boolean> {
+		const idSchuljahresabschnitt = routeApp.data.aktAbschnitt.value.id;
+		if (idSchuljahresabschnitt === this._state.value.idSchuljahresabschnitt)
+			return false;
+		const listStundenplaene = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, idSchuljahresabschnitt);
 		const mapStundenplaene = new Map<number, StundenplanListeEintrag>();
 		const auswahl = listStundenplaene.size() > 0 ? listStundenplaene.get(0) : undefined;
 		for (const l of listStundenplaene)
 			mapStundenplaene.set(l.id, l);
-		this.setPatchedDefaultState({ idFach: this._state.value.idFach, auswahl, mapStundenplaene });
+		this.setPatchedDefaultState({ idSchuljahresabschnitt, auswahl, mapStundenplaene });
+		return true;
 	}
 
 	private getKalenderWoche(manager: StundenplanManager, wochentyp: number, kwjahr: number | undefined, kw: number | undefined) : { wochentyp?: number, kalenderwoche?: StundenplanKalenderwochenzuordnung } {
@@ -97,13 +111,13 @@ export class RouteDataFachStundenplan extends RouteData<RouteStateFachDataStunde
 		return result;
 	}
 
-	public async setEintrag(idFach: number, idStundenplan: number | undefined, wochentyp: number, kwjahr: number | undefined, kw: number | undefined) {
+	public async setEintrag(idFach: number, idStundenplan: number | undefined, wochentypNr: number, kwjahr: number | undefined, kw: number | undefined) {
 		// Prüfe, ob die vorge Auswahl mit der neuen Auswahl übereinstimmt. In diesem Fall ist keine Aktion nötig
 		const vorige_auswahl = this._state.value.auswahl;
 		if ((vorige_auswahl !== undefined) && (this._state.value.idFach === idFach) && (vorige_auswahl.id === idStundenplan)) {
-			if ((wochentyp !== this._state.value.wochentyp) || (kwjahr !== this._state.value.kalenderwoche?.jahr)
+			if ((wochentypNr !== this._state.value.wochentyp) || (kwjahr !== this._state.value.kalenderwoche?.jahr)
 				|| (kw !== this._state.value.kalenderwoche?.kw)) {
-				const tmpKW = this.getKalenderWoche(this.manager, wochentyp, kwjahr, kw);
+				const tmpKW = this.getKalenderWoche(this.manager, wochentypNr, kwjahr, kw);
 				this.setPatchedState({ wochentyp: tmpKW.wochentyp, kalenderwoche: tmpKW.kalenderwoche });
 				return;
 			}
@@ -128,24 +142,29 @@ export class RouteDataFachStundenplan extends RouteData<RouteStateFachDataStunde
 		const manager = new StundenplanManager(daten, unterrichtsdaten, new ArrayList<StundenplanPausenaufsicht>(), unterrichtsverteilung);
 
 		// Wochentyp und Kalenderwoche prüfen...
-		const tmpKW = this.getKalenderWoche(manager, wochentyp, kwjahr, kw);
+		const { wochentyp, kalenderwoche } = this.getKalenderWoche(manager, wochentypNr, kwjahr, kw);
 		// Und zuletzt den internen State anpassen, um die Reaktivität der vue-Komponenten zu triggern
-		this.setPatchedState({ idFach, auswahl, manager, wochentyp: tmpKW.wochentyp, kalenderwoche: tmpKW.kalenderwoche });
+		this.setPatchedState({ idFach, auswahl, manager, wochentyp, kalenderwoche });
 	}
 
 	public gotoStundenplan = async (value: StundenplanListeEintrag) => {
-		await RouteManager.doRoute(routeFachStundenplanDaten.getRoute({ idStundenplan: value.id, wochentyp: 0, kw: "" }));
+		await RouteManager.doRoute(routeFachStundenplan.getRoute({ idStundenplan: value.id, wochentyp: 0, kw: "" }));
 	}
 
 	public gotoWochentyp = async (wochentyp: number) => {
-		await RouteManager.doRoute(routeFachStundenplanDaten.getRoute({ wochentyp }));
+		await RouteManager.doRoute(routeFachStundenplan.getRoute({ wochentyp }));
 	}
 
 	public gotoKalenderwoche = async (value: StundenplanKalenderwochenzuordnung | undefined) => {
 		const kw = (value === undefined) ? "" : value.jahr + "." + value.kw;
 		const wochentyp = (value === undefined) ? "" : value.wochentyp;
-		await RouteManager.doRoute(routeFachStundenplanDaten.getRoute({ wochentyp, kw }));
+		await RouteManager.doRoute(routeFachStundenplan.getRoute({ wochentyp, kw }));
 	}
 
+	getPDF = api.call(async (reportingParameter: ReportingParameter): Promise<ApiFile> => {
+		if (!this.hatAuswahl)
+			throw new DeveloperNotificationException("Dieser Stundenplan kann nur gedruckt werden, wenn mindestens ein Fach ausgewählt ist.");
+		reportingParameter.idSchuljahresabschnitt = this.idSchuljahresabschnitt;
+		return await api.server.pdfReport(reportingParameter, api.schema);
+	})
 }
-

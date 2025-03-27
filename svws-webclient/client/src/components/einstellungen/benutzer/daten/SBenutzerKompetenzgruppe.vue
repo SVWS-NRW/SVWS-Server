@@ -1,24 +1,24 @@
 <template>
-	<div class="svws-ui-tr" role="row">
+	<div class="svws-ui-tr kompetenz-tr" role="row">
 		<div class="svws-ui-td" role="cell" :class="{'col-span-2': getBenutzerManager().istAdmin()}">
 			<div class="flex items-center gap-1">
-				<svws-ui-button type="icon" size="small" @click="collapsed = !collapsed" :class="{'pointer-events-none': !hatSubKompetenzen}" :tabindex="!hatSubKompetenzen ? -1 : ''">
+				<div type="icon" size="small" @click="collapsed = !collapsed" :class="hatSubKompetenzen ? 'cursor-pointer' : 'pointer-events-none'" :tabindex="!hatSubKompetenzen ? -1 : ''">
 					<template v-if="hatSubKompetenzen">
 						<span class="icon i-ri-arrow-right-s-line" v-if="collapsed" />
 						<span class="icon i-ri-arrow-down-s-line" v-else />
 					</template>
-				</svws-ui-button>
+				</div>
 				<svws-ui-checkbox v-model="selected" :indeterminate="indeterminate" :disabled="getBenutzerManager().istAdmin()">
 					{{ kompetenzgruppe.daten.bezeichnung }}
 				</svws-ui-checkbox>
 			</div>
 		</div>
 		<div class="svws-ui-td" role="cell" />
-		<div v-if="!getBenutzerManager().istAdmin()" class="svws-ui-td text-black/50 dark:text-white/50" role="cell">
+		<div v-if="!getBenutzerManager().istAdmin()" class="svws-ui-td text-ui-contrast-50" role="cell">
 			<span class="line-clamp-1 break-all leading-tight -my-0.5" :title="getTopLevelGruppen4Kompetenz">{{ getTopLevelGruppen4Kompetenz }}</span>
 		</div>
 		<template v-if="hatSubKompetenzen">
-			<div v-for="kompetenz in benutzerKompetenzen(kompetenzgruppe)" :key="kompetenz.daten.id" class="svws-ui-tr" v-show="!collapsed">
+			<div v-for="kompetenz in benutzerKompetenzen(kompetenzgruppe)" :key="kompetenz.daten.id" class="svws-ui-tr kompetenz-tr" v-show="!collapsed">
 				<s-benutzer-kompetenz :kompetenz :show-info :get-benutzer-manager :add-kompetenz :remove-kompetenz />
 			</div>
 		</template>
@@ -78,9 +78,9 @@
 
 </script>
 
-<style scoped lang="postcss">
+<style scoped>
 
-	.svws-ui-tr {
+	.kompetenz-tr {
 		grid-template-columns: minmax(4rem, 2fr) 0.15fr minmax(4rem, 1fr);
 	}
 

@@ -1,29 +1,29 @@
 <template>
-	<div class="svws-ui-button-select" ref="button">
-		<svws-ui-button ref="inputEl" :type="type">
-			<span v-if="defaultAction !== undefined" @click="noDefault ? dropdownOpen = !dropdownOpen : (defaultAction && action(defaultAction))" class="flex gap-1">
-				<slot name="icon" />{{ defaultAction.text }}
+	<div class="flex gap-px" ref="button">
+		<svws-ui-button ref="inputEl" :type>
+			<span v-if="defaultAction !== undefined" @click="noDefault ? dropdownOpen = !dropdownOpen : (defaultAction && action(defaultAction))" class="flex gap-1 justify-center items-center">
+				<slot name="icon" /><span>{{ defaultAction.text }}</span>
 			</span>
-			<span v-else-if="defaultItem" @click="defaultItem && action(defaultItem)" class="flex gap-1">
-				<slot name="icon" />{{ defaultItem.text }}
+			<span v-else-if="defaultItem" @click="defaultItem && action(defaultItem)" class="flex gap-1 justify-center items-center">
+				<slot name="icon" /><span>{{ defaultItem.text }}</span>
 			</span>
 			<span v-else class="icon i-ri-menu-line" />
 		</svws-ui-button>
-		<button class="svws-toggle button" :class="`button--${type}`" @click.stop="dropdownOpen = !dropdownOpen" :disabled="listEmpty">
-			<span class="icon i-ri-arrow-down-s-line" v-if="!dropdownOpen" />
-			<span class="icon i-ri-arrow-up-s-line" v-else />
+		<button class="rounded-l-none rounded-r-md z-10 border border-ui text-sm-bold" :class="`button--${type}`" @click.stop="dropdownOpen = !dropdownOpen" :disabled="listEmpty">
+			<span class="icon mt-1 i-ri-arrow-down-s-line" v-if="!dropdownOpen" />
+			<span class="icon mt-1 i-ri-arrow-up-s-line" v-else />
 		</button>
-		<Teleport to="body">
-			<svws-ui-dropdown-list v-if="dropdownOpen && dropdownActions" ref="refList" :strategy :floating-left :floating-top :filtered-list="dropdownActions">
-				<template #item="{ item }">
-					<hr v-if="item.separator === true" class="w-full mx-auto my-1 text-ui-neutral">
-					<button v-else class="svws-ui-dropdown-list--item" role="button" @click="action(item)">
-						{{ item.text }}
-					</button>
-				</template>
-			</svws-ui-dropdown-list>
-		</Teleport>
 	</div>
+	<Teleport to="body">
+		<svws-ui-dropdown-list v-if="dropdownOpen && dropdownActions" ref="refList" :strategy :floating-left :floating-top :filtered-list="dropdownActions">
+			<template #item="{ item }">
+				<hr v-if="item.separator === true" class="w-full mx-auto my-1 text-ui-neutral">
+				<button v-else class="svws-ui-dropdown-list--item" role="button" @click="action(item)">
+					{{ item.text }}
+				</button>
+			</template>
+		</svws-ui-dropdown-list>
+	</Teleport>
 </template>
 
 <script lang="ts" setup>
@@ -31,7 +31,8 @@
 	import type { ButtonType } from '../../types';
 	import { autoUpdate, flip, offset, shift, size, useFloating } from "@floating-ui/vue";
 	import { onClickOutside } from "@vueuse/core";
-	import { ref, computed } from 'vue';
+	import type { ComponentPublicInstance } from 'vue';
+	import { ref, computed, useTemplateRef } from 'vue';
 	import SvwsUiDropdownList from "./SvwsUiDropdownList.vue";
 
 	type Item = {
@@ -54,9 +55,10 @@
 		noDefault: false,
 	});
 
-	const button = ref(null);
-	const inputEl = ref(null);
-	const refList = ref(null);
+	defineSlots();
+	const refList = useTemplateRef<ComponentPublicInstance>('refList');
+	const inputEl = useTemplateRef<ComponentPublicInstance>('inputEl');
+	const button = useTemplateRef('button');
 	const dropdownOpen = ref(false);
 	const defaultItem = ref<Item | undefined>(undefined);
 
@@ -97,33 +99,18 @@
 
 </script>
 
-<style lang="postcss">
-
-	.svws-ui-button-select {
-		@apply flex gap-px;
-
-		.svws-toggle.button {
-			@apply rounded-l-none rounded-r-md px-0.5;
-		}
-
-		.input-wrapper & .button {
-			@apply mr-0;
-		}
-	}
-</style>
-
-<style lang="postcss" scoped>
+<style scoped>
 
 	.button {
-		@apply rounded-r-none z-10 relative;
+		position: relative;
+		border-top-right-radius: 0;
+		border-bottom-right-radius: 0;
+		z-index: 10;
+		margin-right: 0;
 	}
 
 	.svws-ui-dropdown-list {
-		@apply min-w-fit;
-	}
-
-	.svws-ui-dropdown-list--item {
-		@apply text-button text-ui;
+		min-width: fit-content;
 	}
 
 </style>

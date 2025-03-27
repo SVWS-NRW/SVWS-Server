@@ -1,0 +1,23 @@
+{
+	"name": "@svws-nrw/tests-server-dav",
+	"description": "SVWS-Server-Projekt: DAV API Tests",
+	"author": "MSB NRW",
+	"license": "BSD-3-Clause",
+	"version": "1.0.5",
+	"files": [
+		"dist"
+	],
+	"main": "./dist/index.js",
+	"type": "module",
+	"types": "./dist/index.d.ts",
+	"scripts": {
+		"test:setup": "vitest run ./tests/setup --coverage.reporter=html --mode allowDestructiveTests --outputFile build/test-results/setup-test-results.xml",
+		"test:sync": "vitest run ./tests/sync --coverage.reporter=html --mode allowDestructiveTests --outputFile build/test-results/sync-test-results.xml",
+		"test:afterSetup": "vitest run ./tests/afterSetup --coverage.reporter=html --mode allowDestructiveTests --outputFile build/test-results/after-setup-test-results.xml",
+		"test:tempDockerEnv": "vitest run ./tests --coverage.reporter=html --mode allowDestructiveTests ",
+		"lint": "eslint 'tests/**/*.{ts,vue}' --cache",
+		"lint-fix": "eslint 'tests/**/*.{ts,vue}' --cache --fix",
+		"build": "tsc",
+		"check-licenses": "license-checker-rseidelsohn --summary --unknown"
+	}
+}

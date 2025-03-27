@@ -45,8 +45,8 @@ import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import de.svws_nrw.asd.data.klassen.KlassenDaten;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
-import de.svws_nrw.core.data.klassen.KlassenDaten;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBEntityManager;

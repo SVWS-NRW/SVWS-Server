@@ -5,9 +5,9 @@
 			{{ text }}
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="emit('update:show', false)">{{ abbrechen_text }}</svws-ui-button>
-			<svws-ui-button v-if="jumpTo !== undefined" type="primary" @click="jump_to">{{ jumpTo_text }}</svws-ui-button>
-			<svws-ui-button v-if="weiter !== undefined" type="primary" @click="weiter();emit('update:show', false)">{{ weiter_text }}</svws-ui-button>
+			<svws-ui-button type="secondary" @click="emit('update:show', false)">{{ abbrechenText }}</svws-ui-button>
+			<svws-ui-button v-if="jumpTo !== undefined" type="primary" @click="jump_to">{{ jumpToText }}</svws-ui-button>
+			<svws-ui-button v-if="weiter !== undefined" type="primary" @click="weiter();emit('update:show', false)">{{ weiterText }}</svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>
@@ -19,15 +19,15 @@
 		text: string | undefined;
 		jumpTo?: () => Promise<void>;
 		weiter?: () => void;
-		jumpTo_text?: string;
-		weiter_text?: string;
-		abbrechen_text?: string;
+		jumpToText?: string;
+		weiterText?: string;
+		abbrechenText?: string;
 	}>(), {
 		jumpTo: undefined,
 		weiter: undefined,
-		weiter_text: "weiter",
-		jumpTo_text: "springen",
-		abbrechen_text: "abbrechen",
+		weiterText: "weiter",
+		jumpToText: "springen",
+		abbrechenText: "abbrechen",
 	});
 
 	const emit = defineEmits<{

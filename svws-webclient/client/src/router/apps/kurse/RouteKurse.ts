@@ -9,9 +9,10 @@ import { routeKursDaten } from "~/router/apps/kurse/RouteKursDaten";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import { routeKurseGruppenprozesse } from "./RouteKurseGruppenprozesse";
 import { routeKurseNeu } from "./RouteKurseNeu";
-import { KurseAuswahlProps } from "~/components/kurse/SKurseAuswahlProps";
+import type { KurseAuswahlProps } from "~/components/kurse/SKurseAuswahlProps";
 import { ConfigElement } from "~/components/Config";
 import { api } from "~/router/Api";
+import { AppMenuGroup } from "@ui";
 
 
 const SKurseAuswahl = () => import("~/components/kurse/SKurseAuswahl.vue");
@@ -29,6 +30,8 @@ export class RouteKurse extends RouteAuswahlNode<KursListeManager, RouteDataKurs
 			routeKurseNeu,
 		];
 		super.defaultChild = routeKursDaten;
+		super.menugroup = AppMenuGroup.MAIN;
+		super.icon = "i-ri-book-2-line";
 		super.getAuswahlListProps = (props) => (<KurseAuswahlProps>{
 			...props,
 			setFilterNurSichtbar: this.data.setFilterNurSichtbar,

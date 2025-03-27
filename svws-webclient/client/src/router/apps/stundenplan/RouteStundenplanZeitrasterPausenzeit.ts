@@ -1,11 +1,10 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationNormalized, RouteParams } from "vue-router";
 import type { StundenplanZeitrasterPausenzeitProps } from "~/components/stundenplan/zeitrasterPausenzeit/SStundenplanZeitrasterPausenzeitProps";
 
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
-import { routeStundenplan, type RouteStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
+import { RouteStundenplan, routeStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
 import { api } from "~/router/Api";
-import { routeApp } from "../RouteApp";
 
 const SStundenplanZeitrasterPausenzeit = () => import("~/components/stundenplan/zeitrasterPausenzeit/SStundenplanZeitrasterPausenzeit.vue");
 
@@ -18,15 +17,13 @@ export class RouteStundenplanZeitrasterPausenzeit extends RouteNode<any, RouteSt
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Zeitraster";
-	}
-
-	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+		this.isHidden = (params?: RouteParams) => RouteStundenplan.katalogeCheckHidden(false, this, params);
 	}
 
 	public getProps(to: RouteLocationNormalized): StundenplanZeitrasterPausenzeitProps {
 		return {
 			schulform: api.schulform,
-			stundenplanManager: () => routeStundenplan.data.stundenplanManager,
+			stundenplanManager: () => routeStundenplan.data.manager.daten(),
 			listLehrer: routeStundenplan.data.listLehrer,
 			patchPausenzeit: routeStundenplan.data.patchPausenzeit,
 			removePausenzeiten: routeStundenplan.data.removePausenzeiten,

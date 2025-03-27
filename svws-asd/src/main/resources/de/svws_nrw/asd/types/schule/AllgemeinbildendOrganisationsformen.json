@@ -2,7 +2,7 @@
 	"version": 2,
 	"daten": [ {
 		"bezeichner": "NICHT_ZUGEORDNET",
-		"idHistorie": 1,
+		"idStatistik": "1",
 		"historie": [ {
 			"id": 3000000,
 			"schluessel": "0",
@@ -17,7 +17,7 @@
 		} ]
 	}, {	
 		"bezeichner": "HALBTAG",
-		"idHistorie": 2,
+		"idStatistik": "2",
 		"historie": [ {
 			"id": 3001000,
 			"schluessel": "1",
@@ -70,7 +70,7 @@
 		} ]
 	}, {	
 		"bezeichner": "GANZTAG",
-		"idHistorie": 3,
+		"idStatistik": "3",
 		"historie": [ {
 			"id": 3002000,
 			"schluessel": "2",
@@ -123,7 +123,7 @@
 		} ]
 	}, {	
 		"bezeichner": "GANZTAG_ERWEITERT",
-		"idHistorie": 4,
+		"idStatistik": "4",
 		"historie": [ {
 			"id": 3003000,
 			"schluessel": "3",
@@ -144,7 +144,7 @@
 		} ]
 	}, {	
 		"bezeichner": "GANZTAG_OFFEN",
-		"idHistorie": 5,
+		"idStatistik": "5",
 		"historie": [ {
 			"id": 3004000,
 			"schluessel": "4",

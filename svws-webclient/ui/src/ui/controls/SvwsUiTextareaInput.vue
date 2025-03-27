@@ -11,20 +11,20 @@
 			'textarea-input--resize-both': resizeable === 'both',
 			'textarea-input--headless': headless,
 			'col-span-full': span === 'full',
-			'flex-grow': span === 'grow'
+			'grow': span === 'grow'
 		}">
-		<textarea ref="textarea" v-model="dataOrEmpty" @input="onInput" @blur="onBlur" class="textarea-input--control" :disabled :required :rows v-bind="{ ...$attrs }" />
+		<textarea ref="textarea" v-model="dataOrEmpty" @input="onInput" @blur="onBlur" class="textarea-input--control" :disabled :required :rows v-bind="{ ...$attrs }" :class="{ 'contentFocusField': isContentFocusField }" />
 		<span :id="idPlaceholder" v-if="placeholder.length > 0" class="textarea-input--placeholder" :class="{ 'textarea-input--placeholder--required': required }">
 			<span>{{ placeholder }}</span>
-			<span class="icon i-ri-alert-line ml-0.5 -my-0.5 icon-error" v-if="isValid === false" />
+			<span class="icon i-ri-alert-line ml-0.5 -my-0.5 icon-ui-danger" v-if="isValid === false" />
 			<span v-if="(maxLen > 0) && (data !== null)" class="inline-flex ml-1 gap-1" :class="maxLenValid ? 'opacity-50' : 'text-ui-danger'">
 				{{ `(${(data.toLocaleString().length > 0) ? data.toLocaleString().length + '/' : 'maximal '}${maxLen} Zeichen)` }}
 			</span>
 			<span :id="idStatistics" v-if="statistics" class="cursor-pointer">
 				<svws-ui-tooltip position="right">
 					<span class="inline-flex items-center">
-						<span class="icon i-ri-bar-chart-2-line icon-statistics pointer-events-auto ml-0.5" />
-						<span class="icon i-ri-alert-fill icon-error" v-if="(data === '') || (data === null)" />
+						<span class="icon i-ri-bar-chart-2-line icon-ui-statistic pointer-events-auto ml-0.5" />
+						<span class="icon i-ri-alert-fill icon-ui-danger" v-if="(data === '') || (data === null)" />
 					</span>
 					<template #content>
 						Relevant für die Statistik
@@ -56,6 +56,7 @@
 		maxLen?: number;
 		span?: 'full' | 'grow';
 		headless?: boolean;
+		isContentFocusField?: boolean;
 	}>(), {
 		modelValue: "",
 		placeholder: "",
@@ -70,6 +71,7 @@
 		maxLen: undefined,
 		span: undefined,
 		headless: false,
+		isContentFocusField: false,
 	})
 
 	const emit = defineEmits<{
@@ -141,152 +143,3 @@
 	defineExpose({ content: data });
 
 </script>
-
-
-<style lang="postcss">
-	.textarea-input {
-		@apply flex;
-		@apply relative;
-
-		textarea::placeholder {
-			@apply text-ui-secondary;
-		}
-		&.textarea-input--headless {
-			@apply bg-transparent;
-			textarea {
-				@apply bg-transparent border-none ;
-			}
-		}
-	}
-
-	.textarea-input--control {
-		@apply bg-ui border border-ui-secondary text-ui;
-		@apply rounded-md;
-		@apply w-full;
-		@apply text-base;
-		@apply cursor-text;
-		padding: 0.5em 0.7em;
-		min-height: 2.5em;
-		min-width: 10em;
-
-		&:focus {
-			@apply outline-none;
-		}
-
-		&:focus-visible {
-			@apply ring ring-ui-neutral;
-		}
-	}
-
-	span.textarea-input--control {
-		padding-top: 0.4em;
-		padding-bottom: 0.4em;
-	}
-
-	.textarea-input--focus .textarea-input--control,
-	.textarea-input--filled .textarea-input--control {
-		@apply border-ui;
-	}
-
-	.textarea-input--invalid:not(:focus-within) .textarea-input--control {
-		@apply border-ui-danger;
-	}
-
-	.textarea-input--statistics .textarea-input--control {
-		@apply border-ui-statistic;
-	}
-
-	.textarea-input--statistics:not(.textarea-input--filled) .textarea-input--control {
-		@apply border-ui-statistic-secondary;
-	}
-
-	.textarea-input--resize-none .textarea-input--control {
-		@apply resize-none;
-	}
-
-	.textarea-input--resize-vertical .textarea-input--control {
-		@apply resize-y;
-	}
-
-	.textarea-input--resize-horizontal .textarea-input--control {
-		@apply resize-x;
-	}
-
-	.textarea-input--resize-both .textarea-input--control {
-		@apply resize;
-	}
-
-	.textarea-input--placeholder {
-		@apply absolute;
-		@apply pointer-events-none;
-		@apply opacity-60;
-		@apply transform;
-		@apply flex items-center font-medium;
-
-		top: 0.5em;
-		left: 0.7em;
-		line-height: 1.33;
-
-		.icon {
-			@apply w-[1.4em];
-		}
-	}
-
-	.textarea-input:not(.textarea-input--filled):not(:focus-within):not(.textarea-input--disabled):hover .textarea-input--placeholder {
-		@apply opacity-80;
-	}
-
-	.textarea-input--statistics.textarea-input--invalid .textarea-input--control {
-		@apply border-ui-danger;
-	}
-
-	.textarea-input--statistics .textarea-input--placeholder {
-		@apply text-ui-statistic;
-	}
-
-	.textarea-input--statistics.textarea-input--invalid .textarea-input--placeholder {
-		@apply text-ui-statistic;
-	}
-
-	.textarea-input--focus:not(.textarea-input--headless) .textarea-input--placeholder,
-	.textarea-input--filled:not(.textarea-input--headless) .textarea-input--placeholder {
-		@apply bg-ui opacity-100;
-		@apply -translate-y-1/2;
-		@apply rounded;
-		@apply px-1;
-
-		top: 0;
-		left: 0.7em;
-		font-size: 0.78rem;
-
-		&:after {
-			content: "";
-		}
-	}
-
-	.textarea-input--headless.textarea-input--filled .textarea-input--placeholder {
-		@apply opacity-0;
-	}
-
-	.textarea-input--invalid .textarea-input--placeholder,
-	.textarea-input--invalid:not(:focus-within) .textarea-input--control {
-		@apply text-ui-danger;
-	}
-
-	.textarea-input--placeholder--required:after {
-		@apply text-ui-danger;
-		content: " *";
-	}
-
-	.textarea-input--disabled .textarea-input--control {
-		@apply bg-ui text-ui-disabled border-ui-disabled;
-		@apply pointer-events-none resize-none;
-	}
-
-	.textarea-input--disabled .textarea-input--placeholder {
-		@apply bg-ui text-ui-disabled;
-	}
-
-
-
-</style>

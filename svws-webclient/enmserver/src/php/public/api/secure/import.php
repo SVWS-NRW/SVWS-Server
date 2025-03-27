@@ -1,5 +1,13 @@
 <?php
-
+	/**
+	 * Importiert die ENM-Daten Lehrer aus dem SVWS Server und speichert diese in der SQLite Datenbank.
+	 *
+	 * @httpMethod POST
+	 * @auth (Basic) Lehrer Username und Kennwort benötigt
+	 *
+	 * @return void
+	 * @responseCode 200
+	 */
 	// Initialisierung
 	require_once $_SERVER['DOCUMENT_ROOT'].'/../app/init.php';
 	require_once $_SERVER['DOCUMENT_ROOT'].'/../app/ENMDatenManager.php';

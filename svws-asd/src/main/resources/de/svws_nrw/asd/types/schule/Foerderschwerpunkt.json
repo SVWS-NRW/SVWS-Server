@@ -2,7 +2,7 @@
 	"version": 2,
 	"daten": [ {
 		"bezeichner": "KEINER",
-		"idHistorie": 1,
+		"idStatistik": "1",
 		"historie": [ {
 			"id": 0,
 			"kuerzel": "**",
@@ -22,7 +22,7 @@
 		} ]
 	}, {
 		"bezeichner": "BL",
-		"idHistorie": 2,
+		"idStatistik": "2",
 		"historie": [ {
 			"id": 1000,
 			"kuerzel": "BL",
@@ -42,7 +42,7 @@
 		} ]
 	}, {
 		"bezeichner": "EZ",
-		"idHistorie": 3,
+		"idStatistik": "3",
 		"historie": [ {
 			"id": 2000,
 			"kuerzel": "EZ",
@@ -62,7 +62,7 @@
 		} ]
 	}, {
 		"bezeichner": "GB",
-		"idHistorie": 4,
+		"idStatistik": "4",
 		"historie": [ {
 			"id": 3000,
 			"kuerzel": "GB",
@@ -82,7 +82,7 @@
 		} ]
 	}, {
 		"bezeichner": "GH",
-		"idHistorie": 5,
+		"idStatistik": "5",
 		"historie": [ {
 			"id": 4000,
 			"kuerzel": "GH",
@@ -102,7 +102,7 @@
 		} ]
 	}, {
 		"bezeichner": "KB",
-		"idHistorie": 6,
+		"idStatistik": "6",
 		"historie": [ {
 			"id": 5000,
 			"kuerzel": "KB",
@@ -122,7 +122,7 @@
 		} ]
 	}, {
 		"bezeichner": "KR",
-		"idHistorie": 7,
+		"idStatistik": "7",
 		"historie": [ {
 			"id": 6000,
 			"kuerzel": "KR",
@@ -134,7 +134,7 @@
 		} ]
 	}, {
 		"bezeichner": "LB",
-		"idHistorie": 8,
+		"idStatistik": "8",
 		"historie": [ {
 			"id": 7000,
 			"kuerzel": "LB",
@@ -154,7 +154,7 @@
 		} ]
 	}, {
 		"bezeichner": "PE",
-		"idHistorie": 9,
+		"idStatistik": "9",
 		"historie": [ {
 			"id": 8000,
 			"kuerzel": "PE",
@@ -166,7 +166,7 @@
 		} ]
 	}, {
 		"bezeichner": "PF",
-		"idHistorie": 10,
+		"idStatistik": "10",
 		"historie": [ {
 			"id": 9000,
 			"kuerzel": "PF",
@@ -178,7 +178,7 @@
 		} ]
 	}, {
 		"bezeichner": "PL",
-		"idHistorie": 11,
+		"idStatistik": "11",
 		"historie": [ {
 			"id": 10000,
 			"kuerzel": "PL",
@@ -190,7 +190,7 @@
 		} ]
 	}, {
 		"bezeichner": "PS",
-		"idHistorie": 12,
+		"idStatistik": "12",
 		"historie": [ {
 			"id": 11000,
 			"kuerzel": "PS",
@@ -202,7 +202,7 @@
 		} ]
 	}, {
 		"bezeichner": "SB",
-		"idHistorie": 13,
+		"idStatistik": "13",
 		"historie": [ {
 			"id": 12000,
 			"kuerzel": "SB",
@@ -222,7 +222,7 @@
 		} ]
 	}, {
 		"bezeichner": "SG",
-		"idHistorie": 14,
+		"idStatistik": "14",
 		"historie": [ {
 			"id": 13000,
 			"kuerzel": "SG",
@@ -242,7 +242,7 @@
 		} ]
 	}, {
 		"bezeichner": "SH",
-		"idHistorie": 15,
+		"idStatistik": "15",
 		"historie": [ {
 			"id": 14000,
 			"kuerzel": "SH",
@@ -262,7 +262,7 @@
 		} ]
 	}, {
 		"bezeichner": "XX",
-		"idHistorie": 16,
+		"idStatistik": "16",
 		"historie": [ {
 			"id": 15000,
 			"kuerzel": "XX",

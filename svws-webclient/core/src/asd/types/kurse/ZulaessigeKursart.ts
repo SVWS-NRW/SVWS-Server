@@ -11,7 +11,7 @@ import { NullPointerException } from '../../../java/lang/NullPointerException';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import type { CoreType } from '../../../asd/types/CoreType';
-import { de_svws_nrw_asd_types_CoreType_getManager, de_svws_nrw_asd_types_CoreType_daten, de_svws_nrw_asd_types_CoreType_historienId, de_svws_nrw_asd_types_CoreType_historie } from '../../../asd/types/CoreType';
+import { de_svws_nrw_asd_types_CoreType_getManager, de_svws_nrw_asd_types_CoreType_daten, de_svws_nrw_asd_types_CoreType_statistikId, de_svws_nrw_asd_types_CoreType_historie } from '../../../asd/types/CoreType';
 import type { JavaMap } from '../../../java/util/JavaMap';
 import { HashSet } from '../../../java/util/HashSet';
 import { CoreTypeException } from '../../../asd/data/CoreTypeException';
@@ -416,6 +416,9 @@ export class ZulaessigeKursart extends JavaEnum<ZulaessigeKursart> implements Co
 	 */
 	public static init(manager : CoreTypeDataManager<ZulaessigeKursartKatalogEintrag, ZulaessigeKursart>) : void {
 		CoreTypeDataManager.putManager(ZulaessigeKursart.class, manager);
+		ZulaessigeKursart._mapSchulformenByID.clear();
+		ZulaessigeKursart._mapBySchuljahrAndSchulform.clear();
+		ZulaessigeKursart._mapBySchuljahrAndAllgemeinerKursart.clear();
 		for (const ct of ZulaessigeKursart.data().getWerte())
 			for (const e of ct.historie()) {
 				const tmpSet : JavaSet<Schulform> | null = new HashSet<Schulform>();
@@ -539,8 +542,8 @@ export class ZulaessigeKursart extends JavaEnum<ZulaessigeKursart> implements Co
 		return de_svws_nrw_asd_types_CoreType_daten(this, schuljahr);
 	}
 
-	public historienId() : number {
-		return de_svws_nrw_asd_types_CoreType_historienId(this);
+	public statistikId() : String | null {
+		return de_svws_nrw_asd_types_CoreType_statistikId(this);
 	}
 
 	public historie() : List<ZulaessigeKursartKatalogEintrag> {

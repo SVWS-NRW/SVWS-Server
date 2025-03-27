@@ -7,14 +7,12 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumstunde;
-import de.svws_nrw.core.data.stundenplan.Stundenplan;
-import de.svws_nrw.module.reporting.proxytypes.stundenplanung.ProxyReportingStundenplanungRaum;
-import de.svws_nrw.module.reporting.proxytypes.stundenplanung.ProxyReportingStundenplanungZeitrasterstunde;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKlausuraufsicht;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKlausurraum;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKlausurtermin;
-import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungZeitrasterstunde;
+import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungStundenplan;
+import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungUnterrichtsrasterstunde;
 
 
 /**
@@ -46,27 +44,22 @@ public class ProxyReportingGostKlausurplanungKlausurraum extends ReportingGostKl
 		this.reportingRepository = reportingRepository;
 
 		// Stundenplan zum Klausurtermin ermitteln. Ohne Stundenplan gibt es keine Raumdaten und kein Zeitraster für die Aufsichten.
-		final Stundenplan stundenplan = this.reportingRepository.stundenplan(super.klausurtermin.datum());
+		final ReportingStundenplanungStundenplan stundenplan = this.reportingRepository.stundenplan(super.klausurtermin.datum());
 
 		if (stundenplan != null) {
 			// Wenn bereits ein Raum der Schule (aus dem Stundenplan) der Klausur zugeordnet wurde, dann die Daten ermitteln und ergänzen.
-			if (gostKlausurraum.idStundenplanRaum != null) {
-				stundenplan.raeume.stream().filter(r -> r.id == gostKlausurraum.idStundenplanRaum).findFirst()
-						.ifPresent(stundenplanRaum -> super.raumdaten = new ProxyReportingStundenplanungRaum(stundenplanRaum, stundenplan.id));
-			}
+			if (gostKlausurraum.idStundenplanRaum != null)
+				super.raumdaten = stundenplan.raum(gostKlausurraum.idStundenplanRaum);
 
 			// Stunden der Klausur für die Aufsichten aus dem Zeitraster des Stundenplans ergänzen.
 			if ((gostKlausurraumstunden != null) && !gostKlausurraumstunden.isEmpty()) {
-				final List<ReportingStundenplanungZeitrasterstunde> stunden = new ArrayList<>();
+				final List<ReportingStundenplanungUnterrichtsrasterstunde> stunden = new ArrayList<>();
 				for (final GostKlausurraumstunde stunde : gostKlausurraumstunden) {
-					if (stunde != null) {
-						stundenplan.zeitraster.stream().filter(z -> z.id == stunde.idZeitraster).findFirst()
-								.ifPresent(
-										stundenplanstunde -> stunden.add(new ProxyReportingStundenplanungZeitrasterstunde(stundenplanstunde, stundenplan.id)));
-					}
+					if (stunde != null)
+						stunden.add(stundenplan.unterrichtsrasterstunde(stunde.idZeitraster));
 				}
 				if (!stunden.isEmpty()) {
-					stunden.sort(Comparator.comparing(ReportingStundenplanungZeitrasterstunde::unterrichtstunde));
+					stunden.sort(Comparator.comparing(ReportingStundenplanungUnterrichtsrasterstunde::stundeImUnterrichtsraster));
 					// TODO: Wenn die Aufsichten im Client vorhanden sind und die Datenstrukturen stehen, dann ProxyReportingGostKlausurplanungKlausuraufsicht
 					//  anlegen. Zudem müssen dann auch die fehlenden Daten (hier null) ergänzt werden.
 					super.aufsichten.addAll(stunden.stream().map(z -> (new ReportingGostKlausurplanungKlausuraufsicht(null, null, null, null, z))).toList());

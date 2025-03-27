@@ -1,7 +1,4 @@
-import { SchuldateiOrganisationseinheitSchulform } from '../../../schulen/v1/data/SchuldateiOrganisationseinheitSchulform';
 import { SchuldateiEintrag } from '../../../schulen/v1/data/SchuldateiEintrag';
-import { ArrayList } from '../../../java/util/ArrayList';
-import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 
 export class SchuldateiOrganisationseinheitGrunddaten extends SchuldateiEintrag {
@@ -15,6 +12,21 @@ export class SchuldateiOrganisationseinheitGrunddaten extends SchuldateiEintrag 
 	 * Die Schulnummer.
 	 */
 	public schulnummer : string = "";
+
+	/**
+	 * Die Amtsbezeichnung der Organisationseinheit
+	 */
+	public amtsbez1 : string = "";
+
+	/**
+	 * Die Amtsbezeichnung der Organisationseinheit
+	 */
+	public amtsbez2 : string = "";
+
+	/**
+	 * Die Amtsbezeichnung der Organisationseinheit
+	 */
+	public amtsbez3 : string = "";
 
 	/**
 	 * Die Kurzbezeichnung der Organisationseinheit
@@ -81,11 +93,6 @@ export class SchuldateiOrganisationseinheitGrunddaten extends SchuldateiEintrag 
 	 */
 	public internatsplaetze : number = 0;
 
-	/**
-	 * Die Schulformen der Organisationseinheit:Schule (zeitl. Verlaufsliste)
-	 */
-	public readonly schulform : List<SchuldateiOrganisationseinheitSchulform> = new ArrayList<SchuldateiOrganisationseinheitSchulform>();
-
 
 	/**
 	 * Erstellt neue Grunddaten für eine Organiationseinheit der Schuldatei
@@ -116,6 +123,15 @@ export class SchuldateiOrganisationseinheitGrunddaten extends SchuldateiEintrag 
 		if (obj.schulnummer === undefined)
 			throw new Error('invalid json format, missing attribute schulnummer');
 		result.schulnummer = obj.schulnummer;
+		if (obj.amtsbez1 === undefined)
+			throw new Error('invalid json format, missing attribute amtsbez1');
+		result.amtsbez1 = obj.amtsbez1;
+		if (obj.amtsbez2 === undefined)
+			throw new Error('invalid json format, missing attribute amtsbez2');
+		result.amtsbez2 = obj.amtsbez2;
+		if (obj.amtsbez3 === undefined)
+			throw new Error('invalid json format, missing attribute amtsbez3');
+		result.amtsbez3 = obj.amtsbez3;
 		if (obj.kurzbezeichnung === undefined)
 			throw new Error('invalid json format, missing attribute kurzbezeichnung');
 		result.kurzbezeichnung = obj.kurzbezeichnung;
@@ -155,11 +171,6 @@ export class SchuldateiOrganisationseinheitGrunddaten extends SchuldateiEintrag 
 		if (obj.internatsplaetze === undefined)
 			throw new Error('invalid json format, missing attribute internatsplaetze');
 		result.internatsplaetze = obj.internatsplaetze;
-		if (obj.schulform !== undefined) {
-			for (const elem of obj.schulform) {
-				result.schulform.add(SchuldateiOrganisationseinheitSchulform.transpilerFromJSON(JSON.stringify(elem)));
-			}
-		}
 		return result;
 	}
 
@@ -170,6 +181,9 @@ export class SchuldateiOrganisationseinheitGrunddaten extends SchuldateiEintrag 
 		result += '"geaendertam" : ' + ((obj.geaendertam === null) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
 		result += '"id" : ' + JSON.stringify(obj.id) + ',';
 		result += '"schulnummer" : ' + JSON.stringify(obj.schulnummer) + ',';
+		result += '"amtsbez1" : ' + JSON.stringify(obj.amtsbez1) + ',';
+		result += '"amtsbez2" : ' + JSON.stringify(obj.amtsbez2) + ',';
+		result += '"amtsbez3" : ' + JSON.stringify(obj.amtsbez3) + ',';
 		result += '"kurzbezeichnung" : ' + JSON.stringify(obj.kurzbezeichnung) + ',';
 		result += '"rechtsstatus" : ' + JSON.stringify(obj.rechtsstatus) + ',';
 		result += '"schultraegernummer" : ' + JSON.stringify(obj.schultraegernummer) + ',';
@@ -183,14 +197,6 @@ export class SchuldateiOrganisationseinheitGrunddaten extends SchuldateiEintrag 
 		result += '"ptb" : ' + JSON.stringify(obj.ptb) + ',';
 		result += '"internatsbetrieb" : ' + JSON.stringify(obj.internatsbetrieb) + ',';
 		result += '"internatsplaetze" : ' + obj.internatsplaetze.toString() + ',';
-		result += '"schulform" : [ ';
-		for (let i = 0; i < obj.schulform.size(); i++) {
-			const elem = obj.schulform.get(i);
-			result += SchuldateiOrganisationseinheitSchulform.transpilerToJSON(elem);
-			if (i < obj.schulform.size() - 1)
-				result += ',';
-		}
-		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -212,6 +218,15 @@ export class SchuldateiOrganisationseinheitGrunddaten extends SchuldateiEintrag 
 		}
 		if (obj.schulnummer !== undefined) {
 			result += '"schulnummer" : ' + JSON.stringify(obj.schulnummer) + ',';
+		}
+		if (obj.amtsbez1 !== undefined) {
+			result += '"amtsbez1" : ' + JSON.stringify(obj.amtsbez1) + ',';
+		}
+		if (obj.amtsbez2 !== undefined) {
+			result += '"amtsbez2" : ' + JSON.stringify(obj.amtsbez2) + ',';
+		}
+		if (obj.amtsbez3 !== undefined) {
+			result += '"amtsbez3" : ' + JSON.stringify(obj.amtsbez3) + ',';
 		}
 		if (obj.kurzbezeichnung !== undefined) {
 			result += '"kurzbezeichnung" : ' + JSON.stringify(obj.kurzbezeichnung) + ',';
@@ -251,16 +266,6 @@ export class SchuldateiOrganisationseinheitGrunddaten extends SchuldateiEintrag 
 		}
 		if (obj.internatsplaetze !== undefined) {
 			result += '"internatsplaetze" : ' + obj.internatsplaetze.toString() + ',';
-		}
-		if (obj.schulform !== undefined) {
-			result += '"schulform" : [ ';
-			for (let i = 0; i < obj.schulform.size(); i++) {
-				const elem = obj.schulform.get(i);
-				result += SchuldateiOrganisationseinheitSchulform.transpilerToJSON(elem);
-				if (i < obj.schulform.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

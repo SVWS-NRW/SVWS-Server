@@ -744,33 +744,6 @@ public class SchemaTabelle {
 	 *
 	 * @return das SQL-Skript zum Erstellen oder Entfernen von Triggern für das Auto-Inkrement
 	 */
-	public String getPrimaerschluesselTriggerSQL(final DBDriver dbms, final int rev, final boolean create) {
-		final var triggerList = getPrimaerschluesselTriggerSQLList(dbms, rev, create);
-		if (triggerList.isEmpty())
-			return "";
-		final var newline = System.lineSeparator();
-		if (DBDriver.MARIA_DB.equals(dbms) || DBDriver.MYSQL.equals(dbms)) {
-			return triggerList.stream().map(sql -> "delimiter $" + newline + sql + newline + "$" + newline + "delimiter ;" + newline)
-					.collect(Collectors.joining(newline + newline));
-		} else if (DBDriver.MSSQL.equals(dbms)) {
-			return triggerList.stream().map(sql -> sql + newline + "GO" + newline)
-					.collect(Collectors.joining(newline + newline));
-		}
-		// DBDriver.SQLITE.equals(dbms))
-		return triggerList.stream().collect(Collectors.joining(newline + newline));
-	}
-
-
-
-	/**
-	 * Erstellt die SQL-Skripte zum Erstellen oder Entfernen von Triggern für das Auto-Inkrement
-	 *
-	 * @param dbms     das DBMS für welches das Skript angefragt wird
-	 * @param rev      die Revision, für welche die Trigger der Tabelle erzeugt oder entfernt werden sollen
-	 * @param create   gibt an, ob das CREATE-Skript oder das Drop-Skript angefragt wird.
-	 *
-	 * @return das SQL-Skript zum Erstellen oder Entfernen von Triggern für das Auto-Inkrement
-	 */
 	public List<String> getPrimaerschluesselTriggerSQLList(final DBDriver dbms, final long rev, final boolean create) {
 		final ArrayList<String> result = new ArrayList<>();
 		if ((!this._pkAutoIncrement) || (this._pkSpalten.size() != 1))
@@ -784,7 +757,7 @@ public class SchemaTabelle {
 					|| ((rev != -1) && (rev >= this.revision().revision) && ((this.veraltet().revision == -1) || (rev < this.veraltet().revision)))))
 				return result;
 			if (DBDriver.MARIA_DB.equals(dbms) || DBDriver.MYSQL.equals(dbms)) {
-				result.add("CREATE TRIGGER t_AutoIncrement_INSERT_" + tab + newline
+				result.add("CREATE OR REPLACE TRIGGER t_AutoIncrement_INSERT_" + tab + newline
 						+ "BEFORE INSERT" + newline
 						+ "  ON " + tab + " FOR EACH ROW" + newline
 						+ "BEGIN" + newline
@@ -804,7 +777,7 @@ public class SchemaTabelle {
 						+ "    UPDATE Schema_AutoInkremente SET MaxID = NEW." + spalte + " WHERE NameTabelle='" + tab + "';" + newline
 						+ "  END IF;" + newline
 						+ "END" + newline);
-				result.add("CREATE TRIGGER t_AutoIncrement_UPDATE_" + tab + newline
+				result.add("CREATE OR REPLACE TRIGGER t_AutoIncrement_UPDATE_" + tab + newline
 						+ "BEFORE UPDATE" + newline
 						+ "  ON " + tab + " FOR EACH ROW" + newline
 						+ "BEGIN" + newline

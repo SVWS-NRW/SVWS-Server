@@ -106,13 +106,13 @@
 					<tr><td colspan="9" class="f-tiny" style="height: 1mm;"></td></tr>
 					<tr th:each="erziehergruppe,iterationVarErzieherGruppe : ${schueler.erzieherArtGruppen()}">
 						<td class="f-tiny"></td>
-						<td class="f-tiny p-tb-0-lr-1 f-ital t-ar " th:classappend="${!iterationVarErzieherGruppe.last} ? 'bo-b-grey'" th:text="${erziehergruppe.bezeichnung()}">Eltern</td>
-						<td colspan="4" class="f-tiny p-tb-0-lr-1" th:classappend="${!iterationVarErzieherGruppe.last} ? 'bo-b-grey'" th:text="${erziehergruppe.vornameNachnameMitTitel()}">Dr. Erika und Norbert Mustermann</td>
-						<td class="f-tiny p-tb-0-lr-1" th:classappend="${!iterationVarErzieherGruppe.last} ? 'bo-b-grey'" th:text="${erziehergruppe.strassennameHausnummer()}">Musterstraße 13a</td>
-						<td class="f-tiny p-tb-0-lr-1 ta-r" th:classappend="${!iterationVarErzieherGruppe.last} ? 'bo-b-grey'" th:text="${erziehergruppe.plz()}">12345</td>
-						<td class="f-tiny p-tb-0-lr-1" th:classappend="${!iterationVarErzieherGruppe.last} ? 'bo-b-grey'" th:text="${erziehergruppe.wohnortname()}">Musterstadt</td>
+						<td class="f-tiny p-tb-0 p-lr-1 f-ital t-ar " th:classappend="${!iterationVarErzieherGruppe.last} ? 'bo-b-grey'" th:text="${erziehergruppe.bezeichnung()}">Eltern</td>
+						<td colspan="4" class="f-tiny p-tb-0 p-lr-1" th:classappend="${!iterationVarErzieherGruppe.last} ? 'bo-b-grey'" th:text="${erziehergruppe.vornameNachnameMitTitel()}">Dr. Erika und Norbert Mustermann</td>
+						<td class="f-tiny p-tb-0 p-lr-1" th:classappend="${!iterationVarErzieherGruppe.last} ? 'bo-b-grey'" th:text="${erziehergruppe.strassennameHausnummer()}">Musterstraße 13a</td>
+						<td class="f-tiny p-tb-0 p-lr-1 ta-r" th:classappend="${!iterationVarErzieherGruppe.last} ? 'bo-b-grey'" th:text="${erziehergruppe.plz()}">12345</td>
+						<td class="f-tiny p-tb-0 p-lr-1" th:classappend="${!iterationVarErzieherGruppe.last} ? 'bo-b-grey'" th:text="${erziehergruppe.wohnortname()}">Musterstadt</td>
 					</tr>
-					<tr><td colspan="9" class="f-tiny p-tb-0-lr-1" style="height: 1mm;"></td></tr>
+					<tr><td colspan="9" class="f-tiny p-tb-0 p-lr-1" style="height: 1mm;"></td></tr>
 				</th:block>
 				</tbody>
 			</table>

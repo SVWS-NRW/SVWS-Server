@@ -7,14 +7,15 @@
 		<Teleport to=".router-tab-bar--subnav" v-if="isMounted">
 			<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl :halbjahr :zeige-alle-jahrgaenge :set-zeige-alle-jahrgaenge />
 		</Teleport>
-		<div class="page--content page--content--full relative">
-			<svws-ui-content-card title="In Planung">
+		<div class="page page-flex-row">
+			<div class="flex flex-col gap-2 min-w-128">
+				<div class="text-headline-md">In Planung</div>
 				<div class="flex flex-col">
 					<div v-if="jahrgangsdaten?.abiturjahr !== -1"
 						@drop="onDrop(undefined)"
 						@dragover="checkDropZoneTerminAuswahl"
 						class="h-full"
-						:class="[(terminSelected.value !== undefined && terminSelected.value.datum !== null) ? 'p-4 border-error ring-4 ring-error/10 border-2 rounded-xl border-dashed' : '']">
+						:class="[(terminSelected.value !== undefined && terminSelected.value.datum !== null) ? 'p-4 border-ui-danger ring-4 ring-ui-danger/10 border-2 rounded-xl border-dashed' : '']">
 						<div>
 							<div class="leading-tight flex flex-col gap-0.5" v-if="kMan().terminOhneDatumGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value).isEmpty()">
 								<span>Aktuell keine Klausuren zu planen.</span>
@@ -31,8 +32,8 @@
 								@dragend="onDrag(undefined)"
 								@click="terminSelected.value?.id === termin.id ? onDrag(undefined) : onDrag(termin);$event.stopPropagation()"
 								:class="{
-									'border bg-white dark:bg-black rounded-lg border-black/10 dark:border-white/10 my-3 cursor-grab': terminSelected.value !== undefined && terminSelected.value.id === termin.id,
-									'cursor-pointer hover:bg-black/10 dark:hover:bg-white/10 rounded-lg pb-1': terminSelected.value !== undefined && terminSelected.value.id !== termin.id || terminSelected.value === undefined,
+									'border bg-ui-contrast-0 rounded-lg border-ui-contrast-10 my-3 cursor-grab': terminSelected.value !== undefined && terminSelected.value.id === termin.id,
+									'cursor-pointer hover:bg-ui-contrast-10 rounded-lg pb-1': terminSelected.value !== undefined && terminSelected.value.id !== termin.id || terminSelected.value === undefined,
 								}">
 								<s-gost-klausurplanung-termin :termin
 									:benutzer-kompetenzen
@@ -50,8 +51,8 @@
 						</ul>
 					</div>
 				</div>
-			</svws-ui-content-card>
-			<svws-ui-content-card class="svws-card-stundenplan">
+			</div>
+			<div class="svws-card-stundenplan max-w-480 min-w-320 h-full overflow-auto overflow-y-hidden">
 				<template v-if="kalenderdatum">
 					<s-gost-klausurplanung-kalender-stundenplan-ansicht :benutzer-kompetenzen
 						:id="33"
@@ -74,35 +75,33 @@
 						:kalenderwoche
 						:kursklausur-mouse-over="() => kursklausurMouseOver">
 						<template #kwAuswahl>
-							<div class="col-span-2 flex gap-0.5 my-auto">
-								<svws-ui-button type="icon" class="-my-1 w-7 h-7" @click="navKalenderdatum(-7)" :disabled="!berechneKwzDatum(-7)"><span class="icon i-ri-arrow-left-s-line -m-0.5" /></svws-ui-button>
-								<svws-ui-select class="flex-grow svws-kw-auswahl" title="Kalenderwoche" v-model="kalenderwochenauswahl" :items="kalenderwochen()" :item-text="(kw: StundenplanKalenderwochenzuordnung) => stundenplanManager().kalenderwochenzuordnungGetWocheAsString(kw)" headless />
-								<svws-ui-button type="icon" class="-my-1 w-7 h-7" @click="navKalenderdatum(+7)" :disabled="!berechneKwzDatum(+7)"><span class="icon i-ri-arrow-right-s-line -m-0.5" /></svws-ui-button>
+							<div class="col-span-2 flex gap-0.5">
+								<svws-ui-button type="icon" @click="navKalenderdatum(-7)" :disabled="!berechneKwzDatum(-7)"><span class="icon i-ri-arrow-left-s-line" /></svws-ui-button>
+								<svws-ui-select title="Kalenderwoche" v-model="kalenderwochenauswahl" :items="kalenderwochen()" :item-text="kw => stundenplanManager().kalenderwochenzuordnungGetWocheAsString(kw)" headless />
+								<svws-ui-button type="icon" @click="navKalenderdatum(+7)" :disabled="!berechneKwzDatum(+7)"><span class="icon i-ri-arrow-right-s-line" /></svws-ui-button>
 							</div>
 						</template>
 					</s-gost-klausurplanung-kalender-stundenplan-ansicht>
 				</template>
 				<template v-else>
 					<svws-ui-select title="Kalenderwoche" v-model="kalenderwochenauswahl" :items="kalenderwochen()"
-						:item-text="(kw: StundenplanKalenderwochenzuordnung) => stundenplanManager().kalenderwochenzuordnungGetWocheAsString(kw)" />
+						:item-text="kw => stundenplanManager().kalenderwochenzuordnungGetWocheAsString(kw)" />
 				</template>
-			</svws-ui-content-card>
-			<svws-ui-content-card>
-				<template #title>
-					<span class="text-headline-md leading-none inline-flex gap-1">
-						<template v-if="anzahlProKwKonflikte2(4, false).length === 0">
-							<span class="icon i-ri-checkbox-circle-fill icon-success -my-1" />
-							<span>Keine Konflikte</span>
-						</template>
-						<template v-else-if="anzahlProKwKonflikte2(4, false).length > 0">
-							<span class="icon i-ri-alert-fill icon-error -my-0.5" />
-							<span> Konflikte</span>
-						</template>
-					</span>
-				</template>
+			</div>
+			<div class="flex flex-col h-full overflow-y-auto  min-w-96">
+				<div class="text-headline-md leading-none inline-flex gap-1">
+					<template v-if="anzahlProKwKonflikte2(4, false).length === 0">
+						<span class="icon i-ri-checkbox-circle-fill icon-ui-success" />
+						<span>Keine Konflikte</span>
+					</template>
+					<template v-else-if="anzahlProKwKonflikte2(4, false).length > 0">
+						<span class="icon i-ri-alert-fill icon-ui-danger" />
+						<span> Konflikte</span>
+					</template>
+				</div>
 				<div class="mb-12">
 					<div v-if="anzahlProKwKonflikte2(4, false).length > 0">
-						<div class="text-headline-sm leading-tight mb-6 -mt-2">
+						<div class="text-headline-sm leading-tight mb-6">
 							<div class="inline-flex gap-2 justify-between w-full">
 								<span>{{ anzahlProKwKonflikte2(4, false).length }} Schüler</span>
 								<svws-ui-checkbox class="-mt-1" type="toggle" v-model="showMoreKonflikte">Alle anzeigen</svws-ui-checkbox>
@@ -113,7 +112,7 @@
 							<li v-for="konflikt in anzahlProKwKonflikte(4, false, showMoreKonflikte)" :key="konflikt.getKey()">
 								<span class="font-bold">{{ kMan().schuelerGetByIdOrException(konflikt.getKey())?.vorname + ' ' + kMan().schuelerGetByIdOrException(konflikt.getKey())?.nachname }}</span>
 								<div class="grid grid-cols-3 gap-x-1 gap-y-2 mt-0.5">
-									<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`--background-color: ${kMan().fachHTMLFarbeRgbaByKursklausur(kMan().kursklausurBySchuelerklausurTermin(klausur))};`" @mouseenter="kursklausurMouseOver = kMan().kursklausurBySchuelerklausurTermin(klausur)" @mouseleave="kursklausurMouseOver=undefined">
+									<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`color: var(--color-text-ui-static); background-color: ${kMan().fachHTMLFarbeRgbaByKursklausur(kMan().kursklausurBySchuelerklausurTermin(klausur))};`" @mouseenter="kursklausurMouseOver = kMan().kursklausurBySchuelerklausurTermin(klausur)" @mouseleave="kursklausurMouseOver=undefined">
 										<span class="text-button font-medium">{{ kMan().kursKurzbezeichnungByKursklausur(kMan().kursklausurBySchuelerklausurTermin(klausur)) }}</span>
 										<span class="text-sm font-medium">{{ DateUtils.gibDatumGermanFormat(kMan().terminOrExceptionBySchuelerklausurTermin(klausur).datum !== null ? kMan().terminOrExceptionBySchuelerklausurTermin(klausur).datum! : stundenplanManager().datumGetByKwzAndZeitraster(kalenderwoche(), zeitrasterSelected!)) }}</span>									</span>
 								</div>
@@ -125,16 +124,16 @@
 				<div>
 					<span class="text-headline-md leading-none inline-flex gap-1">
 						<template v-if="anzahlProKwKonflikte2(3, true).length === 0">
-							<span class="icon i-ri-checkbox-circle-fill text-success -my-1" />
+							<span class="icon i-ri-checkbox-circle-fill icon-ui-success" />
 							<span>Keine Warnungen</span>
 						</template>
 						<template v-else-if="anzahlProKwKonflikte2(3, true).length > 0">
-							<span class="icon i-ri-alert-line text-highlight -my-0.5" />
+							<span class="icon i-ri-alert-line icon-ui-caution" />
 							<span> Warnungen</span>
 						</template>
 					</span>
 					<div v-if="anzahlProKwKonflikte2(3, true).length > 0" class="mt-5">
-						<div class="text-headline-sm leading-tight mb-6 -mt-2">
+						<div class="text-headline-sm leading-tight mb-6">
 							<div class="inline-flex gap-2 justify-between w-full">
 								<span>{{ anzahlProKwKonflikte2(3, true).length }} Schüler</span>
 								<svws-ui-checkbox class="-mt-1" type="toggle" v-model="showMoreWarnungen">Alle anzeigen</svws-ui-checkbox>
@@ -145,7 +144,7 @@
 							<li v-for="konflikt in anzahlProKwKonflikte(3, true, showMoreWarnungen)" :key="konflikt.getKey()">
 								<span class="font-bold">{{ kMan().schuelerGetByIdOrException(konflikt.getKey())?.vorname + ' ' + kMan().schuelerGetByIdOrException(konflikt.getKey())?.nachname }}</span>
 								<div class="grid grid-cols-3 gap-x-1 gap-y-2 mt-0.5">
-									<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`--background-color: ${kMan().fachHTMLFarbeRgbaByKursklausur(kMan().kursklausurBySchuelerklausurTermin(klausur))};`" @mouseenter="kursklausurMouseOver = kMan().kursklausurBySchuelerklausurTermin(klausur)" @mouseleave="kursklausurMouseOver=undefined">
+									<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`color: var(--color-text-ui-static); background-color: ${kMan().fachHTMLFarbeRgbaByKursklausur(kMan().kursklausurBySchuelerklausurTermin(klausur))};`" @mouseenter="kursklausurMouseOver = kMan().kursklausurBySchuelerklausurTermin(klausur)" @mouseleave="kursklausurMouseOver=undefined">
 										<span class="text-button font-medium">{{ kMan().kursKurzbezeichnungByKursklausur(kMan().kursklausurBySchuelerklausurTermin(klausur)) }}</span>
 										<span class="text-sm font-medium">{{ DateUtils.gibDatumGermanFormat(kMan().terminOrExceptionBySchuelerklausurTermin(klausur).datum !== null ? kMan().terminOrExceptionBySchuelerklausurTermin(klausur).datum! : stundenplanManager().datumGetByKwzAndZeitraster(kalenderwoche(), zeitrasterSelected!)) }}</span>
 									</span>
@@ -155,10 +154,10 @@
 						</ul>
 					</div>
 				</div>
-			</svws-ui-content-card>
+			</div>
 		</div>
 	</template>
-	<s-gost-klausurplanung-modal :show="modalKlausurHatRaeume" text="Der Klausurtermin ist Teil einer jahrgangsübergreifenden Raumplanung. Die Aktion hat daher Auswirkungen auf andere Termine." :weiter="verschiebeKlausurTrotzRaumzuweisung" />
+	<s-gost-klausurplanung-modal v-model:show="modalKlausurHatRaeume" text="Der Klausurtermin ist Teil einer jahrgangsübergreifenden Raumplanung. Die Aktion hat daher Auswirkungen auf andere Termine." :weiter="verschiebeKlausurTrotzRaumzuweisung" />
 </template>
 
 <script setup lang="ts">
@@ -187,7 +186,7 @@
 		},
 		set: (value) => {
 			void props.gotoKalenderdatum(DateUtils.gibDatumDesMontagsOfJahrAndKalenderwoche(value.jahr, value.kw), props.terminSelected.value);
-		}
+		},
 	});
 
 	function kalenderwochen(): List<StundenplanKalenderwochenzuordnung> {
@@ -305,74 +304,20 @@
 
 </script>
 
-<style lang="postcss" scoped>
-.page--content {
-  	@apply grid;
-  	grid-template-columns: minmax(22rem, 0.2fr) 1fr minmax(22rem, 0.2fr);
-}
-
-.svws-ui-tab-content {
-	@apply overflow-y-hidden items-start;
-
-	.page--content {
-		@apply h-full py-0 auto-rows-auto;
-
-		.content-card {
-			@apply max-h-full pt-8 pb-16 px-4 -mx-4 overflow-y-auto h-[unset];
-			scrollbar-gutter: stable;
-		}
-	}
-}
-
-.svws-ui-tab-content {
-	@apply overflow-y-hidden items-start;
-
-	.page--content {
-		@apply h-full py-0 auto-rows-auto;
-
-		.content-card {
-			@apply max-h-full pt-8 pb-16 px-4 -mx-4 overflow-y-auto h-[unset];
-			scrollbar-gutter: stable;
-		}
-
-		.svws-card-stundenplan {
-			@apply overflow-y-hidden overflow-x-hidden pb-0;
-			scrollbar-gutter: auto;
-		}
-	}
-}
-</style>
-
 <style lang="postcss">
-.svws-ui-stundenplan--stunde.svws-ui-stundenplan--stunde--klausurplan-opacity {
-	@apply bg-opacity-20;
-}
 
-.svws-kw-auswahl {
-	@apply bg-primary text-white rounded-md h-7 -my-1;
+	@reference "../../../../../ui/src/assets/styles/index.css"
 
-	.text-input--headless {
-		@apply !px-4 !text-button ;
-	}
+	.svws-kw-auswahl {
+		@apply bg-ui-brand text-white rounded-md h-7 -my-1;
 
-	.svws-dropdown-icon {
-		@apply !hidden;
-	}
-}
+		.text-input--headless {
+			@apply !px-4 !text-button;
+		}
 
-.svws-card-stundenplan {
-	@apply pb-16;
-
-	.content-card--content {
-		@apply h-full overflow-x-scroll overflow-y-auto pt-px;
-	}
-
-	.svws-ui-stundenplan {
-		@apply overflow-visible h-auto pb-8 w-full;
-
-		.svws-ui-stundenplan--unterricht {
-			@apply flex px-1 py-0 border-none;
+		.svws-dropdown-icon {
+			@apply !hidden;
 		}
 	}
-}
+
 </style>

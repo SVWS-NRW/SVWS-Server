@@ -373,8 +373,8 @@ public class DBBackupManager {
 		}
 		while (!ranges.isEmpty()) {
 			final Map.Entry<Integer, Integer> range = ranges.removeFirst();
-			if (tgtConn.insertRangeNativeUnprepared(tab.name(), tab.getSpalten(rev).stream().map(col -> col.name()).toList(), entities,
-					range.getKey(), range.getValue(), 1000000)) {
+			final List<String> colnames = tab.getSpalten(rev).stream().map(col -> col.name()).toList();
+			if (tgtConn.insertRangeNativeUnprepared(tab.name(), colnames, entities, range.getKey(), range.getValue(), 1000000)) {
 				if (range.getKey().equals(range.getValue()))
 					logger.logLn("Datensatz " + range.getKey() + " erfolgreich geschrieben. (Freier Speicher: "
 							+ (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/"
@@ -424,6 +424,9 @@ public class DBBackupManager {
 		for (final SchemaTabelle tab : Schema.getTabellen(rev)) {
 			// Prüfe, ob die Tabelle bei dem Import/Export beachtet werden soll, wenn nicht dann übespringe sie
 			if (!tab.importExport())
+				continue;
+			// Spezialfall vor Revision 34 - In Tabelle Kurs_Schueler gibt es in den Backups noch keine Spalte Leistung-ID... Der Inhalt wird aber in Revision rekonstruiert
+			if (("Kurs_Schueler".equals(tab.name())) && (rev < 34))
 				continue;
 
 			final DBEntityManager srcConn = schemaManager.getConnection();

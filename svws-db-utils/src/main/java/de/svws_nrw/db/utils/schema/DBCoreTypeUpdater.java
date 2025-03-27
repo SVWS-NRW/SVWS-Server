@@ -38,7 +38,7 @@ import de.svws_nrw.core.types.schueler.Herkunftsarten;
 import de.svws_nrw.asd.types.schule.AllgemeinbildendOrganisationsformen;
 import de.svws_nrw.core.types.schule.AllgemeineMerkmale;
 import de.svws_nrw.asd.types.schule.BerufskollegOrganisationsformen;
-import de.svws_nrw.core.types.schule.Nationalitaeten;
+import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.asd.types.schule.Religion;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
@@ -107,7 +107,7 @@ public class DBCoreTypeUpdater {
 		tables.add(new CoreTypeTable("KursFortschreibungsarten", KursFortschreibungsart.VERSION, updateKursFortschreibungsarten));
 		tables.add(new CoreTypeTable("Schulformen", Schulform.data().getVersion(), updateSchulformen));
 		tables.add(new CoreTypeTable("PersonalTypen", PersonalTyp.VERSION, updatePersonalTypen));
-		tables.add(new CoreTypeTable("Nationalitaeten_Keys", Nationalitaeten.VERSION, updateNationalitaeten_Keys));
+		tables.add(new CoreTypeTable("Nationalitaeten_Keys", Nationalitaeten.data().getVersion(), updateNationalitaeten_Keys));
 		tables.add(new CoreTypeTable("Jahrgaenge_Keys", Jahrgaenge.data().getVersion(), updateJahrgaengeKeys));
 		tables.add(new CoreTypeTable("Noten", Note.data().getVersion(), updateNoten));
 		final long versionHerkuenfte = HerkunftSonstige.VERSION + HerkunftBildungsgang.data().getVersion() + HerkunftBildungsgangTyp.data().getVersion()
@@ -427,7 +427,7 @@ public class DBCoreTypeUpdater {
 		sql.append(strInsertInto);
 		sql.append(tabname);
 		sql.append("(DEStatisCode) ");
-		final List<String> codes = Arrays.stream(Nationalitaeten.values()).map(nat -> nat.daten.codeDEStatis).distinct().toList();
+		final List<String> codes = Arrays.stream(Nationalitaeten.values()).flatMap(nat -> nat.historie().stream()).map(kat -> kat.codeDEStatis).distinct().toList();
 		boolean isFirst = true;
 		for (final String code : codes) {
 			sql.append(isFirst ? strValues : ", (");
@@ -436,7 +436,7 @@ public class DBCoreTypeUpdater {
 		}
 		if (conn.getDBDriver() != DBDriver.SQLITE)
 			sql.append(" ON DUPLICATE KEY UPDATE DEStatisCode=VALUES(DEStatisCode)");
-		updateCoreTypeTabelle(conn, tabname, Nationalitaeten.class.getCanonicalName(), Nationalitaeten.VERSION, sql.toString());
+		updateCoreTypeTabelle(conn, tabname, Nationalitaeten.class.getCanonicalName(), Nationalitaeten.data().getVersion(), sql.toString());
 	};
 
 

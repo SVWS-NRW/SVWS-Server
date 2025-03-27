@@ -1,7 +1,3 @@
-<script setup lang="ts">
-	import { logEvent } from 'histoire/client';
-</script>
-
 <template>
 	<Story title="Avatar" id="svws-ui-avatar" icon="ri:user-line">
 		<Variant title="Default" id="Default">
@@ -13,3 +9,7 @@
 		</Variant>
 	</Story>
 </template>
+
+<script setup lang="ts">
+	import { logEvent } from 'histoire/client';
+</script>

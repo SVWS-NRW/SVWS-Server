@@ -121,17 +121,17 @@ export class GostKursplanungSchuelerFilter {
 				this.setFachFilter(false)
 				this.setKursFilter(false)
 			}
-		}
+		},
 	});
 
 	public fach_toggle = computed({
 		get: () => (this._fach.value !== undefined) ? 'fach' : undefined,
-		set: () => this.setFachFilter(true)
+		set: () => this.setFachFilter(true),
 	});
 
 	public kurs_toggle = computed({
 		get: () => (this._kurs.value !== undefined) ? "kurs" : undefined,
-		set: () => this.setKursFilter(true)
+		set: () => this.setKursFilter(true),
 	})
 
 	private setKursFilter(value: boolean) {

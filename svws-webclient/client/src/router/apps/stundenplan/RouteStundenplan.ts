@@ -1,16 +1,11 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
+import type { RouteLocationRaw, RouteParams } from "vue-router";
 import type { RouteApp } from "~/router/apps/RouteApp";
-import type { TabData } from "@ui";
-import type { StundenplanAuswahlProps } from "~/components/stundenplan/SStundenplanAuswahlProps";
-import type { StundenplanAppProps } from "~/components/stundenplan/SStundenplanAppProps";
 
-import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode, StundenplanKonfiguration } from "@core";
+import type { StundenplanListeManager , DeveloperNotificationException} from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode, StundenplanKonfiguration } from "@core";
 
 import { api } from "~/router/Api";
-import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
-
-import { routeApp } from "~/router/apps/RouteApp";
 
 import { routeStundenplanDaten } from "~/router/apps/stundenplan/RouteStundenplanDaten";
 import { routeStundenplanKalenderwochen } from "./RouteStundenplanKalenderwochen";
@@ -18,26 +13,31 @@ import { routeStundenplanPausen } from "~/router/apps/stundenplan/RouteStundenpl
 import { routeStundenplanZeitrasterPausenzeit } from "./RouteStundenplanZeitrasterPausenzeit";
 import { routeStundenplanKlasse } from "~/router/apps/stundenplan/RouteStundenplanKlasse";
 import { routeStundenplanUnterrichte } from "./RouteStundenplanUnterrichte";
+import { routeKatalogPausenzeiten } from "./kataloge/RouteKatalogPausenzeiten";
+import { routeKatalogAufsichtsbereiche } from "./kataloge/RouteKatalogAufsichtsbereiche";
+import { routeKatalogRaeume } from "./kataloge/RouteKatalogRaeume";
+import { routeKatalogZeitraster } from "./kataloge/RouteKatalogZeitraster";
 import { RouteDataStundenplan } from "~/router/apps/stundenplan/RouteDataStundenplan";
-import { routeError } from "~/router/error/RouteError";
-import { routeStundenplanKataloge } from "./RouteStundenplanKataloge";
 import { routeStundenplanRaum } from "./RouteStundenplanRaum";
 import { ConfigElement } from "~/components/Config";
+import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
+import { AppMenuGroup } from "@ui";
+import { routeStundenplanNeu } from "./RouteStundenplanNeu";
+import { routeStundenplanGruppenprozesse } from "./RouteStundenplanGruppenprozesse";
+import { routeError } from "~/router/error/RouteError";
 
 const SStundenplanAuswahl = () => import("~/components/stundenplan/SStundenplanAuswahl.vue")
 const SStundenplanApp = () => import("~/components/stundenplan/SStundenplanApp.vue")
 
-export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> {
+export class RouteStundenplan extends RouteAuswahlNode<StundenplanListeManager, RouteDataStundenplan, RouteApp> {
 
 	public constructor() {
 		super(Schulform.values(), [
 			BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN,
 			BenutzerKompetenz.STUNDENPLAN_FUNKTIONSBEZOGEN_ANSEHEN,
-		], "stundenplan", "stundenplan/:id(\\d+)?", SStundenplanApp, new RouteDataStundenplan());
+		], "stundenplan", "stundenplan/:id(-?\\d+)?", SStundenplanApp, SStundenplanAuswahl, new RouteDataStundenplan());
 		super.mode = ServerMode.STABLE;
-		super.propHandler = (route) => this.getProps(route);
 		super.text = "Stundenplan";
-		super.setView("liste", SStundenplanAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 			routeStundenplanDaten,
 			routeStundenplanKalenderwochen,
@@ -46,76 +46,42 @@ export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> 
 			routeStundenplanKlasse,
 			routeStundenplanUnterrichte,
 			routeStundenplanRaum,
+			routeKatalogZeitraster,
+			routeKatalogPausenzeiten,
+			routeKatalogAufsichtsbereiche,
+			routeKatalogRaeume,
+			routeStundenplanNeu,
+			routeStundenplanGruppenprozesse,
 		];
 		super.defaultChild = routeStundenplanDaten;
+		super.menugroup = AppMenuGroup.MAIN;
+		super.icon = "i-ri-calendar-event-line";
 		const stundenplanConfig = new StundenplanKonfiguration();
 		api.config.addElements([
 			new ConfigElement("stundenplan.settings.defaults", "user", StundenplanKonfiguration.transpilerToJSON(stundenplanConfig)),
 		]);
+		super.updateIfTarget = this.doUpdateIfTarget;
 	}
 
-	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
+	protected doUpdateIfTarget = async (to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined) => {
+		if (!this.data.manager.hasDaten())
+			return;
+		return this.getRouteSelectedChild();
+	};
+
+	public static katalogeCheckHidden(isKatalog: boolean, node: RouteNode<any, any>, params?: RouteParams ) {
+		if (params === undefined)
+			return false;
 		try {
-			const { idSchuljahresabschnitt, id } = RouteNode.getIntParams(to_params, ["idSchuljahresabschnitt", "id"]);
-			if (idSchuljahresabschnitt === undefined)
-				throw new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt.");
-			await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
-			if ((id === -1) || (this.data.auswahl === undefined))
-				return routeStundenplanKataloge.getRouteDefaultChild();
-			if (id !== undefined) {
-				const eintrag = this.data.mapKatalogeintraege.get(id);
-				if (eintrag === undefined)
-					return this.getRoute();
-				await this.data.setEintrag(eintrag);
-				if (this.data.auswahl.id === -1)
-					return routeStundenplanKataloge.getRouteDefaultChild();
-			}
-			if (to.name === this.name)
-				return this.getRouteDefaultChild();
-			if (!to.name.startsWith(this.data.view.name))
-				for (const child of this.children)
-					if (to.name.startsWith(child.name))
-						this.data.setView(child, this.children);
+			const { id } = RouteNode.getIntParams(params, ["id"] );
+			if (isKatalog && id !== -1)
+				return { name: routeStundenplanDaten.name, params };
+			else if (!isKatalog && id === -1)
+				return { name: routeKatalogZeitraster.name, params };
+			return false;
 		} catch (e) {
 			return routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
-	}
-
-	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
-		this.data.reset();
-	}
-
-	public addRouteParamsFromState() : RouteParamsRawGeneric {
-		return { id : this.data.auswahl?.id ?? undefined };
-	}
-
-	public getAuswahlProps(to: RouteLocationNormalized): StundenplanAuswahlProps {
-		return {
-			serverMode: api.mode,
-			auswahl: this.data.auswahl,
-			mapKatalogeintraege: () => this.data.mapKatalogeintraege,
-			gotoEintrag: this.data.gotoEintrag,
-			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(true),
-			addEintrag: this.data.addEintrag,
-			removeEintraege: this.data.removeEintraege,
-		};
-	}
-
-	public getProps(to: RouteLocationNormalized): StundenplanAppProps {
-		return {
-			auswahl: this.data.auswahl,
-			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab),
-		};
-	}
-
-	private setTab = async (value: TabData) => {
-		if (value.name === this.data.view.name)
-			return;
-		const node = RouteNode.getNodeByName(value.name);
-		if (node === undefined)
-			throw new DeveloperNotificationException("Unbekannte Route");
-		await RouteManager.doRoute(node.getRoute());
-		this.data.setView(node, routeStundenplan.children);
 	}
 
 }

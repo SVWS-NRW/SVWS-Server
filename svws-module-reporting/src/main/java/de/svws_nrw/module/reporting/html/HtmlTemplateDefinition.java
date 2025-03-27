@@ -214,7 +214,97 @@ public enum HtmlTemplateDefinition {
 			            <p th:if="${iterState.first}" th:text="${'Schueler-Stammdatenliste_' + #dates.format(#dates.createNow(), 'yyyyMMdd-HHmm')}"></p>
 			        </th:block>
 			""",
-			Arrays.asList(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN));
+			Arrays.asList(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)),
+
+	/** Report-Vorlage: Stundenplanung - Fach - Stundenplan */
+	STUNDENPLANUNG_v_FACH_STUNDENPLAN(
+			ReportingReportvorlage.STUNDENPLANUNG_v_FACH_STUNDENPLAN,
+			"de/svws_nrw/module/reporting/",
+			"stundenplanung/StundenplanungFachStundenplan.html",
+			"Fach-Stundenplan",
+			"""
+			        <p th:if="${FaecherStundenplaene.isEmpty()}" th:text="${'Fach-Stundenplaene_' + #strings.replace(#strings.replace(Schule.auswahlSchuljahresabschnitt().textSchuljahresabschnittKurz(), '.', ''), '/', '-')}"></p>
+			        <th:block th:if="${!FaecherStundenplaene.isEmpty()}" th:each="fachstundenplan,iterState : ${FaecherStundenplaene}">
+			            <p th:if="${iterState.first && (FaecherStundenplaene.size() == 1)}" th:text="${'Fach-Stundenplan_' + #strings.replace(#strings.replace(fachstundenplan.stundenplan().schuljahresabschnitt().textSchuljahresabschnittKurz(), '.', ''), '/', '-') + '_' + #strings.replace(fachstundenplan.fach().kuerzel(), ' ', '_') + '_' + #dates.format(#dates.createNow(), 'yyyyMMdd-HHmm')}"></p>
+			            <p th:if="${iterState.first && (FaecherStundenplaene.size() > 1)}" th:text="${'Fach-Stundenplaene_' + #strings.replace(#strings.replace(fachstundenplan.stundenplan().schuljahresabschnitt().textSchuljahresabschnittKurz(), '.', ''), '/', '-')}"></p>
+			        </th:block>
+			""",
+			Arrays.asList(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN)),
+
+	/** Report-Vorlage: Stundenplanung - Klasse - Stundenplan */
+	STUNDENPLANUNG_v_KLASSEN_STUNDENPLAN(
+			ReportingReportvorlage.STUNDENPLANUNG_v_KLASSEN_STUNDENPLAN,
+			"de/svws_nrw/module/reporting/",
+			"stundenplanung/StundenplanungKlassenStundenplan.html",
+			"Klassen-Stundenplan",
+			"""
+			        <p th:if="${KlassenStundenplaene.isEmpty()}" th:text="${'Klassen-Stundenplaene_' + #strings.replace(#strings.replace(Schule.auswahlSchuljahresabschnitt().textSchuljahresabschnittKurz(), '.', ''), '/', '-')}"></p>
+			        <th:block th:if="${!KlassenStundenplaene.isEmpty()}" th:each="klassenstundenplan,iterState : ${KlassenStundenplaene}">
+			            <p th:if="${iterState.first && (KlassenStundenplaene.size() == 1)}" th:text="${'Klassen-Stundenplan_' + #strings.replace(#strings.replace(klassenstundenplan.stundenplan().schuljahresabschnitt().textSchuljahresabschnittKurz(), '.', ''), '/', '-') + '_' + #strings.replace(klassenstundenplan.klasse().kuerzel(), ' ', '_') + '_' + #dates.format(#dates.createNow(), 'yyyyMMdd-HHmm')}"></p>
+			            <p th:if="${iterState.first && (KlassenStundenplaene.size() > 1)}" th:text="${'Klassen-Stundenplaene_' + #strings.replace(#strings.replace(klassenstundenplan.stundenplan().schuljahresabschnitt().textSchuljahresabschnittKurz(), '.', ''), '/', '-')}"></p>
+			        </th:block>
+			""",
+			Arrays.asList(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN)),
+
+	/** Report-Vorlage: Stundenplanung - Lehrer - Stundenplan */
+	STUNDENPLANUNG_v_LEHRER_STUNDENPLAN(
+			ReportingReportvorlage.STUNDENPLANUNG_v_LEHRER_STUNDENPLAN,
+			"de/svws_nrw/module/reporting/",
+			"stundenplanung/StundenplanungLehrerStundenplan.html",
+			"Lehrer-Stundenplan",
+			"""
+			        <p th:if="${LehrerStundenplaene.isEmpty()}" th:text="${'Lehrer-Stundenplaene_' + #strings.replace(#strings.replace(Schule.auswahlSchuljahresabschnitt().textSchuljahresabschnittKurz(), '.', ''), '/', '-')}"></p>
+			        <th:block th:if="${!LehrerStundenplaene.isEmpty()}" th:each="lehrerstundenplan,iterState : ${LehrerStundenplaene}">
+			            <p th:if="${iterState.first && (LehrerStundenplaene.size() == 1)}" th:text="${'Lehrer-Stundenplan_' + #strings.replace(#strings.replace(lehrerstundenplan.stundenplan().schuljahresabschnitt().textSchuljahresabschnittKurz(), '.', ''), '/', '-') + '_' + #strings.replace(lehrerstundenplan.lehrer().kuerzel(), ' ', '_') + '_' + #dates.format(#dates.createNow(), 'yyyyMMdd-HHmm')}"></p>
+			            <p th:if="${iterState.first && (LehrerStundenplaene.size() > 1)}" th:text="${'Lehrer-Stundenplaene_' + #strings.replace(#strings.replace(lehrerstundenplan.stundenplan().schuljahresabschnitt().textSchuljahresabschnittKurz(), '.', ''), '/', '-')}"></p>
+			        </th:block>
+			""",
+			Arrays.asList(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN)),
+
+	/** Report-Vorlage: Stundenplanung - Lehrer - Stundenplan */
+	STUNDENPLANUNG_v_LEHRER_STUNDENPLAN_KOMBINIERT(
+			ReportingReportvorlage.STUNDENPLANUNG_v_LEHRER_STUNDENPLAN_KOMBINIERT,
+			"de/svws_nrw/module/reporting/",
+			"stundenplanung/StundenplanungLehrerStundenplanKombiniert.html",
+			"Lehrer-Stundenplan-Kombiniert",
+			"""
+			        <p th:if="${LehrerStundenplaene.isEmpty()}" th:text="${'Lehrer-Stundenplaene-Kombiniert_' + #strings.replace(#strings.replace(Schule.auswahlSchuljahresabschnitt().textSchuljahresabschnittKurz(), '.', ''), '/', '-')}"></p>
+			        <th:block th:if="${!LehrerStundenplaene.isEmpty()}" th:each="lehrerstundenplan,iterState : ${LehrerStundenplaene}">
+			            <p th:if="${iterState.first && (LehrerStundenplaene.size() == 1)}" th:text="${'Lehrer-Stundenplan-Kombiniert_' + #strings.replace(#strings.replace(lehrerstundenplan.stundenplan().schuljahresabschnitt().textSchuljahresabschnittKurz(), '.', ''), '/', '-') + '_' + #strings.replace(lehrerstundenplan.lehrer().kuerzel(), ' ', '_') + '_' + #dates.format(#dates.createNow(), 'yyyyMMdd-HHmm')}"></p>
+			            <p th:if="${iterState.first && (LehrerStundenplaene.size() > 1)}" th:text="${'Lehrer-Stundenplaene-Kombiniert_' + #strings.replace(#strings.replace(lehrerstundenplan.stundenplan().schuljahresabschnitt().textSchuljahresabschnittKurz(), '.', ''), '/', '-')}"></p>
+			        </th:block>
+			""",
+			Arrays.asList(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN)),
+
+	/** Report-Vorlage: Stundenplanung - Raum - Stundenplan */
+	STUNDENPLANUNG_v_RAUM_STUNDENPLAN(
+			ReportingReportvorlage.STUNDENPLANUNG_v_RAUM_STUNDENPLAN,
+			"de/svws_nrw/module/reporting/",
+			"stundenplanung/StundenplanungRaumStundenplan.html",
+			"Raum-Stundenplan",
+			"""
+			        <p th:if="${RaeumeStundenplaene.isEmpty()}" th:text="${'Raum-Stundenplaene_' + #strings.replace(#strings.replace(Schule.auswahlSchuljahresabschnitt().textSchuljahresabschnittKurz(), '.', ''), '/', '-')}"></p>
+			        <th:block th:if="${!RaeumeStundenplaene.isEmpty()}" th:each="raumstundenplan,iterState : ${RaeumeStundenplaene}">
+			            <p th:if="${iterState.first && (RaeumeStundenplaene.size() == 1)}" th:text="${'Raum-Stundenplan_' + #strings.replace(#strings.replace(raumstundenplan.stundenplan().schuljahresabschnitt().textSchuljahresabschnittKurz(), '.', ''), '/', '-') + '_' + #strings.replace(raumstundenplan.raum().kuerzel(), ' ', '_') + '_' + #dates.format(#dates.createNow(), 'yyyyMMdd-HHmm')}"></p>
+			            <p th:if="${iterState.first && (RaeumeStundenplaene.size() > 1)}" th:text="${'Raum-Stundenplaene_' + #strings.replace(#strings.replace(raumstundenplan.stundenplan().schuljahresabschnitt().textSchuljahresabschnittKurz(), '.', ''), '/', '-')}"></p>
+			        </th:block>
+			""",
+			Arrays.asList(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN)),
+
+	/** Report-Vorlage: Stundenplanung - Schüler - Stundenplan */
+	STUNDENPLANUNG_v_SCHUELER_STUNDENPLAN(
+			ReportingReportvorlage.STUNDENPLANUNG_v_SCHUELER_STUNDENPLAN,
+			"de/svws_nrw/module/reporting/",
+			"stundenplanung/StundenplanungSchuelerStundenplan.html",
+			"Schueler-Stundenplan",
+			"""
+			        <p th:if="${SchuelerStundenplaene.isEmpty()}" th:text="${'Schueler-Stundenplaene_' + #strings.replace(#strings.replace(Schule.auswahlSchuljahresabschnitt().textSchuljahresabschnittKurz(), '.', ''), '/', '-')}"></p>
+			        <th:block th:if="${!SchuelerStundenplaene.isEmpty()}" th:each="schuelerstundenplan,iterState : ${SchuelerStundenplaene}">
+			            <p th:if="${iterState.first && (SchuelerStundenplaene.size() == 1)}" th:text="${'Schueler-Stundenplan_' + #strings.replace(#strings.replace(schuelerstundenplan.stundenplan().schuljahresabschnitt().textSchuljahresabschnittKurz(), '.', ''), '/', '-') + '_' + #strings.replace(schuelerstundenplan.schueler().nachname(), ' ', '_') + '__' + #strings.replace(schuelerstundenplan.schueler().vorname(), ' ', '_') + '_(' + schuelerstundenplan.schueler().id() + ')_' + #dates.format(#dates.createNow(), 'yyyyMMdd-HHmm')}"></p>
+			            <p th:if="${iterState.first && (SchuelerStundenplaene.size() > 1)}" th:text="${'Schueler-Stundenplaene_' + #strings.replace(#strings.replace(schuelerstundenplan.stundenplan().schuljahresabschnitt().textSchuljahresabschnittKurz(), '.', ''), '/', '-')}"></p>
+			        </th:block>
+			""",
+			Arrays.asList(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN));
 
 
 

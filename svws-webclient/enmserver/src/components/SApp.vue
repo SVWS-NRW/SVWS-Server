@@ -8,7 +8,7 @@
 				<template #default>
 					<template v-for="item in apps" :key="item.name">
 						<template v-if="item.name !== 'einstellungen'">
-							<svws-ui-menu-item :active="is_active(item)" @click="startSetApp(item)">
+							<svws-ui-menu-item :active="is_active(item)" @click="startSetApp(item)" @keydown.enter="startSetApp(item)">
 								<template #icon>
 									<span class="inline-block icon-lg i-ri-book-2-line" v-if="item.name === 'leistungen'" />
 									<span class="inline-block icon-lg i-ri-book-2-line" v-if="item.name === 'teilleistungen'" />
@@ -22,7 +22,7 @@
 				<template #footer>
 					<template v-for="item in apps" :key="item.name">
 						<template v-if="item.name === 'einstellungen'">
-							<svws-ui-menu-item :active="is_active(item)" @click="startSetApp(item)">
+							<svws-ui-menu-item :active="is_active(item)" @click="startSetApp(item)" @keydown.enter="startSetApp(item)">
 								<template #icon><span class="inline-block icon-lg i-ri-settings-3-line" /></template>
 								<template #label><span class="text-xs"> {{ item.text }}</span> </template>
 							</svws-ui-menu-item>
@@ -39,7 +39,7 @@
 						<svws-ui-button type="transparent" @click="copyToClipboard">
 							<span class="icon i-ri-file-copy-line" v-if="copied === null" />
 							<span class="icon i-ri-error-warning-fill" v-else-if="copied === false" />
-							<span class="icon i-ri-check-line icon-primary" v-else />
+							<span class="icon i-ri-check-line icon-ui-brand" v-else />
 						</svws-ui-button>
 					</div>
 				</template>
@@ -59,45 +59,44 @@
 		</template>
 		<template #tertiaryMenu v-if="app.hide !== true">
 			<template v-if="pendingSetApp">
-				<svws-ui-secondary-menu>
-					<template #headline>
-						<span>{{ pendingSetApp }}</span>
-					</template>
-					<template #abschnitt>
-						<span class="inline-block h-4 rounded animate-pulse w-16 bg-black/10 dark:bg-white/10 -mb-1" />
-					</template>
-				</svws-ui-secondary-menu>
+				<div class="h-full flex flex-col">
+					<div class="secondary-menu--headline">
+						<h1>{{ pendingSetApp }}</h1>
+					</div>
+					<div class="secondary-menu--header" />
+					<div class="secondary-menu--content" />
+				</div>
 			</template>
 			<template v-else>
 				<router-view :key="app.name" name="liste" />
 			</template>
 		</template>
 		<template #main>
-			<main class="app--page" :class="app.name" role="main">
-				<div v-show="pendingSetApp" class="page--wrapper" :class="{'svws-api--pending': apiStatus.pending}">
+			<main class="app--page h-full" :class="app.name" role="main">
+				<div v-show="pendingSetApp" class="flex flex-col w-full h-full grow" :class="{'svws-api--pending': apiStatus.pending}">
 					<svws-ui-header>
 						<div class="flex items-center">
 							<div class="w-20 mr-6" v-if="(app.name === 'schueler') || (app.name === 'lehrer')">
-								<div class="inline-block h-20 rounded-xl animate-pulse w-20 bg-black/5 dark:bg-white/5" />
+								<div class="inline-block h-20 rounded-xl animate-pulse w-20 bg-ui-contrast-10" />
 							</div>
 							<div>
-								<span class="inline-block h-[1em] rounded animate-pulse w-52 bg-black/10 dark:bg-white/10" />
+								<span class="inline-block h-[1em] rounded-sm animate-pulse w-52 bg-ui-contrast-10" />
 								<br>
-								<span class="inline-block h-[1em] rounded animate-pulse w-20 bg-black/5 dark:bg-white/5" />
+								<span class="inline-block h-[1em] rounded-sm animate-pulse w-20 bg-ui-contrast-10" />
 							</div>
 						</div>
 					</svws-ui-header>
 				</div>
 				<p v-if="focusSwitchingEnabled" v-show="focusHelpVisible" class="region-enumeration">8</p>
-				<div v-show="!pendingSetApp" class="page--wrapper" :class="{'svws-api--pending': apiStatus.pending, 'focus-region': focusSwitchingEnabled, 'highlighted': focusHelpVisible}">
+				<div v-show="!pendingSetApp" class="flex flex-col w-full h-full grow overflow-hidden" :class="{'svws-api--pending': apiStatus.pending, 'focus-region': focusSwitchingEnabled, 'highlighted': focusHelpVisible}">
 					<router-view :key="app.name" />
 				</div>
 			</main>
 		</template>
 	</svws-ui-app-layout>
 	<svws-ui-notifications v-if="errors.size > 0">
-		<div v-if="errors.size > 1" class="bg-white">
-			<svws-ui-button @click="errors.clear()" type="transparent" class="pointer-events-auto ml-auto rounded-lg bg-white border-light fixed right-6 left-0 top-5 z-50 w-[29rem] max-w-[75vw] justify-center">Alle {{ errors.size }} Meldungen schließen</svws-ui-button>
+		<div v-if="errors.size > 1" class="bg-ui-contrast-0">
+			<svws-ui-button @click="errors.clear()" type="transparent" class="pointer-events-auto ml-auto rounded-lg bg-ui-contrast-0 border-light fixed right-6 left-0 top-5 z-50 w-[29rem] max-w-[75vw] justify-center">Alle {{ errors.size }} Meldungen schließen</svws-ui-button>
 			<div class="min-h-[1.85rem]" />
 		</div>
 		<template v-for="error of [...errors.values()].reverse().slice(0, 20)" :key="error.id">
@@ -124,7 +123,7 @@
 	import { githash } from '../../githash';
 	import { version } from '../../version';
 	import { api } from '~/router/Api';
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
+	import { useRegionSwitch } from "~/components/useRegionSwitchEnm";
 	import type { TabData } from "@ui/ui/nav/TabData";
 	import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 	import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
@@ -240,20 +239,17 @@
 		else if (reason instanceof OpenApiError) {
 			name = "API-Fehler: Dieser Fehler wird durch eine fehlerhafte Kommunikation mit dem Server verursacht. In der Regel bedeutet das, dass die verschickten Daten nicht den Vorgaben entsprechen."
 			if (reason.response instanceof Response) {
+				const text = await reason.response.text();
 				try {
-					let res;
-					if (reason.response.headers.get('content-type') === 'application/json') {
-						res = await reason.response.json();
-						if ('log' in res && 'success' in res)
-							log = res satisfies SimpleOperationResponse;
-					}
+					const res = JSON.parse(text)
+					if (('log' in res) && ('success' in res))
+						log = res satisfies SimpleOperationResponse;
+				} catch {
+					if (text.length > 0)
+						message = text;
 					else
-						res = await reason.response.text();
-					if (res.length > 0)
-						message = res;
-					else
-						message += ' - Status: '+reason.response.status;
-				} catch(e) { void e }
+						message += ` - Status: ${reason.response.status}`;
+				}
 			}
 		}
 		const newError: CapturedError = { id: counter.value, name, message, stack: reason.stack?.split("\n") || '', log }
@@ -264,26 +260,14 @@
 
 <style lang="postcss">
 
+	@reference "../../../ui/src/assets/styles/index.css";
+
 	.app--page {
-		@apply flex flex-grow flex-col justify-between;
+		@apply flex grow flex-col justify-between;
 		@apply h-screen;
 		@apply overflow-hidden;
 		@apply relative;
-		@apply bg-white dark:bg-black;
-	}
-
-	.page--wrapper {
-		@apply flex flex-col w-full h-full flex-grow;
-	}
-
-	.page--flex {
-		@apply flex flex-col w-full h-full;
-	}
-
-	span.icon, span.icon-lg {
-		.dark & {
-			@apply icon-white;
-		}
+		@apply bg-ui-contrast-0;
 	}
 
 </style>

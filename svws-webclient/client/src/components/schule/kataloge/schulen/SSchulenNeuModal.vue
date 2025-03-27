@@ -5,12 +5,12 @@
 		<template #modalContent>
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input v-model="item.name" required placeholder="Name" />
-				<svws-ui-text-input v-model="item.schulnummer" required placeholder="Schulnummer" :valid />
+				<svws-ui-text-input v-model="item.schulnummerStatistik" required placeholder="Schulnummer" :valid />
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
 			<svws-ui-button type="secondary" @click="show = false"> Abbrechen </svws-ui-button>
-			<svws-ui-button type="secondary" @click="importer()" :disabled="!item.name || !valid(item.schulnummer)"> Schule hinzufügen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="importer()" :disabled="!item.name || !valid(item.schulnummerStatistik)"> Schule hinzufügen </svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>
@@ -33,7 +33,7 @@
 	}
 
 	async function importer() {
-		await props.addEintrag({name: item.value.name, schulnummer: item.value.schulnummer});
+		await props.addEintrag({name: item.value.name, schulnummerStatistik: item.value.schulnummerStatistik});
 		item.value = new SchulEintrag();
 		show.value = false;
 	}

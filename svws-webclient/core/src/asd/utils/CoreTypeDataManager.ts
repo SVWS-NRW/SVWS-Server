@@ -41,9 +41,9 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	private readonly _listWerte : List<U>;
 
 	/**
-	 * Die Zuordnung der Liste mit den Historien-IDs zu den Bezeichnern des Core-Types
+	 * Die Zuordnung der Liste mit den Statistik-IDs zu den Bezeichnern des Core-Types
 	 */
-	private readonly _mapBezeichnerToHistorienID : JavaMap<string, number>;
+	private readonly _mapBezeichnerToStatistikID : JavaMap<string, string>;
 
 	/**
 	 * Die Daten des Core-Types mit der Zuordnung der Liste mit den Historien-Einträgen zu den Bezeichnern des Core-Types
@@ -56,9 +56,9 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	private readonly _mapBezeichnerToEnum : JavaMap<string, U> = new HashMap<string, U>();
 
 	/**
-	 * Eine Map mit der Zuordnung der Historien-IDs zu den Enum-Einträgen
+	 * Eine Map mit der Zuordnung der Statistik-IDs zu den Enum-Einträgen
 	 */
-	private readonly _mapEnumToHistorienID : JavaMap<U, number> = new HashMap<U, number>();
+	private readonly _mapEnumToStatistikID : JavaMap<U, string> = new HashMap<U, string>();
 
 	/**
 	 * Eine Map mit der Zuordnung der Historieneinträge zu den Enum-Einträgen
@@ -123,9 +123,9 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	 * @param clazz     die Core-Type-Klasse
 	 * @param values    ein Array mit allen Werten des Core-Types
 	 * @param data      die Daten für den Core-Type
-	 * @param idsHistorien   die IDs der Historien zu den einzelnen Bezeichnern
+	 * @param idsStatistik   die IDs der Historien zu den einzelnen Bezeichnern
 	 */
-	public constructor(version : number, clazz : Class<U>, values : Array<U>, data : JavaMap<string, List<T>>, idsHistorien : JavaMap<string, number>) {
+	public constructor(version : number, clazz : Class<U>, values : Array<U>, data : JavaMap<string, List<T>>, idsStatistik : JavaMap<string, string>) {
 		super();
 		this._name = clazz.getSimpleName();
 		if (version <= 0)
@@ -133,17 +133,17 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 		this._version = version;
 		this._listWerte = Arrays.asList(...values);
 		this._mapBezeichnerToHistorie = data;
-		this._mapBezeichnerToHistorienID = idsHistorien;
+		this._mapBezeichnerToStatistikID = idsStatistik;
 		for (const coreTypeValue of values) {
 			this._mapBezeichnerToEnum.put(coreTypeValue.name(), coreTypeValue);
 			const historie : List<T> | null = this._mapBezeichnerToHistorie.get(coreTypeValue.name());
 			if (historie === null)
 				throw new CoreTypeException(this._name + ": Der Core-Type-Bezeichner " + coreTypeValue.name() + "hat keine Daten zugeordnet. Der Core-Type konnte nicht vollständig initialisiert werden.")
 			this._mapEnumToHistorie.put(coreTypeValue, historie);
-			const idHistorie : number | null = this._mapBezeichnerToHistorienID.get(coreTypeValue.name());
-			if (idHistorie === null)
-				throw new CoreTypeException(this._name + ": Der Core-Type-Bezeichner " + coreTypeValue.name() + "hat keine Historien-ID zugeordnet. Der Core-Type konnte nicht vollständig initialisiert werden.")
-			this._mapEnumToHistorienID.put(coreTypeValue, idHistorie);
+			const idStatistik : string | null = this._mapBezeichnerToStatistikID.get(coreTypeValue.name());
+			if (idStatistik === null)
+				throw new CoreTypeException(this._name + ": Der Core-Type-Bezeichner " + coreTypeValue.name() + "hat keine Statistik-ID zugeordnet. Der Core-Type konnte nicht vollständig initialisiert werden.")
+			this._mapEnumToStatistikID.put(coreTypeValue, idStatistik);
 		}
 		for (const bezeichner of this._mapBezeichnerToHistorie.keySet()) {
 			const coreTypeValue : U | null = this._mapBezeichnerToEnum.get(bezeichner);
@@ -221,7 +221,7 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	public static checkHistorie<T extends CoreTypeData>(setIDs : JavaSet<number>, coreTypeName : string, bezeichnerName : string, historie : List<T>) : void {
 		let schuljahr : number | null = null;
 		for (const eintrag of historie) {
-			if ((schuljahr !== null) && ((eintrag.gueltigVon === null) || (eintrag.gueltigVon < 2000) || (JavaInteger.compare(eintrag.gueltigVon, schuljahr) <= 0) || ((eintrag.gueltigBis !== null) && (eintrag.gueltigBis > 3000))))
+			if ((schuljahr !== null) && ((eintrag.gueltigVon === null) || (eintrag.gueltigVon < 1900) || (JavaInteger.compare(eintrag.gueltigVon, schuljahr) <= 0) || ((eintrag.gueltigBis !== null) && (eintrag.gueltigBis > 3000))))
 				throw new CoreTypeException(coreTypeName + ": Die Historie ist fehlerhaft beim Eintrag für " + bezeichnerName + ". Neuere Historieneinträge müssen weiter unten in der Liste stehen.")
 			schuljahr = (eintrag.gueltigBis === null) ? JavaInteger.MAX_VALUE : eintrag.gueltigBis;
 			if (setIDs.contains(eintrag.id))
@@ -259,16 +259,16 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	}
 
 	/**
-	 * Gibt die Historien-ID für den angegebenen Bezeichner zurück.
+	 * Gibt die Statistik-ID für den angegebenen Bezeichner zurück.
 	 *
 	 * @param bezeichner   der Bezeichner
 	 *
-	 * @return die Historien-ID
+	 * @return die Statistik-ID
 	 */
-	public getHistorienIdByBezeichner(bezeichner : string | null) : number {
-		const tmp : number | null = this._mapBezeichnerToHistorienID.get(bezeichner);
+	public getStatistikIdByBezeichner(bezeichner : string | null) : string | null {
+		const tmp : string | null = this._mapBezeichnerToStatistikID.get(bezeichner);
 		if (tmp === null)
-			throw new CoreTypeException(this._name + ": Keine Historien-ID für den Bezeichner " + bezeichner + " gefunden.")
+			throw new CoreTypeException(this._name + ": Keine Statistik-ID für den Bezeichner " + bezeichner + " gefunden.")
 		return tmp;
 	}
 
@@ -345,18 +345,18 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	}
 
 	/**
-	 * Gibt die Historien-ID für den angegebenen Core-Type Wert zurück.
+	 * Gibt die Statistik-ID für den angegebenen Core-Type Wert zurück.
 	 *
 	 * @param value   der Core-Type-Wert
 	 *
-	 * @return die Historien-ID
+	 * @return die Statistik-ID
 	 */
-	public getHistorienIdByWert(value : U) : number {
+	public getStatistikIdByWert(value : U) : string {
 		if (value === null)
-			throw new CoreTypeException("Ein Zugriff auf eine Historien-ID ist mit null nicht möglich.")
-		const tmp : number | null = this._mapEnumToHistorienID.get(value);
+			throw new CoreTypeException("Ein Zugriff auf eine Statistik-ID ist mit null nicht möglich.")
+		const tmp : string | null = this._mapEnumToStatistikID.get(value);
 		if (tmp === null)
-			throw new CoreTypeException(this._name + ": Keine Historien-ID für den Bezeichner " + value.name() + " gefunden.")
+			throw new CoreTypeException(this._name + ": Keine Statistik-ID für den Bezeichner " + value.name() + " gefunden.")
 		return tmp;
 	}
 

@@ -12,6 +12,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import de.svws_nrw.asd.adt.PairNN;
+import de.svws_nrw.asd.data.kurse.KursDaten;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.adt.map.HashMap2D;
@@ -39,7 +40,6 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTerminRich;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurterminraumstunde;
-import de.svws_nrw.core.data.kurse.KursDaten;
 import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.core.data.stundenplan.StundenplanKalenderwochenzuordnung;
@@ -68,7 +68,7 @@ public class GostKlausurplanManager {
 	private final @NotNull Map<Integer, GostFaecherManager> _faechermanager_by_abijahr = new HashMap<>();
 	private final @NotNull KursManager _kursManager = new KursManager();
 	private final @NotNull HashMap2D<Long, String, StundenplanManager> _stundenplanmanager_by_schuljahresabschnitt_and_datum = new HashMap2D<>();
-	private final @NotNull HashMap3D<Long, Integer, Integer, StundenplanManager> _stundenplanmanager_by_schuljahresabschnitt_and_kw = new HashMap3D<>();
+//	private final @NotNull HashMap3D<Long, Integer, Integer, StundenplanManager> _stundenplanmanager_by_schuljahresabschnitt_and_kw = new HashMap3D<>();
 	private final @NotNull Map<Long, List<StundenplanManager>> _stundenplanmanagermenge_by_schuljahresabschnitt = new HashMap<>();
 	private final @NotNull Map<Long, LehrerListeEintrag> _lehrerMap = new HashMap<>();
 	private final @NotNull Map<Long, SchuelerListeEintrag> _schuelerlisteeintrag_by_id = new HashMap<>();
@@ -636,18 +636,18 @@ public class GostKlausurplanManager {
 		return liste != null && !liste.isEmpty();
 	}
 
-	/**
-	 * Prüft, ob zu den angegebenen Parametern ein StundenplanManager existiert. Falls noch keine StundenplanManager für den angegebenen Schuljahresabschnitt geladen wurden, wird eine {@link DeveloperNotificationException} geworfen
-	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
-	 * @param jahr das Jahr
-	 * @param kalenderwoche die Kalenderwoche
-	 * @return true, wenn ein StundenplanManager existiert, sonst false
-	 */
-	public boolean stundenplanManagerExistsByAbschnittAndKW(final long idSchuljahresabschnitt, final int jahr, final int kalenderwoche) {
-		if (!stundenplanManagerGeladenByAbschnitt(idSchuljahresabschnitt))
-			throw new DeveloperNotificationException("StundenplanManager für Schuljahresabschnitt " + idSchuljahresabschnitt + " wurde nicht geladen.");
-		return _stundenplanmanager_by_schuljahresabschnitt_and_kw.contains(idSchuljahresabschnitt, jahr, kalenderwoche);
-	}
+//	/**
+//	 * Prüft, ob zu den angegebenen Parametern ein StundenplanManager existiert. Falls noch keine StundenplanManager für den angegebenen Schuljahresabschnitt geladen wurden, wird eine {@link DeveloperNotificationException} geworfen
+//	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
+//	 * @param jahr das Jahr
+//	 * @param kalenderwoche die Kalenderwoche
+//	 * @return true, wenn ein StundenplanManager existiert, sonst false
+//	 */
+//	public boolean stundenplanManagerExistsByAbschnittAndKW(final long idSchuljahresabschnitt, final int jahr, final int kalenderwoche) {
+//		if (!stundenplanManagerGeladenByAbschnitt(idSchuljahresabschnitt))
+//			throw new DeveloperNotificationException("StundenplanManager für Schuljahresabschnitt " + idSchuljahresabschnitt + " wurde nicht geladen.");
+//		return _stundenplanmanager_by_schuljahresabschnitt_and_kw.contains(idSchuljahresabschnitt, jahr, kalenderwoche);
+//	}
 
 	/**
 	 * Prüft, ob zu den angegebenen Parametern ein StundenplanManager existiert. Falls noch keine StundenplanManager für den angegebenen Schuljahresabschnitt geladen wurden, wird eine {@link DeveloperNotificationException} geworfen
@@ -705,14 +705,14 @@ public class GostKlausurplanManager {
 		// TODO: so muss es sein, wenn Stundenpläne sich nicht mehr überscheiden dürfen:
 		// DeveloperNotificationException.ifMap2DPutOverwrites(_stundenplanmanager_by_schuljahresabschnitt_and_datum, idSchuljahresabschnitt, datum, stundenplanManager);
 		_stundenplanmanager_by_schuljahresabschnitt_and_datum.put(idSchuljahresabschnitt, datum, stundenplanManager);
-		final int kwjahr = DateUtils.gibKwJahrDesDatumsISO8601(datum);
-		final int kw = DateUtils.gibKwDesDatumsISO8601(datum);
-		if (_stundenplanmanager_by_schuljahresabschnitt_and_kw.contains(idSchuljahresabschnitt, kwjahr, kw)) {
-			final StundenplanManager managerInMap = _stundenplanmanager_by_schuljahresabschnitt_and_kw.getOrNull(idSchuljahresabschnitt, kwjahr, kw);
-			if ((managerInMap != null) && (managerInMap.stundenplanGetID() != stundenplanManager.stundenplanGetID()))
-				throw new DeveloperNotificationException("Mehrere Stundenpläne innerhalb der Kalenderwoche %d gültig.".formatted(kw));
-		} else
-			_stundenplanmanager_by_schuljahresabschnitt_and_kw.put(idSchuljahresabschnitt, kwjahr, kw, stundenplanManager);
+//		final int kwjahr = DateUtils.gibKwJahrDesDatumsISO8601(datum);
+//		final int kw = DateUtils.gibKwDesDatumsISO8601(datum);
+//		if (_stundenplanmanager_by_schuljahresabschnitt_and_kw.contains(idSchuljahresabschnitt, kwjahr, kw)) {
+//			final StundenplanManager managerInMap = _stundenplanmanager_by_schuljahresabschnitt_and_kw.getOrNull(idSchuljahresabschnitt, kwjahr, kw);
+//			if ((managerInMap != null) && (managerInMap.stundenplanGetID() != stundenplanManager.stundenplanGetID()))
+//				throw new DeveloperNotificationException("Mehrere Stundenpläne innerhalb der Kalenderwoche %d gültig.".formatted(kw));
+//		} else
+//			_stundenplanmanager_by_schuljahresabschnitt_and_kw.put(idSchuljahresabschnitt, kwjahr, kw, stundenplanManager);
 	}
 
 	/**
@@ -823,27 +823,27 @@ public class GostKlausurplanManager {
 		return null;
 	}
 
-	/**
-	 * Liefert das dem Jahr und der Kalenderwoche zugeordnete {@link StundenplanKalenderwochenzuordnung}-Objekt der Auswahl-Menge oder das nächstmöglichste.
-	 * <br>Hinweis: Einige Objekte dieser Menge können die ID = -1 haben, falls sie erzeugt wurden und nicht aus der DB stammen.
-	 * <br>Laufzeit: O(1)
-	 *
-	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
-	 * @param jahr           Das Jahr der Kalenderwoche.
-	 * @param kalenderwoche  Die gewünschte Kalenderwoche.
-	 *
-	 * @return das dem Jahr und der Kalenderwoche zugeordnete {@link StundenplanKalenderwochenzuordnung}-Objekt der Auswahl-Menge oder das nächstmöglichste.
-	 */
-	public @NotNull StundenplanManager stundenplanManagerGetByAbschnittAndJahrAndKWOrClosest(final long idSchuljahresabschnitt, final int jahr,
-			final int kalenderwoche) {
-		if (!stundenplanManagerGeladenByAbschnitt(idSchuljahresabschnitt))
-			throw new DeveloperNotificationException("StundenplanManager für Schuljahresabschnitt " + idSchuljahresabschnitt + " wurde nicht geladen.");
-		final StundenplanManager manager = _stundenplanmanager_by_schuljahresabschnitt_and_kw.getOrNull(idSchuljahresabschnitt, jahr, kalenderwoche);
-		if (manager != null)
-			return manager;
-		final @NotNull String dateOfMonday = DateUtils.gibDatumDesMontagsOfJahrAndKalenderwoche(jahr, kalenderwoche);
-		return stundenplanManagerGetByAbschnittAndDatumOrClosest(idSchuljahresabschnitt, dateOfMonday);
-	}
+//	/**
+//	 * Liefert das dem Jahr und der Kalenderwoche zugeordnete {@link StundenplanKalenderwochenzuordnung}-Objekt der Auswahl-Menge oder das nächstmöglichste.
+//	 * <br>Hinweis: Einige Objekte dieser Menge können die ID = -1 haben, falls sie erzeugt wurden und nicht aus der DB stammen.
+//	 * <br>Laufzeit: O(1)
+//	 *
+//	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
+//	 * @param jahr           Das Jahr der Kalenderwoche.
+//	 * @param kalenderwoche  Die gewünschte Kalenderwoche.
+//	 *
+//	 * @return das dem Jahr und der Kalenderwoche zugeordnete {@link StundenplanKalenderwochenzuordnung}-Objekt der Auswahl-Menge oder das nächstmöglichste.
+//	 */
+//	public @NotNull StundenplanManager stundenplanManagerGetByAbschnittAndJahrAndKWOrClosest(final long idSchuljahresabschnitt, final int jahr,
+//			final int kalenderwoche) {
+//		if (!stundenplanManagerGeladenByAbschnitt(idSchuljahresabschnitt))
+//			throw new DeveloperNotificationException("StundenplanManager für Schuljahresabschnitt " + idSchuljahresabschnitt + " wurde nicht geladen.");
+//		final StundenplanManager manager = _stundenplanmanager_by_schuljahresabschnitt_and_kw.getOrNull(idSchuljahresabschnitt, jahr, kalenderwoche);
+//		if (manager != null)
+//			return manager;
+//		final @NotNull String dateOfMonday = DateUtils.gibDatumDesMontagsOfJahrAndKalenderwoche(jahr, kalenderwoche);
+//		return stundenplanManagerGetByAbschnittAndDatumOrClosest(idSchuljahresabschnitt, dateOfMonday);
+//	}
 
 	/**
 	 * Liefert den {@link StundenplanManager}, zu den übergebenen Parametern, sonst wird eine {@link DeveloperNotificationException} geworfen.
@@ -3512,13 +3512,13 @@ public class GostKlausurplanManager {
 	 * @param quartal das Quartal
 	 * @param threshold     der Schwellwert (z.B. 3), der mindestens erreicht sein muss, damit die
 	 *                  Schüler-IDs in die Rückgabe-Map aufgenommen werden
-	 * @param thresholdOnly wenn <code>true</code> wird die Schüler-ID nur bei exaktem Erreichen des <code>threshold</code> in die Rückgabe-Map aufgenommen. Größere Werte werden nicht berücksichtigt.
+	 * @param thresholdMinus der Schwellwert (z.B. 4), dessen Menge von der Threshold-Menge abgezogen wird, damit Warnungen nicht die Fehler enthalten, bei -1 wird nichts abgezogen
 	 *
 	 * @return die Map Schüler-ID -> {@link GostSchuelerklausurTermin}menge, die Schüler-IDs von Schülern enthalten, die in der den Termin
 	 * enthaltenen Kalenderwoche mehr (>=) Klausuren schreiben, als der Schwellwert definiert und die betreffenden {@link GostSchuelerklausurTermin}e.
 	 */
 	public @NotNull List<PairNN<PairNN<Integer, Long>, List<GostSchuelerklausurTermin>>> klausurenProSchueleridExceedingKWThresholdByAbijahrAndHalbjahrAndThreshold(
-			final int abijahr, final @NotNull GostHalbjahr halbjahr, final int quartal, final int threshold, final boolean thresholdOnly) {
+			final int abijahr, final @NotNull GostHalbjahr halbjahr, final int quartal, final int threshold, final int thresholdMinus) {
 		final Map<Integer, Map<Long, List<GostSchuelerklausurTermin>>> schuelerklausurterminaktuellmenge_by_schuelerId =
 				_schuelerklausurterminaktuellmenge_by_abijahr_and_kw_and_schuelerId.getMap2OrNull(abijahr);
 		final @NotNull List<PairNN<PairNN<Integer, Long>, List<GostSchuelerklausurTermin>>> ergebnis = new ArrayList<>();
@@ -3527,10 +3527,10 @@ public class GostKlausurplanManager {
 
 		for (final @NotNull Entry<Integer, Map<Long, List<GostSchuelerklausurTermin>>> kwEntry : schuelerklausurterminaktuellmenge_by_schuelerId.entrySet()) {
 			for (final @NotNull Entry<Long, List<GostSchuelerklausurTermin>> schuelerEntry : kwEntry.getValue().entrySet()) {
-				if ((schuelerEntry.getValue().size() == threshold) || ((schuelerEntry.getValue().size() > threshold) && !thresholdOnly))
+				if ((schuelerEntry.getValue().size() >= threshold) && ((thresholdMinus < 0) || (schuelerEntry.getValue().size() < thresholdMinus)))
 					for (final @NotNull GostSchuelerklausurTermin skt : schuelerEntry.getValue()) {
 						final @NotNull GostKlausurvorgabe vorgabe = vorgabeBySchuelerklausurTermin(skt);
-						if (vorgabe.abiJahrgang == abijahr && vorgabe.halbjahr == halbjahr.id && (quartal == 0 || vorgabe.quartal == quartal)) {
+						if (vorgabe.abiJahrgang == abijahr && vorgabe.halbjahr == halbjahr.id && (quartal == 0 || vorgabe.quartal == quartal) && !(vorgabe.halbjahr == 5 && vorgabe.quartal == 2)) {
 							ergebnis.add(new PairNN<>(new PairNN<>(kwEntry.getKey(), schuelerEntry.getKey()), schuelerEntry.getValue()));
 							break;
 						}
@@ -5165,18 +5165,19 @@ public class GostKlausurplanManager {
 	 * @param abiJahrgang der Abitur-Jahrgang
 	 * @param halbjahr das {@link GostHalbjahr}
 	 * @param quartal die Nummer des Quartals, 0 für alle Quartale
+	 * @param kwErrorLimit das Errorlimit für die Anzahl der Klausuren pro Schüler und Woche
 	 *
 	 * @return die Anzahl möglicher Probleme in der aktuellen Klausurplanung zum übergebenen {@link GostHalbjahr} und Quartal
 	 */
 	public int planungsfehlerGetAnzahlByHalbjahrAndQuartal(final int abiJahrgang, final @NotNull GostHalbjahr halbjahr,
-			final int quartal) {
+			final int quartal, final int kwErrorLimit) {
 		int anzahl = 0;
 		anzahl += vorgabefehlendGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += kursklausurfehlendGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += schuelerklausurfehlendGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += terminMitKonfliktGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
-		anzahl += klausurenProSchueleridExceedingKWThresholdByAbijahrAndHalbjahrAndThreshold(abiJahrgang, halbjahr, quartal, 4, false).size();
+		anzahl += klausurenProSchueleridExceedingKWThresholdByAbijahrAndHalbjahrAndThreshold(abiJahrgang, halbjahr, quartal, kwErrorLimit, -1).size();
 		if (!stundenplanManagerGeladenAndExistsByAbschnitt(
 				DeveloperNotificationException.ifMap2DGetIsNull(_schuljahresabschnitt_by_abijahr_and_halbjahr, abiJahrgang, halbjahr.id)))
 			anzahl++;
@@ -5189,18 +5190,20 @@ public class GostKlausurplanManager {
 	 * @param abiJahrgang der Abitur-Jahrgang
 	 * @param halbjahr das {@link GostHalbjahr}
 	 * @param quartal die Nummer des Quartals, 0 für alle Quartale
+	 * @param kwWarnLimit die Anzahl der Klausuren pro Schüler und Woche, ab der eine Warnung ausgegeben wird
+	 * @param kwErrorLimit die Anzahl der Klausuren pro Schüler und Woche, ab der ein Fehler ausgegeben wird
 	 *
 	 * @return die Anzahl möglicher Probleme in der aktuellen Klausurplanung zum übergebenen {@link GostHalbjahr} und Quartal
 	 */
 	public int planungshinweiseGetAnzahlByHalbjahrAndQuartal(final int abiJahrgang, final @NotNull GostHalbjahr halbjahr,
-			final int quartal) {
+			final int quartal,  final int kwWarnLimit, final int kwErrorLimit) {
 		int anzahl = 0;
 
 		anzahl += terminOhneDatumGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += terminUnvollstaendigeRaumzuweisungGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += terminUnzureichendePlatzkapazitaetGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
-		anzahl += klausurenProSchueleridExceedingKWThresholdByAbijahrAndHalbjahrAndThreshold(abiJahrgang, halbjahr, quartal, 3, true).size();
+		anzahl += klausurenProSchueleridExceedingKWThresholdByAbijahrAndHalbjahrAndThreshold(abiJahrgang, halbjahr, quartal, kwWarnLimit, kwErrorLimit).size();
 		return anzahl;
 	}
 

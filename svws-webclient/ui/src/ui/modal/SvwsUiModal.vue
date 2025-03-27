@@ -1,14 +1,14 @@
 <template>
 	<TransitionRoot appear :show>
-		<Dialog class="modal--wrapper" @close="autoCloseModal" @keyup.esc="autoCloseModal">
+		<Dialog :id="idComponent" class="modal--wrapper" @close="autoCloseModal" @keyup.esc="autoCloseModal">
 			<div class="modal--pageWrapper"
 				:class="{ 'modal--pageWrapper--help': size === 'help', }">
-				<TransitionChild v-if="size !== 'help'" as="div"
+				<TransitionChild :id="idTC_overlay" v-if="size !== 'help'" as="div"
 					enter="ease-out duration-200" enter-from="opacity-0" enter-to="opacity-100"
 					leave="ease-in duration-100" leave-from="opacity-100" leave-to="opacity-0">
 					<div class="modal--overlay" @click="autoCloseModal" />
 				</TransitionChild>
-				<TransitionChild as="div"
+				<TransitionChild :id="idTC_div" as="div"
 					enter="ease-out duration-200" enter-from="opacity-0 scale-95" enter-to="opacity-100 scale-100"
 					leave="ease-in duration-100" leave-from="opacity-100 scale-100" leave-to="opacity-0 scale-95"
 					class="modal"
@@ -21,7 +21,7 @@
 					}">
 					<div class="modal--titlebar">
 						<DialogTitle class="modal--title inline-flex items-center gap-1">
-							<span class="icon i-ri-alert-fill icon-error inline-block" v-if="type === 'danger'" />
+							<span class="icon i-ri-alert-fill icon-ui-danger inline-block" v-if="type === 'danger'" />
 							<slot name="modalTitle" />
 						</DialogTitle>
 						<svws-ui-tooltip v-if="$slots.hilfe" autosize>
@@ -61,6 +61,7 @@
 <script setup lang='ts'>
 
 	import { Dialog, DialogTitle, DialogDescription, TransitionRoot, TransitionChild } from "@headlessui/vue";
+	import { useId } from "vue";
 	import type { Size } from "../../types";
 
 	const props = withDefaults(defineProps<{
@@ -78,6 +79,8 @@
 		noScroll: false,
 	});
 
+	defineSlots();
+
 	const emit = defineEmits<{
 		"update:show": [show: boolean];
 	}>();
@@ -91,144 +94,8 @@
 		emit('update:show', false);
 	}
 
+	const idComponent = useId();
+	const idTC_overlay = useId();
+	const idTC_div = useId();
+
 </script>
-
-<style lang="postcss">
-
-	.modal--pageWrapper {
-		@apply flex items-center justify-center;
-		@apply h-screen;
-		@apply p-6;
-		@apply pointer-events-auto;
-	}
-
-	.modal--pageWrapper--help {
-		@apply justify-end items-start;
-		@apply pointer-events-none;
-	}
-
-	.modal--titlebar {
-		@apply flex flex-row items-center justify-between;
-		@apply w-full;
-	}
-	/* TODO: COLORS icon close darkmode */
-
-	.modal {
-		@apply bg-ui text-ui border border-ui-secondary;
-		@apply align-bottom sm:align-middle my-8 transform transition-all overflow-hidden;
-		@apply max-h-full max-w-modal-sm;
-		@apply flex flex-col items-center;
-		@apply w-full mx-auto;
-		@apply relative z-50;
-		@apply rounded-xl;
-
-		&--sm {
-			@apply w-full max-w-modal-sm;
-		}
-
-		&--md {
-			@apply w-full max-w-modal-md;
-			@apply rounded-xl;
-		}
-
-		&--lg {
-			@apply w-full max-w-modal-lg;
-			@apply rounded-xl;
-		}
-
-		&--help {
-			@apply border border-ui;
-			@apply m-0 h-full;
-			@apply shadow-xl;
-			@apply w-full max-w-modal-help;
-			@apply pointer-events-auto rounded-lg;
-
-			.modal--description,
-			.modal--content {
-				@apply text-left text-base;
-			}
-		}
-
-		&--danger {
-			.modal--title {
-				@apply text-ui-danger;
-			}
-
-			.button--primary {
-				@apply bg-ui-danger text-ui-ondanger border-ui-danger;
-
-				&:focus-visible {
-					@apply ring-ui-danger;
-				}
-			}
-		}
-
-		.modal--titlebar {
-			@apply border-b border-ui-secondary;
-			@apply p-2;
-
-			.button {
-				@apply rounded-md;
-
-				&:focus {
-					@apply outline-none ring-0 border-0;
-				}
-			}
-		}
-
-		&--title {
-			@apply flex-grow px-2;
-			@apply text-headline-sm;
-		}
-
-		&--content-wrapper:not(&--content-noscroll) {
-			@apply h-full overflow-y-auto w-full;
-			-webkit-overflow-scrolling: touch;
-		}
-
-		&--content-wrapper {
-			@apply h-full overflow-hidden w-full flex flex-col;
-		}
-
-		&--description {
-			@apply px-4 py-5 text-headline-sm text-center;
-		}
-
-		&--content:not(&--content-noscroll) {
-			@apply w-full text-base px-4 py-5 text-center;
-		}
-
-		&--content {
-			@apply h-full w-full text-base px-4 py-5 text-center overflow-hidden flex flex-col;
-		}
-
-		&--wrapper {
-			@apply fixed inset-0 z-50 pointer-events-none;
-			@apply overflow-y-auto;
-			-webkit-overflow-scrolling: touch;
-		}
-
-		&--actions {
-			@apply flex items-center justify-center p-4 pb-6 gap-2;
-		}
-
-		&--logs {
-			@apply flex items-center justify-center p-4 pb-6 gap-2;
-		}
-
-	}
-
-	.modal--description + .modal--content,
-	.modal--description + .modal--actions,
-	.modal--content + .modal--actions{
-		@apply pt-0;
-	}
-
-	.modal--overlay {
-		@apply bg-ui-neutral-weak backdrop-filter backdrop-grayscale;
-		@apply absolute top-0 left-0;
-		@apply h-full w-full;
-		@apply z-50;
-	}
-
-</style>

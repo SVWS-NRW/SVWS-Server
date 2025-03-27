@@ -4,6 +4,7 @@
   "DisableAutoUpdates" : false,
   "UseHTTPDefaultv11" : false,
   "PortHTTPS" : "${APP_PORT}",
+  "PortHTTPPrivilegedAccess" : null,
   "UseCORSHeader" : false,
   "TempPath" : "tmp",
   "TLSKeyAlias" : "${SVWS_TLS_KEY_ALIAS}",
@@ -14,15 +15,11 @@
   "LoggingEnabled" : true,
   "LoggingPath" : "logs",
   "ServerMode" : "stable",
+  "PrivilegedDatabaseUser" : "root",
   "DBKonfiguration" : {
     "dbms" : "MARIA_DB",
-    "location" : "${MariaDB_HOST}",
-    "defaultschema" : "${MariaDB_DATABASE}",
-    "SchemaKonfiguration" : [ {
-      "name" : "${MariaDB_DATABASE}",
-      "svwslogin" : false,
-      "username" : "${MariaDB_USER}",
-      "password" : "${MariaDB_PASSWORD}"
-    } ]
+    "location" : "${MARIADB_HOST}",
+    "defaultschema" : "",
+    "SchemaKonfiguration" : []
   }
 }

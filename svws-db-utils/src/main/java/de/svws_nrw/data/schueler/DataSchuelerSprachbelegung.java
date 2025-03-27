@@ -1,9 +1,9 @@
 package de.svws_nrw.data.schueler;
 
-import de.svws_nrw.core.data.schueler.Sprachbelegung;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.asd.data.fach.SprachreferenzniveauKatalogEintrag;
 import de.svws_nrw.asd.data.jahrgang.JahrgaengeKatalogEintrag;
+import de.svws_nrw.asd.data.schueler.Sprachbelegung;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.fach.Sprachreferenzniveau;
 import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;

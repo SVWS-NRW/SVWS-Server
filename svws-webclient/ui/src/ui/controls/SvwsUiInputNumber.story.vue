@@ -46,7 +46,7 @@
 			<div>Wert: {{ value3 === null ? "null" : value3 }}</div>
 			<p class="mt-2">
 				Info: Die Hintergrundfarbe des Headless Inputs ist transparent und zeigt so immer die Hintergrundfarbe des Parent-Elements.
-				Mit einer spezifischen <code class="bg-ui-neutral px-2 rounded">bg-ui-xxxx</code> Klasse kann die Hintergrundfarbe des Headless Inputs geändert werden.
+				Mit einer spezifischen <code class="bg-ui-neutral px-2 rounded-xs">bg-ui-xxxx</code> Klasse kann die Hintergrundfarbe des Headless Inputs geändert werden.
 			</p>
 		</Variant>
 	</Story>

@@ -1,6 +1,6 @@
 import type { RouteParams } from "vue-router";
 
-import type { LehrerListeManager} from "@core";
+import type { LehrerListeManager } from "@core";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import type { RouteNode } from "~/router/RouteNode";
@@ -15,7 +15,9 @@ import { routeLehrerStundenplan } from "./stundenplan/RouteLehrerStundenplan";
 import { routeLehrerUnterrichtsdaten } from "~/router/apps/lehrer/RouteLehrerUnterrichtsdaten";
 import { api } from "~/router/Api";
 import { ConfigElement } from "~/components/Config";
-import { LehrerAuswahlProps } from "~/components/lehrer/SLehrerAuswahlProps";
+import type { LehrerAuswahlProps } from "~/components/lehrer/SLehrerAuswahlProps";
+import { AppMenuGroup } from "@ui";
+import {routeLehrerEinwilligungen} from "~/router/apps/lehrer/einwilligungen/RouteLehrerEinwilligungen";
 
 const SLehrerAuswahl = () => import("~/components/lehrer/SLehrerAuswahl.vue");
 const SLehrerApp = () => import("~/components/lehrer/SLehrerApp.vue");
@@ -31,10 +33,13 @@ export class RouteLehrer extends RouteAuswahlNode<LehrerListeManager, RouteDataL
 			routeLehrerPersonaldaten,
 			routeLehrerStundenplan,
 			routeLehrerUnterrichtsdaten,
+			routeLehrerEinwilligungen,
 			routeLehrerGruppenprozesse,
 			routeLehrerNeu,
 		];
 		super.defaultChild = routeLehrerIndividualdaten;
+		super.menugroup = AppMenuGroup.MAIN;
+		super.icon = "i-ri-briefcase-line";
 		super.updateIfTarget = this.doUpdateIfTarget;
 		super.getAuswahlListProps = (props) => (<LehrerAuswahlProps>{
 			...props,

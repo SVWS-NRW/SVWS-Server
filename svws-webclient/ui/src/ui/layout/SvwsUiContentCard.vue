@@ -1,19 +1,5 @@
-<script setup lang='ts'>
-	const props = withDefaults(defineProps<{
-		title?: string;
-		overflowScroll?: boolean;
-		largeTitle?: boolean;
-		hasBackground?: boolean;
-	}>(), {
-		title: '',
-		overflowScroll: false,
-		largeTitle: false,
-		hasBackground: false,
-	});
-</script>
-
 <template>
-	<div class="content-card" :class="{'h-full': overflowScroll, 'svws-has-background': hasBackground}">
+	<div :id="idComponent" class="content-card" :class="{'h-full': overflowScroll, 'svws-has-background': hasBackground}">
 		<div v-if="title || $slots.actions || $slots.title" class="content-card--header" :class="{
 			'content-card--header--has-actions': $slots.actions
 		}">
@@ -32,96 +18,23 @@
 	</div>
 </template>
 
-<style lang="postcss">
-	.content-card {
-		@apply h-fit;
+<script setup lang='ts'>
 
-		&.svws-has-background {
-			@apply bg-ui-neutral;
-			@apply px-6 py-3;
+	import { useId } from "vue";
 
-			&:first-child {
-				@apply pt-6;
-			}
+	const props = withDefaults(defineProps<{
+		title?: string;
+		overflowScroll?: boolean;
+		largeTitle?: boolean;
+		hasBackground?: boolean;
+	}>(), {
+		title: '',
+		overflowScroll: false,
+		largeTitle: false,
+		hasBackground: false,
+	});
 
-			&:last-child {
-				@apply pb-6;
-			}
+	defineSlots();
+	const idComponent = useId();
 
-			.svws-ui-table {
-				@apply rounded-lg;
-
-				.svws-ui-tr {
-					.svws-ui-td:last-child {
-						@apply !pr-0;
-					}
-				}
-
-				.svws-ui-tbody:last-child .svws-ui-tr:last-child .svws-ui-td,
-				.svws-ui-tfoot {
-					@apply border-b-0;
-				}
-			}
-
-			.svws-ui-thead {
-				@apply rounded-t-lg;
-			}
-		}
-
-		&--content {
-			&--with-title {
-				@apply mt-4;
-			}
-
-			&--overflow-scroll {
-				@apply h-full flex flex-col;
-			}
-		}
-
-		&--headline {
-			@apply text-ui;
-			@apply text-headline-md;
-			@apply flex-shrink-0 max-w-full leading-none;
-
-			&--large {
-				@apply text-headline;
-			}
-		}
-
-		&--header {
-			@apply inline-flex items-center justify-between mb-1 py-1 w-auto;
-
-			&--has-actions {
-				@apply flex gap-x-8 gap-y-1 w-full items-start flex-wrap mb-0;
-
-				.content-card--headline {
-					@apply hyphens-auto sm:flex-grow;
-				}
-			}
-		}
-
-		&--actions {
-			@apply flex items-center gap-x-2 max-xl:w-full max-xl:mb-3 -mt-1;
-		}
-
-    &.col-span-full {
-      .content-card--actions {
-        @apply max-xl:w-auto max-xl:mb-0 max-md:w-full max-md:mb-3;
-      }
-    }
-
-    &.h-full {
-      .content-card--content {
-        @apply min-h-full;
-      }
-    }
-	}
-
-	.content-card--wrapper--light-bg .content-card--header {
-		@apply bg-ui;
-	}
-
-	.page--wrapper[class*="gost_kursplanung_halbjahr_ergebnis"] .svws-ui-tab-content {
-		@apply overflow-hidden;
-	}
-</style>
+</script>

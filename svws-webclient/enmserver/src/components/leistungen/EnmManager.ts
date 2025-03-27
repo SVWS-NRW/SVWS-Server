@@ -171,7 +171,7 @@ export class EnmManager {
 			this._auswahlSchueler.value = listSchueler.getFirst();
 			return;
 		}
-		if ((index) <= listSchueler.size())
+		if ((index + 1) < listSchueler.size())
 			this._auswahlSchueler.value = listSchueler.get(index + 1);
 		else
 			this._auswahlSchueler.value = listSchueler.getFirst();
@@ -930,6 +930,37 @@ export class EnmManager {
 		if (lerngruppe.kursartID === null)
 			return '';
 		return lerngruppe.kursartKuerzel ?? '';
+	}
+
+	/**
+	 * Gibt die Kursart der Leistung zurück.
+	 *
+	 * @param leistung   die Leistung
+	 *
+	 * @returns die Kursart als String
+	 */
+	public leistungGetKursartAsString(leistung: ENMLeistung) : string {
+		// Bestimme die Lerngruppe zu der Leistung
+		const lerngruppe = this.mapLerngruppen.value.get(leistung.lerngruppenID);
+		if ((lerngruppe === null) || (lerngruppe.kursartID === null) || (lerngruppe.kursartKuerzel === null))
+			return '';
+		// Bei Grundkursen muss die Schriftlichkeit mit angezeigt werden
+		let kuerzel = lerngruppe.kursartKuerzel;
+		if (kuerzel === 'GK')
+			kuerzel = kuerzel + ((leistung.istSchriftlich ?? false) ? "S" : "M");
+		// Handelt es sich nicht um ein Abiturfach, so kann das allgemeine Kürzel zurückgegeben werden
+		if (leistung.abiturfach === null)
+			return kuerzel;
+		// Setze ggf. die Kursart anhand des Abiturfaches
+		const jahrgaenge = this.mapLerngruppeJahrgaenge.value.get(lerngruppe.id);
+		if (jahrgaenge === null)
+			return kuerzel;
+		if (jahrgaenge.size() === 1) {
+			const jahrgang = jahrgaenge.getFirst();
+			if ((jahrgang.kuerzel === 'EF') || (jahrgang.kuerzel === 'S1') || (jahrgang.kuerzel === 'S2'))
+				return kuerzel;
+		}
+		return ((leistung.abiturfach < 3) ? "LK" + leistung.abiturfach : "AB" + leistung.abiturfach);
 	}
 
 	/**

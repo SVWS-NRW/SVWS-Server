@@ -2,7 +2,7 @@ package de.svws_nrw.core.utils.klassen;
 
 import java.util.Comparator;
 
-import de.svws_nrw.core.data.klassen.KlassenDaten;
+import de.svws_nrw.asd.data.klassen.KlassenDaten;
 import jakarta.validation.constraints.NotNull;
 
 /**

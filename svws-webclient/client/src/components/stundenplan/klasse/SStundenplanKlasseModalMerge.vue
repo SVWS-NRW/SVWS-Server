@@ -14,7 +14,7 @@
 		</template>
 		<template #modalActions>
 			<svws-ui-button type="secondary" @click="show = false">Abbrechen</svws-ui-button>
-			<svws-ui-button type="primary" @click="mergeUnterrichte(selected)">OK</svws-ui-button>
+			<svws-ui-button type="primary" @click="mergeUnterrichte(selected)" :disabled="selected.length === 0">OK</svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>
@@ -27,7 +27,7 @@
 
 	const props = defineProps<{
 		stundenplanManager: () => StundenplanManager;
-		mergeUnterrichte: (list: Array<List<StundenplanUnterricht>>) => Promise<void>;
+		mergeUnterrichte: (list: Iterable<List<StundenplanUnterricht>>) => Promise<void>;
 	}>();
 
 	const columns = [
@@ -76,8 +76,6 @@
 
 	const show = ref<boolean>(false);
 
-	const openModal = () => {
-		show.value = true;
-	}
+	const openModal = () => show.value = true;
 
 </script>

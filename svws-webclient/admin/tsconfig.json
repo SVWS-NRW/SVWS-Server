@@ -22,7 +22,6 @@
 	"exclude": [
 		"**/*.story.vue",
 		"**/histoire.setup.ts", 
-		"tailwind.config.js",
 		"postcss.config.js",
 	]
 }

@@ -8,4 +8,6 @@ export interface EnmKlassenleitungProps {
 	patchLernabschnitt: (patch: Partial<ENMLernabschnitt>) => Promise<boolean>;
 	columnsVisible: () => Map<string, boolean|null>;
 	setColumnsVisible: (columns: Map<string, boolean|null>) => Promise<void>;
+	floskelEditorVisible: boolean;
+	setFloskelEditorVisible: (value: boolean) => Promise<void>;
 }

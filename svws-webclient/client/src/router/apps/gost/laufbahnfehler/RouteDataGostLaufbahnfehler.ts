@@ -1,13 +1,5 @@
 import type { ApiFile, GostBelegpruefungsErgebnisse, List} from "@core";
-import {
-	ArrayList,
-	DeveloperNotificationException,
-	GostBelegpruefungsArt,
-	OpenApiError,
-	ReportingParameter,
-	ReportingReportvorlage,
-	SimpleOperationResponse
-} from "@core";
+import { ArrayList, DeveloperNotificationException, GostBelegpruefungsArt, OpenApiError, ReportingParameter, ReportingReportvorlage, SimpleOperationResponse } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -90,24 +82,10 @@ export class RouteDataGostLaufbahnfehler extends RouteData<RouteStateDataGostLau
 	gotoSprachenfolge = async (idSchueler: number) =>
 		await RouteManager.doRoute(routeSchuelerSprachen.getRoute({ id: idSchueler }));
 
-	importLaufbahnplanung = async (data: FormData): Promise<SimpleOperationResponse> => {
+	importLaufbahnplanung = async (data: FormData): Promise<void> => {
 		api.status.start();
-		try {
-			const res = await api.server.importGostSchuelerLaufbahnplanungen(data, api.schema);
-			api.status.stop();
-			return res;
-		} catch(e) {
-			if ((e instanceof OpenApiError) && (e.response !== null) && ((e.response.status === 400) || (e.response.status === 409))) {
-				const json : string = await e.response.text();
-				return SimpleOperationResponse.transpilerFromJSON(json);
-			}
-			const result = new SimpleOperationResponse();
-			result.log.add("Fehler bei der Server-Anfrage. ");
-			if (e instanceof Error)
-				result.log.add("  " + e.message);
-			api.status.stop();
-			return result;
-		}
+		await api.server.importGostSchuelerLaufbahnplanungen(data, api.schema);
+		api.status.stop();
 	}
 
 	exportLaufbahnplanung = async (schueler: List<number>): Promise<ApiFile> => {
@@ -150,4 +128,3 @@ export class RouteDataGostLaufbahnfehler extends RouteData<RouteStateDataGostLau
 	}
 
 }
-

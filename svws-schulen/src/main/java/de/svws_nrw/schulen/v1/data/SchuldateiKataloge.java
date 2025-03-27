@@ -17,9 +17,13 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @TranspilerDTO
 public class SchuldateiKataloge {
 
+	/** Die Version der Schuldatei. */
+	@Schema(description = "die Version")
+	public @NotNull SchuldateiVersion version = new SchuldateiVersion();
+
 	/** Die Katalog-Einträge */
 	@ArraySchema(schema = @Schema(implementation = SchuldateiKatalogeintrag.class))
-	public @NotNull List<SchuldateiKatalogeintrag> katalog = new ArrayList<>();
+	public @NotNull List<SchuldateiKatalogeintrag> kataloge = new ArrayList<>();
 
 
 	/**

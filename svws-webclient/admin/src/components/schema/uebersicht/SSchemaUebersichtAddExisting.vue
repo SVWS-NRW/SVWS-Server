@@ -1,34 +1,46 @@
 <template>
-	<svws-ui-action-button title="In Konfiguration aufnehmen" description="Das Schema wird mit dem angegebenen Benutzer und Kennwort in die Konfiguration der SVWS-Servers aufgenommen." icon="i-ri-share-forward-2-line" :action-function :action-disabled="(props.schema === undefined) || user.length === 0 || (user === 'root')" :is-loading="loadingFunction().value" action-label="Hinzufügen" :is-active>
-		<div class="input-wrapper">
-			<svws-ui-text-input v-model.trim="user" required placeholder="Benutzername" :disabled="loadingFunction().value" :valid="value => value !== 'root'" />
-			<svws-ui-text-input v-model.trim="password" required placeholder="Passwort" :disabled="loadingFunction().value" type="password" />
+	<ui-card icon="i-ri-share-forward-2-line" title="In Konfiguration aufnehmen"
+		subtitle="Das Schema wird mit dem angegebenen Benutzer und Kennwort in die Konfiguration der SVWS-Servers aufgenommen."
+		:is-open="isOpen" @update:is-open="(isOpen) => emit('opened', isOpen)">
+		<div class="input-wrapper mt-2">
+			<svws-ui-text-input v-model.trim="user" required placeholder="Benutzername" :disabled="loading" :valid="value => value !== 'root'" />
+			<svws-ui-text-input v-model.trim="password" required placeholder="Passwort" :disabled="loading" type="password" />
 			<svws-ui-spacing />
 		</div>
-	</svws-ui-action-button>
+		<template #buttonFooterLeft>
+			<svws-ui-button :disabled="(props.schema === undefined) || user.length === 0 || (user === 'root') || loading" :is-loading="loading" title="Hinzufügen" @click="actionFunction">
+				<svws-ui-spinner v-if="loading" spinning />
+				<span v-else class="icon i-ri-play-line" />
+				Hinzufügen
+			</svws-ui-button>
+		</template>
+	</ui-card>
 </template>
 
 <script setup lang="ts">
 
+	import { ref } from "vue";
+	import type { List } from "@core/java/util/List";
 	import { BenutzerKennwort } from "@core/core/data/BenutzerKennwort";
 	import { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
-	import type { List } from "@core/java/util/List";
-	import { type ShallowRef, ref } from "vue";
 
 	const props = defineProps<{
 		addExistingSchemaToConfig: ((data: BenutzerKennwort, schema: string) => Promise<void>);
 		schema: string;
-		logsFunction: () => ShallowRef<List<string | null> | undefined>;
-		statusFunction: () => ShallowRef<boolean | undefined>;
-		loadingFunction: () => ShallowRef<boolean>;
-		isActive: boolean;
+		setStatus: (loading: boolean, status?: boolean, logs?: List<string | null>) => void;
+		loading: boolean;
+		isOpen: boolean;
+	}>();
+
+	const emit = defineEmits<{
+		'opened': [value: boolean];
 	}>();
 
 	const user = ref<string>('');
 	const password = ref<string>('');
 
 	async function actionFunction() {
-		props.loadingFunction().value = true;
+		props.setStatus(true);
 		const data = new BenutzerKennwort();
 		data.user = user.value;
 		data.password = password.value;
@@ -37,16 +49,7 @@
 		await props.addExistingSchemaToConfig(data, props.schema);
 		user.value = '';
 		password.value = '';
-		props.loadingFunction().value = false;
-		clear();
-	}
-
-	function clear() {
-		props.logsFunction().value = undefined;
-		props.statusFunction().value = undefined;
-		props.loadingFunction().value = false;
-		user.value = '';
-		password.value = '';
+		props.setStatus(false);
 	}
 
 </script>

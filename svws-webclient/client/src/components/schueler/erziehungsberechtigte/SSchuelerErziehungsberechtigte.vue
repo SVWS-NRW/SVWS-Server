@@ -1,5 +1,5 @@
 <template>
-	<div class="page--content">
+	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Erziehungsberechtigte" class="col-span-full">
 			<svws-ui-table class="contentFocusField" :items="data()" :columns :no-data="data().size() === 0" clickable :clicked="erzieher" @update:clicked="value => erzieher = value" focus-first-element>
 				<template #header(anschreiben)>
@@ -42,7 +42,7 @@
 					<svws-ui-text-input placeholder="Name" :model-value="erzieher.nachname" @change="nachname=>erzieher !== undefined && patch({ nachname }, erzieher.id)" type="text" />
 					<svws-ui-text-input placeholder="Vorname" :model-value="erzieher.vorname" @change="vorname=>erzieher !== undefined && patch({ vorname }, erzieher.id)" type="text" />
 					<svws-ui-text-input placeholder="E-Mail Adresse" :model-value="erzieher.eMail" @change="eMail=>erzieher !== undefined && patch({ eMail }, erzieher.id)" type="email" verify-email />
-					<svws-ui-select title="Staatsangehörigkeit" v-model="staatsangehoerigkeit" :items="Nationalitaeten.values()" :item-text="i => i.daten.staatsangehoerigkeit" :item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" autocomplete />
+					<svws-ui-select title="Staatsangehörigkeit" v-model="staatsangehoerigkeit" :items="Nationalitaeten.values()" :item-text="i => i.historie().getLast().staatsangehoerigkeit" :item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" autocomplete />
 					<svws-ui-spacing />
 					<svws-ui-text-input placeholder="Straße und Hausnummer" :model-value="strasse(erzieher)" @change="patchStrasse" type="text" />
 					<svws-ui-select title="Wohnort" v-model="wohnort" :items="mapOrte" :item-filter="orte_filter" :item-sort="orte_sort" :item-text="i => `${i.plz} ${i.ortsname}`" autocomplete />
@@ -57,7 +57,7 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, ref } from "vue";
+	import { computed, ref, watch } from "vue";
 	import type { DataTableColumn } from "@ui";
 	import type { SchuelerErziehungsberechtigteProps } from "./SSchuelerErziehungsberechtigteProps";
 	import type { Erzieherart, OrtKatalogEintrag, OrtsteilKatalogEintrag} from "@core";
@@ -67,6 +67,14 @@
 	const props = defineProps<SchuelerErziehungsberechtigteProps>();
 
 	const erzieher = ref<ErzieherStammdaten | undefined>();
+
+	watch(() => props.data(), (neu) => {
+		if (neu.isEmpty())
+			erzieher.value = undefined;
+		else
+			erzieher.value = neu.getFirst();
+	}, { immediate: true });
+
 	const columns: DataTableColumn[] = [
 		{ key: "idErzieherArt", label: "Art"},
 		{ key: "name", label: "Name"},
@@ -88,7 +96,7 @@
 
 	const wohnort = computed<OrtKatalogEintrag | undefined>({
 		get: () => ((erzieher.value === undefined) || (erzieher.value.wohnortID === null)) ? undefined : props.mapOrte.get(erzieher.value.wohnortID),
-		set: (value) => (erzieher.value !== undefined) && void props.patch({ wohnortID: value === undefined ? null : value.id }, erzieher.value.id)
+		set: (value) => (erzieher.value !== undefined) && void props.patch({ wohnortID: value === undefined ? null : value.id }, erzieher.value.id),
 	});
 
 	const ortsteile = computed<Array<OrtsteilKatalogEintrag>>(() => {
@@ -101,17 +109,17 @@
 
 	const ortsteil = computed<OrtsteilKatalogEintrag | undefined>({
 		get: () => ((erzieher.value === undefined) || (erzieher.value.ortsteilID === null)) ? undefined : props.mapOrtsteile.get(erzieher.value.ortsteilID),
-		set: (value) => (erzieher.value !== undefined) && void props.patch({ ortsteilID: value === undefined ? null : value.id }, erzieher.value.id)
+		set: (value) => (erzieher.value !== undefined) && void props.patch({ ortsteilID: value === undefined ? null : value.id }, erzieher.value.id),
 	});
 
 	const staatsangehoerigkeit = computed<Nationalitaeten>({
-		get: () => ((erzieher.value !== undefined) && Nationalitaeten.getByISO3(erzieher.value.staatsangehoerigkeitID)) || Nationalitaeten.DEU,
-		set: (value) => (erzieher.value !== undefined) && void props.patch({ staatsangehoerigkeitID: value.daten.iso3 }, erzieher.value.id)
+		get: () => ((erzieher.value !== undefined) && Nationalitaeten.getByISO3(erzieher.value.staatsangehoerigkeitID)) || Nationalitaeten.getDEU(),
+		set: (value) => (erzieher.value !== undefined) && void props.patch({ staatsangehoerigkeitID: value.historie().getLast().iso3 }, erzieher.value.id),
 	});
 
 	const idErzieherArt = computed<Erzieherart | undefined>({
 		get: () => ((erzieher.value === undefined) || (erzieher.value.idErzieherArt === null)) ? undefined : props.mapErzieherarten.get(erzieher.value.idErzieherArt),
-		set: (value) => (erzieher.value !== undefined) && void props.patch({ idErzieherArt: value === undefined ? null : value.id }, erzieher.value.id)
+		set: (value) => (erzieher.value !== undefined) && void props.patch({ idErzieherArt: value === undefined ? null : value.id }, erzieher.value.id),
 	});
 
 </script>

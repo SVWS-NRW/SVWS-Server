@@ -65,7 +65,7 @@ public final class DataGostBlockungKursLehrer extends DataManager<Long> {
 		daten.nachname = lehrer.Nachname;
 		daten.reihenfolge = dto.Reihenfolge;
 		daten.wochenstunden = dto.Wochenstunden;
-		daten.istExtern = (abschnitt != null) && ((abschnitt.StammschulNr != null) || (!abschnitt.StammschulNr.equals("" + schule.SchulNr)));
+		daten.istExtern = (abschnitt != null) && ((abschnitt.StammschulNr != null) && (!abschnitt.StammschulNr.equals("" + schule.SchulNr)));
 		return daten;
 	}
 

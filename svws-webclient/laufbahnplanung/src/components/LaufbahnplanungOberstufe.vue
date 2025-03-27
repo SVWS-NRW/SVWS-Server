@@ -21,7 +21,7 @@
 			<svws-ui-sub-nav>
 				<svws-ui-button type="transparent" @click="export_laufbahnplanung"><span class="icon-sm i-ri-upload-2-line" />Exportieren</svws-ui-button>
 				<svws-ui-button type="transparent" @click="showModalImport = true"><span class="icon-sm i-ri-download-2-line" /> Importieren…</svws-ui-button>
-				<s-laufbahnplanung-import-modal :show="showModalImport" :import-laufbahnplanung="import_laufbahnplanung" />
+				<s-laufbahnplanung-import-modal :show="showModalImport" :import-laufbahnplanung="import_laufbahnplanung" @update:show="val => showModalImport = val" />
 				<svws-ui-button :type="zwischenspeicher === undefined ? 'transparent' : 'error'" @click="saveLaufbahnplanung">Planung merken</svws-ui-button>
 				<svws-ui-button type="danger" @click="restoreLaufbahnplanung" v-if="zwischenspeicher !== undefined">Planung wiederherstellen</svws-ui-button>
 				<svws-ui-button :type="modus === 'normal' ? 'transparent' : 'danger'" @click="switchModus">
@@ -32,8 +32,8 @@
 			</svws-ui-sub-nav>
 		</Teleport>
 
-		<div v-if="schueler.abiturjahrgang !== null" class="page--content page--content--full page--content--laufbahnplanung">
-			<div class="flex-grow overflow-y-auto overflow-x-hidden min-w-fit">
+		<div v-if="schueler.abiturjahrgang !== null" class="page page-flex-row">
+			<div class="grow overflow-y-auto overflow-x-hidden min-w-fit">
 				<s-laufbahnplanung-card-planung :abiturdaten-manager :modus :gost-jahrgangsdaten :set-wahl :goto-kursblockung="async () => {}" :faecher-anzeigen belegung-hat-immer-noten />
 			</div>
 			<div class="w-2/5 3xl:w-1/2 min-w-[36rem] overflow-y-auto overflow-x-hidden">
@@ -42,7 +42,7 @@
 				</div>
 			</div>
 		</div>
-		<div v-else class="page--content page--content--full">Die Laufbahnplanung hat kein gültiges Abiturjahr, bitte prüfen Sie die importierte Datei.</div>
+		<div v-else class="page page-flex-row">Die Laufbahnplanung hat kein gültiges Abiturjahr, bitte prüfen Sie die importierte Datei.</div>
 	</svws-ui-tab-bar>
 </template>
 
@@ -129,7 +129,6 @@
 	async function export_laufbahnplanung() {
 		const { data, name } = await props.exportLaufbahnplanung();
 		const link = document.createElement("a");
-		console.log(data, name)
 		link.href = URL.createObjectURL(data);
 		link.download = name;
 		link.target = "_blank";
@@ -138,18 +137,7 @@
 	}
 
 	async function import_laufbahnplanung(formData: FormData) {
-		const result = await props.importLaufbahnplanung(formData);
-		return (result === null);
+		await props.importLaufbahnplanung(formData);
 	}
 
 </script>
-
-
-<style lang="postcss" scoped>
-
-	.page--content--laufbahnplanung {
-		@apply gap-x-8 2xl:gap-x-12 relative overflow-y-hidden h-full;
-		@apply px-4 lg:px-6 3xl:px-8 4xl:px-12 pt-8 pb-16;
-	}
-
-</style>

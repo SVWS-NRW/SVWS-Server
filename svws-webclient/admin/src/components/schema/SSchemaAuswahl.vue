@@ -1,12 +1,14 @@
 <template>
-	<svws-ui-secondary-menu>
-		<template #headline>
-			<div class="flex flex-col gap-0.5">
-				<span>Schema</span>
-				<svws-ui-button @click="refresh" type="transparent" title="Liste aktualisieren" class="-ml-3"> <span class="icon i-ri-loop-right-line" /> Liste aktualisieren</svws-ui-button>
-			</div>
-		</template>
-		<template #content>
+	<div class="h-full flex flex-col">
+		<div class="secondary-menu--headline">
+			<h1>
+				<div class="flex flex-col gap-0.5">
+					<span>Schema</span>
+					<svws-ui-button @click="refresh" type="transparent" title="Liste aktualisieren" class="-ml-3"> <span class="icon i-ri-loop-right-line" /> Liste aktualisieren</svws-ui-button>
+				</div>
+			</h1>
+		</div>
+		<div class="secondary-menu--content">
 			<svws-ui-table :items="mapSchema().values()" :columns="cols" :model-value="selectedItems" @update:model-value="setAuswahlGruppe"
 				:clickable="!auswahlGruppe.length" :clicked="auswahlGruppe.length ? undefined : auswahl" @update:clicked="gotoSchema" :selectable="hasRootPrivileges" count scroll-into-view scroll>
 				<template #header(isTainted)>
@@ -46,8 +48,8 @@
 					<svws-ui-button @click="gotoSchemaNeu" type="icon" title="Neues Schema anlegen"> <span class="icon i-ri-add-line" /> </svws-ui-button>
 				</template>
 			</svws-ui-table>
-		</template>
-	</svws-ui-secondary-menu>
+		</div>
+	</div>
 </template>
 
 <script setup lang="ts">

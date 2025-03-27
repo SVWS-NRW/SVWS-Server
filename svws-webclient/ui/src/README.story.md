@@ -123,19 +123,19 @@ Beispiel: `.svws-active`, `.svws-disabled`
 ```vue
 <!-- SvwsUiTable.vue -->
 <style lang="postcss">
-.svws-ui-thead {
-  @apply text-sm;
+	.svws-ui-thead {
+	@apply text-sm;
 
-  &.svws-active {
-    @apply bg-ui-selected text-ui-onselected;
-  }
-}
+	&.svws-active {
+		@apply bg-ui-selected text-ui-onselected;
+	}
+	}
 
-.svws-ui-data-table {
-  .svws-ui-thead {
-    @apply font-bold;
-  }
-}
+	.svws-ui-data-table {
+	.svws-ui-thead {
+		@apply font-bold;
+	}
+	}
 </style>
 ```
 
@@ -143,26 +143,26 @@ Beispiel: `.svws-active`, `.svws-disabled`
 <!-- SvwsUiComponentA.vue -->
 <style lang="postcss">
 .svws-ui-component-a {
-  .svws-ui-thead {
-    @apply text-ui-brand;
-  }
+	.svws-ui-thead {
+		@apply text-ui-brand;
+	}
 
-  .svws-ui-button {
-    &.svws-active {
-      @apply bg-ui-danger;
-    }
-  }
-}
+	.svws-ui-button {
+		&.svws-active {
+		@apply bg-ui-danger;
+		}
+	}
+	}
 </style>
 ```
 
 ```vue
 <!-- SvwsUiComponentB.vue -->
 <style lang="postcss">
-.svws-ui-component-b {
-  .svws-ui-thead {
-    @apply uppercase;
-  }
-}
+	.svws-ui-component-b {
+		.svws-ui-thead {
+			@apply uppercase;
+		}
+	}
 </style>
 ```

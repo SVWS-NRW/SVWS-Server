@@ -1,7 +1,7 @@
 package de.svws_nrw.core.data.gost;
 
+import de.svws_nrw.asd.data.schueler.Schueler;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungErgebnis;
-import de.svws_nrw.core.data.schueler.Schueler;
 import de.svws_nrw.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;

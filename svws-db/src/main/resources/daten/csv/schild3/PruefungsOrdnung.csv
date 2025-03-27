@@ -106,7 +106,7 @@ BK;APO-GOSt02/11-13;APO-GOSt 02: Jahrgänge 01-03;-D01-D02-;0;0;-01-02-03-;null;
 BK;APO-BK-99/E-SozPäd;APO-BK-99/E-SozPäd;-E05-E06-E07-E08-;0;40;-01-02-03-04-;null;null
 G;S/AOSF-SI05/5-10;AOSF-SI 05: Jahrgänge 5-10;-***-EVB-RKB-GMS-;0;20;-01-02-03-04-;null;null
 G;G/AO-GS00/1-4;AO-GS 00: Jahrgänge 1-4;-***-EVB-RKB-GMS-;0;20;-01-02-03-04-;null;null
-G;G/AO-GS05/1-4;AO-GS 05: Jahrgänge 1-4;-***-EVB-RKB-GMS-;0;10;-1E-2E-03-04-E1-E2-E3-EP-;null;null
+G;G/AO-GS05/1-4;AO-GS 05: Jahrgänge 1-4;-***-EVB-RKB-GMS-;0;10;-01-02-03-04-;null;null
 GE;APO-GOSt02/11-13;APO-GOSt 02: Jahrgänge 11-13;-***-;0;30;-11-12-13-;null;null
 GE;APO-GOSt(B)10/G8;APO-GOSt(B)10;-***-Y8-GY-GY8-;0;10;-EF-Q1-Q2-11-12-13-;null;null
 GE;S/AOSF-SI05/5-10;AOSF-SI 05: Jahrgänge 5-10;-***-ER-GGS-GGY-GR-GRH-GY-H-R-RH-SRH-SSI-Y8-GY8-;0;10;-05-06-07-08-09-10-;null;null
@@ -243,14 +243,18 @@ SG;APO-GOSt01/11-13;APO-GOSt 01: Jahrgänge 11-13;-***-S01-;0;40;-11-12-13-;null
 SG;APO-GOSt(B)10/G8;APO-GOSt(B)10/G8;-***-S01-;0;10;-EF-Q1-Q2-;null;null
 SR;R/APO-SI05/5-10;APO-SI05: Klassen 5-10;-***-R01-;0;10;-05-06-07-08-09-10-;null;null
 V;GE/APO-SI05/5-10;APO-SI 05: Jahrgänge 5-10 (Primus);-***-SI-ST-GS7-GS6-;0;10;-05-06-07-08-09-10-;null;null
+PS;GE/APO-SI05/5-10;APO-SI 05: Jahrgänge 5-10;-***-SI-ST-GS7-GS6-;0;10;-05-06-07-08-09-10-;null;null
+PS;GE/APO-SI20/5-10;APO-SI 20: Jahrgänge 5-10;-***-SI-ST-GS7-GS6-;0;10;-05-06-07-08-09-10-;null;null
+PS;S/AOSF-SI05/5-10;AOSF-SI 05: Jahrgänge 5-10;-***-SI-ST-GS7-GS6-;0;10;-05-06-07-08-09-10-;null;null
+PS;G/AO-GS05/1-4;AO-GS 05: Jahrgänge 1-4;-***-;0;10;-01-02-03-04-;null;null
 V;H/APO-SI05/10B;APO-SI 05: Klasse 10B;-***-;0;20;-10-;null;null
 V;H/APO-SI05/5-9;APO-SI 05: Klassen 5-9;-***-;0;10;-05-06-07-08-09-;null;null
-V;G/AO-GS05/1-4;AO-GS 05: Jahrgänge 1-4;-***-;0;10;-01-02-03-04-E1-E2-E3-EP-;null;null
+V;G/AO-GS05/1-4;AO-GS 05: Jahrgänge 1-4;-***-;0;10;-01-02-03-04-;null;null
 V;H/APO-SI05/10A;APO-SI 05: Klasse 10A;-***-;0;10;-10-;null;null
 V;G/AO-GS00/1-4;AO-GS 00: Jahrgänge 1-4;-***-;0;20;-01-02-03-04-;null;null
 V;S/AOSF-SI05/5-10;AOSF-SI 05: Jahrgänge 5-10;-***-SI-ST-GS7-GS6-;0;10;-05-06-07-08-09-10-;null;null
-WB;APO-WBK10-KL;APO-WBK10-KL;-K02-;0;10;-91-92-01-02-03-04-05-06-;null;null
-WB;APO-WbK-00/AG;APO-WbK-00/AG;-G02-;0;20;-91-92-01-02-03-04-05-06-;null;null
-WB;APO-WbK-00/AR;APO-WbK-00/AR;-R02-;0;10;-91-92-01-02-03-04-;null;null
-WB;APO-WbK-00/KL;APO-WbK-00/KL;-K02-;0;20;-91-92-01-02-03-04-05-06-;null;null
-WB;APO-WBK10-AG;APO-WBK10-AG;-G02-;0;10;-91-92-01-02-03-04-05-06-;null;null
+WB;APO-WBK10-KL;APO-WBK10-KL;-K02-;0;10;-V1-V2-S1-S2-S3-S4-S5-S6-;null;null
+WB;APO-WbK-00/AG;APO-WbK-00/AG;-G02-;0;20;-V1-V2-S1-S2-S3-S4-S5-S6-;null;null
+WB;APO-WbK-00/AR;APO-WbK-00/AR;-R02-;0;10;-91-92-R1-R2-R3-R4-;null;null
+WB;APO-WbK-00/KL;APO-WbK-00/KL;-K02-;0;20;-V1-V2-S1-S2-S3-S4-S5-S6-;null;null
+WB;APO-WBK10-AG;APO-WBK10-AG;-G02-;0;10;-V1-V2-S1-S2-S3-S4-S5-S6-;null;null

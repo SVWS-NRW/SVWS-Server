@@ -1,10 +1,11 @@
 <template>
-	<svws-ui-secondary-menu>
-		<template #headline>Klassen</template>
-		<template #abschnitt>
-			<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
-		</template>
-		<template #content>
+	<div class="h-full flex flex-col">
+		<div class="secondary-menu--headline">
+			<h1>Klassen</h1>
+			<div><abschnitt-auswahl :daten="schuljahresabschnittsauswahl" /></div>
+		</div>
+		<div class="secondary-menu--header" />
+		<div class="secondary-menu--content">
 			<svws-ui-table :clickable="!manager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="klassendaten => gotoDefaultView(klassendaten.id)"
 				:items="rowsFiltered" :model-value="[...props.manager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)"
 				:columns selectable count :filter-open="true" :filtered="filterChanged()" :filterReset scroll-into-view scroll allow-arrow-key-selection
@@ -23,16 +24,18 @@
 				</template>
 				<template #actions>
 					<div class="flex gap-5">
-						<s-klassen-auswahl-sortierung-modal v-slot="{ openModal }" :setze-default-sortierung>
-							<svws-ui-tooltip position="bottom">
-								<svws-ui-button type="secondary" @click="openModal">
-									Standardsortierung anwenden&nbsp;...
-								</svws-ui-button>
-								<template #content>
-									Standardsortierung wiederherstellen
-								</template>
-							</svws-ui-tooltip>
-						</s-klassen-auswahl-sortierung-modal>
+						<template v-if="manager().liste.size() > 0">
+							<s-klassen-auswahl-sortierung-modal v-slot="{ openModal }" :setze-default-sortierung>
+								<svws-ui-tooltip position="bottom">
+									<svws-ui-button type="secondary" @click="openModal">
+										Standardsortierung anwenden&nbsp;...
+									</svws-ui-button>
+									<template #content>
+										Standardsortierung wiederherstellen
+									</template>
+								</svws-ui-tooltip>
+							</s-klassen-auswahl-sortierung-modal>
+						</template>
 						<svws-ui-tooltip v-if="hatKompetenzAendern" position="bottom">
 							<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="gotoHinzufuegenView(true)" :has-focus="rowsFiltered.length === 0">
 								<span class="icon i-ri-add-line" />
@@ -44,8 +47,8 @@
 					</div>
 				</template>
 			</svws-ui-table>
-		</template>
-	</svws-ui-secondary-menu>
+		</div>
+	</div>
 </template>
 
 <script setup lang="ts">

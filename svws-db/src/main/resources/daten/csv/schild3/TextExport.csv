@@ -30,7 +30,7 @@ ErzAdr;ErzEMail;1. Person: E-Mail;S;;;;;ALLE
 ErzAdr;ErzEMail2;2. Person: E-Mail;S;;;;;ALLE
 ErzAdr;ErzOrt_ID;Ortsname;S;;;Bezeichnung;SELECT Bezeichnung FROM K_Ort WHERE ID=%;ALLE
 ErzAdr;ErzOrt_ID;Postleitzahl;S;;;PLZ;SELECT PLZ FROM K_Ort WHERE ID=%;ALLE
-ErzAdr;ErzStrasse;Straße;S;;;;SELECT CONCAT(ErzStrassenname, ' ', ErzHausNr) AS ErzStrasse  FROM SchuelerErzAdr WHERE Schueler_ID=%;ALLE
+ErzAdr;ErzStrasse;Straße;S;;;;SELECT CONCAT(ErzStrassenname, ' ', ErzHausNr,ErzHausnrZusatz) AS ErzStrasse  FROM SchuelerErzAdr WHERE Schueler_ID=%;ALLE
 ErzAdr;Name1;1. Person: Nachname;S;;;;;ALLE
 ErzAdr;Name2;2. Person: Nachname;S;;;;;ALLE
 ErzAdr;Schueler_ID;Schüler-Jahrgang;S;;;InternKrz;SELECT J.InternKrz FROM EigeneSchule_Jahrgaenge J WHERE J.ID=(SELECT A.Jahrgang_ID from SchuelerLernabschnittsdaten A, Schueler S WHERE S.ID=% and A.Schueler_ID=S.ID AND A.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID AND A.WechselNr=0);ALLE
@@ -161,7 +161,7 @@ Schueler;ID;Erzieher: Erhält Anschreiben;B;;;ErzAnschreiben;SELECT ErzAnschreib
 Schueler;ID;Erzieher: Ort;S;;;Bezeichnung;SELECT O.Bezeichnung, SchuelerErzAdr.ID FROM K_Ort O, SchuelerErzAdr WHERE O.ID=SchuelerErzAdr.ErzOrt_ID AND SchuelerErzAdr.Schueler_ID=% ORDER BY SchuelerErzAdr.Sortierung;ALLE
 Schueler;ID;Erzieher: Ortsteil;S;;;Bezeichnung;SELECT K_Ortsteil.Bezeichnung, SchuelerErzAdr.ID FROM K_Ortsteil, SchuelerErzAdr WHERE K_Ortsteil.ID=SchuelerErzAdr.ErzOrtsteil_ID AND SchuelerErzAdr.Schueler_ID=% ORDER BY SchuelerErzAdr.Sortierung;ALLE
 Schueler;ID;Erzieher: Postleitzahl;S;;;PLZ;SELECT O.PLZ, SchuelerErzAdr.ID FROM K_Ort O, SchuelerErzAdr WHERE O.ID=SchuelerErzAdr.ErzOrt_ID AND SchuelerErzAdr.Schueler_ID=% ORDER BY SchuelerErzAdr.Sortierung;ALLE
-Schueler;ID;Erzieher: Straße;S;;;ErzStrassenname;SELECT CONCAT(ErzStrassenname,' ',ErzHausNr) as EzStrasse FROM SchuelerErzAdr WHERE Schueler_ID=% ORDER BY Sortierung;ALLE
+Schueler;ID;Erzieher: Straße;S;;;ErzStrasse;SELECT CONCAT(ErzStrassenname,' ',ErzHausNr,ErzHausNrZusatz) as ErzStrasse FROM SchuelerErzAdr WHERE Schueler_ID=% ORDER BY Sortierung;ALLE
 Schueler;ID;Interne ID-Nummer;I;;;;;ALLE
 Schueler;ID;Telefon-Nummern: Anschluss-Art;S;;;Bezeichnung;SELECT T.Bezeichnung FROM K_Telefonart T, SchuelerTelefone ST WHERE T.ID=ST.Telefonart_ID and ST.Schueler_ID=% ORDER BY ST.Sortierung;ALLE
 Schueler;ID;Telefon-Nummern: Bemerkung;S;;;Bemerkung;SELECT Bemerkung FROM SchuelerTelefone WHERE Schueler_ID=% ORDER BY Sortierung;ALLE
@@ -207,7 +207,7 @@ Schueler;StaatKrz;Staatsangehörigkeit (Klartext);S;;;mtblStaat.bezeichnung;code
 Schueler;StaatKrz;Staatsangehörigkeit (Klartext, Adjektiv);S;;;mtblStaat.staatsangehoerigkeit;codeDEStatis=%;ALLE
 Schueler;StaatKrz;Staatsangehörigkeit (Schlüssel);S;;;;;ALLE
 Schueler;Status;Status;I;;;;;ALLE
-Schueler;ID;Straße;S;;;Strasse;SELECT CONCAT(Strassenname, ' ', HausNr) AS Strasse FROM Schueler WHERE ID=%;ALLE
+Schueler;ID;Straße;S;;;Strasse;SELECT CONCAT(Strassenname, ' ', HausNr,HausNrZusatz) AS Strasse FROM Schueler WHERE ID=%;ALLE
 Schueler;Telefon;Telefon-Nr.;S;;;;;ALLE
 Schueler;Uebergangsempfehlung_JG5;Übergangsempfehlung;S;;;;;ALLE
 Schueler;VerkehrsspracheFamilie;Verkehrssprache in der Familie;S;;;mtblVerkehrssprachen.bezeichnung;kuerzel=%;ALLE

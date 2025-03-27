@@ -1,5 +1,3 @@
-<script setup lang="ts">
-</script>
 
 <template>
 	<Story title="Spinner" id="svws-ui-spinner" icon="ri:loader-4-line" :layout="{type: 'grid', width: '45%'}">

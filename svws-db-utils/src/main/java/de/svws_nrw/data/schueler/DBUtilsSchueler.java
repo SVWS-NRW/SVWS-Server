@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.asd.data.schueler.Sprachendaten;
 import de.svws_nrw.base.crypto.AES;
 import de.svws_nrw.base.crypto.AESAlgo;
-import de.svws_nrw.core.data.schueler.Sprachendaten;
 import de.svws_nrw.data.crypto.DBUtilsCrypto;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerSprachenfolge;

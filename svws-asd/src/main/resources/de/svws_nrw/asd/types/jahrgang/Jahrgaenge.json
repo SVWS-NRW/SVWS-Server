@@ -1,8 +1,8 @@
 {
 	"version": 3,
 	"daten": [ {	
-		"bezeichner": "HAUSFRUEERZIEHUNG",
-		"idHistorie": 27,
+		"bezeichner": "HAUSFRUEHERZIEHUNG",
+		"idStatistik": "27",
 		"historie": [ {
 			"id": 90000,
 			"schluessel": "90",
@@ -14,7 +14,7 @@
 		} ]
 	}, {
 		"bezeichner": "JAHRGANG_00",
-		"idHistorie": 20,
+		"idStatistik": "20",
 		"historie": [ {
 			"id": 0,
 			"schluessel": "00", 
@@ -25,40 +25,8 @@
 			"gueltigBis": null
 		} ]
 	}, {
-		"bezeichner": "VORKURS_SEMESTER_1",
-		"idHistorie": 18,
-		"historie": [ {
-			"id": 200000,
-			"schluessel": "91",
-			"kuerzel": "91",
-			"text": "Vorkurs (1. Semester)",
-			"schulformen": [ "WB", "S", "KS" ],
-			"gueltigVon": null,
-			"gueltigBis": 2014
-		}, {
-			"id": 200001,
-			"schluessel": "91",
-			"kuerzel": "91",
-			"text": "Vorkurs (1. Semester)",
-			"schulformen": [ "WB" ],
-			"gueltigVon": 2015,
-			"gueltigBis": null
-		} ]
-	}, {
-		"bezeichner": "VORKURS_SEMESTER_2",
-		"idHistorie": 19,
-		"historie": [ {
-			"id": 300000,
-			"schluessel": "92",
-			"kuerzel": "92",
-			"text": "Vorkurs (2. Semester)",
-			"schulformen": [ "WB" ],
-			"gueltigVon": null,
-			"gueltigBis": null
-		} ]
-	}, {
 		"bezeichner": "JAHRGANG_01",
-		"idHistorie": 1,
+		"idStatistik": "1",
 		"historie": [ {
 			"id": 1000000,
 			"schluessel": "01",
@@ -70,7 +38,7 @@
 		} ]
 	}, {
 		"bezeichner": "JAHRGANG_02",
-		"idHistorie": 2,
+		"idStatistik": "2",
 		"historie": [ {
 			"id": 2000000,
 			"schluessel": "02",
@@ -82,7 +50,7 @@
 		} ]
 	}, {
 		"bezeichner": "JAHRGANG_03",
-		"idHistorie": 3,
+		"idStatistik": "3",
 		"historie": [ {
 			"id": 3000000,
 			"schluessel": "03",
@@ -94,7 +62,7 @@
 		} ]
 	}, {
 		"bezeichner": "JAHRGANG_04",
-		"idHistorie": 4,
+		"idStatistik": "4",
 		"historie": [ {
 			"id": 4000000,
 			"schluessel": "04",
@@ -106,7 +74,7 @@
 		} ]
 	}, {
 		"bezeichner": "JAHRGANG_05",
-		"idHistorie": 5,
+		"idStatistik": "5",
 		"historie": [ {
 			"id": 5000000,
 			"schluessel": "05",
@@ -126,7 +94,7 @@
 		} ]
 	}, {
 		"bezeichner": "JAHRGANG_06",
-		"idHistorie": 6,
+		"idStatistik": "6",
 		"historie": [ {
 			"id": 6000000,
 			"schluessel": "06",
@@ -146,7 +114,7 @@
 		} ]
 	}, {
 		"bezeichner": "JAHRGANG_07",
-		"idHistorie": 7,
+		"idStatistik": "7",
 		"historie": [ {
 			"id": 7000000,
 			"schluessel": "07",
@@ -166,7 +134,7 @@
 		} ]
 	}, {
 		"bezeichner": "JAHRGANG_08",
-		"idHistorie": 8,
+		"idStatistik": "8",
 		"historie": [ {
 			"id": 8000000,
 			"schluessel": "08",
@@ -186,7 +154,7 @@
 		} ]
 	}, {
 		"bezeichner": "JAHRGANG_09",
-		"idHistorie": 9,
+		"idStatistik": "9",
 		"historie": [ {
 			"id": 9000000,
 			"schluessel": "09",
@@ -206,7 +174,7 @@
 		} ]
 	}, {
 		"bezeichner": "JAHRGANG_10",
-		"idHistorie": 10,
+		"idStatistik": "10",
 		"historie": [ {
 			"id": 10000000,
 			"schluessel": "10",
@@ -226,7 +194,7 @@
 		} ]
 	}, {
 		"bezeichner": "JAHRGANG_11",
-		"idHistorie": 11,
+		"idStatistik": "11",
 		"historie": [ {
 			"id": 11000000,
 			"schluessel": "11",
@@ -246,7 +214,7 @@
 		} ]
 	}, {
 		"bezeichner": "JAHRGANG_12",
-		"idHistorie": 12,
+		"idStatistik": "12",
 		"historie": [ {
 			"id": 12000000,
 			"schluessel": "12",
@@ -266,7 +234,7 @@
 		} ]
 	}, {
 		"bezeichner": "JAHRGANG_13",
-		"idHistorie": 13,
+		"idStatistik": "13",
 		"historie": [ {
 			"id": 13000000,
 			"schluessel": "13",
@@ -286,7 +254,7 @@
 		} ]
 	}, {
 		"bezeichner": "EF",
-		"idHistorie": 14,
+		"idStatistik": "14",
 		"historie": [ {
 			"id": 21000000,
 			"schluessel": "EF",
@@ -306,7 +274,7 @@
 		} ]
 	}, {
 		"bezeichner": "Q1",
-		"idHistorie": 15,
+		"idStatistik": "15",
 		"historie": [ {
 			"id": 22000000,
 			"schluessel": "Q1",
@@ -326,7 +294,7 @@
 		} ]
 	}, {
 		"bezeichner": "Q2",
-		"idHistorie": 16,
+		"idStatistik": "16",
 		"historie": [ {
 			"id": 23000000,
 			"schluessel": "Q2",
@@ -346,7 +314,7 @@
 		} ]
 	}, {
 		"bezeichner": "BERUFSPRAXISSTUFE",
-		"idHistorie": 17,
+		"idStatistik": "17",
 		"historie": [ {
 			"id": 30000000,
 			"schluessel": "85,86",
@@ -365,13 +333,125 @@
 			"gueltigBis": null
 		} ]
 	}, {
+		"bezeichner": "REALSCHULE_VORKURS_SEMESTER_1",
+		"idStatistik": "28",
+		"historie": [ {
+			"id": 400000,
+			"schluessel": "91",
+			"kuerzel": "91",
+			"text": "Vorkurs (1. Semester)",
+			"schulformen": [ "WB", "S", "KS" ],
+			"gueltigVon": null,
+			"gueltigBis": 2014
+		}, {
+			"id": 400001,
+			"schluessel": "91",
+			"kuerzel": "91",
+			"text": "Vorkurs (1. Semester, Abendrealschule)",
+			"schulformen": [ "WB" ],
+			"gueltigVon": 2015,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "REALSCHULE_VORKURS_SEMESTER_2",
+		"idStatistik": "29",
+		"historie": [ {
+			"id": 500000,
+			"schluessel": "92",
+			"kuerzel": "92",
+			"text": "Vorkurs (2. Semester, Abendrealschule)",
+			"schulformen": [ "WB" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "REALSCHULE_SEMESTER_01",
+		"idStatistik": "30",
+		"historie": [ {
+			"id": 1200000,
+			"schluessel": "R1",
+			"kuerzel": "R1",
+			"text": "1. Semester (Hauptphase, Abendrealschule)",
+			"schulformen": [ "WB" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "REALSCHULE_SEMESTER_02",
+		"idStatistik": "31",
+		"historie": [ {
+			"id": 2200000,
+			"schluessel": "R2",
+			"kuerzel": "R2",
+			"text": "2. Semester (Hauptphase, Abendrealschule)",
+			"schulformen": [ "WB" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "REALSCHULE_SEMESTER_03",
+		"idStatistik": "32",
+		"historie": [ {
+			"id": 3200000,
+			"schluessel": "R3",
+			"kuerzel": "R3",
+			"text": "3. Semester (Hauptphase, Abendrealschule)",
+			"schulformen": [ "WB" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "REALSCHULE_SEMESTER_04",
+		"idStatistik": "33",
+		"historie": [ {
+			"id": 4200000,
+			"schluessel": "R4",
+			"kuerzel": "R4",
+			"text": "4. Semester (Hauptphase, Abendrealschule)",
+			"schulformen": [ "WB" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "VORKURS_SEMESTER_1",
+		"idStatistik": "18",
+		"historie": [ {
+			"id": 200000,
+			"schluessel": "V1",
+			"kuerzel": "V1",
+			"text": "Vorkurs (1. Semester)",
+			"schulformen": [ "WB", "S", "KS" ],
+			"gueltigVon": null,
+			"gueltigBis": 2014
+		}, {
+			"id": 200001,
+			"schluessel": "V1",
+			"kuerzel": "V1",
+			"text": "Vorkurs (1. Semester)",
+			"schulformen": [ "WB" ],
+			"gueltigVon": 2015,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "VORKURS_SEMESTER_2",
+		"idStatistik": "19",
+		"historie": [ {
+			"id": 300000,
+			"schluessel": "V2",
+			"kuerzel": "V2",
+			"text": "Vorkurs (2. Semester)",
+			"schulformen": [ "WB" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
 		"bezeichner": "SEMESTER_01",
-		"idHistorie": 21,
+		"idStatistik": "21",
 		"historie": [ {
 			"id": 1500000,
 			"schluessel": "S1",
 			"kuerzel": "S1",
-			"text": "1. Semester",
+			"text": "1. Semester (EF.1)",
 			"schulformen": [ "WB" ],
 			"gueltigVon": null,
 			"gueltigBis": 2009
@@ -379,19 +459,19 @@
 			"id": 1500001,
 			"schluessel": "S1",
 			"kuerzel": "S1",
-			"text": "1. Semester",
+			"text": "1. Semester (EF.1)",
 			"schulformen": [ "HI", "WB" ],
 			"gueltigVon": 2010,
 			"gueltigBis": null
 		} ]
 	}, {
 		"bezeichner": "SEMESTER_02",
-		"idHistorie": 22,
+		"idStatistik": "22",
 		"historie": [ {
 			"id": 2500000,
 			"schluessel": "S2",
 			"kuerzel": "S2",
-			"text": "2. Semester",
+			"text": "2. Semester (EF.2)",
 			"schulformen": [ "WB" ],
 			"gueltigVon": null,
 			"gueltigBis": 2009
@@ -399,19 +479,19 @@
 			"id": 2500001,
 			"schluessel": "S2",
 			"kuerzel": "S2",
-			"text": "2. Semester",
+			"text": "2. Semester (EF.2)",
 			"schulformen": [ "HI", "WB" ],
 			"gueltigVon": 2010,
 			"gueltigBis": null
 		} ]
 	}, {
 		"bezeichner": "SEMESTER_03",
-		"idHistorie": 23,
+		"idStatistik": "23",
 		"historie": [ {
 			"id": 3500000,
 			"schluessel": "S3",
 			"kuerzel": "S3",
-			"text": "3. Semester",
+			"text": "3. Semester (Q1.1)",
 			"schulformen": [ "WB" ],
 			"gueltigVon": null,
 			"gueltigBis": 2009
@@ -419,19 +499,19 @@
 			"id": 3500001,
 			"schluessel": "S3",
 			"kuerzel": "S3",
-			"text": "3. Semester",
+			"text": "3. Semester (Q1.1)",
 			"schulformen": [ "HI", "WB" ],
 			"gueltigVon": 2010,
 			"gueltigBis": null
 		} ]
 	}, {
 		"bezeichner": "SEMESTER_04",
-		"idHistorie": 24,
+		"idStatistik": "24",
 		"historie": [ {
 			"id": 4500000,
 			"schluessel": "S4",
 			"kuerzel": "S4",
-			"text": "4. Semester",
+			"text": "4. Semester (Q1.2)",
 			"schulformen": [ "WB" ],
 			"gueltigVon": null,
 			"gueltigBis": 2009
@@ -439,19 +519,19 @@
 			"id": 4500001,
 			"schluessel": "S4",
 			"kuerzel": "S4",
-			"text": "4. Semester",
+			"text": "4. Semester (Q1.2)",
 			"schulformen": [ "HI", "WB" ],
 			"gueltigVon": 2010,
 			"gueltigBis": null
 		} ]
 	}, {
 		"bezeichner": "SEMESTER_05",
-		"idHistorie": 25,
+		"idStatistik": "25",
 		"historie": [ {
 			"id": 5500000,
 			"schluessel": "S5",
 			"kuerzel": "S5",
-			"text": "5. Semester",
+			"text": "5. Semester (Q2.1)",
 			"schulformen": [ "WB" ],
 			"gueltigVon": null,
 			"gueltigBis": 2012
@@ -459,19 +539,19 @@
 			"id": 5500001,
 			"schluessel": "S5",
 			"kuerzel": "S5",
-			"text": "5. Semester",
+			"text": "5. Semester (Q2.1)",
 			"schulformen": [ "HI", "WB" ],
 			"gueltigVon": 2013,
 			"gueltigBis": null
 		} ]
 	}, {
 		"bezeichner": "SEMESTER_06",
-		"idHistorie": 26,
+		"idStatistik": "26",
 		"historie": [ {
 			"id": 6500000,
 			"schluessel": "S6",
 			"kuerzel": "S6",
-			"text": "6. Semester",
+			"text": "6. Semester (Q2.2)",
 			"schulformen": [ "WB" ],
 			"gueltigVon": null,
 			"gueltigBis": 2012
@@ -479,7 +559,7 @@
 			"id": 6500001,
 			"schluessel": "S6",
 			"kuerzel": "S6",
-			"text": "6. Semester",
+			"text": "6. Semester (Q2.2)",
 			"schulformen": [ "HI", "WB" ],
 			"gueltigVon": 2013,
 			"gueltigBis": null

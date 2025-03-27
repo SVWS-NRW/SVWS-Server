@@ -45,6 +45,8 @@
 
 	const show = ref<boolean>(false);
 
+	defineSlots();
+
 	const openModal = (error?: string | Error) => {
 		if (error === undefined)
 			return;
@@ -63,13 +65,17 @@
 		else if (reason instanceof OpenApiError) {
 			name = "API-Fehler: Dieser Fehler wird durch eine fehlerhafte Kommunikation mit dem Server verursacht. In der Regel bedeutet das, dass die verschickten Daten nicht den Vorgaben entsprechen."
 			if (reason.response instanceof Response) {
+				const text = await reason.response.text();
 				try {
-					const res = await reason.response.json();
-					if ('log' in res && 'success' in res)
-						log = res as SimpleOperationResponse;
-					else if (res.length > 0)
-						message = res;
-				} catch(e) { void e }
+					const res = JSON.parse(text)
+					if (('log' in res) && ('success' in res))
+						log = res satisfies SimpleOperationResponse;
+				} catch {
+					if (text.length > 0)
+						message = text;
+					else
+						message += ` - Status: ${reason.response.status}`;
+				}
 			}
 		}
 		const newError: CapturedError = {

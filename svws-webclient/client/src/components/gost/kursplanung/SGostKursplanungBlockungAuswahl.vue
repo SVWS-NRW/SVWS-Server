@@ -2,7 +2,7 @@
 	<svws-ui-table clickable :clicked="auswahlBlockung" @update:clicked="select_blockungauswahl" :items="listBlockungen" :columns="[{ key: 'name', label: 'Blockungen' }]" no-data-text="Es liegt noch keine Planung für dieses Halbjahr vor.">
 		<template #noData v-if="istBlockungPersistiert">
 			<span class="inline-flex gap-1 leading-tight">
-				<span class="icon-sm icon-error i-ri-error-warning-line flex-shrink-0" />
+				<span class="icon-sm icon-ui-danger i-ri-error-warning-line shrink-0" />
 				<span>Es liegt bereits eine persistierte Blockung vor, die wiederhergestellt werden kann.</span>
 			</span>
 		</template>
@@ -27,11 +27,11 @@
 						<template v-if="hatUpdateKompetenz && ((auswahlBlockung !== undefined) && !isPending(auswahlBlockung.id)) && (blockung === auswahlBlockung)">
 							<template v-if="allow_berechne_blockung">
 								<s-gost-kursplanung-modal-blockung-ausfuehrlich-berechnen v-if="allow_berechne_blockung" :map-core-type-name-json-data :ausfuehrliche-darstellung-kursdifferenz :set-ausfuehrliche-darstellung-kursdifferenz :get-datenmanager :add-ergebnisse v-slot="{ openModal }">
-									<svws-ui-button type="transparent" @click="openModal" title="Ausführliche Berechnung lokal im Browser und Auswahl von guten Ergebnissen" :disabled="apiStatus.pending" class="text-black dark:text-white mr-4">
+									<svws-ui-button type="transparent" @click="openModal" title="Ausführliche Berechnung lokal im Browser und Auswahl von guten Ergebnissen" :disabled="apiStatus.pending" class="text-ui-contrast-100 mr-4">
 										<span class="icon-sm i-ri-calculator-line -mx-0.5" /> Blocken…
 									</svws-ui-button>
 								</s-gost-kursplanung-modal-blockung-ausfuehrlich-berechnen>
-								<!-- <svws-ui-button type="transparent" @click.stop="do_create_blockungsergebnisse" title="Schnelle Berechnung auf dem Server mit direkter Übernahme der Ergebnisse" :disabled="apiStatus.pending" v-if="allow_berechne_blockung" class="text-black dark:text-white"> <span class="icon-sm i-ri-calculator-line -mx-0.5" /> Schnell </svws-ui-button> -->
+								<!-- <svws-ui-button type="transparent" @click.stop="do_create_blockungsergebnisse" title="Schnelle Berechnung auf dem Server mit direkter Übernahme der Ergebnisse" :disabled="apiStatus.pending" v-if="allow_berechne_blockung" class="text-ui-contrast-100"> <span class="icon-sm i-ri-calculator-line -mx-0.5" /> Schnell </svws-ui-button> -->
 							</template>
 							<svws-ui-tooltip position="top" v-else>
 								<svws-ui-button type="transparent" disabled> <span class="icon-sm i-ri-calculator-line -mx-0.5" />Blocken…</svws-ui-button>
@@ -42,24 +42,24 @@
 								</template>
 							</svws-ui-tooltip>
 							<s-gost-kursplanung-remove-blockung-modal :remove-blockung v-slot="{ openModal }">
-								<svws-ui-button type="icon" @click.stop="openModal" title="Blockung löschen" :disabled="apiStatus.pending" class="text-black dark:text-white">
+								<svws-ui-button type="icon" @click.stop="openModal" title="Blockung löschen" :disabled="apiStatus.pending" class="text-ui-contrast-100">
 									<span class="icon-sm i-ri-delete-bin-line -mx-0.5" />
 								</svws-ui-button>
 							</s-gost-kursplanung-remove-blockung-modal>
 						</template>
 						<template v-if="hatUpdateKompetenz">
 							<svws-ui-tooltip v-if="blockung.istAktiv">
-								<span class="icon icon-primary i-ri-checkbox-circle-fill ml-2 hover:opacity-50" @click="patchBlockung({ istAktiv: false }, blockung.id)" />
+								<span class="icon icon-ui-brand i-ri-checkbox-circle-fill ml-2 hover:opacity-50" @click="patchBlockung({ istAktiv: false }, blockung.id)" />
 								<template #content> Aktivierte Blockung </template>
 							</svws-ui-tooltip>
 							<svws-ui-tooltip v-else>
-								<span class="icon icon-primary i-ri-checkbox-circle-line ml-2 opacity-25 hover:opacity-75" @click="patchBlockung({ istAktiv: true }, blockung.id)" />
+								<span class="icon icon-ui-brand i-ri-checkbox-circle-line ml-2 opacity-25 hover:opacity-75" @click="patchBlockung({ istAktiv: true }, blockung.id)" />
 								<template #content> Blockung als aktiv markieren </template>
 							</svws-ui-tooltip>
 						</template>
 						<template v-else>
-							<span v-if="blockung.istAktiv" class="icon icon-primary i-ri-checkbox-circle-fill ml-2" />
-							<span v-else class="icon icon-primary i-ri-checkbox-circle-line ml-2 opacity-25" />
+							<span v-if="blockung.istAktiv" class="icon icon-ui-brand i-ri-checkbox-circle-fill ml-2" />
+							<span v-else class="icon icon-ui-brand i-ri-checkbox-circle-line ml-2 opacity-25" />
 						</template>
 					</div>
 				</div>
@@ -74,10 +74,10 @@
 	<div v-if="(auswahlBlockung !== undefined) && isPending(auswahlBlockung.id)" class="my-3 flex gap-1 items-center mb-5 px-7 3xl:px-8" :class="{'animate-pulse': !apiStatus.hasError}">
 		<template v-if="apiStatus.pending">
 			<svws-ui-spinner spinning />
-			<span class="text-button text-black/50 dark:text-white/50">Ergebnisse werden berechnet…</span>
+			<span class="text-button text-ui-contrast-50">Ergebnisse werden berechnet…</span>
 		</template>
 		<template v-if="apiStatus.hasError">
-			<span class="text-error font-bold">Fehler beim Berechnen der Blockung.</span>
+			<span class="text-ui-danger font-bold">Fehler beim Berechnen der Blockung.</span>
 		</template>
 	</div>
 	<s-gost-kursplanung-ergebnis-auswahl v-if="hatBlockung" :halbjahr :api-status :get-datenmanager :patch-ergebnis :remove-ergebnisse :goto-ergebnis :auswahl-ergebnis :hat-update-kompetenz />

@@ -8,11 +8,10 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.adt.Pair;
-import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
+import de.svws_nrw.asd.data.kurse.KursDaten;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
-import de.svws_nrw.core.data.kurse.KursDaten;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.data.gost.DBUtilsGost;
 import de.svws_nrw.data.gost.DBUtilsGostAbitur;
@@ -22,7 +21,6 @@ import de.svws_nrw.data.gost.DataGostBlockungsergebnisse;
 import de.svws_nrw.data.gost.DataGostSchuelerLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.data.kurse.DataKurse;
-import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
@@ -52,7 +50,8 @@ public final class ReportingValidierung {
 	 *
 	 * @throws ApiOperationException  im Fehlerfall
 	 */
-	public static void validiereDatenFuerSchueler(final ReportingRepository reportingRepository, final List<Long> idsSchueler, final boolean mitGostLaufbahnplanung,
+	public static void validiereDatenFuerSchueler(final ReportingRepository reportingRepository, final List<Long> idsSchueler,
+			final boolean mitGostLaufbahnplanung,
 			final boolean mitAbiturDaten) throws ApiOperationException {
 
 		// Grunddaten prüfen.
@@ -130,8 +129,7 @@ public final class ReportingValidierung {
 			// Lade Abiturdaten für die Gost-Laufbahnplanung zwecks Prüfung.
 			final Map<Long, Abiturdaten> mapGostBeratungsdatenAbiturdaten;
 			try {
-				mapGostBeratungsdatenAbiturdaten = new HashMap<>(DBUtilsGostLaufbahn.getFromIDsUndSchuljahresabschnitt(conn, idsNonNull,
-						reportingRepository.aktuellerSchuljahresabschnitt().id()));
+				mapGostBeratungsdatenAbiturdaten = new HashMap<>(DBUtilsGostLaufbahn.getFromIDs(conn, idsNonNull));
 			} catch (final ApiOperationException aoe) {
 				reportingRepository.logger().logLn(LogLevel.ERROR, 4,
 						"FEHLER: Es wurden Schüler-IDs übergeben, für die keine Abiturdaten in der GOSt-Laufbahnplanung existieren.");
@@ -202,11 +200,10 @@ public final class ReportingValidierung {
 	 *
 	 * @param reportingRepository	Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung.
 	 * @param idsKurse   			Liste der IDs der Kurse, die berücksichtigt werden sollen.
-	 * @param cacheDaten 			Legt fest, ob die zur Validierung geladenen Daten im Repository gespeichert werden sollen.
 	 *
 	 * @throws ApiOperationException  im Fehlerfall
 	 */
-	public static void validiereDatenFuerKurse(final ReportingRepository reportingRepository, final List<Long> idsKurse, final boolean cacheDaten)
+	public static void validiereDatenFuerKurse(final ReportingRepository reportingRepository, final List<Long> idsKurse)
 			throws ApiOperationException {
 
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Beginn der Validierung der Kursdaten.");
@@ -226,7 +223,7 @@ public final class ReportingValidierung {
 
 		// Prüfe die Kurs-IDs. Erzeuge Maps, damit auch später leicht auf die Kursdaten zugegriffen werden kann.
 		final Map<Long, KursDaten> mapKursdaten =
-				new DataKurse(reportingRepository.conn()).getListByIDs(idsNonNull, cacheDaten).stream()
+				new DataKurse(reportingRepository.conn()).getListByIDs(idsNonNull, true).stream()
 						.collect(Collectors.toMap(k -> k.id, k -> k));
 		for (final Long kID : idsNonNull)
 			if (mapKursdaten.get(kID) == null) {
@@ -234,34 +231,26 @@ public final class ReportingValidierung {
 				throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurden ungültige Kurs-IDs übergeben.");
 			}
 
-		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Ende der Validierung der Kursdaten.");
-
 		// Daten sind valide, speichere diese nun gemäß Parameter im Repository.
-		if (cacheDaten) {
-			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Beginn der Speicherung der Daten aus der Validierung der Kursdaten im Repository.");
-			final List<ReportingKurs> listeKurse =
-					mapKursdaten.values().stream().map(k -> (ReportingKurs) new ProxyReportingKurs(reportingRepository, k)).toList();
-			listeKurse.forEach(k -> reportingRepository.mapKurse().putIfAbsent(k.id(), k));
-			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Ende der Speicherung der Daten aus der Validierung der Kursdaten im Repository.");
-		}
+		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Speicherung der Daten aus der Validierung der Kursdaten im Repository.");
+		mapKursdaten.values().stream()
+				.map(k -> (ReportingKurs) new ProxyReportingKurs(reportingRepository, k))
+				.forEach(k -> reportingRepository.mapKurse().putIfAbsent(k.id(), k));
+
+		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Ende der Validierung der Kursdaten.");
 	}
 
 
 	/**
 	 * Validiert von der API übergebene Daten für Lehrer. Bei fehlenden oder unstimmigen Daten wird eine ApiOperationException geworfen.
-	 * Über den Parameter cacheDaten kann gesteuert werden, ob bereits abgerufene Daten aus der DB im Repository zwischengespeichert werden soll.
 	 *
 	 * @param reportingRepository	Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung.
 	 * @param idsLehrer   			Liste der IDs der Lehrer, die berücksichtigt werden sollen.
-	 * @param cacheDaten 			Legt fest, ob die zur Validierung geladenen Daten im Repository gespeichert werden sollen.
 	 *
 	 * @throws ApiOperationException  im Fehlerfall
 	 */
-	public static void validiereDatenFuerLehrer(final ReportingRepository reportingRepository, final List<Long> idsLehrer, final boolean cacheDaten)
+	public static void validiereDatenFuerLehrer(final ReportingRepository reportingRepository, final List<Long> idsLehrer)
 			throws ApiOperationException {
-
-		// Grunddaten prüfen.
-		final DBEntityManager conn = reportingRepository.conn();
 
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Beginn der Validierung der Lehrerdaten.");
 
@@ -278,24 +267,13 @@ public final class ReportingValidierung {
 			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurden keine Lehrer-IDs übergeben.");
 		}
 
-		// Prüfe die Lehrer-IDs. Erzeuge Maps, damit auch später leicht auf die Lehrerdaten zugegriffen werden kann.
-		final Map<Long, LehrerStammdaten> mapLehrer =
-				new DataLehrerStammdaten(reportingRepository.conn()).getListByIDs(idsNonNull).stream()
-						.collect(Collectors.toMap(l -> l.id, l -> l));
-		for (final Long lID : idsNonNull)
-			if (mapLehrer.get(lID) == null) {
-				reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Es wurden ungültige Lehrer-IDs übergeben.");
-				throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurden ungültige Lehrer-IDs übergeben.");
-			}
+		// Prüfe die Lehrer-IDs anhand der Daten aus dem Repository.
+		if (idsNonNull.stream().anyMatch(id -> reportingRepository.mapLehrerStammdaten().get(id) == null)) {
+			reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Es wurden ungültige Lehrer-IDs übergeben.");
+			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurden ungültige Lehrer-IDs übergeben.");
+		}
 
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Ende der Validierung der Lehrerdaten.");
-
-		// Daten sind valide, speichere diese nun gemäß Parameter im Repository.
-		if (cacheDaten) {
-			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Beginn der Speicherung der Daten aus der Validierung der Lehrerdaten im Repository.");
-			reportingRepository.mapLehrerStammdaten().putAll(mapLehrer);
-			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Ende der Speicherung der Daten aus der Validierung der Lehrerdaten im Repository.");
-		}
 	}
 
 
@@ -309,10 +287,18 @@ public final class ReportingValidierung {
 	public static void validiereDatenFuerGostKursplanungBlockungsergebnis(final ReportingRepository reportingRepository)
 			throws ApiOperationException {
 
+		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Beginn der Validierung der Blockungsergebnisdaten.");
+
+		if ((reportingRepository.reportingParameter().idsHauptdaten == null) || reportingRepository.reportingParameter().idsHauptdaten.isEmpty()) {
+			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "FEHLER: Es wurde keine ID für ein Blockungsergebnis übergeben.");
+			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurde keine ID für ein Blockungsergebnis übergeben.");
+		}
+
 		// Für die GOSt-Kursplanung muss die Schule eine Schule mit GOSt sein.
 		try {
 			DBUtilsGost.pruefeSchuleMitGOSt(reportingRepository.conn());
 		} catch (final ApiOperationException e) {
+			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "FEHLER: Keine Schule oder Schule ohne GOSt gefunden.");
 			throw new ApiOperationException(Status.NOT_FOUND, e, "FEHLER: Keine Schule oder Schule ohne GOSt gefunden.");
 		}
 
@@ -324,8 +310,11 @@ public final class ReportingValidierung {
 			DataGostBlockungsdaten.getBlockungsdatenManagerFromDB(conn,
 					DataGostBlockungsergebnisse.getErgebnisFromID(conn, idBlockungsergebnis).blockungID);
 		} catch (final ApiOperationException e) {
-			throw new ApiOperationException(Status.NOT_FOUND, e, "FEHLER: Mit der angegebenen Blockungsergebnis-ID konnte keine Daten ermittelt werden..");
+			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "FEHLER: Mit der angegebenen Blockungsergebnis-ID konnte keine Daten ermittelt werden.");
+			throw new ApiOperationException(Status.NOT_FOUND, e, "FEHLER: Mit der angegebenen Blockungsergebnis-ID konnte keine Daten ermittelt werden.");
 		}
+
+		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Ende der Validierung der Blockungsergebnisdaten.");
 	}
 
 	/**
@@ -377,6 +366,35 @@ public final class ReportingValidierung {
 						"FEHLER: Die Parameter für Abiturjahrgang und GOSt-Halbjahr konnten nicht gelesen werden oder sind außerhalb des Wertebereichs.");
 			}
 		}
+	}
+
+
+	/**
+	 * Validiert von der API übergebene Daten für GOSt-Klausurplanung. Bei fehlenden oder unstimmigen Daten wird eine ApiOperationException geworfen.
+	 *
+	 * @param reportingRepository		Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung.
+	 *
+	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 */
+	public static void validiereDatenFuerStundenplanung(final ReportingRepository reportingRepository)
+			throws ApiOperationException {
+
+		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Beginn der Validierung der Stundenplanungsdaten.");
+
+		if ((reportingRepository.reportingParameter().idsHauptdaten == null) || reportingRepository.reportingParameter().idsHauptdaten.isEmpty()) {
+			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "FEHLER: Es wurde keine ID für die Stundenplanung übergeben.");
+			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurde keine ID für die Stundenplanung übergeben.");
+		}
+
+		final Long idStundenplan = reportingRepository.reportingParameter().idsHauptdaten.getFirst();
+
+		// Prüfe nun, ob es zur angegebenen Stundenplan-ID einen Stundenplan gibt.
+		if ((idStundenplan == null) || (reportingRepository.stundenplan(idStundenplan) == null)) {
+			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "FEHLER: Mit der angegebenen Stundenplan-ID konnte kein Stundenplan ermittelt werden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Mit der angegebenen Stundenplan-ID konnte kein Stundenplan ermittelt werden.");
+		}
+
+		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Ende der Validierung der Stundenplanungsdaten.");
 	}
 
 }

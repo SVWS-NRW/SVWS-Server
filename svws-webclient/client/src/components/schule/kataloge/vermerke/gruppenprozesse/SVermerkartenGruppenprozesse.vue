@@ -1,15 +1,24 @@
 <template>
-	<div class="page--content">
+	<div class="page page-grid-cards">
 		<div v-if="ServerMode.DEV.checkServerMode(serverMode)" class="flex flex-col gap-y-16 lg:gap-y-16">
-			<svws-ui-action-button v-if="hatKompetenzLoeschen" title="Löschen" description="Ausgewählte Vermerkarten werden gelöscht." icon="i-ri-delete-bin-line"
-				:action-function="entferneVermerkarten" :action-label="leereVermerkartenVorhanden ? 'Leere Vermerkarten löschen' : 'Löschen'" :is-loading="loading" :is-active="currentAction === 'delete'"
-				:action-disabled="manager().getVermerkartenIDsMitSchuelern().size() === manager().liste.auswahlSize()" @click="toggleDeleteVermerkarten">
-				<span v-if="alleVermerkartenLeer">Alle ausgewählten Vermerkarten sind bereit zum Löschen.</span>
-				<span v-if="leereVermerkartenVorhanden">Einige Vermerkarten haben noch Schüler, leere Vermerkarten können gelöscht werden.</span>
-				<div v-if="!alleVermerkartenLeer">
-					<span v-for="message in nichtAlleVermerkartenLeer" :key="message" class="text-error"> {{ message }} <br> </span>
+			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Vermerkarten werden gelöscht"
+				:is-open="currentAction === 'delete'" @update:is-open="(isOpen) => setCurrentAction('delete', isOpen)">
+				<div>
+					<span v-if="alleVermerkartenLeer">Alle ausgewählten Vermerkarten sind bereit zum Löschen.</span>
+					<span v-if="leereVermerkartenVorhanden">Einige Vermerkarten haben noch Schüler, leere Vermerkarten können gelöscht werden.</span>
+					<div v-if="!alleVermerkartenLeer">
+						<span v-for="message in nichtAlleVermerkartenLeer" :key="message" class="text-ui-danger"> {{ message }} <br> </span>
+					</div>
 				</div>
-			</svws-ui-action-button>
+				<template #buttonFooterLeft>
+					<svws-ui-button :disabled="manager().getVermerkartenIDsMitSchuelern().size() === manager().liste.auswahlSize() || loading"
+						title="Löschen" @click="entferneVermerkarten" :is-loading="loading" class="mt-4">
+						<svws-ui-spinner v-if="loading" spinning />
+						<span v-else class="icon i-ri-play-line" />
+						Löschen
+					</svws-ui-button>
+				</template>
+			</ui-card>
 			<log-box :logs :status>
 				<template #button>
 					<svws-ui-button v-if="status !== undefined" type="transparent" @click="clearLog" title="Log verwerfen">Log verwerfen</svws-ui-button>
@@ -35,6 +44,10 @@
 	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
 
 	const currentAction = ref<string>('');
+	const oldAction = ref<{ name: string | undefined; open: boolean }>({
+		name: undefined,
+		open: false,
+	});
 	const loading = ref<boolean>(false);
 	const logs = ref<List<string | null> | undefined>();
 	const status = ref<boolean | undefined>();
@@ -52,9 +65,17 @@
 	const leereVermerkartenVorhanden = computed(() =>
 		(alleVermerkartenLeer.value === false) && (props.manager().getVermerkartenIDsMitSchuelern().size() !== props.manager().liste.auswahlSize()));
 
-	function toggleDeleteVermerkarten() {
-		currentAction.value = currentAction.value === 'delete' ? '' : 'delete';
+	function setCurrentAction(newAction: string, open: boolean) {
+		if(newAction === oldAction.value.name && !open)
+			return;
+		oldAction.value.name = currentAction.value;
+		oldAction.value.open = (currentAction.value === "") ? false : true;
+		if(open === true)
+			currentAction.value= newAction;
+		else
+			currentAction.value = "";
 	}
+
 
 	function clearLog() {
 		loading.value = false;

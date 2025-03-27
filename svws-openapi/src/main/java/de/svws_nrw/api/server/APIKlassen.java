@@ -3,7 +3,7 @@ package de.svws_nrw.api.server;
 import java.io.InputStream;
 
 import de.svws_nrw.core.data.SimpleOperationResponse;
-import de.svws_nrw.core.data.klassen.KlassenDaten;
+import de.svws_nrw.asd.data.klassen.KlassenDaten;
 import de.svws_nrw.asd.data.klassen.KlassenartKatalogEintrag;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;

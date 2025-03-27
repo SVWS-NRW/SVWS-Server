@@ -1,6 +1,6 @@
 package de.svws_nrw.db.converter.current;
 
-import de.svws_nrw.core.types.schule.Nationalitaeten;
+import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.db.converter.DBAttributeConverter;
 import jakarta.persistence.Converter;
 
@@ -28,7 +28,7 @@ public final class NationalitaetenConverter extends DBAttributeConverter<Nationa
 
 	@Override
 	public String convertToDatabaseColumn(final Nationalitaeten attribute) {
-		return (attribute == null) ? null : attribute.daten.codeDEStatis;
+		return (attribute == null) ? null : attribute.historie().getLast().codeDEStatis;
 	}
 
 	@Override

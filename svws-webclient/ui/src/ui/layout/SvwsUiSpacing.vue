@@ -14,16 +14,3 @@
 	});
 
 </script>
-
-
-<style lang="postcss">
-
-	.svws-ui-spacing {
-		@apply col-span-full h-2;
-
-		&--2 {
-			@apply h-9;
-		}
-	}
-
-</style>

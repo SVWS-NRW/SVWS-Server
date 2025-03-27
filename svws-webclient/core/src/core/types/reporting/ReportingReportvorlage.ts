@@ -82,6 +82,36 @@ export class ReportingReportvorlage extends JavaEnum<ReportingReportvorlage> {
 	public static readonly SCHUELER_v_STAMMDATENLISTE : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_STAMMDATENLISTE", 13, "Schueler-Stammdatenliste");
 
 	/**
+	 * Report-Vorlage: Stundenplanung - Fach - Stundenplan
+	 */
+	public static readonly STUNDENPLANUNG_v_FACH_STUNDENPLAN : ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_v_FACH_STUNDENPLAN", 14, "Stundenplanung-FachStundenplan");
+
+	/**
+	 * Report-Vorlage: Stundenplanung - Klasse - Stundenplan
+	 */
+	public static readonly STUNDENPLANUNG_v_KLASSEN_STUNDENPLAN : ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_v_KLASSEN_STUNDENPLAN", 15, "Stundenplanung-KlassenStundenplan");
+
+	/**
+	 * Report-Vorlage: Stundenplanung - Lehrer - Stundenplan
+	 */
+	public static readonly STUNDENPLANUNG_v_LEHRER_STUNDENPLAN : ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_v_LEHRER_STUNDENPLAN", 16, "Stundenplanung-LehrerStundenplan");
+
+	/**
+	 * Report-Vorlage: Stundenplanung - Lehrer - Stundenplan - Kombiniert
+	 */
+	public static readonly STUNDENPLANUNG_v_LEHRER_STUNDENPLAN_KOMBINIERT : ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_v_LEHRER_STUNDENPLAN_KOMBINIERT", 17, "Stundenplanung-LehrerStundenplanKombiniert");
+
+	/**
+	 * Report-Vorlage: Stundenplanung - Fach - Stundenplan
+	 */
+	public static readonly STUNDENPLANUNG_v_RAUM_STUNDENPLAN : ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_v_RAUM_STUNDENPLAN", 18, "Stundenplanung-RaumStundenplan");
+
+	/**
+	 * Report-Vorlage: Stundenplanung - Schüler - Stundenplan
+	 */
+	public static readonly STUNDENPLANUNG_v_SCHUELER_STUNDENPLAN : ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_v_SCHUELER_STUNDENPLAN", 19, "Stundenplanung-SchuelerStundenplan");
+
+	/**
 	 * Die Bezeichnung der Report-Vorlage
 	 */
 	private readonly bezeichnung : string | null;

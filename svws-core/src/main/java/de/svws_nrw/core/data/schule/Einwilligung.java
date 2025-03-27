@@ -15,11 +15,11 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class Einwilligung {
 
 	/** Die ID des zugehörigen Schülers. */
-	@Schema(description = "die ID des zugehörigen Schülers.", example = "4711")
+	@Schema(description = "die ID des zugehörigen Schülers.", example = "4711", accessMode = Schema.AccessMode.READ_ONLY)
 	public long idSchueler;
 
 	/** Die ID der Einwilligungsart. */
-	@Schema(description = "die ID der Einwilligungsart", example = "4713")
+	@Schema(description = "die ID der Einwilligungsart", example = "4713", accessMode = Schema.AccessMode.READ_ONLY)
 	public long idEinwilligungsart;
 
 	/** Der Status der Einwilligung (erteilt/nicht erteilt). */

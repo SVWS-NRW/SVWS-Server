@@ -1,16 +1,18 @@
-import { DeveloperNotificationException, type SchuelerSchulbesuchsdaten} from "@core";
+import { DeveloperNotificationException } from "@core";
+import type { SchuelerSchulbesuchsdaten, SchuelerListeEintrag } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
+import { SchuelerSchulbesuchManager } from "~/components/schueler/schulbesuch/SchuelerSchulbesuchManager";
 
 interface RouteStateDataSchuelerSchulbesuch extends RouteStateInterface {
-	daten: SchuelerSchulbesuchsdaten | undefined;
-	idSchueler: number | undefined;
+	auswahl: SchuelerListeEintrag | undefined;
+	schuelerSchulbesuchManager: SchuelerSchulbesuchManager | undefined;
 }
 
 const defaultState = <RouteStateDataSchuelerSchulbesuch> {
-	daten: undefined,
-	idSchueler: undefined,
+	auswahl: undefined,
+	schuelerSchulbesuchManager: undefined,
 };
 
 export class RouteDataSchuelerSchulbesuch extends RouteData<RouteStateDataSchuelerSchulbesuch> {
@@ -19,21 +21,41 @@ export class RouteDataSchuelerSchulbesuch extends RouteData<RouteStateDataSchuel
 		super(defaultState);
 	}
 
-	get daten(): SchuelerSchulbesuchsdaten {
-		if (this._state.value.daten === undefined)
+	get auswahl(): SchuelerListeEintrag {
+		if (this._state.value.auswahl === undefined)
 			throw new DeveloperNotificationException("Beim Zugriff auf die Daten sind noch keine gültigen Daten geladen.");
-		return this._state.value.daten;
+		return this._state.value.auswahl;
 	}
 
-	public async setEintrag(idSchueler?: number) {
-		if (idSchueler === undefined || idSchueler === this._state.value.idSchueler)
+	get schuelerSchulbesuchManager(): SchuelerSchulbesuchManager {
+		if (this._state.value.schuelerSchulbesuchManager === undefined)
+			throw new DeveloperNotificationException("SchülerSchulbesuchManager nicht initialisiert.")
+		return this._state.value.schuelerSchulbesuchManager;
+	}
+
+	patch = async (data : Partial<SchuelerSchulbesuchsdaten>) : Promise<void> => {
+		await api.server.patchSchuelerSchulbesuch(data, api.schema, this.auswahl.id);
+	}
+
+	public async ladeDaten(auswahl: SchuelerListeEintrag | null) {
+		if (auswahl === this._state.value.auswahl)
 			return;
-		const daten = await api.server.getSchuelerSchulbesuch(api.schema, idSchueler);
-		this.setPatchedState({idSchueler, daten});
+		if (auswahl === null)
+			this.setDefaultState();
+		else {
+			try {
+				const data: SchuelerSchulbesuchsdaten = await api.server.getSchuelerSchulbesuch(api.schema, auswahl.id);
+				const schulen = await api.server.getSchulen(api.schema);
+				const merkmale = await api.server.getMerkmale(api.schema);
+				const entlassgruende = await api.server.getEntlassgruende(api.schema);
+				const schuelerSchulbesuchManager = new SchuelerSchulbesuchManager(
+					data, auswahl, api.schuleStammdaten.abschnitte, schulen, merkmale, entlassgruende, this.patch);
+				this.setPatchedState({auswahl, schuelerSchulbesuchManager});
+			} catch (error) {
+				throw new DeveloperNotificationException("Fehler beim Erzeugen des SchuelerSchulbesuchManagers");
+			}
+		}
 	}
 
-	patch = async (data : Partial<SchuelerSchulbesuchsdaten>) => {
-		await api.server.patchSchuelerSchulbesuch(data, api.schema, this.daten.id);
-	}
 }
 

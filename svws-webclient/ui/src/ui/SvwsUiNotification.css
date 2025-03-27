@@ -1,0 +1,103 @@
+.notification {
+	@apply bg-ui text-ui border border-ui-neutral;
+	@apply flex flex-col shrink-0;
+	@apply w-full;
+	@apply relative z-40;
+	@apply rounded-lg overflow-hidden;
+	@apply shadow-xl;
+	@apply text-base pointer-events-auto;
+	@apply font-bold;
+	transition: transform 0.2s ease-out;
+
+	.notification--icon span {
+		@apply animate-pulse opacity-100 mr-2 cursor-default;
+	}
+}
+
+.notification--error {
+	@apply bg-ui-danger text-ui-ondanger border-ui-danger;
+
+	.notification--icon,
+	.notification--close-button,
+	.notification--send-button,
+	.notification--copy-button,
+	.notification--details-button {
+		@apply cursor-pointer opacity-80 hover:opacity-100;
+		span.icon {
+			@apply icon-ui-ondanger;
+		}
+	}
+}
+
+.notification--success {
+	@apply bg-ui-success text-ui-onsuccess border-ui-success;
+
+	.notification--icon,
+	.notification--close-button,
+	.notification--copy-button,
+	.notification--send-button,
+	.notification--details-button {
+		@apply cursor-pointer opacity-80 hover:opacity-100;
+		span.icon {
+			@apply icon-ui-onsuccess text-ui-onsuccess;
+		}
+	}
+}
+
+.notification--warning {
+	@apply bg-ui-warning text-ui-onwarning border-ui-warning;
+	.notification--icon,
+	.notification--close-button,
+	.notification--copy-button,
+	.notification--send-button,
+	.notification--details-button {
+		@apply cursor-pointer opacity-80 hover:opacity-100;
+		span.icon {
+			@apply icon-ui-onwarning text-ui-onwarning;
+		}
+	}
+}
+
+.notification--content-wrapper {
+	@apply h-full overflow-y-auto w-full;
+	-webkit-overflow-scrolling: touch;
+}
+
+.notification--wrapper {
+	@apply fixed inset-0 z-50;
+	@apply overflow-y-auto;
+}
+
+.notification--content {
+	@apply grow flex flex-wrap gap-x-1;
+	@apply px-3 py-2 overflow-hidden;
+
+	.notification--icon {
+		@apply inline-block;
+	}
+
+	.notification--text {
+		@apply text-base font-bold;
+	}
+
+	.notification--stack {
+		@apply whitespace-pre-wrap bg-ui-black mt-2 -mb-2 -mx-3 p-3 font-mono overflow-auto min-w-full rounded-b-md;
+	}
+}
+
+.notification--content--has-header {
+	.notification--header {
+		@apply w-auto text-headline-sm font-bold mb-0.5;
+	}
+
+	.notification--text {
+		@apply w-full font-medium break-words;
+	}
+}
+
+
+
+.notification--details-button,
+.notification--copy-button {
+	@apply flex items-center gap-1 text-sm font-bold px-2 rounded-md;
+}

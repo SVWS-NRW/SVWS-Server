@@ -53,7 +53,7 @@ export class RouteDataSchuelerErziehungsberechtigte extends RouteData<RouteState
 		const mapErzieherarten = new Map<number, Erzieherart>();
 		for (const e of listErzieherarten)
 			mapErzieherarten.set(e.id, e);
-		this.setPatchedDefaultState({ mapErzieherarten })
+		this.setPatchedDefaultState({ mapErzieherarten });
 	}
 
 	patch = async (data : Partial<ErzieherStammdaten>, id: number) => {

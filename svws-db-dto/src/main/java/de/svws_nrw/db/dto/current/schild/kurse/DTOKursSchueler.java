@@ -20,17 +20,17 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @IdClass(DTOKursSchuelerPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Kurs_Schueler")
-@JsonPropertyOrder({"Kurs_ID", "Schueler_ID", "LernabschnittWechselNr"})
+@JsonPropertyOrder({"Kurs_ID", "Schueler_ID", "LernabschnittWechselNr", "Leistung_ID"})
 public final class DTOKursSchueler {
 
 	/** Die Datenbankabfrage für alle DTOs */
 	public static final String QUERY_ALL = "SELECT e FROM DTOKursSchueler e";
 
 	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
-	public static final String QUERY_PK = "SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID = ?1 AND e.Schueler_ID = ?2 AND e.LernabschnittWechselNr = ?3";
+	public static final String QUERY_PK = "SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID = ?1 AND e.Schueler_ID = ?2 AND e.LernabschnittWechselNr = ?3 AND e.Leistung_ID = ?4";
 
 	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
-	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID IS NOT NULL AND e.Schueler_ID IS NOT NULL AND e.LernabschnittWechselNr IS NOT NULL";
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID IS NOT NULL AND e.Schueler_ID IS NOT NULL AND e.LernabschnittWechselNr IS NOT NULL AND e.Leistung_ID IS NOT NULL";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Kurs_ID */
 	public static final String QUERY_BY_KURS_ID = "SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID = ?1";
@@ -50,6 +50,12 @@ public final class DTOKursSchueler {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes LernabschnittWechselNr */
 	public static final String QUERY_LIST_BY_LERNABSCHNITTWECHSELNR = "SELECT e FROM DTOKursSchueler e WHERE e.LernabschnittWechselNr IN ?1";
 
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Leistung_ID */
+	public static final String QUERY_BY_LEISTUNG_ID = "SELECT e FROM DTOKursSchueler e WHERE e.Leistung_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Leistung_ID */
+	public static final String QUERY_LIST_BY_LEISTUNG_ID = "SELECT e FROM DTOKursSchueler e WHERE e.Leistung_ID IN ?1";
+
 	/** Die eindeutige ID des Kurses – verweist auf den Kurs */
 	@Id
 	@Column(name = "Kurs_ID")
@@ -68,6 +74,12 @@ public final class DTOKursSchueler {
 	@JsonProperty
 	public Integer LernabschnittWechselNr;
 
+	/** Die eindeutige ID der Leistungsdaten, in denen die Zuordnung stattgefunden hat */
+	@Id
+	@Column(name = "Leistung_ID")
+	@JsonProperty
+	public long Leistung_ID;
+
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOKursSchueler ohne eine Initialisierung der Attribute.
 	 */
@@ -79,10 +91,12 @@ public final class DTOKursSchueler {
 	 * Erstellt ein neues Objekt der Klasse DTOKursSchueler ohne eine Initialisierung der Attribute.
 	 * @param Kurs_ID   der Wert für das Attribut Kurs_ID
 	 * @param Schueler_ID   der Wert für das Attribut Schueler_ID
+	 * @param Leistung_ID   der Wert für das Attribut Leistung_ID
 	 */
-	public DTOKursSchueler(final long Kurs_ID, final long Schueler_ID) {
+	public DTOKursSchueler(final long Kurs_ID, final long Schueler_ID, final long Leistung_ID) {
 		this.Kurs_ID = Kurs_ID;
 		this.Schueler_ID = Schueler_ID;
+		this.Leistung_ID = Leistung_ID;
 	}
 
 
@@ -104,7 +118,7 @@ public final class DTOKursSchueler {
 				return false;
 		} else if (!LernabschnittWechselNr.equals(other.LernabschnittWechselNr))
 			return false;
-		return true;
+		return Leistung_ID == other.Leistung_ID;
 	}
 
 	@Override
@@ -116,6 +130,8 @@ public final class DTOKursSchueler {
 		result = prime * result + Long.hashCode(Schueler_ID);
 
 		result = prime * result + ((LernabschnittWechselNr == null) ? 0 : LernabschnittWechselNr.hashCode());
+
+		result = prime * result + Long.hashCode(Leistung_ID);
 		return result;
 	}
 
@@ -127,7 +143,7 @@ public final class DTOKursSchueler {
 	 */
 	@Override
 	public String toString() {
-		return "DTOKursSchueler(Kurs_ID=" + this.Kurs_ID + ", Schueler_ID=" + this.Schueler_ID + ", LernabschnittWechselNr=" + this.LernabschnittWechselNr + ")";
+		return "DTOKursSchueler(Kurs_ID=" + this.Kurs_ID + ", Schueler_ID=" + this.Schueler_ID + ", LernabschnittWechselNr=" + this.LernabschnittWechselNr + ", Leistung_ID=" + this.Leistung_ID + ")";
 	}
 
 }

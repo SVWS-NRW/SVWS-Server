@@ -21,6 +21,10 @@ public class DBSchemaListeEintrag {
 	@Schema(description = "gibt an, ob es sich um das Default-Schema in der Konfiguration handelt", example = "false")
 	public boolean isDefault;
 
+	/** Gibt an, ob es sich um ein deaktiviertes Schema in der Konfiguration handelt. */
+	@Schema(description = "gibt an, ob es sich um ein deaktiviertes Schema in der Konfiguration handelt", example = "false")
+	public boolean isDeactivated;
+
 	/**
 	 * Leerer Standardkonstruktor.
 	 */

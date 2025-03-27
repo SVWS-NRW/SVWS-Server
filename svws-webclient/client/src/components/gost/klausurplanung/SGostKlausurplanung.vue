@@ -1,7 +1,7 @@
 <template>
 	<Teleport to=".svws-ui-header--actions" v-if="isMounted">
 		<svws-ui-button-select v-if="!kMan().terminGetMengeAsList().isEmpty()" type="secondary" :dropdown-actions="dropdownList">
-			<template #icon> <svws-ui-spinner spinning v-if="apiStatus.pending" /> <span class="icon-sm i-ri-printer-line" v-else /> </template>
+			<template #icon> <svws-ui-spinner spinning v-if="apiStatus.pending" /> <span class="icon i-ri-printer-line" v-else /> </template>
 		</svws-ui-button-select>
 	</Teleport>
 	<Teleport to=".svws-sub-nav-target" defer>
@@ -9,8 +9,8 @@
 			<svws-ui-tab-bar :tab-manager secondary :focus-switching-enabled :focus-help-visible>
 				<template #badge="{ tab }">
 					<template v-if="(tab.name === 'gost.klausurplanung.probleme') && kMan().hasFehlenddatenZuAbijahrUndHalbjahr(props.jahrgangsdaten!.abiturjahr, halbjahr)">
-						<div class="font-bold text-white bg-error rounded-full shadow h-5 ml-1 -mt-3 px-1.5 pt-0.5" v-if="numErrors">{{ numErrors }}</div>
-						<div class="font-bold text-black bg-yellow-200 rounded-full shadow h-5 ml-1 -mt-3 px-1.5 pt-0.5" v-if="numWarnings">{{ numWarnings }}</div>
+						<div class="font-bold text-ui-ondanger bg-ui-danger rounded-full shadow-sm h-5 ml-1 -mt-2 px-1.5 pt-0.5" v-if="numErrors">{{ numErrors }}</div>
+						<div class="font-bold text-ui-oncaution bg-ui-caution rounded-full shadow-sm h-5 ml-1 -mt-2 px-1.5 pt-0.5" v-if="numWarnings">{{ numWarnings }}</div>
 					</template>
 				</template>
 			</svws-ui-tab-bar>
@@ -35,8 +35,8 @@
 	const isMounted = ref(false);
 	onMounted(() => isMounted.value = true);
 
-	const numErrors = computed<number>(() => props.kMan().planungsfehlerGetAnzahlByHalbjahrAndQuartal(props.jahrgangsdaten!.abiturjahr, props.halbjahr, props.quartalsauswahl.value));
-	const numWarnings = computed<number>(() => props.kMan().planungshinweiseGetAnzahlByHalbjahrAndQuartal(props.jahrgangsdaten!.abiturjahr, props.halbjahr, props.quartalsauswahl.value));
+	const numErrors = computed<number>(() => props.kMan().planungsfehlerGetAnzahlByHalbjahrAndQuartal(props.jahrgangsdaten!.abiturjahr, props.halbjahr, props.quartalsauswahl.value, props.getConfigNumberValue("kwErrorLimit")));
+	const numWarnings = computed<number>(() => props.kMan().planungshinweiseGetAnzahlByHalbjahrAndQuartal(props.jahrgangsdaten!.abiturjahr, props.halbjahr, props.quartalsauswahl.value, props.getConfigNumberValue("kwWarnLimit"), props.getConfigNumberValue("kwErrorLimit")));
 
 	const dropdownList = [
 		{ text: "Klausurplan (Kurse)", action: () => downloadPDF("Klausurplan (Kurse)")},

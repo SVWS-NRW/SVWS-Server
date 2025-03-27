@@ -477,7 +477,7 @@
 
 	const hatRegel = computed<boolean>({
 		get: () => !props.getDatenmanager().regelGetListeOfTyp(GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN).isEmpty(),
-		set: (erstellen) => void props.regelnUpdate(props.getErgebnismanager().regelupdateCreate_10_LEHRKRAEFTE_BEACHTEN(erstellen))
+		set: (erstellen) => void props.regelnUpdate(props.getErgebnismanager().regelupdateCreate_10_LEHRKRAEFTE_BEACHTEN(erstellen)),
 	})
 
 	async function regelEntfernen(r: GostBlockungRegel) {
@@ -600,7 +600,7 @@
 		set: (value) => {
 			if (regel.value !== undefined)
 				regel.value.parameter.set(1, value)
-		}
+		},
 	})
 
 	const regelParameterMaxAnzahlProSchiene = computed<number>({
@@ -612,12 +612,12 @@
 		set: (value) => {
 			if (regel.value !== undefined)
 				regel.value.parameter.set(2, value)
-		}
+		},
 	});
 
 	const regelParameterKursart = (regel: GostBlockungRegel, parameter: number) => computed<GostKursart>({
 		get: () => GostKursart.fromID(regel.parameter.get(parameter)),
-		set: (value) => regel.parameter.set(parameter, value.id)
+		set: (value) => regel.parameter.set(parameter, value.id),
 	});
 
 	const regelParameterSchiene = (schienen: Iterable<GostBlockungSchiene>, regel: GostBlockungRegel, parameter: number) => computed<GostBlockungSchiene>({
@@ -627,22 +627,22 @@
 					return schiene;
 			return new GostBlockungSchiene();
 		},
-		set: (value) => regel.parameter.set(parameter, value.nummer)
+		set: (value) => regel.parameter.set(parameter, value.nummer),
 	})
 
 	const regelParameterKurs = (regel: GostBlockungRegel, parameter: number) => computed<GostBlockungKurs>({
 		get: () => props.getDatenmanager().kursGet(regel.parameter.get(parameter)),
-		set: (value) => regel.parameter.set(parameter, value.id)
+		set: (value) => regel.parameter.set(parameter, value.id),
 	})
 
 	const regelParameterSchueler = (regel: GostBlockungRegel, parameter: number) => computed<Schueler>({
 		get: () => props.getDatenmanager().schuelerGet(regel.parameter.get(parameter)),
-		set: (value) => regel.parameter.set(parameter, value.id)
+		set: (value) => regel.parameter.set(parameter, value.id),
 	})
 
 	const regelParameterFach = (regel: GostBlockungRegel, parameter: number) => computed<GostFach>({
 		get: () => props.getDatenmanager().faecherManager().getOrException(regel.parameter.get(parameter)),
-		set: (value) => regel.parameter.set(parameter, value.id)
+		set: (value) => regel.parameter.set(parameter, value.id),
 	})
 
 </script>

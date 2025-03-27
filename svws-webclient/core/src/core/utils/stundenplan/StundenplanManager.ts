@@ -37,6 +37,7 @@ import type { JavaSet } from '../../../java/util/JavaSet';
 import { LongArrayKey } from '../../../core/adt/LongArrayKey';
 import { Map3DUtils } from '../../../core/utils/Map3DUtils';
 import { StringUtils } from '../../../core/utils/StringUtils';
+import type { JavaIterator } from '../../../java/util/JavaIterator';
 import { StundenplanUnterricht, cast_de_svws_nrw_core_data_stundenplan_StundenplanUnterricht } from '../../../core/data/stundenplan/StundenplanUnterricht';
 import { StundenplanKalenderwochenzuordnung } from '../../../core/data/stundenplan/StundenplanKalenderwochenzuordnung';
 import { HashMap3D } from '../../../core/adt/map/HashMap3D';
@@ -407,6 +408,10 @@ export class StundenplanManager extends JavaObject {
 
 	private _unterrichtmenge : List<StundenplanUnterricht> = new ArrayList<StundenplanUnterricht>();
 
+	private _unterrichtmenge_ungueltig : List<StundenplanUnterricht> = new ArrayList<StundenplanUnterricht>();
+
+	private _unterrichtmenge_ungueltig_set : HashSet<number> = new HashSet<number>();
+
 	private _unterrichtmenge_by_idFach : HashMap<number, List<StundenplanUnterricht>> = new HashMap<number, List<StundenplanUnterricht>>();
 
 	private _unterrichtmenge_by_idKlasse : HashMap<number, List<StundenplanUnterricht>> = new HashMap<number, List<StundenplanUnterricht>>();
@@ -616,6 +621,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update_all() : void {
+		this.update_unterrichtmenge_ungueltig();
 		this.update_kwzmenge_update_kwz_by_jahr_and_kw();
 		this.update_aufsichtsbereichmenge();
 		this.update_fachmenge();
@@ -727,6 +733,29 @@ export class StundenplanManager extends JavaObject {
 		this.update_pausenzeitHatSchnittMitZeitraster_by_wochentag_idSchueler();
 		this.update_pausenzeitHatSchnittMitZeitraster_by_wochentag_idJahrgang();
 		this.update_pausenzeitHatSchnittMitZeitraster_by_wochentag();
+	}
+
+	/**
+	 * Es kann passieren, dass {@link StundenplanUnterricht}-Objekte existieren, aber nicht die zugehörigen
+	 * {@link StundenplanKlassenunterricht}-Objekte, dann werden die {@link StundenplanUnterricht}-Objekte verschoben in eine Liste.
+	 */
+	private update_unterrichtmenge_ungueltig() : void {
+		for (const u of this._unterrichtmenge_ungueltig)
+			this._unterricht_by_id.put(u.id, u);
+		this._unterrichtmenge_ungueltig = new ArrayList();
+		this._unterrichtmenge_ungueltig_set = new HashSet();
+		for (const u of new ArrayList(this._unterricht_by_id.values())) {
+			if (u.idKurs !== null)
+				continue;
+			let ungueltig : boolean = false;
+			for (const idKlasse of u.klassen)
+				ungueltig = ungueltig || !this._klassenunterricht_by_idKlasse_and_idFach.contains(idKlasse, u.idFach);
+			if (ungueltig) {
+				this._unterricht_by_id.remove(u.id);
+				this._unterrichtmenge_ungueltig.add(u);
+				this._unterrichtmenge_ungueltig_set.add(u.id);
+			}
+		}
 	}
 
 	private update_pausenzeitHatSchnittMitZeitraster_by_wochentag() : void {
@@ -1188,36 +1217,51 @@ export class StundenplanManager extends JavaObject {
 
 	private update_pausenaufsichtbereichmenge_by_idPausenaufsicht() : void {
 		this._pausenaufsichtbereichmenge_by_idPausenaufsicht = new HashMap();
+		for (const pausenaufsicht of this._pausenaufsicht_by_id.values())
+			MapUtils.getOrCreateArrayList(this._pausenaufsichtbereichmenge_by_idPausenaufsicht, pausenaufsicht.id);
 		for (const bereich of this._pausenaufsichtbereich_by_id.values())
 			MapUtils.addToList(this._pausenaufsichtbereichmenge_by_idPausenaufsicht, bereich.idPausenaufsicht, bereich);
 	}
 
 	private update_pausenaufsichtbereichmenge_by_idAufsichtsbereich() : void {
 		this._pausenaufsichtbereichmenge_by_idAufsichtsbereich = new HashMap();
+		for (const aufsichtbereich of this._aufsichtsbereich_by_id.values())
+			MapUtils.getOrCreateArrayList(this._pausenaufsichtbereichmenge_by_idAufsichtsbereich, aufsichtbereich.id);
 		for (const bereich of this._pausenaufsichtbereich_by_id.values())
 			MapUtils.addToList(this._pausenaufsichtbereichmenge_by_idAufsichtsbereich, bereich.idAufsichtsbereich, bereich);
 	}
 
 	private update_pausenaufsichtbereichmenge_by_Wochentyp() : void {
 		this._pausenaufsichtbereichmenge_by_Wochentyp = new HashMap();
+		for (let wochentyp : number = 0; wochentyp <= this._stundenplanWochenTypModell; wochentyp++)
+			MapUtils.getOrCreateArrayList(this._pausenaufsichtbereichmenge_by_Wochentyp, wochentyp);
 		for (const bereich of this._pausenaufsichtbereich_by_id.values())
 			MapUtils.addToList(this._pausenaufsichtbereichmenge_by_Wochentyp, bereich.wochentyp, bereich);
 	}
 
 	private update_pausenaufsichtbereichmenge_by_idPausenaufsicht_and_idAufsichtsbereich() : void {
 		this._pausenaufsichtbereichmenge_by_idPausenaufsicht_and_idAufsichtsbereich = new HashMap2D();
+		for (const pausenaufsicht of this._pausenaufsicht_by_id.values())
+			for (const aufsichtbereich of this._aufsichtsbereich_by_id.values())
+				Map2DUtils.getOrCreateArrayList(this._pausenaufsichtbereichmenge_by_idPausenaufsicht_and_idAufsichtsbereich, pausenaufsicht.id, aufsichtbereich.id);
 		for (const bereich of this._pausenaufsichtbereich_by_id.values())
 			Map2DUtils.addToList(this._pausenaufsichtbereichmenge_by_idPausenaufsicht_and_idAufsichtsbereich, bereich.idPausenaufsicht, bereich.idAufsichtsbereich, bereich);
 	}
 
 	private update_pausenaufsichtbereichmenge_by_idPausenaufsicht_and_Wochentyp() : void {
 		this._pausenaufsichtbereichmenge_by_idPausenaufsicht_and_Wochentyp = new HashMap2D();
+		for (const pausenaufsicht of this._pausenaufsicht_by_id.values())
+			for (let wochentyp : number = 0; wochentyp <= this._stundenplanWochenTypModell; wochentyp++)
+				Map2DUtils.getOrCreateArrayList(this._pausenaufsichtbereichmenge_by_idPausenaufsicht_and_Wochentyp, pausenaufsicht.id, wochentyp);
 		for (const bereich of this._pausenaufsichtbereich_by_id.values())
 			Map2DUtils.addToList(this._pausenaufsichtbereichmenge_by_idPausenaufsicht_and_Wochentyp, bereich.idPausenaufsicht, bereich.wochentyp, bereich);
 	}
 
 	private update_pausenaufsichtbereichmenge_by_idAufsichtsbereich_and_Wochentyp() : void {
 		this._pausenaufsichtbereichmenge_by_idAufsichtsbereich_and_Wochentyp = new HashMap2D();
+		for (const aufsichtbereich of this._aufsichtsbereich_by_id.values())
+			for (let wochentyp : number = 0; wochentyp <= this._stundenplanWochenTypModell; wochentyp++)
+				Map2DUtils.getOrCreateArrayList(this._pausenaufsichtbereichmenge_by_idAufsichtsbereich_and_Wochentyp, aufsichtbereich.id, wochentyp);
 		for (const bereich of this._pausenaufsichtbereich_by_id.values())
 			Map2DUtils.addToList(this._pausenaufsichtbereichmenge_by_idAufsichtsbereich_and_Wochentyp, bereich.idAufsichtsbereich, bereich.wochentyp, bereich);
 	}
@@ -1941,9 +1985,8 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private aufsichtsbereichRemoveOhneUpdateById(idAufsichtsbereich : number) : void {
-		for (const aufsicht of MapUtils.getOrCreateArrayList(this._pausenaufsichtmenge_by_idAufsichtsbereich, idAufsichtsbereich))
-			for (const bereich of this.pausenaufsichtbereichGetMengeByPausenaufsichtIdAndAufsichtsbereichId(idAufsichtsbereich, aufsicht.id))
-				aufsicht.bereiche.remove(bereich);
+		const bereiche : List<StundenplanPausenaufsichtBereich> = DeveloperNotificationException.ifMapGetIsNull(this._pausenaufsichtbereichmenge_by_idAufsichtsbereich, idAufsichtsbereich);
+		this.pausenaufsichtbereichRemoveAllOhneUpdate(bereiche);
 		DeveloperNotificationException.ifMapRemoveFailes(this._aufsichtsbereich_by_id, idAufsichtsbereich);
 	}
 
@@ -2662,6 +2705,21 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine Beschreibung des {@link StundenplanKlasse}-Objekts in der Form "7b".
+	 * <br>Hinweis: Diese Methode liefert niemals eine Exception, stattdessen enthält der String eine Fehlermeldung.
+	 *
+	 * @param idKlasse Die ID des angefragten-Objektes.
+	 *
+	 * @return eine Beschreibung des {@link StundenplanKlasse}-Objekts in der Form "7b".
+	 */
+	public klasseGetBeschreibungKuerzel(idKlasse : number) : string {
+		let kl : StundenplanKlasse | null = this._klasse_by_id.get(idKlasse);
+		if (kl === null)
+			return "Klassen-Objekt [" + idKlasse + "] ???";
+		return kl.kuerzel;
+	}
+
+	/**
 	 * Liefert eine Liste aller {@link StundenplanKlasse}-Objekte.
 	 * <br>Laufzeit: O(1)
 	 *
@@ -2820,6 +2878,90 @@ export class StundenplanManager extends JavaObject {
 				return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Liefert eine Liste aller Kollisionen bestimmer Drag-Objekte in Bezug auf eine bestimmte Drop-Zelle.
+	 *
+	 * @param listKl      Drag: Die Liste der {@link StundenplanKlassenunterricht}-Objekte.
+	 * @param listKu      Drag: Die Liste der {@link StundenplanKurs}-Objekte.
+	 * @param listU       Drag: Die Liste der {@link StundenplanUnterricht}-Objekte.
+	 * @param wochentag   Drop: Der Typ des {@link Wochentag}-Objekts.
+	 * @param stunde      Drop: Die Unterrichtsstunde an dem Wochentag.
+	 * @param wochentyp   Drop: Der Typ der Woche (beispielsweise bei AB-Wochen).
+	 *
+	 * @return eine Liste aller Kollisionen bestimmer Drag-Objekte in Bezug auf eine bestimmte Drop-Zelle.
+	 */
+	public getDropKollisionsbeschreibungZurZelle(listKl : List<StundenplanKlassenunterricht>, listKu : List<StundenplanKurs>, listU : List<StundenplanUnterricht>, wochentag : number, stunde : number, wochentyp : number) : List<string> {
+		const beschreibungen : List<string> = new ArrayList<string>();
+		const dragLehrer : HashSet<number> = new HashSet<number>();
+		const dragKlassen : HashSet<number> = new HashSet<number>();
+		const dragSchueler : HashSet<number> = new HashSet<number>();
+		const dragRaeume : HashSet<number> = new HashSet<number>();
+		for (let kl of listKl) {
+			dragLehrer.addAll(kl.lehrer);
+			dragKlassen.add(kl.idKlasse);
+			dragSchueler.addAll(kl.schueler);
+		}
+		for (let ku of listKu) {
+			dragLehrer.addAll(ku.lehrer);
+			dragSchueler.addAll(ku.schueler);
+		}
+		for (let u of listU) {
+			dragLehrer.addAll(u.lehrer);
+			dragKlassen.addAll(u.klassen);
+			for (const schueler of this.schuelerGetMengeByUnterrichtIdAsList(u.id))
+				dragSchueler.add(schueler.id);
+			dragRaeume.addAll(u.raeume);
+		}
+		for (const idLehrkraft of dragLehrer)
+			for (const u2 of this.unterrichtGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idLehrkraft, wochentag, stunde, wochentyp, true))
+				beschreibungen.add("L-Kollision mit " + this.unterrichtGetByID_StringOfFaLeKl(u2.id));
+		for (const idKlasse of dragKlassen)
+			for (const u2 of this.unterrichtGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idKlasse, wochentag, stunde, wochentyp, true))
+				beschreibungen.add("K-Kollision mit " + this.unterrichtGetByID_StringOfFaLeKl(u2.id));
+		const listS : List<string> = new ArrayList<string>();
+		for (const idSchueler of dragSchueler)
+			for (const u2 of this.unterrichtGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idSchueler, wochentag, stunde, wochentyp, true))
+				listS.add("S-Kollision mit " + this.unterrichtGetByID_StringOfFaLeKl(u2.id));
+		if (listS.size() === 1)
+			beschreibungen.add(ListUtils.getNonNullElementAtOrException(listS, 0));
+		if (listS.size() >= 2)
+			beschreibungen.add(ListUtils.getNonNullElementAtOrException(listS, 0) + " (+ " + (listS.size() - 1) + " weitere)");
+		for (const idRaum of dragRaeume)
+			for (const u2 of this.unterrichtGetMengeByRaumIdAndWochentagAndStundeAndWochentypAndSchieneAndInklusiveOrEmptyList(idRaum, wochentag, stunde, wochentyp, -2, true))
+				beschreibungen.add("R-Kollision mit " + this.unterrichtGetByID_StringOfFaLeKl(u2.id));
+		return beschreibungen;
+	}
+
+	/**
+	 * Liefert eine Liste aller Kollisionen des {@link StundenplanKlassenunterricht}-Objekte in Bezug auf eine bestimmte Zelle.
+	 * <br>Hinweis: Das sind Kollision von Lehrkärften, Klassen oder SuS.
+	 *
+	 * @param klassenU    Der {@link StundenplanKlassenunterricht}, welcher gesetzt werden soll.
+	 * @param wochentag   Der Typ des {@link Wochentag}-Objekts.
+	 * @param stunde      Die Unterrichtsstunde an dem Wochentag.
+	 * @param wochentyp   Der Typ der Woche (beispielsweise bei AB-Wochen).
+	 *
+	 * @return eine Liste aller Kollisionen des {@link StundenplanKlassenunterricht}-Objekte in Bezug auf eine bestimmte Zelle.
+	 */
+	public klassenunterrichtGetDropKollisionsbeschreibungZurZelle(klassenU : StundenplanKlassenunterricht, wochentag : number, stunde : number, wochentyp : number) : List<string> {
+		const beschreibungen : List<string> = new ArrayList<string>();
+		for (const idLehrkraft of klassenU.lehrer)
+			for (const u2 of this.unterrichtGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idLehrkraft, wochentag, stunde, wochentyp, true))
+				beschreibungen.add("Lehrkraft " + this.lehrerGetBeschreibungKuerzel(idLehrkraft) + " kollidert mit " + this.unterrichtGetByID_StringOfFaLeKl(u2.id));
+		for (const u2 of this.unterrichtGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(klassenU.idKlasse, wochentag, stunde, wochentyp, true))
+			beschreibungen.add("Klasse " + klassenU.bezeichnung + " kollidert mit " + this.unterrichtGetByID_StringOfFaLeKl(u2.id));
+		for (const idSchueler of klassenU.schueler) {
+			const listS : List<string> = new ArrayList<string>();
+			for (const u2 of this.unterrichtGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idSchueler, wochentag, stunde, wochentyp, true))
+				listS.add("Schueler " + this.schuelerGetBeschreibungVornameNachname(idSchueler) + " kollidert mit " + this.unterrichtGetByID_StringOfFaLeKl(u2.id));
+			if (listS.size() === 1)
+				beschreibungen.add(ListUtils.getNonNullElementAtOrException(listS, 0));
+			if (listS.size() >= 2)
+				beschreibungen.add(ListUtils.getNonNullElementAtOrException(listS, 0) + " [... und " + (listS.size() - 1) + " weitere SuS]");
+		}
+		return beschreibungen;
 	}
 
 	/**
@@ -3066,6 +3208,34 @@ export class StundenplanManager extends JavaObject {
 				return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Liefert eine Liste aller Kollisionen des {@link StundenplanKurs}-Objekte in Bezug auf eine bestimmte Zelle.
+	 * <br>Hinweis: Das sind Kollision von Lehrkärften oder SuS.
+	 *
+	 * @param kurs        Der {@link StundenplanKurs}, welcher gesetzt werden soll.
+	 * @param wochentag   Der Typ des {@link Wochentag}-Objekts.
+	 * @param stunde      Die Unterrichtsstunde an dem Wochentag.
+	 * @param wochentyp   Der Typ der Woche (beispielsweise bei AB-Wochen).
+	 *
+	 * @return eine Liste aller Kollisionen des {@link StundenplanKurs}-Objekte in Bezug auf eine bestimmte Zelle.
+	 */
+	public kursGetDropKollisionsbeschreibungZurZelle(kurs : StundenplanKurs, wochentag : number, stunde : number, wochentyp : number) : List<string> {
+		const beschreibungen : List<string> = new ArrayList<string>();
+		for (const idLehrkraft of kurs.lehrer)
+			for (const u2 of this.unterrichtGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idLehrkraft, wochentag, stunde, wochentyp, true))
+				beschreibungen.add("Lehrkraft " + this.lehrerGetBeschreibungKuerzel(idLehrkraft) + " kollidert mit " + this.unterrichtGetByID_StringOfFaLeKl(u2.id));
+		for (const idSchueler of kurs.schueler) {
+			const listS : List<string> = new ArrayList<string>();
+			for (const u2 of this.unterrichtGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idSchueler, wochentag, stunde, wochentyp, true))
+				listS.add("Schueler " + this.schuelerGetBeschreibungVornameNachname(idSchueler) + " kollidert mit " + this.unterrichtGetByID_StringOfFaLeKl(u2.id));
+			if (listS.size() === 1)
+				beschreibungen.add(ListUtils.getNonNullElementAtOrException(listS, 0));
+			if (listS.size() >= 2)
+				beschreibungen.add(ListUtils.getNonNullElementAtOrException(listS, 0) + " [... und " + (listS.size() - 1) + " weitere SuS]");
+		}
+		return beschreibungen;
 	}
 
 	/**
@@ -3400,6 +3570,21 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public lehrerGetByIdOrException(idLehrer : number) : StundenplanLehrer {
 		return DeveloperNotificationException.ifMapGetIsNull(this._lehrer_by_id, idLehrer);
+	}
+
+	/**
+	 * Liefert eine Beschreibung des {@link StundenplanLehrer}-Objekts in der Form "BAR".
+	 * <br>Hinweis: Diese Methode liefert niemals eine Exception, stattdessen enthält der String eine Fehlermeldung.
+	 *
+	 * @param idLehrer Die ID des angefragten-Objektes.
+	 *
+	 * @return eine Beschreibung des {@link StundenplanLehrer}-Objekts in der Form "BAR".
+	 */
+	public lehrerGetBeschreibungKuerzel(idLehrer : number) : string {
+		let l : StundenplanLehrer | null = this._lehrer_by_id.get(idLehrer);
+		if (l === null)
+			return "Lehrer-Objekt [" + idLehrer + "] ???";
+		return l.kuerzel;
 	}
 
 	/**
@@ -3764,6 +3949,8 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private pausenaufsichtRemoveOhneUpdateById(idPausenaufsicht : number) : void {
+		const spa : StundenplanPausenaufsicht = DeveloperNotificationException.ifMapGetIsNull(this._pausenaufsicht_by_id, idPausenaufsicht);
+		this.pausenaufsichtbereichRemoveAllOhneUpdate(new ArrayList(spa.bereiche));
 		DeveloperNotificationException.ifMapRemoveFailes(this._pausenaufsicht_by_id, idPausenaufsicht);
 	}
 
@@ -3947,15 +4134,12 @@ export class StundenplanManager extends JavaObject {
 
 	private pausenaufsichtbereichRemoveAllOhneUpdate(pausenaufsichtbereiche : List<StundenplanPausenaufsichtBereich>) : void {
 		for (const pausenaufsichtbereich of pausenaufsichtbereiche) {
-			DeveloperNotificationException.ifMapRemoveFailes(this._pausenaufsichtbereich_by_id, pausenaufsichtbereich.id);
 			const pausenaufsicht : StundenplanPausenaufsicht = DeveloperNotificationException.ifMapGetIsNull(this._pausenaufsicht_by_id, pausenaufsichtbereich.idPausenaufsicht);
-			for (let i : number = 0; i < pausenaufsicht.bereiche.size(); i++) {
-				const bereich : StundenplanPausenaufsichtBereich = pausenaufsicht.bereiche.get(i);
-				if (bereich.id === pausenaufsichtbereich.id) {
-					pausenaufsicht.bereiche.remove(bereich);
-					break;
-				}
-			}
+			const iter : JavaIterator<StundenplanPausenaufsichtBereich> = pausenaufsicht.bereiche.iterator();
+			while (iter.hasNext())
+				if (iter.next().id === pausenaufsichtbereich.id)
+					iter.remove();
+			DeveloperNotificationException.ifMapRemoveFailes(this._pausenaufsichtbereich_by_id, pausenaufsichtbereich.id);
 		}
 	}
 
@@ -4536,6 +4720,21 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine Beschreibung des {@link StundenplanRaum}-Objekts in der Form "042".
+	 * <br>Hinweis: Diese Methode liefert niemals eine Exception, stattdessen enthält der String eine Fehlermeldung.
+	 *
+	 * @param idRaum Die ID des angefragten-Objektes.
+	 *
+	 * @return eine Beschreibung des {@link StundenplanRaum}-Objekts in der Form "042".
+	 */
+	public raumGetBeschreibungKuerzel(idRaum : number) : string {
+		let ra : StundenplanRaum | null = this._raum_by_id.get(idRaum);
+		if (ra === null)
+			return "Raum-Objekt [" + idRaum + "] ???";
+		return ra.kuerzel;
+	}
+
+	/**
 	 * Liefert das zum Kürzel zugehörige {@link StundenplanRaum}-Objekt.
 	 * <br>Laufzeit: O(1)
 	 *
@@ -4626,7 +4825,7 @@ export class StundenplanManager extends JavaObject {
 		const listRaumGuete2 : List<StundenplanRaum> = new ArrayList<StundenplanRaum>();
 		const listRaumGuete3 : List<StundenplanRaum> = new ArrayList<StundenplanRaum>();
 		const listRaumGuete4 : List<StundenplanRaum> = new ArrayList<StundenplanRaum>();
-		for (const r of this._raummenge_verwendet_sortiert) {
+		for (const r of this._raummenge_sortiert) {
 			const kollisionen : number = this.raumGetAnzahlAnKollisionenFuerUnterrichte(r.id, listUnterrichtIDs);
 			if (r.groesse >= maxSuS) {
 				if (kollisionen <= 0) {
@@ -4945,8 +5144,22 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine Beschreibung des {@link StundenplanSchueler}-Objekts in der Form "Peter Pan".
+	 * <br>Hinweis: Diese Methode liefert niemals eine Exception, stattdessen enthält der String eine Fehlermeldung.
+	 *
+	 * @param idSchueler Die ID des angefragten-Objektes.
+	 *
+	 * @return eine Beschreibung des {@link StundenplanSchueler}-Objekts in der Form "Peter Pan".
+	 */
+	public schuelerGetBeschreibungVornameNachname(idSchueler : number) : string {
+		let s : StundenplanSchueler | null = this._schueler_by_id.get(idSchueler);
+		if (s === null)
+			return "Schüler-Objekt [" + idSchueler + "] ???";
+		return s.vorname + " " + s.nachname;
+	}
+
+	/**
 	 * Liefert das zur ID zugehörige {@link StundenplanSchueler}-Objekt.
-	 * <br>Laufzeit: O(1)
 	 *
 	 * @param idSchueler Die ID des angefragten-Objektes.
 	 *
@@ -5530,7 +5743,6 @@ export class StundenplanManager extends JavaObject {
 
 	/**
 	 * Liefert das {@link StundenplanUnterricht}-Objekt zur übergebenen ID.
-	 * <br>Laufzeit: O(1)
 	 * <br>Hinweis: Unnötige Methode, denn man bekommt die Objekte über Zeitraster-Abfragen.
 	 *
 	 * @param idUnterricht  Die Datenbank-ID des Unterrichts.
@@ -5543,12 +5755,21 @@ export class StundenplanManager extends JavaObject {
 
 	/**
 	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte.
-	 * <br> Laufzeit: O(1)
 	 *
 	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte.
 	 */
 	public unterrichtGetMengeAsList() : List<StundenplanUnterricht> {
 		return this._unterrichtmenge;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte, die entfernt wurden,
+	 * da es derzeit kein zu gehöriges {@link StundenplanKlassenunterricht}-Objekt gibt.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte.
+	 */
+	public unterrichtGetMengeUngueltigAsList() : List<StundenplanUnterricht> {
+		return this._unterrichtmenge_ungueltig;
 	}
 
 	/**
@@ -5571,6 +5792,17 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public unterrichtGetMengeByWochentyp(wochentyp : number) : List<StundenplanUnterricht> {
 		return MapUtils.getOrCreateArrayList(this._unterrichtmenge_by_wochentyp, wochentyp);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte einer Klasse.
+	 *
+	 * @param idKlasse   Die Datenbank-ID der Klasse.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte einer Klasse.
+	 */
+	public unterrichtGetMengeByKlasseId(idKlasse : number) : List<StundenplanUnterricht> {
+		return MapUtils.getOrCreateArrayList(this._unterrichtmenge_by_idKlasse, idKlasse);
 	}
 
 	/**
@@ -5840,6 +6072,17 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte einer Lehrkraft.
+	 *
+	 * @param idLehrer   Die Datenbank-ID der Lehrkraft.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte einer Lehrkraft.
+	 */
+	public unterrichtGetMengeByLehrerId(idLehrer : number) : List<StundenplanUnterricht> {
+		return MapUtils.getOrCreateArrayList(this._unterrichtmenge_by_idLehrer, idLehrer);
+	}
+
+	/**
 	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte der Lehrkraft am "wochentag, stunde, wochentyp" einer bestimmten Schiene.
 	 * Falls der Parameter "inklWoche0" TRUE ist und der "wochentyp" größer als 0 ist, wird der Unterricht des Wochentyps 0 auch hinzugefügt.
 	 *
@@ -5973,6 +6216,17 @@ export class StundenplanManager extends JavaObject {
 			if (this.unterrichtHatSchiene(u, idSchiene) || (idSchiene === -2))
 				list.add(u);
 		return list;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte eines Raumes.
+	 *
+	 * @param idRaum   Die ID des {@link StundenplanRaum}-Objektes.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte eines Raumes.
+	 */
+	public unterrichtGetMengeByRaumId(idRaum : number) : List<StundenplanUnterricht> {
+		return MapUtils.getOrCreateArrayList(this._unterrichtmenge_by_idRaum, idRaum);
 	}
 
 	/**
@@ -6133,6 +6387,23 @@ export class StundenplanManager extends JavaObject {
 		sRa = JavaString.isEmpty(sRa) ? "" : (", " + sRa);
 		sSc = JavaString.isEmpty(sSc) ? "" : (", " + sSc);
 		return idUnterricht + sLe + sFa + sKl + sRa + sSc;
+	}
+
+	/**
+	 * Liefert einen String, der diesen Unterricht beschreibt, in der Form 'M BAR 06b'.
+	 *
+	 * @param idUnterricht  Die Datenbank-ID des Unterrichts.
+	 *
+	 * @return einen String, der diesen Unterricht beschreibt, in der Form 'M BAR 06b'.
+	 */
+	private unterrichtGetByID_StringOfFaLeKl(idUnterricht : number) : string {
+		let sFa : string | null = this.unterrichtGetByIDStringOfFachOderKurs(idUnterricht, false);
+		let sLe : string | null = this.unterrichtGetByIDLehrerFirstAsStringOrEmpty(idUnterricht);
+		let sKl : string | null = this.unterrichtGetByIDStringOfKlassen(idUnterricht);
+		let s : string | null = sFa;
+		s = s + (JavaString.isEmpty(s) ? "" : " ") + sLe;
+		s = s + (JavaString.isEmpty(s) ? "" : " ") + sKl;
+		return s;
 	}
 
 	/**
@@ -6331,17 +6602,14 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private unterrichtRemoveByIdOhneUpdate(idUnterricht : number) : void {
-		DeveloperNotificationException.ifMapRemoveFailes(this._unterricht_by_id, idUnterricht);
-	}
-
-	/**
-	 * Entfernt aus dem Stundenplan ein existierendes {@link StundenplanUnterricht}-Objekt.
-	 *
-	 * @param idUnterricht  Die Datenbank-ID des {@link StundenplanUnterricht}-Objekts.
-	 */
-	public unterrichtRemoveById(idUnterricht : number) : void {
-		this.unterrichtRemoveByIdOhneUpdate(idUnterricht);
-		this.update_all();
+		if (this._unterrichtmenge_ungueltig_set.contains(idUnterricht)) {
+			const iter : JavaIterator<StundenplanUnterricht> = this._unterrichtmenge_ungueltig.iterator();
+			while (iter.hasNext())
+				if (iter.next().id === idUnterricht)
+					iter.remove();
+		} else {
+			DeveloperNotificationException.ifMapRemoveFailes(this._unterricht_by_id, idUnterricht);
+		}
 	}
 
 	/**
@@ -6350,8 +6618,8 @@ export class StundenplanManager extends JavaObject {
 	 * @param listUnterricht  Die Liste der zu entfernenden {@link StundenplanUnterricht}-Objekte.
 	 */
 	public unterrichtRemoveAll(listUnterricht : List<StundenplanUnterricht>) : void {
-		for (const unterricht of listUnterricht)
-			this.unterrichtRemoveByIdOhneUpdate(unterricht.id);
+		for (const u of listUnterricht)
+			this.unterrichtRemoveByIdOhneUpdate(u.id);
 		this.update_all();
 	}
 

@@ -1,15 +1,11 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
-
-import type { DeveloperNotificationException} from "@core";
+import type { KlassenStundenplanProps } from "~/components/klassen/stundenplan/SKlassenStundenplanProps";
+import { DeveloperNotificationException} from "@core";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
 import { routeKlassen, type RouteKlassen } from "~/router/apps/klassen/RouteKlassen";
-import { routeKlassenStundenplanDaten } from "~/router/apps/klassen/stundenplan/RouteKlassenStundenplanDaten";
 import { RouteDataKlassenStundenplan } from "~/router/apps/klassen/stundenplan/RouteDataKlassenStundenplan";
-
-import { type StundenplanAuswahlProps } from "@ui";
 import { ConfigElement } from "~/components/Config";
 import { api } from "~/router/Api";
 
@@ -18,14 +14,11 @@ const SKlassenStundenplan = () => import("~/components/klassen/stundenplan/SKlas
 export class RouteKlassenStundenplan extends RouteNode<RouteDataKlassenStundenplan, RouteKlassen> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN ], "klassen.stundenplan", "stundenplan", SKlassenStundenplan, new RouteDataKlassenStundenplan());
+		super(Schulform.values(), [ BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN ], "klassen.stundenplan", "stundenplan/:idStundenplan(\\d+)?/:wochentyp(\\d+)?/:kw(\\d+\\.\\d+)?", SKlassenStundenplan, new RouteDataKlassenStundenplan());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Stundenplan";
-		super.children = [
-			routeKlassenStundenplanDaten,
-		];
-		super.defaultChild = routeKlassenStundenplanDaten;
+		super.children = [];
 		api.config.addElements([
 			new ConfigElement("klasse.stundenplan.ganzerStundenplan", "user", "true"),
 		]);
@@ -33,22 +26,28 @@ export class RouteKlassenStundenplan extends RouteNode<RouteDataKlassenStundenpl
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
 		try {
-			if (isEntering)
-				await routeKlassenStundenplan.data.ladeListe();
-			const { id } = RouteNode.getIntParams(to_params, ["id"]);
-			if (id === undefined)
-				return routeKlassen.getRoute();
-			// Prüfe, ob diese Route als aktuelle View für die Tab-Bar gesetzt ist
-			if (routeKlassen.data.view.name !== this.name)
-				routeKlassen.data.setView(this, routeKlassen.children);
-			// Prüfe, ob diese Route das Ziel ist. Wenn dies der fall ist, dann muss ggf. noch ein Stundenplan geladen werden
-			if (to.name === this.name) {
-			// Und wähle dann einen Eintrag aus der Stundenplanliste aus, wenn diese nicht leer ist
-				if (routeKlassenStundenplan.data.mapStundenplaene.size !== 0) {
-					const [ idStundenplan ] = routeKlassenStundenplan.data.mapStundenplaene.keys();
-					return routeKlassenStundenplanDaten.getRoute({ id, idStundenplan, wochentyp: 0 });
-				}
+			const { idSchuljahresabschnitt, id: idKlasse, idStundenplan, wochentyp } = RouteNode.getIntParams(to_params, ["idSchuljahresabschnitt", "id", "idStundenplan", "wochentyp"]);
+			const { kw: kwString } = RouteNode.getStringParams(to_params, ["kw"]);
+			if (idSchuljahresabschnitt === undefined)
+				throw new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt.");
+			let kwjahr = undefined;
+			let kw = undefined;
+			if ((kwString !== undefined) && (kwString !== "") && (wochentyp === undefined)) {
+				const tmpKW = kwString.split(".");
+				if (tmpKW.length !== 2)
+					throw new DeveloperNotificationException("Die Angabe der Kalenderwoche muss die Form 'Jahr.KW' haben.");
+				kwjahr = parseInt(tmpKW[0]);
+				kw = parseInt(tmpKW[1]);
 			}
+			// Prüfe, ob ein Schüler ausgewählt ist. Wenn nicht dann wechsele in die Schüler-Route zurück.
+			if (idKlasse === undefined)
+				return routeKlassen.getRoute();
+			// Lade die Stundenplandaten neu, wenn die ID des Schuljahresabschnittes sich ändert (das passiert beim Laden der Route automatisch)
+			if (await this.data.ladeListe(idKlasse))
+				return this.getRoute();
+			// Aktualisiere / Lade ggf. den Stundenplan ...
+			if (idStundenplan !== undefined)
+				await routeKlassenStundenplan.data.setEintrag(idKlasse, idStundenplan, wochentyp ?? 0, kwjahr, kw);
 		} catch (e) {
 			return routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
@@ -62,9 +61,13 @@ export class RouteKlassenStundenplan extends RouteNode<RouteDataKlassenStundenpl
 		};
 	}
 
-	public getProps(to: RouteLocationNormalized): StundenplanAuswahlProps {
+	public getProps(to: RouteLocationNormalized): KlassenStundenplanProps {
 		return {
-			stundenplan: this.data.mapStundenplaene.size === 0 ? undefined : this.data.auswahl,
+			apiStatus: api.status,
+			getPDF: this.data.getPDF,
+			id: routeKlassen.data.manager.daten().id,
+			ignoreEmpty: this.data.ganzerStundenplan,
+			stundenplan: () => (this.data.mapStundenplaene.size === 0) ? undefined : this.data.auswahl,
 			mapStundenplaene: this.data.mapStundenplaene,
 			gotoStundenplan: this.data.gotoStundenplan,
 			gotoWochentyp: this.data.gotoWochentyp,

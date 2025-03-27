@@ -1,0 +1,264 @@
+.input-number-component input::placeholder {
+	@apply text-ui-secondary;
+}
+
+.placeholder--visible .input-number-component input::placeholder {
+	@apply text-ui;
+}
+
+.input-number-component {
+	@apply flex;
+	@apply relative;
+	@apply w-full min-w-16;
+	@apply overflow-hidden whitespace-nowrap text-base;
+
+	&:focus {
+		@apply outline-hidden;
+	}
+
+	input {
+		@apply cursor-text text-ellipsis;
+
+		&:focus {
+			@apply outline-hidden;
+		}
+	}
+}
+
+.input-number--number {
+	input {
+		@apply pr-14;
+		appearance: textfield;
+	}
+
+	.svws-input-stepper {
+		@apply absolute top-1 right-1.5 bottom-1 flex justify-center items-center gap-1;
+
+		button {
+			@apply bg-ui-neutral border border-ui-secondary;
+			@apply rounded-[0.2rem] focus:outline-hidden leading-none;
+
+			&:hover,
+			&:focus-visible {
+				@apply bg-ui-neutral-hover border-ui-neutral-hover;
+			}
+
+			&:focus-visible {
+				@apply ring-3 ring-ui;
+			}
+
+			&.svws-disabled {
+				@apply pointer-events-none opacity-25;
+
+				span.icon {
+					@apply opacity-50;
+				}
+			}
+
+			.icon {
+				margin-top: 0.1rem;
+			}
+		}
+	}
+
+	.input-number--placeholder {
+		max-width: calc(100% - 0.7em);
+	}
+}
+
+.input-number--control {
+	@apply bg-ui border border-ui-secondary;
+	@apply rounded-md;
+	@apply h-9 w-full;
+	@apply text-base;
+	@apply whitespace-nowrap;
+	padding: 0.5em 0.7em;
+
+	&:hover,
+	&:focus-active {
+		@apply border-ui;
+	}
+}
+
+.input-number--rounded-sm {
+	@apply rounded-full;
+}
+
+.input-number-component:focus-within .input-number--control,
+.input-number--filled .input-number--control {
+	@apply border-ui;
+	@apply outline-hidden;
+}
+
+.input-number-component:focus-within .input-number--control {
+	@apply ring-3 ring-ui-neutral;
+}
+
+.input-number--filled:not(:focus-within):not(:hover) .input-number--control {
+	@apply border-ui-secondary;
+}
+
+.input-number--statistics.input-number--filled:not(:focus-within):not(:hover) .input-number--control,
+.input-number--statistics:not(:focus-within):not(:hover) .input-number--control {
+	@apply border-ui-statistic;
+}
+
+.input-number--invalid.input-number--filled:not(:focus-within):not(:hover) .input-number--control {
+	@apply border-ui-danger;
+}
+
+.input-number--statistics.input-number--filled:not(:focus-within):hover .input-number--control,
+.input-number--statistics:not(:focus-within):hover .input-number--control {
+	@apply border-ui-statistic;
+}
+
+.input-number--invalid.input-number--filled:not(:focus-within):hover .input-number--control {
+	@apply border-ui-danger;
+}
+
+.input-number--filled:not(:focus-within):hover .input-number--control {
+	@apply border-ui-secondary;
+}
+
+.input-number--statistics.input-number-component:focus-within .input-number--control,
+.input-number--statistics.input-number--filled .input-number--control {
+	@apply border-ui-statistic;
+}
+
+.input-number--readonly:hover .input-number--control {
+	@apply border-ui-secondary;
+}
+
+.input-number--readonly.input-number--filled:hover .input-number--control {
+	@apply border-ui;
+}
+
+.input-number--control--multiselect-tags {
+	@apply border-b-0 rounded-b-none pt-1 pb-0;
+}
+
+.input-number--statistics {
+	.tooltip-trigger--triggered svg {
+		@apply text-ui-statistic;
+	}
+}
+
+&.input-number--filled {
+	@apply text-ui-brand;
+}
+
+/* Das sieht gut aus, aber führt zu Problemen, wenn das Fenster verkleinert wird. Min/Max verwenden?
+input {
+	@apply pl-8;
+} */
+
+.input-number--readonly .input-number--control {
+	@apply pointer-events-auto cursor-default select-none;
+}
+
+.input-number--placeholder {
+	@apply absolute;
+	@apply pointer-events-none;
+	@apply opacity-60;
+	@apply transform;
+	@apply flex items-center font-medium;
+
+	top: 0.5em;
+	left: 0.7em;
+	line-height: 1.33;
+}
+
+.input-number-component:not(.input-number--filled) .input-number--placeholder {
+	@apply font-normal;
+
+	.wrapper--tag-list & {
+		@apply font-medium;
+	}
+
+	.wrapper--tag-list:not(.wrapper--filled) & {
+		@apply font-medium;
+	}
+}
+
+.input-number--placeholder--prefix {
+	left: 4.5em;
+	top: 0.5em;
+}
+
+.multiselect-input-component .input-number--placeholder {
+	top: 0.5em;
+}
+
+.input-number-component:focus-within .input-number--placeholder,
+.input-number--filled .input-number--placeholder {
+	@apply bg-ui;
+	@apply -translate-y-1/2 opacity-100 rounded-sm px-1;
+
+	top: 0;
+	left: 0.7em;
+	font-size: 0.78rem;
+
+	&:after {
+		content: "";
+	}
+}
+
+.input-number--statistics .input-number--placeholder {
+	@apply text-ui-statistic;
+	@apply font-bold;
+}
+
+.input-number--invalid .input-number--placeholder,
+.input-number--invalid:not(:focus-within) .input-number--control {
+	@apply text-ui-danger;
+}
+
+.input-number--disabled {
+	@apply cursor-default pointer-events-none;
+
+	.input-number--placeholder {
+		@apply text-ui-disabled;
+	}
+}
+
+.input-number--control:disabled {
+	@apply text-ui-disabled !border-ui-disabled;
+	@apply pointer-events-none;
+}
+
+.input-number-component:focus-within,
+.input-number--filled {
+	@apply overflow-visible;
+}
+
+.input-number--placeholder--required:after {
+	@apply text-ui-danger;
+	@apply inline-block font-normal relative;
+	content: "*";
+	font-size: 1.2em;
+	margin-bottom: -0.2em;
+	top: -0.1em;
+	left: 0.1em;
+}
+
+.input-number--headless,
+.svws-ui-table .input-number--control {
+	@apply w-full whitespace-nowrap border-0 outline-hidden;
+
+	&:not([class*="bg-"]) {
+		background-color: unset;
+	}
+
+	&::placeholder {
+		@apply font-normal;
+		color: inherit;
+	}
+
+	&:hover:not(:focus) {
+		@apply underline decoration-dotted underline-offset-2;
+	}
+}
+
+.input-number--inline {
+	@apply cursor-text underline decoration-dotted underline-offset-2;
+}

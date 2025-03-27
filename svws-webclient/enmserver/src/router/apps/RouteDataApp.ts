@@ -43,6 +43,14 @@ export class RouteDataApp extends RouteData<RouteStateInterface> {
 		await api.config.setValue('teilleistungen.table.columns', JSON.stringify([...value]));
 	}
 
+	get floskelEditorVisible(): boolean {
+		return (api.config.getValue("floskelEditorVisible") === 'true');
+	}
+
+	setFloskelEditorVisible = async (value: boolean) => {
+		await api.config.setValue('floskelEditorVisible', value ? 'true' : 'false');
+	}
+
 	/**
 	 * Patch-Methode für ENM-Leistungsdaten.
 	 *

@@ -1,47 +1,77 @@
 <template>
-	<div class="page--content">
-		<div class="flex flex-col gap-y-16 lg:gap-y-20">
+	<div class="page page-flex-row">
+		<div class="h-full min-w-128 flex flex-col gap-y-8 overflow-y-auto px-6">
 			<template v-if="eintrag !== undefined">
-				<svws-ui-content-card v-if="(eintrag !== undefined) && (!eintrag.isInConfig)">
-					<s-schema-uebersicht-add-existing :schema="eintrag.name" :add-existing-schema-to-config :logs-function :loading-function :status-function
-						:is-active="currentAction === 'config'" @click="clickConfig" />
-				</svws-ui-content-card>
-				<svws-ui-content-card v-if="eintrag.isSVWS || revisionNotUpToDate" title="Sicherung">
-					<svws-ui-action-button v-if="eintrag.isSVWS" title="Backup" description="Daten aus dem Schema werden in ein SQLite-Backup übertragen"
-						icon="i-ri-save-3-line" :action-function="getBackupSchema" action-label="Backup starten" :is-loading="loading"
-						:is-active="currentAction === 'backup'" @click="clickBackup" />
-					<svws-ui-action-button v-if="revisionNotUpToDate" title="Aktualisieren" :description="`Setzt das Schema auf die aktuelle Revision ${ revision } hoch`"
-						icon="i-ri-speed-line" :action-function="upgradeSchema" action-label="Aktualisierung starten" :is-loading="loading"
-						:is-active="currentAction === 'upgrade'" @click="clickUpgrade">
-						<div v-if="eintrag.isTainted" class="text-error flex">
-							<span class="icon icon-error i-ri-error-warning-line inline relative mt-0.5 mr-1" />
-							Achtung, auch nach dem Hochsetzen bleibt das Schema „Tainted“.
-						</div>
-					</svws-ui-action-button>
-				</svws-ui-content-card>
-				<svws-ui-content-card v-if="zeigeInitialisierungMitSchulkatalog || zeigeNeuesSchemaAnlegen || ((eintrag !== undefined) && (eintrag.isInConfig))" title="Initialisieren / Wiederherstellen">
-					<svws-ui-action-button v-if="zeigeNeuesSchemaAnlegen" title="Neues Schema" description="Erstellt ein neues leeres Schema, welches im Anschluss initialisiert werden kann"
-						icon="i-ri-archive-line" :action-function="createEmptySchema" action-label="Schema Anlegen" :is-loading="loading"
-						:is-active="currentAction === 'empty'" @click="clickEmpty" />
-					<svws-ui-action-button v-if="zeigeInitialisierungMitSchulkatalog" title="Initialisieren aus Schulkatalog" description="Daten werden über die Auswahl der Schulnummer initialisiert" icon="i-ri-archive-line" :action-function="init" action-label="Initialisieren" :is-loading="loading" :action-disabled="schule === undefined" :is-active="currentAction === 'init'" @click="clickInit">
-						<svws-ui-input-wrapper>
-							<svws-ui-select title="Schulen nach Schulnummer und Ort suchen" v-model="schule" :items="schulen()" :item-text="i=> `${i.SchulNr}: ${i.ABez1 ?? ''} ${i.ABez2 ?? ''} ${i.ABez3 ?? ''}`" autocomplete :item-filter="schulen_filter" />
-						</svws-ui-input-wrapper>
-					</svws-ui-action-button>
-					<s-schema-uebersicht-restore v-if="(eintrag !== undefined) && (eintrag.isInConfig)" :restore-schema :logs-function :loading-function :status-function :is-active="currentAction === 'restore'" @click="clickRestore" />
-					<s-schema-uebersicht-migrate v-if="(eintrag !== undefined) && (eintrag.isInConfig)" :migrate-schema :target-schema="eintrag.name" :migration-quellinformationen :logs-function :loading-function :status-function :is-active="currentAction === 'migrate'" @click="clickMigrate" />
-				</svws-ui-content-card>
+				<div v-if="(eintrag !== undefined) && (!eintrag.isInConfig)" class="flex flex-col gap-4">
+					<s-schema-uebersicht-add-existing :schema="eintrag.name" :add-existing-schema-to-config :loading :set-status :is-open="currentAction === 'config'" @opened="(isOpen) => setCurrentAction('config', isOpen)" />
+				</div>
+				<div v-if="eintrag.isSVWS || revisionNotUpToDate" class="flex flex-col gap-4">
+					<div class="text-headline-md">Sicherung</div>
+					<div class="space-y-2">
+						<ui-card v-if="eintrag.isSVWS" icon="i-ri-save-3-line" title="Backup" subtitle="Daten aus dem Schema werden in ein SQLite-Backup übertragen" :is-open="currentAction === 'backup'" @update:is-open="(isOpen) => setCurrentAction('backup', isOpen)">
+							<svws-ui-button :disabled="loading" title="Backup starten" @click="getBackupSchema" :is-loading="loading">
+								<svws-ui-spinner v-if="loading" spinning />
+								<span v-else class="icon i-ri-play-line" />
+								Backup starten
+							</svws-ui-button>
+						</ui-card>
+						<ui-card v-if="revisionNotUpToDate" icon="i-ri-speed-line" title="Aktualisieren" :subtitle="`Setzt das Schema auf die aktuelle Revision ${revision} hoch`" :is-open="currentAction === 'upgrade'" @update:is-open="(isOpen) => setCurrentAction('upgrade', isOpen)">
+							<div class="flex flex-col gap-2">
+								<div v-if="eintrag.isTainted" class="text-ui-danger flex items-center">
+									<span class="icon icon-ui-danger i-ri-error-warning-line inline relative mt-0.5 mr-1" />
+									Achtung, auch nach dem Hochsetzen bleibt das Schema „Tainted“.
+								</div>
+							</div>
+							<template #buttonFooterLeft>
+								<svws-ui-button :disabled="loading" title="Aktualisierung starten" @click="upgradeSchema" :is-loading="loading" class="w-fit mt-4">
+									<svws-ui-spinner v-if="loading" spinning />
+									<span v-else class="icon i-ri-play-line" />
+									Aktualisierung starten
+								</svws-ui-button>
+							</template>
+						</ui-card>
+					</div>
+				</div>
+				<div v-if="zeigeInitialisierungMitSchulkatalog || zeigeNeuesSchemaAnlegen || ((eintrag !== undefined) && (eintrag.isInConfig))" class="flex flex-col gap-4">
+					<div class="text-headline-md">Initialisieren / Wiederherstellen</div>
+					<div class="space-y-2">
+						<ui-card v-if="zeigeNeuesSchemaAnlegen" icon="i-ri-archive-line" title="Neues Schema" subtitle="Erstellt ein neues leeres Schema, welches im Anschluss initialisiert werden kann" :is-open="currentAction === 'empty'" @update:is-open="(isOpen) => setCurrentAction('empty', isOpen)">
+							<svws-ui-button :disabled="loading" title="Schema Anlegen" @click="createEmptySchema" :is-loading="loading">
+								<svws-ui-spinner v-if="loading" spinning />
+								<span v-else class="icon i-ri-play-line" />
+								Schema Anlegen
+							</svws-ui-button>
+						</ui-card>
+						<ui-card v-if="zeigeInitialisierungMitSchulkatalog" icon="i-ri-archive-line" title="Initialisieren aus Schulkatalog" subtitle="Daten werden über die Auswahl der Schulnummer initialisiert" :is-open="currentAction === 'init'" @update:is-open="(isOpen) => setCurrentAction('init', isOpen)">
+							<div class="w-full">
+								<svws-ui-input-wrapper class="mt-2">
+									<svws-ui-select title="Schulen nach Schulnummer und Ort suchen" v-model="schule" :items="schulen()" :item-text="i=> `${i.SchulNr}: ${i.ABez1 ?? ''} ${i.ABez2 ?? ''} ${i.ABez3 ?? ''}`" autocomplete :item-filter="schulen_filter" />
+								</svws-ui-input-wrapper>
+							</div>
+							<template #buttonFooterLeft>
+								<svws-ui-button :disabled="schule === undefined || loading" title="Initialisieren" @click="init" :is-loading="loading">
+									<svws-ui-spinner v-if="loading" spinning />
+									<span v-else class="icon i-ri-play-line" />
+									Initialisieren
+								</svws-ui-button>
+							</template>
+						</ui-card>
+						<s-schema-uebersicht-restore v-if="(eintrag !== undefined) && (eintrag.isInConfig)" :restore-schema :loading :set-status :is-open="currentAction === 'restore'" @opened="(isOpen) => setCurrentAction('restore', isOpen)" />
+						<s-schema-uebersicht-migrate v-if="(eintrag !== undefined) && (eintrag.isInConfig)" :migrate-schema :target-schema="eintrag.name" :migration-quellinformationen :loading :set-status :is-open="currentAction === 'migrate'" @opened="isOpen => setCurrentAction('migrate', isOpen)" />
+					</div>
+				</div>
 			</template>
 		</div>
-		<div class="flex flex-col gap-y-16 lg:gap-y-20">
-			<svws-ui-content-card title="Admin-Benutzer">
-				<svws-ui-table :columns="cols" :items="admins()" />
-			</svws-ui-content-card>
+		<div class="min-w-96 flex flex-col gap-y-8 overflow-y-auto px-6">
+			<div class="flex flex-col gap-4">
+				<div class="text-headline-md">Admin-Benutzer</div>
+				<svws-ui-table :columns="cols" :items="admins()" scroll />
+			</div>
 		</div>
-		<div class="col-span-full">
+		<div class="grow min-w-fit">
 			<log-box :logs :status>
 				<template #button>
-					<svws-ui-button v-if="status !== undefined" type="transparent" @click="clearLog" title="Log verwerfen">Log verwerfen </svws-ui-button>
+					<svws-ui-button v-if="status !== undefined" type="transparent" @click="clear" title="Log verwerfen">Log verwerfen </svws-ui-button>
 				</template>
 			</log-box>
 		</div>
@@ -64,20 +94,26 @@
 			return;
 		if ((newEintrag !== undefined) && (oldEintrag !== undefined) && (newEintrag.name === oldEintrag.name))
 			return;
-		clearLog();
+		clear();
 	});
 
 	const schule = ref<SchulenKatalogEintrag>()
 	const loading = ref<boolean>(false);
 	const logs = shallowRef<List<string|null> | undefined>(undefined);
 	const status = shallowRef<boolean | undefined>(undefined);
-	const currentAction = ref<'config' | 'empty' | 'init' | 'restore' | 'migrate' | 'upgrade' | 'backup' | ''>("");
+	const currentAction = ref<string>('');
+	const oldAction = ref<{ name: string | undefined; open: boolean }>({
+		name: undefined,
+		open: false,
+	});
 
-	const logsFunction = () => logs;
-	const loadingFunction = () => loading;
-	const statusFunction = () => status;
+	function setStatus(loadingV: boolean, statusV?: boolean, logsV?: List<string | null>) {
+		logs.value = logsV;
+		loading.value = loadingV;
+		status.value = statusV;
+	}
 
-	function clearLog() {
+	function clear() {
 		loading.value = false;
 		logs.value = undefined;
 		status.value = undefined;
@@ -100,53 +136,15 @@
 		{ key: "name", label: "Benutzername", span: 1, sortable: true },
 	];
 
-	function clickConfig() {
-		if (loading.value)
+	function setCurrentAction(newAction: string, open: boolean) {
+		if(newAction === oldAction.value.name && !open)
 			return;
-		currentAction.value = (currentAction.value === 'config') ? '' : 'config';
-		clearLog();
-	}
-
-	function clickEmpty() {
-		if (loading.value)
-			return;
-		currentAction.value = (currentAction.value === 'empty') ? '' : 'empty';
-		clearLog();
-	}
-
-	function clickInit() {
-		if (loading.value)
-			return;
-		currentAction.value = (currentAction.value === 'init') ? '' : 'init';
-		clearLog();
-	}
-
-	function clickRestore() {
-		if (loading.value)
-			return;
-		currentAction.value = (currentAction.value === 'restore') ? '' : 'restore';
-		clearLog();
-	}
-
-	function clickMigrate() {
-		if (loading.value)
-			return;
-		currentAction.value = (currentAction.value === 'migrate') ? '' : 'migrate';
-		clearLog();
-	}
-
-	function clickUpgrade() {
-		if (loading.value)
-			return;
-		currentAction.value = (currentAction.value === 'upgrade') ? '' : 'upgrade';
-		clearLog();
-	}
-
-	function clickBackup() {
-		if (loading.value)
-			return;
-		currentAction.value = (currentAction.value === 'backup') ? '' : 'backup';
-		clearLog();
+		oldAction.value.name = currentAction.value;
+		oldAction.value.open = (currentAction.value === "") ? false : true;
+		if(open === true)
+			currentAction.value= newAction;
+		else
+			currentAction.value = "";
 	}
 
 	async function getBackupSchema() {
@@ -211,59 +209,3 @@
 	};
 
 </script>
-
-<style lang="postcss" scoped>
-	.page--content {
-		grid-template-columns: 2fr 1fr;
-	}
-
-	.svws-ui-content-button {
-		@apply rounded-lg border-light border p-4 text-balance flex gap-1 text-left;
-
-		.icon {
-			@apply block h-[1.2em] w-[1.2em];
-		}
-
-		&.svws-not-active {
-			@apply opacity-50 border-transparent order-1;
-
-			.svws-icon {
-				@apply opacity-25;
-			}
-		}
-
-		&.svws-active {
-			@apply border-transparent text-primary bg-primary/10;
-		}
-
-		&:not(.svws-active):hover,
-		&:not(.svws-active):focus-visible {
-			@apply outline-none bg-black/10 border-black/10 opacity-100;
-
-			.svws-icon {
-				@apply opacity-100;
-			}
-		}
-
-		&:focus {
-			@apply outline-none;
-		}
-
-		&:not(.svws-active):focus-visible {
-			@apply ring ring-primary/50 ring-offset-1;
-		}
-
-		.svws-title {
-			@apply font-bold text-headline-md;
-		}
-
-		.svws-description {
-			@apply opacity-50 leading-tight;
-		}
-
-		.svws-icon {
-			@apply text-headline-xl w-16 text-center;
-		}
-	}
-
-</style>

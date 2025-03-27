@@ -1,5 +1,5 @@
 <template>
-	<div class="page--content page--content--full">
+	<div class="page page-flex-row">
 		<stundenplan-ansicht-planung :manager="stundenplanManager" :add-zeitraster :remove-zeitraster :set-selection :import-zeitraster :set-settings-defaults :schulform :selected>
 			<span class="opacity-50" v-if="!selected"><span class="icon i-ri-information-line inline-block -mt-0.5" /> Im Zeitraster klicken, um einen Eintrag, Pausenzeit, Wochentag oder Stunde auszuwählen.</span>
 			<stundenplan-detail-zeitrastereintrag :patch-zeitraster :remove-zeitraster :selected :stundenplan-manager v-if="(selected instanceof StundenplanZeitraster)" />
@@ -20,14 +20,3 @@
 	// const hatUpdateKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.STUNDENPLAN_AENDERN));
 
 </script>
-
-<style lang="postcss" scoped>
-
-	.page--content {
-		@apply grid overflow-y-hidden overflow-x-auto h-full pb-3 pt-6 lg:gap-x-8;
-		grid-auto-rows: 100%;
-		grid-template-columns: 2fr minmax(20rem, 0.5fr);
-		grid-auto-columns: max-content;
-	}
-
-</style>

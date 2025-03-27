@@ -1,5 +1,5 @@
 <template>
-	<div class="page--content page--content--flex-row">
+	<div class="page page-flex-row max-w-480">
 		<Teleport to=".svws-sub-nav-target" defer>
 			<svws-ui-sub-nav :focus-switching-enabled :focus-help-visible>
 				<div class="ml-4 flex gap-0.5 items-center leading-none">
@@ -7,18 +7,25 @@
 					<svws-ui-select headless title="Raum" v-model="raum" :items="stundenplanManager().raumGetMengeVerwendetAsList()" :item-text="i => i.kuerzel" autocomplete
 						:item-filter="(i, text)=> i.filter(k => k.kuerzel.includes(text.toLocaleLowerCase()))" :item-sort="() => 0" type="transparent" focus-class-sub-nav />
 					<svws-ui-button type="secondary" @click.stop="ignoreEmpty = !ignoreEmpty" title="Ganzen Stundenplan anzeigen, auch leere Stunden" class="h-9">
-						<span class="flex-grow w-32">{{ ignoreEmpty ? 'Keine leeren Stunden':'Alle Stunden' }}</span>
+						<span class="grow w-32">{{ ignoreEmpty ? 'Keine leeren Stunden':'Alle Stunden' }}</span>
 					</svws-ui-button>
 					<template v-if="stundenplanManager().getWochenTypModell() > 0">
 						<div class="text-button font-bold mr-1 -mt-px">Wochentyp:</div>
-						<svws-ui-select headless title="Wochentyp" v-model="wochentypAnzeige" :items="wochentypen()" class="print:hidden" type="transparent"
+						<svws-ui-select headless title="Wochentyp" v-model="wochentypAnzeige" :items="wochentypen()" class="print:!hidden" type="transparent"
 							:disabled="wochentypen().size() <= 0" :item-text="wt => stundenplanManager().stundenplanGetWochenTypAsString(wt)" />
 					</template>
 				</div>
 			</svws-ui-sub-nav>
 		</Teleport>
+		<Teleport to=".svws-ui-header--actions" defer>
+			<s-stundenplan-raum-drucken-modal v-if="raum" v-slot="{ openModal }" :get-p-d-f :api-status :manager="stundenplanManager()" :raum>
+				<svws-ui-button @click="openModal" type="secondary"><span class="icon i-ri-printer-line" /> Stundenplan drucken</svws-ui-button>
+			</s-stundenplan-raum-drucken-modal>
+			<svws-ui-modal-hilfe> <hilfe-raum-stundenplan /> </svws-ui-modal-hilfe>
+		</Teleport>
 		<div v-if="raum === undefined">Dieser Stundenplan hat noch keine Räume</div>
-		<stundenplan-raum v-else :id="raum.id" :manager="stundenplanManager" :wochentyp="() => wochentypAnzeige" :kalenderwoche="() => undefined" mode-pausenaufsichten="aus" :ignore-empty class="h-full w-2/3 overflow-scroll pr-4" />
+		<stundenplan-raum v-else class="min-w-fit h-full w-2/3 overflow-scroll pr-4" :id="raum.id" :manager="stundenplanManager"
+			:wochentyp="() => wochentypAnzeige" :kalenderwoche="() => undefined" mode-pausenaufsichten="aus" :ignore-empty />
 	</div>
 </template>
 
@@ -50,7 +57,7 @@
 			else
 				return undefined;
 		},
-		set: (value) => _raum.value = value
+		set: (value) => _raum.value = value,
 	});
 
 	const ignoreEmpty = computed<boolean>({

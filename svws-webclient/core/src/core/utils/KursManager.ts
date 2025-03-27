@@ -1,5 +1,5 @@
 import { JavaObject } from '../../java/lang/JavaObject';
-import { KursDaten } from '../../core/data/kurse/KursDaten';
+import { KursDaten } from '../../asd/data/kurse/KursDaten';
 import { HashMap } from '../../java/util/HashMap';
 import { ArrayList } from '../../java/util/ArrayList';
 import type { Collection } from '../../java/util/Collection';

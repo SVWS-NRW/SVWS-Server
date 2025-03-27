@@ -25,7 +25,7 @@
 				<svws-ui-header>
 					<div class="flex items-center">
 						<div>
-							<span class="inline-flex gap-2"><span class="icon i-ri-alert-fill icon-error" />{{ error?.name }}</span>
+							<span class="inline-flex gap-2"><span class="icon i-ri-alert-fill icon-ui-danger" />{{ error?.name }}</span>
 							<br>
 							<span class="opacity-40">
 								<template v-if="code !== undefined">
@@ -40,7 +40,7 @@
 				</svws-ui-header>
 				<div class="svws-ui-page" v-if="error !== undefined">
 					<div class="svws-ui-tab-content">
-						<div class="page--content">
+						<div class="page page-grid-cards">
 							<svws-ui-content-card :title="error?.message">
 								<pre>{{ error.stack }}</pre>
 							</svws-ui-content-card>

@@ -2,7 +2,7 @@
 	"version": 1,
 	"daten": [ {
 		"bezeichner": "SBO_2_1",
-		"idHistorie": 1,
+		"idStatistik": "1",
 		"historie": [ {
 			"id": 35,
 			"kuerzel": "SBO 2.1",
@@ -16,7 +16,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_2_2",
-		"idHistorie": 2,
+		"idStatistik": "2",
 		"historie": [ {
 			"id": 36,
 			"kuerzel": "SBO 2.2",
@@ -30,7 +30,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_2_3",
-		"idHistorie": 3,
+		"idStatistik": "3",
 		"historie": [ {
 			"id": 37,
 			"kuerzel": "SBO 2.3",
@@ -44,7 +44,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_2_4",
-		"idHistorie": 4,
+		"idStatistik": "4",
 		"historie": [ {
 			"id": 38,
 			"kuerzel": "SBO 2.4",
@@ -58,7 +58,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_2_5",
-		"idHistorie": 5,
+		"idStatistik": "5",
 		"historie": [ {
 			"id": 39,
 			"kuerzel": "SBO 2.5",
@@ -72,7 +72,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_2_6",
-		"idHistorie": 6,
+		"idStatistik": "6",
 		"historie": [ {
 			"id": 40,
 			"kuerzel": "SBO 2.6",
@@ -86,7 +86,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_3_4",
-		"idHistorie": 7,
+		"idStatistik": "7",
 		"historie": [ {
 			"id": 41,
 			"kuerzel": "SBO 3.4",
@@ -100,7 +100,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_4_1",
-		"idHistorie": 8,
+		"idStatistik": "8",
 		"historie": [ {
 			"id": 42,
 			"kuerzel": "SBO 4.1",
@@ -114,7 +114,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_4_2",
-		"idHistorie": 9,
+		"idStatistik": "9",
 		"historie": [ {
 			"id": 43,
 			"kuerzel": "SBO 4.2",
@@ -128,7 +128,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_4_3",
-		"idHistorie": 10,
+		"idStatistik": "10",
 		"historie": [ {
 			"id": 44,
 			"kuerzel": "SBO 4.3",
@@ -142,7 +142,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_4_4",
-		"idHistorie": 11,
+		"idStatistik": "11",
 		"historie": [ {
 			"id": 45,
 			"kuerzel": "SBO 4.4",
@@ -156,7 +156,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_4_5",
-		"idHistorie": 12,
+		"idStatistik": "12",
 		"historie": [ {
 			"id": 46,
 			"kuerzel": "SBO 4.5",
@@ -170,7 +170,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_5_1",
-		"idHistorie": 13,
+		"idStatistik": "13",
 		"historie": [ {
 			"id": 47,
 			"kuerzel": "SBO 5.1",
@@ -184,7 +184,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_5_2",
-		"idHistorie": 14,
+		"idStatistik": "14",
 		"historie": [ {
 			"id": 48,
 			"kuerzel": "SBO 5.2",
@@ -198,7 +198,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_5_3",
-		"idHistorie": 15,
+		"idStatistik": "15",
 		"historie": [ {
 			"id": 49,
 			"kuerzel": "SBO 5.3",
@@ -212,7 +212,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_5_4",
-		"idHistorie": 16,
+		"idStatistik": "16",
 		"historie": [ {
 			"id": 50,
 			"kuerzel": "SBO 5.4",
@@ -226,7 +226,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_6_1",
-		"idHistorie": 17,
+		"idStatistik": "17",
 		"historie": [ {
 			"id": 51,
 			"kuerzel": "SBO 6.1",
@@ -240,7 +240,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_6_2",
-		"idHistorie": 18,
+		"idStatistik": "18",
 		"historie": [ {
 			"id": 52,
 			"kuerzel": "SBO 6.2",
@@ -254,7 +254,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_6_3",
-		"idHistorie": 19,
+		"idStatistik": "19",
 		"historie": [ {
 			"id": 53,
 			"kuerzel": "SBO 6.3",
@@ -268,7 +268,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_6_4",
-		"idHistorie": 20,
+		"idStatistik": "20",
 		"historie": [ {
 			"id": 54,
 			"kuerzel": "SBO 6.4",
@@ -282,7 +282,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_6_5",
-		"idHistorie": 21,
+		"idStatistik": "21",
 		"historie": [ {
 			"id": 55,
 			"kuerzel": "SBO 6.5",
@@ -296,7 +296,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_6_6",
-		"idHistorie": 22,
+		"idStatistik": "22",
 		"historie": [ {
 			"id": 56,
 			"kuerzel": "SBO 6.6",
@@ -310,7 +310,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_7_1",
-		"idHistorie": 23,
+		"idStatistik": "23",
 		"historie": [ {
 			"id": 57,
 			"kuerzel": "SBO 7.1",
@@ -324,7 +324,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_8_1",
-		"idHistorie": 24,
+		"idStatistik": "24",
 		"historie": [ {
 			"id": 58,
 			"kuerzel": "SBO 8.1",
@@ -338,7 +338,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_8_2",
-		"idHistorie": 25,
+		"idStatistik": "25",
 		"historie": [ {
 			"id": 59,
 			"kuerzel": "SBO 8.2",
@@ -352,7 +352,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_9_1",
-		"idHistorie": 26,
+		"idStatistik": "26",
 		"historie": [ {
 			"id": 60,
 			"kuerzel": "SBO 9.1",
@@ -366,7 +366,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_9_2",
-		"idHistorie": 27,
+		"idStatistik": "27",
 		"historie": [ {
 			"id": 61,
 			"kuerzel": "SBO 9.2",
@@ -380,7 +380,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_9_3",
-		"idHistorie": 28,
+		"idStatistik": "28",
 		"historie": [ {
 			"id": 62,
 			"kuerzel": "SBO 9.3",
@@ -394,7 +394,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_10_1",
-		"idHistorie": 29,
+		"idStatistik": "29",
 		"historie": [ {
 			"id": 63,
 			"kuerzel": "SBO 10.1",
@@ -408,7 +408,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_10_2",
-		"idHistorie": 30,
+		"idStatistik": "30",
 		"historie": [ {
 			"id": 64,
 			"kuerzel": "SBO 10.2",
@@ -422,7 +422,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_10_3",
-		"idHistorie": 31,
+		"idStatistik": "31",
 		"historie": [ {
 			"id": 65,
 			"kuerzel": "SBO 10.3",
@@ -436,7 +436,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_10_4",
-		"idHistorie": 32,
+		"idStatistik": "32",
 		"historie": [ {
 			"id": 66,
 			"kuerzel": "SBO 10.4",
@@ -450,7 +450,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_10_5",
-		"idHistorie": 33,
+		"idStatistik": "33",
 		"historie": [ {
 			"id": 67,
 			"kuerzel": "SBO 10.5",
@@ -464,7 +464,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_10_6",
-		"idHistorie": 34,
+		"idStatistik": "34",
 		"historie": [ {
 			"id": 68,
 			"kuerzel": "SBO 10.6",
@@ -478,7 +478,7 @@
 		} ]
 	}, {
 		"bezeichner": "SBO_10_7",
-		"idHistorie": 35,
+		"idStatistik": "35",
 		"historie": [ {
 			"id": 69,
 			"kuerzel": "SBO 10.7",

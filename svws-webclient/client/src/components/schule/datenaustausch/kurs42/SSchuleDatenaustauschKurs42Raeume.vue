@@ -1,5 +1,5 @@
 <template>
-	<div class="page--content">
+	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Raumliste aus Kurs42 importieren">
 			<div class="flex flex-col gap-2 mb-4 lg:mb-8">
 				<p>Laden Sie die Datei Raeume.txt von Kurs 42 hier hoch, um den Raum-Katalog um die Räume in dieser Datei zu ergänzen. </p>

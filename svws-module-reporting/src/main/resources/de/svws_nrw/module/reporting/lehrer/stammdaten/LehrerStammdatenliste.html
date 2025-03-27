@@ -66,15 +66,15 @@
 			</tr>
 			</thead>
 			<tr style="page-break-inside: avoid;" th:each="lehrer,iterationVarLehrer : ${Lehrer}" th:classappend="${iterationVarLehrer.odd} ? 'bg-lightgrey'">
-				<td class="f-small ta-r bo-t-grey p-tb-0-lr-1" th:text="${iterationVarLehrer.count + '. '}">1. </td>
-				<td class="f-small bo-t-grey p-tb-0-lr-1" th:text="${lehrer.nachname()}">Mustermann</td>
-				<td class="f-small bo-t-grey p-tb-0-lr-1" th:text="${lehrer.vorname()}">Maximilian Moritz</td>
-				<td class="f-small bo-t-grey p-tb-0-lr-1" th:text="${lehrer.amtsbezeichnung()}">OStR</td>
-				<td class="f-small bo-t-grey p-tb-0-lr-1 ta-c" th:text="${lehrer.geschlecht().kuerzel}">m</td>
-				<td class="f-small bo-t-grey p-tb-0-lr-1" th:text="${#convert.toDateDE(lehrer.geburtsdatum())}">07.08.2010</td>
-				<td class="f-small bo-t-grey p-tb-0-lr-1" th:text="${lehrer.strassennameHausnummer()}">Musterstraße 13a</td>
-				<td class="f-small bo-t-grey p-tb-0-lr-1 ta-r" th:text="${lehrer.wohnort().plz}">12345</td>
-				<td class="f-small bo-t-grey p-tb-0-lr-1" th:text="${lehrer.wohnort().ortsname}">Musterstadt</td>
+				<td class="f-small ta-r bo-t-grey p-tb-0 p-lr-1" th:text="${iterationVarLehrer.count + '. '}">1. </td>
+				<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${lehrer.nachname()}">Mustermann</td>
+				<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${lehrer.vorname()}">Maximilian Moritz</td>
+				<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${lehrer.amtsbezeichnung()}">OStR</td>
+				<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-c" th:text="${lehrer.geschlecht().kuerzel}">m</td>
+				<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${#convert.toDateDE(lehrer.geburtsdatum())}">07.08.2010</td>
+				<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${lehrer.strassennameHausnummer()}">Musterstraße 13a</td>
+				<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-r" th:text="${lehrer.wohnort().plz}">12345</td>
+				<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${lehrer.wohnort().ortsname}">Musterstadt</td>
 			</tr>
 		</table>
 	</body>

@@ -3,7 +3,7 @@ import { GostLaufbahnplanungDatenFachbelegung } from '../../../core/data/gost/Go
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
-import { Sprachendaten } from '../../../core/data/schueler/Sprachendaten';
+import { Sprachendaten } from '../../../asd/data/schueler/Sprachendaten';
 
 export class GostLaufbahnplanungDatenSchueler extends JavaObject {
 

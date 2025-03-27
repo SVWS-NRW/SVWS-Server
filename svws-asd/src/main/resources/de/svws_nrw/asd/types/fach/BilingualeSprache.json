@@ -2,7 +2,7 @@
 	"version": 3,
 	"daten": [ {
 		"bezeichner": "ENGLISCH",
-		"idHistorie": 1,
+		"idStatistik": "1",
 		"historie": [ {
 			"id": 1000,
 			"kuerzel": "E",
@@ -22,7 +22,7 @@
 		} ]
 	}, {
 		"bezeichner": "FRANZOESISCH",
-		"idHistorie": 2,
+		"idStatistik": "2",
 		"historie": [ {
 			"id": 2000,
 			"kuerzel": "F",
@@ -42,7 +42,7 @@
 		} ]
 	}, {
 		"bezeichner": "ITALIENISCH",
-		"idHistorie": 3,
+		"idStatistik": "3",
 		"historie": [ {
 			"id": 3000,
 			"kuerzel": "I",
@@ -62,7 +62,7 @@
 		} ]
 	}, {
 		"bezeichner": "NIEDERLAENDISCH",
-		"idHistorie": 4,
+		"idStatistik": "4",
 		"historie": [ {
 			"id": 4000,
 			"kuerzel": "N",
@@ -82,7 +82,7 @@
 		} ]
 	}, {
 		"bezeichner": "SPANISCH",
-		"idHistorie": 5,
+		"idStatistik": "5",
 		"historie": [ {
 			"id": 5000,
 			"kuerzel": "S",
@@ -102,7 +102,7 @@
 		} ]
 	}, {
 		"bezeichner": "TUERKISCH",
-		"idHistorie": 6,
+		"idStatistik": "6",
 		"historie": [ {
 			"id": 6000,
 			"kuerzel": "T",
@@ -122,7 +122,7 @@
 		} ]
 	}, {
 		"bezeichner": "NEUGRIECHIESCH",
-		"idHistorie": 7,
+		"idStatistik": "7",
 		"historie": [ {
 			"id": 7000,
 			"kuerzel": "Z",

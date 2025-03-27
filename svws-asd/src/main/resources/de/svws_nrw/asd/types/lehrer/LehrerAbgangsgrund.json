@@ -2,7 +2,7 @@
 	"version": 1,
 	"daten": [ {
 		"bezeichner": "RUHEST",
-		"idHistorie": 1,
+		"idStatistik": "1",
 		"historie": [ {
 			"id": 1,
 			"schluessel": "11",
@@ -13,7 +13,7 @@
 		} ]
 	}, {
 		"bezeichner": "UNFAEHIGK",
-		"idHistorie": 2,
+		"idStatistik": "2",
 		"historie": [ {
 			"id": 2,
 			"schluessel": "12",
@@ -24,7 +24,7 @@
 		} ]
 	}, {
 		"bezeichner": "TOD",
-		"idHistorie": 3,
+		"idStatistik": "3",
 		"historie": [ {
 			"id": 3,
 			"schluessel": "13",
@@ -35,7 +35,7 @@
 		} ]
 	}, {
 		"bezeichner": "AndBuLand",
-		"idHistorie": 4,
+		"idStatistik": "4",
 		"historie": [ {
 			"id": 4,
 			"schluessel": "14",
@@ -46,7 +46,7 @@
 		} ]
 	}, {
 		"bezeichner": "WECHSEL",
-		"idHistorie": 5,
+		"idStatistik": "5",
 		"historie": [ {
 			"id": 5,
 			"schluessel": "15",
@@ -57,7 +57,7 @@
 		} ]
 	}, {
 		"bezeichner": "BEFRIST",
-		"idHistorie": 6,
+		"idStatistik": "6",
 		"historie": [ {
 			"id": 6,
 			"schluessel": "16",
@@ -68,7 +68,7 @@
 		} ]
 	}, {
 		"bezeichner": "SONSTIG",
-		"idHistorie": 7,
+		"idStatistik": "7",
 		"historie": [ {
 			"id": 7,
 			"schluessel": "17",

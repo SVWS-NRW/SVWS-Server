@@ -9,7 +9,8 @@ import java.util.Locale;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import de.svws_nrw.core.data.klassen.KlassenDaten;
+
+import de.svws_nrw.asd.data.klassen.KlassenDaten;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -128,7 +129,7 @@ public final class HtmlContextKlassen extends HtmlContext {
 	 *
 	 * @return	Liste der Einzel-Contexts.
 	 */
-	public List<HtmlContextKlassen> getEinzelKlasseContexts() {
+	public List<HtmlContextKlassen> getEinzelContexts() {
 		final List<HtmlContextKlassen> resultContexts = new ArrayList<>();
 
 		for (final ReportingKlasse reportingKlasse : klassen) {

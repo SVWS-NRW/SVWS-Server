@@ -136,7 +136,7 @@ public final class HtmlContextSchueler extends HtmlContext {
 	 *
 	 * @return	Liste der Einzel-Contexts.
 	 */
-	public List<HtmlContextSchueler> getEinzelSchuelerContexts() {
+	public List<HtmlContextSchueler> getEinzelContexts() {
 		final List<HtmlContextSchueler> resultContexts = new ArrayList<>();
 
 		for (final ReportingSchueler reportingSchueler : schueler) {

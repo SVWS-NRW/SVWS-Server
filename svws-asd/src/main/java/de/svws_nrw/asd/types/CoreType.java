@@ -42,13 +42,13 @@ public interface CoreType<T extends CoreTypeData, U extends CoreType<T, U>> exte
 
 
 	/**
-	 * Gibt die Historien-ID zu diesem Core-Type zurück.
+	 * Gibt die Statistik-ID zu diesem Core-Type zurück.
 	 *
-	 * @return die Historien-ID
+	 * @return die Statistik ID
 	 */
 	@SuppressWarnings("unchecked")
-	default long historienId() {
-		return this.getManager().getHistorienIdByWert((@NotNull U) this);
+	default String statistikId() {
+		return this.getManager().getStatistikIdByWert((@NotNull U) this);
 	}
 
 

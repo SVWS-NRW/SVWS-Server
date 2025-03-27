@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import de.svws_nrw.core.data.kurse.KursDaten;
+import de.svws_nrw.asd.data.kurse.KursDaten;
 import de.svws_nrw.core.data.stundenplan.StundenplanListeEintrag;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.kurse.DataKurse;
@@ -46,6 +46,7 @@ public final class DataStundenplanListe extends DataManager<Long> {
 		daten.idSchuljahresabschnitt = s.Schuljahresabschnitts_ID;
 		daten.gueltigAb = s.Beginn;
 		daten.gueltigBis = s.Ende;
+		daten.wochenTypModell = s.WochentypModell;
 		return daten;
 	};
 

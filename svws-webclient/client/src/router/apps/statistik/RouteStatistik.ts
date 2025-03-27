@@ -10,6 +10,7 @@ import { type RouteApp } from "~/router/apps/RouteApp";
 
 import type { StatistikAppProps } from "~/components/statistik/SStatistikAppProps";
 import { api } from "~/router/Api";
+import { AppMenuGroup } from "@ui";
 
 const SStatistikAuswahl = () => import("~/components/statistik/SStatistikAuswahl.vue")
 const SStatistikApp = () => import("~/components/statistik/SStatistikApp.vue")
@@ -24,6 +25,8 @@ export class RouteStatistik extends RouteNode<any, RouteApp> {
 		super.setView("liste", SStatistikAuswahl, (route) => this.getNoProps(route));
 		super.children = [
 		];
+		super.menugroup = AppMenuGroup.MAIN;
+		super.icon = "i-ri-bar-chart-2-line";
 	}
 
 	protected getAuswahlComputedProperty(): WritableComputedRef<undefined> {

@@ -82,7 +82,7 @@ describe("Bedingtes Rendern", () => {
 		const outerSpan = wrapper.find("span.toggle--label");
 		expect(outerSpan.exists()).toBeTruthy();
 		const innerSpan = outerSpan.find(
-			"span.icon.i-ri-bar-chart-2-line.icon-statistics.ml-2"
+			"span.icon.i-ri-bar-chart-2-line.icon-ui-statistic.ml-2"
 		);
 		expect(innerSpan.exists()).toBeTruthy();
 	});

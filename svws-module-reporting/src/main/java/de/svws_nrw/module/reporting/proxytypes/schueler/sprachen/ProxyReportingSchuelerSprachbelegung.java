@@ -1,7 +1,8 @@
 package de.svws_nrw.module.reporting.proxytypes.schueler.sprachen;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import de.svws_nrw.core.data.schueler.Sprachbelegung;
+
+import de.svws_nrw.asd.data.schueler.Sprachbelegung;
 import de.svws_nrw.asd.types.fach.Sprachreferenzniveau;
 import de.svws_nrw.module.reporting.proxytypes.fach.ProxyReportingStatistikFach;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;

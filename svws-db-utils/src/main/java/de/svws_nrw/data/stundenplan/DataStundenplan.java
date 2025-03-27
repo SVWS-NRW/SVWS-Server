@@ -1,9 +1,9 @@
 package de.svws_nrw.data.stundenplan;
 
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
+import de.svws_nrw.asd.data.kurse.KursDaten;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.stundenplan.Stundenplan;
 import de.svws_nrw.core.data.stundenplan.StundenplanAufsichtsbereich;
@@ -13,9 +13,10 @@ import de.svws_nrw.core.data.stundenplan.StundenplanPausenzeit;
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
 import de.svws_nrw.core.data.stundenplan.StundenplanSchiene;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
-import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
+import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.data.kurse.DataKurse;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
@@ -24,15 +25,13 @@ import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanPausenaufsich
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterricht;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanZeitraster;
 import de.svws_nrw.db.utils.ApiOperationException;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den Core-DTO
  * {@link Stundenplan}.
  */
-public final class DataStundenplan extends DataManager<Long> {
+public final class DataStundenplan extends DataManagerRevised<Long, DTOStundenplan, Stundenplan> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link Stundenplan}.
@@ -41,66 +40,43 @@ public final class DataStundenplan extends DataManager<Long> {
 	 */
 	public DataStundenplan(final DBEntityManager conn) {
 		super(conn);
+		setAttributesRequiredOnCreation("idSchuljahresabschnitt", "gueltigAb", "gueltigBis", "wochenTypModell");
+		setAttributesNotPatchable("id", "idSchuljahresabschnitt");
 	}
-
-	@Override
-	public Response getAll() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public Response getList() {
-		throw new UnsupportedOperationException();
-	}
-
 
 	/**
-	 * Prüft, ob ein Stundenplan mit der angegegeben ID vorhanden ist und gibt das Datenbank-DTO
-	 * ggf. zurück. Ist der Stundenplan nicht vorhanden, so wird eine {@link ApiOperationException}
-	 * geworfen.
+	 * Gibt die Daten einer Klasse zu deren ID zurück.
 	 *
-	 * @param conn   die zu verwendende Datenbank-Verbindung
-	 * @param id     die ID des Stundenplans
+	 * @param id   Die ID der Klasse.
 	 *
-	 * @return das Datenbank-DTO
-	 *
-	 * @throws ApiOperationException falls kein Stundenplan mit der ID gefunden wurde
-	 */
-	public static DTOStundenplan getDTOStundenplan(final DBEntityManager conn, final Long id) throws ApiOperationException {
-		// Prüfe, ob ein Stundenplan mit der stundenplanID existiert und lade diesen
-		if (id == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Die StundenplanID darf nicht null sein.");
-		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, id);
-		if (stundenplan == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Ein Stundenplan mit der ID %d ist nicht vorhanden.".formatted(id));
-		return stundenplan;
-	}
-
-
-	/**
-	 * Gibt den Stundenplan zur angegebenen ID zurück.
-	 *
-	 * @param conn            die Datenbankverbindung
-	 * @param id   die ID des Stundenplans
-	 *
-	 * @return das Stundenplan-Objekt
+	 * @return die Daten der Klasse zur ID.
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public static Stundenplan getStundenplan(final DBEntityManager conn, final long id) throws ApiOperationException {
-		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, id);
-		if (stundenplan == null)
-			return null;
+	@Override
+	public Stundenplan getById(final Long id) throws ApiOperationException {
+		final DTOStundenplan dto = getDTO(id);
+		return map(dto);
+	}
+
+	@Override
+	protected long getLongId(final DTOStundenplan dto) throws ApiOperationException {
+		return dto.ID;
+	}
+
+
+	@Override
+	protected Stundenplan map(final DTOStundenplan stundenplan) throws ApiOperationException {
 		final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, stundenplan.Schuljahresabschnitts_ID);
 		if (schuljahresabschnitt == null)
 			return null;
-		final List<StundenplanZeitraster> zeitraster = DataStundenplanZeitraster.getZeitraster(conn, id);
-		final List<StundenplanRaum> raeume = DataStundenplanRaeume.getRaeume(conn, id);
-		final List<StundenplanSchiene> schienen = DataStundenplanSchienen.getSchienen(conn, id);
-		final List<StundenplanJahrgang> jahrgaenge = DataStundenplanJahrgaenge.getJahrgaenge(conn, id);
-		final List<StundenplanPausenzeit> pausenzeiten = new DataStundenplanPausenzeiten(conn, id).getList();
-		final List<StundenplanAufsichtsbereich> aufsichtsbereiche = DataStundenplanAufsichtsbereiche.getAufsichtsbereiche(conn, id);
-		final List<StundenplanKalenderwochenzuordnung> kalenderwochenzuordnung = new DataStundenplanKalenderwochenzuordnung(conn, id).getList();
+		final List<StundenplanZeitraster> zeitraster = DataStundenplanZeitraster.getZeitraster(conn, stundenplan.ID);
+		final List<StundenplanRaum> raeume = DataStundenplanRaeume.getRaeume(conn, stundenplan.ID);
+		final List<StundenplanSchiene> schienen = DataStundenplanSchienen.getSchienen(conn, stundenplan.ID);
+		final List<StundenplanJahrgang> jahrgaenge = DataStundenplanJahrgaenge.getJahrgaenge(conn, stundenplan.ID);
+		final List<StundenplanPausenzeit> pausenzeiten = new DataStundenplanPausenzeiten(conn, stundenplan.ID).getList();
+		final List<StundenplanAufsichtsbereich> aufsichtsbereiche = DataStundenplanAufsichtsbereiche.getAufsichtsbereiche(conn, stundenplan.ID);
+		final List<StundenplanKalenderwochenzuordnung> kalenderwochenzuordnung = new DataStundenplanKalenderwochenzuordnung(conn, stundenplan.ID).getList();
 		// Erstelle das Core-DTO-Objekt für die Response
 		final Stundenplan daten = new Stundenplan();
 		daten.id = stundenplan.ID;
@@ -126,35 +102,20 @@ public final class DataStundenplan extends DataManager<Long> {
 	}
 
 	@Override
-	public Response get(final Long id) throws ApiOperationException {
-		if (id == null)
-			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einem Stundenplan mit der ID null ist unzulässig.");
-		final Stundenplan stundenplan = DataStundenplan.getStundenplan(conn, id);
-		if (stundenplan == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(id));
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(stundenplan).build();
+	protected void initDTO(final DTOStundenplan dto, final Long id, final Map<String, Object> initAttributes) {
+		dto.ID = id;
 	}
 
-
-	private static final Map<String, DataBasicMapper<DTOStundenplan>> patchMappings = Map.ofEntries(
-			Map.entry("id", (conn, dto, value, map) -> {
-				final Long patch_id = JSONMapper.convertToLong(value, true);
-				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-					throw new ApiOperationException(Status.BAD_REQUEST);
-			}),
-			Map.entry("idSchuljahresabschnitt", (conn, dto, value, map) -> {
-				throw new ApiOperationException(Status.BAD_REQUEST);
-			}),
-			Map.entry("schuljahr", (conn, dto, value, map) -> {
-				throw new ApiOperationException(Status.BAD_REQUEST);
-			}),
-			Map.entry("abschnitt", (conn, dto, value, map) -> {
-				throw new ApiOperationException(Status.BAD_REQUEST);
-			}),
-			Map.entry("gueltigAb", (conn, dto, value, map) -> dto.Beginn = JSONMapper.convertToString(value, false, false, null)),
-			Map.entry("gueltigBis", (conn, dto, value, map) -> dto.Ende = JSONMapper.convertToString(value, false, false, null)),
-			Map.entry("bezeichnungStundenplan", (conn, dto, value, map) -> dto.Beschreibung = JSONMapper.convertToString(value, false, false, 1000)),
-			Map.entry("wochenTypModell", (conn, dto, value, map) -> {
+	@Override
+	protected void mapAttribute(final DTOStundenplan dto, final String name, final Object value, final Map<String, Object> map)
+			throws ApiOperationException {
+		switch (name) {
+			case "id" -> dto.ID = JSONMapper.convertToLong(value, false);
+			case "idSchuljahresabschnitt" -> dto.Schuljahresabschnitts_ID = JSONMapper.convertToLong(value, false);
+			case "gueltigAb" -> dto.Beginn = JSONMapper.convertToString(value, false, false, null);
+			case "gueltigBis" -> dto.Ende = JSONMapper.convertToString(value, false, false, null);
+			case "bezeichnungStundenplan" -> dto.Beschreibung = JSONMapper.convertToString(value, false, false, 1000);
+			case "wochenTypModell" -> {
 				final long idStundenplan = dto.ID;
 				int wochentypmodell = JSONMapper.convertToIntegerInRange(value, false, 0, 100);
 				if (wochentypmodell == 1)
@@ -204,11 +165,67 @@ public final class DataStundenplan extends DataManager<Long> {
 				conn.transactionExecuteDelete("DELETE FROM DTOStundenplanKalenderwochenZuordnung e WHERE e.Stundenplan_ID = %d".formatted(dto.ID));
 				// Setze das Wochentyp-Modell
 				dto.WochentypModell = wochentypmodell;
-			}));
+			}
+			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Das Patchen des Attributes %s wird nicht unterstützt.".formatted(name));
+		}
+	}
 
+	/**
+	 * Die Methode ermittelt das entsprechende {@link DTOStundenplan} Objekt zur angegebenen Klassen ID.
+	 *
+	 * @param id ID der Klasse
+	 *
+	 * @return Ein {@link DTOStundenplan} Objekt.
+	 *
+	 * @throws ApiOperationException im Fehlerfall
+	 */
+	public DTOStundenplan getDTO(final Long id) throws ApiOperationException {
+		if (id == null)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für den Stundenplan darf nicht null sein.");
+		final DTOStundenplan dto = conn.queryByKey(DTOStundenplan.class, id);
+		if (dto == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Kein Stundenplan zur ID " + id + " gefunden.");
+		return dto;
+	}
+
+	/**
+	 * Prüft, ob ein Stundenplan mit der angegegeben ID vorhanden ist und gibt das Datenbank-DTO
+	 * ggf. zurück. Ist der Stundenplan nicht vorhanden, so wird eine {@link ApiOperationException}
+	 * geworfen.
+	 *
+	 * @param conn   die zu verwendende Datenbank-Verbindung
+	 * @param id     die ID des Stundenplans
+	 *
+	 * @return das Datenbank-DTO
+	 *
+	 * @throws ApiOperationException falls kein Stundenplan mit der ID gefunden wurde
+	 */
+	public static DTOStundenplan getDTOStundenplan(final DBEntityManager conn, final Long id) throws ApiOperationException {
+		return new DataStundenplan(conn).getDTO(id);
+	}
+
+	/**
+	 * Fügt ein neues DTO des übergebenen Typ in die Datenbank hinzu, indem in der
+	 * Datenbank eine neue ID abgefragt wird und die Attribute des JSON-Objektes gemäß dem
+	 * Attribut-Mapper integriert werden. Um zu gewährleisten, dass der Primärschlüssel
+	 * angelegt ist, wird das Patchen von einzelnen Attributen zurückgestellt und erst nach
+	 * dem Persistieren des Objektes in einem zweiten Schritt durchgeführt.
+	 *
+	 * @param initAttributes  die Map mit den initialen Attributen für das neue DTO
+	 *
+	 * @return das Core-DTO
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
 	@Override
-	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
-		return super.patchBasic(id, is, DTOStundenplan.class, patchMappings);
+	public Stundenplan add(final Map<String, Object> initAttributes) throws ApiOperationException {
+		Stundenplan stundenplan = super.add(initAttributes);
+//		conn.transactionPersist(stundenplan);
+//		conn.transactionFlush();
+		// Füge die Schienen, welche bereits in der Kursliste angegeben sind zum Stundenplan hinzu
+		final List<KursDaten> kurse = DataKurse.getKursListenFuerAbschnitt(conn, stundenplan.idSchuljahresabschnitt, false);
+		DataStundenplanSchienen.updateSchienenFromKursliste(conn, stundenplan.id, kurse);
+		return stundenplan;
 	}
 
 }

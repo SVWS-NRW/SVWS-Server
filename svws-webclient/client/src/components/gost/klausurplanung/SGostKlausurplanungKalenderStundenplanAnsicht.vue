@@ -1,9 +1,9 @@
 <template>
-	<div class="svws-ui-stundenplan svws-hat-zeitachse svws-zeitraster-5">
+	<div class="svws-ui-stundenplan svws-hat-zeitachse svws-zeitraster-5 overflow-visible h-auto pb-8 w-full">
 		<!-- Die Überschriften des Stundenplan -->
 		<div class="svws-ui-stundenplan--head">
 			<slot name="kwAuswahl">
-				<div class="col-span-2 inline-flex gap-1 items-center justify-center print:pl-2 print:justify-start font-bold text-headline-md pb-0.5">
+				<div class="col-span-2 inline-flex gap-1 items-center justify-center print:!pl-2 print:!justify-start font-bold text-headline-md pb-0.5">
 					KW {{ kalenderwoche().kw || '–' }}
 				</div>
 			</slot>
@@ -53,7 +53,7 @@
 							@dragover="checkDropZoneZeitraster($event, manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde))"
 							@dragleave="checkDropZoneZeitraster($event, undefined)"
 							@drop="onDrop(manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde))">
-							<div v-if="kurseGefiltert(manager().datumGetByKwzAndWochentag(kalenderwoche(), wochentag), wochentag, stunde).size()" class="svws-ui-stundenplan--unterricht border-dashed border-black/50 flex absolute inset-1 w-auto bg-white/80 z-30 pointer-events-none">
+							<div v-if="kurseGefiltert(manager().datumGetByKwzAndWochentag(kalenderwoche(), wochentag), wochentag, stunde).size()" class="svws-ui-stundenplan--unterricht border-dashed border-ui-contrast-50 flex absolute inset-1 w-auto bg-ui-contrast-10 z-30 pointer-events-none">
 								<div class="flex flex-col items-start justify-between mx-auto font-normal w-full opacity-75">
 									<span class="text-button">{{ [...kurseGefiltert(manager().datumGetByKwzAndWochentag(kalenderwoche(), wochentag), wochentag, stunde)].map(kurs => kursInfos(kurs)).join(", ") }}</span>
 									<span v-if="dragData !== undefined && sumSchreiber(manager().datumGetByKwzAndWochentag(kalenderwoche(), wochentag), wochentag, stunde) > 0" class="inline-flex gap-0.5 text-button font-normal"><span class="icon i-ri-group-line" />{{ sumSchreiber(manager().datumGetByKwzAndWochentag(kalenderwoche(), wochentag), wochentag, stunde) }}</span>
@@ -75,7 +75,7 @@
 				</template>
 				<template v-for="item in kMan().terminGruppierteUeberschneidungenGetMengeByDatumAndAbijahr(manager().datumGetByKwzAndWochentag(kalenderwoche(), wochentag), zeigeAlleJahrgaenge() ? null : jahrgangsdaten.abiturjahr)">
 					<template v-for="(termin, index) in item" :key="termin.id">
-						<div class="svws-ui-stundenplan--unterricht flex flex-grow cursor-grab p-[2px] relative text-center z-10 border-transparent"
+						<div class="svws-ui-stundenplan--unterricht flex grow cursor-grab p-[2px] relative text-center z-10 border-transparent"
 							:style="posKlausurtermin(termin) +
 								(item.size() > 1
 									? (index === 0
@@ -91,17 +91,17 @@
 							:draggable="termin.abijahr === jahrgangsdaten.abiturjahr && hatKompetenzUpdate"
 							@dragstart="onDrag(termin)"
 							@dragend="onDrag(undefined)">
-							<div class="bg-white/40 dark:bg-black bg-highlight border w-full h-full rounded-lg overflow-hidden flex items-center justify-center relative group"
+							<div class="bg-ui-caution text-ui-oncaution border w-full h-full rounded-lg overflow-hidden flex items-center justify-center relative group"
 								:class="{
-									'bg-light border-black/20 dark:border-white/25': dragData !== undefined,
-									'shadow border-black/10 dark:border-white/10': dragData === undefined,
+									'bg-ui-neutral border-ui-contrast-25': dragData !== undefined,
+									'shadow-sm border-ui-contrast-10': dragData === undefined,
 								}">
 								<span class="icon i-ri-draggable absolute top-1 left-0 z-10 opacity-50 group-hover:opacity-100" v-if="termin.abijahr === jahrgangsdaten.abiturjahr && hatKompetenzUpdate" />
-								<div class="absolute inset-0 flex w-full flex-col pointer-events-none opacity-80 bg-white" :style="{background: kursklausurMouseOver() !== undefined && kursklausurMouseOver()!.idTermin === termin.id ? 'none' : getBgColors(termin)}" />
+								<div class="absolute inset-0 flex w-full flex-col pointer-events-none opacity-80 bg-ui" :style="{background: kursklausurMouseOver() !== undefined && kursklausurMouseOver()!.idTermin === termin.id ? 'none' : getBgColors(termin)}" />
 								<span v-if="zeigeAlleJahrgaenge()" class="absolute top-1.5 right-1.5 z-10 font-bold text-sm opacity-50">{{ GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(termin.abijahr, routeApp.data.aktAbschnitt.value.schuljahr, halbjahr.halbjahr)?.jahrgang }}</span>
 								<svws-ui-tooltip :hover="false" position="right-start" class="!items-start h-full mr-auto" :indicator="false" :class="{'!cursor-grab': termin.abijahr === jahrgangsdaten.abiturjahr, '!cursor-pointer': termin.abijahr !== jahrgangsdaten.abiturjahr}">
 									<span class="z-10 relative p-1 leading-tight cursor-pointer font-medium text-left mt-6 pb-0 hyphens-auto">
-										<span class="line-clamp-4" :class="dragData && dragData() !== undefined ? 'opacity-0' : ''">{{ terminBezeichnung(termin) }}</span>
+										<span class="line-clamp-4 text-ui" :class="dragData && dragData() !== undefined ? 'opacity-0' : ''">{{ terminBezeichnung(termin) }}</span>
 									</span>
 									<template #content>
 										<s-gost-klausurplanung-termin :termin
@@ -115,7 +115,7 @@
 										</s-gost-klausurplanung-termin>
 									</template>
 								</svws-ui-tooltip>
-								<span class="absolute bottom-0 left-0 py-1.5 pl-1.5 text-sm opacity-50 hidden group-hover:block pointer-events-none">Details</span>
+								<span class="absolute bottom-0 left-0 py-1.5 pl-1.5 text-sm opacity-50 hidden group-hover:block pointer-events-none text-ui-static">Details</span>
 							</div>
 						</div>
 					</template>
@@ -127,10 +127,10 @@
 
 <script setup lang="ts">
 
-	import type { GostKlausurtermin, Wochentag, StundenplanPausenaufsicht } from "@core";
-	import {type List, type StundenplanPausenzeit, DateUtils, Fach, GostHalbjahr, BenutzerKompetenz} from "@core";
 	import { computed } from "vue";
 	import type { SGostKlausurplanungKalenderStundenplanAnsichtProps } from "./SGostKlausurplanungKalenderStundenplanAnsichtProps";
+	import type { GostKlausurtermin, Wochentag, StundenplanPausenaufsicht, List, StundenplanPausenzeit } from "@core";
+	import { DateUtils, Fach, GostHalbjahr, BenutzerKompetenz} from "@core";
 	import { routeApp } from "~/router/apps/RouteApp";
 
 	const wochentage = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag' ];
@@ -300,3 +300,18 @@
 	}
 
 </script>
+
+<style scoped>
+
+	@reference "../../../../../ui/src/assets/styles/index.css"
+
+	.svws-ui-stundenplan--stunde--klausurplan-opacity {
+		/* CSS_TODO */
+		@apply bg-opacity-20;
+	}
+
+	.svws-ui-stundenplan--unterricht {
+		@apply flex px-1 py-0 border-none;
+	}
+
+</style>

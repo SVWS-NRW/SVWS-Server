@@ -5,6 +5,7 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteDataBenutzerprofil } from "~/router/apps/benutzerprofil/RouteDataBenutzerprofil";
 import { api } from "~/router/Api";
+import { AppMenuGroup } from "@ui";
 
 const SBenutzerprofilApp = () => import("~/components/benutzerprofil/SBenutzerprofilApp.vue")
 
@@ -15,6 +16,7 @@ export class RouteBenutzerprofil extends RouteNode<RouteDataBenutzerprofil, Rout
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Benutzerprofil";
+		super.menugroup = AppMenuGroup.BENUTZERPROFIL;
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {

@@ -39,6 +39,7 @@
 				</table>
 			</div>
 		</Variant>
+		<!-- Iteration über die semantischen types ['bg', 'text', 'border', 'accent', 'ring', 'icon'] -->
 		<Variant :title="`${type}-ui`" source=" " :id="`tokens-${type}`" v-for="(type, typeIndex) in semantics.type" :key="typeIndex">
 			<div class="relative">
 				<div class="flex flex-col gap-4 font-mono">
@@ -46,16 +47,24 @@
 						<div v-for="(prominence, prominenceIndex) in semantics.prominence" :key="prominenceIndex">
 							<div v-for="(interaction, interactionIndex) in semantics.interaction" :key="interactionIndex">
 								<div class="grid grid-cols-2 gap-1 items-center">
+									<!-- Filterung plausibler UI Elemente -->
 									<template v-if="shouldExist(type, role, prominence, interaction)">
+										<!-- light mode -->
 										<div class="ui-docs-bg flex items-center gap-1"
 											:style="{
-												backgroundColor: `${role.startsWith('on') ? `var(--color-bg-ui-${role.replace('on', '')})` : ''}`,
+												/* Setzt die Hintergrundfarbe, wenn die Rolle mit 'on' beginnt */
+												backgroundColor: `${role.startsWith('on') ? `var(--color-bg-ui-${role.replace('on', '')}${ prominence ? `-${prominence}` : '' }${ interaction ? `-${interaction}` : '' })` : ''}`,
+												/* Setzt die Textfarbe basierend auf Typ, Rolle, Prominenz und Interaktion */
 												color: `${role.startsWith('on') ? `var(--color-${type.startsWith('icon') ? 'text' : type}-ui${ role ? `-${role}` : '' }${ prominence ? `-${prominence}` : '' }${ interaction ? `-${interaction}` : '' })` : ''}`,
+												/* Setzt die Akzentfarbe, wenn der Typ mit 'accent' beginnt */
 												accentColor: `${type.startsWith('accent') ? `var(--color-accent-ui${ role ? `-${role}` : '' })` : ''}`
 											}">
 											<div class="ui-docs-color-swatch" :style="{backgroundColor: `var(--color-${type === 'icon' ? 'text' : type}-ui${ role ? `-${role}` : '' }${ prominence ? `-${prominence}` : '' }${ interaction ? `-${interaction}` : '' })`}" />
+											<!-- Checkbox-Vorschau, falls Typ 'accent' ist -->
 											<div v-if="type === 'accent'" class="ui-docs-preview-checkbox"><input type="checkbox" checked style="pointer-events: none; accent-color: inherit;"></div>
+											<!-- Icon-Vorschau, falls Typ 'icon' ist -->
 											<span v-if="type === 'icon'" class="i-ri-archive-line icon-xl" :class="`icon-ui${ role ? `-${role}` : '' }`" />
+											<!-- Text mit Farbvariablenbezeichnung -->
 											<div style="user-select: all;">
 												<span><span class="font-bold">{{ type }}</span><span class="opacity-50 font-bold">-ui</span></span>
 												<span>{{ role ? `-${role}` : '' }}</span>
@@ -64,16 +73,23 @@
 											</div>
 											<div class="contrast-value" />
 										</div>
-										<div class="ui-docs-bg dark flex items-center gap-1"
+										<!-- dark mode -->
+										<div class="ui-docs-bg dark flex items-center gap-1 bg-ui-danger-secondary-hover"
 											:class="{darkOnDisabled: role.startsWith('ondisabled')}"
 											:style="{
-												backgroundColor: `${role.startsWith('on') ? `var(--color-bg-ui-${role.replace('on', '')})` : ''}`,
+												/* Setzt die Hintergrundfarbe, wenn die Rolle mit 'on' beginnt */
+												backgroundColor: `${role.startsWith('on') ? `var(--color-bg-ui-${role.replace('on', '')}${ prominence ? `-${prominence}` : '' }${ interaction ? `-${interaction}` : '' })` : ''}`,
+												/* Setzt die Textfarbe basierend auf Typ, Rolle, Prominenz und Interaktion */
 												color: `${role.startsWith('on') ? `var(--color-${type.startsWith('icon') ? 'text' : type}-ui${ role ? `-${role}` : '' }${ prominence ? `-${prominence}` : '' }${ interaction ? `-${interaction}` : '' })` : ''}`,
+												/* Setzt die Akzentfarbe, wenn der Typ mit 'accent' beginnt */
 												accentColor: `${type.startsWith('accent') ? `var(--color-accent-ui${ role ? `-${role}` : '' })` : ''}`
 											}">
 											<div class="ui-docs-color-swatch" :style="{backgroundColor: `var(--color-${type === 'icon' ? 'text' : type}-ui${ role ? `-${role}` : '' }${ prominence ? `-${prominence}` : '' }${ interaction ? `-${interaction}` : '' })`}" />
+											<!-- Checkbox-Vorschau, falls Typ 'accent' ist -->
 											<div v-if="type === 'accent'" class="ui-docs-preview-checkbox"><input type="checkbox" checked style="pointer-events: none;"></div>
+											<!-- Icon-Vorschau, falls Typ 'icon' ist -->
 											<span v-if="type === 'icon'" class="i-ri-archive-line icon-xl" :class="`icon-ui${ role ? `-${role}` : '' }`" />
+											<!-- Text mit Farbvariablenbezeichnung -->
 											<div style="user-select: all;">
 												<span><span class="font-bold">{{ type }}</span><span class="opacity-50 font-bold">-ui</span></span>
 												<span>{{ role ? `-${role}` : '' }}</span>
@@ -91,7 +107,7 @@
 			</div>
 			<!-- Generate all tailwind colors for icons:
 			 icon-ui icon-ui-brand icon-ui-statistic icon-ui-danger icon-ui-success icon-ui-warning icon-ui-caution icon-ui-neutral icon-ui-onbrand icon-ui-onstatistic icon-ui-onselected icon-ui-ondanger icon-ui-onsuccess icon-ui-onwarning icon-ui-oncaution icon-ui-onneutral
-			 icon-ui--dark icon-ui-brand--dark icon-ui-statistic--dark icon-ui-danger--dark icon-ui-success--dark icon-ui-warning--dark icon-ui-caution--dark icon-ui-neutral--dark icon-ui-onbrand--dark icon-ui-onstatistic--dark icon-ui-onselected--dark icon-ui-ondanger--dark icon-ui-onsuccess--dark icon-ui-onwarning--dark icon-ui-oncaution--dark icon-ui-onneutral--dark -->
+			-->
 		</Variant>
 		<Variant title="Beispiele" source=" " id="beispiele">
 			<div class="htw-prose dark:htw-prose-invert" style="max-width: unset;">
@@ -217,6 +233,7 @@
 </template>
 
 <script setup lang="ts">
+
 	import { onMounted } from 'vue';
 
 	const semantics = {
@@ -227,78 +244,67 @@
 	}
 
 	function shouldExist(type = '', role = '', prominence = '', interaction = '') {
-		if((type === 'bg' && prominence === 'weak' && interaction === '' && !role.startsWith('on') && role !== 'disabled' && role !== 'inverted' && role !== 'selected' && role !== '')) {
+		if ((type === 'bg' && prominence === 'weak' && interaction === '' && !role.startsWith('on') && role !== 'disabled' && role !== 'inverted' && role !== 'selected' && role !== ''))
 			return true;
-		}
-		if ((type === 'bg' && role !== '' && role.startsWith('on')) || (type === 'bg' && prominence !== '') || (role.includes('disabled') && interaction !== '')) {
+		if ((type === 'bg' && role !== '' && role.startsWith('on')) || (type === 'bg' && prominence !== '') || (role.includes('disabled') && interaction !== ''))
 			return false;
-		}
-		if ((type === 'ring') && (role === 'selected' || role.includes('disabled') || role.startsWith('on') || prominence !== '' || interaction !== '')) {
+		if ((type === 'ring') && (role === 'selected' || role.includes('disabled') || role.startsWith('on') || prominence !== '' || interaction !== ''))
 			return false;
-		}
-		if ((type === 'icon') && (role === 'selected' || role.includes('disabled') || prominence !== '' || interaction !== '')) {
+		if ((type === 'icon') && (role === 'selected' || role.includes('disabled') || prominence !== '' || interaction !== ''))
 			return false;
-		}
-		if ((type === 'accent') && (role === 'selected' || prominence !== '' || interaction !== '')) {
+		if ((type === 'accent') && (role === 'selected' || prominence !== '' || interaction !== ''))
 			return false;
-		}
-		if((type !== 'bg' && role === 'inverted') || (type === 'bg' && role === 'inverted' && interaction !== '') || (type !== 'bg' && prominence === 'weak')) {
+		if ((type !== 'bg' && role === 'inverted') || (type === 'bg' && role === 'inverted' && interaction !== '') || (type !== 'bg' && prominence === 'weak'))
 			return false;
-		}
 		return true;
 	}
 
 	// http://www.w3.org/TR/WCAG20/#contrast-ratiodef
+	// Berechnen der relativen Leuchtdichte eines RGB-Farbwerts
 	function docsContrastRelativeLuminance(rgb = [0, 0, 0]) {
 		const lowc = 1 / 12.92;
 		const rsrgb = rgb[0] / 255;
 		const gsrgb = rgb[1] / 255;
 		const bsrgb = rgb[2] / 255;
-
+		//sRGB-Gammakorrektur
 		const r = rsrgb <= 0.03928 ? rsrgb * lowc : Math.pow((rsrgb + 0.055) / 1.055, 2.4);
 		const g = gsrgb <= 0.03928 ? gsrgb * lowc : Math.pow((gsrgb + 0.055) / 1.055, 2.4);
 		const b = bsrgb <= 0.03928 ? bsrgb * lowc : Math.pow((bsrgb + 0.055) / 1.055, 2.4);
-
 		return (r * 0.2126) + (g * 0.7152) + (b * 0.0722);
 	}
 
+	// Berechnen des Kontrasts zwischen zwei Leuchtdichten
 	function docsContrastLuminance(a = 0, b = 0) {
-		const l1 = Math.max(a, b);
-		const l2 = Math.min(a, b);
+		const l1 = Math.max(a, b); // Helle Farbe
+		const l2 = Math.min(a, b); // Dunkle Farbe
 		return (l1 + 0.05) / (l2 + 0.05);
 	}
 
+	// Berechnen des Kontrastwertes zwischen zwei Farben und gibt eine Bewertung zurück
 	function docsGetContrast(a = "", b = "") {
-		if (a === "" || b === "") {
-			return "N/A";
-		}
-
+		if (a === "" || b === "")
+			return "N/A"; // Falls Farben fehlen
+		// Extrahieren der RGB-Werte aus CSS-Farbstrings
 		const bg = a.match(/\d+/g)?.map(Number);
 		const fg = b.match(/\d+/g)?.map(Number);
-
+		// Berechnen des Kontrastverhältnisses
 		const contrast = docsContrastLuminance(docsContrastRelativeLuminance(bg), docsContrastRelativeLuminance(fg));
-
+		// Bewerten des Kontrastverhältnisses gemäß WCAG-Richtlinien
 		const score = contrast >= 7 ? "AAA" : contrast >= 4.5 ? "AA" : contrast >= 3 ? "" : "!";
-
-		if (contrast < 1.09) {
-			return;
-		}
-
+		if (contrast < 1.09)
+			return; // Falls der Kontrast zu niedrig ist, wird nichts zurückgegeben
 		return `${contrast.toFixed(2)}:1${score !== "" ? ` (${score})` : ""}`;
 	}
 
+	// Aktualisieren der Kontrastwerte in der UI
 	function updateContrastValues() {
 		document.querySelectorAll('.ui-docs-bg').forEach((el) => {
 			const swatch = el.querySelector('.ui-docs-color-swatch');
 			const valueTarget = el.querySelector('.contrast-value');
-
-			if (!swatch || !valueTarget) {
+			if (!swatch || !valueTarget)
 				return;
-			};
-
 			const bg = window.getComputedStyle(el).backgroundColor;
 			const fg = window.getComputedStyle(swatch).backgroundColor;
-
 			valueTarget.textContent = docsGetContrast(bg, fg) ?? '';
 		});
 	}
@@ -306,41 +312,5 @@
 	onMounted(() => {
 		updateContrastValues();
 	});
+
 </script>
-
-<style lang="postcss" scoped>
-.ui-docs-bg {
-	@apply px-1 py-0.5;
-}
-
-html:not(.htw-dark) .ui-docs-bg {
-	@apply bg-neutral-100 text-neutral-900;
-}
-
-html:not(.htw-dark) .ui-docs-bg.dark {
-	@apply bg-neutral-800 text-neutral-100;
-	color-scheme: dark;
-}
-
-.htw-dark .ui-docs-bg.dark {
-	display: none;
-}
-
-.contrast-value {
-	@apply ml-auto;
-}
-
-.darkOnDisabled {
-	@apply relative;
-}
-.darkOnDisabled:before {
-	content: '';
-	@apply absolute inset-0 -z-10;
-	@apply bg-neutral-800
-}
-
-.ui-docs-color-swatch,
-.ui-docs-preview-checkbox {
-	@apply p-2 w-12 h-8 rounded-lg;
-}
-</style>

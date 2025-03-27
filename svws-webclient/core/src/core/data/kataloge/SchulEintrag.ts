@@ -19,9 +19,9 @@ export class SchulEintrag extends JavaObject {
 	public kurzbezeichnung : string | null = null;
 
 	/**
-	 * Die Schulnummer der Schule.
+	 * Die Statistik-Schulnummer der Schule
 	 */
-	public schulnummer : string = "";
+	public schulnummerStatistik : string | null = null;
 
 	/**
 	 * Der Name des Schule.
@@ -114,9 +114,7 @@ export class SchulEintrag extends JavaObject {
 		result.id = obj.id;
 		result.kuerzel = (obj.kuerzel === undefined) ? null : obj.kuerzel === null ? null : obj.kuerzel;
 		result.kurzbezeichnung = (obj.kurzbezeichnung === undefined) ? null : obj.kurzbezeichnung === null ? null : obj.kurzbezeichnung;
-		if (obj.schulnummer === undefined)
-			throw new Error('invalid json format, missing attribute schulnummer');
-		result.schulnummer = obj.schulnummer;
+		result.schulnummerStatistik = (obj.schulnummerStatistik === undefined) ? null : obj.schulnummerStatistik === null ? null : obj.schulnummerStatistik;
 		if (obj.name === undefined)
 			throw new Error('invalid json format, missing attribute name');
 		result.name = obj.name;
@@ -144,7 +142,7 @@ export class SchulEintrag extends JavaObject {
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		result += '"kurzbezeichnung" : ' + ((obj.kurzbezeichnung === null) ? 'null' : JSON.stringify(obj.kurzbezeichnung)) + ',';
-		result += '"schulnummer" : ' + JSON.stringify(obj.schulnummer) + ',';
+		result += '"schulnummerStatistik" : ' + ((obj.schulnummerStatistik === null) ? 'null' : JSON.stringify(obj.schulnummerStatistik)) + ',';
 		result += '"name" : ' + JSON.stringify(obj.name) + ',';
 		result += '"idSchulform" : ' + ((obj.idSchulform === null) ? 'null' : obj.idSchulform.toString()) + ',';
 		result += '"strassenname" : ' + ((obj.strassenname === null) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
@@ -174,8 +172,8 @@ export class SchulEintrag extends JavaObject {
 		if (obj.kurzbezeichnung !== undefined) {
 			result += '"kurzbezeichnung" : ' + ((obj.kurzbezeichnung === null) ? 'null' : JSON.stringify(obj.kurzbezeichnung)) + ',';
 		}
-		if (obj.schulnummer !== undefined) {
-			result += '"schulnummer" : ' + JSON.stringify(obj.schulnummer) + ',';
+		if (obj.schulnummerStatistik !== undefined) {
+			result += '"schulnummerStatistik" : ' + ((obj.schulnummerStatistik === null) ? 'null' : JSON.stringify(obj.schulnummerStatistik)) + ',';
 		}
 		if (obj.name !== undefined) {
 			result += '"name" : ' + JSON.stringify(obj.name) + ',';

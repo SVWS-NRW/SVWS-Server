@@ -1,10 +1,10 @@
 <template>
-	<div @dragover="checkDropZone($event)" @drop="onDrop(raum)" class="flex flex-col rounded-xl border bg-white dark:bg-black"
+	<div @dragover="checkDropZone($event)" @drop="onDrop(raum)" class="min-w-120 max-w-120 flex flex-col rounded-xl border bg-ui-contrast-0 h-fit"
 		:class="{
-			'shadow-lg shadow-black/5 border-black/10 dark:border-white/10': dragData() === undefined,
-			'border-dashed border-svws dark:border-svws ring-4 ring-svws/25': dragData() !== undefined && dragData() instanceof GostKursklausur,
-			'border-red-500': raumHatFehler(),
-			'bg-red-200': raum.idTermin !== terminSelected.id, // TODO Priorität und warum überhaupt???
+			'shadow-lg shadow-ui-contrast-10 border-ui-contrast-10': dragData() === undefined,
+			'border-dashed border-ui-brand dark:border-ui-brand ring-4 ring-ui-brand/25': (dragData() !== undefined) && (dragData() instanceof GostKursklausur),
+			'border-ui-danger': raumHatFehler(),
+			'bg-ui-danger-secondary': raum.idTermin !== terminSelected.id, // TODO Priorität und warum überhaupt???
 		}">
 		<div class="flex h-full flex-col p-3">
 			<div class="svws-raum-title flex justify-between">
@@ -12,17 +12,17 @@
 					:model-value="raum.idStundenplanRaum === null ? undefined : kMan().stundenplanraumGetByKlausurraum(raum)"
 					:disabled="!hatKompetenzUpdate"
 					headless
-					class="flex-grow"
+					class="grow"
 					@update:model-value="(value : StundenplanRaum | undefined) => void patchKlausurraum(raum.id, { idStundenplanRaum: value !== undefined ? value.id : null })"
 					:item-text="(item: StundenplanRaum) => item !== null ? (item.kuerzel + ' (' + item.groesse+ ' Plätze, ' + item.beschreibung + ')') : ''"
 					:items="raeumeVerfuegbar" />
-				<span class="inline-flex items-center flex-shrink-0  -my-1">
-					<svws-ui-tooltip class="text-error font-bold text-headline-md" v-if="raumHatFehler()">
+				<span class="inline-flex items-center shrink-0">
+					<svws-ui-tooltip class="text-ui-danger font-bold text-headline-md" v-if="raumHatFehler()">
 						<template #content>
 							<template v-if="!raum.idStundenplanRaum">Keine Raumnummer zugeordnet</template>
 							<template v-else-if="anzahlSuS() > kMan().stundenplanraumGetByKlausurraum(raum).groesse">Derzeitige Raumbelegung überschreitet die Raumkapazität</template>
 						</template>
-						<span class="icon icon-error i-ri-alert-fill" />
+						<span class="icon icon-ui-danger i-ri-alert-fill" />
 					</svws-ui-tooltip>
 					<!--<span v-if="multijahrgang()" class="text-button">{{ GostHalbjahr.fromIDorException(kMan().terminGetByIdOrException(raum.idTermin).halbjahr).jahrgang }}</span>-->
 					<template v-if="multijahrgang()">
@@ -31,12 +31,12 @@
 					</template>
 				</span>
 			</div>
-			<svws-ui-table :items="[]" :columns="cols" :no-data="klausurenImRaum().size() === 0" no-data-text="Noch keine Klausuren zugewiesen." class="mt-6">
+			<svws-ui-table :items="[]" :columns="cols" :no-data="klausurenImRaum().size() === 0" no-data-text="Noch keine Klausuren zugewiesen." class="mt-4">
 				<template #header><span /></template>
 				<template #body>
 					<div v-for="klausur of klausurenImRaum()" :key="klausur.id" class="svws-ui-tr cursor-grab" role="row" :data="klausur" :draggable="hatKompetenzUpdate" @dragstart="onDrag(klausur)"	@dragend="onDrag(undefined)">
 						<div class="svws-ui-td" role="cell">
-							<span v-if="hatKompetenzUpdate" class="icon i-ri-draggable -m-0.5 -ml-3" />
+							<span v-if="hatKompetenzUpdate" class="icon i-ri-draggable" />
 						</div>
 						<div class="svws-ui-td" role="cell">
 							{{ GostHalbjahr.fromIDorException(kMan().vorgabeByKursklausur(klausur).halbjahr).jahrgang }}
@@ -46,17 +46,15 @@
 								<template #content>
 									<s-gost-klausurplanung-kursliste :k-man :kursklausur="klausur" :termin="kMan().terminOrNullByKursklausur(klausur)!" :benutzer-kompetenzen />
 								</template>
-								<span class="svws-ui-badge hover:opacity-75" :style="`--background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
+								<span class="svws-ui-badge hover:opacity-75" :style="`color: var(--color-text-ui-static); background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
 								<svws-ui-tooltip>
 									<template #content>
 										Bemerkung: {{ klausur.bemerkung }}
 									</template>
-									<span class="icon i-ri-edit-2-line icon-primary" v-if="klausur.bemerkung !== null && klausur.bemerkung.trim().length > 0" />
+									<span class="icon i-ri-edit-2-line icon-ui-brand" v-if="(klausur.bemerkung !== null) && (klausur.bemerkung.trim().length > 0)" />
 								</svws-ui-tooltip>
 							</svws-ui-tooltip>
 						</div>
-
-
 						<div class="svws-ui-td" role="cell">{{ kMan().kursLehrerKuerzelByKursklausur(klausur) }}</div>
 						<div class="svws-ui-td flex" role="cell">
 							<div>
@@ -73,23 +71,25 @@
 				</template>
 			</svws-ui-table>
 			<div class="mt-3">
-				<svws-ui-textarea-input class="text-sm" :headless="raum.bemerkung === null || raum.bemerkung.trim().length === 0" :rows="1" resizeable="none" autoresize placeholder="Bemerkungen zum Raum" :disabled="!hatKompetenzUpdate" :model-value="raum.bemerkung" @change="bemerkung => patchKlausurraum(raum.id, {bemerkung})" />
+				<svws-ui-textarea-input class="text-sm" :headless="(raum.bemerkung === null) || (raum.bemerkung.trim().length === 0)" :rows="1" resizeable="none" autoresize placeholder="Bemerkungen zum Raum" :disabled="!hatKompetenzUpdate" :model-value="raum.bemerkung" @change="bemerkung => patchKlausurraum(raum.id, {bemerkung})" />
 			</div>
 			<span class="mt-auto -mb-3 flex w-full items-center justify-between gap-1 text-sm">
 				<div class="py-3" :class="{'opacity-50': klausurenImRaum().size() === 0}">
 					<span class="font-bold">
-						<span v-if="raum.idStundenplanRaum !== null" :class="anzahlSuS() > kMan().stundenplanraumGetByKlausurraum(raum).groesse ? 'text-error' : ''">{{ anzahlSuS() }}/{{ kMan().stundenplanraumGetByKlausurraum(raum).groesse }} belegt, </span>
+						<span v-if="raum.idStundenplanRaum !== null" :class="anzahlSuS() > kMan().stundenplanraumGetByKlausurraum(raum).groesse ? 'text-ui-danger' : ''">{{ anzahlSuS() }}/{{ kMan().stundenplanraumGetByKlausurraum(raum).groesse }} belegt, </span>
 						<span v-else>{{ anzahlSuS() }} Plätze, </span>
 					</span>
 					<span>{{ anzahlRaumstunden }} Raumstunden benötigt</span>
 				</div>
-				<svws-ui-button type="icon" :disabled="!hatKompetenzUpdate" size="small" class="-mr-1" @click="loescheKlausurraum(raum.id)"><span class="icon i-ri-delete-bin-line" /></svws-ui-button>
+				<svws-ui-button type="trash" :disabled="!hatKompetenzUpdate" size="small" @click="loescheKlausurraum(raum.id)" />
 			</span>
 		</div>
 	</div>
 </template>
 
+
 <script setup lang="ts">
+
 	import type { StundenplanRaum, GostKlausurplanManager, GostKlausurenCollectionSkrsKrsData, GostKlausurraum, GostKlausurtermin} from '@core';
 	import { BenutzerKompetenz } from '@core';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';
@@ -170,18 +170,10 @@
 
 </script>
 
-<style lang="postcss">
-.svws-raum-title {
-  .text-input--headless {
-    @apply text-headline-md pl-5;
+<style scoped>
 
-    &::placeholder {
-      @apply font-bold;
-    }
-  }
+	.svws-ui-tr {
+		grid-template-columns: 1.5rem 2rem minmax(4rem, 1.5fr) minmax(4rem, 0.75fr) minmax(4.75rem, 0.5fr) minmax(4rem, 0.25fr) minmax(4rem, 1.25fr) ;
+	}
 
-  .svws-ui-select.svws-headless .svws-dropdown-icon {
-    @apply w-5 h-5 -left-1 text-base top-0.5;
-  }
-}
 </style>

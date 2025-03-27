@@ -102,6 +102,7 @@ export class SchuldateiOrganisationseinheitManager extends JavaObject {
 		if ((this._organisationseinheit.oeart !== null) && (!this._managerSchuldatei.katalogOrganisationseinheitarten.hasEintrag(this._organisationseinheit.oeart)))
 			throw new IllegalArgumentException(JavaString.format("Die Art %s der Organisationseinheit mit der Schulnummer %s hat keinen zugehörigen Katalog-Eintrag.", this._organisationseinheit.oeart, this._organisationseinheit.schulnummer))
 		this.validateGrunddaten();
+		this.validateSchulform();
 		this.validateAdressen();
 		this.validateMerkmale();
 		this.validateErreichbarkeiten();
@@ -159,7 +160,6 @@ export class SchuldateiOrganisationseinheitManager extends JavaObject {
 				if (grunddaten.internatsplaetze > 0)
 					throw new IllegalArgumentException("Die Internatsplätze haben einen Wert > 0 bei den Grunddaten der Organisationseinheit mit der Schulnummer " + this._organisationseinheit.schulnummer + " ,obwohl kein Internatsbetrieb vorliegt.")
 			}
-			this.validateSchulform(grunddaten);
 		}
 	}
 
@@ -173,13 +173,13 @@ export class SchuldateiOrganisationseinheitManager extends JavaObject {
 	 * </ol>
 	 *
 	 * @param schuljahr    das schuljahr
-	 * @param grunddaten   die Grunddaten
+	 * @param oe   die Organisatinseinheit
 	 *
 	 * @return ein Array mit den drei Werten zur Schulform
 	 */
-	private static getSchulformInfo(schuljahr : number, grunddaten : SchuldateiOrganisationseinheitGrunddaten) : Array<string> {
+	private static getSchulformInfo(schuljahr : number, oe : SchuldateiOrganisationseinheit) : Array<string> {
 		const sf : Array<string> = ["", "", ""];
-		for (const schulform of grunddaten.schulform) {
+		for (const schulform of oe.schulform) {
 			if (SchuldateiUtils.pruefeSchuljahr(schuljahr, schulform)) {
 				if (JavaObject.equalsTranspiler("Schulform", (schulform.schulformcode))) {
 					sf[0] = schulform.schulformwert;
@@ -200,38 +200,37 @@ export class SchuldateiOrganisationseinheitManager extends JavaObject {
 	 * Die Schulformcodes "Schulform" und "SchulformASD" müssen immer zusammen auftreten und der
 	 * Schlüsselwert des Katalogeintrags von SchulformASD muss dem Wert von Schulform entsprechen!
 	 *
-	 * @param grunddaten   die Grundaten der Organisationseinheit.
-	 *
 	 * @throws IllegalArgumentException falls die Daten der Schuldatei nicht fehlerfrei eingelesen werden können
 	 */
-	private validateSchulform(grunddaten : SchuldateiOrganisationseinheitGrunddaten) : void {
+	private validateSchulform() : void {
+		const oe : SchuldateiOrganisationseinheit | null = this._organisationseinheit;
 		let isSchulform : boolean = false;
 		let isSchulformASD : boolean = false;
 		let schulformWert : string = "";
 		let schulformAsdWert : string = "";
 		let schuljahr : number = SchuldateiUtils._immerGueltigBis;
-		for (const schulform of grunddaten.schulform) {
+		for (const schulform of oe.schulform) {
 			if (JavaObject.equalsTranspiler("Schulform", (schulform.schulformcode))) {
 				schulformWert = schulform.schulformwert;
 				isSchulform = true;
 			} else
 				if (JavaObject.equalsTranspiler("SchulformASD", (schulform.schulformcode))) {
 					if (!this._managerSchuldatei.katalogSchulformen.hasEintragInZeitraum(schulform, schulform.schulformwert))
-						throw new IllegalArgumentException("Die SchulformASD '" + schulform.schulformwert + "' ist bei der Organisationseinheit mit der Schulnummer " + grunddaten.schulnummer + " nicht im Katalog enthalten.")
+						throw new IllegalArgumentException("Die SchulformASD '" + schulform.schulformwert + "' ist bei der Organisationseinheit mit der Schulnummer " + oe.schulnummer + " nicht im Katalog enthalten.")
 					schulformAsdWert = schulform.schulformwert;
 					schuljahr = (schulform.gueltigbis === null ? SchuldateiUtils._immerGueltigBis : SchuldateiUtils.schuljahrAusDatum(schulform.gueltigbis));
 					isSchulformASD = true;
 				} else
 					if (JavaObject.equalsTranspiler("Schulart", (schulform.schulformcode))) {
 						if (!this._managerSchuldatei.katalogSchularten.hasEintragInZeitraum(schulform, schulform.schulformwert))
-							throw new IllegalArgumentException("Die Schulart '" + schulform.schulformwert + "' ist bei der Organisationseinheit mit der Schulnummer " + grunddaten.schulnummer + " nicht im Katalog enthalten.")
+							throw new IllegalArgumentException("Die Schulart '" + schulform.schulformwert + "' ist bei der Organisationseinheit mit der Schulnummer " + oe.schulnummer + " nicht im Katalog enthalten.")
 					}
 		}
 		if (!isSchulform || !isSchulformASD)
-			throw new IllegalArgumentException("Die Schulform ist bei der Organisationseinheit mit der Schulnummer " + grunddaten.schulnummer + " nicht gesetzt.")
+			throw new IllegalArgumentException("Die Schulform ist bei der Organisationseinheit mit der Schulnummer " + oe.schulnummer + " nicht gesetzt.")
 		const eintrag : SchuldateiKatalogeintrag | null = this._managerSchuldatei.katalogSchulformen.getEintragBySchuljahrAndWert(schuljahr, schulformAsdWert);
 		if (eintrag === null || !JavaObject.equalsTranspiler(eintrag.schluessel, (schulformWert)))
-			throw new IllegalArgumentException("Die Schulformen Schulform und SchulformASD passen nicht zusammen bei der Organisationseinheit mit der Schulnummer " + grunddaten.schulnummer + ".")
+			throw new IllegalArgumentException("Die Schulformen Schulform und SchulformASD passen nicht zusammen bei der Organisationseinheit mit der Schulnummer " + oe.schulnummer + ".")
 	}
 
 	/**
@@ -300,7 +299,7 @@ export class SchuldateiOrganisationseinheitManager extends JavaObject {
 	 * @throws IllegalArgumentException falls die Daten der Schuldatei nicht fehlerfrei eingelesen werden können
 	 */
 	private validateEigenschaften() : void {
-		for (const eigenschaft of this._organisationseinheit.oeEigenschaften) {
+		for (const eigenschaft of this._organisationseinheit.oe_eigenschaften) {
 			if (!JavaObject.equalsTranspiler(this._organisationseinheit.schulnummer, (eigenschaft.schulnummer)))
 				throw new IllegalArgumentException("Die Schulnummer " + eigenschaft.schulnummer + " bei der Erreichbarkeit passt nicht zu der Schulnummer der Organisationseinheit " + this._organisationseinheit.schulnummer + ".")
 			if (!this._managerSchuldatei.katalogOergangisationseinheitEigenschaften.hasEintragInZeitraum(eigenschaft, eigenschaft.eigenschaft))
@@ -376,28 +375,34 @@ export class SchuldateiOrganisationseinheitManager extends JavaObject {
 	/**
 	 * Gibt den ersten Teil der amtlichen Bezeichnung der Organisationseinheit zurück
 	 *
+	 * @param schuljahr   das Schuljahr
+	 *
 	 * @return die amtliche Bezeichnung
 	 */
-	public getAmtlicheBezeichnung1() : string {
-		return this._organisationseinheit.amtsbez1;
+	public getAmtlicheBezeichnung1(schuljahr : number) : string {
+		return this.getGrunddaten(schuljahr).amtsbez1;
 	}
 
 	/**
 	 * Gibt den zweiten Teil der amtlichen Bezeichnung der Organisationseinheit zurück
 	 *
+	 * @param schuljahr   das Schuljahr
+	 *
 	 * @return die amtliche Bezeichnung
 	 */
-	public getAmtlicheBezeichnung2() : string {
-		return this._organisationseinheit.amtsbez2;
+	public getAmtlicheBezeichnung2(schuljahr : number) : string {
+		return this.getGrunddaten(schuljahr).amtsbez2;
 	}
 
 	/**
 	 * Gibt den dritten Teil der amtlichen Bezeichnung der Organisationseinheit zurück
 	 *
+	 * @param schuljahr   das Schuljahr
+	 *
 	 * @return die amtliche Bezeichnung
 	 */
-	public getAmtlicheBezeichnung3() : string {
-		return this._organisationseinheit.amtsbez3;
+	public getAmtlicheBezeichnung3(schuljahr : number) : string {
+		return this.getGrunddaten(schuljahr).amtsbez3;
 	}
 
 	/**
@@ -445,10 +450,6 @@ export class SchuldateiOrganisationseinheitManager extends JavaObject {
 				eintrag = other;
 		}
 		this._mapGrunddatenBySchuljahr.put(schuljahr, eintrag);
-		const sf : Array<string> = SchuldateiOrganisationseinheitManager.getSchulformInfo(schuljahr, eintrag);
-		this._mapSchulformBySchuljahr.put(schuljahr, sf[0]);
-		this._mapSchulformASDBySchuljahr.put(schuljahr, sf[1]);
-		this._mapSchulartBySchuljahr.put(schuljahr, sf[2]);
 		return eintrag;
 	}
 
@@ -722,8 +723,12 @@ export class SchuldateiOrganisationseinheitManager extends JavaObject {
 	 * @throws IllegalArgumentException wenn für das Schuljahr keine Daten vorhanden sind
 	 */
 	public getSchulform(schuljahr : number) : string {
-		if (!this._mapSchulformBySchuljahr.containsKey(schuljahr))
-			this.getGrunddaten(schuljahr);
+		if (!this._mapSchulformBySchuljahr.containsKey(schuljahr)) {
+			const sf : Array<string> = SchuldateiOrganisationseinheitManager.getSchulformInfo(schuljahr, this._organisationseinheit);
+			this._mapSchulformBySchuljahr.put(schuljahr, sf[0]);
+			this._mapSchulformASDBySchuljahr.put(schuljahr, sf[1]);
+			this._mapSchulartBySchuljahr.put(schuljahr, sf[2]);
+		}
 		const result : string | null = this._mapSchulformBySchuljahr.get(schuljahr);
 		if (result === null)
 			throw new IllegalArgumentException("Es konnte keine Schulform für die Organisationseinheit mit der Schulnummer " + this._organisationseinheit.schulnummer + " in diesem Schuljahr gefunden werden.")
@@ -862,7 +867,7 @@ export class SchuldateiOrganisationseinheitManager extends JavaObject {
 		if (listEigenschaften !== null)
 			return listEigenschaften;
 		listEigenschaften = new ArrayList();
-		for (const eintrag of this._organisationseinheit.oeEigenschaften)
+		for (const eintrag of this._organisationseinheit.oe_eigenschaften)
 			if (SchuldateiUtils.pruefeSchuljahr(schuljahr, eintrag))
 				listEigenschaften.add(eintrag);
 		this._mapEigenschaftenBySchuljahr.put(schuljahr, listEigenschaften);

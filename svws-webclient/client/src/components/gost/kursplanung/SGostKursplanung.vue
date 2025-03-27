@@ -1,17 +1,17 @@
 <template>
-	<div class="page--content page--content--full page--content--gost-grid" :class="{'svws-blockungstabelle-hidden': (blockungstabelleHidden() === 'alles'), 'svws-blockungstabelle-schienen-hidden': (blockungstabelleHidden() === 'schienen')}">
+	<div class="page page-flex-row">
 		<Teleport to=".svws-ui-header--actions" v-if="isMounted">
 			<svws-ui-button-select v-if="hatBlockung" type="secondary" :dropdown-actions="dropdownList">
-				<template #icon> <svws-ui-spinner spinning v-if="apiStatus.pending" /> <span class="icon-sm i-ri-printer-line" v-else /> </template>
+				<template #icon> <svws-ui-spinner spinning v-if="apiStatus.pending" /> <span class="icon i-ri-printer-line" v-else /> </template>
 			</svws-ui-button-select>
 			<svws-ui-modal-hilfe> <hilfe-kursplanung /> </svws-ui-modal-hilfe>
 		</Teleport>
 		<template v-if="hatBlockung">
 			<Teleport to=".svws-sub-nav-target" v-if="isMounted">
 				<svws-ui-sub-nav :focus-switching-enabled :focus-help-visible>
-					<div v-if="hatUpdateKompetenz" class="flex gap-0.5 items-center leading-none ml-2">
-						<div class="text-button font-normal mr-1 -mt-px">Ergebnis:</div>
-						<svws-ui-button type="transparent" @click.stop="ergebnisAbleiten()" title="Eine neue Blockung auf Grundlage dieses Ergebnisses erstellen." class="text-black dark:text-white subNavigationFocusField">
+					<div v-if="hatUpdateKompetenz" class="flex gap-2 items-center">
+						<div class="text-button font-normal">Ergebnis:</div>
+						<svws-ui-button type="transparent" @click.stop="ergebnisAbleiten()" title="Eine neue Blockung auf Grundlage dieses Ergebnisses erstellen." class="text-ui-contrast-100 subNavigationFocusField">
 							<span class="icon-sm i-ri-file-copy-line" /> Ableiten
 						</svws-ui-button>
 						<s-gost-kursplanung-kursansicht-modal-blockung-hochschreiben :get-datenmanager :ergebnis-hochschreiben v-slot="{ openModal }">
@@ -29,8 +29,8 @@
 								<span class="icon-sm i-ri-loop-left-line" /> Synchronisieren
 							</svws-ui-button>
 						</s-gost-kursplanung-kursansicht-modal-ergebnis-synchronisieren>
-						<div class="border-l border-black/10 dark:border-white/10 ml-6 h-5 w-7" />
-						<div class="text-button font-normal mr-1 -mt-px">Kurse:</div>
+						<div class="border-l border-ui-contrast-10 ml-6 h-5 w-7" />
+						<div class="text-button font-normal">Kurse:</div>
 						<s-gost-kursplanung-kursansicht-modal-irrlaeufer v-if="props.getErgebnismanager().getOfSchuelerMapIDzuUngueltigeKurse().size()" :update-kurs-schueler-zuordnungen :get-ergebnismanager v-slot="{ openModal }">
 							<svws-ui-button type="error" size="small" @click="openModal()" title="Zeigt ungültige Schüler/Kurs-Zuordnungen, die aufgelöst werden können">
 								<span class="icon-sm i-ri-error-warning-line" /> Ungültige Kurszuordnungen
@@ -55,7 +55,7 @@
 							<template #icon> <svws-ui-spinner spinning v-if="apiStatus.pending" /> <span class="icon-sm i-ri-pushpin-line" v-else /> </template>
 						</svws-ui-button-select>
 						<template v-if="istVorlage">
-							<svws-ui-button @click="removeKurse(getKursauswahl())" :disabled="getKursauswahl().size() < 1" :class="getKursauswahl().size() < 1 ? 'opacity-50' : 'text-error'" size="small" type="transparent" title="Kurse aus Auswahl löschen">
+							<svws-ui-button @click="removeKurse(getKursauswahl())" :disabled="getKursauswahl().size() < 1" :class="getKursauswahl().size() < 1 ? 'opacity-50' : 'text-ui-danger'" size="small" type="transparent" title="Kurse aus Auswahl löschen">
 								<span class="icon-sm i-ri-delete-bin-line" /> Entfernen
 							</svws-ui-button>
 						</template>
@@ -73,23 +73,24 @@
 							</div>
 						</template>
 					</div>
-					<div class="flex gap-0.5 items-center leading-none" :class="{ 'ml-2': !hatUpdateKompetenz }">
-						<div class="border-l border-black/10 dark:border-white/10 ml-6 h-5 w-7" />
-						<div class="text-button font-normal mr-1 -mt-px">Regeln:</div>
+					<div class="flex gap-2 items-center" :class="{ 'ml-2': !hatUpdateKompetenz }">
+						<div class="border-l border-ui-contrast-10 ml-6 h-5 w-7" />
+						<div class="text-button font-normal">Regeln:</div>
 						<svws-ui-button @click="onToggle" size="small" type="transparent" title="Alle Regeln anzeigen" :class="{'mr-2': regelzahl}">
 							<span class="icon-sm i-ri-settings-3-line" /> Detailansicht&nbsp;<template #badge v-if="regelzahl"> {{ regelzahl }} </template>
 						</svws-ui-button>
 					</div>
 				</svws-ui-sub-nav>
 			</Teleport>
-			<s-gost-kursplanung-kursansicht :zeige-schienenbezeichnungen :set-zeige-schienenbezeichnungen
+			<s-gost-kursplanung-kursansicht class="min-w-fit"
+				:zeige-schienenbezeichnungen :set-zeige-schienenbezeichnungen
 				:halbjahr :faecher-manager :hat-ergebnis :ergebnis-hochschreiben :api-status :set-blockungstabelle-hidden
 				:get-datenmanager :get-kursauswahl :set-kursauswahl :get-ergebnismanager :map-fachwahl-statistik :map-lehrer :schueler-filter :kurssortierung
 				:regeln-update :update-kurs-schienen-zuordnung :patch-kurs :add-kurs :remove-kurse :add-kurs-lehrer
 				:patch-schiene :add-schiene :remove-schiene :remove-kurs-lehrer :ergebnis-aktivieren :existiert-schuljahresabschnitt
 				:blockungstabelle-hidden :add-schiene-kurs :remove-schiene-kurs :combine-kurs :split-kurs :hat-update-kompetenz />
-			<router-view name="gost_kursplanung_schueler_auswahl" />
-			<router-view />
+			<router-view name="gost_kursplanung_schueler_auswahl" class="min-w-100" />
+			<router-view class="min-w-fit" />
 			<Teleport to="body">
 				<aside class="app-layout--aside max-w-2xl h-auto" v-if="!collapsed">
 					<div class="app-layout--aside-container relative h-auto max-h-full">
@@ -102,22 +103,17 @@
 				</aside>
 			</Teleport>
 		</template>
-		<div v-else class="col-span-full">
-			<div class="p-3 border-2 border-dashed border-black/10 dark:border-white/10 rounded-lg max-w-xl">
-				<div class="text-headline-md mb-5">Keine Blockung ausgewählt</div>
-				<div v-if="hatUpdateKompetenz" class="opacity-75 leading-tight flex flex-col gap-2">
-					<div>
-						<svws-ui-button type="icon" class="inline align-middle" title="Neue Blockung hinzufügen" @click.stop="addBlockung">
-							<span class="icon inline-block i-ri-add-line" />
-						</svws-ui-button>
-						<span class="align-middle">Neue Blockung erstellen</span>
-					</div>
-					<div v-if="persistiert">
-						<svws-ui-button :disabled="apiStatus.pending" type="icon" class="inline align-middle" title="Erstelle eine Blockung aus der Persistierung in den Leistungsdaten" @click.stop="restoreBlockung">
-							<span class="icon-sm inline-block i-ri-arrow-turn-back-line -mb-0.5" />
-						</svws-ui-button>
-						<span class="align-middle">Wiederherstellen einer Blockung aus den bestehenden Leistungsdaten</span>
-					</div>
+		<div v-else>
+			<div class="p-3 border-2 border-dashed border-ui-contrast-10 rounded-lg">
+				<div class="text-headline-md mb-5">Keine Blockung für dieses Halbjahr vorhanden</div>
+				<div v-if="hatUpdateKompetenz">
+					<svws-ui-button type="transparent" @click.stop="addBlockung">
+						<span class="icon i-ri-add-line" /> Neue Blockung hinzufügen
+					</svws-ui-button>
+					<div class="h-2" />
+					<svws-ui-button :disabled="apiStatus.pending" type="transparent" title="Erstelle eine Blockung aus der Persistierung in den Leistungsdaten" @click.stop="restoreBlockung">
+						<span class="icon i-ri-arrow-turn-back-line" /> Wiederherstellen einer Blockung aus den bestehenden Leistungsdaten
+					</svws-ui-button>
 				</div>
 			</div>
 		</div>
@@ -284,23 +280,3 @@
 	});
 
 </script>
-
-<style lang="postcss" scoped>
-
-	.page--content {
-		@apply grid overflow-y-hidden overflow-x-auto h-full pb-3 pt-6 lg:gap-x-12;
-		grid-auto-rows: 100%;
-		grid-template-columns: max-content minmax(18rem, 0.4fr) 1fr;
-		grid-auto-columns: max-content;
-
-		&.svws-blockungstabelle-schienen-hidden {
-			grid-template-columns: min-content minmax(20rem, 0.15fr) 1fr;
-		}
-
-		&.svws-blockungstabelle-hidden {
-			grid-template-columns: max-content minmax(20rem, 0.15fr) 1fr;
-
-		}
-	}
-
-</style>

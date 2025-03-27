@@ -14,13 +14,3 @@
 	}>();
 
 </script>
-
-<style lang="postcss">
-.svws-ui-spinner {
-  @apply animate-spin hidden;
-
-  .svws-api--pending & {
-    @apply inline-block;
-  }
-}
-</style>

@@ -14,6 +14,11 @@
 						Info
 					</template>
 					<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita, eos consequatur inventore, voluptate exercitationem labore cupiditate distinctio nesciunt quisquam mollitia perspiciatis laboriosam sint eius itaque vitae accusamus dolorem molestias adipisci!</p>
+					<template #stack>
+						RouteManager@http://localhost:3000/src/router/RouteManager.ts?t=1677784265352:23:5
+						create@http://localhost:3000/src/router/RouteManager.ts?t=1677784265352:46:30
+						@http://localhost:3000/src/router/RouteManager.ts?t=1677784265352:196:43
+					</template>
 				</svws-ui-notification>
 			</div>
 		</Variant>
@@ -24,6 +29,11 @@
 						Success
 					</template>
 					<p>Das hat gut geklappt!</p>
+					<template #stack>
+						RouteManager@http://localhost:3000/src/router/RouteManager.ts?t=1677784265352:23:5
+						create@http://localhost:3000/src/router/RouteManager.ts?t=1677784265352:46:30
+						@http://localhost:3000/src/router/RouteManager.ts?t=1677784265352:196:43
+					</template>
 				</svws-ui-notification>
 			</div>
 		</Variant>
@@ -34,6 +44,11 @@
 						Warning
 					</template>
 					<p>Lorem ipsum dolor sit, amet consectetur adipisicing elit.</p>
+					<template #stack>
+						RouteManager@http://localhost:3000/src/router/RouteManager.ts?t=1677784265352:23:5
+						create@http://localhost:3000/src/router/RouteManager.ts?t=1677784265352:46:30
+						@http://localhost:3000/src/router/RouteManager.ts?t=1677784265352:196:43
+					</template>
 				</svws-ui-notification>
 			</div>
 		</Variant>
@@ -44,6 +59,11 @@
 						UserNotificationException
 					</template>
 					<p>Something went wrong. Das ist ein Beispiel für eine UserNotificationException.</p>
+					<template #stack>
+						RouteManager@http://localhost:3000/src/router/RouteManager.ts?t=1677784265352:23:5
+						create@http://localhost:3000/src/router/RouteManager.ts?t=1677784265352:46:30
+						@http://localhost:3000/src/router/RouteManager.ts?t=1677784265352:196:43
+					</template>
 				</svws-ui-notification>
 			</div>
 		</Variant>
@@ -65,14 +85,13 @@
 	</Story>
 </template>
 
-<script setup lang="ts">
-</script>
+<style scoped>
 
-<style>
-html {
-	font-size: 16px !important;
-}
-body {
-	font-size: 0.875rem !important;
-}
+	html {
+		font-size: 16px !important;
+	}
+	body {
+		font-size: 0.875rem !important;
+	}
+
 </style>

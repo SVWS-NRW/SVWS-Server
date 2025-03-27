@@ -1,6 +1,7 @@
 package de.svws_nrw.module.reporting.proxytypes.jahrgang;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
@@ -39,6 +40,7 @@ public class ProxyReportingJahrgang extends ReportingJahrgang {
 				jahrgangsDaten.id,
 				jahrgangsDaten.idFolgejahrgang,
 				null,
+				null,
 				ersetzeNullBlankTrim(jahrgangsDaten.kuerzel),
 				ersetzeNullBlankTrim(jahrgangsDaten.kuerzelSchulgliederung),
 				ersetzeNullBlankTrim(jahrgangsDaten.kuerzelStatistik),
@@ -47,6 +49,7 @@ public class ProxyReportingJahrgang extends ReportingJahrgang {
 				schuljahresabschnitt,
 				jahrgangsDaten.sortierung);
 
+		this.jahrgang = (jahrgangsDaten.kuerzelStatistik == null) ? null : Jahrgaenge.data().getWertBySchluessel(jahrgangsDaten.kuerzelStatistik);
 		this.reportingRepository = reportingRepository;
 	}
 

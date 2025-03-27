@@ -6,16 +6,16 @@ import { RouteNode } from "~/router/RouteNode";
 
 import type { SchuleDatenaustauschWenomProps } from "~/components/schule/datenaustausch/wenom/SSchuleDatenaustauschWenomProps";
 import type { RouteApp } from "../../RouteApp";
-import { routeSchule } from "../RouteSchule";
 import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
+import { RouteDataSchuleDatenaustauschWenom } from "./RouteDataSchuleDatenaustauschWenom";
 
 const SSchuleDatenaustauschWenom = () => import("~/components/schule/datenaustausch/wenom/SSchuleDatenaustauschWenom.vue");
 
-export class RouteSchuleDatenaustauschWenom extends RouteNode<any, RouteApp> {
+export class RouteSchuleDatenaustauschWenom extends RouteNode<RouteDataSchuleDatenaustauschWenom, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.NOTENMODUL_ADMINISTRATION ], "schule.datenaustausch.wenom", "wenom", SSchuleDatenaustauschWenom);
-		super.mode = ServerMode.DEV;
+		super(Schulform.values(), [ BenutzerKompetenz.NOTENMODUL_ADMINISTRATION ], "schule.datenaustausch.wenom", "wenom", SSchuleDatenaustauschWenom, new RouteDataSchuleDatenaustauschWenom());
+		super.mode = ServerMode.ALPHA;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Webnotenmanager";
 		super.menugroup = RouteSchuleMenuGroup.DATENAUSTAUSCH;
@@ -23,24 +23,30 @@ export class RouteSchuleDatenaustauschWenom extends RouteNode<any, RouteApp> {
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
 		if (isEntering)
-			routeSchule.data.mapInitialKennwoerter = await routeSchule.data.wenomGetEnmCredentials();
+			await this.data.init();
+	}
+
+	public async leave(): Promise<void> {
+		this.data.reset();
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuleDatenaustauschWenomProps {
 		return {
-			mapInitialKennwoerter: () => routeSchule.data.mapInitialKennwoerter,
-			getEnmDaten: routeSchule.data.wenomGetEnmDaten,
-			getEnmCredentials: routeSchule.data.wenomGetEnmCredentials,
-			getCredentials: routeSchule.data.wenomGetCredentials,
-			setCredentials: routeSchule.data.wenomSetCredentials,
-			removeCredentials: routeSchule.data.wenomRemoveCredential,
-			synchronize: routeSchule.data.wenomSynchronize,
-			download: routeSchule.data.wenomDownload,
-			upload: routeSchule.data.wenomUpload,
-			truncate: routeSchule.data.wenomTruncate,
-			reset: routeSchule.data.wenomReset,
-			check: routeSchule.data.wenomCheck,
-			setup: routeSchule.data.wenomSetup,
+			connected: this.data.connected,
+			connectionInfo: () => this.data.connectionInfo,
+			enmDaten: () => this.data.enmDaten,
+			mapEnmInitialKennwoerter: () => this.data.mapEnmInitialKennwoerter,
+			connect: this.data.connect,
+			trustCertificate: this.data.trustCertificate,
+			serverConfig: () => this.data.mapEnmServerConfigServer,
+			setServerConfigElement: this.data.wenomSetServerConfigElement,
+			setCredentials: this.data.wenomSetCredentials,
+			removeCredentials: this.data.wenomRemoveCredential,
+			synchronize: this.data.wenomSynchronize,
+			download: this.data.wenomDownload,
+			upload: this.data.wenomUpload,
+			truncate: this.data.wenomTruncate,
+			reset: this.data.wenomReset,
 		};
 	}
 }

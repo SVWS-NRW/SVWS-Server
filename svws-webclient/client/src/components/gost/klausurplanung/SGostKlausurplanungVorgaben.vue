@@ -5,11 +5,13 @@
 	<Teleport to=".router-tab-bar--subnav" v-if="isMounted">
 		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" :halbjahr="halbjahr" />
 	</Teleport>
-	<div class="page--content page--content--full">
-		<svws-ui-content-card title="Klausurvorgaben">
-			<svws-ui-table id="vorgabenTable" :items="vorgaben()" :columns="cols" v-model:clicked="selectedVorgabeRow" :clickable="hatKompetenzUpdate" @click="startEdit" :no-data="vorgaben().isEmpty()" :no-data-text="'Keine ' + (jahrgangsdaten?.abiturjahr === -1 ? 'Vorlagen für ' : '') + 'Klausurvorgaben für das ' + (quartalsauswahl.value !== 0 ? quartalsauswahl.value + '. Quartal im' : '') + ' Halbjahr ' + halbjahr.kuerzel + ' vorhanden.'">
+	<div class="page page-flex-row">
+		<div class="grow min-w-fit flex flex-col gap-4 overflow-y-hidden">
+			<div class="text-headline-md">Klausurvorgaben</div>
+			<svws-ui-table scroll id="vorgabenTable" :items="vorgaben()" :columns="cols" v-model:clicked="selectedVorgabeRow" :clickable="hatKompetenzUpdate" @click="startEdit" :no-data="vorgaben().isEmpty()"
+				:no-data-text="'Keine ' + (jahrgangsdaten?.abiturjahr === -1 ? 'Vorlagen für ' : '') + 'Klausurvorgaben für das ' + (quartalsauswahl.value !== 0 ? quartalsauswahl.value + '. Quartal im' : '') + ' Halbjahr ' + halbjahr.kuerzel + ' vorhanden.'">
 				<template #cell(idFach)="{ value }">
-					<span class="svws-ui-badge" :style="{ '--background-color': getBgColor(kMan().getFaecherManager(jahrgangsdaten!.abiturjahr).get(value)?.kuerzel || null) }">{{ kMan().getFaecherManager(jahrgangsdaten!.abiturjahr).get(value)?.bezeichnung }}</span>
+					<span class="svws-ui-badge" :style="`color: var(--color-text-ui-static); background-color: ${getBgColor(kMan().getFaecherManager(jahrgangsdaten!.abiturjahr).get(value)?.kuerzel || null)}`">{{ kMan().getFaecherManager(jahrgangsdaten!.abiturjahr).get(value)?.bezeichnung }}</span>
 				</template>
 				<template #cell(quartal)="{value}">
 					{{ value }}.
@@ -42,11 +44,14 @@
 					<svws-ui-button type="icon" @click="neueVorgabe" :disabled="!hatKompetenzUpdate || selectedVorgabeRow !== undefined" title="Neue Vorgabe erstellen"><span class="icon i-ri-add-line" /></svws-ui-button>
 				</template>
 			</svws-ui-table>
-		</svws-ui-content-card>
-		<svws-ui-content-card id="vorgabenEdit" v-if="hatKompetenzUpdate" :title="activeVorgabe.idVorgabe === 0 ? 'Neue Vorgabe erstellen' : (activeVorgabe.idVorgabe > 0 ? 'Vorgabe bearbeiten' : 'Bearbeiten')" class="sticky top-8 -ml-2">
-			<template #actions v-if="activeVorgabe.idVorgabe > 0">
-				<svws-ui-button type="danger" @click="loescheKlausurvorgabe" :disabled="activeVorgabe.idVorgabe < 0 || activeVorgabe.idFach === -1 || activeVorgabe.kursart === '' || activeVorgabe.quartal === -1 || (kMan().istVorgabeVerwendetByKursklausur(activeVorgabe))"><span class="icon i-ri-delete-bin-line" />Löschen</svws-ui-button>
-			</template>
+		</div>
+		<div v-if="hatKompetenzUpdate" class="min-w-100 max-w-100 flex flex-col gap-8" id="vorgabenEdit">
+			<div class="flex flex-row justify-between">
+				<span class="text-headline-md">{{ activeVorgabe.idVorgabe === 0 ? 'Neue Vorgabe erstellen' : (activeVorgabe.idVorgabe > 0 ? 'Vorgabe bearbeiten' : 'Bearbeiten') }}</span>
+				<template v-if="activeVorgabe.idVorgabe > 0">
+					<svws-ui-button type="danger" @click="loescheKlausurvorgabe" :disabled="activeVorgabe.idVorgabe < 0 || activeVorgabe.idFach === -1 || activeVorgabe.kursart === '' || activeVorgabe.quartal === -1 || (kMan().istVorgabeVerwendetByKursklausur(activeVorgabe))"><span class="icon i-ri-delete-bin-line" />Löschen</svws-ui-button>
+				</template>
+			</div>
 			<template v-if="activeVorgabe.idVorgabe < 0">
 				<span class="opacity-50">Zum Bearbeiten eine Vorgabe in der Tabelle auswählen oder mit <span class="icon i-ri-add-line inline-block text-button -my-0.5" /> eine neue erstellen.</span>
 			</template>
@@ -98,7 +103,7 @@
 					<svws-ui-button @click="saveKlausurvorgabe" :disabled="activeVorgabe.idFach === -1 || activeVorgabe.kursart === '' || activeVorgabe.quartal === -1">Speichern</svws-ui-button>
 				</div>
 			</template>
-		</svws-ui-content-card>
+		</div>
 	</div>
 </template>
 
@@ -131,7 +136,7 @@
 		set(val) {
 			if (val !== undefined)
 				activeVorgabe.value.idFach = val.id;
-		}
+		},
 	});
 
 	const faecherSortiert = computed(() => {
@@ -201,7 +206,7 @@
 		{key: 'istMdlPruefung', label: 'M', align: "center", tooltip: 'Mündliche Prüfung', fixedWidth: 2.5},
 		{key: 'istAudioNotwendig', label: 'A', align: "center", tooltip: 'Mit Audioteil', fixedWidth: 2.5},
 		{key: 'istVideoNotwendig', label: 'V', align: "center", tooltip: 'Mit Videoteil', fixedWidth: 2.5},
-		{key: 'bemerkungVorgabe', label: 'Bemerkung', span: 1.25}
+		{key: 'bemerkungVorgabe', label: 'Bemerkung', span: 1.25},
 	];
 
 	function getBgColor(kuerzel: string | null) {
@@ -226,10 +231,3 @@
 	}
 
 </script>
-
-<style lang="postcss" scoped>
-.page--content {
-  @apply grid;
-  grid-template-columns: 1fr minmax(20rem, 0.25fr);
-}
-</style>

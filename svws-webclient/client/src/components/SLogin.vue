@@ -1,79 +1,36 @@
 <template>
-	<svws-ui-app-layout :fullwidth-content="!authentication_success" :class="{'app--layout--login': !authentication_success}">
-		<template #main>
-			<div class="login-wrapper">
-				<div class="login-container pt-5">
-					<div class="login-form modal modal--sm my-auto">
-						<div class="modal--content-wrapper pb-3">
-							<div class="modal--content px-5">
-								<div class="mb-6 mt-2">
-									<h1 class="font-bold text-headline-xl leading-none w-full py-2">
-										SVWS NRW
-									</h1>
-									<h2 class="text-headline-sm leading-tight opacity-50">Schulverwaltung für<br>Nordrhein-Westfalen</h2>
-								</div>
-								<svws-ui-input-wrapper center>
-									<svws-ui-text-input v-model.trim="inputHostname" type="text" url placeholder="Serveraddresse" @keyup.enter="connect" @focus="inputFocus = true" :debounce-ms="0" />
-									<svws-ui-button type="secondary" @click="connect" :disabled="!(inputDBSchemata.size() === 0 || connecting || inputFocus )" :class="{'opacity-25 hover:opacity-100': inputDBSchemata.size() > 0 && !inputFocus}">
-										<span v-if="inputDBSchemata.size() === 0 || connecting || inputFocus">Verbinden</span>
-										<span v-else>Verbunden</span>
-										<svws-ui-spinner :spinning="connecting" />
-										<span class="icon i-ri-check-line" v-if="!connecting && inputDBSchemata.size() > 0 && !inputFocus" />
-									</svws-ui-button>
-								</svws-ui-input-wrapper>
-								<Transition>
-									<svws-ui-input-wrapper v-if="inputDBSchemata.size() > 0 && !connecting" class="mt-10" center>
-										<svws-ui-select v-model="schema" title="Datenbank-Schema" :items="inputDBSchemata" :item-text="i => i.name ?? 'SCHEMANAME FEHLT'" class="w-full" @update:model-value="schema => schema && setSchema(schema)" />
-										<svws-ui-text-input v-model.trim="username" type="text" placeholder="Benutzername" @keyup.enter="doLogin" ref="refUsername" />
-										<svws-ui-text-input v-model.trim="password" type="password" placeholder="Passwort" @keyup.enter="doLogin" />
-										<svws-ui-spacing />
-										<div class="flex gap-2">
-											<svws-ui-modal-hilfe> <s-login-hilfe /> </svws-ui-modal-hilfe>
-											<svws-ui-button @click="doLogin" type="primary" :disabled="authenticating">
-												Anmelden
-												<svws-ui-spinner v-if="authenticating" spinning />
-												<span class="icon i-ri-login-circle-line" v-else />
-											</svws-ui-button>
-										</div>
-									</svws-ui-input-wrapper>
-								</Transition>
-								<div class="mt-16 text-sm font-medium">
-									<div class="flex gap-2 items-center opacity-50">
-										<img src="/images/Wappenzeichen_NRW_bw.svg" alt="Logo NRW" class="h-11">
-										<div class="text-left flex flex-col">
-											<span class="pb-0.5">Powered by SVWS-NRW</span>
-											<div class="flex gap-2 place-items-center">
-												<div><span class="font-bold">v{{ version }}</span> <a :href="`https://github.com/SVWS-NRW/SVWS-Server/commit/${githash}`" v-if="version.includes('SNAPSHOT')">{{ githash.substring(0, 8) }}</a></div>
-												<div @click="copyToClipboard" class="cursor-pointer place-items-center flex">
-													<span class="icon-sm i-ri-file-copy-line inline-block" v-if="copied === null" />
-													<span class="icon-sm i-ri-error-warning-fill inline-block" v-else-if="copied === false" />
-													<span class="icon-sm i-ri-check-line icon-primary inline-block" v-else />
-												</div>
-											</div>
-											<nav class="flex items-center gap-2">
-												<a class="login-footer-link" href="#">Impressum</a>
-												<datenschutz-modal v-slot="{ openModal }">
-													<a class="login-footer-link" href="#" @click="openModal()">Datenschutz</a>
-												</datenschutz-modal>
-											</nav>
-										</div>
-									</div>
-									<div class="mt-3 -mb-3 opacity-50">
-										<p class="text-sm text-left">
-											Hinweis: Um eine gute Lesbarkeit zu erzeugen, wird bei SVWS-NRW möglichst auf
-											geschlechtsneutrale Begriffe wie Lehrkräfte, Klassenleitung, Erziehungsberechtigte usw.
-											zurückgegriffen. An Stellen, wo das nicht möglich ist, wird versucht alle
-											Geschlechter gleichermaßen zu berücksichtigen.
-										</p>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+	<ui-login-layout :version :githash>
+		<template #logo>
+			<img src="/images/Wappenzeichen_NRW_bw.svg" alt="Logo NRW" class="h-14">
 		</template>
-	</svws-ui-app-layout>
+		<template #main>
+			<div class="grid grow grid-cols-1 gap-3 justify-items-center py-0.5">
+				<svws-ui-text-input v-model.trim="inputHostname" type="text" url placeholder="Serveraddresse" @keyup.enter="connect" @focus="inputFocus = true" :debounce-ms="0" />
+				<svws-ui-button type="secondary" @click="connect" :disabled="!(inputDBSchemata.size() === 0 || connecting || inputFocus )" :class="{'opacity-25 hover:opacity-100': inputDBSchemata.size() > 0 && !inputFocus}">
+					<span v-if="inputDBSchemata.size() === 0 || connecting || inputFocus">Verbinden</span>
+					<span v-else>Verbunden</span>
+					<svws-ui-spinner :spinning="connecting" />
+					<span class="icon i-ri-check-line" v-if="!connecting && inputDBSchemata.size() > 0 && !inputFocus" />
+				</svws-ui-button>
+			</div>
+			<Transition>
+				<svws-ui-input-wrapper v-if="inputDBSchemata.size() > 0 && !connecting" class="mt-10" center>
+					<svws-ui-select v-model="schema" title="Datenbank-Schema" :items="inputDBSchemata" :item-text="i => `${i.name ?? 'SCHEMANAME FEHLT'}${i.isDeactivated ? ' (Nicht verfügbar)':''}`" class="w-full" @update:model-value="schema => schema && setSchema(schema)" />
+					<svws-ui-text-input v-model.trim="username" type="text" placeholder="Benutzername" @keyup.enter="doLogin" ref="refUsername" />
+					<svws-ui-text-input v-model.trim="password" type="password" placeholder="Passwort" @keyup.enter="doLogin" />
+					<svws-ui-spacing />
+					<div class="flex gap-2">
+						<svws-ui-modal-hilfe> <s-login-hilfe /> </svws-ui-modal-hilfe>
+						<svws-ui-button @click="doLogin" type="primary" :disabled="authenticating">
+							Anmelden
+							<svws-ui-spinner v-if="authenticating" spinning />
+							<span class="icon i-ri-login-circle-line" v-else />
+						</svws-ui-button>
+					</div>
+				</svws-ui-input-wrapper>
+			</Transition>
+		</template>
+	</ui-login-layout>
 	<svws-ui-notifications v-if="error">
 		<svws-ui-notification type="error">
 			<template #header> {{ error.name }} </template>
@@ -88,7 +45,7 @@
 	import type { ComponentExposed } from "vue-component-type-helpers";
 	import type { LoginProps } from "./SLoginProps";
 	import type { DBSchemaListeEintrag, List } from "@core";
-	import { ArrayList, DeveloperNotificationException, JsonCoreTypeReader } from "@core";
+	import { ArrayList, DeveloperNotificationException, JsonCoreTypeReader, UserNotificationException } from "@core";
 	import { SvwsUiTextInput } from "@ui";
 	import { version } from '../../version';
 	import { githash } from '../../githash';
@@ -101,7 +58,6 @@
 	const username = ref("");
 	const password = ref("");
 	const error = ref<{name: string; message: string;}|null>(null);
-	const copied = ref<boolean|null>(null);
 
 	onMounted(() => {
 		try {
@@ -112,21 +68,11 @@
 		}
 	})
 
-	async function copyToClipboard() {
-		try {
-			await navigator.clipboard.writeText(`${version} ${githash}`);
-		} catch(e) {
-			copied.value = false;
-		}
-		copied.value = true;
-	}
-
 	const connecting = ref(false);
 	const authenticating = ref(false);
 	const inputFocus = ref(false);
 
 	const connection_failed = ref(false);
-	const authentication_success = ref(false);
 
 	const inputDBSchemata = shallowRef<List<DBSchemaListeEintrag>>(new ArrayList());
 
@@ -200,51 +146,20 @@
 		if ((schema.value === undefined) || (schema.value.name === null))
 			return error.value = {name: "Eingabefehler", message: "Es muss ein gültiges Schema ausgewählt sein."};
 		authenticating.value = true;
-		await props.login(schema.value.name, username.value, password.value);
-		authenticating.value = false;
-		firstauth.value = false;
-		if (!props.authenticated)
-			error.value = {name: "Eingabefehler", message: "Passwort oder Benutzername falsch. Bitte achten Sie auch auf die Groß- Kleinschreibung beim Benutzernamen."};
-		else {
-			localStorage.setItem("SVWS-Client Last Used Schema", schema.value.name);
-			// localStorage.setItem(`SVWS-Client Last Used Username for Schema_${schema.value.name}`, username.value);
+		try {
+			await props.login(schema.value.name, username.value, password.value);
+			firstauth.value = false;
+			if (!props.authenticated)
+				error.value = {name: "Eingabefehler", message: "Passwort oder Benutzername falsch."};
+			else {
+				localStorage.setItem("SVWS-Client Last Used Schema", schema.value.name);
+				// localStorage.setItem(`SVWS-Client Last Used Username for Schema_${schema.value.name}`, username.value);
+			}
+		} catch (e) {
+			if (e instanceof UserNotificationException)
+				error.value = e;
 		}
+		authenticating.value = false;
 	}
 
 </script>
-
-<style lang="postcss" scoped>
-	.login-wrapper {
-		@apply flex h-full flex-col justify-between;
-	}
-
-	.app--layout--login {
-		@apply p-0 bg-none bg-transparent;
-	}
-
-	.login-container {
-		@apply bg-cover bg-top h-full flex flex-col justify-center items-center px-4;
-		background-image: url('/images/placeholder-background.jpg');
-	}
-
-	.login-footer-link {
-		@apply inline-block;
-	}
-
-	.login-footer-link:hover,
-	.login-footer-link:focus,
-	.login-footer-link:hover .hover-underline,
-	.login-footer-link:focus .hover-underline {
-		@apply underline;
-	}
-
-	.v-enter-active,
-	.v-leave-active {
-		transition: opacity 0.5s ease;
-	}
-
-	.v-enter-from,
-	.v-leave-to {
-		opacity: 0;
-	}
-</style>

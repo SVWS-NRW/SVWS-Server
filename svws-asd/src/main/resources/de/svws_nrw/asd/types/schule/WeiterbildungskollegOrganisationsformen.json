@@ -2,7 +2,7 @@
 	"version": 1,
 	"daten": [ {
 		"bezeichner": "TEILZEIT",
-		"idHistorie": 1,
+		"idStatistik": "1",
 		"historie": [ {
 			"id": 2001000,
 			"schluessel": "1",
@@ -16,7 +16,7 @@
 		} ]
 	}, {	
 		"bezeichner": "VOLLZEIT",
-		"idHistorie": 2,
+		"idStatistik": "2",
 		"historie": [ {
 			"id": 2002000,
 			"schluessel": "2",

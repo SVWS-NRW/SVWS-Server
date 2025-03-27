@@ -20,7 +20,7 @@ export class RouteSchuleFachDaten extends RouteNode<any, RouteSchuleFaecher> {
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (routeSchuleFaecher.data.manager.auswahlID() === null)
-			return routeSchuleFaecher.getRoute()
+			return routeSchuleFaecher.getRoute();
 	}
 
 	public getProps(to: RouteLocationNormalized): FachDatenProps {

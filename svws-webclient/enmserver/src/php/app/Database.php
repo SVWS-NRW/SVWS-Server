@@ -34,7 +34,7 @@
 
 		/**
 		 * Erstellt eine Tabelle mit dem übergebenen SQL-Befehl
-		 * 
+		 *
 		 * @param string $tablename   der Name der Tabelle
 		 * @param string $sql         der SQL-Befehl
 		 */
@@ -140,9 +140,9 @@
 		/**
 		 * Führt die übergebene SQL-Anfrage aus und gibt alle Ergebnisse als Objekte zurück.
 		 * Im Fehlerfall wird null zurückgegeben.
-		 * 
+		 *
 		 * @param string $sql   die SQL-Anfrage
-		 * 
+		 *
 		 * @return array | null   ein Array mit Objekten oder null
 		 */
 		public function queryAllOrNull(string $sql): array | null {
@@ -156,10 +156,10 @@
 		/**
 		 * Führt die übergebene SQL-Anfrage aus und gibt alle Ergebnisse als Objekte zurück.
 		 * Im Fehlerfall wird ein 500er Response Code erzeugt
-		 * 
+		 *
 		 * @param string $sql     die SQL-Anfrage
-		 * @param string $error   ein 
-		 * 
+		 * @param string $error   ein
+		 *
 		 * @return array   ein Array mit Objekten
 		 */
 		public function queryAllOrExit500(string $sql, string $error): array {
@@ -173,9 +173,9 @@
 		/**
 		 * Führt die übergebene SQL-Anfrage aus und gibt das Ergebnis als Objekt zurück.
 		 * Im Fehlerfall wird  null zurückgegeben.
-		 * 
+		 *
 		 * @param string $sql   die sql-Anfrage
-		 * 
+		 *
 		 * @return object | null   das Objekt oder null
 		 */
 		public function querySingleOrNull(string $sql): object | null {
@@ -188,9 +188,9 @@
 
 		/**
 		 * Erstellt ein neues Token und gibt dieses zurück. Ein zuvor bestendes Token wird dabei ersetzt.
-		 * 
+		 *
 		 * @param int $id   die ID für welche der Access-Token generiert werden soll
-		 * 
+		 *
 		 * @return object die Informationen zum Token oder null, wenn das Erstellen nicht erfolgreich war
 		 */
 		public function createClientAccessToken(int $id): object | null {
@@ -211,9 +211,9 @@
 
 		/**
 		 * Bestimmt den Client-Eintrag anhand des übergebenen Access-Tokens und gibt diesen zurück.
-		 * 
+		 *
 		 * @param string $token   das Token anhand welchem der Client-Eintrag ermittelt werden soll
-		 * 
+		 *
 		 * @return object der Client-Eintrag oder null, falls keiner gefunden wird
 		 */
 		public function getClientByAccessToken(string | null $token): object | null {
@@ -237,7 +237,7 @@
 		/**
 		 * Entfernt aus allen Tabellen mit bestehenden ENM-Daten, die Daten, welche nicht den
 		 * angegebenen Zeitstempel tragen. Daten mit dem Zeitstempel werden also dabei erhalten.
-		 * 
+		 *
 		 * @param int $ts   der Zeitstempel
 		 */
 		public function retainENMDaten(int $ts) {
@@ -266,7 +266,7 @@
 
 		/**
 		 * Schreibe das ENM-Datenobjekt in die Datenbank.
-		 * 
+		 *
 		 * @param int $ts            der Zeitstempel, dem die Daten zugeordnet werden
 		 * @param object $enmDaten   die zu schreibenden ENM-Daten
 		 */
@@ -301,7 +301,7 @@
 		/**
 		 * Bereitet ein Statement mit dem übergenenen SQL-Befehl vor und gibt dieses zurück.
 		 * Ist dies nicht erfolgreich, so wird ein Fehlercode 500 ausgeführt.
-		 * 
+		 *
 		 * @return PDOStatement   das Statement
 		 */
 		public function prepareStatement(string $sql): PDOStatement {
@@ -315,7 +315,7 @@
 		/**
 		 * Bindet den Wert des Parameters an das Statement.
 		 * Ist dies nicht erfolgreich, so wird ein Fehlercode 500 ausgeführt.
-		 * 
+		 *
 		 * @param PDOStatement $statement   das Statement
 		 * @param string $param             der Parameter, z.B. ':id'
 		 * @param mixed $value              der Wert
@@ -346,7 +346,7 @@
 		/**
 		 * Schreibe die ENM-Lehrer-Objekte in die Datenbank.
 		 * Ist dies nicht erfolgreich, so wird ein Fehlercode 500 ausgeführt.
-		 * 
+		 *
 		 * @param int $ts            der Zeitstempel, dem die Daten zugeordnet werden
 		 * @param array $enmLehrer   die zu schreibenden ENM-Lehrer-Daten
 		 */
@@ -369,7 +369,7 @@
 		/**
 		 * Schreibe die ENM-Schüler-Objekte in die Datenbank.
 		 * Ist dies nicht erfolgreich, so wird ein Fehlercode 500 ausgeführt.
-		 * 
+		 *
 		 * @param int $ts              der Zeitstempel, dem die Daten zugeordnet werden
 		 * @param array $enmSchueler   die zu schreibenden ENM-Schüler-Daten
 		 */
@@ -462,12 +462,12 @@
 
 		/**
 		 * Erstellt einen Abgleich von vorherigen Einträgen zu den Einträgen mit dem angegebenen Zeitstempel.
-		 * 
+		 *
 		 * @param int $ts   der Zeitstempel der neu importierten Daten
 		 */
 		public function importDiffSchueler(int $ts) {
 			// Entferne zunächst alle alten Schüler-Einträge, die nicht in den neuen Daten enthalten sind oder keine Änderungen haben
-			$this->dropFrom('Schueler', "ts < $ts AND (id, ts) NOT IN (SELECT a.id, a.ts FROM Schueler a JOIN Schueler b WHERE a.id = b.id AND a.ts < b.ts AND (a.tsFehlstundenGesamt <> b.tsFehlstundenGesamt OR a.tsFehlstundenGesamtUnentschuldigt <> b.tsFehlstundenGesamtUnentschuldigt OR a.tsASV <> b.tsASV OR a.tsAUE <> b.tsAUE OR a.tsZB <> b.tsZB OR a.tsLELS <> b.tsLELS OR a.tsSchulformEmpf <> b.tsSchulformEmpf OR a.tsIndividuelleVersetzungsbemerkungen <> b.tsIndividuelleVersetzungsbemerkungen OR a.tsFoerderbemerkungen <> b.tsFoerderbemerkungen))");			
+			$this->dropFrom('Schueler', "ts < $ts AND (id, ts) NOT IN (SELECT a.id, a.ts FROM Schueler a JOIN Schueler b WHERE a.id = b.id AND a.ts < b.ts AND (a.tsFehlstundenGesamt <> b.tsFehlstundenGesamt OR a.tsFehlstundenGesamtUnentschuldigt <> b.tsFehlstundenGesamtUnentschuldigt OR a.tsASV <> b.tsASV OR a.tsAUE <> b.tsAUE OR a.tsZB <> b.tsZB OR a.tsLELS <> b.tsLELS OR a.tsSchulformEmpf <> b.tsSchulformEmpf OR a.tsIndividuelleVersetzungsbemerkungen <> b.tsIndividuelleVersetzungsbemerkungen OR a.tsFoerderbemerkungen <> b.tsFoerderbemerkungen))");
 			// Lese dann alle Daten mit dem alten Zeitstempel ein, da diese ggf. Änderungen beinhalten
 			$diffsOld = $this->queryAllOrNull("SELECT id, ts, idJahrgang, idKlasse, daten, tsFehlstundenGesamt, tsFehlstundenGesamtUnentschuldigt, tsASV, tsAUE, tsZB, tsLELS, tsSchulformEmpf, tsIndividuelleVersetzungsbemerkungen, tsFoerderbemerkungen FROM Schueler WHERE ts < $ts");
 			if ($diffsOld === null)
@@ -550,7 +550,7 @@
 
 		/**
 		 * Erstellt einen Abgleich von vorherigen Einträgen zu den Einträgen mit dem angegebenen Zeitstempel.
-		 * 
+		 *
 		 * @param int $ts   der Zeitstempel der neu importierten Daten
 		 */
 		public function importDiffLeistungen(int $ts) {
@@ -559,7 +559,7 @@
 			// Lese dann alle Daten mit dem alten Zeitstempel ein, da diese ggf. Änderungen beinhalten
 			$diffsOld = $this->queryAllOrNull("SELECT id, ts, idSchueler, idLerngruppe, daten, tsNote, tsNoteQuartal, tsFehlstundenFach, tsFehlstundenUnentschuldigtFach, tsFachbezogeneBemerkungen, tsIstGemahnt FROM Leistungsdaten WHERE ts < $ts");
 			if ($diffsOld === null)
-				return;	
+				return;
 			// Erstelle aus den alten Daten eine Map basierend auf der id und eine Liste der ids
 			$mapOld = [];
 			$idsArray = [];
@@ -622,7 +622,7 @@
 
 		/**
 		 * Erstellt einen Abgleich von vorherigen Einträgen zu den Einträgen mit dem angegebenen Zeitstempel.
-		 * 
+		 *
 		 * @param int $ts   der Zeitstempel der neu importierten Daten
 		 */
 		public function importDiffTeilleistungen(int $ts) {
@@ -631,7 +631,7 @@
 			// Lese dann alle Daten mit dem alten Zeitstempel ein, da diese ggf. Änderungen beinhalten
 			$diffsOld = $this->queryAllOrNull("SELECT id, ts, idLeistung, daten, tsArtID, tsDatum, tsBemerkung, tsNote FROM Teilleistungen WHERE ts < $ts");
 			if ($diffsOld === null)
-				return;	
+				return;
 			// Erstelle aus den alten Daten eine Map basierend auf der id und eine Liste der ids
 			$mapOld = [];
 			$idsArray = [];
@@ -680,7 +680,7 @@
 
 		/**
 		 * Erstellt einen Abgleich von vorherigen Einträgen zu den Einträgen mit dem angegebenen Zeitstempel.
-		 * 
+		 *
 		 * @param int $ts   der Zeitstempel der neu importierten Daten
 		 */
 		public function importDiffAnkreuzkompetenzen(int $ts) {
@@ -689,7 +689,7 @@
 			// Lese dann alle Daten mit dem alten Zeitstempel ein, da diese ggf. Änderungen beinhalten
 			$diffsOld = $this->queryAllOrNull("SELECT id, ts, idSchueler, idKompetenz, daten, tsStufe FROM Ankreuzkompetenzen WHERE ts < $ts");
 			if ($diffsOld === null)
-				return;	
+				return;
 			// Erstelle aus den alten Daten eine Map basierend auf der id und eine Liste der ids
 			$mapOld = [];
 			$idsArray = [];
@@ -720,7 +720,7 @@
 
 		/**
 		 * Erstellt einen Abgleich von vorherigen Einträgen zu den Einträgen mit dem angegebenen Zeitstempel.
-		 * 
+		 *
 		 * @param int $ts   der Zeitstempel der neu importierten Daten
 		 */
 		public function importDiffLehrer(int $ts) {
@@ -729,7 +729,7 @@
 			// Lese dann alle Daten mit dem alten Zeitstempel ein, da diese ggf. Änderungen beinhalten
 			$diffsOld = $this->queryAllOrNull("SELECT id, ts, daten, eMailDienstlich, passwordHash, tsPasswordHash FROM Lehrer WHERE ts < $ts");
 			if ($diffsOld === null)
-				return;	
+				return;
 			// Erstelle aus den alten Daten eine Map basierend auf der id und eine Liste der ids
 			$mapOld = [];
 			$idsArray = [];
@@ -760,7 +760,7 @@
 
 		/**
 		 * Lädt die SMTP-Konfiguration aus der Datenbank und initialisiert den SMTP-Client damit.
-		 * 
+		 *
 		 * @return ?SMTPClient   der SMTP-Client oder null, wenn keine Konfiguration vorliegt
 		 */
 		public function getSMTPClient(): ?SMTPClient {
@@ -778,9 +778,9 @@
 		/**
 		 * Ermittelt die globale Konfiguration und die benutzerspezifische Konfiguration anhand der
 		 * übergebenen Lehrer-ID und gibt diese als JSON-String zurück.
-		 * 
+		 *
 		 * @param int $idLehrer   die ID des Lehrers, dessen benutzerspezifische Konfiguration ermittelt wird
-		 * 
+		 *
 		 * @return string ein JSON mit der globalen und der benutzerspezifischen Konfiguration
 		 */
 		public function getClientConfig(int $idLehrer): string {
@@ -794,7 +794,7 @@
 		/**
 		 * Ermittelt die Konfiguration des Server, d.h. die Server-sepzifische Konfiguration und die globale Konfiguration für
 		 * den Client und gibt diese als JSON-String zurück.
-		 * 
+		 *
 		 * @return string ein JSON mit den beiden Konfigurationen
 		 */
 		public function getServerConfig(): string {
@@ -807,7 +807,7 @@
 
 		/**
 		 * Setzt einen Eintrag in der globalen Konfiguration.
-		 * 
+		 *
 		 * @param bool $nurServer   gibt an, ob der Konfigurationseintrag nur den Server betrifft oder global ist.
 		 * @param string $key       der zu setzende Schlüssel
 		 * @param string $value     der zu setzende Wert für den Schlüssel
@@ -848,7 +848,7 @@
 
 		/**
 		 * Setzt einen Eintrag in der benutzerspezifischen Konfiguration anhand der übergebenen Lehrer-ID.
-		 * 
+		 *
 		 * @param int $idLehrer   die ID des Lehrers, dessen benutzerspezifische Konfiguration angepasst wird
 		 * @param string $key     der zu setzende Schlüssel
 		 * @param string $value   der zu setzende Wert für den Schlüssel
@@ -892,7 +892,7 @@
 		/**
 		 * Ermittelt den Zeitstempel und die grundlegenden ENM-Daten aus der Datenbank und gibt
 		 * diese in einem Array zurück.
-		 * 
+		 *
 		 * @return object der Zeitstempel und die ENM-Daten als JSON-Objekt
 		 */
 		public function getJsonENMDaten(): object {
@@ -906,7 +906,7 @@
 
 		/**
 		 * Ermittelt die Lehrerdaten aus der Datenbank und gibt diese in einem Array zurück.
-		 * 
+		 *
 		 * @return array die Lehrer-Daten
 		 */
 		public function getENMLehrerdaten(): array {
@@ -919,7 +919,7 @@
 
 		/**
 		 * Ermittelt die Lehrerdaten aus der Datenbank und gibt diese in einem Array zurück.
-		 * 
+		 *
 		 * @return ?object die Lehrer-Daten
 		 */
 		public function getENMLehrerByEmail(string $email): object | null {
@@ -935,7 +935,7 @@
 
 		/**
 		 * Ermittelt die Schülerdaten aus der Datenbank und gibt diese in einem Array zurück.
-		 * 
+		 *
 		 * @return array die Schüler-Daten
 		 */
 		public function getENMSchuelerdaten(): array {
@@ -988,10 +988,10 @@
 
 		/**
 		 * Prüft, ob die beiden Strings sich unterscheiden. Dabei wird auch auf Null-Werte geprüft.
-		 * 
+		 *
 		 * @param string | null $a   der erste String
 		 * @param string | null $b   der zweite String
-		 * 
+		 *
 		 * @return bool   true, wenn die beiden Werte unterschiedlich sind
 		 */
 		protected function diffStringNullable(string | null $a, string | null $b) : bool {
@@ -1005,10 +1005,10 @@
 		/**
 		 * Prüft, ob die Arrays sich unterscheiden. Dabei wird zum Vergleich der Werte
 		 * der Vergleichsoperator !== verwendet.
-		 * 
+		 *
 		 * @param array $a   das erste Array
 		 * @param array $b   das zweite Array
-		 * 
+		 *
 		 * @return bool   true, wenn die beiden Arrays unterschiedlich sind
 		 */
 		protected function diffArraySimple(array $a, array $b) : bool {
@@ -1023,10 +1023,13 @@
 		/**
 		 * Erstellt einen Update-Befehl für die Datenbank aus den übergebenen Daten für einen
 		 * Patch von Leistungsdaten.
-		 * 
+		 *
 		 * @param string $ts      der Zeitstempel der neu importierten Daten
 		 * @param object $daten   die Daten aus der Datenbank
 		 * @param object $patch   der Patch für die Daten
+		 * Folgende Werte können durch das Patch Objekt überschrieben werden: tsNote, tsNoteQuartal,
+		 * 																	  tsFehlstundenFach, tsFehlstundenUnentschuldigtFach,
+		 * 																	  fehlstundenUnentschuldigtFach, fachbezogeneBemerkungen, istGemahnt
 		 */
 		public function patchENMLeistung(string $ts, object $daten, object $patch) {
 			$update = "";
@@ -1061,6 +1064,9 @@
 				$daten->tsIstGemahnt = $ts;
 			}
 			if (strlen($update) > 0) {
+				// Stelle sicher in der Datenbanktabelle nicht Objekte auftauchen die woanders in der Datenbank gespeichert werden
+				$daten->teilleistungen = [];
+				// Schreibe das gepatchte JSON in die Datenbank zurück
 				$updatedData = json_encode($daten, JSON_UNESCAPED_SLASHES);
 				$update .= "daten='$updatedData' WHERE id=$patch->id";
 				$this->updateSet('Leistungsdaten', $update);
@@ -1070,10 +1076,11 @@
 		/**
 		 * Erstellt einen Update-Befehl für die Datenbank aus den übergebenen Daten für einen
 		 * Patch von Lernabschnittsdaten eines Schülers.
-		 * 
+		 *
 		 * @param string $ts      der Zeitstempel der neu importierten Daten
 		 * @param object $daten   die Daten aus der Datenbank
 		 * @param object $patch   der Patch für die Daten
+		 * Folgende Werte können durch das Patch Objekt überschrieben werden: fehlstundenGesamt, fehlstundenGesamtUnentschuldigt
 		 */
 		public function patchENMSchuelerLernabschnitt(string $ts, object $daten, object $patch) {
 			$update = "";
@@ -1090,6 +1097,10 @@
 				$daten->lernabschnitt->tsFehlstundenGesamtUnentschuldigt = $ts;
 			}
 			if (strlen($update) > 0) {
+				// Stelle sicher in der Datenbanktabelle nicht Objekte auftauchen die woanders in der Datenbank gespeichert werden
+				$daten->ankreuzkompetenzen = [];
+				$daten->leistungsdaten = [];
+				// Schreibe das gepatchte JSON in die Datenbank zurück
 				$updatedData = json_encode($daten, JSON_UNESCAPED_SLASHES);
 				$update .= "daten='$updatedData' WHERE id=$patch->id";
 				$this->updateSet('Schueler', $update);
@@ -1099,57 +1110,62 @@
 		/**
 		 * Erstellt einen Update-Befehl für die Datenbank aus den übergebenen Daten für einen
 		 * Patch von Bemerkungsdaten eines Schülers.
-		 * 
+		 *
 		 * @param string $ts        der Zeitstempel der neu importierten Daten
 		 * @param int $idSchueler   die ID des Schülers
 		 * @param object $daten     die Daten aus der Datenbank
 		 * @param object $patch     der Patch für die Daten
+		 * Folgende Werte können durch das Patch Objekt überschrieben werden: ASV, AUE, ZB, LELS, schulformEmpf, individuelleVersetzungsbemerkungen, foerderbemerkungen
 		 */
 		public function patchENMSchuelerBemerkungen(string $ts, int $idSchueler, object $daten, object $patch) {
 			$update = "";
-			if (property_exists($patch->bemerkungen, 'ASV') && ($ts > $patch->bemerkungen->tsASV)
-					&& $this->diffStringNullable($patch->bemerkungen->ASV, $patch->bemerkungen->ASV)) {
+			if (property_exists($patch, 'ASV') && ($ts > $daten->bemerkungen->tsASV)
+					&& $this->diffStringNullable($daten->bemerkungen->ASV, $patch->ASV)) {
 				$update .= "tsASV='$ts',";
-				$daten->bemerkungen->ASV = $patch->bemerkungen->ASV;
+				$daten->bemerkungen->ASV = $patch->ASV;
 				$daten->bemerkungen->tsASV = $ts;
 			}
-			if (property_exists($patch->bemerkungen, 'AUE') && ($ts > $patch->bemerkungen->tsAUE)
-					&& $this->diffStringNullable($patch->bemerkungen->AUE, $patch->bemerkungen->AUE)) {
+			if (property_exists($patch, 'AUE') && ($ts > $daten->bemerkungen->tsAUE)
+					&& $this->diffStringNullable($daten->bemerkungen->AUE, $patch->AUE)) {
 				$update .= "tsAUE='$ts',";
-				$daten->bemerkungen->AUE = $patch->bemerkungen->AUE;
+				$daten->bemerkungen->AUE = $patch->AUE;
 				$daten->bemerkungen->tsAUE = $ts;
 			}
-			if (property_exists($patch->bemerkungen, 'ZB') && ($ts > $patch->bemerkungen->tsZB)
-					&& $this->diffStringNullable($patch->bemerkungen->ZB, $patch->bemerkungen->ZB)) {
+			if (property_exists($patch, 'ZB') && ($ts > $daten->bemerkungen->tsZB)
+					&& $this->diffStringNullable($daten->bemerkungen->ZB, $patch->ZB)) {
 				$update .= "tsZB='$ts',";
-				$daten->bemerkungen->ZB = $patch->bemerkungen->ZB;
+				$daten->bemerkungen->ZB = $patch->ZB;
 				$daten->bemerkungen->tsZB = $ts;
 			}
-			if (property_exists($patch->bemerkungen, 'LELS') && ($ts > $patch->bemerkungen->tsLELS)
-					&& $this->diffStringNullable($patch->bemerkungen->LELS, $patch->bemerkungen->LELS)) {
+			if (property_exists($patch, 'LELS') && ($ts > $daten->bemerkungen->tsLELS)
+					&& $this->diffStringNullable($daten->bemerkungen->LELS, $patch->LELS)) {
 				$update .= "tsLELS='$ts',";
-				$daten->bemerkungen->LELS = $patch->bemerkungen->LELS;
+				$daten->bemerkungen->LELS = $patch->LELS;
 				$daten->bemerkungen->tsLELS = $ts;
 			}
-			if (property_exists($patch->bemerkungen, 'schulformEmpf') && ($ts > $patch->bemerkungen->tsSchulformEmpf)
-					&& $this->diffStringNullable($patch->bemerkungen->schulformEmpf, $patch->bemerkungen->schulformEmpf)) {
+			if (property_exists($patch, 'schulformEmpf') && ($ts > $daten->bemerkungen->tsSchulformEmpf)
+					&& $this->diffStringNullable($daten->bemerkungen->schulformEmpf, $patch->schulformEmpf)) {
 				$update .= "tsSchulformEmpf='$ts',";
-				$daten->bemerkungen->schulformEmpf = $patch->bemerkungen->schulformEmpf;
+				$daten->bemerkungen->schulformEmpf = $patch->schulformEmpf;
 				$daten->bemerkungen->tsSchulformEmpf = $ts;
 			}
-			if (property_exists($patch->bemerkungen, 'individuelleVersetzungsbemerkungen') && ($ts > $patch->bemerkungen->tsIndividuelleVersetzungsbemerkungen)
-					&& $this->diffStringNullable($patch->bemerkungen->individuelleVersetzungsbemerkungen, $patch->bemerkungen->individuelleVersetzungsbemerkungen)) {
+			if (property_exists($patch, 'individuelleVersetzungsbemerkungen') && ($ts > $daten->bemerkungen->tsIndividuelleVersetzungsbemerkungen)
+					&& $this->diffStringNullable($daten->bemerkungen->individuelleVersetzungsbemerkungen, $patch->individuelleVersetzungsbemerkungen)) {
 				$update .= "tsIndividuelleVersetzungsbemerkungen='$ts',";
-				$daten->bemerkungen->individuelleVersetzungsbemerkungen = $patch->bemerkungen->individuelleVersetzungsbemerkungen;
+				$daten->bemerkungen->individuelleVersetzungsbemerkungen = $patch->individuelleVersetzungsbemerkungen;
 				$daten->bemerkungen->tsIndividuelleVersetzungsbemerkungen = $ts;
 			}
-			if (property_exists($patch->bemerkungen, 'foerderbemerkungen') && ($ts > $patch->bemerkungen->tsFoerderbemerkungen)
-					&& $this->diffStringNullable($patch->bemerkungen->foerderbemerkungen, $patch->bemerkungen->foerderbemerkungen)) {
+			if (property_exists($patch, 'foerderbemerkungen') && ($ts > $daten->bemerkungen->tsFoerderbemerkungen)
+					&& $this->diffStringNullable($daten->bemerkungen->foerderbemerkungen, $patch->foerderbemerkungen)) {
 				$update .= "tsFoerderbemerkungen='$ts',";
-				$daten->bemerkungen->foerderbemerkungen = $patch->bemerkungen->foerderbemerkungen;
+				$daten->bemerkungen->foerderbemerkungen = $patch->foerderbemerkungen;
 				$daten->bemerkungen->tsFoerderbemerkungen = $ts;
 			}
 			if (strlen($update) > 0) {
+				// Stelle sicher in der Datenbanktabelle nicht Objekte auftauchen die woanders in der Datenbank gespeichert werden
+				$daten->ankreuzkompetenzen = [];
+				$daten->leistungsdaten = [];
+				// Schreibe das gepatchte JSON in die Datenbank zurück
 				$updatedData = json_encode($daten, JSON_UNESCAPED_SLASHES);
 				$update .= "daten='$updatedData' WHERE id=$idSchueler";
 				$this->updateSet('Schueler', $update);
@@ -1159,10 +1175,11 @@
 		/**
 		 * Erstellt einen Update-Befehl für die Datenbank aus den übergebenen Daten für einen
 		 * Patch von Daten zu Teilleistungen.
-		 * 
+		 *
 		 * @param string $ts      der Zeitstempel der neu importierten Daten
 		 * @param object $daten   die Daten aus der Datenbank
 		 * @param object $patch   der Patch für die Daten
+		 * Folgende Werte können durch das Patch Objekt überschrieben werden: artID, datum, bemerkung, note
 		 */
 		public function patchENMTeilleistung(string $ts, object $daten, object $patch) {
 			$update = "";
@@ -1196,10 +1213,12 @@
 		/**
 		 * Erstellt einen Update-Befehl für die Datenbank aus den übergebenen Daten für einen
 		 * Patch von Schüler-Daten zu den Ankreuzkompetenzen.
-		 * 
+		 *
 		 * @param string $ts      der Zeitstempel der neu importierten Daten
 		 * @param object $daten   die Daten aus der Datenbank
 		 * @param object $patch   der Patch für die Daten
+		 *
+		 * Folgende Werte können durch das Patch Objekt überschrieben werden: Stufen
 		 */
 		public function patchENMSchuelerAnkreuzkompetenzen(string $ts, object $daten, object $patch) {
 			$update = "";

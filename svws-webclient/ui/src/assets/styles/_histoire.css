@@ -1,3 +1,5 @@
+@import "./index.css";
+
 @media (max-width: 639px) {
 	body {
 		font-size: 0.875rem;
@@ -5,7 +7,6 @@
 }
 
 html {
-	@apply font-sans !important;
 	font-size: initial !important;
 }
 

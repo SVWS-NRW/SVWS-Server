@@ -1,6 +1,7 @@
 package de.svws_nrw.module.reporting.types.kurs;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -8,8 +9,10 @@ import java.util.stream.Collectors;
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
+import de.svws_nrw.module.reporting.types.klasse.ReportingKlasse;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
+import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLernabschnitt;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 
 
@@ -17,6 +20,10 @@ import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Kurs.
  */
 public class ReportingKurs extends ReportingBaseType {
+
+	/** Eine Liste der Klassen, deren Schüler den Kurs belegen. */
+	private final List<ReportingKlasse> klassen = new ArrayList<>();
+
 
 	/** Ggf. die Zeugnisbezeichnung des Kurses. */
 	protected String bezeichnungZeugnis;
@@ -146,6 +153,27 @@ public class ReportingKurs extends ReportingBaseType {
 
 
 	// ##### Berechnete Methoden #####
+
+	/**
+	 * Ermittelte alle Klassen der Schüler, welche im Kurs vertreten sind.
+	 *
+	 * @return Liste der Klassen der Schüler im Kurs.
+	 */
+	public List<ReportingKlasse> klassen() {
+		if (klassen.isEmpty() && (this.schueler() != null) && !schueler().isEmpty()) {
+			final List<ReportingKlasse> result = new ArrayList<>();
+			for (final ReportingSchueler s : this.schueler()) {
+				final ReportingSchuelerLernabschnitt lernabschnitt = s.aktiverLernabschnittInSchuljahresabschnitt(this.schuljahresabschnitt);
+				if ((lernabschnitt != null) && (lernabschnitt.klasse() != null))
+					result.add(lernabschnitt.klasse());
+			}
+			if (!result.isEmpty()) {
+				this.klassen.addAll(result.stream().distinct().sorted(Comparator.comparing(ReportingKlasse::kuerzel)).toList());
+			}
+		}
+		return this.klassen;
+	}
+
 	/**
 	 * Gibt eine Liste aller Lehrkräfte des Kurses aus, wobei die erste die Kursleitung ist.
 	 *
@@ -166,9 +194,10 @@ public class ReportingKurs extends ReportingBaseType {
 	 * @return		Kommaseparierte Liste der Lehrkräfte, beginnend mit der Kursleitung.
 	 */
 	public String auflistungLehrkraefte() {
-		if (lehrkraefte().isEmpty())
+		final List<ReportingLehrer> listeLehrkraefte = lehrkraefte();
+		if (listeLehrkraefte.isEmpty())
 			return "";
-		return this.lehrkraefte().stream().map(ReportingLehrer::kuerzel).collect(Collectors.joining(","));
+		return listeLehrkraefte.stream().map(ReportingLehrer::kuerzel).collect(Collectors.joining(","));
 	}
 
 	/**

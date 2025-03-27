@@ -1,17 +1,13 @@
 import type { RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
-import { ViewType, type TabData, type TabManager } from "@ui";
 import type { AppProps } from "~/components/SAppProps";
+import { AppMenuManager, ViewType, type TabData, type TabManager } from "@ui";
 import { Schulform, BenutzerKompetenz, ServerMode, DeveloperNotificationException } from "@core";
-import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteManager, routerManager } from "~/router/RouteManager";
 import { RoutingStatus } from "~/router/RoutingStatus";
 import { RouteDataApp } from "~/router/apps/RouteDataApp";
+import { api } from "~/router/Api";
 import { routeBenutzerprofil } from "./benutzerprofil/RouteBenutzerprofil";
-import { routeSchule } from "~/router/apps/schule/RouteSchule";
-import { routeSchuleJahrgaenge } from "~/router/apps/schule/jahrgaenge/RouteSchuleJahrgaenge";
-import { routeSchuleFaecher } from "~/router/apps/schule/faecher/RouteSchuleFaecher";
-import { routeStundenplanKataloge } from "./stundenplan/RouteStundenplanKataloge";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { routeKlassen } from "~/router/apps/klassen/RouteKlassen";
@@ -21,29 +17,38 @@ import { routeStatistik } from "~/router/apps/statistik/RouteStatistik";
 import { routeStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
 import { routeLogin } from "~/router/login/RouteLogin";
 import { routeError } from "../error/RouteError";
+import { routeSchule } from "~/router/apps/schule/RouteSchule";
+import { routeSchuleJahrgaenge } from "~/router/apps/schule/jahrgaenge/RouteSchuleJahrgaenge";
+import { routeSchuleFaecher } from "~/router/apps/schule/faecher/RouteSchuleFaecher";
 import { routeSchuleBetriebe } from "./schule/betriebe/RouteSchuleBetriebe";
 import { routeKatalogEinwilligungsarten } from "./schule/einwilligungsarten/RouteKatalogEinwilligungsarten";
 import { routeKatalogFoerderschwerpunkte } from "./schule/foerderschwerpunkte/RouteKatalogFoerderschwerpunkte";
 import { routeKatalogReligionen } from "./schule/religionen/RouteKatalogReligionen";
 import { routeKatalogSchulen } from "./schule/schulen/RouteKatalogSchulen";
 import { routeKatalogVermerkarten } from "./schule/vermerkarten/RouteKatalogVermerkarten";
+import { routeKatalogLernplattformen } from "~/router/apps/schule/lernplattformen/RouteKatalogLernplattformen";
 import { routeEinstellungen } from "./einstellungen/RouteEinstellungen";
 import { routeEinstellungenBenutzer } from "~/router/apps/einstellungen/benutzer/RouteEinstellungenBenutzer";
 import { routeEinstellungenBenutzergruppe } from "~/router/apps/einstellungen/benutzergruppen/RouteEinstellungenBenutzergruppe";
 import { routeSchuleDatenaustauschKurs42 } from "./schule/datenaustausch/kurs42/RouteSchuleDatenaustauschKurs42";
 import { routeSchuleDatenaustauschUntis } from "./schule/datenaustausch/untis/RouteSchuleDatenaustauschUntis";
-import SApp from "~/components/SApp.vue";
 import { routeSchuleDatenaustauschENM } from "./schule/datenaustausch/RouteSchuleDatenaustauschENM";
 import { routeSchuleDatenaustauschLaufbahnplanung } from "./schule/datenaustausch/RouteSchuleDatenaustauschLupo";
 import { routeSchuleDatenaustauschSchulbewerbung } from "./schule/datenaustausch/RouteSchuleDatenaustauschSchulbewerbung";
 import { routeSchuleDatenaustauschWenom } from "./schule/datenaustausch/RouteSchuleDatenaustauschWenom";
 import { routeSchuleStammdaten } from "./schule/RouteSchuleStammdaten";
+import { routeSchuleReporting } from "./schule/reporting/RouteSchuleReporting";
+import SApp from "~/components/SApp.vue";
 
 
 export class RouteApp extends RouteNode<RouteDataApp, any> {
 
 	/** Die Knoten, welche im Haupt-Menu zur Verfügung gestellt werden */
 	private _menuMain: RouteNode<any, any>[];
+
+	public menuHidden() : boolean[] {
+		return super.menu.map(c => c.hidden(routerManager.getRouteParams()) !== false);
+	}
 
 	/** Die Knoten, welche im Menu Einstellungen zur Verfügung gestellt werden */
 	// TODO in abstrahierter Form in RouteNode integrieren...
@@ -83,6 +88,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		super.propHandler = (route) => this.getProps();
 		super.text = "SVWS-Client";
 		this._menuMain = [
+			routeBenutzerprofil,
 			routeSchule,
 			routeSchueler,
 			routeLehrer,
@@ -106,6 +112,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeKatalogFoerderschwerpunkte,
 			routeSchuleJahrgaenge,
 			routeKatalogVermerkarten,
+			routeKatalogLernplattformen,
 			// Allgemein
 			routeKatalogReligionen,
 			routeKatalogSchulen,
@@ -116,11 +123,11 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeSchuleDatenaustauschLaufbahnplanung,
 			routeSchuleDatenaustauschKurs42,
 			routeSchuleDatenaustauschUntis,
+			// Reporting
+			routeSchuleReporting,
 		];
 		super.children = [
-			routeBenutzerprofil,
 			...this._menuMain,
-			routeStundenplanKataloge,
 			...this._menuSchule,
 			...this._menuEinstellungen,
 		];
@@ -167,12 +174,8 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			schulform: api.schulform,
 			schuleStammdaten: api.schuleStammdaten,
 			// Props für die Navigation
-			setApp: this.setApp,
-			app: this.getApp(),
-			selectedChild: this.getSelectedChild(),
+			menu: this.getMenuManager(),
 			benutzerprofilApp: { name: routeBenutzerprofil.name, text: routeBenutzerprofil.text, hide: true },
-			apps: this.getApps(),
-			appsHidden: this.children_hidden().value,
 			apiStatus: api.status,
 			tabManagerSchule: this.getTabManagerSchule,
 			tabManagerEinstellungen: this.getTabManagerEinstellungen,
@@ -186,7 +189,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	}
 
 	private getApp(): TabData {
-		return { name: this.data.view.name, text: this.data.view.text, hide: !this.data.view.hasView('liste') };
+		return { name: (this.data.view.name === "stundenplan.kataloge") ? "stundenplan" : this.data.view.name, text: this.data.view.text, hide: !this.data.view.hasView('liste') };
 	}
 
 	private getApps(): TabData[] {
@@ -213,6 +216,18 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		const result = await RouteManager.doRoute(node.getRoute());
 		if (result === RoutingStatus.SUCCESS)
 			this.data.setView(node, this.children);
+	}
+
+	private getMenuManager() : AppMenuManager {
+		return new AppMenuManager(
+			this.getTabManager(),
+			[ { name: "schule", manager: this.getTabManagerSchule() }, { name: "einstellungen", manager: this.getTabManagerEinstellungen() } ],
+			this.getApp()
+		);
+	}
+
+	private getTabManager() : TabManager {
+		return this.createTabManager(super.menu, this.menuHidden(), this.data.view.name, this.setApp, ViewType.DEFAULT);
 	}
 
 	private getTabManagerEinstellungen = () : TabManager => {

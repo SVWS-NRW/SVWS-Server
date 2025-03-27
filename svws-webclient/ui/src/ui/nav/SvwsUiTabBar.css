@@ -1,0 +1,180 @@
+.svws-ui-page {
+	@apply flex flex-col items-start overflow-hidden h-full;
+	&.svws-single-tab {
+		.svws-ui-tabs--list {
+			@apply invisible
+		}
+	}
+}
+
+.svws-ui-tab-content {
+	@apply w-full relative grow overflow-auto;
+	.svws-api--pending & {
+		@apply opacity-50 filter grayscale;
+	}
+}
+
+.svws-ui-tabs,
+.svws-sub-nav-target {
+	@apply px-6 lg:px-9 3xl:px-12 4xl:px-20 w-full;
+	@apply print:!hidden;
+
+	.svws-ui-tabs--secondary {
+		@apply px-0;
+	}
+}
+
+
+.svws-sub-nav-target {
+	@apply w-full relative z-30;
+	scrollbar-width: none;
+}
+
+.svws-has-sub-nav .svws-ui-tabs--wrapper:before {
+	@apply rounded-md h-[10px] bottom-[-8px];
+}
+
+
+.svws-ui-tabs--wrapper:before {
+	@apply bg-ui-neutral;
+	@apply h-[2px] absolute left-0 right-0 bottom-0;
+	content: '';
+}
+
+.svws-ui-tabs--wrapper {
+	@apply bg-ui;
+	@apply flex items-center -mx-3 px-0.5 w-auto relative z-30 shrink-0 overflow-hidden;
+}
+
+.svws-ui-tabs--list {
+	@apply flex flex-row items-center relative w-full gap-x-[2px] p-[2px] overflow-x-scroll pb-2 -mb-px;
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+
+	&::-webkit-scrollbar {
+		display: none;
+	}
+
+	&:focus-visible {
+		@apply outline-hidden;
+	}
+}
+
+.svws-ui-tabs--scroll-button {
+	@apply absolute z-20 -top-0.5 text-base h-8 flex items-center w-12 py-1 cursor-pointer;
+	@apply from-transparent to-ui;
+
+	.button {
+		@apply bg-ui-neutral border border-ui-secondary;
+		@apply w-5 h-full p-0 rounded;
+
+		&:focus {
+			@apply outline-hidden;
+		}
+
+		&:hover,
+		&:focus-visible {
+			@apply bg-ui-neutral-hover border-ui-neutral-hover;
+		}
+
+		&:focus-visible {
+			@apply ring-3 ring-ui;
+		}
+	}
+}
+
+.svws-sub-nav-target {
+	@apply overflow-x-auto shrink-0;
+}
+
+.svws-ui-secondary-tabs {
+	@apply text-button flex gap-[2px] pt-1.5 pb-3 px-1 -mt-px rounded-md;
+}
+
+.svws-ui-tab-button {
+	@apply text-ui bg-ui;
+	@apply inline-flex items-center justify-center;
+	@apply py-1 px-2;
+	@apply rounded;
+	@apply select-none;
+	@apply text-sm font-bold;
+	@apply whitespace-nowrap;
+	@apply relative border border-transparent;
+
+	.svws-ui-spinner {
+		@apply w-4 h-4 absolute top-1.5 right-0.5;
+	}
+
+	&:focus {
+		@apply outline-hidden;
+	}
+
+	&:hover,
+	&:focus-visible {
+		@apply bg-ui-hover text-ui-hover;
+
+		.page--statistik & {
+			@apply text-ui-statistic;
+		}
+
+	}
+
+	&:active {
+		@apply bg-ui-selected text-ui-onselected;
+
+		.page--statistik & {
+			@apply bg-ui-statistic-weak text-ui-statistic;
+		}
+	}
+
+	&:focus-visible {
+		@apply ring-3 ring-ui;
+		@apply z-10;
+
+		.page--statistik & {
+			@apply ring-ui-statistic;
+		}
+	}
+
+	&.svws-active,
+	&.svws-active:hover {
+		@apply text-ui-onselected bg-ui-selected;
+
+		.svws-ui-tabs &,
+		.svws-ui-secondary-tabs & {
+			&:before {
+				@apply absolute left-2 right-2 -bottom-2 h-[2px] border-b-2;
+				content: '';
+			}
+		}
+
+		.svws-ui-secondary-tabs & {
+			@apply bg-ui;
+
+			&:before {
+				@apply -bottom-1;
+			}
+		}
+
+		.page--statistik & {
+			@apply text-ui-statistic;
+		}
+	}
+
+	&.svws-active {
+		.svws-api--pending & {
+			span {
+				@apply animate-pulse;
+			}
+		}
+	}
+
+	&:disabled {
+		@apply bg-transparent text-ui-disabled pointer-events-none;
+	}
+}
+
+.page--statistik .svws-ui-tabs .svws-ui-tab-button.svws-active	{
+	@apply bg-ui-statistic-weak text-ui-statistic;
+}
+

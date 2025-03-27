@@ -15,11 +15,11 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class WiedervorlageEintrag {
 
 	/** Die ID des Eintrags. */
-	@Schema(description = "die ID des Eintrags", example = "42")
+	@Schema(description = "die ID des Eintrags", example = "42", accessMode = Schema.AccessMode.READ_ONLY)
 	public long id = -1;
 
 	/** Die ID des Benutzers, der den Eintrag erstellt hat. */
-	@Schema(description = "die ID des Benutzers, der den Eintrag erstellt hat.", example = "42")
+	@Schema(description = "die ID des Benutzers, der den Eintrag erstellt hat.", example = "42", accessMode = Schema.AccessMode.READ_ONLY)
 	public long idBenutzer = -1;
 
 	/** Die ID der Benutzergruppe, welcher der Eintrag zugeordnet ist, oder null, falls keine Zuordnung vorliegt. */
@@ -42,7 +42,7 @@ public class WiedervorlageEintrag {
 	public @NotNull String bemerkung = "";
 
 	/** Gibt den Zeitstempel an, wann der Eintrag angelegt wurde. */
-	@Schema(description = "Gibt den Zeitstempel an, wann der Eintrag angelegt wurde.", example = "2013-11-14 13:12:48.774")
+	@Schema(description = "Gibt den Zeitstempel an, wann der Eintrag angelegt wurde.", example = "2013-11-14 13:12:48.774", accessMode = Schema.AccessMode.READ_ONLY)
 	public String tsAngelegt = null;
 
 	/** Gibt den Zeitstempel an, wann der Eintrag angelegt wurde. */
@@ -50,11 +50,11 @@ public class WiedervorlageEintrag {
 	public String tsWiedervorlage = null;
 
 	/** Gibt den Zeitstempel an, wann der Eintrag als erledigt markiert wurde. */
-	@Schema(description = "Gibt den Zeitstempel an, wann der Eintrag als erledigt markiert wurde.", example = "2013-11-14 13:12:48.774")
+	@Schema(description = "Gibt den Zeitstempel an, wann der Eintrag als erledigt markiert wurde.", example = "2013-11-14 13:12:48.774", accessMode = Schema.AccessMode.READ_ONLY)
 	public String tsErledigt = null;
 
 	/** Die ID des Benutzers, der den Eintrag als erledigt markiert hat, oder null. */
-	@Schema(description = "die ID des Benutzers, der den Eintrag als erledigt markiert hat, oder null.", example = "null")
+	@Schema(description = "die ID des Benutzers, der den Eintrag als erledigt markiert hat, oder null.", example = "null", accessMode = Schema.AccessMode.READ_ONLY)
 	public Long idBenutzerErledigt = null;
 
 	/** Gibt an, ob der Eintrag automatisch als erledigt markiert werden soll, wenn er einem Benutzer nach dem Wiedervorlage-Zeitpunkt angezeigt wurde. */

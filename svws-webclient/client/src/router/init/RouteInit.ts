@@ -16,11 +16,9 @@ import SInit from "~/components/init/SInit.vue";
 export class RouteInit extends RouteNode<any, any> {
 
 	protected listSchulkatalog = ref<List<SchulenKatalogEintrag>>(new ArrayList<SchulenKatalogEintrag>());
-	protected source = ref<'init'|'restore'|'migrate' | undefined>(undefined);
-	protected db = ref<'mysql' | 'mariadb' | 'mssql' | 'mdb'| undefined>(undefined);
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.ADMIN ], "init", "/init/:source?/:db?", SInit);
+		super(Schulform.values(), [ BenutzerKompetenz.ADMIN ], "init", "/init", SInit);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps();
 		super.text = "Initialisierung";
@@ -46,10 +44,9 @@ export class RouteInit extends RouteNode<any, any> {
 		return this.logout();
 	}
 
-	migrateDB = async (formData: FormData): Promise<boolean> => {
-		if (this.source.value === 'restore')
+	migrateDB = async (formData: FormData, restore: boolean, db: string | undefined): Promise<boolean> => {
+		if (restore)
 			return this.importSQLite(formData);
-		const db = this.db.value;
 		if (db === undefined) return false;
 		const schulnummer = parseInt(formData.get('schulnummer')?.toString() ?? '');
 		const data = new DatenbankVerbindungsdaten();
@@ -94,42 +91,17 @@ export class RouteInit extends RouteNode<any, any> {
 		return true;
 	}
 
-	setSource = async (source: 'init'|'restore'|'migrate') => {
-		const db = (source === 'migrate') ? 'mdb' : undefined;
-		await RouteManager.doRoute(this.getRoute({ source, db }));
-	}
-
-	setDB = async (db: 'mysql'|'mariadb'|'mssql'|'mdb') => {
-		await RouteManager.doRoute(this.getRoute({ source: this.source.value, db }));
-	}
-
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
-		if (to_params.source instanceof Array || to_params.db instanceof Array)
-			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		const source = (to_params.source === 'init' || to_params.source === 'migrate' || to_params.source === 'restore') ? to_params.source : undefined;
-		const db = (to_params.db === 'mysql' || to_params.db === 'mariadb' || to_params.db === 'mssql' || to_params.db === 'mdb') ? to_params.db : undefined;
 		if (isEntering)
 			this.listSchulkatalog.value = await api.server.getKatalogSchulen(api.schema);
-		if (source === undefined)
-			return { name: this.name, params: { source: 'init' }};
-		if ((source === 'migrate') && (db === undefined))
-			return { name: this.name, params: { source: to_params.source, db: 'mdb' }};
-		if ((source !== 'migrate') && (db !== undefined))
-			return { name: this.name, params: { source: to_params.source }};
-		this.source.value = source;
-		this.db.value = db;
 	}
 
 	public getProps(): InitProps {
 		return {
-			setSource: this.setSource,
-			setDB: this.setDB,
 			listSchulkatalog: this.listSchulkatalog.value,
 			initSchule: this.initSchule,
 			migrateDB: this.migrateDB,
 			importSQLite: this.importSQLite,
-			source: this.source.value,
-			db: this.db.value,
 		}
 	}
 

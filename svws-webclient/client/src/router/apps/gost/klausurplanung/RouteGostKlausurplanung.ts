@@ -36,7 +36,7 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 		super(schulformenGymOb, [
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION,
-			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN
+			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN,
 		], "gost.klausurplanung", "klausurplanung/:halbjahr([0-5])?", SGostKlausurplanung, new RouteDataGostKlausurplanung());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
@@ -56,6 +56,8 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 		api.config.addElements([
 			new ConfigElement("gost.klausurplan.quartal", "user", "0"),
 			new ConfigElement("gost.klausurplan.zeigeAlleJahrgaenge", "user", "false"),
+			new ConfigElement("gost.klausurplan.kwWarnLimit", "user", "3"),
+			new ConfigElement("gost.klausurplan.kwErrorLimit", "user", "4"),
 			new ConfigElement("gost.klausurplan.raumblockung_regel_optimiere_blocke_in_moeglichst_wenig_raeume", "user", "true"),
 			new ConfigElement("gost.klausurplan.raumblockung_regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume", "user", "true"),
 			new ConfigElement("gost.klausurplan.raumblockung_regel_forciere_selbe_kursklausur_im_selben_raum", "user", "true"),
@@ -167,6 +169,7 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 			quartalsauswahl: routeGostKlausurplanung.data.quartalsauswahl,
 			halbjahr: this.data.halbjahr,
 			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab),
+			getConfigNumberValue: routeGostKlausurplanung.data.getConfigNumberValue,
 		}
 	}
 

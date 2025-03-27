@@ -38,8 +38,8 @@ export class RouteDataSchuelerEinwilligungen extends RouteData<RouteStateSchuele
 	}
 
 
-	add = async (idEinwilligungsart: number) => {
-		const addCanditate : Partial<Einwilligung> = {idSchueler: this.auswahl.id, idEinwilligungsart: idEinwilligungsart}
+	add = async (data: Partial<Einwilligung>, idEinwilligungsart: number) => {
+		const addCanditate : Partial<Einwilligung> = Object.assign(data, {idSchueler: this.auswahl.id})
 		api.status.start();
 		const einwilligungNeu = await api.server.addEinwilligung(addCanditate, api.schema, this.auswahl.id, idEinwilligungsart);
 		this.einwilligungen.add(einwilligungNeu);

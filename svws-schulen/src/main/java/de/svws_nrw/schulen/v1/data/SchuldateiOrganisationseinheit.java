@@ -35,18 +35,6 @@ public class SchuldateiOrganisationseinheit {
 	@Schema(description = "die Art der Organisationseinheit", example = "1")
 	public @NotNull String oeart = "";
 
-	/** Die Amtsbezeichnung der Organisationseinheit */
-	@Schema(description = "Teil1 der amtlichen Bezeichnung der Organisationseinheit", example = "Städt. Gymnasium ....")
-	public @NotNull String amtsbez1 = "";
-
-	/** Die Amtsbezeichnung der Organisationseinheit */
-	@Schema(description = "Teil2 der amtlichen Bezeichnung der Organisationseinheit", example = "Städt. Gymnasium ....")
-	public @NotNull String amtsbez2 = "";
-
-	/** Die Amtsbezeichnung der Organisationseinheit */
-	@Schema(description = "Teil3 der amtlichen Bezeichnung der Organisationseinheit", example = "Städt. Gymnasium ....")
-	public @NotNull String amtsbez3 = "";
-
 	/** Das Errichtungsdatum der Schule. */
 	@Schema(description = "das Errichtungsdatum der Schule", example = "01.08.1973")
 	public @NotNull String errichtung = "";
@@ -58,6 +46,10 @@ public class SchuldateiOrganisationseinheit {
 	/** Die Grunddaten der Organisationseinheit (zeitl. Verlaufsliste)*/
 	@ArraySchema(schema = @Schema(implementation = SchuldateiOrganisationseinheitGrunddaten.class))
 	public final @NotNull List<SchuldateiOrganisationseinheitGrunddaten> grunddaten = new ArrayList<>();
+
+	/** Die Schulformen der Organisationseinheit:Schule (zeitl. Verlaufsliste)*/
+	@ArraySchema(schema = @Schema(implementation = SchuldateiOrganisationseinheitSchulform.class))
+	public final @NotNull List<SchuldateiOrganisationseinheitSchulform> schulform = new ArrayList<>();
 
 	/** Die Adressen der Organisationseinheit (zeitl. Verlaufsliste)*/
 	@ArraySchema(schema = @Schema(implementation = SchuldateiOrganisationseinheitAdresse.class))
@@ -77,7 +69,7 @@ public class SchuldateiOrganisationseinheit {
 
 	/** Die Eigenschaften der Organisationseinheit */
 	@ArraySchema(schema = @Schema(implementation = SchuldateiOrganisationseinheitEigenschaft.class))
-	public final @NotNull List<SchuldateiOrganisationseinheitEigenschaft> oeEigenschaften = new ArrayList<>();
+	public final @NotNull List<SchuldateiOrganisationseinheitEigenschaft> oe_eigenschaften = new ArrayList<>();
 
 
 	/**

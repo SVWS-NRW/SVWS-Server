@@ -1,0 +1,5 @@
+.ui-select {
+	:popover-open {
+		@apply absolute m-0;
+	}
+}

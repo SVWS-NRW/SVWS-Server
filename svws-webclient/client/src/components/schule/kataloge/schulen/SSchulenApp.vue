@@ -8,7 +8,7 @@
 							<h2 class="svws-headline">
 								{{ manager().auswahl().kuerzel }}
 								<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
-									Schulnummer: {{ manager().auswahl().schulnummer }}
+									Schulnummer: {{ manager().auswahl().schulnummerStatistik }}
 								</svws-ui-badge>
 							</h2>
 							<span class="svws-subline">{{ manager().daten().name }}</span>
@@ -48,7 +48,7 @@
 		const auswahlSchulenList = props.manager().liste.auswahlSorted();
 		if (auswahlSchulenList.size() > 5)
 			return `${auswahlSchulenList.size()} Schulen ausgewählt`;
-		return [...auswahlSchulenList].map(k => k.schulnummer).join(', ');
+		return [...auswahlSchulenList].map(k => k.schulnummerStatistik).join(', ');
 	})
 
 </script>

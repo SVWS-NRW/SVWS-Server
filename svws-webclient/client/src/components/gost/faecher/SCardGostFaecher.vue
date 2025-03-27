@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-table :items="faecherManager().faecher()" :no-data="false" :columns has-background scroll class="h-full">
+	<svws-ui-table :items="faecherManager().faecher()" :no-data="false" has-background scroll class="h-full">
 		<template #header>
 			<div class="svws-ui-tr" role="row">
 				<div class="svws-ui-td svws-divider col-span-4" role="columnheader">
@@ -65,16 +65,21 @@
 				</div>
 			</div>
 		</template>
-		<template #rowCustom="{ row: fach }">
-			<s-row-gost-faecher :key="fach.hashCode()" :fach-id="fach.id" :abiturjahr :patch-fach :faecher-manager :hat-update-kompetenz />
+		<template #body>
+			<template v-for="fach in faecherManager().faecher()" :key="fach.hashCode()">
+				<div class="svws-ui-tr text-ui-static" role="row" :style="{ 'background-color': bgColor(fach) }">
+					<s-row-gost-faecher :fach-id="fach.id" :abiturjahr :patch-fach :faecher-manager :hat-update-kompetenz />
+				</div>
+			</template>
 		</template>
 	</svws-ui-table>
 </template>
 
 <script setup lang="ts">
 
+	import { computed } from "vue";
+	import { Fach } from "@core";
 	import type { GostFach, GostFaecherManager } from "@core";
-	import type { DataTableColumn } from "@ui";
 
 	const props = defineProps<{
 		faecherManager: () => GostFaecherManager;
@@ -83,21 +88,18 @@
 		hatUpdateKompetenz: boolean;
 	}>();
 
-	const columns: DataTableColumn[] = [
-		{ key: "Kuerzel", label: "Kürzel", span: 0.25, minWidth: 5 },
-		{ key: "Fach", label: "Fach", span: 1, minWidth: 12},
-		{ key: "Neu", label: "Neu", align: 'center', span: 0.1, minWidth: 2.5 },
-		{ key: "WStd.", label: "WS", tooltip: "Wochenstunden", align: 'center', span: 0.25, minWidth: 3.5 },
-		{ key: "1.", label: "1.", align: 'center', span: 0.25, minWidth: 6 },
-		{ key: "2.", label: "2.", align: 'center', span: 0.25, minWidth: 6 },
-		{ key: "EF.1", label: "EF.1", align: 'center', span: 0.25, minWidth: 3 },
-		{ key: "EF.2", label: "EF.2", align: 'center', span: 0.25, minWidth: 3 },
-		{ key: "Q1.1", label: "Q1.1", align: 'center', span: 0.25, minWidth: 3 },
-		{ key: "Q1.2", label: "Q1.2", align: 'center', span: 0.25, minWidth: 3 },
-		{ key: "Q2.1", label: "Q2.1", align: 'center', span: 0.25, minWidth: 3 },
-		{ key: "Q2.2", label: "Q2.2", align: 'center', span: 0.25, minWidth: 3 },
-		{ key: "GK", label: "GK", align: 'center', span: 0.25, minWidth: 3 },
-		{ key: "LK", label: "LK", align: 'center', span: 0.25, minWidth: 3 }
-	];
+	const schuljahr = computed<number>(() => props.faecherManager().getSchuljahr());
+
+	function bgColor(fach : GostFach) : string {
+		return Fach.getBySchluesselOrDefault(fach.kuerzel).getHMTLFarbeRGB(schuljahr.value);
+	}
 
 </script>
+
+<style scoped>
+
+	.svws-ui-tr {
+		grid-template-columns: minmax(5rem, 0.25fr) minmax(12rem, 1fr) minmax(2.5rem, 0.1fr) minmax(3.5rem, 0.25fr) repeat(2, minmax(6rem, 0.25fr)) repeat(8, minmax(3rem, 0.25fr));
+	}
+
+</style>

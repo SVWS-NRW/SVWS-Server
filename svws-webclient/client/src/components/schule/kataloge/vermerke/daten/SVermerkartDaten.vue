@@ -1,5 +1,5 @@
 <template>
-	<div class="page--content">
+	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Vermerkart" class="w-full">
 			<svws-ui-input-wrapper>
 				<svws-ui-text-input class="contentFocusField w-5/5" placeholder="Bezeichnung" :model-value="vermerkartenManager().auswahl().bezeichnung" @change="bezeichnung => patch({ bezeichnung: bezeichnung ?? undefined })" type="text" />
@@ -35,7 +35,6 @@
 
 	import type { DataTableColumn } from "@ui";
 	import type { VermerkartDatenProps } from "./SVermerkartDatenProps";
-	import type { SchuelerVermerkartZusammenfassung } from "@core";
 
 	defineProps<VermerkartDatenProps>();
 

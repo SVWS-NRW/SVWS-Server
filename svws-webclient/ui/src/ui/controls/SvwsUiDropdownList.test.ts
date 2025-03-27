@@ -294,7 +294,7 @@ describe("Bedingtes Rendern mit CSS-Prüfung ", () => {
 			"icon",
 			"i-ri-check-line",
 			"w-5",
-			"flex-shrink-0",
+			"shrink-0",
 			"-mr-1",
 			"-my-1",
 			"relative",

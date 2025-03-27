@@ -14,38 +14,3 @@
 		center: false,
 	});
 </script>
-
-
-<style lang="postcss">
-.input-wrapper {
-	@apply grid flex-grow grid-cols-1 gap-3;
-
-	&--2 {
-		@apply sm:grid-cols-2;
-	}
-
-	&--4 {
-		@apply grid-cols-2 md:grid-cols-4;
-	}
-
-	.input-wrapper:not(.col-span-1) {
-		@apply col-span-full;
-	}
-
-	&--checkboxes {
-		@apply gap-x-3 gap-y-0;
-	}
-
-	.button {
-		@apply mr-auto;
-	}
-
-	&--center {
-		@apply justify-items-center;
-
-		.button {
-			@apply mx-auto;
-		}
-	}
-}
-</style>

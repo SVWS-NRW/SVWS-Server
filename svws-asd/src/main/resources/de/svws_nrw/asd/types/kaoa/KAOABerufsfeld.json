@@ -2,7 +2,7 @@
 	"version": 1,
 	"daten": [ {
 		"bezeichner": "BAV",
-		"idHistorie": 1,
+		"idStatistik": "1",
 		"historie": [ {
 			"id": 1,
 			"kuerzel": "BAV",
@@ -13,7 +13,7 @@
 		} ]
 	}, {
 		"bezeichner": "D",
-		"idHistorie": 2,
+		"idStatistik": "2",
 		"historie": [ {
 			"id": 2,
 			"kuerzel": "D",
@@ -24,7 +24,7 @@
 		} ]
 	}, {
 		"bezeichner": "EL",
-		"idHistorie": 3,
+		"idStatistik": "3",
 		"historie": [ {
 			"id": 3,
 			"kuerzel": "EL",
@@ -35,7 +35,7 @@
 		} ]
 	}, {
 		"bezeichner": "G",
-		"idHistorie": 4,
+		"idStatistik": "4",
 		"historie": [ {
 			"id": 4,
 			"kuerzel": "G",
@@ -46,7 +46,7 @@
 		} ]
 	}, {
 		"bezeichner": "GESGE",
-		"idHistorie": 5,
+		"idStatistik": "5",
 		"historie": [ {
 			"id": 5,
 			"kuerzel": "GESGE",
@@ -57,7 +57,7 @@
 		} ]
 	}, {
 		"bezeichner": "ITC",
-		"idHistorie": 6,
+		"idStatistik": "6",
 		"historie": [ {
 			"id": 6,
 			"kuerzel": "ITC",
@@ -68,7 +68,7 @@
 		} ]
 	}, {
 		"bezeichner": "KKG",
-		"idHistorie": 7,
+		"idStatistik": "7",
 		"historie": [ {
 			"id": 7,
 			"kuerzel": "KKG",
@@ -79,7 +79,7 @@
 		} ]
 	}, {
 		"bezeichner": "LANAUM",
-		"idHistorie": 8,
+		"idStatistik": "8",
 		"historie": [ {
 			"id": 8,
 			"kuerzel": "LANAUM",
@@ -90,7 +90,7 @@
 		} ]
 	}, {
 		"bezeichner": "M",
-		"idHistorie": 9,
+		"idStatistik": "9",
 		"historie": [ {
 			"id": 9,
 			"kuerzel": "M",
@@ -101,7 +101,7 @@
 		} ]
 	}, {
 		"bezeichner": "ME",
-		"idHistorie": 10,
+		"idStatistik": "10",
 		"historie": [ {
 			"id": 10,
 			"kuerzel": "ME",
@@ -112,7 +112,7 @@
 		} ]
 	}, {
 		"bezeichner": "N",
-		"idHistorie": 11,
+		"idStatistik": "11",
 		"historie": [ {
 			"id": 11,
 			"kuerzel": "N",
@@ -123,7 +123,7 @@
 		} ]
 	}, {
 		"bezeichner": "PRFE",
-		"idHistorie": 12,
+		"idStatistik": "12",
 		"historie": [ {
 			"id": 12,
 			"kuerzel": "PRFE",
@@ -134,7 +134,7 @@
 		} ]
 	}, {
 		"bezeichner": "SP",
-		"idHistorie": 13,
+		"idStatistik": "13",
 		"historie": [ {
 			"id": 13,
 			"kuerzel": "SP",
@@ -145,7 +145,7 @@
 		} ]
 	}, {
 		"bezeichner": "TEC",
-		"idHistorie": 14,
+		"idStatistik": "14",
 		"historie": [ {
 			"id": 14,
 			"kuerzel": "TEC",
@@ -156,7 +156,7 @@
 		} ]
 	}, {
 		"bezeichner": "VL",
-		"idHistorie": 15,
+		"idStatistik": "15",
 		"historie": [ {
 			"id": 15,
 			"kuerzel": "VL",
@@ -167,7 +167,7 @@
 		} ]
 	}, {
 		"bezeichner": "WIVE",
-		"idHistorie": 16,
+		"idStatistik": "16",
 		"historie": [ {
 			"id": 16,
 			"kuerzel": "WIVE",

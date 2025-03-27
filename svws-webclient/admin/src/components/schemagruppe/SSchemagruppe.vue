@@ -1,19 +1,26 @@
 <template>
-	<div class="page--content">
-		<div v-if="auswahlGruppe.length > 0" class="flex flex-col gap-y-16 lg:gap-y-20">
-			<svws-ui-action-button title="Löschen" description="Ausgewählte Schemata löschen." icon="i-ri-delete-bin-line"
-				:action-function="removeSchemata" action-label="Löschen" :is-loading="apiStatus.pending" :is-active="currentAction === 'delete'"
-				:action-disabled="!checkDeletable[0]" @click="toggleDelete">
-				<template v-if="checkDeletable[0]">
-					<span>Die folgenden Schemata werden gelöscht:</span><br>
-					<ul>
-						<li v-for="schema in auswahlGruppe" :key="schema.name"> {{ schema.name }} </li>
-					</ul>
-				</template>
-				<template v-else v-for="message in checkDeletable[1]" :key="message">
-					<span class="text-error"> {{ message }} <br> </span>
-				</template>
-			</svws-ui-action-button>
+	<div class="page page-flex-col overflow-x-auto">
+		<div v-if="auswahlGruppe.length > 0" class="flex flex-col gap-y-4">
+			<div class="min-w-128 max-w-192">
+				<ui-card icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Schemata löschen." :is-open="currentAction === 'delete'" @update:is-open="(isOpen) => setCurrentAction('delete', isOpen)">
+					<div>
+						<template v-if="checkDeletable[0]">
+							<span>Die folgenden Schemata werden gelöscht:</span><br>
+							<ul>
+								<li v-for="schema in auswahlGruppe" :key="schema.name"> {{ schema.name }} </li>
+							</ul>
+						</template>
+						<template v-else v-for="message in checkDeletable[1]" :key="message">
+							<span class="text-ui-danger"> {{ message }} <br> </span>
+						</template>
+						<svws-ui-button :disabled="!checkDeletable[0] || apiStatus.pending" title="Löschen" @click="removeSchemata" :is-loading="apiStatus.pending" class="mt-4">
+							<svws-ui-spinner v-if="apiStatus.pending" spinning />
+							<span v-else class="icon i-ri-play-line" />
+							Löschen
+						</svws-ui-button>
+					</div>
+				</ui-card>
+			</div>
 		</div>
 		<div v-else class="flex"><svws-ui-spinner spinning /><span>&nbsp;Laden des zuletzt ausgewählten Schemas …</span></div>
 	</div>
@@ -28,7 +35,22 @@
 
 	const props = defineProps<SchemagruppeProps>();
 
-	const currentAction = ref<'' | 'delete'>('delete');
+	const currentAction = ref<string>('');
+	const oldAction = ref<{ name: string | undefined; open: boolean }>({
+		name: undefined,
+		open: false,
+	});
+
+	function setCurrentAction(newAction: string, open: boolean) {
+		if(newAction === oldAction.value.name && !open)
+			return;
+		oldAction.value.name = currentAction.value;
+		oldAction.value.open = (currentAction.value === "") ? false : true;
+		if(open === true)
+			currentAction.value= newAction;
+		else
+			currentAction.value = "";
+	}
 
 	function toggleDelete() {
 		currentAction.value = currentAction.value === 'delete' ? '' : 'delete';

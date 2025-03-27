@@ -568,7 +568,8 @@ public class APIENM {
 
 	/**
 	 * Die OpenAPI-Methode für das Ausführen des initialen Setups eines ENM-Servers. Gibt bei Erfolg true zurück und wenn
-	 * der Server bereits initialisiert wurde, false.
+	 * der Server bereits initialisiert wurde, false. Im Rahmen dieses Aufrufs wird auch das TLS-Zertifikat des Servers
+	 * geprüft und ggf. in der Datenbank aktualisiert.
 	 *
 	 * @param schema  das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
 	 * @param request die Informationen zur HTTP-Anfrage
@@ -587,6 +588,8 @@ public class APIENM {
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Operation auszuführen.")
 	@ApiResponse(responseCode = "404", description = "Keine ENM-Serverdaten gefunden.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "409", description = "Der TLS-Zertifikat des ENM-Server wird nicht vertraut.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	@ApiResponse(responseCode = "502", description = "Fehler bei der Verbindung zum ENM-Server, u.U. auch fehlende OAuth-Daten.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))

@@ -25,14 +25,14 @@
 				</s-pausenzeit-neu-modal>
 			</template>
 		</svws-ui-table>
-		<svws-ui-action-button title="Alle Pausenzeiten erstellen" :is-active="actionPausenzeiten" @click="()=>actionPausenzeiten = !actionPausenzeiten" icon="i-ri-add-line">
+		<ui-card icon="i-ri-add-line" title="Alle Pausenzeiten erstellen" :is-open="actionPausenzeiten" @update:is-open="(isOpen) => actionPausenzeiten = isOpen">
 			<stundenplan-zeitraster-einstellungen :manager="stundenplanManager" :set-settings-defaults>
 				<svws-ui-button type="secondary" @click="addBlock" title="Alle Pausenzeiten erstellen">
 					<span class="icon i-ri-calendar-event-line" />
 					<span class="icon i-ri-add-line -ml-1" />Alle Pausenzeiten erstellen
 				</svws-ui-button>
 			</stundenplan-zeitraster-einstellungen>
-		</svws-ui-action-button>
+		</ui-card>
 	</div>
 </template>
 
@@ -50,7 +50,7 @@
 	const columns = [
 		{key: 'wochentag', label: 'Wochentag', span: 2},
 		{key: 'beginn', label: 'Beginn', span: 1},
-		{key: 'ende', label: 'Ende', span: 1}
+		{key: 'ende', label: 'Ende', span: 1},
 	]
 
 	async function doDeleteEintraege() {

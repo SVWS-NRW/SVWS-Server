@@ -1,13 +1,11 @@
 <template>
-	<svws-ui-secondary-menu>
-		<template #headline>
-			<span>Betriebe</span>
-		</template>
-		<template #abschnitt>
-			<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
-		</template>
-		<template #header />
-		<template #content>
+	<div class="h-full flex flex-col">
+		<div class="secondary-menu--headline">
+			<h1>Betriebe</h1>
+			<div><abschnitt-auswahl :daten="schuljahresabschnittsauswahl" /></div>
+		</div>
+		<div class="secondary-menu--header" />
+		<div class="secondary-menu--content">
 			<svws-ui-table :clicked="auswahl" @update:clicked="gotoEintrag" :items="rowsFiltered" :columns clickable scroll-into-view selectable :model-value="selected" @update:model-value="selected=$event" count
 				:focus-switching-enabled :focus-help-visible>
 				<template #search>
@@ -22,8 +20,8 @@
 					</s-betriebe-neu-modal>
 				</template>
 			</svws-ui-table>
-		</template>
-	</svws-ui-secondary-menu>
+		</div>
+	</div>
 </template>
 
 

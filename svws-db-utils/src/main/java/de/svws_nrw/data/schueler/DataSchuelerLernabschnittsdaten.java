@@ -1,8 +1,8 @@
 package de.svws_nrw.data.schueler;
 
-import de.svws_nrw.core.data.schueler.SchuelerLernabschnittNachpruefung;
-import de.svws_nrw.core.data.schueler.SchuelerLernabschnittNachpruefungsdaten;
-import de.svws_nrw.core.data.schueler.SchuelerLernabschnittsdaten;
+import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittNachpruefung;
+import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittNachpruefungsdaten;
+import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittsdaten;
 import de.svws_nrw.asd.data.schule.SchulgliederungKatalogEintrag;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.Note;
@@ -303,6 +303,7 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 					throw new ApiOperationException(Status.CONFLICT);
 				dto.Jahrgang_ID = idJahrgang;
 			}
+			case "epJahre" -> dto.EPJahre = JSONMapper.convertToIntegerInRange(value, true, 1, 3);
 			case "fachklasseID" -> {
 				final Long idFachklasse = JSONMapper.convertToLong(value, true);
 				if (idFachklasse != null) {

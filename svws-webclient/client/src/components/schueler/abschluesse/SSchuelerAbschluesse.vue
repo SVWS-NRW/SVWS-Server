@@ -1,5 +1,5 @@
 <template>
-	<div class="page--content">
+	<div class="page">
 		<svws-ui-todo title="Abschlüsse und Berechtigungen an aktueller Schule">
 			Hier werden zukünftig die Informationen zu den Abschlüssen und Berechtigungen an der aktuellen Schule angezeigt.
 		</svws-ui-todo>

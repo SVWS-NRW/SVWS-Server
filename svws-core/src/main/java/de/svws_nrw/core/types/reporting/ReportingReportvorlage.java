@@ -58,8 +58,25 @@ public enum ReportingReportvorlage {
 	SCHUELER_v_SCHULBESCHEINIGUNG("Schueler-Schulbescheinigung"),
 
 	/** Report-Vorlage: Schüler - Stammdaten - Liste */
-	SCHUELER_v_STAMMDATENLISTE("Schueler-Stammdatenliste");
+	SCHUELER_v_STAMMDATENLISTE("Schueler-Stammdatenliste"),
 
+	/** Report-Vorlage: Stundenplanung - Fach - Stundenplan */
+	STUNDENPLANUNG_v_FACH_STUNDENPLAN("Stundenplanung-FachStundenplan"),
+
+	/** Report-Vorlage: Stundenplanung - Klasse - Stundenplan */
+	STUNDENPLANUNG_v_KLASSEN_STUNDENPLAN("Stundenplanung-KlassenStundenplan"),
+
+	/** Report-Vorlage: Stundenplanung - Lehrer - Stundenplan */
+	STUNDENPLANUNG_v_LEHRER_STUNDENPLAN("Stundenplanung-LehrerStundenplan"),
+
+	/** Report-Vorlage: Stundenplanung - Lehrer - Stundenplan - Kombiniert */
+	STUNDENPLANUNG_v_LEHRER_STUNDENPLAN_KOMBINIERT("Stundenplanung-LehrerStundenplanKombiniert"),
+
+	/** Report-Vorlage: Stundenplanung - Fach - Stundenplan */
+	STUNDENPLANUNG_v_RAUM_STUNDENPLAN("Stundenplanung-RaumStundenplan"),
+
+	/** Report-Vorlage: Stundenplanung - Schüler - Stundenplan */
+	STUNDENPLANUNG_v_SCHUELER_STUNDENPLAN("Stundenplanung-SchuelerStundenplan");
 
 
 	/** Die Bezeichnung der Report-Vorlage */

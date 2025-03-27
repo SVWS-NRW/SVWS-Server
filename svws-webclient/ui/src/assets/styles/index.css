@@ -1,35 +1,96 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@source "./../..";
 
+@import "./colors.css";
+@import "./borders.css";
+@import "./dimensions.css";
+@import "./fonts.css";
+@import "./screens.css";
+@import "./icons.css";
+
+@import "../../ui/SvwsDocsUiColors.css";
+@import "../../ui/SvwsUiAvatar.css";
+@import "../../ui/SvwsUiBadge.css";
+@import "../../ui/SvwsUiNotification.css";
+@import "../../ui/SvwsUiSpinner.css";
+@import "../../ui/SvwsUiTooltip.css";
+@import "../../ui/controls/SvwsUiButton.css";
+@import "../../ui/controls/SvwsUiCheckbox.css";
+@import "../../ui/controls/SvwsUiDropdownList.css";
+@import "../../ui/controls/SvwsUiInputNumber.css";
+@import "../../ui/controls/SvwsUiMultiSelect.css";
+@import "../../ui/controls/SvwsUiRadioOption.css";
+@import "../../ui/controls/SvwsUiSelect.css";
+@import "../../ui/controls/select/UiSelect.css";
+@import "../../ui/controls/SvwsUiTextareaInput.css";
+@import "../../ui/controls/SvwsUiTextInput.css";
+@import "../../ui/controls/UiFileInput.css";
+@import "../../ui/layout/SvwsUiAppLayout.css";
+@import "../../ui/layout/UiCard.css";
+@import "../../ui/layout/SvwsUiContentCard.css";
+@import "../../ui/layout/SvwsUiDashboardTile.css";
+@import "../../ui/layout/SvwsUiHeader.css";
+@import "../../ui/layout/SvwsUiInputWrapper.css";
+@import "../../ui/layout/SvwsUiSpacing.css";
+@import "../../ui/layout/SvwsUiTable.css";
+@import "../../ui/layout/UiPage.css";
+@import "../../ui/modal/SvwsUiModal.css";
+@import "../../ui/nav/SvwsUiMenu.css";
+@import "../../ui/nav/SvwsUiMenuHeader.css";
+@import "../../ui/nav/SvwsUiMenuItem.css";
+@import "../../ui/nav/SvwsUiSecondaryMenu.css";
+@import "../../ui/nav/SvwsUiSubNav.css";
+@import "../../ui/nav/SvwsUiTabBar.css";
+@import "../../ui/nav/SvwsUiTabBarVertical.css";
+
+@import "../../components/stundenplan/StundenplanAnsicht.css";
+
+@plugin "@tailwindcss/typography";
+
+/* TODO: Prüfen, inwieweit die unteren Definitionen nicht besser bei den UI-Komponenten platziert werden können. */
 @layer base {
 
-	:root {
-		--color-white: 255, 255, 255; /* #ffffff */
-		--color-black: 44, 44, 44; /* #2C2C2C */
-		--color-gray: 102, 102, 102; /* #666666 */
-		--color-primary: 34, 133, 213; /* #2285d5 */
-		--color-light: 242, 244, 245; /* ##f5f4f2 CONTRAST good, flipped to blue */
-		--color-dark-20: 195, 195, 195; /* #c8d0d6 */
-		--color-dark: 43, 68, 82; /* #2b4452 */
-		--color-error: 225, 29, 72; /* #e11d48 // color-rose-600 */
-		--color-success: 132, 204, 22; /* #84cc16, color-lime-500  */
-		--color-highlight: 255, 246, 147; /* #fff693 */
-		--color-statistics: 139, 92, 246; /* #8b5cf6, color-violet-500 */
+	.scrollbar-thin {
+		scrollbar-width: thin;
 	}
 
-	@media (prefers-color-scheme: dark) {
-		:root {
-			--color-black: 28, 28, 28; /* #2C2C2C */
+	.secondary-menu--header .input-wrapper {
+		@apply max-2xl:grid-cols-1;
+	}
+
+	.focus-region {
+		border: 1px solid transparent;
+		border-radius: 6px;
+
+		&.highlighted {
+			border: 1px solid rgba(255, 0, 0, .5);
+			box-shadow: inset 0 0 3px rgba(255, 0, 0, .5);
 		}
 	}
 
-	html {
-		@apply antialiased text-black dark:text-white;
+	.region-enumeration {
+		position: fixed;
+		z-index: 1000;
+		color: rgba(255, 0, 0, .65);
+		padding: 0 0 0 5px;
+		font-weight: bold;
+		font-size: x-large;
+		pointer-events: none;
+		margin-top: -4px;
+
+		&.sub-nav {
+			margin-top: -7px;
+		}
 	}
 
-	html.dark {
-		--color-black: 28, 28, 28; /* #2C2C2C */
+	/* Buttons haben seit v4 keinen Pointer mehr: */
+	button:not(:disabled),
+	[role="button"]:not(:disabled) {
+		cursor: pointer;
+	}
+
+	html {
+		@apply antialiased text-ui;
 	}
 
 	.text-sm-bold {
@@ -37,12 +98,17 @@
 	}
 
 	hr {
-		@apply border-0 border-t-2 border-solid border-black/10 dark:border-white/10;
+		@apply border-0 border-t-2 border-solid border-ui-contrast-10;
 	}
 
 	.svws-ui-badge {
-		@apply rounded border border-black/10 font-medium text-black line-clamp-1 break-all inline-flex leading-none;
-		background-color: var(--background-color);
+		@apply rounded-sm border border-ui-contrast-10 font-medium text-ui-contrast-100 bg-ui line-clamp-1 break-all inline-flex leading-none;
+		padding: 0.05rem 0.25rem;
+		margin: -0.125rem auto -0.125rem -0.125rem;
+	}
+
+	.svws-ui-badge-transparent {
+		@apply rounded-sm border border-ui-contrast-10 font-medium text-ui-contrast-100 line-clamp-1 break-all inline-flex leading-none;
 		padding: 0.05rem 0.25rem;
 		margin: -0.125rem auto -0.125rem -0.125rem;
 	}
@@ -50,4 +116,5 @@
 	.icon {
 		@apply inline-block;
 	}
+
 }

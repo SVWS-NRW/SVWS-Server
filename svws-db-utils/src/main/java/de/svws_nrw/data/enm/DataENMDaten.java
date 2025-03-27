@@ -49,7 +49,6 @@ import de.svws_nrw.core.types.oauth2.OAuth2ServerTyp;
 import de.svws_nrw.core.utils.enm.ENMDatenManager;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
-import de.svws_nrw.data.oauth2.DataOauthClientSecrets;
 import de.svws_nrw.data.oauth2.OAuth2Client;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.lehrer.DTOLehrerNotenmodulCredentials;
@@ -71,7 +70,6 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerPSFachBemerkungen;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerTeilleistung;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOTeilleistungsarten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
-import de.svws_nrw.db.dto.current.svws.auth.DTOSchuleOAuthSecrets;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsLehrerNotenmodulCredentials;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerAnkreuzkompetenzen;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLeistungsdaten;
@@ -1141,52 +1139,6 @@ public final class DataENMDaten extends DataManager<Long> {
 
 
 	/**
-	 * Erstellt mit einer gegebenen Datenbankverbindung einen {@link OAuthClient}
-	 *
-	 * @param conn    die Datenbankverbindung
-	 * @param logger  der Logger
-	 *
-	 * @return der OAuthClient
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	private static OAuth2Client getWenomOAuthClient(final DBEntityManager conn, final Logger logger) throws ApiOperationException {
-		logger.logLn("Lese die OAuth2-Client-Secrets für den ENM-Server aus der Datenbank...");
-		final DTOSchuleOAuthSecrets dto = new DataOauthClientSecrets(conn).getDto(OAuth2ServerTyp.WENOM);
-		if (dto == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Es wurden keine OAuth2-Client-Secrets für den ENM-Server in der Datenbank gefunden.");
-		logger.logLn("Prüfe, ob das OAuth2-Token noch gültig ist und fordere ggf. ein neues an...");
-		logger.modifyIndent(2);
-		final OAuth2Client client = OAuth2Client.getClient(dto, logger);
-		logger.modifyIndent(-2);
-		return client;
-	}
-
-
-	/**
-	 * Erstellt mit einer gegebenen Datenbankverbindung einen {@link OAuthClient}
-	 *
-	 * @param conn    die Datenbankverbindung
-	 * @param logger  der Logger
-	 *
-	 * @return der OAuthClient
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	private static OAuth2Client getWenomOAuthClientWithoutSecret(final DBEntityManager conn, final Logger logger) throws ApiOperationException {
-		logger.logLn("Lese die OAuth2-Client-Secrets für den ENM-Server aus der Datenbank...");
-		final DTOSchuleOAuthSecrets dto = new DataOauthClientSecrets(conn).getDto(OAuth2ServerTyp.WENOM);
-		if (dto == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Es wurden keine OAuth2-Client-Secrets für den ENM-Server in der Datenbank gefunden.");
-		logger.logLn("Prüfe, ob das OAuth2-Token noch gültig ist und fordere ggf. ein neues an...");
-		logger.modifyIndent(2);
-		final OAuth2Client client = OAuth2Client.getClientWithoutSecret(dto, logger);
-		logger.modifyIndent(-2);
-		return client;
-	}
-
-
-	/**
 	 * Lädt die ENM-Daten über den gegebenen OAuthClient vom ENM-Server und mit dem gegebenen DataManager in die
 	 * Datenbank
 	 *
@@ -1198,7 +1150,7 @@ public final class DataENMDaten extends DataManager<Long> {
 	 */
 	private static void downloadENMDaten(final DBEntityManager conn, final OAuth2Client client, final Logger logger) throws ApiOperationException {
 		logger.logLn("Sende die Anfrage zum Herunderladen der ENM-Daten von dem ENM-Server...");
-		final HttpResponse<byte[]> httpResponse = client.get("/api/secure/export", BodyHandlers.ofByteArray(), logger);
+		final HttpResponse<byte[]> httpResponse = client.get("/api/secure/export", BodyHandlers.ofByteArray());
 		if (httpResponse.statusCode() != Status.OK.getStatusCode())
 			throw new ApiOperationException(Status.BAD_GATEWAY, httpResponse.body());
 		logger.logLn("Schreibe die neuen Daten aus ENM-Daten anhand der Zeitstempel in die Datenbank des SVWS-Servers...");
@@ -1220,7 +1172,7 @@ public final class DataENMDaten extends DataManager<Long> {
 		final byte[] daten = getAllGZIPBytes(conn);
 		logger.logLn("Sende die ENM-Daten an den ENM-Server...");
 		logger.modifyIndent(2);
-		final HttpResponse<String> response = client.postMultipart("/api/secure/import", "json.gz", daten, BodyHandlers.ofString(), logger);
+		final HttpResponse<String> response = client.postMultipart("/api/secure/import", "json.gz", daten, BodyHandlers.ofString());
 		logger.modifyIndent(-2);
 		if (response.statusCode() != Status.OK.getStatusCode())
 			throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
@@ -1250,7 +1202,7 @@ public final class DataENMDaten extends DataManager<Long> {
 		try {
 			logger.logLn("Führe eine Synchronisation der Daten durch...");
 			logger.modifyIndent(2);
-			final OAuth2Client client = getWenomOAuthClient(conn, logger);
+			final OAuth2Client client = new OAuth2Client(conn, logger, OAuth2ServerTyp.WENOM, true);
 			uploadENMDaten(conn, client, logger);
 			downloadENMDaten(conn, client, logger);
 			logger.logLn("Die Synchronisation wurde erfolgreich abgeschlossen.");
@@ -1291,7 +1243,7 @@ public final class DataENMDaten extends DataManager<Long> {
 		try {
 			logger.logLn("Führe einen Upload der Daten durch...");
 			logger.modifyIndent(2);
-			final OAuth2Client client = getWenomOAuthClient(conn, logger);
+			final OAuth2Client client = new OAuth2Client(conn, logger, OAuth2ServerTyp.WENOM, true);
 			uploadENMDaten(conn, client, logger);
 			logger.logLn("Der Upload wurde erfolgreich abgeschlossen.");
 			sor.success = true;
@@ -1331,7 +1283,7 @@ public final class DataENMDaten extends DataManager<Long> {
 		try {
 			logger.logLn("Führe einen Download der Daten durch...");
 			logger.modifyIndent(2);
-			final OAuth2Client client = getWenomOAuthClient(conn, logger);
+			final OAuth2Client client = new OAuth2Client(conn, logger, OAuth2ServerTyp.WENOM, true);
 			downloadENMDaten(conn, client, logger);
 			logger.logLn("Der Download wurde erfolgreich abgeschlossen.");
 			sor.success = true;
@@ -1371,8 +1323,8 @@ public final class DataENMDaten extends DataManager<Long> {
 		try {
 			logger.logLn("Führe ein Truncate auf dem Server durch...");
 			logger.modifyIndent(2);
-			final OAuth2Client client = getWenomOAuthClient(conn, logger);
-			final HttpResponse<String> response = client.postEmpty("/api/secure/truncate", BodyHandlers.ofString(), logger);
+			final OAuth2Client client = new OAuth2Client(conn, logger, OAuth2ServerTyp.WENOM, true);
+			final HttpResponse<String> response = client.postEmpty("/api/secure/truncate", BodyHandlers.ofString());
 			if (response.statusCode() != Status.OK.getStatusCode())
 				throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
 			logger.logLn("Die Truncate-Operation wurde erfolgreich abgeschlossen.");
@@ -1412,8 +1364,8 @@ public final class DataENMDaten extends DataManager<Long> {
 		try {
 			logger.logLn("Führe ein Reset auf dem Server durch...");
 			logger.modifyIndent(2);
-			final OAuth2Client client = getWenomOAuthClient(conn, logger);
-			final HttpResponse<String> response = client.postEmpty("/api/secure/reset", BodyHandlers.ofString(), logger);
+			final OAuth2Client client = new OAuth2Client(conn, logger, OAuth2ServerTyp.WENOM, true);
+			final HttpResponse<String> response = client.postEmpty("/api/secure/reset", BodyHandlers.ofString());
 			if (response.statusCode() != Status.OK.getStatusCode())
 				throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
 			logger.logLn("Die Reset-Operation wurde erfolgreich abgeschlossen.");
@@ -1453,8 +1405,8 @@ public final class DataENMDaten extends DataManager<Long> {
 		try {
 			logger.logLn("Prüft, ob der Endpunkt für einen Verbindungstest erreichbar ist...");
 			logger.modifyIndent(2);
-			final OAuth2Client client = getWenomOAuthClient(conn, logger);
-			final HttpResponse<String> response = client.get("/api/secure/check", BodyHandlers.ofString(), logger);
+			final OAuth2Client client = new OAuth2Client(conn, logger, OAuth2ServerTyp.WENOM, true);
+			final HttpResponse<String> response = client.get("/api/secure/check", BodyHandlers.ofString());
 			if (response.statusCode() != Status.OK.getStatusCode())
 				throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
 			logger.logLn("Der Verbindungstest wurde erfolgreich durchgeführt.");
@@ -1494,8 +1446,8 @@ public final class DataENMDaten extends DataManager<Long> {
 		try {
 			logger.logLn("Frage Serverkonfiguration an...");
 			logger.modifyIndent(2);
-			final OAuth2Client client = getWenomOAuthClient(conn, logger);
-			final HttpResponse<String> response = client.get("/api/secure/serverconfig", BodyHandlers.ofString(), logger);
+			final OAuth2Client client = new OAuth2Client(conn, logger, OAuth2ServerTyp.WENOM, true);
+			final HttpResponse<String> response = client.get("/api/secure/serverconfig", BodyHandlers.ofString());
 			if (response.statusCode() != Status.OK.getStatusCode())
 				throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
 			logger.logLn("Die Serverkonfiguration wurde erfolgreich abgefragt.");
@@ -1540,8 +1492,8 @@ public final class DataENMDaten extends DataManager<Long> {
 			logger.logLn("Schicke das Konfigurationselement an den Server...");
 			logger.modifyIndent(2);
 			final String element = JSONMapper.toJsonString(is);
-			final OAuth2Client client = getWenomOAuthClient(conn, logger);
-			final HttpResponse<String> response = client.put("/api/secure/serverconfig", BodyHandlers.ofString(), logger, element);
+			final OAuth2Client client = new OAuth2Client(conn, logger, OAuth2ServerTyp.WENOM, true);
+			final HttpResponse<String> response = client.put("/api/secure/serverconfig", BodyHandlers.ofString(), element);
 			if (response.statusCode() != Status.OK.getStatusCode())
 				throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
 			logger.logLn("Das Konfigurationselement wurde erfolgreich gesetzt.");
@@ -1561,7 +1513,7 @@ public final class DataENMDaten extends DataManager<Long> {
 	}
 
 	/**
-	 * Prüft, ob der ENM-Server bereits initialisiert ist.
+	 * Prüft, ob der ENM-Server bereits initialisiert ist und gleichzeitig, ob das TLS bekannt ist.
 	 *
 	 * @param conn   die Datenbank-Verbindung
 	 *
@@ -1573,8 +1525,11 @@ public final class DataENMDaten extends DataManager<Long> {
 		// Erstelle zunächst einen Logger für die Operation
 		final Logger logger = new Logger();
 		try {
-			final OAuth2Client client = getWenomOAuthClientWithoutSecret(conn, logger);
-			final HttpResponse<String> response = client.getUnauthorized("/api/setup", BodyHandlers.ofString(), logger);
+			final OAuth2Client client = new OAuth2Client(conn, logger, OAuth2ServerTyp.WENOM, false);
+			final boolean isTrusted = client.checkCertificate();
+			if (!isTrusted)
+				return Response.status(Status.CONFLICT).entity("Dem Zertifikat wird aktuell nicht vertraut.").build();
+			final HttpResponse<String> response = client.getUnauthorized("/api/setup", BodyHandlers.ofString());
 			if ((response.statusCode() != Status.NO_CONTENT.getStatusCode()) && (response.statusCode() != Status.CONFLICT.getStatusCode()))
 				throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(response.statusCode() == Status.NO_CONTENT.getStatusCode()).build();

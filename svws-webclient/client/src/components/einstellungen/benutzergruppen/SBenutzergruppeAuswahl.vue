@@ -1,12 +1,11 @@
 <template>
-	<svws-ui-secondary-menu>
-		<template #headline>
-			<span title="Benutzergruppen">Benutzergruppen</span>
-		</template>
-		<template #abschnitt>
-			<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
-		</template>
-		<template #content>
+	<div class="h-full flex flex-col">
+		<div class="secondary-menu--headline">
+			<h1><span title="Benutzergruppen">Benutzergruppen</span></h1>
+			<div><abschnitt-auswahl :daten="schuljahresabschnittsauswahl" /></div>
+		</div>
+		<div class="secondary-menu--header" />
+		<div class="secondary-menu--content">
 			<svws-ui-table :clicked="auswahl()" @update:clicked="gotoBenutzergruppe" v-model="selectedItems" :items="rowsFiltered.values()"
 				:columns="cols" clickable selectable count :unique-key="String(auswahl()?.id)" scroll scroll-into-view :focus-switching-enabled :focus-help-visible>
 				<template #search>
@@ -17,8 +16,8 @@
 						:delete-benutzergruppen="deleteMultipleGroup" :has-focus="rowsFiltered.size === 0" />
 				</template>
 			</svws-ui-table>
-		</template>
-	</svws-ui-secondary-menu>
+		</div>
+	</div>
 </template>
 
 <script setup lang="ts">

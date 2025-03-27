@@ -1,9 +1,9 @@
 package de.svws_nrw.module.reporting.types.person;
 
 import de.svws_nrw.asd.types.Geschlecht;
+import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.core.data.kataloge.OrtKatalogEintrag;
 import de.svws_nrw.core.data.kataloge.OrtsteilKatalogEintrag;
-import de.svws_nrw.core.types.schule.Nationalitaeten;
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
 
 /**

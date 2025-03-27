@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
 
-import de.svws_nrw.core.data.schueler.SchuelerBetriebsdaten;
+import de.svws_nrw.asd.data.schueler.SchuelerBetriebsdaten;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;

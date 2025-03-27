@@ -1,18 +1,20 @@
 <template>
-	<svws-ui-table :items="[]" :no-data="false" :columns="cols">
+	<svws-ui-table :items="[]" :no-data="false">
 		<template #header>
-			<div role="row" class="svws-ui-tr" :style="{ '--background-color': fws ? getBgColor(fws) : 'transparent' }">
-				<div role="cell" class="svws-ui-td col-span-full">
-					<div class="flex gap-1">
-						<span class="svws-ui-badge">{{ faecherManager.get(props.fachID)?.bezeichnung || "&ndash;" }}</span>
-						<span>in der {{ halbjahr.kuerzel }}</span>
+			<div role="row" class="svws-ui-tr text-ui-static">
+				<template v-if="fws !== undefined">
+					<div role="cell" class="svws-ui-td col-span-full" :style="'background-color: ' + getBgColor(fws)">
+						<div class="flex gap-1">
+							<span>{{ faecherManager.get(props.fachID)?.bezeichnung || "&ndash;" }}</span>
+							<span>in der {{ halbjahr.kuerzel }}</span>
+						</div>
 					</div>
-				</div>
+				</template>
 			</div>
 		</template>
 		<template #body>
 			<template v-if="fws !== undefined && hatFachwahl(fws)">
-				<div role="row" class="svws-ui-tr">
+				<div role="row" class="svws-ui-tr text-ui">
 					<div role="cell" class="svws-ui-td svws-align-center">
 						<span class="icon i-ri-draft-line text-sm -my-0.5 mr-0.5" />
 						<span v-if="fws.fachwahlen[halbjahr.id].wahlenGKSchriftlich > 0"> Schriftlich ({{ fws.fachwahlen[halbjahr.id].wahlenGKSchriftlich }}) </span>
@@ -24,9 +26,9 @@
 						<span v-else class="opacity-25">Mündlich (—)</span>
 					</div>
 				</div>
-				<div role="row" class="svws-ui-tr">
+				<div role="row" class="svws-ui-tr text-ui">
 					<div role="cell" class="flex flex-col svws-ui-td mb-5 leading-tight" v-for="col in [1, 2]" :key="col">
-						<div v-for="schueler in getSchuelerListe(fws.id, col)" :key="schueler.id" class="flex gap-1 py-0.5 px-1 -mx-1 -mt-0.5 hover:bg-black/10 dark:hover:bg-white/10 rounded cursor-pointer" role="link" @click="gotoLaufbahnplanung(schueler.id)">
+						<div v-for="schueler in getSchuelerListe(fws.id, col)" :key="schueler.id" class="flex gap-1 py-0.5 px-1 -mx-1 -mt-0.5 hover:bg-ui-contrast-10 rounded-sm cursor-pointer" role="link" @click="gotoLaufbahnplanung(schueler.id)">
 							<span class="icon i-ri-link" />
 							<span class="line-clamp-1 break-all leading-tight -my-0.5" :title="schueler.nachname + ', ' + schueler.vorname">{{ schueler.nachname + ", " + schueler.vorname }}</span>
 						</div>
@@ -39,7 +41,6 @@
 
 <script setup lang="ts">
 
-	import type { DataTableColumn } from "@ui";
 	import type { GostFachwahlenFachHalbjahrProps } from "./SGostFachwahlenFachHalbjahrProps";
 	import type { ComputedRef} from "vue";
 	import { computed } from "vue";
@@ -53,11 +54,6 @@
 				return f;
 		return undefined;
 	});
-
-	const cols: DataTableColumn[] = [
-		{ key: "GKS", label: "GKS", span: 1 },
-		{ key: "GKM", label: "GKM", span: 1 },
-	];
 
 	const schuljahr = computed<number>(() => props.faecherManager.getSchuljahr());
 
@@ -98,3 +94,11 @@
 	}
 
 </script>
+
+<style scoped>
+
+	.svws-ui-tr {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+</style>

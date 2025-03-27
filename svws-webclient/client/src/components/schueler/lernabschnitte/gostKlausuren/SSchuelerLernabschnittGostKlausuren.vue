@@ -1,5 +1,5 @@
 <template>
-	<div class="content">
+	<div class="page page-grid-cards">
 		<svws-ui-modal v-if="showModalTerminGrund" :show="showModalTerminGrund" size="small">
 			<template #modalTitle>
 				Grund für Fehlen angeben
@@ -104,11 +104,3 @@
 	];
 
 </script>
-
-<style lang="postcss" scoped>
-
-	.content {
-		@apply w-full h-full grid grid-cols-2;
-	}
-
-</style>

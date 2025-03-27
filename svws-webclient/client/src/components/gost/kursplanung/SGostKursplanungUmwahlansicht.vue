@@ -1,5 +1,5 @@
 <template>
-	<div v-if="hatBlockung && hatErgebnis && (schueler !== undefined)" class="min-w-[42rem] w-fit h-full flex flex-col">
+	<div v-if="hatBlockung && hatErgebnis && (schueler !== undefined)" class="min-w-fit h-full flex flex-col">
 		<div class="content-card--header mb-2 w-fit h-fit">
 			<div class="flex flex-row">
 				<svws-ui-button type="icon" @click="routeLaufbahnplanung()" :title="`Zur Laufbahnplanung von ${schueler.vorname} ${schueler.nachname}`" size="small" class="mr-0.5 mt-0.5">
@@ -18,23 +18,24 @@
 						<!-- Die Liste mit den Fachwahlen -->
 						<svws-ui-table :items="[]" :no-data="false" :disable-header="true" type="navigation" has-background class="mt-1">
 							<template #body>
-								<div v-for="fach in fachbelegungen" :key="fach.fachID" role="row" class="svws-ui-tr !w-full" :class="{ 'font-medium': (fachwahlKurszuordnungen.get(fach.fachID) === undefined) }">
+								<div v-for="fach in fachbelegungen" :key="fach.fachID" role="row" class="svws-ui-tr !w-full"
+									:class="{ 'font-medium': (fachwahlKurszuordnungen.get(fach.fachID) === undefined) }">
 									<div role="cell"
 										:draggable="hatUpdateKompetenz && (fachwahlKurszuordnungen.get(fach.fachID) === undefined)"
 										@dragstart="drag_started(fachwahlKurszuordnungen.get(fach.fachID)?.id, fach.fachID, fachwahlKursarten.get(fach.fachID)!.id)"
 										@dragend="drag_ended()"
-										class="select-none svws-ui-td svws-no-padding group"
+										class="select-none svws-ui-td svws-no-padding group rounded-sm text-ui-static"
 										:class="hatUpdateKompetenz && (fachwahlKurszuordnungen.get(fach.fachID) === undefined) ? 'cursor-grab' : 'opacity-50'"
-										:style="{ '--background-color': bgColorFachwahl(fach.fachID) }">
-										<div class="svws-ui-badge w-auto flex-grow !h-full items-center m-0">
-											<div class="flex flex-row flex-grow">
+										:style="{ 'background-color': bgColorFachwahl(fach.fachID) }">
+										<div class="svws-ui-badge-transparent w-auto grow !h-full items-center m-0">
+											<div class="flex flex-row grow">
 												<template v-if="(fachwahlKurszuordnungen.get(fach.fachID) === undefined) && hatUpdateKompetenz">
-													<span class="icon-sm i-ri-draggable opacity-50 group-hover:opacity-100 rounded-sm group-hover:bg-white/50" />
+													<span class="icon-ui-static icon-sm i-ri-draggable opacity-50 group-hover:opacity-100 rounded-xs" />
 												</template>
 												<template v-else>
 													<span class="w-3 text-sm">&nbsp;</span>
 												</template>
-												<span class="ml-0.5">
+												<span class="ml-0.5 text-ui-static">
 													{{ getFachwahlKursname(fach.fachID) }}
 													<template v-if="getDatenmanager().getHalbjahr().istQualifikationsphase() && getDatenmanager().schuelerGetOfFachFachwahl(schueler.id, fach.fachID).abiturfach !== null">
 														<span class="text-sm">—</span>
@@ -42,8 +43,8 @@
 													</template>
 												</span>
 											</div>
-											<span v-if="fach.istSchriftlich" class="icon i-ri-draft-line" />
-											<span v-else class="icon i-ri-chat-1-line" />
+											<span v-if="fach.istSchriftlich" class="icon-ui-static icon i-ri-draft-line" />
+											<span v-else class="icon-ui-static icon i-ri-chat-1-line" />
 										</div>
 									</div>
 								</div>
@@ -53,9 +54,9 @@
 						<template v-if="hatUpdateKompetenz">
 							<svws-ui-button type="secondary" @click="auto_verteilen" :disabled="apiStatus.pending" title="Automatisch verteilen und aktuelle Zuordnung verwerfen" class="mt-2 w-full"><span class="icon i-ri-sparkling-line" />Verteilen</svws-ui-button>
 							<!-- Der "Mülleimer für das Ablegen von Kursen, bei denen die Kurs-Schüler-Zuordnung aufgehoben werden soll. " -->
-							<div class="mt-5 py-4 border-2 rounded-xl border-dashed border-black/10 dark:border-white/10" :class="[dragAndDropData === undefined ? 'border-black/10 dark:border-white/10' : 'border-error ring-4 ring-error/10']">
+							<div class="mt-5 py-4 border-2 rounded-xl border-dashed" :class="[dragAndDropData === undefined ? 'border-ui-contrast-10' : 'border-ui-danger ring-4 ring-ui-danger/50']">
 								<div class="flex items-center gap-2 justify-center" :class="[dragAndDropData === undefined ? 'opacity-25' : 'opacity-100']">
-									<span class="icon i-ri-delete-bin-line text-headline flex-shrink-0" :class="[dragAndDropData === undefined ? 'opacity-50' : 'text-error']" />
+									<span class="icon i-ri-delete-bin-line text-headline shrink-0" :class="[dragAndDropData === undefined ? 'opacity-50' : 'text-ui-danger']" />
 									<span class="text-sm w-2/3">
 										<template v-if="dragAndDropData === undefined">Kurse hier zum<br>Löschen ablegen</template>
 										<template v-else>Kurs-Zuordnung<br>aufheben</template>
@@ -68,16 +69,17 @@
 			</div>
 
 			<!-- Übersicht über die Kurs-Schienen-Zuordnung für den Schüler -->
-			<div class="flex-grow">
+			<div class="grow">
 				<svws-ui-table :items="[]" :columns="cols" :disable-header="true" :no-data="false" class="border-t">
 					<template #body>
-						<div v-for="(schiene, index) in getErgebnismanager().getMengeAllerSchienen()" :key="index" role="row" class="svws-ui-tr">
+						<div v-for="(schiene, index) in getErgebnismanager().getMengeAllerSchienen()" :key="index" role="row" class="svws-ui-tr"
+							:style="gridTemplateColumns">
 							<!-- Informationen zu der Schiene und der Statistik dazu auf der linken Seite der Tabelle -->
 							<div role="cell" class="svws-ui-td svws-divider">
 								<div class="flex flex-col py-1 w-full" :title="getErgebnismanager().getSchieneG(schiene.id).bezeichnung">
-									<div class="inline-flex items-center" :class="{'text-error': hatSchieneKollisionen(schiene.id).value}">
-										<span class="icon icon-error i-ri-alert-line -mt-0.5" v-if="hatSchieneKollisionen(schiene.id).value" />
-										<div class="overflow-hidden overflow-ellipsis whitespace-nowrap w-full"><span class="mb-0.5 text-button">{{ getErgebnismanager().getSchieneG(schiene.id).bezeichnung }}</span></div>
+									<div class="inline-flex items-center" :class="{'text-ui-danger': hatSchieneKollisionen(schiene.id).value}">
+										<span class="icon icon-ui-danger i-ri-alert-line -mt-0.5" v-if="hatSchieneKollisionen(schiene.id).value" />
+										<div class="overflow-hidden text-ellipsis whitespace-nowrap w-full"><span class="mb-0.5 text-button">{{ getErgebnismanager().getSchieneG(schiene.id).bezeichnung }}</span></div>
 									</div>
 									<span class="text-sm font-medium opacity-50">{{ schiene.kurse.size() }} Kurs{{ schiene.kurse.size() === 1 ? '' : 'e' }}</span>
 									<span class="text-sm font-medium opacity-50">{{ getErgebnismanager().getOfSchieneAnzahlSchueler(schiene.id) }} Schüler</span>
@@ -87,15 +89,19 @@
 							<!-- Die Liste der Schüler-Kurse (von links nach rechts), welche der Schiene zugeordnet sind (stehen ggf. für drag und/oder drop zur Verfügung). -->
 							<div role="cell" v-for="kurs of getErgebnismanager().getOfSchieneKursmengeSortiert(schiene.id)" :key="kurs.id"
 								class="svws-ui-td svws-align-center svws-no-padding select-none group relative !p-[2px] svws-divider last:!border-r-0"
-								:class="{ 'is-drop-zone': is_drop_zone(kurs).value, 'cursor-grab': is_draggable(kurs.id).value }"
+								:class="{ 'cursor-grab': is_draggable(kurs.id).value }"
 								:draggable="is_draggable(kurs.id).value"
 								@dragstart="drag_started(kurs.id, kurs.fachID, kurs.kursart)"
 								@dragend="drag_ended()">
-								<div class="w-full h-full flex flex-col justify-center items-center rounded border border-black/10 py-1 px-0.5"
-									:style="{ 'background-color': hatSchieneKollisionen(schiene.id).value && getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id) ? 'rgb(var(--color-error))' : bgColor(kurs.id) }"
-									:class="{ 'text-white' : hatSchieneKollisionen(schiene.id).value && getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id)}"
-									@dragover="if (is_drop_zone(kurs).value) $event.preventDefault();" @drop="drop_aendere_kurszuordnung(kurs)">
-									<span class="icon-sm i-ri-draggable mt-1 ml-1 opacity-50 group-hover:opacity-100 rounded-sm absolute top-0 left-0" v-if="is_draggable(kurs.id).value" :class="[hatSchieneKollisionen(schiene.id).value && is_draggable(kurs.id).value ? 'group-hover:bg-white/25 icon-white' : 'group-hover:bg-white/75 icon-black']" />
+								<div class="w-full h-full flex flex-col justify-center items-center rounded-sm border border-black/10 py-1 px-0.5"
+									:style="{ 'background-color': hatSchieneKollisionen(schiene.id).value && getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id) ? 'var(--color-bg-ui-danger)' : bgColor(kurs.id) }"
+									:class="{
+										'text-ui-ondanger' : hatSchieneKollisionen(schiene.id).value && getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id),
+										'bg-ui-brand/10 opacity-75 border-ui-brand rounded-sm ring-3 ring-ui-brand': is_drop_zone(kurs).value,
+										'text-ui-static': getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id) && !hatSchieneKollisionen(schiene.id).value,
+									}"
+									@dragover="onDragOver($event, kurs)" @drop="drop_aendere_kurszuordnung(kurs)">
+									<span class="icon-sm i-ri-draggable mt-1 ml-1 opacity-50 group-hover:opacity-100 rounded-xs absolute top-0 left-0" v-if="is_draggable(kurs.id).value" :class="[hatSchieneKollisionen(schiene.id).value && is_draggable(kurs.id).value ? 'group-hover:opacity-25 icon-ui-contrast-0' : 'group-hover:opacity-50 icon-ui-contrast-100']" />
 									<span class="text-sm opacity-50 relative" title="Schriftlich/Insgesamt im Kurs">
 										{{ getErgebnismanager().getOfKursAnzahlSchuelerSchriftlich(kurs.id) }}/{{ kurs.schueler.size() }}
 									</span>
@@ -112,9 +118,9 @@
 											</span>
 											<span class="cursor-pointer" @click.stop="fixieren_regel_toggle(kurs.id)" :title="fixier_regel(kurs.id) ? 'Fixiert' : 'Fixieren'">
 												<span class="icon i-ri-pushpin-fill inline-block" v-if="fixier_regel(kurs.id)"
-													:class="[hatSchieneKollisionen(schiene.id).value ? 'icon-white' : '']" />
+													:class="{'icon-ui-static': getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id) && !hatSchieneKollisionen(schiene.id).value, 'icon-ui-ondanger': getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id) && hatSchieneKollisionen(schiene.id).value}" />
 												<span class="icon i-ri-pushpin-line inline-block opacity-75" v-if="!verbieten_regel(kurs.id) && !fixier_regel(kurs.id)"
-													:class="[hatSchieneKollisionen(schiene.id).value ? 'icon-white' : '']" />
+													:class="{'icon-ui-static': getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id) && !hatSchieneKollisionen(schiene.id).value, 'icon-ui-ondanger': getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id) && hatSchieneKollisionen(schiene.id).value}" />
 											</span>
 										</template>
 										<template v-else>
@@ -189,6 +195,8 @@
 		return cols;
 	})
 
+	const gridTemplateColumns = computed<string>(() => "grid-template-columns: minmax(8rem, 1fr) repeat(" + props.getErgebnismanager().getOfSchieneMaxKursanzahl() + ", minmax(7rem, 1fr))");
+
 	const hatSchieneKollisionen = (idSchiene: number) => computed<boolean>(() =>
 		props.getErgebnismanager().getOfSchuelerOfSchieneHatKollision(idSchueler.value, idSchiene)
 	);
@@ -227,6 +235,11 @@
 
 	function drag_ended() {
 		dragAndDropData.value = undefined;
+	}
+
+	function onDragOver(event: DragEvent, kurs: GostBlockungsergebnisKurs) {
+		if (is_drop_zone(kurs).value)
+			event.preventDefault();
 	}
 
 	async function drop_aendere_kurszuordnung(kurs_neu: GostBlockungsergebnisKurs) {
@@ -335,17 +348,3 @@
 	}
 
 </script>
-
-
-<style lang="postcss" scoped>
-
-	.is-drop-zone {
-		@apply relative bg-primary/5;
-
-		&:before {
-			content: '';
-			@apply absolute inset-1 border border-svws pointer-events-none rounded-lg ring-4 ring-svws/25;
-		}
-	}
-
-</style>

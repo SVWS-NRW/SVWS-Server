@@ -1,6 +1,6 @@
 import { ref } from "vue";
 
-import type { DBSchemaListeEintrag, DeveloperNotificationException} from "@core";
+import type { DBSchemaListeEintrag } from "@core";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
@@ -32,7 +32,7 @@ export class RouteLogin extends RouteNode<any, any> {
 			const { schema } = RouteNode.getStringParams(to_params, ["schema"]);
 			this.schema.value = schema ?? null;
 		} catch (e) {
-			console.log('Es wurde ein falscher Schema-Parameter übergeben, Login trotzdem fortsetzen: ',e)
+			console.log('Es wurde ein falscher Schema-Parameter übergeben, Login trotzdem fortsetzen: ', e)
 		}
 	}
 
