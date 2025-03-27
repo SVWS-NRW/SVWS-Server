@@ -1,6 +1,6 @@
 <template>
-	<div class="page page-flex-col">
-		<svws-ui-table :columns :items="leistungen" has-background class="h-fit col-span-2 -mt-1">
+	<div class="w-340">
+		<svws-ui-table :columns :items="leistungen" has-background>
 			<template #header>
 				<div role="row" class="svws-ui-tr">
 					<div role="columnheader" :class="{ 'col-span-5': hatUpdateKompetenz, 'col-span-4': !hatUpdateKompetenz }" aria-label="Fach" />

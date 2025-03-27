@@ -2,18 +2,20 @@
 	<div class="page page-flex-row max-w-480">
 		<Teleport to=".svws-sub-nav-target" defer>
 			<svws-ui-sub-nav :focus-switching-enabled :focus-help-visible>
-				<div class="ml-4 flex gap-0.5 items-center leading-none">
-					<div class="text-button font-bold mr-1 -mt-px">Raum:</div>
-					<svws-ui-select headless title="Raum" v-model="raum" :items="stundenplanManager().raumGetMengeVerwendetAsList()" :item-text="i => i.kuerzel" autocomplete
-						:item-filter="(i, text)=> i.filter(k => k.kuerzel.includes(text.toLocaleLowerCase()))" :item-sort="() => 0" type="transparent" focus-class-sub-nav />
-					<svws-ui-button type="secondary" @click.stop="ignoreEmpty = !ignoreEmpty" title="Ganzen Stundenplan anzeigen, auch leere Stunden" class="h-9">
-						<span class="grow w-32">{{ ignoreEmpty ? 'Keine leeren Stunden':'Alle Stunden' }}</span>
+				<div class="ml-4 flex gap-2 max-w-1/2 min-w1/3 items-center justify-between leading-none">
+					<div class="flex gap-2 items-center">
+						<div class="text-button font-bold mr-1 -mt-px">Raum:</div>
+						<svws-ui-select headless title="Raum" v-model="raum" :items="stundenplanManager().raumGetMengeVerwendetAsList()" :item-text="i => i.kuerzel" autocomplete
+							:item-filter="(i, text)=> i.filter(k => k.kuerzel.includes(text.toLocaleLowerCase()))" :item-sort="() => 0" type="transparent" focus-class-sub-nav />
+					</div>
+					<svws-ui-button type="secondary" @click.stop="ignoreEmpty = !ignoreEmpty" title="Ganzen Stundenplan anzeigen, auch leere Stunden">
+						<span class="grow text-nowrap">{{ ignoreEmpty ? 'Keine leeren Stunden':'Alle Stunden' }}</span>
 					</svws-ui-button>
-					<template v-if="stundenplanManager().getWochenTypModell() > 0">
+					<div v-if="stundenplanManager().getWochenTypModell() > 0" class="flex gap-2 items-center">
 						<div class="text-button font-bold mr-1 -mt-px">Wochentyp:</div>
 						<svws-ui-select headless title="Wochentyp" v-model="wochentypAnzeige" :items="wochentypen()" class="print:!hidden" type="transparent"
 							:disabled="wochentypen().size() <= 0" :item-text="wt => stundenplanManager().stundenplanGetWochenTypAsString(wt)" />
-					</template>
+					</div>
 				</div>
 			</svws-ui-sub-nav>
 		</Teleport>
