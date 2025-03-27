@@ -6,7 +6,7 @@
 		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" :halbjahr="halbjahr" />
 	</Teleport>
 	<div class="page page-flex-col min-w-128 max-w-256">
-		<ui-card v-if="!kMan().stundenplanManagerGeladenAndExistsByAbschnitt(props.abschnitt!.id)" icon="i-ri-calendar-event-line" :fehler="ValidatorFehlerart.MUSS"
+		<ui-card v-if="abschnitt !== undefined && !kMan().stundenplanManagerGeladenAndExistsByAbschnitt(abschnitt.id)" icon="i-ri-calendar-event-line" :fehler="ValidatorFehlerart.MUSS"
 			title="Kein Stundenplan" subtitle="Es existiert kein Stundenplan für diesen Schuljahresabschnitt." :is-open="currentAction === 'stundenplan_fehlend'"
 			@update:is-open="(isOpen) => setCurrentAction('stundenplan_fehlend', isOpen)">
 			<p>Zur Terminierung von Klausurschienen und Raumplanung muss zwingend ein Stundenplan definiert sein.</p>
@@ -112,7 +112,7 @@
 				<template #cell(status)="{ rowData }">
 					<svws-ui-button type="transparent" @click="gotoKalenderdatum(undefined, rowData)"
 						title="Datum setzen" size="small"
-						:disabled="!kMan().stundenplanManagerExistsByAbschnitt(props.abschnitt!.id)">
+						:disabled="abschnitt === undefined || !kMan().stundenplanManagerExistsByAbschnitt(abschnitt.id)">
 						<span class="icon i-ri-link" /> datieren
 					</svws-ui-button>
 				</template>

@@ -1,5 +1,5 @@
 <template>
-	<template v-if="props.kMan().stundenplanManagerGeladenByAbschnitt(props.abschnitt!.id)">
+	<template v-if="props.abschnitt !== undefined && props.kMan().stundenplanManagerGeladenByAbschnitt(props.abschnitt.id)">
 		<Teleport to=".svws-ui-header--actions" v-if="isMounted">
 			<svws-ui-modal-hilfe class="ml-auto"> <s-gost-klausurplanung-raumzeit-hilfe /> </svws-ui-modal-hilfe>
 		</Teleport>
