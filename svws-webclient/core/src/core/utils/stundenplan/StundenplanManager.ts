@@ -45,8 +45,8 @@ import { AVLSet } from '../../../core/adt/set/AVLSet';
 import { StundenplanKonfiguration } from '../../../core/data/stundenplan/StundenplanKonfiguration';
 import { StundenplanZeitraster } from '../../../core/data/stundenplan/StundenplanZeitraster';
 import { StundenplanPausenzeit } from '../../../core/data/stundenplan/StundenplanPausenzeit';
-import { Exception } from '../../../java/lang/Exception';
 import { StundenplanUnterrichtUtils } from '../../../core/utils/stundenplan/StundenplanUnterrichtUtils';
+import { Exception } from '../../../java/lang/Exception';
 import { BlockungsUtils } from '../../../core/utils/BlockungsUtils';
 import { StundenplanFach } from '../../../core/data/stundenplan/StundenplanFach';
 import { ListUtils } from '../../../core/utils/ListUtils';
@@ -172,6 +172,8 @@ export class StundenplanManager extends JavaObject {
 
 	private readonly _compUnterricht : Comparator<StundenplanUnterricht>;
 
+	private readonly _compUnterrichtNachJahrgangKlasseFachWochentyp : Comparator<StundenplanUnterricht>;
+
 	private static readonly _compZeitraster : Comparator<StundenplanZeitraster> = { compare : (a: StundenplanZeitraster, b: StundenplanZeitraster) => {
 		if (a.wochentag < b.wochentag)
 			return -1;
@@ -211,6 +213,8 @@ export class StundenplanManager extends JavaObject {
 	private _jahrgangmenge_by_idKurs : HashMap<number, List<StundenplanJahrgang>> = new HashMap<number, List<StundenplanJahrgang>>();
 
 	private _jahrgangmenge_by_idKlasse : HashMap<number, List<StundenplanJahrgang>> = new HashMap<number, List<StundenplanJahrgang>>();
+
+	private _jahrgangmenge_by_idUnterricht : HashMap<number, List<StundenplanJahrgang>> = new HashMap<number, List<StundenplanJahrgang>>();
 
 	private _kwz_by_id : HashMap<number, StundenplanKalenderwochenzuordnung> = new HashMap<number, StundenplanKalenderwochenzuordnung>();
 
@@ -552,6 +556,7 @@ export class StundenplanManager extends JavaObject {
 			const unterrichtsverteilung : StundenplanUnterrichtsverteilung | null = cast_de_svws_nrw_core_data_stundenplan_StundenplanUnterrichtsverteilung(__param3);
 			this._compKlassenunterricht = this.klassenunterrichtCreateComparator();
 			this._compUnterricht = this.unterrichtCreateComparator();
+			this._compUnterrichtNachJahrgangKlasseFachWochentyp = this.unterrichtCreateComparatorNachJahrgangKlasseFachWochentyp();
 			this._stundenplanID = daten.id;
 			this._stundenplanWochenTypModell = daten.wochenTypModell;
 			this._stundenplanSchuljahresAbschnittID = daten.idSchuljahresabschnitt;
@@ -571,6 +576,7 @@ export class StundenplanManager extends JavaObject {
 			const stundenplanKomplett : StundenplanKomplett = cast_de_svws_nrw_core_data_stundenplan_StundenplanKomplett(__param0);
 			this._compKlassenunterricht = this.klassenunterrichtCreateComparator();
 			this._compUnterricht = this.unterrichtCreateComparator();
+			this._compUnterrichtNachJahrgangKlasseFachWochentyp = this.unterrichtCreateComparatorNachJahrgangKlasseFachWochentyp();
 			this._stundenplanID = stundenplanKomplett.daten.id;
 			this._stundenplanWochenTypModell = stundenplanKomplett.daten.wochenTypModell;
 			this._stundenplanSchuljahresAbschnittID = stundenplanKomplett.daten.idSchuljahresabschnitt;
@@ -582,6 +588,46 @@ export class StundenplanManager extends JavaObject {
 			DeveloperNotificationException.ifTrue("Die ID des Stundenplans passt nicht zur ID der StundenplanUnterrichtsverteilung.", stundenplanKomplett.daten.id !== stundenplanKomplett.unterrichtsverteilung.id);
 			this.initAll(stundenplanKomplett.daten.kalenderwochenZuordnung, stundenplanKomplett.unterrichtsverteilung.faecher, stundenplanKomplett.daten.jahrgaenge, stundenplanKomplett.daten.zeitraster, stundenplanKomplett.daten.raeume, stundenplanKomplett.daten.pausenzeiten, stundenplanKomplett.daten.aufsichtsbereiche, stundenplanKomplett.unterrichtsverteilung.lehrer, stundenplanKomplett.unterrichtsverteilung.schueler, stundenplanKomplett.daten.schienen, stundenplanKomplett.unterrichtsverteilung.klassen, stundenplanKomplett.unterrichtsverteilung.klassenunterricht, stundenplanKomplett.pausenaufsichten, stundenplanKomplett.unterrichtsverteilung.kurse, stundenplanKomplett.unterrichte);
 		} else throw new Error('invalid method overload');
+	}
+
+	private compareKlassenlistenIDsNachJahrgang(klassen1 : List<number>, klassen2 : List<number>) : number {
+		const aJahrgang : StundenplanJahrgang | null = this.jahrgangGetMinimumByKlassenIDs(klassen1);
+		const bJahrgang : StundenplanJahrgang | null = this.jahrgangGetMinimumByKlassenIDs(klassen2);
+		if ((aJahrgang !== null) || (bJahrgang !== null)) {
+			if (aJahrgang === null)
+				return -1;
+			if (bJahrgang === null)
+				return +1;
+			const cmpJahrgang : number = StundenplanManager._compJahrgang.compare(aJahrgang, bJahrgang);
+			if (cmpJahrgang !== 0)
+				return cmpJahrgang;
+		}
+		return 0;
+	}
+
+	private compareKlassenlistenIDsNachStandard(a : List<number>, b : List<number>) : number {
+		if (a.size() < b.size())
+			return -1;
+		if (a.size() > b.size())
+			return +1;
+		for (let i : number = 0; i < a.size(); i++) {
+			const aIdKlasse : number = ListUtils.getNonNullElementAtOrException(a, i).valueOf();
+			const bIdKlasse : number = ListUtils.getNonNullElementAtOrException(b, i).valueOf();
+			const aKlasse : StundenplanKlasse = DeveloperNotificationException.ifMapGetIsNull(this._klasse_by_id, aIdKlasse);
+			const bKlasse : StundenplanKlasse = DeveloperNotificationException.ifMapGetIsNull(this._klasse_by_id, bIdKlasse);
+			const cmpKlasse : number = StundenplanUnterrichtUtils.comparatorKlassen.compare(aKlasse, bKlasse);
+			if (cmpKlasse !== 0)
+				return cmpKlasse;
+		}
+		return 0;
+	}
+
+	private static compareWochentyp(wochentyp1 : number, wochentyp2 : number) : number {
+		if (wochentyp1 < wochentyp2)
+			return -1;
+		if (wochentyp1 > wochentyp2)
+			return +1;
+		return 0;
 	}
 
 	private static init_gueltig_bis(gueltigAb : string, gueltigBis : string | null) : string {
@@ -678,7 +724,6 @@ export class StundenplanManager extends JavaObject {
 		this.update_unterrichtmenge_by_idSchiene();
 		this.update_unterrichtmenge_by_idKurs();
 		this.update_unterrichtmenge_by_idKlasse_and_idFach();
-		this.update_unterrichtmenge_by_idZeitraster_and_wochentyp();
 		this.update_unterrichtmenge_by_idLehrer();
 		this.update_unterrichtmenge_by_idLehrer_and_idZeitraster();
 		this.update_unterrichtmenge_by_idRaum();
@@ -703,6 +748,7 @@ export class StundenplanManager extends JavaObject {
 		this.update_pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp();
 		this.update_unterrichtmenge_by_idJahrgang();
 		this.update_unterrichtmenge_by_idSchueler();
+		this.update_jahrgangmenge_by_idUnterricht();
 		this.update_klassenunterrichtmenge_by_idKlasse_and_idSchiene();
 		this.update_wertWochenminuten_by_idKurs();
 		this.update_wertWochenminuten_by_idKlasse_und_idFach();
@@ -714,8 +760,6 @@ export class StundenplanManager extends JavaObject {
 		this.update_kursmenge_verwendet_sortiert();
 		this.update_fachmenge_verwendet_sortiert();
 		this.update_schuelermenge_by_idUnterricht();
-		this.update_unterrichtmenge_by_idZeitraster_wochentyp_fach();
-		this.update_unterrichtmenge_by_idZeitraster_wochentyp_raum();
 		this.update_pausenzeitmenge_by_idKlasse_and_wochentag();
 		this.update_pausenzeitmenge_by_idJahrgang_and_wochentag();
 		this.update_pausenzeitmenge_by_idSchueler_and_wochentag();
@@ -727,12 +771,15 @@ export class StundenplanManager extends JavaObject {
 		this.update_schienenmenge_by_idKlasse();
 		this.update_kursmenge_by_idKlasse_and_idSchiene();
 		this.update_lehrermenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp();
+		this.update_unterrichtmenge_by_idZeitraster_and_wochentyp();
 		this.update_klassenmenge_verwendet_sortiert();
 		this.update_pausenzeitHatSchnittMitZeitraster_by_wochentag_idKlasse();
 		this.update_pausenzeitHatSchnittMitZeitraster_by_wochentag_idLehrer();
 		this.update_pausenzeitHatSchnittMitZeitraster_by_wochentag_idSchueler();
 		this.update_pausenzeitHatSchnittMitZeitraster_by_wochentag_idJahrgang();
 		this.update_pausenzeitHatSchnittMitZeitraster_by_wochentag();
+		this.update_unterrichtmenge_by_idZeitraster_wochentyp_fach();
+		this.update_unterrichtmenge_by_idZeitraster_wochentyp_raum();
 	}
 
 	/**
@@ -1106,6 +1153,26 @@ export class StundenplanManager extends JavaObject {
 				MapUtils.addToList(this._jahrgangmenge_by_idKurs, kurs.id, jahrgang);
 			}
 			MapUtils.getOrCreateArrayList(this._jahrgangmenge_by_idKurs, kurs.id).sort(StundenplanManager._compJahrgang);
+		}
+	}
+
+	private update_jahrgangmenge_by_idUnterricht() : void {
+		this._jahrgangmenge_by_idUnterricht = new HashMap();
+		for (const u of this._unterrichtmenge) {
+			const setOfJahrgangIDs : JavaSet<number> = new HashSet<number>();
+			if (u.idKurs === null) {
+				for (const idKlasse of u.klassen)
+					for (const j of DeveloperNotificationException.ifMapGetIsNull(this._jahrgangmenge_by_idKlasse, idKlasse))
+						setOfJahrgangIDs.add(j.id);
+			} else {
+				for (const j of DeveloperNotificationException.ifMapGetIsNull(this._jahrgangmenge_by_idKurs, u.idKurs))
+					setOfJahrgangIDs.add(j.id);
+			}
+			for (const idJahrgang of setOfJahrgangIDs) {
+				const j : StundenplanJahrgang = DeveloperNotificationException.ifMapGetIsNull(this._jahrgang_by_id, idJahrgang);
+				MapUtils.addToList(this._jahrgangmenge_by_idUnterricht, u.id, j);
+			}
+			MapUtils.getOrCreateArrayList(this._jahrgangmenge_by_idUnterricht, u.id).sort(StundenplanManager._compJahrgang);
 		}
 	}
 
@@ -1683,8 +1750,12 @@ export class StundenplanManager extends JavaObject {
 
 	private update_unterrichtmenge_by_idZeitraster_and_wochentyp() : void {
 		this._unterrichtmenge_by_idZeitraster_and_wochentyp = new HashMap2D();
-		for (const u of this._unterrichtmenge)
+		for (const u of this._unterrichtmenge) {
 			Map2DUtils.addToList(this._unterrichtmenge_by_idZeitraster_and_wochentyp, u.idZeitraster, u.wochentyp, u);
+			Map2DUtils.addToList(this._unterrichtmenge_by_idZeitraster_and_wochentyp, u.idZeitraster, -1, u);
+		}
+		for (const list of this._unterrichtmenge_by_idZeitraster_and_wochentyp.getNonNullValuesAsList())
+			list.sort(this._compUnterrichtNachJahrgangKlasseFachWochentyp);
 	}
 
 	private update_unterrichtmenge_by_idRaum() : void {
@@ -2222,10 +2293,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Liste der {@link StundenplanJahrgang}-Objekte.
 	 */
 	public jahrgangGetMengeByUnterrichtIdAsList(idUnterricht : number) : List<StundenplanJahrgang> {
-		const unterricht : StundenplanUnterricht = this.unterrichtGetByIdOrException(idUnterricht);
-		if (unterricht.idKurs !== null)
-			return this.jahrgangGetMengeByKursIdAsList(unterricht.idKurs);
-		return this.jahrgangGetMengeByKlassenIdsAsList(unterricht.klassen);
+		return DeveloperNotificationException.ifMapGetIsNull(this._jahrgangmenge_by_idUnterricht, idUnterricht);
 	}
 
 	/**
@@ -2673,23 +2741,6 @@ export class StundenplanManager extends JavaObject {
 			DeveloperNotificationException.ifMapNotContains("_jahrgang_by_id", this._jahrgang_by_id, idJahrgang);
 		for (const idSchueler of klasse.schueler)
 			DeveloperNotificationException.ifMapNotContains("_schueler_by_id", this._schueler_by_id, idSchueler);
-	}
-
-	private klasseCompareByKlassenIDs(a : List<number>, b : List<number>) : number {
-		if (a.size() < b.size())
-			return -1;
-		if (a.size() > b.size())
-			return +1;
-		for (let i : number = 0; i < a.size(); i++) {
-			const aIdKlasse : number = ListUtils.getNonNullElementAtOrException(a, i).valueOf();
-			const bIdKlasse : number = ListUtils.getNonNullElementAtOrException(b, i).valueOf();
-			const aKlasse : StundenplanKlasse = DeveloperNotificationException.ifMapGetIsNull(this._klasse_by_id, aIdKlasse);
-			const bKlasse : StundenplanKlasse = DeveloperNotificationException.ifMapGetIsNull(this._klasse_by_id, bIdKlasse);
-			const cmpKlasse : number = StundenplanUnterrichtUtils.comparatorKlassen.compare(aKlasse, bKlasse);
-			if (cmpKlasse !== 0)
-				return cmpKlasse;
-		}
-		return 0;
 	}
 
 	/**
@@ -5706,22 +5757,14 @@ export class StundenplanManager extends JavaObject {
 
 	private unterrichtCreateComparator() : Comparator<StundenplanUnterricht> {
 		const comp : Comparator<StundenplanUnterricht> = { compare : (a: StundenplanUnterricht, b: StundenplanUnterricht) => {
-			const aJahrgang : StundenplanJahrgang | null = this.jahrgangGetMinimumByKlassenIDs(a.klassen);
-			const bJahrgang : StundenplanJahrgang | null = this.jahrgangGetMinimumByKlassenIDs(b.klassen);
-			if ((aJahrgang !== null) || (bJahrgang !== null)) {
-				if (aJahrgang === null)
-					return -1;
-				if (bJahrgang === null)
-					return +1;
-				const cmpJahrgang : number = StundenplanManager._compJahrgang.compare(aJahrgang, bJahrgang);
-				if (cmpJahrgang !== 0)
-					return cmpJahrgang;
-			}
+			let cmpKlassenNachJahrgang : number = this.compareKlassenlistenIDsNachJahrgang(a.klassen, b.klassen);
+			if (cmpKlassenNachJahrgang !== 0)
+				return cmpKlassenNachJahrgang;
 			if ((a.idKurs !== null) && (b.idKurs === null))
 				return -1;
 			if ((a.idKurs === null) && (b.idKurs !== null))
 				return +1;
-			const cmpKlasse : number = this.klasseCompareByKlassenIDs(a.klassen, b.klassen);
+			const cmpKlasse : number = this.compareKlassenlistenIDsNachStandard(a.klassen, b.klassen);
 			if (cmpKlasse !== 0)
 				return cmpKlasse;
 			const aFach : StundenplanFach = DeveloperNotificationException.ifMapGetIsNull(this._fach_by_id, a.idFach);
@@ -5732,10 +5775,40 @@ export class StundenplanManager extends JavaObject {
 			const cmpLehrer : number = this.lehrerCompareByLehrerIDs(a.lehrer, b.lehrer);
 			if (cmpLehrer !== 0)
 				return cmpLehrer;
-			if (a.wochentyp < b.wochentyp)
-				return -1;
-			if (a.wochentyp > b.wochentyp)
-				return +1;
+			let cmpWochentyp : number = StundenplanManager.compareWochentyp(a.wochentyp, b.wochentyp);
+			if (cmpWochentyp !== 0)
+				return cmpWochentyp;
+			return JavaLong.compare(a.id, b.id);
+		} };
+		return comp;
+	}
+
+	private unterrichtCreateComparatorNachJahrgangKlasseFachWochentyp() : Comparator<StundenplanUnterricht> {
+		const comp : Comparator<StundenplanUnterricht> = { compare : (a: StundenplanUnterricht, b: StundenplanUnterricht) => {
+			const listA : List<StundenplanJahrgang> = DeveloperNotificationException.ifMapGetIsNull(this._jahrgangmenge_by_idUnterricht, a.id);
+			const listB : List<StundenplanJahrgang> = DeveloperNotificationException.ifMapGetIsNull(this._jahrgangmenge_by_idUnterricht, b.id);
+			if ((!listA.isEmpty()) || (!listB.isEmpty())) {
+				if (listA.isEmpty())
+					return -1;
+				if (listB.isEmpty())
+					return +1;
+				const aJahrgang : StundenplanJahrgang = ListUtils.getNonNullElementAtOrException(listA, 0);
+				const bJahrgang : StundenplanJahrgang = ListUtils.getNonNullElementAtOrException(listB, 0);
+				const cmpJahrgang : number = StundenplanManager._compJahrgang.compare(aJahrgang, bJahrgang);
+				if (cmpJahrgang !== 0)
+					return cmpJahrgang;
+			}
+			const cmpKlasse : number = this.compareKlassenlistenIDsNachStandard(a.klassen, b.klassen);
+			if (cmpKlasse !== 0)
+				return cmpKlasse;
+			const aFach : StundenplanFach = DeveloperNotificationException.ifMapGetIsNull(this._fach_by_id, a.idFach);
+			const bFach : StundenplanFach = DeveloperNotificationException.ifMapGetIsNull(this._fach_by_id, b.idFach);
+			const cmpFach : number = StundenplanManager._compFach.compare(aFach, bFach);
+			if (cmpFach !== 0)
+				return cmpFach;
+			let cmpWochentyp : number = StundenplanManager.compareWochentyp(a.wochentyp, b.wochentyp);
+			if (cmpWochentyp !== 0)
+				return cmpWochentyp;
 			return JavaLong.compare(a.id, b.id);
 		} };
 		return comp;
@@ -5947,7 +6020,7 @@ export class StundenplanManager extends JavaObject {
 	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekt, die im übergeben Zeitraster und Wochentyp liegen.
 	 *
 	 * @param idZeitraster  Die Datenbank-ID des Zeitrasters.
-	 * @param wochentyp     Der Wochentyp (0 jede Woche, 1 nur Woche A, 2 nur Woche B, ...)
+	 * @param wochentyp     Der Wochentyp (-1 = alles, 0 jede Woche, 1 nur Woche A, 2 nur Woche B, ...)
 	 *
 	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekt, die im übergeben Zeitraster und Wochentyp liegen.
 	 */
