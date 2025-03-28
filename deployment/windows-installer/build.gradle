@@ -1,4 +1,6 @@
+import org.gradle.internal.os.OperatingSystem
 import org.apache.tools.ant.filters.ReplaceTokens
+
 buildscript {
 	repositories {
 		mavenCentral()
@@ -81,7 +83,7 @@ task printDependencies2 {
 
 task downloadSVWSAdminClient(type: Copy) {
 	dependsOn(':svws-webclient:admin:doZip')
-	from "../../svws-webclient/Admin/build/SVWS-Admin-Client.zip"
+	from "../../svws-webclient/admin/build/SVWS-Admin-Client.zip"
 	into "download/svws-" + project.version + "/"
 }
 
@@ -325,7 +327,11 @@ task copyInnoExtractor(type: Copy) {
 task extractInnoSetup(type:Exec) {
 	dependsOn "copyInnoExtractor"
 	workingDir file("${buildDir}/inno")
-	commandLine "cmd", "/c", "innoextract.exe", "--output-dir", "${buildDir}/inno/", "${projectDir}/download/svws-${project.version}/innosetup-${innosetup_version}.exe"
+	if (OperatingSystem.current().isWindows()) {
+		commandLine "cmd", "/c", "innoextract.exe", "--output-dir", "${buildDir}/inno/", "${projectDir}/download/svws-${project.version}/innosetup-${innosetup_version}.exe"
+	} else {
+		commandLine "wine", "innoextract.exe", "--output-dir", "${buildDir}/inno/", "${projectDir}/download/svws-${project.version}/innosetup-${innosetup_version}.exe"
+	}
 }
 
 
@@ -340,9 +346,14 @@ task buildPrepare {
 }
 
 
+/* Wichtig: Wird dieser Task nicht unter Windows ausgeführt, so muss eine passende Wine-Konfiguration vorliegen */ 
 task buildWindowsInstaller(type:Exec) {
 	group 'build'
-	commandLine "cmd", "/c", "${buildDir}/inno/app/iscc.exe", "SVWS_Installer_full.iss"
+	if (OperatingSystem.current().isWindows()) {
+		commandLine "cmd", "/c", "${buildDir}/inno/app/iscc.exe", "SVWS_Installer_full.iss"
+	} else {
+		commandLine "wine", "../inno/app/iscc.exe", "SVWS_Installer_full.iss"
+	}
 	dependsOn "buildPrepare"
 	doFirst {
 		mkdir "$buildDir/output"
