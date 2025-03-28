@@ -14,7 +14,7 @@
 }
 
 .textarea-input--control {
-	@apply bg-ui border border-ui-secondary text-ui;
+	@apply bg-ui border border-ui text-ui;
 	@apply rounded-md;
 	@apply w-full;
 	@apply text-base;
@@ -51,7 +51,7 @@ span.textarea-input--control {
 }
 
 .textarea-input--statistics:not(.textarea-input--filled) .textarea-input--control {
-	@apply border-ui-statistic-secondary;
+	@apply border-ui-statistic;
 }
 
 .textarea-input--resize-none .textarea-input--control {

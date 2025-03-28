@@ -19,7 +19,7 @@
 
 	&:not(.svws-headless) {
 		@apply min-h-[2.25rem];
-		@apply bg-ui border border-ui-secondary text-ui;
+		@apply bg-ui border border-ui text-ui;
 		@apply rounded-md;
 
 		.text-input-component {
@@ -57,7 +57,7 @@
 			}
 		}
 		.svws-tag {
-			@apply bg-ui border border-ui-secondary;
+			@apply bg-ui border border-ui;
 			@apply inline-flex items-center gap-0.5 rounded-sm leading-none pl-2 pr-1 text-base;
 		}
 

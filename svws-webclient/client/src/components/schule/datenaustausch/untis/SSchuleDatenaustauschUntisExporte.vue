@@ -78,7 +78,7 @@
 				</div>
 
 				<!-- Visualisierung der zuvor vom SVWS-Server geladenen Daten -->
-				<div class="h-full w-full overflow-scroll grow bg-ui border border-ui-secondary text-ui rounded-md text-base pt-2 pl-2 pr-6 pb-6">
+				<div class="h-full w-full overflow-scroll grow bg-ui border border-ui text-ui rounded-md text-base pt-2 pl-2 pr-6 pb-6">
 					<pre>{{ value }}</pre>
 				</div>
 			</template>

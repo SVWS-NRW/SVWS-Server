@@ -2,7 +2,7 @@
 	@apply flex flex-col items-center w-full justify-center mx-auto relative;
 
 	.app--menu--initials--icon {
-		@apply bg-ui text-ui border border-ui-secondary;
+		@apply bg-ui text-ui border border-ui;
 		@apply flex flex-col items-center w-full justify-center mx-auto relative;
 		@apply rounded-lg overflow-hidden font-bold;
 		@apply w-12 h-12 xl:w-14 xl:h-14;

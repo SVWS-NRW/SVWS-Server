@@ -65,7 +65,7 @@
 	@apply from-transparent to-ui;
 
 	.button {
-		@apply bg-ui-neutral border border-ui-secondary;
+		@apply bg-ui-neutral border border-ui;
 		@apply w-5 h-full p-0 rounded;
 
 		&:focus {

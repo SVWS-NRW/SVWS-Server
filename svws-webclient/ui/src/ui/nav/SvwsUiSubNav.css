@@ -40,7 +40,7 @@
 			@apply from-white/0 via-50% via-white to-white dark:from-black/0 dark:via-50% dark:via-black dark:to-black;
 
 			.button {
-				@apply bg-ui-neutral border border-ui-secondary;
+				@apply bg-ui-neutral border border-ui;
 				@apply w-5 h-full p-0 rounded;
 
 				&:focus {

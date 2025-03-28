@@ -85,7 +85,7 @@
 }
 
 .text-input--control {
-	@apply bg-ui border border-ui-secondary;
+	@apply bg-ui border border-ui;
 	@apply rounded-md;
 	@apply h-9 w-full;
 	@apply text-base;

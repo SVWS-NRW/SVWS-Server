@@ -1,7 +1,7 @@
 .svws-ui-table {
 	@apply bg-ui text-ui;
 	/* TODO: Was passiert mit dem Border */
-	/* @apply border-ui-secondary; */
+	/* @apply border-ui; */
 	@apply flex max-h-full w-full flex-col tabular-nums;
 	--checkbox-width: 1.75rem;
 	background-color: rgb(var(--color-bg-ui));
@@ -72,7 +72,7 @@
 .svws-ui-thead,
 .svws-ui-tfoot,
 .svws-ui-tfoot--data {
-	@apply bg-ui text-ui border-ui-secondary;
+	@apply bg-ui text-ui border-ui;
 	@apply sticky;
 
 	.svws-ui-table.svws-has-background & {
@@ -305,7 +305,7 @@
 }
 
 .svws-ui-td {
-	@apply border-ui-secondary;
+	@apply border-ui;
 	@apply flex items-start gap-1 overflow-hidden border-b leading-none;
 	padding: 0.3rem 0.25rem;
 
@@ -432,7 +432,7 @@
 		}
 
 		> .svws-ui-tr:not(:last-child) {
-			@apply border-ui-secondary;
+			@apply border-ui;
 			@apply border-b border-dashed;
 		}
 	}
@@ -468,7 +468,7 @@
 }
 
 .svws-ui-table.svws-type-grid {
-	@apply border-x border-t border-ui-secondary;
+	@apply border-x border-t border-ui;
 
 	&.svws-has-background {
 		@apply border-ui-contrast-75;
@@ -477,7 +477,7 @@
 	.svws-ui-thead,
 	.svws-ui-tbody {
 		.svws-ui-td:not(:last-child) {
-			@apply border-r border-ui-secondary;
+			@apply border-r border-ui;
 		}
 
 		.svws-ui-td:not(.svws-align-center) {

@@ -11,7 +11,7 @@
 	}
 
 	.svws-dropdown-icon {
-		@apply bg-ui-neutral border border-ui-secondary;
+		@apply bg-ui-neutral border border-ui;
 		@apply pointer-events-none right-1;
 	}
 

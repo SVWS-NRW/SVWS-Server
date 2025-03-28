@@ -66,7 +66,7 @@ html {
 
 	.app--sidebar-container {
 		@apply rounded-2xl h-full;
-		@apply border border-ui-secondary;
+		@apply border border-ui;
 	}
 
 	.secondary-menu--headline {
@@ -266,7 +266,7 @@ html {
 }
 
 .app-layout--aside {
-	@apply bg-ui text-ui border border-ui-secondary;
+	@apply bg-ui text-ui border border-ui;
 	@apply -ml-4 z-50 w-1/2 absolute top-9 right-2 bottom-2 rounded-2xl;
 }
 

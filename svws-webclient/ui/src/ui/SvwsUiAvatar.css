@@ -9,7 +9,7 @@
 }
 
 .avatar {
-	@apply bg-ui-neutral border border-ui-secondary;
+	@apply bg-ui-neutral border border-ui;
 	@apply w-full rounded-xl overflow-hidden relative;
 	padding-bottom: 100%;
 

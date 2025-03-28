@@ -1,7 +1,7 @@
 <template>
 	<div class="h-screen w-screen overflow-hidden bg-ui">
 		<div class="h-full w-full overflow-hidden flex flex-col justify-center items-center bg-top bg-cover bg-[url(@images/bglogin.jpg)]">
-			<div class="h-fit max-h-full w-full overflow-hidden m-auto flex flex-col items-center bg-ui text-ui border border-ui-secondary rounded-xl" :class="classSize">
+			<div class="h-fit max-h-full w-full overflow-hidden m-auto flex flex-col items-center bg-ui text-ui border border-ui rounded-xl" :class="classSize">
 				<span v-if="underConstruction" class="h-[1rem] w-full" style="background: repeating-linear-gradient( -45deg, #000, #000 10px, #ffff00 10px, #ffff00 20px );" />
 				<div class="p-4 w-full h-full overflow-hidden text-center flex flex-col gap-4">
 					<!-- Header -->
