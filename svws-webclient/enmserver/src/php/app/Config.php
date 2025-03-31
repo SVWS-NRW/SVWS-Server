@@ -118,12 +118,43 @@
 		}
 
 		/**
-		 * Erzeugt einen zufälligen String, der für Kennwörter verwendet werden kann.
+		 * Erzeugt einen zufälligen, URL-sicheren String, der für Kennwörter verwendet werden kann.
 		 * 
 		 * @return string das neue Kennwort
 		 */
-		public static function generateRandomSecret() : string {
-			return base64_encode(random_bytes(32));
+		public static function generateRandomSecret(): string {
+			return rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');
+		}
+
+		/**
+		 * Prüft, ob ein Passwort die folgenden Kriterien erfüllt:
+		 * - min. 16 Zeichen
+		 * - min. ein Großbuchstabe
+		 * - min. ein Kleinbuchstabe
+		 * - min. eine Zahl
+		 *
+		 * @param string $password Das zu prüfende Passwort
+		 * @return bool true, wenn das Passwort den Anforderungen entspricht, sonst false
+		 */
+		public static function validatePassword(string $password): bool {
+			// Prüft, ob die Länge des Passworts mindestens 16 Zeichen beträgt
+			if (strlen($password) < 16)
+				return false;
+
+			// Prüft, ob das Passwort mindestens einen Großbuchstaben enthält
+			if (!preg_match('/[A-Z]/', $password))
+				return false;
+
+			// Prüft, ob das Passwort mindestens einen Kleinbuchstaben enthält
+			if (!preg_match('/[a-z]/', $password))
+				return false;
+
+			// Prüft, ob das Passwort mindestens eine Zahl enthält
+			if (!preg_match('/[0-9]/', $password))
+				return false;
+
+			// Wenn alle Bedingungen erfüllt sind, geben wir true zurück
+			return true;
 		}
 
 	}

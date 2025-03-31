@@ -6,8 +6,8 @@
 	 * @auth (Basic) Lehrer Username und Kennwort benötigt
 	 * @param {id: number, patch: {Partial<ENMLeistungen>}} Das Patch-Objekt, das die zu aktualisierenden Leistungen enthält.
 	 * Folgende Werte können durch das Patch Objekt überschrieben werden: tsNote, tsNoteQuartal,
-	 *                                                                     tsFehlstundenFach, tsFehlstundenUnentschuldigtFach,
-	 *                                                                     fehlstundenUnentschuldigtFach, fachbezogeneBemerkungen, istGemahnt
+	 *                                                                    tsFehlstundenFach, tsFehlstundenUnentschuldigtFach,
+	 *                                                                    fehlstundenUnentschuldigtFach, fachbezogeneBemerkungen, istGemahnt
 	 *
 	 * @return void
 	 * @responseCode 200

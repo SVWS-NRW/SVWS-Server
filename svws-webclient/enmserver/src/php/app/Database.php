@@ -1,6 +1,7 @@
 <?php
 
 	require_once 'Config.php';
+	require_once 'SMTPClient.php';
 
 	/**
 	 * Diese Klasse dient dem Zugriff auf die SQLite-Datenbank aus der Konfiguration.
@@ -119,6 +120,7 @@
 			$this->createTable('Ankreuzkompetenzen', 'CREATE TABLE Ankreuzkompetenzen(id INTEGER, ts INTEGER, idSchueler INTEGER, idKompetenz INTEGER, daten TEXT, tsStufe TEXT, PRIMARY KEY(id, ts))');
 			$this->createTable('Sprachenfolge', 'CREATE TABLE Sprachenfolge(id INTEGER, sprache TEXT, ts INTEGER, idSchueler INTEGER, daten TEXT, PRIMARY KEY (id, sprache, ts))');
 			$this->createTable('Lehrer', 'CREATE TABLE Lehrer(id INTEGER, ts INTEGER, daten TEXT, eMailDienstlich TEXT, passwordHash TEXT, tsPasswordHash TEXT, PRIMARY KEY(id, ts))');
+			$this->createTable('Lehrertoken', 'CREATE TABLE Lehrertoken(idLehrer INTEGER PRIMARY KEY, token TEXT, tokenTimestamp INTEGER, tokenValidForSecs INTEGER)');
 		}
 
 		/**
@@ -769,7 +771,7 @@
 				return null;
 			if (count($result) !== 1)
 				return null;
-			$json = $result[0];
+			$json = $result[0]->value;
 			$client = new SMTPClient($json);
 			// Prüfe noch, ob der Client eine vollständige und plausible Konfiguration hat
 			return $client->isValid() ? $client : null;
@@ -933,6 +935,25 @@
 			return null;
 		}
 
+		/**
+ 		 * Ermittelt die Lehrerdaten aus der Datenbank und gibt bei einem gefundenen Datensatz 'true' zurück,
+ 		 * andernfalls bei null oder mehreren Datensätzen 'false'.
+ 		 * 
+ 		 * @return bool true bei genau einem gefundenen Datensatz, false bei keinem oder mehreren
+ 		 */
+		public function checkENMLehrerByEmail(string $email): bool {
+			// Lese die Email-Adresse zur Vermeidung von SQL-Injection nicht direkt aus der DB
+			$results = $this->queryAllOrExit500("SELECT daten FROM Lehrer", "Fehler beim Lesen der Lehrer-Daten");
+			$matchingCount = 0; // Zähler für passende Datensätze
+			foreach ($results as $row) {
+				$tmp = json_decode($row->daten);
+				if (strcasecmp($tmp->eMailDienstlich, $email) === 0)
+					$matchingCount++;
+			}
+			// Wenn genau ein Datensatz gefunden wurde, return true, sonst false
+			return $matchingCount === 1;
+		}
+		
 		/**
 		 * Ermittelt die Schülerdaten aus der Datenbank und gibt diese in einem Array zurück.
 		 *
@@ -1232,6 +1253,112 @@
 				$update .= "daten='$updatedData' WHERE id=$patch->id";
 				$this->updateSet('Ankreuzkompetenzen', $update);
 			}
+		}
+
+		/**
+		 * Erstellt einen Update-Befehl für die Datenbank aus den übergebenen Daten für einen
+		 * Patch von Lehrer-Daten zu dem Passwort.
+		 *
+		 * @param string $ts      der Zeitstempel der neu importierten Daten
+		 * @param object $daten   die Daten aus der Datenbank
+		 * @param object $patch   der Patch für die Daten
+		 */
+		public function patchENMLehrerPassword(string $ts, object $daten, object $patch) {
+			$update = "";
+			if (property_exists($patch, 'passwordHash') && $this->diffStringNullable($patch->passwordHash, $daten->passwordHash) && ($ts > $daten->tsPasswordHash)) {
+				$update .= "tsPasswordHash='$ts',";
+				$update .= "passwordHash='$patch->passwordHash',";
+				$daten->passwordHash = $patch->passwordHash;
+				$daten->tsPasswordHash = $ts;
+			}
+			if (strlen($update) > 0) {
+				$updatedData = json_encode($daten, JSON_UNESCAPED_SLASHES);
+				$update .= "daten='$updatedData' WHERE id='$patch->id'";
+				$this->updateSet('Lehrer', $update);
+			}
+		}
+
+		/**
+		 * Erstellt ein neues Password-Token. Ein zuvor bestendes Password-Token wird dabei ersetzt.
+		 * 
+		 * @param int $lehrerId   Die ID des Lehrers
+		 * @return string $token  Das generierte und gespeicherte Password-Token 
+		 */
+		public function writeENMLehrerToken(int $lehrerId): string {
+			$token = Config::generateRandomSecret();
+			$time = time();
+			$validFor = 600;
+			$this->beginTransaction();
+
+			// Alten Token löschen
+			$stmt = $this->prepareStatement("DELETE FROM Lehrertoken WHERE idLehrer = :idLehrer");
+			$this->bindStatementValue($stmt, ":idLehrer", $lehrerId, PDO::PARAM_INT);
+			$this->executeStatement($stmt);
+
+			// Neuen Token speichern
+			$stmt = $this->prepareStatement("INSERT INTO Lehrertoken (idLehrer, token, tokenTimestamp, tokenValidForSecs) VALUES (:id, :token, :ts, :valid)");
+			$this->bindStatementValue($stmt, ":id", $lehrerId, PDO::PARAM_INT);
+			$this->bindStatementValue($stmt, ":token", $token, PDO::PARAM_STR);
+			$this->bindStatementValue($stmt, ":ts", $time, PDO::PARAM_INT);
+			$this->bindStatementValue($stmt, ":valid", $validFor, PDO::PARAM_STR);
+			$this->executeStatement($stmt);
+
+			$this->commitTransaction();
+			return $token;
+		}
+
+		/**
+		 * Überprüft, ob zu einer LehrerId ein gültiger Token vorliegt oder prüft, ob ein übergebener Token noch gültig ist.
+		 *
+		 * @param string|int $identifier   Kann die LehrerId oder ein Token sein
+		 * @return boolean                 Token gültig true; Token abgelaufen oder nicht vorhanden false
+		 */
+		public function isENMLehrerTokenValid($identifier): bool {
+			// Überprüfen, ob $identifier eine ID oder ein Token ist
+			if (is_int($identifier)) {
+				// Abfrage nach ID
+				$stmt = $this->prepareStatement("SELECT * FROM Lehrertoken WHERE idLehrer = :idLehrer");
+				$this->bindStatementValue($stmt, ":idLehrer", $identifier, PDO::PARAM_INT);
+				$this->executeStatement($stmt);
+				$result = $stmt->fetchAll(PDO::FETCH_OBJ);
+			} else {
+				// Abfrage nach Token
+				$stmt = $this->prepareStatement("SELECT * FROM Lehrertoken WHERE token = :token");
+				$this->bindStatementValue($stmt, ":token", $identifier, PDO::PARAM_STR);
+				$this->executeStatement($stmt);
+				$result = $stmt->fetchAll(PDO::FETCH_OBJ);
+			}
+
+			// Das erste und einzige Ergebnis
+			$tokenObj = $result[0];
+
+			// Überprüfe, ob ein Token existiert und ob es noch gültig ist
+			if (isset($tokenObj->token)) {
+				$tokenTimestamp = $tokenObj->tokenTimestamp; // Zeitstempel des Tokens
+				$tokenValidForSecs = $tokenObj->tokenValidForSecs; // Gültigkeitsdauer in Sekunden
+				// Berechne, ob das Token noch gültig ist
+				$tokenExpiryTime = $tokenTimestamp + $tokenValidForSecs; // Ablaufzeit des Tokens
+				$currentTime = time(); // Aktuelle Zeit
+				if ($currentTime < $tokenExpiryTime)
+					return true;
+			}
+			return false;
+		}
+
+		/**
+		 * Löscht das Password-Token eines Lehrers aus der Datenbank.
+		 *
+		 * @param int $lehrerId   Die ID des Lehrers
+		 */
+		public function deleteENMLehrerToken(int $lehrerId) {
+			$this->beginTransaction();
+
+			// Token für den Lehrer löschen
+			$stmt = $this->prepareStatement("DELETE FROM Lehrertoken WHERE idLehrer = :idLehrer");
+			$this->bindStatementValue($stmt, ":idLehrer", $lehrerId, PDO::PARAM_INT);
+			$this->executeStatement($stmt);
+
+			$this->commitTransaction();
 		}
 
 	}
