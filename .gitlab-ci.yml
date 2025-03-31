@@ -10,7 +10,7 @@
 # https://github.com/gradle/gradle
 
 
-image: svwsnrw/dockerrunner:21
+image: 10.1.1.3/svwsnrw/docker-runner:21
 
 # Disable the Gradle daemon for Continuous Integration servers as correctness
 # is usually a priority over speed in CI environments. Using a fresh
@@ -139,7 +139,7 @@ build_windows:
 
 sign_artifacts:
     stage: sign
-    image: svwsnrw/dockerrunner:17
+    image: 10.1.1.3/svwsnrw/docker-runner:17
     rules:
         - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
     needs:
