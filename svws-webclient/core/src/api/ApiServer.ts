@@ -114,6 +114,7 @@ import { LehrerLehramtKatalogEintrag } from '../asd/data/lehrer/LehrerLehramtKat
 import { LehrerLehrbefaehigungAnerkennungKatalogEintrag } from '../asd/data/lehrer/LehrerLehrbefaehigungAnerkennungKatalogEintrag';
 import { LehrerLehrbefaehigungKatalogEintrag } from '../asd/data/lehrer/LehrerLehrbefaehigungKatalogEintrag';
 import { LehrerLeitungsfunktionKatalogEintrag } from '../asd/data/lehrer/LehrerLeitungsfunktionKatalogEintrag';
+import { LehrerLernplattform } from '../core/data/lehrer/LehrerLernplattform';
 import { LehrerListeEintrag } from '../core/data/lehrer/LehrerListeEintrag';
 import { LehrerMehrleistungsartKatalogEintrag } from '../asd/data/lehrer/LehrerMehrleistungsartKatalogEintrag';
 import { LehrerMinderleistungsartKatalogEintrag } from '../asd/data/lehrer/LehrerMinderleistungsartKatalogEintrag';
@@ -7897,6 +7898,63 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getLehrerLernplattformen für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/{id : \d+}/lernplattformen
+	 *
+	 * Liest die Lernplattformen des Lehrers zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Lernplattformen des Lehrers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<LehrerLernplattform>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Lehrerdaten anzusehen.
+	 *   Code 404: Keine Lernplattform für den Lehrer mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Lernplattformen des Lehrers
+	 */
+	public async getLehrerLernplattformen(schema : string, id : number) : Promise<List<LehrerLernplattform>> {
+		const path = "/db/{schema}/lehrer/{id : \\d+}/lernplattformen"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<LehrerLernplattform>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerLernplattform.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchLehrerLernplattform für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/{id : \d+}/lernplattformen/{idLernplattform : \d+}
+	 *
+	 * Passt die Einwilligung zu der angegebenen Lehrer- und Einwilligungsart-ID an und speichert das Ergebnis in der Datenbank.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Einwilligungen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich in die Lernplattform integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lernplattform der Lehrer zu ändern.
+	 *   Code 404: Kein Lehrer oder keine Lernplattform der angegebenen Art gefunden.
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde. (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<LehrerLernplattform>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 * @param {number} idLernplattform - der Pfad-Parameter idLernplattform
+	 */
+	public async patchLehrerLernplattform(data : Partial<LehrerLernplattform>, schema : string, id : number, idLernplattform : number) : Promise<void> {
+		const path = "/db/{schema}/lehrer/{id : \\d+}/lernplattformen/{idLernplattform : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
+			.replace(/{idLernplattform\s*(:[^{}]+({[^{}]+})*)?}/g, idLernplattform.toString());
+		const body : string = LehrerLernplattform.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getLehrerPersonaldaten für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/{id : \d+}/personaldaten
 	 *
 	 * Liest die Personaldaten des Lehrers zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerpersonaldaten besitzt.
@@ -9721,37 +9779,6 @@ export class ApiServer extends BaseApi {
 			.replace(/{idLernplattform\s*(:[^{}]+({[^{}]+})*)?}/g, idLernplattform.toString());
 		const body : string = SchuelerLernplattform.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getSchuelerLernplattformCredentials für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/lernplattformen/{idLernplattform : \d+}
-	 *
-	 * Liest anhand der Schüler-ID und der Lernplattform-ID den zugehörigen Credential-Datensatz aus der Datenbank aus und liefert die den Benutzername und Initialkennwort zurück.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Credentials des Schülers zu einer Lernplattform
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<Lernplattform>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzusehen.
-	 *   Code 404: Credentials oder Lernplattform nicht gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 * @param {number} idLernplattform - der Pfad-Parameter idLernplattform
-	 *
-	 * @returns Die Credentials des Schülers zu einer Lernplattform
-	 */
-	public async getSchuelerLernplattformCredentials(schema : string, id : number, idLernplattform : number) : Promise<List<Lernplattform>> {
-		const path = "/db/{schema}/schueler/{id : \\d+}/lernplattformen/{idLernplattform : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
-			.replace(/{idLernplattform\s*(:[^{}]+({[^{}]+})*)?}/g, idLernplattform.toString());
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<Lernplattform>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Lernplattform.transpilerFromJSON(text)); });
-		return ret;
 	}
 
 

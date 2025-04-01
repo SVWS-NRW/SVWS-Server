@@ -25,7 +25,6 @@ import de.svws_nrw.core.data.schueler.SchuelerVermerke;
 import de.svws_nrw.core.data.schule.Einwilligung;
 import de.svws_nrw.core.data.schule.HerkunftKatalogEintrag;
 import de.svws_nrw.core.data.schule.HerkunftsartKatalogEintrag;
-import de.svws_nrw.core.data.schule.Lernplattform;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.JSONMapper;
@@ -1772,37 +1771,7 @@ public class APISchueler {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerLernplattformen(conn, idSchueler).patchAsResponse(new Long[]{idSchueler, idLernplattform},
 						is),
 				request, ServerMode.DEV,
-				//TODO: Benutzerkompetenz hinzufügen
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
-	}
-
-	/**
-	 * Die OpenAPI-Methode für die Abfrage von Credentials eines Schülers einer Lernplattform.
-	 *
-	 * @param schema               das Datenbankschema, auf welchem der Patch ausgeführt werden soll
-	 * @param idSchueler           die Schueler-ID
-	 * @param idLernplattform      die ID der Lernplattform
-	 * @param request              die Informationen zur HTTP-Anfrage
-	 *
-	 * @return das Ergebnis der Patch-Operation
-	 */
-	@GET
-	@Path("/{id : \\d+}/lernplattformen/{idLernplattform : \\d+}")
-	@Operation(summary = "Liefert die Credentials der Lernplattform für den Schüler.",
-			description = "Liest anhand der Schüler-ID und der Lernplattform-ID den zugehörigen Credential-Datensatz aus der Datenbank aus und liefert die "
-					+ "den Benutzername und Initialkennwort zurück.")
-	@ApiResponse(responseCode = "200", description = "Die Credentials des Schülers zu einer Lernplattform",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Lernplattform.class))))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Credentials oder Lernplattform nicht gefunden")
-	public Response getSchuelerLernplattformCredentials(@PathParam("schema") final String schema, @PathParam("id") final long idSchueler,
-			@PathParam("idLernplattform") final long idLernplattform, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataSchuelerLernplattformen(conn, idSchueler).getCredentialsAsResponse(idLernplattform),
-				request,
-				ServerMode.DEV,
-				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN
-		);
 	}
 
 }

@@ -18,6 +18,7 @@ import de.svws_nrw.asd.data.lehrer.LehrerMinderleistungsartKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerRechtsverhaeltnisKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerZugangsgrundKatalogEintrag;
 import de.svws_nrw.core.data.SimpleOperationResponse;
+import de.svws_nrw.core.data.lehrer.LehrerLernplattform;
 import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdaten;
 import de.svws_nrw.asd.data.lehrer.LehrerPersonaldaten;
@@ -43,6 +44,7 @@ import de.svws_nrw.data.lehrer.DataKatalogLehrerMinderleistungsarten;
 import de.svws_nrw.data.lehrer.DataKatalogLehrerRechtsverhaeltnis;
 import de.svws_nrw.data.lehrer.DataKatalogLehrerZugangsgruende;
 import de.svws_nrw.data.lehrer.DataLehrerEinwilligungen;
+import de.svws_nrw.data.lehrer.DataLehrerLernplattformen;
 import de.svws_nrw.data.lehrer.DataLehrerPersonalabschnittsdaten;
 import de.svws_nrw.data.lehrer.DataLehrerPersonaldaten;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
@@ -757,6 +759,65 @@ public class APILehrer {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerEinwilligungen(conn, idLehrer)
 						.patchAsResponse(new Long[]{idLehrer, idEinwilligungsart}, is),
+				request, ServerMode.DEV,
+				BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Lernplattformen eines Lehrers.
+	 *
+	 * @param schema       das Datenbankschema, auf welchem die Abfrage ausgeführt werden soll
+	 * @param idLehrer     die Datenbank-ID zur Identifikation des Lehrers
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Lernplattformen des Lehrers
+	 */
+	@GET
+	@Path("/{id : \\d+}/lernplattformen")
+	@Operation(summary = "Liefert zu der ID des Lehrers die zugehörigen Lernplattformen.",
+			description = "Liest die Lernplattformen des Lehrers zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Lernplattformen des Lehrers",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerLernplattform.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Lehrerdaten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Lernplattform für den Lehrer mit der angegebenen ID gefunden")
+	public Response getLehrerLernplattformen(@PathParam("schema") final String schema, @PathParam("id") final long idLehrer,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerLernplattformen(conn, idLehrer).getListAsResponse(),
+				request, ServerMode.DEV,
+				BenutzerKompetenz.LEHRER_PERSONALDATEN_ANSEHEN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Patchen einer Lernplattform.
+	 *
+	 * @param schema               das Datenbankschema, auf welchem der Patch ausgeführt werden soll
+	 * @param idLehrer             die Lehrer-ID
+	 * @param idLernplattform      die ID der Lernplattform, zu welcher die zu patchende Einwilligung gehört
+	 * @param is                   der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request              die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/{id : \\d+}/lernplattformen/{idLernplattform : \\d+}")
+	@Operation(summary = "Passt die Einwilligung zu der angegebenen Lehrer- und Einwilligungsart-ID an.",
+			description = "Passt die Einwilligung zu der angegebenen Lehrer- und Einwilligungsart-ID an und speichert das Ergebnis in der Datenbank."
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Einwilligungen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Lernplattform integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lernplattform der Lehrer zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Lehrer oder keine Lernplattform der angegebenen Art gefunden.")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde."
+			+ " (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response patchLehrerLernplattform(@PathParam("schema") final String schema, @PathParam("id") final long idLehrer,
+			@PathParam("idLernplattform") final long idLernplattform,
+			@RequestBody(description = "Der Patch für die Lernplattformen eines Lehrers", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LehrerLernplattform.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerLernplattformen(conn, idLehrer).patchAsResponse(new Long[]{idLehrer, idLernplattform},
+						is),
 				request, ServerMode.DEV,
 				BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN);
 	}

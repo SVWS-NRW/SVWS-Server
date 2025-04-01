@@ -1,7 +1,7 @@
 <template>
 	<div class="page page-grid-cards">
 		<svws-ui-content-card class="col-span-full">
-			<svws-ui-table :items="props.schuelerLernplattformen()" :columns>
+			<svws-ui-table :items="props.lehrerLernplattformen()" :columns>
 				<template #cell(idLernplattform)="{ value }">
 					{{ getBezeichnungLernplattform(value) }}
 				</template>
@@ -25,10 +25,10 @@
 </template>
 
 <script setup lang="ts">
-	import type { SchuelerLernplattformenProps } from "~/components/schueler/lernplattformen/SchuelerLernplattformenProps";
 	import type { DataTableColumn } from "@ui";
+	import type { LehrerLernplattformenProps } from "~/components/lehrer/lernplattformen/LehrerLernplattformenProps";
 
-	const props = defineProps<SchuelerLernplattformenProps>();
+	const props = defineProps<LehrerLernplattformenProps>();
 
 	const columns: DataTableColumn[] = [
 		{ key: "idLernplattform", label: "Lernplattform", sortable: true },

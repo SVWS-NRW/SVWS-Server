@@ -491,6 +491,7 @@ export { SchuelerblockungInputFachwahl } from './core/data/kursblockung/Schueler
 export { SchuelerblockungInputKurs } from './core/data/kursblockung/SchuelerblockungInputKurs';
 export { SchuelerblockungOutput } from './core/data/kursblockung/SchuelerblockungOutput';
 export { SchuelerblockungOutputFachwahlZuKurs } from './core/data/kursblockung/SchuelerblockungOutputFachwahlZuKurs';
+export { LehrerLernplattform } from './core/data/lehrer/LehrerLernplattform';
 export { LehrerListeEintrag } from './core/data/lehrer/LehrerListeEintrag';
 export { OAuth2ClientConnection } from './core/data/oauth2/OAuth2ClientConnection';
 export { ReportingParameter } from './core/data/reporting/ReportingParameter';

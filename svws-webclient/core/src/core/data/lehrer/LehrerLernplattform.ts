@@ -1,12 +1,12 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { Class } from '../../../java/lang/Class';
 
-export class SchuelerLernplattform extends JavaObject {
+export class LehrerLernplattform extends JavaObject {
 
 	/**
-	 * Die ID des zugehörigen Schülers.
+	 * Die ID des zugehörigen Lehrers.
 	 */
-	public idSchueler : number = 0;
+	public idLehrer : number = 0;
 
 	/**
 	 * Die ID der Lernplattform.
@@ -39,12 +39,12 @@ export class SchuelerLernplattform extends JavaObject {
 	public einwilligungVideokonferenz : boolean = false;
 
 	/**
-	 * Benutzername für die Lernplattform eines Schülers
+	 * Benutzername für die Lernplattform eines Lehrers
 	 */
 	public benutzername : string | null = null;
 
 	/**
-	 * Initialkennwort für die Lernplattform eines Schülers
+	 * Initialkennwort für die Lernplattform eines Lehrers
 	 */
 	public initialKennwort : string | null = null;
 
@@ -54,21 +54,21 @@ export class SchuelerLernplattform extends JavaObject {
 	}
 
 	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.core.data.schueler.SchuelerLernplattform';
+		return 'de.svws_nrw.core.data.lehrer.LehrerLernplattform';
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.data.schueler.SchuelerLernplattform'].includes(name);
+		return ['de.svws_nrw.core.data.lehrer.LehrerLernplattform'].includes(name);
 	}
 
-	public static class = new Class<SchuelerLernplattform>('de.svws_nrw.core.data.schueler.SchuelerLernplattform');
+	public static class = new Class<LehrerLernplattform>('de.svws_nrw.core.data.lehrer.LehrerLernplattform');
 
-	public static transpilerFromJSON(json : string): SchuelerLernplattform {
-		const obj = JSON.parse(json) as Partial<SchuelerLernplattform>;
-		const result = new SchuelerLernplattform();
-		if (obj.idSchueler === undefined)
-			throw new Error('invalid json format, missing attribute idSchueler');
-		result.idSchueler = obj.idSchueler;
+	public static transpilerFromJSON(json : string): LehrerLernplattform {
+		const obj = JSON.parse(json) as Partial<LehrerLernplattform>;
+		const result = new LehrerLernplattform();
+		if (obj.idLehrer === undefined)
+			throw new Error('invalid json format, missing attribute idLehrer');
+		result.idLehrer = obj.idLehrer;
 		if (obj.idLernplattform === undefined)
 			throw new Error('invalid json format, missing attribute idLernplattform');
 		result.idLernplattform = obj.idLernplattform;
@@ -92,9 +92,9 @@ export class SchuelerLernplattform extends JavaObject {
 		return result;
 	}
 
-	public static transpilerToJSON(obj : SchuelerLernplattform) : string {
+	public static transpilerToJSON(obj : LehrerLernplattform) : string {
 		let result = '{';
-		result += '"idSchueler" : ' + obj.idSchueler.toString() + ',';
+		result += '"idLehrer" : ' + obj.idLehrer.toString() + ',';
 		result += '"idLernplattform" : ' + obj.idLernplattform.toString() + ',';
 		result += '"idCredential" : ' + obj.idCredential.toString() + ',';
 		result += '"einwilligungAbgefragt" : ' + obj.einwilligungAbgefragt.toString() + ',';
@@ -108,10 +108,10 @@ export class SchuelerLernplattform extends JavaObject {
 		return result;
 	}
 
-	public static transpilerToJSONPatch(obj : Partial<SchuelerLernplattform>) : string {
+	public static transpilerToJSONPatch(obj : Partial<LehrerLernplattform>) : string {
 		let result = '{';
-		if (obj.idSchueler !== undefined) {
-			result += '"idSchueler" : ' + obj.idSchueler.toString() + ',';
+		if (obj.idLehrer !== undefined) {
+			result += '"idLehrer" : ' + obj.idLehrer.toString() + ',';
 		}
 		if (obj.idLernplattform !== undefined) {
 			result += '"idLernplattform" : ' + obj.idLernplattform.toString() + ',';
@@ -144,6 +144,6 @@ export class SchuelerLernplattform extends JavaObject {
 
 }
 
-export function cast_de_svws_nrw_core_data_schueler_SchuelerLernplattform(obj : unknown) : SchuelerLernplattform {
-	return obj as SchuelerLernplattform;
+export function cast_de_svws_nrw_core_data_lehrer_LehrerLernplattform(obj : unknown) : LehrerLernplattform {
+	return obj as LehrerLernplattform;
 }

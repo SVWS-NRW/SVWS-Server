@@ -1,5 +1,55 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`Schule Tests  > gegen { schema: 'GymAbi01' } > getLernplattformen 1`] = `
+ArrayList {
+  "addFirst": [Function],
+  "addLast": [Function],
+  "elementData": [
+    Lernplattform {
+      "anzahlEinwilligungen": 493,
+      "benutzernameSuffixErzieher": "",
+      "benutzernameSuffixLehrer": "",
+      "benutzernameSuffixSchueler": "",
+      "bezeichnung": "Logineo NRW",
+      "id": 1,
+      "konfiguration": "",
+    },
+    Lernplattform {
+      "anzahlEinwilligungen": 493,
+      "benutzernameSuffixErzieher": "",
+      "benutzernameSuffixLehrer": "",
+      "benutzernameSuffixSchueler": "",
+      "bezeichnung": "IServ",
+      "id": 2,
+      "konfiguration": "",
+    },
+    Lernplattform {
+      "anzahlEinwilligungen": 493,
+      "benutzernameSuffixErzieher": "",
+      "benutzernameSuffixLehrer": "",
+      "benutzernameSuffixSchueler": "",
+      "bezeichnung": "Logineo LMS",
+      "id": 3,
+      "konfiguration": "",
+    },
+    Lernplattform {
+      "anzahlEinwilligungen": 493,
+      "benutzernameSuffixErzieher": "",
+      "benutzernameSuffixLehrer": "L_",
+      "benutzernameSuffixSchueler": "S_",
+      "bezeichnung": "SDS",
+      "id": 4,
+      "konfiguration": "{"Namensfolge":"VN","ZeichenVorname":20,"ZeichenNachname":30,"TrennzeichenName":".","MaximaleLaengeBenutzername":100,"KennwortLaenge":8,"SonderzeichenImNamenErsetzen":true,"NurErsterVorname":true,"NurErsterNachname":true,"KennwortMitSonderzeichen":false}",
+    },
+  ],
+  "getFirst": [Function],
+  "getLast": [Function],
+  "modCount": 4,
+  "removeFirst": [Function],
+  "removeLast": [Function],
+}
+`;
+
 exports[`Schule Tests  > gegen { schema: 'GymAbi01' } > getSchuleNummer 1`] = `168890`;
 
 exports[`Schule Tests  > gegen { schema: 'GymAbi01' } > getSchuleStammdaten 1`] = `
