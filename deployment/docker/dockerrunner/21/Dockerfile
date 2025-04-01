@@ -7,4 +7,5 @@ curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID")/gp
 add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") $(lsb_release -cs) stable"
 apt-get update
 apt-get -y install docker-ce
+echo '{ "insecure-registries" : [ "10.1.1.3" ] }' > /etc/docker/daemon.json
 EOF
