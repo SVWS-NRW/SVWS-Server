@@ -134,8 +134,8 @@
 			<stundenplan-klasse mode-pausenaufsichten="tooltip" :id="klasse.id" :manager="stundenplanManager" :wochentyp="()=>wochentypAnzeige" :kalenderwoche="() => undefined"
 				:use-drag-and-drop="hatUpdateKompetenz" :drag-data="() => dragData" :on-drag :on-drop class="h-full overflow-scroll pr-4" @update:click="u => toRaw(auswahl) !== u ? auswahl = u : auswahl = undefined" />
 			<!-- Card für die zusätzlichen Einstellungen zum Unterricht -->
-			<template v-if="(auswahl !== undefined)">
-				<div class="flex flex-col gap-4 min-w-96">
+			<div class="flex flex-col gap-4 w-96 min-w-96">
+				<template v-if="(auswahl !== undefined)">
 					<div class="text-headline-md">Raumzuordnung {{ unterrichtBezeichnung }} ({{ schuelerzahl }} SuS)</div>
 					<div>{{ auswahl.lehrer.size() > 1 ? 'Lehrkräfte' : 'Lehrkraft' }} {{ [...auswahl.lehrer].map(l => stundenplanManager().lehrerGetByIdOrException(l).kuerzel).join(', ') }}</div>
 					<div class="text-headline-sm">Für alle Unterrichte setzen:</div>
@@ -156,8 +156,8 @@
 								@update:model-value="liste => patchUnterrichtRaeume(ListUtils.create1(u), liste)" :item-text="item => raumInfo(item, ListUtils.create1(u))" :disabled />
 						</template>
 					</div>
-				</div>
-			</template>
+				</template>
+			</div>
 		</template>
 	</div>
 </template>
