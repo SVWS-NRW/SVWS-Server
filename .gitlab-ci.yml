@@ -85,18 +85,13 @@ build_snapshot_windows:
     stage: build_snapshot_installer
     needs:
         - job: build
-    only:
-        refs:
-            - dev
-    tags:
-        - windows
-    image: svwsnrw/dockerrunner-win
+    image: 10.1.1.3/svwsnrw/docker-runner-wine:21
     script:
-        - ./deployment/setupVersion.ps1
-        - dir /builds/svws/SVWS-Server/
+        - chmod +x ./deployment/setupVersion.sh
+        - ./deployment/setupVersion.sh
         - ./gradlew :deployment:windows-installer:doZip
         - mkdir artifacts_windows
-        - copy .\deployment\windows-installer\build\output\win64-installer* .\artifacts_windows\
+        - cp ./deployment/windows-installer/build/output/win64-installer* ./artifacts_windows/
     artifacts:
         paths:
             - artifacts_windows/
@@ -124,15 +119,13 @@ build_windows:
         - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
     needs:
         - job: build
-    tags:
-        - windows
-    image: svwsnrw/dockerrunner-win
+    image: 10.1.1.3/svwsnrw/docker-runner-wine:21
     script:
-        - ./deployment/setupVersion.ps1
-        - dir /builds/svws/SVWS-Server/
+        - chmod +x ./deployment/setupVersion.sh
+        - ./deployment/setupVersion.sh
         - ./gradlew :deployment:windows-installer:doZip
         - mkdir artifacts_windows
-        - copy .\deployment\windows-installer\build\output\win64-installer* .\artifacts_windows\
+        - cp ./deployment/windows-installer/build/output/win64-installer* ./artifacts_windows/
     artifacts:
         paths:
             - artifacts_windows/
