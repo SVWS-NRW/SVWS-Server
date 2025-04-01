@@ -456,3 +456,50 @@ describe("Ankreuzkompetenzen können bearbeitet werden", () => {
 		expect(strippedDataAfterEdit).toMatchSnapshot()
 	});
 })
+
+describe("Passwort Management durch create_pwt", () => {
+	test("Fehlender Parameter im JSON führt zu Fehler", async () => {
+		// Diese Daten werden patched
+		const bodyData = {
+			notUsed: "Die Dienst-E-Mail ist erforderlich."
+		}
+
+		const responsePost = await apiServiceAuth.post(`/api/create_pwt`, {body: JSON.stringify(bodyData)});
+		expect(await responsePost.text()).toContain("Die Dienst-E-Mail ist erforderlich");
+		expect(responsePost.status).toBe(400);
+	});
+
+	test("Unbekannte Email erzeugt Fehler", async () => {
+		// Diese Daten werden patched
+		const bodyData = {
+			eMailDienstlich: "notused@email.de"
+		}
+
+		const responsePost = await apiServiceAuth.post(`/api/create_pwt`, {body: JSON.stringify(bodyData)});
+		expect(await responsePost.text()).toContain("Mehrere Lehrer mit dieser E-Mail-Adresse gefunden");
+		expect(responsePost.status).toBe(409);
+	});
+
+	test.skip("Korrekte Email -> 204", async () => {
+		// Diese Daten werden patched
+		const bodyData = {
+			eMailDienstlich: "D.Berthold@lmail.de"
+		}
+
+		const responsePost = await apiServiceAuth.post(`/api/create_pwt`, {body: JSON.stringify(bodyData)});
+		console.log(await responsePost.text());
+		expect(responsePost.status).toBe(204);
+	});
+
+	test("Korrekte Email doppelt führt zu einem Fehler", async () => {
+		const bodyData = {
+			eMailDienstlich: "D.Berthold@lmail.de"
+		}
+
+		await apiServiceAuth.post(`/api/create_pwt`, {body: JSON.stringify(bodyData)});
+
+		const responsePost = await apiServiceAuth.post(`/api/create_pwt`, {body: JSON.stringify(bodyData)});
+		expect(await responsePost.text()).toContain("Bitte warten Sie, bevor Sie es erneut versuchen.");
+		expect(responsePost.status).toBe(429);
+	});
+})
