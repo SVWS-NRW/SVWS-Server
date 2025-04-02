@@ -25,7 +25,7 @@
 				</svws-ui-radio-group>
 			</div>
 			<svws-ui-table :items="filtered" :no-data="filtered.isEmpty()" no-data-html="Keine Laufbahnfehler gefunden."
-				clickable v-model:clicked="schueler" :columns selectable v-model="auswahl" scroll>
+				clickable v-model:clicked="schueler" :columns selectable v-model="auswahl" scroll count>
 				<template #header(linkToSchueler)>
 					<span class="icon i-ri-group-line" />
 				</template>
