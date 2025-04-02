@@ -22,11 +22,11 @@
 							@change="sortierung => patchPartial({ sortierung: sortierung ?? undefined }, validateSortierung(sortierung))" />
 					</div>
 					<svws-ui-spacing />
-					<svws-ui-select v-if="!listeVorgaengerklassen.isEmpty()" title="Vorgängerklasse" :disabled="!hatKompetenzUpdate" :model-value="data.idVorgaengerklasse === null ? null : mapKlassenVorigerAbschnitt().get(data.idVorgaengerklasse)"
+					<svws-ui-select v-if="zeigeVorgaengerklassen()" title="Vorgängerklasse" :disabled="!hatKompetenzUpdate" :model-value="data.idVorgaengerklasse === null ? null : mapKlassenVorigerAbschnitt().get(data.idVorgaengerklasse)"
 						@update:model-value="value => patchPartial({ idVorgaengerklasse: value?.id ?? null })"
 						:items="listeVorgaengerklassen" :item-text="f => f.kuerzel ?? '---'" removable />
 					<svws-ui-text-input v-else placeholder="Vorgängerklasse" :model-value="data.kuerzelVorgaengerklasse === null ? '&nbsp;' : data.kuerzelVorgaengerklasse" type="text" disabled />
-					<svws-ui-select v-if="!listeFolgeklassen.isEmpty()" title="Folgeklasse" :disabled="!hatKompetenzUpdate" :model-value="data.idFolgeklasse === null ? null : mapKlassenFolgenderAbschnitt().get(data.idFolgeklasse)"
+					<svws-ui-select v-if="zeigeFolgeklassen()" title="Folgeklasse" :disabled="!hatKompetenzUpdate" :model-value="data.idFolgeklasse === null ? null : mapKlassenFolgenderAbschnitt().get(data.idFolgeklasse)"
 						@update:model-value="value => patchPartial({ idFolgeklasse: value?.id ?? null })"
 						:items="listeFolgeklassen" :item-text="f => f.kuerzel ?? '---'" removable />
 					<svws-ui-text-input v-else placeholder="Folgeklasse" :model-value="data.kuerzelFolgeklasse === null ? '&nbsp;' : data.kuerzelFolgeklasse" type="text" disabled />
@@ -121,7 +121,7 @@
 	import type { DataTableColumn } from "@ui";
 	import type { KlassenDatenProps } from "./SKlassenDatenProps";
 	import type { LehrerListeEintrag, KlassenDaten, JahrgangsDaten, List } from "@core";
-	import { SchuelerStatus, Schulform, Schulgliederung, Klassenart, AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen, WeiterbildungskollegOrganisationsformen, ArrayList, BenutzerKompetenz } from "@core";
+	import { SchuelerStatus, Schulform, Schulgliederung, Klassenart, AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen, WeiterbildungskollegOrganisationsformen, ArrayList, BenutzerKompetenz, Jahrgaenge } from "@core";
 
 	const props = defineProps<KlassenDatenProps>();
 
@@ -176,6 +176,47 @@
 			&& (klassenleitungClicked.value.id !== letzteKlassenleitungId.value)
 			&& data.value.klassenLeitungen.contains(klassenleitungClicked.value.id);
 	});
+
+	const jgWBK = new Set<Jahrgaenge>([
+		Jahrgaenge.VORKURS_SEMESTER_1, Jahrgaenge.VORKURS_SEMESTER_2,
+		Jahrgaenge.SEMESTER_01, Jahrgaenge.SEMESTER_02, Jahrgaenge.SEMESTER_03, Jahrgaenge.SEMESTER_04, Jahrgaenge.SEMESTER_05, Jahrgaenge.SEMESTER_06,
+		Jahrgaenge.REALSCHULE_VORKURS_SEMESTER_1, Jahrgaenge.REALSCHULE_VORKURS_SEMESTER_2,
+		Jahrgaenge.REALSCHULE_SEMESTER_01, Jahrgaenge.REALSCHULE_SEMESTER_02, Jahrgaenge.REALSCHULE_SEMESTER_03, Jahrgaenge.REALSCHULE_SEMESTER_04,
+	]);
+
+	function istSemesterBetrieb() : boolean {
+		if (props.schulform === Schulform.WB)
+			return true;
+		const jgdaten = jahrgang.value;
+		if ((jgdaten === null) || (jgdaten.kuerzelStatistik === null))
+			return false;
+		const jg = Jahrgaenge.data().getWertBySchluessel(jgdaten.kuerzelStatistik);
+		if (jg === null)
+			return false;
+		return jgWBK.has(jg);
+	}
+
+	function zeigeVorgaengerklassen() : boolean {
+		if (listeVorgaengerklassen.value.isEmpty())
+			return false;
+		if (istSemesterBetrieb())
+			return true;
+		const sja = props.manager().getSchuljahresabschnittAuswahl();
+		if (sja === null)
+			return false;
+		return (sja.abschnitt === 1);
+	}
+
+	function zeigeFolgeklassen() : boolean {
+		if (listeFolgeklassen.value.isEmpty())
+			return false;
+		if (istSemesterBetrieb())
+			return true;
+		const sja = props.manager().getSchuljahresabschnittAuswahl();
+		if (sja === null)
+			return false;
+		return (sja.abschnitt === 2);
+	}
 
 	async function removeKlassenleitungHandler(rowData : LehrerListeEintrag) : Promise<void> {
 		await props.removeKlassenleitung(rowData);

@@ -120,7 +120,7 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 	/**
 	 * Das Filter-Attribut auf nur sichtbare Klassen
 	 */
-	private _filterNurSichtbar : boolean = true;
+	private _filterNurSichtbar : boolean = false;
 
 	/**
 	 *  Trigger, wenn eine Checkbox zum Hinzufügen von Schülern zu einer Klasse verwendet wird.

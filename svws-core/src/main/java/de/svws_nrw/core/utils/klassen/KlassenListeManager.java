@@ -89,7 +89,7 @@ public final class KlassenListeManager extends AuswahlManager<Long, KlassenDaten
 			(final @NotNull SchuelerStatus a, final @NotNull SchuelerStatus b) -> a.ordinal() - b.ordinal();
 
 	/** Das Filter-Attribut auf nur sichtbare Klassen */
-	private boolean _filterNurSichtbar = true;
+	private boolean _filterNurSichtbar = false;
 
 
 	/**
