@@ -31,12 +31,15 @@
 				</td>
 			</tr>
 		</thead>
-		<tbody ref="tbodyRef" class="svws-ui-tbody h-full overflow-y-auto" role="rowgroup" aria-label="Tabelleninhalt">
-			<template v-for="(schueler, indexSchueler) of manager.lerngruppenAuswahlGetSchueler()" :key="schueler">
+		<tbody class="svws-ui-tbody h-full overflow-y-auto" role="rowgroup" aria-label="Tabelleninhalt">
+			<template v-for="(schueler, indexSchueler) of manager.lerngruppenAuswahlGetSchuelerMitLeistungsdaten()" :key="schueler">
 				<template v-for="(leistung, indexLeistung) of manager.leistungenGetOfSchueler(schueler.id)" :key="leistung">
 					<tr class="svws-ui-tr" role="row" :class="{ 'svws-clicked': manager.auswahlLeistung.leistung?.id === leistung.id }"
 						@click.capture.exact="setAuswahlLeistung({ indexSchueler, indexLeistung, leistung })"
-						:ref="el => rowRefs.set(leistung.id, el as HTMLElement)">
+						@keydown.tab="handleTabEvent($event, leistung.id)" :ref="el => rowRefs.set(leistung.id, {
+							element: (el as HTMLElement),
+							isLastRow: manager.lerngruppenAuswahlGetSchuelerMitLeistungsdaten().getLast().id === schueler.id
+								&& manager.leistungenGetOfSchueler(schueler.id).getLast().id === leistung.id })">
 						<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Klasse') ?? true">
 							{{ manager.schuelerGetKlasse(schueler.id).kuerzelAnzeige }}
 						</td>
@@ -58,7 +61,7 @@
 						<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Quartal') ?? true">
 							<svws-ui-select v-if="manager.lerngruppeIstFachlehrer(leistung.lerngruppenID)" title="—" headless class="w-full"
 								:items="Note.values()" :item-text="item => item.daten(manager.schuljahr)?.kuerzel ?? '—'"
-								:model-value="Note.fromKuerzel(leistung.noteQuartal)"
+								:model-value="Note.fromKuerzel(leistung.noteQuartal)" @focusin="tabToUnselectedLeistung(indexSchueler, indexLeistung, leistung, 0)"
 								@update:model-value="value => doPatchLeistung(leistung, { noteQuartal: value?.daten(manager.schuljahr)?.kuerzel ?? null })"
 								:focus-class-content="manager.auswahlLeistung?.leistung?.id === leistung.id" />
 							<div v-else>{{ leistung.noteQuartal }}</div>
@@ -88,7 +91,8 @@
 							<span v-else>—</span>
 						</td>
 						<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Bemerkung') ?? true" :class="{ 'bg-ui-selected-secondary text-ui-onselected-secondary': floskelEditorVisible && (manager.auswahlLeistung.leistung?.id === leistung.id) }">
-							<span class="text-ellipsis overflow-hidden whitespace-nowrap column-focussable" tabindex="0" @keydown.enter.prevent="focusFloskelEditor">{{ leistung.fachbezogeneBemerkungen }}</span>
+							<span class="text-ellipsis overflow-hidden whitespace-nowrap column-focussable" tabindex="0" @keydown.enter.prevent="focusFloskelEditor"
+								@focusin="tabToUnselectedLeistung(indexSchueler, indexLeistung, leistung, columnsComputed.length - 1)">{{ leistung.fachbezogeneBemerkungen }}</span>
 						</td>
 						<td class="svws-ui-td" role="cell" />
 					</tr>
@@ -107,7 +111,7 @@
 	import { Note } from '@core/asd/types/Note';
 
 	const props = defineProps<EnmLeistungenProps>();
-	const rowRefs = ref(new Map<number, HTMLElement>());
+	const rowRefs = ref(new Map<number, { element: HTMLElement, isLastRow: boolean }>());
 	const currentColumn = ref(0);
 
 	const cols = [
@@ -131,7 +135,7 @@
 	});
 
 	const columnsComputed = computed<HTMLElement[]>(
-		() => Array.from(rowRefs.value.get(props.manager.auswahlLeistung.leistung!.id)!.querySelectorAll("input, .column-focussable"))
+		() => Array.from(rowRefs.value.get(props.manager.auswahlLeistung.leistung!.id)!.element.querySelectorAll("input, .column-focussable"))
 	);
 
 	function setAuswahlLeistung(value: EnmLeistungAuswahl) {
@@ -167,15 +171,42 @@
 		props.manager.update();
 	}
 
+	function tabToUnselectedLeistung(indexSchueler: number, indexLeistung: number, leistung: ENMLeistung, columnIndex: number) {
+		currentColumn.value = columnIndex;
+		setAuswahlLeistung({ indexSchueler, indexLeistung, leistung });
+	}
+
+	function handleTabEvent(eve: KeyboardEvent, idLeistung: number) {
+		if (eve.shiftKey) {
+			if (currentColumn.value === 0) {
+				if(props.manager.auswahlLeistung.indexSchueler === 0 && props.manager.auswahlLeistung.indexLeistung === 0)
+					return;
+				eve.preventDefault();
+				props.manager.auswahlLeistungVorherige();
+				currentColumn.value = columnsComputed.value.length - 1;
+				columnsComputed.value[currentColumn.value].focus();
+			} else
+				currentColumn.value -= 1;
+		} else {
+			if (currentColumn.value === columnsComputed.value.length - 1) {
+				if(rowRefs.value.get(idLeistung)?.isLastRow ?? false)
+					return;
+				eve.preventDefault();
+				props.manager.auswahlLeistungNaechste();
+				currentColumn.value = 0;
+				columnsComputed.value[currentColumn.value].focus();
+			} else
+				currentColumn.value += 1;
+		}
+	}
+
 	const gridTemplateColumnsComputed = computed<string>(() => {
 		return cols.filter(c => colsVisible.value.get(c.kuerzel) ?? true).map(c => c.width).join(" ") + " 5em";
 	});
 
 	watch(
 		() => props.manager.auswahlLeistung,
-		() => {
-			columnsComputed.value[currentColumn.value].focus();
-		}
+		() => columnsComputed.value[currentColumn.value].focus()
 	)
 
 </script>

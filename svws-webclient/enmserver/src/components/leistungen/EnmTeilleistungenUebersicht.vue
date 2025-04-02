@@ -36,11 +36,14 @@
 			</tr>
 		</thead>
 		<tbody class="svws-ui-tbody h-full overflow-y-auto" role="rowgroup" aria-label="Tabelleninhalt">
-			<template v-for="(schueler, indexSchueler) of manager.lerngruppenAuswahlGetSchueler()" :key="schueler">
+			<template v-for="(schueler, indexSchueler) of manager.lerngruppenAuswahlGetSchuelerMitLeistungsdaten()" :key="schueler">
 				<template v-for="(leistung, indexLeistung) of manager.leistungenGetOfSchueler(schueler.id)" :key="leistung">
 					<tr class="svws-ui-tr" role="row" :class="{ 'svws-clicked': manager.auswahlLeistung.leistung === leistung }"
 						@click.capture.exact="setAuswahlLeistung({ indexSchueler, indexLeistung, leistung })"
-						:ref="el => rowRefs.set(leistung.id, el as HTMLElement)">
+						@keydown.tab="handleTabEvent($event, leistung.id)" :ref="el => rowRefs.set(leistung.id, {
+							element: (el as HTMLElement),
+							isLastRow: manager.lerngruppenAuswahlGetSchuelerMitLeistungsdaten().getLast().id === schueler.id
+								&& manager.leistungenGetOfSchueler(schueler.id).getLast().id === leistung.id })">
 						<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Klasse') ?? true">
 							{{ manager.schuelerGetKlasse(schueler.id).kuerzelAnzeige }}
 						</td>
@@ -62,10 +65,10 @@
 						<template v-for="art of manager.lerngruppenAuswahlGetTeilleistungsarten()" :key="art.id">
 							<td class="svws-ui-td" role="cell">
 								<template v-if="manager.lerngruppenAuswahlGetTeilleistungOrNull(leistung.id, art.id) !== null">
-									<svws-ui-select v-if="manager.lerngruppeIstFachlehrer(leistung.lerngruppenID)" title="—" headless class="w-full"
-										:items="Note.values()" :item-text="item => item.daten(manager.schuljahr)?.kuerzel ?? '—'"
-										:focus-class-content="manager.auswahlLeistung.leistung === leistung && art.id === 5"
+									<svws-ui-select v-if="manager.lerngruppeIstFachlehrer(leistung.lerngruppenID)" title="—" headless class="w-full" :items="Note.values()"
+										:item-text="item => item.daten(manager.schuljahr)?.kuerzel ?? '—'" :focus-class-content="manager.auswahlLeistung.leistung === leistung && art.id === 5"
 										:model-value="Note.fromKuerzel(manager.lerngruppenAuswahlGetTeilleistungOrNull(leistung.id, art.id)!.note)"
+										@focusin="() => { if(art.id === 5) tabToUnselectedLeistung(indexSchueler, indexLeistung, leistung, 0) }"
 										@update:model-value="value => doPatchTeilleistung(manager.lerngruppenAuswahlGetTeilleistungOrNull(leistung.id, art.id)!, { note: value?.daten(manager.schuljahr)?.kuerzel ?? null })" />
 									<div v-else>{{ manager.lerngruppenAuswahlGetTeilleistungOrNull(leistung.id, art.id)!.note }}</div>
 								</template>
@@ -81,7 +84,7 @@
 						<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Note') ?? true">
 							<svws-ui-select v-if="manager.lerngruppeIstFachlehrer(leistung.lerngruppenID)" title="—" headless class="w-full"
 								:items="Note.values()" :item-text="item => item.daten(manager.schuljahr)?.kuerzel ?? '—'"
-								:model-value="Note.fromKuerzel(leistung.note)"
+								:model-value="Note.fromKuerzel(leistung.note)" @focusin="tabToUnselectedLeistung(indexSchueler, indexLeistung, leistung, columnsComputed.length - 1)"
 								@update:model-value="value => doPatchLeistung(leistung, { note: value?.daten(manager.schuljahr)?.kuerzel ?? null })" />
 							<div v-else>{{ leistung.note }}</div>
 						</td>
@@ -103,7 +106,7 @@
 	import { Note } from '@core/asd/types/Note';
 
 	const props = defineProps<EnmTeilleistungenProps>();
-	const rowRefs = ref(new Map<number, HTMLElement>());
+	const rowRefs = ref(new Map<number, { element: HTMLElement, isLastRow: boolean }>());
 	const currentColumn = ref(0);
 
 	const cols = [
@@ -124,7 +127,7 @@
 	});
 
 	const columnsComputed = computed<HTMLElement[]>(
-		() => Array.from(rowRefs.value.get(props.manager.auswahlLeistung.leistung!.id)!.querySelectorAll("input"))
+		() => Array.from(rowRefs.value.get(props.manager.auswahlLeistung.leistung!.id)!.element.querySelectorAll("input"))
 	);
 
 	function setAuswahlLeistung(value: EnmLeistungAuswahl) {
@@ -163,6 +166,35 @@
 		props.manager.update();
 	}
 
+	function tabToUnselectedLeistung(indexSchueler: number, indexLeistung: number, leistung: ENMLeistung, columnIndex: number) {
+		currentColumn.value = columnIndex;
+		setAuswahlLeistung({ indexSchueler, indexLeistung, leistung });
+	}
+
+	function handleTabEvent(eve: KeyboardEvent, idLeistung: number) {
+		if (eve.shiftKey) {
+			if (currentColumn.value === 0) {
+				if(props.manager.auswahlLeistung.indexSchueler === 0)
+					return;
+				eve.preventDefault();
+				props.manager.auswahlLeistungVorherige();
+				currentColumn.value = columnsComputed.value.length - 1;
+				columnsComputed.value[currentColumn.value].focus();
+			} else
+				currentColumn.value -= 1;
+		} else {
+			if (currentColumn.value === columnsComputed.value.length - 1) {
+				if(rowRefs.value.get(idLeistung)?.isLastRow ?? false)
+					return;
+				eve.preventDefault();
+				props.manager.auswahlLeistungNaechste();
+				currentColumn.value = 0;
+				columnsComputed.value[currentColumn.value].focus();
+			} else
+				currentColumn.value += 1;
+		}
+	}
+
 	const gridTemplateColumnsComputed = computed<string>(() => {
 		let frs = " ";
 		for (const art of props.manager.lerngruppenAuswahlGetTeilleistungsarten())
@@ -172,9 +204,7 @@
 
 	watch(
 		() => props.manager.auswahlLeistung,
-		() => {
-			columnsComputed.value[currentColumn.value].focus();
-		}
+		() => columnsComputed.value[currentColumn.value].focus()
 	)
 
 </script>
