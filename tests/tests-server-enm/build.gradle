@@ -1,7 +1,12 @@
+import groovy.json.JsonSlurper
+
 // Initialisierung der Plugins
 plugins {
 	id 'svws.gradle.node.plugin'
 }
+
+def testConfigPath = "${rootDir}/config/tests/config.json" as String
+def CONFIG = new JsonSlurper().parse(new File(testConfigPath))
 
 // Führt alle Tasks von subproject-plugin.gradle in diesem Verzeichnis aus
 apply from: ('../subproject-plugin.gradle')
@@ -160,7 +165,10 @@ task testAgainstDockerEnv() {
 	finalizedBy("extractClientSecret")
 	finalizedBy("runSyncTest")
 	finalizedBy("runTestsAfterSetup")
-	finalizedBy("removeENMBuildArtifacts") // räume die Testumgebung ab
+
+	if(!CONFIG.keep_container_after_test_run) {
+		finalizedBy("removeENMBuildArtifacts") // räume die Testumgebung ab
+	}
 }
 
 /**

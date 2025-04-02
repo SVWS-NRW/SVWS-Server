@@ -6,6 +6,9 @@ dependencies {
 	implementation project(':svws-server-app')
 }
 
+def testConfigPath = "${rootDir}/config/tests/config.json" as String
+def CONFIG = new JsonSlurper().parse(new File(testConfigPath))
+
 def buildDirPath = layout.buildDirectory.get()
 
 
@@ -98,6 +101,11 @@ task generateDockerComposeFile {
 	def inputFile = file('../templates/docker/docker-compose.yml.template')
 	def outputFile = file("$buildDirPath/tempdocker/docker-compose.yml")
 
+	def docker_reg_url = ""
+	if (System.getenv('CI_SERVER')) {
+		docker_reg_url = CONFIG.docker_reg_url
+	}
+
 	doLast {
 		// Definiere welche Platzhalter durch welche Werte ersetzt werden sollen
 		def replacements = [
@@ -106,6 +114,7 @@ task generateDockerComposeFile {
 				'GRADLE_PLACEHOLDER_DEFAULT_SCHEMA'        : "${project.ext.TARGET_TEST_DATA_BASES[0].replace('.sqlite', '')}",
 				'GRADLE_PLACEHOLDER_MARIADB_SERVICE_NAME'  : "${project.ext.DB_SERVICE_NAME}",
 				'GRADLE_PLACEHOLDER_APP_IMAGE_NAME'        : "${project.ext.APP_IMAGE_NAME}",
+				'GRADLE_PLACEHOLDER_DOCKER_REG_URL'		   : "${docker_reg_url}"
 		]
 		def replacementsLokal = [
 				'GRADLE_PLACEHOLDER_MARIADB_FORWARDING_PORT': "ports:\n      - \"${project.ext.FORWARDED_DB_PORT}:3306\"",
@@ -146,15 +155,22 @@ task generateDockerFile {
 	def outputFile = file("$buildDirPath/tempdocker/Dockerfile")
 
 	doLast {
-
 		def enmReplacement = "localhost"
+
+		def docker_reg_url = ""
+
+		if (System.getenv('CI_SERVER')) {
+			docker_reg_url = CONFIG.docker_reg_url
+		}
+
 		if (project.ext.has('ENM_CONTAINER_NAME')) {
 			enmReplacement = "${project.ext.ENM_CONTAINER_NAME}"
 		}
 		// Definiere welche Platzhalter durch welche Werte ersetzt werden sollen.
 		def replacements = [
 				'GRADLE_PLACEHOLDER_MARIADB_CONTAINER_NAME': "${project.ext.DB_CONTAINER_NAME}",
-				'GRADLE_PLACEHOLDER_ENM_HOST'              : "${enmReplacement}"
+				'GRADLE_PLACEHOLDER_ENM_HOST'              : "${enmReplacement}",
+				'GRADLE_PLACEHOLDER_DOCKER_REG_URL'		   : "${docker_reg_url}"
 		]
 
 		// Lese das Template ein
@@ -307,6 +323,9 @@ task starteDockerContainerMitTestUmgebung(type: Exec) {
 
 
 // Imports für den Task seedDataBase
+
+import groovy.json.JsonSlurper
+
 import javax.net.ssl.TrustManager
 import java.net.http.HttpClient
 import java.net.http.HttpRequest

@@ -10,7 +10,7 @@
 	"types": "./dist/index.d.ts",
 	"scripts": {
 		"test:local": "vitest run ./tests",
-		"test:tempDockerEnv": "vitest run ./tests --coverage.reporter=html --mode allowDestructiveTests ",
+		"test:tempDockerEnv": "vitest run ./tests --coverage.reporter=html --mode allowDestructiveTests",
 		"lint": "eslint 'tests/**/*.{ts,vue}' --cache",
 		"build": "tsc"
 	}

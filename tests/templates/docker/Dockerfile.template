@@ -3,7 +3,7 @@
 # werden die Platzhalter durch die entsprechenden Werte ersetzt.
 
 # Verwende das offizielle OpenJDK 21 Image und installiere zusätzlich die benötigten Pakete
-FROM 10.1.1.3/library/eclipse-temurin:21
+FROM GRADLE_PLACEHOLDER_DOCKER_REG_URLeclipse-temurin:21
 
 # Kopiere die Konfigurationsdateien
 COPY build/ /tmp/build

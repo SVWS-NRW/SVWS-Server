@@ -7,10 +7,11 @@
 	"scripts": {
 		"installdeps": "playwright install-deps",
 		"install": "playwright install",
+		"test:local" : "playwright test",
 		"test" : "playwright test",
 		"show": "playwright show-report",
 		"lint": "eslint 'src_old/**/*.ts' --cache",
-		"codegen": "playwright codegen -o build/codegen/gen_test.ts --ignore-https-errors"
+		"codegen": "playwright codegen https://localhost -o build/codegen/gen_test.ts --ignore-https-errors"
 	},
 	"keywords": [],
 	"author": "",

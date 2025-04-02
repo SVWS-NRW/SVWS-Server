@@ -66,13 +66,10 @@ task testAgainstDockerEnv(type: NpmRun) {
 /**
  * Starten der Tests gegen die lokale Applikation. Hier wird kein Docker gestartet.
  */
-task testLokalDAV(type: NpmRun) {
+task no_auto_docker_test_DAV(type: NpmRun) {
 	group 'verification'
-	dependsOn ':testingNeu:checkIfLokalApplikationIsRunning'
-	dependsOn ':testingNeu:checkIfLokalDataBaseIsRunning'
-
-	// Falls Exceptions auftreten führen diese nicht zum Abbruch des Tasks
-	ignoreExitValue = true
+	dependsOn ':tests:checkIfLokalApplikationIsRunning'
+	dependsOn ':tests:checkIfLokalDataBaseIsRunning'
 
 	inputs.files fileTree("$projectDir/tests"),
 			fileTree("$rootDir").matching { exclude 'build', 'dist' }

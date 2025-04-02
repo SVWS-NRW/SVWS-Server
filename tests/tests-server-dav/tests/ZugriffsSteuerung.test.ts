@@ -1,6 +1,8 @@
 import {describe, expect, test} from "vitest";
 import {getApiService} from "./utils/RequestBuilder.js"
 
+const allowDestructiveTests = process.env.MODE === 'allowDestructiveTests'
+
 describe("Dav Api, prüfe ob mit falschen Username/Password alle Endpunkte geschlossen sind", () => {
 	process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
@@ -86,7 +88,7 @@ describe("Dav Api, prüfe ob mit falschen Username/Password alle Endpunkte gesch
 			expect(response!.status).toBe(401);
 		});
 
-		test("DELETE Request mit If-Match Header", async () => {
+		test.runIf(allowDestructiveTests)("DELETE Request mit If-Match Header", async () => {
 			const response = await apiService.delete(`/dav/${schema}/kalender/-1/something-something.ics`, {
 				headers: {
 					"Content-Type": "Text/Calendar",
@@ -97,7 +99,7 @@ describe("Dav Api, prüfe ob mit falschen Username/Password alle Endpunkte gesch
 			expect(response!.status).toBe(401);
 		});
 
-		test("DELETE Request gegen Kalender -1", async () => {
+		test.runIf(allowDestructiveTests)("DELETE Request gegen Kalender -1", async () => {
 			const response = await apiService.delete(`/dav/${schema}/kalender/-1`, {headers: {"Content-Type": "Text/Calendar"}});
 			expect(response).toBeDefined();
 			expect(response!.status).toBe(401);

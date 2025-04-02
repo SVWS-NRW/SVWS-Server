@@ -159,45 +159,45 @@ task integrationTest() {
 	dependsOn 'tests-server-enm:testAgainstDockerEnv' // Vite API ENM Tests
 
 
-	// Stoppe die container für die jeweiligen Testumgebungen nach den Integrationstests
-	// Jeden ausgeführte Testpackage sollte auch hier auftauchen
-	finalizedBy 'tests-server-api:removeTestEnvironmentEntryPoint'
-	finalizedBy 'tests-e2e-client:removeTestEnvironmentEntryPoint'
-	finalizedBy 'tests-server-dav:removeTestEnvironmentEntryPoint'
- 	finalizedBy 'tests-server-enm:removeTestEnvironmentEntryPoint'
+	if(!CONFIG.keep_container_after_test_run) {
+		// Stoppe die container für die jeweiligen Testumgebungen nach den Integrationstests
+		// Jeden ausgeführte Test Sub-Packet sollte auch hier auftauchen
+		finalizedBy 'tests-server-api:removeTestEnvironmentEntryPoint'
+		finalizedBy 'tests-e2e-client:removeTestEnvironmentEntryPoint'
+		finalizedBy 'tests-server-dav:removeTestEnvironmentEntryPoint'
+		finalizedBy 'tests-server-enm:removeTestEnvironmentEntryPoint'
 
-	// Aggregiere die Informationen aus allen Tests
-	finalizedBy 'checkJUnitResults'
+		// Aggregiere die Informationen aus allen Tests
+		finalizedBy 'checkJUnitResults'
+	} else {
+		println("Achtung: Testcontainer wurden nicht abgeräumt!")
+	}
 }
 
 
 /**
  * Überprüft, ob die lokale SVWS-Anwendung läuft, indem sie eine HTTP-Anfrage an den lokalen Server sendet.
- * Hierfür wird das curl-Tool verwendet und das Ergebnis in eine temporäre Datei geschrieben welche anschließend ausgelesen und gelöscht wird.
+ * Hierfür wird das curl-Tool verwendet.
  *
  * @throws GradleException Wenn der HTTP-Antwortcode des lokalen Servers nicht 200 ist.
  */
-task checkIfLokalApplikationIsRunning(type: Exec) {
+task checkIfLokalApplikationIsRunning() {
 	description 'Wirf einen Fehler wenn SVWS Server App auf dem Host System auf Port 443 läuft.'
 	doFirst {
-		def outputFile = file("${buildDirPath}/curlOutput.txt")
-		if (!outputFile.exists()) {
-			outputFile.createNewFile() // Create the file
-		}
-		commandLine 'curl', '-k', '-s', '-o', '/dev/null', '-w', '%{http_code}', 'https://localhost/status/alive'
-		standardOutput = new FileOutputStream(outputFile)
-		ignoreExitValue = true
+		// Führe den curl-Befehl aus und speichere die Ausgabe in einer Variable
+		def process = ['curl', '-k', '-s', '-o', '/dev/null', '-w', '%{http_code}', 'https://localhost/status/alive'].execute()
+		process.waitFor()
 
-		def responseCode = outputFile.text.trim()
-		outputFile.delete() // Entferne die temporäre Datei nach dem Lesen
+		// Lese die Ausgabe des Prozesses
+		def responseCode = process.text.trim()
+
 		if (responseCode == '200') {
-			println 'SVWS Server läuft auf Port 443'
+			println 'SVWS Server läuft auf Port 443.'
 		} else {
 			throw new GradleException('Es läuft kein SVWS Server auf port 443')
 		}
 	}
 }
-
 
 /**
  * Überprüft, ob die lokale SVWS-Datenbank läuft, indem sie eine Socket-Anfrage an den lokalen DB-Server sendet.
@@ -231,7 +231,7 @@ task checkIfLokalDataBaseIsRunning {
  * Dies Test laufen gehen die lokale unabhängig gestartete Datenbank und SVWS App. Es werden keine Docker Container im Hintergrund als Testumgebung gestartet.
  * Läuft also das Backend oder die Datenbank nicht, kann dieser Task nicht verwendet werden.
  */
-task integrationTestLocalOnlyNoDocker() {
+task no_auto_docker_integrationTest() {
 	description 'Führt die integrations gegen das laufende Backed + Datenbank aus. Diese werden daher benötigt und sollten vorher manuel gestartet werden'
 	group 'verification'
 
@@ -239,9 +239,10 @@ task integrationTestLocalOnlyNoDocker() {
 	dependsOn ':tests:checkIfLokalApplikationIsRunning'
 	dependsOn ':tests:checkIfLokalDataBaseIsRunning'
 
-	dependsOn 'tests-server-api:testLokalAPI' // VITE API Tests
-	dependsOn 'tests-e2e-client:testLokalE2E' // Playwright E2E Tests
-	dependsOn 'tests-server-dav:testLokalAPI' // VITE API DAV Tests
+	// Führe die lokalen Tests der jeweiligen Subpackages aus
+	dependsOn 'tests-server-api:no_auto_docker_test_APIServer' // VITE API Tests
+	dependsOn 'tests-server-dav:no_auto_docker_test_DAV' // VITE API DAV Tests
+	dependsOn 'tests-e2e-client:no_auto_docker_test_E2E' // Ende zu Ende Tests
 }
 
 

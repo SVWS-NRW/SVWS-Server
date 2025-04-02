@@ -229,8 +229,6 @@ describe("Leistung und Teilleistung können bearbeitet werden", () => {
 		const testSchueler = _data.schueler.elementData.find((s: ENMSchueler) => {
 			return s.id === 3029;
 		})
-
-		console.log(testSchueler)
 	})
 
 
@@ -266,8 +264,6 @@ describe("Leistung und Teilleistung können bearbeitet werden", () => {
 			}
 			const postResponse = await apiServiceAuth.post(`/api/teilleistung`, {body: JSON.stringify(bodyData)});
 
-			console.log(postResponse)
-			console.log(await postResponse.text())
 			// Post war erfolgreich
 			expect(postResponse.status).toBe(200);
 		}
