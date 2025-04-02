@@ -582,10 +582,15 @@ public class TypeNode {
 
 	private String transpileDeclaredType(final DeclaredType dt, final boolean noTypeArgs) {
 		String typeString = "";
-		if (dt.asElement() instanceof final TypeElement te)
-			typeString = te.getSimpleName().toString();
-		else
+		if (dt.asElement() instanceof final TypeElement te) {
+			if ("java.lang.String".equals(te.getQualifiedName().toString())) {
+				typeString = "string";
+			} else {
+				typeString = te.getSimpleName().toString();
+			}
+		} else {
 			throw new TranspilerException("Transpiler Error: Unhandled Declared Type of Kind " + dt.getKind());
+		}
 		final List<? extends TypeMirror> typeArgs = dt.getTypeArguments();
 		if (noTypeArgs || (typeArgs == null) || (typeArgs.isEmpty()))
 			return typeString + ((decl && !notNull) ? " | null" : "");
