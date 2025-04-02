@@ -172,6 +172,8 @@ export class RouteData {
 				hjBelegung.kursartKuerzel = kursart;
 				hjBelegung.schriftlich = fb.schriftlich[hj.id];
 				hjBelegung.biliSprache = fach.biliSprache;
+				if (fach.kuerzel === "PX")
+					hjBelegung.wochenstunden = fach.wochenstundenQualifikationsphase;
 				belegung.belegungen[hj.id] = hjBelegung;
 				belegung.letzteKursart = kursart;
 			}
@@ -315,9 +317,10 @@ export class RouteData {
 			const hjBelegung = new AbiturFachbelegungHalbjahr();
 			hjBelegung.halbjahrKuerzel = hj.kuerzel;
 			if (w === "M") {
-				if (fach.kuerzel === "PX")
+				if (fach.kuerzel === "PX") {
 					hjBelegung.kursartKuerzel = GostKursart.PJK.kuerzel;
-				else if (fach.kuerzel === "VX")
+					hjBelegung.wochenstunden = fach.wochenstundenQualifikationsphase;
+				} else if (fach.kuerzel === "VX")
 					hjBelegung.kursartKuerzel = GostKursart.VTF.kuerzel;
 				else
 					hjBelegung.kursartKuerzel = GostKursart.GK.kuerzel;
