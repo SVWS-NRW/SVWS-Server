@@ -29,14 +29,14 @@ export class LehrerEinwilligung extends JavaObject {
 	}
 
 	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.core.data.schule.LehrerEinwilligung';
+		return 'de.svws_nrw.core.data.lehrer.LehrerEinwilligung';
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.data.schule.LehrerEinwilligung'].includes(name);
+		return ['de.svws_nrw.core.data.lehrer.LehrerEinwilligung'].includes(name);
 	}
 
-	public static class = new Class<LehrerEinwilligung>('de.svws_nrw.core.data.schule.LehrerEinwilligung');
+	public static class = new Class<LehrerEinwilligung>('de.svws_nrw.core.data.lehrer.LehrerEinwilligung');
 
 	public static transpilerFromJSON(json : string): LehrerEinwilligung {
 		const obj = JSON.parse(json) as Partial<LehrerEinwilligung>;
@@ -88,6 +88,6 @@ export class LehrerEinwilligung extends JavaObject {
 
 }
 
-export function cast_de_svws_nrw_core_data_schule_LehrerEinwilligung(obj : unknown) : LehrerEinwilligung {
+export function cast_de_svws_nrw_core_data_lehrer_LehrerEinwilligung(obj : unknown) : LehrerEinwilligung {
 	return obj as LehrerEinwilligung;
 }

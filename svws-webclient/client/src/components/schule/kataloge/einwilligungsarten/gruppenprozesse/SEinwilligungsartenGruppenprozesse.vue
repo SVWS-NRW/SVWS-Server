@@ -5,13 +5,12 @@
 				:is-open="currentAction === 'delete'" @update:is-open="(isOpen) => setCurrentAction('delete', isOpen)">
 				<div>
 					<span v-if="alleEinwilligungsartenLeer">Alle ausgewählten Einwilligungsarten sind bereit zum Löschen.</span>
-					<span v-if="leereEinwilligungsartenartenVorhanden">Einige Einwilligungsarten haben noch Schüler, leere Einwilligungsarten können gelöscht werden.</span>
 					<div v-if="!alleEinwilligungsartenLeer">
-						<span v-for="message in nichtAlleEinwilligungsartenLeer" :key="message" class="text-ui-danger"> {{ message }} <br> </span>
+						<span class="text-ui-danger"> Diese Einwilligungsart ist noch Schülern/Lehrern zugeordnet. Wollen Sie es trotzdem löschen?  <br> </span>
 					</div>
 				</div>
 				<template #buttonFooterLeft>
-					<svws-ui-button :disabled="manager().getEinwilligungsartenIDsMitSchuelern().size() === manager().liste.auswahlSize() || loading"
+					<svws-ui-button :disabled="loading"
 						title="Löschen" @click="entferneEinwilligungsarten" :is-loading="loading" class="mt-4">
 						<svws-ui-spinner v-if="loading" spinning />
 						<span v-else class="icon i-ri-play-line" />
@@ -36,7 +35,7 @@
 <script setup lang="ts">
 
 	import { ref, computed } from "vue";
-	import { ArrayList, BenutzerKompetenz, type List, ServerMode } from "@core";
+	import { BenutzerKompetenz, type List, ServerMode } from "@core";
 	import type {
 		SchuleEinwilligungsartenGruppenprozesseProps,
 	} from "~/components/schule/kataloge/einwilligungsarten/gruppenprozesse/SEinwilligungsartenGruppenprozesseProps";
@@ -56,23 +55,12 @@
 
 	const alleEinwilligungsartenLeer = computed(() => (currentAction.value === 'delete') && props.manager().getEinwilligungsartenIDsMitSchuelern().isEmpty());
 
-	const nichtAlleEinwilligungsartenLeer = computed(() => {
-		const errorLog: List<string> = new ArrayList<string>();
-		if (alleEinwilligungsartenLeer.value)
-			for (const einwilligungsart of props.manager().getEinwilligungsartenIDsMitSchuelern())
-				errorLog.add(`Einwilligungsart ${props.manager().liste.get(einwilligungsart)?.bezeichnung ?? '???'} (ID: ${einwilligungsart}) kann nicht gelöscht werden, da ihr noch Schüler zugeordnet sind.`);
-		return errorLog;
-	})
-
-	const leereEinwilligungsartenartenVorhanden = computed(() =>
-		(alleEinwilligungsartenLeer.value) && (props.manager().getEinwilligungsartenIDsMitSchuelern().size() !== props.manager().liste.auswahlSize()));
-
 	function setCurrentAction(newAction: string, open: boolean) {
 		if(newAction === oldAction.value.name && !open)
 			return;
 		oldAction.value.name = currentAction.value;
-		oldAction.value.open = (currentAction.value === "") ? false : true;
-		if(open === true)
+		oldAction.value.open = (currentAction.value !== "");
+		if(open)
 			currentAction.value= newAction;
 		else
 			currentAction.value = "";

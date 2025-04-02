@@ -1,6 +1,6 @@
 package de.svws_nrw.data.schueler;
 
-import de.svws_nrw.core.data.schule.Einwilligung;
+import de.svws_nrw.core.data.schueler.SchuelerEinwilligung;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
@@ -14,14 +14,14 @@ import java.util.Objects;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für den
- * Core-DTO {@link Einwilligung}.
+ * Core-DTO {@link SchuelerEinwilligung}.
  */
-public final class DataSchuelerEinwilligungen extends DataManagerRevised<Long[], DTOSchuelerDatenschutz, Einwilligung> {
+public final class DataSchuelerEinwilligungen extends DataManagerRevised<Long[], DTOSchuelerDatenschutz, SchuelerEinwilligung> {
 
 	private final Long idSchueler;
 
 	/**
-	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO {@link Einwilligung}.
+	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO {@link SchuelerEinwilligung}.
 	 *
 	 * @param conn         die Datenbank-Verbindung für den Datenbankzugriff
 	 * @param idSchueler   die ID des Schülerdatensatzes auf dem die Datenbankoperationen ausgeführt werden
@@ -35,8 +35,8 @@ public final class DataSchuelerEinwilligungen extends DataManagerRevised<Long[],
 
 
 	@Override
-	public Einwilligung map(final DTOSchuelerDatenschutz dtoEinwilligung) {
-		final Einwilligung daten = new Einwilligung();
+	public SchuelerEinwilligung map(final DTOSchuelerDatenschutz dtoEinwilligung) {
+		final SchuelerEinwilligung daten = new SchuelerEinwilligung();
 		daten.idSchueler = dtoEinwilligung.Schueler_ID;
 		daten.idEinwilligungsart = dtoEinwilligung.Datenschutz_ID;
 		daten.status = dtoEinwilligung.Status;
@@ -45,13 +45,13 @@ public final class DataSchuelerEinwilligungen extends DataManagerRevised<Long[],
 	}
 
 	@Override
-	public List<Einwilligung> getAll() throws ApiOperationException {
+	public List<SchuelerEinwilligung> getAll() throws ApiOperationException {
 		final List<DTOSchuelerDatenschutz> einwilligungen = conn.queryAll(DTOSchuelerDatenschutz.class);
 		return einwilligungen.stream().map(this::map).toList();
 	}
 
 	@Override
-	public List<Einwilligung> getList() throws ApiOperationException {
+	public List<SchuelerEinwilligung> getList() throws ApiOperationException {
 		final List<DTOSchuelerDatenschutz> einwilligungen = conn.queryList(
 				DTOSchuelerDatenschutz.QUERY_BY_SCHUELER_ID, DTOSchuelerDatenschutz.class, idSchueler);
 		return einwilligungen.stream().map(this::map).toList();
@@ -105,7 +105,7 @@ public final class DataSchuelerEinwilligungen extends DataManagerRevised<Long[],
 	}
 
 	@Override
-	public Einwilligung getById(final Long[] id) throws ApiOperationException {
+	public SchuelerEinwilligung getById(final Long[] id) throws ApiOperationException {
 		if (id == null)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einer Einwilligungsart mit der ID null ist unzulässig.");
 		final DTOSchuelerDatenschutz einwilligung = conn.queryByKey(DTOSchuelerDatenschutz.class, id[0], id[1]);

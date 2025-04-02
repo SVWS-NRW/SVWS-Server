@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
-import de.svws_nrw.core.data.schule.Einwilligung;
+import de.svws_nrw.core.data.schueler.SchuelerEinwilligung;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerDatenschutz;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -67,7 +67,7 @@ class DataSchuelerEinwilligungenTest {
 		when(this.conn.queryByKey(DTOSchuelerDatenschutz.class, dtoSchuelerDatenschutz.Schueler_ID, dtoSchuelerDatenschutz.Datenschutz_ID)).thenReturn(dtoSchuelerDatenschutz);
 
 		assertThat(dataSchuelerEinwilligungen.getById(new Long[] {dtoSchuelerDatenschutz.Schueler_ID, dtoSchuelerDatenschutz.Schueler_ID}))
-				.isInstanceOf(Einwilligung.class)
+				.isInstanceOf(SchuelerEinwilligung.class)
 				.hasFieldOrPropertyWithValue("idSchueler", dtoSchuelerDatenschutz.Schueler_ID);
 	}
 
@@ -102,7 +102,7 @@ class DataSchuelerEinwilligungenTest {
 				.isNotNull()
 				.hasSize(1)
 				.first()
-				.satisfies(einwilligung -> assertThat(einwilligung)
+				.satisfies(schuelerEinwilligung -> assertThat(schuelerEinwilligung)
 						.hasFieldOrPropertyWithValue("idSchueler", 1L)
 						.hasFieldOrPropertyWithValue("idEinwilligungsart", 1L)
 						.hasFieldOrPropertyWithValue("status", false)
@@ -168,7 +168,7 @@ class DataSchuelerEinwilligungenTest {
 		final var dtoLehrerDatenschutz = getDTOSchuelerDatenschutz();
 
 		assertThat(this.dataSchuelerEinwilligungen.map(dtoLehrerDatenschutz))
-				.isInstanceOf(Einwilligung.class)
+				.isInstanceOf(SchuelerEinwilligung.class)
 				.hasFieldOrPropertyWithValue("idSchueler", 1L)
 				.hasFieldOrPropertyWithValue("idEinwilligungsart", 1L)
 				.hasFieldOrPropertyWithValue("status", false)

@@ -491,6 +491,7 @@ export { SchuelerblockungInputFachwahl } from './core/data/kursblockung/Schueler
 export { SchuelerblockungInputKurs } from './core/data/kursblockung/SchuelerblockungInputKurs';
 export { SchuelerblockungOutput } from './core/data/kursblockung/SchuelerblockungOutput';
 export { SchuelerblockungOutputFachwahlZuKurs } from './core/data/kursblockung/SchuelerblockungOutputFachwahlZuKurs';
+export { LehrerEinwilligung } from './core/data/lehrer/LehrerEinwilligung';
 export { LehrerLernplattform } from './core/data/lehrer/LehrerLernplattform';
 export { LehrerListeEintrag } from './core/data/lehrer/LehrerListeEintrag';
 export { OAuth2ClientConnection } from './core/data/oauth2/OAuth2ClientConnection';
@@ -513,6 +514,7 @@ export { SchildReportingDatenquelleAttribut } from './core/data/schild3/reportin
 export { SchildReportingSchuelerLeistungsdaten } from './core/data/schild3/reporting/SchildReportingSchuelerLeistungsdaten';
 export { SchildReportingSchuelerLernabschnitt } from './core/data/schild3/reporting/SchildReportingSchuelerLernabschnitt';
 export { SchildReportingSchuelerSprachpruefungen } from './core/data/schild3/reporting/SchildReportingSchuelerSprachpruefungen';
+export { SchuelerEinwilligung } from './core/data/schueler/SchuelerEinwilligung';
 export { SchuelerEinwilligungsartenZusammenfassung } from './core/data/schueler/SchuelerEinwilligungsartenZusammenfassung';
 export { SchuelerKAoADaten } from './core/data/schueler/SchuelerKAoADaten';
 export { SchuelerLernabschnittListeEintrag } from './core/data/schueler/SchuelerLernabschnittListeEintrag';
@@ -534,7 +536,6 @@ export { BerufskollegFachklassenKatalogDaten } from './core/data/schule/Berufsko
 export { BerufskollegFachklassenKatalogEintrag } from './core/data/schule/BerufskollegFachklassenKatalogEintrag';
 export { BerufskollegFachklassenKatalogIndex } from './core/data/schule/BerufskollegFachklassenKatalogIndex';
 export { EinschulungsartKatalogEintrag } from './core/data/schule/EinschulungsartKatalogEintrag';
-export { Einwilligung } from './core/data/schule/Einwilligung';
 export { Einwilligungsart } from './core/data/schule/Einwilligungsart';
 export { FoerderschwerpunktEintrag } from './core/data/schule/FoerderschwerpunktEintrag';
 export { HerkunftKatalogEintrag } from './core/data/schule/HerkunftKatalogEintrag';
@@ -543,7 +544,6 @@ export { HerkunftSonstigeKatalogEintrag } from './core/data/schule/HerkunftSonst
 export { HerkunftsartKatalogEintrag } from './core/data/schule/HerkunftsartKatalogEintrag';
 export { HerkunftsartKatalogEintragBezeichnung } from './core/data/schule/HerkunftsartKatalogEintragBezeichnung';
 export { HerkunftsschulnummerKatalogEintrag } from './core/data/schule/HerkunftsschulnummerKatalogEintrag';
-export { LehrerEinwilligung } from './core/data/schule/LehrerEinwilligung';
 export { Lernplattform } from './core/data/schule/Lernplattform';
 export { Merkmal } from './core/data/schule/Merkmal';
 export { PruefungsordnungKatalogEintrag } from './core/data/schule/PruefungsordnungKatalogEintrag';

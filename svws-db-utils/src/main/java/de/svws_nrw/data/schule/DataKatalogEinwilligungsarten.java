@@ -6,15 +6,12 @@ import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.schule.PersonTyp;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
-import de.svws_nrw.data.lehrer.DataLehrerEinwilligungen;
-import de.svws_nrw.data.schueler.DataSchuelerEinwilligungen;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogEinwilligungsart;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerDatenschutz;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerDatenschutz;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
-import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -214,12 +211,16 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 		final List<DTOKatalogEinwilligungsart> einwilligungsArten = this.conn.queryByKeyList(DTOKatalogEinwilligungsart.class, ids).stream().toList();
 
 		// Prüfe, ob das Löschen der Einwilligungsarten erlaubt ist
-		final Map<Long, SimpleOperationResponse> mapResponses = einwilligungsArten.stream()
-				.collect(Collectors.toMap(r -> r.ID, this::checkDeletePreConditions));
+		final Map<Long, SimpleOperationResponse> mapResponse = einwilligungsArten.stream()
+				.collect(Collectors.toMap(dto -> dto.ID, dto -> {
+					final SimpleOperationResponse response = new SimpleOperationResponse();
+					response.id = dto.ID;
+					return response;
+				}));
 
 		// Lösche die Einwilligungsarten und gib den Erfolg in der Response zurück
 		for (final DTOKatalogEinwilligungsart dtoEinwilligungsArt : einwilligungsArten) {
-			final SimpleOperationResponse operationResponse = mapResponses.get(dtoEinwilligungsArt.ID);
+			final SimpleOperationResponse operationResponse = mapResponse.get(dtoEinwilligungsArt.ID);
 			if (operationResponse == null)
 				throw new DeveloperNotificationException("Das SimpleOperationResponse Objekt zu der ID %d existiert nicht.".formatted(dtoEinwilligungsArt.ID));
 
@@ -227,32 +228,6 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 				operationResponse.success = this.conn.transactionRemove(dtoEinwilligungsArt);
 		}
 
-		return Response.ok().entity(mapResponses.values()).build();
-	}
-
-	/**
-	 * Diese Methode prüft, ob alle Vorbedingungen zum Löschen einer Einwilligungsart erfüllt sind.
-	 * Es wird eine {@link SimpleOperationResponse} zurückgegeben.
-	 *
-	 * @param dtoEinwilligungsArt   das DTO der Einwilligungsart, die gelöscht werden soll
-	 *
-	 * @return Liefert eine Response mit dem Log der Vorbedingungsprüfung zurück.
-	 */
-	private SimpleOperationResponse checkDeletePreConditions(final @NotNull DTOKatalogEinwilligungsart dtoEinwilligungsArt) {
-		final SimpleOperationResponse operationResponse = new SimpleOperationResponse();
-		operationResponse.id = dtoEinwilligungsArt.ID;
-
-		// Kein Schüler darf Einwilligungen dieser Einwilligungsart haben
-		final List<Long> schuelerEinwilligungIds = new DataSchuelerEinwilligungen(conn, 1L).getIDsByEinwilligungsartId(dtoEinwilligungsArt.ID);
-		if (!schuelerEinwilligungIds.isEmpty())
-			operationResponse.log.add(
-					"Einwilligungsart %s (ID: %d) hat noch %d verknüpfte(n) Schülereinwilligungen.".formatted(dtoEinwilligungsArt.Bezeichnung, dtoEinwilligungsArt.ID, schuelerEinwilligungIds.size()));
-
-		// Kein Lehrer darf Einwilligungen dieser Einwilligungsart haben
-		final List<Long> lehrerEinwilligungIds = new DataLehrerEinwilligungen(conn, 1L).getIDsByEinwilligungsartId(dtoEinwilligungsArt.ID);
-		if (!lehrerEinwilligungIds.isEmpty())
-			operationResponse.log.add(
-					"Einwilligungsart %s (ID: %d) hat noch %d verknüpfte(n) Lehrereinwilligungen.".formatted(dtoEinwilligungsArt.Bezeichnung, dtoEinwilligungsArt.ID, lehrerEinwilligungIds.size()));
-		return operationResponse;
+		return Response.ok().entity(mapResponse.values()).build();
 	}
 }

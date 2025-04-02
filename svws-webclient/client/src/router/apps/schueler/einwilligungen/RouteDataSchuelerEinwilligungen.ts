@@ -1,13 +1,13 @@
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 
-import type { List, SchuelerListeEintrag, Einwilligung, Einwilligungsart } from "@core";
+import type { List, SchuelerListeEintrag, SchuelerEinwilligung, Einwilligungsart } from "@core";
 import { ArrayList, DeveloperNotificationException } from "@core";
 import { api } from "~/router/Api";
 
 
 interface RouteStateSchuelerEinwilligungen extends RouteStateInterface {
 	auswahl: SchuelerListeEintrag | undefined;
-	einwilligungen: List<Einwilligung>;
+	einwilligungen: List<SchuelerEinwilligung>;
 	mapEinwilligungsarten: Map<number, Einwilligungsart>;
 }
 
@@ -29,7 +29,7 @@ export class RouteDataSchuelerEinwilligungen extends RouteData<RouteStateSchuele
 		return this._state.value.auswahl;
 	}
 
-	get einwilligungen(): List<Einwilligung> {
+	get einwilligungen(): List<SchuelerEinwilligung> {
 		return this._state.value.einwilligungen;
 	}
 
@@ -37,22 +37,12 @@ export class RouteDataSchuelerEinwilligungen extends RouteData<RouteStateSchuele
 		return this._state.value.mapEinwilligungsarten;
 	}
 
-
-	add = async (data: Partial<Einwilligung>, idEinwilligungsart: number) => {
-		const addCanditate : Partial<Einwilligung> = Object.assign(data, {idSchueler: this.auswahl.id})
-		api.status.start();
-		const einwilligungNeu = await api.server.addEinwilligung(addCanditate, api.schema, this.auswahl.id, idEinwilligungsart);
-		this.einwilligungen.add(einwilligungNeu);
-		this.commit();
-		api.status.stop();
-	}
-
-	patch = async (data : Partial<Einwilligung> | undefined, idEinwilligungsart: number) => {
+	patch = async (data : Partial<SchuelerEinwilligung> | undefined, idEinwilligungsart: number) => {
 		if (data === undefined)
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		api.status.start();
 
-		await api.server.patchEinwilligung(data, api.schema, this.auswahl.id, idEinwilligungsart);
+		await api.server.patchSchuelerEinwilligung(data, api.schema, this.auswahl.id, idEinwilligungsart);
 
 		for (const einwilligung of this.einwilligungen)
 			if (einwilligung.idEinwilligungsart === idEinwilligungsart)
@@ -61,25 +51,11 @@ export class RouteDataSchuelerEinwilligungen extends RouteData<RouteStateSchuele
 		api.status.stop();
 	}
 
-	remove = async (idEinwilligungsart: number) => {
-		api.status.start();
-		await api.server.deleteEinwilligung(api.schema, this.auswahl.id, idEinwilligungsart);
-		for (let i = this.einwilligungen.size() - 1; i >= 0; i--) {
-			const currentEinwilligung = this.einwilligungen.get(i);
-			if (idEinwilligungsart === currentEinwilligung.idEinwilligungsart) {
-				this.einwilligungen.removeElementAt(i);
-				break;
-			}
-		}
-		this.commit();
-		api.status.stop();
-	}
-
 	public async ladeDaten(auswahl: SchuelerListeEintrag | null | undefined) {
 		if ((auswahl === null) || (auswahl === undefined)) {
 			this.setPatchedDefaultState({});
 		} else {
-			const einwilligungen = await api.server.getEinwilligungen(api.schema, auswahl.id);
+			const einwilligungen = await api.server.getSchuelerEinwilligungen(api.schema, auswahl.id);
 			const einwilligungsArten = await api.server.getEinwilligungsarten(api.schema);
 			const mapEinwilligungsarten = new Map();
 			for (const ea of einwilligungsArten)

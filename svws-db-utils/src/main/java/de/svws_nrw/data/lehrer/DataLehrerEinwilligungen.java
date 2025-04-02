@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import de.svws_nrw.core.data.schule.Einwilligungsart;
-import de.svws_nrw.core.data.schule.LehrerEinwilligung;
+import de.svws_nrw.core.data.lehrer.LehrerEinwilligung;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;

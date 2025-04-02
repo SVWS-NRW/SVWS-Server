@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { Class } from '../../../java/lang/Class';
 
-export class Einwilligung extends JavaObject {
+export class SchuelerEinwilligung extends JavaObject {
 
 	/**
 	 * Die ID des zugehörigen Schülers.
@@ -29,18 +29,18 @@ export class Einwilligung extends JavaObject {
 	}
 
 	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.core.data.schule.Einwilligung';
+		return 'de.svws_nrw.core.data.schueler.SchuelerEinwilligung';
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.data.schule.Einwilligung'].includes(name);
+		return ['de.svws_nrw.core.data.schueler.SchuelerEinwilligung'].includes(name);
 	}
 
-	public static class = new Class<Einwilligung>('de.svws_nrw.core.data.schule.Einwilligung');
+	public static class = new Class<SchuelerEinwilligung>('de.svws_nrw.core.data.schueler.SchuelerEinwilligung');
 
-	public static transpilerFromJSON(json : string): Einwilligung {
-		const obj = JSON.parse(json) as Partial<Einwilligung>;
-		const result = new Einwilligung();
+	public static transpilerFromJSON(json : string): SchuelerEinwilligung {
+		const obj = JSON.parse(json) as Partial<SchuelerEinwilligung>;
+		const result = new SchuelerEinwilligung();
 		if (obj.idSchueler === undefined)
 			throw new Error('invalid json format, missing attribute idSchueler');
 		result.idSchueler = obj.idSchueler;
@@ -56,7 +56,7 @@ export class Einwilligung extends JavaObject {
 		return result;
 	}
 
-	public static transpilerToJSON(obj : Einwilligung) : string {
+	public static transpilerToJSON(obj : SchuelerEinwilligung) : string {
 		let result = '{';
 		result += '"idSchueler" : ' + obj.idSchueler.toString() + ',';
 		result += '"idEinwilligungsart" : ' + obj.idEinwilligungsart.toString() + ',';
@@ -67,7 +67,7 @@ export class Einwilligung extends JavaObject {
 		return result;
 	}
 
-	public static transpilerToJSONPatch(obj : Partial<Einwilligung>) : string {
+	public static transpilerToJSONPatch(obj : Partial<SchuelerEinwilligung>) : string {
 		let result = '{';
 		if (obj.idSchueler !== undefined) {
 			result += '"idSchueler" : ' + obj.idSchueler.toString() + ',';
@@ -88,6 +88,6 @@ export class Einwilligung extends JavaObject {
 
 }
 
-export function cast_de_svws_nrw_core_data_schule_Einwilligung(obj : unknown) : Einwilligung {
-	return obj as Einwilligung;
+export function cast_de_svws_nrw_core_data_schueler_SchuelerEinwilligung(obj : unknown) : SchuelerEinwilligung {
+	return obj as SchuelerEinwilligung;
 }
