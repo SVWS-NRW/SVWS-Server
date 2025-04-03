@@ -7,7 +7,7 @@
 	background-color: rgb(var(--color-bg-ui));
 
 	&.svws-has-background {
-		@apply text-ui-contrast-100;
+		@apply text-ui-100;
 	}
 
 	&.svws-no-data,
@@ -51,7 +51,7 @@
 	}
 
 	.svws-ui-badge {
-		@apply text-ui-contrast-100;
+		@apply text-ui-100;
 
 		&.svws-has-background & {
 			@apply border-transparent;
@@ -93,7 +93,7 @@
 	}
 
 	.svws-ui-badge {
-		@apply text-button font-bold text-ui-contrast-100;
+		@apply text-button font-bold text-ui-100;
 	}
 
 	.svws-no-data & {
@@ -138,7 +138,7 @@
 					/* TODO: COLORS icon */
 
 					.page--statistik & {
-						@apply bg-ui-statistic-weak text-ui-statistic;
+						@apply bg-ui-statistic-secondary text-ui-statistic;
 					}
 				}
 			}
@@ -228,7 +228,7 @@
 			@apply text-ui-secondary;
 
 			.svws-ui-badge {
-				@apply text-ui-contrast-100 opacity-100;
+				@apply text-ui-100 opacity-100;
 			}
 		}
 	}
@@ -278,7 +278,7 @@
 		}
 
 		.page--statistik & {
-			@apply bg-ui-statistic-weak text-ui-statistic;
+			@apply bg-ui-statistic-secondary text-ui-statistic;
 		}
 
 		.svws-ui-tr:not(.svws-clicked) {
@@ -330,7 +330,7 @@
 	}
 
 	.svws-ui-table.svws-has-background & {
-		@apply border-ui-dark-gray;
+		@apply border-ui-100;
 	}
 
 	&.svws-align-right {
@@ -349,17 +349,17 @@
 		@apply relative cursor-default;
 
 		.svws-ui-table.svws-has-background & {
-			@apply text-ui-static;
+			@apply text-uistatic;
 		}
 
 		&:before {
-			@apply bg-ui-inverted;
+			@apply bg-ui-0;
 			@apply pointer-events-none absolute inset-0;
 			content: '';
 		}
 
 		.svws-ui-table.svws-has-background &:before {
-			@apply bg-ui-static-inverted opacity-30;
+			@apply bg-uistatic-0 opacity-30;
 		}
 
 	}
@@ -369,15 +369,15 @@
 		@apply text-ui;
 
 		.svws-has-background & {
-			@apply text-ui-static;
+			@apply text-uistatic;
 
 			.button {
-				@apply text-ui-static;
+				@apply text-uistatic;
 			}
 		}
 
 		.svws-ui-table.svws-has-background &:before {
-			@apply bg-ui-black opacity-20;
+			@apply bg-uistatic-0 opacity-20;
 			box-shadow: 0 0 0 1px rgba(0,0,0,0.2);
 		}
 	}
@@ -426,7 +426,7 @@
 				@apply border-dashed border-transparent;
 
 				&.svws-divider {
-					@apply border-solid border-r border-ui-contrast-25;
+					@apply border-solid border-r border-ui-25;
 				}
 			}
 		}
@@ -471,7 +471,7 @@
 	@apply border-x border-t border-ui;
 
 	&.svws-has-background {
-		@apply border-ui-contrast-75;
+		@apply border-ui-75;
 	}
 
 	.svws-ui-thead,
@@ -497,7 +497,7 @@
 		.svws-ui-thead,
 		.svws-ui-tbody {
 			.svws-ui-td:not(:last-child) {
-				@apply border-ui-contrast-75;
+				@apply border-ui-75;
 			}
 		}
 	}

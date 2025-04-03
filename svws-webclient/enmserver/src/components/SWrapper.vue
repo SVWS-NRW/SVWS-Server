@@ -7,8 +7,8 @@
 		Bitte aktualisieren Sie Ihren Browser, diese Version ist nicht kompatibel für das Noten-Modul.
 	</svws-ui-notification>
 	<svws-ui-notifications v-if="errors.size > 0">
-		<div v-if="errors.size > 1" class="bg-ui-contrast-0">
-			<svws-ui-button @click="errors.clear()" type="transparent" class="pointer-events-auto ml-auto rounded-lg bg-ui-contrast-0 border-light fixed right-6 left-0 top-5 z-50 w-[29rem] max-w-[75vw] justify-center">Alle {{ errors.size }} Meldungen schließen</svws-ui-button>
+		<div v-if="errors.size > 1" class="bg-ui-0">
+			<svws-ui-button @click="errors.clear()" type="transparent" class="pointer-events-auto ml-auto rounded-lg bg-ui-0 border-light fixed right-6 left-0 top-5 z-50 w-[29rem] max-w-[75vw] justify-center">Alle {{ errors.size }} Meldungen schließen</svws-ui-button>
 			<div class="min-h-[1.85rem]" />
 		</div>
 		<template v-for="error of [...errors.values()].reverse().slice(0, 20)" :key="error.id">

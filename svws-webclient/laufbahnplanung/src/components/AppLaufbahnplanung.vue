@@ -7,9 +7,9 @@
 						<svws-ui-header>
 							<div class="flex items-center">
 								<div>
-									<span class="inline-block h-[1em] rounded-sm animate-pulse w-52 bg-ui-contrast-10" />
+									<span class="inline-block h-[1em] rounded-sm animate-pulse w-52 bg-ui-10" />
 									<br>
-									<span class="inline-block h-[1em] rounded-sm animate-pulse w-20 bg-ui-contrast-10" />
+									<span class="inline-block h-[1em] rounded-sm animate-pulse w-20 bg-ui-10" />
 								</div>
 							</div>
 						</svws-ui-header>

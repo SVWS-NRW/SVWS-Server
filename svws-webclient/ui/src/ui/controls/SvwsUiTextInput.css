@@ -107,7 +107,7 @@
 
 
 .svws-ui-table.svws-has-background .text-input--headless {
-	@apply text-ui-static;
+	@apply text-uistatic;
 }
 
 .multiselect-input-component .text-input--control,
@@ -122,7 +122,7 @@
 }
 
 .text-input-component .text-input--control:focus-visible {
-	@apply ring-3 ring-ui-contrast-10;
+	@apply ring-3 ring-ui-neutral;
 }
 
 .text-input--invalid.text-input-component:focus-within .text-input--control,

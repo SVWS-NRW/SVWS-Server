@@ -27,14 +27,14 @@
 }
 
 .toggle--indicator {
-	@apply bg-ui-contrast-0;
-	@apply rounded-full ring-1 ring-ui-contrast-100;
+	@apply bg-ui-0;
+	@apply rounded-full ring-1 ring-ui-neutral0;
 	@apply relative;
 	@apply h-4 w-8;
 
 	&:before {
 		@apply absolute;
-		@apply bg-ui-contrast-100 border border-ui-contrast-0;
+		@apply bg-ui-100 border border-ui-0;
 		@apply block;
 		@apply rounded-full;
 		@apply h-4 w-4;
@@ -63,7 +63,7 @@
 	@apply bg-ui-brand ring-ui-brand;
 
 	&:before {
-		@apply bg-ui-contrast-0 translate-x-full border-ui-brand;
+		@apply bg-ui-0 translate-x-full border-ui-brand;
 	}
 }
 
@@ -100,9 +100,9 @@
 }
 
 .toggle.toggle--disabled input:checked+.toggle--indicator {
-	@apply bg-ui-contrast-100 ring-ui-contrast-100 border-ui-contrast-100 text-ui-contrast-100;
+	@apply bg-ui-100 ring-ui-neutral0 border-ui-100 text-ui-100;
 
 	&:before {
-		@apply border-ui-contrast-100;
+		@apply border-ui-100;
 	}
 }

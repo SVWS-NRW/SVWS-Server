@@ -23,8 +23,8 @@
 			<div class="inline-flex gap-1" :class="{'-mt-1': anzahl_zusatzkraefte}">
 				<div v-if="anzahl_zusatzkraefte">{{ [...getDatenmanager().kursGetLehrkraefteSortiert(kurs.id)].map(lehrer => lehrer.kuerzel).join(", ") }}</div>
 				<svws-ui-button :type="anzahl_zusatzkraefte ? 'transparent' : 'secondary'" @click="toggle_zusatzkraefte_modal">
-					<template v-if="anzahl_zusatzkraefte"> <span class="icon-ui-static icon-sm i-ri-edit-2-line" /> </template>
-					<template v-else> <div class="text-ui-static">Anlegen</div> </template>
+					<template v-if="anzahl_zusatzkraefte"> <span class="icon-uistatic icon-sm i-ri-edit-2-line" /> </template>
+					<template v-else> <div class="text-uistatic">Anlegen</div> </template>
 				</svws-ui-button>
 			</div>
 		</div>

@@ -58,8 +58,8 @@
 							<!-- Unterstütze mehrere Drop-Bereich, um direkt den einzelnen Wochentypen zuweisen zu können ... -->
 							<div v-if="(draggedData !== undefined) && ((hatWochentypen) || (!hatWochentypen && isZeitrasterDropZone.getOrException(wochentag.id, stunde, 0)))"
 								class="absolute pointer-events-none w-[calc(100%-0.5rem)] h-[calc(100%-0.5rem)] flex flex-col gap-1 z-10 text-center select-none rounded-lg"
-								:class="isDragOverPosition(wochentag, stunde) ? ['bg-ui-contrast-10', 'opacity-50']:['opacity-0']">
-								<div class="grow flex justify-center items-center p-2 border-2 border-solid rounded-lg border-ui-contrast-75 hover:font-bold"
+								:class="isDragOverPosition(wochentag, stunde) ? ['bg-ui-10', 'opacity-50']:['opacity-0']">
+								<div class="grow flex justify-center items-center p-2 border-2 border-solid rounded-lg border-ui-75 hover:font-bold"
 									:class="{
 										'bg-ui-success text-ui-onsuccess opacity-50': (dragOverPos.wochentyp === 0) && isZeitrasterDropZone.getOrException(wochentag.id, stunde, 0),
 										'opacity-0': !isZeitrasterDropZone.getOrException(wochentag.id, stunde, 0)
@@ -68,7 +68,7 @@
 								</div>
 								<div v-if="hatWochentypen" class="h-[calc(50%-0.25rem)] flex flex-row gap-1">
 									<template v-for="wt, wtIndex in manager().getWochenTypModell()" :key="wtIndex">
-										<div class="grow flex justify-center items-center p-2 border-2 border-solid rounded-lg border-ui-contrast-75 hover:font-bold"
+										<div class="grow flex justify-center items-center p-2 border-2 border-solid rounded-lg border-ui-75 hover:font-bold"
 											:class="{
 												'bg-ui-success text-ui-onsuccess opacity-50': (wtIndex + 1 === dragOverPos.wochentyp) && isZeitrasterDropZone.getOrException(wochentag.id, stunde, wtIndex + 1),
 												'opacity-0': !isZeitrasterDropZone.getOrException(wochentag.id, stunde, wtIndex + 1)
@@ -85,23 +85,23 @@
 								<!-- Diese Ansicht hat keine Anzeige der Schienen (Schüler, Lehrer) -->
 								<div v-for="unterricht in getUnterrichte(wochentag.id, stunde, 0, null)" :key="unterricht.id"
 									class="svws-ui-stundenplan--unterricht"
-									:class="{ 'cursor-grab': draggable, 'grow': growUnterricht, 'border-ui-contrast-100 bg-ui-danger text-ui-ondanger border-dashed': isDraggedType(unterricht) }"
-									:style="isDraggedType(unterricht) ? '' : `background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)}; color: var(--color-ui-static)`"
+									:class="{ 'cursor-grab': draggable, 'grow': growUnterricht, 'border-ui-100 bg-ui-danger text-ui-ondanger border-dashed': isDraggedType(unterricht) }"
+									:style="isDraggedType(unterricht) ? '' : `background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)}; color: var(--color-uistatic)`"
 									:draggable @dragstart="onDrag(unterricht)" @dragend="onDrag(undefined)" @click="emit('update:click', unterricht)">
 									<slot name="unterricht" :unterricht />
 								</div>
 							</template>
 							<template v-else v-for="schiene in [{id: -1}, ...getSchienenListe(wochentag.id, stunde, 0)]" :key="schiene.id">
-								<div :class="{'bg-ui-contrast-10 rounded-md pl-1 pr-1 pb-1 mt-1': schiene.id > -1}">
+								<div :class="{'bg-ui-10 rounded-md pl-1 pr-1 pb-1 mt-1': schiene.id > -1}">
 									<div v-if="'bezeichnung' in schiene" class="col-span-full text-sm font-bold pt-1 pb-2 print:!mb-0 flex place-items-center group ml-2.5" :class="{'cursor-grab': draggable}"
 										:draggable @dragstart.stop="onDrag(getUnterrichte(wochentag.id, stunde, 0, schiene.id), $event)" @dragend.stop="onDrag(undefined)">
-										<span v-if="draggable" class="icon i-ri-draggable inline-block icon-ui-contrast-75 -ml-1 opacity-60 group-hover:opacity-10 group-hover:icon-ui-contrast-75" />
+										<span v-if="draggable" class="icon i-ri-draggable inline-block icon-ui-75 -ml-1 opacity-60 group-hover:opacity-10 group-hover:icon-ui-75" />
 										<span>{{ schiene.bezeichnung }}</span>
 									</div>
 									<div v-for="unterricht in getUnterrichte(wochentag.id, stunde, 0, schiene.id)" :key="unterricht.id"
 										class="svws-ui-stundenplan--unterricht"
-										:class="{ 'cursor-grab': draggable, 'grow': growUnterricht, 'border-ui-contrast-100 bg-ui-danger text-ui-ondanger border-dashed ': isDraggedType(unterricht) }"
-										:style="isDraggedType(unterricht) ? '' : `background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)}; color: var(--color-ui-static)`"
+										:class="{ 'cursor-grab': draggable, 'grow': growUnterricht, 'border-ui-100 bg-ui-danger text-ui-ondanger border-dashed ': isDraggedType(unterricht) }"
+										:style="isDraggedType(unterricht) ? '' : `background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)}; color: var(--color-uistatic)`"
 										:draggable @dragstart.stop="onDrag(unterricht)" @dragend.stop="onDrag(undefined)" @click="emit('update:click', unterricht)">
 										<slot name="unterricht" :unterricht="unterricht" />
 									</div>
@@ -110,7 +110,7 @@
 							<!-- dann die Darstellung des speziellen Unterrichtes der Wochentypen -->
 							<div v-if="hatZeitrasterUnterrichtMitWochentyp.getOrNull(wochentag.id, stunde) ?? false" class="svws-multiple gap-1">
 								<template v-for="wt in getWochentyp" :key="wt">
-									<div :class="{'border-r border-ui-contrast-25 p-1 last:border-r-0 flex flex-col': wochentyp()}" :style="wochentyp() ? `grid-column-start: ${wt}`: ''">
+									<div :class="{'border-r border-ui-25 p-1 last:border-r-0 flex flex-col': wochentyp()}" :style="wochentyp() ? `grid-column-start: ${wt}`: ''">
 										<template v-if="!showSchienen">
 											<!-- Diese Ansicht hat keine Anzeige der Schienen (Schüler, Lehrer) -->
 											<template v-if="getUnterrichte(wochentag.id, stunde, wt, null).size() > 0">
@@ -118,8 +118,8 @@
 											</template>
 											<div v-for="unterricht in getUnterrichte(wochentag.id, stunde, wt, null)" :key="unterricht.id"
 												class="svws-ui-stundenplan--unterricht"
-												:class="{'cursor-grab': draggable, 'grow': growUnterricht, 'svws-compact': !wochentyp(), 'border-ui-contrast-100 bg-ui-danger text-ui-ondanger border-dashed': isDraggedType(unterricht) }"
-												:style="isDraggedType(unterricht) ? '' : `background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)}; color: var(--color-ui-static)`"
+												:class="{'cursor-grab': draggable, 'grow': growUnterricht, 'svws-compact': !wochentyp(), 'border-ui-100 bg-ui-danger text-ui-ondanger border-dashed': isDraggedType(unterricht) }"
+												:style="isDraggedType(unterricht) ? '' : `background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)}; color: var(--color-uistatic)`"
 												:draggable @dragstart="onDrag(unterricht)" @dragend="onDrag(undefined)" @click="emit('update:click', unterricht)">
 												<slot name="unterricht" :unterricht />
 											</div>
@@ -135,8 +135,8 @@
 												</div>
 												<div v-for="unterricht in getUnterrichte(wochentag.id, stunde, wt, schiene.id)" :key="unterricht.id"
 													class="svws-ui-stundenplan--unterricht"
-													:class="{ 'cursor-grab': draggable, 'grow': growUnterricht, 'svws-compact': !wochentyp(), 'border-ui-contrast-100 bg-ui-danger text-ui-ondanger border-dashed': isDraggedType(unterricht) } "
-													:style="isDraggedType(unterricht) ? '' : `background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)}; color: var(--color-ui-static)`"
+													:class="{ 'cursor-grab': draggable, 'grow': growUnterricht, 'svws-compact': !wochentyp(), 'border-ui-100 bg-ui-danger text-ui-ondanger border-dashed': isDraggedType(unterricht) } "
+													:style="isDraggedType(unterricht) ? '' : `background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)}; color: var(--color-uistatic)`"
 													:draggable @dragstart.stop="onDrag(unterricht)" @dragend.stop="onDrag(undefined)" @click="emit('update:click', unterricht)">
 													<slot name="unterricht" :unterricht="unterricht" />
 												</div>

@@ -1,5 +1,5 @@
 <template>
-	<div role="row" class="svws-ui-tr text-ui-static" :style="{ 'background-color': bgColor }">
+	<div role="row" class="svws-ui-tr text-uistatic" :style="{ 'background-color': bgColor }">
 		<div role="cell" class="svws-ui-td select-text">
 			<div class="whitespace-nowrap min-w-fit">
 				{{ fach.kuerzelAnzeige }}
@@ -46,7 +46,7 @@
 					<span class="absolute -right-0 top-0">
 						<template v-if="istFachkombiErforderlich[halbjahr.id] || istFachkombiVerboten[halbjahr.id] || !zkMoeglich(halbjahr)">
 							<svws-ui-tooltip :color="istBewertet(halbjahr) ? 'light' : 'danger'" position="bottom">
-								<span class="icon i-ri-error-warning-line" :class="istBewertet(halbjahr) ? 'icon-ui-contrast-75' : 'icon-ui-danger'" />
+								<span class="icon i-ri-error-warning-line" :class="istBewertet(halbjahr) ? 'icon-ui-75' : 'icon-ui-danger'" />
 								<template #content v-if="istFachkombiErforderlich[halbjahr.id]">
 									Fachkombination erforderlich
 								</template>
@@ -198,9 +198,9 @@
 		return Color.preferWhiteAsContrastColor(bgFarbe);
 	});
 	const textColor = computed<string>(() => ((isLightMode.value && !isPreferWhiteTextColor.value) || (!isLightMode.value && isPreferWhiteTextColor.value))
-		? 'text-ui' : 'text-ui-contrast-0');
+		? 'text-ui' : 'text-ui-0');
 	const textColorWeak = computed<string>(() => ((isLightMode.value && !isPreferWhiteTextColor.value) || (!isLightMode.value && isPreferWhiteTextColor.value))
-		? 'text-ui-contrast-50' : 'text-ui-contrast-10');
+		? 'text-ui-50' : 'text-ui-10');
 
 	// Nächste Halbjahr-Zelle fokussieren, wenn möglich. Sonst "update:focus:impossible" emitten, sodass Parent-Komponente einen Schritt weiter gehen kann
 	function doFocusOnHalbjahr() {

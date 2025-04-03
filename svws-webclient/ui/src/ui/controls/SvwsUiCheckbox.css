@@ -106,12 +106,12 @@ input[type="checkbox"] {
 		}
 
 		&:not(:checked) {
-			@apply border-ui-dark-gray;
+			@apply border-ui-75;
 		}
 
 		&:hover:not([disabled]),
 		&:focus-visible:not([disabled]) {
-			@apply border-ui-dark-gray;
+			@apply border-ui-75;
 		}
 
 		&:not(:checked)[disabled] {
@@ -144,7 +144,7 @@ input[type="checkbox"] {
 
 		&:before {
 			content: '';
-			@apply bg-ui-white border border-ui;
+			@apply bg-ui border border-ui;
 			@apply inline-block h-full w-4 rounded-[0.2rem];
 		}
 	}
@@ -216,7 +216,7 @@ input[type="checkbox"] {
 	&.svws-bw {
 		input[type="checkbox"] {
 			&:checked ~ .svws-ui-toggle--icon {
-				@apply bg-ui-inverted border-transparent;
+				@apply bg-ui-0 border-transparent;
 
 				&:before {
 					@apply border-transparent bg-ui;
