@@ -1364,7 +1364,7 @@ public class APIGost {
 	@ApiResponse(responseCode = "403", description = "Der Benutzer hat keine Berechtigung, um die Laufbahndaten zu importieren.")
 	public Response importGostSchuelerLaufbahnplanung(@PathParam("schema") final String schema,
 			@PathParam("id") final long id,
-			@RequestBody(description = "Die Laufbahnplanungsdatei", required = true,
+			@RequestBody(description = "Die Laufbahnplanungsdatei - der Dateiname ist US-ASCII und darf daher u.a. keine Umlaute enthalten", required = true,
 					content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm final SimpleBinaryMultipartBody multipart,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn).importGZip(id, multipart.data),
