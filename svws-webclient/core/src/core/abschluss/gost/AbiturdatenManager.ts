@@ -331,6 +331,25 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	/**
+	 * Prüft, ob in den Abiturdaten mindestens eine Fachbelegung existiert oder nicht.
+	 * Wichtig: Bei dieser Methode wird auch eine 0-Punkte-Belegung als Fachbelegung gezählt!
+	 *
+	 * @return true, wenn mindestens eine Fachbelegung existiert, und ansonsten false
+	 */
+	public existsFachbelegung() : boolean {
+		const fachbelegungen : List<AbiturFachbelegung> = this.abidaten.fachbelegungen;
+		for (const fb of fachbelegungen) {
+			const fach : GostFach | null = this.getFach(fb);
+			if (fach === null)
+				continue;
+			for (let i : number = 0; i < GostHalbjahr.maxHalbjahre; i++)
+				if (fb.belegungen[i] !== null)
+					return true;
+		}
+		return false;
+	}
+
+	/**
 	 * Prüft, ob das Fach in allen angegebenen Halbjahren belegt wurde.
 	 * Ist die Fachbelegung null, so schlägt die Prüfung fehl. Wird bei einer gültigen Fachbelegung kein Halbjahr
 	 * angegeben, so ist die Prüfung erfolgreich, da kein Halbjahr geprüft werden muss.

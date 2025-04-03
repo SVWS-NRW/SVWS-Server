@@ -959,6 +959,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 			// Führe die Belegprüfung für den Schüler durch
 			final AbiturdatenManager abiManager = new AbiturdatenManager(abidaten, jahrgangsdaten, faecherManager, pruefungsArt);
 			ergebnisse.ergebnis = abiManager.getBelegpruefungErgebnis();
+			ergebnisse.hatFachwahlen = abiManager.existsFachbelegung();
 
 			// F+lle das zugehörige Schüler-DTO
 			ergebnisse.schueler.id = dtoSchueler.ID;

@@ -13,11 +13,12 @@
 				<template #icon> <svws-ui-spinner spinning v-if="apiStatus.pending" /> <span class="icon i-ri-printer-line" v-else /> </template>
 			</svws-ui-button-select>
 		</Teleport>
-		<div class="min-w-120 h-full flex flex-col">
-			<div class="flex flex-wrap gap-x-10 gap-y-3 items-center justify-between mb-5 content-card--headline">
-				<div class="flex flex-wrap gap-x-5">
+		<div class="min-w-120 h-full flex flex-col gap-y-6">
+			<div class="flex flex-row items-center justify-between">
+				<div class="flex flex-col gap-y-1">
 					<svws-ui-checkbox type="toggle" :model-value="filterFehler()" @update:model-value="setFilterFehler">Nur Fehler</svws-ui-checkbox>
 					<svws-ui-checkbox type="toggle" :model-value="filterExterne()" @update:model-value="setFilterExterne">Externe ausblenden</svws-ui-checkbox>
+					<svws-ui-checkbox type="toggle" :model-value="filterNurMitFachwahlen()" @update:model-value="setFilterNurMitFachwahlen">Nur mit Fachwahlen</svws-ui-checkbox>
 				</div>
 				<svws-ui-radio-group class="radio--row">
 					<svws-ui-radio-option v-model="art" value="ef1" name="ef1" label="EF.1" />
@@ -51,8 +52,16 @@
 				<template #cell(hinweise)="cell">
 					<span v-if="counterAnzahlOderWochenstunden(cell.rowData.ergebnis.fehlercodes) > 0" class="opacity-75 -my-0.5"><span class="icon i-ri-information-line" /></span>
 				</template>
-				<template #cell(ergebnis)="{value: f}: {value: GostBelegpruefungErgebnis}">
-					<span :class="counter(f.fehlercodes) === 0 ? 'opacity-25' : ''">{{ counter(f.fehlercodes) }}</span>
+				<template #cell(ergebnis)="{rowData}">
+					<span v-if="!rowData.hatFachwahlen">
+						<svws-ui-tooltip>
+							<span class="icon icon-ui-danger i-ri-alert-line -my-1" />
+							<template #content>
+								Es liegen derzeit noch keine Fachwahlen vor.
+							</template>
+						</svws-ui-tooltip>
+					</span>
+					<span :class="counter(rowData.ergebnis.fehlercodes) === 0 ? 'opacity-25' : ''">{{ counter(rowData.ergebnis.fehlercodes) }}</span>
 				</template>
 			</svws-ui-table>
 		</div>
@@ -115,7 +124,7 @@
 
 	const showModalImport = ref<boolean>(false);
 
-	const hasFilter = computed<boolean>(() => props.filterFehler() || props.filterExterne());
+	const hasFilter = computed<boolean>(() => props.filterFehler() || props.filterExterne() || props.filterNurMitFachwahlen());
 
 	const filtered = computed<List<GostBelegpruefungsErgebnisse>>(() => {
 		if (!hasFilter.value)
@@ -125,6 +134,8 @@
 			if (props.filterFehler() && e.ergebnis.erfolgreich)
 				continue;
 			if ((props.filterExterne()) && (SchuelerStatus.data().getWertByKuerzel("" + e.schueler.status) === SchuelerStatus.EXTERN))
+				continue;
+			if ((props.filterNurMitFachwahlen() && !e.hatFachwahlen))
 				continue;
 			a.add(e);
 		}

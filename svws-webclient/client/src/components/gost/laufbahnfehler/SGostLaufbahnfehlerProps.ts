@@ -22,4 +22,6 @@ export interface GostLaufbahnfehlerProps {
 	setFilterFehler: (value: boolean) => Promise<void>;
 	filterExterne: () => boolean;
 	setFilterExterne: (value: boolean) => Promise<void>;
+	filterNurMitFachwahlen: () => boolean;
+	setFilterNurMitFachwahlen: (value: boolean) => Promise<void>;
 }

@@ -32,6 +32,7 @@ export class RouteGostLaufbahnfehler extends RouteNode<RouteDataGostLaufbahnfehl
 		api.config.addElements([
 			new ConfigElement("gost.laufbahnfehler.filterFehler", "user", "true"),
 			new ConfigElement("gost.laufbahnfehler.filterExterne", "user", "false"),
+			new ConfigElement("gost.laufbahnfehler.filterNurMitFachwahlen", "user", "false"),
 		]);
 	}
 
@@ -96,6 +97,8 @@ export class RouteGostLaufbahnfehler extends RouteNode<RouteDataGostLaufbahnfehl
 			setFilterFehler: this.data.setFilterFehler,
 			filterExterne: () => this.data.filterExterne,
 			setFilterExterne: this.data.setFilterExterne,
+			filterNurMitFachwahlen: () => this.data.filterNurMitFachwahlen,
+			setFilterNurMitFachwahlen: this.data.setFilterNurMitFachwahlen,
 			apiStatus: api.status,
 		};
 	}

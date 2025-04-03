@@ -56,6 +56,14 @@ export class RouteDataGostLaufbahnfehler extends RouteData<RouteStateDataGostLau
 		await api.config.setValue('gost.laufbahnfehler.filterExterne', value ? "true" : "false");
 	}
 
+	get filterNurMitFachwahlen(): boolean {
+		return api.config.getValue('gost.laufbahnfehler.filterNurMitFachwahlen') === 'true';
+	}
+
+	setFilterNurMitFachwahlen = async (value: boolean) => {
+		await api.config.setValue('gost.laufbahnfehler.filterNurMitFachwahlen', value ? "true" : "false");
+	}
+
 	protected async updateList(abiturjahr : number, gostBelegpruefungsArt : GostBelegpruefungsArt) {
 		if (abiturjahr < 1)
 			throw new DeveloperNotificationException(`Fehlerhafte Übergabe des Abiturjahrs: ${abiturjahr}`)
