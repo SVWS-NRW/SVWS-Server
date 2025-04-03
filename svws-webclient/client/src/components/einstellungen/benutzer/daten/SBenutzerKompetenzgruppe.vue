@@ -14,7 +14,7 @@
 			</div>
 		</div>
 		<div class="svws-ui-td" role="cell" />
-		<div v-if="!getBenutzerManager().istAdmin()" class="svws-ui-td text-ui-50" role="cell">
+		<div v-if="!getBenutzerManager().istAdmin()" class="svws-ui-td text-ui-contrast-50" role="cell">
 			<span class="line-clamp-1 break-all leading-tight -my-0.5" :title="getTopLevelGruppen4Kompetenz">{{ getTopLevelGruppen4Kompetenz }}</span>
 		</div>
 		<template v-if="hatSubKompetenzen">

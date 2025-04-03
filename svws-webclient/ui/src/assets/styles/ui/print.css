@@ -86,7 +86,7 @@
 	}
 
 	.svws-ui-stundenplan {
-		@apply min-w-0 w-full border border-ui-100;
+		@apply min-w-0 w-full border border-ui-contrast-100;
 		border-width: 1pt;
 		@apply border-b-0;
 	}

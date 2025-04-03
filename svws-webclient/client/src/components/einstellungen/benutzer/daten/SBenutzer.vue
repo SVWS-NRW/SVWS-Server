@@ -67,7 +67,7 @@
 						<div class="svws-ui-td" role="columnheader">
 							<span class="icon cursor-pointer" :class="{ 'i-ri-question-line': !showInfo, 'i-ri-question-fill': showInfo }" @click="toggleShowInfo" />
 						</div>
-						<div v-if="!getBenutzerManager().istAdmin()" class="svws-ui-td !pl-1 text-ui-50" role="columnheader">Übernommen aus der Gruppe</div>
+						<div v-if="!getBenutzerManager().istAdmin()" class="svws-ui-td !pl-1 text-ui-contrast-50" role="columnheader">Übernommen aus der Gruppe</div>
 					</div>
 				</template>
 				<template #body>

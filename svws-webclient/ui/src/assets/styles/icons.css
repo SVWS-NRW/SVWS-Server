@@ -12,9 +12,6 @@
 
 }
 
-
-
-
 @utility icon {
 	width: var(--icon-size);
 	height: var(--icon-size);
@@ -65,7 +62,7 @@
 }
 
 @utility icon-* {
-	background-color: --value(--icon-color-*);
+	background-color: --value(--color-*);
 }
 
 @utility i-ri-add-line {

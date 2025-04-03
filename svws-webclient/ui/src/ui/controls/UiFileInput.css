@@ -12,11 +12,11 @@
 	}
 
 	input[type="file"] {
-		@apply text-ui-50 cursor-pointer;
+		@apply text-ui-contrast-50 cursor-pointer;
 	}
 
 	input[type="file"]:hover {
-		@apply text-ui-75;
+		@apply text-ui-contrast-75;
 	}
 
 	input[type="file"]:hover::file-selector-button {

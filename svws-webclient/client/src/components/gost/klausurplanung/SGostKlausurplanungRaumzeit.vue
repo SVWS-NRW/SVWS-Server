@@ -20,8 +20,8 @@
 							@dragover="checkDropZone($event)" @drop="onDrop(termin)"
 							:data="termin"
 							:class="{
-								'border bg-ui-0 rounded-lg border-ui-10 my-3': terminSelected.value !== undefined && terminSelected.value.id === termin.id,
-								'cursor-pointer hover:bg-ui-10 pb-1 rounded-lg': terminSelected.value !== undefined && terminSelected.value.id !== termin.id,
+								'border bg-ui-contrast-0 rounded-lg border-ui-contrast-10 my-3': terminSelected.value !== undefined && terminSelected.value.id === termin.id,
+								'cursor-pointer hover:bg-ui-contrast-10 pb-1 rounded-lg': terminSelected.value !== undefined && terminSelected.value.id !== termin.id,
 							}">
 							<s-gost-klausurplanung-termin :termin :k-man :benutzer-kompetenzen
 								:on-drag :draggable="isDraggable" drag-icon :klausur-css-classes="calculatCssClassesKlausur"
@@ -75,7 +75,7 @@
 	const calculatCssClassesKlausur = (kl: GostKlausurplanungDragData, termin: GostKlausurtermin | undefined) => {
 		const klausur = kl as GostKursklausur;
 		return {
-			"text-ui-50": props.kMan().isKursklausurAlleSchuelerklausurenVerplant(klausur, termin ? termin : null),
+			"text-ui-contrast-50": props.kMan().isKursklausurAlleSchuelerklausurenVerplant(klausur, termin ? termin : null),
 			"": !props.kMan().isKursklausurAlleSchuelerklausurenVerplant(klausur, termin ? termin : null),
 		}
 	};

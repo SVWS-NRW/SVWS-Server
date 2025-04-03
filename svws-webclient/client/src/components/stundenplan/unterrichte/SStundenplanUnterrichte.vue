@@ -59,7 +59,7 @@
 					{{ stundenplanManager().stundenplanGetWochenTypAsStringKurz(value) }}
 				</template>
 				<template #cell(idKurs)="{ rowData }">
-					<div class="svws-ui-badge" :style="{'background-color': getBgColor(stundenplanManager().fachGetByIdOrException(rowData.idFach).kuerzelStatistik), 'color': 'var(--color-uistatic)'}">{{ rowData.idKurs ? stundenplanManager().kursGetByIdOrException(rowData.idKurs).bezeichnung : stundenplanManager().fachGetByIdOrException(rowData.idFach).bezeichnung }}</div>
+					<div class="svws-ui-badge" :style="{'background-color': getBgColor(stundenplanManager().fachGetByIdOrException(rowData.idFach).kuerzelStatistik), 'color': 'var(--color-ui-static)'}">{{ rowData.idKurs ? stundenplanManager().kursGetByIdOrException(rowData.idKurs).bezeichnung : stundenplanManager().fachGetByIdOrException(rowData.idFach).bezeichnung }}</div>
 				</template>
 				<template #cell(lehrer)="{ rowData, value }">
 					<svws-ui-multi-select v-if="checkFocusMultiselect({ type: 'lehrer', id: rowData.id })"

@@ -1,6 +1,6 @@
 .svws-ui-dropdown-list {
 	@apply border bg-ui border-ui text-ui;
-	@apply w-full z-50 min-w-[11rem] shadow-xl rounded-lg shadow-ui-10;
+	@apply w-full z-50 min-w-[11rem] shadow-xl rounded-lg shadow-ui-contrast-10;
 }
 
 .svws-ui-dropdown-list--items {

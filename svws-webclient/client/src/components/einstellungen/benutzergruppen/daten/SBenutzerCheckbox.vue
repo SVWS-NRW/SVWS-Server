@@ -1,7 +1,7 @@
 <template>
 	<div class="svws-ui-tr" role="row" @click.prevent="spalteLinks ? add() : void 0"
 		style="grid-template-columns: 2fr 1fr;"
-		:class="spalteLinks ? 'text-ui-50 hover:text-ui-100 cursor-copy' : ''"
+		:class="spalteLinks ? 'text-ui-contrast-50 hover:text-ui-contrast-100 cursor-copy' : ''"
 		:title="spalteLinks ? 'Benutzer zur Gruppe hinzufügen' : 'Benutzer aus Gruppe entfernen'">
 		<div class="svws-ui-td" role="cell">
 			<svws-ui-button type="icon" size="small" title="Benutzer anzeigen" @click.stop="gotoBenutzer(benutzer.id)">

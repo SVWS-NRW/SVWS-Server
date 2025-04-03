@@ -11,7 +11,7 @@
 				<svws-ui-sub-nav :focus-switching-enabled :focus-help-visible>
 					<div v-if="hatUpdateKompetenz" class="flex gap-2 items-center">
 						<div class="text-button font-normal">Ergebnis:</div>
-						<svws-ui-button type="transparent" @click.stop="ergebnisAbleiten()" title="Eine neue Blockung auf Grundlage dieses Ergebnisses erstellen." class="text-ui-100 subNavigationFocusField">
+						<svws-ui-button type="transparent" @click.stop="ergebnisAbleiten()" title="Eine neue Blockung auf Grundlage dieses Ergebnisses erstellen." class="text-ui-contrast-100 subNavigationFocusField">
 							<span class="icon-sm i-ri-file-copy-line" /> Ableiten
 						</svws-ui-button>
 						<s-gost-kursplanung-kursansicht-modal-blockung-hochschreiben :get-datenmanager :ergebnis-hochschreiben v-slot="{ openModal }">
@@ -29,7 +29,7 @@
 								<span class="icon-sm i-ri-loop-left-line" /> Synchronisieren
 							</svws-ui-button>
 						</s-gost-kursplanung-kursansicht-modal-ergebnis-synchronisieren>
-						<div class="border-l border-ui-10 ml-6 h-5 w-7" />
+						<div class="border-l border-ui-contrast-10 ml-6 h-5 w-7" />
 						<div class="text-button font-normal">Kurse:</div>
 						<s-gost-kursplanung-kursansicht-modal-irrlaeufer v-if="props.getErgebnismanager().getOfSchuelerMapIDzuUngueltigeKurse().size()" :update-kurs-schueler-zuordnungen :get-ergebnismanager v-slot="{ openModal }">
 							<svws-ui-button type="error" size="small" @click="openModal()" title="Zeigt ungültige Schüler/Kurs-Zuordnungen, die aufgelöst werden können">
@@ -74,7 +74,7 @@
 						</template>
 					</div>
 					<div class="flex gap-2 items-center" :class="{ 'ml-2': !hatUpdateKompetenz }">
-						<div class="border-l border-ui-10 ml-6 h-5 w-7" />
+						<div class="border-l border-ui-contrast-10 ml-6 h-5 w-7" />
 						<div class="text-button font-normal">Regeln:</div>
 						<svws-ui-button @click="onToggle" size="small" type="transparent" title="Alle Regeln anzeigen" :class="{'mr-2': regelzahl}">
 							<span class="icon-sm i-ri-settings-3-line" /> Detailansicht&nbsp;<template #badge v-if="regelzahl"> {{ regelzahl }} </template>
@@ -104,7 +104,7 @@
 			</Teleport>
 		</template>
 		<div v-else>
-			<div class="p-3 border-2 border-dashed border-ui-10 rounded-lg">
+			<div class="p-3 border-2 border-dashed border-ui-contrast-10 rounded-lg">
 				<div class="text-headline-md mb-5">Keine Blockung für dieses Halbjahr vorhanden</div>
 				<div v-if="hatUpdateKompetenz">
 					<svws-ui-button type="transparent" @click.stop="addBlockung">

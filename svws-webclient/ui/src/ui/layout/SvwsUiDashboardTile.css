@@ -3,12 +3,12 @@
 }
 
 .svws-ui-dashboard-tile {
-	@apply bg-ui-brand-secondary text-ui;
+	@apply bg-ui-brand-weak text-ui;
 	@apply rounded-lg p-3 sm:p-4 md:p-5 flex flex-col;
 	@apply text-base md:text-headline md:font-normal;
 
 	.page--statistik & {
-		@apply bg-ui-statistic-secondary;
+		@apply bg-ui-statistic-weak;
 	}
 
 	.dashboard-tile--title {

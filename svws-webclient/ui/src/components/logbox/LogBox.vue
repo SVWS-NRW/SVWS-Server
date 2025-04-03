@@ -21,7 +21,7 @@
 				<slot name="button" />
 			</span>
 		</div>
-		<div class="bg-ui-100 text-ui-0 rounded-xl">
+		<div class="bg-ui-contrast-100 text-ui-contrast-0 rounded-xl">
 			<div class="max-h-96 w-full overflow-auto">
 				<pre class="py-2 px-3 w-px" v-if="status !== undefined">{{ log }}</pre>
 			</div>

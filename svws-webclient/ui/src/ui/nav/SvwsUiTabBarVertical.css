@@ -112,7 +112,7 @@
 		@apply bg-ui-selected text-ui-onselected;
 
 		.page--statistik & {
-			@apply bg-ui-statistic-secondary text-ui-statistic;
+			@apply bg-ui-statistic-weak text-ui-statistic;
 		}
 	}
 
@@ -154,5 +154,5 @@
 	}
 }
 .page--statistik .svws-ui-tabs--vertical .tab-bar-vertical--button.svws-active:before	{
-	@apply bg-ui-statistic-secondary text-ui-statistic;
+	@apply bg-ui-statistic-weak text-ui-statistic;
 }

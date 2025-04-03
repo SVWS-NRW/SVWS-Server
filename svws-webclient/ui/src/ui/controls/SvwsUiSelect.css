@@ -112,7 +112,7 @@
 
 		.svws-ui-select--icon {
 			.svws-ui-table.svws-has-background & {
-				@apply icon-uistatic;
+				@apply icon-ui-static;
 			}
 
 		}

@@ -114,7 +114,7 @@
 						<template v-else>
 							<template v-if="hatUpdateKompetenz">
 								<template v-for="(schiene, index) in schienen" :key="schiene.id">
-									<div @dragover="if (istDropZoneSchiene(schiene)) $event.preventDefault();" @drop="openModalRegelKursartSchiene(schiene)" class="svws-ui-td svws-align-center text-ui-25 hover:text-ui-100 !p-0 relative group" role="columnheader"
+									<div @dragover="if (istDropZoneSchiene(schiene)) $event.preventDefault();" @drop="openModalRegelKursartSchiene(schiene)" class="svws-ui-td svws-align-center text-ui-contrast-25 hover:text-ui-contrast-100 !p-0 relative group" role="columnheader"
 										:class="{ 'bg-ui-brand/5 text-ui-onbrand hover:text-ui-onbrand-hover': istDropZoneSchiene(schiene), 'svws-divider': (index + 1) < schienen.size() }">
 										<div :key="schiene.id" @click="openModalRegelKursartSchiene(schiene)" class="select-none text-center" :class="(dragSperreSchiene !== undefined) ? ['cursor-grabbing'] : ['cursor-grab']" :draggable="true" @dragstart="dragSchieneStarted(schiene)" @dragend="dragSchieneEnded">
 											<span class="rounded-xs w-3 absolute top-1 left-1 max-w-[0.75rem]">
@@ -156,20 +156,20 @@
 									<div role="row" class="svws-ui-tr svws-disabled-soft select-none" :style="getGridTemplateColumnsWithBackgroundColor(fachwahl)" :key="fachwahl.kursart.id">
 										<div role="cell" class="svws-ui-td" />
 										<div role="cell" class="svws-ui-td" />
-										<div role="cell" class="svws-ui-td text-uistatic!">{{ fachwahl.fachwahlen.kuerzel }}-{{ fachwahl.kursart.kuerzel }}</div>
+										<div role="cell" class="svws-ui-td text-ui-static!">{{ fachwahl.fachwahlen.kuerzel }}-{{ fachwahl.kursart.kuerzel }}</div>
 										<div role="cell" class="svws-ui-td" />
 										<div role="cell" class="svws-ui-td" />
-										<div role="cell" class="svws-ui-td svws-align-center text-uistatic!" @click="toggleSchuelerFilterFachwahl(fachwahl)">
+										<div role="cell" class="svws-ui-td svws-align-center text-ui-static!" @click="toggleSchuelerFilterFachwahl(fachwahl)">
 											{{ getAnzahlFachwahlen(fachwahl) }}
 										</div>
 										<div role="cell" class="svws-ui-td" />
 										<div role="cell" class="svws-ui-td svws-align-center" :style="{'gridColumn': 'span ' + getDatenmanager().schieneGetListe().size()}">
 											<svws-ui-button :disabled="!hatUpdateKompetenz" type="transparent" @click="hatUpdateKompetenz && add_kurs(fachwahl)" title="Kurs anlegen">
 												<span class="inline-flex items-center text-button -mr-0.5">
-													<span class="icon-uistatic icon i-ri-book-2-line" />
-													<span class="icon-uistatic icon-sm i-ri-add-line -ml-0.5 text-sm" />
+													<span class="icon-ui-static icon i-ri-book-2-line" />
+													<span class="icon-ui-static icon-sm i-ri-add-line -ml-0.5 text-sm" />
 												</span>
-												<div class="text-uistatic">Kurs anlegen</div>
+												<div class="text-ui-static">Kurs anlegen</div>
 											</svws-ui-button>
 										</div>
 									</div>
@@ -177,17 +177,17 @@
 							</template>
 							<template v-else>
 								<template v-for="kurs in listeDerKurse(fachwahl)" :key="kurs.id">
-									<div role="row" class="svws-ui-tr select-none text-uistatic" :style="getGridTemplateColumnsWithBackgroundColor(fachwahl)"
+									<div role="row" class="svws-ui-tr select-none text-ui-static" :style="getGridTemplateColumnsWithBackgroundColor(fachwahl)"
 										:class="{'font-bold': (schuelerFilter().fach === kurs.fach_id) && ((schuelerFilter().kursart?.id === kurs.kursart) || (schuelerFilter().kursart === undefined)), 'svws-expanded': kursdetailAnzeigen === kurs.id}">
 										<div role="cell" class="svws-ui-td svws-align-center cursor-pointer">
 											<svws-ui-checkbox :model-value="getKursauswahl().contains(kurs.id)" @update:model-value="updateKursauswahl(kurs)" headless />
 										</div>
 										<template v-if="zeigeAufklappzeile">
-											<div role="cell" class="svws-ui-td svws-align-center cursor-pointer p-0 items-center hover:text-ui-100" @click="setKursdetailAnzeigen(kurs.id)"
-												:class="{'text-ui-50' : kursdetailAnzeigen !== kurs.id}"
+											<div role="cell" class="svws-ui-td svws-align-center cursor-pointer p-0 items-center hover:text-ui-contrast-100" @click="setKursdetailAnzeigen(kurs.id)"
+												:class="{'text-ui-contrast-50' : kursdetailAnzeigen !== kurs.id}"
 												title="Kursdetails anzeigen">
-												<span v-if="kursdetailAnzeigen === kurs.id" class="icon-uistatic icon i-ri-arrow-down-s-line relative" />
-												<span v-else class="icon-uistatic icon i-ri-arrow-right-s-line relative" />
+												<span v-if="kursdetailAnzeigen === kurs.id" class="icon-ui-static icon i-ri-arrow-down-s-line relative" />
+												<span v-else class="icon-ui-static icon i-ri-arrow-right-s-line relative" />
 											</div>
 										</template>
 										<div role="cell" class="svws-ui-td py-0 whitespace-nowrap overflow-hidden text-ellipsis w-full">
@@ -218,7 +218,7 @@
 											<template v-if="setze_kursdifferenz(kurs).value && kurs_blockungsergebnis(kurs).value">
 												<div role="cell" class="svws-ui-td svws-align-center cursor-pointer group relative" @click="toggle_active_fachwahl(kurs)">
 													{{ kursdifferenz(kurs).value[2] }}
-													<span class="icon-sm i-ri-filter-fill icon-uistatic absolute right-0 top-1" :class="(schuelerFilter().fach === kurs.fach_id) && (schuelerFilter().kursart?.id === kurs.kursart) ? 'text-ui-100' : 'invisible group-hover:visible opacity-25'" />
+													<span class="icon-sm i-ri-filter-fill icon-ui-static absolute right-0 top-1" :class="(schuelerFilter().fach === kurs.fach_id) && (schuelerFilter().kursart?.id === kurs.kursart) ? 'text-ui-contrast-100' : 'invisible group-hover:visible opacity-25'" />
 												</div>
 												<div role="cell" class="svws-ui-td svws-align-center svws-divider">
 													<span :class="{'opacity-25': kursdifferenz(kurs).value[1] <= 1}">{{ kursdifferenz(kurs).value[1] }}</span>
@@ -238,7 +238,7 @@
 										<template v-if="blockungstabelleHidden() === 'schienen'">
 											<div role="cell" class="svws-ui-td svws-align-center !p-[2px]">
 												<div @click="toggleKursAusgewaehlt(kurs)"
-													class="select-none w-full h-full rounded-xs flex justify-around items-center group bg-ui-0 text-ui-100 p-px"
+													class="select-none w-full h-full rounded-xs flex justify-around items-center group bg-ui-contrast-0 text-ui-contrast-100 p-px"
 													:class="istKursAusgewaehlt(kurs).value ? 'font-bold' : 'opacity-50'">
 													<svws-ui-tooltip v-if="getErgebnismanager().getOfKursAnzahlSchuelerExternePlusDummies(kurs.id) > 0">
 														<span class="whitespace-nowrap">{{ getErgebnismanager().getOfKursAnzahlSchuelerPlusDummy(kurs.id) }}<span class="font-bold">*</span></span>
@@ -256,7 +256,7 @@
 													:class="{
 														'bg-ui-success/50': hatUpdateKompetenz && (highlightKursAufAnderenKurs(kurs, schiene).value || highlightRechteckDrop(kurs, schiene).value),
 														'bg-ui-warning/50': hatUpdateKompetenz && highlightRechteck(kurs, schiene).value && !highlightKursAufAnderenKurs(kurs, schiene).value,
-														'bg-ui-100 opacity-50 text-ui-25 font-bold': highlightKursVerschieben(kurs).value,
+														'bg-ui-contrast-100 opacity-50 text-ui-contrast-25 font-bold': highlightKursVerschieben(kurs).value,
 														'svws-disabled': istKursVerbotenInSchiene(kurs, schiene).value,
 														'svws-divider': (index + 1) < getErgebnismanager().getMengeAllerSchienen().size(),
 														'cursor-grabbing': isDragging,
@@ -268,12 +268,12 @@
 													<div v-if="istZugeordnetKursSchiene(kurs, schiene).value"
 														:draggable="hatUpdateKompetenz && !istKursFixiertInSchiene(kurs, schiene).value"
 														@dragstart.stop="setDrag(kurs, schiene)" @dragend="resetDrag" @click="toggleKursAusgewaehlt(kurs)"
-														class="select-none w-full h-full rounded-xs flex justify-around items-center group p-px bg-ui-10 text-ui-75"
+														class="select-none w-full h-full rounded-xs flex justify-around items-center group p-px bg-ui-contrast-10 text-ui-contrast-75"
 														:class="{
-															'font-bold ring-ui-brand ring-3 text-ui-100': istKursAusgewaehlt(kurs).value,
+															'font-bold ring-ui-brand ring-3 text-ui-contrast-100': istKursAusgewaehlt(kurs).value,
 															'cursor-grab': !isDragging,
 														}">
-														<span v-if="hatUpdateKompetenz && !istKursFixiertInSchiene(kurs, schiene).value" class="icon-sm group-hover:icon-ui-100 opacity-25 rounded-xs i-ri-draggable group-hover:opacity-100 px-1.5" />
+														<span v-if="hatUpdateKompetenz && !istKursFixiertInSchiene(kurs, schiene).value" class="icon-sm group-hover:icon-ui-contrast-100 opacity-25 rounded-xs i-ri-draggable group-hover:opacity-100 px-1.5" />
 														<svws-ui-tooltip v-if="getErgebnismanager().getOfKursAnzahlSchuelerExternePlusDummies(kurs.id) > 0">
 															<span class="whitespace-nowrap">{{ getErgebnismanager().getOfKursAnzahlSchuelerPlusDummy(kurs.id) }}<span class="font-bold">*</span></span>
 															<template #content>{{ getErgebnismanager().getOfKursAnzahlSchuelerInterne(kurs.id) }} und {{ getErgebnismanager().getOfKursAnzahlSchuelerExternePlusDummies(kurs.id) }} zusätzliche Kursteilnehmer</template>
@@ -289,7 +289,7 @@
 														@click="hatUpdateKompetenz && toggleRegelSperreKursInSchiene(kurs, schiene)"
 														draggable="true" @dragstart.stop="setDrag(kurs, schiene)" @dragend="resetDrag"
 														:class="{ 'svws-disabled': istKursVerbotenInSchiene(kurs, schiene).value }">
-														<div v-if="highlightKursVerschieben(kurs).value" class="absolute bg-ui-0/50 inset-0 border-2 border-dashed rounded-sm border-ui-25" />
+														<div v-if="highlightKursVerschieben(kurs).value" class="absolute bg-ui-contrast-0/50 inset-0 border-2 border-dashed rounded-sm border-ui-contrast-25" />
 														<span v-if="istKursGesperrtInSchiene(kurs, schiene).value" class="icon i-ri-lock-2-line inline-block !opacity-50 group-hover:!opacity-100" />
 														<span v-if="hatUpdateKompetenz && !istKursGesperrtInSchiene(kurs, schiene).value" class="icon i-ri-lock-2-line inline-block !opacity-0 group-hover:!opacity-25" />
 													</div>

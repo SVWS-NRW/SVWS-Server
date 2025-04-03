@@ -83,5 +83,5 @@
 		return true;
 	}
 
-// bg-ui-100 text-ui-0 rounded-xl max-h-96 w-full Bugfix Tailwind TODO
+// bg-ui-contrast-100 text-ui-contrast-0 rounded-xl max-h-96 w-full Bugfix Tailwind TODO
 </script>

@@ -39,7 +39,7 @@
 						</div>
 					</template>
 					<template #body>
-						<div role="row" v-for="row in fachwahlstatistik" :key="row.id" class="svws-ui-tr text-uistatic" :style="{ 'background-color': getBgColor(row) }">
+						<div role="row" v-for="row in fachwahlstatistik" :key="row.id" class="svws-ui-tr text-ui-static" :style="{ 'background-color': getBgColor(row) }">
 							<template v-for="(heading, index) in colHeadings" :key="heading.text">
 								<div v-for="(h, n) in heading.cols" :key="n" class="svws-ui-td select-none" role="cell" @click="selectData(row, heading.text)"
 									:class="{

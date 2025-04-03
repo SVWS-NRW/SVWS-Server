@@ -67,7 +67,7 @@
 		</template>
 		<template #body>
 			<template v-for="fach in faecherManager().faecher()" :key="fach.hashCode()">
-				<div class="svws-ui-tr text-uistatic" role="row" :style="{ 'background-color': bgColor(fach) }">
+				<div class="svws-ui-tr text-ui-static" role="row" :style="{ 'background-color': bgColor(fach) }">
 					<s-row-gost-faecher :fach-id="fach.id" :abiturjahr :patch-fach :faecher-manager :hat-update-kompetenz />
 				</div>
 			</template>

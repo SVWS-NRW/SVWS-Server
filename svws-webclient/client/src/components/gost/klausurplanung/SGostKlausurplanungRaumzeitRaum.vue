@@ -1,7 +1,7 @@
 <template>
-	<div @dragover="checkDropZone($event)" @drop="onDrop(raum)" class="min-w-120 max-w-120 flex flex-col rounded-xl border bg-ui-0 h-fit"
+	<div @dragover="checkDropZone($event)" @drop="onDrop(raum)" class="min-w-120 max-w-120 flex flex-col rounded-xl border bg-ui-contrast-0 h-fit"
 		:class="{
-			'shadow-lg shadow-ui-10 border-ui-10': dragData() === undefined,
+			'shadow-lg shadow-ui-contrast-10 border-ui-contrast-10': dragData() === undefined,
 			'border-dashed border-ui-brand dark:border-ui-brand ring-4 ring-ui-brand/25': (dragData() !== undefined) && (dragData() instanceof GostKursklausur),
 			'border-ui-danger': raumHatFehler(),
 			'bg-ui-danger-secondary': raum.idTermin !== terminSelected.id, // TODO Priorität und warum überhaupt???
@@ -46,7 +46,7 @@
 								<template #content>
 									<s-gost-klausurplanung-kursliste :k-man :kursklausur="klausur" :termin="kMan().terminOrNullByKursklausur(klausur)!" :benutzer-kompetenzen />
 								</template>
-								<span class="svws-ui-badge hover:opacity-75" :style="`color: var(--color-text-uistatic); background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
+								<span class="svws-ui-badge hover:opacity-75" :style="`color: var(--color-text-ui-static); background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
 								<svws-ui-tooltip>
 									<template #content>
 										Bemerkung: {{ klausur.bemerkung }}

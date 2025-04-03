@@ -53,7 +53,7 @@
 							@dragover="checkDropZoneZeitraster($event, manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde))"
 							@dragleave="checkDropZoneZeitraster($event, undefined)"
 							@drop="onDrop(manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde))">
-							<div v-if="kurseGefiltert(manager().datumGetByKwzAndWochentag(kalenderwoche(), wochentag), wochentag, stunde).size()" class="svws-ui-stundenplan--unterricht border-dashed border-ui-50 flex absolute inset-1 w-auto bg-ui-10 z-30 pointer-events-none">
+							<div v-if="kurseGefiltert(manager().datumGetByKwzAndWochentag(kalenderwoche(), wochentag), wochentag, stunde).size()" class="svws-ui-stundenplan--unterricht border-dashed border-ui-contrast-50 flex absolute inset-1 w-auto bg-ui-contrast-10 z-30 pointer-events-none">
 								<div class="flex flex-col items-start justify-between mx-auto font-normal w-full opacity-75">
 									<span class="text-button">{{ [...kurseGefiltert(manager().datumGetByKwzAndWochentag(kalenderwoche(), wochentag), wochentag, stunde)].map(kurs => kursInfos(kurs)).join(", ") }}</span>
 									<span v-if="dragData !== undefined && sumSchreiber(manager().datumGetByKwzAndWochentag(kalenderwoche(), wochentag), wochentag, stunde) > 0" class="inline-flex gap-0.5 text-button font-normal"><span class="icon i-ri-group-line" />{{ sumSchreiber(manager().datumGetByKwzAndWochentag(kalenderwoche(), wochentag), wochentag, stunde) }}</span>
@@ -93,8 +93,8 @@
 							@dragend="onDrag(undefined)">
 							<div class="bg-ui-caution text-ui-oncaution border w-full h-full rounded-lg overflow-hidden flex items-center justify-center relative group"
 								:class="{
-									'bg-ui-neutral border-ui-25': dragData !== undefined,
-									'shadow-sm border-ui-10': dragData === undefined,
+									'bg-ui-neutral border-ui-contrast-25': dragData !== undefined,
+									'shadow-sm border-ui-contrast-10': dragData === undefined,
 								}">
 								<span class="icon i-ri-draggable absolute top-1 left-0 z-10 opacity-50 group-hover:opacity-100" v-if="termin.abijahr === jahrgangsdaten.abiturjahr && hatKompetenzUpdate" />
 								<div class="absolute inset-0 flex w-full flex-col pointer-events-none opacity-80 bg-ui" :style="{background: kursklausurMouseOver() !== undefined && kursklausurMouseOver()!.idTermin === termin.id ? 'none' : getBgColors(termin)}" />
@@ -115,7 +115,7 @@
 										</s-gost-klausurplanung-termin>
 									</template>
 								</svws-ui-tooltip>
-								<span class="absolute bottom-0 left-0 py-1.5 pl-1.5 text-sm opacity-50 hidden group-hover:block pointer-events-none text-uistatic">Details</span>
+								<span class="absolute bottom-0 left-0 py-1.5 pl-1.5 text-sm opacity-50 hidden group-hover:block pointer-events-none text-ui-static">Details</span>
 							</div>
 						</div>
 					</template>

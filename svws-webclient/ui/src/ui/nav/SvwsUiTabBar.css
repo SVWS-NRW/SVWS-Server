@@ -123,7 +123,7 @@
 		@apply bg-ui-selected text-ui-onselected;
 
 		.page--statistik & {
-			@apply bg-ui-statistic-secondary text-ui-statistic;
+			@apply bg-ui-statistic-weak text-ui-statistic;
 		}
 	}
 
@@ -175,6 +175,6 @@
 }
 
 .page--statistik .svws-ui-tabs .svws-ui-tab-button.svws-active	{
-	@apply bg-ui-statistic-secondary text-ui-statistic;
+	@apply bg-ui-statistic-weak text-ui-statistic;
 }
 

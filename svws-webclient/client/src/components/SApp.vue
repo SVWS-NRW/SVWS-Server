@@ -77,7 +77,7 @@
 				<div class="h-full flex flex-col">
 					<div class="secondary-menu--headline">
 						<h1><span>{{ pendingSetApp }}</span></h1>
-						<div><span class="inline-block h-4 rounded-sm animate-pulse w-16 -mb-1 bg-ui-10" /></div>
+						<div><span class="inline-block h-4 rounded-sm animate-pulse w-16 -mb-1 bg-ui-contrast-10" /></div>
 					</div>
 				</div>
 			</template>
@@ -91,12 +91,12 @@
 					<svws-ui-header>
 						<div class="flex items-center">
 							<div class="w-20 mr-6" v-if="(menu.current.name === 'schueler') || (menu.current.name === 'lehrer')">
-								<div class="inline-block h-20 rounded-xl animate-pulse w-20 bg-ui-10" />
+								<div class="inline-block h-20 rounded-xl animate-pulse w-20 bg-ui-contrast-10" />
 							</div>
 							<div>
-								<span class="inline-block h-[1em] rounded-sm animate-pulse w-52 bg-ui-10" />
+								<span class="inline-block h-[1em] rounded-sm animate-pulse w-52 bg-ui-contrast-10" />
 								<br>
-								<span class="inline-block h-[1em] rounded-sm animate-pulse w-20 bg-ui-10" />
+								<span class="inline-block h-[1em] rounded-sm animate-pulse w-20 bg-ui-contrast-10" />
 							</div>
 						</div>
 					</svws-ui-header>
@@ -110,7 +110,7 @@
 	</svws-ui-app-layout>
 	<svws-ui-notifications v-if="errors.size > 0">
 		<div v-if="errors.size > 1" class="bg-ui">
-			<svws-ui-button @click="errors.clear()" type="transparent" class="pointer-events-auto ml-auto rounded-lg bg-ui border-ui-25 fixed right-6 left-0 top-5 z-50 w-full justify-center">Alle {{ errors.size }} Meldungen schließen</svws-ui-button>
+			<svws-ui-button @click="errors.clear()" type="transparent" class="pointer-events-auto ml-auto rounded-lg bg-ui border-ui-contrast-25 fixed right-6 left-0 top-5 z-50 w-full justify-center">Alle {{ errors.size }} Meldungen schließen</svws-ui-button>
 			<div class="min-h-[1.85rem]" />
 		</div>
 		<template v-for="error of [...errors.values()].reverse().slice(0, 20)" :key="error.id">

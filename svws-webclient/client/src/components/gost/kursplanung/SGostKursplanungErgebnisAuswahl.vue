@@ -27,41 +27,41 @@
 					<span class="flex gap-1 items-center ml-0.5" :class="{'filter saturate-200': auswahlErgebnis === ergebnis}">
 						<!-- Wert 1  -->
 						<svws-ui-tooltip v-if="getErgebnismanager(ergebnis).getOfBewertung1Wert() > 0" autosize>
-							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': bgColor(getErgebnismanager(ergebnis).getOfBewertung1Farbcode()), 'color': 'var(--color-uistatic)'}">{{ getErgebnismanager(ergebnis).getOfBewertung1Wert() }}</span>
+							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': bgColor(getErgebnismanager(ergebnis).getOfBewertung1Farbcode()), 'color': 'var(--color-ui-static)'}">{{ getErgebnismanager(ergebnis).getOfBewertung1Wert() }}</span>
 							<template #content>
 								<pre>{{ getErgebnismanager(ergebnis).regelGetTooltipFuerRegelverletzungen() }}</pre>
 							</template>
 						</svws-ui-tooltip>
-						<span v-else class="svws-ui-badge min-w-[2.75rem] text-center justify-center" title="0 Regelkonflikte" :style="{'background-color': bgColor(getErgebnismanager(ergebnis).getOfBewertung1Farbcode()), 'color': 'var(--color-uistatic)'}">0</span>
+						<span v-else class="svws-ui-badge min-w-[2.75rem] text-center justify-center" title="0 Regelkonflikte" :style="{'background-color': bgColor(getErgebnismanager(ergebnis).getOfBewertung1Farbcode()), 'color': 'var(--color-ui-static)'}">0</span>
 						<!-- Wert 2-->
 						<svws-ui-tooltip v-if="getErgebnismanager(ergebnis).getOfBewertung2Wert() > 0" autosize>
-							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': bgColor(getErgebnismanager(ergebnis).getOfBewertung2Farbcode()), 'color': 'var(--color-uistatic)'}">{{ getErgebnismanager(ergebnis).getOfBewertung2Wert() }}</span>
+							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': bgColor(getErgebnismanager(ergebnis).getOfBewertung2Farbcode()), 'color': 'var(--color-ui-static)'}">{{ getErgebnismanager(ergebnis).getOfBewertung2Wert() }}</span>
 							<template #content>
 								<pre>{{ getErgebnismanager(ergebnis).regelGetTooltipFuerWahlkonflikte() }}</pre>
 							</template>
 						</svws-ui-tooltip>
-						<span v-else class="svws-ui-badge min-w-[2.75rem] text-center justify-center" title="0 Wahlkonflikte" :style="{'background-color': bgColor(getErgebnismanager(ergebnis).getOfBewertung2Farbcode()), 'color': 'var(--color-uistatic)'}">0</span>
+						<span v-else class="svws-ui-badge min-w-[2.75rem] text-center justify-center" title="0 Wahlkonflikte" :style="{'background-color': bgColor(getErgebnismanager(ergebnis).getOfBewertung2Farbcode()), 'color': 'var(--color-ui-static)'}">0</span>
 						<!-- Wert 3-->
 						<svws-ui-tooltip autosize>
-							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': bgColor(getErgebnismanager(ergebnis).getOfBewertung3Farbcode()), 'color': 'var(--color-uistatic)'}"> {{ getErgebnismanager(ergebnis).getOfBewertung3Wert() }} </span>
+							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': bgColor(getErgebnismanager(ergebnis).getOfBewertung3Farbcode()), 'color': 'var(--color-ui-static)'}"> {{ getErgebnismanager(ergebnis).getOfBewertung3Wert() }} </span>
 							<template #content>
 								<pre>{{ getErgebnismanager(ergebnis).regelGetTooltipFuerKursdifferenzen() }}</pre>
 							</template>
 						</svws-ui-tooltip>
 						<!-- Wert 4-->
 						<svws-ui-tooltip v-if="getErgebnismanager(ergebnis).getOfBewertung4Wert() > 0" autosize>
-							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': bgColor(getErgebnismanager(ergebnis).getOfBewertung4Farbcode()), 'color': 'var(--color-uistatic)'}">{{ getErgebnismanager(ergebnis).getOfBewertung4Wert() }}</span>
+							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': bgColor(getErgebnismanager(ergebnis).getOfBewertung4Farbcode()), 'color': 'var(--color-ui-static)'}">{{ getErgebnismanager(ergebnis).getOfBewertung4Wert() }}</span>
 							<template #content>
 								<pre>{{ getErgebnismanager(ergebnis).regelGetTooltipFuerFaecherparallelitaet() }}</pre>
 							</template>
 						</svws-ui-tooltip>
-						<span v-else class="svws-ui-badge min-w-[2.75rem] text-center justify-center" title="0 Fächer parallel" :style="{'background-color': bgColor(getErgebnismanager(ergebnis).getOfBewertung4Farbcode()), 'color': 'var(--color-uistatic)'}">0</span>
+						<span v-else class="svws-ui-badge min-w-[2.75rem] text-center justify-center" title="0 Fächer parallel" :style="{'background-color': bgColor(getErgebnismanager(ergebnis).getOfBewertung4Farbcode()), 'color': 'var(--color-ui-static)'}">0</span>
 						<!-- Ende Wertanzeige-->
 					</span>
 					<div class="ml-auto inline-flex">
 						<template v-if="hatUpdateKompetenz">
 							<template v-if="(auswahlErgebnis === ergebnis) && (getErgebnisse().size() > 1)">
-								<svws-ui-button type="icon" @click.stop="remove_ergebnis" title="Ergebnis löschen" :disabled="apiStatus.pending || (getErgebnisse().size() <= 1)" class="text-ui-100">
+								<svws-ui-button type="icon" @click.stop="remove_ergebnis" title="Ergebnis löschen" :disabled="apiStatus.pending || (getErgebnisse().size() <= 1)" class="text-ui-contrast-100">
 									<span class="icon-sm i-ri-delete-bin-line -mx-0.5" />
 								</svws-ui-button>
 							</template>

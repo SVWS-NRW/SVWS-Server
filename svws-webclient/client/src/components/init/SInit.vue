@@ -218,7 +218,7 @@
 
 		&:not(.svws-active):hover,
 		&:not(.svws-active):focus-visible {
-			@apply outline-hidden bg-ui-10 opacity-100;
+			@apply outline-hidden bg-ui-contrast-10 opacity-100;
 
 			.svws-icon {
 				@apply opacity-100;

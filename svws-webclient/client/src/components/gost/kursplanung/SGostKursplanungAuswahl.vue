@@ -69,7 +69,7 @@
 	@reference "../../../../../ui/src/assets/styles/index.css"
 
 	.cell--bewertung span {
-		@apply inline-block text-center text-ui-100 rounded-sm font-normal;
+		@apply inline-block text-center text-ui-contrast-100 rounded-sm font-normal;
 		min-width: 5ex;
 		padding: 0.05em 0.2em;
 	}
