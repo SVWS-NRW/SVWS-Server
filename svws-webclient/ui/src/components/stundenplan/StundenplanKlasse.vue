@@ -1,14 +1,15 @@
 <template>
 	<stundenplan-ansicht show-schienen hide-zeitachse-pausenzeiten :mode-pausenaufsichten :show-zeitachse :ignore-empty :use-drag-and-drop
 		:manager :wochentyp :kalenderwoche :drag-data :get-schienen :get-unterricht :zeitraster-hat-unterricht-mit-wochentyp
-		:get-pausenzeiten :schneiden-pausenzeiten-zeitraster :get-pausenzeiten-wochentag :get-pausenaufsichten-pausenzeit :on-drag :on-drop>
+		:get-pausenzeiten :schneiden-pausenzeiten-zeitraster :get-pausenzeiten-wochentag :get-pausenaufsichten-pausenzeit :on-drag :on-drop
+		@update:click="unterricht => emit('update:click', unterricht)">
 		<template #unterricht="{ unterricht }">
-			<div class="font-bold col-span-2 flex place-items-center group" title="Unterricht" @click="emit('update:click', unterricht)">
+			<div class="font-bold col-span-2 flex place-items-center group" title="Unterricht">
 				<span v-if="useDragAndDrop" class="icon i-ri-draggable inline-block icon-ui-contrast-75 opacity-60 group-hover:opacity-100 group-hover:icon-ui-contrast-75" />
 				<span>{{ manager().unterrichtGetByIDStringOfFachOderKurs(unterricht.id, false) }}</span>
 			</div>
-			<div class="text-center flex place-items-center gap-2" title="Lehrkraft" @click="emit('update:click', unterricht)"> {{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }} <span v-if="unterricht.lehrer.size() > 1" class="icon inline-block i-ri-add-circle-line" /></div>
-			<div class="text-center" title="Raum" @click="emit('update:click', unterricht)"> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }} </div>
+			<div class="text-center flex place-items-center gap-2" title="Lehrkraft"> {{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }} <span v-if="unterricht.lehrer.size() > 1" class="icon inline-block i-ri-add-circle-line" /></div>
+			<div class="text-center" title="Raum"> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }} </div>
 		</template>
 	</stundenplan-ansicht>
 </template>

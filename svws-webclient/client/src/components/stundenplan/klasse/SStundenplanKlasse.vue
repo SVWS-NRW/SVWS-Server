@@ -34,9 +34,8 @@
 			<span>Für diesen Stundenplan ist keine Klasse vorhanden.</span>
 		</template>
 		<template v-else>
-			<div v-if="hatUpdateKompetenz" @dragover="checkDropZone($event)" @drop="onDrop(undefined, -1)" class="min-w-fit flex flex-col justify-start mb-auto svws-table-offset h-full overflow-y-scroll overflow-x-hidden pr-4 border-2 rounded-xl border-dashed p-1"
+			<div v-if="hatUpdateKompetenz" @dragover="checkDropZone($event)" @drop="onDrop(undefined, -1)" class="min-w-fit flex flex-col gap-4 justify-start mb-auto svws-table-offset h-full overflow-y-scroll overflow-x-hidden pr-6 border-2 rounded-xl border-dashed"
 				:class="[dragData === undefined ? 'border-transparent' : ' border-ui-danger ring-4 ring-ui-danger/10']">
-				<div class="fixed flex items-center justify-center h-3/4 w-72 z-20 pointer-events-none"><span :class="dragData === undefined ? '':'icon-lg icon-ui-danger opacity-50 i-ri-delete-bin-line scale-[4]'" /></div>
 				<svws-ui-table v-if="!stundenplanManager().klassenunterrichtGetMengeByKlasseIdAsList(klasse.id).isEmpty()" :items="stundenplanManager().klassenunterrichtGetMengeByKlasseIdAsList(klasse.id)" :columns="colsKlassenunterricht">
 					<template #body>
 						<template v-for="ku in stundenplanManager().klassenunterrichtGetMengeByKlasseIdAsList(klasse.id)" :key="ku.idKlasse + '/' + ku.idFach">
@@ -65,7 +64,8 @@
 						</template>
 					</template>
 				</svws-ui-table>
-				<svws-ui-checkbox v-if="!stundenplanManager().schieneGetMengeByKlasseId(klasse.id).isEmpty()" type="toggle" v-model="schienSortierung" class="mt-8">Nach Schienen sortieren</svws-ui-checkbox>
+				<div class="fixed flex items-center justify-center h-3/4 w-72 z-20 pointer-events-none"><span :class="dragData === undefined ? '':'icon-lg icon-ui-danger opacity-50 i-ri-delete-bin-line scale-[4]'" /></div>
+				<svws-ui-checkbox v-if="!stundenplanManager().schieneGetMengeByKlasseId(klasse.id).isEmpty()" type="toggle" v-model="schienSortierung">Nach Schienen sortieren</svws-ui-checkbox>
 				<svws-ui-table v-if="!stundenplanManager().kursGetMengeByKlasseIdAsList(klasse.id).isEmpty()" :items="stundenplanManager().kursGetMengeByKlasseIdAsList(klasse.id)" :columns="colsKursunterricht">
 					<template #body>
 						<template v-if="(schienSortierung === true) && (!stundenplanManager().schieneGetMengeByKlasseId(klasse.id).isEmpty())">

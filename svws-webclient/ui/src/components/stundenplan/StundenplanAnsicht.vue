@@ -87,8 +87,8 @@
 									class="svws-ui-stundenplan--unterricht"
 									:class="{ 'cursor-grab': draggable, 'grow': growUnterricht, 'border-ui-contrast-100 bg-ui-danger text-ui-ondanger border-dashed': isDraggedType(unterricht) }"
 									:style="isDraggedType(unterricht) ? '' : `background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)}; color: var(--color-ui-static)`"
-									:draggable @dragstart="onDrag(unterricht)" @dragend="onDrag(undefined)">
-									<slot name="unterricht" :unterricht="unterricht" />
+									:draggable @dragstart="onDrag(unterricht)" @dragend="onDrag(undefined)" @click="emit('update:click', unterricht)">
+									<slot name="unterricht" :unterricht />
 								</div>
 							</template>
 							<template v-else v-for="schiene in [{id: -1}, ...getSchienenListe(wochentag.id, stunde, 0)]" :key="schiene.id">
@@ -102,7 +102,7 @@
 										class="svws-ui-stundenplan--unterricht"
 										:class="{ 'cursor-grab': draggable, 'grow': growUnterricht, 'border-ui-contrast-100 bg-ui-danger text-ui-ondanger border-dashed ': isDraggedType(unterricht) }"
 										:style="isDraggedType(unterricht) ? '' : `background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)}; color: var(--color-ui-static)`"
-										:draggable @dragstart.stop="onDrag(unterricht)" @dragend.stop="onDrag(undefined)">
+										:draggable @dragstart.stop="onDrag(unterricht)" @dragend.stop="onDrag(undefined)" @click="emit('update:click', unterricht)">
 										<slot name="unterricht" :unterricht="unterricht" />
 									</div>
 								</div>
@@ -120,8 +120,8 @@
 												class="svws-ui-stundenplan--unterricht"
 												:class="{'cursor-grab': draggable, 'grow': growUnterricht, 'svws-compact': !wochentyp(), 'border-ui-contrast-100 bg-ui-danger text-ui-ondanger border-dashed': isDraggedType(unterricht) }"
 												:style="isDraggedType(unterricht) ? '' : `background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)}; color: var(--color-ui-static)`"
-												:draggable @dragstart="onDrag(unterricht)" @dragend="onDrag(undefined)">
-												<slot name="unterricht" :unterricht="unterricht" />
+												:draggable @dragstart="onDrag(unterricht)" @dragend="onDrag(undefined)" @click="emit('update:click', unterricht)">
+												<slot name="unterricht" :unterricht />
 											</div>
 										</template>
 										<template v-else v-for="schiene in [{id: -1}, ...getSchienenListe(wochentag.id, stunde, wt)]" :key="schiene.id">
@@ -137,7 +137,7 @@
 													class="svws-ui-stundenplan--unterricht"
 													:class="{ 'cursor-grab': draggable, 'grow': growUnterricht, 'svws-compact': !wochentyp(), 'border-ui-contrast-100 bg-ui-danger text-ui-ondanger border-dashed': isDraggedType(unterricht) } "
 													:style="isDraggedType(unterricht) ? '' : `background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)}; color: var(--color-ui-static)`"
-													:draggable @dragstart.stop="onDrag(unterricht)" @dragend.stop="onDrag(undefined)">
+													:draggable @dragstart.stop="onDrag(unterricht)" @dragend.stop="onDrag(undefined)" @click="emit('update:click', unterricht)">
 													<slot name="unterricht" :unterricht="unterricht" />
 												</div>
 											</div>
@@ -204,6 +204,10 @@
 	});
 
 	defineSlots();
+
+	const emit = defineEmits<{
+		"update:click": [value: StundenplanUnterricht];
+	}>();
 
 	const dragOverPos = shallowRef<{
 		wochentag : number | undefined,
