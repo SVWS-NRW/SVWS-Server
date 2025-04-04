@@ -3,7 +3,7 @@ import type { GostKursplanungUmwahlansichtProps } from "~/components/gost/kurspl
 import type { KursplanungSchuelerAuswahlProps } from "~/components/gost/kursplanung/SGostKursplanungSchuelerAuswahlProps";
 
 import { BenutzerKompetenz, DeveloperNotificationException, GostHalbjahr, ServerMode } from "@core";
-import { ConfigElement } from "~/components/Config";
+import { ConfigElement } from "../../../../../../ui/src/utils/Config";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";

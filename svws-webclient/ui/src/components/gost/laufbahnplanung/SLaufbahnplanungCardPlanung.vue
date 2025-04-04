@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-table :items="abiturdatenManager().faecher().faecher()" :columns has-background scroll>
+	<svws-ui-table :items="manager.alleFaecher" :columns has-background scroll>
 		<template #header>
 			<div role="row" class="svws-ui-tr">
 				<div role="columnheader" class="svws-ui-td col-span-3 svws-divider">
@@ -61,13 +61,10 @@
 			</div>
 		</template>
 		<template #body>
-			<template v-for="fach in abiturdatenManager().faecher().faecher()" :key="fach.id">
-				<template v-if="fachanzeigen(fach)">
-					<s-laufbahnplanung-fach :abiturdaten-manager :gost-jahrgangsdaten :fach :modus :set-wahl :ignoriere-sprachenfolge :belegung-hat-immer-noten :hat-update-kompetenz :active-halbjahr-id
-						:active-focus="fach.id === activeFachId" @keydown="switchFocus($event)" @update:focus="(fachId: number, halbjahrId: number) => updateFocusState(fachId, halbjahrId)"
-						@update:focus:impossible="(fachId: number, halbjahrId: number) => retryFocus(fachId, halbjahrId)" />
-				</template>
-				<template v-else><div /></template>
+			<template v-for="fach in manager.faecherGefiltert" :key="fach.id">
+				<s-laufbahnplanung-fach :manager :abiturdaten-manager :gost-jahrgangsdaten :fach :set-wahl :ignoriere-sprachenfolge :belegung-hat-immer-noten :hat-update-kompetenz :active-halbjahr-id
+					:active-focus="fach.id === activeFachId" @keydown="switchFocus($event)" @update:focus="(fachId: number, halbjahrId: number) => updateFocusState(fachId, halbjahrId)"
+					@update:focus:impossible="(fachId: number, halbjahrId: number) => retryFocus(fachId, halbjahrId)" />
 			</template>
 		</template>
 		<template #dataFooter>
@@ -175,8 +172,6 @@
 	import type { AbiturdatenManager } from "../../../../../core/src/core/abschluss/gost/AbiturdatenManager";
 	import type { GostJahrgangsdaten } from "../../../../../core/src/core/data/gost/GostJahrgangsdaten";
 	import type { GostSchuelerFachwahl } from "../../../../../core/src/core/data/gost/GostSchuelerFachwahl";
-	import type { GostFach } from "../../../../../core/src/core/data/gost/GostFach";
-	import type { AbiturFachbelegungHalbjahr } from "../../../../../core/src/core/data/gost/AbiturFachbelegungHalbjahr";
 	import { GostHalbjahr } from "../../../../../core/src/core/types/gost/GostHalbjahr";
 	import type { DataTableColumn } from "../../../types";
 	import type { LaufbahnplanungUiManager } from "./LaufbahnplanungUiManager";
@@ -187,9 +182,7 @@
 		gostJahrgangsdaten: GostJahrgangsdaten;
 		setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>;
 		gotoKursblockung: (halbjahr: GostHalbjahr) => Promise<unknown>
-		modus?: 'normal' | 'manuell' | 'hochschreiben';
 		ignoriereSprachenfolge? : boolean;
-		faecherAnzeigen: 'alle' | 'nur_waehlbare' | 'nur_gewaehlt';
 		title?: string | undefined;
 		belegungHatImmerNoten?: boolean;
 		hatUpdateKompetenz?: boolean;
@@ -200,26 +193,6 @@
 		belegungHatImmerNoten: false,
 		hatUpdateKompetenz: true,
 	});
-
-	function fachanzeigen(fach : GostFach) : boolean {
-		switch (props.faecherAnzeigen) {
-			case 'alle':
-				return true;
-			case 'nur_waehlbare':
-				return fach.istMoeglichEF1 || fach.istMoeglichEF2 || fach.istMoeglichQ11 || fach.istMoeglichQ12 || fach.istMoeglichQ21 || fach.istMoeglichQ22;
-			case 'nur_gewaehlt': {
-				const fb = props.abiturdatenManager().getFachbelegungByID(fach.id);
-				if (fb === null)
-					return false;
-				for (const halbjahr of GostHalbjahr.values()) {
-					const fbh : AbiturFachbelegungHalbjahr | null = fb.belegungen[halbjahr.id];
-					if ((fbh !== null))
-						return true;
-				}
-				return false;
-			}
-		}
-	}
 
 	const columns: Array<DataTableColumn> = [
 		{ key: "kuerzel", label: "Kürzel", align: 'center', minWidth: 5, span: 0.75},
@@ -250,7 +223,7 @@
 
 	onMounted(() => {
 		// Fächer-IDs zu statischer Liste hinzufügen um Fächer durchschalten zu können
-		for (const fach of props.abiturdatenManager().faecher().faecher())
+		for (const fach of props.manager.alleFaecher)
 			faecherIds.push(fach.id);
 	})
 

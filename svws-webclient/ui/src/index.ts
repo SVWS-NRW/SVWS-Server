@@ -82,6 +82,7 @@ export type { DataTableColumn, SortByAndOrder } from "./types";
 export type { TabData } from "./ui/nav/TabData";
 
 // Class exports
+export { Config } from "./utils/Config";
 export { AppMenuManager } from "./ui/nav/AppMenuManager";
 export { TabManager } from "./ui/nav/TabManager";
 export { Checkpoint } from "./ui/modal/Checkpoint";

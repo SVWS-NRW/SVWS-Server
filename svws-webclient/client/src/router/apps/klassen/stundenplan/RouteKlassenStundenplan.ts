@@ -6,7 +6,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
 import { routeKlassen, type RouteKlassen } from "~/router/apps/klassen/RouteKlassen";
 import { RouteDataKlassenStundenplan } from "~/router/apps/klassen/stundenplan/RouteDataKlassenStundenplan";
-import { ConfigElement } from "~/components/Config";
+import { ConfigElement } from "../../../../../../ui/src/utils/Config";
 import { api } from "~/router/Api";
 
 const SKlassenStundenplan = () => import("~/components/klassen/stundenplan/SKlassenStundenplan.vue");

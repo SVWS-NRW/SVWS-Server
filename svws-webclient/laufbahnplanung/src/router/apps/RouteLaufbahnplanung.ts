@@ -35,6 +35,7 @@ export class RouteLaufbahnplanung extends RouteNode<unknown, RouteApp> {
 
 	public getProps(to: RouteLocationNormalized): LaufbahnplanungOberstufeProps {
 		return {
+			config: () => routeApp.data.config,
 			setWahl: routeApp.data.setWahl,
 			setGostBelegpruefungsArt: routeApp.data.setGostBelegpruefungsArt,
 			exportLaufbahnplanung: routeApp.data.exportLaufbahnplanung,
@@ -49,8 +50,6 @@ export class RouteLaufbahnplanung extends RouteNode<unknown, RouteApp> {
 			saveLaufbahnplanung: routeApp.data.saveLaufbahnplanung,
 			restoreLaufbahnplanung: routeApp.data.restoreLaufbahnplanung,
 			resetFachwahlen: routeApp.data.resetFachwahlen,
-			modus: routeApp.data.modus,
-			setModus: routeApp.data.setModus,
 		};
 	}
 

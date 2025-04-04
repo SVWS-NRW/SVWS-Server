@@ -30,6 +30,7 @@ import { GostKursart } from "@core/core/types/gost/GostKursart";
 import { GostFaecherManager } from "@core/core/utils/gost/GostFaecherManager";
 import { ArrayList } from "@core/java/util/ArrayList";
 import type { List } from "@core/java/util/List";
+import { Config, ConfigElement } from "@ui/utils/Config";
 
 
 interface RouteState {
@@ -40,8 +41,8 @@ interface RouteState {
 	abiturdaten: Abiturdaten | undefined;
 	abiturdatenManager: AbiturdatenManager | undefined;
 	faecherManager: GostFaecherManager | undefined;
+	config: Config;
 	gostBelegpruefungsArt: 'ef1' | 'gesamt' | 'auto';
-	modus: 'manuell' | 'normal' | 'hochschreiben';
 	gostBelegpruefungErgebnis: GostBelegpruefungErgebnis;
 	gostJahrgang: GostJahrgang;
 	gostJahrgangsdaten: GostJahrgangsdaten;
@@ -59,8 +60,8 @@ export class RouteData {
 		abiturdaten: undefined,
 		abiturdatenManager: undefined,
 		faecherManager: undefined,
+		config: new Config(async (key, value) => { }, async (key, value) => { }),
 		gostBelegpruefungsArt: 'gesamt',
-		modus: 'normal',
 		gostBelegpruefungErgebnis: new GostBelegpruefungErgebnis(),
 		gostJahrgang: new GostJahrgang(),
 		gostJahrgangsdaten: new GostJahrgangsdaten(),
@@ -81,6 +82,15 @@ export class RouteData {
 
 	private commit(): void {
 		this._state.value = { ... this._state.value };
+	}
+
+	public constructor() {
+		this._state.value.config.addElements([new ConfigElement("app.schueler.laufbahnplanung.modus", "user", "normal")]);
+		this._state.value.config.addElements([new ConfigElement("app.schueler.laufbahnplanung.faecher.anzeigen", "user", "alle")]);
+	}
+
+	public get config(): Config {
+		return this._state.value.config;
 	}
 
 	public async setView(view: RouteNode<any,any>) {
@@ -397,15 +407,6 @@ export class RouteData {
 
 	get zwischenspeicher(): Abiturdaten | undefined {
 		return this._state.value.zwischenspeicher;
-	}
-
-	get modus(): 'manuell'|'normal'|'hochschreiben' {
-		return this._state.value.modus;
-	}
-
-	setModus = async (modus: 'manuell'|'normal'|'hochschreiben') => {
-		this._state.value.modus = modus;
-		this.commit();
 	}
 
 	saveLaufbahnplanung = async (): Promise<void> => {

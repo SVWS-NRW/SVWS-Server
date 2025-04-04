@@ -9,7 +9,7 @@ import { routeError } from "~/router/error/RouteError";
 import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteDataSchuelerLaufbahnplanung } from "~/router/apps/schueler/laufbahnplanung/RouteDataSchuelerLaufbahnplanung";
 
-import { ConfigElement } from "~/components/Config";
+import { ConfigElement } from "../../../../../../ui/src/utils/Config";
 import { SSchuelerLaufbahnplanung } from "@ui";
 import { schulformenGymOb } from "~/router/RouteHelper";
 
@@ -84,6 +84,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			benutzerKompetenzenAbiturjahrgaenge: api.benutzerKompetenzenAbiturjahrgaenge,
+			config: () => api.config,
 			setWahl: this.data.setWahl,
 			setGostBelegpruefungsArt: this.data.setGostBelegpruefungsArt,
 			getPdfWahlbogen: this.data.getPdfWahlbogen,
@@ -102,10 +103,6 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 			saveLaufbahnplanung: this.data.saveLaufbahnplanung,
 			restoreLaufbahnplanung: this.data.restoreLaufbahnplanung,
 			resetFachwahlen: this.data.resetFachwahlen,
-			modus: this.data.modus,
-			setModus: this.data.setModus,
-			faecherAnzeigen: this.data.faecherAnzeigen,
-			setFaecherAnzeigen: this.data.setFaecherAnzeigen,
 			gotoKursblockung: this.data.gotoKursblockung,
 		};
 	}

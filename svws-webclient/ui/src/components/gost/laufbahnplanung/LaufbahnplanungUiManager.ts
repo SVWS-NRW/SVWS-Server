@@ -1,5 +1,7 @@
-import { computed } from "vue";
-import { AbiturdatenManager, DeveloperNotificationException, GostHalbjahr } from "../../../../../core/src";
+import { computed, ref } from "vue";
+import type { AbiturFachbelegungHalbjahr, GostJahrgangsdaten, JavaMap} from "../../../../../core/src";
+import { ArrayList, DeveloperNotificationException, GostHalbjahr, HashMap, type AbiturdatenManager, type GostFach, type List } from "../../../../../core/src";
+import type { Config } from "~/utils/Config";
 
 /**
  * Laufbahnplanung Oberstufe: Ein Manager für die Verwaltung von UI-Spezifischen Funktionen
@@ -9,6 +11,12 @@ export class LaufbahnplanungUiManager {
 
 	/** Der Manager für die Abiturdaten, welcher auch die Belegprüfung durchführt. */
 	private manager: () => AbiturdatenManager;
+
+	/** Die Konfiguration des Clients */
+	private config: () => Config;
+
+	/** Die Daten zum Abitur-Jahrgang */
+	private jahrgang: () => GostJahrgangsdaten;
 
 	/** Computed Property: Ein Array mit der Anzahl von anrechenbaren Kursen in den einzelnen Halbjahren */
 	private _anrechenbareKurse = computed<number[]>(() => this.manager().getAnrechenbareKurse());
@@ -30,15 +38,40 @@ export class LaufbahnplanungUiManager {
 	/** Computed Property: Die durchschnittlichen Wochenstunden in den Halbjahren der Qualifikationsphase */
 	public _wochenstundenDurchschnittQ = computed<number>(() => this.manager().getWochenstundenQualifikationsphase() / 4);
 
+	/** Die Konfiguration, ob alle Fächer oder nur ein Teil angezeigt werden soll */
+	public _faecherAnzeigen = ref<'alle' | 'nur_waehlbare' | 'nur_gewaehlt'>('alle');
+
+	/** Der Eingabemodus */
+	public _modus = ref<'manuell' | 'normal' | 'hochschreiben'>('normal');
+
 
 	/**
 	 * Erstellt einen neuen UI-Manager auf Basis des übergebenen Abiturdaten-Managers,
 	 * welcher die Belegprüfung durchführt.
 	 *
 	 * @param manager   der Abiturdaten-Manager zur Durchführung der Belegprüfung
+	 * @param config    die Konfiguration des Clients
 	 */
-	public constructor(manager: () => AbiturdatenManager) {
+	public constructor(manager: () => AbiturdatenManager, config: () => Config, jahrgang: () => GostJahrgangsdaten) {
 		this.manager = manager;
+		this.config = config;
+		this.jahrgang = jahrgang;
+		// Lese aus der Konfiguration aus, ob alle Fächer oder nur ein Teil angezeigt werden soll
+		const wert = this.config().getValue("app.schueler.laufbahnplanung.faecher.anzeigen");
+		if ((wert === 'alle') || (wert === 'nur_waehlbare') || (wert === 'nur_gewaehlt')) {
+			this._faecherAnzeigen.value = wert;
+		} else {
+			void this.config().setValue("app.schueler.laufbahnplanung.faecher.anzeigen", 'alle');
+			this._faecherAnzeigen.value = 'alle';
+		}
+		// Lese den Eingabemodus aus der Konfiguration aus
+		const modus = this.config().getValue("app.schueler.laufbahnplanung.modus");
+		if ((modus === 'manuell') || (modus === 'normal') || (modus === 'hochschreiben')) {
+			this._modus.value = modus;
+		} else {
+			void this.config().setValue("app.schueler.laufbahnplanung.modus", 'normal');
+			this._modus.value = 'normal';
+		}
 	}
 
 
@@ -196,6 +229,180 @@ export class LaufbahnplanungUiManager {
 	 */
 	public getWochenstundenDurchschnittQCSS() : string {
 		return this.getWochenstundenDurchschnittCSS(this.wochenstundenDurchschnittQ);
+	}
+
+
+	/**
+	 * Gibt den konfigurierten Eingabemodus für die Laufbahnplanung zurück
+	 */
+	get modus(): 'manuell' | 'normal' | 'hochschreiben' {
+		return this._modus.value;
+	}
+
+	/**
+	 * Setzt den Eingabemodus in der Konfiguration
+	 *
+	 * @param modus   der Eingabemods
+	 */
+	setModus = async (modus: 'manuell' | 'normal' | 'hochschreiben') => {
+		await this.config().setValue("app.schueler.laufbahnplanung.modus", modus);
+		this._modus.value = modus;
+	}
+
+	/**
+	 * Wechselt den aktuellen Eingabemodus zum nächsten verfügbaren Modus.
+	 */
+	public async switchModus() {
+		// wenn EF1 und EF2 bereits festgelegt sind, macht der Hochschreibemodus
+		// keinen Sinn mehr und wird deaktiviert.
+		const festgelegt = this.jahrgang().istBlockungFestgelegt;
+		if (festgelegt[0] && festgelegt[1]) {
+			switch (this.modus) {
+				case 'normal':
+					await this.setModus('manuell');
+					break;
+				case 'manuell':
+					await this.setModus('normal');
+					break;
+				case 'hochschreiben':
+					await this.setModus('normal');
+					break;
+			}
+		} else {
+			switch (this.modus) {
+				case 'normal':
+					await this.setModus('hochschreiben');
+					break;
+				case 'hochschreiben':
+					await this.setModus('manuell');
+					break;
+				case 'manuell':
+					await this.setModus('normal');
+					break;
+			}
+		}
+	}
+
+
+	/**
+	 * Gibt die Liste alle Fächer vom Fächermanager zurück.
+	 *
+	 * @returns die die Liste alle Fächer vom Fächermanager
+	 */
+	public get alleFaecher() : List<GostFach> {
+		return this.manager().faecher().faecher();
+	}
+
+	/**
+	 * Erstellt eine Map mit allen wählbaren Fächer, welche ihrer ID zugeordnet sind
+	 */
+	private _faecherWaehlbar = computed<List<GostFach>>(() => {
+		const result = new ArrayList<GostFach>();
+		for (const fach of this.alleFaecher)
+			if (fach.istMoeglichEF1 || fach.istMoeglichEF2 || fach.istMoeglichQ11 || fach.istMoeglichQ12 || fach.istMoeglichQ21 || fach.istMoeglichQ22)
+				result.add(fach);
+		return result;
+	});
+
+	/**
+	 * Erstellt eine Map mit allen gewählten Fächern, welche ihrer ID zugeordnet sind
+	 */
+	private _faecherGewaehlt = computed<List<GostFach>>(() => {
+		const result = new ArrayList<GostFach>();
+		for (const fach of this.alleFaecher) {
+			const fb = this.manager().getFachbelegungByID(fach.id);
+			if (fb === null)
+				continue;
+			for (const halbjahr of GostHalbjahr.values()) {
+				const fbh : AbiturFachbelegungHalbjahr | null = fb.belegungen[halbjahr.id];
+				if ((fbh !== null)) {
+					result.add(fach);
+					break;
+				}
+			}
+		}
+		return result;
+	});
+
+	/**
+	 * Gibt an, ob nicht wählbare Fächer existieren
+	 */
+	private _hatFaecherNichtWaehlbar = computed<boolean>(() => {
+		return (this._faecherWaehlbar.value.size() !== this.alleFaecher.size());
+	});
+
+	/**
+	 * Gibt die Konfiguration zurück, ob alle Fächer oder nur ein Teil angezeigt werden sollen
+	 */
+	get faecherAnzeigen(): 'alle' | 'nur_waehlbare' | 'nur_gewaehlt' {
+		return this._faecherAnzeigen.value;
+	}
+
+	/**
+	 * Setzt in der Konfiguration, ob alle Fächer oder nur ein Teil angezeigt werden sollen
+	 *
+	 * @param value   die Information, ob alle Fächer oder nur ein Teil angezeigt werden sollen
+	 */
+	setFaecherAnzeigen = async (value: 'alle' | 'nur_waehlbare' | 'nur_gewaehlt') => {
+		await this.config().setValue("app.schueler.laufbahnplanung.faecher.anzeigen", value);
+		this._faecherAnzeigen.value = value;
+	}
+
+	/**
+	 * Wechselt bei der Konfiguration auf den nächsten Modus, in Bezug darauf, ob alle, nur wählbare
+	 * oder nur gewählte Fächer angezeigt werden sollen.
+	 */
+	public async switchFaecherAnzeigen() {
+		switch (this.faecherAnzeigen) {
+			case 'alle':
+				await this.setFaecherAnzeigen(this._hatFaecherNichtWaehlbar.value ? 'nur_waehlbare' : 'nur_gewaehlt')
+				break;
+			case 'nur_waehlbare':
+				await this.setFaecherAnzeigen('nur_gewaehlt')
+				break;
+			case 'nur_gewaehlt':
+				await this.setFaecherAnzeigen('alle')
+				break;
+		}
+	}
+
+	/**
+	 * Gibt den Anzeigtext für den konfigurierten Modus zurück, ob alle, nur wählbare
+	 * oder nur gewählte Fächer angezeigt werden sollen.
+	 *
+	 * @returns der Anzeigetext
+	 */
+	public getTextFaecherAnzeigen() {
+		switch (this.faecherAnzeigen) {
+			case 'alle':
+				return "Alle";
+			case 'nur_waehlbare':
+				return "Nur wählbare"
+			case 'nur_gewaehlt':
+				return "Nur gewählte"
+		}
+	}
+
+
+	/**
+	 * Die Liste der Fächer gefiltert anhand des Anzeigemodus für Fächer
+	 */
+	private _faecherGefiltert = computed<List<GostFach>>(() => {
+		switch (this.faecherAnzeigen) {
+			case 'nur_waehlbare':
+				return this._faecherWaehlbar.value;
+			case 'nur_gewaehlt':
+				return this._faecherGewaehlt.value;
+			default:
+				return this.alleFaecher;
+		}
+	});
+
+	/**
+	 * Gibt die Liste der Fächer gefiltert anhand des Anzeigemodus für Fächer zurück.
+	 */
+	public get faecherGefiltert() : List<GostFach> {
+		return this._faecherGefiltert.value;
 	}
 
 }

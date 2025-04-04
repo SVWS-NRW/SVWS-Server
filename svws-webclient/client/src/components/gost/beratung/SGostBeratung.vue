@@ -53,7 +53,7 @@
 
 	const props = defineProps<GostBeratungProps>();
 
-	const manager = computed<LaufbahnplanungUiManager>(() => new LaufbahnplanungUiManager(props.abiturdatenManager));
+	const manager = computed<LaufbahnplanungUiManager>(() => new LaufbahnplanungUiManager(props.abiturdatenManager, props.config, props.jahrgangsdaten));
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 

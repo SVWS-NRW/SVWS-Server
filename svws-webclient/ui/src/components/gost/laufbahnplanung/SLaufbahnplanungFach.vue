@@ -146,12 +146,13 @@
 	import { GostAbiturFach } from "../../../../../core/src/core/types/gost/GostAbiturFach";
 	import { GostFachUtils } from "../../../../../core/src/core/utils/gost/GostFachUtils";
 	import { Color } from "../../../ui/Color";
+	import type { LaufbahnplanungUiManager } from "./LaufbahnplanungUiManager";
 
 	const props = withDefaults(defineProps<{
+		manager: LaufbahnplanungUiManager;
 		abiturdatenManager: () => AbiturdatenManager;
 		gostJahrgangsdaten: GostJahrgangsdaten;
 		fach: GostFach;
-		modus?: 'normal' | 'manuell' | 'hochschreiben';
 		ignoriereSprachenfolge? : boolean;
 		belegungHatImmerNoten?: boolean;
 		hatUpdateKompetenz: boolean;
@@ -159,7 +160,6 @@
 		activeFocus?: boolean;
 		activeHalbjahrId?: number;
 	}>(), {
-		modus: 'normal',
 		ignoriereSprachenfolge: false,
 		belegungHatImmerNoten: false,
 		activeHalbjahrId: 0,
@@ -423,7 +423,7 @@
 	async function stepperAbi() {
 		if (!props.hatUpdateKompetenz)
 			return;
-		if (props.modus === 'manuell') {
+		if (props.manager.modus === 'manuell') {
 			await stepper_manuellAbi();
 			return;
 		}
@@ -437,7 +437,7 @@
 	async function stepper(halbjahr: GostHalbjahr) {
 		if (!props.hatUpdateKompetenz)
 			return;
-		if (props.modus === 'manuell') {
+		if (props.manager.modus === 'manuell') {
 			await stepper_manuell(halbjahr);
 			return;
 		}
@@ -445,12 +445,12 @@
 			return;
 		const wahl = props.abiturdatenManager().getSchuelerFachwahl(props.fach.id);
 		if (halbjahr === GostHalbjahr.EF1)
-			if (props.modus === 'normal')
+			if (props.manager.modus === 'normal')
 				setEF1Wahl(wahl);
 			else
 				setEF1WahlHochschreiben(wahl);
 		else if (halbjahr === GostHalbjahr.EF2)
-			if (props.modus === 'normal')
+			if (props.manager.modus === 'normal')
 				setEF2Wahl(wahl);
 			else
 				setEF2WahlHochschreiben(wahl);

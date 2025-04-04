@@ -1,11 +1,13 @@
 import type { AbiturdatenManager, BenutzerDaten, BenutzerKompetenz, GostBelegpruefungErgebnis, GostBeratungslehrer, GostHalbjahr, GostJahrgangsdaten, GostSchuelerFachwahl, LehrerListeEintrag, List, Schulform, ServerMode } from "@core";
 import type { RoutingStatus } from "~/router/RoutingStatus";
+import type { Config } from "@ui";
 
 export interface GostBeratungProps {
 	schulform: Schulform;
 	serverMode: ServerMode;
 	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	benutzerdaten: BenutzerDaten;
+	config: () => Config;
 	patchJahrgangsdaten: (data: Partial<GostJahrgangsdaten>, abiturjahr : number) => Promise<boolean>;
 	jahrgangsdaten: () => GostJahrgangsdaten;
 	setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>;

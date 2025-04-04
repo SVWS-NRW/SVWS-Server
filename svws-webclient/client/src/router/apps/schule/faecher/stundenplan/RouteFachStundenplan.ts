@@ -5,7 +5,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
 import { routeSchuleFaecher, type RouteSchuleFaecher } from "~/router/apps/schule/faecher/RouteSchuleFaecher";
 import { RouteDataFachStundenplan } from "~/router/apps/schule/faecher/stundenplan/RouteDataFachStundenplan";
-import { ConfigElement } from "~/components/Config";
+import { ConfigElement } from "../../../../../../../ui/src/utils/Config";
 import { api } from "~/router/Api";
 import type { FachStundenplanProps } from "~/components/schule/faecher/stundenplan/SFachStundenplanProps";
 

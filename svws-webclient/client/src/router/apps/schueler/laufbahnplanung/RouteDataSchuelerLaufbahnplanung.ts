@@ -90,31 +90,6 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 		return this._state.value.zwischenspeicher;
 	}
 
-	get modus(): 'manuell'|'normal'|'hochschreiben' {
-		const s = api.config.getValue("app.schueler.laufbahnplanung.modus");
-		if (s === 'manuell' || s === 'normal' || s === 'hochschreiben')
-			return s;
-		void api.config.setValue("app.schueler.laufbahnplanung.modus", 'normal');
-		throw new DeveloperNotificationException("Es wurde eine fehlerhafte Modusart als Standardauswahl hinterlegt");
-	}
-
-	setModus = async (modus: 'manuell' | 'normal' | 'hochschreiben') => {
-		await api.config.setValue("app.schueler.laufbahnplanung.modus", modus);
-	}
-
-	get faecherAnzeigen(): 'alle' | 'nur_waehlbare' | 'nur_gewaehlt' {
-		const s = api.config.getValue("app.schueler.laufbahnplanung.faecher.anzeigen");
-		if (s === 'alle' || s === 'nur_waehlbare' || s === 'nur_gewaehlt')
-			return s;
-		void api.config.setValue("app.schueler.laufbahnplanung.faecher.anzeigen", 'alle');
-		throw new DeveloperNotificationException("Es wurde eine fehlerhafter Wert als Standardauswahl hinterlegt");
-	}
-
-	setFaecherAnzeigen = async (value: 'alle' | 'nur_waehlbare' | 'nur_gewaehlt') => {
-		await api.config.setValue("app.schueler.laufbahnplanung.faecher.anzeigen", value);
-		this.commit();
-	}
-
 	createAbiturdatenmanager = (daten?: Abiturdaten): AbiturdatenManager | undefined => {
 		const abiturdaten = daten || this._state.value.abiturdaten;
 		if (abiturdaten === undefined)

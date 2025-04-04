@@ -9,7 +9,7 @@ import { api } from "./Api";
 import type { AbschnittAuswahlDaten } from "@ui";
 import { routeApp } from "./apps/RouteApp";
 import { routeError } from "./error/RouteError";
-import { ConfigElement } from "~/components/Config";
+import { ConfigElement } from "../../../ui/src/utils/Config";
 
 /**
  * Das Interface für die Properties in Bezug auf das Handling des Listenbereichs, welcher der Komponente,
