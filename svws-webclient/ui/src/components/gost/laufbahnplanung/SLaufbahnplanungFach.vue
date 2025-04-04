@@ -187,21 +187,6 @@
 	const bgColor = computed<string>(() => Fach.getBySchluesselOrDefault(props.fach.kuerzel).getHMTLFarbeRGB(schuljahr.value));
 	const fachbelegung = computed<AbiturFachbelegung | null>(() => props.abiturdatenManager().getFachbelegungByID(props.fach.id));
 
-	const isLightMode = ref<boolean>(window.matchMedia('(prefers-color-scheme: light)').matches);
-	onMounted(() => window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', changeColorScheme));
-	onBeforeUnmount(() => window.matchMedia('(prefers-color-scheme: light)').removeEventListener('change', changeColorScheme));
-	function changeColorScheme(event: MediaQueryListEvent) {
-		isLightMode.value = event.matches;
-	}
-	const isPreferWhiteTextColor = computed<boolean>(() => {
-		const bgFarbe = Fach.getBySchluesselOrDefault(props.fach.kuerzel).getFarbe(schuljahr.value);
-		return Color.preferWhiteAsContrastColor(bgFarbe);
-	});
-	const textColor = computed<string>(() => ((isLightMode.value && !isPreferWhiteTextColor.value) || (!isLightMode.value && isPreferWhiteTextColor.value))
-		? 'text-ui' : 'text-ui-contrast-0');
-	const textColorWeak = computed<string>(() => ((isLightMode.value && !isPreferWhiteTextColor.value) || (!isLightMode.value && isPreferWhiteTextColor.value))
-		? 'text-ui-contrast-50' : 'text-ui-contrast-10');
-
 	// Nächste Halbjahr-Zelle fokussieren, wenn möglich. Sonst "update:focus:impossible" emitten, sodass Parent-Komponente einen Schritt weiter gehen kann
 	function doFocusOnHalbjahr() {
 		const focusCell = halbjahrRefs.value.get(props.activeHalbjahrId);
