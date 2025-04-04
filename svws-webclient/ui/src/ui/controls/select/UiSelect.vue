@@ -85,7 +85,7 @@
 		<!-- Dropdown -->
 		<ul popover :aria-labelledby="`uiSelectLabel_${instanceId}`" :id="`uiSelectDropdown_${instanceId}`" ref="uiSelectDropdown" role="listbox"
 			class="overflow-auto bg-ui select-none scrollbar-thin px-1 rounded-md border border-ui"
-			:style="{ top: topPosition, left: leftPositionComputed, width: comboboxDimensions.width + 'px', maxHeight: maxHeight + 'px' }">
+			:style="{ top: topPosition, left: leftPositionComputed, width: width + 'px', maxHeight: maxHeight + 'px' }">
 			<li v-if="selectManager.filtered.isEmpty()" class="cursor-not-allowed p-2 hover:bg-ui-hover text-ui-secondary italic">
 				{{ "Keine passenden Einträge gefunden" }}
 			</li>
@@ -106,9 +106,12 @@
 
 <script setup lang="ts" generic="T">
 
-	import { computed, nextTick, onBeforeUnmount, onMounted, ref, useId, watch } from 'vue';
-	import type { BaseSelectManager } from './BaseSelectManager';
+	import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+	import { useElementBounding, useWindowSize } from '@vueuse/core';
+	import type { BaseSelectManager } from './selectManager/BaseSelectManager';
 	import type { List } from '../../../../../core/src/java/util/List';
+	import { ArrayList } from '../../../../../core/src';
+	import { SearchSelectFilter } from './filter/SearchSelectFilter';
 
 	const props = withDefaults(defineProps<{
 		label?: string;
@@ -147,15 +150,9 @@
 	const uiSelectSearch = ref<HTMLElement | null>(null);
 	const uiSelectDropdown = ref<HTMLDivElement | null>(null);
 
-	// Dimensionen der Combobox für die Berechnung der Größe und Position des Dropdowns
-	const comboboxDimensions = ref({
-		top: 0,
-		left: 0,
-		height: 0,
-		width: 0,
-	});
-	// Höhe des Browserfensters, um die Höhe des Dropdowns zu berechnen
-	const windowHeight = ref(0);
+	// Größen und Positionen zur Berechnung des Dropdowns
+	const { top, left, width, height } = useElementBounding(uiSelectCombobox);
+	const { height: windowHeight } = useWindowSize();
 
 	// Index des visuell hervorghobenen Dropdownlistenelements bei Tastennavigation
 	const highlightedIndex = ref(-1);
@@ -166,23 +163,23 @@
 			const dropdownHeight = uiSelectDropdown.value?.scrollHeight !== undefined
 				? Math.min(maxHeight.value, uiSelectDropdown.value.scrollHeight)
 				: maxHeight.value;
-			return `${comboboxDimensions.value.top - dropdownHeight - 2}px`;
+			return `${top.value - dropdownHeight - 2}px`;
 		} else
-			return `${comboboxDimensions.value.top + comboboxDimensions.value.height}px`;
+			return `${top.value + height.value + 3}px`;
 
 	});
 
 	// Berechnet die left Position des Dropdowns abhängig von der Position der Combobox
 	const leftPositionComputed = computed(() => {
-		return comboboxDimensions.value.left + 'px';
+		return left.value + 'px';
 	});
 
 	// Berechnet, ab wann das Dropdown über der Combobox positioniert wird, statt darunter
 	const flip = computed (() => {
 		if (!showDropdown.value)
 			return false;
-		const below = windowHeight.value - (comboboxDimensions.value.top + comboboxDimensions.value.height);
-		const uppon = comboboxDimensions.value.top;
+		const below = windowHeight.value - (top.value + height.value);
+		const uppon = top.value;
 		if (uiSelectDropdown.value?.clientHeight !== undefined && below > 100)
 			return false;
 		return (below < uppon);
@@ -193,9 +190,9 @@
 	const maxHeight = computed(() => {
 		let maxHeight = 0;
 		if (flip.value)
-			maxHeight = comboboxDimensions.value.top - 5;
+			maxHeight = top.value - 5;
 		else
-			maxHeight = windowHeight.value - (comboboxDimensions.value.top + comboboxDimensions.value.height) - 5;
+			maxHeight = windowHeight.value - (top.value + height.value) - 5;
 		return (maxHeight > 235) ? 235 : maxHeight;
 	});
 
@@ -219,7 +216,13 @@
 		return (min !== null) ? `min. ${min}` : `max. ${max}`;
 	});
 
+	let searchFilter: SearchSelectFilter<T> | undefined = undefined;
 	onMounted(() => {
+		if (props.searchable) {
+			searchFilter = new SearchSelectFilter("search", search.value, (item: T) => props.selectManager.getOptionText(item));
+			props.selectManager.addFilter(searchFilter);
+		}
+
 		document.addEventListener('click', handleClickOutside);
 		window.addEventListener('resize', () => closeDropdown());
 
@@ -318,8 +321,18 @@
 	 * Beginnt eine Suche bei der Eingabe von Zeichen in das Suchfeld. Dabei wird außerdem auch das Dropdown geöffnet, falls dies nicht bereits der Fall ist.
 	 */
 	function handleInput() {
-		props.selectManager.filter(search.value);
+		updateSearchFilter();
 		openDropdown();
+	}
+
+	function updateSearchFilter() {
+		if (!props.searchable)
+			return;
+		if (searchFilter !== undefined)
+			searchFilter.search = search.value;
+		else
+			searchFilter = new SearchSelectFilter("search", search.value, (item: T) => props.selectManager.getOptionText(item));
+		props.selectManager.updateFilter(searchFilter);
 	}
 
 	/**
@@ -346,7 +359,7 @@
 
 		props.selectManager.toggleSelection(option);
 		resetSearch();
-		model.value = props.selectManager.selected;
+		updateModel();
 	};
 
 	/**
@@ -359,6 +372,7 @@
 		closeDropdown();
 		props.selectManager.clearSelection();
 		resetSearch();
+		updateModel();
 	}
 
 	/**
@@ -370,7 +384,14 @@
 	function deselect(event: MouseEvent | KeyboardEvent, option: T) {
 		event.stopPropagation();
 		props.selectManager.deselect(option);
-		model.value = props.selectManager.selected;
+		updateModel();
+	}
+
+	function updateModel() {
+		const tmpList = new ArrayList<T>();
+		for (const i of props.selectManager.selected)
+			tmpList.add(i);
+		model.value = tmpList;
 	}
 
 	/**
@@ -390,23 +411,9 @@
 		handleComboboxFocus();
 		if (uiSelectDropdown.value === null || showDropdown.value)
 			return;
-		calculateDropdownDimensions();
 		showDropdown.value = true;
 		uiSelectDropdown.value.showPopover();
 		visualFocusOnCombobox.value = false;
-	}
-
-	/**
-	 * Berechnet Größe und Position des Dropdowns
-	 */
-	function calculateDropdownDimensions() {
-		if (uiSelectCombobox.value === null)
-			return 0;
-		comboboxDimensions.value.top = uiSelectCombobox.value.getBoundingClientRect().top;
-		comboboxDimensions.value.left = uiSelectCombobox.value.getBoundingClientRect().left;
-		comboboxDimensions.value.height = uiSelectCombobox.value.getBoundingClientRect().height;
-		comboboxDimensions.value.width = uiSelectCombobox.value.getBoundingClientRect().width;
-		windowHeight.value = window.innerHeight;
 	}
 
 	/**
@@ -426,7 +433,7 @@
 	}
 
 	/**
-	 * Tastaturbedinung des Komponente
+	 * Tastaturbedinung des Komponente. Sie orierntiert sich an den Vorgaben von https://www.w3.org/WAI/ARIA/apg/patterns/combobox/
 	 *
 	 * @param event das Keyboardevent, das die gedrückte Taste enthält
 	 */
@@ -608,7 +615,7 @@
 	 */
 	function resetSearch() {
 		search.value = "";
-		props.selectManager.filter(search.value);
+		updateSearchFilter();
 	}
 
 	/**

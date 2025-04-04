@@ -1,7 +1,8 @@
 import { ref, shallowRef, triggerRef } from "vue";
-import type { List } from "../../../../../core/src/java/util/List";
-import { ArrayList } from "../../../../../core/src/java/util/ArrayList";
-import { DeveloperNotificationException } from "../../../../../core/src";
+import type { List } from "../../../../../../core/src/java/util/List";
+import { ArrayList } from "../../../../../../core/src/java/util/ArrayList";
+import { DeveloperNotificationException } from "../../../../../../core/src";
+import type { SelectFilter } from "../filter/SelectFilter";
 
 /**
  * Abstrakte Manager Klasse zur Verwendung in einer Select-Komponente (UiSelect.vue). SelectManager übernehmen die Logik der Select-Komponente.
@@ -10,7 +11,7 @@ import { DeveloperNotificationException } from "../../../../../core/src";
 export abstract class BaseSelectManager<T> {
 
 	// Alle Optionen des Dropdowns
-	protected _list = shallowRef<List<T>>(new ArrayList<T>());
+	protected _options = shallowRef<List<T>>(new ArrayList<T>());
 
 	// Die aktuelle Selektion des Dropdowns. Enthält bei Single-Selektion immer nur ein Objekt
 	protected _selected = shallowRef<List<T>>(new ArrayList<T>());
@@ -18,11 +19,18 @@ export abstract class BaseSelectManager<T> {
 	// Die gefilterte Liste der Optionen, die im Dropdwon angezeigt werden.
 	protected _filtered = shallowRef<List<T>>(new ArrayList<T>());
 
+	// Eine Map, die alle validen Optionen zu einem Filter enthält.
+	protected _filterMap = new Map<string, List<T>>;
+
+	// Alle Filter, die auf die Optionen angewendet werden
+	private _filters: List<SelectFilter<T>> = new ArrayList();
+
 	// Definiert, ob eine Multi-Selektion möglich ist
 	protected _multi = ref<boolean>(false);
 
 	// Definiert, wie die aktuelle Selektion im Inputfeld dargestellt wird
 	protected abstract _selectionDisplayText: string | ((option: any) => string);
+
 	// Definiert, wie die Optionen im Dropdown dargestellt werden
 	protected abstract _optionDisplayText: string | ((option: any) => string);
 
@@ -30,16 +38,16 @@ export abstract class BaseSelectManager<T> {
 	 * Konstruktor des Managers.
 	 *
 	 * @param multi      definiert, ob Multi-Selektionen erlaubt sind
-	 * @param list       die Liste aller Optionen der Komponente (ungefiltert)
+	 * @param options    die Liste aller Optionen der Komponente (ungefiltert)
 	 * @param selected   optional. Die Liste der aktuell selektierten Optionen. Bei einer Singe-Select-Komponente darf maximal ein Objekt in dieser Liste sein.
 	 */
-	public constructor(multi: boolean, list: Iterable<T>, selected?: Iterable<T>) {
+	public constructor(multi: boolean, options: Iterable<T>, selected?: Iterable<T>) {
 		this.multi = multi;
 
-		const listTmp = new ArrayList<T>();
-		for (const i of list)
-			listTmp.add(i);
-		this.list = listTmp;
+		const optionsTmp = new ArrayList<T>();
+		for (const i of options)
+			optionsTmp.add(i);
+		this.options = optionsTmp;
 
 		const selectedTmp = new ArrayList<T>();
 		if (selected !== undefined) {
@@ -57,8 +65,8 @@ export abstract class BaseSelectManager<T> {
 	 *
 	 * @return ungefilterte Liste
 	 */
-	public get list(): List<T> {
-		return this._list.value;
+	public get options(): List<T> {
+		return this._options.value;
 	}
 
 	/**
@@ -66,8 +74,8 @@ export abstract class BaseSelectManager<T> {
 	 *
 	 * @param value   neue Optionenliste (ungefiltert)
 	 */
-	public set list(value: List<T>) {
-		this._list.value = value;
+	public set options(value: List<T>) {
+		this._options.value = value;
 	}
 
 	/**
@@ -92,6 +100,112 @@ export abstract class BaseSelectManager<T> {
 				+ "Dem selected Setter wurden jedoch mehrere übergeben.");
 		this._selected.value = value;
 		triggerRef(this._selected);
+	}
+
+	/**
+	 * Getter für alle aktiven Filter der Optionen.
+	 *
+	 * @return Aktuell aktive Filter
+	 */
+	public get filters(): List<SelectFilter<T>> {
+		return this._filters;
+	}
+
+	/**
+	 * Setter für alle aktiven Filter der Optionen.
+	 *
+	 * @param value   neue aktive Filter
+	 */
+	public set filters(value: List<SelectFilter<T>>) {
+		this._filters = value;
+	}
+
+	/**
+	 * Fügt einen Filter zu den aktiven Filtern hinzu. Der key des Filters muss eindeutig sein. Es dürfen keine zwei Filter mit demselben Key hinzugefügt werden.
+	 * Die gefilterte Liste wird sofort aktualisiert.
+	 *
+	 * @param filter   der neue, aktive Filter
+	 */
+	public addFilter(filter: SelectFilter<T>) {
+		for (const item of this.filters)
+			if (item.key === filter.key)
+				throw new DeveloperNotificationException(`Der SelectManager des UiSelects beinhaltet bereits einen Filter mit dem Key ${filter.key}`);
+		this.filters.add(filter);
+		const filteredList = filter.apply(this.options)
+		this._filterMap.set(filter.key, filteredList);
+		this.updateFiltered();
+	}
+
+	/**
+	 * Aktualisiert einen bereits aktiven Filter z.B. wegen Zustandsänderungen innerhalb des Filters
+	 *
+	 * @param filter   der Filter, der aktualisiert werden soll-
+	 */
+	public updateFilter(filter: SelectFilter<T>) {
+		this.removeFilter(filter);
+		this.addFilter(filter);
+	}
+
+	/**
+	 * Entfernt einen aktiven Filter. Die gefilterte Liste wird sofort aktualisiert.
+	 *
+	 * @param removeFilter   Filter, der entfernt werden soll.
+	 */
+	public removeFilter(removeFilter: SelectFilter<T>) {
+		const filter = this.findFilter(removeFilter);
+		if (filter === undefined)
+			return;
+		this.filters.remove(filter);
+		this._filterMap.delete(filter.key);
+		this.updateFiltered();
+	}
+
+	/**
+	 * Sucht einen Filter in der aktiven Filterliste anhand seines Keys.
+	 *
+	 * @param findFilter   der Filter, der gefunden werden soll
+	 *
+	 * @returns den passenden Filter. Undefined, wenn keiner gefunden werden konnte.
+	 */
+	private findFilter(findFilter: SelectFilter<T>): SelectFilter<T> | undefined {
+		for (const filter of this.filters)
+			if (filter.key === findFilter.key)
+				return filter;
+		return undefined;
+	}
+
+	/**
+	 * Aktualisiert die Liste der gefilterten Optionen basierend auf den aktuell aktiven Filtern.
+	 */
+	private updateFiltered() {
+		let result: List<T> = new ArrayList();
+
+		for (const filteredOptions of this._filterMap.values())
+			if (result.isEmpty())
+				result = filteredOptions;
+			else
+				result = this.intersect(result, filteredOptions);
+
+		this.filtered = result;
+	}
+
+	/**
+	 * Ermittelt die Überschneidung von zwei Listen und gibt nur die Elemente zurück, die in beiden Listen enthalten sind.
+	 *
+	 * @param list1   die erste Liste
+	 * @param list2   die zweite Liste
+	 *
+	 * @returns eine Liste mit Elementen, die in beiden Listen enthalten sind.
+	 */
+	private intersect(list1: List<T>, list2: List<T>): List<T> {
+		const result = new ArrayList<T>();
+		const set1 = new Set(list1);
+		const set2 = new Set(list2);
+
+		const intersection = set1.intersection(set2);
+		intersection.forEach((value) => result.add(value));
+
+		return result;
 	}
 
 	/**
@@ -168,20 +282,6 @@ export abstract class BaseSelectManager<T> {
 	}
 
 	/**
-	 * Filtert die Optionen des Dropdowns auf Basis eines Suchbegriffs
-	 *
-	 * @param search   der Suchbegriff, nach dem gefiltert wird.
-	 */
-	public filter(search: string) {
-		const result = new ArrayList<T>();
-
-		for (const option of this.list)
-			if (this.getOptionText(option).toLowerCase().includes(search.toLowerCase()))
-				result.add(option);
-		this._filtered.value = result;
-	}
-
-	/**
 	 * Toggelt den Select-Zustand der übergebenen Option.
 	 *
 	 * @param option   die Option, dessen Select-Zustand getoggelt werden soll
@@ -224,8 +324,11 @@ export abstract class BaseSelectManager<T> {
 	 * @param option   die Option, die deselektiert werden soll
 	 */
 	public deselect(option: T): void {
-		this._selected.value.remove(option);
-		triggerRef(this._selected);
+		const index = this._selected.value.indexOf(option);
+		if (index !== -1) {
+			this._selected.value.removeElementAt(index);
+			triggerRef(this._selected);
+		}
 	}
 
 	/**

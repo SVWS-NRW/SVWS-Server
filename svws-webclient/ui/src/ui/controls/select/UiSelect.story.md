@@ -1,6 +1,20 @@
 ## UiSelect
 UiSelect ist eien Combobox, die zur Auswahl von vorgegebenen Option verwendet werden kann. Sie kann mit einfachen Datentypen wie Strings oder Numbers umgehen, aber auch mit komplexeren wie CoreTypes. Hierfür werden sogenannte `SelectManager` verwendet, von denen einige einfache bereits zur Verfügung stehen. Für komplexere Fälle können eigene SelectManager erstellt werden, die von den vorhandenen ableiten.
 
+<details>
+<summary>Inhalt</summary>
+
+- [Props](#props)
+- [Tastaturbedienung](#tastaturbedienung)
+- [SelectManager](#selectmanager)
+  - [SimpleSelectManager](#simpleselectmanager)
+  - [CoreTypeSelectManager](#coretypeselectmanager)
+- [Filter](#filter)
+  - [SearchSelectFilter](#searchselectfilter)
+  - [FachSelectFilter](#fachselectfilter)
+
+</details>
+
 ### Props
 Folgende Props können gesetzt werden, um die Komponente zu konfigurieren.
 
@@ -100,7 +114,7 @@ Die Komponente kann mit der Tastatur bedient werden. Wichtig bei der Navigation 
 Der SelectManager beinhaltet die Logik der Komponente basierend auf dem Datentyp der Optionen in Dropdown. Er kümmert sich um folgende Punkte:
 - speichert alle Optionen des Dropdowns
 - speichert die aktuelle Selektion
-- filtert die Optionen des Dropdowns zum Beispiel durch Suchbegriffe
+- speichert aktive Filter und wendet diese an
 - gibt an, ob es sich um eine Multi- oder Singleselektion Komponente handelt
 - Gibt den Textinhalt für die Optionen im Dropdown zurück
 
@@ -129,3 +143,24 @@ Dieser Manager akzeptiert einfach CoreTypes als Optionen und definiert, wie dies
 - **schulform (Schulform)**: Die Schulform, nach der gefiltert wird
 - **selectionDisplayText (string | Funktion)**: Gibt an, wie die Selektion dargestellt werden soll. Es kann zwischen `text`, `kuerzel` und `kuerzelText` gewählt werden, falls vordefinierte Einstellungen gewünscht sind. Wenn eigene Definitionen verwendet werden sollen, dann können diese zum Beispiel wie folgt angegeben werden: ``(option) => `${option.id}: ${option.text}` ``
 - **optionDisplayText (string | Funktion)**: Gibt an, wie die Optionen in der Dropdownliste dargestellt werden sollen. Es kann zwischen `text`, `kuerzel` und `kuezerlText` gewählt werden, falls vordefinierte Einstellungen gewünscht sind. Wenn eigene Definitionen verwendet werden sollen, dann können diese zum Beispiel wie folgt angegeben werden: ``(option) => `${option.id}: ${option.text}` ``
+
+## Filter
+Optionen im einem UiSelect können gefiltert werden. Damit mehrere Filter kombiniert werden können, existiert das Interface `SelectFilter`, auf dem basierend die Filter definiert werden. Diese Filter können anschließend an den SelectManager übergeben werden. \
+Bei Änderungen an einem Filter wie beispielsweise an darin befindlichen Attributen, muss ein `selectManager.updateFilter([betroffener Filter])` aufgerufen werden, da der selectManager diese Änderungen andernfalls nicht registriert. \
+Die angezeigten Optionen im Dropdown des Selects sind ausschließlich Optionen, die für alle angewendeten Filter valide sind.
+
+### SearchSelectFilter
+Ein spezieller Filter, der für die Filterung nach Suchbegriffen verwendet wird. Wird im UiSelect die prop `searchable = true` gesetzt, dann wird dieser Filter automatisch verwendet. Er kann aber auch mit anderen Suchbegriffen kombiniert werden.
+
+**Konstruktor**
+- **key (string)**: Ein eindeutiger Key zur Identifikation des Filters. Der Key muss nur innerhalb des SelectManagers eindeutig sein.
+- **search (string)**: Der Suchbegriff, nach dem gefiltert werden soll. Es werden nur exakte Übereinstimmungen gefiltert (Groß- und Kleinschreibung irrelevant). Wildcards sind nicht erlaubt.
+- **getText ((option: T) => string))**: Eine Funktion, die verwendet wird, um den Text der Optionen zu generieren. Dieser Text wird zum Vergleich mit dem Suchbegriff verwendet
+
+### FachSelectFilter
+Ein spezieller Filter, der Optionen vom Typ `Fach` nach `Fachgruppen` filtert. Es können mehrere Fachgruppen angegeben werden. Der Filter gibt dann alle Fächer zurück, die mit min. einer Fachgruppe übereinstimmen.
+
+**Konstruktor**
+- **key (string)**: Ein eindeutiger Key zur Identifikation des Filters. Der Key muss nur innerhalb des SelectManagers eindeutig sein.
+- **fachgruppen (List<Fachgruppe>)**: Eine Liste der Fachgruppen, nach denen gefiltert wird.
+- **schuljahr (number)**: Das dafür verwendet Schuljahr.

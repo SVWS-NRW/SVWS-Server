@@ -20,7 +20,7 @@ export class SimpleSelectManager extends BaseSelectManager<string | number> {
 	 */
 	public constructor(multi: boolean, liste: Iterable<string | number>, selected?: Iterable<string | number>) {
 		super(multi, liste, selected);
-		this.filtered = this._list.value;
+		this.filtered = this._options.value;
 	}
 
 	/**

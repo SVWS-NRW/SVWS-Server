@@ -1,8 +1,8 @@
-import type { Class, Schulform } from "../../../../../core/src";
-import { ArrayList, CoreTypeDataManager, DeveloperNotificationException, JsonCoreTypeReader } from "../../../../../core/src";
-import type { CoreTypeData } from "../../../../../core/src/asd/data/CoreTypeData";
-import type { CoreType } from "../../../../../core/src/asd/types/CoreType";
-import type { List } from "../../../../../core/src/java/util/List";
+import type { Class, Schulform } from "../../../../../../core/src";
+import { ArrayList, CoreTypeDataManager, DeveloperNotificationException, JsonCoreTypeReader } from "../../../../../../core/src";
+import type { CoreTypeData } from "../../../../../../core/src/asd/data/CoreTypeData";
+import type { CoreType } from "../../../../../../core/src/asd/types/CoreType";
+import type { List } from "../../../../../../core/src/java/util/List";
 import { BaseSelectManager } from "./BaseSelectManager";
 import { ref } from "vue";
 
@@ -23,14 +23,12 @@ export class CoreTypeSelectManager<T extends CoreTypeData, U extends CoreType<T,
 	// Definiert, wie die aktuelle Selektion im Inputfeld dargestellt wird. Als default stehen die Werte "text" (nur Text-Attribut),
 	// "kuerzel" (nur Kürzel-Attribut) und "kuerzelText" (Kürzel-Attribut - Text-Attribut) zur Verfügung. Eigene Darstellungen können über Funktionen
 	// definiert werden.
-	protected _selectionDisplayText: "kuerzel" | "text" | "kuerzelText" | ((item: T) => string) = "kuerzelText";
+	protected _selectionDisplayText: "kuerzel" | "text" | "kuerzelText" | ((option: T) => string) = "kuerzelText";
 
 	// Definiert, wie die Optionen im Dropdown dargestellt werden. Als default stehen die Werte "text" (nur Text-Attribut),
 	// "kuerzel" (nur Kürzel-Attribut) und "kuerzelText" (Kürzel-Attribut - Text-Attribut) zur Verfügung. Eigene Darstellungen können über Funktionen
 	// definiert werden.
-	protected _optionDisplayText: "kuerzel" | "text" | "kuerzelText" | ((item: T) => string) = "kuerzelText";
-
-
+	protected _optionDisplayText: "kuerzel" | "text" | "kuerzelText" | ((option: T) => string) = "kuerzelText";
 
 	/**
 	 * Konstrutor des Managers
@@ -58,7 +56,7 @@ export class CoreTypeSelectManager<T extends CoreTypeData, U extends CoreType<T,
 		this.schulform = schulform;
 		this.optionDisplayText = optionDisplayText;
 		this.seletcionDisplayText = selectionDisplayText;
-		this.filtered = this._list.value;
+		this.filtered = this._options.value;
 	}
 
 	/**
