@@ -1319,15 +1319,17 @@
 				// Abfrage nach ID
 				$stmt = $this->prepareStatement("SELECT * FROM Lehrertoken WHERE idLehrer = :idLehrer");
 				$this->bindStatementValue($stmt, ":idLehrer", $identifier, PDO::PARAM_INT);
-				$this->executeStatement($stmt);
-				$result = $stmt->fetchAll(PDO::FETCH_OBJ);
 			} else {
 				// Abfrage nach Token
 				$stmt = $this->prepareStatement("SELECT * FROM Lehrertoken WHERE token = :token");
 				$this->bindStatementValue($stmt, ":token", $identifier, PDO::PARAM_STR);
-				$this->executeStatement($stmt);
-				$result = $stmt->fetchAll(PDO::FETCH_OBJ);
 			}
+			$this->executeStatement($stmt);
+			$result = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+			// Prüfen, ob ein Ergebnis vorliegt
+			if (empty($result))
+				return false;
 
 			// Das erste und einzige Ergebnis
 			$tokenObj = $result[0];
