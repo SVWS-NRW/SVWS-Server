@@ -195,6 +195,7 @@ import { StundenplanSchiene } from '../core/data/stundenplan/StundenplanSchiene'
 import { StundenplanUnterricht } from '../core/data/stundenplan/StundenplanUnterricht';
 import { StundenplanUnterrichtsverteilung } from '../core/data/stundenplan/StundenplanUnterrichtsverteilung';
 import { StundenplanZeitraster } from '../core/data/stundenplan/StundenplanZeitraster';
+import { TelefonArt } from '../core/data/schule/TelefonArt';
 import { UebergangsempfehlungKatalogEintrag } from '../asd/data/schueler/UebergangsempfehlungKatalogEintrag';
 import { VerkehrsspracheKatalogEintrag } from '../core/data/schule/VerkehrsspracheKatalogEintrag';
 import { VermerkartEintrag } from '../core/data/schule/VermerkartEintrag';
@@ -13593,6 +13594,114 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = SchuleStammdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getTelefonart für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/telefonart/{id : \d+}
+	 *
+	 * Liest die Daten der Telefonart zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Daten der Telefonart
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: TelefonArt
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalogdaten anzusehen.
+	 *   Code 404: Keine Telefonart mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Daten der Telefonart
+	 */
+	public async getTelefonart(schema : string, id : number) : Promise<TelefonArt> {
+		const path = "/db/{schema}/schule/telefonart/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return TelefonArt.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchTelefonart für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/Telefonart/{id : \d+}
+	 *
+	 * Passt die Telefonart-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern der Daten der Telefonart besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich in die Telefonart-Daten integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Telefonart-Daten zu ändern.
+	 *   Code 404: Keine Telefonart mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<TelefonArt>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchTelefonart(data : Partial<TelefonArt>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/schule/Telefonart/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = TelefonArt.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addTelefonart für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/telefonart/new
+	 *
+	 * Erstellt eine neue Telefonart und gibt sie zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Telefonart besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Telefonart wurde erfolgreich angelegt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: TelefonArt
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Telefonart anzulegen.
+	 *   Code 409: Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<TelefonArt>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Telefonart wurde erfolgreich angelegt.
+	 */
+	public async addTelefonart(data : Partial<TelefonArt>, schema : string) : Promise<TelefonArt> {
+		const path = "/db/{schema}/schule/telefonart/new"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = TelefonArt.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return TelefonArt.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getTelefonarten für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/Telefonarten
+	 *
+	 * Erstellt eine Liste aller in dem Katalog vorhanden Telefonarten unter Angabe der ID und der Bezeichnung. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste von Katalog-Einträgen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<TelefonArt>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Eine Liste von Katalog-Einträgen
+	 */
+	public async getTelefonarten(schema : string) : Promise<List<TelefonArt>> {
+		const path = "/db/{schema}/schule/Telefonarten"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<TelefonArt>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(TelefonArt.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 

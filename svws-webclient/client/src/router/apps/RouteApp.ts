@@ -25,6 +25,7 @@ import { routeKatalogEinwilligungsarten } from "./schule/einwilligungsarten/Rout
 import { routeKatalogFoerderschwerpunkte } from "./schule/foerderschwerpunkte/RouteKatalogFoerderschwerpunkte";
 import { routeKatalogReligionen } from "./schule/religionen/RouteKatalogReligionen";
 import { routeKatalogSchulen } from "./schule/schulen/RouteKatalogSchulen";
+import { routeKatalogTelefonArten } from "~/router/apps/schule/telefonarten/RouteKatalogTelefonArten";
 import { routeKatalogVermerkarten } from "./schule/vermerkarten/RouteKatalogVermerkarten";
 import { routeKatalogLernplattformen } from "~/router/apps/schule/lernplattformen/RouteKatalogLernplattformen";
 import { routeEinstellungen } from "./einstellungen/RouteEinstellungen";
@@ -116,6 +117,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			// Allgemein
 			routeKatalogReligionen,
 			routeKatalogSchulen,
+			routeKatalogTelefonArten,
 			// Datenaustausch
 			routeSchuleDatenaustauschENM,
 			routeSchuleDatenaustauschWenom,

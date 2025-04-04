@@ -554,6 +554,7 @@ export { SchuleInfo } from './core/data/schule/SchuleInfo';
 export { SchulenKatalogEintrag } from './core/data/schule/SchulenKatalogEintrag';
 export { SchulformGliederungJahrgaenge } from './core/data/schule/SchulformGliederungJahrgaenge';
 export { SchultraegerKatalogEintrag } from './core/data/schule/SchultraegerKatalogEintrag';
+export { TelefonArt } from './core/data/schule/TelefonArt';
 export { VerkehrsspracheKatalogEintrag } from './core/data/schule/VerkehrsspracheKatalogEintrag';
 export { VermerkartEintrag } from './core/data/schule/VermerkartEintrag';
 export { WiedervorlageEintrag } from './core/data/schule/WiedervorlageEintrag';
@@ -780,6 +781,7 @@ export { StundenplanblockungManagerRaumMenge } from './core/utils/stundenplanblo
 export { StundenplanblockungManagerSchule } from './core/utils/stundenplanblockung/StundenplanblockungManagerSchule';
 export { StundenplanblockungManagerStatistik } from './core/utils/stundenplanblockung/StundenplanblockungManagerStatistik';
 export { StundenplanblockungManagerStundenelement } from './core/utils/stundenplanblockung/StundenplanblockungManagerStundenelement';
+export { TelefonArtListeManager } from './core/utils/telefonart/TelefonArtListeManager';
 export { ApiPrivileged } from './api/ApiPrivileged';
 export { ApiSchema } from './api/ApiSchema';
 export { ApiServer } from './api/ApiServer';
