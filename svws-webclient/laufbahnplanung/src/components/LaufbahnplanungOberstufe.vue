@@ -34,7 +34,7 @@
 
 		<div v-if="schueler.abiturjahrgang !== null" class="page page-flex-row">
 			<div class="grow overflow-y-auto overflow-x-hidden min-w-fit">
-				<s-laufbahnplanung-card-planung :abiturdaten-manager :modus :gost-jahrgangsdaten :set-wahl :goto-kursblockung="async () => {}" :faecher-anzeigen belegung-hat-immer-noten />
+				<s-laufbahnplanung-card-planung :manager :abiturdaten-manager :modus :gost-jahrgangsdaten :set-wahl :goto-kursblockung="async () => {}" :faecher-anzeigen belegung-hat-immer-noten />
 			</div>
 			<div class="w-2/5 3xl:w-1/2 min-w-[36rem] overflow-y-auto overflow-x-hidden">
 				<div class="flex flex-col gap-16">
@@ -54,8 +54,11 @@
 	import { githash } from '../../githash';
 	import { TabManager } from "@ui/ui/nav/TabManager";
 	import type { TabData } from "@ui/ui/nav/TabData";
+	import { LaufbahnplanungUiManager } from "@ui/components/gost/laufbahnplanung/LaufbahnplanungUiManager";
 
 	const props = defineProps<LaufbahnplanungOberstufeProps>();
+
+	const manager = computed<LaufbahnplanungUiManager>(() => new LaufbahnplanungUiManager(props.abiturdatenManager));
 
 	const tabManager = new TabManager([], <TabData>{}, async (value: TabData) => {});
 

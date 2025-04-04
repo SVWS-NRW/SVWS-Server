@@ -86,6 +86,7 @@ export { AppMenuManager } from "./ui/nav/AppMenuManager";
 export { TabManager } from "./ui/nav/TabManager";
 export { Checkpoint } from "./ui/modal/Checkpoint";
 export { Color } from "./ui/Color";
+export { LaufbahnplanungUiManager } from "./components/gost/laufbahnplanung/LaufbahnplanungUiManager";
 
 // Enums
 export { AppMenuGroup } from "./ui/nav/AppMenuGroup";

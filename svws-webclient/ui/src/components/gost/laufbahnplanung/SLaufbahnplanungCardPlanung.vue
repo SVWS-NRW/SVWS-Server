@@ -81,26 +81,16 @@
 						</template>
 					</svws-ui-tooltip>
 				</div>
-				<div role="cell" class="svws-ui-td svws-align-center svws-no-padding items-center! " v-for="(kurse, i) in kurszahlen" :key="i" :class="{'svws-divider': (i === 1 || i === 5)}">
+				<div role="cell" class="svws-ui-td svws-align-center svws-no-padding items-center! " v-for="hj in GostHalbjahr.values()" :key="hj.id" :class="{'svws-divider': (hj.id === 1 || hj.id === 5)}">
 					<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-sm w-full m-0.5"
-						:class="{
-							'svws-ergebnis--not-enough': ((kurse < 10) && (i < 2)) || ((kurse < 9) && (i > 1)),
-							'svws-ergebnis--low': ((kurse > 9) && (kurse < 11) && (i < 2)) || ((kurse > 8) && (kurse < 10) && (i > 1)),
-							'svws-ergebnis--good': ((kurse > 10) && (kurse < 13) && (i < 2)) || ((kurse > 9) && (kurse < 12) && (i > 1)),
-							'svws-ergebnis--more': ((kurse > 12) && (i < 2)) || ((kurse > 11) && (i > 1))
-						}">
-						{{ kurse }}
+						:class="manager.getAnrechenbareKurseCSS(hj)">
+						{{ manager.getAnrechenbareKurse(hj) }}
 					</span>
 				</div>
 				<div role="cell" class="svws-ui-td svws-align-center svws-no-padding items-center!">
 					<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-sm w-full m-0.5"
-						:class="{
-							'svws-ergebnis--not-enough': (kurse_summe < 38),
-							'svws-ergebnis--low': (kurse_summe > 37) && (kurse_summe < 40),
-							'svws-ergebnis--good': (kurse_summe > 39) && (kurse_summe < 43),
-							'svws-ergebnis--more': (kurse_summe > 42),
-						}">
-						{{ kurse_summe }}
+						:class="manager.getSummeAnrechenbareKurseCSS()">
+						{{ manager.summeAnrechenbareKurse }}
 					</span>
 				</div>
 			</div>
@@ -114,26 +104,16 @@
 						</template>
 					</svws-ui-tooltip>
 				</div>
-				<div role="cell" class="svws-ui-td svws-align-center svws-no-padding items-center!" v-for="(wst, i) in wochenstunden" :key="i" :class="{'svws-divider': ((i === 1) || (i === 5))}">
+				<div role="cell" class="svws-ui-td svws-align-center svws-no-padding items-center!" v-for="hj in GostHalbjahr.values()" :key="hj.id" :class="{'svws-divider': ((hj.id === 1) || (hj.id === 5))}">
 					<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-sm w-full m-0.5"
-						:class="{
-							'svws-ergebnis--not-enough': (wst < 30),
-							'svws-ergebnis--low': (wst >= 30) && (wst < 33),
-							'svws-ergebnis--good': (wst >= 33) && (wst < 37),
-							'svws-ergebnis--more': (wst >= 37),
-						}">
-						{{ wst }}
+						:class="manager.getWochenstundenCSS(hj)">
+						{{ manager.getWochenstunden(hj) }}
 					</span>
 				</div>
 				<div role="cell" class="svws-ui-td svws-align-center svws-no-padding items-center!">
 					<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-sm w-full m-0.5"
-						:class="{
-							'svws-ergebnis--not-enough':( wst_summe < 100),
-							'svws-ergebnis--low': (wst_summe >= 100) && (wst_summe < 101),
-							'svws-ergebnis--good': (wst_summe >= 101) && (wst_summe <= 106),
-							'svws-ergebnis--more': (wst_summe > 106),
-						}">
-						{{ wst_summe }}
+						:class="manager.getWochenstundenJahressummeCSS()">
+						{{ manager.wochenstundenJahressumme }}
 					</span>
 				</div>
 			</div>
@@ -149,22 +129,14 @@
 				</div>
 				<div role="cell" class="svws-ui-td svws-align-center svws-no-padding items-center! col-span-2 svws-divider">
 					<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-sm w-full m-0.5"
-						:class="{
-							'svws-ergebnis--not-enough': (wst_d_ef < 34),
-							'svws-ergebnis--good': (wst_d_ef >= 34) && (wst_d_ef < 37),
-							'svws-ergebnis--more': (wst_d_ef >= 37),
-						}">
-						{{ wst_d_ef }}
+						:class="manager.getWochenstundenDurchschnittEFCSS()">
+						{{ manager.wochenstundenDurchschnittEF }}
 					</span>
 				</div>
 				<div role="cell" class="svws-ui-td svws-align-center svws-no-padding items-center! col-span-4 svws-divider">
 					<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-sm w-full m-0.5"
-						:class="{
-							'svws-ergebnis--not-enough':( wst_d_q < 34),
-							'svws-ergebnis--good': (wst_d_q >= 34) && (wst_d_q < 37),
-							'svws-ergebnis--more': (wst_d_q >= 37),
-						}">
-						{{ wst_d_q }}
+						:class="manager.getWochenstundenDurchschnittQCSS()">
+						{{ manager.wochenstundenDurchschnittQ }}
 					</span>
 				</div>
 				<div role="cell" class="svws-ui-td svws-align-center">
@@ -199,7 +171,7 @@
 
 <script setup lang="ts">
 
-	import { ref, computed, onMounted } from "vue";
+	import { ref, onMounted } from "vue";
 	import type { AbiturdatenManager } from "../../../../../core/src/core/abschluss/gost/AbiturdatenManager";
 	import type { GostJahrgangsdaten } from "../../../../../core/src/core/data/gost/GostJahrgangsdaten";
 	import type { GostSchuelerFachwahl } from "../../../../../core/src/core/data/gost/GostSchuelerFachwahl";
@@ -207,8 +179,10 @@
 	import type { AbiturFachbelegungHalbjahr } from "../../../../../core/src/core/data/gost/AbiturFachbelegungHalbjahr";
 	import { GostHalbjahr } from "../../../../../core/src/core/types/gost/GostHalbjahr";
 	import type { DataTableColumn } from "../../../types";
+	import type { LaufbahnplanungUiManager } from "./LaufbahnplanungUiManager";
 
 	const props = withDefaults(defineProps<{
+		manager: LaufbahnplanungUiManager;
 		abiturdatenManager: () => AbiturdatenManager;
 		gostJahrgangsdaten: GostJahrgangsdaten;
 		setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>;
@@ -247,13 +221,6 @@
 		}
 	}
 
-	const kurszahlen = computed<number[]>(() => props.abiturdatenManager().getAnrechenbareKurse());
-	const kurse_summe = computed<number>(() => props.abiturdatenManager().getAnrechenbareKurseBlockI());
-	const wochenstunden = computed<number[]>(() => props.abiturdatenManager().getWochenstunden());
-	const wst_summe = computed<number>(() => wochenstunden.value.reduce((p, c) => p + c, 0) / 2);
-	const wst_d_ef = computed<number>(() => props.abiturdatenManager().getWochenstundenEinfuehrungsphase() / 2);
-	const wst_d_q = computed<number>(() => props.abiturdatenManager().getWochenstundenQualifikationsphase() / 4);
-
 	const columns: Array<DataTableColumn> = [
 		{ key: "kuerzel", label: "Kürzel", align: 'center', minWidth: 5, span: 0.75},
 		{ key: "bezeichnung", label: "Bezeichnung", align: 'center', span: 3, minWidth: 12 },
@@ -282,7 +249,7 @@
 	}
 
 	onMounted(() => {
-		// Fächer-IDs zu statischer Liste hinzufügen um Fächer durschalten zu können
+		// Fächer-IDs zu statischer Liste hinzufügen um Fächer durchschalten zu können
 		for (const fach of props.abiturdatenManager().faecher().faecher())
 			faecherIds.push(fach.id);
 	})
@@ -332,7 +299,7 @@
 	}
 
 	function getFachIndexById(fachId: number): number {
-		for (let i=0; i<=faecherIds.length; i++)
+		for (let i=0; i <= faecherIds.length; i++)
 			if (faecherIds[i] === fachId)
 				return i;
 		return -1;
