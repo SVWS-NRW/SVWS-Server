@@ -1,5 +1,5 @@
 import { computed, ref } from "vue";
-import type { AbiturFachbelegungHalbjahr, GostJahrgangsdaten, JavaMap} from "../../../../../core/src";
+import { AbiturFachbelegung, AbiturFachbelegungHalbjahr, Fach, Fachgruppe, GostJahrgangsdaten, HashMap2D, JavaMap} from "../../../../../core/src";
 import { ArrayList, DeveloperNotificationException, GostHalbjahr, HashMap, type AbiturdatenManager, type GostFach, type List } from "../../../../../core/src";
 import type { Config } from "~/utils/Config";
 
@@ -403,6 +403,70 @@ export class LaufbahnplanungUiManager {
 	 */
 	public get faecherGefiltert() : List<GostFach> {
 		return this._faecherGefiltert.value;
+	}
+
+	/**
+	 * Erstellt eine Map zu den Fachgruppen aller Fächer
+	 */
+	private _fachgruppe = computed<JavaMap<GostFach, Fachgruppe | null>>(() => {
+		const map = new HashMap<GostFach, Fachgruppe | null>();
+		for (const fach of this.alleFaecher)
+			map.put(fach, Fach.getBySchluesselOrDefault(fach.kuerzel).getFachgruppe(this.manager().getSchuljahr()) ?? null);
+		return map;
+	});
+
+	/**
+	 * Gibt die Fachgruppe zu dem übergebenen Fach zurück.
+	 *
+	 * @param fach   das Fach
+	 *
+	 * @returns die zugehörige Fachgruppe oder null, falls keine zugeordnet ist
+	 */
+	public getFachgruppe(fach: GostFach): Fachgruppe | null {
+		return this._fachgruppe.value.get(fach);
+	}
+
+	/**
+	 * Erstellt eine Übersicht, ob bei den Fächern Doppelbelegungen vorkommen oder nicht.
+	 */
+	private _fachDoppelbelegungen = computed<HashMap2D<GostFach, GostHalbjahr, boolean>>(() => {
+		const map = new HashMap2D<GostFach, GostHalbjahr, boolean>();
+		for (const fach of this.alleFaecher) {
+			// Gehe bei dem Fach zunächst davon aus, dass keine Doppelbelegung vorkommt.
+			for (const hj of GostHalbjahr.values())
+				map.put(fach, hj, false);
+			// Prüfe, ob das Fach relevant für die Prüfungsordnung ist und auch kein Vertiefungskurs ist
+			if ((!fach.istPruefungsordnungsRelevant) || (this.getFachgruppe(fach) === Fachgruppe.FG_VX))
+				continue;
+			// Gehe alle Fachbelegungen zu dem Statistik-Fach durch und prüfe, ob eine zweite Belegung existiert
+			const fachbelegungen = this.manager().getFachbelegungByFachkuerzel(fach.kuerzel);
+			for (const fachbelegung of fachbelegungen) {
+				// Ignoriere die eigene Belegung des Faches
+				if (fachbelegung.fachID === fach.id)
+					continue;
+				// Prüfe das zweite Fach, sofern es relevant für die Prüfungsordnung ist
+				const fach2 = this.manager().faecher().get(fachbelegung.fachID);
+				if ((fach2 === null) || !fach2.istPruefungsordnungsRelevant)
+					continue;
+				// Aktualisiere die Map bei einer Doppelbelegung
+				for (const hj of GostHalbjahr.values())
+					if (this.manager().pruefeBelegung(fachbelegung, hj))
+						map.put(fach, hj, true);
+			}
+		}
+		return map;
+	});
+
+	/**
+	 * Gibt zurück, ob bei dem übergebenen Fach in dem angegebenen Halbjahr eine Doppelbelegung vorliegt oder nicht.
+	 *
+	 * @param fach       das Fach
+	 * @param halbjahr   das Halbjahr
+	 *
+	 * @returns true, wenn eine Doppelbelegung vorliegt oder nicht, und ansonsten false
+	 */
+	public hatDoppelbelegung(fach: GostFach, halbjahr: GostHalbjahr) : boolean {
+		return this._fachDoppelbelegungen.value.getOrNull(fach, halbjahr) ?? false;
 	}
 
 }

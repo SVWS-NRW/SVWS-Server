@@ -127,7 +127,7 @@
 
 <script setup lang="ts">
 
-	import { computed, onBeforeUnmount, onMounted, onUpdated, ref } from "vue";
+	import { computed, onUpdated, ref } from "vue";
 	import { AbiturdatenManager } from "../../../../../core/src/core/abschluss/gost/AbiturdatenManager";
 	import type { GostJahrgangsdaten } from "../../../../../core/src/core/data/gost/GostJahrgangsdaten";
 	import type { GostFach } from "../../../../../core/src/core/data/gost/GostFach";
@@ -145,7 +145,6 @@
 	import { GostFachbereich } from "../../../../../core/src/core/types/gost/GostFachbereich";
 	import { GostAbiturFach } from "../../../../../core/src/core/types/gost/GostAbiturFach";
 	import { GostFachUtils } from "../../../../../core/src/core/utils/gost/GostFachUtils";
-	import { Color } from "../../../ui/Color";
 	import type { LaufbahnplanungUiManager } from "./LaufbahnplanungUiManager";
 
 	const props = withDefaults(defineProps<{
@@ -182,7 +181,6 @@
 	const halbjahrRefs = ref(new Map<number, HTMLElement>());
 	const schuljahr = computed<number>(() => props.abiturdatenManager().getSchuljahr());
 	const gostHalbjahr = computed<GostHalbjahr | null>(() => GostHalbjahr.fromJahrgangUndHalbjahr(props.gostJahrgangsdaten.jahrgang, props.gostJahrgangsdaten.halbjahr));
-	const fachgruppe = computed<Fachgruppe | null>(() => Fach.getBySchluesselOrDefault(props.fach.kuerzel).getFachgruppe(schuljahr.value) ?? null);
 	const istFremdsprache = computed<boolean>(() => Fach.getBySchluesselOrDefault(props.fach.kuerzel).daten(schuljahr.value)?.istFremdsprache ?? false);
 	const bgColor = computed<string>(() => Fach.getBySchluesselOrDefault(props.fach.kuerzel).getHMTLFarbeRGB(schuljahr.value));
 	const fachbelegung = computed<AbiturFachbelegung | null>(() => props.abiturdatenManager().getFachbelegungByID(props.fach.id));
@@ -231,41 +229,18 @@
 
 	const istMoeglichAbi = computed<boolean>(() => props.abiturdatenManager().getMoeglicheKursartAlsAbiturfach(props.fach.id) !== null);
 
-	/**
-	 * Prüft, ob ein Fach bereits belegt ist durch ein gleichnamiges Fach, z.B. bei Bili-Fächern
-	 *
-	 * @param {GostHalbjahr} hj Das GostHalbjahr
-	 *
-	 * @returns {boolean} ob doppelt belegt wurde, z.B. bei Bili-Fächern
-	 */
-	function checkDoppelbelegung(hj: GostHalbjahr): boolean {
-		// TODO Prüfe, ob der AbiturdatenManager nicht schon eine solche Methode hat - wenn nicht, dann ergänze eine
-		if ((!props.fach.istPruefungsordnungsRelevant) || (fachgruppe.value === Fachgruppe.FG_VX))
-			return false;
-		const fachbelegungen = props.abiturdatenManager().getFachbelegungByFachkuerzel(props.fach.kuerzel);
-		for (const fachbelegung of fachbelegungen) {
-			const fach2 = props.abiturdatenManager().faecher().get(fachbelegung.fachID);
-			if ((fach2 === null) || !fach2.istPruefungsordnungsRelevant)
-				continue;
-			if (props.abiturdatenManager().pruefeBelegung(fachbelegung, hj)) {
-				if (fachbelegung.fachID !== props.fach.id)
-					return true;
-			}
-		}
-		return false;
-	}
-
-
 	const istMoeglich = computed<boolean[]>(() => {
 		if (props.fach.istFremdsprache && ((!props.ignoriereSprachenfolge) && !getFallsSpracheMoeglich.value))
 			return [ false, false, false, false, false, false ];
+		const istNichtErsatzOderPjk = (props.manager.getFachgruppe(props.fach) !== Fachgruppe.FG_ME)
+			&& (props.manager.getFachgruppe(props.fach) !== Fachgruppe.FG_PX);
 		return [
-			(props.fach.istMoeglichEF1 && !checkDoppelbelegung(GostHalbjahr.EF1) && (fachgruppe.value !== Fachgruppe.FG_ME) && (fachgruppe.value !== Fachgruppe.FG_PX)),
-			(props.fach.istMoeglichEF2 && !checkDoppelbelegung(GostHalbjahr.EF2) && (fachgruppe.value !== Fachgruppe.FG_ME) && (fachgruppe.value !== Fachgruppe.FG_PX)),
-			(props.fach.istMoeglichQ11 && !checkDoppelbelegung(GostHalbjahr.Q11)),
-			(props.fach.istMoeglichQ12 && !checkDoppelbelegung(GostHalbjahr.Q12)),
-			(props.fach.istMoeglichQ21 && !checkDoppelbelegung(GostHalbjahr.Q21)),
-			(props.fach.istMoeglichQ22 && !checkDoppelbelegung(GostHalbjahr.Q22)),
+			(props.fach.istMoeglichEF1 && !props.manager.hatDoppelbelegung(props.fach, GostHalbjahr.EF1) && istNichtErsatzOderPjk),
+			(props.fach.istMoeglichEF2 && !props.manager.hatDoppelbelegung(props.fach, GostHalbjahr.EF2) && istNichtErsatzOderPjk),
+			(props.fach.istMoeglichQ11 && !props.manager.hatDoppelbelegung(props.fach, GostHalbjahr.Q11)),
+			(props.fach.istMoeglichQ12 && !props.manager.hatDoppelbelegung(props.fach, GostHalbjahr.Q12)),
+			(props.fach.istMoeglichQ21 && !props.manager.hatDoppelbelegung(props.fach, GostHalbjahr.Q21)),
+			(props.fach.istMoeglichQ22 && !props.manager.hatDoppelbelegung(props.fach, GostHalbjahr.Q22)),
 		];
 	});
 
@@ -392,18 +367,8 @@
 		return result;
 	});
 
-	const ist_VTF = computed<boolean>(() => fachgruppe.value === Fachgruppe.FG_VX);
-	const ist_PJK = computed<boolean>(() => fachgruppe.value === Fachgruppe.FG_PX);
-
-	const getAndereFachwahl = computed<GostSchuelerFachwahl | null>(() => {
-		if (fachgruppe.value === Fachgruppe.FG_VX)
-			return null;
-		const fachbelegungen = props.abiturdatenManager().getFachbelegungByFachkuerzel(props.fach.kuerzel);
-		for (const fachbelegung of fachbelegungen)
-			if (fachbelegung.fachID !== props.fach.id)
-				return props.abiturdatenManager().getSchuelerFachwahl(fachbelegung.fachID)
-		return null;
-	})
+	const ist_VTF = computed<boolean>(() => props.manager.getFachgruppe(props.fach) === Fachgruppe.FG_VX);
+	const ist_PJK = computed<boolean>(() => props.manager.getFachgruppe(props.fach) === Fachgruppe.FG_PX);
 
 	async function stepperAbi() {
 		if (!props.hatUpdateKompetenz)
@@ -862,7 +827,7 @@
 					const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(props.gostJahrgangsdaten.beginnZusatzkursSW);
 					if (beginn !== null) {
 						if (beginn === GostHalbjahr.Q11) {
-							if (!hatSchuelerFachwahl(wahl, GostHalbjahr.EF2) && !hatSchuelerFachwahl(getAndereFachwahl.value, GostHalbjahr.EF2)) {
+							if (!hatSchuelerFachwahl(wahl, GostHalbjahr.EF2) && !props.manager.hatDoppelbelegung(props.fach, GostHalbjahr.EF2)) {
 								wahl.halbjahre[GostHalbjahr.Q11.id] = 'ZK'
 								wahl.halbjahre[GostHalbjahr.Q12.id] = 'ZK'
 							}
@@ -873,7 +838,7 @@
 					const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(props.gostJahrgangsdaten.beginnZusatzkursGE);
 					if (beginn !== null) {
 						if (beginn === GostHalbjahr.Q11) {
-							if (!hatSchuelerFachwahl(wahl, GostHalbjahr.EF2) && !hatSchuelerFachwahl(getAndereFachwahl.value, GostHalbjahr.EF2)) {
+							if (!hatSchuelerFachwahl(wahl, GostHalbjahr.EF2) && !props.manager.hatDoppelbelegung(props.fach, GostHalbjahr.EF2)) {
 								wahl.halbjahre[GostHalbjahr.Q11.id] = 'ZK'
 								wahl.halbjahre[GostHalbjahr.Q12.id] = 'ZK'
 							}
@@ -942,13 +907,13 @@
 					const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(props.gostJahrgangsdaten.beginnZusatzkursSW);
 					if (beginn !== null) {
 						if (beginn === GostHalbjahr.Q11) {
-							if (!hatSchuelerFachwahl(wahl, GostHalbjahr.EF2) && !hatSchuelerFachwahl(getAndereFachwahl.value, GostHalbjahr.EF2)) {
+							if (!hatSchuelerFachwahl(wahl, GostHalbjahr.EF2) && !props.manager.hatDoppelbelegung(props.fach, GostHalbjahr.EF2)) {
 								wahl.halbjahre[GostHalbjahr.Q11.id] = 'ZK'
 								wahl.halbjahre[GostHalbjahr.Q12.id] = 'ZK'
 							}
 						}
 						if (beginn === GostHalbjahr.Q12) {
-							if (!hatSchuelerFachwahl(wahl, GostHalbjahr.Q11) && !hatSchuelerFachwahl(getAndereFachwahl.value, GostHalbjahr.Q11)) {
+							if (!hatSchuelerFachwahl(wahl, GostHalbjahr.Q11) && !props.manager.hatDoppelbelegung(props.fach, GostHalbjahr.Q11)) {
 								wahl.halbjahre[GostHalbjahr.Q12.id] = 'ZK'
 								wahl.halbjahre[GostHalbjahr.Q21.id] = 'ZK'
 							}
@@ -959,13 +924,13 @@
 					const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(props.gostJahrgangsdaten.beginnZusatzkursGE);
 					if (beginn !== null) {
 						if (beginn === GostHalbjahr.Q11) {
-							if (!hatSchuelerFachwahl(wahl, GostHalbjahr.EF2) && !hatSchuelerFachwahl(getAndereFachwahl.value, GostHalbjahr.EF2)) {
+							if (!hatSchuelerFachwahl(wahl, GostHalbjahr.EF2) && !props.manager.hatDoppelbelegung(props.fach, GostHalbjahr.EF2)) {
 								wahl.halbjahre[GostHalbjahr.Q11.id] = 'ZK'
 								wahl.halbjahre[GostHalbjahr.Q12.id] = 'ZK'
 							}
 						}
 						if (beginn === GostHalbjahr.Q12) {
-							if (!hatSchuelerFachwahl(wahl, GostHalbjahr.Q11) && !hatSchuelerFachwahl(getAndereFachwahl.value, GostHalbjahr.Q11)) {
+							if (!hatSchuelerFachwahl(wahl, GostHalbjahr.Q11) && !props.manager.hatDoppelbelegung(props.fach, GostHalbjahr.Q11)) {
 								wahl.halbjahre[GostHalbjahr.Q12.id] = 'ZK'
 								wahl.halbjahre[GostHalbjahr.Q21.id] = 'ZK'
 							}
@@ -1035,13 +1000,13 @@
 					const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(props.gostJahrgangsdaten.beginnZusatzkursSW);
 					if (beginn !== null) {
 						if (beginn === GostHalbjahr.Q12) {
-							if (!hatSchuelerFachwahl(wahl, GostHalbjahr.Q11) && !hatSchuelerFachwahl(getAndereFachwahl.value, GostHalbjahr.Q11)) {
+							if (!hatSchuelerFachwahl(wahl, GostHalbjahr.Q11) && !props.manager.hatDoppelbelegung(props.fach, GostHalbjahr.Q11)) {
 								wahl.halbjahre[GostHalbjahr.Q12.id] = 'ZK'
 								wahl.halbjahre[GostHalbjahr.Q21.id] = 'ZK'
 							}
 						}
 						if (beginn === GostHalbjahr.Q21) {
-							if (!hatSchuelerFachwahl(wahl, GostHalbjahr.Q12) && !hatSchuelerFachwahl(getAndereFachwahl.value, GostHalbjahr.Q12)) {
+							if (!hatSchuelerFachwahl(wahl, GostHalbjahr.Q12) && !props.manager.hatDoppelbelegung(props.fach, GostHalbjahr.Q12)) {
 								wahl.halbjahre[GostHalbjahr.Q21.id] = 'ZK'
 								wahl.halbjahre[GostHalbjahr.Q22.id] = 'ZK'
 							}
@@ -1052,13 +1017,13 @@
 					const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(props.gostJahrgangsdaten.beginnZusatzkursGE);
 					if (beginn !== null) {
 						if (beginn === GostHalbjahr.Q12) {
-							if (!hatSchuelerFachwahl(wahl, GostHalbjahr.Q11) && !hatSchuelerFachwahl(getAndereFachwahl.value, GostHalbjahr.Q11)) {
+							if (!hatSchuelerFachwahl(wahl, GostHalbjahr.Q11) && !props.manager.hatDoppelbelegung(props.fach, GostHalbjahr.Q11)) {
 								wahl.halbjahre[GostHalbjahr.Q12.id] = 'ZK'
 								wahl.halbjahre[GostHalbjahr.Q21.id] = 'ZK'
 							}
 						}
 						if (beginn === GostHalbjahr.Q21) {
-							if (!hatSchuelerFachwahl(wahl, GostHalbjahr.Q12) && !hatSchuelerFachwahl(getAndereFachwahl.value, GostHalbjahr.Q12)) {
+							if (!hatSchuelerFachwahl(wahl, GostHalbjahr.Q12) && !props.manager.hatDoppelbelegung(props.fach, GostHalbjahr.Q12)) {
 								wahl.halbjahre[GostHalbjahr.Q21.id] = 'ZK'
 								wahl.halbjahre[GostHalbjahr.Q22.id] = 'ZK'
 							}
@@ -1116,7 +1081,7 @@
 					const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(props.gostJahrgangsdaten.beginnZusatzkursSW);
 					if (beginn !== null) {
 						if (beginn === GostHalbjahr.Q21) {
-							if (!hatSchuelerFachwahl(wahl, GostHalbjahr.Q12) && !hatSchuelerFachwahl(getAndereFachwahl.value, GostHalbjahr.Q12)) {
+							if (!hatSchuelerFachwahl(wahl, GostHalbjahr.Q12) && !props.manager.hatDoppelbelegung(props.fach, GostHalbjahr.Q12)) {
 								wahl.halbjahre[GostHalbjahr.Q21.id] = 'ZK'
 								wahl.halbjahre[GostHalbjahr.Q22.id] = 'ZK'
 							}
@@ -1127,7 +1092,7 @@
 					const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(props.gostJahrgangsdaten.beginnZusatzkursGE);
 					if (beginn !== null) {
 						if (beginn === GostHalbjahr.Q21) {
-							if (!hatSchuelerFachwahl(wahl, GostHalbjahr.Q12) && !hatSchuelerFachwahl(getAndereFachwahl.value, GostHalbjahr.Q12)) {
+							if (!hatSchuelerFachwahl(wahl, GostHalbjahr.Q12) && !props.manager.hatDoppelbelegung(props.fach, GostHalbjahr.Q12)) {
 								wahl.halbjahre[GostHalbjahr.Q21.id] = 'ZK'
 								wahl.halbjahre[GostHalbjahr.Q22.id] = 'ZK'
 							}
