@@ -13,15 +13,15 @@
 		<div role="cell" class="svws-ui-td svws-align-center svws-divider">
 			{{ fach.wochenstundenQualifikationsphase }}
 		</div>
-		<div role="cell" class="svws-ui-td svws-align-center font-medium" :class="{ 'svws-disabled': !istFremdsprache }">
-			<template v-if="istFremdsprache">
+		<div role="cell" class="svws-ui-td svws-align-center font-medium" :class="{ 'svws-disabled': !manager.istFremdsprache(fach) }">
+			<template v-if="manager.istFremdsprache(fach)">
 				<span v-if="ignoriereSprachenfolge"> ? </span>
 				<span v-else-if="sprachenfolgeNr === 0 && !sprachenfolgeJahrgang"> — </span>
 				<span v-else> {{ sprachenfolgeNr }} </span>
 			</template>
 		</div>
-		<div role="cell" class="svws-ui-td svws-align-center font-medium svws-divider" :class="{ 'svws-disabled': !istFremdsprache}">
-			<template v-if="istFremdsprache">
+		<div role="cell" class="svws-ui-td svws-align-center font-medium svws-divider" :class="{ 'svws-disabled': !manager.istFremdsprache(fach)}">
+			<template v-if="manager.istFremdsprache(fach)">
 				<span v-if="ignoriereSprachenfolge"> ? </span>
 				<span v-else-if="sprachenfolgeNr === 0 && !sprachenfolgeJahrgang"> — </span>
 				<span v-else> {{ sprachenfolgeJahrgang }} </span>
@@ -181,7 +181,6 @@
 	const halbjahrRefs = ref(new Map<number, HTMLElement>());
 	const schuljahr = computed<number>(() => props.abiturdatenManager().getSchuljahr());
 	const gostHalbjahr = computed<GostHalbjahr | null>(() => GostHalbjahr.fromJahrgangUndHalbjahr(props.gostJahrgangsdaten.jahrgang, props.gostJahrgangsdaten.halbjahr));
-	const istFremdsprache = computed<boolean>(() => Fach.getBySchluesselOrDefault(props.fach.kuerzel).daten(schuljahr.value)?.istFremdsprache ?? false);
 	const bgColor = computed<string>(() => Fach.getBySchluesselOrDefault(props.fach.kuerzel).getHMTLFarbeRGB(schuljahr.value));
 	const fachbelegung = computed<AbiturFachbelegung | null>(() => props.abiturdatenManager().getFachbelegungByID(props.fach.id));
 
@@ -206,21 +205,12 @@
 		return null;
 	})
 
-	// Prüft, ob eine Sprache bisher schon unterrichtet wurde oder neu einsetzend ist
-	const getFallsSpracheMoeglich = computed<boolean>(() => {
-		const ist_fortfuehrbar = SprachendatenUtils.istFortfuehrbareSpracheInGOSt(
-			props.abiturdatenManager().getSprachendaten(), Fach.getBySchluesselOrDefault(props.fach.kuerzel).daten(schuljahr.value)?.kuerzel ?? null
-		);
-		// sprachbelegung.value; // TODO warum muss diese Zeile hier rein? Sonst Fehler mit Sprachenfolge in Laufbahnplanung  <--- ENTFERNEN ?!
-		return ((ist_fortfuehrbar && !props.fach.istFremdSpracheNeuEinsetzend) || (!ist_fortfuehrbar && props.fach.istFremdSpracheNeuEinsetzend));
-	})
-
 	const sprachenfolgeNr = computed<number>(() =>
-		getFallsSpracheMoeglich.value ? sprachbelegung.value?.reihenfolge ?? 0 : 0
+		props.manager.istFremdspracheMoeglich(props.fach) ? sprachbelegung.value?.reihenfolge ?? 0 : 0
 	);
 
 	const sprachenfolgeJahrgang = computed<string>(() =>
-		getFallsSpracheMoeglich.value ? (sprachbelegung.value?.belegungVonJahrgang ?? "") : ""
+		props.manager.istFremdspracheMoeglich(props.fach) ? (sprachbelegung.value?.belegungVonJahrgang ?? "") : ""
 	);
 
 	function istBewertet(halbjahr: GostHalbjahr): boolean {
@@ -230,7 +220,7 @@
 	const istMoeglichAbi = computed<boolean>(() => props.abiturdatenManager().getMoeglicheKursartAlsAbiturfach(props.fach.id) !== null);
 
 	const istMoeglich = computed<boolean[]>(() => {
-		if (props.fach.istFremdsprache && ((!props.ignoriereSprachenfolge) && !getFallsSpracheMoeglich.value))
+		if (props.manager.istFremdsprache(props.fach) && ((!props.ignoriereSprachenfolge) && !props.manager.istFremdspracheMoeglich(props.fach)))
 			return [ false, false, false, false, false, false ];
 		const istNichtErsatzOderPjk = (props.manager.getFachgruppe(props.fach) !== Fachgruppe.FG_ME)
 			&& (props.manager.getFachgruppe(props.fach) !== Fachgruppe.FG_PX);

@@ -1,5 +1,5 @@
 import { computed, ref } from "vue";
-import { AbiturFachbelegung, AbiturFachbelegungHalbjahr, Fach, Fachgruppe, GostJahrgangsdaten, HashMap2D, JavaMap} from "../../../../../core/src";
+import { AbiturFachbelegung, AbiturFachbelegungHalbjahr, Fach, Fachgruppe, GostJahrgangsdaten, HashMap2D, JavaMap, SprachendatenUtils} from "../../../../../core/src";
 import { ArrayList, DeveloperNotificationException, GostHalbjahr, HashMap, type AbiturdatenManager, type GostFach, type List } from "../../../../../core/src";
 import type { Config } from "~/utils/Config";
 
@@ -467,6 +467,58 @@ export class LaufbahnplanungUiManager {
 	 */
 	public hatDoppelbelegung(fach: GostFach, halbjahr: GostHalbjahr) : boolean {
 		return this._fachDoppelbelegungen.value.getOrNull(fach, halbjahr) ?? false;
+	}
+
+	/**
+	 * Eine Map, welche zu einem Fach angibt, ob es sich um eine Fremdsprachen handelt oder nicht
+	 */
+	private _mapFremdsprachen = computed<JavaMap<GostFach, boolean>>(() => {
+		const map = new HashMap<GostFach, boolean>();
+		const schuljahr = this.manager().getSchuljahr();
+		for (const fach of this.alleFaecher)
+			map.put(fach, fach.istFremdsprache && (Fach.getBySchluesselOrDefault(fach.kuerzel).daten(schuljahr)?.istFremdsprache ?? false));
+		return map;
+	});
+
+	/**
+	 * Gibt zurück, ob es sich bei dem übergebenen Fach um ein Fremdsprachenfach handelt oder nicht.
+	 *
+	 * @param fach   das Fach
+	 *
+	 * @returns true, falls es sich um ein Fremdsprache handelt, und ansonsten false
+	 */
+	public istFremdsprache(fach: GostFach): boolean {
+		return this._mapFremdsprachen.value.get(fach) ?? false;
+	}
+
+	/**
+	 * Eine Map, welche zu einem Fach angibt, ob die Belegung einer Fremdsprache möglich ist oder nicht
+	 */
+	private _mapFremdsprachenMoeglich = computed<JavaMap<GostFach, boolean>>(() => {
+		const map = new HashMap<GostFach, boolean>();
+		const schuljahr = this.manager().getSchuljahr();
+		for (const fach of this.alleFaecher) {
+			if (this.istFremdsprache(fach)) {
+				const f = Fach.getBySchluesselOrDefault(fach.kuerzel).daten(schuljahr)?.kuerzel ?? null;
+				const istFortfuehrbar = SprachendatenUtils.istFortfuehrbareSpracheInGOSt(this.manager().getSprachendaten(), f);
+				map.put(fach, (istFortfuehrbar && !fach.istFremdSpracheNeuEinsetzend) || (!istFortfuehrbar && fach.istFremdSpracheNeuEinsetzend));
+			} else {
+				map.put(fach, false);
+			}
+		}
+		return map;
+	});
+
+	/**
+	 * Gibt zurück, ob es sich bei dem übergebenen Fach um eine Fremdsprache handelt und bei dieser
+	 * auch eine Belegung möglich ist.
+	 *
+	 * @param fach   das Fach
+	 *
+	 * @returns true, wenn eine Belegung des Fremdsprachenfaches möglich ist, und ansonsten false
+	 */
+	public istFremdspracheMoeglich(fach: GostFach): boolean {
+		return this._mapFremdsprachenMoeglich.value.get(fach) ?? false;
 	}
 
 }
