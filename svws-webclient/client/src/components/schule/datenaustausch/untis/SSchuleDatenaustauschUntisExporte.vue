@@ -28,8 +28,8 @@
 			<div v-if="zeigeGPU002Laden" class="max-w-196">
 				<ui-card compact :collapsible="false" title="Upload GPU002.txt" show-divider>
 					<div class="text-justify">
-						Laden Sie jetzt die Datei <span class="font-bold">GPU002.txt</span> von Untis hier hoch, um die Klausuren anschließend zu exportieren.
-						Die CSV-Datei muss als Textkodierung UTF-8 verwenden. Als Trennzeichen wird das Semikolon verwendet und für die textbegrenzung doppelte Anführungszeichen (").
+						Laden Sie jetzt die Datei <span class="font-bold">GPU002.txt</span> von Untis hier hoch, um die Schüler-Kurs-Zuordnungen (Kurswahlen) anschließend zu exportieren.
+						Die CSV-Datei muss als Textkodierung UTF-8 verwenden. Als Trennzeichen wird das Semikolon verwendet und für die Textbegrenzung doppelte Anführungszeichen (").
 					</div>
 					<template #buttonFooterLeft>
 						<input type="file" accept=".txt" @change="importGPU002">
@@ -126,7 +126,7 @@
 	});
 
 	const fachwahlenGPU015 = <GPU>({
-		title: 'Fachwahlen',
+		title: 'Kurswahlen',
 		files: [ 'GPU015.txt' ],
 		export: async (gpu002 : string) => await props.exportUntisFachwahlenGPU015(sidvariante.value, gpu002),
 	});

@@ -4349,7 +4349,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode createGostAbiturjahrgang für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/new/{jahrgangid}
+	 * Implementierung der POST-Methode createGostAbiturjahrgang für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/new/{schuljahresabschnittsid}/{jahrgangid}
 	 *
 	 * Erstellt einen neuen Abiturjahrgang und gibt das Abiturjahr zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eine Abiturjahrgangs besitzt.
 	 *
@@ -4363,13 +4363,15 @@ export class ApiServer extends BaseApi {
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} schuljahresabschnittsid - der Pfad-Parameter schuljahresabschnittsid
 	 * @param {number} jahrgangid - der Pfad-Parameter jahrgangid
 	 *
 	 * @returns Der Abiturjahrgang wurde erfolgreich angelegt.
 	 */
-	public async createGostAbiturjahrgang(schema : string, jahrgangid : number) : Promise<number | null> {
-		const path = "/db/{schema}/gost/abiturjahrgang/new/{jahrgangid}"
+	public async createGostAbiturjahrgang(schema : string, schuljahresabschnittsid : number, jahrgangid : number) : Promise<number | null> {
+		const path = "/db/{schema}/gost/abiturjahrgang/new/{schuljahresabschnittsid}/{jahrgangid}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{schuljahresabschnittsid\s*(:[^{}]+({[^{}]+})*)?}/g, schuljahresabschnittsid.toString())
 			.replace(/{jahrgangid\s*(:[^{}]+({[^{}]+})*)?}/g, jahrgangid.toString());
 		const result : string = await super.postJSON(path, null);
 		const text = result;
