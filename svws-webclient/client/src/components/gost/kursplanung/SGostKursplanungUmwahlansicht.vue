@@ -24,18 +24,18 @@
 										:draggable="hatUpdateKompetenz && (fachwahlKurszuordnungen.get(fach.fachID) === undefined)"
 										@dragstart="drag_started(fachwahlKurszuordnungen.get(fach.fachID)?.id, fach.fachID, fachwahlKursarten.get(fach.fachID)!.id)"
 										@dragend="drag_ended()"
-										class="select-none svws-ui-td svws-no-padding group rounded-sm text-ui-static"
+										class="select-none svws-ui-td svws-no-padding group rounded-sm text-uistatic"
 										:class="hatUpdateKompetenz && (fachwahlKurszuordnungen.get(fach.fachID) === undefined) ? 'cursor-grab' : 'opacity-50'"
 										:style="{ 'background-color': bgColorFachwahl(fach.fachID) }">
 										<div class="svws-ui-badge-transparent w-auto grow !h-full items-center m-0">
 											<div class="flex flex-row grow">
 												<template v-if="(fachwahlKurszuordnungen.get(fach.fachID) === undefined) && hatUpdateKompetenz">
-													<span class="icon-ui-static icon-sm i-ri-draggable opacity-50 group-hover:opacity-100 rounded-xs" />
+													<span class="icon-uistatic icon-sm i-ri-draggable opacity-50 group-hover:opacity-100 rounded-xs" />
 												</template>
 												<template v-else>
 													<span class="w-3 text-sm">&nbsp;</span>
 												</template>
-												<span class="ml-0.5 text-ui-static">
+												<span class="ml-0.5 text-uistatic">
 													{{ getFachwahlKursname(fach.fachID) }}
 													<template v-if="getDatenmanager().getHalbjahr().istQualifikationsphase() && getDatenmanager().schuelerGetOfFachFachwahl(schueler.id, fach.fachID).abiturfach !== null">
 														<span class="text-sm">—</span>
@@ -43,8 +43,8 @@
 													</template>
 												</span>
 											</div>
-											<span v-if="fach.istSchriftlich" class="icon-ui-static icon i-ri-draft-line" />
-											<span v-else class="icon-ui-static icon i-ri-chat-1-line" />
+											<span v-if="fach.istSchriftlich" class="icon-uistatic icon i-ri-draft-line" />
+											<span v-else class="icon-uistatic icon i-ri-chat-1-line" />
 										</div>
 									</div>
 								</div>
@@ -54,7 +54,7 @@
 						<template v-if="hatUpdateKompetenz">
 							<svws-ui-button type="secondary" @click="auto_verteilen" :disabled="apiStatus.pending" title="Automatisch verteilen und aktuelle Zuordnung verwerfen" class="mt-2 w-full"><span class="icon i-ri-sparkling-line" />Verteilen</svws-ui-button>
 							<!-- Der "Mülleimer für das Ablegen von Kursen, bei denen die Kurs-Schüler-Zuordnung aufgehoben werden soll. " -->
-							<div class="mt-5 py-4 border-2 rounded-xl border-dashed" :class="[dragAndDropData === undefined ? 'border-ui-contrast-10' : 'border-ui-danger ring-4 ring-ui-danger/50']">
+							<div class="mt-5 py-4 border-2 rounded-xl border-dashed" :class="[dragAndDropData === undefined ? 'border-ui-10' : 'border-ui-danger ring-4 ring-ui-danger/50']">
 								<div class="flex items-center gap-2 justify-center" :class="[dragAndDropData === undefined ? 'opacity-25' : 'opacity-100']">
 									<span class="icon i-ri-delete-bin-line text-headline shrink-0" :class="[dragAndDropData === undefined ? 'opacity-50' : 'text-ui-danger']" />
 									<span class="text-sm w-2/3">
@@ -98,10 +98,10 @@
 									:class="{
 										'text-ui-ondanger' : hatSchieneKollisionen(schiene.id).value && getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id),
 										'bg-ui-brand/10 opacity-75 border-ui-brand rounded-sm ring-3 ring-ui-brand': is_drop_zone(kurs).value,
-										'text-ui-static': getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id) && !hatSchieneKollisionen(schiene.id).value,
+										'text-uistatic': getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id) && !hatSchieneKollisionen(schiene.id).value,
 									}"
 									@dragover="onDragOver($event, kurs)" @drop="drop_aendere_kurszuordnung(kurs)">
-									<span class="icon-sm i-ri-draggable mt-1 ml-1 opacity-50 group-hover:opacity-100 rounded-xs absolute top-0 left-0" v-if="is_draggable(kurs.id).value" :class="[hatSchieneKollisionen(schiene.id).value && is_draggable(kurs.id).value ? 'group-hover:opacity-25 icon-ui-contrast-0' : 'group-hover:opacity-50 icon-ui-contrast-100']" />
+									<span class="icon-sm i-ri-draggable mt-1 ml-1 opacity-50 group-hover:opacity-100 rounded-xs absolute top-0 left-0" v-if="is_draggable(kurs.id).value" :class="[hatSchieneKollisionen(schiene.id).value && is_draggable(kurs.id).value ? 'group-hover:opacity-25 icon-ui-0' : 'group-hover:opacity-50 icon-ui-100']" />
 									<span class="text-sm opacity-50 relative" title="Schriftlich/Insgesamt im Kurs">
 										{{ getErgebnismanager().getOfKursAnzahlSchuelerSchriftlich(kurs.id) }}/{{ kurs.schueler.size() }}
 									</span>
@@ -118,9 +118,9 @@
 											</span>
 											<span class="cursor-pointer" @click.stop="fixieren_regel_toggle(kurs.id)" :title="fixier_regel(kurs.id) ? 'Fixiert' : 'Fixieren'">
 												<span class="icon i-ri-pushpin-fill inline-block" v-if="fixier_regel(kurs.id)"
-													:class="{'icon-ui-static': getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id) && !hatSchieneKollisionen(schiene.id).value, 'icon-ui-ondanger': getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id) && hatSchieneKollisionen(schiene.id).value}" />
+													:class="{'icon-uistatic': getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id) && !hatSchieneKollisionen(schiene.id).value, 'icon-ui-ondanger': getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id) && hatSchieneKollisionen(schiene.id).value}" />
 												<span class="icon i-ri-pushpin-line inline-block opacity-75" v-if="!verbieten_regel(kurs.id) && !fixier_regel(kurs.id)"
-													:class="{'icon-ui-static': getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id) && !hatSchieneKollisionen(schiene.id).value, 'icon-ui-ondanger': getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id) && hatSchieneKollisionen(schiene.id).value}" />
+													:class="{'icon-uistatic': getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id) && !hatSchieneKollisionen(schiene.id).value, 'icon-ui-ondanger': getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id) && hatSchieneKollisionen(schiene.id).value}" />
 											</span>
 										</template>
 										<template v-else>

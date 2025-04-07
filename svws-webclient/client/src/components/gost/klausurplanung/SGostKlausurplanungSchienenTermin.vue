@@ -1,7 +1,7 @@
 <template>
-	<div class="svws-klausurplanung-schienen-termin flex flex-col border bg-ui-contrast-0 rounded-xl cursor-pointer max-w-120" @drop="onDrop(termin())" @dragover="checkDropZone($event)"
+	<div class="svws-klausurplanung-schienen-termin flex flex-col border bg-ui-100 rounded-xl cursor-pointer max-w-120" @drop="onDrop(termin())" @dragover="checkDropZone($event)"
 		:class="{
-			'shadow-lg shadow-ui-contrast-50 border-ui-contrast-10': dragData() === undefined,
+			'shadow-lg shadow-ui-50 border-ui-10': dragData() === undefined,
 			'border-dashed border-ui-brand ring-4 ring-ui-brand/25': (dragData() !== undefined && dragData() instanceof GostKursklausur && (termin().quartal === kMan().vorgabeByKursklausur(dragData() as GostKursklausur).quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur === 0),
 			'border-dashed border-ui-danger': (dragData() !== undefined && dragData() instanceof GostKursklausur && (termin().quartal === kMan().vorgabeByKursklausur(dragData() as GostKursklausur).quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur > 0 || konflikteTermin() > 0),
 			'border-ui-brand/50 svws-selected': terminSelected,

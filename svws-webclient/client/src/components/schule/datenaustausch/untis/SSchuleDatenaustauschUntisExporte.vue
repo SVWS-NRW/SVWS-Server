@@ -1,5 +1,5 @@
 <template>
-	<div class="page page-flex-row gap-2 overflow-y-auto">
+	<div class="page page-flex-row gap-4 overflow-y-auto">
 		<!-- Auswahl des Untis-Exportes (linke Seite) -->
 		<div class="h-full min-w-48 w-48 flex flex-col gap-2">
 			<template v-for="(gpu, index) in gpus" :key="gpu.title">

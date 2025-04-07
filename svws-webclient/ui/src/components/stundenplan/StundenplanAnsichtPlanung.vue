@@ -6,7 +6,7 @@
 			<div class="inline-flex gap-1 items-center justify-center print:!pl-2 print:!justify-start opacity-50 text-sm font-bold pb-0.5" />
 			<!-- Daneben werden die einzelnen Wochentage des Stundenplans angezeigt -->
 			<div v-for="wochentag in wochentagRange" :key="wochentag.id" @click="updateSelected(wochentag)" class="svws-wochentag-label group" :class="{'svws-selected': selected===wochentag}">
-				<span class="px-2 py-1 rounded-xs group group-hover:bg-ui-contrast-25!"> {{ wochentag.beschreibung }}</span>
+				<span class="px-2 py-1 rounded-xs group group-hover:bg-ui-25!"> {{ wochentag.beschreibung }}</span>
 			</div>
 		</div>
 		<!-- Die Daten des Stundenplans -->
@@ -49,7 +49,7 @@
 							<span class="icon i-ri-cup-line" />
 						</div>
 						<div v-else class="svws-ui-stundenplan--pausen-aufsicht">
-							<span class="icon i-ri-cup-line icon-ui-contrast-25" />
+							<span class="icon i-ri-cup-line icon-ui-25" />
 						</div>
 					</div>
 				</template>

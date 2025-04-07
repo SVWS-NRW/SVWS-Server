@@ -11,13 +11,13 @@
 		<div class="svws-ui-tab-content">
 			<div class="page page-flex-row">
 				<svws-ui-content-card title="Import von Schulbewerbung.de">
+					<div class="flex items-start gap-3">
+						Hier wird zukünftig der Import von Schulbewerbung.de gehandhabt...
+					</div>
 					<svws-ui-button class="contentFocusField" type="primary" @click="doImport">
 						<span class="icon i-ri-download-2-line" />
 						<span>Import</span>
 					</svws-ui-button>
-					<div class="flex items-start gap-3">
-						Hier wird zukünftig der Import von Schulbewerbung.de gehandhabt...
-					</div>
 				</svws-ui-content-card>
 				<svws-ui-content-card title="Export zu Schulbewerbung.de">
 					<div class="flex items-start gap-3">

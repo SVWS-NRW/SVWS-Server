@@ -4,7 +4,7 @@
 		:get-pausenaufsichten-pausenzeit :on-drag :on-drop>
 		<template #unterricht="{ unterricht }">
 			<div class="font-bold flex place-items-center group" title="Unterricht">
-				<span v-if="useDragAndDrop" class="icon i-ri-draggable inline-block icon-ui-contrast-75 -ml-1 opacity-60 group-hover:opacity-100 group-hover:icon-ui-contrast-75" />
+				<span v-if="useDragAndDrop" class="icon i-ri-draggable inline-block icon-ui-75 -ml-1 opacity-60 group-hover:opacity-100 group-hover:icon-ui-75" />
 				<svws-ui-tooltip v-if="unterricht.schienen.size() > 0">
 					<span class="break-keep">{{ manager().unterrichtGetByIDStringOfFachOderKurs(unterricht.id, false) }}&nbsp;({{ schienennummer(unterricht.schienen) }})</span>
 					<template #content>{{ schienenbezeichnung(unterricht.schienen) }}</template>

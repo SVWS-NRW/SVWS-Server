@@ -4,7 +4,7 @@
 		:get-pausenzeiten :schneiden-pausenzeiten-zeitraster :get-pausenzeiten-wochentag :get-pausenaufsichten-pausenzeit :on-drag :on-drop>
 		<template #unterricht="{ unterricht }">
 			<div class="font-bold flex place-items-center group col-span-2" title="Unterricht">
-				<span v-if="useDragAndDrop" class="icon i-ri-draggable inline-block icon-ui-contrast-75 -ml-1 opacity-60 group-hover:opacity-100 group-hover:icon-ui-contrast-75" />
+				<span v-if="useDragAndDrop" class="icon i-ri-draggable inline-block icon-ui-75 -ml-1 opacity-60 group-hover:opacity-100 group-hover:icon-ui-75" />
 				<span>{{ manager().unterrichtGetByIDStringOfFachOderKurs(unterricht.id, false) }}</span>
 			</div>
 			<div class="text-center">{{ unterricht.idKurs ? [...manager().kursGetByIdOrException(unterricht.idKurs).jahrgaenge].map(j => manager().jahrgangGetByIdOrException(j).kuerzel).join(', ') : [...unterricht.klassen].map(k => manager().klasseGetByIdOrException(k).kuerzel).join(', ') }}</div>

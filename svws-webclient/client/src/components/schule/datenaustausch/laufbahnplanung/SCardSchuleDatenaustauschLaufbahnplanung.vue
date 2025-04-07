@@ -44,12 +44,12 @@
 
 	const replaceSchueler = computed<boolean>({
 		get: () => (mode.value !== 'none'),
-		set: (value) => mode.value = value ? 'schueler' : 'none'
+		set: (value) => mode.value = value ? 'schueler' : 'none',
 	});
 
 	const replaceJahrgang = computed<boolean>({
 		get: () => (mode.value === 'all'),
-		set: (value) => mode.value = value ? 'all' : 'schueler'
+		set: (value) => mode.value = value ? 'all' : 'schueler',
 	});
 
 	const status = ref<boolean | undefined>(undefined);
@@ -73,8 +73,6 @@
 		loading.value = false;
 	}
 
-	defineExpose({
-		status
-	});
+	defineExpose({ status });
 
 </script>

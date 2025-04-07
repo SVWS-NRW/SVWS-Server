@@ -81,7 +81,7 @@
 	}
 
 	.notification--stack {
-		@apply whitespace-pre-wrap bg-ui-black mt-2 -mb-2 -mx-3 p-3 font-mono overflow-auto min-w-full rounded-b-md;
+		@apply whitespace-pre-wrap bg-uistatic-0 mt-2 -mb-2 -mx-3 p-3 font-mono overflow-auto min-w-full rounded-b-md;
 	}
 }
 

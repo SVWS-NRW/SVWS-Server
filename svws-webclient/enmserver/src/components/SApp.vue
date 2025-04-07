@@ -77,12 +77,12 @@
 					<svws-ui-header>
 						<div class="flex items-center">
 							<div class="w-20 mr-6" v-if="(app.name === 'schueler') || (app.name === 'lehrer')">
-								<div class="inline-block h-20 rounded-xl animate-pulse w-20 bg-ui-contrast-10" />
+								<div class="inline-block h-20 rounded-xl animate-pulse w-20 bg-ui-75" />
 							</div>
 							<div>
-								<span class="inline-block h-[1em] rounded-sm animate-pulse w-52 bg-ui-contrast-10" />
+								<span class="inline-block h-[1em] rounded-sm animate-pulse w-52 bg-ui-75" />
 								<br>
-								<span class="inline-block h-[1em] rounded-sm animate-pulse w-20 bg-ui-contrast-10" />
+								<span class="inline-block h-[1em] rounded-sm animate-pulse w-20 bg-ui-75" />
 							</div>
 						</div>
 					</svws-ui-header>
@@ -95,8 +95,8 @@
 		</template>
 	</svws-ui-app-layout>
 	<svws-ui-notifications v-if="errors.size > 0">
-		<div v-if="errors.size > 1" class="bg-ui-contrast-0">
-			<svws-ui-button @click="errors.clear()" type="transparent" class="pointer-events-auto ml-auto rounded-lg bg-ui-contrast-0 border-light fixed right-6 left-0 top-5 z-50 w-[29rem] max-w-[75vw] justify-center">Alle {{ errors.size }} Meldungen schließen</svws-ui-button>
+		<div v-if="errors.size > 1" class="bg-ui-100">
+			<svws-ui-button @click="errors.clear()" type="transparent" class="pointer-events-auto ml-auto rounded-lg bg-ui-100 border-light fixed right-6 left-0 top-5 z-50 w-[29rem] max-w-[75vw] justify-center">Alle {{ errors.size }} Meldungen schließen</svws-ui-button>
 			<div class="min-h-[1.85rem]" />
 		</div>
 		<template v-for="error of [...errors.values()].reverse().slice(0, 20)" :key="error.id">
@@ -267,7 +267,7 @@
 		@apply h-screen;
 		@apply overflow-hidden;
 		@apply relative;
-		@apply bg-ui-contrast-0;
+		@apply bg-ui-100;
 	}
 
 </style>

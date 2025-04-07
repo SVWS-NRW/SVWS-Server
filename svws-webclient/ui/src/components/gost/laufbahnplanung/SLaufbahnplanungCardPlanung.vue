@@ -293,8 +293,8 @@
 	}
 
 	.svws-ergebnis--good {
-		background-color: var(--color-bg-ui-success-weak);
-		color: var(--color-text-ui-onsuccess-weak);
+		background-color: var(--color-bg-ui-success-secondary);
+		color: var(--color-text-uistatic);
 	}
 
 	.svws-ergebnis--more {

@@ -1,5 +1,5 @@
 <template>
-	<div class="flex flex-col bg-ui-contrast-0 rounded-xl cursor-pointer" @drop="onDrop(termin())" @dragover="checkDropZone($event, termin())" :class="dragData === undefined || isDropZone(termin()) ? '' : 'opacity-35'">
+	<div class="flex flex-col bg-ui-100 rounded-xl cursor-pointer" @drop="onDrop(termin())" @dragover="checkDropZone($event, termin())" :class="dragData === undefined || isDropZone(termin()) ? '' : 'opacity-35'">
 		<s-gost-klausurplanung-termin :termin="termin()"
 			:benutzer-kompetenzen
 			:k-man

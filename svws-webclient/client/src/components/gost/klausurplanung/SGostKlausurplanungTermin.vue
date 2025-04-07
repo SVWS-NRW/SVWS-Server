@@ -1,11 +1,11 @@
 <template>
-	<div :id="'gost-klausurtermin-' + termin.id" class="svws-ui-termin h-full flex flex-col group bg-ui-contrast-0 rounded-lg"
+	<div :id="'gost-klausurtermin-' + termin.id" class="svws-ui-termin h-full flex flex-col group bg-ui-100 rounded-lg"
 		:class="{
-			'border shadow-md shadow-ui-contrast-10': !inTooltip,
-			'border-ui-contrast-10': !inTooltip && !terminSelected,
+			'border shadow-md shadow-ui-10': !inTooltip,
+			'border-ui-10': !inTooltip && !terminSelected,
 			'-mx-2 -my-1': inTooltip,
 			'border-r-2 border-r-ui-brand border-l-transparent': inTooltip && !termin.istHaupttermin,
-			'border-ui-contrast-500 ring-4 ring-ui-contrast-10': termin.istHaupttermin && !inTooltip && terminSelected,
+			'border-ui-500 ring-4 ring-ui-neutral': termin.istHaupttermin && !inTooltip && terminSelected,
 			'border-ui-brand/50 ring-4 ring-ui-brand/10': !termin.istHaupttermin && !inTooltip && terminSelected,
 			'border-l-brand border-l-2': !termin.istHaupttermin,
 		}">
@@ -14,7 +14,7 @@
 				<template v-if="!$slots.tableTitle">
 					<slot name="title">
 						<span class="leading-tight inline-flex gap-0.5 items-center" :class="{'text-base': compact || compactWithDate}">
-							<span v-if="dragIcon && !compact" class="group-hover:bg-ui-contrast-10 mr-0.5 rounded pt-1">
+							<span v-if="dragIcon && !compact" class="group-hover:bg-ui-75 mr-0.5 rounded pt-1">
 								<span class="icon i-ri-draggable" />
 							</span>
 							<span class="break-all">{{ terminBezeichnung() }}</span>
@@ -57,7 +57,7 @@
 						Keine Klausuren
 					</div>
 					<slot name="kursklausuren" v-if="kursklausuren().size()">
-						<svws-ui-table :disable-header="!$slots.tableTitle" :class="{'border-t border-ui-contrast-25': !$slots.tableTitle}">
+						<svws-ui-table :disable-header="!$slots.tableTitle" :class="{'border-t border-ui-25': !$slots.tableTitle}">
 							<template #header>
 								<div class="svws-ui-tr" :style="tableRowStyle" role="row">
 									<div class="svws-ui-td col-span-full" role="columnheader">
@@ -90,7 +90,7 @@
 											<template #content>
 												<s-gost-klausurplanung-kursliste :k-man :kursklausur="klausur" :termin :patch-klausur :create-schuelerklausur-termin @modal="keepOpen = $event" :benutzer-kompetenzen />
 											</template>
-											<span class="svws-ui-badge hover:opacity-75" :style="`color: var(--color-text-ui-static); background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
+											<span class="svws-ui-badge hover:opacity-75" :style="`color: var(--color-text-uistatic); background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
 											<svws-ui-tooltip>
 												<template #content>
 													<div v-if="kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe !== null && kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe!.trim().length > 0">
@@ -250,7 +250,7 @@
 
 		&:hover {
 			.i-ri-draggable {
-				@apply opacity-100 text-ui-contrast-100;
+				@apply opacity-100 text-ui-100;
 			}
 		}
 	}
@@ -261,7 +261,7 @@
 
 			&:not(:focus) {
 				&::placeholder {
-					@apply text-ui-contrast-100;
+					@apply text-ui-100;
 				}
 			}
 

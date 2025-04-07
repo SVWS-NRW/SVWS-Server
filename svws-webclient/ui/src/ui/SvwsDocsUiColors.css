@@ -3,11 +3,11 @@
 }
 
 html:not(.htw-dark) .ui-docs-bg {
-	@apply bg-ui-neutral text-ui-contrast-100;
+	@apply bg-ui text-ui;
 }
 
 html:not(.htw-dark) .ui-docs-bg.dark {
-	@apply bg-ui-contrast-0 text-ui-contrast-100;
+	@apply bg-ui text-ui;
 	color-scheme: dark;
 }
 
@@ -30,5 +30,5 @@ html:not(.htw-dark) .ui-docs-bg.dark {
 
 .ui-docs-color-swatch,
 .ui-docs-preview-checkbox {
-	@apply p-2 w-12 h-8 rounded-lg;
+	@apply p-2 w-12 h-8 min-w-12 rounded-lg;
 }

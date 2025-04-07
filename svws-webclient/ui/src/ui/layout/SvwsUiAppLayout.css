@@ -2,10 +2,6 @@ html {
 	font-size: 10px;
 	@apply bg-ui-neutral text-ui;
 
-	&.dark {
-		@apply bg-ui-black;
-	}
-
 	&.font-size-small {
 		font-size: 9px;
 	}
@@ -128,7 +124,7 @@ html {
 		@apply absolute right-0 top-0 z-40 pt-4 pr-2 flex flex-col;
 
 		button {
-			@apply rounded-lg text-ui-contrast-50 p-0.5 inline-flex flex-col items-center gap-1 text-headline-sm;
+			@apply rounded-lg text-ui-50 p-0.5 inline-flex flex-col items-center gap-1 text-headline-sm;
 
 			svg {
 				@apply shrink-0 text-headline-md;
@@ -136,7 +132,7 @@ html {
 
 			&:hover,
 			&:focus-visible {
-				@apply bg-ui-contrast-10 text-ui-contrast-100;
+				@apply bg-ui-75 text-ui-100;
 			}
 		}
 
@@ -197,7 +193,7 @@ html {
 
 	.s-all-sidebars-collapsed {
 		.app--content-container {
-			@apply border border-ui-contrast-10 rounded-l-2xl;
+			@apply border border-ui-10 rounded-l-2xl;
 		}
 
 		.s-toggle-second {
@@ -344,7 +340,7 @@ html {
 	@apply w-full h-full flex justify-center items-center;
 
 	span.icon {
-		@apply w-full h-1/5 icon-ui-contrast-25;
+		@apply w-full h-1/5 icon-ui-25;
 		max-width: 20vw;
 	}
 }

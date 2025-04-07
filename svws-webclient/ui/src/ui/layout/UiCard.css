@@ -2,7 +2,7 @@
 	@apply rounded-lg min-w-fit gap-3;
 
 	.ui-card--header {
-		@apply p-4 flex items-center gap-3 text-left w-full rounded-lg bg-ui-brand-weak border border-ui-brand transition-[border-radius]
+		@apply p-4 flex items-center gap-3 text-left w-full rounded-lg bg-ui-brand-secondary border border-ui-brand transition-[border-radius]
 			duration-100 delay-[450ms] ease-in-out;
 
 		.ui-card--header--icon span {
@@ -100,7 +100,7 @@
 						}
 
 						&:disabled {
-							@apply icon-ui-contrast-50 bg-transparent;
+							@apply icon-ui-50 bg-transparent;
 						}
 					}
 				}

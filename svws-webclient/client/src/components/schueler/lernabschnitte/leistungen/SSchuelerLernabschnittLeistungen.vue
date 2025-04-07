@@ -19,7 +19,7 @@
 				</div>
 			</template>
 			<template #rowCustom="{ row: leistung }">
-				<div v-if="leistung.id !== null" class="svws-ui-tr" role="row" :style="`color: var(--color-text-ui-static); background-color: ${manager().fachFarbeGetByLeistungsIdOrDefault(leistung.id)}`">
+				<div v-if="leistung.id !== null" class="svws-ui-tr" role="row" :style="`color: var(--color-text-uistatic); background-color: ${manager().fachFarbeGetByLeistungsIdOrDefault(leistung.id)}`">
 					<div v-if="hatUpdateKompetenz" class="svws-ui-td svws-align-center cursor-pointer" role="cell">
 						<svws-ui-checkbox :model-value="auswahl.has(leistung)" @update:model-value="auswahl.has(leistung) ? auswahl.delete(leistung) : auswahl.add(leistung)" headless />
 					</div>
