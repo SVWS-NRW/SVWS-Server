@@ -62,7 +62,7 @@
 		</template>
 		<template #body>
 			<template v-for="fach in manager.faecherGefiltert" :key="fach.id">
-				<s-laufbahnplanung-fach :manager :abiturdaten-manager :gost-jahrgangsdaten :fach :set-wahl :ignoriere-sprachenfolge :belegung-hat-immer-noten :hat-update-kompetenz :active-halbjahr-id
+				<s-laufbahnplanung-fach :manager :abiturdaten-manager :gost-jahrgangsdaten :fach :set-wahl :hat-update-kompetenz :active-halbjahr-id
 					:active-focus="fach.id === activeFachId" @keydown="switchFocus($event)" @update:focus="(fachId: number, halbjahrId: number) => updateFocusState(fachId, halbjahrId)"
 					@update:focus:impossible="(fachId: number, halbjahrId: number) => retryFocus(fachId, halbjahrId)" />
 			</template>
@@ -182,15 +182,11 @@
 		gostJahrgangsdaten: GostJahrgangsdaten;
 		setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>;
 		gotoKursblockung: (halbjahr: GostHalbjahr) => Promise<unknown>
-		ignoriereSprachenfolge? : boolean;
 		title?: string | undefined;
-		belegungHatImmerNoten?: boolean;
 		hatUpdateKompetenz?: boolean;
 	}>(), {
 		title: undefined,
 		modus: 'normal',
-		ignoriereSprachenfolge: false,
-		belegungHatImmerNoten: false,
 		hatUpdateKompetenz: true,
 	});
 

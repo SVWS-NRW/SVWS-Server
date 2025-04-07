@@ -15,14 +15,14 @@
 		</div>
 		<div role="cell" class="svws-ui-td svws-align-center font-medium" :class="{ 'svws-disabled': !manager.istFremdsprache(fach) }">
 			<template v-if="manager.istFremdsprache(fach)">
-				<span v-if="ignoriereSprachenfolge"> ? </span>
+				<span v-if="manager.ignoriereSprachenfolge"> ? </span>
 				<span v-else-if="sprachenfolgeNr === 0 && !sprachenfolgeJahrgang"> — </span>
 				<span v-else> {{ sprachenfolgeNr }} </span>
 			</template>
 		</div>
 		<div role="cell" class="svws-ui-td svws-align-center font-medium svws-divider" :class="{ 'svws-disabled': !manager.istFremdsprache(fach)}">
 			<template v-if="manager.istFremdsprache(fach)">
-				<span v-if="ignoriereSprachenfolge"> ? </span>
+				<span v-if="manager.ignoriereSprachenfolge"> ? </span>
 				<span v-else-if="sprachenfolgeNr === 0 && !sprachenfolgeJahrgang"> — </span>
 				<span v-else> {{ sprachenfolgeJahrgang }} </span>
 			</template>
@@ -30,13 +30,13 @@
 		<template v-for="halbjahr in GostHalbjahr.values()" :key="halbjahr.id">
 			<div role="cell" class="laufbahn-cell svws-ui-td svws-align-center svws-divider select-none font-medium"
 				:class="hatUpdateKompetenz ? {
-					'cursor-pointer': istMoeglich[halbjahr.id] && !istBewertet(halbjahr),
-					'cursor-not-allowed': (!istMoeglich[halbjahr.id] || istBewertet(halbjahr) || istFachkombiVerboten[halbjahr.id]),
-					'svws-disabled': !istMoeglich[halbjahr.id],
-					'svws-disabled-soft': (istBewertet(halbjahr) && istMoeglich[halbjahr.id]) || (((gostHalbjahr !== null) && (gostHalbjahr.id >= halbjahr.id)) && istMoeglich[halbjahr.id]),
+					'cursor-pointer': manager.istMoeglich(fach, halbjahr) && !istBewertet(halbjahr),
+					'cursor-not-allowed': (!manager.istMoeglich(fach, halbjahr) || istBewertet(halbjahr) || istFachkombiVerboten[halbjahr.id]),
+					'svws-disabled': !manager.istMoeglich(fach, halbjahr),
+					'svws-disabled-soft': (istBewertet(halbjahr) && manager.istMoeglich(fach, halbjahr)) || (((gostHalbjahr !== null) && (gostHalbjahr.id >= halbjahr.id)) && manager.istMoeglich(fach, halbjahr)),
 				} : {}"
 				@click.stop="stepper(halbjahr)" :title="getTooltipHalbjahr(halbjahr)"
-				:tabindex="istMoeglich[halbjahr.id] ? 0 : -1" @keydown.enter.prevent="handleKeyboardStep($event, halbjahr)" @keydown.space.prevent="handleKeyboardStep($event, halbjahr)"
+				:tabindex="manager.istMoeglich(fach, halbjahr) ? 0 : -1" @keydown.enter.prevent="handleKeyboardStep($event, halbjahr)" @keydown.space.prevent="handleKeyboardStep($event, halbjahr)"
 				@keydown.delete.prevent="deleteFachwahlPlaceholder(halbjahr)" :ref="el => halbjahrRefs.set(halbjahr.id, el as HTMLElement)" @focus="() => emit('update:focus', fach.id, halbjahr.id)">
 				<div class="inline-flex items-center gap-1 relative w-full">
 					<span class="w-full text-center">
@@ -58,7 +58,7 @@
 								</template>
 							</svws-ui-tooltip>
 						</template>
-						<template v-else-if="!istMoeglich[halbjahr.id] && (wahlen[halbjahr.id] !== '') && hatUpdateKompetenz">
+						<template v-else-if="!manager.istMoeglich(fach, halbjahr) && (wahlen[halbjahr.id] !== '') && hatUpdateKompetenz">
 							<svws-ui-tooltip :color="istBewertet(halbjahr) && (noten[halbjahr.id] !== null) ? 'light' : 'danger'">
 								<svws-ui-button type="icon" size="small" :disabled="istBewertet(halbjahr) && (noten[halbjahr.id] !== null)" @click="deleteFachwahl(halbjahr)"
 									@keydown.enter.prevent="deleteFachwahl(halbjahr)" @keydown.space.prevent="deleteFachwahl(halbjahr)">
@@ -74,7 +74,7 @@
 								</template>
 							</svws-ui-tooltip>
 						</template>
-						<template v-else-if="(wahlen[halbjahr.id] !== '') && istBewertet(halbjahr) && ((noten[halbjahr.id] === null) && !belegungHatImmerNoten) && hatUpdateKompetenz">
+						<template v-else-if="(wahlen[halbjahr.id] !== '') && istBewertet(halbjahr) && ((noten[halbjahr.id] === null) && !manager.belegungHatImmerNoten) && hatUpdateKompetenz">
 							<svws-ui-tooltip :color="'danger'">
 								<svws-ui-button type="icon" size="small" @click="deleteFachwahl(halbjahr)"
 									@keydown.enter.prevent="deleteFachwahl(halbjahr)" @keydown.space.prevent="deleteFachwahl(halbjahr)">
@@ -136,7 +136,6 @@
 	import { Fach } from "../../../../../core/src/asd/types/fach/Fach";
 	import type { AbiturFachbelegung } from "../../../../../core/src/core/data/gost/AbiturFachbelegung";
 	import type { Sprachbelegung } from "../../../../../core/src/asd/data/schueler/Sprachbelegung";
-	import { SprachendatenUtils } from "../../../../../core/src/core/utils/schueler/SprachendatenUtils";
 	import { GostHalbjahr } from "../../../../../core/src/core/types/gost/GostHalbjahr";
 	import { AbiturFachbelegungHalbjahr } from "../../../../../core/src/core/data/gost/AbiturFachbelegungHalbjahr";
 	import { GostKursart } from "../../../../../core/src/core/types/gost/GostKursart";
@@ -152,15 +151,11 @@
 		abiturdatenManager: () => AbiturdatenManager;
 		gostJahrgangsdaten: GostJahrgangsdaten;
 		fach: GostFach;
-		ignoriereSprachenfolge? : boolean;
-		belegungHatImmerNoten?: boolean;
 		hatUpdateKompetenz: boolean;
 		setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>;
 		activeFocus?: boolean;
 		activeHalbjahrId?: number;
 	}>(), {
-		ignoriereSprachenfolge: false,
-		belegungHatImmerNoten: false,
 		activeHalbjahrId: 0,
 	});
 
@@ -187,12 +182,14 @@
 	// Nächste Halbjahr-Zelle fokussieren, wenn möglich. Sonst "update:focus:impossible" emitten, sodass Parent-Komponente einen Schritt weiter gehen kann
 	function doFocusOnHalbjahr() {
 		const focusCell = halbjahrRefs.value.get(props.activeHalbjahrId);
-		if (istMoeglich.value[props.activeHalbjahrId]
-			|| ((props.activeHalbjahrId !== 6) && (wahlen.value[props.activeHalbjahrId] !== ""))
-			|| istMoeglichAbi.value || (abi_wahl.value !== ""))
+		const halbjahr = (props.activeHalbjahrId < GostHalbjahr.values().length) ? GostHalbjahr.fromID(props.activeHalbjahrId) : null;
+		if ((halbjahr !== null) && (props.manager.istMoeglich(props.fach, halbjahr) || (wahlen.value[halbjahr.id] !== ""))) {
 			focusCell?.focus();
-		else
+		} else if ((halbjahr === null) && (istMoeglichAbi.value || (abi_wahl.value !== ""))) {
+			focusCell?.focus();
+		} else {
 			emit("update:focus:impossible", props.fach.id, props.activeHalbjahrId);
+		}
 	}
 
 	const sprachbelegung = computed<Sprachbelegung | null>(() => {
@@ -219,22 +216,6 @@
 
 	const istMoeglichAbi = computed<boolean>(() => props.abiturdatenManager().getMoeglicheKursartAlsAbiturfach(props.fach.id) !== null);
 
-	const istMoeglich = computed<boolean[]>(() => {
-		if (props.manager.istFremdsprache(props.fach) && ((!props.ignoriereSprachenfolge) && !props.manager.istFremdspracheMoeglich(props.fach)))
-			return [ false, false, false, false, false, false ];
-		const istNichtErsatzOderPjk = (props.manager.getFachgruppe(props.fach) !== Fachgruppe.FG_ME)
-			&& (props.manager.getFachgruppe(props.fach) !== Fachgruppe.FG_PX);
-		return [
-			(props.fach.istMoeglichEF1 && !props.manager.hatDoppelbelegung(props.fach, GostHalbjahr.EF1) && istNichtErsatzOderPjk),
-			(props.fach.istMoeglichEF2 && !props.manager.hatDoppelbelegung(props.fach, GostHalbjahr.EF2) && istNichtErsatzOderPjk),
-			(props.fach.istMoeglichQ11 && !props.manager.hatDoppelbelegung(props.fach, GostHalbjahr.Q11)),
-			(props.fach.istMoeglichQ12 && !props.manager.hatDoppelbelegung(props.fach, GostHalbjahr.Q12)),
-			(props.fach.istMoeglichQ21 && !props.manager.hatDoppelbelegung(props.fach, GostHalbjahr.Q21)),
-			(props.fach.istMoeglichQ22 && !props.manager.hatDoppelbelegung(props.fach, GostHalbjahr.Q22)),
-		];
-	});
-
-
 	function getTooltipHalbjahr(halbjahr: GostHalbjahr) : string {
 		if (istBewertet(halbjahr)) {
 			const note = noten.value[halbjahr.id];
@@ -242,7 +223,7 @@
 				return 'Es liegen keine Leistungsdaten vor!';
 			return `Note ${note.daten(schuljahr.value)?.kuerzel ?? '-'} (keine Änderungen mehr möglich)`;
 		}
-		return (!istMoeglich.value[halbjahr.id]) ? 'Wahl nicht möglich' : '';
+		return (!props.manager.istMoeglich(props.fach, halbjahr)) ? 'Wahl nicht möglich' : '';
 	}
 
 
@@ -381,7 +362,7 @@
 			await stepper_manuell(halbjahr);
 			return;
 		}
-		if ((!istMoeglich.value[halbjahr.id]) || istBewertet(halbjahr))
+		if ((!props.manager.istMoeglich(props.fach, halbjahr)) || istBewertet(halbjahr))
 			return;
 		const wahl = props.abiturdatenManager().getSchuelerFachwahl(props.fach.id);
 		if (halbjahr === GostHalbjahr.EF1)
@@ -435,7 +416,7 @@
 	async function deleteFachwahl(halbjahr: GostHalbjahr | undefined) {
 		if (halbjahr === undefined)
 			return;
-		if (istMoeglich.value[halbjahr.id] && (!istBewertet(halbjahr) || noten.value[halbjahr.id] !== null))
+		if (props.manager.istMoeglich(props.fach, halbjahr) && (!istBewertet(halbjahr) || noten.value[halbjahr.id] !== null))
 			return;
 		const wahl = props.abiturdatenManager().getSchuelerFachwahl(props.fach.id);
 		wahl.halbjahre[halbjahr.id] = null;
@@ -1204,7 +1185,7 @@
 	async function handleHochschreiben(halbjahr: GostHalbjahr) {
 		if (!props.hatUpdateKompetenz)
 			return;
-		if ((!istMoeglich.value[halbjahr.id]) || istBewertet(halbjahr))
+		if ((!props.manager.istMoeglich(props.fach, halbjahr)) || istBewertet(halbjahr))
 			return;
 		const wahl = props.abiturdatenManager().getSchuelerFachwahl(props.fach.id);
 		if (halbjahr === GostHalbjahr.EF1)

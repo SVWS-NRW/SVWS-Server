@@ -18,6 +18,12 @@ export class LaufbahnplanungUiManager {
 	/** Die Daten zum Abitur-Jahrgang */
 	private jahrgang: () => GostJahrgangsdaten;
 
+	/** Gibt an, ob bei den angebotenen Sprachfächern eine Sprachenfolge berücksichtigt werden soll oder nicht */
+	private _ignoriereSprachenfolge : boolean = false;
+
+	/** Gibt an, ob bei den einzelnen Fachbelegungen immer Noten bei den Leistungsdaten angenommen werden sollen */
+	private _belegungHatImmerNoten : boolean = false;
+
 	/** Computed Property: Ein Array mit der Anzahl von anrechenbaren Kursen in den einzelnen Halbjahren */
 	private _anrechenbareKurse = computed<number[]>(() => this.manager().getAnrechenbareKurse());
 
@@ -49,13 +55,18 @@ export class LaufbahnplanungUiManager {
 	 * Erstellt einen neuen UI-Manager auf Basis des übergebenen Abiturdaten-Managers,
 	 * welcher die Belegprüfung durchführt.
 	 *
-	 * @param manager   der Abiturdaten-Manager zur Durchführung der Belegprüfung
-	 * @param config    die Konfiguration des Clients
+	 * @param manager                  der Abiturdaten-Manager zur Durchführung der Belegprüfung
+	 * @param config                   die Konfiguration des Clients
+	 * @param ignoriereSprachenfolge   gibt an, ob bei den angebotenen Sprachfächern eine Sprachenfolge berücksichtigt werden soll oder nicht
+	 * @param belegungHatImmerNoten    gibt an, ob bei den einzelnen Fachbelegungen immer Noten bei den Leistungsdaten angenommen werden sollen
 	 */
-	public constructor(manager: () => AbiturdatenManager, config: () => Config, jahrgang: () => GostJahrgangsdaten) {
+	public constructor(manager: () => AbiturdatenManager, config: () => Config, jahrgang: () => GostJahrgangsdaten,
+		ignoriereSprachenfolge : boolean = false, belegungHatImmerNoten : boolean = false) {
 		this.manager = manager;
 		this.config = config;
 		this.jahrgang = jahrgang;
+		this._ignoriereSprachenfolge = ignoriereSprachenfolge;
+		this._belegungHatImmerNoten = belegungHatImmerNoten;
 		// Lese aus der Konfiguration aus, ob alle Fächer oder nur ein Teil angezeigt werden soll
 		const wert = this.config().getValue("app.schueler.laufbahnplanung.faecher.anzeigen");
 		if ((wert === 'alle') || (wert === 'nur_waehlbare') || (wert === 'nur_gewaehlt')) {
@@ -72,6 +83,21 @@ export class LaufbahnplanungUiManager {
 			void this.config().setValue("app.schueler.laufbahnplanung.modus", 'normal');
 			this._modus.value = 'normal';
 		}
+	}
+
+
+	/**
+	 * Gibt zurück, ob bei den angebotenen Sprachfächern eine Sprachenfolge berücksichtigt werden soll oder nicht
+	 */
+	public get ignoriereSprachenfolge() : boolean {
+		return this._ignoriereSprachenfolge;
+	}
+
+	/*
+	 * Gibt zurück, ob bei den einzelnen Fachbelegungen immer Noten bei den Leistungsdaten angenommen werden sollen
+	 */
+	public get belegungHatImmerNoten() : boolean {
+		return this._belegungHatImmerNoten;
 	}
 
 
@@ -519,6 +545,45 @@ export class LaufbahnplanungUiManager {
 	 */
 	public istFremdspracheMoeglich(fach: GostFach): boolean {
 		return this._mapFremdsprachenMoeglich.value.get(fach) ?? false;
+	}
+
+	/**
+	 * Eine Map, welche angibt, ob bei den Fächern eine Belegung in den einzelnen Jahrgängen möglich ist oder nicht.
+	 */
+	private _istMoeglich = computed<HashMap2D<GostFach, GostHalbjahr, boolean>>(() => {
+		const map = new HashMap2D<GostFach, GostHalbjahr, boolean>();
+		for (const fach of this.alleFaecher) {
+			// Prüfe, ob es sich um eine Fremdsprache handelt und deren Belegung aufgrund der Sprachenfolge ausgeschlossen ist
+			if ((!this.ignoriereSprachenfolge) && (this.istFremdsprache(fach) && !this.istFremdspracheMoeglich(fach))) {
+				map.put(fach, GostHalbjahr.EF1, false);
+				map.put(fach, GostHalbjahr.EF2, false);
+				map.put(fach, GostHalbjahr.Q11, false);
+				map.put(fach, GostHalbjahr.Q12, false);
+				map.put(fach, GostHalbjahr.Q21, false);
+				map.put(fach, GostHalbjahr.Q22, false);
+			} else {
+				const istNichtErsatzOderPjk = (this.getFachgruppe(fach) !== Fachgruppe.FG_ME) && (this.getFachgruppe(fach) !== Fachgruppe.FG_PX);
+				map.put(fach, GostHalbjahr.EF1, (fach.istMoeglichEF1 && !this.hatDoppelbelegung(fach, GostHalbjahr.EF1) && istNichtErsatzOderPjk));
+				map.put(fach, GostHalbjahr.EF2, (fach.istMoeglichEF2 && !this.hatDoppelbelegung(fach, GostHalbjahr.EF2) && istNichtErsatzOderPjk));
+				map.put(fach, GostHalbjahr.Q11, (fach.istMoeglichQ11 && !this.hatDoppelbelegung(fach, GostHalbjahr.Q11)));
+				map.put(fach, GostHalbjahr.Q12, (fach.istMoeglichQ12 && !this.hatDoppelbelegung(fach, GostHalbjahr.Q12)));
+				map.put(fach, GostHalbjahr.Q21, (fach.istMoeglichQ21 && !this.hatDoppelbelegung(fach, GostHalbjahr.Q21)));
+				map.put(fach, GostHalbjahr.Q22, (fach.istMoeglichQ22 && !this.hatDoppelbelegung(fach, GostHalbjahr.Q22)));
+			}
+		}
+		return map;
+	});
+
+	/**
+	 * Gibt zurück, ob eine Belegung des übergebenen Faches in dem angegeben Halbjahr möglich ist oder nicht.
+	 *
+	 * @param fach       das Fach
+	 * @param halbjahr   das Halbjahr
+	 *
+	 * @returns true, wenn eine Belegung des übergebenen Faches in dem angegeben Halbjahr möglich ist, und ansonsten false
+	 */
+	public istMoeglich(fach: GostFach, halbjahr: GostHalbjahr) : boolean {
+		return this._istMoeglich.value.getOrNull(fach, halbjahr) ?? false;
 	}
 
 }
