@@ -1,5 +1,5 @@
 import { computed, ref } from "vue";
-import type { AbiturFachbelegungHalbjahr, GostJahrgangsdaten, JavaMap, Sprachbelegung} from "../../../../../core/src";
+import type { AbiturFachbelegungHalbjahr, GostJahrgangsdaten, GostKursart, JavaMap, Sprachbelegung} from "../../../../../core/src";
 import { Fach, Fachgruppe, HashMap2D, SprachendatenUtils} from "../../../../../core/src";
 import { ArrayList, GostHalbjahr, HashMap, type AbiturdatenManager, type GostFach, type List } from "../../../../../core/src";
 import type { Config } from "~/utils/Config";
@@ -673,6 +673,43 @@ export class LaufbahnplanungUiManager {
 	 */
 	public istMoeglich(fach: GostFach, halbjahr: GostHalbjahr) : boolean {
 		return this._istMoeglich.value.getOrNull(fach, halbjahr) ?? false;
+	}
+
+	/**
+	 * Eine Map mit der Zuordnung der Möglichen Kursart für ein Abiturfach zu einem Fach.
+	 */
+	private _abiMoeglicheKursart = computed<JavaMap<GostFach, GostKursart>>(() => {
+		const map = new HashMap<GostFach, GostKursart>();
+		for (const fach of this.alleFaecher) {
+			const tmp = this.manager().getMoeglicheKursartAlsAbiturfach(fach.id);
+			if (tmp !== null)
+				map.put(fach, tmp);
+		}
+		return map;
+	});
+
+
+	/**
+	 * Gibt zurück, ob das übergene Fach als Abiturfach wählbar ist.
+	 *
+	 * @param fach   das Fach
+	 *
+	 * @returns true, wenn es als Abiturfach wählbar ist, und ansonsten false
+	 */
+	public istMoeglichAbi(fach: GostFach) : boolean {
+		return (this._abiMoeglicheKursart.value.get(fach) !== null);
+	}
+
+	/**
+	 * Gibt die Kursart zurück, welche für das übergeben Fach aufgrund der
+	 * Fachbelegungen im Abitur wählbar ist.
+	 *
+	 * @param fach   das Fach
+	 *
+	 * @returns die Kursart
+	 */
+	public getMoeglicheAbiKursart(fach: GostFach): GostKursart | null {
+		return this._abiMoeglicheKursart.value.get(fach);
 	}
 
 }

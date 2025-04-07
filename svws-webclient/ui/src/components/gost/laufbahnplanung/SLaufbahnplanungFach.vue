@@ -102,15 +102,15 @@
 		</template>
 		<div role="cell" class="laufbahn-cell svws-ui-td svws-align-center select-none font-medium"
 			:class="hatUpdateKompetenz ? {
-				'cursor-pointer': istMoeglichAbi && !istBewertet(GostHalbjahr.Q22), '': istMoeglichAbi,
-				'cursor-not-allowed': !istMoeglichAbi,
-				'svws-disabled': !istMoeglichAbi,
-				'svws-disabled-soft': istBewertet(GostHalbjahr.Q22) && istMoeglichAbi,
+				'cursor-pointer': manager.istMoeglichAbi(fach) && !istBewertet(GostHalbjahr.Q22), '': manager.istMoeglichAbi(fach),
+				'cursor-not-allowed': !manager.istMoeglichAbi(fach),
+				'svws-disabled': !manager.istMoeglichAbi(fach),
+				'svws-disabled-soft': istBewertet(GostHalbjahr.Q22) && manager.istMoeglichAbi(fach),
 			} : {}"
-			@click.stop="stepperAbi()" :tabindex="istMoeglichAbi ? 0 : -1" @keydown.enter.prevent="stepperAbi()" @keydown.space.prevent="stepperAbi()" @keydown.delete.prevent="deleteFachwahlAbiturPlaceholder()"
+			@click.stop="stepperAbi()" :tabindex="manager.istMoeglichAbi(fach) ? 0 : -1" @keydown.enter.prevent="stepperAbi()" @keydown.space.prevent="stepperAbi()" @keydown.delete.prevent="deleteFachwahlAbiturPlaceholder()"
 			:ref="el => halbjahrRefs.set(GostHalbjahr.values().length, el as HTMLElement)" @focus="() => emit('update:focus', fach.id, GostHalbjahr.values().length)">
 			<template v-if="abi_wahl"> {{ abi_wahl }} </template>
-			<span v-if="abi_wahl && !istMoeglichAbi && hatUpdateKompetenz" class="absolute -right-0">
+			<span v-if="abi_wahl && !manager.istMoeglichAbi(fach) && hatUpdateKompetenz" class="absolute -right-0">
 				<svws-ui-tooltip :color="'danger'">
 					<svws-ui-button type="icon" size="small" @click="deleteFachwahlAbitur()"
 						@keydown.enter.prevent="deleteFachwahlAbitur()" @keydown.space.prevent="deleteFachwahlAbitur()">
@@ -134,7 +134,6 @@
 	import type { GostSchuelerFachwahl } from "../../../../../core/src/core/data/gost/GostSchuelerFachwahl";
 	import { Fachgruppe } from "../../../../../core/src/asd/types/fach/Fachgruppe";
 	import { Fach } from "../../../../../core/src/asd/types/fach/Fach";
-	import type { Sprachbelegung } from "../../../../../core/src/asd/data/schueler/Sprachbelegung";
 	import { GostHalbjahr } from "../../../../../core/src/core/types/gost/GostHalbjahr";
 	import { AbiturFachbelegungHalbjahr } from "../../../../../core/src/core/data/gost/AbiturFachbelegungHalbjahr";
 	import { GostKursart } from "../../../../../core/src/core/types/gost/GostKursart";
@@ -181,7 +180,7 @@
 		const halbjahr = (props.activeHalbjahrId < GostHalbjahr.values().length) ? GostHalbjahr.fromID(props.activeHalbjahrId) : null;
 		if ((halbjahr !== null) && (props.manager.istMoeglich(props.fach, halbjahr) || (wahlen.value[halbjahr.id] !== ""))) {
 			focusCell?.focus();
-		} else if ((halbjahr === null) && (istMoeglichAbi.value || (abi_wahl.value !== ""))) {
+		} else if ((halbjahr === null) && (props.manager.istMoeglichAbi(props.fach) || (abi_wahl.value !== ""))) {
 			focusCell?.focus();
 		} else {
 			emit("update:focus:impossible", props.fach.id, props.activeHalbjahrId);
@@ -191,8 +190,6 @@
 	function istBewertet(halbjahr: GostHalbjahr): boolean {
 		return props.abiturdatenManager().istBewertet(halbjahr);
 	}
-
-	const istMoeglichAbi = computed<boolean>(() => props.abiturdatenManager().getMoeglicheKursartAlsAbiturfach(props.fach.id) !== null);
 
 	function getTooltipHalbjahr(halbjahr: GostHalbjahr) : string {
 		if (istBewertet(halbjahr)) {
@@ -330,7 +327,7 @@
 			await stepper_manuellAbi();
 			return;
 		}
-		if (!istMoeglichAbi.value)
+		if (!props.manager.istMoeglichAbi(props.fach))
 			return;
 		const wahl = props.abiturdatenManager().getSchuelerFachwahl(props.fach.id);
 		setAbiturWahl(wahl);
@@ -1115,7 +1112,7 @@
 
 
 	function setAbiturWahl(wahl: GostSchuelerFachwahl): void {
-		const abiMoeglicheKursart : GostKursart | null = props.abiturdatenManager().getMoeglicheKursartAlsAbiturfach(props.fach.id);
+		const abiMoeglicheKursart = props.manager.getMoeglicheAbiKursart(props.fach);
 		if (abiMoeglicheKursart === null) {
 			wahl.abiturFach = null;
 			return;
