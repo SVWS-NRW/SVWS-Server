@@ -1,5 +1,5 @@
 import { computed, ref } from "vue";
-import type { AbiturFachbelegungHalbjahr, GostJahrgangsdaten, JavaMap} from "../../../../../core/src";
+import type { AbiturFachbelegungHalbjahr, GostJahrgangsdaten, JavaMap, Sprachbelegung} from "../../../../../core/src";
 import { Fach, Fachgruppe, HashMap2D, SprachendatenUtils} from "../../../../../core/src";
 import { ArrayList, GostHalbjahr, HashMap, type AbiturdatenManager, type GostFach, type List } from "../../../../../core/src";
 import type { Config } from "~/utils/Config";
@@ -539,6 +539,71 @@ export class LaufbahnplanungUiManager {
 	 */
 	public istFremdsprache(fach: GostFach): boolean {
 		return this._mapFremdsprachen.value.get(fach) ?? false;
+	}
+
+	/**
+	 * Eine Map mit den Sprachbelegungen, welche dem zugehörigen Fach zugeordnet sind
+	 */
+	private _mapSprachbelegung = computed<JavaMap<GostFach, Sprachbelegung>>(() => {
+		const map = new HashMap<GostFach, Sprachbelegung>();
+		const schuljahr = this.manager().getSchuljahr();
+		for (const fach of this.alleFaecher) {
+			const sprach_kuerzel = Fach.getBySchluesselOrDefault(fach.kuerzel).daten(schuljahr)?.kuerzel ?? null;
+			if (sprach_kuerzel === null)
+				continue;
+			for (const sprache of this.manager().getSprachendaten().belegungen)
+				if (sprache.sprache === sprach_kuerzel)
+					map.put(fach, sprache);
+		}
+		return map;
+	});
+
+	/**
+	 * Gibt zurück, ob es für das übergebene Fach eine gültige Sprachbelegung gibt oder nicht
+	 *
+	 * @param fach   das Fach
+	 *
+	 * @returns true, wenn es für das übergebene Fach eine gültige Sprachbelegung gibt, und ansonsten false
+	 */
+	public hatSprachbelegung(fach: GostFach): boolean {
+		if (!this.istFremdspracheMoeglich(fach))
+			return false;
+		const sprachbelegung = this._mapSprachbelegung.value.get(fach);
+		const rf = sprachbelegung?.reihenfolge ?? 0;
+		const jg = sprachbelegung?.belegungVonJahrgang ?? "";
+		return (rf !== 0) && (jg !== "");
+	}
+
+	/**
+	 * Gibt die Nummer des Faches in der Reihenfolge der Sprachbelegung an,
+	 * sofern es sich um ein Sprachfach handelt und in der Sprachenfolge eine
+	 * Belegung hat. Ansonsten wird 0 für die Reihenfolge zurückgegeben.
+	 *
+	 * @param fach   das Fach
+	 *
+	 * @returns die Nummer in der Reihenfolge oder 0
+	 */
+	public getSprachenfolgeNr(fach: GostFach): number {
+		if (!this.istFremdspracheMoeglich(fach))
+			return 0;
+		const sprachbelegung = this._mapSprachbelegung.value.get(fach);
+		return sprachbelegung?.reihenfolge ?? 0;
+	}
+
+	/**
+	 * Gibt den Jahrgang der Sprachbelegung zurück, sofern es sich bei dem übergebenen Fach
+	 * um ein Sprachfach handelt und es in der Sprachenfolge eine Belegung hat. Ansonsten
+	 * wird ein leerer String für den Jahrgang zurückgegeben.
+	 *
+	 * @param fach   das Fach
+	 *
+	 * @returns das Kürzel des Jahrgangs oder ein leerer String
+	 */
+	public getSprachenfolgeJahrgang(fach: GostFach): string {
+		if (!this.istFremdspracheMoeglich(fach))
+			return "";
+		const sprachbelegung = this._mapSprachbelegung.value.get(fach);
+		return sprachbelegung?.belegungVonJahrgang ?? "";
 	}
 
 	/**

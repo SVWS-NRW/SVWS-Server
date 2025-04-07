@@ -16,15 +16,15 @@
 		<div role="cell" class="svws-ui-td svws-align-center font-medium" :class="{ 'svws-disabled': !manager.istFremdsprache(fach) }">
 			<template v-if="manager.istFremdsprache(fach)">
 				<span v-if="manager.ignoriereSprachenfolge"> ? </span>
-				<span v-else-if="sprachenfolgeNr === 0 && !sprachenfolgeJahrgang"> — </span>
-				<span v-else> {{ sprachenfolgeNr }} </span>
+				<span v-else-if="!manager.hatSprachbelegung(fach)"> — </span>
+				<span v-else> {{ manager.getSprachenfolgeNr(fach) }} </span>
 			</template>
 		</div>
 		<div role="cell" class="svws-ui-td svws-align-center font-medium svws-divider" :class="{ 'svws-disabled': !manager.istFremdsprache(fach)}">
 			<template v-if="manager.istFremdsprache(fach)">
 				<span v-if="manager.ignoriereSprachenfolge"> ? </span>
-				<span v-else-if="sprachenfolgeNr === 0 && !sprachenfolgeJahrgang"> — </span>
-				<span v-else> {{ sprachenfolgeJahrgang }} </span>
+				<span v-else-if="!manager.hatSprachbelegung(fach)"> — </span>
+				<span v-else> {{ manager.getSprachenfolgeJahrgang(fach) }} </span>
 			</template>
 		</div>
 		<template v-for="halbjahr in GostHalbjahr.values()" :key="halbjahr.id">
@@ -187,25 +187,6 @@
 			emit("update:focus:impossible", props.fach.id, props.activeHalbjahrId);
 		}
 	}
-
-	const sprachbelegung = computed<Sprachbelegung | null>(() => {
-		const schuljahr = props.abiturdatenManager().getSchuljahr();
-		const sprach_kuerzel = Fach.getBySchluesselOrDefault(props.fach.kuerzel).daten(schuljahr)?.kuerzel ?? null;
-		if (sprach_kuerzel === null)
-			return null;
-		for (const sprache of props.abiturdatenManager().getSprachendaten().belegungen)
-			if (sprache.sprache === sprach_kuerzel)
-				return sprache;
-		return null;
-	})
-
-	const sprachenfolgeNr = computed<number>(() =>
-		props.manager.istFremdspracheMoeglich(props.fach) ? sprachbelegung.value?.reihenfolge ?? 0 : 0
-	);
-
-	const sprachenfolgeJahrgang = computed<string>(() =>
-		props.manager.istFremdspracheMoeglich(props.fach) ? (sprachbelegung.value?.belegungVonJahrgang ?? "") : ""
-	);
 
 	function istBewertet(halbjahr: GostHalbjahr): boolean {
 		return props.abiturdatenManager().istBewertet(halbjahr);
