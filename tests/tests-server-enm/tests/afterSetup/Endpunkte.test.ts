@@ -476,7 +476,7 @@ describe("Passwort Management durch create_pwt", () => {
 		expect(responsePost.status).toBe(409);
 	});
 
-	test.skip("Korrekte Email -> 204", async () => {
+	test("Korrekte Email -> 204", async () => {
 		// Diese Daten werden patched
 		const bodyData = {
 			eMailDienstlich: "D.Berthold@lmail.de"
