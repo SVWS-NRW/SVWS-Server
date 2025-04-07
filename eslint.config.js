@@ -58,14 +58,14 @@ export default tseslint.config(
         "importAttributes": "never",
         "dynamicImports": "never"
     	}],
-			"@stylistic/no-mixed-operators": "error",
 			"@stylistic/no-multi-spaces": "error",
+			"@stylistic/no-mixed-operators": "error",
 			"@stylistic/no-trailing-spaces": "error",
 			"@stylistic/indent": ["error", "tab", { "SwitchCase": 1 }],
 
+			"require-await": "off",
 			"no-unused-vars": "off",
 			"no-dupe-class-members": "off",
-			"require-await": "off",
 
 			"eqeqeq": "error",
 			"no-extra-boolean-cast": "error",
@@ -83,11 +83,13 @@ export default tseslint.config(
 
 			"@typescript-eslint/no-misused-promises": "error",
 			"@typescript-eslint/no-floating-promises": "error",
+			"@typescript-eslint/consistent-type-imports": "warn",
+			// "@typescript-eslint/no-empty-object-type": ["warn", { allowInterfaces: 'with-single-extends' }],
+			"@typescript-eslint/no-empty-object-type": "off",
+			"@typescript-eslint/restrict-template-expressions": ["error", {'allowNumber': true}],
+			"@typescript-eslint/restrict-plus-operands": ["error", {'allowNumberAndString': true}],
 			"@typescript-eslint/strict-boolean-expressions": ["error", { allowString: false, allowNumber: false }],
 			// "@typescript-eslint/array-type": ["error", {"default": "array-simple", "readonly": "array-simple"}],
-			"@typescript-eslint/restrict-plus-operands": ["error", {'allowNumberAndString': true}],
-			"@typescript-eslint/restrict-template-expressions": ["error", {'allowNumber': true}],
-			"@typescript-eslint/consistent-type-imports": "warn",
 			// Deaktivierte Regeln:
 			// Temporär defekt:
 			"@typescript-eslint/no-unsafe-call": "off",
@@ -96,14 +98,14 @@ export default tseslint.config(
 			"@typescript-eslint/no-unsafe-assignment": "off",
 			"@typescript-eslint/no-unsafe-member-access": "off",
 			// Zu häufig, erstmal warn
+			"@typescript-eslint/array-type": "off",
+			"@typescript-eslint/prefer-for-of": "off",
+			"@typescript-eslint/no-invalid-void-type": "off",
 			"@typescript-eslint/prefer-optional-chain": "off",
 			"@typescript-eslint/prefer-nullish-coalescing": "off",
-			"@typescript-eslint/no-unnecessary-boolean-literal-compare": "off",
-			"@typescript-eslint/array-type": ["off"],
-			"@typescript-eslint/no-invalid-void-type": "off",
 			"@typescript-eslint/consistent-type-definitions": "off",
 			"@typescript-eslint/consistent-generic-constructors": "off",
-			"@typescript-eslint/prefer-for-of": "off",
+			"@typescript-eslint/no-unnecessary-boolean-literal-compare": "off",
 		},
   },
 	{
