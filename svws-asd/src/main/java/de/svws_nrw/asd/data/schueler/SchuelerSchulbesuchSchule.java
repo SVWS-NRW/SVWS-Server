@@ -21,8 +21,8 @@ public class SchuelerSchulbesuchSchule {
 	@Schema(description = "Die ID der Schule", example = "178947")
 	public Long idSchule;
 
-	/** Die ID des Bildungsganges/Schulgliederung an der Schule. */
-	@Schema(description = "die ID des Bildungsganges/Schulgliederung an der Schule", example = "***")
+	/** Der Schlüssel des Bildungsganges/Schulgliederung an der Schule. */
+	@Schema(description = "Der Schlüssel des Bildungsganges/Schulgliederung an der Schule", example = "***")
 	public String schulgliederung;
 
 	/** Die ID des Grundes für die Entlassung von der Schule. */

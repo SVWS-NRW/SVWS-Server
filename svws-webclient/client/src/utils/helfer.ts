@@ -188,5 +188,13 @@ export function filterSchulenEintraege(items: SchulEintrag[], search: string) : 
 /** Filter für CoreType */
 export function coreTypeDataFilter(items: CoreTypeData[], search: string): CoreTypeData[] {
 	const searchLower = search.trim().toLowerCase();
-	return items.filter(fach => fach.schluessel.toLowerCase().includes(searchLower) || fach.text.toLowerCase().includes(searchLower));
+	return items.filter(item => item.schluessel.toLowerCase().includes(searchLower) || item.text.toLowerCase().includes(searchLower)
+			|| item.kuerzel.toLowerCase().includes(searchLower));
+}
+
+/** Formatiert ein Datum in das Format 01.01.2020 */
+export function formatDate(dateString: string | null): string {
+	if (dateString === null)
+		return "";
+	return new Date(dateString).toLocaleDateString("de-DE");
 }

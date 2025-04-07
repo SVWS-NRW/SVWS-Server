@@ -345,24 +345,28 @@ public class APISchueler {
 	 * Die OpenAPI-Methode für das Entfernen von bisher besuchten Schulen.
 	 *
 	 * @param schema       das Datenbankschema
-	 * @param id           die ID der bisher besuchten Schule
+	 * @param ids          die IDs der bisher besuchten Schulen
 	 * @param request      die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem Status und ggf. der gelöschten bisherigen Schule
 	 */
 	@DELETE
-	@Path("/bisherigeSchule/{id : \\d+}")
+	@Path("/bisherigeSchule/multiple")
 	@Operation(summary = "Entfernt bisher besuchte Schulen.",
 			description = "Entfernt bisher besuchte Schulen, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine bisher besuchte Schule wurde erfolgreich entfernt.",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchuelerSchulbesuchSchule.class)))
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchuelerSchulbesuchSchule.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um bisher besuchte Schulen zu entfernen.")
-	@ApiResponse(responseCode = "404", description = "Die bisher besuchte Schule ist nicht vorhanden")
+	@ApiResponse(responseCode = "404", description = "Die bisher besuchten Schulen sind nicht vorhanden")
 	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response deleteBisherigeSchule(@PathParam("schema") final String schema, @PathParam("id") final long id,
+	public Response deleteBisherigeSchulen(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die IDs der zu löschenden bisher besuchten Schulen", required = true,
+			content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream ids,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerSchulbesuchSchule(conn).deleteAsResponse(id),
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataSchuelerSchulbesuchSchule(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(ids)),
 				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
 	}
 

@@ -1,5 +1,5 @@
 import { DeveloperNotificationException } from "@core";
-import type { SchuelerSchulbesuchsdaten, SchuelerListeEintrag } from "@core";
+import type { SchuelerSchulbesuchsdaten, SchuelerListeEintrag, SchuelerSchulbesuchSchule, List } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -33,8 +33,27 @@ export class RouteDataSchuelerSchulbesuch extends RouteData<RouteStateDataSchuel
 		return this._state.value.schuelerSchulbesuchManager;
 	}
 
-	patch = async (data : Partial<SchuelerSchulbesuchsdaten>) : Promise<void> => {
+	patch = async (data: Partial<SchuelerSchulbesuchsdaten>) : Promise<void> => {
 		await api.server.patchSchuelerSchulbesuch(data, api.schema, this.auswahl.id);
+	}
+
+	addSchuelerSchulbesuchSchule = async (data: Partial<SchuelerSchulbesuchSchule>) : Promise<void> => {
+		const result = await api.server.addBisherigeSchule(data, api.schema, this.auswahl.id);
+		this.schuelerSchulbesuchManager.addSchuelerSchulbesuchSchule(result);
+		this.commit();
+	}
+
+	patchSchuelerSchulbesuchSchule = async (id: number, data: Partial<SchuelerSchulbesuchSchule>) : Promise<void> => {
+		await api.server.patchBisherigeSchule(data, api.schema, id)
+		this.schuelerSchulbesuchManager.patchBisherigeSchuleById(id, data);
+		this.commit();
+	}
+
+	deleteSchuelerSchulbesuchSchulen = async (ids: List<number>) : Promise<void> => {
+		await api.server.deleteBisherigeSchulen(ids, api.schema);
+		for (const id of ids)
+			this.schuelerSchulbesuchManager.deleteBisherigeSchuleById(id);
+		this.commit();
 	}
 
 	public async ladeDaten(auswahl: SchuelerListeEintrag | null) {

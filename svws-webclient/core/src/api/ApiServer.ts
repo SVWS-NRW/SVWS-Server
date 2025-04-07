@@ -10457,31 +10457,33 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der DELETE-Methode deleteBisherigeSchule für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/bisherigeSchule/{id : \d+}
+	 * Implementierung der DELETE-Methode deleteBisherigeSchulen für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/bisherigeSchule/multiple
 	 *
 	 * Entfernt bisher besuchte Schulen, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine bisher besuchte Schule wurde erfolgreich entfernt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SchuelerSchulbesuchSchule
+	 *     - Rückgabe-Typ: List<SchuelerSchulbesuchSchule>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um bisher besuchte Schulen zu entfernen.
-	 *   Code 404: Die bisher besuchte Schule ist nicht vorhanden
+	 *   Code 404: Die bisher besuchten Schulen sind nicht vorhanden
 	 *   Code 409: Die übergebenen Daten sind fehlerhaft
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
 	 *
 	 * @returns Eine bisher besuchte Schule wurde erfolgreich entfernt.
 	 */
-	public async deleteBisherigeSchule(schema : string, id : number) : Promise<SchuelerSchulbesuchSchule> {
-		const path = "/db/{schema}/schueler/bisherigeSchule/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
-		const text = result;
-		return SchuelerSchulbesuchSchule.transpilerFromJSON(text);
+	public async deleteBisherigeSchulen(data : List<number>, schema : string) : Promise<List<SchuelerSchulbesuchSchule>> {
+		const path = "/db/{schema}/schueler/bisherigeSchule/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SchuelerSchulbesuchSchule>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerSchulbesuchSchule.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 

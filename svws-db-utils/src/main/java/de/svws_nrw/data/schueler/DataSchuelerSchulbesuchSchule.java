@@ -50,7 +50,7 @@ public final class DataSchuelerSchulbesuchSchule extends DataManagerRevised<Long
 	public DataSchuelerSchulbesuchSchule(final DBEntityManager conn, final Long idSchueler) {
 		super(conn);
 		this.idSchueler = idSchueler;
-		setAttributesRequiredOnCreation("schulnummer");
+		setAttributesRequiredOnCreation("idSchule");
 		setAttributesNotPatchable("id");
 		this.entlassartenByBezeichnung = conn.queryAll(DTOEntlassarten.class).stream().collect(Collectors.toMap(e -> e.Bezeichnung, e -> e));
 		this.schulenBySchulnummer = conn.queryAll(DTOSchuleNRW.class).stream().collect(Collectors.toMap(s -> s.SchulNr, s -> s));

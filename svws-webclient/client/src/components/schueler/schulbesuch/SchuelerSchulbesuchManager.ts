@@ -1,6 +1,8 @@
-import { Einschulungsart, Herkunftsarten, Jahrgaenge, PrimarstufeSchuleingangsphaseBesuchsjahre, Schulform, Schulgliederung, Uebergangsempfehlung,
-	SchuelerSchulbesuchsdaten, SchuelerListeEintrag } from "@core";
-import type { KatalogEntlassgrund, Merkmal, SchulEintrag } from "@core";
+import {
+	Einschulungsart, Herkunftsarten, Jahrgaenge, PrimarstufeSchuleingangsphaseBesuchsjahre, Schulform, Schulgliederung, Uebergangsempfehlung,
+	SchuelerSchulbesuchsdaten, SchuelerListeEintrag
+} from "@core";
+import type { KatalogEntlassgrund, Merkmal, SchulEintrag, SchuelerSchulbesuchSchule } from "@core";
 import type { Schuljahresabschnitt, List } from "@core";
 import { StateManager } from "~/router/StateManager";
 
@@ -212,7 +214,40 @@ export class SchuelerSchulbesuchManager extends StateManager<ManagerStateDataSch
 		void this.doPatch({ [field]: v?.daten(this.schuljahr)?.kuerzel ?? null });
 	}
 
+	/** Eintrag zu den bisher besuchten Schulen hinzufügen */
+	public addSchuelerSchulbesuchSchule(s: SchuelerSchulbesuchSchule) {
+		this.daten.alleSchulen.add(s);
+	}
+
+	/** Eintrag der bisher besuchten Schulen löschen */
+	public deleteBisherigeSchuleById(id: number) {
+		const index = this.getIndexBisherigeSchuleById(id);
+		if (index !== undefined)
+			this.daten.alleSchulen.removeElementAt(index);
+	}
+
+	/** Eintrag der bisher besuchten Schulen patchen */
+	public patchBisherigeSchuleById(id: number, data: Partial<SchuelerSchulbesuchSchule>) {
+		const index = this.getIndexBisherigeSchuleById(id);
+		if (index === undefined)
+			return;
+		let schule = this.daten.alleSchulen.get(index);
+		if (schule === undefined)
+			return;
+		Object.assign(schule, data);
+	}
+
 	// --- util ---
+
+	private getIndexBisherigeSchuleById(id: number) : number | undefined {
+		let index = 0;
+		for (const s of this.daten.alleSchulen) {
+			if (s.id === id)
+				return index;
+			index++;
+		}
+		return;
+	}
 
 	private calcSchuljahr(): number {
 		const abschnitt = this._schuljahresabschnitteById.get(this._state.value.auswahl.idSchuljahresabschnitt);
