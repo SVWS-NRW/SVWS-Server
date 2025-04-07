@@ -1,6 +1,7 @@
 import { computed, ref } from "vue";
-import { AbiturFachbelegung, AbiturFachbelegungHalbjahr, Fach, Fachgruppe, GostJahrgangsdaten, HashMap2D, JavaMap, SprachendatenUtils} from "../../../../../core/src";
-import { ArrayList, DeveloperNotificationException, GostHalbjahr, HashMap, type AbiturdatenManager, type GostFach, type List } from "../../../../../core/src";
+import type { AbiturFachbelegungHalbjahr, GostJahrgangsdaten, JavaMap} from "../../../../../core/src";
+import { Fach, Fachgruppe, HashMap2D, SprachendatenUtils} from "../../../../../core/src";
+import { ArrayList, GostHalbjahr, HashMap, type AbiturdatenManager, type GostFach, type List } from "../../../../../core/src";
 import type { Config } from "~/utils/Config";
 
 /**
@@ -98,6 +99,29 @@ export class LaufbahnplanungUiManager {
 	 */
 	public get belegungHatImmerNoten() : boolean {
 		return this._belegungHatImmerNoten;
+	}
+
+	/**
+	 * Das aktuelle Halbjahr der Oberstufe des Abiturjahrgangs oder null, wenn der Jahrgang aktuell nicht zur Oberstufe gehört.
+	 */
+	private _aktuellesHalbjahr = computed<GostHalbjahr | null>(() => GostHalbjahr.fromJahrgangUndHalbjahr(this.jahrgang().jahrgang, this.jahrgang().halbjahr));
+
+	/**
+	 * Gibt das aktuelle Halbjahr der Oberstufe des Abiturjahrgangs zurück oder null, wenn der Jahrgang aktuell nicht zur Oberstufe gehört.
+	 */
+	public get aktuellesHalbjahr() : GostHalbjahr | null {
+		return this._aktuellesHalbjahr.value;
+	}
+
+	/**
+	 * Gibt an, ob das übergebene Halbjahr das aktuelle Halbjahr ist oder bereits in der Vergangenheit liegt.
+	 *
+	 * @param halbjahr   das Halbjahr
+	 *
+	 * @returns true, wenn das übergebene Halbjahr das aktuelle Halbjahr ist oder bereits in der Vergangenheit liegt, und ansonsten false
+	 */
+	public istAktuellOderVergangen(halbjahr: GostHalbjahr) {
+		return (this.aktuellesHalbjahr !== null) && (this.aktuellesHalbjahr.id >= halbjahr.id);
 	}
 
 

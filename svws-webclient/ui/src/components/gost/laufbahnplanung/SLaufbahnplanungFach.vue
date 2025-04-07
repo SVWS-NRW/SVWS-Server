@@ -33,7 +33,7 @@
 					'cursor-pointer': manager.istMoeglich(fach, halbjahr) && !istBewertet(halbjahr),
 					'cursor-not-allowed': (!manager.istMoeglich(fach, halbjahr) || istBewertet(halbjahr) || istFachkombiVerboten[halbjahr.id]),
 					'svws-disabled': !manager.istMoeglich(fach, halbjahr),
-					'svws-disabled-soft': (istBewertet(halbjahr) && manager.istMoeglich(fach, halbjahr)) || (((gostHalbjahr !== null) && (gostHalbjahr.id >= halbjahr.id)) && manager.istMoeglich(fach, halbjahr)),
+					'svws-disabled-soft': (istBewertet(halbjahr) && manager.istMoeglich(fach, halbjahr)) || (manager.istAktuellOderVergangen(halbjahr) && manager.istMoeglich(fach, halbjahr)),
 				} : {}"
 				@click.stop="stepper(halbjahr)" :title="getTooltipHalbjahr(halbjahr)"
 				:tabindex="manager.istMoeglich(fach, halbjahr) ? 0 : -1" @keydown.enter.prevent="handleKeyboardStep($event, halbjahr)" @keydown.space.prevent="handleKeyboardStep($event, halbjahr)"
@@ -134,7 +134,6 @@
 	import type { GostSchuelerFachwahl } from "../../../../../core/src/core/data/gost/GostSchuelerFachwahl";
 	import { Fachgruppe } from "../../../../../core/src/asd/types/fach/Fachgruppe";
 	import { Fach } from "../../../../../core/src/asd/types/fach/Fach";
-	import type { AbiturFachbelegung } from "../../../../../core/src/core/data/gost/AbiturFachbelegung";
 	import type { Sprachbelegung } from "../../../../../core/src/asd/data/schueler/Sprachbelegung";
 	import { GostHalbjahr } from "../../../../../core/src/core/types/gost/GostHalbjahr";
 	import { AbiturFachbelegungHalbjahr } from "../../../../../core/src/core/data/gost/AbiturFachbelegungHalbjahr";
@@ -169,15 +168,12 @@
 
 	onUpdated(() => {
 		// Prüft, ob die Fach-Komponente aktuell den Fokus hat
-		if(props.activeFocus)
+		if (props.activeFocus)
 			doFocusOnHalbjahr();
 	});
 
 	const halbjahrRefs = ref(new Map<number, HTMLElement>());
-	const schuljahr = computed<number>(() => props.abiturdatenManager().getSchuljahr());
-	const gostHalbjahr = computed<GostHalbjahr | null>(() => GostHalbjahr.fromJahrgangUndHalbjahr(props.gostJahrgangsdaten.jahrgang, props.gostJahrgangsdaten.halbjahr));
-	const bgColor = computed<string>(() => Fach.getBySchluesselOrDefault(props.fach.kuerzel).getHMTLFarbeRGB(schuljahr.value));
-	const fachbelegung = computed<AbiturFachbelegung | null>(() => props.abiturdatenManager().getFachbelegungByID(props.fach.id));
+	const bgColor = computed<string>(() => Fach.getBySchluesselOrDefault(props.fach.kuerzel).getHMTLFarbeRGB(props.abiturdatenManager().getSchuljahr()));
 
 	// Nächste Halbjahr-Zelle fokussieren, wenn möglich. Sonst "update:focus:impossible" emitten, sodass Parent-Komponente einen Schritt weiter gehen kann
 	function doFocusOnHalbjahr() {
@@ -193,7 +189,8 @@
 	}
 
 	const sprachbelegung = computed<Sprachbelegung | null>(() => {
-		const sprach_kuerzel = Fach.getBySchluesselOrDefault(props.fach.kuerzel).daten(schuljahr.value)?.kuerzel ?? null;
+		const schuljahr = props.abiturdatenManager().getSchuljahr();
+		const sprach_kuerzel = Fach.getBySchluesselOrDefault(props.fach.kuerzel).daten(schuljahr)?.kuerzel ?? null;
 		if (sprach_kuerzel === null)
 			return null;
 		for (const sprache of props.abiturdatenManager().getSprachendaten().belegungen)
@@ -221,22 +218,25 @@
 			const note = noten.value[halbjahr.id];
 			if (note === null)
 				return 'Es liegen keine Leistungsdaten vor!';
-			return `Note ${note.daten(schuljahr.value)?.kuerzel ?? '-'} (keine Änderungen mehr möglich)`;
+			const schuljahr = props.abiturdatenManager().getSchuljahr();
+			return `Note ${note.daten(schuljahr)?.kuerzel ?? '-'} (keine Änderungen mehr möglich)`;
 		}
 		return (!props.manager.istMoeglich(props.fach, halbjahr)) ? 'Wahl nicht möglich' : '';
 	}
 
 
 	const abi_wahl = computed<string>(() => {
-		if ((fachbelegung.value === null) || (fachbelegung.value.abiturFach === null))
+		const fachbelegung = props.abiturdatenManager().getFachbelegungByID(props.fach.id);
+		if ((fachbelegung === null) || (fachbelegung.abiturFach === null))
 			return "";
-		return fachbelegung.value.abiturFach.toString();
+		return fachbelegung.abiturFach.toString();
 	})
 
 	const wahlen = computed<string[]>(() => {
-		if (fachbelegung.value === null)
+		const fachbelegung = props.abiturdatenManager().getFachbelegungByID(props.fach.id);
+		if (fachbelegung === null)
 			return ["", "", "", "", "", ""];
-		return fachbelegung.value.belegungen.map((b: AbiturFachbelegungHalbjahr | null) => {
+		return fachbelegung.belegungen.map((b: AbiturFachbelegungHalbjahr | null) => {
 			b = (b !== null) ? b : new AbiturFachbelegungHalbjahr();
 			if (AbiturdatenManager.istNullPunkteBelegungInQPhase(b))
 				return "6";
@@ -254,9 +254,10 @@
 
 
 	const noten = computed<Array<Note | null>>(() => {
-		if (fachbelegung.value === null)
+		const fachbelegung = props.abiturdatenManager().getFachbelegungByID(props.fach.id);
+		if (fachbelegung === null)
 			return [null, null, null, null, null, null];
-		return fachbelegung.value.belegungen.map((b: AbiturFachbelegungHalbjahr | null) => {
+		return fachbelegung.belegungen.map((b: AbiturFachbelegungHalbjahr | null) => {
 			if ((b === null) || (b.notenkuerzel === null))
 				return null; // gebe explizit null zurück, da dann keine Leistungsdaten für die Belegung vorliegen
 			return Note.fromKuerzel(b.notenkuerzel);
