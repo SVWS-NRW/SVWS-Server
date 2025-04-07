@@ -495,8 +495,8 @@ export class LaufbahnplanungUiManager {
 				if ((b === null) || (b.notenkuerzel === null))
 					continue;
 				const note = Note.fromKuerzel(b.notenkuerzel);
-				if (note === Note.KEINE)
-					continue;
+				/* Der Wert Note.KEINE muss hier erhalten bleiben, um den Zustand zu unterscheiden,
+				 * dass zwar Leistungsdaten vorhanden sind, aber noch keine Note gesetzt wurde */
 				map.put(fach, hj, note);
 			}
 		}
