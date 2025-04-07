@@ -14,7 +14,7 @@
 		</Teleport>
 		<div class="min-w-fit grow overflow-y-auto overflow-x-hidden">
 			<s-laufbahnplanung-card-planung title="Vorlage für Schüler des Abiturjahrgangs" :goto-kursblockung :hat-update-kompetenz
-				:manager :abiturdaten-manager :modus :faecher-anzeigen="'alle'" :gost-jahrgangsdaten="jahrgangsdaten()" :set-wahl />
+				:manager :abiturdaten-manager :modus :faecher-anzeigen="'alle'" :gost-jahrgangsdaten="jahrgangsdaten()" />
 		</div>
 		<div class="min-w-120 overflow-y-auto overflow-x-hidden flex flex-col gap-y-8 lg:gap-y-12 scrollbar-thin pr-4">
 			<svws-ui-content-card v-if="istAbiturjahrgang" title="Beratungslehrer">
@@ -53,7 +53,8 @@
 
 	const props = defineProps<GostBeratungProps>();
 
-	const manager = computed<LaufbahnplanungUiManager>(() => new LaufbahnplanungUiManager(props.abiturdatenManager, props.config, props.jahrgangsdaten, true));
+	const manager = computed<LaufbahnplanungUiManager>(() =>
+		new LaufbahnplanungUiManager(props.abiturdatenManager, props.config, props.jahrgangsdaten, props.setWahl, true));
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 

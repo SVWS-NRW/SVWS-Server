@@ -62,7 +62,7 @@
 		</template>
 		<template #body>
 			<template v-for="fach in manager.faecherGefiltert" :key="fach.id">
-				<s-laufbahnplanung-fach :manager :abiturdaten-manager :gost-jahrgangsdaten :fach :set-wahl :hat-update-kompetenz :active-halbjahr-id
+				<s-laufbahnplanung-fach :manager :abiturdaten-manager :gost-jahrgangsdaten :fach :hat-update-kompetenz :active-halbjahr-id
 					:active-focus="fach.id === activeFachId" @keydown="switchFocus($event)" @update:focus="(fachId: number, halbjahrId: number) => updateFocusState(fachId, halbjahrId)"
 					@update:focus:impossible="(fachId: number, halbjahrId: number) => retryFocus(fachId, halbjahrId)" />
 			</template>
@@ -171,7 +171,6 @@
 	import { ref, onMounted } from "vue";
 	import type { AbiturdatenManager } from "../../../../../core/src/core/abschluss/gost/AbiturdatenManager";
 	import type { GostJahrgangsdaten } from "../../../../../core/src/core/data/gost/GostJahrgangsdaten";
-	import type { GostSchuelerFachwahl } from "../../../../../core/src/core/data/gost/GostSchuelerFachwahl";
 	import { GostHalbjahr } from "../../../../../core/src/core/types/gost/GostHalbjahr";
 	import type { DataTableColumn } from "../../../types";
 	import type { LaufbahnplanungUiManager } from "./LaufbahnplanungUiManager";
@@ -180,7 +179,6 @@
 		manager: LaufbahnplanungUiManager;
 		abiturdatenManager: () => AbiturdatenManager;
 		gostJahrgangsdaten: GostJahrgangsdaten;
-		setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>;
 		gotoKursblockung: (halbjahr: GostHalbjahr) => Promise<unknown>
 		title?: string | undefined;
 		hatUpdateKompetenz?: boolean;
