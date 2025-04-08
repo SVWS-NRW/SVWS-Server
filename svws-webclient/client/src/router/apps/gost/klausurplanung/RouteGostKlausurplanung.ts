@@ -154,12 +154,6 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 		return { halbjahr: this.data.halbjahr.id };
 	}
 
-	// public getRoute(abiturjahr: number, halbjahr?: number) : RouteLocationRaw {
-	// 	if (halbjahr === undefined)
-	// 		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: abiturjahr }};
-	// 	return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: abiturjahr, halbjahr: halbjahr }};
-	// }
-
 	public getProps(to: RouteLocationNormalized): GostKlausurplanungProps {
 		return {
 			apiStatus: api.status,
