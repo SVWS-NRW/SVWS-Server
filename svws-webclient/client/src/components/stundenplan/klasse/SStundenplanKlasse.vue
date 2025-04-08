@@ -131,7 +131,7 @@
 				</svws-ui-table>
 			</div>
 			<!-- Das Zeitraster des Stundenplans, in welches von der linken Seite die Kurs-Unterrichte oder die Klassen-Unterricht hineingezogen werden können.-->
-			<stundenplan-klasse mode-pausenaufsichten="tooltip" :id="klasse.id" :manager="stundenplanManager" :wochentyp="()=>wochentypAnzeige" :kalenderwoche="() => undefined"
+			<stundenplan-klassen mode-pausenaufsichten="tooltip" :id="klasse.id" :manager="stundenplanManager" :wochentyp="()=>wochentypAnzeige" :kalenderwoche="() => undefined"
 				:use-drag-and-drop="hatUpdateKompetenz" :drag-data="() => dragData" :on-drag :on-drop class="h-full overflow-scroll pr-4" @update:click="u => toRaw(auswahl) !== u ? auswahl = u : auswahl = undefined" />
 			<!-- Card für die zusätzlichen Einstellungen zum Unterricht -->
 			<div class="flex flex-col gap-4 w-96 min-w-96">
@@ -168,7 +168,8 @@
 	import type { DataTableColumn } from "@ui";
 	import type { StundenplanAnsichtDragData, StundenplanAnsichtDropZone } from "@ui";
 	import type { StundenplanKlasseProps } from "./SStundenplanKlasseProps";
-	import type { List, StundenplanKlasse, StundenplanRaum } from "@core";
+	import type { List, StundenplanRaum } from "@core";
+	import { StundenplanKlasse } from "@core";
 	import { ArrayList, StundenplanKurs, StundenplanKlassenunterricht, Fach, StundenplanUnterricht, StundenplanZeitraster, HashSet, StundenplanSchiene, BenutzerKompetenz, ListUtils, Wochentag } from "@core";
 	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
@@ -193,7 +194,7 @@
 				try {
 					return props.stundenplanManager().klasseGetByIdOrException(_klasse.value.id);
 				} catch (e) { /* empty */ }
-			return props.stundenplanManager().klasseGetMengeAsList().get(0);
+			return props.stundenplanManager().klasseGetMengeAsList().isEmpty() ? new StundenplanKlasse() : props.stundenplanManager().klasseGetMengeAsList().get(0);
 		},
 		set: (value : StundenplanKlasse) => _klasse.value = value,
 	});

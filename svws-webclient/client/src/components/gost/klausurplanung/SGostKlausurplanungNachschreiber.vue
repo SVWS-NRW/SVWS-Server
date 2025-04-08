@@ -82,7 +82,7 @@
 		</div>
 		<div class="grow flex flex-col gap-8 w-full overflow-hidden">
 			<div class="flex flex-col gap-4 w-full">
-				<div v-if="multijahrgang()" class="flex flex-col gap-4 rounded-lg bg-ui-neutral px-6 py-3 min-w-120 w-fit">
+				<div v-if="multijahrgang()" class="flex flex-col gap-4 rounded-lg bg-ui-warning-weak px-6 py-3 min-w-120 w-full">
 					<span class="leading-tight text-headline-md gap-1">
 						<span v-if="(!zeigeAlleJahrgaenge() && kMan().terminNtMengeEnthaeltFremdeJgstByAbijahrAndHalbjahrAndQuartalMultijahrgang(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value, true))" class="icon i-ri-alert-fill icon-ui-danger px-4" />
 						<span>Jahrgangsübergreifende Planung</span>
