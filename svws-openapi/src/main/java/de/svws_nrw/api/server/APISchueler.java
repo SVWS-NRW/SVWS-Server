@@ -456,24 +456,25 @@ public class APISchueler {
 	 * Die OpenAPI-Methode für das Entfernen von SchuelerMerkmalen.
 	 *
 	 * @param schema       das Datenbankschema
-	 * @param id           die ID des SchuelerMerkmals
+	 * @param ids           die IDs der SchuelerMerkmale
 	 * @param request      die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem Status und ggf. dem gelöschten SchuelerMerkmal
 	 */
 	@DELETE
-	@Path("/merkmal/{id : \\d+}")
+	@Path("/merkmal/multiple")
 	@Operation(summary = "Entfernt SchuelerMerkmale.",
 			description = "Entfernt SchuelerMerkmale, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
 	@ApiResponse(responseCode = "200", description = "Ein SchuelerMerkmal wurde erfolgreich entfernt.",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchuelerSchulbesuchMerkmal.class)))
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchuelerSchulbesuchMerkmal.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um SchuelerMerkmale zu entfernen.")
-	@ApiResponse(responseCode = "404", description = "Das SchuelerMerkmal ist nicht vorhanden")
+	@ApiResponse(responseCode = "404", description = "Die SchuelerMerkmale sind nicht vorhanden")
 	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response deleteSchuelerMerkmal(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerMerkmale(conn).deleteAsResponse(id),
+	public Response deleteSchuelerMerkmale(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der zu löschenden Merkmale",
+			required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class))))
+			final InputStream ids, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerMerkmale(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(ids)),
 				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
 	}
 

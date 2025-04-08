@@ -10959,31 +10959,33 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der DELETE-Methode deleteSchuelerMerkmal für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/merkmal/{id : \d+}
+	 * Implementierung der DELETE-Methode deleteSchuelerMerkmale für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/merkmal/multiple
 	 *
 	 * Entfernt SchuelerMerkmale, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Ein SchuelerMerkmal wurde erfolgreich entfernt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SchuelerSchulbesuchMerkmal
+	 *     - Rückgabe-Typ: List<SchuelerSchulbesuchMerkmal>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um SchuelerMerkmale zu entfernen.
-	 *   Code 404: Das SchuelerMerkmal ist nicht vorhanden
+	 *   Code 404: Die SchuelerMerkmale sind nicht vorhanden
 	 *   Code 409: Die übergebenen Daten sind fehlerhaft
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
 	 *
 	 * @returns Ein SchuelerMerkmal wurde erfolgreich entfernt.
 	 */
-	public async deleteSchuelerMerkmal(schema : string, id : number) : Promise<SchuelerSchulbesuchMerkmal> {
-		const path = "/db/{schema}/schueler/merkmal/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
-		const text = result;
-		return SchuelerSchulbesuchMerkmal.transpilerFromJSON(text);
+	public async deleteSchuelerMerkmale(data : List<number>, schema : string) : Promise<List<SchuelerSchulbesuchMerkmal>> {
+		const path = "/db/{schema}/schueler/merkmal/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SchuelerSchulbesuchMerkmal>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerSchulbesuchMerkmal.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 

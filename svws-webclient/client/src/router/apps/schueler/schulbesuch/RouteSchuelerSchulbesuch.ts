@@ -49,6 +49,9 @@ export class RouteSchuelerSchulbesuch extends RouteNode<RouteDataSchuelerSchulbe
 			addSchuelerSchulbesuchSchule: this.data.addSchuelerSchulbesuchSchule,
 			patchSchuelerSchulbesuchSchule: this.data.patchSchuelerSchulbesuchSchule,
 			deleteSchuelerSchulbesuchSchulen: this.data.deleteSchuelerSchulbesuchSchulen,
+			addSchuelerSchulbesuchMerkmal: this.data.addSchuelerSchulbesuchMerkmal,
+			patchSchuelerSchulbesuchMerkmal: this.data.patchSchuelerSchulbesuchMerkmal,
+			deleteSchuelerSchulbesuchMerkmale: this.data.deleteSchuelerSchulbesuchMerkmale,
 		};
 	}
 }

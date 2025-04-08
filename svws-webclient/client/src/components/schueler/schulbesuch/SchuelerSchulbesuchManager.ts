@@ -1,8 +1,6 @@
-import {
-	Einschulungsart, Herkunftsarten, Jahrgaenge, PrimarstufeSchuleingangsphaseBesuchsjahre, Schulform, Schulgliederung, Uebergangsempfehlung,
-	SchuelerSchulbesuchsdaten, SchuelerListeEintrag
-} from "@core";
-import type { KatalogEntlassgrund, Merkmal, SchulEintrag, SchuelerSchulbesuchSchule } from "@core";
+import { Einschulungsart, Herkunftsarten, Jahrgaenge, PrimarstufeSchuleingangsphaseBesuchsjahre, Schulform, Schulgliederung, Uebergangsempfehlung,
+	SchuelerSchulbesuchsdaten, SchuelerListeEintrag } from "@core";
+import type { KatalogEntlassgrund, Merkmal, SchulEintrag, SchuelerSchulbesuchSchule, SchuelerSchulbesuchMerkmal } from "@core";
 import type { Schuljahresabschnitt, List } from "@core";
 import { StateManager } from "~/router/StateManager";
 
@@ -231,10 +229,29 @@ export class SchuelerSchulbesuchManager extends StateManager<ManagerStateDataSch
 		const index = this.getIndexBisherigeSchuleById(id);
 		if (index === undefined)
 			return;
-		let schule = this.daten.alleSchulen.get(index);
-		if (schule === undefined)
-			return;
+		const schule = this.daten.alleSchulen.get(index);
 		Object.assign(schule, data);
+	}
+
+	/** Eintrag zu den Merkmalen hinzufügen */
+	public addSchuelerSchulbesuchMerkmal(m : SchuelerSchulbesuchMerkmal) {
+		this.daten.merkmale.add(m);
+	}
+
+	/** Eintrag der Merkmale patchen */
+	public patchSchuelerSchulbesuchMerkmalById(id: number, data: Partial<SchuelerSchulbesuchMerkmal>) {
+		const index = this.getIndexMerkmalById(id);
+		if (index === undefined)
+			return;
+		const merkmal = this.daten.merkmale.get(index);
+		Object.assign(merkmal, data);
+	}
+
+	/** Eintrag der Merkmale löschen */
+	public deleteSchuelerSchulbesuchMerkmal(id: number) {
+		const index = this.getIndexMerkmalById(id);
+		if (index !== undefined)
+			this.daten.merkmale.removeElementAt(index);
 	}
 
 	// --- util ---
@@ -242,6 +259,16 @@ export class SchuelerSchulbesuchManager extends StateManager<ManagerStateDataSch
 	private getIndexBisherigeSchuleById(id: number) : number | undefined {
 		let index = 0;
 		for (const s of this.daten.alleSchulen) {
+			if (s.id === id)
+				return index;
+			index++;
+		}
+		return;
+	}
+
+	private getIndexMerkmalById(id: number) : number | undefined {
+		let index = 0;
+		for (const s of this.daten.merkmale) {
 			if (s.id === id)
 				return index;
 			index++;

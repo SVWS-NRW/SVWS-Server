@@ -83,7 +83,8 @@
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Besondere Merkmale für die Statistik">
-			<svws-ui-table :columns="colsMerkmale" :items="manager().daten.merkmale">
+			<svws-ui-table :clickable="true" @update:clicked="v => patchMerkmal(v)" :columns="columnsMerkmale" :items="merkmale"
+				v-model="auswahlMerkmale" :selectable="hatUpdateKompetenz">
 				<template #cell(merkmal)="{ rowData: s }">
 					<span>{{ manager().merkmaleById.get(s.idMerkmal ?? -1)?.bezeichnung ?? " - " }}</span>
 				</template>
@@ -93,12 +94,33 @@
 				<template #cell(datumBis)="{ rowData: s }">
 					<span>{{ formatDate(s.datumBis) }}</span>
 				</template>
+				<template #actions v-if="hatUpdateKompetenz">
+					<svws-ui-button @click="deleteAuswahlMerkmale" type="trash" :disabled="auswahlMerkmale.length === 0" />
+					<svws-ui-button @click="addMerkmal" type="icon" title="Merkmal hinzufügen"> <span class="icon i-ri-add-line" /> </svws-ui-button>
+				</template>
 			</svws-ui-table>
+			<!-- Modal zum Erzeugen und Patchen eines Eintrags der besonderen Merkmale für die Statistik -->
+			<svws-ui-modal :show="showModalMerkmal" @update:show="closeModalMerkmal">
+				<template #modalTitle>Merkmal hinzufügen</template>
+				<template #modalContent>
+					<svws-ui-input-wrapper :grid="2" style="text-align: left">
+						<svws-ui-select title="Merkmal" :items="manager().merkmaleById.values()" :item-text="textMerkmal" removable required
+							@update:model-value="v => newEntryMerkmal.idMerkmal = v?.id ?? null"
+							:model-value="manager().merkmaleById.get(newEntryMerkmal.idMerkmal ?? -1)" />
+						<svws-ui-text-input placeholder="Von" type="date" v-model="newEntryMerkmal.datumVon" />
+						<svws-ui-text-input placeholder="Bis" type="date" v-model="newEntryMerkmal.datumBis" />
+					</svws-ui-input-wrapper>
+					<div class="mt-7 flex flex-row gap-4 justify end">
+						<svws-ui-button type="secondary" @click="closeModalMerkmal">Abbrechen</svws-ui-button>
+						<svws-ui-button @click="sendRequestMerkmal(currentMode)" :disabled="!newEntryMerkmal.idMerkmal">Speichern</svws-ui-button>
+					</div>
+				</template>
+			</svws-ui-modal>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Alle bisher besuchten Schulen" class="col-span-full">
 			<!-- Tabelle der bisher besuchten Schulen -->
 			<svws-ui-table :clickable="true" @update:clicked="v => patchBisherigeSchule(v)" :columns="columnsBisherigeSchulen" :items="bisherigeSchulen"
-						   v-model="auswahlBisherigeSchulen" :selectable="hatUpdateKompetenz">
+				v-model="auswahlBisherigeSchulen" :selectable="hatUpdateKompetenz">
 				<template #cell(schulform)="{ rowData }">
 					<span>{{ Schulform.data().getEintragByID(manager().schulenById.get(rowData.idSchule ?? -1)?.idSchulform ?? -1)?.kuerzel ?? ' - ' }}</span>
 				</template>
@@ -164,11 +186,9 @@
 
 <script setup lang="ts">
 
-	import {
-		BenutzerKompetenz, Einschulungsart, Jahrgaenge, PrimarstufeSchuleingangsphaseBesuchsjahre, SchuelerSchulbesuchSchule, Schulform, Schulgliederung,
-		Uebergangsempfehlung, SchulEintrag, AdressenUtils, ArrayList,
-	} from "@core";
-	import type { Herkunftsarten, SchulformKatalogEintrag, SchulgliederungKatalogEintrag } from "@core";
+	import { BenutzerKompetenz, Einschulungsart, Jahrgaenge, PrimarstufeSchuleingangsphaseBesuchsjahre, SchuelerSchulbesuchSchule, Schulform, Schulgliederung,
+		Uebergangsempfehlung, SchulEintrag, AdressenUtils, ArrayList, SchuelerSchulbesuchMerkmal } from "@core";
+	import type { Herkunftsarten, SchulformKatalogEintrag, SchulgliederungKatalogEintrag, Merkmal } from "@core";
 	import type { SchuelerSchulbesuchProps } from './SSchuelerSchulbesuchProps';
 	import type { DataTableColumn } from "@ui";
 	import { coreTypeDataFilter, filterSchulenEintraege, formatDate } from "~/utils/helfer";
@@ -176,13 +196,79 @@
 
 	const props = defineProps<SchuelerSchulbesuchProps>();
 	const hatUpdateKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
+	function enterDefaultMode() {
+		setMode(Mode.DEFAULT);
+		resetBisherigeSchule();
+		resetMerkmal();
+		closeModalBisherigeSchule();
+		closeModalMerkmal();
+	}
 
 	// --- Tabelle Merkmale ---
-	const colsMerkmale: DataTableColumn[] = [
+	const merkmale = computed(() => [...props.manager().daten.merkmale])
+	const newEntryMerkmal = ref<SchuelerSchulbesuchMerkmal>(new SchuelerSchulbesuchMerkmal());
+	const columnsMerkmale: DataTableColumn[] = [
 		{ key: "merkmal", label: "Merkmal"},
 		{ key: "datumVon", label: "Von"},
 		{ key: "datumBis", label: "Bis"},
 	]
+
+	// --- Merkmale Modal ---
+	const showModalMerkmal = ref<boolean>(false);
+	function addMerkmal() {
+		resetMerkmal();
+		setMode(Mode.ADD);
+		openModalMerkmal();
+	}
+
+	function openModalMerkmal() {
+		showModalMerkmal.value = true;
+	}
+
+	function resetMerkmal() {
+		newEntryMerkmal.value = new SchuelerSchulbesuchMerkmal();
+	}
+
+	function closeModalMerkmal() {
+		resetMerkmal();
+		setMode(Mode.DEFAULT)
+		showModalMerkmal.value = false;
+	}
+
+	// --- api calls Merkmal ---
+	async function sendRequestMerkmal(type : Mode) {
+		const { id, ...partialDataWithoutId } = newEntryMerkmal.value;
+		if (type === Mode.ADD)
+			await props.addSchuelerSchulbesuchMerkmal(partialDataWithoutId);
+		if (type === Mode.PATCH)
+			await props.patchSchuelerSchulbesuchMerkmal(newEntryMerkmal.value.id, partialDataWithoutId);
+		enterDefaultMode();
+	}
+
+	// Patch
+	function patchMerkmal(merkmal : SchuelerSchulbesuchMerkmal) {
+		resetMerkmal();
+		setMode(Mode.PATCH);
+		newEntryMerkmal.value.id = merkmal.id;
+		newEntryMerkmal.value.idMerkmal = merkmal.idMerkmal;
+		newEntryMerkmal.value.datumVon = merkmal.datumVon;
+		newEntryMerkmal.value.datumBis = merkmal.datumBis;
+		openModalMerkmal();
+	}
+
+	// Delete
+	const auswahlMerkmale = ref<SchuelerSchulbesuchMerkmal[]>([]);
+	async function deleteAuswahlMerkmale() {
+		if (auswahlMerkmale.value.length === 0) {
+			return;
+		}
+		const ids = new ArrayList<number>();
+		for (const s of auswahlMerkmale.value) {
+			ids.add(s.id);
+		}
+		await props.deleteSchuelerSchulbesuchMerkmale(ids);
+		auswahlMerkmale.value = [];
+	}
 
 	// --- Table Bisherige Schulen ---
 	const bisherigeSchulen = computed(() => [...props.manager().daten.alleSchulen])
@@ -197,7 +283,7 @@
 		{ key: "jahrgangVon", label: "Jahrgang Von", span: 0.2, align: "center" },
 		{ key: "jahrgangBis", label: "Jahrgang Bis", span: 0.2, align: "center" },
 		{ key: "schulgliederung", label: "Schulgliederung", align: "center" },
-		{ key: "entlassart", label: "Entlassart", span: 0.2, align: "center" }
+		{ key: "entlassart", label: "Entlassart", span: 0.2, align: "center" },
 	]
 	// datumBis (+ watcher) wird als computed benötigt, damit die Vorauswahl der Schulgliederung direkt in das Datenobjekt (newEntryBisherigeSchule) geschrieben wird.
 	const newEntryBisherigeSchuleDatumBis = computed({
@@ -212,10 +298,10 @@
 
 	// --- Bisherige Schulen Modal ---
 	const showModalBisherigeSchule = ref<boolean>(false);
-	function enterDefaultMode() {
-		setMode(Mode.DEFAULT);
+	function addBisherigeSchule() {
 		resetBisherigeSchule();
-		closeModalBisherigeSchule();
+		setMode(Mode.ADD);
+		openModalBisherigeSchule();
 	}
 
 	function setMode(newMode: Mode) {
@@ -272,7 +358,7 @@
 			if (g.schluessel === newEntryBisherigeSchule.value.schulgliederung)
 				return g;
 		}
-	};
+	}
 
 	const adresseBisherigeSchule = computed<string>(() => {
 		if (selectedSchuleForNewEntryBisherigeSchule.value.id === -1)
@@ -292,13 +378,6 @@
 		if (type === Mode.PATCH)
 			await props.patchSchuelerSchulbesuchSchule(newEntryBisherigeSchule.value.id, partialDataWithoutId);
 		enterDefaultMode();
-	}
-
-	// Post
-	function addBisherigeSchule() {
-		resetBisherigeSchule();
-		setMode(Mode.ADD);
-		openModalBisherigeSchule();
 	}
 
 	// Patch
@@ -336,6 +415,12 @@
 
 	function textSchule(s: SchulEintrag) {
 		return s.name;
+	}
+
+	function textMerkmal(m : Merkmal) {
+		if (m.bezeichnung === null)
+			return '';
+		return m.bezeichnung;
 	}
 
 	function textJahrgang(j : Jahrgaenge) {
