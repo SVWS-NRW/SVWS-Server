@@ -296,6 +296,7 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	 * Interne Hilfsmethode: Setzt den View-Type auf DEFAULT und entweder diesem Knoten oder die Default-View
 	 */
 	private setDefaults() {
+		this.manager.liste.auswahlClear();
 		this.activeViewType = ViewType.DEFAULT
 		this._state.value.view = (this._state.value.view?.name === this.view.name) ? this.view : this.defaultView;
 		this.commit();

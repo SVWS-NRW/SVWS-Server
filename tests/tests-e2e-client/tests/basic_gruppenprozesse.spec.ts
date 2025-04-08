@@ -1,26 +1,34 @@
-import {test, expect} from '@playwright/test';
+import { test, expect } from '@playwright/test';
 
 test.use({
 	ignoreHTTPSErrors: true,
 });
 
-const targetHost = process.env.VITE_targetHost ?? "https://localhost"
+const targetHost = process.env.VITE_targetHost ?? "http://localhost:3000"
+test.setTimeout(60_000); // globalen Playwright Timeout auf 60 Sekunden setzen
 
-test('Mehrfachauswahl von Schuelern erzeugt View für Gruppenprozesse', async ({page}) => {
-	test.setTimeout(60_000);
-	await page.goto(targetHost + '/#/login?redirect=/');
+test('Selektion von zwei Schülern öffnet die Individualdaten View für Schüler Gruppenprozesse', async ({page}) => {
+	// login
+	await page.goto(targetHost);
 	await page.getByLabel('Benutzername').click();
 	await page.getByLabel('Benutzername').fill('Admin');
 	await page.getByRole('button', {name: 'Anmelden'}).click();
-	await expect(page.locator('header')).toContainText('Eleonora Externa');
+
+	// Initialen State prüfen
+	await expect(page.locator('.svws-headline')).toContainText('Eleonora Externa');
+
+	// zwei Schüler selektieren
 	await page.getByRole('row', {name: '09a Ankel Matthias'}).getByRole('checkbox').check();
 	await page.getByRole('row', {name: '09a Bechtel Kerstin'}).getByRole('checkbox').check();
-	await expect(page.locator('header')).toContainText('Gruppenprozesse');
-	await expect(page.locator('header')).toContainText('Matthias Ankel, Kerstin Bechtel');
-	await page.waitForTimeout(2000);
+
+	// prüfen ob Mehrfachauswahl mit Schülern im Titel erscheint
+	await expect(page.locator('.svws-headline')).toContainText('Mehrfachauswahl');
+	await expect(page.locator('.svws-subline')).toContainText('Matthias Ankel, Kerstin Bechtel');
+
+	// Selektion der Schüler zurücknehmen
 	await page.getByRole('row', {name: '09a Ankel Matthias'}).getByRole('checkbox').uncheck();
 	await page.getByRole('row', {name: '09a Bechtel Kerstin'}).getByRole('checkbox').uncheck();
-	await page.getByRole('cell', {name: 'Externa'}).click();
-	await page.waitForTimeout(2000);
-	await expect(page.locator('header')).toContainText('Eleonora Externa');
+
+	// prüfen ob wieder die initiale Individualdaten Ansicht erscheint
+	await expect(page.locator('.svws-headline')).toContainText('Eleonora Externa');
 })

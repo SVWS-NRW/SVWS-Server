@@ -107,7 +107,7 @@ export abstract class RouteAuswahlNode<TAuswahlManager extends AuswahlManager<nu
 				if (!isNaN(lastId))
 					id = lastId;
 			}
-			if (isEntering && (to.types.has(ViewType.GRUPPENPROZESSE) || to.types.has(ViewType.HINZUFUEGEN)))
+			if (isEntering && to.hasOneOfTypes([ViewType.GRUPPENPROZESSE, ViewType.HINZUFUEGEN]))
 				return this.getRouteView(this.data.view, { id: id ?? '' });
 			// Daten zum ausgewählten Schuljahresabschnitt und Schüler laden
 			const idNeu = await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt, isEntering);

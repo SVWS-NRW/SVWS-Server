@@ -42,6 +42,7 @@ export class RouteSchueler extends RouteAuswahlNode<SchuelerListeManager, RouteD
 		super.getAuswahlProps = props => (<SchuelerAppProps>{
 			...props,
 			schulform: api.schulform,
+			gotoDefaultView: this.data.gotoDefaultView,
 		});
 		super.children = [
 			routeSchuelerIndividualdaten,
