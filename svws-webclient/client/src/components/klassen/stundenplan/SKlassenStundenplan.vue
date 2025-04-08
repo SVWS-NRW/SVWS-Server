@@ -15,7 +15,7 @@
 		<template v-else>
 			<stundenplan-auswahl :stundenplan="stundenplan()" :map-stundenplaene :goto-stundenplan :goto-wochentyp :goto-kalenderwoche :manager :wochentyp
 				:kalenderwoche :ganzer-stundenplan :set-ganzer-stundenplan autofocus />
-			<stundenplan-klasse :id :ignore-empty :manager :wochentyp :kalenderwoche />
+			<stundenplan-klassen :id :ignore-empty :manager :wochentyp :kalenderwoche />
 		</template>
 	</div>
 </template>

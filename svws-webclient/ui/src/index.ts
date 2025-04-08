@@ -8,7 +8,7 @@ export type { StundenplanAnsichtPlanungProps } from "./components/stundenplan/St
 export type { StundenplanAnsichtProps, StundenplanAnsichtDragData, StundenplanAnsichtDropZone } from "./components/stundenplan/StundenplanAnsichtProps.ts";
 export type { StundenplanAuswahlProps } from "./components/stundenplan/StundenplanAuswahlProps.ts";
 export type { StundenplanFachProps } from "./components/stundenplan/StundenplanFachProps.ts";
-export type { StundenplanKlasseProps } from "./components/stundenplan/StundenplanKlasseProps.ts";
+export type { StundenplanKlassenProps } from "./components/stundenplan/StundenplanKlassenProps";
 export type { StundenplanLehrerProps } from "./components/stundenplan/StundenplanLehrerProps.ts";
 export type { StundenplanRaumProps } from "./components/stundenplan/StundenplanRaumProps.ts";
 export type { StundenplanSchuelerProps } from "./components/stundenplan/StundenplanSchuelerProps.ts";
@@ -33,7 +33,7 @@ export { default as StundenplanAnsichtPausenaufsichten } from "./components/stun
 export { default as StundenplanAnsichtPlanung } from "./components/stundenplan/StundenplanAnsichtPlanung.vue";
 export { default as StundenplanAuswahl } from "./components/stundenplan/StundenplanAuswahl.vue";
 export { default as StundenplanFach } from "./components/stundenplan/StundenplanFach.vue";
-export { default as StundenplanKlasse } from "./components/stundenplan/StundenplanKlasse.vue";
+export { default as StundenplanKlassen } from "./components/stundenplan/StundenplanKlassen.vue";
 export { default as StundenplanLehrer } from "./components/stundenplan/StundenplanLehrer.vue";
 export { default as StundenplanRaum } from "./components/stundenplan/StundenplanRaum.vue";
 export { default as StundenplanSchueler } from "./components/stundenplan/StundenplanSchueler.vue";

@@ -2,7 +2,7 @@ import type { StundenplanKalenderwochenzuordnung } from "../../../../core/src/co
 import type { StundenplanManager } from "../../../../core/src/core/utils/stundenplan/StundenplanManager";
 import type { StundenplanAnsichtDragData, StundenplanAnsichtDropZone } from "./StundenplanAnsichtProps";
 
-export interface StundenplanKlasseProps {
+export interface StundenplanKlassenProps {
 	modePausenaufsichten?: 'normal' | 'kurz' | 'tooltip' | 'aus';
 	showZeitachse?: boolean;
 	zeitrasterSteps?: 1 | 5 | 10 | 15;

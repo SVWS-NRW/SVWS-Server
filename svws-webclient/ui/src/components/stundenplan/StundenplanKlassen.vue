@@ -22,9 +22,9 @@
 	import type { StundenplanUnterricht } from "../../../../core/src/core/data/stundenplan/StundenplanUnterricht";
 	import type { StundenplanPausenzeit } from "../../../../core/src/core/data/stundenplan/StundenplanPausenzeit";
 	import type { StundenplanPausenaufsicht } from "../../../../core/src/core/data/stundenplan/StundenplanPausenaufsicht";
-	import type { StundenplanKlasseProps } from "./StundenplanKlasseProps";
+	import type { StundenplanKlassenProps } from "./StundenplanKlassenProps";
 
-	const props = withDefaults(defineProps<StundenplanKlasseProps>(), {
+	const props = withDefaults(defineProps<StundenplanKlassenProps>(), {
 		modePausenaufsichten: 'normal',
 		showZeitachse: true,
 		zeitrasterSteps: 5,
