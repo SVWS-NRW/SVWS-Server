@@ -270,12 +270,24 @@
 		const jg = props.manager().jahrgaenge.get(data.value.idJahrgang);
 		if (jg === null)
 			return result;
+		const tmpJg = (jg.kuerzelStatistik === null) ? null : Jahrgaenge.data().getWertBySchluessel(jg.kuerzelStatistik);
+		if (tmpJg === null)
+			return result;
+		let schulgliederung : Schulgliederung | null = null;
+		if (jg.kuerzelSchulgliederung === null) {
+			schulgliederung = Schulgliederung.getDefault(props.manager().schulform());
+		} else {
+			schulgliederung = Schulgliederung.data().getWertBySchluessel(jg.kuerzelSchulgliederung);
+		}
 		for (const kl of props.mapKlassenFolgenderAbschnitt().values()) {
 			if (kl.idJahrgang === null) {
-				result.add(kl);
+				result.add(kl); // Jahrgangunabhängige Klassen können als Vorgängerklassen vorkommen
 			} else {
 				const jgKl = props.manager().jahrgaenge.get(kl.idJahrgang);
-				if (jg.idFolgejahrgang === jgKl?.id)
+				const tmpJgKl = (jgKl === null) || (jgKl.kuerzelStatistik === null) ? null : Jahrgaenge.data().getWertBySchluessel(jgKl.kuerzelStatistik);
+				if (tmpJgKl === null)
+					continue;
+				if (tmpJgKl.isNachfolgerVon(props.manager().getSchuljahr(), tmpJg, props.manager().schulform(), schulgliederung))
 					result.add(kl);
 			}
 		}
@@ -292,12 +304,24 @@
 		const jg = props.manager().jahrgaenge.get(data.value.idJahrgang);
 		if (jg === null)
 			return result;
+		const tmpJg = (jg.kuerzelStatistik === null) ? null : Jahrgaenge.data().getWertBySchluessel(jg.kuerzelStatistik);
+		if (tmpJg === null)
+			return result;
+		let schulgliederung : Schulgliederung | null = null;
+		if (jg.kuerzelSchulgliederung === null) {
+			schulgliederung = Schulgliederung.getDefault(props.manager().schulform());
+		} else {
+			schulgliederung = Schulgliederung.data().getWertBySchluessel(jg.kuerzelSchulgliederung);
+		}
 		for (const kl of props.mapKlassenVorigerAbschnitt().values()) {
 			if (kl.idJahrgang === null) {
-				result.add(kl);
+				result.add(kl); // Jahrgangunabhängige Klassen können als Vorgängerklassen vorkommen
 			} else {
 				const jgKl = props.manager().jahrgaenge.get(kl.idJahrgang);
-				if (jg.id === jgKl?.idFolgejahrgang)
+				const tmpJgKl = (jgKl === null) || (jgKl.kuerzelStatistik === null) ? null : Jahrgaenge.data().getWertBySchluessel(jgKl.kuerzelStatistik);
+				if (tmpJgKl === null)
+					continue;
+				if (tmpJgKl.isVorgaengerVon(props.manager().getSchuljahr(), tmpJg, props.manager().schulform(), schulgliederung))
 					result.add(kl);
 			}
 		}
