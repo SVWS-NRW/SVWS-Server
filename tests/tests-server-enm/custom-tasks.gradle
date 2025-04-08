@@ -74,7 +74,7 @@ task generateENMDockerFile() {
 
 	def docker_reg_url = ""
 	if (System.getenv('CI_SERVER')) {
-		docker_reg_url = CONFIG.docker_reg_url
+		docker_reg_url = CONFIG.dockerRegistry
 	}
 
 	doFirst {

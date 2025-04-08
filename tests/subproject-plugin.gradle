@@ -103,7 +103,7 @@ task generateDockerComposeFile {
 
 	def docker_reg_url = ""
 	if (System.getenv('CI_SERVER')) {
-		docker_reg_url = CONFIG.docker_reg_url
+		docker_reg_url = CONFIG.dockerRegistry
 	}
 
 	doLast {
@@ -160,7 +160,7 @@ task generateDockerFile {
 		def docker_reg_url = ""
 
 		if (System.getenv('CI_SERVER')) {
-			docker_reg_url = CONFIG.docker_reg_url
+			docker_reg_url = CONFIG.dockerRegistry
 		}
 
 		if (project.ext.has('ENM_CONTAINER_NAME')) {

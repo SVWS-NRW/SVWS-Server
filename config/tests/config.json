@@ -1,6 +1,6 @@
 {
-    "keep_container_after_test_run": false,
-	"docker_reg_url": "10.1.1.3/library/",
+    "keepContainerAfterTestRun": false,
+	"dockerRegistry": "10.1.1.3/library/",
 	"lastRepoUpdate": "2025-03-27T08:13:40Z",
     "GymAbi01": "https://github.com/SVWS-NRW/SVWS-TestMDBs/raw/refs/heads/main/GOST_Abitur/Abi-Test-Daten-01/GymAbi.sqlite",
     "GymAbiDav": "https://github.com/SVWS-NRW/SVWS-TestMDBs/raw/refs/heads/main/GOST_Abitur/Abi-Test-Daten-01/GymAbiDav.sqlite",

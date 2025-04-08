@@ -2,12 +2,12 @@
 	<div class="page page-grid-cards">
 		<div class="flex flex-col gap-4">
 			<ui-card v-if="hatKompetenzDrucken && (mapStundenplaene.size > 0)" icon="i-ri-printer-line" title="Stundenplan drucken" subtitle="Drucke die Stundenpläne der ausgewählten Schüler."
-					 :is-open="currentAction === 'print'" @update:is-open="isOpen => setCurrentAction('print', isOpen)">
+				:is-open="currentAction === 'print'" @update:is-open="isOpen => setCurrentAction('print', isOpen)">
 				<div>
 					<svws-ui-input-wrapper :grid="2" class="p-2">
 						<div>
 							<svws-ui-select title="Stundenplan" v-model="stundenplanAuswahl" :items="mapStundenplaene.values()"
-											:item-text="s => s.bezeichnung.replace('Stundenplan ', '') + ': ' + toDateStr(s.gueltigAb) + '—' + toDateStr(s.gueltigBis) + ' (KW ' + toKW(s.gueltigAb) + '—' + toKW(s.gueltigBis) + ')'" />
+								:item-text="s => s.bezeichnung.replace('Stundenplan ', '') + ': ' + toDateStr(s.gueltigAb) + '—' + toDateStr(s.gueltigBis) + ' (KW ' + toKW(s.gueltigAb) + '—' + toKW(s.gueltigBis) + ')'" />
 						</div>
 						<div></div>
 						<div class="text-left">
@@ -62,13 +62,13 @@
 <script setup lang="ts">
 
 	import { ref, computed } from "vue";
-	import type { SchuelerGruppenprozesseProps } from "./SSchuelerGruppenprozesseProps";
+	import type { SSchuelerAllgemeinesGruppenprozesseProps } from "./SSchuelerAllgemeinesGruppenprozesseProps";
 	import type { StundenplanListeEintrag, List } from "@core";
 	import { ArrayList, BenutzerKompetenz, DateUtils, ReportingParameter, ReportingReportvorlage } from "@core";
 
 	type Action = 'print' | 'delete' | '';
 
-	const props = defineProps<SchuelerGruppenprozesseProps>();
+	const props = defineProps<SSchuelerAllgemeinesGruppenprozesseProps>();
 
 	const currentAction = ref<Action>('');
 	const oldAction = ref<{ name: string | undefined; open: boolean }>({
@@ -89,11 +89,12 @@
 	})
 
 	function setCurrentAction(newAction: Action, open: boolean) {
-		if(newAction === oldAction.value.name && !open)
+		if (newAction === oldAction.value.name && !open)
 			return;
+
 		oldAction.value.name = currentAction.value;
-		oldAction.value.open = (currentAction.value === "") ? false : true;
-		if(open === true)
+		oldAction.value.open = (currentAction.value !== "");
+		if (open)
 			currentAction.value= newAction;
 		else
 			currentAction.value = "";

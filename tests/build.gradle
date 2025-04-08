@@ -159,7 +159,7 @@ task integrationTest() {
 	dependsOn 'tests-server-enm:testAgainstDockerEnv' // Vite API ENM Tests
 
 
-	if(!CONFIG.keep_container_after_test_run) {
+	if(!CONFIG.keepContainerAfterTestRun) {
 		// Stoppe die container für die jeweiligen Testumgebungen nach den Integrationstests
 		// Jeden ausgeführte Test Sub-Packet sollte auch hier auftauchen
 		finalizedBy 'tests-server-api:removeTestEnvironmentEntryPoint'

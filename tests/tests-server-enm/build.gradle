@@ -166,7 +166,7 @@ task testAgainstDockerEnv() {
 	finalizedBy("runSyncTest")
 	finalizedBy("runTestsAfterSetup")
 
-	if(!CONFIG.keep_container_after_test_run) {
+	if(!CONFIG.keepContainerAfterTestRun) {
 		finalizedBy("removeENMBuildArtifacts") // räume die Testumgebung ab
 	}
 }

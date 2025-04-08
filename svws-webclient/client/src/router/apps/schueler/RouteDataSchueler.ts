@@ -6,8 +6,8 @@ import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/Rout
 import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdaten";
 import { ViewType } from "@ui";
 import { routeSchuelerNeu } from "~/router/apps/schueler/RouteSchuelerNeu";
-import { routeSchuelerGruppenprozesse } from "~/router/apps/schueler/RouteSchuelerGruppenprozesse";
 import type { RouteParamsRawGeneric } from "vue-router";
+import { routeSchuelerAllgemeinesGruppenprozesse } from "~/router/apps/schueler/allgemeines/RouteSchuelerAllgemeinesGruppenprozesse";
 
 
 interface RouteStateSchueler extends RouteStateAuswahlInterface<SchuelerListeManager>{
@@ -18,6 +18,7 @@ const defaultState = <RouteStateSchueler> {
 	idSchuljahresabschnitt: -1,
 	manager: undefined,
 	view: routeSchuelerIndividualdaten,
+	gruppenprozesseView: routeSchuelerAllgemeinesGruppenprozesse,
 	activeViewType: ViewType.DEFAULT,
 	mapStundenplaene: new Map(),
 };
@@ -25,7 +26,7 @@ const defaultState = <RouteStateSchueler> {
 export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, RouteStateSchueler> {
 
 	public constructor() {
-		super(defaultState, routeSchuelerGruppenprozesse, routeSchuelerNeu);
+		super(defaultState, undefined, routeSchuelerNeu);
 	}
 
 	public addID(param: RouteParamsRawGeneric, id: number): void {
