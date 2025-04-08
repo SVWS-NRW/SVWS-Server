@@ -5,13 +5,17 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.schule.TelefonArt;
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.data.schueler.DataSchuelerTelefon;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.erzieher.DTOSchuelerTelefon;
 import de.svws_nrw.db.dto.current.schild.erzieher.DTOTelefonArt;
 import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.Response;
 
 /**
@@ -110,5 +114,41 @@ public final class DataKatalogTelefonArten extends DataManagerRevised<Long, DTOT
 		}
 	}
 
-	//TODO Löschen von Telefonarten implementieren
+	@Override
+	public Response deleteMultipleAsResponse(final List<Long> ids) {
+		// Bestimme die Datenbank-DTOs der Telefonarten
+		final List<DTOTelefonArt> telefonArten = this.conn.queryByKeyList(DTOTelefonArt.class, ids).stream().toList();
+		// Prüfe, ob das Löschen der Telefonarten erlaubt ist
+		final Map<Long, SimpleOperationResponse> mapResponses = telefonArten.stream()
+				.collect(Collectors.toMap(r -> r.ID, this::checkDeletePreConditions));
+		// Lösche die Telefonarten und gib den Erfolg in der Response zurück
+		for (final DTOTelefonArt dtotelefonArt : telefonArten) {
+			final SimpleOperationResponse operationResponse = mapResponses.get(dtotelefonArt.ID);
+			if (operationResponse == null)
+				throw new DeveloperNotificationException("Das SimpleOperationResponse Objekt zu der ID %d existiert nicht.".formatted(dtotelefonArt.ID));
+			if (operationResponse.log.isEmpty())
+				operationResponse.success = this.conn.transactionRemove(dtotelefonArt);
+		}
+		return Response.ok().entity(mapResponses.values()).build();
+	}
+
+	/**
+	 * Diese Methode prüft, ob alle Vorbedingungen zum Löschen einer Telefonart erfüllt sind.
+	 * Es wird eine {@link SimpleOperationResponse} zurückgegeben.
+	 *
+	 * @param dtoTelefonArt   das DTO der Telefonart, die gelöscht werden soll
+	 *
+	 * @return Liefert eine Response mit dem Log der Vorbedingungsprüfung zurück.
+	 */
+	private SimpleOperationResponse checkDeletePreConditions(final @NotNull DTOTelefonArt dtoTelefonArt) {
+		final SimpleOperationResponse operationResponse = new SimpleOperationResponse();
+		operationResponse.id = dtoTelefonArt.ID;
+
+		// Kein Schüler darf Telefoneinträge dieser Telefonart haben
+		final List<Long> schuelerTelefonIds = new DataSchuelerTelefon(conn, 1L).getIDsByTelefonArtId(dtoTelefonArt.ID);
+		if (!schuelerTelefonIds.isEmpty())
+			operationResponse.log.add("Telefonart %s (ID: %d) hat noch %d verknüpfte(n) Schlertelefoneinträge.".formatted(dtoTelefonArt.Bezeichnung,
+					dtoTelefonArt.ID,	schuelerTelefonIds.size()));
+		return operationResponse;
+	}
 }

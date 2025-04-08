@@ -521,6 +521,7 @@ export { SchuelerLernabschnittListeEintrag } from './core/data/schueler/Schueler
 export { SchuelerLernplattform } from './core/data/schueler/SchuelerLernplattform';
 export { SchuelerListe } from './core/data/schueler/SchuelerListe';
 export { SchuelerListeEintrag } from './core/data/schueler/SchuelerListeEintrag';
+export { SchuelerTelefon } from './core/data/schueler/SchuelerTelefon';
 export { SchuelerVermerkartZusammenfassung } from './core/data/schueler/SchuelerVermerkartZusammenfassung';
 export { SchuelerVermerke } from './core/data/schueler/SchuelerVermerke';
 export { AbgangsartKatalog } from './core/data/schule/AbgangsartKatalog';

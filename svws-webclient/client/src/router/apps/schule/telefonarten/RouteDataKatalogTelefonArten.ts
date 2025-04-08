@@ -46,8 +46,7 @@ export class RouteDataKatalogTelefonArten extends RouteDataAuswahl<TelefonArtLis
 	}
 
 	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {
-		//TODO Löschen implementieren
-		return await api.server.deleteLernplattformen(ids, api.schema);
+		return await api.server.deleteTelefonarten(ids, api.schema);
 	}
 
 	add = async (data: Partial<TelefonArt>): Promise<void> => {

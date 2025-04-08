@@ -21,6 +21,7 @@ import de.svws_nrw.core.data.schueler.SchuelerKAoADaten;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittListeEintrag;
 import de.svws_nrw.core.data.schueler.SchuelerLernplattform;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
+import de.svws_nrw.core.data.schueler.SchuelerTelefon;
 import de.svws_nrw.core.data.schueler.SchuelerVermerke;
 import de.svws_nrw.core.data.schueler.SchuelerEinwilligung;
 import de.svws_nrw.core.data.schule.HerkunftKatalogEintrag;
@@ -48,6 +49,7 @@ import de.svws_nrw.data.schueler.DataSchuelerSchulbesuchsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerSprachbelegung;
 import de.svws_nrw.data.schueler.DataSchuelerSprachpruefung;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
+import de.svws_nrw.data.schueler.DataSchuelerTelefon;
 import de.svws_nrw.data.schueler.DataSchuelerVermerke;
 import de.svws_nrw.data.schueler.DataSchuelerliste;
 import io.swagger.v3.oas.annotations.Operation;
@@ -1713,6 +1715,138 @@ public class APISchueler {
 						is),
 				request, ServerMode.DEV,
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Telefonneinträge eines Schülers.
+	 *
+	 * @param schema       das Datenbankschema, auf welchem die Abfrage ausgeführt werden soll
+	 * @param idSchueler   die Datenbank-ID zur Identifikation des Schülers
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Telefoneinträge des Schülers
+	 */
+	@GET
+	@Path("/{id : \\d+}/telefone")
+	@Operation(summary = "Liefert zu der ID des Schülers die zugehörigen Telefoneinträge.",
+			description = "Liest die Telefoneinträge des Schülers zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Telefoneinträge des Schülers",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchuelerTelefon.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine TelefonArt für den Schüler mit der angegebenen ID gefunden")
+	public Response getSchuelerTelefone(@PathParam("schema") final String schema, @PathParam("id") final long idSchueler,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerTelefon(conn, idSchueler).getListAsResponse(),
+				request, ServerMode.DEV, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage eines Schülertelefons.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param idSchueler        die Datenbank-ID zur Identifikation des Schülertelefons
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Daten zum Schülertelefon
+	 */
+	@GET
+	@Path("/telefon/{id : \\d+}")
+	@Operation(summary = "Liefert zu der ID des Schülertelefons die zugehörigen Daten.",
+			description = "Liest die Daten des Schülertelefons zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Daten des Schülertelefons",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchuelerTelefon.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Kein Schülertelefon mit der angegebenen ID gefunden")
+	public Response getSchuelerTelefon(@PathParam("schema") final String schema, @PathParam("id") final long idSchueler, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerTelefon(conn, idSchueler).getByIdAsResponse(idSchueler),
+				request, ServerMode.DEV, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
+	}
+
+	/**
+	 *
+	 * Erzeugt einen Schülertelefoneintrag und gibt diesen zurück
+	 *
+	 * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param idSchueler die ID des Schülers bei dem das der Eintrag gemacht werden soll
+	 * @param is 		 der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 *
+	 * @return HTTP_201 und der angelegte Schülertelefoneintrag, wenn erfolgreich. <br>
+	 *         HTTP_400, wenn Fehler bei der Validierung auftreten HTTP_403 bei fehlender Berechtigung,<br>
+	 *         HTTP_404, wenn der Eintrag nicht gefunden wurde
+	 */
+	@POST
+	@Path("/{idSchueler : \\d+}/telefon")
+	@Operation(summary = "Erstellt einen neuen Schülertelefoneintrag", description = "Erstellt einen neuen Schülertelefoneintrag"
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerdaten besitzt.")
+	@ApiResponse(responseCode = "201", description = "Die Telefone des Schülers",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchuelerTelefon.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schülertelefone anzulegen.")
+	public Response addSchuelerTelefon(@PathParam("schema") final String schema, @PathParam("idSchueler") final long idSchueler,
+			@RequestBody(description = "Die Telefone des Schülers", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					schema = @Schema(implementation = SchuelerTelefon.class))) final InputStream is, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerTelefon(conn, idSchueler).addAsResponse(is),
+				request, ServerMode.DEV, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Patchen der Telefoneinträge eines Schülers.
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param idSchueler die ID des Schülers bei dem das der Eintrag gepatcht werden soll
+	 * @param idTelefon       die ID des Telefoneintrags welcher gepatcht wird
+	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/{idSchueler : \\d+}/telefon/{idTelefon : \\d+}")
+	@Operation(summary = "Liefert zu der ID des Schülers.",
+			description = "Passt die Vermerke zu der angegebenen Schüler-ID und der angegeben Telefon-ID an und speichert das Ergebnis in der Datenbank."
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Sprachbelegungen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Schülertelefoneinträge integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Telefondaten der Schüler zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Schülertelefoneintrag mit der angegebenen ID gefunden oder keine Sprachbelegung für die Sprache "
+			+ "gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
+			+ " (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response patchSchuelerTelefon(@PathParam("schema") final String schema, @PathParam("idSchueler") final long idSchueler,
+			@PathParam("idTelefon") final long idTelefon,
+			@RequestBody(description = "Der Patch für die Schülertelefoneinträge", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerTelefon.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerTelefon(conn, idSchueler).patchAsResponse(idTelefon, is),
+				request, ServerMode.DEV, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
+	}
+
+	/**
+	 * Löscht ein SchülerTelefoneintrag anhand der Id
+	 *
+	 * @param schema         das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param idSchueler     die Schueler-ID
+	 * @param idTelefon      die Datenbank-ID des Schülertelefons
+	 * @param request        die Informationen zur HTTP-Anfrage
+	 *
+	 * @return HTTP_204, wenn erfolgreich. <br>
+	 *         HTTP_403 bei fehlender Berechtigung,<br>
+	 *         HTTP_404, wenn der Eintrag nicht gefunden wurde
+	 */
+	@DELETE
+	@Path("/{idSchueler : \\d+}/telefon/{idTelefon : \\d+}")
+	@Operation(summary = "Löscht einen Schuelertelefoneintrag", description = "Löscht einen Schuelertelefoneintrag"
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerdaten besitzt.")
+	@ApiResponse(responseCode = "204", description = "Der Telefoneintrag des Schülers wurde gelöscht")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzulegen.")
+	@ApiResponse(responseCode = "404", description = "Kein Schülertelefoneinträge mit der angegebenen ID gefunden")
+	public Response deleteSchuelerTelefon(@PathParam("schema") final String schema, @PathParam("idSchueler") final long idSchueler,
+			@PathParam("idTelefon") final long idTelefon, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerTelefon(conn, idSchueler).deleteAsResponse(idTelefon),
+				request, ServerMode.DEV, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
 	}
 
 }
