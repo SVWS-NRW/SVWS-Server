@@ -139,6 +139,18 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		return this._state.value.halbjahr;
 	}
 
+	get zuletztBesucht(): Map<number, { halbjahrId: number, idBlockung: number, idErgebnis: number }> {
+		const text = api.config.getValue("gost.kursplanung.route.zuletztBesucht");
+		const arr = JSON.parse(text);
+		return new Map(arr);
+	}
+
+	setZuletztBesucht = async (value: Map<number, { halbjahrId: number, idBlockung: number, idErgebnis: number }>) => {
+		console.log(value)
+		const text = JSON.stringify([...value.entries()]);
+		await api.config.setValue('gost.kursplanung.route.zuletztBesucht', text);
+	}
+
 	get blockungstabelleHidden(): 'nichts'|'alles'|'schienen' {
 		return api.config.getValue("gost.kursplanung.kursansicht.ausgeblendet") as 'nichts'|'alles'|'schienen';
 	}
