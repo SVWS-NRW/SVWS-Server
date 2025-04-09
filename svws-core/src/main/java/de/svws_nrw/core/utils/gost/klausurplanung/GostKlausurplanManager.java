@@ -68,7 +68,6 @@ public class GostKlausurplanManager {
 	private final @NotNull Map<Integer, GostFaecherManager> _faechermanager_by_abijahr = new HashMap<>();
 	private final @NotNull KursManager _kursManager = new KursManager();
 	private final @NotNull HashMap2D<Long, String, StundenplanManager> _stundenplanmanager_by_schuljahresabschnitt_and_datum = new HashMap2D<>();
-//	private final @NotNull HashMap3D<Long, Integer, Integer, StundenplanManager> _stundenplanmanager_by_schuljahresabschnitt_and_kw = new HashMap3D<>();
 	private final @NotNull Map<Long, List<StundenplanManager>> _stundenplanmanagermenge_by_schuljahresabschnitt = new HashMap<>();
 	private final @NotNull Map<Long, LehrerListeEintrag> _lehrerMap = new HashMap<>();
 	private final @NotNull Map<Long, SchuelerListeEintrag> _schuelerlisteeintrag_by_id = new HashMap<>();
@@ -231,7 +230,6 @@ public class GostKlausurplanManager {
 	// GostKursklausur
 	private final @NotNull Map<Long, GostKursklausur> _kursklausur_by_id = new HashMap<>();
 	private final @NotNull List<GostKursklausur> _kursklausurmenge = new ArrayList<>();
-//	private final @NotNull Map<Long, List<GostKursklausur>> _kursklausurmenge_by_idTermin = new HashMap<>();
 	private @NotNull ListMap2DLongKeys<GostKursklausur> _kursklausur_by_idVorgabe_and_idKurs = new ListMap2DLongKeys<>();
 	private @NotNull ListMap4DLongKeys<GostKursklausur> _kursklausurmenge_by_abijahr_and_halbjahr_and_idTermin_and_quartal =
 			new ListMap4DLongKeys<>();
@@ -636,19 +634,6 @@ public class GostKlausurplanManager {
 		return liste != null && !liste.isEmpty();
 	}
 
-//	/**
-//	 * Prüft, ob zu den angegebenen Parametern ein StundenplanManager existiert. Falls noch keine StundenplanManager für den angegebenen Schuljahresabschnitt geladen wurden, wird eine {@link DeveloperNotificationException} geworfen
-//	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
-//	 * @param jahr das Jahr
-//	 * @param kalenderwoche die Kalenderwoche
-//	 * @return true, wenn ein StundenplanManager existiert, sonst false
-//	 */
-//	public boolean stundenplanManagerExistsByAbschnittAndKW(final long idSchuljahresabschnitt, final int jahr, final int kalenderwoche) {
-//		if (!stundenplanManagerGeladenByAbschnitt(idSchuljahresabschnitt))
-//			throw new DeveloperNotificationException("StundenplanManager für Schuljahresabschnitt " + idSchuljahresabschnitt + " wurde nicht geladen.");
-//		return _stundenplanmanager_by_schuljahresabschnitt_and_kw.contains(idSchuljahresabschnitt, jahr, kalenderwoche);
-//	}
-
 	/**
 	 * Prüft, ob zu den angegebenen Parametern ein StundenplanManager existiert. Falls noch keine StundenplanManager für den angegebenen Schuljahresabschnitt geladen wurden, wird eine {@link DeveloperNotificationException} geworfen
 	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
@@ -822,28 +807,6 @@ public class GostKlausurplanManager {
 		}
 		return null;
 	}
-
-//	/**
-//	 * Liefert das dem Jahr und der Kalenderwoche zugeordnete {@link StundenplanKalenderwochenzuordnung}-Objekt der Auswahl-Menge oder das nächstmöglichste.
-//	 * <br>Hinweis: Einige Objekte dieser Menge können die ID = -1 haben, falls sie erzeugt wurden und nicht aus der DB stammen.
-//	 * <br>Laufzeit: O(1)
-//	 *
-//	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
-//	 * @param jahr           Das Jahr der Kalenderwoche.
-//	 * @param kalenderwoche  Die gewünschte Kalenderwoche.
-//	 *
-//	 * @return das dem Jahr und der Kalenderwoche zugeordnete {@link StundenplanKalenderwochenzuordnung}-Objekt der Auswahl-Menge oder das nächstmöglichste.
-//	 */
-//	public @NotNull StundenplanManager stundenplanManagerGetByAbschnittAndJahrAndKWOrClosest(final long idSchuljahresabschnitt, final int jahr,
-//			final int kalenderwoche) {
-//		if (!stundenplanManagerGeladenByAbschnitt(idSchuljahresabschnitt))
-//			throw new DeveloperNotificationException("StundenplanManager für Schuljahresabschnitt " + idSchuljahresabschnitt + " wurde nicht geladen.");
-//		final StundenplanManager manager = _stundenplanmanager_by_schuljahresabschnitt_and_kw.getOrNull(idSchuljahresabschnitt, jahr, kalenderwoche);
-//		if (manager != null)
-//			return manager;
-//		final @NotNull String dateOfMonday = DateUtils.gibDatumDesMontagsOfJahrAndKalenderwoche(jahr, kalenderwoche);
-//		return stundenplanManagerGetByAbschnittAndDatumOrClosest(idSchuljahresabschnitt, dateOfMonday);
-//	}
 
 	/**
 	 * Liefert den {@link StundenplanManager}, zu den übergebenen Parametern, sonst wird eine {@link DeveloperNotificationException} geworfen.
@@ -4544,17 +4507,17 @@ public class GostKlausurplanManager {
 	 * Liefert die Menge aller {@link GostKursklausur}en zurück, die in einem {@link GostKlausurraum} geschrieben werden, auch wenn die {@link GostKursklausur} nur nachgeschrieben wird.
 	 *
 	 * @param raum  der {@link GostKlausurraum}
+	 * @param includeNachschreiber <code>true</code>, wenn auch Nachschreiber berücksichtigt werden sollen
 	 *
 	 * @return die Menge aller {@link GostKursklausur}en zurück, die in einem {@link GostKlausurraum} geschrieben werden, auch wenn die {@link GostKursklausur} nur nachgeschrieben wird.
 	 */
-	public @NotNull List<GostKursklausur> kursklausurGetMengeByRaum(final @NotNull GostKlausurraum raum) {
-		final List<GostKursklausur> kursklausuren = new ArrayList<>();
+	public @NotNull Set<GostKursklausur> kursklausurGetMengeByRaum(final @NotNull GostKlausurraum raum, final boolean includeNachschreiber) {
+		final Set<GostKursklausur> kursklausuren = new HashSet<>();
 		if (!_schuelerklausurterminaktuellmenge_by_idRaum_and_idKursklausur.containsKey1(raum.id))
 			return kursklausuren;
-		for (final long idKK : _schuelerklausurterminaktuellmenge_by_idRaum_and_idKursklausur.getKeySetOf(raum.id)) {
-			if (!_schuelerklausurterminaktuellmenge_by_idRaum_and_idKursklausur.getOrException(raum.id, idKK).isEmpty())
-				kursklausuren.add(kursklausurGetByIdOrException(idKK));
-		}
+		for (final GostSchuelerklausurTermin skt : ListUtils.getFlatted(_schuelerklausurterminaktuellmenge_by_idRaum_and_idKursklausur.getNonNullValuesOfKey1AsList(raum.id)))
+			if (skt.folgeNr == 0 || includeNachschreiber)
+				kursklausuren.add(kursklausurBySchuelerklausurTermin(skt));
 		return kursklausuren;
 	}
 
@@ -4711,7 +4674,7 @@ public class GostKlausurplanManager {
 	 */
 	public Integer getGemeinsameKursklausurdauerByKlausurraum(final @NotNull GostKlausurraum raum) {
 		int dauer = -1;
-		for (final @NotNull GostKursklausur klausur : kursklausurGetMengeByRaum(raum)) {
+		for (final @NotNull GostKursklausur klausur : kursklausurGetMengeByRaum(raum, true)) {
 			final @NotNull GostKlausurvorgabe vorgabe = vorgabeByKursklausur(klausur);
 			if (dauer == -1)
 				dauer = vorgabe.dauer;
@@ -4731,7 +4694,7 @@ public class GostKlausurplanManager {
 	 */
 	public Integer getGemeinsamerKursklausurstartByKlausurraum(final @NotNull GostKlausurraum raum) {
 		Integer start = -1;
-		for (final @NotNull GostKursklausur klausur : kursklausurGetMengeByRaum(raum)) {
+		for (final @NotNull GostKursklausur klausur : kursklausurGetMengeByRaum(raum, true)) {
 			if ((start != null) && (start == -1))
 				start = klausur.startzeit;
 			if (hatAbweichendeStartzeitByKursklausur(klausur))

@@ -140,7 +140,7 @@
 					<div class="mt-3">
 						<svws-ui-textarea-input class="text-sm" :headless="termin.bemerkung === null || termin.bemerkung.trim().length === 0" :rows="1"
 							resizeable="none" autoresize placeholder="Bemerkungen zum Termin" :disabled="!hatKompetenzUpdate" :model-value="termin.bemerkung"
-							@change="bemerkung => patchKlausurtermin(termin.id, {bemerkung})" @click="$event.stopPropagation()" />
+							@change="bemerkung => patchKlausurtermin(termin.id, {bemerkung})" @click="$event.stopPropagation()" @drop.prevent @dragover.prevent />
 					</div>
 					<span class="flex w-full justify-between items-center gap-1 text-sm mt-auto pr-2" :class="{'pl-3': inTooltip}">
 						<div class="py-3" :class="{'opacity-50': !kursklausuren().size() && (showSchuelerklausuren && !schuelerklausurtermine().size())}">

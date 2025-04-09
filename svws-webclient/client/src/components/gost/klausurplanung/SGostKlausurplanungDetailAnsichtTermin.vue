@@ -19,10 +19,10 @@
 					<td v-else class="border-r text-ui-danger text-center border-ui-25">
 						N.N.
 					</td>
-					<template v-if="kMan().kursklausurGetMengeByRaum(raum).size() > 0">
+					<template v-if="kMan().kursklausurGetMengeByRaum(raum, false).size() > 0">
 						<td class="border-ui-25 border-r" :colspan="kursInfoColspan(raum)">
 							<table class="w-full">
-								<tr class="border-b last:border-b-0 border-ui-25 border-dashed" v-for="klausur in kMan().kursklausurGetMengeByRaum(raum)" :key="klausur.id">
+								<tr class="border-b last:border-b-0 border-ui-25 border-dashed" v-for="klausur in kMan().kursklausurGetMengeByRaum(raum, false)" :key="klausur.id">
 									<td class="px-3 py-1" :class="{'w-1/2': kMan().getGemeinsamerKursklausurstartByKlausurraum(raum) !== null && kMan().getGemeinsameKursklausurdauerByKlausurraum(raum) !== null}">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</td>
 									<td class="px-3 py-1" :class="{'w-1/2': kMan().getGemeinsamerKursklausurstartByKlausurraum(raum) !== null && kMan().getGemeinsameKursklausurdauerByKlausurraum(raum) !== null}">{{ kMan().kursLehrerKuerzelByKursklausur(klausur) }}</td>
 									<td class="pl-3 py-1 text-center" v-if="kMan().getGemeinsamerKursklausurstartByKlausurraum(raum) === null"><span class="inline-flex">{{ DateUtils.getStringOfUhrzeitFromMinuten(kMan().startzeitByKursklausurOrException(klausur)) }} Uhr <span class="icon i-ri-alert-fill ml-2 icon-ui-caution" v-if="kMan().hatAbweichendeStartzeitByKursklausur(klausur)" /></span></td>

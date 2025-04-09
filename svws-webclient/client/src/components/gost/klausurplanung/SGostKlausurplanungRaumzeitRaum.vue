@@ -65,13 +65,14 @@
 						</div>
 						<div class="svws-ui-td" role="cell">{{ kMan().vorgabeByKursklausur(klausur).dauer }}</div>
 						<div class="svws-ui-td" role="cell">
-							<svws-ui-text-input :model-value="klausur.startzeit !== null ? DateUtils.getStringOfUhrzeitFromMinuten(klausur.startzeit) : ''" headless :placeholder="klausur.startzeit === null ? (kMan().startzeitByKursklausurOrNull(klausur) !== null ? DateUtils.getStringOfUhrzeitFromMinuten(kMan().startzeitByKursklausurOrException(klausur)) + ' Uhr' || 'Startzeit' : '') : 'Individuelle Startzeit'" @change="zeit => patchKlausurbeginn(zeit, klausur)" />
+							<svws-ui-text-input :model-value="klausur.startzeit !== null ? DateUtils.getStringOfUhrzeitFromMinuten(klausur.startzeit) : ''" headless :placeholder="klausurStartzeit(klausur) + ' Uhr'" @change="zeit => patchKlausurbeginn(zeit, klausur)" />
 						</div>
 					</div>
 				</template>
 			</svws-ui-table>
 			<div class="mt-3">
-				<svws-ui-textarea-input class="text-sm" :headless="(raum.bemerkung === null) || (raum.bemerkung.trim().length === 0)" :rows="1" resizeable="none" autoresize placeholder="Bemerkungen zum Raum" :disabled="!hatKompetenzUpdate" :model-value="raum.bemerkung" @change="bemerkung => patchKlausurraum(raum.id, {bemerkung})" />
+				<svws-ui-textarea-input class="text-sm" :headless="(raum.bemerkung === null) || (raum.bemerkung.trim().length === 0)" :rows="1" resizeable="none" autoresize placeholder="Bemerkungen zum Raum" :disabled="!hatKompetenzUpdate" :model-value="raum.bemerkung" @change="bemerkung => patchKlausurraum(raum.id, {bemerkung})" @drop.prevent
+					@dragover.prevent />
 			</div>
 			<span class="mt-auto -mb-3 flex w-full items-center justify-between gap-1 text-sm">
 				<div class="py-3" :class="{'opacity-50': klausurenImRaum().size() === 0}">
@@ -118,11 +119,27 @@
 
 	const raumHatFehler = () => (props.raum.idStundenplanRaum !== null && anzahlSuS() > props.kMan().stundenplanraumGetByKlausurraum(props.raum).groesse) || props.raum.idStundenplanRaum === null;
 
-	const klausurenImRaum = () => props.kMan().kursklausurGetMengeByRaum(props.raum);
+	const klausurenImRaum = () => props.kMan().kursklausurGetMengeByRaum(props.raum, true);
 
 	const anzahlSuS = () => props.kMan().schuelerklausurterminGetMengeByRaum(props.raum).size();
 
 	const termin = () => props.kMan().terminGetByIdOrException(props.raum.idTermin);
+
+	const klausurStartzeit = (klausur: GostKursklausur) => {
+		let startzeit = -1;
+		if (klausur.startzeit !== null)
+			startzeit = klausur.startzeit;
+		else if (klausur.idTermin === props.raum.idTermin) {
+			const startzeitKursklausur = props.kMan().startzeitByKursklausurOrNull(klausur);
+			if (startzeitKursklausur !== null)
+				startzeit = startzeitKursklausur;
+		} else {
+			const startzeitRaum = termin().startzeit;
+			if (startzeitRaum !== null)
+				startzeit = startzeitRaum;
+		}
+		return startzeit !== -1 ? DateUtils.getStringOfUhrzeitFromMinuten(startzeit) : undefined;
+	}
 
 	const anzahlRaumstunden = computed(() => {
 		return props.kMan().raumstundeGetMengeByRaum(props.raum).size();
