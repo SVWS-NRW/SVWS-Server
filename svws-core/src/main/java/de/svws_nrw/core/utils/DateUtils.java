@@ -1,8 +1,11 @@
 package de.svws_nrw.core.utils;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import de.svws_nrw.asd.adt.PairNN;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
+import de.svws_nrw.core.types.Wochentag;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -175,6 +178,29 @@ public final class DateUtils {
 		final int schalttage2 = ((jahr / 4) - (jahr / 100)) + (jahr / 400);
 		final int schaltjahr = schalttage2 - schalttage1;
 		return 365 + schaltjahr;
+	}
+
+	/**
+	 * Liefert eine Liste von Paaren von Wochentagen und den zugehörigen Daten im ISO8601-Format (uuuu-MM-dd) der als Array übergebenen Wochentage der Kalenderwoche des Kalenderwochenjahres.
+	 * <br>Hinweis: Der Montag kann bei der 1. KW im Vorjahr liegen!
+	 *
+	 * @param kalenderwochenjahr  Das Jahr der Kalenderwoche.
+	 * @param kalenderwoche       Die Kalenderwoche.
+	 * @param wochentage          Das Array der Wochentage.
+	 *
+	 * @return die Liste von Paaren von Wochentagen und den zugehörigen Daten im ISO8601-Format (uuuu-MM-dd) der der Kalenderwoche des Kalenderwochenjahres.
+	 */
+	public static @NotNull List<PairNN<Wochentag, String>> gibDatenDerWochentageOfJahrAndKalenderwoche(final int kalenderwochenjahr, final int kalenderwoche, final @NotNull Wochentag[] wochentage) {
+		DeveloperNotificationException.ifTrue("kalenderwoche < 1", kalenderwoche < 1);
+	    DeveloperNotificationException.ifTrue("kalenderwoche > gibKalenderwochenOfJahr(kalenderwochenjahr)", kalenderwoche > gibKalenderwochenOfJahr(kalenderwochenjahr));
+	    DeveloperNotificationException.ifTrue("wochentage ist leer", wochentage.length == 0);
+
+	    final List<PairNN<Wochentag, String>> daten = new ArrayList<>();
+	    for (Wochentag wochentag : wochentage) {
+    		final @NotNull Wochentag wtag = DeveloperNotificationException.ifNull("wochentage enthält null-Einträge", wochentag);
+	        daten.add(new PairNN<>(wtag, gibDatumDesWochentagsOfJahrAndKalenderwoche(kalenderwochenjahr, kalenderwoche, wtag.id)));
+	    }
+	    return daten;
 	}
 
 	/**

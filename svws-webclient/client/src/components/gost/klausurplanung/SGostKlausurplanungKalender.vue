@@ -56,6 +56,7 @@
 				<template v-if="kalenderdatum">
 					<s-gost-klausurplanung-kalender-stundenplan-ansicht :benutzer-kompetenzen
 						:id="33"
+						:abschnitt
 						:kalenderdatum
 						:jahrgangsdaten
 						:halbjahr
@@ -172,7 +173,11 @@
 
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
 
-	const kalenderwoche = () => props.kMan().stundenplanManagerGetByAbschnittAndDatumOrException(props.abschnitt!.id, props.kalenderdatum.value!).kalenderwochenzuordnungGetByDatum(props.kalenderdatum.value!);
+	const kalenderwoche = (datum?: string) => {
+		if (datum === undefined)
+			datum = props.kalenderdatum.value!;
+		return props.kMan().stundenplanManagerGetByAbschnittAndDatumOrException(props.abschnitt!.id, datum).kalenderwochenzuordnungGetByDatum(datum)
+	};
 
 	const stundenplanManager = () => props.kMan().stundenplanManagerGetByAbschnittAndDatumOrException(props.abschnitt!.id, DateUtils.gibDatumDesMontagsOfJahrAndKalenderwoche(kalenderwoche().jahr, kalenderwoche().kw));
 
@@ -256,7 +261,8 @@
 		if (props.terminSelected.value !== undefined)
 			for (const klausur of props.kMan().kursklausurGetMengeByTermin(props.terminSelected.value))
 				kursIds.add(klausur.idKurs);
-		return props.kMan().stundenplanManagerGetByAbschnittAndDatumOrException(props.abschnitt!.id, datum).kursGetMengeGefiltertByWochentypAndWochentagAndStunde(kursIds, kalenderwoche().wochentyp, day, stunde);
+		const sManager = props.kMan().stundenplanManagerGetByAbschnittAndDatumOrNull(props.abschnitt!.id, datum);
+		return sManager !== null ? sManager.kursGetMengeGefiltertByWochentypAndWochentagAndStunde(kursIds, kalenderwoche(datum).wochentyp, day, stunde) : new ArrayList<number>() as List<number>;
 	}
 
 	function sumSchreiber(datum: string, day: Wochentag, stunde: number) {
