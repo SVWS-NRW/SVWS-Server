@@ -140,7 +140,6 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			}
 			// Prüfe das Blockungsergebnis und setzte dieses ggf.
 			let ergebnis : GostBlockungsergebnis | undefined;
-			console.log(ergebnis)
 			if (idErgebnis === undefined) {
 				// ... wurde die ID des Ergebnisses auf undefined setzt, so prüfe, ob die Ergebnisliste leer ist und wähle ggf. das aktiver oder das erste Element aus
 				if ((this.data.hatBlockung) && (this.data.ergebnisse.size() > 0)) {

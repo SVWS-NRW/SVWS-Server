@@ -146,7 +146,6 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 	}
 
 	setZuletztBesucht = async (value: Map<number, { halbjahrId: number, idBlockung: number, idErgebnis: number }>) => {
-		console.log(value)
 		const text = JSON.stringify([...value.entries()]);
 		await api.config.setValue('gost.kursplanung.route.zuletztBesucht', text);
 	}
