@@ -30,6 +30,7 @@ import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.Logger;
+import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.data.gost.DBUtilsGostLaufbahn;
@@ -191,9 +192,9 @@ public class GenerateTestdatenLaufbahn {
 					faecherManager.addFachkombinationenAll(mapJahrgangIDToGostFaecherkombinationen.get(strJahrgangID));
 					logger.logLn("Generiere Daten für " + strSchuelerID + " des Jahrgangs " + strJahrgangID);
 
-					AbiturdatenManager manager = new AbiturdatenManager(abiturdaten, gostJahrgangsdaten, faecherManager, GostBelegpruefungsArt.EF1);
+					AbiturdatenManager manager = new AbiturdatenManager(ServerMode.DEV, abiturdaten, gostJahrgangsdaten, faecherManager, GostBelegpruefungsArt.EF1);
 					final GostBelegpruefungErgebnis ergebnisEF1 = manager.getBelegpruefungErgebnis();
-					manager = new AbiturdatenManager(abiturdaten, gostJahrgangsdaten, faecherManager, GostBelegpruefungsArt.GESAMT);
+					manager = new AbiturdatenManager(ServerMode.DEV, abiturdaten, gostJahrgangsdaten, faecherManager, GostBelegpruefungsArt.GESAMT);
 					final GostBelegpruefungErgebnis ergebnisGesamt = manager.getBelegpruefungErgebnis();
 
 					writeTo(outPath + "/Jahrgang_" + strJahrgangID + "_" + strSchuelerID + "_Abiturdaten.json", mapper.writeValueAsString(abiturdaten));

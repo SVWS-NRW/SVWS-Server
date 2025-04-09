@@ -1,5 +1,5 @@
 <template>
-	<div role="row" class="svws-ui-tr text-uistatic" :style="{ 'background-color': bgColor }">
+	<div role="row" class="svws-ui-tr text-uistatic" :style="{ 'background-color': manager.getFachfarbe(fach) }">
 		<div role="cell" class="svws-ui-td select-text">
 			<div class="whitespace-nowrap min-w-fit">
 				{{ fach.kuerzelAnzeige }}
@@ -166,7 +166,6 @@
 	});
 
 	const halbjahrRefs = ref(new Map<number, HTMLElement>());
-	const bgColor = computed<string>(() => Fach.getBySchluesselOrDefault(props.fach.kuerzel).getHMTLFarbeRGB(props.abiturdatenManager().getSchuljahr()));
 
 	// Nächste Halbjahr-Zelle fokussieren, wenn möglich. Sonst "update:focus:impossible" emitten, sodass Parent-Komponente einen Schritt weiter gehen kann
 	function doFocusOnHalbjahr() {
@@ -364,7 +363,7 @@
 	async function handleHochschreiben(halbjahr: GostHalbjahr) {
 		if (!props.hatUpdateKompetenz)
 			return;
-		await props.manager.stepperHochschreiben(props.fach, halbjahr);
+		await props.manager.stepper(props.fach, halbjahr, 'hochschreiben');
 	}
 
 </script>

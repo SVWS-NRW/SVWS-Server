@@ -1,7 +1,9 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { Naturwissenschaften } from '../../../core/abschluss/gost/belegpruefung/Naturwissenschaften';
 import { Schwerpunkt } from '../../../core/abschluss/gost/belegpruefung/Schwerpunkt';
+import { Abi29BelegpruefungKurszahlenUndWochenstunden } from '../../../core/abschluss/gost/belegpruefung/abi2029/Abi29BelegpruefungKurszahlenUndWochenstunden';
 import { GostFaecherManager } from '../../../core/utils/gost/GostFaecherManager';
+import { Abi29BelegpruefungSport } from '../../../core/abschluss/gost/belegpruefung/abi2029/Abi29BelegpruefungSport';
 import { HashMap } from '../../../java/util/HashMap';
 import { GostFachUtils } from '../../../core/utils/gost/GostFachUtils';
 import { KurszahlenUndWochenstunden } from '../../../core/abschluss/gost/belegpruefung/KurszahlenUndWochenstunden';
@@ -9,47 +11,66 @@ import { ArrayList } from '../../../java/util/ArrayList';
 import { GostBelegpruefungErgebnis } from '../../../core/abschluss/gost/GostBelegpruefungErgebnis';
 import { GostKursart } from '../../../core/types/gost/GostKursart';
 import { Latinum } from '../../../core/abschluss/gost/belegpruefung/Latinum';
+import { Abi29BelegpruefungSchwerpunkt } from '../../../core/abschluss/gost/belegpruefung/abi2029/Abi29BelegpruefungSchwerpunkt';
 import { Sprachendaten } from '../../../asd/data/schueler/Sprachendaten';
 import { GostFachbereich } from '../../../core/types/gost/GostFachbereich';
+import { Abi29BelegpruefungNaturwissenschaften } from '../../../core/abschluss/gost/belegpruefung/abi2029/Abi29BelegpruefungNaturwissenschaften';
 import { Allgemeines } from '../../../core/abschluss/gost/belegpruefung/Allgemeines';
 import { Sport } from '../../../core/abschluss/gost/belegpruefung/Sport';
 import type { List } from '../../../java/util/List';
+import { Abi29BelegpruefungFachkombinationen } from '../../../core/abschluss/gost/belegpruefung/abi2029/Abi29BelegpruefungFachkombinationen';
 import { Collections } from '../../../java/util/Collections';
 import { AbiFaecher } from '../../../core/abschluss/gost/belegpruefung/AbiFaecher';
 import { HashSet } from '../../../java/util/HashSet';
+import { Abi29BelegpruefungAllgemeines } from '../../../core/abschluss/gost/belegpruefung/abi2029/Abi29BelegpruefungAllgemeines';
 import { Fach } from '../../../asd/types/fach/Fach';
 import { LiterarischKuenstlerisch } from '../../../core/abschluss/gost/belegpruefung/LiterarischKuenstlerisch';
+import { Abi29BelegpruefungProjektkurse } from '../../../core/abschluss/gost/belegpruefung/abi2029/Abi29BelegpruefungProjektkurse';
 import { GostAbiturFach } from '../../../core/types/gost/GostAbiturFach';
 import { ArrayMap } from '../../../core/adt/map/ArrayMap';
 import { Deutsch } from '../../../core/abschluss/gost/belegpruefung/Deutsch';
 import { Fachkombinationen } from '../../../core/abschluss/gost/belegpruefung/Fachkombinationen';
+import { Abi29BelegpruefungMathematik } from '../../../core/abschluss/gost/belegpruefung/abi2029/Abi29BelegpruefungMathematik';
 import { GostJahrgangFachkombination } from '../../../core/data/gost/GostJahrgangFachkombination';
+import { Abi29BelegpruefungLatinum } from '../../../core/abschluss/gost/belegpruefung/abi2029/Abi29BelegpruefungLatinum';
 import { Note } from '../../../asd/types/Note';
 import { Class } from '../../../java/lang/Class';
 import type { JavaMap } from '../../../java/util/JavaMap';
 import { FachWaehlbar } from '../../../core/abschluss/gost/belegpruefung/FachWaehlbar';
 import type { JavaSet } from '../../../java/util/JavaSet';
+import { Abi29BelegpruefungDeutsch } from '../../../core/abschluss/gost/belegpruefung/abi2029/Abi29BelegpruefungDeutsch';
+import { Abi29BelegpruefungFachWaehlbar } from '../../../core/abschluss/gost/belegpruefung/abi2029/Abi29BelegpruefungFachWaehlbar';
 import { GostBelegpruefungsArt } from '../../../core/abschluss/gost/GostBelegpruefungsArt';
 import { AbiturFachbelegungHalbjahr } from '../../../core/data/gost/AbiturFachbelegungHalbjahr';
 import { GostBesondereLernleistung } from '../../../core/types/gost/GostBesondereLernleistung';
 import { GostSchuelerFachwahl } from '../../../core/data/gost/GostSchuelerFachwahl';
+import { Abi29BelegpruefungAbiFaecher } from '../../../core/abschluss/gost/belegpruefung/abi2029/Abi29BelegpruefungAbiFaecher';
 import { GostJahrgangsdaten } from '../../../core/data/gost/GostJahrgangsdaten';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { GostHalbjahr } from '../../../core/types/gost/GostHalbjahr';
 import { GostSchriftlichkeit } from '../../../core/types/gost/GostSchriftlichkeit';
+import { Abi29BelegpruefungGesellschaftswissenschaftenUndReligion } from '../../../core/abschluss/gost/belegpruefung/abi2029/Abi29BelegpruefungGesellschaftswissenschaftenUndReligion';
 import { GesellschaftswissenschaftenUndReligion } from '../../../core/abschluss/gost/belegpruefung/GesellschaftswissenschaftenUndReligion';
+import { ServerMode } from '../../../core/types/ServerMode';
 import { GostBelegungsfehler } from '../../../core/abschluss/gost/GostBelegungsfehler';
 import { GostFach } from '../../../core/data/gost/GostFach';
+import { Abi29BelegpruefungFremdsprachen } from '../../../core/abschluss/gost/belegpruefung/abi2029/Abi29BelegpruefungFremdsprachen';
 import { AbiturFachbelegung } from '../../../core/data/gost/AbiturFachbelegung';
 import { GostBelegpruefung } from '../../../core/abschluss/gost/GostBelegpruefung';
 import { Abiturdaten } from '../../../core/data/gost/Abiturdaten';
 import { Projektkurse } from '../../../core/abschluss/gost/belegpruefung/Projektkurse';
 import { SprachendatenUtils } from '../../../core/utils/schueler/SprachendatenUtils';
+import { Abi29BelegpruefungLiterarischKuenstlerisch } from '../../../core/abschluss/gost/belegpruefung/abi2029/Abi29BelegpruefungLiterarischKuenstlerisch';
 import { Fremdsprachen } from '../../../core/abschluss/gost/belegpruefung/Fremdsprachen';
 import { GostBelegpruefungErgebnisFehler } from '../../../core/abschluss/gost/GostBelegpruefungErgebnisFehler';
 import { Mathematik } from '../../../core/abschluss/gost/belegpruefung/Mathematik';
 
 export class AbiturdatenManager extends JavaObject {
+
+	/**
+	 * der Modus, in welchem der Server betrieben wird, um einen experimentellen Modus zu unterstützen.
+	 */
+	private readonly servermode : ServerMode;
 
 	/**
 	 * Das Abiturdaten-Objekt, welches mithilfe dieses Managers bearbeitet wird
@@ -92,6 +113,11 @@ export class AbiturdatenManager extends JavaObject {
 	private belegpruefungKurszahlenUndWochenstunden : KurszahlenUndWochenstunden | null = null;
 
 	/**
+	 * Die zuletzt durchgeführte Belegprüfung bezüglich der Kurszahlen und der Wochenstunden - experimenteller Code
+	 */
+	private abi29BelegpruefungKurszahlenUndWochenstunden : Abi29BelegpruefungKurszahlenUndWochenstunden | null = null;
+
+	/**
 	 * Die Menge der Belegprüfungsfehler, die bei den durchgeführten Belegprüfungen aufgetreten sind.
 	 */
 	private belegpruefungsfehler : List<GostBelegungsfehler> = new ArrayList<GostBelegungsfehler>();
@@ -105,13 +131,15 @@ export class AbiturdatenManager extends JavaObject {
 	/**
 	 * Erstellt ein neues Manager-Objekt, welches mit den übergebenen Abiturdaten verknüpft wird.
 	 *
+	 * @param servermode     der Modus, in welchem der Server betrieben wird, um einen experimentellen Modus zu unterstützen
 	 * @param abidaten       die Abiturdaten
 	 * @param gostJahrgang   die Informationen zu dem Abiturjahrgang
 	 * @param faecherManager der Manager für die Fächer und Fachkombinationen der Gymnasialen Oberstufe
 	 * @param pruefungsArt   die Art der Belegpruefung (z.B. EF1 oder GESAMT)
 	 */
-	public constructor(abidaten : Abiturdaten, gostJahrgang : GostJahrgangsdaten | null, faecherManager : GostFaecherManager, pruefungsArt : GostBelegpruefungsArt) {
+	public constructor(servermode : ServerMode, abidaten : Abiturdaten, gostJahrgang : GostJahrgangsdaten | null, faecherManager : GostFaecherManager, pruefungsArt : GostBelegpruefungsArt) {
 		super();
+		this.servermode = servermode;
 		this.abidaten = abidaten;
 		this._jahrgangsdaten = gostJahrgang;
 		this.faecherManager = faecherManager;
@@ -120,14 +148,14 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Führt die Belegprüfung der Art pruefungs_art für einen Schüler durch, dessen Abiturdaten mit dem angegebenen
+	 * Initialisiert die Belegprüfung der Art pruefungs_art für einen Schüler durch, dessen Abiturdaten mit dem angegebenen
 	 * Manager verwaltet werden.
 	 *
 	 * @param pruefungsArt    die Art der Prüfung, die durchgeführt wird
 	 *
 	 * @return eine Liste mit den durchgefuehrten Belegpruefungen
 	 */
-	public getPruefungen(pruefungsArt : GostBelegpruefungsArt) : List<GostBelegpruefung> {
+	private getPruefungenDefault(pruefungsArt : GostBelegpruefungsArt) : List<GostBelegpruefung> {
 		const pruefungen : ArrayList<GostBelegpruefung> = new ArrayList<GostBelegpruefung>();
 		pruefungen.add(new Deutsch(this, pruefungsArt));
 		const pruefungFremdsprachen : Fremdsprachen = new Fremdsprachen(this, pruefungsArt);
@@ -149,6 +177,53 @@ export class AbiturdatenManager extends JavaObject {
 		pruefungen.add(new Fachkombinationen(this, pruefungsArt));
 		pruefungen.add(new FachWaehlbar(this, pruefungsArt));
 		return pruefungen;
+	}
+
+	/**
+	 * Einbinden von experimentellem Code:
+	 * Initialisiert die Belegprüfung der Art pruefungs_art für einen Schüler durch, dessen Abiturdaten mit dem angegebenen
+	 * Manager verwaltet werden.
+	 *
+	 * @param pruefungsArt    die Art der Prüfung, die durchgeführt wird
+	 *
+	 * @return eine Liste mit den durchgefuehrten Belegpruefungen
+	 */
+	private getPruefungenAbi2029(pruefungsArt : GostBelegpruefungsArt) : List<GostBelegpruefung> {
+		const pruefungen : ArrayList<GostBelegpruefung> = new ArrayList<GostBelegpruefung>();
+		pruefungen.add(new Abi29BelegpruefungDeutsch(this, pruefungsArt));
+		const pruefungFremdsprachen : Abi29BelegpruefungFremdsprachen = new Abi29BelegpruefungFremdsprachen(this, pruefungsArt);
+		pruefungen.add(pruefungFremdsprachen);
+		pruefungen.add(new Abi29BelegpruefungLatinum(this, pruefungsArt));
+		pruefungen.add(new Abi29BelegpruefungLiterarischKuenstlerisch(this, pruefungsArt));
+		pruefungen.add(new Abi29BelegpruefungGesellschaftswissenschaftenUndReligion(this, pruefungsArt));
+		pruefungen.add(new Abi29BelegpruefungMathematik(this, pruefungsArt));
+		const pruefungNaturwissenschaften : Abi29BelegpruefungNaturwissenschaften = new Abi29BelegpruefungNaturwissenschaften(this, pruefungsArt);
+		pruefungen.add(pruefungNaturwissenschaften);
+		pruefungen.add(new Abi29BelegpruefungSport(this, pruefungsArt));
+		const pruefungProjektkurse : Abi29BelegpruefungProjektkurse = new Abi29BelegpruefungProjektkurse(this, pruefungsArt);
+		pruefungen.add(pruefungProjektkurse);
+		pruefungen.add(new Abi29BelegpruefungSchwerpunkt(this, pruefungsArt, pruefungFremdsprachen, pruefungNaturwissenschaften));
+		pruefungen.add(new Abi29BelegpruefungAbiFaecher(this, pruefungsArt, pruefungProjektkurse));
+		this.abi29BelegpruefungKurszahlenUndWochenstunden = new Abi29BelegpruefungKurszahlenUndWochenstunden(this, pruefungsArt, pruefungProjektkurse);
+		pruefungen.add(this.abi29BelegpruefungKurszahlenUndWochenstunden);
+		pruefungen.add(new Abi29BelegpruefungAllgemeines(this, pruefungsArt));
+		pruefungen.add(new Abi29BelegpruefungFachkombinationen(this, pruefungsArt));
+		pruefungen.add(new Abi29BelegpruefungFachWaehlbar(this, pruefungsArt));
+		return pruefungen;
+	}
+
+	/**
+	 * Führt die Belegprüfung der Art pruefungs_art für einen Schüler durch, dessen Abiturdaten mit dem angegebenen
+	 * Manager verwaltet werden.
+	 *
+	 * @param pruefungsArt    die Art der Prüfung, die durchgeführt wird
+	 *
+	 * @return eine Liste mit den durchgefuehrten Belegpruefungen
+	 */
+	public getPruefungen(pruefungsArt : GostBelegpruefungsArt) : List<GostBelegpruefung> {
+		if ((this.abidaten.abiturjahr >= 2029) && (this.servermode as unknown === ServerMode.DEV as unknown))
+			return this.getPruefungenAbi2029(pruefungsArt);
+		return this.getPruefungenDefault(pruefungsArt);
 	}
 
 	/**
@@ -181,14 +256,18 @@ export class AbiturdatenManager extends JavaObject {
 		for (const fachbelegung of fachbelegungen) {
 			if (this.zaehleBelegung(fachbelegung) > 0) {
 				const fach : GostFach | null = this.getFach(fachbelegung);
+				if (fach === null)
+					continue;
 				const fachbereiche : List<GostFachbereich> = GostFachbereich.getBereiche(fach);
 				for (const fachbereich of fachbereiche) {
 					let listFachbelegungen : List<AbiturFachbelegung> | null = this.mapFachbereiche.get(fachbereich);
 					if (listFachbelegungen !== null)
 						listFachbelegungen.add(fachbelegung);
-					listFachbelegungen = this.mapFachbereicheRelevant.get(fachbereich);
-					if (listFachbelegungen !== null)
-						listFachbelegungen.add(fachbelegung);
+					if (fach.istPruefungsordnungsRelevant) {
+						listFachbelegungen = this.mapFachbereicheRelevant.get(fachbereich);
+						if (listFachbelegungen !== null)
+							listFachbelegungen.add(fachbelegung);
+					}
 				}
 			}
 		}
@@ -1549,7 +1628,7 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Prüft, ob das fach mit der übergebenen ID als Abiturfach möglich ist und mit welcher Kursart
+	 * Prüft, ob das Fach mit der übergebenen ID als Abiturfach möglich ist und mit welcher Kursart
 	 * dieses Fach aufgrund der Belegungen im Abitur gewählt werden kann.
 	 *
 	 * @param id   die ID des Fachs
@@ -1558,6 +1637,8 @@ export class AbiturdatenManager extends JavaObject {
 	 *         ausgewählt werden kann.
 	 */
 	public getMoeglicheKursartAlsAbiturfach(id : number) : GostKursart | null {
+		if ((this.abidaten.abiturjahr >= 2029) && (this.servermode as unknown === ServerMode.DEV as unknown))
+			return this._getAbi29MoeglicheKursartAlsAbiturfach(id);
 		const fach : GostFach | null = this.faecherManager.get(id);
 		if ((fach === null) || (!fach.istPruefungsordnungsRelevant))
 			return null;
@@ -1569,6 +1650,52 @@ export class AbiturdatenManager extends JavaObject {
 			return null;
 		if (kursart as unknown === GostKursart.LK as unknown)
 			return this.pruefeBelegungMitKursart(belegung, kursart, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22) ? kursart : null;
+		if (belegung.belegungen[GostHalbjahr.Q22.id] === null)
+			return null;
+		const fachbelegungen : List<AbiturFachbelegung> = GostFachbereich.RELIGION.hat(fach) ? this.getFachbelegungen(GostFachbereich.RELIGION) : this.getFachbelegungByFachkuerzel(fach.kuerzel);
+		return (this.pruefeBelegungExistiertMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11) && this.pruefeBelegungExistiertMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q12) && this.pruefeBelegungExistiertMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q21)) ? kursart : null;
+	}
+
+	/**
+	 * Experimenteller Code:
+	 *
+	 * Prüft, ob das Fach mit der übergebenen ID als Abiturfach möglich ist und mit welcher Kursart
+	 * dieses Fach aufgrund der Belegungen im Abitur gewählt werden kann.
+	 *
+	 * @param id   die ID des Fachs
+	 *
+	 * @return die mögliche Kursart des Faches im Abitur oder null, falls das Fach nicht als Abiturfach
+	 *         ausgewählt werden kann.
+	 */
+	private _getAbi29MoeglicheKursartAlsAbiturfach(id : number) : GostKursart | null {
+		const fach : GostFach | null = this.faecherManager.get(id);
+		if ((fach === null) || (!fach.istPruefungsordnungsRelevant))
+			return null;
+		const belegung : AbiturFachbelegung | null = this.getFachbelegungByID(id);
+		if ((belegung === null) || (belegung.letzteKursart === null))
+			return null;
+		const kursart : GostKursart | null = GostKursart.fromKuerzel(belegung.letzteKursart);
+		if ((kursart === null) || (kursart as unknown !== GostKursart.GK as unknown) && (kursart as unknown !== GostKursart.LK as unknown) && (kursart as unknown !== GostKursart.PJK as unknown))
+			return null;
+		if (kursart as unknown === GostKursart.LK as unknown) {
+			if (!fach.istMoeglichAbiLK)
+				return null;
+			return this.pruefeBelegungMitKursart(belegung, kursart, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22) ? kursart : null;
+		}
+		if (kursart as unknown === GostKursart.PJK as unknown) {
+			if (!fach.istMoeglichAbiGK)
+				return null;
+			if (!this.pruefeBelegungMitKursart(belegung, kursart, GostHalbjahr.Q21, GostHalbjahr.Q22))
+				return null;
+			const leitfach : AbiturFachbelegung | null = this.getFachbelegungByKuerzel(fach.projektKursLeitfach1Kuerzel);
+			if (!this.pruefeBelegungMitKursart(leitfach, GostKursart.GK, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12))
+				return null;
+			if (!this.pruefeBelegungMitSchriftlichkeit(leitfach, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12))
+				return null;
+			return kursart;
+		}
+		if (!fach.istMoeglichAbiGK)
+			return null;
 		if (belegung.belegungen[GostHalbjahr.Q22.id] === null)
 			return null;
 		const fachbelegungen : List<AbiturFachbelegung> = GostFachbereich.RELIGION.hat(fach) ? this.getFachbelegungen(GostFachbereich.RELIGION) : this.getFachbelegungByFachkuerzel(fach.kuerzel);
@@ -1819,12 +1946,32 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	/**
+	 * Experimenteller Code:
+	 * Gibt das Belegprüfungs-Objekt für die KurszahlenUndWochenstunden zurück, welches für
+	 * die Belegprüfung genutzt wurde und die Statistiken dazu erstellt hat.
+	 *
+	 * @return das Belegprüfungs-Objekt für die KurszahlenUndWochenstunden
+	 */
+	private getAbi29KurszahlenUndWochenstunden() : Abi29BelegpruefungKurszahlenUndWochenstunden {
+		if (this.abi29BelegpruefungKurszahlenUndWochenstunden === null)
+			throw new NullPointerException("Die Belegprüfung zu Kurszahlen und Wochenstunden wurde noch nicht erstellt und durchgeführt.")
+		return this.abi29BelegpruefungKurszahlenUndWochenstunden;
+	}
+
+	/**
 	 * Berechnet die Wochenstunden, welche von dem Schüler in den einzelnen
 	 * Halbjahren der gymnasialen Oberstufe für das Abitur relevant belegt wurden.
 	 *
 	 * @return ein Array mit den Wochenstunden für die sechs Halbjahre
 	 */
 	public getWochenstunden() : Array<number> {
+		if ((this.abidaten.abiturjahr >= 2029) && (this.servermode as unknown === ServerMode.DEV as unknown)) {
+			const kuw : Abi29BelegpruefungKurszahlenUndWochenstunden = this.getAbi29KurszahlenUndWochenstunden();
+			const stunden : Array<number> = [0, 0, 0, 0, 0, 0];
+			for (const hj of GostHalbjahr.values())
+				stunden[hj.id] = kuw.getWochenstunden(hj);
+			return stunden;
+		}
 		const kuw : KurszahlenUndWochenstunden = this.getKurszahlenUndWochenstunden();
 		const stunden : Array<number> = [0, 0, 0, 0, 0, 0];
 		for (const hj of GostHalbjahr.values())
@@ -1838,6 +1985,10 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return die Anzahl der Wochenstunden
 	 */
 	public getWochenstundenEinfuehrungsphase() : number {
+		if ((this.abidaten.abiturjahr >= 2029) && (this.servermode as unknown === ServerMode.DEV as unknown)) {
+			const kuw : Abi29BelegpruefungKurszahlenUndWochenstunden = this.getAbi29KurszahlenUndWochenstunden();
+			return kuw.getWochenstundenEinfuehrungsphase();
+		}
 		const kuw : KurszahlenUndWochenstunden = this.getKurszahlenUndWochenstunden();
 		return kuw.getWochenstundenEinfuehrungsphase();
 	}
@@ -1848,6 +1999,10 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return die Anzahl der Wochenstunden
 	 */
 	public getWochenstundenQualifikationsphase() : number {
+		if ((this.abidaten.abiturjahr >= 2029) && (this.servermode as unknown === ServerMode.DEV as unknown)) {
+			const kuw : Abi29BelegpruefungKurszahlenUndWochenstunden = this.getAbi29KurszahlenUndWochenstunden();
+			return kuw.getWochenstundenQualifikationsphase();
+		}
 		const kuw : KurszahlenUndWochenstunden = this.getKurszahlenUndWochenstunden();
 		return kuw.getWochenstundenQualifikationsphase();
 	}
@@ -1859,6 +2014,13 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return ein Array mit den anrechenbaren Kursen für die sechs Halbjahre
 	 */
 	public getAnrechenbareKurse() : Array<number> {
+		if ((this.abidaten.abiturjahr >= 2029) && (this.servermode as unknown === ServerMode.DEV as unknown)) {
+			const kuw : Abi29BelegpruefungKurszahlenUndWochenstunden = this.getAbi29KurszahlenUndWochenstunden();
+			const anzahl : Array<number> = [0, 0, 0, 0, 0, 0];
+			for (const hj of GostHalbjahr.values())
+				anzahl[hj.id] = kuw.getKurszahlenAnrechenbar(hj);
+			return anzahl;
+		}
 		const kuw : KurszahlenUndWochenstunden = this.getKurszahlenUndWochenstunden();
 		const anzahl : Array<number> = [0, 0, 0, 0, 0, 0];
 		for (const hj of GostHalbjahr.values())
@@ -1873,6 +2035,10 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return die anrechenbaren Kursen für Block I des Abiturs
 	 */
 	public getAnrechenbareKurseBlockI() : number {
+		if ((this.abidaten.abiturjahr >= 2029) && (this.servermode as unknown === ServerMode.DEV as unknown)) {
+			const kuw : Abi29BelegpruefungKurszahlenUndWochenstunden = this.getAbi29KurszahlenUndWochenstunden();
+			return kuw.getBlockIAnzahlAnrechenbar();
+		}
 		const kuw : KurszahlenUndWochenstunden = this.getKurszahlenUndWochenstunden();
 		return kuw.getBlockIAnzahlAnrechenbar();
 	}

@@ -2,6 +2,17 @@ package de.svws_nrw.core.types.gost;
 
 import jakarta.validation.constraints.NotNull;
 
+/*
+ * Bei dieser Implementierung handelt es sich um eine Umsetzung in Bezug auf möglichen zukünftigen
+ * Änderungen in der APO-GOSt. Diese basiert auf der aktuellen Implementierung und integriert Aspekte
+ * aus dem Eckpunktepapier und auf in den Schulleiterdienstbesprechungen erläuterten Vorhaben.
+ * Sie dient der Evaluierung von möglichen Umsetzungsvarianten und als Vorbereitung einer späteren
+ * Implementierung der Belegprüfung. Insbesondere sollen erste Versuche mit Laufbahnen mit einem
+ * 5. Abiturfach und Projektkursen erprobt werden. Detailaspekte können erst nach Erscheinen der APO-GOSt
+ * umgesetzt werden.
+ * Es handelt sich also um experimentellen Code, der keine Rückschlüsse auf Details einer zukünftigen APO-GOSt
+ * erlaubt.
+ */
 /**
  * Diese Klasse stellt die Core-Types als Aufzählung für die Abiturfacharten zur Verfügung.
  * Core-Types dienen als grundlegende abstrakte Datentypen sowohl für die Core-Algorithmen
@@ -19,10 +30,13 @@ public enum GostAbiturFach {
 	AB3(3, "AB3", "3. Abiturfach (GK, schriftlich)"),
 
 	/** 4. Abiturfach (GK, mündlich in der Abiturprüfung) = AB4 */
-	AB4(4, "AB4", "4. Abiturfach (GK, mündlich)");
+	AB4(4, "AB4", "4. Abiturfach (GK, mündlich)"),
+
+	/** 5. Abiturfach (GK/PJK/BLL)*/
+	AB5(5, "AB5", "5. Abiturfach (GK/PJK/BLL)");
 
 
-	/** Die ID bzw. Nummer der Abiturfachart (1-4) */
+	/** Die ID bzw. Nummer der Abiturfachart (1-5) */
 	public final int id;
 
 	/** Das Kürzel der Abiturfachart, welches auch in speziellen Kursarten genutzt wird. */
@@ -65,6 +79,8 @@ public enum GostAbiturFach {
 				return AB3;
 			case 4:
 				return AB4;
+			case 5:
+				return AB5;
 			default:
 				return null;
 		}
@@ -90,6 +106,8 @@ public enum GostAbiturFach {
 				return AB3;
 			case "4":
 				return AB4;
+			case "5":
+				return AB5;
 			default:
 				return null;
 		}
@@ -113,6 +131,8 @@ public enum GostAbiturFach {
 				return AB3;
 			case "AB4":
 				return AB4;
+			case "AB5":
+				return AB5;
 			default:
 				return null;
 		}

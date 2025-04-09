@@ -1,5 +1,6 @@
 package de.svws_nrw.api.server;
 
+import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungErgebnis;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt;
@@ -1138,7 +1139,8 @@ public class APIGost {
 			if (faecherManager.isEmpty())
 				faecherManager = DBUtilsFaecherGost.getFaecherManager(abidaten.schuljahrAbitur, conn, null);
 			faecherManager.addFachkombinationenAll(DataGostJahrgangFachkombinationen.getFachkombinationen(conn, abidaten.abiturjahr));
-			final AbiturdatenManager manager = new AbiturdatenManager(abidaten, jahrgangsdaten, faecherManager, GostBelegpruefungsArt.GESAMT);
+			final AbiturdatenManager manager =
+					new AbiturdatenManager(SVWSKonfiguration.get().getServerMode(), abidaten, jahrgangsdaten, faecherManager, GostBelegpruefungsArt.GESAMT);
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(manager.getBelegpruefungErgebnis()).build();
 		},
 				request, ServerMode.STABLE,
@@ -1177,7 +1179,8 @@ public class APIGost {
 			if (faecherManager.isEmpty())
 				faecherManager = DBUtilsFaecherGost.getFaecherManager(abidaten.schuljahrAbitur, conn, null);
 			faecherManager.addFachkombinationenAll(DataGostJahrgangFachkombinationen.getFachkombinationen(conn, abidaten.abiturjahr));
-			final AbiturdatenManager manager = new AbiturdatenManager(abidaten, jahrgangsdaten, faecherManager, GostBelegpruefungsArt.EF1);
+			final AbiturdatenManager manager =
+					new AbiturdatenManager(SVWSKonfiguration.get().getServerMode(), abidaten, jahrgangsdaten, faecherManager, GostBelegpruefungsArt.EF1);
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(manager.getBelegpruefungErgebnis()).build();
 		},
 				request, ServerMode.STABLE,

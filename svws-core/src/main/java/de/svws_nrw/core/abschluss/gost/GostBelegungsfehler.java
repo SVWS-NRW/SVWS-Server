@@ -2,6 +2,19 @@ package de.svws_nrw.core.abschluss.gost;
 
 import jakarta.validation.constraints.NotNull;
 
+/*
+ * Die Implementierung enthält Teile von experimentellem Code. Für diesen gilt folgendes:
+ *
+ * Bei dieser Implementierung handelt es sich um eine Umsetzung in Bezug auf möglichen zukünftigen
+ * Änderungen in der APO-GOSt. Diese basiert auf der aktuellen Implementierung und integriert Aspekte
+ * aus dem Eckpunktepapier und auf in den Schulleiterdienstbesprechungen erläuterten Vorhaben.
+ * Sie dient der Evaluierung von möglichen Umsetzungsvarianten und als Vorbereitung einer späteren
+ * Implementierung der Belegprüfung. Insbesondere sollen erste Versuche mit Laufbahnen mit einem
+ * 5. Abiturfach und Projektkursen erprobt werden. Detailaspekte können erst nach Erscheinen der APO-GOSt
+ * umgesetzt werden.
+ * Es handelt sich also um experimentellen Code, der keine Rückschlüsse auf Details einer zukünftigen APO-GOSt
+ * erlaubt.
+ */
 /**
  * Diese Aufzählung beinhaltet die Fehlercodes, die bei einer Belegprüfung auftreten können.
  * Die Aufzählungsobjekte enthalten zusätzlich die Textnachrichten für die unterschiedlichen
@@ -12,6 +25,11 @@ public enum GostBelegungsfehler {
 	/** BelegungsfehlerArt ABI_10: Unter den vier Abiturfächern müssen zwei der Fächer Deutsch, Mathematik oder Fremdsprache sein. */
 	ABI_10("ABI_10", GostBelegungsfehlerArt.BELEGUNG,
 			"Unter den vier Abiturfächern müssen zwei der Fächer Deutsch, Mathematik oder Fremdsprache sein.",
+			null),
+
+	/** Experimenteller Code - BelegungsfehlerArt ABI_10_2: Unter den fünf Abiturfächern müssen zwei der Fächer Deutsch, Mathematik oder Fremdsprache sein. */
+	ABI_10_2("ABI_10_2", GostBelegungsfehlerArt.BELEGUNG,
+			"Unter den fünf Abiturfächern müssen zwei der Fächer Deutsch, Mathematik oder Fremdsprache sein.",
 			null),
 
 	/** BelegungsfehlerArt ABI_11 */
@@ -34,6 +52,11 @@ public enum GostBelegungsfehler {
 			"Sport kann nur als 2. oder als 4. Abiturfach gewählt werden.",
 			null),
 
+	/** Experimenteller Code - BelegungsfehlerArt ABI_15_2 */
+	ABI_15_2("ABI_15_2", GostBelegungsfehlerArt.BELEGUNG,
+			"Sport kann nur als 2., 4. oder 5. Abiturfach gewählt werden.",
+			null),
+
 	/** BelegungsfehlerArt ABI_16 */
 	ABI_16("ABI_16", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
 			"Fächer, die keine Abiturfächer sind, müssen in Q2.2 mündlich belegt werden.",
@@ -52,6 +75,11 @@ public enum GostBelegungsfehler {
 	/** BelegungsfehlerArt ABI_19: Unter den vier Abiturfächern müssen zwei der Fächer Deutsch, Mathematik oder Fremdsprache sein. Dies kann nicht durch zwei Fremdsprachen erfüllt werden. */
 	ABI_19("ABI_19", GostBelegungsfehlerArt.BELEGUNG,
 			"Unter den vier Abiturfächern müssen zwei der Fächer Deutsch, Mathematik oder Fremdsprache sein. Dies kann nicht durch zwei Fremdsprachen erfüllt werden.",
+			null),
+
+	/** Experimenteller Code - BelegungsfehlerArt ABI_19_2 */
+	ABI_19_2("ABI_19_2", GostBelegungsfehlerArt.BELEGUNG,
+			"Unter den fünf Abiturfächern müssen zwei der Fächer Deutsch, Mathematik oder Fremdsprache sein. Dies kann nicht durch zwei Fremdsprachen erfüllt werden.",
 			null),
 
 	/** BelegungsfehlerArt ABI_21: Es kann nur ein Fach 1. Abiturfach sein. */
@@ -74,6 +102,37 @@ public enum GostBelegungsfehler {
 			"Es kann nur ein Fach 4. Abiturfach sein.",
 			null),
 
+	/** Experimenteller Code - BelegungsfehlerArt ABI_25: Es kann nur ein Fach 5. Abiturfach sein. */
+	ABI_25("ABI_25", GostBelegungsfehlerArt.BELEGUNG,
+			"Es kann nur ein Fach 5. Abiturfach sein.",
+			null),
+
+	/** Experimenteller Code - BelegungsfehlerArt ABI_26_2 */
+	ABI_26_2("ABI_26_2", GostBelegungsfehlerArt.BELEGUNG,
+			"Ein Projektkurs kann nur als 5. Abiturfach gewählt werden, wenn sein Referenzfach in der EF und Q1 belegt wurde.",
+			null),
+
+	/** Experimenteller Code - BelegungsfehlerArt ABI_27_2 */
+	ABI_27_2("ABI_27_2", GostBelegungsfehlerArt.BELEGUNG,
+			"Ein Projektkurs kann nur als 5. Abiturfach gewählt werden, wenn sein Referenzfach in der Q1 schriftlich belegt wurde.",
+			null),
+
+	/** Experimenteller Code - BelegungsfehlerArt ABI_28_2 */
+	ABI_28_2("ABI_28_2", GostBelegungsfehlerArt.BELEGUNG,
+			"Ein Projektkurs kann nur als 5. Abiturfach gewählt werden, wenn sein Referenzfach nicht als Abiturfach gewählt wurde.",
+			null),
+
+	/** Experimenteller Code - BelegungsfehlerArt ABI_29_2 */
+	ABI_29_2("ABI_29_2", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
+			"Das 5. Abiturfach muss als Grundkurs von Q1.1 bis Q2.1 schriftlich belegt sein.",
+			null),
+
+	/** Experimenteller Code - BelegungsfehlerArt ABI_30_2 */
+	ABI_30_2("ABI_30_2", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
+			"In Q2.2 muss das 5. Abiturfach mündlich belegt sein.",
+			null),
+
+
 	/** BelegungsfehlerArt ABI_18: In der Einführungsphase müssen in jedem Halbjahr mindestens 10 Fächer belegt werden. Vertiefungskurse werden bei der Zählung nicht berücksichtigt.
 	 *  <br>In EF.1 müssen mindestens 10 Kurse belegt werden. Bei der Kurszählung werden Vertiefungskurse nicht mitgezählt. */
 	ANZ_10("ANZ_10", GostBelegungsfehlerArt.BELEGUNG,
@@ -88,6 +147,11 @@ public enum GostBelegungsfehler {
 	/** BelegungsfehlerArt ANZ_12 */
 	ANZ_12("ANZ_12", GostBelegungsfehlerArt.BELEGUNG,
 			"In der Qualifikationsphase müssen mindestens 38 anrechenbare Kurse belegt werden.",
+			null),
+
+	/** Experimenteller Code - BelegungsfehlerArt ANZ_12_2 */
+	ANZ_12_2("ANZ_12_2", GostBelegungsfehlerArt.BELEGUNG,
+			"In der Qualifikationsphase müssen mindestens 36 anrechenbare Kurse belegt werden.",
 			null),
 
 	/** BelegungsfehlerArt ANZ_13 */
@@ -163,6 +227,11 @@ public enum GostBelegungsfehler {
 	/** BelegungsfehlerArt E1BEL_10 */
 	E1BEL_10("E1BEL_10", GostBelegungsfehlerArt.BELEGUNG,
 			"Bis auf Literatur, vokal- und instrumentalpraktische Kurse, Zusatzkurse, Vertiefungsfächer und Projektkurse können keine Fächer hinzugewählt werden, die nicht schon ab EF.1 belegt wurden.",
+			null),
+
+	/** Experimenteller Code - BelegungsfehlerArt E1BEL_10_2 */
+	E1BEL_10_2("E1BEL_10_2", GostBelegungsfehlerArt.BELEGUNG,
+			"Bis auf Literatur, Zusatzkurse, Vertiefungsfächer und Projektkurse können keine Fächer hinzugewählt werden, die nicht schon ab EF.1 belegt wurden.",
 			null),
 
 	/** BelegungsfehlerArt FS_10 */
@@ -345,6 +414,11 @@ public enum GostBelegungsfehler {
 			"Die Abiturfächer müssen alle drei Aufgabenfelder abdecken. Insgesamt sind vier Abiturfächer zu belegen.",
 			null),
 
+	/** Experimenteller Code - BelegungsfehlerArt LK1_13_2 */
+	LK1_13_2("LK1_13_2", GostBelegungsfehlerArt.BELEGUNG,
+			"Die Abiturfächer müssen alle drei Aufgabenfelder abdecken. Insgesamt sind fünf Abiturfächer zu belegen.",
+			null),
+
 	/** BelegungsfehlerArt M_10 */
 	M_10("M_10", GostBelegungsfehlerArt.BELEGUNG,
 			"Mathematik muss von EF.1 bis Q2.2 belegt werden.",
@@ -425,6 +499,11 @@ public enum GostBelegungsfehler {
 			"Ein Projektkurs soll nur im Ausnahmefall abgewählt werden. Bei einem abgewählten Projektkurs werden lediglich die Wochenstunden auf die Laufbahn angerechnet.",
 			null),
 
+	/** Experimenteller Code - BelegungsfehlerArt PF_17_2 */
+	PF_17_2("PF_17_2", GostBelegungsfehlerArt.HINWEIS,
+			"Ein Projektkurs muss immer in zwei aufeinander folgenden Halbjahren gewählt werden.",
+			null),
+
 	/** BelegungsfehlerArt PF_18 */
 	PF_18("PF_18", GostBelegungsfehlerArt.BELEGUNG,
 			"Ein Projektkurs kann nicht in der Q2.2 beginnen.",
@@ -433,6 +512,36 @@ public enum GostBelegungsfehler {
 	/** BelegungsfehlerArt PF_19 */
 	PF_19("PF_19", GostBelegungsfehlerArt.BELEGUNG,
 			"Ein Projektkurs kann als Leitfach kein anderes Projektkursfach, ein Vertiefungskursfach oder ein Ersatzfach aus dem literarisch künstlerischen Bereich haben.",
+			null),
+
+	/** Experimenteller Code - BelegungsfehlerArt PF_20_2 */
+	PF_20_2("PF_20_2", GostBelegungsfehlerArt.BELEGUNG,
+			"Ein Projektkurses muss in den beiden Halbjahren der Q2 gewählt werden.",
+			null),
+
+	/** Experimenteller Code - BelegungsfehlerArt PF_21_2 */
+	PF_21_2("PF_21_2", GostBelegungsfehlerArt.BELEGUNG,
+			"Es muss genau ein Projektkurses gewählt werden.",
+			null),
+
+	/** Experimenteller Code - BelegungsfehlerArt PF_22_2 */
+	PF_22_2("PF_22_2", GostBelegungsfehlerArt.BELEGUNG,
+			"Ein Projektkurs muss genau ein Leitfach haben.",
+			null),
+
+	/** Experimenteller Code - BelegungsfehlerArt PF_23_2 */
+	PF_23_2("PF_23_2", GostBelegungsfehlerArt.BELEGUNG,
+			"Ein Projektkurs kann nur belegt werden, wenn sein Leitfach in der EF und Q1 gewählt wurde.",
+			null),
+
+	/** Experimenteller Code - BelegungsfehlerArt PF_24_2 */
+	PF_24_2("PF_24_2", GostBelegungsfehlerArt.BELEGUNG,
+			"Ein Projektkurs kann nur belegt werden, wenn sein Leitfach in der Q1 schriftlich gewählt wurde.",
+			null),
+
+	/** BelegungsfehlerArt PF_25 */
+	PF_25("PF_25_2", GostBelegungsfehlerArt.BELEGUNG,
+			"Ein Projektkurs kann nur belegt werden, wenn sein Leitfach ein gültiges Fach in der gymnasialen Oberstufe ist.",
 			null),
 
 	/** BelegungsfehlerArt RE_10 */

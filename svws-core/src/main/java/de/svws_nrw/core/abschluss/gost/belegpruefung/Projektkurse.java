@@ -240,9 +240,10 @@ public final class Projektkurse extends GostBelegpruefung {
 			if ((leitfach2 != null) && pruefeBelegungLeitfachbelegung(fachbelegung, leitfach2)) {
 				// Prüfe, ob die Fachdefinition des Projektkursfaches zulässig ist (eigentlich keine individuelle Belegprüfung)
 				final GostFach lf = manager.getFach(leitfach2);
-				if (lf == null)
-					throw new DeveloperNotificationException(
-							"Interner Fehler: Das Leitfach mit der angegebenen ID existiert nicht als Fach der gymnasialen Oberstufe in diesem Jahrgang.");
+				if (lf == null) {
+					addFehler(GostBelegungsfehler.PF_25);
+					continue;
+				}
 				final Fach zf = Fach.getBySchluesselOrDefault(lf.kuerzel);
 				if ((GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(lf) || (zf == Fach.PX) || (zf == Fach.VX)))
 					addFehler(GostBelegungsfehler.PF_19);

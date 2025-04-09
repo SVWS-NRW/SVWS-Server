@@ -9,6 +9,7 @@ import { routeLadeDaten } from "./RouteLadeDaten";
 import LaufbahnplanungOberstufe from "~/components/LaufbahnplanungOberstufe.vue";
 import { type LaufbahnplanungOberstufeProps } from "~/components/LaufbahnplanungOberstufeProps";
 import { GostLaufbahnplanungDaten } from "@core/core/data/gost/GostLaufbahnplanungDaten";
+import { ServerMode } from "@core/core/types/ServerMode";
 
 
 export class RouteLaufbahnplanung extends RouteNode<unknown, RouteApp> {
@@ -35,6 +36,7 @@ export class RouteLaufbahnplanung extends RouteNode<unknown, RouteApp> {
 
 	public getProps(to: RouteLocationNormalized): LaufbahnplanungOberstufeProps {
 		return {
+			serverMode: routeApp.data.serverMode,
 			config: () => routeApp.data.config,
 			setWahl: routeApp.data.setWahl,
 			setGostBelegpruefungsArt: routeApp.data.setGostBelegpruefungsArt,

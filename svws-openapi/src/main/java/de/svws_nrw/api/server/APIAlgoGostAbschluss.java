@@ -7,6 +7,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
+import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungErgebnis;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt;
@@ -59,7 +60,8 @@ public class APIAlgoGostAbschluss {
 			@Context final HttpServletRequest request) {
 		// Prüfe die Belegung der Kurse mithilfe des Abiturdaten-Managers und gib das Ergebnis der Belegprüfung zurück.
 		final GostFaecherManager faecherManager = new GostFaecherManager(daten.abiturdaten.schuljahrAbitur, daten.gostFaecher, daten.gostFaecherKombinationen);
-		final AbiturdatenManager manager = new AbiturdatenManager(daten.abiturdaten, daten.gostJahrgang, faecherManager, GostBelegpruefungsArt.GESAMT);
+		final AbiturdatenManager manager = new AbiturdatenManager(SVWSKonfiguration.get().getServerMode(), daten.abiturdaten, daten.gostJahrgang,
+				faecherManager, GostBelegpruefungsArt.GESAMT);
 		return manager.getBelegpruefungErgebnis();
 	}
 
@@ -87,7 +89,8 @@ public class APIAlgoGostAbschluss {
 			@Context final HttpServletRequest request) {
 		// Prüfe die Belegung der Kurse mithilfe des Abiturdaten-Managers und gib das Ergebnis der Belegprüfung zurück.
 		final GostFaecherManager faecherManager = new GostFaecherManager(daten.abiturdaten.schuljahrAbitur, daten.gostFaecher, daten.gostFaecherKombinationen);
-		final AbiturdatenManager manager = new AbiturdatenManager(daten.abiturdaten, daten.gostJahrgang, faecherManager, GostBelegpruefungsArt.EF1);
+		final AbiturdatenManager manager = new AbiturdatenManager(SVWSKonfiguration.get().getServerMode(), daten.abiturdaten, daten.gostJahrgang,
+				faecherManager, GostBelegpruefungsArt.EF1);
 		return manager.getBelegpruefungErgebnis();
 	}
 

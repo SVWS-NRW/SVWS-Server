@@ -15,8 +15,8 @@ import type { ServerMode } from "../../../../../core/src/core/types/ServerMode";
 import type { ArrayList } from "../../../../../core/src/java/util/ArrayList";
 
 export interface SchuelerLaufbahnplanungProps {
-	schulform?: Schulform;
-	serverMode?: ServerMode;
+	schulform: Schulform;
+	serverMode: ServerMode;
 	benutzerKompetenzen?: Set<BenutzerKompetenz>,
 	benutzerKompetenzenAbiturjahrgaenge?: Set<number>;
 	config: () => Config;

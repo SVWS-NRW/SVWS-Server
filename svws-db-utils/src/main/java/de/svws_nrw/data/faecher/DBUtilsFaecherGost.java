@@ -6,9 +6,11 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.gost.GostFach;
+import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.asd.types.fach.Fachgruppe;
 import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
+import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.gost.DBUtilsGost;
 import de.svws_nrw.db.DBEntityManager;
@@ -21,6 +23,18 @@ import jakarta.ws.rs.core.Response.Status;
 /**
  * Diese Klasse stellt Hilfsmethoden für den Zugriff auf Informationen
  * zu Fächern der gymnasialen Oberstufe zur Verfügung.
+ *
+ * Die Implementierung enthält Teile von experimentellem Code. Für diesen gilt folgendes:
+ *
+ * Bei dieser Implementierung handelt es sich um eine Umsetzung in Bezug auf möglichen zukünftigen
+ * Änderungen in der APO-GOSt. Diese basiert auf der aktuellen Implementierung und integriert Aspekte
+ * aus dem Eckpunktepapier und auf in den Schulleiterdienstbesprechungen erläuterten Vorhaben.
+ * Sie dient der Evaluierung von möglichen Umsetzungsvarianten und als Vorbereitung einer späteren
+ * Implementierung der Belegprüfung. Insbesondere sollen erste Versuche mit Laufbahnen mit einem
+ * 5. Abiturfach und Projektkursen erprobt werden. Detailaspekte können erst nach Erscheinen der APO-GOSt
+ * umgesetzt werden.
+ * Es handelt sich also um experimentellen Code, der keine Rückschlüsse auf Details einer zukünftigen APO-GOSt
+ * erlaubt.
  */
 public final class DBUtilsFaecherGost {
 
@@ -101,13 +115,15 @@ public final class DBUtilsFaecherGost {
 		final DTOFach fach = faecher.get(idFach);
 		if (fach == null)
 			return null;
+		final Fach f = Fach.getBySchluesselOrDefault(fach.StatistikKuerzel);
 		final GostFach eintrag = new GostFach();
 		eintrag.id = fach.ID;
 		eintrag.kuerzel = fach.StatistikKuerzel;
 		eintrag.kuerzelAnzeige = fach.Kuerzel;
 		eintrag.bezeichnung = fach.Bezeichnung;
 		eintrag.sortierung = fach.SortierungAllg;
-		eintrag.istPruefungsordnungsRelevant = fach.IstPruefungsordnungsRelevant;
+		eintrag.istPruefungsordnungsRelevant = fach.IstPruefungsordnungsRelevant
+				&& ((SVWSKonfiguration.get().getServerMode() != ServerMode.DEV) || (schuljahr < 2028) || ((f != Fach.IN) && (f != Fach.VO))); // Experimenteller Code
 		eintrag.istFremdsprache = fach.IstFremdsprache;
 		eintrag.istFremdSpracheNeuEinsetzend = fach.IstMoeglichAlsNeueFremdspracheInSekII;
 		eintrag.biliSprache = ((fach.Unterrichtssprache != null) && (!"".equals(fach.Unterrichtssprache)) && (!"D".equals(fach.Unterrichtssprache)))

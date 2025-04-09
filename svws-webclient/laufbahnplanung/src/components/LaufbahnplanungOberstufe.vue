@@ -59,7 +59,7 @@
 	const props = defineProps<LaufbahnplanungOberstufeProps>();
 
 	const manager = computed<LaufbahnplanungUiManager>(() =>
-		new LaufbahnplanungUiManager(props.abiturdatenManager, props.config, () => props.gostJahrgangsdaten, props.setWahl, false, true));
+		new LaufbahnplanungUiManager(props.serverMode, props.abiturdatenManager, props.config, () => props.gostJahrgangsdaten, props.setWahl, false, true));
 
 	const tabManager = new TabManager([], <TabData>{}, async (value: TabData) => {});
 

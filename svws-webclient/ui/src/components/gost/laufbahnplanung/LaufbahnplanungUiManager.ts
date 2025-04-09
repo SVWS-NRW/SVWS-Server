@@ -1,14 +1,31 @@
 import { computed, ref } from "vue";
-import type { AbiturFachbelegungHalbjahr, GostJahrgangsdaten, GostSchuelerFachwahl, JavaMap, Sprachbelegung} from "../../../../../core/src";
-import { GostAbiturFach, GostFachbereich, GostFachUtils, GostKursart, Note, Fach, Fachgruppe, HashMap2D, SprachendatenUtils,
-	ArrayList, GostHalbjahr, HashMap, type AbiturdatenManager, type GostFach, type List } from "../../../../../core/src";
+import type { AbiturFachbelegungHalbjahr, GostJahrgangsdaten, GostSchuelerFachwahl, JavaMap, Sprachbelegung, AbiturdatenManager,
+	GostFach, List } from "../../../../../core/src";
+import { ServerMode, GostAbiturFach, GostFachbereich, GostFachUtils, GostKursart, Note, Fach, Fachgruppe, HashMap2D, SprachendatenUtils,
+	ArrayList, GostHalbjahr, HashMap, RGBFarbe} from "../../../../../core/src";
 import type { Config } from "~/utils/Config";
 
+/*
+ * Die Implementierung enthält Teile von experimentellem Code. Für diesen gilt folgendes:
+ *
+ * Bei dieser Implementierung handelt es sich um eine Umsetzung in Bezug auf möglichen zukünftigen
+ * Änderungen in der APO-GOSt. Diese basiert auf der aktuellen Implementierung und integriert Aspekte
+ * aus dem Eckpunktepapier und auf in den Schulleiterdienstbesprechungen erläuterten Vorhaben.
+ * Sie dient der Evaluierung von möglichen Umsetzungsvarianten und als Vorbereitung einer späteren
+ * Implementierung der Belegprüfung. Insbesondere sollen erste Versuche mit Laufbahnen mit einem
+ * 5. Abiturfach und Projektkursen erprobt werden. Detailaspekte können erst nach Erscheinen der APO-GOSt
+ * umgesetzt werden.
+ * Es handelt sich also um experimentellen Code, der keine Rückschlüsse auf Details einer zukünftigen APO-GOSt
+ * erlaubt.
+ */
 /**
  * Laufbahnplanung Oberstufe: Ein Manager für die Verwaltung von UI-Spezifischen Funktionen
  * auf die aktuellen Laufbahn-Beratungsdaten eines Schülers.
  */
 export class LaufbahnplanungUiManager {
+
+	/** Der Modus, in welchem der Server betrieben wird */
+	private serverMode: ServerMode;
 
 	/** Der Manager für die Abiturdaten, welcher auch die Belegprüfung durchführt. */
 	private manager: () => AbiturdatenManager;
@@ -59,14 +76,16 @@ export class LaufbahnplanungUiManager {
 	 * Erstellt einen neuen UI-Manager auf Basis des übergebenen Abiturdaten-Managers,
 	 * welcher die Belegprüfung durchführt.
 	 *
+	 * @param serverMode               der Mode, in welchem der Server betrieben wird
 	 * @param manager                  der Abiturdaten-Manager zur Durchführung der Belegprüfung
 	 * @param config                   die Konfiguration des Clients
 	 * @param ignoriereSprachenfolge   gibt an, ob bei den angebotenen Sprachfächern eine Sprachenfolge berücksichtigt werden soll oder nicht
 	 * @param belegungHatImmerNoten    gibt an, ob bei den einzelnen Fachbelegungen immer Noten bei den Leistungsdaten angenommen werden sollen
 	 */
-	public constructor(manager: () => AbiturdatenManager, config: () => Config, jahrgang: () => GostJahrgangsdaten,
+	public constructor(serverMode: ServerMode, manager: () => AbiturdatenManager, config: () => Config, jahrgang: () => GostJahrgangsdaten,
 		setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>, ignoriereSprachenfolge : boolean = false,
 		belegungHatImmerNoten : boolean = false) {
+		this.serverMode = serverMode;
 		this.manager = manager;
 		this.config = config;
 		this.jahrgang = jahrgang;
@@ -91,6 +110,8 @@ export class LaufbahnplanungUiManager {
 		}
 	}
 
+	/** Gibt an, ob der experimentelle Code ab Abitur 2029 genutzt werden soll */
+	private isAbi29ff = computed<boolean>(() => (this.manager().getAbiturjahr() >= 2029) && (this.serverMode === ServerMode.DEV));
 
 	/**
 	 * Gibt zurück, ob bei den angebotenen Sprachfächern eine Sprachenfolge berücksichtigt werden soll oder nicht
@@ -463,10 +484,19 @@ export class LaufbahnplanungUiManager {
 	/**
 	 * Erstellt eine Map zu den Fachgruppen aller Fächer
 	 */
-	private _fachgruppe = computed<JavaMap<GostFach, Fachgruppe | null>>(() => {
-		const map = new HashMap<GostFach, Fachgruppe | null>();
-		for (const fach of this.alleFaecher)
-			map.put(fach, Fach.getBySchluesselOrDefault(fach.kuerzel).getFachgruppe(this.manager().getSchuljahr()) ?? null);
+	private _fachgruppe = computed<JavaMap<GostFach, Fachgruppe>>(() => {
+		const map = new HashMap<GostFach, Fachgruppe>();
+		for (const fach of this.alleFaecher) {
+			if (this.isAbi29ff.value) {
+				const f = Fach.getBySchluesselOrDefault(fach.kuerzel);
+				if ((f === Fach.IN) || (f === Fach.VO))
+					continue;
+			}
+			const fg = Fach.getBySchluesselOrDefault(fach.kuerzel).getFachgruppe(this.manager().getSchuljahr()) ?? null;
+			if (fg === null)
+				continue;
+			map.put(fach, fg);
+		}
 		return map;
 	});
 
@@ -479,6 +509,19 @@ export class LaufbahnplanungUiManager {
 	 */
 	public getFachgruppe(fach: GostFach): Fachgruppe | null {
 		return this._fachgruppe.value.get(fach);
+	}
+
+	/**
+	 * Gibt die Fachfarbe für das übergebene Fach zurück.
+	 *
+	 * @param fach   das Fach
+	 *
+	 * @returns die zugehörige Fachfarbe
+	 */
+	public getFachfarbe(fach: GostFach): string {
+		const gruppe = this._fachgruppe.value.get(fach);
+		const farbe : RGBFarbe = (gruppe === null) ? new RGBFarbe() : gruppe.getFarbe(this.manager().getSchuljahr());
+		return "rgb(" + farbe.red + "," + farbe.green + "," + farbe.blue + ")";
 	}
 
 	/**
@@ -891,6 +934,118 @@ export class LaufbahnplanungUiManager {
 	}
 
 	/**
+	 * Stepper für das Durchwandern der Auswahloptionen im Abiturbereich eines Faches
+	 * im manuellen Modus. (ab Abitur 2029 - experimenteller Code !)
+	 *
+	 * @param fach   das Fach
+	 *
+	 * @returns -
+	 */
+	private async stepperAbitur2029Manuell(fach: GostFach) : Promise<void> {
+		if (this.manager().istBewertet(GostHalbjahr.Q22))
+			return;
+		const wahl = this.manager().getSchuelerFachwahl(fach.id);
+		if (wahl.halbjahre[GostHalbjahr.Q22.id] === null)
+			return
+		switch (wahl.abiturFach) {
+			case null:
+				wahl.abiturFach = (wahl.halbjahre[GostHalbjahr.Q22.id] === "LK") ? 1 : 3;
+				break;
+			case 1:
+				wahl.abiturFach = (wahl.halbjahre[GostHalbjahr.Q22.id] === "LK") ? 2 : 3;
+				break;
+			case 2:
+				wahl.abiturFach = (wahl.halbjahre[GostHalbjahr.Q22.id] === "LK") ? null : 3;
+				break;
+			case 3:
+				wahl.abiturFach = (wahl.halbjahre[GostHalbjahr.Q22.id] === "LK") ? null : 4;
+				break;
+			case 4:
+				wahl.abiturFach = (wahl.halbjahre[GostHalbjahr.Q22.id] === "LK") ? null : 5;
+				break;
+			case 5:
+				wahl.abiturFach = null;
+				break;
+			default:
+				wahl.abiturFach = null;
+				break;
+		}
+		await this.setWahl(fach.id, wahl);
+	}
+
+	/**
+	 * Stepper für das Durchwandern der Auswahloptionen im Abiturbereich eines Faches
+	 * im normalen Modus und im Hochschreibemodus. (ab Abitur 2029 - experimenteller Code !)
+	 *
+	 * @param fach   das Fach
+	 *
+	 * @returns -
+	 */
+	private async stepperAbitur2029Normal(fach: GostFach) {
+		// Prüfe, ob die Wahl als Abiturfach überhaupt möglich ist
+		if (!this.istMoeglichAbi(fach))
+			return;
+		// Bestimme die Fachwahl des Schüler und die mögliche Kursart im Abitur.
+		const wahl = this.manager().getSchuelerFachwahl(fach.id);
+		const abiMoeglicheKursart = this.getMoeglicheAbiKursart(fach);
+		// Keine Kursart im Abitur möglich...
+		if (abiMoeglicheKursart === null) {
+			wahl.abiturFach = null;
+			return;
+		}
+		// Die mögliche Kursart im Abitur ist LK (Leistungskurs)
+		if (abiMoeglicheKursart === GostKursart.LK) {
+			switch (wahl.abiturFach) {
+				case 1:
+					wahl.abiturFach = 2;
+					break;
+				case 2:
+					if (GostFachUtils.istWaehlbarLeistungskurs1(fach))
+						wahl.abiturFach = 1;
+					break;
+				default:
+					if (GostFachUtils.istWaehlbarLeistungskurs1(fach) && !this.manager().hatAbiFach(GostAbiturFach.LK1))
+						wahl.abiturFach = 1;
+					wahl.abiturFach = 2;
+					break;
+			}
+			return;
+		}
+		// Die mögliche Kursart im Abitur ist GK (Grundkurs)
+		if (abiMoeglicheKursart === GostKursart.GK) {
+			switch (wahl.abiturFach) {
+				case null:
+					wahl.abiturFach = (wahl.halbjahre[GostHalbjahr.Q22.id] === "M") ? 4 : 3;
+					break;
+				case 3:
+					wahl.abiturFach = (wahl.halbjahre[GostHalbjahr.Q22.id] === "M") ? 4 : null;
+					break;
+				case 4:
+					wahl.abiturFach = (wahl.halbjahre[GostHalbjahr.Q22.id] === "S") ? 3 : 5;
+					break;
+				case 5:
+					wahl.abiturFach = (wahl.halbjahre[GostHalbjahr.Q22.id] === "S") ? 3 : 4;
+					break;
+				default:
+					wahl.abiturFach = null;
+					break;
+			}
+		}
+		// Die mögliche Kursart im Abitur ist PJK (Projektkurs)
+		if (abiMoeglicheKursart === GostKursart.PJK) {
+			switch (wahl.abiturFach) {
+				case 5:
+					wahl.abiturFach = null;
+					break;
+				default:
+					wahl.abiturFach = 5;
+					break;
+			}
+		}
+		await this.setWahl(fach.id, wahl);
+	}
+
+	/**
 	 * Stepper für das Durchwandern der Auswahloptionen im Abiturbereich. Diese Methode ist ein
 	 * Einsprungspunkt für die vue-Komponente und wählt je nach Modus die geeignete Methode aus.
 	 *
@@ -899,6 +1054,17 @@ export class LaufbahnplanungUiManager {
 	 * @returns -
 	 */
 	public async stepperAbitur(fach: GostFach) {
+		if (this.isAbi29ff.value) {
+			switch (this.modus) {
+				case 'manuell':
+					await this.stepperAbitur2029Manuell(fach);
+					return;
+				case 'normal':
+				case 'hochschreiben':
+					await this.stepperAbitur2029Normal(fach);
+					return;
+			}
+		}
 		switch (this.modus) {
 			case 'manuell':
 				await this.stepperAbiturManuell(fach);
@@ -1674,7 +1840,7 @@ export class LaufbahnplanungUiManager {
 	 *
 	 * @returns -
 	 */
-	public async stepperHochschreiben(fach: GostFach, halbjahr: GostHalbjahr) {
+	private async stepperHochschreiben(fach: GostFach, halbjahr: GostHalbjahr) {
 		if ((!this.istMoeglich(fach, halbjahr)) || this.manager().istBewertet(halbjahr))
 			return;
 		const wahl = this.manager().getSchuelerFachwahl(fach.id);
@@ -1730,8 +1896,9 @@ export class LaufbahnplanungUiManager {
 	 *
 	 * @returns -
 	 */
-	public async stepper(fach: GostFach, halbjahr: GostHalbjahr) {
-		switch (this.modus) {
+	public async stepper(fach: GostFach, halbjahr: GostHalbjahr, modus?: 'manuell' | 'hochschreiben' | 'normal') {
+		const mode = (modus === undefined) ? this.modus : modus;
+		switch (mode) {
 			case 'manuell':
 				await this.stepperManuell(fach, halbjahr);
 				return;

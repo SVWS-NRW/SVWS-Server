@@ -54,12 +54,28 @@
 </template>
 
 <script setup lang="ts">
-	import type { List, GostFach, GostFaecherManager} from "@core";
+
+	/**
+	 * Die Implementierung enthält Teile von experimentellem Code. Für diesen gilt folgendes:
+	 *
+	 * Bei dieser Implementierung handelt es sich um eine Umsetzung in Bezug auf möglichen zukünftigen
+	 * Änderungen in der APO-GOSt. Diese basiert auf der aktuellen Implementierung und integriert Aspekte
+	 * aus dem Eckpunktepapier und auf in den Schulleiterdienstbesprechungen erläuterten Vorhaben.
+	 * Sie dient der Evaluierung von möglichen Umsetzungsvarianten und als Vorbereitung einer späteren
+	 * Implementierung der Belegprüfung. Insbesondere sollen erste Versuche mit Laufbahnen mit einem
+	 * 5. Abiturfach und Projektkursen erprobt werden. Detailaspekte können erst nach Erscheinen der APO-GOSt
+	 * umgesetzt werden.
+	 * Es handelt sich also um experimentellen Code, der keine Rückschlüsse auf Details einer zukünftigen APO-GOSt
+	 * erlaubt.
+	 */
+
 	import type { ComputedRef, WritableComputedRef } from "vue";
 	import { computed } from "vue";
-	import { ArrayList, DeveloperNotificationException, Fachgruppe, Jahrgaenge, Fach } from "@core";
+	import type { List, GostFach, GostFaecherManager} from "@core";
+	import { ServerMode, ArrayList, DeveloperNotificationException, Fachgruppe, Jahrgaenge, Fach } from "@core";
 
 	const props = defineProps<{
+		serverMode: ServerMode;
 		patchFach: (data: Partial<GostFach>, fach_id: number) => Promise<void>;
 		abiturjahr: number;
 		fachId: number;
@@ -138,6 +154,8 @@
 
 	const abi_gk_moeglich: ComputedRef<boolean> = computed(() => {
 		const fg = Fach.getBySchluesselOrDefault(fach.value.kuerzel).getFachgruppe(schuljahr.value);
+		if (ServerMode.DEV.checkServerMode(props.serverMode) && (props.abiturjahr >= 2029)) // experimenteller Code
+			return (fg !== Fachgruppe.FG_ME) && (fg !== Fachgruppe.FG_VX);
 		return (fg !== Fachgruppe.FG_ME) && (fg !== Fachgruppe.FG_VX) && (fg !== Fachgruppe.FG_PX);
 	});
 

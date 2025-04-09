@@ -31,9 +31,11 @@ import { GostFaecherManager } from "@core/core/utils/gost/GostFaecherManager";
 import { ArrayList } from "@core/java/util/ArrayList";
 import type { List } from "@core/java/util/List";
 import { Config, ConfigElement } from "@ui/utils/Config";
+import { ServerMode } from "@core/core/types/ServerMode";
 
 
 interface RouteState {
+	serverMode: ServerMode,
 	schuleStammdaten: SchuleStammdaten;
 	auswahl: SchuelerListeEintrag | undefined;
 	schuelerIDEncrypted: string;
@@ -53,6 +55,7 @@ interface RouteState {
 export class RouteData {
 
 	private static _defaultState : RouteState = {
+		serverMode: ServerMode.STABLE,
 		schuleStammdaten: new SchuleStammdaten(),
 		auswahl: undefined,
 		schuelerIDEncrypted: '',
@@ -89,6 +92,10 @@ export class RouteData {
 		this._state.value.config.addElements([new ConfigElement("app.schueler.laufbahnplanung.faecher.anzeigen", "user", "alle")]);
 	}
 
+	public get serverMode(): ServerMode {
+		return this._state.value.serverMode;
+	}
+
 	public get config(): Config {
 		return this._state.value.config;
 	}
@@ -112,13 +119,13 @@ export class RouteData {
 		const jahrgangsdaten = this._state.value.gostJahrgangsdaten;
 		const art = this.gostBelegpruefungsArt;
 		if (art === 'ef1')
-			return new AbiturdatenManager(abiturdaten, jahrgangsdaten, fachManager, GostBelegpruefungsArt.EF1);
+			return new AbiturdatenManager(this.serverMode, abiturdaten, jahrgangsdaten, fachManager, GostBelegpruefungsArt.EF1);
 		if (art === 'gesamt')
-			return new AbiturdatenManager(abiturdaten, jahrgangsdaten, fachManager, GostBelegpruefungsArt.GESAMT);
-		const abiturdatenManager = new AbiturdatenManager(abiturdaten, jahrgangsdaten, fachManager, GostBelegpruefungsArt.GESAMT);
+			return new AbiturdatenManager(this.serverMode, abiturdaten, jahrgangsdaten, fachManager, GostBelegpruefungsArt.GESAMT);
+		const abiturdatenManager = new AbiturdatenManager(this.serverMode, abiturdaten, jahrgangsdaten, fachManager, GostBelegpruefungsArt.GESAMT);
 		if (abiturdatenManager.pruefeBelegungExistiert(abiturdatenManager.getFachbelegungen(), GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))
 			return abiturdatenManager;
-		return new AbiturdatenManager(abiturdaten, jahrgangsdaten, fachManager, GostBelegpruefungsArt.EF1);
+		return new AbiturdatenManager(this.serverMode, abiturdaten, jahrgangsdaten, fachManager, GostBelegpruefungsArt.EF1);
 	}
 
 	public async ladeDaten(daten: GostLaufbahnplanungDaten) {
