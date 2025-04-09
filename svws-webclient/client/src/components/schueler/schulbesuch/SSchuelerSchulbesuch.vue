@@ -107,8 +107,8 @@
 						<svws-ui-select title="Merkmal" :items="manager().merkmaleById.values()" :item-text="textMerkmal" removable required
 							@update:model-value="v => newEntryMerkmal.idMerkmal = v?.id ?? null"
 							:model-value="manager().merkmaleById.get(newEntryMerkmal.idMerkmal ?? -1)" />
-						<svws-ui-text-input placeholder="Von" type="date" v-model="newEntryMerkmal.datumVon" />
-						<svws-ui-text-input placeholder="Bis" type="date" v-model="newEntryMerkmal.datumBis" />
+						<svws-ui-text-input placeholder="Von" type="date" :max-date="newEntryMerkmal.datumBis" v-model="newEntryMerkmal.datumVon" />
+						<svws-ui-text-input placeholder="Bis" type="date" :min-date="newEntryMerkmal.datumVon" v-model="newEntryMerkmal.datumBis" />
 					</svws-ui-input-wrapper>
 					<div class="mt-7 flex flex-row gap-4 justify end">
 						<svws-ui-button type="secondary" @click="closeModalMerkmal">Abbrechen</svws-ui-button>
@@ -164,8 +164,8 @@
 							:model-value="manager().schulenById.get(newEntryBisherigeSchule.idSchule ?? -1)?.schulnummerStatistik ?? '-'" />
 						<svws-ui-text-input placeholder="Schulform" readonly :model-value="selectedSchulformBisherigeSchule?.text" />
 						<svws-ui-spacing />
-						<svws-ui-text-input placeholder="Start des Schulbesuchs" type="date" v-model="newEntryBisherigeSchule.datumVon" />
-						<svws-ui-text-input placeholder="Ende des Schulbesuchs" type="date" v-model="newEntryBisherigeSchuleDatumBis" />
+						<svws-ui-text-input placeholder="Start des Schulbesuchs" type="date" :max-date="newEntryBisherigeSchuleDatumBis" v-model="newEntryBisherigeSchule.datumVon" />
+						<svws-ui-text-input placeholder="Ende des Schulbesuchs" type="date" :min-date="newEntryBisherigeSchule.datumVon" v-model="newEntryBisherigeSchuleDatumBis" />
 						<svws-ui-select class="col-span-full" title="Schulgliederung" :items="schulgliederungenBisherigeSchule"
 							:disabled="(!newEntryBisherigeSchule.datumBis || !selectedSchulformBisherigeSchule)" autocomplete
 							:item-filter="coreTypeDataFilter" v-model="schulgliederungBisherigeSchule"

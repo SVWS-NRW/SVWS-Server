@@ -1,5 +1,7 @@
 package de.svws_nrw.data.schueler;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -117,8 +119,21 @@ public final class DataSchuelerMerkmale extends DataManagerRevised<Long, DTOSchu
 						.orElseThrow(() -> new ApiOperationException(Status.BAD_REQUEST, "Zur id %d existiert kein Merkmal.".formatted(id)));
 			}
 			case "datumVon" -> dto.DatumVon = JSONMapper.convertToString(value, true, true, null, "DatumVon");
-			case "datumBis" -> dto.DatumBis = JSONMapper.convertToString(value, true, true, null, "DatumBis");
+			case "datumBis" -> mapDatumBis(dto, value);
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
 		}
+	}
+
+	private static void mapDatumBis(final DTOSchuelerMerkmale dto, final Object value) throws ApiOperationException {
+		final String datum = JSONMapper.convertToString(value, true, true, null, "DatumBis");
+		if ((dto.DatumVon != null) && (datum != null)) {
+			// Prüfung, ob das Enddatum nach dem Startdatum liegt
+			final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			final LocalDate datumVon = LocalDate.parse(dto.DatumVon, formatter);
+			final LocalDate datumBis = LocalDate.parse(datum, formatter);
+			if (datumBis.isBefore(datumVon))
+				throw new ApiOperationException(Status.BAD_REQUEST, "Das Enddatum %s darf nicht vor dem Startdatum %s liegen".formatted(datumBis, datumVon));
+		}
+		dto.DatumBis = datum;
 	}
 }

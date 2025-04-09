@@ -26,6 +26,8 @@
 			:class="{ 'text-input--control': !headless, 'text-input--headless': headless, 'text-input--rounded': rounded, 'text-input--prefix': url, }"
 			v-bind="{ ...$attrs }"
 			:type="type"
+			:min="minDate"
+			:max="maxDate"
 			:value="data"
 			:disabled
 			:required
@@ -105,6 +107,8 @@
 
 	const props = withDefaults(defineProps<{
 		type?: "text" | "date" | "email" | "search" | "tel" | "password";
+		minDate?: string;
+		maxDate?: string;
 		modelValue?: string | null;
 		modelModifiers?: { trim: boolean };
 		placeholder?: string;
