@@ -62,11 +62,7 @@
 		@apply bg-ui-danger text-ui-ondanger border-ui-danger;
 	}
 
-			/* &:focus-visible {
-				verursacht postcss fehler
-				@apply ring-ui-danger;
-			} */
-	}
+}
 
 .modal .modal--titlebar {
 	@apply border-b border-ui;

@@ -20,7 +20,6 @@
 		"../core/src/**/*.ts",
 	],
 	"exclude": [
-		"postcss.config.js",
 		"../core/src/index.ts"
 	]
 }

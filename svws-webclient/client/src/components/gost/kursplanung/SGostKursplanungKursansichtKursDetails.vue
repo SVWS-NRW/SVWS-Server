@@ -80,26 +80,3 @@
 	}
 
 </script>
-
-<style lang="postcss">
-
-	@reference "../../../../../ui/src/assets/styles/index.css"
-
-	.table--row-kursdetail {
-		@apply relative z-10 border-b border-ui-25;
-		/*box-shadow: inset 0 -4px 5px 0 rgba(0, 0, 0, 0.1);*/
-    @apply shadow-inner shadow-ui-25;
-
-		.data-table__contrast-border & {
-			@apply border-ui-50;
-		}
-
-    .button--secondary {
-      @apply hover:text-ui-100 hover:border-ui-100;
-    }
-
-    .text-input-component {
-      @apply text-sm;
-    }
-	}
-</style>

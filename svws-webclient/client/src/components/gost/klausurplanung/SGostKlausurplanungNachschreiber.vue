@@ -240,7 +240,7 @@
 
 </script>
 
-<style lang="postcss" scoped>
+<!-- <style lang="postcss" scoped>
 
 	@reference "../../../../../ui/src/assets/styles/index.css"
 
@@ -253,4 +253,4 @@
 		}
 	}
 
-</style>
+</style> -->

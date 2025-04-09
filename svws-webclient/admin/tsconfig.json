@@ -21,7 +21,6 @@
 	],
 	"exclude": [
 		"**/*.story.vue",
-		"**/histoire.setup.ts", 
-		"postcss.config.js",
+		"**/histoire.setup.ts",
 	]
 }

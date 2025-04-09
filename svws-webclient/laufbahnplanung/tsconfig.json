@@ -19,7 +19,4 @@
 		"../ui/src/",
 		"../core/src/**/*.ts",
 	],
-	"exclude": [
-		"postcss.config.js",
-	]
 }

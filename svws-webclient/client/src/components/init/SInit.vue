@@ -197,7 +197,7 @@
 	}
 </script>
 
-<style lang="postcss">
+<!-- <style lang="postcss">
 
 	@reference "../../../../ui/src/assets/styles/index.css"
 
@@ -246,4 +246,4 @@
 		}
 	}
 
-</style>
+</style> -->
