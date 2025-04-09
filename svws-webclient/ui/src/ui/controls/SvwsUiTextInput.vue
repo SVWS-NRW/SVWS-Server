@@ -130,6 +130,8 @@
 		removable?: boolean;
 	}>(), {
 		type: "text",
+		minDate: undefined,
+		maxDate: undefined,
 		modelValue: null,
 		modelModifiers: () => ({ trim: false }),
 		placeholder: "",
