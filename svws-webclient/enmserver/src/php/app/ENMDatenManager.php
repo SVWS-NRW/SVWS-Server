@@ -104,7 +104,7 @@
 		 *
 		 * @param Database $db   das Objekt für den Datenbankzugriff
 		 */
-		public function doImport(Database $db) {
+		public function doImport(Database $db): void {
 			// Prüfe anhand der Schulnummer, ob bereits importierte Daten vorliegen
 			$schulnummer = $this->enmDaten->schulnummer;
 			$dbEnmDaten = $db->queryAllOrNull("SELECT * FROM Daten WHERE schulnummer = $schulnummer", true);
@@ -324,7 +324,7 @@
 		 *                                                                     tsFehlstundenFach, tsFehlstundenUnentschuldigtFach,
 		 *                                                                     fehlstundenUnentschuldigtFach, fachbezogeneBemerkungen, istGemahnt
 		 */
-		public function patchENMLeistung(Database $db, object $lehrer, object $patch) {
+		public function patchENMLeistung(Database $db, object $lehrer, object $patch): void {
 			// Prüfe, ob eine ID für die Leistungsdaten im Patch vorhanden ist
 			if ($patch->id === null)
 				Http::exit400BadRequest("Es muss eine ID angegeben werden, damit die Leistungsdaten angepasst werden können.");
@@ -350,7 +350,7 @@
 		 * @param object $patch    der Patch
 		 * Folgende Werte können durch das Patch Objekt überschrieben werden: fehlstundenGesamt, fehlstundenGesamtUnentschuldigt
 		 */
-		public function patchENMSchuelerLernabschnitt(Database $db, object $lehrer, object $patch) {
+		public function patchENMSchuelerLernabschnitt(Database $db, object $lehrer, object $patch): void {
 			// Prüfe, ob eine ID für die Lernabschnittsdaten im Patch vorhanden ist
 			if ($patch->id === null)
 				Http::exit400BadRequest("Es muss eine ID angegeben werden, damit die Lernabschnittsdaten angepasst werden können.");
@@ -378,7 +378,7 @@
 		 * @param object $patch     der Patch
 		 * Folgende Werte können durch das Patch Objekt überschrieben werden: ASV, AUE, ZB, LELS, schulformEmpf, individuelleVersetzungsbemerkungen, foerderbemerkungen
 		 */
-		public function patchENMSchuelerBemerkungen(Database $db, object $lehrer, int $idSchueler, object $patch) {
+		public function patchENMSchuelerBemerkungen(Database $db, object $lehrer, int $idSchueler, object $patch): void {
 			// Prüfe, ob Bemerkungen für die Schüler-ID vorhanden sind
 			$mapsSchueler = $this->getMapsSchueler();
 			if (!array_key_exists($idSchueler, $mapsSchueler->bemerkungen) || !array_key_exists($idSchueler, $mapsSchueler->schueler))
@@ -401,7 +401,7 @@
 		 * @param object $patch    der Patch
 		 * Folgende Werte können durch das Patch Objekt überschrieben werden: artID, datum, bemerkung, note
 		 */
-		public function patchENMTeilleistung(Database $db, object $lehrer, object $patch) {
+		public function patchENMTeilleistung(Database $db, object $lehrer, object $patch): void {
 			// Prüfe, ob eine ID für die Teilleistungen im Patch vorhanden ist
 			if ($patch->id === null)
 				Http::exit400BadRequest("Es muss eine ID angegeben werden, damit die Teilleistungen angepasst werden können.");
@@ -429,7 +429,7 @@
 		 *
 		 *  Folgende Werte können durch das Patch Objekt überschrieben werden: Stufen
 		 */
-		public function patchENMSchuelerAnkreuzkompetenzen(Database $db, object $lehrer, object $patch) {
+		public function patchENMSchuelerAnkreuzkompetenzen(Database $db, object $lehrer, object $patch): void {
 			// Prüfe, ob eine ID für die Ankreuzkompetenz im Patch vorhanden ist
 			if ($patch->id === null)
 				Http::exit400BadRequest("Es muss eine ID angegeben werden, damit die Ankreuzkompetenz angepasst werden kann.");

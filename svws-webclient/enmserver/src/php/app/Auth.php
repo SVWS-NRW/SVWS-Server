@@ -56,11 +56,12 @@
 		 * Prüfe den Authorization-Header, ob dieser eine Basic-Authentifizierung mit dem übergebenen Benutzernamen und
 		 * dem übergebenen Benutzer-Kennwort hat.
 		 * Tritt ein Fehler bei der Prüfung auf, so wird ein Fehlercode 401 zurückgegeben.
-		 * 
+		 *
 		 * @param string $username   der Benutzername
 		 * @param string $password   das Kennwort
-		 */
-		public function pruefeBasicAuth(string $username, string $password) {
+		 * @return void
+ 		 */
+		public function pruefeBasicAuth(string $username, string $password): void {
 			if ((strcmp($this->authMethod, "Basic") != 0)
 				|| (strcasecmp($this->authUser, $username) != 0)
 				|| (strcmp($this->authPassword, $password) != 0))
@@ -71,7 +72,7 @@
 		 * Prüfe den Authorization-Header, ob dieser eine Basic-Authentifizierung mit den Crendentials
 		 * eines Lehrers hat.
 		 * Tritt ein Fehler bei der Prüfung auf, so wird ein Fehlercode 401 zurückgegeben.
-		 * 
+		 *
 		 * @return object   das Lehrer-Objekt des angemeldeten Benutzer
 		 */
 		public function pruefeLehrerBasicAuth() : object {
@@ -88,8 +89,9 @@
 		/**
 		 * Prüft, ob das Access-Token der Anfrage zu einem Client gehört und gültig ist.
 		 * Tritt ein Fehler bei der Prüfung auf, so wird ein Fehlercode 401 zurückgegeben.
-		 */
-		public function pruefeAccessToken() {
+		 * @return void
+ 		 */
+		public function pruefeAccessToken(): void {
 			if (strcmp($this->authMethod, "Bearer") != 0)
 				Http::exit401Unauthorized('WWW-Authenticate: Bearer realm="ENM-Server", error="invalid_request", error_description="An access token is required"');
 			$client = $this->db->getClientByAccessToken($this->authToken);
@@ -106,7 +108,7 @@
 		 * Prüfe den Authorization-Header, ob die Methode "Basic" vorliegt, der Benutzername
 		 * eine gültige Client-ID ist und das Client-Secret zu dem Secret in der Datenbank passt.
 		 * Tritt ein Fehler bei der Prüfung auf, so wird ein Fehlercode 401 zurückgegeben.
-		 * 
+		 *
 		 * @return int im Erfolgsfall wird die authorisierte Client-ID zurückgegeben
 		 */
 		public function pruefeClientSecret(): int {
@@ -126,16 +128,17 @@
 		/**
 		 * Gibt die HTTP-Methode zurück.
 		 */
-		public function getHTTPMethod() {
+		public function getHTTPMethod(): string {
 			return $_SERVER['REQUEST_METHOD'];
 		}
 
 		/**
 		 * Prüft, ob die HTTP-Methode erlaubt ist oder nicht.
-		 * 
+		 *
 		 * @param array $allowed   die erlaubten HTTP-Methoden
-		 */
-		public function pruefeHTTPMethod(array $allowed) {
+		 * @return void
+ 		 */
+		public function pruefeHTTPMethod(array $allowed): void {
 			$hasMethod = false;
 			foreach ($allowed as $tmp)
 				if (strcmp($_SERVER['REQUEST_METHOD'], $tmp) === 0)
