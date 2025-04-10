@@ -1,6 +1,7 @@
 import { computed, ref } from "vue";
 import type { AbiturFachbelegungHalbjahr, GostJahrgangsdaten, GostSchuelerFachwahl, JavaMap, Sprachbelegung, AbiturdatenManager,
-	GostFach, List } from "../../../../../core/src";
+	GostFach, List, 
+	Sprachpruefung} from "../../../../../core/src";
 import { ServerMode, GostAbiturFach, GostFachbereich, GostFachUtils, GostKursart, Note, Fach, Fachgruppe, HashMap2D, SprachendatenUtils,
 	ArrayList, GostHalbjahr, HashMap, RGBFarbe} from "../../../../../core/src";
 import type { Config } from "~/utils/Config";
@@ -647,9 +648,26 @@ export class LaufbahnplanungUiManager {
 			const sprach_kuerzel = Fach.getBySchluesselOrDefault(fach.kuerzel).daten(schuljahr)?.kuerzel ?? null;
 			if (sprach_kuerzel === null)
 				continue;
-			for (const sprache of this.manager().getSprachendaten().belegungen)
-				if (sprache.sprache === sprach_kuerzel)
-					map.put(fach, sprache);
+			for (const belegung of this.manager().getSprachendaten().belegungen)
+				if (belegung.sprache === sprach_kuerzel)
+					map.put(fach, belegung);
+		}
+		return map;
+	});
+
+	/**
+	 * Eine Map mit den Sprachprüfungen, welche dem zugehörigen Fach zugeordnet sind
+	 */
+	private _mapSprachpruefungen = computed<JavaMap<GostFach, Sprachpruefung>>(() => {
+		const map = new HashMap<GostFach, Sprachpruefung>();
+		const schuljahr = this.manager().getSchuljahr();
+		for (const fach of this.alleFaecher) {
+			const sprach_kuerzel = Fach.getBySchluesselOrDefault(fach.kuerzel).daten(schuljahr)?.kuerzel ?? null;
+			if (sprach_kuerzel === null)
+				continue;
+			for (const pruefung of this.manager().getSprachendaten().pruefungen)
+				if ((pruefung.ersetzteSprache === sprach_kuerzel) && (SprachendatenUtils.istFeststellungspruefungEESAMSABestanden(pruefung)))
+					map.put(fach, pruefung);
 		}
 		return map;
 	});
@@ -665,9 +683,15 @@ export class LaufbahnplanungUiManager {
 		if (!this.istFremdspracheMoeglich(fach))
 			return false;
 		const sprachbelegung = this._mapSprachbelegung.value.get(fach);
-		const rf = sprachbelegung?.reihenfolge ?? 0;
-		const jg = sprachbelegung?.belegungVonJahrgang ?? "";
-		return (rf !== 0) && (jg !== "");
+		if (sprachbelegung !== null) {
+			const rf = sprachbelegung.reihenfolge ?? 0;
+			const jg = sprachbelegung.belegungVonJahrgang ?? "";
+			return (rf !== 0) && (jg !== "");
+		}
+		const sprachpruefung = this._mapSprachpruefungen.value.get(fach);
+		if (sprachpruefung !== null)
+			return fach.istFremdSpracheNeuEinsetzend || sprachpruefung.kannBelegungAlsFortgefuehrteSpracheErlauben;
+		return false;
 	}
 
 	/**
@@ -683,7 +707,18 @@ export class LaufbahnplanungUiManager {
 		if (!this.istFremdspracheMoeglich(fach))
 			return 0;
 		const sprachbelegung = this._mapSprachbelegung.value.get(fach);
-		return sprachbelegung?.reihenfolge ?? 0;
+		if (sprachbelegung !== null)
+			return sprachbelegung.reihenfolge ?? 0;
+		const sprachpruefung = this._mapSprachpruefungen.value.get(fach);
+		if (sprachpruefung !== null) {
+			if (sprachpruefung.kannErstePflichtfremdspracheErsetzen)
+				return 1;
+			if (sprachpruefung.kannZweitePflichtfremdspracheErsetzen)
+				return 2;
+			if (sprachpruefung.kannWahlpflichtfremdspracheErsetzen)
+				return 3;
+		}
+		return 0;
 	}
 
 	/**
@@ -699,7 +734,13 @@ export class LaufbahnplanungUiManager {
 		if (!this.istFremdspracheMoeglich(fach))
 			return "";
 		const sprachbelegung = this._mapSprachbelegung.value.get(fach);
-		return sprachbelegung?.belegungVonJahrgang ?? "";
+		if (sprachbelegung !== null)
+			return sprachbelegung.belegungVonJahrgang ?? "";
+		const sprachpruefung = this._mapSprachpruefungen.value.get(fach);
+		if (sprachpruefung !== null) {
+			return "P";
+		}
+		return "";
 	}
 
 	/**

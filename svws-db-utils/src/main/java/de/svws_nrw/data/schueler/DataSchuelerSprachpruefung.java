@@ -14,6 +14,7 @@ import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.types.fach.Sprachpruefungniveau;
+import de.svws_nrw.core.utils.schueler.SprachendatenUtils;
 import de.svws_nrw.asd.types.fach.Sprachreferenzniveau;
 import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.data.DataManagerRevised;
@@ -63,6 +64,7 @@ public final class DataSchuelerSprachpruefung extends DataManagerRevised<Long, D
 		final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dtoSchueler.Schuljahresabschnitts_ID);
 		final Sprachpruefung daten = new Sprachpruefung();
 		daten.sprache = dto.Sprache;
+		daten.ersetzteSprache = SprachendatenUtils.getErsetzeSprache(dto.Sprache);
 		daten.jahrgang = dto.ASDJahrgang;
 		daten.anspruchsniveauId = (dto.Anspruchsniveau == null) ? null : dto.Anspruchsniveau.daten.id;
 		daten.pruefungsdatum = dto.Pruefungsdatum;

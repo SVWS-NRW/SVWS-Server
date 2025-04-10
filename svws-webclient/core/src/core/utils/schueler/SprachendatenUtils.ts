@@ -1,14 +1,15 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { JavaInteger } from '../../../java/lang/JavaInteger';
 import { IllegalStateException } from '../../../java/lang/IllegalStateException';
-import { Sprachbelegung } from '../../../asd/data/schueler/Sprachbelegung';
+import { Fach } from '../../../asd/types/fach/Fach';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { Sprachpruefung } from '../../../asd/data/schueler/Sprachpruefung';
+import { Sprachendaten } from '../../../asd/data/schueler/Sprachendaten';
+import type { Comparator } from '../../../java/util/Comparator';
+import { JavaInteger } from '../../../java/lang/JavaInteger';
+import { Sprachbelegung } from '../../../asd/data/schueler/Sprachbelegung';
 import { Sprachpruefungniveau } from '../../../core/types/fach/Sprachpruefungniveau';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
-import { Sprachendaten } from '../../../asd/data/schueler/Sprachendaten';
-import type { Comparator } from '../../../java/util/Comparator';
 
 export class SprachendatenUtils extends JavaObject {
 
@@ -310,6 +311,80 @@ export class SprachendatenUtils extends JavaObject {
 	}
 
 	/**
+	 * Gibt bei Fächern für herkunftssprachlichen Unterricht, das einstellige Sprachkürzel der Sprache zurück, die mit
+	 * diesem Fach bei einer zugehörigen Sprachprüfung ersetzt werden.
+	 *
+	 * @param kuerzel   das Kürzel des herkunftssprachlichen Unterrichtsfaches
+	 *
+	 * @return das einstellige Kürzel der Sprache oder null
+	 */
+	public static getErsetzeSprache(kuerzel : string) : string | null {
+		const fach : Fach = Fach.getBySchluesselOrDefault(kuerzel);
+		let _sevar_832970431 : any;
+		const _seexpr_832970431 = (fach);
+		if (_seexpr_832970431 === Fach.AM) {
+			_sevar_832970431 = null;
+		} else if (_seexpr_832970431 === Fach.AN) {
+			_sevar_832970431 = null;
+		} else if (_seexpr_832970431 === Fach.BM) {
+			_sevar_832970431 = null;
+		} else if (_seexpr_832970431 === Fach.CN) {
+			_sevar_832970431 = "C";
+		} else if (_seexpr_832970431 === Fach.CM) {
+			_sevar_832970431 = null;
+		} else if (_seexpr_832970431 === Fach.EM) {
+			_sevar_832970431 = null;
+		} else if (_seexpr_832970431 === Fach.FM) {
+			_sevar_832970431 = "F";
+		} else if (_seexpr_832970431 === Fach.GM) {
+			_sevar_832970431 = null;
+		} else if (_seexpr_832970431 === Fach.IM) {
+			_sevar_832970431 = "I";
+		} else if (_seexpr_832970431 === Fach.JM) {
+			_sevar_832970431 = null;
+		} else if (_seexpr_832970431 === Fach.LM) {
+			_sevar_832970431 = null;
+		} else if (_seexpr_832970431 === Fach.MM) {
+			_sevar_832970431 = null;
+		} else if (_seexpr_832970431 === Fach.MN) {
+			_sevar_832970431 = null;
+		} else if (_seexpr_832970431 === Fach.NM) {
+			_sevar_832970431 = "N";
+		} else if (_seexpr_832970431 === Fach.PM) {
+			_sevar_832970431 = null;
+		} else if (_seexpr_832970431 === Fach.QM) {
+			_sevar_832970431 = null;
+		} else if (_seexpr_832970431 === Fach.OM) {
+			_sevar_832970431 = "O";
+		} else if (_seexpr_832970431 === Fach.RM) {
+			_sevar_832970431 = "R";
+		} else if (_seexpr_832970431 === Fach.RN) {
+			_sevar_832970431 = null;
+		} else if (_seexpr_832970431 === Fach.SM) {
+			_sevar_832970431 = "S";
+		} else if (_seexpr_832970431 === Fach.TM) {
+			_sevar_832970431 = "T";
+		} else if (_seexpr_832970431 === Fach.TN) {
+			_sevar_832970431 = null;
+		} else if (_seexpr_832970431 === Fach.UM) {
+			_sevar_832970431 = null;
+		} else if (_seexpr_832970431 === Fach.UN) {
+			_sevar_832970431 = null;
+		} else if (_seexpr_832970431 === Fach.VM) {
+			_sevar_832970431 = null;
+		} else if (_seexpr_832970431 === Fach.XM) {
+			_sevar_832970431 = null;
+		} else if (_seexpr_832970431 === Fach.YM) {
+			_sevar_832970431 = null;
+		} else if (_seexpr_832970431 === Fach.ZM) {
+			_sevar_832970431 = null;
+		} else {
+			_sevar_832970431 = null;
+		}
+		return _sevar_832970431;
+	}
+
+	/**
 	 * Gibt die Fremdsprache zurück, die als erste Fremdsprache der Sekundarstufe I gewertet werden kann.
 	 * Im Falle einer Sprachprüfung als erste Pflichtfremdsprache wird diese zurückgegeben, da der Prüfungseintrag diese als erste Sprache explizit festlegt.
 	 * Ist keine Sprachprüfung als erste Pflichtfremdsprache vorhanden, so wird die als erste Sprache in der Sekundarstufe I belegt
@@ -498,7 +573,7 @@ export class SprachendatenUtils extends JavaObject {
 	 *
 	 * @return True, wenn die Sprache erfolgreich auf Niveau EESA/MSA geprüft wurde, sonst false
 	 */
-	private static istFeststellungspruefungEESAMSABestanden(pruefung : Sprachpruefung | null) : boolean {
+	public static istFeststellungspruefungEESAMSABestanden(pruefung : Sprachpruefung | null) : boolean {
 		return (pruefung !== null) && pruefung.istFeststellungspruefung && (pruefung.note !== null) && (pruefung.note <= 4) && ((pruefung.kannBelegungAlsFortgefuehrteSpracheErlauben && (pruefung.anspruchsniveauId === Sprachpruefungniveau.MSA.daten.id)) || ((pruefung.kannErstePflichtfremdspracheErsetzen || pruefung.kannZweitePflichtfremdspracheErsetzen || pruefung.kannWahlpflichtfremdspracheErsetzen) && ((pruefung.anspruchsniveauId === Sprachpruefungniveau.EESA.daten.id) || (pruefung.anspruchsniveauId === Sprachpruefungniveau.MSA.daten.id))));
 	}
 
