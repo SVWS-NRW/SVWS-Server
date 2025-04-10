@@ -1,5 +1,5 @@
-import { readFileSync, readdirSync } from "fs";
-import { resolve, basename } from "path";
+import { readFileSync, readdirSync } from "node:fs";
+import { resolve, basename } from "node:path";
 import { describe, test, expect } from "vitest";
 import type { GostBelegpruefungErgebnisFehler } from "../../../index";
 import { Abiturdaten, AbiturdatenManager, GostJahrgangFachkombination, GostFaecherManager, GostJahrgangsdaten, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFach, ArrayList, ServerMode } from "../../../index";

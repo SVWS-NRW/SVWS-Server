@@ -2,7 +2,7 @@ import { defineConfig } from "vite";
 import Vue from "@vitejs/plugin-vue";
 import Components from "unplugin-vue-components/vite";
 import Markdown from 'unplugin-vue-markdown/vite'
-import { resolve } from "path";
+import { resolve } from "node:path";
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({

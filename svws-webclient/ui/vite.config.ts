@@ -1,7 +1,7 @@
 /// <reference types="histoire" />
 
 import { defineConfig, searchForWorkspaceRoot } from "vite";
-import { resolve } from "path";
+import { resolve } from "node:path";
 import Components from "unplugin-vue-components/vite";
 import Vue from "@vitejs/plugin-vue";
 import { HstVue } from '@histoire/plugin-vue'
