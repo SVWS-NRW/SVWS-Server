@@ -129,6 +129,13 @@ export class SchuelerSchulbesuchManager extends StateManager<ManagerStateDataSch
 		return (entry !== null) ? entry.text : null;
 	}
 
+	/** Gibt eine Liste der Jahrgaenge zurück, die in der gegebenen Schulform möglich sind */
+	public getJahrgaengeBySchulform(schulform : Schulform | null) : List<Jahrgaenge> {
+		if (schulform === null)
+			return Jahrgaenge.data().getWerte();
+		return Jahrgaenge.data().getListBySchuljahrAndSchulform(this.schuljahr, schulform)
+	}
+
 	/** Gibt die Herkunftsarten der vorherigen Schulform des ausgewählten Schülers zurück */
 	public getHerkunftsarten() : Herkunftsarten[] {
 		return Herkunftsarten.values().filter(
