@@ -119,15 +119,14 @@ export class SchuelerSchulbesuchManager extends StateManager<ManagerStateDataSch
 		return Herkunftsarten.getByID(artID) || undefined;
 	}
 
-	/** Gibt die vorherige AllgHerkunft des ausgewählten Schülers zurück */
-	public getVorigeAllgHerkunft() {
-		if (this.daten.vorigeAllgHerkunft === null)
-			return "";
-		const value = Schulform.data().getWertByKuerzel(this.daten.vorigeAllgHerkunft);
+
+	/** Gibt die vorherige AllgHerkunft des ausgewählten Schülers zurück. Diese ist abhängig von der ausgewählten Schule */
+	public getVorigeAllgHerkunft() : string | null {
+		const value = this.getVorigeSchulform();
 		if (value === null)
-			return "";
+			return null;
 		const entry = Schulform.data().getEintragBySchuljahrUndWert(this.schuljahr, value);
-		return (entry !== null) ? entry.text : "";
+		return (entry !== null) ? entry.text : null;
 	}
 
 	/** Gibt die Herkunftsarten der vorherigen Schulform des ausgewählten Schülers zurück */
@@ -137,14 +136,11 @@ export class SchuelerSchulbesuchManager extends StateManager<ManagerStateDataSch
 	}
 
 	/** Gibt die vorherige Schulform des ausgewählten Schülers zurück */
-	public getVorigeSchulform() :Schulform | undefined {
-		const vorigeAllgHerkunft = this.daten.vorigeAllgHerkunft;
-		if (vorigeAllgHerkunft === null)
-			return undefined;
-		const sgl = Schulgliederung.data().getWertByKuerzel(vorigeAllgHerkunft);
-		if (sgl !== null)
-			return Schulform.BK;
-		return Schulform.data().getWertByKuerzel(vorigeAllgHerkunft) || undefined;
+	public getVorigeSchulform() :Schulform | null {
+		const schule = this.getVorherigeSchule();
+		if (schule === undefined || schule.idSchulform === null)
+			return null;
+		return Schulform.data().getWertByID(schule.idSchulform);
 	}
 
 	/** Gibt den Entlassjahrgang des ausgewählten Schülers zurück */

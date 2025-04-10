@@ -137,7 +137,7 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 			}
 			// Informationen zu der Schule, die vor der Aufnahme besucht wurde
 			case "idVorherigeSchule" -> mapSchulnummer(value, "idVorherigeSchule", v -> dtoSchueler.LSSchulNr = v);
-			case "vorigeAllgHerkunft" -> { /* TODO zur Zeit noch nicht implementiert */ }
+			case "vorigeAllgHerkunft" -> { /* Feld ist historisch überflüssig */ }
 			case "vorigeEntlassdatum" -> dtoSchueler.LSSchulEntlassDatum = JSONMapper.convertToString(value, true, true, null, "vorigeEntlassdatum");
 			case "vorigeEntlassjahrgang" -> mapJahrgang(value, "vorigeEntlassjahrgang", v -> dtoSchueler.LSJahrgang = v);
 			case "vorigeArtLetzteVersetzung" -> mapVorigeArtLetzteVersetzung(dtoSchueler, value);
