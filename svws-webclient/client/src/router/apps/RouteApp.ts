@@ -222,7 +222,8 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 
 	private getMenuManager() : AppMenuManager {
 		const submenuManager = new Array<{name: string, manager: TabManager}>();
-		submenuManager.push({ name: "schule", manager: this.getTabManagerSchule() });
+		if (routeSchule.hidden() === false)
+			submenuManager.push({ name: "schule", manager: this.getTabManagerSchule() });
 		if (routeEinstellungen.hidden() === false)
 			submenuManager.push({ name: "einstellungen", manager: this.getTabManagerEinstellungen() });
 		return new AppMenuManager(this.getTabManager(), submenuManager, this.getApp());
