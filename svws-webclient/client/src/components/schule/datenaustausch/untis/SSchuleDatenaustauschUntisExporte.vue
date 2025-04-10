@@ -28,7 +28,7 @@
 			<div v-if="zeigeGPU002Laden" class="max-w-196">
 				<ui-card compact :collapsible="false" title="Upload GPU002.txt" show-divider>
 					<div class="text-justify">
-						Laden Sie jetzt die Datei <span class="font-bold">GPU002.txt</span> von Untis hier hoch, um die Schüler-Kurs-Zuordnungen (Kurswahlen) anschließend zu exportieren.
+						Laden Sie jetzt die aktuelle Datei <span class="font-bold">GPU002.txt</span> von Untis hier hoch, um die {{ textZweckGPU002 }} anschließend zu exportieren.
 						Die CSV-Datei muss als Textkodierung UTF-8 verwenden. Als Trennzeichen wird das Semikolon verwendet und für die Textbegrenzung doppelte Anführungszeichen (").
 					</div>
 					<template #buttonFooterLeft>
@@ -182,6 +182,17 @@
 	const zeigeSchuelerVariantenAuswahl = computed<boolean>(() => gpusHabenSchueler.includes(aktuell.value));
 	const zeigeGPU002Laden = computed<boolean>(() => gpusBrauchenGPU002.includes(aktuell.value));
 	const zeigeDateiSpeichern = computed<boolean>(() => (daten.value !== null) && (!zeigeGPU002Laden.value || (gpu002.value !== null)));
+	const textZweckGPU002 = computed<string>(() => {
+		if (aktuell.value === fachwahlenGPU015)
+			return "Schüler-Kurs-Zuordnungen (Kurswahlen)";
+		if (aktuell.value === klausurenGPU017)
+			return "Klausuren";
+		if (aktuell.value === blockungGPUs)
+			return "Daten der Blockung";
+		if (aktuell.value === schienenGPU019)
+			return "Kurs-Schienen";
+		return "TODO (noch nicht implementiert)";
+	});
 
 	onMounted(() => onSelect(aktuell.value));
 
