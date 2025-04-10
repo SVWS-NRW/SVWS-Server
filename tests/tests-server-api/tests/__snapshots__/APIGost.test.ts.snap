@@ -2085,7 +2085,7 @@ GostLeistungen {
       "elementData": [
         Sprachpruefung {
           "anspruchsniveauId": 3,
-          "ersetzteSprache": null,
+          "ersetzteSprache": "T",
           "istFeststellungspruefung": false,
           "istHSUPruefung": true,
           "jahrgang": "09",
