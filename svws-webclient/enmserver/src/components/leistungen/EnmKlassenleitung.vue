@@ -22,6 +22,7 @@
 	import { computed, ref, watchEffect } from 'vue';
 	import type { BemerkungenHauptgruppe } from './EnmManager';
 	import type { EnmKlassenleitungProps } from './EnmKlassenleitungProps';
+	import type { ENMLeistungBemerkungen } from '@core/index';
 
 	const props = defineProps<EnmKlassenleitungProps>();
 
@@ -48,20 +49,23 @@
 		const schueler = props.manager.auswahlSchueler ?? null;
 		if (schueler === null)
 			return;
+		const patch = <Partial<ENMLeistungBemerkungen>>{};
 		switch (erlaubteHauptgruppe.value) {
 			case 'ASV':
-				schueler.bemerkungen.ASV = bemerkung;
+				patch.ASV = bemerkung;
 				break;
 			case 'AUE':
-				schueler.bemerkungen.AUE = bemerkung;
+				patch.AUE = bemerkung;
 				break;
 			case 'ZB':
-				schueler.bemerkungen.ZB = bemerkung;
+				patch.ZB = bemerkung;
 				break;
 			default:
 				return;
 		}
-		await props.patchBemerkungen(schueler.id, schueler.bemerkungen);
+		const success = await props.patchBemerkungen(schueler.id, patch);
+		if (success)
+			Object.assign(schueler.bemerkungen, patch);
 		props.manager.update();
 	}
 
