@@ -1,9 +1,8 @@
 import { computed, ref } from "vue";
 import type { AbiturFachbelegungHalbjahr, GostJahrgangsdaten, GostSchuelerFachwahl, JavaMap, Sprachbelegung, AbiturdatenManager,
-	GostFach, List, 
-	Sprachpruefung} from "../../../../../core/src";
+	GostFach, List, Sprachpruefung } from "../../../../../core/src";
 import { ServerMode, GostAbiturFach, GostFachbereich, GostFachUtils, GostKursart, Note, Fach, Fachgruppe, HashMap2D, SprachendatenUtils,
-	ArrayList, GostHalbjahr, HashMap, RGBFarbe} from "../../../../../core/src";
+	ArrayList, GostHalbjahr, HashMap, RGBFarbe } from "../../../../../core/src";
 import type { Config } from "~/utils/Config";
 
 /*
@@ -1059,13 +1058,13 @@ export class LaufbahnplanungUiManager {
 					wahl.abiturFach = (wahl.halbjahre[GostHalbjahr.Q22.id] === "M") ? 4 : 3;
 					break;
 				case 3:
-					wahl.abiturFach = (wahl.halbjahre[GostHalbjahr.Q22.id] === "M") ? 4 : null;
+					wahl.abiturFach = (wahl.halbjahre[GostHalbjahr.Q22.id] === "M") ? 4 : 5;
 					break;
 				case 4:
 					wahl.abiturFach = (wahl.halbjahre[GostHalbjahr.Q22.id] === "S") ? 3 : 5;
 					break;
 				case 5:
-					wahl.abiturFach = (wahl.halbjahre[GostHalbjahr.Q22.id] === "S") ? 3 : 4;
+					wahl.abiturFach = (wahl.halbjahre[GostHalbjahr.Q22.id] === "S") ? 3 : null;
 					break;
 				default:
 					wahl.abiturFach = null;
