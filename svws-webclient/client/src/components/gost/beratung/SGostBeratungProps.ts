@@ -16,7 +16,7 @@ export interface GostBeratungProps {
 	gostBelegpruefungErgebnis: () => GostBelegpruefungErgebnis;
 	abiturdatenManager: () => AbiturdatenManager;
 	mapLehrer: Map<number, LehrerListeEintrag>;
-	resetFachwahlen: () => Promise<void>;
+	resetFachwahlen: (forceDelete: boolean) => Promise<void>;
 	beratungslehrer: () => List<GostBeratungslehrer>;
 	addBeratungslehrer: (id: number) => Promise<void>;
 	removeBeratungslehrer: (lehrer: GostBeratungslehrer[]) => Promise<void>;

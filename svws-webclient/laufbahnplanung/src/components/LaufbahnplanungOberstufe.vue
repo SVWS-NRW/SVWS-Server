@@ -27,7 +27,7 @@
 				<svws-ui-button :type="manager.modus === 'normal' ? 'transparent' : 'danger'" @click="manager.switchModus()">
 					<span class="icon-sm i-ri-loop-right-line" /> Modus: <span>{{ manager.modus }}</span>
 				</svws-ui-button>
-				<s-modal-laufbahnplanung-kurswahlen-loeschen schueler-ansicht :gost-jahrgangsdaten :reset-fachwahlen />
+				<s-modal-laufbahnplanung-kurswahlen-loeschen schueler-ansicht keine-vorlage :gost-jahrgangsdaten :reset-fachwahlen />
 				<svws-ui-button type="transparent" @click="manager.switchFaecherAnzeigen()"> {{ "Fächer anzeigen: " + manager.getTextFaecherAnzeigen() }} </svws-ui-button>
 			</svws-ui-sub-nav>
 		</Teleport>

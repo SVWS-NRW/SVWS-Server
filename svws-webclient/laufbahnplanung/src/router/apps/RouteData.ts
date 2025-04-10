@@ -434,7 +434,7 @@ export class RouteData {
 		this.setPatchedState({ zwischenspeicher: undefined, abiturdaten, abiturdatenManager, gostBelegpruefungErgebnis });
 	}
 
-	resetFachwahlen = async () => {
+	resetFachwahlen = async (forceDelete: boolean) => {
 		const abiturdaten = this._state.value.abiturdaten;
 		if (abiturdaten === undefined)
 			throw new DeveloperNotificationException("Die Laufbahnplanungsdaten stehen unerwartet nicht zur Verfügung.");

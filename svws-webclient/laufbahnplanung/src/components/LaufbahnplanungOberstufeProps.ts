@@ -24,5 +24,5 @@ export interface LaufbahnplanungOberstufeProps {
 	zwischenspeicher?: GostLaufbahnplanungDaten;
 	saveLaufbahnplanung: () => Promise<void>;
 	restoreLaufbahnplanung: () => Promise<void>;
-	resetFachwahlen: () => Promise<void>;
+	resetFachwahlen: (forceDelete: boolean) => Promise<void>;
 }

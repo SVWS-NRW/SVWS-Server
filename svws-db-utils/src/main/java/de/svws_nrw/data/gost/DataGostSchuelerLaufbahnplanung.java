@@ -1070,4 +1070,28 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 		return Response.status(Status.NO_CONTENT).build();
 	}
 
+	/**
+	 * Löscht die Fachwahlen für den angegebenen Schüler.
+	 * Liegen bereits bewertete Halbjahre vor, so wird der
+	 * Fehlercode 409 CONFLICT zurückgegeben.
+	 *
+	 * @param idSchueler   die ID des Schülers
+	 *
+	 * @return Die HTTP-Response der Operation
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public Response delete(final long idSchueler) throws ApiOperationException {
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		final Abiturdaten abidaten = DBUtilsGostLaufbahn.get(conn, idSchueler);
+		for (final GostHalbjahr hj : GostHalbjahr.values())
+			if (abidaten.bewertetesHalbjahr[hj.id])
+				throw new ApiOperationException(Status.CONFLICT, "Die Fachwahlen können nicht vollständig gelöscht werden, da bereits bewertete Abschnitt vorliegen.");
+		final List<DTOGostSchuelerFachbelegungen> fachwahlen = conn.queryList(DTOGostSchuelerFachbelegungen.QUERY_BY_SCHUELER_ID,
+				DTOGostSchuelerFachbelegungen.class, idSchueler);
+		for (final DTOGostSchuelerFachbelegungen fw : fachwahlen)
+			conn.transactionRemove(fw);
+		return Response.status(Status.NO_CONTENT).build();
+	}
+
 }

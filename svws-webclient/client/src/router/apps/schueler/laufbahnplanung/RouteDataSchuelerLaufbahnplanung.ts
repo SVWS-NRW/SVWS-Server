@@ -229,8 +229,11 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 		}
 	}
 
-	resetFachwahlen = api.call(async () => {
-		await api.server.resetGostSchuelerFachwahlen(api.schema, this.auswahl.id);
+	resetFachwahlen = api.call(async (forceDelete: boolean) => {
+		if (forceDelete)
+			await api.server.deleteGostSchuelerFachwahlen(api.schema, this.auswahl.id);
+		else
+			await api.server.resetGostSchuelerFachwahlen(api.schema, this.auswahl.id);
 		const abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, this.auswahl.id);
 		this._state.value.abiturdaten = abiturdaten;
 		await this.setGostBelegpruefungErgebnis();

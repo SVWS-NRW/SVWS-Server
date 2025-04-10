@@ -1,33 +1,22 @@
 <template>
-	<div>
-		<svws-ui-button @click="toggle_modal" size="small" type="transparent" class="hover--danger">
-			<span class="icon-sm i-ri-delete-bin-line" />
-			<template v-if="schuelerAnsicht && hatFesteWahlen">Fachwahlen löschen</template>
-			<template v-else-if="schuelerAnsicht">Fachwahlen zurücksetzen</template>
-			<template v-else-if="gostJahrgangsdaten.abiturjahr === -1">Zurücksetzen aus Standardwerte</template>
-			<template v-else>Zurücksetzen auf allg. Vorlage</template>
-		</svws-ui-button>
-		<svws-ui-modal v-model:show="show" size="small" type="danger">
-			<template #modalTitle>
-				<template v-if="schuelerAnsicht && hatFesteWahlen">Nicht feste Fachwahlen löschen</template>
-				<template v-else-if="schuelerAnsicht">Alle Kurswahlen zurücksetzen</template>
-				<template v-else-if="gostJahrgangsdaten.abiturjahr === -1">Zurücksetzen aus Standardwerte</template>
-				<template v-else>Zurücksetzen der Vorlage auf die allgemeine Vorlage</template>
-			</template>
-			<template #modalDescription>
-				<div class="flex gap-1 mb-2">
-					<template v-if="schuelerAnsicht && hatFesteWahlen">Sollen die nicht festen Fachwahlen gelöscht werden?</template>
-					<template v-else-if="schuelerAnsicht">Soll die Laufbahnplanung auf die jahrgangs-spezifische Vorlage zurückgesetzt werden?</template>
-					<div v-else-if="gostJahrgangsdaten.abiturjahr === -1">Soll die Vorlage auf die Standardwerte zurückgesetzt werden?</div>
-					<div v-else>Soll diese jahrgangs-spezifisch Vorlage auf die allgemeine Vorlage zurückgesetzt werden?</div>
-				</div>
-			</template>
-			<template #modalActions>
-				<svws-ui-button @click="toggle_modal" type="secondary">Abbrechen</svws-ui-button>
-				<svws-ui-button @click="reset_fachwahlen" type="danger">Ja</svws-ui-button>
-			</template>
-		</svws-ui-modal>
-	</div>
+	<svws-ui-button v-if="!keineVorlage" @click="toggle_modal(false)" size="small" type="transparent" class="hover--danger">
+		<span class="icon-sm i-ri-delete-bin-line" />{{ buttonText }}
+	</svws-ui-button>
+	<svws-ui-button v-if="keineVorlage || (schuelerAnsicht && !hatFesteWahlen)" @click="toggle_modal(true)" size="small" type="transparent" class="hover--danger">
+		<span class="icon-sm i-ri-delete-bin-line" />Fachwahlen löschen
+	</svws-ui-button>
+	<svws-ui-modal v-model:show="show" size="small" type="danger">
+		<template #modalTitle>
+			{{ modalTitle }}
+		</template>
+		<template #modalDescription>
+			{{ modalDescription }}
+		</template>
+		<template #modalActions>
+			<svws-ui-button @click="toggle_modal" type="secondary">Abbrechen</svws-ui-button>
+			<svws-ui-button @click="reset_fachwahlen" type="danger">Ja</svws-ui-button>
+		</template>
+	</svws-ui-modal>
 </template>
 
 <script setup lang="ts">
@@ -37,10 +26,53 @@
 
 	const props = withDefaults(defineProps<{
 		gostJahrgangsdaten: GostJahrgangsdaten;
-		resetFachwahlen: () => Promise<void>;
+		resetFachwahlen: (forceDelete: boolean) => Promise<void>;
 		schuelerAnsicht?: boolean;
+		keineVorlage?: boolean;
 	}>(), {
 		schuelerAnsicht: false,
+		keineVorlage: false,
+	});
+
+	const show = ref<boolean>(false);
+	const doForceDelete = ref<boolean>(false);
+
+
+	const buttonText = computed<string>(() => {
+		if (props.schuelerAnsicht && hatFesteWahlen.value)
+			return "Fachwahlen löschen";
+		else if (props.schuelerAnsicht)
+			return "Fachwahlen zurücksetzen";
+		else if (props.gostJahrgangsdaten.abiturjahr === -1)
+			return "Zurücksetzen aus Standardwerte";
+		else
+			return "Zurücksetzen auf allg. Vorlage";
+	});
+
+	const modalTitle = computed<string>(() => {
+		if (props.schuelerAnsicht && hatFesteWahlen.value)
+			return "Nicht feste Fachwahlen löschen";
+		else if (props.schuelerAnsicht && doForceDelete.value)
+			return "Alle Fachwahlen löschen";
+		else if (props.schuelerAnsicht)
+			return "Alle Fachwahlen zurücksetzen";
+		else if (props.gostJahrgangsdaten.abiturjahr === -1)
+			return "Zurücksetzen aus Standardwerte";
+		else
+			return "Zurücksetzen der Vorlage auf die allgemeine Vorlage";
+	});
+
+	const modalDescription = computed<string>(() => {
+		if (props.schuelerAnsicht && hatFesteWahlen.value)
+			return "Sollen die nicht festen Fachwahlen gelöscht werden?";
+		else if (props.schuelerAnsicht && doForceDelete.value)
+			return "Soll die Laufbahnplanung vollständig geleert werden?";
+		else if (props.schuelerAnsicht)
+			return "Soll die Laufbahnplanung auf die jahrgangs-spezifische Vorlage zurückgesetzt werden?";
+		else if (props.gostJahrgangsdaten.abiturjahr === -1)
+			return "Soll die Vorlage auf die Standardwerte zurückgesetzt werden?";
+		else
+			return "Soll diese jahrgangs-spezifisch Vorlage auf die allgemeine Vorlage zurückgesetzt werden?";
 	});
 
 	const hatFesteWahlen = computed<boolean>(() => {
@@ -48,15 +80,16 @@
 		return (jg === "Q1") || (jg === "Q2") || ((jg === "EF") && (props.gostJahrgangsdaten.istBlockungFestgelegt[0]));
 	});
 
-	const show = ref<boolean>(false);
-
-	function toggle_modal() {
+	function toggle_modal(forceDelete: boolean) {
 		show.value = !show.value;
+		doForceDelete.value = forceDelete;
 	}
 
 	async function reset_fachwahlen() {
+		const forceDelete = doForceDelete.value;
+		doForceDelete.value = false;
 		show.value = false;
-		await props.resetFachwahlen();
+		await props.resetFachwahlen(forceDelete);
 	}
 
 </script>

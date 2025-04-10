@@ -1002,6 +1002,34 @@ public class APIGost {
 
 
 	/**
+	 * Die OpenAPI-Methode für das Komplette Entfernen der Fachwahlen eines Schülers.
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param schuelerid   die ID des Schülers, dessen Fachwahlen komplett gelöscht werden sollen
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort
+	 */
+	@POST
+	@Path("/schueler/{schuelerid : \\d+}/fachwahl/delete")
+	@Operation(summary = "Löscht die Fachwahlen des Schülers mit der angegebenen ID.",
+			description = "Löscht die Fachwahlen des Schülers mit der angegebenen ID."
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen der Fachwahlen besitzt.")
+	@ApiResponse(responseCode = "203", description = "Die Fachwahlen wurden erfolgreich gelöscht.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Fachwahlen zu löschen.")
+	@ApiResponse(responseCode = "404", description = "Der Schüler bzw. der zugehörige Abiturjahrgang wurde nicht gefunden.")
+	@ApiResponse(responseCode = "409", description = "Es liegen bereits bewertete Abschnitt vor, so dass die Fachwahlen nicht vollständig entfernt werden können.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteGostSchuelerFachwahlen(@PathParam("schema") final String schema, @PathParam("schuelerid") final long schuelerid,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn).delete(schuelerid),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN);
+	}
+
+
+	/**
 	 * Liest die Leistungsdaten in Bezug auf die gymnasiale Oberstufe des Schülers mit der angegebene ID aus der Datenbank und liefert diese zurück.
 	 * Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Leistungsdaten besitzt.
 	 *
