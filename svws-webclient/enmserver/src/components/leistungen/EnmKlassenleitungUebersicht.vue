@@ -43,12 +43,12 @@
 					</td>
 					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('FS') ?? true">
 						<svws-ui-input-number @focusin="tabToUnselectedSchueler(schueler, 0)" :model-value="schueler.lernabschnitt.fehlstundenGesamt" headless hide-stepper min="0" max="999"
-							@change="fehlstundenGesamt => doPatchLernabschnitt({ fehlstundenGesamt, id: schueler.lernabschnitt.id })"
+							@change="fehlstundenGesamt => doPatchLernabschnitt(schueler.lernabschnitt, { fehlstundenGesamt, id: schueler.lernabschnitt.id })"
 							:class="{ 'contentFocusField': manager.auswahlSchueler?.id === schueler.id }" />
 					</td>
 					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('FSU') ?? true">
 						<svws-ui-input-number :model-value="schueler.lernabschnitt.fehlstundenGesamtUnentschuldigt" headless hide-stepper min="0" :max="schueler.lernabschnitt.fehlstundenGesamt"
-							@change="fehlstundenGesamtUnentschuldigt => doPatchLernabschnitt({ fehlstundenGesamtUnentschuldigt, id: schueler.lernabschnitt.id })" />
+							@change="fehlstundenGesamtUnentschuldigt => doPatchLernabschnitt(schueler.lernabschnitt, { fehlstundenGesamtUnentschuldigt, id: schueler.lernabschnitt.id })" />
 					</td>
 					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('ASV') ?? true" @click="emitBemerkung('ASV')" @keydown.enter.prevent="focusFloskelEditor('ASV')"
 						:class="{ 'bg-ui-selected-secondary text-ui-onselected-secondary': floskelEditorVisible && (manager.auswahlSchueler?.id === schueler.id) && (hauptgruppe === 'ASV') }">
@@ -134,8 +134,10 @@
 		await props.setFloskelEditorVisible(true).then(() => (document.getElementsByClassName("floskel-input")[0] as HTMLElement).focus());
 	}
 
-	async function doPatchLernabschnitt(patch: Partial<ENMLernabschnitt>) {
-		await props.patchLernabschnitt(patch);
+	async function doPatchLernabschnitt(lernabschnitt: ENMLernabschnitt, patch: Partial<ENMLernabschnitt>) {
+		const success = await props.patchLernabschnitt(patch);
+		if (success)
+			Object.assign(lernabschnitt, patch);
 		props.manager.update();
 	}
 
