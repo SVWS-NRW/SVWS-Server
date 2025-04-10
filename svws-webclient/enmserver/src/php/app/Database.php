@@ -1089,8 +1089,13 @@
 				$daten->teilleistungen = [];
 				// Schreibe das gepatchte JSON in die Datenbank zurück
 				$updatedData = json_encode($daten, JSON_UNESCAPED_SLASHES);
-				$update .= "daten='$updatedData' WHERE id=$patch->id";
-				$this->updateSet('Leistungsdaten', $update);
+
+				$this->beginTransaction();
+				$stmt = $this->prepareStatement("UPDATE Leistungsdaten SET $update daten=:daten WHERE id=:id");
+				$this->bindStatementValue($stmt, ":daten", $updatedData, PDO::PARAM_STR);
+				$this->bindStatementValue($stmt, ":id", $patch->id, PDO::PARAM_INT);
+				$this->executeStatement($stmt);
+				$this->commitTransaction();
 			}
 		}
 
@@ -1118,13 +1123,18 @@
 				$daten->lernabschnitt->tsFehlstundenGesamtUnentschuldigt = $ts;
 			}
 			if (strlen($update) > 0) {
-				// Stelle sicher in der Datenbanktabelle nicht Objekte auftauchen die woanders in der Datenbank gespeichert werden
+				// Stelle sicher in der Datenbanktabelle nicht Objekte auftauchen, die woanders in der Datenbank gespeichert werden
 				$daten->ankreuzkompetenzen = [];
 				$daten->leistungsdaten = [];
 				// Schreibe das gepatchte JSON in die Datenbank zurück
 				$updatedData = json_encode($daten, JSON_UNESCAPED_SLASHES);
-				$update .= "daten='$updatedData' WHERE id=$daten->id";
-				$this->updateSet('Schueler', $update);
+
+				$this->beginTransaction();
+				$stmt = $this->prepareStatement("UPDATE Schueler SET $update daten=:daten WHERE id=:id");
+				$this->bindStatementValue($stmt, ":daten", $updatedData, PDO::PARAM_STR);
+				$this->bindStatementValue($stmt, ":id", $daten->id, PDO::PARAM_INT);
+				$this->executeStatement($stmt);
+				$this->commitTransaction();
 			}
 		}
 
@@ -1188,8 +1198,13 @@
 				$daten->leistungsdaten = [];
 				// Schreibe das gepatchte JSON in die Datenbank zurück
 				$updatedData = json_encode($daten, JSON_UNESCAPED_SLASHES);
-				$update .= "daten='$updatedData' WHERE id=$idSchueler";
-				$this->updateSet('Schueler', $update);
+
+				$this->beginTransaction();
+				$stmt = $this->prepareStatement("UPDATE Schueler SET $update daten=:daten WHERE id=:id");
+				$this->bindStatementValue($stmt, ":daten", $updatedData, PDO::PARAM_STR);
+				$this->bindStatementValue($stmt, ":id", $idSchueler, PDO::PARAM_INT);
+				$this->executeStatement($stmt);
+				$this->commitTransaction();
 			}
 		}
 
@@ -1226,8 +1241,13 @@
 			}
 			if (strlen($update) > 0) {
 				$updatedData = json_encode($daten, JSON_UNESCAPED_SLASHES);
-				$update .= "daten='$updatedData' WHERE id=$patch->id";
-				$this->updateSet('Teilleistungen', $update);
+
+				$this->beginTransaction();
+				$stmt = $this->prepareStatement("UPDATE Teilleistungen SET $update daten=:daten WHERE id=:id");
+				$this->bindStatementValue($stmt, ":daten", $updatedData, PDO::PARAM_STR);
+				$this->bindStatementValue($stmt, ":id", $patch->id, PDO::PARAM_INT);
+				$this->executeStatement($stmt);
+				$this->commitTransaction();
 			}
 		}
 
@@ -1244,14 +1264,22 @@
 		public function patchENMSchuelerAnkreuzkompetenzen(string $ts, object $daten, object $patch) {
 			$update = "";
 			if (property_exists($patch, 'stufen') && $this->diffArraySimple($patch->stufen, $daten->stufen) && ($ts > $daten->tsStufe)) {
+				foreach ($patch->stufen as $index=>$stufe)
+					if (!is_bool($stufe))
+						Http::exit500("Fehler beim Ausführen des Patch-Statements. Stufe mit Index ".$index." in der Ankreuzkompetenz ist kein Boolean-Wert. Patch wurde abgebrochen.");
 				$update .= "tsStufe='$ts',";
 				$daten->stufen = $patch->stufen;
 				$daten->tsStufe = $ts;
 			}
 			if (strlen($update) > 0) {
 				$updatedData = json_encode($daten, JSON_UNESCAPED_SLASHES);
-				$update .= "daten='$updatedData' WHERE id=$patch->id";
-				$this->updateSet('Ankreuzkompetenzen', $update);
+
+				$this->beginTransaction();
+				$stmt = $this->prepareStatement("UPDATE Ankreuzkompetenzen SET $update daten=:daten WHERE id=:id");
+				$this->bindStatementValue($stmt, ":daten", $updatedData, PDO::PARAM_STR);
+				$this->bindStatementValue($stmt, ":id", $patch->id, PDO::PARAM_INT);
+				$this->executeStatement($stmt);
+				$this->commitTransaction();
 			}
 		}
 
