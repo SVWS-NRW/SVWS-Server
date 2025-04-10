@@ -938,7 +938,7 @@
 		/**
  		 * Ermittelt die Lehrerdaten aus der Datenbank und gibt bei einem gefundenen Datensatz 'true' zurück,
  		 * andernfalls bei null oder mehreren Datensätzen 'false'.
- 		 * 
+ 		 *
  		 * @return bool true bei genau einem gefundenen Datensatz, false bei keinem oder mehreren
  		 */
 		public function checkENMLehrerByEmail(string $email): bool {
@@ -953,7 +953,7 @@
 			// Wenn genau ein Datensatz gefunden wurde, return true, sonst false
 			return $matchingCount === 1;
 		}
-		
+
 		/**
 		 * Ermittelt die Schülerdaten aus der Datenbank und gibt diese in einem Array zurück.
 		 *
@@ -1105,16 +1105,16 @@
 		 */
 		public function patchENMSchuelerLernabschnitt(string $ts, object $daten, object $patch) {
 			$update = "";
-			if (property_exists($patch->lernabschnitt, 'fehlstundenGesamt') && ($ts > $patch->lernabschnitt->tsFehlstundenGesamt)
-					&& ($patch->lernabschnitt->fehlstundenGesamt !== $daten->lernabschnitt->fehlstundenGesamt)) {
+			if (property_exists($patch, 'fehlstundenGesamt') && ($ts > $daten->lernabschnitt->tsFehlstundenGesamt)
+					&& ($patch->fehlstundenGesamt !== $daten->lernabschnitt->fehlstundenGesamt)) {
 				$update .= "tsFehlstundenGesamt='$ts',";
-				$daten->lernabschnitt->fehlstundenGesamt = $patch->lernabschnitt->fehlstundenGesamt;
+				$daten->lernabschnitt->fehlstundenGesamt = $patch->fehlstundenGesamt;
 				$daten->lernabschnitt->tsFehlstundenGesamt = $ts;
 			}
-			if (property_exists($patch->lernabschnitt, 'fehlstundenGesamtUnentschuldigt') && ($ts > $daten->lernabschnitt->tsFehlstundenGesamtUnentschuldigt)
-					&& ($patch->lernabschnitt->fehlstundenGesamtUnentschuldigt !== $daten->lernabschnitt->fehlstundenGesamtUnentschuldigt)) {
+			if (property_exists($patch, 'fehlstundenGesamtUnentschuldigt') && ($ts > $daten->lernabschnitt->tsFehlstundenGesamtUnentschuldigt)
+					&& ($patch->fehlstundenGesamtUnentschuldigt !== $daten->lernabschnitt->fehlstundenGesamtUnentschuldigt)) {
 				$update .= "tsFehlstundenGesamtUnentschuldigt='$ts',";
-				$daten->lernabschnitt->fehlstundenGesamtUnentschuldigt = $patch->lernabschnitt->fehlstundenGesamtUnentschuldigt;
+				$daten->lernabschnitt->fehlstundenGesamtUnentschuldigt = $patch->fehlstundenGesamtUnentschuldigt;
 				$daten->lernabschnitt->tsFehlstundenGesamtUnentschuldigt = $ts;
 			}
 			if (strlen($update) > 0) {
@@ -1123,7 +1123,7 @@
 				$daten->leistungsdaten = [];
 				// Schreibe das gepatchte JSON in die Datenbank zurück
 				$updatedData = json_encode($daten, JSON_UNESCAPED_SLASHES);
-				$update .= "daten='$updatedData' WHERE id=$patch->id";
+				$update .= "daten='$updatedData' WHERE id=$daten->id";
 				$this->updateSet('Schueler', $update);
 			}
 		}
@@ -1280,9 +1280,9 @@
 
 		/**
 		 * Erstellt ein neues Password-Token. Ein zuvor bestendes Password-Token wird dabei ersetzt.
-		 * 
+		 *
 		 * @param int $lehrerId   Die ID des Lehrers
-		 * @return string $token  Das generierte und gespeicherte Password-Token 
+		 * @return string $token  Das generierte und gespeicherte Password-Token
 		 */
 		public function writeENMLehrerToken(int $lehrerId): string {
 			$token = Config::generateRandomSecret();

@@ -364,7 +364,7 @@
 			$mapKlassen = $this->getMapKlassen($lehrer);
 			if (!array_key_exists($schueler->klasseID, $mapKlassen))
 				Http::exit403Forbidden("Der angemeldete Lehrer ist kein Klassenlehrer der Klasse mit der ID ".$schueler->klasseID.".");
-			$db->patchENMSchuelerLernabschnitt(date('Y-m-d H:i:s.v', time()), $lernabschnitt, $patch);
+			$db->patchENMSchuelerLernabschnitt(date('Y-m-d H:i:s.v', time()), $schueler, $patch);
 		}
 
 		/**
