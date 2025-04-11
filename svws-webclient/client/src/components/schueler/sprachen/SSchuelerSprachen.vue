@@ -266,7 +266,7 @@
 		for (const k of Fach.getListFremdsprachenKuerzelAtomar(schuljahr.value)) {
 			const sprache = Fach.getMapFremdsprachenKuerzelAtomar(schuljahr.value).get(k);
 			const spracheEintrag = sprache?.daten(schuljahr.value) ?? null;
-			if ((spracheEintrag !== null) && !spracheEintrag.istErsatzPflichtFS && spracheEintrag.istHKFS && !spracheEintrag.istAusRegUFach && !pruefungenHKFS.has(k))
+			if ((spracheEintrag !== null) && spracheEintrag.istHKFS && !spracheEintrag.istAusRegUFach && !pruefungenHKFS.has(k))
 				sprachen.push(k);
 		}
 		return sprachen;
@@ -280,7 +280,7 @@
 		for (const k of Fach.getListFremdsprachenKuerzelAtomar(schuljahr.value)) {
 			const sprache = Fach.getMapFremdsprachenKuerzelAtomar(schuljahr.value).get(k);
 			const spracheEintrag = sprache?.daten(schuljahr.value) ?? null;
-			if ((spracheEintrag !== null) && spracheEintrag.istErsatzPflichtFS && spracheEintrag.istHKFS && !spracheEintrag.istAusRegUFach && !pruefungenFeststellung.has(k))
+			if ((spracheEintrag !== null) && spracheEintrag.istHKFS && !spracheEintrag.istAusRegUFach && !pruefungenFeststellung.has(k))
 				sprachen.push(k);
 		}
 		return sprachen;
