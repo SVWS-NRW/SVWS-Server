@@ -4,7 +4,7 @@ import type { CoreTypeData } from "../../../../../../core/src/asd/data/CoreTypeD
 import type { CoreType } from "../../../../../../core/src/asd/types/CoreType";
 import type { List } from "../../../../../../core/src/java/util/List";
 import { BaseSelectManager } from "./BaseSelectManager";
-import { ref } from "vue";
+import { ref, toRaw } from "vue";
 
 /**
  * Spezialisierte Manager-Klasse für die Select-Komponente (`UiSelect.vue`), die einfache CoreTypes als Optionstypen unterstützt.
@@ -129,7 +129,7 @@ export class CoreTypeSelectManager<T extends CoreTypeData, U extends CoreType<T,
 	 * @returns den Text der Option.
 	 */
 	public getSelectionText(option: U): string {
-		const eintrag = this._manager.getEintragBySchuljahrUndWert(this.schuljahr, option);
+		const eintrag = this._manager.getEintragBySchuljahrUndWert(this.schuljahr, toRaw(option));
 		if (eintrag === null)
 			throw new DeveloperNotificationException("Der Eintrag konnte nicht gefunden werden, obwohl die Existenz im Konstruktor bestimmt wurde.");
 		if (typeof this._selectionDisplayText === "function")

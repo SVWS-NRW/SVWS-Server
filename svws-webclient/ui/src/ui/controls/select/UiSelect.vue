@@ -109,7 +109,7 @@
 	import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 	import { useElementBounding, useWindowSize } from '@vueuse/core';
 	import type { BaseSelectManager } from './selectManager/BaseSelectManager';
-	import type { List } from '../../../../../core/src/java/util/List';
+	import type { List } from '../../../../../core/src';
 	import { ArrayList } from '../../../../../core/src';
 	import { SearchSelectFilter } from './filter/SearchSelectFilter';
 
@@ -134,7 +134,7 @@
 
 	// ID zur Eindeutigen Kennzeichnung der Komponente. Wird für die HTML IDs benötigt
 	const instanceId = crypto.randomUUID();
-	const model = defineModel<List<T>>();
+	const model = defineModel<any>();
 
 	// Suchtext für durchsuchbare Listen (searchable = true)
 	const search = ref('');
@@ -234,6 +234,8 @@
 				handleBlur();
 			}
 		});
+
+		props.selectManager.selected = model.value;
 	});
 
 	onBeforeUnmount(() => {
@@ -264,6 +266,13 @@
 			}
 		});
 	});
+
+	watch(
+		() => model.value,
+		(newSelection) => {
+			props.selectManager.selected = newSelection;
+		}
+	)
 
 	/**
 	 * Teilt den Text in Teile auf, die mit der Suchanfrage übereinstimmen. Dies wird dazu verwendet, die übereinstimmenden Teile farblich hervorzuheben.
@@ -359,7 +368,7 @@
 
 		props.selectManager.toggleSelection(option);
 		resetSearch();
-		updateModel();
+		model.value = props.selectManager.selected;
 	};
 
 	/**
@@ -372,7 +381,7 @@
 		closeDropdown();
 		props.selectManager.clearSelection();
 		resetSearch();
-		updateModel();
+		model.value = props.selectManager.selected;
 	}
 
 	/**
@@ -384,14 +393,7 @@
 	function deselect(event: MouseEvent | KeyboardEvent, option: T) {
 		event.stopPropagation();
 		props.selectManager.deselect(option);
-		updateModel();
-	}
-
-	function updateModel() {
-		const tmpList = new ArrayList<T>();
-		for (const i of props.selectManager.selected)
-			tmpList.add(i);
-		model.value = tmpList;
+		model.value = props.selectManager.selected;
 	}
 
 	/**

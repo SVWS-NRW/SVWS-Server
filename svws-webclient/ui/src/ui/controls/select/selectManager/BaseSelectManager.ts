@@ -94,11 +94,20 @@ export abstract class BaseSelectManager<T> {
 	 *
 	 * @throws DeveloperNotificationException   wenn die neue Liste mehrere Optionen enthält, aber nur Single-Selektionen erlaubt sind
 	 */
-	public set selected(value : List<T>) {
-		if (!this._multi.value && value.size() > 1)
+	public set selected(value: any) {
+		const newSelection = new ArrayList<T>();
+		if (value !== undefined && value !== null) {
+			if ((typeof value[Symbol.iterator] === 'function') && (typeof value !== "string"))
+				newSelection.addAll(value);
+			else
+				newSelection.add(value);
+		}
+
+		if (!this._multi.value && newSelection.size() > 1)
 			throw new DeveloperNotificationException("In einer Single-Select-Komponente können nicht mehrere Optionen selektiert sein. "
 				+ "Dem selected Setter wurden jedoch mehrere übergeben.");
-		this._selected.value = value;
+
+		this._selected.value = newSelection;
 		triggerRef(this._selected);
 	}
 
