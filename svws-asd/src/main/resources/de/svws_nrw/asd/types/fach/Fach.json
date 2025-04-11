@@ -1,5 +1,5 @@
 {
-	"version": 7,
+	"version": 8,
 	"daten": [ {
 		"bezeichner": "AB",
 		"idStatistik": "1",
@@ -8071,7 +8071,7 @@
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null}],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": 2022
 		} ]
 	}, {
 		"bezeichner": "YM",
@@ -8441,7 +8441,7 @@
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null}],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": 2022
 		} ]
 	}, {
 		"bezeichner": "ZM",
