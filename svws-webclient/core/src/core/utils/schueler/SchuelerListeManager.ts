@@ -6,8 +6,8 @@ import { SchuelerStatusKatalogEintrag } from '../../../asd/data/schueler/Schuele
 import { HashMap } from '../../../java/util/HashMap';
 import { Schulform } from '../../../asd/types/schule/Schulform';
 import { KlassenUtils } from '../../../core/utils/klassen/KlassenUtils';
-import { SchuelerUtils } from '../../../core/utils/schueler/SchuelerUtils';
 import { ArrayList } from '../../../java/util/ArrayList';
+import { SchuelerUtils } from '../../../core/utils/schueler/SchuelerUtils';
 import { JahrgangsDaten } from '../../../core/data/jahrgang/JahrgangsDaten';
 import { JavaString } from '../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
@@ -21,6 +21,7 @@ import { Schulgliederung } from '../../../asd/types/schule/Schulgliederung';
 import { SchulgliederungKatalogEintrag } from '../../../asd/data/schule/SchulgliederungKatalogEintrag';
 import type { List } from '../../../java/util/List';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
+import { SchuelerTelefon } from '../../../core/data/schueler/SchuelerTelefon';
 import { Pair } from '../../../asd/adt/Pair';
 import { AttributMitAuswahl } from '../../../core/utils/AttributMitAuswahl';
 import { SchuelerStammdaten } from '../../../asd/data/schueler/SchuelerStammdaten';
@@ -135,6 +136,8 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 	 */
 	private _filterNurMitLernabschitt : boolean = true;
 
+	private readonly schuelerTelefonList : List<SchuelerTelefon> = new ArrayList<SchuelerTelefon>();
+
 
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
@@ -230,6 +233,25 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 	public setFilterNurMitLernabschitt(value : boolean) : void {
 		this._filterNurMitLernabschitt = value;
 		this._eventHandlerFilterChanged.run();
+	}
+
+	/**
+	 *Gibt eine Liste mit Schülertelefonen zurück, die in der Auswahl sind und Schüler beinhalten
+	 *
+	 * @return Die Liste von Schülertelefonen, die Schüler haben
+	 */
+	public getSuchuelerTelefone() : List<SchuelerTelefon> {
+		return this.schuelerTelefonList;
+	}
+
+	/**
+	 * Setzt die Schülertelefonliste des ausgewählten Schülers
+	 *
+	 * @param value  Liste mit dem Schülertelefon
+	 */
+	public setSchuelerTelefone(value : List<SchuelerTelefon> | null) : void {
+		this.schuelerTelefonList.clear();
+		this.schuelerTelefonList.addAll(value);
 	}
 
 	/**

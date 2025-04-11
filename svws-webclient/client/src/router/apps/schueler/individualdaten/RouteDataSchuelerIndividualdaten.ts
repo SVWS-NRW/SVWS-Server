@@ -1,5 +1,5 @@
 import { Schulform } from "@core";
-import type { FoerderschwerpunktEintrag, KatalogEintrag, ReligionEintrag, SchulEintrag, SchulformKatalogEintrag } from "@core";
+import type { FoerderschwerpunktEintrag, KatalogEintrag, ReligionEintrag, SchulEintrag, SchulformKatalogEintrag, TelefonArt } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -11,6 +11,7 @@ interface RouteStateDataSchuelerIndividualdaten extends RouteStateInterface {
 	mapHaltestellen: Map<number, KatalogEintrag>;
 	mapReligionen: Map<number, ReligionEintrag>;
 	mapSchulen: Map<string, SchulEintrag>;
+	mapTelefonArten: Map<number, TelefonArt>;
 }
 
 const defaultState = <RouteStateDataSchuelerIndividualdaten> {
@@ -19,6 +20,7 @@ const defaultState = <RouteStateDataSchuelerIndividualdaten> {
 	mapHaltestellen: new Map(),
 	mapReligionen: new Map(),
 	mapSchulen: new Map<string, SchulEintrag>(),
+	mapTelefonArten: new Map(),
 };
 
 
@@ -48,6 +50,9 @@ export class RouteDataSchuelerIndividualdaten extends RouteData<RouteStateDataSc
 		return this._state.value.mapSchulen;
 	}
 
+	get mapTelefonArten(): Map<number, TelefonArt> {
+		return this._state.value.mapTelefonArten;
+	}
 
 	public async ladeListe() {
 		// Lade den Katalog der Fahrschülerarten
@@ -70,6 +75,11 @@ export class RouteDataSchuelerIndividualdaten extends RouteData<RouteStateDataSc
 		const mapReligionen = new Map();
 		for (const r of religionen)
 			mapReligionen.set(r.id, r);
+		// Lade den Katalog der TelefonArten
+		const telefonArten = await api.server.getTelefonarten(api.schema);
+		const mapTelefonArten = new Map();
+		for (const ta of telefonArten)
+			mapTelefonArten.set(ta.id, ta);
 		// Ermittle den Katalog der Schulen, welche ein Kürzel haben und als Stammschulen für Schüler in Frage kommen
 		const schulen = await api.server.getSchulen(api.schema);
 		const mapSchulen = new Map<string, SchulEintrag>();
@@ -81,8 +91,7 @@ export class RouteDataSchuelerIndividualdaten extends RouteData<RouteStateDataSc
 			if (sf === api.schulform)
 				mapSchulen.set(schule.schulnummerStatistik, schule);
 		}
-		this.setPatchedDefaultState({ mapFahrschuelerarten, mapFoerderschwerpunkte, mapHaltestellen, mapReligionen, mapSchulen })
+		this.setPatchedDefaultState({ mapFahrschuelerarten, mapFoerderschwerpunkte, mapHaltestellen, mapReligionen, mapSchulen, mapTelefonArten })
 	}
 
 }
-

@@ -6,11 +6,11 @@
 				<div>
 					<span v-if="alleTelefonnummernLeer">Alle ausgewählten Telefonarten sind bereit zum Löschen.</span>
 					<div v-if="!alleTelefonnummernLeer">
-						<span class="text-ui-danger"> Diese Telefonarten ist noch Schülern zugeordnet. Wollen Sie es trotzdem löschen?  <br> </span>
+						<span class="text-ui-danger"> Diese Telefonarten ist noch Schülern zugeordnet und kann nicht gelöscht werden.  <br> </span>
 					</div>
 				</div>
 				<template #buttonFooterLeft>
-					<svws-ui-button :disabled="loading"
+					<svws-ui-button :disabled="!alleTelefonnummernLeer || loading"
 						title="Löschen" @click="entferneTelefonArten" :is-loading="loading" class="mt-4">
 						<svws-ui-spinner v-if="loading" spinning />
 						<span v-else class="icon i-ri-play-line" />
