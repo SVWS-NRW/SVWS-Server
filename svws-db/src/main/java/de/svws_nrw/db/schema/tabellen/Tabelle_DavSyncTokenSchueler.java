@@ -563,7 +563,7 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
                             SELECT DISTINCT Schueler_ID FROM SchuelerLernabschnittsdaten WHERE Klassen_ID IN (SELECT ID FROM Klassen WHERE Jahrgang_ID = OLD.ID OR Jahrgang_ID = NEW.ID)
                             UNION
                             SELECT DISTINCT Schueler_ID FROM Kurs_Schueler WHERE Kurs_ID IN (SELECT ID FROM Kurse WHERE Jahrgang_ID = OLD.ID OR Jahrgang_ID = NEW.ID)
-                        ) a
+                        ) a WHERE Schueler_ID IS NOT NULL
                     ) DO
                         SET token := (SELECT SyncToken FROM DavSyncTokenSchueler WHERE ID = sid.Schueler_ID);
                         IF token IS NULL THEN
@@ -591,7 +591,7 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
                         SELECT DISTINCT Schueler_ID FROM SchuelerLernabschnittsdaten WHERE Klassen_ID IN (SELECT ID FROM Klassen WHERE Jahrgang_ID = NEW.ID)
                         UNION
                         SELECT DISTINCT Schueler_ID FROM Kurs_Schueler WHERE Kurs_ID IN (SELECT ID FROM Kurse WHERE Jahrgang_ID = NEW.ID)
-                    ) a
+                    ) a WHERE Schueler_ID IS NOT NULL
                 ) DO
                     SET token := (SELECT SyncToken FROM DavSyncTokenSchueler WHERE ID = sid.Schueler_ID);
                     IF token IS NULL THEN
@@ -614,9 +614,11 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
             BEGIN
                 DECLARE token DATETIME;
                 FOR sid IN (
-                    SELECT DISTINCT Schueler_ID FROM SchuelerLernabschnittsdaten WHERE Klassen_ID IN (SELECT ID FROM Klassen WHERE Jahrgang_ID = OLD.ID)
-                    UNION
-                    SELECT DISTINCT Schueler_ID FROM Kurs_Schueler WHERE Kurs_ID IN (SELECT ID FROM Kurse WHERE Jahrgang_ID = OLD.ID)
+                    SELECT DISTINCT Schueler_ID FROM (
+                        SELECT DISTINCT Schueler_ID FROM SchuelerLernabschnittsdaten WHERE Klassen_ID IN (SELECT ID FROM Klassen WHERE Jahrgang_ID = OLD.ID)
+                        UNION
+                        SELECT DISTINCT Schueler_ID FROM Kurs_Schueler WHERE Kurs_ID IN (SELECT ID FROM Kurse WHERE Jahrgang_ID = OLD.ID)
+                    ) a WHERE Schueler_ID IS NOT NULL
                 ) DO
                     SET token := (SELECT SyncToken FROM DavSyncTokenSchueler WHERE ID = sid.Schueler_ID);
                     IF token IS NULL THEN
@@ -629,11 +631,6 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
             """,
 			Schema.tab_EigeneSchule_Jahrgaenge, Schema.tab_Kurse, Schema.tab_Kurs_Schueler, Schema.tab_Klassen,
 			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_DavSyncTokenSchueler);
-
-
-	// TODO weitere Trigger für MariaDB
-
-	// TODO Trigger für SQLite
 
 
 	/**
