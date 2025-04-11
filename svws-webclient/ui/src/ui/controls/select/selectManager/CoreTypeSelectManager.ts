@@ -56,7 +56,6 @@ export class CoreTypeSelectManager<T extends CoreTypeData, U extends CoreType<T,
 		this.schulform = schulform;
 		this.optionDisplayText = optionDisplayText;
 		this.seletcionDisplayText = selectionDisplayText;
-		this.filtered = this._options.value;
 	}
 
 	/**

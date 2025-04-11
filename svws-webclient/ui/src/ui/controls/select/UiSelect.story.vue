@@ -9,6 +9,8 @@
 						:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" />
 					<ui-select label="CoreTypeSelectManager" :select-manager="sCoreTypeSelectManager()" :searchable="state.searchable" :disabled="state.disabled"
 						:statistics="state.statistics" :removable="state.removable" />
+					<ui-select label="ObjectSelectManager" :select-manager="sObjectSelectManager()" :searchable="state.searchable"
+						:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<template #controls>
@@ -40,6 +42,8 @@
 						:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" :min-options="state.minOptions"
 						:max-options="state.maxOptions" />
 					<ui-select label="CoreTypeSelectManager" :select-manager="mCoreTypeSelectManager()" :searchable="state.searchable" :disabled="state.disabled"
+						:statistics="state.statistics" :removable="state.removable" :min-options="state.minOptions" :max-options="state.maxOptions" />
+					<ui-select label="ObjectSelectManager" :select-manager="mObjectSelectManager()" :searchable="state.searchable" :disabled="state.disabled"
 						:statistics="state.statistics" :removable="state.removable" :min-options="state.minOptions" :max-options="state.maxOptions" />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
@@ -124,6 +128,7 @@
 	import { CoreTypeSelectManager } from "./selectManager/CoreTypeSelectManager";
 	import { FachSelectFilter as FachSelectFilter } from "./filter/FachSelectFilter";
 	import { ArrayList, Fach, Fachgruppe, LehrerRechtsverhaeltnis, Schulform } from "../../../../../core/src";
+	import { ObjectSelectManager } from "./selectManager/ObjectSelectManager";
 
 
 
@@ -162,6 +167,7 @@
 		"Kirsche", "Kiwi", "Lemon", "Litschi", "Melone", "Orange", "Papaya", "Pfirsich", "Pflaume", "Rote Johannisbeere", "Zitronenmelisse",
 	];
 	const numberItems: number[] = [ 1990, 1991, 1992, 1993, 1994, 2000, 2001, 2002, 2003, 2004, 2010, 2011, 2012, 2013, 2014, 2020, 2021, 2022, 2023, 2024 ];
+	const carItems: { marke: string, color: string }[] = [{ marke: "BMW", color: "blue" }, { marke: "Audi", color: "red" }];
 
 
 
@@ -170,6 +176,8 @@
 	const sStringSelectManager = () => new SimpleSelectManager(false, stringItems);
 	const sNumberSelectManager = () => new SimpleSelectManager(false, numberItems);
 	const sCoreTypeSelectManager = () => new CoreTypeSelectManager(false, LehrerRechtsverhaeltnis.class, 2018, Schulform.GY, 'text', 'kuerzelText');
+	const sObjectSelectManager = () => new ObjectSelectManager(false, carItems, (option : { marke: string, color: string }) => `${option.marke} - ${option.color}`,
+		(option : { marke: string, color: string }) => option.marke);
 	const sFachSelectManager = () => {
 		const manager = new CoreTypeSelectManager(false, Fach.class, 2020, Schulform.GY, 'text', 'kuerzelText');
 		manager.addFilter(new FachSelectFilter("fachgruppe1", filter.value, 2020));
@@ -180,5 +188,7 @@
 	const mStringSelectManager = () => new SimpleSelectManager(true, stringItems);
 	const mNumberSelectManager = () => new SimpleSelectManager(true, numberItems);
 	const mCoreTypeSelectManager = () => new CoreTypeSelectManager(true, LehrerRechtsverhaeltnis.class, 2018, Schulform.GY, 'text', 'kuerzelText');
+	const mObjectSelectManager = () => new ObjectSelectManager(true, carItems, (option : { marke: string, color: string }) => `${option.marke} - ${option.color}`,
+		(option : { marke: string, color: string }) => option.marke);
 
 </script>

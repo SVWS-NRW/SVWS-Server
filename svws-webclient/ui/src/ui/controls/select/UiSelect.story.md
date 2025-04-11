@@ -8,6 +8,7 @@ UiSelect ist eien Combobox, die zur Auswahl von vorgegebenen Option verwendet we
 - [Tastaturbedienung](#tastaturbedienung)
 - [SelectManager](#selectmanager)
   - [SimpleSelectManager](#simpleselectmanager)
+  - [ObjectSelectManager](#objectselectmanager)
   - [CoreTypeSelectManager](#coretypeselectmanager)
 - [Filter](#filter)
   - [SearchSelectFilter](#searchselectfilter)
@@ -122,16 +123,26 @@ SelectManager leiten alle von der abstrakten Klasse `BaseSelectManager` ab. Es s
 
 **Konstruktor**
 - **multi (boolean)**: Gibt an, ob es sich um eine Multiselektion handelt
-- **list (Iterable)**: Alle Optionen, die das Dropdown beinhaltet
-- **selected (Iterable, optional)**: Definiert die bereits selektierten Einträge
-- 
+- **options (Iterable<T>)**: Alle Optionen, die das Dropdown beinhaltet
+- **selected (Iterable<T>, optional)**: Definiert die bereits selektierten Einträge
+
 ### SimpleSelectManager
-Dieser Manager kann mit einfachen Optionen-Datentypen bestehend aus Numbers oder Strings umgehen. Er kann die Einträge der Optionen nach Suchtexten filtern. 
+Dieser Manager kann mit einfachen Optionen-Datentypen bestehend aus Numbers oder Strings umgehen.
 
 **Konstruktor**
 - **multi (boolean)**: Gibt an, ob es sich um eine Multiselektion handelt
-- **list (Iterable)**: Alle Optionen, die das Dropdown beinhaltet
-- **selected (Iterable, optional)**: Definiert die bereits selektierten Einträge
+- **options (Iterable<string | number>)**: Alle Optionen, die das Dropdown beinhaltet
+- **selected (Iterable<string | number>, optional)**: Definiert die bereits selektierten Einträge
+
+### ObjectSelectManager
+Dieser Manager ist ein einfacher, allgemeiner Manager, der mit allen Objekten umgehen kann. Dafür muss angegeben werden, wie die Texter der Selektionen und die Texte der Optionen generiert werden sollen.
+
+**Konstruktor**
+- **multi (boolean)**: Gibt an, ob es sich um eine Multiselektion handelt
+- **options (Iterable<any>)**: Alle Optionen, die das Dropdown beinhaltet
+- **selectionDisplayText ((option: any) => string)**: Eine Funktion, die den Text für die Selektion generiert zum Beispiel: ``(option) => `${option.id}: ${option.text}` ``
+- **optionDisplayText ((option: any) => string)**: Eine Funktion, die den Text für die Optionen im Dropdown generiert zum Beispiel: ``(option) => `${option.id}: ${option.text}` ``
+- **selected (Iterable<any>, optional)**: Definiert die bereits selektierten Einträge
 
 ### CoreTypeSelectManager
 Dieser Manager akzeptiert einfach CoreTypes als Optionen und definiert, wie diese in der Liste angezeigt werden. Er filtert die Einträge nach Schuljahr und Schulform und kann zusätzlich noch nach Suchtexten filtern
@@ -155,7 +166,7 @@ Ein spezieller Filter, der für die Filterung nach Suchbegriffen verwendet wird.
 **Konstruktor**
 - **key (string)**: Ein eindeutiger Key zur Identifikation des Filters. Der Key muss nur innerhalb des SelectManagers eindeutig sein.
 - **search (string)**: Der Suchbegriff, nach dem gefiltert werden soll. Es werden nur exakte Übereinstimmungen gefiltert (Groß- und Kleinschreibung irrelevant). Wildcards sind nicht erlaubt.
-- **getText ((option: T) => string))**: Eine Funktion, die verwendet wird, um den Text der Optionen zu generieren. Dieser Text wird zum Vergleich mit dem Suchbegriff verwendet
+- **getText ((option: T) => string)**: Eine Funktion, die verwendet wird, um den Text der Optionen zu generieren. Dieser Text wird zum Vergleich mit dem Suchbegriff verwendet
 
 ### FachSelectFilter
 Ein spezieller Filter, der Optionen vom Typ `Fach` nach `Fachgruppen` filtert. Es können mehrere Fachgruppen angegeben werden. Der Filter gibt dann alle Fächer zurück, die mit min. einer Fachgruppe übereinstimmen.

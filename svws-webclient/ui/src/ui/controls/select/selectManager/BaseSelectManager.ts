@@ -41,7 +41,7 @@ export abstract class BaseSelectManager<T> {
 	 * @param options    die Liste aller Optionen der Komponente (ungefiltert)
 	 * @param selected   optional. Die Liste der aktuell selektierten Optionen. Bei einer Singe-Select-Komponente darf maximal ein Objekt in dieser Liste sein.
 	 */
-	public constructor(multi: boolean, options: Iterable<T>, selected?: Iterable<T>) {
+	protected constructor(multi: boolean, options: Iterable<T>, selected?: Iterable<T>) {
 		this.multi = multi;
 
 		const optionsTmp = new ArrayList<T>();
@@ -58,6 +58,7 @@ export abstract class BaseSelectManager<T> {
 					+ "Dem Konstruktor wurden jedoch mehrere übergeben.");
 			this.selected = selectedTmp;
 		}
+		this.updateFiltered();
 	}
 
 	/**
@@ -188,6 +189,8 @@ export abstract class BaseSelectManager<T> {
 	 */
 	private updateFiltered() {
 		let result: List<T> = new ArrayList();
+		if (this._filterMap.size === 0)
+			result = this.options;
 
 		for (const filteredOptions of this._filterMap.values())
 			if (result.isEmpty())
