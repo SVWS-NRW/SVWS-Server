@@ -499,3 +499,43 @@ describe("Passwort Management durch create_pwt", () => {
 		expect(responsePost.status).toBe(429);
 	});
 })
+
+describe("Test Lernabschnitte", () =>{
+	test("Post Lernabschnitte", async () => {
+		const response = await apiServiceAuth.get(`/api/daten`);
+		expect(response.status).toBe(200);
+		const _data = await parse(await response.blob());
+
+		const schuelerID = 3029
+
+		const schueler = _data.schueler.elementData.find((s: ENMSchueler) => {
+			return s.id === schuelerID;
+		})
+
+		const lernabschnittID = 12452
+		expect(schueler.lernabschnitt.id).toBe(lernabschnittID)
+
+		const bodyData = {
+			id: lernabschnittID,
+			fehlstundenGesamt: 1337
+
+		}
+
+		const responseOfPost = await apiServiceAuth.post(`/api/lernabschnitt`, {
+			body: JSON.stringify(bodyData)
+		});
+		console.log(await responseOfPost.text())
+		expect(responseOfPost.status).toBe(200)
+
+		const responseAfterPost = await apiServiceAuth.get(`/api/daten`);
+		expect(responseAfterPost.status).toBe(200);
+		const _dataAfterPost = await parse(await responseAfterPost.blob());
+
+		const schuelerAfterPost = _dataAfterPost.schueler.elementData.find((s: ENMSchueler) => {
+			return s.id === schuelerID;
+		})
+
+		expect(schuelerAfterPost.lernabschnitt.fehlstundenGesamt).toBe(1337)
+
+	});
+});
