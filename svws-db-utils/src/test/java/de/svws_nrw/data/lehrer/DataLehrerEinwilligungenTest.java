@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
-import de.svws_nrw.core.data.schule.LehrerEinwilligung;
+import de.svws_nrw.core.data.lehrer.LehrerEinwilligung;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerDatenschutz;
 import de.svws_nrw.db.utils.ApiOperationException;

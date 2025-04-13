@@ -881,12 +881,14 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 			final String kuerzelVorgaenger = ((schulform != Schulform.WB) && (schuljahresabschnitt.abschnitt == 2))
 					? klassenDaten.kuerzel : klassenDaten.kuerzelVorgaengerklasse;
 			klassenDaten.idVorgaengerklasse = Optional.ofNullable(klassenVorher.get(kuerzelVorgaenger)).map(e -> e.ID).orElse(null);
+			klassenDaten.kuerzelVorgaengerklasse = kuerzelVorgaenger;
 		}
 
 		if (klassenDaten.kuerzelFolgeklasse != null) {
 			final String kuerzelNachfolger = ((schulform != Schulform.WB) && (schuljahresabschnitt.abschnitt == 1))
 					? klassenDaten.kuerzel : klassenDaten.kuerzelFolgeklasse;
 			klassenDaten.idFolgeklasse = Optional.ofNullable(klassenNachher.get(kuerzelNachfolger)).map(e -> e.ID).orElse(null);
+			klassenDaten.kuerzelFolgeklasse = kuerzelNachfolger;
 		}
 
 		if (attachSchueler) {

@@ -26,7 +26,7 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 
 
 	/** Die Route für Gruppenprozesse */
-	private routeGruppenprozesse: RouteNode<any,any>;
+	private routeGruppenprozesse: RouteNode<any,any> | undefined;
 
 	/** Die Route für das Hinzufügen */
 	private routeHinzufuegen: RouteNode<any,any>;
@@ -39,7 +39,7 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	 *
 	 * @param defaultState   der Default-State
 	 */
-	protected constructor(defaultState : RouteState, routeGruppenprozesse: RouteNode<any,any>, routeHinzufuegen: RouteNode<any,any>) {
+	protected constructor(defaultState : RouteState, routeGruppenprozesse: RouteNode<any,any> | undefined, routeHinzufuegen: RouteNode<any,any>) {
 		super(defaultState);
 		this.routeGruppenprozesse = routeGruppenprozesse;
 		this.routeHinzufuegen = routeHinzufuegen;
@@ -296,6 +296,7 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	 * Interne Hilfsmethode: Setzt den View-Type auf DEFAULT und entweder diesem Knoten oder die Default-View
 	 */
 	private setDefaults() {
+		this.manager.liste.auswahlClear();
 		this.activeViewType = ViewType.DEFAULT
 		this._state.value.view = (this._state.value.view?.name === this.view.name) ? this.view : this.defaultView;
 		this.commit();
@@ -311,10 +312,10 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 		const params = {};
 		if ((id !== null) && (id !== undefined) && this.manager.liste.has(id)) {
 			this.addID(params, id);
-			const route = ((this.view !== this.routeHinzufuegen) && (this.view !== this.routeGruppenprozesse))
+			const route = (this.activeViewType !== ViewType.HINZUFUEGEN) && (this.activeViewType !== ViewType.GRUPPENPROZESSE)
 				? this.view.getRoute(params) : this.defaultView.getRoute(params);
 			const result = await RouteManager.doRoute(route);
-			if (result === RoutingStatus.STOPPED_ROUTING_IS_ACTIVE){
+			if (result === RoutingStatus.STOPPED_ROUTING_IS_ACTIVE) {
 				const eintrag = this.getEintragOrDefault(id);
 				await this.setDaten(eintrag);
 			}
@@ -346,17 +347,26 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	 * @param navigate   gibt an, ob ein Routing durchgeführt werden soll oder nur die View im State gesetzt werden soll
 	 */
 	gotoGruppenprozessView = async (navigate: boolean) => {
-		if ((this.activeViewType === ViewType.GRUPPENPROZESSE) || (this._state.value.view === this.routeGruppenprozesse)) {
+		if (this.activeViewType === ViewType.GRUPPENPROZESSE) {
 			this.commit();
 			return;
 		}
 
 		this.activeViewType = ViewType.GRUPPENPROZESSE;
 
-		if (navigate)
-			await RouteManager.doRoute(this.routeGruppenprozesse.getRoute());
+		if (navigate) {
+			// TODO: Sobald alle Routen auf die neue Gruppenprozesslogik umgestellt wurden kann dieses If weg!
+			if (this._defaultState.gruppenprozesseView !== undefined) {
+				await RouteManager.doRoute(this.defaultGruppenprozesseView.getRoute());
+				this._state.value.view = (this._state.value.view?.name === this.view.name) ? this.view : this.defaultGruppenprozesseView;
+			} else if (this.routeGruppenprozesse !== undefined) {
+				await RouteManager.doRoute(this.routeGruppenprozesse.getRoute());
+				this._state.value.view = this.routeGruppenprozesse
+			} else {
+				throw new DeveloperNotificationException('Es wurde keine Standard Route für Gruppenprozesse festgelegt!');
+			}
+		}
 
-		this._state.value.view = this.routeGruppenprozesse;
 		this.manager.setDaten(null);
 		this.commit();
 	}

@@ -36,7 +36,10 @@
 
 				<template v-else-if="activeViewType === ViewType.GRUPPENPROZESSE">
 					<div class="svws-headline-wrapper">
-						<h2 class="svws-headline">Gruppenprozesse</h2>
+						<div class="flex flex-row gap-3">
+							<h2 class="svws-headline">Mehrfachauswahl</h2>
+							<svws-ui-button size="normal" type="danger" @click="() => gotoDefaultView(manager().getVorherigeAuswahl()?.id)">Auswahl aufheben</svws-ui-button>
+						</div>
 						<span class="svws-subline">{{ schuelerSubline }}</span>
 					</div>
 				</template>

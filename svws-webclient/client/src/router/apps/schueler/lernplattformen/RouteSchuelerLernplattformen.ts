@@ -16,7 +16,7 @@ const SSchuelerLernplattformen = () => import("~/components/schueler/lernplattfo
 export class RouteSchuelerLernplattformen extends RouteNode<RouteDataSchuelerLernplattformen, RouteSchueler> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler.lernplattformen", "lernplattformen", SSchuelerLernplattformen, new RouteDataSchuelerLernplattformen());
+		super(Schulform.values(), [ BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN ], "schueler.lernplattformen", "lernplattformen", SSchuelerLernplattformen, new RouteDataSchuelerLernplattformen());
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Lernplattformen";

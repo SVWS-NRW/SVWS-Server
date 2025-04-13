@@ -170,7 +170,6 @@ Schueler;ID;Versetzung;S;;;StatistikKrz;SELECT LA.VersetzungKrz FROM SchuelerLer
 Schueler;ID;bes. Merkmal;S;;;Kurztext;select SM1.Kurztext from SchuelerMerkmale SM1 where SM1.Schueler_ID=% order by SM1.DatumVon desc;ALLE
 Schueler;IDExt;Externe ID-Nummer;S;;;;;ALLE
 Schueler;JahrZuzug;Zuzugsjahr;I;;;;;ALLE
-Schueler;ID;Schulbesuchsjahre;I;;;Schulbesuchsjahre;;ALLE
 Schueler;Kindergarten_ID;Kindergarten;S;;;Bezeichnung;SELECT Bezeichnung FROM K_Kindergarten WHERE ID=%;ALLE
 Schueler;LSEntlassart;Höchster allg. Abschluss;S;;;;;ALLE
 Schueler;LSEntlassart;Letzte Schule: Abschluss;S;;;;;ALLE

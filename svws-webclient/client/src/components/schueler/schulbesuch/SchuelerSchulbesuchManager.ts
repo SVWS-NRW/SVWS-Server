@@ -1,6 +1,6 @@
 import { Einschulungsart, Herkunftsarten, Jahrgaenge, PrimarstufeSchuleingangsphaseBesuchsjahre, Schulform, Schulgliederung, Uebergangsempfehlung,
 	SchuelerSchulbesuchsdaten, SchuelerListeEintrag } from "@core";
-import type { KatalogEntlassgrund, Merkmal, SchulEintrag } from "@core";
+import type { KatalogEntlassgrund, Merkmal, SchulEintrag, SchuelerSchulbesuchSchule, SchuelerSchulbesuchMerkmal } from "@core";
 import type { Schuljahresabschnitt, List } from "@core";
 import { StateManager } from "~/router/StateManager";
 
@@ -119,15 +119,21 @@ export class SchuelerSchulbesuchManager extends StateManager<ManagerStateDataSch
 		return Herkunftsarten.getByID(artID) || undefined;
 	}
 
-	/** Gibt die vorherige AllgHerkunft des ausgewählten Schülers zurück */
-	public getVorigeAllgHerkunft() {
-		if (this.daten.vorigeAllgHerkunft === null)
-			return "";
-		const value = Schulform.data().getWertByKuerzel(this.daten.vorigeAllgHerkunft);
+
+	/** Gibt die vorherige AllgHerkunft des ausgewählten Schülers zurück. Diese ist abhängig von der ausgewählten Schule */
+	public getVorigeAllgHerkunft() : string | null {
+		const value = this.getVorigeSchulform();
 		if (value === null)
-			return "";
+			return null;
 		const entry = Schulform.data().getEintragBySchuljahrUndWert(this.schuljahr, value);
-		return (entry !== null) ? entry.text : "";
+		return (entry !== null) ? entry.text : null;
+	}
+
+	/** Gibt eine Liste der Jahrgaenge zurück, die in der gegebenen Schulform möglich sind */
+	public getJahrgaengeBySchulform(schulform : Schulform | null) : List<Jahrgaenge> {
+		if (schulform === null)
+			return Jahrgaenge.data().getWerte();
+		return Jahrgaenge.data().getListBySchuljahrAndSchulform(this.schuljahr, schulform)
 	}
 
 	/** Gibt die Herkunftsarten der vorherigen Schulform des ausgewählten Schülers zurück */
@@ -137,14 +143,11 @@ export class SchuelerSchulbesuchManager extends StateManager<ManagerStateDataSch
 	}
 
 	/** Gibt die vorherige Schulform des ausgewählten Schülers zurück */
-	public getVorigeSchulform() :Schulform | undefined {
-		const vorigeAllgHerkunft = this.daten.vorigeAllgHerkunft;
-		if (vorigeAllgHerkunft === null)
-			return undefined;
-		const sgl = Schulgliederung.data().getWertByKuerzel(vorigeAllgHerkunft);
-		if (sgl !== null)
-			return Schulform.BK;
-		return Schulform.data().getWertByKuerzel(vorigeAllgHerkunft) || undefined;
+	public getVorigeSchulform() :Schulform | null {
+		const schule = this.getVorherigeSchule();
+		if (schule === undefined || schule.idSchulform === null)
+			return null;
+		return Schulform.data().getWertByID(schule.idSchulform);
 	}
 
 	/** Gibt den Entlassjahrgang des ausgewählten Schülers zurück */
@@ -212,7 +215,69 @@ export class SchuelerSchulbesuchManager extends StateManager<ManagerStateDataSch
 		void this.doPatch({ [field]: v?.daten(this.schuljahr)?.kuerzel ?? null });
 	}
 
+	/** Eintrag zu den bisher besuchten Schulen hinzufügen */
+	public addSchuelerSchulbesuchSchule(s: SchuelerSchulbesuchSchule) {
+		this.daten.alleSchulen.add(s);
+	}
+
+	/** Eintrag der bisher besuchten Schulen löschen */
+	public deleteBisherigeSchuleById(id: number) {
+		const index = this.getIndexBisherigeSchuleById(id);
+		if (index !== undefined)
+			this.daten.alleSchulen.removeElementAt(index);
+	}
+
+	/** Eintrag der bisher besuchten Schulen patchen */
+	public patchBisherigeSchuleById(id: number, data: Partial<SchuelerSchulbesuchSchule>) {
+		const index = this.getIndexBisherigeSchuleById(id);
+		if (index === undefined)
+			return;
+		const schule = this.daten.alleSchulen.get(index);
+		Object.assign(schule, data);
+	}
+
+	/** Eintrag zu den Merkmalen hinzufügen */
+	public addSchuelerSchulbesuchMerkmal(m : SchuelerSchulbesuchMerkmal) {
+		this.daten.merkmale.add(m);
+	}
+
+	/** Eintrag der Merkmale patchen */
+	public patchSchuelerSchulbesuchMerkmalById(id: number, data: Partial<SchuelerSchulbesuchMerkmal>) {
+		const index = this.getIndexMerkmalById(id);
+		if (index === undefined)
+			return;
+		const merkmal = this.daten.merkmale.get(index);
+		Object.assign(merkmal, data);
+	}
+
+	/** Eintrag der Merkmale löschen */
+	public deleteSchuelerSchulbesuchMerkmal(id: number) {
+		const index = this.getIndexMerkmalById(id);
+		if (index !== undefined)
+			this.daten.merkmale.removeElementAt(index);
+	}
+
 	// --- util ---
+
+	private getIndexBisherigeSchuleById(id: number) : number | undefined {
+		let index = 0;
+		for (const s of this.daten.alleSchulen) {
+			if (s.id === id)
+				return index;
+			index++;
+		}
+		return;
+	}
+
+	private getIndexMerkmalById(id: number) : number | undefined {
+		let index = 0;
+		for (const s of this.daten.merkmale) {
+			if (s.id === id)
+				return index;
+			index++;
+		}
+		return;
+	}
 
 	private calcSchuljahr(): number {
 		const abschnitt = this._schuljahresabschnitteById.get(this._state.value.auswahl.idSchuljahresabschnitt);

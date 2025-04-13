@@ -47,8 +47,8 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public final class DataGostJahrgangsliste extends DataManager<Integer> {
 
-	/** Die ID des Schuljahresabschnitts, auf den sich die Jahrgangsinformationen bei den Abiturjahrgängen beziehen */
-	private final long idSchuljahresabschnitt;
+	/** Der Schuljahresabschnitts, auf den sich die Jahrgangsinformationen bei den Abiturjahrgängen beziehen */
+	private final Schuljahresabschnitt schuljahresabschnitt;
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO
@@ -56,10 +56,14 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 	 *
 	 * @param conn                     die Datenbank-Verbindung für den Datenbankzugriff
 	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnittes, auf den sich die Jahrgangsinformationen bei den Abiturjahrgängen beziehen
+	 *
+	 * @throws ApiOperationException   falls die ID des Schuljahresabschnittes ungültig ist
 	 */
-	public DataGostJahrgangsliste(final DBEntityManager conn, final long idSchuljahresabschnitt) {
+	public DataGostJahrgangsliste(final DBEntityManager conn, final long idSchuljahresabschnitt) throws ApiOperationException {
 		super(conn);
-		this.idSchuljahresabschnitt = idSchuljahresabschnitt;
+		this.schuljahresabschnitt = conn.getUser().schuleGetAbschnittById(idSchuljahresabschnitt);
+		if (this.schuljahresabschnitt == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Die ID %d für den Schuljahresabschnitt ist nicht gültig.");
 	}
 
 
@@ -133,7 +137,7 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 
 	@Override
 	public Response getAll() throws ApiOperationException {
-		final List<GostJahrgang> daten = getGostJahrgangsliste(conn, conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(idSchuljahresabschnitt));
+		final List<GostJahrgang> daten = getGostJahrgangsliste(conn, this.schuljahresabschnitt);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -168,14 +172,13 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 		if (!conn.getUser().schuleHatGymOb())
 			throw new ApiOperationException(Status.NOT_FOUND, "Die Schule hat eine Schulform ohne gymnasiale Oberstufe.");
 		final Schulform schulform = conn.getUser().schuleGetSchulform();
-		final int aktuellesSchuljahr = conn.getUser().schuleGetSchuljahr();
 
 		// Ermittle die Jahrgangsdaten und bestimme das Abiturjahr
 		final DTOJahrgang jahrgang = conn.queryByKey(DTOJahrgang.class, jahrgang_id);
 		if (jahrgang == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 		final Integer abiturjahr = GostAbiturjahrUtils.getGostAbiturjahr(schulform, Schulgliederung.data().getWertByKuerzel(jahrgang.GliederungKuerzel),
-				aktuellesSchuljahr, jahrgang.ASDJahrgang);
+				schuljahresabschnitt.schuljahr, jahrgang.ASDJahrgang);
 		if (abiturjahr == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 
@@ -278,10 +281,10 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 						final List<DTOSchuelerLeistungsdaten> slds = mapLeistungsdaten.get(sla.ID);
 						if ((slds == null) || (slds.isEmpty()))
 							continue;
-						final DTOSchuljahresabschnitte schuljahresabschnitt = mapSchuljahresabschnitte.get(sla.Schuljahresabschnitts_ID);
-						if (schuljahresabschnitt == null)
+						final DTOSchuljahresabschnitte dtoSchuljahresabschnitt = mapSchuljahresabschnitte.get(sla.Schuljahresabschnitts_ID);
+						if (dtoSchuljahresabschnitt == null)
 							continue;
-						final GostHalbjahr halbjahr = GostHalbjahr.fromJahrgangUndHalbjahr(sla.ASDJahrgang, schuljahresabschnitt.Abschnitt);
+						final GostHalbjahr halbjahr = GostHalbjahr.fromJahrgangUndHalbjahr(sla.ASDJahrgang, dtoSchuljahresabschnitt.Abschnitt);
 						if (halbjahr == null)
 							continue;
 						for (final DTOSchuelerLeistungsdaten sld : slds) {
@@ -309,27 +312,27 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 							switch (halbjahr) {
 								case EF1 -> {
 									fachbelegung.EF1_Kursart = funcGetKursart.apply(sld, halbjahr);
-									fachbelegung.EF1_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz, aktuellesSchuljahr);
+									fachbelegung.EF1_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz, schuljahresabschnitt.schuljahr);
 								}
 								case EF2 -> {
 									fachbelegung.EF2_Kursart = funcGetKursart.apply(sld, halbjahr);
-									fachbelegung.EF2_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz, aktuellesSchuljahr);
+									fachbelegung.EF2_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz, schuljahresabschnitt.schuljahr);
 								}
 								case Q11 -> {
 									fachbelegung.Q11_Kursart = funcGetKursart.apply(sld, halbjahr);
-									fachbelegung.Q11_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz, aktuellesSchuljahr);
+									fachbelegung.Q11_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz, schuljahresabschnitt.schuljahr);
 								}
 								case Q12 -> {
 									fachbelegung.Q12_Kursart = funcGetKursart.apply(sld, halbjahr);
-									fachbelegung.Q12_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz, aktuellesSchuljahr);
+									fachbelegung.Q12_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz, schuljahresabschnitt.schuljahr);
 								}
 								case Q21 -> {
 									fachbelegung.Q21_Kursart = funcGetKursart.apply(sld, halbjahr);
-									fachbelegung.Q21_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz, aktuellesSchuljahr);
+									fachbelegung.Q21_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz, schuljahresabschnitt.schuljahr);
 								}
 								case Q22 -> {
 									fachbelegung.Q22_Kursart = funcGetKursart.apply(sld, halbjahr);
-									fachbelegung.Q22_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz, aktuellesSchuljahr);
+									fachbelegung.Q22_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz, schuljahresabschnitt.schuljahr);
 								}
 							}
 						}

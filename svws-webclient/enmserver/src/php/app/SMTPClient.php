@@ -116,8 +116,8 @@
 
 			$smtpConfig = json_decode($config, true);
 
-			$this->host = $smtpConfig['smtpHost'];
-			$this->port = $smtpConfig['smtpPort'];
+			$this->host = $smtpConfig['host'];
+			$this->port = $smtpConfig['port'];
 			$this->username = $smtpConfig['username'];
 			$this->password = $smtpConfig['password'];
 			$this->useTLS = $smtpConfig['useTLS'];

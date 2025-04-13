@@ -89,13 +89,13 @@ export class RouteDataGostBeratung extends RouteData<RouteStateDataGostBeratung>
 			return;
 		const art = this.gostBelegpruefungsArt;
 		if (art === 'ef1')
-			return new AbiturdatenManager(abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.EF1);
+			return new AbiturdatenManager(api.mode, abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.EF1);
 		if (art === 'gesamt')
-			return new AbiturdatenManager(abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.GESAMT);
-		const abiturdatenManager = new AbiturdatenManager(abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.GESAMT);
+			return new AbiturdatenManager(api.mode, abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.GESAMT);
+		const abiturdatenManager = new AbiturdatenManager(api.mode, abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.GESAMT);
 		if (abiturdatenManager.pruefeBelegungExistiert(abiturdatenManager.getFachbelegungen(), GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))
 			return abiturdatenManager;
-		return new AbiturdatenManager(abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.EF1);
+		return new AbiturdatenManager(api.mode, abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.EF1);
 	}
 
 	setGostBelegpruefungErgebnis = async () => {
@@ -152,7 +152,7 @@ export class RouteDataGostBeratung extends RouteData<RouteStateDataGostBeratung>
 		}
 	}
 
-	resetFachwahlen = async () => {
+	resetFachwahlen = async (forceDelete: boolean) => {
 		await api.server.resetGostAbiturjahrgangFachwahlen(api.schema, this.auswahl);
 		const abiturdaten = await api.server.getGostAbiturjahrgangLaufbahnplanung(api.schema, this.auswahl);
 		this._state.value.abiturdaten = abiturdaten;

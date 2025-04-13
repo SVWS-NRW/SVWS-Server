@@ -1,12 +1,10 @@
 import type { List } from "@core";
-import type { Einwilligung, Einwilligungsart } from "@core";
+import type { SchuelerEinwilligung, Einwilligungsart } from "@core";
 import type { ApiStatus } from "~/components/ApiStatus";
 
 export interface SchuelerEinwilligungenProps {
-	einwilligungen: () => List<Einwilligung>;
+	einwilligungen: () => List<SchuelerEinwilligung>;
 	mapEinwilligungsarten: Map<number, Einwilligungsart>;
-	patch: (data : Partial<Einwilligung>, idEinwilligungsart: number) => Promise<void>;
-	add: (data: Partial<Einwilligung>, idEinwilligungsart: number) => Promise<void>;
-	remove: (idEinwilligungsart: number) => Promise<void>;
+	patch: (data : Partial<SchuelerEinwilligung>, idEinwilligungsart: number) => Promise<void>;
 	apiStatus: ApiStatus;
 }

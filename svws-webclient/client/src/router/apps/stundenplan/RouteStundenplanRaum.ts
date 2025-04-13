@@ -6,7 +6,7 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteStundenplan, routeStundenplan } from "./RouteStundenplan";
 import { api } from "~/router/Api";
-import { ConfigElement } from "~/components/Config";
+import { ConfigElement } from "../../../../../ui/src/utils/Config";
 
 const SStundenplanRaum = () => import("~/components/stundenplan/raum/SStundenplanRaum.vue");
 

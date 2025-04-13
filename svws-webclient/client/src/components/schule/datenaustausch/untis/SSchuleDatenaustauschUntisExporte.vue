@@ -1,5 +1,5 @@
 <template>
-	<div class="page page-flex-row gap-2 overflow-y-auto">
+	<div class="page page-flex-row gap-4 overflow-y-auto">
 		<!-- Auswahl des Untis-Exportes (linke Seite) -->
 		<div class="h-full min-w-48 w-48 flex flex-col gap-2">
 			<template v-for="(gpu, index) in gpus" :key="gpu.title">
@@ -28,8 +28,8 @@
 			<div v-if="zeigeGPU002Laden" class="max-w-196">
 				<ui-card compact :collapsible="false" title="Upload GPU002.txt" show-divider>
 					<div class="text-justify">
-						Laden Sie jetzt die Datei <span class="font-bold">GPU002.txt</span> von Untis hier hoch, um die Klausuren anschließend zu exportieren.
-						Die CSV-Datei muss als Textkodierung UTF-8 verwenden. Als Trennzeichen wird das Semikolon verwendet und für die textbegrenzung doppelte Anführungszeichen (").
+						Laden Sie jetzt die aktuelle Datei <span class="font-bold">GPU002.txt</span> von Untis hier hoch, um die {{ textZweckGPU002 }} anschließend zu exportieren.
+						Die CSV-Datei muss als Textkodierung UTF-8 verwenden. Als Trennzeichen wird das Semikolon verwendet und für die Textbegrenzung doppelte Anführungszeichen (").
 					</div>
 					<template #buttonFooterLeft>
 						<input type="file" accept=".txt" @change="importGPU002">
@@ -78,7 +78,7 @@
 				</div>
 
 				<!-- Visualisierung der zuvor vom SVWS-Server geladenen Daten -->
-				<div class="h-full w-full overflow-scroll grow bg-ui border border-ui-secondary text-ui rounded-md text-base pt-2 pl-2 pr-6 pb-6">
+				<div class="h-full w-full overflow-scroll grow bg-ui border border-ui text-ui rounded-md text-base pt-2 pl-2 pr-6 pb-6">
 					<pre>{{ value }}</pre>
 				</div>
 			</template>
@@ -126,7 +126,7 @@
 	});
 
 	const fachwahlenGPU015 = <GPU>({
-		title: 'Fachwahlen',
+		title: 'Kurswahlen',
 		files: [ 'GPU015.txt' ],
 		export: async (gpu002 : string) => await props.exportUntisFachwahlenGPU015(sidvariante.value, gpu002),
 	});
@@ -182,6 +182,17 @@
 	const zeigeSchuelerVariantenAuswahl = computed<boolean>(() => gpusHabenSchueler.includes(aktuell.value));
 	const zeigeGPU002Laden = computed<boolean>(() => gpusBrauchenGPU002.includes(aktuell.value));
 	const zeigeDateiSpeichern = computed<boolean>(() => (daten.value !== null) && (!zeigeGPU002Laden.value || (gpu002.value !== null)));
+	const textZweckGPU002 = computed<string>(() => {
+		if (aktuell.value === fachwahlenGPU015)
+			return "Schüler-Kurs-Zuordnungen (Kurswahlen)";
+		if (aktuell.value === klausurenGPU017)
+			return "Klausuren";
+		if (aktuell.value === blockungGPUs)
+			return "Daten der Blockung";
+		if (aktuell.value === schienenGPU019)
+			return "Kurs-Schienen";
+		return "TODO (noch nicht implementiert)";
+	});
 
 	onMounted(() => onSelect(aktuell.value));
 

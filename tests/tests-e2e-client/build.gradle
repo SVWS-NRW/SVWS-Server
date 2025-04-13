@@ -88,12 +88,12 @@ task testAgainstDockerEnv(type: NpmRun) {
 /**
  * Starten der Tests gegen die lokale Applikation. Hier wird kein Docker gestartet.
  */
-task testLokalE2E(type: NpmRun) {
+task no_auto_docker_test_E2E(type: NpmRun) {
 	group "verification"
 	dependsOn ':tests:checkIfLokalApplikationIsRunning'
 	dependsOn ':tests:checkIfLokalDataBaseIsRunning'
 	inputs.dir file("$projectDir/tests")
-	args = ['test']
+	args = ['test:local']
 }
 
 /**
@@ -104,5 +104,3 @@ task recordE2ETest(type: NpmRun) {
 	mkdir file("$projectDir/build/codegen")
 	args = ['codegen']
 }
-
-

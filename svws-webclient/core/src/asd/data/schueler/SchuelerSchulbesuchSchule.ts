@@ -14,7 +14,7 @@ export class SchuelerSchulbesuchSchule extends JavaObject {
 	public idSchule : number | null = null;
 
 	/**
-	 * Die ID des Bildungsganges/Schulgliederung an der Schule.
+	 * Der Schlüssel des Bildungsganges/Schulgliederung an der Schule.
 	 */
 	public schulgliederung : string | null = null;
 

@@ -20,7 +20,7 @@ import { RouteDataGost } from "~/router/apps/gost/RouteDataGost";
 import type { TabData } from "@ui";
 import type { GostAppProps } from "~/components/gost/SGostAppProps";
 import type { GostAuswahlProps } from "~/components/gost/SGostAuswahlProps";
-import { ConfigElement } from "~/components/Config";
+import { ConfigElement } from "../../../../../ui/src/utils/Config";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { routeError } from "~/router/error/RouteError";
 import { ViewType } from "@ui";

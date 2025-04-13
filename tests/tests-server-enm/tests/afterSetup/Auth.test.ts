@@ -101,6 +101,11 @@ describe("GET Requests ohne Auth gegen den ENM Server", () => {
 		const response = await apiServiceNoAuth.get(`/api/teilleistung`)
 		expect(response.status).toBe(403);
 	});
+
+	test("check_smtp > 200", async () => {
+		const response = await apiServiceNoAuth.get(`/api/check_smtp`)
+		expect(response.status).toBe(200);
+	});
 })
 
 describe("PUT Requests ohne Auth gegen den ENM Server", () => {

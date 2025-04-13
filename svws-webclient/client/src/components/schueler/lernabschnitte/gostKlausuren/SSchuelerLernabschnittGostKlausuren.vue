@@ -1,5 +1,5 @@
 <template>
-	<div class="page page-grid-cards">
+	<div class="w-140">
 		<svws-ui-modal v-if="showModalTerminGrund" :show="showModalTerminGrund" size="small">
 			<template #modalTitle>
 				Grund für Fehlen angeben
@@ -12,7 +12,7 @@
 				<svws-ui-button type="primary" @click="createTermin(true)"> Nachschreibtermin erstellen </svws-ui-button>
 			</template>
 		</svws-ui-modal>
-		<svws-ui-content-card title="Klausuren" v-if="hatKlausurManager()">
+		<svws-ui-content-card v-if="hatKlausurManager()">
 			<svws-ui-table :items="kMan().schuelerklausurGetMengeAsList()" :columns="colsKlausuren">
 				<template #cell(quartal)="{ rowData }">
 					<span class="mt-3 mb-3">{{ kMan().vorgabeBySchuelerklausur(rowData).quartal }}</span>
@@ -93,8 +93,8 @@
 
 	const colsKlausuren: Array<DataTableColumn> = [
 		{ key: "quartal", label: "Quartal", tooltip: "Ursprüngliches Datum der Klausur", fixedWidth: 5},
-		{ key: "kurs", label: "Kurs", tooltip: "Kurs", fixedWidth: 5 },
-		{ key: "lehrer", label: "Fachlehrer", tooltip: "Fachlehrer", fixedWidth: 5 },
+		{ key: "kurs", label: "Kurs", tooltip: "Kurs" },
+		{ key: "lehrer", label: "Fachlehrer", tooltip: "Fachlehrer", fixedWidth: 7 },
 		{ key: "termin", label: "Datum", tooltip: "Ursprüngliches Datum der Klausur", minWidth: 6 },
 	];
 

@@ -67,8 +67,8 @@
 		</template>
 		<template #body>
 			<template v-for="fach in faecherManager().faecher()" :key="fach.hashCode()">
-				<div class="svws-ui-tr text-ui-static" role="row" :style="{ 'background-color': bgColor(fach) }">
-					<s-row-gost-faecher :fach-id="fach.id" :abiturjahr :patch-fach :faecher-manager :hat-update-kompetenz />
+				<div class="svws-ui-tr text-uistatic" role="row" :style="{ 'background-color': bgColor(fach) }">
+					<s-row-gost-faecher :server-mode :fach-id="fach.id" :abiturjahr :patch-fach :faecher-manager :hat-update-kompetenz />
 				</div>
 			</template>
 		</template>
@@ -79,9 +79,10 @@
 
 	import { computed } from "vue";
 	import { Fach } from "@core";
-	import type { GostFach, GostFaecherManager } from "@core";
+	import type { GostFach, GostFaecherManager, ServerMode } from "@core";
 
 	const props = defineProps<{
+		serverMode: ServerMode;
 		faecherManager: () => GostFaecherManager;
 		patchFach: (data: Partial<GostFach>, fach_id: number) => Promise<void>;
 		abiturjahr: number;

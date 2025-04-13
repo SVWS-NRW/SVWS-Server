@@ -122,7 +122,7 @@ export class Religion extends JavaEnum<Religion> implements CoreType<ReligionKat
 		return de_svws_nrw_asd_types_CoreType_daten(this, schuljahr);
 	}
 
-	public statistikId() : String | null {
+	public statistikId() : string | null {
 		return de_svws_nrw_asd_types_CoreType_statistikId(this);
 	}
 

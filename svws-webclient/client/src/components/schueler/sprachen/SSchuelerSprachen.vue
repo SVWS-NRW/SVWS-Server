@@ -14,7 +14,7 @@
 					<span v-else> {{ rowData.reihenfolge ?? "-" }} </span>
 				</template>
 				<template #cell(belegungVonAbschnitt)="{ rowData }">
-					<div v-if="hatUpdateKompetenz" class="flex items-center gap-0.5 border border-ui-contrast-25 border-dashed hover:border-ui-contrast-50 hover:border-solid hover:bg-ui-contrast-0 my-auto p-[0.1rem] rounded-sm cursor-pointer"
+					<div v-if="hatUpdateKompetenz" class="flex items-center gap-0.5 border border-ui-25 border-dashed hover:border-ui-50 hover:border-solid hover:bg-ui-100 my-auto p-[0.1rem] rounded-sm cursor-pointer"
 						@click="patchSprachbelegung({belegungVonAbschnitt: rowData.belegungVonAbschnitt === 1 ? 2 : 1}, rowData.sprache)">
 						<span :class="{ 'opacity-100 font-bold': rowData.belegungVonAbschnitt === 1, 'opacity-25 hover:opacity-100 font-medium': rowData.belegungVonAbschnitt === 2}">1</span>
 						<span class="opacity-50">|</span>
@@ -29,7 +29,7 @@
 					<div v-else> {{ (rowData.belegungVonJahrgang === null) ? null : Jahrgaenge.data().getWertByKuerzel(rowData.belegungVonJahrgang)?.daten(schuljahr)?.kuerzel ?? '—' }} </div>
 				</template>
 				<template #cell(belegungBisAbschnitt)="{ rowData }">
-					<div v-if="hatUpdateKompetenz" class="flex items-center gap-0.5 border border-ui-contrast-25 border-dashed hover:border-ui-contrast-50 hover:border-solid hover:bg-ui-contrast-0 my-auto p-[0.1rem] rounded-sm cursor-pointer"
+					<div v-if="hatUpdateKompetenz" class="flex items-center gap-0.5 border border-ui-25 border-dashed hover:border-ui-50 hover:border-solid hover:bg-ui-100 my-auto p-[0.1rem] rounded-sm cursor-pointer"
 						@click="patchSprachbelegung({belegungBisAbschnitt: rowData.belegungBisAbschnitt === 1 ? 2 : 1}, rowData.sprache)">
 						<span :class="{ 'opacity-100 font-bold': rowData.belegungBisAbschnitt === 1, 'opacity-25 hover:opacity-100 font-medium': rowData.belegungBisAbschnitt === 2}">1</span>
 						<span class="opacity-50">|</span>
@@ -266,7 +266,7 @@
 		for (const k of Fach.getListFremdsprachenKuerzelAtomar(schuljahr.value)) {
 			const sprache = Fach.getMapFremdsprachenKuerzelAtomar(schuljahr.value).get(k);
 			const spracheEintrag = sprache?.daten(schuljahr.value) ?? null;
-			if ((spracheEintrag !== null) && !spracheEintrag.istErsatzPflichtFS && spracheEintrag.istHKFS && !spracheEintrag.istAusRegUFach && !pruefungenHKFS.has(k))
+			if ((spracheEintrag !== null) && spracheEintrag.istHKFS && !spracheEintrag.istAusRegUFach && !pruefungenHKFS.has(k))
 				sprachen.push(k);
 		}
 		return sprachen;
@@ -280,7 +280,7 @@
 		for (const k of Fach.getListFremdsprachenKuerzelAtomar(schuljahr.value)) {
 			const sprache = Fach.getMapFremdsprachenKuerzelAtomar(schuljahr.value).get(k);
 			const spracheEintrag = sprache?.daten(schuljahr.value) ?? null;
-			if ((spracheEintrag !== null) && spracheEintrag.istErsatzPflichtFS && spracheEintrag.istHKFS && !spracheEintrag.istAusRegUFach && !pruefungenFeststellung.has(k))
+			if ((spracheEintrag !== null) && spracheEintrag.istHKFS && !spracheEintrag.istAusRegUFach && !pruefungenFeststellung.has(k))
 				sprachen.push(k);
 		}
 		return sprachen;

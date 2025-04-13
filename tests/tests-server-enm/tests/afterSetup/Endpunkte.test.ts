@@ -229,8 +229,6 @@ describe("Leistung und Teilleistung können bearbeitet werden", () => {
 		const testSchueler = _data.schueler.elementData.find((s: ENMSchueler) => {
 			return s.id === 3029;
 		})
-
-		console.log(testSchueler)
 	})
 
 
@@ -266,8 +264,6 @@ describe("Leistung und Teilleistung können bearbeitet werden", () => {
 			}
 			const postResponse = await apiServiceAuth.post(`/api/teilleistung`, {body: JSON.stringify(bodyData)});
 
-			console.log(postResponse)
-			console.log(await postResponse.text())
 			// Post war erfolgreich
 			expect(postResponse.status).toBe(200);
 		}
@@ -456,3 +452,90 @@ describe("Ankreuzkompetenzen können bearbeitet werden", () => {
 		expect(strippedDataAfterEdit).toMatchSnapshot()
 	});
 })
+
+describe("Passwort Management durch create_pwt", () => {
+	test("Fehlender Parameter im JSON führt zu Fehler", async () => {
+		// Diese Daten werden patched
+		const bodyData = {
+			notUsed: "Die Dienst-E-Mail ist erforderlich."
+		}
+
+		const responsePost = await apiServiceAuth.post(`/api/create_pwt`, {body: JSON.stringify(bodyData)});
+		expect(await responsePost.text()).toContain("Die Dienst-E-Mail ist erforderlich");
+		expect(responsePost.status).toBe(400);
+	});
+
+	test("Unbekannte Email erzeugt Fehler", async () => {
+		// Diese Daten werden patched
+		const bodyData = {
+			eMailDienstlich: "notused@email.de"
+		}
+
+		const responsePost = await apiServiceAuth.post(`/api/create_pwt`, {body: JSON.stringify(bodyData)});
+		expect(await responsePost.text()).toContain("Mehrere Lehrer mit dieser E-Mail-Adresse gefunden");
+		expect(responsePost.status).toBe(409);
+	});
+
+	test("Korrekte Email -> 204", async () => {
+		// Diese Daten werden patched
+		const bodyData = {
+			eMailDienstlich: "D.Berthold@lmail.de"
+		}
+
+		const responsePost = await apiServiceAuth.post(`/api/create_pwt`, {body: JSON.stringify(bodyData)});
+		console.log(await responsePost.text());
+		expect(responsePost.status).toBe(204);
+	});
+
+	test("Korrekte Email doppelt führt zu einem Fehler", async () => {
+		const bodyData = {
+			eMailDienstlich: "D.Berthold@lmail.de"
+		}
+
+		await apiServiceAuth.post(`/api/create_pwt`, {body: JSON.stringify(bodyData)});
+
+		const responsePost = await apiServiceAuth.post(`/api/create_pwt`, {body: JSON.stringify(bodyData)});
+		expect(await responsePost.text()).toContain("Bitte warten Sie, bevor Sie es erneut versuchen.");
+		expect(responsePost.status).toBe(429);
+	});
+})
+
+describe("Test Lernabschnitte", () =>{
+	test("Post Lernabschnitte", async () => {
+		const response = await apiServiceAuth.get(`/api/daten`);
+		expect(response.status).toBe(200);
+		const _data = await parse(await response.blob());
+
+		const schuelerID = 3029
+
+		const schueler = _data.schueler.elementData.find((s: ENMSchueler) => {
+			return s.id === schuelerID;
+		})
+
+		const lernabschnittID = 12452
+		expect(schueler.lernabschnitt.id).toBe(lernabschnittID)
+
+		const bodyData = {
+			id: lernabschnittID,
+			fehlstundenGesamt: 1337
+
+		}
+
+		const responseOfPost = await apiServiceAuth.post(`/api/lernabschnitt`, {
+			body: JSON.stringify(bodyData)
+		});
+		console.log(await responseOfPost.text())
+		expect(responseOfPost.status).toBe(200)
+
+		const responseAfterPost = await apiServiceAuth.get(`/api/daten`);
+		expect(responseAfterPost.status).toBe(200);
+		const _dataAfterPost = await parse(await responseAfterPost.blob());
+
+		const schuelerAfterPost = _dataAfterPost.schueler.elementData.find((s: ENMSchueler) => {
+			return s.id === schuelerID;
+		})
+
+		expect(schuelerAfterPost.lernabschnitt.fehlstundenGesamt).toBe(1337)
+
+	});
+});

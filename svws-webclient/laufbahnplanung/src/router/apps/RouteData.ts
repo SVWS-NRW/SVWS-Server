@@ -30,9 +30,12 @@ import { GostKursart } from "@core/core/types/gost/GostKursart";
 import { GostFaecherManager } from "@core/core/utils/gost/GostFaecherManager";
 import { ArrayList } from "@core/java/util/ArrayList";
 import type { List } from "@core/java/util/List";
+import { Config, ConfigElement } from "@ui/utils/Config";
+import { ServerMode } from "@core/core/types/ServerMode";
 
 
 interface RouteState {
+	serverMode: ServerMode,
 	schuleStammdaten: SchuleStammdaten;
 	auswahl: SchuelerListeEintrag | undefined;
 	schuelerIDEncrypted: string;
@@ -40,8 +43,8 @@ interface RouteState {
 	abiturdaten: Abiturdaten | undefined;
 	abiturdatenManager: AbiturdatenManager | undefined;
 	faecherManager: GostFaecherManager | undefined;
+	config: Config;
 	gostBelegpruefungsArt: 'ef1' | 'gesamt' | 'auto';
-	modus: 'manuell' | 'normal' | 'hochschreiben';
 	gostBelegpruefungErgebnis: GostBelegpruefungErgebnis;
 	gostJahrgang: GostJahrgang;
 	gostJahrgangsdaten: GostJahrgangsdaten;
@@ -52,6 +55,7 @@ interface RouteState {
 export class RouteData {
 
 	private static _defaultState : RouteState = {
+		serverMode: ServerMode.STABLE,
 		schuleStammdaten: new SchuleStammdaten(),
 		auswahl: undefined,
 		schuelerIDEncrypted: '',
@@ -59,8 +63,8 @@ export class RouteData {
 		abiturdaten: undefined,
 		abiturdatenManager: undefined,
 		faecherManager: undefined,
+		config: new Config(async (key, value) => { }, async (key, value) => { }),
 		gostBelegpruefungsArt: 'gesamt',
-		modus: 'normal',
 		gostBelegpruefungErgebnis: new GostBelegpruefungErgebnis(),
 		gostJahrgang: new GostJahrgang(),
 		gostJahrgangsdaten: new GostJahrgangsdaten(),
@@ -83,6 +87,19 @@ export class RouteData {
 		this._state.value = { ... this._state.value };
 	}
 
+	public constructor() {
+		this._state.value.config.addElements([new ConfigElement("app.schueler.laufbahnplanung.modus", "user", "normal")]);
+		this._state.value.config.addElements([new ConfigElement("app.schueler.laufbahnplanung.faecher.anzeigen", "user", "alle")]);
+	}
+
+	public get serverMode(): ServerMode {
+		return this._state.value.serverMode;
+	}
+
+	public get config(): Config {
+		return this._state.value.config;
+	}
+
 	public async setView(view: RouteNode<any,any>) {
 		if (routeApp.children.includes(view))
 			this.setPatchedState({ view: view });
@@ -102,13 +119,13 @@ export class RouteData {
 		const jahrgangsdaten = this._state.value.gostJahrgangsdaten;
 		const art = this.gostBelegpruefungsArt;
 		if (art === 'ef1')
-			return new AbiturdatenManager(abiturdaten, jahrgangsdaten, fachManager, GostBelegpruefungsArt.EF1);
+			return new AbiturdatenManager(this.serverMode, abiturdaten, jahrgangsdaten, fachManager, GostBelegpruefungsArt.EF1);
 		if (art === 'gesamt')
-			return new AbiturdatenManager(abiturdaten, jahrgangsdaten, fachManager, GostBelegpruefungsArt.GESAMT);
-		const abiturdatenManager = new AbiturdatenManager(abiturdaten, jahrgangsdaten, fachManager, GostBelegpruefungsArt.GESAMT);
+			return new AbiturdatenManager(this.serverMode, abiturdaten, jahrgangsdaten, fachManager, GostBelegpruefungsArt.GESAMT);
+		const abiturdatenManager = new AbiturdatenManager(this.serverMode, abiturdaten, jahrgangsdaten, fachManager, GostBelegpruefungsArt.GESAMT);
 		if (abiturdatenManager.pruefeBelegungExistiert(abiturdatenManager.getFachbelegungen(), GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))
 			return abiturdatenManager;
-		return new AbiturdatenManager(abiturdaten, jahrgangsdaten, fachManager, GostBelegpruefungsArt.EF1);
+		return new AbiturdatenManager(this.serverMode, abiturdaten, jahrgangsdaten, fachManager, GostBelegpruefungsArt.EF1);
 	}
 
 	public async ladeDaten(daten: GostLaufbahnplanungDaten) {
@@ -172,6 +189,8 @@ export class RouteData {
 				hjBelegung.kursartKuerzel = kursart;
 				hjBelegung.schriftlich = fb.schriftlich[hj.id];
 				hjBelegung.biliSprache = fach.biliSprache;
+				if (fach.kuerzel === "PX")
+					hjBelegung.wochenstunden = fach.wochenstundenQualifikationsphase;
 				belegung.belegungen[hj.id] = hjBelegung;
 				belegung.letzteKursart = kursart;
 			}
@@ -315,9 +334,10 @@ export class RouteData {
 			const hjBelegung = new AbiturFachbelegungHalbjahr();
 			hjBelegung.halbjahrKuerzel = hj.kuerzel;
 			if (w === "M") {
-				if (fach.kuerzel === "PX")
+				if (fach.kuerzel === "PX") {
 					hjBelegung.kursartKuerzel = GostKursart.PJK.kuerzel;
-				else if (fach.kuerzel === "VX")
+					hjBelegung.wochenstunden = fach.wochenstundenQualifikationsphase;
+				} else if (fach.kuerzel === "VX")
 					hjBelegung.kursartKuerzel = GostKursart.VTF.kuerzel;
 				else
 					hjBelegung.kursartKuerzel = GostKursart.GK.kuerzel;
@@ -396,15 +416,6 @@ export class RouteData {
 		return this._state.value.zwischenspeicher;
 	}
 
-	get modus(): 'manuell'|'normal'|'hochschreiben' {
-		return this._state.value.modus;
-	}
-
-	setModus = async (modus: 'manuell'|'normal'|'hochschreiben') => {
-		this._state.value.modus = modus;
-		this.commit();
-	}
-
 	saveLaufbahnplanung = async (): Promise<void> => {
 		if (this._state.value.abiturdaten === undefined)
 			return;
@@ -423,7 +434,7 @@ export class RouteData {
 		this.setPatchedState({ zwischenspeicher: undefined, abiturdaten, abiturdatenManager, gostBelegpruefungErgebnis });
 	}
 
-	resetFachwahlen = async () => {
+	resetFachwahlen = async (forceDelete: boolean) => {
 		const abiturdaten = this._state.value.abiturdaten;
 		if (abiturdaten === undefined)
 			throw new DeveloperNotificationException("Die Laufbahnplanungsdaten stehen unerwartet nicht zur Verfügung.");

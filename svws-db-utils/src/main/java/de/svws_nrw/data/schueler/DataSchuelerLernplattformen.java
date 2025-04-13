@@ -1,6 +1,5 @@
 package de.svws_nrw.data.schueler;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -12,8 +11,6 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernplattform;
 import de.svws_nrw.db.dto.current.svws.auth.DTOCredentialsLernplattformen;
 import de.svws_nrw.db.utils.ApiOperationException;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -49,6 +46,22 @@ public final class DataSchuelerLernplattformen extends DataManagerRevised<Long[]
 		return daten;
 	}
 
+	/**
+	 * Konvertiert ein DTOLernplattformen-Objekt in ein Lernplattform-Objekt und setzt den Benutzernamen und das Initialkennwort.
+	 *
+	 * @param dtoLernplattform Das DTOLernplattformen-Objekt, das konvertiert werden soll.
+	 * @param benutzername     Der Benutzername zu der Lernplattform, das gesetzt werden sollen.
+	 * @param initialkennwort  Das Initialkennwort zu der Lernplattform, das gesetzt werden sollen.
+	 *
+	 * @return Ein Lernplattform-Objekt, das aus dem DTOLernplattformen-Objekt konvertiert und mit den der Benutzername und das Initialkennwort gesetzt wurde.
+	 */
+	public SchuelerLernplattform map(final DTOSchuelerLernplattform dtoLernplattform, final String benutzername, final String initialkennwort) {
+		final SchuelerLernplattform daten = map(dtoLernplattform);
+		daten.benutzername = benutzername;
+		daten.initialKennwort = initialkennwort;
+		return daten;
+	}
+
 	@Override
 	public List<SchuelerLernplattform> getAll() throws ApiOperationException {
 		final List<DTOSchuelerLernplattform> lernplattformen = conn.queryAll(DTOSchuelerLernplattform.class);
@@ -56,10 +69,20 @@ public final class DataSchuelerLernplattformen extends DataManagerRevised<Long[]
 	}
 
 	@Override
-	public List<SchuelerLernplattform> getList() throws ApiOperationException {
-		final List<DTOSchuelerLernplattform> lernplattformen = conn.queryList(
-				DTOSchuelerLernplattform.QUERY_BY_SCHUELERID, DTOSchuelerLernplattform.class, idSchueler);
-		return lernplattformen.stream().map(this::map).toList();
+	public List<SchuelerLernplattform> getList() {
+		final List<DTOSchuelerLernplattform> dtos = conn.queryList(DTOSchuelerLernplattform.QUERY_BY_SCHUELERID, DTOSchuelerLernplattform.class, idSchueler);
+		return dtos.stream().map(dto -> {
+			String benutzername = null;
+			String initialKennwort = null;
+			if (dto.CredentialID != null) {
+				final DTOCredentialsLernplattformen credentials = conn.queryByKey(DTOCredentialsLernplattformen.class, dto.CredentialID);
+				if (credentials != null) {
+					benutzername = credentials.Benutzername;
+					initialKennwort = credentials.Initialkennwort;
+				}
+			}
+			return map(dto, benutzername, initialKennwort);
+		}).toList();
 	}
 
 	@Override
@@ -129,33 +152,4 @@ public final class DataSchuelerLernplattformen extends DataManagerRevised<Long[]
 	public DTOSchuelerLernplattform getDatabaseDTOByID(final Long[] id) {
 		return conn.queryByKey(DTOSchuelerLernplattform.class, id[0], id[1]);
 	}
-
-	/**
-	 * Bestimmt die Credentials eines Schülers zu seinen Lernplattformen.
-	 *
-	 * @param idLernplattform   ID der Lernplattform
-	 *
-	 * @return die Credentials zu den Lernplattformen
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	public Response getCredentialsAsResponse(final long idLernplattform) throws ApiOperationException {
-
-		final DTOSchuelerLernplattform schuelerLernplattform = conn.queryByKey(DTOSchuelerLernplattform.class, this.idSchueler, idLernplattform);
-		if ((schuelerLernplattform == null) || (schuelerLernplattform.CredentialID == null)) {
-			throw new ApiOperationException(Status.NOT_FOUND, "Für den Schüler mit ID " + this.idSchueler + " und Lernplattform-ID " + idLernplattform + " wurden keine Credentials gefunden.");
-		}
-
-		final DTOCredentialsLernplattformen credentials = conn.queryByKey(DTOCredentialsLernplattformen.class, schuelerLernplattform.CredentialID);
-		if (credentials == null) {
-			throw new ApiOperationException(Status.NOT_FOUND, "Der Credential-Datensatz mit der ID " + schuelerLernplattform.CredentialID + " wurde nicht gefunden.");
-		}
-
-		final Map<String, Object> payload = new HashMap<>();
-		payload.put("Benutzername", credentials.Benutzername);
-		payload.put("Initialkennwort", credentials.Initialkennwort);
-
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(payload).build();
-	}
-
 }

@@ -35,7 +35,7 @@
 		@apply absolute top-1 right-1.5 bottom-1 flex justify-center items-center gap-1;
 
 		button {
-			@apply bg-ui-neutral border border-ui-secondary;
+			@apply bg-ui-neutral border border-ui;
 			@apply rounded-[0.2rem] focus:outline-hidden leading-none;
 
 			&:hover,
@@ -67,7 +67,7 @@
 }
 
 .input-number--control {
-	@apply bg-ui border border-ui-secondary;
+	@apply bg-ui border border-ui;
 	@apply rounded-md;
 	@apply h-9 w-full;
 	@apply text-base;
@@ -95,7 +95,7 @@
 }
 
 .input-number--filled:not(:focus-within):not(:hover) .input-number--control {
-	@apply border-ui-secondary;
+	@apply border-ui;
 }
 
 .input-number--statistics.input-number--filled:not(:focus-within):not(:hover) .input-number--control,
@@ -117,7 +117,7 @@
 }
 
 .input-number--filled:not(:focus-within):hover .input-number--control {
-	@apply border-ui-secondary;
+	@apply border-ui;
 }
 
 .input-number--statistics.input-number-component:focus-within .input-number--control,
@@ -126,7 +126,7 @@
 }
 
 .input-number--readonly:hover .input-number--control {
-	@apply border-ui-secondary;
+	@apply border-ui;
 }
 
 .input-number--readonly.input-number--filled:hover .input-number--control {

@@ -7,7 +7,7 @@
 			$inc_memory_limit_success = ini_set('memory_limit', '512M');
 			if ($inc_memory_limit_success === false) {
 				$inc_memory_limit_success = ini_set('memory_limit', '256M');
-			}		
+			}
 		}
 	}
 
@@ -38,7 +38,7 @@
 		 */
 		public static function getBodyJsonObject() : object {
 			try {
-				$obj = json_decode(HTTP::getBody(), false);
+				$obj = json_decode(Http::getBody(), false);
 				if (!is_object($obj))
 					Http::exit400BadRequest("Fehler beim Dekodieren des JSON-Strings des HTTP-Body.");
 				return $obj;
@@ -50,9 +50,9 @@
 		/**
 		 * Ermittelt den Namen der temporären Datei, welche für einen Http-Request in einem Multipart
 		 * Body übergeben wurde.
-		 * 
+		 *
 		 * @param string $name   der Name der Datei in der Form-Daten des Multipart
-		 * 
+		 *
 		 * @return string der Pfad zu der temporären Datei, in dem die Datei zwischengespeichert ist
 		 */
 		public static function getMultipartTmpFilename(string $name) : string {
@@ -62,7 +62,7 @@
 			$contentType = trim(explode(";", $contentType)[0]);
 			if (strcmp($contentType, "multipart/form-data") != 0)
 				Http::exit400BadRequest("Fehler im HTTP-Header: Content Type ist nicht 'multipart/form-data'.");
-		
+
 			$file = $_FILES[$name];
 			if ($file == null)
 				Http::exit400BadRequest("Fehler in der Anfrage: Die Anfrage muss einen Datei-Anhang mit dem Namen '$name' enthalten.");
@@ -96,7 +96,7 @@
 		 * dekomprimiert deren GZIP-komprimierten Inhalt und gibt dies zurück.
 		 *
 		 * @param string $name   der Name der Datei in der Form-Daten des Multipart
-		 * 
+		 *
 		 * @return string der Inhalt der Datei
 		 */
 		public static function getMultipartGzipFileContent(string $name) : string {
@@ -130,14 +130,14 @@
 				}
 				if (strcasecmp($cors_sec_fetch_mode, "cors") === 0) {
 					http_response_code(204);
-					exit;		
+					exit;
 				}
 			}
 		}
 
 		/**
 		 * Gibt einen BAD_REQUEST (400) zurück und beendet das PHP-Skript.
-		 * 
+		 *
 		 * @param ?string msg   ein optionaler Parameter, um eine Nachricht als plain text zurückzugeben
 		 */
 		public static function exit400BadRequest(?string $msg = null) {
@@ -169,7 +169,7 @@
 
 		/**
 		 * Gibt einen NOT_FOUND (404) zurück und beendet das PHP-Skript.
-		 * 
+		 *
 		 * @param string msg   ein optionaler Parameter, um eine Nachricht als plain text zurückzugeben
 		 */
 		public static function exit404NotFound(?string $msg = null) {
@@ -184,7 +184,7 @@
 		/**
 		 * Gibt einen INTERNAL_SERVER_ERROR (500) mit der übergebenen Nachricht zurück und
 		 * beendet das PHP-Skript.
-		 * 
+		 *
 		 * @param string $err   die Fehlermeldung
 		 */
 		public static function exit500(string $err) {

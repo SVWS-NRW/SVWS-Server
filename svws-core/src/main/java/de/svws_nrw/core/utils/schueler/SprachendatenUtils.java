@@ -7,6 +7,7 @@ import java.util.Comparator;
 import de.svws_nrw.asd.data.schueler.Sprachbelegung;
 import de.svws_nrw.asd.data.schueler.Sprachendaten;
 import de.svws_nrw.asd.data.schueler.Sprachpruefung;
+import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.types.fach.Sprachpruefungniveau;
 
 import jakarta.validation.constraints.NotNull;
@@ -394,6 +395,50 @@ public final class SprachendatenUtils {
 
 
 	/**
+	 * Gibt bei Fächern für herkunftssprachlichen Unterricht, das einstellige Sprachkürzel der Sprache zurück, die mit
+	 * diesem Fach bei einer zugehörigen Sprachprüfung ersetzt werden.
+	 *
+	 * @param kuerzel   das Kürzel des herkunftssprachlichen Unterrichtsfaches
+	 *
+	 * @return das einstellige Kürzel der Sprache oder null
+	 */
+	public static String getErsetzeSprache(final @NotNull String kuerzel) {
+		final @NotNull Fach fach = Fach.getBySchluesselOrDefault(kuerzel);
+		return switch (fach) {
+			case AM -> null; // Arabisch
+			case AN -> null; // Aramäisch
+			case BM -> null; // Bosnisch
+			case CN -> "C";  // Chinesisch
+			case CM -> null; // Kroatisch
+			case EM -> null; // Serbisch
+			case FM -> "F";  // Französisch
+			case GM -> null; // Neugriechisch
+			case IM -> "I";  // Italienisch
+			case JM -> null; // Japanisch
+			case LM -> null; // Albanisch
+			case MM -> null; // Mazedonisch
+			case MN -> null; // Ungarisch
+			case NM -> "N";  // Niederländisch
+			case PM -> null; // Polnisch
+			case QM -> null; // Farsi
+			case OM -> "O";  // Portugiesisch
+			case RM -> "R";  // Russisch
+			case RN -> null; // Romanes
+			case SM -> "S";  // Spanisch
+			case TM -> "T";  // Türkisch
+			case TN -> null; // Thai
+			case UM -> null; // Rumänisch
+			case UN -> null; // Ukrainisch
+			case VM -> null; // Bulgarisch
+			case XM -> null; // sonstige Sprache
+			case YM -> null; // Koreanisch
+			case ZM -> null; // Kurdische Sprachen (Sorani, Komanci, Zaza)
+			default -> null; // sonstige Fächer
+		};
+	}
+
+
+	/**
 	 * Gibt die Fremdsprache zurück, die als erste Fremdsprache der Sekundarstufe I gewertet werden kann.
 	 * Im Falle einer Sprachprüfung als erste Pflichtfremdsprache wird diese zurückgegeben, da der Prüfungseintrag diese als erste Sprache explizit festlegt.
 	 * Ist keine Sprachprüfung als erste Pflichtfremdsprache vorhanden, so wird die als erste Sprache in der Sekundarstufe I belegt
@@ -642,7 +687,7 @@ public final class SprachendatenUtils {
 	 *
 	 * @return True, wenn die Sprache erfolgreich auf Niveau EESA/MSA geprüft wurde, sonst false
 	 */
-	private static boolean istFeststellungspruefungEESAMSABestanden(final Sprachpruefung pruefung) {
+	public static boolean istFeststellungspruefungEESAMSABestanden(final Sprachpruefung pruefung) {
 		return (pruefung != null) && pruefung.istFeststellungspruefung && (pruefung.note != null) && (pruefung.note <= 4)
 				&& ((pruefung.kannBelegungAlsFortgefuehrteSpracheErlauben && (pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id))
 						|| ((pruefung.kannErstePflichtfremdspracheErsetzen || pruefung.kannZweitePflichtfremdspracheErsetzen

@@ -8,7 +8,7 @@
 		</div>
 	</div>
 	<svws-ui-spacing :size="2" />
-	<div v-if="stundenplanManager().unterrichtGetMengeByZeitrasterIdAndWochentypOrEmptyList(selected.id, 0).isEmpty()" class="text-headline-sm">
+	<div v-if="stundenplanManager().unterrichtGetMengeByZeitrasterIdAndWochentypOrEmptyList(selected.id, -1).isEmpty()" class="text-headline-sm">
 		Keine Unterrichte in diesem Zeitraster
 	</div>
 	<div v-else class="svws-ui-table overflow-hidden" role="table" aria-label="Tabelle">
@@ -22,9 +22,9 @@
 			</div>
 		</div>
 		<div class="svws-ui-tbody overflow-auto" role="rowgroup" aria-label="Tabelleninhalt">
-			<div v-for="rowData in stundenplanManager().unterrichtGetMengeByZeitrasterIdAndWochentypOrEmptyList(selected.id, 0)" :key="rowData.id" class="svws-ui-tr" role="row">
+			<div v-for="rowData in stundenplanManager().unterrichtGetMengeByZeitrasterIdAndWochentypOrEmptyList(selected.id, -1)" :key="rowData.id" class="svws-ui-tr" role="row">
 				<div class="svws-ui-td" role="cell">
-					<span class="svws-ui-badge" :style="`background-color: ${getBgColor(stundenplanManager().fachGetByIdOrException(rowData.idFach).kuerzelStatistik)}; color: var(--color-text-ui-static)`">{{ stundenplanManager().unterrichtGetByIDStringOfFachOderKurs(rowData.id, true) }}</span>
+					<span class="svws-ui-badge" :style="`background-color: ${getBgColor(stundenplanManager().fachGetByIdOrException(rowData.idFach).kuerzelStatistik)}; color: var(--color-text-uistatic)`">{{ stundenplanManager().unterrichtGetByIDStringOfFachOderKurs(rowData.id, true) }}</span>
 				</div>
 				<div class="svws-ui-td" role="cell">
 					<span>{{ stundenplanManager().stundenplanGetWochenTypAsStringKurz(rowData.wochentyp) }}</span>

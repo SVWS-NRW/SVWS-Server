@@ -1,11 +1,14 @@
 import { JavaObject } from '../../java/lang/JavaObject';
 import { JavaInteger } from '../../java/lang/JavaInteger';
 import { StringBuilder } from '../../java/lang/StringBuilder';
+import { PairNN } from '../../asd/adt/PairNN';
 import { StringUtils } from '../../core/utils/StringUtils';
 import { ArrayList } from '../../java/util/ArrayList';
+import type { List } from '../../java/util/List';
 import { Class } from '../../java/lang/Class';
 import { JavaString } from '../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../core/exceptions/DeveloperNotificationException';
+import { Wochentag } from '../../core/types/Wochentag';
 
 export class DateUtils extends JavaObject {
 
@@ -180,6 +183,28 @@ export class DateUtils extends JavaObject {
 		const schalttage2 : number = ((Math.trunc(jahr / 4)) - (Math.trunc(jahr / 100))) + (Math.trunc(jahr / 400));
 		const schaltjahr : number = schalttage2 - schalttage1;
 		return 365 + schaltjahr;
+	}
+
+	/**
+	 * Liefert eine Liste von Paaren von Wochentagen und den zugehörigen Daten im ISO8601-Format (uuuu-MM-dd) der als Array übergebenen Wochentage der Kalenderwoche des Kalenderwochenjahres.
+	 * <br>Hinweis: Der Montag kann bei der 1. KW im Vorjahr liegen!
+	 *
+	 * @param kalenderwochenjahr  Das Jahr der Kalenderwoche.
+	 * @param kalenderwoche       Die Kalenderwoche.
+	 * @param wochentage          Das Array der Wochentage.
+	 *
+	 * @return die Liste von Paaren von Wochentagen und den zugehörigen Daten im ISO8601-Format (uuuu-MM-dd) der der Kalenderwoche des Kalenderwochenjahres.
+	 */
+	public static gibDatenDerWochentageOfJahrAndKalenderwoche(kalenderwochenjahr : number, kalenderwoche : number, wochentage : Array<Wochentag | null>) : List<PairNN<Wochentag, string>> {
+		DeveloperNotificationException.ifTrue("kalenderwoche < 1", kalenderwoche < 1);
+		DeveloperNotificationException.ifTrue("kalenderwoche > gibKalenderwochenOfJahr(kalenderwochenjahr)", kalenderwoche > DateUtils.gibKalenderwochenOfJahr(kalenderwochenjahr));
+		DeveloperNotificationException.ifTrue("wochentage ist leer", wochentage.length === 0);
+		const daten : List<PairNN<Wochentag, string>> | null = new ArrayList<PairNN<Wochentag, string>>();
+		for (let wochentag of wochentage) {
+			const wtag : Wochentag = DeveloperNotificationException.ifNull("wochentage enthält null-Einträge", wochentag);
+			daten.add(new PairNN<Wochentag, string>(wtag, DateUtils.gibDatumDesWochentagsOfJahrAndKalenderwoche(kalenderwochenjahr, kalenderwoche, wtag.id)));
+		}
+		return daten;
 	}
 
 	/**

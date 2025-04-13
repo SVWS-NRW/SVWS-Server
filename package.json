@@ -2,7 +2,7 @@
 	"author": "MSB NRW",
 	"name": "svws-monorepo",
 	"description": "SVWS-Server-Projekt: Monorepo-Workspace",
-	"version": "1.0.5",
+	"version": "1.0.6",
 	"license": "BSD-3-Clause",
 	"type": "module",
 	"dependencies": {
@@ -16,7 +16,7 @@
 		"@histoire/plugin-vue": "^1.0.0-alpha.1",
 		"@stylistic/eslint-plugin": "^4.0.1",
 		"@tailwindcss/typography": "^0.5.9",
-		"@tailwindcss/vite": "^4.0.7",
+		"@tailwindcss/vite": "^4.0.17",
 		"@types/eslint__js": "^8.42.3",
 		"@types/node": "^22.9.0",
 		"@typescript-eslint/eslint-plugin": "^8.0.0-alpha.30",
@@ -31,7 +31,7 @@
 		"histoire": "^1.0.0-alpha.1",
 		"license-checker-rseidelsohn": "^4.0.0",
 		"remixicon": "^4.2.0",
-		"tailwindcss": "^4.0.3",
+		"tailwindcss": "^4.0.17",
 		"typescript": "^5.7.3",
 		"typescript-eslint": "^8.0.0-alpha.30",
 		"unplugin-auto-import": "^19.0.0",
@@ -56,6 +56,6 @@
 		"svws-webclient/enmserver",
 		"svws-webclient/laufbahnplanung",
 		"svws-webclient/ui",
-		"tests/tests/server-api"
+		"tests/tests-server-api"
 	]
 }

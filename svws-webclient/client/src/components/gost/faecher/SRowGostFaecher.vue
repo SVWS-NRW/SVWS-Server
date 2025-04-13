@@ -12,7 +12,7 @@
 		<input :disabled="!hatUpdateKompetenz || true" type="checkbox" class="svws-ui-checkbox svws-headless" v-model="fach.istFremdSpracheNeuEinsetzend">
 	</div>
 	<div role="cell" class="svws-ui-td svws-align-center svws-divider svws-no-padding" :class="{ 'cursor-pointer': istProjektkurs && hatUpdateKompetenz }" @click="set_pjk_stunden">
-		<div v-if="istProjektkurs && hatUpdateKompetenz" class="flex items-center gap-0.5 border border-ui-contrast-25 hover:border-ui-contrast-50 border-dashed hover:border-solid hover:bg-ui-contrast-0 my-auto p-[0.1rem] rounded" @keydown.enter="set_pjk_stunden" tabindex="0">
+		<div v-if="istProjektkurs && hatUpdateKompetenz" class="flex items-center gap-0.5 border border-ui-25 hover:border-ui-50 border-dashed hover:border-solid hover:bg-ui-100 my-auto p-[0.1rem] rounded" @keydown.enter="set_pjk_stunden" tabindex="0">
 			<span :class="{ 'opacity-100 font-bold': fach.wochenstundenQualifikationsphase === 2, 'opacity-25 hover:opacity-100 font-medium': fach.wochenstundenQualifikationsphase === 3}">2</span>
 			<span class="opacity-50">/</span>
 			<span :class="{ 'opacity-100 font-bold': fach.wochenstundenQualifikationsphase === 3, 'opacity-25 hover:opacity-100 font-medium': fach.wochenstundenQualifikationsphase === 2}">3</span>
@@ -54,12 +54,28 @@
 </template>
 
 <script setup lang="ts">
-	import type { List, GostFach, GostFaecherManager} from "@core";
+
+	/**
+	 * Die Implementierung enthält Teile von experimentellem Code. Für diesen gilt folgendes:
+	 *
+	 * Bei dieser Implementierung handelt es sich um eine Umsetzung in Bezug auf möglichen zukünftigen
+	 * Änderungen in der APO-GOSt. Diese basiert auf der aktuellen Implementierung und integriert Aspekte
+	 * aus dem Eckpunktepapier und auf in den Schulleiterdienstbesprechungen erläuterten Vorhaben.
+	 * Sie dient der Evaluierung von möglichen Umsetzungsvarianten und als Vorbereitung einer späteren
+	 * Implementierung der Belegprüfung. Insbesondere sollen erste Versuche mit Laufbahnen mit einem
+	 * 5. Abiturfach und Projektkursen erprobt werden. Detailaspekte können erst nach Erscheinen der APO-GOSt
+	 * umgesetzt werden.
+	 * Es handelt sich also um experimentellen Code, der keine Rückschlüsse auf Details einer zukünftigen APO-GOSt
+	 * erlaubt.
+	 */
+
 	import type { ComputedRef, WritableComputedRef } from "vue";
 	import { computed } from "vue";
-	import { ArrayList, DeveloperNotificationException, Fachgruppe, Jahrgaenge, Fach } from "@core";
+	import type { List, GostFach, GostFaecherManager} from "@core";
+	import { ServerMode, ArrayList, DeveloperNotificationException, Fachgruppe, Jahrgaenge, Fach } from "@core";
 
 	const props = defineProps<{
+		serverMode: ServerMode;
 		patchFach: (data: Partial<GostFach>, fach_id: number) => Promise<void>;
 		abiturjahr: number;
 		fachId: number;
@@ -138,6 +154,8 @@
 
 	const abi_gk_moeglich: ComputedRef<boolean> = computed(() => {
 		const fg = Fach.getBySchluesselOrDefault(fach.value.kuerzel).getFachgruppe(schuljahr.value);
+		if (ServerMode.DEV.checkServerMode(props.serverMode) && (props.abiturjahr >= 2029)) // experimenteller Code
+			return (fg !== Fachgruppe.FG_ME) && (fg !== Fachgruppe.FG_VX);
 		return (fg !== Fachgruppe.FG_ME) && (fg !== Fachgruppe.FG_VX) && (fg !== Fachgruppe.FG_PX);
 	});
 

@@ -87,7 +87,7 @@ export class LehrerLehrbefaehigungAnerkennung extends JavaEnum<LehrerLehrbefaehi
 		return de_svws_nrw_asd_types_CoreType_daten(this, schuljahr);
 	}
 
-	public statistikId() : String | null {
+	public statistikId() : string | null {
 		return de_svws_nrw_asd_types_CoreType_statistikId(this);
 	}
 

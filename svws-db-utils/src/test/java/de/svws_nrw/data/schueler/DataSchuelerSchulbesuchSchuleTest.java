@@ -33,7 +33,7 @@ class DataSchuelerSchulbesuchSchuleTest {
 
 	private final DBEntityManager conn = mock(DBEntityManager.class);
 
-	private DataSchuelerSchulbesuchSchule data;
+	private DataSchuelerSchulbesuchSchule dataSchuelerSchulbesuchSchule;
 
 	@BeforeAll
 	static void setUpAll() {
@@ -43,7 +43,7 @@ class DataSchuelerSchulbesuchSchuleTest {
 	@BeforeEach
 	void setUp() {
 		when(this.conn.queryAll(DTOEntlassarten.class)).thenReturn(List.of(new DTOEntlassarten(7, "Beurlaubung")));
-		data = new DataSchuelerSchulbesuchSchule(conn, 123L);
+		dataSchuelerSchulbesuchSchule = new DataSchuelerSchulbesuchSchule(conn, 123L);
 	}
 
 	@Test
@@ -55,7 +55,7 @@ class DataSchuelerSchulbesuchSchuleTest {
 		try (var mapperMock = Mockito.mockStatic(JSONMapper.class)) {
 			mapperMock.when(() -> JSONMapper.toMap(any(InputStream.class))).thenReturn(Map.of("id", 99L));
 
-			final var throwable = catchThrowable(() -> this.data.patchAsResponse(1L, mock(InputStream.class)));
+			final var throwable = catchThrowable(() -> this.dataSchuelerSchulbesuchSchule.patchAsResponse(1L, mock(InputStream.class)));
 
 			assertThat(throwable)
 					.isInstanceOf(ApiOperationException.class)
@@ -69,7 +69,7 @@ class DataSchuelerSchulbesuchSchuleTest {
 	void initDTOTest() throws ApiOperationException {
 		final var dto = getDtoSchuelerAbgaenge();
 
-		this.data.initDTO(dto, 2L, null);
+		this.dataSchuelerSchulbesuchSchule.initDTO(dto, 2L, null);
 
 		assertThat(dto.ID).isEqualTo(2L);
 	}
@@ -78,9 +78,9 @@ class DataSchuelerSchulbesuchSchuleTest {
 	@DisplayName("initDTO | missing idSchueler")
 	void initDTOTest_idSchuelerMissing() {
 		final var dto = getDtoSchuelerAbgaenge();
-		data = new DataSchuelerSchulbesuchSchule(conn);
+		dataSchuelerSchulbesuchSchule = new DataSchuelerSchulbesuchSchule(conn);
 
-		final var throwable = catchThrowable(() -> this.data.initDTO(dto, 2L, null));
+		final var throwable = catchThrowable(() -> this.dataSchuelerSchulbesuchSchule.initDTO(dto, 2L, null));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
@@ -93,7 +93,7 @@ class DataSchuelerSchulbesuchSchuleTest {
 	void getLongIdTest() {
 		final var dto = getDtoSchuelerAbgaenge();
 
-		assertThat(this.data.getLongId(dto)).isEqualTo(1L);
+		assertThat(this.dataSchuelerSchulbesuchSchule.getLongId(dto)).isEqualTo(1L);
 	}
 
 	@Test
@@ -102,7 +102,7 @@ class DataSchuelerSchulbesuchSchuleTest {
 		final var dto = getDtoSchuelerAbgaenge();
 		when(this.conn.queryByKey(DTOSchuelerAbgaenge.class, 1L)).thenReturn(dto);
 
-		assertThat(this.data.getById(1L))
+		assertThat(this.dataSchuelerSchulbesuchSchule.getById(1L))
 				.isInstanceOf(SchuelerSchulbesuchSchule.class)
 				.hasFieldOrPropertyWithValue("id", dto.ID);
 	}
@@ -110,7 +110,7 @@ class DataSchuelerSchulbesuchSchuleTest {
 	@Test
 	@DisplayName("getByID | ID can't be null")
 	void getByIdTest_IdNull() {
-		final var throwable = catchThrowable(() -> this.data.getById(null));
+		final var throwable = catchThrowable(() -> this.dataSchuelerSchulbesuchSchule.getById(null));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
@@ -121,7 +121,7 @@ class DataSchuelerSchulbesuchSchuleTest {
 	@Test
 	@DisplayName("getByID | id not found")
 	void getByIdTest_IdNotFound() {
-		final var throwable = catchThrowable(() -> this.data.getById(99L));
+		final var throwable = catchThrowable(() -> this.dataSchuelerSchulbesuchSchule.getById(99L));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
@@ -160,7 +160,7 @@ class DataSchuelerSchulbesuchSchuleTest {
 		final var dto = getDtoSchuelerAbgaenge();
 		dto.AbgangsSchulNr = null;
 
-		final var result = this.data.map(dto);
+		final var result = this.dataSchuelerSchulbesuchSchule.map(dto);
 
 		assertThat(result.idSchule).isNull();
 	}
@@ -198,7 +198,7 @@ class DataSchuelerSchulbesuchSchuleTest {
 	@Test
 	@DisplayName("mapAttribute | id is correct | nothing thrown")
 	void mapAttributeTest_idIsCorrect() {
-		assertThatNoException().isThrownBy(() -> this.data.mapAttribute(getDtoSchuelerAbgaenge(), "id", 1L, null));
+		assertThatNoException().isThrownBy(() -> this.dataSchuelerSchulbesuchSchule.mapAttribute(getDtoSchuelerAbgaenge(), "id", 1L, null));
 	}
 
 	@Test
@@ -206,7 +206,7 @@ class DataSchuelerSchulbesuchSchuleTest {
 	void mapAttributeTest_idIsNotCorrect() {
 		final var dto = new DTOSchuelerAbgaenge(1L, 2L);
 
-		final var throwable = catchThrowable(() -> this.data.mapAttribute(dto, "id", 2L, null));
+		final var throwable = catchThrowable(() -> this.dataSchuelerSchulbesuchSchule.mapAttribute(dto, "id", 2L, null));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
@@ -234,7 +234,7 @@ class DataSchuelerSchulbesuchSchuleTest {
 	void mapAttributeTest_idSchuleException() {
 		final var dto = new DTOSchuelerAbgaenge(1L, 2L);
 
-		final var throwable = catchThrowable(() -> this.data.mapAttribute(dto, "idSchule", 37L, null));
+		final var throwable = catchThrowable(() -> this.dataSchuelerSchulbesuchSchule.mapAttribute(dto, "idSchule", 37L, null));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
@@ -247,7 +247,7 @@ class DataSchuelerSchulbesuchSchuleTest {
 	final void mapAttributeTest_schulgliederung() throws ApiOperationException {
 		final var dto = new DTOSchuelerAbgaenge(1L, 2L);
 
-		this.data.mapAttribute(dto, "schulgliederung", "123", null);
+		this.dataSchuelerSchulbesuchSchule.mapAttribute(dto, "schulgliederung", "123", null);
 
 		assertThat(dto.LSSGL).isEqualTo("123");
 	}
@@ -270,7 +270,7 @@ class DataSchuelerSchulbesuchSchuleTest {
 	final void mapAttributeTest_entlassgrundException() {
 		final var dto = new DTOSchuelerAbgaenge(1L, 2L);
 
-		final var throwable = catchThrowable(() -> this.data.mapAttribute(dto, "entlassgrundID", 37L, null));
+		final var throwable = catchThrowable(() -> this.dataSchuelerSchulbesuchSchule.mapAttribute(dto, "entlassgrundID", 37L, null));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
@@ -284,7 +284,7 @@ class DataSchuelerSchulbesuchSchuleTest {
 		final var dto = new DTOSchuelerAbgaenge(1L, 2L);
 		dto.BemerkungIntern = "needs to be replaced with null";
 
-		this.data.mapAttribute(dto, "entlassgrundID", null, null);
+		this.dataSchuelerSchulbesuchSchule.mapAttribute(dto, "entlassgrundID", null, null);
 
 		assertThat(dto.BemerkungIntern).isNull();
 
@@ -297,7 +297,7 @@ class DataSchuelerSchulbesuchSchuleTest {
 	final void mapAttributeTest_AbschlussartID() throws ApiOperationException {
 		final var dto = new DTOSchuelerAbgaenge(1L, 2L);
 
-		this.data.mapAttribute(dto, "abschlussartID", "12", null);
+		this.dataSchuelerSchulbesuchSchule.mapAttribute(dto, "abschlussartID", "12", null);
 
 		assertThat(dto.LSEntlassArt).isEqualTo("12");
 	}
@@ -307,7 +307,7 @@ class DataSchuelerSchulbesuchSchuleTest {
 	final void mapAttributeTest_organisationsFormID() throws ApiOperationException {
 		final var dto = new DTOSchuelerAbgaenge(1L, 2L);
 
-		this.data.mapAttribute(dto, "organisationsFormID", "A", null);
+		this.dataSchuelerSchulbesuchSchule.mapAttribute(dto, "organisationsFormID", "A", null);
 
 		assertThat(dto.OrganisationsformKrz).isEqualTo("A");
 	}
@@ -317,7 +317,7 @@ class DataSchuelerSchulbesuchSchuleTest {
 	final void mapAttributeTest_datumVon() throws ApiOperationException {
 		final var dto = new DTOSchuelerAbgaenge(1L, 2L);
 
-		this.data.mapAttribute(dto, "datumVon", "01-02-2020", null);
+		this.dataSchuelerSchulbesuchSchule.mapAttribute(dto, "datumVon", "01-02-2020", null);
 
 		assertThat(dto.LSBeginnDatum).isEqualTo("01-02-2020");
 	}
@@ -327,7 +327,7 @@ class DataSchuelerSchulbesuchSchuleTest {
 	final void mapAttributeTest_datumBis() throws ApiOperationException {
 		final var dto = new DTOSchuelerAbgaenge(1L, 2L);
 
-		this.data.mapAttribute(dto, "datumBis", "01-02-2020", null);
+		this.dataSchuelerSchulbesuchSchule.mapAttribute(dto, "datumBis", "01-02-2020", null);
 
 		assertThat(dto.LSSchulEntlassDatum).isEqualTo("01-02-2020");
 	}
@@ -337,7 +337,7 @@ class DataSchuelerSchulbesuchSchuleTest {
 	final void mapAttributeTest_jahrgangVon() throws ApiOperationException {
 		final var dto = new DTOSchuelerAbgaenge(1L, 2L);
 
-		this.data.mapAttribute(dto, "jahrgangVon", "02", null);
+		this.dataSchuelerSchulbesuchSchule.mapAttribute(dto, "jahrgangVon", "02", null);
 
 		assertThat(dto.LSBeginnJahrgang).isEqualTo("02");
 	}
@@ -347,7 +347,7 @@ class DataSchuelerSchulbesuchSchuleTest {
 	final void mapAttributeTest_jahrgangBis() throws ApiOperationException {
 		final var dto = new DTOSchuelerAbgaenge(1L, 2L);
 
-		this.data.mapAttribute(dto, "jahrgangBis", "02", null);
+		this.dataSchuelerSchulbesuchSchule.mapAttribute(dto, "jahrgangBis", "02", null);
 
 		assertThat(dto.LSJahrgang).isEqualTo("02");
 	}
@@ -355,7 +355,7 @@ class DataSchuelerSchulbesuchSchuleTest {
 	@Test
 	@DisplayName("mapAttribute | unknown")
 	final void mapAttributeTest_unknown() {
-		final var throwable = catchThrowable(() -> this.data.mapAttribute(null, "unknown", null, null));
+		final var throwable = catchThrowable(() -> this.dataSchuelerSchulbesuchSchule.mapAttribute(null, "unknown", null, null));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)

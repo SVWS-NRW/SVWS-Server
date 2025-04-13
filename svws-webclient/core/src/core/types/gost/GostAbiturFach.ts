@@ -30,7 +30,12 @@ export class GostAbiturFach extends JavaEnum<GostAbiturFach> {
 	public static readonly AB4 : GostAbiturFach = new GostAbiturFach("AB4", 3, 4, "AB4", "4. Abiturfach (GK, mündlich)");
 
 	/**
-	 * Die ID bzw. Nummer der Abiturfachart (1-4)
+	 * 5. Abiturfach (GK/PJK/BLL)
+	 */
+	public static readonly AB5 : GostAbiturFach = new GostAbiturFach("AB5", 4, 5, "AB5", "5. Abiturfach (GK/PJK/BLL)");
+
+	/**
+	 * Die ID bzw. Nummer der Abiturfachart (1-5)
 	 */
 	public readonly id : number;
 
@@ -83,6 +88,9 @@ export class GostAbiturFach extends JavaEnum<GostAbiturFach> {
 			case 4: {
 				return GostAbiturFach.AB4;
 			}
+			case 5: {
+				return GostAbiturFach.AB5;
+			}
 			default: {
 				return null;
 			}
@@ -112,6 +120,9 @@ export class GostAbiturFach extends JavaEnum<GostAbiturFach> {
 			case "4": {
 				return GostAbiturFach.AB4;
 			}
+			case "5": {
+				return GostAbiturFach.AB5;
+			}
 			default: {
 				return null;
 			}
@@ -138,6 +149,9 @@ export class GostAbiturFach extends JavaEnum<GostAbiturFach> {
 			}
 			case "AB4": {
 				return GostAbiturFach.AB4;
+			}
+			case "AB5": {
+				return GostAbiturFach.AB5;
 			}
 			default: {
 				return null;

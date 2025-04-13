@@ -14,7 +14,7 @@ import { routeGostKursplanungSchueler } from "~/router/apps/gost/kursplanung/Rou
 
 import { RouteDataGostKursplanung } from "~/router/apps/gost/kursplanung/RouteDataGostKursplanung";
 
-import { ConfigElement } from "~/components/Config";
+import { ConfigElement } from "../../../../../../ui/src/utils/Config";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { routeError } from "~/router/error/RouteError";
 
@@ -46,6 +46,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			new ConfigElement("gost.kursplanung.umkursen.fixierteVerschieben", "user", "false"),
 			new ConfigElement("gost.kursplanung.umkursen.inZielkursFixieren", "user", "false"),
 			new ConfigElement("gost.kursplanung.berechnung.ausfuehrlicheDarstellungKursdifferenz", "user", "true"),
+			new ConfigElement("gost.kursplanung.route.zuletztBesucht", "user", "[]"), // Map<number, { halbjahrId: number, idBlockung: number, idErgebnis: number }>
 		]);
 	}
 
@@ -79,11 +80,12 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean, redirected: RouteNode<any, any> | undefined) : Promise<void | Error | RouteLocationRaw> {
 		try {
 			const { abiturjahr, halbjahr: halbjahrId, idblockung: idBlockung, idergebnis: idErgebnis } = RouteNode.getIntParams(to_params, ["abiturjahr", "halbjahr", "idblockung", "idergebnis"]);
-			const halbjahr = GostHalbjahr.fromID(halbjahrId ?? null);
 			// Prüfe den Abiturjahrgang und setze diesen ggf.
 			if (abiturjahr === undefined)
 				throw new DeveloperNotificationException("Fehler: Der Abiturjahrgang darf an dieser Stelle nicht undefined sein.");
 			const abiturjahrwechsel = await this.data.setAbiturjahr(abiturjahr, isEntering);
+			const zuletztBesucht = this.data.zuletztBesucht.get(abiturjahr);
+			const halbjahr = GostHalbjahr.fromID(halbjahrId ?? zuletztBesucht?.halbjahrId ?? null);
 			// Prüfe das Halbjahr und setzte dieses ggf.
 			if ((abiturjahrwechsel) || (halbjahr === null)) {
 				let hj = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abiturjahr, routeApp.data.aktAbschnitt.value.schuljahr, routeApp.data.aktAbschnitt.value.abschnitt);
@@ -105,8 +107,12 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 							break;
 						}
 					}
-					if (blockungsEintrag === undefined)
-						[blockungsEintrag] = this.data.mapBlockungen.values();
+					if (blockungsEintrag === undefined) {
+						if (zuletztBesucht?.idBlockung !== undefined)
+							blockungsEintrag = this.data.mapBlockungen.get(zuletztBesucht.idBlockung);
+						if (blockungsEintrag === undefined)
+							[blockungsEintrag] = this.data.mapBlockungen.values();
+					}
 					return this.getRouteBlockung(abiturjahr, halbjahr.id, blockungsEintrag.id);
 				}
 				if (this.data.hatBlockung)
@@ -126,31 +132,35 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 					if (this.data.ergebnisse.size() <= 0)
 						throw new DeveloperNotificationException("Fehler bei der Blockung. Es muss bei einer Blockung immer mindestens das Vorlagen-Ergebnis vorhanden sein.");
 					// ...wenn kein Ergebnis in der Route gesetzt wurde, aber ein Ergebnis existiert, dann setze die Route neu auf das Vorlagen-Ergebnis und ggf. auf den aktuellen Schüler
+					const currErgebnisId = zuletztBesucht?.idErgebnis ?? this.data.auswahlErgebnis.id;
 					if (this.data.hatSchueler)
-						return this.getRouteSchueler(abiturjahr, halbjahr.id, blockungsEintrag.id, this.data.auswahlErgebnis.id, this.data.auswahlSchueler.id);
-					return this.getRouteErgebnis(abiturjahr, halbjahr.id, blockungsEintrag.id, this.data.auswahlErgebnis.id);
+						return this.getRouteSchueler(abiturjahr, halbjahr.id, blockungsEintrag.id, currErgebnisId, this.data.auswahlSchueler.id);
+					return this.getRouteErgebnis(abiturjahr, halbjahr.id, blockungsEintrag.id, currErgebnisId);
 				}
 			}
 			// Prüfe das Blockungsergebnis und setzte dieses ggf.
+			let ergebnis : GostBlockungsergebnis | undefined;
 			if (idErgebnis === undefined) {
-			// ... wurde die ID des Ergebnisses auf undefined setzt, so prüfe, ob die Ergebnisliste leer ist und wähle ggf. das aktiver oder das erste Element aus
+				// ... wurde die ID des Ergebnisses auf undefined setzt, so prüfe, ob die Ergebnisliste leer ist und wähle ggf. das aktiver oder das erste Element aus
 				if ((this.data.hatBlockung) && (this.data.ergebnisse.size() > 0)) {
-					let ergebnis : GostBlockungsergebnis | undefined = undefined;
 					for (const e of this.data.datenmanager.ergebnisGetListeSortiertNachBewertung()) {
 						if (e.istAktiv === true) {
 							ergebnis = e;
 							break;
 						}
 					}
-					if (ergebnis === undefined)
-						ergebnis = this.data.datenmanager.ergebnisGetListeSortiertNachBewertung().get(0);
+					if (ergebnis === undefined) {
+						if (zuletztBesucht?.idErgebnis !== undefined)
+							ergebnis = this.data.datenmanager.ergebnisGet(zuletztBesucht.idErgebnis);
+						if (ergebnis === undefined)
+							ergebnis = this.data.datenmanager.ergebnisGetListeSortiertNachBewertung().get(0);
+					}
 					return this.getRouteErgebnis(abiturjahr, halbjahr.id, idBlockung, ergebnis.id);
 				}
 				if ((this.data.hatBlockung) && (this.data.ergebnisse.size() <= 0))
 					return; // akzeptiere die Route, da kein Ergebnis vorhanden ist - sollt eigentlich nicht vorkommen, da ein Vorlagenergebnis notwendig ist
 				return this.getRouteHalbjahr(abiturjahr, halbjahr.id); // Es existiert keine Blockung, also route zu der Halbjahresauswahl
 			}
-			let ergebnis;
 			try {
 				ergebnis = routeGostKursplanung.data.datenmanager.ergebnisGet(idErgebnis);
 			} catch (e) {
@@ -176,6 +186,9 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 	}
 
 	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
+		const { abiturjahr, halbjahr: halbjahrId, idblockung: idBlockung, idergebnis: idErgebnis } = RouteNode.getIntParams(from_params, ["abiturjahr", "halbjahr", "idblockung", "idergebnis"]);
+		if ((abiturjahr !== undefined) && (halbjahrId !== undefined) && (idBlockung !== undefined) && (idErgebnis !== undefined))
+			await this.data.setZuletztBesucht(new Map([[abiturjahr, { halbjahrId, idBlockung, idErgebnis }]]));
 		await this.data.setAuswahlBlockung(undefined, true);
 		this.data.unsetHalbjahr();
 	}

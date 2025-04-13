@@ -29,7 +29,7 @@
 					{{ value }}
 				</template>
 				<template #actions>
-					<svws-ui-tooltip position="bottom" v-if="ServerMode.DEV.checkServerMode(serverMode)/* && hatKompetenzAendern*/">
+					<svws-ui-tooltip position="bottom" v-if="hatKompetenzAendern">
 						<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="startCreationMode" :has-focus="rowsFiltered.length === 0">
 							<span class="icon i-ri-add-line" />
 						</svws-ui-button>
@@ -49,7 +49,7 @@
 	import type { StundenplanAuswahlProps } from "./SStundenplanAuswahlProps";
 	import type { DataTableColumn } from "@ui";
 	import { ViewType } from "@ui";
-	import { ServerMode } from "@core";
+	import { BenutzerKompetenz } from "@core";
 	import type { StundenplanListeEintrag } from "@core";
 	import {useRegionSwitch} from "~/components/useRegionSwitch";
 
@@ -57,6 +57,8 @@
 	const selected = ref<StundenplanListeEintrag[]>([]);
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
+
+	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.STUNDENPLAN_AENDERN));
 
 	const columns: DataTableColumn[] = [
 		{ key: "bezeichnung", label: "Bezeichnung", span: 2, sortable: false },

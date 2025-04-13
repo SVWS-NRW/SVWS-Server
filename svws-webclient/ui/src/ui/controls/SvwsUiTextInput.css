@@ -85,7 +85,7 @@
 }
 
 .text-input--control {
-	@apply bg-ui border border-ui-secondary;
+	@apply bg-ui border border-ui;
 	@apply rounded-md;
 	@apply h-9 w-full;
 	@apply text-base;
@@ -107,7 +107,7 @@
 
 
 .svws-ui-table.svws-has-background .text-input--headless {
-	@apply text-ui-static;
+	@apply text-uistatic;
 }
 
 .multiselect-input-component .text-input--control,
@@ -122,7 +122,7 @@
 }
 
 .text-input-component .text-input--control:focus-visible {
-	@apply ring-3 ring-ui-contrast-10;
+	@apply ring-3 ring-ui-neutral;
 }
 
 .text-input--invalid.text-input-component:focus-within .text-input--control,
@@ -249,11 +249,6 @@
 	left: 0.7em;
 	font-size: 0.78rem;
 }
-	.text-input--filled.text-input--readonly:not(.text-input--select)
-	.text-input--placeholder:after  {
-		@apply ml-1 h-3 w-3;
-		content: url(@icons/System/lock-line.svg);
-	}
 
 .text-input--statistics .text-input--placeholder {
 	@apply text-ui-statistic font-bold;
@@ -290,11 +285,6 @@
 .text-input-component:focus-within,
 .text-input--filled {
 	@apply overflow-visible;
-}
-
-.text-input--placeholder--required:after {
-	@apply ml-1 h-3 w-3;
-	content: url(@icons/Editor/asterisk.svg);
 }
 
 .text-input--statistics .text-input--placeholder--required:after {

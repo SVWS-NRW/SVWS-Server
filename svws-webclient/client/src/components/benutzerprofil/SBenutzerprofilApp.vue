@@ -41,11 +41,11 @@
 						<svws-ui-radio-option value="light" v-model="themeRef" name="theme" label="Light" @click="updateTheme('light')" />
 						<svws-ui-radio-option value="dark" v-model="themeRef" name="theme" label="Dark (In Entwicklung)" @click="updateTheme('dark')" />
 					</svws-ui-radio-group>
-					<div v-if="themeRef === 'dark'" class="mt-2 text-ui-contrast-25">
+					<svws-ui-notification v-if="themeRef === 'dark'" type="warning">
 						Achtung! Das Dark-Theme befindet sich gerade noch in der Entwicklung und ist noch nicht
 						vollständig umgesetzt.
-						<span class="font-bold text-ui-contrast-0">Es kann an einigen Stellen zu Darstellungsproblemen führen.</span>span
-					</div>
+						<br>Es kann an einigen Stellen zu Darstellungsproblemen führen.
+					</svws-ui-notification>
 				</div>
 			</div>
 		</svws-ui-content-card>

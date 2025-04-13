@@ -26,7 +26,6 @@ import { BilingualeSpracheKatalogEintrag } from '../asd/data/fach/BilingualeSpra
 import { DatenbankVerbindungsdaten } from '../core/data/schema/DatenbankVerbindungsdaten';
 import { DBSchemaListeEintrag } from '../core/data/db/DBSchemaListeEintrag';
 import { EinschulungsartKatalogEintrag } from '../core/data/schule/EinschulungsartKatalogEintrag';
-import { Einwilligung } from '../core/data/schule/Einwilligung';
 import { Einwilligungsart } from '../core/data/schule/Einwilligungsart';
 import { ENMConfigResponse } from '../core/data/enm/ENMConfigResponse';
 import { ENMDaten } from '../core/data/enm/ENMDaten';
@@ -106,7 +105,7 @@ import { LehrerAbgangsgrundKatalogEintrag } from '../asd/data/lehrer/LehrerAbgan
 import { LehrerAnrechnungsgrundKatalogEintrag } from '../asd/data/lehrer/LehrerAnrechnungsgrundKatalogEintrag';
 import { LehrerBeschaeftigungsartKatalogEintrag } from '../asd/data/lehrer/LehrerBeschaeftigungsartKatalogEintrag';
 import { LehrerEinsatzstatusKatalogEintrag } from '../asd/data/lehrer/LehrerEinsatzstatusKatalogEintrag';
-import { LehrerEinwilligung } from '../core/data/schule/LehrerEinwilligung';
+import { LehrerEinwilligung } from '../core/data/lehrer/LehrerEinwilligung';
 import { LehrerFachrichtungAnerkennungKatalogEintrag } from '../asd/data/lehrer/LehrerFachrichtungAnerkennungKatalogEintrag';
 import { LehrerFachrichtungKatalogEintrag } from '../asd/data/lehrer/LehrerFachrichtungKatalogEintrag';
 import { LehrerLehramtAnerkennungKatalogEintrag } from '../asd/data/lehrer/LehrerLehramtAnerkennungKatalogEintrag';
@@ -114,6 +113,7 @@ import { LehrerLehramtKatalogEintrag } from '../asd/data/lehrer/LehrerLehramtKat
 import { LehrerLehrbefaehigungAnerkennungKatalogEintrag } from '../asd/data/lehrer/LehrerLehrbefaehigungAnerkennungKatalogEintrag';
 import { LehrerLehrbefaehigungKatalogEintrag } from '../asd/data/lehrer/LehrerLehrbefaehigungKatalogEintrag';
 import { LehrerLeitungsfunktionKatalogEintrag } from '../asd/data/lehrer/LehrerLeitungsfunktionKatalogEintrag';
+import { LehrerLernplattform } from '../core/data/lehrer/LehrerLernplattform';
 import { LehrerListeEintrag } from '../core/data/lehrer/LehrerListeEintrag';
 import { LehrerMehrleistungsartKatalogEintrag } from '../asd/data/lehrer/LehrerMehrleistungsartKatalogEintrag';
 import { LehrerMinderleistungsartKatalogEintrag } from '../asd/data/lehrer/LehrerMinderleistungsartKatalogEintrag';
@@ -149,6 +149,7 @@ import { Schild3KatalogEintragPruefungsordnungOption } from '../core/data/schild
 import { Schild3KatalogEintragUnicodeUmwandlung } from '../core/data/schild3/Schild3KatalogEintragUnicodeUmwandlung';
 import { Schild3KatalogEintragVersetzungsvermerke } from '../core/data/schild3/Schild3KatalogEintragVersetzungsvermerke';
 import { SchuelerBetriebsdaten } from '../asd/data/schueler/SchuelerBetriebsdaten';
+import { SchuelerEinwilligung } from '../core/data/schueler/SchuelerEinwilligung';
 import { SchuelerEinwilligungsartenZusammenfassung } from '../core/data/schueler/SchuelerEinwilligungsartenZusammenfassung';
 import { SchuelerKAoADaten } from '../core/data/schueler/SchuelerKAoADaten';
 import { SchuelerLeistungsdaten } from '../asd/data/schueler/SchuelerLeistungsdaten';
@@ -162,6 +163,7 @@ import { SchuelerSchulbesuchSchule } from '../asd/data/schueler/SchuelerSchulbes
 import { SchuelerSchulbesuchsdaten } from '../asd/data/schueler/SchuelerSchulbesuchsdaten';
 import { SchuelerStammdaten } from '../asd/data/schueler/SchuelerStammdaten';
 import { SchuelerStatusKatalogEintrag } from '../asd/data/schueler/SchuelerStatusKatalogEintrag';
+import { SchuelerTelefon } from '../core/data/schueler/SchuelerTelefon';
 import { SchuelerVermerkartZusammenfassung } from '../core/data/schueler/SchuelerVermerkartZusammenfassung';
 import { SchuelerVermerke } from '../core/data/schueler/SchuelerVermerke';
 import { SchulabschlussAllgemeinbildendKatalogEintrag } from '../asd/data/schule/SchulabschlussAllgemeinbildendKatalogEintrag';
@@ -194,6 +196,7 @@ import { StundenplanSchiene } from '../core/data/stundenplan/StundenplanSchiene'
 import { StundenplanUnterricht } from '../core/data/stundenplan/StundenplanUnterricht';
 import { StundenplanUnterrichtsverteilung } from '../core/data/stundenplan/StundenplanUnterrichtsverteilung';
 import { StundenplanZeitraster } from '../core/data/stundenplan/StundenplanZeitraster';
+import { TelefonArt } from '../core/data/schule/TelefonArt';
 import { UebergangsempfehlungKatalogEintrag } from '../asd/data/schueler/UebergangsempfehlungKatalogEintrag';
 import { VerkehrsspracheKatalogEintrag } from '../core/data/schule/VerkehrsspracheKatalogEintrag';
 import { VermerkartEintrag } from '../core/data/schule/VermerkartEintrag';
@@ -4347,7 +4350,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode createGostAbiturjahrgang für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/new/{jahrgangid}
+	 * Implementierung der POST-Methode createGostAbiturjahrgang für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/new/{schuljahresabschnittsid}/{jahrgangid}
 	 *
 	 * Erstellt einen neuen Abiturjahrgang und gibt das Abiturjahr zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eine Abiturjahrgangs besitzt.
 	 *
@@ -4361,13 +4364,15 @@ export class ApiServer extends BaseApi {
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} schuljahresabschnittsid - der Pfad-Parameter schuljahresabschnittsid
 	 * @param {number} jahrgangid - der Pfad-Parameter jahrgangid
 	 *
 	 * @returns Der Abiturjahrgang wurde erfolgreich angelegt.
 	 */
-	public async createGostAbiturjahrgang(schema : string, jahrgangid : number) : Promise<number | null> {
-		const path = "/db/{schema}/gost/abiturjahrgang/new/{jahrgangid}"
+	public async createGostAbiturjahrgang(schema : string, schuljahresabschnittsid : number, jahrgangid : number) : Promise<number | null> {
+		const path = "/db/{schema}/gost/abiturjahrgang/new/{schuljahresabschnittsid}/{jahrgangid}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{schuljahresabschnittsid\s*(:[^{}]+({[^{}]+})*)?}/g, schuljahresabschnittsid.toString())
 			.replace(/{jahrgangid\s*(:[^{}]+({[^{}]+})*)?}/g, jahrgangid.toString());
 		const result : string = await super.postJSON(path, null);
 		const text = result;
@@ -7028,6 +7033,30 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode deleteGostSchuelerFachwahlen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{schuelerid : \d+}/fachwahl/delete
+	 *
+	 * Löscht die Fachwahlen des Schülers mit der angegebenen ID.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen der Fachwahlen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 203: Die Fachwahlen wurden erfolgreich gelöscht.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Fachwahlen zu löschen.
+	 *   Code 404: Der Schüler bzw. der zugehörige Abiturjahrgang wurde nicht gefunden.
+	 *   Code 409: Es liegen bereits bewertete Abschnitt vor, so dass die Fachwahlen nicht vollständig entfernt werden können.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} schuelerid - der Pfad-Parameter schuelerid
+	 */
+	public async deleteGostSchuelerFachwahlen(schema : string, schuelerid : number) : Promise<void> {
+		const path = "/db/{schema}/gost/schueler/{schuelerid : \\d+}/fachwahl/delete"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{schuelerid\s*(:[^{}]+({[^{}]+})*)?}/g, schuelerid.toString());
+		await super.postJSON(path, null);
+		return;
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode resetGostSchuelerFachwahlen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{schuelerid : \d+}/fachwahl/reset
 	 *
 	 * Setzt die Fachwahlen des Schülers mit der angegebenen ID zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Zurücksetzen der Fachwahlen besitzt.
@@ -7893,6 +7922,63 @@ export class ApiServer extends BaseApi {
 		const ret = new ArrayList<LehrerListeEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerListeEintrag.transpilerFromJSON(text)); });
 		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getLehrerLernplattformen für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/{id : \d+}/lernplattformen
+	 *
+	 * Liest die Lernplattformen des Lehrers zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Lernplattformen des Lehrers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<LehrerLernplattform>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Lehrerdaten anzusehen.
+	 *   Code 404: Keine Lernplattform für den Lehrer mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Lernplattformen des Lehrers
+	 */
+	public async getLehrerLernplattformen(schema : string, id : number) : Promise<List<LehrerLernplattform>> {
+		const path = "/db/{schema}/lehrer/{id : \\d+}/lernplattformen"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<LehrerLernplattform>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerLernplattform.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchLehrerLernplattform für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/{id : \d+}/lernplattformen/{idLernplattform : \d+}
+	 *
+	 * Passt die Einwilligung zu der angegebenen Lehrer- und Einwilligungsart-ID an und speichert das Ergebnis in der Datenbank.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Einwilligungen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich in die Lernplattform integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lernplattform der Lehrer zu ändern.
+	 *   Code 404: Kein Lehrer oder keine Lernplattform der angegebenen Art gefunden.
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde. (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<LehrerLernplattform>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 * @param {number} idLernplattform - der Pfad-Parameter idLernplattform
+	 */
+	public async patchLehrerLernplattform(data : Partial<LehrerLernplattform>, schema : string, id : number, idLernplattform : number) : Promise<void> {
+		const path = "/db/{schema}/lehrer/{id : \\d+}/lernplattformen/{idLernplattform : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
+			.replace(/{idLernplattform\s*(:[^{}]+({[^{}]+})*)?}/g, idLernplattform.toString());
+		const body : string = LehrerLernplattform.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
 	}
 
 
@@ -9389,117 +9475,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getEinwilligungen für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/einwilligungen
-	 *
-	 * Liest die Einwilligungen des Schülers zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Einwilligungen des Schülers
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<Einwilligung>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzusehen.
-	 *   Code 404: Keine Einwilligungen für den Schüler mit der angegebenen ID gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Die Einwilligungen des Schülers
-	 */
-	public async getEinwilligungen(schema : string, id : number) : Promise<List<Einwilligung>> {
-		const path = "/db/{schema}/schueler/{id : \\d+}/einwilligungen"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<Einwilligung>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Einwilligung.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
-	 * Implementierung der PATCH-Methode patchEinwilligung für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/einwilligungen/{eaId : \d+}
-	 *
-	 * Passt die Einwilligung zu der angegebenen Schüler- und Einwilligungsart-ID an und speichert das Ergebnis in der Datenbank.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schüler-Einwilligungen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Patch wurde erfolgreich in die Einwilligung integriert.
-	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Einwilligungen der Schüler zu ändern.
-	 *   Code 404: Kein Schüler oder keine Einwilligung der angegebenen Art gefunden.
-	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde. (z.B. eine negative ID)
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {Partial<Einwilligung>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 * @param {number} eaId - der Pfad-Parameter eaId
-	 */
-	public async patchEinwilligung(data : Partial<Einwilligung>, schema : string, id : number, eaId : number) : Promise<void> {
-		const path = "/db/{schema}/schueler/{id : \\d+}/einwilligungen/{eaId : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
-			.replace(/{eaId\s*(:[^{}]+({[^{}]+})*)?}/g, eaId.toString());
-		const body : string = Einwilligung.transpilerToJSONPatch(data);
-		return super.patchJSON(path, body);
-	}
-
-
-	/**
-	 * Implementierung der POST-Methode addEinwilligung für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/einwilligungen/{eaId : \d+}
-	 *
-	 * Erstellt eine neuen Einwilligung für den Schüler mit der angegebenen IDDabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Einwilligungen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 201: Die erstellte Einwilligung.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: Einwilligung
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Einwilligungen anzulegen.
-	 *
-	 * @param {Partial<Einwilligung>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 * @param {number} eaId - der Pfad-Parameter eaId
-	 *
-	 * @returns Die erstellte Einwilligung.
-	 */
-	public async addEinwilligung(data : Partial<Einwilligung>, schema : string, id : number, eaId : number) : Promise<Einwilligung> {
-		const path = "/db/{schema}/schueler/{id : \\d+}/einwilligungen/{eaId : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
-			.replace(/{eaId\s*(:[^{}]+({[^{}]+})*)?}/g, eaId.toString());
-		const body : string = Einwilligung.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
-		const text = result;
-		return Einwilligung.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der DELETE-Methode deleteEinwilligung für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/einwilligungen/{eaId : \d+}
-	 *
-	 * Löscht die Einwilligung mit der angegebenen IDDabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Einwilligungen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 204: Die Einwilligung des Schülers wurde gelöscht
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten zu ändern.
-	 *   Code 404: Keine Einwilligung mit der angegebenen ID gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 * @param {number} eaId - der Pfad-Parameter eaId
-	 */
-	public async deleteEinwilligung(schema : string, id : number, eaId : number) : Promise<void> {
-		const path = "/db/{schema}/schueler/{id : \\d+}/einwilligungen/{eaId : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
-			.replace(/{eaId\s*(:[^{}]+({[^{}]+})*)?}/g, eaId.toString());
-		await super.deleteJSON(path, null);
-		return;
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode getSchuelerErzieher für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/erzieher
 	 *
 	 * Erstellt eine Liste aller in der Datenbank vorhandenen Erzieher unter Angabe der Schüler-IDdes Vor- und Nachnamens, Erzieherart, Kontaktdaten, ob sie in der Anwendung sichtbar bzw. änderbar sein sollen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Erzieherdaten besitzt.
@@ -9721,37 +9696,6 @@ export class ApiServer extends BaseApi {
 			.replace(/{idLernplattform\s*(:[^{}]+({[^{}]+})*)?}/g, idLernplattform.toString());
 		const body : string = SchuelerLernplattform.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getSchuelerLernplattformCredentials für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/lernplattformen/{idLernplattform : \d+}
-	 *
-	 * Liest anhand der Schüler-ID und der Lernplattform-ID den zugehörigen Credential-Datensatz aus der Datenbank aus und liefert die den Benutzername und Initialkennwort zurück.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Credentials des Schülers zu einer Lernplattform
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<Lernplattform>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzusehen.
-	 *   Code 404: Credentials oder Lernplattform nicht gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 * @param {number} idLernplattform - der Pfad-Parameter idLernplattform
-	 *
-	 * @returns Die Credentials des Schülers zu einer Lernplattform
-	 */
-	public async getSchuelerLernplattformCredentials(schema : string, id : number, idLernplattform : number) : Promise<List<Lernplattform>> {
-		const path = "/db/{schema}/schueler/{id : \\d+}/lernplattformen/{idLernplattform : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
-			.replace(/{idLernplattform\s*(:[^{}]+({[^{}]+})*)?}/g, idLernplattform.toString());
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<Lernplattform>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Lernplattform.transpilerFromJSON(text)); });
-		return ret;
 	}
 
 
@@ -10156,6 +10100,35 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getSchuelerTelefone für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/telefone
+	 *
+	 * Liest die Telefoneinträge des Schülers zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Telefoneinträge des Schülers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SchuelerTelefon>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzusehen.
+	 *   Code 404: Keine TelefonArt für den Schüler mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Telefoneinträge des Schülers
+	 */
+	public async getSchuelerTelefone(schema : string, id : number) : Promise<List<SchuelerTelefon>> {
+		const path = "/db/{schema}/schueler/{id : \\d+}/telefone"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SchuelerTelefon>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerTelefon.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getVermerkdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/vermerke
 	 *
 	 * Liest die Vermerkdaten des Schülers zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten und Vermerke besitzt.
@@ -10238,6 +10211,63 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getSchuelerEinwilligungen für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{idSchueler : \d+}/einwilligungen
+	 *
+	 * Liest die Einwilligungen des Schülers zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Einwilligungen des Schülers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SchuelerEinwilligung>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzusehen.
+	 *   Code 404: Keine Einwilligungen für den Schüler mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idSchueler - der Pfad-Parameter idSchueler
+	 *
+	 * @returns Die Einwilligungen des Schülers
+	 */
+	public async getSchuelerEinwilligungen(schema : string, idSchueler : number) : Promise<List<SchuelerEinwilligung>> {
+		const path = "/db/{schema}/schueler/{idSchueler : \\d+}/einwilligungen"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idSchueler\s*(:[^{}]+({[^{}]+})*)?}/g, idSchueler.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SchuelerEinwilligung>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerEinwilligung.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchSchuelerEinwilligung für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{idSchueler : \d+}/einwilligungen/{idEinwilligungsart : \d+}
+	 *
+	 * Passt die Einwilligung zu der angegebenen Schüler- und Einwilligungsart-ID an und speichert das Ergebnis in der Datenbank.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schüler-Einwilligungen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich in die Einwilligung integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Einwilligungen der Schüler zu ändern.
+	 *   Code 404: Kein Schüler oder keine Einwilligung der angegebenen Art gefunden.
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde. (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<SchuelerEinwilligung>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idSchueler - der Pfad-Parameter idSchueler
+	 * @param {number} idEinwilligungsart - der Pfad-Parameter idEinwilligungsart
+	 */
+	public async patchSchuelerEinwilligung(data : Partial<SchuelerEinwilligung>, schema : string, idSchueler : number, idEinwilligungsart : number) : Promise<void> {
+		const path = "/db/{schema}/schueler/{idSchueler : \\d+}/einwilligungen/{idEinwilligungsart : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idSchueler\s*(:[^{}]+({[^{}]+})*)?}/g, idSchueler.toString())
+			.replace(/{idEinwilligungsart\s*(:[^{}]+({[^{}]+})*)?}/g, idEinwilligungsart.toString());
+		const body : string = SchuelerEinwilligung.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode addSchuelerMerkmal für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{idSchueler : \d+}/merkmal
 	 *
 	 * Erstellt neue SchuelerMerkmale, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
@@ -10263,6 +10293,86 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return SchuelerSchulbesuchMerkmal.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addSchuelerTelefon für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{idSchueler : \d+}/telefon
+	 *
+	 * Erstellt einen neuen SchülertelefoneintragDabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die Telefone des Schülers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SchuelerTelefon
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schülertelefone anzulegen.
+	 *
+	 * @param {Partial<SchuelerTelefon>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idSchueler - der Pfad-Parameter idSchueler
+	 *
+	 * @returns Die Telefone des Schülers
+	 */
+	public async addSchuelerTelefon(data : Partial<SchuelerTelefon>, schema : string, idSchueler : number) : Promise<SchuelerTelefon> {
+		const path = "/db/{schema}/schueler/{idSchueler : \\d+}/telefon"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idSchueler\s*(:[^{}]+({[^{}]+})*)?}/g, idSchueler.toString());
+		const body : string = SchuelerTelefon.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return SchuelerTelefon.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchSchuelerTelefon für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{idSchueler : \d+}/telefon/{idTelefon : \d+}
+	 *
+	 * Passt die Vermerke zu der angegebenen Schüler-ID und der angegeben Telefon-ID an und speichert das Ergebnis in der Datenbank.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Sprachbelegungen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich in die Schülertelefoneinträge integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Telefondaten der Schüler zu ändern.
+	 *   Code 404: Kein Schülertelefoneintrag mit der angegebenen ID gefunden oder keine Sprachbelegung für die Sprache gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<SchuelerTelefon>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idSchueler - der Pfad-Parameter idSchueler
+	 * @param {number} idTelefon - der Pfad-Parameter idTelefon
+	 */
+	public async patchSchuelerTelefon(data : Partial<SchuelerTelefon>, schema : string, idSchueler : number, idTelefon : number) : Promise<void> {
+		const path = "/db/{schema}/schueler/{idSchueler : \\d+}/telefon/{idTelefon : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idSchueler\s*(:[^{}]+({[^{}]+})*)?}/g, idSchueler.toString())
+			.replace(/{idTelefon\s*(:[^{}]+({[^{}]+})*)?}/g, idTelefon.toString());
+		const body : string = SchuelerTelefon.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteSchuelerTelefon für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{idSchueler : \d+}/telefon/{idTelefon : \d+}
+	 *
+	 * Löscht einen SchuelertelefoneintragDabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Der Telefoneintrag des Schülers wurde gelöscht
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzulegen.
+	 *   Code 404: Kein Schülertelefoneinträge mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idSchueler - der Pfad-Parameter idSchueler
+	 * @param {number} idTelefon - der Pfad-Parameter idTelefon
+	 */
+	public async deleteSchuelerTelefon(schema : string, idSchueler : number, idTelefon : number) : Promise<void> {
+		const path = "/db/{schema}/schueler/{idSchueler : \\d+}/telefon/{idTelefon : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idSchueler\s*(:[^{}]+({[^{}]+})*)?}/g, idSchueler.toString())
+			.replace(/{idTelefon\s*(:[^{}]+({[^{}]+})*)?}/g, idTelefon.toString());
+		await super.deleteJSON(path, null);
+		return;
 	}
 
 
@@ -10483,31 +10593,33 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der DELETE-Methode deleteBisherigeSchule für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/bisherigeSchule/{id : \d+}
+	 * Implementierung der DELETE-Methode deleteBisherigeSchulen für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/bisherigeSchule/multiple
 	 *
 	 * Entfernt bisher besuchte Schulen, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine bisher besuchte Schule wurde erfolgreich entfernt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SchuelerSchulbesuchSchule
+	 *     - Rückgabe-Typ: List<SchuelerSchulbesuchSchule>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um bisher besuchte Schulen zu entfernen.
-	 *   Code 404: Die bisher besuchte Schule ist nicht vorhanden
+	 *   Code 404: Die bisher besuchten Schulen sind nicht vorhanden
 	 *   Code 409: Die übergebenen Daten sind fehlerhaft
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
 	 *
 	 * @returns Eine bisher besuchte Schule wurde erfolgreich entfernt.
 	 */
-	public async deleteBisherigeSchule(schema : string, id : number) : Promise<SchuelerSchulbesuchSchule> {
-		const path = "/db/{schema}/schueler/bisherigeSchule/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
-		const text = result;
-		return SchuelerSchulbesuchSchule.transpilerFromJSON(text);
+	public async deleteBisherigeSchulen(data : List<number>, schema : string) : Promise<List<SchuelerSchulbesuchSchule>> {
+		const path = "/db/{schema}/schueler/bisherigeSchule/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SchuelerSchulbesuchSchule>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerSchulbesuchSchule.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 
@@ -10871,31 +10983,60 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der DELETE-Methode deleteSchuelerMerkmal für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/merkmal/{id : \d+}
+	 * Implementierung der DELETE-Methode deleteSchuelerMerkmale für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/merkmal/multiple
 	 *
 	 * Entfernt SchuelerMerkmale, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Ein SchuelerMerkmal wurde erfolgreich entfernt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SchuelerSchulbesuchMerkmal
+	 *     - Rückgabe-Typ: List<SchuelerSchulbesuchMerkmal>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um SchuelerMerkmale zu entfernen.
-	 *   Code 404: Das SchuelerMerkmal ist nicht vorhanden
+	 *   Code 404: Die SchuelerMerkmale sind nicht vorhanden
 	 *   Code 409: Die übergebenen Daten sind fehlerhaft
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Ein SchuelerMerkmal wurde erfolgreich entfernt.
+	 */
+	public async deleteSchuelerMerkmale(data : List<number>, schema : string) : Promise<List<SchuelerSchulbesuchMerkmal>> {
+		const path = "/db/{schema}/schueler/merkmal/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SchuelerSchulbesuchMerkmal>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerSchulbesuchMerkmal.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getSchuelerTelefon für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/telefon/{id : \d+}
+	 *
+	 * Liest die Daten des Schülertelefons zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Daten des Schülertelefons
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SchuelerTelefon
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.
+	 *   Code 404: Kein Schülertelefon mit der angegebenen ID gefunden
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 *
-	 * @returns Ein SchuelerMerkmal wurde erfolgreich entfernt.
+	 * @returns Die Daten des Schülertelefons
 	 */
-	public async deleteSchuelerMerkmal(schema : string, id : number) : Promise<SchuelerSchulbesuchMerkmal> {
-		const path = "/db/{schema}/schueler/merkmal/{id : \\d+}"
+	public async getSchuelerTelefon(schema : string, id : number) : Promise<SchuelerTelefon> {
+		const path = "/db/{schema}/schueler/telefon/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result : string = await super.getJSON(path);
 		const text = result;
-		return SchuelerSchulbesuchMerkmal.transpilerFromJSON(text);
+		return SchuelerTelefon.transpilerFromJSON(text);
 	}
 
 
@@ -13620,6 +13761,145 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = SchuleStammdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getTelefonart für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/telefonart/{id : \d+}
+	 *
+	 * Liest die Daten der Telefonart zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Daten der Telefonart
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: TelefonArt
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalogdaten anzusehen.
+	 *   Code 404: Keine Telefonart mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Daten der Telefonart
+	 */
+	public async getTelefonart(schema : string, id : number) : Promise<TelefonArt> {
+		const path = "/db/{schema}/schule/telefonart/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return TelefonArt.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchTelefonart für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/Telefonart/{id : \d+}
+	 *
+	 * Passt die Telefonart-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern der Daten der Telefonart besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich in die Telefonart-Daten integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Telefonart-Daten zu ändern.
+	 *   Code 404: Keine Telefonart mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<TelefonArt>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchTelefonart(data : Partial<TelefonArt>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/schule/Telefonart/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = TelefonArt.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addTelefonart für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/telefonart/new
+	 *
+	 * Erstellt eine neue Telefonart und gibt sie zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Telefonart besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Telefonart wurde erfolgreich angelegt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: TelefonArt
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Telefonart anzulegen.
+	 *   Code 409: Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<TelefonArt>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Telefonart wurde erfolgreich angelegt.
+	 */
+	public async addTelefonart(data : Partial<TelefonArt>, schema : string) : Promise<TelefonArt> {
+		const path = "/db/{schema}/schule/telefonart/new"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = TelefonArt.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return TelefonArt.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getTelefonarten für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/Telefonarten
+	 *
+	 * Erstellt eine Liste aller in dem Katalog vorhanden Telefonarten unter Angabe der ID und der Bezeichnung. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste von Katalog-Einträgen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<TelefonArt>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Eine Liste von Katalog-Einträgen
+	 */
+	public async getTelefonarten(schema : string) : Promise<List<TelefonArt>> {
+		const path = "/db/{schema}/schule/Telefonarten"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<TelefonArt>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(TelefonArt.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteTelefonarten für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/telefonarten/delete/multiple
+	 *
+	 * Entfernt mehrere Telefonarten der Schule.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Telefonarten wurden erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.
+	 *   Code 404: Telefonarten nicht vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Telefonarten wurden erfolgreich entfernt.
+	 */
+	public async deleteTelefonarten(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+		const path = "/db/{schema}/schule/telefonarten/delete/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 

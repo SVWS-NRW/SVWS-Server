@@ -31,5 +31,3 @@ test('Basic_Navigation_left_menu', async ({page}) => {
 	await expect(page.locator('h1')).toContainText('SVWS NRW');
 	await expect(page.getByRole('button', {name: 'Anmelden'})).toContainText('Anmelden');
 });
-
-

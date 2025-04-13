@@ -19,5 +19,10 @@ describe("Schule Tests ", () => {
 			const result = await api.getSchuleStammdaten(schema);
 			expect(result).toMatchSnapshot();
 		});
+
+		test("getLernplattformen", async () => {
+			const result = await api.getLernplattformen(schema);
+			expect(result).toMatchSnapshot();
+		});
 	})
 })

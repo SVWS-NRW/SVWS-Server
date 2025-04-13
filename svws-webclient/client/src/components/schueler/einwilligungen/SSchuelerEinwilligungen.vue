@@ -48,7 +48,7 @@
 <script setup lang="ts">
 	import { computed } from "vue";
 	import type { SchuelerEinwilligungenProps } from './SchuelerEinwilligungenProps';
-	import type { Einwilligung } from "@core";
+	import type { SchuelerEinwilligung} from "@core";
 
 	const props = defineProps<SchuelerEinwilligungenProps>();
 
@@ -70,7 +70,7 @@
 		return props.mapEinwilligungsarten.get(idEinwilligungsart)?.bezeichnung ?? "";
 	}
 
-	function getEinwilligungsstatus(einwilligung: Einwilligung): string {
+	function getEinwilligungsstatus(einwilligung: SchuelerEinwilligung): string {
 		if (einwilligung.abgefragt && einwilligung.status)
 			return 'Abgefragt und Zugestimmt';
 		else if (einwilligung.status)

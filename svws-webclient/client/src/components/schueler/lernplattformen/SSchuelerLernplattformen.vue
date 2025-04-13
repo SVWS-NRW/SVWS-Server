@@ -1,9 +1,9 @@
 <template>
 	<div class="page page-grid-cards">
 		<svws-ui-content-card class="col-span-full">
-			<svws-ui-table :items="props.schuelerLernplattformen()" :model-value="[...props.schuelerLernplattformen()]" :columns>
-				<template #cell(bezeichnung)="{ rowData }">
-					{{ getBezeichnungLernplattform(rowData.idLernplattform) }}
+			<svws-ui-table :items="props.schuelerLernplattformen()" :columns>
+				<template #cell(idLernplattform)="{ value }">
+					{{ getBezeichnungLernplattform(value) }}
 				</template>
 				<template #cell(EinwilligungAbgefragt)="{ rowData }">
 					<svws-ui-checkbox :model-value="rowData.einwilligungAbgefragt"
@@ -12,6 +12,12 @@
 				<template #cell(EinwilligungNutzung)="{ rowData }">
 					<svws-ui-checkbox :model-value="rowData.einwilligungNutzung"
 						@update:model-value="value => patch({ einwilligungNutzung: value }, rowData.idLernplattform)" />
+				</template>
+				<template #cell(benutzername)="{ value }">
+					{{ value }}
+				</template>
+				<template #cell(initialKennwort)="{ value }">
+					{{ value }}
 				</template>
 			</svws-ui-table>
 		</svws-ui-content-card>
@@ -25,9 +31,11 @@
 	const props = defineProps<SchuelerLernplattformenProps>();
 
 	const columns: DataTableColumn[] = [
-		{ key: "bezeichnung", label: "Lernplattform", sortable: true },
+		{ key: "idLernplattform", label: "Lernplattform", sortable: true },
 		{ key: "EinwilligungAbgefragt", label: "Einwilligung Abgefragt", sortable: true },
 		{ key: "EinwilligungNutzung", label: "Einwilligung Nutzung", sortable: true },
+		{ key: "benutzername", label: "Benutzername", sortable: true },
+		{ key: "initialKennwort", label: "InitialKennwort", sortable: true },
 	];
 
 	function getBezeichnungLernplattform(idLernplattform: number): string {

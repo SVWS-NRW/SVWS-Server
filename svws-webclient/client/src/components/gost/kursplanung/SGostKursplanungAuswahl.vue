@@ -63,18 +63,3 @@
 	const visible = computed<boolean>(() => (props.jahrgangsdaten()?.abiturjahr ?? -1) > 0);
 
 </script>
-
-<style lang="postcss" scoped>
-
-	@reference "../../../../../ui/src/assets/styles/index.css"
-
-	.cell--bewertung span {
-		@apply inline-block text-center text-ui-contrast-100 rounded-sm font-normal;
-		min-width: 5ex;
-		padding: 0.05em 0.2em;
-	}
-
-	.vt-clicked .cell--bewertung span {
-		filter: brightness(0.8) saturate(200%);
-	}
-</style>

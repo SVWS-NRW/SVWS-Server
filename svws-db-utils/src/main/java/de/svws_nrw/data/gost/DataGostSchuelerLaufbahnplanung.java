@@ -24,6 +24,7 @@ import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import de.svws_nrw.base.compression.CompressionException;
 import de.svws_nrw.base.crypto.AES;
 import de.svws_nrw.base.crypto.AESException;
+import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt;
 import de.svws_nrw.core.data.SimpleOperationResponse;
@@ -40,8 +41,13 @@ import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.asd.data.schueler.Sprachbelegung;
 import de.svws_nrw.asd.data.schueler.Sprachpruefung;
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.Note;
+import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
+import de.svws_nrw.asd.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulgliederung;
+import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.types.gost.GostFachbereich;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
@@ -62,6 +68,7 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
+import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.persistence.TypedQuery;
@@ -70,6 +77,19 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
+/*
+ * Die Implementierung enthält Teile von experimentellem Code. Für diesen gilt folgendes:
+ *
+ * Bei dieser Implementierung handelt es sich um eine Umsetzung in Bezug auf möglichen zukünftigen
+ * Änderungen in der APO-GOSt. Diese basiert auf der aktuellen Implementierung und integriert Aspekte
+ * aus dem Eckpunktepapier und auf in den Schulleiterdienstbesprechungen erläuterten Vorhaben.
+ * Sie dient der Evaluierung von möglichen Umsetzungsvarianten und als Vorbereitung einer späteren
+ * Implementierung der Belegprüfung. Insbesondere sollen erste Versuche mit Laufbahnen mit einem
+ * 5. Abiturfach und Projektkursen erprobt werden. Detailaspekte können erst nach Erscheinen der APO-GOSt
+ * umgesetzt werden.
+ * Es handelt sich also um experimentellen Code, der keine Rückschlüsse auf Details einer zukünftigen APO-GOSt
+ * erlaubt.
+ */
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für den
  * Core-DTO {@link Abiturdaten}.
@@ -279,15 +299,17 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 		if (map.isEmpty())
 			return Response.status(Status.OK).build();
 		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		final Schulform schulform = conn.getUser().schuleGetSchulform();
 		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, schueler_id);
 		if (schueler == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
-		// Ermittle den aktuellen Schuljahresaschnitt und den dazugehörigen Schüler-Lernabschnitt
+		final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(schueler.Schuljahresabschnitts_ID);
+		// Ermittle den aktuellen Schuljahresabschnitt und den dazugehörigen Schüler-Lernabschnitt
 		final DTOSchuljahresabschnitte abschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schueler.Schuljahresabschnitts_ID);
 		if (abschnitt == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 		final TypedQuery<DTOSchuelerLernabschnittsdaten> queryAktAbschnitt = conn.query(
-				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = :schueler_id AND e.Schuljahresabschnitts_ID = :abschnitt_id",
+				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = :schueler_id AND e.Schuljahresabschnitts_ID = :abschnitt_id AND e.WechselNr = 0",
 				DTOSchuelerLernabschnittsdaten.class);
 		final DTOSchuelerLernabschnittsdaten lernabschnitt = queryAktAbschnitt
 				.setParameter("schueler_id", schueler.ID)
@@ -298,6 +320,15 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 		final GostHalbjahr aktHalbjahr = (schule.AnzahlAbschnitte == 4)
 				? GostHalbjahr.fromJahrgangUndHalbjahr(lernabschnitt.ASDJahrgang, (abschnitt.Abschnitt + 1) / 2)
 				: GostHalbjahr.fromJahrgangUndHalbjahr(lernabschnitt.ASDJahrgang, abschnitt.Abschnitt);
+		final Schulgliederung schulgliederung = (lernabschnitt.Schulgliederung == null)
+				? Schulgliederung.getDefault(schulform)
+				: Schulgliederung.data().getWertByKuerzel(lernabschnitt.Schulgliederung);
+		final DTOJahrgang dtoJahrgang = conn.queryByKey(DTOJahrgang.class, lernabschnitt.Jahrgang_ID);
+		final Jahrgaenge jahrgang =
+				((dtoJahrgang == null) || (dtoJahrgang.ASDJahrgang == null)) ? null : Jahrgaenge.data().getWertBySchluessel(dtoJahrgang.ASDJahrgang);
+		final Integer abiturjahr = DBUtilsGost.getAbiturjahr(schulform, schulgliederung, schuljahresabschnitt.schuljahr, jahrgang);
+		if (abiturjahr == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Das Abiturjahr konnte für den Schüler nicht ermittelt werden.");
 		// Bestimme das Fach und die Fachbelegungen in der DB. Liegen keine vor, so erstelle eine neue Fachnbelegung in der DB,um den Patch zu speichern
 		final DTOFach fach = conn.queryByKey(DTOFach.class, fach_id);
 		if ((fach == null) || (fach.IstOberstufenFach == null) || Boolean.TRUE.equals(!fach.IstOberstufenFach))
@@ -336,10 +367,10 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 					}
 				}
 				case "abiturFach" -> {
-					final Integer af = JSONMapper.convertToInteger(value, true);
-					if ((af != null) && ((af < 1) || (af > 4)))
-						throw new ApiOperationException(Status.CONFLICT);
-					fachbelegung.AbiturFach = af;
+					// experimenteller Code für das 5. Abiturfach
+					final int maxAbifach = ((abiturjahr >= 2029) && (ServerMode.DEV.checkServerMode(SVWSKonfiguration.get().getServerMode())))
+							? 5 : 4;
+					fachbelegung.AbiturFach = JSONMapper.convertToIntegerInRange(value, true, 1, maxAbifach + 1);
 				}
 				default -> throw new ApiOperationException(Status.BAD_REQUEST);
 			}
@@ -957,8 +988,10 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 			final GostBelegpruefungsErgebnisse ergebnisse = new GostBelegpruefungsErgebnisse();
 
 			// Führe die Belegprüfung für den Schüler durch
-			final AbiturdatenManager abiManager = new AbiturdatenManager(abidaten, jahrgangsdaten, faecherManager, pruefungsArt);
+			final AbiturdatenManager abiManager =
+					new AbiturdatenManager(SVWSKonfiguration.get().getServerMode(), abidaten, jahrgangsdaten, faecherManager, pruefungsArt);
 			ergebnisse.ergebnis = abiManager.getBelegpruefungErgebnis();
+			ergebnisse.hatFachwahlen = abiManager.existsFachbelegung();
 
 			// F+lle das zugehörige Schüler-DTO
 			ergebnisse.schueler.id = dtoSchueler.ID;
@@ -1034,6 +1067,30 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 				fw.Q22_Kursart = null;
 			conn.transactionPersist(fw);
 		}
+		return Response.status(Status.NO_CONTENT).build();
+	}
+
+	/**
+	 * Löscht die Fachwahlen für den angegebenen Schüler.
+	 * Liegen bereits bewertete Halbjahre vor, so wird der
+	 * Fehlercode 409 CONFLICT zurückgegeben.
+	 *
+	 * @param idSchueler   die ID des Schülers
+	 *
+	 * @return Die HTTP-Response der Operation
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public Response delete(final long idSchueler) throws ApiOperationException {
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		final Abiturdaten abidaten = DBUtilsGostLaufbahn.get(conn, idSchueler);
+		for (final GostHalbjahr hj : GostHalbjahr.values())
+			if (abidaten.bewertetesHalbjahr[hj.id])
+				throw new ApiOperationException(Status.CONFLICT, "Die Fachwahlen können nicht vollständig gelöscht werden, da bereits bewertete Abschnitt vorliegen.");
+		final List<DTOGostSchuelerFachbelegungen> fachwahlen = conn.queryList(DTOGostSchuelerFachbelegungen.QUERY_BY_SCHUELER_ID,
+				DTOGostSchuelerFachbelegungen.class, idSchueler);
+		for (final DTOGostSchuelerFachbelegungen fw : fachwahlen)
+			conn.transactionRemove(fw);
 		return Response.status(Status.NO_CONTENT).build();
 	}
 

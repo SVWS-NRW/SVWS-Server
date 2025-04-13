@@ -40,4 +40,12 @@ public class SchuelerLernplattform {
 	/** Die Einwilligung zur VideoKonferenz einer Lernplattform. */
 	@Schema(description = "Die Einwilligung zur VideoKonferenz einer Lernplattform.", example = "true")
 	public boolean einwilligungVideokonferenz;
+
+	/** Benutzername für die Lernplattform eines Schülers */
+	@Schema(description = "Benutzername für die Lernplattform eines Schülers.", example = "Mustermann")
+	public String benutzername;
+
+	/** Initialkennwort für die Lernplattform eines Schülers */
+	@Schema(description = "Initialkennwort für die Lernplattform eines Schülers.", example = "InitialeKennwort123")
+	public String initialKennwort;
 }

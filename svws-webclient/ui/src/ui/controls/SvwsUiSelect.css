@@ -11,7 +11,7 @@
 	}
 
 	.svws-dropdown-icon {
-		@apply bg-ui-neutral border border-ui-secondary;
+		@apply bg-ui-neutral border border-ui;
 		@apply pointer-events-none right-1;
 	}
 
@@ -104,15 +104,11 @@
 
 		.svws-remove {
 			@apply right-auto left-4 inline-flex items-center justify-center w-4;
-
-			svg {
-				@apply -m-px;
-			}
 		}
 
 		.svws-ui-select--icon {
 			.svws-ui-table.svws-has-background & {
-				@apply icon-ui-static;
+				@apply icon-uistatic;
 			}
 
 		}
@@ -124,7 +120,9 @@
 			&:focus-visible,
 			&:focus-within {
 				~ .svws-dropdown-icon {
-					@apply text-ui;
+					.svws-ui-table.svws-has-background & {
+						@apply text-ui bg-uistatic-75;
+					}
 					/* TODO: COLORS icon */
 				}
 			}
@@ -150,7 +148,7 @@
 
 		&.svws-headless {
 			.svws-dropdown-icon {
-				@apply text-ui-danger;
+				@apply text-ui-danger bg-uistatic-75;
 				/* TODO: COLORS icon */
 			}
 		}

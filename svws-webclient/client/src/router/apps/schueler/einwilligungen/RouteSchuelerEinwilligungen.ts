@@ -4,13 +4,11 @@ import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMod
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
-import { routeApp } from "~/router/apps/RouteApp";
 import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteDataSchuelerEinwilligungen } from "~/router/apps/schueler/einwilligungen/RouteDataSchuelerEinwilligungen";
 
-import type {SchuelerEinwilligungenProps} from "~/components/schueler/einwilligungen/SchuelerEinwilligungenProps";
-import {api} from "~/router/Api";
-import {SvwsUiTodo} from "@ui";
+import type { SchuelerEinwilligungenProps } from "~/components/schueler/einwilligungen/SchuelerEinwilligungenProps";
+import { api } from "~/router/Api";
 
 const SSchuelerEinwilligungen = () => import("~/components/schueler/einwilligungen/SSchuelerEinwilligungen.vue");
 
@@ -42,12 +40,9 @@ export class RouteSchuelerEinwilligungen extends RouteNode<RouteDataSchuelerEinw
 			einwilligungen: () => this.data.einwilligungen,
 			mapEinwilligungsarten: this.data.mapEinwilligungsarten,
 			patch: this.data.patch,
-			add: this.data.add,
-			remove: this.data.remove,
 			apiStatus: api.status,
 		};
 	}
-
 }
 
 export const routeSchuelerEinwilligungen = new RouteSchuelerEinwilligungen();

@@ -4182,17 +4182,17 @@ export class GostKlausurplanManager extends JavaObject {
 	 * Liefert die Menge aller {@link GostKursklausur}en zurück, die in einem {@link GostKlausurraum} geschrieben werden, auch wenn die {@link GostKursklausur} nur nachgeschrieben wird.
 	 *
 	 * @param raum  der {@link GostKlausurraum}
+	 * @param includeNachschreiber <code>true</code>, wenn auch Nachschreiber berücksichtigt werden sollen
 	 *
 	 * @return die Menge aller {@link GostKursklausur}en zurück, die in einem {@link GostKlausurraum} geschrieben werden, auch wenn die {@link GostKursklausur} nur nachgeschrieben wird.
 	 */
-	public kursklausurGetMengeByRaum(raum : GostKlausurraum) : List<GostKursklausur> {
-		const kursklausuren : List<GostKursklausur> | null = new ArrayList<GostKursklausur>();
+	public kursklausurGetMengeByRaum(raum : GostKlausurraum, includeNachschreiber : boolean) : JavaSet<GostKursklausur> {
+		const kursklausuren : JavaSet<GostKursklausur> | null = new HashSet<GostKursklausur>();
 		if (!this._schuelerklausurterminaktuellmenge_by_idRaum_and_idKursklausur.containsKey1(raum.id))
 			return kursklausuren;
-		for (const idKK of this._schuelerklausurterminaktuellmenge_by_idRaum_and_idKursklausur.getKeySetOf(raum.id)) {
-			if (!this._schuelerklausurterminaktuellmenge_by_idRaum_and_idKursklausur.getOrException(raum.id, idKK).isEmpty())
-				kursklausuren.add(this.kursklausurGetByIdOrException(idKK));
-		}
+		for (const skt of ListUtils.getFlatted(this._schuelerklausurterminaktuellmenge_by_idRaum_and_idKursklausur.getNonNullValuesOfKey1AsList(raum.id)))
+			if (skt.folgeNr === 0 || includeNachschreiber)
+				kursklausuren.add(this.kursklausurBySchuelerklausurTermin(skt));
 		return kursklausuren;
 	}
 
@@ -4346,7 +4346,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 */
 	public getGemeinsameKursklausurdauerByKlausurraum(raum : GostKlausurraum) : number | null {
 		let dauer : number = -1;
-		for (const klausur of this.kursklausurGetMengeByRaum(raum)) {
+		for (const klausur of this.kursklausurGetMengeByRaum(raum, true)) {
 			const vorgabe : GostKlausurvorgabe = this.vorgabeByKursklausur(klausur);
 			if (dauer === -1)
 				dauer = vorgabe.dauer;
@@ -4366,7 +4366,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 */
 	public getGemeinsamerKursklausurstartByKlausurraum(raum : GostKlausurraum) : number | null {
 		let start : number | null = -1;
-		for (const klausur of this.kursklausurGetMengeByRaum(raum)) {
+		for (const klausur of this.kursklausurGetMengeByRaum(raum, true)) {
 			if ((start !== null) && (start === -1))
 				start = klausur.startzeit;
 			if (this.hatAbweichendeStartzeitByKursklausur(klausur))

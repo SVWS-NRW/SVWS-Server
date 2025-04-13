@@ -10,7 +10,7 @@ import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import { routeKurseGruppenprozesse } from "./RouteKurseGruppenprozesse";
 import { routeKurseNeu } from "./RouteKurseNeu";
 import type { KurseAuswahlProps } from "~/components/kurse/SKurseAuswahlProps";
-import { ConfigElement } from "~/components/Config";
+import { ConfigElement } from "../../../../../ui/src/utils/Config";
 import { api } from "~/router/Api";
 import { AppMenuGroup } from "@ui";
 

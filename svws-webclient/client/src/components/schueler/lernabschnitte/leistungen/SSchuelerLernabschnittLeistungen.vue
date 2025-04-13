@@ -1,6 +1,6 @@
 <template>
-	<div class="page page-flex-col">
-		<svws-ui-table :columns :items="leistungen" has-background class="h-fit col-span-2 -mt-1">
+	<div class="w-340">
+		<svws-ui-table :columns :items="leistungen" has-background>
 			<template #header>
 				<div role="row" class="svws-ui-tr">
 					<div role="columnheader" :class="{ 'col-span-5': hatUpdateKompetenz, 'col-span-4': !hatUpdateKompetenz }" aria-label="Fach" />
@@ -19,7 +19,7 @@
 				</div>
 			</template>
 			<template #rowCustom="{ row: leistung }">
-				<div v-if="leistung.id !== null" class="svws-ui-tr" role="row" :style="`color: var(--color-text-ui-static); background-color: ${manager().fachFarbeGetByLeistungsIdOrDefault(leistung.id)}`">
+				<div v-if="leistung.id !== null" class="svws-ui-tr" role="row" :style="`color: var(--color-text-uistatic); background-color: ${manager().fachFarbeGetByLeistungsIdOrDefault(leistung.id)}`">
 					<div v-if="hatUpdateKompetenz" class="svws-ui-td svws-align-center cursor-pointer" role="cell">
 						<svws-ui-checkbox :model-value="auswahl.has(leistung)" @update:model-value="auswahl.has(leistung) ? auswahl.delete(leistung) : auswahl.add(leistung)" headless />
 					</div>

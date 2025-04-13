@@ -25,6 +25,7 @@ import { routeKatalogEinwilligungsarten } from "./schule/einwilligungsarten/Rout
 import { routeKatalogFoerderschwerpunkte } from "./schule/foerderschwerpunkte/RouteKatalogFoerderschwerpunkte";
 import { routeKatalogReligionen } from "./schule/religionen/RouteKatalogReligionen";
 import { routeKatalogSchulen } from "./schule/schulen/RouteKatalogSchulen";
+import { routeKatalogTelefonArten } from "~/router/apps/schule/telefonarten/RouteKatalogTelefonArten";
 import { routeKatalogVermerkarten } from "./schule/vermerkarten/RouteKatalogVermerkarten";
 import { routeKatalogLernplattformen } from "~/router/apps/schule/lernplattformen/RouteKatalogLernplattformen";
 import { routeEinstellungen } from "./einstellungen/RouteEinstellungen";
@@ -116,6 +117,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			// Allgemein
 			routeKatalogReligionen,
 			routeKatalogSchulen,
+			routeKatalogTelefonArten,
 			// Datenaustausch
 			routeSchuleDatenaustauschENM,
 			routeSchuleDatenaustauschWenom,
@@ -219,11 +221,12 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	}
 
 	private getMenuManager() : AppMenuManager {
-		return new AppMenuManager(
-			this.getTabManager(),
-			[ { name: "schule", manager: this.getTabManagerSchule() }, { name: "einstellungen", manager: this.getTabManagerEinstellungen() } ],
-			this.getApp()
-		);
+		const submenuManager = new Array<{name: string, manager: TabManager}>();
+		if (routeSchule.hidden() === false)
+			submenuManager.push({ name: "schule", manager: this.getTabManagerSchule() });
+		if (routeEinstellungen.hidden() === false)
+			submenuManager.push({ name: "einstellungen", manager: this.getTabManagerEinstellungen() });
+		return new AppMenuManager(this.getTabManager(), submenuManager, this.getApp());
 	}
 
 	private getTabManager() : TabManager {

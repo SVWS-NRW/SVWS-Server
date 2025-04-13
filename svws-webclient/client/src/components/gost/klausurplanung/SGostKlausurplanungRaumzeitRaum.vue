@@ -1,10 +1,10 @@
 <template>
-	<div @dragover="checkDropZone($event)" @drop="onDrop(raum)" class="min-w-120 max-w-120 flex flex-col rounded-xl border bg-ui-contrast-0 h-fit"
+	<div @dragover="checkDropZone($event)" @drop="onDrop(raum)" class="min-w-120 max-w-120 flex flex-col rounded-xl border bg-ui-100 h-fit"
 		:class="{
-			'shadow-lg shadow-ui-contrast-10 border-ui-contrast-10': dragData() === undefined,
+			'shadow-lg shadow-ui-10 border-ui-10': dragData() === undefined,
 			'border-dashed border-ui-brand dark:border-ui-brand ring-4 ring-ui-brand/25': (dragData() !== undefined) && (dragData() instanceof GostKursklausur),
 			'border-ui-danger': raumHatFehler(),
-			'bg-ui-danger-secondary': raum.idTermin !== terminSelected.id, // TODO Priorität und warum überhaupt???
+			'bg-ui-warning-weak': raum.idTermin !== terminSelected.id,
 		}">
 		<div class="flex h-full flex-col p-3">
 			<div class="svws-raum-title flex justify-between">
@@ -46,7 +46,7 @@
 								<template #content>
 									<s-gost-klausurplanung-kursliste :k-man :kursklausur="klausur" :termin="kMan().terminOrNullByKursklausur(klausur)!" :benutzer-kompetenzen />
 								</template>
-								<span class="svws-ui-badge hover:opacity-75" :style="`color: var(--color-text-ui-static); background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
+								<span class="svws-ui-badge hover:opacity-75" :style="`color: var(--color-text-uistatic); background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
 								<svws-ui-tooltip>
 									<template #content>
 										Bemerkung: {{ klausur.bemerkung }}
@@ -65,13 +65,14 @@
 						</div>
 						<div class="svws-ui-td" role="cell">{{ kMan().vorgabeByKursklausur(klausur).dauer }}</div>
 						<div class="svws-ui-td" role="cell">
-							<svws-ui-text-input :model-value="klausur.startzeit !== null ? DateUtils.getStringOfUhrzeitFromMinuten(klausur.startzeit) : ''" headless :placeholder="klausur.startzeit === null ? (kMan().startzeitByKursklausurOrNull(klausur) !== null ? DateUtils.getStringOfUhrzeitFromMinuten(kMan().startzeitByKursklausurOrException(klausur)) + ' Uhr' || 'Startzeit' : '') : 'Individuelle Startzeit'" @change="zeit => patchKlausurbeginn(zeit, klausur)" />
+							<svws-ui-text-input :model-value="klausur.startzeit !== null ? DateUtils.getStringOfUhrzeitFromMinuten(klausur.startzeit) : ''" headless :placeholder="klausurStartzeit(klausur) + ' Uhr'" @change="zeit => patchKlausurbeginn(zeit, klausur)" />
 						</div>
 					</div>
 				</template>
 			</svws-ui-table>
 			<div class="mt-3">
-				<svws-ui-textarea-input class="text-sm" :headless="(raum.bemerkung === null) || (raum.bemerkung.trim().length === 0)" :rows="1" resizeable="none" autoresize placeholder="Bemerkungen zum Raum" :disabled="!hatKompetenzUpdate" :model-value="raum.bemerkung" @change="bemerkung => patchKlausurraum(raum.id, {bemerkung})" />
+				<svws-ui-textarea-input class="text-sm" :headless="(raum.bemerkung === null) || (raum.bemerkung.trim().length === 0)" :rows="1" resizeable="none" autoresize placeholder="Bemerkungen zum Raum" :disabled="!hatKompetenzUpdate" :model-value="raum.bemerkung" @change="bemerkung => patchKlausurraum(raum.id, {bemerkung})" @drop.prevent
+					@dragover.prevent />
 			</div>
 			<span class="mt-auto -mb-3 flex w-full items-center justify-between gap-1 text-sm">
 				<div class="py-3" :class="{'opacity-50': klausurenImRaum().size() === 0}">
@@ -118,11 +119,27 @@
 
 	const raumHatFehler = () => (props.raum.idStundenplanRaum !== null && anzahlSuS() > props.kMan().stundenplanraumGetByKlausurraum(props.raum).groesse) || props.raum.idStundenplanRaum === null;
 
-	const klausurenImRaum = () => props.kMan().kursklausurGetMengeByRaum(props.raum);
+	const klausurenImRaum = () => props.kMan().kursklausurGetMengeByRaum(props.raum, true);
 
 	const anzahlSuS = () => props.kMan().schuelerklausurterminGetMengeByRaum(props.raum).size();
 
 	const termin = () => props.kMan().terminGetByIdOrException(props.raum.idTermin);
+
+	const klausurStartzeit = (klausur: GostKursklausur) => {
+		let startzeit = -1;
+		if (klausur.startzeit !== null)
+			startzeit = klausur.startzeit;
+		else if (klausur.idTermin === props.raum.idTermin) {
+			const startzeitKursklausur = props.kMan().startzeitByKursklausurOrNull(klausur);
+			if (startzeitKursklausur !== null)
+				startzeit = startzeitKursklausur;
+		} else {
+			const startzeitRaum = termin().startzeit;
+			if (startzeitRaum !== null)
+				startzeit = startzeitRaum;
+		}
+		return startzeit !== -1 ? DateUtils.getStringOfUhrzeitFromMinuten(startzeit) : undefined;
+	}
 
 	const anzahlRaumstunden = computed(() => {
 		return props.kMan().raumstundeGetMengeByRaum(props.raum).size();

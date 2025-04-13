@@ -78,7 +78,6 @@ public final class AbiFaecher extends GostBelegpruefung {
 			mapAbiturFachbelegungen.put(abiturFach, fachbelegung);
 			anzahlAbiFaecher++;
 			// Bestimme Aufgabenfelder
-			// TODO Erstelle Enum GOStAufgabenfeld
 			final GostFach fach = manager.getFach(fachbelegung);
 			if (fach == null)
 				continue;

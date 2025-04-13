@@ -12,8 +12,9 @@
 					:model-value="manager().getVorherigeSchule()?.schulnummerStatistik ?? ' - '" />
 				<svws-ui-text-input placeholder="Entlassen am" type="date" :model-value="manager().daten.vorigeEntlassdatum"
 					@change="vorigeEntlassdatum => manager().doPatch({ vorigeEntlassdatum })" />
-				<svws-ui-select title="Entlassjahrgang" :items="Jahrgaenge.values()" :model-value="manager().getEntlassjahrgang('vorigeEntlassjahrgang')"
-					@update:model-value="v => manager().patchEntlassjahrgang(v, 'vorigeEntlassjahrgang')" :item-text="textJahrgang" removable />
+				<svws-ui-select title="Entlassjahrgang" :items="manager().getJahrgaengeBySchulform(manager().getVorigeSchulform())" :item-text="textJahrgang"
+					:model-value="manager().getEntlassjahrgang('vorigeEntlassjahrgang')" :disabled="manager().getVorherigeSchule() === undefined"
+					@update:model-value="v => manager().patchEntlassjahrgang(v, 'vorigeEntlassjahrgang')" removable />
 				<svws-ui-text-input placeholder="Bemerkung" span="full" :model-value="manager().daten.vorigeBemerkung" :max-len="255"
 					@change="v => { if ((v ?? '').length <= 255) manager().doPatch({ vorigeBemerkung : v }) } " />
 				<svws-ui-spacing />
@@ -30,7 +31,7 @@
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input class="contentFocusField" placeholder="Entlassen am" type="date" :model-value="manager().daten.entlassungDatum"
 					@change="entlassungDatum => manager().doPatch({ entlassungDatum })" />
-				<svws-ui-select title="Entlassjahrgang" :items="Jahrgaenge.values()" :model-value="manager().getEntlassjahrgang('entlassungJahrgang')"
+				<svws-ui-select title="Entlassjahrgang" :items="manager().getJahrgaengeBySchulform(props.schulform)" :model-value="manager().getEntlassjahrgang('entlassungJahrgang')"
 					@update:model-value="v => manager().patchEntlassjahrgang(v, 'entlassungJahrgang')" :item-text="textJahrgang" removable />
 				<svws-ui-select title="Entlassgrund" :items="manager().entlassgruendeById" :item-text="v => v.bezeichnung" removable
 					:model-value="manager().getEntlassgrund('entlassungGrundID')"
@@ -83,7 +84,8 @@
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Besondere Merkmale für die Statistik">
-			<svws-ui-table :columns="colsMerkmale" :items="manager().daten.merkmale">
+			<svws-ui-table :clickable="true" @update:clicked="v => patchMerkmal(v)" :columns="columnsMerkmale" :items="merkmale"
+				v-model="auswahlMerkmale" :selectable="hatUpdateKompetenz">
 				<template #cell(merkmal)="{ rowData: s }">
 					<span>{{ manager().merkmaleById.get(s.idMerkmal ?? -1)?.bezeichnung ?? " - " }}</span>
 				</template>
@@ -93,46 +95,335 @@
 				<template #cell(datumBis)="{ rowData: s }">
 					<span>{{ formatDate(s.datumBis) }}</span>
 				</template>
+				<template #actions v-if="hatUpdateKompetenz">
+					<svws-ui-button @click="deleteAuswahlMerkmale" type="trash" :disabled="auswahlMerkmale.length === 0" />
+					<svws-ui-button @click="addMerkmal" type="icon" title="Merkmal hinzufügen"> <span class="icon i-ri-add-line" /> </svws-ui-button>
+				</template>
 			</svws-ui-table>
+			<!-- Modal zum Erzeugen und Patchen eines Eintrags der besonderen Merkmale für die Statistik -->
+			<svws-ui-modal :show="showModalMerkmal" @update:show="closeModalMerkmal">
+				<template #modalTitle>Merkmal hinzufügen</template>
+				<template #modalContent>
+					<svws-ui-input-wrapper :grid="2" style="text-align: left">
+						<svws-ui-select title="Merkmal" :items="manager().merkmaleById.values()" :item-text="textMerkmal" removable required
+							@update:model-value="v => newEntryMerkmal.idMerkmal = v?.id ?? null"
+							:model-value="manager().merkmaleById.get(newEntryMerkmal.idMerkmal ?? -1)" />
+						<svws-ui-text-input placeholder="Von" type="date" :max-date="newEntryMerkmal.datumBis ?? undefined" v-model="newEntryMerkmal.datumVon" />
+						<svws-ui-text-input placeholder="Bis" type="date" :min-date="newEntryMerkmal.datumVon ?? undefined" v-model="newEntryMerkmal.datumBis" />
+					</svws-ui-input-wrapper>
+					<div class="mt-7 flex flex-row gap-4 justify end">
+						<svws-ui-button type="secondary" @click="closeModalMerkmal">Abbrechen</svws-ui-button>
+						<svws-ui-button @click="sendRequestMerkmal(currentMode)" :disabled="!newEntryMerkmal.idMerkmal">Speichern</svws-ui-button>
+					</div>
+				</template>
+			</svws-ui-modal>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Alle bisher besuchten Schulen" class="col-span-full">
-			<svws-ui-table :columns="colsSchulen" :items="manager().daten.alleSchulen">
-				<template #cell(schulform)="{ rowData: s}">
-					<span>{{ Schulform.data().getEintragByID(manager().schulenById.get(s.id)?.idSchulform ?? -1)?.kuerzel ?? " - " }}</span>
+			<!-- Tabelle der bisher besuchten Schulen -->
+			<svws-ui-table :clickable="true" @update:clicked="v => patchBisherigeSchule(v)" :columns="columnsBisherigeSchulen" :items="bisherigeSchulen"
+				v-model="auswahlBisherigeSchulen" :selectable="hatUpdateKompetenz">
+				<template #cell(schulform)="{ rowData }">
+					<span>{{ Schulform.data().getEintragByID(manager().schulenById.get(rowData.idSchule ?? -1)?.idSchulform ?? -1)?.kuerzel ?? ' - ' }}</span>
 				</template>
-				<template #cell(schulname)="{ rowData: s }">
-					<span>{{ manager().schulenById.get(s.id)?.name ?? " - " }}</span>
+				<template #cell(schulname)="{ rowData }">
+					<span>{{ manager().schulenById.get(rowData.idSchule ?? -1)?.name ?? '-' }}</span>
 				</template>
-				<template #cell(datumVon)="{ rowData: s }">
-					<span>{{ formatDate(s.datumVon) }}</span>
+				<template #cell(datumVon)="{ rowData }">
+					<span>{{ formatDate(rowData.datumVon) }}</span>
 				</template>
-				<template #cell(datumBis)="{ rowData: s }">
-					<span>{{ formatDate(s.datumBis) }}</span>
+				<template #cell(datumBis)="{ rowData }">
+					<span>{{ formatDate(rowData.datumBis) }}</span>
 				</template>
-				<template #cell(entlassart)="{ rowData: s }">
-					<span>{{ manager().entlassgruendeById.get(s.entlassgrundID ?? -1)?.bezeichnung ?? " - " }}</span>
+				<!-- Todo: JahrgangVon und JahrgangBis Siehe Issue #2214 -->
+				<template #cell(jahrgangVon)>
+					<span>-</span>
+				</template>
+				<template #cell(jahrgangBis)>
+					<span>-</span>
+				</template>
+				<template #cell(schulgliederung)="{ rowData }">
+					<span>{{ textSchulgliederung(rowData.schulgliederung) }}</span>
+				</template>
+				<template #cell(entlassart)="{ rowData }">
+					<span>{{ manager().entlassgruendeById.get(rowData.entlassgrundID ?? -1)?.bezeichnung ?? '-' }}</span>
+				</template>
+				<template #actions v-if="hatUpdateKompetenz">
+					<svws-ui-button @click="deleteAuswahlBisherigeSchulen" type="trash" :disabled="auswahlBisherigeSchulen.length === 0" />
+					<svws-ui-button @click="addBisherigeSchule" type="icon" title="Schuleintrag hinzufügen"> <span class="icon i-ri-add-line" /> </svws-ui-button>
 				</template>
 			</svws-ui-table>
+			<!-- Modal zum Erzeugen und Patchen eines Eintrags der bisher besuchten Schulen -->
+			<svws-ui-modal :show="showModalBisherigeSchule" @update:show="closeModalBisherigeSchule">
+				<template #modalTitle>Schule hinzufügen</template>
+				<template #modalContent>
+					<svws-ui-input-wrapper :grid="2" style="text-align: left">
+						<svws-ui-select class="col-span-full" title="Schule" :items="manager().schulenById.values()" autocomplete removable
+							:item-filter="filterSchulenEintraege" @update:model-value="v => newEntryBisherigeSchule.idSchule = v?.id ?? null"
+							:model-value="manager().schulenById.get(newEntryBisherigeSchule.idSchule ?? -1)" :item-text="textSchule" />
+						<svws-ui-text-input span="full" placeholder="Adresse" readonly :model-value="adresseBisherigeSchule" />
+						<svws-ui-text-input placeholder="Schulnummer" :statistics="true" readonly
+							:model-value="manager().schulenById.get(newEntryBisherigeSchule.idSchule ?? -1)?.schulnummerStatistik ?? '-'" />
+						<svws-ui-text-input placeholder="Schulform" readonly :model-value="selectedSchulformBisherigeSchule?.text" />
+						<svws-ui-spacing />
+						<svws-ui-text-input placeholder="Start des Schulbesuchs" type="date" :max-date="newEntryBisherigeSchuleDatumBis ?? undefined"
+							v-model="newEntryBisherigeSchule.datumVon" />
+						<svws-ui-text-input placeholder="Ende des Schulbesuchs" type="date" :min-date="newEntryBisherigeSchule.datumVon ?? undefined"
+							v-model="newEntryBisherigeSchuleDatumBis" />
+						<svws-ui-select class="col-span-full" title="Schulgliederung" :items="schulgliederungenBisherigeSchule"
+							:disabled="(!newEntryBisherigeSchule.datumBis || !selectedSchulformBisherigeSchule)" autocomplete
+							:item-filter="coreTypeDataFilter" v-model="schulgliederungBisherigeSchule"
+							:item-text="v => (v as SchulgliederungKatalogEintrag).text" />
+						<!-- Todo: JahrgangVon und JahrgangBis Siehe Issue #2214 -->
+						<svws-ui-text-input placeholder="JahrgangVon" disabled />
+						<svws-ui-text-input placeholder="JahrgangBis" disabled />
+					</svws-ui-input-wrapper>
+					<div class="mt-7 flex flex-row gap-4 justify end">
+						<svws-ui-button type="secondary" @click="closeModalBisherigeSchule">Abbrechen</svws-ui-button>
+						<svws-ui-button @click="sendRequestBisherigeSchule(currentMode)" :disabled="!newEntryBisherigeSchule.idSchule">Speichern</svws-ui-button>
+					</div>
+				</template>
+			</svws-ui-modal>
 		</svws-ui-content-card>
 	</div>
 </template>
 
 <script setup lang="ts">
 
-	import { Einschulungsart, Jahrgaenge, PrimarstufeSchuleingangsphaseBesuchsjahre, Schulform, Uebergangsempfehlung } from "@core";
-	import type { Herkunftsarten, SchulEintrag } from "@core";
+	import { BenutzerKompetenz, Einschulungsart, PrimarstufeSchuleingangsphaseBesuchsjahre, SchuelerSchulbesuchSchule, Schulform, Schulgliederung,
+		Uebergangsempfehlung, SchulEintrag, AdressenUtils, ArrayList, SchuelerSchulbesuchMerkmal, Jahrgaenge } from "@core";
+	import type { Herkunftsarten, SchulformKatalogEintrag, SchulgliederungKatalogEintrag, Merkmal } from "@core";
 	import type { SchuelerSchulbesuchProps } from './SSchuelerSchulbesuchProps';
 	import type { DataTableColumn } from "@ui";
-	import { filterSchulenEintraege } from "~/utils/helfer";
+	import { coreTypeDataFilter, filterSchulenEintraege, formatDate } from "~/utils/helfer";
+	import { ref, computed, watch } from "vue";
 
 	const props = defineProps<SchuelerSchulbesuchProps>();
+	const hatUpdateKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
+	function enterDefaultMode() {
+		setMode(Mode.DEFAULT);
+		resetBisherigeSchule();
+		resetMerkmal();
+		closeModalBisherigeSchule();
+		closeModalMerkmal();
+	}
 
+	// --- Tabelle Merkmale ---
+	const merkmale = computed(() => [...props.manager().daten.merkmale])
+	const newEntryMerkmal = ref<SchuelerSchulbesuchMerkmal>(new SchuelerSchulbesuchMerkmal());
+	const columnsMerkmale: DataTableColumn[] = [
+		{ key: "merkmal", label: "Merkmal"},
+		{ key: "datumVon", label: "Von"},
+		{ key: "datumBis", label: "Bis"},
+	]
+
+	// --- Merkmale Modal ---
+	const showModalMerkmal = ref<boolean>(false);
+	function addMerkmal() {
+		resetMerkmal();
+		setMode(Mode.ADD);
+		openModalMerkmal();
+	}
+
+	function openModalMerkmal() {
+		showModalMerkmal.value = true;
+	}
+
+	function resetMerkmal() {
+		newEntryMerkmal.value = new SchuelerSchulbesuchMerkmal();
+	}
+
+	function closeModalMerkmal() {
+		resetMerkmal();
+		setMode(Mode.DEFAULT)
+		showModalMerkmal.value = false;
+	}
+
+	// --- api calls Merkmal ---
+	async function sendRequestMerkmal(type : Mode) {
+		const { id, ...partialDataWithoutId } = newEntryMerkmal.value;
+		if (type === Mode.ADD)
+			await props.addSchuelerSchulbesuchMerkmal(partialDataWithoutId);
+		if (type === Mode.PATCH)
+			await props.patchSchuelerSchulbesuchMerkmal(newEntryMerkmal.value.id, partialDataWithoutId);
+		enterDefaultMode();
+	}
+
+	// Patch
+	function patchMerkmal(merkmal : SchuelerSchulbesuchMerkmal) {
+		resetMerkmal();
+		setMode(Mode.PATCH);
+		newEntryMerkmal.value.id = merkmal.id;
+		newEntryMerkmal.value.idMerkmal = merkmal.idMerkmal;
+		newEntryMerkmal.value.datumVon = merkmal.datumVon;
+		newEntryMerkmal.value.datumBis = merkmal.datumBis;
+		openModalMerkmal();
+	}
+
+	// Delete
+	const auswahlMerkmale = ref<SchuelerSchulbesuchMerkmal[]>([]);
+	async function deleteAuswahlMerkmale() {
+		if (auswahlMerkmale.value.length === 0) {
+			return;
+		}
+		const ids = new ArrayList<number>();
+		for (const s of auswahlMerkmale.value) {
+			ids.add(s.id);
+		}
+		await props.deleteSchuelerSchulbesuchMerkmale(ids);
+		auswahlMerkmale.value = [];
+	}
+
+	// --- Table Bisherige Schulen ---
+	const bisherigeSchulen = computed(() => [...props.manager().daten.alleSchulen])
+	const newEntryBisherigeSchule = ref<SchuelerSchulbesuchSchule>(new SchuelerSchulbesuchSchule());
+	enum Mode { ADD, PATCH , DEFAULT }
+	const currentMode = ref<Mode>(Mode.DEFAULT);
+	const columnsBisherigeSchulen: DataTableColumn[] = [
+		{ key: "schulform", label: "Schulform", span: 0.2, align: "center" },
+		{ key: "schulname", label: "Schulname" },
+		{ key: "datumVon", label: "Aufnahme-Datum", span: 0.25, align: "center" },
+		{ key: "datumBis", label: "Entlass-Datum", span: 0.25, align: "center" },
+		{ key: "jahrgangVon", label: "Jahrgang Von", span: 0.2, align: "center" },
+		{ key: "jahrgangBis", label: "Jahrgang Bis", span: 0.2, align: "center" },
+		{ key: "schulgliederung", label: "Schulgliederung", align: "center" },
+		{ key: "entlassart", label: "Entlassart", span: 0.2, align: "center" },
+	]
+	// datumBis (+ watcher) wird als computed benötigt, damit die Vorauswahl der Schulgliederung direkt in das Datenobjekt (newEntryBisherigeSchule) geschrieben wird.
+	const newEntryBisherigeSchuleDatumBis = computed({
+		get: () => newEntryBisherigeSchule.value.datumBis,
+		set: (val: string) => newEntryBisherigeSchule.value.datumBis = val,
+	})
+
+	watch(newEntryBisherigeSchuleDatumBis, () => {
+		if (currentMode.value === Mode.ADD)
+			newEntryBisherigeSchule.value.schulgliederung = schulgliederungenBisherigeSchule.value[0]?.schluessel ?? null;
+	})
+
+	// --- Bisherige Schulen Modal ---
+	const showModalBisherigeSchule = ref<boolean>(false);
+	function addBisherigeSchule() {
+		resetBisherigeSchule();
+		setMode(Mode.ADD);
+		openModalBisherigeSchule();
+	}
+
+	function setMode(newMode: Mode) {
+		return currentMode.value = newMode;
+	}
+
+	function openModalBisherigeSchule() {
+		showModalBisherigeSchule.value = true;
+	}
+
+	function closeModalBisherigeSchule() {
+		resetBisherigeSchule();
+		setMode(Mode.DEFAULT)
+		showModalBisherigeSchule.value = false;
+	}
+
+	function resetBisherigeSchule() {
+		newEntryBisherigeSchule.value = new SchuelerSchulbesuchSchule();
+	}
+
+	const selectedSchuleForNewEntryBisherigeSchule = computed<SchulEintrag>(() => {
+		if (newEntryBisherigeSchule.value.idSchule === null)
+			return new SchulEintrag();
+		const schule = props.manager().schulenById.get(newEntryBisherigeSchule.value.idSchule);
+		return (schule === undefined) ? new SchulEintrag() : schule;
+	});
+
+	const selectedSchulformBisherigeSchule = computed<SchulformKatalogEintrag | null>(() => {
+		if (selectedSchuleForNewEntryBisherigeSchule.value.idSchulform === null)
+			return null;
+		return Schulform.data().getEintragByID(selectedSchuleForNewEntryBisherigeSchule.value.idSchulform);
+	});
+
+	const schulgliederungenBisherigeSchule = computed<SchulgliederungKatalogEintrag[]>(() => {
+		if ((!selectedSchulformBisherigeSchule.value) || (newEntryBisherigeSchule.value.datumBis === null))
+			return [];
+		const jahr = Number(newEntryBisherigeSchule.value.datumBis.toString().substring(0, 4));
+		const gliederungenByJahr = Schulgliederung.data().getEintraegeBySchuljahr(jahr);
+		const result = [];
+		for (const g of gliederungenByJahr) {
+			if (g.schulformen.contains(selectedSchulformBisherigeSchule.value.kuerzel))
+				result.push(g);
+		}
+		return result;
+	});
+
+	const schulgliederungBisherigeSchule = computed({
+		get: () => newEntryBisherigeSchule.value.schulgliederung === "" ? schulgliederungenBisherigeSchule.value[0] : findGliederung(),
+		set: (v : SchulgliederungKatalogEintrag) => newEntryBisherigeSchule.value.schulgliederung = v.schluessel,
+	});
+
+	function findGliederung() {
+		for (const g of schulgliederungenBisherigeSchule.value) {
+			if (g.schluessel === newEntryBisherigeSchule.value.schulgliederung)
+				return g;
+		}
+	}
+
+	const adresseBisherigeSchule = computed<string>(() => {
+		if (selectedSchuleForNewEntryBisherigeSchule.value.id === -1)
+			return '';
+		const strasse = AdressenUtils.combineStrasse(selectedSchuleForNewEntryBisherigeSchule.value.strassenname,
+			selectedSchuleForNewEntryBisherigeSchule.value.hausnummer,
+			selectedSchuleForNewEntryBisherigeSchule.value.zusatzHausnummer);
+		return strasse + ', ' + selectedSchuleForNewEntryBisherigeSchule.value.plz + ' ' +
+			selectedSchuleForNewEntryBisherigeSchule.value.ort;
+	});
+
+	// --- api calls Bisherige Schulen ---
+	async function sendRequestBisherigeSchule(type : Mode) {
+		const { id, ...partialDataWithoutId } = newEntryBisherigeSchule.value;
+		if (type === Mode.ADD)
+			await props.addSchuelerSchulbesuchSchule(partialDataWithoutId);
+		if (type === Mode.PATCH)
+			await props.patchSchuelerSchulbesuchSchule(newEntryBisherigeSchule.value.id, partialDataWithoutId);
+		enterDefaultMode();
+	}
+
+	// Patch
+	function patchBisherigeSchule(schule : SchuelerSchulbesuchSchule) {
+		resetBisherigeSchule();
+		setMode(Mode.PATCH);
+		newEntryBisherigeSchule.value.id = schule.id;
+		newEntryBisherigeSchule.value.idSchule = schule.idSchule;
+		newEntryBisherigeSchule.value.datumVon = schule.datumVon;
+		newEntryBisherigeSchule.value.datumBis = schule.datumBis;
+		newEntryBisherigeSchule.value.schulgliederung = schule.schulgliederung;
+		newEntryBisherigeSchule.value.jahrgangVon = schule.jahrgangVon;
+		newEntryBisherigeSchule.value.jahrgangBis = schule.jahrgangBis;
+		openModalBisherigeSchule();
+	}
+
+	// Delete
+	const auswahlBisherigeSchulen = ref<SchuelerSchulbesuchSchule[]>([]);
+	async function deleteAuswahlBisherigeSchulen() {
+		if (auswahlBisherigeSchulen.value.length === 0) {
+			return;
+		}
+		const ids = new ArrayList<number>();
+		for (const s of auswahlBisherigeSchulen.value) {
+			ids.add(s.id);
+		}
+		await props.deleteSchuelerSchulbesuchSchulen(ids);
+		auswahlBisherigeSchulen.value = [];
+	}
+
+	// --- allgemeiner Abschnitt ---
 	function textHerkunftsarten(h: Herkunftsarten) {
 		return h.getBezeichnung(props.manager().schuljahr, props.manager().getVorigeSchulform() || Schulform.G) + ' (' + h.daten.kuerzel + ')';
 	}
 
 	function textSchule(s: SchulEintrag) {
 		return s.name;
+	}
+
+	function textMerkmal(m : Merkmal) {
+		if (m.bezeichnung === null)
+			return '';
+		return m.bezeichnung;
 	}
 
 	function textJahrgang(j : Jahrgaenge) {
@@ -155,26 +446,16 @@
 		return s.daten(props.manager().schuljahr)?.text ?? '-';
 	}
 
-	const colsSchulen: DataTableColumn[] = [
-		{ key: "schulform", label: "Schulform", span: 0.2, align: "center" },
-		{ key: "schulname", label: "Schulname" },
-		{ key: "datumVon", label: "Aufnahme-Datum", span: 0.25, align: "center" },
-		{ key: "jahrgangVon", label: "Jahrgang", span: 0.15, align: "center" },
-		{ key: "datumBis", label: "Entlass-Datum", span: 0.25, align: "center" },
-		{ key: "jahrgangBis", label: "Jahrgang", span: 0.15, align: "center" },
-		{ key: "entlassart", label: "Entlassart", align: "center" },
-	];
-
-	const colsMerkmale: DataTableColumn[] = [
-		{ key: "merkmal", label: "Merkmal"},
-		{ key: "datumVon", label: "Von"},
-		{ key: "datumBis", label: "Bis"},
-	]
-
-	function formatDate(dateString: string | null): string {
-		if (dateString === null)
-			return "";
-		return new Date(dateString).toLocaleDateString("de-DE");
+	function textSchulgliederung(v : string | null) {
+		if (v === null)
+			return '-';
+		const wertBySchluessel = Schulgliederung.data().getWertBySchluessel(v);
+		if (!wertBySchluessel)
+			return '-';
+		const historienEintrag = wertBySchluessel.daten(props.manager().schuljahr);
+		if (!historienEintrag)
+			return '-'
+		return historienEintrag.text;
 	}
 
 </script>

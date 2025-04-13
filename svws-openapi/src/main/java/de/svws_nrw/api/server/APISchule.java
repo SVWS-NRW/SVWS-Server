@@ -2,7 +2,9 @@ package de.svws_nrw.api.server;
 
 import de.svws_nrw.core.data.schule.Lernplattform;
 import de.svws_nrw.core.data.schule.Merkmal;
+import de.svws_nrw.core.data.schule.TelefonArt;
 import de.svws_nrw.data.schule.DataKatalogLernplattformen;
+import de.svws_nrw.data.schule.DataKatalogTelefonArten;
 import de.svws_nrw.data.schule.DataMerkmale;
 import java.io.InputStream;
 
@@ -2951,5 +2953,138 @@ public class APISchule {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogLernplattformen(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)),
 				request, ServerMode.DEV,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage des schulspezifischen Kataloges für die Telefonarten.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return          die Liste mit dem Katalog der Telefonarten
+	 */
+	@GET
+	@Path("/Telefonarten")
+	@Operation(summary = "Gibt eine Übersicht aller Telefonarten im Katalog zurück.",
+			description = "Erstellt eine Liste aller in dem Katalog vorhanden Telefonarten unter Angabe der ID und der Bezeichnung. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TelefonArt.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
+	public Response getTelefonarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogTelefonArten(conn).getAllAsResponse(),
+				request, ServerMode.DEV, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage einer Telefonart.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param id        die Datenbank-ID zur Identifikation der Telefonart
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Daten zur Telefonart
+	 */
+	@GET
+	@Path("/telefonart/{id : \\d+}")
+	@Operation(summary = "Liefert zu der ID der Telefonart die zugehörigen Daten.",
+			description = "Liest die Daten der Telefonart zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Daten der Telefonart",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = TelefonArt.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalogdaten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Telefonart mit der angegebenen ID gefunden")
+	public Response getTelefonart(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogTelefonArten(conn).getByIdAsResponse(id),
+				request, ServerMode.DEV,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Erstellen einer neuen Telefonart.
+	 *
+	 * @param schema       das Datenbankschema, in welchem die Telefonart erstellt wird
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 * @param is           das JSON-Objekt
+	 *
+	 * @return die HTTP-Antwort mit der neuen Telefonart
+	 */
+	@POST
+	@Path("/telefonart/new")
+	@Operation(summary = "Erstellt eine neue Telefonart und gibt sie zurück.",
+			description = "Erstellt eine neue Telefonart und gibt sie zurück."
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Telefonart besitzt.")
+	@ApiResponse(responseCode = "201", description = "Telefonart wurde erfolgreich angelegt.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = TelefonArt.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Telefonart anzulegen.")
+	@ApiResponse(responseCode = "409", description = "Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response addTelefonart(@PathParam("schema") final String schema,
+			@RequestBody(description = "Der initiale Patch für die neue Telefonart", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = TelefonArt.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogTelefonArten(conn).addAsResponse(is),
+				request, ServerMode.DEV,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Patchen einer Telefonart im angegebenen Schema
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param id        die Datenbank-ID zur Identifikation der Telefonart
+	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/Telefonart/{id : \\d+}")
+	@Operation(summary = "Passt die zu der ID der Telefonart zugehörigen Stammdaten an.",
+			description = "Passt die Telefonart-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern der Daten der Telefonart besitzt.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Telefonart-Daten integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Telefonart-Daten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Keine Telefonart mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
+			+ " (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response patchTelefonart(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@RequestBody(description = "Der Patch für die Telefonart", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = TelefonArt.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogTelefonArten(conn).patchAsResponse(id, is),
+				request, ServerMode.DEV,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen mehrerer Telefonarten der Schule.
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param is           die IDs der Telefonarten
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
+	 */
+	@DELETE
+	@Path("/telefonarten/delete/multiple")
+	@Operation(summary = "Entfernt mehrere Telefonarten der Schule.",
+			description = "Entfernt mehrere Telefonarten der Schule."
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.")
+	@ApiResponse(responseCode = "200", description = "Die Telefonarten wurden erfolgreich entfernt.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.")
+	@ApiResponse(responseCode = "404", description = "Telefonarten nicht vorhanden")
+	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteTelefonarten(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die IDs der zu löschenden Telefonarten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogTelefonArten(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)),
+				request, ServerMode.DEV, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 }

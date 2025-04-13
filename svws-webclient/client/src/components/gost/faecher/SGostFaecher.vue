@@ -1,6 +1,6 @@
 <template>
 	<div class="page page-flex-row" style="grid-template-columns: minmax(min-content, 1.5fr) minmax(min-content, 1fr)">
-		<s-card-gost-faecher class="min-w-fit max-w-fit" :faecher-manager :abiturjahr="jahrgangsdaten()?.abiturjahr ?? -1" :patch-fach :hat-update-kompetenz />
+		<s-card-gost-faecher class="min-w-fit max-w-fit" :server-mode :faecher-manager :abiturjahr="jahrgangsdaten()?.abiturjahr ?? -1" :patch-fach :hat-update-kompetenz />
 		<div class="min-w-180 max-w-180 flex flex-col gap-y-16 lg:gap-y-20 top-8 h-full overflow-y-auto overflow-x-hidden pr-4 scrollbar-thin">
 			<s-card-gost-fachkombinationen :typ="GostLaufbahnplanungFachkombinationTyp.VERBOTEN" :faecher-manager
 				:map-fachkombinationen :patch-fachkombination :hat-update-kompetenz :add-fachkombination :remove-fachkombination />

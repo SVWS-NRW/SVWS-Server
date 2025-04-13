@@ -197,7 +197,7 @@
 	}
 </script>
 
-<style lang="postcss">
+<!-- <style lang="postcss">
 
 	@reference "../../../../ui/src/assets/styles/index.css"
 
@@ -218,7 +218,7 @@
 
 		&:not(.svws-active):hover,
 		&:not(.svws-active):focus-visible {
-			@apply outline-hidden bg-ui-contrast-10 opacity-100;
+			@apply outline-hidden bg-ui-75 opacity-100;
 
 			.svws-icon {
 				@apply opacity-100;
@@ -246,4 +246,4 @@
 		}
 	}
 
-</style>
+</style> -->

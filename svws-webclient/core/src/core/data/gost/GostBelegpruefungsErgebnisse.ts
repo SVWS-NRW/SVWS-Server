@@ -11,6 +11,11 @@ export class GostBelegpruefungsErgebnisse extends JavaObject {
 	public schueler : Schueler = new Schueler();
 
 	/**
+	 * Gibt an, ob der Schüler aktuell Fachwahlen hat der nicht.
+	 */
+	public hatFachwahlen : boolean = false;
+
+	/**
 	 * Die zugehörigen Belegprüfungsergebnisse
 	 */
 	public ergebnis : GostBelegpruefungErgebnis = new GostBelegpruefungErgebnis();
@@ -39,6 +44,9 @@ export class GostBelegpruefungsErgebnisse extends JavaObject {
 		if (obj.schueler === undefined)
 			throw new Error('invalid json format, missing attribute schueler');
 		result.schueler = Schueler.transpilerFromJSON(JSON.stringify(obj.schueler));
+		if (obj.hatFachwahlen === undefined)
+			throw new Error('invalid json format, missing attribute hatFachwahlen');
+		result.hatFachwahlen = obj.hatFachwahlen;
 		if (obj.ergebnis === undefined)
 			throw new Error('invalid json format, missing attribute ergebnis');
 		result.ergebnis = GostBelegpruefungErgebnis.transpilerFromJSON(JSON.stringify(obj.ergebnis));
@@ -48,6 +56,7 @@ export class GostBelegpruefungsErgebnisse extends JavaObject {
 	public static transpilerToJSON(obj : GostBelegpruefungsErgebnisse) : string {
 		let result = '{';
 		result += '"schueler" : ' + Schueler.transpilerToJSON(obj.schueler) + ',';
+		result += '"hatFachwahlen" : ' + obj.hatFachwahlen.toString() + ',';
 		result += '"ergebnis" : ' + GostBelegpruefungErgebnis.transpilerToJSON(obj.ergebnis) + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -58,6 +67,9 @@ export class GostBelegpruefungsErgebnisse extends JavaObject {
 		let result = '{';
 		if (obj.schueler !== undefined) {
 			result += '"schueler" : ' + Schueler.transpilerToJSON(obj.schueler) + ',';
+		}
+		if (obj.hatFachwahlen !== undefined) {
+			result += '"hatFachwahlen" : ' + obj.hatFachwahlen.toString() + ',';
 		}
 		if (obj.ergebnis !== undefined) {
 			result += '"ergebnis" : ' + GostBelegpruefungErgebnis.transpilerToJSON(obj.ergebnis) + ',';

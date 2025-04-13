@@ -1,7 +1,7 @@
 import {beforeEach, describe, expect, test} from "vitest";
 import {getApiService} from "../../utils/RequestBuilder.js"
 import {parse} from "../../utils/ENMApiDataParser.js";
-import {resolve} from "path";
+import {resolve} from "node:path";
 
 const targetUrlENMServer: string = process.env.VITE_ENM_targetHost ?? "https://localhost";
 
@@ -36,12 +36,12 @@ describe("Init and Sync Workflow", () => {
 			id: 1,
 			authServer: targetUrlENMServerFORSvwsApp,
 			clientID: "1",
-			clientSecret: CLIENT_SECRET
+			clientSecret: CLIENT_SECRET,
 		}
 
 		const responsePost = await svwsAppapiService.post(`/db/${targetDB}/oauth/secrets/create`, {
 			body: JSON.stringify(createBody),
-			headers: {"Content-Type": "application/json"}
+			headers: {"Content-Type": "application/json"},
 		})
 
 		expect(responsePost.status).toBe(201);
@@ -50,12 +50,12 @@ describe("Init and Sync Workflow", () => {
 	test("Die aktuelel Konfiguration kann gepatched werden", async () => {
 		const patchBody = {
 			authServer: targetUrlENMServerFORSvwsApp,
-			clientSecret: CLIENT_SECRET
+			clientSecret: CLIENT_SECRET,
 		}
 
 		const responsePatch = await svwsAppapiService.patch(`/db/${targetDB}/oauth/secrets/1`, {
 			body: JSON.stringify(patchBody),
-			headers: {"Content-Type": "application/json"}
+			headers: {"Content-Type": "application/json"},
 		})
 		expect(responsePatch.status).toBe(204);
 	})

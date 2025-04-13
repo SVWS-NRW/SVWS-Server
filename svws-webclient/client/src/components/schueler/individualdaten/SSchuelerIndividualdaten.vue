@@ -19,65 +19,6 @@
 					@change="geburtsname => patch({ geburtsname })" type="text" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
-		<svws-ui-content-card title="Wohnort und Kontaktdaten" v-if="hatKompetenzAnsehen">
-			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input class="contentFocusField" placeholder="Straße" :readonly="!hatKompetenzUpdate" :model-value="strasse" @change="patchStrasse" type="text" span="full" />
-				<svws-ui-select title="Wohnort" :readonly="!hatKompetenzUpdate" v-model="wohnortID" :items="mapOrte" :item-filter="orte_filter"
-					:item-sort="orte_sort" :item-text="i => `${i.plz} ${i.ortsname}`" autocomplete statistics />
-				<svws-ui-select title="Ortsteil" :readonly="!hatKompetenzUpdate" v-model="ortsteilID" :items="ortsteile"
-					:item-text="i => i.ortsteil ?? ''" :item-sort="ortsteilSort" :item-filter="ortsteilFilter" removable />
-				<svws-ui-spacing />
-				<svws-ui-text-input placeholder="Telefon" :readonly="!hatKompetenzUpdate" :model-value="data.telefon" @change="telefon => patch({ telefon })" type="tel" />
-				<svws-ui-text-input placeholder="Mobil oder Fax" :readonly="!hatKompetenzUpdate" :model-value="data.telefonMobil"
-					@change="telefonMobil => patch({ telefonMobil })" type="tel" />
-				<svws-ui-text-input placeholder="Private E-Mail-Adresse" :readonly="!hatKompetenzUpdate" :model-value="data.emailPrivat"
-					@change="emailPrivat => patch({ emailPrivat })" type="email" verify-email />
-				<svws-ui-text-input placeholder="Schulische E-Mail-Adresse" :readonly="!hatKompetenzUpdate" :model-value="data.emailSchule"
-					@change="emailSchule => patch({ emailSchule })" type="email" verify-email />
-			</svws-ui-input-wrapper>
-		</svws-ui-content-card>
-		<svws-ui-content-card title="Staatsangehörigkeit und Konfession" v-if="hatKompetenzAnsehen">
-			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-select title="1. Staatsangehörigkeit" :readonly="!hatKompetenzUpdate" v-model="staatsangehoerigkeit" autocomplete
-					:items="Nationalitaeten.values()" :item-text="i => i.historie().getLast().staatsangehoerigkeit"
-					:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" required statistics focus-class-content />
-				<svws-ui-select title="2. Staatsangehörigkeit" :readonly="!hatKompetenzUpdate" v-model="staatsangehoerigkeit2" autocomplete removable
-					:items="Nationalitaeten.values()" :item-text="i => i.historie().getLast().staatsangehoerigkeit"
-					:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" />
-				<svws-ui-select title="Konfession" :readonly="!hatKompetenzUpdate" v-model="religion" :items="mapReligionen" :item-text="i => i.bezeichnung ?? ''" required statistics />
-				<div class="flex items-center pl-2">
-					<svws-ui-checkbox v-model="druckeKonfessionAufZeugnisse" :disabled="!hatKompetenzUpdate">Konfession aufs Zeugnis</svws-ui-checkbox>
-				</div>
-				<svws-ui-text-input placeholder="Abmeldung vom Religionsunterricht" :readonly="!hatKompetenzUpdate" :model-value="data.religionabmeldung"
-					@change="religionabmeldung => patch({religionabmeldung})" type="date" />
-				<svws-ui-text-input placeholder="Wiederanmeldung" :readonly="!hatKompetenzUpdate" :model-value="data.religionanmeldung"
-					@change="religionanmeldung => patch({religionanmeldung})" type="date" />
-			</svws-ui-input-wrapper>
-		</svws-ui-content-card>
-		<svws-ui-content-card title="Migrationshintergrund" v-if="hatKompetenzAnsehen">
-			<template #actions>
-				<svws-ui-checkbox :disabled="!hatKompetenzUpdate" class="mt-3 xl:mt-0" :model-value="hatMigrationshintergrund" statistics
-					@update:model-value="hatMigrationshintergrund => patch({hatMigrationshintergrund})" focus-class-content>
-					Migrationshintergrund vorhanden
-				</svws-ui-checkbox>
-			</template>
-			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-input-number placeholder="Zuzugsjahr" :model-value="data.zuzugsjahr" @change="zuzugsjahr => patch({zuzugsjahr})"
-					:disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate" statistics hide-stepper :min :max />
-				<svws-ui-select title="Geburtsland" v-model="geburtsland" :items="Nationalitaeten.values()" :item-text="i => `${i.historie().getLast().bezeichnung} (${i.historie().getLast().iso3})`"
-					:item-sort="nationalitaetenKatalogEintragSort" :item-filter="nationalitaetenKatalogEintragFilter"
-					:disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate" autocomplete statistics />
-				<svws-ui-select title="Verkehrssprache" v-model="verkehrsprache" autocomplete :items="Verkehrssprache.values()"
-					:item-text="i => `${i.daten.bezeichnung} (${i.daten.kuerzel})`" :item-sort="verkehrsspracheKatalogEintragSort"
-					:item-filter="verkehrsspracheKatalogEintragFilter" :disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate" class="col-span-full" statistics />
-				<svws-ui-select title="Geburtsland Mutter" v-model="geburtslandMutter" :items="Nationalitaeten.values()"
-					:item-text="i => `${i.historie().getLast().bezeichnung} (${i.historie().getLast().iso3})`" :item-sort="nationalitaetenKatalogEintragSort"
-					:item-filter="nationalitaetenKatalogEintragFilter" :disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate" autocomplete statistics />
-				<svws-ui-select title="Geburtsland Vater" v-model="geburtslandVater" :items="Nationalitaeten.values()"
-					:item-text="i => `${i.historie().getLast().bezeichnung} (${i.historie().getLast().iso3})`" :item-sort="nationalitaetenKatalogEintragSort"
-					:item-filter="nationalitaetenKatalogEintragFilter" :disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate" autocomplete statistics />
-			</svws-ui-input-wrapper>
-		</svws-ui-content-card>
 		<svws-ui-content-card title="Statusdaten" v-if="hatKompetenzAnsehen">
 			<template #actions v-if="schulform === Schulform.BK || schulform === Schulform.SB">
 				<svws-ui-checkbox :disabled="!hatKompetenzUpdate" :model-value="data.istDuplikat" @update:model-value="istDuplikat => patch({istDuplikat})">Ist Duplikat</svws-ui-checkbox>
@@ -125,17 +66,106 @@
 				</svws-ui-input-wrapper>
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
+		<svws-ui-content-card title="Wohnort und Kontaktdaten" v-if="hatKompetenzAnsehen">
+			<svws-ui-input-wrapper :grid="2">
+				<svws-ui-text-input class="contentFocusField" placeholder="Straße" :readonly="!hatKompetenzUpdate" :model-value="strasse" @change="patchStrasse" type="text" span="full" />
+				<svws-ui-select title="Wohnort" :readonly="!hatKompetenzUpdate" v-model="wohnortID" :items="mapOrte" :item-filter="orte_filter"
+					:item-sort="orte_sort" :item-text="i => `${i.plz} ${i.ortsname}`" autocomplete statistics />
+				<svws-ui-select title="Ortsteil" :readonly="!hatKompetenzUpdate" v-model="ortsteilID" :items="ortsteile"
+					:item-text="i => i.ortsteil ?? ''" :item-sort="ortsteilSort" :item-filter="ortsteilFilter" removable />
+				<svws-ui-spacing />
+				<svws-ui-text-input placeholder="Telefon" :readonly="!hatKompetenzUpdate" :model-value="data.telefon" @change="telefon => patch({ telefon })" type="tel" />
+				<svws-ui-text-input placeholder="Mobil oder Fax" :readonly="!hatKompetenzUpdate" :model-value="data.telefonMobil"
+					@change="telefonMobil => patch({ telefonMobil })" type="tel" />
+				<svws-ui-text-input placeholder="Private E-Mail-Adresse" :readonly="!hatKompetenzUpdate" :model-value="data.emailPrivat"
+					@change="emailPrivat => patch({ emailPrivat })" type="email" verify-email />
+				<svws-ui-text-input placeholder="Schulische E-Mail-Adresse" :readonly="!hatKompetenzUpdate" :model-value="data.emailSchule"
+					@change="emailSchule => patch({ emailSchule })" type="email" verify-email />
+			</svws-ui-input-wrapper>
+		</svws-ui-content-card>
+		<svws-ui-content-card title="Staatsangehörigkeit und Konfession" v-if="hatKompetenzAnsehen">
+			<svws-ui-input-wrapper :grid="2">
+				<svws-ui-select title="1. Staatsangehörigkeit" :readonly="!hatKompetenzUpdate" v-model="staatsangehoerigkeit" autocomplete
+					:items="Nationalitaeten.values()" :item-text="i => i.historie().getLast().staatsangehoerigkeit"
+					:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" required statistics focus-class-content />
+				<svws-ui-select title="2. Staatsangehörigkeit" :readonly="!hatKompetenzUpdate" v-model="staatsangehoerigkeit2" autocomplete removable
+					:items="Nationalitaeten.values()" :item-text="i => i.historie().getLast().staatsangehoerigkeit"
+					:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" />
+				<svws-ui-select title="Konfession" :readonly="!hatKompetenzUpdate" v-model="religion" :items="mapReligionen" :item-text="i => i.bezeichnung ?? ''" required statistics />
+				<div class="flex items-center pl-2">
+					<svws-ui-checkbox v-model="druckeKonfessionAufZeugnisse" :disabled="!hatKompetenzUpdate">Konfession aufs Zeugnis</svws-ui-checkbox>
+				</div>
+				<svws-ui-text-input placeholder="Abmeldung vom Religionsunterricht" :readonly="!hatKompetenzUpdate" :model-value="data.religionabmeldung"
+					@change="religionabmeldung => patch({religionabmeldung})" type="date" />
+				<svws-ui-text-input placeholder="Wiederanmeldung" :readonly="!hatKompetenzUpdate" :model-value="data.religionanmeldung"
+					@change="religionanmeldung => patch({religionanmeldung})" type="date" />
+			</svws-ui-input-wrapper>
+		</svws-ui-content-card>
+		<svws-ui-content-card title="Weitere Telefonnummern">
+			<svws-ui-table :clickable="true" :items="schuelerTelefon" :columns="columns" :selectable="hatKompetenzUpdate" :model-value="selected">
+				<template #cell(idTelefonArt)="{ value }">
+					{{ getTelefonnummer(value) }}
+				</template>
+				<template #cell(telefonnummer)="{ value }">
+					{{ value }}
+				</template>
+				<template #actions>
+					<div class="inline-flex gap-4">
+						<svws-ui-button type="trash" />
+						<svws-ui-button @click="addTelefonnummer" type="icon" title="Telefonnummer hinzufügen"><span class="icon i-ri-add-line" /></svws-ui-button>
+					</div>
+				</template>
+			</svws-ui-table>
+			<svws-ui-modal :show="showModalTelefonnummer" @update:show="closeModalTelefonnummer">
+				<template #modalTitle>Telefonnummer hinzufügen</template>
+				<template #modalContent>
+					<svws-ui-input-wrapper :grid="2" style="text-align: left">
+						<svws-ui-select title="Telefonart" :items="mapTelefonArten.values()" v-model="selectedTelefonArt" :item-text="i => i.bezeichnung" />
+						<svws-ui-text-input v-model="telefonnummer.telefonnummer" type="text" placeholder="Telefonnummer" />
+					</svws-ui-input-wrapper>
+					<div class="mt-7 flex flex-row gap-4 justify end">
+						<svws-ui-button type="secondary" @click="closeModalTelefonnummer">Abbrechen</svws-ui-button>
+						<svws-ui-button>Speichern</svws-ui-button>
+					</div>
+				</template>
+			</svws-ui-modal>
+		</svws-ui-content-card>
+		<svws-ui-content-card title="Migrationshintergrund" v-if="hatKompetenzAnsehen">
+			<template #actions>
+				<svws-ui-checkbox :disabled="!hatKompetenzUpdate" class="mt-3 xl:mt-0" :model-value="hatMigrationshintergrund" statistics
+					@update:model-value="hatMigrationshintergrund => patch({hatMigrationshintergrund})" focus-class-content>
+					Migrationshintergrund vorhanden
+				</svws-ui-checkbox>
+			</template>
+			<svws-ui-input-wrapper :grid="2">
+				<svws-ui-input-number placeholder="Zuzugsjahr" :model-value="data.zuzugsjahr" @change="zuzugsjahr => patch({zuzugsjahr})"
+					:disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate" statistics hide-stepper :min :max />
+				<svws-ui-select title="Geburtsland" v-model="geburtsland" :items="Nationalitaeten.values()" :item-text="i => `${i.historie().getLast().bezeichnung} (${i.historie().getLast().iso3})`"
+					:item-sort="nationalitaetenKatalogEintragSort" :item-filter="nationalitaetenKatalogEintragFilter"
+					:disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate" autocomplete statistics />
+				<svws-ui-select title="Verkehrssprache" v-model="verkehrsprache" autocomplete :items="Verkehrssprache.values()"
+					:item-text="i => `${i.daten.bezeichnung} (${i.daten.kuerzel})`" :item-sort="verkehrsspracheKatalogEintragSort"
+					:item-filter="verkehrsspracheKatalogEintragFilter" :disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate" class="col-span-full" statistics />
+				<svws-ui-select title="Geburtsland Mutter" v-model="geburtslandMutter" :items="Nationalitaeten.values()"
+					:item-text="i => `${i.historie().getLast().bezeichnung} (${i.historie().getLast().iso3})`" :item-sort="nationalitaetenKatalogEintragSort"
+					:item-filter="nationalitaetenKatalogEintragFilter" :disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate" autocomplete statistics />
+				<svws-ui-select title="Geburtsland Vater" v-model="geburtslandVater" :items="Nationalitaeten.values()"
+					:item-text="i => `${i.historie().getLast().bezeichnung} (${i.historie().getLast().iso3})`" :item-sort="nationalitaetenKatalogEintragSort"
+					:item-filter="nationalitaetenKatalogEintragFilter" :disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate" autocomplete statistics />
+			</svws-ui-input-wrapper>
+		</svws-ui-content-card>
 	</div>
 </template>
 
 <script setup lang="ts">
 
-	import { computed } from "vue";
+	import {computed, ref} from "vue";
 	import type { SchuelerIndividualdatenProps } from "./SSchuelerIndividualdatenProps";
-	import type { SchuelerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, KatalogEintrag, SchulEintrag } from "@core";
-	import { SchuelerStatus, Schulform, Nationalitaeten, Geschlecht, AdressenUtils, Verkehrssprache, BenutzerKompetenz, DateUtils } from "@core";
+	import type { SchuelerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, KatalogEintrag, SchulEintrag} from "@core";
+	import { SchuelerStatus, Schulform, Nationalitaeten, Geschlecht, AdressenUtils, Verkehrssprache, BenutzerKompetenz, DateUtils, SchuelerTelefon } from "@core";
 	import { verkehrsspracheKatalogEintragFilter, verkehrsspracheKatalogEintragSort, nationalitaetenKatalogEintragFilter, nationalitaetenKatalogEintragSort,
 		staatsangehoerigkeitKatalogEintragSort, staatsangehoerigkeitKatalogEintragFilter, orte_sort, orte_filter, ortsteilSort, ortsteilFilter } from "~/utils/helfer";
+	import type { DataTableColumn } from "@ui";
 
 	const props = defineProps<SchuelerIndividualdatenProps>();
 
@@ -145,6 +175,52 @@
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 
 	const data = computed<SchuelerStammdaten>(() => props.schuelerListeManager().daten());
+
+	const selected = ref<SchuelerTelefon[]>([]);
+	const telefonnummer = ref(new SchuelerTelefon());
+	const schuelerTelefon = computed(() => [...props.schuelerListeManager().getSuchuelerTelefone()]);
+
+	const columns: DataTableColumn[] = [
+		{ key: "idTelefonArt", label: "Ansprechpartner", span: 1 },
+		{ key: "telefonnummer", label: "Telefonnummern", span: 1 },
+	]
+
+	function getTelefonnummer(idTelefonArt: number): string {
+		return props.mapTelefonArten.get(idTelefonArt)?.bezeichnung ?? "";
+	}
+
+	const selectedTelefonArt = computed({
+		get: () => props.mapTelefonArten.get(telefonnummer.value.idTelefonArt) ?? null,
+		set: (selected) => telefonnummer.value.idTelefonArt = (selected !== null) ? selected.id : 0,
+	});
+
+	enum Mode { ADD, PATCH , DEFAULT }
+	const currentMode = ref<Mode>(Mode.DEFAULT);
+	const showModalTelefonnummer = ref<boolean>(false);
+	const newEntryTelefonnummer = ref<SchuelerTelefon>(new SchuelerTelefon());
+	function addTelefonnummer() {
+		resetMerkmal();
+		setMode(Mode.ADD);
+		openModalTelefonnummer();
+	}
+
+	function openModalTelefonnummer() {
+		showModalTelefonnummer.value = true;
+	}
+
+	function closeModalTelefonnummer() {
+		resetMerkmal();
+		setMode(Mode.DEFAULT)
+		showModalTelefonnummer.value = false;
+	}
+
+	function setMode(newMode: Mode) {
+		return currentMode.value = newMode;
+	}
+
+	function resetMerkmal() {
+		newEntryTelefonnummer.value = new SchuelerTelefon();
+	}
 
 	function istGeburtsdatumGueltig(strDate: string | null) {
 		if (strDate === null || typeof strDate === 'number')

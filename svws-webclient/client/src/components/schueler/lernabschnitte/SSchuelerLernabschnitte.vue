@@ -1,6 +1,6 @@
 <template>
-	<div class="page page-flex-row overflow-y-auto">
-		<div class="flex-none w-28 h-full">
+	<div class="page page-flex-row pt-0">
+		<div class="flex-none w-28 h-full overflow-y-auto pr-4">
 			<svws-ui-table :clicked="lernabschnitt" @update:clicked="gotoLernabschnitt" :columns="[{key: 'schuljahresabschnitt', label: 'Abschnitt'}]" :items="lernabschnitte" clickable type="navigation" class="-mt-1">
 				<template #cell="{ rowData: row }">
 					<div>
@@ -24,7 +24,7 @@
 				<svws-ui-tab-bar :tab-manager secondary :focus-switching-enabled :focus-help-visible />
 			</nav>
 		</Teleport>
-		<div class="grow h-full">
+		<div class="h-full overflow-y-auto pr-4">
 			<router-view :key="$route.hash" />
 		</div>
 	</div>

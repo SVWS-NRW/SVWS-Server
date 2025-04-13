@@ -1693,7 +1693,7 @@ export class Fach extends JavaEnum<Fach> implements CoreType<FachKatalogEintrag,
 		return de_svws_nrw_asd_types_CoreType_daten(this, schuljahr);
 	}
 
-	public statistikId() : String | null {
+	public statistikId() : string | null {
 		return de_svws_nrw_asd_types_CoreType_statistikId(this);
 	}
 

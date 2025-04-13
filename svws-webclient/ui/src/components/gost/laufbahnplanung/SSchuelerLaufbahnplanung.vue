@@ -7,11 +7,11 @@
 				<s-laufbahnplanung-import-modal v-model:show="show" :import-laufbahnplanung />
 				<svws-ui-button :type="zwischenspeicher === undefined ? 'transparent' : 'error'" @click="saveLaufbahnplanung">Planung merken</svws-ui-button>
 				<svws-ui-button type="danger" @click="restoreLaufbahnplanung" v-if="zwischenspeicher !== undefined">Planung wiederherstellen</svws-ui-button>
-				<svws-ui-button :type="modus === 'normal' ? 'transparent' : 'danger'" @click="switchModus" title="Modus wechseln">
-					<span class="icon-sm i-ri-loop-right-line" /> Modus: <span>{{ modus }}</span>
+				<svws-ui-button :type="manager.modus === 'normal' ? 'transparent' : 'danger'" @click="manager.switchModus()" title="Modus wechseln">
+					<span class="icon-sm i-ri-loop-right-line" /> Modus: <span>{{ manager.modus }}</span>
 				</svws-ui-button>
 				<s-modal-laufbahnplanung-kurswahlen-loeschen schueler-ansicht :gost-jahrgangsdaten :reset-fachwahlen />
-				<svws-ui-button type="transparent" @click="switchFaecherAnzeigen()"> {{ "Fächer anzeigen: " + textFaecherAnzeigen() }} </svws-ui-button>
+				<svws-ui-button type="transparent" @click="manager.switchFaecherAnzeigen()"> {{ "Fächer anzeigen: " + manager.getTextFaecherAnzeigen() }} </svws-ui-button>
 			</svws-ui-sub-nav>
 		</Teleport>
 		<Teleport defer to=".svws-ui-header--actions">
@@ -21,7 +21,7 @@
 			<svws-ui-modal-hilfe> <hilfe-laufbahnplanung /> </svws-ui-modal-hilfe>
 		</Teleport>
 		<div class="grow overflow-y-auto overflow-x-hidden min-w-fit">
-			<s-laufbahnplanung-card-planung v-if="visible" :abiturdaten-manager :modus :gost-jahrgangsdaten :set-wahl :goto-kursblockung :faecher-anzeigen />
+			<s-laufbahnplanung-card-planung v-if="visible" :manager :abiturdaten-manager :gost-jahrgangsdaten :set-wahl :goto-kursblockung />
 		</div>
 		<div class="w-2/5 3xl:w-1/2 min-w-144 overflow-y-auto overflow-x-hidden">
 			<div class="flex flex-col gap-y-16 lg:gap-y-20">
@@ -38,8 +38,11 @@
 	import type { SchuelerLaufbahnplanungProps } from "./SSchuelerLaufbahnplanungProps";
 	import { BenutzerKompetenz } from "../../../../../core/src/core/types/benutzer/BenutzerKompetenz";
 	import type { GostLaufbahnplanungBeratungsdaten } from "../../../../../core/src/core/data/gost/GostLaufbahnplanungBeratungsdaten";
+	import { LaufbahnplanungUiManager } from "./LaufbahnplanungUiManager";
 
 	const props = defineProps<SchuelerLaufbahnplanungProps>();
+
+	const manager = computed<LaufbahnplanungUiManager>(() => new LaufbahnplanungUiManager(props.serverMode, props.abiturdatenManager, props.config, () => props.gostJahrgangsdaten, props.setWahl));
 
 	const hatUpdateKompetenz = computed<boolean>(() => {
 		if ((props.benutzerKompetenzen === undefined) || (props.benutzerKompetenzenAbiturjahrgaenge === undefined) || (props.schueler.abiturjahrgang === null))
@@ -69,69 +72,6 @@
 	async function doPatchBeratungsdaten(data: Partial<GostLaufbahnplanungBeratungsdaten>) {
 		await props.patchBeratungsdaten(data);
 		updated.value = false;
-	}
-
-	const hatFaecherNichtWaehlbar = computed<boolean>(() => {
-		for (const fach of props.abiturdatenManager().faecher().faecher())
-			if (!(fach.istMoeglichEF1 || fach.istMoeglichEF2 || fach.istMoeglichQ11 || fach.istMoeglichQ12 || fach.istMoeglichQ21 || fach.istMoeglichQ22))
-				return true;
-		return false;
-	});
-
-	async function switchFaecherAnzeigen() {
-		switch (props.faecherAnzeigen) {
-			case 'alle':
-				await props.setFaecherAnzeigen(hatFaecherNichtWaehlbar.value ? 'nur_waehlbare' : 'nur_gewaehlt')
-				break;
-			case 'nur_waehlbare':
-				await props.setFaecherAnzeigen('nur_gewaehlt')
-				break;
-			case 'nur_gewaehlt':
-				await props.setFaecherAnzeigen('alle')
-				break;
-		}
-	}
-
-	function textFaecherAnzeigen() {
-		switch (props.faecherAnzeigen) {
-			case 'alle':
-				return "Alle";
-			case 'nur_waehlbare':
-				return "Nur wählbare"
-			case 'nur_gewaehlt':
-				return "Nur gewählte"
-		}
-	}
-
-	async function switchModus() {
-		// wenn EF1 und EF2 bereits festgelegt sind, macht der Hochschreibemodus
-		// keinen Sinn mehr und wird deaktiviert.
-		const festgelegt = props.gostJahrgangsdaten.istBlockungFestgelegt
-		if (festgelegt[0] && festgelegt[1]) {
-			switch (props.modus) {
-				case 'normal':
-					await props.setModus('manuell');
-					break;
-				case 'manuell':
-					await props.setModus('normal');
-					break;
-				case 'hochschreiben':
-					await props.setModus('normal');
-					break;
-			}
-		} else {
-			switch (props.modus) {
-				case 'normal':
-					await props.setModus('hochschreiben');
-					break;
-				case 'hochschreiben':
-					await props.setModus('manuell');
-					break;
-				case 'manuell':
-					await props.setModus('normal');
-					break;
-			}
-		}
 	}
 
 	const dropdownList = [

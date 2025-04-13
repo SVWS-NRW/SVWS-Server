@@ -21,6 +21,10 @@ public class GostBelegpruefungsErgebnisse {
 	@Schema(implementation = Schueler.class)
 	public @NotNull Schueler schueler = new Schueler();
 
+	/** Gibt an, ob der Schüler aktuell Fachwahlen hat der nicht. */
+	@Schema(description = "gibt an, ob der Schüler aktuell Fachwahlen hat der nicht", example = "true")
+	public boolean hatFachwahlen = false;
+
 	/** Die zugehörigen Belegprüfungsergebnisse */
 	@Schema(implementation = GostBelegpruefungErgebnis.class)
 	public @NotNull GostBelegpruefungErgebnis ergebnis = new GostBelegpruefungErgebnis();

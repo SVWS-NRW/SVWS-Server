@@ -184,6 +184,7 @@ public class StundenplanManager {
 			};
 
 	private final @NotNull Comparator<StundenplanUnterricht> _compUnterricht;
+	private final @NotNull Comparator<StundenplanUnterricht> _compUnterrichtNachJahrgangKlasseFachWochentyp;
 
 	private static final @NotNull Comparator<StundenplanZeitraster> _compZeitraster =
 			(final @NotNull StundenplanZeitraster a, final @NotNull StundenplanZeitraster b) -> {
@@ -222,6 +223,7 @@ public class StundenplanManager {
 	private @NotNull List<StundenplanJahrgang> _jahrgangmenge_sortiert = new ArrayList<>();
 	private @NotNull HashMap<Long, List<@NotNull StundenplanJahrgang>> _jahrgangmenge_by_idKurs = new HashMap<>();
 	private @NotNull HashMap<Long, List<StundenplanJahrgang>> _jahrgangmenge_by_idKlasse = new HashMap<>();
+	private @NotNull HashMap<Long, List<StundenplanJahrgang>> _jahrgangmenge_by_idUnterricht = new HashMap<>();
 
 	// StundenplanKalenderwochenzuordnung
 	private @NotNull HashMap<Long, StundenplanKalenderwochenzuordnung> _kwz_by_id = new HashMap<>();
@@ -370,9 +372,9 @@ public class StundenplanManager {
 	private @NotNull HashMap2D<Long, Long, List<StundenplanUnterricht>> _unterrichtmenge_by_idLehrer_and_idZeitraster = new HashMap2D<>();
 	private @NotNull HashMap2D<Long, Long, List<StundenplanUnterricht>> _unterrichtmenge_by_idJahrgang_and_idZeitraster = new HashMap2D<>();
 	private @NotNull HashMap2D<Long, Long, List<StundenplanUnterricht>> _unterrichtmenge_by_idKlasse_and_idFach = new HashMap2D<>();
-	private @NotNull HashMap2D<Long, Integer, List<StundenplanUnterricht>> _unterrichtmenge_by_idZeitraster_and_wochentyp = new HashMap2D<>();
-	private @NotNull HashMap3D<Long, Integer, Long, List<StundenplanUnterricht>> _unterrichtmenge_by_idZeitraster_wochentyp_fach = new HashMap3D<>();
-	private @NotNull HashMap3D<Long, Integer, Long, List<StundenplanUnterricht>> _unterrichtmenge_by_idZeitraster_wochentyp_raum = new HashMap3D<>();
+	private @NotNull HashMap2D<Long, Integer, List<StundenplanUnterricht>> _unterrichtmenge_by_idZeitraster_and_wochentyp = new HashMap2D<>(); // Wochentyp -1 --> alle Unterrichte im Zeitraster
+	private @NotNull HashMap3D<Long, Integer, Long, List<StundenplanUnterricht>> _unterrichtmenge_by_idZeitraster_wochentyp_fach = new HashMap3D<>();  // Wochentyp -1 --> alle Unterrichte im Zeitraster
+	private @NotNull HashMap3D<Long, Integer, Long, List<StundenplanUnterricht>> _unterrichtmenge_by_idZeitraster_wochentyp_raum = new HashMap3D<>(); // Wochentyp -1 --> alle Unterrichte im Zeitraster
 	private boolean _unterrichtHatMultiWochen = false;
 	private @NotNull List<List<StundenplanUnterricht>> _unterrichtsgruppenMergeable = new ArrayList<>();
 
@@ -433,6 +435,7 @@ public class StundenplanManager {
 			final @NotNull List<StundenplanPausenaufsicht> pausenaufsichten, final StundenplanUnterrichtsverteilung unterrichtsverteilung) {
 		_compKlassenunterricht = klassenunterrichtCreateComparator();
 		_compUnterricht = unterrichtCreateComparator();
+		_compUnterrichtNachJahrgangKlasseFachWochentyp = unterrichtCreateComparatorNachJahrgangKlasseFachWochentyp();
 		_stundenplanID = daten.id;
 		_stundenplanWochenTypModell = daten.wochenTypModell;
 		_stundenplanSchuljahresAbschnittID = daten.idSchuljahresabschnitt;
@@ -479,6 +482,7 @@ public class StundenplanManager {
 	public StundenplanManager(final @NotNull StundenplanKomplett stundenplanKomplett) {
 		_compKlassenunterricht = klassenunterrichtCreateComparator();
 		_compUnterricht = unterrichtCreateComparator();
+		_compUnterrichtNachJahrgangKlasseFachWochentyp = unterrichtCreateComparatorNachJahrgangKlasseFachWochentyp();
 		_stundenplanID = stundenplanKomplett.daten.id;
 		_stundenplanWochenTypModell = stundenplanKomplett.daten.wochenTypModell;
 		_stundenplanSchuljahresAbschnittID = stundenplanKomplett.daten.idSchuljahresabschnitt;
@@ -507,6 +511,46 @@ public class StundenplanManager {
 				stundenplanKomplett.pausenaufsichten,
 				stundenplanKomplett.unterrichtsverteilung.kurse,
 				stundenplanKomplett.unterrichte);
+	}
+
+	private int compareKlassenlistenIDsNachJahrgang(final @NotNull List<Long> klassen1, final @NotNull List<Long> klassen2) {
+		final StundenplanJahrgang aJahrgang = jahrgangGetMinimumByKlassenIDs(klassen1);
+		final StundenplanJahrgang bJahrgang = jahrgangGetMinimumByKlassenIDs(klassen2);
+		if ((aJahrgang != null) || (bJahrgang != null)) {
+			if (aJahrgang == null)
+				return -1;
+			if (bJahrgang == null)
+				return +1;
+			final int cmpJahrgang = _compJahrgang.compare(aJahrgang, bJahrgang);
+			if (cmpJahrgang != 0)
+				return cmpJahrgang;
+		}
+		return 0;
+	}
+
+	private int compareKlassenlistenIDsNachStandard(final @NotNull List<Long> a, final @NotNull List<Long> b) {
+		if (a.size() < b.size())
+			return -1;
+		if (a.size() > b.size())
+			return +1;
+		for (int i = 0; i < a.size(); i++) {
+			final long aIdKlasse = ListUtils.getNonNullElementAtOrException(a, i);
+			final long bIdKlasse = ListUtils.getNonNullElementAtOrException(b, i);
+			final @NotNull StundenplanKlasse aKlasse = DeveloperNotificationException.ifMapGetIsNull(_klasse_by_id, aIdKlasse);
+			final @NotNull StundenplanKlasse bKlasse = DeveloperNotificationException.ifMapGetIsNull(_klasse_by_id, bIdKlasse);
+			final int cmpKlasse = StundenplanUnterrichtUtils.comparatorKlassen.compare(aKlasse, bKlasse);
+			if (cmpKlasse != 0)
+				return cmpKlasse;
+		}
+		return 0;
+	}
+
+	private static int compareWochentyp(final int wochentyp1, final  int wochentyp2) {
+		if (wochentyp1 < wochentyp2)
+			return -1;
+		if (wochentyp1 > wochentyp2)
+			return +1;
+		return 0;
 	}
 
 	private static @NotNull String init_gueltig_bis(final @NotNull String gueltigAb, final String gueltigBis) {
@@ -631,7 +675,6 @@ public class StundenplanManager {
 		update_unterrichtmenge_by_idSchiene();                                            // _unterrichtmenge
 		update_unterrichtmenge_by_idKurs();                                               // _unterrichtmenge
 		update_unterrichtmenge_by_idKlasse_and_idFach();                                  // _unterrichtmenge
-		update_unterrichtmenge_by_idZeitraster_and_wochentyp();                           // _unterrichtmenge
 		update_unterrichtmenge_by_idLehrer();                                             // _unterrichtmenge
 		update_unterrichtmenge_by_idLehrer_and_idZeitraster();                            // _unterrichtmenge
 		update_unterrichtmenge_by_idRaum();                                               // _unterrichtmenge
@@ -645,7 +688,6 @@ public class StundenplanManager {
 		update_kwzmenge_by_wochentyp();                                                   // _kwzmenge_sortiert
 
 		// 2. Ordnung
-
 		update_kursmenge_by_idKlasse();                                                      // _kursmenge, _schuelermenge_by_idKurs
 		update_klassenmenge_by_idKurs();                                                     // _kursmenge, _schuelermenge_by_idKurs
 		update_pausenzeitmenge_by_idLehrer_and_wochentag();                                  // _pausenzeitmenge_by_idLehrer
@@ -659,6 +701,7 @@ public class StundenplanManager {
 		update_pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp();   // _aufsichtsbereichmenge, _pausenaufsichtmenge_by_idAufsichtsbereich, _pausenaufsichtbereichmenge_by_idPausenaufsicht
 		update_unterrichtmenge_by_idJahrgang();                                              // _unterrichtmenge, _jahrgangmenge_by_idKlasse, _jahrgangmenge_by_idKurs
 		update_unterrichtmenge_by_idSchueler();                                              // _unterrichtmenge, _schuelermenge_by_idKlasse, _schuelermenge_by_idKurs
+		update_jahrgangmenge_by_idUnterricht();                                              // _unterrichtmenge, _jahrgangmenge_by_idKlasse, _jahrgangmenge_by_idKurs
 		update_klassenunterrichtmenge_by_idKlasse_and_idSchiene();                           // _klassenunterrichtmenge_by_idKlasse
 		update_wertWochenminuten_by_idKurs();                                                // _kursmenge, _unterrichtmenge_by_idKurs
 		update_wertWochenminuten_by_idKlasse_und_idFach();                                   // _klassenmenge, _fachmenge, _unterrichtmenge_by_idKlasse_and_idFach
@@ -670,8 +713,6 @@ public class StundenplanManager {
 		update_kursmenge_verwendet_sortiert();                                               // _kursmenge_sortiert, _unterrichtmenge_by_idKurs
 		update_fachmenge_verwendet_sortiert();                                               // _fachmenge_sortiert, _unterrichtmenge_by_idFach
 		update_schuelermenge_by_idUnterricht();                                              // _unterrichtmenge, _schuelermenge_by_idKlasse, _schuelermenge_by_idKurs
-		update_unterrichtmenge_by_idZeitraster_wochentyp_fach();                             // _unterrichtmenge_by_idZeitraster_and_wochentyp
-		update_unterrichtmenge_by_idZeitraster_wochentyp_raum();                             // _unterrichtmenge_by_idZeitraster_and_wochentyp
 
 		// 3. Ordnung
 		update_pausenzeitmenge_by_idKlasse_and_wochentag();                                  // _pausenzeitmenge_by_idKlasse
@@ -685,6 +726,7 @@ public class StundenplanManager {
 		update_schienenmenge_by_idKlasse();                                                  // _klassenmenge, _kursmenge_by_idKlasse, _klassenunterrichtmenge_by_idKlasse
 		update_kursmenge_by_idKlasse_and_idSchiene();                                        // _kursmenge_by_idKlasse
 		update_lehrermenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp();           // _pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp
+		update_unterrichtmenge_by_idZeitraster_and_wochentyp();                              // _unterrichtmenge, _jahrgangmenge_by_idUnterricht (wegen des Comparators)
 
 		// 4. Ordnung
 		update_klassenmenge_verwendet_sortiert();                                            // _klassenmenge_sortiert, _unterrichtmenge_by_idKlasse
@@ -693,6 +735,9 @@ public class StundenplanManager {
 		update_pausenzeitHatSchnittMitZeitraster_by_wochentag_idSchueler();                  // _pausenzeitmenge_by_idSchueler_and_wochentag
 		update_pausenzeitHatSchnittMitZeitraster_by_wochentag_idJahrgang();                  // _pausenzeitmenge_by_idJahrgang_and_wochentag
 		update_pausenzeitHatSchnittMitZeitraster_by_wochentag();
+		update_unterrichtmenge_by_idZeitraster_wochentyp_fach();                             // _unterrichtmenge_by_idZeitraster_and_wochentyp
+		update_unterrichtmenge_by_idZeitraster_wochentyp_raum();                             // _unterrichtmenge_by_idZeitraster_and_wochentyp
+
 	}
 
 	/**
@@ -1144,6 +1189,29 @@ public class StundenplanManager {
 				MapUtils.addToList(_jahrgangmenge_by_idKurs, kurs.id, jahrgang);
 			}
 			MapUtils.getOrCreateArrayList(_jahrgangmenge_by_idKurs, kurs.id).sort(_compJahrgang);
+		}
+	}
+
+	private void update_jahrgangmenge_by_idUnterricht() {
+		_jahrgangmenge_by_idUnterricht = new HashMap<>();
+		for (final @NotNull StundenplanUnterricht u : _unterrichtmenge) {
+			// Aggregieren.
+			final @NotNull Set<Long> setOfJahrgangIDs = new HashSet<>();
+			if (u.idKurs == null) {
+				for (final long idKlasse  : u.klassen)
+					for (final StundenplanJahrgang j : DeveloperNotificationException.ifMapGetIsNull(_jahrgangmenge_by_idKlasse, idKlasse))
+						setOfJahrgangIDs.add(j.id);
+			} else {
+				for (final StundenplanJahrgang j : DeveloperNotificationException.ifMapGetIsNull(_jahrgangmenge_by_idKurs, u.idKurs))
+					setOfJahrgangIDs.add(j.id);
+			}
+			// Umwandeln
+			for (final long idJahrgang : setOfJahrgangIDs) {
+				final @NotNull StundenplanJahrgang j = DeveloperNotificationException.ifMapGetIsNull(_jahrgang_by_id, idJahrgang);
+				MapUtils.addToList(_jahrgangmenge_by_idUnterricht, u.id, j);
+			}
+			// Sortieren
+			MapUtils.getOrCreateArrayList(_jahrgangmenge_by_idUnterricht, u.id).sort(_compJahrgang);
 		}
 	}
 
@@ -1782,10 +1850,19 @@ public class StundenplanManager {
 			MapUtils.addToList(_unterrichtmenge_by_idZeitraster, u.idZeitraster, u);
 	}
 
+	// Vorsortiert nach : Jahrgang, Klasse, Fach, Wochentyp
 	private void update_unterrichtmenge_by_idZeitraster_and_wochentyp() {
 		_unterrichtmenge_by_idZeitraster_and_wochentyp = new HashMap2D<>();
-		for (final @NotNull StundenplanUnterricht u : _unterrichtmenge)
+
+		// Erzeugen der Listen.
+		for (final @NotNull StundenplanUnterricht u : _unterrichtmenge) {
 			Map2DUtils.addToList(_unterrichtmenge_by_idZeitraster_and_wochentyp, u.idZeitraster, u.wochentyp, u);
+			Map2DUtils.addToList(_unterrichtmenge_by_idZeitraster_and_wochentyp, u.idZeitraster, -1, u);
+		}
+
+		// Sortieren der Listen.
+		for (final @NotNull List<StundenplanUnterricht> list : _unterrichtmenge_by_idZeitraster_and_wochentyp.getNonNullValuesAsList())
+			list.sort(_compUnterrichtNachJahrgangKlasseFachWochentyp);
 	}
 
 	private void update_unterrichtmenge_by_idRaum() {
@@ -2417,10 +2494,7 @@ public class StundenplanManager {
 	 * @return eine Liste der {@link StundenplanJahrgang}-Objekte.
 	 */
 	public @NotNull List<StundenplanJahrgang> jahrgangGetMengeByUnterrichtIdAsList(final long idUnterricht) {
-		final @NotNull StundenplanUnterricht unterricht = unterrichtGetByIdOrException(idUnterricht);
-		if (unterricht.idKurs != null)
-			return this.jahrgangGetMengeByKursIdAsList(unterricht.idKurs);
-		return jahrgangGetMengeByKlassenIdsAsList(unterricht.klassen);
+		return DeveloperNotificationException.ifMapGetIsNull(_jahrgangmenge_by_idUnterricht, idUnterricht);
 	}
 
 	/**
@@ -2945,22 +3019,6 @@ public class StundenplanManager {
 			DeveloperNotificationException.ifMapNotContains("_schueler_by_id", _schueler_by_id, idSchueler);
 	}
 
-	private int klasseCompareByKlassenIDs(final @NotNull List<Long> a, final @NotNull List<Long> b) {
-		if (a.size() < b.size())
-			return -1;
-		if (a.size() > b.size())
-			return +1;
-		for (int i = 0; i < a.size(); i++) {
-			final long aIdKlasse = ListUtils.getNonNullElementAtOrException(a, i);
-			final long bIdKlasse = ListUtils.getNonNullElementAtOrException(b, i);
-			final @NotNull StundenplanKlasse aKlasse = DeveloperNotificationException.ifMapGetIsNull(_klasse_by_id, aIdKlasse);
-			final @NotNull StundenplanKlasse bKlasse = DeveloperNotificationException.ifMapGetIsNull(_klasse_by_id, bIdKlasse);
-			final int cmpKlasse = StundenplanUnterrichtUtils.comparatorKlassen.compare(aKlasse, bKlasse);
-			if (cmpKlasse != 0)
-				return cmpKlasse;
-		}
-		return 0;
-	}
 
 	/**
 	 * Liefert das {@link StundenplanKlasse}-Objekt mit der übergebenen ID.
@@ -6337,18 +6395,10 @@ public class StundenplanManager {
 
 	private @NotNull Comparator<StundenplanUnterricht> unterrichtCreateComparator() {
 		final @NotNull Comparator<StundenplanUnterricht> comp = (final @NotNull StundenplanUnterricht a, final @NotNull StundenplanUnterricht b) -> {
-			// Sortierung nach Jahrgang
-			final StundenplanJahrgang aJahrgang = jahrgangGetMinimumByKlassenIDs(a.klassen);
-			final StundenplanJahrgang bJahrgang = jahrgangGetMinimumByKlassenIDs(b.klassen);
-			if ((aJahrgang != null) || (bJahrgang != null)) {
-				if (aJahrgang == null)
-					return -1;
-				if (bJahrgang == null)
-					return +1;
-				final int cmpJahrgang = _compJahrgang.compare(aJahrgang, bJahrgang);
-				if (cmpJahrgang != 0)
-					return cmpJahrgang;
-			}
+			// Sortierung nach Jahrgängen
+			int cmpKlassenNachJahrgang = compareKlassenlistenIDsNachJahrgang(a.klassen, b.klassen);
+			if (cmpKlassenNachJahrgang != 0)
+				return cmpKlassenNachJahrgang;
 
 			// Sortierung nach Kurs
 			if ((a.idKurs != null) && (b.idKurs == null))
@@ -6356,8 +6406,8 @@ public class StundenplanManager {
 			if ((a.idKurs == null) && (b.idKurs != null))
 				return +1;
 
-			// Sortierung nach Klassen-Listen
-			final int cmpKlasse = klasseCompareByKlassenIDs(a.klassen, b.klassen);
+			// Sortierung nach Klassen
+			final int cmpKlasse = compareKlassenlistenIDsNachStandard(a.klassen, b.klassen);
 			if (cmpKlasse != 0)
 				return cmpKlasse;
 
@@ -6374,10 +6424,50 @@ public class StundenplanManager {
 				return cmpLehrer;
 
 			// Sortierung nach Wochentyp
-			if (a.wochentyp < b.wochentyp)
-				return -1;
-			if (a.wochentyp > b.wochentyp)
-				return +1;
+			int cmpWochentyp = compareWochentyp(a.wochentyp, b.wochentyp);
+			if (cmpWochentyp != 0)
+				return cmpWochentyp;
+
+			// Sortierung nach ID
+			return Long.compare(a.id, b.id);
+		};
+
+		return comp;
+	}
+
+	private @NotNull Comparator<StundenplanUnterricht> unterrichtCreateComparatorNachJahrgangKlasseFachWochentyp() {
+		final @NotNull Comparator<StundenplanUnterricht> comp = (final @NotNull StundenplanUnterricht a, final @NotNull StundenplanUnterricht b) -> {
+			// Sortierung nach Jahrgängen
+			final @NotNull List<StundenplanJahrgang> listA = DeveloperNotificationException.ifMapGetIsNull(_jahrgangmenge_by_idUnterricht, a.id);
+			final @NotNull List<StundenplanJahrgang> listB = DeveloperNotificationException.ifMapGetIsNull(_jahrgangmenge_by_idUnterricht, b.id);
+			if ((!listA.isEmpty()) || (!listB.isEmpty())) {
+				if (listA.isEmpty())
+					return -1;
+				if (listB.isEmpty())
+					return +1;
+				final @NotNull StundenplanJahrgang aJahrgang = ListUtils.getNonNullElementAtOrException(listA, 0);
+				final @NotNull StundenplanJahrgang bJahrgang = ListUtils.getNonNullElementAtOrException(listB, 0);
+				final int cmpJahrgang = _compJahrgang.compare(aJahrgang, bJahrgang);
+				if (cmpJahrgang != 0)
+					return cmpJahrgang;
+			}
+
+			// Sortierung nach Klassen
+			final int cmpKlasse = compareKlassenlistenIDsNachStandard(a.klassen, b.klassen);
+			if (cmpKlasse != 0)
+				return cmpKlasse;
+
+			// Sortierung nach Fach
+			final @NotNull StundenplanFach aFach = DeveloperNotificationException.ifMapGetIsNull(_fach_by_id, a.idFach);
+			final @NotNull StundenplanFach bFach = DeveloperNotificationException.ifMapGetIsNull(_fach_by_id, b.idFach);
+			final int cmpFach = _compFach.compare(aFach, bFach);
+			if (cmpFach != 0)
+				return cmpFach;
+
+			// Sortierung nach Wochentyp
+			int cmpWochentyp = compareWochentyp(a.wochentyp, b.wochentyp);
+			if (cmpWochentyp != 0)
+				return cmpWochentyp;
 
 			// Sortierung nach ID
 			return Long.compare(a.id, b.id);
@@ -6606,7 +6696,7 @@ public class StundenplanManager {
 	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekt, die im übergeben Zeitraster und Wochentyp liegen.
 	 *
 	 * @param idZeitraster  Die Datenbank-ID des Zeitrasters.
-	 * @param wochentyp     Der Wochentyp (0 jede Woche, 1 nur Woche A, 2 nur Woche B, ...)
+	 * @param wochentyp     Der Wochentyp (-1 = alles, 0 jede Woche, 1 nur Woche A, 2 nur Woche B, ...)
 	 *
 	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekt, die im übergeben Zeitraster und Wochentyp liegen.
 	 */

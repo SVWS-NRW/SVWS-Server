@@ -1,6 +1,7 @@
 <?php
 
 	require_once 'Config.php';
+	require_once 'SMTPClient.php';
 
 	/**
 	 * Diese Klasse dient dem Zugriff auf die SQLite-Datenbank aus der Konfiguration.
@@ -38,7 +39,7 @@
 		 * @param string $tablename   der Name der Tabelle
 		 * @param string $sql         der SQL-Befehl
 		 */
-		protected function createTable(string $tablename, string $sql) {
+		protected function createTable(string $tablename, string $sql): void {
 			try {
 				$this->conn->exec($sql);
 			} catch (PDOException $e) {
@@ -51,7 +52,7 @@
 		 *
 		 * @param string $tablename   der Name der Tabelle
 		 */
-		protected function clearTable(string $tablename) {
+		protected function clearTable(string $tablename): void {
 			try {
 				$this->conn->exec("DELETE FROM $tablename");
 			} catch (PDOException $e) {
@@ -65,7 +66,7 @@
 		 * @param string $tablename   der Name der Tabelle
 		 * @param string $sqlpart     der Teil des SQL-Befehls hinter dem SET
 		 */
-		protected function updateSet(string $tablename, string $sqlpart) {
+		protected function updateSet(string $tablename, string $sqlpart): void {
 			try {
 				$sql = "UPDATE $tablename SET ".$sqlpart;
 				$this->conn->exec($sql);
@@ -80,7 +81,7 @@
 		 * @param string $tablename   der Name der Tabelle
 		 * @param string $sql         der SQL-Befehl
 		 */
-		public function insertInto(string $tablename, string $sql) {
+		public function insertInto(string $tablename, string $sql): void {
 			try {
 				$this->conn->exec($sql);
 			} catch (PDOException $e) {
@@ -94,7 +95,7 @@
 		 * @param string $tablename   der Tabellenname
 		 * @param string $bedingung   die Lösch-Bedingung
 		 */
-		public function dropFrom(string $tablename, string $bedingung) {
+		public function dropFrom(string $tablename, string $bedingung): void {
 			try {
 				$sql = "DELETE FROM $tablename WHERE $bedingung";
 				$this->conn->exec($sql);
@@ -106,7 +107,7 @@
 		/**
 		 * Initialisiert die Datenbank mit Default-Werten
 		 */
-		protected function initDatabase() {
+		protected function initDatabase(): void {
 			$this->createTable('OAuth', 'CREATE TABLE OAuth(clientID INTEGER PRIMARY KEY, token TEXT, tokenTimestamp INTEGER, tokenValidForSecs INTEGER)');
 			$this->insertInto('OAuth', "INSERT INTO OAuth(clientID, token, tokenTimestamp, tokenValidForSecs) VALUES (1, NULL, NULL, NULL)");
 			$this->createTable('ServerConfig', 'CREATE TABLE ServerConfig(schluessel TEXT PRIMARY KEY, wert TEXT)');
@@ -119,12 +120,13 @@
 			$this->createTable('Ankreuzkompetenzen', 'CREATE TABLE Ankreuzkompetenzen(id INTEGER, ts INTEGER, idSchueler INTEGER, idKompetenz INTEGER, daten TEXT, tsStufe TEXT, PRIMARY KEY(id, ts))');
 			$this->createTable('Sprachenfolge', 'CREATE TABLE Sprachenfolge(id INTEGER, sprache TEXT, ts INTEGER, idSchueler INTEGER, daten TEXT, PRIMARY KEY (id, sprache, ts))');
 			$this->createTable('Lehrer', 'CREATE TABLE Lehrer(id INTEGER, ts INTEGER, daten TEXT, eMailDienstlich TEXT, passwordHash TEXT, tsPasswordHash TEXT, PRIMARY KEY(id, ts))');
+			$this->createTable('Lehrertoken', 'CREATE TABLE Lehrertoken(idLehrer INTEGER PRIMARY KEY, token TEXT, tokenTimestamp INTEGER, tokenValidForSecs INTEGER)');
 		}
 
 		/**
 		 * Reinitialisiert die Datenbank, indem das Client-Secret neu gesetzt wird und die vorhanden ENM-Daten gelöscht werden.
 		 */
-		public function reinitDatbase() {
+		public function reinitDatbase(): void {
 			$this->clearENMDaten();
 			$this->clearTable('OAuth');
 			$this->insertInto('OAuth', "INSERT INTO OAuth(clientID, token, tokenTimestamp, tokenValidForSecs) VALUES (1, NULL, NULL, NULL)");
@@ -132,7 +134,8 @@
 
 		/**
 		 * Beendet die Datenbankverbindung.
-		 */
+		 * @return void
+ 		 */
 		public function __destruct() {
 			$this->conn = null;
 		}
@@ -240,7 +243,7 @@
 		 *
 		 * @param int $ts   der Zeitstempel
 		 */
-		public function retainENMDaten(int $ts) {
+		public function retainENMDaten(int $ts): void {
 			$this->dropFrom('Daten', "ts <> $ts");
 			$this->dropFrom('Schueler', "ts <> $ts");
 			$this->dropFrom('Leistungsdaten', "ts <> $ts");
@@ -253,7 +256,7 @@
 		/**
 		 * Leert alle Tabellen mit bestehenden ENM-Daten. Die Client-Credentials bleiben dabei erhalten
 		 */
-		public function clearENMDaten() {
+		public function clearENMDaten(): void {
 			$this->clearTable('Daten');
 			$this->clearTable('Schueler');
 			$this->clearTable('Leistungsdaten');
@@ -270,7 +273,7 @@
 		 * @param int $ts            der Zeitstempel, dem die Daten zugeordnet werden
 		 * @param object $enmDaten   die zu schreibenden ENM-Daten
 		 */
-		public function writeENMDaten(int $ts, object $enmDaten) {
+		public function writeENMDaten(int $ts, object $enmDaten): void {
 			$jsonEnmDaten = json_encode($enmDaten, JSON_UNESCAPED_SLASHES);
 			$this->insertInto("Daten", "INSERT INTO Daten(ts, schulnummer, daten) VALUES ($ts, $enmDaten->schulnummer, '$jsonEnmDaten')");
 		}
@@ -278,7 +281,7 @@
 		/**
 		 * Beginnt eine Transaktion. Ist dies nicht erfolgreich, so wird ein Fehlercode 500 ausgeführt.
 		 */
-		public function beginTransaction() {
+		public function beginTransaction(): void {
 			try {
 				$this->conn->beginTransaction();
 			} catch (PDOException $e) {
@@ -290,7 +293,7 @@
 		 * Führt bei einer Transaktion einen Commit aus.
 		 * Ist dies nicht erfolgreich, so wird ein Fehlercode 500 ausgeführt.
 		 */
-		public function commitTransaction() {
+		public function commitTransaction(): void {
 			try {
 				$this->conn->commit();
 			} catch (PDOException $e) {
@@ -321,7 +324,7 @@
 		 * @param mixed $value              der Wert
 		 * @param int $type                 der PDO-Datentyp des Parameters
 		 */
-		public function bindStatementValue(PDOStatement $statement, string $param, mixed $value, int $type) {
+		public function bindStatementValue(PDOStatement $statement, string $param, mixed $value, int $type): void {
 			try {
 				$statement->bindValue($param, $value, $type);
 			} catch (PDOException $e) {
@@ -335,7 +338,7 @@
 		 *
 		 * @param PDOStatement $statement   das Statement
 		 */
-		public function executeStatement(PDOStatement $statement) {
+		public function executeStatement(PDOStatement $statement): void {
 			try {
 				$statement->execute();
 			} catch (PDOException $e) {
@@ -350,7 +353,7 @@
 		 * @param int $ts            der Zeitstempel, dem die Daten zugeordnet werden
 		 * @param array $enmLehrer   die zu schreibenden ENM-Lehrer-Daten
 		 */
-		public function writeENMLehrer(int $ts, array $enmLehrer) {
+		public function writeENMLehrer(int $ts, array $enmLehrer): void {
 			$this->beginTransaction();
 			$stmt = $this->prepareStatement("INSERT INTO Lehrer(id, ts, daten, eMailDienstlich, passwordHash, tsPasswordHash) VALUES (:id, :ts, :daten, :email, :pw, :tspw)");
 			foreach ($enmLehrer as $lehrer) {
@@ -373,7 +376,7 @@
 		 * @param int $ts              der Zeitstempel, dem die Daten zugeordnet werden
 		 * @param array $enmSchueler   die zu schreibenden ENM-Schüler-Daten
 		 */
-		public function writeENMSchueler(int $ts, array $enmSchueler) {
+		public function writeENMSchueler(int $ts, array $enmSchueler): void {
 			$this->beginTransaction();
 			$stmtSchueler = $this->prepareStatement("INSERT INTO Schueler(id, ts, idJahrgang, idKlasse, daten, tsFehlstundenGesamt, tsFehlstundenGesamtUnentschuldigt, tsASV, tsAUE, tsZB, tsLELS, tsSchulformEmpf, tsIndividuelleVersetzungsbemerkungen, tsFoerderbemerkungen) VALUES (:id, :ts, :idJahrgang, :idKlasse, :daten, :tsFehlstundenGesamt, :tsFehlstundenGesamtUnentschuldigt, :tsASV, :tsAUE, :tsZB, :tsLELS, :tsSchulformEmpf, :tsIndividuelleVersetzungsbemerkungen, :tsFoerderbemerkungen)");
 			$stmtLeistung = $this->prepareStatement("INSERT INTO Leistungsdaten(id, ts, idSchueler, idLerngruppe, daten, tsNote, tsNoteQuartal, tsFehlstundenFach, tsFehlstundenUnentschuldigtFach, tsFachbezogeneBemerkungen, tsIstGemahnt) VALUES (:id, :ts, :idSchueler, :idLerngruppe, :daten, :tsNote, :tsNoteQuartal, :tsFehlstundenFach, :tsFehlstundenUnentschuldigtFach, :tsFachbezogeneBemerkungen, :tsIstGemahnt)");
@@ -465,7 +468,7 @@
 		 *
 		 * @param int $ts   der Zeitstempel der neu importierten Daten
 		 */
-		public function importDiffSchueler(int $ts) {
+		public function importDiffSchueler(int $ts): void {
 			// Entferne zunächst alle alten Schüler-Einträge, die nicht in den neuen Daten enthalten sind oder keine Änderungen haben
 			$this->dropFrom('Schueler', "ts < $ts AND (id, ts) NOT IN (SELECT a.id, a.ts FROM Schueler a JOIN Schueler b WHERE a.id = b.id AND a.ts < b.ts AND (a.tsFehlstundenGesamt <> b.tsFehlstundenGesamt OR a.tsFehlstundenGesamtUnentschuldigt <> b.tsFehlstundenGesamtUnentschuldigt OR a.tsASV <> b.tsASV OR a.tsAUE <> b.tsAUE OR a.tsZB <> b.tsZB OR a.tsLELS <> b.tsLELS OR a.tsSchulformEmpf <> b.tsSchulformEmpf OR a.tsIndividuelleVersetzungsbemerkungen <> b.tsIndividuelleVersetzungsbemerkungen OR a.tsFoerderbemerkungen <> b.tsFoerderbemerkungen))");
 			// Lese dann alle Daten mit dem alten Zeitstempel ein, da diese ggf. Änderungen beinhalten
@@ -553,7 +556,7 @@
 		 *
 		 * @param int $ts   der Zeitstempel der neu importierten Daten
 		 */
-		public function importDiffLeistungen(int $ts) {
+		public function importDiffLeistungen(int $ts): void {
 			// Entferne zunächst alle alten Leistungsdaten-Einträge, die nicht in den neuen Daten enthalten sind oder keine Änderungen haben
 			$this->dropFrom('Leistungsdaten', "ts < $ts AND (id, ts) NOT IN (SELECT a.id, a.ts FROM Leistungsdaten a JOIN Leistungsdaten b WHERE a.id = b.id AND a.ts < b.ts AND (a.tsNote <> b.tsNote OR a.tsNoteQuartal <> b.tsNoteQuartal OR a.tsFehlstundenFach <> b.tsFehlstundenFach OR a.tsFehlstundenUnentschuldigtFach <> b.tsFehlstundenUnentschuldigtFach OR a.tsFachbezogeneBemerkungen <> b.tsFachbezogeneBemerkungen OR a.tsIstGemahnt <> b.tsIstGemahnt))");
 			// Lese dann alle Daten mit dem alten Zeitstempel ein, da diese ggf. Änderungen beinhalten
@@ -625,7 +628,7 @@
 		 *
 		 * @param int $ts   der Zeitstempel der neu importierten Daten
 		 */
-		public function importDiffTeilleistungen(int $ts) {
+		public function importDiffTeilleistungen(int $ts): void {
 			// Entferne zunächst alle alten Teilleistungen, die nicht in den neuen Daten enthalten sind oder keine Änderungen haben
 			$this->dropFrom('Teilleistungen', "ts < $ts AND (id, ts) NOT IN (SELECT a.id, a.ts FROM Teilleistungen a JOIN Teilleistungen b WHERE a.id = b.id AND a.ts < b.ts AND (a.tsArtID <> b.tsArtID OR a.tsDatum <> b.tsDatum OR a.tsBemerkung <> b.tsBemerkung OR a.tsNote <> b.tsNote))");
 			// Lese dann alle Daten mit dem alten Zeitstempel ein, da diese ggf. Änderungen beinhalten
@@ -683,7 +686,7 @@
 		 *
 		 * @param int $ts   der Zeitstempel der neu importierten Daten
 		 */
-		public function importDiffAnkreuzkompetenzen(int $ts) {
+		public function importDiffAnkreuzkompetenzen(int $ts): void {
 			// Entferne zunächst alle alten Ankreuzkompetenzen-Einträge, die nicht in den neuen Daten enthalten sind oder keine Änderungen haben
 			$this->dropFrom('Ankreuzkompetenzen', "ts < $ts AND (id, ts) NOT IN (SELECT a.id, a.ts FROM Ankreuzkompetenzen a JOIN Ankreuzkompetenzen b WHERE a.id = b.id AND a.ts < b.ts AND (a.tsStufe <> b.tsStufe))");
 			// Lese dann alle Daten mit dem alten Zeitstempel ein, da diese ggf. Änderungen beinhalten
@@ -723,7 +726,7 @@
 		 *
 		 * @param int $ts   der Zeitstempel der neu importierten Daten
 		 */
-		public function importDiffLehrer(int $ts) {
+		public function importDiffLehrer(int $ts): void {
 			// Entferne zunächst alle alten Lehrer-Einträge, die nicht in den neuen Daten enthalten sind oder keine Änderungen haben
 			$this->dropFrom('Lehrer', "ts < $ts AND (id, ts) NOT IN (SELECT a.id, a.ts FROM Lehrer a JOIN Lehrer b WHERE a.id = b.id AND a.ts < b.ts AND (a.tsPasswordHash <> b.tsPasswordHash))");
 			// Lese dann alle Daten mit dem alten Zeitstempel ein, da diese ggf. Änderungen beinhalten
@@ -769,7 +772,7 @@
 				return null;
 			if (count($result) !== 1)
 				return null;
-			$json = $result[0];
+			$json = $result[0]->value;
 			$client = new SMTPClient($json);
 			// Prüfe noch, ob der Client eine vollständige und plausible Konfiguration hat
 			return $client->isValid() ? $client : null;
@@ -812,7 +815,7 @@
 		 * @param string $key       der zu setzende Schlüssel
 		 * @param string $value     der zu setzende Wert für den Schlüssel
 		 */
-		public function putConfig(bool $nurServer, string $key, string | null $value) {
+		public function putConfig(bool $nurServer, string $key, string | null $value): void {
 			$table = $nurServer ? "ServerConfig" : "ClientConfig";
 			// Prüfe, ob bereits ein Eintrag vorliegt
 			$stmt = $this->prepareStatement("SELECT wert FROM $table WHERE schluessel = :schluessel");
@@ -853,7 +856,7 @@
 		 * @param string $key     der zu setzende Schlüssel
 		 * @param string $value   der zu setzende Wert für den Schlüssel
 		 */
-		public function putClientUserConfig(int $idLehrer, string $key, string | null $value) {
+		public function putClientUserConfig(int $idLehrer, string $key, string | null $value): void {
 			// Prüfe, ob bereits ein Eintrag vorliegt
 			$stmt = $this->prepareStatement("SELECT wert FROM ClientLehrerConfig WHERE idLehrer = :idLehrer AND schluessel = :schluessel");
 			$this->bindStatementValue($stmt, ":idLehrer", $idLehrer, PDO::PARAM_INT);
@@ -931,6 +934,25 @@
 					return $tmp;
 			}
 			return null;
+		}
+
+		/**
+ 		 * Ermittelt die Lehrerdaten aus der Datenbank und gibt bei einem gefundenen Datensatz 'true' zurück,
+ 		 * andernfalls bei null oder mehreren Datensätzen 'false'.
+ 		 *
+ 		 * @return bool true bei genau einem gefundenen Datensatz, false bei keinem oder mehreren
+ 		 */
+		public function checkENMLehrerByEmail(string $email): bool {
+			// Lese die Email-Adresse zur Vermeidung von SQL-Injection nicht direkt aus der DB
+			$results = $this->queryAllOrExit500("SELECT daten FROM Lehrer", "Fehler beim Lesen der Lehrer-Daten");
+			$matchingCount = 0; // Zähler für passende Datensätze
+			foreach ($results as $row) {
+				$tmp = json_decode($row->daten);
+				if (strcasecmp($tmp->eMailDienstlich, $email) === 0)
+					$matchingCount++;
+			}
+			// Wenn genau ein Datensatz gefunden wurde, return true, sonst false
+			return $matchingCount === 1;
 		}
 
 		/**
@@ -1031,7 +1053,7 @@
 		 * 																	  tsFehlstundenFach, tsFehlstundenUnentschuldigtFach,
 		 * 																	  fehlstundenUnentschuldigtFach, fachbezogeneBemerkungen, istGemahnt
 		 */
-		public function patchENMLeistung(string $ts, object $daten, object $patch) {
+		public function patchENMLeistung(string $ts, object $daten, object $patch): void {
 			$update = "";
 			if (property_exists($patch, 'note') && $this->diffStringNullable($patch->note, $daten->note) && ($ts > $daten->tsNote)) {
 				$update .= "tsNote='$ts',";
@@ -1068,8 +1090,13 @@
 				$daten->teilleistungen = [];
 				// Schreibe das gepatchte JSON in die Datenbank zurück
 				$updatedData = json_encode($daten, JSON_UNESCAPED_SLASHES);
-				$update .= "daten='$updatedData' WHERE id=$patch->id";
-				$this->updateSet('Leistungsdaten', $update);
+
+				$this->beginTransaction();
+				$stmt = $this->prepareStatement("UPDATE Leistungsdaten SET $update daten=:daten WHERE id=:id");
+				$this->bindStatementValue($stmt, ":daten", $updatedData, PDO::PARAM_STR);
+				$this->bindStatementValue($stmt, ":id", $patch->id, PDO::PARAM_INT);
+				$this->executeStatement($stmt);
+				$this->commitTransaction();
 			}
 		}
 
@@ -1082,28 +1109,33 @@
 		 * @param object $patch   der Patch für die Daten
 		 * Folgende Werte können durch das Patch Objekt überschrieben werden: fehlstundenGesamt, fehlstundenGesamtUnentschuldigt
 		 */
-		public function patchENMSchuelerLernabschnitt(string $ts, object $daten, object $patch) {
+		public function patchENMSchuelerLernabschnitt(string $ts, object $daten, object $patch): void {
 			$update = "";
-			if (property_exists($patch->lernabschnitt, 'fehlstundenGesamt') && ($ts > $patch->lernabschnitt->tsFehlstundenGesamt)
-					&& ($patch->lernabschnitt->fehlstundenGesamt !== $daten->lernabschnitt->fehlstundenGesamt)) {
+			if (property_exists($patch, 'fehlstundenGesamt') && ($ts > $daten->lernabschnitt->tsFehlstundenGesamt)
+					&& ($patch->fehlstundenGesamt !== $daten->lernabschnitt->fehlstundenGesamt)) {
 				$update .= "tsFehlstundenGesamt='$ts',";
-				$daten->lernabschnitt->fehlstundenGesamt = $patch->lernabschnitt->fehlstundenGesamt;
+				$daten->lernabschnitt->fehlstundenGesamt = $patch->fehlstundenGesamt;
 				$daten->lernabschnitt->tsFehlstundenGesamt = $ts;
 			}
-			if (property_exists($patch->lernabschnitt, 'fehlstundenGesamtUnentschuldigt') && ($ts > $daten->lernabschnitt->tsFehlstundenGesamtUnentschuldigt)
-					&& ($patch->lernabschnitt->fehlstundenGesamtUnentschuldigt !== $daten->lernabschnitt->fehlstundenGesamtUnentschuldigt)) {
+			if (property_exists($patch, 'fehlstundenGesamtUnentschuldigt') && ($ts > $daten->lernabschnitt->tsFehlstundenGesamtUnentschuldigt)
+					&& ($patch->fehlstundenGesamtUnentschuldigt !== $daten->lernabschnitt->fehlstundenGesamtUnentschuldigt)) {
 				$update .= "tsFehlstundenGesamtUnentschuldigt='$ts',";
-				$daten->lernabschnitt->fehlstundenGesamtUnentschuldigt = $patch->lernabschnitt->fehlstundenGesamtUnentschuldigt;
+				$daten->lernabschnitt->fehlstundenGesamtUnentschuldigt = $patch->fehlstundenGesamtUnentschuldigt;
 				$daten->lernabschnitt->tsFehlstundenGesamtUnentschuldigt = $ts;
 			}
 			if (strlen($update) > 0) {
-				// Stelle sicher in der Datenbanktabelle nicht Objekte auftauchen die woanders in der Datenbank gespeichert werden
+				// Stelle sicher in der Datenbanktabelle nicht Objekte auftauchen, die woanders in der Datenbank gespeichert werden
 				$daten->ankreuzkompetenzen = [];
 				$daten->leistungsdaten = [];
 				// Schreibe das gepatchte JSON in die Datenbank zurück
 				$updatedData = json_encode($daten, JSON_UNESCAPED_SLASHES);
-				$update .= "daten='$updatedData' WHERE id=$patch->id";
-				$this->updateSet('Schueler', $update);
+
+				$this->beginTransaction();
+				$stmt = $this->prepareStatement("UPDATE Schueler SET $update daten=:daten WHERE id=:id");
+				$this->bindStatementValue($stmt, ":daten", $updatedData, PDO::PARAM_STR);
+				$this->bindStatementValue($stmt, ":id", $daten->id, PDO::PARAM_INT);
+				$this->executeStatement($stmt);
+				$this->commitTransaction();
 			}
 		}
 
@@ -1117,7 +1149,7 @@
 		 * @param object $patch     der Patch für die Daten
 		 * Folgende Werte können durch das Patch Objekt überschrieben werden: ASV, AUE, ZB, LELS, schulformEmpf, individuelleVersetzungsbemerkungen, foerderbemerkungen
 		 */
-		public function patchENMSchuelerBemerkungen(string $ts, int $idSchueler, object $daten, object $patch) {
+		public function patchENMSchuelerBemerkungen(string $ts, int $idSchueler, object $daten, object $patch): void {
 			$update = "";
 			if (property_exists($patch, 'ASV') && ($ts > $daten->bemerkungen->tsASV)
 					&& $this->diffStringNullable($daten->bemerkungen->ASV, $patch->ASV)) {
@@ -1167,8 +1199,13 @@
 				$daten->leistungsdaten = [];
 				// Schreibe das gepatchte JSON in die Datenbank zurück
 				$updatedData = json_encode($daten, JSON_UNESCAPED_SLASHES);
-				$update .= "daten='$updatedData' WHERE id=$idSchueler";
-				$this->updateSet('Schueler', $update);
+
+				$this->beginTransaction();
+				$stmt = $this->prepareStatement("UPDATE Schueler SET $update daten=:daten WHERE id=:id");
+				$this->bindStatementValue($stmt, ":daten", $updatedData, PDO::PARAM_STR);
+				$this->bindStatementValue($stmt, ":id", $idSchueler, PDO::PARAM_INT);
+				$this->executeStatement($stmt);
+				$this->commitTransaction();
 			}
 		}
 
@@ -1181,7 +1218,7 @@
 		 * @param object $patch   der Patch für die Daten
 		 * Folgende Werte können durch das Patch Objekt überschrieben werden: artID, datum, bemerkung, note
 		 */
-		public function patchENMTeilleistung(string $ts, object $daten, object $patch) {
+		public function patchENMTeilleistung(string $ts, object $daten, object $patch): void {
 			$update = "";
 			if (property_exists($patch, 'artID') && ($patch->artID !== $daten->artID) && ($ts > $daten->tsArtID)) {
 				$update .= "tsArtID='$ts',";
@@ -1205,8 +1242,13 @@
 			}
 			if (strlen($update) > 0) {
 				$updatedData = json_encode($daten, JSON_UNESCAPED_SLASHES);
-				$update .= "daten='$updatedData' WHERE id=$patch->id";
-				$this->updateSet('Teilleistungen', $update);
+
+				$this->beginTransaction();
+				$stmt = $this->prepareStatement("UPDATE Teilleistungen SET $update daten=:daten WHERE id=:id");
+				$this->bindStatementValue($stmt, ":daten", $updatedData, PDO::PARAM_STR);
+				$this->bindStatementValue($stmt, ":id", $patch->id, PDO::PARAM_INT);
+				$this->executeStatement($stmt);
+				$this->commitTransaction();
 			}
 		}
 
@@ -1220,18 +1262,134 @@
 		 *
 		 * Folgende Werte können durch das Patch Objekt überschrieben werden: Stufen
 		 */
-		public function patchENMSchuelerAnkreuzkompetenzen(string $ts, object $daten, object $patch) {
+		public function patchENMSchuelerAnkreuzkompetenzen(string $ts, object $daten, object $patch): void {
 			$update = "";
 			if (property_exists($patch, 'stufen') && $this->diffArraySimple($patch->stufen, $daten->stufen) && ($ts > $daten->tsStufe)) {
+				foreach ($patch->stufen as $index=>$stufe)
+					if (!is_bool($stufe))
+						Http::exit500("Fehler beim Ausführen des Patch-Statements. Stufe mit Index ".$index." in der Ankreuzkompetenz ist kein Boolean-Wert. Patch wurde abgebrochen.");
 				$update .= "tsStufe='$ts',";
 				$daten->stufen = $patch->stufen;
 				$daten->tsStufe = $ts;
 			}
 			if (strlen($update) > 0) {
 				$updatedData = json_encode($daten, JSON_UNESCAPED_SLASHES);
-				$update .= "daten='$updatedData' WHERE id=$patch->id";
-				$this->updateSet('Ankreuzkompetenzen', $update);
+
+				$this->beginTransaction();
+				$stmt = $this->prepareStatement("UPDATE Ankreuzkompetenzen SET $update daten=:daten WHERE id=:id");
+				$this->bindStatementValue($stmt, ":daten", $updatedData, PDO::PARAM_STR);
+				$this->bindStatementValue($stmt, ":id", $patch->id, PDO::PARAM_INT);
+				$this->executeStatement($stmt);
+				$this->commitTransaction();
 			}
+		}
+
+		/**
+		 * Erstellt einen Update-Befehl für die Datenbank aus den übergebenen Daten für einen
+		 * Patch von Lehrer-Daten zu dem Passwort.
+		 *
+		 * @param string $ts      der Zeitstempel der neu importierten Daten
+		 * @param object $daten   die Daten aus der Datenbank
+		 * @param object $patch   der Patch für die Daten
+		 */
+		public function patchENMLehrerPassword(string $ts, object $daten, object $patch): void {
+			$update = "";
+			if (property_exists($patch, 'passwordHash') && $this->diffStringNullable($patch->passwordHash, $daten->passwordHash) && ($ts > $daten->tsPasswordHash)) {
+				$update .= "tsPasswordHash='$ts',";
+				$update .= "passwordHash='$patch->passwordHash',";
+				$daten->passwordHash = $patch->passwordHash;
+				$daten->tsPasswordHash = $ts;
+			}
+			if (strlen($update) > 0) {
+				$updatedData = json_encode($daten, JSON_UNESCAPED_SLASHES);
+				$update .= "daten='$updatedData' WHERE id='$patch->id'";
+				$this->updateSet('Lehrer', $update);
+			}
+		}
+
+		/**
+		 * Erstellt ein neues Password-Token. Ein zuvor bestendes Password-Token wird dabei ersetzt.
+		 *
+		 * @param int $lehrerId   Die ID des Lehrers
+		 * @return string $token  Das generierte und gespeicherte Password-Token
+		 */
+		public function writeENMLehrerToken(int $lehrerId): string {
+			$token = Config::generateRandomSecret();
+			$time = time();
+			$validFor = 600;
+			$this->beginTransaction();
+
+			// Alten Token löschen
+			$stmt = $this->prepareStatement("DELETE FROM Lehrertoken WHERE idLehrer = :idLehrer");
+			$this->bindStatementValue($stmt, ":idLehrer", $lehrerId, PDO::PARAM_INT);
+			$this->executeStatement($stmt);
+
+			// Neuen Token speichern
+			$stmt = $this->prepareStatement("INSERT INTO Lehrertoken (idLehrer, token, tokenTimestamp, tokenValidForSecs) VALUES (:id, :token, :ts, :valid)");
+			$this->bindStatementValue($stmt, ":id", $lehrerId, PDO::PARAM_INT);
+			$this->bindStatementValue($stmt, ":token", $token, PDO::PARAM_STR);
+			$this->bindStatementValue($stmt, ":ts", $time, PDO::PARAM_INT);
+			$this->bindStatementValue($stmt, ":valid", $validFor, PDO::PARAM_STR);
+			$this->executeStatement($stmt);
+
+			$this->commitTransaction();
+			return $token;
+		}
+
+		/**
+		 * Überprüft, ob zu einer LehrerId ein gültiger Token vorliegt oder prüft, ob ein übergebener Token noch gültig ist.
+		 *
+		 * @param string|int $identifier   Kann die LehrerId oder ein Token sein
+		 * @return boolean                 Token gültig true; Token abgelaufen oder nicht vorhanden false
+		 */
+		public function isENMLehrerTokenValid($identifier): bool {
+			// Überprüfen, ob $identifier eine ID oder ein Token ist
+			if (is_int($identifier)) {
+				// Abfrage nach ID
+				$stmt = $this->prepareStatement("SELECT * FROM Lehrertoken WHERE idLehrer = :idLehrer");
+				$this->bindStatementValue($stmt, ":idLehrer", $identifier, PDO::PARAM_INT);
+			} else {
+				// Abfrage nach Token
+				$stmt = $this->prepareStatement("SELECT * FROM Lehrertoken WHERE token = :token");
+				$this->bindStatementValue($stmt, ":token", $identifier, PDO::PARAM_STR);
+			}
+			$this->executeStatement($stmt);
+			$result = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+			// Prüfen, ob ein Ergebnis vorliegt
+			if (empty($result))
+				return false;
+
+			// Das erste und einzige Ergebnis
+			$tokenObj = $result[0];
+
+			// Überprüfe, ob ein Token existiert und ob es noch gültig ist
+			if (isset($tokenObj->token)) {
+				$tokenTimestamp = $tokenObj->tokenTimestamp; // Zeitstempel des Tokens
+				$tokenValidForSecs = $tokenObj->tokenValidForSecs; // Gültigkeitsdauer in Sekunden
+				// Berechne, ob das Token noch gültig ist
+				$tokenExpiryTime = $tokenTimestamp + $tokenValidForSecs; // Ablaufzeit des Tokens
+				$currentTime = time(); // Aktuelle Zeit
+				if ($currentTime < $tokenExpiryTime)
+					return true;
+			}
+			return false;
+		}
+
+		/**
+		 * Löscht das Password-Token eines Lehrers aus der Datenbank.
+		 *
+		 * @param int $lehrerId   Die ID des Lehrers
+		 */
+		public function deleteENMLehrerToken(int $lehrerId): void {
+			$this->beginTransaction();
+
+			// Token für den Lehrer löschen
+			$stmt = $this->prepareStatement("DELETE FROM Lehrertoken WHERE idLehrer = :idLehrer");
+			$this->bindStatementValue($stmt, ":idLehrer", $lehrerId, PDO::PARAM_INT);
+			$this->executeStatement($stmt);
+
+			$this->commitTransaction();
 		}
 
 	}

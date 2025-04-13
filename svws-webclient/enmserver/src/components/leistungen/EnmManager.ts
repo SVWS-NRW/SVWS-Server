@@ -542,6 +542,16 @@ export class EnmManager {
 		return result;
 	});
 
+	/** Die Liste der Schüler, die durch die aktuelle Lerngruppenauswahl ausgewählt sind und dort Leistungsdaten haben */
+	protected listLerngruppenAuswahlSchuelerMitLeistungsdaten = computed<List<ENMSchueler>>(() => {
+		const result = new ArrayList<ENMSchueler>();
+		for (const schueler of this.listLerngruppenAuswahlSchueler.value) {
+			if (this.mapLerngruppenAuswahlSchuelerLeistungen.value.get(schueler.id) === null)
+				continue;
+			result.add(schueler);
+		}
+		return result;
+	});
 
 	/** Die aktuelle Auswahl der Klassen */
 	protected listKlassenAuswahl = computed<List<ENMKlasse>>(() => {
@@ -1003,6 +1013,14 @@ export class EnmManager {
 		return this.listLerngruppenAuswahlSchueler.value;
 	}
 
+	/**
+	 * Gibt die Liste der Schüler mit Leistungen in der aktuellen Lerngruppenauswahl zurück;
+	 *
+	 * @returns die Liste der Schüler mit Leistungen in der aktuellen Lerngruppenauswahl
+	 */
+	public lerngruppenAuswahlGetSchuelerMitLeistungsdaten() : List<ENMSchueler> {
+		return this.listLerngruppenAuswahlSchuelerMitLeistungsdaten.value;
+	}
 
 	/**
 	 * Gibt die Liste der Schüler der aktuellen Klassenauswahl zurück;

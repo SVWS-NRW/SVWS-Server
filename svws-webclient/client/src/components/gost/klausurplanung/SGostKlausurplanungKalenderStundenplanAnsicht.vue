@@ -8,8 +8,8 @@
 				</div>
 			</slot>
 			<!-- Daneben werden die einzelnen Wochentage des Stundenplans angezeigt -->
-			<div v-for="wochentag in wochentagRange" :key="wochentag.id" class="font-bold my-auto w-full inline-flex items-center justify-center tabular-nums">
-				<span class="opacity-50 uppercase mr-2">{{ wochentage[wochentag.id].slice(0, 2) }}</span> {{ DateUtils.gibDatumGermanFormat(manager().datumGetByKwzAndWochentag(kalenderwoche(), wochentag)) }}
+			<div v-for="wochentag in wochentagRange" :key="wochentag.a.id" class="font-bold my-auto w-full inline-flex items-center justify-center tabular-nums">
+				<span class="opacity-50 uppercase mr-2">{{ wochentage[wochentag.a.id].slice(0, 2) }}</span> {{ DateUtils.gibDatumGermanFormat(wochentag.b) }}
 			</div>
 		</div>
 		<!-- Die Daten des Stundenplans -->
@@ -44,26 +44,27 @@
 				</template>
 			</div>
 			<!-- Zeige die Unterrichte und Pausenaufsichten des Stundenplans -->
-			<div v-for="wochentag in wochentagRange" :key="wochentag.id" class="svws-ui-stundenplan--zeitraster">
+			<div v-for="wochentag in wochentagRange" :key="wochentag.a.id" class="svws-ui-stundenplan--zeitraster">
 				<!-- Darstellung des Unterrichtes in dem Zeitraster -->
 				<template v-for="stunde in zeitrasterRange" :key="stunde">
-					<template v-if="manager().zeitrasterGetByWochentagAndStundeOrNull(wochentag.id, stunde)">
+					<template v-if="kMan().stundenplanManagerGetByAbschnittAndDatumOrNull(abschnitt!.id, wochentag.b) !== null && stundenplanManager(wochentag.b).zeitrasterGetByWochentagAndStundeOrNull(wochentag.a.id, stunde)">
 						<div class="svws-ui-stundenplan--stunde flex-row relative" :class="dragData && dragData() !== undefined ? 'z-20 svws-ui-stundenplan--stunde--klausurplan-opacity' : ''"
-							:style="posZeitraster(wochentag, stunde)"
-							@dragover="checkDropZoneZeitraster($event, manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde))"
+							:style="posZeitraster(wochentag.a, stunde)"
+							@dragover="checkDropZoneZeitraster($event, stundenplanManager(wochentag.b).zeitrasterGetByWochentagAndStundeOrException(wochentag.a.id, stunde))"
 							@dragleave="checkDropZoneZeitraster($event, undefined)"
-							@drop="onDrop(manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde))">
-							<div v-if="kurseGefiltert(manager().datumGetByKwzAndWochentag(kalenderwoche(), wochentag), wochentag, stunde).size()" class="svws-ui-stundenplan--unterricht border-dashed border-ui-contrast-50 flex absolute inset-1 w-auto bg-ui-contrast-10 z-30 pointer-events-none">
+							@drop="onDrop(stundenplanManager(wochentag.b).zeitrasterGetByWochentagAndStundeOrException(wochentag.a.id, stunde))">
+							<div v-if="kurseGefiltert(wochentag.b, wochentag.a, stunde).size()" class="svws-ui-stundenplan--unterricht border-dashed border-ui-50 flex absolute inset-1 w-auto bg-ui-75 z-30 pointer-events-none">
 								<div class="flex flex-col items-start justify-between mx-auto font-normal w-full opacity-75">
-									<span class="text-button">{{ [...kurseGefiltert(manager().datumGetByKwzAndWochentag(kalenderwoche(), wochentag), wochentag, stunde)].map(kurs => kursInfos(kurs)).join(", ") }}</span>
-									<span v-if="dragData !== undefined && sumSchreiber(manager().datumGetByKwzAndWochentag(kalenderwoche(), wochentag), wochentag, stunde) > 0" class="inline-flex gap-0.5 text-button font-normal"><span class="icon i-ri-group-line" />{{ sumSchreiber(manager().datumGetByKwzAndWochentag(kalenderwoche(), wochentag), wochentag, stunde) }}</span>
+									<span class="text-button">{{ [...kurseGefiltert(wochentag.b, wochentag.a, stunde)].map(kurs => kursInfos(kurs)).join(", ") }}</span>
+									<span v-if="dragData !== undefined && sumSchreiber(wochentag.b, wochentag.a, stunde) > 0" class="inline-flex gap-0.5 text-button font-normal"><span class="icon i-ri-group-line" />{{ sumSchreiber(wochentag.b, wochentag.a, stunde) }}</span>
 								</div>
 							</div>
 						</div>
 					</template>
+					<div v-else class="svws-ui-stundenplan--stunde flex-row relative" :style="posZeitraster(wochentag.a, stunde)">&nbsp;</div>
 				</template>
 				<!-- Darstellung der Pausenzeiten und der zugehörigen Aufsichten -->
-				<template v-for="pause in getPausenzeitenWochentag(wochentag)" :key="pause">
+				<template v-for="pause in getPausenzeitenWochentag(wochentag.a)" :key="pause">
 					<div class="svws-ui-stundenplan--pause" :style="posPause(pause)">
 						<template v-for="pausenaufsicht in getPausenaufsichtenPausenzeit(pause)" :key="pausenaufsicht.id">
 							<div class="svws-ui-stundenplan--pausen-aufsicht" :class="{'svws-lehrkraft': mode === 'lehrer'}">
@@ -73,7 +74,7 @@
 						</template>
 					</div>
 				</template>
-				<template v-for="item in kMan().terminGruppierteUeberschneidungenGetMengeByDatumAndAbijahr(manager().datumGetByKwzAndWochentag(kalenderwoche(), wochentag), zeigeAlleJahrgaenge() ? null : jahrgangsdaten.abiturjahr)">
+				<template v-for="item in kMan().terminGruppierteUeberschneidungenGetMengeByDatumAndAbijahr(wochentag.b, zeigeAlleJahrgaenge() ? null : jahrgangsdaten.abiturjahr)">
 					<template v-for="(termin, index) in item" :key="termin.id">
 						<div class="svws-ui-stundenplan--unterricht flex grow cursor-grab p-[2px] relative text-center z-10 border-transparent"
 							:style="posKlausurtermin(termin) +
@@ -93,8 +94,8 @@
 							@dragend="onDrag(undefined)">
 							<div class="bg-ui-caution text-ui-oncaution border w-full h-full rounded-lg overflow-hidden flex items-center justify-center relative group"
 								:class="{
-									'bg-ui-neutral border-ui-contrast-25': dragData !== undefined,
-									'shadow-sm border-ui-contrast-10': dragData === undefined,
+									'bg-ui-neutral border-ui-25': dragData !== undefined,
+									'shadow-sm border-ui-10': dragData === undefined,
 								}">
 								<span class="icon i-ri-draggable absolute top-1 left-0 z-10 opacity-50 group-hover:opacity-100" v-if="termin.abijahr === jahrgangsdaten.abiturjahr && hatKompetenzUpdate" />
 								<div class="absolute inset-0 flex w-full flex-col pointer-events-none opacity-80 bg-ui" :style="{background: kursklausurMouseOver() !== undefined && kursklausurMouseOver()!.idTermin === termin.id ? 'none' : getBgColors(termin)}" />
@@ -115,7 +116,7 @@
 										</s-gost-klausurplanung-termin>
 									</template>
 								</svws-ui-tooltip>
-								<span class="absolute bottom-0 left-0 py-1.5 pl-1.5 text-sm opacity-50 hidden group-hover:block pointer-events-none text-ui-static">Details</span>
+								<span class="absolute bottom-0 left-0 py-1.5 pl-1.5 text-sm opacity-50 hidden group-hover:block pointer-events-none text-uistatic">Details</span>
 							</div>
 						</div>
 					</template>
@@ -141,6 +142,8 @@
 		useDragAndDrop: false,
 		dragData: () => undefined,
 	});
+
+	const stundenplanManager = (datum: string) => props.kMan().stundenplanManagerGetByAbschnittAndDatumOrException(props.abschnitt!.id, datum);
 
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
 
@@ -172,7 +175,7 @@
 	});
 
 	const wochentagRange = computed(() => {
-		return props.manager().zeitrasterGetWochentageAlsEnumRange();
+		return DateUtils.gibDatenDerWochentageOfJahrAndKalenderwoche(props.kalenderwoche().jahr, props.kalenderwoche().kw, props.manager().zeitrasterGetWochentageAlsEnumRange());
 	});
 
 	const zeitrasterRange = computed(() => {

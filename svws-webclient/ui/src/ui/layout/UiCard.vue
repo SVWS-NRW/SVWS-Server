@@ -112,6 +112,7 @@
 	import type { SetupContext } from 'vue';
 	import { ref, onMounted, computed, useSlots, watch, useId } from 'vue';
 	import type { ButtonType } from '../../types';
+	import { ValidatorFehlerart } from '../../../../core/src/asd/validate/ValidatorFehlerart';
 
 	const props = withDefaults(defineProps<{
 		compact?: boolean;
@@ -147,7 +148,8 @@
 		saveButtonDisabledReason?: string;
 		deleteButtonDisabledReason?: string;
 		cancelButtonDisabledReason?: string;
-
+		/* Validatoren */
+		fehler?: ValidatorFehlerart;
 	}>(), {
 		compact: false,
 		/* Collapse Optionen */
@@ -182,6 +184,8 @@
 		saveButtonDisabledReason: undefined,
 		deleteButtonDisabledReason: undefined,
 		cancelButtonDisabledReason: undefined,
+		/* Validatoren */
+		fehler: () => ValidatorFehlerart.UNGENUTZT,
 	});
 
 	defineSlots();

@@ -200,6 +200,7 @@ public enum Jahrgaenge implements CoreType<JahrgaengeKatalogEintrag, Jahrgaenge>
 			return false;
 		final Schulgliederung gl = (gliederung == null) ? Schulgliederung.getDefault(schulform) : gliederung;
 		return switch (this) {
+			case HAUSFRUEHERZIEHUNG -> (vergleichsjahrgang == null);
 			case JAHRGANG_00 -> (vergleichsjahrgang == null);
 			case JAHRGANG_01 -> (vergleichsjahrgang == null);
 			case JAHRGANG_02 -> (vergleichsjahrgang == JAHRGANG_01);
@@ -214,13 +215,24 @@ public enum Jahrgaenge implements CoreType<JahrgaengeKatalogEintrag, Jahrgaenge>
 			case JAHRGANG_11 -> (vergleichsjahrgang == JAHRGANG_10);
 			case JAHRGANG_12 -> (vergleichsjahrgang == JAHRGANG_11);
 			case JAHRGANG_13 -> (vergleichsjahrgang == JAHRGANG_12);
-			case BERUFSPRAXISSTUFE -> (vergleichsjahrgang == null);
-			case HAUSFRUEHERZIEHUNG -> (vergleichsjahrgang == null);
-			case VORKURS_SEMESTER_1 -> (vergleichsjahrgang == null);
-			case VORKURS_SEMESTER_2 -> (vergleichsjahrgang == VORKURS_SEMESTER_1);
 			case EF -> (gl == Schulgliederung.GY8) ? (vergleichsjahrgang == JAHRGANG_09) : (vergleichsjahrgang == JAHRGANG_10);
 			case Q1 -> (vergleichsjahrgang == EF);
 			case Q2 -> (vergleichsjahrgang == Q1);
+			case BERUFSPRAXISSTUFE -> (vergleichsjahrgang == null);
+			case REALSCHULE_VORKURS_SEMESTER_1 -> (vergleichsjahrgang == null);
+			case REALSCHULE_VORKURS_SEMESTER_2 -> (vergleichsjahrgang == REALSCHULE_VORKURS_SEMESTER_1);
+			case REALSCHULE_SEMESTER_01 -> (vergleichsjahrgang == REALSCHULE_VORKURS_SEMESTER_2);
+			case REALSCHULE_SEMESTER_02 -> (vergleichsjahrgang == REALSCHULE_SEMESTER_01);
+			case REALSCHULE_SEMESTER_03 -> (vergleichsjahrgang == REALSCHULE_SEMESTER_02);
+			case REALSCHULE_SEMESTER_04 -> (vergleichsjahrgang == REALSCHULE_SEMESTER_03);
+			case VORKURS_SEMESTER_1 -> (vergleichsjahrgang == null);
+			case VORKURS_SEMESTER_2 -> (vergleichsjahrgang == VORKURS_SEMESTER_1);
+			case SEMESTER_01 -> (vergleichsjahrgang == VORKURS_SEMESTER_2);
+			case SEMESTER_02 -> (vergleichsjahrgang == SEMESTER_01);
+			case SEMESTER_03 -> (vergleichsjahrgang == SEMESTER_02);
+			case SEMESTER_04 -> (vergleichsjahrgang == SEMESTER_03);
+			case SEMESTER_05 -> (vergleichsjahrgang == SEMESTER_04);
+			case SEMESTER_06 -> (vergleichsjahrgang == SEMESTER_05);
 			default -> false;
 		};
 	}
@@ -247,6 +259,7 @@ public enum Jahrgaenge implements CoreType<JahrgaengeKatalogEintrag, Jahrgaenge>
 			return false;
 		final Schulgliederung gl = (gliederung == null) ? Schulgliederung.getDefault(schulform) : gliederung;
 		return switch (this) {
+			case HAUSFRUEHERZIEHUNG -> (vergleichsjahrgang == null);
 			case JAHRGANG_00 -> (vergleichsjahrgang == JAHRGANG_01);
 			case JAHRGANG_01 -> (vergleichsjahrgang == JAHRGANG_02);
 			case JAHRGANG_02 -> (vergleichsjahrgang == JAHRGANG_03);
@@ -262,13 +275,24 @@ public enum Jahrgaenge implements CoreType<JahrgaengeKatalogEintrag, Jahrgaenge>
 			case JAHRGANG_11 -> (vergleichsjahrgang == JAHRGANG_12);
 			case JAHRGANG_12 -> (vergleichsjahrgang == JAHRGANG_13);
 			case JAHRGANG_13 -> (vergleichsjahrgang == null);
-			case BERUFSPRAXISSTUFE -> (vergleichsjahrgang == null);
-			case HAUSFRUEHERZIEHUNG -> (vergleichsjahrgang == null);
-			case VORKURS_SEMESTER_1 -> (vergleichsjahrgang == VORKURS_SEMESTER_2);
-			case VORKURS_SEMESTER_2 -> (vergleichsjahrgang == null);
 			case EF -> (vergleichsjahrgang == Q1);
 			case Q1 -> (vergleichsjahrgang == Q2);
 			case Q2 -> (vergleichsjahrgang == null);
+			case BERUFSPRAXISSTUFE -> (vergleichsjahrgang == null);
+			case REALSCHULE_VORKURS_SEMESTER_1 -> (vergleichsjahrgang == REALSCHULE_VORKURS_SEMESTER_2);
+			case REALSCHULE_VORKURS_SEMESTER_2 -> (vergleichsjahrgang == REALSCHULE_SEMESTER_01);
+			case REALSCHULE_SEMESTER_01 -> (vergleichsjahrgang == REALSCHULE_SEMESTER_02);
+			case REALSCHULE_SEMESTER_02 -> (vergleichsjahrgang == REALSCHULE_SEMESTER_03);
+			case REALSCHULE_SEMESTER_03 -> (vergleichsjahrgang == REALSCHULE_SEMESTER_04);
+			case REALSCHULE_SEMESTER_04 -> (vergleichsjahrgang == null);
+			case VORKURS_SEMESTER_1 -> (vergleichsjahrgang == VORKURS_SEMESTER_2);
+			case VORKURS_SEMESTER_2 -> (vergleichsjahrgang == SEMESTER_01);
+			case SEMESTER_01 -> (vergleichsjahrgang == SEMESTER_02);
+			case SEMESTER_02 -> (vergleichsjahrgang == SEMESTER_03);
+			case SEMESTER_03 -> (vergleichsjahrgang == SEMESTER_04);
+			case SEMESTER_04 -> (vergleichsjahrgang == SEMESTER_05);
+			case SEMESTER_05 -> (vergleichsjahrgang == SEMESTER_06);
+			case SEMESTER_06 -> (vergleichsjahrgang == null);
 			default -> false;
 		};
 	}
@@ -287,6 +311,7 @@ public enum Jahrgaenge implements CoreType<JahrgaengeKatalogEintrag, Jahrgaenge>
 	 */
 	public boolean isMoeglicherNachfolgerVon(final Jahrgaenge vergleichsjahrgang) {
 		return switch (this) {
+			case HAUSFRUEHERZIEHUNG -> (vergleichsjahrgang == null);
 			case JAHRGANG_00 -> (vergleichsjahrgang == null);
 			case JAHRGANG_01 -> (vergleichsjahrgang == null);
 			case JAHRGANG_02 -> (vergleichsjahrgang == JAHRGANG_01);
@@ -301,13 +326,24 @@ public enum Jahrgaenge implements CoreType<JahrgaengeKatalogEintrag, Jahrgaenge>
 			case JAHRGANG_11 -> (vergleichsjahrgang == JAHRGANG_10);
 			case JAHRGANG_12 -> (vergleichsjahrgang == JAHRGANG_11);
 			case JAHRGANG_13 -> (vergleichsjahrgang == JAHRGANG_12);
-			case BERUFSPRAXISSTUFE -> (vergleichsjahrgang == null);
-			case HAUSFRUEHERZIEHUNG -> (vergleichsjahrgang == null);
-			case VORKURS_SEMESTER_1 -> (vergleichsjahrgang == null);
-			case VORKURS_SEMESTER_2 -> (vergleichsjahrgang == VORKURS_SEMESTER_1);
 			case EF -> (vergleichsjahrgang == JAHRGANG_09) || (vergleichsjahrgang == JAHRGANG_10);
 			case Q1 -> (vergleichsjahrgang == EF);
 			case Q2 -> (vergleichsjahrgang == Q1);
+			case BERUFSPRAXISSTUFE -> (vergleichsjahrgang == null);
+			case REALSCHULE_VORKURS_SEMESTER_1 -> (vergleichsjahrgang == null);
+			case REALSCHULE_VORKURS_SEMESTER_2 -> (vergleichsjahrgang == REALSCHULE_VORKURS_SEMESTER_1);
+			case REALSCHULE_SEMESTER_01 -> (vergleichsjahrgang == REALSCHULE_VORKURS_SEMESTER_2);
+			case REALSCHULE_SEMESTER_02 -> (vergleichsjahrgang == REALSCHULE_SEMESTER_01);
+			case REALSCHULE_SEMESTER_03 -> (vergleichsjahrgang == REALSCHULE_SEMESTER_02);
+			case REALSCHULE_SEMESTER_04 -> (vergleichsjahrgang == REALSCHULE_SEMESTER_03);
+			case VORKURS_SEMESTER_1 -> (vergleichsjahrgang == null);
+			case VORKURS_SEMESTER_2 -> (vergleichsjahrgang == VORKURS_SEMESTER_1);
+			case SEMESTER_01 -> (vergleichsjahrgang == VORKURS_SEMESTER_2);
+			case SEMESTER_02 -> (vergleichsjahrgang == SEMESTER_01);
+			case SEMESTER_03 -> (vergleichsjahrgang == SEMESTER_02);
+			case SEMESTER_04 -> (vergleichsjahrgang == SEMESTER_03);
+			case SEMESTER_05 -> (vergleichsjahrgang == SEMESTER_04);
+			case SEMESTER_06 -> (vergleichsjahrgang == SEMESTER_05);
 			default -> false;
 		};
 	}
@@ -326,6 +362,7 @@ public enum Jahrgaenge implements CoreType<JahrgaengeKatalogEintrag, Jahrgaenge>
 	 */
 	public boolean isMoeglicherVorgaengerVon(final Jahrgaenge vergleichsjahrgang) {
 		return switch (this) {
+			case HAUSFRUEHERZIEHUNG -> (vergleichsjahrgang == null);
 			case JAHRGANG_00 -> (vergleichsjahrgang == JAHRGANG_01);
 			case JAHRGANG_01 -> (vergleichsjahrgang == JAHRGANG_02);
 			case JAHRGANG_02 -> (vergleichsjahrgang == JAHRGANG_03);
@@ -340,13 +377,24 @@ public enum Jahrgaenge implements CoreType<JahrgaengeKatalogEintrag, Jahrgaenge>
 			case JAHRGANG_11 -> (vergleichsjahrgang == JAHRGANG_12);
 			case JAHRGANG_12 -> (vergleichsjahrgang == JAHRGANG_13);
 			case JAHRGANG_13 -> (vergleichsjahrgang == null);
-			case BERUFSPRAXISSTUFE -> (vergleichsjahrgang == null);
-			case HAUSFRUEHERZIEHUNG -> (vergleichsjahrgang == null);
-			case VORKURS_SEMESTER_1 -> (vergleichsjahrgang == VORKURS_SEMESTER_2);
-			case VORKURS_SEMESTER_2 -> (vergleichsjahrgang == null);
 			case EF -> (vergleichsjahrgang == Q1);
 			case Q1 -> (vergleichsjahrgang == Q2);
 			case Q2 -> (vergleichsjahrgang == null);
+			case BERUFSPRAXISSTUFE -> (vergleichsjahrgang == null);
+			case REALSCHULE_VORKURS_SEMESTER_1 -> (vergleichsjahrgang == REALSCHULE_VORKURS_SEMESTER_2);
+			case REALSCHULE_VORKURS_SEMESTER_2 -> (vergleichsjahrgang == REALSCHULE_SEMESTER_01);
+			case REALSCHULE_SEMESTER_01 -> (vergleichsjahrgang == REALSCHULE_SEMESTER_02);
+			case REALSCHULE_SEMESTER_02 -> (vergleichsjahrgang == REALSCHULE_SEMESTER_03);
+			case REALSCHULE_SEMESTER_03 -> (vergleichsjahrgang == REALSCHULE_SEMESTER_04);
+			case REALSCHULE_SEMESTER_04 -> (vergleichsjahrgang == null);
+			case VORKURS_SEMESTER_1 -> (vergleichsjahrgang == VORKURS_SEMESTER_2);
+			case VORKURS_SEMESTER_2 -> (vergleichsjahrgang == SEMESTER_01);
+			case SEMESTER_01 -> (vergleichsjahrgang == SEMESTER_02);
+			case SEMESTER_02 -> (vergleichsjahrgang == SEMESTER_03);
+			case SEMESTER_03 -> (vergleichsjahrgang == SEMESTER_04);
+			case SEMESTER_04 -> (vergleichsjahrgang == SEMESTER_05);
+			case SEMESTER_05 -> (vergleichsjahrgang == SEMESTER_06);
+			case SEMESTER_06 -> (vergleichsjahrgang == null);
 			default -> false;
 		};
 	}

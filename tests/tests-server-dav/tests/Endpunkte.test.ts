@@ -1,6 +1,8 @@
 import {describe, expect, test} from "vitest";
 import {getApiService} from "./utils/RequestBuilder.js"
 
+const allowDestructiveTests = process.env.MODE === 'allowDestructiveTests'
+
 describe("Prüft ob entsprechende Endpunkte erreichbar sind", () => {
 	const apiService = getApiService('Admin', '')
 
@@ -63,7 +65,7 @@ describe("Prüft ob entsprechende Endpunkte erreichbar sind", () => {
 		});
 
 
-		test(`dav/${schema}/kalender/-1/something-something.ics`, async () => {
+		test.runIf(allowDestructiveTests)(`dav/${schema}/kalender/-1/something-something.ics`, async () => {
 			const response = await apiService.delete(`/dav/${schema}/kalender/-1/something-something.ics`, {
 				headers: {
 					"If-Match": "*",
@@ -74,7 +76,7 @@ describe("Prüft ob entsprechende Endpunkte erreichbar sind", () => {
 			expect(response!.status).toBe(400);
 		});
 
-		test(`dav/${schema}/kalender/-1/something-something.ics`, async () => {
+		test.runIf(allowDestructiveTests)(`dav/${schema}/kalender/-1/something-something.ics`, async () => {
 			const response = await apiService.delete(`/dav/${schema}/kalender/-1/something-something.ics`, {
 				headers: {
 					"Content-Type": "Text/Calender"

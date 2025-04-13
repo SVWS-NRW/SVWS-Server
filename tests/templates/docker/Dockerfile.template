@@ -1,36 +1,42 @@
-# Dies ist ein Template File. In den verschiedenen Subpackage wird jeweils ein Dockerfile hieraus abgeleitet.
+# Dies ist ein Template File. In den verschiedenen Subpackages wird jeweils ein Dockerfile hieraus abgeleitet.
 # Die Datei wird durch das Gradle-Script "buildDockerfile" in das Dockerfile des jeweiligen Subpackages kopiert. Während des Kopiervorgangs
 # werden die Platzhalter durch die entsprechenden Werte ersetzt.
 
-# Verwende das offizielle OpenJDK 11 Image und installiere zusätzlich die benötigten Pakete
-FROM eclipse-temurin:21
-RUN apt update && apt-get -y install gettext zip mariadb-client
-
-# Erstelle die Verzeichnisse
-RUN mkdir -p /opt/app/svws/client
+# Verwende das offizielle OpenJDK 21 Image und installiere zusätzlich die benötigten Pakete
+FROM GRADLE_PLACEHOLDER_DOCKER_REG_URLeclipse-temurin:21
 
 # Kopiere die Konfigurationsdateien
-COPY build/tempdocker/appConf/svws_config.json.template.GRADLE_PLACEHOLDER_MARIADB_CONTAINER_NAME /etc/app/svws/conf/svws_config.json.template.GRADLE_PLACEHOLDER_MARIADB_CONTAINER_NAME
+COPY build/ /tmp/build
 
-# Kopiere die Startskripte
-COPY build/tempdocker/init-scripts/startup.sh /opt/app/svws/startup.sh
-COPY build/tempdocker/init-scripts /etc/app/svws/init-scripts
+RUN <<EOF
+apt update && apt-get -y install gettext zip mariadb-client
 
-# Kopiere SSL Zertifakte für die JDK und füge der JDK im Container das Zertifikat hinzu
-RUN mkdir /var/ssl &&\
-	openssl req -subj '/CN=GRADLE_PLACEHOLDER_ENM_HOST' -new -newkey rsa:2048 -days 3650 -nodes -x509 -keyout /var/ssl/private.key -out /var/ssl/public.pem &&\
-	keytool -importcert -noprompt -keystore /opt/java/openjdk/lib/security/cacerts -alias localhost -file /var/ssl/public.pem
+# Erstelle die Verzeichnisse
+mkdir -p /opt/app/svws/client
 
-# Kopiere die Datenbanken
-COPY build/tempdatabases /etc/app/svws/testdatabases
+# Kopiere SSL Zertifikate für die JDK und füge der JDK im Container das Zertifikat hinzu
+mkdir /var/ssl
+mkdir /etc/app
+mkdir /etc/app/svws
+mkdir /etc/app/svws/conf
 
-# Kopiere die extLibs (Java Bibliotheken) und die Build Artefakte
-COPY ../build/extLib /build/SVWS-Client.zip /build/SVWS-Admin-Client.zip  /opt/app/svws/
 
-RUN unzip -d /opt/app/svws/client /opt/app/svws/SVWS-Client.zip &&\
-	unzip -d /opt/app/svws/admin /opt/app/svws/SVWS-Admin-Client.zip &&\
- 	rm -rf /opt/app/svws/SVWS-Client*.zip &&\
-	rm -rf /opt/app/svws/SVWS-Admin-Client*.zip
+openssl req -subj '/CN=GRADLE_PLACEHOLDER_ENM_HOST' -new -newkey rsa:2048 -days 3650 -nodes -x509 -keyout /var/ssl/private.key -out /var/ssl/public.pem
+keytool -importcert -noprompt -keystore /opt/java/openjdk/lib/security/cacerts -alias localhost -file /var/ssl/public.pem
+
+# Verschiebe zuvor kopierte Daten in die Zielverzeichnisse
+mv /tmp/build/tempdocker/appConf/svws_config.json.template /etc/app/svws/conf/svws_config.json.template
+mv /tmp/build/tempdocker/init-scripts/startup.sh /opt/app/svws/startup.sh
+mv /tmp/build/tempdocker/init-scripts /etc/app/svws/init-scripts
+mv /tmp/build/tempdatabases /etc/app/svws/testdatabases
+mv /tmp/build/extLib/* /opt/app/svws/
+
+# Extrahier die Build Artefakte
+unzip -d /opt/app/svws/client /tmp/build/SVWS-Client.zip
+rm -rf /tmp/build/SVWS-Client.zip
+unzip -d /opt/app/svws/admin /tmp/build/SVWS-Admin-Client.zip
+rm -rf /tmp/build/SVWS-Admin-Client.zip
+EOF
 
 WORKDIR /opt/app/svws
 

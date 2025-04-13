@@ -29,7 +29,7 @@ export default defineConfig({
 	use: {
 		video: {
 			mode: 'retain-on-failure',
-			size: { width: 640, height: 480 },
+			size: { width: 960, height: 720 },
 		},
 		baseURL: process.env.VITE_targetHost ?? "https://localhost",
 	},

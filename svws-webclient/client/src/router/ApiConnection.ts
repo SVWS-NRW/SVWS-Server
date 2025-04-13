@@ -3,7 +3,7 @@ import { ref, shallowRef } from "vue";
 import type { BenutzerDaten, DBSchemaListeEintrag, List, SchuleStammdaten } from "@core";
 import { ValidatorKontext, ApiSchema, ApiServer, BenutzerKompetenz, ServerMode, DeveloperNotificationException, UserNotificationException, OpenApiError } from "@core";
 
-import { Config } from "~/components/Config";
+import { Config } from "../../../ui/src/utils/Config";
 import { AES } from "~/utils/crypto/aes";
 import { AESAlgo } from "~/utils/crypto/aesAlgo";
 

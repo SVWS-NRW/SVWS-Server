@@ -227,7 +227,7 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 	}
 
 	addAbiturjahrgang = async (idJahrgang: number) => {
-		const abiturjahr : number | null = await api.server.createGostAbiturjahrgang(api.schema, idJahrgang);
+		const abiturjahr : number | null = await api.server.createGostAbiturjahrgang(api.schema, this._state.value.idSchuljahresabschnitt, idJahrgang);
 		if (abiturjahr === null)
 			throw new DeveloperNotificationException("Abiturjahrgang konnte nicht erstellt werden.");
 		let daten : Partial<RouteStateGost> = await this.ladeDatenFuerSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt);

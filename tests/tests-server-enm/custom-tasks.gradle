@@ -1,5 +1,10 @@
+import groovy.json.JsonSlurper
+
 def svwsArtifactVersion = project.ext.latestRelease
 def buildDirPath = layout.buildDirectory.get()
+
+def testConfigPath = "${rootDir}/config/tests/config.json" as String
+def CONFIG = new JsonSlurper().parse(new File(testConfigPath))
 
 /**
  * Kopiert ENM-Build-Artefakte (ZIP).
@@ -67,17 +72,24 @@ task generateENMDockerFile() {
 	mustRunAfter("starteDockerContainerMitTestUmgebung")
 	mustRunAfter(unzipENMBuildArtefact)
 
+	def docker_reg_url = ""
+	if (System.getenv('CI_SERVER')) {
+		docker_reg_url = CONFIG.dockerRegistry
+	}
+
 	doFirst {
 		mkdir file("./build/tempdocker/enm")
 	}
 	doLast {
 		def outputFile = file("$buildDirPath/tempdocker/enm/Dockerfile")
 
-		def content = "FROM php:8.4-apache\n\n" +
+		def content = "FROM ${docker_reg_url}php:8.4-apache\n\n" +
 				"# Aktivieren des Rewrite und SSL -Moduls\n" +
-				"RUN a2enmod ssl rewrite\n" +
-				"RUN a2ensite default-ssl\n" +
-				"RUN a2enmod rewrite\n\n" +
+				"RUN <<EOF\n" +
+				"  a2enmod ssl rewrite\n" +
+				"  a2ensite default-ssl\n" +
+				"  a2enmod rewrite\n" +
+				"EOF\n" +
 				"# Baue selbst signierte SSL Zertifikat\n" +
 				"COPY ./build/tempdocker/enm/certs/private.key /etc/ssl/private/ssl-cert-snakeoil.key\n" +
 				"COPY ./build/tempdocker/enm/certs/public.pem  /etc/ssl/certs/ssl-cert-snakeoil.pem\n" +
@@ -258,17 +270,12 @@ task starteDockerContainerMitTestUmgebungENM() {
 	description = 'Starte den Docker-Container für die Testumgebung des ENM Server'
 	dependsOn 'buildDockerImageENM'
 	doLast {
-		new File("$buildDirPath/tempdocker/enm/Docker-compose.yml").eachLine { line ->
-			println line
-		}
 		exec {
 			executable 'docker'
 			workingDir "$buildDirPath/tempdocker/enm"
 
 			args 'compose', '-p', "svws-$project.name", '-f', "$buildDirPath/tempdocker/enm/Docker-compose.yml", 'up', '--wait'
-
 			println("Docker Container ${ENM_CONTAINER_NAME} gestartet")
 		}
-
 	}
 }

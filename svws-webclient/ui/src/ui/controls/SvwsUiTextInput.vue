@@ -26,10 +26,12 @@
 			:class="{ 'text-input--control': !headless, 'text-input--headless': headless, 'text-input--rounded': rounded, 'text-input--prefix': url, }"
 			v-bind="{ ...$attrs }"
 			:type="type"
+			:min="minDate"
+			:max="maxDate"
 			:value="data"
-			:disabled="disabled"
-			:required="required"
-			:readonly="readonly"
+			:disabled
+			:required
+			:readonly
 			:aria-labelledby="labelId"
 			:placeholder="headless || type === 'search' ? placeholder : ''"
 			@input="onInput"
@@ -42,7 +44,8 @@
 			<span v-if="(maxLen !== undefined) || (minLen !== undefined)" class="inline-flex ml-1 gap-1" :class="{'text-ui-danger': !maxLenValid || !minLenValid, 'opacity-50': maxLenValid && minLenValid}">
 				{{ (maxLen !== undefined) && (minLen === undefined) ? ` (max. ${maxLen} Zeichen)` : '' }}
 				{{ (minLen !== undefined) && (maxLen === undefined) ? ` (mind. ${minLen} Zeichen)` : '' }}
-				{{ (minLen !== undefined) && (maxLen !== undefined) ? ` (zwischen ${minLen} und ${maxLen} Zeichen)` : '' }}
+				{{ (minLen !== undefined) && (maxLen !== undefined) && (minLen !== maxLen) ? ` (zwischen ${minLen} und ${maxLen} Zeichen)` : '' }}
+				{{ (minLen !== undefined) && (maxLen !== undefined) && (minLen === maxLen) ? ` (genau ${maxLen} Zeichen)` : '' }}
 			</span>
 			<span v-if="statistics" class="cursor-pointer inline-block -my-1">
 				<svws-ui-tooltip position="right">
@@ -77,6 +80,7 @@
 				</svws-ui-tooltip>
 			</span>
 			<span v-if="required" class="icon-xs i-ri-asterisk ml-1 inline-block " :class="{ 'icon-ui-statistic': statistics }" />
+			<span v-if="readonly && !isSelectInput" class="icon-xs i-ri-lock-line inline-block ml-1" :class="{ 'icon-ui-statistic': statistics }" />
 		</span>
 		<span v-if="removable && (type === 'date') && (!readonly)" @keydown.enter="updateData('')" @click.stop="updateData('')" class="svws-icon--remove icon i-ri-close-line" tabindex="0" />
 		<span v-if="(type === 'date') && !firefox()" class="svws-icon icon i-ri-calendar-2-line" />
@@ -103,6 +107,8 @@
 
 	const props = withDefaults(defineProps<{
 		type?: "text" | "date" | "email" | "search" | "tel" | "password";
+		minDate?: string;
+		maxDate?: string;
 		modelValue?: string | null;
 		modelModifiers?: { trim: boolean };
 		placeholder?: string;
@@ -124,6 +130,8 @@
 		removable?: boolean;
 	}>(), {
 		type: "text",
+		minDate: undefined,
+		maxDate: undefined,
 		modelValue: null,
 		modelModifiers: () => ({ trim: false }),
 		placeholder: "",

@@ -1,5 +1,5 @@
 <template>
-	<div class="page page-flex-row gap-2 overflow-y-auto">
+	<div class="page page-flex-row gap-6 overflow-y-auto">
 		<!-- Auswahl des Untis-Importes (linke Seite) -->
 		<div class="h-full min-w-48 w-48 flex flex-col gap-2">
 			<svws-ui-button class="contentFocusField" :type="(aktuell === 'stundenplanGPU001') ? 'primary' : 'secondary'" @click="onSelect('stundenplanGPU001')">
@@ -132,7 +132,7 @@
 					<svws-ui-text-input placeholder="Bezeichner WochenTyp 3" :model-value="wochentypen[2]" @update:model-value="(value) => setWochentypBezeichner(3, value)" required />
 					<svws-ui-text-input placeholder="Bezeichner WochenTyp 4" :model-value="wochentypen[3]" @update:model-value="(value) => setWochentypBezeichner(4, value)" required />
 				</div>
-				<div class="mt-2 mb-4 h-64 w-full overflow-scroll grow bg-ui border border-ui-secondary text-ui rounded-md text-base pt-2 pl-2 pr-6 pb-6">
+				<div class="mt-2 mb-4 h-64 w-full overflow-scroll grow bg-ui border border-ui text-ui rounded-md text-base pt-2 pl-2 pr-6 pb-6">
 					<pre>{{ resultGPU001?.asString ?? null }}</pre>
 				</div>
 				<svws-ui-button v-if="resultGPU001 !== null" @click="importStundenplanGPU001Berechnet">Import starten</svws-ui-button>
@@ -168,7 +168,7 @@
 					</p>
 					<input id="contentFocusField" type="file" accept=".txt,.csv" @change="(event) => importStundenplanGPP002GPU014(2, event)" :disabled="loading">
 				</div>
-				<div class="mt-2 mb-4 h-64 w-full overflow-scroll grow bg-ui border border-ui-secondary text-ui rounded-md text-base pt-2 pl-2 pr-6 pb-6">
+				<div class="mt-2 mb-4 h-64 w-full overflow-scroll grow bg-ui border border-ui text-ui rounded-md text-base pt-2 pl-2 pr-6 pb-6">
 					<pre>{{ resultGPU001?.asString ?? null }}</pre>
 				</div>
 				<svws-ui-button v-if="resultGPU001 !== null" @click="importStundenplanGPU001Berechnet">Import starten</svws-ui-button>

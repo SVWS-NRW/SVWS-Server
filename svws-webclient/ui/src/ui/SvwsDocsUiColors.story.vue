@@ -1,13 +1,13 @@
 <template>
-	<Story title="Farben (Design Tokens)" id="farben" group="top" icon="ri:palette-line" :responsive-disabled="true" :layout="{type: 'grid', width: '90%'}" auto-props-disabled>
+	<Story title="Farben (Design Tokens)" id="farben" group="top" icon="ri:palette-line" :responsive-disabled="true" :layout="{type: 'single'}" auto-props-disabled>
 		<Variant title="Design Tokens" source=" " id="info">
 			<div class="htw-prose dark:htw-prose-invert" style="max-width: unset;">
 				<p><em>Weitere Informationen dazu sowie Links zu Tools und Resourcen sind unter den Farben auf dieser Seite aufgeführt.</em></p>
 				<p>
 					Um eine konsistente Farbgebung zu gewährleisten, verwenden wir ein Farbschema, das auf Design Tokens basiert. Die unten aufgeführten Tokens sind als CSS-Classes verfügbar und können in Komponenten und dem Client verwendet werden und sind semantisch nach diesen Attributen zusammengesetzt:
 				</p>
-				<table style="max-width: 60ch;">
-					<thead>
+				<table class="text-left w-150">
+					<thead class="border-b border-ui h-10">
 						<tr>
 							<th>[type]</th>
 							<th>-ui</th>
@@ -17,11 +17,14 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
+						<tr class="align-top">
 							<td>
 								<div v-for="(type, typeIndex) in semantics.type" :key="typeIndex">{{ type }}</div>
 							</td>
-							<td><strong><span class="opacity-50">-ui</span></strong></td>
+							<td>
+								<div class="opacity-50"><strong>-ui</strong></div>
+								<div class="opacity-50"><strong>-uistatic</strong></div>
+							</td>
 							<td>
 								<div><em>default</em></div>
 								<div v-for="(role, roleIndex) in semantics.role" :key="roleIndex">{{ role }}</div>
@@ -39,76 +42,38 @@
 				</table>
 			</div>
 		</Variant>
-		<!-- Iteration über die semantischen types ['bg', 'text', 'border', 'accent', 'ring', 'icon'] -->
-		<Variant :title="`${type}-ui`" source=" " :id="`tokens-${type}`" v-for="(type, typeIndex) in semantics.type" :key="typeIndex">
-			<div class="relative">
-				<div class="flex flex-col gap-4 font-mono">
-					<div v-for="(role, roleIndex) in semantics.role" :key="roleIndex" style="padding: 0.5em 0;">
-						<div v-for="(prominence, prominenceIndex) in semantics.prominence" :key="prominenceIndex">
-							<div v-for="(interaction, interactionIndex) in semantics.interaction" :key="interactionIndex">
-								<div class="grid grid-cols-2 gap-1 items-center">
-									<!-- Filterung plausibler UI Elemente -->
-									<template v-if="shouldExist(type, role, prominence, interaction)">
-										<!-- light mode -->
-										<div class="ui-docs-bg flex items-center gap-1"
-											:style="{
-												/* Setzt die Hintergrundfarbe, wenn die Rolle mit 'on' beginnt */
-												backgroundColor: `${role.startsWith('on') ? `var(--color-bg-ui-${role.replace('on', '')}${ prominence ? `-${prominence}` : '' }${ interaction ? `-${interaction}` : '' })` : ''}`,
-												/* Setzt die Textfarbe basierend auf Typ, Rolle, Prominenz und Interaktion */
-												color: `${role.startsWith('on') ? `var(--color-${type.startsWith('icon') ? 'text' : type}-ui${ role ? `-${role}` : '' }${ prominence ? `-${prominence}` : '' }${ interaction ? `-${interaction}` : '' })` : ''}`,
-												/* Setzt die Akzentfarbe, wenn der Typ mit 'accent' beginnt */
-												accentColor: `${type.startsWith('accent') ? `var(--color-accent-ui${ role ? `-${role}` : '' })` : ''}`
-											}">
-											<div class="ui-docs-color-swatch" :style="{backgroundColor: `var(--color-${type === 'icon' ? 'text' : type}-ui${ role ? `-${role}` : '' }${ prominence ? `-${prominence}` : '' }${ interaction ? `-${interaction}` : '' })`}" />
-											<!-- Checkbox-Vorschau, falls Typ 'accent' ist -->
-											<div v-if="type === 'accent'" class="ui-docs-preview-checkbox"><input type="checkbox" checked style="pointer-events: none; accent-color: inherit;"></div>
-											<!-- Icon-Vorschau, falls Typ 'icon' ist -->
-											<span v-if="type === 'icon'" class="i-ri-archive-line icon-xl" :class="`icon-ui${ role ? `-${role}` : '' }`" />
-											<!-- Text mit Farbvariablenbezeichnung -->
-											<div style="user-select: all;">
-												<span><span class="font-bold">{{ type }}</span><span class="opacity-50 font-bold">-ui</span></span>
-												<span>{{ role ? `-${role}` : '' }}</span>
-												<span>{{ prominence ? `-${prominence}` : '' }}</span>
-												<span>{{ interaction ? `-${interaction}` : '' }}</span>
-											</div>
-											<div class="contrast-value" />
-										</div>
-										<!-- dark mode -->
-										<div class="ui-docs-bg dark flex items-center gap-1 bg-ui-danger-secondary-hover"
-											:class="{darkOnDisabled: role.startsWith('ondisabled')}"
-											:style="{
-												/* Setzt die Hintergrundfarbe, wenn die Rolle mit 'on' beginnt */
-												backgroundColor: `${role.startsWith('on') ? `var(--color-bg-ui-${role.replace('on', '')}${ prominence ? `-${prominence}` : '' }${ interaction ? `-${interaction}` : '' })` : ''}`,
-												/* Setzt die Textfarbe basierend auf Typ, Rolle, Prominenz und Interaktion */
-												color: `${role.startsWith('on') ? `var(--color-${type.startsWith('icon') ? 'text' : type}-ui${ role ? `-${role}` : '' }${ prominence ? `-${prominence}` : '' }${ interaction ? `-${interaction}` : '' })` : ''}`,
-												/* Setzt die Akzentfarbe, wenn der Typ mit 'accent' beginnt */
-												accentColor: `${type.startsWith('accent') ? `var(--color-accent-ui${ role ? `-${role}` : '' })` : ''}`
-											}">
-											<div class="ui-docs-color-swatch" :style="{backgroundColor: `var(--color-${type === 'icon' ? 'text' : type}-ui${ role ? `-${role}` : '' }${ prominence ? `-${prominence}` : '' }${ interaction ? `-${interaction}` : '' })`}" />
-											<!-- Checkbox-Vorschau, falls Typ 'accent' ist -->
-											<div v-if="type === 'accent'" class="ui-docs-preview-checkbox"><input type="checkbox" checked style="pointer-events: none;"></div>
-											<!-- Icon-Vorschau, falls Typ 'icon' ist -->
-											<span v-if="type === 'icon'" class="i-ri-archive-line icon-xl" :class="`icon-ui${ role ? `-${role}` : '' }`" />
-											<!-- Text mit Farbvariablenbezeichnung -->
-											<div style="user-select: all;">
-												<span><span class="font-bold">{{ type }}</span><span class="opacity-50 font-bold">-ui</span></span>
-												<span>{{ role ? `-${role}` : '' }}</span>
-												<span>{{ prominence ? `-${prominence}` : '' }}</span>
-												<span>{{ interaction ? `-${interaction}` : '' }}</span>
-											</div>
-											<div class="contrast-value" />
-										</div>
-									</template>
-								</div>
+		<Variant :title="`${type}-ui`" source="" :id="`tokens-${type}`" v-for="([type, typeMap]) in typeList" :key="type">
+			<div class="grid grid-cols-2 items-center">
+				<div v-for="(isDark, index) in [false, true]" :key="index">
+					<div v-for="([role, roleColors]) in typeMap" :key="role" class="my-3" :class="{'dark': isDark}">
+						<div v-for="color in roleColors" :key="color" class="ui-docs-bg flex items-center gap-1"
+							:style="{
+								/* Setzt die Hintergrundfarbe, wenn die Rolle mit 'on' beginnt */
+								backgroundColor: color.includes('-on') ? `var(--color-bg-ui-${color.split('-on')[1]?.split('-')[0] || 'default'})` : 'var(--color-bg-ui)',
+								/* Setzt die Textfarbe basierend auf Typ, Rolle, Prominenz und Interaktion */
+								color: `${color.includes('-on') ? `var(--color-${color})` : `var(--color-text-ui)`}`,
+								/* Setzt die Akzentfarbe, wenn der Typ mit 'accent' beginnt */
+								accentColor: `${(type === 'accent') ? `var(--color-${color})` : ''}`,
+							}">
+							<div class="ui-docs-color-swatch" :style="{ backgroundColor: `var(--color-${color})`}" />
+							<!-- Checkbox-Vorschau, falls Typ 'accent' ist -->
+							<div v-if="type === 'accent'" class="ui-docs-preview-checkbox"><input type="checkbox" checked style="pointer-events: none; accent-color: inherit;"></div>
+							<!-- Icon-Vorschau, falls Typ 'icon' ist -->
+							<span v-if="type === 'icon'" class="i-ri-archive-line icon-xl min-w-6" :class="color" />
+							<!-- Text mit Farbvariablenbezeichnung -->
+							<div>
+								<span v-for="(part, partIndex) in color.split('-')" :key="partIndex" class="font-mono"
+									:class="{'font-bold': partIndex < 2 , 'opacity-50':(( part === 'ui') || (part === 'uistatic'))}">
+									{{ part }}<span v-if="partIndex < color.split('-').length - 1">-</span>
+								</span>
 							</div>
+							<div class="contrast-value text-ui" />
 						</div>
 					</div>
 				</div>
 			</div>
-			<!-- Generate all tailwind colors for icons:
-			 icon-ui icon-ui-brand icon-ui-statistic icon-ui-danger icon-ui-success icon-ui-warning icon-ui-caution icon-ui-neutral icon-ui-onbrand icon-ui-onstatistic icon-ui-onselected icon-ui-ondanger icon-ui-onsuccess icon-ui-onwarning icon-ui-oncaution icon-ui-onneutral
-			-->
 		</Variant>
+		<!-- Iteration über die semantischen types ['bg', 'text', 'border', 'accent', 'ring', 'icon'] -->
 		<Variant title="Beispiele" source=" " id="beispiele">
 			<div class="htw-prose dark:htw-prose-invert" style="max-width: unset;">
 				<table>
@@ -236,28 +201,197 @@
 
 	import { onMounted } from 'vue';
 
+
+	const textColorMap: Map<string, string[]> = new Map([
+		['default', [
+			'text-ui', 'text-ui-0', 'text-ui-10', 'text-ui-25',
+			'text-ui-50', 'text-ui-75', 'text-ui-100', 'text-ui-hover',
+		]],
+		['brand', [
+			'text-ui-brand', 'text-ui-brand-hover',
+			'text-ui-brand-secondary', 'text-ui-brand-secondary-hover',
+		]],
+		['statistic', [
+			'text-ui-statistic', 'text-ui-statistic-hover',
+			'text-ui-statistic-secondary', 'text-ui-statistic-secondary-hover',
+		]],
+		['selected', [
+			'text-ui-selected', 'text-ui-selected-hover',
+			'text-ui-selected-secondary', 'text-ui-selected-secondary-hover',
+		]],
+		['danger', [
+			'text-ui-danger', 'text-ui-danger-hover',
+			'text-ui-danger-secondary', 'text-ui-danger-secondary-hover',
+		]],
+		['success', [
+			'text-ui-success', 'text-ui-success-hover',
+			'text-ui-success-secondary', 'text-ui-success-secondary-hover',
+		]],
+		['warning', [
+			'text-ui-warning', 'text-ui-warning-hover',
+			'text-ui-warning-secondary', 'text-ui-warning-secondary-hover',
+		]],
+		['caution', [
+			'text-ui-caution', 'text-ui-caution-hover',
+			'text-ui-caution-secondary', 'text-ui-caution-secondary-hover',
+		]],
+		['neutral', [
+			'text-ui-neutral', 'text-ui-neutral-hover',
+			'text-ui-neutral-secondary', 'text-ui-neutral-secondary-hover',
+		]],
+		['disabled', [
+			'text-ui-disabled', 'text-ui-disabled-secondary',
+		]],
+		['onbrand', [
+			'text-ui-onbrand', 'text-ui-onbrand-hover',
+			'text-ui-onbrand-secondary', 'text-ui-onbrand-secondary-hover',
+		]],
+		['onstatistic', [
+			'text-ui-onstatistic', 'text-ui-onstatistic-hover',
+			'text-ui-onstatistic-secondary', 'text-ui-onstatistic-secondary-hover',
+		]],
+		['onselected', [
+			'text-ui-onselected', 'text-ui-onselected-hover',
+			'text-ui-onselected-secondary', 'text-ui-onselected-secondary-hover',
+		]],
+		['ondanger', [
+			'text-ui-ondanger', 'text-ui-ondanger-hover',
+			'text-ui-ondanger-secondary', 'text-ui-ondanger-secondary-hover',
+		]],
+		['onsuccess', [
+			'text-ui-onsuccess', 'text-ui-onsuccess-hover',
+			'text-ui-onsuccess-secondary', 'text-ui-onsuccess-secondary-hover',
+		]],
+		['onwarning', [
+			'text-ui-onwarning', 'text-ui-onwarning-hover',
+			'text-ui-onwarning-secondary', 'text-ui-onwarning-secondary-hover',
+		]],
+		['oncaution', [
+			'text-ui-oncaution', 'text-ui-oncaution-hover',
+			'text-ui-oncaution-secondary', 'text-ui-oncaution-secondary-hover',
+		]],
+		['onneutral', [
+			'text-ui-onneutral', 'text-ui-onneutral-hover',
+			'text-ui-onneutral-secondary', 'text-ui-onneutral-secondary-hover',
+		]],
+		['ondisabled', [
+			'text-ui-ondisabled', 'text-ui-ondisabled-secondary',
+		]],
+	]);
+
+	const borderColorMap: Map<string, string[]> = new Map([
+		['default', ['border-ui', 'border-ui-0', 'border-ui-10', 'border-ui-25', 'border-ui-50', 'border-ui-75', 'border-ui-100', 'border-ui-hover']],
+		['brand', ['border-ui-brand', 'border-ui-brand-hover']],
+		['statistic', ['border-ui-statistic', 'border-ui-statistic-hover']],
+		['selected', ['border-ui-selected', 'border-ui-selected-hover']],
+		['danger', ['border-ui-danger', 'border-ui-danger-hover']],
+		['success', ['border-ui-success', 'border-ui-success-hover']],
+		['warning', ['border-ui-warning', 'border-ui-warning-hover']],
+		['caution', ['border-ui-caution', 'border-ui-caution-hover']],
+		['neutral', ['border-ui-neutral', 'border-ui-neutral-hover']],
+		['disabled', ['border-ui-disabled']],
+		['onbrand', ['border-ui-onbrand', 'border-ui-onbrand-hover']],
+		['onstatistic', ['border-ui-onstatistic', 'border-ui-onstatistic-hover']],
+		['onselected', ['border-ui-onselected', 'border-ui-onselected-hover']],
+		['ondanger', ['border-ui-ondanger', 'border-ui-ondanger-hover']],
+		['onsuccess', ['border-ui-onsuccess', 'border-ui-onsuccess-hover']],
+		['onwarning', ['border-ui-onwarning', 'border-ui-onwarning-hover']],
+		['oncaution', ['border-ui-oncaution', 'border-ui-oncaution-hover']],
+		['onneutral', ['border-ui-onneutral', 'border-ui-onneutral-hover']],
+		['ondisabled', ['border-ui-ondisabled']],
+	]);
+
+
+	const backgroundColorMap: Map<string, string[]> = new Map([
+		['default', ['bg-ui', 'bg-ui-0', 'bg-ui-10', 'bg-ui-25', 'bg-ui-50', 'bg-ui-75', 'bg-ui-100', 'bg-ui-hover']],
+		['brand', ['bg-ui-brand', 'bg-ui-brand-hover', 'bg-ui-brand-secondary']],
+		['statistic', ['bg-ui-statistic', 'bg-ui-statistic-hover', 'bg-ui-statistic-secondary']],
+		['selected', ['bg-ui-selected', 'bg-ui-selected-hover']],
+		['danger', ['bg-ui-danger', 'bg-ui-danger-hover', 'bg-ui-danger-secondary']],
+		['success', ['bg-ui-success', 'bg-ui-success-hover', 'bg-ui-success-secondary']],
+		['warning', ['bg-ui-warning', 'bg-ui-warning-hover', 'bg-ui-warning-secondary']],
+		['caution', ['bg-ui-caution', 'bg-ui-caution-hover', 'bg-ui-caution-secondary']],
+		['neutral', ['bg-ui-neutral', 'bg-ui-neutral-hover', 'bg-ui-neutral-secondary']],
+		['disabled', ['bg-ui-disabled']],
+		['uistatic', ['bg-uistatic', 'bg-uistatic-0', 'bg-uistatic-10', 'bg-uistatic-25', 'bg-uistatic-50', 'bg-uistatic-75', 'bg-uistatic-100']],
+	]);
+
+
+	const accentColorMap: Map<string, string[]> = new Map([
+		['default', ['accent-ui']],
+		['brand', ['accent-ui-brand']],
+		['statistic', ['accent-ui-statistic']],
+		['selected', ['accent-ui-selected']],
+		['danger', ['accent-ui-danger']],
+		['success', ['accent-ui-success']],
+		['warning', ['accent-ui-warning']],
+		['caution', ['accent-ui-caution']],
+		['neutral', ['accent-ui-neutral']],
+		['disabled', ['accent-ui-disabled']],
+		['onbrand', ['accent-ui-onbrand']],
+		['onstatistic', ['accent-ui-onstatistic']],
+		['onselected', ['accent-ui-onselected']],
+		['ondanger', ['accent-ui-ondanger']],
+		['onsuccess', ['accent-ui-onsuccess']],
+		['onwarning', ['accent-ui-onwarning']],
+		['oncaution', ['accent-ui-oncaution']],
+		['onneutral', ['accent-ui-onneutral']],
+		['ondisabled', ['accent-ui-ondisabled']],
+	]);
+
+	const ringColorMap: Map<string, string[]> = new Map([
+		['default', ['ring-ui']],
+		['brand', ['ring-ui-brand']],
+		['statistic', ['ring-ui-statistic']],
+		['danger', ['ring-ui-danger']],
+		['success', ['ring-ui-success']],
+		['warning', ['ring-ui-warning']],
+		['caution', ['ring-ui-caution']],
+		['neutral', ['ring-ui-neutral']],
+	]);
+
+	const iconColorMap: Map<string, string[]> = new Map([
+		['default', ['icon-ui', 'icon-ui-0', 'icon-ui-10', 'icon-ui-25', 'icon-ui-50', 'icon-ui-75', 'icon-ui-100', 'icon-ui-hover', 'icon-ui-secondary',
+			'icon-ui-secondary-hover']],
+		['brand', ['icon-ui-brand', 'icon-ui-brand-hover', 'icon-ui-brand-secondary', 'icon-ui-brand-secondary-hover']],
+		['statistic', ['icon-ui-statistic', 'icon-ui-statistic-hover', 'icon-ui-statistic-secondary', 'icon-ui-statistic-secondary-hover']],
+		['selected', ['icon-ui-selected', 'icon-ui-selected-hover', 'icon-ui-selected-secondary', 'icon-ui-selected-secondary-hover']],
+		['danger', ['icon-ui-danger', 'icon-ui-danger-hover', 'icon-ui-danger-secondary', 'icon-ui-danger-secondary-hover']],
+		['success', ['icon-ui-success', 'icon-ui-success-hover', 'icon-ui-success-secondary', 'icon-ui-success-secondary-hover']],
+		['warning', ['icon-ui-warning', 'icon-ui-warning-hover', 'icon-ui-warning-secondary', 'icon-ui-warning-secondary-hover']],
+		['caution', ['icon-ui-caution', 'icon-ui-caution-hover', 'icon-ui-caution-secondary', 'icon-ui-caution-secondary-hover']],
+		['neutral', ['icon-ui-neutral', 'icon-ui-neutral-hover', 'icon-ui-neutral-secondary', 'icon-ui-neutral-secondary-hover']],
+		['disabled', ['icon-ui-disabled', 'icon-ui-disabled-secondary']],
+		['onbrand', ['icon-ui-onbrand', 'icon-ui-onbrand-hover', 'icon-ui-onbrand-secondary', 'icon-ui-onbrand-secondary-hover']],
+		['onstatistic', ['icon-ui-onstatistic', 'icon-ui-onstatistic-hover', 'icon-ui-onstatistic-secondary', 'icon-ui-onstatistic-secondary-hover']],
+		['onselected', ['icon-ui-onselected', 'icon-ui-onselected-hover', 'icon-ui-onselected-secondary', 'icon-ui-onselected-secondary-hover']],
+		['ondanger', ['icon-ui-ondanger', 'icon-ui-ondanger-hover', 'icon-ui-ondanger-secondary', 'icon-ui-ondanger-secondary-hover']],
+		['onsuccess', ['icon-ui-onsuccess', 'icon-ui-onsuccess-hover', 'icon-ui-onsuccess-secondary', 'icon-ui-onsuccess-secondary-hover']],
+		['onwarning', ['icon-ui-onwarning', 'icon-ui-onwarning-hover', 'icon-ui-onwarning-secondary', 'icon-ui-onwarning-secondary-hover']],
+		['oncaution', ['icon-ui-oncaution', 'icon-ui-oncaution-hover', 'icon-ui-oncaution-secondary', 'icon-ui-oncaution-secondary-hover']],
+		['onneutral', ['icon-ui-onneutral', 'icon-ui-onneutral-hover', 'icon-ui-onneutral-secondary', 'icon-ui-onneutral-secondary-hover']],
+		['ondisabled', ['icon-ui-ondisabled', 'icon-ui-ondisabled-secondary']],
+		['uistatic', ['icon-uistatic', 'icon-uistatic-0', 'icon-uistatic-10', 'icon-uistatic-25', 'icon-uistatic-50', 'icon-uistatic-75', 'icon-uistatic-100']],
+	]);
+
+	const shadowColorMap: Map<string, string[]> = new Map([
+		['default', ['shadow-ui-0', 'shadow-ui-10', 'shadow-ui-25', 'shadow-ui-50', 'shadow-ui-75', 'shadow-ui-100'	]],
+	]);
+
+
+
+
+	const typeList = new Map([["bg", backgroundColorMap], ["text", textColorMap], ['border', borderColorMap], ['accent', accentColorMap],
+		['ring', ringColorMap], ['icon', iconColorMap], ['shadow', shadowColorMap]]);
+
+
 	const semantics = {
 		type: ['bg', 'text', 'border', 'accent', 'ring', 'icon'],
-		role: ['', 'brand', 'statistic', 'selected', 'danger', 'success', 'warning', 'caution', 'neutral', 'disabled', 'onbrand', 'onstatistic', 'onselected', 'ondanger', 'onsuccess', 'onwarning', 'oncaution', 'onneutral', 'ondisabled', 'inverted'],
-		prominence: ['', 'secondary', 'weak'], // strong, weak
+		role: ['', 'brand', 'statistic', 'selected', 'danger', 'success', 'warning', 'caution', 'neutral', 'disabled', 'onbrand', 'onstatistic', 'onselected', 'ondanger', 'onsuccess', 'onwarning', 'oncaution', 'onneutral', 'ondisabled'],
+		prominence: ['', 'secondary', '0', '10', '25', '50', '75', '100'], // strong, weak
 		interaction: ['', 'hover'], // active
 	}
 
-	function shouldExist(type = '', role = '', prominence = '', interaction = '') {
-		if ((type === 'bg' && prominence === 'weak' && interaction === '' && !role.startsWith('on') && role !== 'disabled' && role !== 'inverted' && role !== 'selected' && role !== ''))
-			return true;
-		if ((type === 'bg' && role !== '' && role.startsWith('on')) || (type === 'bg' && prominence !== '') || (role.includes('disabled') && interaction !== ''))
-			return false;
-		if ((type === 'ring') && (role === 'selected' || role.includes('disabled') || role.startsWith('on') || prominence !== '' || interaction !== ''))
-			return false;
-		if ((type === 'icon') && (role === 'selected' || role.includes('disabled') || prominence !== '' || interaction !== ''))
-			return false;
-		if ((type === 'accent') && (role === 'selected' || prominence !== '' || interaction !== ''))
-			return false;
-		if ((type !== 'bg' && role === 'inverted') || (type === 'bg' && role === 'inverted' && interaction !== '') || (type !== 'bg' && prominence === 'weak'))
-			return false;
-		return true;
-	}
 
 	// http://www.w3.org/TR/WCAG20/#contrast-ratiodef
 	// Berechnen der relativen Leuchtdichte eines RGB-Farbwerts
@@ -291,8 +425,6 @@
 		const contrast = docsContrastLuminance(docsContrastRelativeLuminance(bg), docsContrastRelativeLuminance(fg));
 		// Bewerten des Kontrastverhältnisses gemäß WCAG-Richtlinien
 		const score = contrast >= 7 ? "AAA" : contrast >= 4.5 ? "AA" : contrast >= 3 ? "" : "!";
-		if (contrast < 1.09)
-			return; // Falls der Kontrast zu niedrig ist, wird nichts zurückgegeben
 		return `${contrast.toFixed(2)}:1${score !== "" ? ` (${score})` : ""}`;
 	}
 
@@ -305,7 +437,7 @@
 				return;
 			const bg = window.getComputedStyle(el).backgroundColor;
 			const fg = window.getComputedStyle(swatch).backgroundColor;
-			valueTarget.textContent = docsGetContrast(bg, fg) ?? '';
+			valueTarget.textContent = docsGetContrast(bg, fg);
 		});
 	}
 

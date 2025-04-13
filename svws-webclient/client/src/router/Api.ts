@@ -1,7 +1,7 @@
 import { computed } from "vue";
 
 import type { AES } from "~/utils/crypto/aes";
-import type { Config } from "~/components/Config";
+import type { Config } from "../../../ui/src/utils/Config";
 import type { List, DBSchemaListeEintrag, ApiServer, LehrerListeEintrag, SchuelerListeEintrag, KlassenDaten, KursDaten, JahrgangsDaten, SchuleStammdaten, Schuljahresabschnitt, BenutzerDaten, BenutzerKompetenz, ServerMode, ValidatorKontext} from "@core";
 import { Schulform, Schulgliederung, BenutzerTyp, OpenApiError, SimpleOperationResponse, DeveloperNotificationException } from "@core";
 

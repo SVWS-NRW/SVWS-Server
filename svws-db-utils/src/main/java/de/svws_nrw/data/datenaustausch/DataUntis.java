@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1347,7 +1348,7 @@ public final class DataUntis {
 				final GostKlausurtermin termin = manager.terminGetByIdOrException(raum.idTermin);
 				klausur.datum = getUntisDate(termin.datum);
 				klausur.name = "%s_K%d_%s".formatted(GostHalbjahr.fromIDorException(termin.halbjahr).jahrgang, termin.quartal,
-						manager.kursklausurGetMengeByRaum(raum).stream().map(manager::kursKurzbezeichnungByKursklausur).collect(Collectors.joining("_")));
+						manager.kursklausurGetMengeByRaum(raum, true).stream().map(manager::kursKurzbezeichnungByKursklausur).collect(Collectors.joining("_")));
 
 				final StundenplanManager stundenplan = manager.stundenplanManagerGetByTerminOrNull(termin);
 				if (stundenplan == null) {
@@ -1360,7 +1361,7 @@ public final class DataUntis {
 				final StundenplanRaum stundenplanraum = manager.stundenplanraumGetByKlausurraumOrNull(raum);
 				if (stundenplanraum != null)
 					klausur.raeume = stunden.stream().map(s -> stundenplanraum.kuerzel).collect(Collectors.joining(" - "));
-				processKlausurenAndSchueler(klausur, manager, unterrichte, idVariante, manager.kursklausurGetMengeByRaum(raum),
+				processKlausurenAndSchueler(klausur, manager, unterrichte, idVariante, manager.kursklausurGetMengeByRaum(raum, true),
 						manager.schuelerklausurGetMengeByRaum(raum));
 				result.add(klausur);
 			}
@@ -1385,7 +1386,7 @@ public final class DataUntis {
 
 	private static void processKlausurenAndSchueler(final UntisGPU017 klausur, final GostKlausurplanManager manager,
 			final HashMap2D<String, String, List<UntisGPU002>> unterrichte, final int idVarianteSchuelerBezeichner,
-			final List<GostKursklausur> klausuren, final List<GostSchuelerklausur> schuelerKlausuren) {
+			final Collection<GostKursklausur> klausuren, final List<GostSchuelerklausur> schuelerKlausuren) {
 		klausur.unterrichte = klausuren.stream()
 				.flatMap(k -> Optional.ofNullable(unterrichte
 						.getOrNull(GostHalbjahr.fromIDorException(manager.vorgabeByKursklausur(k).halbjahr).jahrgang,

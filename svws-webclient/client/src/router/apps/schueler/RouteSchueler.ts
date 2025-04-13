@@ -8,7 +8,6 @@ import type { RouteNode } from "~/router/RouteNode";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { RouteDataSchueler } from "~/router/apps/schueler/RouteDataSchueler";
-import { routeSchuelerGruppenprozesse } from "~/router/apps/schueler/RouteSchuelerGruppenprozesse";
 import { routeSchuelerNeu } from "~/router/apps/schueler/RouteSchuelerNeu";
 import { routeSchuelerAusbildungsbetriebe } from "~/router/apps/schueler/ausbildungsbetriebe/RouteSchuelerAusbildungsbetriebe";
 import { routeSchuelerErziehungsberechtigte } from "~/router/apps/schueler/erziehungsberechtigte/RouteSchuelerErziehungsberechtigte";
@@ -23,6 +22,8 @@ import { AppMenuGroup } from "@ui";
 import { api } from "~/router/Api";
 import type { SchuelerAppProps } from "~/components/schueler/SSchuelerAppProps";
 import { routeSchuelerSonstiges } from "./sonstiges/RouteSchuelerSonstiges";
+import { routeSchuelerAllgemeinesGruppenprozesse } from "~/router/apps/schueler/allgemeines/RouteSchuelerAllgemeinesGruppenprozesse";
+import { routeSchuelerIndividualdatenGruppenprozesse } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdatenGruppenprozesse";
 
 const SSchuelerAuswahl = () => import("~/components/schueler/SSchuelerAuswahl.vue")
 const SSchuelerApp = () => import("~/components/schueler/SSchuelerApp.vue")
@@ -41,6 +42,7 @@ export class RouteSchueler extends RouteAuswahlNode<SchuelerListeManager, RouteD
 		super.getAuswahlProps = props => (<SchuelerAppProps>{
 			...props,
 			schulform: api.schulform,
+			gotoDefaultView: this.data.gotoDefaultView,
 		});
 		super.children = [
 			routeSchuelerIndividualdaten,
@@ -53,8 +55,9 @@ export class RouteSchueler extends RouteAuswahlNode<SchuelerListeManager, RouteD
 			routeSchuelerSprachen,
 			routeSchuelerLaufbahnplanung,
 			routeSchuelerStundenplan,
+			routeSchuelerAllgemeinesGruppenprozesse,
+			routeSchuelerIndividualdatenGruppenprozesse,
 			routeSchuelerNeu,
-			routeSchuelerGruppenprozesse,
 		];
 		super.defaultChild = routeSchuelerIndividualdaten;
 		super.updateIfTarget = this.doUpdateIfTarget;

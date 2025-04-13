@@ -1,16 +1,17 @@
 {
 	"name": "svws-test",
-	"version": "1.0.5",
+	"version": "1.0.6",
 	"description": "",
 	"main": "index.js",
 	"type": "module",
 	"scripts": {
 		"installdeps": "playwright install-deps",
 		"install": "playwright install",
+		"test:local" : "playwright test",
 		"test" : "playwright test",
 		"show": "playwright show-report",
 		"lint": "eslint 'src_old/**/*.ts' --cache",
-		"codegen": "playwright codegen -o build/codegen/gen_test.ts --ignore-https-errors"
+		"codegen": "playwright codegen https://localhost -o build/codegen/gen_test.ts --ignore-https-errors"
 	},
 	"keywords": [],
 	"author": "",

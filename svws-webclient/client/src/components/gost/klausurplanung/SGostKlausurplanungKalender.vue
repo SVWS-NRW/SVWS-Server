@@ -1,6 +1,6 @@
 <template>
 	<!--<template v-if="kMan().stundenplanManagerExistsByAbschnitt(abschnitt!.id) && props.kMan().stundenplanManagerExistsByAbschnittAndKW(props.abschnitt!.id, kalenderwoche().jahr, kalenderwoche().kw)">-->
-	<template v-if="kMan().stundenplanManagerGeladenByAbschnitt(abschnitt!.id) && kMan().stundenplanManagerExistsByAbschnitt(abschnitt!.id) && kMan().stundenplanManagerGetByAbschnittAndDatumOrNull(props.abschnitt!.id, props.kalenderdatum.value!) !== null">
+	<template v-if="abschnitt !== undefined && kMan().stundenplanManagerGeladenByAbschnitt(abschnitt.id) && kMan().stundenplanManagerExistsByAbschnitt(abschnitt.id) && kMan().stundenplanManagerGetByAbschnittAndDatumOrNull(abschnitt.id, props.kalenderdatum.value!) !== null">
 		<Teleport to=".svws-ui-header--actions" v-if="isMounted">
 			<svws-ui-modal-hilfe class="ml-auto"> <s-gost-klausurplanung-kalender-hilfe /> </svws-ui-modal-hilfe>
 		</Teleport>
@@ -32,8 +32,8 @@
 								@dragend="onDrag(undefined)"
 								@click="terminSelected.value?.id === termin.id ? onDrag(undefined) : onDrag(termin);$event.stopPropagation()"
 								:class="{
-									'border bg-ui-contrast-0 rounded-lg border-ui-contrast-10 my-3 cursor-grab': terminSelected.value !== undefined && terminSelected.value.id === termin.id,
-									'cursor-pointer hover:bg-ui-contrast-10 rounded-lg pb-1': terminSelected.value !== undefined && terminSelected.value.id !== termin.id || terminSelected.value === undefined,
+									'border bg-ui-100 rounded-lg border-ui-10 my-3 cursor-grab': terminSelected.value !== undefined && terminSelected.value.id === termin.id,
+									'cursor-pointer hover:bg-ui-75 rounded-lg pb-1': terminSelected.value !== undefined && terminSelected.value.id !== termin.id || terminSelected.value === undefined,
 								}">
 								<s-gost-klausurplanung-termin :termin
 									:benutzer-kompetenzen
@@ -56,6 +56,7 @@
 				<template v-if="kalenderdatum">
 					<s-gost-klausurplanung-kalender-stundenplan-ansicht :benutzer-kompetenzen
 						:id="33"
+						:abschnitt
 						:kalenderdatum
 						:jahrgangsdaten
 						:halbjahr
@@ -112,7 +113,7 @@
 							<li v-for="konflikt in anzahlProKwKonflikte(4, false, showMoreKonflikte)" :key="konflikt.getKey()">
 								<span class="font-bold">{{ kMan().schuelerGetByIdOrException(konflikt.getKey())?.vorname + ' ' + kMan().schuelerGetByIdOrException(konflikt.getKey())?.nachname }}</span>
 								<div class="grid grid-cols-3 gap-x-1 gap-y-2 mt-0.5">
-									<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`color: var(--color-text-ui-static); background-color: ${kMan().fachHTMLFarbeRgbaByKursklausur(kMan().kursklausurBySchuelerklausurTermin(klausur))};`" @mouseenter="kursklausurMouseOver = kMan().kursklausurBySchuelerklausurTermin(klausur)" @mouseleave="kursklausurMouseOver=undefined">
+									<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`color: var(--color-text-uistatic); background-color: ${kMan().fachHTMLFarbeRgbaByKursklausur(kMan().kursklausurBySchuelerklausurTermin(klausur))};`" @mouseenter="kursklausurMouseOver = kMan().kursklausurBySchuelerklausurTermin(klausur)" @mouseleave="kursklausurMouseOver=undefined">
 										<span class="text-button font-medium">{{ kMan().kursKurzbezeichnungByKursklausur(kMan().kursklausurBySchuelerklausurTermin(klausur)) }}</span>
 										<span class="text-sm font-medium">{{ DateUtils.gibDatumGermanFormat(kMan().terminOrExceptionBySchuelerklausurTermin(klausur).datum !== null ? kMan().terminOrExceptionBySchuelerklausurTermin(klausur).datum! : stundenplanManager().datumGetByKwzAndZeitraster(kalenderwoche(), zeitrasterSelected!)) }}</span>									</span>
 								</div>
@@ -144,7 +145,7 @@
 							<li v-for="konflikt in anzahlProKwKonflikte(3, true, showMoreWarnungen)" :key="konflikt.getKey()">
 								<span class="font-bold">{{ kMan().schuelerGetByIdOrException(konflikt.getKey())?.vorname + ' ' + kMan().schuelerGetByIdOrException(konflikt.getKey())?.nachname }}</span>
 								<div class="grid grid-cols-3 gap-x-1 gap-y-2 mt-0.5">
-									<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`color: var(--color-text-ui-static); background-color: ${kMan().fachHTMLFarbeRgbaByKursklausur(kMan().kursklausurBySchuelerklausurTermin(klausur))};`" @mouseenter="kursklausurMouseOver = kMan().kursklausurBySchuelerklausurTermin(klausur)" @mouseleave="kursklausurMouseOver=undefined">
+									<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`color: var(--color-text-uistatic); background-color: ${kMan().fachHTMLFarbeRgbaByKursklausur(kMan().kursklausurBySchuelerklausurTermin(klausur))};`" @mouseenter="kursklausurMouseOver = kMan().kursklausurBySchuelerklausurTermin(klausur)" @mouseleave="kursklausurMouseOver=undefined">
 										<span class="text-button font-medium">{{ kMan().kursKurzbezeichnungByKursklausur(kMan().kursklausurBySchuelerklausurTermin(klausur)) }}</span>
 										<span class="text-sm font-medium">{{ DateUtils.gibDatumGermanFormat(kMan().terminOrExceptionBySchuelerklausurTermin(klausur).datum !== null ? kMan().terminOrExceptionBySchuelerklausurTermin(klausur).datum! : stundenplanManager().datumGetByKwzAndZeitraster(kalenderwoche(), zeitrasterSelected!)) }}</span>
 									</span>
@@ -172,7 +173,11 @@
 
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
 
-	const kalenderwoche = () => props.kMan().stundenplanManagerGetByAbschnittAndDatumOrException(props.abschnitt!.id, props.kalenderdatum.value!).kalenderwochenzuordnungGetByDatum(props.kalenderdatum.value!);
+	const kalenderwoche = (datum?: string) => {
+		if (datum === undefined)
+			datum = props.kalenderdatum.value!;
+		return props.kMan().stundenplanManagerGetByAbschnittAndDatumOrException(props.abschnitt!.id, datum).kalenderwochenzuordnungGetByDatum(datum)
+	};
 
 	const stundenplanManager = () => props.kMan().stundenplanManagerGetByAbschnittAndDatumOrException(props.abschnitt!.id, DateUtils.gibDatumDesMontagsOfJahrAndKalenderwoche(kalenderwoche().jahr, kalenderwoche().kw));
 
@@ -256,7 +261,8 @@
 		if (props.terminSelected.value !== undefined)
 			for (const klausur of props.kMan().kursklausurGetMengeByTermin(props.terminSelected.value))
 				kursIds.add(klausur.idKurs);
-		return props.kMan().stundenplanManagerGetByAbschnittAndDatumOrException(props.abschnitt!.id, datum).kursGetMengeGefiltertByWochentypAndWochentagAndStunde(kursIds, kalenderwoche().wochentyp, day, stunde);
+		const sManager = props.kMan().stundenplanManagerGetByAbschnittAndDatumOrNull(props.abschnitt!.id, datum);
+		return sManager !== null ? sManager.kursGetMengeGefiltertByWochentypAndWochentagAndStunde(kursIds, kalenderwoche(datum).wochentyp, day, stunde) : new ArrayList<number>() as List<number>;
 	}
 
 	function sumSchreiber(datum: string, day: Wochentag, stunde: number) {
@@ -304,7 +310,7 @@
 
 </script>
 
-<style lang="postcss">
+<!-- <style lang="postcss">
 
 	@reference "../../../../../ui/src/assets/styles/index.css"
 
@@ -320,4 +326,4 @@
 		}
 	}
 
-</style>
+</style> -->

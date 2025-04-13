@@ -38,6 +38,16 @@ export class SchuelerLernplattform extends JavaObject {
 	 */
 	public einwilligungVideokonferenz : boolean = false;
 
+	/**
+	 * Benutzername für die Lernplattform eines Schülers
+	 */
+	public benutzername : string | null = null;
+
+	/**
+	 * Initialkennwort für die Lernplattform eines Schülers
+	 */
+	public initialKennwort : string | null = null;
+
 
 	public constructor() {
 		super();
@@ -77,6 +87,8 @@ export class SchuelerLernplattform extends JavaObject {
 		if (obj.einwilligungVideokonferenz === undefined)
 			throw new Error('invalid json format, missing attribute einwilligungVideokonferenz');
 		result.einwilligungVideokonferenz = obj.einwilligungVideokonferenz;
+		result.benutzername = (obj.benutzername === undefined) ? null : obj.benutzername === null ? null : obj.benutzername;
+		result.initialKennwort = (obj.initialKennwort === undefined) ? null : obj.initialKennwort === null ? null : obj.initialKennwort;
 		return result;
 	}
 
@@ -89,6 +101,8 @@ export class SchuelerLernplattform extends JavaObject {
 		result += '"einwilligungNutzung" : ' + obj.einwilligungNutzung.toString() + ',';
 		result += '"einwilligungAudiokonferenz" : ' + obj.einwilligungAudiokonferenz.toString() + ',';
 		result += '"einwilligungVideokonferenz" : ' + obj.einwilligungVideokonferenz.toString() + ',';
+		result += '"benutzername" : ' + ((obj.benutzername === null) ? 'null' : JSON.stringify(obj.benutzername)) + ',';
+		result += '"initialKennwort" : ' + ((obj.initialKennwort === null) ? 'null' : JSON.stringify(obj.initialKennwort)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -116,6 +130,12 @@ export class SchuelerLernplattform extends JavaObject {
 		}
 		if (obj.einwilligungVideokonferenz !== undefined) {
 			result += '"einwilligungVideokonferenz" : ' + obj.einwilligungVideokonferenz.toString() + ',';
+		}
+		if (obj.benutzername !== undefined) {
+			result += '"benutzername" : ' + ((obj.benutzername === null) ? 'null' : JSON.stringify(obj.benutzername)) + ',';
+		}
+		if (obj.initialKennwort !== undefined) {
+			result += '"initialKennwort" : ' + ((obj.initialKennwort === null) ? 'null' : JSON.stringify(obj.initialKennwort)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

@@ -1,6 +1,8 @@
 package de.svws_nrw.data.schueler;
 
 import de.svws_nrw.db.dto.current.schild.katalog.DTOSchuleNRW;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +52,7 @@ public final class DataSchuelerSchulbesuchSchule extends DataManagerRevised<Long
 	public DataSchuelerSchulbesuchSchule(final DBEntityManager conn, final Long idSchueler) {
 		super(conn);
 		this.idSchueler = idSchueler;
-		setAttributesRequiredOnCreation("schulnummer");
+		setAttributesRequiredOnCreation("idSchule");
 		setAttributesNotPatchable("id");
 		this.entlassartenByBezeichnung = conn.queryAll(DTOEntlassarten.class).stream().collect(Collectors.toMap(e -> e.Bezeichnung, e -> e));
 		this.schulenBySchulnummer = conn.queryAll(DTOSchuleNRW.class).stream().collect(Collectors.toMap(s -> s.SchulNr, s -> s));
@@ -132,11 +134,24 @@ public final class DataSchuelerSchulbesuchSchule extends DataManagerRevised<Long
 			case "abschlussartID" -> dto.LSEntlassArt = JSONMapper.convertToString(value, true, true, 2, "abschlussartID");
 			case "organisationsFormID" -> dto.OrganisationsformKrz = JSONMapper.convertToString(value, true, true, 1, "organisationsformKrz");
 			case "datumVon" -> dto.LSBeginnDatum = JSONMapper.convertToString(value, true, true, null, "datumVon");
-			case "datumBis" -> dto.LSSchulEntlassDatum = JSONMapper.convertToString(value, true, true, null, "datumBis");
+			case "datumBis" -> mapDatumBis(dto, value);
 			case "jahrgangVon" -> dto.LSBeginnJahrgang = JSONMapper.convertToString(value, true, true, 2, "jahrgangVon");
 			case "jahrgangBis" -> dto.LSJahrgang = JSONMapper.convertToString(value, true, true, 2, "jahrgangBis");
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
 		}
+	}
+
+	private static void mapDatumBis(final DTOSchuelerAbgaenge dto, final Object value) throws ApiOperationException {
+		final String datum = JSONMapper.convertToString(value, true, true, null, "DatumBis");
+		if (dto.LSBeginnDatum != null) {
+			// Prüfung, ob das Enddatum nach dem Startdatum liegt
+			final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			final LocalDate datumVon = LocalDate.parse(dto.LSBeginnDatum, formatter);
+			final LocalDate datumBis = LocalDate.parse(datum, formatter);
+			if (datumBis.isBefore(datumVon))
+				throw new ApiOperationException(Status.BAD_REQUEST, "Das Enddatum %s darf nicht vor dem Startdatum %s liegen".formatted(datumBis, datumVon));
+		}
+		dto.LSSchulEntlassDatum = datum;
 	}
 
 	private void mapSchulnummer(final DTOSchuelerAbgaenge dto, final Object value) throws ApiOperationException {

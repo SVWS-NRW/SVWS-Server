@@ -7,7 +7,7 @@
 	</Teleport>
 	<div class="page page-flex-col overflow-x-auto">
 		<template v-if="stundenplan === undefined">
-			<div class="flex flex-col gap-2 justify-center items-center min-h-full w-full grow text-headline-md text-ui-contrast-50 text-center">
+			<div class="flex flex-col gap-2 justify-center items-center min-h-full w-full grow text-headline-md text-ui-50 text-center">
 				<span class="icon-xxl i-ri-calendar-event-line" />
 				<span>Derzeit liegt kein Stundenplan<br>für diesen Lernabschnitt vor.</span>
 			</div>
@@ -15,7 +15,7 @@
 		<template v-else>
 			<stundenplan-auswahl :stundenplan="stundenplan()" :map-stundenplaene :goto-stundenplan :goto-wochentyp :goto-kalenderwoche :manager :wochentyp
 				:kalenderwoche :ganzer-stundenplan :set-ganzer-stundenplan autofocus />
-			<stundenplan-klasse :id :ignore-empty :manager :wochentyp :kalenderwoche />
+			<stundenplan-klassen :id :ignore-empty :manager :wochentyp :kalenderwoche />
 		</template>
 	</div>
 </template>

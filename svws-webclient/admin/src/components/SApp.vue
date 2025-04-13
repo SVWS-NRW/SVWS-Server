@@ -53,9 +53,9 @@
 						<svws-ui-header>
 							<div class="flex items-center">
 								<div>
-									<span class="inline-block h-[1em] rounded-sm animate-pulse w-52 bg-ui-contrast-10" />
+									<span class="inline-block h-[1em] rounded-sm animate-pulse w-52 bg-ui-75" />
 									<br>
-									<span class="inline-block h-[1em] rounded-sm animate-pulse w-20 bg-ui-contrast-10" />
+									<span class="inline-block h-[1em] rounded-sm animate-pulse w-20 bg-ui-75" />
 								</div>
 							</div>
 						</svws-ui-header>
@@ -109,17 +109,3 @@
 	}
 
 </script>
-
-<style lang="postcss">
-
-	@reference "../../../ui/src/assets/styles/index.css";
-
-	.app--page {
-		@apply flex grow flex-col justify-between;
-		@apply h-screen;
-		@apply overflow-hidden;
-		@apply relative;
-		@apply bg-ui-contrast-0;
-	}
-
-</style>

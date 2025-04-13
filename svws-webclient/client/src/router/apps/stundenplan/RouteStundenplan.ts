@@ -19,7 +19,7 @@ import { routeKatalogRaeume } from "./kataloge/RouteKatalogRaeume";
 import { routeKatalogZeitraster } from "./kataloge/RouteKatalogZeitraster";
 import { RouteDataStundenplan } from "~/router/apps/stundenplan/RouteDataStundenplan";
 import { routeStundenplanRaum } from "./RouteStundenplanRaum";
-import { ConfigElement } from "~/components/Config";
+import { ConfigElement } from "../../../../../ui/src/utils/Config";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import { AppMenuGroup } from "@ui";
 import { routeStundenplanNeu } from "./RouteStundenplanNeu";

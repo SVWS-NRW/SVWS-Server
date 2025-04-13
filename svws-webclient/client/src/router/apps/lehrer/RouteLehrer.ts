@@ -14,10 +14,11 @@ import { routeLehrerPersonaldaten } from "~/router/apps/lehrer/RouteLehrerPerson
 import { routeLehrerStundenplan } from "./stundenplan/RouteLehrerStundenplan";
 import { routeLehrerUnterrichtsdaten } from "~/router/apps/lehrer/RouteLehrerUnterrichtsdaten";
 import { api } from "~/router/Api";
-import { ConfigElement } from "~/components/Config";
+import { ConfigElement } from "../../../../../ui/src/utils/Config";
 import type { LehrerAuswahlProps } from "~/components/lehrer/SLehrerAuswahlProps";
 import { AppMenuGroup } from "@ui";
 import {routeLehrerEinwilligungen} from "~/router/apps/lehrer/einwilligungen/RouteLehrerEinwilligungen";
+import {routeLehrerLernplattformen} from "~/router/apps/lehrer/lernplattformen/RouteLehrerLernplattformen";
 
 const SLehrerAuswahl = () => import("~/components/lehrer/SLehrerAuswahl.vue");
 const SLehrerApp = () => import("~/components/lehrer/SLehrerApp.vue");
@@ -34,6 +35,7 @@ export class RouteLehrer extends RouteAuswahlNode<LehrerListeManager, RouteDataL
 			routeLehrerStundenplan,
 			routeLehrerUnterrichtsdaten,
 			routeLehrerEinwilligungen,
+			routeLehrerLernplattformen,
 			routeLehrerGruppenprozesse,
 			routeLehrerNeu,
 		];

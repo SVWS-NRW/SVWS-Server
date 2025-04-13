@@ -1,5 +1,6 @@
 package de.svws_nrw.api.server;
 
+import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungErgebnis;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt;
@@ -142,14 +143,15 @@ public class APIGost {
 	/**
 	 * Die OpenAPI-Methode für das Erstellen eines neuen Abiturjahrgangs der gymnasialen Oberstufe.
 	 *
-	 * @param schema       das Datenbankschema, in welchem die Blockung erstellt wird
-	 * @param jahrgangID   die ID des Jahrgangs, für welchen der Abitur-Jahrgang erstellt werden soll
-	 * @param request      die Informationen zur HTTP-Anfrage
+	 * @param schema                    das Datenbankschema, in welchem die Blockung erstellt wird
+	 * @param schuljahresabschnittsID   die ID des Schuljahresabschnittes, auf welchen sich der Jahrgang bezieht
+	 * @param jahrgangID                die ID des Jahrgangs, für welchen der Abitur-Jahrgang erstellt werden soll
+	 * @param request                   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem neu angelegten Abiturjahr
 	 */
 	@POST
-	@Path("/abiturjahrgang/new/{jahrgangid}")
+	@Path("/abiturjahrgang/new/{schuljahresabschnittsid}/{jahrgangid}")
 	@Operation(summary = "Erstellt einen neuen Abiturjahrgang und gibt das Abiturjahr zurück.",
 			description = "Erstellt einen neuen Abiturjahrgang und gibt das Abiturjahr zurück."
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eine Abiturjahrgangs besitzt.")
@@ -159,10 +161,10 @@ public class APIGost {
 	@ApiResponse(responseCode = "404", description = "Keine Daten beim angegebenen Jahrgang gefunden, um einen Abiturjahrgang anzulegen")
 	@ApiResponse(responseCode = "409", description = "Der Abiturjahrgang existiert bereits")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response createGostAbiturjahrgang(@PathParam("schema") final String schema, @PathParam("jahrgangid") final long jahrgangID,
-			@Context final HttpServletRequest request) {
+	public Response createGostAbiturjahrgang(@PathParam("schema") final String schema, @PathParam("schuljahresabschnittsid") final long schuljahresabschnittsID,
+			@PathParam("jahrgangid") final long jahrgangID, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataGostJahrgangsliste(conn, conn.getUser().schuleGetSchuljahresabschnitt().id).create(jahrgangID),
+				conn -> new DataGostJahrgangsliste(conn, schuljahresabschnittsID).create(jahrgangID),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
 				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN);
@@ -1000,6 +1002,34 @@ public class APIGost {
 
 
 	/**
+	 * Die OpenAPI-Methode für das Komplette Entfernen der Fachwahlen eines Schülers.
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param schuelerid   die ID des Schülers, dessen Fachwahlen komplett gelöscht werden sollen
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort
+	 */
+	@POST
+	@Path("/schueler/{schuelerid : \\d+}/fachwahl/delete")
+	@Operation(summary = "Löscht die Fachwahlen des Schülers mit der angegebenen ID.",
+			description = "Löscht die Fachwahlen des Schülers mit der angegebenen ID."
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen der Fachwahlen besitzt.")
+	@ApiResponse(responseCode = "203", description = "Die Fachwahlen wurden erfolgreich gelöscht.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Fachwahlen zu löschen.")
+	@ApiResponse(responseCode = "404", description = "Der Schüler bzw. der zugehörige Abiturjahrgang wurde nicht gefunden.")
+	@ApiResponse(responseCode = "409", description = "Es liegen bereits bewertete Abschnitt vor, so dass die Fachwahlen nicht vollständig entfernt werden können.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteGostSchuelerFachwahlen(@PathParam("schema") final String schema, @PathParam("schuelerid") final long schuelerid,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn).delete(schuelerid),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN);
+	}
+
+
+	/**
 	 * Liest die Leistungsdaten in Bezug auf die gymnasiale Oberstufe des Schülers mit der angegebene ID aus der Datenbank und liefert diese zurück.
 	 * Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Leistungsdaten besitzt.
 	 *
@@ -1137,7 +1167,8 @@ public class APIGost {
 			if (faecherManager.isEmpty())
 				faecherManager = DBUtilsFaecherGost.getFaecherManager(abidaten.schuljahrAbitur, conn, null);
 			faecherManager.addFachkombinationenAll(DataGostJahrgangFachkombinationen.getFachkombinationen(conn, abidaten.abiturjahr));
-			final AbiturdatenManager manager = new AbiturdatenManager(abidaten, jahrgangsdaten, faecherManager, GostBelegpruefungsArt.GESAMT);
+			final AbiturdatenManager manager =
+					new AbiturdatenManager(SVWSKonfiguration.get().getServerMode(), abidaten, jahrgangsdaten, faecherManager, GostBelegpruefungsArt.GESAMT);
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(manager.getBelegpruefungErgebnis()).build();
 		},
 				request, ServerMode.STABLE,
@@ -1176,7 +1207,8 @@ public class APIGost {
 			if (faecherManager.isEmpty())
 				faecherManager = DBUtilsFaecherGost.getFaecherManager(abidaten.schuljahrAbitur, conn, null);
 			faecherManager.addFachkombinationenAll(DataGostJahrgangFachkombinationen.getFachkombinationen(conn, abidaten.abiturjahr));
-			final AbiturdatenManager manager = new AbiturdatenManager(abidaten, jahrgangsdaten, faecherManager, GostBelegpruefungsArt.EF1);
+			final AbiturdatenManager manager =
+					new AbiturdatenManager(SVWSKonfiguration.get().getServerMode(), abidaten, jahrgangsdaten, faecherManager, GostBelegpruefungsArt.EF1);
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(manager.getBelegpruefungErgebnis()).build();
 		},
 				request, ServerMode.STABLE,
@@ -1364,7 +1396,7 @@ public class APIGost {
 	@ApiResponse(responseCode = "403", description = "Der Benutzer hat keine Berechtigung, um die Laufbahndaten zu importieren.")
 	public Response importGostSchuelerLaufbahnplanung(@PathParam("schema") final String schema,
 			@PathParam("id") final long id,
-			@RequestBody(description = "Die Laufbahnplanungsdatei", required = true,
+			@RequestBody(description = "Die Laufbahnplanungsdatei - der Dateiname ist US-ASCII und darf daher u.a. keine Umlaute enthalten", required = true,
 					content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm final SimpleBinaryMultipartBody multipart,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn).importGZip(id, multipart.data),

@@ -10,8 +10,8 @@ import { RouteDataSchuelerSchulbesuch } from "~/router/apps/schueler/schulbesuch
 
 import type { SchuelerSchulbesuchProps } from "~/components/schueler/schulbesuch/SSchuelerSchulbesuchProps";
 import { api } from "~/router/Api";
-import {RouteManager} from "~/router/RouteManager";
-import {routeKatalogSchulen} from "~/router/apps/schule/schulen/RouteKatalogSchulen";
+import { RouteManager } from "~/router/RouteManager";
+import { routeKatalogSchulen } from "~/router/apps/schule/schulen/RouteKatalogSchulen";
 
 const SSchuelerSchulbesuch = () => import("~/components/schueler/schulbesuch/SSchuelerSchulbesuch.vue");
 
@@ -45,7 +45,13 @@ export class RouteSchuelerSchulbesuch extends RouteNode<RouteDataSchuelerSchulbe
 			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			autofocus: routeSchueler.data.autofocus,
-			goToSchule : this.goToSchule
+			goToSchule: this.goToSchule,
+			addSchuelerSchulbesuchSchule: this.data.addSchuelerSchulbesuchSchule,
+			patchSchuelerSchulbesuchSchule: this.data.patchSchuelerSchulbesuchSchule,
+			deleteSchuelerSchulbesuchSchulen: this.data.deleteSchuelerSchulbesuchSchulen,
+			addSchuelerSchulbesuchMerkmal: this.data.addSchuelerSchulbesuchMerkmal,
+			patchSchuelerSchulbesuchMerkmal: this.data.patchSchuelerSchulbesuchMerkmal,
+			deleteSchuelerSchulbesuchMerkmale: this.data.deleteSchuelerSchulbesuchMerkmale,
 		};
 	}
 }

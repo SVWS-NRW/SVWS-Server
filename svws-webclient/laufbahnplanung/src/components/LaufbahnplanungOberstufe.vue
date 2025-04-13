@@ -24,17 +24,17 @@
 				<s-laufbahnplanung-import-modal :show="showModalImport" :import-laufbahnplanung="import_laufbahnplanung" @update:show="val => showModalImport = val" />
 				<svws-ui-button :type="zwischenspeicher === undefined ? 'transparent' : 'error'" @click="saveLaufbahnplanung">Planung merken</svws-ui-button>
 				<svws-ui-button type="danger" @click="restoreLaufbahnplanung" v-if="zwischenspeicher !== undefined">Planung wiederherstellen</svws-ui-button>
-				<svws-ui-button :type="modus === 'normal' ? 'transparent' : 'danger'" @click="switchModus">
-					<span class="icon-sm i-ri-loop-right-line" /> Modus: <span>{{ modus }}</span>
+				<svws-ui-button :type="manager.modus === 'normal' ? 'transparent' : 'danger'" @click="manager.switchModus()">
+					<span class="icon-sm i-ri-loop-right-line" /> Modus: <span>{{ manager.modus }}</span>
 				</svws-ui-button>
-				<s-modal-laufbahnplanung-kurswahlen-loeschen schueler-ansicht :gost-jahrgangsdaten :reset-fachwahlen />
-				<svws-ui-button type="transparent" @click="switchFaecherAnzeigen()"> {{ "Fächer anzeigen: " + textFaecherAnzeigen() }} </svws-ui-button>
+				<s-modal-laufbahnplanung-kurswahlen-loeschen schueler-ansicht keine-vorlage :gost-jahrgangsdaten :reset-fachwahlen />
+				<svws-ui-button type="transparent" @click="manager.switchFaecherAnzeigen()"> {{ "Fächer anzeigen: " + manager.getTextFaecherAnzeigen() }} </svws-ui-button>
 			</svws-ui-sub-nav>
 		</Teleport>
 
 		<div v-if="schueler.abiturjahrgang !== null" class="page page-flex-row">
 			<div class="grow overflow-y-auto overflow-x-hidden min-w-fit">
-				<s-laufbahnplanung-card-planung :abiturdaten-manager :modus :gost-jahrgangsdaten :set-wahl :goto-kursblockung="async () => {}" :faecher-anzeigen belegung-hat-immer-noten />
+				<s-laufbahnplanung-card-planung :manager :abiturdaten-manager :gost-jahrgangsdaten :goto-kursblockung="async () => {}" />
 			</div>
 			<div class="w-2/5 3xl:w-1/2 min-w-[36rem] overflow-y-auto overflow-x-hidden">
 				<div class="flex flex-col gap-16">
@@ -54,77 +54,16 @@
 	import { githash } from '../../githash';
 	import { TabManager } from "@ui/ui/nav/TabManager";
 	import type { TabData } from "@ui/ui/nav/TabData";
+	import { LaufbahnplanungUiManager } from "@ui/components/gost/laufbahnplanung/LaufbahnplanungUiManager";
 
 	const props = defineProps<LaufbahnplanungOberstufeProps>();
+
+	const manager = computed<LaufbahnplanungUiManager>(() =>
+		new LaufbahnplanungUiManager(props.serverMode, props.abiturdatenManager, props.config, () => props.gostJahrgangsdaten, props.setWahl, false, true));
 
 	const tabManager = new TabManager([], <TabData>{}, async (value: TabData) => {});
 
 	const showModalImport = ref<boolean>(false);
-
-	const faecherAnzeigen = ref<'alle'|'nur_waehlbare'|'nur_gewaehlt'>('alle');
-
-	const hatFaecherNichtWaehlbar = computed<boolean>(() => {
-		for (const fach of props.abiturdatenManager().faecher().faecher())
-			if (!(fach.istMoeglichEF1 || fach.istMoeglichEF2 || fach.istMoeglichQ11 || fach.istMoeglichQ12 || fach.istMoeglichQ21 || fach.istMoeglichQ22))
-				return true;
-		return false;
-	});
-
-	function switchFaecherAnzeigen() {
-		switch (faecherAnzeigen.value) {
-			case 'alle':
-				faecherAnzeigen.value = hatFaecherNichtWaehlbar.value ? 'nur_waehlbare' : 'nur_gewaehlt';
-				break;
-			case 'nur_waehlbare':
-				faecherAnzeigen.value = 'nur_gewaehlt';
-				break;
-			case 'nur_gewaehlt':
-				faecherAnzeigen.value = 'alle';
-				break;
-		}
-	}
-
-	function textFaecherAnzeigen() {
-		switch (faecherAnzeigen.value) {
-			case 'alle':
-				return "Alle";
-			case 'nur_waehlbare':
-				return "Nur wählbare"
-			case 'nur_gewaehlt':
-				return "Nur gewählte"
-		}
-	}
-
-	async function switchModus() {
-		// wenn EF1 und EF2 bereits festgelegt sind, macht der Hochschreibemodus
-		// keinen Sinn mehr und wird deaktiviert.
-		const festgelegt = props.gostJahrgangsdaten.istBlockungFestgelegt
-		if (festgelegt[0] && festgelegt[1]) {
-			switch (props.modus) {
-				case 'normal':
-					await props.setModus('manuell');
-					break;
-				case 'manuell':
-					await props.setModus('normal');
-					break;
-				case 'hochschreiben':
-					await props.setModus('normal');
-					break;
-			}
-		} else {
-			switch (props.modus) {
-				case 'normal':
-					await props.setModus('hochschreiben');
-					break;
-				case 'hochschreiben':
-					await props.setModus('manuell');
-					break;
-				case 'manuell':
-					await props.setModus('normal');
-					break;
-			}
-		}
-	}
 
 	async function export_laufbahnplanung() {
 		const { data, name } = await props.exportLaufbahnplanung();

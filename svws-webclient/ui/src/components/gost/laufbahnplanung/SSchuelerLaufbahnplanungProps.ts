@@ -1,3 +1,4 @@
+import type { Config } from "~/utils/Config";
 import type { ApiFile } from "../../../../../core/src/api/BaseApi";
 import type { Schulform } from "../../../../../core/src/asd/types/schule/Schulform";
 import type { AbiturdatenManager } from "../../../../../core/src/core/abschluss/gost/AbiturdatenManager";
@@ -14,10 +15,11 @@ import type { ServerMode } from "../../../../../core/src/core/types/ServerMode";
 import type { ArrayList } from "../../../../../core/src/java/util/ArrayList";
 
 export interface SchuelerLaufbahnplanungProps {
-	schulform?: Schulform;
-	serverMode?: ServerMode;
+	schulform: Schulform;
+	serverMode: ServerMode;
 	benutzerKompetenzen?: Set<BenutzerKompetenz>,
 	benutzerKompetenzenAbiturjahrgaenge?: Set<number>;
+	config: () => Config;
 	setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>;
 	setGostBelegpruefungsArt: (value: 'ef1'|'gesamt'|'auto') => Promise<void>;
 	getPdfWahlbogen: (title: string) => Promise<ApiFile>;
@@ -35,10 +37,6 @@ export interface SchuelerLaufbahnplanungProps {
 	zwischenspeicher?: GostLaufbahnplanungDaten;
 	saveLaufbahnplanung: () => Promise<void>;
 	restoreLaufbahnplanung: () => Promise<void>;
-	resetFachwahlen: () => Promise<void>;
-	modus: 'manuell' | 'normal' | 'hochschreiben';
-	setModus: (modus: 'manuell' | 'normal' | 'hochschreiben') => Promise<void>;
-	faecherAnzeigen: 'alle' | 'nur_waehlbare' | 'nur_gewaehlt';
-	setFaecherAnzeigen: (value: 'alle' | 'nur_waehlbare' | 'nur_gewaehlt') => Promise<void>;
+	resetFachwahlen: (forceDelete: boolean) => Promise<void>;
 	gotoKursblockung: (halbjahr: GostHalbjahr) => Promise<void>;
 }

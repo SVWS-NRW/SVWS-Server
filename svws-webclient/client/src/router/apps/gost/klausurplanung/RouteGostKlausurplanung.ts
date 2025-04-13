@@ -20,7 +20,7 @@ import { RouteDataGostKlausurplanung } from "~/router/apps/gost/klausurplanung/R
 
 import type { GostKlausurplanungAuswahlProps } from "~/components/gost/klausurplanung/SGostKlausurplanungAuswahlProps";
 import { routeError } from "~/router/error/RouteError";
-import { ConfigElement } from "~/components/Config";
+import { ConfigElement } from "../../../../../../ui/src/utils/Config";
 import { api } from "~/router/Api";
 import type { GostKlausurplanungProps } from "~/components/gost/klausurplanung/SGostKlausurplanungProps";
 import { routeGostKlausurplanungProbleme } from "./RouteGostKlausurplanungProbleme";
@@ -153,12 +153,6 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 	public addRouteParamsFromState() : RouteParamsRawGeneric {
 		return { halbjahr: this.data.halbjahr.id };
 	}
-
-	// public getRoute(abiturjahr: number, halbjahr?: number) : RouteLocationRaw {
-	// 	if (halbjahr === undefined)
-	// 		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: abiturjahr }};
-	// 	return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: abiturjahr, halbjahr: halbjahr }};
-	// }
 
 	public getProps(to: RouteLocationNormalized): GostKlausurplanungProps {
 		return {

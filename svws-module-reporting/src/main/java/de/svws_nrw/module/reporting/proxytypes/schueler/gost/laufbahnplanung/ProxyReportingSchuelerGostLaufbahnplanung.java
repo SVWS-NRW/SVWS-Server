@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
+import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungErgebnis;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungErgebnisFehler;
@@ -127,7 +128,8 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 		}
 		final GostJahrgangsdaten gostJahrgangsdaten = this.reportingRepository.mapGostAbiturjahrgangDaten().get(super.abiturjahr());
 		final GostFaecherManager gostFaecherManager = this.reportingRepository.mapGostAbiturjahrgangFaecher().get(super.abiturjahr());
-		final AbiturdatenManager abiturdatenManager = new AbiturdatenManager(abiturdaten, gostJahrgangsdaten, gostFaecherManager, GostBelegpruefungsArt.GESAMT);
+		final AbiturdatenManager abiturdatenManager = new AbiturdatenManager(SVWSKonfiguration.get().getServerMode(), abiturdaten, gostJahrgangsdaten,
+				gostFaecherManager, GostBelegpruefungsArt.GESAMT);
 
 		// Daten der GOSt-Laufbahnplanung ermitteln. Wenn zum Schüler keine Daten in den bereits geladenen Daten gefunden werden, dann wird versucht, die Daten
 		// für alle Schüler diese Daten nachzuladen, sofern sie bei diesen noch fehlen sollten.

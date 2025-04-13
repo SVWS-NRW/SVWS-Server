@@ -1,5 +1,5 @@
 <template>
-	<div class="page page-grid-cards">
+	<div class="w-250 p-4">
 		<svws-ui-content-card>
 			<svws-ui-input-wrapper>
 				<svws-ui-text-input placeholder="Konferenz-Datum" :model-value="manager().lernabschnittGet().datumKonferenz" @change="datumKonferenz=>patch({ datumKonferenz })" type="date" focus />

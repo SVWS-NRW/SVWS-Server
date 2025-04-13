@@ -11,6 +11,7 @@ import { StateManager } from "./StateManager";
  */
 export interface RouteStateInterface {
 	view?: RouteNode<any, any>;
+	gruppenprozesseView?: RouteNode<any, any>,
 	activeViewType?: ViewType;
 }
 
@@ -94,6 +95,12 @@ export abstract class RouteData<RouteState extends RouteStateInterface> extends 
 		if (this._defaultState.view === undefined)
 			throw new DeveloperNotificationException("Bei dieser Route wurde keine Ansicht im Default-State definiert.");
 		return this._defaultState.view;
+	}
+
+	public get defaultGruppenprozesseView(): RouteNode<any,any> {
+		if (this._defaultState.gruppenprozesseView === undefined)
+			throw new DeveloperNotificationException("Bei dieser Route wurde keine Gruppenprozess Ansicht im Default-State definiert.");
+		return this._defaultState.gruppenprozesseView;
 	}
 
 	/**

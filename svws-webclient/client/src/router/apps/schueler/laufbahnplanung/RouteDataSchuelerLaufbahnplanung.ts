@@ -90,44 +90,19 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 		return this._state.value.zwischenspeicher;
 	}
 
-	get modus(): 'manuell'|'normal'|'hochschreiben' {
-		const s = api.config.getValue("app.schueler.laufbahnplanung.modus");
-		if (s === 'manuell' || s === 'normal' || s === 'hochschreiben')
-			return s;
-		void api.config.setValue("app.schueler.laufbahnplanung.modus", 'normal');
-		throw new DeveloperNotificationException("Es wurde eine fehlerhafte Modusart als Standardauswahl hinterlegt");
-	}
-
-	setModus = async (modus: 'manuell' | 'normal' | 'hochschreiben') => {
-		await api.config.setValue("app.schueler.laufbahnplanung.modus", modus);
-	}
-
-	get faecherAnzeigen(): 'alle' | 'nur_waehlbare' | 'nur_gewaehlt' {
-		const s = api.config.getValue("app.schueler.laufbahnplanung.faecher.anzeigen");
-		if (s === 'alle' || s === 'nur_waehlbare' || s === 'nur_gewaehlt')
-			return s;
-		void api.config.setValue("app.schueler.laufbahnplanung.faecher.anzeigen", 'alle');
-		throw new DeveloperNotificationException("Es wurde eine fehlerhafter Wert als Standardauswahl hinterlegt");
-	}
-
-	setFaecherAnzeigen = async (value: 'alle' | 'nur_waehlbare' | 'nur_gewaehlt') => {
-		await api.config.setValue("app.schueler.laufbahnplanung.faecher.anzeigen", value);
-		this.commit();
-	}
-
 	createAbiturdatenmanager = (daten?: Abiturdaten): AbiturdatenManager | undefined => {
 		const abiturdaten = daten || this._state.value.abiturdaten;
 		if (abiturdaten === undefined)
 			return;
 		const art = this.gostBelegpruefungsArt;
 		if (art === 'ef1')
-			return new AbiturdatenManager(abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.EF1);
+			return new AbiturdatenManager(api.mode, abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.EF1);
 		if (art === 'gesamt')
-			return new AbiturdatenManager(abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.GESAMT);
-		const abiturdatenManager = new AbiturdatenManager(abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.GESAMT);
+			return new AbiturdatenManager(api.mode, abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.GESAMT);
+		const abiturdatenManager = new AbiturdatenManager(api.mode, abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.GESAMT);
 		if (abiturdatenManager.pruefeBelegungExistiert(abiturdatenManager.getFachbelegungen(), GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))
 			return abiturdatenManager;
-		return new AbiturdatenManager(abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.EF1);
+		return new AbiturdatenManager(api.mode, abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.EF1);
 	}
 
 	setGostBelegpruefungErgebnis = async () => {
@@ -254,8 +229,11 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 		}
 	}
 
-	resetFachwahlen = api.call(async () => {
-		await api.server.resetGostSchuelerFachwahlen(api.schema, this.auswahl.id);
+	resetFachwahlen = api.call(async (forceDelete: boolean) => {
+		if (forceDelete)
+			await api.server.deleteGostSchuelerFachwahlen(api.schema, this.auswahl.id);
+		else
+			await api.server.resetGostSchuelerFachwahlen(api.schema, this.auswahl.id);
 		const abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, this.auswahl.id);
 		this._state.value.abiturdaten = abiturdaten;
 		await this.setGostBelegpruefungErgebnis();
