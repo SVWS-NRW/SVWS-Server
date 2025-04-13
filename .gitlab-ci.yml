@@ -150,8 +150,6 @@ sign_artifacts:
         paths:
             - artifacts_windows/
             - artifacts_linux/
-            - "./build/**"
-            - "./**/build/**"
         exclude:
             - "./build/signing/**/*"
             - "./build/signing"
@@ -163,6 +161,7 @@ publish_all:
     variables:
         SECURE_FILES_DOWNLOAD_PATH: '/'
     needs:
+        - job: build
         - job: sign_artifacts
     script:
         - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
@@ -179,6 +178,7 @@ publish_maven:
     variables:
         SECURE_FILES_DOWNLOAD_PATH: '/'
     needs:
+        - job: build
         - job: sign_artifacts
     script:
         - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
@@ -195,6 +195,7 @@ publish_dockerhub:
     variables:
         SECURE_FILES_DOWNLOAD_PATH: '/'
     needs:
+        - job: build
         - job: sign_artifacts
     script:
         - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
@@ -212,6 +213,7 @@ publish_github:
     variables:
         SECURE_FILES_DOWNLOAD_PATH: '/'
     needs:
+        - job: build
         - job: sign_artifacts
     script:
         - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
