@@ -1739,7 +1739,7 @@ public class APISchueler {
 	public Response getSchuelerTelefone(@PathParam("schema") final String schema, @PathParam("id") final long idSchueler,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerTelefon(conn, idSchueler).getListAsResponse(),
-				request, ServerMode.DEV, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
+				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
 	}
 
 	/**

@@ -2974,7 +2974,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getTelefonarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogTelefonArten(conn).getAllAsResponse(),
-				request, ServerMode.DEV, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
 	}
 
 	/**
