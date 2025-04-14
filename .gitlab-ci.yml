@@ -169,7 +169,6 @@ publish_all:
         - chmod +x ./deployment/setupVersion.sh
         - ./deployment/setupVersion.sh
         - ./gradlew publishReleaseAll
-    when: manual
 
 publish_maven:
     stage: publish
@@ -186,7 +185,6 @@ publish_maven:
         - chmod +x ./deployment/setupVersion.sh
         - ./deployment/setupVersion.sh
         - ./gradlew publishAllPublicationsToSonatypeRepository closeAndReleaseSonatypeStagingRepository
-    when: manual
 
 publish_dockerhub:
     stage: publish
@@ -204,7 +202,6 @@ publish_dockerhub:
         - chmod +x ./deployment/setupVersion.sh
         - ./deployment/setupVersion.sh
         - ./gradlew :deployment:docker:dockerPushAllDockerhub
-    when: manual
 
 publish_github:
     stage: publish
@@ -221,4 +218,3 @@ publish_github:
         - chmod +x ./deployment/setupVersion.sh
         - ./deployment/setupVersion.sh
         - ./gradlew :deployment:githubRelease
-    when: manual
