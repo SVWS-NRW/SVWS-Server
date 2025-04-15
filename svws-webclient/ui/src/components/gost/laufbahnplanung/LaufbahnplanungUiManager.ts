@@ -689,7 +689,7 @@ export class LaufbahnplanungUiManager {
 		}
 		const sprachpruefung = this._mapSprachpruefungen.value.get(fach);
 		if (sprachpruefung !== null)
-			return fach.istFremdSpracheNeuEinsetzend || sprachpruefung.kannBelegungAlsFortgefuehrteSpracheErlauben;
+			return fach.istFremdSpracheNeuEinsetzend || SprachendatenUtils.istFeststellungspruefungEESAMSABestanden(sprachpruefung);
 		return false;
 	}
 
