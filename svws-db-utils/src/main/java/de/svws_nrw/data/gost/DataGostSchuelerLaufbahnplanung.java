@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -735,39 +736,10 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 					conn.queryList("SELECT e FROM DTOGostSchuelerFachbelegungen e WHERE e.Schueler_ID = ?1 AND e.Fach_ID IN ?2",
 							DTOGostSchuelerFachbelegungen.class, dtoSchueler.ID, alle);
 			final Map<Long, DTOGostSchuelerFachbelegungen> mapFachwahlen = fachwahlen.stream().collect(Collectors.toMap(f -> f.Fach_ID, f -> f));
-			for (final Long idFach : beide) {
-				final AbiturFachbelegung db = dbBelegungen.get(idFach);
-				final GostLaufbahnplanungDatenFachbelegung datei = dateiBelegungen.get(idFach);
-				final DTOGostSchuelerFachbelegungen fachwahl = mapFachwahlen.get(idFach);
-				for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
-					final String dbKursart = (db.belegungen[halbjahr.id] == null) ? null : db.belegungen[halbjahr.id].kursartKuerzel;
-					final boolean dbSchriftlich = (db.belegungen[halbjahr.id] != null) && db.belegungen[halbjahr.id].schriftlich;
-					final String dateiKursart = datei.kursart[halbjahr.id];
-					if (((dbKursart == null) && (dateiKursart == null)) || ((dbKursart != null) && (dateiKursart != null)
-							&& (dbKursart.equals(dateiKursart)) && (dbSchriftlich == datei.schriftlich[halbjahr.id])))
-						continue;
-					final String kursart = (dateiKursart == null) ? null
-							: ("AT".equals(dateiKursart) ? "AT"
-									: (GostKursart.LK.kuerzel.equals(dateiKursart) ? "LK"
-											: (GostKursart.ZK.kuerzel.equals(dateiKursart) ? "ZK"
-													: (GostKursart.PJK.kuerzel.equals(dateiKursart) ? "M"
-															: (GostKursart.VTF.kuerzel.equals(dateiKursart) ? "M"
-																	: (datei.schriftlich[halbjahr.id] ? "S" : "M"))))));
-					switch (halbjahr) {
-						case EF1 -> fachwahl.EF1_Kursart = kursart;
-						case EF2 -> fachwahl.EF2_Kursart = kursart;
-						case Q11 -> fachwahl.Q11_Kursart = kursart;
-						case Q12 -> fachwahl.Q12_Kursart = kursart;
-						case Q21 -> fachwahl.Q21_Kursart = kursart;
-						case Q22 -> fachwahl.Q22_Kursart = kursart;
-					}
-				}
-				fachwahl.AbiturFach = datei.abiturFach;
-				fachwahlenGeaendert.add(fachwahl);
-			}
-			for (final Long idFach : nurDatei) {
+			for (final Long idFach : Stream.concat(beide.stream(), nurDatei.stream()).collect(Collectors.toSet())) {
 				final GostLaufbahnplanungDatenFachbelegung datei = dateiBelegungen.get(idFach);
 				DTOGostSchuelerFachbelegungen fachwahl = mapFachwahlen.get(idFach);
+				// Ergänze ggf. Fachwahl-Einträge, welche zwar durch Leistungsdaten bestehen, aber nicht wirklich in der DB abgelegt sind.
 				if (fachwahl == null)
 					fachwahl = new DTOGostSchuelerFachbelegungen(dtoSchueler.ID, idFach);
 				for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
