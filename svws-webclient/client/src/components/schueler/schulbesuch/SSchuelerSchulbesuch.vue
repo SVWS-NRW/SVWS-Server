@@ -104,10 +104,10 @@
 			<svws-ui-modal :show="showModalMerkmal" @update:show="closeModalMerkmal">
 				<template #modalTitle>Merkmal hinzufügen</template>
 				<template #modalContent>
+					<svws-ui-select title="Merkmal" class="pb-4" :items="merkmaleFilteredNotCreated" :item-text="textMerkmal" removable required
+						@update:model-value="v => newEntryMerkmal.idMerkmal = v?.id ?? null"
+						:model-value="manager().merkmaleById.get(newEntryMerkmal.idMerkmal ?? -1)" />
 					<svws-ui-input-wrapper :grid="2" style="text-align: left">
-						<svws-ui-select title="Merkmal" :items="manager().merkmaleById.values()" :item-text="textMerkmal" removable required
-							@update:model-value="v => newEntryMerkmal.idMerkmal = v?.id ?? null"
-							:model-value="manager().merkmaleById.get(newEntryMerkmal.idMerkmal ?? -1)" />
 						<svws-ui-text-input placeholder="Von" type="date" :max-date="newEntryMerkmal.datumBis ?? undefined" v-model="newEntryMerkmal.datumVon" />
 						<svws-ui-text-input placeholder="Bis" type="date" :min-date="newEntryMerkmal.datumVon ?? undefined" v-model="newEntryMerkmal.datumBis" />
 					</svws-ui-input-wrapper>
@@ -190,8 +190,8 @@
 <script setup lang="ts">
 
 	import { BenutzerKompetenz, Einschulungsart, PrimarstufeSchuleingangsphaseBesuchsjahre, SchuelerSchulbesuchSchule, Schulform, Schulgliederung,
-		Uebergangsempfehlung, SchulEintrag, AdressenUtils, ArrayList, SchuelerSchulbesuchMerkmal, Jahrgaenge } from "@core";
-	import type { Herkunftsarten, SchulformKatalogEintrag, SchulgliederungKatalogEintrag, Merkmal } from "@core";
+		Uebergangsempfehlung, SchulEintrag, AdressenUtils, ArrayList, SchuelerSchulbesuchMerkmal } from "@core";
+	import type { Herkunftsarten, SchulformKatalogEintrag, SchulgliederungKatalogEintrag, Merkmal, Jahrgaenge } from "@core";
 	import type { SchuelerSchulbesuchProps } from './SSchuelerSchulbesuchProps';
 	import type { DataTableColumn } from "@ui";
 	import { coreTypeDataFilter, filterSchulenEintraege, formatDate } from "~/utils/helfer";
@@ -217,6 +217,15 @@
 	]
 
 	// --- Merkmale Modal ---
+	const merkmaleFilteredNotCreated = computed(() => {
+		const result = [];
+		for (const m of props.manager().merkmaleById.values()) {
+			const alreadyExists = merkmale.value.some(v => v.idMerkmal === m.id);
+			if (!alreadyExists)
+				result.push(m);
+		}
+		return result;
+	});
 	const showModalMerkmal = ref<boolean>(false);
 	function addMerkmal() {
 		resetMerkmal();
