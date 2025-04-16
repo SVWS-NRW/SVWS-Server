@@ -948,7 +948,8 @@ export class LaufbahnplanungUiManager {
 				default:
 					if (GostFachUtils.istWaehlbarLeistungskurs1(fach) && !this.manager().hatAbiFach(GostAbiturFach.LK1))
 						wahl.abiturFach = 1;
-					wahl.abiturFach = 2;
+					else
+						wahl.abiturFach = 2;
 					break;
 			}
 			return;
@@ -1046,7 +1047,8 @@ export class LaufbahnplanungUiManager {
 				default:
 					if (GostFachUtils.istWaehlbarLeistungskurs1(fach) && !this.manager().hatAbiFach(GostAbiturFach.LK1))
 						wahl.abiturFach = 1;
-					wahl.abiturFach = 2;
+					else
+						wahl.abiturFach = 2;
 					break;
 			}
 			return;
