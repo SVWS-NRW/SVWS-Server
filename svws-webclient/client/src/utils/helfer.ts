@@ -1,4 +1,7 @@
-import type { Erzieherart, KatalogEintrag, LehrerListeEintrag, Nationalitaeten, OrtKatalogEintrag, OrtsteilKatalogEintrag, Verkehrssprache, CoreTypeData, SchulenKatalogEintrag, SchulEintrag } from "@core";
+import type { Erzieherart, KatalogEintrag, LehrerListeEintrag, Nationalitaeten, OrtKatalogEintrag, OrtsteilKatalogEintrag, Verkehrssprache, CoreTypeData,
+	SchulenKatalogEintrag, SchulEintrag } from "@core";
+import { Schulform } from "@core";
+
 
 /** Die Sortierfunktion für den Ortskatalog */
 export function orte_sort(a: OrtKatalogEintrag, b: OrtKatalogEintrag): number {
@@ -175,11 +178,14 @@ export function filterSchulenEintraege(items: SchulEintrag[], search: string) : 
 	const searchLower = search.toLowerCase()
 	const list = [];
 	for (const i of items) {
-		if (((i.schulnummerStatistik !== null) && i.schulnummerStatistik.includes(searchLower))
+		const schulform = Schulform.data().getEintragByID(i.idSchulform ?? -1);
+		if (((schulform !== null) && schulform.text.toLowerCase().includes(searchLower))
+				||((i.schulnummerStatistik !== null) && i.schulnummerStatistik.includes(searchLower))
 				|| ((i.schulnummerStatistik !== null) && i.schulnummerStatistik.includes(searchLower))
 				|| ((i.kurzbezeichnung !== null) && i.kurzbezeichnung.toLowerCase().includes(searchLower))
 				|| i.name.toLowerCase().includes(searchLower) || ((i.ort !== null) && i.ort.toLowerCase().includes(searchLower))
-				|| ((i.kuerzel !== null) && i.kuerzel.toLowerCase().includes(searchLower)))
+				|| ((i.kuerzel !== null) && i.kuerzel.toLowerCase().includes(searchLower))
+				|| ((i.plz !== null) && i.plz.toLowerCase().includes(searchLower)))
 			list.push(i);
 	}
 	return list;
