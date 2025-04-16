@@ -44,7 +44,7 @@ export class CoreTypeSelectManager<T extends CoreTypeData, U extends CoreType<T,
 	 */
 	public constructor(multi: boolean, clazz : Class<U>, schuljahr: number, schulform: Schulform,
 		selectionDisplayText: "kuerzel" | "text" | "kuerzelText" | ((option: T) => string) = "kuerzelText",
-		optionDisplayText: "kuerzel" | "text" | "kuerzelText" | ((option: T) => string) = "kuerzelText", selected: List<U> = new ArrayList<U>()) {
+		optionDisplayText: "kuerzel" | "text" | "kuerzelText" | ((option: T) => string) = "kuerzelText", selected?: any) {
 
 		const manager = CoreTypeDataManager.getManager(clazz);
 		const data = manager.getListBySchuljahrAndSchulform(schuljahr, schulform);

@@ -18,7 +18,7 @@ export class ObjectSelectManager extends BaseSelectManager<any> {
 	 * @param selected               die Liste der aktuell selektierten Optionen. Bei einer Singe-Select-Komponente darf maximal ein Objekt in dieser Liste sein.
 	 */
 	public constructor(multi: boolean, options: Iterable<any>, selectionDisplayText: (option: any) => string, optionDisplayText: (option: any) => string,
-		selected?: Iterable<any>) {
+		selected?: any) {
 		super(multi, options, selected);
 		this._optionDisplayText = optionDisplayText;
 		this._selectionDisplayText = selectionDisplayText;

@@ -78,17 +78,17 @@
 					gestellt. Gesetzte Fachgruppen in einem Filter ergänzen sich dabei. Wird jedoch in beiden Filtern eine Fachruppe gesetzt, dann werden nur
 					Optionen angezeigt, die zu beiden Fachgruppen passen.
 					<strong>Filter 1</strong>
-					<svws-ui-checkbox v-model="fremdsprache">
+					<svws-ui-checkbox v-model="filterState1.fremdsprache">
 						Fremdsprachen
 					</svws-ui-checkbox>
-					<svws-ui-checkbox v-model="musikUndKunst">
+					<svws-ui-checkbox v-model="filterState1.musikUndKunst">
 						Musik und Kunst
 					</svws-ui-checkbox>
 					<strong>Filter 2</strong>
-					<svws-ui-checkbox v-model="deutsch">
+					<svws-ui-checkbox v-model="filterState2.deutsch">
 						Deustch
 					</svws-ui-checkbox>
-					<svws-ui-checkbox v-model="musikUndKunst2">
+					<svws-ui-checkbox v-model="filterState2.musikUndKunst">
 						Musik und Kunst
 					</svws-ui-checkbox>
 					<ui-select label="CoreTypeSelectManager Fach abhängig von Fachgruppe" :select-manager="sFachSelectManager()" :searchable="state.searchable" :disabled="state.disabled"
@@ -123,7 +123,7 @@
 
 <script setup lang="ts">
 
-	import { computed, reactive, ref } from "vue";
+	import { reactive, ref, watchEffect } from "vue";
 	import { SimpleSelectManager } from "./selectManager/SimpleSelectManager";
 	import { CoreTypeSelectManager } from "./selectManager/CoreTypeSelectManager";
 	import { FachSelectFilter as FachSelectFilter } from "./filter/FachSelectFilter";
@@ -141,26 +141,40 @@
 		maxOptions: undefined as number | undefined,
 	});
 
-	const fremdsprache = ref();
-	const musikUndKunst = ref();
-	const filter = computed (() => {
-		const list = new ArrayList<Fachgruppe>();
-		if (fremdsprache.value === true)
-			list.add(Fachgruppe.FG_FS);
-		if (musikUndKunst.value === true)
-			list.add(Fachgruppe.FG_MS);
-		return list;
-	});
-	const deutsch = ref();
-	const musikUndKunst2 = ref();
-	const filter2 = computed (() => {
-		const list = new ArrayList<Fachgruppe>();
-		if (deutsch.value === true)
-			list.add(Fachgruppe.FG_D);
-		if (musikUndKunst2.value === true)
-			list.add(Fachgruppe.FG_MS);
-		return list;
-	});
+	// Filter lassen sich wegen der structuredClone() Methode von histoire nicht als computed umsetzen, daher dieser Workaround. Andernfalls tauchen entsprechende
+	// Warnings in der Konsole auf.
+
+	const filterState1 = reactive({
+		fremdsprache: false,
+		musikUndKunst: false,
+	})
+
+	const filter = ref<Fachgruppe[]>([])
+
+	watchEffect(() => {
+		const list = new ArrayList<Fachgruppe>()
+		if (filterState1.fremdsprache)
+			list.add(Fachgruppe.FG_FS)
+		if (filterState1.musikUndKunst)
+			list.add(Fachgruppe.FG_MS)
+		filter.value = [...list] // in plain array umgewandelt
+	})
+
+	const filterState2 = reactive({
+		deutsch: false,
+		musikUndKunst: false,
+	})
+
+	const filter2 = ref<Fachgruppe[]>([])
+
+	watchEffect(() => {
+		const list = new ArrayList<Fachgruppe>()
+		if (filterState2.deutsch)
+			list.add(Fachgruppe.FG_D)
+		if (filterState2.musikUndKunst)
+			list.add(Fachgruppe.FG_MS)
+		filter2.value = [...list]
+	})
 
 	const stringItems: string[] = ["Ananas", "Aprikose", "Banane", "Birne", "Apfelsine", "Brombeere", "Clementine", "Granatapfel", "Himbeere",
 		"Ich will gleich den ganzen Obstkorb haben und am liebsten alles doppelt und dreifach, nur damit dieses Item einen langen Text zur Vorschau hat.",
@@ -176,8 +190,8 @@
 	const sStringSelectManager = () => new SimpleSelectManager(false, stringItems);
 	const sNumberSelectManager = () => new SimpleSelectManager(false, numberItems);
 	const sCoreTypeSelectManager = () => new CoreTypeSelectManager(false, LehrerRechtsverhaeltnis.class, 2018, Schulform.GY, 'text', 'kuerzelText');
-	const sObjectSelectManager = () => new ObjectSelectManager(false, carItems, (option : { marke: string, color: string }) => `${option.marke} - ${option.color}`,
-		(option : { marke: string, color: string }) => option.marke);
+	const sObjectSelectManager = () => new ObjectSelectManager(false, carItems,
+		(option : { marke: string, color: string }) => option.marke, (option : { marke: string, color: string }) => `${option.marke} - ${option.color}`);
 	const sFachSelectManager = () => {
 		const manager = new CoreTypeSelectManager(false, Fach.class, 2020, Schulform.GY, 'text', 'kuerzelText');
 		manager.addFilter(new FachSelectFilter("fachgruppe1", filter.value, 2020));
@@ -188,7 +202,7 @@
 	const mStringSelectManager = () => new SimpleSelectManager(true, stringItems);
 	const mNumberSelectManager = () => new SimpleSelectManager(true, numberItems);
 	const mCoreTypeSelectManager = () => new CoreTypeSelectManager(true, LehrerRechtsverhaeltnis.class, 2018, Schulform.GY, 'text', 'kuerzelText');
-	const mObjectSelectManager = () => new ObjectSelectManager(true, carItems, (option : { marke: string, color: string }) => `${option.marke} - ${option.color}`,
-		(option : { marke: string, color: string }) => option.marke);
+	const mObjectSelectManager = () => new ObjectSelectManager(true, carItems,
+		(option : { marke: string, color: string }) => option.marke, (option : { marke: string, color: string }) => `${option.marke} - ${option.color}`);
 
 </script>

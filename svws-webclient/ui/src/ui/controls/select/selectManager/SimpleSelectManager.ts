@@ -18,7 +18,7 @@ export class SimpleSelectManager extends BaseSelectManager<string | number> {
 	 * @param options       die Liste aller Optionen der Komponente (ungefiltert).
 	 * @param selected   die Liste der aktuell selektierten Optionen. Bei einer Singe-Select-Komponente darf maximal ein Objekt in dieser Liste sein.
 	 */
-	public constructor(multi: boolean, options: Iterable<string | number>, selected?: Iterable<string | number>) {
+	public constructor(multi: boolean, options: Iterable<string | number>, selected?: Iterable<string | number> | string | number) {
 		super(multi, options, selected);
 	}
 

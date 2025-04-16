@@ -1,5 +1,5 @@
 <template>
-	<div ref="uiSelect" class="ui-select relative">
+	<div ref="uiSelect" class="ui-select relative mt-1">
 		<!-- Combobox -->
 		<div :id="`uiSelectInput_${instanceId}`" ref="uiSelectCombobox" :tabindex="(searchable === true) ? -1 : 0"
 			:role="(searchable === false) ? 'combobox' : undefined" :aria-labelledby="`uiSelectLabel_${instanceId}`"
@@ -23,7 +23,7 @@
 			<div class="flex flex-wrap items-center gap-x-1 gap-y-1 flex-1 min-w-0 mt-1">
 				<!-- Aktuelle Selektion (nur Mehrfachselektion) -->
 				<template v-if="selectManager.multi && !selectManager.selected.isEmpty()">
-					<span v-for="item in selectManager.selected" :key="selectManager.getOptionText(item)" tabindex="0"
+					<span v-for="item in selectManager.selected" :key="selectManager.getSelectionText(item)" tabindex="0"
 						:aria-label="`Auswahl ${props.selectManager.getSelectionText(item)}`"
 						class="px-2 py-1 rounded-md text-sm flex items-center overflow-hidden max-w-30 shrink-0"
 						:class="[ disabled ? 'bg-ui-disabled text-ui-ondisabled' : 'bg-ui-selected text-ui-onselected']">
@@ -52,12 +52,12 @@
 					<div class="flex items-center overflow-hidden row-start-1 col-start-1">
 						<svws-ui-tooltip position="top" :indicator="false" class="truncate">
 							<template #content>
-								{{ selectManager.getSelectionText(selectManager.selected.getFirst()) }}
+								{{ selectManager.getSelectionText(selectManager.selected) }}
 							</template>
-							<div v-if="!selectManager.multi && !selectManager.selected.isEmpty() && search === ''"
+							<div v-if="!selectManager.multi && (selectManager.selected !== null) && (search === '')"
 								class="truncate z-0 cursor-pointer"
 								:class="[disabled ? 'text-ui-disabled' : (visualFocusOnCombobox || !domFocusOnCombobox) ? 'text-ui' : 'text-ui-secondary']">
-								{{ selectManager.getSelectionText(selectManager.selected.getFirst()) }}
+								{{ selectManager.getSelectionText(selectManager.selected) }}
 							</div>
 						</svws-ui-tooltip>
 					</div>
@@ -84,16 +84,16 @@
 
 		<!-- Dropdown -->
 		<ul popover :aria-labelledby="`uiSelectLabel_${instanceId}`" :id="`uiSelectDropdown_${instanceId}`" ref="uiSelectDropdown" role="listbox"
-			class="overflow-auto bg-ui select-none scrollbar-thin px-1 rounded-md border border-ui"
+			class="overflow-auto bg-ui select-none scrollbar-thin p-1 rounded-md border border-ui"
 			:style="{ top: topPosition, left: leftPositionComputed, width: width + 'px', maxHeight: maxHeight + 'px' }">
 			<li v-if="selectManager.filtered.isEmpty()" class="cursor-not-allowed p-2 hover:bg-ui-hover text-ui-secondary italic">
 				{{ "Keine passenden Einträge gefunden" }}
 			</li>
 			<li v-else :id="`uiSelectOption_${optionIndex}_${instanceId}`" v-for="(option, optionIndex) in selectManager.filtered"
 				:key="selectManager.getOptionText(option)" role="option" :aria-selected="selectManager.isSelected(option)"
-				class="cursor-pointer p-1 hover:bg-ui-hover hover:ring-3 hover:ring-ui-neutral hover:p-[4px] rounded-sm my-1"
+				class="cursor-pointer p-2 hover:bg-ui-hover hover:inset-ring-3 hover:inset-ring-ui-neutral rounded-lg"
 				:class="[(selectManager.isSelected(option)) ? 'bg-ui-selected text-ui-onselected font-medium border border-ui-selected' : 'text-ui',
-					{'bg-ui-hover ring-3 ring-ui-neutral ': (highlightedIndex === optionIndex)}]"
+					{'bg-ui-hover inset-ring-3 inset-ring-ui-neutral ': (highlightedIndex === optionIndex)}]"
 				@click="toggleSelection($event, option)">
 				<template v-for="(part, index) in splitText(selectManager.getOptionText(option))" :key="index">
 					<span v-if="part.matchIsSearch" class="bg-ui-selected">{{ part.text }}</span>
@@ -109,8 +109,7 @@
 	import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 	import { useElementBounding, useWindowSize } from '@vueuse/core';
 	import type { BaseSelectManager } from './selectManager/BaseSelectManager';
-	import type { List } from '../../../../../core/src';
-	import { ArrayList } from '../../../../../core/src';
+	import type { ArrayList } from '../../../../../core/src';
 	import { SearchSelectFilter } from './filter/SearchSelectFilter';
 
 	const props = withDefaults(defineProps<{
@@ -198,8 +197,11 @@
 
 	// Definiert, wann das Label der Combobox nach oben rutscht
 	const moveLabel = computed(() => {
-		return !props.selectManager.selected.isEmpty() || ((search.value !== '') && (props.searchable));
-	});
+		const selected = props.selectManager.selected;
+		const hasSelection = (props.selectManager.multi) ? (selected.size() > 0) : ((selected !== null) && (selected !== undefined));
+
+		return hasSelection || (search.value !== '' && props.searchable)
+	})
 
 	// Generiert den Text, der bei einer Multi-Selektion die Limitierung der Optinonen anzeigt
 	const selectionLimitText = computed(() => {
@@ -235,7 +237,13 @@
 			}
 		});
 
-		props.selectManager.selected = model.value;
+		if (props.selectManager.multi) {
+			if ((props.selectManager.selected as ArrayList<T>).isEmpty())
+				props.selectManager.selected = model.value;
+		}
+		else
+			if ((props.selectManager.selected === undefined) || (props.selectManager.selected === null))
+				props.selectManager.selected = model.value;
 	});
 
 	onBeforeUnmount(() => {
@@ -271,7 +279,8 @@
 		() => model.value,
 		(newSelection) => {
 			props.selectManager.selected = newSelection;
-		}
+		},
+		{ deep: true }
 	)
 
 	/**

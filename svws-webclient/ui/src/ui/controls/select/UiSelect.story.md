@@ -19,6 +19,11 @@ UiSelect ist eien Combobox, die zur Auswahl von vorgegebenen Option verwendet we
 ### Props
 Folgende Props können gesetzt werden, um die Komponente zu konfigurieren.
 
+**modelValue**
+- **Typ**: `any` (einzelne Option bei Single-Selektion, Iterable bei Multi-Selektion)
+- **Default**: `null`
+- Enthält die aktuelle Selektion
+
 **label**
 - **Typ**: `string`   
 - **Default**: `""`   
@@ -124,7 +129,7 @@ SelectManager leiten alle von der abstrakten Klasse `BaseSelectManager` ab. Es s
 **Konstruktor**
 - **multi (boolean)**: Gibt an, ob es sich um eine Multiselektion handelt
 - **options (Iterable<T>)**: Alle Optionen, die das Dropdown beinhaltet
-- **selected (Iterable<T>, optional)**: Definiert die bereits selektierten Einträge
+- **selected (any, optional)**: Definiert die bereits selektierten Einträge. Bei einer Multi-Selektion muss es ein Iterable sein, andernfalls eine einzelne Option
 
 ### SimpleSelectManager
 Dieser Manager kann mit einfachen Optionen-Datentypen bestehend aus Numbers oder Strings umgehen.
@@ -132,7 +137,7 @@ Dieser Manager kann mit einfachen Optionen-Datentypen bestehend aus Numbers oder
 **Konstruktor**
 - **multi (boolean)**: Gibt an, ob es sich um eine Multiselektion handelt
 - **options (Iterable<string | number>)**: Alle Optionen, die das Dropdown beinhaltet
-- **selected (Iterable<string | number>, optional)**: Definiert die bereits selektierten Einträge
+- **selected (any, optional)**: Definiert die bereits selektierten Einträge. Bei einer Multi-Selektion muss es ein Iterable sein, andernfalls eine einzelne Option
 
 ### ObjectSelectManager
 Dieser Manager ist ein einfacher, allgemeiner Manager, der mit allen Objekten umgehen kann. Dafür muss angegeben werden, wie die Texter der Selektionen und die Texte der Optionen generiert werden sollen.
@@ -142,7 +147,7 @@ Dieser Manager ist ein einfacher, allgemeiner Manager, der mit allen Objekten um
 - **options (Iterable<any>)**: Alle Optionen, die das Dropdown beinhaltet
 - **selectionDisplayText ((option: any) => string)**: Eine Funktion, die den Text für die Selektion generiert zum Beispiel: ``(option) => `${option.id}: ${option.text}` ``
 - **optionDisplayText ((option: any) => string)**: Eine Funktion, die den Text für die Optionen im Dropdown generiert zum Beispiel: ``(option) => `${option.id}: ${option.text}` ``
-- **selected (Iterable<any>, optional)**: Definiert die bereits selektierten Einträge
+- **selected (any, optional)**: Definiert die bereits selektierten Einträge. Bei einer Multi-Selektion muss es ein Iterable sein, andernfalls eine einzelne Option
 
 ### CoreTypeSelectManager
 Dieser Manager akzeptiert einfach CoreTypes als Optionen und definiert, wie diese in der Liste angezeigt werden. Er filtert die Einträge nach Schuljahr und Schulform und kann zusätzlich noch nach Suchtexten filtern
@@ -154,6 +159,7 @@ Dieser Manager akzeptiert einfach CoreTypes als Optionen und definiert, wie dies
 - **schulform (Schulform)**: Die Schulform, nach der gefiltert wird
 - **selectionDisplayText (string | Funktion)**: Gibt an, wie die Selektion dargestellt werden soll. Es kann zwischen `text`, `kuerzel` und `kuerzelText` gewählt werden, falls vordefinierte Einstellungen gewünscht sind. Wenn eigene Definitionen verwendet werden sollen, dann können diese zum Beispiel wie folgt angegeben werden: ``(option) => `${option.id}: ${option.text}` ``
 - **optionDisplayText (string | Funktion)**: Gibt an, wie die Optionen in der Dropdownliste dargestellt werden sollen. Es kann zwischen `text`, `kuerzel` und `kuezerlText` gewählt werden, falls vordefinierte Einstellungen gewünscht sind. Wenn eigene Definitionen verwendet werden sollen, dann können diese zum Beispiel wie folgt angegeben werden: ``(option) => `${option.id}: ${option.text}` ``
+- **selected (any, optional)**: Definiert die bereits selektierten Einträge. Bei einer Multi-Selektion muss es ein Iterable sein, andernfalls eine einzelne Option
 
 ## Filter
 Optionen im einem UiSelect können gefiltert werden. Damit mehrere Filter kombiniert werden können, existiert das Interface `SelectFilter`, auf dem basierend die Filter definiert werden. Diese Filter können anschließend an den SelectManager übergeben werden. \
