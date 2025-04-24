@@ -24,6 +24,10 @@ input[type="checkbox"] {
 		@apply accent-ui-neutral;
 	}
 
+	&.svws-headless {
+		@apply p-0;
+	}
+
 	.svws-loading &,
 	&.svws-loading {
 		@apply accent-ui-disabled;

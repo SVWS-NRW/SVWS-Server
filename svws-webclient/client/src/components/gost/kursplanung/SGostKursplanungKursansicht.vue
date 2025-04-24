@@ -186,8 +186,8 @@
 											<div role="cell" class="svws-ui-td svws-align-center cursor-pointer p-0 items-center hover:text-ui-100" @click="setKursdetailAnzeigen(kurs.id)"
 												:class="{'text-ui-50' : kursdetailAnzeigen !== kurs.id}"
 												title="Kursdetails anzeigen">
-												<span v-if="kursdetailAnzeigen === kurs.id" class="icon-uistatic icon i-ri-arrow-down-s-line relative" />
-												<span v-else class="icon-uistatic icon i-ri-arrow-right-s-line relative" />
+												<span v-if="kursdetailAnzeigen === kurs.id" class="icon-sm i-ri-arrow-down-s-line icon-uistatic relative" />
+												<span v-else class="icon-sm i-ri-arrow-right-s-line icon-uistatic relative" />
 											</div>
 										</template>
 										<div role="cell" class="svws-ui-td py-0 whitespace-nowrap overflow-hidden text-ellipsis w-full">
