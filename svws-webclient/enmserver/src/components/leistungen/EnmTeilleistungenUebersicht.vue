@@ -20,7 +20,7 @@
 				</template>
 				<td class="svws-ui-td" role="columnheader">
 					<svws-ui-tooltip :hover="false" :show-arrow="false" position="top" class="h-full w-full">
-						<span class="icon inline-block" :class="[...colsVisible.values()].some(c => c === false) ? 'i-ri-layout-column-fill' : 'i-ri-layout-column-line'" /><span class="icon i-ri-arrow-down-s-line" />						<template #content>
+						<span class="icon" :class="[...colsVisible.values()].some(c => c === false) ? 'i-ri-layout-column-fill' : 'i-ri-layout-column-line'" /><span class="icon i-ri-arrow-down-s-line" />						<template #content>
 							<ul class="min-w-[10rem] flex flex-col gap-0.5 pt-1">
 								<template v-for="col of cols" :key="col.name">
 									<li v-if="colsVisible.get(col.kuerzel) !== null">

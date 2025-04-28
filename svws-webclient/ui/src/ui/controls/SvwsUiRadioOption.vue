@@ -10,16 +10,16 @@
 		<input :id="idInputField" v-model="checked" type="radio" :name="name" :value="value" :disabled="disabled" class="radio--indicator">
 		<span :id="idIcon" v-if="icon" class="radio--indicator-icon">
 			<template v-if="iconType === 'view'">
-				<span class="icon i-ri-eye-line radio--indicator-icon--checked inline-block -my-0.5" />
+				<span class="icon i-ri-eye-line radio--indicator-icon--checked -my-0.5" />
 			</template>
 			<template v-else>
 				<slot>
-					<span class="icon i-ri-checkbox-blank-circle-line radio--indicator-icon--blank inline-block -my-0.5" />
-					<span class="icon i-ri-checkbox-circle-line radio--indicator-icon--checked inline-block -my-0.5" />
+					<span class="icon i-ri-checkbox-blank-circle-line radio--indicator-icon--blank -my-0.5" />
+					<span class="icon i-ri-checkbox-circle-line radio--indicator-icon--checked -my-0.5" />
 				</slot>
 			</template>
 		</span>
-		<span :id="idLabel" class="radio--label--text"> {{ label }} <span class="icon i-ri-bar-chart-2-line icon-ui-statistic inline-block -my-0.5" v-if="statistics" /> </span>
+		<span :id="idLabel" class="radio--label--text"> {{ label }} <span class="icon i-ri-bar-chart-2-line icon-ui-statistic -my-0.5" v-if="statistics" /> </span>
 	</label>
 </template>
 

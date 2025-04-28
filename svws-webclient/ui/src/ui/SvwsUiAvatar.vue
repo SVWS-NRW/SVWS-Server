@@ -2,36 +2,36 @@
 	<div class="svws-ui-avatar" :class="{'is-capturing': isCapturing}">
 		<div v-if="capture || upload || (src.length > 0)" tabindex="0" class="avatar--edit">
 			<span class="avatar--edit-trigger">
-				<span class="icon i-ri-camera-line w-full h-full opacity-50 inline-block" />
+				<span class="icon i-ri-camera-line w-full h-full opacity-50" />
 			</span>
 			<svws-ui-button v-if="src && (src.split(',').length > 1)" type="icon" @click="deleteImage" tabindex="0" title="Bild löschen">
-				<span class="icon i-ri-delete-bin-line inline-block" :class="{'icon-ui-caution': stage}" />
+				<span class="icon i-ri-delete-bin-line" :class="{'icon-ui-caution': stage}" />
 			</svws-ui-button>
 			<svws-ui-button v-if="upload && (uploadedImage === null) && (src.split(',').length < 2)" type="icon" @click="toggleUpload" tabindex="0" title="Bild hochladen">
 				<input class="hidden" ref="fileInputEl" type="file" accept="image/*" @change="onFileChanged">
-				<span class="icon i-ri-upload-2-line inline-block" />
+				<span class="icon i-ri-upload-2-line" />
 			</svws-ui-button>
 			<svws-ui-button v-if="capture && (currentSnapshot === null) && hasVideoDevice" type="icon" @click="toggleCapturing" tabindex="0" title="Aufnahme starten">
-				<span class="icon i-ri-camera-fill inline-block" />
+				<span class="icon i-ri-camera-fill" />
 			</svws-ui-button>
 			<svws-ui-button v-if="capture && isCapturing && (currentSnapshot !== null)" type="icon" @click="toggleSnapshot" tabindex="0" title="Aufnahme löschen">
-				<span class="icon i-ri-delete-bin-line inline-block" />
+				<span class="icon i-ri-delete-bin-line" />
 			</svws-ui-button>
 		</div>
 		<div class="avatar--capture-control" v-if="isCapturing">
 			<svws-ui-button v-if="currentSnapshot !== null" type="icon" @click="toggleSnapshot" tabindex="0" title="Neue Aufnahme">
-				<span class="icon i-ri-refresh-line inline-block" />
+				<span class="icon i-ri-refresh-line" />
 			</svws-ui-button>
 			<svws-ui-button v-if="currentSnapshot === null" type="icon" @click="stopCapturing" tabindex="0" title="Aufnahme abbrechen">
-				<span class="icon i-ri-camera-off-line inline-block" />
+				<span class="icon i-ri-camera-off-line" />
 			</svws-ui-button>
 			<svws-ui-button v-if="currentSnapshot === null" type="primary" @click="toggleSnapshot" tabindex="0" title="Bild aufnehmen">
-				<span class="icon i-ri-fullscreen-line inline-block" />
+				<span class="icon i-ri-fullscreen-line" />
 				<span>Bild aufnehmen</span>
 			</svws-ui-button>
 			<svws-ui-button v-if="currentSnapshot" type="primary" @click="toggleCapturing" tabindex="0" title="Bild speichern">
 				<span>Bild speichern</span>
-				<span class="icon i-ri-check-line inline-block" />
+				<span class="icon i-ri-check-line" />
 			</svws-ui-button>
 		</div>
 		<div class="avatar" :class="{'avatar--has-image': uploadedImage}">

@@ -46,7 +46,7 @@
 									<div class="svws-ui-badge select-none group cursor-grab flex place-items-center" @click="auswahl !== ku ? auswahl = ku : auswahl = undefined"
 										:style="stundenplanManager().klassenunterrichtGetWochenminutenREST(klasse.id, ku.idFach) > 0 ? `color: var(--color-text-uistatic); background-color: ${getBgColor(stundenplanManager().fachGetByIdOrException(ku.idFach).kuerzelStatistik)}` : ''"
 										:class="{ 'cursor-grabbing': dragData !== undefined, '!border-black/5': stundenplanManager().klassenunterrichtGetWochenminutenREST(klasse.id, ku.idFach) <= 0 }" draggable="true">
-										<span class="icon i-ri-draggable inline-block icon-ui-75 opacity-60 group-hover:opacity-100 group-hover:icon-ui-75" />
+										<span class="icon i-ri-draggable icon-ui-75 opacity-60 group-hover:opacity-100 group-hover:icon-ui-75" />
 										<span :class="{'font-bold': stundenplanManager().klassenunterrichtGetWochenminutenREST(klasse.id, ku.idFach) > 0}">
 											{{ stundenplanManager().fachGetByIdOrException(ku.idFach).bezeichnung }}
 										</span>
@@ -74,7 +74,7 @@
 								<div role="row" class="svws-ui-tr tr-kursunterricht bg-ui-75">
 									<div role="cell" class="select-none svws-ui-td font-bold group" :class="{ 'cursor-grabbing': dragData !== undefined }">
 										<div class="select-none group cursor-grab flex place-items-center">
-											<span class="icon i-ri-draggable inline-block opacity-60 group-hover:opacity-100 group-hover:icon-ui-75" />
+											<span class="icon i-ri-draggable opacity-60 group-hover:opacity-100 group-hover:icon-ui-75" />
 											<span>{{ schiene.bezeichnung }}</span>
 										</div>
 									</div>
@@ -89,7 +89,7 @@
 										'font-bold': stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0 }">
 										<div class="svws-ui-badge select-none group cursor-grab flex place-items-center" draggable="true" :class="{ 'cursor-grabbing': dragData !== undefined, 'border-black/5!': stundenplanManager().kursGetWochenstundenREST(kurs.id) <= 0 }"
 											:style="stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0 ? `color: var(--color-text-uistatic); background-color: ${getBgColor(stundenplanManager().fachGetByIdOrException(kurs.idFach).kuerzelStatistik)}` : ''">
-											<span class="icon i-ri-draggable inline-block icon-ui-75 opacity-60 group-hover:opacity-100 group-hover:icon-ui-75" />
+											<span class="icon i-ri-draggable icon-ui-75 opacity-60 group-hover:opacity-100 group-hover:icon-ui-75" />
 											<span :class="{'font-bold': stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0}">{{ kurs.bezeichnung }}</span>
 										</div>
 									</div>
@@ -113,7 +113,7 @@
 									'font-bold': stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0 }">
 									<div class="svws-ui-badge select-none group cursor-grab flex place-items-center"
 										:class="{ 'cursor-grabbing': dragData !== undefined, 'border-ui-10': stundenplanManager().kursGetWochenstundenREST(kurs.id) <= 0 }" draggable="true">
-										<span class="icon i-ri-draggable inline-block icon-ui-75 opacity-60 group-hover:opacity-100 group-hover:icon-ui-75" />
+										<span class="icon i-ri-draggable icon-ui-75 opacity-60 group-hover:opacity-100 group-hover:icon-ui-75" />
 										<span :class="{'font-bold': stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0}">{{ kurs.bezeichnung }}</span>
 									</div>
 								</div>

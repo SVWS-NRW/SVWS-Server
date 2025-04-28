@@ -7,7 +7,7 @@
 						Zurück
 					</template>
 					<template #icon>
-						<span class="icon-lg i-ri-arrow-go-back-line inline-block" />
+						<span class="icon-lg i-ri-arrow-go-back-line" />
 					</template>
 				</svws-ui-menu-item>
 				<svws-ui-menu-item :active="false" @click="reloadClient">
@@ -15,7 +15,7 @@
 						Neu laden
 					</template>
 					<template #icon>
-						<span class="icon-lg i-ri-restart-line inline-block" />
+						<span class="icon-lg i-ri-restart-line" />
 					</template>
 				</svws-ui-menu-item>
 			</svws-ui-menu>

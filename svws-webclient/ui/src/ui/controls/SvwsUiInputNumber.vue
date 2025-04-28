@@ -51,8 +51,8 @@
 			</span>
 		</span>
 		<span v-if="data !== null && !hideStepper && !disabled" class="svws-input-stepper">
-			<button ref="btnMinus" role="button" @click="onInputNumber('down')" @blur="onBlur" :class="{'svws-disabled': String($attrs?.min) === String(data)}"><span class="icon i-ri-subtract-line inline-block" /></button>
-			<button ref="btnPlus" role="button" @click="onInputNumber('up')" @blur="onBlur" :class="{'svws-disabled': String($attrs?.max) === String(data)}"><span class="icon i-ri-add-line inline-block" /></button>
+			<button ref="btnMinus" role="button" @click="onInputNumber('down')" @blur="onBlur" :class="{'svws-disabled': String($attrs?.min) === String(data)}"><span class="icon i-ri-subtract-line" /></button>
+			<button ref="btnPlus" role="button" @click="onInputNumber('up')" @blur="onBlur" :class="{'svws-disabled': String($attrs?.max) === String(data)}"><span class="icon i-ri-add-line" /></button>
 		</span>
 	</div>
 </template>

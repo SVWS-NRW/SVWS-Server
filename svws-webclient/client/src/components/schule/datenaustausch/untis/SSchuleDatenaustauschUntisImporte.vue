@@ -98,8 +98,8 @@
 			<div v-if="aktuell === 'stundenplanGPU001002'" class="max-w-196">
 				<div class="flex flex-col gap-2 mb-4">
 					<p>
-						<span v-if="tmpGPU001?.valid ?? false" class="icon i-ri-checkbox-circle-fill icon-ui-success inline-block" />
-						<span v-if="!(tmpGPU001?.valid ?? true)" class="icon i-ri-alert-fill icon-ui-danger inline-block" />
+						<span v-if="tmpGPU001?.valid ?? false" class="icon i-ri-checkbox-circle-fill icon-ui-success" />
+						<span v-if="!(tmpGPU001?.valid ?? true)" class="icon i-ri-alert-fill icon-ui-danger" />
 						Laden Sie die Datei
 						<svws-ui-tooltip>
 							<span class="font-bold flex flex-row gap-1">GPU001.txt: <span class="icon i-ri-information-line mt-0.5" /></span>
@@ -113,8 +113,8 @@
 				</div>
 				<div class="flex flex-col gap-2 mt-8 mb-4">
 					<p>
-						<span v-if="tmpGPU002?.valid ?? false" class="icon i-ri-checkbox-circle-fill icon-ui-success inline-block" />
-						<span v-if="!(tmpGPU002?.valid ?? true)" class="icon i-ri-alert-fill icon-ui-danger inline-block" />
+						<span v-if="tmpGPU002?.valid ?? false" class="icon i-ri-checkbox-circle-fill icon-ui-success" />
+						<span v-if="!(tmpGPU002?.valid ?? true)" class="icon i-ri-alert-fill icon-ui-danger" />
 						Laden Sie die Datei
 						<svws-ui-tooltip>
 							<span class="font-bold flex flex-row gap-1">GPU002.txt: <span class="icon i-ri-information-line mt-0.5" /></span>
@@ -140,8 +140,8 @@
 			<div v-if="aktuell === 'stundenplanGPP002GPU014'" class="max-w-196">
 				<div class="flex flex-col gap-2 mb-4">
 					<p>
-						<span v-if="tmpGPP002?.valid ?? false" class="icon i-ri-checkbox-circle-fill icon-ui-success inline-block" />
-						<span v-if="!(tmpGPP002?.valid ?? true)" class="icon i-ri-alert-fill icon-ui-danger inline-block" />
+						<span v-if="tmpGPP002?.valid ?? false" class="icon i-ri-checkbox-circle-fill icon-ui-success" />
+						<span v-if="!(tmpGPP002?.valid ?? true)" class="icon i-ri-alert-fill icon-ui-danger" />
 						Laden Sie die Datei
 						<svws-ui-tooltip>
 							<span class="font-bold flex flex-row gap-1">GPP002.txt: <span class="icon i-ri-information-line mt-0.5" /></span>
@@ -155,8 +155,8 @@
 				</div>
 				<div class="flex flex-col gap-2 mt-8 mb-4">
 					<p>
-						<span v-if="tmpGPU014?.valid ?? false" class="icon i-ri-checkbox-circle-fill icon-ui-success inline-block" />
-						<span v-if="!(tmpGPU014?.valid ?? true)" class="icon i-ri-alert-fill icon-ui-danger inline-block" />
+						<span v-if="tmpGPU014?.valid ?? false" class="icon i-ri-checkbox-circle-fill icon-ui-success" />
+						<span v-if="!(tmpGPU014?.valid ?? true)" class="icon i-ri-alert-fill icon-ui-danger" />
 						Laden Sie die Datei
 						<svws-ui-tooltip>
 							<span class="font-bold flex flex-row gap-1">GPU014.txt: <span class="icon i-ri-information-line mt-0.5" /></span>

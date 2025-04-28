@@ -95,7 +95,7 @@
 								<div :class="{'bg-ui-50 text-ui-100 rounded-md pl-1 pr-1 pb-1 mt-1': schiene.id > -1}">
 									<div v-if="'bezeichnung' in schiene" class="group col-span-full text-sm font-bold pt-1 pb-2 print:!mb-0 flex place-items-center group ml-2.5" :class="{'cursor-grab': draggable}"
 										:draggable @dragstart.stop="onDrag(getUnterrichte(wochentag.id, stunde, 0, schiene.id), $event)" @dragend.stop="onDrag(undefined)">
-										<span v-if="draggable" class="icon i-ri-draggable group-hover:icon-ui-100 inline-block icon-ui-50" />
+										<span v-if="draggable" class="icon i-ri-draggable group-hover:icon-ui-100 icon-ui-50" />
 										<span>{{ schiene.bezeichnung }}</span>
 									</div>
 									<div v-for="unterricht in getUnterrichte(wochentag.id, stunde, 0, schiene.id)" :key="unterricht.id"
@@ -131,7 +131,7 @@
 											<div :class="{'bg-ui-50 text-ui-100 rounded-md pl-1 pr-1 pb-1 pt-0': schiene.id > -1}">
 												<div v-if="'bezeichnung' in schiene" class="group col-span-full text-sm font-bold pt-1 pb-2 print:!mb-0 flex place-items-center group ml-2.5" :class="{'cursor-grab': draggable}"
 													:draggable @dragstart.stop="onDrag(getUnterrichte(wochentag.id, stunde, wt, schiene.id), $event)" @dragend.stop="onDrag(undefined)">
-													<span v-if="draggable" class="icon i-ri-draggable group-hover:icon-ui-100 inline-block icon-ui-50" />
+													<span v-if="draggable" class="icon i-ri-draggable group-hover:icon-ui-100 icon-ui-50" />
 													<span>{{ schiene.bezeichnung }}</span>
 												</div>
 												<div v-for="unterricht in getUnterrichte(wochentag.id, stunde, wt, schiene.id)" :key="unterricht.id"

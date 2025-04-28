@@ -30,7 +30,7 @@
 					</template>
 					<svws-ui-menu-item subline="" @click="doLogout">
 						<template #label>Abmelden</template>
-						<template #icon> <span class="icon-lg i-ri-logout-circle-line inline-block" /> </template>
+						<template #icon> <span class="icon-lg i-ri-logout-circle-line" /> </template>
 					</svws-ui-menu-item>
 				</template>
 				<template #version>

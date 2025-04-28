@@ -14,8 +14,8 @@
 
 
 
-
 @utility icon {
+	display: inline-block;
 	width: var(--icon-size);
 	height: var(--icon-size);
 	line-height: var(--icon-size);
@@ -23,6 +23,7 @@
 }
 
 @utility icon-xxs {
+	display: inline-block;
 	width: var(--icon-size-xxs);
 	height: var(--icon-size-xxs);
 	line-height: var(--icon-size-xxs);
@@ -30,6 +31,7 @@
 }
 
 @utility icon-xs {
+	display: inline-block;
 	width: var(--icon-size-xs);
 	height: var(--icon-size-xs);
 	line-height: var(--icon-size-xs);
@@ -37,6 +39,7 @@
 }
 
 @utility icon-sm {
+	display: inline-block;
 	width: var(--icon-size-sm);
 	height: var(--icon-size-sm);
 	line-height: var(--icon-size-sm);
@@ -44,6 +47,7 @@
 }
 
 @utility icon-lg {
+	display: inline-block;
 	width: var(--icon-size-lg);
 	height: var(--icon-size-lg);
 	line-height: var(--icon-size-lg);
@@ -51,6 +55,7 @@
 }
 
 @utility icon-xl {
+	display: inline-block;
 	width: var(--icon-size-xl);
 	height: var(--icon-size-xl);
 	line-height: var(--icon-size-xl);
@@ -58,15 +63,18 @@
 }
 
 @utility icon-xxl {
+	display: inline-block;
 	width: var(--icon-size-xxl);
 	height: var(--icon-size-xxl);
 	line-height: var(--icon-size-xxl);
 	background-color: var(--color-text-ui);
 }
 
+
 @utility icon-* {
 	background-color: --value(--icon-color-*);
 }
+
 
 @utility i-ri-add-line {
 	mask-image: url(@icons/System/add-line.svg);
