@@ -102,9 +102,9 @@
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Weitere Telefonnummern" v-if="serverMode === ServerMode.DEV">
-			<svws-ui-table :clickable="true" :items="schuelerTelefon" :columns="columns" :selectable="hatKompetenzUpdate" :model-value="selected">
+			<svws-ui-table :clickable="true" :items="getListSchuelerTelefoneintraege()" :columns="columns" :selectable="hatKompetenzUpdate" :model-value="selected">
 				<template #cell(idTelefonArt)="{ value }">
-					{{ getTelefonnummer(value) }}
+					{{ getBezeichnungTelefonart(value) }}
 				</template>
 				<template #cell(telefonnummer)="{ value }">
 					{{ value }}
@@ -178,14 +178,13 @@
 
 	const selected = ref<SchuelerTelefon[]>([]);
 	const telefonnummer = ref(new SchuelerTelefon());
-	const schuelerTelefon = computed(() => [...props.schuelerListeManager().getSuchuelerTelefone()]);
 
 	const columns: DataTableColumn[] = [
 		{ key: "idTelefonArt", label: "Ansprechpartner", span: 1 },
 		{ key: "telefonnummer", label: "Telefonnummern", span: 1 },
 	]
 
-	function getTelefonnummer(idTelefonArt: number): string {
+	function getBezeichnungTelefonart(idTelefonArt: number): string {
 		return props.mapTelefonArten.get(idTelefonArt)?.bezeichnung ?? "";
 	}
 
@@ -194,7 +193,7 @@
 		set: (selected) => telefonnummer.value.idTelefonArt = (selected !== null) ? selected.id : 0,
 	});
 
-	enum Mode { ADD, PATCH , DEFAULT }
+	enum Mode { ADD, PATCH, DEFAULT }
 	const currentMode = ref<Mode>(Mode.DEFAULT);
 	const showModalTelefonnummer = ref<boolean>(false);
 	const newEntryTelefonnummer = ref<SchuelerTelefon>(new SchuelerTelefon());

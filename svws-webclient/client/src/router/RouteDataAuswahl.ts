@@ -113,9 +113,9 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 		const vorherigeAuswahl = ((this._state.value.manager !== undefined) && this.manager.hasDaten()) ? this.manager.auswahl() : null;
 		if (vorherigeAuswahl !== null) {
 			const auswahl = manager.liste.get(this.manager.getIdByEintrag(vorherigeAuswahl));
-			let daten = await this.ladeDaten(auswahl);
+			let daten = await this.ladeDaten(auswahl, newState);
 			if ((daten === null) && (!manager.liste.list().isEmpty()))
-				daten = await this.ladeDaten(manager.liste.list().getFirst());
+				daten = await this.ladeDaten(manager.liste.list().getFirst(), newState);
 			manager.setDaten(daten);
 			if (daten !== null)
 				await this.updateManager(manager, this.manager, daten);
@@ -162,10 +162,11 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	 * Auswahl ein neuer Eintrag ausgewählt wird.
 	 *
 	 * @param auswahl   die neu Auswahl oder null
+	 * @param state     der State, bei welchem die Daten angepasst werden
 	 *
 	 * @returns die geladenen Daten oder null
 	 */
-	public abstract ladeDaten(auswahl: TAuswahl | null) : Promise<TDaten | null>;
+	public abstract ladeDaten(auswahl: TAuswahl | null, state: Partial<RouteState>) : Promise<TDaten | null>;
 
 
 	/**
@@ -198,7 +199,7 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 			return;
 
 		const eintrag = this.getEintragOrDefault(id);
-		const daten = await this.ladeDaten(eintrag);
+		const daten = await this.ladeDaten(eintrag, this._state.value);
 		await this.updateDaten(daten);
 		this.commit();
 	}

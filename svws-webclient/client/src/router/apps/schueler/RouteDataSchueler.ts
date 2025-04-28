@@ -1,4 +1,4 @@
-import type { ApiFile, List, ReportingParameter, SchuelerListeEintrag, SchuelerStammdaten, SimpleOperationResponse, StundenplanListeEintrag } from "@core";
+import type { ApiFile, List, ReportingParameter, SchuelerListeEintrag, SchuelerStammdaten, SimpleOperationResponse, StundenplanListeEintrag , SchuelerTelefon } from "@core";
 import { BenutzerKompetenz, ArrayList, SchuelerListe, SchuelerListeManager, SchuelerStatus, DeveloperNotificationException } from "@core";
 
 import { api } from "~/router/Api";
@@ -12,6 +12,7 @@ import { routeSchuelerIndividualdatenGruppenprozesse } from "~/router/apps/schue
 
 interface RouteStateSchueler extends RouteStateAuswahlInterface<SchuelerListeManager>{
 	mapStundenplaene: Map<number, StundenplanListeEintrag>;
+	listSchuelerTelefoneintraege: List<SchuelerTelefon>;
 };
 
 const defaultState = <RouteStateSchueler> {
@@ -21,6 +22,7 @@ const defaultState = <RouteStateSchueler> {
 	gruppenprozesseView: routeSchuelerIndividualdatenGruppenprozesse,
 	activeViewType: ViewType.DEFAULT,
 	mapStundenplaene: new Map(),
+	listSchuelerTelefoneintraege: new ArrayList(),
 };
 
 export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, RouteStateSchueler> {
@@ -61,13 +63,13 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 		return { manager };
 	}
 
-	public async ladeDaten(auswahl: SchuelerListeEintrag | null) : Promise<SchuelerStammdaten | null> {
+	public async ladeDaten(auswahl: SchuelerListeEintrag | null, state: Partial<RouteStateSchueler>) : Promise<SchuelerStammdaten | null> {
 		if (auswahl === null)
 			return null;
 		const res = await api.server.getSchuelerStammdaten(api.schema, auswahl.id);
 		const schuelerTelefone = await api.server.getSchuelerTelefone(api.schema, auswahl.id);
 		this.manager.schuelerstatus.auswahlAdd(SchuelerStatus.data().getWertByID(res.status));
-		this.manager.setSchuelerTelefone(schuelerTelefone);
+		state.listSchuelerTelefoneintraege = schuelerTelefone;
 		return res;
 	}
 
@@ -82,6 +84,45 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 	get schuelerListeManager(): SchuelerListeManager {
 		return this.hasManager ? this.manager // oder gib einen Dummy zurück...
 			: new SchuelerListeManager(api.schulform, new SchuelerListe(), new ArrayList(), api.schuleStammdaten.abschnitte, api.schuleStammdaten.idSchuljahresabschnitt);
+	}
+
+	get listSchuelerTelefoneintraege(): List<SchuelerTelefon> {
+		return this._state.value.listSchuelerTelefoneintraege;
+	}
+
+	addSchuelerTelefoneintrag = async (data: Partial<SchuelerTelefon>, idSchueler: number): Promise<void> => {
+		api.status.start();
+		const telefon = await api.server.addSchuelerTelefon(data, api.schema, idSchueler);
+		this.listSchuelerTelefoneintraege.add(telefon);
+		this.commit();
+		api.status.stop();
+	}
+
+	patchSchuelerTelefoneintrag = async (data: Partial<SchuelerTelefon>, idEintrag: number): Promise<void> => {
+		api.status.start();
+		await api.server.patchSchuelerTelefon(data, api.schema, idEintrag);
+		for (const l of this.listSchuelerTelefoneintraege)
+			if (l.id === idEintrag)
+				Object.assign(l, data);
+		this.commit();
+		api.status.stop();
+	}
+
+	deleteSchuelerTelefoneintrage = async (idsEintraege: List<number>): Promise<void> => {
+		api.status.start();
+		await api.server.deleteSchuelerTelefone(idsEintraege, api.schema);
+		const liste = this.listSchuelerTelefoneintraege;
+		for (const id of idsEintraege) {
+			for (let i = 0; i < liste.size(); i++) {
+				const tel = liste.get(i);
+				if (tel.id === id) {
+					liste.removeElementAt(i);
+					break;
+				}
+			}
+		}
+		this.commit();
+		api.status.stop();
 	}
 
 	protected async doPatch(data : Partial<SchuelerStammdaten>, id: number) : Promise<void> {

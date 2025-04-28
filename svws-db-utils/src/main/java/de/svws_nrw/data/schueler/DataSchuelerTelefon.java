@@ -13,9 +13,22 @@ import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response;
 
+/**
+ * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für den
+ * Core-DTO {@link SchuelerTelefon}.
+ */
 public final class DataSchuelerTelefon extends DataManagerRevised<Long, DTOSchuelerTelefon, SchuelerTelefon> {
 
 	private final Long idSchueler;
+
+	/**
+	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO {@link SchuelerTelefon}.
+	 *
+	 * @param conn         die Datenbank-Verbindung für den Datenbankzugriff
+	 */
+	public DataSchuelerTelefon(final DBEntityManager conn) {
+		this(conn, null);
+	}
 
 	/**
 	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO {@link SchuelerTelefon}.
@@ -26,7 +39,7 @@ public final class DataSchuelerTelefon extends DataManagerRevised<Long, DTOSchue
 	public DataSchuelerTelefon(final DBEntityManager conn, final Long idSchueler) {
 		super(conn);
 		this.idSchueler = idSchueler;
-		setAttributesNotPatchable("id", "idSchueler", "idTelefonArt");
+		setAttributesNotPatchable("id", "idSchueler");
 	}
 
 	@Override
@@ -84,8 +97,8 @@ public final class DataSchuelerTelefon extends DataManagerRevised<Long, DTOSchue
 					throw new ApiOperationException(Response.Status.BAD_REQUEST, "IdPatch %d ist ungleich dtoId %d".formatted(id, dto.ID));
 			}
 			case "idSchueler" -> {
-				final Long idSchueler = JSONMapper.convertToLong(value, false, "idSchueler");
-				if (!Objects.equals(dto.Schueler_ID, idSchueler))
+				final Long id = JSONMapper.convertToLong(value, false, "idSchueler");
+				if (!Objects.equals(dto.Schueler_ID, id))
 					throw new ApiOperationException(Response.Status.BAD_REQUEST, "IdPatch %d ist ungleich dtoId %d".formatted(idSchueler, dto.Schueler_ID));
 			}
 			case "idTelefonArt" -> {
