@@ -167,7 +167,11 @@ Bei Änderungen an einem Filter wie beispielsweise an darin befindlichen Attribu
 Die angezeigten Optionen im Dropdown des Selects sind ausschließlich Optionen, die für alle angewendeten Filter valide sind.
 
 ### SearchSelectFilter
-Ein spezieller Filter, der für die Filterung nach Suchbegriffen verwendet wird. Wird im UiSelect die prop `searchable = true` gesetzt, dann wird dieser Filter automatisch verwendet. Er kann aber auch mit anderen Suchbegriffen kombiniert werden.
+Ein spezieller Filter, der für die Filterung nach Suchbegriffen verwendet wird. Wird im UiSelect die prop `searchable = true` gesetzt, dann wird dieser Filter automatisch verwendet. 
+Es ist außerdem eine Tiefensuche möglich. Dabei wird der Suchbegriff nicht nur mit dem Optiontext verglichen, sondern auch mit den Inhalten von angegebenene Attributen.
+Diese Suche wird aktiviert, indem auf dem SelectManager `setDeepSearchAttributes(['attributeName'])` aufgerufen wird. Dabei werden alle Attributnamen übergeben, 
+die zusätzlich durchsucht werden sollen. Alternativ klnnen die Attribute auch direkt im `SearchSelectFilter` gesetzt werden, falls dieser selbst an den SelectManager
+übergeben wird.
 
 **Konstruktor**
 - **key (string)**: Ein eindeutiger Key zur Identifikation des Filters. Der Key muss nur innerhalb des SelectManagers eindeutig sein.

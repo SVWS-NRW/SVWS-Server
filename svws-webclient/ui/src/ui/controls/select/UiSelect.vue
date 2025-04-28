@@ -220,9 +220,17 @@
 
 	let searchFilter: SearchSelectFilter<T> | undefined = undefined;
 	onMounted(() => {
+		// Wenn das Select durchsuchbar ist, wird ein SearchSelectFilter hinzugefügt. Sollte bereits einer existieren, wird nur der neue Suchbegriff gesetzt.
 		if (props.searchable) {
-			searchFilter = new SearchSelectFilter("search", search.value, (item: T) => props.selectManager.getOptionText(item));
-			props.selectManager.addFilter(searchFilter);
+			const tmpSearchFilter = props.selectManager.getFilter("search") as SearchSelectFilter<T> | null;
+			if (tmpSearchFilter !== null) {
+				tmpSearchFilter.search = search.value;
+				searchFilter = tmpSearchFilter;
+			}
+			else {
+				searchFilter = new SearchSelectFilter("search", search.value, (item: T) => props.selectManager.getOptionText(item));
+				props.selectManager.addFilter(searchFilter);
+			}
 		}
 
 		document.addEventListener('click', handleClickOutside);

@@ -11,6 +11,9 @@ export class SearchSelectFilter<T> implements SelectFilter<T> {
 	private _search: string;
 	// Methode, die den Text der Option erzeugt, um ihn mit dem Suchbegriff vergleichen zu können.
 	private _getText: (option: T) => string;
+	// Attribute, die für die Tiefensuche verwendet werden sollen. Die Tiefensuche geht über den generierten Text aus getText() hinaus und durchsucht auch
+	// angegebene Attribute der Optionen.
+	private _deepSearchAttributes: string[] = [];
 
 	/**
 	 * Konstruktor für den SearchSelectFilter
@@ -33,12 +36,24 @@ export class SearchSelectFilter<T> implements SelectFilter<T> {
 	 * @returns Liste der gefilterten Optionen
 	 */
 	apply(options: List<T>): List<T> {
-		const filteredOptions: List<T> = new ArrayList<T>();
+		const filteredOptions: List<T> = new ArrayList<T>()
 
 		for (const option of options) {
+			// Suche im Optionentext
 			if (this._search === "" || this._getText(option).toLocaleLowerCase("de-DE").includes(this._search.toLocaleLowerCase("de-DE"))) {
-				filteredOptions.add(option);
+				filteredOptions.add(option)
+				continue;
 			}
+
+			// Suche in den Attributen der Option
+			const matches = this._deepSearchAttributes.some((attr) => {
+				const value = option[attr as keyof T];
+				const stringValue = (value !== undefined && value !== null) ? value.toString() : '';
+				return stringValue.toLocaleLowerCase("de-DE").includes(this._search.toLocaleLowerCase("de-DE"));
+			})
+
+			if (matches)
+				filteredOptions.add(option);
 		}
 
 		return filteredOptions;
@@ -49,7 +64,16 @@ export class SearchSelectFilter<T> implements SelectFilter<T> {
 	 *
 	 * @param value   der neue Suchbegriff
 	 */
-	set search(value: string) {
+	public set search(value: string) {
 		this._search = value;
+	}
+
+	/**
+	 * Setter für die Attribute der Tiefensuche
+	 *
+	 * @param value   die neuen Attribute, die zusätzlich durchsucht werden sollen.
+	 */
+	public set deepSearchAttributes(value: string[]) {
+		this._deepSearchAttributes = value;
 	}
 }

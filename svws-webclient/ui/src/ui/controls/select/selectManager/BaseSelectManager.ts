@@ -3,6 +3,7 @@ import type { List } from "../../../../../../core/src/java/util/List";
 import { ArrayList } from "../../../../../../core/src/java/util/ArrayList";
 import { DeveloperNotificationException } from "../../../../../../core/src";
 import type { SelectFilter } from "../filter/SelectFilter";
+import { SearchSelectFilter } from "../filter/SearchSelectFilter";
 
 /**
  * Abstrakte Manager Klasse zur Verwendung in einer Select-Komponente (UiSelect.vue). SelectManager übernehmen die Logik der Select-Komponente.
@@ -149,8 +150,10 @@ export abstract class BaseSelectManager<T> {
 	 */
 	public addFilter(newFilter: SelectFilter<T>) {
 		for (const filter of this.filters)
-			if (filter.key === newFilter.key)
-				throw new DeveloperNotificationException(`Der SelectManager des UiSelects beinhaltet bereits einen Filter mit dem Key ${newFilter.key}`);
+			if (filter.key === newFilter.key) {
+				this.removeFilter(newFilter);
+				break;
+			}
 		this.filters.add(newFilter);
 		const filteredList = newFilter.apply(this.options)
 		this._filterMap.set(newFilter.key, filteredList);
@@ -173,7 +176,7 @@ export abstract class BaseSelectManager<T> {
 	 * @param removeFilter   Filter, der entfernt werden soll.
 	 */
 	public removeFilter(removeFilter: SelectFilter<T>) {
-		const filter = this.findFilter(removeFilter);
+		const filter = this.getFilter(removeFilter.key);
 		if (filter === null)
 			return;
 		this.filters.remove(filter);
@@ -184,13 +187,13 @@ export abstract class BaseSelectManager<T> {
 	/**
 	 * Sucht einen Filter in der aktiven Filterliste anhand seines Keys.
 	 *
-	 * @param findFilter   der Filter, der gefunden werden soll
+	 * @param filterKey   der Key des Filters, der gefunden werden soll
 	 *
 	 * @returns den passenden Filter. null, wenn keiner gefunden werden konnte.
 	 */
-	private findFilter(findFilter: SelectFilter<T>): SelectFilter<T> | null {
+	public getFilter(filterKey: string): SelectFilter<T> | null {
 		for (const filter of this.filters)
-			if (filter.key === findFilter.key)
+			if (filter.key === filterKey)
 				return filter;
 		return null;
 	}
@@ -210,6 +213,19 @@ export abstract class BaseSelectManager<T> {
 				result = this.intersect(result, filteredOptions);
 
 		this.filtered = result;
+	}
+
+	/**
+	 * Fügt Attribute zum SearchSelectFilter (key = "search") hinzu, die bei der Suche nach Suchbegriffen berücksichtigt werden sollen.
+	 *
+	 * @param attributes   Attribute des Objekts, in denen bei einer Begriffssuche ebenfalls gesucht werden soll.
+	 */
+	public setDeepSearchAttributes(attributes: string[]) {
+		let searchFilter = this.getFilter("search");
+		if (searchFilter === null)
+			searchFilter = new SearchSelectFilter<T>("search", "", (option: T) => this.getOptionText(option));
+		(searchFilter as SearchSelectFilter<T>).deepSearchAttributes = attributes;
+		this.updateFilter(searchFilter);
 	}
 
 	/**

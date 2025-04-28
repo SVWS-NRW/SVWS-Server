@@ -27,8 +27,7 @@
 						:searchable="${state.searchable}"
 						:disabled="${state.disabled}"
 						:statistics="${state.statistics}"
-						:removable="${state.removable}"
-					</ui-select>
+						:removable="${state.removable}"/>
 				` }}
 			</template>
 		</Variant>
@@ -65,8 +64,7 @@
 						:statistics="${state.statistics}"
 						:removable="${state.removable}"
 						:min-options="${state.minOptions}"
-						:max-options="${state.maxOptions}"
-					</ui-select>
+						:max-options="${state.maxOptions}"/>
 				` }}
 			</template>
 		</Variant>
@@ -113,8 +111,46 @@
 						:statistics="${state.statistics}"
 						:removable="${state.removable}"
 						:min-options="${state.minOptions}"
-						:max-options="${state.maxOptions}"
-					</ui-select>
+						:max-options="${state.maxOptions}"/>
+				` }}
+			</template>
+		</Variant>
+		<Variant title="Deep Search">
+			<svws-ui-content-card class="p-5">
+				<svws-ui-input-wrapper>
+					Das folgende Select verwendet Deep Search und lässt auch die Suche nach Attributen zu, die nicht im Optiontext dargestellt werden. So ergibt
+					die Suche nach "2006" oder "2008" ebenfalls jeweils ein Auto, da die Optionen folgende sind:
+					<pre class="bg-ui-neutral border border-ui-neutral rounded w-fit whitespace-normal p-2">
+						<code>
+							[<br>
+								{ marke: "BMW", color: "blue", baujahr: 2006 },<br>
+								{ marke: "Audi", color: "red", baujahr: 2008 }<br>
+							]
+						</code>
+					</pre>
+					<ui-select label="Deep Search ObjectSelectManager" :select-manager="deepSearchObjectSelectManager()" :searchable="true" :disabled="state.disabled"
+						:statistics="state.statistics" :removable="state.removable" :min-options="state.minOptions" :max-options="state.maxOptions" />
+				</svws-ui-input-wrapper>
+			</svws-ui-content-card>
+			<template #controls>
+				<HstCheckbox v-model="state.searchable" title="Searchable" />
+				<HstCheckbox v-model="state.disabled" title="Disabled" />
+				<HstCheckbox v-model="state.statistics" title="Statistik" />
+				<HstCheckbox v-model="state.removable" title="Removable" />
+				<HstNumber v-model="state.minOptions" title="minOptions" />
+				<HstNumber v-model="state.maxOptions" title="maxOptions" />
+			</template>
+			<template #source>
+				{{ `
+					<ui-select
+						label="..."
+						:select-manager="..."
+						:searchable="${state.searchable}"
+						:disabled="${state.disabled}"
+						:statistics="${state.statistics}"
+						:removable="${state.removable}"
+						:min-options="${state.minOptions}"
+						:max-options="${state.maxOptions}"/>
 				` }}
 			</template>
 		</Variant>
@@ -181,7 +217,7 @@
 		"Kirsche", "Kiwi", "Lemon", "Litschi", "Melone", "Orange", "Papaya", "Pfirsich", "Pflaume", "Rote Johannisbeere", "Zitronenmelisse",
 	];
 	const numberItems: number[] = [ 1990, 1991, 1992, 1993, 1994, 2000, 2001, 2002, 2003, 2004, 2010, 2011, 2012, 2013, 2014, 2020, 2021, 2022, 2023, 2024 ];
-	const carItems: { marke: string, color: string }[] = [{ marke: "BMW", color: "blue" }, { marke: "Audi", color: "red" }];
+	const carItems: { marke: string, color: string, baujahr: number }[] = [{ marke: "BMW", color: "blue", baujahr: 2006 }, { marke: "Audi", color: "red", baujahr: 2008}];
 
 
 
@@ -192,6 +228,12 @@
 	const sCoreTypeSelectManager = () => new CoreTypeSelectManager(false, LehrerRechtsverhaeltnis.class, 2018, Schulform.GY, 'text', 'kuerzelText');
 	const sObjectSelectManager = () => new ObjectSelectManager(false, carItems,
 		(option : { marke: string, color: string }) => option.marke, (option : { marke: string, color: string }) => `${option.marke} - ${option.color}`);
+	const deepSearchObjectSelectManager = () => {
+		const manager = new ObjectSelectManager(false, carItems,
+			(option : { marke: string, color: string, baujahr: number }) => option.marke, (option : { marke: string, color: string, baujahr: number }) => `${option.marke} - ${option.color}`);
+		manager.setDeepSearchAttributes(["marke", "color", "baujahr"]);
+		return manager;
+	}
 	const sFachSelectManager = () => {
 		const manager = new CoreTypeSelectManager(false, Fach.class, 2020, Schulform.GY, 'text', 'kuerzelText');
 		manager.addFilter(new FachSelectFilter("fachgruppe1", filter.value, 2020));
