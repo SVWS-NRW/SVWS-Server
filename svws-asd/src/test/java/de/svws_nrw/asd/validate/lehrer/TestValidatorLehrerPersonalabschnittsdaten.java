@@ -33,10 +33,13 @@ import jakarta.validation.constraints.NotNull;
 @DisplayName("Teste den Validator zu LehrerPersonalabschnittsdaten")
 class TestValidatorLehrerPersonalabschnittsdaten {
 
+	/** Stammdaten der Schule */
 	static final SchuleStammdaten schuleTestdaten_001 = JsonReader.fromResource(
 			"de/svws_nrw/asd/validate/schule/Testdaten_001_SchuleStammdaten.json", SchuleStammdaten.class);
+	/** Stammdaten des Lehrers */
 	static final LehrerStammdaten lsdTestdaten_001 = JsonReader.fromResource(
 			"de/svws_nrw/asd/validate/lehrer/Testdaten_001_LehrerStammdaten.json", LehrerStammdaten.class);
+	/** Personalabschnittsdaten des Lehrers */
 	static final LehrerPersonalabschnittsdaten lpadTestdaten_002 = JsonReader.fromResource(
 			"de/svws_nrw/asd/validate/lehrer/Testdaten_002_LehrerPersonalabschnittsdaten.json",
 			LehrerPersonalabschnittsdaten.class);

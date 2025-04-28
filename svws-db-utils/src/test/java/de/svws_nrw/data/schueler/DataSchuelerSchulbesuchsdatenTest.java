@@ -37,7 +37,8 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class DataSchuelerSchulbesuchsdatenTest {
 
-	public static final String STATUS = "status";
+	/** Definition STATUS */
+	static final String STATUS = "status";
 
 	@Mock
 	private DBEntityManager conn;

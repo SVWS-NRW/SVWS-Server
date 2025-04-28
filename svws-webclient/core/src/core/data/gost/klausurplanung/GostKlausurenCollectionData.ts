@@ -35,6 +35,9 @@ export class GostKlausurenCollectionData extends JavaObject {
 	 */
 	public termine : List<GostKlausurtermin> = new ArrayList<GostKlausurtermin>();
 
+	/**
+	 * Beschreibung zur Collection
+	 */
 	public description : string | null = null;
 
 

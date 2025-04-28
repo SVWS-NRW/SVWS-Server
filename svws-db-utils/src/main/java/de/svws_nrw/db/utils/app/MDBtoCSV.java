@@ -39,7 +39,14 @@ public class MDBtoCSV {
 
 	/// Die unterstützen Typen von MDBs
 	private enum MDBType {
-		UNKNOWN, STATKUE, SCHILD2_STATKUE, SCHULVER
+		/** MDB-Typ unbekannt */
+		UNKNOWN,
+		/** MDB ist vom Typ StatKue */
+		STATKUE,
+		/** MDB ist vom Typ Schild-2-StatKue */
+		SCHILD2_STATKUE,
+		/** MDB ist vom Typ Schulverzeichnis */
+		SCHULVER
 	}
 
 	/// Der Typ der MDB-Datei

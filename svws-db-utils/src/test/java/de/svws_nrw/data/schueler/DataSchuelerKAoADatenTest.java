@@ -49,18 +49,38 @@ import static org.mockito.Mockito.when;
 @TestMethodOrder(MethodOrderer.MethodName.class)
 class DataSchuelerKAoADatenTest {
 
-	public static final String STATUS = "status";
+	/** Definition STATUS */
+	static final String STATUS = "status";
 
-	public static final String ID = "id";
-	public static final String SCHULJAHRESABSCHNTT = "idSchuljahresabschnitt";
-	public static final String JAHRGANG = "idJahrgang";
-	public static final String KATEGORIE = "idKategorie";
-	public static final String MERKMAL = "idMerkmal";
-	public static final String ZUSATZMERKMAL = "idZusatzmerkmal";
-	public static final String ANSCHLUSSOPTION = "idAnschlussoption";
-	public static final String BERUFSFELD = "idBerufsfeld";
-	public static final String EBENE_4 = "idEbene4";
-	public static final String BEMERKUNG = "bemerkung";
+	/** Definition ID */
+	static final String ID = "id";
+
+	/** Definition SCHULJAHRESABSCHNTT */
+	static final String SCHULJAHRESABSCHNTT = "idSchuljahresabschnitt";
+
+	/** Definition JAHRGANG */
+	static final String JAHRGANG = "idJahrgang";
+
+	/** Definition KATEGORIE */
+	static final String KATEGORIE = "idKategorie";
+
+	/** Definition MERKMAL */
+	static final String MERKMAL = "idMerkmal";
+
+	/** Definition ZUSATZMERKMAL */
+	static final String ZUSATZMERKMAL = "idZusatzmerkmal";
+
+	/** Definition ANSCHLUSSOPTION */
+	static final String ANSCHLUSSOPTION = "idAnschlussoption";
+
+	/** Definition BERUFSFELD */
+	static final String BERUFSFELD = "idBerufsfeld";
+
+	/** Definition EBENE_4 */
+	static final String EBENE_4 = "idEbene4";
+
+	/** Definition BEMERKUNG */
+	static final String BEMERKUNG = "bemerkung";
 
 	private final DBEntityManager conn = mock(DBEntityManager.class);
 

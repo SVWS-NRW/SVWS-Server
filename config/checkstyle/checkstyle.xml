@@ -17,9 +17,9 @@
   <module name="BeforeExecutionExclusionFileFilter">
     <property name="fileNamePattern" value=".*[\\/]src[\\/]main[\\/]gen[\\/].*$"/>
   </module>
-  
+
   <!-- https://checkstyle.org/config_filters.html#SuppressionFilter -->
-  <!-- 
+  <!--
   <module name="SuppressionFilter">
     <property name="file" value="${de.svws_nrw.checkstyle.suppressionfilter.config}"
               default="checkstyle-suppressions.xml" />

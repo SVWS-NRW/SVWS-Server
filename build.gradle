@@ -136,6 +136,10 @@ allprojects {
 
 subprojects {
 
+	checkstyle {
+		toolVersion = "10.21.1"
+	}
+
 	// Publishing-Plugin für alle Module aktivieren (mit Ausnahme des Moduls 'gradle-build-src')
 	if (it.name != 'gradle-build-src') {
 		apply plugin: 'svws.gradle.svwsmavenpublish.plugin'

@@ -21,6 +21,7 @@ class TestValidatorSchuleStammdatenSchulform {
 		ASDCoreTypeUtils.initAll();
 	}
 
+	/** Stammdaten der Schule */
 	final SchuleStammdaten schuleStammdaten = JsonReader.fromResource(
 			"de/svws_nrw/asd/validate/schule/Testdaten_001_SchuleStammdaten.json", SchuleStammdaten.class);
 	private ValidatorSchuleStammdatenSchulform validatorSchuleStammdatenSchulform;

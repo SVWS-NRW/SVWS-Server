@@ -38,6 +38,7 @@ public class GostKlausurenCollectionData {
 	@ArraySchema(schema = @Schema(implementation = GostKlausurtermin.class, description = "Ein Array mit den GostKlausurtermin."))
 	public @NotNull List<GostKlausurtermin> termine = new ArrayList<>();
 
+	/** Beschreibung zur Collection */
 	@Schema(description = "Beschreibung zur Collection", example = "...")
 	public String description;
 
