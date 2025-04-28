@@ -35,12 +35,12 @@
 				<svws-ui-select title="Haltestelle" :readonly="!hatKompetenzUpdate" v-model="inputHaltestelleID" :items="mapHaltestellen"
 					:item-text="i => i.text ?? ''" removable />
 				<svws-ui-text-input placeholder="Anmeldedatum" :readonly="!hatKompetenzUpdate" :model-value="data.anmeldedatum"
-					@change="d => patch({ anmeldedatum : d ?? null })" type="date" removable />
+					@change="anmeldedatum => patch({ anmeldedatum : anmeldedatum ?? null })" type="date" removable />
 				<svws-ui-text-input placeholder="Aufnahmedatum" :readonly="!hatKompetenzUpdate" :model-value="data.aufnahmedatum"
-					@change="aufnahmedatum => patch({aufnahmedatum})" type="date" statistics />
+					@change="aufnahmedatum => patch({ aufnahmedatum : aufnahmedatum ?? null })" type="date" statistics />
 				<svws-ui-spacing />
 				<svws-ui-input-wrapper :grid="2" class="input-wrapper--checkboxes">
-					<svws-ui-checkbox :disabled="!hatKompetenzUpdate" :model-value="data.istVolljaehrig === true"
+					<svws-ui-checkbox :disabled="!hatKompetenzUpdate" :model-value="data.istVolljaehrig"
 						@update:model-value="istVolljaehrig => patch({ istVolljaehrig })">
 						Volljährig
 					</svws-ui-checkbox>
@@ -48,10 +48,10 @@
 						@update:model-value="keineAuskunftAnDritte => patch({ keineAuskunftAnDritte })">
 						Keine Auskunft an Dritte
 					</svws-ui-checkbox>
-					<svws-ui-checkbox :disabled="!hatKompetenzUpdate" :model-value="data.istSchulpflichtErfuellt === true" readonly>
+					<svws-ui-checkbox :disabled="!hatKompetenzUpdate" :model-value="data.istSchulpflichtErfuellt" readonly>
 						Schulpflicht erfüllt
 					</svws-ui-checkbox>
-					<svws-ui-checkbox :disabled="!hatKompetenzUpdate" :model-value="data.istBerufsschulpflichtErfuellt === true"
+					<svws-ui-checkbox :disabled="!hatKompetenzUpdate" :model-value="data.istBerufsschulpflichtErfuellt"
 						@update:model-value="istBerufsschulpflichtErfuellt => patch({ istBerufsschulpflichtErfuellt })">
 						Schulpflicht SII erfüllt
 					</svws-ui-checkbox>

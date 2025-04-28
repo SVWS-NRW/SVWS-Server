@@ -11014,6 +11014,57 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getSchuelerStammdatenMultiple für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/stammdaten
+	 *
+	 * Liest die Stammdaten der Schüler zu der angegebenen IDs aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Stammdaten des Schülers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SchuelerStammdaten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.
+	 *   Code 404: Kein Schüler-Eintrag mit der angegebenen ID gefunden
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Stammdaten des Schülers
+	 */
+	public async getSchuelerStammdatenMultiple(data : List<number>, schema : string) : Promise<SchuelerStammdaten> {
+		const path = "/db/{schema}/schueler/stammdaten"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return SchuelerStammdaten.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchSchuelerStammdatenMultiple für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/stammdaten
+	 *
+	 * Passt die Schüler-Stammdaten zu den angegebenen IDs an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich in die Schülerstammdaten integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schülerdaten zu ändern.
+	 *   Code 404: Ein Schüler-Eintrag mit den angegebenen IDs wurde nicht gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<Partial<SchuelerStammdaten>>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 */
+	public async patchSchuelerStammdatenMultiple(data : List<Partial<SchuelerStammdaten>>, schema : string) : Promise<void> {
+		const path = "/db/{schema}/schueler/stammdaten"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<SchuelerStammdaten>).map(d => SchuelerStammdaten.transpilerToJSONPatch(d)).join() + "]";
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getSchuelerTelefon für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/telefon/{id : \d+}
 	 *
 	 * Liest die Daten des Schülertelefons zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.

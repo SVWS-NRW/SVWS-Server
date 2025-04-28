@@ -15,8 +15,10 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin;
 import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
+import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.proxytypes.kurs.ProxyReportingKurs;
 import de.svws_nrw.module.reporting.proxytypes.schueler.ProxyReportingSchueler;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
@@ -155,8 +157,12 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 				fehlendeSchueler.add(idSchueler);
 		}
 		if (!fehlendeSchueler.isEmpty()) {
-			final List<SchuelerStammdaten> fehlendeSchuelerStammdaten = DataSchuelerStammdaten.getListStammdaten(this.reportingRepository.conn(),
-					fehlendeSchueler);
+			final List<SchuelerStammdaten> fehlendeSchuelerStammdaten;
+			try {
+				fehlendeSchuelerStammdaten = (new DataSchuelerStammdaten(this.reportingRepository.conn())).getListByIds(fehlendeSchueler);
+			} catch (final ApiOperationException e) {
+				throw new DeveloperNotificationException(e.getMessage());
+			}
 			schuelerStammdaten.addAll(fehlendeSchuelerStammdaten);
 			fehlendeSchuelerStammdaten.forEach(s -> this.reportingRepository.mapSchuelerStammdaten().putIfAbsent(s.id, s));
 		}

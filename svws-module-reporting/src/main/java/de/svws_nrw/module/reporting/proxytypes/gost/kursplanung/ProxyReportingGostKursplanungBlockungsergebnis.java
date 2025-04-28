@@ -7,6 +7,7 @@ import de.svws_nrw.core.data.gost.GostFachwahl;
 import de.svws_nrw.core.data.gost.GostStatistikFachwahl;
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
@@ -90,7 +91,12 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 				fehlendeSchueler.add(idSchueler);
 		}
 		if (!fehlendeSchueler.isEmpty()) {
-			final List<SchuelerStammdaten> fehlendeSchuelerStammdaten = DataSchuelerStammdaten.getListStammdaten(reportingRepository.conn(), fehlendeSchueler);
+			final List<SchuelerStammdaten> fehlendeSchuelerStammdaten;
+			try {
+				fehlendeSchuelerStammdaten = (new DataSchuelerStammdaten(reportingRepository.conn())).getListByIds(fehlendeSchueler);
+			} catch (final ApiOperationException e) {
+				throw new DeveloperNotificationException(e.getMessage());
+			}
 			schuelerStammdaten.addAll(fehlendeSchuelerStammdaten);
 			fehlendeSchuelerStammdaten.forEach(s -> this.reportingRepository.mapSchuelerStammdaten().putIfAbsent(s.id, s));
 		}

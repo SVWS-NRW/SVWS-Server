@@ -198,9 +198,34 @@ public class APISchueler {
 	@ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
 	public Response getSchuelerStammdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerStammdaten(conn).get(id),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerStammdaten(conn).getByIdAsResponse(id),
+				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Stammdaten mehrerer Schüler.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param is        Inputstream mit einer Liste von Schüler IDs
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Stammdaten der Schüler
+	 */
+	@GET
+	@Path("/stammdaten")
+	@Operation(summary = "Liefert zu den Schüler IDs die zugehörigen Stammdaten.",
+			description = "Liest die Stammdaten der Schüler zu der angegebenen IDs aus der Datenbank und liefert diese zurück. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Stammdaten des Schülers",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchuelerStammdaten.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
+	public Response getSchuelerStammdatenMultiple(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der Schüler", required = true,
+			content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerStammdaten(conn).getListByIdsAsResponse(JSONMapper.toListOfLong(is)),
+				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
 	}
 
 
@@ -216,7 +241,7 @@ public class APISchueler {
 	 */
 	@PATCH
 	@Path("/{id : \\d+}/stammdaten")
-	@Operation(summary = "Liefert zu der ID des Schülers die zugehörigen Stammdaten.",
+	@Operation(summary = "Patch für eines Schüler Stammdaten Objektes.",
 			description = "Passt die Schüler-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerdaten besitzt.")
 	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Schülerstammdaten integriert.")
@@ -230,9 +255,38 @@ public class APISchueler {
 			@RequestBody(description = "Der Patch für die Schüler-Stammdaten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					schema = @Schema(implementation = SchuelerStammdaten.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerStammdaten(conn).patch(id, is),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerStammdaten(conn).patchAsResponse(id, is),
+				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Patchen der Stammdaten mehrerer Schüler.
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/stammdaten")
+	@Operation(summary = "Patch für mehrere Schüler Stammdaten Objekte.",
+			description = "Passt die Schüler-Stammdaten zu den angegebenen IDs an und speichert das Ergebnis in der Datenbank. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Schülerstammdaten integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerdaten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Ein Schüler-Eintrag mit den angegebenen IDs wurde nicht gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
+			+ " (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response patchSchuelerStammdatenMultiple(@PathParam("schema") final String schema,
+			@RequestBody(description = "Der Patch für die Schüler-Stammdaten", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							array = @ArraySchema(schema = @Schema(implementation = SchuelerStammdaten.class)))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerStammdaten(conn).patchMultipleAsResponse(is),
+				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
 	}
 
 	/**
@@ -257,9 +311,9 @@ public class APISchueler {
 			content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(conn -> new DataSchuelerStammdaten(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.SCHUELER_LOESCHEN);
+		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
+				conn -> new DataSchuelerStammdaten(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)),
+				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_LOESCHEN);
 	}
 
 
@@ -275,9 +329,9 @@ public class APISchueler {
 	@GET
 	@Path("/bisherigeSchule/{id : \\d+}")
 	@Operation(summary = "Liefert die zur ID zugehörigen bisher besuchte Schule",
-		description = "Gibt die bisher besuchte Schule zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
+			description = "Gibt die bisher besuchte Schule zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
 	@ApiResponse(responseCode = "200", description = "Die bisher besuchte Schule", content = @Content(mediaType = "application/json",
-		schema = @Schema(implementation = SchuelerSchulbesuchSchule.class)))
+			schema = @Schema(implementation = SchuelerSchulbesuchSchule.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine bisher besuchte Schule mit der angegebenen ID gefunden.")
 	public Response getBisherigeSchule(@PathParam("schema") final String schema, @PathParam("id") final long id,
@@ -343,15 +397,15 @@ public class APISchueler {
 				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
 	}
 
-		/**
-	 * Die OpenAPI-Methode für das Entfernen von bisher besuchten Schulen.
-	 *
-	 * @param schema       das Datenbankschema
-	 * @param ids          die IDs der bisher besuchten Schulen
-	 * @param request      die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die HTTP-Antwort mit dem Status und ggf. der gelöschten bisherigen Schule
-	 */
+	/**
+	* Die OpenAPI-Methode für das Entfernen von bisher besuchten Schulen.
+	*
+	* @param schema       das Datenbankschema
+	* @param ids          die IDs der bisher besuchten Schulen
+	* @param request      die Informationen zur HTTP-Anfrage
+	*
+	* @return die HTTP-Antwort mit dem Status und ggf. der gelöschten bisherigen Schule
+	*/
 	@DELETE
 	@Path("/bisherigeSchule/multiple")
 	@Operation(summary = "Entfernt bisher besuchte Schulen.",
@@ -364,8 +418,8 @@ public class APISchueler {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteBisherigeSchulen(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die IDs der zu löschenden bisher besuchten Schulen", required = true,
-			content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream ids,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream ids,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
 				conn -> new DataSchuelerSchulbesuchSchule(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(ids)),
@@ -414,7 +468,7 @@ public class APISchueler {
 			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerSchulbesuchMerkmal.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um SchuelerMerkmale hinzuzufügen.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response addSchuelerMerkmal(@PathParam("schema") final String schema,  @PathParam("idSchueler") final long idSchueler,
+	public Response addSchuelerMerkmal(@PathParam("schema") final String schema, @PathParam("idSchueler") final long idSchueler,
 			@RequestBody(description = "Die Daten des zu erstellenden SchuelerMerkmal ohne ID, die automatisch generiert wird", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							schema = @Schema(implementation = SchuelerSchulbesuchMerkmal.class))) final InputStream is,
@@ -472,8 +526,9 @@ public class APISchueler {
 	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteSchuelerMerkmale(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der zu löschenden Merkmale",
-			required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class))))
-			final InputStream ids, @Context final HttpServletRequest request) {
+			required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream ids,
+			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerMerkmale(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(ids)),
 				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
 	}
@@ -1235,9 +1290,11 @@ public class APISchueler {
 	public Response patchSchuelerEinwilligung(@PathParam("schema") final String schema, @PathParam("idSchueler") final long idSchueler,
 			@PathParam("idEinwilligungsart") final long idEinwilligungsart,
 			@RequestBody(description = "Der Patch für die Einwilligung", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerEinwilligung.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = SchuelerEinwilligung.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerEinwilligungen(conn, idSchueler).patchAsResponse(new Long[]{idSchueler, idEinwilligungsart},
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataSchuelerEinwilligungen(conn, idSchueler).patchAsResponse(new Long[] { idSchueler, idEinwilligungsart },
 						is),
 				request, ServerMode.DEV,
 				//TODO: Benutzerkompetenz hinzufügen
@@ -1710,9 +1767,11 @@ public class APISchueler {
 	public Response patchSchuelerLernplattform(@PathParam("schema") final String schema, @PathParam("id") final long idSchueler,
 			@PathParam("idLernplattform") final long idLernplattform,
 			@RequestBody(description = "Der Patch für die Lernplattformen eines Schülers", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerLernplattform.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = SchuelerLernplattform.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerLernplattformen(conn, idSchueler).patchAsResponse(new Long[]{idSchueler, idLernplattform},
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataSchuelerLernplattformen(conn, idSchueler).patchAsResponse(new Long[] { idSchueler, idLernplattform },
 						is),
 				request, ServerMode.DEV,
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
@@ -1760,7 +1819,8 @@ public class APISchueler {
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchuelerTelefon.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Kein Schülertelefon mit der angegebenen ID gefunden")
-	public Response getSchuelerTelefon(@PathParam("schema") final String schema, @PathParam("id") final long idSchueler, @Context final HttpServletRequest request) {
+	public Response getSchuelerTelefon(@PathParam("schema") final String schema, @PathParam("id") final long idSchueler,
+			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerTelefon(conn, idSchueler).getByIdAsResponse(idSchueler),
 				request, ServerMode.DEV, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
 	}
@@ -1787,7 +1847,8 @@ public class APISchueler {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schülertelefone anzulegen.")
 	public Response addSchuelerTelefon(@PathParam("schema") final String schema, @PathParam("idSchueler") final long idSchueler,
 			@RequestBody(description = "Die Telefone des Schülers", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					schema = @Schema(implementation = SchuelerTelefon.class))) final InputStream is, @Context final HttpServletRequest request) {
+					schema = @Schema(implementation = SchuelerTelefon.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerTelefon(conn, idSchueler).addAsResponse(is),
 				request, ServerMode.DEV, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
 	}

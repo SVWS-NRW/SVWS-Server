@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.asd.data.kurse.KursDaten;
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.data.kurse.DataKurse;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
@@ -206,9 +207,12 @@ public class ProxyReportingKurs extends ReportingKurs {
 
 				// Lade fehlende Daten, falls nötig
 				if (!fehlendeSchuelerIDs.isEmpty()) {
-					final List<SchuelerStammdaten> schuelerStammdaten =
-							DataSchuelerStammdaten.getListStammdaten(this.reportingRepository.conn(), fehlendeSchuelerIDs);
-
+					final List<SchuelerStammdaten> schuelerStammdaten;
+					try {
+						schuelerStammdaten = (new DataSchuelerStammdaten(this.reportingRepository.conn())).getListByIds(fehlendeSchuelerIDs);
+					} catch (final ApiOperationException e) {
+						throw new DeveloperNotificationException(e.getMessage());
+					}
 					// Aktualisiere die Map
 					this.reportingRepository.mapSchuelerStammdaten()
 							.putAll(schuelerStammdaten.stream().collect(Collectors.toMap(s -> s.id, Function.identity())));

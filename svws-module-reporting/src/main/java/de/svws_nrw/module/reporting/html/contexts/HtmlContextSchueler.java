@@ -2,7 +2,9 @@ package de.svws_nrw.module.reporting.html.contexts;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
+import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.proxytypes.schueler.ProxyReportingSchueler;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
@@ -96,7 +98,12 @@ public final class HtmlContextSchueler extends HtmlContext {
 				fehlendeSchueler.add(idSchueler);
 		}
 		if (!fehlendeSchueler.isEmpty()) {
-			final List<SchuelerStammdaten> fehlendeSchuelerStammdaten = DataSchuelerStammdaten.getListStammdaten(reportingRepository.conn(), fehlendeSchueler);
+			final List<SchuelerStammdaten> fehlendeSchuelerStammdaten;
+			try {
+				fehlendeSchuelerStammdaten = (new DataSchuelerStammdaten(reportingRepository.conn())).getListByIds(fehlendeSchueler);
+			} catch (final ApiOperationException e) {
+				throw new DeveloperNotificationException(e.getMessage());
+			}
 			fehlendeSchuelerStammdaten.forEach(s -> this.reportingRepository.mapSchuelerStammdaten().putIfAbsent(s.id, s));
 			mapSchueler.putAll(fehlendeSchuelerStammdaten.stream().collect(Collectors.toMap(s -> s.id, s -> s)));
 		}
