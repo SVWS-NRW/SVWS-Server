@@ -12,6 +12,11 @@ Die Card kann durch ihre Props und durch Slots angepasst werden:
 - **Default**: `false`   
 - Zeigt die Komponente in kompakter Darstellung mit geringeren Abständen und kleineren Icons.
 
+**fehler**
+- **Typ**: `ValidatorFehlerart`   
+- **Default**: `ValidatorFehlerart.UNGENUTZT`   
+- Färbt die Komponente abhängig von ihrer Fehlerart ein
+
 #### **Collapse Optionen**
 **isOpen**
 - **Typ**: `boolean`   

@@ -170,7 +170,6 @@ describe("Bedingtes Rendern der HTML-Elemenete", () => {
 			// Vorbereiten
 			await wrapper.setProps({ required: true });
 			// Testen
-			console.log(wrapper.html())
 			expect(wrapper.get("textarea").attributes("required")).toBe("");
 		})
 

@@ -103,12 +103,50 @@
 				<HstText v-model="state.disabledReason" title="Disabled Grund" />
 			</template>
 		</Variant>
+		<Variant title="Validator Fehler" id="fehler" :responsive-disabled="false">
+			<div class="p-4 grid gap-4">
+				<ui-card :compact="state.compact" :is-open="state.isOpen" :collapsible="true" :collapse-icon-position="state.iconPosition"
+					:icon="state.showIcon ? 'i-ri-settings-2-line' : undefined" title="Kein Fehler" :subtitle="state.subtitle" :info="state.info"
+					:content="state.content" :show-divider="state.showDivider" :footer="state.footer" @update:is-open="(isOpen) => state.isOpen = isOpen"
+					:fehler="ValidatorFehlerart.UNGENUTZT" />
+				<ui-card :compact="state.compact" :is-open="state.isOpen" :collapsible="true" :collapse-icon-position="state.iconPosition"
+					:icon="state.showIcon ? 'i-ri-settings-2-line' : undefined" title="Hinweis" :subtitle="state.subtitle" :info="state.info"
+					:content="state.content" :show-divider="state.showDivider" :footer="state.footer" @update:is-open="(isOpen) => state.isOpen = isOpen"
+					:fehler="ValidatorFehlerart.HINWEIS" />
+				<ui-card :compact="state.compact" :is-open="state.isOpen" :collapsible="true" :collapse-icon-position="state.iconPosition"
+					:icon="state.showIcon ? 'i-ri-settings-2-line' : undefined" title="Kann Fehler" :subtitle="state.subtitle" :info="state.info"
+					:content="state.content" :show-divider="state.showDivider" :footer="state.footer" @update:is-open="(isOpen) => state.isOpen = isOpen"
+					:fehler="ValidatorFehlerart.KANN" />
+				<ui-card :compact="state.compact" :is-open="state.isOpen" :collapsible="true" :collapse-icon-position="state.iconPosition"
+					:icon="state.showIcon ? 'i-ri-settings-2-line' : undefined" title="Muss Fehler" :subtitle="state.subtitle" :info="state.info"
+					:content="state.content" :show-divider="state.showDivider" :footer="state.footer" @update:is-open="(isOpen) => state.isOpen = isOpen"
+					:fehler="ValidatorFehlerart.MUSS" />
+			</div>
+			<template #controls>
+				<HstCheckbox v-model="state.compact" title="kompakt" />
+				<HstCheckbox v-model="state.isOpen" title="geöffnet" />
+				<div class="text-headline-sm pl-2">Header</div>
+				<HstCheckbox v-model="state.showIcon" title="Icon" />
+				<HstText v-model="state.title" title="Titel" />
+				<HstText v-model="state.subtitle" title="Untertitel" />
+				<HstText v-model="state.info" title="Info" />
+				<HstRadio v-model="state.iconPosition" title="Collapse Position" :options="[
+					{ label: 'rechts', value: 'right' },
+					{ label: 'links', value: 'left' },
+				]" />
+				<div class="text-headline-sm pl-2">Body</div>
+				<HstTextarea v-model="state.content" title="Inhalt" />
+				<HstCheckbox v-model="state.showDivider" title="Trennlinie" />
+				<HstTextarea v-model="state.footer" title="Footer" />
+			</template>
+		</Variant>
 	</Story>
 </template>
 
 <script setup lang="ts">
 
 	import { reactive } from 'vue';
+	import { ValidatorFehlerart } from '../../../../core/src';
 
 	const onEdit = () => alert("Bearbeiten");
 	const onSave = () => alert("Speichern");

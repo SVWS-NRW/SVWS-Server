@@ -1,21 +1,23 @@
 <template>
-	<div class="ui-card" :class="{ 'ui-card--compact' : compact }" tabindex="0">
+	<div class="ui-card" :class="{ 'ui-card--compact' : compact }" tabindex="-1" @mouseover="isHovered = true" @mouseleave="isHovered = false">
 		<!-- Header Section -->
-		<component :is="collapsible ? 'button' : 'div'" :type="collapsible ? 'button' : 'text'" :class="{ 'ui-card--active': isActive }" class="ui-card--header"
+		<component :is="collapsible ? 'button' : 'div'" :type="collapsible ? 'button' : 'text'" tabindex="0"
+			:class="[{ 'ui-card--active': isActive }, headerBackgroundColor, headerTextColor, borderColor]"
+			class="ui-card--header focus:ring-3 focus:ring-ui focus:!rounded outline-none"
 			@click="collapsible ? setActive() : null" :aria-expanded="ariaExpanded" :aria-controls="collapsible ? 'cardBody' + instanceId : undefined">
 			<!-- Left Collapse Icon -->
 			<div v-if="showCollapseIconLeft" class="ui-card--header--collapse-icon">
 				<transition name="ui-card--icon" mode="out-in">
 					<!-- Closed Icon -->
-					<span v-if="!isActive" :class="collapseIconClosed" aria-label="Card geschlossen" />
+					<span v-if="!isActive" :class="[collapseIconClosed, headerIconColor]" aria-label="Card geschlossen" />
 					<!-- Opened Icon -->
-					<span v-else :class="collapseIconOpened" aria-label="Card geöffnet" />
+					<span v-else :class="[collapseIconOpened, headerIconColor]" aria-label="Card geöffnet" />
 				</transition>
 			</div>
 			<slot name="collapseLeft" />
 
 			<!-- Icon Section -->
-			<div v-if="showIcon" class="ui-card--header--icon "> <span :class="[icon]" /> </div>
+			<div v-if="showIcon" class="ui-card--header--icon"> <span :class="[icon, headerIconColor]" /> </div>
 			<slot name="icon" />
 
 			<!-- Title and Subtitle Section -->
@@ -36,9 +38,9 @@
 				<div v-if="showCollapseIconRight" class="ui-card--header--collapse-icon">
 					<transition name="ui-card--icon" mode="out-in">
 						<!-- Closed Icon -->
-						<span v-if="!isActive" :class="collapseIconClosed" aria-label="Card geschlossen" />
+						<span v-if="!isActive" :class="[collapseIconClosed, headerIconColor]" aria-label="Card geschlossen" />
 						<!-- Opened Icon -->
-						<span v-else :class="collapseIconOpened" aria-label="Card geöffnet" />
+						<span v-else :class="[collapseIconOpened, headerIconColor]" aria-label="Card geöffnet" />
 					</transition>
 				</div>
 				<slot name="collapseRight" />
@@ -47,7 +49,7 @@
 
 		<transition name="ui-card--collapse" @before-enter="emit('update:isOpen', true);" @enter="openCard" @after-enter="afterOpenCard" @before-leave="beforeCloseCard" @leave="closeCard" @after-leave="emit('update:isOpen', false);">
 			<div v-show="isActive" :id="'cardBody' + instanceId" class="ui-card--body-wrapper" ref="bodyWrapperRef">
-				<div class="ui-card--body">
+				<div class="ui-card--body" :class="borderColor">
 					<!-- Content Section -->
 					<div class="ui-card--body--content">
 						<!-- Left Button Section -->
@@ -110,7 +112,7 @@
 <script lang="ts" setup>
 
 	import type { SetupContext } from 'vue';
-	import { ref, onMounted, computed, useSlots, watch, useId } from 'vue';
+	import { ref, onMounted, computed, useSlots, watch, useId, toRaw } from 'vue';
 	import type { ButtonType } from '../../types';
 	import { ValidatorFehlerart } from '../../../../core/src/asd/validate/ValidatorFehlerart';
 
@@ -221,6 +223,76 @@
 	const showFooterLeftButton = computed(() => !slots.buttonFooterLeft && showButtons.value && (props.buttonContainer === 'footer')
 		&& (props.buttonPosition === 'left'));
 	const showButtons = computed (() => buttons.value.length !== 0);
+
+	const isHovered = ref(false);
+
+	// Berechnung der Farben
+	const headerBackgroundColor = computed(() => {
+		if (isHovered.value) {
+			switch (toRaw(props.fehler)) {
+				case ValidatorFehlerart.HINWEIS:
+					return (isActive.value) ? 'bg-ui-warning-hover' : 'bg-ui';
+				case ValidatorFehlerart.KANN:
+					return (isActive.value) ? 'bg-ui-caution-hover' : 'bg-ui';
+				case ValidatorFehlerart.MUSS:
+					return (isActive.value) ? 'bg-ui-danger-hover' : 'bg-ui';
+				default:
+					return (isActive.value) ? 'bg-ui-brand-hover' : 'bg-ui';
+			}
+		} else {
+			switch (toRaw(props.fehler)) {
+				case ValidatorFehlerart.HINWEIS:
+					return (isActive.value) ? 'bg-ui-warning' : 'bg-ui-warning-secondary';
+				case ValidatorFehlerart.KANN:
+					return (isActive.value) ? 'bg-ui-caution' : 'bg-ui-caution-secondary';
+				case ValidatorFehlerart.MUSS:
+					return (isActive.value) ? 'bg-ui-danger' : 'bg-ui-danger-secondary';
+				default:
+					return (isActive.value) ? 'bg-ui-brand' : 'bg-ui-brand-secondary';
+			}
+		}
+
+
+	});
+
+	const headerTextColor = computed(() => {
+		switch (toRaw(props.fehler)) {
+			case ValidatorFehlerart.HINWEIS:
+				return (isActive.value) ? 'text-ui-onwarning' : 'text-ui';
+			case ValidatorFehlerart.KANN:
+				return (isActive.value) ? 'text-ui-oncaution' : 'text-ui';
+			case ValidatorFehlerart.MUSS:
+				return (isActive.value) ? 'text-ui-ondanger' : 'text-ui';
+			default:
+				return (isActive.value) ? 'text-ui-onbrand' : 'text-ui';
+		}
+	});
+
+	const headerIconColor = computed(() => {
+		switch (toRaw(props.fehler)) {
+			case ValidatorFehlerart.HINWEIS:
+				return (isActive.value) ? '!icon-ui-onwarning' : '!icon-ui';
+			case ValidatorFehlerart.KANN:
+				return (isActive.value) ? '!icon-ui-oncaution' : '!icon-ui';
+			case ValidatorFehlerart.MUSS:
+				return (isActive.value) ? '!icon-ui-ondanger' : '!icon-ui';
+			default:
+				return (isActive.value) ? '!icon-ui-onbrand' : '!icon-ui';
+		}
+	});
+
+	const borderColor = computed(() => {
+		switch (toRaw(props.fehler)) {
+			case ValidatorFehlerart.HINWEIS:
+				return 'border-ui-warning';
+			case ValidatorFehlerart.KANN:
+				return 'border-ui-caution';
+			case ValidatorFehlerart.MUSS:
+				return 'border-ui-danger';
+			default:
+				return 'border-ui-brand';
+		}
+	});
 
 	/**
 	 * Setzt die ID für den Teleport, abhängig von der gewünschten Position der Buttons.

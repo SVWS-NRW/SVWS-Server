@@ -125,7 +125,6 @@ describe("Tests für die CSS-Props", () => {
 				break;
 		}
 		// Testen
-		console.log(wrapper.html());
 		switch (x) {
 			case "disable":
 			case "statistics":
