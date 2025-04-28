@@ -59,40 +59,39 @@
 							{{ manager.lerngruppeGetFachlehrerOrNull(leistung.lerngruppenID) }}
 						</td>
 						<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Quartal') ?? true">
-							<svws-ui-select v-if="manager.lerngruppeIstFachlehrer(leistung.lerngruppenID)" title="—" headless class="w-full"
-								:items="Note.values()" :item-text="item => item.daten(manager.schuljahr)?.kuerzel ?? '—'"
-								:model-value="Note.fromKuerzel(leistung.noteQuartal)" @focusin="tabToUnselectedLeistung(indexSchueler, indexLeistung, leistung, 0)"
-								@update:model-value="value => doPatchLeistung(leistung, { noteQuartal: value?.daten(manager.schuljahr)?.kuerzel ?? null })"
-								:focus-class-content="manager.auswahlLeistung?.leistung?.id === leistung.id" />
-							<div v-else>{{ leistung.noteQuartal }}</div>
+							<svws-ui-text-input v-if="manager.auswahlLeistung?.leistung?.id === leistung.id && manager.lerngruppeIstFachlehrer(leistung.lerngruppenID)" class="w-full" :model-value="leistung.noteQuartal" @focusin="tabToUnselectedLeistung(indexSchueler, indexLeistung, leistung, $event.target)"
+								:class="{ contentFocusField: (manager.auswahlLeistung?.leistung?.id === leistung.id) }"
+								@change="noteQuartal => doPatchLeistungNote(leistung, Note.fromKuerzel(noteQuartal).daten(props.manager.schuljahr)?.kuerzel,{ noteQuartal: (Note.fromKuerzel(noteQuartal).daten(props.manager.schuljahr)?.kuerzel ?? null) })" />
+							<div v-else class="grade-field column-focussable" tabindex="0" @focusin="tabToUnselectedLeistung(indexSchueler, indexLeistung, leistung, $event.target)">
+								{{ leistung.noteQuartal ?? "-" }}
+							</div>
 						</td>
 						<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Note') ?? true">
-							<svws-ui-select v-if="manager.lerngruppeIstFachlehrer(leistung.lerngruppenID)" title="—" headless class="w-full"
-								:items="Note.values()" :item-text="item => item.daten(manager.schuljahr)?.kuerzel ?? '—'"
-								:model-value="Note.fromKuerzel(leistung.note)"
-								@update:model-value="value => doPatchLeistung(leistung, { note: value?.daten(manager.schuljahr)?.kuerzel ?? null })" />
-							<div v-else>{{ leistung.note }}</div>
+							<svws-ui-text-input v-if="manager.auswahlLeistung?.leistung?.id === leistung.id && manager.lerngruppeIstFachlehrer(leistung.lerngruppenID)" class="w-full" :model-value="leistung.note" @focusin="tabToUnselectedLeistung(indexSchueler, indexLeistung, leistung, $event.target)"
+								@change="note => doPatchLeistungNote(leistung, Note.fromKuerzel(note).daten(props.manager.schuljahr)?.kuerzel,{ note: (Note.fromKuerzel(note).daten(props.manager.schuljahr)?.kuerzel ?? null) })" />
+							<div v-else class="grade-field column-focussable" tabindex="0" @focusin="tabToUnselectedLeistung(indexSchueler, indexLeistung, leistung, $event.target)">
+								{{ leistung.note ?? "-" }}
+							</div>
 						</td>
 						<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Mahnung') ?? true">
-							<svws-ui-checkbox v-if="manager.lerngruppeIstFachlehrer(leistung.lerngruppenID)" headless class="w-full"
-								:model-value="leistung.istGemahnt ?? false"
-								@update:model-value="value => doPatchLeistung(leistung, { istGemahnt: value })" />
+							<svws-ui-checkbox v-if="manager.lerngruppeIstFachlehrer(leistung.lerngruppenID)" headless class="w-full" :model-value="leistung.istGemahnt ?? false" @update:model-value="value => doPatchLeistung(leistung, { istGemahnt: value })"
+								@focusin="tabToUnselectedLeistung(indexSchueler, indexLeistung, leistung,$event.target)" />
 						</td>
 						<td class="svws-ui-td" role="cell" v-if="colsVisible.get('FS') ?? true">
-							<svws-ui-input-number v-if="manager.fehlstundenFachbezogen(schueler)" placeholder="Fehlstunden"
-								:model-value="leistung.fehlstundenFach" headless hide-stepper min="0" max="999"
-								@change="fehlstundenFach => doPatchLeistung(leistung, { fehlstundenFach })" />
-							<span v-else>—</span>
+							<svws-ui-input-number v-if="manager.fehlstundenFachbezogen(schueler)" placeholder="Fehlstunden" :model-value="leistung.fehlstundenFach" headless hide-stepper min="0" max="999"
+								@change="fehlstundenFach => doPatchLeistung(leistung, { fehlstundenFach })" @focusin="tabToUnselectedLeistung(indexSchueler, indexLeistung, leistung, $event.target)" />
+							<span v-else class="grade-field column-focussable" tabindex="0">—</span>
 						</td>
 						<td class="svws-ui-td" role="cell" v-if="colsVisible.get('FSU') ?? true">
 							<svws-ui-input-number v-if="manager.fehlstundenFachbezogen(schueler)" placeholder="Fehlstunden (unentschuldigt)"
 								:model-value="leistung.fehlstundenUnentschuldigtFach" headless hide-stepper min="0" max="999"
-								@change="fehlstundenUnentschuldigtFach => doPatchLeistung(leistung, { fehlstundenUnentschuldigtFach })" />
-							<span v-else>—</span>
+								@change="fehlstundenUnentschuldigtFach => doPatchLeistung(leistung, { fehlstundenUnentschuldigtFach })"
+								@focusin="tabToUnselectedLeistung(indexSchueler, indexLeistung, leistung, $event.target)" />
+							<span v-else class="grade-field column-focussable" tabindex="0">—</span>
 						</td>
 						<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Bemerkung') ?? true" :class="{ 'bg-ui-selected-secondary text-ui-onselected-secondary': floskelEditorVisible && (manager.auswahlLeistung.leistung?.id === leistung.id) }">
 							<span class="text-ellipsis overflow-hidden whitespace-nowrap column-focussable" tabindex="0" @keydown.enter.prevent="focusFloskelEditor"
-								@focusin="tabToUnselectedLeistung(indexSchueler, indexLeistung, leistung, columnsComputed.length - 1)">{{ leistung.fachbezogeneBemerkungen }}</span>
+								@focusin="tabToUnselectedLeistung(indexSchueler, indexLeistung, leistung, $event.target)">{{ leistung.fachbezogeneBemerkungen }}</span>
 						</td>
 						<td class="svws-ui-td" role="cell" />
 					</tr>
@@ -104,14 +103,14 @@
 
 <script setup lang="ts">
 
-	import { computed, ref, watch } from 'vue';
+	import { onMounted, computed, nextTick, ref, watch } from 'vue';
 	import type { EnmLeistungenProps } from './EnmLeistungenProps';
 	import type { EnmLeistungAuswahl } from './EnmManager';
 	import type { ENMLeistung } from '@core/core/data/enm/ENMLeistung';
 	import { Note } from '@core/asd/types/Note';
 
 	const props = defineProps<EnmLeistungenProps>();
-	const rowRefs = ref(new Map<number, { element: HTMLElement, isLastRow: boolean }>());
+	const rowRefs = ref(new Map<number, { element: HTMLElement | null, isLastRow: boolean }>());
 	const currentColumn = ref(0);
 
 	const cols = [
@@ -135,12 +134,25 @@
 	});
 
 	const columnsComputed = computed<HTMLElement[]>(
-		() => Array.from(rowRefs.value.get(props.manager.auswahlLeistung.leistung!.id)!.element.querySelectorAll("input, .column-focussable"))
+		() => {
+			if (props.manager.auswahlLeistung.leistung) {
+				const htmlElement = rowRefs.value.get(props.manager.auswahlLeistung.leistung.id)!.element;
+				if (htmlElement !== null)
+					return Array.from(htmlElement.querySelectorAll("input, .column-focussable"));
+				else
+					return [];
+			} else
+				return [];
+		}
 	);
 
 	function setAuswahlLeistung(value: EnmLeistungAuswahl) {
 		props.manager.auswahlLeistung = value;
-		columnsComputed.value[currentColumn.value].focus();
+	}
+
+	function selectInputContent(ele: EventTarget) {
+		if (ele instanceof HTMLInputElement)
+			ele.select();
 	}
 
 	function nextColumn() {
@@ -171,9 +183,25 @@
 		props.manager.update();
 	}
 
-	function tabToUnselectedLeistung(indexSchueler: number, indexLeistung: number, leistung: ENMLeistung, columnIndex: number) {
-		currentColumn.value = columnIndex;
-		setAuswahlLeistung({ indexSchueler, indexLeistung, leistung });
+	async function doPatchLeistungNote(leistung: ENMLeistung, newValue: string | null | undefined, patchObject: Partial<ENMLeistung>) {
+		if (newValue === null || newValue === undefined || newValue === "")
+			return;
+		else
+			await doPatchLeistung(leistung, patchObject);
+	}
+
+	function tabToUnselectedLeistung(indexSchueler: number, indexLeistung: number, leistung: ENMLeistung, ele: EventTarget | null) {
+		const newRowHtml = rowRefs.value.get(leistung.id)?.element;
+		if (newRowHtml === null || newRowHtml === undefined)
+			return;
+		const newRowArray = Array.from(newRowHtml.querySelectorAll("input, .column-focussable"));
+		const columnIndex = newRowArray.indexOf(ele as HTMLElement);
+		if (columnIndex !== -1)
+			currentColumn.value = columnIndex;
+		if (!props.manager.compareAuswahlLeistung({ indexSchueler, indexLeistung, leistung }, props.manager.auswahlLeistung))
+			setAuswahlLeistung({ indexSchueler, indexLeistung, leistung });
+		if(ele)
+			selectInputContent(ele);
 	}
 
 	function handleTabEvent(eve: KeyboardEvent, idLeistung: number) {
@@ -206,8 +234,10 @@
 
 	watch(
 		() => props.manager.auswahlLeistung,
-		() => columnsComputed.value[currentColumn.value].focus()
+		async () => await nextTick(() => columnsComputed.value[currentColumn.value].focus())
 	)
+
+	onMounted(() => currentColumn.value = 0)
 
 </script>
 
@@ -216,6 +246,10 @@
 	.svws-ui-tr {
 		grid-template-columns: v-bind(gridTemplateColumnsComputed);
 		min-height: auto;
+	}
+
+	.grade-field {
+		width: 100%;
 	}
 
 </style>

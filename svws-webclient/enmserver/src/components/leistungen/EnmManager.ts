@@ -807,6 +807,11 @@ export class EnmManager {
 		return a.id - b.id;
 	}
 
+	/** Vergleicht zwei Auswahlelemente. Sie sind verschieden, wenn die Schüler- oder Leistungsindizes oder die Leistungs-Id verschieden sind.  */
+	public compareAuswahlLeistung(a: EnmLeistungAuswahl, b: EnmLeistungAuswahl): boolean {
+		return (a.leistung?.id === b.leistung?.id) && (a.indexLeistung === b.indexLeistung) && (a.indexSchueler === b.indexSchueler);
+	}
+
 	/** Definition des Comparators für zwei Teilleistungen */
 	public comparatorTeilleistungen = <Comparator<ENMTeilleistung>>{ compare: this.compareTeilleistungen };
 

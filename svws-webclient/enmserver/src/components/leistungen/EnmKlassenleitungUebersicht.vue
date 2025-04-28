@@ -42,25 +42,25 @@
 						{{ schueler.nachname }}, {{ schueler.vorname }} ({{ schueler.geschlecht }})
 					</td>
 					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('FS') ?? true">
-						<svws-ui-input-number @focusin="tabToUnselectedSchueler(schueler, 0)" :model-value="schueler.lernabschnitt.fehlstundenGesamt" headless hide-stepper min="0" max="999"
+						<svws-ui-input-number @focusin="switchToUnselectedSchueler(schueler, $event.target)" :model-value="schueler.lernabschnitt.fehlstundenGesamt" headless hide-stepper min="0" max="999"
 							@change="fehlstundenGesamt => doPatchLernabschnitt(schueler.lernabschnitt, { fehlstundenGesamt, id: schueler.lernabschnitt.id })"
 							:class="{ 'contentFocusField': manager.auswahlSchueler?.id === schueler.id }" />
 					</td>
 					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('FSU') ?? true">
-						<svws-ui-input-number :model-value="schueler.lernabschnitt.fehlstundenGesamtUnentschuldigt" headless hide-stepper min="0" :max="schueler.lernabschnitt.fehlstundenGesamt"
-							@change="fehlstundenGesamtUnentschuldigt => doPatchLernabschnitt(schueler.lernabschnitt, { fehlstundenGesamtUnentschuldigt, id: schueler.lernabschnitt.id })" />
+						<svws-ui-input-number :model-value="schueler.lernabschnitt.fehlstundenGesamtUnentschuldigt" headless hide-stepper min="0" @focusin="switchToUnselectedSchueler(schueler, $event.target)"
+							:max="schueler.lernabschnitt.fehlstundenGesamt" @change="fehlstundenGesamtUnentschuldigt => doPatchLernabschnitt(schueler.lernabschnitt, { fehlstundenGesamtUnentschuldigt, id: schueler.lernabschnitt.id })" />
 					</td>
 					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('ASV') ?? true" @click="emitBemerkung('ASV')" @keydown.enter.prevent="focusFloskelEditor('ASV')"
 						:class="{ 'bg-ui-selected-secondary text-ui-onselected-secondary': floskelEditorVisible && (manager.auswahlSchueler?.id === schueler.id) && (hauptgruppe === 'ASV') }">
-						<span class="text-ellipsis overflow-hidden whitespace-nowrap column-focussable" tabindex="0">{{ schueler.bemerkungen.ASV }}</span>
+						<span class="text-ellipsis overflow-hidden whitespace-nowrap column-focussable" @focusin="switchToUnselectedSchueler(schueler, $event.target)" tabindex="0">{{ schueler.bemerkungen.ASV }}</span>
 					</td>
 					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('AUE') ?? true" @click="emitBemerkung('AUE')" @keydown.enter.prevent="focusFloskelEditor('AUE')"
 						:class="{ 'bg-ui-selected-secondary text-ui-onselected-secondary': floskelEditorVisible && (manager.auswahlSchueler?.id === schueler.id) && (hauptgruppe === 'AUE') }">
-						<span class="text-ellipsis overflow-hidden whitespace-nowrap column-focussable" tabindex="0">{{ schueler.bemerkungen.AUE }}</span>
+						<span class="text-ellipsis overflow-hidden whitespace-nowrap column-focussable" @focusin="switchToUnselectedSchueler(schueler, $event.target)" tabindex="0">{{ schueler.bemerkungen.AUE }}</span>
 					</td>
 					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('ZB') ?? true" @click="emitBemerkung('ZB')" @keydown.enter.prevent="focusFloskelEditor('ZB')"
 						:class="{ 'bg-ui-selected-secondary text-ui-onselected-secondary': floskelEditorVisible && (manager.auswahlSchueler?.id === schueler.id) && (hauptgruppe === 'ZB') }">
-						<span class="text-ellipsis overflow-hidden whitespace-nowrap column-focussable" @focusin="tabToUnselectedSchueler(schueler, columnsComputed.length - 1)" tabindex="0">{{ schueler.bemerkungen.ZB }}</span>
+						<span class="text-ellipsis overflow-hidden whitespace-nowrap column-focussable" @focusin="switchToUnselectedSchueler(schueler, $event.target)" tabindex="0">{{ schueler.bemerkungen.ZB }}</span>
 					</td>
 					<td class="svws-ui-td" role="cell" />
 				</tr>
@@ -71,7 +71,7 @@
 
 <script setup lang="ts">
 
-	import { computed, ref, watch } from 'vue';
+	import { computed, nextTick, ref, watch } from 'vue';
 	import type { EnmKlassenleitungProps } from './EnmKlassenleitungProps';
 	import type { BemerkungenHauptgruppe } from './EnmManager';
 	import type { ENMLernabschnitt } from '@core/core/data/enm/ENMLernabschnitt';
@@ -141,9 +141,22 @@
 		props.manager.update();
 	}
 
-	function tabToUnselectedSchueler(schueler: ENMSchueler, columnIndex: number) {
-		currentColumn.value = columnIndex;
+	function selectInputContent(ele: EventTarget) {
+		if (ele instanceof HTMLInputElement)
+			ele.select();
+	}
+
+	function switchToUnselectedSchueler(schueler: ENMSchueler, ele: EventTarget | null) {
+		const newRowHtml = rowRefs.value.get(schueler.id);
+		if (newRowHtml === undefined)
+			return;
+		const newRowArray = Array.from(newRowHtml.querySelectorAll("input, .column-focussable"));
+		const columnIndex = newRowArray.indexOf(ele as HTMLElement);
+		if (columnIndex !== -1)
+			currentColumn.value = columnIndex;
 		props.manager.auswahlSchueler = schueler;
+		if(ele)
+			selectInputContent(ele);
 	}
 
 	function handleTabEvent(eve: KeyboardEvent) {
@@ -176,7 +189,7 @@
 
 	watch(
 		() => props.manager.auswahlSchueler,
-		() => columnsComputed.value[currentColumn.value].focus()
+		async () => await nextTick(() => columnsComputed.value[currentColumn.value].focus())
 	)
 
 </script>
