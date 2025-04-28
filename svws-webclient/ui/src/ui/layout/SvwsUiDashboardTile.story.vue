@@ -1,5 +1,5 @@
 <template>
-	<Story title="Dashboard Tile" id="svws-ui-dashboard-tile" icon="ri:dashboard-line" auto-props-disabled responsive-disabled>
+	<Story title="Dashboard Tile" id="svws-ui-dashboard-tile" icon="ri:dashboard-line" :layout="{ type: 'single', iframe: false }" auto-props-disabled responsive-disabled>
 		<Variant title="Default" id="Default" source=" ">
 			<div class="p-4">
 				<div class="svws-ui-dashboard">

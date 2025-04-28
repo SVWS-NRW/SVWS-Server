@@ -1,5 +1,5 @@
 <template>
-	<Story title="Sidebar/Menu Item" id="svws-ui-menu-item" group="app">
+	<Story title="Sidebar/Menu Item" id="svws-ui-menu-item" :layout="{ type: 'single', iframe: false }" group="app">
 		<Variant v-for="(props, title) of propsVariants"
 			:key="title"
 			:id="title"

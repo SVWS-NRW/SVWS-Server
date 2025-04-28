@@ -1,5 +1,5 @@
 <template>
-	<Story title="Card" id="ui-card" icon="ri:window-2-fill" :layout="{ type: 'single' }" auto-props-disabled>
+	<Story title="Card" id="ui-card" icon="ri:window-2-fill" :layout="{ type: 'single', iframe: false }" auto-props-disabled>
 		<Variant title="Collapsible" id="Collapsible" :responsive-disabled="false">
 			<div class="p-4">
 				<ui-card :compact="state.compact" :is-open="state.isOpen" :collapsible="true" :collapse-icon-position="state.iconPosition"

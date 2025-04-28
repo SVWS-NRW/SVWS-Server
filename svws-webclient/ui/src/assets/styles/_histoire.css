@@ -8,22 +8,21 @@
 
 html {
 	font-size: initial !important;
-}
-
-.histoire-generic-render-story {
-	@apply h-auto;
-	contain: layout;
-}
-
-.histoire-generic-render-story.dark,
-.dark .htw-border {
 	@apply bg-ui text-ui;
 }
 
-.htw-dark .bind-preview-bg {
-	@apply bg-ui;
+html:is(.htw-dark) {
+	color-scheme: dark;
 }
 
-.htw-m-auto {
-	margin-top: 0;
+.bind-preview-bg {
+	@apply border-ui-neutral;
+}
+
+.htw-border {
+	@apply border border-ui-neutral;
+}
+
+.htw-bg-gray-700 {
+	@apply bg-ui;
 }

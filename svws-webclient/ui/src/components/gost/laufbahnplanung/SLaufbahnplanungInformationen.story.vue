@@ -1,5 +1,5 @@
 <template>
-	<Story title="Laufbahnplanungsinformationen">
+	<Story title="Laufbahnplanungsinformationen" :layout="{ type: 'single', iframe: false }">
 		<Variant title="Fehlermeldungen">
 			<s-laufbahnplanung-informationen :fehlerliste="()=>fehlerliste" />
 		</Variant>

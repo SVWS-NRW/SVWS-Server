@@ -7,3 +7,4 @@ root.setAttribute('class', 'light');
 const reader = new JsonCoreTypeReaderStatic();
 reader.readAll();
 
+

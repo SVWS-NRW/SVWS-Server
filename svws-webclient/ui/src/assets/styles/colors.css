@@ -5,7 +5,7 @@
 	:root {
 		/* TODO color-scheme: light dark; -> Als default - Browser-Default...*/
 		color-scheme: light;
-		/* color-scheme: light dark; */
+		/* color-scheme: light dark;  */
 
 		--color-text-ui: light-dark(var(--color-palette-neutral-900), var(--color-palette-neutral-100));
 		--color-text-ui-0: light-dark(var(--color-palette-neutral-100), var(--color-palette-neutral-900));
@@ -211,7 +211,6 @@
 		--color-bg-ui-neutral-hover: light-dark(var(--color-palette-neutral-400), var(--color-palette-neutral-700));
 		--color-bg-ui-neutral-secondary: light-dark(var(--color-palette-neutral-50), var(--color-palette-neutral-950));
 		--color-bg-ui-disabled: light-dark(var(--color-palette-neutral-300), var(--color-palette-neutral-850));
-
 		--color-bg-uistatic: var(--color-palette-neutral-100);
 		--color-bg-uistatic-0: var(--color-palette-neutral-900);
 		--color-bg-uistatic-10: var(--color-palette-neutral-800);
@@ -262,6 +261,14 @@
 		--color-border-ui-onneutral: light-dark(var(--color-palette-neutral-900), var(--color-palette-neutral-100));
 		--color-border-ui-onneutral-hover: light-dark(var(--color-palette-brand-500), var(--color-palette-brand-300));
 		--color-border-ui-ondisabled: light-dark(var(--color-palette-neutral-500), var(--color-palette-neutral-850));
+		--color-border-uistatic: var(--color-palette-neutral-900);
+		--color-border-uistatic-0: var(--color-palette-neutral-100);
+		--color-border-uistatic-10: var(--color-palette-neutral-300);
+		--color-border-uistatic-25: var(--color-palette-neutral-500);
+		--color-border-uistatic-50: var(--color-palette-neutral-700);
+		--color-border-uistatic-75: var(--color-palette-neutral-800);
+		--color-border-uistatic-100: var(--color-palette-neutral-900);
+
 
 		--color-accent-ui: light-dark(var(--color-palette-brand-500), var(--color-palette-brand-300));
 		--color-accent-ui-brand: light-dark(var(--color-palette-brand-500), var(--color-palette-brand-300));
@@ -445,6 +452,7 @@
 	--border-color-ui-onneutral: var(--color-border-ui-onneutral);
 	--border-color-ui-onneutral-hover: var(--color-border-ui-onneutral-hover);
 	--border-color-ui-ondisabled: var(--color-border-ui-ondisabled);
+	--border-color-uistatic: var(--color-text-uistatic);
 	--border-color-uistatic-0: var(--color-text-uistatic-0);
 	--border-color-uistatic-10: var(--color-text-uistatic-10);
 	--border-color-uistatic-25: var(--color-text-uistatic-25);

@@ -1,5 +1,5 @@
 <template>
-	<Story title="Avatar" id="svws-ui-avatar" icon="ri:user-line">
+	<Story title="Avatar" id="svws-ui-avatar" icon="ri:user-line" :layout="{ type: 'single', iframe: false }">
 		<Variant title="Default" id="Default">
 			<div class="p-4">
 				<div class="w-20">
