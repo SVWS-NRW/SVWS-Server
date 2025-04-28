@@ -11349,29 +11349,31 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der DELETE-Methode deleteAbteilungen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/abteilungen/multiple
 	 *
-	 * Entfernt mehrere Abteilungen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen eines Abteilung hat.
+	 * Entfernt mehrere Abteilungen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen von Abteilungen hat.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Abteilung wurde erfolgreich entfernt.
+	 *   Code 200: Die Abteilungen wurden erfolgreich entfernt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: Abteilung
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
-	 *   Code 404: Keine Abteilung vorhanden
-	 *   Code 409: Die übergebenen Daten sind fehlerhaft)
+	 *   Code 404: Keine Abteilungen vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
 	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
 	 *
 	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
-	 * @returns Die Abteilung wurde erfolgreich entfernt.
+	 * @returns Die Abteilungen wurden erfolgreich entfernt.
 	 */
-	public async deleteAbteilungen(data : List<number>, schema : string) : Promise<Abteilung> {
+	public async deleteAbteilungen(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/schule/abteilungen/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : string = await super.deleteJSON(path, body);
-		const text = result;
-		return Abteilung.transpilerFromJSON(text);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 

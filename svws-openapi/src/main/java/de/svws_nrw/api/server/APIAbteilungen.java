@@ -1,5 +1,6 @@
 package de.svws_nrw.api.server;
 
+import de.svws_nrw.core.data.SimpleOperationResponse;
 import java.io.InputStream;
 
 import de.svws_nrw.core.data.schule.Abteilung;
@@ -144,11 +145,12 @@ public class APIAbteilungen {
 	@DELETE
 	@Path("/multiple")
 	@Operation(summary = "Entfernt mehrere Abteilungen.",
-			description = "Entfernt mehrere Abteilungen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen eines Abteilung hat.")
-	@ApiResponse(responseCode = "200", description = "Die Abteilung wurde erfolgreich entfernt.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Abteilung.class)))
+			description = "Entfernt mehrere Abteilungen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen von Abteilungen hat.")
+	@ApiResponse(responseCode = "200", description = "Die Abteilungen wurden erfolgreich entfernt.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
-	@ApiResponse(responseCode = "404", description = "Keine Abteilung vorhanden")
-	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft)")
+	@ApiResponse(responseCode = "404", description = "Keine Abteilungen vorhanden")
+	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z. B. beim Datenbankzugriff)")
 	public Response deleteAbteilungen(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der zu löschenden Klassen", required = true,
 			content = @Content(mediaType = MediaType.APPLICATION_JSON,
