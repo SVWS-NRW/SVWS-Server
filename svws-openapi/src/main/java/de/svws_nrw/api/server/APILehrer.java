@@ -304,7 +304,7 @@ public class APILehrer {
 	@ApiResponse(responseCode = "404", description = "Keine Lehrer-Personalabschnittsdaten mit der angegebenen ID gefunden")
 	public Response getLehrerPersonalabschnittsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerPersonalabschnittsdaten(conn).get(id),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerPersonalabschnittsdaten(conn).getByIdAsResponse(id),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.LEHRER_PERSONALDATEN_ANSEHEN);
 	}
@@ -337,7 +337,7 @@ public class APILehrer {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							schema = @Schema(implementation = LehrerPersonalabschnittsdaten.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerPersonalabschnittsdaten(conn).patch(id, is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerPersonalabschnittsdaten(conn).patchAsResponse(id, is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN);
 	}
