@@ -46,6 +46,15 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	}
 
 	/**
+	 * Die Methode, um einen Dummy-Manager zurückzugeben, falls bisher kein Manager initialisiert wurde.
+	 *
+	 * @returns der Dummy-Manager
+	 */
+	protected getDummyManager() : TAuswahlManager | undefined {
+		return undefined;
+	}
+
+	/**
 	 * Gibt zurück, ob ein initialisierter Manager existiert.
 	 */
 	get hasManager(): boolean {
@@ -56,8 +65,12 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	 * Gibt den Auswahl-Manager zurück.
 	 */
 	get manager(): TAuswahlManager {
-		if (this._state.value.manager === undefined)
+		if (this._state.value.manager === undefined) {
+			const dummy = this.getDummyManager();
+			if (dummy !== undefined)
+				return dummy;
 			throw new DeveloperNotificationException("Abfrage des Managers ohne vorige Initialisierung");
+		}
 		return this._state.value.manager;
 	}
 

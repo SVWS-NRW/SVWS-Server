@@ -81,10 +81,14 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 		this.setPatchedState({ mapStundenplaene });
 	}
 
-	get schuelerListeManager(): SchuelerListeManager {
-		return this.hasManager ? this.manager // oder gib einen Dummy zurück...
-			: new SchuelerListeManager(api.schulform, new SchuelerListe(), new ArrayList(), api.schuleStammdaten.abschnitte, api.schuleStammdaten.idSchuljahresabschnitt);
-	}
+	// /**
+	//  * Gebe einen Dummy-Manager zurück, wenn noch keine Initialisierung des Managers stattgefunden hat.
+	//  *
+	//  * @returns der Dummy-Manager
+	//  */
+	// protected getDummyManager() : SchuelerListeManager | undefined {
+	// 	return new SchuelerListeManager(api.schulform, new SchuelerListe(), new ArrayList(), api.schuleStammdaten.abschnitte, api.schuleStammdaten.idSchuljahresabschnitt);
+	// }
 
 	get listSchuelerTelefoneintraege(): List<SchuelerTelefon> {
 		return this._state.value.listSchuelerTelefoneintraege;
@@ -142,7 +146,7 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LOESCHEN))
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Schülern vor.');
 
-		if (!this.schuelerListeManager.liste.auswahlExists())
+		if (!this.manager.liste.auswahlExists())
 			errorLog.add('Es wurde kein Schüler zum Löschen ausgewählt.');
 
 		return [errorLog.isEmpty(), errorLog];

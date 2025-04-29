@@ -6983,7 +6983,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die Fachwahlen der gymnasialen Oberstufe für das angegebene Fach und den angegebenen Schüler
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: Abiturdaten
+	 *     - Rückgabe-Typ: GostSchuelerFachwahl
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Fachwahlen der Gymnasialen Oberstufe eines Schülers auszulesen.
 	 *   Code 404: Kein Eintrag für einen Schüler mit Laufbahnplanungsdaten der gymnasialen Oberstufe für die angegebene ID gefunden
 	 *
@@ -6993,14 +6993,14 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Fachwahlen der gymnasialen Oberstufe für das angegebene Fach und den angegebenen Schüler
 	 */
-	public async getGostSchuelerFachwahl(schema : string, schuelerid : number, fachid : number) : Promise<Abiturdaten> {
+	public async getGostSchuelerFachwahl(schema : string, schuelerid : number, fachid : number) : Promise<GostSchuelerFachwahl> {
 		const path = "/db/{schema}/gost/schueler/{schuelerid : \\d+}/fachwahl/{fachid : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{schuelerid\s*(:[^{}]+({[^{}]+})*)?}/g, schuelerid.toString())
 			.replace(/{fachid\s*(:[^{}]+({[^{}]+})*)?}/g, fachid.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
-		return Abiturdaten.transpilerFromJSON(text);
+		return GostSchuelerFachwahl.transpilerFromJSON(text);
 	}
 
 

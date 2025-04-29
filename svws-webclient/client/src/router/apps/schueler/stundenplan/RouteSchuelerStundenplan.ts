@@ -69,7 +69,7 @@ export class RouteSchuelerStundenplan extends RouteNode<RouteDataSchuelerStunden
 		return {
 			apiStatus: api.status,
 			getPDF: this.data.getPDF,
-			id: routeSchueler.data.schuelerListeManager.daten().id,
+			id: routeSchueler.data.manager.daten().id,
 			ignoreEmpty: this.data.ganzerStundenplan,
 			stundenplan: () => (this.data.mapStundenplaene.size === 0) ? undefined : this.data.auswahl,
 			mapStundenplaene: this.data.mapStundenplaene,

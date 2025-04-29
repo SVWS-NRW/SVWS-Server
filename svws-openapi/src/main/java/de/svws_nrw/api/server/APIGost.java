@@ -921,7 +921,7 @@ public class APIGost {
 			description = "Liest für die gymnasiale Oberstufe die Fachwahlen zu einem Fach von dem angegebenen Schüler aus. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Fachwahlen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Die Fachwahlen der gymnasialen Oberstufe für das angegebene Fach und den angegebenen Schüler",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Abiturdaten.class)))
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostSchuelerFachwahl.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Fachwahlen der Gymnasialen Oberstufe eines Schülers "
 			+ "auszulesen.")
 	@ApiResponse(responseCode = "404", description = "Kein Eintrag für einen Schüler mit Laufbahnplanungsdaten der gymnasialen Oberstufe für die angegebene "
