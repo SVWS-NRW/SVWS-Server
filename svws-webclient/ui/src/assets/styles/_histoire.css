@@ -15,14 +15,7 @@ html:is(.htw-dark) {
 	color-scheme: dark;
 }
 
-.bind-preview-bg {
-	@apply border-ui-neutral;
-}
-
-.htw-border {
-	@apply border border-ui-neutral;
-}
-
-.htw-bg-gray-700 {
+.htw-dark .dark\:htw-bg-gray-700 {
 	@apply bg-ui;
-}
+  }
+  

@@ -58,11 +58,5 @@ export default defineConfig({
 		{label:'bg-uistatic-75',color:'var(--background-color-uistatic-75)',contrastColor:'var(--text-color-ui-75)'},
 		{label:'bg-uistatic-100',color:'var(--background-color-uistatic-100)',contrastColor:'var(--text-color-ui-100)'},
 	  ],	  
-	  theme: {
-		colors: {
-		  gray: {
-			700: '#262627', // Diese Farbe wird für den Hintergrund im Darkmode verwendet. Sie wird hier auf die Farbe von bg-ui im Darkmode gesetzt
-		  },
-		},
-	  }
+	 
 })

@@ -1,252 +1,248 @@
 <template>
 	<Story title="Farben" id="farben" group="top" icon="ri:palette-line" :responsive-disabled="true" :layout="{ type: 'single', iframe: false }" auto-props-disabled>
-		<Variant title="Einleitung" source="" id="resources">
-			<div class="htw-prose dark:htw-prose-invert">
+		<Variant title="Einleitung" source=" " id="resources">
+			<div class="htw-prose dark:htw-prose-invert inline">
 				<h1>Einleitung</h1>
-				<p>
+				<p class="text-ui">
 					SVWS-UI bietet einen breite Palette von aufeinander abgestimmten Farben, die für viele Anwendungsfälle vordefiniert sind und den Richtlinien
 					zu Kontrasten nach WCAG entsprechen. Die Benennung der Farben entsprechen einer semantischen Struktur, die die Wahl der passenden Farbe
 					erleichtern soll. Diese Struktur ist in den <a href="#info">Design Tokens</a> beschrieben.
 				</p>
 
 				<h2>Themes</h2>
-				<p>
+				<p class="text-ui">
 					Bisher sind zwei Theme implementiert: das Light-Theme und das Dark-Theme. Die Farben passen sich automatisch an das ausgewählte Theme an.
 					Eine Anpassungen durch <code class="bg-ui-selected">dark:bg-ui</code> ist nicht mehr erforderlich.<br>
 					Alle hier definierten Farben bieten eine Vorschau für beide Themes sowie die Kontrastwerte.
 				</p>
 				<h2>Technische Umsetzung</h2>
-				<p>
+				<p class="text-ui">
 					Farben sind in <code>/SVWS-Server/svws-webclient/ui/src/assets/styles/colors.css</code> definiert. Eine allgemeine Palette ist
 					unter <code>/SVWS-Server/svws-webclient/ui/src/assets/styles/palette.css</code> definiert. Diese Farben sollen niemals direkt verwendet werden.
 					Für die Definition der Farben wird auf Tailwind 4 und die Verwendung von Theme Variablen zurückgegriffen.
 					<a href="https://tailwindcss.com/docs/theme" target="_blank" rel="noopener noreferrer">Theme variables</a>
 				</p>
-				<p>
+				<p class="text-ui">
 					In <code>colors.css</code> werden die Farben für jeden Token angepasst. Dazu sollen ausschließlich Farben aus der UI Palette eingesetzt werden.
 					<br>Mit Hilfe der Funktion <code>light-dark()</code> werden Farben sowohl für das Light- als auch für das Dark-Theme definiert.
 				</p>
 			</div>
 		</Variant>
-		<Variant title="Design Tokens" source="" id="info">
-			<h1>Design Tokens</h1>
-			<p>
-				Um eine konsistente Farbgebung zu gewährleisten, verwenden wir ein Farbschema, das auf Design Tokens basiert. Die unten aufgeführten Tokens
-				sind als CSS-Classes verfügbar und können in Komponenten und dem Client verwendet werden. Vereinzelte Kombinationen stehen jedoch nicht zur
-				Verfügung. Valide Kombinationen können auf dieser Seite eingesehen werden.
-			</p>
-			<p>Die CSS-Klassen sind semantisch nach diesen Attributen zusammengesetzt:</p>
-			<table class="text-left w-150 my-2">
-				<thead class="border-b border-ui h-10">
-					<tr>
-						<th><em>[type]</em></th>
-						<th>-ui</th>
-						<th><em>-[role]</em></th>
-						<th><em>-[prominence]</em></th>
-						<th><em>-[interaction]</em></th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr class="align-top">
-						<td>
-							<div v-for="(type, typeIndex) in semantics.type" :key="typeIndex">{{ type }}</div>
-						</td>
-						<td>
-							<div class="opacity-50"><strong>-ui</strong></div>
-							<div class="opacity-50"><strong>-uistatic</strong></div>
-						</td>
-						<td>
-							<div><em>default</em></div>
-							<div v-for="(role, roleIndex) in semantics.role" :key="roleIndex">{{ role }}</div>
-						</td>
-						<td>
-							<div><em>default</em></div>
-							<div v-for="(prominence, prominenceIndex) in semantics.prominence" :key="prominenceIndex">{{ prominence }}</div>
-						</td>
-						<td>
-							<div><em>default</em></div>
-							<div v-for="(interaction, interactionIndex) in semantics.interaction" :key="interactionIndex">{{ interaction }}</div>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-			<h2>Tokens</h2>
-			<h3>Type</h3>
-			<p>
-				Der Type bezieht sich auf die Art, wie die Farbe angwendet werden soll. So steht <code class="bg-ui-selected">bg</code> zum Beispiel für backgroundcolor, während
-				<code class="bg-ui-selected">text</code> für Textfarben steht.
-			</p>
-			<h3>ui</h3>
-			<p>
-				Der Zusatz <code class="bg-ui-selected">-ui</code> bzw. <code class="bg-ui-selected">-uistatic</code> markiert Farben aus dieser UI-Bibliothek.
-				<code class="bg-ui-selected">-uistatic</code> steht dabei für statische Farben. Diese Farben verändern sich nicht basierend auf dem Theme, sondern
-				sind für alle Themes gleich.
-			</p>
-			<h3>Role</h3>
-			<p>
-				Die Rolle beschreibt den Einsatz der Farbe. <code class="bg-ui-selected">success</code> zum Beispiel symbolisiert eine erfolgreiche Aktion und
-				nutzt hierfür einen Grünton.
-			</p>
-			<p>
-				Eine spezielle Funktion haben außerdem die <code class="bg-ui-selected">on</code>-Farben. Diese kommen zum Einsatz, wenn Farben über einer bestimmten
-				Hintergrundfarbe liegen	wie zum Beispiel für Texte oder Borders. Wird eine Hintergrundfarbe definiert, die von der Defaultfarbe (bg-ui) abweicht,
-				dann müssen die anderen	Farben entsprechend angepasst werden. Beispiel: bei der Hintergrundfarbe <code class="bg-ui-selected">bg-ui-success</code> ist für Texte die
-				Farbe <code class="bg-ui-selected">text-ui-onsuccess</code> zu verwenden. Dieses Vorgehen stellt sicher, dass die Kontraste in allen Themes
-				korrekt sind und bewahrt außerdem die Konsistenz.
-			</p>
-			<h3>Prominence</h3>
-			<p>
-				Die Prominence der Farbe beschreibt ihre Hervorhebung. Die Werte <code class="bg-ui-selected">0</code> bis
-				<code class="bg-ui-selected">100</code> bezeichnen Abstufungen von der Standardfarbe. <code class="bg-ui-selected">secondary</code> dagegen
-				beschreibt eine Sekundärfarbe, die beispielsweise für Placeholder-Texte verwendet wird.
-			</p>
-			<h3>Interaction</h3>
-			<p>
-				Die Interaction beschreibt Farben, die bei einer bestimmten Interaktionen mit Elementen zum Einsatz kommen. die Interaction
-				<code class="bg-ui-selected">hover</code> wird zum Beispiel verwendet, um die Farbe bei einem Hover zu verändern.
-			</p>
-			<h2>Konzept</h2>
-			<p>
-				Zur Erstellung des Farbschemas wurden Best Practices anderer Apps analysiert. Unter Berücksichtigung der Anforderungen aus dem SVWS-Client und
-				der UI-Komponenten wurde das System mit Design Tokens definiert.
-			</p>
-			<p>
-				Damit das Farbsystem flexibel und erweiterbar bleibt, wurden die Tokens semantisch nach Type, Role, Prominenz und Interaktion aufgeteilt. Damit
-				ist es möglich das System für neue Komponenten und Features sinnvoll zu erweitern und sogar komplett neue Themes (z.B. High Contrast)
-				unkompliziert zu ergänzen.
-			</p>
-			<ul>
-				<li><a href="https://medium.muz.li/unlocking-the-power-of-design-tokens-to-create-dark-mode-ui-18c0802b094e" target="_blank" rel="noopener noreferrer">Unlocking the Power of Design Tokens to Create Dark Mode UI</a></li>
-				<li><a href="https://tr.designtokens.org/format/#design-token" target="_blank" rel="noopener noreferrer">Design Tokens Format Module Draft Community Group Report</a></li>
-				<li><a href="https://www.subframe.com/blog/how-to-setup-semantic-tailwind-colors" target="_blank" rel="noopener noreferrer">How to setup semantic Tailwind CSS colors</a></li>
-				<li><a href="https://uxdesign.cc/naming-design-tokens-9454818ed7cb" target="_blank" rel="noopener noreferrer">Naming design tokens</a></li>
-				<li><a href="https://www.figma.com/blog/illuminating-dark-mode/" target="_blank" rel="noopener noreferrer">The hidden challenges of a (seemingly) simple user request, and how we built a new pattern of designing and engineering at Figma.</a></li>
-				<li><a href="https://www.figma.com/blog/the-future-of-design-systems-is-semantic/" target="_blank" rel="noopener noreferrer">The future of design systems is semantic</a></li>
-				<li>Evolution of design tokens and component styling, <a href="https://medium.com/fast-design/evolution-of-design-tokens-and-component-styling-part-1-f1491ad1120e" target="_blank" rel="noopener noreferrer">part 1</a>, <a href="https://medium.com/fast-design/evolution-of-design-tokens-and-component-styling-part-2-1018e8bae62" target="_blank" rel="noopener noreferrer">part 2</a></li>
-				<li><a href="https://bradfrost.com/blog/post/creating-themeable-design-systems/" target="_blank" rel="noopener noreferrer">creating themeable design systems</a></li>
-				<li><a href="https://bradfrost.com/blog/post/the-many-faces-of-themeable-design-systems/" target="_blank" rel="noopener noreferrer">the many faces of themeable design systems</a></li>
-				<li><a href="https://www.figma.com/community/file/1105905817981866740" target="_blank" rel="noopener noreferrer">How design tokens can make us better collaborators / Config 2022</a></li>
-				<li><a href="https://medium.com/thinking-design/adaptive-color-in-design-systems-7bcd2e664fa0" target="_blank" rel="noopener noreferrer">Adaptive Color in Design Systems</a></li>
-			</ul>
+		<Variant title="Design Tokens" source=" " id="info">
+			<div class="htw-prose dark:htw-prose-invert inline">
+				<h1>Design Tokens</h1>
+				<p class="text-ui">
+					Um eine konsistente Farbgebung zu gewährleisten, verwenden wir ein Farbschema, das auf Design Tokens basiert. Die unten aufgeführten Tokens
+					sind als CSS-Classes verfügbar und können in Komponenten und dem Client verwendet werden. Vereinzelte Kombinationen stehen jedoch nicht zur
+					Verfügung. Valide Kombinationen können auf dieser Seite eingesehen werden.
+				</p>
+				<p class="text-ui">Die CSS-Klassen sind semantisch nach diesen Attributen zusammengesetzt:</p>
+				<table class="text-left w-150 my-2">
+					<thead class="border-b border-ui h-10">
+						<tr>
+							<th><em>[type]</em></th>
+							<th>-ui</th>
+							<th><em>-[role]</em></th>
+							<th><em>-[prominence]</em></th>
+							<th><em>-[interaction]</em></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="align-top">
+							<td>
+								<div v-for="(type, typeIndex) in semantics.type" :key="typeIndex">{{ type }}</div>
+							</td>
+							<td>
+								<div class="opacity-50"><strong>-ui</strong></div>
+								<div class="opacity-50"><strong>-uistatic</strong></div>
+							</td>
+							<td>
+								<div><em>default</em></div>
+								<div v-for="(role, roleIndex) in semantics.role" :key="roleIndex">{{ role }}</div>
+							</td>
+							<td>
+								<div><em>default</em></div>
+								<div v-for="(prominence, prominenceIndex) in semantics.prominence" :key="prominenceIndex">{{ prominence }}</div>
+							</td>
+							<td>
+								<div><em>default</em></div>
+								<div v-for="(interaction, interactionIndex) in semantics.interaction" :key="interactionIndex">{{ interaction }}</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<h2>Tokens</h2>
+				<h3>Type</h3>
+				<p class="text-ui">
+					Der Type bezieht sich auf die Art, wie die Farbe angwendet werden soll. So steht <code class="bg-ui-selected">bg</code> zum Beispiel für backgroundcolor, während
+					<code class="bg-ui-selected">text</code> für Textfarben steht.
+				</p>
+				<h3>ui</h3>
+				<p class="text-ui">
+					Der Zusatz <code class="bg-ui-selected">-ui</code> bzw. <code class="bg-ui-selected">-uistatic</code> markiert Farben aus dieser UI-Bibliothek.
+					<code class="bg-ui-selected">-uistatic</code> steht dabei für statische Farben. Diese Farben verändern sich nicht basierend auf dem Theme, sondern
+					sind für alle Themes gleich.
+				</p>
+				<h3>Role</h3>
+				<p class="text-ui">
+					Die Rolle beschreibt den Einsatz der Farbe. <code class="bg-ui-selected">success</code> zum Beispiel symbolisiert eine erfolgreiche Aktion und
+					nutzt hierfür einen Grünton.
+				</p>
+				<p class="text-ui">
+					Eine spezielle Funktion haben außerdem die <code class="bg-ui-selected">on</code>-Farben. Diese kommen zum Einsatz, wenn Farben über einer bestimmten
+					Hintergrundfarbe liegen	wie zum Beispiel für Texte oder Borders. Wird eine Hintergrundfarbe definiert, die von der Defaultfarbe (bg-ui) abweicht,
+					dann müssen die anderen	Farben entsprechend angepasst werden. Beispiel: bei der Hintergrundfarbe <code class="bg-ui-selected">bg-ui-success</code> ist für Texte die
+					Farbe <code class="bg-ui-selected">text-ui-onsuccess</code> zu verwenden. Dieses Vorgehen stellt sicher, dass die Kontraste in allen Themes
+					korrekt sind und bewahrt außerdem die Konsistenz.
+				</p>
+				<h3>Prominence</h3>
+				<p class="text-ui">
+					Die Prominence der Farbe beschreibt ihre Hervorhebung. Die Werte <code class="bg-ui-selected">0</code> bis
+					<code class="bg-ui-selected">100</code> bezeichnen Abstufungen von der Standardfarbe. <code class="bg-ui-selected">secondary</code> dagegen
+					beschreibt eine Sekundärfarbe, die beispielsweise für Placeholder-Texte verwendet wird.
+				</p>
+				<h3>Interaction</h3>
+				<p class="text-ui">
+					Die Interaction beschreibt Farben, die bei einer bestimmten Interaktionen mit Elementen zum Einsatz kommen. die Interaction
+					<code class="bg-ui-selected">hover</code> wird zum Beispiel verwendet, um die Farbe bei einem Hover zu verändern.
+				</p>
+				<h2>Konzept</h2>
+				<p class="text-ui">
+					Zur Erstellung des Farbschemas wurden Best Practices anderer Apps analysiert. Unter Berücksichtigung der Anforderungen aus dem SVWS-Client und
+					der UI-Komponenten wurde das System mit Design Tokens definiert.
+				</p>
+				<p class="text-ui">
+					Damit das Farbsystem flexibel und erweiterbar bleibt, wurden die Tokens semantisch nach Type, Role, Prominenz und Interaktion aufgeteilt. Damit
+					ist es möglich das System für neue Komponenten und Features sinnvoll zu erweitern und sogar komplett neue Themes (z.B. High Contrast)
+					unkompliziert zu ergänzen.
+				</p>
+				<ul>
+					<li><a href="https://medium.muz.li/unlocking-the-power-of-design-tokens-to-create-dark-mode-ui-18c0802b094e" target="_blank" rel="noopener noreferrer">Unlocking the Power of Design Tokens to Create Dark Mode UI</a></li>
+					<li><a href="https://tr.designtokens.org/format/#design-token" target="_blank" rel="noopener noreferrer">Design Tokens Format Module Draft Community Group Report</a></li>
+					<li><a href="https://www.subframe.com/blog/how-to-setup-semantic-tailwind-colors" target="_blank" rel="noopener noreferrer">How to setup semantic Tailwind CSS colors</a></li>
+					<li><a href="https://uxdesign.cc/naming-design-tokens-9454818ed7cb" target="_blank" rel="noopener noreferrer">Naming design tokens</a></li>
+					<li><a href="https://www.figma.com/blog/illuminating-dark-mode/" target="_blank" rel="noopener noreferrer">The hidden challenges of a (seemingly) simple user request, and how we built a new pattern of designing and engineering at Figma.</a></li>
+					<li><a href="https://www.figma.com/blog/the-future-of-design-systems-is-semantic/" target="_blank" rel="noopener noreferrer">The future of design systems is semantic</a></li>
+					<li>Evolution of design tokens and component styling, <a href="https://medium.com/fast-design/evolution-of-design-tokens-and-component-styling-part-1-f1491ad1120e" target="_blank" rel="noopener noreferrer">part 1</a>, <a href="https://medium.com/fast-design/evolution-of-design-tokens-and-component-styling-part-2-1018e8bae62" target="_blank" rel="noopener noreferrer">part 2</a></li>
+					<li><a href="https://bradfrost.com/blog/post/creating-themeable-design-systems/" target="_blank" rel="noopener noreferrer">creating themeable design systems</a></li>
+					<li><a href="https://bradfrost.com/blog/post/the-many-faces-of-themeable-design-systems/" target="_blank" rel="noopener noreferrer">the many faces of themeable design systems</a></li>
+					<li><a href="https://www.figma.com/community/file/1105905817981866740" target="_blank" rel="noopener noreferrer">How design tokens can make us better collaborators / Config 2022</a></li>
+					<li><a href="https://medium.com/thinking-design/adaptive-color-in-design-systems-7bcd2e664fa0" target="_blank" rel="noopener noreferrer">Adaptive Color in Design Systems</a></li>
+				</ul>
+			</div>
 		</Variant>
 		<Variant title="Verwendung" source=" " id="verwendung">
-			<h1>Verwendung der Farben</h1>
-			<p>
-				SVWS-UI bietet eine breite Palette von aufeinander abgestimmten Farben, die für die verschiedensten Anwendungsfälle zum Einsatz kommen können.
-				Durch die richtige Verwendung dieser Farben kann eine konsistente Benuzteroberfläche geschaffen werden, die zudem auch den Richtlinien der
-				Barrierefreiheit in Bezug auf Kontraste entspricht.
-			</p>
-			<p>
-				Wichtig für das Verständnis der Farben ist zu wissen, dass die Farben keine direkte Funktion haben. Ihre Namen demosntrieren nur, wofür sie
-				verwendet werden sollen. Ein Beispiel: Die Farbe <code class="bg-ui-selected">text-ui-hover</code> ist eine Textfarbe, die verwendet werden soll,
-				sobald der Text gehovert wird. Das setzen der Klasse alleine sorgt aber nicht für den Effekt.<br>
-				<span class="text-ui-danger"><strong>Der folgende Code erzielt NICHT den gewünschten Hovereffekt</strong></span>
-			</p>
-			<h3>Code</h3>
-			<pre class="bg-ui-neutral border border-ui rounded-lg w-fit whitespace-normal p-2">
-				&lt;div class=&quot;bg-ui text-ui text-ui-hover&quot;&gt;Hover me!&lt;/div&gt;
-			</pre>
-			<h3>Ergebnis</h3>
-			<code>
+			<div class="htw-prose dark:htw-prose-invert inline">
+				<h1>Verwendung der Farben</h1>
+				<p class="text-ui">
+					SVWS-UI bietet eine breite Palette von aufeinander abgestimmten Farben, die für die verschiedensten Anwendungsfälle zum Einsatz kommen können.
+					Durch die richtige Verwendung dieser Farben kann eine konsistente Benuzteroberfläche geschaffen werden, die zudem auch den Richtlinien der
+					Barrierefreiheit in Bezug auf Kontraste entspricht.
+				</p>
+				<p class="text-ui">
+					Wichtig für das Verständnis der Farben ist zu wissen, dass die Farben keine direkte Funktion haben. Ihre Namen demosntrieren nur, wofür sie
+					verwendet werden sollen. Ein Beispiel: Die Farbe <code class="bg-ui-selected">text-ui-hover</code> ist eine Textfarbe, die verwendet werden soll,
+					sobald der Text gehovert wird. Das setzen der Klasse alleine sorgt aber nicht für den Effekt.<br>
+					<span><strong class="text-ui-danger">Der folgende Code erzielt NICHT den gewünschten Hovereffekt</strong></span>
+				</p>
+				<h3>Code</h3>
+				<pre class="w-fit">&lt;div class=&quot;bg-ui text-ui text-ui-hover&quot;&gt;Hover me!&lt;/div&gt;</pre>
+				<h3>Ergebnis</h3>
 				<div class="bg-ui text-ui text-ui-hover">Hover me!</div>
-			</code>
-			<p>
-				Wird eine Textfarbe so definiert, dann wird der Text immer die Farbe <code class="bg-ui-selected">text-ui-hover</code> haben, egal ob er gehovert
-				wird oder nicht. <br>
-				<span class="text-ui-success"><strong>Der folgende Code erzielt den gewünschten Hovereffekt</strong></span>
-			</p>
-			<h3>Code</h3>
-			<pre class="bg-ui-neutral border border-ui rounded-lg w-fit whitespace-normal p-2">
-				&lt;div class=&quot;bg-ui text-ui hover:text-ui-hover&quot;&gt;Hover me!&lt;/div&gt;
-			</pre>
-			<h3>Ergebnis</h3>
-			<code>
+				<p class="text-ui">
+					Wird eine Textfarbe so definiert, dann wird der Text immer die Farbe <code class="bg-ui-selected">text-ui-hover</code> haben, egal ob er gehovert
+					wird oder nicht. <br>
+					<span><strong class="text-ui-success">Der folgende Code erzielt den gewünschten Hovereffekt</strong></span>
+				</p>
+				<h3>Code</h3>
+				<pre class="w-fit">&lt;div class=&quot;bg-ui text-ui hover:text-ui-hover&quot;&gt;Hover me!&lt;/div&gt;</pre>
+				<h3>Ergebnis</h3>
 				<div class="bg-ui text-ui hover:text-ui-hover">Hover me!</div>
-			</code>
-			<h2>Regeln</h2>
-			<p>
-				Um die Ziele der Barrierefreiheit und der konsistenten Benutzeroberfläche zu erreichen, müssen einige Regeln beachtet werden:
-			</p>
-			<ol>
-				<li>
-					<strong>Ausschließliche Nutzung der hier aufgeführten Farben:</strong>Es müssen ausschließlich die hier aufgeführten Farben verwendet werden.
-					Die alten CSS-Color-Classes (Tailwind defaults) dürfen nicht mehr verwendet werden. Verwendbare SVWS-Farben sind an dem Zusatz
-					<code class="bg-ui-selected">-ui</code> bzw. <code class="bg-ui-selected">-uistatic</code> zu erkennen.
-				</li>
-				<li>
-					<strong>Kontraste beachten:</strong> Für eine barrierefreie Webseite müssen kontrastreiche Farben gewählt werden. Diese müssen den Standards der <a href="https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html" target="_blank" class="text-ui-brand">Web Content Accessibility Guidelines (WCAG) 2.1</a>
-					entsprechen und mindestens das Level AA erreichen, besser noch AAA. Die entsprechenden Kontraste und Level sind auch hier bei allen Farben
-					angegeben. <br>
-					Bei Hintergrundfarben kann ein ausreichender Kontrast auch mit der Hilfe von Borders erreicht werden.
-				</li>
-				<li>
-					<strong>Passende Farben auf Hintergrundfarben:</strong> Für die meisten Hintergrundfarben gibt es abgestimmte Farben für Texte, Icons, Borders etc.
-					Die Namen der Farben orientieren sich dann an dem der Hintergrundfarbe, nur mit einem <code class="bg-ui-selected">on</code> Zusatz bei der Rolle. <br>
-					Beispiel: Für die Hintergrundfarbe <code class="bg-ui-selected">bg-ui-success</code> sind die Textfarben <code class="bg-ui-selected">text-ui-onsuccess</code>,
-					<code class="bg-ui-selected">text-ui-onsuccess-hover</code>, <code class="bg-ui-selected">text-ui-onsuccess-secondary</code> oder
-					<code class="bg-ui-selected">text-ui-onsuccess-secondary-hover</code> zu verwenden. Die richtige Nutzung der Farben sorgt für eine abgestimmte,
-					kontrastreiche Kombination, die sich durch die gesamte Benutzeroberfläche zieht.
-				</li>
-				<li>
-					<strong>Keine speziellen Theme-Anpassungen:</strong> Abhängig vom aktuell angezeigten Theme werden auch automatisch passende Farben verwendet.
-					So ist <code class="bg-ui-selected">bg-ui</code> im Light-Theme hell und im Dark-Theme dunkel, ohne das selbst Anpassungen vorgenommen werden
-					müssen. Klassendefinitionen wie <code class="bg-ui-selected">dark:bg-ui</code> sind daher nicht mehr notwendig. <br>
-					Sollte es aber dennoch nötig sein, dass Farben in einem anderen Theme angezeigt werden, obwohl dieses gerade nicht verwendet wird, reicht
-					es aus, dem enstsprechenden Element die Klasse zu geben, zum Beispiel:
-					<code class="bg-ui-selected">&lt;div class=&quot;dark bg-ui text-ui&quot;&gt;Text&lt;/div&gt;</code>.
-					Es wird dann für den Hintergrund und die Textfarbe automatisch die Farbe aus dem Dark-Theme gewählt.
-				</li>
-				<li>
-					<strong>Verwendung von statischen Farben:</strong> Spezielle Farben mit dem Zusatz <code class="bg-ui-selected">-uistatic</code> sind
-					statische Farben, die unabhängig vom Theme immer gleich aussehen. Verwende sie daher immer nur explizit dann, wenn dieser Effekt gewollt
-					ist. Das ist zum Beispiel im SVWS-Client der Fall, wenn Fächerfarben vom Server geladen werden.
-				</li>
-			</ol>
-			<h2>Erweiterungen</h2>
-			<p>
-				Bei Bedarf kann das System durch weitere Farben bzw. Farbabstufungen und -kombinationen erweitert werden. In den meisten Fällen sollte für jede
-				Anforderung jedoch eine passende Kombination aus den vorhandenen Tokens gefunden werden können und es müssen die Richtlinien für Kontraste
-				nach WCAG berücksichtigt werden.
-			</p>
-			<h2>Barrierefreiheit nach WCAG 2</h2>
-			<p>
-				Grundsätzlich muss mindestens ein Kontrastlevel von AA nach WCAG erreicht werden. Besser ist ein Kontrast von AAA. Welche Kontraste die Farben
-				bezogen auf den Hintergrund erreichen, kann auf den jeweiligen Farbseiten geprüft werden. Farben, die ein Level von AA erreichen, werden gelb
-				markiert. Farben, die ein Level von AAA erreichen, werden grün markiert. Farben, die kein Level erreichen, werden rot markiert.
-			</p>
-			<p>
-				In Zukunft kann ein weiteres Farbschema neben Light und Dark Mode ergänzt werden, welches AAA priorisiert.
-			</p>
-			<p>
-				Weiterführende Links:
-			</p>
-			<ul>
-				<li><a href="https://www.w3.org/WAI/WCAG21/Understanding/conformance#levels" target="_blank" rel="noopener noreferrer">Understanding Levels of Conformance (AA, AAA)</a></li>
-				<li><a href="https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html" target="_blank" rel="noopener noreferrer">Contrast (Minimum) (Level AA)</a></li>
-				<li><a href="https://www.w3.org/WAI/WCAG21/Understanding/contrast-enhanced.html" target="_blank" rel="noopener noreferrer">Contrast (Enhanced) (Level AAA)</a></li>
-				<li><a href="https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html" target="_blank" rel="noopener noreferrer">Non-text Contrast</a></li>
-				<li><a href="https://www.w3.org/TR/WCAG21/#dfn-contrast-ratio" target="_blank" rel="noopener noreferrer">Contrast Ratio</a></li>
-				<li><a href="https://www.w3.org/TR/WCAG21/#dfn-relative-luminance" target="_blank" rel="noopener noreferrer">Relative Luminance</a></li>
-			</ul>
-			<p>Mit verschiedenen Tools können Farben auch einzeln getestet werden:</p>
-			<ul>
-				<li><a href="https://color.adobe.com/create/color-contrast-analyzer" target="_blank" rel="noopener noreferrer">Adobe Color Accessibility Tools: Contrast Checker</a></li>
-				<li><a href="https://medium.com/@NateBaldwin/leonardo-an-open-source-contrast-based-color-generator-92d61b6521d2" target="_blank" rel="noopener noreferrer">Leonardo: an open source contrast-based color generator</a></li>
-				<li><a href="https://leonardocolor.io/tools.html#" target="_blank" rel="noopener noreferrer">Leonardo Color Toolbox (Contrast Check)</a></li>
-				<li><a href="https://leonardocolor.io/theme.html#" target="_blank" rel="noopener noreferrer">Leonardo Adaptive color theme tool</a></li>
-			</ul>
+				<h2>Regeln</h2>
+				<p class="text-ui">
+					Um die Ziele der Barrierefreiheit und der konsistenten Benutzeroberfläche zu erreichen, müssen einige Regeln beachtet werden:
+				</p>
+				<ol>
+					<li>
+						<strong>Ausschließliche Nutzung der hier aufgeführten Farben:</strong>Es müssen ausschließlich die hier aufgeführten Farben verwendet werden.
+						Die alten CSS-Color-Classes (Tailwind defaults) dürfen nicht mehr verwendet werden. Verwendbare SVWS-Farben sind an dem Zusatz
+						<code class="bg-ui-selected">-ui</code> bzw. <code class="bg-ui-selected">-uistatic</code> zu erkennen.
+					</li>
+					<li>
+						<strong>Kontraste beachten:</strong> Für eine barrierefreie Webseite müssen kontrastreiche Farben gewählt werden. Diese müssen den Standards der <a href="https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html" target="_blank" class="text-ui-brand">Web Content Accessibility Guidelines (WCAG) 2.1</a>
+						entsprechen und mindestens das Level AA erreichen, besser noch AAA. Die entsprechenden Kontraste und Level sind auch hier bei allen Farben
+						angegeben. <br>
+						Bei Hintergrundfarben kann ein ausreichender Kontrast auch mit der Hilfe von Borders erreicht werden.
+					</li>
+					<li>
+						<strong>Passende Farben auf Hintergrundfarben:</strong> Für die meisten Hintergrundfarben gibt es abgestimmte Farben für Texte, Icons, Borders etc.
+						Die Namen der Farben orientieren sich dann an dem der Hintergrundfarbe, nur mit einem <code class="bg-ui-selected">on</code> Zusatz bei der Rolle. <br>
+						Beispiel: Für die Hintergrundfarbe <code class="bg-ui-selected">bg-ui-success</code> sind die Textfarben <code class="bg-ui-selected">text-ui-onsuccess</code>,
+						<code class="bg-ui-selected">text-ui-onsuccess-hover</code>, <code class="bg-ui-selected">text-ui-onsuccess-secondary</code> oder
+						<code class="bg-ui-selected">text-ui-onsuccess-secondary-hover</code> zu verwenden. Die richtige Nutzung der Farben sorgt für eine abgestimmte,
+						kontrastreiche Kombination, die sich durch die gesamte Benutzeroberfläche zieht.
+					</li>
+					<li>
+						<strong>Keine speziellen Theme-Anpassungen:</strong> Abhängig vom aktuell angezeigten Theme werden auch automatisch passende Farben verwendet.
+						So ist <code class="bg-ui-selected">bg-ui</code> im Light-Theme hell und im Dark-Theme dunkel, ohne das selbst Anpassungen vorgenommen werden
+						müssen. Klassendefinitionen wie <code class="bg-ui-selected">dark:bg-ui</code> sind daher nicht mehr notwendig. <br>
+						Sollte es aber dennoch nötig sein, dass Farben in einem anderen Theme angezeigt werden, obwohl dieses gerade nicht verwendet wird, reicht
+						es aus, dem enstsprechenden Element die Klasse zu geben, zum Beispiel:
+						<code class="bg-ui-selected">&lt;div class=&quot;dark bg-ui text-ui&quot;&gt;Text&lt;/div&gt;</code>.
+						Es wird dann für den Hintergrund und die Textfarbe automatisch die Farbe aus dem Dark-Theme gewählt.
+					</li>
+					<li>
+						<strong>Verwendung von statischen Farben:</strong> Spezielle Farben mit dem Zusatz <code class="bg-ui-selected">-uistatic</code> sind
+						statische Farben, die unabhängig vom Theme immer gleich aussehen. Verwende sie daher immer nur explizit dann, wenn dieser Effekt gewollt
+						ist. Das ist zum Beispiel im SVWS-Client der Fall, wenn Fächerfarben vom Server geladen werden.
+					</li>
+				</ol>
+				<h2>Erweiterungen</h2>
+				<p class="text-ui">
+					Bei Bedarf kann das System durch weitere Farben bzw. Farbabstufungen und -kombinationen erweitert werden. In den meisten Fällen sollte für jede
+					Anforderung jedoch eine passende Kombination aus den vorhandenen Tokens gefunden werden können und es müssen die Richtlinien für Kontraste
+					nach WCAG berücksichtigt werden.
+				</p>
+				<h2>Barrierefreiheit nach WCAG 2</h2>
+				<p class="text-ui">
+					Grundsätzlich muss mindestens ein Kontrastlevel von AA nach WCAG erreicht werden. Besser ist ein Kontrast von AAA. Welche Kontraste die Farben
+					bezogen auf den Hintergrund erreichen, kann auf den jeweiligen Farbseiten geprüft werden. Farben, die ein Level von AA erreichen, werden gelb
+					markiert. Farben, die ein Level von AAA erreichen, werden grün markiert. Farben, die kein Level erreichen, werden rot markiert.
+				</p>
+				<p class="text-ui">
+					In Zukunft kann ein weiteres Farbschema neben Light und Dark Mode ergänzt werden, welches AAA priorisiert.
+				</p>
+				<p class="text-ui">
+					Weiterführende Links:
+				</p>
+				<ul>
+					<li><a href="https://www.w3.org/WAI/WCAG21/Understanding/conformance#levels" target="_blank" rel="noopener noreferrer">Understanding Levels of Conformance (AA, AAA)</a></li>
+					<li><a href="https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html" target="_blank" rel="noopener noreferrer">Contrast (Minimum) (Level AA)</a></li>
+					<li><a href="https://www.w3.org/WAI/WCAG21/Understanding/contrast-enhanced.html" target="_blank" rel="noopener noreferrer">Contrast (Enhanced) (Level AAA)</a></li>
+					<li><a href="https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html" target="_blank" rel="noopener noreferrer">Non-text Contrast</a></li>
+					<li><a href="https://www.w3.org/TR/WCAG21/#dfn-contrast-ratio" target="_blank" rel="noopener noreferrer">Contrast Ratio</a></li>
+					<li><a href="https://www.w3.org/TR/WCAG21/#dfn-relative-luminance" target="_blank" rel="noopener noreferrer">Relative Luminance</a></li>
+				</ul>
+				<p class="text-ui">Mit verschiedenen Tools können Farben auch einzeln getestet werden:</p>
+				<ul>
+					<li><a href="https://color.adobe.com/create/color-contrast-analyzer" target="_blank" rel="noopener noreferrer">Adobe Color Accessibility Tools: Contrast Checker</a></li>
+					<li><a href="https://medium.com/@NateBaldwin/leonardo-an-open-source-contrast-based-color-generator-92d61b6521d2" target="_blank" rel="noopener noreferrer">Leonardo: an open source contrast-based color generator</a></li>
+					<li><a href="https://leonardocolor.io/tools.html#" target="_blank" rel="noopener noreferrer">Leonardo Color Toolbox (Contrast Check)</a></li>
+					<li><a href="https://leonardocolor.io/theme.html#" target="_blank" rel="noopener noreferrer">Leonardo Adaptive color theme tool</a></li>
+				</ul>
+			</div>
 		</Variant>
 		<Variant :title="`${type}-ui`" source=" " :id="`tokens-${type}`" v-for="([type, typeMap]) in typeList" :key="type">
-			<div v-if="type === 'bg'">
+			<div v-if="type === 'bg'" class="htw-prose dark:htw-prose-invert inline">
 				<h1>Hintergrundfarben</h1>
-				<p>
+				<p class="text-ui">
 					Folgende Farben werden für Hintergründe verwendet. Es ist zu beachten, dass die Kontrastrichtlinien von WCAG eingehalten werden. Um
 					diese zu erreichen, können zusätzliche Borders verwendet werden.
 				</p>
 			</div>
-			<div v-if="type === 'text'">
+			<div v-if="type === 'text'" class="htw-prose dark:htw-prose-invert inline">
 				<h1>Textfarben</h1>
-				<p>
+				<p class="text-ui">
 					Folgende Farben werden für Texte verwendet. Es ist zu beachten, dass die Kontrastrichtlinien von WCAG eingehalten werden. Um
 					diese zu erreichen, müssen die <code class="bg-ui-selected">-on</code> Farben zu den passenden Hintergründen verwendet werden. Beispiel:
 					Für die Hintergrundfarbe <code class="bg-ui-selected">bg-ui-success</code> sind die Textfarben <code class="bg-ui-selected">text-ui-onsuccess</code>,
@@ -256,18 +252,18 @@
 					verwendet und das enstprechende Kontrastlevel angegeben. Für die Vorschau von weiteren Schriftgrößen, klicke auf eine Farbkachel.
 				</p>
 			</div>
-			<div v-if="type === 'border'">
+			<div v-if="type === 'border'" class="htw-prose dark:htw-prose-invert inline">
 				<h1>Borderfarben</h1>
-				<p>
+				<p class="text-ui">
 					Folgende Farben werden für Borders (Rahmen) verwendet. Es ist zu beachten, dass die Kontrastrichtlinien von WCAG eingehalten werden. Um
 					diese zu erreichen, müssen die <code class="bg-ui-selected">-on</code> Farben zu den passenden Hintergründen verwendet werden. Beispiel:
 					Für die Hintergrundfarbe <code class="bg-ui-selected">bg-ui-success</code> sind die Borderfarben <code class="bg-ui-selected">border-ui-onsuccess</code> oder
 					<code class="bg-ui-selected">border-ui-onsuccess-hover</code> zu verwenden.
 				</p>
 			</div>
-			<div v-if="type === 'accent'">
+			<div v-if="type === 'accent'" class="htw-prose dark:htw-prose-invert inline">
 				<h1>Accentfarben</h1>
-				<p>
+				<p class="text-ui">
 					Folgende Farben werden für Akzente verwendet. Sie dienen zum Einfärben von Checkboxen, Radiobuttons, Rangs-Slidern etc.
 					Es ist zu beachten, dass die Kontrastrichtlinien von WCAG eingehalten werden. Um diese zu erreichen, müssen die
 					<code class="bg-ui-selected">-on</code> Farben zu den passenden Hintergründen verwendet werden. Beispiel:
@@ -275,16 +271,16 @@
 					<code class="bg-ui-selected">accent-ui-onsuccess</code> zu verwenden.
 				</p>
 			</div>
-			<div v-if="type === 'ring'">
+			<div v-if="type === 'ring'" class="htw-prose dark:htw-prose-invert inline">
 				<h1>Ringfarben</h1>
-				<p>
+				<p class="text-ui">
 					Folgende Farben werden für Ringe verwendet. Sie dienen zur visuellen Hervorhebung eines Elements zum Beispiel bei einem Fokus oder Hover.
 					Ringfarben umschließen das Element und sind daher nicht mit den Borderfarben zu verwechseln.
 				</p>
 			</div>
-			<div v-if="type === 'icon'">
+			<div v-if="type === 'icon'" class="htw-prose dark:htw-prose-invert inline">
 				<h1>Iconfarben</h1>
-				<p>
+				<p class="text-ui">
 					Folgende Farben werden für Icons verwendet. Es ist zu beachten, dass die Kontrastrichtlinien von WCAG eingehalten werden. Um
 					diese zu erreichen, müssen die <code class="bg-ui-selected">-on</code> Farben zu den passenden Hintergründen verwendet werden. Beispiel:
 					Für die Hintergrundfarbe <code class="bg-ui-selected">bg-ui-success</code> sind die Iconfarben <code class="bg-ui-selected">icon-ui-onsuccess</code>,
@@ -292,14 +288,15 @@
 					<code class="bg-ui-selected">icon-ui-onsuccess-secondary-hover</code> zu verwenden.
 				</p>
 			</div>
-			<div v-if="type === 'shadow'">
+			<div v-if="type === 'shadow'" class="htw-prose dark:htw-prose-invert inline">
 				<h1>Shadowfarben</h1>
-				<p>
+				<p class="text-ui">
 					Folgende Farben werden für Schattierungen verwendet. Wenn diese rein zum Styling verwendet werden, ohne inhaltlichen Wert zu übermitteln,
 					müssen sie keinen WCAG Kontrastrichtlienien entsprechen.
 				</p>
 			</div>
-			<div :class="[(type === 'bg') ? 'grid-cols-[1fr_auto_auto_auto_auto]' : 'grid-cols-[1fr_auto_auto_auto_auto_auto_auto]', 'grid rounded-md m-2']">
+			<div :class="[(type === 'bg') ? 'grid-cols-[1fr_auto_auto_auto_auto]' : 'grid-cols-[1fr_auto_auto_auto_auto_auto_auto]', 'grid rounded-md m-2']"
+				class="mt-10">
 				<div class="contents font-bold text-center border-b border-ui py-2">
 					<div>CSS-Klasse</div>
 					<div :class="[(type === 'bg') ? 'col-span-2' : 'col-span-3']">Light Theme</div>
@@ -690,13 +687,14 @@
 		const { contrastRatio: contrast, contrastLevel: score} = getContrast(color, dark);
 		colorPreview.contrast = contrast;
 		colorPreview.contrastLevels = generateContrastLevels(score);
-
 	}
 
 	/**
 	 * Generiert die Kontrastlevel nach WCAG für die verschiedenen Schriftgrößen
 	 *
 	 * @param score   der score, der mit dem Kontrast für die Farben erreicht wurde.
+	 *
+	 * @returns die Kontrastlevel für die verschiedenen Schriftgrößen
 	 */
 	function generateContrastLevels(score: string): string[] {
 		const result: string[] = [];
@@ -723,10 +721,12 @@
 	}
 
 	/**
-	 * Bestimmt den RGB Wert einer Farbe anhand der Variable und des Themes
+	 * Bestimmt den Farbwert einer Farbe anhand der Variable und des Themes
 	 *
 	 * @param variableName   die Farbvariable, deren RGB bestimmt werden soll.
 	 * @param dark           false, wenn die Farbe im light-Mode bestimmt werden soll. True, wenn die Farbe im dark-Mode bestimmt werden soll.
+	 *
+	 * @returns der Farbwert
 	 */
 	function resolveComputedColor(variableName: string, dark = false): string {
 		// Zur Bestimmung der Farbe muss eine dummy-div erstellt werden. Dieses ist nicht sichtbar.
@@ -743,21 +743,21 @@
 	}
 
 	/**
-	 * Bestimmt aus einer "light-dark" Variablendefinition den entsprechenden RGB wert.
+	 * Bestimmt aus einer "light-dark" Variablendefinition den entsprechenden RGB-Wert.
 	 *
 	 * @param input   der String mit der light-dark Variable
 	 * @param dark    false, wenn die light-Mode Farbe bestimmt werden soll. True, denn die dark-Mode Farbe bestimmt werden soll.
+	 *
+	 * @returns die RGB-Definition der entsprechenden Farbe und des entsprechenden Themes
 	 */
 	function resolveLightDark(input: string, dark: boolean): string {
-		if (!input.includes('light-dark')) {
+		if (!input.includes('light-dark'))
 			return input;
-		}
 
 		const match = /light-dark\(((?:[^(),]+|\([^()]*\))+),\s*((?:[^(),]+|\([^()]*\))+)\)/.exec(input);
 
-		if (!match) {
+		if (!match)
 			return input;
-		}
 
 		const [, lightValue, darkValue] = match;
 
@@ -768,6 +768,8 @@
 	 * Berechnet die zugehörige Hintergrundfarbe zu einer gegebenen Farbe.
 	 *
 	 * @param color   die Farbe, deren Hintergrundfabe bestimmt werden soll.
+	 *
+	 * @returns die Hintergrundfarbe zur gegebenen Vordergrundfarbe
 	 */
 	function getBackgroundColor(color: string): string {
 		if (!color.includes('-on'))
@@ -786,6 +788,8 @@
 	 * Bestimmt die Farbe für den Kontrastwert, abhängig von dem erreichten WCAG-Level.
 	 *
 	 * @param score   WCAG Level
+	 *
+	 * @returns die Textfarbe für das Kontrastlevel
 	 */
 	function getContrastColor(score: string): string {
 		switch (score) {
@@ -803,12 +807,14 @@
 	 * http://www.w3.org/TR/WCAG20/#contrast-ratiodef
 	 *
 	 * @param rgb   der RGB Farbwert
+	 *
+	 * @returns die relative Leuchtdichte
 	 */
-	function getContrastRelativeLuminance(rgb = [0, 0, 0]) {
+	function getContrastRelativeLuminance(rgb: { r: number, g: number, b: number }): number {
 		const lowc = 1 / 12.92;
-		const rsrgb = rgb[0] / 255;
-		const gsrgb = rgb[1] / 255;
-		const bsrgb = rgb[2] / 255;
+		const rsrgb = rgb.r / 255;
+		const gsrgb = rgb.g / 255;
+		const bsrgb = rgb.b / 255;
 		//sRGB-Gammakorrektur
 		const r = rsrgb <= 0.03928 ? rsrgb * lowc : Math.pow((rsrgb + 0.055) / 1.055, 2.4);
 		const g = gsrgb <= 0.03928 ? gsrgb * lowc : Math.pow((gsrgb + 0.055) / 1.055, 2.4);
@@ -821,11 +827,146 @@
 	 *
 	 * @param background   Hintergrundfarbe
 	 * @param foreground   Vordergrundfarbe
+	 *
+	 * @returns das Kontrastverhältnis
 	 */
-	function getContrastLuminance(background = 0, foreground = 0) {
+	function getContrastLuminance(background = 0, foreground = 0): number {
 		const l1 = Math.max(background, foreground);
 		const l2 = Math.min(background, foreground);
 		return (l1 + 0.05) / (l2 + 0.05);
+	}
+
+	/**
+	 * Konvertiert eine Farbkodierung in ein RGB-Objekt. Zulässige Farben sind HEX, RGB(A) und HSL(A).
+	 *
+	 * @param color   der Farbstring, der in ein RGB-Objekt umgewandelt werden soll.
+	 *
+	 * @returns { r: number; g: number; b: number }   ein Objekt mit den RGB-Werten
+	 */
+	function parseColorToRGB(color: string): { r: number; g: number; b: number } {
+		if (typeof color !== 'string')
+			return { r: 0, g: 0, b: 0 };
+
+		color = color.trim().toLowerCase();
+
+		const colorType = color.startsWith('#') ? 'hex' :
+			color.startsWith('rgb') ? 'rgb' :
+			color.startsWith('hsl') ? 'hsl' : 'unknown';
+
+		switch (colorType) {
+			case 'hex':
+				return hexToRgb(color);
+			case 'rgb':
+				return rgbStringToRgb(color);
+			case 'hsl':
+				return hslToRgb(color);
+			default:
+				return { r: 0, g: 0, b: 0 };
+		}
+	}
+
+
+	/**
+	 * Wandelt einen HEX-Farbstring in RGB um.
+	 *
+	 * @param color   der Hex-Farbstring, der in ein RGB-Objekt umgewandelt werden soll.
+	 *
+	 * @returns { r: number; g: number; b: number }   ein Objekt mit den RGB-Werten
+	 */
+	function hexToRgb (color: string): { r: number; g: number; b: number }{
+		// entfernt das '#' Zeichen
+		let hex = color.slice(1);
+		// Wandelt 3-stellige Hexadezimalwerte in 6-stellige um, indem die Buchstaben verdoppelt werden
+		if (hex.length === 3)
+			hex = hex.split('').map(c => c + c).join('');
+		// Prüft, ob der Hexwert die richtige Zeichenlänge und die richtigen Zeichen beinhaltet.
+		if (hex.length !== 6 || !/^[0-9a-f]{6}$/i.test(hex))
+			return { r: 0, g: 0, b: 0 };
+		// Wandelt den Hexadezimalwert in einen RGB-Wert um
+		const bigint = parseInt(hex, 16);
+		return { r: (bigint >> 16) & 255, g: (bigint >> 8) & 255, b: bigint & 255 };
+	}
+
+	/**
+	 * Wandelt einen RGB-Farbstring in ein RGB-Objekt um.
+	 *
+	 * @param color   der RGB-Farbstring, der in ein RGB-Objekt umgewandelt werden soll.
+	 *
+	 * @returns { r: number; g: number; b: number }   ein Objekt mit den RGB-Werten
+	 */
+	function rgbStringToRgb (color: string): { r: number; g: number; b: number } {
+		// Extrahiere die Zahlen aus dem RGB-Farbwert, der als string übergeben wird.
+		const match = color.match(/\d+/g);
+		// Prüft, ob ein gültiger Wert übergeben wurde
+		if (!match || match.length < 3)
+			return { r: 0, g: 0, b: 0 };
+		const [r, g, b] = match.map(Number).slice(0, 3);
+		return { r, g, b };
+	}
+
+	/**
+	 * Wandelt einen HSL-Farbstring in ein RGB-Objekt um.
+	 * Referenz: https://www.jameslmilner.com/posts/converting-rgb-hex-hsl-colors/
+	 *
+	 * @param color   der HSL-Farbstring, der in ein RGB-Objekt umgewandelt werden soll.
+	 *
+	 * @returns { r: number; g: number; b: number }   ein Objekt mit den RGB-Werten
+	 */
+	function hslToRgb(color: string): { r: number; g: number; b: number } {
+		// Extrahiere die Zahlen aus dem HSL-Farbwert, der als string übergeben wird.
+		const match = color.match(/[\d.]+/g);
+		// Prüft, ob ein gültiger Wert übergeben wurde
+		if (!match || match.length < 3)
+			return { r: 0, g: 0, b: 0 };
+
+		// Konvertiere die extrahierten Strings in Zahlen (h, s, l)
+		const [h, s, l] = match.map(Number);
+
+		// Normalisiere die HSL-Werte (sind üblicherweise in Prozent, daher /100)
+		const hDecimal = h / 100;
+		const sDecimal = s / 100;
+		const lDecimal = l / 100;
+
+		// Wenn die Sättigung (s) 0 ist, ist die Farbe ein Grauton.
+		if (s === 0) {
+			const gray = lDecimal * 255;
+			// Grautöne haben alle RGB-Werte gleich (r, g, b sind gleich)
+			return { r: gray, g: gray, b: gray };
+		}
+
+		// Hue-to-RGB Umrechnung (Hilfsfunktion, die den Wert von RGB für gegebene HSL-Werte berechnet)
+		const hueToRGB = (p: number, q: number, tRaw: number): number => {
+			let t = tRaw;
+			// Bereinige t, wenn es außerhalb des [0, 1]-Bereichs liegt
+			if (t < 0) t += 1;
+			if (t > 1) t -= 1;
+
+			// Berechne RGB basierend auf dem Wert von t (Hue)
+			// Diese Berechnungen kommen aus den HSL-to-RGB Formeln
+			if (t < (1 / 6)) return p + ((q - p) * 6 * t); // Farbton zwischen 0 und 60°
+			if (t < (1 / 2)) return q; // Farbton zwischen 60° und 180°
+			if (t < (2 / 3)) return p + ((q - p) * ((2 / 3) - t) * 6); // Farbton zwischen 180° und 240°
+			return p; // Farbton zwischen 240° und 360°
+		};
+
+		// Berechne die Werte von q und p, die für die Umrechnung auf RGB verwendet werden
+		const q = (lDecimal < 0.5)
+			? (lDecimal * (1 + sDecimal)) // Wenn der Helligkeitswert weniger als 0.5 ist
+			: (lDecimal + sDecimal - (lDecimal * sDecimal)); // Wenn der Helligkeitswert mehr als 0.5 ist
+
+		// Berechne den Wert für p
+		const p = (2 * lDecimal) - q;
+
+		const r = hueToRGB(p, q, hDecimal + (1 / 3)); // Rot hat den Farbton verschoben um 1/3 (120°)
+		const g = hueToRGB(p, q, hDecimal); // Grün entspricht dem Original Farbton
+		const b = hueToRGB(p, q, hDecimal - (1 / 3)); // Blau hat den Farbton verschoben um -1/3 (-120°)
+
+		// Gib die RGB-Werte zurück, skaliert auf den Bereich [0, 255]
+		return {
+			r: r * 255,
+			g: g * 255,
+			b: b * 255,
+		};
 	}
 
 	/**
@@ -833,14 +974,15 @@
 	 *
 	 * @param color   die Farbe, deren Kontrast zur zugehörigen Hintergrundfarbe berechnet werden soll
 	 * @param dark    false, wenn der Kontrast für den light-Mode berechnet werden soll. True, wenn der Kontrast für den dark-mode berechnet werden soll.
+	 *
+	 * @returns { contrastRatio: string, contrastLevel: string }   ein Objekt mit dem Kontrastverhältnis und dem Kontrastlevel
 	 */
 	function getContrast(color: string, dark: boolean) : { contrastRatio: string, contrastLevel: string } {
 		const foreground = resolveComputedColor(color, dark);
 		const background = resolveComputedColor(getBackgroundColor(color), dark);
 
-		// Extrahieren der RGB-Werte aus CSS-Farbstrings
-		const fg = foreground.match(/\d+/g)?.map(Number);
-		const bg = background.match(/\d+/g)?.map(Number);
+		const fg = parseColorToRGB(foreground);
+		const bg = parseColorToRGB(background);
 		// Berechnen des Kontrastverhältnisses
 		const contrast = getContrastLuminance(getContrastRelativeLuminance(bg), getContrastRelativeLuminance(fg));
 		// Bewerten des Kontrastverhältnisses gemäß WCAG-Richtlinien
