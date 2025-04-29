@@ -1,12 +1,12 @@
 <template>
-	<svws-ui-modal :show @update:show="value => emit('update:show', value)" size="small">
+	<svws-ui-modal :show @update:show="value => doShow(value)" size="small">
 		<template #modalTitle>Laufbahnplanungsdaten importieren</template>
 		<template #modalContent>
-			<input type="file" accept=".lp" :multiple="multiple" @change="import_file" :disabled="loading">
+			<input type="file" accept=".lp" :multiple @change="importFile" :disabled="loading">
 			<div v-if="failed" class="mt-4"> Fehler beim Upload </div>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="emit('update:show', false)">{{ failed === true ? 'Schließen':'Abbrechen' }}</svws-ui-button>
+			<svws-ui-button type="secondary" @click="doShow(false)">{{ failed === true ? 'Schließen':'Abbrechen' }}</svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>
@@ -27,7 +27,12 @@
 	const failed = ref<boolean>(false);
 	const loading = ref<boolean>(false);
 
-	async function import_file(event: Event) {
+	function doShow(value: boolean) {
+		failed.value = false;
+		emit('update:show', value);
+	}
+
+	async function importFile(event: Event) {
 		const target = event.target as HTMLInputElement;
 		if ((target.files === null) || (target.files.length === 0))
 			return;
@@ -37,7 +42,6 @@
 		try {
 			await props.importLaufbahnplanung(formData);
 			emit('update:show', false);
-			failed.value = false;
 		} catch (e) {
 			failed.value = true;
 			throw e;

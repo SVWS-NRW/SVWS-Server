@@ -5,16 +5,14 @@
 		</template>
 		<template #main>
 			<div class="w-full text-left mb-4">Datei öffnen:</div>
-			<svws-ui-input-wrapper center>
-				<input type="file" accept=".lp" @change="import_file" :disabled="loading" class="w-full">
-				<svws-ui-spinner :spinning="loading" />
-				<br> {{ (typeof status === "string") ? ("Fehler beim Import: " + status) : ((status === null) ? "Import erfolgreich" : "") }}
-			</svws-ui-input-wrapper>
-			<div class="mt-3 -mb-3 opacity-50">
-				<p class="text-sm text-left">
-					Bitte beachten Sie, dass keinerlei personenbezogenen Daten
-					auf unsere Server geladen werden. Die Daten verbleiben auf Ihrem Endgerät.
-				</p>
+			<input type="file" accept=".lp" @change="import_file" :disabled="loading" class="w-full">
+			<svws-ui-spinner :spinning="loading" />
+			<div v-if="typeof status === 'string'" class="mt-2 text-sm text-left border-ui-danger text-ui-ondanger rounded-md bg-ui-danger p-1 border-2">
+				{{ status }}
+			</div>
+			<div class="mt-2 text-sm text-left border-ui-warning text-ui-onwarning rounded-md bg-ui-warning p-1 border-2">
+				Bitte beachten Sie, dass keinerlei personenbezogenen Daten
+				auf unsere Server geladen werden. Die Daten verbleiben auf Ihrem Endgerät.
 			</div>
 		</template>
 	</ui-login-layout>
@@ -50,7 +48,7 @@
 			if (e instanceof UserNotificationException)
 				status.value = e.message;
 			else
-				status.value = "Es gabe einen Fehler beim Import der Laufbahnplanungsdaten"
+				status.value = "Es gab einen Fehler beim Import der Laufbahnplanungsdaten";
 		}
 		loading.value = false;
 	}
