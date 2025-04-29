@@ -21,6 +21,7 @@ import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.lehrer.LehrerLernplattform;
 import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdaten;
+import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdatenAnrechnungsstunden;
 import de.svws_nrw.asd.data.lehrer.LehrerPersonaldaten;
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.data.lehrer.LehrerEinwilligung;
@@ -46,6 +47,7 @@ import de.svws_nrw.data.lehrer.DataKatalogLehrerZugangsgruende;
 import de.svws_nrw.data.lehrer.DataLehrerEinwilligungen;
 import de.svws_nrw.data.lehrer.DataLehrerLernplattformen;
 import de.svws_nrw.data.lehrer.DataLehrerPersonalabschnittsdaten;
+import de.svws_nrw.data.lehrer.DataLehrerPersonalabschnittsdatenMinderleistungen;
 import de.svws_nrw.data.lehrer.DataLehrerPersonaldaten;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.lehrer.DataLehrerliste;
@@ -283,6 +285,117 @@ public class APILehrer {
 				BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN);
 	}
 
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Personalabschnittsdaten eines Lehrers.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param id        die Datenbank-ID zur Identifikation der Abschnittsdaten
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Personalabschnittsdaten eines Lehrers zu einem Schuljahresabschnitt
+	 */
+	@GET
+	@Path("/personalabschnittsdatenentlastungsstunden/{id : \\d+}")
+	@Operation(summary = "Liefert zu der ID des Abschnittes die zugehörigen Personalabschnittsdaten.",
+			description = "Liest die Personalabschnittsdaten zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerpersonaldaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Personalabschnittsdaten", content = @Content(mediaType = "application/json",
+			schema = @Schema(implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrer-Personaldaten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Lehrer-Personalabschnittsdaten mit der angegebenen ID gefunden")
+	public Response getLehrerPersonalabschnittsdatenEntlastungsstunden(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerPersonalabschnittsdatenMinderleistungen(conn).getByIdAsResponse(id),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.LEHRER_PERSONALDATEN_ANSEHEN);
+	}
+	/**
+	 * Die OpenAPI-Methode für das Hinzufügen der Entlastungsstunden.
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param is           der Input-Stream mit den Daten der Entlastungsstunden
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem neuen Datensaz für Entlastungsstunden
+	 */
+	@POST
+	@Path("/personalabschnittsdatenentlastungsstunden")
+	@Operation(summary = "Erstellt einen neuen Datensatz für Entlastungsstunden und gibt das zugehörige Objekt zurück.",
+			description = "Erstellt einen neuen Datensatz für Entlastungsstunden und gibt das zugehörige Objekt zurück.. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen neuer Entlastungsstunden besitzt.")
+	@ApiResponse(responseCode = "201", description = "Die Entlastungsstunden wurde erfolgreich hinzugefügt.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Entlastungsstunden anzulegen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response addLehrerPersonalabschnittsdatenEntlastungsstunden(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die Daten des zu erstellenden Entlastungsstunden ohne ID, welche automatisch generiert wird", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(
+			    conn -> new DataLehrerPersonalabschnittsdatenMinderleistungen(conn).addAsResponse(is),
+			    request,
+			    ServerMode.STABLE,
+			    BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN
+			);
+
+	}
+	/**
+	 * Die OpenAPI-Methode für das Entfernen der Entlastungsstunden.
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param id           die Datenbank-ID zur Identifikation der Abschnittsdaten
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status und ggf. dem gelöschten Datensatz für Entlastungsstunden
+	 */
+	@DELETE
+	@Path("/personalabschnittsdatenentlastungsstunden/{id : \\d+}")
+	@Operation(summary = "Entfernt die Lehrer-Personalabschnittsdatenentlastungsstunden zu der angegebenen ID an.",
+			description = "Entfernt die Lehrer-Personalabschnittsdatenentlastungsstunden zu der angegebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen der Entlastungsstunden hat.")
+	@ApiResponse(responseCode = "200", description = "Die Entlastungsstunden wurde erfolgreich entfernt.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um ein Fach zu löschen.")
+	@ApiResponse(responseCode = "404", description = "Kein Lehrer-Eintrag mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteLehrerPersonalabschnittsdatenEntlastungsstunden(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataLehrerPersonalabschnittsdatenMinderleistungen(conn).deleteAsResponse(id), request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_LOESCHEN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Patchen der Personalabschnittsdaten eines Lehrers.
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param id        die Datenbank-ID zur Identifikation der Abschnittsdaten
+	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/personalabschnittsdatenentlastungsstunden/{id : \\d+}")
+	@Operation(summary = "Passt die Lehrer-Personalabschnittsdatenanrechnungsstunden zu der angegebenen ID an.",
+			description = "Passt die Lehrer-Personalabschnittsdatenanrechnungsstunden zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personalabschnittsdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Lehrer-Personalabschnittsdaten integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrer-Personaldaten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Lehrer-Eintrag mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
+			+ " (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response patchLehrerPersonalabschnittsdatenEntlastungsstunden(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@RequestBody(description = "Der Patch für die Lehrer-Personalabschnittsdatenanrechnungsstunden", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerPersonalabschnittsdatenMinderleistungen(conn).patchAsResponse(id, is),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN);
+	}
 
 	/**
 	 * Die OpenAPI-Methode für die Abfrage der Personalabschnittsdaten eines Lehrers.

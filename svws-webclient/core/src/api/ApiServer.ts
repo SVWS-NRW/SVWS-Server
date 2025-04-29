@@ -118,6 +118,7 @@ import { LehrerListeEintrag } from '../core/data/lehrer/LehrerListeEintrag';
 import { LehrerMehrleistungsartKatalogEintrag } from '../asd/data/lehrer/LehrerMehrleistungsartKatalogEintrag';
 import { LehrerMinderleistungsartKatalogEintrag } from '../asd/data/lehrer/LehrerMinderleistungsartKatalogEintrag';
 import { LehrerPersonalabschnittsdaten } from '../asd/data/lehrer/LehrerPersonalabschnittsdaten';
+import { LehrerPersonalabschnittsdatenAnrechnungsstunden } from '../asd/data/lehrer/LehrerPersonalabschnittsdatenAnrechnungsstunden';
 import { LehrerPersonaldaten } from '../asd/data/lehrer/LehrerPersonaldaten';
 import { LehrerRechtsverhaeltnisKatalogEintrag } from '../asd/data/lehrer/LehrerRechtsverhaeltnisKatalogEintrag';
 import { LehrerStammdaten } from '../asd/data/lehrer/LehrerStammdaten';
@@ -8706,6 +8707,59 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = LehrerPersonalabschnittsdaten.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getLehrerPersonalabschnittsdatenEntlastungsstunden für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personalabschnittsdatenentlastungsstunden/{id : \d+}
+	 *
+	 * Liest die Personalabschnittsdaten zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerpersonaldaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Personalabschnittsdaten
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: LehrerPersonalabschnittsdatenAnrechnungsstunden
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrer-Personaldaten anzusehen.
+	 *   Code 404: Keine Lehrer-Personalabschnittsdaten mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Personalabschnittsdaten
+	 */
+	public async getLehrerPersonalabschnittsdatenEntlastungsstunden(schema : string, id : number) : Promise<LehrerPersonalabschnittsdatenAnrechnungsstunden> {
+		const path = "/db/{schema}/lehrer/personalabschnittsdatenentlastungsstunden/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchLehrerPersonalabschnittsdatenEntlastungsstunden für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personalabschnittsdatenentlastungsstunden/{id : \d+}
+	 *
+	 * Passt die Lehrer-Personalabschnittsdatenanrechnungsstunden zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personalabschnittsdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich in die Lehrer-Personalabschnittsdaten integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrer-Personaldaten zu ändern.
+	 *   Code 404: Kein Lehrer-Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchLehrerPersonalabschnittsdatenEntlastungsstunden(data : Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/lehrer/personalabschnittsdatenentlastungsstunden/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 

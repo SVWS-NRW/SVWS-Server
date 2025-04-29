@@ -56,7 +56,7 @@ public final class DataLehrerPersonalabschnittsdaten extends DataManagerRevised<
 		final LehrerPersonalabschnittsdaten daten = map(dto);
 		daten.anrechnungen.addAll(DataLehrerPersonalabschnittsdatenAnrechungen.getByLehrerabschnittsdatenId(conn, dto.Schuljahresabschnitts_ID, id));
 		daten.mehrleistung.addAll(DataLehrerPersonalabschnittsdatenMehrleistungen.getByLehrerabschnittsdatenId(conn, dto.Schuljahresabschnitts_ID, id));
-		daten.minderleistung.addAll(DataLehrerPersonalabschnittsdatenMinderleistungen.getByLehrerabschnittsdatenId(conn, dto.Schuljahresabschnitts_ID, id));
+		daten.minderleistung.addAll(DataLehrerPersonalabschnittsdatenMinderleistungen.getByLehrerabschnittsdatenId(conn, id));
 		daten.funktionen.addAll(DataLehrerPersonalabschnittsdatenLehrerfunktionen.getByLehrerabschnittsdatenId(conn, id));
 		return daten;
 	}
@@ -120,7 +120,7 @@ public final class DataLehrerPersonalabschnittsdaten extends DataManagerRevised<
 			daten = mapInternal(l);
 			daten.anrechnungen.addAll(DataLehrerPersonalabschnittsdatenAnrechungen.getByLehrerabschnittsdatenId(conn, l.Schuljahresabschnitts_ID, l.ID));
 			daten.mehrleistung.addAll(DataLehrerPersonalabschnittsdatenMehrleistungen.getByLehrerabschnittsdatenId(conn, l.Schuljahresabschnitts_ID, l.ID));
-			daten.minderleistung.addAll(DataLehrerPersonalabschnittsdatenMinderleistungen.getByLehrerabschnittsdatenId(conn, l.Schuljahresabschnitts_ID, l.ID));
+			daten.minderleistung.addAll(DataLehrerPersonalabschnittsdatenMinderleistungen.getByLehrerabschnittsdatenId(conn, l.ID));
 			daten.funktionen.addAll(DataLehrerPersonalabschnittsdatenLehrerfunktionen.getByLehrerabschnittsdatenId(conn, l.ID));
 			result.add(daten);
 		}
