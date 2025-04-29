@@ -26,8 +26,7 @@ import jakarta.ws.rs.core.Response.Status;
  * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für das
  * Core-DTO {@link LehrerStammdaten}.
  */
-
-public class DataLehrerPersonalabschnittsdaten extends DataManagerRevised<Long, DTOLehrerAbschnittsdaten, LehrerPersonalabschnittsdaten> {
+public final class DataLehrerPersonalabschnittsdaten extends DataManagerRevised<Long, DTOLehrerAbschnittsdaten, LehrerPersonalabschnittsdaten> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für das Core-DTO {@link LehrerStammdaten}.
@@ -36,24 +35,24 @@ public class DataLehrerPersonalabschnittsdaten extends DataManagerRevised<Long, 
 	 */
 	public DataLehrerPersonalabschnittsdaten(final DBEntityManager conn) {
 		super(conn);
-		setAttributesNotPatchable("id");
-		// TODO setAttributesRequiredOnCreation();
+		setAttributesNotPatchable("id", "idLehrer", "idSchuljahresabschnitt");
+		setAttributesRequiredOnCreation("idLehrer", "idSchuljahresabschnitt");
 	}
-	/**
-	 */
+
+
 	@Override
 	protected void initDTO(final DTOLehrerAbschnittsdaten dto, final Long newID, final Map<String, Object> initAttributes) throws ApiOperationException {
 		dto.ID = newID;
 	}
-	/**
-	 */
+
+
 	@Override
 	public LehrerPersonalabschnittsdaten getById(final Long id) throws ApiOperationException {
 		if (id == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Keine Lehrkraft mit der ID %d gefunden.".formatted(id));
+			throw new ApiOperationException(Status.NOT_FOUND, "Die ID für die Personalabschnittsdaten der Lehrkraft darf nicht null sein.");
 		final DTOLehrerAbschnittsdaten dto = conn.queryByKey(DTOLehrerAbschnittsdaten.class, id);
 		if (dto == null)
-			throw new ApiOperationException(Status.NOT_FOUND);
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Personalabschnittsdaten einer Lehrkraft mit der ID %d gefunden.".formatted(id));
 		final LehrerPersonalabschnittsdaten daten = map(dto);
 		daten.anrechnungen.addAll(DataLehrerPersonalabschnittsdatenAnrechungen.getByLehrerabschnittsdatenId(conn, dto.Schuljahresabschnitts_ID, id));
 		daten.mehrleistung.addAll(DataLehrerPersonalabschnittsdatenMehrleistungen.getByLehrerabschnittsdatenId(conn, dto.Schuljahresabschnitts_ID, id));
@@ -61,6 +60,8 @@ public class DataLehrerPersonalabschnittsdaten extends DataManagerRevised<Long, 
 		daten.funktionen.addAll(DataLehrerPersonalabschnittsdatenLehrerfunktionen.getByLehrerabschnittsdatenId(conn, id));
 		return daten;
 	}
+
+
 	protected static LehrerPersonalabschnittsdaten mapInternal(final DTOLehrerAbschnittsdaten dto) {
 		final LehrerPersonalabschnittsdaten daten = new LehrerPersonalabschnittsdaten();
 		daten.id = dto.ID;
@@ -73,27 +74,29 @@ public class DataLehrerPersonalabschnittsdaten extends DataManagerRevised<Long, 
 		daten.stammschulnummer = dto.StammschulNr;
 		return daten;
 	}
-	/**
-	 */
+
+
 	@Override
 	protected LehrerPersonalabschnittsdaten map(final DTOLehrerAbschnittsdaten dto) throws ApiOperationException {
 		return mapInternal(dto);
 	}
-	/**
-	 */
+
+
 	@Override
 	protected void mapAttribute(final DTOLehrerAbschnittsdaten dto, final String name, final Object value, final Map<String, Object> map)
 			throws ApiOperationException {
 		switch (name) {
-			case "pflichtstundensoll" -> dto.PflichtstdSoll =
-					JSONMapper.convertToDouble(value, true);
+			case "pflichtstundensoll" -> dto.PflichtstdSoll = JSONMapper.convertToDouble(value, true);
 			case "rechtsverhaeltnis" -> dto.Rechtsverhaeltnis = validateRechtverhaeltnis(value, dto);
 			case "beschaeftigungsart" -> dto.Beschaeftigungsart = validateBeschaeftigunsart(value, dto);
 			case "einsatzstatus" -> dto.Einsatzstatus = validateEinsatzstatus(value, dto);
-			case "stammschulnummer" -> dto.StammschulNr = JSONMapper.convertToString(value, true, false, Schema.tab_LehrerAbschnittsdaten.col_StammschulNr.datenlaenge(), "stammschulnummer");
+			case "stammschulnummer" -> dto.StammschulNr =
+					JSONMapper.convertToString(value, true, false, Schema.tab_LehrerAbschnittsdaten.col_StammschulNr.datenlaenge(), "stammschulnummer");
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
 		}
 	}
+
+
 	/**
 	 * Ermittelt die Abschnittsdaten für den Lehrer mit der angegebenen ID und und gibt diese zurück.
 	 *
@@ -107,8 +110,8 @@ public class DataLehrerPersonalabschnittsdaten extends DataManagerRevised<Long, 
 	public static List<LehrerPersonalabschnittsdaten> getByLehrerId(final DBEntityManager conn, final Long idLehrer) throws ApiOperationException {
 		final List<LehrerPersonalabschnittsdaten> result = new ArrayList<>();
 		// Bestimme die Abschnittsdaten des Lehrers
-		final List<DTOLehrerAbschnittsdaten> abschnittsdaten = conn.queryList(DTOLehrerAbschnittsdaten.QUERY_BY_LEHRER_ID,
-				DTOLehrerAbschnittsdaten.class, idLehrer);
+		final List<DTOLehrerAbschnittsdaten> abschnittsdaten =
+				conn.queryList(DTOLehrerAbschnittsdaten.QUERY_BY_LEHRER_ID, DTOLehrerAbschnittsdaten.class, idLehrer);
 		if (abschnittsdaten == null)
 			return result;
 		// Konvertiere sie und füge sie zur Liste hinzu
@@ -123,47 +126,56 @@ public class DataLehrerPersonalabschnittsdaten extends DataManagerRevised<Long, 
 		}
 		return result;
 	}
+
+
 	private String validateRechtverhaeltnis(final Object value, final DTOLehrerAbschnittsdaten dto) throws ApiOperationException {
-		final String strData = JSONMapper.convertToString(value, true, false, Schema.tab_LehrerAbschnittsdaten.col_Rechtsverhaeltnis.datenlaenge(), "rechtsverhailtnis");
+		final String strData =
+				JSONMapper.convertToString(value, true, false, Schema.tab_LehrerAbschnittsdaten.col_Rechtsverhaeltnis.datenlaenge(), "rechtsverhaeltnis");
 		if (strData == null)
 			return null;
-		final LehrerRechtsverhaeltnis rv = LehrerRechtsverhaeltnis.data().getWertByKuerzel(strData);
+		final LehrerRechtsverhaeltnis rv = LehrerRechtsverhaeltnis.data().getWertBySchluessel(strData);
 		if (rv == null)
-			throw new ApiOperationException(Status.NOT_FOUND,
-					"Das LehrerRechtsverhältnis mit dem Kürzel %s ist nicht vorhanden".formatted(strData));
+			throw new ApiOperationException(Status.NOT_FOUND, "Das Rechtsverhältnis mit dem Kürzel %s ist nicht vorhanden".formatted(strData));
 		final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dto.Schuljahresabschnitts_ID);
 		final LehrerRechtsverhaeltnisKatalogEintrag eintrag = rv.daten(abschnitt.schuljahr);
 		if (eintrag == null)
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Das Rechtsverhältnis mit dem Kürzel %s ist im Schuljahr %d nicht gültig.".formatted(strData, abschnitt.schuljahr));
+			throw new ApiOperationException(Status.BAD_REQUEST, "Das Rechtsverhältnis mit dem Kürzel %s ist im Schuljahr %d nicht gültig."
+					.formatted(strData, abschnitt.schuljahr));
 		return eintrag.kuerzel;
 	}
+
+
 	private String validateBeschaeftigunsart(final Object value, final DTOLehrerAbschnittsdaten dto) throws ApiOperationException {
-		final String strData = JSONMapper.convertToString(value, true, false, Schema.tab_LehrerAbschnittsdaten.col_Beschaeftigungsart.datenlaenge(), "beschaeftigungsart");
-		final LehrerBeschaeftigungsart ba = LehrerBeschaeftigungsart.data().getWertByKuerzel(strData);
+		final String strData =
+				JSONMapper.convertToString(value, true, false, Schema.tab_LehrerAbschnittsdaten.col_Beschaeftigungsart.datenlaenge(), "beschaeftigungsart");
+		if (strData == null)
+			return null;
+		final LehrerBeschaeftigungsart ba = LehrerBeschaeftigungsart.data().getWertBySchluessel(strData);
 		if (ba == null)
-			throw new ApiOperationException(Status.NOT_FOUND,
-					"Die Beschäftigungsart mit dem Kürzel %s ist nicht vorhanden".formatted(strData));
+			throw new ApiOperationException(Status.NOT_FOUND, "Die Beschäftigungsart mit dem Kürzel %s ist nicht vorhanden".formatted(strData));
 		final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dto.Schuljahresabschnitts_ID);
 		final LehrerBeschaeftigungsartKatalogEintrag eintrag = ba.daten(abschnitt.schuljahr);
 		if (eintrag == null)
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Die Beschäftigungsart mit dem Kürzel %s ist im Schuljahr %d nicht gültig.".formatted(strData, abschnitt.schuljahr));
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die Beschäftigungsart mit dem Kürzel %s ist im Schuljahr %d nicht gültig."
+					.formatted(strData, abschnitt.schuljahr));
 		return eintrag.kuerzel;
 	}
+
+
 	private String validateEinsatzstatus(final Object value, final DTOLehrerAbschnittsdaten dto) throws ApiOperationException {
-		final String strData = JSONMapper.convertToString(value, true, false, null);
+		final String strData =
+				JSONMapper.convertToString(value, true, false, Schema.tab_LehrerAbschnittsdaten.col_Einsatzstatus.datenlaenge(), "einsatzstatus");
 		if (strData == null)
 			return null;
-		final LehrerEinsatzstatus es = LehrerEinsatzstatus.data().getWertByKuerzel(strData);
+		final LehrerEinsatzstatus es = LehrerEinsatzstatus.data().getWertBySchluessel(strData);
 		if (es == null)
-			throw new ApiOperationException(Status.NOT_FOUND,
-					"Der Einsatzstatus mit dem Kürzel %s ist nicht vorhanden".formatted(strData));
+			throw new ApiOperationException(Status.NOT_FOUND, "Der Einsatzstatus mit dem Kürzel %s ist nicht vorhanden".formatted(strData));
 		final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dto.Schuljahresabschnitts_ID);
 		final LehrerEinsatzstatusKatalogEintrag eintrag = es.daten(abschnitt.schuljahr);
 		if (eintrag == null)
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Der Einsatzstatus mit dem Kürzel %s ist im Schuljahr %d nicht gültig.".formatted(strData, abschnitt.schuljahr));
+			throw new ApiOperationException(Status.BAD_REQUEST, "Der Einsatzstatus mit dem Kürzel %s ist im Schuljahr %d nicht gültig."
+					.formatted(strData, abschnitt.schuljahr));
 		return eintrag.kuerzel;
 	}
+
 }
