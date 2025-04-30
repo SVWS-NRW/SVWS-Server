@@ -1,5 +1,5 @@
 <template>
-	<div class="page page-flex-row max-w-400">
+	<div class="page page-flex-row max-w-440">
 		<Teleport to=".svws-sub-nav-target" v-if="hatUpdateKompetenz" defer>
 			<svws-ui-sub-nav :focus-switching-enabled :focus-help-visible>
 				<svws-ui-button :disabled="apiStatus.pending" type="transparent" title="Planung importieren" @click="showModalImport = true"><span class="icon i-ri-download-2-line" /> Importieren…</svws-ui-button>
@@ -13,7 +13,7 @@
 				<template #icon> <svws-ui-spinner spinning v-if="apiStatus.pending" /> <span class="icon i-ri-printer-line" v-else /> </template>
 			</svws-ui-button-select>
 		</Teleport>
-		<div class="min-w-120 h-full flex flex-col gap-y-6">
+		<div class="min-w-160 h-full flex flex-col gap-y-6">
 			<div class="flex flex-row items-center justify-between">
 				<div class="flex flex-col gap-y-1">
 					<svws-ui-checkbox type="toggle" :model-value="filterFehler()" @update:model-value="setFilterFehler">Nur Fehler</svws-ui-checkbox>
@@ -48,6 +48,12 @@
 					<span v-if="rowData.schueler.status !== 2" class="svws-ui-badge text-sm font-bold mt-0 ml-1 bg-ui-25">
 						{{ SchuelerStatus.data().getWertByKuerzel("" + rowData.schueler.status)?.daten(schuljahr)?.text ?? '—' }}
 					</span>
+				</template>
+				<template #cell(beratung)="{rowData}">
+					{{ (rowData.beratungsDatum === null) ? '—' : new Date(rowData.beratungsDatum).toLocaleDateString("de-DE", {year: "numeric", month: "2-digit", day: "2-digit",}) }}
+				</template>
+				<template #cell(ruecklauf)="{rowData}">
+					{{ (rowData.ruecklaufDatum === null) ? '—' : new Date(rowData.ruecklaufDatum).toLocaleDateString("de-DE", {year: "numeric", month: "2-digit", day: "2-digit",}) }}
 				</template>
 				<template #cell(hinweise)="cell">
 					<span v-if="counterAnzahlOderWochenstunden(cell.rowData.ergebnis.fehlercodes) > 0" class="opacity-75 -my-0.5"><span class="icon i-ri-information-line" /></span>
@@ -99,7 +105,7 @@
 	import { computed, ref, shallowRef } from 'vue';
 	import type { GostLaufbahnfehlerProps } from "./SGostLaufbahnfehlerProps";
 	import type { DataTableColumn } from '@ui';
-	import type { List, GostBelegpruefungErgebnisFehler, GostBelegpruefungErgebnis} from '@core';
+	import type { List, GostBelegpruefungErgebnisFehler } from '@core';
 	import { ArrayList, GostBelegpruefungsArt, GostBelegungsfehlerArt, SchuelerStatus, GostBelegpruefungsErgebnisse, BenutzerKompetenz } from '@core';
 	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
@@ -118,6 +124,8 @@
 	const columns: DataTableColumn[] = [
 		{key: "linkToSchueler", label: " ", fixedWidth: 1.75, align: "center"},
 		{key: 'name', label: 'Name, Vorname', span: 2},
+		{key: 'beratung', labe: 'Beratung', fixedWidth: 5.5, align: "center"},
+		{key: 'ruecklauf', labe: 'Rücklauf', fixedWidth: 5.5, align: "center"},
 		{key: 'hinweise', label: 'K/WS', tooltip: 'Gibt an, ob Hinweise zu der Anzahl von Kursen oder Wochenstunden vorliegen', fixedWidth: 3.5, align: 'center'},
 		{key: 'ergebnis', label: 'Fehler', tooltip: 'Anzahl der Fehler insgesamt', fixedWidth: 3.5, align: 'right', sortable: true},
 	];
