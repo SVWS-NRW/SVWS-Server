@@ -93,7 +93,11 @@
 					Hintergrundfarbe liegen	wie zum Beispiel für Texte oder Borders. Wird eine Hintergrundfarbe definiert, die von der Defaultfarbe (bg-ui) abweicht,
 					dann müssen die anderen	Farben entsprechend angepasst werden. Beispiel: bei der Hintergrundfarbe <code class="bg-ui-selected">bg-ui-success</code> ist für Texte die
 					Farbe <code class="bg-ui-selected">text-ui-onsuccess</code> zu verwenden. Dieses Vorgehen stellt sicher, dass die Kontraste in allen Themes
-					korrekt sind und bewahrt außerdem die Konsistenz.
+					korrekt sind und bewahrt außerdem die Konsistenz. <br>
+					Alle Variationen der <code class="bg-ui-selected">on</code>-Farben beziehen sich immer auf den Hintergrund. Das bedeutet eine Farbe wie
+					<code class="bg-ui-selected">text-ui-onbrand-secondary</code> bezieht sich auf die Hintergrundfarbe
+					<code class="bg-ui-selected">bg-ui-brand-secondary</code>. Das <code class="bg-ui-selected">text-ui-onbrand-secondary</code> bezieht sich
+					hier nicht auf die Textfarbe in Kombination mit <code class="bg-ui-selected">bg-ui-brand</code>.
 				</p>
 				<h3>Prominence</h3>
 				<p class="text-ui">
@@ -178,8 +182,7 @@
 						<strong>Passende Farben auf Hintergrundfarben:</strong> Für die meisten Hintergrundfarben gibt es abgestimmte Farben für Texte, Icons, Borders etc.
 						Die Namen der Farben orientieren sich dann an dem der Hintergrundfarbe, nur mit einem <code class="bg-ui-selected">on</code> Zusatz bei der Rolle. <br>
 						Beispiel: Für die Hintergrundfarbe <code class="bg-ui-selected">bg-ui-success</code> sind die Textfarben <code class="bg-ui-selected">text-ui-onsuccess</code>,
-						<code class="bg-ui-selected">text-ui-onsuccess-hover</code>, <code class="bg-ui-selected">text-ui-onsuccess-secondary</code> oder
-						<code class="bg-ui-selected">text-ui-onsuccess-secondary-hover</code> zu verwenden. Die richtige Nutzung der Farben sorgt für eine abgestimmte,
+						<code class="bg-ui-selected">text-ui-onsuccess-hover</code> oder <code class="bg-ui-selected">text-ui-onsuccess-secondary</code> zu verwenden. Die richtige Nutzung der Farben sorgt für eine abgestimmte,
 						kontrastreiche Kombination, die sich durch die gesamte Benutzeroberfläche zieht.
 					</li>
 					<li>
@@ -245,9 +248,9 @@
 				<p class="text-ui">
 					Folgende Farben werden für Texte verwendet. Es ist zu beachten, dass die Kontrastrichtlinien von WCAG eingehalten werden. Um
 					diese zu erreichen, müssen die <code class="bg-ui-selected">-on</code> Farben zu den passenden Hintergründen verwendet werden. Beispiel:
-					Für die Hintergrundfarbe <code class="bg-ui-selected">bg-ui-success</code> sind die Textfarben <code class="bg-ui-selected">text-ui-onsuccess</code>,
-					<code class="bg-ui-selected">text-ui-onsuccess-hover</code>, <code class="bg-ui-selected">text-ui-onsuccess-secondary</code> oder
-					<code class="bg-ui-selected">text-ui-onsuccess-secondary-hover</code> zu verwenden. <br>
+					Für die Hintergrundfarbe <code class="bg-ui-selected">bg-ui-success</code> ist die Textfarbe
+					<code class="bg-ui-selected">text-ui-onsuccess</code> zu verwenden. Für <code class="bg-ui-selected">bg-ui-success-hover</code> hingegen ist
+					die Textfarbe <code class="bg-ui-selected">text-ui-onsuccess-hover</code> zu verwenden. <br>
 					Das erriechte WCAG Kontrastlevel ist außerdem abhängig von der Schriftgröße. In der Vorschau wird die für SVWS normale Schriftgröße (9pt)
 					verwendet und das enstprechende Kontrastlevel angegeben. Für die Vorschau von weiteren Schriftgrößen, klicke auf eine Farbkachel.
 				</p>
@@ -257,8 +260,9 @@
 				<p class="text-ui">
 					Folgende Farben werden für Borders (Rahmen) verwendet. Es ist zu beachten, dass die Kontrastrichtlinien von WCAG eingehalten werden. Um
 					diese zu erreichen, müssen die <code class="bg-ui-selected">-on</code> Farben zu den passenden Hintergründen verwendet werden. Beispiel:
-					Für die Hintergrundfarbe <code class="bg-ui-selected">bg-ui-success</code> sind die Borderfarben <code class="bg-ui-selected">border-ui-onsuccess</code> oder
-					<code class="bg-ui-selected">border-ui-onsuccess-hover</code> zu verwenden.
+					Für die Hintergrundfarbe <code class="bg-ui-selected">bg-ui-success</code> ist die Borderfarbe
+					<code class="bg-ui-selected">border-ui-onsuccess</code> zu verwenden. Für <code class="bg-ui-selected">bg-ui-success-hover</code> hingegen ist
+					die Borderfarbe <code class="bg-ui-selected">border-ui-onsuccess-hover</code> zu verwenden. <br>
 				</p>
 			</div>
 			<div v-if="type === 'accent'" class="htw-prose dark:htw-prose-invert inline">
@@ -283,9 +287,9 @@
 				<p class="text-ui">
 					Folgende Farben werden für Icons verwendet. Es ist zu beachten, dass die Kontrastrichtlinien von WCAG eingehalten werden. Um
 					diese zu erreichen, müssen die <code class="bg-ui-selected">-on</code> Farben zu den passenden Hintergründen verwendet werden. Beispiel:
-					Für die Hintergrundfarbe <code class="bg-ui-selected">bg-ui-success</code> sind die Iconfarben <code class="bg-ui-selected">icon-ui-onsuccess</code>,
-					<code class="bg-ui-selected">icon-ui-onsuccess-hover</code>, <code class="bg-ui-selected">icon-ui-onsuccess-secondary</code> oder
-					<code class="bg-ui-selected">icon-ui-onsuccess-secondary-hover</code> zu verwenden.
+					Für die Hintergrundfarbe <code class="bg-ui-selected">bg-ui-success</code> ist die Iconfarbe
+					<code class="bg-ui-selected">icon-ui-onsuccess</code> zu verwenden. Für <code class="bg-ui-selected">bg-ui-success-hover</code> hingegen ist
+					die Iconfarbe <code class="bg-ui-selected">icon-ui-onsuccess-hover</code> zu verwenden. <br>
 				</p>
 			</div>
 			<div v-if="type === 'shadow'" class="htw-prose dark:htw-prose-invert inline">
@@ -482,47 +486,37 @@
 			'text-ui-warning-secondary', 'text-ui-warning-secondary-hover',
 		]],
 		['caution', [
-			'text-ui-caution', 'text-ui-caution-hover',
-			'text-ui-caution-secondary', 'text-ui-caution-secondary-hover',
+			'text-ui-caution', 'text-ui-caution-hover', 'text-ui-caution-secondary',
 		]],
 		['neutral', [
-			'text-ui-neutral', 'text-ui-neutral-hover',
-			'text-ui-neutral-secondary', 'text-ui-neutral-secondary-hover',
+			'text-ui-neutral', 'text-ui-neutral-hover', 'text-ui-neutral-secondary',
 		]],
 		['disabled', [
 			'text-ui-disabled', 'text-ui-disabled-secondary',
 		]],
 		['onbrand', [
-			'text-ui-onbrand', 'text-ui-onbrand-hover',
-			'text-ui-onbrand-secondary', 'text-ui-onbrand-secondary-hover',
+			'text-ui-onbrand', 'text-ui-onbrand-hover', 'text-ui-onbrand-secondary',
 		]],
 		['onstatistic', [
-			'text-ui-onstatistic', 'text-ui-onstatistic-hover',
-			'text-ui-onstatistic-secondary', 'text-ui-onstatistic-secondary-hover',
+			'text-ui-onstatistic', 'text-ui-onstatistic-hover', 'text-ui-onstatistic-secondary',
 		]],
 		['onselected', [
-			'text-ui-onselected', 'text-ui-onselected-hover',
-			'text-ui-onselected-secondary', 'text-ui-onselected-secondary-hover',
+			'text-ui-onselected', 'text-ui-onselected-hover', 'text-ui-onselected-secondary',
 		]],
 		['ondanger', [
-			'text-ui-ondanger', 'text-ui-ondanger-hover',
-			'text-ui-ondanger-secondary', 'text-ui-ondanger-secondary-hover',
+			'text-ui-ondanger', 'text-ui-ondanger-hover', 'text-ui-ondanger-secondary',
 		]],
 		['onsuccess', [
-			'text-ui-onsuccess', 'text-ui-onsuccess-hover',
-			'text-ui-onsuccess-secondary', 'text-ui-onsuccess-secondary-hover',
+			'text-ui-onsuccess', 'text-ui-onsuccess-hover','text-ui-onsuccess-secondary',
 		]],
 		['onwarning', [
-			'text-ui-onwarning', 'text-ui-onwarning-hover',
-			'text-ui-onwarning-secondary', 'text-ui-onwarning-secondary-hover',
+			'text-ui-onwarning', 'text-ui-onwarning-hover',	'text-ui-onwarning-secondary',
 		]],
 		['oncaution', [
-			'text-ui-oncaution', 'text-ui-oncaution-hover',
-			'text-ui-oncaution-secondary', 'text-ui-oncaution-secondary-hover',
+			'text-ui-oncaution', 'text-ui-oncaution-hover',	'text-ui-oncaution-secondary',
 		]],
 		['onneutral', [
-			'text-ui-onneutral', 'text-ui-onneutral-hover',
-			'text-ui-onneutral-secondary', 'text-ui-onneutral-secondary-hover',
+			'text-ui-onneutral', 'text-ui-onneutral-hover', 'text-ui-onneutral-secondary',
 		]],
 		['ondisabled', [
 			'text-ui-ondisabled', 'text-ui-ondisabled-secondary',
@@ -616,14 +610,14 @@
 		['caution', ['icon-ui-caution', 'icon-ui-caution-hover', 'icon-ui-caution-secondary', 'icon-ui-caution-secondary-hover']],
 		['neutral', ['icon-ui-neutral', 'icon-ui-neutral-hover', 'icon-ui-neutral-secondary', 'icon-ui-neutral-secondary-hover']],
 		['disabled', ['icon-ui-disabled', 'icon-ui-disabled-secondary']],
-		['onbrand', ['icon-ui-onbrand', 'icon-ui-onbrand-hover', 'icon-ui-onbrand-secondary', 'icon-ui-onbrand-secondary-hover']],
-		['onstatistic', ['icon-ui-onstatistic', 'icon-ui-onstatistic-hover', 'icon-ui-onstatistic-secondary', 'icon-ui-onstatistic-secondary-hover']],
-		['onselected', ['icon-ui-onselected', 'icon-ui-onselected-hover', 'icon-ui-onselected-secondary', 'icon-ui-onselected-secondary-hover']],
-		['ondanger', ['icon-ui-ondanger', 'icon-ui-ondanger-hover', 'icon-ui-ondanger-secondary', 'icon-ui-ondanger-secondary-hover']],
-		['onsuccess', ['icon-ui-onsuccess', 'icon-ui-onsuccess-hover', 'icon-ui-onsuccess-secondary', 'icon-ui-onsuccess-secondary-hover']],
-		['onwarning', ['icon-ui-onwarning', 'icon-ui-onwarning-hover', 'icon-ui-onwarning-secondary', 'icon-ui-onwarning-secondary-hover']],
-		['oncaution', ['icon-ui-oncaution', 'icon-ui-oncaution-hover', 'icon-ui-oncaution-secondary', 'icon-ui-oncaution-secondary-hover']],
-		['onneutral', ['icon-ui-onneutral', 'icon-ui-onneutral-hover', 'icon-ui-onneutral-secondary', 'icon-ui-onneutral-secondary-hover']],
+		['onbrand', ['icon-ui-onbrand', 'icon-ui-onbrand-hover', 'icon-ui-onbrand-secondary']],
+		['onstatistic', ['icon-ui-onstatistic', 'icon-ui-onstatistic-hover', 'icon-ui-onstatistic-secondary']],
+		['onselected', ['icon-ui-onselected', 'icon-ui-onselected-hover', 'icon-ui-onselected-secondary']],
+		['ondanger', ['icon-ui-ondanger', 'icon-ui-ondanger-hover', 'icon-ui-ondanger-secondary']],
+		['onsuccess', ['icon-ui-onsuccess', 'icon-ui-onsuccess-hover', 'icon-ui-onsuccess-secondary']],
+		['onwarning', ['icon-ui-onwarning', 'icon-ui-onwarning-hover', 'icon-ui-onwarning-secondary']],
+		['oncaution', ['icon-ui-oncaution', 'icon-ui-oncaution-hover', 'icon-ui-oncaution-secondary']],
+		['onneutral', ['icon-ui-onneutral', 'icon-ui-onneutral-hover', 'icon-ui-onneutral-secondary']],
 		['ondisabled', ['icon-ui-ondisabled', 'icon-ui-ondisabled-secondary']],
 		['uistatic', ['icon-uistatic', 'icon-uistatic-0', 'icon-uistatic-10', 'icon-uistatic-25', 'icon-uistatic-50', 'icon-uistatic-75', 'icon-uistatic-100']],
 	]);
@@ -774,15 +768,27 @@
 	function getBackgroundColor(color: string): string {
 		if (!color.includes('-on'))
 			return 'bg-ui';
+
 		return color
 			.split('-')
-			.slice(0, 3) // Nur die ersten 3 Teile behalten
-			.map((part, index) => {
-				if (index === 0) return 'bg'; // Erster Teil wird 'bg'
-				return part.replace('on', ''); // 'on' am Anfang des Mittelteils entfernen
+			.map((part, index, parts) => {
+				// Erster Teil wird 'bg'
+				if (index === 0) return 'bg';
+
+				// Das 'on' am Anfang des dritten Teils entfernen
+				if (index === 2 && part.startsWith('on')) return part.replace(/^on/, '');
+
+				// Wenn der String mit '-secondary-hover' endet, entferne '-secondary'
+				if (index === parts.length - 2 && part === 'secondary' && parts[parts.length - 1] === 'hover') {
+					return ''; // Entfernt 'secondary', wenn 'hover' direkt folgt
+				}
+
+				return part;
 			})
+			.filter(part => part !== '') // Entfernt leere Teile
 			.join('-');
 	}
+
 
 	/**
 	 * Bestimmt die Farbe für den Kontrastwert, abhängig von dem erreichten WCAG-Level.

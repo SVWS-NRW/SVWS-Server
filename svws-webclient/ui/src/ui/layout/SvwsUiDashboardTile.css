@@ -93,10 +93,10 @@
 		}
 
 		.dashboard-tile--title {
-			@apply text-ui-onbrand-secondary-hover;
+			@apply text-ui-onbrand-secondary;
 
 			.page--statistik & {
-				@apply text-ui-onstatistic-secondary-hover;
+				@apply text-ui-onstatistic-secondary;
 			}
 		}
 	}
