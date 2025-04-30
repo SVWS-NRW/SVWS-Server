@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.text.Collator;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -63,6 +64,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangBeratungslehrer;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangFachkombinationen;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
+import de.svws_nrw.db.dto.current.gost.DTOGostSchueler;
 import de.svws_nrw.db.dto.current.gost.DTOGostSchuelerFachbelegungen;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
@@ -563,7 +565,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 	 */
 	private static boolean doImport(final DBEntityManager conn, final DTOSchueler dtoSchueler, final GostLaufbahnplanungDaten laufbahnplanungsdaten,
 			final Logger logger) throws ApiOperationException {
-		// Lese zunächst die Informationen zur Schule ein und prüfe, ob die Schulnummer übereinstimmt.
+		// Lese die Informationen zur Schule ein und prüfe, ob die Schulnummer übereinstimmt.
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 		if (schule == null) {
 			logger.logLn("Fehler: Die Daten der Schule können nicht aus der Datenbank eingelesen werden.");
@@ -571,6 +573,12 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 		}
 		if (laufbahnplanungsdaten.schulNr != schule.SchulNr) {
 			logger.logLn("Fehler: Die Schulnummer der Planungsdatei simmt nicht mit der Schulnummer der Datenbank überein.");
+			return false;
+		}
+		// Lese die allgemeinen Informationen des Schülers zu der Laufbahn ein.
+		final DTOGostSchueler gostSchueler = conn.queryByKey(DTOGostSchueler.class, dtoSchueler.ID);
+		if (gostSchueler == null) {
+			logger.logLn("Fehler: Es konnte kein Eintrag für den Schüler mit der ID %d in der Laufbahnplung ermittelt werden.".formatted(dtoSchueler.ID));
 			return false;
 		}
 		// Lese zunächst die Abiturdaten des Schülers ein, welche in der Datenbank gespeichert sind.
@@ -769,6 +777,9 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 				final DTOGostSchuelerFachbelegungen fachwahl = mapFachwahlen.get(idFach);
 				conn.transactionRemove(fachwahl);
 			}
+			// Und setzen des Rücklaufdatums
+			gostSchueler.DatumRuecklauf = DateTimeFormatter.ISO_DATE.format(LocalDate.now(ZoneId.of("Europe/Berlin")));
+			conn.transactionPersist(gostSchueler);
 		} else {
 			logger.logLn("Keine Änderungen für den Schüler mit der ID " + dtoSchueler.ID + " gegenüber der Datenbank in der Datei enthalten.");
 		}
