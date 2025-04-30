@@ -3,7 +3,7 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 import { BenutzerKompetenz, DeveloperNotificationException, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
-import { type RouteSchuelerAbitur } from "~/router/apps/schueler/abitur/RouteSchuelerAbitur";
+import { routeSchuelerAbitur, type RouteSchuelerAbitur } from "~/router/apps/schueler/abitur/RouteSchuelerAbitur";
 
 import type { SchuelerAbiturLeistungsuebersichtProps } from "~/components/schueler/abitur/SchuelerAbiturLeistungsuebersichtProps";
 import { api } from "~/router/Api";
@@ -18,7 +18,7 @@ export class RouteSchuelerAbiturLeistungsuebersicht extends RouteNode<any, Route
 	public constructor() {
 		super(schulformenGymOb, [
 			BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN,
-			BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN
+			BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN,
 		], "schueler.abitur.leistungsuebersicht", "leistungsuebersicht", SchuelerAbiturLeistungsuebersicht);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
@@ -35,6 +35,9 @@ export class RouteSchuelerAbiturLeistungsuebersicht extends RouteNode<any, Route
 		return {
 			serverMode: api.mode,
 			schule: api.schuleStammdaten,
+			managerLaufbahnplanung: () => routeSchuelerAbitur.data.managerLaufbahnplanung,
+			ergebnisBelegpruefung: () => routeSchuelerAbitur.data.ergebnisBelegpruefung,
+			managerAbitur: () => routeSchuelerAbitur.data.managerAbitur,
 		};
 	}
 

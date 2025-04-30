@@ -6737,6 +6737,8 @@ export class ApiServer extends BaseApi {
 	 *     - Rückgabe-Typ: Abiturdaten
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Leistungsdaten anzusehen.
 	 *   Code 404: Kein Schüler-Eintrag mit der angegebenen ID gefunden
+	 *     - Mime-Type: text/plain
+	 *     - Rückgabe-Typ: String
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
@@ -6745,33 +6747,6 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostSchuelerAbiturdaten(schema : string, id : number) : Promise<Abiturdaten> {
 		const path = "/db/{schema}/gost/schueler/{id : \\d+}/abiturdaten"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
-		const text = result;
-		return Abiturdaten.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getGostSchuelerAbiturdatenAusLeistungsdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{id : \d+}/abiturdatenAusLeistungsdaten
-	 *
-	 * Liest die Abiturdaten aus den Leistungsdaten der gymnasiale Oberstufe des Schülers mit der angegebene ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Leistungsdaten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Abiturdaten des Schülers
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: Abiturdaten
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Leistungsdaten anzusehen.
-	 *   Code 404: Kein Schüler-Eintrag mit der angegebenen ID gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Die Abiturdaten des Schülers
-	 */
-	public async getGostSchuelerAbiturdatenAusLeistungsdaten(schema : string, id : number) : Promise<Abiturdaten> {
-		const path = "/db/{schema}/gost/schueler/{id : \\d+}/abiturdatenAusLeistungsdaten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);

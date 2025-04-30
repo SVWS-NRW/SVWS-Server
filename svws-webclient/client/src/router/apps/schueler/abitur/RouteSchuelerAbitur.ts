@@ -22,7 +22,7 @@ export class RouteSchuelerAbitur extends RouteNode<RouteDataSchuelerAbitur, Rout
 	public constructor() {
 		super(schulformenGymOb, [
 			BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN,
-			BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN
+			BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN,
 		], "schueler.abitur", "abitur", SchuelerAbitur, new RouteDataSchuelerAbitur());
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
@@ -58,7 +58,14 @@ export class RouteSchuelerAbitur extends RouteNode<RouteDataSchuelerAbitur, Rout
 			const { id } = RouteNode.getIntParams(to_params, [ "id" ]);
 			if (id === undefined)
 				throw new DeveloperNotificationException("Fehler: Keine Schüler-ID in der URL angegeben.");
-			await this.data.setSchueler(id, isEntering);
+			const schueler = routeSchueler.data.manager.liste.get(id);
+			if (schueler === null)
+				return routeSchueler.getRoute({ id });
+			try {
+				await this.data.setSchueler(schueler, isEntering);
+			} catch(error) {
+				return routeSchueler.getRoute({ id });
+			}
 			if (to === this)
 				return this.getRouteView(this.data.view);
 			if (!to.name.startsWith(this.data.view.name))

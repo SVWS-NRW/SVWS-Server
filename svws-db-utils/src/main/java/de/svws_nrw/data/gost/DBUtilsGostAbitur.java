@@ -4,14 +4,10 @@ import de.svws_nrw.core.data.gost.AbiturFachbelegung;
 import de.svws_nrw.core.data.gost.AbiturFachbelegungHalbjahr;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostFach;
-import de.svws_nrw.core.data.gost.GostLeistungen;
-import de.svws_nrw.core.data.gost.GostLeistungenFachbelegung;
-import de.svws_nrw.core.data.gost.GostLeistungenFachwahl;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.types.gost.AbiturBelegungsart;
-import de.svws_nrw.core.types.gost.GostAbiturFach;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
@@ -45,90 +41,6 @@ public final class DBUtilsGostAbitur {
 		throw new IllegalStateException("Instantiation of " + DBUtilsGostAbitur.class.getName() + " not allowed");
 	}
 
-	/**
-	 * Ermittelt die für das Abitur relevanten Daten für den Schüler mit der angegebenen
-	 * ID aus den Leistungsdaten in der Datenbank.
-	 *
-	 * @param conn   die Datenbankverbindung
-	 * @param id     die ID des Schülers
-	 *
-	 * @return die für das Abitur relevanten Daten für den Schüler mit der angegebenen ID
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public static Abiturdaten getAbiturdatenAusLeistungsdaten(final DBEntityManager conn, final long id) throws ApiOperationException {
-		final GostLeistungen leistungen = DBUtilsGost.getLeistungsdaten(conn, id);
-		if (leistungen == null)
-			throw new ApiOperationException(Status.NOT_FOUND);
-
-		if (!"Q2".equals(leistungen.aktuellerJahrgang))
-			return null;
-		final Abiturdaten abidaten = new Abiturdaten();
-		abidaten.schuelerID = leistungen.id;
-		abidaten.schuljahrAbitur = leistungen.aktuellesSchuljahr;
-		abidaten.abiturjahr = abidaten.schuljahrAbitur + 1;
-		abidaten.sprachendaten = leistungen.sprachendaten;
-		abidaten.bilingualeSprache = leistungen.bilingualeSprache;
-		abidaten.projektKursThema = leistungen.projektkursThema;
-		abidaten.projektkursLeitfach1Kuerzel = leistungen.projektkursLeitfach1Kuerzel;
-		abidaten.projektkursLeitfach2Kuerzel = leistungen.projektkursLeitfach2Kuerzel;
-		for (final GostHalbjahr hj : GostHalbjahr.values())
-			abidaten.bewertetesHalbjahr[hj.id] = leistungen.bewertetesHalbjahr[hj.id];
-		for (final GostLeistungenFachwahl leistungenFach : leistungen.faecher) {
-			GostHalbjahr letzteBelegungHalbjahr = null;   // das Halbjahr der letzten Belegung
-			final AbiturFachbelegung fach = new AbiturFachbelegung();
-			fach.fachID = leistungenFach.fach.id;
-			fach.istFSNeu = leistungenFach.istFSNeu;
-			fach.abiturFach = (GostAbiturFach.fromID(leistungenFach.abiturfach) == null) ? null : leistungenFach.abiturfach;
-			for (final GostLeistungenFachbelegung leistungenBelegung : leistungenFach.belegungen) {
-				if (!leistungenBelegung.abschnittGewertet)
-					continue;
-
-				// Nehme jeweils die Kursart, welche beim letzten gewerteten Abschnitt eingetragen ist
-				if (((letzteBelegungHalbjahr == null) || (GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel).compareTo(letzteBelegungHalbjahr) > 0))
-						&& (GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel) != null) && leistungenBelegung.abschnittGewertet) {
-					letzteBelegungHalbjahr = GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel);
-					fach.letzteKursart = (GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel) == null) ? null
-							: GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel).kuerzel;
-				}
-
-				// Erzeuge die zugehörige Belegung
-				final AbiturFachbelegungHalbjahr belegung = new AbiturFachbelegungHalbjahr();
-				belegung.halbjahrKuerzel = (GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel) == null) ? null
-						: GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel).kuerzel;
-				belegung.kursartKuerzel = (GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel) == null) ? null
-						: GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel).kuerzel;
-				belegung.schriftlich = leistungenBelegung.istSchriftlich;
-				belegung.biliSprache = leistungenBelegung.bilingualeSprache;
-				belegung.lehrer = leistungenBelegung.lehrer;
-				belegung.wochenstunden = leistungenBelegung.wochenstunden;
-				belegung.fehlstundenGesamt = leistungenBelegung.fehlstundenGesamt;
-				belegung.fehlstundenUnentschuldigt = leistungenBelegung.fehlstundenUnentschuldigt;
-				belegung.notenkuerzel = Note.fromKuerzel(leistungenBelegung.notenKuerzel).daten(abidaten.schuljahrAbitur).kuerzel;
-				fach.belegungen[GostHalbjahr.fromKuerzel(belegung.halbjahrKuerzel).id] = belegung;
-			}
-			abidaten.fachbelegungen.add(fach);
-		}
-
-		// Bestimmt die Fehlstunden-Summe für den Block I (Qualifikationsphase) anhand der Fehlstunden bei den einzelnen Kurs-Belegungen.
-		int block1FehlstundenGesamt = 0;
-		int block1FehlstundenUnentschuldigt = 0;
-		for (final AbiturFachbelegung fach : abidaten.fachbelegungen) {
-			for (final AbiturFachbelegungHalbjahr belegung : fach.belegungen) {
-				if ((belegung == null) || !GostHalbjahr.fromKuerzel(belegung.halbjahrKuerzel).istQualifikationsphase())
-					continue;
-				block1FehlstundenGesamt += belegung.fehlstundenGesamt;
-				block1FehlstundenUnentschuldigt += belegung.fehlstundenUnentschuldigt;
-			}
-		}
-		abidaten.block1FehlstundenGesamt = block1FehlstundenGesamt;
-		abidaten.block1FehlstundenUnentschuldigt = block1FehlstundenUnentschuldigt;
-
-		// und gib die Abiturdaten zurück...
-		return abidaten;
-	}
-
-
 
 	/**
 	 * Ermittelt die für das Abitur relevanten Daten für den Schüler mit der angegebenen
@@ -145,22 +57,31 @@ public final class DBUtilsGostAbitur {
 		// Prüfe zunächst den Schüler auf Existenz.
 		final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, id);
 		if (dtoSchueler == null)
-			throw new ApiOperationException(Status.NOT_FOUND);
+			throw new ApiOperationException(Status.NOT_FOUND, "Es exiistiert kein Schüler mit der ID %d in der Datenbank.".formatted(id));
 
 		// Ermittle für einen Vergleich die Abiturdaten für Block I aus den Leistungsdaten, nutze dafür den entsprechenden Service
-		final Abiturdaten abidatenVergleich = getAbiturdatenAusLeistungsdaten(conn, id);
+		final Abiturdaten abidatenVergleich = DBUtilsGostLaufbahn.get(conn, id);
 		if (abidatenVergleich == null)
-			throw new ApiOperationException(Status.NOT_FOUND);
+			throw new ApiOperationException(Status.NOT_FOUND, "Es konnten keine Abiturdaten aus den Leistungsdaten ausgelesen werden.");
 
 		// Lese die Abiturdaten anhand der ID aus der Datenbank
 		final List<DTOSchuelerAbitur> dtosSchuelerAbitur = conn.queryList(DTOSchuelerAbitur.QUERY_BY_SCHUELER_ID, DTOSchuelerAbitur.class, id);
 		if ((dtosSchuelerAbitur == null) || (dtosSchuelerAbitur.isEmpty()))
-			throw new ApiOperationException(Status.NOT_FOUND);
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"Es wurden keine Abiturdaten für den Schüler mit der ID %d in der Datenbank gefunden.".formatted(id));
+
 		// TODO if (dtosSchuelerAbitur.size() > 1) - Es existieren mehrere Abiturdatensätze für den Schüler mit der ID - TODO neueren Jahrgang auswählen
 		final DTOSchuelerAbitur dtoSchuelerAbitur = dtosSchuelerAbitur.getFirst();
+		if (dtoSchuelerAbitur == null)
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"Es wurden keine Abiturdaten für den Schüler mit der ID %d in der Datenbank gefunden.".formatted(id));
+		if (dtoSchuelerAbitur.Schuljahresabschnitts_ID == null)
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"Der Eintrag mit den Abiturdaten für den Schüler mit der ID %d enthält keinen gültigen Schuljahresabschnitt.".formatted(id));
+
 		final List<DTOSchuelerAbiturFach> faecher = conn.queryList(DTOSchuelerAbiturFach.QUERY_BY_SCHUELER_ID, DTOSchuelerAbiturFach.class, id);
 		if (faecher == null)
-			throw new ApiOperationException(Status.NOT_FOUND);
+			throw new ApiOperationException(Status.NOT_FOUND, "Es konnten keine Fachinformationen für die Abiturdaten des Schülers aus der DB ausgelesen werden.");
 
 		// Lese beide Tabellen mit den Informationen zu den belegten oder geprüften Sprachen aus.
 		final List<DTOSchuelerSprachenfolge> sprachenfolge = conn.queryList(DTOSchuelerSprachenfolge.QUERY_BY_SCHUELER_ID, DTOSchuelerSprachenfolge.class, id);
@@ -235,7 +156,7 @@ public final class DBUtilsGostAbitur {
 
 			// Ermittle für einen Vergleich die Abiturdaten für Block I aus den Leistungsdaten, nutze dafür den entsprechenden Service.
 			// TODO: Hier müsste auch die folgende Methode mehrere IDs umgestellt und aus der for-Schleife gezogen werden.
-			final Abiturdaten abidatenVergleich = getAbiturdatenAusLeistungsdaten(conn, idSchueler);
+			final Abiturdaten abidatenVergleich = DBUtilsGostLaufbahn.get(conn, idSchueler);
 			if (abidatenVergleich == null)
 				throw new ApiOperationException(Status.NOT_FOUND);
 

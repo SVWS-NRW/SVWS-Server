@@ -1064,43 +1064,6 @@ public class APIGost {
 
 
 	/**
-	 * Liest die Abiturdaten aus den Leistungsdaten der gymnasialen Oberstufe des Schülers mit der angegebene ID aus der Datenbank und liefert diese zurück.
-	 * Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Leistungsdaten besitzt.
-	 *
-	 * @param schema   das Schema aus dem die Abiturdaten des Schülers kommen sollen
-	 * @param id       die ID des Schülers zu dem die Abiturdaten geliefert werden sollen
-	 *
-	 * @param request  die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die Abiturdaten in der gymnasialen Oberstufe für den Schüler mit der
-	 *         angegebenen ID und die Berechtigung des Datenbank-Users
-	 */
-	@GET
-	@Path("/schueler/{id : \\d+}/abiturdatenAusLeistungsdaten")
-	@Operation(summary = "Liefert zu der ID des Schülers die zugehörigen Abiturdaten, die aus den Leistungsdaten der Oberstufe gewonnen werden können.",
-			description = "Liest die Abiturdaten aus den Leistungsdaten der gymnasiale Oberstufe des Schülers mit der angegebene ID aus der "
-					+ "Datenbank und liefert diese zurück. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Leistungsdaten besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Abiturdaten des Schülers",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Abiturdaten.class)))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Leistungsdaten anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
-	public Response getGostSchuelerAbiturdatenAusLeistungsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(
-				conn -> Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(DBUtilsGostAbitur.getAbiturdatenAusLeistungsdaten(conn, id)).build(),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
-				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
-				BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN,
-				BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN);
-	}
-
-
-
-	/**
 	 * Liest die Abiturdaten aus den Abiturtabellen des Schülers mit der angegebene ID und liefert diese zurück.
 	 * Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Leistungsdaten besitzt.
 	 *
@@ -1120,7 +1083,8 @@ public class APIGost {
 	@ApiResponse(responseCode = "200", description = "Die Abiturdaten des Schülers",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Abiturdaten.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Leistungsdaten anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden",
+			content = @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)))
 	public Response getGostSchuelerAbiturdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(

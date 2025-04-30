@@ -59,13 +59,11 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 							break;
 						}
 			const { id } = RouteNode.getIntParams(to_params, ["id"]);
-			if (this.parent === undefined)
-				throw new DeveloperNotificationException("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
 			if (id === undefined)
 				await this.data.ladeDaten(null);
 			else
 				try {
-					await this.data.ladeDaten(this.parent.data.manager.liste.get(id));
+					await this.data.ladeDaten(routeSchueler.data.manager.liste.get(id));
 				} catch(error) {
 					return routeSchueler.getRoute({ id });
 				}

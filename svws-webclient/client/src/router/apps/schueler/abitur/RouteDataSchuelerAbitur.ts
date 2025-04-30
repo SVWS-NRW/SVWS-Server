@@ -1,17 +1,23 @@
+import type { GostBelegpruefungErgebnis, SchuelerListeEintrag} from "@core";
+import { AbiturdatenManager, DeveloperNotificationException, GostBelegpruefungsArt, GostFaecherManager, UserNotificationException } from "@core";
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { routeSchuelerAbiturLeistungsuebersicht } from "~/router/apps/schueler/abitur/RouteSchuelerAbiturLeistungsuebersicht";
 
 interface RouteStateDataSchuelerAbitur extends RouteStateInterface {
 	// Daten, die in Abhängigkeit des ausgewählten Schülers geladen werden
-	idSchueler: number;
-	hatGymOb: boolean;
+	schueler: SchuelerListeEintrag | null;
+	managerLaufbahnplanung: AbiturdatenManager | null;
+	ergebnisBelegpruefung: GostBelegpruefungErgebnis | null;
+	managerAbitur: AbiturdatenManager | null;
 }
 
 const defaultState = <RouteStateDataSchuelerAbitur> {
-	idSchueler: -1,
-	hatGymOb: false,
+	schueler: null,
 	view: routeSchuelerAbiturLeistungsuebersicht,
+	managerLaufbahnplanung: null,
+	ergebnisBelegpruefung: null,
+	managerAbitur: null,
 };
 
 
@@ -21,32 +27,71 @@ export class RouteDataSchuelerAbitur extends RouteData<RouteStateDataSchuelerAbi
 		super(defaultState);
 	}
 
-	get idSchueler(): number {
-		return this._state.value.idSchueler;
+	get schueler(): SchuelerListeEintrag {
+		const schueler = this._state.value.schueler;
+		if (schueler === null)
+			throw new DeveloperNotificationException("Ein Aufruf dieser Methode sollte vor der korrekten Initialisierung nicht erfolgen.");
+		return schueler;
 	}
 
-	get hatGymOb(): boolean {
-		return this._state.value.hatGymOb;
+	get managerLaufbahnplanung() : AbiturdatenManager {
+		const managerLaufbahnplanung = this._state.value.managerLaufbahnplanung;
+		if (managerLaufbahnplanung === null)
+			throw new DeveloperNotificationException("Ein Aufruf dieser Methode sollte vor der korrekten Initialisierung der Laufbahnplanungsdaten nicht erfolgen.");
+		return managerLaufbahnplanung;
+	}
+
+	get ergebnisBelegpruefung() : GostBelegpruefungErgebnis {
+		const ergebnisBelegpruefung = this._state.value.ergebnisBelegpruefung;
+		if (ergebnisBelegpruefung === null)
+			throw new DeveloperNotificationException("Ein Aufruf dieser Methode sollte vor der korrekten Initialisierung der Laufbahnplanungsdaten nicht erfolgen.");
+		return ergebnisBelegpruefung;
+	}
+
+	get managerAbitur() : AbiturdatenManager | null {
+		return this._state.value.managerAbitur;
 	}
 
 	/**
 	 * Lädt die Informationen zu der übergebenen Schüler-ID
 	 *
-	 * @param idSchueler   die ID des Schülers
-	 * @param force        gibt an, ob das Laden erzwungen werden soll, obwohl die ID bereits geladen ist
+	 * @param schueler   der Listeneintrag zu dem Schüler
+	 * @param force      gibt an, ob das Laden erzwungen werden soll, obwohl die ID bereits geladen ist
 	 */
-	public async setSchueler(idSchueler: number, force: boolean = false) : Promise<void> {
-		if ((!force) && (idSchueler === this._state.value.idSchueler))
+	public async setSchueler(schueler: SchuelerListeEintrag, force: boolean = false) : Promise<void> {
+		if ((!force) && (schueler.id === this._state.value.schueler?.id))
 			return;
-		const listAbschnitte = await api.server.getSchuelerLernabschnittsliste(api.schema, idSchueler);
-		let hatGymOb : boolean = false;
-		for (const abschnitt of listAbschnitte) {
-			if (("EF" === abschnitt.jahrgang) || ("Q1" === abschnitt.jahrgang) || ("Q2" === abschnitt.jahrgang)) {
-				hatGymOb = true;
-				break;
-			}
+		// Lade die Informationen zum Abiturjahrgang des Schülers
+		if (schueler.abiturjahrgang === null)
+			throw new DeveloperNotificationException("Für den Schüler konnte kein Abiturjahrgang ermittelt werden.");
+		let gostJahrgangsdaten = undefined;
+		let listGostFaecher = undefined;
+		let faecherManager = undefined;
+		let listFachkombinationen = undefined;
+		try {
+			gostJahrgangsdaten = await api.server.getGostAbiturjahrgang(api.schema, schueler.abiturjahrgang);
+			listGostFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, schueler.abiturjahrgang);
+			faecherManager = new GostFaecherManager(schueler.abiturjahrgang - 1, listGostFaecher);
+			listFachkombinationen = await api.server.getGostAbiturjahrgangFachkombinationen(api.schema, schueler.abiturjahrgang);
+			faecherManager.addFachkombinationenAll(listFachkombinationen);
+		} catch(error) {
+			throw new UserNotificationException("Die Informationen zum Abiturjahrgang " + schueler.abiturjahrgang + " und dessen Fächer konnten nicht vollständig ermittelt werden. Überpfüfen Sie diese Infromationen.");
 		}
-		let newState = <RouteStateDataSchuelerAbitur>{ idSchueler, hatGymOb, view: this._state.value.view };
+		const newState = <RouteStateDataSchuelerAbitur>{ schueler, managerLaufbahnplanung: null, ergebnisBelegpruefung: null, managerAbitur: null, view: this._state.value.view };
+		try {
+			const abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, schueler.id);
+			newState.managerLaufbahnplanung = new AbiturdatenManager(api.mode, abiturdaten, gostJahrgangsdaten, faecherManager, GostBelegpruefungsArt.GESAMT);
+			newState.ergebnisBelegpruefung = newState.managerLaufbahnplanung.getBelegpruefungErgebnis();
+		} catch (e) {
+			// do nothing
+		}
+		try {
+			// TODO hole Abiturdaten für das spezielle Abiturjahr
+			const abiturdaten = await api.server.getGostSchuelerAbiturdaten(api.schema, schueler.id);
+			newState.managerAbitur = new AbiturdatenManager(api.mode, abiturdaten, gostJahrgangsdaten, faecherManager, GostBelegpruefungsArt.GESAMT);
+		} catch (e) {
+			// do nothing
+		}
 		this.setPatchedDefaultState(newState)
 	}
 
