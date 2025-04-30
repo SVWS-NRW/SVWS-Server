@@ -274,6 +274,15 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	/**
+	 * Gibt die von diesem Manager verwalteten Abiturdaten zurück.
+	 *
+	 * @return die Abiturdaten des Managers
+	 */
+	public daten() : Abiturdaten {
+		return this.abidaten;
+	}
+
+	/**
 	 * Gibt den zugehörigen Fächer-Manager zurück.
 	 *
 	 * @return der Fächer-Manager

@@ -15,7 +15,7 @@
 			</template>
 
 			<!-- Übersicht über die Fachbelegungen in der Q-Phase / Block I -->
-			<schueler-abitur-zulassung :server-mode :schule :manager="managerLaufbahnplanung" />
+			<schueler-abitur-zulassung :server-mode :schule :manager="managerLaufbahnplanung" berechnen />
 		</template>
 
 		<!-- Darstellung der Laufbahninformationen aus dem persistierten Abiturbereich -->
@@ -24,7 +24,7 @@
 			<div><span class="icon i-ri-information-line icon-ui-danger" />Es liegen bereits Daten zum Abitur vor.</div>
 
 			<!-- Übersicht über die Fachbelegungen in der Q-Phase / Block I -->
-			<schueler-abitur-zulassung :server-mode :schule :manager="managerLaufbahnplanung" />
+			<schueler-abitur-zulassung :server-mode :schule :manager="managerLaufbahnplanung" berechnen />
 			
 			<!-- Übersicht über die Fachbelegungen in der Q-Phase / Block I -->
 			<schueler-abitur-zulassung :server-mode :schule :manager="() => managerAbitur()!" />

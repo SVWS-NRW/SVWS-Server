@@ -4,4 +4,5 @@ export interface SchuelerAbiturZulassungProps {
 	serverMode: ServerMode;
 	schule: SchuleStammdaten;
 	manager: () => AbiturdatenManager;
+	berechnen?: boolean;
 }

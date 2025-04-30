@@ -284,6 +284,16 @@ public class AbiturdatenManager {
 
 
 	/**
+	 * Gibt die von diesem Manager verwalteten Abiturdaten zurück.
+	 *
+	 * @return die Abiturdaten des Managers
+	 */
+	public @NotNull Abiturdaten daten() {
+		return this.abidaten;
+	}
+
+
+	/**
 	 * Gibt den zugehörigen Fächer-Manager zurück.
 	 *
 	 * @return der Fächer-Manager
