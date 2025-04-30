@@ -1,23 +1,34 @@
 <template>
-	<div class="page page-flex-row pt-0">
-		<!-- Übersicht über die Fachbelegungen in der Q-Phase / Block I -->
-		<schueler-abitur-zulassung :server-mode :schule :manager="managerLaufbahnplanung" />
+	<div class="page page-flex-col pt-0">
+		<!-- Darstellung der Laufbahninformationen anhand der Leistungsdaten und nicht aus dem persistierten Abiturbereich, da dieser noch nicht vorliegt. -->
+		<template v-if="managerAbitur() === null">
+			<!-- Zeige einen Hinweis, wenn noch nicht für alle Halbjahre der Qualifikationsphase Leistungsdaten vorliegen -->
+			<template v-if="!istQPhaseBewertet()">
+				<div> <span class="icon i-ri-alert-line icon-ui-danger" /> Es liegen noch nicht für alle Halbjahre der Qualifikationsphase Leistungsdaten vor.</div>
+			</template>
 
-		<!-- Darstellung der Information, ob bereits Daten im Abiturbereich vorliegen und ggf. Abweichungen zwischen den Daten deutlich hervorheben -->
-		<template v-if="managerAbitur() !== null">
-			<div>Es liegen bereits Daten zum Abitur vor.</div>
+			<!-- Wenn Belegungsfehler vorliegen, sollten diese hier deutlich angezeigt werden -->
+			<template v-if="!belegungsfehler.isEmpty()">
+				<div> <span class="icon i-ri-alert-line icon-ui-danger" /> Es {{ (belegungsfehler.size() > 1) ? 'sind' : 'ist' }} noch {{ belegungsfehler.size() }} Fehler in der Laufbahnplanung vorhanden. Bitte prüfen Sie die Laufbahn des Schüler manuell. </div>
+				<!-- TODO Link zur Laufbahnplanung einbauen -->
+				<!-- TODO Hier die Checkbox manuelle geprüft anbieten -->
+			</template>
+
+			<!-- Übersicht über die Fachbelegungen in der Q-Phase / Block I -->
+			<schueler-abitur-zulassung :server-mode :schule :manager="managerLaufbahnplanung" />
 		</template>
 
-		<!-- Zeige einen Hinweis, wenn noch nicht für alle Halbjahre der Qualifikationsphase Leistungsdaten vorliegen -->
-		<template v-if="!istQPhaseBewertet()">
-			<div> <span class="icon i-ri-alert-line icon-ui-danger" /> Es liegen noch nicht für alle Halbjahre der Qualifikationsphase Leistungsdaten vor.</div>
-		</template>
+		<!-- Darstellung der Laufbahninformationen aus dem persistierten Abiturbereich -->
+		<template v-else>
 
-		<!-- Wenn Belegungsfehler vorliegen, sollten diese hier deutlich angezeigt werden -->
-		<template v-if="!belegungsfehler.isEmpty()">
-			<div> <span class="icon i-ri-alert-line icon-ui-danger" /> Es {{ (belegungsfehler.size() > 1) ? 'sind' : 'ist' }} noch {{ belegungsfehler.size() }} Fehler in der Laufbahnplanung vorhanden. Bitte prüfen Sie die Laufbahn des Schüler manuell. </div>
-			<!-- TODO Link zur Laufbahnplanung einbauen -->
-			<!-- TODO Hier die Checkbox manuelle geprüft anbieten -->
+			<div><span class="icon i-ri-information-line icon-ui-danger" />Es liegen bereits Daten zum Abitur vor.</div>
+
+			<!-- Übersicht über die Fachbelegungen in der Q-Phase / Block I -->
+			<schueler-abitur-zulassung :server-mode :schule :manager="managerLaufbahnplanung" />
+			
+			<!-- Übersicht über die Fachbelegungen in der Q-Phase / Block I -->
+			<schueler-abitur-zulassung :server-mode :schule :manager="() => managerAbitur()!" />
+
 		</template>
 	</div>
 </template>

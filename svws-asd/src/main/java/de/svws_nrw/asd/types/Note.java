@@ -134,15 +134,15 @@ public enum Note implements @NotNull CoreType<NoteKatalogEintrag, Note> {
 	public static Note fromNoteSekI(final Integer noteSekI) {
 		if (noteSekI == null)
 			return null;
-		switch (noteSekI) {
-			case 1: return SEHR_GUT;
-			case 2: return GUT;
-			case 3: return BEFRIEDIGEND;
-			case 4: return AUSREICHEND;
-			case 5: return MANGELHAFT;
-			case 6: return UNGENUEGEND;
-			default: return null;
-		}
+		return switch (noteSekI) {
+			case 1 -> SEHR_GUT;
+			case 2 -> GUT;
+			case 3 -> BEFRIEDIGEND;
+			case 4 -> AUSREICHEND;
+			case 5 -> MANGELHAFT;
+			case 6 -> UNGENUEGEND;
+			default -> null;
+		};
 	}
 
 	/**
@@ -155,25 +155,47 @@ public enum Note implements @NotNull CoreType<NoteKatalogEintrag, Note> {
 	public static @NotNull Note fromNotenpunkte(final Integer notenpunkte) {
 		if (notenpunkte == null)
 			return KEINE;
-		switch (notenpunkte) {
-			case 0: return UNGENUEGEND;
-			case 1: return MANGELHAFT_MINUS;
-			case 2: return MANGELHAFT;
-			case 3: return MANGELHAFT_PLUS;
-			case 4: return AUSREICHEND_MINUS;
-			case 5: return AUSREICHEND;
-			case 6: return AUSREICHEND_PLUS;
-			case 7: return BEFRIEDIGEND_MINUS;
-			case 8: return BEFRIEDIGEND;
-			case 9: return BEFRIEDIGEND_PLUS;
-			case 10: return GUT_MINUS;
-			case 11: return GUT;
-			case 12: return GUT_PLUS;
-			case 13: return SEHR_GUT_MINUS;
-			case 14: return SEHR_GUT;
-			case 15: return SEHR_GUT_PLUS;
-			default: return KEINE;
-		}
+		return switch (notenpunkte) {
+			case 0 -> UNGENUEGEND;
+			case 1 -> MANGELHAFT_MINUS;
+			case 2 -> MANGELHAFT;
+			case 3 -> MANGELHAFT_PLUS;
+			case 4 -> AUSREICHEND_MINUS;
+			case 5 -> AUSREICHEND;
+			case 6 -> AUSREICHEND_PLUS;
+			case 7 -> BEFRIEDIGEND_MINUS;
+			case 8 -> BEFRIEDIGEND;
+			case 9 -> BEFRIEDIGEND_PLUS;
+			case 10 -> GUT_MINUS;
+			case 11 -> GUT;
+			case 12 -> GUT_PLUS;
+			case 13 -> SEHR_GUT_MINUS;
+			case 14 -> SEHR_GUT;
+			case 15 -> SEHR_GUT_PLUS;
+			default -> KEINE;
+		};
+	}
+
+	/**
+	 * Gibt die Pseudonote anhand des angegebenen Kürzels zurück.
+	 *
+	 * @param kuerzel   das Kürzel anhand derer die Pseudonote ermittelt wird
+	 *
+	 * @return die Note aus dieser Aufzählung oder Note.KEINE im Fehlerfall
+	 */
+	private static @NotNull Note pseudoNoteFromKuerzel(final @NotNull String kuerzel) {
+		return switch (kuerzel) {
+			case "E1" -> E1_MIT_BESONDEREM_ERFOLG_TEILGENOMMEN;
+			case "E2" -> E2_MIT_ERFOLG_TEILGENOMMEN;
+			case "E3" -> E3_TEILGENOMMEN;
+			case "AT" -> ATTEST;
+			case "AM" -> ABGEMELDET;
+			case "NB" -> NICHT_BEURTEILT;
+			case "NT" -> NICHT_TEILGENOMMEN;
+			case "NE" -> NICHT_ERTEILT;
+			case "LM" -> LEHRERMANGEL;
+			default -> KEINE;
+		};
 	}
 
 	/**
@@ -187,39 +209,30 @@ public enum Note implements @NotNull CoreType<NoteKatalogEintrag, Note> {
 		if (kuerzel == null)
 			return KEINE;
 		final String kuerzelUppercase = kuerzel.toUpperCase();
-		switch (kuerzelUppercase) {
-			case "6": return UNGENUEGEND;
-			case "5-": return MANGELHAFT_MINUS;
-			case "5": return MANGELHAFT;
-			case "5+": return MANGELHAFT_PLUS;
-			case "4-": return AUSREICHEND_MINUS;
-			case "4": return AUSREICHEND;
-			case "4+": return AUSREICHEND_PLUS;
-			case "3-": return BEFRIEDIGEND_MINUS;
-			case "3": return BEFRIEDIGEND;
-			case "3+": return BEFRIEDIGEND_PLUS;
-			case "2-": return GUT_MINUS;
-			case "2": return GUT;
-			case "2+": return GUT_PLUS;
-			case "1-": return SEHR_GUT_MINUS;
-			case "1": return SEHR_GUT;
-			case "1+": return SEHR_GUT_PLUS;
-			case "E1": return E1_MIT_BESONDEREM_ERFOLG_TEILGENOMMEN;
-			case "E2": return E2_MIT_ERFOLG_TEILGENOMMEN;
-			case "E3": return E3_TEILGENOMMEN;
-			case "AT": return ATTEST;
-			case "AM": return ABGEMELDET;
-			case "NB": return NICHT_BEURTEILT;
-			case "NT": return NICHT_TEILGENOMMEN;
-			case "NE": return NICHT_ERTEILT;
-			case "LM": return LEHRERMANGEL;
-			default: return KEINE;
-		}
+		return switch (kuerzelUppercase) {
+			case "6" -> UNGENUEGEND;
+			case "5-" -> MANGELHAFT_MINUS;
+			case "5" -> MANGELHAFT;
+			case "5+" -> MANGELHAFT_PLUS;
+			case "4-" -> AUSREICHEND_MINUS;
+			case "4" -> AUSREICHEND;
+			case "4+" -> AUSREICHEND_PLUS;
+			case "3-" -> BEFRIEDIGEND_MINUS;
+			case "3" -> BEFRIEDIGEND;
+			case "3+" -> BEFRIEDIGEND_PLUS;
+			case "2-" -> GUT_MINUS;
+			case "2" -> GUT;
+			case "2+" -> GUT_PLUS;
+			case "1-" -> SEHR_GUT_MINUS;
+			case "1" -> SEHR_GUT;
+			case "1+" -> SEHR_GUT_PLUS;
+			default -> pseudoNoteFromKuerzel(kuerzelUppercase);
+		};
 	}
 
 	/**
 	 * Gibt die Note anhand der angegebenen Notenpunkte zurück, welche als String
-	 * übergeben werden.
+	 * übergeben werden. Bei Pseudonoten wird die Note anhand des Kürzels ermittelt
 	 *
 	 * @param notenpunkte   die Notenpunkte anhand derer die Note ermittelt wird als String
 	 *
@@ -228,25 +241,25 @@ public enum Note implements @NotNull CoreType<NoteKatalogEintrag, Note> {
 	public static @NotNull Note fromNotenpunkteString(final String notenpunkte) {
 		if (notenpunkte == null)
 			return KEINE;
-		switch (notenpunkte) {
-			case "0": return UNGENUEGEND;
-			case "1": return MANGELHAFT_MINUS;
-			case "2": return MANGELHAFT;
-			case "3": return MANGELHAFT_PLUS;
-			case "4": return AUSREICHEND_MINUS;
-			case "5": return AUSREICHEND;
-			case "6": return AUSREICHEND_PLUS;
-			case "7": return BEFRIEDIGEND_MINUS;
-			case "8": return BEFRIEDIGEND;
-			case "9": return BEFRIEDIGEND_PLUS;
-			case "10": return GUT_MINUS;
-			case "11": return GUT;
-			case "12": return GUT_PLUS;
-			case "13": return SEHR_GUT_MINUS;
-			case "14": return SEHR_GUT;
-			case "15": return SEHR_GUT_PLUS;
-			default: return KEINE;
-		}
+		return switch (notenpunkte) {
+			case "0", "00" -> UNGENUEGEND;
+			case "1", "01" -> MANGELHAFT_MINUS;
+			case "2", "02" -> MANGELHAFT;
+			case "3", "03" -> MANGELHAFT_PLUS;
+			case "4", "04" -> AUSREICHEND_MINUS;
+			case "5", "05" -> AUSREICHEND;
+			case "6", "06" -> AUSREICHEND_PLUS;
+			case "7", "07" -> BEFRIEDIGEND_MINUS;
+			case "8", "08" -> BEFRIEDIGEND;
+			case "9", "09" -> BEFRIEDIGEND_PLUS;
+			case "10" -> GUT_MINUS;
+			case "11" -> GUT;
+			case "12" -> GUT_PLUS;
+			case "13" -> SEHR_GUT_MINUS;
+			case "14" -> SEHR_GUT;
+			case "15" -> SEHR_GUT_PLUS;
+			default -> pseudoNoteFromKuerzel(notenpunkte);
+		};
 	}
 
 	/**
@@ -284,15 +297,16 @@ public enum Note implements @NotNull CoreType<NoteKatalogEintrag, Note> {
 		final NoteKatalogEintrag nke = this.daten(schuljahr);
 		if (nke == null || nke.notenpunkte == null)
 			return KEINE;
-		switch (nke.notenpunkte) {
-			case 0: return UNGENUEGEND;
-			case 1, 2, 3: return MANGELHAFT;
-			case 4, 5, 6: return AUSREICHEND;
-			case 7, 8, 9: return BEFRIEDIGEND;
-			case 10, 11, 12: return GUT;
-			case 13, 14, 15: return SEHR_GUT;
-			default: return KEINE;
-		}
+		final Integer np = nke.notenpunkte;
+		return switch (np) {
+			case 0 -> UNGENUEGEND;
+			case 1, 2, 3 -> MANGELHAFT;
+			case 4, 5, 6 -> AUSREICHEND;
+			case 7, 8, 9 -> BEFRIEDIGEND;
+			case 10, 11, 12 -> GUT;
+			case 13, 14, 15 -> SEHR_GUT;
+			default -> KEINE;
+		};
 	}
 
 
@@ -341,18 +355,18 @@ public enum Note implements @NotNull CoreType<NoteKatalogEintrag, Note> {
 
 	public Integer getNoteSekI(final int schuljahr) {
 		final NoteKatalogEintrag nke = this.daten(schuljahr);
-		if (nke != null) {
-			switch (nke.notenpunkte) {
-				case 15, 14, 13: return 1;
-				case 12, 11, 10: return 2;
-				case 9, 8, 7: return 3;
-				case 6, 5, 4: return 4;
-				case 3, 2, 1: return 5;
-				case 0: return 6;
-				default: return null;
-			}
-		}
-		return null;
+		if (nke == null)
+			return null;
+		final Integer np = nke.notenpunkte;
+		return switch (np) {
+			case 15, 14, 13 -> 1;
+			case 12, 11, 10 -> 2;
+			case 9, 8, 7 -> 3;
+			case 6, 5, 4 -> 4;
+			case 3, 2, 1 -> 5;
+			case 0 -> 6;
+			default -> null;
+		};
 	}
 
 	/**
