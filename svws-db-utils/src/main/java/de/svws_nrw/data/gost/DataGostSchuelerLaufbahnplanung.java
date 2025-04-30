@@ -944,6 +944,9 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final int schuljahr = abiturjahr - 1;
 		final List<DTOSchueler> listSchuelerDTOs = (new DataGostJahrgangSchuelerliste(conn, abiturjahr)).getSchuelerDTOs();
+		final List<Long> listSchuelerIDs = listSchuelerDTOs.stream().map(s -> s.ID).toList();
+		final Map<Long, DTOGostSchueler> mapGostSchuelerDTOs = conn.queryByKeyList(DTOGostSchueler.class, listSchuelerIDs)
+				.stream().collect(Collectors.toMap(s -> s.Schueler_ID, s -> s));
 
 		// Erstelle das DTO für die Eregbnisrückmeldung
 		final List<GostBelegpruefungsErgebnisse> daten = new ArrayList<>();
@@ -967,6 +970,9 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 			// Bestimme die Laufbahndaten des Schülers
 			final Abiturdaten abidaten = DBUtilsGostLaufbahn.get(conn, dtoSchueler.ID);
 
+			// Bestimme die Beratungsdaten des Schülers
+			final DTOGostSchueler gostSchueler = mapGostSchuelerDTOs.get(dtoSchueler.ID);
+
 			// Erzeuge das Ergebnis-DTO für die Rückgabe
 			final GostBelegpruefungsErgebnisse ergebnisse = new GostBelegpruefungsErgebnisse();
 
@@ -975,6 +981,8 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 					new AbiturdatenManager(SVWSKonfiguration.get().getServerMode(), abidaten, jahrgangsdaten, faecherManager, pruefungsArt);
 			ergebnisse.ergebnis = abiManager.getBelegpruefungErgebnis();
 			ergebnisse.hatFachwahlen = abiManager.existsFachbelegung();
+			ergebnisse.beratungsDatum = (gostSchueler == null) ? null : gostSchueler.DatumBeratung;
+			ergebnisse.ruecklaufDatum = (gostSchueler == null) ? null : gostSchueler.DatumRuecklauf;
 
 			// F+lle das zugehörige Schüler-DTO
 			ergebnisse.schueler.id = dtoSchueler.ID;
