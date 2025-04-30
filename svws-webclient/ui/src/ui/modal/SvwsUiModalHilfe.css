@@ -1,0 +1,9 @@
+/* 
+Hier kann das CSS für die Markdown-Dateien ergänzt werden, die über das Hilfe-Modal angezeigt werden.
+*/
+
+.modal .markdown {
+	h1 { @apply text-2xl font-extrabold mt-2; }
+	h2 { @apply text-xl font-bold mt-1.5; }
+	h3 { @apply text-lg font-semibold mt-1; }
+}

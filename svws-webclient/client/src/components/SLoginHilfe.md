@@ -39,7 +39,3 @@ Die aktuell verwendete Version des SVWS-Clients wird hier angezeigt, ebenso der 
 Das Kopier-Icon <span class="icon-sm i-ri-file-copy-line" /> neben der Versionsnummer kann verwendet werden, um Fehlermeldungen in die Zwischenablage zu kopieren, diese Fehlermeldung kann dem Entwicklerteam übermittelt werden und hilft deutlich bei einer Fehlersuche.
 
 Über die Links **Impressum** und **Datenschutz** werden eben diese Informationen aufgerufen.
-
----
-
-Nutzen Sie für weitere Informationen und Anleitungen die [ausführliche Dokumentation](https://doku.svws-nrw.de).
