@@ -1,4 +1,7 @@
 <template>
+	<Teleport to=".svws-ui-header--actions" defer>
+		<svws-ui-modal-hilfe> <hilfe-schule-stammdaten /> </svws-ui-modal-hilfe>
+	</Teleport>
 	<div class="flex flex-col w-full h-full overflow-hidden">
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
