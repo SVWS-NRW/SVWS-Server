@@ -52,6 +52,11 @@ public final class DataAbteilungen extends DataManagerRevised<Long, DTOAbteilung
 	}
 
 	@Override
+	protected long getLongId(final DTOAbteilungen abteilung) {
+		return abteilung.ID;
+	}
+
+	@Override
 	protected Abteilung map(final DTOAbteilungen dtoAbteilungen) throws ApiOperationException {
 		final Abteilung abteilung = new Abteilung();
 

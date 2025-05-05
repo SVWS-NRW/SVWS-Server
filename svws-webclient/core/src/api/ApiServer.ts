@@ -11266,6 +11266,37 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der DELETE-Methode deleteAbteilungen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/abteilungen/delete/multiple
+	 *
+	 * Entfernt Abteilungen, insofern die Berechtigungen vorhanden sind
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Abteilungen wurden erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
+	 *   Code 400: Für das Löschen müssen IDs angegeben werden. Null ist nicht zulässig.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Abteilungen zu löschen.
+	 *   Code 404: Es wurden keine Entitäten zu den IDs gefunden.
+	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Abteilungen wurden erfolgreich entfernt.
+	 */
+	public async deleteAbteilungen(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+		const path = "/db/{schema}/schule/abteilungen/delete/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode addAbteilungKlassenzuordnung für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/abteilungen/klassenzuordnung
 	 *
 	 * Erstellt eine neue AbteilungenKlassenzuordnungen und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von AbteilungKlassenzuordnungen besitzt.
@@ -11318,37 +11349,6 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.deleteJSON(path, null);
 		const text = result;
 		return AbteilungKlassenzuordnung.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der DELETE-Methode deleteAbteilungen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/abteilungen/multiple
-	 *
-	 * Entfernt mehrere Abteilungen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen von Abteilungen hat.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Abteilungen wurden erfolgreich entfernt.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
-	 *   Code 404: Keine Abteilungen vorhanden
-	 *   Code 409: Die übergebenen Daten sind fehlerhaft
-	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
-	 *
-	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Die Abteilungen wurden erfolgreich entfernt.
-	 */
-	public async deleteAbteilungen(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
-		const path = "/db/{schema}/schule/abteilungen/multiple"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
-		return ret;
 	}
 
 

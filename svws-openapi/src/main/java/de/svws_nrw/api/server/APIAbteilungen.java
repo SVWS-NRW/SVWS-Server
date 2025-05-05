@@ -143,21 +143,21 @@ public class APIAbteilungen {
 	 * @return die HTTP-Antwort mit dem Status und ggf. der gelöschten Abteilung
 	 */
 	@DELETE
-	@Path("/multiple")
-	@Operation(summary = "Entfernt mehrere Abteilungen.",
-			description = "Entfernt mehrere Abteilungen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen von Abteilungen hat.")
+	@Path("/delete/multiple")
+	@Operation(summary = "Entfernt mehrere Abteilungen.", description = "Entfernt Abteilungen, insofern die Berechtigungen vorhanden sind")
 	@ApiResponse(responseCode = "200", description = "Die Abteilungen wurden erfolgreich entfernt.",
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
-	@ApiResponse(responseCode = "404", description = "Keine Abteilungen vorhanden")
-	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+	@ApiResponse(responseCode = "400", description = "Für das Löschen müssen IDs angegeben werden. Null ist nicht zulässig.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Abteilungen zu löschen.")
+	@ApiResponse(responseCode = "404", description = "Es wurden keine Entitäten zu den IDs gefunden.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z. B. beim Datenbankzugriff)")
-	public Response deleteAbteilungen(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der zu löschenden Klassen", required = true,
-			content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataAbteilungen(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)), request, ServerMode.DEV,
-				BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
+	public Response deleteAbteilungen(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die IDs der zu löschenden Klassen", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
+				conn -> new DataAbteilungen(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)), request, ServerMode.DEV,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
 
 	/**

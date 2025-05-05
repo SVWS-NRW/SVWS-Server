@@ -46,13 +46,11 @@ export class RouteDataAbteilungen extends RouteDataAuswahl<AbteilungenListeManag
 	}
 
 	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {
-		// TODO: implement
 		return await api.server.deleteAbteilungen(ids, api.schema);
 	}
 
-	protected deleteMessage(id: number, abteilung: Abteilung): string {
-		// TODO: implement
-		return '';
+	protected deleteMessage(id: number, abteilung: Abteilung | null): string {
+		return `Abteilung ${abteilung?.bezeichnung ?? '???'} (ID: ${id}) wurde erfolgreich gelöscht.`;
 	}
 
 }
