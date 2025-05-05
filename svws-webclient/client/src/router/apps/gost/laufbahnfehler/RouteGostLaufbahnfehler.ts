@@ -100,6 +100,7 @@ export class RouteGostLaufbahnfehler extends RouteNode<RouteDataGostLaufbahnfehl
 			filterNurMitFachwahlen: () => this.data.filterNurMitFachwahlen,
 			setFilterNurMitFachwahlen: this.data.setFilterNurMitFachwahlen,
 			apiStatus: api.status,
+			loeschenFachwahlenSelected: this.data.loeschenFachwahlenSelected,
 		};
 	}
 }

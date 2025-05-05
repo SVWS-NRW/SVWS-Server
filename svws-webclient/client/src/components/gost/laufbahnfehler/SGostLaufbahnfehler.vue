@@ -5,7 +5,8 @@
 				<svws-ui-button :disabled="apiStatus.pending" type="transparent" title="Planung importieren" @click="showModalImport = true"><span class="icon i-ri-download-2-line" /> Importieren…</svws-ui-button>
 				<s-laufbahnplanung-import-modal v-model:show="showModalImport" multiple :import-laufbahnplanung />
 				<svws-ui-button :disabled="apiStatus.pending" type="transparent" title="Planung exportieren" @click="export_laufbahnplanung"><span class="icon i-ri-upload-2-line" />Exportiere {{ auswahl.length > 0 ? 'Auswahl':'alle' }}</svws-ui-button>
-				<s-modal-laufbahnplanung-alle-fachwahlen-loeschen :gost-jahrgangsdaten="jahrgangsdaten" :reset-fachwahlen="resetFachwahlenAlle" />
+				<s-modal-laufbahnplanung-alle-fachwahlen-zuruecksetzen :gost-jahrgangsdaten="jahrgangsdaten" :reset-fachwahlen="resetFachwahlenAlle" />
+				<s-modal-laufbahnplanung-alle-fachwahlen-loeschen :reset-auswahl :loeschen-fachwahlen-selected :selected="auswahl" />
 			</svws-ui-sub-nav>
 		</Teleport>
 		<Teleport to=".svws-ui-header--actions" defer>
@@ -165,6 +166,10 @@
 				ids.value.add(s.schueler.id);
 		},
 	})
+
+	function resetAuswahl() {
+		auswahl.value = [];
+	}
 
 	const schueler_state = shallowRef<GostBelegpruefungsErgebnisse>();
 	const schueler = computed<GostBelegpruefungsErgebnisse>({

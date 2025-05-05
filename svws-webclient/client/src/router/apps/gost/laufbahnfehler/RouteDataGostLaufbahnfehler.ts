@@ -135,4 +135,10 @@ export class RouteDataGostLaufbahnfehler extends RouteData<RouteStateDataGostLau
 		await this.setAbiturjahr(this.abiturjahr);
 	}
 
+	loeschenFachwahlenSelected = async (ergebnisse: Iterable<GostBelegpruefungsErgebnisse>) => {
+		for (const ergebnis of ergebnisse)
+			await api.server.deleteGostSchuelerFachwahlen(api.schema, ergebnis.schueler.id);
+		await this.setAbiturjahr(this.abiturjahr);
+	}
+
 }
