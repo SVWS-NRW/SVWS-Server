@@ -53,6 +53,11 @@ Folgende Props können gesetzt werden, um die Komponente zu konfigurieren.
 - **Default**: `false`   
 - Definiert, ob die Komponente für die Statistik relevant ist
 
+**headless**
+- **Typ**: `boolean`   
+- **Default**: `false`   
+- Definiert, ob das Select headless (ohne Rahmen und Hintergrund) dargestellt werden soll. Wird zum Beispiel für Tabellen benötigt.
+
 **minOptions**
 - **Typ**: `number`   
 - **Default**: `undefined`   

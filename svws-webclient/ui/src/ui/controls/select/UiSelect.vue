@@ -1,5 +1,5 @@
 <template>
-	<div ref="uiSelect" class="ui-select relative mt-1">
+	<div ref="uiSelect" class="ui-select relative mt-1 rounded-md" :class="rootClasses">
 		<!-- Combobox -->
 		<div :id="`uiSelectInput_${instanceId}`" ref="uiSelectCombobox" :tabindex="(searchable === true) ? -1 : 0"
 			:role="(searchable === false) ? 'combobox' : undefined" :aria-labelledby="`uiSelectLabel_${instanceId}`"
@@ -7,26 +7,39 @@
 			:aria-expanded="(searchable === false) ? showDropdown : undefined"
 			:aria-disabled="((searchable === false) && (disabled === true)) ? true : undefined"
 			:aria-activedescendant="((searchable === false) && (highlightedIndex !== -1)) ? `uiSelectOption_${highlightedIndex}_${instanceId}` : undefined"
-			class="outline-none focus-within:ring-3 ring-ui w-full border px-2 py-1 rounded-md flex gap-1 min-w-fit min-h-10 hover:ring-ui-neutral hover:ring-3"
-			:class="{ 'pointer-events-none border-ui-disabled': disabled, 'cursor-text': searchable, 'cursor-pointer': !searchable }"
+			class="relative outline-none focus-within:ring-3 ring-ui w-full rounded-md flex gap-1 hover:ring-ui-neutral hover:ring-3"
+			:class="[headless ? 'px-1 py-0' : 'border min-h-10 px-2 py-1', disabled ? 'pointer-events-none border-ui-disabled' : borderColorClass, backgroundColorClass,
+				{ 'pointer-events-none border-ui-disabled': disabled, 'cursor-text': searchable, 'cursor-pointer': !searchable}]"
 			@click="handleComponentClick" @focus="handleComboboxFocus" @keydown="onKeyDown">
+			<!-- Expand-Icon + Clear-Button headless -->
+			<div v-if="headless" class="ml-auto flex items-center">
+				<span class="icon-sm i-ri-expand-up-down-line cursor-pointer" :class="[ disabled ? 'icon-ui-disabled' : iconColorClass]" />
+				<button v-if="removable" type="button" :disabled aria-label="Auswahl löschen" @click="clearSelection" @keydown.enter="clearSelection"
+					class="hover:bg-ui-hover flex focus:ring-2 ring-ui outline-none rounded-sm">
+					<span class="icon-sm i-ri-close-line" :class="[ disabled ? 'icon-ui-disabled' : iconColorClass]" />
+				</button>
+			</div>
+
 			<!-- Label -->
-			<label v-if="label" :id="`uiSelectLabel_${instanceId}`"
-				class="absolute left-2 transition-all duration-100 ease-in-out pointer-events-none flex items-center"
-				:class="[ moveLabel ? 'text-xs font-medium -top-2 bg-ui px-1' : 'top-1/2 transform -translate-y-1/2']">
+			<label v-if="label && ((headless && !moveLabel) || !headless)" :id="`uiSelectLabel_${instanceId}`"
+				class="absolute transition-all duration-100 ease-in-out pointer-events-none rounded left-2 whitespace-nowrap overflow-hidden truncate max-w-fit"
+				:class="[ moveLabel ? 'text-xs font-medium -top-2 px-1' : 'top-1/2 transform -translate-y-1/2',
+					removable ? (moveLabel ? 'right-2' : 'right-11') : (moveLabel ? 'right-2' : 'right-6'),
+					headless ? (removable ? 'left-10' : 'left-6') : '', disabled ? 'text-ui-disabled' : '', backgroundColorClass]">
 				<span v-if="statistics" class="icon icon-sm icon-ui-statistic i-ri-bar-chart-2-line mx-1" />
-				<span :class="disabled ? 'text-ui-disabled' : moveLabel ? 'text-ui' : 'text-ui-secondary'">{{ label }}</span>
-				<span v-if="selectionLimitText !== null" class="text-ui-secondary text-xs pl-1"> ({{ selectionLimitText }}) </span>
+				<span :class="disabled ? '' : moveLabel ? textColorClass : getSecondaryTextColor(textColorClass)">{{ label }}</span>
+				<span v-if="selectionLimitText !== null" :class="[disabled ? 'text-ui-disabled' : getSecondaryTextColor(textColorClass), 'text-xs pl-1']">
+					({{ selectionLimitText }}) </span>
 			</label>
 
 			<!-- Wrapper für die aktuelle Selektion und das Suchfeld -->
-			<div class="flex flex-wrap items-center gap-x-1 gap-y-1 flex-1 min-w-0 mt-1">
+			<div class="flex flex-wrap items-center gap-x-1 gap-y-1 flex-1 min-w-0">
 				<!-- Aktuelle Selektion (nur Mehrfachselektion) -->
 				<template v-if="selectManager.multi && !selectManager.selected.isEmpty()">
 					<span v-for="item in selectManager.selected" :key="selectManager.getSelectionText(item)" tabindex="0"
 						:aria-label="`Auswahl ${props.selectManager.getSelectionText(item)}`"
 						class="px-2 py-1 rounded-md text-sm flex items-center overflow-hidden max-w-30 shrink-0"
-						:class="[ disabled ? 'bg-ui-disabled text-ui-ondisabled' : 'bg-ui-selected text-ui-onselected']">
+						:class="[ disabled ? 'bg-ui-disabled text-ui-ondisabled' : 'bg-ui-selected text-ui-onselected', { 'mt-1' : !headless }]">
 
 						<svws-ui-tooltip position="top" :indicator="false" class="truncate">
 							<template #content>
@@ -47,7 +60,7 @@
 				</template>
 
 				<!-- Wrapper für das Such-Input und aktuelle Selektion (nur Einzelselektion) -->
-				<div class="relative grid grid-cols-1 grid-rows-1 flex-1 min-w-15 shrink-0 order-last">
+				<div class="relative grid grid-cols-1 grid-rows-1 flex-1 min-w-10 shrink-0 order-last">
 					<!-- Aktuelle Selektion (nur Einzelselektion) -->
 					<div class="flex items-center overflow-hidden row-start-1 col-start-1">
 						<svws-ui-tooltip position="top" :indicator="false" class="truncate">
@@ -56,7 +69,7 @@
 							</template>
 							<div v-if="!selectManager.multi && (selectManager.selected !== null) && (search === '')"
 								class="truncate z-0 cursor-pointer"
-								:class="[disabled ? 'text-ui-disabled' : (visualFocusOnCombobox || !domFocusOnCombobox) ? 'text-ui' : 'text-ui-secondary']">
+								:class="[disabled ? 'text-ui-disabled' : (visualFocusOnCombobox || !domFocusOnCombobox) ? textColorClass : getSecondaryTextColor(textColorClass)]">
 								{{ selectManager.getSelectionText(selectManager.selected) }}
 							</div>
 						</svws-ui-tooltip>
@@ -73,12 +86,12 @@
 
 
 			<!-- Expand-Icon + Clear-Button -->
-			<div class="ml-auto flex items-center">
+			<div v-if="!headless" class="ml-auto flex items-center">
 				<button v-if="removable" type="button" :disabled aria-label="Auswahl löschen" @click="clearSelection" @keydown.enter="clearSelection"
 					class="hover:bg-ui-hover flex ml-1 focus:ring-3 ring-ui outline-none rounded-sm">
-					<span class="icon-sm icon i-ri-close-line" :class="[ disabled ? 'icon-ui-disabled' : 'icon-ui']" />
+					<span class="icon-sm icon i-ri-close-line" :class="[ disabled ? 'icon-ui-disabled' : iconColorClass]" />
 				</button>
-				<span class="icon i-ri-expand-up-down-line cursor-pointer" :class="[ disabled ? 'icon-ui-disabled' : 'icon-ui']" />
+				<span class="icon i-ri-expand-up-down-line cursor-pointer" :class="[ disabled ? 'icon-ui-disabled' : iconColorClass]" />
 			</div>
 		</div>
 
@@ -106,7 +119,7 @@
 
 <script setup lang="ts" generic="T">
 
-	import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+	import { computed, nextTick, onBeforeUnmount, onMounted, ref, useAttrs, watch } from 'vue';
 	import { useElementBounding, useWindowSize } from '@vueuse/core';
 	import type { BaseSelectManager } from './selectManager/BaseSelectManager';
 	import type { ArrayList } from '../../../../../core/src';
@@ -119,6 +132,7 @@
 		removable?: boolean;
 		disabled?: boolean;
 		statistics?: boolean;
+		headless?: boolean;
 		minOptions?: number | undefined;
 		maxOptions?: number | undefined;
 	}>(), {
@@ -127,9 +141,87 @@
 		removable: true,
 		disabled: false,
 		statistics: false,
+		headless: false,
 		minOptions: undefined,
 		maxOptions: undefined,
 	});
+
+	/** Die Vererbung der Attribute wird abgestellt, damit diese manuell an die richtigen Stellen weitergeleitet werden kann */
+	defineOptions({ inheritAttrs: false });
+	const attrs = useAttrs();
+
+	/**
+	 * Extrahiert alle gesetzten Klassen von außerhalb und setzt diese an den Rootknoten. Icon-Farben werden jedoch herausgefiltert, da diese den Hintergrund
+	 * beeinflussen.
+	 */
+	const rootClasses = computed (() => {
+		const result = { ...attrs };
+
+		const stringClass = result.class;
+
+		if (typeof stringClass === 'string')
+			result.class = stringClass.split(' ').filter(c => !c.startsWith('icon-ui')).join(' ');
+		return result;
+	});
+
+	/**
+	 * Berechnet die Hintergrundfarbe der Combobox. Wird von außen eine gesetzt, dann wird diese verwendet. Andernfalls bg-ui.
+	 */
+	const backgroundColorClass = computed(() => {
+		const classString = attrs.class;
+		if (typeof classString !== "string")
+			return props.headless ? "" : "bg-ui";
+		const classes = classString.split(' ');
+
+		// Nach erster bg-ui* Klasse suchen
+		const match = classes.find(c => c.startsWith('bg-ui'));
+		return match ?? (props.headless ? "" : "bg-ui");
+	});
+
+	/**
+	 * Berechnet die Textfarbe. Wird von außen eine gesetzt, dann wird diese verwendet. Andernfalls text-ui. Für Sekundärfarben wird dann automatisch
+	 * die sekundäre Variante der übergebenen Farbe verwendet.
+	 */
+	const textColorClass = computed(() => {
+		const classString = attrs.class;
+		if (typeof classString !== "string")
+			return "text-ui";
+		const classes = classString.split(' ');
+
+		// Nach erster text-ui* Klasse suchen
+		const match = classes.find(c => c.startsWith('text-ui'));
+		return match ?? 'text-ui';
+	});
+
+	/**
+	 * Berechnet die Iconfarbe. Wird von außen eine gesetzt, dann wird diese verwendet. Andernfalls icon-ui.
+	 */
+	const iconColorClass = computed(() => {
+		const classString = attrs.class;
+		if (typeof classString !== "string")
+			return "icon-ui";
+		const classes = classString.split(' ');
+
+		// Nach erster icon-ui* Klasse suchen
+		const match = classes.find(c => c.startsWith('icon-ui'));
+		return match ?? 'icon-ui';
+	});
+
+	/**
+	 * Berechnet die Borderfarbe der Combobox. Wird von außen eine gesetzt, dann wird diese verwendet. Andernfalls bg-ui-neutral.
+	 */
+	const borderColorClass = computed(() => {
+		const classString = attrs.class;
+		if (typeof classString !== "string")
+			return "border-ui-neutral";
+		const classes = classString.split(' ');
+
+		// Nach erster border-ui* Klasse suchen
+		const match = classes.find(c => c.startsWith('border-ui'));
+		return match ?? 'border-ui-neutral';
+	});
+
+
 
 	// ID zur Eindeutigen Kennzeichnung der Komponente. Wird für die HTML IDs benötigt
 	const instanceId = crypto.randomUUID();
@@ -662,6 +754,58 @@
 			resetSearch();
 		}
 		handleComboboxFocus();
+	}
+
+	/**
+	 * Generiert die passende sekundäre Textfarbe für gesetzte Textfarben von außen.
+	 *
+	 * @param color    die Textfarbe, dessen Sekundärfarbe ermittler werden soll.
+	 */
+	function getSecondaryTextColor (color: string) {
+		if (color.startsWith("text-uistatic"))
+			return "text-uistatic-50";
+		switch (color) {
+			case "text-ui":
+				return "text-ui-secondary";
+			case "text-ui-brand":
+				return "text-ui-brand-secondary"
+			case "text-ui-statistic":
+				return "text-ui-statistic-secondary"
+			case "text-ui-selected":
+				return "text-ui-selected-secondary"
+			case "text-ui-danger":
+				return "text-ui-danger-secondary"
+			case "text-ui-success":
+				return "text-ui-success-secondary"
+			case "text-ui-warning":
+				return "text-ui-warning-secondary"
+			case "text-ui-caution":
+				return "text-ui-caution-secondary"
+			case "text-ui-neutral":
+				return "text-ui-neutral-secondary"
+			case "text-ui-disabled":
+				return "text-ui-disabled-secondary"
+			case "text-ui-onbrand":
+				return "text-ui-onbrand-secondary"
+			case "text-ui-onstatistic":
+				return "text-ui-onstatistic-secondary"
+			case "text-ui-onselected":
+				return "text-ui-onselected-secondary"
+			case "text-ui-ondanger":
+				return "text-ui-ondanger-secondary"
+			case "text-ui-onsuccess":
+				return "text-ui-onsuccess-secondary"
+			case "text-ui-onwarning":
+				return "text-ui-onwarning-secondary"
+			case "text-ui-oncaution":
+				return "text-ui-oncaution-secondary"
+			case "text-ui-onneutral":
+				return "text-ui-onneutral-secondary"
+			case "text-ui-ondisabled":
+				return "text-ui-ondisabled-secondary"
+			default:
+				return "text-ui-disabled";
+		}
 	}
 
 </script>

@@ -4,13 +4,17 @@
 			<svws-ui-content-card class="p-5">
 				<svws-ui-input-wrapper>
 					<ui-select label="SimpleSelectManager mit String" :select-manager="sStringSelectManager()" :searchable="state.searchable"
-						:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" />
+						:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" :headless="state.headless"
+						:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" />
 					<ui-select label="SimpleSelectManager mit Number" :select-manager="sNumberSelectManager()" :searchable="state.searchable"
-						:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" />
+						:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" :headless="state.headless"
+						:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" />
 					<ui-select label="CoreTypeSelectManager" :select-manager="sCoreTypeSelectManager()" :searchable="state.searchable" :disabled="state.disabled"
-						:statistics="state.statistics" :removable="state.removable" />
+						:statistics="state.statistics" :removable="state.removable" :headless="state.headless"
+						:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" />
 					<ui-select label="ObjectSelectManager" :select-manager="sObjectSelectManager()" :searchable="state.searchable"
-						:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" />
+						:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" :headless="state.headless"
+						:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<template #controls>
@@ -18,55 +22,52 @@
 				<HstCheckbox v-model="state.disabled" title="Disabled" />
 				<HstCheckbox v-model="state.statistics" title="Statistik" />
 				<HstCheckbox v-model="state.removable" title="Removable" />
-			</template>
-			<template #source>
-				{{ `
-					<ui-select
-						label="..."
-						:select-manager="..."
-						:searchable="${state.searchable}"
-						:disabled="${state.disabled}"
-						:statistics="${state.statistics}"
-						:removable="${state.removable}"/>
-				` }}
+				<HstCheckbox v-model="state.headless" title="Headless" />
+				<span class="text-headline-md">Farben</span>
+				<HstRadio v-model="state.bgColor" title="Hintergrund" :options="[
+					{ label: 'keine', value: '' },
+					{ label: 'bg-ui-brand', value: 'bg-ui-brand' },
+					{ label: 'bg-ui-success', value: 'bg-ui-success' },
+					{ label: 'bg-ui-danger', value: 'bg-ui-danger' },
+				]" />
+				<HstRadio v-model="state.textColor" title="Text" :options="[
+					{ label: 'keine', value: '' },
+					{ label: 'text-ui-onbrand', value: 'text-ui-onbrand' },
+					{ label: 'text-ui-onsuccess', value: 'text-ui-onsuccess' },
+					{ label: 'text-ui-ondanger', value: 'text-ui-ondanger' },
+				]" />
+				<HstRadio v-model="state.iconColor" title="Icon" :options="[
+					{ label: 'keine', value: '' },
+					{ label: 'icon-ui-onbrand', value: 'icon-ui-onbrand' },
+					{ label: 'icon-ui-onsuccess', value: 'icon-ui-onsuccess' },
+					{ label: 'icon-ui-ondanger', value: 'icon-ui-ondanger' },
+				]" />
+				<HstRadio v-model="state.borderColor" title="Border" :options="[
+					{ label: 'keine', value: '' },
+					{ label: 'border-ui-brand', value: 'border-ui-brand' },
+					{ label: 'border-ui-success', value: 'border-ui-success' },
+					{ label: 'border-ui-danger', value: 'border-ui-danger' },
+				]" />
 			</template>
 		</Variant>
 		<Variant title="Multi Selection">
 			<svws-ui-content-card class="p-5">
 				<svws-ui-input-wrapper>
 					<ui-select label="SimpleSelectManager mit String" :select-manager="mStringSelectManager()" :searchable="state.searchable"
-						:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" :min-options="state.minOptions"
-						:max-options="state.maxOptions" />
+						:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" :headless="state.headless"
+						:min-options="state.minOptions" :max-options="state.maxOptions"
+						:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" />
 					<ui-select label="SimpleSelectManager mit Number" :select-manager="mNumberSelectManager()" :searchable="state.searchable"
-						:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" :min-options="state.minOptions"
-						:max-options="state.maxOptions" />
+						:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" :headless="state.headless"
+						:min-options="state.minOptions" :max-options="state.maxOptions" :class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" />
 					<ui-select label="CoreTypeSelectManager" :select-manager="mCoreTypeSelectManager()" :searchable="state.searchable" :disabled="state.disabled"
-						:statistics="state.statistics" :removable="state.removable" :min-options="state.minOptions" :max-options="state.maxOptions" />
+						:statistics="state.statistics" :removable="state.removable" :headless="state.headless" :min-options="state.minOptions"
+						:max-options="state.maxOptions" :class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" />
 					<ui-select label="ObjectSelectManager" :select-manager="mObjectSelectManager()" :searchable="state.searchable" :disabled="state.disabled"
-						:statistics="state.statistics" :removable="state.removable" :min-options="state.minOptions" :max-options="state.maxOptions" />
+						:statistics="state.statistics" :removable="state.removable" :headless="state.headless" :min-options="state.minOptions"
+						:max-options="state.maxOptions" :class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
-			<template #controls>
-				<HstCheckbox v-model="state.searchable" title="Searchable" />
-				<HstCheckbox v-model="state.disabled" title="Disabled" />
-				<HstCheckbox v-model="state.statistics" title="Statistik" />
-				<HstCheckbox v-model="state.removable" title="Removable" />
-				<HstNumber v-model="state.minOptions" title="minOptions" />
-				<HstNumber v-model="state.maxOptions" title="maxOptions" />
-			</template>
-			<template #source>
-				{{ `
-					<ui-select
-						label="..."
-						:select-manager="..."
-						:searchable="${state.searchable}"
-						:disabled="${state.disabled}"
-						:statistics="${state.statistics}"
-						:removable="${state.removable}"
-						:min-options="${state.minOptions}"
-						:max-options="${state.maxOptions}"/>
-				` }}
-			</template>
 		</Variant>
 		<Variant title="Filter">
 			<svws-ui-content-card class="p-5">
@@ -89,31 +90,12 @@
 					<svws-ui-checkbox v-model="filterState2.musikUndKunst">
 						Musik und Kunst
 					</svws-ui-checkbox>
-					<ui-select label="CoreTypeSelectManager Fach abhängig von Fachgruppe" :select-manager="sFachSelectManager()" :searchable="state.searchable" :disabled="state.disabled"
-						:statistics="state.statistics" :removable="state.removable" :min-options="state.minOptions" :max-options="state.maxOptions" />
+					<ui-select label="CoreTypeSelectManager Fach abhängig von Fachgruppe" :select-manager="sFachSelectManager()" :searchable="state.searchable"
+						:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" :headless="state.headless"
+						:min-options="state.minOptions" :max-options="state.maxOptions"
+						:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
-			<template #controls>
-				<HstCheckbox v-model="state.searchable" title="Searchable" />
-				<HstCheckbox v-model="state.disabled" title="Disabled" />
-				<HstCheckbox v-model="state.statistics" title="Statistik" />
-				<HstCheckbox v-model="state.removable" title="Removable" />
-				<HstNumber v-model="state.minOptions" title="minOptions" />
-				<HstNumber v-model="state.maxOptions" title="maxOptions" />
-			</template>
-			<template #source>
-				{{ `
-					<ui-select
-						label="..."
-						:select-manager="..."
-						:searchable="${state.searchable}"
-						:disabled="${state.disabled}"
-						:statistics="${state.statistics}"
-						:removable="${state.removable}"
-						:min-options="${state.minOptions}"
-						:max-options="${state.maxOptions}"/>
-				` }}
-			</template>
 		</Variant>
 		<Variant title="Deep Search">
 			<svws-ui-content-card class="p-5">
@@ -129,31 +111,48 @@
 						</code>
 					</pre>
 					<ui-select label="Deep Search ObjectSelectManager" :select-manager="deepSearchObjectSelectManager()" :searchable="true" :disabled="state.disabled"
-						:statistics="state.statistics" :removable="state.removable" :min-options="state.minOptions" :max-options="state.maxOptions" />
+						:statistics="state.statistics" :removable="state.removable" :headless="state.headless" :min-options="state.minOptions"
+						:max-options="state.maxOptions" :class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
-			<template #controls>
-				<HstCheckbox v-model="state.searchable" title="Searchable" />
-				<HstCheckbox v-model="state.disabled" title="Disabled" />
-				<HstCheckbox v-model="state.statistics" title="Statistik" />
-				<HstCheckbox v-model="state.removable" title="Removable" />
-				<HstNumber v-model="state.minOptions" title="minOptions" />
-				<HstNumber v-model="state.maxOptions" title="maxOptions" />
-			</template>
-			<template #source>
-				{{ `
-					<ui-select
-						label="..."
-						:select-manager="..."
-						:searchable="${state.searchable}"
-						:disabled="${state.disabled}"
-						:statistics="${state.statistics}"
-						:removable="${state.removable}"
-						:min-options="${state.minOptions}"
-						:max-options="${state.maxOptions}"/>
-				` }}
-			</template>
 		</Variant>
+		<template #source>
+			{{ getSourceString() }}
+		</template>
+		<template #controls>
+			<HstCheckbox v-model="state.searchable" title="Searchable" />
+			<HstCheckbox v-model="state.disabled" title="Disabled" />
+			<HstCheckbox v-model="state.statistics" title="Statistik" />
+			<HstCheckbox v-model="state.removable" title="Removable" />
+			<HstCheckbox v-model="state.headless" title="Headless" />
+			<HstNumber v-model="state.minOptions" title="minOptions" />
+			<HstNumber v-model="state.maxOptions" title="maxOptions" />
+			<span class="text-headline-md">Farben</span>
+			<HstRadio v-model="state.bgColor" title="Hintergrund" :options="[
+				{ label: 'keine', value: '' },
+				{ label: 'bg-ui-brand', value: 'bg-ui-brand' },
+				{ label: 'bg-ui-success', value: 'bg-ui-success' },
+				{ label: 'bg-ui-danger', value: 'bg-ui-danger' },
+			]" />
+			<HstRadio v-model="state.textColor" title="Text" :options="[
+				{ label: 'keine', value: '' },
+				{ label: 'text-ui-onbrand', value: 'text-ui-onbrand' },
+				{ label: 'text-ui-onsuccess', value: 'text-ui-onsuccess' },
+				{ label: 'text-ui-ondanger', value: 'text-ui-ondanger' },
+			]" />
+			<HstRadio v-model="state.iconColor" title="Icon" :options="[
+				{ label: 'keine', value: '' },
+				{ label: 'icon-ui-onbrand', value: 'icon-ui-onbrand' },
+				{ label: 'icon-ui-onsuccess', value: 'icon-ui-onsuccess' },
+				{ label: 'icon-ui-ondanger', value: 'icon-ui-ondanger' },
+			]" />
+			<HstRadio v-model="state.borderColor" title="Border" :options="[
+				{ label: 'keine', value: '' },
+				{ label: 'border-ui-onbrand', value: 'border-ui-onbrand' },
+				{ label: 'border-ui-onsuccess', value: 'border-ui-onsuccess' },
+				{ label: 'border-ui-ondanger', value: 'border-ui-ondanger' },
+			]" />
+		</template>
 	</Story>
 </template>
 
@@ -173,8 +172,13 @@
 		disabled: false,
 		statistics: false,
 		removable: true,
+		headless: false,
 		minOptions: undefined as number | undefined,
 		maxOptions: undefined as number | undefined,
+		bgColor: "",
+		textColor: "",
+		iconColor: "",
+		borderColor: "",
 	});
 
 	// Filter lassen sich wegen der structuredClone() Methode von histoire nicht als computed umsetzen, daher dieser Workaround. Andernfalls tauchen entsprechende
@@ -247,4 +251,20 @@
 	const mObjectSelectManager = () => new ObjectSelectManager(true, carItems,
 		(option : { marke: string, color: string }) => option.marke, (option : { marke: string, color: string }) => `${option.marke} - ${option.color}`);
 
+
+	function getSourceString (multi = false) {
+		return `<ui-select
+        label="..."
+        :select-manager="..."
+        ${state.searchable ? 'searchable' : ''}
+        ${state.disabled ? 'disabled' : ''}
+        ${state.statistics ? 'statistics' : ''}
+        ${state.removable ? '' : ':removable="false"'}
+        ${state.headless ? 'headless' : ''}
+        ${multi ? `:min-options="${state.minOptions}"` : ''}
+        ${multi ? `:max-options="${state.maxOptions}"` : ''}
+		/>
+      `.split('\n').filter(line => line.trim() !== '').join('\n');
+
+	};
 </script>
