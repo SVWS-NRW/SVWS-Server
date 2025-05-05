@@ -24,7 +24,7 @@ public class ReligionEintrag {
 	public @NotNull String bezeichnung = "";
 
 	/** Die Bezeichnung bzw. der Name der Religion, wie sie auf einem Zeugnis erscheint. */
-	@Schema(description = "die Bezeichnung bzw. der Name der Religion, wie sie auf einem Zeugnis erscheint", example = "röm.-kath.")
+	@Schema(description = "die Bezeichnung bzw. der Name der Religion, wie sie auf einem Zeugnis erscheint", example = "katholisch")
 	public String bezeichnungZeugnis = "";
 
 	/** Das Kürzel des Eintrages für die Statistik. */
