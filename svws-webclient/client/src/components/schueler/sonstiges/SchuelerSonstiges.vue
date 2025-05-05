@@ -1,4 +1,7 @@
 <template>
+	<Teleport to=".svws-ui-header--actions" defer>
+		<svws-ui-modal-hilfe> <hilfe-schueler-sonstiges /> </svws-ui-modal-hilfe>
+	</Teleport>
 	<Teleport to=".svws-sub-nav-target" defer>
 		<nav class="svws-ui-secondary-tabs">
 			<svws-ui-tab-bar :tab-manager secondary :focus-switching-enabled :focus-help-visible />

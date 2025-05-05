@@ -1,7 +1,4 @@
 <template>
-	<Teleport to=".svws-ui-header--actions" defer>
-		<svws-ui-modal-hilfe> <hilfe-schule-stammdaten /> </svws-ui-modal-hilfe>
-	</Teleport>
 	<div class="flex flex-col w-full h-full overflow-hidden">
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
@@ -15,7 +12,9 @@
 					<span class="svws-subline">{{ `${schule().bezeichnung2 ?? ''} ${schule().bezeichnung3 ?? ''}` }}</span>
 				</div>
 			</div>
-			<div class="svws-ui-header--actions" />
+			<div class="svws-ui-header--actions">
+				<svws-ui-modal-hilfe> <hilfe-schule-stammdaten /> </svws-ui-modal-hilfe>
+			</div>
 		</header>
 		<div class="page page-grid-cards">
 			<svws-ui-content-card title="Stammdaten">

@@ -1,4 +1,7 @@
 <template>
+	<Teleport to=".svws-ui-header--actions" defer>
+		<svws-ui-modal-hilfe> <hilfe-schueler-adressen /> </svws-ui-modal-hilfe>
+	</Teleport>
 	<div class="page page-grid-cards">
 		<div class="col-span-full">
 			<s-card-schueler-beschaeftigung :list-schuelerbetriebe="listSchuelerbetriebe" :map-beschaeftigungsarten="mapBeschaeftigungsarten"

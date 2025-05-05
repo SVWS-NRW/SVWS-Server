@@ -1,4 +1,7 @@
 <template>
+	<Teleport to=".svws-ui-header--actions" defer>
+		<svws-ui-modal-hilfe> <hilfe-schueler-kaoa /> </svws-ui-modal-hilfe>
+	</Teleport>
 	<div class="page">
 		<svws-ui-content-card class="col-span-full">
 			<div class="space-y-2">

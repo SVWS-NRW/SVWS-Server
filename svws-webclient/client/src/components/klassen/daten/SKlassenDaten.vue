@@ -1,4 +1,7 @@
 <template>
+	<Teleport to=".svws-ui-header--actions" defer>
+		<svws-ui-modal-hilfe> <hilfe-klassen-daten /> </svws-ui-modal-hilfe>
+	</Teleport>
 	<div class="page page-grid-cards">
 		<div class="flex flex-col gap-y-16 lg:gap-y-20">
 			<svws-ui-content-card title="Allgemein">

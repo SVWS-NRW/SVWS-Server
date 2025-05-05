@@ -1,4 +1,7 @@
 <template>
+	<Teleport to=".svws-ui-header--actions" defer>
+		<svws-ui-modal-hilfe> <hilfe-schueler-erziehungsberechtigte /> </svws-ui-modal-hilfe>
+	</Teleport>
 	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Erziehungsberechtigte" class="col-span-full">
 			<svws-ui-table class="contentFocusField" :items="data()" :columns :no-data="data().size() === 0" clickable :clicked="erzieher" @update:clicked="value => erzieher = value" focus-first-element>

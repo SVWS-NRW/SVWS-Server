@@ -1,4 +1,7 @@
 <template>
+	<Teleport to=".svws-ui-header--actions" defer>
+		<svws-ui-modal-hilfe> <hilfe-schueler-laufbahnplanung /> </svws-ui-modal-hilfe>
+	</Teleport>
 	<div class="page page-flex-row max-w-480">
 		<Teleport v-if="hatUpdateKompetenz" defer to=".svws-sub-nav-target">
 			<svws-ui-sub-nav>

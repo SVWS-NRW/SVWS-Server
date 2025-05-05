@@ -1,4 +1,7 @@
 <template>
+	<Teleport to=".svws-ui-header--actions" defer>
+		<svws-ui-modal-hilfe> <hilfe-schueler-individualdaten /> </svws-ui-modal-hilfe>
+	</Teleport>
 	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
