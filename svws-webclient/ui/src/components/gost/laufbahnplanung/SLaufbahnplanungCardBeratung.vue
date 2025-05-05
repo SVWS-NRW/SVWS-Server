@@ -4,7 +4,7 @@
 			<div class="col-span-full">
 				Letzer Import mit Änderungen:&nbsp;&nbsp;
 				<template v-if="gostLaufbahnBeratungsdaten().ruecklaufdatum === null">'—'</template>
-				<template v-else> {{ new Date(gostLaufbahnBeratungsdaten().ruecklaufdatum!).toLocaleDateString("de-DE", {year: "numeric", month: "2-digit", day: "2-digit",}) }} </template>
+				<template v-else> {{ new Date(gostLaufbahnBeratungsdaten().ruecklaufdatum!).toLocaleDateString("de-DE", { year: "numeric", month: "2-digit", day: "2-digit" }) }} </template>
 			</div>
 			<svws-ui-select title="Zuletzt beraten von" :items="listLehrer" :model-value="getBeratungslehrer"
 				:item-text="i=>`${i.kuerzel} (${i.vorname} ${i.nachname})`"

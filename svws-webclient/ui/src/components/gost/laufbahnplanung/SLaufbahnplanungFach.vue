@@ -42,10 +42,10 @@
 					<template v-if="wahlen[halbjahr.id] !== '' && wahlen[halbjahr.id] === '6'">0</template>
 					<template v-else>{{ wahlen[halbjahr.id] }}&#8203;</template>
 				</span>
-				<span class="absolute right-3">
+				<span class="absolute">
 					<template v-if="istFachkombiErforderlich[halbjahr.id] || istFachkombiVerboten[halbjahr.id] || !zkMoeglich(halbjahr)">
 						<svws-ui-tooltip :color="istBewertet(halbjahr) ? 'light' : 'danger'" position="bottom">
-							<span class="icon i-ri-error-warning-line" :class="istBewertet(halbjahr) ? 'icon-ui-75' : 'icon-ui-danger'" />
+							<span class="icon mr-12 i-ri-error-warning-line " :class="istBewertet(halbjahr) ? 'icon-ui-75' : 'icon-ui-danger'" />
 							<template #content v-if="istFachkombiErforderlich[halbjahr.id]">
 								Fachkombination erforderlich
 							</template>
@@ -57,10 +57,10 @@
 							</template>
 						</svws-ui-tooltip>
 					</template>
-					<template v-else-if="!manager.istMoeglich(fach, halbjahr) && (wahlen[halbjahr.id] !== '') && hatUpdateKompetenz">
+					<template v-if="!manager.istMoeglich(fach, halbjahr) && (wahlen[halbjahr.id] !== '') && hatUpdateKompetenz">
 						<svws-ui-tooltip :color="istBewertet(halbjahr) && manager.hatNote(fach, halbjahr) ? 'light' : 'danger'">
 							<svws-ui-button type="icon" size="small" :disabled="istBewertet(halbjahr) && manager.hatNote(fach, halbjahr)" @click="manager.deleteFachwahl(fach, halbjahr)"
-								@keydown.enter.prevent="manager.deleteFachwahl(fach, halbjahr)" @keydown.space.prevent="manager.deleteFachwahl(fach, halbjahr)">
+								@keydown.enter.prevent="manager.deleteFachwahl(fach, halbjahr)" @keydown.space.prevent="manager.deleteFachwahl(fach, halbjahr)" class="left-4">
 								<span class="icon i-ri-close-line" />
 							</svws-ui-button>
 							<template #content>
@@ -75,7 +75,7 @@
 					</template>
 					<template v-else-if="(wahlen[halbjahr.id] !== '') && istBewertet(halbjahr) && (!manager.hatNote(fach, halbjahr) && !manager.belegungHatImmerNoten) && hatUpdateKompetenz">
 						<svws-ui-tooltip :color="'danger'">
-							<svws-ui-button type="icon" size="small" @click="manager.deleteFachwahl(fach, halbjahr)"
+							<svws-ui-button type="icon" size="small" @click="manager.deleteFachwahl(fach, halbjahr)" class="left-4"
 								@keydown.enter.prevent="manager.deleteFachwahl(fach, halbjahr)" @keydown.space.prevent="manager.deleteFachwahl(fach, halbjahr)">
 								<span class="icon i-ri-close-line" />
 							</svws-ui-button>
@@ -88,7 +88,7 @@
 					<template v-else-if="wahlen[halbjahr.id] && wahlen[halbjahr.id] === '6'">
 						<svws-ui-tooltip color="danger" position="bottom">
 							<div class="inline-flex items-center">
-								<span class="icon i-ri-error-warning-line icon-ui-danger" />
+								<span class="icon mr-12 i-ri-error-warning-line icon-ui-danger" />
 							</div>
 							<template #content>
 								Dieser Kurs gilt aufgrund von 0 Punkten als nicht belegt.
