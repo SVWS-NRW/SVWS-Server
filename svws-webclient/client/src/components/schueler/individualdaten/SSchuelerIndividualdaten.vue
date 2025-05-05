@@ -105,7 +105,8 @@
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Weitere Telefonnummern" v-if="serverMode === ServerMode.DEV">
-			<svws-ui-table :clickable="true" :items="getListSchuelerTelefoneintraege()" :columns="columns" :selectable="hatKompetenzUpdate" :model-value="selected">
+			<svws-ui-table :clickable="true" @update:clicked="v => patchTelefonnummer(v)" :items="telefonEintraege" :columns="columns"
+				:selectable="hatKompetenzUpdate" v-model="selected">
 				<template #cell(idTelefonArt)="{ value }">
 					{{ getBezeichnungTelefonart(value) }}
 				</template>
@@ -114,7 +115,7 @@
 				</template>
 				<template #actions>
 					<div class="inline-flex gap-4">
-						<svws-ui-button type="trash" />
+						<svws-ui-button @click="deleteTelefonnummern" type="trash" :disabled="selected.length === 0" />
 						<svws-ui-button @click="addTelefonnummer" type="icon" title="Telefonnummer hinzufügen"><span class="icon i-ri-add-line" /></svws-ui-button>
 					</div>
 				</template>
@@ -124,11 +125,13 @@
 				<template #modalContent>
 					<svws-ui-input-wrapper :grid="2" style="text-align: left">
 						<svws-ui-select title="Telefonart" :items="mapTelefonArten.values()" v-model="selectedTelefonArt" :item-text="i => i.bezeichnung" />
-						<svws-ui-text-input v-model="telefonnummer.telefonnummer" type="text" placeholder="Telefonnummer" />
+						<svws-ui-text-input v-model="newEntryTelefonnummer.telefonnummer" type="text" placeholder="Telefonnummer" />
 					</svws-ui-input-wrapper>
 					<div class="mt-7 flex flex-row gap-4 justify end">
 						<svws-ui-button type="secondary" @click="closeModalTelefonnummer">Abbrechen</svws-ui-button>
-						<svws-ui-button>Speichern</svws-ui-button>
+						<svws-ui-button @click="sendRequestTelefonnummer" :disabled="(selectedTelefonArt !== null) && (newEntryTelefonnummer.telefonnummer ?? '').length < 1">
+							Speichern
+						</svws-ui-button>
 					</div>
 				</template>
 			</svws-ui-modal>
@@ -162,9 +165,10 @@
 
 <script setup lang="ts">
 
-	import {computed, ref} from "vue";
+	import { computed, ref } from "vue";
 	import type { SchuelerIndividualdatenProps } from "./SSchuelerIndividualdatenProps";
-	import type { SchuelerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, KatalogEintrag, SchulEintrag} from "@core";
+	import type { SchuelerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, KatalogEintrag, SchulEintrag, TelefonArt } from "@core";
+	import { ArrayList} from "@core";
 	import { SchuelerStatus, Schulform, Nationalitaeten, Geschlecht, AdressenUtils, Verkehrssprache, BenutzerKompetenz, DateUtils, SchuelerTelefon, ServerMode } from "@core";
 	import { verkehrsspracheKatalogEintragFilter, verkehrsspracheKatalogEintragSort, nationalitaetenKatalogEintragFilter, nationalitaetenKatalogEintragSort,
 		staatsangehoerigkeitKatalogEintragSort, staatsangehoerigkeitKatalogEintragFilter, orte_sort, orte_filter, ortsteilSort, ortsteilFilter } from "~/utils/helfer";
@@ -178,9 +182,16 @@
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 
 	const data = computed<SchuelerStammdaten>(() => props.schuelerListeManager().daten());
+	const telefonEintraege = computed(() => [...props.getListSchuelerTelefoneintraege()])
+
+	function enterDefaultMode() {
+		setMode(Mode.DEFAULT);
+		resetTelefonnummer();
+		closeModalTelefonnummer();
+	}
 
 	const selected = ref<SchuelerTelefon[]>([]);
-	const telefonnummer = ref(new SchuelerTelefon());
+	const newEntryTelefonnummer = ref<SchuelerTelefon>(new SchuelerTelefon());
 
 	const columns: DataTableColumn[] = [
 		{ key: "idTelefonArt", label: "Ansprechpartner", span: 1 },
@@ -191,19 +202,47 @@
 		return props.mapTelefonArten.get(idTelefonArt)?.bezeichnung ?? "";
 	}
 
-	const selectedTelefonArt = computed({
-		get: () => props.mapTelefonArten.get(telefonnummer.value.idTelefonArt) ?? null,
-		set: (selected) => telefonnummer.value.idTelefonArt = (selected !== null) ? selected.id : 0,
+	const selectedTelefonArt = computed<TelefonArt|null>({
+		get: () => props.mapTelefonArten.get(newEntryTelefonnummer.value.idTelefonArt) ?? null,
+		set: (selected) => newEntryTelefonnummer.value.idTelefonArt = (selected !== null) ? selected.id : 0,
 	});
 
 	enum Mode { ADD, PATCH, DEFAULT }
 	const currentMode = ref<Mode>(Mode.DEFAULT);
 	const showModalTelefonnummer = ref<boolean>(false);
-	const newEntryTelefonnummer = ref<SchuelerTelefon>(new SchuelerTelefon());
 	function addTelefonnummer() {
-		resetMerkmal();
+		resetTelefonnummer();
 		setMode(Mode.ADD);
 		openModalTelefonnummer();
+	}
+
+	async function sendRequestTelefonnummer() {
+		const { id, idSchueler, ...partialDataWithoutId } = newEntryTelefonnummer.value;
+		const schuelerId = props.schuelerListeManager().daten().id;
+		if (currentMode.value === Mode.ADD)
+			await props.addSchuelerTelefoneintrag(partialDataWithoutId, schuelerId);
+		if (currentMode.value === Mode.PATCH)
+			await props.patchSchuelerTelefoneintrag(partialDataWithoutId, newEntryTelefonnummer.value.id);
+		enterDefaultMode();
+	}
+
+	function patchTelefonnummer(telefonnummer: SchuelerTelefon) {
+		resetTelefonnummer();
+		setMode(Mode.PATCH);
+		newEntryTelefonnummer.value.id = telefonnummer.id;
+		newEntryTelefonnummer.value.idTelefonArt = telefonnummer.idTelefonArt;
+		newEntryTelefonnummer.value.telefonnummer = telefonnummer.telefonnummer;
+		openModalTelefonnummer();
+	}
+
+	async function deleteTelefonnummern() {
+		if (selected.value.length === 0)
+			return;
+		const ids = new ArrayList<number>();
+		for (const s of selected.value)
+			ids.add(s.id);
+		await props.deleteSchuelerTelefoneintrage(ids);
+		selected.value = [];
 	}
 
 	function openModalTelefonnummer() {
@@ -211,7 +250,7 @@
 	}
 
 	function closeModalTelefonnummer() {
-		resetMerkmal();
+		resetTelefonnummer();
 		setMode(Mode.DEFAULT)
 		showModalTelefonnummer.value = false;
 	}
@@ -220,8 +259,12 @@
 		return currentMode.value = newMode;
 	}
 
-	function resetMerkmal() {
-		newEntryTelefonnummer.value = new SchuelerTelefon();
+	function resetTelefonnummer() {
+		const defaultTelefon = new SchuelerTelefon();
+		defaultTelefon.telefonnummer = '+49';
+		const ersteTelefonArt = props.mapTelefonArten.values().next().value;
+		defaultTelefon.idTelefonArt = ersteTelefonArt?.id ?? 0;
+		newEntryTelefonnummer.value = defaultTelefon;
 	}
 
 	function istGeburtsdatumGueltig(strDate: string | null) {
