@@ -130,8 +130,12 @@ export class RouteDataGostLaufbahnfehler extends RouteData<RouteStateDataGostLau
 		}
 	}
 
-	resetFachwahlenAlle = async () => {
-		await api.server.resetGostAbiturjahrgangSchuelerFachwahlen(api.schema, this.abiturjahr);
+	resetFachwahlenAlle = async (ergebnisse: Iterable<GostBelegpruefungsErgebnisse>) => {
+		if ([...ergebnisse].length === this.listBelegpruefungsErgebnisse.size())
+			await api.server.resetGostAbiturjahrgangSchuelerFachwahlen(api.schema, this.abiturjahr);
+		else
+			for (const ergebnis of ergebnisse)
+				await api.server.resetGostSchuelerFachwahlen(api.schema, ergebnis.schueler.id);
 		await this.setAbiturjahr(this.abiturjahr);
 	}
 

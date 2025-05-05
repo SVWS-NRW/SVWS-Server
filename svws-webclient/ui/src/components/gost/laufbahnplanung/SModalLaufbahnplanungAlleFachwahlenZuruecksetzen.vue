@@ -1,29 +1,30 @@
 <template>
 	<div>
-		<svws-ui-button @click="toggle_modal" size="small" type="transparent" class="hover--danger subNavigationFocusField">
+		<svws-ui-button :disabled="selected.length === 0" @click="toggle_modal" size="small" type="transparent"
+			class="hover--danger subNavigationFocusField" title="Diese Aktion ersetzt alle Fachwahlen durch die Vorlage">
 			<span class="icon-sm i-ri-delete-bin-line" />
-			<template v-if="hatFesteWahlen">Nicht feste Schüler-Fachwahlen zurücksetzen</template>
-			<template v-else>Alle Schüler-Fachwahlen zurücksetzen</template>
+			<template v-if="hatFesteWahlen">Ausgewählte nicht feste Schüler-Fachwahlen zurücksetzen...</template>
+			<template v-else>Ausgewählte Schüler-Fachwahlen zurücksetzen...</template>
 		</svws-ui-button>
 		<svws-ui-modal v-model:show="show" size="medium" type="danger">
 			<template #modalTitle>
-				<template v-if="hatFesteWahlen">Nicht feste Fachwahlen aller Schüler im Abiturjahrgang auf die Vorlage zurücksetzen</template>
-				<template v-else>Die Fachwahlen aller Schüler im Abiturjahrgang auf die Vorlage zurücksetzen</template>
+				<template v-if="hatFesteWahlen">Nicht feste Fachwahlen ausgewählter Schüler im Abiturjahrgang auf die Vorlage zurücksetzen</template>
+				<template v-else>Die Fachwahlen ausgewählter Schüler im Abiturjahrgang auf die Vorlage zurücksetzen</template>
 			</template>
 			<template #modalDescription>
 				<div class="flex gap-1 mb-2">
 					<template v-if="hatFesteWahlen">
-						Sollen für alle Schüler des Abiturjahrgangs die nicht festen Fachwahlen der noch in Planung befindlichen Halbjahre
+						Soll für die ausgewählten Schüler des Abiturjahrgangs die nicht festen Fachwahlen der noch in Planung befindlichen Halbjahre
 						gelöscht und auf die Vorlage zurückgesetzt werden?
 					</template>
 					<template v-else>
-						Sollen für alle Schüler des Abiturjahrgangs die Fachwahlen auf die Vorlage zurückgesetzt werden?
+						Soll für die ausgewählten Schüler des Abiturjahrgangs die Fachwahlen auf die Vorlage zurückgesetzt werden?
 					</template>
 				</div>
 			</template>
 			<template #modalActions>
 				<svws-ui-button @click="toggle_modal" type="secondary">Abbrechen</svws-ui-button>
-				<svws-ui-button @click="reset_fachwahlen" type="danger">Ja</svws-ui-button>
+				<svws-ui-button @click="reset_fachwahlen_selected" type="danger">Ja</svws-ui-button>
 			</template>
 		</svws-ui-modal>
 	</div>
@@ -33,10 +34,12 @@
 
 	import { computed, ref } from 'vue';
 	import type { GostJahrgangsdaten } from '../../../../../core/src/core/data/gost/GostJahrgangsdaten';
+	import type { GostBelegpruefungsErgebnisse } from '../../../../../core/src/core/data/gost/GostBelegpruefungsErgebnisse';
 
 	const props = defineProps<{
 		gostJahrgangsdaten: () => GostJahrgangsdaten;
-		resetFachwahlen: () => Promise<void>;
+		selected: GostBelegpruefungsErgebnisse[];
+		resetFachwahlen: (ergebnisse: Iterable<GostBelegpruefungsErgebnisse>) => Promise<void>;
 	}>();
 
 	const hatFesteWahlen = computed<boolean>(() => {
@@ -50,9 +53,9 @@
 		show.value = !show.value;
 	}
 
-	async function reset_fachwahlen() {
+	async function reset_fachwahlen_selected() {
 		show.value = false;
-		await props.resetFachwahlen();
+		await props.resetFachwahlen(props.selected);
 	}
 
 </script>

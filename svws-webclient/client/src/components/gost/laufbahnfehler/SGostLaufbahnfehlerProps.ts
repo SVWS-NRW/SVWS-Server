@@ -15,7 +15,7 @@ export interface GostLaufbahnfehlerProps {
 	importLaufbahnplanung: (data: FormData) => Promise<void>;
 	exportLaufbahnplanung: (schueler: List<number>) => Promise<ApiFile>;
 	getPdfLaufbahnplanung: (title: string, list: List<number>, detaillevel: number, einzelpdfs: boolean) => Promise<ApiFile>;
-	resetFachwahlenAlle: () => Promise<void>;
+	resetFachwahlenAlle: (ergebnisse: Iterable<GostBelegpruefungsErgebnisse>) => Promise<void>;
 	jahrgangsdaten: () => GostJahrgangsdaten;
 	apiStatus: ApiStatus;
 	filterFehler: () => boolean;

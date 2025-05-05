@@ -1,16 +1,17 @@
 <template>
 	<div>
-		<svws-ui-button :disabled="selected.length === 0" @click="toggle_modal" size="small" type="transparent" class="hover--danger subNavigationFocusField">
+		<svws-ui-button :disabled="selected.length === 0" @click="toggle_modal" size="small" type="transparent"
+			class="hover--danger subNavigationFocusField" title="Diese Aktion entfernt ersatzlos alle Fachwahlen">
 			<span class="icon-sm i-ri-delete-bin-line" />
-			Alle ausgewählten Schüler-Fachwahlen löschen
+			Ausgewählte Schüler-Fachwahlen löschen...
 		</svws-ui-button>
 		<svws-ui-modal v-model:show="show" size="medium" type="danger">
 			<template #modalTitle>
-				Die Fachwahlen aller ausgewählten Schüler im Abiturjahrgang löschen
+				Die Fachwahlen der ausgewählten Schüler im Abiturjahrgang löschen
 			</template>
 			<template #modalDescription>
 				<div class="flex gap-1 mb-2">
-					Sollen für alle ausgewählten Schüler des Abiturjahrgangs die Fachwahlen gelöscht werden?
+					Soll für die ausgewählten Schüler des Abiturjahrgangs die Fachwahlen gelöscht werden?
 				</div>
 			</template>
 			<template #modalActions>
