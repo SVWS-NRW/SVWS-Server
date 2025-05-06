@@ -230,6 +230,32 @@ public class APISchueler {
 
 
 	/**
+	 * Die OpenAPI-Methode für das Hinzufügen neuer SchülerStammdaten.
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param is           der Input-Stream mit den Daten der SchülerStammdaten
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit den erstellen SchülerStammdaten
+	 */
+	@POST
+	@Path("/stammdaten/create")
+	@Operation(summary = "Erstellt neue SchülerStammdaten und gibt das erstellte Objekt zurück.",
+			description = "Erstellt neue SchülerStammdaten und gibt das erstellte Objekt zurück. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen neuer SchülerStammdaten besitzt.")
+	@ApiResponse(responseCode = "201", description = "Die SchülerStammdaten wurden erfolgreich hinzugefügt.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerStammdaten.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um SchülerStammdaten anzulegen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response addSchuelerStammdaten(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die Daten der zu erstellenden SchülerStammdaten ohne ID, da diese automatisch generiert wird", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerStammdaten.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataSchuelerStammdaten(conn).addAsResponse(is), request, ServerMode.DEV, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
+	}
+
+	/**
 	 * Die OpenAPI-Methode für das Patchen der Stammdaten eines Schülers.
 	 *
 	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll

@@ -137,6 +137,57 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 		return dto.ID;
 	}
 
+	@Override
+	protected void initDTO(final DTOSchueler dto, final Long id, final Map<String, Object> initAttributes) {
+		// Basisdaten
+		dto.ID = id;
+		dto.Nachname = "";
+		dto.Vorname = "";
+		dto.AlleVornamen = "";
+		dto.Geschlecht = Geschlecht.M;
+		dto.Geburtsdatum = "";
+		dto.Geburtsort = "";
+		dto.Geburtsname = "";
+		// Wohnort und Kontaktdaten
+		dto.Strassenname = "";
+		dto.HausNr = "";
+		dto.HausNrZusatz = "";
+		dto.Ort_ID = null;
+		dto.Ortsteil_ID = null;
+		dto.Telefon = "";
+		dto.Fax = "";
+		dto.Email = "";
+		dto.SchulEmail = "";
+		// Daten zur Staatsangehörigkeit und zur Religion
+		dto.StaatKrz = null;
+		dto.StaatKrz2 = null;
+		dto.Religion_ID = null;
+		dto.KonfDruck = false;
+		dto.Religionsabmeldung = "";
+		dto.Religionsanmeldung = "";
+		// Daten zum Migrationshintergrund
+		dto.Migrationshintergrund = false;
+		dto.JahrZuzug = null;
+		dto.GeburtslandSchueler = null;
+		dto.VerkehrsspracheFamilie = null;
+		dto.GeburtslandVater = null;
+		dto.GeburtslandMutter = null;
+		// Statusdaten
+		dto.idStatus = null;
+		dto.Duplikat = null;
+		dto.ExterneSchulNr = null;
+		dto.Fahrschueler_ID = null;
+		dto.Haltestelle_ID = null;
+		dto.AnmeldeDatum = null;
+		dto.Aufnahmedatum = null;
+		dto.Volljaehrig = false;
+		dto.KeineAuskunft = false;
+		dto.SchulpflichtErf = false;
+		dto.BerufsschulpflErf = false;
+		dto.MasernImpfnachweis = false;
+		dto.Bafoeg = false;
+		dto.MeisterBafoeg = false;
+	}
 
 	@Override
 	protected SchuelerStammdaten map(final DTOSchueler dto) throws ApiOperationException {
