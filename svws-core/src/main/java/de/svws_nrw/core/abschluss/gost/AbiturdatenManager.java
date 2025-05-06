@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import de.svws_nrw.asd.data.NoteKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.Sprachendaten;
 import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.asd.types.fach.Fach;
@@ -2285,6 +2286,75 @@ public class AbiturdatenManager {
 	 */
 	public @NotNull GostAbiturMarkierungsalgorithmusErgebnis getErgebnisMarkierungsalgorithmus() {
 		return this.markierungsErgebnis;
+	}
+
+
+	/**
+	 * Wendet das Ergebnis des Markierungsergebnis auf diese Belegung an.
+	 *
+	 * @return true, wenn es erfolgreich angewendet wurde, und ansonsten false
+	 */
+	public boolean applyErgebnisMarkierungsalgorithmus() {
+		// Wenn der Algorithmus nicht erfolgreich gelaufen ist, dann sollte er auch nicht angewendet werden...
+		if (!this.markierungsErgebnis.erfolgreich) {
+			abidaten.block1Zulassung = false;
+			return false;
+		}
+		// Gehe die einzelnen Markierungs-Einträge durch und wende diese die Abiturdaten an
+		for (final @NotNull GostAbiturMarkierungsalgorithmusMarkierung markierung : this.markierungsErgebnis.markierungen) {
+			final AbiturFachbelegung belegung = getFachbelegungByID(markierung.idFach);
+			if (belegung == null)
+				return false;
+			final GostHalbjahr halbjahr = GostHalbjahr.fromID(markierung.idHalbjahr);
+			if (halbjahr == null)
+				return false;
+			final AbiturFachbelegungHalbjahr belegungHalbjahr = belegung.belegungen[markierung.idHalbjahr];
+			if (belegungHalbjahr == null)
+				return false;
+			belegungHalbjahr.block1gewertet = markierung.markiert;
+		}
+		// Gehe die einzelnen Fachbelegungen durch und aktualisiere die Ergebnisse für Block I
+		abidaten.block1AnzahlKurse = 0;
+		abidaten.block1DefiziteGesamt = 0;
+		abidaten.block1DefiziteLK = 0;
+		abidaten.block1PunktSummeGK = 0;
+		abidaten.block1PunktSummeLK = 0;
+		for (final @NotNull AbiturFachbelegung fachbelegung : abidaten.fachbelegungen) {
+			double summeKurseFach = 0.0;
+			fachbelegung.block1PunktSumme = 0;
+			for (final @NotNull GostHalbjahr halbjahr : GostHalbjahr.getQualifikationsphase()) {
+				final AbiturFachbelegungHalbjahr belegungHalbjahr = fachbelegung.belegungen[halbjahr.id];
+				if ((belegungHalbjahr == null) || (belegungHalbjahr.block1gewertet == null) || (!belegungHalbjahr.block1gewertet))
+					continue;
+				final boolean istLK = GostKursart.LK.kuerzel.equals(belegungHalbjahr.kursartKuerzel);
+				final Note note = Note.fromKuerzel(belegungHalbjahr.notenkuerzel);
+				final NoteKatalogEintrag nke = note.getKatalogEintrag(this.getSchuljahr());
+				if ((nke == null) || (nke.notenpunkte == null))
+					continue;
+				final int notenpunkte = nke.notenpunkte * (istLK ? 2 : 1);
+				fachbelegung.block1PunktSumme += notenpunkte;
+				summeKurseFach++;
+				abidaten.block1AnzahlKurse++;
+				if (istLK) {
+					abidaten.block1PunktSummeLK += notenpunkte;
+					if (notenpunkte < 5)
+						abidaten.block1DefiziteLK++;
+				} else {
+					abidaten.block1PunktSummeGK += notenpunkte;
+				}
+				if (notenpunkte < 5)
+					abidaten.block1DefiziteGesamt++;
+			}
+			fachbelegung.block1NotenpunkteDurchschnitt = (summeKurseFach == 0.0) ? null : (fachbelegung.block1PunktSumme / summeKurseFach);
+		}
+		final double summeNotenpunkte = abidaten.block1PunktSummeLK + abidaten.block1PunktSummeGK;
+		final double anzahlKurse = (abidaten.block1AnzahlKurse + 8.0); // LK-Belegungen doppelt zählen, also + 2*4, da auch die Notenpunkte doppelt gezählt wurden
+		abidaten.block1PunktSummeNormiert = (int) Math.round((40.0 * summeNotenpunkte) / anzahlKurse);
+		abidaten.block1NotenpunkteDurchschnitt = Math.round((summeNotenpunkte / anzahlKurse) * 100.0) / 100.0;
+		abidaten.block1Zulassung = (abidaten.block1PunktSummeNormiert >= 200)
+				&& (((abidaten.block1AnzahlKurse >= 35) && (abidaten.block1AnzahlKurse <= 37) && (abidaten.block1DefiziteGesamt <= 7))
+						|| ((abidaten.block1AnzahlKurse >= 38) && (abidaten.block1DefiziteGesamt <= 8)));
+		return true;
 	}
 
 }

@@ -20,15 +20,17 @@
 
 		<!-- Darstellung der Laufbahninformationen aus dem persistierten Abiturbereich -->
 		<template v-else>
-
 			<div><span class="icon i-ri-information-line icon-ui-danger" />Es liegen bereits Daten zum Abitur vor.</div>
+
+			<div v-if="serverMode === ServerMode.DEV" class="w-64">
+				<svws-ui-button @click="copyMarkierungsergebnisToClipboard">Kopiere Markierungsergebnis</svws-ui-button>
+			</div>
 
 			<!-- Übersicht über die Fachbelegungen in der Q-Phase / Block I -->
 			<schueler-abitur-zulassung :server-mode :schule :manager="managerLaufbahnplanung" berechnen />
-			
+
 			<!-- Übersicht über die Fachbelegungen in der Q-Phase / Block I -->
 			<schueler-abitur-zulassung :server-mode :schule :manager="() => managerAbitur()!" />
-
 		</template>
 	</div>
 </template>
@@ -36,8 +38,8 @@
 <script setup lang="ts">
 
 	import { computed } from 'vue';
-	import { GostBelegpruefungErgebnisFehler, List } from "@core";
-	import { ArrayList, GostBelegungsfehlerArt, GostHalbjahr } from "@core";
+	import type { GostBelegpruefungErgebnisFehler, List } from "@core";
+	import { ArrayList, GostAbiturMarkierungsalgorithmusErgebnis, GostBelegungsfehlerArt, GostHalbjahr, ServerMode } from "@core";
 
 	import type { SchuelerAbiturLeistungsuebersichtProps } from "./SchuelerAbiturLeistungsuebersichtProps";
 
@@ -57,6 +59,16 @@
 		const man = props.managerLaufbahnplanung();
 		return (man.istBewertet(GostHalbjahr.Q11) && man.istBewertet(GostHalbjahr.Q12)
 			&& man.istBewertet(GostHalbjahr.Q21) && man.istBewertet(GostHalbjahr.Q22))
+	}
+
+	async function copyMarkierungsergebnisToClipboard() {
+		try {
+			const ergebnis = props.managerLaufbahnplanung().getErgebnisMarkierungsalgorithmus();
+			const json = GostAbiturMarkierungsalgorithmusErgebnis.transpilerToJSON(ergebnis);
+			await navigator.clipboard.writeText(json);
+		} catch(e) {
+			// do nothing
+		}
 	}
 
 </script>

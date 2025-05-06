@@ -82,6 +82,7 @@ export class RouteDataSchuelerAbitur extends RouteData<RouteStateDataSchuelerAbi
 			const abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, schueler.id);
 			newState.managerLaufbahnplanung = new AbiturdatenManager(api.mode, abiturdaten, gostJahrgangsdaten, faecherManager, GostBelegpruefungsArt.GESAMT);
 			newState.ergebnisBelegpruefung = newState.managerLaufbahnplanung.getBelegpruefungErgebnis();
+			newState.managerLaufbahnplanung.applyErgebnisMarkierungsalgorithmus();
 		} catch (e) {
 			// do nothing
 		}

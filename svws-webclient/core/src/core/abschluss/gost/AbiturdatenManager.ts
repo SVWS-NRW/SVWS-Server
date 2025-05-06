@@ -10,6 +10,7 @@ import { GostFachUtils } from '../../../core/utils/gost/GostFachUtils';
 import { KurszahlenUndWochenstunden } from '../../../core/abschluss/gost/belegpruefung/KurszahlenUndWochenstunden';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { GostBelegpruefungErgebnis } from '../../../core/abschluss/gost/GostBelegpruefungErgebnis';
+import { JavaMath } from '../../../java/lang/JavaMath';
 import { GostKursart } from '../../../core/types/gost/GostKursart';
 import { Latinum } from '../../../core/abschluss/gost/belegpruefung/Latinum';
 import { Abi29BelegpruefungSchwerpunkt } from '../../../core/abschluss/gost/belegpruefung/abi2029/Abi29BelegpruefungSchwerpunkt';
@@ -64,6 +65,7 @@ import { Projektkurse } from '../../../core/abschluss/gost/belegpruefung/Projekt
 import { SprachendatenUtils } from '../../../core/utils/schueler/SprachendatenUtils';
 import { Abi29BelegpruefungLiterarischKuenstlerisch } from '../../../core/abschluss/gost/belegpruefung/abi2029/Abi29BelegpruefungLiterarischKuenstlerisch';
 import { Fremdsprachen } from '../../../core/abschluss/gost/belegpruefung/Fremdsprachen';
+import { NoteKatalogEintrag } from '../../../asd/data/NoteKatalogEintrag';
 import { GostAbiturMarkierungsalgorithmusErgebnis } from '../../../core/abschluss/gost/GostAbiturMarkierungsalgorithmusErgebnis';
 import { GostBelegpruefungErgebnisFehler } from '../../../core/abschluss/gost/GostBelegpruefungErgebnisFehler';
 import { Mathematik } from '../../../core/abschluss/gost/belegpruefung/Mathematik';
@@ -2111,6 +2113,69 @@ export class AbiturdatenManager extends JavaObject {
 	 */
 	public getErgebnisMarkierungsalgorithmus() : GostAbiturMarkierungsalgorithmusErgebnis {
 		return this.markierungsErgebnis;
+	}
+
+	/**
+	 * Wendet das Ergebnis des Markierungsergebnis auf diese Belegung an.
+	 *
+	 * @return true, wenn es erfolgreich angewendet wurde, und ansonsten false
+	 */
+	public applyErgebnisMarkierungsalgorithmus() : boolean {
+		if (!this.markierungsErgebnis.erfolgreich) {
+			this.abidaten.block1Zulassung = false;
+			return false;
+		}
+		for (const markierung of this.markierungsErgebnis.markierungen) {
+			const belegung : AbiturFachbelegung | null = this.getFachbelegungByID(markierung.idFach);
+			if (belegung === null)
+				return false;
+			const halbjahr : GostHalbjahr | null = GostHalbjahr.fromID(markierung.idHalbjahr);
+			if (halbjahr === null)
+				return false;
+			const belegungHalbjahr : AbiturFachbelegungHalbjahr | null = belegung.belegungen[markierung.idHalbjahr];
+			if (belegungHalbjahr === null)
+				return false;
+			belegungHalbjahr.block1gewertet = markierung.markiert;
+		}
+		this.abidaten.block1AnzahlKurse = 0;
+		this.abidaten.block1DefiziteGesamt = 0;
+		this.abidaten.block1DefiziteLK = 0;
+		this.abidaten.block1PunktSummeGK = 0;
+		this.abidaten.block1PunktSummeLK = 0;
+		for (const fachbelegung of this.abidaten.fachbelegungen) {
+			let summeKurseFach : number = 0.0;
+			fachbelegung.block1PunktSumme = 0;
+			for (const halbjahr of GostHalbjahr.getQualifikationsphase()) {
+				const belegungHalbjahr : AbiturFachbelegungHalbjahr | null = fachbelegung.belegungen[halbjahr.id];
+				if ((belegungHalbjahr === null) || (belegungHalbjahr.block1gewertet === null) || (!belegungHalbjahr.block1gewertet))
+					continue;
+				const istLK : boolean = JavaObject.equalsTranspiler(GostKursart.LK.kuerzel, (belegungHalbjahr.kursartKuerzel));
+				const note : Note | null = Note.fromKuerzel(belegungHalbjahr.notenkuerzel);
+				const nke : NoteKatalogEintrag | null = note.getKatalogEintrag(this.getSchuljahr());
+				if ((nke === null) || (nke.notenpunkte === null))
+					continue;
+				const notenpunkte : number = nke.notenpunkte * (istLK ? 2 : 1);
+				fachbelegung.block1PunktSumme += notenpunkte;
+				summeKurseFach++;
+				this.abidaten.block1AnzahlKurse++;
+				if (istLK) {
+					this.abidaten.block1PunktSummeLK += notenpunkte;
+					if (notenpunkte < 5)
+						this.abidaten.block1DefiziteLK++;
+				} else {
+					this.abidaten.block1PunktSummeGK += notenpunkte;
+				}
+				if (notenpunkte < 5)
+					this.abidaten.block1DefiziteGesamt++;
+			}
+			fachbelegung.block1NotenpunkteDurchschnitt = (summeKurseFach === 0.0) ? null : (fachbelegung.block1PunktSumme / summeKurseFach);
+		}
+		const summeNotenpunkte : number = this.abidaten.block1PunktSummeLK + this.abidaten.block1PunktSummeGK;
+		const anzahlKurse : number = (this.abidaten.block1AnzahlKurse + 8.0);
+		this.abidaten.block1PunktSummeNormiert = Math.round((40.0 * summeNotenpunkte) / anzahlKurse) as number;
+		this.abidaten.block1NotenpunkteDurchschnitt = Math.round((summeNotenpunkte / anzahlKurse) * 100.0) / 100.0;
+		this.abidaten.block1Zulassung = (this.abidaten.block1PunktSummeNormiert >= 200) && (((this.abidaten.block1AnzahlKurse >= 35) && (this.abidaten.block1AnzahlKurse <= 37) && (this.abidaten.block1DefiziteGesamt <= 7)) || ((this.abidaten.block1AnzahlKurse >= 38) && (this.abidaten.block1DefiziteGesamt <= 8)));
+		return true;
 	}
 
 	transpilerCanonicalName(): string {

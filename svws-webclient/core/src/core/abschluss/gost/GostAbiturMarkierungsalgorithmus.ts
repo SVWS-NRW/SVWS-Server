@@ -169,16 +169,16 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 			return a.ergebnis.erfolgreich ? -1 : 1;
 		if (a.hatZulassung === !b.hatZulassung)
 			return a.hatZulassung ? -1 : 2;
-		let tmp : number = a.summeNormiert - b.summeNormiert;
+		let tmp : number = b.summeNormiert - a.summeNormiert;
 		if (tmp !== 0)
 			return tmp;
 		const aDefizite : number = a.defiziteLK + a.defiziteGK;
 		const bDefizite : number = b.defiziteLK + b.defiziteGK;
-		tmp = bDefizite - aDefizite;
+		tmp = aDefizite - bDefizite;
 		if (tmp !== 0)
 			return tmp;
-		tmp = b.defiziteLK - a.defiziteLK;
-		return 0;
+		tmp = a.defiziteLK - b.defiziteLK;
+		return a.summeKurse - b.summeKurse;
 	} };
 
 

@@ -26,10 +26,10 @@
 					<td class="svws-ui-td svws-divider text-center" :style="{ 'background-color': getFachfarbe(fach) }" role="cell">
 						<div class="w-full">{{ getKursart(fach) }}</div>
 					</td>
-					<template v-for="hj in GostHalbjahr.getQualifikationsphase()">
-						<td class="svws-ui-td text-center" :class="{ 
-							'svws-disabled': !hatBelegung(fach, hj), 
-							'svws-divider': (hj === GostHalbjahr.Q22), 
+					<template v-for="hj in GostHalbjahr.getQualifikationsphase()" :key="hj.id">
+						<td class="svws-ui-td text-center" :class="{
+							'svws-disabled': !hatBelegung(fach, hj),
+							'svws-divider': (hj === GostHalbjahr.Q22),
 							'bg-ui-brand-secondary font-bold': istGewertet(fach, hj)
 						}" role="cell">
 							<div class="w-full">{{ getNotenpunkte(fach, hj) }}</div>
@@ -65,7 +65,8 @@
 <script setup lang="ts">
 
 	import { computed } from 'vue';
-	import { AbiturFachbelegungHalbjahr, Fach, Fachgruppe, GostFach, GostKursart, List, Note, RGBFarbe } from "@core";
+	import type { AbiturFachbelegungHalbjahr, Fachgruppe, GostFach, List} from "@core";
+	import { Fach, GostKursart, Note, RGBFarbe } from "@core";
 	import { ArrayList, GostHalbjahr } from "@core";
 
 	import type { SchuelerAbiturZulassungProps } from "./SchuelerAbiturZulassungProps";
@@ -163,7 +164,7 @@
 		if (belegung === null)
 			return summe;
 		if (!props.berechnen)
-			return belegung.block1PunktSumme || 0;
+			return belegung.block1PunktSumme ?? 0;
 		const istLK = (belegung.letzteKursart === GostKursart.LK.kuerzel);
 		for (const hj of GostHalbjahr.getQualifikationsphase()) {
 			const hjbelegung = belegung.belegungen[hj.id];
