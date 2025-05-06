@@ -11235,7 +11235,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getAbteilungenByIdJahresAbschnitt für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/abteilungen/{idSchuljahresabschnitts : \d+}
+	 * Implementierung der GET-Methode getAbteilungenByIdJahresAbschnitt für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/abteilungen/{idSchuljahresabschnitt : \d+}
 	 *
 	 * Erstellt eine Liste aller in der Datenbank vorhanden Abteilungen für die angegebene Id des Schuljahresabschnittes unter Angabe der ID, der Bezeichnung, der ID des Schuljahresabschnitts, der Lehrer-ID des Abteilungsleiters, die Bezeichnung des Raums des Abteilungsleiters, die eMail-Adresse des Abteilungsleiters, die interne telefonische Durchwahl des Abteilungsleiters, einer Sortierreihenfolge und und die Zuordnungen der Klassen zu der Abteilung.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Abteilungen besitzt.
 	 *
@@ -11247,14 +11247,14 @@ export class ApiServer extends BaseApi {
 	 *   Code 404: Keine Abteilung-Einträge gefunden
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} idSchuljahresabschnitts - der Pfad-Parameter idSchuljahresabschnitts
+	 * @param {number} idSchuljahresabschnitt - der Pfad-Parameter idSchuljahresabschnitt
 	 *
 	 * @returns Eine Liste von Abteilung-Listen-Einträgen
 	 */
-	public async getAbteilungenByIdJahresAbschnitt(schema : string, idSchuljahresabschnitts : number) : Promise<List<Abteilung>> {
-		const path = "/db/{schema}/schule/abteilungen/{idSchuljahresabschnitts : \\d+}"
+	public async getAbteilungenByIdJahresAbschnitt(schema : string, idSchuljahresabschnitt : number) : Promise<List<Abteilung>> {
+		const path = "/db/{schema}/schule/abteilungen/{idSchuljahresabschnitt : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{idSchuljahresabschnitts\s*(:[^{}]+({[^{}]+})*)?}/g, idSchuljahresabschnitts.toString());
+			.replace(/{idSchuljahresabschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, idSchuljahresabschnitt.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Abteilung>();
@@ -11264,28 +11264,28 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode addAbteilung für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/abteilungen/{idSchuljahresabschnitts : \d+}
+	 * Implementierung der POST-Methode addAbteilung für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/abteilungen/{idSchuljahresabschnitt : \d+}
 	 *
 	 * Erstellt eine neue Abteilung und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Abteilungen besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Abteilung wurde erfolgreich hinzugefügt.
+	 *   Code 201: Die Abteilung wurde erfolgreich hinzugefügt.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: Abteilung
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
 	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
 	 *
-	 * @param {Abteilung} data - der Request-Body für die HTTP-Methode
+	 * @param {Partial<Abteilung>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} idSchuljahresabschnitts - der Pfad-Parameter idSchuljahresabschnitts
+	 * @param {number} idSchuljahresabschnitt - der Pfad-Parameter idSchuljahresabschnitt
 	 *
 	 * @returns Die Abteilung wurde erfolgreich hinzugefügt.
 	 */
-	public async addAbteilung(data : Abteilung, schema : string, idSchuljahresabschnitts : number) : Promise<Abteilung> {
-		const path = "/db/{schema}/schule/abteilungen/{idSchuljahresabschnitts : \\d+}"
+	public async addAbteilung(data : Partial<Abteilung>, schema : string, idSchuljahresabschnitt : number) : Promise<Abteilung> {
+		const path = "/db/{schema}/schule/abteilungen/{idSchuljahresabschnitt : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{idSchuljahresabschnitts\s*(:[^{}]+({[^{}]+})*)?}/g, idSchuljahresabschnitts.toString());
-		const body : string = Abteilung.transpilerToJSON(data);
+			.replace(/{idSchuljahresabschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, idSchuljahresabschnitt.toString());
+		const body : string = Abteilung.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return Abteilung.transpilerFromJSON(text);

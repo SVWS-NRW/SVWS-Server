@@ -23,6 +23,7 @@ export class RouteAbteilungenNeu extends RouteNode<any, RouteAbteilungen> {
 	public getProps(to: RouteLocationNormalized): AbteilungenNeuProps {
 		return {
 			manager: () => routeAbteilungen.data.manager,
+			add: routeAbteilungen.data.add,
 			goToDefaultView: routeAbteilungen.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),

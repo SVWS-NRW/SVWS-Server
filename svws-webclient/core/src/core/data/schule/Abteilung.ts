@@ -17,9 +17,9 @@ export class Abteilung extends JavaObject {
 	public bezeichnung : string = "";
 
 	/**
-	 * Die ID des Schuljahresabschnittes für den die Abteilung definiert ist.
+	 * Die ID des Schuljahresabschnitts für den die Abteilung definiert ist.
 	 */
-	public idSchuljahresabschnitts : number = 0;
+	public idSchuljahresabschnitt : number = 0;
 
 	/**
 	 * Die Lehrer-ID des Abteilungsleiters, sofern die Abteilung einen zugewiesen hat.
@@ -78,9 +78,9 @@ export class Abteilung extends JavaObject {
 		if (obj.bezeichnung === undefined)
 			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
-		if (obj.idSchuljahresabschnitts === undefined)
-			throw new Error('invalid json format, missing attribute idSchuljahresabschnitts');
-		result.idSchuljahresabschnitts = obj.idSchuljahresabschnitts;
+		if (obj.idSchuljahresabschnitt === undefined)
+			throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
+		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
 		result.idAbteilungsleiter = (obj.idAbteilungsleiter === undefined) ? null : obj.idAbteilungsleiter === null ? null : obj.idAbteilungsleiter;
 		result.raum = (obj.raum === undefined) ? null : obj.raum === null ? null : obj.raum;
 		result.email = (obj.email === undefined) ? null : obj.email === null ? null : obj.email;
@@ -100,7 +100,7 @@ export class Abteilung extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
-		result += '"idSchuljahresabschnitts" : ' + obj.idSchuljahresabschnitts.toString() + ',';
+		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt.toString() + ',';
 		result += '"idAbteilungsleiter" : ' + ((obj.idAbteilungsleiter === null) ? 'null' : obj.idAbteilungsleiter.toString()) + ',';
 		result += '"raum" : ' + ((obj.raum === null) ? 'null' : JSON.stringify(obj.raum)) + ',';
 		result += '"email" : ' + ((obj.email === null) ? 'null' : JSON.stringify(obj.email)) + ',';
@@ -127,8 +127,8 @@ export class Abteilung extends JavaObject {
 		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		}
-		if (obj.idSchuljahresabschnitts !== undefined) {
-			result += '"idSchuljahresabschnitts" : ' + obj.idSchuljahresabschnitts.toString() + ',';
+		if (obj.idSchuljahresabschnitt !== undefined) {
+			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt.toString() + ',';
 		}
 		if (obj.idAbteilungsleiter !== undefined) {
 			result += '"idAbteilungsleiter" : ' + ((obj.idAbteilungsleiter === null) ? 'null' : obj.idAbteilungsleiter.toString()) + ',';

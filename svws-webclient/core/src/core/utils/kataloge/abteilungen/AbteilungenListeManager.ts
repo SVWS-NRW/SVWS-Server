@@ -41,15 +41,15 @@ export class AbteilungenListeManager extends AuswahlManager<number, Abteilung, A
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
 	 *
-	 * @param schuljahresabschnitt    		der Schuljahresabschnitt, auf den sich die Klassenauswahl bezieht
-	 * @param schuljahresabschnitte         die Liste der Schuljahresabschnitte
-	 * @param schuljahresabschnittSchule	der Schuljahresabschnitt, in welchem sich die Schule aktuell befindet.
-	 * @param schulform     				die Schulform der Schule
-	 * @param abteilungen     				die Liste der Abteilungen
-	 * @param lehrer     					die Liste der Lehrer
+	 * @param idSchuljahresabschnittAuswahl    	  der Schuljahresabschnitt, auf den sich die Abteilungsauswahl bezieht
+	 * @param idSchuljahresabschnittSchule    der Schuljahresabschnitt, in welchem sich die Schule aktuell befindet.
+	 * @param schuljahresabschnitte           die Liste der Schuljahresabschnitte
+	 * @param schulform     				  die Schulform der Schule
+	 * @param abteilungen     				  die Liste der Abteilungen
+	 * @param lehrer     					  die Liste der Lehrer
 	 */
-	public constructor(schuljahresabschnitt : number, schuljahresabschnittSchule : number, schuljahresabschnitte : List<Schuljahresabschnitt>, schulform : Schulform | null, abteilungen : List<Abteilung>, lehrer : List<LehrerListeEintrag>) {
-		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, abteilungen, AbteilungenListeManager.comparator, AbteilungenListeManager._abteilungToId, AbteilungenListeManager._abteilungToId, Arrays.asList());
+	public constructor(idSchuljahresabschnittAuswahl : number, idSchuljahresabschnittSchule : number, schuljahresabschnitte : List<Schuljahresabschnitt>, schulform : Schulform | null, abteilungen : List<Abteilung>, lehrer : List<LehrerListeEintrag>) {
+		super(idSchuljahresabschnittAuswahl, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, abteilungen, AbteilungenListeManager.comparator, AbteilungenListeManager._abteilungToId, AbteilungenListeManager._abteilungToId, Arrays.asList());
 		this._lehrer = AbteilungenListeManager.mapLehrer(lehrer);
 	}
 

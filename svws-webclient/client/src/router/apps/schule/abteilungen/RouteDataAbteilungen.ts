@@ -53,4 +53,11 @@ export class RouteDataAbteilungen extends RouteDataAuswahl<AbteilungenListeManag
 		return `Abteilung ${abteilung?.bezeichnung ?? '???'} (ID: ${id}) wurde erfolgreich gelöscht.`;
 	}
 
+	add = async (data: Partial<Abteilung>) : Promise<void> => {
+		const abteilung = await api.server.addAbteilung(data, api.schema, api.schuleStammdaten.idSchuljahresabschnitt);
+		this.manager.liste.add(abteilung);
+		this.commit();
+		await this.gotoDefaultView(abteilung.id);
+	}
+
 }

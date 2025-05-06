@@ -53,12 +53,12 @@ public class APIAbteilungen {
 	 *
 	 * @param schema        			das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
 	 * @param request       			die Informationen zur HTTP-Anfrage
-	 * @param idSchuljahresabschnitts 	die Id des Schuljahresabschnitts für die Abteilung
+	 * @param idSchuljahresabschnitt 	die Id des Schuljahresabschnitts für die Abteilung
 	 *
 	 * @return              			die Liste der Abteilungen im Jahresabschnitts des Datenbankschemas
 	 */
 	@GET
-	@Path("/{idSchuljahresabschnitts : \\d+}")
+	@Path("/{idSchuljahresabschnitt : \\d+}")
 	@Operation(summary = "Gibt eine Übersicht von allen Abteilungen im abgefragten Jahresabschnittes zurück.",
 			description = "Erstellt eine Liste aller in der Datenbank vorhanden Abteilungen für die angegebene Id des Schuljahresabschnittes unter Angabe der ID, "
 					+ "der Bezeichnung, der ID des Schuljahresabschnitts, der Lehrer-ID des Abteilungsleiters, die Bezeichnung des Raums des "
@@ -70,9 +70,9 @@ public class APIAbteilungen {
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Abteilung.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Abteilungen anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Abteilung-Einträge gefunden")
-	public Response getAbteilungenByIdJahresAbschnitt(@PathParam("schema") final String schema, @PathParam("idSchuljahresabschnitts") final long idSchuljahresabschnitts,
+	public Response getAbteilungenByIdJahresAbschnitt(@PathParam("schema") final String schema, @PathParam("idSchuljahresabschnitt") final long idSchuljahresabschnitt,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn ->  new DataAbteilungen(conn, idSchuljahresabschnitts).getAllAsResponse(),
+		return DBBenutzerUtils.runWithTransaction(conn ->  new DataAbteilungen(conn, idSchuljahresabschnitt).getAllAsResponse(),
 				request, ServerMode.DEV, BenutzerKompetenz.SCHULBEZOGENE_DATEN_ANSEHEN);
 	}
 
@@ -81,26 +81,27 @@ public class APIAbteilungen {
 	 *
 	 * @param schema    					das Datenbankschema, auf welches der Create ausgeführt werden soll
 	 * @param is        					der Input-Stream mit den Daten der Abteilung
-	 * @param idSchuljahresabschnitts		die Id des Schuljahresabschnitts für die Abteilung
+	 * @param idSchuljahresabschnitt		die Id des Schuljahresabschnitts für die Abteilung
 	 * @param request   					die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit der neuen Abteilung
 	 */
 	@POST
-	@Path("/{idSchuljahresabschnitts : \\d+}")
+	@Path("/{idSchuljahresabschnitt : \\d+}")
 	@Operation(summary = "Erstellt eine neue Abteilung und gibt das zugehörige Objekt zurück.",
 			description = "Erstellt eine neue Abteilung und gibt das zugehörige Objekt zurück. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Abteilungen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Abteilung wurde erfolgreich hinzugefügt.",
+	@ApiResponse(responseCode = "201", description = "Die Abteilung wurde erfolgreich hinzugefügt.",
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Abteilung.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z. B. beim Datenbankzugriff)")
-	public Response addAbteilung(@PathParam("schema") final String schema, @PathParam("idSchuljahresabschnitts") final long idSchuljahresabschnitts,
-			@RequestBody(description = "Die Daten des zu erstellenden Abteilung ohne ID, welche automatisch generiert wird", required = true, content =
-			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Abteilung.class))) final InputStream is,
+	public Response addAbteilung(@PathParam("schema") final String schema, @PathParam("idSchuljahresabschnitt") final long idSchuljahresabschnitt,
+			@RequestBody(description = "Die Daten des zu erstellenden Abteilung ohne ID, welche automatisch generiert wird", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Abteilung.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataAbteilungen(conn, idSchuljahresabschnitts).addAsResponse(is), request, ServerMode.DEV, BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
+				conn -> new DataAbteilungen(conn, idSchuljahresabschnitt).addAsResponse(is), request, ServerMode.DEV,
+				BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
 	}
 
 	/**
@@ -130,7 +131,8 @@ public class APIAbteilungen {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Abteilung.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataAbteilungen(conn).patchAsResponse(id, is), request, ServerMode.DEV, BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
+				conn -> new DataAbteilungen(conn).patchAsResponse(id, is), request, ServerMode.DEV,
+				BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
 	}
 
 	/**
@@ -157,7 +159,7 @@ public class APIAbteilungen {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
 				conn -> new DataAbteilungen(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)), request, ServerMode.DEV,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
+				BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
 	}
 
 	/**
@@ -208,7 +210,8 @@ public class APIAbteilungen {
 			@Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = AbteilungKlassenzuordnung.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataAbteilungenKlassenzuordnungen(conn).addMultipleAsResponse(is), request, ServerMode.DEV, BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
+				conn -> new DataAbteilungenKlassenzuordnungen(conn).addMultipleAsResponse(is), request, ServerMode.DEV,
+				BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
 	}
 
 	/**

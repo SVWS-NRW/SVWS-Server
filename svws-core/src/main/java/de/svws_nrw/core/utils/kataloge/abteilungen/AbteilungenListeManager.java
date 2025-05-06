@@ -44,17 +44,17 @@ public final class AbteilungenListeManager extends AuswahlManager<Long, Abteilun
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
 	 *
-	 * @param schuljahresabschnitt    		der Schuljahresabschnitt, auf den sich die Klassenauswahl bezieht
-	 * @param schuljahresabschnitte         die Liste der Schuljahresabschnitte
-	 * @param schuljahresabschnittSchule	der Schuljahresabschnitt, in welchem sich die Schule aktuell befindet.
-	 * @param schulform     				die Schulform der Schule
-	 * @param abteilungen     				die Liste der Abteilungen
-	 * @param lehrer     					die Liste der Lehrer
+	 * @param idSchuljahresabschnittAuswahl    	  der Schuljahresabschnitt, auf den sich die Abteilungsauswahl bezieht
+	 * @param idSchuljahresabschnittSchule    der Schuljahresabschnitt, in welchem sich die Schule aktuell befindet.
+	 * @param schuljahresabschnitte           die Liste der Schuljahresabschnitte
+	 * @param schulform     				  die Schulform der Schule
+	 * @param abteilungen     				  die Liste der Abteilungen
+	 * @param lehrer     					  die Liste der Lehrer
 	 */
-	public AbteilungenListeManager(final long schuljahresabschnitt, final long schuljahresabschnittSchule,
+	public AbteilungenListeManager(final long idSchuljahresabschnittAuswahl, final long idSchuljahresabschnittSchule,
 			final @NotNull List<Schuljahresabschnitt> schuljahresabschnitte, final Schulform schulform,
 			final @NotNull List<Abteilung> abteilungen, final @NotNull List<LehrerListeEintrag> lehrer) {
-		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, abteilungen, AbteilungenListeManager.comparator,
+		super(idSchuljahresabschnittAuswahl, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, abteilungen, AbteilungenListeManager.comparator,
 				_abteilungToId, _abteilungToId, Arrays.asList());
 		this._lehrer = mapLehrer(lehrer);
 	}
