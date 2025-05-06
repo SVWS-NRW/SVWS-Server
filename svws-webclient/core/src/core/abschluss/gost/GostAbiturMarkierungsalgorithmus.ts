@@ -505,13 +505,24 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 		const fach : GostFach | null = this.getFach(belegung);
 		if (fach === null)
 			return false;
+		const fachbelegungen : List<AbiturFachbelegung> = this.manager.getFachbelegungByFachkuerzel(fach.kuerzel);
 		for (const hj of GostHalbjahr.getQualifikationsphase()) {
-			const hjBelegung : AbiturFachbelegungHalbjahr | null = belegung.belegungen[hj.id];
-			if (hjBelegung === null) {
-				this.ergebnis.log.add(this.logIndent + "  Im Halbjahr " + hj.kuerzel + " fehlt eine Belegung des Faches");
+			let current : AbiturFachbelegung | null = null;
+			for (const fb of fachbelegungen) {
+				if (fb.belegungen[hj.id] !== null) {
+					if (current !== null) {
+						this.ergebnis.log.add(this.logIndent + "  Die gleichzeitige Belegung eines Sachfaches bilingual und nicht-biligual ist nicht zulässig.");
+						return false;
+					}
+					current = fb;
+				}
+			}
+			if (current === null) {
+				this.ergebnis.log.add(this.logIndent + "  Im Halbjahr " + hj.kuerzel + " wurde für das Fach keine gültige Belegung gefunden.");
 				return false;
 			}
-			if ((hjBelegung.notenkuerzel === null) || (JavaString.isBlank(hjBelegung.notenkuerzel))) {
+			const hjBelegung : AbiturFachbelegungHalbjahr | null = current.belegungen[hj.id];
+			if ((hjBelegung === null) || (hjBelegung.notenkuerzel === null) || (JavaString.isBlank(hjBelegung.notenkuerzel))) {
 				this.ergebnis.log.add(this.logIndent + "  Im Halbjahr " + hj.kuerzel + " wurde für das Fach keine gültige Note erteilt.");
 				return false;
 			}
@@ -524,7 +535,7 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 				this.ergebnis.log.add(this.logIndent + "  Im Halbjahr " + hj.kuerzel + " wurde die Note ungenügend für das Fach erteilt. Somit ist keine Zulassung mehr möglich, da das Fach somit als nicht belegt gilt.");
 				return false;
 			}
-			if (!this.markiereHalbjahresbelegung(belegung, hj))
+			if (!this.markiereHalbjahresbelegung(current, hj))
 				return false;
 		}
 		return true;
@@ -703,21 +714,31 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 			newStates.addAll((new GostAbiturMarkierungsalgorithmus(this)).markiereZweitesSchwerpunktfachQ2());
 			return newStates;
 		}
-		const klassischeNaturwissenschaften : List<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
-		for (const klassischeNaturwissenschaft of this.manager.getRelevanteFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH_KLASSISCH))
-			if (this.manager.pruefeBelegung(klassischeNaturwissenschaft, ...GostHalbjahr.getQualifikationsphase()))
-				klassischeNaturwissenschaften.add(klassischeNaturwissenschaft);
-		if (klassischeNaturwissenschaften.isEmpty()) {
+		const belegungen : List<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
+		const bereitsGeprueft : JavaSet<string> = new HashSet<string>();
+		for (const belegung of this.manager.getRelevanteFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH_KLASSISCH)) {
+			const fach : GostFach | null = this.getFach(belegung);
+			if (fach === null)
+				continue;
+			if (bereitsGeprueft.contains(fach.kuerzel))
+				continue;
+			const tmpBelegung : List<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
+			tmpBelegung.add(belegung);
+			if (this.manager.pruefeBelegungExistiert(tmpBelegung, ...GostHalbjahr.getQualifikationsphase()))
+				belegungen.add(belegung);
+			bereitsGeprueft.add(fach.kuerzel);
+		}
+		if (belegungen.isEmpty()) {
 			this.ergebnis.log.add(this.logIndent + "  Konnte keine durchgängig belegte klassische Naturwissenschaft zur Markierung ermitteln.");
 			return newStates;
 		}
-		for (const klassischeNaturwissenschaft of klassischeNaturwissenschaften) {
-			const fach : GostFach | null = this.getFach(klassischeNaturwissenschaft);
+		for (const belegung of belegungen) {
+			const fach : GostFach | null = this.getFach(belegung);
 			if (fach === null)
 				continue;
 			const newState : GostAbiturMarkierungsalgorithmus = new GostAbiturMarkierungsalgorithmus(this);
 			this.ergebnis.log.add(this.logIndent + "  Fallunterscheidung: Markiere die vier Kurse für die klassische Naturwissenschaft " + fach.kuerzelAnzeige + "...");
-			if (!newState.markiereBelegungDurchgaengig(klassischeNaturwissenschaft))
+			if (!newState.markiereBelegungDurchgaengig(belegung))
 				continue;
 			newStates.addAll(newState.markiereZweitesSchwerpunktfachQ2());
 		}
@@ -955,9 +976,19 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 			return newStates;
 		}
 		const belegungen : List<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
-		for (const belegung of this.manager.getRelevanteFachbelegungen(GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH))
-			if (this.manager.pruefeBelegung(belegung, ...GostHalbjahr.getQualifikationsphase()))
+		const bereitsGeprueft : JavaSet<string> = new HashSet<string>();
+		for (const belegung of this.manager.getRelevanteFachbelegungen(GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH)) {
+			const fach : GostFach | null = this.getFach(belegung);
+			if (fach === null)
+				continue;
+			if (bereitsGeprueft.contains(fach.kuerzel))
+				continue;
+			const tmpBelegung : List<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
+			tmpBelegung.add(belegung);
+			if (this.manager.pruefeBelegungExistiert(tmpBelegung, ...GostHalbjahr.getQualifikationsphase()))
 				belegungen.add(belegung);
+			bereitsGeprueft.add(fach.kuerzel);
+		}
 		if (belegungen.isEmpty()) {
 			this.ergebnis.log.add(this.logIndent + "  Konnte keine durchgängig belegte Gesellschaftswissenschaft zur Markierung ermitteln.");
 			return newStates;

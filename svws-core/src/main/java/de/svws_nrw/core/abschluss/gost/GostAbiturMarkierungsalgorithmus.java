@@ -499,16 +499,30 @@ public final class GostAbiturMarkierungsalgorithmus {
 		final GostFach fach = getFach(belegung);
 		if (fach == null)
 			return false;
+		// Prüfe, auch ob die Fachbelegung auch zwischenzeitlich bilinguale und nicht bilinguale Kurse hat
+		final @NotNull List<AbiturFachbelegung> fachbelegungen = manager.getFachbelegungByFachkuerzel(fach.kuerzel);
+
 		// Iteriere durch alle Halbjahres-Belegungen
 		for (final GostHalbjahr hj : GostHalbjahr.getQualifikationsphase()) {
-			final AbiturFachbelegungHalbjahr hjBelegung = belegung.belegungen[hj.id];
-			// Prüfe ob die Halbjahresbelegung existiert
-			if (hjBelegung == null) {
-				ergebnis.log.add(logIndent + "  Im Halbjahr " + hj.kuerzel + " fehlt eine Belegung des Faches");
+			// Bestimme die Halbjahresbelegung so, dass auch ein Wechsel zwischen bilingual und nicht bilingual berücksichtigt wird
+			AbiturFachbelegung current = null;
+			for (final @NotNull AbiturFachbelegung fb : fachbelegungen) {
+				if (fb.belegungen[hj.id] != null) {
+					if (current != null) {
+						ergebnis.log.add(logIndent + "  Die gleichzeitige Belegung eines Sachfaches bilingual und nicht-biligual ist nicht zulässig.");
+						return false;
+					}
+					current = fb;
+				}
+			}
+
+			// Prüfe, ob eine Note gesetzt wurde
+			if (current == null) {
+				ergebnis.log.add(logIndent + "  Im Halbjahr " + hj.kuerzel + " wurde für das Fach keine gültige Belegung gefunden.");
 				return false;
 			}
-			// Prüfe, ob eine Note gesetzt wurde
-			if ((hjBelegung.notenkuerzel == null) || (hjBelegung.notenkuerzel.isBlank())) {
+			final AbiturFachbelegungHalbjahr hjBelegung = current.belegungen[hj.id];
+			if ((hjBelegung == null) || (hjBelegung.notenkuerzel == null) || (hjBelegung.notenkuerzel.isBlank())) {
 				ergebnis.log.add(logIndent + "  Im Halbjahr " + hj.kuerzel + " wurde für das Fach keine gültige Note erteilt.");
 				return false;
 			}
@@ -523,7 +537,7 @@ public final class GostAbiturMarkierungsalgorithmus {
 						+ " wurde die Note ungenügend für das Fach erteilt. Somit ist keine Zulassung mehr möglich, da das Fach somit als nicht belegt gilt.");
 				return false;
 			}
-			if (!markiereHalbjahresbelegung(belegung, hj))
+			if (!markiereHalbjahresbelegung(current, hj))
 				return false;
 		}
 		return true;
@@ -731,25 +745,34 @@ public final class GostAbiturMarkierungsalgorithmus {
 		}
 
 		// Bestimme die möglichen klassischen Naturwissenschaften ...
-		final @NotNull List<AbiturFachbelegung> klassischeNaturwissenschaften = new ArrayList<>();
-		for (final @NotNull AbiturFachbelegung klassischeNaturwissenschaft : manager
-				.getRelevanteFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH_KLASSISCH))
-			if (manager.pruefeBelegung(klassischeNaturwissenschaft, GostHalbjahr.getQualifikationsphase()))
-				klassischeNaturwissenschaften.add(klassischeNaturwissenschaft);
+		final @NotNull List<AbiturFachbelegung> belegungen = new ArrayList<>();
+		final @NotNull Set<String> bereitsGeprueft = new HashSet<>(); // Wird ggf. bei bilingualen Sachfächern benötigt, um doppelte Erkennung zu vermeiden
+		for (final @NotNull AbiturFachbelegung belegung : manager.getRelevanteFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH_KLASSISCH)) {
+			final GostFach fach = getFach(belegung);
+			if (fach == null)
+				continue;
+			if (bereitsGeprueft.contains(fach.kuerzel))
+				continue;
+			final @NotNull List<AbiturFachbelegung> tmpBelegung = new ArrayList<>(); // Wird ggf. benötigt, um die Abwahl eines bilingualen Faches zu erkennen
+			tmpBelegung.add(belegung);
+			if (manager.pruefeBelegungExistiert(tmpBelegung, GostHalbjahr.getQualifikationsphase()))
+				belegungen.add(belegung);
+			bereitsGeprueft.add(fach.kuerzel);
+		}
 		// ... prüfe die einzelnen Markierungsmöglichkeiten und erzeuge dafür weitere Instanzen des Algorithmus mit getrennten States
-		if (klassischeNaturwissenschaften.isEmpty()) {
+		if (belegungen.isEmpty()) {
 			ergebnis.log.add(logIndent + "  Konnte keine durchgängig belegte klassische Naturwissenschaft zur Markierung ermitteln.");
 			return newStates;
 		}
-		for (final @NotNull AbiturFachbelegung klassischeNaturwissenschaft : klassischeNaturwissenschaften) {
-			final GostFach fach = getFach(klassischeNaturwissenschaft);
+		for (final @NotNull AbiturFachbelegung belegung : belegungen) {
+			final GostFach fach = getFach(belegung);
 			if (fach == null)
 				continue;
 			// Erzeuge einen neuen State, bei welchem die Belegung durchgängig markiert wird
 			final @NotNull GostAbiturMarkierungsalgorithmus newState = new GostAbiturMarkierungsalgorithmus(this);
 
 			ergebnis.log.add(logIndent + "  Fallunterscheidung: Markiere die vier Kurse für die klassische Naturwissenschaft " + fach.kuerzelAnzeige + "...");
-			if (!newState.markiereBelegungDurchgaengig(klassischeNaturwissenschaft))
+			if (!newState.markiereBelegungDurchgaengig(belegung))
 				continue;
 
 			newStates.addAll(newState.markiereZweitesSchwerpunktfachQ2());
@@ -1052,9 +1075,19 @@ public final class GostAbiturMarkierungsalgorithmus {
 
 		// Es muss noch eine Gesellschaftswissenschaft markiert werden (z.B. Religion als Abiturfach)
 		final @NotNull List<AbiturFachbelegung> belegungen = new ArrayList<>();
-		for (final @NotNull AbiturFachbelegung belegung : manager.getRelevanteFachbelegungen(GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH))
-			if (manager.pruefeBelegung(belegung, GostHalbjahr.getQualifikationsphase()))
+		final @NotNull Set<String> bereitsGeprueft = new HashSet<>(); // Wird ggf. bei bilingualen Sachfächern benötigt, um doppelte Erkennung zu vermeiden
+		for (final @NotNull AbiturFachbelegung belegung : manager.getRelevanteFachbelegungen(GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH)) {
+			final GostFach fach = getFach(belegung);
+			if (fach == null)
+				continue;
+			if (bereitsGeprueft.contains(fach.kuerzel))
+				continue;
+			final @NotNull List<AbiturFachbelegung> tmpBelegung = new ArrayList<>(); // Wird ggf. benötigt, um die Abwahl eines bilingualen Faches zu erkennen
+			tmpBelegung.add(belegung);
+			if (manager.pruefeBelegungExistiert(tmpBelegung, GostHalbjahr.getQualifikationsphase()))
 				belegungen.add(belegung);
+			bereitsGeprueft.add(fach.kuerzel);
+		}
 		// ... prüfe die einzelnen Markierungsmöglichkeiten und erzeuge dafür weitere Instanzen des Algorithmus mit getrennten States
 		if (belegungen.isEmpty()) {
 			ergebnis.log.add(logIndent + "  Konnte keine durchgängig belegte Gesellschaftswissenschaft zur Markierung ermitteln.");
