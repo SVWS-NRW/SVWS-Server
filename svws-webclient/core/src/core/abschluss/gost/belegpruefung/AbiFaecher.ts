@@ -154,6 +154,9 @@ export class AbiFaecher extends GostBelegpruefung {
 					this.addFehler(GostBelegungsfehler.ABI_24);
 					break;
 				}
+				default: {
+					break;
+				}
 			}
 		}
 	}

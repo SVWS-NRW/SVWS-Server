@@ -27,13 +27,13 @@ import jakarta.validation.constraints.NotNull;
 public final class Projektkurse extends GostBelegpruefung {
 
 	/// Eine Vektor mit den Projektfächern, die belegt wurden. Dies sollte im Regelfall nur ein Fach sein, können aber ggf. bei einer gültigen Belegung bis zu drei Fächer sein
-	private ArrayList<AbiturFachbelegung> projektkursBelegung;
+	private final @NotNull ArrayList<AbiturFachbelegung> projektkursBelegung = new ArrayList<>();
 
 	/// falls ein Projektkurs gültig gewählt wurde: Der Projektkurs, sonst: null
 	private AbiturFachbelegung projektkurs;
 
 	/// ein Vektor, welcher die anrechenbaren Halbjahre eines gültig angewählten Projektkurses beinhaltet
-	private ArrayList<GostHalbjahr> projektkursHalbjahre;
+	private final @NotNull ArrayList<GostHalbjahr> projektkursHalbjahre = new ArrayList<>();
 
 
 	/**
@@ -50,8 +50,6 @@ public final class Projektkurse extends GostBelegpruefung {
 	@Override
 	protected void init() {
 		projektkurs = null;
-		projektkursBelegung = new ArrayList<>();
-		projektkursHalbjahre = new ArrayList<>();
 
 		// Bestimme die belegten Projektfächer
 		final @NotNull List<AbiturFachbelegung> alleFachbelegungen = manager.getRelevanteFachbelegungen();
@@ -94,8 +92,6 @@ public final class Projektkurse extends GostBelegpruefung {
 	 * Prüft, ob ein Projektfach in der EF belegt wurde. Eine solche Belegung ist nicht zulässig.
 	 */
 	private void pruefeBelegungEF() {
-		if (projektkursBelegung == null)
-			return;
 		for (final AbiturFachbelegung fachbelegung : projektkursBelegung) {
 			for (final AbiturFachbelegungHalbjahr belegungHalbjahr : fachbelegung.belegungen) {
 				if (belegungHalbjahr == null)
@@ -113,9 +109,6 @@ public final class Projektkurse extends GostBelegpruefung {
 	 * auch nur genau ein anrechenbarer Projektkurs existieren!
 	 */
 	private void pruefeAufAnrechenbarenProjektkurs() {
-		if (projektkursBelegung == null)
-			return;
-
 		// Prüfe ggf. auch mehrere Projektfächer, da abgebrochene Einzelbelegungen vorliegen können
 		for (final AbiturFachbelegung fachbelegung : projektkursBelegung) {
 			// Prüfe die einzelnen Halbjahresbelegungen der Projektfächer
@@ -149,8 +142,6 @@ public final class Projektkurse extends GostBelegpruefung {
 
 				// Speichere den anrechenbaren Projektkurs für spätere Prüfungen
 				projektkurs = fachbelegung;
-				if (projektkursHalbjahre == null)
-					projektkursHalbjahre = new ArrayList<>();
 				projektkursHalbjahre.add(halbjahr);
 				projektkursHalbjahre.add(nextHalbjahr);
 				break;
@@ -167,9 +158,6 @@ public final class Projektkurse extends GostBelegpruefung {
 	 * einem Halbjahr nicht mehrere Projektfächer belegt sein.
 	 */
 	private void pruefeBelegungHalbjahre() {
-		if (projektkursBelegung == null)
-			return;
-
 		// Erstelle eine Menge zur Prüfung, ob in einem Halbjahr mehr als ein Projektkurs belegt wurde.
 		final @NotNull HashSet<GostHalbjahr> pjkHalbjahre = new HashSet<>();
 
@@ -216,9 +204,6 @@ public final class Projektkurse extends GostBelegpruefung {
 	 * Prüft die Belegung der Leitfächer
 	 */
 	private void pruefeBelegungLeitfaecher() {
-		if (projektkursBelegung == null)
-			return;
-
 		for (final AbiturFachbelegung fachbelegung : projektkursBelegung) {
 			final GostFach fach = manager.getFach(fachbelegung);
 			if (fach == null)
@@ -368,5 +353,15 @@ public final class Projektkurse extends GostBelegpruefung {
 		return 2;
 	}
 
+
+	/**
+	 * Gibt die beiden anrechenbaren Halbjahre der Projektkursbelegung zurück, sofern
+	 * der Kurs anrechenbar ist.
+	 *
+	 * @return die beiden Halbjahre der Projektkursbelegung
+	 */
+	public @NotNull List<GostHalbjahr> getAnrechenbareHalbjahre() {
+		return this.projektkursHalbjahre;
+	}
 
 }

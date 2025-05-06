@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import de.svws_nrw.asd.data.schueler.Sprachendaten;
 import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.asd.types.fach.Fach;
@@ -120,6 +118,8 @@ public class AbiturdatenManager {
 	/** Gibt an, ob die Belegprüfung insgesamt erfolgreich war oder nicht. */
 	private boolean belegpruefungErfolgreich = false;
 
+	/** Das Ergebnis des Markierungsalgorithmus */
+	private @NotNull GostAbiturMarkierungsalgorithmusErgebnis markierungsErgebnis = new GostAbiturMarkierungsalgorithmusErgebnis();
 
 
 	/**
@@ -238,11 +238,21 @@ public class AbiturdatenManager {
 		if (abidaten == null)
 			return;
 		initMapFachbereiche();
+		// Führe die Belegprüfung durch
 		belegpruefungen = getPruefungen(pruefungsArt);
 		for (final @NotNull GostBelegpruefung belegpruefung : belegpruefungen)
 			belegpruefung.pruefe();
 		belegpruefungsfehler = GostBelegpruefung.getBelegungsfehlerAlle(belegpruefungen);
 		belegpruefungErfolgreich = GostBelegpruefung.istErfolgreich(belegpruefungsfehler);
+		// Führe ggf. den Markierungsalgorithmus durch
+		if (istBewertetQualifikationsPhase()) {
+			if ((abidaten.abiturjahr >= 2029) && (this.servermode == ServerMode.DEV)) {
+				// Führe ggf. den experimentellen Code aus
+				markierungsErgebnis = Abi29GostAbiturMarkierungsalgorithmus.berechne(this, belegpruefungen);
+			} else {
+				markierungsErgebnis = GostAbiturMarkierungsalgorithmus.berechne(this, belegpruefungen);
+			}
+		}
 	}
 
 
@@ -321,6 +331,19 @@ public class AbiturdatenManager {
 	 */
 	public boolean istBewertet(final @NotNull GostHalbjahr halbjahr) {
 		return abidaten.bewertetesHalbjahr[halbjahr.id];
+	}
+
+
+	/**
+	 * Gibt zurück, ob alle Halbjahr der Qualifikationsphase bewertet sind oder nicht.
+	 *
+	 * @return true, falls alle Halbjahre bewertet sind, und ansonsten false
+	 */
+	public boolean istBewertetQualifikationsPhase() {
+		for (final @NotNull GostHalbjahr hj : GostHalbjahr.getQualifikationsphase())
+			if (!istBewertet(hj))
+				return false;
+		return true;
 	}
 
 
@@ -499,6 +522,31 @@ public class AbiturdatenManager {
 		int anzahl = 0;
 		for (int i = 0; i < GostHalbjahr.maxHalbjahre; i++) {
 			final AbiturFachbelegungHalbjahr belegungHalbjahr = fachbelegung.belegungen[i];
+			if ((belegungHalbjahr != null) && (!istNullPunkteBelegungInQPhase(belegungHalbjahr)))
+				anzahl++;
+		}
+		return anzahl;
+	}
+
+
+	/**
+	 * Zählt die Anzahl der Halbjahresbelegungen für die angegebene Fachbelegung in den angegeben Halbjahren.
+	 * Ist die Fachbelegung null, so wird 0 zurückgegeben. Wird bei einer gültigen Fachbelegung kein Halbjahr
+	 * angegeben, so wird ebenfalls 0 zurückgegeben.
+	 *
+	 * @param fachbelegung   die Fachbelegung
+	 * @param halbjahre      die Halbjahre
+	 *
+	 * @return die Anzahl der Belegungen in den Halbjahren
+	 */
+	public int zaehleHalbjahresbelegungen(final AbiturFachbelegung fachbelegung, final @NotNull GostHalbjahr... halbjahre) {
+		if (fachbelegung == null)
+			return 0;
+		if (halbjahre.length == 0)
+			return 0;
+		int anzahl = 0;
+		for (final @NotNull GostHalbjahr halbjahr : halbjahre) {
+			final AbiturFachbelegungHalbjahr belegungHalbjahr = fachbelegung.belegungen[halbjahr.id];
 			if ((belegungHalbjahr != null) && (!istNullPunkteBelegungInQPhase(belegungHalbjahr)))
 				anzahl++;
 		}
@@ -2102,7 +2150,6 @@ public class AbiturdatenManager {
 	 *
 	 * @return das Ergebnis der Belegprüfung
 	 */
-	@JsonIgnore
 	public @NotNull GostBelegpruefungErgebnis getBelegpruefungErgebnis() {
 		final @NotNull GostBelegpruefungErgebnis ergebnis = new GostBelegpruefungErgebnis();
 		ergebnis.erfolgreich = belegpruefungErfolgreich;
@@ -2227,6 +2274,17 @@ public class AbiturdatenManager {
 		}
 		final @NotNull KurszahlenUndWochenstunden kuw = getKurszahlenUndWochenstunden();
 		return kuw.getBlockIAnzahlAnrechenbar();
+	}
+
+
+	/**
+	 * Gibt das Ergebnis des Markierungsalgorithmus zurück. Dieses enthält, ob der Algorithmus erfolgreich gewesen ist
+	 * und im Erfolgsfall ein Liste für die einzelnen Belegungen der Qualifikationsphase, ob diese markiert wurden.
+	 *
+	 * @return das Ergebnis der Belegprüfung
+	 */
+	public @NotNull GostAbiturMarkierungsalgorithmusErgebnis getErgebnisMarkierungsalgorithmus() {
+		return this.markierungsErgebnis;
 	}
 
 }

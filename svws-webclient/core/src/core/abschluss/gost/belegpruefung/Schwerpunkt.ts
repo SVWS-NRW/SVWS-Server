@@ -8,6 +8,10 @@ import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegun
 
 export class Schwerpunkt extends GostBelegpruefung {
 
+	private _hatSchwerpunktFremdsprachen : boolean = false;
+
+	private _hatSchwerpunktNaturwissenschaften : boolean = false;
+
 
 	/**
 	 * Erstellt eine neue Belegprüfung für den Schwerpunkt.
@@ -28,13 +32,15 @@ export class Schwerpunkt extends GostBelegpruefung {
 	protected pruefeEF1() : void {
 		const pruefung_sprachen : Fremdsprachen = (cast_de_svws_nrw_core_abschluss_gost_belegpruefung_Fremdsprachen(this.pruefungen_vorher[0]));
 		const pruefung_nawi : Naturwissenschaften = (cast_de_svws_nrw_core_abschluss_gost_belegpruefung_Naturwissenschaften(this.pruefungen_vorher[1]));
-		if ((pruefung_sprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendSchritflichBelegt() >= 1))
+		this._hatSchwerpunktFremdsprachen = (pruefung_sprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2);
+		this._hatSchwerpunktNaturwissenschaften = (pruefung_nawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendSchritflichBelegt() >= 1);
+		if (this._hatSchwerpunktFremdsprachen && (this._hatSchwerpunktNaturwissenschaften))
 			return;
-		if (pruefung_sprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2) {
+		if (this._hatSchwerpunktFremdsprachen) {
 			this.addFehler(GostBelegungsfehler.NW_FS_12_INFO);
 			return;
 		}
-		if ((pruefung_nawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendSchritflichBelegt() >= 1)) {
+		if (this._hatSchwerpunktNaturwissenschaften) {
 			this.addFehler(GostBelegungsfehler.NW_FS_13_INFO);
 			return;
 		}
@@ -44,17 +50,37 @@ export class Schwerpunkt extends GostBelegpruefung {
 	protected pruefeGesamt() : void {
 		const pruefung_sprachen : Fremdsprachen = (cast_de_svws_nrw_core_abschluss_gost_belegpruefung_Fremdsprachen(this.pruefungen_vorher[0]));
 		const pruefung_nawi : Naturwissenschaften = (cast_de_svws_nrw_core_abschluss_gost_belegpruefung_Naturwissenschaften(this.pruefungen_vorher[1]));
-		if ((pruefung_sprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendSchritflichBelegt() >= 1))
+		this._hatSchwerpunktFremdsprachen = (pruefung_sprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2);
+		this._hatSchwerpunktNaturwissenschaften = (pruefung_nawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendSchritflichBelegt() >= 1);
+		if (this._hatSchwerpunktFremdsprachen && this._hatSchwerpunktNaturwissenschaften)
 			return;
-		if (pruefung_sprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2) {
+		if (this._hatSchwerpunktFremdsprachen) {
 			this.addFehler(GostBelegungsfehler.NW_FS_12_INFO);
 			return;
 		}
-		if ((pruefung_nawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendSchritflichBelegt() >= 1)) {
+		if (this._hatSchwerpunktNaturwissenschaften) {
 			this.addFehler(GostBelegungsfehler.NW_FS_13_INFO);
 			return;
 		}
 		this.addFehler(GostBelegungsfehler.NW_FS_10);
+	}
+
+	/**
+	 * Gibt an, ob ein fremsprachlicher Schwerpunkt vorliegt oder nicht.
+	 *
+	 * @return true, wenn ein fremdsprachlicher Schwerpunkt vorliegt
+	 */
+	public hatSchwerpunktFremdsprachen() : boolean {
+		return this._hatSchwerpunktFremdsprachen;
+	}
+
+	/**
+	 * Gibt an, ob ein naturwissenschaftlicher Schwerpunkt vorliegt oder nicht.
+	 *
+	 * @return true, wenn ein naturwissenschaftlicher Schwerpunkt vorliegt
+	 */
+	public hatSchwerpunktNaturwissenschaften() : boolean {
+		return this._hatSchwerpunktNaturwissenschaften;
 	}
 
 	transpilerCanonicalName(): string {

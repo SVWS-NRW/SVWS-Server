@@ -190,6 +190,8 @@ public final class AbiFaecher extends GostBelegpruefung {
 				case AB4:
 					addFehler(GostBelegungsfehler.ABI_24);
 					break;
+				default: // TODO Fehlermeldung fünftes Fach unzulässig
+					break;
 			}
 		}
 	}
