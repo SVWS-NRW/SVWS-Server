@@ -178,7 +178,14 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 		if (tmp !== 0)
 			return tmp;
 		tmp = a.defiziteLK - b.defiziteLK;
-		return a.summeKurse - b.summeKurse;
+		if (tmp !== 0)
+			return tmp;
+		tmp = a.summeKurse - b.summeKurse;
+		if (tmp !== 0)
+			return tmp;
+		const aPjk : number | null = a.anzahlBelegungen.get(GostFachbereich.PROJEKTKURSE);
+		const bPjk : number | null = b.anzahlBelegungen.get(GostFachbereich.PROJEKTKURSE);
+		return ((aPjk === null) ? 0 : aPjk) - ((bPjk === null) ? 0 : bPjk);
 	} };
 
 
@@ -481,6 +488,7 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 		this.increaseBelegungInFachbereich(GostFachbereich.NATURWISSENSCHAFTLICH_KLASSISCH, fach);
 		this.increaseBelegungInFachbereich(GostFachbereich.NATURWISSENSCHAFTLICH_NEU_EINSETZEND, fach);
 		this.increaseBelegungInFachbereich(GostFachbereich.NATURWISSENSCHAFTLICH, fach);
+		this.increaseBelegungInFachbereich(GostFachbereich.PROJEKTKURSE, fach);
 		const markierung : GostAbiturMarkierungsalgorithmusMarkierung = new GostAbiturMarkierungsalgorithmusMarkierung();
 		markierung.idFach = belegung.fachID;
 		markierung.idHalbjahr = hj.id;

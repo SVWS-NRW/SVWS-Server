@@ -134,7 +134,14 @@ public final class GostAbiturMarkierungsalgorithmus {
 				if (tmp != 0)
 					return tmp;
 				tmp = a.defiziteLK - b.defiziteLK;
-				return a.summeKurse - b.summeKurse;
+				if (tmp != 0)
+					return tmp;
+				tmp = a.summeKurse - b.summeKurse;
+				if (tmp != 0)
+					return tmp;
+				final Integer aPjk = a.anzahlBelegungen.get(GostFachbereich.PROJEKTKURSE);
+				final Integer bPjk = b.anzahlBelegungen.get(GostFachbereich.PROJEKTKURSE);
+				return ((aPjk == null) ? 0 : aPjk) - ((bPjk == null) ? 0 : bPjk);
 			};
 
 	/**
@@ -473,6 +480,7 @@ public final class GostAbiturMarkierungsalgorithmus {
 		increaseBelegungInFachbereich(GostFachbereich.NATURWISSENSCHAFTLICH_KLASSISCH, fach);
 		increaseBelegungInFachbereich(GostFachbereich.NATURWISSENSCHAFTLICH_NEU_EINSETZEND, fach);
 		increaseBelegungInFachbereich(GostFachbereich.NATURWISSENSCHAFTLICH, fach);
+		increaseBelegungInFachbereich(GostFachbereich.PROJEKTKURSE, fach);
 		// Setze die Markierung
 		final @NotNull GostAbiturMarkierungsalgorithmusMarkierung markierung = new GostAbiturMarkierungsalgorithmusMarkierung();
 		markierung.idFach = belegung.fachID;
