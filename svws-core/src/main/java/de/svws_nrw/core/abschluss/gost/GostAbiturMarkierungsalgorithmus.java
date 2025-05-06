@@ -789,6 +789,14 @@ public final class GostAbiturMarkierungsalgorithmus {
 			return newStates;
 		}
 
+		// Prüfe, ob bereits zwei Naturwissenschaften markiert wurden - z.B. wenn eine nicht-klassische Naturwissenschaft im Abiturbereich gewählt wurde
+		final Integer anzahlNW = this.anzahlBelegungen.computeIfAbsent(GostFachbereich.NATURWISSENSCHAFTLICH, k -> 0);
+		if ((anzahlNW != null) && (anzahlNW >= 8)) {
+			ergebnis.log.add(logIndent + "  Es wurden bereits zwei Naturwissenschaften markiert.");
+			newStates.addAll((new GostAbiturMarkierungsalgorithmus(this)).markiereKunstMusikOderErsatz());
+			return newStates;
+		}
+
 		final boolean hatSchwerpunktFremdsprachen = 2 <= manager.zaehleBelegungInHalbjahren(manager.getFachbelegungen(GostFachbereich.FREMDSPRACHE), GostHalbjahr.Q22);
 		final boolean hatSchwerpunktNaturwissenschaften = 2 <= manager.zaehleBelegungInHalbjahren(manager.getFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH), GostHalbjahr.Q22);
 		// Bestimme alle Fachbelegungen, die noch möglich sind: Fremdsprachen, Naturwissenschaften und bilinguale Sachfächer

@@ -748,6 +748,12 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 			newStates.addAll((new GostAbiturMarkierungsalgorithmus(this)).markiereKunstMusikOderErsatz());
 			return newStates;
 		}
+		const anzahlNW : number | null = this.anzahlBelegungen.computeIfAbsent(GostFachbereich.NATURWISSENSCHAFTLICH, { apply : (k: GostFachbereich | null) => 0 });
+		if ((anzahlNW !== null) && (anzahlNW >= 8)) {
+			this.ergebnis.log.add(this.logIndent + "  Es wurden bereits zwei Naturwissenschaften markiert.");
+			newStates.addAll((new GostAbiturMarkierungsalgorithmus(this)).markiereKunstMusikOderErsatz());
+			return newStates;
+		}
 		const hatSchwerpunktFremdsprachen : boolean = 2 <= this.manager.zaehleBelegungInHalbjahren(this.manager.getFachbelegungen(GostFachbereich.FREMDSPRACHE), GostHalbjahr.Q22);
 		const hatSchwerpunktNaturwissenschaften : boolean = 2 <= this.manager.zaehleBelegungInHalbjahren(this.manager.getFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH), GostHalbjahr.Q22);
 		const belegungen : JavaSet<AbiturFachbelegung> = new HashSet<AbiturFachbelegung>();
