@@ -38,7 +38,7 @@ task copyArtifacts(type: Copy) {
  Task führt ein Docker-Runner-17-Build per docker durch.
  */
 task dockerRunner17BuildTag(type: Exec) {
-	group "docker"
+	group = "docker"
 	workingDir "$projectDir/dockerrunner/17"
 	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
 		commandLine 'cmd', '/c', 'docker build . -t svwsnrw/dockerrunner:17'
@@ -50,7 +50,7 @@ task dockerRunner17BuildTag(type: Exec) {
  Task führt ein Docker-Runner-17 push auf dockerhub durch
  */
 task dockerRunner17Push(type: Exec) {
-	group "docker"
+	group = "docker"
 	dependsOn dockerRunner17BuildTag
 	workingDir "$projectDir/dockerrunner/17"
 	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
@@ -66,7 +66,7 @@ task dockerRunner17Push(type: Exec) {
  Task führt ein Docker-Runner-21-Build per docker durch.
  */
 task dockerRunner21BuildTag(type: Exec) {
-	group "docker"
+	group = "docker"
 	workingDir "$projectDir/dockerrunner/21"
 	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
 		commandLine 'cmd', '/c', 'docker build . -t svwsnrw/dockerrunner:21'
@@ -78,7 +78,7 @@ task dockerRunner21BuildTag(type: Exec) {
  Task führt ein Docker-Runner-21 push auf dockerhub durch
  */
 task dockerRunner21Push(type: Exec) {
-	group "docker"
+	group = "docker"
 	dependsOn dockerRunner21BuildTag
 	workingDir "$projectDir/dockerrunner/21"
 	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
@@ -96,7 +96,7 @@ task dockerRunner21Push(type: Exec) {
  Task führt ein Docker-Build per docker durch.
  */
 task dockerBuildTag(type: Exec) {
-	group "docker"
+	group = "docker"
 	dependsOn copyArtifacts
 	workingDir "$projectDir/svws"
 	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
@@ -110,7 +110,7 @@ task dockerBuildTag(type: Exec) {
  Task führt ein Docker-Build per docker durch.
  */
 task dockerBuildLatestTag(type: Exec) {
-	group "docker"
+	group = "docker"
 	dependsOn dockerBuildTag
 	workingDir "$projectDir/svws"
 	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
@@ -124,7 +124,7 @@ task dockerBuildLatestTag(type: Exec) {
  Task führt ein Docker-Push zu dockerhub durch.
  */
 task dockerPushDockerhub(type: Exec) {
-	group "docker"
+	group = "docker"
 	dependsOn dockerBuildLatestTag
 	workingDir "$projectDir/svws"
 	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
@@ -140,7 +140,7 @@ task dockerPushDockerhub(type: Exec) {
  Task führt ein Docker-Push zu dockerhub durch.
  */
 task dockerPushLatestDockerhub(type: Exec) {
-	group "docker"
+	group = "docker"
 	dependsOn dockerPushDockerhub
 	workingDir "$projectDir/svws"
 	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
@@ -156,7 +156,7 @@ task dockerPushLatestDockerhub(type: Exec) {
  Task führt ein Docker-Push zu dockerhub durch.
  */
 task dockerRunnerPushLatestDockerhub(type: Exec) {
-	group "docker"
+	group = "docker"
 	workingDir "$projectDir/dockerrunner"
 	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
 		commandLine 'cmd', '/c', 'docker login'
@@ -175,7 +175,7 @@ task dockerRunnerPushLatestDockerhub(type: Exec) {
 
 task dockerPushAllDockerhub() {
 	dependsOn('dockerPushLatestDockerhub')
-	group "Publishing"
+	group = "Publishing"
 }
 
 

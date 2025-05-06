@@ -3,13 +3,13 @@ plugins {
 }
 
 task assembleClient(type: NpmRun) {
-	dependsOn rootProject.npmPrepare 
+	dependsOn rootProject.npmPrepare
 	dependsOn project(':svws-webclient:core').tasks.assemble
 	dependsOn project(':svws-webclient:ui').tasks.assemble
-	group "build"
+	group = "build"
 	args = ['build']
-	inputs.files fileTree("$rootDir/svws-webclient/core").matching { exclude "build", "dist" }, 
-		fileTree("$rootDir/svws-webclient/ui").matching { exclude "build", "dist", ".histoire" }, 
+	inputs.files fileTree("$rootDir/svws-webclient/core").matching { exclude "build", "dist" },
+		fileTree("$rootDir/svws-webclient/ui").matching { exclude "build", "dist", ".histoire" },
 		fileTree("$projectDir").matching { exclude "build" }
 	outputs.dir file("$buildDir/output")
 }
@@ -33,7 +33,7 @@ clean.dependsOn cleanClient
 
 task publishNexusClient(type: NpmPublish) {
 	dependsOn build
-	group "publishing"
+	group = "publishing"
 	npmrc = "$rootDir/.npmrc.nexus"
 	repository = "https://artifactory.svws-nrw.de/repository/npm-private/"
 	actor = project.ext.getNexusActor()
@@ -43,7 +43,7 @@ task publishNexusClient(type: NpmPublish) {
 
 task publishNpmClient(type: NpmPublish) {
 	dependsOn build
-	group "publishing"
+	group = "publishing"
 	npmrc = "$rootDir/.npmrc.npm"
 	repository = "https://registry.npmjs.org/"
 	token = project.ext.getNpmToken()

@@ -4,7 +4,7 @@ plugins {
 
 task assembleUi(type: NpmRun) {
 	dependsOn rootProject.npmPrepare, project(':svws-webclient:core').tasks.assemble
-	group "build"
+	group = "build"
 	args = ['build']
 	inputs.files fileTree("$projectDir").matching { exclude "build", "dist", ".histoire" }
 	outputs.dir file("$projectDir/dist")
@@ -12,7 +12,7 @@ task assembleUi(type: NpmRun) {
 
 task assembleUiHistoire(type: NpmRun) {
 	dependsOn assembleUi
-	group "build"
+	group = "build"
 	args = ['story:build']
 	inputs.files fileTree("$projectDir").matching { exclude "build", "dist", ".histoire" }
 	outputs.dir file("$projectDir/.histoire")
@@ -29,7 +29,7 @@ clean.dependsOn cleanUi
 
 task publishNexusUi(type: NpmPublish) {
 	dependsOn build
-	group "publishing"
+	group = "publishing"
 	npmrc = "$rootDir/.npmrc.nexus"
 	repository = "https://artifactory.svws-nrw.de/repository/npm-private/"
 	actor = project.ext.getNexusActor()
@@ -39,7 +39,7 @@ task publishNexusUi(type: NpmPublish) {
 
 task publishNpmUi(type: NpmPublish) {
 	dependsOn build
-	group "publishing"
+	group = "publishing"
 	npmrc = "$rootDir/.npmrc.npm"
 	repository = "https://registry.npmjs.org/"
 	token = project.ext.getNpmToken()
@@ -49,7 +49,7 @@ task publishNpmUi(type: NpmPublish) {
 
 task testUi(type: NpmRun) {
 	dependsOn ':svws-webclient:ui:assemble'
-	group "testing"
+	group = "testing"
 	inputs.files fileTree(dir: "$projectDir/src/components/", includes: ["*.{vue}{ts}"]),
 			file("$projectDir/src/test/ts/package.json"),
 			file("$projectDir/src/test/ts/tsconfig.json"),

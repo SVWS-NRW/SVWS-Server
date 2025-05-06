@@ -10,7 +10,7 @@ def CONFIG = new JsonSlurper().parse(new File(testConfigPath))
  * Dieser Task lädt die Testdatenbanken herunter, die für die Integrationstests benötigt werden. Dieser Task überprüft auch, ob die Testdatenbanken aktualisiert wurden.
  */
 task downloadTestDatabases() {
-	description 'Lädt die Testdatenbanken herunter, die für die Integrationstests benötigt werden.'
+	description = 'Lädt die Testdatenbanken herunter, die für die Integrationstests benötigt werden.'
 	doLast {
 		def dataBaseRepositoryPrefix = 'https://api.github.com/repos/SVWS-NRW/SVWS-TestMDBs'
 		project.mkdir "$rootDir/download/testDatenbanken"
@@ -64,7 +64,7 @@ task downloadTestDatabases() {
  * @throws GradleException wenn die Konfigurationsdateien inkonsistent sind.
  */
 task checkIfConfigFilesAreConsistent {
-	description 'Wirft einen Fehler wenn die Konfigurationstemplates für den Server oder die Container unterschiedlich sind.'
+	description = 'Wirft einen Fehler wenn die Konfigurationstemplates für den Server oder die Container unterschiedlich sind.'
 
 	def appConfigTemplatePath = '../svws-server-app/src/main/resources/svwsconfig.json.example'
 	def dockerTestContainerConfigTemplatePath = './templates/config/svws_config.json.template'
@@ -97,7 +97,7 @@ task checkIfConfigFilesAreConsistent {
  * @throws GradleException wenn Docker nicht auf dem Host-System läuft.
  */
 task checkIfDockerIsRunning {
-	description 'Wirft einen Fehler falls Docker nicht auf dem Host System läuft.'
+	description = 'Wirft einen Fehler falls Docker nicht auf dem Host System läuft.'
 	doLast {
 		if ('docker info'.execute().waitFor() != 0) {
 			throw new GradleException('Docker läuft nicht auf dem Host System.')
@@ -143,8 +143,8 @@ task startTestDockerNetwork {
  * Einstiegspunkt sowohl für die CI als auch die lokale Ausführung.
  */
 task integrationTest() {
-	group 'verification'
-	description 'Ausführung aller Integrationstests welche jeweils gegen eine temporäre standardisierte Testumgebung laufen.'
+	group = 'verification'
+	description = 'Ausführung aller Integrationstests welche jeweils gegen eine temporäre standardisierte Testumgebung laufen.'
 
 	// Überprüfe ob für die Integrationstests alle Voraussetzungen erfüllt sind
 	dependsOn 'downloadTestDatabases'
@@ -182,7 +182,7 @@ task integrationTest() {
  * @throws GradleException Wenn der HTTP-Antwortcode des lokalen Servers nicht 200 ist.
  */
 task checkIfLokalApplikationIsRunning() {
-	description 'Wirf einen Fehler wenn SVWS Server App auf dem Host System auf Port 443 läuft.'
+	description = 'Wirf einen Fehler wenn SVWS Server App auf dem Host System auf Port 443 läuft.'
 	doFirst {
 		// Führe den curl-Befehl aus und speichere die Ausgabe in einer Variable
 		def process = ['curl', '-k', '-s', '-o', '/dev/null', '-w', '%{http_code}', 'https://localhost/status/alive'].execute()
@@ -205,7 +205,7 @@ task checkIfLokalApplikationIsRunning() {
  * @throws GradleException Wenn keine Datenbank mit offenem Socket auf 3306 läuft.
  */
 task checkIfLokalDataBaseIsRunning {
-	description 'Wirf einen Fehler wenn keine MariaDB auf dem Host System auf Port 3306 läuft.'
+	description = 'Wirf einen Fehler wenn keine MariaDB auf dem Host System auf Port 3306 läuft.'
 	doLast {
 		def socket = new Socket()
 		try {
@@ -232,8 +232,8 @@ task checkIfLokalDataBaseIsRunning {
  * Läuft also das Backend oder die Datenbank nicht, kann dieser Task nicht verwendet werden.
  */
 task no_auto_docker_integrationTest() {
-	description 'Führt die integrations gegen das laufende Backed + Datenbank aus. Diese werden daher benötigt und sollten vorher manuel gestartet werden'
-	group 'verification'
+	description = 'Führt die integrations gegen das laufende Backed + Datenbank aus. Diese werden daher benötigt und sollten vorher manuel gestartet werden'
+	group = 'verification'
 
 	// Prüfe ob Voraussetzungen erfüllt sind
 	dependsOn ':tests:checkIfLokalApplikationIsRunning'

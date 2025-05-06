@@ -3,7 +3,7 @@ import org.gradle.internal.os.OperatingSystem
 configurations {
 	implementation.extendsFrom(crypto, database, jetty, jackson, resteasy, swagger)
 }
- 
+
 dependencies {
     implementation project(':svws-asd')
     implementation project(':svws-core')
@@ -41,9 +41,9 @@ task runServer(type: JavaExec) {
 	group = 'svws'
 	dependsOn compileJava
 	classpath = sourceSets.main.runtimeClasspath
-    description "Starte den SVWS-Server"
+    description = "Starte den SVWS-Server"
     mainClass = 'de.svws_nrw.server.jetty.Main'
-    jvmArgs "-Dfile.encoding=UTF-8" 
+    jvmArgs "-Dfile.encoding=UTF-8"
 }
 
 task createScripts {
@@ -51,22 +51,22 @@ task createScripts {
 	dependsOn compileJava
 	doLast {
 		if (OperatingSystem.current().isLinux()) {
-			file("./start_server.sh").text = 
+			file("./start_server.sh").text =
 			  '#! /bin/bash\n' +
 			  'java --class-path ' + sourceSets.main.runtimeClasspath.getAsPath() + ' de.svws_nrw.server.jetty.Main\n'
 			project.exec {
 				commandLine('chmod',  '+x', './start_server.sh')
-			}		
+			}
 		} else if (OperatingSystem.current().isWindows()) {
-			file("./start_server.cmd").text = 
+			file("./start_server.cmd").text =
 			  'java --class-path "' + sourceSets.main.runtimeClasspath.getAsPath() + '" de.svws_nrw.server.jetty.Main\n'
 		} else if (OperatingSystem.current().isMacOsX()) {
-			file("./start_server.sh").text = 
+			file("./start_server.sh").text =
 			  '#! /bin/zsh\n' +
 			  'java --class-path ' + sourceSets.main.runtimeClasspath.getAsPath() + ' de.svws_nrw.server.jetty.Main\n'
 			project.exec {
 				commandLine('chmod',  '+x', './start_server.sh')
-			}		
+			}
 		} else {
 			// TODO
 		}

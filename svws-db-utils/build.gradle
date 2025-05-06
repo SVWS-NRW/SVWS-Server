@@ -44,7 +44,7 @@ task generateLegacyMDBs(type: JavaExec) {
 	dependsOn compileJava
 	classpath = sourceSets.main.runtimeClasspath
     outputs.dir file(project.buildDir.toString() + '/mdb/')
-    description "Erzeuge die vier Access-Datenbanken impexp.mdb, statkue.mdb, schildintern.mdb und schulver.mdb für die Verwendung mit Schild v2.x"
+    description = "Erzeuge die vier Access-Datenbanken impexp.mdb, statkue.mdb, schildintern.mdb und schulver.mdb für die Verwendung mit Schild v2.x"
     mainClass = 'de.svws_nrw.db.utils.app.MDBGenerator'
     jvmArgs "-Dfile.encoding=UTF-8"
     args "-j"
@@ -55,7 +55,7 @@ task generateSQLScripts(type: JavaExec) {
 	dependsOn compileJava
 	classpath = sourceSets.main.runtimeClasspath
     outputs.dir file(project.buildDir.toString() + '/sql/')
-    description "Erzeuge SQL-Skripte für das Erstellen und Löschen eines Datenbankschemas sowie zum Befüllen eines Schemas mit Default-Daten"
+    description = "Erzeuge SQL-Skripte für das Erstellen und Löschen eines Datenbankschemas sowie zum Befüllen eines Schemas mit Default-Daten"
     mainClass = 'de.svws_nrw.db.utils.app.SQLGenerator'
     jvmArgs "-Dfile.encoding=UTF-8"
     args "-a"

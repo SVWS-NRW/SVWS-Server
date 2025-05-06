@@ -12,7 +12,7 @@ def jobId = UUID.randomUUID().toString().substring(0, 8)
  * Npm install
  */
 task npmInstall(type: NpmTask) {
-	description 'Installiert die Npm Abhängigkeiten'
+	description = 'Installiert die Npm Abhängigkeiten'
 	args = ['install']
 }
 
@@ -21,8 +21,8 @@ task npmInstall(type: NpmTask) {
  * Playwright Abhängigkeiten installieren
  */
 task playwrightInstallDeps(type: NpmRun) {
-	description 'Installiert die Playwright Abhängigkeiten'
-	group 'testing'
+	description = 'Installiert die Playwright Abhängigkeiten'
+	group = 'testing'
 	dependsOn 'npmInstall'
 	args = ['installdeps']
 	environment PLAYWRIGHT_BROWSERS_PATH: "$projectDir/download/playwright/"
@@ -58,7 +58,7 @@ ext {
  */
 task testAgainstDockerEnv(type: NpmRun) {
 	description = 'Startet die Integrationstests gegen die Docker Umgebung'
-	group 'testing'
+	group = 'testing'
 	dependsOn ':svws-webclient:client:assemble'
 	dependsOn 'seedDatabase'
 	dependsOn 'playwrightInstallDeps'
@@ -89,7 +89,7 @@ task testAgainstDockerEnv(type: NpmRun) {
  * Starten der Tests gegen die lokale Applikation. Hier wird kein Docker gestartet.
  */
 task no_auto_docker_test_E2E(type: NpmRun) {
-	group "verification"
+	group = "verification"
 	dependsOn ':tests:checkIfLokalApplikationIsRunning'
 	dependsOn ':tests:checkIfLokalDataBaseIsRunning'
 	inputs.dir file("$projectDir/tests")

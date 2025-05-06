@@ -8,7 +8,7 @@ task assembleLaufbahnplanung(type: NpmRun) {
 	dependsOn rootProject.npmPrepare
 	dependsOn project(':svws-webclient:core').tasks.assemble
 	dependsOn ':svws-webclient:ui:assemble'
-	group "build"
+	group = "build"
 	args = ['build']
 	inputs.files fileTree("$rootDir/svws-webclient/core").matching { exclude "build", "dist" },
 		fileTree("$rootDir/svws-webclient/ui").matching { exclude "build", "dist", ".histoire" },
@@ -35,7 +35,7 @@ clean.dependsOn cleanLaufbahnplanung
 
 task publishNexusLaufbahnplanung(type: NpmPublish) {
 	dependsOn build
-	group "publishing"
+	group = "publishing"
 	npmrc = "$rootDir/.npmrc.nexus"
 	repository = "https://artifactory.svws-nrw.de/repository/npm-private/"
 	actor = project.ext.getNexusActor()
@@ -45,7 +45,7 @@ task publishNexusLaufbahnplanung(type: NpmPublish) {
 
 task publishNpmLaufbahnplanung(type: NpmPublish) {
 	dependsOn build
-	group "publishing"
+	group = "publishing"
 	npmrc = "$rootDir/.npmrc.npm"
 	repository = "https://registry.npmjs.org/"
 	token = project.ext.getNpmToken()

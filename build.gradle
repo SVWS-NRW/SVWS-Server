@@ -55,7 +55,7 @@ println "*** Memory (used): %.0fM".formatted(memUsed)
 println "*** Memory (max): %.0fM".formatted(memMax)
 
 wrapper {
-	description "Regenerates the Gradle Wrapper files"
+	description = "Regenerates the Gradle Wrapper files"
 	gradleVersion = '8.8'
 	distributionUrl = "https://services.gradle.org/distributions/gradle-${gradleVersion}-bin.zip"
 }
@@ -186,7 +186,7 @@ fileGithashTSEnmServer.withWriter { w -> w << 'export const githash = ' + tsGitH
 
 
 task npmPrepare(type: NpmInstall) {
-	group "build"
+	group = "build"
 	inputs.files fileTree(dir: './', include: 'package.json')
 	doNotTrackState("")
 }
@@ -194,41 +194,41 @@ task npmPrepare(type: NpmInstall) {
 
 task rebuild(type: GradleBuild) {
 	tasks = ['clean', 'build']
-	group "build"
+	group = "build"
 }
 
 
 task wipe() {
 	dependsOn nodeWipe
-	group "build"
+	group = "build"
 }
 
 
 task assembleServer() {
 	dependsOn(':svws-server-app:assemble')
-	group "build"
+	group = "build"
 }
 
 task buildServer() {
 	dependsOn(':svws-server-app:build')
-	group "build"
+	group = "build"
 }
 
 
 task assembleTS() {
 	dependsOn(':svws-webclient:client:assemble')
-	group "build"
+	group = "build"
 }
 
 task buildTS() {
 	dependsOn(':svws-webclient:client:build')
-	group "build"
+	group = "build"
 }
 
 task publishReleaseAllAndCloseSonatype(type: GradleBuild) {
 	tasks = ['publishAllPublicationsToSonatypeRepository', 'closeAndReleaseSonatypeStagingRepository', 'publishReleaseAll']
-	group "publishing"
-	description 'Publish ins Sonatype Staging, im Anschluss Release nach Maven Central und Schließen des Staging. Danach Release zu anderen Repositories'
+	group = "publishing"
+	description = 'Publish ins Sonatype Staging, im Anschluss Release nach Maven Central und Schließen des Staging. Danach Release zu anderen Repositories'
 }
 
 nexusPublishing {
@@ -244,7 +244,7 @@ nexusPublishing {
 
 
 task allJavadoc(type: Javadoc) {
-	group "documentation"
+	group = "documentation"
 	project.subprojects.each {
 		if (it.plugins.hasPlugin('java')) {
 			source += it.java.sourceSets.main.allJava
@@ -257,7 +257,7 @@ task allJavadoc(type: Javadoc) {
 }
 
 task prepareSigning(type: Exec) {
-	group 'signing'
+	group = 'signing'
 	doFirst {
 		mkdir file("${projectDir}/build/signing")
 	}
@@ -266,7 +266,7 @@ task prepareSigning(type: Exec) {
 }
 
 task signWindowsInstaller(type: Exec) {
-	group 'signing'
+	group = 'signing'
 	dependsOn prepareSigning
 	workingDir file("${projectDir}/build/signing")
 	commandLine = ["${projectDir}/config/signing/sign_windows_installer.sh", "${project.version}"]

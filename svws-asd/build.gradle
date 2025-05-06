@@ -2,22 +2,22 @@ configurations {
 	implementation.extendsFrom(jackson, resteasy, validation, swagger)
 	transpiler
 	docGenerator
-} 
+}
 
 dependencies {
 	implementation project(':svws-transpile')
-	
+
 	transpiler fileTree(dir: "$projectDir/src/main/java", includes: ['**/svws_nrw/asd/**/*.java' ],
 			excludes: ['**/svws_nrw/asd/utils/json/**/*.java', '**/svws_nrw/asd/utils/ASDCoreTypeUtils.java', '**/svws_nrw/asd/utils/CoreTypeRessource.java',
 			           '**/svws_nrw/asd/utils/docs/**/*.java'] )
 
-	docGenerator fileTree(dir: "$projectDir/src/main/java/de/svws_nrw/asd/validate", 
+	docGenerator fileTree(dir: "$projectDir/src/main/java/de/svws_nrw/asd/validate",
 	                      includes: ['**/*.java' ],
 			              excludes: ['**/DateManager.java'],  )
 }
 
 task cleanTranspiled(type: Delete) {
-	group "build"
+	group = "build"
 	delete fileTree(dir: "$buildDir/ts"), fileTree(dir: "$buildDir/tmp/transpiler/ts", includes: ["**/*.class"])
 }
 
@@ -25,14 +25,14 @@ task prepareTranspile {
 	doLast {
 		file("$buildDir/transpiler-files.txt").text = configurations.transpiler.files.toString().replace("[", "").replace("]", "").trim()
 	}
-	group "build"
+	group = "build"
 	dependsOn compileJava
 	inputs.files configurations.transpiler
 	outputs.files "$buildDir/transpiler-files.txt"
 }
 
 task transpile(type: JavaExec) {
-	group "build"
+	group = "build"
 	dependsOn compileJava
 	dependsOn prepareTranspile
 	dependsOn project(':svws-transpile').tasks.assemble
@@ -52,7 +52,7 @@ task transpile(type: JavaExec) {
 }
 
 task generateDocu(type: JavaExec) {
-	group "build"
+	group = "build"
 	dependsOn compileJava
 	inputs.files configurations.docGenerator.files
 	outputs.dir "$buildDir/docs/validate"

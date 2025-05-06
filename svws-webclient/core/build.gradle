@@ -6,7 +6,7 @@ sourcesJar.dependsOn project(':svws-openapi').tasks.assembleTranspiled
 
 task assembleCore(type: NpmRun) {
 	dependsOn rootProject.npmPrepare, project(':svws-openapi').tasks.assemble
-	group "build"
+	group = "build"
 	args = ['build']
 	inputs.files fileTree("$projectDir").matching { exclude "build", "dist" }
 	outputs.dir file("$projectDir/dist")
@@ -21,8 +21,8 @@ task cleanCore(type: Delete) {
 clean.dependsOn cleanCore
 
 task testCore(type: NpmRun) {
-	group "svws"
-	dependsOn ':svws-webclient:core:assemble'	
+	group = "svws"
+	dependsOn ':svws-webclient:core:assemble'
 	inputs.files file("$projectDir/src")
 	outputs.dir file("$projectDir/build/coverage")
 	args = [ 'test:run' ]
@@ -33,7 +33,7 @@ task testCore(type: NpmRun) {
 
 task publishNexusCore(type: NpmPublish) {
 	dependsOn build
-	group "publishing"
+	group = "publishing"
 	npmrc = "$rootDir/.npmrc.nexus"
 	repository = "https://artifactory.svws-nrw.de/repository/npm-private/"
 	actor = project.ext.getNexusActor()
@@ -43,7 +43,7 @@ task publishNexusCore(type: NpmPublish) {
 
 task publishNpmCore(type: NpmPublish) {
 	dependsOn build
-	group "publishing"
+	group = "publishing"
 	npmrc = "$rootDir/.npmrc.npm"
 	repository = "https://registry.npmjs.org/"
 	token = project.ext.getNpmToken()

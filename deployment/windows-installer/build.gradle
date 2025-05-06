@@ -27,7 +27,7 @@ java {
 
 ext.svws_version = version
 
-ext.base_url = (project.hasProperty('svws_installer_downloads_base_url')) ? project.svws_installer_downloads_base_url : System.getenv("SVWS_INSTALLER_DOWNLOADS_BASE_URL")  
+ext.base_url = (project.hasProperty('svws_installer_downloads_base_url')) ? project.svws_installer_downloads_base_url : System.getenv("SVWS_INSTALLER_DOWNLOADS_BASE_URL")
 
 ext.jdk = "21"
 ext.jdk_version = "21.0.6"
@@ -53,12 +53,12 @@ ext.innoextract_win_url = (ext.base_url == null)
 	: "${base_url}/innoextract-${innoextract_version}-windows.zip"
 
 ext.windowsservicewrapper_version = "2.10.3"
-ext.windowsservicewrapper_win_url = (ext.base_url == null) 
+ext.windowsservicewrapper_win_url = (ext.base_url == null)
 	? "https://github.com/winsw/winsw/releases/download/v${windowsservicewrapper_version}/WinSW.NETCore31.x64.exe"
 	: "${base_url}/servicewrapper-v${windowsservicewrapper_version}-windows.exe"
 
 ext.curl_version = "8.10.1_3"
-ext.curl_win_url = (ext.base_url == null) 
+ext.curl_win_url = (ext.base_url == null)
 	? "https://curl.se/windows/dl-${curl_version}/curl-${curl_version}-win64-mingw.zip"
 	: "${base_url}/curl-${curl_version}-win64-mingw.zip"
 
@@ -227,7 +227,7 @@ task downloadCurl {
 
 
 task download {
-	group 'build'
+	group = 'build'
 	dependsOn "downloadJarsAll"
 	dependsOn "downloadCurl"
 	dependsOn "downloadWindowsServiceWrapper"
@@ -336,7 +336,7 @@ task extractInnoSetup(type:Exec) {
 
 
 task buildPrepare {
-	group 'build'
+	group = 'build'
 	dependsOn "extract"
 	dependsOn "extractClient"
 	dependsOn "extractAdminClient"
@@ -346,9 +346,9 @@ task buildPrepare {
 }
 
 
-/* Wichtig: Wird dieser Task nicht unter Windows ausgeführt, so muss eine passende Wine-Konfiguration vorliegen */ 
+/* Wichtig: Wird dieser Task nicht unter Windows ausgeführt, so muss eine passende Wine-Konfiguration vorliegen */
 task buildWindowsInstaller(type:Exec) {
-	group 'build'
+	group = 'build'
 	if (OperatingSystem.current().isWindows()) {
 		commandLine "cmd", "/c", "${buildDir}/inno/app/iscc.exe", "SVWS_Installer_full.iss"
 	} else {

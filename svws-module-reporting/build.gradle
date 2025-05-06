@@ -27,13 +27,13 @@ task prepareDownloadDir {
 }
 
 task fontDownload {
-	group "svws"
+	group = "svws"
 	dependsOn prepareDownloadDir
 	ant.get(src: fontLiberationURL, dest: file(fontLiberationDownloadLocation))
 }
 
 task fontExtract(type: Copy) {
-	group "svws"
+	group = "svws"
 	dependsOn fontDownload
 	from tarTree(resources.gzip(fontLiberationDownloadLocation))
 	into fontDir
@@ -43,7 +43,7 @@ task fontExtract(type: Copy) {
 }
 
 task fontRemove(type: Delete) {
-	group "svws"
+	group = "svws"
 	delete "${fontDir}/${fontLiberationDestDir}"
 }
 
