@@ -13,7 +13,6 @@ import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.AbiFaecher;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.Projektkurse;
-import de.svws_nrw.core.abschluss.gost.belegpruefung.Schwerpunkt;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
 import de.svws_nrw.core.data.gost.AbiturFachbelegungHalbjahr;
@@ -44,9 +43,6 @@ public final class GostAbiturMarkierungsalgorithmus {
 
 	/** Die zuvor durchgeführten Belegprüfung zu dem Projektkurs */
 	private final @NotNull Projektkurse belegpruefungProjektkurse;
-
-	/** Die zuvor durchgeführten Belegprüfung zu dem Schwerpunkt */
-	private final @NotNull Schwerpunkt belegpruefungSchwerpunkt;
 
 	/** Die zuvor durchgeführten Belegprüfung zu den Abiturfächern */
 	private final @NotNull AbiFaecher belegpruefungAbiturfaecher;
@@ -155,22 +151,16 @@ public final class GostAbiturMarkierungsalgorithmus {
 		this.manager = manager;
 		// Bestimme die zuvor durchgeführten Belegprüfungen zu den Projektkursen, dem Schwerpunkt und den Abiturfächern
 		Projektkurse belegpruefungProjektkurse = null;
-		Schwerpunkt belegpruefungSchwerpunkt = null;
 		AbiFaecher belegpruefungAbiturfaecher = null;
 		for (final @NotNull GostBelegpruefung pruefung : belegpruefungen) {
 			if (pruefung instanceof Projektkurse)
 				belegpruefungProjektkurse = (Projektkurse) pruefung;
-			if (pruefung instanceof Schwerpunkt)
-				belegpruefungSchwerpunkt = (Schwerpunkt) pruefung;
 			if (pruefung instanceof AbiFaecher)
 				belegpruefungAbiturfaecher = (AbiFaecher) pruefung;
 		}
 		if (belegpruefungProjektkurse == null)
 			throw new DeveloperNotificationException("Die Projektkursprüfung muss als Belegprüfung vorhanden sein.");
 		this.belegpruefungProjektkurse = belegpruefungProjektkurse;
-		if (belegpruefungSchwerpunkt == null)
-			throw new DeveloperNotificationException("Die Schwerpunktprüfung muss als Belegprüfung vorhanden sein.");
-		this.belegpruefungSchwerpunkt = belegpruefungSchwerpunkt;
 		if (belegpruefungAbiturfaecher == null)
 			throw new DeveloperNotificationException("Die Abiturfächerprüfung muss als Belegprüfung vorhanden sein.");
 		this.belegpruefungAbiturfaecher = belegpruefungAbiturfaecher;
@@ -192,7 +182,6 @@ public final class GostAbiturMarkierungsalgorithmus {
 		this.ergebnis.erfolgreich = original.ergebnis.erfolgreich;
 		this.manager = original.manager;
 		this.belegpruefungProjektkurse = original.belegpruefungProjektkurse;
-		this.belegpruefungSchwerpunkt = original.belegpruefungSchwerpunkt;
 		this.belegpruefungAbiturfaecher = original.belegpruefungAbiturfaecher;
 		for (int i = 0; i < this.abi.length; i++)
 			this.abi[i] = original.abi[i];
@@ -263,8 +252,8 @@ public final class GostAbiturMarkierungsalgorithmus {
 		ergebnis.log.add(logIndent + "Anzahl der Fortführbaren Fremdsprachen: " + anzahlFortfuehrbareFremdsprachen);
 
 		// Schwerpunkt bestimmen (SprachenSP, NWSP)
-		final boolean hatSchwerpunktFremdsprachen = belegpruefungSchwerpunkt.hatSchwerpunktFremdsprachen();
-		final boolean hatSchwerpunktNaturwissenschaften = belegpruefungSchwerpunkt.hatSchwerpunktNaturwissenschaften();
+		final boolean hatSchwerpunktFremdsprachen = 2 <= manager.zaehleBelegungInHalbjahren(manager.getFachbelegungen(GostFachbereich.FREMDSPRACHE), GostHalbjahr.Q22);
+		final boolean hatSchwerpunktNaturwissenschaften = 2 <= manager.zaehleBelegungInHalbjahren(manager.getFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH), GostHalbjahr.Q22);
 		ergebnis.log.add(logIndent + "Schwerpunkt: " + (hatSchwerpunktFremdsprachen ? "Fremdsprachen" : "") + " "
 				+ (hatSchwerpunktNaturwissenschaften ? "Naturwissenschaften" : ""));
 		// Markierung der Abiturfächer
@@ -800,8 +789,8 @@ public final class GostAbiturMarkierungsalgorithmus {
 			return newStates;
 		}
 
-		final boolean hatSchwerpunktFremdsprachen = belegpruefungSchwerpunkt.hatSchwerpunktFremdsprachen();
-		final boolean hatSchwerpunktNaturwissenschaften = belegpruefungSchwerpunkt.hatSchwerpunktNaturwissenschaften();
+		final boolean hatSchwerpunktFremdsprachen = 2 <= manager.zaehleBelegungInHalbjahren(manager.getFachbelegungen(GostFachbereich.FREMDSPRACHE), GostHalbjahr.Q22);
+		final boolean hatSchwerpunktNaturwissenschaften = 2 <= manager.zaehleBelegungInHalbjahren(manager.getFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH), GostHalbjahr.Q22);
 		// Bestimme alle Fachbelegungen, die noch möglich sind: Fremdsprachen, Naturwissenschaften und bilinguale Sachfächer
 		final @NotNull Set<AbiturFachbelegung> belegungen = new HashSet<>();
 		if (hatSchwerpunktFremdsprachen) {

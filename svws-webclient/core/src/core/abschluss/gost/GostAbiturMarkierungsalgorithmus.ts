@@ -1,6 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap2D } from '../../../core/adt/map/HashMap2D';
-import { Schwerpunkt, cast_de_svws_nrw_core_abschluss_gost_belegpruefung_Schwerpunkt } from '../../../core/abschluss/gost/belegpruefung/Schwerpunkt';
 import type { JavaSet } from '../../../java/util/JavaSet';
 import { HashMap } from '../../../java/util/HashMap';
 import { AbiturFachbelegungHalbjahr } from '../../../core/data/gost/AbiturFachbelegungHalbjahr';
@@ -54,11 +53,6 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 	 * Die zuvor durchgeführten Belegprüfung zu dem Projektkurs
 	 */
 	private readonly belegpruefungProjektkurse : Projektkurse;
-
-	/**
-	 * Die zuvor durchgeführten Belegprüfung zu dem Schwerpunkt
-	 */
-	private readonly belegpruefungSchwerpunkt : Schwerpunkt;
 
 	/**
 	 * Die zuvor durchgeführten Belegprüfung zu den Abiturfächern
@@ -215,22 +209,16 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 			const belegpruefungen : List<GostBelegpruefung> = cast_java_util_List(__param1);
 			this.manager = manager;
 			let belegpruefungProjektkurse : Projektkurse | null = null;
-			let belegpruefungSchwerpunkt : Schwerpunkt | null = null;
 			let belegpruefungAbiturfaecher : AbiFaecher | null = null;
 			for (const pruefung of belegpruefungen) {
 				if (((pruefung instanceof JavaObject) && (pruefung.isTranspiledInstanceOf('de.svws_nrw.core.abschluss.gost.belegpruefung.Projektkurse'))))
 					belegpruefungProjektkurse = cast_de_svws_nrw_core_abschluss_gost_belegpruefung_Projektkurse(pruefung);
-				if (((pruefung instanceof JavaObject) && (pruefung.isTranspiledInstanceOf('de.svws_nrw.core.abschluss.gost.belegpruefung.Schwerpunkt'))))
-					belegpruefungSchwerpunkt = cast_de_svws_nrw_core_abschluss_gost_belegpruefung_Schwerpunkt(pruefung);
 				if (((pruefung instanceof JavaObject) && (pruefung.isTranspiledInstanceOf('de.svws_nrw.core.abschluss.gost.belegpruefung.AbiFaecher'))))
 					belegpruefungAbiturfaecher = cast_de_svws_nrw_core_abschluss_gost_belegpruefung_AbiFaecher(pruefung);
 			}
 			if (belegpruefungProjektkurse === null)
 				throw new DeveloperNotificationException("Die Projektkursprüfung muss als Belegprüfung vorhanden sein.")
 			this.belegpruefungProjektkurse = belegpruefungProjektkurse;
-			if (belegpruefungSchwerpunkt === null)
-				throw new DeveloperNotificationException("Die Schwerpunktprüfung muss als Belegprüfung vorhanden sein.")
-			this.belegpruefungSchwerpunkt = belegpruefungSchwerpunkt;
 			if (belegpruefungAbiturfaecher === null)
 				throw new DeveloperNotificationException("Die Abiturfächerprüfung muss als Belegprüfung vorhanden sein.")
 			this.belegpruefungAbiturfaecher = belegpruefungAbiturfaecher;
@@ -242,7 +230,6 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 			this.ergebnis.erfolgreich = original.ergebnis.erfolgreich;
 			this.manager = original.manager;
 			this.belegpruefungProjektkurse = original.belegpruefungProjektkurse;
-			this.belegpruefungSchwerpunkt = original.belegpruefungSchwerpunkt;
 			this.belegpruefungAbiturfaecher = original.belegpruefungAbiturfaecher;
 			for (let i : number = 0; i < this.abi.length; i++)
 				this.abi[i] = original.abi[i];
@@ -299,8 +286,8 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 	private init() : boolean {
 		const anzahlFortfuehrbareFremdsprachen : number = SprachendatenUtils.getFortfuehrbareSprachenInGOSt(this.manager.getSprachendaten()).size();
 		this.ergebnis.log.add(this.logIndent + "Anzahl der Fortführbaren Fremdsprachen: " + anzahlFortfuehrbareFremdsprachen);
-		const hatSchwerpunktFremdsprachen : boolean = this.belegpruefungSchwerpunkt.hatSchwerpunktFremdsprachen();
-		const hatSchwerpunktNaturwissenschaften : boolean = this.belegpruefungSchwerpunkt.hatSchwerpunktNaturwissenschaften();
+		const hatSchwerpunktFremdsprachen : boolean = 2 <= this.manager.zaehleBelegungInHalbjahren(this.manager.getFachbelegungen(GostFachbereich.FREMDSPRACHE), GostHalbjahr.Q22);
+		const hatSchwerpunktNaturwissenschaften : boolean = 2 <= this.manager.zaehleBelegungInHalbjahren(this.manager.getFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH), GostHalbjahr.Q22);
 		this.ergebnis.log.add(this.logIndent + "Schwerpunkt: " + (hatSchwerpunktFremdsprachen ? "Fremdsprachen" : "") + " " + (hatSchwerpunktNaturwissenschaften ? "Naturwissenschaften" : ""));
 		if (!this.markiereAbiturfaecher())
 			return false;
@@ -761,8 +748,8 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 			newStates.addAll((new GostAbiturMarkierungsalgorithmus(this)).markiereKunstMusikOderErsatz());
 			return newStates;
 		}
-		const hatSchwerpunktFremdsprachen : boolean = this.belegpruefungSchwerpunkt.hatSchwerpunktFremdsprachen();
-		const hatSchwerpunktNaturwissenschaften : boolean = this.belegpruefungSchwerpunkt.hatSchwerpunktNaturwissenschaften();
+		const hatSchwerpunktFremdsprachen : boolean = 2 <= this.manager.zaehleBelegungInHalbjahren(this.manager.getFachbelegungen(GostFachbereich.FREMDSPRACHE), GostHalbjahr.Q22);
+		const hatSchwerpunktNaturwissenschaften : boolean = 2 <= this.manager.zaehleBelegungInHalbjahren(this.manager.getFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH), GostHalbjahr.Q22);
 		const belegungen : JavaSet<AbiturFachbelegung> = new HashSet<AbiturFachbelegung>();
 		if (hatSchwerpunktFremdsprachen) {
 			for (const belegung of this.manager.getRelevanteFachbelegungen(GostFachbereich.FREMDSPRACHE))
