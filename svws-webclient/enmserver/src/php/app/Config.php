@@ -70,7 +70,7 @@
 		 * @return string der absolute Pfad, wo sich die Applikation befindet
 		 */
 		protected static function determineAppRoot(): string {
-			return substr($_SERVER["DOCUMENT_ROOT"], 0, -strlen("/public"));
+			return __DIR__.'/..';
 		}
 
 		/**
