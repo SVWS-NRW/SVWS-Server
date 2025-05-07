@@ -43,6 +43,7 @@ import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2029.Abi29BelegpruefungP
 import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2029.Abi29BelegpruefungSchwerpunkt;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2029.Abi29BelegpruefungSport;
 import de.svws_nrw.core.adt.map.ArrayMap;
+import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
 import de.svws_nrw.core.data.gost.AbiturFachbelegungHalbjahr;
 import de.svws_nrw.core.data.gost.Abiturdaten;
@@ -94,6 +95,15 @@ public class AbiturdatenManager {
 
 	/** Die Art der durchzuführenden Belegprüfung */
 	private final @NotNull GostBelegpruefungsArt pruefungsArt;
+
+	/** Eine HashMap, welche den schnellen Zugriff auf eine Fachbelegung anhand der Fach-ID ermöglicht */
+	private final @NotNull Map<Long, AbiturFachbelegung> mapFachbelegungByFachID = new HashMap<>();
+
+	/** Eine HashMap für den schnellen Zugriff auf die Fachbelegungen, welche in dem Halbjahr eine gültige Belegung haben */
+	private final @NotNull Map<GostHalbjahr, ArrayList<AbiturFachbelegung>> mapFachbelegungenByGostHalbjahr = new ArrayMap<>(GostHalbjahr.values());
+
+	/** Eine HashMap2D für den schnellen Zugriff auf die Halbjahresbelegungen anhand der Fach-UD und der ID des GostHalbjahres */
+	private final @NotNull HashMap2D<Long, Integer, AbiturFachbelegungHalbjahr> mapFachbelegungHalbjahrByFachIDAndHalbjahrID = new HashMap2D<>();
 
 	/** Eine HashMap, welche den schnellen Zugriff auf die Fachbelegungen über den Fachbereich ermöglicht */
 	private final @NotNull Map<GostFachbereich, ArrayList<AbiturFachbelegung>> mapFachbereiche =
@@ -238,7 +248,7 @@ public class AbiturdatenManager {
 	public void init() {
 		if (abidaten == null)
 			return;
-		initMapFachbereiche();
+		initMaps();
 		// Führe die Belegprüfung durch
 		belegpruefungen = getPruefungen(pruefungsArt);
 		for (final @NotNull GostBelegpruefung belegpruefung : belegpruefungen)
@@ -260,20 +270,26 @@ public class AbiturdatenManager {
 
 	/**
 	 * Initialisiert bzw. reinitialisiert die Map für den schnellen Zugriff auf Fachbelegungen
-	 * anhand des Fachbereichs.
+	 * anhand des Fachbereichs, der Fach-ID oder des Halbjahres.
 	 */
-	private void initMapFachbereiche() {
-		// Leere die HashMap und erstelle neue Vektoren für die Zuordnung von Abitur-Fachbelegungen
+	private void initMaps() {
+		// Leere die HashMaps und erstelle ggf. neue Listen für die Zuordnung von Abitur-Fachbelegungen
+		mapFachbelegungByFachID.clear();
+		mapFachbelegungHalbjahrByFachIDAndHalbjahrID.clear();
 		mapFachbereiche.clear();
 		mapFachbereicheRelevant.clear();
 		for (final @NotNull GostFachbereich fachbereich : GostFachbereich.values()) {
 			mapFachbereiche.put(fachbereich, new ArrayList<>());
 			mapFachbereicheRelevant.put(fachbereich, new ArrayList<>());
 		}
+		mapFachbelegungenByGostHalbjahr.clear();
+		for (final @NotNull GostHalbjahr halbjahr : GostHalbjahr.values())
+			mapFachbelegungenByGostHalbjahr.put(halbjahr, new ArrayList<>());
 
 		// Durchwandere alle belegten Fächer und weise diese den Fachbereichen zu
 		final @NotNull List<AbiturFachbelegung> fachbelegungen = abidaten.fachbelegungen;
 		for (final AbiturFachbelegung fachbelegung : fachbelegungen) {
+			mapFachbelegungByFachID.put(fachbelegung.fachID, fachbelegung);
 			if (zaehleBelegung(fachbelegung) > 0) { // Filtere ggf. leere Belegungen
 				final GostFach fach = getFach(fachbelegung);
 				if (fach == null)
@@ -289,6 +305,18 @@ public class AbiturdatenManager {
 							listFachbelegungen.add(fachbelegung);
 					}
 				}
+			}
+			for (final @NotNull GostHalbjahr halbjahr : GostHalbjahr.values()) {
+				final AbiturFachbelegungHalbjahr belegungHalbjahr = fachbelegung.belegungen[halbjahr.id];
+				if ((belegungHalbjahr == null) || (belegungHalbjahr.kursartKuerzel == null))
+					continue;
+				mapFachbelegungHalbjahrByFachIDAndHalbjahrID.put(fachbelegung.fachID, halbjahr.id, belegungHalbjahr);
+				if (halbjahr.istQualifikationsphase() && (Note.fromKuerzel(belegungHalbjahr.notenkuerzel) == Note.UNGENUEGEND))
+					continue;
+				final List<AbiturFachbelegung> tmp = mapFachbelegungenByGostHalbjahr.get(halbjahr);
+				if (tmp == null) // Sollte nicht auftreten...
+					continue;
+				tmp.add(fachbelegung);
 			}
 		}
 	}
@@ -1395,13 +1423,7 @@ public class AbiturdatenManager {
 	 * @return die Fachbelegung oder null, falls keine vorhanden ist
 	 */
 	public AbiturFachbelegung getFachbelegungByID(final long fachID) {
-		final @NotNull List<AbiturFachbelegung> fachbelegungen = abidaten.fachbelegungen;
-		for (final AbiturFachbelegung fb : fachbelegungen) {
-			final GostFach fach = getFach(fb);
-			if ((fach != null) && (fachID == fach.id))
-				return fb;
-		}
-		return null;
+		return mapFachbelegungByFachID.get(fachID);
 	}
 
 
@@ -2279,6 +2301,87 @@ public class AbiturdatenManager {
 
 
 	/**
+	 * Gibt für die Notenpunkte für die Halbjahresbelegung zurück
+	 *
+	 * @param belegungHalbjahr   die Halbjahresbelegung
+	 *
+	 * @return die Notenpunkte oder null, falls das Fach in dem Halbjahr nicht gewählt wurde
+	 */
+	public Integer getNotenpunkteOfFachbelegungHalbjahr(final AbiturFachbelegungHalbjahr belegungHalbjahr) {
+		if (belegungHalbjahr == null)
+			return null;
+		final NoteKatalogEintrag nke = Note.fromKuerzel(belegungHalbjahr.notenkuerzel).daten(getSchuljahr());
+		return (nke == null) ? null : nke.notenpunkte;
+	}
+
+
+	/**
+	 * Gibt für die übergebene Fach-ID und das übergebene Halbjahr die Notenpunkte zurück, sofern eine
+	 * Belegung vorliegt, welche eine Note hat, und ansonsten null.
+	 *
+	 * @param idFach     die ID des Faches
+	 * @param halbjahr   das Halbjahr
+	 *
+	 * @return die Notenpunkte oder null
+	 */
+	public Integer getNotenpunkteByFachIDAndHalbjahr(final long idFach, final @NotNull GostHalbjahr halbjahr) {
+		return getNotenpunkteOfFachbelegungHalbjahr(mapFachbelegungHalbjahrByFachIDAndHalbjahrID.getOrNull(idFach, halbjahr.id));
+	}
+
+
+	/**
+	 * Ermittelt die Informationen zu markierten Kursen in dem angegeben Halbjahr und gibt diese in einem Array
+	 * zurück. Diese sind:
+	 * - Notenpunktsumme mit doppelter Wertung der LKs (Index 0)
+	 * - Anzahl der Kurse (Index 1)
+	 * - Anzahl der Kurse mit doppelter Zählung der LKs (Index 2)
+	 * - Anzahl der markierten Defizite im LK-Bereich (Index 3)
+	 * - Anzahl der markierten Defizite im GK-Bereich (Index 4)
+	 * - Anzahl der markierten Defizite (Index 5)
+	 *
+	 * @param halbjahr   das Halbjahr
+	 *
+	 * @return die Informationen zu den markierten Kursen
+	 */
+	public @NotNull int[] getKursinformationenOfMarkierteKurseByHalbjahr(final @NotNull GostHalbjahr halbjahr) {
+		final List<AbiturFachbelegung> belegungen = mapFachbelegungenByGostHalbjahr.get(halbjahr);
+		final int[] result = new int[6];
+		result[0] = 0; // Notenpunktsumme
+		result[1] = 0; // AnzahlKurse
+		result[2] = 0; // AnzahlKurse mit LKs doppelt
+		result[3] = 0; // Defizite im LK-Bereich
+		result[4] = 0; // Defizite im GK-Bereich
+		result[5] = 0; // Defizite Gesamt
+		if (belegungen == null)
+			return result;
+		for (final @NotNull AbiturFachbelegung belegung : belegungen) {
+			final AbiturFachbelegungHalbjahr belegungHalbjahr = belegung.belegungen[halbjahr.id];
+			if ((belegungHalbjahr == null) || (!belegungHalbjahr.block1gewertet))
+				continue;
+			final boolean istLKBelegung = GostKursart.LK.kuerzel.equals(belegungHalbjahr.kursartKuerzel);
+			final Integer np = getNotenpunkteOfFachbelegungHalbjahr(belegungHalbjahr);
+			if ((np != null) && (np != 0)) {
+				if (istLKBelegung) {
+					result[0] += np * 2;
+					result[1]++;
+					result[2] += 2;
+					if (np < 5)
+						result[3]++;
+				} else {
+					result[0] += np;
+					result[1]++;
+					result[2]++;
+					if (np < 5)
+						result[4]++;
+				}
+			}
+		}
+		result[5] = result[3] + result[4];
+		return result;
+	}
+
+
+	/**
 	 * Gibt das Ergebnis des Markierungsalgorithmus zurück. Dieses enthält, ob der Algorithmus erfolgreich gewesen ist
 	 * und im Erfolgsfall ein Liste für die einzelnen Belegungen der Qualifikationsphase, ob diese markiert wurden.
 	 *
@@ -2321,6 +2424,7 @@ public class AbiturdatenManager {
 		abidaten.block1PunktSummeLK = 0;
 		for (final @NotNull AbiturFachbelegung fachbelegung : abidaten.fachbelegungen) {
 			double summeKurseFach = 0.0;
+			int punktSummeEinfach = 0;
 			fachbelegung.block1PunktSumme = 0;
 			for (final @NotNull GostHalbjahr halbjahr : GostHalbjahr.getQualifikationsphase()) {
 				final AbiturFachbelegungHalbjahr belegungHalbjahr = fachbelegung.belegungen[halbjahr.id];
@@ -2331,6 +2435,7 @@ public class AbiturdatenManager {
 				final NoteKatalogEintrag nke = note.getKatalogEintrag(this.getSchuljahr());
 				if ((nke == null) || (nke.notenpunkte == null))
 					continue;
+				punktSummeEinfach += nke.notenpunkte;
 				final int notenpunkte = nke.notenpunkte * (istLK ? 2 : 1);
 				fachbelegung.block1PunktSumme += notenpunkte;
 				summeKurseFach++;
@@ -2345,7 +2450,7 @@ public class AbiturdatenManager {
 				if (notenpunkte < 5)
 					abidaten.block1DefiziteGesamt++;
 			}
-			fachbelegung.block1NotenpunkteDurchschnitt = (summeKurseFach == 0.0) ? null : (fachbelegung.block1PunktSumme / summeKurseFach);
+			fachbelegung.block1NotenpunkteDurchschnitt = (summeKurseFach == 0.0) ? null : (punktSummeEinfach / summeKurseFach);
 		}
 		final double summeNotenpunkte = abidaten.block1PunktSummeLK + abidaten.block1PunktSummeGK;
 		final double anzahlKurse = (abidaten.block1AnzahlKurse + 8.0); // LK-Belegungen doppelt zählen, also + 2*4, da auch die Notenpunkte doppelt gezählt wurden

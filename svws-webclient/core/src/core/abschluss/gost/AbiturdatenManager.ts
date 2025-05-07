@@ -3,8 +3,8 @@ import { Naturwissenschaften } from '../../../core/abschluss/gost/belegpruefung/
 import { Schwerpunkt } from '../../../core/abschluss/gost/belegpruefung/Schwerpunkt';
 import { Abi29BelegpruefungKurszahlenUndWochenstunden } from '../../../core/abschluss/gost/belegpruefung/abi2029/Abi29BelegpruefungKurszahlenUndWochenstunden';
 import { GostFaecherManager } from '../../../core/utils/gost/GostFaecherManager';
-import { Abi29BelegpruefungSport } from '../../../core/abschluss/gost/belegpruefung/abi2029/Abi29BelegpruefungSport';
 import { HashMap } from '../../../java/util/HashMap';
+import { Abi29BelegpruefungSport } from '../../../core/abschluss/gost/belegpruefung/abi2029/Abi29BelegpruefungSport';
 import { GostAbiturMarkierungsalgorithmus } from '../../../core/abschluss/gost/GostAbiturMarkierungsalgorithmus';
 import { GostFachUtils } from '../../../core/utils/gost/GostFachUtils';
 import { KurszahlenUndWochenstunden } from '../../../core/abschluss/gost/belegpruefung/KurszahlenUndWochenstunden';
@@ -38,6 +38,7 @@ import { Abi29BelegpruefungLatinum } from '../../../core/abschluss/gost/belegpru
 import { Note } from '../../../asd/types/Note';
 import { Class } from '../../../java/lang/Class';
 import type { JavaMap } from '../../../java/util/JavaMap';
+import { HashMap2D } from '../../../core/adt/map/HashMap2D';
 import { FachWaehlbar } from '../../../core/abschluss/gost/belegpruefung/FachWaehlbar';
 import type { JavaSet } from '../../../java/util/JavaSet';
 import { Abi29BelegpruefungDeutsch } from '../../../core/abschluss/gost/belegpruefung/abi2029/Abi29BelegpruefungDeutsch';
@@ -96,6 +97,21 @@ export class AbiturdatenManager extends JavaObject {
 	 * Die Art der durchzuführenden Belegprüfung
 	 */
 	private readonly pruefungsArt : GostBelegpruefungsArt;
+
+	/**
+	 * Eine HashMap, welche den schnellen Zugriff auf eine Fachbelegung anhand der Fach-ID ermöglicht
+	 */
+	private readonly mapFachbelegungByFachID : JavaMap<number, AbiturFachbelegung> = new HashMap<number, AbiturFachbelegung>();
+
+	/**
+	 * Eine HashMap für den schnellen Zugriff auf die Fachbelegungen, welche in dem Halbjahr eine gültige Belegung haben
+	 */
+	private readonly mapFachbelegungenByGostHalbjahr : JavaMap<GostHalbjahr, ArrayList<AbiturFachbelegung>> = new ArrayMap<GostHalbjahr, ArrayList<AbiturFachbelegung>>(GostHalbjahr.values());
+
+	/**
+	 * Eine HashMap2D für den schnellen Zugriff auf die Halbjahresbelegungen anhand der Fach-UD und der ID des GostHalbjahres
+	 */
+	private readonly mapFachbelegungHalbjahrByFachIDAndHalbjahrID : HashMap2D<number, number, AbiturFachbelegungHalbjahr> = new HashMap2D<number, number, AbiturFachbelegungHalbjahr>();
 
 	/**
 	 * Eine HashMap, welche den schnellen Zugriff auf die Fachbelegungen über den Fachbereich ermöglicht
@@ -243,7 +259,7 @@ export class AbiturdatenManager extends JavaObject {
 	public init() : void {
 		if (this.abidaten === null)
 			return;
-		this.initMapFachbereiche();
+		this.initMaps();
 		this.belegpruefungen = this.getPruefungen(this.pruefungsArt);
 		for (const belegpruefung of this.belegpruefungen)
 			belegpruefung.pruefe();
@@ -260,17 +276,23 @@ export class AbiturdatenManager extends JavaObject {
 
 	/**
 	 * Initialisiert bzw. reinitialisiert die Map für den schnellen Zugriff auf Fachbelegungen
-	 * anhand des Fachbereichs.
+	 * anhand des Fachbereichs, der Fach-ID oder des Halbjahres.
 	 */
-	private initMapFachbereiche() : void {
+	private initMaps() : void {
+		this.mapFachbelegungByFachID.clear();
+		this.mapFachbelegungHalbjahrByFachIDAndHalbjahrID.clear();
 		this.mapFachbereiche.clear();
 		this.mapFachbereicheRelevant.clear();
 		for (const fachbereich of GostFachbereich.values()) {
 			this.mapFachbereiche.put(fachbereich, new ArrayList<AbiturFachbelegung>());
 			this.mapFachbereicheRelevant.put(fachbereich, new ArrayList<AbiturFachbelegung>());
 		}
+		this.mapFachbelegungenByGostHalbjahr.clear();
+		for (const halbjahr of GostHalbjahr.values())
+			this.mapFachbelegungenByGostHalbjahr.put(halbjahr, new ArrayList<AbiturFachbelegung>());
 		const fachbelegungen : List<AbiturFachbelegung> = this.abidaten.fachbelegungen;
 		for (const fachbelegung of fachbelegungen) {
+			this.mapFachbelegungByFachID.put(fachbelegung.fachID, fachbelegung);
 			if (this.zaehleBelegung(fachbelegung) > 0) {
 				const fach : GostFach | null = this.getFach(fachbelegung);
 				if (fach === null)
@@ -286,6 +308,18 @@ export class AbiturdatenManager extends JavaObject {
 							listFachbelegungen.add(fachbelegung);
 					}
 				}
+			}
+			for (const halbjahr of GostHalbjahr.values()) {
+				const belegungHalbjahr : AbiturFachbelegungHalbjahr | null = fachbelegung.belegungen[halbjahr.id];
+				if ((belegungHalbjahr === null) || (belegungHalbjahr.kursartKuerzel === null))
+					continue;
+				this.mapFachbelegungHalbjahrByFachIDAndHalbjahrID.put(fachbelegung.fachID, halbjahr.id, belegungHalbjahr);
+				if (halbjahr.istQualifikationsphase() && (Note.fromKuerzel(belegungHalbjahr.notenkuerzel) as unknown === Note.UNGENUEGEND as unknown))
+					continue;
+				const tmp : List<AbiturFachbelegung> | null = this.mapFachbelegungenByGostHalbjahr.get(halbjahr);
+				if (tmp === null)
+					continue;
+				tmp.add(fachbelegung);
 			}
 		}
 	}
@@ -1304,13 +1338,7 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return die Fachbelegung oder null, falls keine vorhanden ist
 	 */
 	public getFachbelegungByID(fachID : number) : AbiturFachbelegung | null {
-		const fachbelegungen : List<AbiturFachbelegung> = this.abidaten.fachbelegungen;
-		for (const fb of fachbelegungen) {
-			const fach : GostFach | null = this.getFach(fb);
-			if ((fach !== null) && (fachID === fach.id))
-				return fb;
-		}
-		return null;
+		return this.mapFachbelegungByFachID.get(fachID);
 	}
 
 	/**
@@ -2106,6 +2134,84 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	/**
+	 * Gibt für die Notenpunkte für die Halbjahresbelegung zurück
+	 *
+	 * @param belegungHalbjahr   die Halbjahresbelegung
+	 *
+	 * @return die Notenpunkte oder null, falls das Fach in dem Halbjahr nicht gewählt wurde
+	 */
+	public getNotenpunkteOfFachbelegungHalbjahr(belegungHalbjahr : AbiturFachbelegungHalbjahr | null) : number | null {
+		if (belegungHalbjahr === null)
+			return null;
+		const nke : NoteKatalogEintrag | null = Note.fromKuerzel(belegungHalbjahr.notenkuerzel).daten(this.getSchuljahr());
+		return (nke === null) ? null : nke.notenpunkte;
+	}
+
+	/**
+	 * Gibt für die übergebene Fach-ID und das übergebene Halbjahr die Notenpunkte zurück, sofern eine
+	 * Belegung vorliegt, welche eine Note hat, und ansonsten null.
+	 *
+	 * @param idFach     die ID des Faches
+	 * @param halbjahr   das Halbjahr
+	 *
+	 * @return die Notenpunkte oder null
+	 */
+	public getNotenpunkteByFachIDAndHalbjahr(idFach : number, halbjahr : GostHalbjahr) : number | null {
+		return this.getNotenpunkteOfFachbelegungHalbjahr(this.mapFachbelegungHalbjahrByFachIDAndHalbjahrID.getOrNull(idFach, halbjahr.id));
+	}
+
+	/**
+	 * Ermittelt die Informationen zu markierten Kursen in dem angegeben Halbjahr und gibt diese in einem Array
+	 * zurück. Diese sind:
+	 * - Notenpunktsumme mit doppelter Wertung der LKs (Index 0)
+	 * - Anzahl der Kurse (Index 1)
+	 * - Anzahl der Kurse mit doppelter Zählung der LKs (Index 2)
+	 * - Anzahl der markierten Defizite im LK-Bereich (Index 3)
+	 * - Anzahl der markierten Defizite im GK-Bereich (Index 4)
+	 * - Anzahl der markierten Defizite (Index 5)
+	 *
+	 * @param halbjahr   das Halbjahr
+	 *
+	 * @return die Informationen zu den markierten Kursen
+	 */
+	public getKursinformationenOfMarkierteKurseByHalbjahr(halbjahr : GostHalbjahr) : Array<number> {
+		const belegungen : List<AbiturFachbelegung> | null = this.mapFachbelegungenByGostHalbjahr.get(halbjahr);
+		const result : Array<number> | null = Array(6).fill(0);
+		result[0] = 0;
+		result[1] = 0;
+		result[2] = 0;
+		result[3] = 0;
+		result[4] = 0;
+		result[5] = 0;
+		if (belegungen === null)
+			return result;
+		for (const belegung of belegungen) {
+			const belegungHalbjahr : AbiturFachbelegungHalbjahr | null = belegung.belegungen[halbjahr.id];
+			if ((belegungHalbjahr === null) || (!belegungHalbjahr.block1gewertet))
+				continue;
+			const istLKBelegung : boolean = JavaObject.equalsTranspiler(GostKursart.LK.kuerzel, (belegungHalbjahr.kursartKuerzel));
+			const np : number | null = this.getNotenpunkteOfFachbelegungHalbjahr(belegungHalbjahr);
+			if ((np !== null) && (np !== 0)) {
+				if (istLKBelegung) {
+					result[0] += np * 2;
+					result[1]++;
+					result[2] += 2;
+					if (np < 5)
+						result[3]++;
+				} else {
+					result[0] += np;
+					result[1]++;
+					result[2]++;
+					if (np < 5)
+						result[4]++;
+				}
+			}
+		}
+		result[5] = result[3] + result[4];
+		return result;
+	}
+
+	/**
 	 * Gibt das Ergebnis des Markierungsalgorithmus zurück. Dieses enthält, ob der Algorithmus erfolgreich gewesen ist
 	 * und im Erfolgsfall ein Liste für die einzelnen Belegungen der Qualifikationsphase, ob diese markiert wurden.
 	 *
@@ -2144,6 +2250,7 @@ export class AbiturdatenManager extends JavaObject {
 		this.abidaten.block1PunktSummeLK = 0;
 		for (const fachbelegung of this.abidaten.fachbelegungen) {
 			let summeKurseFach : number = 0.0;
+			let punktSummeEinfach : number = 0;
 			fachbelegung.block1PunktSumme = 0;
 			for (const halbjahr of GostHalbjahr.getQualifikationsphase()) {
 				const belegungHalbjahr : AbiturFachbelegungHalbjahr | null = fachbelegung.belegungen[halbjahr.id];
@@ -2154,6 +2261,7 @@ export class AbiturdatenManager extends JavaObject {
 				const nke : NoteKatalogEintrag | null = note.getKatalogEintrag(this.getSchuljahr());
 				if ((nke === null) || (nke.notenpunkte === null))
 					continue;
+				punktSummeEinfach += nke.notenpunkte;
 				const notenpunkte : number = nke.notenpunkte * (istLK ? 2 : 1);
 				fachbelegung.block1PunktSumme += notenpunkte;
 				summeKurseFach++;
@@ -2168,7 +2276,7 @@ export class AbiturdatenManager extends JavaObject {
 				if (notenpunkte < 5)
 					this.abidaten.block1DefiziteGesamt++;
 			}
-			fachbelegung.block1NotenpunkteDurchschnitt = (summeKurseFach === 0.0) ? null : (fachbelegung.block1PunktSumme / summeKurseFach);
+			fachbelegung.block1NotenpunkteDurchschnitt = (summeKurseFach === 0.0) ? null : (punktSummeEinfach / summeKurseFach);
 		}
 		const summeNotenpunkte : number = this.abidaten.block1PunktSummeLK + this.abidaten.block1PunktSummeGK;
 		const anzahlKurse : number = (this.abidaten.block1AnzahlKurse + 8.0);

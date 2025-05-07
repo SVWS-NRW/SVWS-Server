@@ -1,6 +1,20 @@
 <template>
 	<table class="svws-ui-table h-full max-w-fit overflow-hidden" role="table" aria-label="Tabelle">
 		<thead class="svws-ui-thead" role="rowgroup" aria-label="Tabellenkopf">
+			<tr class="svws-ui-tr grid-cols-[24rem_20rem_8rem] text-ui-static" role="row" :class="{
+				'bg-ui-success text-ui-onsuccess' : hatZulassung,
+				'bg-ui-danger text-ui-ondanger' : !hatZulassung
+			}">
+				<td class="svws-ui-td text-center svws-divider" role="cell">
+					<div class="font-bold text-base leading-0">Zulassung:</div>
+					<div class="font-bold text-base leading-0"> {{ hatZulassung ? "Ja" : "Nein" }} </div>
+				</td>
+				<td class="svws-ui-td text-left" role="cell">
+					<div class="font-bold text-base">normierte Punktsumme:</div>
+					<div class="w-16 font-bold text-base">{{ manager().daten().block1PunktSummeNormiert }}</div>
+				</td>
+				<td class="svws-ui-td text-center" role="cell" />
+			</tr>
 			<tr class="svws-ui-tr grid-cols-[4rem_16rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem]" role="row">
 				<td class="svws-ui-td text-center" role="columnheader"> <div class="w-full">Kürzel</div> </td>
 				<td class="svws-ui-td" role="columnheader"> Fach </td>
@@ -30,9 +44,13 @@
 						<td class="svws-ui-td text-center" :class="{
 							'svws-disabled': !hatBelegung(fach, hj),
 							'svws-divider': (hj === GostHalbjahr.Q22),
-							'bg-ui-brand-secondary font-bold': istGewertet(fach, hj)
+							'bg-ui-brand-secondary font-bold': istGewertet(fach, hj),
+							'text-ui-danger': istDefizit(fach, hj),
+							'underline': istSchriftlich(fach, hj)
 						}" role="cell">
-							<div class="w-full">{{ getNotenpunkte(fach, hj) }}</div>
+							<div class="w-full">
+								{{ getNotenpunkteString(fach, hj) }}
+							</div>
 						</td>
 					</template>
 					<td class="svws-ui-td svws-divider text-center" role="cell">
@@ -46,17 +64,113 @@
 					</td>
 				</tr>
 			</template>
-			<tr class="svws-ui-tr grid-cols-[40rem_4rem_4rem_4rem] text-ui-static" role="row">
-				<td class="svws-ui-td" role="cell">
-					<div class="w-full font-bold">Gesamt</div>
+			<tr class="svws-ui-tr grid-cols-[24rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem] text-ui-static" role="row">
+				<td class="svws-ui-td svws-divider" role="cell">
+					<div class="w-full">Punktsumme der gewerteten Kurse</div>
 				</td>
 				<td class="svws-ui-td text-center" role="cell">
-					<div class="w-full">{{ getSummeBlockI() }}</div>
+					<div class="w-full">{{ kursinfoQ11[0] }}</div>
+				</td>
+				<td class="svws-ui-td text-center" role="cell">
+					<div class="w-full">{{ kursinfoQ12[0] }}</div>
+				</td>
+				<td class="svws-ui-td text-center" role="cell">
+					<div class="w-full">{{ kursinfoQ21[0] }}</div>
+				</td>
+				<td class="svws-ui-td text-center svws-divider" role="cell">
+					<div class="w-full">{{ kursinfoQ22[0] }}</div>
+				</td>
+				<td class="svws-ui-td text-center svws-divider" role="cell">
+					<div class="w-full font-bold">{{ (manager().daten().block1PunktSummeGK ?? 0) + (manager().daten().block1PunktSummeLK ?? 0) }}</div>
 				</td>
 				<td class="svws-ui-td text-center" role="cell" />
-				<td class="svws-ui-td text-center" role="cell">
-					<div class="w-full">{{ getDurchschnittBlockI() }}</div>
+				<td class="svws-ui-td text-center" role="cell" />
+			</tr>
+			<tr class="svws-ui-tr grid-cols-[24rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem] text-ui-static" role="row">
+				<td class="svws-ui-td svws-divider" role="cell">
+					<div class="w-full">Anzahl der gewerteten Kurse</div>
 				</td>
+				<td class="svws-ui-td text-center" role="cell">
+					<div class="w-full">{{ kursinfoQ11[1] }}</div>
+				</td>
+				<td class="svws-ui-td text-center" role="cell">
+					<div class="w-full">{{ kursinfoQ12[1] }}</div>
+				</td>
+				<td class="svws-ui-td text-center" role="cell">
+					<div class="w-full">{{ kursinfoQ21[1] }}</div>
+				</td>
+				<td class="svws-ui-td text-center svws-divider" role="cell">
+					<div class="w-full">{{ kursinfoQ22[1] }}</div>
+				</td>
+				<td class="svws-ui-td text-center svws-divider" role="cell">
+					<div class="w-full font-bold">{{ anzahlKurse }}</div>
+				</td>
+				<td class="svws-ui-td text-center" role="cell" />
+				<td class="svws-ui-td text-center" role="cell" />
+			</tr>
+			<tr class="svws-ui-tr grid-cols-[24rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem] text-ui-static" role="row">
+				<td class="svws-ui-td svws-divider" role="cell">
+					<div class="w-full">Anzahl der gewerteten Defizite (GK/LK) </div>
+				</td>
+				<td class="svws-ui-td text-center" role="cell">
+					<div class="w-full">
+						<span :class="{ 'font-bold': kursinfoQ11[4] > 0 }">{{ kursinfoQ11[4] === 0 ? '-' : kursinfoQ11[4] }}</span>
+						/
+						<span :class="{ 'font-bold': kursinfoQ11[3] > 0 }">{{ kursinfoQ11[3] === 0 ? '-' : kursinfoQ11[3] }}</span>
+					</div>
+				</td>
+				<td class="svws-ui-td text-center" role="cell">
+					<div class="w-full">
+						<span :class="{ 'font-bold': kursinfoQ12[4] > 0 }">{{ kursinfoQ12[4] === 0 ? '-' : kursinfoQ12[4] }}</span>
+						/
+						<span :class="{ 'font-bold': kursinfoQ12[3] > 0 }">{{ kursinfoQ12[3] === 0 ? '-' : kursinfoQ12[3] }}</span>
+					</div>
+				</td>
+				<td class="svws-ui-td text-center" role="cell">
+					<div class="w-full">
+						<span :class="{ 'font-bold': kursinfoQ21[4] > 0 }">{{ kursinfoQ21[4] === 0 ? '-' : kursinfoQ21[4] }}</span>
+						/
+						<span :class="{ 'font-bold': kursinfoQ21[3] > 0 }">{{ kursinfoQ21[3] === 0 ? '-' : kursinfoQ21[3] }}</span>
+					</div>
+				</td>
+				<td class="svws-ui-td text-center svws-divider" role="cell">
+					<div class="w-full">
+						<span :class="{ 'font-bold': kursinfoQ22[4] > 0 }">{{ kursinfoQ22[4] === 0 ? '-' : kursinfoQ22[4] }}</span>
+						/
+						<span :class="{ 'font-bold': kursinfoQ22[3] > 0 }">{{ kursinfoQ22[3] === 0 ? '-' : kursinfoQ22[3] }}</span>
+					</div>
+				</td>
+				<td class="svws-ui-td text-center svws-divider" role="cell">
+					<div class="w-full font-bold" :class="{ 'text-ui-danger': defiziteGesZuViele }">
+						<span :class="{ 'font-bold': defiziteGK > 0 }">{{ defiziteGK === 0 ? '-' : defiziteGK }}</span>
+						/
+						<span :class="{ 'font-bold': defiziteLK > 0 }">{{ defiziteLK === 0 ? '-' : defiziteLK }}</span>
+					</div>
+				</td>
+				<td class="svws-ui-td text-center" role="cell" />
+				<td class="svws-ui-td text-center" role="cell" />
+			</tr>
+			<tr class="svws-ui-tr grid-cols-[24rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem] text-ui-static" role="row">
+				<td class="svws-ui-td svws-divider" role="cell">
+					<div class="w-full">Durchschnitt der Notenpunkte</div>
+				</td>
+				<td class="svws-ui-td text-center" role="cell">
+					<div class="w-full">{{ getNotenpunkteDurchschnittOfHalbjahr(GostHalbjahr.Q11) }}</div>
+				</td>
+				<td class="svws-ui-td text-center" role="cell">
+					<div class="w-full">{{ getNotenpunkteDurchschnittOfHalbjahr(GostHalbjahr.Q12) }}</div>
+				</td>
+				<td class="svws-ui-td text-center" role="cell">
+					<div class="w-full">{{ getNotenpunkteDurchschnittOfHalbjahr(GostHalbjahr.Q21) }}</div>
+				</td>
+				<td class="svws-ui-td text-center svws-divider" role="cell">
+					<div class="w-full">{{ getNotenpunkteDurchschnittOfHalbjahr(GostHalbjahr.Q22) }}</div>
+				</td>
+				<td class="svws-ui-td text-center svws-divider" role="cell">
+					<div class="w-full font-bold">{{ formatNotenpunkteDurchschnitt(manager().daten().block1NotenpunkteDurchschnitt) }}</div>
+				</td>
+				<td class="svws-ui-td text-center" role="cell" />
+				<td class="svws-ui-td text-center" role="cell" />
 			</tr>
 		</tbody>
 	</table>
@@ -64,16 +178,14 @@
 
 <script setup lang="ts">
 
-	import { computed } from 'vue';
+	import { computed } from "vue";
 	import type { AbiturFachbelegungHalbjahr, Fachgruppe, GostFach, List} from "@core";
-	import { Fach, GostKursart, Note, RGBFarbe } from "@core";
+	import { Fach, RGBFarbe } from "@core";
 	import { ArrayList, GostHalbjahr } from "@core";
 
 	import type { SchuelerAbiturZulassungProps } from "./SchuelerAbiturZulassungProps";
 
-	const props = withDefaults(defineProps<SchuelerAbiturZulassungProps>(), {
-		berechnen: false,
-	});
+	const props = defineProps<SchuelerAbiturZulassungProps>();
 
 	const schuljahr = computed<number>(() => props.manager().getAbiturjahr() - 1);
 
@@ -93,6 +205,8 @@
 		}
 		return result;
 	});
+
+	const hatZulassung = computed<boolean>(() => props.manager().daten().block1Zulassung ?? false);
 
 	function getAbiFach(fach: GostFach): string {
 		const belegung = props.manager().getFachbelegungByID(fach.id);
@@ -115,25 +229,19 @@
 		return (belegung.belegungen[hj.id] !== null)
 	}
 
-	function getNotenpunkte(fach: GostFach, hj: GostHalbjahr): string | number {
+	function istSchriftlich(fach: GostFach, hj: GostHalbjahr) : boolean {
 		const belegung = props.manager().getFachbelegungByID(fach.id);
 		if (belegung === null)
+			return false;
+		const belegungHalbjahr = belegung.belegungen[hj.id];
+		return (belegungHalbjahr !== null) && (belegungHalbjahr.schriftlich);
+	}
+
+	function getNotenpunkteString(fach: GostFach, hj: GostHalbjahr) : string {
+		const np = props.manager().getNotenpunkteByFachIDAndHalbjahr(fach.id, hj);
+		if (np === null)
 			return "";
-		const hjbelegung = belegung.belegungen[hj.id];
-		if (hjbelegung === null)
-			return "";
-		if ((hjbelegung.notenkuerzel === null) || (hjbelegung.notenkuerzel === "")) {
-			if (hjbelegung.kursartKuerzel !== GostKursart.PJK.kuerzel)
-				return "";
-			const hjNext = hj.next();
-			if (hjNext === null)
-				return "";
-			return getNotenpunkte(fach, hjNext);
-		}
-		const note = Note.fromKuerzel(hjbelegung.notenkuerzel);
-		if (note.istNote(schuljahr.value))
-			return note.daten(schuljahr.value)!.notenpunkte ?? 0;
-		return hjbelegung.notenkuerzel;
+		return ((np < 10) ? "0" : "") + np;
 	}
 
 	function getFachgruppe(fach: GostFach): Fachgruppe | null {
@@ -159,61 +267,60 @@
 	}
 
 	function getFachSummeBlockI(fach: GostFach): number {
-		let summe = 0;
 		const belegung = props.manager().getFachbelegungByID(fach.id);
 		if (belegung === null)
-			return summe;
-		if (!props.berechnen)
-			return belegung.block1PunktSumme ?? 0;
-		const istLK = (belegung.letzteKursart === GostKursart.LK.kuerzel);
-		for (const hj of GostHalbjahr.getQualifikationsphase()) {
-			const hjbelegung = belegung.belegungen[hj.id];
-			if ((hjbelegung === null) || (hjbelegung.block1gewertet !== true))
-				continue;
-			const np = getNotenpunkte(fach, hj);
-			if (typeof np === "string")
-				continue;
-			summe += np * (istLK ? 2 : 1);
+			return 0;
+		return belegung.block1PunktSumme ?? 0;
+	}
+
+	const anzahlKurse = computed<number>(() => props.manager().daten().block1AnzahlKurse ?? 0);
+
+	const defiziteGes = computed<number>(() => props.manager().daten().block1DefiziteGesamt ?? 0);
+	const defiziteLK = computed<number>(() => props.manager().daten().block1DefiziteLK ?? 0);
+	const defiziteGK = computed<number>(() => defiziteGes.value - defiziteLK.value);
+	const defiziteGesZuViele = computed<boolean>(() => (defiziteGes.value > 8) || ((anzahlKurse.value < 38) && (defiziteGes.value > 7)));
+
+	const kursinfoQ11 = computed<Array<number>>(() => props.manager().getKursinformationenOfMarkierteKurseByHalbjahr(GostHalbjahr.Q11));
+	const kursinfoQ12 = computed<Array<number>>(() => props.manager().getKursinformationenOfMarkierteKurseByHalbjahr(GostHalbjahr.Q12));
+	const kursinfoQ21 = computed<Array<number>>(() => props.manager().getKursinformationenOfMarkierteKurseByHalbjahr(GostHalbjahr.Q21));
+	const kursinfoQ22 = computed<Array<number>>(() => props.manager().getKursinformationenOfMarkierteKurseByHalbjahr(GostHalbjahr.Q22));
+
+	function getKursInfo(halbjahr: GostHalbjahr): Array<number> {
+		switch (halbjahr) {
+			case GostHalbjahr.Q11: return kursinfoQ11.value;
+			case GostHalbjahr.Q12: return kursinfoQ12.value;
+			case GostHalbjahr.Q21: return kursinfoQ21.value;
+			case GostHalbjahr.Q22: return kursinfoQ22.value;
 		}
-		return summe;
+		return new Array<number>();
 	}
 
-	function getSummeBlockI(): number {
-		return (props.manager().daten().block1PunktSummeGK ?? 0) + (props.manager().daten().block1PunktSummeLK ?? 0);
+	function istDefizit(fach: GostFach, hj: GostHalbjahr) : boolean {
+		const np = props.manager().getNotenpunkteByFachIDAndHalbjahr(fach.id, hj);
+		return (np !== null) && (np < 5);
 	}
 
-	function average(): number {
-		return 0.0;
-	}
-
-	function getDurchschnittAbiFach(fach: GostFach): number | null {
+	function getDurchschnittAbiFach(fach: GostFach): string {
 		const belegung = props.manager().getFachbelegungByID(fach.id);
-		if ((belegung === null) || (belegung.abiturFach === null))
-			return null;
-		if (!props.berechnen)
-			return belegung.block1NotenpunkteDurchschnitt;
-		// wenn noch keine Bewertung da ist, dann kann auch kein Durchschnitt bestimmt werden.
-		if (!props.manager().istBewertet(GostHalbjahr.Q11) && !props.manager().istBewertet(GostHalbjahr.Q12)
-			&& !props.manager().istBewertet(GostHalbjahr.Q21) && !props.manager().istBewertet(GostHalbjahr.Q22))
-			return null;
-		let summe = 0;
-		let count = 0;
-		for (const hj of GostHalbjahr.getQualifikationsphase()) {
-			const hjbelegung = belegung.belegungen[hj.id];
-			if (hjbelegung === null)
-				continue;
-			const np = getNotenpunkte(fach, hj);
-			if (typeof np === "string")
-				continue;
-			count ++;
-			summe += np;
-		}
-		return summe / count;
+		const avg = (belegung === null) || (belegung.abiturFach === null) ? null : belegung.block1NotenpunkteDurchschnitt;
+		return formatNotenpunkteDurchschnitt(avg);
 	}
 
-	function getDurchschnittBlockI(): string {
-		const ds = props.manager().daten().block1NotenpunkteDurchschnitt;
-		return (ds === null) ? "" : ds.toString();
+	function formatNotenpunkteDurchschnitt(avg: number | null): string {
+		if (avg === null)
+			return "";
+		let tmp = ((avg < 10) ? "0" : "") + avg;
+		if (tmp.length === 2)
+			tmp += ".";
+		while (tmp.length < 5)
+			tmp += "0";
+		return tmp;
+	}
+
+	function getNotenpunkteDurchschnittOfHalbjahr(halbjahr: GostHalbjahr): string {
+		const kursinfo = getKursInfo(halbjahr);
+		const avg = (kursinfo[2] === 0) ? null : Math.round((kursinfo[0] / kursinfo[2]) * 100.0) / 100.0;
+		return formatNotenpunkteDurchschnitt(avg);
 	}
 
 </script>
