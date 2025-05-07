@@ -10,14 +10,20 @@
 		// Der Root-Pfad für die Applikation
 		protected $app_root = null;
 
+                // Default Speicherort von Datenbank/Secret/Server-Mode
+		protected static string $default_dbfolder = 'db';
+
+		// Speicherort von Datenbank/Secret/Server-Mode
+		protected ?string $dbfolder = null;
+
 		// Der Speicherort der SQLite-Datenbank
-		protected static string $dbfile = "db/app.sqlite";
+		protected static string $dbfile = "app.sqlite";
 
 		// Der Dateiname, wo das Client-Secret für die Verbindung des SVWS-Servers zu dem ENM-Server gespeichert wird
-		protected static string $secretfile = "db/client.sec";
+		protected static string $secretfile = "client.sec";
 
 		// Der Dateiname, wo die Information zum Server-Mode gesetzt werden kann. Ist diese Information nicht vorhanden, so wird 'stable' angenommen.
-		protected static string $servermodefile = "db/server.mode";
+		protected static string $servermodefile = "server.mode";
 
 		// Der Modus, in welchem der Server betrieben wird ('dev', 'alpha', 'beta', 'stable')
 		protected string $serverMode = "stable";
@@ -37,8 +43,14 @@
 			// Bestimme zunächst das Root-Verzeichnis der Anwendung
 			$this->app_root = Config::determineAppRoot();
 
+			// ersetze dbfolder durch $_SERVER['dbfolder'] sofern gesetzt.
+			if (isset($_SERVER['dbfolder']))
+				$this->dbfolder=$_SERVER['dbfolder'];
+			else
+				$this->dbfolder=Config::$default_dbfolder;
+
 			// Lese das Client-Secret ein. Wenn nich keines existiert, dann erzeuge es zuvor 
-			$secretfile = $this->app_root."/".Config::$secretfile;
+			$secretfile = $this->app_root."/".$this->dbfolder.'/'.Config::$secretfile;
 			if (!file_exists($secretfile)) {
 				// Versuche eine neues Secret anzulegen anzulegen...
 				$secret = Config::generateRandomSecret();
@@ -49,7 +61,7 @@
 			$this->secret = file_get_contents($secretfile);
 
 			// Setze den Server-Mode, welcher auch an den Client weitergegeben wird
-			$servermodefile = $this->app_root."/".Config::$servermodefile;
+			$servermodefile = $this->app_root.'/'.$this->dbfolder.'/'.Config::$servermodefile;
 			$serverMode = file_exists($servermodefile) ? file_get_contents($servermodefile) : 'stable';
 			$serverMode = strtolower($serverMode);
 			if ((strcmp($serverMode, 'stable') !== 0) && (strcmp($serverMode, 'beta') !== 0) && (strcmp($serverMode, 'alpha') !== 0) && (strcmp($serverMode, 'dev') !== 0))
@@ -78,7 +90,11 @@
 		 * das Client-Secret und die SQLite-Datenbank beide vorliegen.
 		 */
 		public static function isAppInitialized() : bool {
-			return file_exists(Config::determineAppRoot()."/".Config::$secretfile) && file_exists(Config::determineAppRoot()."/".Config::$dbfile);
+                        if (isset($_SERVER['dbfolder']))
+				$dbfolder=$_SERVER['dbfolder'];
+			else
+				$dbfolder=Config::$default_dbfolder;
+			return file_exists(Config::determineAppRoot().'/'.$dbfolder.'/'.Config::$secretfile) && file_exists(Config::determineAppRoot()."/".$dbfolder.'/'.Config::$dbfile);
 		}
 
 		/**
@@ -96,7 +112,7 @@
 		 * @return string der Speicherort
 		 */
 		public function getDatabaseFile(): string {
-			return Config::$dbfile;
+			return $this->dbfolder.'/'.Config::$dbfile;
 		}
 
 		/**
