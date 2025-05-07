@@ -122,6 +122,8 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 			this.manager.auswahl().gueltigAb = data.gueltigAb;
 		if (data.gueltigBis !== undefined)
 			this.manager.auswahl().gueltigBis = data.gueltigBis;
+		if (data.aktiv !== undefined)
+			this.manager.auswahl().aktiv = data.aktiv;
 		if (!this.manager.daten().kalenderwochenzuordnungGetMengeUngueltige().isEmpty()) {
 			const ids = new ArrayList<number>();
 			for (const z of this.manager.daten().kalenderwochenzuordnungGetMengeUngueltige())

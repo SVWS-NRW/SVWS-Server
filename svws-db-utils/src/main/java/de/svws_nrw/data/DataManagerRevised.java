@@ -748,6 +748,19 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 		// Methode kann überschrieben werden
 	}
 
+	/**
+	 * Methode prüft vor dem Persistieren eines Datenbank-DTOs, ob alle Vorbedingungen zum Patch erfüllt sind.
+	 * Standardmäßig hat diese Methode keine Implementierung.
+	 * Wenn eine Prüfung durchgeführt werden soll, muss diese Methode überschrieben werden.
+	 *
+	 * @param dto               das DTO
+	 * @param patchedAttributes   die Map mit den gepatchenden Attributen für das DTO
+	 *
+	 * @throws ApiOperationException wird geworfen, wenn eine Vorbedingung nicht erfüllt wurde
+	 */
+	public void checkBeforePersist(final DatabaseDTO dto, final Map<String, Object> patchedAttributes) throws ApiOperationException {
+		// Methode kann überschrieben werden
+	}
 
 	/**
 	 * Passt die Informationen des Datenbank-DTO mit der angegebenen ID mithilfe des
@@ -777,6 +790,8 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 
 		// Patchings auf DTO anwenden und anschließend in DB persistieren
 		applyPatchMappings(dto, attributesToPatch, null, Collections.emptySet(), false);
+
+		checkBeforePersist(dto, attributesToPatch);
 		saveDatabaseDTO(dto);
 		return map(dto);
 	}
@@ -845,6 +860,7 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 		applyPatchMappings(dto, initAttributes, null, attributesDelayedOnCreation, true);
 
 		// Persistiere das DTO in der Datenbank
+		checkBeforePersist(dto, initAttributes);
 		saveDatabaseDTO(dto);
 		if (!attributesDelayedOnCreation.isEmpty()) {
 			applyPatchMappings(dto, initAttributes, attributesDelayedOnCreation, Collections.emptySet(), true);

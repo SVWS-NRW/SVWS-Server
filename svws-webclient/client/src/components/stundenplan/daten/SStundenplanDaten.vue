@@ -4,13 +4,14 @@
 			<div class="content-card" v-if="manager().hasDaten()">
 				<div class="content-card--header content-card--headline">Allgemein</div>
 				<div class="content-card--content content-card--content--with-title input-wrapper grid-cols-2">
-					<svws-ui-text-input class="contentFocusField" :disabled="!hatUpdateKompetenz" placeholder="Bezeichnung" :model-value="manager().daten().getBezeichnungStundenplan()" @change="bezeichnungStundenplan=> bezeichnungStundenplan && patch({ bezeichnungStundenplan })" type="text" />
+					<div class="flex gap-1"><svws-ui-checkbox type="toggle" :disabled="(!manager().auswahl().aktiv && !manager().istKonfliktfreiZuAktivenStundenplaenen(gueltigData.gueltigAb, gueltigData.gueltigBis))" :model-value="manager().daten().isAktiv()" @update:model-value="handleChangeAktiv" />Stundenplan aktiv</div>
+					<svws-ui-text-input class="contentFocusField" :disabled="!hatUpdateKompetenz" placeholder="Bezeichnung" :model-value="manager().daten().getBezeichnungStundenplan()" :valid="StundenplanListeManager.validateBezeichnung" @change="bezeichnungStundenplan=> bezeichnungStundenplan && patch({ bezeichnungStundenplan })" type="text" />
 					<div v-if="hatUpdateKompetenz" :class="{'flex gap-2': showExtraWTM}">
 						<svws-ui-select title="Wochentypmodell" :items="[0,2,3,4,5]" :item-text="i=> wochenTypModell[i] || ''" :model-value="manager().daten().getWochenTypModell()" @update:model-value="modell => doPatch(modell)" ref="select" />
 						<svws-ui-input-number v-if="showExtraWTM" placeholder="Wochentypmodell" :model-value="manager().daten().getWochenTypModell() < 5 ? 5 : manager().daten().getWochenTypModell()" @change="modell => doPatch(modell)" :min="5" :max="100" />
 					</div>
-					<svws-ui-text-input :disabled="!hatUpdateKompetenz" placeholder="Gültig ab" :model-value="manager().daten().getGueltigAb()" :valid="gueltigAb => manager().validateGueltigAb(gueltigAb, manager().daten().getGueltigBis())" @change="gueltigAb=>gueltigAb && manager().validateGueltigAb(gueltigAb, manager().daten().getGueltigBis()) && patch({ gueltigAb })" type="date" />
-					<svws-ui-text-input :disabled="!hatUpdateKompetenz" placeholder="Gültig bis" :model-value="manager().daten().getGueltigBis()" :valid="gueltigBis => manager().validateGueltigBis(manager().daten().getGueltigAb(), gueltigBis)" @change="gueltigBis=>manager().validateGueltigBis(manager().daten().getGueltigAb(), gueltigBis) && gueltigBis && patch({ gueltigBis })" type="date" />
+					<svws-ui-text-input :disabled="!hatUpdateKompetenz" placeholder="Gültig ab" :model-value="manager().daten().getGueltigAb()" :valid="validateGueltigAb" @change="handleChangeGueltigAb" type="date" :fehlerart="manager().auswahl().aktiv ? ValidatorFehlerart.MUSS : ValidatorFehlerart.HINWEIS" />
+					<svws-ui-text-input :disabled="!hatUpdateKompetenz" placeholder="Gültig bis" :model-value="manager().daten().getGueltigBis()" :valid="validateGueltigBis" @change="handleChangeGueltigBis" type="date" :fehlerart="manager().auswahl().aktiv ? ValidatorFehlerart.MUSS : ValidatorFehlerart.HINWEIS" />
 				</div>
 			</div>
 			<s-card-stundenplan-warnung-wochentypmodell v-if="wtmOK === false" :wochen-typ-modell="newWTM" @change="ok => (wtmOK = ok) && doPatch(newWTM)" :stundenplan-manager="() => manager().daten()" />
@@ -108,17 +109,31 @@
 
 <script setup lang="ts">
 
-	import { computed, ref } from "vue";
+	import { computed, onMounted, ref, watch } from "vue";
 	import type { ComponentExposed } from "vue-component-type-helpers";
 	import type { StundenplanDatenProps } from "./SStundenplanDatenProps";
 	import type { DataTableColumn, SortByAndOrder } from "@ui";
 	import { SvwsUiSelect } from "@ui";
-	import type { StundenplanRaum, Raum, StundenplanAufsichtsbereich, StundenplanPausenzeit } from "@core";
-	import { ArrayList, BenutzerKompetenz, DateUtils, Wochentag } from "@core";
+	import type { StundenplanRaum, Raum, StundenplanAufsichtsbereich, StundenplanPausenzeit, Stundenplan } from "@core";
+	import { ArrayList, BenutzerKompetenz, DateUtils, Wochentag, ValidatorFehlerart, StundenplanListeManager } from "@core";
 
 	const props = defineProps<StundenplanDatenProps>();
 	const select = ref<ComponentExposed<typeof SvwsUiSelect<typeof wochenTypModell>>>();
 	const subActionPausenzeiten = ref<boolean>(false);
+
+	const gueltigData = ref<{gueltigAb: string , gueltigBis: string, aktiv: boolean }>({ gueltigAb: "", gueltigBis: "", aktiv: false });
+	const validAb = ref<boolean>(true);
+	const validBis = ref<boolean>(true);
+
+	onMounted(() => {
+		watch(() => props.manager().auswahl(), () => {
+			gueltigData.value = {
+				gueltigAb: props.manager().auswahl().gueltigAb,
+				gueltigBis: props.manager().auswahl().gueltigBis,
+				aktiv: props.manager().auswahl().aktiv,
+			};
+		}, { immediate: true, deep: false });
+	})
 
 	const cols: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Jahrgang", sortable: true, defaultSort: "asc", span: 0.25 },
@@ -147,6 +162,44 @@
 		else
 			await props.addJahrgang(id);
 	}
+
+	const validateGueltigAb = (gueltigAb: string | null): boolean => {
+		validAb.value = props.manager().validateGueltigAb(gueltigAb, gueltigData.value.gueltigBis, gueltigData.value.aktiv, gueltigData.value.aktiv);
+		return props.manager().validateGueltigAb(gueltigAb, gueltigData.value.gueltigBis, true, props.manager().validateGueltigBis(gueltigData.value.gueltigAb, gueltigData.value.gueltigBis, true));
+	}
+
+	const validateGueltigBis = (gueltigBis: string | null): boolean => {
+		validBis.value = props.manager().validateGueltigBis(gueltigData.value.gueltigAb, gueltigBis, gueltigData.value.aktiv);
+		return props.manager().validateGueltigBis(gueltigData.value.gueltigAb, gueltigBis, true);
+	}
+
+	const handleChangeAktiv = async (aktiv: boolean) => {
+		gueltigData.value.aktiv = aktiv;
+		const patch: Partial<Stundenplan> = {aktiv}
+		if (aktiv === false) {
+			if (props.manager().validateGueltigBis(gueltigData.value.gueltigAb, gueltigData.value.gueltigBis, false))
+				patch.gueltigBis = gueltigData.value.gueltigBis;
+			if (props.manager().validateGueltigAb(gueltigData.value.gueltigAb, gueltigData.value.gueltigBis, false, false))
+				patch.gueltigAb = gueltigData.value.gueltigAb;
+		}
+		await props.patch(patch);
+	};
+
+	const handleChangeGueltigAb = async (gueltigAb: string | null) => {
+		if (gueltigAb === null)
+			return;
+		gueltigData.value.gueltigAb = gueltigAb;
+		if (validAb.value === true && validBis.value === true)
+			await props.patch({ gueltigAb, gueltigBis: gueltigData.value.gueltigBis });
+	};
+
+	const handleChangeGueltigBis = async (gueltigBis: string | null) => {
+		if (gueltigBis === null)
+			return;
+		gueltigData.value.gueltigBis = gueltigBis;
+		if (validAb.value === true && validBis.value === true)
+			await props.patch({ gueltigAb: gueltigData.value.gueltigAb, gueltigBis });
+	};
 
 	async function doPatch(wochenTypModell: number | null | undefined) {
 		if ((wochenTypModell === null) || (wochenTypModell === undefined) || (wochenTypModell === 1))

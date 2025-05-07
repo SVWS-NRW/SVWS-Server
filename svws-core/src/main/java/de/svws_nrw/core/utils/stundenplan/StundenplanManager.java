@@ -418,6 +418,7 @@ public class StundenplanManager {
 	private final int _stundenplanAbschnitt;
 	private final @NotNull String _stundenplanGueltigAb;
 	private final @NotNull String _stundenplanGueltigBis;
+	private final boolean _aktiv;
 	private final @NotNull String _stundenplanBezeichnung;
 
 	// Default-Werte
@@ -443,6 +444,7 @@ public class StundenplanManager {
 		_stundenplanAbschnitt = daten.abschnitt;
 		_stundenplanGueltigAb = daten.gueltigAb;
 		_stundenplanGueltigBis = init_gueltig_bis(daten.gueltigAb, daten.gueltigBis);
+		_aktiv = daten.aktiv;
 		_stundenplanBezeichnung = daten.bezeichnungStundenplan;
 
 		// Spezialfall: "unterrichtsverteilung" ist NULL
@@ -490,6 +492,7 @@ public class StundenplanManager {
 		_stundenplanAbschnitt = stundenplanKomplett.daten.abschnitt;
 		_stundenplanGueltigAb = stundenplanKomplett.daten.gueltigAb;
 		_stundenplanGueltigBis = init_gueltig_bis(stundenplanKomplett.daten.gueltigAb, stundenplanKomplett.daten.gueltigBis);
+		_aktiv = stundenplanKomplett.daten.aktiv;
 		_stundenplanBezeichnung = stundenplanKomplett.daten.bezeichnungStundenplan;
 
 		// Spezielle Prüfungen.
@@ -5289,6 +5292,18 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert das zur ID zugehörige {@link StundenplanRaum}-Objekt oder null, falls der Raum zur ID nicht existiert.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param idRaum Die ID des angefragten-Objektes.
+	 *
+	 * @return das zur ID zugehörige {@link StundenplanRaum}-Objekt oder null, falls der Raum zur ID nicht existiert.
+	 */
+	public StundenplanRaum raumGetByIdOrNull(final long idRaum) {
+		return _raum_by_id.get(idRaum);
+	}
+
+	/**
 	 * Liefert eine Beschreibung des {@link StundenplanRaum}-Objekts in der Form "042".
 	 * <br>Hinweis: Diese Methode liefert niemals eine Exception, stattdessen enthält der String eine Fehlermeldung.
 	 *
@@ -5993,6 +6008,15 @@ public class StundenplanManager {
 	 */
 	public @NotNull String getGueltigBis() {
 		return _stundenplanGueltigBis;
+	}
+
+	/**
+	 * Liefert die Information, ob der Stundenplan aktiv ist.
+	 *
+	 * @return true, wenn der Stundenplan aktiv ist, sonst false.
+	 */
+	public boolean isAktiv() {
+		return _aktiv;
 	}
 
 	/**

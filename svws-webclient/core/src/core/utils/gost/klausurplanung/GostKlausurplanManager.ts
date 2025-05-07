@@ -701,7 +701,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @param stundenplanManager der {@link StundenplanManager}
 	 */
 	public stundenplanManagerAddByAbschnittAndDatum(idSchuljahresabschnitt : number, datum : string, stundenplanManager : StundenplanManager) : void {
-		this._stundenplanmanager_by_schuljahresabschnitt_and_datum.put(idSchuljahresabschnitt, datum, stundenplanManager);
+		DeveloperNotificationException.ifMap2DPutOverwrites(this._stundenplanmanager_by_schuljahresabschnitt_and_datum, idSchuljahresabschnitt, datum, stundenplanManager);
 	}
 
 	/**
@@ -844,14 +844,14 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @return den {@link StundenplanManager}, zu den übergebenen Parametern, sonst wird eine {@link DeveloperNotificationException} geworfen.
 	 */
 	public stundenplanManagerGetByTerminOrException(termin : GostKlausurtermin) : StundenplanManager {
-		return DeveloperNotificationException.ifNull(JavaString.format("Kein Stundenplanmanager zu Termin %d gefunden.", termin.id), this.stundenplanManagerGetByTerminOrNull(termin));
+		return DeveloperNotificationException.ifNull(JavaString.format("Kein Stundenplan zu Termin %d (%s) gefunden.", termin.id, termin.datum), this.stundenplanManagerGetByTerminOrNull(termin));
 	}
 
 	private stundenplanManagerGetByDatumLinearSearch(datum : string) : StundenplanManager {
 		for (const stundenplanManager of this._stundenplanmanager_by_schuljahresabschnitt_and_datum.getNonNullValuesAsList())
 			if (stundenplanManager !== null && JavaString.compareTo(stundenplanManager.getGueltigAb(), datum) <= 0 && JavaString.compareTo(stundenplanManager.getGueltigBis(), datum) >= 0)
 				return stundenplanManager;
-		throw new DeveloperNotificationException(JavaString.format("Kein Stundenplanmanager zu Datum %s gefunden.", datum))
+		throw new DeveloperNotificationException(JavaString.format("Kein Stundenplan zu Datum %s gefunden.", datum))
 	}
 
 	/**
@@ -4614,7 +4614,8 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @return der zugehörige {@link StundenplanRaum}
 	 */
 	public stundenplanraumGetByKlausurraum(raum : GostKlausurraum) : StundenplanRaum {
-		return this.stundenplanManagerGetByTerminOrException(this.terminGetByIdOrException(raum.idTermin)).raumGetByIdOrException(DeveloperNotificationException.ifNull("StundenplanRaum darf nicht NULL sein", raum.idStundenplanRaum));
+		const spm : StundenplanManager = this.stundenplanManagerGetByTerminOrException(this.terminGetByIdOrException(raum.idTermin));
+		return DeveloperNotificationException.ifNull(JavaString.format("Stundenplan %d enthält keinen Raum zur ID %d", spm.stundenplanGetID(), raum.idStundenplanRaum), spm.raumGetByIdOrNull(DeveloperNotificationException.ifNull("StundenplanRaum darf nicht NULL sein", raum.idStundenplanRaum)));
 	}
 
 	/**

@@ -12,6 +12,7 @@
 				:items="rowsFiltered"
 				:model-value="[...props.manager().liste.auswahl()]"
 				@update:model-value="items => setAuswahl(items)"
+				v-model:sort-by-and-order="sortByAndOrder"
 				:columns
 				:unselectable
 				selectable
@@ -24,9 +25,19 @@
 				allow-arrow-key-selection
 				:focus-switching-enabled
 				:focus-help-visible>
+				<template #filterAdvanced>
+					<div class="col-span-full flex flex-wrap gap-x-5">
+						<svws-ui-checkbox type="toggle" v-model="filterNurAktiv">Nur Aktive</svws-ui-checkbox>
+					</div>
+				</template>
 				<template #cell(bezeichnung)="{ value, rowData }">
-					<span v-if="manager().hatUeberschneidungMitAnderemStundenplan(rowData)" class="icon-lg bg-ui-danger i-ri-alert-fill" />
-					{{ value }}
+					<span :class="(!rowData.aktiv && rowData !== manager().getStundenplanVorlage()) ? 'text-ui-disabled' : ''">{{ value }}</span>
+				</template>
+				<template #cell(gueltigAb)="{ value, rowData }">
+					<span :class="(!rowData.aktiv && rowData !== manager().getStundenplanVorlage()) ? 'text-ui-disabled' : ''">{{ (DateUtils.isValidDate(value) ? DateUtils.gibDatumGermanFormat(value) : '') }}</span>
+				</template>
+				<template #cell(gueltigBis)="{ value, rowData }">
+					<span :class="(!rowData.aktiv && rowData !== manager().getStundenplanVorlage()) ? 'text-ui-disabled' : ''">{{ (DateUtils.isValidDate(value) ? DateUtils.gibDatumGermanFormat(value) : '') }}</span>
 				</template>
 				<template #actions>
 					<svws-ui-tooltip position="bottom" v-if="hatKompetenzAendern">
@@ -47,9 +58,9 @@
 
 	import { computed, ref } from "vue";
 	import type { StundenplanAuswahlProps } from "./SStundenplanAuswahlProps";
-	import type { DataTableColumn } from "@ui";
+	import type { DataTableColumn, SortByAndOrder } from "@ui";
 	import { ViewType } from "@ui";
-	import { BenutzerKompetenz } from "@core";
+	import { BenutzerKompetenz, DateUtils } from "@core";
 	import type { StundenplanListeEintrag } from "@core";
 	import {useRegionSwitch} from "~/components/useRegionSwitch";
 
@@ -61,15 +72,12 @@
 	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.STUNDENPLAN_AENDERN));
 
 	const columns: DataTableColumn[] = [
-		{ key: "bezeichnung", label: "Bezeichnung", span: 2, sortable: false },
-		{ key: "gueltigAb", label: "von", span: 1, sortable: true, defaultSort: 'asc', type: 'date' },
-		{ key: "gueltigBis", label: "bis", span: 1, sortable: false, type: 'date' }
+		{ key: "bezeichnung", label: "Bezeichnung", span: 2, sortable: true, defaultSort: 'asc' },
+		{ key: "gueltigAb", label: "von", span: 1, sortable: true, defaultSort: 'asc' },
+		{ key: "gueltigBis", label: "bis", span: 1, sortable: false },
 	];
 
-	const unselectable = computed<Set<StundenplanListeEintrag>>(() => {
-		const vorlage = props.manager().getStundenplanVorlage();
-		return vorlage !== null ? new Set([vorlage]) : new Set();
-	});
+	const unselectable = computed<Set<StundenplanListeEintrag>>(() => new Set([props.manager().getStundenplanVorlage()]));
 
 	const rowsFiltered = computed<StundenplanListeEintrag[]>(() => {
 		const arr = [];
@@ -77,6 +85,16 @@
 			arr.push(e);
 		return arr;
 	});
+
+	const filterNurAktiv = computed<boolean>({
+		get: () => props.manager().filterNurAktiv(),
+		set: (value) => {
+			props.manager().setFilterNurAktiv(value);
+			void props.setFilter();
+			// void props.setFilterNurAktiv(value);
+		},
+	});
+
 
 	async function startCreationMode(): Promise<void> {
 		await props.gotoHinzufuegenView(true)
@@ -106,5 +124,23 @@
 		else
 			await props.gotoDefaultView(props.manager().getVorherigeAuswahl()?.stundenplanGetID());
 	}
+
+	const sortByAndOrder = computed<SortByAndOrder | undefined>({
+		get: () => {
+			const list = props.manager().orderGet();
+			if (list.isEmpty())
+				return undefined;
+			else {
+				const { a: key, b: order} = list.get(0);
+				return { key, order };
+			}
+		},
+		set: (value) => {
+			if ((value === undefined) || (value.key === null))
+				return;
+			props.manager().orderUpdate(value.key, value.order);
+			void props.setFilter();
+		},
+	})
 
 </script>

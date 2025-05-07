@@ -126,6 +126,31 @@ public class APIStundenplan {
 				BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN);
 	}
 
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Liste aller aktiven Stundenpläne eines Schuljahresabschnitts.
+	 *
+	 * @param schema      das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param abschnitt   die ID des Schuljahresabschnitts
+	 * @param request     die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste mit den aktiven Stundenplänen
+	 */
+	@GET
+	@Path("/aktiv/liste/{abschnitt : \\d+}")
+	@Operation(summary = "Gibt eine sortierte Übersicht der aktiven Stundenpläne des angegebenen Schuljahresabschnitts zurück.",
+			description = "Erstellt eine Liste der aktiven Stundenpläne des angegebenen Schuljahresabschnitts. Die Stundenpläne sind anhand der Gültigkeit sortiert."
+					+ "Es wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplanlisten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste der aktiven Stundenpläne",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = StundenplanListeEintrag.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Stundenplanlisten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Stundenpläne gefunden")
+	public Response getStundenplanlisteAktivFuerAbschnitt(@PathParam("schema") final String schema, @PathParam("abschnitt") final long abschnitt,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanListe(conn).getAktive(abschnitt),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN);
+	}
+
 
 	/**
 	 * Die OpenAPI-Methode für die Abfrage von grundlegenden Daten zu einem Stundenplan.

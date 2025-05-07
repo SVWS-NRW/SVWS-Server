@@ -175,7 +175,8 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 				this.setPatchedState(result);
 			}
 			if (!this.manager.stundenplanManagerGeladenByAbschnitt(abschnitt.id)) {
-				const listStundenplaene = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, abschnitt.id);
+				const listStundenplaene = await api.server.getStundenplanlisteAktivFuerAbschnitt(api.schema, abschnitt.id);
+				console.log(listStundenplaene)
 				const listStundenplanManager = new ArrayList<StundenplanManager>();
 				for (const stundenplan of listStundenplaene) {
 					const stundenplandaten = await api.server.getStundenplan(api.schema, stundenplan.id);

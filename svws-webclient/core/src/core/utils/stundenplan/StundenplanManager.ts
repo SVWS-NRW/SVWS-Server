@@ -522,6 +522,8 @@ export class StundenplanManager extends JavaObject {
 
 	private readonly _stundenplanGueltigBis : string;
 
+	private readonly _aktiv : boolean;
+
 	private readonly _stundenplanBezeichnung : string;
 
 	private _stundenplanKonfig : StundenplanKonfiguration = new StundenplanKonfiguration();
@@ -564,6 +566,7 @@ export class StundenplanManager extends JavaObject {
 			this._stundenplanAbschnitt = daten.abschnitt;
 			this._stundenplanGueltigAb = daten.gueltigAb;
 			this._stundenplanGueltigBis = StundenplanManager.init_gueltig_bis(daten.gueltigAb, daten.gueltigBis);
+			this._aktiv = daten.aktiv;
 			this._stundenplanBezeichnung = daten.bezeichnungStundenplan;
 			let uv : StundenplanUnterrichtsverteilung | null = unterrichtsverteilung;
 			if (uv === null) {
@@ -584,6 +587,7 @@ export class StundenplanManager extends JavaObject {
 			this._stundenplanAbschnitt = stundenplanKomplett.daten.abschnitt;
 			this._stundenplanGueltigAb = stundenplanKomplett.daten.gueltigAb;
 			this._stundenplanGueltigBis = StundenplanManager.init_gueltig_bis(stundenplanKomplett.daten.gueltigAb, stundenplanKomplett.daten.gueltigBis);
+			this._aktiv = stundenplanKomplett.daten.aktiv;
 			this._stundenplanBezeichnung = stundenplanKomplett.daten.bezeichnungStundenplan;
 			DeveloperNotificationException.ifTrue("Die ID des Stundenplans passt nicht zur ID der StundenplanUnterrichtsverteilung.", stundenplanKomplett.daten.id !== stundenplanKomplett.unterrichtsverteilung.id);
 			this.initAll(stundenplanKomplett.daten.kalenderwochenZuordnung, stundenplanKomplett.unterrichtsverteilung.faecher, stundenplanKomplett.daten.jahrgaenge, stundenplanKomplett.daten.zeitraster, stundenplanKomplett.daten.raeume, stundenplanKomplett.daten.pausenzeiten, stundenplanKomplett.daten.aufsichtsbereiche, stundenplanKomplett.unterrichtsverteilung.lehrer, stundenplanKomplett.unterrichtsverteilung.schueler, stundenplanKomplett.daten.schienen, stundenplanKomplett.unterrichtsverteilung.klassen, stundenplanKomplett.unterrichtsverteilung.klassenunterricht, stundenplanKomplett.pausenaufsichten, stundenplanKomplett.unterrichtsverteilung.kurse, stundenplanKomplett.unterrichte);
@@ -4771,6 +4775,18 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert das zur ID zugehörige {@link StundenplanRaum}-Objekt oder null, falls der Raum zur ID nicht existiert.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param idRaum Die ID des angefragten-Objektes.
+	 *
+	 * @return das zur ID zugehörige {@link StundenplanRaum}-Objekt oder null, falls der Raum zur ID nicht existiert.
+	 */
+	public raumGetByIdOrNull(idRaum : number) : StundenplanRaum | null {
+		return this._raum_by_id.get(idRaum);
+	}
+
+	/**
 	 * Liefert eine Beschreibung des {@link StundenplanRaum}-Objekts in der Form "042".
 	 * <br>Hinweis: Diese Methode liefert niemals eine Exception, stattdessen enthält der String eine Fehlermeldung.
 	 *
@@ -5392,6 +5408,15 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public getGueltigBis() : string {
 		return this._stundenplanGueltigBis;
+	}
+
+	/**
+	 * Liefert die Information, ob der Stundenplan aktiv ist.
+	 *
+	 * @return true, wenn der Stundenplan aktiv ist, sonst false.
+	 */
+	public isAktiv() : boolean {
+		return this._aktiv;
 	}
 
 	/**

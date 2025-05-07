@@ -38,6 +38,13 @@ public class Tabelle_Stundenplan extends SchemaTabelle {
 			.setJavaComment("Das Datum, bis wann der Stundenplan gültig ist - null, wenn kein Ende innerhalb des Abschnitts festgelegt wurde"
 					+ " (letzter Stundenplan im Abschnitt)");
 
+	/** Die Definition der Tabellenspalte Aktiv */
+	public SchemaTabelleSpalte col_Aktiv = add("Aktiv", SchemaDatentypen.BOOLEAN, false)
+			.setDefault("0")
+			.setNotNull()
+			.setJavaComment("Der Aktiv-Status des Stundenplans - an einem Datum darf nur ein Stundenplan aktiv sein")
+			.setRevision(SchemaRevisionen.REV_38);
+
 	/** Die Definition der Tabellenspalte Beschreibung */
 	public SchemaTabelleSpalte col_Beschreibung = add("Beschreibung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1000)
 			.setNotNull()

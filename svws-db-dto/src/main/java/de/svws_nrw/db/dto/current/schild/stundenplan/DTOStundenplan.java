@@ -26,7 +26,7 @@ import de.svws_nrw.csv.converter.current.DatumConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Stundenplan")
-@JsonPropertyOrder({"ID", "Schuljahresabschnitts_ID", "Beginn", "Ende", "Beschreibung", "WochentypModell"})
+@JsonPropertyOrder({"ID", "Schuljahresabschnitts_ID", "Beginn", "Ende", "Aktiv", "Beschreibung", "WochentypModell"})
 public final class DTOStundenplan {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -64,6 +64,12 @@ public final class DTOStundenplan {
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Ende */
 	public static final String QUERY_LIST_BY_ENDE = "SELECT e FROM DTOStundenplan e WHERE e.Ende IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Aktiv */
+	public static final String QUERY_BY_AKTIV = "SELECT e FROM DTOStundenplan e WHERE e.Aktiv = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Aktiv */
+	public static final String QUERY_LIST_BY_AKTIV = "SELECT e FROM DTOStundenplan e WHERE e.Aktiv IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Beschreibung */
 	public static final String QUERY_BY_BESCHREIBUNG = "SELECT e FROM DTOStundenplan e WHERE e.Beschreibung = ?1";
@@ -104,6 +110,11 @@ public final class DTOStundenplan {
 	@JsonDeserialize(using = DatumConverterDeserializer.class)
 	public String Ende;
 
+	/** Der Aktiv-Status des Stundenplans - an einem Datum darf nur ein Stundenplan aktiv sein */
+	@Column(name = "Aktiv")
+	@JsonProperty
+	public boolean Aktiv;
+
 	/** Eine Beschreibung / Kommentar zu diesem Stundenplan */
 	@Column(name = "Beschreibung")
 	@JsonProperty
@@ -126,16 +137,18 @@ public final class DTOStundenplan {
 	 * @param ID   der Wert für das Attribut ID
 	 * @param Schuljahresabschnitts_ID   der Wert für das Attribut Schuljahresabschnitts_ID
 	 * @param Beginn   der Wert für das Attribut Beginn
+	 * @param Aktiv   der Wert für das Attribut Aktiv
 	 * @param Beschreibung   der Wert für das Attribut Beschreibung
 	 * @param WochentypModell   der Wert für das Attribut WochentypModell
 	 */
-	public DTOStundenplan(final long ID, final long Schuljahresabschnitts_ID, final String Beginn, final String Beschreibung, final int WochentypModell) {
+	public DTOStundenplan(final long ID, final long Schuljahresabschnitts_ID, final String Beginn, final boolean Aktiv, final String Beschreibung, final int WochentypModell) {
 		this.ID = ID;
 		this.Schuljahresabschnitts_ID = Schuljahresabschnitts_ID;
 		if (Beginn == null) {
 			throw new NullPointerException("Beginn must not be null");
 		}
 		this.Beginn = Beginn;
+		this.Aktiv = Aktiv;
 		if (Beschreibung == null) {
 			throw new NullPointerException("Beschreibung must not be null");
 		}
@@ -172,7 +185,7 @@ public final class DTOStundenplan {
 	 */
 	@Override
 	public String toString() {
-		return "DTOStundenplan(ID=" + this.ID + ", Schuljahresabschnitts_ID=" + this.Schuljahresabschnitts_ID + ", Beginn=" + this.Beginn + ", Ende=" + this.Ende + ", Beschreibung=" + this.Beschreibung + ", WochentypModell=" + this.WochentypModell + ")";
+		return "DTOStundenplan(ID=" + this.ID + ", Schuljahresabschnitts_ID=" + this.Schuljahresabschnitts_ID + ", Beginn=" + this.Beginn + ", Ende=" + this.Ende + ", Aktiv=" + this.Aktiv + ", Beschreibung=" + this.Beschreibung + ", WochentypModell=" + this.WochentypModell + ")";
 	}
 
 }

@@ -170,7 +170,7 @@ public final class DataUntis {
 		}
 		// Erstelle den neuen Stundenplan
 		final long idStundenplan = conn.transactionGetNextID(DTOStundenplan.class);
-		final DTOStundenplan dtoStundenplan = new DTOStundenplan(idStundenplan, idSchuljahresabschnitt, beginn, beschreibung, wochentyp);
+		final DTOStundenplan dtoStundenplan = new DTOStundenplan(idStundenplan, idSchuljahresabschnitt, beginn, false, beschreibung, wochentyp);
 		dtoStundenplan.Ende = "%04d-%02d-%02d".formatted(schuljahresabschnitt.schuljahr + 1, 7, 31);
 		conn.transactionPersist(dtoStundenplan);
 		conn.transactionFlush();
@@ -1478,7 +1478,7 @@ public final class DataUntis {
 		final GostKlausurplanManager manager = new GostKlausurplanManager(data);
 
 		logger.logLn("-> laden der Stundenpläne für den Schuljahresabschnitt...");
-		final List<StundenplanListeEintrag> sleList = DataStundenplanListe.getStundenplaene(conn, schuljahresabschnitt.id);
+		final List<StundenplanListeEintrag> sleList = DataStundenplanListe.getStundenplaeneAktiv(conn, schuljahresabschnitt.id);
 		for (final StundenplanListeEintrag sle : sleList) {
 			final StundenplanManager stundenplanManager =
 					new StundenplanManager(new DataStundenplan(conn).getById(sle.id), DataStundenplanUnterricht.getUnterrichte(conn, sle.id),

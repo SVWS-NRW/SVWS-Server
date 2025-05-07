@@ -366,7 +366,7 @@ public class ReportingRepository {
 		try {
 			this.logger.logLn(LogLevel.DEBUG, 8, "Ermittle alle Stundenplan-Definitionen der Schule.");
 			// Ermittle alle Stundenpläne zum aktuellen Schuljahresabschnitt.
-			this.stundenplandefinitionen = new ArrayList<>(DataStundenplanListe.getStundenplaene(this.conn, null));
+			this.stundenplandefinitionen = new ArrayList<>(DataStundenplanListe.getStundenplaeneAktiv(this.conn, null));
 			if (!this.stundenplandefinitionen.isEmpty())
 				this.stundenplandefinitionen.sort(Comparator.comparing((StundenplanListeEintrag sle) -> sle.gueltigAb).reversed());
 		} catch (final Exception e) {

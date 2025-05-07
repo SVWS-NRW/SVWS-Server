@@ -3,9 +3,9 @@
 		:class="{
 			'text-input--filled': (`${data}`.length > 0 && data !== null) || type === 'date',
 			'text-input--invalid': (isValid === false),
-			'text-input--statistic-muss': ((validator !== undefined) && (!validator().getFehler().isEmpty()) && (validator().getFehlerart() === ValidatorFehlerart.MUSS)),
-			'text-input--statistic-kann': ((validator !== undefined) && (!validator().getFehler().isEmpty()) && (validator().getFehlerart() === ValidatorFehlerart.KANN)),
-			'text-input--statistic-hinweis': ((validator !== undefined) && (!validator().getFehler().isEmpty()) && (validator().getFehlerart() === ValidatorFehlerart.HINWEIS)),
+			'text-input--statistic-muss': (((validator !== undefined) && (!validator().getFehler().isEmpty()) && (validator().getFehlerart() === ValidatorFehlerart.MUSS)) || ((isValid === false) && (fehlerart === ValidatorFehlerart.MUSS))),
+			'text-input--statistic-kann': (((validator !== undefined) && (!validator().getFehler().isEmpty()) && (validator().getFehlerart() === ValidatorFehlerart.KANN)) || ((isValid === false) && (fehlerart === ValidatorFehlerart.KANN))),
+			'text-input--statistic-hinweis': (((validator !== undefined) && (!validator().getFehler().isEmpty()) && (validator().getFehlerart() === ValidatorFehlerart.HINWEIS)) || ((isValid === false) && (fehlerart === ValidatorFehlerart.HINWEIS))),
 			'text-input--disabled': disabled,
 			'text-input--readonly': readonly,
 			'text-input--select': isSelectInput,
@@ -128,6 +128,8 @@
 		minLen?: number;
 		span?: 'full' | '2';
 		removable?: boolean;
+		/* Validatoren */
+		fehlerart?: ValidatorFehlerart;
 	}>(), {
 		type: "text",
 		minDate: undefined,
@@ -151,6 +153,8 @@
 		minLen: undefined,
 		span: undefined,
 		removable: false,
+		/* Validatoren */
+		fehlerart: () => ValidatorFehlerart.UNGENUTZT,
 	});
 
 	const emit = defineEmits<{
