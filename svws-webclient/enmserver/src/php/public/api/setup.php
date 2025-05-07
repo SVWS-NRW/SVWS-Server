@@ -12,8 +12,8 @@
 	 * @responseCode 409 Falls der Server bereits initiiert wurde
  	 */
 
-	require_once $_SERVER['DOCUMENT_ROOT'].'/../app/Config.php';
-	require_once $_SERVER['DOCUMENT_ROOT'].'/../app/Database.php';
+	require_once __DIR__.'/../../app/Config.php';
+	require_once __DIR__.'/../../app/Database.php';
 
 	if (strcmp($_SERVER['REQUEST_METHOD'], 'GET') !== 0) {
 		http_response_code(403);
