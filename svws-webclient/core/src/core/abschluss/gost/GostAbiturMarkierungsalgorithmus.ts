@@ -105,6 +105,11 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 	private hatAbiFremspracheNeueinsetzend : boolean = false;
 
 	/**
+	 * Gibt an, ob im Abitur eine Gesellschaftswissenschaft - außer Religion - markiert wurde
+	 */
+	private hatAbiGesellschaftswissenschaft : boolean = false;
+
+	/**
 	 * Gibt an, ob im Abitur Kunst oder Musik gewählt wurde
 	 */
 	private hatAbiKunstOderMusik : boolean = false;
@@ -240,6 +245,7 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 			this.defiziteLK = original.defiziteLK;
 			this.defiziteGK = original.defiziteGK;
 			this.anzahlAbiFremdsprachen = original.anzahlAbiFremdsprachen;
+			this.hatAbiGesellschaftswissenschaft = original.hatAbiGesellschaftswissenschaft;
 			this.hatAbiFremspracheNeueinsetzend = original.hatAbiFremspracheNeueinsetzend;
 			this.hatAbiKunstOderMusik = original.hatAbiKunstOderMusik;
 			this.restErlaubtMusik = original.restErlaubtMusik;
@@ -522,7 +528,7 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 				this.ergebnis.log.add(this.logIndent + "  Im Halbjahr " + hj.kuerzel + " wurde die Note ungenügend für das Fach erteilt. Somit ist keine Zulassung mehr möglich, da das Fach somit als nicht belegt gilt.");
 				return false;
 			}
-			if (!this.markiereHalbjahresbelegung(current, hj))
+			if ((this.markiert.getOrNull(fach.id, hj.id) === null) && (!this.markiereHalbjahresbelegung(current, hj)))
 				return false;
 		}
 		return true;
@@ -599,6 +605,8 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 				this.anzahlAbiFremdsprachen++;
 			if (fach.istFremdsprache && fach.istFremdSpracheNeuEinsetzend)
 				this.hatAbiFremspracheNeueinsetzend = true;
+			if (GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH.hat(fach))
+				this.hatAbiGesellschaftswissenschaft = true;
 			const istKunst : boolean = this.manager.faecher().fachIstKunst(fach.id);
 			const istMusik : boolean = this.manager.faecher().fachIstMusik(fach.id);
 			if (istKunst || istMusik)
@@ -933,8 +941,6 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 	private markiereReligionOderPhilosophieUndEineGesellschaftswissenschaft() : List<GostAbiturMarkierungsalgorithmus> {
 		this.ergebnis.log.add(this.logIndent + "Markierung zwei Religions- oder Philosophiekurse (oder ggf. einer Gesellschaftswissenschaft als Ersatz):");
 		const newStates : List<GostAbiturMarkierungsalgorithmus> = new ArrayList<GostAbiturMarkierungsalgorithmus>();
-		const anzahlGW : number | null = this.anzahlBelegungen.get(GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH);
-		const hatAbiGesellschaftswissenschaft : boolean = (anzahlGW !== null) && (anzahlGW > 0);
 		const anzahlRE : number | null = this.anzahlBelegungen.get(GostFachbereich.RELIGION);
 		const hatAbiRE : boolean = (anzahlRE !== null) && (anzahlRE > 0);
 		let hatReBelegungErfuellt : boolean = false;
@@ -961,7 +967,7 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 				}
 			}
 		}
-		if (hatAbiGesellschaftswissenschaft) {
+		if (this.hatAbiGesellschaftswissenschaft) {
 			const newState : GostAbiturMarkierungsalgorithmus = new GostAbiturMarkierungsalgorithmus(this);
 			if (!hatReBelegungErfuellt)
 				newState.markiereReligionOderErsatzAusGesellschaftswissenschaften();

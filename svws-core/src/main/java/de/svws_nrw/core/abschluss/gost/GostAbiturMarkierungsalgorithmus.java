@@ -74,6 +74,9 @@ public final class GostAbiturMarkierungsalgorithmus {
 	/** Gibt an, ob im Abitur eine neu einsetzende Fremdsprache markiert wurde */
 	private boolean hatAbiFremspracheNeueinsetzend = false;
 
+	/** Gibt an, ob im Abitur eine Gesellschaftswissenschaft - außer Religion - markiert wurde */
+	private boolean hatAbiGesellschaftswissenschaft = false;
+
 	/** Gibt an, ob im Abitur Kunst oder Musik gewählt wurde */
 	private boolean hatAbiKunstOderMusik = false;
 
@@ -193,6 +196,7 @@ public final class GostAbiturMarkierungsalgorithmus {
 		this.defiziteLK = original.defiziteLK;
 		this.defiziteGK = original.defiziteGK;
 		this.anzahlAbiFremdsprachen = original.anzahlAbiFremdsprachen;
+		this.hatAbiGesellschaftswissenschaft = original.hatAbiGesellschaftswissenschaft;
 		this.hatAbiFremspracheNeueinsetzend = original.hatAbiFremspracheNeueinsetzend;
 		this.hatAbiKunstOderMusik = original.hatAbiKunstOderMusik;
 		this.restErlaubtMusik = original.restErlaubtMusik;
@@ -526,7 +530,9 @@ public final class GostAbiturMarkierungsalgorithmus {
 						+ " wurde die Note ungenügend für das Fach erteilt. Somit ist keine Zulassung mehr möglich, da das Fach somit als nicht belegt gilt.");
 				return false;
 			}
-			if (!markiereHalbjahresbelegung(current, hj))
+
+			// Prüfe, on die Belegung bereits markiert wurde - wenn nicht, dann versuche eine Belegung
+			if ((this.markiert.getOrNull(fach.id, hj.id) == null) && (!markiereHalbjahresbelegung(current, hj)))
 				return false;
 		}
 		return true;
@@ -614,6 +620,9 @@ public final class GostAbiturMarkierungsalgorithmus {
 				anzahlAbiFremdsprachen++;
 			if (fach.istFremdsprache && fach.istFremdSpracheNeuEinsetzend)
 				this.hatAbiFremspracheNeueinsetzend = true;
+			// Prüfe auf die Belegung einer Gesellschaftswissenschaft außer Religion
+			if (GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH.hat(fach))
+				hatAbiGesellschaftswissenschaft = true;
 			// Prüfe die Belegung auf Kunst oder Musik
 			final boolean istKunst = manager.faecher().fachIstKunst(fach.id);
 			final boolean istMusik = manager.faecher().fachIstMusik(fach.id);
@@ -1023,9 +1032,6 @@ public final class GostAbiturMarkierungsalgorithmus {
 	private @NotNull List<GostAbiturMarkierungsalgorithmus> markiereReligionOderPhilosophieUndEineGesellschaftswissenschaft() {
 		ergebnis.log.add(logIndent + "Markierung zwei Religions- oder Philosophiekurse (oder ggf. einer Gesellschaftswissenschaft als Ersatz):");
 		final @NotNull List<GostAbiturMarkierungsalgorithmus> newStates = new ArrayList<>();
-
-		final Integer anzahlGW = anzahlBelegungen.get(GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH);
-		final boolean hatAbiGesellschaftswissenschaft = (anzahlGW != null) && (anzahlGW > 0);
 
 		// Prüfe, ob Religion bereits im Abiturbereich markiert wurde.
 		final Integer anzahlRE = anzahlBelegungen.get(GostFachbereich.RELIGION);
