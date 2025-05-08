@@ -2,7 +2,7 @@ import type { GostBelegpruefungErgebnis, SchuelerListeEintrag} from "@core";
 import { AbiturdatenManager, DeveloperNotificationException, GostBelegpruefungsArt, GostFaecherManager, UserNotificationException } from "@core";
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-import { routeSchuelerAbiturLeistungsuebersicht } from "~/router/apps/schueler/abitur/RouteSchuelerAbiturLeistungsuebersicht";
+import { routeSchuelerAbiturZulassung } from "~/router/apps/schueler/abitur/RouteSchuelerAbiturZulassung";
 
 interface RouteStateDataSchuelerAbitur extends RouteStateInterface {
 	// Daten, die in Abhängigkeit des ausgewählten Schülers geladen werden
@@ -14,7 +14,7 @@ interface RouteStateDataSchuelerAbitur extends RouteStateInterface {
 
 const defaultState = <RouteStateDataSchuelerAbitur> {
 	schueler: null,
-	view: routeSchuelerAbiturLeistungsuebersicht,
+	view: routeSchuelerAbiturZulassung,
 	managerLaufbahnplanung: null,
 	ergebnisBelegpruefung: null,
 	managerAbitur: null,

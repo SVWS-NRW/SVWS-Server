@@ -1,7 +1,9 @@
-import type { AbiturdatenManager, SchuleStammdaten, ServerMode } from "@core";
+import type { AbiturdatenManager, GostBelegpruefungErgebnis, SchuleStammdaten, ServerMode } from "@core";
 
 export interface SchuelerAbiturZulassungProps {
 	serverMode: ServerMode;
 	schule: SchuleStammdaten;
-	manager: () => AbiturdatenManager;
+	managerLaufbahnplanung: () => AbiturdatenManager;
+	ergebnisBelegpruefung: () => GostBelegpruefungErgebnis;
+	managerAbitur: () => AbiturdatenManager | null;
 }

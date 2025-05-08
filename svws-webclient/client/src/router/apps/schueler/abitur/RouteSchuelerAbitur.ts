@@ -6,7 +6,7 @@ import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
 import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
-import { routeSchuelerAbiturLeistungsuebersicht } from "~/router/apps/schueler/abitur/RouteSchuelerAbiturLeistungsuebersicht";
+import { routeSchuelerAbiturZulassung } from "~/router/apps/schueler/abitur/RouteSchuelerAbiturZulassung";
 import { RouteDataSchuelerAbitur } from "~/router/apps/schueler/abitur/RouteDataSchuelerAbitur";
 
 import type { SchuelerAbiturProps } from "~/components/schueler/abitur/SchuelerAbiturProps";
@@ -31,9 +31,9 @@ export class RouteSchuelerAbitur extends RouteNode<RouteDataSchuelerAbitur, Rout
 			return this.checkHidden(params);
 		}
 		super.children = [
-			routeSchuelerAbiturLeistungsuebersicht,
+			routeSchuelerAbiturZulassung,
 		];
-		super.defaultChild = routeSchuelerAbiturLeistungsuebersicht;
+		super.defaultChild = routeSchuelerAbiturZulassung;
 	}
 
 	protected checkHidden(params?: RouteParams) {
