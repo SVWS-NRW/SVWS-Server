@@ -23,7 +23,9 @@
 			</div>
 
 			<div class="w-64">
-				<svws-ui-button @click="uebertrageErgebnis">Übertrage in Abiturbereich</svws-ui-button>
+				<svws-ui-button @click="copyAbiturdatenAusLeistungsdaten(managerLaufbahnplanung().daten().schuelerID)">
+					Übertrage in Abiturbereich
+				</svws-ui-button>
 			</div>
 		</template>
 
@@ -78,10 +80,6 @@
 		} catch(e) {
 			// do nothing
 		}
-	}
-
-	async function uebertrageErgebnis() {
-		alert("noch zu implementieren"); // TODO
 	}
 
 </script>

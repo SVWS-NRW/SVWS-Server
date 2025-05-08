@@ -1018,7 +1018,8 @@ public class APIGost {
 	@ApiResponse(responseCode = "203", description = "Die Fachwahlen wurden erfolgreich gelöscht.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Fachwahlen zu löschen.")
 	@ApiResponse(responseCode = "404", description = "Der Schüler bzw. der zugehörige Abiturjahrgang wurde nicht gefunden.")
-	@ApiResponse(responseCode = "409", description = "Es liegen bereits bewertete Abschnitt vor, so dass die Fachwahlen nicht vollständig entfernt werden können.")
+	@ApiResponse(responseCode = "409",
+			description = "Es liegen bereits bewertete Abschnitt vor, so dass die Fachwahlen nicht vollständig entfernt werden können.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteGostSchuelerFachwahlen(@PathParam("schema") final String schema, @PathParam("schuelerid") final long schuelerid,
 			@Context final HttpServletRequest request) {
@@ -1099,6 +1100,34 @@ public class APIGost {
 	}
 
 
+	/**
+	 * Die OpenAPI-Methode für das Übertragen der Abitur-relevanten Daten aus den Leistungsdaten in den
+	 * Abiturbereich.
+	 *
+	 * @param schema    das Datenbankschema
+	 * @param id        die ID des Schülers, bei dem der Übertrag stattfinden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort
+	 */
+	@POST
+	@Path("/schueler/{id : \\d+}/abiturdaten/uebertragen")
+	@Operation(summary = "Überträgt die Abitur-relevanten Daten aus den Leistungsdaten in den Abiturbereich.",
+			description = "Überträgt die Abitur-relevanten Daten aus den Leistungsdaten in den Abiturbereich."
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung hat.")
+	@ApiResponse(responseCode = "204", description = "Die Abiturdaten wurden erfolgreich übertragen")
+	@ApiResponse(responseCode = "400", description = "Der Schüler hat aktuell nicht alle Leistungen für die Qualifikationsphase")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Leistungsdaten in den Abiturbereich zu übertragen")
+	@ApiResponse(responseCode = "404", description = "Es wurden keine Leistungsdaten für die Übertragung gefunden")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response copyGostSchuelerAbiturdatenAusLeistungsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> DBUtilsGostAbitur.copyAbiturdatenAusLeistungsdaten(conn, id),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.ABITUR_AENDERN_ALLGEMEIN,
+				BenutzerKompetenz.ABITUR_AENDERN_FUNKTIONSBEZOGEN);
+	}
 
 	/**
 	 * Die OpenAPI-Methode für die Prüfung der Belegprüfung der Abiturdaten.

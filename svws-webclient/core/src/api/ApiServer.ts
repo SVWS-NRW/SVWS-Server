@@ -6756,6 +6756,30 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode copyGostSchuelerAbiturdatenAusLeistungsdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{id : \d+}/abiturdaten/uebertragen
+	 *
+	 * Überträgt die Abitur-relevanten Daten aus den Leistungsdaten in den Abiturbereich.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Die Abiturdaten wurden erfolgreich übertragen
+	 *   Code 400: Der Schüler hat aktuell nicht alle Leistungen für die Qualifikationsphase
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Leistungsdaten in den Abiturbereich zu übertragen
+	 *   Code 404: Es wurden keine Leistungsdaten für die Übertragung gefunden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async copyGostSchuelerAbiturdatenAusLeistungsdaten(schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/gost/schueler/{id : \\d+}/abiturdaten/uebertragen"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		await super.postJSON(path, null);
+		return;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getGostSchuelerLaufbahnplanung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{id : \d+}/laufbahnplanung
 	 *
 	 * Liest die Laufbahnplanungsdaten für die gymnasiale Oberstufe zu dem Schüler mit der angegebenen ID aus der Datenbank aus und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Laufbahnplanungsdaten besitzt.

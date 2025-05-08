@@ -75,9 +75,11 @@ export class RouteDataSchuelerAbitur extends RouteData<RouteStateDataSchuelerAbi
 			listFachkombinationen = await api.server.getGostAbiturjahrgangFachkombinationen(api.schema, schueler.abiturjahrgang);
 			faecherManager.addFachkombinationenAll(listFachkombinationen);
 		} catch(error) {
-			throw new UserNotificationException("Die Informationen zum Abiturjahrgang " + schueler.abiturjahrgang + " und dessen Fächer konnten nicht vollständig ermittelt werden. Überpfüfen Sie diese Infromationen.");
+			throw new UserNotificationException("Die Informationen zum Abiturjahrgang " + schueler.abiturjahrgang +
+				" und dessen Fächer konnten nicht vollständig ermittelt werden. Überpfüfen Sie diese Infromationen.");
 		}
-		const newState = <RouteStateDataSchuelerAbitur>{ schueler, managerLaufbahnplanung: null, ergebnisBelegpruefung: null, managerAbitur: null, view: this._state.value.view };
+		const newState = <RouteStateDataSchuelerAbitur>{ schueler, managerLaufbahnplanung: null, ergebnisBelegpruefung: null,
+			managerAbitur: null, view: this._state.value.view };
 		try {
 			const abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, schueler.id);
 			newState.managerLaufbahnplanung = new AbiturdatenManager(api.mode, abiturdaten, gostJahrgangsdaten, faecherManager, GostBelegpruefungsArt.GESAMT);
@@ -94,6 +96,18 @@ export class RouteDataSchuelerAbitur extends RouteData<RouteStateDataSchuelerAbi
 			// do nothing
 		}
 		this.setPatchedDefaultState(newState)
+	}
+
+
+	copyAbiturdatenAusLeistungsdaten = async (idSchueler: number) : Promise<void> => {
+		// Kopiere die Leistungsdaten auf dem Server ...
+		await api.server.copyGostSchuelerAbiturdatenAusLeistungsdaten(api.schema, idSchueler);
+		// ... und lade diese dann vom Server
+		const newState = <RouteStateDataSchuelerAbitur>{ };
+		const abiturdaten = await api.server.getGostSchuelerAbiturdaten(api.schema, idSchueler);
+		newState.managerAbitur = new AbiturdatenManager(api.mode, abiturdaten, this.managerLaufbahnplanung.jahrgangsdaten(),
+			this.managerLaufbahnplanung.faecher(), GostBelegpruefungsArt.GESAMT);
+		this.setPatchedState(newState)
 	}
 
 }

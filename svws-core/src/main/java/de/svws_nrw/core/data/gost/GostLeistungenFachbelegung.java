@@ -33,6 +33,9 @@ public class GostLeistungenFachbelegung {
 	/** Gibt den Jahrgang, an dem die Belegung zugeordnet ist */
 	public String jahrgang;
 
+	/** Die ID des Kurses */
+	public Long idKurs;
+
 	/** Gibt die ID des Fachlehrers an, bei dem der zur Fachbelegung gehörige Kurs belegt wurde. */
 	public Long lehrer;
 

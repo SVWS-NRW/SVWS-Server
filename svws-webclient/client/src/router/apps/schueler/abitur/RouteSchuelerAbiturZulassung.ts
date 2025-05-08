@@ -36,6 +36,7 @@ export class RouteSchuelerAbiturZulassung extends RouteNode<any, RouteSchuelerAb
 			managerLaufbahnplanung: () => routeSchuelerAbitur.data.managerLaufbahnplanung,
 			ergebnisBelegpruefung: () => routeSchuelerAbitur.data.ergebnisBelegpruefung,
 			managerAbitur: () => routeSchuelerAbitur.data.managerAbitur,
+			copyAbiturdatenAusLeistungsdaten: routeSchuelerAbitur.data.copyAbiturdatenAusLeistungsdaten,
 		};
 	}
 

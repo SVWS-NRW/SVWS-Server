@@ -6,4 +6,5 @@ export interface SchuelerAbiturZulassungProps {
 	managerLaufbahnplanung: () => AbiturdatenManager;
 	ergebnisBelegpruefung: () => GostBelegpruefungErgebnis;
 	managerAbitur: () => AbiturdatenManager | null;
+	copyAbiturdatenAusLeistungsdaten: (idSchueler: number) => Promise<void>;
 }

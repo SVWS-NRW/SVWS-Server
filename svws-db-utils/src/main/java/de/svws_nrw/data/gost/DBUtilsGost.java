@@ -351,6 +351,7 @@ public final class DBUtilsGost {
 		belegung.abschnitt = abschnittLeistungsdaten.Abschnitt;
 		belegung.abschnittGewertet = lernabschnitt.SemesterWertung;
 		belegung.jahrgang = jahrgang.daten(belegung.schuljahr).kuerzel;
+		belegung.idKurs = leistung.Kurs_ID;
 		belegung.lehrer = leistung.Fachlehrer_ID;
 		belegung.notenKuerzel = leistung.NotenKrz;
 		belegung.kursartKuerzel = kursart.kuerzel;
