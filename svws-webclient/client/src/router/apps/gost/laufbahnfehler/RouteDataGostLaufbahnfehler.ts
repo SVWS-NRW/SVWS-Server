@@ -93,6 +93,7 @@ export class RouteDataGostLaufbahnfehler extends RouteData<RouteStateDataGostLau
 	importLaufbahnplanung = async (data: FormData): Promise<void> => {
 		api.status.start();
 		await api.server.importGostSchuelerLaufbahnplanungen(data, api.schema);
+		await this.setAbiturjahr(this.abiturjahr);
 		api.status.stop();
 	}
 
