@@ -54,6 +54,8 @@ export class RouteDataKurse extends RouteDataAuswahl<KursListeManager, RouteStat
 		if (this._state.value.manager === undefined) {
 			manager.setFilterAuswahlPermitted(true);
 			manager.setFilterNurSichtbar(this.filterNurSichtbar);
+		} else {
+			manager.useFilter(this._state.value.manager);
 		}
 		return { manager };
 	}

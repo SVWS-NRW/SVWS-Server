@@ -389,6 +389,20 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 		return this._mapKursByKuerzelAndJahrgang.getOrNull(kuerzel, idJahrgang);
 	}
 
+	/**
+	 * Methode übernimmt Filterinformationen aus dem übergebenen {@link KursListeManager}
+	 *
+	 * @param srcManager Manager, aus dem die Filterinformationen übernommen werden
+	 */
+	public useFilter(srcManager : KursListeManager) : void {
+		this.jahrgaenge.setAuswahl(srcManager.jahrgaenge);
+		this.lehrer.setAuswahl(srcManager.lehrer);
+		this.schulgliederungen.setAuswahl(srcManager.schulgliederungen);
+		this.faecher.setAuswahl(srcManager.faecher);
+		this.schueler.setAuswahl(srcManager.schueler);
+		this.setFilterNurSichtbar(srcManager._filterNurSichtbar);
+	}
+
 	transpilerCanonicalName(): string {
 		return 'de.svws_nrw.core.utils.kurse.KursListeManager';
 	}
