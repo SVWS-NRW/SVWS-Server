@@ -245,6 +245,11 @@ public final class FachListeManager extends AuswahlManager<Long, FaecherListeEin
 		return (sortierung > 0) && (sortierung < Integer.MAX_VALUE);
 	}
 
+	/**
+	 * Methode übernimmt Filterinformationen aus dem übergebenen {@link AuswahlManager}
+	 *
+	 * @param srcManager Manager, aus dem die Filterinformationen übernommen werden
+	 */
 	public void useFilter(final @NotNull FachListeManager srcManager) {
 		this.setFilterAuswahlPermitted(srcManager.isFilterAuswahlPermitted());
 		this.setFilterNurSichtbar(srcManager.filterNurSichtbar());

@@ -194,6 +194,11 @@ public final class StundenplanUnterrichtListeManager extends AuswahlManager<Long
 		return true;
 	}
 
+	/**
+	 * Methode übernimmt Filterinformationen aus dem übergebenen {@link AuswahlManager}
+	 *
+	 * @param srcManager Manager, aus dem die Filterinformationen übernommen werden
+	 */
 	public void useFilter(final @NotNull StundenplanUnterrichtListeManager srcManager) {
 		this.faecher.setAuswahl(srcManager.faecher);
 		this.klassen.setAuswahl(srcManager.klassen);

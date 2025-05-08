@@ -323,6 +323,11 @@ export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintra
 		return this._mapAbschnittsdatenBySchuljahresabschnittsId.get(id);
 	}
 
+	/**
+	 * Methode übernimmt Filterinformationen aus dem übergebenen {@link AuswahlManager}
+	 *
+	 * @param srcManager Manager, aus dem die Filterinformationen übernommen werden
+	 */
 	public useFilter(srcManager : LehrerListeManager) : void {
 		this.personaltypen.setAuswahl(srcManager.personaltypen);
 		this.setFilterNurStatistikRelevant(srcManager.filterNurStatistikRelevant());

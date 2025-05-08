@@ -177,6 +177,11 @@ public final class ReligionListeManager extends AuswahlManager<Long, ReligionEin
 		return this._mapReligionEintragByKuerzel.get(kuerzel);
 	}
 
+	/**
+	 * Methode übernimmt Filterinformationen aus dem übergebenen {@link AuswahlManager}
+	 *
+	 * @param srcManager Manager, aus dem die Filterinformationen übernommen werden
+	 */
 	public void useFilter(final @NotNull ReligionListeManager srcManager) {
 		this.setFilterNurSichtbar(srcManager.filterNurSichtbar());
 	}

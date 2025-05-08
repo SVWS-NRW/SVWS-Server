@@ -170,6 +170,11 @@ export class VermerkartenListeManager extends AuswahlManager<number, VermerkartE
 		return !(this._filterNurSichtbar && !eintrag.istSichtbar);
 	}
 
+	/**
+	 * Methode übernimmt Filterinformationen aus dem übergebenen {@link AuswahlManager}
+	 *
+	 * @param srcManager Manager, aus dem die Filterinformationen übernommen werden
+	 */
 	public useFilter(srcManager : VermerkartenListeManager) : void {
 		this.setFilterNurSichtbar(srcManager.filterNurSichtbar());
 	}

@@ -498,11 +498,11 @@ public abstract class AuswahlManager<TID, TAuswahl, TDaten> {
 		return this._listeToId.apply(eintrag);
 	}
 
-	/**
-	 * Methode übernimmt Filterinformationen aus dem übergebenen {@link AuswahlManager}
-	 *
-	 * @param srcManager Manager, aus dem die Filterinformationen übernommen werden
-	 */
+	// /**
+	//  * Methode übernimmt Filterinformationen aus dem übergebenen {@link AuswahlManager}
+	//  *
+	//  * @param srcManager Manager, aus dem die Filterinformationen übernommen werden
+	//  */
 	// TODO verwende abstract class
 	// public abstract void useFilter(final @NotNull AuswahlManager<TID, TAuswahl, TDaten> srcManager);
 

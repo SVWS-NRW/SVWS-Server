@@ -205,6 +205,11 @@ export class StundenplanUnterrichtListeManager extends AuswahlManager<number, St
 		return true;
 	}
 
+	/**
+	 * Methode übernimmt Filterinformationen aus dem übergebenen {@link AuswahlManager}
+	 *
+	 * @param srcManager Manager, aus dem die Filterinformationen übernommen werden
+	 */
 	public useFilter(srcManager : StundenplanUnterrichtListeManager) : void {
 		this.faecher.setAuswahl(srcManager.faecher);
 		this.klassen.setAuswahl(srcManager.klassen);
