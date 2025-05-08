@@ -17,7 +17,7 @@
 	 * @responseCode 409 Fehlerhafte Anfrage, wenn Token ungültig oder Passwort nicht regelkonform ist.
 	 */
 	// Initialisierung
-	require_once $_SERVER['DOCUMENT_ROOT'].'/../app/init.php';
+	require_once __DIR__.'/../../app/init.php';
 
 	// Prüfe die HTTP-Methode
 	$auth->pruefeHTTPMethod(["PUT"]);
