@@ -610,25 +610,19 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 		// Prüfe den Bilingualen Bildungsgang
 		if (((daten.bilingualeSprache == null) && (abidaten.bilingualeSprache != null))
 				|| ((daten.bilingualeSprache != null) && (abidaten.bilingualeSprache == null))
-				|| ((daten.bilingualeSprache != null) && !daten.bilingualeSprache.equals(abidaten.bilingualeSprache))) {
-			logger.logLn("Fehler: Die Angaben zum Bilingualen Bildungsgang stimmen nicht überein.");
-			return false;
-		}
+				|| ((daten.bilingualeSprache != null) && !daten.bilingualeSprache.equals(abidaten.bilingualeSprache)))
+			logger.logLn("Hinweis: Die Angaben zum Bilingualen Bildungsgang stimmen nicht überein.");
 		// Überprüfe die Sprachenfolge
-		if (abidaten.sprachendaten.belegungen.size() != daten.sprachendaten.belegungen.size()) {
-			logger.logLn("Fehler: Die Anzahl der Sprachbelegungen stimmen nicht überein.");
-			return false;
-		}
-		if (abidaten.sprachendaten.pruefungen.size() != daten.sprachendaten.pruefungen.size()) {
-			logger.logLn("Fehler: Die Anzahl der Sprachprüfungen stimmen nicht überein.");
-			return false;
-		}
+		if (abidaten.sprachendaten.belegungen.size() != daten.sprachendaten.belegungen.size())
+			logger.logLn("Hinweis: Die Anzahl der Sprachbelegungen stimmen nicht überein.");
+		if (abidaten.sprachendaten.pruefungen.size() != daten.sprachendaten.pruefungen.size())
+			logger.logLn("Hinweis: Die Anzahl der Sprachprüfungen stimmen nicht überein.");
 		final Map<String, Sprachbelegung> sprachBelegungen = abidaten.sprachendaten.belegungen.stream().collect(Collectors.toMap(b -> b.sprache, b -> b));
 		for (final Sprachbelegung belegung : daten.sprachendaten.belegungen) {
 			final Sprachbelegung vergleich = sprachBelegungen.get(belegung.sprache);
 			if (vergleich == null) {
-				logger.logLn("Fehler: Die Sprachbelegung für die Sprache " + belegung.sprache + " wurde in der Datenbank nicht gefunden.");
-				return false;
+				logger.logLn("Hinweis: Die Sprachbelegung für die Sprache " + belegung.sprache + " wurde in der Datenbank nicht gefunden.");
+				continue;
 			}
 			final boolean vglReihenfolge = ((belegung.reihenfolge == null) && (vergleich.reihenfolge == null))
 					|| ((belegung.reihenfolge != null) && (vergleich.reihenfolge != null)
@@ -639,17 +633,15 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 			final boolean vglVonAbschnitt = ((belegung.belegungVonAbschnitt == null) && (vergleich.belegungVonAbschnitt == null))
 					|| ((belegung.belegungVonAbschnitt != null) && (vergleich.belegungVonAbschnitt != null)
 							&& (belegung.belegungVonAbschnitt.equals(vergleich.belegungVonAbschnitt)));
-			if (!vglReihenfolge || !vglVonJg || !vglVonAbschnitt) {
-				logger.logLn("Fehler: Die Sprachbelegung für die Sprache " + belegung.sprache + " stimmt nicht mit der Eintragung in der Datenbank überein.");
-				return false;
-			}
+			if (!vglReihenfolge || !vglVonJg || !vglVonAbschnitt)
+				logger.logLn("Hinweis: Die Sprachbelegung für die Sprache " + belegung.sprache + " stimmt nicht mit der Eintragung in der Datenbank überein.");
 		}
 		final Map<String, Sprachpruefung> sprachPruefungen = abidaten.sprachendaten.pruefungen.stream().collect(Collectors.toMap(b -> b.sprache, b -> b));
 		for (final Sprachpruefung pruefung : daten.sprachendaten.pruefungen) {
 			final Sprachpruefung vergleich = sprachPruefungen.get(pruefung.sprache);
 			if (vergleich == null) {
-				logger.logLn("Fehler: Die Sprachprüfung für die Sprache " + pruefung.sprache + " wurde in der Datenbank nicht gefunden.");
-				return false;
+				logger.logLn("Hinweis: Die Sprachprüfung für die Sprache " + pruefung.sprache + " wurde in der Datenbank nicht gefunden.");
+				continue;
 			}
 			final boolean vglNiveau = ((pruefung.anspruchsniveauId == null) && (vergleich.anspruchsniveauId == null))
 					|| ((pruefung.anspruchsniveauId != null) && (vergleich.anspruchsniveauId != null)
@@ -661,11 +653,9 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 					|| (pruefung.kannErstePflichtfremdspracheErsetzen != vergleich.kannErstePflichtfremdspracheErsetzen)
 					|| (pruefung.kannZweitePflichtfremdspracheErsetzen != vergleich.kannZweitePflichtfremdspracheErsetzen)
 					|| (pruefung.kannWahlpflichtfremdspracheErsetzen != vergleich.kannWahlpflichtfremdspracheErsetzen)
-					|| (pruefung.kannBelegungAlsFortgefuehrteSpracheErlauben != vergleich.kannBelegungAlsFortgefuehrteSpracheErlauben)) {
-				logger.logLn("Fehler: Die Sprachprüfung für die Sprache " + pruefung.sprache
+					|| (pruefung.kannBelegungAlsFortgefuehrteSpracheErlauben != vergleich.kannBelegungAlsFortgefuehrteSpracheErlauben))
+				logger.logLn("Hinweis: Die Sprachprüfung für die Sprache " + pruefung.sprache
 						+ " stimmt nicht nicht mit der Eintragung in der Datenbank überein.");
-				return false;
-			}
 		}
 		// Prüfe die Fachbelegungen bei den Fachbelegungen, wo bereits Leistungsdaten in der Datenbank hinterlegt sind und übernehme die restlichen Fachwahlen
 		final Map<Long, AbiturFachbelegung> dbBelegungen = abidaten.fachbelegungen.stream().collect(Collectors.toMap(b -> b.fachID, b -> b));
