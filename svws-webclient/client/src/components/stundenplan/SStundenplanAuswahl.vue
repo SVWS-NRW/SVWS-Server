@@ -25,19 +25,22 @@
 				allow-arrow-key-selection
 				:focus-switching-enabled
 				:focus-help-visible>
-				<template #filterAdvanced>
+				<template #filter>
 					<div class="col-span-full flex flex-wrap gap-x-5">
 						<svws-ui-checkbox type="toggle" v-model="filterNurAktiv">Nur Aktive</svws-ui-checkbox>
 					</div>
 				</template>
-				<template #cell(bezeichnung)="{ value, rowData }">
-					<span :class="{ 'text-ui-disabled': !rowData.aktiv && (rowData !== manager().getStundenplanVorlage()) }">{{ value }}</span>
+				<template #cell(bezeichnung)="{ value }">
+					{{ value }}
 				</template>
-				<template #cell(gueltigAb)="{ value, rowData }">
-					<span :class="{ 'text-ui-disabled': !rowData.aktiv && (rowData !== manager().getStundenplanVorlage()) }">{{ (DateUtils.isValidDate(value) ? DateUtils.gibDatumGermanFormat(value) : '') }}</span>
+				<template #cell(gueltigAb)="{ value }">
+					{{ (DateUtils.isValidDate(value) ? DateUtils.gibDatumGermanFormat(value) : '') }}
 				</template>
-				<template #cell(gueltigBis)="{ value, rowData }">
-					<span :class="{ 'text-ui-disabled': !rowData.aktiv && (rowData !== manager().getStundenplanVorlage()) }">{{ (DateUtils.isValidDate(value) ? DateUtils.gibDatumGermanFormat(value) : '') }}</span>
+				<template #cell(gueltigBis)="{ value }">
+					{{ (DateUtils.isValidDate(value) ? DateUtils.gibDatumGermanFormat(value) : '') }}
+				</template>
+				<template #cell(aktiv)="{ value }">
+					<span v-if="value" class="icon icon-ui-brand i-ri-checkbox-circle-fill ml-2 hover:opacity-50" title="Dieser Stundenplan ist aktiv" />
 				</template>
 				<template #actions>
 					<svws-ui-tooltip position="bottom" v-if="hatKompetenzAendern">
@@ -56,7 +59,7 @@
 
 <script setup lang="ts">
 
-	import { computed, ref } from "vue";
+	import { computed } from "vue";
 	import type { StundenplanAuswahlProps } from "./SStundenplanAuswahlProps";
 	import type { DataTableColumn, SortByAndOrder } from "@ui";
 	import { ViewType } from "@ui";
@@ -65,16 +68,16 @@
 	import {useRegionSwitch} from "~/components/useRegionSwitch";
 
 	const props = defineProps<StundenplanAuswahlProps>();
-	const selected = ref<StundenplanListeEintrag[]>([]);
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.STUNDENPLAN_AENDERN));
 
 	const columns: DataTableColumn[] = [
-		{ key: "bezeichnung", label: "Bezeichnung", span: 2, sortable: true, defaultSort: 'asc' },
-		{ key: "gueltigAb", label: "von", span: 1, sortable: true, defaultSort: 'asc' },
-		{ key: "gueltigBis", label: "bis", span: 1, sortable: false },
+		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, defaultSort: 'asc' },
+		{ key: "gueltigAb", label: "von", fixedWidth: 7, sortable: true, defaultSort: 'asc' },
+		{ key: "gueltigBis", label: "bis", fixedWidth: 7 },
+		{ key: "aktiv", label: "", fixedWidth: 2 },
 	];
 
 	const unselectable = computed<Set<StundenplanListeEintrag>>(() => new Set([props.manager().getStundenplanVorlage()]));
