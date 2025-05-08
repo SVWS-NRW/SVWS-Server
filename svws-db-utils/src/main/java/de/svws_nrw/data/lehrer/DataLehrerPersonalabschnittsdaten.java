@@ -55,7 +55,7 @@ public final class DataLehrerPersonalabschnittsdaten extends DataManagerRevised<
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Personalabschnittsdaten einer Lehrkraft mit der ID %d gefunden.".formatted(id));
 		final LehrerPersonalabschnittsdaten daten = map(dto);
 		daten.anrechnungen.addAll(DataLehrerPersonalabschnittsdatenAnrechungen.getByLehrerabschnittsdatenId(conn, id));
-		daten.mehrleistung.addAll(DataLehrerPersonalabschnittsdatenMehrleistungen.getByLehrerabschnittsdatenId(conn, dto.Schuljahresabschnitts_ID, id));
+		daten.mehrleistung.addAll(DataLehrerPersonalabschnittsdatenMehrleistungen.getByLehrerabschnittsdatenId(conn, id));
 		daten.minderleistung.addAll(DataLehrerPersonalabschnittsdatenMinderleistungen.getByLehrerabschnittsdatenId(conn, id));
 		daten.funktionen.addAll(DataLehrerPersonalabschnittsdatenLehrerfunktionen.getByLehrerabschnittsdatenId(conn, id));
 		return daten;
@@ -119,7 +119,7 @@ public final class DataLehrerPersonalabschnittsdaten extends DataManagerRevised<
 			LehrerPersonalabschnittsdaten daten;
 			daten = mapInternal(l);
 			daten.anrechnungen.addAll(DataLehrerPersonalabschnittsdatenAnrechungen.getByLehrerabschnittsdatenId(conn, l.ID));
-			daten.mehrleistung.addAll(DataLehrerPersonalabschnittsdatenMehrleistungen.getByLehrerabschnittsdatenId(conn, l.Schuljahresabschnitts_ID, l.ID));
+			daten.mehrleistung.addAll(DataLehrerPersonalabschnittsdatenMehrleistungen.getByLehrerabschnittsdatenId(conn, l.ID));
 			daten.minderleistung.addAll(DataLehrerPersonalabschnittsdatenMinderleistungen.getByLehrerabschnittsdatenId(conn, l.ID));
 			daten.funktionen.addAll(DataLehrerPersonalabschnittsdatenLehrerfunktionen.getByLehrerabschnittsdatenId(conn, l.ID));
 			result.add(daten);
