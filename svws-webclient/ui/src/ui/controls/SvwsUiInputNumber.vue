@@ -17,7 +17,7 @@
 		</div>
 		<input v-else ref="input" :name="id"
 			v-focus
-			:class="{ 'input-number--control': !headless, 'input-number--headless': headless, 'input-number--rounded': rounded, }"
+			:class="[{ 'input-number--control': !headless, 'input-number--headless': headless, 'input-number--rounded': rounded }, 'appearance-none']"
 			v-bind="{ ...$attrs }"
 			type="number"
 			inputmode="numeric"
@@ -30,26 +30,22 @@
 			@input="onInput"
 			@keyup.enter="onKeyEnter"
 			@blur="onBlur">
-		<span v-if="placeholder && !headless"
-			:id="labelId"
-			class="input-number--placeholder"
-			:class="{
-				'input-number--placeholder--required': required,
-			}">
-			<span>{{ placeholder }}</span>
-			<span class="icon i-ri-alert-line ml-0.5 icon-ui-danger" v-if="!isValid" />
+		<span v-if="placeholder && !headless" :id="labelId" class="input-number--placeholder gap-1">
 			<span v-if="statistics" class="cursor-pointer">
 				<svws-ui-tooltip position="right">
-					<span class="inline-flex items-center">
-						<span class="icon i-ri-bar-chart-2-line icon-ui-statistic pointer-events-auto ml-0.5" />
-						<span class="icon i-ri-alert-fill icon-ui-danger" v-if="data === null || data === undefined || !isValid" />
-					</span>
-					<template #content>
-						Relevant für die Statistik
-					</template>
+					<span class="icon i-ri-bar-chart-2-line input-number--statistic-icon" />
+					<template #content>Relevant für die Statistik</template>
 				</svws-ui-tooltip>
 			</span>
+			<span>{{ placeholder }}</span>
+			<span v-if="required" class="icon-xs i-ri-asterisk input-number--placeholder--required input-number--state-icon" aria-hidden />
+			<span v-if="required" class="sr-only">erforderlich</span>
+			<span v-if="!isValid && !statistics && !required" class="icon i-ri-alert-line input-number--state-icon" />
+			<span v-if="statistics" class="cursor-pointer">
+				<span class="icon i-ri-alert-fill input-number--state-icon" v-if="required && (data === null)" />
+			</span>
 		</span>
+
 		<span v-if="data !== null && !hideStepper && !disabled" class="svws-input-stepper">
 			<button ref="btnMinus" role="button" @click="onInputNumber('down')" @blur="onBlur" :class="{'svws-disabled': String($attrs?.min) === String(data)}"><span class="icon i-ri-subtract-line" /></button>
 			<button ref="btnPlus" role="button" @click="onInputNumber('up')" @blur="onBlur" :class="{'svws-disabled': String($attrs?.max) === String(data)}"><span class="icon i-ri-add-line" /></button>

@@ -76,6 +76,11 @@
 		@apply pl-5;
 	}
 
+	&.svws-headless .svws-dropdown-icon,
+	&.svws-headless .svws-remove {
+		@apply mt-0;
+	}
+
 	&.svws-removable.svws-has-value:not(.svws-readonly) {
 		.text-input--control {
 			@apply pr-12;

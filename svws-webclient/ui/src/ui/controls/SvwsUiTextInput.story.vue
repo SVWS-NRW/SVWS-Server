@@ -30,7 +30,7 @@
 					<svws-ui-text-input type="text" model-value="Text Input Value" placeholder="Invalid Input" :valid="(v)=>false" @input="onInput" />
 				</svws-ui-input-wrapper>
 				<svws-ui-input-wrapper>
-					<svws-ui-text-input type="text" model-value="" placeholder="Required" required @input="onInput" />
+					<svws-ui-text-input type="text" model-value="" placeholder="Required" required @input="onInput" :max-len="5" :min-len="2" />
 					<svws-ui-text-input type="text" model-value="Required Value" placeholder="Required" required @input="onInput" />
 				</svws-ui-input-wrapper>
 			</div>

@@ -17,10 +17,6 @@
 
 	&:focus-visible {
 		@apply ring-3 ring-ui-brand;
-
-		.page--statistik & {
-			@apply ring-ui-statistic;
-		}
 	}
 
 	&:active {
@@ -72,14 +68,6 @@
 
 		.icon, .icon-sm {
 			@apply icon-ui-brand;
-		}
-
-		.page--statistik & {
-			@apply border-ui-statistic text-ui-statistic;
-
-			.icon, .icon-sm {
-				@apply icon-ui-statistic;
-			}
 		}
 
 		.notification--error &,

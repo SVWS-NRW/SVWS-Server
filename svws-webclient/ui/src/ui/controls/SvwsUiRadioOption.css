@@ -7,17 +7,11 @@
 		@apply rounded;
 		outline-color: var(--color-ring-ui-brand);
 	}
-
-	&.radio--statistics {
-		&:focus-within input {
-			outline-color: var(--color-ring-ui-statistic);
-		}
-	}
 }
 
 .radio--label--text {
 	@apply flex items-center rounded-md;
-	@apply gap-x-2 py-1.5 pr-3 pl-7;
+	@apply gap-x-1 py-1.5 pr-3 pl-7;
 	min-height: 1.25rem;
 
 	.radio--label--no-text & {
@@ -36,13 +30,6 @@
 .radio--label:hover {
 	.radio--label--text {
 		@apply bg-ui-hover text-ui-hover;
-	}
-
-	&.radio--statistics,
-	.page--statistik & {
-		.radio--label--text {
-			@apply text-ui-statistic;
-		}
 	}
 
 	.radio--indicator ~ .radio--indicator-icon {
@@ -78,11 +65,6 @@
 	.icon {
 		@apply icon-ui-onselected;
 	}
-
-	.radio--statistics &,
-	.page--statistik & {
-		@apply text-ui-statistic;
-	}
 }
 
 .radio--indicator:checked ~ .radio--indicator-icon,
@@ -96,8 +78,17 @@
 	}
 }
 
+.radio--statistic-icon {
+	@apply icon-ui-statistic;
+	@apply pointer-events-auto -my-0.5;
+}
+
 .radio--label--disabled {
 	@apply cursor-not-allowed pointer-events-none;
+
+	.radio--statistic-icon {
+		@apply icon-ui-disabled;
+	}
 
 	.radio--label--text {
 		@apply bg-ui-disabled text-ui-disabled;

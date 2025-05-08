@@ -9,7 +9,7 @@
 			</span>
 			<span v-else class="icon i-ri-menu-line" />
 		</svws-ui-button>
-		<button class="rounded-l-none rounded-r-md z-10 border border-ui text-sm-bold" :class="`button--${type}`" @click.stop="dropdownOpen = !dropdownOpen" :disabled="listEmpty">
+		<button class="rounded-l-none rounded-r-md z-10 border border-ui text-sm-bold focus:ring-3 focus:ring-ui outline-none" :class="`button--${type}`" @click.stop="dropdownOpen = !dropdownOpen" :disabled="listEmpty">
 			<span class="icon mt-1 i-ri-arrow-down-s-line" v-if="!dropdownOpen" />
 			<span class="icon mt-1 i-ri-arrow-up-s-line" v-else />
 		</button>

@@ -19,7 +19,19 @@
 				</slot>
 			</template>
 		</span>
-		<span :id="idLabel" class="radio--label--text"> {{ label }} <span class="icon i-ri-bar-chart-2-line icon-ui-statistic -my-0.5" v-if="statistics" /> </span>
+		<span :id="idLabel" class="radio--label--text">
+			<span v-if="statistics" class="cursor-pointer">
+				<svws-ui-tooltip position="right">
+					<span class="inline-flex items-center">
+						<span class="icon i-ri-bar-chart-2-line radio--statistic-icon" />
+					</span>
+					<template #content>
+						Relevant für die Statistik
+					</template>
+				</svws-ui-tooltip>
+			</span>
+			<span>{{ label }}</span>
+		</span>
 	</label>
 </template>
 
