@@ -5,7 +5,7 @@
 				<div class="content-card--header content-card--headline">Allgemein</div>
 				<div class="content-card--content content-card--content--with-title input-wrapper grid-cols-2">
 					<div class="flex gap-1"><svws-ui-checkbox type="toggle" :disabled="(!manager().auswahl().aktiv && !manager().istKonfliktfreiZuAktivenStundenplaenen(gueltigData.gueltigAb, gueltigData.gueltigBis))" :model-value="manager().daten().isAktiv()" @update:model-value="handleChangeAktiv" />Stundenplan aktiv</div>
-					<svws-ui-text-input class="contentFocusField" :disabled="!hatUpdateKompetenz" placeholder="Bezeichnung" :model-value="manager().daten().getBezeichnungStundenplan()" :valid="StundenplanListeManager.validateBezeichnung" @change="bezeichnungStundenplan=> bezeichnungStundenplan && patch({ bezeichnungStundenplan })" type="text" />
+					<svws-ui-text-input class="contentFocusField" :disabled="!hatUpdateKompetenz" placeholder="Bezeichnung" :model-value="manager().daten().getBezeichnungStundenplan()" :valid="StundenplanListeManager.validateBezeichnung" @change="bezeichnungStundenplan=> bezeichnungStundenplan && patch({ bezeichnungStundenplan })" />
 					<div v-if="hatUpdateKompetenz" :class="{'flex gap-2': showExtraWTM}">
 						<svws-ui-select title="Wochentypmodell" :items="[0,2,3,4,5]" :item-text="i=> wochenTypModell[i] || ''" :model-value="manager().daten().getWochenTypModell()" @update:model-value="modell => doPatch(modell)" ref="select" />
 						<svws-ui-input-number v-if="showExtraWTM" placeholder="Wochentypmodell" :model-value="manager().daten().getWochenTypModell() < 5 ? 5 : manager().daten().getWochenTypModell()" @change="modell => doPatch(modell)" :min="5" :max="100" />
@@ -163,19 +163,19 @@
 			await props.addJahrgang(id);
 	}
 
-	const validateGueltigAb = (gueltigAb: string | null): boolean => {
+	function validateGueltigAb(gueltigAb: string | null): boolean {
 		validAb.value = props.manager().validateGueltigAb(gueltigAb, gueltigData.value.gueltigBis, gueltigData.value.aktiv, gueltigData.value.aktiv);
 		return props.manager().validateGueltigAb(gueltigAb, gueltigData.value.gueltigBis, true, props.manager().validateGueltigBis(gueltigData.value.gueltigAb, gueltigData.value.gueltigBis, true));
 	}
 
-	const validateGueltigBis = (gueltigBis: string | null): boolean => {
+	function validateGueltigBis(gueltigBis: string | null): boolean {
 		validBis.value = props.manager().validateGueltigBis(gueltigData.value.gueltigAb, gueltigBis, gueltigData.value.aktiv);
 		return props.manager().validateGueltigBis(gueltigData.value.gueltigAb, gueltigBis, true);
 	}
 
-	const handleChangeAktiv = async (aktiv: boolean) => {
+	async function handleChangeAktiv(aktiv: boolean) {
 		gueltigData.value.aktiv = aktiv;
-		const patch: Partial<Stundenplan> = {aktiv}
+		const patch: Partial<Stundenplan> = { aktiv };
 		if (aktiv === false) {
 			if (props.manager().validateGueltigBis(gueltigData.value.gueltigAb, gueltigData.value.gueltigBis, false))
 				patch.gueltigBis = gueltigData.value.gueltigBis;
@@ -183,23 +183,23 @@
 				patch.gueltigAb = gueltigData.value.gueltigAb;
 		}
 		await props.patch(patch);
-	};
+	}
 
-	const handleChangeGueltigAb = async (gueltigAb: string | null) => {
+	async function handleChangeGueltigAb(gueltigAb: string | null) {
 		if (gueltigAb === null)
 			return;
 		gueltigData.value.gueltigAb = gueltigAb;
 		if (validAb.value === true && validBis.value === true)
 			await props.patch({ gueltigAb, gueltigBis: gueltigData.value.gueltigBis });
-	};
+	}
 
-	const handleChangeGueltigBis = async (gueltigBis: string | null) => {
+	async function handleChangeGueltigBis(gueltigBis: string | null) {
 		if (gueltigBis === null)
 			return;
 		gueltigData.value.gueltigBis = gueltigBis;
 		if (validAb.value === true && validBis.value === true)
 			await props.patch({ gueltigAb: gueltigData.value.gueltigAb, gueltigBis });
-	};
+	}
 
 	async function doPatch(wochenTypModell: number | null | undefined) {
 		if ((wochenTypModell === null) || (wochenTypModell === undefined) || (wochenTypModell === 1))
@@ -295,7 +295,7 @@
 		return moeglich;
 	})
 
-	const sortByAndOrder = ref<SortByAndOrder | undefined>()
+	const sortByAndOrder = ref<SortByAndOrder | undefined>();
 
 	const pausenzeitenSorted = computed(() => {
 		const temp = sortByAndOrder.value;
@@ -337,4 +337,5 @@
 		await props.removeAufsichtsbereiche(selectedAufsichtsbereiche.value);
 		selectedAufsichtsbereiche.value = [];
 	}
+
 </script>

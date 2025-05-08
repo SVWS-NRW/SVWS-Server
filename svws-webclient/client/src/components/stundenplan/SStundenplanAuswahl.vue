@@ -31,13 +31,13 @@
 					</div>
 				</template>
 				<template #cell(bezeichnung)="{ value, rowData }">
-					<span :class="(!rowData.aktiv && rowData !== manager().getStundenplanVorlage()) ? 'text-ui-disabled' : ''">{{ value }}</span>
+					<span :class="{ 'text-ui-disabled': !rowData.aktiv && (rowData !== manager().getStundenplanVorlage()) }">{{ value }}</span>
 				</template>
 				<template #cell(gueltigAb)="{ value, rowData }">
-					<span :class="(!rowData.aktiv && rowData !== manager().getStundenplanVorlage()) ? 'text-ui-disabled' : ''">{{ (DateUtils.isValidDate(value) ? DateUtils.gibDatumGermanFormat(value) : '') }}</span>
+					<span :class="{ 'text-ui-disabled': !rowData.aktiv && (rowData !== manager().getStundenplanVorlage()) }">{{ (DateUtils.isValidDate(value) ? DateUtils.gibDatumGermanFormat(value) : '') }}</span>
 				</template>
 				<template #cell(gueltigBis)="{ value, rowData }">
-					<span :class="(!rowData.aktiv && rowData !== manager().getStundenplanVorlage()) ? 'text-ui-disabled' : ''">{{ (DateUtils.isValidDate(value) ? DateUtils.gibDatumGermanFormat(value) : '') }}</span>
+					<span :class="{ 'text-ui-disabled': !rowData.aktiv && (rowData !== manager().getStundenplanVorlage()) }">{{ (DateUtils.isValidDate(value) ? DateUtils.gibDatumGermanFormat(value) : '') }}</span>
 				</template>
 				<template #actions>
 					<svws-ui-tooltip position="bottom" v-if="hatKompetenzAendern">
