@@ -356,7 +356,7 @@
 
 	const gridTemplateColumnsComputed = computed(() => gridTemplateColumns.value.length > 0 ? gridTemplateColumns.value : 'repeat(auto-fit, minmax(0, 1fr))');
 
-	const getGridTemplateColumns = computed(() => `grid-template-columns: ${props.selectable ? 'auto': ''} ${gridTemplateColumnsComputed.value}`);
+	const getGridTemplateColumns = computed(() => `grid-template-columns: ${props.selectable ? '2rem': ''} ${gridTemplateColumnsComputed.value}`);
 
 	const rowsComputed = computed<DataTableRow[]>(() => [...props.items].map((source, index) =>
 		({ selectable: !props.unselectable.has(toRaw(source)), initialIndex: index, source: toRaw(source), cells:
