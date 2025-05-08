@@ -167,4 +167,8 @@ public final class VermerkartenListeManager extends AuswahlManager<Long, Vermerk
 		return !(this._filterNurSichtbar && !eintrag.istSichtbar);
 	}
 
+	public void useFilter(final @NotNull VermerkartenListeManager srcManager) {
+		this.setFilterNurSichtbar(srcManager.filterNurSichtbar());
+	}
+
 }

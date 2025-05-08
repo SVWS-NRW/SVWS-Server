@@ -124,4 +124,8 @@ public final class RaumListeManager extends AuswahlManager<Long, Raum, Raum> {
 		return this._mapRaumByKuerzel.get(kuerzel);
 	}
 
+	// public void useFilter(final @NotNull RaumListeManager srcManager) {
+	// 	return;
+	// }
+
 }

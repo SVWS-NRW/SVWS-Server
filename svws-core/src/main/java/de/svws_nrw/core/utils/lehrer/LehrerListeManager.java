@@ -332,4 +332,11 @@ public final class LehrerListeManager extends AuswahlManager<Long, LehrerListeEi
 		return this._mapAbschnittsdatenBySchuljahresabschnittsId.get(id);
 	}
 
+	public void useFilter(final @NotNull LehrerListeManager srcManager) {
+		this.personaltypen.setAuswahl(srcManager.personaltypen);
+		this.setFilterNurStatistikRelevant(srcManager.filterNurStatistikRelevant());
+		this.setFilterNurSichtbar(srcManager.filterNurSichtbar());
+		this.setFilterAuswahlPermitted(srcManager.isFilterAuswahlPermitted());
+	}
+
 }

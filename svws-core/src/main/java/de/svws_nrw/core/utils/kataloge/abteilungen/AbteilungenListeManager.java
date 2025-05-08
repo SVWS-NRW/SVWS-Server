@@ -107,4 +107,9 @@ public final class AbteilungenListeManager extends AuswahlManager<Long, Abteilun
 		}
 		return comparator.compare(a, b);
 	}
+
+	// public void useFilter(final @NotNull AbteilungenListeManager srcManager) {
+	// 	return;
+	// }
+
 }

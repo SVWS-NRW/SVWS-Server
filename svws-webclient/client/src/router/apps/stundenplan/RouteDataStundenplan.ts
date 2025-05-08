@@ -88,6 +88,8 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 		const stundenplanManager = new StundenplanManager(daten, unterrichtsdaten, pausenaufsichten, unterrichtsverteilung);
 		stundenplanManager.stundenplanKonfigSet(this.settingsDefaults);
 		const stundenplanUnterrichtListeManager = new StundenplanUnterrichtListeManager(api.schulform, stundenplanManager, api.schuleStammdaten.abschnitte, daten.idSchuljahresabschnitt);
+		if (this._state.value.stundenplanUnterrichtListeManager !== undefined)
+			stundenplanUnterrichtListeManager.useFilter(this._state.value.stundenplanUnterrichtListeManager);
 		this.setPatchedState({ stundenplanUnterrichtListeManager }, false);
 		return stundenplanManager;
 	}

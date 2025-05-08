@@ -16,7 +16,6 @@ import de.svws_nrw.core.data.fach.FaecherListeEintrag;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.core.utils.AuswahlManager;
-
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -245,4 +244,10 @@ public final class FachListeManager extends AuswahlManager<Long, FaecherListeEin
 			return false;
 		return (sortierung > 0) && (sortierung < Integer.MAX_VALUE);
 	}
+
+	public void useFilter(final @NotNull FachListeManager srcManager) {
+		this.setFilterAuswahlPermitted(srcManager.isFilterAuswahlPermitted());
+		this.setFilterNurSichtbar(srcManager.filterNurSichtbar());
+	}
+
 }

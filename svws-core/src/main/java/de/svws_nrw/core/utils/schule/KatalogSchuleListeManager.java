@@ -136,4 +136,6 @@ public final class KatalogSchuleListeManager extends AuswahlManager<Long, SchulE
 		return true;
 	}
 
+	// public void useFilter(final @NotNull KatalogSchuleListeManager srcManager) {}
+
 }

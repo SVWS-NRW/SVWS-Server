@@ -103,4 +103,8 @@ public final class JahrgangListeManager extends AuswahlManager<Long, JahrgangsDa
 		return true;
 	}
 
+	// public void useFilter(final @NotNull JahrgangListeManager srcManager) {
+	// 	return;
+	// }
+
 }

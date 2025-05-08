@@ -177,4 +177,8 @@ public final class ReligionListeManager extends AuswahlManager<Long, ReligionEin
 		return this._mapReligionEintragByKuerzel.get(kuerzel);
 	}
 
+	public void useFilter(final @NotNull ReligionListeManager srcManager) {
+		this.setFilterNurSichtbar(srcManager.filterNurSichtbar());
+	}
+
 }

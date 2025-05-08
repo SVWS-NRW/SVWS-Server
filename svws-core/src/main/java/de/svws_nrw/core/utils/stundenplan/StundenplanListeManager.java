@@ -325,4 +325,6 @@ public final class StundenplanListeManager extends AuswahlManager<Long, Stundenp
 		return true;
 	}
 
+	// public void useFilter(final @NotNull StundenplanListeManager srcManager) {}
+
 }

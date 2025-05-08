@@ -61,14 +61,12 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 			api.schulform, listLehrer);
 
 		// Übernehme den Filter von dem vorigen Manager oder initialisiere ihn neu, falls kein voriger Manager vorhanden ist
-		if (this._state.value.idSchuljahresabschnitt === -1) {
-			// Initiales Setzen der Filter
+		if (this._state.value.manager === undefined) {
 			manager.setFilterAuswahlPermitted(true);
 			manager.setFilterNurSichtbar(this.filterNurSichtbar);
 			manager.setFilterNurStatistikRelevant(this.filterNurStatistikrelevant);
 		} else {
-			// Filter aus vorherigem Manager übernehmen
-			// TODO manager.useFilter(this._state.value.manager);
+			manager.useFilter(this._state.value.manager);
 		}
 		return { manager };
 	}

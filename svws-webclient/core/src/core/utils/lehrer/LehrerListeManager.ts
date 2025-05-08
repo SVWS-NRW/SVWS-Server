@@ -323,6 +323,13 @@ export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintra
 		return this._mapAbschnittsdatenBySchuljahresabschnittsId.get(id);
 	}
 
+	public useFilter(srcManager : LehrerListeManager) : void {
+		this.personaltypen.setAuswahl(srcManager.personaltypen);
+		this.setFilterNurStatistikRelevant(srcManager.filterNurStatistikRelevant());
+		this.setFilterNurSichtbar(srcManager.filterNurSichtbar());
+		this.setFilterAuswahlPermitted(srcManager.isFilterAuswahlPermitted());
+	}
+
 	transpilerCanonicalName(): string {
 		return 'de.svws_nrw.core.utils.lehrer.LehrerListeManager';
 	}

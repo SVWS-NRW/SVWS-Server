@@ -205,6 +205,20 @@ export class StundenplanUnterrichtListeManager extends AuswahlManager<number, St
 		return true;
 	}
 
+	public useFilter(srcManager : StundenplanUnterrichtListeManager) : void {
+		this.faecher.setAuswahl(srcManager.faecher);
+		this.klassen.setAuswahl(srcManager.klassen);
+		this.kurse.setAuswahl(srcManager.kurse);
+		this.lehrer.setAuswahl(srcManager.lehrer);
+		this.raeume.setAuswahl(srcManager.raeume);
+		this.schienen.setAuswahl(srcManager.schienen);
+		this.schueler.setAuswahl(srcManager.schueler);
+		this.stunden.setAuswahl(srcManager.stunden);
+		this.wochentage.setAuswahl(srcManager.wochentage);
+		this.wochentypen.setAuswahl(srcManager.wochentypen);
+		this.zeitraster.setAuswahl(srcManager.zeitraster);
+	}
+
 	transpilerCanonicalName(): string {
 		return 'de.svws_nrw.core.utils.stundenplan.StundenplanUnterrichtListeManager';
 	}

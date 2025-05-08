@@ -102,4 +102,8 @@ public final class LernplattformListeManager extends AuswahlManager<Long, Lernpl
 		return true;
 	}
 
+	// public void useFilter(final @NotNull LernplattformListeManager srcManager) {
+	// 	return;
+	// }
+
 }
