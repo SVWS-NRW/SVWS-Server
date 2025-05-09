@@ -196,7 +196,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 
 
 	private void pruefeKatalogOrte() {
-		add("Entferne ID, falls ein Katalog-Eintrag doppelt vorkommt (z.B. bei SchildZentral-Dbs)",
+		add("Entferne ID, falls ein Orts-Katalog-Eintrag doppelt vorkommt (z.B. bei SchildZentral-Dbs)",
 				"""
 				DELETE FROM K_Ort
 				WHERE ID IN (
