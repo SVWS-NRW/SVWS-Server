@@ -132,7 +132,8 @@
 							{"schulform": "SG", "gliederung": null},
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null},
-							{"schulform": "V", "gliederung": null}],
+							{"schulform": "V", "gliederung": null},
+							{"schulform": "WB", "gliederung": null}],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -489,7 +490,8 @@
 							{"schulform": "SG", "gliederung": null},
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null},
-							{"schulform": "V", "gliederung": null}],
+							{"schulform": "V", "gliederung": null},
+							{"schulform": "WB", "gliederung": null}],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -957,7 +959,8 @@
 							{"schulform": "SG", "gliederung": null},
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null},
-							{"schulform": "V", "gliederung": null}],
+							{"schulform": "V", "gliederung": null},
+							{"schulform": "WB", "gliederung": null}],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -1366,7 +1369,8 @@
 							{"schulform": "SG", "gliederung": null},
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null},
-							{"schulform": "V", "gliederung": null}],
+							{"schulform": "V", "gliederung": null},
+							{"schulform": "WB", "gliederung": null}],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -2218,7 +2222,8 @@
 							{"schulform": "SG", "gliederung": null},
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null},
-							{"schulform": "V", "gliederung": null}],
+							{"schulform": "V", "gliederung": null},
+							{"schulform": "WB", "gliederung": null}],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -3222,7 +3227,8 @@
 							{"schulform": "SG", "gliederung": null},
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null},
-							{"schulform": "V", "gliederung": null}],
+							{"schulform": "V", "gliederung": null},
+							{"schulform": "WB", "gliederung": null}],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -4093,7 +4099,8 @@
 							{"schulform": "SG", "gliederung": null},
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null},
-							{"schulform": "V", "gliederung": null}],
+							{"schulform": "V", "gliederung": null},
+							{"schulform": "WB", "gliederung": null}],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -4307,7 +4314,8 @@
 							{"schulform": "SG", "gliederung": null},
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null},
-							{"schulform": "V", "gliederung": null}],
+							{"schulform": "V", "gliederung": null},
+							{"schulform": "WB", "gliederung": null}],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -4747,7 +4755,8 @@
 							{"schulform": "SG", "gliederung": null},
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null},
-							{"schulform": "V", "gliederung": null}],
+							{"schulform": "V", "gliederung": null},
+							{"schulform": "WB", "gliederung": null}],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -5135,7 +5144,8 @@
 							{"schulform": "SG", "gliederung": null},
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null},
-							{"schulform": "V", "gliederung": null}],
+							{"schulform": "V", "gliederung": null},
+							{"schulform": "WB", "gliederung": null}],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -5427,7 +5437,8 @@
 							{"schulform": "SG", "gliederung": null},
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null},
-							{"schulform": "V", "gliederung": null}],
+							{"schulform": "V", "gliederung": null},
+							{"schulform": "WB", "gliederung": null}],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -5693,7 +5704,8 @@
 							{"schulform": "SG", "gliederung": null},
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null},
-							{"schulform": "V", "gliederung": null}],
+							{"schulform": "V", "gliederung": null},
+							{"schulform": "WB", "gliederung": null}],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -6054,7 +6066,8 @@
 							{"schulform": "SG", "gliederung": null},
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null},
-							{"schulform": "V", "gliederung": null}],
+							{"schulform": "V", "gliederung": null},
+							{"schulform": "WB", "gliederung": null}],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -6589,7 +6602,8 @@
 							{"schulform": "SG", "gliederung": null},
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null},
-							{"schulform": "V", "gliederung": null}],
+							{"schulform": "V", "gliederung": null},
+							{"schulform": "WB", "gliederung": null}],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -7221,7 +7235,8 @@
 							{"schulform": "SG", "gliederung": null},
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null},
-							{"schulform": "V", "gliederung": null}],
+							{"schulform": "V", "gliederung": null},
+							{"schulform": "WB", "gliederung": null}],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -7396,7 +7411,8 @@
 							{"schulform": "SG", "gliederung": null},
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null},
-							{"schulform": "V", "gliederung": null}],
+							{"schulform": "V", "gliederung": null},
+							{"schulform": "WB", "gliederung": null}],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -7595,7 +7611,8 @@
 							{"schulform": "SG", "gliederung": null},
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null},
-							{"schulform": "V", "gliederung": null}],
+							{"schulform": "V", "gliederung": null},
+							{"schulform": "WB", "gliederung": null}],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -8014,7 +8031,8 @@
 							{"schulform": "SG", "gliederung": null},
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null},
-							{"schulform": "V", "gliederung": null}],
+							{"schulform": "V", "gliederung": null},
+							{"schulform": "WB", "gliederung": null}],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -8104,7 +8122,8 @@
 							{"schulform": "SG", "gliederung": null},
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null},
-							{"schulform": "V", "gliederung": null}],
+							{"schulform": "V", "gliederung": null},
+							{"schulform": "WB", "gliederung": null}],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -8474,7 +8493,8 @@
 							{"schulform": "SG", "gliederung": null},
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null},
-							{"schulform": "V", "gliederung": null}],
+							{"schulform": "V", "gliederung": null},
+							{"schulform": "WB", "gliederung": null}],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -8583,7 +8603,8 @@
 							{"schulform": "SG", "gliederung": null},
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null},
-							{"schulform": "V", "gliederung": null}],
+							{"schulform": "V", "gliederung": null},
+							{"schulform": "WB", "gliederung": null}],
 			"gueltigVon": 2024,
 			"gueltigBis": null
 		} ]
@@ -8617,7 +8638,8 @@
 							{"schulform": "SG", "gliederung": null},
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null},
-							{"schulform": "V", "gliederung": null}],
+							{"schulform": "V", "gliederung": null},
+							{"schulform": "WB", "gliederung": null}],
 			"gueltigVon": 2024,
 			"gueltigBis": null
 		} ]
@@ -8651,7 +8673,8 @@
 							{"schulform": "SG", "gliederung": null},
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null},
-							{"schulform": "V", "gliederung": null}],
+							{"schulform": "V", "gliederung": null},
+							{"schulform": "WB", "gliederung": null}],
 			"gueltigVon": 2024,
 			"gueltigBis": null
 		} ]
@@ -8685,7 +8708,8 @@
 							{"schulform": "SG", "gliederung": null},
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null},
-							{"schulform": "V", "gliederung": null}],
+							{"schulform": "V", "gliederung": null},
+							{"schulform": "WB", "gliederung": null}],
 			"gueltigVon": 2024,
 			"gueltigBis": null
 		} ]
@@ -8719,7 +8743,8 @@
 							{"schulform": "SG", "gliederung": null},
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null},
-							{"schulform": "V", "gliederung": null}],
+							{"schulform": "V", "gliederung": null},
+							{"schulform": "WB", "gliederung": null}],
 			"gueltigVon": 2024,
 			"gueltigBis": null
 		} ]
@@ -8753,7 +8778,8 @@
 							{"schulform": "SG", "gliederung": null},
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null},
-							{"schulform": "V", "gliederung": null}],
+							{"schulform": "V", "gliederung": null},
+							{"schulform": "WB", "gliederung": null}],
 			"gueltigVon": 2024,
 			"gueltigBis": null
 		} ]
@@ -8787,7 +8813,8 @@
 							{"schulform": "SG", "gliederung": null},
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null},
-							{"schulform": "V", "gliederung": null}],
+							{"schulform": "V", "gliederung": null},
+							{"schulform": "WB", "gliederung": null}],
 			"gueltigVon": 2024,
 			"gueltigBis": null
 		} ]
@@ -8821,7 +8848,8 @@
 							{"schulform": "SG", "gliederung": null},
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null},
-							{"schulform": "V", "gliederung": null}],
+							{"schulform": "V", "gliederung": null},
+							{"schulform": "WB", "gliederung": null}],
 			"gueltigVon": 2024,
 			"gueltigBis": null
 		} ]
