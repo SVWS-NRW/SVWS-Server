@@ -18,8 +18,8 @@ import { HashMap } from "@core/java/util/HashMap";
 import { HashSet } from "@core/java/util/HashSet";
 import type { JavaMap } from "@core/java/util/JavaMap";
 import type { List } from "@core/java/util/List";
-import { computed, ref } from "vue";
-import type { Ref } from "vue";
+import { computed, ref, shallowRef } from "vue";
+import type { Ref, ShallowRef } from "vue";
 
 /**
  * Das Interface für die Einträge der Auswahlliste für die Lerngruppen
@@ -78,7 +78,7 @@ export class EnmManager {
 	protected _filterLerngruppen: Ref<Array<EnmLerngruppenAuswahlEintrag>>;
 
 	/** Eine Refernz auf die aktuelle Auswahl der Leistung zur Bearbeitung in diesem Manager */
-	protected _auswahlLeistung: Ref<EnmLeistungAuswahl>;
+	protected _auswahlLeistung: ShallowRef<EnmLeistungAuswahl>;
 
 	/** Eine Refernz auf die aktuelle Auswahl der Leistung zur Bearbeitung in diesem Manager */
 	protected _auswahlSchueler: Ref<ENMSchueler|null>;
@@ -94,7 +94,7 @@ export class EnmManager {
 		this.idLehrer = ref<number>(idLehrer);
 		this._filterLerngruppen = ref<Array<EnmLerngruppenAuswahlEintrag>>(new Array<EnmLerngruppenAuswahlEintrag>());
 		this._filterKlassen = ref<Array<ENMKlasse>>(new Array<ENMKlasse>());
-		this._auswahlLeistung = ref<EnmLeistungAuswahl>({ indexSchueler: 0, indexLeistung: 0, leistung: null });
+		this._auswahlLeistung = shallowRef<EnmLeistungAuswahl>({ indexSchueler: 0, indexLeistung: 0, leistung: null });
 		this._auswahlSchueler = ref<ENMSchueler|null>(null);
 	}
 

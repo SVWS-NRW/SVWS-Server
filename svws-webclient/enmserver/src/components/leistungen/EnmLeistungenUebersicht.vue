@@ -34,12 +34,12 @@
 		<tbody class="svws-ui-tbody h-full overflow-y-auto" role="rowgroup" aria-label="Tabelleninhalt">
 			<template v-for="(schueler, indexSchueler) of manager.lerngruppenAuswahlGetSchuelerMitLeistungsdaten()" :key="schueler">
 				<template v-for="(leistung, indexLeistung) of manager.leistungenGetOfSchueler(schueler.id)" :key="leistung">
-					<tr class="svws-ui-tr" role="row" :class="{ 'svws-clicked': manager.auswahlLeistung.leistung?.id === leistung.id }"
+					<tr class="svws-ui-tr" role="row" :class="{ 'svws-clicked': manager.auswahlLeistung.leistung === leistung }"
 						@click.capture.exact="setAuswahlLeistung({ indexSchueler, indexLeistung, leistung })"
 						@keydown.tab="handleTabEvent($event, leistung.id)" :ref="el => rowRefs.set(leistung.id, {
 							element: (el as HTMLElement),
-							isLastRow: manager.lerngruppenAuswahlGetSchuelerMitLeistungsdaten().getLast().id === schueler.id
-								&& manager.leistungenGetOfSchueler(schueler.id).getLast().id === leistung.id })">
+							isLastRow: (manager.lerngruppenAuswahlGetSchuelerMitLeistungsdaten().getLast().id === schueler.id)
+								&& (manager.leistungenGetOfSchueler(schueler.id).getLast().id === leistung.id) })">
 						<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Klasse') ?? true">
 							{{ manager.schuelerGetKlasse(schueler.id).kuerzelAnzeige }}
 						</td>
@@ -59,15 +59,15 @@
 							{{ manager.lerngruppeGetFachlehrerOrNull(leistung.lerngruppenID) }}
 						</td>
 						<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Quartal') ?? true">
-							<svws-ui-text-input v-if="manager.auswahlLeistung?.leistung?.id === leistung.id && manager.lerngruppeIstFachlehrer(leistung.lerngruppenID)" class="w-full column-focussable" :model-value="leistung.noteQuartal" @focusin="tabToUnselectedLeistung(indexSchueler, indexLeistung, leistung, $event.target)"
-								:class="{ contentFocusField: (manager.auswahlLeistung?.leistung?.id === leistung.id) }"
+							<svws-ui-text-input v-if="(manager.auswahlLeistung.leistung === leistung) && manager.lerngruppeIstFachlehrer(leistung.lerngruppenID)" class="w-full column-focussable" :model-value="leistung.noteQuartal" @focusin="tabToUnselectedLeistung(indexSchueler, indexLeistung, leistung, $event.target)"
+								:class="{ contentFocusField: (manager.auswahlLeistung.leistung === leistung) }"
 								@change="noteQuartal => doPatchLeistungNote(leistung, Note.fromKuerzel(noteQuartal).daten(props.manager.schuljahr)?.kuerzel,{ noteQuartal: (Note.fromKuerzel(noteQuartal).daten(props.manager.schuljahr)?.kuerzel ?? null) })" />
 							<div v-else class="grade-field column-focussable" tabindex="0" @focusin="tabToUnselectedLeistung(indexSchueler, indexLeistung, leistung, $event.target)">
 								{{ leistung.noteQuartal ?? "-" }}
 							</div>
 						</td>
 						<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Note') ?? true">
-							<svws-ui-text-input v-if="manager.auswahlLeistung?.leistung?.id === leistung.id && manager.lerngruppeIstFachlehrer(leistung.lerngruppenID)" class="w-full column-focussable" :model-value="leistung.note" @focusin="tabToUnselectedLeistung(indexSchueler, indexLeistung, leistung, $event.target)"
+							<svws-ui-text-input v-if="(manager.auswahlLeistung.leistung === leistung) && manager.lerngruppeIstFachlehrer(leistung.lerngruppenID)" class="w-full column-focussable" :model-value="leistung.note" @focusin="tabToUnselectedLeistung(indexSchueler, indexLeistung, leistung, $event.target)"
 								@change="note => doPatchLeistungNote(leistung, Note.fromKuerzel(note).daten(props.manager.schuljahr)?.kuerzel,{ note: (Note.fromKuerzel(note).daten(props.manager.schuljahr)?.kuerzel ?? null) })" />
 							<div v-else class="grade-field column-focussable" tabindex="0" @focusin="tabToUnselectedLeistung(indexSchueler, indexLeistung, leistung, $event.target)">
 								{{ leistung.note ?? "-" }}
@@ -92,7 +92,7 @@
 								@focusin="tabToUnselectedLeistung(indexSchueler, indexLeistung, leistung, $event.target)" />
 							<span v-else class="grade-field column-focussable" tabindex="0">—</span>
 						</td>
-						<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Bemerkung') ?? true" :class="{ 'bg-ui-selected-secondary text-ui-onselected-secondary': floskelEditorVisible && (manager.auswahlLeistung.leistung?.id === leistung.id) }">
+						<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Bemerkung') ?? true" :class="{ 'bg-ui-selected-secondary text-ui-onselected-secondary': floskelEditorVisible && (manager.auswahlLeistung.leistung === leistung) }">
 							<span class="text-ellipsis overflow-hidden whitespace-nowrap column-focussable" tabindex="0" @keydown.enter.prevent="focusFloskelEditor"
 								@focusin="tabToUnselectedLeistung(indexSchueler, indexLeistung, leistung, $event.target)">{{ leistung.fachbezogeneBemerkungen }}</span>
 						</td>

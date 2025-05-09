@@ -67,8 +67,8 @@
 						<template v-for="art of manager.lerngruppenAuswahlGetTeilleistungsarten()" :key="art.id">
 							<td class="svws-ui-td" role="cell">
 								<template v-if="manager.lerngruppenAuswahlGetTeilleistungOrNull(leistung.id, art.id) !== null">
-									<svws-ui-text-input :id="manager.lerngruppenAuswahlGetTeilleistungOrNull(leistung.id, art.id)!.id" v-if="manager.auswahlLeistung?.leistung?.id === leistung.id && manager.lerngruppeIstFachlehrer(leistung.lerngruppenID)" class="w-full"
-										:model-value="manager.lerngruppenAuswahlGetTeilleistungOrNull(leistung.id, art.id)!.note" :class="{ contentFocusField: (manager.auswahlLeistung?.leistung?.id === leistung.id) && art.id === 5 }" @focusin="switchToUnselectedLeistung(indexSchueler, indexLeistung, leistung, $event.target)"
+									<svws-ui-text-input :id="manager.lerngruppenAuswahlGetTeilleistungOrNull(leistung.id, art.id)!.id" v-if="(manager.auswahlLeistung.leistung === leistung) && manager.lerngruppeIstFachlehrer(leistung.lerngruppenID)" class="w-full"
+										:model-value="manager.lerngruppenAuswahlGetTeilleistungOrNull(leistung.id, art.id)!.note" :class="{ contentFocusField: (manager.auswahlLeistung.leistung === leistung) && art.id === 5 }" @focusin="switchToUnselectedLeistung(indexSchueler, indexLeistung, leistung, $event.target)"
 										@change="note => doPatchLeistungNote(manager.lerngruppenAuswahlGetTeilleistungOrNull(leistung.id, art.id), Note.fromKuerzel(note).daten(props.manager.schuljahr)?.kuerzel,{ note: (Note.fromKuerzel(note).daten(props.manager.schuljahr)?.kuerzel ?? null) })" />
 									<div v-else @focusin="switchToUnselectedLeistung(indexSchueler, indexLeistung, leistung, $event.target)" class="grade-field column-focussable" tabindex="0">
 										{{ manager.lerngruppenAuswahlGetTeilleistungOrNull(leistung.id, art.id)!.note ?? "-" }}
@@ -77,16 +77,16 @@
 							</td>
 						</template>
 						<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Quartal') ?? true">
-							<svws-ui-text-input v-if="manager.auswahlLeistung?.leistung?.id === leistung.id && manager.lerngruppeIstFachlehrer(leistung.lerngruppenID)" class="w-full" :model-value="leistung.noteQuartal"
-								:class="{ contentFocusField: (manager.auswahlLeistung?.leistung?.id === leistung.id) }" @focusin="switchToUnselectedLeistung(indexSchueler, indexLeistung, leistung, $event.target)"
+							<svws-ui-text-input v-if="(manager.auswahlLeistung.leistung === leistung) && manager.lerngruppeIstFachlehrer(leistung.lerngruppenID)" class="w-full" :model-value="leistung.noteQuartal"
+								:class="{ contentFocusField: (manager.auswahlLeistung.leistung === leistung) }" @focusin="switchToUnselectedLeistung(indexSchueler, indexLeistung, leistung, $event.target)"
 								@change="noteQuartal => doPatchLeistungNote(leistung, Note.fromKuerzel(noteQuartal).daten(props.manager.schuljahr)?.kuerzel,{ noteQuartal: (Note.fromKuerzel(noteQuartal).daten(props.manager.schuljahr)?.kuerzel ?? null) })" />
 							<div v-else class="grade-field column-focussable" tabindex="0" @focusin="switchToUnselectedLeistung(indexSchueler, indexLeistung, leistung, $event.target)">
 								{{ leistung.noteQuartal ?? "-" }}
 							</div>
 						</td>
 						<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Note') ?? true">
-							<svws-ui-text-input v-if="manager.auswahlLeistung?.leistung?.id === leistung.id && manager.lerngruppeIstFachlehrer(leistung.lerngruppenID)" class="w-full" :model-value="leistung.note"
-								:class="{ contentFocusField: (manager.auswahlLeistung?.leistung?.id === leistung.id) }" @focusin="switchToUnselectedLeistung(indexSchueler, indexLeistung, leistung, $event.target)"
+							<svws-ui-text-input v-if="(manager.auswahlLeistung.leistung === leistung) && manager.lerngruppeIstFachlehrer(leistung.lerngruppenID)" class="w-full" :model-value="leistung.note"
+								:class="{ contentFocusField: (manager.auswahlLeistung.leistung === leistung) }" @focusin="switchToUnselectedLeistung(indexSchueler, indexLeistung, leistung, $event.target)"
 								@change="note => doPatchLeistungNote(leistung, Note.fromKuerzel(note).daten(props.manager.schuljahr)?.kuerzel,{ note: (Note.fromKuerzel(note).daten(props.manager.schuljahr)?.kuerzel ?? null) })" />
 							<div v-else class="text-ellipsis overflow-hidden whitespace-nowrap grade-field column-focussable" tabindex="0" @focusin="switchToUnselectedLeistung(indexSchueler, indexLeistung, leistung, $event.target)">
 								{{ leistung.note ?? "-" }}
