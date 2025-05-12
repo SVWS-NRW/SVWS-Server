@@ -952,7 +952,6 @@ export class LaufbahnplanungUiManager {
 						wahl.abiturFach = 2;
 					break;
 			}
-			return;
 		}
 		// Die mögliche Kursart im Abitur ist GK (Grundkurs)
 		if (abiMoeglicheKursart === GostKursart.GK) {
@@ -1051,7 +1050,6 @@ export class LaufbahnplanungUiManager {
 						wahl.abiturFach = 2;
 					break;
 			}
-			return;
 		}
 		// Die mögliche Kursart im Abitur ist GK (Grundkurs)
 		if (abiMoeglicheKursart === GostKursart.GK) {
