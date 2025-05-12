@@ -211,6 +211,7 @@
 		if (!clean.value)
 			return ersetzeTemplates();
 		await props.patch(text.value);
+		props.manager.update();
 	}
 
 </script>

@@ -17,6 +17,7 @@ import type { Comparator } from "@core/java/util/Comparator";
 import { HashMap } from "@core/java/util/HashMap";
 import { HashSet } from "@core/java/util/HashSet";
 import type { JavaMap } from "@core/java/util/JavaMap";
+import type { JavaSet } from "@core/java/util/JavaSet";
 import type { List } from "@core/java/util/List";
 import { computed, ref, shallowRef } from "vue";
 import type { Ref, ShallowRef } from "vue";
@@ -66,22 +67,73 @@ export type BemerkungenHauptgruppe = 'ASV'|'AUE'|'FACH'|'FÖRD'|'FSP'|'VERM'|'VE
 export class EnmManager {
 
 	/** Eine Referenz auf die ENM-Daten */
-	protected _daten: Ref<ENMDaten>;
+	protected _daten: ShallowRef<ENMDaten>;
 
 	/** Eine Referenz auf die ID des Lehrers, für welchen die ENM-Daten in diesem Manager verwaltet werden */
 	protected idLehrer: Ref<number>;
 
 	/** Eine Referenz auf die aktuelle Auswahl von Lerngruppen des Lehrers, auf welche in diesem Manager gefiltert wird */
-	protected _filterKlassen: Ref<Array<ENMKlasse>>;
+	protected _filterKlassen: ShallowRef<Array<ENMKlasse>>;
 
 	/** Eine Referenz auf die aktuelle Auswahl von Lerngruppen des Lehrers, auf welche in diesem Manager gefiltert wird */
-	protected _filterLerngruppen: Ref<Array<EnmLerngruppenAuswahlEintrag>>;
+	protected _filterLerngruppen: ShallowRef<Array<EnmLerngruppenAuswahlEintrag>>;
 
 	/** Eine Refernz auf die aktuelle Auswahl der Leistung zur Bearbeitung in diesem Manager */
 	protected _auswahlLeistung: ShallowRef<EnmLeistungAuswahl>;
 
 	/** Eine Refernz auf die aktuelle Auswahl der Leistung zur Bearbeitung in diesem Manager */
 	protected _auswahlSchueler: Ref<ENMSchueler|null>;
+
+	/** Eine Map von der ID der Förderschwerpunkte auf deren Objekte */
+	readonly mapFoerderschwerpunkte: JavaMap<number, ENMFoerderschwerpunkt> = new HashMap<number, ENMFoerderschwerpunkt>();
+
+	/** Eine Map von der ID der Jahrgänge auf deren Objekte */
+	readonly mapJahrgaenge: JavaMap<number, ENMJahrgang> = new HashMap<number, ENMJahrgang>();
+
+	/** Eine Map von der ID der Klassen auf deren Objekte */
+	readonly mapKlassen: JavaMap<number, ENMKlasse> = new HashMap<number, ENMKlasse>();
+
+	/** Eine Map von der ID der Floskelgruppen auf deren Objekte */
+	readonly mapFloskelgruppen: JavaMap<string, ENMFloskelgruppe> = new HashMap<string, ENMFloskelgruppe>();
+
+	/** Eine Map von der ID der Lehrer auf deren Objekte */
+	readonly mapLehrer: JavaMap<number, ENMLehrer> = new HashMap<number, ENMLehrer>();
+
+	/** Eine Map von der ID der Fächer auf deren Objekte */
+	readonly mapFaecher: JavaMap<number, ENMFach> = new HashMap<number, ENMFach>();
+
+	/** Eine Map von der ID der Teilleistungsarten auf deren Objekte */
+	readonly mapTeilleistungsarten: JavaMap<number, ENMTeilleistungsart> = new HashMap<number, ENMTeilleistungsart>();
+
+	/** Eine Map von der ID der Lerngruppen auf deren Objekte */
+	readonly mapLerngruppen: JavaMap<number, ENMLerngruppe> = new HashMap<number, ENMLerngruppe>();
+
+	/** Eine Map von der ID der Schüler auf deren Objekte */
+	readonly mapSchueler: JavaMap<number, ENMSchueler> = new HashMap<number, ENMSchueler>();
+
+	/** Eine Map, welcher Lerngruppen-ID die Menge der zugehörigen Schüler-Objekte zuordnet */
+	readonly mapLerngruppenSchueler: JavaMap<number, List<ENMSchueler>> = new HashMap<number, List<ENMSchueler>>();
+
+	/** Eine Map, welche einer Lerngruppen-ID die Menge der zugeordneten Jahrgänge zuordnet */
+	readonly mapLerngruppeJahrgaenge: HashMap<number, List<ENMJahrgang>> = new HashMap<number, List<ENMJahrgang>>();
+
+	/** Eine Map, welche einer Klassen-ID die Menge der zugeordneten Schüler zuordnet */
+	readonly mapKlassenSchueler: JavaMap<number, List<ENMSchueler>> = new HashMap<number, List<ENMSchueler>>();
+
+	/** Eine Map, welche einer Lerngruppen-ID die Menge der zugeordneten Klassen zuordnet */
+	readonly mapLerngruppeKlassen: JavaMap<number, List<ENMKlasse>> = new HashMap<number, List<ENMKlasse>>();
+
+	/** Die Liste aller Lerngruppen des Lehrers, sortiert nach den Jahrgängen */
+	readonly listLerngruppenLehrer: List<ENMLerngruppe> = new ArrayList<ENMLerngruppe>();
+
+	/** Die Menge aller Lerngruppen-IDs, wo der Lehrer bei der Lerngruppe als Fachlehrer eingetragen ist. */
+	readonly setLerngruppenLehrer: JavaSet<number> = new HashSet<number>();
+
+	/** Die Auswahlliste für die Lerngruppen */
+	readonly listLerngruppenAuswahlliste: List<EnmLerngruppenAuswahlEintrag> = new ArrayList<EnmLerngruppenAuswahlEintrag>();
+
+	/** Die Liste aller Klassen eines Klassenlehrers, sortiert nach Jahrgängen */
+	readonly listKlassenKlassenlehrer: List<ENMKlasse> = new ArrayList<ENMKlasse>();
 
 	/**
 	 * Erstellt einen neue Enm-Manager für die übergebenen ENM-Daten
@@ -90,12 +142,108 @@ export class EnmManager {
 	 * @param idLehrer   die ID des Lehrers, für welchen die ENM-Daten verwaltet werden
 	 */
 	public constructor(daten: ENMDaten, idLehrer: number) {
-		this._daten = ref<ENMDaten>(daten);
+		this._daten = shallowRef<ENMDaten>(daten);
 		this.idLehrer = ref<number>(idLehrer);
-		this._filterLerngruppen = ref<Array<EnmLerngruppenAuswahlEintrag>>(new Array<EnmLerngruppenAuswahlEintrag>());
-		this._filterKlassen = ref<Array<ENMKlasse>>(new Array<ENMKlasse>());
+		this._filterLerngruppen = shallowRef<Array<EnmLerngruppenAuswahlEintrag>>(new Array<EnmLerngruppenAuswahlEintrag>());
+		this._filterKlassen = shallowRef<Array<ENMKlasse>>(new Array<ENMKlasse>());
 		this._auswahlLeistung = shallowRef<EnmLeistungAuswahl>({ indexSchueler: 0, indexLeistung: 0, leistung: null });
-		this._auswahlSchueler = ref<ENMSchueler|null>(null);
+		this._auswahlSchueler = shallowRef<ENMSchueler|null>(null);
+
+		for (const f of daten.foerderschwerpunkte)
+			this.mapFoerderschwerpunkte.put(f.id, f);
+
+		for (const j of daten.jahrgaenge)
+			this.mapJahrgaenge.put(j.id, j);
+
+		for (const k of daten.klassen) {
+			this.mapKlassen.put(k.id, k);
+			this.mapKlassenSchueler.put(k.id, new ArrayList());
+			if (k.klassenlehrer.contains(this.idLehrer.value))
+				this.listKlassenKlassenlehrer.add(k);
+		}
+		this.listKlassenKlassenlehrer.sort(this.comparatorKlassen);
+
+		for (const f of daten.floskelgruppen)
+			this.mapFloskelgruppen.put(f.kuerzel, f);
+
+		for (const l of daten.lehrer)
+			this.mapLehrer.put(l.id, l);
+
+		for (const f of daten.faecher)
+			this.mapFaecher.put(f.id, f);
+
+		for (const t of daten.teilleistungsarten)
+			this.mapTeilleistungsarten.put(t.id, t);
+
+		for (const l of daten.lerngruppen) {
+			this.mapLerngruppen.put(l.id, l);
+			this.mapLerngruppenSchueler.put(l.id, new ArrayList());
+			this.mapLerngruppeJahrgaenge.put(l.id, new ArrayList());
+			this.mapLerngruppeKlassen.put(l.id, new ArrayList());
+			if (l.lehrerID.contains(this.idLehrer.value)) {
+				this.listLerngruppenLehrer.add(l);
+				this.setLerngruppenLehrer.add(l.id);
+				this.listLerngruppenAuswahlliste.add(<EnmLerngruppenAuswahlEintrag>{
+					id: l.id,
+					bezeichnung: this.lerngruppeGetBezeichnung(l.id),
+					klassen: this.lerngruppeGetKlassenAsString(l.id),
+				});
+			}
+		}
+		this.listLerngruppenLehrer.sort(this.comparatorLerngruppen);
+
+		for (const s of daten.schueler) {
+			this.mapSchueler.put(s.id, s);
+			for (const leistung of s.leistungsdaten) {
+				const idLerngruppe = leistung.lerngruppenID;
+				const list = this.mapLerngruppenSchueler.get(idLerngruppe);
+				if (list === null)
+					throw new DeveloperNotificationException(`Die Lerngruppe mit der ID ${idLerngruppe} wird in Leistungsdaten angegeben, ist aber im Katalog der Lerngruppen nicht vorhanden.`);
+				list.add(s);
+			}
+			const klasse = this.mapKlassenSchueler.get(s.klasseID);
+			if (klasse === null)
+				throw new DeveloperNotificationException(`Die Klasse mit der ID ${s.klasseID} wird in Schülerdaten angegeben, ist aber im Katalog der Klassen nicht vorhanden.`);
+			klasse.add(s);
+		}
+
+		for (const l of daten.lerngruppen) {
+			const listJahrgaenge = this.mapLerngruppeJahrgaenge.get(l.id)!;
+			const listSchueler = this.mapLerngruppenSchueler.get(l.id);
+			if (l.kursartID === null) {
+				// Klassenunterricht - Bestimme den Jahrgang der Klasse
+				const klasse = this.mapKlassen.get(l.kID);
+				if (klasse !== null) {
+					const jahrgang = this.mapJahrgaenge.get(klasse.idJahrgang);
+					if (jahrgang !== null)
+						listJahrgaenge.add(jahrgang);
+				}
+			} else {
+				// Kursunterricht - Bestimme die Jahrgänge aller Schüler
+				const setJahrgaenge = new HashSet<number>();
+				if (listSchueler !== null)
+					for (const schueler of listSchueler)
+						setJahrgaenge.add(schueler.jahrgangID);
+				for (const idJahrgang of setJahrgaenge) {
+					const jahrgang = this.mapJahrgaenge.get(idJahrgang);
+					if (jahrgang !== null)
+						listJahrgaenge.add(jahrgang);
+				}
+			}
+			const tmpKlassenIDs = new HashSet<number>();
+			const listKlassen = new ArrayList<ENMKlasse>();
+			if (listSchueler !== null)
+				for (const s of listSchueler)
+					tmpKlassenIDs.add(s.klasseID);
+			for (const idKlasse of tmpKlassenIDs) {
+				const klasse = this.mapKlassen.get(idKlasse);
+				if (klasse === null)
+					continue;
+				listKlassen.add(klasse);
+			}
+			listKlassen.sort(this.comparatorKlassen);
+			this.mapLerngruppeKlassen.put(l.id, listKlassen);
+		}
 	}
 
 	/**
@@ -219,7 +367,7 @@ export class EnmManager {
 		const listLeistungen = (schueler !== null) ? this.leistungenGetOfSchueler(schueler.id) : null;
 		if ((listLeistungen === null) || (aktuell.indexLeistung < 0) || (aktuell.indexLeistung >= listLeistungen.size()))
 			valid = false;
-		const leistung = (listLeistungen !== null) ? listLeistungen.get(aktuell.indexLeistung) : null;
+		const leistung = (listLeistungen !== null && valid) ? listLeistungen.get(aktuell.indexLeistung) : null;
 		if (leistung?.id !== aktuell.leistung?.id)
 			valid = false;
 		let indexLeistung = aktuell.indexLeistung + 1;
@@ -298,214 +446,12 @@ export class EnmManager {
 		return this._daten.value.aktuellerAbschnitt;
 	}
 
-	/** Eine Map von der ID der Förderschwerpunkte auf deren Objekte */
-	protected mapFoerderschwerpunkte = computed<JavaMap<number, ENMFoerderschwerpunkt>>(() => {
-		const result = new HashMap<number, ENMFoerderschwerpunkt>();
-		for (const f of this._daten.value.foerderschwerpunkte)
-			result.put(f.id, f);
-		return result;
-	});
-
-	/** Eine Map von der ID der Jahrgänge auf deren Objekte */
-	protected mapJahrgaenge = computed<JavaMap<number, ENMJahrgang>>(() => {
-		const result = new HashMap<number, ENMJahrgang>();
-		for (const j of this._daten.value.jahrgaenge)
-			result.put(j.id, j);
-		return result;
-	});
-
-	/** Eine Map von der ID der Klassen auf deren Objekte */
-	protected mapKlassen = computed<JavaMap<number, ENMKlasse>>(() => {
-		const result = new HashMap<number, ENMKlasse>();
-		for (const k of this._daten.value.klassen)
-			result.put(k.id, k);
-		return result;
-	});
-
-	/** Eine Map von der ID der Floskelgruppen auf deren Objekte */
-	protected mapFloskelgruppen = computed<JavaMap<string, ENMFloskelgruppe>>(() => {
-		const result = new HashMap<string, ENMFloskelgruppe>();
-		for (const f of this._daten.value.floskelgruppen)
-			result.put(f.kuerzel, f);
-		return result;
-	});
-
-	/** Eine Map von der ID der Lehrer auf deren Objekte */
-	protected mapLehrer = computed<JavaMap<number, ENMLehrer>>(() => {
-		const result = new HashMap<number, ENMLehrer>();
-		for (const l of this._daten.value.lehrer)
-			result.put(l.id, l);
-		return result;
-	});
-
-	/** Eine Map von der ID der Fächer auf deren Objekte */
-	protected mapFaecher = computed<JavaMap<number, ENMFach>>(() => {
-		const result = new HashMap<number, ENMFach>();
-		for (const f of this._daten.value.faecher)
-			result.put(f.id, f);
-		return result;
-	});
-
-	/** Eine Map von der ID der Teilleistungsarten auf deren Objekte */
-	protected mapTeilleistungsarten = computed<JavaMap<number, ENMTeilleistungsart>>(() => {
-		const result = new HashMap<number, ENMTeilleistungsart>();
-		for (const a of this._daten.value.teilleistungsarten)
-			result.put(a.id, a);
-		return result;
-	});
-
-	/** Eine Map von der ID der Lerngruppen auf deren Objekte */
-	protected mapLerngruppen = computed<JavaMap<number, ENMLerngruppe>>(() => {
-		const result = new HashMap<number, ENMLerngruppe>();
-		for (const l of this._daten.value.lerngruppen)
-			result.put(l.id, l);
-		return result;
-	});
-
-	/** Eine Map von der ID der Schüler auf deren Objekte */
-	protected mapSchueler = computed<JavaMap<number, ENMSchueler>>(() => {
-		const result = new HashMap<number, ENMSchueler>();
-		for (const s of this._daten.value.schueler)
-			result.put(s.id, s);
-		return result;
-	});
-
-	/** Eine Map, welcher Lerngruppen-ID die Menge der zugehörigen Schüler-Objekte zuordnet */
-	protected mapLerngruppenSchueler = computed<JavaMap<number, List<ENMSchueler>>>(() => {
-		const result = new HashMap<number, List<ENMSchueler>>();
-		// Erzeuge zunächst Listen für alle IDs der Lerngruppen
-		for (const lerngruppe of this._daten.value.lerngruppen)
-			result.put(lerngruppe.id, new ArrayList<ENMSchueler>());
-		// Gehe alle Leistungsdaten der Schüler durch, um die Lerngruppen-Zuordnung zu bestimmen
-		for (const schueler of this._daten.value.schueler) {
-			for (const leistung of schueler.leistungsdaten) {
-				const idLerngruppe = leistung.lerngruppenID;
-				const list = result.get(idLerngruppe);
-				if (list === null)
-					throw new DeveloperNotificationException("Die Lerngruppe mit der ID " + idLerngruppe + " wird in Leistungsdaten angegeben, ist aber im Katalog der Lerngruppen nicht vorhanden.");
-				list.add(schueler);
-			}
-		}
-		return result;
-	});
-
-	/** Eine Map, welche einer Lerngruppen-ID die Menge der zugeordneten Jahrgänge zuordnet */
-	protected mapLerngruppeJahrgaenge = computed<JavaMap<number, List<ENMJahrgang>>>(() => {
-		const result = new HashMap<number, List<ENMJahrgang>>();
-		for (const lerngruppe of this._daten.value.lerngruppen) {
-			const list = new ArrayList<ENMJahrgang>();
-			// Klassen- oder Kursunterricht?
-			if (lerngruppe.kursartID === null) {
-				// Klassenunterricht - Bestimme den Jahrgang der Klasse
-				const klasse = this.mapKlassen.value.get(lerngruppe.kID);
-				if (klasse !== null) {
-					const jahrgang = this.mapJahrgaenge.value.get(klasse.idJahrgang);
-					if (jahrgang !== null)
-						list.add(jahrgang);
-				}
-			} else {
-				// Kursunterricht - Bestimme die Jahrgänge aller Schüler
-				const listSchueler = this.mapLerngruppenSchueler.value.get(lerngruppe.id);
-				const setJahrgaenge = new HashSet<number>();
-				if (listSchueler !== null)
-					for (const schueler of listSchueler)
-						setJahrgaenge.add(schueler.jahrgangID);
-				for (const idJahrgang of setJahrgaenge) {
-					const jahrgang = this.mapJahrgaenge.value.get(idJahrgang);
-					if (jahrgang !== null)
-						list.add(jahrgang);
-				}
-			}
-			result.put(lerngruppe.id, list);
-		}
-		return result;
-	});
-
-	/** Eine Map, welche einer Klassen-ID die Menge der zugeordneten Schüler zuordnet */
-	protected mapKlassenSchueler = computed<JavaMap<number, List<ENMSchueler>>>(() => {
-		const result = new HashMap<number, List<ENMSchueler>>();
-		// Erzeuge zunächst Listen für alle IDs der Klassen
-		for (const klasse of this._daten.value.klassen)
-			result.put(klasse.id, new ArrayList<ENMSchueler>());
-		// Gehe alle Leistungsdaten der Schüler durch, um die Lerngruppen-Zuordnung zu bestimmen
-		for (const schueler of this._daten.value.schueler) {
-			const list = result.get(schueler.klasseID);
-			if (list === null)
-				throw new DeveloperNotificationException(`Die Klasse mit der ID ${schueler.klasseID} wird in Schülerdaten angegeben, ist aber im Katalog der Klassen nicht vorhanden.`);
-			list.add(schueler);
-		}
-		return result;
-	});
-
-	/** Eine Map, welche einer Lerngruppen-ID die Menge der zugeordneten Klassen zuordnet */
-	protected mapLerngruppeKlassen = computed<JavaMap<number, List<ENMKlasse>>>(() => {
-		const result = new HashMap<number, List<ENMKlasse>>();
-		for (const lerngruppe of this._daten.value.lerngruppen) {
-			const list = new ArrayList<ENMKlasse>();
-			const schueler = this.mapLerngruppenSchueler.value.get(lerngruppe.id);
-			const tmpKlassenIDs = new HashSet<number>();
-			if (schueler !== null)
-				for (const s of schueler)
-					tmpKlassenIDs.add(s.klasseID);
-			for (const idKlasse of tmpKlassenIDs) {
-				const klasse = this.mapKlassen.value.get(idKlasse);
-				if (klasse === null)
-					continue;
-				list.add(klasse);
-			}
-			list.sort(this.comparatorKlassen);
-			result.put(lerngruppe.id, list);
-		}
-		return result;
-	});
-
-	/** Die Liste aller Lerngruppen des Lehrers, sortiert nach den Jahrgängen */
-	protected listLerngruppenLehrer = computed<List<ENMLerngruppe>>(() => {
-		const result = new ArrayList<ENMLerngruppe>();
-		for (const l of this._daten.value.lerngruppen)
-			if (l.lehrerID.contains(this.idLehrer.value))
-				result.add(l);
-		result.sort(this.comparatorLerngruppen);
-		return result;
-	});
-
-	/** Die Menge aller Lerngruppen-IDs, wo der Lehrer bei der Lerngruppe als Fachlehrer eingetragen ist. */
-	protected setLerngruppenLehrer = computed<HashSet<number>>(() => {
-		const result = new HashSet<number>();
-		for (const l of this.listLerngruppenLehrer.value)
-			result.add(l.id);
-		return result;
-	});
-
-	/** Die Auswahlliste für die Lerngruppen */
-	protected listLerngruppenAuswahlliste = computed<List<EnmLerngruppenAuswahlEintrag>>(() => {
-		const result = new ArrayList<EnmLerngruppenAuswahlEintrag>();
-		for (const l of this.listLerngruppenLehrer.value)
-			result.add(<EnmLerngruppenAuswahlEintrag>{
-				id: l.id,
-				bezeichnung: this.lerngruppeGetBezeichnung(l.id),
-				klassen: this.lerngruppeGetKlassenAsString(l.id),
-			});
-		return result;
-	});
-
-	/** Die Liste aller Klassen eines Klassenlehrers, sortiert nach Jahrgängen */
-	protected listKlassenKlassenlehrer = computed<List<ENMKlasse>>(() => {
-		const result = new ArrayList<ENMKlasse>();
-		for (const k of this.mapKlassen.value.values())
-			if (k.klassenlehrer.contains(this.idLehrer.value))
-				result.add(k);
-		result.sort(this.comparatorKlassen);
-		return result;
-	});
-
-
 	/** Die aktuelle Auswahl der Lerngruppen */
 	protected listLerngruppenAuswahl = computed<List<ENMLerngruppe>>(() => {
-		const lerngruppen = (this.filterLerngruppen.length === 0) ? this.listLerngruppenAuswahlliste.value : this.filterLerngruppen;
+		const lerngruppen = (this.filterLerngruppen.length === 0) ? this.listLerngruppenAuswahlliste : this.filterLerngruppen;
 		const result = new ArrayList<ENMLerngruppe>();
 		for (const l of lerngruppen) {
-			const lerngruppe = this.mapLerngruppen.value.get(l.id);
+			const lerngruppe = this.mapLerngruppen.get(l.id);
 			if (lerngruppe === null)
 				continue;
 			result.add(lerngruppe);
@@ -525,7 +471,7 @@ export class EnmManager {
 	protected listLerngruppenAuswahlSchueler = computed<List<ENMSchueler>>(() => {
 		const idsSchueler = new HashSet<number>();
 		for (const lerngruppe of this.listLerngruppenAuswahl.value) {
-			const listLerngruppenSchueler = this.mapLerngruppenSchueler.value.get(lerngruppe.id);
+			const listLerngruppenSchueler = this.mapLerngruppenSchueler.get(lerngruppe.id);
 			if (listLerngruppenSchueler === null)
 				continue;
 			for (const schueler of listLerngruppenSchueler)
@@ -533,7 +479,7 @@ export class EnmManager {
 		}
 		const result = new ArrayList<ENMSchueler>();
 		for (const idSchueler of idsSchueler) {
-			const schueler = this.mapSchueler.value.get(idSchueler);
+			const schueler = this.mapSchueler.get(idSchueler);
 			if (schueler === null)
 				continue;
 			result.add(schueler);
@@ -555,10 +501,10 @@ export class EnmManager {
 
 	/** Die aktuelle Auswahl der Klassen */
 	protected listKlassenAuswahl = computed<List<ENMKlasse>>(() => {
-		const klassen = (this.filterKlassen.length === 0) ? this.listKlassenKlassenlehrer.value : this.filterKlassen;
+		const klassen = (this.filterKlassen.length === 0) ? this.listKlassenKlassenlehrer : this.filterKlassen;
 		const result = new ArrayList<ENMKlasse>();
 		for (const k of klassen) {
-			const klasse = this.mapKlassen.value.get(k.id);
+			const klasse = this.mapKlassen.get(k.id);
 			if (klasse === null)
 				continue;
 			result.add(klasse);
@@ -578,7 +524,7 @@ export class EnmManager {
 	protected listKlassenAuswahlSchueler = computed<List<ENMSchueler>>(() => {
 		const result = new ArrayList<ENMSchueler>();
 		for (const klasse of this.listKlassenAuswahl.value) {
-			const listKlassenSchueler = this.mapKlassenSchueler.value.get(klasse.id);
+			const listKlassenSchueler = this.mapKlassenSchueler.get(klasse.id);
 			if (listKlassenSchueler === null)
 				continue;
 			result.addAll(listKlassenSchueler);
@@ -630,7 +576,7 @@ export class EnmManager {
 				const teilleistung = tmp.getOrNull(idLeistung, idTeilleistung);
 				if (teilleistung === null)
 					continue;
-				const teilleistungsart = this.mapTeilleistungsarten.value.get(teilleistung.artID);
+				const teilleistungsart = this.mapTeilleistungsarten.get(teilleistung.artID);
 				if (teilleistungsart === null)
 					continue;
 				setTeilleistungsarten.put(teilleistungsart.id, teilleistung);
@@ -648,7 +594,7 @@ export class EnmManager {
 				setArten.add(idTeilleistungsart);
 		const result = new ArrayList<ENMTeilleistungsart>();
 		for (const idTeilleistungsart of setArten) {
-			const art = this.mapTeilleistungsarten.value.get(idTeilleistungsart);
+			const art = this.mapTeilleistungsarten.get(idTeilleistungsart);
 			if (art === null)
 				continue;
 			result.add(art);
@@ -668,8 +614,8 @@ export class EnmManager {
 	 */
 	protected compareLerngruppen = (a : ENMLerngruppe, b : ENMLerngruppe) : number => {
 		// Vergleiche zuerst anhand der Jahrgänge, sofern diese angegeben sind ...
-		const aJgs = this.mapLerngruppeJahrgaenge.value.get(a.id);
-		const bJgs = this.mapLerngruppeJahrgaenge.value.get(b.id);
+		const aJgs = this.mapLerngruppeJahrgaenge.get(a.id);
+		const bJgs = this.mapLerngruppeJahrgaenge.get(b.id);
 		if (!(((aJgs === null) || (aJgs.size() !== 1)) && ((bJgs === null) || (bJgs.size() !== 1)))) {
 			if ((aJgs === null) || (aJgs.size() !== 1))
 				return -1;
@@ -682,8 +628,8 @@ export class EnmManager {
 				return tmp;
 		}
 		// ... vergleiche dann bei Gleichheit dann anhand der Fach-Sortierung
-		const aFach = this.mapFaecher.value.get(a.fachID);
-		const bFach = this.mapFaecher.value.get(b.fachID);
+		const aFach = this.mapFaecher.get(a.fachID);
+		const bFach = this.mapFaecher.get(b.fachID);
 		if (!((aFach === null) && (bFach === null))) {
 			if (aFach === null)
 				return -1;
@@ -735,8 +681,8 @@ export class EnmManager {
 	 * @returns der Wert für den Vergleich (< 0, 0 oder >0)
 	 */
 	protected compareSchueler = (a : ENMSchueler, b : ENMSchueler) : number => {
-		const aKlasse = this.mapKlassen.value.get(a.klasseID);
-		const bKlasse = this.mapKlassen.value.get(b.klasseID);
+		const aKlasse = this.mapKlassen.get(a.klasseID);
+		const bKlasse = this.mapKlassen.get(b.klasseID);
 		if ((aKlasse === null) && (bKlasse !== null))
 			return -1;
 		if ((aKlasse !== null) && (bKlasse === null))
@@ -799,8 +745,8 @@ export class EnmManager {
 	 */
 	protected compareTeilleistungen = (a : ENMTeilleistung, b : ENMTeilleistung) : number => {
 		// Vergleiche zuerst anhand der gesetzten Sortierung der Teilleistungsarten...
-		const aArt = this.mapTeilleistungsarten.value.get(a.artID);
-		const bArt = this.mapTeilleistungsarten.value.get(b.artID);
+		const aArt = this.mapTeilleistungsarten.get(a.artID);
+		const bArt = this.mapTeilleistungsarten.get(b.artID);
 		const tmp = this.compareTeilleistungsarten(aArt, bArt);
 		if (tmp !== 0)
 			return tmp;
@@ -818,17 +764,17 @@ export class EnmManager {
 
 	/** Gibt die Auswahlliste für die Lerngruppen zurück. */
 	public get lerngruppenAuswahlliste() : List<EnmLerngruppenAuswahlEintrag> {
-		return this.listLerngruppenAuswahlliste.value;
+		return this.listLerngruppenAuswahlliste;
 	}
 
 	/** Gibt die Lerngruppen zurück, welche dem Lehrer zugeordnet sind. */
 	public get lerngruppenOfLehrer() : List<ENMLerngruppe> {
-		return this.listLerngruppenLehrer.value;
+		return this.listLerngruppenLehrer;
 	}
 
 	/** Gibt die Liste der Klassen eines Klassenlehrers zurück */
 	public get klassenOfKlassenlehrer(): List<ENMKlasse> {
-		return this.listKlassenKlassenlehrer.value;
+		return this.listKlassenKlassenlehrer;
 	}
 
 	/**
@@ -839,7 +785,7 @@ export class EnmManager {
 	 * @returns die Lerngruppe oder null
 	 */
 	public lerngruppeByIDOrNull(id: number) : ENMLerngruppe | null {
-		return this.mapLerngruppen.value.get(id);
+		return this.mapLerngruppen.get(id);
 	}
 
 	/**
@@ -851,7 +797,7 @@ export class EnmManager {
 	 * @throws DeveloperNotificationException wenn die Lerngruppe nicht in den ENM-Daten existiert
 	 */
 	public lerngruppeByIDOrException(id: number) : ENMLerngruppe {
-		const lerngruppe = this.mapLerngruppen.value.get(id);
+		const lerngruppe = this.mapLerngruppen.get(id);
 		if (lerngruppe === null)
 			throw new DeveloperNotificationException("Fehler bei der Bestimmung der Bezeichnung der Lerngruppe.");
 		return lerngruppe;
@@ -880,7 +826,7 @@ export class EnmManager {
 	 * @returns die Bezeichnung der Lerngruppe
 	 */
 	public lerngruppeGetKlassenAsString(id: number) : string {
-		const klassen = this.mapLerngruppeKlassen.value.get(id);
+		const klassen = this.mapLerngruppeKlassen.get(id);
 		if (klassen === null)
 			throw new DeveloperNotificationException("Fehler bei der Bestimmung der zugeordneten Klassen für die Lerngruppe.");
 		if (klassen.isEmpty())
@@ -896,7 +842,7 @@ export class EnmManager {
 	 * @returns true, falls er Fachlehrer ist, und ansonsten false
 	 */
 	public lerngruppeIstFachlehrer(id: number) : boolean {
-		return this.setLerngruppenLehrer.value.contains(id);
+		return this.setLerngruppenLehrer.contains(id);
 	}
 
 	/**
@@ -908,11 +854,11 @@ export class EnmManager {
 	 */
 	public lerngruppeGetFachlehrer(id: number) : List<ENMLehrer> {
 		const result = new ArrayList<ENMLehrer>();
-		const lerngruppe = this.mapLerngruppen.value.get(id);
+		const lerngruppe = this.mapLerngruppen.get(id);
 		if (lerngruppe === null)
 			return result;
 		for (const idLehrer of lerngruppe.lehrerID) {
-			const lehrer = this.mapLehrer.value.get(idLehrer);
+			const lehrer = this.mapLehrer.get(idLehrer);
 			if (lehrer !== null)
 				result.add(lehrer);
 		}
@@ -939,7 +885,7 @@ export class EnmManager {
 	 * @returns die Kursart als String
 	 */
 	public lerngruppeGetKursartAsString(id: number) : string {
-		const lerngruppe = this.mapLerngruppen.value.get(id);
+		const lerngruppe = this.mapLerngruppen.get(id);
 		if (lerngruppe === null)
 			return '';
 		if (lerngruppe.kursartID === null)
@@ -956,7 +902,7 @@ export class EnmManager {
 	 */
 	public leistungGetKursartAsString(leistung: ENMLeistung) : string {
 		// Bestimme die Lerngruppe zu der Leistung
-		const lerngruppe = this.mapLerngruppen.value.get(leistung.lerngruppenID);
+		const lerngruppe = this.mapLerngruppen.get(leistung.lerngruppenID);
 		if ((lerngruppe === null) || (lerngruppe.kursartID === null) || (lerngruppe.kursartKuerzel === null))
 			return '';
 		// Bei Grundkursen muss die Schriftlichkeit mit angezeigt werden
@@ -967,7 +913,7 @@ export class EnmManager {
 		if (leistung.abiturfach === null)
 			return kuerzel;
 		// Setze ggf. die Kursart anhand des Abiturfaches
-		const jahrgaenge = this.mapLerngruppeJahrgaenge.value.get(lerngruppe.id);
+		const jahrgaenge = this.mapLerngruppeJahrgaenge.get(lerngruppe.id);
 		if (jahrgaenge === null)
 			return kuerzel;
 		if (jahrgaenge.size() === 1) {
@@ -986,7 +932,7 @@ export class EnmManager {
 	 * @returns die Kurs-Bezeichnung
 	 */
 	public lerngruppeGetKursbezeichnung(id: number) : string {
-		const lerngruppe = this.mapLerngruppen.value.get(id);
+		const lerngruppe = this.mapLerngruppen.get(id);
 		if ((lerngruppe === null) || (lerngruppe.kursartID === null))
 			return "";
 		return lerngruppe.bezeichnung ?? "";
@@ -1000,10 +946,10 @@ export class EnmManager {
 	 * @returns das Fachkürzel
 	 */
 	public lerngruppeGetFachkuerzel(id: number) : string {
-		const lerngruppe = this.mapLerngruppen.value.get(id);
+		const lerngruppe = this.mapLerngruppen.get(id);
 		if (lerngruppe === null)
 			return "";
-		const fach = this.mapFaecher.value.get(lerngruppe.fachID);
+		const fach = this.mapFaecher.get(lerngruppe.fachID);
 		if (fach === null)
 			return "";
 		return fach.kuerzelAnzeige;
@@ -1090,10 +1036,10 @@ export class EnmManager {
 	 * @returns die Klasse des Schülers
 	 */
 	public schuelerGetKlasse(id: number) : ENMKlasse {
-		const schueler = this.mapSchueler.value.get(id);
+		const schueler = this.mapSchueler.get(id);
 		if (schueler === null)
 			throw new DeveloperNotificationException("Der Schüler mit der ID " + id + " exististiert nicht.");
-		const klasse = this.mapKlassen.value.get(schueler.klasseID);
+		const klasse = this.mapKlassen.get(schueler.klasseID);
 		if (klasse === null)
 			throw new DeveloperNotificationException("Der Klasse mit der ID " + schueler.klasseID + " des Schülers mit der ID " + id + " exististiert nicht.");
 		return klasse;
