@@ -72,6 +72,8 @@ integration-tests:
     artifacts:
         when: always
         expire_in: "7 days"
+        paths: 
+            - ./tests/tests-e2e-client/build/test-results
         reports:
             junit: ./tests/**/build/test-results/**/*.xml
 
