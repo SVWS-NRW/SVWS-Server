@@ -28,29 +28,29 @@ class JavaLibPlugin implements Plugin<Project> {
 
 	void addDatabase() {
 		def versionPersistenceAPI = '3.2.0';
-		def versionEclipselink = '4.0.3';
-		def versionMariaDB = '3.5.2';
-		def versionSQLite = '3.46.0.0';
-		def versionUCanAccess = '5.1.1';
-		def versionJackcess = '4.0.6';
-		def versionMySQL = '9.0.0';
-		def versionMSSQL = '12.6.0.jre11';
+		def versionEclipselink = '4.0.6';
+		def versionMariaDB = '3.5.3';
+		def versionSQLite = '3.49.1.0';
+		def versionUCanAccess = '5.1.3';
+		def versionJackcess = '5.1.0';
+		def versionMySQL = '9.3.0';
+		def versionMSSQL = '12.10.0.jre11';
 		project.configurations.create('database');
 		project.dependencies.add('database', 'jakarta.persistence:jakarta.persistence-api:' + versionPersistenceAPI);
 		project.dependencies.add('database', 'org.eclipse.persistence:org.eclipse.persistence.jpa:' + versionEclipselink);
 		project.dependencies.add('database', 'org.mariadb.jdbc:mariadb-java-client:' + versionMariaDB);
 		project.dependencies.add('database', 'org.xerial:sqlite-jdbc:' + versionSQLite);
 		project.dependencies.add('database', 'io.github.spannm:ucanaccess:' + versionUCanAccess);
-		project.dependencies.add('database', 'com.healthmarketscience.jackcess:jackcess:' + versionJackcess);
+		project.dependencies.add('database', 'io.github.spannm:jackcess:' + versionJackcess);
 		project.dependencies.add('database', 'com.mysql:mysql-connector-j:' + versionMySQL);
 		project.dependencies.add('database', 'com.microsoft.sqlserver:mssql-jdbc:' + versionMSSQL);
 		// vulnerability fix for: com.mysql:mysql-connector-j:9.0.0 -> pin com.google.protobuf:protobuf-java:4.28.2
-		project.dependencies.add('database', 'com.google.protobuf:protobuf-java:4.28.2');
+		// project.dependencies.add('database', 'com.google.protobuf:protobuf-java:4.28.2');
 	}
 
 
 	void addJacksonConfiguration() {
-		def version = "2.16.2";
+		def version = "2.19.0";
 		project.configurations.create('jackson');
 		project.dependencies.add('jackson', 'com.fasterxml.jackson.core:jackson-annotations:' + version);
 		project.dependencies.add('jackson', 'com.fasterxml.jackson.core:jackson-core:' + version);
@@ -62,7 +62,7 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addJettyConfiguration() {
-		def version = "12.0.14";
+		def version = "12.0.20";
 		def versionServletApi = "6.1.0";
 		project.configurations.create('jetty');
 		project.dependencies.add('jetty', 'jakarta.servlet:jakarta.servlet-api:' + versionServletApi);
@@ -84,32 +84,32 @@ class JavaLibPlugin implements Plugin<Project> {
 		project.dependencies.add('pdf', 'io.github.openhtmltopdf:openhtmltopdf-pdfbox:' + openHtmlToPdfVersion);
 		project.dependencies.add('pdf', 'io.github.openhtmltopdf:openhtmltopdf-svg-support:' + openHtmlToPdfVersion);
 		// vulnerability fix for: io.github.openhtmltopdf:openhtmltopdf-svg-support:1.1.22 -> pin commons-io:commons-io:2.17.0
-		project.dependencies.add('pdf', 'commons-io:commons-io:2.17.0');
+		// project.dependencies.add('pdf', 'commons-io:commons-io:2.17.0');
 	}
 
 
 	void addThymeleafConfiguration() {
-		def version = "3.1.2.RELEASE";
+		def version = "3.1.3.RELEASE";
 		project.configurations.create('thymeleaf');
 		project.dependencies.add('thymeleaf', 'org.thymeleaf:thymeleaf:' + version);
 	}
 
 
 	void addRestEasyConfiguration() {
-		def version = "6.2.10.Final";
+		def version = "6.2.12.Final";
 		project.configurations.create('resteasy');
 		project.dependencies.add('resteasy', 'org.jboss.resteasy:resteasy-core:' + version);
 		project.dependencies.add('resteasy', 'org.jboss.resteasy:resteasy-jackson2-provider:' + version);
 		project.dependencies.add('resteasy', 'org.jboss.resteasy:resteasy-multipart-provider:' + version);
 		project.dependencies.add('resteasy', 'org.jboss.resteasy:resteasy-jaxb-provider:' + version);
 		// vulnerability fix for: org.jboss.resteasy:resteasy-multipart-provider:6.2.10.Final -> pin commons-io:commons-io:2.17.0
-		project.dependencies.add('resteasy', 'commons-io:commons-io:2.17.0');
+		// project.dependencies.add('resteasy', 'commons-io:commons-io:2.17.0');
 	}
 
 
 	void addSwagger() {
-		def version = "2.2.22";
-		def versionUI = "5.17.14";
+		def version = "2.2.30";
+		def versionUI = "5.21.0";
 		project.configurations.create('swagger');
 		project.dependencies.add('swagger', 'io.swagger.core.v3:swagger-jaxrs2-jakarta:' + version);
 		project.dependencies.add('swagger', 'io.swagger.core.v3:swagger-annotations-jakarta:' + version);
@@ -118,7 +118,7 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addValidation() {
-		def version = "3.1.0";
+		def version = "3.1.1";
 		project.configurations.create('validation');
 		project.dependencies.add('validation', 'jakarta.validation:jakarta.validation-api:' + version);
 	}
@@ -137,8 +137,8 @@ class JavaLibPlugin implements Plugin<Project> {
 		this.project = project;
 		project.pluginManager.apply "java"
 
-		project.dependencies.add('testImplementation', 'org.junit.jupiter:junit-jupiter:5.10.2');
-		project.dependencies.add('testImplementation', 'org.junit.platform:junit-platform-launcher:1.10.2');
+		project.dependencies.add('testImplementation', 'org.junit.jupiter:junit-jupiter:5.12.2');
+		project.dependencies.add('testImplementation', 'org.junit.platform:junit-platform-launcher:1.12.2');
 
 		project.java.sourceCompatibility = JavaVersion.VERSION_21
 		project.java.targetCompatibility = JavaVersion.VERSION_21

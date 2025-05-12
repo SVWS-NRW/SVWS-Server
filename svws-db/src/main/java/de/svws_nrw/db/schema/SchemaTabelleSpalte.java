@@ -1,7 +1,5 @@
 package de.svws_nrw.db.schema;
 
-import org.apache.commons.lang3.math.NumberUtils;
-
 import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.converter.DBAttributeConverter;
 
@@ -403,19 +401,34 @@ public final class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte
 			case BIGINT:
 				if ("".equals(_default.trim()))
 					return null;
-				result = NumberUtils.toLong(_default);
+				result = 0;
+				try {
+					result = Long.parseLong(_default);
+				} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
+					// use default set before
+				}
 				break;
 			case FLOAT:
 				if ("".equals(_default.trim()))
 					return null;
-				result = NumberUtils.toDouble(_default);
+				result = 0.0;
+				try {
+					result = Double.parseDouble(_default);
+				} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
+					// use default set before
+				}
 				break;
 			case LONGBLOB:
 				return null;
 			case SMALLINT, INT:
 				if ("".equals(_default.trim()))
 					return null;
-				result = NumberUtils.toInt(_default);
+				result = 0;
+				try {
+					result = Integer.parseInt(_default);
+				} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
+					// use default set before
+				}
 				break;
 			case BOOLEAN:
 				if ("".equals(_default.trim()))

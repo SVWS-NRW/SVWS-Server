@@ -9,8 +9,8 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 
-import com.healthmarketscience.jackcess.Database;
-import com.healthmarketscience.jackcess.DatabaseBuilder;
+import io.github.spannm.jackcess.Database;
+import io.github.spannm.jackcess.DatabaseBuilder;
 
 import de.svws_nrw.config.SVWSKonfiguration;
 import jakarta.persistence.EntityManager;

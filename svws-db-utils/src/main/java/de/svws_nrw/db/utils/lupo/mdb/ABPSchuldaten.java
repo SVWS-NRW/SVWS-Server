@@ -5,13 +5,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 
-import com.healthmarketscience.jackcess.ColumnBuilder;
-import com.healthmarketscience.jackcess.DataType;
-import com.healthmarketscience.jackcess.Database;
-import com.healthmarketscience.jackcess.PropertyMap;
-import com.healthmarketscience.jackcess.Row;
-import com.healthmarketscience.jackcess.Table;
-import com.healthmarketscience.jackcess.TableBuilder;
+import io.github.spannm.jackcess.ColumnBuilder;
+import io.github.spannm.jackcess.DataType;
+import io.github.spannm.jackcess.Database;
+import io.github.spannm.jackcess.PropertyMap;
+import io.github.spannm.jackcess.Row;
+import io.github.spannm.jackcess.Table;
+import io.github.spannm.jackcess.TableBuilder;
 
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
@@ -240,40 +240,40 @@ public final class ABPSchuldaten {
 	public static void write(final Database db, final List<ABPSchuldaten> list) {
 		try {
 			final Table table = new TableBuilder("ABP_Schuldaten")
-					.addColumn(new ColumnBuilder(fieldSchulnr, DataType.TEXT).setLengthInUnits(6))
-					.addColumn(new ColumnBuilder(fieldSchulformKrz, DataType.TEXT).setLengthInUnits(3))
-					.addColumn(new ColumnBuilder(fieldSchulformBez, DataType.TEXT).setLengthInUnits(50))
-					.addColumn(new ColumnBuilder(fieldBezeichnung1, DataType.TEXT).setLengthInUnits(50))
-					.addColumn(new ColumnBuilder(fieldBezeichnung2, DataType.TEXT).setLengthInUnits(50))
-					.addColumn(new ColumnBuilder(fieldBezeichnung3, DataType.TEXT).setLengthInUnits(50))
-					.addColumn(new ColumnBuilder(fieldKennwort, DataType.TEXT).setLengthInUnits(20))
-					.addColumn(new ColumnBuilder(fieldPruefOrdnung, DataType.TEXT).setLengthInUnits(20))
-					.addColumn(new ColumnBuilder(fieldPruefPhase, DataType.TEXT).setLengthInUnits(1))
-					.addColumn(new ColumnBuilder(fieldBilingualSprachen, DataType.TEXT).setLengthInUnits(10))
-					.addColumn(new ColumnBuilder(fieldBeratungslehrer, DataType.TEXT).setLengthInUnits(50))
-					.addColumn(new ColumnBuilder(fieldBeratungslehrerEMail, DataType.TEXT).setLengthInUnits(100))
-					.addColumn(new ColumnBuilder(fieldZK_Beginn_GE, DataType.TEXT).setLengthInUnits(2).putProperty(PropertyMap.DEFAULT_VALUE_PROP,
+					.addColumn(new ColumnBuilder(fieldSchulnr, DataType.TEXT).withLengthInUnits(6))
+					.addColumn(new ColumnBuilder(fieldSchulformKrz, DataType.TEXT).withLengthInUnits(3))
+					.addColumn(new ColumnBuilder(fieldSchulformBez, DataType.TEXT).withLengthInUnits(50))
+					.addColumn(new ColumnBuilder(fieldBezeichnung1, DataType.TEXT).withLengthInUnits(50))
+					.addColumn(new ColumnBuilder(fieldBezeichnung2, DataType.TEXT).withLengthInUnits(50))
+					.addColumn(new ColumnBuilder(fieldBezeichnung3, DataType.TEXT).withLengthInUnits(50))
+					.addColumn(new ColumnBuilder(fieldKennwort, DataType.TEXT).withLengthInUnits(20))
+					.addColumn(new ColumnBuilder(fieldPruefOrdnung, DataType.TEXT).withLengthInUnits(20))
+					.addColumn(new ColumnBuilder(fieldPruefPhase, DataType.TEXT).withLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldBilingualSprachen, DataType.TEXT).withLengthInUnits(10))
+					.addColumn(new ColumnBuilder(fieldBeratungslehrer, DataType.TEXT).withLengthInUnits(50))
+					.addColumn(new ColumnBuilder(fieldBeratungslehrerEMail, DataType.TEXT).withLengthInUnits(100))
+					.addColumn(new ColumnBuilder(fieldZK_Beginn_GE, DataType.TEXT).withLengthInUnits(2).withProperty(PropertyMap.DEFAULT_VALUE_PROP,
 							DataType.TEXT, "'Q3'"))
-					.addColumn(new ColumnBuilder(fieldZK_Beginn_SW, DataType.TEXT).setLengthInUnits(2).putProperty(PropertyMap.DEFAULT_VALUE_PROP,
+					.addColumn(new ColumnBuilder(fieldZK_Beginn_SW, DataType.TEXT).withLengthInUnits(2).withProperty(PropertyMap.DEFAULT_VALUE_PROP,
 							DataType.TEXT, "'Q3'"))
-					.addColumn(new ColumnBuilder(fieldAusdruckAlleFaecher, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP,
+					.addColumn(new ColumnBuilder(fieldAusdruckAlleFaecher, DataType.TEXT).withLengthInUnits(1).withProperty(PropertyMap.DEFAULT_VALUE_PROP,
 							DataType.TEXT, "'J'"))
-					.addColumn(new ColumnBuilder(fieldBeratungshalbjahr, DataType.TEXT).setLengthInUnits(5).putProperty(PropertyMap.DEFAULT_VALUE_PROP,
+					.addColumn(new ColumnBuilder(fieldBeratungshalbjahr, DataType.TEXT).withLengthInUnits(5).withProperty(PropertyMap.DEFAULT_VALUE_PROP,
 							DataType.TEXT, "'EF.1'"))
-					.addColumn(new ColumnBuilder(fieldBeratungsText, DataType.MEMO).setLengthInUnits(16777216))
-					.addColumn(new ColumnBuilder(fieldMailText, DataType.MEMO).setLengthInUnits(16777216))
-					.addColumn(new ColumnBuilder(fieldMailTextBoegen, DataType.MEMO).setLengthInUnits(16777216))
-					.addColumn(new ColumnBuilder(fieldFS_NurMitSF, DataType.TEXT).setLengthInUnits(1))
-					.addColumn(new ColumnBuilder(fieldKomprimieren, DataType.TEXT).setLengthInUnits(1))
-					.addColumn(new ColumnBuilder(fieldAenderungenErlauben, DataType.TEXT).setLengthInUnits(6))
-					.addColumn(new ColumnBuilder(fieldAutoPruefModus, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldBeratungsText, DataType.MEMO).withLengthInUnits(16777216))
+					.addColumn(new ColumnBuilder(fieldMailText, DataType.MEMO).withLengthInUnits(16777216))
+					.addColumn(new ColumnBuilder(fieldMailTextBoegen, DataType.MEMO).withLengthInUnits(16777216))
+					.addColumn(new ColumnBuilder(fieldFS_NurMitSF, DataType.TEXT).withLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldKomprimieren, DataType.TEXT).withLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldAenderungenErlauben, DataType.TEXT).withLengthInUnits(6))
+					.addColumn(new ColumnBuilder(fieldAutoPruefModus, DataType.TEXT).withLengthInUnits(1))
 					.addColumn(new ColumnBuilder(fieldDauerUnterrichtseinheit, DataType.LONG))
-					.addColumn(new ColumnBuilder(fieldSMTP_User, DataType.TEXT).setLengthInUnits(255))
-					.addColumn(new ColumnBuilder(fieldSMTP_Password, DataType.TEXT).setLengthInUnits(255))
-					.addColumn(new ColumnBuilder(fieldSMTP_Server, DataType.TEXT).setLengthInUnits(255))
+					.addColumn(new ColumnBuilder(fieldSMTP_User, DataType.TEXT).withLengthInUnits(255))
+					.addColumn(new ColumnBuilder(fieldSMTP_Password, DataType.TEXT).withLengthInUnits(255))
+					.addColumn(new ColumnBuilder(fieldSMTP_Server, DataType.TEXT).withLengthInUnits(255))
 					.addColumn(new ColumnBuilder(fieldSMTP_Port, DataType.LONG))
-					.addColumn(new ColumnBuilder(fieldSMTP_SSL, DataType.TEXT).setLengthInUnits(1))
-					.addColumn(new ColumnBuilder(fieldSMTP_StartTLS, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldSMTP_SSL, DataType.TEXT).withLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldSMTP_StartTLS, DataType.TEXT).withLengthInUnits(1))
 					.toTable(db);
 
 			for (final ABPSchuldaten zuordnung : list) {

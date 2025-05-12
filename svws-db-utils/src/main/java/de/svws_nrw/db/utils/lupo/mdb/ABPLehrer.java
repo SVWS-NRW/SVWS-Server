@@ -5,13 +5,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 
-import com.healthmarketscience.jackcess.ColumnBuilder;
-import com.healthmarketscience.jackcess.DataType;
-import com.healthmarketscience.jackcess.Database;
-import com.healthmarketscience.jackcess.IndexBuilder;
-import com.healthmarketscience.jackcess.Row;
-import com.healthmarketscience.jackcess.Table;
-import com.healthmarketscience.jackcess.TableBuilder;
+import io.github.spannm.jackcess.ColumnBuilder;
+import io.github.spannm.jackcess.DataType;
+import io.github.spannm.jackcess.Database;
+import io.github.spannm.jackcess.IndexBuilder;
+import io.github.spannm.jackcess.Row;
+import io.github.spannm.jackcess.Table;
+import io.github.spannm.jackcess.TableBuilder;
 
 /**
  * Diese Klasse wird für den Import der Tabelle ABP_Lehrer, d.h. für die Benutzer
@@ -78,12 +78,12 @@ public final class ABPLehrer {
 	public static void write(final Database db, final List<ABPLehrer> list) {
 		try {
 			final Table table = new TableBuilder("ABP_Lehrer")
-					.addColumn(new ColumnBuilder(fieldName, DataType.TEXT).setLengthInUnits(50))
-					.addColumn(new ColumnBuilder(fieldEMail, DataType.TEXT).setLengthInUnits(100))
-					.addColumn(new ColumnBuilder(fieldKennwort, DataType.TEXT).setLengthInUnits(20))
-					.addColumn(new ColumnBuilder(fieldSMTP_User, DataType.TEXT).setLengthInUnits(255))
-					.addColumn(new ColumnBuilder(fieldSMTP_Password, DataType.TEXT).setLengthInUnits(255))
-					.addIndex(new IndexBuilder(IndexBuilder.PRIMARY_KEY_NAME).addColumns(fieldName).setPrimaryKey())
+					.addColumn(new ColumnBuilder(fieldName, DataType.TEXT).withLengthInUnits(50))
+					.addColumn(new ColumnBuilder(fieldEMail, DataType.TEXT).withLengthInUnits(100))
+					.addColumn(new ColumnBuilder(fieldKennwort, DataType.TEXT).withLengthInUnits(20))
+					.addColumn(new ColumnBuilder(fieldSMTP_User, DataType.TEXT).withLengthInUnits(255))
+					.addColumn(new ColumnBuilder(fieldSMTP_Password, DataType.TEXT).withLengthInUnits(255))
+					.addIndex(new IndexBuilder(IndexBuilder.PRIMARY_KEY_NAME).withColumns(fieldName).withPrimaryKey())
 					.toTable(db);
 			for (final ABPLehrer zuordnung : list) {
 				table.addRow(

@@ -6,14 +6,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
 
-import com.healthmarketscience.jackcess.ColumnBuilder;
-import com.healthmarketscience.jackcess.DataType;
-import com.healthmarketscience.jackcess.Database;
-import com.healthmarketscience.jackcess.IndexBuilder;
-import com.healthmarketscience.jackcess.PropertyMap;
-import com.healthmarketscience.jackcess.Row;
-import com.healthmarketscience.jackcess.Table;
-import com.healthmarketscience.jackcess.TableBuilder;
+import io.github.spannm.jackcess.ColumnBuilder;
+import io.github.spannm.jackcess.DataType;
+import io.github.spannm.jackcess.Database;
+import io.github.spannm.jackcess.IndexBuilder;
+import io.github.spannm.jackcess.PropertyMap;
+import io.github.spannm.jackcess.Row;
+import io.github.spannm.jackcess.Table;
+import io.github.spannm.jackcess.TableBuilder;
 
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.gost.DTOFaecherNichtMoeglicheKombination;
@@ -103,17 +103,17 @@ public final class ABPNichtMoeglAbiFachKombi {
 	public static void write(final Database db, final List<ABPNichtMoeglAbiFachKombi> list) {
 		try {
 			final Table table = new TableBuilder("ABP_NichtMoeglAbiFachKombi")
-					.addColumn(new ColumnBuilder(fieldFach1_Krz, DataType.TEXT).setLengthInUnits(20))
+					.addColumn(new ColumnBuilder(fieldFach1_Krz, DataType.TEXT).withLengthInUnits(20))
 					.addColumn(new ColumnBuilder(fieldFach1_ID, DataType.LONG))
-					.addColumn(new ColumnBuilder(fieldFach2_Krz, DataType.TEXT).setLengthInUnits(20))
+					.addColumn(new ColumnBuilder(fieldFach2_Krz, DataType.TEXT).withLengthInUnits(20))
 					.addColumn(new ColumnBuilder(fieldFach2_ID, DataType.LONG))
-					.addColumn(new ColumnBuilder(fieldKursart1, DataType.TEXT).setLengthInUnits(5))
-					.addColumn(new ColumnBuilder(fieldKursart2, DataType.TEXT).setLengthInUnits(5))
-					.addColumn(new ColumnBuilder(fieldPhase, DataType.TEXT).setLengthInUnits(10).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT,
+					.addColumn(new ColumnBuilder(fieldKursart1, DataType.TEXT).withLengthInUnits(5))
+					.addColumn(new ColumnBuilder(fieldKursart2, DataType.TEXT).withLengthInUnits(5))
+					.addColumn(new ColumnBuilder(fieldPhase, DataType.TEXT).withLengthInUnits(10).withProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT,
 							"'-'"))
-					.addColumn(new ColumnBuilder(fieldPK, DataType.TEXT).setLengthInUnits(30))
-					.addColumn(new ColumnBuilder(fieldTyp, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'-'"))
-					.addIndex(new IndexBuilder(IndexBuilder.PRIMARY_KEY_NAME).addColumns(fieldPK).setPrimaryKey())
+					.addColumn(new ColumnBuilder(fieldPK, DataType.TEXT).withLengthInUnits(30))
+					.addColumn(new ColumnBuilder(fieldTyp, DataType.TEXT).withLengthInUnits(1).withProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'-'"))
+					.addIndex(new IndexBuilder(IndexBuilder.PRIMARY_KEY_NAME).withColumns(fieldPK).withPrimaryKey())
 					.toTable(db);
 			for (final ABPNichtMoeglAbiFachKombi zuordnung : list) {
 				table.addRow(

@@ -5,12 +5,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 
-import com.healthmarketscience.jackcess.ColumnBuilder;
-import com.healthmarketscience.jackcess.DataType;
-import com.healthmarketscience.jackcess.Database;
-import com.healthmarketscience.jackcess.Row;
-import com.healthmarketscience.jackcess.Table;
-import com.healthmarketscience.jackcess.TableBuilder;
+import io.github.spannm.jackcess.ColumnBuilder;
+import io.github.spannm.jackcess.DataType;
+import io.github.spannm.jackcess.Database;
+import io.github.spannm.jackcess.Row;
+import io.github.spannm.jackcess.Table;
+import io.github.spannm.jackcess.TableBuilder;
 
 /**
  * Diese Klasse wird für den Import der Tabelle ABP_Version aus einer LuPO-Datenbank
@@ -60,7 +60,7 @@ public final class ABPVersion {
 	public static void write(final Database db, final List<ABPVersion> list) {
 		try {
 			final Table table = new TableBuilder("ABP_Version")
-					.addColumn(new ColumnBuilder("Version", DataType.TEXT).setLengthInUnits(8))
+					.addColumn(new ColumnBuilder("Version", DataType.TEXT).withLengthInUnits(8))
 					.toTable(db);
 			for (final ABPVersion version : list) {
 				table.addRow(version.Version);

@@ -5,12 +5,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 
-import com.healthmarketscience.jackcess.ColumnBuilder;
-import com.healthmarketscience.jackcess.DataType;
-import com.healthmarketscience.jackcess.Database;
-import com.healthmarketscience.jackcess.Row;
-import com.healthmarketscience.jackcess.Table;
-import com.healthmarketscience.jackcess.TableBuilder;
+import io.github.spannm.jackcess.ColumnBuilder;
+import io.github.spannm.jackcess.DataType;
+import io.github.spannm.jackcess.Database;
+import io.github.spannm.jackcess.Row;
+import io.github.spannm.jackcess.Table;
+import io.github.spannm.jackcess.TableBuilder;
 
 /**
  * Diese Klasse wird für den Import der Tabelle ABP_SchuelerFehlermeldungen aus
@@ -84,9 +84,9 @@ public final class ABPSchuelerFehlermeldungen {
 		try {
 			final Table table = new TableBuilder("ABP_SchuelerFehlermeldungen")
 					.addColumn(new ColumnBuilder("Schueler_ID", DataType.LONG))
-					.addColumn(new ColumnBuilder("Fehlercode", DataType.TEXT).setLengthInUnits(20))
-					.addColumn(new ColumnBuilder("Fehlertext", DataType.MEMO).setLengthInUnits(16777216))
-					.addColumn(new ColumnBuilder("Fehlergruppe", DataType.TEXT).setLengthInUnits(2))
+					.addColumn(new ColumnBuilder("Fehlercode", DataType.TEXT).withLengthInUnits(20))
+					.addColumn(new ColumnBuilder("Fehlertext", DataType.MEMO).withLengthInUnits(16777216))
+					.addColumn(new ColumnBuilder("Fehlergruppe", DataType.TEXT).withLengthInUnits(2))
 					.addColumn(new ColumnBuilder("Sortierung", DataType.LONG))
 					.toTable(db);
 			if (list == null)

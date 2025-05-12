@@ -5,12 +5,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 
-import com.healthmarketscience.jackcess.ColumnBuilder;
-import com.healthmarketscience.jackcess.DataType;
-import com.healthmarketscience.jackcess.Database;
-import com.healthmarketscience.jackcess.Row;
-import com.healthmarketscience.jackcess.Table;
-import com.healthmarketscience.jackcess.TableBuilder;
+import io.github.spannm.jackcess.ColumnBuilder;
+import io.github.spannm.jackcess.DataType;
+import io.github.spannm.jackcess.Database;
+import io.github.spannm.jackcess.Row;
+import io.github.spannm.jackcess.Table;
+import io.github.spannm.jackcess.TableBuilder;
 
 /**
  * Diese Klasse wird für den Import der Tabelle ABP_SchuelerFaecherSicherung aus einer
@@ -201,31 +201,31 @@ public final class ABPSchuelerFaecherSicherung {
 					.addColumn(new ColumnBuilder(fieldID, DataType.LONG))
 					.addColumn(new ColumnBuilder(fieldSchueler_ID, DataType.LONG))
 					.addColumn(new ColumnBuilder(fieldFach_ID, DataType.LONG))
-					.addColumn(new ColumnBuilder(fieldFachKrz, DataType.TEXT).setLengthInUnits(20))
-					.addColumn(new ColumnBuilder(fieldFS_BeginnJg, DataType.TEXT).setLengthInUnits(2))
-					.addColumn(new ColumnBuilder(fieldSprachenfolge, DataType.TEXT).setLengthInUnits(1))
-					.addColumn(new ColumnBuilder(fieldKursart_E1, DataType.TEXT).setLengthInUnits(5))
-					.addColumn(new ColumnBuilder(fieldPunkte_E1, DataType.TEXT).setLengthInUnits(2))
-					.addColumn(new ColumnBuilder(fieldKursart_E2, DataType.TEXT).setLengthInUnits(5))
-					.addColumn(new ColumnBuilder(fieldPunkte_E2, DataType.TEXT).setLengthInUnits(2))
-					.addColumn(new ColumnBuilder(fieldKursart_Q1, DataType.TEXT).setLengthInUnits(5))
-					.addColumn(new ColumnBuilder(fieldPunkte_Q1, DataType.TEXT).setLengthInUnits(2))
-					.addColumn(new ColumnBuilder(fieldKursart_Q2, DataType.TEXT).setLengthInUnits(5))
-					.addColumn(new ColumnBuilder(fieldPunkte_Q2, DataType.TEXT).setLengthInUnits(2))
-					.addColumn(new ColumnBuilder(fieldKursart_Q3, DataType.TEXT).setLengthInUnits(5))
-					.addColumn(new ColumnBuilder(fieldPunkte_Q3, DataType.TEXT).setLengthInUnits(2))
-					.addColumn(new ColumnBuilder(fieldKursart_Q4, DataType.TEXT).setLengthInUnits(5))
-					.addColumn(new ColumnBuilder(fieldPunkte_Q4, DataType.TEXT).setLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldFachKrz, DataType.TEXT).withLengthInUnits(20))
+					.addColumn(new ColumnBuilder(fieldFS_BeginnJg, DataType.TEXT).withLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldSprachenfolge, DataType.TEXT).withLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldKursart_E1, DataType.TEXT).withLengthInUnits(5))
+					.addColumn(new ColumnBuilder(fieldPunkte_E1, DataType.TEXT).withLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldKursart_E2, DataType.TEXT).withLengthInUnits(5))
+					.addColumn(new ColumnBuilder(fieldPunkte_E2, DataType.TEXT).withLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldKursart_Q1, DataType.TEXT).withLengthInUnits(5))
+					.addColumn(new ColumnBuilder(fieldPunkte_Q1, DataType.TEXT).withLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldKursart_Q2, DataType.TEXT).withLengthInUnits(5))
+					.addColumn(new ColumnBuilder(fieldPunkte_Q2, DataType.TEXT).withLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldKursart_Q3, DataType.TEXT).withLengthInUnits(5))
+					.addColumn(new ColumnBuilder(fieldPunkte_Q3, DataType.TEXT).withLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldKursart_Q4, DataType.TEXT).withLengthInUnits(5))
+					.addColumn(new ColumnBuilder(fieldPunkte_Q4, DataType.TEXT).withLengthInUnits(2))
 					.addColumn(new ColumnBuilder(fieldAbiturFach, DataType.LONG))
 					.addColumn(new ColumnBuilder(fieldSortierung, DataType.LONG))
-					.addColumn(new ColumnBuilder(fieldFachgruppe, DataType.TEXT).setLengthInUnits(5))
+					.addColumn(new ColumnBuilder(fieldFachgruppe, DataType.TEXT).withLengthInUnits(5))
 					.addColumn(new ColumnBuilder(fieldAufgabenfeld, DataType.LONG))
-					.addColumn(new ColumnBuilder(fieldAendern_E1, DataType.TEXT).setLengthInUnits(2))
-					.addColumn(new ColumnBuilder(fieldAendern_E2, DataType.TEXT).setLengthInUnits(2))
-					.addColumn(new ColumnBuilder(fieldAendern_Q1, DataType.TEXT).setLengthInUnits(2))
-					.addColumn(new ColumnBuilder(fieldAendern_Q2, DataType.TEXT).setLengthInUnits(2))
-					.addColumn(new ColumnBuilder(fieldAendern_Q3, DataType.TEXT).setLengthInUnits(2))
-					.addColumn(new ColumnBuilder(fieldAendern_Q4, DataType.TEXT).setLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldAendern_E1, DataType.TEXT).withLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldAendern_E2, DataType.TEXT).withLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldAendern_Q1, DataType.TEXT).withLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldAendern_Q2, DataType.TEXT).withLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldAendern_Q3, DataType.TEXT).withLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldAendern_Q4, DataType.TEXT).withLengthInUnits(2))
 					.toTable(db);
 			if (list == null)
 				return;
