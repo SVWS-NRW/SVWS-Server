@@ -28,7 +28,7 @@ export class RouteGostFachwahlenAbiturFach extends RouteNode<any, RouteGost> {
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
 			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 		], "gost.fachwahlen.abitur.fach", "abitur/fach/:idFach(\\d+)?", SGostFachwahlenAbiturFach);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);

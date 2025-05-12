@@ -28,7 +28,7 @@ export class RouteGostFachwahlenFachHalbjahr extends RouteNode<any, RouteGost> {
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
 			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 		], "gost.fachwahlen.fach.halbjahr", "fach/:idFach(\\d+)/halbjahr/:idHalbjahr(\\d+)", SGostFachwahlenFachHalbjahr);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);

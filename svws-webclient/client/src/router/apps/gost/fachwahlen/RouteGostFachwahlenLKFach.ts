@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
 
 import type { DeveloperNotificationException} from "@core";
 import { BenutzerKompetenz, ServerMode } from "@core";
@@ -8,15 +8,18 @@ import { routeGost, type RouteGost} from "~/router/apps/gost/RouteGost";
 
 import { routeGostFachwahlen } from "~/router/apps/gost/fachwahlen/RouteGostFachwahlen";
 
-import type { GostFachwahlenAbiturProps } from "~/components/gost/fachwahlen/SGostFachwahlenAbiturProps";
+import type { GostFachwahlenLKFachProps } from "~/components/gost/fachwahlen/SGostFachwahlenLKFachProps";
+import { ref } from "vue";
 import { routeApp } from "../../RouteApp";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { routeError } from "~/router/error/RouteError";
 
 
-const SGostFachwahlenAbitur = () => import("~/components/gost/fachwahlen/SGostFachwahlenAbitur.vue");
+const SGostFachwahlenLKFach = () => import("~/components/gost/fachwahlen/SGostFachwahlenLKFach.vue");
 
-export class RouteGostFachwahlenAbitur extends RouteNode<any, RouteGost> {
+export class RouteGostFachwahlenLKFach extends RouteNode<any, RouteGost> {
+
+	private _idFach = ref<number>(-1);
 
 	public constructor() {
 		super(schulformenGymOb, [
@@ -26,10 +29,10 @@ export class RouteGostFachwahlenAbitur extends RouteNode<any, RouteGost> {
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
 			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
 			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
-		], "gost.fachwahlen.abitur", "abitur", SGostFachwahlenAbitur);
+		], "gost.fachwahlen.lk.fach", "lk/fach/:idFach(\\d+)?", SGostFachwahlenLKFach);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Fachwahlen - Abitur";
+		super.text = "Fachwahlen - Fachspezifisch";
 		this.isHidden = (params?: RouteParams) => {
 			return this.checkHidden(params);
 		}
@@ -47,22 +50,31 @@ export class RouteGostFachwahlenAbitur extends RouteNode<any, RouteGost> {
 	}
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		// if (to_params.abiturjahr instanceof Array)
-		// 	return new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		// const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr);
-		routeGostFachwahlen.data.auswahl = { bereich: 'Abitur' };
+		try {
+			const { idFach } = RouteNode.getIntParams(to_params, ["idFach"]);
+			this._idFach.value = idFach ?? -1;
+			routeGostFachwahlen.data.auswahl = { idFach: this._idFach.value, bereich: 'LK' };
+		} catch (e) {
+			return routeError.getErrorRoute(e as DeveloperNotificationException);
+		}
 	}
 
-	public getProps(to: RouteLocationNormalized): GostFachwahlenAbiturProps {
+	public addRouteParamsFromState() : RouteParamsRawGeneric {
+		const idFach = this._idFach.value;
+		return { idFach };
+	}
+
+	public getProps(to: RouteLocationNormalized): GostFachwahlenLKFachProps {
 		return {
 			gotoLaufbahnplanung: routeGostFachwahlen.gotoLaufbahnplanung,
 			fachwahlstatistik: routeGostFachwahlen.data.fachwahlstatistik,
 			fachwahlenManager: routeGostFachwahlen.data.fachwahlenManager,
 			mapSchueler: routeGostFachwahlen.data.mapSchueler,
 			faecherManager: routeGost.data.faecherManager,
+			fachID: this._idFach.value,
 		};
 	}
 
 }
 
-export const routeGostFachwahlenAbitur = new RouteGostFachwahlenAbitur();
+export const routeGostFachwahlenLKFach = new RouteGostFachwahlenLKFach();

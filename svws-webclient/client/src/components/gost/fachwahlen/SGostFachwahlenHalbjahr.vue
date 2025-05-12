@@ -54,13 +54,12 @@
 
 <script setup lang="ts">
 
-	import type { GostFachwahlenHalbjahrProps } from "./SGostFachwahlenHalbjahrProps";
 	import { computed, ref } from "vue";
+	import type { GostFachwahlenHalbjahrProps } from "./SGostFachwahlenHalbjahrProps";
 	import { Fach, type GostStatistikFachwahl, type SchuelerListeEintrag, type List, ArrayList, type GostHalbjahr } from "@core";
 
 	const props = defineProps<GostFachwahlenHalbjahrProps>();
 
-	/*const aktuell = ref<GostStatistikFachwahl | undefined>(fachwahlenstatistik.value.length === 0 ? undefined : fachwahlenstatistik.value.at(0));*/
 	const aktuell = ref<GostStatistikFachwahl | undefined>(undefined);
 
 	function onClick(fws : GostStatistikFachwahl): void {
