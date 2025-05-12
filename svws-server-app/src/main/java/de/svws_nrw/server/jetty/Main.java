@@ -15,6 +15,7 @@ import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
+import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.db.utils.schema.DBSchemaManager;
@@ -96,6 +97,33 @@ public class Main {
 	}
 
 
+	/**
+	 * Prüft das Default-Charset und die Default-Collation und gibt ggf. Fehlemeldungen über den Logger
+	 * aus.
+	 *
+	 * @param dbConn   die Datenbankverbindung
+	 * @param logger   der Logger
+	 */
+	private static void pruefeCharsetAndCollation(final DBEntityManager dbConn, final Logger logger) {
+		if (dbConn.getDBDriver() == DBDriver.MARIA_DB) {
+			final List<?> result = dbConn
+					.getNativeQuery("SELECT DEFAULT_CHARACTER_SET_NAME, DEFAULT_COLLATION_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME=?")
+					.setParameter(1, dbConn.getDBSchema())
+					.getResultList();
+			if ((result == null) || result.isEmpty()) {
+				logger.logLn("Konnte das Default-Charset und die Default-Collation des Schemas nicht bestimmen.");
+			} else {
+				final Object[] tmp = (Object[]) result.get(0);
+				final String charset = (String) tmp[0];
+				final String collation = (String) tmp[1];
+				if (!"utf8mb4".equals(charset))
+					logger.logLn("Warnung: Das Datenbank-Schema hat nicht 'utf8mb4' als Default-Charset. Dies kann zu Kompatibilitätsproblemen führen.");
+				if (!"utf8mb4_bin".equals(collation))
+					logger.logLn("Warnung: Das Datenbank-Schema hat nicht 'utf8mb4_bin' als Default-Collation. Dies kann zu Kompatibilitätsproblemen führen.");
+			}
+		}
+	}
+
 
 	/**
 	 * Prüft das übergebene Schema und führt ggf. Updates durch.
@@ -125,6 +153,7 @@ public class Main {
 					return connected;
 				}
 				connected = true;
+				pruefeCharsetAndCollation(dbConn, logger);
 				if (doUpdate) {
 					final DBSchemaManager dbManager = DBSchemaManager.create(dbConn, true, logger);
 					if (!dbManager.updater.isUptodate(-1, devMode) && !updateSchema(dbManager, logger))
@@ -140,10 +169,10 @@ public class Main {
 		}
 		if (schemaOK) {
 			svwsconfig.activateSchema(schema.name);
-			logger.logLn("Schema-Prüfung erfolgreich. Schema ist aktiv.");
+			logger.logLn("Prüfung von " + schema.name + " erfolgreich. Schema ist aktiv.");
 		} else {
 			svwsconfig.deactivateSchema(schema.name);
-			logger.logLn("Fehler: Schema kann nicht aktualisiert werden. Das Schema wird deaktiviert.");
+			logger.logLn("Fehler: Schema " + schema.name + " kann nicht aktualisiert werden. Das Schema wird deaktiviert.");
 		}
 		logger.modifyIndent(-2);
 		return connected;

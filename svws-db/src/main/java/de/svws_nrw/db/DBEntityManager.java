@@ -1053,6 +1053,18 @@ public final class DBEntityManager implements AutoCloseable {
 
 
 	/**
+	 * Gibt eine Native SQL-Abfrage auf die Datenbank zur Ausführung zurück.
+	 *
+	 * @param query    die SQL-Abfrage
+	 *
+	 * @return die Abfrage
+	 */
+	public Query getNativeQuery(final String query) {
+		return em.createNativeQuery(query);
+	}
+
+
+	/**
 	 * Erzeugt eine TypedQuery gemäß der Methode {@link EntityManager#createNamedQuery(String, Class)}
 	 *
 	 * @param <T>     die Klasse des Ergebnistyps
