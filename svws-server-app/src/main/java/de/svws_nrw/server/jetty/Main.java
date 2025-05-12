@@ -2,6 +2,8 @@ package de.svws_nrw.server.jetty;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import de.svws_nrw.api.ResourceFileManager;
 import de.svws_nrw.api.SVWSVersion;
@@ -9,6 +11,7 @@ import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.config.LogConsumerLogfile;
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.data.db.DBSchemaListeEintrag;
+import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.db.Benutzer;
@@ -145,10 +148,8 @@ public class Main {
 	 * OpenAPI-Schnittstellen-Web-Applikation gestartet.
 	 *
 	 * @param args   die Kommandozeilenargumente zum Starten des Servers.
-	 *
-	 * @throws Exception   gibt in einem unerwarteten Fehlerfall eine Exception zurück.
 	 */
-	public static void main(final String[] args) throws Exception {
+	public static void main(final String[] args) {
 		// Setze das Default-Encoding auf UTF-8
 		System.setProperty("file.encoding", "UTF-8");
 		System.setProperty("stdout.encoding", "UTF-8");
@@ -176,23 +177,46 @@ public class Main {
 		ResourceFileManager.client();
 		ResourceFileManager.admin();
 
-		// Prüfe alle Datenbankverbindungen beim Server-Start
-		if (svwsconfig.isAutoUpdatesDisabled()) {
-			logger.logLn("Überspringe Prüfung der Datenbankverbindungen! Automatische Aktualisierung wurde in der Server-Konfiguration deaktiviert.");
-		} else {
-			final List<DBSchemaListeEintrag> schemata = svwsconfig.getSchemaList();
-			logger.logLn("Prüfe Datenbankverbindungen (" + schemata.size() + ")...");
-			logger.modifyIndent(2);
-			// Deaktiviere die Schematas zunächst und aktiviere diese nachdem die Prüfung erfolgreich war
-			for (final DBSchemaListeEintrag schema : schemata) {
-				svwsconfig.deactivateSchema(schema.name);
-				pruefeSchema(schema, logger);
-			}
-			logger.modifyIndent(-2);
-		}
+		// Sperre zunächst alle konfigurierten Datenbank-Verbindungen und aktiviere diese erste nachdem die Prüfung erfolgreich war
+		final List<DBSchemaListeEintrag> schemata = svwsconfig.getSchemaList();
+		for (final DBSchemaListeEintrag schema : schemata)
+			svwsconfig.deactivateSchema(schema.name);
 
-		// Starte den SVWS-HTTP-Server (v1.1 or v2 in Abhängigkeit von der SVWS-Konfiguration)
-		server.start();
+		// Starte den Server und die jeweiligen Datenbank-Prüfungen jeweils in einem eigenen Thread und führe diese parallel aus
+		try (ExecutorService executor = Executors.newFixedThreadPool(3)) {
+
+			// Starte den SVWS-HTTP-Server (v1.1 or v2 in Abhängigkeit von der SVWS-Konfiguration) in einem eigenen Task
+			executor.submit(() -> {
+				try {
+					server.start();
+				} catch (final Exception e) {
+					logger.logLn("Fehler beim Starten des Servers: " + e.getMessage());
+					e.printStackTrace();
+				}
+			});
+
+			// Prüfe die einzelen Schemata in eigenen Threads und aktiviere diese nachdem die Prüfung erfolgreich war
+			for (final DBSchemaListeEintrag schema : schemata) {
+				executor.submit(() -> {
+					final Logger threadLogger = new Logger();
+					final LogConsumerList logConsumer = new LogConsumerList();
+					threadLogger.addConsumer(logConsumer);
+					if (svwsconfig.isAutoUpdatesDisabled()) {
+						threadLogger.logLn("Überspringe Prüfung der Datenbankverbindungen für " + schema.name
+								+ "! Automatische Aktualisierung wurde in der Server-Konfiguration deaktiviert.");
+						svwsconfig.activateSchema(schema.name);
+					} else {
+						threadLogger.logLn("Prüfung der Datenbankverbindungen zu " + schema.name + "...");
+						threadLogger.modifyIndent(2);
+						pruefeSchema(schema, threadLogger);
+						threadLogger.modifyIndent(-2);
+					}
+					for (final String str : logConsumer.getStrings())
+						logger.logLn(str);
+				});
+			}
+
+		}
 	}
 
 }

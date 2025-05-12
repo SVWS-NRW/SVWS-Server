@@ -87,6 +87,16 @@ public final class LogData implements Comparable<LogData> {
 
 
 	/**
+	 * Gibt die Anzahl der Leerzeichen zurück, die für die Einrückung genutzt wird.
+	 *
+	 * @return die Anzahl der Leerzeichen
+	 */
+	public int getIndent() {
+		return indent;
+	}
+
+
+	/**
 	 * Gibt den Zeitstempel der Log-Information zurück.
 	 *
 	 * @return der Zeitstempel der Log-Information
