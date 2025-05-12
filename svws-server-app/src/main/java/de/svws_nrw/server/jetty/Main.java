@@ -1,9 +1,8 @@
 package de.svws_nrw.server.jetty;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import de.svws_nrw.api.ResourceFileManager;
 import de.svws_nrw.api.SVWSVersion;
@@ -104,25 +103,28 @@ public class Main {
 	 * @param schema     das Schema
 	 * @param logger     der Logger
 	 * @param doUpdate   gibt an, ob Updates auf das Schema ausgeführt werden sollen oder nicht
+	 * @param versuch    die Nummer des Versuchs, das Schema zu prüfen
 	 *
 	 * @return true, wenn eine Verbindung aufgebaut wurde und eine Prüfung stattgefunden hat, und ansonsten false
 	 */
-	private static boolean pruefeSchema(final DBSchemaListeEintrag schema, final Logger logger, final boolean doUpdate) {
+	private static boolean pruefeSchema(final DBSchemaListeEintrag schema, final Logger logger, final boolean doUpdate, final int versuch) {
 		final SVWSKonfiguration svwsconfig = SVWSKonfiguration.get();
 		final boolean devMode = (svwsconfig.getServerMode() != ServerMode.STABLE);
 
-		logger.logLn("Schema " + schema.name + ": Prüfung der Datenbankverbindung ... ");
+		logger.logLn("Schema " + schema.name + ": Prüfung der Datenbankverbindung" + (versuch > 1 ? " (" + versuch + ". Versuch) " : " ") + "... ");
 		logger.modifyIndent(2);
 		final DBConfig dbconfig = svwsconfig.getDBConfig(schema.name);
 		boolean schemaOK = true;
+		boolean connected = false;
 		final Benutzer dbUser = Benutzer.create(dbconfig);
 		if (dbUser != null) {
 			try (DBEntityManager dbConn = dbUser.getEntityManager()) {
 				if (dbConn == null) {
 					logger.logLn("Verbindung zu dem Schema " + schema.name + " nicht möglich!");
 					logger.modifyIndent(-2);
-					return false;
+					return connected;
 				}
+				connected = true;
 				if (doUpdate) {
 					final DBSchemaManager dbManager = DBSchemaManager.create(dbConn, true, logger);
 					if (!dbManager.updater.isUptodate(-1, devMode) && !updateSchema(dbManager, logger))
@@ -138,12 +140,13 @@ public class Main {
 		}
 		if (schemaOK) {
 			svwsconfig.activateSchema(schema.name);
+			logger.logLn("Schema-Prüfung erfolgreich. Schema ist aktiv.");
 		} else {
 			svwsconfig.deactivateSchema(schema.name);
 			logger.logLn("Fehler: Schema kann nicht aktualisiert werden. Das Schema wird deaktiviert.");
 		}
 		logger.modifyIndent(-2);
-		return true;
+		return connected;
 	}
 
 
@@ -191,32 +194,38 @@ public class Main {
 		for (final DBSchemaListeEintrag schema : schemata)
 			svwsconfig.deactivateSchema(schema.name);
 
-		// Starte den Server und die jeweiligen Datenbank-Prüfungen jeweils in einem eigenen Thread und führe diese parallel aus
-		try (ExecutorService executor = Executors.newFixedThreadPool(3)) {
+		// Starte den SVWS-HTTP-Server (v1.1 or v2 in Abhängigkeit von der SVWS-Konfiguration) in einem eigenen Task
+		Thread.ofPlatform().start(() -> {
+			try {
+				server.start();
+			} catch (final Exception e) {
+				logger.logLn("Fehler beim Starten des Servers: " + e.getMessage());
+				e.printStackTrace();
+			}
+		});
 
-			// Starte den SVWS-HTTP-Server (v1.1 or v2 in Abhängigkeit von der SVWS-Konfiguration) in einem eigenen Task
-			executor.submit(() -> {
-				try {
-					server.start();
-				} catch (final Exception e) {
-					logger.logLn("Fehler beim Starten des Servers: " + e.getMessage());
-					e.printStackTrace();
-				}
-			});
-
-			// Prüfe die einzelen Schemata in eigenen Threads und aktiviere diese nachdem die Prüfung erfolgreich war
-			for (final DBSchemaListeEintrag schema : schemata) {
-				executor.submit(() -> {
-					final Logger threadLogger = new Logger();
-					final LogConsumerList logConsumer = new LogConsumerList();
-					threadLogger.addConsumer(logConsumer);
-					pruefeSchema(schema, threadLogger, !svwsconfig.isAutoUpdatesDisabled());
+		// Prüfe die einzelen Schemata in eigenen Threads und aktiviere diese nachdem die Prüfung erfolgreich war
+		for (final DBSchemaListeEintrag schema : schemata) {
+			Thread.ofPlatform().start(() -> {
+				final Logger threadLogger = new Logger();
+				final LogConsumerList logConsumer = new LogConsumerList();
+				threadLogger.addConsumer(logConsumer);
+				for (int i = 1; i <= 5; i++) {
+					final boolean geprueft = pruefeSchema(schema, threadLogger, !svwsconfig.isAutoUpdatesDisabled(), i);
 					for (final String str : logConsumer.getStrings())
 						logger.logLn(str);
-				});
-			}
-
+					if (geprueft)
+						break;
+					try {
+						Thread.sleep(Duration.ofSeconds(30));
+					} catch (final InterruptedException e) {
+						e.printStackTrace();
+						Thread.currentThread().interrupt();
+					}
+				}
+			});
 		}
+
 	}
 
 }
