@@ -47,11 +47,11 @@ public final class DataSchuelerTelefon extends DataManagerRevised<Long, DTOSchue
 		final SchuelerTelefon daten = new SchuelerTelefon();
 		daten.id = dtoSchuelerTelefon.ID;
 		daten.idSchueler = dtoSchuelerTelefon.Schueler_ID;
-		daten.idTelefonArt = dtoSchuelerTelefon.TelefonArt_ID;
+		daten.idTelefonArt = (dtoSchuelerTelefon.TelefonArt_ID == null) ? -1 : dtoSchuelerTelefon.TelefonArt_ID;
 		daten.telefonnummer = dtoSchuelerTelefon.Telefonnummer;
 		daten.bemerkung = dtoSchuelerTelefon.Bemerkung;
-		daten.sortierung = dtoSchuelerTelefon.Sortierung;
-		daten.istGesperrt = dtoSchuelerTelefon.Gesperrt;
+		daten.sortierung = (dtoSchuelerTelefon.Sortierung == null) ? 32000 : dtoSchuelerTelefon.Sortierung;
+		daten.istGesperrt = (dtoSchuelerTelefon.Gesperrt != null) && dtoSchuelerTelefon.Gesperrt;
 		return daten;
 	}
 
