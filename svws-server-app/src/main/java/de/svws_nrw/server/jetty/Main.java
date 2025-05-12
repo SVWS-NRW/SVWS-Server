@@ -125,7 +125,9 @@ public class Main {
 				schemaOK = false;
 			}
 		}
-		if (!schemaOK) {
+		if (schemaOK) {
+			svwsconfig.activateSchema(schema.name);
+		} else {
 			svwsconfig.deactivateSchema(schema.name);
 			logger.logLn("Fehler: Schema kann nicht aktualisiert werden. Das Schema wird deaktiviert.");
 		}
@@ -181,8 +183,11 @@ public class Main {
 			final List<DBSchemaListeEintrag> schemata = svwsconfig.getSchemaList();
 			logger.logLn("Prüfe Datenbankverbindungen (" + schemata.size() + ")...");
 			logger.modifyIndent(2);
-			for (final DBSchemaListeEintrag schema : schemata)
+			// Deaktiviere die Schematas zunächst und aktiviere diese nachdem die Prüfung erfolgreich war
+			for (final DBSchemaListeEintrag schema : schemata) {
+				svwsconfig.deactivateSchema(schema.name);
 				pruefeSchema(schema, logger);
+			}
 			logger.modifyIndent(-2);
 		}
 
