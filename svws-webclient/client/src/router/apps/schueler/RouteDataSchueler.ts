@@ -67,9 +67,9 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 		if (auswahl === null)
 			return null;
 		const res = await api.server.getSchuelerStammdaten(api.schema, auswahl.id);
-		const schuelerTelefone = await api.server.getSchuelerTelefone(api.schema, auswahl.id);
+		const listSchuelerTelefoneintraege = await api.server.getSchuelerTelefone(api.schema, auswahl.id);
 		this.manager.schuelerstatus.auswahlAdd(SchuelerStatus.data().getWertByID(res.status));
-		state.listSchuelerTelefoneintraege = schuelerTelefone;
+		this.setPatchedState({ listSchuelerTelefoneintraege });
 		return res;
 	}
 
@@ -98,7 +98,7 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 		api.status.start();
 		const telefon = await api.server.addSchuelerTelefon(data, api.schema, idSchueler);
 		this.listSchuelerTelefoneintraege.add(telefon);
-		this.commit();
+		this.setPatchedState({ listSchuelerTelefoneintraege: <List<SchuelerTelefon>>this.listSchuelerTelefoneintraege.clone() });
 		api.status.stop();
 	}
 
@@ -108,7 +108,7 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 		for (const l of this.listSchuelerTelefoneintraege)
 			if (l.id === idEintrag)
 				Object.assign(l, data);
-		this.commit();
+		this.setPatchedState({ listSchuelerTelefoneintraege: <List<SchuelerTelefon>>this.listSchuelerTelefoneintraege.clone() });
 		api.status.stop();
 	}
 
@@ -118,14 +118,14 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 		const liste = this.listSchuelerTelefoneintraege;
 		for (const id of idsEintraege) {
 			for (let i = 0; i < liste.size(); i++) {
-				const tel = liste.get(i);
-				if (tel.id === id) {
+				const eintrag = liste.get(i);
+				if (eintrag.id === id) {
 					liste.removeElementAt(i);
 					break;
 				}
 			}
 		}
-		this.commit();
+		this.setPatchedState({ listSchuelerTelefoneintraege: <List<SchuelerTelefon>>this.listSchuelerTelefoneintraege.clone() });
 		api.status.stop();
 	}
 

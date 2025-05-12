@@ -105,8 +105,7 @@
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Weitere Telefonnummern" v-if="serverMode === ServerMode.DEV">
-			<svws-ui-table :clickable="true" @update:clicked="v => patchTelefonnummer(v)" :items="telefonEintraege" :columns="columns"
-				:selectable="hatKompetenzUpdate" v-model="selected">
+			<svws-ui-table clickable @update:clicked="v => patchTelefonnummer(v)" :items="getListSchuelerTelefoneintraege()" :columns :selectable="hatKompetenzUpdate" v-model="selected">
 				<template #cell(idTelefonArt)="{ value }">
 					{{ getBezeichnungTelefonart(value) }}
 				</template>
@@ -127,9 +126,10 @@
 						<svws-ui-select title="Telefonart" :items="mapTelefonArten.values()" v-model="selectedTelefonArt" :item-text="i => i.bezeichnung" />
 						<svws-ui-text-input v-model="newEntryTelefonnummer.telefonnummer" type="text" placeholder="Telefonnummer" />
 					</svws-ui-input-wrapper>
+					<svws-ui-notification type="warning" v-if="mapTelefonArten.size === 0">Die Liste der Telefonarten ist leer, es sollte mindestens eine Telefonart unter Schule/Kataloge angelegt werden, damit zusätzliche Telefonnummern eine gültige Zuordnung haben. </svws-ui-notification>
 					<div class="mt-7 flex flex-row gap-4 justify end">
 						<svws-ui-button type="secondary" @click="closeModalTelefonnummer">Abbrechen</svws-ui-button>
-						<svws-ui-button @click="sendRequestTelefonnummer" :disabled="(selectedTelefonArt !== null) && (newEntryTelefonnummer.telefonnummer ?? '').length < 1">
+						<svws-ui-button @click="sendRequestTelefonnummer" :disabled="(selectedTelefonArt === null) || (mapTelefonArten.size === 0) || (newEntryTelefonnummer.telefonnummer === null) || (newEntryTelefonnummer.telefonnummer.length === 0)">
 							Speichern
 						</svws-ui-button>
 					</div>
@@ -168,8 +168,7 @@
 	import { computed, ref } from "vue";
 	import type { SchuelerIndividualdatenProps } from "./SSchuelerIndividualdatenProps";
 	import type { SchuelerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, KatalogEintrag, SchulEintrag, TelefonArt } from "@core";
-	import { ArrayList} from "@core";
-	import { SchuelerStatus, Schulform, Nationalitaeten, Geschlecht, AdressenUtils, Verkehrssprache, BenutzerKompetenz, DateUtils, SchuelerTelefon, ServerMode } from "@core";
+	import { SchuelerStatus, Schulform, Nationalitaeten, Geschlecht, AdressenUtils, Verkehrssprache, BenutzerKompetenz, DateUtils, SchuelerTelefon, ServerMode, ArrayList } from "@core";
 	import { verkehrsspracheKatalogEintragFilter, verkehrsspracheKatalogEintragSort, nationalitaetenKatalogEintragFilter, nationalitaetenKatalogEintragSort,
 		staatsangehoerigkeitKatalogEintragSort, staatsangehoerigkeitKatalogEintragFilter, orte_sort, orte_filter, ortsteilSort, ortsteilFilter } from "~/utils/helfer";
 	import type { DataTableColumn } from "@ui";
@@ -182,7 +181,6 @@
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 
 	const data = computed<SchuelerStammdaten>(() => props.schuelerListeManager().daten());
-	const telefonEintraege = computed(() => [...props.getListSchuelerTelefoneintraege()])
 
 	function enterDefaultMode() {
 		setMode(Mode.DEFAULT);
@@ -194,8 +192,8 @@
 	const newEntryTelefonnummer = ref<SchuelerTelefon>(new SchuelerTelefon());
 
 	const columns: DataTableColumn[] = [
-		{ key: "idTelefonArt", label: "Ansprechpartner", span: 1 },
-		{ key: "telefonnummer", label: "Telefonnummern", span: 1 },
+		{ key: "idTelefonArt", label: "Ansprechpartner" },
+		{ key: "telefonnummer", label: "Telefonnummern" },
 	]
 
 	function getBezeichnungTelefonart(idTelefonArt: number): string {
