@@ -7,7 +7,7 @@
 
 	.svws-dropdown-icon,
 	.svws-remove {
-		@apply inline-flex w-5 h-7 absolute text-headline-md top-1 rounded-sm items-center justify-center;
+		@apply inline-flex w-5 h-7 absolute text-headline-md top-3 rounded-sm items-center justify-center;
 	}
 
 	.svws-dropdown-icon {
@@ -28,7 +28,7 @@
 	}
 
 	.svws-remove {
-		@apply right-7 top-2 w-5 h-5 text-ui-secondary;
+		@apply right-7 w-5 h-5 text-ui-secondary;
 
 		.icon {
 			margin-top: 0.3rem;
@@ -76,7 +76,10 @@
 		@apply pl-5;
 	}
 
-	&.svws-headless .svws-dropdown-icon,
+	&.svws-headless .svws-dropdown-icon {
+		@apply mt-0.5;
+	}
+
 	&.svws-headless .svws-remove {
 		@apply mt-0;
 	}
@@ -112,6 +115,7 @@
 		}
 
 		.svws-ui-select--icon {
+
 			.svws-ui-table.svws-has-background & {
 				@apply icon-uistatic;
 			}

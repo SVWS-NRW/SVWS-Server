@@ -1,5 +1,5 @@
 .svws-ui-select.svws-ui-multiselect {
-	@apply flex-none;
+	@apply flex-none mt-2;
 	&:focus-visible,
 	&:focus-within {
 		@apply ring-3 ring-ui-neutral;
@@ -7,6 +7,10 @@
 	.svws-dropdown-icon {
 		@apply top-[0.175rem] right-[0.19rem];
 
+	}
+
+	.text-input-component {
+		@apply mt-0;
 	}
 	.text-input-component .text-input--control:focus-visible {
 		@apply ring-0;

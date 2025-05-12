@@ -13,7 +13,7 @@
 .input-number-component {
 	@apply flex;
 	@apply relative;
-	@apply w-full min-w-16 mt-4;
+	@apply w-full min-w-16 mt-2;
 	@apply overflow-hidden whitespace-nowrap text-base;
 
 	&:focus {
@@ -191,9 +191,7 @@ input {
 	left: 0.7em;
 	font-size: 0.78rem;
 
-	&:after {
-		content: "";
-	}
+
 }
 
 .input-number--invalid .input-number--placeholder,

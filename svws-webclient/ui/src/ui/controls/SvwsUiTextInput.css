@@ -9,7 +9,7 @@
 	@apply text-ui;
 	@apply flex;
 	@apply relative;
-	@apply w-full;
+	@apply w-full mt-2;
 	@apply overflow-hidden whitespace-nowrap text-base;
 
 	&:focus {

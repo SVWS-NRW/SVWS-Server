@@ -41,7 +41,7 @@
 			:focus="autofocus"
 			:class="{ 'contentFocusField': focusClassContent, 'subNavigationFocusField': focusClassSubNav }" />
 		<button v-if="removable && hasSelected && !readonly" role="button" @click.stop="removeItem" class="svws-remove">
-			<span class="icon i-ri-close-line svws-ui-select--icon my-1" />
+			<span class="icon i-ri-close-line svws-ui-select--icon" />
 		</button>
 		<button v-if="!readonly" role="button" class="svws-dropdown-icon" tabindex="-1">
 			<span class="icon i-ri-expand-up-down-line svws-ui-select--icon" v-if="headless" />
