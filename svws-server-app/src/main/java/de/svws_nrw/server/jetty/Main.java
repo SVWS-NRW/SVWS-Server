@@ -101,14 +101,17 @@ public class Main {
 	/**
 	 * Prüft das übergebene Schema und führt ggf. Updates durch.
 	 *
-	 * @param schema   das Schema
-	 * @param logger   der Logger
+	 * @param schema     das Schema
+	 * @param logger     der Logger
+	 * @param doUpdate   gibt an, ob Updates auf das Schema ausgeführt werden sollen oder nicht
+	 *
+	 * @return true, wenn eine Verbindung aufgebaut wurde und eine Prüfung stattgefunden hat, und ansonsten false
 	 */
-	private static void pruefeSchema(final DBSchemaListeEintrag schema, final Logger logger) {
+	private static boolean pruefeSchema(final DBSchemaListeEintrag schema, final Logger logger, final boolean doUpdate) {
 		final SVWSKonfiguration svwsconfig = SVWSKonfiguration.get();
 		final boolean devMode = (svwsconfig.getServerMode() != ServerMode.STABLE);
 
-		logger.logLn("-> zu Schema " + schema.name);
+		logger.logLn("Schema " + schema.name + ": Prüfung der Datenbankverbindung ... ");
 		logger.modifyIndent(2);
 		final DBConfig dbconfig = svwsconfig.getDBConfig(schema.name);
 		boolean schemaOK = true;
@@ -117,13 +120,18 @@ public class Main {
 			try (DBEntityManager dbConn = dbUser.getEntityManager()) {
 				if (dbConn == null) {
 					logger.logLn("Verbindung zu dem Schema " + schema.name + " nicht möglich!");
-					return;
+					logger.modifyIndent(-2);
+					return false;
 				}
-				final DBSchemaManager dbManager = DBSchemaManager.create(dbConn, true, logger);
-				if (!dbManager.updater.isUptodate(-1, devMode) && !updateSchema(dbManager, logger))
-					schemaOK = false;
-				if (!dbManager.updater.coreTypes.isUptodate() && !updateSchemaCoreTypes(dbManager, logger))
-					schemaOK = false;
+				if (doUpdate) {
+					final DBSchemaManager dbManager = DBSchemaManager.create(dbConn, true, logger);
+					if (!dbManager.updater.isUptodate(-1, devMode) && !updateSchema(dbManager, logger))
+						schemaOK = false;
+					if (!dbManager.updater.coreTypes.isUptodate() && !updateSchemaCoreTypes(dbManager, logger))
+						schemaOK = false;
+				} else {
+					logger.logLn("Die Automatische Schema-Aktualisierung wurde in der Server-Konfiguration deaktiviert.");
+				}
 			} catch (@SuppressWarnings("unused") final Exception e) {
 				schemaOK = false;
 			}
@@ -135,6 +143,7 @@ public class Main {
 			logger.logLn("Fehler: Schema kann nicht aktualisiert werden. Das Schema wird deaktiviert.");
 		}
 		logger.modifyIndent(-2);
+		return true;
 	}
 
 
@@ -201,16 +210,7 @@ public class Main {
 					final Logger threadLogger = new Logger();
 					final LogConsumerList logConsumer = new LogConsumerList();
 					threadLogger.addConsumer(logConsumer);
-					if (svwsconfig.isAutoUpdatesDisabled()) {
-						threadLogger.logLn("Überspringe Prüfung der Datenbankverbindungen für " + schema.name
-								+ "! Automatische Aktualisierung wurde in der Server-Konfiguration deaktiviert.");
-						svwsconfig.activateSchema(schema.name);
-					} else {
-						threadLogger.logLn("Prüfung der Datenbankverbindungen zu " + schema.name + "...");
-						threadLogger.modifyIndent(2);
-						pruefeSchema(schema, threadLogger);
-						threadLogger.modifyIndent(-2);
-					}
+					pruefeSchema(schema, threadLogger, !svwsconfig.isAutoUpdatesDisabled());
 					for (final String str : logConsumer.getStrings())
 						logger.logLn(str);
 				});
