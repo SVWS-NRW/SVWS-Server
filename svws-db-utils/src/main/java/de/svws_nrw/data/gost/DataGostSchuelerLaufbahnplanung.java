@@ -1067,11 +1067,90 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 		final Abiturdaten abidaten = DBUtilsGostLaufbahn.get(conn, idSchueler);
 		for (final GostHalbjahr hj : GostHalbjahr.values())
 			if (abidaten.bewertetesHalbjahr[hj.id])
-				throw new ApiOperationException(Status.CONFLICT, "Die Fachwahlen können nicht vollständig gelöscht werden, da bereits bewertete Abschnitt vorliegen.");
+				throw new ApiOperationException(Status.CONFLICT,
+						"Die Fachwahlen können nicht vollständig gelöscht werden, da bereits bewertete Abschnitt vorliegen.");
 		final List<DTOGostSchuelerFachbelegungen> fachwahlen = conn.queryList(DTOGostSchuelerFachbelegungen.QUERY_BY_SCHUELER_ID,
 				DTOGostSchuelerFachbelegungen.class, idSchueler);
 		for (final DTOGostSchuelerFachbelegungen fw : fachwahlen)
 			conn.transactionRemove(fw);
+		return Response.status(Status.NO_CONTENT).build();
+	}
+
+
+	/**
+	 * Löscht die Fachwahlen für die angegebenen Schüler. Liegen bereits bewertete
+	 * Halbjahre vor, so werden nur die Informationen nach dem letzten bewerteten
+	 * Halbjahr gelöscht. Dabei werden die Informationen zum Abitur, wie dem Abiturfach,
+	 * der Q22 zugerechnet.
+	 *
+	 * @param idsSchueler   die IDs der Schüler
+	 *
+	 * @return Die HTTP-Response der Operation
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public Response deleteMultiple(final @NotNull List<Long> idsSchueler) throws ApiOperationException {
+		// Bestimme die aktuellen Abiturdaten zu den Schülern mit den angegebenen IDs
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		final @NotNull Map<Long, Abiturdaten> mapAbidaten = DBUtilsGostLaufbahn.getFromIDs(conn, idsSchueler);
+		// Bestimme alle zugehörigen Fachbelegungseinträge aus der Datenbank
+		final @NotNull Map<Long, List<DTOGostSchuelerFachbelegungen>> mapFachwahlen = conn.queryList(DTOGostSchuelerFachbelegungen.QUERY_LIST_BY_SCHUELER_ID,
+				DTOGostSchuelerFachbelegungen.class, idsSchueler).stream().collect(Collectors.groupingBy(b -> b.Schueler_ID));
+		for (final long idSchueler : idsSchueler) {
+			final Abiturdaten abidaten = mapAbidaten.get(idSchueler);
+			if (abidaten == null)
+				throw new ApiOperationException(Status.NOT_FOUND,
+						"Die Abiturdaten für den Schüler mit der ID %d konnten nicht bestimmt werden.".formatted(idSchueler));
+			final List<DTOGostSchuelerFachbelegungen> fachwahlen = mapFachwahlen.get(idSchueler);
+			if (fachwahlen == null)
+				continue;
+			// Prüfe, bis zu welchem Halbjahr es Bewertungen gibt
+			GostHalbjahr halbjahr = null;
+			for (final @NotNull GostHalbjahr tmpHalbjahr : GostHalbjahr.values())
+				if (abidaten.bewertetesHalbjahr[tmpHalbjahr.id])
+					halbjahr = tmpHalbjahr;
+			// Wenn es keine Bewertung gibt, dann können einfach alle Fachwahlen des Schülers komplett gelöscht werden
+			if (halbjahr == null) {
+				conn.transactionRemoveAll(fachwahlen);
+				continue;
+			}
+			// Wenn auch die Q22 bewertet ist, dann muss nichts gelöscht werden
+			if (halbjahr == GostHalbjahr.Q22)
+				continue;
+			// Die Fachwahlen müssen einzeln bearbeitet werden ...
+			for (final @NotNull DTOGostSchuelerFachbelegungen fachwahl : fachwahlen) {
+				if (halbjahr.compareTo(GostHalbjahr.EF2) < 0) {
+					fachwahl.EF2_Kursart = null;
+					fachwahl.EF2_Punkte = null;
+				}
+				if (halbjahr.compareTo(GostHalbjahr.Q11) < 0) {
+					fachwahl.Q11_Kursart = null;
+					fachwahl.Q11_Punkte = null;
+					fachwahl.Markiert_Q1 = false;
+				}
+				if (halbjahr.compareTo(GostHalbjahr.Q12) < 0) {
+					fachwahl.Q12_Kursart = null;
+					fachwahl.Q12_Punkte = null;
+					fachwahl.Markiert_Q2 = false;
+				}
+				if (halbjahr.compareTo(GostHalbjahr.Q21) < 0) {
+					fachwahl.Q21_Kursart = null;
+					fachwahl.Q21_Punkte = null;
+					fachwahl.Markiert_Q3 = false;
+				}
+				if (halbjahr.compareTo(GostHalbjahr.Q22) < 0) {
+					fachwahl.Q22_Kursart = null;
+					fachwahl.Q22_Punkte = null;
+					fachwahl.Markiert_Q4 = false;
+					fachwahl.AbiturFach = null;
+					fachwahl.Bemerkungen = null;
+					fachwahl.ergebnisAbiturpruefung = null;
+					fachwahl.ergebnisMuendlichePruefung = null;
+					fachwahl.hatMuendlichePflichtpruefung = null;
+				}
+				conn.transactionPersist(fachwahl);
+			}
+		}
 		return Response.status(Status.NO_CONTENT).build();
 	}
 

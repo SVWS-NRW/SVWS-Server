@@ -7105,6 +7105,29 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode deleteGostSchuelerFachwahlenMultiple für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/fachwahlen/deleteMultiple
+	 *
+	 * Löscht die Fachwahlen der Schüler mit den angegebenen IDs.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen der Fachwahlen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 203: Die Fachwahlen wurden erfolgreich gelöscht.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Fachwahlen zu löschen.
+	 *   Code 404: Ein Schüler bzw. der zugehörige Abiturjahrgang wurde nicht gefunden.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 */
+	public async deleteGostSchuelerFachwahlenMultiple(data : List<number>, schema : string) : Promise<void> {
+		const path = "/db/{schema}/gost/schueler/fachwahlen/deleteMultiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		await super.postJSON(path, body);
+		return;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getHaltestellen für den Zugriff auf die URL https://{hostname}/db/{schema}/haltestellen
 	 *
 	 * Erstellt eine Liste aller in dem Katalog vorhanden Haltestellen unter Angabe der ID, eines Kürzels und der textuellen Beschreibung sowie der Information, ob der Eintrag in der Anwendung sichtbar bzw. änderbar sein soll, und gibt diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.

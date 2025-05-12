@@ -23,6 +23,7 @@ import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
+import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.MultipleBinaryMultipartBody;
 import de.svws_nrw.data.SimpleBinaryMultipartBody;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
@@ -1024,6 +1025,38 @@ public class APIGost {
 	public Response deleteGostSchuelerFachwahlen(@PathParam("schema") final String schema, @PathParam("schuelerid") final long schuelerid,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn).delete(schuelerid),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Komplette Entfernen von Fachwahlen bei mehreren Schülern.
+	 * Sollten bereits bewertete Halbjahre vorliegen, so werden nur die Fachwahlen der nachfolgenden
+	 * Halbjahre zurückgesetzt.
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param is           der InputStream, mit der Liste von zu löschenden IDs
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort
+	 */
+	@POST
+	@Path("/schueler/fachwahlen/deleteMultiple")
+	@Operation(summary = "Löscht die Fachwahlen der Schüler mit den angegebenen IDs.",
+			description = "Löscht die Fachwahlen der Schüler mit den angegebenen IDs."
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen der Fachwahlen besitzt.")
+	@ApiResponse(responseCode = "203", description = "Die Fachwahlen wurden erfolgreich gelöscht.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Fachwahlen zu löschen.")
+	@ApiResponse(responseCode = "404", description = "Ein Schüler bzw. der zugehörige Abiturjahrgang wurde nicht gefunden.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteGostSchuelerFachwahlenMultiple(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die IDs der Schüler mit den zu löschenden Fachwahlen", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn).deleteMultiple(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
 				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN);
