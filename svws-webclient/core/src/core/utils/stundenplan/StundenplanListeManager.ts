@@ -119,7 +119,7 @@ export class StundenplanListeManager extends AuswahlManager<number, StundenplanL
 		const filtered : List<StundenplanListeEintrag> | null = super.filtered();
 		if (hasCache)
 			return filtered;
-		if (this._stundenplanVorlage !== null && !this._filterNurAktiv)
+		if (this._stundenplanVorlage !== null)
 			filtered.addFirst(this._stundenplanVorlage);
 		return filtered;
 	}

@@ -119,7 +119,7 @@ public final class StundenplanListeManager extends AuswahlManager<Long, Stundenp
 		final List<StundenplanListeEintrag> filtered = super.filtered();
 		if (hasCache)
 			return filtered;
-		if (_stundenplanVorlage != null && !_filterNurAktiv)
+		if (_stundenplanVorlage != null)
 			filtered.addFirst(_stundenplanVorlage);
 		return filtered;
 	}

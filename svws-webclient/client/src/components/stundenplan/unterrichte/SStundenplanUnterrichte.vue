@@ -1,5 +1,5 @@
 <template>
-	<div class="page page-flex-row max-w-480">
+	<div class="page page-flex-row max-w-480" v-if="stundenplanManager().stundenplanGetID() !== -1">
 		<div class="max-w-240 h-full overflow-y-auto w-full flex flex-col gap-4">
 			<div class="text-headline-sm">Übersicht aller Unterrichte im Zeitraster</div>
 			<svws-ui-table :items="[]" :no-data="false" has-background :filterReset :filter-open="true" :filtered scroll>
