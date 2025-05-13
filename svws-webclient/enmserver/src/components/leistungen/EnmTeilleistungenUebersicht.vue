@@ -2,7 +2,7 @@
 	<table class="svws-ui-table svws-clickable h-full w-full overflow-hidden" role="table" aria-label="Tabelle"
 		@keydown.down.prevent.stop="manager.auswahlLeistungNaechste()" @keydown.up.prevent.stop="manager.auswahlLeistungVorherige()"
 		@keydown.right.prevent="nextColumn" @keydown.left.prevent="prevColumn">
-		<thead class="svws-ui-thead cursor-pointer mb-1" role="rowgroup" aria-label="Tabellenkopf">
+		<thead class="svws-ui-thead cursor-pointer" role="rowgroup" aria-label="Tabellenkopf">
 			<tr class="svws-ui-tr" role="row">
 				<template v-for="col of cols" :key="col.name">
 					<template v-if="col.name === 'Teilleistung'">
@@ -40,7 +40,7 @@
 		<tbody class="svws-ui-tbody h-full overflow-y-auto" role="rowgroup" aria-label="Tabelleninhalt">
 			<template v-for="(schueler, indexSchueler) of manager.lerngruppenAuswahlGetSchuelerMitLeistungsdaten()" :key="schueler">
 				<template v-for="(leistung, indexLeistung) of manager.leistungenGetOfSchueler(schueler.id)" :key="leistung">
-					<tr class="svws-ui-tr" role="row" :class="{ 'svws-clicked': manager.auswahlLeistung.leistung === leistung }"
+					<tr class="svws-ui-tr h-10" role="row" :class="{ 'svws-clicked': manager.auswahlLeistung.leistung === leistung }"
 						@click.capture.exact="setAuswahlLeistung({ indexSchueler, indexLeistung, leistung })"
 						@keydown.tab="handleTabEvent($event, leistung.id)" :ref="el => rowRefs.set(leistung.id, {
 							element: (el as HTMLElement),

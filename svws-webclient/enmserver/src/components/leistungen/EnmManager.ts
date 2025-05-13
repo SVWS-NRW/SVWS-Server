@@ -499,6 +499,20 @@ export class EnmManager {
 		return result;
 	});
 
+	/** Die Liste der Leistungen aller Schüler, die durch die aktuelle Lerngruppenauswahl ausgewählt sind */
+	protected listLerngruppenAuswahlAlleSchuelerLeistungen = computed<List<ENMLeistung>>(() => {
+		const result = new ArrayList<ENMLeistung>();
+		for (const schueler of this.listLerngruppenAuswahlSchueler.value) {
+			const schuelerLeistungen = this.mapLerngruppenAuswahlSchuelerLeistungen.value.get(schueler.id);
+			if (schuelerLeistungen !== null) {
+				for (const leistung of schuelerLeistungen) {
+					result.add(leistung);
+				}
+			}
+		}
+		return result;
+	});
+
 	/** Die aktuelle Auswahl der Klassen */
 	protected listKlassenAuswahl = computed<List<ENMKlasse>>(() => {
 		const klassen = (this.filterKlassen.length === 0) ? this.listKlassenKlassenlehrer : this.filterKlassen;
@@ -1007,10 +1021,30 @@ export class EnmManager {
 	 *
 	 * @param idLeistung			die ID der Leistung
 	 *
-	 * @returns die Leistung, wenn in derAuswahl vorhanden, ansonsten null
+	 * @returns die Leistung, wenn in der Auswahl vorhanden, ansonsten null
 	 */
 	public lerngruppenAuswahlGetLeistungOrNull(idLeistung: number|null): ENMLeistung | null {
 		return this.mapLerngruppenAuswahlLeistungen.value.get(idLeistung);
+	}
+
+	/**
+	 * Gibt die Liste aller Leistungen aller Schüler der aktuellen Lerngruppenauswahl zurück
+	 *
+	 * @returns die Liste der Leistungen
+	 */
+	public lerngruppenAuswahlAlleLeistungen(): List<ENMLeistung> {
+		return this.listLerngruppenAuswahlAlleSchuelerLeistungen.value;
+	}
+
+	/**
+	 * Prüft, ob die aktuelle Liste mit Leistungen die übergebene Leistungsauswahl enthält
+	 *
+	 * @param auswahl   die Leistungsauswahl, deren Vorhandensein in der Liste geprüft werden soll
+	 *
+	 * @returns true, wenn die Leistungsauswahl in der Liste enthalten ist, ansonsten false
+	 */
+	public currentListContainsAuswahl(auswahl: EnmLeistungAuswahl): boolean {
+		return this.lerngruppenAuswahlAlleLeistungen().contains(auswahl.leistung);
 	}
 
 	/**
