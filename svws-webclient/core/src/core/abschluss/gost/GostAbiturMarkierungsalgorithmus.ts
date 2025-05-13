@@ -868,8 +868,8 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 	 * @return true, wenn der Markierungsvorgang erfolgreich war
 	 */
 	private markiereGeschichteBzwSozialwissenschaften(fb : GostFachbereich) : boolean {
-		this.ergebnis.log.add(this.logIndent + "Markierung zwei Geschichtskursen:");
 		const strFB : string = (fb as unknown === GostFachbereich.GESCHICHTE as unknown) ? "Geschichte" : "Sozialwissenschaften";
+		this.ergebnis.log.add(this.logIndent + "Markierung zwei Kursen in " + strFB + ":");
 		const anzahlGE : number | null = this.anzahlBelegungen.get(fb);
 		if ((anzahlGE !== null) && (anzahlGE > 0)) {
 			this.ergebnis.log.add(this.logIndent + "  " + strFB + " wurde bereits im Abiturbereich markiert.");
@@ -1018,13 +1018,19 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 		const resFach : Array<GostFach | null> | null = Array(2).fill(null);
 		const resHalbjahre : Array<GostHalbjahr | null> | null = Array(2).fill(null);
 		const resNotenpunkte : Array<number> | null = Array(2).fill(0);
+		let anzahlVorhandeneMarkierungen : number = 0;
 		for (const belegung of belegungen) {
+			if (belegung.abiturFach !== null)
+				continue;
 			const fach : GostFach | null = this.getFach(belegung);
 			if (fach === null)
 				continue;
 			for (const hj of GostHalbjahr.getQualifikationsphase()) {
-				if (this.markiert.getOrNull(belegung.fachID, hj.id) !== null)
+				const hatMarkierung : boolean = (this.markiert.getOrNull(belegung.fachID, hj.id) !== null);
+				if (hatMarkierung) {
+					anzahlVorhandeneMarkierungen++;
 					continue;
+				}
 				if (!this.manager.pruefeBelegung(belegung, hj))
 					continue;
 				const np : number = this.getNotenpunkte(belegung, hj);
@@ -1045,6 +1051,19 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 						resNotenpunkte[1] = np;
 					}
 			}
+		}
+		if (anzahlVorhandeneMarkierungen >= 2) {
+			this.ergebnis.log.add(this.logIndent + "  Es wurden bereits zwei Kurse markiert, die als Religionsersatz genutzt werden können.");
+			return true;
+		}
+		if (anzahlVorhandeneMarkierungen === 1) {
+			this.ergebnis.log.add(this.logIndent + "  Es wurden bereits ein Kurs markiert, der als Religionsersatz genutzt werden kann.");
+			if ((resBelegung[0] === null) || (resHalbjahre[0] === null) || (resFach[0] === null)) {
+				this.ergebnis.log.add(this.logIndent + "  Fehler: Konnte keine Bewertung für ein weiteres Halbjahr bestimmen.");
+				return false;
+			}
+			this.ergebnis.log.add(this.logIndent + "  Markiere den beiden Kurs in " + resHalbjahre[0].kuerzel + " (" + resNotenpunkte[0] + " Punkte) für " + resFach[0].kuerzelAnzeige + "...");
+			return this.markiereHalbjahresbelegung(resBelegung[0], resHalbjahre[0]);
 		}
 		if ((resBelegung[0] === null) || (resBelegung[1] === null) || (resHalbjahre[0] === null) || (resHalbjahre[1] === null) || (resFach[0] === null) || (resFach[1] === null)) {
 			this.ergebnis.log.add(this.logIndent + "  Fehler: Konnte keine Bewertung für zwei Halbjahre bestimmen.");
