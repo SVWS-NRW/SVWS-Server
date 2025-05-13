@@ -129,7 +129,7 @@ class TestGostMarkierungsalgorithmus {
 	 * @return ein Stream der Testfälle als {@link DynamicTest}-Objekte
 	 */
 	@TestFactory
-	@DisplayName("Teste Belegprüfungsalgorithmus...")
+	@DisplayName("Teste Markierungsalgorithmus...")
 	Stream<DynamicTest> testBelegpruefung() {
 		final ArrayList<DynamicTest> tests = new ArrayList<>();
 		testAbiturdaten.forEach((jahrgang, mapSchuelerJahrgang) -> {

@@ -938,8 +938,8 @@ public final class GostAbiturMarkierungsalgorithmus {
 	 * @return true, wenn der Markierungsvorgang erfolgreich war
 	 */
 	private boolean markiereGeschichteBzwSozialwissenschaften(final @NotNull GostFachbereich fb) {
-		ergebnis.log.add(logIndent + "Markierung zwei Geschichtskursen:");
 		final @NotNull String strFB = (fb == GostFachbereich.GESCHICHTE) ? "Geschichte" : "Sozialwissenschaften";
+		ergebnis.log.add(logIndent + "Markierung zwei Kursen in " + strFB + ":");
 
 		// Prüfe, ob Gesichte/Sozialwissenschaften bereits im Abiturbereich markiert wurde.
 		final Integer anzahlGE = anzahlBelegungen.get(fb);
@@ -1129,14 +1129,20 @@ public final class GostAbiturMarkierungsalgorithmus {
 		final GostFach[] resFach = new GostFach[2];
 		final GostHalbjahr[] resHalbjahre = new GostHalbjahr[2];
 		final int[] resNotenpunkte = new int[2];
+		int anzahlVorhandeneMarkierungen = 0;
 
 		for (final @NotNull AbiturFachbelegung belegung : belegungen) {
+			if (belegung.abiturFach != null)
+				continue;
 			final GostFach fach = getFach(belegung);
 			if (fach == null)
 				continue;
 			for (final @NotNull GostHalbjahr hj : GostHalbjahr.getQualifikationsphase()) {
-				if (markiert.getOrNull(belegung.fachID, hj.id) != null)
+				final boolean hatMarkierung = (markiert.getOrNull(belegung.fachID, hj.id) != null);
+				if (hatMarkierung) {
+					anzahlVorhandeneMarkierungen++;
 					continue;
+				}
 				if (!manager.pruefeBelegung(belegung, hj))
 					continue;
 				final int np = getNotenpunkte(belegung, hj);
@@ -1157,6 +1163,25 @@ public final class GostAbiturMarkierungsalgorithmus {
 				}
 			}
 		}
+		// Wenn schon zwei Markierungen vorhanden sind, dann muss hier nichts mehr markiert werden ...
+		if (anzahlVorhandeneMarkierungen >= 2) {
+			ergebnis.log.add(logIndent + "  Es wurden bereits zwei Kurse markiert, die als Religionsersatz genutzt werden können.");
+			return true;
+		}
+		// Wenn schon eine Markierung vorhanden ist, dann muss nur ein weiterer Kurse markiert werden (dieser Fall sollte nicht vorkommen) ...
+		if (anzahlVorhandeneMarkierungen == 1) {
+			ergebnis.log.add(logIndent + "  Es wurden bereits ein Kurs markiert, der als Religionsersatz genutzt werden kann.");
+			if ((resBelegung[0] == null) || (resHalbjahre[0] == null) || (resFach[0] == null)) {
+				ergebnis.log.add(logIndent + "  Fehler: Konnte keine Bewertung für ein weiteres Halbjahr bestimmen.");
+				return false;
+			}
+			// Erzeuge einen neuen State, bei welchem die beiden besten Halbjahresmarkierungen markiert sind
+			ergebnis.log.add(logIndent + "  Markiere den beiden Kurs in "
+					+ resHalbjahre[0].kuerzel + " (" + resNotenpunkte[0] + " Punkte) für " + resFach[0].kuerzelAnzeige + "...");
+
+			return markiereHalbjahresbelegung(resBelegung[0], resHalbjahre[0]);
+		}
+		// Es müssen noch zwei Kurse markiert werden...
 		if ((resBelegung[0] == null) || (resBelegung[1] == null) || (resHalbjahre[0] == null) || (resHalbjahre[1] == null)
 				|| (resFach[0] == null) || (resFach[1] == null)) {
 			ergebnis.log.add(logIndent + "  Fehler: Konnte keine Bewertung für zwei Halbjahre bestimmen.");
