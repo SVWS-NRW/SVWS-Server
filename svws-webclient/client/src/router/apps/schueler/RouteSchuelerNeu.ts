@@ -7,6 +7,8 @@ import { ViewType } from "@ui";
 import { RouteManager } from "~/router/RouteManager";
 import type { RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import type { SchuelerNeuProps } from "~/components/schueler/SSchuelerNeuProps";
+import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
+import { routeApp } from "~/router/apps/RouteApp";
 
 const SSchuelerNeu = () => import("~/components/schueler/SSchuelerNeu.vue");
 
@@ -27,6 +29,12 @@ export class RouteSchuelerNeu extends RouteNode<any, RouteSchueler> {
 
 	public getProps(to: RouteLocationNormalized): SchuelerNeuProps {
 		return {
+			schuelerListeManager: () => routeSchueler.data.manager,
+			addSchueler: routeSchueler.data.addSchueler,
+			gotoDefaultView: routeSchueler.data.gotoDefaultView,
+			mapOrte: routeApp.data.mapOrte,
+			mapOrtsteile: routeApp.data.mapOrtsteile,
+			mapReligionen: routeApp.data.mapReligionen,
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 		};

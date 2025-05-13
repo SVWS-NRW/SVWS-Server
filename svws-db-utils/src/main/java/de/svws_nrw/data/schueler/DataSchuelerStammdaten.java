@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
@@ -36,6 +37,8 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSchueler, SchuelerStammdaten> {
 
+	private final Long idSchuljahresabschnitt;
+
 	/**
 	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO {@link SchuelerStammdaten}.
 	 *
@@ -44,8 +47,19 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 	public DataSchuelerStammdaten(final DBEntityManager conn) {
 		super(conn);
 		setAttributesNotPatchable("id");
+		this.idSchuljahresabschnitt = 0L;
 	}
 
+	/**
+	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO {@link SchuelerStammdaten}.
+	 *
+	 * @param conn                     die Datenbank-Verbindung für den Datenbankzugriff
+	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
+	 */
+	public DataSchuelerStammdaten(final DBEntityManager conn, final Long idSchuljahresabschnitt) {
+		super(conn);
+		this.idSchuljahresabschnitt = idSchuljahresabschnitt;
+	}
 
 	@Override
 	public SchuelerStammdaten getById(final Long id) throws ApiOperationException {
@@ -141,6 +155,8 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 	protected void initDTO(final DTOSchueler dto, final Long id, final Map<String, Object> initAttributes) {
 		// Basisdaten
 		dto.ID = id;
+		dto.GU_ID = String.format("{%s}", UUID.randomUUID());
+		dto.Schuljahresabschnitts_ID = idSchuljahresabschnitt;
 		dto.Nachname = "";
 		dto.Vorname = "";
 		dto.AlleVornamen = "";
@@ -379,6 +395,10 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 
 	private static void mapGeburtsland(final DTOSchueler dto, final Object value) throws ApiOperationException {
 		final String geburtsland = JSONMapper.convertToString(value, true, true, null, "geburtsland");
+		if ((geburtsland == null) || geburtsland.isBlank()) {
+			dto.GeburtslandSchueler = null;
+			return;
+		}
 		final Nationalitaeten nationalitaet = Nationalitaeten.getByISO3(geburtsland);
 		if (nationalitaet == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
@@ -388,6 +408,10 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 
 	private static void mapVerkehrspracheFamilie(final DTOSchueler dto, final Object value) throws ApiOperationException {
 		final String verkehrspracheFamilie = JSONMapper.convertToString(value, true, true, null, "verkehrspracheFamilie");
+		if ((verkehrspracheFamilie == null) || verkehrspracheFamilie.isBlank()) {
+			dto.VerkehrsspracheFamilie = null;
+			return;
+		}
 		final Verkehrssprache verkehrsprache = Verkehrssprache.getByKuerzelAuto(verkehrspracheFamilie);
 		if (verkehrsprache == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
@@ -397,6 +421,10 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 
 	private static void mapGeburtslandVater(final DTOSchueler dto, final Object value) throws ApiOperationException {
 		final String geburtslandVater = JSONMapper.convertToString(value, true, true, null, "geburtslandVater");
+		if ((geburtslandVater == null) || geburtslandVater.isBlank()) {
+			dto.GeburtslandVater = null;
+			return;
+		}
 		final Nationalitaeten nationalitaet = Nationalitaeten.getByISO3(geburtslandVater);
 		if (nationalitaet == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
@@ -406,6 +434,10 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 
 	private static void mapGeburtslandMutter(final DTOSchueler dto, final Object value) throws ApiOperationException {
 		final String geburtslandMutter = JSONMapper.convertToString(value, true, true, null, "geburtslandMutter");
+		if ((geburtslandMutter == null) || geburtslandMutter.isBlank()) {
+			dto.GeburtslandMutter = null;
+			return;
+		}
 		final Nationalitaeten nationalitaet = Nationalitaeten.getByISO3(geburtslandMutter);
 		if (nationalitaet == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
@@ -418,7 +450,8 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 		final SchuelerStatus schuelerStatus = SchuelerStatus.data().getWertBySchluessel(String.valueOf(status));
 		if (schuelerStatus == null)
 			throw new ApiOperationException(Status.BAD_REQUEST);
-		final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dto.Schuljahresabschnitts_ID);
+		final long schuljahresabschnittsID = (dto.Schuljahresabschnitts_ID != null) ? dto.Schuljahresabschnitts_ID : idSchuljahresabschnitt;
+		final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(schuljahresabschnittsID);
 		final SchuelerStatusKatalogEintrag schuelerStatusEintrag = schuelerStatus.daten(abschnitt.schuljahr);
 		if (schuelerStatusEintrag == null)
 			throw new ApiOperationException(Status.BAD_REQUEST);

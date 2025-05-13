@@ -90,6 +90,12 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 	// 	return new SchuelerListeManager(api.schulform, new SchuelerListe(), new ArrayList(), api.schuleStammdaten.abschnitte, api.schuleStammdaten.idSchuljahresabschnitt);
 	// }
 
+	addSchueler = async (data: Partial<SchuelerStammdaten>): Promise<void> => {
+		const schulerStammdaten = await api.server.addSchuelerStammdaten(data, api.schema, this._state.value.idSchuljahresabschnitt);
+		await this.setSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt, true);
+		await this.gotoDefaultView(schulerStammdaten.id);
+	}
+
 	get listSchuelerTelefoneintraege(): List<SchuelerTelefon> {
 		return this._state.value.listSchuelerTelefoneintraege;
 	}

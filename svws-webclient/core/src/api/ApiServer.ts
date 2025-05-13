@@ -10347,6 +10347,35 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode addSchuelerStammdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{idSchuljahresabschnitt : \d+}/stammdaten/create
+	 *
+	 * Erstellt neue SchülerStammdaten und gibt das erstellte Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen neuer SchülerStammdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die SchülerStammdaten wurden erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SchuelerStammdaten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um SchülerStammdaten anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<SchuelerStammdaten>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idSchuljahresabschnitt - der Pfad-Parameter idSchuljahresabschnitt
+	 *
+	 * @returns Die SchülerStammdaten wurden erfolgreich hinzugefügt.
+	 */
+	public async addSchuelerStammdaten(data : Partial<SchuelerStammdaten>, schema : string, idSchuljahresabschnitt : number) : Promise<SchuelerStammdaten> {
+		const path = "/db/{schema}/schueler/{idSchuljahresabschnitt : \\d+}/stammdaten/create"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idSchuljahresabschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, idSchuljahresabschnitt.toString());
+		const body : string = SchuelerStammdaten.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return SchuelerStammdaten.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getSchuelerFuerAbschnitt für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/abschnitt/{abschnitt : \d+}
 	 *
 	 * Erstellt eine Liste aller Schüler des angegebenen Schuljahresabschnitts unter Angabe der ID, des Vor- und Nachnamens, der Klasse, des Jahrgangs, sein Status (z.B. aktiv), einer Sortierreihenfolge, ob sie in der Anwendung sichtbar bzw. änderbar sein sollen. Die schüler sind anhand der Klasse, des Nchnamens und des Vornamens sortiert.Es wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.
@@ -11031,33 +11060,6 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<SchuelerStammdaten>).map(d => SchuelerStammdaten.transpilerToJSONPatch(d)).join() + "]";
 		return super.patchJSON(path, body);
-	}
-
-
-	/**
-	 * Implementierung der POST-Methode addSchuelerStammdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/stammdaten/create
-	 *
-	 * Erstellt neue SchülerStammdaten und gibt das erstellte Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen neuer SchülerStammdaten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 201: Die SchülerStammdaten wurden erfolgreich hinzugefügt.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SchuelerStammdaten
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um SchülerStammdaten anzulegen.
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {Partial<SchuelerStammdaten>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Die SchülerStammdaten wurden erfolgreich hinzugefügt.
-	 */
-	public async addSchuelerStammdaten(data : Partial<SchuelerStammdaten>, schema : string) : Promise<SchuelerStammdaten> {
-		const path = "/db/{schema}/schueler/stammdaten/create"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = SchuelerStammdaten.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
-		const text = result;
-		return SchuelerStammdaten.transpilerFromJSON(text);
 	}
 
 
