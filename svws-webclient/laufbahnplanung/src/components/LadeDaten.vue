@@ -24,7 +24,7 @@
 	import type { LadeDatenProps } from "./LadeDatenProps";
 	import { version } from '../../version';
 	import { githash } from '../../githash';
-	import { UserNotificationException } from "@core/index";
+	import { UserNotificationException } from "@core/core/exceptions/UserNotificationException";
 
 	const props = defineProps<LadeDatenProps>();
 

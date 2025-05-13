@@ -22,7 +22,7 @@
 	import { computed, ref, watchEffect } from 'vue';
 	import type { BemerkungenHauptgruppe } from './EnmManager';
 	import type { EnmKlassenleitungProps } from './EnmKlassenleitungProps';
-	import type { ENMLeistungBemerkungen } from '@core/index';
+	import type { ENMLeistungBemerkungen } from '@core/core/data/enm/ENMLeistungBemerkungen';
 
 	const props = defineProps<EnmKlassenleitungProps>();
 

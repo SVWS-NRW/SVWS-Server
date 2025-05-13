@@ -5,7 +5,7 @@ import { ENMLeistungBemerkungen } from "@core/core/data/enm/ENMLeistungBemerkung
 import { ENMLernabschnitt } from "@core/core/data/enm/ENMLernabschnitt";
 import { ENMSchuelerAnkreuzkompetenz } from "@core/core/data/enm/ENMSchuelerAnkreuzkompetenz";
 import { ENMTeilleistung } from "@core/core/data/enm/ENMTeilleistung";
-import { ServerMode } from "@core/index";
+import { ServerMode } from "@core/core/types/ServerMode";
 
 export class ApiEnmServer extends BaseApi {
 
