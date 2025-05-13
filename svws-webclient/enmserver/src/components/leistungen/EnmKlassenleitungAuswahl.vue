@@ -5,7 +5,7 @@
 		</div>
 		<div class="secondary-menu--header" />
 		<div class="secondary-menu--content">
-			<svws-ui-table :items="manager.klassenOfKlassenlehrer" clickable @update:clicked="item => manager.filterKlassen = [ item ]" :clicked="manager.filterKlassen[0]"
+			<svws-ui-table :items="manager.listKlassenKlassenlehrer" clickable @update:clicked="item => manager.filterKlassen = [ item ]" :clicked="manager.filterKlassen[0]"
 				:columns :filter-open="false" count scroll-into-view scroll allow-arrow-key-selection :focus-help-visible :focus-switching-enabled />
 		</div>
 	</div>
@@ -24,8 +24,8 @@
 	onMounted(() => {
 		if (props.manager.filterKlassen.length > 0)
 			props.manager.filterKlassen = [ props.manager.filterKlassen[0] ];
-		else if (!props.manager.lerngruppenAuswahlliste.isEmpty())
-			props.manager.filterKlassen = [ props.manager.klassenOfKlassenlehrer.getFirst() ];
+		else if (!props.manager.listKlassenKlassenlehrer.isEmpty())
+			props.manager.filterKlassen = [ props.manager.listKlassenKlassenlehrer.getFirst() ];
 		else
 			props.manager.filterKlassen = [];
 	});

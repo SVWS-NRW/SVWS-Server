@@ -5,7 +5,7 @@
 		</div>
 		<div class="secondary-menu--header" />
 		<div class="secondary-menu--content">
-			<svws-ui-table :items="manager.lerngruppenAuswahlliste" clickable @update:clicked="item => manager.filterLerngruppen = [ item ]" :clicked="manager.filterLerngruppen[0]"
+			<svws-ui-table :items="manager.listLerngruppenAuswahlliste" clickable @update:clicked="item => manager.filterLerngruppen = [ item ]" :clicked="manager.filterLerngruppen[0]"
 				:columns :filter-open="false" count scroll-into-view scroll allow-arrow-key-selection :focus-help-visible :focus-switching-enabled />
 		</div>
 	</div>
@@ -24,8 +24,8 @@
 	onMounted(() => {
 		if (props.manager.filterLerngruppen.length > 0)
 			props.manager.filterLerngruppen = [ props.manager.filterLerngruppen[0] ];
-		else if (!props.manager.lerngruppenAuswahlliste.isEmpty())
-			props.manager.filterLerngruppen = [ props.manager.lerngruppenAuswahlliste.getFirst() ];
+		else if (!props.manager.listLerngruppenAuswahlliste.isEmpty())
+			props.manager.filterLerngruppen = [ props.manager.listLerngruppenAuswahlliste.getFirst() ];
 		else
 			props.manager.filterLerngruppen = [];
 	})

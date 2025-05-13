@@ -180,15 +180,6 @@ export class EnmManager {
 			this.mapLerngruppenSchueler.put(l.id, new ArrayList());
 			this.mapLerngruppeJahrgaenge.put(l.id, new ArrayList());
 			this.mapLerngruppeKlassen.put(l.id, new ArrayList());
-			if (l.lehrerID.contains(this.idLehrer.value)) {
-				this.listLerngruppenLehrer.add(l);
-				this.setLerngruppenLehrer.add(l.id);
-				this.listLerngruppenAuswahlliste.add(<EnmLerngruppenAuswahlEintrag>{
-					id: l.id,
-					bezeichnung: this.lerngruppeGetBezeichnung(l.id),
-					klassen: this.lerngruppeGetKlassenAsString(l.id),
-				});
-			}
 		}
 		this.listLerngruppenLehrer.sort(this.comparatorLerngruppen);
 
@@ -243,6 +234,15 @@ export class EnmManager {
 			}
 			listKlassen.sort(this.comparatorKlassen);
 			this.mapLerngruppeKlassen.put(l.id, listKlassen);
+			if (l.lehrerID.contains(this.idLehrer.value)) {
+				this.listLerngruppenLehrer.add(l);
+				this.setLerngruppenLehrer.add(l.id);
+				this.listLerngruppenAuswahlliste.add(<EnmLerngruppenAuswahlEintrag>{
+					id: l.id,
+					bezeichnung: this.lerngruppeGetBezeichnung(l.id),
+					klassen: this.lerngruppeGetKlassenAsString(l.id),
+				});
+			}
 		}
 	}
 
@@ -761,21 +761,6 @@ export class EnmManager {
 	/** Definition des Comparators für zwei Teilleistungen */
 	public comparatorTeilleistungen = <Comparator<ENMTeilleistung>>{ compare: this.compareTeilleistungen };
 
-
-	/** Gibt die Auswahlliste für die Lerngruppen zurück. */
-	public get lerngruppenAuswahlliste() : List<EnmLerngruppenAuswahlEintrag> {
-		return this.listLerngruppenAuswahlliste;
-	}
-
-	/** Gibt die Lerngruppen zurück, welche dem Lehrer zugeordnet sind. */
-	public get lerngruppenOfLehrer() : List<ENMLerngruppe> {
-		return this.listLerngruppenLehrer;
-	}
-
-	/** Gibt die Liste der Klassen eines Klassenlehrers zurück */
-	public get klassenOfKlassenlehrer(): List<ENMKlasse> {
-		return this.listKlassenKlassenlehrer;
-	}
 
 	/**
 	 * Bestimmt die Lerngruppe anhand der übergebenen ID
