@@ -427,7 +427,8 @@ public final class DBUtilsGostAbitur {
 		DTOSchuelerAbitur dtoSchueler = null;
 		if (!dtosSchueler.isEmpty()) {
 			// Prüfe, ob ein Eintrag mit dem korrekten Schuljahresabschnitt bereits existiert
-			dtoSchueler = dtosSchueler.stream().filter(s -> s.Schuljahresabschnitts_ID == schuljahresabschnitt.id).findFirst().orElse(null);
+			dtoSchueler = dtosSchueler.stream().filter(s -> (s.Schuljahresabschnitts_ID != null) && (s.Schuljahresabschnitts_ID == schuljahresabschnitt.id))
+					.findFirst().orElse(null);
 			if (dtoSchueler == null)
 				dtoSchueler = dtosSchueler.stream().filter(s -> s.Schuljahresabschnitts_ID == null).findFirst().orElse(null);
 		}
