@@ -1,0 +1,206 @@
+{
+  "erfolgreich": true,
+  "markierungen": [
+    {
+      "idFach": 16,
+      "idHalbjahr": 2,
+      "markiert": true
+    },
+    {
+      "idFach": 16,
+      "idHalbjahr": 3,
+      "markiert": true
+    },
+    {
+      "idFach": 16,
+      "idHalbjahr": 4,
+      "markiert": true
+    },
+    {
+      "idFach": 16,
+      "idHalbjahr": 5,
+      "markiert": true
+    },
+    {
+      "idFach": 17,
+      "idHalbjahr": 2,
+      "markiert": true
+    },
+    {
+      "idFach": 17,
+      "idHalbjahr": 3,
+      "markiert": true
+    },
+    {
+      "idFach": 17,
+      "idHalbjahr": 4,
+      "markiert": true
+    },
+    {
+      "idFach": 17,
+      "idHalbjahr": 5,
+      "markiert": true
+    },
+    {
+      "idFach": 71,
+      "idHalbjahr": 2,
+      "markiert": true
+    },
+    {
+      "idFach": 71,
+      "idHalbjahr": 3,
+      "markiert": true
+    },
+    {
+      "idFach": 24,
+      "idHalbjahr": 2,
+      "markiert": true
+    },
+    {
+      "idFach": 24,
+      "idHalbjahr": 3,
+      "markiert": true
+    },
+    {
+      "idFach": 24,
+      "idHalbjahr": 4,
+      "markiert": true
+    },
+    {
+      "idFach": 24,
+      "idHalbjahr": 5,
+      "markiert": true
+    },
+    {
+      "idFach": 37,
+      "idHalbjahr": 2,
+      "markiert": false
+    },
+    {
+      "idFach": 37,
+      "idHalbjahr": 3,
+      "markiert": true
+    },
+    {
+      "idFach": 37,
+      "idHalbjahr": 4,
+      "markiert": true
+    },
+    {
+      "idFach": 37,
+      "idHalbjahr": 5,
+      "markiert": true
+    },
+    {
+      "idFach": 164,
+      "idHalbjahr": 4,
+      "markiert": true
+    },
+    {
+      "idFach": 164,
+      "idHalbjahr": 5,
+      "markiert": true
+    },
+    {
+      "idFach": 70,
+      "idHalbjahr": 2,
+      "markiert": false
+    },
+    {
+      "idFach": 70,
+      "idHalbjahr": 3,
+      "markiert": true
+    },
+    {
+      "idFach": 70,
+      "idHalbjahr": 4,
+      "markiert": true
+    },
+    {
+      "idFach": 70,
+      "idHalbjahr": 5,
+      "markiert": true
+    },
+    {
+      "idFach": 79,
+      "idHalbjahr": 2,
+      "markiert": true
+    },
+    {
+      "idFach": 79,
+      "idHalbjahr": 3,
+      "markiert": true
+    },
+    {
+      "idFach": 79,
+      "idHalbjahr": 4,
+      "markiert": true
+    },
+    {
+      "idFach": 79,
+      "idHalbjahr": 5,
+      "markiert": true
+    },
+    {
+      "idFach": 192,
+      "idHalbjahr": 2,
+      "markiert": true
+    },
+    {
+      "idFach": 192,
+      "idHalbjahr": 3,
+      "markiert": true
+    },
+    {
+      "idFach": 192,
+      "idHalbjahr": 4,
+      "markiert": true
+    },
+    {
+      "idFach": 192,
+      "idHalbjahr": 5,
+      "markiert": true
+    },
+    {
+      "idFach": 128,
+      "idHalbjahr": 2,
+      "markiert": true
+    },
+    {
+      "idFach": 128,
+      "idHalbjahr": 3,
+      "markiert": true
+    },
+    {
+      "idFach": 128,
+      "idHalbjahr": 4,
+      "markiert": true
+    },
+    {
+      "idFach": 128,
+      "idHalbjahr": 5,
+      "markiert": true
+    },
+    {
+      "idFach": 172,
+      "idHalbjahr": 2,
+      "markiert": true
+    },
+    {
+      "idFach": 172,
+      "idHalbjahr": 3,
+      "markiert": true
+    },
+    {
+      "idFach": 172,
+      "idHalbjahr": 4,
+      "markiert": true
+    },
+    {
+      "idFach": 172,
+      "idHalbjahr": 5,
+      "markiert": true
+    }
+  ],
+  "log": [ ]
+}
