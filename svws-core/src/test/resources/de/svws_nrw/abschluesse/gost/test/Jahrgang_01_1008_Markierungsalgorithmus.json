@@ -1,0 +1,237 @@
+{
+  "erfolgreich": true,
+  "markierungen": [
+    {
+      "idFach": 16,
+      "idHalbjahr": 2,
+      "markiert": true
+    },
+    {
+      "idFach": 16,
+      "idHalbjahr": 3,
+      "markiert": true
+    },
+    {
+      "idFach": 16,
+      "idHalbjahr": 4,
+      "markiert": true
+    },
+    {
+      "idFach": 16,
+      "idHalbjahr": 5,
+      "markiert": true
+    },
+    {
+      "idFach": 30,
+      "idHalbjahr": 2,
+      "markiert": true
+    },
+    {
+      "idFach": 30,
+      "idHalbjahr": 3,
+      "markiert": false
+    },
+    {
+      "idFach": 30,
+      "idHalbjahr": 4,
+      "markiert": true
+    },
+    {
+      "idFach": 30,
+      "idHalbjahr": 5,
+      "markiert": true
+    },
+    {
+      "idFach": 17,
+      "idHalbjahr": 2,
+      "markiert": true
+    },
+    {
+      "idFach": 17,
+      "idHalbjahr": 3,
+      "markiert": true
+    },
+    {
+      "idFach": 17,
+      "idHalbjahr": 4,
+      "markiert": true
+    },
+    {
+      "idFach": 17,
+      "idHalbjahr": 5,
+      "markiert": true
+    },
+    {
+      "idFach": 71,
+      "idHalbjahr": 2,
+      "markiert": false
+    },
+    {
+      "idFach": 71,
+      "idHalbjahr": 3,
+      "markiert": false
+    },
+    {
+      "idFach": 71,
+      "idHalbjahr": 4,
+      "markiert": true
+    },
+    {
+      "idFach": 71,
+      "idHalbjahr": 5,
+      "markiert": true
+    },
+    {
+      "idFach": 24,
+      "idHalbjahr": 2,
+      "markiert": true
+    },
+    {
+      "idFach": 24,
+      "idHalbjahr": 3,
+      "markiert": true
+    },
+    {
+      "idFach": 24,
+      "idHalbjahr": 4,
+      "markiert": true
+    },
+    {
+      "idFach": 24,
+      "idHalbjahr": 5,
+      "markiert": true
+    },
+    {
+      "idFach": 37,
+      "idHalbjahr": 4,
+      "markiert": true
+    },
+    {
+      "idFach": 37,
+      "idHalbjahr": 5,
+      "markiert": true
+    },
+    {
+      "idFach": 164,
+      "idHalbjahr": 4,
+      "markiert": true
+    },
+    {
+      "idFach": 164,
+      "idHalbjahr": 5,
+      "markiert": true
+    },
+    {
+      "idFach": 26,
+      "idHalbjahr": 2,
+      "markiert": false
+    },
+    {
+      "idFach": 26,
+      "idHalbjahr": 3,
+      "markiert": true
+    },
+    {
+      "idFach": 27,
+      "idHalbjahr": 2,
+      "markiert": true
+    },
+    {
+      "idFach": 27,
+      "idHalbjahr": 3,
+      "markiert": true
+    },
+    {
+      "idFach": 79,
+      "idHalbjahr": 2,
+      "markiert": true
+    },
+    {
+      "idFach": 79,
+      "idHalbjahr": 3,
+      "markiert": true
+    },
+    {
+      "idFach": 79,
+      "idHalbjahr": 4,
+      "markiert": true
+    },
+    {
+      "idFach": 79,
+      "idHalbjahr": 5,
+      "markiert": true
+    },
+    {
+      "idFach": 192,
+      "idHalbjahr": 2,
+      "markiert": true
+    },
+    {
+      "idFach": 192,
+      "idHalbjahr": 3,
+      "markiert": true
+    },
+    {
+      "idFach": 192,
+      "idHalbjahr": 4,
+      "markiert": true
+    },
+    {
+      "idFach": 192,
+      "idHalbjahr": 5,
+      "markiert": true
+    },
+    {
+      "idFach": 172,
+      "idHalbjahr": 2,
+      "markiert": true
+    },
+    {
+      "idFach": 172,
+      "idHalbjahr": 3,
+      "markiert": false
+    },
+    {
+      "idFach": 172,
+      "idHalbjahr": 4,
+      "markiert": true
+    },
+    {
+      "idFach": 172,
+      "idHalbjahr": 5,
+      "markiert": true
+    }
+  ],
+  "log": [
+    "Anzahl der Fortführbaren Fremdsprachen: 2",
+    "Schwerpunkt: Fremdsprachen ",
+    "Markiere die vier Kurse des 1. Abiturfaches (D)...",
+    "Markiere die vier Kurse des 2. Abiturfaches (EK)...",
+    "Markiere die vier Kurse des 3. Abiturfaches (E)...",
+    "Markiere die vier Kurse des 4. Abiturfaches (BI)...",
+    "Markiere die vier Kurse für das Fach Mathematik...",
+    "  Im Halbjahr Q1.1 liegt ein einbringungspflichtiges Defizit im GK-Bereich vor.",
+    "  Im Halbjahr Q1.2 liegt ein einbringungspflichtiges Defizit im GK-Bereich vor.",
+    "  Im Halbjahr Q2.1 liegt ein einbringungspflichtiges Defizit im GK-Bereich vor.",
+    "  Im Halbjahr Q2.2 liegt ein einbringungspflichtiges Defizit im GK-Bereich vor.",
+    "Markierung der ersten Fremdsprache:",
+    "  Eine erste Fremdsprache wurde bereits im Abiturbereich markiert.",
+    "    Markierung der ersten klassischen Naturwissenschaft:",
+    "      Eine klassische Naturwissenschaft wurde bereits im Abiturbereich markiert.",
+    "        Markierung der zweiten Schwerpunktfaches (Fremdsprache oder Naturwissenschaft in der Q2):",
+    "          Fallunterscheidung: Markiere die beiden Kurse in der Q2 für das Schwerpunktfach F...",
+    "            Markierung von Kunst, Musik oder einem Ersatzfach:",
+    "              Fallunterscheidung: Markiere die beiden Kurse in Q2.1 (9 Punkte) und Q2.2 (9 Punkte) für das KU...",
+    "                Markierung zwei Kursen in Geschichte:",
+    "                  Markiere die beiden Kurse in Q2.1 (9 Punkte) für GE und Q2.2 (9 Punkte) für GE...",
+    "                Markierung zwei Kursen in Sozialwissenschaften:",
+    "                  Markiere die beiden Kurse in Q2.2 (10 Punkte) für SW und Q2.1 (8 Punkte) für SW...",
+    "                Markierung einer neu einsetzenden Fremdsprache in der Q2 bei Einsprachlern...",
+    "                  Es wurde in der Sek I mehr als eine Fremdsprache belegt.",
+    "                    Markierung zwei Religions- oder Philosophiekurse (oder ggf. einer Gesellschaftswissenschaft als Ersatz):",
+    "                      Markiere die beiden Kurse in Q1.2 (12 Punkte) für ER und Q1.1 (10 Punkte) für ER...",
+    "                        Markierung eines Projektkurses, sofern einer belegt wurde:",
+    "                          Markiere keine Projektkursbelegung",
+    "                            Markierung weiterer Kurse:"
+  ]
+}
