@@ -75,7 +75,7 @@ public final class GostAbiturMarkierungsalgorithmus {
 	private boolean hatAbiFremspracheNeueinsetzend = false;
 
 	/** Gibt an, ob im Abitur eine Gesellschaftswissenschaft - außer Religion - markiert wurde */
-	private boolean hatAbiGesellschaftswissenschaft = false;
+	private int anzahlAbiGesellschaftswissenschaft = 0;
 
 	/** Gibt an, ob im Abitur Kunst oder Musik gewählt wurde */
 	private boolean hatAbiKunstOderMusik = false;
@@ -196,7 +196,7 @@ public final class GostAbiturMarkierungsalgorithmus {
 		this.defiziteLK = original.defiziteLK;
 		this.defiziteGK = original.defiziteGK;
 		this.anzahlAbiFremdsprachen = original.anzahlAbiFremdsprachen;
-		this.hatAbiGesellschaftswissenschaft = original.hatAbiGesellschaftswissenschaft;
+		this.anzahlAbiGesellschaftswissenschaft = original.anzahlAbiGesellschaftswissenschaft;
 		this.hatAbiFremspracheNeueinsetzend = original.hatAbiFremspracheNeueinsetzend;
 		this.hatAbiKunstOderMusik = original.hatAbiKunstOderMusik;
 		this.restErlaubtMusik = original.restErlaubtMusik;
@@ -622,7 +622,7 @@ public final class GostAbiturMarkierungsalgorithmus {
 				this.hatAbiFremspracheNeueinsetzend = true;
 			// Prüfe auf die Belegung einer Gesellschaftswissenschaft außer Religion
 			if (GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH.hat(fach))
-				hatAbiGesellschaftswissenschaft = true;
+				anzahlAbiGesellschaftswissenschaft++;
 			// Prüfe die Belegung auf Kunst oder Musik
 			final boolean istKunst = manager.faecher().fachIstKunst(fach.id);
 			final boolean istMusik = manager.faecher().fachIstMusik(fach.id);
@@ -1068,10 +1068,10 @@ public final class GostAbiturMarkierungsalgorithmus {
 		}
 
 		// Es wurde bereits eine Gesellschaftswissenschaft im Abitur markiert
-		if (hatAbiGesellschaftswissenschaft) {
+		if (anzahlAbiGesellschaftswissenschaft > 0) {
 			final @NotNull GostAbiturMarkierungsalgorithmus newState = new GostAbiturMarkierungsalgorithmus(this);
 			// Wenn bereits PL Abiturfach ist, dann kann die zweite Gesellschaftswissenschaft als Religionsersatz dienen
-			if ((!hatReBelegungErfuellt) && (!hatAbiPL))
+			if ((!hatReBelegungErfuellt) && (!hatAbiPL || (anzahlAbiGesellschaftswissenschaft == 1)))
 				newState.markiereReligionOderErsatzAusGesellschaftswissenschaften();
 			newStates.addAll(newState.markiereProjektkurs());
 			return newStates;

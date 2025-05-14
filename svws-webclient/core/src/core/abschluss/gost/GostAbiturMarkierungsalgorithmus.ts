@@ -107,7 +107,7 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 	/**
 	 * Gibt an, ob im Abitur eine Gesellschaftswissenschaft - außer Religion - markiert wurde
 	 */
-	private hatAbiGesellschaftswissenschaft : boolean = false;
+	private anzahlAbiGesellschaftswissenschaft : number = 0;
 
 	/**
 	 * Gibt an, ob im Abitur Kunst oder Musik gewählt wurde
@@ -245,7 +245,7 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 			this.defiziteLK = original.defiziteLK;
 			this.defiziteGK = original.defiziteGK;
 			this.anzahlAbiFremdsprachen = original.anzahlAbiFremdsprachen;
-			this.hatAbiGesellschaftswissenschaft = original.hatAbiGesellschaftswissenschaft;
+			this.anzahlAbiGesellschaftswissenschaft = original.anzahlAbiGesellschaftswissenschaft;
 			this.hatAbiFremspracheNeueinsetzend = original.hatAbiFremspracheNeueinsetzend;
 			this.hatAbiKunstOderMusik = original.hatAbiKunstOderMusik;
 			this.restErlaubtMusik = original.restErlaubtMusik;
@@ -606,7 +606,7 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 			if (fach.istFremdsprache && fach.istFremdSpracheNeuEinsetzend)
 				this.hatAbiFremspracheNeueinsetzend = true;
 			if (GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH.hat(fach))
-				this.hatAbiGesellschaftswissenschaft = true;
+				this.anzahlAbiGesellschaftswissenschaft++;
 			const istKunst : boolean = this.manager.faecher().fachIstKunst(fach.id);
 			const istMusik : boolean = this.manager.faecher().fachIstMusik(fach.id);
 			if (istKunst || istMusik)
@@ -967,9 +967,9 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 				}
 			}
 		}
-		if (this.hatAbiGesellschaftswissenschaft) {
+		if (this.anzahlAbiGesellschaftswissenschaft > 0) {
 			const newState : GostAbiturMarkierungsalgorithmus = new GostAbiturMarkierungsalgorithmus(this);
-			if ((!hatReBelegungErfuellt) && (!hatAbiPL))
+			if ((!hatReBelegungErfuellt) && (!hatAbiPL || (this.anzahlAbiGesellschaftswissenschaft === 1)))
 				newState.markiereReligionOderErsatzAusGesellschaftswissenschaften();
 			newStates.addAll(newState.markiereProjektkurs());
 			return newStates;
