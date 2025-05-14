@@ -193,7 +193,7 @@ class TestGostMarkierungsalgorithmus {
 									if (markierung.markiert)
 										zuwenig.add("(%s-%s)".formatted(fach.kuerzelAnzeige, halbjahr.kuerzel));
 									if ((!markierung.markiert) && (!ergebnisMarkierungen.contains(markierung.idFach, markierung.idHalbjahr, !markierung.markiert)))
-										zuwenig.add("(%s-%s,nicht belegt)".formatted(fach.kuerzelAnzeige, halbjahr.kuerzel));
+										zuwenig.add("(%s-%s,nicht markiert)".formatted(fach.kuerzelAnzeige, halbjahr.kuerzel));
 								}
 							}
 							final List<String> zuviele = new ArrayList<>();
@@ -207,7 +207,7 @@ class TestGostMarkierungsalgorithmus {
 									if (markierung.markiert)
 										zuviele.add("(%s-%s)".formatted(fach.kuerzelAnzeige, halbjahr.kuerzel));
 									if ((!markierung.markiert) && (!testfallMarkierungen.contains(markierung.idFach, markierung.idHalbjahr, !markierung.markiert)))
-										zuviele.add("(%s-%s,nicht beleggt)".formatted(fach.kuerzelAnzeige, halbjahr.kuerzel));
+										zuviele.add("(%s-%s,nicht markiert)".formatted(fach.kuerzelAnzeige, halbjahr.kuerzel));
 								}
 							}
 

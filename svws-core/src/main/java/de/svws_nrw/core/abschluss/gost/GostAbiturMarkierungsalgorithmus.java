@@ -23,6 +23,7 @@ import de.svws_nrw.core.types.gost.GostFachbereich;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.gost.GostSchriftlichkeit;
+import de.svws_nrw.core.utils.gost.GostFachUtils;
 import de.svws_nrw.core.utils.schueler.SprachendatenUtils;
 import jakarta.validation.constraints.NotNull;
 
@@ -256,8 +257,10 @@ public final class GostAbiturMarkierungsalgorithmus {
 		ergebnis.log.add(logIndent + "Anzahl der Fortführbaren Fremdsprachen: " + anzahlFortfuehrbareFremdsprachen);
 
 		// Schwerpunkt bestimmen (SprachenSP, NWSP)
-		final boolean hatSchwerpunktFremdsprachen = 2 <= manager.zaehleBelegungInHalbjahren(manager.getFachbelegungen(GostFachbereich.FREMDSPRACHE), GostHalbjahr.Q22);
-		final boolean hatSchwerpunktNaturwissenschaften = 2 <= manager.zaehleBelegungInHalbjahren(manager.getFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH), GostHalbjahr.Q22);
+		final boolean hatSchwerpunktFremdsprachen =
+				2 <= manager.zaehleBelegungInHalbjahren(manager.getFachbelegungen(GostFachbereich.FREMDSPRACHE), GostHalbjahr.Q22);
+		final boolean hatSchwerpunktNaturwissenschaften =
+				2 <= manager.zaehleBelegungInHalbjahren(manager.getFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH), GostHalbjahr.Q22);
 		ergebnis.log.add(logIndent + "Schwerpunkt: " + (hatSchwerpunktFremdsprachen ? "Fremdsprachen" : "") + " "
 				+ (hatSchwerpunktNaturwissenschaften ? "Naturwissenschaften" : ""));
 		// Markierung der Abiturfächer
@@ -302,6 +305,44 @@ public final class GostAbiturMarkierungsalgorithmus {
 				ergebnis.markierungen.add(markierung);
 			}
 		}
+	}
+
+
+	/**
+	 * Ermittel die Menge aller Sprachbelegungen, die für den Sprachenschwerpunkt in Frage kommen.
+	 *
+	 * @return die Menge aller Sprachbelegungen, die für den Sprachenschwerpunkt in Frage kommen
+	 */
+	private @NotNull Set<AbiturFachbelegung> getSprachbelegungenFuerSchwerpunkt() {
+		// Bestimme alle Sprach-Belegungen, die für den Sprachenschwerpunkt in Frage kommen
+		final @NotNull Set<AbiturFachbelegung> belegungen = new HashSet<>();
+		final @NotNull Set<String> belegteFremdsprachen = new HashSet<>();
+		for (final @NotNull AbiturFachbelegung belegung : manager.getRelevanteFachbelegungen(GostFachbereich.FREMDSPRACHE)) {
+			if ((manager.pruefeBelegungMitSchriftlichkeit(belegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21))
+					&& (manager.pruefeBelegung(belegung, GostHalbjahr.Q22))) {
+				final GostFach fach = manager.getFach(belegung);
+				if (fach == null) // Dieser Fehlerfall sollte nicht auftreten...
+					continue;
+				final String fs = GostFachUtils.getFremdsprache(fach);
+				if (fs == null) // Dieser Fehlerfall sollte nicht auftreten...
+					continue;
+				belegteFremdsprachen.add(fs);
+				belegungen.add(belegung);
+			}
+		}
+		// Prüfe, ob auch ein bilinguales Sachfach als Schwerpunktfach in Frage kommt. Dafür darf die Bili-Sprache nicht schon als Schwerpunktsprache in Frage kommen
+		for (final @NotNull AbiturFachbelegung belegung : manager.getFachbelegungenBilingual()) {
+			if ((manager.pruefeBelegungMitSchriftlichkeit(belegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21))
+					&& (manager.pruefeBelegung(belegung, GostHalbjahr.Q22))) {
+				final GostFach fach = manager.getFach(belegung);
+				if (fach == null) // Dieser Fehlerfall sollte nicht auftreten...
+					continue;
+				if (belegteFremdsprachen.contains(fach.biliSprache))
+					continue;
+				belegungen.add(belegung);
+			}
+		}
+		return belegungen;
 	}
 
 
@@ -806,26 +847,26 @@ public final class GostAbiturMarkierungsalgorithmus {
 			return newStates;
 		}
 
-		final boolean hatSchwerpunktFremdsprachen = 2 <= manager.zaehleBelegungInHalbjahren(manager.getFachbelegungen(GostFachbereich.FREMDSPRACHE), GostHalbjahr.Q22);
-		final boolean hatSchwerpunktNaturwissenschaften = 2 <= manager.zaehleBelegungInHalbjahren(manager.getFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH), GostHalbjahr.Q22);
+		final @NotNull Set<AbiturFachbelegung> setBelegungenSprachenschwerpunkt = getSprachbelegungenFuerSchwerpunkt();
+		final boolean hatSchwerpunktFremdsprachen = 2 <= setBelegungenSprachenschwerpunkt.size();
+		final boolean hatSchwerpunktNaturwissenschaften =
+				2 <= manager.zaehleBelegungInHalbjahren(manager.getFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH), GostHalbjahr.Q22);
 		// Bestimme alle Fachbelegungen, die noch möglich sind: Fremdsprachen, Naturwissenschaften und bilinguale Sachfächer
 		final @NotNull Set<AbiturFachbelegung> belegungen = new HashSet<>();
 		if (hatSchwerpunktFremdsprachen) {
 			for (final @NotNull AbiturFachbelegung belegung : manager.getRelevanteFachbelegungen(GostFachbereich.FREMDSPRACHE))
-				if ((manager.pruefeBelegungMitSchriftlichkeit(belegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21))
-						&& (manager.pruefeBelegung(belegung, GostHalbjahr.Q22))
+				if (setBelegungenSprachenschwerpunkt.contains(belegung)
 						&& (!markiert.contains(belegung.fachID, GostHalbjahr.Q21.id) && !markiert.contains(belegung.fachID, GostHalbjahr.Q22.id)))
 					belegungen.add(belegung);
 			for (final @NotNull AbiturFachbelegung belegung : manager.getFachbelegungenBilingual())
-				if ((manager.pruefeBelegungMitSchriftlichkeit(belegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21))
-						&& (manager.pruefeBelegung(belegung, GostHalbjahr.Q22))
-						&& (!markiert.contains(belegung.fachID, GostHalbjahr.Q21.id) && !markiert.contains(belegung.fachID, GostHalbjahr.Q22.id)))
+				if (setBelegungenSprachenschwerpunkt.contains(belegung))
 					belegungen.add(belegung);
 		}
 		if (hatSchwerpunktNaturwissenschaften)
 			for (final @NotNull AbiturFachbelegung belegung : manager.getRelevanteFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH))
 				if (manager.pruefeBelegung(belegung, GostHalbjahr.getQualifikationsphase())
-						&& (!markiert.contains(belegung.fachID, GostHalbjahr.Q21.id) && !markiert.contains(belegung.fachID, GostHalbjahr.Q22.id)))
+						&& (!markiert.contains(belegung.fachID, GostHalbjahr.Q21.id) && !markiert.contains(belegung.fachID, GostHalbjahr.Q22.id))
+						&& !setBelegungenSprachenschwerpunkt.contains(belegung)) // Spezialfall Bili-Sachfach berücksichtigen
 					belegungen.add(belegung);
 
 		// ... prüfe die einzelnen Markierungsmöglichkeiten und erzeuge dafür weitere Instanzen des Algorithmus mit getrennten States
@@ -841,9 +882,9 @@ public final class GostAbiturMarkierungsalgorithmus {
 			final @NotNull GostAbiturMarkierungsalgorithmus newState = new GostAbiturMarkierungsalgorithmus(this);
 
 			ergebnis.log.add(logIndent + "  Fallunterscheidung: Markiere die beiden Kurse in der Q2 für das Schwerpunktfach " + fach.kuerzelAnzeige + "...");
-			if (!newState.markiereHalbjahresbelegung(belegung, GostHalbjahr.Q21))
+			if (!markiert.contains(belegung.fachID, GostHalbjahr.Q21.id) && !newState.markiereHalbjahresbelegung(belegung, GostHalbjahr.Q21))
 				continue;
-			if (!newState.markiereHalbjahresbelegung(belegung, GostHalbjahr.Q22))
+			if (!markiert.contains(belegung.fachID, GostHalbjahr.Q22.id) && !newState.markiereHalbjahresbelegung(belegung, GostHalbjahr.Q22))
 				continue;
 
 			newStates.addAll(newState.markiereKunstMusikOderErsatz());

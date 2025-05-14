@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap2D } from '../../../core/adt/map/HashMap2D';
 import type { JavaSet } from '../../../java/util/JavaSet';
 import { HashMap } from '../../../java/util/HashMap';
+import { GostFachUtils } from '../../../core/utils/gost/GostFachUtils';
 import { AbiturFachbelegungHalbjahr } from '../../../core/data/gost/AbiturFachbelegungHalbjahr';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { JavaString } from '../../../java/lang/JavaString';
@@ -329,6 +330,39 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 				this.ergebnis.markierungen.add(markierung);
 			}
 		}
+	}
+
+	/**
+	 * Ermittel die Menge aller Sprachbelegungen, die für den Sprachenschwerpunkt in Frage kommen.
+	 *
+	 * @return die Menge aller Sprachbelegungen, die für den Sprachenschwerpunkt in Frage kommen
+	 */
+	private getSprachbelegungenFuerSchwerpunkt() : JavaSet<AbiturFachbelegung> {
+		const belegungen : JavaSet<AbiturFachbelegung> = new HashSet<AbiturFachbelegung>();
+		const belegteFremdsprachen : JavaSet<string> = new HashSet<string>();
+		for (const belegung of this.manager.getRelevanteFachbelegungen(GostFachbereich.FREMDSPRACHE)) {
+			if ((this.manager.pruefeBelegungMitSchriftlichkeit(belegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21)) && (this.manager.pruefeBelegung(belegung, GostHalbjahr.Q22))) {
+				const fach : GostFach | null = this.manager.getFach(belegung);
+				if (fach === null)
+					continue;
+				const fs : string | null = GostFachUtils.getFremdsprache(fach);
+				if (fs === null)
+					continue;
+				belegteFremdsprachen.add(fs);
+				belegungen.add(belegung);
+			}
+		}
+		for (const belegung of this.manager.getFachbelegungenBilingual()) {
+			if ((this.manager.pruefeBelegungMitSchriftlichkeit(belegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21)) && (this.manager.pruefeBelegung(belegung, GostHalbjahr.Q22))) {
+				const fach : GostFach | null = this.manager.getFach(belegung);
+				if (fach === null)
+					continue;
+				if (belegteFremdsprachen.contains(fach.biliSprache))
+					continue;
+				belegungen.add(belegung);
+			}
+		}
+		return belegungen;
 	}
 
 	/**
@@ -762,20 +796,21 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 			newStates.addAll((new GostAbiturMarkierungsalgorithmus(this)).markiereKunstMusikOderErsatz());
 			return newStates;
 		}
-		const hatSchwerpunktFremdsprachen : boolean = 2 <= this.manager.zaehleBelegungInHalbjahren(this.manager.getFachbelegungen(GostFachbereich.FREMDSPRACHE), GostHalbjahr.Q22);
+		const setBelegungenSprachenschwerpunkt : JavaSet<AbiturFachbelegung> = this.getSprachbelegungenFuerSchwerpunkt();
+		const hatSchwerpunktFremdsprachen : boolean = 2 <= setBelegungenSprachenschwerpunkt.size();
 		const hatSchwerpunktNaturwissenschaften : boolean = 2 <= this.manager.zaehleBelegungInHalbjahren(this.manager.getFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH), GostHalbjahr.Q22);
 		const belegungen : JavaSet<AbiturFachbelegung> = new HashSet<AbiturFachbelegung>();
 		if (hatSchwerpunktFremdsprachen) {
 			for (const belegung of this.manager.getRelevanteFachbelegungen(GostFachbereich.FREMDSPRACHE))
-				if ((this.manager.pruefeBelegungMitSchriftlichkeit(belegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21)) && (this.manager.pruefeBelegung(belegung, GostHalbjahr.Q22)) && (!this.markiert.contains(belegung.fachID, GostHalbjahr.Q21.id) && !this.markiert.contains(belegung.fachID, GostHalbjahr.Q22.id)))
+				if (setBelegungenSprachenschwerpunkt.contains(belegung) && (!this.markiert.contains(belegung.fachID, GostHalbjahr.Q21.id) && !this.markiert.contains(belegung.fachID, GostHalbjahr.Q22.id)))
 					belegungen.add(belegung);
 			for (const belegung of this.manager.getFachbelegungenBilingual())
-				if ((this.manager.pruefeBelegungMitSchriftlichkeit(belegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21)) && (this.manager.pruefeBelegung(belegung, GostHalbjahr.Q22)) && (!this.markiert.contains(belegung.fachID, GostHalbjahr.Q21.id) && !this.markiert.contains(belegung.fachID, GostHalbjahr.Q22.id)))
+				if (setBelegungenSprachenschwerpunkt.contains(belegung))
 					belegungen.add(belegung);
 		}
 		if (hatSchwerpunktNaturwissenschaften)
 			for (const belegung of this.manager.getRelevanteFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH))
-				if (this.manager.pruefeBelegung(belegung, ...GostHalbjahr.getQualifikationsphase()) && (!this.markiert.contains(belegung.fachID, GostHalbjahr.Q21.id) && !this.markiert.contains(belegung.fachID, GostHalbjahr.Q22.id)))
+				if (this.manager.pruefeBelegung(belegung, ...GostHalbjahr.getQualifikationsphase()) && (!this.markiert.contains(belegung.fachID, GostHalbjahr.Q21.id) && !this.markiert.contains(belegung.fachID, GostHalbjahr.Q22.id)) && !setBelegungenSprachenschwerpunkt.contains(belegung))
 					belegungen.add(belegung);
 		if (belegungen.isEmpty()) {
 			this.ergebnis.log.add(this.logIndent + "  Konnte kein durchgängig belegtes Schwerpunktfach zur Markierung ermitteln.");
@@ -787,9 +822,9 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 				continue;
 			const newState : GostAbiturMarkierungsalgorithmus = new GostAbiturMarkierungsalgorithmus(this);
 			this.ergebnis.log.add(this.logIndent + "  Fallunterscheidung: Markiere die beiden Kurse in der Q2 für das Schwerpunktfach " + fach.kuerzelAnzeige + "...");
-			if (!newState.markiereHalbjahresbelegung(belegung, GostHalbjahr.Q21))
+			if (!this.markiert.contains(belegung.fachID, GostHalbjahr.Q21.id) && !newState.markiereHalbjahresbelegung(belegung, GostHalbjahr.Q21))
 				continue;
-			if (!newState.markiereHalbjahresbelegung(belegung, GostHalbjahr.Q22))
+			if (!this.markiert.contains(belegung.fachID, GostHalbjahr.Q22.id) && !newState.markiereHalbjahresbelegung(belegung, GostHalbjahr.Q22))
 				continue;
 			newStates.addAll(newState.markiereKunstMusikOderErsatz());
 		}
