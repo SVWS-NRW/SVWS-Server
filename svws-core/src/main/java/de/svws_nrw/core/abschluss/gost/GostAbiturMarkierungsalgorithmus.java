@@ -1033,6 +1033,9 @@ public final class GostAbiturMarkierungsalgorithmus {
 		ergebnis.log.add(logIndent + "Markierung zwei Religions- oder Philosophiekurse (oder ggf. einer Gesellschaftswissenschaft als Ersatz):");
 		final @NotNull List<GostAbiturMarkierungsalgorithmus> newStates = new ArrayList<>();
 
+		// Prüfe, ob Philosophie bereits im Abiturbereich markiert wurde.
+		final Integer anzahlPL = anzahlBelegungen.get(GostFachbereich.PHILOSOPHIE);
+		final boolean hatAbiPL = (anzahlPL != null) && (anzahlPL > 0);
 		// Prüfe, ob Religion bereits im Abiturbereich markiert wurde.
 		final Integer anzahlRE = anzahlBelegungen.get(GostFachbereich.RELIGION);
 		final boolean hatAbiRE = (anzahlRE != null) && (anzahlRE > 0);
@@ -1041,9 +1044,6 @@ public final class GostAbiturMarkierungsalgorithmus {
 			ergebnis.log.add(logIndent + "  Es wurde bereits im Abiturbereich bereits ein Religionsfach markiert.");
 			hatReBelegungErfuellt = true;
 		} else {
-			// Prüfe, ob Philosophie bereits im Abiturbereich markiert wurde.
-			final Integer anzahlPL = anzahlBelegungen.get(GostFachbereich.PHILOSOPHIE);
-			final boolean hatAbiPL = (anzahlPL != null) && (anzahlPL > 0);
 			if (hatAbiPL)
 				ergebnis.log
 						.add(logIndent + "  Philosophie wurde im Abiturbereich gewählt und kann daher nicht als Ersatz für ein Religionsfach genutzt werden.");
@@ -1070,7 +1070,8 @@ public final class GostAbiturMarkierungsalgorithmus {
 		// Es wurde bereits eine Gesellschaftswissenschaft im Abitur markiert
 		if (hatAbiGesellschaftswissenschaft) {
 			final @NotNull GostAbiturMarkierungsalgorithmus newState = new GostAbiturMarkierungsalgorithmus(this);
-			if (!hatReBelegungErfuellt)
+			// Wenn bereits PL Abiturfach ist, dann kann die zweite Gesellschaftswissenschaft als Religionsersatz dienen
+			if ((!hatReBelegungErfuellt) && (!hatAbiPL))
 				newState.markiereReligionOderErsatzAusGesellschaftswissenschaften();
 			newStates.addAll(newState.markiereProjektkurs());
 			return newStates;
@@ -1129,20 +1130,14 @@ public final class GostAbiturMarkierungsalgorithmus {
 		final GostFach[] resFach = new GostFach[2];
 		final GostHalbjahr[] resHalbjahre = new GostHalbjahr[2];
 		final int[] resNotenpunkte = new int[2];
-		int anzahlVorhandeneMarkierungen = 0;
 
 		for (final @NotNull AbiturFachbelegung belegung : belegungen) {
-			if (belegung.abiturFach != null)
-				continue;
 			final GostFach fach = getFach(belegung);
 			if (fach == null)
 				continue;
 			for (final @NotNull GostHalbjahr hj : GostHalbjahr.getQualifikationsphase()) {
-				final boolean hatMarkierung = (markiert.getOrNull(belegung.fachID, hj.id) != null);
-				if (hatMarkierung) {
-					anzahlVorhandeneMarkierungen++;
+				if (markiert.getOrNull(belegung.fachID, hj.id) != null)
 					continue;
-				}
 				if (!manager.pruefeBelegung(belegung, hj))
 					continue;
 				final int np = getNotenpunkte(belegung, hj);
@@ -1163,25 +1158,6 @@ public final class GostAbiturMarkierungsalgorithmus {
 				}
 			}
 		}
-		// Wenn schon zwei Markierungen vorhanden sind, dann muss hier nichts mehr markiert werden ...
-		if (anzahlVorhandeneMarkierungen >= 2) {
-			ergebnis.log.add(logIndent + "  Es wurden bereits zwei Kurse markiert, die als Religionsersatz genutzt werden können.");
-			return true;
-		}
-		// Wenn schon eine Markierung vorhanden ist, dann muss nur ein weiterer Kurse markiert werden (dieser Fall sollte nicht vorkommen) ...
-		if (anzahlVorhandeneMarkierungen == 1) {
-			ergebnis.log.add(logIndent + "  Es wurden bereits ein Kurs markiert, der als Religionsersatz genutzt werden kann.");
-			if ((resBelegung[0] == null) || (resHalbjahre[0] == null) || (resFach[0] == null)) {
-				ergebnis.log.add(logIndent + "  Fehler: Konnte keine Bewertung für ein weiteres Halbjahr bestimmen.");
-				return false;
-			}
-			// Erzeuge einen neuen State, bei welchem die beiden besten Halbjahresmarkierungen markiert sind
-			ergebnis.log.add(logIndent + "  Markiere den beiden Kurs in "
-					+ resHalbjahre[0].kuerzel + " (" + resNotenpunkte[0] + " Punkte) für " + resFach[0].kuerzelAnzeige + "...");
-
-			return markiereHalbjahresbelegung(resBelegung[0], resHalbjahre[0]);
-		}
-		// Es müssen noch zwei Kurse markiert werden...
 		if ((resBelegung[0] == null) || (resBelegung[1] == null) || (resHalbjahre[0] == null) || (resHalbjahre[1] == null)
 				|| (resFach[0] == null) || (resFach[1] == null)) {
 			ergebnis.log.add(logIndent + "  Fehler: Konnte keine Bewertung für zwei Halbjahre bestimmen.");

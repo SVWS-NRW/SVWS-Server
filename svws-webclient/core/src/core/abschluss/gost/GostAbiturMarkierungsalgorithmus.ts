@@ -941,6 +941,8 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 	private markiereReligionOderPhilosophieUndEineGesellschaftswissenschaft() : List<GostAbiturMarkierungsalgorithmus> {
 		this.ergebnis.log.add(this.logIndent + "Markierung zwei Religions- oder Philosophiekurse (oder ggf. einer Gesellschaftswissenschaft als Ersatz):");
 		const newStates : List<GostAbiturMarkierungsalgorithmus> = new ArrayList<GostAbiturMarkierungsalgorithmus>();
+		const anzahlPL : number | null = this.anzahlBelegungen.get(GostFachbereich.PHILOSOPHIE);
+		const hatAbiPL : boolean = (anzahlPL !== null) && (anzahlPL > 0);
 		const anzahlRE : number | null = this.anzahlBelegungen.get(GostFachbereich.RELIGION);
 		const hatAbiRE : boolean = (anzahlRE !== null) && (anzahlRE > 0);
 		let hatReBelegungErfuellt : boolean = false;
@@ -948,8 +950,6 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 			this.ergebnis.log.add(this.logIndent + "  Es wurde bereits im Abiturbereich bereits ein Religionsfach markiert.");
 			hatReBelegungErfuellt = true;
 		} else {
-			const anzahlPL : number | null = this.anzahlBelegungen.get(GostFachbereich.PHILOSOPHIE);
-			const hatAbiPL : boolean = (anzahlPL !== null) && (anzahlPL > 0);
 			if (hatAbiPL)
 				this.ergebnis.log.add(this.logIndent + "  Philosophie wurde im Abiturbereich gewählt und kann daher nicht als Ersatz für ein Religionsfach genutzt werden.");
 			if (!hatAbiPL) {
@@ -969,7 +969,7 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 		}
 		if (this.hatAbiGesellschaftswissenschaft) {
 			const newState : GostAbiturMarkierungsalgorithmus = new GostAbiturMarkierungsalgorithmus(this);
-			if (!hatReBelegungErfuellt)
+			if ((!hatReBelegungErfuellt) && (!hatAbiPL))
 				newState.markiereReligionOderErsatzAusGesellschaftswissenschaften();
 			newStates.addAll(newState.markiereProjektkurs());
 			return newStates;
@@ -1018,19 +1018,13 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 		const resFach : Array<GostFach | null> | null = Array(2).fill(null);
 		const resHalbjahre : Array<GostHalbjahr | null> | null = Array(2).fill(null);
 		const resNotenpunkte : Array<number> | null = Array(2).fill(0);
-		let anzahlVorhandeneMarkierungen : number = 0;
 		for (const belegung of belegungen) {
-			if (belegung.abiturFach !== null)
-				continue;
 			const fach : GostFach | null = this.getFach(belegung);
 			if (fach === null)
 				continue;
 			for (const hj of GostHalbjahr.getQualifikationsphase()) {
-				const hatMarkierung : boolean = (this.markiert.getOrNull(belegung.fachID, hj.id) !== null);
-				if (hatMarkierung) {
-					anzahlVorhandeneMarkierungen++;
+				if (this.markiert.getOrNull(belegung.fachID, hj.id) !== null)
 					continue;
-				}
 				if (!this.manager.pruefeBelegung(belegung, hj))
 					continue;
 				const np : number = this.getNotenpunkte(belegung, hj);
@@ -1051,19 +1045,6 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 						resNotenpunkte[1] = np;
 					}
 			}
-		}
-		if (anzahlVorhandeneMarkierungen >= 2) {
-			this.ergebnis.log.add(this.logIndent + "  Es wurden bereits zwei Kurse markiert, die als Religionsersatz genutzt werden können.");
-			return true;
-		}
-		if (anzahlVorhandeneMarkierungen === 1) {
-			this.ergebnis.log.add(this.logIndent + "  Es wurden bereits ein Kurs markiert, der als Religionsersatz genutzt werden kann.");
-			if ((resBelegung[0] === null) || (resHalbjahre[0] === null) || (resFach[0] === null)) {
-				this.ergebnis.log.add(this.logIndent + "  Fehler: Konnte keine Bewertung für ein weiteres Halbjahr bestimmen.");
-				return false;
-			}
-			this.ergebnis.log.add(this.logIndent + "  Markiere den beiden Kurs in " + resHalbjahre[0].kuerzel + " (" + resNotenpunkte[0] + " Punkte) für " + resFach[0].kuerzelAnzeige + "...");
-			return this.markiereHalbjahresbelegung(resBelegung[0], resHalbjahre[0]);
 		}
 		if ((resBelegung[0] === null) || (resBelegung[1] === null) || (resHalbjahre[0] === null) || (resHalbjahre[1] === null) || (resFach[0] === null) || (resFach[1] === null)) {
 			this.ergebnis.log.add(this.logIndent + "  Fehler: Konnte keine Bewertung für zwei Halbjahre bestimmen.");
