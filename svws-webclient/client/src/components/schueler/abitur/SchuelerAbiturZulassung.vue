@@ -76,7 +76,7 @@
 		try {
 			const ergebnis = props.managerLaufbahnplanung().getErgebnisMarkierungsalgorithmus();
 			const json = GostAbiturMarkierungsalgorithmusErgebnis.transpilerToJSON(ergebnis);
-			await navigator.clipboard.writeText(json);
+			await navigator.clipboard.writeText(JSON.stringify(JSON.parse(json), null, 2));
 		} catch(e) {
 			// do nothing
 		}

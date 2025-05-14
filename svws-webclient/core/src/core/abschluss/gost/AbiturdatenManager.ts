@@ -2354,12 +2354,12 @@ export class AbiturdatenManager extends JavaObject {
 				this.abidaten.block1AnzahlKurse++;
 				if (istLK) {
 					this.abidaten.block1PunktSummeLK += notenpunkte;
-					if (notenpunkte < 5)
+					if (nke.notenpunkte < 5)
 						this.abidaten.block1DefiziteLK++;
 				} else {
 					this.abidaten.block1PunktSummeGK += notenpunkte;
 				}
-				if (notenpunkte < 5)
+				if (nke.notenpunkte < 5)
 					this.abidaten.block1DefiziteGesamt++;
 			}
 			fachbelegung.block1NotenpunkteDurchschnitt = (summeKurseFach === 0.0) ? null : (punktSummeEinfach / summeKurseFach);

@@ -2534,12 +2534,12 @@ public class AbiturdatenManager {
 				abidaten.block1AnzahlKurse++;
 				if (istLK) {
 					abidaten.block1PunktSummeLK += notenpunkte;
-					if (notenpunkte < 5)
+					if (nke.notenpunkte < 5)
 						abidaten.block1DefiziteLK++;
 				} else {
 					abidaten.block1PunktSummeGK += notenpunkte;
 				}
-				if (notenpunkte < 5)
+				if (nke.notenpunkte < 5)
 					abidaten.block1DefiziteGesamt++;
 			}
 			fachbelegung.block1NotenpunkteDurchschnitt = (summeKurseFach == 0.0) ? null : (punktSummeEinfach / summeKurseFach);
