@@ -5,6 +5,7 @@ import java.util.List;
 
 import de.svws_nrw.asd.data.schueler.Schueler;
 import de.svws_nrw.transpiler.TranspilerDTO;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -55,9 +56,11 @@ public class KursDaten {
 	public boolean istSichtbar;
 
 	/** Die Schüler des Kurses. */
+	@ArraySchema(schema = @Schema(implementation = Schueler.class))
 	public @NotNull List<Schueler> schueler = new ArrayList<>();
 
 	/** Die Nummern der Kurs-Schienen, in welchen sich der Kurs befindet - sofern eine Schiene zugeordnet wurde */
+	@ArraySchema(schema = @Schema(implementation = Integer.class))
 	public @NotNull List<Integer> schienen = new ArrayList<>();
 
 
