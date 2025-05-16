@@ -127,6 +127,7 @@ export { KAOAZusatzmerkmaleOptionsartenKatalogEintrag } from './asd/data/kaoa/KA
 export { KlassenDaten } from './asd/data/klassen/KlassenDaten';
 export { KlassenartKatalogEintrag } from './asd/data/klassen/KlassenartKatalogEintrag';
 export { KursDaten } from './asd/data/kurse/KursDaten';
+export { KursLehrer } from './asd/data/kurse/KursLehrer';
 export { ZulaessigeKursartKatalogEintrag } from './asd/data/kurse/ZulaessigeKursartKatalogEintrag';
 export { LehrerAbgangsgrundKatalogEintrag } from './asd/data/lehrer/LehrerAbgangsgrundKatalogEintrag';
 export { LehrerAnrechnungsgrundKatalogEintrag } from './asd/data/lehrer/LehrerAnrechnungsgrundKatalogEintrag';
