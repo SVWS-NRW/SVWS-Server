@@ -259,7 +259,6 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 					"Eine Klasse kann nur mit einem gültigen Schuljahresabschnitt angelegt werden. Die ID %d ist ungültig.".formatted(idSchuljahresabschnitt));
 
 		dtoKlassen.ID = newId;
-		dtoKlassen.Sichtbar = true;
 		dtoKlassen.Sortierung = 0;
 		dtoKlassen.AdrMerkmal = teilstandort.AdrMerkmal;
 		final OrganisationsformKatalogEintrag orgformEintrag = AllgemeinbildendOrganisationsformen.NICHT_ZUGEORDNET.daten(schuljahresabschnitt.schuljahr);
@@ -293,7 +292,6 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 			case "idJahrgang" -> mapJahrgang(dto, value);
 			case "parallelitaet" -> mapParallelitaet(dto, value);
 			case "sortierung" -> dto.Sortierung = JSONMapper.convertToIntegerInRange(value, false, 0, Integer.MAX_VALUE);
-			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false);
 			case "teilstandort" -> mapTeilstandort(dto, value);
 			case "beschreibung" -> dto.Bezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_Klassen.col_Bezeichnung.datenlaenge());
 			case "idVorgaengerklasse" -> mapVorgaengerKlasse(dto, value);
@@ -853,7 +851,6 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 		klassenDaten.idJahrgang = dto.Jahrgang_ID;
 		klassenDaten.parallelitaet = ((dto.ASDKlasse == null) || (dto.ASDKlasse.length() < 3)) ? null : dto.ASDKlasse.substring(2);
 		klassenDaten.sortierung = dto.Sortierung;
-		klassenDaten.istSichtbar = dto.Sichtbar;
 		klassenDaten.teilstandort = Objects.toString(dto.AdrMerkmal, "");
 		klassenDaten.beschreibung = Objects.toString(dto.Bezeichnung, "");
 

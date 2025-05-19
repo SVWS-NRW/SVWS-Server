@@ -158,7 +158,7 @@ public class LupoMDB {
 	public void exportTo() throws IOException {
 		logger.logLn("Schreibe LuPO-Daten in die Datei " + filename);
 		logger.modifyIndent(2);
-		try (Database db = new DatabaseBuilder(new File(filename))
+		try (Database db = DatabaseBuilder.newDatabase(new File(filename))
 				.withFileFormat(Database.FileFormat.V2000)
 				.putSummaryProperty("Title", DataType.TEXT, "db1")
 				.putSummaryProperty("Author", DataType.TEXT, "SVWS-Server-Team")

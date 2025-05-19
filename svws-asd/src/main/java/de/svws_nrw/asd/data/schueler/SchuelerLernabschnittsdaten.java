@@ -51,11 +51,6 @@ public class SchuelerLernabschnittsdaten {
 	@Schema(description = "das Datum der Zeugnisses bzw. der Laufbahnbescheinigung", example = "NULL")
 	public String datumZeugnis = null;
 
-	// TODO Version 1.x: Prüfen, ob der Wert beim Lernabschnitt gespeichert wird oder sich besser automatisch ermitteln lässt
-	/** Die Anzahl der Schulbesuchsjahre */
-	@Schema(description = "die Anzahl der Schulbesuchsjahre", example = "NULL")
-	public Integer anzahlSchulbesuchsjahre = null;
-
 	/** Gibt an, ob es sich um einen gewerteten Abschnitt handelt oder nicht */
 	@Schema(description = "gibt an, ob es sich um einen gewerteten Abschnitt handelt oder nicht", example = "true")
 	public boolean istGewertet = true;

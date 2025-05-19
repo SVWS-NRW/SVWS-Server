@@ -39,7 +39,6 @@ public final class DBUtilsSchuelerLernabschnittsdaten {
 			final DTOKlassen klasse, final DTOJahrgang jahrgang) {
 		final DTOSchuelerLernabschnittsdaten lernabschnitt = new DTOSchuelerLernabschnittsdaten(idNew, idSchueler, schuljahresabschnitt.id, false, false);
 		lernabschnitt.WechselNr = 0;
-		lernabschnitt.Schulbesuchsjahre = null;
 		lernabschnitt.Hochrechnung = null;
 		lernabschnitt.SemesterWertung = true;
 		lernabschnitt.PruefOrdnung = klasse.PruefOrdnung;
@@ -188,8 +187,6 @@ public final class DBUtilsSchuelerLernabschnittsdaten {
 					schuljahresabschnitt.id);
 			final DTOJahrgang jahrgang = DBUtilsJahrgaenge.get(conn, klasse.Jahrgang_ID);
 			final DTOSchuelerLernabschnittsdaten sla = createDefault(idSLA, idSchueler, schuljahresabschnitt, klasse, jahrgang);
-			if (slaPrev.Schulbesuchsjahre != null)
-				sla.Schulbesuchsjahre = schuljahrNeu ? (slaPrev.Schulbesuchsjahre + 1) : slaPrev.Schulbesuchsjahre;
 			sla.Hochrechnung = slaPrev.Hochrechnung;
 			sla.BilingualerZweig = slaPrev.BilingualerZweig;
 			sla.Schwerbehinderung = slaPrev.Schwerbehinderung;

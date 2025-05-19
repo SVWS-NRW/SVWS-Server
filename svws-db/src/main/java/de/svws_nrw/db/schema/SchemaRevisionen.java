@@ -225,7 +225,13 @@ public enum SchemaRevisionen {
 	REV_37(37, "2025-04-11"),
 
 	/** Aktiv-Flag für Stundenpläne */
-	REV_38(38, "2025-04-24");
+	REV_38(38, "2025-04-24"),
+
+	/**
+	 * Entfernen des Flags istSichtbar bei den Klassen,
+	 * Anpassungen bei den Lehrerpersonaldaten - nicht korrekte Eintragungen bei den Anrechungsstunden, Minder- und Mehrleistungen
+	 */
+	REV_39(39, "2025-05-19");
 
 
 	/**
@@ -233,14 +239,14 @@ public enum SchemaRevisionen {
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_38;
+	public static final SchemaRevisionen maxRevision = REV_39;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_38;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_39;
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */
 	private static Map<Long, SchemaRevisionen> _mapByNumber = null;

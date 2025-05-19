@@ -44,10 +44,6 @@ public class KlassenDaten {
 	@Schema(description = "die Sortierreihenfolge des Klassenlisten-Eintrags", example = "1")
 	public int sortierung;
 
-	/** Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. */
-	@Schema(description = "gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht", example = "true")
-	public boolean istSichtbar;
-
 	/** Die Liste der IDs der Klassenleitungen der Klasse. */
 	@ArraySchema(schema = @Schema(implementation = Long.class))
 	public @NotNull List<Long> klassenLeitungen = new ArrayList<>();

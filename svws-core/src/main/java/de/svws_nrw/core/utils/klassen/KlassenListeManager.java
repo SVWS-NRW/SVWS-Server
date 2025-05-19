@@ -40,7 +40,6 @@ public final class KlassenListeManager extends AuswahlManager<Long, KlassenDaten
 	private static final @NotNull Function<KlassenDaten, Long> _klasseToId = (final @NotNull KlassenDaten k) -> k.id;
 
 	/** Zusätzliche Maps, welche zum schnellen Zugriff auf Teilmengen der Liste verwendet werden können */
-	private final @NotNull HashMap2D<Boolean, Long, KlassenDaten> _mapKlasseIstSichtbar = new HashMap2D<>();
 	private final @NotNull HashMap2D<Long, Long, KlassenDaten> _mapKlasseInJahrgang = new HashMap2D<>();
 	private final @NotNull HashMap2D<Long, Long, KlassenDaten> _mapKlasseHatSchueler = new HashMap2D<>();
 	private final @NotNull HashMap2D<Long, Long, KlassenDaten> _mapKlassenlehrerInKlasse = new HashMap2D<>();
@@ -88,9 +87,6 @@ public final class KlassenListeManager extends AuswahlManager<Long, KlassenDaten
 	private static final @NotNull Comparator<SchuelerStatus> _comparatorSchuelerStatus =
 			(final @NotNull SchuelerStatus a, final @NotNull SchuelerStatus b) -> a.ordinal() - b.ordinal();
 
-	/** Das Filter-Attribut auf nur sichtbare Klassen */
-	private boolean _filterNurSichtbar = false;
-
 
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
@@ -131,7 +127,6 @@ public final class KlassenListeManager extends AuswahlManager<Long, KlassenDaten
 
 	private void initKlassen() {
 		for (final @NotNull KlassenDaten k : this.liste.list()) {
-			this._mapKlasseIstSichtbar.put(k.istSichtbar, k.id, k);
 			if (k.idJahrgang != null) {
 				this._mapKlasseInJahrgang.put(k.idJahrgang, k.id, k);
 				final JahrgangsDaten j = this.jahrgaenge.getOrException(k.idJahrgang);
@@ -185,27 +180,6 @@ public final class KlassenListeManager extends AuswahlManager<Long, KlassenDaten
 
 
 	/**
-	 * Gibt die aktuelle Filtereinstellung auf nur sichtbare Klassen zurück.
-	 *
-	 * @return true, wenn nur nichtbare Klassen angezeigt werden und ansonsten false
-	 */
-	public boolean filterNurSichtbar() {
-		return this._filterNurSichtbar;
-	}
-
-
-	/**
-	 * Setzt die Filtereinstellung auf nur sichtbare Klassen.
-	 *
-	 * @param value   true, wenn der Filter aktiviert werden soll und ansonsten false
-	 */
-	public void setFilterNurSichtbar(final boolean value) {
-		this._filterNurSichtbar = value;
-		this._eventHandlerFilterChanged.run();
-	}
-
-
-	/**
 	 * Vergleicht zwei Klassenlisteneinträge anhand der spezifizierten Ordnung.
 	 *
 	 * @param a   der erste Eintrag
@@ -243,8 +217,6 @@ public final class KlassenListeManager extends AuswahlManager<Long, KlassenDaten
 	@Override
 	protected boolean checkFilter(final @NotNull KlassenDaten eintrag) {
 		this._filteredSchuelerListe = null;
-		if (this._filterNurSichtbar && !eintrag.istSichtbar)
-			return false;
 		if (this.jahrgaenge.auswahlExists() && ((eintrag.idJahrgang == null) || (!this.jahrgaenge.auswahlHasKey(eintrag.idJahrgang))))
 			return false;
 		if (this.lehrer.auswahlExists()) {

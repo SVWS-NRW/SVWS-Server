@@ -33,10 +33,6 @@ public class StundenplanKlasse {
 	@Schema(description = "die Sortierreihenfolge des Klassenlisten-Eintrags", example = "1")
 	public int sortierung = 32000;
 
-	/** Gibt an, ob die Klasse sichtbar ist oder nicht. */
-	@Schema(description = "Gibt an, ob die Klasse sichtbar ist oder nicht", example = "true")
-	public boolean istSichtbar = true;
-
 	/** Die Liste der {@link StundenplanJahrgang}-IDs denen die Klasse zugeordnet ist. */
 	@Schema(description = "die Liste der IDs der Jahrgänge, denen die Klasse zugeordnet ist")
 	public @NotNull List<Long> jahrgaenge = new ArrayList<>();

@@ -295,18 +295,4 @@ class KlassenListeManagerTest {
 		assertThrows(DeveloperNotificationException.class, () -> klassenListeManager.compareAuswahl(klasse1, klasse2));
 	}
 
-	@Test
-	@DisplayName("Filter | Only visible classes should pass the filter when filter is set")
-	void checkFilterNurSichtbar() {
-		klassenListeManager = new KlassenListeManager(1L, 1L, schuljahresabschnitte, schulform, klassen, schueler, jahrgaenge, lehrer);
-
-		klassenListeManager.setFilterNurSichtbar(true);
-		final KlassenDaten visibleClass = new KlassenDaten();
-		visibleClass.istSichtbar = true;
-		final KlassenDaten invisibleClass = new KlassenDaten();
-		invisibleClass.istSichtbar = false;
-
-		assertTrue(klassenListeManager.checkFilter(visibleClass));
-		assertFalse(klassenListeManager.checkFilter(invisibleClass));
-	}
 }

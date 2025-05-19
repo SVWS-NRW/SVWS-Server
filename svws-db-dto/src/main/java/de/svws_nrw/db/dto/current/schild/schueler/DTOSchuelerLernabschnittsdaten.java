@@ -479,7 +479,7 @@ public final class DTOSchuelerLernabschnittsdaten {
 	@JsonProperty
 	public Integer WechselNr;
 
-	/** Schulbesuchsjahre für den Lernabschnitt */
+	/** DEPRECATED: Schulbesuchsjahre für den Lernabschnitt */
 	@Column(name = "Schulbesuchsjahre")
 	@JsonProperty
 	public Integer Schulbesuchsjahre;

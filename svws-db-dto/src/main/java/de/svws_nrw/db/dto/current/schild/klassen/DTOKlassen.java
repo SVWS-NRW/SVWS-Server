@@ -2,7 +2,6 @@ package de.svws_nrw.db.dto.current.schild.klassen;
 
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
-import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
 
 
 import jakarta.persistence.Cacheable;
@@ -18,8 +17,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultMinusConverterSerializer;
 import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultMinusConverterDeserializer;
-import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterSerializer;
-import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Klassen.
@@ -29,7 +26,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Klassen")
-@JsonPropertyOrder({"ID", "Schuljahresabschnitts_ID", "Bezeichnung", "ASDKlasse", "Klasse", "Jahrgang_ID", "FKlasse", "VKlasse", "OrgFormKrz", "ASDSchulformNr", "Fachklasse_ID", "PruefOrdnung", "Sichtbar", "Sortierung", "Klassenart", "SommerSem", "NotenGesperrt", "AdrMerkmal", "Ankreuzzeugnisse"})
+@JsonPropertyOrder({"ID", "Schuljahresabschnitts_ID", "Bezeichnung", "ASDKlasse", "Klasse", "Jahrgang_ID", "FKlasse", "VKlasse", "OrgFormKrz", "ASDSchulformNr", "Fachklasse_ID", "PruefOrdnung", "Sortierung", "Klassenart", "SommerSem", "NotenGesperrt", "AdrMerkmal", "Ankreuzzeugnisse"})
 public final class DTOKlassen {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -115,12 +112,6 @@ public final class DTOKlassen {
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PruefOrdnung */
 	public static final String QUERY_LIST_BY_PRUEFORDNUNG = "SELECT e FROM DTOKlassen e WHERE e.PruefOrdnung IN ?1";
-
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Sichtbar */
-	public static final String QUERY_BY_SICHTBAR = "SELECT e FROM DTOKlassen e WHERE e.Sichtbar = ?1";
-
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sichtbar */
-	public static final String QUERY_LIST_BY_SICHTBAR = "SELECT e FROM DTOKlassen e WHERE e.Sichtbar IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Sortierung */
 	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM DTOKlassen e WHERE e.Sortierung = ?1";
@@ -219,14 +210,6 @@ public final class DTOKlassen {
 	@JsonProperty
 	public String PruefOrdnung;
 
-	/** Gibt an ob eine Klasse sichtbar ist */
-	@Column(name = "Sichtbar")
-	@JsonProperty
-	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
-	public Boolean Sichtbar;
-
 	/** Sortierungnummer der Klasse */
 	@Column(name = "Sortierung")
 	@JsonProperty
@@ -317,7 +300,7 @@ public final class DTOKlassen {
 	 */
 	@Override
 	public String toString() {
-		return "DTOKlassen(ID=" + this.ID + ", Schuljahresabschnitts_ID=" + this.Schuljahresabschnitts_ID + ", Bezeichnung=" + this.Bezeichnung + ", ASDKlasse=" + this.ASDKlasse + ", Klasse=" + this.Klasse + ", Jahrgang_ID=" + this.Jahrgang_ID + ", FKlasse=" + this.FKlasse + ", VKlasse=" + this.VKlasse + ", OrgFormKrz=" + this.OrgFormKrz + ", ASDSchulformNr=" + this.ASDSchulformNr + ", Fachklasse_ID=" + this.Fachklasse_ID + ", PruefOrdnung=" + this.PruefOrdnung + ", Sichtbar=" + this.Sichtbar + ", Sortierung=" + this.Sortierung + ", Klassenart=" + this.Klassenart + ", SommerSem=" + this.SommerSem + ", NotenGesperrt=" + this.NotenGesperrt + ", AdrMerkmal=" + this.AdrMerkmal + ", Ankreuzzeugnisse=" + this.Ankreuzzeugnisse + ")";
+		return "DTOKlassen(ID=" + this.ID + ", Schuljahresabschnitts_ID=" + this.Schuljahresabschnitts_ID + ", Bezeichnung=" + this.Bezeichnung + ", ASDKlasse=" + this.ASDKlasse + ", Klasse=" + this.Klasse + ", Jahrgang_ID=" + this.Jahrgang_ID + ", FKlasse=" + this.FKlasse + ", VKlasse=" + this.VKlasse + ", OrgFormKrz=" + this.OrgFormKrz + ", ASDSchulformNr=" + this.ASDSchulformNr + ", Fachklasse_ID=" + this.Fachklasse_ID + ", PruefOrdnung=" + this.PruefOrdnung + ", Sortierung=" + this.Sortierung + ", Klassenart=" + this.Klassenart + ", SommerSem=" + this.SommerSem + ", NotenGesperrt=" + this.NotenGesperrt + ", AdrMerkmal=" + this.AdrMerkmal + ", Ankreuzzeugnisse=" + this.Ankreuzzeugnisse + ")";
 	}
 
 }

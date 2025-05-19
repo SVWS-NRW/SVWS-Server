@@ -67,7 +67,6 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 				klassenDaten.idSchulgliederung,
 				klassenDaten.idVorgaengerklasse,
 				klassenDaten.idWeiterbildungOrganisationsform,
-				klassenDaten.istSichtbar,
 				null,
 				new ArrayList<>(),
 				ersetzeNullBlankTrim(klassenDaten.kuerzel),

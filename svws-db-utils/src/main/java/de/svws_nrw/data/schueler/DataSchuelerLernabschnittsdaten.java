@@ -137,7 +137,6 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 		daten.datumEnde = dto.DatumBis;
 		daten.datumKonferenz = dto.Konferenzdatum;
 		daten.datumZeugnis = dto.ZeugnisDatum;
-		daten.anzahlSchulbesuchsjahre = dto.Schulbesuchsjahre;
 		daten.istGewertet = (dto.SemesterWertung == null) || dto.SemesterWertung;
 		daten.istWiederholung = (dto.Wiederholung != null) && dto.Wiederholung;
 		daten.pruefungsOrdnung = dto.PruefOrdnung;
@@ -259,7 +258,6 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 				// TODO Datum validieren
 				dto.ZeugnisDatum = strDatum;
 			}
-			case "anzahlSchulbesuchsjahre" -> dto.Schulbesuchsjahre = JSONMapper.convertToIntegerInRange(value, true, 0, 100);
 			case "istGewertet" -> dto.SemesterWertung = JSONMapper.convertToBoolean(value, false);
 			case "istWiederholung" -> dto.Wiederholung = JSONMapper.convertToBoolean(value, false);
 			case "pruefungsOrdnung" -> {
