@@ -20,6 +20,7 @@
 					<svws-ui-checkbox type="toggle" :model-value="filterFehler()" @update:model-value="setFilterFehler">Nur Fehler</svws-ui-checkbox>
 					<svws-ui-checkbox type="toggle" :model-value="filterExterne()" @update:model-value="setFilterExterne">Externe ausblenden</svws-ui-checkbox>
 					<svws-ui-checkbox type="toggle" :model-value="filterNurMitFachwahlen()" @update:model-value="setFilterNurMitFachwahlen">Nur mit Fachwahlen</svws-ui-checkbox>
+					<svws-ui-checkbox type="toggle" :model-value="filterNeuaufnahmen()" @update:model-value="setFilterNeuaufnahmen">Neuaufnahmen</svws-ui-checkbox>
 				</div>
 				<svws-ui-radio-group class="radio--row">
 					<svws-ui-radio-option v-model="art" value="ef1" name="ef1" label="EF.1" />
@@ -47,7 +48,7 @@
 				<template #cell(name)="{rowData}">
 					<span class="line-clamp-1 leading-tight -my-0.5 break-all">{{ rowData.schueler.nachname }}, {{ rowData.schueler.vorname }}</span>
 					<span v-if="rowData.schueler.status !== 2" class="svws-ui-badge text-sm font-bold mt-0 ml-1 bg-ui-25">
-						{{ SchuelerStatus.data().getWertByKuerzel("" + rowData.schueler.status)?.daten(schuljahr)?.text ?? '—' }}
+						{{ SchuelerStatus.data().getEintragByID(rowData.schueler.status)?.text ?? '—' }}
 					</span>
 				</template>
 				<template #cell(beratung)="{rowData}">
@@ -133,20 +134,22 @@
 
 	const showModalImport = ref<boolean>(false);
 
-	const hasFilter = computed<boolean>(() => props.filterFehler() || props.filterExterne() || props.filterNurMitFachwahlen());
-
 	const filtered = computed<List<GostBelegpruefungsErgebnisse>>(() => {
-		if (!hasFilter.value)
+		if (!props.filterFehler() && !props.filterExterne() && !props.filterNurMitFachwahlen() && !props.filterNeuaufnahmen())
 			return props.listBelegpruefungsErgebnisse();
 		const a: List<GostBelegpruefungsErgebnisse> = new ArrayList();
 		for (const e of props.listBelegpruefungsErgebnisse()) {
+			let erlaubt = true;
 			if (props.filterFehler() && e.ergebnis.erfolgreich)
-				continue;
-			if ((props.filterExterne()) && (SchuelerStatus.data().getWertByKuerzel("" + e.schueler.status) === SchuelerStatus.EXTERN))
-				continue;
-			if ((props.filterNurMitFachwahlen() && !e.hatFachwahlen))
-				continue;
-			a.add(e);
+				erlaubt = false;
+			if ((props.filterExterne()) && (SchuelerStatus.data().getWertByID(e.schueler.status) === SchuelerStatus.EXTERN))
+				erlaubt = false;
+			if (props.filterNurMitFachwahlen() && !e.hatFachwahlen)
+				erlaubt = false;
+			if (props.filterNeuaufnahmen() && (SchuelerStatus.data().getWertByID(e.schueler.status) !== SchuelerStatus.NEUAUFNAHME))
+				erlaubt = false;
+			if(erlaubt)
+				a.add(e);
 		}
 		return a;
 	})
