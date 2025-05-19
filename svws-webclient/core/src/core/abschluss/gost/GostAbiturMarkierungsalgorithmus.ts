@@ -521,6 +521,7 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 		markierung.idHalbjahr = hj.id;
 		markierung.markiert = true;
 		this.markiert.put(markierung.idFach, markierung.idHalbjahr, markierung);
+		this.ergebnis.log.add(this.logIndent + "    Markiere " + hj.kuerzel + " im Fach " + fach.kuerzelAnzeige + " (" + nke.notenpunkte + ").");
 		return true;
 	}
 
@@ -652,7 +653,6 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 				if (istMusik) {
 					this.restErlaubtMusik = 2;
 				}
-			this.restErlaubtMusik = 1;
 			if (!this.markiereBelegungDurchgaengig(belegung))
 				return false;
 		}

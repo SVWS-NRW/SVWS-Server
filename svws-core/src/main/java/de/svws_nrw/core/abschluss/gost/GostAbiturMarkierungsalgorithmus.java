@@ -521,6 +521,7 @@ public final class GostAbiturMarkierungsalgorithmus {
 		markierung.idHalbjahr = hj.id;
 		markierung.markiert = true;
 		markiert.put(markierung.idFach, markierung.idHalbjahr, markierung);
+		ergebnis.log.add(logIndent + "    Markiere " + hj.kuerzel + " im Fach " + fach.kuerzelAnzeige + " (" + nke.notenpunkte + ").");
 		return true;
 	}
 
@@ -676,7 +677,6 @@ public final class GostAbiturMarkierungsalgorithmus {
 				this.restErlaubtMusik = 2;
 			}
 
-			this.restErlaubtMusik = 1;
 			// Markiere alle vier Halbjahresbelegungen
 			if (!markiereBelegungDurchgaengig(belegung))
 				return false;
