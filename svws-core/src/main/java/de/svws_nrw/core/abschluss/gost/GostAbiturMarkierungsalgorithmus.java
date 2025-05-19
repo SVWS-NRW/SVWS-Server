@@ -154,20 +154,20 @@ public final class GostAbiturMarkierungsalgorithmus {
 	private GostAbiturMarkierungsalgorithmus(final @NotNull AbiturdatenManager manager, final @NotNull List<GostBelegpruefung> belegpruefungen) {
 		this.manager = manager;
 		// Bestimme die zuvor durchgeführten Belegprüfungen zu den Projektkursen, dem Schwerpunkt und den Abiturfächern
-		Projektkurse belegpruefungProjektkurse = null;
-		AbiFaecher belegpruefungAbiturfaecher = null;
+		Projektkurse tmpBelegpruefungProjektkurse = null;
+		AbiFaecher tmpBelegpruefungAbiturfaecher = null;
 		for (final @NotNull GostBelegpruefung pruefung : belegpruefungen) {
 			if (pruefung instanceof Projektkurse)
-				belegpruefungProjektkurse = (Projektkurse) pruefung;
+				tmpBelegpruefungProjektkurse = (Projektkurse) pruefung;
 			if (pruefung instanceof AbiFaecher)
-				belegpruefungAbiturfaecher = (AbiFaecher) pruefung;
+				tmpBelegpruefungAbiturfaecher = (AbiFaecher) pruefung;
 		}
-		if (belegpruefungProjektkurse == null)
+		if (tmpBelegpruefungProjektkurse == null)
 			throw new DeveloperNotificationException("Die Projektkursprüfung muss als Belegprüfung vorhanden sein.");
-		this.belegpruefungProjektkurse = belegpruefungProjektkurse;
-		if (belegpruefungAbiturfaecher == null)
+		this.belegpruefungProjektkurse = tmpBelegpruefungProjektkurse;
+		if (tmpBelegpruefungAbiturfaecher == null)
 			throw new DeveloperNotificationException("Die Abiturfächerprüfung muss als Belegprüfung vorhanden sein.");
-		this.belegpruefungAbiturfaecher = belegpruefungAbiturfaecher;
+		this.belegpruefungAbiturfaecher = tmpBelegpruefungAbiturfaecher;
 	}
 
 
@@ -1066,7 +1066,7 @@ public final class GostAbiturMarkierungsalgorithmus {
 	 * Markiere die beiden besten Religions- oder Philosophiekurse, sofern
 	 * diese nicht bereits im Abiturbereich markiert wurden.
 	 * Markiere außerdem eine Gesellschaftswissenschaft, sofern diese nicht bereits im Abitur markiert wurde
-	 * TODO: Führe die Markierungen aus Ebene 7 aus
+	 * Führe die Markierungen aus Ebene 7 aus
 	 *
 	 * @return die resultierenden möglichen Zustände
 	 */
@@ -1080,34 +1080,43 @@ public final class GostAbiturMarkierungsalgorithmus {
 		// Prüfe, ob Religion bereits im Abiturbereich markiert wurde.
 		final Integer anzahlRE = anzahlBelegungen.get(GostFachbereich.RELIGION);
 		final boolean hatAbiRE = (anzahlRE != null) && (anzahlRE > 0);
-		boolean hatReBelegungErfuellt = false;
+		final boolean hatReBelegungErfuellt = false;
 		if (hatAbiRE) {
 			ergebnis.log.add(logIndent + "  Es wurde bereits im Abiturbereich bereits ein Religionsfach markiert.");
-			hatReBelegungErfuellt = true;
-		} else {
-			if (hatAbiPL)
-				ergebnis.log
-						.add(logIndent + "  Philosophie wurde im Abiturbereich gewählt und kann daher nicht als Ersatz für ein Religionsfach genutzt werden.");
+			newStates.addAll(this.markiereGesellschaftswissenschaftUndGgfErsatzfachFuerReligion(hatAbiPL, true));
+			return newStates;
+		}
+		if (hatAbiPL)
+			ergebnis.log.add(logIndent + "  Philosophie wurde im Abiturbereich gewählt und kann daher nicht als Ersatz für ein Religionsfach genutzt werden.");
 
-			// Wenn weder ein Religionsfach noch Philosophie im Abitur belegt wurde, dann können die beiden besten Halbjahrebelegungen gewählt werden
-			if (!hatAbiPL) { // && !hatAbiRE
-				if (!this.markiereZweiBeste(manager.getRelevanteFachbelegungen(GostFachbereich.RELIGION, GostFachbereich.PHILOSOPHIE)))
-					return newStates;
-				hatReBelegungErfuellt = true;
-			}
-
-			// Wenn Philosophie wurde als Abiturfach gewählt wurde, dann kann es daher nicht als Ersatzfach gewählt werden...
-			if (hatAbiPL) {
-				final @NotNull List<AbiturFachbelegung> belegungen = manager.getRelevanteFachbelegungen(GostFachbereich.RELIGION);
-				final boolean hatReligionsbelegungen = manager.pruefeBelegungExistiert(belegungen, GostHalbjahr.Q11, GostHalbjahr.Q12);
-				if (hatReligionsbelegungen) {
-					if (!this.markiereZweiBeste(belegungen))
-						return newStates;
-					hatReBelegungErfuellt = true;
-				}
-			}
+		// Wenn weder ein Religionsfach noch Philosophie im Abitur belegt wurde, dann können die beiden besten Halbjahrebelegungen gewählt werden
+		if (!hatAbiPL) { // && !hatAbiRE
+			if (!this.markiereZweiBeste(manager.getRelevanteFachbelegungen(GostFachbereich.RELIGION, GostFachbereich.PHILOSOPHIE)))
+				return newStates;
+			newStates.addAll(this.markiereGesellschaftswissenschaftUndGgfErsatzfachFuerReligion(hatAbiPL, true));
+			return newStates;
 		}
 
+		// Wenn Philosophie als Abiturfach gewählt wurde, dann kann es daher nicht als Ersatzfach gewählt werden...
+		final @NotNull List<AbiturFachbelegung> belegungen = manager.getRelevanteFachbelegungen(GostFachbereich.RELIGION);
+		final boolean hatReligionsbelegungen = manager.pruefeBelegungExistiert(belegungen, GostHalbjahr.Q11, GostHalbjahr.Q12);
+		if (hatReligionsbelegungen) {
+			// Wenn Religion existiert, so kann es entweder selbst markiert werden ...
+			final @NotNull GostAbiturMarkierungsalgorithmus newState = new GostAbiturMarkierungsalgorithmus(this);
+			if (!newState.markiereZweiBeste(belegungen))
+				return newStates;
+			newStates.addAll(this.markiereGesellschaftswissenschaftUndGgfErsatzfachFuerReligion(hatAbiPL, true));
+		}
+		// ... oder ggf. auch ein Ersatzfach
+		final @NotNull GostAbiturMarkierungsalgorithmus newState = new GostAbiturMarkierungsalgorithmus(this);
+		newStates.addAll(newState.markiereGesellschaftswissenschaftUndGgfErsatzfachFuerReligion(hatAbiPL, hatReBelegungErfuellt));
+		return newStates;
+	}
+
+
+	private @NotNull List<GostAbiturMarkierungsalgorithmus> markiereGesellschaftswissenschaftUndGgfErsatzfachFuerReligion(final boolean hatAbiPL,
+			final boolean hatReBelegungErfuellt) {
+		final @NotNull List<GostAbiturMarkierungsalgorithmus> newStates = new ArrayList<>();
 		// Es wurde bereits eine Gesellschaftswissenschaft im Abitur markiert
 		if (anzahlAbiGesellschaftswissenschaft > 0) {
 			final @NotNull GostAbiturMarkierungsalgorithmus newState = new GostAbiturMarkierungsalgorithmus(this);
@@ -1217,7 +1226,7 @@ public final class GostAbiturMarkierungsalgorithmus {
 	 * Markierungsbaum - Ebene 7:
 	 * Berücksichtige die beiden Fälle, dass ein Projektkurs markiert werden kann oder nicht,
 	 * sofern einer belegt wurde.
-	 * TODO: Führe die Markierungen aus Ebene 8 aus
+	 * Führe die Markierungen aus Ebene 8 aus
 	 *
 	 * @return die resultierenden möglichen Zustände
 	 */
