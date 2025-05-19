@@ -214,20 +214,20 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 			const manager : AbiturdatenManager = cast_de_svws_nrw_core_abschluss_gost_AbiturdatenManager(__param0);
 			const belegpruefungen : List<GostBelegpruefung> = cast_java_util_List(__param1);
 			this.manager = manager;
-			let belegpruefungProjektkurse : Projektkurse | null = null;
-			let belegpruefungAbiturfaecher : AbiFaecher | null = null;
+			let tmpBelegpruefungProjektkurse : Projektkurse | null = null;
+			let tmpBelegpruefungAbiturfaecher : AbiFaecher | null = null;
 			for (const pruefung of belegpruefungen) {
 				if (((pruefung instanceof JavaObject) && (pruefung.isTranspiledInstanceOf('de.svws_nrw.core.abschluss.gost.belegpruefung.Projektkurse'))))
-					belegpruefungProjektkurse = cast_de_svws_nrw_core_abschluss_gost_belegpruefung_Projektkurse(pruefung);
+					tmpBelegpruefungProjektkurse = cast_de_svws_nrw_core_abschluss_gost_belegpruefung_Projektkurse(pruefung);
 				if (((pruefung instanceof JavaObject) && (pruefung.isTranspiledInstanceOf('de.svws_nrw.core.abschluss.gost.belegpruefung.AbiFaecher'))))
-					belegpruefungAbiturfaecher = cast_de_svws_nrw_core_abschluss_gost_belegpruefung_AbiFaecher(pruefung);
+					tmpBelegpruefungAbiturfaecher = cast_de_svws_nrw_core_abschluss_gost_belegpruefung_AbiFaecher(pruefung);
 			}
-			if (belegpruefungProjektkurse === null)
+			if (tmpBelegpruefungProjektkurse === null)
 				throw new DeveloperNotificationException("Die Projektkursprüfung muss als Belegprüfung vorhanden sein.")
-			this.belegpruefungProjektkurse = belegpruefungProjektkurse;
-			if (belegpruefungAbiturfaecher === null)
+			this.belegpruefungProjektkurse = tmpBelegpruefungProjektkurse;
+			if (tmpBelegpruefungAbiturfaecher === null)
 				throw new DeveloperNotificationException("Die Abiturfächerprüfung muss als Belegprüfung vorhanden sein.")
-			this.belegpruefungAbiturfaecher = belegpruefungAbiturfaecher;
+			this.belegpruefungAbiturfaecher = tmpBelegpruefungAbiturfaecher;
 		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.abschluss.gost.GostAbiturMarkierungsalgorithmus')))) && (__param1 === undefined)) {
 			const original : GostAbiturMarkierungsalgorithmus = cast_de_svws_nrw_core_abschluss_gost_GostAbiturMarkierungsalgorithmus(__param0);
 			this.ergebnis.markierungen.addAll(original.ergebnis.markierungen);
@@ -969,7 +969,7 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 	 * Markiere die beiden besten Religions- oder Philosophiekurse, sofern
 	 * diese nicht bereits im Abiturbereich markiert wurden.
 	 * Markiere außerdem eine Gesellschaftswissenschaft, sofern diese nicht bereits im Abitur markiert wurde
-	 * TODO: Führe die Markierungen aus Ebene 7 aus
+	 * Führe die Markierungen aus Ebene 7 aus
 	 *
 	 * @return die resultierenden möglichen Zustände
 	 */
@@ -980,28 +980,35 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 		const hatAbiPL : boolean = (anzahlPL !== null) && (anzahlPL > 0);
 		const anzahlRE : number | null = this.anzahlBelegungen.get(GostFachbereich.RELIGION);
 		const hatAbiRE : boolean = (anzahlRE !== null) && (anzahlRE > 0);
-		let hatReBelegungErfuellt : boolean = false;
+		const hatReBelegungErfuellt : boolean = false;
 		if (hatAbiRE) {
 			this.ergebnis.log.add(this.logIndent + "  Es wurde bereits im Abiturbereich bereits ein Religionsfach markiert.");
-			hatReBelegungErfuellt = true;
-		} else {
-			if (hatAbiPL)
-				this.ergebnis.log.add(this.logIndent + "  Philosophie wurde im Abiturbereich gewählt und kann daher nicht als Ersatz für ein Religionsfach genutzt werden.");
-			if (!hatAbiPL) {
-				if (!this.markiereZweiBeste(this.manager.getRelevanteFachbelegungen(GostFachbereich.RELIGION, GostFachbereich.PHILOSOPHIE)))
-					return newStates;
-				hatReBelegungErfuellt = true;
-			}
-			if (hatAbiPL) {
-				const belegungen : List<AbiturFachbelegung> = this.manager.getRelevanteFachbelegungen(GostFachbereich.RELIGION);
-				const hatReligionsbelegungen : boolean = this.manager.pruefeBelegungExistiert(belegungen, GostHalbjahr.Q11, GostHalbjahr.Q12);
-				if (hatReligionsbelegungen) {
-					if (!this.markiereZweiBeste(belegungen))
-						return newStates;
-					hatReBelegungErfuellt = true;
-				}
-			}
+			newStates.addAll(this.markiereGesellschaftswissenschaftUndGgfErsatzfachFuerReligion(hatAbiPL, true));
+			return newStates;
 		}
+		if (hatAbiPL)
+			this.ergebnis.log.add(this.logIndent + "  Philosophie wurde im Abiturbereich gewählt und kann daher nicht als Ersatz für ein Religionsfach genutzt werden.");
+		if (!hatAbiPL) {
+			if (!this.markiereZweiBeste(this.manager.getRelevanteFachbelegungen(GostFachbereich.RELIGION, GostFachbereich.PHILOSOPHIE)))
+				return newStates;
+			newStates.addAll(this.markiereGesellschaftswissenschaftUndGgfErsatzfachFuerReligion(hatAbiPL, true));
+			return newStates;
+		}
+		const belegungen : List<AbiturFachbelegung> = this.manager.getRelevanteFachbelegungen(GostFachbereich.RELIGION);
+		const hatReligionsbelegungen : boolean = this.manager.pruefeBelegungExistiert(belegungen, GostHalbjahr.Q11, GostHalbjahr.Q12);
+		if (hatReligionsbelegungen) {
+			const newState : GostAbiturMarkierungsalgorithmus = new GostAbiturMarkierungsalgorithmus(this);
+			if (!newState.markiereZweiBeste(belegungen))
+				return newStates;
+			newStates.addAll(this.markiereGesellschaftswissenschaftUndGgfErsatzfachFuerReligion(hatAbiPL, true));
+		}
+		const newState : GostAbiturMarkierungsalgorithmus = new GostAbiturMarkierungsalgorithmus(this);
+		newStates.addAll(newState.markiereGesellschaftswissenschaftUndGgfErsatzfachFuerReligion(hatAbiPL, hatReBelegungErfuellt));
+		return newStates;
+	}
+
+	private markiereGesellschaftswissenschaftUndGgfErsatzfachFuerReligion(hatAbiPL : boolean, hatReBelegungErfuellt : boolean) : List<GostAbiturMarkierungsalgorithmus> {
+		const newStates : List<GostAbiturMarkierungsalgorithmus> = new ArrayList<GostAbiturMarkierungsalgorithmus>();
 		if (this.anzahlAbiGesellschaftswissenschaft > 0) {
 			const newState : GostAbiturMarkierungsalgorithmus = new GostAbiturMarkierungsalgorithmus(this);
 			if ((!hatReBelegungErfuellt) && (!hatAbiPL || (this.anzahlAbiGesellschaftswissenschaft === 1)))
@@ -1093,7 +1100,7 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 	 * Markierungsbaum - Ebene 7:
 	 * Berücksichtige die beiden Fälle, dass ein Projektkurs markiert werden kann oder nicht,
 	 * sofern einer belegt wurde.
-	 * TODO: Führe die Markierungen aus Ebene 8 aus
+	 * Führe die Markierungen aus Ebene 8 aus
 	 *
 	 * @return die resultierenden möglichen Zustände
 	 */
