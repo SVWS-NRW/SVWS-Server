@@ -1,7 +1,11 @@
 .textarea-input {
 	@apply flex;
 	@apply relative;
-	@apply mt-4;
+	@apply m-[0.2em];
+
+		&:not(.textarea-input--headless) {
+			@apply mt-[0.8em];
+		}
 
 	textarea::placeholder {
 		@apply text-ui-secondary;

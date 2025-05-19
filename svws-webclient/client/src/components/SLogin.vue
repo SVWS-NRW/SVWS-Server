@@ -14,7 +14,7 @@
 				</svws-ui-button>
 			</div>
 			<Transition>
-				<svws-ui-input-wrapper v-if="inputDBSchemata.size() > 0 && !connecting" class="mt-10" center>
+				<svws-ui-input-wrapper v-if="inputDBSchemata.size() > 0 && !connecting" class="mt-1" center>
 					<svws-ui-select v-model="schema" title="Datenbank-Schema" :items="inputDBSchemata" :item-text="i => `${i.name ?? 'SCHEMANAME FEHLT'}${i.isDeactivated ? ' (Nicht verfügbar)':''}`" class="w-full" @update:model-value="schema => schema && setSchema(schema)" />
 					<svws-ui-text-input v-model.trim="username" type="text" placeholder="Benutzername" @keyup.enter="doLogin" ref="refUsername" />
 					<svws-ui-text-input v-model.trim="password" type="password" placeholder="Passwort" @keyup.enter="doLogin" />

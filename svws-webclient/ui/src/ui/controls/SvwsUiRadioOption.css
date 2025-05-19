@@ -2,10 +2,10 @@
 	@apply cursor-pointer relative;
 	@apply select-none;
 	@apply text-button;
+	@apply m-[0.2em];
 
 	&:focus-within input {
-		@apply rounded;
-		outline-color: var(--color-ring-ui-brand);
+		@apply rounded ring-2 ring-ui-brand outline-none;
 	}
 }
 

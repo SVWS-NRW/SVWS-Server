@@ -11,10 +11,14 @@
 }
 
 .input-number-component {
-	@apply flex;
+	@apply inline-flex;
 	@apply relative;
-	@apply w-full min-w-16 mt-2;
+	@apply w-[calc(100%-0.4rem)] min-w-16 m-[0.2em];
 	@apply overflow-hidden whitespace-nowrap text-base;
+
+		&:not(.input-number-component--headless) {
+			@apply mt-[0.8em];
+		}
 
 	&:focus {
 		@apply outline-hidden;
@@ -57,7 +61,7 @@
 			}
 
 			&:focus-visible {
-				@apply ring-3 ring-ui;
+				@apply ring-2 ring-ui;
 			}
 
 			&.svws-disabled {
@@ -105,7 +109,7 @@
 }
 
 .input-number-component:focus-within .input-number--control {
-	@apply ring-3 ring-ui-neutral;
+	@apply ring-2 ring-ui-neutral;
 }
 
 .input-number--filled:not(:focus-within):not(:hover) .input-number--control {

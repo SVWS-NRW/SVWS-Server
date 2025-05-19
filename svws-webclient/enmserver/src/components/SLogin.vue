@@ -14,7 +14,7 @@
 				</svws-ui-button>
 			</div>
 			<Transition>
-				<svws-ui-input-wrapper v-if="serverFound && !connecting" class="mt-10" center>
+				<svws-ui-input-wrapper v-if="serverFound && !connecting" class="mt-1" center>
 					<svws-ui-text-input v-model.trim="username" type="text" placeholder="Benutzername" @keyup.enter="doLogin" ref="refUsername" />
 					<svws-ui-text-input v-model.trim="password" type="password" placeholder="Passwort" @keyup.enter="doLogin" />
 					<svws-ui-spacing />

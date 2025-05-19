@@ -1,5 +1,5 @@
 .ui-card {
-	@apply rounded-lg min-w-fit gap-3;
+	@apply rounded-lg min-w-fit gap-3 m-[0.2em];
 
 	.ui-card--header {
 		@apply p-4 flex items-center gap-3 text-left w-full rounded-lg border transition-[border-radius]

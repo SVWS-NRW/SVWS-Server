@@ -9,8 +9,12 @@
 	@apply text-ui;
 	@apply flex;
 	@apply relative;
-	@apply w-full mt-2;
+	@apply w-[calc(100%-0.4rem)] m-[0.2em];
 	@apply overflow-hidden whitespace-nowrap text-base;
+
+	&:not(.text-input-component--headless) {
+		@apply mt-[0.8em];
+	}
 
 	&:focus {
 		@apply outline-hidden;
@@ -132,7 +136,7 @@
 }
 
 .text-input-component .text-input--control:focus-visible {
-	@apply ring-3 ring-ui-neutral;
+	@apply ring-2 ring-ui-neutral;
 }
 
 .text-input--invalid.text-input-component:focus-within .text-input--control,

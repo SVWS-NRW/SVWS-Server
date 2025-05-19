@@ -1,5 +1,10 @@
 .svws-ui-select {
-	@apply relative w-full cursor-pointer flex;
+	@apply relative cursor-pointer inline-flex m-[0.2em] w-[calc(100%-0.4rem)];
+
+		&:not(.svws-headless) {
+			@apply mt-[0.8em];
+		}
+
 
 	.svws-ui-table & {
 		@apply p-0 -my-0.5;
@@ -7,7 +12,7 @@
 
 	.svws-dropdown-icon,
 	.svws-remove {
-		@apply inline-flex w-5 h-7 absolute text-headline-md top-3 rounded-sm items-center justify-center;
+		@apply inline-flex w-5 h-7 absolute text-headline-md top-1 rounded-sm items-center justify-center;
 	}
 
 	.svws-dropdown-icon {
@@ -16,6 +21,7 @@
 	}
 
 	.text-input-component {
+		@apply !m-0 w-full;
 		&:hover,
 		&:focus-visible,
 		&:focus-within {
@@ -28,7 +34,7 @@
 	}
 
 	.svws-remove {
-		@apply right-7 w-5 h-5 text-ui-secondary;
+		@apply right-7.5 w-5 h-5 text-ui-secondary;
 
 		.icon {
 			margin-top: 0.3rem;
@@ -45,7 +51,7 @@
 		}
 
 		&:focus-visible {
-			@apply ring-3 ring-ui-danger bg-ui-danger text-ui-ondanger;
+			@apply ring-2 ring-ui-danger bg-ui-danger text-ui-ondanger;
 		}
 	}
 
@@ -123,8 +129,7 @@
 		}
 
 		.text-input-component {
-			@apply pr-1 my-0;
-
+			@apply m-0;
 			&:hover,
 			&:focus-visible,
 			&:focus-within {
@@ -141,7 +146,7 @@
 			.text-input-component {
 				&:focus-visible {
 					~ .svws-dropdown-icon {
-						@apply ring-3 ring-ui;
+						@apply ring-2 ring-ui;
 					}
 				}
 			}

@@ -1,5 +1,5 @@
 .input-wrapper {
-	@apply grid grow grid-cols-1 gap-3;
+	@apply grid grow grid-cols-1 gap-x-2;
 
 	.input-wrapper:not(.col-span-1) {
 		@apply col-span-full;
