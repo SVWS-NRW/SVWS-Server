@@ -32,8 +32,8 @@
 					<svws-ui-text-input class="contentFocusField" placeholder="Straße" :model-value="strasse" @change="patchStrasse" type="text" span="full" :disabled="!editSchuldaten" />
 					<!-- TODO PLZ Ort sollte durch den Orstkatalog gehandhabt werden - siehe auch Schüler-Kontaktdaten -->
 					<!-- <svws-ui-select title="Wohnort" v-model="wohnortID" :items="mapOrte" :item-filter="orte_filter" :item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete :disabled="!editSchuldaten" /> -->
-					<svws-ui-text-input placeholder="Telefon" :model-value="schule().telefon" @change="telefon => patch({ telefon })" type="tel" :disabled="!editSchuldaten" />
-					<svws-ui-text-input placeholder="Fax" :model-value="schule().fax" @change="fax => patch({ fax })" type="tel" :disabled="!editSchuldaten" />
+					<svws-ui-text-input placeholder="Telefon" :model-value="schule().telefon" @change="telefon => patch({ telefon })" type="tel" :disabled="!editSchuldaten" :max-len="20" />
+					<svws-ui-text-input placeholder="Fax" :model-value="schule().fax" @change="fax => patch({ fax })" type="tel" :disabled="!editSchuldaten" :max-len="20" />
 					<svws-ui-text-input placeholder="Homepage" :model-value="schule().webAdresse" @change="webAdresse => patch({ webAdresse })" verify-email :disabled="!editSchuldaten" />
 					<svws-ui-text-input placeholder="E-Mail-Adresse" :model-value="schule().email" @change="email => patch({ email })" type="email" verify-email :disabled="!editSchuldaten" />
 				</svws-ui-input-wrapper>

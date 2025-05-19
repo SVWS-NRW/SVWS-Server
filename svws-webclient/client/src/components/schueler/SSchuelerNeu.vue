@@ -35,8 +35,8 @@
 				<svws-ui-text-input placeholder="Geburtsdatum" required type="date" v-model="data.geburtsdatum" />
 				<svws-ui-text-input placeholder="Geburtsort" v-model="data.geburtsort" />
 				<svws-ui-spacing />
-				<svws-ui-text-input placeholder="Telefon" type="tel" v-model="data.telefon" :valid="fieldIsValid('telefon')" />
-				<svws-ui-text-input placeholder="Mobil/Fax" type="tel" v-model="data.telefonMobil" :valid="fieldIsValid('telefonMobil')" />
+				<svws-ui-text-input placeholder="Telefon" type="tel" v-model="data.telefon" :valid="fieldIsValid('telefon')" :max-len="20" />
+				<svws-ui-text-input placeholder="Mobil/Fax" type="tel" v-model="data.telefonMobil" :valid="fieldIsValid('telefonMobil')" :max-len="20" />
 				<svws-ui-text-input placeholder="E-Mail" type="email" v-model="data.emailPrivat" :valid="fieldIsValid('emailPrivat')" />
 				<svws-ui-spacing />
 				<svws-ui-select title="1. Staatsangehörigkeit" :items="Nationalitaeten.values()" :item-text="i => i.historie().getLast().staatsangehoerigkeit"

@@ -20,7 +20,7 @@
 					{{ rowData.vorname }} {{ rowData.nachname }}
 				</template>
 				<template #cell(email)="{ value: eMail }">
-					{{ eMail ? eMail : '–' }}
+					{{ eMail ? eMail : '—' }}
 				</template>
 				<template #cell(adresse)="{ rowData }">
 					{{ strasse(rowData) }}{{ rowData.wohnortID && mapOrte?.get(rowData.wohnortID) ? `, ${mapOrte.get(rowData.wohnortID)?.plz} ${mapOrte?.get(rowData.wohnortID)?.ortsname}` : '' }}

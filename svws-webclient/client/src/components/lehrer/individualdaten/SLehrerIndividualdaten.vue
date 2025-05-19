@@ -32,8 +32,8 @@
 				<svws-ui-select v-model="wohnortID" title="Wohnort" :disabled="!hatUpdateKompetenz" :items="mapOrte" :item-filter="orte_filter" :item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
 				<svws-ui-select v-model="ortsteilID" title="Ortsteil" :disabled="!hatUpdateKompetenz" :items="ortsteile" :item-sort="ortsteilSort" :item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''" removable />
 				<svws-ui-spacing />
-				<svws-ui-text-input placeholder="Telefon" :disabled="!hatUpdateKompetenz" :model-value="data().telefon" @change="telefon => patch({telefon})" type="tel" />
-				<svws-ui-text-input placeholder="Mobil oder Fax" :disabled="!hatUpdateKompetenz" :model-value="data().telefonMobil" @change="telefonMobil => patch({telefonMobil})" type="tel" />
+				<svws-ui-text-input placeholder="Telefon" :disabled="!hatUpdateKompetenz" :model-value="data().telefon" @change="telefon => patch({telefon})" type="tel" :max-len="20" />
+				<svws-ui-text-input placeholder="Mobil oder Fax" :disabled="!hatUpdateKompetenz" :model-value="data().telefonMobil" @change="telefonMobil => patch({telefonMobil})" type="tel" :max-len="20" />
 				<svws-ui-text-input placeholder="Private E-Mail-Adresse" :disabled="!hatUpdateKompetenz" :model-value="data().emailPrivat" @change="emailPrivat => patch({emailPrivat})" type="email" verify-email />
 				<svws-ui-text-input placeholder="Schulische E-Mail-Adresse" :disabled="!hatUpdateKompetenz" :model-value="data().emailDienstlich" @change="emailDienstlich => patch({emailDienstlich})" type="email" verify-email />
 			</svws-ui-input-wrapper>

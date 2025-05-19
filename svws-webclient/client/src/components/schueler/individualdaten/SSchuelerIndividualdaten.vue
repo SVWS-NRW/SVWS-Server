@@ -71,15 +71,17 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Wohnort und Kontaktdaten" v-if="hatKompetenzAnsehen">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input class="contentFocusField" placeholder="Straße" :readonly="!hatKompetenzUpdate" :model-value="strasse" @change="patchStrasse" type="text" span="full" />
-				<svws-ui-select title="Wohnort" :readonly="!hatKompetenzUpdate" v-model="wohnortID" :items="mapOrte" :item-filter="orte_filter"
-					:item-sort="orte_sort" :item-text="i => `${i.plz} ${i.ortsname}`" autocomplete statistics />
+				<svws-ui-text-input class="contentFocusField" placeholder="Straße" :readonly="!hatKompetenzUpdate" :model-value="strasse"
+					@change="patchStrasse" type="text" span="full" />
+				<svws-ui-select title="Wohnort" :readonly="!hatKompetenzUpdate" v-model="wohnortID" :items="mapOrte"
+					:item-filter="orte_filter" :item-sort="orte_sort" :item-text="i => `${i.plz} ${i.ortsname}`" autocomplete statistics />
 				<svws-ui-select title="Ortsteil" :readonly="!hatKompetenzUpdate" v-model="ortsteilID" :items="ortsteile"
 					:item-text="i => i.ortsteil ?? ''" :item-sort="ortsteilSort" :item-filter="ortsteilFilter" removable />
 				<svws-ui-spacing />
-				<svws-ui-text-input placeholder="Telefon" :readonly="!hatKompetenzUpdate" :model-value="data.telefon" @change="telefon => patch({ telefon })" type="tel" />
+				<svws-ui-text-input placeholder="Telefon" :readonly="!hatKompetenzUpdate" :model-value="data.telefon"
+					@change="telefon => patch({ telefon })" type="tel" :max-len="20" />
 				<svws-ui-text-input placeholder="Mobil oder Fax" :readonly="!hatKompetenzUpdate" :model-value="data.telefonMobil"
-					@change="telefonMobil => patch({ telefonMobil })" type="tel" />
+					@change="telefonMobil => patch({ telefonMobil })" type="tel" :max-len="20" />
 				<svws-ui-text-input placeholder="Private E-Mail-Adresse" :readonly="!hatKompetenzUpdate" :model-value="data.emailPrivat"
 					@change="emailPrivat => patch({ emailPrivat })" type="email" verify-email />
 				<svws-ui-text-input placeholder="Schulische E-Mail-Adresse" :readonly="!hatKompetenzUpdate" :model-value="data.emailSchule"
@@ -122,9 +124,9 @@
 			<svws-ui-modal :show="showModalTelefonnummer" @update:show="closeModalTelefonnummer">
 				<template #modalTitle>Telefonnummer hinzufügen</template>
 				<template #modalContent>
-					<svws-ui-input-wrapper :grid="2" style="text-align: left">
+					<svws-ui-input-wrapper :grid="2" class="text-left">
 						<svws-ui-select title="Telefonart" :items="mapTelefonArten.values()" v-model="selectedTelefonArt" :item-text="i => i.bezeichnung" />
-						<svws-ui-text-input v-model="newEntryTelefonnummer.telefonnummer" type="text" placeholder="Telefonnummer" />
+						<svws-ui-text-input v-model="newEntryTelefonnummer.telefonnummer" type="text" placeholder="Telefonnummer" :max-len="20" />
 					</svws-ui-input-wrapper>
 					<svws-ui-notification type="warning" v-if="mapTelefonArten.size === 0">Die Liste der Telefonarten ist leer, es sollte mindestens eine Telefonart unter Schule/Kataloge angelegt werden, damit zusätzliche Telefonnummern eine gültige Zuordnung haben. </svws-ui-notification>
 					<div class="mt-7 flex flex-row gap-4 justify end">
