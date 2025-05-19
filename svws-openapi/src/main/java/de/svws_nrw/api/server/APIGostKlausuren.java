@@ -530,6 +530,33 @@ public class APIGostKlausuren {
 	}
 
 	/**
+	 * Löscht mehrere {@link GostKursklausur}en.
+	 *
+	 * @param schema     das Datenbankschema, in welchem die {@link GostKursklausur}en gelöscht werden
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 * @param klausurIds	 die IDs der zu löschenden {@link GostKursklausur}en
+	 *
+	 * @return die HTTP-Antwort mit dem Status und ggf. den gelöschten GostKursklausuren
+	 */
+	@DELETE
+	@Path("/kursklausuren/delete")
+	@Operation(summary = "Löscht mehrere GostKursklausuren.", description = "Löscht mehrere GostKursklausuren."
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen einer GostKursklausur " + "besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Kursklausuren für die angegebenen IDs wurden erfolgreich gelöscht.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine GostKursklausur zu löschen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteGostKlausurenKursklausuren(@PathParam("schema") final String schema,
+			@RequestBody(description = "die IDs der GostKursklausuren", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> klausurIds,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenKursklausur(conn).deleteMultipleAsResponse(klausurIds),
+				request,
+				ServerMode.STABLE,
+				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN);
+	}
+
+	/**
 	 * Löscht mehrere {@link GostKlausurtermin}e.
 	 *
 	 * @param schema     das Datenbankschema, in welchem die {@link GostKlausurtermin}e gelöscht werden

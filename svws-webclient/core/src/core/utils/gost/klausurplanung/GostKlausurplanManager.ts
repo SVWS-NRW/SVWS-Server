@@ -1484,6 +1484,7 @@ export class GostKlausurplanManager extends JavaObject {
 	}
 
 	private kursklausurRemoveOhneUpdateById(idKursklausur : number) : void {
+		this.schuelerklausurRemoveAllOhneUpdate(this._schuelerklausur_by_idKursklausur_and_idSchueler.get1(idKursklausur));
 		DeveloperNotificationException.ifMapRemoveFailes(this._kursklausur_by_id, idKursklausur);
 	}
 
@@ -1661,9 +1662,8 @@ export class GostKlausurplanManager extends JavaObject {
 	private terminRemoveOhneUpdateById(idTermin : number) : void {
 		DeveloperNotificationException.ifMapRemoveFailes(this._termin_by_id, idTermin);
 		const kursklausurenZuTermin : List<GostKursklausur> | null = this._kursklausurmenge_by_abijahr_and_halbjahr_and_idTermin_and_quartal.get3(idTermin);
-		if (kursklausurenZuTermin !== null)
-			for (const k of kursklausurenZuTermin)
-				k.idTermin = null;
+		for (const k of kursklausurenZuTermin)
+			k.idTermin = null;
 		const schuelerklausurtermineZuTermin : List<GostSchuelerklausurTermin> | null = this._schuelerklausurterminmenge_by_idTermin.get(idTermin);
 		if (schuelerklausurtermineZuTermin !== null)
 			for (const skt of schuelerklausurtermineZuTermin)
@@ -1774,29 +1774,39 @@ export class GostKlausurplanManager extends JavaObject {
 
 	private schuelerklausurRemoveOhneUpdateById(idSchuelerklausur : number) : void {
 		const removed : GostSchuelerklausur | null = DeveloperNotificationException.ifMapRemoveFailes(this._schuelerklausur_by_id, idSchuelerklausur);
-		this.schuelerklausurterminRemoveAll(this.schuelerklausurterminGetMengeBySchuelerklausur(removed));
+		this.schuelerklausurterminRemoveAllOhneUpdate(this.schuelerklausurterminGetMengeBySchuelerklausur(removed));
 		this.schuelerklausurfehlendRemoveOhneUpdate(removed);
 	}
 
 	/**
 	 * Entfernt ein existierendes {@link GostKursklausur}-Objekt.
 	 *
-	 * @param idKursklausur Die ID des {@link GostKursklausur}-Objekts.
+	 * @param idSchuelerklausur Die ID des {@link GostSchuelerklausur}-Objekts.
 	 */
-	public schuelerklausurRemoveById(idKursklausur : number) : void {
-		this.schuelerklausurRemoveOhneUpdateById(idKursklausur);
+	public schuelerklausurRemoveById(idSchuelerklausur : number) : void {
+		this.schuelerklausurRemoveOhneUpdateById(idSchuelerklausur);
 		this.update_all();
 	}
 
 	/**
-	 * Entfernt alle {@link GostKursklausur}-Objekte.
+	 * Entfernt alle {@link GostSchuelerklausur}-Objekte.
 	 *
 	 * @param listSchuelerklausuren Die Liste der zu entfernenden
-	 *                          {@link GostKursklausur}-Objekte.
+	 *                          {@link GostSchuelerklausur}-Objekte.
 	 */
-	public schuelerklausurRemoveAll(listSchuelerklausuren : List<GostSchuelerklausur>) : void {
+	private schuelerklausurRemoveAllOhneUpdate(listSchuelerklausuren : List<GostSchuelerklausur>) : void {
 		for (const schuelerklausur of listSchuelerklausuren)
 			this.schuelerklausurRemoveOhneUpdateById(schuelerklausur.id);
+	}
+
+	/**
+	 * Entfernt alle {@link GostSchuelerklausur}-Objekte.
+	 *
+	 * @param listSchuelerklausuren Die Liste der zu entfernenden
+	 *                          {@link GostSchuelerklausur}-Objekte.
+	 */
+	public schuelerklausurRemoveAll(listSchuelerklausuren : List<GostSchuelerklausur>) : void {
+		this.schuelerklausurRemoveAllOhneUpdate(listSchuelerklausuren);
 		this.update_all();
 	}
 
@@ -1984,9 +1994,19 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @param listSchuelerklausurtermine die Liste der zu entfernenden
 	 *                                   {@link GostSchuelerklausurTermin}-Objekte.
 	 */
-	public schuelerklausurterminRemoveAll(listSchuelerklausurtermine : List<GostSchuelerklausurTermin>) : void {
+	public schuelerklausurterminRemoveAllOhneUpdate(listSchuelerklausurtermine : List<GostSchuelerklausurTermin>) : void {
 		for (const schuelerklausurtermin of listSchuelerklausurtermine)
 			this.schuelerklausurterminRemoveOhneUpdateById(schuelerklausurtermin.id);
+	}
+
+	/**
+	 * Entfernt alle {@link GostSchuelerklausurTermin}-Objekte.
+	 *
+	 * @param listSchuelerklausurtermine die Liste der zu entfernenden
+	 *                                   {@link GostSchuelerklausurTermin}-Objekte.
+	 */
+	public schuelerklausurterminRemoveAll(listSchuelerklausurtermine : List<GostSchuelerklausurTermin>) : void {
+		this.schuelerklausurterminRemoveAllOhneUpdate(listSchuelerklausurtermine);
 		this.update_all();
 	}
 
@@ -2564,8 +2584,7 @@ export class GostKlausurplanManager extends JavaObject {
 	}
 
 	private kursklausurGetMengeByTerminid(idTermin : number | null) : List<GostKursklausur> {
-		const klausuren : List<GostKursklausur> | null = this._kursklausurmenge_by_abijahr_and_halbjahr_and_idTermin_and_quartal.get3((idTermin !== null) ? idTermin : -1);
-		return (klausuren !== null) ? klausuren : new ArrayList();
+		return this._kursklausurmenge_by_abijahr_and_halbjahr_and_idTermin_and_quartal.get3((idTermin !== null) ? idTermin : -1);
 	}
 
 	/**
@@ -3688,7 +3707,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 * denen ein {@link GostKlausurtermin} zugewiesen wurde.
 	 */
 	public schuelerklausurterminNtAktuellMitTerminGetMengeByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number) : List<GostSchuelerklausurTermin> {
-		let ergebnis : List<GostSchuelerklausurTermin> = new ArrayList<GostSchuelerklausurTermin>();
+		let ergebnis : List<GostSchuelerklausurTermin>;
 		if (quartal > 0) {
 			ergebnis = this._schuelerklausurterminntaktuellmenge_by_abijahr_and_halbjahr_and_quartal_and_idTermin.get123(abiJahrgang, halbjahr.id, quartal);
 			let iterator : JavaIterator<GostSchuelerklausurTermin> | null = ergebnis.iterator();

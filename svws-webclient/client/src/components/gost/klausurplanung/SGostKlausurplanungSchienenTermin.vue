@@ -40,7 +40,7 @@
 				</svws-ui-button>
 			</template>
 			<template #loeschen>
-				<svws-ui-button v-if="loescheKlausurtermine !== undefined && termin !== undefined" :disabled="!hatKompetenzUpdate" type="icon" size="small" class="-mr-1" @click="loescheKlausurtermine(Arrays.asList([termin()]));$event.stopPropagation()"><span class="icon i-ri-delete-bin-line -mx-1.5" /></svws-ui-button>
+				<svws-ui-button type="trash" v-if="loescheKlausurtermine !== undefined && termin !== undefined" :disabled="!hatKompetenzUpdate" class="-mr-1" @click="loescheKlausurtermine(Arrays.asList([termin()]));$event.stopPropagation()" />
 			</template>
 		</s-gost-klausurplanung-termin>
 	</div>

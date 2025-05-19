@@ -1539,6 +1539,7 @@ public class GostKlausurplanManager {
 	}
 
 	private void kursklausurRemoveOhneUpdateById(final long idKursklausur) {
+		schuelerklausurRemoveAllOhneUpdate(_schuelerklausur_by_idKursklausur_and_idSchueler.get1(idKursklausur));
 		DeveloperNotificationException.ifMapRemoveFailes(_kursklausur_by_id, idKursklausur);
 	}
 
@@ -1736,9 +1737,8 @@ public class GostKlausurplanManager {
 	private void terminRemoveOhneUpdateById(final long idTermin) {
 		DeveloperNotificationException.ifMapRemoveFailes(_termin_by_id, idTermin);
 		final List<GostKursklausur> kursklausurenZuTermin = _kursklausurmenge_by_abijahr_and_halbjahr_and_idTermin_and_quartal.get3(idTermin);
-		if (kursklausurenZuTermin != null)
-			for (final @NotNull GostKursklausur k : kursklausurenZuTermin)
-				k.idTermin = null;
+		for (final @NotNull GostKursklausur k : kursklausurenZuTermin)
+			k.idTermin = null;
 		final List<GostSchuelerklausurTermin> schuelerklausurtermineZuTermin = _schuelerklausurterminmenge_by_idTermin
 				.get(idTermin);
 		if (schuelerklausurtermineZuTermin != null)
@@ -1866,31 +1866,40 @@ public class GostKlausurplanManager {
 
 	private void schuelerklausurRemoveOhneUpdateById(final long idSchuelerklausur) {
 		final GostSchuelerklausur removed = DeveloperNotificationException.ifMapRemoveFailes(_schuelerklausur_by_id, idSchuelerklausur);
-		schuelerklausurterminRemoveAll(schuelerklausurterminGetMengeBySchuelerklausur(removed));
+		schuelerklausurterminRemoveAllOhneUpdate(schuelerklausurterminGetMengeBySchuelerklausur(removed));
 		schuelerklausurfehlendRemoveOhneUpdate(removed);
 	}
 
 	/**
 	 * Entfernt ein existierendes {@link GostKursklausur}-Objekt.
 	 *
-	 * @param idKursklausur Die ID des {@link GostKursklausur}-Objekts.
+	 * @param idSchuelerklausur Die ID des {@link GostSchuelerklausur}-Objekts.
 	 */
-	public void schuelerklausurRemoveById(final long idKursklausur) {
-		schuelerklausurRemoveOhneUpdateById(idKursklausur);
+	public void schuelerklausurRemoveById(final long idSchuelerklausur) {
+		schuelerklausurRemoveOhneUpdateById(idSchuelerklausur);
 
 		update_all();
 	}
 
 	/**
-	 * Entfernt alle {@link GostKursklausur}-Objekte.
+	 * Entfernt alle {@link GostSchuelerklausur}-Objekte.
 	 *
 	 * @param listSchuelerklausuren Die Liste der zu entfernenden
-	 *                          {@link GostKursklausur}-Objekte.
+	 *                          {@link GostSchuelerklausur}-Objekte.
 	 */
-	public void schuelerklausurRemoveAll(final @NotNull List<GostSchuelerklausur> listSchuelerklausuren) {
+	private void schuelerklausurRemoveAllOhneUpdate(final @NotNull List<GostSchuelerklausur> listSchuelerklausuren) {
 		for (final @NotNull GostSchuelerklausur schuelerklausur : listSchuelerklausuren)
 			schuelerklausurRemoveOhneUpdateById(schuelerklausur.id);
+	}
 
+	/**
+	 * Entfernt alle {@link GostSchuelerklausur}-Objekte.
+	 *
+	 * @param listSchuelerklausuren Die Liste der zu entfernenden
+	 *                          {@link GostSchuelerklausur}-Objekte.
+	 */
+	public void schuelerklausurRemoveAll(final @NotNull List<GostSchuelerklausur> listSchuelerklausuren) {
+		schuelerklausurRemoveAllOhneUpdate(listSchuelerklausuren);
 		update_all();
 	}
 
@@ -2098,7 +2107,6 @@ public class GostKlausurplanManager {
 	 */
 	public void schuelerklausurterminRemoveById(final long idSchuelerklausurtermin) {
 		schuelerklausurterminRemoveOhneUpdateById(idSchuelerklausurtermin);
-
 		update_all();
 	}
 
@@ -2108,11 +2116,19 @@ public class GostKlausurplanManager {
 	 * @param listSchuelerklausurtermine die Liste der zu entfernenden
 	 *                                   {@link GostSchuelerklausurTermin}-Objekte.
 	 */
-	public void schuelerklausurterminRemoveAll(
-			final @NotNull List<GostSchuelerklausurTermin> listSchuelerklausurtermine) {
+	public void schuelerklausurterminRemoveAllOhneUpdate(final @NotNull List<GostSchuelerklausurTermin> listSchuelerklausurtermine) {
 		for (final @NotNull GostSchuelerklausurTermin schuelerklausurtermin : listSchuelerklausurtermine)
 			schuelerklausurterminRemoveOhneUpdateById(schuelerklausurtermin.id);
+	}
 
+	/**
+	 * Entfernt alle {@link GostSchuelerklausurTermin}-Objekte.
+	 *
+	 * @param listSchuelerklausurtermine die Liste der zu entfernenden
+	 *                                   {@link GostSchuelerklausurTermin}-Objekte.
+	 */
+	public void schuelerklausurterminRemoveAll(final @NotNull List<GostSchuelerklausurTermin> listSchuelerklausurtermine) {
+		schuelerklausurterminRemoveAllOhneUpdate(listSchuelerklausurtermine);
 		update_all();
 	}
 
@@ -2647,7 +2663,7 @@ public class GostKlausurplanManager {
 				.get1245OrException(vorgabe.abiJahrgang, vorgabe.halbjahr, GostKursart.fromKuerzelOrException(vorgabe.kursart).id, vorgabe.idFach);
 		if ((vorgabe.halbjahr % 2) == 1)
 			vorgabenSchuljahr.addAll(_vorgabe_by_abijahr_and_halbjahr_and_quartal_and_kursartAllg_and_idFach
-					.get1245(vorgabe.abiJahrgang, vorgabe.halbjahr - 1, GostKursart.fromKuerzelOrException(vorgabe.kursart).id, vorgabe.idFach));
+					.get1245(vorgabe.abiJahrgang, vorgabe.halbjahr - 1L, GostKursart.fromKuerzelOrException(vorgabe.kursart).id, vorgabe.idFach));
 		vorgabenSchuljahr.sort(_compVorgabe);
 		final int listIndex = vorgabenSchuljahr.indexOf(vorgabe);
 		if (listIndex == 0)
@@ -2767,8 +2783,7 @@ public class GostKlausurplanManager {
 	}
 
 	private @NotNull List<GostKursklausur> kursklausurGetMengeByTerminid(final Long idTermin) {
-		final List<GostKursklausur> klausuren = _kursklausurmenge_by_abijahr_and_halbjahr_and_idTermin_and_quartal.get3((idTermin != null) ? idTermin : -1);
-		return (klausuren != null) ? klausuren : new ArrayList<>();
+		return _kursklausurmenge_by_abijahr_and_halbjahr_and_idTermin_and_quartal.get3((idTermin != null) ? idTermin : -1);
 	}
 
 	/**
@@ -3986,7 +4001,7 @@ public class GostKlausurplanManager {
 	 */
 	public @NotNull List<GostSchuelerklausurTermin> schuelerklausurterminNtAktuellMitTerminGetMengeByHalbjahrAndQuartal(
 			final int abiJahrgang, final @NotNull GostHalbjahr halbjahr, final int quartal) {
-		@NotNull List<GostSchuelerklausurTermin> ergebnis = new ArrayList<>();
+		@NotNull List<GostSchuelerklausurTermin> ergebnis;
 		if (quartal > 0) {
 
 			ergebnis = _schuelerklausurterminntaktuellmenge_by_abijahr_and_halbjahr_and_quartal_and_idTermin.get123(abiJahrgang, halbjahr.id, quartal);

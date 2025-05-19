@@ -1,11 +1,7 @@
 
 import type { GostJahrgangsdaten, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, GostKlausurterminblockungDaten, GostNachschreibterminblockungKonfiguration, GostKlausurenUpdate, List, GostKlausurraumRich, ApiFile, GostSchuelerklausur} from "@core";
-import { GostKlausurenCollectionAllData, GostKlausurenCollectionHjData, ReportingParameter, ReportingReportvorlage} from "@core";
-import { GostSchuelerklausurTermin } from "@core";
-import { GostKlausurenCollectionSkrsKrsData, GostKursklausur } from "@core";
+import { GostKlausurtermin, ArrayList, StundenplanManager, GostFaecherManager, GostHalbjahr, GostKlausurplanManager, DeveloperNotificationException, GostSchuelerklausurTermin, GostKlausurenCollectionAllData, GostKlausurenCollectionHjData, ReportingParameter, ReportingReportvorlage, GostKlausurenCollectionSkrsKrsData, GostKursklausur } from "@core";
 import type { RouteNode } from "~/router/RouteNode";
-import { StundenplanManager, GostFaecherManager, GostHalbjahr, GostKlausurplanManager, DeveloperNotificationException } from "@core";
-import { GostKlausurtermin, ArrayList} from "@core";
 import { computed } from "vue";
 
 import { api } from "~/router/Api";
@@ -176,7 +172,6 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 			}
 			if (!this.manager.stundenplanManagerGeladenByAbschnitt(abschnitt.id)) {
 				const listStundenplaene = await api.server.getStundenplanlisteAktivFuerAbschnitt(api.schema, abschnitt.id);
-				console.log(listStundenplaene)
 				const listStundenplanManager = new ArrayList<StundenplanManager>();
 				for (const stundenplan of listStundenplaene) {
 					const stundenplandaten = await api.server.getStundenplan(api.schema, stundenplan.id);
@@ -339,6 +334,23 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		api.status.stop();
 	}
 
+	loescheKursklausuren = async (klausuren: List<GostKursklausur> | GostKursklausur[]) => {
+		api.status.start();
+		const klausurIds = new ArrayList<number>();
+		for (const klausur of klausuren)
+			klausurIds.add(klausur.id);
+		await api.server.deleteGostKlausurenKursklausuren(klausurIds, api.schema);
+		const klausListe = new ArrayList<GostKursklausur>();
+		if (Array.isArray(klausuren))
+			for (const klausur of klausuren)
+				klausListe.add(klausur);
+		else
+			klausListe.addAll(klausuren);
+		this.manager.kursklausurRemoveAll(klausListe);
+		this.commit();
+		api.status.stop();
+	}
+
 	erzeugeSchuelerklausuren = async (klausuren: List<Partial<GostSchuelerklausur>>) => {
 		api.status.start();
 		for (const klausur of klausuren)
@@ -494,7 +506,6 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		if (rRaeume.isEmpty())
 			return new GostKlausurenCollectionSkrsKrsData();
 		api.status.start();
-		const skids = new ArrayList<number>();
 		let collectionSkrsKrs;
 		if (!deleteFromRaeume) {
 			collectionSkrsKrs = await api.server.setzeGostSchuelerklausurenZuRaum(rRaeume, api.schema, this.abiturjahr, this.halbjahr.id);
