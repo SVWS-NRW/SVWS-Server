@@ -19,6 +19,10 @@ import jakarta.ws.rs.core.Response.Status;
 
 
 
+/**
+ * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für das
+ * Core-DTO {@link LehrerPersonalabschnittsdatenAnrechnungsstunden}.
+ */
 public final class DataLehrerPersonalabschnittsdatenMehrleistungen extends DataManagerRevised<Long, DTOLehrerMehrleistung, LehrerPersonalabschnittsdatenAnrechnungsstunden> {
 
 	/**
@@ -31,10 +35,14 @@ public final class DataLehrerPersonalabschnittsdatenMehrleistungen extends DataM
 		setAttributesNotPatchable("id");
 		setAttributesRequiredOnCreation("idAbschnittsdaten", "idGrund", "anzahl");
 	}
+
+
 	@Override
 	protected void initDTO(final DTOLehrerMehrleistung dto, final Long newID, final Map<String, Object> initAttributes) throws ApiOperationException {
 		dto.ID = newID;
 	}
+
+
 	protected static LehrerPersonalabschnittsdatenAnrechnungsstunden mapInternal(final DTOLehrerMehrleistung dto, final DBEntityManager conn) throws ApiOperationException {
 		final LehrerPersonalabschnittsdatenAnrechnungsstunden daten = new LehrerPersonalabschnittsdatenAnrechnungsstunden();
 		daten.id = dto.ID;
@@ -47,27 +55,33 @@ public final class DataLehrerPersonalabschnittsdatenMehrleistungen extends DataM
 		final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dtoAbschnitt.Schuljahresabschnitts_ID);
 		final LehrerMehrleistungsartKatalogEintrag artEintrag = (art == null) ? null : art.daten(abschnitt.schuljahr);
 		if (artEintrag == null)
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
-					"Das Kürzel für die Art der Minderleistung, welches in der Datenbank gespeichert ist, ist im Schuljahr %d nicht gültig."
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"Das Kürzel für die Art der Mehrleistung, welches in der Datenbank gespeichert ist, ist im Schuljahr %d nicht gültig."
 							.formatted(abschnitt.schuljahr));
 		daten.idGrund = artEintrag.id;
 		daten.anzahl = (dto.MehrleistungStd == null) ? 0.0 : dto.MehrleistungStd;
 		return daten;
 	}
+
+
 	@Override
 	protected LehrerPersonalabschnittsdatenAnrechnungsstunden map(final DTOLehrerMehrleistung dto) throws ApiOperationException {
 		return mapInternal(dto, conn);
 	}
+
+
 	@Override
 	protected void mapAttribute(final DTOLehrerMehrleistung dto, final String name, final Object value, final Map<String, Object> map)
 			throws ApiOperationException {
 		switch (name) {
 			case "idAbschnittsdaten" -> updateAbschnittID(dto,  JSONMapper.convertToLong(value, false));
-			case "idGrund" -> updateMehrleistungsgrundKrz(dto, JSONMapper.convertToLong(value, true, "idGrund"));
-			case "anzahl" -> dto.MehrleistungStd = JSONMapper.convertToDouble(value, true);
+			case "idGrund" -> updateMehrleistungsgrundKrz(dto, JSONMapper.convertToLong(value, false, "idGrund"));
+			case "anzahl" -> dto.MehrleistungStd = JSONMapper.convertToDouble(value, false);
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
 		}
 	}
+
+
 	@Override
 	public LehrerPersonalabschnittsdatenAnrechnungsstunden getById(final Long id) throws ApiOperationException {
 		if (id == null)
@@ -77,20 +91,22 @@ public final class DataLehrerPersonalabschnittsdatenMehrleistungen extends DataM
 			throw new ApiOperationException(Status.NOT_FOUND);
 		return map(dto);
 	}
+
+
 	/**
-	 * Ermittelt die Anrechungen für die Lehrerabschnittsdaten mit der angegebenen ID und und gibt diese zurück.
+	 * Ermittelt die Mehrleistungen für die Lehrerabschnittsdaten mit der angegebenen ID und und gibt diese zurück.
 	 *
 	 * @param conn                      die Datenbankverbindung
 	 * @param idLehrerabschnittsdaten   die ID der Lehrerabschnittsdaten
 	 *
-	 * @return die Liste mit den Anrechnungen
+	 * @return die Liste mit den Mehrleistungen
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static List<LehrerPersonalabschnittsdatenAnrechnungsstunden> getByLehrerabschnittsdatenId(final DBEntityManager conn,
 			final long idLehrerabschnittsdaten) throws ApiOperationException {
 		final List<LehrerPersonalabschnittsdatenAnrechnungsstunden> result = new ArrayList<>();
-		// Bestimme die Anrechungen für die Lehrerabschnittsdaten
+		// Bestimme die Mehrleistungen für die Lehrerabschnittsdaten
 		final List<DTOLehrerMehrleistung> dtos = conn.queryList(DTOLehrerMehrleistung.QUERY_BY_ABSCHNITT_ID,
 				DTOLehrerMehrleistung.class, idLehrerabschnittsdaten);
 		if (dtos == null)
@@ -100,7 +116,9 @@ public final class DataLehrerPersonalabschnittsdatenMehrleistungen extends DataM
 			result.add(mapInternal(dto, conn));
 		return result;
 	}
-	private void updateMehrleistungsgrundKrz(final DTOLehrerMehrleistung dto, final Long idGrund) throws ApiOperationException {
+
+
+	private void updateMehrleistungsgrundKrz(final DTOLehrerMehrleistung dto, final long idGrund) throws ApiOperationException {
 		try {
 			final LehrerMehrleistungsarten grund = LehrerMehrleistungsarten.data().getWertByID(idGrund);
 			final DTOLehrerAbschnittsdaten dtoAbschnitt = conn.queryByKey(DTOLehrerAbschnittsdaten.class, dto.Abschnitt_ID);
@@ -111,17 +129,17 @@ public final class DataLehrerPersonalabschnittsdatenMehrleistungen extends DataM
 			final LehrerMehrleistungsartKatalogEintrag eintrag = grund.daten(abschnitt.schuljahr);
 			if (eintrag == null)
 				throw new ApiOperationException(Status.BAD_REQUEST,
-						"Der Minderleistungsgrund mit der ID %d ist im Schuljahr %d nicht gültig.".formatted(idGrund, abschnitt.schuljahr));
+						"Der Mehrleistungesgrund mit der ID %d ist im Schuljahr %d nicht gültig.".formatted(idGrund, abschnitt.schuljahr));
 			dto.MehrleistungsgrundKrz = eintrag.kuerzel;
 		} catch (@SuppressWarnings("unused") final CoreTypeException cte) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Der Mehrleistungsgrund mit der ID %d ist nicht vorhanden.".formatted(idGrund));
 		}
 	}
-	private void updateAbschnittID(final DTOLehrerMehrleistung dto, final Long abschnittID) throws ApiOperationException {
-		if ((abschnittID != null) && ((abschnittID < 0 || (conn.queryByKey(DTOLehrerAbschnittsdaten.class, abschnittID)) == null)))
+
+
+	private void updateAbschnittID(final DTOLehrerMehrleistung dto, final long abschnittID) throws ApiOperationException {
+		if (((abschnittID < 0) || (conn.queryByKey(DTOLehrerAbschnittsdaten.class, abschnittID)) == null))
 				throw new ApiOperationException(Status.CONFLICT, "AbschnittID %d ungültig.".formatted(abschnittID));
-		if (abschnittID == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "AbschnittID darf nicht null sein.");
 		dto.Abschnitt_ID = abschnittID;
 	}
 

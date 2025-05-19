@@ -18,7 +18,10 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response.Status;
 
 
-
+/**
+ * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für das
+ * Core-DTO {@link LehrerPersonalabschnittsdatenAnrechnungsstunden}.
+ */
 public final class DataLehrerPersonalabschnittsdatenAnrechungen extends DataManagerRevised<Long, DTOLehrerAnrechnungsstunde, LehrerPersonalabschnittsdatenAnrechnungsstunden> {
 
 	/**
@@ -31,10 +34,14 @@ public final class DataLehrerPersonalabschnittsdatenAnrechungen extends DataMana
 		setAttributesNotPatchable("id", "idAbschnittsdaten");
 		setAttributesRequiredOnCreation("idAbschnittsdaten", "idGrund", "anzahl");
 	}
+
+
 	@Override
 	protected void initDTO(final DTOLehrerAnrechnungsstunde dto, final Long newID, final Map<String, Object> initAttributes) throws ApiOperationException {
 		dto.ID = newID;
 	}
+
+
 	protected static LehrerPersonalabschnittsdatenAnrechnungsstunden mapInternal(final DTOLehrerAnrechnungsstunde dto, final DBEntityManager conn) throws ApiOperationException {
 		final LehrerPersonalabschnittsdatenAnrechnungsstunden daten = new LehrerPersonalabschnittsdatenAnrechnungsstunden();
 		daten.id = dto.ID;
@@ -47,36 +54,44 @@ public final class DataLehrerPersonalabschnittsdatenAnrechungen extends DataMana
 		final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dtoAbschnitt.Schuljahresabschnitts_ID);
 		final LehrerAnrechnungsgrundKatalogEintrag artEintrag = (art == null) ? null : art.daten(abschnitt.schuljahr);
 		if (artEintrag == null)
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
-					"Das Kürzel für die Art der Minderleistung, welches in der Datenbank gespeichert ist, ist im Schuljahr %d nicht gültig."
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"Das Kürzel für den Anrechnungsgrund, welches in der Datenbank gespeichert ist, ist im Schuljahr %d nicht gültig."
 							.formatted(abschnitt.schuljahr));
 		daten.idGrund = artEintrag.id;
 		daten.anzahl = (dto.AnrechnungStd == null) ? 0.0 : dto.AnrechnungStd;
 		return daten;
 	}
+
+
 	@Override
 	protected LehrerPersonalabschnittsdatenAnrechnungsstunden map(final DTOLehrerAnrechnungsstunde dto) throws ApiOperationException {
 		return mapInternal(dto, conn);
 	}
+
+
 	@Override
 	protected void mapAttribute(final DTOLehrerAnrechnungsstunde dto, final String name, final Object value, final Map<String, Object> map)
 			throws ApiOperationException {
 		switch (name) {
-			case "idAbschnittsdaten" -> updateAbschnittID(dto, JSONMapper.convertToLong(value, true, "idAbschnittsdaten"));
-			case "idGrund" -> updateAnrechnungsgrundKrz(dto, JSONMapper.convertToLong(value, true, "idGrund"));
-			case "anzahl" -> dto.AnrechnungStd = JSONMapper.convertToDouble(value, true);
+			case "idAbschnittsdaten" -> updateAbschnittID(dto, JSONMapper.convertToLong(value, false, "idAbschnittsdaten"));
+			case "idGrund" -> updateAnrechnungsgrundKrz(dto, JSONMapper.convertToLong(value, false, "idGrund"));
+			case "anzahl" -> dto.AnrechnungStd = JSONMapper.convertToDouble(value, false);
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
 		}
 	}
+
+
 	@Override
 	public LehrerPersonalabschnittsdatenAnrechnungsstunden getById(final Long id) throws ApiOperationException {
 		if (id == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Anrechnungsstunden mit der ID %d gefunden.".formatted(id));
 		final DTOLehrerAnrechnungsstunde dto = conn.queryByKey(DTOLehrerAnrechnungsstunde.class, id);
 		if (dto == null)
-			throw new ApiOperationException(Status.NOT_FOUND);
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Anrechnungsstunden mit der ID %d gefunden.".formatted(id));
 		return map(dto);
 	}
+
+
 	/**
 	 * Ermittelt die Anrechungen für die Lehrerabschnittsdaten mit der angegebenen ID und und gibt diese zurück.
 	 *
@@ -100,7 +115,9 @@ public final class DataLehrerPersonalabschnittsdatenAnrechungen extends DataMana
 			result.add(mapInternal(dto, conn));
 		return result;
 	}
-	private void updateAnrechnungsgrundKrz(final DTOLehrerAnrechnungsstunde dto, final Long idGrund) throws ApiOperationException {
+
+
+	private void updateAnrechnungsgrundKrz(final DTOLehrerAnrechnungsstunde dto, final long idGrund) throws ApiOperationException {
 		try {
 			final LehrerAnrechnungsgrund grund = LehrerAnrechnungsgrund.data().getWertByID(idGrund);
 			final DTOLehrerAbschnittsdaten dtoAbschnitt = conn.queryByKey(DTOLehrerAbschnittsdaten.class, dto.Abschnitt_ID);
@@ -111,17 +128,17 @@ public final class DataLehrerPersonalabschnittsdatenAnrechungen extends DataMana
 			final LehrerAnrechnungsgrundKatalogEintrag eintrag = grund.daten(abschnitt.schuljahr);
 			if (eintrag == null)
 				throw new ApiOperationException(Status.BAD_REQUEST,
-						"Der Minderleistungsgrund mit der ID %d ist im Schuljahr %d nicht gültig.".formatted(idGrund, abschnitt.schuljahr));
+						"Der Anrechnungsgrund mit der ID %d ist im Schuljahr %d nicht gültig.".formatted(idGrund, abschnitt.schuljahr));
 			dto.AnrechnungsgrundKrz = eintrag.kuerzel;
 		} catch (@SuppressWarnings("unused") final CoreTypeException cte) {
-			throw new ApiOperationException(Status.NOT_FOUND, "Der Minderleistungsgrund mit der ID %d ist nicht vorhanden.".formatted(idGrund));
+			throw new ApiOperationException(Status.NOT_FOUND, "Der Anrechnungsgrund mit der ID %d ist nicht vorhanden.".formatted(idGrund));
 		}
 	}
-	private void updateAbschnittID(final DTOLehrerAnrechnungsstunde dto, final Long abschnittID) throws ApiOperationException {
-		if ((abschnittID != null) && ((abschnittID < 0 || (conn.queryByKey(DTOLehrerAbschnittsdaten.class, abschnittID)) == null)))
+
+
+	private void updateAbschnittID(final DTOLehrerAnrechnungsstunde dto, final long abschnittID) throws ApiOperationException {
+		if (((abschnittID < 0) || (conn.queryByKey(DTOLehrerAbschnittsdaten.class, abschnittID)) == null))
 				throw new ApiOperationException(Status.CONFLICT, "AbschnittID %d ungültig.".formatted(abschnittID));
-		if (abschnittID == null)
-			throw new ApiOperationException(Status.NO_CONTENT, "AbschnittID darf nicht null sein.".formatted(abschnittID));
 		dto.Abschnitt_ID = abschnittID;
 	}
 

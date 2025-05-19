@@ -8,7 +8,6 @@ import de.svws_nrw.asd.data.lehrer.LehrerBeschaeftigungsartKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerEinsatzstatusKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdaten;
 import de.svws_nrw.asd.data.lehrer.LehrerRechtsverhaeltnisKatalogEintrag;
-import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.lehrer.LehrerBeschaeftigungsart;
 import de.svws_nrw.asd.types.lehrer.LehrerEinsatzstatus;
@@ -24,12 +23,12 @@ import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für das
- * Core-DTO {@link LehrerStammdaten}.
+ * Core-DTO {@link LehrerPersonalabschnittsdaten}.
  */
 public final class DataLehrerPersonalabschnittsdaten extends DataManagerRevised<Long, DTOLehrerAbschnittsdaten, LehrerPersonalabschnittsdaten> {
 
 	/**
-	 * Erstellt einen neuen {@link DataManager} für das Core-DTO {@link LehrerStammdaten}.
+	 * Erstellt einen neuen {@link DataManager} für das Core-DTO {@link LehrerPersonalabschnittsdaten}.
 	 *
 	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
 	 */

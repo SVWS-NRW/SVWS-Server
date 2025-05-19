@@ -8694,7 +8694,7 @@ export class ApiServer extends BaseApi {
 	 *   Code 200: Der Patch wurde erfolgreich in die Lehrer-Personalabschnittsdaten integriert.
 	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrer-Personaldaten zu ändern.
-	 *   Code 404: Kein Lehrer-Eintrag mit der angegebenen ID gefunden
+	 *   Code 404: Keine Personalabschnittsdaten mit der angegebenen ID gefunden
 	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
@@ -8712,24 +8712,24 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getLehrerPersonalabschnittsdatenEntlastungsstunden für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personalabschnittsdatenentlastungsstunden/{id : \d+}
+	 * Implementierung der GET-Methode getLehrerPersonalabschnittsdatenAllgemeineAnrechnung für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personalabschnittsdaten/anrechnung/{id : \d+}
 	 *
-	 * Liest die Personalabschnittsdaten zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerpersonaldaten besitzt.
+	 * Liest die allgemeine Anrechnung zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerpersonaldaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Personalabschnittsdaten
+	 *   Code 200: Die allgemeine Anrechnung
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: LehrerPersonalabschnittsdatenAnrechnungsstunden
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrer-Personaldaten anzusehen.
-	 *   Code 404: Keine Lehrer-Personalabschnittsdaten mit der angegebenen ID gefunden
+	 *   Code 404: Keine allgemeine Anrechnung mit der angegebenen ID gefunden
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 *
-	 * @returns Die Personalabschnittsdaten
+	 * @returns Die allgemeine Anrechnung
 	 */
-	public async getLehrerPersonalabschnittsdatenEntlastungsstunden(schema : string, id : number) : Promise<LehrerPersonalabschnittsdatenAnrechnungsstunden> {
-		const path = "/db/{schema}/lehrer/personalabschnittsdatenentlastungsstunden/{id : \\d+}"
+	public async getLehrerPersonalabschnittsdatenAllgemeineAnrechnung(schema : string, id : number) : Promise<LehrerPersonalabschnittsdatenAnrechnungsstunden> {
+		const path = "/db/{schema}/lehrer/personalabschnittsdaten/anrechnung/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
@@ -8739,15 +8739,44 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der PATCH-Methode patchLehrerPersonalabschnittsdatenEntlastungsstunden für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personalabschnittsdatenentlastungsstunden/{id : \d+}
+	 * Implementierung der DELETE-Methode deleteLehrerPersonalabschnittsdatenAllgemeineAnrechnung für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personalabschnittsdaten/anrechnung/{id : \d+}
 	 *
-	 * Passt die Lehrer-Personalabschnittsdatenanrechnungsstunden zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personalabschnittsdaten besitzt.
+	 * Entfernt die allgemeine Anrechnung zu der angegebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen der allgemeinen Anrechnun hat.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Patch wurde erfolgreich in die Lehrer-Personalabschnittsdaten integriert.
+	 *   Code 200: Die allgemeine Anrechnung wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: LehrerPersonalabschnittsdatenAnrechnungsstunden
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine allgemeine Anrechnung zu löschen.
+	 *   Code 404: Keine allgemeine Anrechnung mit der angegebenen ID gefunden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die allgemeine Anrechnung wurde erfolgreich entfernt.
+	 */
+	public async deleteLehrerPersonalabschnittsdatenAllgemeineAnrechnung(schema : string, id : number) : Promise<LehrerPersonalabschnittsdatenAnrechnungsstunden> {
+		const path = "/db/{schema}/lehrer/personalabschnittsdaten/anrechnung/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchLehrerPersonalabschnittsdatenAllgemeineAnrechnung für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personalabschnittsdaten/anrechnung/{id : \d+}
+	 *
+	 * Passt die allgemeine Anrechnung zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personalabschnittsdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich in die allgemeine Anrechnung integriert.
 	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrer-Personaldaten zu ändern.
-	 *   Code 404: Kein Lehrer-Eintrag mit der angegebenen ID gefunden
+	 *   Code 404: Keine allgemeine Anrechnung mit der angegebenen ID gefunden
 	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
@@ -8755,12 +8784,257 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchLehrerPersonalabschnittsdatenEntlastungsstunden(data : Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, schema : string, id : number) : Promise<void> {
-		const path = "/db/{schema}/lehrer/personalabschnittsdatenentlastungsstunden/{id : \\d+}"
+	public async patchLehrerPersonalabschnittsdatenAllgemeineAnrechnung(data : Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/lehrer/personalabschnittsdaten/anrechnung/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addLehrerPersonalabschnittsdatenAllgemeineAnrechnung für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personalabschnittsdaten/anrechnung/add
+	 *
+	 * Erstellt einen neuen Datensatz für für eine Mehrleistung in den Personalabschnittsdaten eines Lehrers und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen neuer Entlastungsstunden besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die allgemeine Anrechnung wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: LehrerPersonalabschnittsdatenAnrechnungsstunden
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine allgemeine Anrechnung anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die allgemeine Anrechnung wurde erfolgreich hinzugefügt.
+	 */
+	public async addLehrerPersonalabschnittsdatenAllgemeineAnrechnung(data : Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, schema : string) : Promise<LehrerPersonalabschnittsdatenAnrechnungsstunden> {
+		const path = "/db/{schema}/lehrer/personalabschnittsdaten/anrechnung/add"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getLehrerPersonalabschnittsdatenMehrleistung für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personalabschnittsdaten/mehrleistung/{id : \d+}
+	 *
+	 * Liest die Mehrleistung zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerpersonaldaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Mehrleistung
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: LehrerPersonalabschnittsdatenAnrechnungsstunden
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrer-Personaldaten anzusehen.
+	 *   Code 404: Keine Mehrleistung mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Mehrleistung
+	 */
+	public async getLehrerPersonalabschnittsdatenMehrleistung(schema : string, id : number) : Promise<LehrerPersonalabschnittsdatenAnrechnungsstunden> {
+		const path = "/db/{schema}/lehrer/personalabschnittsdaten/mehrleistung/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteLehrerPersonalabschnittsdatenMehrleistung für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personalabschnittsdaten/mehrleistung/{id : \d+}
+	 *
+	 * Entfernt die Mehrleistung zu der angegebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen der Mehrleistung hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Mehrleistung wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: LehrerPersonalabschnittsdatenAnrechnungsstunden
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Mehrleistung zu löschen.
+	 *   Code 404: Keine Mehrleistung mit der angegebenen ID gefunden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Mehrleistung wurde erfolgreich entfernt.
+	 */
+	public async deleteLehrerPersonalabschnittsdatenMehrleistung(schema : string, id : number) : Promise<LehrerPersonalabschnittsdatenAnrechnungsstunden> {
+		const path = "/db/{schema}/lehrer/personalabschnittsdaten/mehrleistung/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchLehrerPersonalabschnittsdatenMehrleistung für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personalabschnittsdaten/mehrleistung/{id : \d+}
+	 *
+	 * Passt die Mehrleistung zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personalabschnittsdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich in die Mehrleistung integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrer-Personaldaten zu ändern.
+	 *   Code 404: Keine Mehrleistung mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchLehrerPersonalabschnittsdatenMehrleistung(data : Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/lehrer/personalabschnittsdaten/mehrleistung/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addLehrerPersonalabschnittsdatenMehrleistung für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personalabschnittsdaten/mehrleistung/add
+	 *
+	 * Erstellt einen neuen Datensatz für für eine Mehrleistung in den Personalabschnittsdaten eines Lehrers und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen neuer Entlastungsstunden besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die Mehrleistung wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: LehrerPersonalabschnittsdatenAnrechnungsstunden
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Mehrleistungen anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Mehrleistung wurde erfolgreich hinzugefügt.
+	 */
+	public async addLehrerPersonalabschnittsdatenMehrleistung(data : Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, schema : string) : Promise<LehrerPersonalabschnittsdatenAnrechnungsstunden> {
+		const path = "/db/{schema}/lehrer/personalabschnittsdaten/mehrleistung/add"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getLehrerPersonalabschnittsdatenMinderleistung für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personalabschnittsdaten/minderleistung/{id : \d+}
+	 *
+	 * Liest die Minderleistung zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerpersonaldaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Minderleistung
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: LehrerPersonalabschnittsdatenAnrechnungsstunden
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrer-Personaldaten anzusehen.
+	 *   Code 404: Keine Minderleistung mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Minderleistung
+	 */
+	public async getLehrerPersonalabschnittsdatenMinderleistung(schema : string, id : number) : Promise<LehrerPersonalabschnittsdatenAnrechnungsstunden> {
+		const path = "/db/{schema}/lehrer/personalabschnittsdaten/minderleistung/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteLehrerPersonalabschnittsdatenMinderleistung für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personalabschnittsdaten/minderleistung/{id : \d+}
+	 *
+	 * Entfernt die Minderleistung zu der angegebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen der Minderleistung hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Minderleistung wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: LehrerPersonalabschnittsdatenAnrechnungsstunden
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Minderleistung zu löschen.
+	 *   Code 404: Keine Minderleistung mit der angegebenen ID gefunden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Minderleistung wurde erfolgreich entfernt.
+	 */
+	public async deleteLehrerPersonalabschnittsdatenMinderleistung(schema : string, id : number) : Promise<LehrerPersonalabschnittsdatenAnrechnungsstunden> {
+		const path = "/db/{schema}/lehrer/personalabschnittsdaten/minderleistung/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchLehrerPersonalabschnittsdatenMinderleistung für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personalabschnittsdaten/minderleistung/{id : \d+}
+	 *
+	 * Passt die Minderleistung zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personalabschnittsdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich in die Minderleistung integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrer-Personaldaten zu ändern.
+	 *   Code 404: Keine Minderleistung mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchLehrerPersonalabschnittsdatenMinderleistung(data : Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/lehrer/personalabschnittsdaten/minderleistung/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addLehrerPersonalabschnittsdatenMinderleistung für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personalabschnittsdaten/minderleistung/add
+	 *
+	 * Erstellt einen neuen Datensatz für für eine Minderleistung in den Personalabschnittsdaten eines Lehrers und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen neuer Entlastungsstunden besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die Minderleistung wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: LehrerPersonalabschnittsdatenAnrechnungsstunden
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Minderleistungen anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Minderleistung wurde erfolgreich hinzugefügt.
+	 */
+	public async addLehrerPersonalabschnittsdatenMinderleistung(data : Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, schema : string) : Promise<LehrerPersonalabschnittsdatenAnrechnungsstunden> {
+		const path = "/db/{schema}/lehrer/personalabschnittsdaten/minderleistung/add"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerFromJSON(text);
 	}
 
 
