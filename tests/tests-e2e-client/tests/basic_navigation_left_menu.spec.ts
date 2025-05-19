@@ -22,7 +22,7 @@ test('Basic_Navigation_left_menu', async ({page}) => {
 	await page.getByRole('link', {name: 'Kurse'}).click();
 	await expect(page.locator('header')).toContainText('N-F-1');
 	await page.getByRole('link', {name: 'Oberstufe'}).click();
-	await expect(page.locator('header')).toContainText('Allgemeine Vorlagen');
+	await expect(page.locator('header')).toContainText('Abiturjahrgang 2019');
 	await page.getByRole('link', {name: 'Stundenplan'}).click();
 	await expect(page.locator('header')).toContainText('Stundenplan 2. Halbjahr ID: 1');
 	await page.getByRole('link', {name: 'Einstellungen'}).click();
