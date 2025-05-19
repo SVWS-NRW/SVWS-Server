@@ -1575,7 +1575,7 @@ LehrerStammdaten {
   "nachname": "Specking",
   "ortsteilID": null,
   "personalTyp": "LEHRKRAFT",
-  "staatsangehoerigkeitID": "DEU",
+  "staatsangehoerigkeitID": null,
   "strassenname": "Friedrich-Wolf-Straße",
   "telefon": "01234-418192",
   "telefonMobil": "0197-851952",
