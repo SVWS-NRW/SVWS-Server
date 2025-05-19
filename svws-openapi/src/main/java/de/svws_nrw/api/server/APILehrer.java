@@ -377,7 +377,7 @@ public class APILehrer {
 	 * Die OpenAPI-Methode für das Hinzufügen einer Minderleistung zu den Personalabschnittsdaten eines Lehrers.
 	 *
 	 * @param schema       das Datenbankschema
-	 * @param is           der Input-Stream mit den Daten der Minderleistung 
+	 * @param is           der Input-Stream mit den Daten der Minderleistung
 	 * @param request      die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem neuen Datensaz für Entlastungsstunden
