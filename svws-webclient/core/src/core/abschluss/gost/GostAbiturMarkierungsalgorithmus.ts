@@ -854,7 +854,7 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 		}
 		const belegungen : List<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 		for (const belegung of this.manager.getRelevanteFachbelegungen(GostFachbereich.LITERARISCH_KUENSTLERISCH))
-			if (this.manager.zaehleHalbjahresbelegungen(belegung, GostHalbjahr.Q11, GostHalbjahr.Q12) >= 2)
+			if (this.manager.zaehleHalbjahresbelegungen(belegung, ...GostHalbjahr.getQualifikationsphase()) >= 2)
 				belegungen.add(belegung);
 		if (belegungen.isEmpty()) {
 			this.ergebnis.log.add(this.logIndent + "  Keine Fachbelegung von Kunst, Musik oder einem Ersatzfach in zwei Halbjahren vorhanden.");

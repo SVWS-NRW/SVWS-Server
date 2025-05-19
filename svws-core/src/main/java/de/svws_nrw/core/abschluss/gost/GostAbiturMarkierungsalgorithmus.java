@@ -920,7 +920,7 @@ public final class GostAbiturMarkierungsalgorithmus {
 		// Bestimme die möglichen Fachbelegungen (mindestens zwei Belegungen in der QPhase - keine Null-Punkte-Belegung zählen!)
 		final @NotNull List<AbiturFachbelegung> belegungen = new ArrayList<>();
 		for (final @NotNull AbiturFachbelegung belegung : manager.getRelevanteFachbelegungen(GostFachbereich.LITERARISCH_KUENSTLERISCH))
-			if (manager.zaehleHalbjahresbelegungen(belegung, GostHalbjahr.Q11, GostHalbjahr.Q12) >= 2)
+			if (manager.zaehleHalbjahresbelegungen(belegung, GostHalbjahr.getQualifikationsphase()) >= 2)
 				belegungen.add(belegung);
 		// ... prüfe die einzelnen Markierungsmöglichkeiten und erzeuge dafür weitere Instanzen des Algorithmus mit getrennten States
 		if (belegungen.isEmpty()) {
