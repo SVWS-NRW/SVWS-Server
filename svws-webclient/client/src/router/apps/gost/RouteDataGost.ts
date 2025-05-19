@@ -221,8 +221,8 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 	}
 
 	patchJahrgangsdaten = async (data: Partial<GostJahrgangsdaten>, abiturjahr : number) => {
-		await api.server.patchGostAbiturjahrgang(data, api.schema, abiturjahr)
-		this.setPatchedState({ jahrgangsdaten: Object.assign(this.jahrgangsdaten, data) })
+		await api.server.patchGostAbiturjahrgang(data, api.schema, abiturjahr);
+		this.setPatchedState({ jahrgangsdaten: Object.assign(this.jahrgangsdaten, data) });
 		return true;
 	}
 
@@ -235,6 +235,7 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 		if (jahrgang === undefined)
 			throw new DeveloperNotificationException("Der neu erstelle Abiturjahrgang konnte nicht geladen werden.");
 		daten = await this.ladeDatenFuerAbiturjahrgang(jahrgang, daten, true);
+		daten.creationModeEnabled = false;
 		this.setPatchedDefaultState(daten);
 		await RouteManager.doRoute(routeGost.getRoute({ abiturjahr: jahrgang.abiturjahr }));
 	}
@@ -315,7 +316,7 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 	public removeAbiturjahrgaengeCheck = (): [boolean, ArrayList<string>] => {
 		const errorLog: ArrayList<string> = new ArrayList();
 		if (this.selected.length === 0)
-			errorLog.add('Es wurde kein Abiturjahrgang zum Löschen ausgewählt.')
+			errorLog.add('Es wurde kein Abiturjahrgang zum Löschen ausgewählt.');
 		for (const abiturjahrgang of this.selected)
 			if (abiturjahrgang.istBlockungFestgelegt.some(jg => (jg === true)))
 				errorLog.add(`Der Abiturjahrgang ${abiturjahrgang.abiturjahr} kann nicht gelöscht werden, da ihm bereits Kurse zugeordnet sind.`);
@@ -327,7 +328,8 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 			await api.server.deleteGostAbiturjahrgang(api.schema, j.abiturjahr);
 			this.mapAbiturjahrgaenge.delete(j.abiturjahr);
 		}
-		this.setPatchedState({ mapAbiturjahrgaenge: this.mapAbiturjahrgaenge, selected: [ ] });
+		const mapJahrgaengeOhneAbiJahrgang = this.ladeJahrgaengeOhneAbiJahrgang(this.mapAbiturjahrgaenge, this.mapJahrgaenge);
+		this.setPatchedState({ mapAbiturjahrgaenge: this.mapAbiturjahrgaenge, selected: [ ], mapJahrgaengeOhneAbiJahrgang });
 		return [true, new ArrayList<null|string>()];
 	}
 
