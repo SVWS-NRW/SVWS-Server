@@ -4,6 +4,7 @@ CGIPassAuth on
 	Header set Access-Control-Allow-Origin "*"
 	Header set Access-Control-Allow-Headers "*, Authorization"
 	Header set Access-Control-Allow-Methods "GET, POST, PATCH, PUT, DELETE, OPTIONS, HEAD"
+	Header set X-Robots-Tag "noindex, nofollow"
 </IfModule>
 
 RewriteEngine on
