@@ -3,6 +3,8 @@ package de.svws_nrw.api;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import de.svws_nrw.api.swagger.NonPrimitiveToNullableConverter;
+import io.swagger.v3.core.converter.ModelConverters;
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
@@ -113,8 +115,10 @@ public class OpenApiServer extends BaseOpenApiResource {
 	public Response getOpenApi(@Context final HttpHeaders headers,
 			@Context final UriInfo uriInfo,
 			@PathParam("type") final String type) throws Exception {
+		ModelConverters.getInstance().addConverter(new NonPrimitiveToNullableConverter());
 		final OpenApiContext ctx = getOpenApiContext();
 		final OpenAPI oas = ctx.read();
+
 		if (oas == null)
 			return Response.status(404).build();
 
