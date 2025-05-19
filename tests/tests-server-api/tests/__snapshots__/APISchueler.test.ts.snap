@@ -27957,7 +27957,7 @@ SchuelerStammdaten {
   "religionabmeldung": null,
   "religionanmeldung": null,
   "staatsangehoerigkeit2ID": null,
-  "staatsangehoerigkeitID": null,
+  "staatsangehoerigkeitID": "DEU",
   "status": 2,
   "strassenname": "Kreuzstraße",
   "telefon": "01234-971763",
