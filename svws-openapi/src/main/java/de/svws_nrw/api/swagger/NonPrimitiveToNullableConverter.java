@@ -21,7 +21,7 @@ public class NonPrimitiveToNullableConverter implements ModelConverter {
 			final Schema model = converter.resolve(annotatedType, modelConverterContext, iterator);
 
 			if (model != null) {
-				final var isPropertyDefinedAsNotNull =
+				final boolean isPropertyDefinedAsNotNull =
 						(annotatedType.getCtxAnnotations() != null) && Arrays.stream(annotatedType.getCtxAnnotations()).anyMatch(x -> x instanceof NotNull);
 
 				final JavaType javaType = Json.mapper().constructType(annotatedType.getType());
