@@ -22,6 +22,14 @@ export class LehrerUtils extends JavaObject {
 		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
 	} };
 
+	/**
+	 * Ein Kuerzel-Comparator für den Vergleich von Lehrern in Lehrerlisten.
+	 */
+	public static readonly comparatorKuerzel : Comparator<LehrerListeEintrag> = { compare : (a: LehrerListeEintrag, b: LehrerListeEintrag) => {
+		const cmp : number = JavaString.compareTo(a.kuerzel, b.kuerzel);
+		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
+	} };
+
 
 	private constructor() {
 		super();
