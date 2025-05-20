@@ -22,14 +22,12 @@
 <script setup lang="ts">
 
 	import { computed } from 'vue';
-	import type { GostBelegpruefungErgebnisFehler, List } from "@core";
-	import { ArrayList, GostAbiturMarkierungsalgorithmusErgebnis, GostBelegungsfehlerArt, GostHalbjahr, ServerMode } from "@core";
 
 	import type { SchuelerAbiturPruefungsuebersichtProps } from "./SchuelerAbiturPruefungsuebersichtProps";
 
 	const props = defineProps<SchuelerAbiturPruefungsuebersichtProps>();
 
 	const hatZulassung = computed<boolean>(() => props.manager()?.daten().block1Zulassung ?? false);
-	const block1PunktSummeNormiert = computed<number>(() => props.manager().daten().block1PunktSummeNormiert ?? 0);
+	const block1PunktSummeNormiert = computed<number>(() => props.manager()?.daten().block1PunktSummeNormiert ?? 0);
 
 </script>
