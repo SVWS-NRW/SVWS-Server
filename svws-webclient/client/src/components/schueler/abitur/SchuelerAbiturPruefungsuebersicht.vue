@@ -3,7 +3,6 @@
 		<!-- Darstellung der Prüfungsergebnisse aus dem persistierten Abiturbereich - Die Zulassung wird hier nur kurz Zusammengefasst -->
 		<template v-if="manager() !== null">
 			<template v-if="hatZulassung">
-				<div class="font-bold text-base">Normierte Punktsumme aus Block I: {{ block1PunktSummeNormiert }}</div>
 				<schueler-abitur-pruefungsuebersicht-tabelle :server-mode :schule :manager="() => manager()!" />
 			</template>
 			<template v-else>
