@@ -13,6 +13,7 @@ import type { SchuelerAbiturProps } from "~/components/schueler/abitur/SchuelerA
 import type { TabData } from "@ui";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { api } from "~/router/Api";
+import { routeSchuelerAbiturPruefungsuebersicht } from "./RouteSchuelerAbiturPruefungsuebersicht";
 
 const SchuelerAbitur = () => import("~/components/schueler/abitur/SchuelerAbitur.vue");
 
@@ -32,6 +33,7 @@ export class RouteSchuelerAbitur extends RouteNode<RouteDataSchuelerAbitur, Rout
 		}
 		super.children = [
 			routeSchuelerAbiturZulassung,
+			routeSchuelerAbiturPruefungsuebersicht,
 		];
 		super.defaultChild = routeSchuelerAbiturZulassung;
 	}
