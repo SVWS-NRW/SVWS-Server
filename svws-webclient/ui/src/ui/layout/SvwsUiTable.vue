@@ -82,6 +82,8 @@
 								'svws-divider': column.divider,
 							}]" :tabindex="column.sortable ? 0 : -1">
 						<slot :name="`header(${column.key})`" :column="column">
+							<span v-if="column.statistic" class="icon i-ri-bar-chart-2-line"
+								:class="{'icon-ui-disabled' : noDataCalculated, 'icon-ui-statistic' : !noDataCalculated }" />
 							<svws-ui-tooltip v-if="column.tooltip">
 								<span class="line-clamp-1 break-all leading-tight">{{ column.label }}</span>
 								<template #content>
@@ -341,6 +343,7 @@
 			divider: input.divider ?? false,
 			toggle: input.toggle ?? false,
 			toggleInvisible: input.toggleInvisible ?? false,
+			statistic: input.statistic ?? false,
 		}
 	}
 

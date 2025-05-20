@@ -3,7 +3,8 @@
 		<template #modalTitle>Lehrbefähigung hinzufügen</template>
 		<template #modalContent>
 			<svws-ui-input-wrapper>
-				<svws-ui-select title="Lehrbefähigung" v-model="lehrbefaehigung" :items="LehrerLehrbefaehigung.data().getWerteBySchuljahr(schuljahr)" :item-text="i => i.daten(schuljahr)?.text ?? '—'" headless />
+				<svws-ui-select title="Lehrbefähigung" v-model="lehrbefaehigung" :items="LehrerLehrbefaehigung.data().getWerteBySchuljahr(schuljahr)"
+					:item-text="i => i.daten(schuljahr)?.text ?? '—'" headless statistics />
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>

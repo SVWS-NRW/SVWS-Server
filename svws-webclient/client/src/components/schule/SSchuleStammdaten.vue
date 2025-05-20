@@ -20,7 +20,7 @@
 			<svws-ui-content-card title="Stammdaten">
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-text-input class="contentFocusField" placeholder="Bezeichnung 1" :model-value="schule().bezeichnung1" @change="bezeichnung1 => bezeichnung1 && patch({ bezeichnung1 })" type="text" :disabled="!editSchuldaten" />
-					<svws-ui-text-input placeholder="Schulnummer" :model-value="schule().schulNr.toString()" type="text" readonly />
+					<svws-ui-text-input placeholder="Schulnummer" :model-value="schule().schulNr.toString()" type="text" readonly statistics />
 					<svws-ui-text-input placeholder="Bezeichnung 2" :model-value="schule().bezeichnung2" @change="bezeichnung2 => patch({ bezeichnung2 })" type="text" :disabled="!editSchuldaten" />
 					<svws-ui-text-input placeholder="Schulform" :model-value="textSchulform" type="text" readonly />
 					<svws-ui-text-input placeholder="Bezeichnung 3" :model-value="schule().bezeichnung3" @change="bezeichnung3 => patch({ bezeichnung3 })" type="text" :disabled="!editSchuldaten" />

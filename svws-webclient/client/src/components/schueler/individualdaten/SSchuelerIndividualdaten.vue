@@ -43,7 +43,7 @@
 					@change="aufnahmedatum => patch({ aufnahmedatum : aufnahmedatum ?? null })" type="date" statistics />
 				<svws-ui-spacing />
 				<svws-ui-input-wrapper :grid="2" class="input-wrapper--checkboxes">
-					<svws-ui-checkbox :disabled="!hatKompetenzUpdate" :model-value="data.istVolljaehrig"
+					<svws-ui-checkbox :disabled="!hatKompetenzUpdate" :model-value="data.istVolljaehrig" statistics
 						@update:model-value="istVolljaehrig => patch({ istVolljaehrig })">
 						Volljährig
 					</svws-ui-checkbox>
@@ -51,7 +51,7 @@
 						@update:model-value="keineAuskunftAnDritte => patch({ keineAuskunftAnDritte })">
 						Keine Auskunft an Dritte
 					</svws-ui-checkbox>
-					<svws-ui-checkbox :disabled="!hatKompetenzUpdate" :model-value="data.istSchulpflichtErfuellt" readonly>
+					<svws-ui-checkbox :disabled="!hatKompetenzUpdate" :model-value="data.istSchulpflichtErfuellt" readonly statistics >
 						Schulpflicht erfüllt
 					</svws-ui-checkbox>
 					<svws-ui-checkbox :disabled="!hatKompetenzUpdate" :model-value="data.istBerufsschulpflichtErfuellt"
@@ -101,9 +101,9 @@
 					<svws-ui-checkbox v-model="druckeKonfessionAufZeugnisse" :disabled="!hatKompetenzUpdate">Konfession aufs Zeugnis</svws-ui-checkbox>
 				</div>
 				<svws-ui-text-input placeholder="Abmeldung vom Religionsunterricht" :readonly="!hatKompetenzUpdate" :model-value="data.religionabmeldung"
-					@change="religionabmeldung => patch({religionabmeldung})" type="date" />
+					@change="religionabmeldung => patch({religionabmeldung})" type="date" statistics />
 				<svws-ui-text-input placeholder="Wiederanmeldung" :readonly="!hatKompetenzUpdate" :model-value="data.religionanmeldung"
-					@change="religionanmeldung => patch({religionanmeldung})" type="date" />
+					@change="religionanmeldung => patch({religionanmeldung})" type="date" statistics />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Weitere Telefonnummern" v-if="serverMode === ServerMode.DEV">

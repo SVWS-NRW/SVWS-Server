@@ -68,7 +68,7 @@
 	}
 
 	const cols = [
-		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc" },
+		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc", statistic: true },
 		{ key: "nachname", label: "Nachname", sortable: true, span: 2 },
 		{ key: "vorname", label: "Vorname", sortable: true, span: 2 },
 	];
