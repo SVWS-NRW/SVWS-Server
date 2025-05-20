@@ -11735,24 +11735,26 @@ export class ApiServer extends BaseApi {
 	 * Erstellt eine neue AbteilungenKlassenzuordnungen und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von AbteilungKlassenzuordnungen besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die AbteilungenKlassenzuordnungen wurde erfolgreich hinzugefügt.
+	 *   Code 201: Die AbteilungenKlassenzuordnungen wurde erfolgreich hinzugefügt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: AbteilungKlassenzuordnung
+	 *     - Rückgabe-Typ: List<AbteilungKlassenzuordnung>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
 	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
 	 *
-	 * @param {List<AbteilungKlassenzuordnung>} data - der Request-Body für die HTTP-Methode
+	 * @param {List<Partial<AbteilungKlassenzuordnung>>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
 	 * @returns Die AbteilungenKlassenzuordnungen wurde erfolgreich hinzugefügt.
 	 */
-	public async addAbteilungKlassenzuordnung(data : List<AbteilungKlassenzuordnung>, schema : string) : Promise<AbteilungKlassenzuordnung> {
+	public async addAbteilungKlassenzuordnung(data : List<Partial<AbteilungKlassenzuordnung>>, schema : string) : Promise<List<AbteilungKlassenzuordnung>> {
 		const path = "/db/{schema}/schule/abteilungen/klassenzuordnung"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<AbteilungKlassenzuordnung>).map(d => AbteilungKlassenzuordnung.transpilerToJSON(d)).join() + "]";
+		const body : string = "[" + (data.toArray() as Array<AbteilungKlassenzuordnung>).map(d => AbteilungKlassenzuordnung.transpilerToJSONPatch(d)).join() + "]";
 		const result : string = await super.postJSON(path, body);
-		const text = result;
-		return AbteilungKlassenzuordnung.transpilerFromJSON(text);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<AbteilungKlassenzuordnung>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(AbteilungKlassenzuordnung.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 

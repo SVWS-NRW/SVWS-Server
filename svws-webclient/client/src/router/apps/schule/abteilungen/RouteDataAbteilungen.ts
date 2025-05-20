@@ -1,6 +1,6 @@
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
-import type { List, Abteilung, SimpleOperationResponse } from "@core";
+import { List, Abteilung, SimpleOperationResponse, AbteilungKlassenzuordnung } from "@core";
 import { ArrayList } from "@core";
 import { AbteilungenListeManager } from "@core";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
@@ -13,7 +13,7 @@ import { api } from "~/router/Api";
 
 const defaultState = {
 	idSchuljahresabschnitt : -1,
-	manager: new AbteilungenListeManager(-1, -1, new ArrayList(), null, new ArrayList(), new ArrayList()),
+	manager: new AbteilungenListeManager(-1, -1, new ArrayList(), null, new ArrayList(), new ArrayList(), new ArrayList()),
 	view: routeAbteilungenDaten,
 	activeViewType: ViewType.DEFAULT,
 	oldView: undefined,
@@ -32,8 +32,9 @@ export class RouteDataAbteilungen extends RouteDataAuswahl<AbteilungenListeManag
 	protected async createManager(_ : number) : Promise<Partial<RouteStateAuswahlInterface<AbteilungenListeManager>>> {
 		const abteilungen = await api.server.getAbteilungenByIdJahresAbschnitt(api.schema, api.schuleStammdaten.idSchuljahresabschnitt)
 		const lehrer = await api.server.getLehrer(api.schema);
+		const klassen = await api.server.getKlassenFuerAbschnitt(api.schema, api.schuleStammdaten.idSchuljahresabschnitt);
 		const manager = new AbteilungenListeManager(api.abschnitt.id, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,
-			api.schulform, abteilungen, lehrer);
+			api.schulform, abteilungen, lehrer, klassen);
 		return { manager }
 	}
 
@@ -53,11 +54,18 @@ export class RouteDataAbteilungen extends RouteDataAuswahl<AbteilungenListeManag
 		return `Abteilung ${abteilung?.bezeichnung ?? '???'} (ID: ${id}) wurde erfolgreich gelöscht.`;
 	}
 
-	add = async (data: Partial<Abteilung>) : Promise<void> => {
+	addAbteilung = async (data: Partial<Abteilung>) : Promise<number> => {
 		const abteilung = await api.server.addAbteilung(data, api.schema, api.schuleStammdaten.idSchuljahresabschnitt);
 		this.manager.liste.add(abteilung);
 		this.commit();
-		await this.gotoDefaultView(abteilung.id);
+		return abteilung.id;
+	}
+
+	addKlassenzuordnungen = async (data: List<Partial<AbteilungKlassenzuordnung>>, idAbteilung : number) : Promise<void> => {
+		const result = await api.server.addAbteilungKlassenzuordnung(data, api.schema);
+		await this.gotoDefaultView(idAbteilung);
+		this.manager.addKlassenToAuswahl(result);
+		this.commit();
 	}
 
 }

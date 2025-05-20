@@ -1,13 +1,16 @@
 package de.svws_nrw.core.utils.kataloge.abteilungen;
 
 import de.svws_nrw.asd.adt.Pair;
+import de.svws_nrw.asd.data.klassen.KlassenDaten;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
 import de.svws_nrw.core.data.schule.Abteilung;
+import de.svws_nrw.core.data.schule.AbteilungKlassenzuordnung;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.utils.AuswahlManager;
 import jakarta.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -23,7 +26,9 @@ public final class AbteilungenListeManager extends AuswahlManager<Long, Abteilun
 
 	private static final @NotNull Function<Abteilung, Long> _abteilungToId = (final @NotNull Abteilung a) -> a.id;
 
-	private final @NotNull Map<Long, LehrerListeEintrag> _lehrer;
+	private final @NotNull Map<Long, LehrerListeEintrag> _lehrerById;
+
+	private final @NotNull Map<Long, KlassenDaten> _klassenById;
 
 	/** Ein Default-Comparator für den Vergleich von Abteilungen. */
 	public static final @NotNull Comparator<Abteilung> comparator =
@@ -50,18 +55,27 @@ public final class AbteilungenListeManager extends AuswahlManager<Long, Abteilun
 	 * @param schulform     				  die Schulform der Schule
 	 * @param abteilungen     				  die Liste der Abteilungen
 	 * @param lehrer     					  die Liste der Lehrer
+	 * @param klassen						  die Liste der Klassen
 	 */
 	public AbteilungenListeManager(final long idSchuljahresabschnittAuswahl, final long idSchuljahresabschnittSchule,
 			final @NotNull List<Schuljahresabschnitt> schuljahresabschnitte, final Schulform schulform,
-			final @NotNull List<Abteilung> abteilungen, final @NotNull List<LehrerListeEintrag> lehrer) {
+			final @NotNull List<Abteilung> abteilungen, final @NotNull List<LehrerListeEintrag> lehrer, final @NotNull List<KlassenDaten> klassen) {
 		super(idSchuljahresabschnittAuswahl, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, abteilungen, AbteilungenListeManager.comparator,
 				_abteilungToId, _abteilungToId, Arrays.asList());
-		this._lehrer = mapLehrer(lehrer);
+		this._lehrerById = mapLehrer(lehrer);
+		this._klassenById = mapKlassen(klassen);
 	}
 
 	private static @NotNull Map<Long, LehrerListeEintrag> mapLehrer(final @NotNull List<LehrerListeEintrag> lehrerListe) {
 		final Map<Long, LehrerListeEintrag> result = new HashMap<>();
 		for (final LehrerListeEintrag v : lehrerListe)
+			result.put(v.id, v);
+		return result;
+	}
+
+	private static @NotNull Map<Long, KlassenDaten> mapKlassen(final @NotNull List<KlassenDaten> klassen) {
+		final Map<Long, KlassenDaten> result = new HashMap<>();
+		for (final KlassenDaten v : klassen)
 			result.put(v.id, v);
 		return result;
 	}
@@ -72,7 +86,34 @@ public final class AbteilungenListeManager extends AuswahlManager<Long, Abteilun
 	 * @return lehrer
 	 */
 	public @NotNull Map<Long, LehrerListeEintrag> getLehrer() {
-		return _lehrer;
+		return _lehrerById;
+	}
+
+	/**
+	 * Ein Getter für die Liste der klassen
+	 *
+	 * @return klassen
+	 */
+	public @NotNull Map<Long, KlassenDaten> getKlassen() {
+		return _klassenById;
+	}
+
+
+	/**
+	 * Ein Getter der Klassen für die aktuelle Auswahl
+	 *
+	 * @return klassen
+	 */
+	public @NotNull List<KlassenDaten> getKlassenByAuswahl() {
+		final List<KlassenDaten> result = new ArrayList<>();
+		if ((this._daten == null) || (this._daten.klassenzuordnungen.isEmpty()))
+			return result;
+		for (final AbteilungKlassenzuordnung a : this._daten.klassenzuordnungen) {
+			final KlassenDaten klasse = _klassenById.get(a.idKlasse);
+			if (klasse != null)
+				result.add(klasse);
+		}
+		return result;
 	}
 
 	/**
@@ -83,7 +124,17 @@ public final class AbteilungenListeManager extends AuswahlManager<Long, Abteilun
 	 * @return		lehrer
 	 */
 	public LehrerListeEintrag getLehrerById(final long id) {
-		return _lehrer.get(id);
+		return _lehrerById.get(id);
+	}
+
+	/**
+	 * Fügt die Liste der AbteilungsKlassenzuordnungen der ausgewählten Abteilung hinzu
+	 *
+	 * @param zuordnungen    Liste der AbteilungsKlassenzuordnungen
+	 */
+	public void addKlassenToAuswahl(final @NotNull List<AbteilungKlassenzuordnung> zuordnungen) {
+		if (_daten != null)
+			_daten.klassenzuordnungen.addAll(zuordnungen);
 	}
 
 	@Override

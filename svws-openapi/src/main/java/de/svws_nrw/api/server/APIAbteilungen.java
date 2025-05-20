@@ -201,13 +201,14 @@ public class APIAbteilungen {
 	@Operation(summary = "Erstellt eine neue AbteilungenKlassenzuordnungen und gibt das zugehörige Objekt zurück.",
 			description = "Erstellt eine neue AbteilungenKlassenzuordnungen und gibt das zugehörige Objekt zurück. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von AbteilungKlassenzuordnungen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die AbteilungenKlassenzuordnungen wurde erfolgreich hinzugefügt.",
-			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = AbteilungKlassenzuordnung.class)))
+	@ApiResponse(responseCode = "201", description = "Die AbteilungenKlassenzuordnungen wurde erfolgreich hinzugefügt.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = AbteilungKlassenzuordnung.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z. B. beim Datenbankzugriff)")
 	public Response addAbteilungKlassenzuordnung(@PathParam("schema") final String schema,
-			@RequestBody(description = "Die Daten des zu erstellenden AbteilungenKlassenzuordnungen ohne ID, welche automatisch generiert wird", required = true, content =
-			@Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = AbteilungKlassenzuordnung.class)))) final InputStream is,
+			@RequestBody(description = "Die Daten der zu erstellenden AbteilungenKlassenzuordnungen ohne ID, die automatisch generiert werden", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							array = @ArraySchema(schema = @Schema(implementation = AbteilungKlassenzuordnung.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
 				conn -> new DataAbteilungenKlassenzuordnungen(conn).addMultipleAsResponse(is), request, ServerMode.DEV,
