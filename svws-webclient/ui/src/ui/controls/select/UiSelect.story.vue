@@ -162,7 +162,11 @@
 	import { SimpleSelectManager } from "./selectManager/SimpleSelectManager";
 	import { CoreTypeSelectManager } from "./selectManager/CoreTypeSelectManager";
 	import { FachSelectFilter as FachSelectFilter } from "./filter/FachSelectFilter";
-	import { ArrayList, Fach, Fachgruppe, LehrerRechtsverhaeltnis, Schulform } from "../../../../../core/src";
+	import { ArrayList } from "../../../../../core/src/java/util/ArrayList";
+	import { Fach } from "../../../../../core/src/asd/types/fach/Fach";
+	import { Fachgruppe } from "../../../../../core/src/asd/types/fach/Fachgruppe";
+	import { LehrerRechtsverhaeltnis } from "../../../../../core/src/asd/types/lehrer/LehrerRechtsverhaeltnis";
+	import { Schulform } from "../../../../../core/src/asd/types/schule/Schulform";
 	import { ObjectSelectManager } from "./selectManager/ObjectSelectManager";
 
 

@@ -1,4 +1,5 @@
-import type { Fach, Fachgruppe } from "../../../../../../core/src";
+import type { Fachgruppe } from "../../../../../../core/src/asd/types/fach/Fachgruppe";
+import type { Fach } from "../../../../../../core/src/asd/types/fach/Fach";
 import { ArrayList } from "../../../../../../core/src/java/util/ArrayList";
 import type { List } from "../../../../../../core/src/java/util/List";
 import type { SelectFilter } from "./SelectFilter";

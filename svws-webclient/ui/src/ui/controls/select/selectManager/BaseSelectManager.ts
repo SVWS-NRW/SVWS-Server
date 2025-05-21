@@ -1,7 +1,7 @@
 import { ref, shallowRef, toRaw, triggerRef } from "vue";
 import type { List } from "../../../../../../core/src/java/util/List";
 import { ArrayList } from "../../../../../../core/src/java/util/ArrayList";
-import { DeveloperNotificationException } from "../../../../../../core/src";
+import { DeveloperNotificationException } from "../../../../../../core/src/core/exceptions/DeveloperNotificationException";
 import type { SelectFilter } from "../filter/SelectFilter";
 import { SearchSelectFilter } from "../filter/SearchSelectFilter";
 

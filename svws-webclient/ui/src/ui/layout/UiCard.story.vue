@@ -146,7 +146,7 @@
 <script setup lang="ts">
 
 	import { reactive } from 'vue';
-	import { ValidatorFehlerart } from '../../../../core/src';
+	import { ValidatorFehlerart } from '../../../../core/src/asd/validate/ValidatorFehlerart';
 
 	const onEdit = () => alert("Bearbeiten");
 	const onSave = () => alert("Speichern");

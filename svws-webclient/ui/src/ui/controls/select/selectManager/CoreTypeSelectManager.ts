@@ -1,8 +1,10 @@
-import type { Class, Schulform } from "../../../../../../core/src";
-import { ArrayList, CoreTypeDataManager, DeveloperNotificationException, JsonCoreTypeReader } from "../../../../../../core/src";
+import type { Class } from "../../../../../../core/src/java/lang/Class";
+import type { Schulform } from "../../../../../../core/src/asd/types/schule/Schulform";
+import { ArrayList } from "../../../../../../core/src/java/util/ArrayList";
+import { CoreTypeDataManager } from "../../../../../../core/src/asd/utils/CoreTypeDataManager";
+import { DeveloperNotificationException } from "../../../../../../core/src/core/exceptions/DeveloperNotificationException";
 import type { CoreTypeData } from "../../../../../../core/src/asd/data/CoreTypeData";
 import type { CoreType } from "../../../../../../core/src/asd/types/CoreType";
-import type { List } from "../../../../../../core/src/java/util/List";
 import { BaseSelectManager } from "./BaseSelectManager";
 import { ref, toRaw } from "vue";
 

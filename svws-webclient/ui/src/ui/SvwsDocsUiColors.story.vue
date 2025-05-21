@@ -452,7 +452,7 @@
 
 	import type { PropType} from 'vue';
 	import { defineComponent, reactive } from 'vue';
-	import { DeveloperNotificationException } from '../../../core/src';
+	import { DeveloperNotificationException } from '../../../core/src/core/exceptions/DeveloperNotificationException';
 
 
 	// Folgende Maps enthalten alle definierten Farben
