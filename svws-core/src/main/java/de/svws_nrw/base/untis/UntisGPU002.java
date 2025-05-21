@@ -44,7 +44,7 @@ public class UntisGPU002 {
 	public String raumKuerzel;
 
 	/** Statistik 1 Unt */
-	public Integer statistik1Unt;
+	public String statistik1Unt;
 
 	/** Studentenzahl */
 	public Integer studentenZahl;
@@ -168,7 +168,7 @@ public class UntisGPU002 {
 			.addColumn("lehrerKuerzel")
 			.addColumn("fachKuerzel")
 			.addColumn("raumKuerzel")
-			.addNumberColumn("statistik1Unt")
+			.addColumn("statistik1Unt")
 			.addNumberColumn("studentenZahl")
 			.addNumberColumn("wochenwert")
 			.addColumn("wochenTyp")
