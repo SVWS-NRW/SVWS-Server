@@ -4,7 +4,7 @@
 		<template #modalContent>
 			<svws-ui-input-wrapper>
 				<svws-ui-select title="Lehrbefähigung" v-model="lehrbefaehigung" :items="LehrerLehrbefaehigung.data().getWerteBySchuljahr(schuljahr)"
-					:item-text="i => i.daten(schuljahr)?.text ?? '—'" headless statistics />
+					:item-text="i => i.daten(schuljahr)?.text ?? '—'" statistics />
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
