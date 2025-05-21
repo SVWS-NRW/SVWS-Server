@@ -40,9 +40,9 @@
 	})
 
 	watchEffect(() => {
-		if (props.manager.klassenAuswahlGetSchueler().contains(props.manager.auswahlSchueler))
+		if (props.manager.klasseAuswahlGetSchueler().contains(props.manager.auswahlSchueler))
 			return;
-		props.manager.auswahlSchuelerNaechster();
+		props.manager.schuelerNext();
 	})
 
 	async function doPatchBemerkungen(bemerkung: string|null) {

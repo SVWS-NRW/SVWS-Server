@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 
-	import { ref, watchEffect } from 'vue';
+	import { ref } from 'vue';
 	import type { EnmLeistungenProps } from './EnmLeistungenProps';
 
 	const props = defineProps<EnmLeistungenProps>();
@@ -28,20 +28,14 @@
 	const img = document.createElement('img');
 	img.src = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
 
-	watchEffect(() => {
-		if (props.manager.lerngruppenAuswahlGetLeistungOrNull(props.manager.auswahlLeistung.leistung?.id ?? null) !== null)
-			return;
-		props.manager.auswahlLeistungNaechste();
-	})
-
 	async function doPatchLeistung(fachbezogeneBemerkungen: string|null) {
-		if (props.manager.auswahlLeistung.leistung === null)
+		if (props.manager.auswahlLeistung === null)
 			return;
-		const id = props.manager.auswahlLeistung.leistung.id
+		const id = props.manager.auswahlLeistung.a.id
 		const patch = { id, fachbezogeneBemerkungen };
 		const success = await props.patchLeistung(patch);
 		if (success)
-			Object.assign(props.manager.auswahlLeistung.leistung, patch);
+			Object.assign(props.manager.auswahlLeistung.a, patch);
 		props.manager.update();
 	}
 

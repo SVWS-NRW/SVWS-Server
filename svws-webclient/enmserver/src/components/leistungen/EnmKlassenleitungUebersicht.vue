@@ -1,6 +1,6 @@
 <template>
 	<table class="svws-ui-table svws-clickable h-full w-full overflow-hidden" role="table" aria-label="Tabelle"
-		@keydown.down.prevent.stop="manager.auswahlSchuelerNaechster()" @keydown.up.prevent.stop="manager.auswahlSchuelerVorheriger()"
+		@keydown.down.prevent.stop="manager.schuelerNext" @keydown.up.prevent.stop="manager.schuelerPrevious"
 		@keydown.right.prevent="nextColumn" @keydown.left.prevent="prevColumn">
 		<thead class="svws-ui-thead cursor-pointer" role="rowgroup" aria-label="Tabellenkopf">
 			<tr class="svws-ui-tr" role="row">
@@ -32,7 +32,7 @@
 			</tr>
 		</thead>
 		<tbody class="svws-ui-tbody h-full overflow-y-auto" role="rowgroup" aria-label="Tabelleninhalt">
-			<template v-for="schueler of manager.klassenAuswahlGetSchueler()" :key="schueler">
+			<template v-for="schueler of manager.klasseAuswahlGetSchueler()" :key="schueler">
 				<tr class="svws-ui-tr h-10" role="row" :class="{ 'svws-clicked': manager.auswahlSchueler?.id === schueler.id }" @keydown.tab="handleTabEvent"
 					@click.capture.exact="manager.auswahlSchueler = schueler" :ref="el => rowRefs.set(schueler.id, el as HTMLElement)">
 					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Klasse') ?? true">
@@ -109,9 +109,14 @@
 		set: (value) => void props.setColumnsVisible(value),
 	});
 
-	const columnsComputed = computed<HTMLElement[]>(
-		() => Array.from(rowRefs.value.get(props.manager.auswahlSchueler!.id)!.querySelectorAll("input, .column-focussable"))
-	);
+	const columnsComputed = computed<HTMLElement[]>(() => {
+		if (props.manager.auswahlSchueler === null)
+			return [];
+		const row = rowRefs.value.get(props.manager.auswahlSchueler.id);
+		if (row === undefined)
+			return []
+		return Array.from(row.querySelectorAll("input, .column-focussable"));
+	});
 
 	function nextColumn() {
 		if (currentColumn.value === columnsComputed.value.length - 1)
@@ -162,20 +167,20 @@
 	function handleTabEvent(eve: KeyboardEvent) {
 		if (eve.shiftKey) {
 			if (currentColumn.value === 0) {
-				if(props.manager.auswahlSchueler === props.manager.klassenAuswahlGetSchueler().getFirst())
+				if(props.manager.auswahlSchueler === props.manager.klasseAuswahlGetSchueler().getFirst())
 					return;
 				eve.preventDefault();
-				props.manager.auswahlSchuelerVorheriger();
+				props.manager.schuelerPrevious();
 				currentColumn.value = columnsComputed.value.length - 1;
 				columnsComputed.value[currentColumn.value].focus();
 			} else
 				currentColumn.value -= 1;
 		} else {
 			if (currentColumn.value === columnsComputed.value.length - 1) {
-				if(props.manager.auswahlSchueler === props.manager.klassenAuswahlGetSchueler().getLast())
+				if(props.manager.auswahlSchueler === props.manager.klasseAuswahlGetSchueler().getLast())
 					return;
 				eve.preventDefault();
-				props.manager.auswahlSchuelerNaechster();
+				props.manager.schuelerNext();
 				currentColumn.value = 0;
 				columnsComputed.value[currentColumn.value].focus();
 			} else
@@ -183,13 +188,13 @@
 		}
 	}
 
-	const gridTemplateColumnsComputed = computed<string>(() => {
-		return cols.filter(c => colsVisible.value.get(c.kuerzel) ?? true).map(c => c.width).join(" ") + " 5em";
-	});
+	const gridTemplateColumnsComputed = computed<string>(() => cols.filter(c => colsVisible.value.get(c.kuerzel) ?? true).map(c => c.width).join(" ") + " 5em");
 
 	watch(
 		() => props.manager.auswahlSchueler,
-		async () => await nextTick(() => columnsComputed.value[currentColumn.value].focus())
+		async () => {
+			await nextTick(() => columnsComputed.value[currentColumn.value].focus())
+		}
 	)
 
 </script>
