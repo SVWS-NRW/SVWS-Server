@@ -637,7 +637,15 @@ public final class DBUtilsGostLaufbahn {
 		belegung.block1kursAufZeugnis = true;
 		belegung.notenkuerzel = null;
 		fach.belegungen[halbjahr.id] = belegung;
-		fach.letzteKursart = belegung.kursartKuerzel;
+		boolean isLetzte = true;
+		for (GostHalbjahr hj = halbjahr.next(); hj != null; hj = hj.next()) {
+			if (fach.belegungen[hj.id] != null) {
+				isLetzte = false;
+				break;
+			}
+		}
+		if (isLetzte)
+			fach.letzteKursart = belegung.kursartKuerzel;
 	}
 
 
