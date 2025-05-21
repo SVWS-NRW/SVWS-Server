@@ -1748,7 +1748,9 @@ public final class DataUntis {
 				dto.idUnterricht = mapKursZuUnterricht.get(k.id);
 				dto.fach = datenManager.kursGetName(k.id);
 				dto.klasse = datenManager.getHalbjahr().jahrgang;
-				final GostFachwahl fw = datenManager.schuelerGetOfFachFachwahl(dtoSchueler.ID, k.fachID);
+				final GostFachwahl fw = datenManager.schuelerGetOfFachFachwahlOrNull(dtoSchueler.ID, k.fachID);
+				if (fw == null)
+					continue; // TODO Loggen, dass für die Kurszuordnung keine Fachwahl hinterlegt ist
 				final GostKursart kursart = GostKursart.fromIDorNull(fw.kursartID);
 				dto.statistikKennzeichen = switch (kursart) {
 					case LK -> "" + fw.abiturfach;
