@@ -7,18 +7,19 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.schueler.Sprachendaten;
+import de.svws_nrw.asd.data.schule.SchulgliederungKatalogEintrag;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
+import de.svws_nrw.core.abschluss.bk.d.BKGymAbiturFachbelegung;
+import de.svws_nrw.core.abschluss.bk.d.BKGymAbiturFachbelegungHalbjahr;
+import de.svws_nrw.core.abschluss.bk.d.BKGymAbiturdaten;
 import de.svws_nrw.core.data.bk.abi.BKGymFach;
 import de.svws_nrw.core.data.bk.abi.BKGymLeistungen;
 import de.svws_nrw.core.data.bk.abi.BKGymLeistungenFach;
 import de.svws_nrw.core.data.bk.abi.BKGymLeistungenFachHalbjahr;
-import de.svws_nrw.core.data.gost.AbiturFachbelegung;
-import de.svws_nrw.core.data.gost.AbiturFachbelegungHalbjahr;
-import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.types.gost.GostAbiturFach;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
@@ -98,21 +99,18 @@ public final class DataBKGymLeistungen {
 	 *
 	 * @param schuljahr         das Schuljahr, auf welches sich die Anfrage bezieht
 	 * @param conn              die Datenbank-Verbindung
-	 * @param schulgliederung   die Schulgliederung
-	 * @param fks               der fünfstellige Fachklassen-Schlüssen (mit laufender Nummer in den letzen beiden Stellen)
 	 *
 	 * @return die Liste aller Fächer der gymnasialen Oberstufe
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private static @NotNull BKGymFaecherManager getFaecherManager(final int schuljahr, final DBEntityManager conn,
-			final @NotNull Schulgliederung schulgliederung, final @NotNull String fks) throws ApiOperationException {
+	private static @NotNull BKGymFaecherManager getFaecherManager(final int schuljahr, final DBEntityManager conn) throws ApiOperationException {
 		final Map<Long, DTOFach> faecher = conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
 		if (faecher == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 		final @NotNull List<BKGymFach> tmpFaecher = faecher.values().stream()
 				.map(fach -> mapFromDTOFach(fach)).filter(Objects::nonNull).toList();
-		return new BKGymFaecherManager(schuljahr, tmpFaecher, schulgliederung, fks);
+		return new BKGymFaecherManager(schuljahr, tmpFaecher);
 	}
 
 
@@ -226,7 +224,7 @@ public final class DataBKGymLeistungen {
 			throw new ApiOperationException(Status.NOT_FOUND,
 					"Konnte die Fachklasse mit der ID %d des aktuellen Lernabschnittes des Schülers mit der ID %d nicht bestimmen."
 							.formatted(aktLernabschnitt.Fachklasse_ID, schueler.ID));
-		final BKGymFaecherManager fachManager = getFaecherManager(abiturjahr - 1, conn, schulgliederung, fachklasse.FKS_AP_SIM);
+		final BKGymFaecherManager fachManager = getFaecherManager(abiturjahr - 1, conn);
 
 		// Prüfe, ob die Schulgliederung den Abschluss Abitur erlaubt, um festzustellen, ob der Schüler in einem Bildungsgang des beruflichen Gymnasiums ist
 		// TODO Prüfe, ob die Schulgliedungen bei den allgemeinbildenden Abschlüssen ABITUR in dem abiturjahr des Schülers erlaubt
@@ -285,7 +283,7 @@ public final class DataBKGymLeistungen {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static Abiturdaten getAbiturdatenFromLeistungsdaten(final DBEntityManager conn, final long id) throws ApiOperationException {
+	public static BKGymAbiturdaten getAbiturdatenFromLeistungsdaten(final DBEntityManager conn, final long id) throws ApiOperationException {
 		// Prüfe die Schulform
 		final Schulform schulform = conn.getUser().schuleGetSchulform();
 		if ((schulform != Schulform.BK) && (schulform != Schulform.SB))
@@ -324,6 +322,10 @@ public final class DataBKGymLeistungen {
 		if (abiturjahr == null)
 			throw new ApiOperationException(Status.BAD_REQUEST,
 					"Für den Schüler mit der ID %d konnte das Abiturjahr nicht ermittelt werden.".formatted(id));
+		final SchulgliederungKatalogEintrag schulgliederungEintrag = schulgliederung.daten(abiturjahr - 1);
+		if (schulgliederungEintrag == null)
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"Konnte die Schulgliederung des aktuellen Lernabschnittes des Schülers mit der ID %d nicht bestimmen.".formatted(id));
 		if (aktLernabschnitt.Fachklasse_ID == null)
 			throw new ApiOperationException(Status.NOT_FOUND,
 					"Konnte die Fachklasse des aktuellen Lernabschnittes des Schülers mit der ID %d nicht bestimmen.".formatted(id));
@@ -332,17 +334,19 @@ public final class DataBKGymLeistungen {
 			throw new ApiOperationException(Status.NOT_FOUND,
 					"Konnte die Fachklasse mit der ID %d des aktuellen Lernabschnittes des Schülers mit der ID %d nicht bestimmen."
 							.formatted(aktLernabschnitt.Fachklasse_ID, id));
-		final BKGymFaecherManager fachManager = getFaecherManager(abiturjahr - 1, conn, schulgliederung, fachklasse.FKS_AP_SIM);
+		final BKGymFaecherManager fachManager = getFaecherManager(abiturjahr - 1, conn);
 
 		// Bestimme die bereits vorhandenen Leistungsdaten für die weitere Laufbahnplanung
 		final BKGymLeistungen leistungen = getLeistungsdaten(conn, id);
 		if (leistungen == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 
-		final Abiturdaten abidaten = new Abiturdaten();
+		final BKGymAbiturdaten abidaten = new BKGymAbiturdaten();
 		abidaten.schuelerID = id;
 		abidaten.abiturjahr = abiturjahr;
 		abidaten.schuljahrAbitur = abidaten.abiturjahr - 1;
+		abidaten.idSchulgliederung = schulgliederungEintrag.id;
+		abidaten.fachklassenschluessel = fachklasse.FKS_AP_SIM;
 		abidaten.sprachendaten = leistungen.sprachendaten;
 		abidaten.bilingualeSprache = leistungen.bilingualeSprache;
 
@@ -351,7 +355,7 @@ public final class DataBKGymLeistungen {
 
 		for (final BKGymLeistungenFach leistungenFach : leistungen.faecher) {
 			GostHalbjahr letzteBelegungHalbjahr = null;   // das Halbjahr der letzten Belegung
-			final AbiturFachbelegung fach = new AbiturFachbelegung();
+			final BKGymAbiturFachbelegung fach = new BKGymAbiturFachbelegung();
 			fach.fachID = leistungenFach.fach.id;
 			fach.istFSNeu = leistungenFach.istFSNeu;
 			fach.abiturFach = (GostAbiturFach.fromID(leistungenFach.abiturfach) == null) ? null : leistungenFach.abiturfach;
@@ -367,7 +371,7 @@ public final class DataBKGymLeistungen {
 				}
 
 				// Erzeuge die zugehörige Belegung
-				final AbiturFachbelegungHalbjahr belegung = new AbiturFachbelegungHalbjahr();
+				final BKGymAbiturFachbelegungHalbjahr belegung = new BKGymAbiturFachbelegungHalbjahr();
 				belegung.halbjahrKuerzel = (GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel) == null) ? null
 						: GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel).kuerzel;
 				belegung.kursartKuerzel = (GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel) == null) ? null
@@ -395,8 +399,8 @@ public final class DataBKGymLeistungen {
 		// Bestimmt die Fehlstunden-Summe für den Block I (Qualifikationsphase) anhand der Fehlstunden bei den einzelnen Kurs-Belegungen.
 		int block1FehlstundenGesamt = 0;
 		int block1FehlstundenUnentschuldigt = 0;
-		for (final AbiturFachbelegung fach : abidaten.fachbelegungen) {
-			for (final AbiturFachbelegungHalbjahr belegung : fach.belegungen) {
+		for (final BKGymAbiturFachbelegung fach : abidaten.fachbelegungen) {
+			for (final BKGymAbiturFachbelegungHalbjahr belegung : fach.belegungen) {
 				if ((belegung == null) || !GostHalbjahr.fromKuerzel(belegung.halbjahrKuerzel).istQualifikationsphase())
 					continue;
 				block1FehlstundenGesamt += belegung.fehlstundenGesamt;

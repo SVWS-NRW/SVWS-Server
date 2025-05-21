@@ -1,5 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { BKGymFach, cast_de_svws_nrw_core_data_bk_abi_BKGymFach } from '../../../core/data/bk/abi/BKGymFach';
+import { BKGymFach } from '../../../core/data/bk/abi/BKGymFach';
 import { Fach } from '../../../asd/types/fach/Fach';
 import type { JavaSet } from '../../../java/util/JavaSet';
 import { java_util_Set_of } from '../../../java/util/JavaSet';
@@ -7,7 +7,6 @@ import { HashMap } from '../../../java/util/HashMap';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import type { Comparator } from '../../../java/util/Comparator';
-import { Schulgliederung } from '../../../asd/types/schule/Schulgliederung';
 import type { Collection } from '../../../java/util/Collection';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
@@ -53,10 +52,8 @@ export class BKGymFaecherManager extends JavaObject {
 	 *
 	 * @param schuljahr         das Schuljahr, für welches der Fächer-Manager die Fächer verwaltet
 	 * @param faecher           die Liste mit den Fächern
-	 * @param schulgliederung   die Schulgliederung
-	 * @param fks               der fünfstellige Fachklassen-Schlüssen (mit laufender Nummer in den letzen beiden Stellen)
 	 */
-	public constructor(schuljahr : number, faecher : List<BKGymFach>, schulgliederung : Schulgliederung, fks : string) {
+	public constructor(schuljahr : number, faecher : List<BKGymFach>) {
 		super();
 		this.schuljahr = schuljahr;
 		this.addAll(faecher);
@@ -165,7 +162,9 @@ export class BKGymFaecherManager extends JavaObject {
 	 *
 	 * @return true, falls es sich um eine Fremdsprache handelt und ansonsten null
 	 */
-	public static istFremdsprache(kuerzel : string) : boolean;
+	public static istFremdsprachenKuerzel(kuerzel : string) : boolean {
+		return BKGymFaecherManager.alleFremdsprachen.contains(Fach.getBySchluesselOrDefault(kuerzel));
+	}
 
 	/**
 	 * Prüft, ob es auch bei dem Fach um eine Fremdsprache handelt oder nicht
@@ -174,19 +173,8 @@ export class BKGymFaecherManager extends JavaObject {
 	 *
 	 * @return true, falls es sich um eine Fremdsprache handelt und ansonsten null
 	 */
-	public static istFremdsprache(fach : BKGymFach) : boolean;
-
-	/**
-	 * Implementation for method overloads of 'istFremdsprache'
-	 */
-	public static istFremdsprache(__param0 : BKGymFach | string) : boolean {
-		if (((__param0 !== undefined) && (typeof __param0 === "string"))) {
-			const kuerzel : string = __param0;
-			return BKGymFaecherManager.alleFremdsprachen.contains(Fach.getBySchluesselOrDefault(kuerzel));
-		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.data.bk.abi.BKGymFach'))))) {
-			const fach : BKGymFach = cast_de_svws_nrw_core_data_bk_abi_BKGymFach(__param0);
-			return BKGymFaecherManager.alleFremdsprachen.contains(Fach.getBySchluesselOrDefault(fach.kuerzel));
-		} else throw new Error('invalid method overload');
+	public static istFremdsprache(fach : BKGymFach) : boolean {
+		return BKGymFaecherManager.alleFremdsprachen.contains(Fach.getBySchluesselOrDefault(fach.kuerzel));
 	}
 
 	/**
@@ -197,7 +185,7 @@ export class BKGymFaecherManager extends JavaObject {
 	 * @return das einstellige Sprach-Kürzel oder null
 	 */
 	public static getFremdsprache(fach : BKGymFach) : string | null {
-		if ((fach.kuerzel === null) || (JavaObject.equalsTranspiler("", (fach.kuerzel))) || !BKGymFaecherManager.istFremdsprache(fach))
+		if ((JavaObject.equalsTranspiler("", (fach.kuerzel))) || !BKGymFaecherManager.istFremdsprache(fach))
 			return null;
 		return fach.kuerzel.substring(0, 1).toUpperCase();
 	}

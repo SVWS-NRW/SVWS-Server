@@ -23,6 +23,7 @@ import { BetriebAnsprechpartner } from '../core/data/betrieb/BetriebAnsprechpart
 import { BetriebListeEintrag } from '../core/data/betrieb/BetriebListeEintrag';
 import { BetriebStammdaten } from '../core/data/betrieb/BetriebStammdaten';
 import { BilingualeSpracheKatalogEintrag } from '../asd/data/fach/BilingualeSpracheKatalogEintrag';
+import { BKGymAbiturdaten } from '../core/abschluss/bk/d/BKGymAbiturdaten';
 import { BKGymLeistungen } from '../core/data/bk/abi/BKGymLeistungen';
 import { DatenbankVerbindungsdaten } from '../core/data/schema/DatenbankVerbindungsdaten';
 import { DBSchemaListeEintrag } from '../core/data/db/DBSchemaListeEintrag';
@@ -1779,7 +1780,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die Abiturdaten aus der Laufbahn des angegebenen Schülers
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: Abiturdaten
+	 *     - Rückgabe-Typ: BKGymAbiturdaten
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Abiturdaten eines Schülers auszulesen.
 	 *   Code 404: Kein Eintrag für einen Schüler mit Daten des beruflichen Gymnasiums für die angegebene ID gefunden
 	 *
@@ -1788,13 +1789,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Abiturdaten aus der Laufbahn des angegebenen Schülers
 	 */
-	public async getBKGymSchuelerAbiturdatenAusLeistungsdaten(schema : string, id : number) : Promise<Abiturdaten> {
+	public async getBKGymSchuelerAbiturdatenAusLeistungsdaten(schema : string, id : number) : Promise<BKGymAbiturdaten> {
 		const path = "/db/{schema}/bk/gym/schueler/{id : \\d+}/laufbahn"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
-		return Abiturdaten.transpilerFromJSON(text);
+		return BKGymAbiturdaten.transpilerFromJSON(text);
 	}
 
 

@@ -1,7 +1,7 @@
 package de.svws_nrw.api.server;
 
+import de.svws_nrw.core.abschluss.bk.d.BKGymAbiturdaten;
 import de.svws_nrw.core.data.bk.abi.BKGymLeistungen;
-import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
@@ -78,7 +78,7 @@ public class APIBKGym {
 					+ "liefert diese zurück. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Abiturdaten besitzt.")
 	@ApiResponse(responseCode = "200", description = "Die Abiturdaten aus der Laufbahn des angegebenen Schülers",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Abiturdaten.class)))
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = BKGymAbiturdaten.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Abiturdaten eines Schülers auszulesen.")
 	@ApiResponse(responseCode = "404", description = "Kein Eintrag für einen Schüler mit Daten des beruflichen Gymnasiums für die angegebene ID gefunden")
 	public Response getBKGymSchuelerAbiturdatenAusLeistungsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,

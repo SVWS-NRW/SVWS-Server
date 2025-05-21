@@ -1,0 +1,172 @@
+[ {
+  "id" : 4905,
+  "kuerzel" : "BI",
+  "kuerzelAnzeige" : "BI",
+  "bezeichnung" : "Biologie",
+  "sortierung" : 32000,
+  "istFremdsprache" : false,
+  "istFremdSpracheNeuEinsetzend" : false,
+  "biliSprache" : null
+}, {
+  "id" : 4910,
+  "kuerzel" : "D",
+  "kuerzelAnzeige" : "D",
+  "bezeichnung" : "Deutsch",
+  "sortierung" : 32000,
+  "istFremdsprache" : false,
+  "istFremdSpracheNeuEinsetzend" : false,
+  "biliSprache" : null
+}, {
+  "id" : 4912,
+  "kuerzel" : "E",
+  "kuerzelAnzeige" : "E",
+  "bezeichnung" : "Englisch",
+  "sortierung" : 20,
+  "istFremdsprache" : true,
+  "istFremdSpracheNeuEinsetzend" : false,
+  "biliSprache" : null
+}, {
+  "id" : 4935,
+  "kuerzel" : "KU",
+  "kuerzelAnzeige" : "KU",
+  "bezeichnung" : "Kunst",
+  "sortierung" : 32000,
+  "istFremdsprache" : false,
+  "istFremdSpracheNeuEinsetzend" : false,
+  "biliSprache" : null
+}, {
+  "id" : 4939,
+  "kuerzel" : "M",
+  "kuerzelAnzeige" : "M",
+  "bezeichnung" : "Mathematik",
+  "sortierung" : 230,
+  "istFremdsprache" : false,
+  "istFremdSpracheNeuEinsetzend" : false,
+  "biliSprache" : null
+}, {
+  "id" : 4945,
+  "kuerzel" : "MU",
+  "kuerzelAnzeige" : "MU",
+  "bezeichnung" : "Musik",
+  "sortierung" : 32000,
+  "istFremdsprache" : false,
+  "istFremdSpracheNeuEinsetzend" : false,
+  "biliSprache" : null
+}, {
+  "id" : 4954,
+  "kuerzel" : "PL",
+  "kuerzelAnzeige" : "PL",
+  "bezeichnung" : "Philosophie",
+  "sortierung" : 32000,
+  "istFremdsprache" : false,
+  "istFremdSpracheNeuEinsetzend" : false,
+  "biliSprache" : null
+}, {
+  "id" : 4970,
+  "kuerzel" : "SP",
+  "kuerzelAnzeige" : "SP",
+  "bezeichnung" : "Sport",
+  "sortierung" : 32000,
+  "istFremdsprache" : false,
+  "istFremdSpracheNeuEinsetzend" : false,
+  "biliSprache" : null
+}, {
+  "id" : 5041,
+  "kuerzel" : "EW",
+  "kuerzelAnzeige" : "FB",
+  "bezeichnung" : "Erziehungswissenschaften",
+  "sortierung" : 200,
+  "istFremdsprache" : false,
+  "istFremdSpracheNeuEinsetzend" : false,
+  "biliSprache" : null
+}, {
+  "id" : 5043,
+  "kuerzel" : "EWN",
+  "kuerzelAnzeige" : "FB",
+  "bezeichnung" : "Erziehungswissenschaften",
+  "sortierung" : 200,
+  "istFremdsprache" : false,
+  "istFremdSpracheNeuEinsetzend" : false,
+  "biliSprache" : null
+}, {
+  "id" : 5053,
+  "kuerzel" : "FRA",
+  "kuerzelAnzeige" : "F",
+  "bezeichnung" : "Französisch",
+  "sortierung" : 32000,
+  "istFremdsprache" : true,
+  "istFremdSpracheNeuEinsetzend" : false,
+  "biliSprache" : null
+}, {
+  "id" : 5059,
+  "kuerzel" : "GG",
+  "kuerzelAnzeige" : "GL",
+  "bezeichnung" : "Gesellschaftslehre mit Geschichte",
+  "sortierung" : 32000,
+  "istFremdsprache" : false,
+  "istFremdSpracheNeuEinsetzend" : false,
+  "biliSprache" : null
+}, {
+  "id" : 5099,
+  "kuerzel" : "LIT",
+  "kuerzelAnzeige" : "LI",
+  "bezeichnung" : "Literatur",
+  "sortierung" : 32000,
+  "istFremdsprache" : false,
+  "istFremdSpracheNeuEinsetzend" : false,
+  "biliSprache" : null
+}, {
+  "id" : 5148,
+  "kuerzel" : "PSY",
+  "kuerzelAnzeige" : "PS",
+  "bezeichnung" : "Psychologie",
+  "sortierung" : 32000,
+  "istFremdsprache" : false,
+  "istFremdSpracheNeuEinsetzend" : false,
+  "biliSprache" : null
+}, {
+  "id" : 5151,
+  "kuerzel" : "RLE",
+  "kuerzelAnzeige" : "EN",
+  "bezeichnung" : "Religionslehre",
+  "sortierung" : 32000,
+  "istFremdsprache" : false,
+  "istFremdSpracheNeuEinsetzend" : false,
+  "biliSprache" : null
+}, {
+  "id" : 5153,
+  "kuerzel" : "RLK",
+  "kuerzelAnzeige" : "KR",
+  "bezeichnung" : "Religionslehre",
+  "sortierung" : 32000,
+  "istFremdsprache" : false,
+  "istFremdSpracheNeuEinsetzend" : false,
+  "biliSprache" : null
+}, {
+  "id" : 5163,
+  "kuerzel" : "SOPÄ",
+  "kuerzelAnzeige" : "DM",
+  "bezeichnung" : "Sozialpädagogik",
+  "sortierung" : 32000,
+  "istFremdsprache" : false,
+  "istFremdSpracheNeuEinsetzend" : false,
+  "biliSprache" : null
+}, {
+  "id" : 5164,
+  "kuerzel" : "SOZ",
+  "kuerzelAnzeige" : "SL",
+  "bezeichnung" : "Soziologie",
+  "sortierung" : 32000,
+  "istFremdsprache" : false,
+  "istFremdSpracheNeuEinsetzend" : false,
+  "biliSprache" : null
+}, {
+  "id" : 5166,
+  "kuerzel" : "SPI",
+  "kuerzelAnzeige" : "SI",
+  "bezeichnung" : "Spielerziehung",
+  "sortierung" : 32000,
+  "istFremdsprache" : false,
+  "istFremdSpracheNeuEinsetzend" : false,
+  "biliSprache" : null
+} ]

@@ -9,7 +9,6 @@ import java.util.Set;
 
 import de.svws_nrw.asd.data.fach.FachKatalogEintrag;
 import de.svws_nrw.asd.types.fach.Fach;
-import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.core.data.bk.abi.BKGymFach;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.transpiler.annotations.AllowNull;
@@ -64,11 +63,8 @@ public class BKGymFaecherManager {
 	 *
 	 * @param schuljahr         das Schuljahr, für welches der Fächer-Manager die Fächer verwaltet
 	 * @param faecher           die Liste mit den Fächern
-	 * @param schulgliederung   die Schulgliederung
-	 * @param fks               der fünfstellige Fachklassen-Schlüssen (mit laufender Nummer in den letzen beiden Stellen)
 	 */
-	public BKGymFaecherManager(final int schuljahr, final @NotNull List<BKGymFach> faecher, final @NotNull Schulgliederung schulgliederung,
-			final @NotNull String fks) {
+	public BKGymFaecherManager(final int schuljahr, final @NotNull List<BKGymFach> faecher) {
 		this.schuljahr = schuljahr;
 		addAll(faecher);
 	}
@@ -185,7 +181,7 @@ public class BKGymFaecherManager {
 	 *
 	 * @return true, falls es sich um eine Fremdsprache handelt und ansonsten null
 	 */
-	public static boolean istFremdsprache(final @NotNull String kuerzel) {
+	public static boolean istFremdsprachenKuerzel(final @NotNull String kuerzel) {
 		return alleFremdsprachen.contains(Fach.getBySchluesselOrDefault(kuerzel));
 	}
 
@@ -210,7 +206,7 @@ public class BKGymFaecherManager {
 	 * @return das einstellige Sprach-Kürzel oder null
 	 */
 	public static String getFremdsprache(final @NotNull BKGymFach fach) {
-		if ((fach.kuerzel == null) || ("".equals(fach.kuerzel)) || !istFremdsprache(fach))
+		if (("".equals(fach.kuerzel)) || !istFremdsprache(fach))
 			return null;
 		return fach.kuerzel.substring(0, 1).toUpperCase();
 	}
