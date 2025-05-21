@@ -1092,7 +1092,7 @@
 			"text": "Didaktik u. Methodik der soz.päd. Praxis mit Übungen",
 			"kuerzel": "DM",
 			"aufgabenfeld": null,
-			"fachgruppe": null,
+			"fachgruppe": "FG_GS",
 			"abJahrgang": null,
 			"istFremdsprache": false,
 			"istHKFS": false,

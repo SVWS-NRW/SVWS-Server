@@ -340,6 +340,30 @@ public enum GostHalbjahr {
 
 
 	/**
+	 * Gibt das Halbjahr zurück, welches zu dem übergebenen Berufskolleg-Jahrgang und Halbjahr gehört.
+	 *
+	 * @param jahrgang     der Jahrgang am Berufskolleg
+	 * @param halbjahr     die Nummer des Halbjahres
+	 *
+	 * @return das Halbjahr oder null, falls es kein gültiges Halbjahr mit den Angaben gibt.
+	 */
+	public static GostHalbjahr fromBkJahrgangUndHalbjahr(final String jahrgang, final int halbjahr) {
+		if ((halbjahr != 1) && (halbjahr != 2))
+			return null;
+		switch (jahrgang) {
+			case "01":
+				return (halbjahr == 1) ? EF1 : EF2;
+			case "02":
+				return (halbjahr == 1) ? Q11 : Q12;
+			case "03":
+				return (halbjahr == 1) ? Q21 : Q22;
+			default:
+				return null;
+		}
+	}
+
+
+	/**
 	 * Ermittelt das Halbjahr der gymnasialen Oberstufe anhand des angegebenen Abiturjahres und
 	 * dem aktuellen Schuljahr und Halbjahr
 	 *

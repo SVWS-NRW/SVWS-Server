@@ -3,6 +3,7 @@ package de.svws_nrw.api;
 import de.svws_nrw.api.server.APIAbteilungen;
 import de.svws_nrw.api.server.APIAlgoGesamtschuleAbschluss;
 import de.svws_nrw.api.server.APIAlgoGostAbschluss;
+import de.svws_nrw.api.server.APIBKGym;
 import de.svws_nrw.api.server.APIBenutzer;
 import de.svws_nrw.api.server.APIBetrieb;
 import de.svws_nrw.api.server.APIClientConfig;
@@ -65,6 +66,7 @@ public final class RestAppServer extends Application {
 			APIDatenaustausch.class,
 			APIGost.class,
 			APIGostKursplanung.class,
+			APIBKGym.class,
 			APILehrer.class,
 			APIErzieher.class,
 			APIBetrieb.class,

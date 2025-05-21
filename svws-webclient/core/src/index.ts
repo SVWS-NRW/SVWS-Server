@@ -391,6 +391,10 @@ export { BKBildungsplanKatalogIndex } from './core/data/bk/BKBildungsplanKatalog
 export { BKFBFach } from './core/data/bk/BKFBFach';
 export { BKFachklassenSchluessel } from './core/data/bk/BKFachklassenSchluessel';
 export { BKLernfeld } from './core/data/bk/BKLernfeld';
+export { BKGymFach } from './core/data/bk/abi/BKGymFach';
+export { BKGymLeistungen } from './core/data/bk/abi/BKGymLeistungen';
+export { BKGymLeistungenFach } from './core/data/bk/abi/BKGymLeistungenFach';
+export { BKGymLeistungenFachHalbjahr } from './core/data/bk/abi/BKGymLeistungenFachHalbjahr';
 export { DBSchemaListeEintrag } from './core/data/db/DBSchemaListeEintrag';
 export { MigrateBody } from './core/data/db/MigrateBody';
 export { SchemaListeEintrag } from './core/data/db/SchemaListeEintrag';
@@ -716,6 +720,7 @@ export { SetUtils } from './core/utils/SetUtils';
 export { StringUtils } from './core/utils/StringUtils';
 export { BenutzerManager } from './core/utils/benutzer/BenutzerManager';
 export { BenutzergruppenManager } from './core/utils/benutzer/BenutzergruppenManager';
+export { BKGymFaecherManager } from './core/utils/bk/BKGymFaecherManager';
 export { EinwilligungsartenListeManager } from './core/utils/einwilligungsart/EinwilligungsartenListeManager';
 export { ENMDatenManager } from './core/utils/enm/ENMDatenManager';
 export { FachListeManager } from './core/utils/fach/FachListeManager';

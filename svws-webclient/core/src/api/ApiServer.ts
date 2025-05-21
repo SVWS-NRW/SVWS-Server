@@ -23,6 +23,7 @@ import { BetriebAnsprechpartner } from '../core/data/betrieb/BetriebAnsprechpart
 import { BetriebListeEintrag } from '../core/data/betrieb/BetriebListeEintrag';
 import { BetriebStammdaten } from '../core/data/betrieb/BetriebStammdaten';
 import { BilingualeSpracheKatalogEintrag } from '../asd/data/fach/BilingualeSpracheKatalogEintrag';
+import { BKGymLeistungen } from '../core/data/bk/abi/BKGymLeistungen';
 import { DatenbankVerbindungsdaten } from '../core/data/schema/DatenbankVerbindungsdaten';
 import { DBSchemaListeEintrag } from '../core/data/db/DBSchemaListeEintrag';
 import { EinschulungsartKatalogEintrag } from '../core/data/schule/EinschulungsartKatalogEintrag';
@@ -1767,6 +1768,60 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return SchuelerBetriebsdaten.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getBKGymSchuelerAbiturdatenAusLeistungsdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/bk/gym/schueler/{id : \d+}/laufbahn
+	 *
+	 * Liest die Abiturdaten des beruflichen Gymnasiums aus den Leistungsdaten des Schülers mit der angegebenen ID aus der Datenbank aus und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Abiturdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Abiturdaten aus der Laufbahn des angegebenen Schülers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Abiturdaten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Abiturdaten eines Schülers auszulesen.
+	 *   Code 404: Kein Eintrag für einen Schüler mit Daten des beruflichen Gymnasiums für die angegebene ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Abiturdaten aus der Laufbahn des angegebenen Schülers
+	 */
+	public async getBKGymSchuelerAbiturdatenAusLeistungsdaten(schema : string, id : number) : Promise<Abiturdaten> {
+		const path = "/db/{schema}/bk/gym/schueler/{id : \\d+}/laufbahn"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return Abiturdaten.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getBKGymSchuelerLeistungsdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/bk/gym/schueler/{id : \d+}/leistungsdaten
+	 *
+	 * Liest die Leistungsdaten in Bezug auf das berufliche Gymnasium des Schülers mit der angegebene ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Leistungsdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Leistungsdaten des Schülers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: BKGymLeistungen
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Leistungsdaten anzusehen.
+	 *   Code 404: Kein Schüler-Eintrag mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Leistungsdaten des Schülers
+	 */
+	public async getBKGymSchuelerLeistungsdaten(schema : string, id : number) : Promise<BKGymLeistungen> {
+		const path = "/db/{schema}/bk/gym/schueler/{id : \\d+}/leistungsdaten"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return BKGymLeistungen.transpilerFromJSON(text);
 	}
 
 
