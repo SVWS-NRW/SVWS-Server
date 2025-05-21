@@ -3,8 +3,6 @@ package de.svws_nrw.core.abschluss.bk.d;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.svws_nrw.asd.types.schule.Schulgliederung;
-import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -68,40 +66,5 @@ public abstract class BKGymBelegpruefung {
 	 * Führt die Belegprüfung durch.
 	 */
 	public abstract void pruefe();
-
-
-	/**
-	 * Erstellt eine Belegprüfung zu einer Fachklasse in der Schulgliederung D01.
-	 *
-	 * @param manager   der Manager für die Abiturdaten
-	 *
-	 * @return der Belegprüfungsalgorithmus
-	 */
-	private static @NotNull BKGymBelegpruefung createPruefungD01(final @NotNull BKGymAbiturdatenManager manager) {
-		final @NotNull String fks = manager.getFachklassenschluessel();
-		return switch (fks) {
-			case "10600" -> new BKGymBelegpruefungD01_10600(manager);
-			default -> throw new DeveloperNotificationException("Die Belegprüfung für die Schulgliederung " + manager.getGliederung().name()
-					+ " und den Fachklassenschlüssel " + manager.getFachklassenschluessel() + " wird noch nicht unterstützt.");
-		};
-	}
-
-
-	/**
-	 * Erstellt die zugehörige Belegprüfung mit den Abiturdaten anhand des übergebenen Bildungsganges.
-	 *
-	 * @param manager   der Manager für die Abiturdaten
-	 *
-	 * @return der Belegprüfungsalgorithmus
-	 */
-	public static @NotNull BKGymBelegpruefung getPruefung(final @NotNull BKGymAbiturdatenManager manager) {
-		final @NotNull Schulgliederung sgl = manager.getGliederung();
-		final @NotNull BKGymBelegpruefung pruefung = switch (sgl) {
-			case D01 -> createPruefungD01(manager);
-			default ->
-				throw new DeveloperNotificationException("Die Belegprüfung für die Schulgliederung " + manager.getGliederung().name() + " wird noch nicht unterstützt.");
-		};
-		return pruefung;
-	}
 
 }

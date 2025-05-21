@@ -7,6 +7,7 @@ import java.util.Map;
 
 import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.core.data.bk.abi.BKGymFach;
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.utils.bk.BKGymFaecherManager;
 import jakarta.validation.constraints.NotNull;
@@ -60,7 +61,7 @@ public class BKGymAbiturdatenManager {
 		this.fks = fks;
 		this.faecherManager = faecherManager;
 		this.bisHalbjahr = bisHalbjahr;
-		this.belegpruefung = BKGymBelegpruefung.getPruefung(this);
+		this.belegpruefung = getBelegpruefung();
 		init();
 		this.belegpruefung.pruefe();
 		belegpruefungsfehler = this.belegpruefung.getBelegungsfehler();
@@ -84,6 +85,35 @@ public class BKGymAbiturdatenManager {
 				continue;
 			mapFachbelegungenByFachbezeichnung.put(fach.bezeichnung, fachbelegung);
 		}
+	}
+
+
+	/**
+	 * Erstellt eine Belegprüfung zu einer Fachklasse in der Schulgliederung D01.
+	 *
+	 * @return der Belegprüfungsalgorithmus
+	 */
+	private @NotNull BKGymBelegpruefung createBelegpruefungD01() {
+		return switch (fks) {
+			case "10600" -> new BKGymBelegpruefungD01_10600(this);
+			default -> throw new DeveloperNotificationException("Die Belegprüfung für die Schulgliederung " + gliederung.name()
+					+ " und den Fachklassenschlüssel " + fks + " wird noch nicht unterstützt.");
+		};
+	}
+
+
+	/**
+	 * Erstellt die zugehörige Belegprüfung mit den Abiturdaten anhand des übergebenen Bildungsganges.
+	 *
+	 * @return der Belegprüfungsalgorithmus
+	 */
+	private @NotNull BKGymBelegpruefung getBelegpruefung() {
+		final @NotNull BKGymBelegpruefung pruefung = switch (gliederung) {
+			case D01 -> createBelegpruefungD01();
+			default ->
+				throw new DeveloperNotificationException("Die Belegprüfung für die Schulgliederung " + gliederung.name() + " wird noch nicht unterstützt.");
+		};
+		return pruefung;
 	}
 
 

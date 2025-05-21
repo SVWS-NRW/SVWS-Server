@@ -3,6 +3,7 @@ import { BKGymFach } from '../../../../core/data/bk/abi/BKGymFach';
 import { HashMap } from '../../../../java/util/HashMap';
 import { ArrayList } from '../../../../java/util/ArrayList';
 import { BKGymAbiturFachbelegung } from '../../../../core/abschluss/bk/d/BKGymAbiturFachbelegung';
+import { DeveloperNotificationException } from '../../../../core/exceptions/DeveloperNotificationException';
 import { BKGymBelegungsfehler } from '../../../../core/abschluss/bk/d/BKGymBelegungsfehler';
 import { BKGymAbiturdaten, cast_de_svws_nrw_core_abschluss_bk_d_BKGymAbiturdaten } from '../../../../core/abschluss/bk/d/BKGymAbiturdaten';
 import { BKGymBelegpruefungErgebnis } from '../../../../core/abschluss/bk/d/BKGymBelegpruefungErgebnis';
@@ -13,6 +14,7 @@ import { Schulgliederung } from '../../../../asd/types/schule/Schulgliederung';
 import type { List } from '../../../../java/util/List';
 import { Class } from '../../../../java/lang/Class';
 import type { JavaMap } from '../../../../java/util/JavaMap';
+import { BKGymBelegpruefungD01_10600 } from '../../../../core/abschluss/bk/d/BKGymBelegpruefungD01_10600';
 import { BKGymBelegpruefungErgebnisFehler } from '../../../../core/abschluss/bk/d/BKGymBelegpruefungErgebnisFehler';
 
 export class BKGymAbiturdatenManager extends JavaObject {
@@ -79,7 +81,7 @@ export class BKGymAbiturdatenManager extends JavaObject {
 		this.fks = fks;
 		this.faecherManager = faecherManager;
 		this.bisHalbjahr = bisHalbjahr;
-		this.belegpruefung = BKGymBelegpruefung.getPruefung(this);
+		this.belegpruefung = this.getBelegpruefung();
 		this.init();
 		this.belegpruefung.pruefe();
 		this.belegpruefungsfehler = this.belegpruefung.getBelegungsfehler();
@@ -99,6 +101,39 @@ export class BKGymAbiturdatenManager extends JavaObject {
 				continue;
 			this.mapFachbelegungenByFachbezeichnung.put(fach.bezeichnung, fachbelegung);
 		}
+	}
+
+	/**
+	 * Erstellt eine Belegprüfung zu einer Fachklasse in der Schulgliederung D01.
+	 *
+	 * @return der Belegprüfungsalgorithmus
+	 */
+	private createBelegpruefungD01() : BKGymBelegpruefung {
+		let _sevar_1605027791 : any;
+		const _seexpr_1605027791 = (this.fks);
+		if (_seexpr_1605027791 === "10600") {
+			_sevar_1605027791 = new BKGymBelegpruefungD01_10600(this);
+		} else {
+			throw new DeveloperNotificationException("Die Belegprüfung für die Schulgliederung " + this.gliederung.name() + " und den Fachklassenschlüssel " + this.fks + " wird noch nicht unterstützt.");
+		}
+		return _sevar_1605027791;
+	}
+
+	/**
+	 * Erstellt die zugehörige Belegprüfung mit den Abiturdaten anhand des übergebenen Bildungsganges.
+	 *
+	 * @return der Belegprüfungsalgorithmus
+	 */
+	private getBelegpruefung() : BKGymBelegpruefung {
+		let pruefung : BKGymBelegpruefung;
+		const _seexpr_7773353 = (this.gliederung);
+		if (_seexpr_7773353 === Schulgliederung.D01) {
+			pruefung = this.createBelegpruefungD01();
+		} else {
+			throw new DeveloperNotificationException("Die Belegprüfung für die Schulgliederung " + this.gliederung.name() + " wird noch nicht unterstützt.");
+		}
+		;
+		return pruefung;
 	}
 
 	/**
