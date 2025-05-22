@@ -3,7 +3,7 @@
 	"description": "SVWS-Server-Projekt: DAV API Tests",
 	"author": "MSB NRW",
 	"license": "BSD-3-Clause",
-	"version": "1.0.8-SNAPSHOT",
+	"version": "1.0.9-SNAPSHOT",
 	"files": [
 		"dist"
 	],
