@@ -27,10 +27,8 @@
 								<div class="flex gap-2 place-items-center">
 									<div>
 										<span class="font-bold">v{{ version }}</span>
-										<span v-if="version.includes('SNAPSHOT')">&nbsp;{{ servermode.name() }}-Mode
-											<a :href="`https://github.com/SVWS-NRW/SVWS-Server/commit/${githash}`">
-												&nbsp;{{ githash.substring(0, 8) }}
-											</a>
+										<span v-if="version.includes('SNAPSHOT')">
+											<a :href="`https://github.com/SVWS-NRW/SVWS-Server/commit/${githash}`"> &nbsp;{{ githash.substring(0, 8) }} </a>
 										</span>
 									</div>
 									<div @click="copyToClipboard" class="cursor-pointer place-items-center flex">
@@ -64,11 +62,9 @@
 <script setup lang='ts'>
 
 	import { computed, ref } from 'vue';
-	import type { ServerMode } from '../../../../core/src/core/types/ServerMode';
 
 	const props = withDefaults(defineProps<{
 		version?: string;
-		servermode: ServerMode;
 		githash?: string;
 		size?: 'sm' | 'md' | 'lg';
 		application?: string;
