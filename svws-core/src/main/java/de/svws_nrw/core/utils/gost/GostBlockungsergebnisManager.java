@@ -6185,6 +6185,46 @@ public class GostBlockungsergebnisManager {
 		return listOfLists;
 	}
 
+
+
+	/**
+	 * Liefert alle Kollisionen einer Schiene (pro Element ein Schüler).
+	 *
+	 * @param idSchiene  Die Datenbank-ID der Schiene.
+	 *
+	 * @return alle Kollisionen einer Schiene (pro Element ein Schüler).
+	 */
+	public @NotNull String getOfSchieneTooltipSchuelerkollisionen(final long idSchiene) {
+		final @NotNull StringBuilder sb = new StringBuilder();
+
+		int zeilen = 0;
+		int zeilen_ignored = 0;
+
+		// Kollisionen des Schülers in der Schiene
+		for (final long idSchueler : _schuelerID_schienenID_to_kurseSet.getKeySet()) {
+			// Überprüfe, ob die Schiene bezogen auf den Schüler überhaupt Kollisionen hat.
+			final Set<GostBlockungsergebnisKurs> set = _schuelerID_schienenID_to_kurseSet.getOrNull(idSchueler, idSchiene);
+			if (set == null)
+				continue;
+			if (set.size() <= 1)
+				continue;
+
+			// Sammle alle Kollisionen dieses Schülers.
+			final @NotNull ArrayList<GostBlockungsergebnisKurs> list = new ArrayList<>(set);
+			if (zeilen < 10) {
+				sb.append(_parent.toStringSchuelerSimple(idSchueler) + " ist in mehreren Kursen:");
+				for (int i = 0; i < list.size(); i++)
+					sb.append((i == 0 ? "" : ", ") + _parent.toStringKursSimpleOhneID(list.get(i).id));
+				sb.append("\n");
+			} else {
+				zeilen_ignored++;
+			}
+			zeilen++;
+		}
+
+		return sb.toString() + (zeilen_ignored == 0 ? "" : "+" + zeilen_ignored + " weitere Zeilen.");
+	}
+
 	private static int getOfKursOfKursAnzahlGemeinsamerSchueler(final @NotNull GostBlockungsergebnisKurs kurs1,
 			final @NotNull GostBlockungsergebnisKurs kurs2) {
 		final @NotNull Set<Long> set = new HashSet<>();
@@ -6205,7 +6245,6 @@ public class GostBlockungsergebnisManager {
 	public boolean getOfSchieneRemoveAllowed(final long idSchiene) throws DeveloperNotificationException {
 		return getSchieneE(idSchiene).kurse.isEmpty();
 	}
-
 
 	/**
 	 * Liefert die maximale Anzahl an Kursen, die es in einer Schiene gibt.

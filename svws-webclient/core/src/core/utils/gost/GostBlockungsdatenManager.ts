@@ -261,6 +261,20 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine Kurzdarstellung des Kurses (ohne ID, außer der ID ist kein Kurs zugeordnet).
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return eine Kurzdarstellung des Kurses (ohne ID, außer der ID ist kein Kurs zugeordnet).
+	 */
+	public toStringKursSimpleOhneID(idKurs : number) : string {
+		const kurs : GostBlockungKurs | null = this._map_idKurs_kurs.get(idKurs);
+		if (kurs === null)
+			return "[Kurs (" + idKurs + ") ohne Mapping]";
+		return this.toStringFachSimple(kurs.fach_id) + "-" + this.toStringKursartSimple(kurs.kursart) + kurs.nummer + (JavaString.isEmpty(kurs.suffix) ? "" : "-") + kurs.suffix;
+	}
+
+	/**
 	 * Liefert eine Kurzdarstellung des Faches mit der übergebenen ID.
 	 *
 	 * @param idFach  Die Datenbank-ID des Faches.

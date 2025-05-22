@@ -215,6 +215,22 @@ public class GostBlockungsdatenManager {
 	}
 
 	/**
+	 * Liefert eine Kurzdarstellung des Kurses (ohne ID, außer der ID ist kein Kurs zugeordnet).
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return eine Kurzdarstellung des Kurses (ohne ID, außer der ID ist kein Kurs zugeordnet).
+	 */
+	public @NotNull String toStringKursSimpleOhneID(final long idKurs) {
+		final GostBlockungKurs kurs = _map_idKurs_kurs.get(idKurs);
+		if (kurs == null)
+			return "[Kurs (" + idKurs + ") ohne Mapping]";
+
+		return toStringFachSimple(kurs.fach_id) + "-" + toStringKursartSimple(kurs.kursart) + kurs.nummer
+				+ (kurs.suffix.isEmpty() ? "" : "-") + kurs.suffix;
+	}
+
+	/**
 	 * Liefert eine Kurzdarstellung des Faches mit der übergebenen ID.
 	 *
 	 * @param idFach  Die Datenbank-ID des Faches.

@@ -5343,6 +5343,37 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		return listOfLists;
 	}
 
+	/**
+	 * Liefert alle Kollisionen einer Schiene (pro Element ein Schüler).
+	 *
+	 * @param idSchiene  Die Datenbank-ID der Schiene.
+	 *
+	 * @return alle Kollisionen einer Schiene (pro Element ein Schüler).
+	 */
+	public getOfSchieneTooltipSchuelerkollisionen(idSchiene : number) : string {
+		const sb : StringBuilder = new StringBuilder();
+		let zeilen : number = 0;
+		let zeilen_ignored : number = 0;
+		for (const idSchueler of this._schuelerID_schienenID_to_kurseSet.getKeySet()) {
+			const set : JavaSet<GostBlockungsergebnisKurs> | null = this._schuelerID_schienenID_to_kurseSet.getOrNull(idSchueler, idSchiene);
+			if (set === null)
+				continue;
+			if (set.size() <= 1)
+				continue;
+			const list : ArrayList<GostBlockungsergebnisKurs> = new ArrayList<GostBlockungsergebnisKurs>(set);
+			if (zeilen < 10) {
+				sb.append(this._parent.toStringSchuelerSimple(idSchueler) + " ist in mehreren Kursen:");
+				for (let i : number = 0; i < list.size(); i++)
+					sb.append((i === 0 ? "" : ", ") + this._parent.toStringKursSimpleOhneID(list.get(i).id));
+				sb.append("\n");
+			} else {
+				zeilen_ignored++;
+			}
+			zeilen++;
+		}
+		return sb.toString() + (zeilen_ignored === 0 ? "" : "+" + zeilen_ignored + " weitere Zeilen.");
+	}
+
 	private static getOfKursOfKursAnzahlGemeinsamerSchueler(kurs1 : GostBlockungsergebnisKurs, kurs2 : GostBlockungsergebnisKurs) : number {
 		const set : JavaSet<number> = new HashSet<number>();
 		set.addAll(kurs1.schueler);
