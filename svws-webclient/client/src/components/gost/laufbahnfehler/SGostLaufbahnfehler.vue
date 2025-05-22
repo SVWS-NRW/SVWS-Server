@@ -27,8 +27,8 @@
 					<svws-ui-radio-option v-model="art" value="gesamt" name="gesamt" label="Gesamt" />
 				</svws-ui-radio-group>
 			</div>
-			<svws-ui-table :items="filtered" :no-data="filtered.isEmpty()" no-data-html="Keine Laufbahnfehler gefunden."
-				clickable v-model:clicked="schueler" :columns selectable v-model="auswahl" scroll count>
+			<svws-ui-table :items="dataSorted" :no-data="filtered.isEmpty()" no-data-html="Keine Laufbahnfehler gefunden."
+				clickable v-model:clicked="schueler" :columns selectable v-model="auswahl" scroll count v-model:sort-by-and-order="sortByAndOrder">
 				<template #header(linkToSchueler)>
 					<span class="icon i-ri-group-line" />
 				</template>
@@ -106,7 +106,7 @@
 
 	import { computed, ref, shallowRef } from 'vue';
 	import type { GostLaufbahnfehlerProps } from "./SGostLaufbahnfehlerProps";
-	import type { DataTableColumn } from '@ui';
+	import type { DataTableColumn, SortByAndOrder } from '@ui';
 	import type { List, GostBelegpruefungErgebnisFehler } from '@core';
 	import { ArrayList, GostBelegpruefungsArt, GostBelegungsfehlerArt, SchuelerStatus, GostBelegpruefungsErgebnisse, BenutzerKompetenz } from '@core';
 	import { useRegionSwitch } from "~/components/useRegionSwitch";
@@ -125,12 +125,33 @@
 
 	const columns: DataTableColumn[] = [
 		{key: "linkToSchueler", label: " ", fixedWidth: 1.75, align: "center"},
-		{key: 'name', label: 'Name, Vorname', span: 2},
-		{key: 'beratung', labe: 'Beratung', fixedWidth: 5.5, align: "center"},
-		{key: 'ruecklauf', labe: 'Rücklauf', fixedWidth: 5.5, align: "center"},
+		{key: 'name', label: 'Name, Vorname', span: 2, sortable: true},
+		{key: 'beratung', labe: 'Beratung', fixedWidth: 5.5, align: "center", sortable: true},
+		{key: 'ruecklauf', labe: 'Rücklauf', fixedWidth: 5.5, align: "center", sortable: true},
 		{key: 'hinweise', label: 'K/WS', tooltip: 'Gibt an, ob Hinweise zu der Anzahl von Kursen oder Wochenstunden vorliegen', fixedWidth: 3.5, align: 'center'},
 		{key: 'ergebnis', label: 'Fehler', tooltip: 'Anzahl der Fehler insgesamt', fixedWidth: 3.5, align: 'right', sortable: true},
 	];
+	const sortByAndOrder = ref<SortByAndOrder | undefined>()
+
+	const dataSorted = computed(() => {
+		const temp = sortByAndOrder.value;
+		if (temp === undefined)
+			return filtered.value;
+		const arr = [...filtered.value];
+		arr.sort((a, b) => {
+			switch (temp.key) {
+				case 'name':
+					return a.schueler.nachname.localeCompare(b.schueler.nachname, "de-DE");
+				case 'beratung':
+					return a.beratungsDatum?.localeCompare(b.beratungsDatum ?? '', "de-DE") ?? 0;
+				case 'ruecklauf':
+					return a.ruecklaufDatum?.localeCompare(b.ruecklaufDatum ?? '', "de-DE") ?? 0;
+				default:
+					return 0;
+			}
+		})
+		return temp.order === true ? arr : arr.reverse();
+	})
 
 	const showModalImport = ref<boolean>(false);
 
