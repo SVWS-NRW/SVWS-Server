@@ -10,6 +10,7 @@
 		"test:local" : "playwright test",
 		"test" : "playwright test",
 		"show": "playwright show-report",
+		"ui": "playwright test --ui",
 		"lint": "eslint 'src_old/**/*.ts' --cache",
 		"codegen": "playwright codegen https://localhost -o build/codegen/gen_test.ts --ignore-https-errors"
 	},

@@ -1,6 +1,6 @@
-import {describe, expect, test} from "vitest";
-import {getApiServer} from "./utils/TestUtils.js";
-import {GostFach} from "@core";
+import { describe, expect, test } from "vitest";
+import { getApiServer } from "./utils/TestUtils.js";
+import { GostFach } from "@core";
 
 const allowDestructiveTests = process.env.MODE === 'allowDestructiveTests'
 
@@ -89,12 +89,6 @@ describe("Gesamtschule Tests", () => {
 		// TODO: FIX ME
 		test.skip("getGostSchuelerAbiturdaten", async () => {
 			const result = await api.getGostSchuelerAbiturdaten(schema, 1199);
-			expect(result).toMatchSnapshot();
-		});
-
-		// TODO: FIX ME
-		test.skip("getGostSchuelerAbiturdatenAusLeistungsdaten", async () => {
-			const result = await api.getGostSchuelerAbiturdatenAusLeistungsdaten(schema, 1199);
 			expect(result).toMatchSnapshot();
 		});
 

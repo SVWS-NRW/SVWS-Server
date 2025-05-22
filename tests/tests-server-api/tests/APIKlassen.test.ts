@@ -1,6 +1,6 @@
-import {describe, test, expect} from 'vitest';
-import {ArrayList} from "@core";
-import {getApiServer, handleRequest} from "./utils/TestUtils.js";
+import { describe, test, expect } from 'vitest';
+import { ArrayList } from "@core";
+import { getApiServer, handleRequest } from "./utils/TestUtils.js";
 
 const allowDestructiveTests = process.env.MODE === 'allowDestructiveTests'
 
@@ -38,7 +38,7 @@ describe("APIKlassen Tests", () => {
 		test.runIf(allowDestructiveTests)('POST: Neue Klasse (nur Plichtfelder)', async () => {
 			const result = await handleRequest(api, api.addKlasse, {idSchuljahresabschnitt: 2, idJahrgang: 4, kuerzel: '123abc'}, schema);
 			expect(result.content).toMatchSnapshot({
-				id: expect.any(Number)
+				id: expect.any(Number),
 			});
 		})
 
@@ -58,7 +58,7 @@ describe("APIKlassen Tests", () => {
 				idKlassenart: 6000,
 				noteneingabeGesperrt: true,
 				verwendungAnkreuzkompetenzen: true,
-				beginnSommersemester: true
+				beginnSommersemester: true,
 			},
 			schema, 3);
 

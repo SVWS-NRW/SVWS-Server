@@ -1,5 +1,5 @@
-import {describe, expect, test} from "vitest";
-import {getApiService} from "./utils/RequestBuilder.js"
+import { describe, expect, test } from "vitest";
+import { getApiService } from "./utils/RequestBuilder.js"
 
 const allowDestructiveTests = process.env.MODE === 'allowDestructiveTests'
 
@@ -69,8 +69,8 @@ describe("Dav Api, prüfe ob mit falschen Username/Password alle Endpunkte gesch
 			const response = await apiService.put(`/dav/${schema}/kalender/-1/something-something.ics`, {
 				headers: {
 					"Content-Type": "Text/Calendar",
-					"If-None-Match": ""
-				}
+					"If-None-Match": "",
+				},
 			});
 			expect(response).toBeDefined();
 			expect(response!.status).toBe(401);
@@ -78,11 +78,11 @@ describe("Dav Api, prüfe ob mit falschen Username/Password alle Endpunkte gesch
 
 		test("PUT Request mit If-Match Header", async () => {
 			const response = await apiService.put(`/dav/${schema}/kalender/-1/something-something.ics`, {
-						headers: {
-							"Content-Type": "Text/Calendar",
-							"If-Match": "*"
-						}
-					},
+				headers: {
+					"Content-Type": "Text/Calendar",
+					"If-Match": "*",
+				},
+			}
 			);
 			expect(response).toBeDefined();
 			expect(response!.status).toBe(401);
@@ -92,8 +92,8 @@ describe("Dav Api, prüfe ob mit falschen Username/Password alle Endpunkte gesch
 			const response = await apiService.delete(`/dav/${schema}/kalender/-1/something-something.ics`, {
 				headers: {
 					"Content-Type": "Text/Calendar",
-					"If-Match": "*"
-				}
+					"If-Match": "*",
+				},
 			});
 			expect(response).toBeDefined();
 			expect(response!.status).toBe(401);

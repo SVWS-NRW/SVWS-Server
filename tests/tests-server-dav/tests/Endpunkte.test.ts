@@ -1,5 +1,5 @@
-import {describe, expect, test} from "vitest";
-import {getApiService} from "./utils/RequestBuilder.js"
+import { describe, expect, test } from "vitest";
+import { getApiService } from "./utils/RequestBuilder.js"
 
 const allowDestructiveTests = process.env.MODE === 'allowDestructiveTests'
 
@@ -45,7 +45,7 @@ describe("Prüft ob entsprechende Endpunkte erreichbar sind", () => {
 		test(`dav/${schema}/kalender/-1/something-something.ics`, async () => {
 			const response = await apiService.put(`/dav/${schema}/kalender/-1/something-something.ics`, {
 				body: "a",
-				headers: {"If-None-Match": "", "Content-Type": "Text/Calender"}
+				headers: {"If-None-Match": "", "Content-Type": "Text/Calender"},
 			})
 			expect(response).toBeDefined();
 			expect(response!.status).toBe(400);
@@ -57,8 +57,8 @@ describe("Prüft ob entsprechende Endpunkte erreichbar sind", () => {
 				body: "a",
 				headers: {
 					"If-Match": "*",
-					"Content-Type": "Text/Calender"
-				}
+					"Content-Type": "Text/Calender",
+				},
 			})
 			expect(response).toBeDefined();
 			expect(response!.status).toBe(500);
@@ -69,8 +69,8 @@ describe("Prüft ob entsprechende Endpunkte erreichbar sind", () => {
 			const response = await apiService.delete(`/dav/${schema}/kalender/-1/something-something.ics`, {
 				headers: {
 					"If-Match": "*",
-					"Content-Type": "Text/Calender"
-				}
+					"Content-Type": "Text/Calender",
+				},
 			})
 			expect(response).toBeDefined();
 			expect(response!.status).toBe(400);
@@ -79,8 +79,8 @@ describe("Prüft ob entsprechende Endpunkte erreichbar sind", () => {
 		test.runIf(allowDestructiveTests)(`dav/${schema}/kalender/-1/something-something.ics`, async () => {
 			const response = await apiService.delete(`/dav/${schema}/kalender/-1/something-something.ics`, {
 				headers: {
-					"Content-Type": "Text/Calender"
-				}
+					"Content-Type": "Text/Calender",
+				},
 			})
 			expect(response).toBeDefined();
 			expect(response!.status).toBe(400);

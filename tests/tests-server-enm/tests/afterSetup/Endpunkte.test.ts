@@ -1,7 +1,8 @@
-import {describe, expect, test} from "vitest";
-import {getApiService} from "../../utils/RequestBuilder.js";
-import {parse} from "../../utils/ENMApiDataParser.js";
-import {ENMSchueler, ENMLeistung, ENMSchuelerAnkreuzkompetenz} from "@core";
+import { describe, expect, test } from "vitest";
+import { getApiService } from "../../utils/RequestBuilder.js";
+import { parse } from "../../utils/ENMApiDataParser.js";
+import type { ENMLeistung, ENMSchuelerAnkreuzkompetenz } from "@core";
+import { ENMSchueler } from "@core";
 
 const targetUrlENMServer: string = process.env.VITE_ENM_targetHost ?? "https://localhost";
 const apiServiceAuth = getApiService('T.Giesen@lmail.de', 'UD73Js0Uro', targetUrlENMServer)
@@ -14,9 +15,12 @@ describe("Das Bearbeiten von Bemerkungen führt zu keinen Redundanzen im Child A
 
 		// Extrahier einen Schüler aus den Daten
 		const _data = await parse(await response.blob());
-		const schueler = _data.schueler.elementData.find((s: ENMSchueler) => {
-			return s.id === 3029;
-		})
+		let schueler = new ENMSchueler();
+		for (const s of _data.schueler)
+			if (s.id === 3029) {
+				schueler = s;
+				break;
+			}
 
 		// Überprüfe das die entsprechenden Daten vom Schüler passen
 		expect(schueler.nachname).toBe("Lindemann");
@@ -32,8 +36,8 @@ describe("Das Bearbeiten von Bemerkungen führt zu keinen Redundanzen im Child A
 				ZB: "Test",
 				foerderbemerkungen: "Test",
 				individuelleVersetzungsbemerkungen: "Test",
-				schulformEmpf: "Test"
-			}
+				schulformEmpf: "Test",
+			},
 		}
 		const postResponse = await apiServiceAuth.post(`/api/bemerkungen`, {body: JSON.stringify(bodyDataPost)});
 		expect(postResponse.status).toBe(200);
@@ -42,11 +46,14 @@ describe("Das Bearbeiten von Bemerkungen führt zu keinen Redundanzen im Child A
 		expect(responseAfterEdit.status).toBe(200);
 		const _dataAfterEdit = await parse(await responseAfterEdit.blob());
 		// Extrahier einen Schüler aus den Daten
-		const schuelerAfterEdit = _dataAfterEdit.schueler.elementData.find((s: ENMSchueler) => {
-			return s.id === 3029;
-		})
+		let schuelerAfterEdit = new ENMSchueler();
+		for (const s of _dataAfterEdit.schueler)
+			if (s.id === 3029) {
+				schuelerAfterEdit = s;
+				break;
+			}
 
-		const leistungsDaten = schuelerAfterEdit.leistungsdaten.elementData;
+		const leistungsDaten = [...schuelerAfterEdit.leistungsdaten];
 
 		const prevalences: number [] = []
 		leistungsDaten.forEach((ld: ENMLeistung) => {
@@ -84,8 +91,8 @@ describe("Das Bearbeiten von Bemerkungen führt zu keinen Redundanzen im Child A
 				ZB: "Test",
 				foerderbemerkungen: "Test",
 				individuelleVersetzungsbemerkungen: "Test",
-				schulformEmpf: "Test"
-			}
+				schulformEmpf: "Test",
+			},
 		}
 		const postResponse = await apiServiceAuth.post(`/api/bemerkungen`, {body: JSON.stringify(bodyDataPost)});
 		expect(postResponse.status).toBe(200);
@@ -137,11 +144,11 @@ describe("Das Bearbeiten von Leistungen führt zu keinen Redundanzen im Child Ar
 			note: "6",
 			istGemahnt: true,
 			fehlstundenFach: 3,
-			fachbezogeneBemerkungen: "ist ein test"
+			fachbezogeneBemerkungen: "ist ein test",
 		}
 
 		const responsePost = await apiServiceAuth.post(`/api/leistung`, {
-			body: JSON.stringify(bodyData)
+			body: JSON.stringify(bodyData),
 		});
 
 		expect(responsePost.status).toBe(200);
@@ -198,10 +205,10 @@ describe("Leistung und Teilleistung können bearbeitet werden", () => {
 			note: "6",
 			istGemahnt: true,
 			fehlstundenFach: 3,
-			fachbezogeneBemerkungen: "ist ein test"
+			fachbezogeneBemerkungen: "ist ein test",
 		}
 		const responsePost = await apiServiceAuth.post(`/api/leistung`, {
-			body: JSON.stringify(bodyData)
+			body: JSON.stringify(bodyData),
 		});
 		expect(responsePost.status).toBe(200);
 		//
@@ -270,8 +277,8 @@ describe("Leistung und Teilleistung können bearbeitet werden", () => {
 
 		const responseAfterEdit = await apiServiceAuth.get(`/api/daten`);
 		expect(responseAfterEdit).toBeDefined();
-		expect(responseAfterEdit!.status).toBe(200);
-		const _dataAfterEdit = await parse(await responseAfterEdit!.blob());
+		expect(responseAfterEdit.status).toBe(200);
+		const _dataAfterEdit = await parse(await responseAfterEdit.blob());
 
 		const testSchuelerAfterEdit = _dataAfterEdit.schueler.elementData.find((s: ENMSchueler) => {
 			return s.id === 3029;
@@ -295,12 +302,12 @@ describe("Clientconfig können bearbeitet werden", () => {
 		// Diese Daten werden patched
 		const bodyData = {
 			"key": "testkey",
-			"value": "testvalue"
+			"value": "testvalue",
 		}
 
 		const responsePUT = await apiServiceAuth.put(`/api/clientconfig`, {
 			body: JSON.stringify(bodyData),
-			headers: {"Content-Type": "application/json"}
+			headers: {"Content-Type": "application/json"},
 		});
 
 		expect(responsePUT.status).toBe(200);
@@ -332,8 +339,8 @@ describe("Bemerkungen können bearbeitet werden", () => {
 				ZB: "Test",
 				foerderbemerkungen: "Test",
 				individuelleVersetzungsbemerkungen: "Test",
-				schulformEmpf: "Test"
-			}
+				schulformEmpf: "Test",
+			},
 		}
 		const responsePost = await apiServiceAuthWrongTeacher.post(`/api/bemerkungen`, {body: JSON.stringify(bodyData)});
 
@@ -367,8 +374,8 @@ describe("Bemerkungen können bearbeitet werden", () => {
 				ZB: "Test",
 				foerderbemerkungen: "Test",
 				individuelleVersetzungsbemerkungen: "Test",
-				schulformEmpf: "Test"
-			}
+				schulformEmpf: "Test",
+			},
 		}
 		const responsePost = await apiServiceAuth.post(`/api/bemerkungen`, {body: JSON.stringify(bodyData)});
 		expect(responsePost.status).toBe(200);
@@ -392,7 +399,7 @@ describe("Ankreuzkompetenzen können bearbeitet werden", () => {
 	test("Ankreuzkompetenzen mit unbekannter ID", async () => {
 		const bodyData = {
 			id: 9999999999,
-			stufen: [true, true, true, true, true]
+			stufen: [true, true, true, true, true],
 		}
 
 		const responsePost = await apiServiceAuth.post(`/api/ankreuzkompetenz`, {body: JSON.stringify(bodyData)});
@@ -402,7 +409,7 @@ describe("Ankreuzkompetenzen können bearbeitet werden", () => {
 	test("Anpassung von Ankreuzkompetenzen von Schueler der nicht der gleichen Klasse wie Lehrer zugeordnet ist ist verboten", async () => {
 		const bodyData = {
 			id: targetAnkreuzKompetenzId,
-			stufen: [true, true, true, true, true]
+			stufen: [true, true, true, true, true],
 		}
 		const responsePost = await apiServiceAuthWrongTeacher.post(`/api/ankreuzkompetenz`, {body: JSON.stringify(bodyData)});
 		expect(responsePost.status).toBe(403);
@@ -431,7 +438,7 @@ describe("Ankreuzkompetenzen können bearbeitet werden", () => {
 		// Diese Daten werden patched
 		const bodyData = {
 			id: targetAnkreuzKompetenzId,
-			stufen: [true, true, true, true, true]
+			stufen: [true, true, true, true, true],
 		}
 
 		const responsePost = await apiServiceAuth.post(`/api/ankreuzkompetenz`, {body: JSON.stringify(bodyData)});
@@ -457,7 +464,7 @@ describe("Passwort Management durch create_pwt", () => {
 	test("Fehlender Parameter im JSON führt zu Fehler", async () => {
 		// Diese Daten werden patched
 		const bodyData = {
-			notUsed: "Die Dienst-E-Mail ist erforderlich."
+			notUsed: "Die Dienst-E-Mail ist erforderlich.",
 		}
 
 		const responsePost = await apiServiceAuth.post(`/api/create_pwt`, {body: JSON.stringify(bodyData)});
@@ -468,7 +475,7 @@ describe("Passwort Management durch create_pwt", () => {
 	test("Unbekannte Email erzeugt Fehler", async () => {
 		// Diese Daten werden patched
 		const bodyData = {
-			eMailDienstlich: "notused@email.de"
+			eMailDienstlich: "notused@email.de",
 		}
 
 		const responsePost = await apiServiceAuth.post(`/api/create_pwt`, {body: JSON.stringify(bodyData)});
@@ -479,7 +486,7 @@ describe("Passwort Management durch create_pwt", () => {
 	test("Korrekte Email -> 204", async () => {
 		// Diese Daten werden patched
 		const bodyData = {
-			eMailDienstlich: "D.Berthold@lmail.de"
+			eMailDienstlich: "D.Berthold@lmail.de",
 		}
 
 		const responsePost = await apiServiceAuth.post(`/api/create_pwt`, {body: JSON.stringify(bodyData)});
@@ -489,7 +496,7 @@ describe("Passwort Management durch create_pwt", () => {
 
 	test("Korrekte Email doppelt führt zu einem Fehler", async () => {
 		const bodyData = {
-			eMailDienstlich: "D.Berthold@lmail.de"
+			eMailDienstlich: "D.Berthold@lmail.de",
 		}
 
 		await apiServiceAuth.post(`/api/create_pwt`, {body: JSON.stringify(bodyData)});
@@ -500,7 +507,7 @@ describe("Passwort Management durch create_pwt", () => {
 	});
 })
 
-describe("Test Lernabschnitte", () =>{
+describe("Test Lernabschnitte", () => {
 	test("Post Lernabschnitte", async () => {
 		const response = await apiServiceAuth.get(`/api/daten`);
 		expect(response.status).toBe(200);
@@ -517,12 +524,12 @@ describe("Test Lernabschnitte", () =>{
 
 		const bodyData = {
 			id: lernabschnittID,
-			fehlstundenGesamt: 1337
+			fehlstundenGesamt: 1337,
 
 		}
 
 		const responseOfPost = await apiServiceAuth.post(`/api/lernabschnitt`, {
-			body: JSON.stringify(bodyData)
+			body: JSON.stringify(bodyData),
 		});
 		console.log(await responseOfPost.text())
 		expect(responseOfPost.status).toBe(200)
