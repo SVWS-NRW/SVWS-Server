@@ -81,6 +81,29 @@ public final class AbteilungenListeManager extends AuswahlManager<Long, Abteilun
 	}
 
 	/**
+	 * Löscht Klassenzuordnungen anhand der IDs
+	 *
+	 * @param ids    Ids der Klassenzuordnungen
+	 */
+	public void deleteKlassenzuordnungen(final @NotNull List<Long> ids) {
+		if (this._daten == null)
+			return;
+
+		for (final Long id: ids) {
+			AbteilungKlassenzuordnung toBeDeleted = null;
+			for (final AbteilungKlassenzuordnung v : this._daten.klassenzuordnungen) {
+				if (v.id == id) {
+					toBeDeleted = v;
+					break;
+				}
+			}
+			if (toBeDeleted != null)
+				this._daten.klassenzuordnungen.remove(toBeDeleted);
+		}
+	}
+
+
+	/**
 	 * Ein Getter für die Liste der Lehrer
 	 *
 	 * @return lehrer

@@ -11815,31 +11815,33 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der DELETE-Methode deleteAbteilungKlassenzuordnung für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/abteilungen/klassenzuordnung/{id : \d+}
+	 * Implementierung der DELETE-Methode deleteAbteilungKlassenzuordnung für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/abteilungen/klassenzuordnung/delete/multiple
 	 *
-	 * Entfernt eine AbteilungenKlassenzuordnung. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen einer AbteilungenKlassenzuordnungen hat.
+	 * Entfernt AbteilungenKlassenzuordnungen, insofern der SVWS-Benutzer die notwendige Berechtigung hat.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die AbteilungenKlassenzuordnung wurde erfolgreich entfernt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: AbteilungKlassenzuordnung
+	 *     - Rückgabe-Typ: List<AbteilungKlassenzuordnung>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
 	 *   Code 404: Keine AbteilungenKlassenzuordnung vorhanden
 	 *   Code 409: Die übergebenen Daten sind fehlerhaft)
 	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
 	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
 	 *
 	 * @returns Die AbteilungenKlassenzuordnung wurde erfolgreich entfernt.
 	 */
-	public async deleteAbteilungKlassenzuordnung(schema : string, id : number) : Promise<AbteilungKlassenzuordnung> {
-		const path = "/db/{schema}/schule/abteilungen/klassenzuordnung/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
-		const text = result;
-		return AbteilungKlassenzuordnung.transpilerFromJSON(text);
+	public async deleteAbteilungKlassenzuordnung(data : List<number>, schema : string) : Promise<List<AbteilungKlassenzuordnung>> {
+		const path = "/db/{schema}/schule/abteilungen/klassenzuordnung/delete/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<AbteilungKlassenzuordnung>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(AbteilungKlassenzuordnung.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 

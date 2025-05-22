@@ -216,30 +216,30 @@ public class APIAbteilungen {
 	}
 
 	/**
-	 * Die OpenAPI-Methode für das Entfernen der AbteilungKlassenzuordnung.
+	 * Die OpenAPI-Methode für das Entfernen von AbteilungKlassenzuordnungen.
 	 *
 	 * @param schema    das Datenbankschema
-	 * @param id        der InputStream, mit der Liste von zu löschenden IDs
+	 * @param is        der InputStream, mit der Liste der zu löschenden IDs
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem Status und ggf. der gelöschten AbteilungenKlassenzuordnung
 	 */
 	@DELETE
-	@Path("/klassenzuordnung/{id : \\d+}")
-	@Operation(summary = "Entfernt eine AbteilungenKlassenzuordnung anhand der mitgelieferten ID.",
-			description = "Entfernt eine AbteilungenKlassenzuordnung. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen einer "
-					+ "AbteilungenKlassenzuordnungen hat.")
-	@ApiResponse(responseCode = "200", description = "Die AbteilungenKlassenzuordnung wurde erfolgreich entfernt.", content = @Content(mediaType =
-			"application/json", schema = @Schema(implementation = AbteilungKlassenzuordnung.class)))
+	@Path("/klassenzuordnung/delete/multiple")
+	@Operation(summary = "Entfernt AbteilungenKlassenzuordnungen.",
+			description = "Entfernt AbteilungenKlassenzuordnungen, insofern der SVWS-Benutzer die notwendige Berechtigung hat.")
+	@ApiResponse(responseCode = "200", description = "Die AbteilungenKlassenzuordnung wurde erfolgreich entfernt.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = AbteilungKlassenzuordnung.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
 	@ApiResponse(responseCode = "404", description = "Keine AbteilungenKlassenzuordnung vorhanden")
 	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft)")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z. B. beim Datenbankzugriff)")
-	public Response deleteAbteilungKlassenzuordnung(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@Context final HttpServletRequest request) {
+	public Response deleteAbteilungKlassenzuordnung(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die Ids der zu löschenden Objekte", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+			array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataAbteilungenKlassenzuordnungen(conn).deleteAsResponse(id), request, ServerMode.DEV,
-				BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
+				conn -> new DataAbteilungenKlassenzuordnungen(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)),
+				request, ServerMode.DEV, BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
 	}
 
 }

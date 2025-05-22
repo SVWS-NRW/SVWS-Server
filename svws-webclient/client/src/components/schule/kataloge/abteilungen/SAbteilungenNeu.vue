@@ -23,16 +23,17 @@
 				</template>
 			</svws-ui-table>
 		</svws-ui-content-card>
+		<svws-ui-checkpoint-modal :checkpoint :continue-routing="props.continueRoutingAfterCheckpoint" />
 	</div>
 </template>
 
 <script setup lang="ts">
 
+	import {computed, ref, watch} from "vue";
 	import type { AbteilungenNeuProps } from "~/components/schule/kataloge/abteilungen/SAbteilungenNeuProps";
 	import type { KlassenDaten, LehrerListeEintrag, List } from "@core";
 	import type { DataTableColumn } from "@ui";
 	import { Abteilung, AbteilungKlassenzuordnung, ArrayList, JavaString } from "@core";
-	import { computed, ref } from "vue";
 	import { ObjectSelectManager } from "../../../../../../ui/src/ui/controls/select/selectManager/ObjectSelectManager";
 
 	const props = defineProps<AbteilungenNeuProps>();
@@ -120,5 +121,11 @@
 	const columns: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Kürzel"},
 	];
+
+	watch(() => data.value, async() => {
+		if (isLoading.value)
+			return;
+		props.checkpoint.active = true;
+	}, {immediate: false, deep: true});
 
 </script>

@@ -75,6 +75,27 @@ export class AbteilungenListeManager extends AuswahlManager<number, Abteilung, A
 	}
 
 	/**
+	 * Löscht Klassenzuordnungen anhand der IDs
+	 *
+	 * @param ids    Ids der Klassenzuordnungen
+	 */
+	public deleteKlassenzuordnungen(ids : List<number>) : void {
+		if (this._daten === null)
+			return;
+		for (const id of ids) {
+			let toBeDeleted : AbteilungKlassenzuordnung | null = null;
+			for (const v of this._daten.klassenzuordnungen) {
+				if (v.id === id) {
+					toBeDeleted = v;
+					break;
+				}
+			}
+			if (toBeDeleted !== null)
+				this._daten.klassenzuordnungen.remove(toBeDeleted);
+		}
+	}
+
+	/**
 	 * Ein Getter für die Liste der Lehrer
 	 *
 	 * @return lehrer

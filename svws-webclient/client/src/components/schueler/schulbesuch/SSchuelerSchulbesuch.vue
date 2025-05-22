@@ -89,7 +89,7 @@
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Besondere Merkmale für die Statistik">
-			<svws-ui-table :clickable="true" @update:clicked="v => patchMerkmal(v)" :columns="columnsMerkmale" :items="merkmale"
+			<svws-ui-table clickable @update:clicked="v => patchMerkmal(v)" :columns="columnsMerkmale" :items="merkmale"
 				v-model="auswahlMerkmale" :selectable="hatUpdateKompetenz">
 				<template #cell(merkmal)="{ rowData: s }">
 					<span>{{ manager().merkmaleById.get(s.idMerkmal ?? -1)?.bezeichnung ?? " - " }}</span>
@@ -125,7 +125,7 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Alle bisher besuchten Schulen" class="col-span-full">
 			<!-- Tabelle der bisher besuchten Schulen -->
-			<svws-ui-table :clickable="true" @update:clicked="v => patchBisherigeSchule(v)" :columns="columnsBisherigeSchulen" :items="bisherigeSchulen"
+			<svws-ui-table clickable @update:clicked="v => patchBisherigeSchule(v)" :columns="columnsBisherigeSchulen" :items="bisherigeSchulen"
 				v-model="auswahlBisherigeSchulen" :selectable="hatUpdateKompetenz">
 				<template #cell(schulform)="{ rowData }">
 					<span>{{ Schulform.data().getEintragByID(manager().schulenById.get(rowData.idSchule ?? -1)?.idSchulform ?? -1)?.kuerzel ?? ' - ' }}</span>
@@ -276,13 +276,11 @@
 	// Delete
 	const auswahlMerkmale = ref<SchuelerSchulbesuchMerkmal[]>([]);
 	async function deleteAuswahlMerkmale() {
-		if (auswahlMerkmale.value.length === 0) {
+		if (auswahlMerkmale.value.length === 0)
 			return;
-		}
 		const ids = new ArrayList<number>();
-		for (const s of auswahlMerkmale.value) {
+		for (const s of auswahlMerkmale.value)
 			ids.add(s.id);
-		}
 		await props.deleteSchuelerSchulbesuchMerkmale(ids);
 		auswahlMerkmale.value = [];
 	}
