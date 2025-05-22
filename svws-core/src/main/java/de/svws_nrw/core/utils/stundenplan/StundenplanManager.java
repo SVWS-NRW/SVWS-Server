@@ -4276,7 +4276,6 @@ public class StundenplanManager {
 
 	private void pausenaufsichtCheckAttributes(final @NotNull StundenplanPausenaufsicht pausenaufsicht) {
 		DeveloperNotificationException.ifInvalidID("pausenaufsicht.id", pausenaufsicht.id);
-		DeveloperNotificationException.ifMapNotContains("_map_idLehrer_zu_lehrer", _lehrer_by_id, pausenaufsicht.idLehrer);
 		DeveloperNotificationException.ifMapNotContains("_map_idPausenzeit_zu_pausenzeit", _pausenzeit_by_id, pausenaufsicht.idPausenzeit);
 
 		for (final @NotNull StundenplanPausenaufsichtBereich aufsichtsbereich : pausenaufsicht.bereiche)
