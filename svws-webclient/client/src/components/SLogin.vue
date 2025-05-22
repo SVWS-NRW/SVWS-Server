@@ -1,5 +1,5 @@
 <template>
-	<ui-login-layout :version :githash>
+	<ui-login-layout :version :githash :servermode>
 		<template #logo>
 			<img src="/images/Wappenzeichen_NRW_bw.svg" alt="Logo NRW" class="h-14">
 		</template>

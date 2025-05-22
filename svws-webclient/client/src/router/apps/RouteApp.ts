@@ -176,6 +176,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			username: api.username,
 			schemaname: api.schema,
 			schulform: api.schulform,
+			servermode: api.mode,
 			schuleStammdaten: api.schuleStammdaten,
 			// Props für die Navigation
 			menu: this.getMenuManager(),
