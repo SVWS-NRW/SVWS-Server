@@ -114,7 +114,7 @@
 										<template v-if="!showSchienen">
 											<!-- Diese Ansicht hat keine Anzeige der Schienen (Schüler, Lehrer) -->
 											<template v-if="getUnterrichte(wochentag.id, stunde, wt, null).size() > 0">
-												<div class="bg-ui-25 col-span-full text-sm font-bold text-center mt-1 py-1 print:!mb-0"> {{ manager().stundenplanGetWochenTypAsString(wt) }}</div>
+												<div class="bg-ui-75 text-ui-100 col-span-full text-sm font-bold text-center mt-1 py-1 print:!mb-0"> {{ manager().stundenplanGetWochenTypAsString(wt) }}</div>
 											</template>
 											<div v-for="unterricht in getUnterrichte(wochentag.id, stunde, wt, null)" :key="unterricht.id"
 												class="svws-ui-stundenplan--unterricht"

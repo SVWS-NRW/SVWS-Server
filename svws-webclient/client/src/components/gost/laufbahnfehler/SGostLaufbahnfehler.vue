@@ -47,7 +47,7 @@
 				</template>
 				<template #cell(name)="{rowData}">
 					<span class="line-clamp-1 leading-tight -my-0.5 break-all">{{ rowData.schueler.nachname }}, {{ rowData.schueler.vorname }}</span>
-					<span v-if="rowData.schueler.status !== 2" class="svws-ui-badge text-sm font-bold mt-0 ml-1 bg-ui-25">
+					<span v-if="rowData.schueler.status !== 2" class="svws-ui-badge text-sm font-bold mt-0 ml-1 bg-ui-50 text-ui-100">
 						{{ SchuelerStatus.data().getEintragByID(rowData.schueler.status)?.text ?? '—' }}
 					</span>
 				</template>

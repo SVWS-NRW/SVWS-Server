@@ -51,7 +51,7 @@
 						@update:model-value="keineAuskunftAnDritte => patch({ keineAuskunftAnDritte })">
 						Keine Auskunft an Dritte
 					</svws-ui-checkbox>
-					<svws-ui-checkbox :disabled="!hatKompetenzUpdate" :model-value="data.istSchulpflichtErfuellt" readonly statistics >
+					<svws-ui-checkbox :disabled="!hatKompetenzUpdate" :model-value="data.istSchulpflichtErfuellt" readonly statistics>
 						Schulpflicht erfüllt
 					</svws-ui-checkbox>
 					<svws-ui-checkbox :disabled="!hatKompetenzUpdate" :model-value="data.istBerufsschulpflichtErfuellt"
