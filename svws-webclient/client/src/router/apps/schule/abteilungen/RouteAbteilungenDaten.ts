@@ -31,6 +31,7 @@ export class RouteAbteilungenDaten extends RouteNode<any, RouteAbteilungen> {
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			patch: routeAbteilungen.data.patch,
 			deleteKlassenzuordnungen: routeAbteilungen.data.deleteKlassenzuordnungen,
+			addKlassenzuordnungen: routeAbteilungen.data.addKlassenzuordnungen,
 		}
 	}
 }

@@ -8,8 +8,11 @@
 				<svws-ui-text-input placeholder="Durchwahl" type="tel" :max-len="20" v-model="data.durchwahl" :valid="fieldIsValid('durchwahl')" />
 				<svws-ui-spacing />
 				<ui-select label="Lehrer" v-model="idLehrer" :select-manager="lehrerSelectManager" />
-				<div />
-				<div />
+				<svws-ui-button :disabled="data.idAbteilungsleiter === null" type="transparent"
+					@click="goToLehrer(data.idAbteilungsleiter ?? -1)">
+					<span class="icon i-ri-link" /> Zum Lehrer
+				</svws-ui-button>
+				<svws-ui-spacing />
 				<div class="mt-7 flex flex-row gap-4 justify end">
 					<svws-ui-button type="secondary" @click="cancel">Abbrechen</svws-ui-button>
 					<svws-ui-button @click="add" :disabled="!formIsValid">Speichern</svws-ui-button>
@@ -17,7 +20,7 @@
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Klassen">
-			<svws-ui-table :items="manager().getKlassen().values()" :columns :selectable="true" v-model="selectedKlassen" :scroll="true" class="max-h-[400px]">
+			<svws-ui-table :items="manager().getKlassen().values()" :columns selectable v-model="klassenToBeAdded" scroll >
 				<template #cell(kuerzel)="{ rowData: s }">
 					<span>{{ s.kuerzel }}</span>
 				</template>
@@ -29,7 +32,7 @@
 
 <script setup lang="ts">
 
-	import {computed, ref, watch} from "vue";
+	import { computed, ref, watch } from "vue";
 	import type { AbteilungenNeuProps } from "~/components/schule/kataloge/abteilungen/SAbteilungenNeuProps";
 	import type { KlassenDaten, LehrerListeEintrag, List } from "@core";
 	import type { DataTableColumn } from "@ui";
@@ -39,7 +42,7 @@
 	const props = defineProps<AbteilungenNeuProps>();
 	const data = ref<Abteilung>(new Abteilung());
 	const isLoading = ref<boolean>(false);
-	const selectedKlassen = ref<KlassenDaten[]>([])
+	const klassenToBeAdded = ref<KlassenDaten[]>([])
 
 	const idLehrer = computed({
 		get: () => props.manager().getLehrer().get(data.value.idAbteilungsleiter),
@@ -100,10 +103,10 @@
 	}
 
 	function createKlassenzuordnungen(idAbteilung: number): List<AbteilungKlassenzuordnung> {
-		if (selectedKlassen.value.length === 0)
+		if (klassenToBeAdded.value.length === 0)
 			return new ArrayList<AbteilungKlassenzuordnung>();
 		const klassenzuordnungen = new ArrayList<AbteilungKlassenzuordnung>();
-		for (const klasse of selectedKlassen.value ) {
+		for (const klasse of klassenToBeAdded.value ) {
 			const zuordnung = new AbteilungKlassenzuordnung()
 			zuordnung.idAbteilung = idAbteilung;
 			zuordnung.idKlasse = klasse.id;
