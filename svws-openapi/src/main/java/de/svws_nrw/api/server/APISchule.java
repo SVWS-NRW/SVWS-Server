@@ -1,8 +1,10 @@
 package de.svws_nrw.api.server;
 
+import de.svws_nrw.core.data.schule.Kindergarten;
 import de.svws_nrw.core.data.schule.Lernplattform;
 import de.svws_nrw.core.data.schule.Merkmal;
 import de.svws_nrw.core.data.schule.TelefonArt;
+import de.svws_nrw.data.schule.DataKatalogKindergaerten;
 import de.svws_nrw.data.schule.DataKatalogLernplattformen;
 import de.svws_nrw.data.schule.DataKatalogTelefonArten;
 import de.svws_nrw.data.schule.DataMerkmale;
@@ -1519,6 +1521,111 @@ public class APISchule {
 				BenutzerKompetenz.KEINE);
 	}
 
+	/**
+	 * Die OpenAPI-Methode für die Abfrage des schulspezifischen Kataloges für die Kindergärten.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return          die Liste mit dem Katalog der Kindergärten
+	 */
+	@GET
+	@Path("/kindergaerten")
+	@Operation(summary = "Gibt eine Übersicht aller Kindergärten im Katalog zurück.",
+			description = "Erstellt eine Liste aller in dem Katalog vorhanden Kindergärten. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Kindergarten.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
+	public Response getKindergaerten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogKindergaerten(conn).getAllAsResponse(),
+				request, ServerMode.DEV, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Hinzufügen neuer Kindergärten.
+	 *
+	 * @param schema       das Datenbankschema, in welchem der Kindergarten erstellt wird
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 * @param is           das JSON-Objekt
+	 *
+	 * @return die HTTP-Antwort mit neuem Kindergarten
+	 */
+	@POST
+	@Path("/kindergarten/new")
+	@Operation(summary = "Erstellt einen neuen Kindergarten und gibt diesen zurück.",
+			description = "Erstellt einen neuen Kindergarten und gibt diesen zurück."
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Hinzufügen eines Kindergartens besitzt.")
+	@ApiResponse(responseCode = "201", description = "Kindergarten wurde erfolgreich angelegt.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Kindergarten.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Telefonart anzulegen.")
+	@ApiResponse(responseCode = "409", description = "Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response addKindergarten(@PathParam("schema") final String schema,
+			@RequestBody(description = "Der initiale Patch für den neuen Kindergarten", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Kindergarten.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogKindergaerten(conn).addAsResponse(is),
+				request, ServerMode.DEV,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Patchen eines Kindergartens im angegebenen Schema
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param id        die Datenbank-ID zur Identifikation des Kindergartens
+	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/kindergarten/{id : \\d+}")
+	@Operation(summary = "Passt die zu der ID des Kindergarten zugehörigen Stammdaten an.",
+			description = "Passt die Kindergarten-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern der Daten der Kindergärten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Kindergarten-Daten integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Kindergarten-Daten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Kindergarten mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
+			+ " (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response patchKindergarten(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@RequestBody(description = "Der Patch für den Kindergarten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = Kindergarten.class))) final InputStream is, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogKindergaerten(conn).patchAsResponse(id, is), request, ServerMode.DEV,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen mehrerer Kindergärten.
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param is           die IDs der Kindergärten
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
+	 */
+	@DELETE
+	@Path("/kindergaerten/delete/multiple")
+	@Operation(summary = "Entfernt mehrere Kindergärten.",
+			description = "Entfernt mehrere Kindergärten."
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.")
+	@ApiResponse(responseCode = "200", description = "Die Kindergärten wurden erfolgreich entfernt.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.")
+	@ApiResponse(responseCode = "404", description = "Kindergärten nicht vorhanden")
+	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteKindergaerten(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die IDs der zu löschenden Kindergärten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogKindergaerten(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)),
+				request, ServerMode.DEV, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
 
 	/**
 	 * Die OpenAPI-Methode für die Abfrage der Kataloges der Noten.
