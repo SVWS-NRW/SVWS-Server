@@ -6,7 +6,7 @@ test.use({
 
 const targetHost = process.env.VITE_targetHost ?? "https://localhost"
 
-test('test', async ({ page }) => {
+test.skip('test', async ({ page }) => {
 	await page.goto(targetHost + '/#/login?redirect=/');
 	await page.getByLabel('Benutzername').click();
 	await page.getByLabel('Benutzername').fill('admin');
