@@ -1,13 +1,18 @@
 <template>
 	<div class="page page-grid-cards">
-		<svws-ui-content-card>
+		<svws-ui-input-wrapper :grid="1">
 			<div class="pb-4">
 				<svws-ui-radio-option v-model="isInternal" :value="true" label=" Schule aus NRW erstellen " />
 				<svws-ui-radio-option class="pb-4" v-model="isInternal" :value="false" label=" Externe Schule erstellen " />
 			</div>
-			<svws-ui-select v-if="!isInternal" class="pb-4" title="Schulen außerhalb NRW" :items="Herkunftsschulnummern.all_values_by_name.values()"
-				:model-value="externalSchulnummer" @update:model-value="v => data.schulnummerStatistik = v?.daten.schulnummer.toString() ?? ''"
-				:item-text=" v => v.daten.bezeichnung" />
+			<svws-ui-tooltip v-if="!isInternal" color="primary" :show-arrow="false" :indicator="false">
+				<template #content>
+					Schulen außerhalb NRW und sonstige Herkünfte z.B. auch nicht staatl. anerkannte Schulen.
+				</template>
+				<svws-ui-select class="pb-4 w-full" title="Schulen außerhalb von NRW und Privatschulen" :items="Herkunftsschulnummern.all_values_by_name.values()"
+					:model-value="externalSchulnummer" @update:model-value="v => data.schulnummerStatistik = v?.daten.schulnummer.toString() ?? ''"
+					:item-text=" v => v.daten.bezeichnung" />
+			</svws-ui-tooltip>
 			<svws-ui-select v-if="isInternal" class="pb-4" title="Schulen innerhalb NRW" removable :items="schulenKatalogEintraege" autocomplete :disabled="isLoading"
 				:model-value="selectedSchule" :item-filter="filterSchulenKatalogEintraege" @update:model-value="updateData" :item-text="schulenKatalogEintragText" />
 			<div v-if="!schuleAlreadyCreated">
@@ -40,8 +45,8 @@
 				<p class="pb-4">Diese Schule wurde bereits angelegt:</p>
 				<svws-ui-button @click="navigateToSelectedSchule"> Zur Schule </svws-ui-button>
 			</div>
-		</svws-ui-content-card>
-		<svws-ui-checkpoint-modal :checkpoint :continue-routing="props.continueRoutingAfterCheckpoint" />
+			<svws-ui-checkpoint-modal :checkpoint :continue-routing="props.continueRoutingAfterCheckpoint" />
+		</svws-ui-input-wrapper>
 	</div>
 </template>
 
