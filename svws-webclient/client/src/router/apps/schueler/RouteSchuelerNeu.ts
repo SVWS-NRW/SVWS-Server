@@ -35,6 +35,8 @@ export class RouteSchuelerNeu extends RouteNode<any, RouteSchueler> {
 			mapOrte: routeApp.data.mapOrte,
 			mapOrtsteile: routeApp.data.mapOrtsteile,
 			mapReligionen: routeApp.data.mapReligionen,
+			mapFahrschuelerarten: routeApp.data.mapFahrschuelerarten,
+			mapHaltestellen: routeApp.data.mapHaltestellen,
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 		};

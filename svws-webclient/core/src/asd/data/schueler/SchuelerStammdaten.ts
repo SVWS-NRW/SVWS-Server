@@ -223,6 +223,36 @@ export class SchuelerStammdaten extends JavaObject {
 	 */
 	public erhaeltMeisterBAFOEG : boolean = false;
 
+	/**
+	 * Der Beginn des Bildungsgangs eines Schülers.
+	 */
+	public beginnBildungsgang : string | null = null;
+
+	/**
+	 * Die ID einer Einschulungsart.
+	 */
+	public einschulungsartID : number | null = null;
+
+	/**
+	 * Die Dauer des Kindergartenbesuchs eines Schülers.
+	 */
+	public dauerKindergartenbesuch : string | null = null;
+
+	/**
+	 * Die ID des Kindergartens.
+	 */
+	public kindergartenID : number | null = null;
+
+	/**
+	 * Schüler wurde zu einem Sprachförderkurs verpflichtet (Ja/Nein).
+	 */
+	public verpflichtungSprachfoerderkurs : boolean = false;
+
+	/**
+	 * Teilnahme des Schülers an einem Sprachförderkurs (Ja/Nein).
+	 */
+	public teilnahmeSprachfoerderkurs : boolean = false;
+
 
 	/**
 	 * Leerer Standardkonstruktor.
@@ -320,6 +350,16 @@ export class SchuelerStammdaten extends JavaObject {
 		if (obj.erhaeltMeisterBAFOEG === undefined)
 			throw new Error('invalid json format, missing attribute erhaeltMeisterBAFOEG');
 		result.erhaeltMeisterBAFOEG = obj.erhaeltMeisterBAFOEG;
+		result.beginnBildungsgang = (obj.beginnBildungsgang === undefined) ? null : obj.beginnBildungsgang === null ? null : obj.beginnBildungsgang;
+		result.einschulungsartID = (obj.einschulungsartID === undefined) ? null : obj.einschulungsartID === null ? null : obj.einschulungsartID;
+		result.dauerKindergartenbesuch = (obj.dauerKindergartenbesuch === undefined) ? null : obj.dauerKindergartenbesuch === null ? null : obj.dauerKindergartenbesuch;
+		result.kindergartenID = (obj.kindergartenID === undefined) ? null : obj.kindergartenID === null ? null : obj.kindergartenID;
+		if (obj.verpflichtungSprachfoerderkurs === undefined)
+			throw new Error('invalid json format, missing attribute verpflichtungSprachfoerderkurs');
+		result.verpflichtungSprachfoerderkurs = obj.verpflichtungSprachfoerderkurs;
+		if (obj.teilnahmeSprachfoerderkurs === undefined)
+			throw new Error('invalid json format, missing attribute teilnahmeSprachfoerderkurs');
+		result.teilnahmeSprachfoerderkurs = obj.teilnahmeSprachfoerderkurs;
 		return result;
 	}
 
@@ -369,6 +409,12 @@ export class SchuelerStammdaten extends JavaObject {
 		result += '"keineAuskunftAnDritte" : ' + obj.keineAuskunftAnDritte.toString() + ',';
 		result += '"erhaeltSchuelerBAFOEG" : ' + obj.erhaeltSchuelerBAFOEG.toString() + ',';
 		result += '"erhaeltMeisterBAFOEG" : ' + obj.erhaeltMeisterBAFOEG.toString() + ',';
+		result += '"beginnBildungsgang" : ' + ((obj.beginnBildungsgang === null) ? 'null' : JSON.stringify(obj.beginnBildungsgang)) + ',';
+		result += '"einschulungsartID" : ' + ((obj.einschulungsartID === null) ? 'null' : obj.einschulungsartID.toString()) + ',';
+		result += '"dauerKindergartenbesuch" : ' + ((obj.dauerKindergartenbesuch === null) ? 'null' : JSON.stringify(obj.dauerKindergartenbesuch)) + ',';
+		result += '"kindergartenID" : ' + ((obj.kindergartenID === null) ? 'null' : obj.kindergartenID.toString()) + ',';
+		result += '"verpflichtungSprachfoerderkurs" : ' + obj.verpflichtungSprachfoerderkurs.toString() + ',';
+		result += '"teilnahmeSprachfoerderkurs" : ' + obj.teilnahmeSprachfoerderkurs.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -507,6 +553,24 @@ export class SchuelerStammdaten extends JavaObject {
 		}
 		if (obj.erhaeltMeisterBAFOEG !== undefined) {
 			result += '"erhaeltMeisterBAFOEG" : ' + obj.erhaeltMeisterBAFOEG.toString() + ',';
+		}
+		if (obj.beginnBildungsgang !== undefined) {
+			result += '"beginnBildungsgang" : ' + ((obj.beginnBildungsgang === null) ? 'null' : JSON.stringify(obj.beginnBildungsgang)) + ',';
+		}
+		if (obj.einschulungsartID !== undefined) {
+			result += '"einschulungsartID" : ' + ((obj.einschulungsartID === null) ? 'null' : obj.einschulungsartID.toString()) + ',';
+		}
+		if (obj.dauerKindergartenbesuch !== undefined) {
+			result += '"dauerKindergartenbesuch" : ' + ((obj.dauerKindergartenbesuch === null) ? 'null' : JSON.stringify(obj.dauerKindergartenbesuch)) + ',';
+		}
+		if (obj.kindergartenID !== undefined) {
+			result += '"kindergartenID" : ' + ((obj.kindergartenID === null) ? 'null' : obj.kindergartenID.toString()) + ',';
+		}
+		if (obj.verpflichtungSprachfoerderkurs !== undefined) {
+			result += '"verpflichtungSprachfoerderkurs" : ' + obj.verpflichtungSprachfoerderkurs.toString() + ',';
+		}
+		if (obj.teilnahmeSprachfoerderkurs !== undefined) {
+			result += '"teilnahmeSprachfoerderkurs" : ' + obj.teilnahmeSprachfoerderkurs.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

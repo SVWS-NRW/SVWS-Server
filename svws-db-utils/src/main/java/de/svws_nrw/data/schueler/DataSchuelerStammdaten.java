@@ -18,10 +18,12 @@ import de.svws_nrw.core.types.schule.Verkehrssprache;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.schild.grundschule.DTOKindergarten;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOFahrschuelerart;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOHaltestellen;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKonfession;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil;
+import de.svws_nrw.db.dto.current.schild.schueler.DTOEinschulungsart;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerFoto;
 import de.svws_nrw.db.schema.Schema;
@@ -257,6 +259,9 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 		daten.hatMasernimpfnachweis = dto.MasernImpfnachweis;
 		daten.erhaeltSchuelerBAFOEG = dto.Bafoeg;
 		daten.erhaeltMeisterBAFOEG = dto.MeisterBafoeg;
+
+		daten.beginnBildungsgang = dto.BeginnBildungsgang;
+		daten.dauerKindergartenbesuch = dto.DauerKindergartenbesuch;
 		return daten;
 	}
 
@@ -283,8 +288,10 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 			case "hausnummer" -> dto.HausNr = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_HausNr.datenlaenge(), "hausnummer");
 			case "hausnummerZusatz" -> dto.HausNrZusatz = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_HausNrZusatz.datenlaenge(),
 					"hausnummerZusatz");
-			case "wohnortID" -> mapWohnortID(dto, value, map);
-			case "ortsteilID" -> mapOrtsteilID(dto, value, map);
+			case "wohnortID" -> setWohnort(dto, JSONMapper.convertToLong(value, true, "wohnortID"),
+					Optional.ofNullable(JSONMapper.convertToLong(map.get("ortsteilID"), true, "ortsteilID")).orElse(dto.Ortsteil_ID));
+			case "ortsteilID" -> setWohnort(dto, Optional.ofNullable(JSONMapper.convertToLong(map.get("wohnortID"), true, "wohnortID")).orElse(dto.Ort_ID),
+					JSONMapper.convertToLong(value, true, "ortsteilID"));
 			case "telefon" -> dto.Telefon = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_Telefon.datenlaenge(), "telefon");
 			case "telefonMobil" -> dto.Fax = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_Fax.datenlaenge(), "telefonMobil");
 			case "emailPrivat" -> dto.Email = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_Email.datenlaenge(), "emailPrivat");
@@ -323,22 +330,16 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 			case "erhaeltSchuelerBAFOEG" -> dto.Bafoeg = JSONMapper.convertToBoolean(value, false, "erhaeltSchuelerBAFOEG");
 			case "erhaeltMeisterBAFOEG" -> dto.MeisterBafoeg = JSONMapper.convertToBoolean(value, false, "erhaeltMeisterBAFOEG");
 			case "istDuplikat" -> dto.Duplikat = JSONMapper.convertToBoolean(value, false, "istDuplikat");
+
+			case "beginnBildungsgang" -> dto.BeginnBildungsgang = JSONMapper.convertToString(value, true, false, Schema.tab_Schueler.col_BeginnBildungsgang.datenlaenge(),
+					"beginnBildungsgang");
+			case "einschulungsartID" -> mapEinschulungsartID(dto, value);
+			case "dauerKindergartenbesuch" -> dto.DauerKindergartenbesuch = JSONMapper.convertToString(value, true, false,
+					Schema.tab_Schueler.col_DauerKindergartenbesuch.datenlaenge(), "dauerKindergartenbesuch");
+			case "kindergartenID" -> mapKindergartenID(dto, value);
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Das Patchen des Attributes %s ist nicht implementiert.".formatted(name));
 		}
 	}
-
-
-	private void mapWohnortID(final DTOSchueler dto, final Object value, final Map<String, Object> map) throws ApiOperationException {
-		final Long ortsteilId = (map.get("ortsteilID") == null) ? dto.Ortsteil_ID : ((Long) map.get("ortsteilID"));
-		setWohnort(dto, JSONMapper.convertToLong(value, true, "wohnortID"), ortsteilId);
-	}
-
-
-	private void mapOrtsteilID(final DTOSchueler dto, final Object value, final Map<String, Object> map) throws ApiOperationException {
-		final Long wohnortId = (map.get("wohnortID") == null) ? dto.Ort_ID : ((Long) map.get("wohnortID"));
-		setWohnort(dto, wohnortId, JSONMapper.convertToLong(value, true, "ortsteilID"));
-	}
-
 
 	private static void mapID(final DTOSchueler dto, final Object value) throws ApiOperationException {
 		final Long id = JSONMapper.convertToLong(value, true);
@@ -488,6 +489,25 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 		dto.Haltestelle_ID = haltestelleId;
 	}
 
+	private void mapEinschulungsartID(final DTOSchueler dto, final Object value) throws ApiOperationException {
+		final Long einschulungsId = JSONMapper.convertToLongInRange(value, true, 0L, null, "einschulungsartID");
+		if (einschulungsId != null) {
+			final DTOEinschulungsart einschulungsartDTO = conn.queryByKey(DTOEinschulungsart.class, einschulungsId);
+			if (einschulungsartDTO == null)
+				throw new ApiOperationException(Status.NOT_FOUND);
+		}
+		dto.Einschulungsart_ID = einschulungsId;
+	}
+
+	private void mapKindergartenID(final DTOSchueler dto, final Object value) throws ApiOperationException {
+		final Long kindergartenId = JSONMapper.convertToLongInRange(value, true, 0L, null, "kindergartenID");
+		if (kindergartenId != null) {
+			final DTOKindergarten kindergartenDTO = conn.queryByKey(DTOKindergarten.class, kindergartenId);
+			if (kindergartenDTO == null)
+				throw new ApiOperationException(Status.NOT_FOUND);
+		}
+		dto.Kindergarten_ID = kindergartenId;
+	}
 
 	/**
 	 * Setzt das Schüler-Foto für den übergebenen Schüler.

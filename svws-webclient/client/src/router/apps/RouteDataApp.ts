@@ -1,6 +1,6 @@
 import { computed } from "vue";
 import type { RouteLocationRaw } from "vue-router";
-import { Schuljahresabschnitt, type OrtKatalogEintrag, type OrtsteilKatalogEintrag, type ReligionEintrag } from "@core";
+import { Schuljahresabschnitt, type OrtKatalogEintrag, type OrtsteilKatalogEintrag, type ReligionEintrag, type KatalogEintrag } from "@core";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { api } from "~/router/Api";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
@@ -13,6 +13,8 @@ interface RouteStateApp extends RouteStateInterface {
 	mapOrte: Map<number, OrtKatalogEintrag>;
 	mapOrtsteile: Map<number, OrtsteilKatalogEintrag>;
 	mapReligionen: Map<number, ReligionEintrag>;
+	mapFahrschuelerarten: Map<number, KatalogEintrag>;
+	mapHaltestellen: Map<number, KatalogEintrag>;
 }
 
 const defaultState = <RouteStateApp>{
@@ -20,7 +22,9 @@ const defaultState = <RouteStateApp>{
 	mapOrte: new Map(),
 	mapOrtsteile: new Map(),
 	mapReligionen: new Map(),
-	view: routeSchueler
+	mapFahrschuelerarten: new Map(),
+	mapHaltestellen: new Map(),
+	view: routeSchueler,
 };
 
 export class RouteDataApp extends RouteData<RouteStateApp> {
@@ -45,8 +49,18 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 		const mapReligionen = new Map();
 		for (const r of religionen)
 			mapReligionen.set(r.id, r);
+		// Lade den Katalog der Fahrschülerarten
+		const fahrschuelerarten = await api.server.getSchuelerFahrschuelerarten(api.schema)
+		const mapFahrschuelerarten = new Map();
+		for (const fa of fahrschuelerarten)
+			mapFahrschuelerarten.set(fa.id, fa);
+		// Lade den Katalog der Haltestellen
+		const haltestellen = await api.server.getHaltestellen(api.schema);
+		const mapHaltestellen = new Map();
+		for (const h of haltestellen)
+			mapHaltestellen.set(h.id, h);
 		// Und aktualisiere den internen State
-		this.setPatchedDefaultStateKeepView({ mapOrte, mapOrtsteile, mapReligionen });
+		this.setPatchedDefaultStateKeepView({ mapOrte, mapOrtsteile, mapReligionen, mapFahrschuelerarten, mapHaltestellen });
 	}
 
 	public async leave() {
@@ -102,6 +116,14 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 
 	get mapReligionen(): Map<number, ReligionEintrag> {
 		return this._state.value.mapReligionen;
+	}
+
+	get mapFahrschuelerarten(): Map<number, KatalogEintrag> {
+		return this._state.value.mapFahrschuelerarten;
+	}
+
+	get mapHaltestellen(): Map<number, KatalogEintrag> {
+		return this._state.value.mapHaltestellen;
 	}
 
 	public get idSchuljahresabschnitt() {
