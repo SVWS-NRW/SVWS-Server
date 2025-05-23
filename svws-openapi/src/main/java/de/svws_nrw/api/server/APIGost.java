@@ -29,7 +29,7 @@ import de.svws_nrw.data.SimpleBinaryMultipartBody;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.data.gost.DBUtilsGost;
-import de.svws_nrw.data.gost.DBUtilsGostAbitur;
+import de.svws_nrw.data.gost.DataGostAbiturdaten;
 import de.svws_nrw.data.gost.DataGostAbiturjahrgangFachwahlen;
 import de.svws_nrw.data.gost.DataGostBeratungslehrer;
 import de.svws_nrw.data.gost.DataGostFaecher;
@@ -1122,7 +1122,7 @@ public class APIGost {
 	public Response getGostSchuelerAbiturdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(DBUtilsGostAbitur.getAbiturdaten(conn, id)).build(),
+				conn -> (new DataGostAbiturdaten(conn, null)).getByIdAsResponse(id),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
 				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
@@ -1156,7 +1156,7 @@ public class APIGost {
 	public Response copyGostSchuelerAbiturdatenAusLeistungsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> DBUtilsGostAbitur.copyAbiturdatenAusLeistungsdaten(conn, id),
+				conn -> (new DataGostAbiturdaten(conn, null)).copyAbiturdatenAusLeistungsdaten(id),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.ABITUR_AENDERN_ALLGEMEIN,
 				BenutzerKompetenz.ABITUR_AENDERN_FUNKTIONSBEZOGEN);

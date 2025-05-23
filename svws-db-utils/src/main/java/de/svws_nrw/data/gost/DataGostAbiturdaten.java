@@ -1,5 +1,16 @@
 package de.svws_nrw.data.gost;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
+import de.svws_nrw.asd.types.Note;
+import de.svws_nrw.asd.types.fach.Fach;
+import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt;
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
@@ -7,16 +18,13 @@ import de.svws_nrw.core.data.gost.AbiturFachbelegungHalbjahr;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
-import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
-import de.svws_nrw.asd.types.Note;
-import de.svws_nrw.asd.types.fach.Fach;
-import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.types.gost.AbiturBelegungsart;
 import de.svws_nrw.core.types.gost.GostAbiturFach;
 import de.svws_nrw.core.types.gost.GostBesondereLernleistung;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
+import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
@@ -30,42 +38,34 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
-
-
 /**
- * Diese Klasse stellt Hilfsmethoden für den Zugriff auf Informationen
- * zu dem Abiturbereich von Schülern der gymnasialen Oberstufe zur Verfügung.
+ * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für das Core-DTO {@link Abiturdaten}.
  */
-public final class DBUtilsGostAbitur {
+public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchuelerAbitur, Abiturdaten> {
 
-	private DBUtilsGostAbitur() {
-		throw new IllegalStateException("Instantiation of " + DBUtilsGostAbitur.class.getName() + " not allowed");
-	}
-
+	/** Das Abiturjahr, sofern sich die Anfrage auf ein konkretes Abiturjahr bezieht. Ansonsten null */
+	private final Integer abiturjahr;
 
 	/**
-	 * Ermittelt die für das Abitur relevanten Daten für den Schüler mit der angegebenen
-	 * ID aus den in der Datenbank gespeicherten Abiturtabellen.
+	 * Erstellt einen neuen Daten-Manager für das übergebene Abiturjahr. Dieses kann null sein,
+	 * wenn das Abiturjahr aus den Laufbahndaten des Schülers ermittelt werden soll.
 	 *
-	 * @param conn   die Datenbank-Verbindung
-	 * @param id     die ID des Schülers
-	 *
-	 * @return die für das Abitur relevanten Daten für den Schüler mit der angegebenen ID
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
+	 * @param conn         die Datenbank-Verbindung
+	 * @param abiturjahr   das Abiturjahr oder null
 	 */
-	public static Abiturdaten getAbiturdaten(final DBEntityManager conn, final long id) throws ApiOperationException {
+	public DataGostAbiturdaten(final DBEntityManager conn, final Integer abiturjahr) {
+		super(conn);
+		setAttributesNotPatchable("schuelerID", "abiturjahr", "schuljahrAbitur", "bewertetesHalbjahr", "fachbelegungen", "sprachendaten", "bilingualeSprache");
+		setAttributesRequiredOnCreation("schuelerID"); // TODO add ist eigentlich die Methode copyAbiturdatenAusLeistungsdaten -> Anpassen
+		this.abiturjahr = abiturjahr;
+	}
+
+	@Override
+	public Abiturdaten getById(final Long id) throws ApiOperationException {
 		// Prüfe zunächst den Schüler auf Existenz.
 		final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, id);
 		if (dtoSchueler == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Es exiistiert kein Schüler mit der ID %d in der Datenbank.".formatted(id));
+			throw new ApiOperationException(Status.NOT_FOUND, "Es existiert kein Schüler mit der ID %d in der Datenbank.".formatted(id));
 
 		// Ermittle für einen Vergleich die Abiturdaten für Block I aus den Leistungsdaten, nutze dafür den entsprechenden Service
 		final Abiturdaten abidatenVergleich = DBUtilsGostLaufbahn.get(conn, id);
@@ -99,21 +99,26 @@ public final class DBUtilsGostAbitur {
 		final Map<Integer, GostFaecherManager> mapGostFaecherManager = new HashMap<>();
 
 		// gib die Abiturdaten zurück.
-		return erzeugeAbiturdaten(conn, dtoSchuelerAbitur, abidatenVergleich, sprachenfolge, faecher, mapGostFaecherManager);
+		return erzeugeAbiturdaten(dtoSchuelerAbitur, abidatenVergleich, sprachenfolge, faecher, mapGostFaecherManager);
+	}
+
+	@Override
+	protected Abiturdaten map(final DTOSchuelerAbitur dto) throws ApiOperationException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 
 	/**
 	 * Ermittelt die für das Abitur relevanten Daten für die Schüler mit den angegebenen IDs aus den in der Datenbank gespeicherten Abiturtabellen.
 	 *
-	 * @param conn        die Datenbank-Verbindung
 	 * @param idsSchueler die IDs der Schüler
 	 *
 	 * @return die für das Abitur relevanten Daten der Schüler als Map zur Schüler-ID.
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static Map<Long, Abiturdaten> getAbiturdatenFromIDs(final DBEntityManager conn, final List<Long> idsSchueler) throws ApiOperationException {
+	public Map<Long, Abiturdaten> getAbiturdatenFromIDs(final List<Long> idsSchueler) throws ApiOperationException {
 		// Prüfe zunächst die Schüler auf Existenz.
 		if (idsSchueler == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
@@ -169,14 +174,15 @@ public final class DBUtilsGostAbitur {
 			if (abidatenVergleich == null)
 				throw new ApiOperationException(Status.NOT_FOUND);
 
-			mapAbiturdaten.put(idSchueler, erzeugeAbiturdaten(conn, dtoSchuelerAbitur, abidatenVergleich, sprachenfolge, faecher, mapGostFaecherManager));
+			mapAbiturdaten.put(idSchueler, erzeugeAbiturdaten(dtoSchuelerAbitur, abidatenVergleich, sprachenfolge, faecher, mapGostFaecherManager));
 		}
 
 		// Gibt die Abiturdaten zurück.
 		return mapAbiturdaten;
 	}
 
-	private static Abiturdaten erzeugeAbiturdaten(final DBEntityManager conn, final DTOSchuelerAbitur dtoSchuelerAbitur, final Abiturdaten abidatenVergleich,
+
+	private Abiturdaten erzeugeAbiturdaten(final DTOSchuelerAbitur dtoSchuelerAbitur, final Abiturdaten abidatenVergleich,
 			final List<DTOSchuelerSprachenfolge> sprachenfolge, final List<DTOSchuelerAbiturFach> faecher,
 			final Map<Integer, GostFaecherManager> mapGostFaecherManager)
 			throws ApiOperationException {
@@ -410,12 +416,11 @@ public final class DBUtilsGostAbitur {
 	/**
 	 * Perisistiert die Abiturdaten aus dem übergebenen Abiturdaten-Manager in der Datenbank.
 	 *
-	 * @param conn      die Datenbankverbindung
 	 * @param manager   der Abiturdaten-Manager
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static void persistAbiturdaten(final @NotNull DBEntityManager conn, final @NotNull AbiturdatenManager manager) throws ApiOperationException {
+	private void persistAbiturdaten(final @NotNull AbiturdatenManager manager) throws ApiOperationException {
 		final @NotNull Abiturdaten abidaten = manager.daten();
 		// Bestimme den Schuljahresabschnitt für das Abitur
 		final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetAbschnittBySchuljahrUndHalbjahr(manager.getSchuljahr(), 2);
@@ -544,14 +549,13 @@ public final class DBUtilsGostAbitur {
 	/**
 	 * Überträgt die Abitur-relevanten Daten aus den Leistungsdaten in den Abiturbereich
 	 *
-	 * @param conn   die Datenbank-Verbindung
 	 * @param id     die ID des Schülers
 	 *
 	 * @return die HTTP-Response
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public static Response copyAbiturdatenAusLeistungsdaten(final @NotNull DBEntityManager conn, final long id) throws ApiOperationException {
+	public Response copyAbiturdatenAusLeistungsdaten(final long id) throws ApiOperationException {
 		final Abiturdaten abidaten = (new DataGostSchuelerLaufbahnplanung(conn)).getById(id);
 		if ((!abidaten.bewertetesHalbjahr[GostHalbjahr.Q11.id]) || (!abidaten.bewertetesHalbjahr[GostHalbjahr.Q12.id])
 				|| (!abidaten.bewertetesHalbjahr[GostHalbjahr.Q21.id]) || (!abidaten.bewertetesHalbjahr[GostHalbjahr.Q22.id]))
@@ -565,7 +569,7 @@ public final class DBUtilsGostAbitur {
 		// Führe dann die Markierungsberechnung durch
 		manager.applyErgebnisMarkierungsalgorithmus();
 		// Persistiere die Abiturdaten in die zugehörige Datenbank-Tabelle
-		persistAbiturdaten(conn, manager);
+		persistAbiturdaten(manager);
 		return Response.status(Status.NO_CONTENT).build();
 	}
 

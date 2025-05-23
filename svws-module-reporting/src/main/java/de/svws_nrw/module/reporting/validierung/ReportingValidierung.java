@@ -14,8 +14,8 @@ import de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.data.gost.DBUtilsGost;
-import de.svws_nrw.data.gost.DBUtilsGostAbitur;
 import de.svws_nrw.data.gost.DBUtilsGostLaufbahn;
+import de.svws_nrw.data.gost.DataGostAbiturdaten;
 import de.svws_nrw.data.gost.DataGostBlockungsdaten;
 import de.svws_nrw.data.gost.DataGostBlockungsergebnisse;
 import de.svws_nrw.data.gost.DataGostSchuelerLaufbahnplanungBeratungsdaten;
@@ -96,7 +96,7 @@ public final class ReportingValidierung {
 			final Map<Long, Abiturdaten> mapGostSchuelerAbiturdaten;
 
 			try {
-				mapGostSchuelerAbiturdaten = new HashMap<>(DBUtilsGostAbitur.getAbiturdatenFromIDs(conn, idsNonNull));
+				mapGostSchuelerAbiturdaten = new HashMap<>(new DataGostAbiturdaten(conn, null).getAbiturdatenFromIDs(idsNonNull));
 			} catch (final ApiOperationException aoe) {
 				reportingRepository.logger().logLn(LogLevel.ERROR, 4,
 						"FEHLER: Es wurden Schüler-IDs übergeben, für die keine Abiturdaten in der GOSt existieren.");

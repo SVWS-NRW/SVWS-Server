@@ -16,7 +16,7 @@ import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.data.erzieher.DataErzieherStammdaten;
-import de.svws_nrw.data.gost.DBUtilsGostAbitur;
+import de.svws_nrw.data.gost.DataGostAbiturdaten;
 import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerSprachbelegung;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -271,7 +271,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 						new ProxyReportingSchuelerGostAbitur(this.reportingRepository, this.reportingRepository.mapGostSchuelerAbiturdaten().get(this.id()));
 			} else {
 				try {
-					final Abiturdaten abiturdaten = DBUtilsGostAbitur.getAbiturdaten(this.reportingRepository.conn(), this.id());
+					final Abiturdaten abiturdaten = new DataGostAbiturdaten(this.reportingRepository.conn(), null).getById(this.id());
 					super.gostAbitur = new ProxyReportingSchuelerGostAbitur(this.reportingRepository, abiturdaten);
 				} catch (final ApiOperationException e) {
 					ReportingExceptionUtils.putStacktraceInLog(
