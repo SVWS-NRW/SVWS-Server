@@ -70,7 +70,7 @@
 			<slot name="header" :all-rows-selected="allRowsSelected" :toggle-all-rows="toggleBulkSelection" :columns="columnsComputed">
 				<div role="row" class="svws-ui-tr" :style="getGridTemplateColumns">
 					<div v-if="selectable" class="svws-ui-td svws-align-center" role="columnheader" aria-label="Alle auswählen">
-						<svws-ui-checkbox :model-value="allRowsSelected" :indeterminate="someNotAllRowsSelected" @update:model-value="toggleBulkSelection" :disabled="typeof noData !== 'undefined' ? noData : noDataCalculated" />
+						<svws-ui-checkbox :model-value="allRowsSelected" :indeterminate="someNotAllRowsSelected" @update:model-value="toggleBulkSelection" :disabled="(typeof noData !== 'undefined' ? noData : noDataCalculated) || lockSelectable" />
 					</div>
 					<div v-for="column in columnsComputed" class="svws-ui-td" role="columnheader" :key="column.key" @click.exact="column.sortable && toggleSorting(column)" @keyup.enter="column.sortable && toggleSorting(column)"
 						:class="[
@@ -119,7 +119,7 @@
 							<slot name="row" :row="row.source">
 								<template v-if="selectable">
 									<div v-if="row.selectable" class="svws-ui-td svws-align-center" role="cell" :key="`selectable__${row}_${index}`">
-										<input type="checkbox" :checked="isRowSelected(row)" @input="toggleRowSelection(row)" @click.stop :ref="el => selectionRefs.set(index, el)" @keydown.down.prevent.stop="switchElement($event, selectionRefs, index, false)" @keydown.up.prevent.stop="switchElement($event, selectionRefs, index, true)">
+										<input type="checkbox" :checked="isRowSelected(row)" :disabled="lockSelectable" @input="toggleRowSelection(row)" @click.stop :ref="el => selectionRefs.set(index, el)" @keydown.down.prevent.stop="switchElement($event, selectionRefs, index, false)" @keydown.up.prevent.stop="switchElement($event, selectionRefs, index, true)">
 									</div>
 									<div v-else class="w-6 border-b border-ui" />
 								</template>
@@ -158,7 +158,7 @@
 			<slot name="footer" :all-rows-selected="allRowsSelected" :toggle-all-rows="toggleBulkSelection" :rows="sortedRows">
 				<div class="svws-ui-tr" :style="getGridTemplateColumns" role="row">
 					<div v-if="selectable" class="svws-ui-td svws-align-center" role="columnheader" aria-label="Alle auswählen">
-						<svws-ui-checkbox :model-value="allRowsSelected" :indeterminate="someNotAllRowsSelected" @update:model-value="toggleBulkSelection" :disabled="typeof noData !== 'undefined' ? noData : noDataCalculated" />
+						<svws-ui-checkbox :model-value="allRowsSelected" :indeterminate="someNotAllRowsSelected" @update:model-value="toggleBulkSelection" :disabled="(typeof noData !== 'undefined' ? noData : noDataCalculated) || lockSelectable" />
 					</div>
 					<div v-if="count" class="text-sm svws-ui-td font-medium" role="cell">
 						<template v-if="allRowsSelected && modelValue">Alle {{ modelValue.length - selectedItemsNotListed.length - unselectable.size }} ausgewählt<template v-if="selectedItemsNotListed.length > 0">, <svws-ui-button class="m-0.5" type="transparent" size="small" title="Weitere ausgewählte Einträge, die nicht angezeigt werden. Klicken entfernt aus der Liste." @click="unselectAllNotListedRows"><span class="icon-sm i-ri-close-line" />{{ selectedItemsNotListed.length }} Weitere nicht angezeigt</svws-ui-button>, <svws-ui-button type="transparent" size="small" title="Alle ausgwählten Einträge. Klicken, um alle aus der Auswahl zu entfernen." @click="unselectAllRows"><span class="icon-sm i-ri-close-line" />{{ modelValue.length - unselectable.size }}</svws-ui-button> insgesamt</template></template>
@@ -251,6 +251,7 @@
 			focusSwitchingEnabled? : boolean;
 			focusHelpVisible? : boolean;
 			multiSelectFocusEnabled?: boolean;
+			lockSelectable?: boolean;
 		}>(),
 		{
 			columns: () => [],
@@ -284,6 +285,7 @@
 			focusSwitchingEnabled: false,
 			focusHelpVisible: false,
 			multiSelectFocusEnabled: false,
+			lockSelectable: false,
 		}
 	);
 

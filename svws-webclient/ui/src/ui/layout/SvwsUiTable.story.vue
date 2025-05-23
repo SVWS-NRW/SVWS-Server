@@ -4,7 +4,7 @@
 			<div class="px-3">
 				<svws-ui-content-card>
 					<svws-ui-table v-model="selectedRows" :items="data" :columns="cols" :clickable="state.clickable" :disable-header="state.disableHeader" :disable-footer="state.disableFooter" :selectable="state.selectable" :count="state.count" v-model:clicked="clickedRow" :filtered="docsMultiselectFilterA?.length > 0 || docsMultiselectFilterB?.length > 0"
-						:toggle-columns="state.toggleColumns" :filter-reset="filterReset" :type="state.typeGrid ? 'grid' : 'table'" v-model:hidden-columns="state.hiddenColumns">
+						:toggle-columns="state.toggleColumns" :filter-reset="filterReset" :type="state.typeGrid ? 'grid' : 'table'" v-model:hidden-columns="state.hiddenColumns" :lock-selectable="state.lockSelectable">
 						<template #search v-if="state.docsWithSearch">
 							<svws-ui-text-input type="search" placeholder="Suche" v-model="search" />
 						</template>
@@ -49,6 +49,7 @@
 				<HstCheckbox v-model="state.typeGrid" title="type='grid'" />
 				<HstCheckbox v-model="state.disableHeader" title="disable-header" />
 				<HstCheckbox v-model="state.disableFooter" title="disable-footer" />
+				<HstCheckbox v-model="state.lockSelectable" title="disable-selection-checkboxes" />
 				<HstCheckbox v-model="state.count" title="count" />
 			</template>
 		</Variant>
@@ -92,6 +93,7 @@
 		sortBy: undefined,
 		sortingOrder: undefined,
 		disableFooter: false,
+		lockSelectable: false,
 		count: true,
 		noData: undefined,
 		noDataText: "Keine Einträge gefunden",
