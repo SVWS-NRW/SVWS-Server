@@ -184,7 +184,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			apiStatus: api.status,
 			tabManagerSchule: this.getTabManagerSchule,
 			tabManagerEinstellungen: this.getTabManagerEinstellungen,
-			schuljahresabschnittsauswahl: () => this.data.getSchuljahresabschnittsauswahl(false),
+			schuljahresabschnittsauswahl: () => this.data.getSchuljahresabschnittsauswahl(true),
 		};
 	}
 
