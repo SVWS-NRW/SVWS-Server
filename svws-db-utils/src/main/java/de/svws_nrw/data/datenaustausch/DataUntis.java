@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -797,11 +798,33 @@ public final class DataUntis {
 					"In der Datenbank gibt es keinen Schuljahresabschnitt mit der ID %d.".formatted(idSchuljahresabschnitt));
 		}
 		logger.logLn("-> für den Schuljahresabschnitt %d.%d".formatted(schuljahresabschnitt.schuljahr, schuljahresabschnitt.abschnitt));
-		final List<DTOLehrer> lehrer = conn.queryList(DTOLehrer.QUERY_BY_SICHTBAR, DTOLehrer.class, true);
-		if (lehrer.isEmpty()) {
+		final @NotNull Schuljahresabschnitt schuleSchuljahresabschnitt = conn.getUser().schuleGetSchuljahresabschnitt();
+		final List<DTOLehrer> tmpLehrer = ((schuljahresabschnitt.schuljahr < schuleSchuljahresabschnitt.schuljahr) || ((schuljahresabschnitt.schuljahr == schuleSchuljahresabschnitt.schuljahr) && (schuljahresabschnitt.abschnitt < schuleSchuljahresabschnitt.abschnitt)))
+				? conn.queryAll(DTOLehrer.class) : conn.queryList(DTOLehrer.QUERY_BY_SICHTBAR, DTOLehrer.class, true);
+		if (tmpLehrer.isEmpty()) {
 			logger.logLn("-> keine Lehrer für den Export gefunden");
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine sichtbaren Lehrer für den Export gefunden.");
 		}
+		// Filtere Lehrer anhand des Abgangsdatums bzw. des Zugangsdatums...
+		final List<DTOLehrer> lehrer = new ArrayList<>();
+		for (final @NotNull DTOLehrer l : tmpLehrer) {
+			try {
+				if (l.DatumZugang != null) {
+					final LocalDate date = LocalDate.parse(l.DatumZugang);
+					if ((date.getYear() > schuljahresabschnitt.schuljahr + 1) || ((date.getYear() == schuljahresabschnitt.schuljahr + 1) && (date.getMonthValue() > 7)))
+						continue;
+				}
+				if (l.DatumAbgang != null) {
+					final LocalDate date = LocalDate.parse(l.DatumAbgang);
+					if ((date.getYear() < schuljahresabschnitt.schuljahr) || ((date.getYear() == schuljahresabschnitt.schuljahr) && (date.getMonthValue() < 8)))
+						continue;
+				}
+			} catch (@SuppressWarnings("unused") final @NotNull DateTimeParseException dtpe) {
+				// do nothing...
+			}
+			lehrer.add(l);
+		}
+		// Lese die Lehrerdaten ein und gib die Untis-Datensätze für die zurück...
 		final List<Long> idsLehrer = lehrer.stream().map(kl -> kl.ID).toList();
 		logger.logLn("-> bestimme die zugehörigen Abschnittsdaten für die Lehrer...");
 		final Map<Long, DTOLehrerAbschnittsdaten> mapAbschnitteByLehrerId =
