@@ -1,7 +1,7 @@
 <template>
 	<table class="svws-ui-table svws-clickable h-full w-full overflow-hidden" role="table" aria-label="Tabelle"
-		@keydown.down.prevent.stop="manager.managerKlassenleitung.linkedListNext"
-		@keydown.up.prevent.stop="manager.managerKlassenleitung.linkedListPrevious"
+		@keydown.down.prevent.stop="auswahlmanager.linkedListNext"
+		@keydown.up.prevent.stop="auswahlmanager.linkedListPrevious"
 		@keydown.right.prevent="nextColumn" @keydown.left.prevent="prevColumn">
 		<thead class="svws-ui-thead cursor-pointer" role="rowgroup" aria-label="Tabellenkopf">
 			<tr class="svws-ui-tr" role="row">
@@ -33,10 +33,10 @@
 			</tr>
 		</thead>
 		<tbody class="svws-ui-tbody h-full overflow-y-auto" role="rowgroup" aria-label="Tabelleninhalt">
-			<template v-for="schueler of manager.managerKlassenleitung.liste" :key="schueler">
-				<tr class="svws-ui-tr h-10" role="row" :class="{ 'svws-clicked': manager.managerKlassenleitung.auswahl === schueler }"
+			<template v-for="schueler of auswahlmanager.liste" :key="schueler">
+				<tr class="svws-ui-tr h-10" role="row" :class="{ 'svws-clicked': auswahlmanager.auswahl === schueler }"
 					@keydown.tab="handleTabEvent"
-					@click.capture.exact="manager.managerKlassenleitung.auswahl = schueler"
+					@click.capture.exact="auswahlmanager.auswahl = schueler"
 					:ref="el => rowRefs.set(schueler, el as HTMLElement)">
 					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Klasse') ?? true">
 						{{ manager.schuelerGetKlasse(schueler.id).kuerzelAnzeige }}
@@ -47,22 +47,22 @@
 					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('FS') ?? true">
 						<svws-ui-input-number @focusin="switchToUnselectedSchueler(schueler, $event.target)" :model-value="schueler.lernabschnitt.fehlstundenGesamt" headless hide-stepper min="0" max="999"
 							@change="fehlstundenGesamt => doPatchLernabschnitt(schueler.lernabschnitt, { fehlstundenGesamt, id: schueler.lernabschnitt.id })"
-							:class="{ 'contentFocusField': manager.managerKlassenleitung.auswahl === schueler }" />
+							:class="{ 'contentFocusField': auswahlmanager.auswahl === schueler }" />
 					</td>
 					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('FSU') ?? true">
 						<svws-ui-input-number :model-value="schueler.lernabschnitt.fehlstundenGesamtUnentschuldigt" headless hide-stepper min="0" @focusin="switchToUnselectedSchueler(schueler, $event.target)"
 							:max="schueler.lernabschnitt.fehlstundenGesamt" @change="fehlstundenGesamtUnentschuldigt => doPatchLernabschnitt(schueler.lernabschnitt, { fehlstundenGesamtUnentschuldigt, id: schueler.lernabschnitt.id })" />
 					</td>
 					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('ASV') ?? true" @click="emitBemerkung('ASV')" @keydown.enter.prevent="focusFloskelEditor('ASV')"
-						:class="{ 'bg-ui-selected-secondary text-ui-onselected-secondary': floskelEditorVisible && (manager.managerKlassenleitung.auswahl === schueler) && (hauptgruppe === 'ASV') }">
+						:class="{ 'bg-ui-selected-secondary text-ui-onselected-secondary': floskelEditorVisible && (auswahlmanager.auswahl === schueler) && (hauptgruppe === 'ASV') }">
 						<span class="text-ellipsis overflow-hidden whitespace-nowrap column-focussable" @focusin="switchToUnselectedSchueler(schueler, $event.target)" tabindex="0">{{ schueler.bemerkungen.ASV }}</span>
 					</td>
 					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('AUE') ?? true" @click="emitBemerkung('AUE')" @keydown.enter.prevent="focusFloskelEditor('AUE')"
-						:class="{ 'bg-ui-selected-secondary text-ui-onselected-secondary': floskelEditorVisible && (manager.managerKlassenleitung.auswahl === schueler) && (hauptgruppe === 'AUE') }">
+						:class="{ 'bg-ui-selected-secondary text-ui-onselected-secondary': floskelEditorVisible && (auswahlmanager.auswahl === schueler) && (hauptgruppe === 'AUE') }">
 						<span class="text-ellipsis overflow-hidden whitespace-nowrap column-focussable" @focusin="switchToUnselectedSchueler(schueler, $event.target)" tabindex="0">{{ schueler.bemerkungen.AUE }}</span>
 					</td>
 					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('ZB') ?? true" @click="emitBemerkung('ZB')" @keydown.enter.prevent="focusFloskelEditor('ZB')"
-						:class="{ 'bg-ui-selected-secondary text-ui-onselected-secondary': floskelEditorVisible && (manager.managerKlassenleitung.auswahl === schueler) && (hauptgruppe === 'ZB') }">
+						:class="{ 'bg-ui-selected-secondary text-ui-onselected-secondary': floskelEditorVisible && (auswahlmanager.auswahl === schueler) && (hauptgruppe === 'ZB') }">
 						<span class="text-ellipsis overflow-hidden whitespace-nowrap column-focussable" @focusin="switchToUnselectedSchueler(schueler, $event.target)" tabindex="0">{{ schueler.bemerkungen.ZB }}</span>
 					</td>
 					<td class="svws-ui-td" role="cell" />
@@ -113,7 +113,7 @@
 	});
 
 	const columnsComputed = computed<HTMLElement[]>(() => {
-		const row = rowRefs.value.get(props.manager.managerKlassenleitung.auswahl);
+		const row = rowRefs.value.get(props.auswahlmanager.auswahl);
 		if (row === undefined)
 			return []
 		return Array.from(row.querySelectorAll("input, .column-focussable"));
@@ -159,7 +159,7 @@
 		const columnIndex = newRowArray.indexOf(ele as HTMLElement);
 		if (columnIndex !== -1)
 			currentColumn.value = columnIndex;
-		props.manager.managerKlassenleitung.auswahl = schueler;
+		props.auswahlmanager.auswahl = schueler;
 		if(ele)
 			selectInputContent(ele);
 	}
@@ -168,17 +168,17 @@
 		if (eve.shiftKey) {
 			if (currentColumn.value === 0) {
 				eve.preventDefault();
-				props.manager.managerKlassenleitung.linkedListPrevious();
+				props.auswahlmanager.linkedListPrevious();
 				currentColumn.value = columnsComputed.value.length - 1;
 				columnsComputed.value[currentColumn.value].focus();
 			} else
 				currentColumn.value -= 1;
 		} else {
 			if (currentColumn.value === columnsComputed.value.length - 1) {
-				if (!props.manager.managerKlassenleitung.linkedListHasNext())
+				if (!props.auswahlmanager.linkedListHasNext())
 					return;
 				eve.preventDefault();
-				props.manager.managerKlassenleitung.linkedListNext();
+				props.auswahlmanager.linkedListNext();
 				currentColumn.value = 0;
 				columnsComputed.value[currentColumn.value].focus();
 			} else
@@ -189,7 +189,7 @@
 	const gridTemplateColumnsComputed = computed<string>(() => cols.filter(c => colsVisible.value.get(c.kuerzel) ?? true).map(c => c.width).join(" ") + " 5em");
 
 	watch(
-		() => props.manager.managerKlassenleitung.auswahl,
+		() => props.auswahlmanager.auswahl,
 		async () => {
 			await nextTick(() => columnsComputed.value[currentColumn.value].focus())
 		}

@@ -36,6 +36,7 @@ export class RouteKlassenleitung extends RouteNode<any, RouteApp> {
 	public getProps(): EnmKlassenleitungProps {
 		return {
 			manager: api.manager,
+			auswahlmanager: routeApp.data.auswahlmanagerKlassenleitung,
 			patchBemerkungen: routeApp.data.patchBemerkungen,
 			patchLernabschnitt: routeApp.data.patchLernabschnitt,
 			columnsVisible: () => routeApp.data.klassenleitungColumnsVisible,

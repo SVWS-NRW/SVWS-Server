@@ -5,7 +5,7 @@
 		</div>
 		<div class="secondary-menu--header" />
 		<div class="secondary-menu--content">
-			<svws-ui-table :items="manager.listKlassenKlassenlehrer" clickable @update:clicked="klasse => manager.managerKlassenleitung.filter = klasse" :clicked="manager.managerKlassenleitung.filter"
+			<svws-ui-table :items="manager.listKlassenKlassenlehrer" clickable @update:clicked="klasse => auswahlmanager.filter = klasse" :clicked="auswahlmanager.filter"
 				:columns :filter-open="false" count scroll-into-view scroll allow-arrow-key-selection :focus-help-visible :focus-switching-enabled />
 		</div>
 	</div>

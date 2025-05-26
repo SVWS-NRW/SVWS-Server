@@ -57,13 +57,17 @@
 	import { computed, ref, watch } from 'vue';
 	import type { ENMFloskel } from '@core/core/data/enm/ENMFloskel';
 	import type { ENMFloskelgruppe } from '@core/core/data/enm/ENMFloskelgruppe';
-	import type { EnmManager, BemerkungenHauptgruppe } from './EnmManager';
+	import type { EnmManager, BemerkungenHauptgruppe, EnmAuswahlManager, EnmLerngruppenAuswahlEintrag } from './EnmManager';
 	import { ArrayList } from '@core/java/util/ArrayList';
-	import type { ENMSchueler } from '@core/core/data/enm/ENMSchueler';
+	import { ENMSchueler } from '@core/core/data/enm/ENMSchueler';
+	import { PairNN } from '@core/asd/adt/PairNN';
+	import type { ENMLeistung } from '@core/core/data/enm/ENMLeistung';
+	import type { ENMKlasse } from '@core/core/data/enm/ENMKlasse';
 
 
 	const props = defineProps<{
 		manager: EnmManager;
+		auswahlmanager: EnmAuswahlManager<EnmLerngruppenAuswahlEintrag[], PairNN<ENMLeistung, ENMSchueler>>|EnmAuswahlManager<ENMKlasse, ENMSchueler>;
 		patch: (value: string|null) => Promise<void>;
 		erlaubteHauptgruppe: BemerkungenHauptgruppe;
 		floskelEditorVisible: boolean;
@@ -86,24 +90,28 @@
 	const text = ref<string|null>(null);
 
 	const bemerkung = computed<string|null>(() => {
+		if (props.auswahlmanager.auswahl instanceof PairNN)
+			return props.auswahlmanager.auswahl.a.fachbezogeneBemerkungen;
 		switch (props.erlaubteHauptgruppe) {
-			case 'FACH':
-				return props.manager.managerLeistungen.auswahl.a.fachbezogeneBemerkungen ?? null;
 			case 'ASV':
-				return props.manager.managerKlassenleitung.auswahl.bemerkungen.ASV ?? null;
+				return props.auswahlmanager.auswahl.bemerkungen.ASV;
 			case 'AUE':
-				return props.manager.managerKlassenleitung.auswahl.bemerkungen.AUE ?? null;
+				return props.auswahlmanager.auswahl.bemerkungen.AUE;
 			case 'ZB':
-				return props.manager.managerKlassenleitung.auswahl.bemerkungen.ZB ?? null;
+				return props.auswahlmanager.auswahl.bemerkungen.ZB;
 			default:
 				return null;
 		}
 	});
 
-	watch([bemerkung, () => props.manager.managerLeistungen.auswahl, () => props.manager.managerKlassenleitung.auswahl, () => props.erlaubteHauptgruppe],
+	watch([bemerkung, () => props.auswahlmanager.auswahl, () => props.auswahlmanager.auswahl, () => props.erlaubteHauptgruppe],
 		([neuBemerkung]) => text.value = neuBemerkung);
 
-	const schueler = computed<ENMSchueler>(() => (props.erlaubteHauptgruppe === 'FACH') ? props.manager.managerLeistungen.auswahl.b : props.manager.managerKlassenleitung.auswahl);
+	const schueler = computed<ENMSchueler>(() => {
+		if (props.auswahlmanager.auswahl instanceof PairNN)
+			return props.auswahlmanager.auswahl.b;
+		return props.auswahlmanager.auswahl;
+	})
 
 	const clean = computed(() => (text.value === null) || !templateRegex.exec(text.value));
 
@@ -114,20 +122,22 @@
 	}
 
 	const gruppenMap = computed(() => {
-		const liste = new Map<ENMFloskelgruppe, ArrayList<ENMFloskel>>();
+		const map = new Map<ENMFloskelgruppe, ArrayList<ENMFloskel>>();
+		if (props.auswahlmanager.auswahl instanceof ENMSchueler)
+			return map;
 		for (const gruppe of props.manager.listFloskelgruppen) {
 			if ((gruppe.hauptgruppe !== props.erlaubteHauptgruppe) && (gruppe.hauptgruppe !== 'ALLG'))
 				continue;
 			const floskeln = new ArrayList<ENMFloskel>();
 			for (const floskel of gruppe.floskeln)
 				if ((floskel.fachID === null)
-					|| ((props.manager.lerngruppeByIDOrException(props.manager.managerLeistungen.auswahl.a.lerngruppenID).fachID === floskel.fachID)
+					|| ((props.manager.lerngruppeByIDOrException(props.auswahlmanager.auswahl.a.lerngruppenID).fachID === floskel.fachID)
 						&& ((floskel.jahrgangID === null) || (floskel.jahrgangID === schueler.value.jahrgangID))))
 					floskeln.add(floskel);
 			if (!floskeln.isEmpty())
-				liste.set(gruppe, floskeln);
+				map.set(gruppe, floskeln);
 		}
-		return liste;
+		return map;
 	});
 
 	const floskelMap = computed(() => {

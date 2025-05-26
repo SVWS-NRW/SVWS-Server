@@ -1,7 +1,7 @@
 <template>
 	<table class="svws-ui-table svws-clickable h-full w-full overflow-hidden" role="table" aria-label="Tabelle"
-		@keydown.down.prevent.stop="manager.managerTeilleistungen.linkedListNext"
-		@keydown.up.prevent.stop="manager.managerTeilleistungen.linkedListPrevious"
+		@keydown.down.prevent.stop="auswahlmanager.linkedListNext"
+		@keydown.up.prevent.stop="auswahlmanager.linkedListPrevious"
 		@keydown.right.prevent="nextColumn"
 		@keydown.left.prevent="prevColumn">
 		<thead class="svws-ui-thead cursor-pointer" role="rowgroup" aria-label="Tabellenkopf">
@@ -40,8 +40,8 @@
 			</tr>
 		</thead>
 		<tbody class="svws-ui-tbody h-full overflow-y-auto" role="rowgroup" aria-label="Tabelleninhalt">
-			<template v-for="pair of manager.managerTeilleistungen.liste" :key="pair">
-				<tr class="svws-ui-tr h-10" role="row" :class="{ 'svws-clicked': manager.managerTeilleistungen.auswahl === pair }"
+			<template v-for="pair of auswahlmanager.liste" :key="pair">
+				<tr class="svws-ui-tr h-10" role="row" :class="{ 'svws-clicked': auswahlmanager.auswahl === pair }"
 					@click="setAuswahlLeistung(pair)"
 					@keydown.tab="handleTabEvent($event, pair)"
 					:ref="el => rowRefs.set(pair, el as HTMLElement)">
@@ -67,10 +67,10 @@
 						<td class="svws-ui-td" role="cell">
 							<template v-for="teilleistung of manager.mapLeistungTeilleistungsartTeilleistung.getOrNull(pair.a.id, art) !== null ? [manager.mapLeistungTeilleistungsartTeilleistung.getOrNull(pair.a.id, art)!] : []" :key="teilleistung">
 								<input id="teilleistung.id"
-									v-if="(manager.managerTeilleistungen.auswahl === pair) && manager.lerngruppeIstFachlehrer(pair.a.lerngruppenID)"
+									v-if="(auswahlmanager.auswahl === pair) && manager.lerngruppeIstFachlehrer(pair.a.lerngruppenID)"
 									class="w-full column-focussable"
 									v-model="teilleistung.note"
-									:class="{ contentFocusField: (manager.managerTeilleistungen.auswahl === pair) && art === 5 }"
+									:class="{ contentFocusField: (auswahlmanager.auswahl === pair) && art === 5 }"
 									@focusin="tabToUnselectedLeistung(pair, $event.target)"
 									@change="doPatchLeistungNote(teilleistung, Note.fromKuerzel(teilleistung.note).daten(props.manager.schuljahr)?.kuerzel,{ note: (Note.fromKuerzel(teilleistung.note).daten(props.manager.schuljahr)?.kuerzel ?? null) })">
 								<div v-else class="grade-field column-focussable"
@@ -82,11 +82,11 @@
 						</td>
 					</template>
 					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Quartal') ?? true">
-						<input v-if="(manager.managerTeilleistungen.auswahl === pair) && manager.lerngruppeIstFachlehrer(pair.a.lerngruppenID)"
+						<input v-if="(auswahlmanager.auswahl === pair) && manager.lerngruppeIstFachlehrer(pair.a.lerngruppenID)"
 							class="w-full column-focussable"
 							v-model="pair.a.noteQuartal"
 							@focusin="tabToUnselectedLeistung(pair, $event.target)"
-							:class="{ contentFocusField: manager.managerTeilleistungen.auswahl === pair}"
+							:class="{ contentFocusField: auswahlmanager.auswahl === pair}"
 							@change="() => doPatchLeistungNote(pair.a, Note.fromKuerzel(pair.a.noteQuartal).daten(props.manager.schuljahr)?.kuerzel,{ noteQuartal: (Note.fromKuerzel(pair.a.noteQuartal).daten(props.manager.schuljahr)?.kuerzel ?? null) })">
 						<div v-else class="column-focussable w-full h-full contentFocusField"
 							tabindex="0"
@@ -95,9 +95,9 @@
 						</div>
 					</td>
 					<td v-if="colsVisible.get('Note') ?? true" class="svws-ui-td" role="cell">
-						<input v-if="(manager.managerTeilleistungen.auswahl === pair) && manager.lerngruppeIstFachlehrer(pair.a.lerngruppenID)"
+						<input v-if="(auswahlmanager.auswahl === pair) && manager.lerngruppeIstFachlehrer(pair.a.lerngruppenID)"
 							class="w-full column-focussable"
-							:class="{ contentFocusField: manager.managerTeilleistungen.auswahl === pair }"
+							:class="{ contentFocusField: auswahlmanager.auswahl === pair }"
 							v-model="pair.a.note" @focusin="tabToUnselectedLeistung(pair, $event.target)"
 							@change="() => doPatchLeistungNote(pair.a, Note.fromKuerzel(pair.a.note).daten(props.manager.schuljahr)?.kuerzel,{ note: (Note.fromKuerzel(pair.a.note).daten(props.manager.schuljahr)?.kuerzel ?? null) })">
 						<div v-else class="column-focussable w-full h-full"
@@ -117,7 +117,6 @@
 
 	import { computed, nextTick, onMounted, ref, watch } from 'vue';
 	import type { EnmTeilleistungenProps } from './EnmTeilleistungenProps';
-	import type { EnmLerngruppenAuswahlEintrag } from './EnmManager';
 	import type { ENMLeistung } from '@core/core/data/enm/ENMLeistung';
 	import type { PairNN } from '@core/asd/adt/PairNN';
 	import type { ENMSchueler } from '@core/core/data/enm/ENMSchueler';
@@ -147,7 +146,7 @@
 	});
 
 	const columnsComputed = computed<HTMLElement[]>(() => {
-		const htmlElement = rowRefs.value.get(props.manager.managerTeilleistungen.auswahl);
+		const htmlElement = rowRefs.value.get(props.auswahlmanager.auswahl);
 		if (htmlElement !== undefined)
 			return Array.from(htmlElement.querySelectorAll(".column-focussable"));
 		return [];
@@ -156,7 +155,7 @@
 	function setAuswahlLeistung(value: PairNN<ENMLeistung, ENMSchueler>) {
 		if (currentColumn.value === -1)
 			currentColumn.value = 0;
-		props.manager.managerTeilleistungen.auswahl = value;
+		props.auswahlmanager.auswahl = value;
 	}
 
 	function selectInputContent(ele: EventTarget) {
@@ -213,7 +212,7 @@
 		const columnIndex = newRowArray.indexOf(ele as HTMLElement);
 		if (columnIndex !== -1)
 			currentColumn.value = columnIndex;
-		if (!props.manager.compareAuswahlLeistung(leistung, props.manager.managerTeilleistungen.auswahl))
+		if (!props.manager.compareAuswahlLeistung(leistung, props.auswahlmanager.auswahl))
 			setAuswahlLeistung(leistung);
 		if(ele)
 			selectInputContent(ele);
@@ -223,17 +222,17 @@
 		if (eve.shiftKey) {
 			if (currentColumn.value === 0) {
 				eve.preventDefault();
-				props.manager.managerTeilleistungen.linkedListPrevious();
+				props.auswahlmanager.linkedListPrevious();
 				currentColumn.value = columnsComputed.value.length - 1;
 				columnsComputed.value[currentColumn.value].focus();
 			} else
 				currentColumn.value -= 1;
 		} else {
 			if (currentColumn.value === columnsComputed.value.length - 1) {
-				if (!props.manager.managerTeilleistungen.linkedListHasNext())
+				if (!props.auswahlmanager.linkedListHasNext())
 					return;
 				eve.preventDefault();
-				props.manager.managerTeilleistungen.linkedListNext();
+				props.auswahlmanager.linkedListNext();
 				currentColumn.value = 0;
 				columnsComputed.value[currentColumn.value].focus();
 			} else
@@ -242,7 +241,7 @@
 	}
 
 	const setTeilleistungsarten = computed(() => {
-		const set = props.manager.mapLerngruppeTeilleistungsarten.get(props.manager.managerTeilleistungen.filter.id);
+		const set = props.manager.mapLerngruppeTeilleistungsarten.get(props.auswahlmanager.filter.id);
 		if (set === null)
 			return new HashSet<number>();
 		return set;
@@ -255,7 +254,7 @@
 		return cols.filter(c => colsVisible.value.get(c.kuerzel) ?? true).map(c => c.width).join(" ") + frs + " 5em";
 	});
 
-	watch(() => props.manager.managerTeilleistungen.auswahl, async () => await nextTick(() => columnsComputed.value[currentColumn.value].focus()));
+	watch(() => props.auswahlmanager.auswahl, async () => await nextTick(() => columnsComputed.value[currentColumn.value].focus()));
 
 	onMounted(() => currentColumn.value = 0);
 

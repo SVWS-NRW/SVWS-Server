@@ -36,6 +36,7 @@ export class RouteTeilleistungen extends RouteNode<any, RouteApp> {
 	public getProps(): EnmTeilleistungenProps {
 		return {
 			manager: api.manager,
+			auswahlmanager: routeApp.data.auswahlmanagerTeilleistungen,
 			patchLeistung: routeApp.data.patchLeistung,
 			patchTeilleistung: routeApp.data.patchTeilleistung,
 			columnsVisible: () => routeApp.data.teilleistungenColumnsVisible,

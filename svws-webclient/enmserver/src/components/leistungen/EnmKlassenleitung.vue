@@ -2,7 +2,7 @@
 	<div class="page page-flex-row">
 		<div class="flex flex-row h-full w-full overflow-hidden" @dragover="dragOver">
 			<div class="grow w-full h-full overflow-hidden">
-				<enm-klassenleitung-uebersicht :manager :patch-bemerkungen :patch-lernabschnitt :columns-visible :set-columns-visible @hauptgruppe="erlaubteHauptgruppe = $event" :floskel-editor-visible :set-floskel-editor-visible />
+				<enm-klassenleitung-uebersicht :manager :patch-bemerkungen :patch-lernabschnitt :columns-visible :set-columns-visible @hauptgruppe="erlaubteHauptgruppe = $event" :floskel-editor-visible :set-floskel-editor-visible :auswahlmanager />
 			</div>
 			<template v-if="floskelColumnsVisible">
 				<div class="h-full content-center text-center cursor-col-resize min-w-8 max-w-8 lg:min-w-12 lg:max-w-12 bg-ui hover:bg-ui-hover" draggable="true" @dragstart="dragStart" @dragend="dragEnd">
@@ -10,7 +10,7 @@
 					<span class="icon i-ri-arrow-right-s-line" />
 				</div>
 				<div class="h-full overflow-hidden" :style="{ 'min-width': floskelEditorVisible ? posDivider + 'rem' : '4rem', 'max-width': floskelEditorVisible ? posDivider + 'rem' : '4rem' }">
-					<enm-floskeleditor :manager :patch="doPatchBemerkungen" :erlaubte-hauptgruppe :floskel-editor-visible :set-floskel-editor-visible />
+					<enm-floskeleditor :manager :patch="doPatchBemerkungen" :erlaubte-hauptgruppe :floskel-editor-visible :set-floskel-editor-visible :auswahlmanager />
 				</div>
 			</template>
 		</div>
@@ -20,9 +20,9 @@
 <script setup lang="ts">
 
 	import { computed, ref } from 'vue';
-	import type { BemerkungenHauptgruppe } from './EnmManager';
 	import type { EnmKlassenleitungProps } from './EnmKlassenleitungProps';
 	import type { ENMLeistungBemerkungen } from '@core/core/data/enm/ENMLeistungBemerkungen';
+	import type { BemerkungenHauptgruppe } from './EnmManager';
 
 	const props = defineProps<EnmKlassenleitungProps>();
 
@@ -54,9 +54,9 @@
 			default:
 				return;
 		}
-		const success = await props.patchBemerkungen(props.manager.managerKlassenleitung.auswahl.id, patch);
+		const success = await props.patchBemerkungen(props.auswahlmanager.auswahl.id, patch);
 		if (success)
-			Object.assign(props.manager.managerKlassenleitung.auswahl.bemerkungen, patch);
+			Object.assign(props.auswahlmanager.auswahl.bemerkungen, patch);
 	}
 
 	// Default-Breite von 49 rem für den Floskel-Editor

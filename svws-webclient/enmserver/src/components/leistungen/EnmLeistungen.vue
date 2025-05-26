@@ -2,7 +2,7 @@
 	<div class="page page-flex-row">
 		<div class="flex flex-row h-full w-full overflow-hidden" @dragover="dragOver">
 			<div class="grow w-full h-full overflow-hidden">
-				<enm-leistungen-uebersicht :manager :patch-leistung :columns-visible :set-columns-visible :floskel-editor-visible :set-floskel-editor-visible />
+				<enm-leistungen-uebersicht :manager :patch-leistung :columns-visible :set-columns-visible :floskel-editor-visible :set-floskel-editor-visible :auswahlmanager />
 			</div>
 			<template v-if="columnsVisible().get('Bemerkung')">
 				<div class="h-full content-center text-center cursor-col-resize min-w-8 max-w-8 lg:min-w-12 lg:max-w-12 bg-ui hover:bg-ui-hover" draggable="true" @dragstart="dragStart" @dragend="dragEnd">
@@ -10,7 +10,7 @@
 					<span class="icon i-ri-arrow-right-s-line" />
 				</div>
 				<div class="h-full overflow-hidden" :style="{ 'min-width': floskelEditorVisible ? posDivider + 'rem' : '4rem', 'max-width': floskelEditorVisible ? posDivider + 'rem' : '4rem' }">
-					<enm-floskeleditor :manager :patch="doPatchLeistung" erlaubte-hauptgruppe="FACH" :floskel-editor-visible :set-floskel-editor-visible />
+					<enm-floskeleditor :manager :patch="doPatchLeistung" erlaubte-hauptgruppe="FACH" :floskel-editor-visible :set-floskel-editor-visible :auswahlmanager />
 				</div>
 			</template>
 		</div>
@@ -29,11 +29,11 @@
 	img.src = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
 
 	async function doPatchLeistung(fachbezogeneBemerkungen: string|null) {
-		const id = props.manager.managerLeistungen.auswahl.a.id
+		const id = props.auswahlmanager.auswahl.a.id
 		const patch = { id, fachbezogeneBemerkungen };
 		const success = await props.patchLeistung(patch);
 		if (success)
-			Object.assign(props.manager.managerLeistungen.auswahl.a, patch);
+			Object.assign(props.auswahlmanager.auswahl.a, patch);
 	}
 
 	// Default-Breite von 49 rem für den Floskel-Editor

@@ -40,6 +40,7 @@ export class RouteLeistungen extends RouteNode<any, RouteApp> {
 	public getProps(): EnmLeistungenProps {
 		return {
 			manager: api.manager,
+			auswahlmanager: routeApp.data.auswahlmanagerLeistungen,
 			patchLeistung: routeApp.data.patchLeistung,
 			columnsVisible: () => routeApp.data.leistungenColumnsVisible,
 			setColumnsVisible: routeApp.data.setLeistungenColumnsVisible,

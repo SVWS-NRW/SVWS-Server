@@ -2,7 +2,6 @@ import type { ShallowRef } from "vue";
 import type { ENMDaten } from "@core/core/data/enm/ENMDaten";
 import type { ENMFach } from "@core/core/data/enm/ENMFach";
 import type { ENMFloskelgruppe } from "@core/core/data/enm/ENMFloskelgruppe";
-import type { ENMFoerderschwerpunkt } from "@core/core/data/enm/ENMFoerderschwerpunkt";
 import type { ENMJahrgang } from "@core/core/data/enm/ENMJahrgang";
 import type { ENMKlasse } from "@core/core/data/enm/ENMKlasse";
 import type { ENMLehrer } from "@core/core/data/enm/ENMLehrer";
@@ -174,17 +173,8 @@ export class EnmManager {
 	/** Die Liste aller Floskelgruppen */
 	readonly listFloskelgruppen: List<ENMFloskelgruppe>;
 
-	/** Eine Map von der ID der Förderschwerpunkte auf deren Objekte */
-	readonly mapFoerderschwerpunkte: JavaMap<number, ENMFoerderschwerpunkt> = new HashMap<number, ENMFoerderschwerpunkt>();
-
-	/** Eine Map von der ID der Jahrgänge auf deren Objekte */
-	readonly mapJahrgaenge: JavaMap<number, ENMJahrgang> = new HashMap<number, ENMJahrgang>();
-
 	/** Eine Map von der ID der Klassen auf deren Objekte */
 	readonly mapKlassen: JavaMap<number, ENMKlasse> = new HashMap<number, ENMKlasse>();
-
-	/** Eine Map von der ID der Floskelgruppen auf deren Objekte */
-	readonly mapFloskelgruppen: JavaMap<string, ENMFloskelgruppe> = new HashMap<string, ENMFloskelgruppe>();
 
 	/** Eine Map von der ID der Lehrer auf deren Objekte */
 	readonly mapLehrer: JavaMap<number, ENMLehrer> = new HashMap<number, ENMLehrer>();
@@ -197,9 +187,6 @@ export class EnmManager {
 
 	/** Eine Map von der ID der Lerngruppen auf deren Objekte */
 	readonly mapLerngruppen: JavaMap<number, ENMLerngruppe> = new HashMap<number, ENMLerngruppe>();
-
-	/** Ein Set mit Lerngruppen-IDs */
-	readonly setLerngruppenIDs: JavaSet<number> = new HashSet<number>();
 
 	/** Eine Map von der ID der Schüler auf deren Objekte */
 	readonly mapSchueler: JavaMap<number, ENMSchueler> = new HashMap<number, ENMSchueler>();
@@ -222,9 +209,6 @@ export class EnmManager {
 	/** Eine HahMap2D der Leistungen und Teilleistungsarten sowie der Teilleistung */
 	readonly mapLeistungTeilleistungsartTeilleistung: HashMap2D<number, number, ENMTeilleistung> = new HashMap2D();
 
-	/** Die Liste aller Lerngruppen des Lehrers, sortiert nach den Jahrgängen */
-	readonly listLerngruppenLehrer: List<ENMLerngruppe> = new ArrayList<ENMLerngruppe>();
-
 	readonly mapLerngruppeLeistungen: JavaMap<number, List<PairNN<ENMLeistung, ENMSchueler>>> = new HashMap();
 
 	/** Die Menge aller Lerngruppen-IDs, wo der Lehrer bei der Lerngruppe als Fachlehrer eingetragen ist. */
@@ -235,19 +219,6 @@ export class EnmManager {
 
 	/** Die Liste aller Klassen eines Klassenlehrers, sortiert nach Jahrgängen */
 	readonly listKlassenKlassenlehrer: List<ENMKlasse> = new ArrayList<ENMKlasse>();
-
-	/** Die Liste aller Paare mit Leistung und Schüler des Lehrers */
-	readonly listPairsLeistungSchueler: List<PairNN<ENMLeistung, ENMSchueler>> = new ArrayList();
-
-	/** Die Liste aller Lerngruppen */
-	readonly listLerngruppen: List<ENMLerngruppe> = new ArrayList();
-
-	/** Der Auswahlmanager für die Leistungen */
-	readonly managerLeistungen: EnmAuswahlManager<EnmLerngruppenAuswahlEintrag[],PairNN<ENMLeistung, ENMSchueler>>;
-	/** Der Auswahlmanager für die Teilleistungen */
-	readonly managerTeilleistungen: EnmAuswahlManager<EnmLerngruppenAuswahlEintrag, PairNN<ENMLeistung, ENMSchueler>>;
-	/** Der Auswahlmanager für die Klassenleitungsklassen */
-	readonly managerKlassenleitung: EnmAuswahlManager<ENMKlasse, ENMSchueler>;
 
 	/**
 	 * Erstellt einen neue Enm-Manager für die übergebenen ENM-Daten
@@ -260,13 +231,6 @@ export class EnmManager {
 		this.schuljahr = daten.schuljahr;
 		this.halbjahr = daten.aktuellerAbschnitt;
 		this.listFloskelgruppen = daten.floskelgruppen;
-		this.listLerngruppen = daten.lerngruppen;
-
-		for (const f of daten.foerderschwerpunkte)
-			this.mapFoerderschwerpunkte.put(f.id, f);
-
-		for (const j of daten.jahrgaenge)
-			this.mapJahrgaenge.put(j.id, j);
 
 		for (const k of daten.klassen) {
 			this.mapKlassen.put(k.id, k);
@@ -275,9 +239,6 @@ export class EnmManager {
 				this.listKlassenKlassenlehrer.add(k);
 		}
 		this.listKlassenKlassenlehrer.sort(this.comparatorKlassen);
-
-		for (const f of daten.floskelgruppen)
-			this.mapFloskelgruppen.put(f.kuerzel, f);
 
 		for (const l of daten.lehrer)
 			this.mapLehrer.put(l.id, l);
@@ -295,9 +256,7 @@ export class EnmManager {
 			this.mapLerngruppeKlassen.put(l.id, new ArrayList());
 			this.mapLerngruppeLeistungen.put(l.id, new ArrayList());
 			this.mapLerngruppeTeilleistungsarten.put(l.id, new HashSet<number>());
-			this.setLerngruppenIDs.add(l.id);
 		}
-		this.listLerngruppenLehrer.sort(this.comparatorLerngruppen);
 
 		for (const s of daten.schueler) {
 			this.mapSchueler.put(s.id, s);
@@ -321,28 +280,7 @@ export class EnmManager {
 		}
 
 		for (const l of daten.lerngruppen) {
-			const listJahrgaenge = this.mapLerngruppeJahrgaenge.get(l.id)!;
 			const listSchueler = this.mapLerngruppenSchueler.get(l.id);
-			if (l.kursartID === null) {
-				// Klassenunterricht - Bestimme den Jahrgang der Klasse
-				const klasse = this.mapKlassen.get(l.kID);
-				if (klasse !== null) {
-					const jahrgang = this.mapJahrgaenge.get(klasse.idJahrgang);
-					if (jahrgang !== null)
-						listJahrgaenge.add(jahrgang);
-				}
-			} else {
-				// Kursunterricht - Bestimme die Jahrgänge aller Schüler
-				const setJahrgaenge = new HashSet<number>();
-				if (listSchueler !== null)
-					for (const schueler of listSchueler)
-						setJahrgaenge.add(schueler.jahrgangID);
-				for (const idJahrgang of setJahrgaenge) {
-					const jahrgang = this.mapJahrgaenge.get(idJahrgang);
-					if (jahrgang !== null)
-						listJahrgaenge.add(jahrgang);
-				}
-			}
 			const tmpKlassenIDs = new HashSet<number>();
 			const listKlassen = new ArrayList<ENMKlasse>();
 			if (listSchueler !== null)
@@ -357,7 +295,6 @@ export class EnmManager {
 			listKlassen.sort(this.comparatorKlassen);
 			this.mapLerngruppeKlassen.put(l.id, listKlassen);
 			if (l.lehrerID.contains(this.idLehrer)) {
-				this.listLerngruppenLehrer.add(l);
 				this.setLerngruppenLehrer.add(l.id);
 				this.listLerngruppenAuswahlliste.add(<EnmLerngruppenAuswahlEintrag>{
 					id: l.id,
@@ -373,11 +310,6 @@ export class EnmManager {
 					const list = this.mapLerngruppeLeistungen.get(l.lerngruppenID);
 					list?.add(pair);
 				}
-
-		const klasse = this.listKlassenKlassenlehrer.getFirst();
-		this.managerKlassenleitung = new EnmAuswahlManager(klasse, this.mapKlassenSchueler);
-		this.managerLeistungen = new EnmAuswahlManager([], this.mapLerngruppeLeistungen);
-		this.managerTeilleistungen = new EnmAuswahlManager(this.listLerngruppenAuswahlliste.getFirst(), this.mapLerngruppeLeistungen);
 	}
 
 	/**
