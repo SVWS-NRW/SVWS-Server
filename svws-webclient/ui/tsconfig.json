@@ -18,7 +18,8 @@
 		"src/**/*.vue",
 		"components.d.ts",
 		"../core/src/**/*.ts",
-		"histoire.setup.ts"	],
+		"histoire.*.ts",
+		],
 	"exclude": [
 		"../core/src/index.ts",
 	]

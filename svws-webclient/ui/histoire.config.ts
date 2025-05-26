@@ -57,6 +57,6 @@ export default defineConfig({
 		{label:'bg-uistatic-50',color:'var(--background-color-uistatic-50)',contrastColor:'var(--text-color-ui-50)'},
 		{label:'bg-uistatic-75',color:'var(--background-color-uistatic-75)',contrastColor:'var(--text-color-ui-75)'},
 		{label:'bg-uistatic-100',color:'var(--background-color-uistatic-100)',contrastColor:'var(--text-color-ui-100)'},
-	  ],	  
-	 
+	],
+
 })
