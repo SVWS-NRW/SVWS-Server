@@ -15,7 +15,7 @@ import type { Comparator } from "@core/java/util/Comparator";
 import type { JavaMap } from "@core/java/util/JavaMap";
 import type { JavaSet } from "@core/java/util/JavaSet";
 import type { List } from "@core/java/util/List";
-import { shallowRef, triggerRef } from "vue";
+import { shallowRef } from "vue";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { ArrayList } from "@core/java/util/ArrayList";
 import { HashMap } from "@core/java/util/HashMap";
@@ -46,40 +46,121 @@ export interface EnmLerngruppenAuswahlEintrag {
 export type BemerkungenHauptgruppe = 'ASV'|'AUE'|'FACH'|'FÖRD'|'FSP'|'VERM'|'VERS'|'ZB';
 
 
+export class EnmAuswahlManager<TAuswahl extends ({id: number}|{id: number}[]), TEintrag> {
+	/** Der Filter für die Gruppenauswahl (Lerngruppe, Klasse) */
+	protected _filter: ShallowRef<TAuswahl|undefined>;
+	/** die Map mit den Listen der Einträge */
+	protected _mapGruppeListe: JavaMap<number, List<TEintrag>>;
+	/** Die Liste der anzuzeigenden Leistungen oder Schüler */
+	protected _liste: ShallowRef<List<TEintrag>>;
+	/** Die aktuelle Auswahl aus der Liste der Leistungen oder Schüler */
+	protected _auswahl: ShallowRef<TEintrag>;
+	/** Die Linked List der Liste */
+	protected _linkedList: ListIterator<TEintrag>;
+
+	/**
+	 * Erstellt einen Auswahlmanager für die übergebenen Daten
+	 *
+	 * @param filter ein Filter entweder als Array oder einzelnes Objekt mit mindestens einem id-Attribut
+	 * @param map eine Map mit Einträgen, die über die Filterobjekte und deren ID gefunden werden können
+	 */
+	public constructor(filter: TAuswahl, map: JavaMap<number, List<TEintrag>>) {
+		this._liste = shallowRef(new ArrayList());
+		this._mapGruppeListe = map;
+		this._filter = shallowRef();
+		this.filter = filter;
+		this._linkedList = this._liste.value.listIterator();
+		this._auswahl = shallowRef(this._linkedList.next());
+	}
+
+	/** der Getter für den Filter */
+	public get filter(): TAuswahl {
+		if (this._filter.value === undefined)
+			throw new DeveloperNotificationException("Es ist kein Filter gesetzt");
+		return this._filter.value;
+	}
+	/** Der Setter für den Filter, erstellt automatisch auch die Liste der Ergebnisse */
+	public set filter(value: TAuswahl) {
+		let tmpFilter = [];
+		if (Array.isArray(value))
+			if (value.length === 0)
+				for (const e of this._mapGruppeListe.keySet())
+					tmpFilter.push(e);
+			else
+				tmpFilter = value.map(e => e.id);
+		else
+			tmpFilter.push(value.id);
+		this._filter.value = value;
+		const tmpList = new ArrayList<TEintrag>();
+		for (const f of tmpFilter) {
+			const l = this._mapGruppeListe.get(f);
+			if (l !== null)
+				tmpList.addAll(l)
+		}
+		this.liste = tmpList;
+	}
+
+	/** Die Liste der Einträge */
+	public get liste(): List<TEintrag> {
+		return this._liste.value;
+	}
+	/** Der Setter für die Liste der Einträge, erstellt auch die Linked List */
+	protected set liste(value: List<TEintrag>) {
+		this._liste.value = value;
+		this._linkedList = this._liste.value.listIterator();
+	}
+
+	/** Die aktuelle Auswahl aus den Einträgen */
+	public get auswahl(): TEintrag {
+		return this._auswahl.value;
+	}
+	/** Setzt die Auswahl eines Eintrags und positioniert den Cursor der Linked List */
+	public set auswahl(value: TEintrag) {
+		if (value === this._auswahl.value)
+			return;
+		this._auswahl.value = value;
+		let weiter = true;
+		while (weiter) {
+			if (this._linkedList.hasNext()) {
+				const eintrag = this._linkedList.next();
+				if (eintrag === value)
+					weiter = false;
+			} else
+				this._linkedList = this._liste.value.listIterator();
+		}
+	}
+
+	/** geht ein Element weiter in der Linked-Liste */
+	public linkedListNext() {
+		if (this._linkedList.hasNext()) {
+			const eintrag = this._linkedList.next();
+			this._auswahl.value = (eintrag === this._auswahl.value && this._linkedList.hasNext())
+				? this._linkedList.next()
+				: eintrag;
+		}
+	}
+
+	/** geht ein Element zurück in der Linked-Liste */
+	public linkedListPrevious() {
+		if (this._linkedList.hasPrevious()) {
+			const pair = this._linkedList.previous();
+			this._auswahl.value = (pair === this._auswahl.value && this._linkedList.hasPrevious())
+				? this._linkedList.previous()
+				: pair;
+		}
+	}
+
+	/** prüft, ob es ein nächstes Element gibt in der Linked Liste */
+	public linkedListHasNext() {
+		return this._linkedList.hasNext();
+	}
+}
+
+
 /**
  * Ein Manager für die Verwaltung den ENM-Daten.
  */
 export class EnmManager {
-
-	/** Eine Referenz auf die ENM-Daten */
-	protected _daten: ShallowRef<ENMDaten>;
-
-	/** Eine Referenz auf die aktuelle Auswahl von Lerngruppen des Lehrers, auf welche in diesem Manager gefiltert wird */
-	protected _filterKlassen: ShallowRef<Array<ENMKlasse>>;
-
-	/** Eine Referenz auf die aktuell ausgewählte Klasse eines Klassenlehrers */
-	protected _auswahlKlasse: ShallowRef<ENMKlasse|null>;
-
-	/** Eine Referenz auf die aktuelle Auswahl von Lerngruppen des Lehrers, auf welche in diesem Manager gefiltert wird */
-	protected _filterLerngruppen: ShallowRef<Array<EnmLerngruppenAuswahlEintrag>>;
-
-	/** Eine Refernz auf die aktuelle Auswahl der Leistung zur Bearbeitung in diesem Manager */
-	protected _auswahlLeistung: ShallowRef<PairNN<ENMLeistung, ENMSchueler>|null>;
-
-	/** Eine Referenz auf die aktuelle Auswahl der Leistung zur Bearbeitung in diesem Manager */
-	protected _auswahlSchueler: ShallowRef<ENMSchueler|null>;
-
-	/** Die Liste aller Schüler, die in der Klassenlehreransicht dargestellt werden */
-	protected _listKlasseAuswahlSchueler: ShallowRef<List<ENMSchueler>>;
-
-	/** Ermittelt anhand der ausgewählten Lerngruppen die benötigten Leistungen als Pair */
-	protected _auswahlPairLeistungSchueler: ShallowRef<List<PairNN<ENMLeistung, ENMSchueler>>>;
-
-	/** Ein ListenIterator der Leistung/Schüler-Paare */
-	protected _linkedListPairsLeistungSchueler: ListIterator<PairNN<ENMLeistung, ENMSchueler>> = new ArrayList<PairNN<ENMLeistung, ENMSchueler>>().listIterator();
-
-	/** Ein ListenIterator der Schüler in der Klassenleitungsauswahl */
-	protected _linkedListSchueler: ListIterator<ENMSchueler> = new ArrayList<ENMSchueler>().listIterator();
 
 	/** Eine Referenz auf die ID des Lehrers, für welchen die ENM-Daten in diesem Manager verwaltet werden */
 	readonly idLehrer: number;
@@ -144,6 +225,8 @@ export class EnmManager {
 	/** Die Liste aller Lerngruppen des Lehrers, sortiert nach den Jahrgängen */
 	readonly listLerngruppenLehrer: List<ENMLerngruppe> = new ArrayList<ENMLerngruppe>();
 
+	readonly mapLerngruppeLeistungen: JavaMap<number, List<PairNN<ENMLeistung, ENMSchueler>>> = new HashMap();
+
 	/** Die Menge aller Lerngruppen-IDs, wo der Lehrer bei der Lerngruppe als Fachlehrer eingetragen ist. */
 	readonly setLerngruppenLehrer: JavaSet<number> = new HashSet<number>();
 
@@ -159,6 +242,12 @@ export class EnmManager {
 	/** Die Liste aller Lerngruppen */
 	readonly listLerngruppen: List<ENMLerngruppe> = new ArrayList();
 
+	/** Der Auswahlmanager für die Leistungen */
+	readonly managerLeistungen: EnmAuswahlManager<EnmLerngruppenAuswahlEintrag[],PairNN<ENMLeistung, ENMSchueler>>;
+	/** Der Auswahlmanager für die Teilleistungen */
+	readonly managerTeilleistungen: EnmAuswahlManager<EnmLerngruppenAuswahlEintrag, PairNN<ENMLeistung, ENMSchueler>>;
+	/** Der Auswahlmanager für die Klassenleitungsklassen */
+	readonly managerKlassenleitung: EnmAuswahlManager<ENMKlasse, ENMSchueler>;
 
 	/**
 	 * Erstellt einen neue Enm-Manager für die übergebenen ENM-Daten
@@ -167,12 +256,6 @@ export class EnmManager {
 	 * @param idLehrer   die ID des Lehrers, für welchen die ENM-Daten verwaltet werden
 	 */
 	public constructor(daten: ENMDaten, idLehrer: number) {
-		this._daten = shallowRef<ENMDaten>(daten);
-		this._filterLerngruppen = shallowRef<Array<EnmLerngruppenAuswahlEintrag>>(new Array<EnmLerngruppenAuswahlEintrag>());
-		this._filterKlassen = shallowRef<Array<ENMKlasse>>(new Array<ENMKlasse>());
-		this._auswahlLeistung = shallowRef<PairNN<ENMLeistung, ENMSchueler>|null>(null);
-		this._auswahlSchueler = shallowRef<ENMSchueler|null>(null);
-
 		this.idLehrer = idLehrer;
 		this.schuljahr = daten.schuljahr;
 		this.halbjahr = daten.aktuellerAbschnitt;
@@ -192,18 +275,6 @@ export class EnmManager {
 				this.listKlassenKlassenlehrer.add(k);
 		}
 		this.listKlassenKlassenlehrer.sort(this.comparatorKlassen);
-		if (!this.listKlassenKlassenlehrer.isEmpty()) {
-			this._auswahlKlasse = shallowRef(this.listKlassenKlassenlehrer.getFirst());
-			const schueler = this.mapKlassenSchueler.get(this._auswahlKlasse.value?.id);
-			if (schueler !== null)
-				this._listKlasseAuswahlSchueler = shallowRef(schueler);
-			else
-				this._listKlasseAuswahlSchueler = shallowRef(new ArrayList());
-		}
-		else {
-			this._auswahlKlasse = shallowRef(null);
-			this._listKlasseAuswahlSchueler = shallowRef(new ArrayList());
-		}
 
 		for (const f of daten.floskelgruppen)
 			this.mapFloskelgruppen.put(f.kuerzel, f);
@@ -222,6 +293,7 @@ export class EnmManager {
 			this.mapLerngruppenSchueler.put(l.id, new ArrayList());
 			this.mapLerngruppeJahrgaenge.put(l.id, new ArrayList());
 			this.mapLerngruppeKlassen.put(l.id, new ArrayList());
+			this.mapLerngruppeLeistungen.put(l.id, new ArrayList());
 			this.mapLerngruppeTeilleistungsarten.put(l.id, new HashSet<number>());
 			this.setLerngruppenIDs.add(l.id);
 		}
@@ -296,168 +368,16 @@ export class EnmManager {
 		}
 		for (const s of daten.schueler)
 			for (const l of s.leistungsdaten)
-				if (this.setLerngruppenLehrer.contains(l.lerngruppenID))
-					this.listPairsLeistungSchueler.add(new PairNN(l, s));
+				if (this.setLerngruppenLehrer.contains(l.lerngruppenID)) {
+					const pair = new PairNN(l, s);
+					const list = this.mapLerngruppeLeistungen.get(l.lerngruppenID);
+					list?.add(pair);
+				}
 
-		this._auswahlPairLeistungSchueler = shallowRef(this.listPairsLeistungSchueler);
-	}
-
-	/**
-	 * Aktualisiert die Daten dieses Manager, in dem die Reaktivität des Daten-Attributs getriggert wird.
-	 */
-	public update(): void {
-		// Object.assign(this._daten.value, this._daten.value);
-		triggerRef(this._daten)
-	}
-
-	/** Gibt die aktuelle Auswahl der Lerngruppen zurück. */
-	public get filterLerngruppen() : Array<EnmLerngruppenAuswahlEintrag> {
-		return this._filterLerngruppen.value;
-	}
-	/** Setzt die aktuelle Auswahl der Lerngruppen. */
-	public set filterLerngruppen(value : Array<EnmLerngruppenAuswahlEintrag>) {
-		this._filterLerngruppen.value = value;
-		if ((value.length === 0) || (value.length === this.listLerngruppenAuswahlliste.size()))
-			this._auswahlPairLeistungSchueler.value = this.listPairsLeistungSchueler;
-		else {
-			const set = new HashSet<number>();
-			for (const entry of value)
-				set.add(entry.id);
-			const list = new ArrayList<PairNN<ENMLeistung, ENMSchueler>>();
-			for (const p of this.listPairsLeistungSchueler)
-				if (set.contains(p.a.lerngruppenID))
-					list.add(p);
-			this._auswahlPairLeistungSchueler.value = list;
-		}
-		this._linkedListPairsLeistungSchueler = this._auswahlPairLeistungSchueler.value.listIterator();
-	}
-
-	/** Gibt die aktuelle Auswahl der Klassen zurück. */
-	public get filterKlassen() : Array<ENMKlasse> {
-		return this._filterKlassen.value;
-	}
-	/** Setzt die aktuelle Auswahl der Klassen. */
-	public set filterKlassen(value : Array<ENMKlasse>) {
-		this._filterKlassen.value = value;
-	}
-
-	/** Gibt die aktuell ausgewählte Leistung zurück */
-	public get auswahlLeistung() : PairNN<ENMLeistung, ENMSchueler>|null {
-		return this._auswahlLeistung.value;
-	}
-	/** Setzt die aktuell ausgewählte Leistung */
-	public set auswahlLeistung(value: PairNN<ENMLeistung, ENMSchueler>|null) {
-		if (value === this._auswahlLeistung.value)
-			return;
-		this._auswahlLeistung.value = value;
-		if ((value === null) || !this.currentListContainsAuswahl(value))
-			return;
-		let weiter = true;
-		while (weiter) {
-			if (this._linkedListPairsLeistungSchueler.hasNext()) {
-				const pair = this._linkedListPairsLeistungSchueler.next();
-				if (pair === value)
-					weiter = false;
-			} else
-				this._linkedListPairsLeistungSchueler = this._auswahlPairLeistungSchueler.value.listIterator();
-		}
-	}
-
-	// /** Gibt den aktuell ausgewählte Klasse eines Klassenlehrers zurück */
-	public get auswahlKlasse() : ENMKlasse | null {
-		return this._auswahlKlasse.value;
-	}
-	// /** Setzt den aktuell ausgewählte Klasse eines Klassenlehrers */
-	public set auswahlKlasse(value: ENMKlasse | null) {
-		if (this._auswahlKlasse.value === value)
-			return;
-		this._auswahlKlasse.value = value;
-		const schueler = this.mapKlassenSchueler.get(this._auswahlKlasse.value?.id);
-		this._listKlasseAuswahlSchueler.value = schueler ?? new ArrayList<ENMSchueler>();
-		if (schueler !== null)
-			this.auswahlSchueler = schueler.getFirst();
-	}
-
-	// /** Gibt den aktuell ausgewählten Schüler zurück */
-	public get auswahlSchueler() : ENMSchueler | null {
-		return this._auswahlSchueler.value;
-	}
-	// /** Setzt den aktuell ausgewählten Schüler */
-	public set auswahlSchueler(value: ENMSchueler | null) {
-		if (value === this._auswahlSchueler.value)
-			return;
-		this._auswahlSchueler.value = value;
-		if ((value === null) || !this._listKlasseAuswahlSchueler.value.contains(value))
-			return;
-		let weiter = true;
-		while (weiter) {
-			if (this._linkedListSchueler.hasNext()) {
-				const schueler = this._linkedListSchueler.next();
-				if (schueler === value)
-					weiter = false;
-			} else {
-				this._linkedListSchueler = this._listKlasseAuswahlSchueler.value.listIterator();
-			}
-		}
-	}
-
-	/** Das aktuell ausgewählte Paar<Leistung, Schüler> */
-	public auswahlPairLeistungSchueler() {
-		return this._auswahlPairLeistungSchueler.value;
-	}
-
-
-	/** geht ein Element weiter in der Leistung/Schüler-Liste */
-	public linkedListPairNext() {
-		if (this._linkedListPairsLeistungSchueler.hasNext()) {
-			const pair = this._linkedListPairsLeistungSchueler.next();
-			this._auswahlLeistung.value = (pair === this._auswahlLeistung.value && this._linkedListPairsLeistungSchueler.hasNext())
-				? this._linkedListPairsLeistungSchueler.next()
-				: pair;
-		}
-	}
-
-	/** geht ein Element zurück in der Leistung/Schüler-Liste */
-	public linkedListPairPrevious() {
-		if (this._linkedListPairsLeistungSchueler.hasPrevious()) {
-			const pair = this._linkedListPairsLeistungSchueler.previous();
-			this._auswahlLeistung.value = (pair === this._auswahlLeistung.value && this._linkedListPairsLeistungSchueler.hasPrevious())
-				? this._linkedListPairsLeistungSchueler.previous()
-				: pair;
-		}
-	}
-
-	/** prüft, ob es ein nächstes Element gibt bei den Leistung/Schüler Paaren */
-	public linkedListPairHasNext() {
-		return this._linkedListPairsLeistungSchueler.hasNext();
-	}
-
-
-	// protected _linkedListSchueler = computed(() => this._listKlassenAuswahlSchueler.value.listIterator());
-
-	/** Gehe einen Schüler weiter in der Liste */
-	public schuelerNext() {
-		if (this._linkedListSchueler.hasNext()) {
-			const schueler = this._linkedListSchueler.next();
-			this._auswahlSchueler.value = (schueler === this._auswahlSchueler.value && this._linkedListSchueler.hasNext())
-				? this._linkedListSchueler.next()
-				: schueler;
-		}
-	}
-
-	/** Gehe einen Schüler zurück in der Liste */
-	public schuelerPrevious() {
-		if (this._linkedListSchueler.hasPrevious()) {
-			const schueler = this._linkedListSchueler.previous();
-			this._auswahlSchueler.value = (schueler === this._auswahlSchueler.value && this._linkedListSchueler.hasPrevious())
-				? this._linkedListSchueler.previous()
-				: schueler;
-		}
-	}
-
-	/** Prüft, ob der Schüler einen Nachfolger hat */
-	public linkedListSchuelerHasNext() {
-		return this._linkedListSchueler.hasNext();
+		const klasse = this.listKlassenKlassenlehrer.getFirst();
+		this.managerKlassenleitung = new EnmAuswahlManager(klasse, this.mapKlassenSchueler);
+		this.managerLeistungen = new EnmAuswahlManager([], this.mapLerngruppeLeistungen);
+		this.managerTeilleistungen = new EnmAuswahlManager(this.listLerngruppenAuswahlliste.getFirst(), this.mapLerngruppeLeistungen);
 	}
 
 	/**
@@ -795,26 +715,6 @@ export class EnmManager {
 		if (fach === null)
 			return "";
 		return fach.kuerzelAnzeige;
-	}
-
-	/**
-	 * Gibt die Liste der Schüler der aktuellen Klassenauswahl zurück;
-	 *
-	 * @returns die Liste der Schüler der aktuellen Klassenauswahl
-	 */
-	public klasseAuswahlGetSchueler() : List<ENMSchueler> {
-		return this._listKlasseAuswahlSchueler.value;
-	}
-
-	/**
-	 * Prüft, ob die aktuelle Liste mit Leistungen die übergebene Leistungsauswahl enthält
-	 *
-	 * @param auswahl   die Leistungsauswahl, deren Vorhandensein in der Liste geprüft werden soll
-	 *
-	 * @returns true, wenn die Leistungsauswahl in der Liste enthalten ist, ansonsten false
-	 */
-	public currentListContainsAuswahl(auswahl: PairNN<ENMLeistung, ENMSchueler>|null): boolean {
-		return (auswahl !== null) && this._auswahlPairLeistungSchueler.value.contains(auswahl);
 	}
 
 	/**

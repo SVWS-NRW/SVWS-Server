@@ -164,6 +164,7 @@ export class ApiConnection {
 			this._daten = undefined;
 			this._manager = undefined;
 			this._serverMode.value = ServerMode.STABLE;
+			throw error;
 		}
 		return this._authenticated.value;
 	}

@@ -29,14 +29,11 @@
 	img.src = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
 
 	async function doPatchLeistung(fachbezogeneBemerkungen: string|null) {
-		if (props.manager.auswahlLeistung === null)
-			return;
-		const id = props.manager.auswahlLeistung.a.id
+		const id = props.manager.managerLeistungen.auswahl.a.id
 		const patch = { id, fachbezogeneBemerkungen };
 		const success = await props.patchLeistung(patch);
 		if (success)
-			Object.assign(props.manager.auswahlLeistung.a, patch);
-		props.manager.update();
+			Object.assign(props.manager.managerLeistungen.auswahl.a, patch);
 	}
 
 	// Default-Breite von 49 rem für den Floskel-Editor

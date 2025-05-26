@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 
-	import { computed, ref, watchEffect } from 'vue';
+	import { computed, ref } from 'vue';
 	import type { BemerkungenHauptgruppe } from './EnmManager';
 	import type { EnmKlassenleitungProps } from './EnmKlassenleitungProps';
 	import type { ENMLeistungBemerkungen } from '@core/core/data/enm/ENMLeistungBemerkungen';
@@ -39,16 +39,7 @@
 			|| (cols.get('ZB') ?? false);
 	})
 
-	watchEffect(() => {
-		if (props.manager.klasseAuswahlGetSchueler().contains(props.manager.auswahlSchueler))
-			return;
-		props.manager.schuelerNext();
-	})
-
 	async function doPatchBemerkungen(bemerkung: string|null) {
-		const schueler = props.manager.auswahlSchueler ?? null;
-		if (schueler === null)
-			return;
 		const patch = <Partial<ENMLeistungBemerkungen>>{};
 		switch (erlaubteHauptgruppe.value) {
 			case 'ASV':
@@ -63,10 +54,9 @@
 			default:
 				return;
 		}
-		const success = await props.patchBemerkungen(schueler.id, patch);
+		const success = await props.patchBemerkungen(props.manager.managerKlassenleitung.auswahl.id, patch);
 		if (success)
-			Object.assign(schueler.bemerkungen, patch);
-		props.manager.update();
+			Object.assign(props.manager.managerKlassenleitung.auswahl.bemerkungen, patch);
 	}
 
 	// Default-Breite von 49 rem für den Floskel-Editor

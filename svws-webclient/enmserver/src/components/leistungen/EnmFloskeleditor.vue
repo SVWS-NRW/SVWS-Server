@@ -59,7 +59,7 @@
 	import type { ENMFloskelgruppe } from '@core/core/data/enm/ENMFloskelgruppe';
 	import type { EnmManager, BemerkungenHauptgruppe } from './EnmManager';
 	import { ArrayList } from '@core/java/util/ArrayList';
-	import { ENMSchueler } from '@core/core/data/enm/ENMSchueler';
+	import type { ENMSchueler } from '@core/core/data/enm/ENMSchueler';
 
 
 	const props = defineProps<{
@@ -88,22 +88,22 @@
 	const bemerkung = computed<string|null>(() => {
 		switch (props.erlaubteHauptgruppe) {
 			case 'FACH':
-				return props.manager.auswahlLeistung?.a.fachbezogeneBemerkungen ?? null;
+				return props.manager.managerLeistungen.auswahl.a.fachbezogeneBemerkungen ?? null;
 			case 'ASV':
-				return props.manager.auswahlSchueler?.bemerkungen.ASV ?? null;
+				return props.manager.managerKlassenleitung.auswahl.bemerkungen.ASV ?? null;
 			case 'AUE':
-				return props.manager.auswahlSchueler?.bemerkungen.AUE ?? null;
+				return props.manager.managerKlassenleitung.auswahl.bemerkungen.AUE ?? null;
 			case 'ZB':
-				return props.manager.auswahlSchueler?.bemerkungen.ZB ?? null;
+				return props.manager.managerKlassenleitung.auswahl.bemerkungen.ZB ?? null;
 			default:
 				return null;
 		}
 	});
 
-	watch([bemerkung, () => props.manager.auswahlLeistung, () => props.manager.auswahlSchueler, () => props.erlaubteHauptgruppe],
+	watch([bemerkung, () => props.manager.managerLeistungen.auswahl, () => props.manager.managerKlassenleitung.auswahl, () => props.erlaubteHauptgruppe],
 		([neuBemerkung]) => text.value = neuBemerkung);
 
-	const schueler = computed<ENMSchueler>(() => ((props.erlaubteHauptgruppe === 'FACH') ? props.manager.auswahlLeistung?.b : props.manager.auswahlSchueler) ?? new ENMSchueler());
+	const schueler = computed<ENMSchueler>(() => (props.erlaubteHauptgruppe === 'FACH') ? props.manager.managerLeistungen.auswahl.b : props.manager.managerKlassenleitung.auswahl);
 
 	const clean = computed(() => (text.value === null) || !templateRegex.exec(text.value));
 
@@ -115,15 +115,13 @@
 
 	const gruppenMap = computed(() => {
 		const liste = new Map<ENMFloskelgruppe, ArrayList<ENMFloskel>>();
-		if (props.manager.auswahlLeistung === null)
-			return liste
 		for (const gruppe of props.manager.listFloskelgruppen) {
 			if ((gruppe.hauptgruppe !== props.erlaubteHauptgruppe) && (gruppe.hauptgruppe !== 'ALLG'))
 				continue;
 			const floskeln = new ArrayList<ENMFloskel>();
 			for (const floskel of gruppe.floskeln)
 				if ((floskel.fachID === null)
-					|| ((props.manager.lerngruppeByIDOrException(props.manager.auswahlLeistung.a.lerngruppenID).fachID === floskel.fachID)
+					|| ((props.manager.lerngruppeByIDOrException(props.manager.managerLeistungen.auswahl.a.lerngruppenID).fachID === floskel.fachID)
 						&& ((floskel.jahrgangID === null) || (floskel.jahrgangID === schueler.value.jahrgangID))))
 					floskeln.add(floskel);
 			if (!floskeln.isEmpty())
@@ -202,12 +200,9 @@
 	const collapsed = ref(new Map<ENMFloskelgruppe, boolean>([...props.manager.listFloskelgruppen].map(g => g.hauptgruppe === 'ALLG' ? [g, true] : [g, false])));
 
 	async function doPatchLeistung() {
-		if ((props.manager.auswahlLeistung === null) && (props.manager.auswahlSchueler === null))
-			return;
 		if (!clean.value)
 			return ersetzeTemplates();
 		await props.patch(text.value);
-		props.manager.update();
 	}
 
 </script>
