@@ -30,7 +30,6 @@ import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.asd.types.kurse.ZulaessigeKursart;
 import de.svws_nrw.asd.types.lehrer.LehrerBeschaeftigungsart;
 import de.svws_nrw.asd.types.lehrer.LehrerRechtsverhaeltnis;
-import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.base.LogUtils;
 import de.svws_nrw.base.untis.UntisGPU001;
 import de.svws_nrw.base.untis.UntisGPU002;
@@ -145,7 +144,8 @@ public final class DataUntis {
 		final Map<String, LehrerListeEintrag> mapLehrerByKuerzel = new DataLehrerliste(conn).getLehrerListe(false).stream()
 				.collect(Collectors.toMap(l -> l.kuerzel, l -> l));
 		// Bestimme die Fächer
-		final Map<String, FaecherListeEintrag> mapFaecherByKuerzel = new DataFaecherliste(conn).getFaecherListe(false).stream().collect(Collectors.toMap(f -> f.kuerzel, f -> f));
+		final Map<String, FaecherListeEintrag> mapFaecherByKuerzel =
+				new DataFaecherliste(conn).getFaecherListe(false).stream().collect(Collectors.toMap(f -> f.kuerzel, f -> f));
 		// Bestimme die Klassen des Schuljahresabschnitts
 		final List<DTOKlassen> klassen = conn.queryList(DTOKlassen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKlassen.class, schuljahresabschnitt.id);
 		final Map<String, DTOKlassen> mapKlassenByKuerzel = klassen.stream().collect(Collectors.toMap(k -> k.Klasse, k -> k));
@@ -262,7 +262,8 @@ public final class DataUntis {
 					// Wenn der Lehrer bereits vorhanden ist, dann gibt verwerfe den Eintrag
 					logger.logLn(2,
 							"Unterricht mit der ID %d wurde für das Fach '%s' der Klasse '%s' mit der ID %d bereits für den Wochentag %d und der Stunde %d mit Wochentyp %d mit dem Lehrer mit der ID %d hinzugefügt."
-									.formatted(u.idUnterricht, fach.kuerzel, klasse.Klasse, klasse.ID, u.wochentag, u.stunde, wt, lehrer.id) + " Überspringe diesen Eintrag...");
+									.formatted(u.idUnterricht, fach.kuerzel, klasse.Klasse, klasse.ID, u.wochentag, u.stunde, wt, lehrer.id)
+									+ " Überspringe diesen Eintrag...");
 					continue;
 				}
 
@@ -799,8 +800,10 @@ public final class DataUntis {
 		}
 		logger.logLn("-> für den Schuljahresabschnitt %d.%d".formatted(schuljahresabschnitt.schuljahr, schuljahresabschnitt.abschnitt));
 		final @NotNull Schuljahresabschnitt schuleSchuljahresabschnitt = conn.getUser().schuleGetSchuljahresabschnitt();
-		final List<DTOLehrer> tmpLehrer = ((schuljahresabschnitt.schuljahr < schuleSchuljahresabschnitt.schuljahr) || ((schuljahresabschnitt.schuljahr == schuleSchuljahresabschnitt.schuljahr) && (schuljahresabschnitt.abschnitt < schuleSchuljahresabschnitt.abschnitt)))
-				? conn.queryAll(DTOLehrer.class) : conn.queryList(DTOLehrer.QUERY_BY_SICHTBAR, DTOLehrer.class, true);
+		final List<DTOLehrer> tmpLehrer = ((schuljahresabschnitt.schuljahr < schuleSchuljahresabschnitt.schuljahr)
+				|| ((schuljahresabschnitt.schuljahr == schuleSchuljahresabschnitt.schuljahr)
+						&& (schuljahresabschnitt.abschnitt < schuleSchuljahresabschnitt.abschnitt)))
+								? conn.queryAll(DTOLehrer.class) : conn.queryList(DTOLehrer.QUERY_BY_SICHTBAR, DTOLehrer.class, true);
 		if (tmpLehrer.isEmpty()) {
 			logger.logLn("-> keine Lehrer für den Export gefunden");
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine sichtbaren Lehrer für den Export gefunden.");
@@ -811,7 +814,8 @@ public final class DataUntis {
 			try {
 				if (l.DatumZugang != null) {
 					final LocalDate date = LocalDate.parse(l.DatumZugang);
-					if ((date.getYear() > schuljahresabschnitt.schuljahr + 1) || ((date.getYear() == schuljahresabschnitt.schuljahr + 1) && (date.getMonthValue() > 7)))
+					if ((date.getYear() > schuljahresabschnitt.schuljahr + 1)
+							|| ((date.getYear() == schuljahresabschnitt.schuljahr + 1) && (date.getMonthValue() > 7)))
 						continue;
 				}
 				if (l.DatumAbgang != null) {
@@ -1075,22 +1079,27 @@ public final class DataUntis {
 					"In der Datenbank gibt es keinen Schuljahresabschnitt mit der ID %d.".formatted(idSchuljahresabschnitt));
 		}
 		logger.logLn("-> für den Schuljahresabschnitt %d.%d".formatted(schuljahresabschnitt.schuljahr, schuljahresabschnitt.abschnitt));
-		final List<Long> statusIDs = List.of(
-				SchuelerStatus.NEUAUFNAHME.daten(schuljahresabschnitt.schuljahr).id,
-				SchuelerStatus.WARTELISTE.daten(schuljahresabschnitt.schuljahr).id,
-				SchuelerStatus.AKTIV.daten(schuljahresabschnitt.schuljahr).id,
-				SchuelerStatus.EXTERN.daten(schuljahresabschnitt.schuljahr).id);
-		final List<DTOSchueler> schueler = conn.queryList("SELECT s FROM DTOSchueler s WHERE s.ID IS NOT NULL AND s.Schuljahresabschnitts_ID = ?1 AND "
-				+ "(s.Geloescht = null OR s.Geloescht = false) AND s.idStatus IN ?2", DTOSchueler.class, idSchuljahresabschnitt, statusIDs);
-		if (schueler.isEmpty()) {
+		// Bestimme die Schülerlernabschnitte, die zu dem Schuljahresabschnitt gehören und WechselNr 0 haben
+		final List<DTOSchuelerLernabschnittsdaten> lernabschnitte =
+				conn.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.WechselNr = 0",
+						DTOSchuelerLernabschnittsdaten.class, schuljahresabschnitt.id);
+		// Bestimme die Schülermenge zu den Schülerlernabschnitten
+		final List<Long> idsSchueler = lernabschnitte.stream().map(la -> la.Schueler_ID).distinct().toList();
+		if (idsSchueler.isEmpty()) {
 			logger.logLn("-> keine Schüler für den Export gefunden");
 			throw new ApiOperationException(Status.NOT_FOUND,
 					"Keine Schüler im Schuljahresabschnitt %d.%d für den Export gefunden.".formatted(schuljahresabschnitt.schuljahr,
 							schuljahresabschnitt.abschnitt));
 		}
-		final List<Long> idsSchueler = schueler.stream().map(s -> s.ID).toList();
+		final List<DTOSchueler> schueler = conn.queryByKeyList(DTOSchueler.class, idsSchueler);
+		// Bestimme die zugehörigen Klassen...
 		logger.logLn("-> bestimme die zugehörigen Klassen...");
-		final Map<Long, DTOKlassen> mapKlassenBySchuelerId = DataKlassendaten.getDTOMapAktuellBySchuelerID(conn, idsSchueler);
+		final List<Long> idsKlassen = lernabschnitte.stream().map(la -> la.Klassen_ID).distinct().toList();
+		final Map<Long, DTOKlassen> mapKlassen = idsKlassen.isEmpty() ? new HashMap<>()
+				: conn.queryByKeyList(DTOKlassen.class, idsKlassen).stream().collect(Collectors.toMap(k -> k.ID, k -> k));
+		final Map<Long, DTOKlassen> mapKlassenBySchuelerId =
+				lernabschnitte.stream().filter(la -> (la.Klassen_ID != null) && (mapKlassen.get(la.Klassen_ID) != null))
+						.collect(Collectors.toMap(la -> la.Schueler_ID, la -> mapKlassen.get(la.Klassen_ID)));
 		return getGPU010(logger, schueler, mapKlassenBySchuelerId, idVariante);
 	}
 
