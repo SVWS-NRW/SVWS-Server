@@ -43,8 +43,8 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchuelerAbitur, Abiturdaten> {
 
-	/** Das Abiturjahr, sofern sich die Anfrage auf ein konkretes Abiturjahr bezieht. Ansonsten null */
-	private final Integer abiturjahr;
+	/** Der Schuljahresabschnitt für das Abitur, sofern sich die Anfrage auf ein konkretes Abiturjahr bezieht. Ansonsten null */
+	private final Schuljahresabschnitt schuljahresabschnitt;
 
 	/**
 	 * Erstellt einen neuen Daten-Manager für das übergebene Abiturjahr. Dieses kann null sein,
@@ -56,9 +56,35 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 	public DataGostAbiturdaten(final DBEntityManager conn, final Integer abiturjahr) {
 		super(conn);
 		setAttributesNotPatchable("schuelerID", "abiturjahr", "schuljahrAbitur", "bewertetesHalbjahr", "fachbelegungen", "sprachendaten", "bilingualeSprache");
-		setAttributesRequiredOnCreation("schuelerID"); // TODO add ist eigentlich die Methode copyAbiturdatenAusLeistungsdaten -> Anpassen
-		this.abiturjahr = abiturjahr;
+		// Bestimme den Schuljahresabschnitt für das Abiturjahr, sofern eines angegeben ist
+		this.schuljahresabschnitt = (abiturjahr == null) ? null : conn.getUser().schuleGetAbschnittBySchuljahrUndHalbjahr(abiturjahr - 1, 2);
 	}
+
+
+	@Override
+	public DTOSchuelerAbitur getDatabaseDTOByID(final Long id) {
+		// Lese die Abiturdaten anhand der ID aus der Datenbank
+		final List<DTOSchuelerAbitur> dtosSchuelerAbitur = conn.queryList(DTOSchuelerAbitur.QUERY_BY_SCHUELER_ID, DTOSchuelerAbitur.class, id);
+		if ((dtosSchuelerAbitur == null) || (dtosSchuelerAbitur.isEmpty()))
+			return null;
+		// Abiturjahr wurde nicht angegeben - ggf. auswählen
+		if (schuljahresabschnitt == null) {
+			DTOSchuelerAbitur current = null;
+			for (final DTOSchuelerAbitur dtoSchuelerAbitur : dtosSchuelerAbitur) {
+				final Schuljahresabschnitt dtoSja = (dtoSchuelerAbitur.Schuljahresabschnitts_ID) == null ? null
+						: conn.getUser().schuleGetAbschnittById(dtoSchuelerAbitur.Schuljahresabschnitts_ID);
+				if ((current == null) || ((dtoSja != null) && ((dtoSja.schuljahr > schuljahresabschnitt.schuljahr)
+						|| ((dtoSja.schuljahr == schuljahresabschnitt.schuljahr) && (dtoSja.abschnitt > schuljahresabschnitt.abschnitt)))))
+					current = dtoSchuelerAbitur;
+			}
+			return current;
+		}
+		for (final DTOSchuelerAbitur dtoSchuelerAbitur : dtosSchuelerAbitur)
+			if (dtoSchuelerAbitur.Schuljahresabschnitts_ID == schuljahresabschnitt.id)
+				return dtoSchuelerAbitur;
+		return null;
+	}
+
 
 	@Override
 	public Abiturdaten getById(final Long id) throws ApiOperationException {
@@ -73,19 +99,10 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 			throw new ApiOperationException(Status.NOT_FOUND, "Es konnten keine Abiturdaten aus den Leistungsdaten ausgelesen werden.");
 
 		// Lese die Abiturdaten anhand der ID aus der Datenbank
-		final List<DTOSchuelerAbitur> dtosSchuelerAbitur = conn.queryList(DTOSchuelerAbitur.QUERY_BY_SCHUELER_ID, DTOSchuelerAbitur.class, id);
-		if ((dtosSchuelerAbitur == null) || (dtosSchuelerAbitur.isEmpty()))
-			throw new ApiOperationException(Status.NOT_FOUND,
-					"Es wurden keine Abiturdaten für den Schüler mit der ID %d in der Datenbank gefunden.".formatted(id));
-
-		// TODO if (dtosSchuelerAbitur.size() > 1) - Es existieren mehrere Abiturdatensätze für den Schüler mit der ID - TODO neueren Jahrgang auswählen
-		final DTOSchuelerAbitur dtoSchuelerAbitur = dtosSchuelerAbitur.getFirst();
+		final DTOSchuelerAbitur dtoSchuelerAbitur = getDatabaseDTOByID(id);
 		if (dtoSchuelerAbitur == null)
 			throw new ApiOperationException(Status.NOT_FOUND,
 					"Es wurden keine Abiturdaten für den Schüler mit der ID %d in der Datenbank gefunden.".formatted(id));
-		if (dtoSchuelerAbitur.Schuljahresabschnitts_ID == null)
-			throw new ApiOperationException(Status.NOT_FOUND,
-					"Der Eintrag mit den Abiturdaten für den Schüler mit der ID %d enthält keinen gültigen Schuljahresabschnitt.".formatted(id));
 
 		final List<DTOSchuelerAbiturFach> faecher = conn.queryList(DTOSchuelerAbiturFach.QUERY_BY_SCHUELER_ID, DTOSchuelerAbiturFach.class, id);
 		if (faecher == null)

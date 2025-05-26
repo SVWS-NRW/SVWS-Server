@@ -1162,6 +1162,39 @@ public class APIGost {
 				BenutzerKompetenz.ABITUR_AENDERN_FUNKTIONSBEZOGEN);
 	}
 
+
+	/**
+	 * Die OpenAPI-Methode für das Anpassen der Abiturdaten eines Schülers der gymnasialen Oberstufe.
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param id        die ID des Schülers, dessen Abiturdaten angepasst werden sollen
+	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort
+	 */
+	@PATCH
+	@Path("/schueler/{id : \\d+}/abiturdaten")
+	@Operation(summary = "Passt die Abiturdaten eines Schüler an.",
+			description = "Passt die Abiturdaten eines Schüler an. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung hat.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Anpassungen durchzuführen.")
+	@ApiResponse(responseCode = "404", description = "Keine passenden Daten für den Patch gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response patchGostSchuelerAbiturdaten(
+			@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@RequestBody(description = "Der Patch für die Abiturdaten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					schema = @Schema(implementation = Abiturdaten.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> (new DataGostAbiturdaten(conn, null)).patchAsResponse(id, is),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.ABITUR_AENDERN_ALLGEMEIN,
+				BenutzerKompetenz.ABITUR_AENDERN_FUNKTIONSBEZOGEN);
+	}
+
 	/**
 	 * Die OpenAPI-Methode für die Prüfung der Belegprüfung der Abiturdaten.
 	 *
