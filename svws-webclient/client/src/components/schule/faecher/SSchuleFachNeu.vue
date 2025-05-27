@@ -15,6 +15,7 @@
 		<svws-ui-content-card title="Zeugnis">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-checkbox v-model="data.aufZeugnis" :disabled>Auf Zeugnis</svws-ui-checkbox>
+				<div />
 				<svws-ui-text-input placeholder="Bezeichnung (Zeugnis)" required v-model="data.bezeichnungZeugnis" :disabled />
 				<svws-ui-text-input placeholder="Bezeichnung (Überweisungszeugnis)" required v-model="data.bezeichnungUeberweisungszeugnis" :disabled />
 			</svws-ui-input-wrapper>
