@@ -25,7 +25,7 @@ export class AbteilungenListeManager extends AuswahlManager<number, Abteilung, A
 
 	private readonly _lehrerById : JavaMap<number, LehrerListeEintrag>;
 
-	private readonly _klassenById : JavaMap<number, KlassenDaten>;
+	private _klassenById : JavaMap<number, KlassenDaten>;
 
 	/**
 	 * Ein Default-Comparator für den Vergleich von Abteilungen.
@@ -40,6 +40,14 @@ export class AbteilungenListeManager extends AuswahlManager<number, Abteilung, A
 				return cmp;
 		}
 		return JavaLong.compare(a.id, b.id);
+	} };
+
+	private readonly comparatorKlassenzuordnung : Comparator<AbteilungKlassenzuordnung> = { compare : (a: AbteilungKlassenzuordnung, b: AbteilungKlassenzuordnung) => {
+		const firstClass : KlassenDaten | null = this._klassenById.get(a.idKlasse);
+		const secondClass : KlassenDaten | null = this._klassenById.get(b.idKlasse);
+		if ((firstClass === null) || (firstClass.kuerzel === null) || (secondClass === null) || (secondClass.kuerzel === null))
+			return 0;
+		return JavaString.compareTo(firstClass.kuerzel, secondClass.kuerzel);
 	} };
 
 
@@ -147,8 +155,10 @@ export class AbteilungenListeManager extends AuswahlManager<number, Abteilung, A
 	 * @param zuordnungen    Liste der AbteilungsKlassenzuordnungen
 	 */
 	public addKlassenToAuswahl(zuordnungen : List<AbteilungKlassenzuordnung>) : void {
-		if (this._daten !== null)
+		if (this._daten !== null) {
 			this._daten.klassenzuordnungen.addAll(zuordnungen);
+			this._daten.klassenzuordnungen.sort(this.comparatorKlassenzuordnung);
+		}
 	}
 
 	protected checkFilter(eintrag : Abteilung | null) : boolean {

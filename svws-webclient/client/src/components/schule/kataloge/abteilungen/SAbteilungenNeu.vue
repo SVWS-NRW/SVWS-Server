@@ -12,19 +12,14 @@
 					@click="goToLehrer(data.idAbteilungsleiter ?? -1)">
 					<span class="icon i-ri-link" /> Zum Lehrer
 				</svws-ui-button>
-				<svws-ui-spacing />
 				<div class="mt-7 flex flex-row gap-4 justify end">
 					<svws-ui-button type="secondary" @click="cancel">Abbrechen</svws-ui-button>
 					<svws-ui-button @click="add" :disabled="!formIsValid">Speichern</svws-ui-button>
 				</div>
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
-		<svws-ui-content-card title="Klassen">
-			<svws-ui-table :items="manager().getKlassen().values()" :columns selectable v-model="klassenToBeAdded" scroll >
-				<template #cell(kuerzel)="{ rowData: s }">
-					<span>{{ s.kuerzel }}</span>
-				</template>
-			</svws-ui-table>
+		<svws-ui-content-card title="Klassen zuordnen">
+			<svws-ui-table :items="manager().getKlassen().values()" :columns selectable v-model="klassenToBeAdded" scroll />
 		</svws-ui-content-card>
 		<svws-ui-checkpoint-modal :checkpoint :continue-routing="props.continueRoutingAfterCheckpoint" />
 	</div>
@@ -122,7 +117,7 @@
 	}
 
 	const columns: DataTableColumn[] = [
-		{ key: "kuerzel", label: "Kürzel"},
+		{ key: "kuerzel", label: "Klasse"},
 	];
 
 	watch(() => data.value, async() => {
