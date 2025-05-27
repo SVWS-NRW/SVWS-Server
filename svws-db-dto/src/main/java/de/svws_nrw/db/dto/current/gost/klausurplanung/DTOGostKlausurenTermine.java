@@ -37,7 +37,7 @@ import de.svws_nrw.csv.converter.current.gost.GOStHalbjahrConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Gost_Klausuren_Termine")
-@JsonPropertyOrder({"ID", "Abi_Jahrgang", "Halbjahr", "Quartal", "Datum", "Startzeit", "Bezeichnung", "Bemerkungen", "IstHaupttermin", "NachschreiberZugelassen"})
+@JsonPropertyOrder({"ID", "Schuljahresabschnitt_ID", "Abi_Jahrgang", "Halbjahr", "Quartal", "Datum", "Startzeit", "Bezeichnung", "Bemerkungen", "IstHaupttermin", "NachschreiberZugelassen"})
 public final class DTOGostKlausurenTermine {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -57,6 +57,12 @@ public final class DTOGostKlausurenTermine {
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
 	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOGostKlausurenTermine e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Schuljahresabschnitt_ID */
+	public static final String QUERY_BY_SCHULJAHRESABSCHNITT_ID = "SELECT e FROM DTOGostKlausurenTermine e WHERE e.Schuljahresabschnitt_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schuljahresabschnitt_ID */
+	public static final String QUERY_LIST_BY_SCHULJAHRESABSCHNITT_ID = "SELECT e FROM DTOGostKlausurenTermine e WHERE e.Schuljahresabschnitt_ID IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Abi_Jahrgang */
 	public static final String QUERY_BY_ABI_JAHRGANG = "SELECT e FROM DTOGostKlausurenTermine e WHERE e.Abi_Jahrgang = ?1";
@@ -117,6 +123,11 @@ public final class DTOGostKlausurenTermine {
 	@Column(name = "ID")
 	@JsonProperty
 	public long ID;
+
+	/** ID des Schuljahresabschnittes */
+	@Column(name = "Schuljahresabschnitt_ID")
+	@JsonProperty
+	public long Schuljahresabschnitt_ID;
 
 	/** Der Abiturjahrgang, dem die Klausurvorgabe zugeordnet ist */
 	@Column(name = "Abi_Jahrgang")
@@ -188,14 +199,16 @@ public final class DTOGostKlausurenTermine {
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOGostKlausurenTermine ohne eine Initialisierung der Attribute.
 	 * @param ID   der Wert für das Attribut ID
+	 * @param Schuljahresabschnitt_ID   der Wert für das Attribut Schuljahresabschnitt_ID
 	 * @param Abi_Jahrgang   der Wert für das Attribut Abi_Jahrgang
 	 * @param Halbjahr   der Wert für das Attribut Halbjahr
 	 * @param Quartal   der Wert für das Attribut Quartal
 	 * @param IstHaupttermin   der Wert für das Attribut IstHaupttermin
 	 * @param NachschreiberZugelassen   der Wert für das Attribut NachschreiberZugelassen
 	 */
-	public DTOGostKlausurenTermine(final long ID, final int Abi_Jahrgang, final GostHalbjahr Halbjahr, final int Quartal, final Boolean IstHaupttermin, final Boolean NachschreiberZugelassen) {
+	public DTOGostKlausurenTermine(final long ID, final long Schuljahresabschnitt_ID, final int Abi_Jahrgang, final GostHalbjahr Halbjahr, final int Quartal, final Boolean IstHaupttermin, final Boolean NachschreiberZugelassen) {
 		this.ID = ID;
+		this.Schuljahresabschnitt_ID = Schuljahresabschnitt_ID;
 		this.Abi_Jahrgang = Abi_Jahrgang;
 		this.Halbjahr = Halbjahr;
 		this.Quartal = Quartal;
@@ -232,7 +245,7 @@ public final class DTOGostKlausurenTermine {
 	 */
 	@Override
 	public String toString() {
-		return "DTOGostKlausurenTermine(ID=" + this.ID + ", Abi_Jahrgang=" + this.Abi_Jahrgang + ", Halbjahr=" + this.Halbjahr + ", Quartal=" + this.Quartal + ", Datum=" + this.Datum + ", Startzeit=" + this.Startzeit + ", Bezeichnung=" + this.Bezeichnung + ", Bemerkungen=" + this.Bemerkungen + ", IstHaupttermin=" + this.IstHaupttermin + ", NachschreiberZugelassen=" + this.NachschreiberZugelassen + ")";
+		return "DTOGostKlausurenTermine(ID=" + this.ID + ", Schuljahresabschnitt_ID=" + this.Schuljahresabschnitt_ID + ", Abi_Jahrgang=" + this.Abi_Jahrgang + ", Halbjahr=" + this.Halbjahr + ", Quartal=" + this.Quartal + ", Datum=" + this.Datum + ", Startzeit=" + this.Startzeit + ", Bezeichnung=" + this.Bezeichnung + ", Bemerkungen=" + this.Bemerkungen + ", IstHaupttermin=" + this.IstHaupttermin + ", NachschreiberZugelassen=" + this.NachschreiberZugelassen + ")";
 	}
 
 }

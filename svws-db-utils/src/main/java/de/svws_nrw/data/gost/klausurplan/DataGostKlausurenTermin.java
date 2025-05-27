@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionRaumData;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionSkrsKrsData;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum;
@@ -45,22 +44,11 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 	 * {@link GostKlausurtermin}.
 	 *
 	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
-	 * @param idSchuljahresAbschnitt die ID des Schuljahresabschnitts
-	 */
-	public DataGostKlausurenTermin(final DBEntityManager conn, final long idSchuljahresAbschnitt) {
-		super(conn);
-		super.setAttributesNotPatchable("abijahr", "halbjahr", "istHaupttermin");
-		super.setAttributesRequiredOnCreation("abijahr", "halbjahr", "quartal");
-	}
-
-	/**
-	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO
-	 * {@link GostKlausurtermin}.
-	 *
-	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
 	 */
 	public DataGostKlausurenTermin(final DBEntityManager conn) {
-		this(conn, -1);
+		super(conn);
+		super.setAttributesNotPatchable("id", "idSchuljahresabschnitt", "abijahr", "halbjahr", "istHaupttermin");
+		super.setAttributesRequiredOnCreation("idSchuljahresabschnitt", "abijahr", "halbjahr", "quartal");
 	}
 
 	/**
@@ -107,6 +95,7 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 	protected GostKlausurtermin map(final DTOGostKlausurenTermine dto) throws ApiOperationException {
 		final GostKlausurtermin daten = new GostKlausurtermin();
 		daten.id = dto.ID;
+		daten.idSchuljahresabschnitt = dto.Schuljahresabschnitt_ID;
 		daten.abijahr = dto.Abi_Jahrgang;
 		daten.datum = dto.Datum;
 		daten.halbjahr = dto.Halbjahr.id;
@@ -123,6 +112,7 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 	protected void mapAttribute(final DTOGostKlausurenTermine dto, final String name, final Object value, final Map<String, Object> map)
 			throws ApiOperationException {
 		switch (name) {
+			case "idSchuljahresabschnitt" -> dto.Schuljahresabschnitt_ID = JSONMapper.convertToLong(value, false);
 			case "abijahr" -> dto.Abi_Jahrgang = JSONMapper.convertToInteger(value, false);
 			case "halbjahr" -> dto.Halbjahr = DataGostKlausurenVorgabe.checkHalbjahr(JSONMapper.convertToInteger(value, false));
 			case "quartal" -> dto.Quartal =	DataGostKlausurenVorgabe.checkQuartal(JSONMapper.convertToInteger(value, false));
@@ -351,8 +341,7 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 			}
 		}
 		if (!raumListeNeu.isEmpty()) {
-			final Schuljahresabschnitt schuljahresabschnitt = DataGostKlausuren.getSchuljahresabschnittFromAbijahrUndHalbjahr(conn, termin.abijahr, GostHalbjahr.fromIDorException(termin.halbjahr));
-			raumDataChanged.raumdata = new DataGostKlausurenSchuelerklausurraumstunde(conn).transactionSetzeRaumZuSchuelerklausuren(raumListeNeu, schuljahresabschnitt).raumdata;
+			raumDataChanged.raumdata = new DataGostKlausurenSchuelerklausurraumstunde(conn).transactionSetzeRaumZuSchuelerklausuren(raumListeNeu).raumdata;
 			raumDataChanged.raumdata.raeume = raumListe;
 		}
 	}

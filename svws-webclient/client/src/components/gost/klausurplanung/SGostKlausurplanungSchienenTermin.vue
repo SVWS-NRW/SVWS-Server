@@ -1,5 +1,5 @@
 <template>
-	<div class="svws-klausurplanung-schienen-termin flex flex-col border bg-ui-100 rounded-xl cursor-pointer max-w-120" @drop="onDrop(termin())" @dragover="checkDropZone($event)"
+	<div class="svws-klausurplanung-schienen-termin flex flex-col border bg-ui-100 rounded-xl cursor-pointer max-w-120" @drop="onDrop($event, termin())" @dragover="checkDropZone($event)"
 		:class="{
 			'shadow-lg shadow-ui-50 border-ui-10': dragData() === undefined,
 			'border-dashed border-ui-brand ring-4 ring-ui-brand/25': (dragData() !== undefined && dragData() instanceof GostKursklausur && (termin().quartal === kMan().vorgabeByKursklausur(dragData() as GostKursklausur).quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur === 0),
@@ -61,8 +61,8 @@
 		patchKlausurtermin: (id: number, termin: Partial<GostKlausurtermin>) => Promise<void>;
 		klausurCssClasses: (klausur: GostKlausurplanungDragData, termin: GostKlausurtermin | undefined) => void;
 		dragData: () => GostKlausurplanungDragData;
-		onDrag: (data: GostKlausurplanungDragData) => void;
-		onDrop: (zone: GostKlausurplanungDropZone) => void;
+		onDrag: (event: DragEvent, data: GostKlausurplanungDragData) => void;
+		onDrop: (event: DragEvent | undefined, zone: GostKlausurplanungDropZone) => Promise<void>;
 		draggable: (data: GostKlausurplanungDragData) => boolean;
 		patchKlausur: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<GostKlausurenCollectionSkrsKrsData>;
 		createSchuelerklausurTermin: (id: number) => Promise<void>;

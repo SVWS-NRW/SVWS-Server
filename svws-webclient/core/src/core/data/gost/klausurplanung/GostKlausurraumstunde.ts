@@ -17,7 +17,7 @@ export class GostKlausurraumstunde extends JavaObject {
 	/**
 	 * Die ID des Zeitrasters.
 	 */
-	public idZeitraster : number = -1;
+	public idZeitraster : number | null = null;
 
 
 	/**
@@ -65,9 +65,7 @@ export class GostKlausurraumstunde extends JavaObject {
 		if (obj.idRaum === undefined)
 			throw new Error('invalid json format, missing attribute idRaum');
 		result.idRaum = obj.idRaum;
-		if (obj.idZeitraster === undefined)
-			throw new Error('invalid json format, missing attribute idZeitraster');
-		result.idZeitraster = obj.idZeitraster;
+		result.idZeitraster = (obj.idZeitraster === undefined) ? null : obj.idZeitraster === null ? null : obj.idZeitraster;
 		return result;
 	}
 
@@ -75,7 +73,7 @@ export class GostKlausurraumstunde extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"idRaum" : ' + obj.idRaum.toString() + ',';
-		result += '"idZeitraster" : ' + obj.idZeitraster.toString() + ',';
+		result += '"idZeitraster" : ' + ((obj.idZeitraster === null) ? 'null' : obj.idZeitraster.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -90,7 +88,7 @@ export class GostKlausurraumstunde extends JavaObject {
 			result += '"idRaum" : ' + obj.idRaum.toString() + ',';
 		}
 		if (obj.idZeitraster !== undefined) {
-			result += '"idZeitraster" : ' + obj.idZeitraster.toString() + ',';
+			result += '"idZeitraster" : ' + ((obj.idZeitraster === null) ? 'null' : obj.idZeitraster.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

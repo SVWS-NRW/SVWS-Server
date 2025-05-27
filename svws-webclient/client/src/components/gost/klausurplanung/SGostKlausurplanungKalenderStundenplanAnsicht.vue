@@ -48,7 +48,10 @@
 				<!-- Darstellung des Unterrichtes in dem Zeitraster -->
 				<template v-for="stunde in zeitrasterRange" :key="stunde">
 					<template v-if="kMan().stundenplanManagerGetByAbschnittAndDatumOrNull(abschnitt!.id, wochentag.b) !== null && stundenplanManager(wochentag.b).zeitrasterGetByWochentagAndStundeOrNull(wochentag.a.id, stunde)">
-						<div class="svws-ui-stundenplan--stunde flex-row relative" :class="dragData && dragData() !== undefined ? 'z-20 svws-ui-stundenplan--stunde--klausurplan-opacity' : ''"
+						<div class="svws-ui-stundenplan--stunde flex-row relative"
+							:class="{
+								'z-20 svws-ui-stundenplan--stunde--klausurplan-opacity': dragData && dragData() !== undefined,
+							}"
 							:style="posZeitraster(wochentag.a, stunde)"
 							@dragover="checkDropZoneZeitraster($event, stundenplanManager(wochentag.b).zeitrasterGetByWochentagAndStundeOrException(wochentag.a.id, stunde))"
 							@dragleave="checkDropZoneZeitraster($event, undefined)"
@@ -61,7 +64,7 @@
 							</div>
 						</div>
 					</template>
-					<div v-else class="svws-ui-stundenplan--stunde flex-row relative" :style="posZeitraster(wochentag.a, stunde)">&nbsp;</div>
+					<div v-else class="svws-ui-stundenplan--stunde flex-row relative bg-ui-warning-secondary text-center justify-center" :style="posZeitraster(wochentag.a, stunde)">Stundenplan fehlt</div>
 				</template>
 				<!-- Darstellung der Pausenzeiten und der zugehörigen Aufsichten -->
 				<template v-for="pause in getPausenzeitenWochentag(wochentag.a)" :key="pause">

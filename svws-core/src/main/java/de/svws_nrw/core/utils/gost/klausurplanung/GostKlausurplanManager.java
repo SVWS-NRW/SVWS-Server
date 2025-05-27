@@ -13,7 +13,6 @@ import java.util.Set;
 
 import de.svws_nrw.asd.adt.PairNN;
 import de.svws_nrw.asd.data.kurse.KursDaten;
-import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.adt.map.HashMap3D;
@@ -820,11 +819,11 @@ public class GostKlausurplanManager {
 	 * @return den {@link StundenplanManager}, zu den übergebenen Parametern, sonst null.
 	 */
 	public StundenplanManager stundenplanManagerGetByTerminOrNull(final @NotNull GostKlausurtermin termin) {
-		final Long idSchuljahresabschnitt = getSchuljahresabschnittIdByTerminOrNull(termin);
-		if (idSchuljahresabschnitt == null)
-			return stundenplanManagerGetByDatumLinearSearch(
-					DeveloperNotificationException.ifNull("Kein Datum zum Termin %d gefunden.".formatted(termin.id), termin.datum));
-		return stundenplanManagerGetByAbschnittAndDatumOrNull(idSchuljahresabschnitt,
+//		final Long idSchuljahresabschnitt = getSchuljahresabschnittIdByTerminOrNull(termin);
+//		if (idSchuljahresabschnitt == null)
+//			return stundenplanManagerGetByDatumLinearSearch(
+//					DeveloperNotificationException.ifNull("Kein Datum zum Termin %d gefunden.".formatted(termin.id), termin.datum));
+		return stundenplanManagerGetByAbschnittAndDatumOrNull(termin.idSchuljahresabschnitt,
 				DeveloperNotificationException.ifNull("Kein Datum zum Termin %d gefunden.".formatted(termin.id), termin.datum));
 	}
 
@@ -1162,7 +1161,10 @@ public class GostKlausurplanManager {
 	private void update_raumstunde_by_idRaum_and_idZeitraster() {
 		_raumstunde_by_idRaum_and_idZeitraster = new ListMap2DLongKeys<>();
 		for (final @NotNull GostKlausurraumstunde rs : _raumstundenmenge)
-			DeveloperNotificationException.ifListMap2DLongKeysPutOverwrites(_raumstunde_by_idRaum_and_idZeitraster, rs.idRaum, rs.idZeitraster, rs);
+			if (rs.idZeitraster != null)
+				DeveloperNotificationException.ifListMap2DLongKeysPutOverwrites(_raumstunde_by_idRaum_and_idZeitraster, rs.idRaum, rs.idZeitraster, rs);
+			else
+				_raumstunde_by_idRaum_and_idZeitraster.add(rs.idRaum, -1, rs);
 	}
 
 	private void update_raumstundenmenge_by_idSchuelerklausurtermin() {
@@ -1247,15 +1249,15 @@ public class GostKlausurplanManager {
 		final @NotNull HashSet<Long> setOfIDs = new HashSet<>();
 		for (final @NotNull GostKlausurvorgabe vorgabe : list) {
 			vorgabeCheck(vorgabe);
-			DeveloperNotificationException.ifTrue("vorgabeAddAllOhneUpdate: ID=" + vorgabe.idVorgabe + " existiert bereits!",
-					_vorgabe_by_id.containsKey(vorgabe.idVorgabe));
-			DeveloperNotificationException.ifTrue("vorgabeAddAllOhneUpdate: ID=" + vorgabe.idVorgabe + " doppelt in der Liste!",
-					!setOfIDs.add(vorgabe.idVorgabe));
+			DeveloperNotificationException.ifTrue("vorgabeAddAllOhneUpdate: ID=" + vorgabe.id + " existiert bereits!",
+					_vorgabe_by_id.containsKey(vorgabe.id));
+			DeveloperNotificationException.ifTrue("vorgabeAddAllOhneUpdate: ID=" + vorgabe.id + " doppelt in der Liste!",
+					!setOfIDs.add(vorgabe.id));
 		}
 
 		// add all
 		for (final @NotNull GostKlausurvorgabe vorgabe : list) {
-			DeveloperNotificationException.ifMapPutOverwrites(_vorgabe_by_id, vorgabe.idVorgabe, vorgabe);
+			DeveloperNotificationException.ifMapPutOverwrites(_vorgabe_by_id, vorgabe.id, vorgabe);
 			vorgabefehlendRemoveOhneUpdate(vorgabe);
 		}
 		_vorgabenInitialized = true;
@@ -1273,7 +1275,7 @@ public class GostKlausurplanManager {
 	}
 
 	private static void vorgabeCheck(final @NotNull GostKlausurvorgabe vorgabe) {
-		DeveloperNotificationException.ifInvalidID("vorgabe.idVorgabe", vorgabe.idVorgabe);
+		DeveloperNotificationException.ifInvalidID("vorgabe.idVorgabe", vorgabe.id);
 	}
 
 	/**
@@ -1308,15 +1310,15 @@ public class GostKlausurplanManager {
 		vorgabeCheck(vorgabe);
 
 		// Altes Objekt durch neues Objekt ersetzen
-		DeveloperNotificationException.ifMapRemoveFailes(_vorgabe_by_id, vorgabe.idVorgabe);
-		DeveloperNotificationException.ifMapPutOverwrites(_vorgabe_by_id, vorgabe.idVorgabe, vorgabe);
+		DeveloperNotificationException.ifMapRemoveFailes(_vorgabe_by_id, vorgabe.id);
+		DeveloperNotificationException.ifMapPutOverwrites(_vorgabe_by_id, vorgabe.id, vorgabe);
 
 		update_all();
 	}
 
 	private void vorgabeRemoveOhneUpdateById(final long idVorgabe) {
 		final @NotNull GostKlausurvorgabe vorgabe = DeveloperNotificationException.ifMapRemoveFailes(_vorgabe_by_id, idVorgabe);
-		vorgabe.idVorgabe = -1;
+		vorgabe.id = -1;
 		vorgabefehlendAddAllOhneUpdate(ListUtils.create1(vorgabe));
 	}
 
@@ -1339,7 +1341,7 @@ public class GostKlausurplanManager {
 	 */
 	public void vorgabeRemoveAll(final @NotNull List<GostKlausurvorgabe> listVorgaben) {
 		for (final @NotNull GostKlausurvorgabe vorgabe : listVorgaben)
-			vorgabeRemoveOhneUpdateById(vorgabe.idVorgabe);
+			vorgabeRemoveOhneUpdateById(vorgabe.id);
 
 		update_all();
 	}
@@ -1718,6 +1720,14 @@ public class GostKlausurplanManager {
 		return _terminmenge;
 	}
 
+	private void terminPatchAttributesOhneUpdate(final @NotNull GostKlausurtermin termin) {
+		terminCheck(termin);
+
+		// Altes Objekt durch neues Objekt ersetzen
+		DeveloperNotificationException.ifMapRemoveFailes(_termin_by_id, termin.id);
+		DeveloperNotificationException.ifMapPutOverwrites(_termin_by_id, termin.id, termin);
+	}
+
 	/**
 	 * Aktualisiert das vorhandene {@link GostKlausurtermin}-Objekt durch das neue
 	 * Objekt.
@@ -1725,11 +1735,7 @@ public class GostKlausurplanManager {
 	 * @param termin Das neue {@link GostKlausurtermin}-Objekt.
 	 */
 	public void terminPatchAttributes(final @NotNull GostKlausurtermin termin) {
-		terminCheck(termin);
-
-		// Altes Objekt durch neues Objekt ersetzen
-		DeveloperNotificationException.ifMapRemoveFailes(_termin_by_id, termin.id);
-		DeveloperNotificationException.ifMapPutOverwrites(_termin_by_id, termin.id, termin);
+		terminPatchAttributesOhneUpdate(termin);
 
 		update_all();
 	}
@@ -3693,7 +3699,7 @@ public class GostKlausurplanManager {
 	 * @return die {@link GostKursklausur}
 	 */
 	public GostKursklausur kursklausurByVorgabeAndKursid(final @NotNull GostKlausurvorgabe vorgabe, final long idKurs) {
-		return _kursklausur_by_idVorgabe_and_idKurs.getSingle12OrNull(vorgabe.idVorgabe, idKurs);
+		return _kursklausur_by_idVorgabe_and_idKurs.getSingle12OrNull(vorgabe.id, idKurs);
 	}
 
 	/**
@@ -3717,7 +3723,7 @@ public class GostKlausurplanManager {
 	 * @return <code>true</code>, falls die {@link GostKlausurvorgabe} verwendet wird, sonst <code>false</code>
 	 */
 	public boolean istVorgabeVerwendetByKursklausur(final @NotNull GostKlausurvorgabe vorgabe) {
-		final @NotNull List<GostKursklausur> klausuren = _kursklausur_by_idVorgabe_and_idKurs.get1(vorgabe.idVorgabe);
+		final @NotNull List<GostKursklausur> klausuren = _kursklausur_by_idVorgabe_and_idKurs.get1(vorgabe.id);
 		return !klausuren.isEmpty();
 	}
 
@@ -3732,9 +3738,9 @@ public class GostKlausurplanManager {
 		final GostKlausurvorgabe previousVorgabe = vorgabeGetPrevious(vorgabeGetByIdOrException(klausur.idVorgabe));
 		if (previousVorgabe == null)
 			return null;
-		if (!_kursklausur_by_idVorgabe_and_idKurs.containsKey1(previousVorgabe.idVorgabe))
+		if (!_kursklausur_by_idVorgabe_and_idKurs.containsKey1(previousVorgabe.id))
 			return null;
-		final @NotNull List<GostKursklausur> klausuren = _kursklausur_by_idVorgabe_and_idKurs.get1(previousVorgabe.idVorgabe);
+		final @NotNull List<GostKursklausur> klausuren = _kursklausur_by_idVorgabe_and_idKurs.get1(previousVorgabe.id);
 		for (final @NotNull GostKursklausur k : klausuren) {
 			final KursDaten kKurs = getKursManager().get(k.idKurs);
 			final KursDaten klausurKurs = getKursManager().get(klausur.idKurs);
@@ -4497,18 +4503,22 @@ public class GostKlausurplanManager {
 		return (stunden != null) ? stunden : new ArrayList<>();
 	}
 
-	/**
-	 * Aktualisiert die internen Strukturen, nachdem sich anhand der übergebenen {@link GostKlausurenCollectionSkrsKrsData}. Diese Methode sollte nur nach einem API-Call aufgerufen werden, in dem das {@link GostKlausurenCollectionSkrsKrsData}-Objekt erzeugt wurde.
-	 *
-	 * @param collectionSkrsKrs die {@link GostKlausurenCollectionSkrsKrsData}
-	 */
-	public void setzeRaumZuSchuelerklausuren(final @NotNull GostKlausurenCollectionSkrsKrsData collectionSkrsKrs) {
+	private void setzeRaumZuSchuelerklausurenOhneUpdate(final @NotNull GostKlausurenCollectionSkrsKrsData collectionSkrsKrs) {
 		raumRemoveAllIfExistsNoCascadeOhneUpdate(collectionSkrsKrs.raumdata.raeume);
 		raumAddAllOhneUpdate(collectionSkrsKrs.raumdata.raeume);
 		raumstundeAddAllOhneUpdate(collectionSkrsKrs.raumdata.raumstunden);
 		raumstundeRemoveAllOhneUpdate(collectionSkrsKrs.raumstundenGeloescht);
 		schuelerklausurraumstundeRemoveAllOhneUpdateByIdSchuelerklausurtermin(collectionSkrsKrs.idsSchuelerklausurtermine);
 		schuelerklausurraumstundeAddAllOhneUpdate(collectionSkrsKrs.raumdata.sktRaumstunden);
+	}
+
+	/**
+	 * Aktualisiert die internen Strukturen, nachdem sich anhand der übergebenen {@link GostKlausurenCollectionSkrsKrsData}. Diese Methode sollte nur nach einem API-Call aufgerufen werden, in dem das {@link GostKlausurenCollectionSkrsKrsData}-Objekt erzeugt wurde.
+	 *
+	 * @param collectionSkrsKrs die {@link GostKlausurenCollectionSkrsKrsData}
+	 */
+	public void setzeRaumZuSchuelerklausuren(final @NotNull GostKlausurenCollectionSkrsKrsData collectionSkrsKrs) {
+		setzeRaumZuSchuelerklausurenOhneUpdate(collectionSkrsKrs);
 
 		update_all();
 	}
@@ -5032,20 +5042,22 @@ public class GostKlausurplanManager {
 		return false;
 	}
 
-	/**
-	 * Liefert die Menge von {@link StundenplanZeitraster} zum übergebenen {@link GostKlausurraum} zurück.
-	 *
-	 * @param raum der {@link GostKlausurraum}
-	 *
-	 * @return die Menge von {@link StundenplanZeitraster}en zum übergebenen {@link GostKlausurraum}.
-	 */
-	public @NotNull List<StundenplanZeitraster> zeitrasterGetMengeByRaum(final @NotNull GostKlausurraum raum) {
-		final @NotNull List<StundenplanZeitraster> ergebnis = new ArrayList<>();
-		for (final @NotNull GostKlausurraumstunde rs : raumstundeGetMengeByRaum(raum)) {
-			ergebnis.add(stundenplanManagerGetByTerminOrException(terminGetByIdOrException(raum.idTermin)).zeitrasterGetByIdOrException(rs.idZeitraster));
-		}
-		return ergebnis;
-	}
+//	/**
+//	 * Liefert die Menge von {@link StundenplanZeitraster} zum übergebenen {@link GostKlausurraum} zurück.
+//	 *
+//	 * @param raum der {@link GostKlausurraum}
+//	 *
+//	 * @return die Menge von {@link StundenplanZeitraster}en zum übergebenen {@link GostKlausurraum}.
+//	 */
+//	public List<StundenplanZeitraster> zeitrasterGetMengeByRaum(final @NotNull GostKlausurraum raum) {
+//		final @NotNull List<StundenplanZeitraster> ergebnis = new ArrayList<>();
+//		for (final @NotNull GostKlausurraumstunde rs : raumstundeGetMengeByRaum(raum)) {
+//			if (rs.idZeitraster == null)
+//				return null;
+//			ergebnis.add(stundenplanManagerGetByTerminOrException(terminGetByIdOrException(raum.idTermin)).zeitrasterGetByIdOrException(rs.idZeitraster));
+//		}
+//		return ergebnis;
+//	}
 
 
 	/**
@@ -5154,6 +5166,7 @@ public class GostKlausurplanManager {
 		anzahl += schuelerklausurfehlendGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += terminMitKonfliktGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += klausurenProSchueleridExceedingKWThresholdByAbijahrAndHalbjahrAndThreshold(abiJahrgang, halbjahr, quartal, kwErrorLimit, -1).size();
+		anzahl += terminOhneStundenplanGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		if (!stundenplanManagerGeladenAndExistsByAbschnitt(
 				DeveloperNotificationException.ifMap2DGetIsNull(_schuljahresabschnitt_by_abijahr_and_halbjahr, abiJahrgang, halbjahr.id)))
 			anzahl++;
@@ -5202,6 +5215,24 @@ public class GostKlausurplanManager {
 	}
 
 	/**
+	 * Liefert eine Liste von datierten {@link GostKlausurtermin}en, die keinen validen Stundenplan haben zum übergebenen {@link GostHalbjahr} und Quartal
+	 *
+	 * @param abiJahrgang der Abitur-Jahrgang
+	 * @param halbjahr das {@link GostHalbjahr}
+	 * @param quartal die Nummer des Quartals, 0 für alle Quartale
+	 *
+	 * @return eine Liste von datierten {@link GostKlausurtermin}en, die keinen validen Stundenplan haben zum übergebenen {@link GostHalbjahr} und Quartal
+	 */
+	public @NotNull List<GostKlausurtermin> terminOhneStundenplanGetMengeByAbijahrAndHalbjahrAndQuartal(final int abiJahrgang, final @NotNull GostHalbjahr halbjahr,
+			final int quartal) {
+		final @NotNull List<GostKlausurtermin> ergebnis = new ArrayList<>();
+		for (final @NotNull GostKlausurtermin termin : terminMitDatumGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal))
+			if (stundenplanManagerGetByTerminOrNull(termin) == null)
+				ergebnis.add(termin);
+		return ergebnis;
+	}
+
+	/**
 	 * Liefert eine Liste von {@link GostKlausurtermin}en, bei denen die Raumzuweisung noch unvollständig ist zum übergebenen {@link GostHalbjahr} und Quartal
 	 *
 	 * @param abiJahrgang der Abitur-Jahrgang
@@ -5239,42 +5270,64 @@ public class GostKlausurplanManager {
 		return ergebnis;
 	}
 
+//	/**
+//	 * Liefert die Id des {@link Schuljahresabschnitt}s zum übergebenen Abiturjahrgang und Halbjahr. Falls kein {@link Schuljahresabschnitt} gefunden wird, wird <code>null</code> zurückgegeben.
+//	 * @param abiJahrgang der Abiturjahrang
+//	 * @param halbjahr das {@link GostHalbjahr}
+//	 * @return die Id des {@link Schuljahresabschnitt}s zum übergebenen Abiturjahrgang und Halbjahr. Falls kein {@link Schuljahresabschnitt} gefunden wird, wird <code>null</code> zurückgegeben.
+//	 */
+//	public Long getSchuljahresabschnittIdByAbijahrAndHalbjahrOrNull(final int abiJahrgang, final @NotNull GostHalbjahr halbjahr) {
+//		return _schuljahresabschnitt_by_abijahr_and_halbjahr.getOrNull(abiJahrgang, halbjahr.id);
+//	}
+
+//	/**
+//	 * Liefert die Id des {@link Schuljahresabschnitt}s zum übergebenen Abiturjahrgang und Halbjahr. Falls kein {@link Schuljahresabschnitt} gefunden wird, wird eine <code>DeveloperNotificationException</code> geworfen.
+//	 * @param abiJahrgang der Abiturjahrang
+//	 * @param halbjahr das {@link GostHalbjahr}
+//	 * @return die Id des {@link Schuljahresabschnitt}s zum übergebenen Abiturjahrgang und Halbjahr. Falls kein {@link Schuljahresabschnitt} gefunden wird, wird eine <code>DeveloperNotificationException</code> geworfen.
+//	 */
+//	public long getSchuljahresabschnittIdByAbijahrAndHalbjahrOrException(final int abiJahrgang, final @NotNull GostHalbjahr halbjahr) {
+//		return _schuljahresabschnitt_by_abijahr_and_halbjahr.getOrException(abiJahrgang, halbjahr.id);
+//	}
+
+//	/**
+//	 * Liefert die Id des {@link Schuljahresabschnitt}s zum übergebenen {@link GostKlausurtermin}. Falls kein {@link Schuljahresabschnitt} gefunden wird, wird <code>null</code> zurückgegeben.
+//	 * @param termin der {@link GostKlausurtermin}
+//	 * @return die Id des {@link Schuljahresabschnitt}s zum übergebenen {@link GostKlausurtermin}. Falls kein {@link Schuljahresabschnitt} gefunden wird, wird <code>null</code> zurückgegeben.
+//	 */
+//	public Long getSchuljahresabschnittIdByTerminOrNull(final @NotNull GostKlausurtermin termin) {
+//		return getSchuljahresabschnittIdByAbijahrAndHalbjahrOrNull(termin.abijahr, GostHalbjahr.fromIDorException(termin.halbjahr));
+//	}
+
+//	/**
+//	 * Liefert die Id des {@link Schuljahresabschnitt}s zum übergebenen {@link GostKlausurtermin}. Falls kein {@link Schuljahresabschnitt} gefunden wird, wird eine <code>DeveloperNotificationException</code> geworfen.
+//	 * @param termin der {@link GostKlausurtermin}
+//	 * @return die Id des {@link Schuljahresabschnitt}s zum übergebenen {@link GostKlausurtermin}. Falls kein {@link Schuljahresabschnitt} gefunden wird, wird eine <code>DeveloperNotificationException</code> geworfen.
+//	 */
+//	public long getSchuljahresabschnittIdByTerminOrException(final @NotNull GostKlausurtermin termin) {
+//		return getSchuljahresabschnittIdByAbijahrAndHalbjahrOrException(termin.abijahr, GostHalbjahr.fromIDorException(termin.halbjahr));
+//	}
+
 	/**
-	 * Liefert die Id des {@link Schuljahresabschnitt}s zum übergebenen Abiturjahrgang und Halbjahr. Falls kein {@link Schuljahresabschnitt} gefunden wird, wird <code>null</code> zurückgegeben.
-	 * @param abiJahrgang der Abiturjahrang
-	 * @param halbjahr das {@link GostHalbjahr}
-	 * @return die Id des {@link Schuljahresabschnitt}s zum übergebenen Abiturjahrgang und Halbjahr. Falls kein {@link Schuljahresabschnitt} gefunden wird, wird <code>null</code> zurückgegeben.
+	 *	Fasst zwei Update-Methoden zusammen, um Laufzeit bei update_all() zu sparen.
+	 *  @param kursklausur die {@link GostKursklausur}, zu der die Attribute aktualisiert werden sollen
+	 * 	@param raumData die Raumdaten, die aktualisiert werden sollen
 	 */
-	public Long getSchuljahresabschnittIdByAbijahrAndHalbjahrOrNull(final int abiJahrgang, final @NotNull GostHalbjahr halbjahr) {
-		return _schuljahresabschnitt_by_abijahr_and_halbjahr.getOrNull(abiJahrgang, halbjahr.id);
+	public void kursklausurPatchAttributesAndSetzeRaumZuSchuelerklausuren(final @NotNull GostKursklausur kursklausur, final @NotNull GostKlausurenCollectionSkrsKrsData raumData) {
+		kursklausurPatchAttributesOhneUpdate(kursklausur);
+		setzeRaumZuSchuelerklausurenOhneUpdate(raumData);
+		update_all();
 	}
 
 	/**
-	 * Liefert die Id des {@link Schuljahresabschnitt}s zum übergebenen Abiturjahrgang und Halbjahr. Falls kein {@link Schuljahresabschnitt} gefunden wird, wird eine <code>DeveloperNotificationException</code> geworfen.
-	 * @param abiJahrgang der Abiturjahrang
-	 * @param halbjahr das {@link GostHalbjahr}
-	 * @return die Id des {@link Schuljahresabschnitt}s zum übergebenen Abiturjahrgang und Halbjahr. Falls kein {@link Schuljahresabschnitt} gefunden wird, wird eine <code>DeveloperNotificationException</code> geworfen.
+	 *	Fasst zwei Update-Methoden zusammen, um Laufzeit bei update_all() zu sparen.
+	 *  @param termin der {@link GostKlausurtermin}, zu dem die Attribute aktualisiert werden sollen
+	 * 	@param raumData die Raumdaten, die aktualisiert werden sollen
 	 */
-	public long getSchuljahresabschnittIdByAbijahrAndHalbjahrOrException(final int abiJahrgang, final @NotNull GostHalbjahr halbjahr) {
-		return _schuljahresabschnitt_by_abijahr_and_halbjahr.getOrException(abiJahrgang, halbjahr.id);
-	}
-
-	/**
-	 * Liefert die Id des {@link Schuljahresabschnitt}s zum übergebenen {@link GostKlausurtermin}. Falls kein {@link Schuljahresabschnitt} gefunden wird, wird <code>null</code> zurückgegeben.
-	 * @param termin der {@link GostKlausurtermin}
-	 * @return die Id des {@link Schuljahresabschnitt}s zum übergebenen {@link GostKlausurtermin}. Falls kein {@link Schuljahresabschnitt} gefunden wird, wird <code>null</code> zurückgegeben.
-	 */
-	public Long getSchuljahresabschnittIdByTerminOrNull(final @NotNull GostKlausurtermin termin) {
-		return getSchuljahresabschnittIdByAbijahrAndHalbjahrOrNull(termin.abijahr, GostHalbjahr.fromIDorException(termin.halbjahr));
-	}
-
-	/**
-	 * Liefert die Id des {@link Schuljahresabschnitt}s zum übergebenen {@link GostKlausurtermin}. Falls kein {@link Schuljahresabschnitt} gefunden wird, wird eine <code>DeveloperNotificationException</code> geworfen.
-	 * @param termin der {@link GostKlausurtermin}
-	 * @return die Id des {@link Schuljahresabschnitt}s zum übergebenen {@link GostKlausurtermin}. Falls kein {@link Schuljahresabschnitt} gefunden wird, wird eine <code>DeveloperNotificationException</code> geworfen.
-	 */
-	public long getSchuljahresabschnittIdByTerminOrException(final @NotNull GostKlausurtermin termin) {
-		return getSchuljahresabschnittIdByAbijahrAndHalbjahrOrException(termin.abijahr, GostHalbjahr.fromIDorException(termin.halbjahr));
+	public void terminPatchAttributesAndSetzeRaumZuSchuelerklausuren(final @NotNull GostKlausurtermin termin, final @NotNull GostKlausurenCollectionSkrsKrsData raumData) {
+		setzeRaumZuSchuelerklausurenOhneUpdate(raumData);
+		terminPatchAttributesOhneUpdate(termin);
+		update_all();
 	}
 
 }

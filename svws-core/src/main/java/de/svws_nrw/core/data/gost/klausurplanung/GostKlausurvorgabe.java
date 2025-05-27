@@ -16,7 +16,7 @@ public class GostKlausurvorgabe {
 
 	/** Die ID der Klausurvorgabe. */
 	@Schema(description = "die ID des Stundenplans", example = "815")
-	public long idVorgabe = -1;
+	public long id = -1;
 
 	/** Das Jahr, in welchem der Jahrgang Abitur machen wird, -1 für die Vorlage. */
 	@Schema(description = "das Jahr, in welchem der Jahrgang Abitur machen wird", example = "2025")
@@ -70,7 +70,7 @@ public class GostKlausurvorgabe {
 	 */
 	@Override
 	public boolean equals(final Object another) {
-		return (another != null) && (another instanceof GostKlausurvorgabe) && (this.idVorgabe == ((GostKlausurvorgabe) another).idVorgabe);
+		return (another != null) && (another instanceof GostKlausurvorgabe) && (this.id == ((GostKlausurvorgabe) another).id);
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class GostKlausurvorgabe {
 	 */
 	@Override
 	public int hashCode() {
-		return Long.hashCode(idVorgabe);
+		return Long.hashCode(id);
 	}
 
 	/**

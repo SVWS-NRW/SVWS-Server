@@ -58,6 +58,11 @@ export class DateUtils extends JavaObject {
 	private static readonly MONAT_ZU_TEXT : Array<string | null> = ["", "Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
 
 	/**
+	 * Ein Mapping für den Wochentag als Zahl zu seiner textuellen Beschreibung.
+	 */
+	private static readonly WOCHENTAG_ZU_TEXT : Array<string | null> = ["", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"];
+
+	/**
 	 *  Liefert für den jeweiligen Monat im Jahr die Summe der vergangenen Tage.<br>
 	 *  [0][3] bedeutet, dass im März bereits 59 Tage vergangen sind (kein Schaltjahr).<br>
 	 *  [1][3] bedeutet, dass im März bereits 60 Tage vergangen sind (Schaltjahr).
@@ -422,6 +427,17 @@ export class DateUtils extends JavaObject {
 	 */
 	public static gibWochentagDesDatumsISO8601(datumISO8601 : string) : number {
 		return DateUtils.extractFromDateISO8601(datumISO8601)[3];
+	}
+
+	/**
+	 * Liefert den Wochentag (Montag...Sonntag) zu einem bestimmten Datum.
+	 *
+	 * @param datumISO8601   das Datum im ISO8601-Format uuuu-MM-dd (z.B. 2014-03-14).
+	 *
+	 * @return den Wochentag (Montag...Sonntag) zu einem bestimmten Datum.
+	 */
+	public static gibWochentagNameDesDatumsISO8601(datumISO8601 : string) : string | null {
+		return DateUtils.WOCHENTAG_ZU_TEXT[DateUtils.extractFromDateISO8601(datumISO8601)[3]];
 	}
 
 	/**

@@ -28,8 +28,8 @@ public final class DataGostKlausurenRaumstunde extends DataManagerRevised<Long, 
 	 */
 	public DataGostKlausurenRaumstunde(final DBEntityManager conn) {
 		super(conn);
-//		super.setAttributesNotPatchable("idTermin");
-//		super.setAttributesRequiredOnCreation("idTermin");
+		super.setAttributesNotPatchable("id", "idRaum", "idZeitraster");
+		super.setAttributesRequiredOnCreation("idRaum", "idZeitraster");
 	}
 
 	/**

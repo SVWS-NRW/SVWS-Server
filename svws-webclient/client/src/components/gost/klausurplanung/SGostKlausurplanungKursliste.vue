@@ -16,7 +16,7 @@
 		<h3 class="border-b text-headline-md">Bemerkung zur Vorgabe</h3>
 		{{ kMan().vorgabeByKursklausur(kursklausur).bemerkungVorgabe }}
 	</div>
-	<h2 class="border-b text-headline my-4">Klausurschreiber im Kurs {{ kMan().kursKurzbezeichnungByKursklausur(kursklausur) }}</h2>
+	<h2 class="border-b text-headline my-4 whitespace-nowrap">Klausurschreiber im Kurs {{ kMan().kursKurzbezeichnungByKursklausur(kursklausur) }}</h2>
 	<table class="w-full">
 		<tr v-for="s in kMan().schuelerklausurterminGetMengeByKursklausur(kursklausur)" :key="s.id" class="border-b">
 			<td>
@@ -40,8 +40,8 @@
 						<span class="icon i-ri-user-forbid-line" />
 					</svws-ui-tooltip>
 				</svws-ui-button>
-				<span v-else class="italic flex items-center">
-					(<svws-ui-textarea-input :disabled="!hatKompetenzUpdate || !patchKlausur" class="text-sm" headless :rows="1" resizeable="none" autoresize placeholder="Grund des Fehlens" :model-value="s.bemerkung" @change="bemerkung => patchKlausur(s, {bemerkung})" />)
+				<span class="whitespace-nowrap flex items-center" v-else-if="hatKompetenzUpdate && termin !== undefined && !kMan().schuelerSchreibtKlausurtermin(kMan().schuelerGetBySchuelerklausurtermin(s).id, termin)">
+					<span>(</span><svws-ui-textarea-input :disabled="!hatKompetenzUpdate || !patchKlausur" class="text-sm inline-block align-middle" headless :rows="1" resizeable="none" autoresize placeholder="Grund des Fehlens" :model-value="s.bemerkung" @change="bemerkung => patchKlausur(s, {bemerkung})" /><span>)</span>
 				</span>
 			</td>
 		</tr>

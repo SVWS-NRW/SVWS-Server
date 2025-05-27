@@ -115,7 +115,7 @@
 					<slot name="rowCustom" :row="row.source">
 						<div class="svws-ui-tr" :style="getGridTemplateColumns" role="row" :key="`table-row_${row}_${index}`" @click.exact="toggleRowClick(row)" :ref="el => itemRefs.set(index, el)"
 							:class="{ 'svws-selected': isRowSelected(row), 'svws-clicked': isRowClicked(row), 'listFocusField': isRowClicked(row) || (multiSelectFocusEnabled && isRowSelected(row)) }" tabindex="0" @keydown.enter="toggleRowClick(row)"
-							@keydown.down.prevent="switchElement($event, itemRefs, index, false)" @keydown.up.prevent="switchElement($event, itemRefs, index, true)">
+							@keydown.down.prevent="switchElement($event, itemRefs, index, false)" @keydown.up.prevent="switchElement($event, itemRefs, index, true)" :data="row.source" :draggable="rowDraggable(row.source)" v-on="rowDragListeners(row.source)">
 							<slot name="row" :row="row.source">
 								<template v-if="selectable">
 									<div v-if="row.selectable" class="svws-ui-td svws-align-center" role="cell" :key="`selectable__${row}_${index}`">
@@ -252,6 +252,9 @@
 			focusHelpVisible? : boolean;
 			multiSelectFocusEnabled?: boolean;
 			lockSelectable?: boolean;
+			rowDraggable?: (item: DataTableItem) => boolean;
+			rowDragstart?: (event: DragEvent, item: DataTableItem) => void;
+			rowDragend?: (event: DragEvent, item: DataTableItem) => void;
 		}>(),
 		{
 			columns: () => [],
@@ -286,6 +289,9 @@
 			focusHelpVisible: false,
 			multiSelectFocusEnabled: false,
 			lockSelectable: false,
+			rowDraggable: () => false,
+			rowDragstart: () => {},
+			rowDragend: () => {},
 		}
 	);
 
@@ -560,5 +566,14 @@
 		else
 			itemRefs.value.get(clickedItemIndex.value)?.focus();
 	});
+
+	function rowDragListeners(row: DataTableItem) {
+		if (!props.rowDraggable(row))
+			return {} // keine Drag-Listener
+		return {
+			dragstart: (event: DragEvent) => props.rowDragstart(event, row),
+			dragend:   (event: DragEvent) => props.rowDragend(event, row),
+		}
+	}
 
 </script>

@@ -25,6 +25,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausurenTermine;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausurenTermineRaumstunden;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenTermine;
+import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.persistence.TypedQuery;
@@ -46,7 +47,7 @@ public final class DataGostKlausurenSchuelerklausurTermin
 	 */
 	public DataGostKlausurenSchuelerklausurTermin(final DBEntityManager conn) {
 		super(conn);
-		super.setAttributesNotPatchable("idSchuelerklausur", "folgeNr");
+		super.setAttributesNotPatchable("id", "idSchuelerklausur", "folgeNr");
 		super.setAttributesRequiredOnCreation("idSchuelerklausur", "folgeNr");
 	}
 
@@ -334,8 +335,18 @@ public final class DataGostKlausurenSchuelerklausurTermin
 				final GostKlausurvorgabe v = kMan.vorgabeBySchuelerklausurTermin(zuordnung.a);
 				DTOGostKlausurenTermine neuerTermin = mapNeueTermine.get(zuordnung.b);
 				if (neuerTermin == null) {
-					neuerTermin = new DTOGostKlausurenTermine(idNextTermin++, v.abiJahrgang,
-							GostHalbjahr.fromIDorException(v.halbjahr), v.quartal, false, true);
+					final GostHalbjahr ghj = GostHalbjahr.fromIDorException(v.halbjahr);
+
+					final List<DTOSchuljahresabschnitte> sjaList =
+							conn.query("SELECT s FROM DTOSchuljahresabschnitte s WHERE s.Jahr = :jahr AND s.Abschnitt = :abschnitt", DTOSchuljahresabschnitte.class)
+									.setParameter("jahr", ghj.getSchuljahrFromAbiturjahr(v.abiJahrgang))
+									.setParameter("abschnitt", (v.halbjahr % 2) + 1)
+									.getResultList();
+					if ((sjaList == null) || (sjaList.size() != 1))
+						throw new ApiOperationException(Status.NOT_FOUND, "Noch kein Schuljahresabschnitt für dieses Halbjahr definiert.");
+
+					neuerTermin = new DTOGostKlausurenTermine(idNextTermin++, sjaList.getFirst().ID, v.abiJahrgang,
+							ghj, v.quartal, false, true);
 					conn.transactionPersist(neuerTermin);
 					conn.transactionFlush();
 					mapNeueTermine.put(zuordnung.b, neuerTermin);

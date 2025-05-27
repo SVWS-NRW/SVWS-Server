@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Gost_Klausuren_Raumstunden")
-@JsonPropertyOrder({"ID", "Klausurraum_ID", "Zeitraster_ID"})
+@JsonPropertyOrder({"ID", "Klausurraum_ID", "Zeitraster_ID", "Zeitraster_Stunde"})
 public final class DTOGostKlausurenRaumstunden {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -51,6 +51,12 @@ public final class DTOGostKlausurenRaumstunden {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Zeitraster_ID */
 	public static final String QUERY_LIST_BY_ZEITRASTER_ID = "SELECT e FROM DTOGostKlausurenRaumstunden e WHERE e.Zeitraster_ID IN ?1";
 
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Zeitraster_Stunde */
+	public static final String QUERY_BY_ZEITRASTER_STUNDE = "SELECT e FROM DTOGostKlausurenRaumstunden e WHERE e.Zeitraster_Stunde = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Zeitraster_Stunde */
+	public static final String QUERY_LIST_BY_ZEITRASTER_STUNDE = "SELECT e FROM DTOGostKlausurenRaumstunden e WHERE e.Zeitraster_Stunde IN ?1";
+
 	/** ID der Raumstunde (generiert) */
 	@Id
 	@Column(name = "ID")
@@ -65,7 +71,12 @@ public final class DTOGostKlausurenRaumstunden {
 	/** ID des Zeitrasters */
 	@Column(name = "Zeitraster_ID")
 	@JsonProperty
-	public long Zeitraster_ID;
+	public Long Zeitraster_ID;
+
+	/** Die Stunde laut Stundenplan (1, 2, ...), falls keine Zeitraster_ID gesetzt ist */
+	@Column(name = "Zeitraster_Stunde")
+	@JsonProperty
+	public Integer Zeitraster_Stunde;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOGostKlausurenRaumstunden ohne eine Initialisierung der Attribute.
@@ -78,12 +89,10 @@ public final class DTOGostKlausurenRaumstunden {
 	 * Erstellt ein neues Objekt der Klasse DTOGostKlausurenRaumstunden ohne eine Initialisierung der Attribute.
 	 * @param ID   der Wert für das Attribut ID
 	 * @param Klausurraum_ID   der Wert für das Attribut Klausurraum_ID
-	 * @param Zeitraster_ID   der Wert für das Attribut Zeitraster_ID
 	 */
-	public DTOGostKlausurenRaumstunden(final long ID, final long Klausurraum_ID, final long Zeitraster_ID) {
+	public DTOGostKlausurenRaumstunden(final long ID, final long Klausurraum_ID) {
 		this.ID = ID;
 		this.Klausurraum_ID = Klausurraum_ID;
-		this.Zeitraster_ID = Zeitraster_ID;
 	}
 
 
@@ -115,7 +124,7 @@ public final class DTOGostKlausurenRaumstunden {
 	 */
 	@Override
 	public String toString() {
-		return "DTOGostKlausurenRaumstunden(ID=" + this.ID + ", Klausurraum_ID=" + this.Klausurraum_ID + ", Zeitraster_ID=" + this.Zeitraster_ID + ")";
+		return "DTOGostKlausurenRaumstunden(ID=" + this.ID + ", Klausurraum_ID=" + this.Klausurraum_ID + ", Zeitraster_ID=" + this.Zeitraster_ID + ", Zeitraster_Stunde=" + this.Zeitraster_Stunde + ")";
 	}
 
 }

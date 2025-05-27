@@ -172,7 +172,7 @@
 	const dragData = ref<GostKlausurplanungDragData>(undefined);
 	const terminSelected = ref<GostKlausurtermin | undefined>(undefined);
 
-	const onDrag = (data: GostKlausurplanungDragData) => {
+	const onDrag = (event: DragEvent, data: GostKlausurplanungDragData) => {
 		terminSelected.value = undefined;
 		dragData.value = data;
 	};

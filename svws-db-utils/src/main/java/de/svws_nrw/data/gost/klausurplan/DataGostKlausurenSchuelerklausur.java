@@ -37,7 +37,7 @@ public final class DataGostKlausurenSchuelerklausur extends DataManagerRevised<L
 	 */
 	public DataGostKlausurenSchuelerklausur(final DBEntityManager conn) {
 		super(conn);
-		super.setAttributesNotPatchable("idKursklausur", "idSchueler");
+		super.setAttributesNotPatchable("id", "idKursklausur", "idSchueler");
 		super.setAttributesRequiredOnCreation("idKursklausur", "idSchueler");
 	}
 

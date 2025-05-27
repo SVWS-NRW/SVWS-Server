@@ -50,7 +50,7 @@
 	</div>
 	<Teleport to="body" v-if="isMounted">
 		<svws-ui-dropdown-list v-if="showList" :statistics :filtered-list :item-text="itemText" :strategy :floating-left :floating-top :selected-item-list
-			:select-item ref="refList" :search-text :highlight-item="(highlightItem as Item|undefined)" />
+			:select-item ref="refList" :search-text :highlight-item="(highlightItem as Item|undefined)" :no-items-text />
 	</Teleport>
 </template>
 
@@ -89,6 +89,7 @@
 		autofocus?: boolean;
 		focusClassContent?: boolean;
 		focusClassSubNav?: boolean;
+		noItemsText?: string;
 	}>(), {
 		label: '',
 		title: '',
@@ -108,6 +109,7 @@
 		autofocus: false,
 		focusClassContent: false,
 		focusClassSubNav: false,
+		noItemsText: undefined,
 	})
 
 	const emit = defineEmits<{

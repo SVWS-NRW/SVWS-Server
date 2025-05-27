@@ -121,7 +121,7 @@
 		patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>) => Promise<boolean>;
 		patchKlausur: (klausur: GostKursklausur, patch: Partial<GostKursklausur>) => Promise<GostKlausurenCollectionSkrsKrsData>;
 		dragData: () => GostKlausurplanungDragData;
-		onDrag: (data: GostKlausurplanungDragData) => void;
+		onDrag: (event: DragEvent, data: GostKlausurplanungDragData) => void;
 		onDrop: (zone: GostKlausurplanungDropZone) => void;
 		zeigeAlleJahrgaenge: () => boolean;
 		setzeRaumZuSchuelerklausuren: (raeume: List<GostKlausurraumRich>, deleteFromRaeume: boolean) => Promise<GostKlausurenCollectionSkrsKrsData>;

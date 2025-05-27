@@ -4,6 +4,7 @@
 			'border shadow-md shadow-ui-10': !inTooltip,
 			'border-ui-10': !inTooltip && !terminSelected,
 			'-mx-2 -my-1': inTooltip,
+			'bg-ui-caution-secondary': !stundenplanVorhanden,
 			'border-r-2 border-r-ui-brand border-l-transparent': inTooltip && !termin.istHaupttermin,
 			'border-ui-500 ring-4 ring-ui-neutral': termin.istHaupttermin && !inTooltip && terminSelected,
 			'border-ui-brand/50 ring-4 ring-ui-brand/10': !termin.istHaupttermin && !inTooltip && terminSelected,
@@ -19,7 +20,7 @@
 							</span>
 							<span class="break-all">{{ terminBezeichnung() }}</span>
 						</span>
-						<div v-if="compactWithDate && termin.datum" class="mb-1 -mt-0.5 opacity-50 text-base">{{ DateUtils.gibDatumGermanFormat(termin.datum) }}</div>
+						<div v-if="compactWithDate && termin.datum" class="mb-1 -mt-0.5 opacity-50 text-base">{{ DateUtils.gibDatumGermanFormat(termin.datum) }} <span class="text-ui-caution" v-if="kMan().stundenplanManagerGetByTerminOrNull(termin) === null"><span class="icon-ui-caution icon i-ri-alert-line" /> Kein Stundenplan definiert</span></div>
 						<div v-if="compact || compactWithDate" class="svws-compact-data text-sm font-medium flex flex-wrap mt-0.5">
 							<span class="font-bold">{{ kMan().schuelerklausurterminAktuellGetMengeByTermin(termin).size() }} Schüler,&nbsp;</span>
 							<span><span v-if="kMan().minKlausurdauerGetByTermin(termin, true) < kMan().maxKlausurdauerGetByTermin(termin, true)">{{ kMan().minKlausurdauerGetByTermin(termin, true) }} - </span>{{ kMan().maxKlausurdauerGetByTermin(termin, true) }} Minuten</span>
@@ -70,8 +71,8 @@
 									:key="klausur.id"
 									:data="klausur"
 									:draggable="onDrag !== undefined && draggable(klausur, termin)"
-									@dragstart="onDrag && onDrag(klausur);$event.stopPropagation()"
-									@dragend="onDrag && onDrag(undefined);$event.stopPropagation()"
+									@dragstart="onDrag && onDrag($event, klausur);$event.stopPropagation()"
+									@dragend="onDrag && onDrag($event, undefined);$event.stopPropagation()"
 									class="svws-ui-tr" :style="tableRowStyle" role="row"
 									:class="[
 										props.klausurCssClasses === undefined ? '' : props.klausurCssClasses(klausur, termin),
@@ -167,7 +168,7 @@
 		termin: GostKlausurtermin;
 		kMan: () => GostKlausurplanManager;
 		klausurCssClasses?: (klausur: GostKlausurplanungDragData, termin: GostKlausurtermin | undefined) => void;
-		onDrag?: (data: GostKlausurplanungDragData) => void;
+		onDrag?: (event: DragEvent, data: GostKlausurplanungDragData) => void;
 		draggable?: (data: GostKlausurplanungDragData, termin: GostKlausurtermin) => boolean;
 		//onDrop?: (zone: GostKlausurplanungDropZone) => void;
 		compact?: boolean;
@@ -201,6 +202,8 @@
 		hideButtonRaeumePlanen: false,
 		inTooltip: false,
 	});
+
+	const stundenplanVorhanden = computed<boolean>(() => props.termin.datum === null || props.kMan().stundenplanManagerGetByTerminOrNull(props.termin) !== null);
 
 	const keepOpen = ref<boolean>(false);
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));

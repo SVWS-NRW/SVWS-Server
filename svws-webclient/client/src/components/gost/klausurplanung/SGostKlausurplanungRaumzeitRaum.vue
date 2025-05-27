@@ -12,6 +12,7 @@
 					:model-value="raum.idStundenplanRaum === null ? undefined : kMan().stundenplanraumGetByKlausurraum(raum)"
 					:disabled="!hatKompetenzUpdate"
 					headless
+					no-items-text="Keine Räume im Stundenplan gefunden"
 					class="grow"
 					@update:model-value="(value : StundenplanRaum | undefined) => void patchKlausurraum(raum.id, { idStundenplanRaum: value !== undefined ? value.id : null })"
 					:item-text="(item: StundenplanRaum) => item !== null ? (item.kuerzel + ' (' + item.groesse+ ' Plätze, ' + item.beschreibung + ')') : ''"
@@ -34,7 +35,7 @@
 			<svws-ui-table :items="[]" :columns="cols" :no-data="klausurenImRaum().size() === 0" no-data-text="Noch keine Klausuren zugewiesen." class="mt-4">
 				<template #header><span /></template>
 				<template #body>
-					<div v-for="klausur of klausurenImRaum()" :key="klausur.id" class="svws-ui-tr cursor-grab" role="row" :data="klausur" :draggable="hatKompetenzUpdate" @dragstart="onDrag(klausur)"	@dragend="onDrag(undefined)">
+					<div v-for="klausur of klausurenImRaum()" :key="klausur.id" class="svws-ui-tr cursor-grab" role="row" :data="klausur" :draggable="hatKompetenzUpdate" @dragstart="onDrag($event, klausur)"	@dragend="onDrag($event, undefined)">
 						<div class="svws-ui-td" role="cell">
 							<span v-if="hatKompetenzUpdate" class="icon i-ri-draggable" />
 						</div>
@@ -107,7 +108,7 @@
 		loescheKlausurraum: (id: number) => Promise<boolean>;
 		patchKlausur: (klausur: GostKursklausur, patch: Partial<GostKursklausur>) => Promise<GostKlausurenCollectionSkrsKrsData>;
 		dragData: () => GostKlausurplanungDragData;
-		onDrag: (data: GostKlausurplanungDragData) => void;
+		onDrag: (event: DragEvent, data: GostKlausurplanungDragData) => void;
 		onDrop: (zone: GostKlausurplanungDropZone) => void;
 		multijahrgang: () => boolean;
 		terminSelected: GostKlausurtermin;

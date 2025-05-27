@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Gost_Klausuren_Raeume")
-@JsonPropertyOrder({"ID", "Termin_ID", "Stundenplan_Raum_ID", "Bemerkungen"})
+@JsonPropertyOrder({"ID", "Termin_ID", "Stundenplan_Raum_ID", "Stundenplan_Raum_Kuerzel", "Bemerkungen"})
 public final class DTOGostKlausurenRaeume {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -51,6 +51,12 @@ public final class DTOGostKlausurenRaeume {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Stundenplan_Raum_ID */
 	public static final String QUERY_LIST_BY_STUNDENPLAN_RAUM_ID = "SELECT e FROM DTOGostKlausurenRaeume e WHERE e.Stundenplan_Raum_ID IN ?1";
 
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Stundenplan_Raum_Kuerzel */
+	public static final String QUERY_BY_STUNDENPLAN_RAUM_KUERZEL = "SELECT e FROM DTOGostKlausurenRaeume e WHERE e.Stundenplan_Raum_Kuerzel = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Stundenplan_Raum_Kuerzel */
+	public static final String QUERY_LIST_BY_STUNDENPLAN_RAUM_KUERZEL = "SELECT e FROM DTOGostKlausurenRaeume e WHERE e.Stundenplan_Raum_Kuerzel IN ?1";
+
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Bemerkungen */
 	public static final String QUERY_BY_BEMERKUNGEN = "SELECT e FROM DTOGostKlausurenRaeume e WHERE e.Bemerkungen = ?1";
 
@@ -72,6 +78,11 @@ public final class DTOGostKlausurenRaeume {
 	@Column(name = "Stundenplan_Raum_ID")
 	@JsonProperty
 	public Long Stundenplan_Raum_ID;
+
+	/** Das Kürzel des Stundenplan_Raums, falls keine Stundenplan_Raum_ID gesetzt ist */
+	@Column(name = "Stundenplan_Raum_Kuerzel")
+	@JsonProperty
+	public String Stundenplan_Raum_Kuerzel;
 
 	/** Text für Bemerkungen zum Klausurraum */
 	@Column(name = "Bemerkungen")
@@ -124,7 +135,7 @@ public final class DTOGostKlausurenRaeume {
 	 */
 	@Override
 	public String toString() {
-		return "DTOGostKlausurenRaeume(ID=" + this.ID + ", Termin_ID=" + this.Termin_ID + ", Stundenplan_Raum_ID=" + this.Stundenplan_Raum_ID + ", Bemerkungen=" + this.Bemerkungen + ")";
+		return "DTOGostKlausurenRaeume(ID=" + this.ID + ", Termin_ID=" + this.Termin_ID + ", Stundenplan_Raum_ID=" + this.Stundenplan_Raum_ID + ", Stundenplan_Raum_Kuerzel=" + this.Stundenplan_Raum_Kuerzel + ", Bemerkungen=" + this.Bemerkungen + ")";
 	}
 
 }

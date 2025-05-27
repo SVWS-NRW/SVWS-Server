@@ -139,6 +139,7 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 				return this.data.view.getRoute({ halbjahr: halbjahr.id});
 			}
 		} catch(e) {
+			this.data.reset();
 			return routeError.getErrorRoute(e instanceof Error ? e : new DeveloperNotificationException("Unbekannter Fehler beim Laden der Klausurplanungsdaten."));
 		}
 	}

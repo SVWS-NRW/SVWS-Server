@@ -28,9 +28,10 @@
 		</template>
 	</svws-ui-modal>
 	<div class="page page-flex-row">
-		<div class="min-w-fit max-w-fit flex flex-col gap-2" @drop="onDrop(undefined)" @dragover="$event.preventDefault()" :class="[(dragData !== undefined && dragData instanceof GostKursklausur && dragData.idTermin !== null) ? 'ring-offset-8 ring-4 ring-ui-danger/20 rounded-xl' : '' ]">
+		<div class="min-w-fit max-w-fit flex flex-col gap-2" @drop="onDrop($event, undefined)" @dragover="$event.preventDefault()" :class="[(dragData !== undefined && dragData instanceof GostKursklausur && dragData.idTermin !== null) ? 'ring-offset-8 ring-4 ring-ui-danger/20 rounded-xl' : '' ]">
 			<h3 class="text-headline-md" title="In Planung">In Planung</h3>
-			<svws-ui-table selectable v-model="selected" :items="props.kMan().kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value)" :columns="cols">
+			<svws-ui-table selectable v-model="selected" :items="props.kMan().kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value)" :columns="cols"
+				:row-draggable="draggable" :row-dragstart="onDrag" :row-dragend="() => onDrag(undefined, undefined)">
 				<template #noData>
 					<div class="leading-tight flex flex-col gap-0.5">
 						<span>Aktuell keine Klausuren zu planen.</span>
@@ -55,7 +56,7 @@
 			{ key: "dauer", label: "Dauer", tooltip: "Dauer in Minuten", span: 0.5, align: "right", minWidth: 3.25 },
 			{ key: "kursSchiene", label: "S", tooltip: "Schiene", span: 0.25, align: "right", minWidth: 2.75 }, -->
 				<template #cell(kurs)="{ rowData }">
-					<div class="-ml-2" :data="rowData" :draggable="draggable(rowData)" @dragstart="onDrag(rowData)" @dragend="onDrag(undefined)">
+					<div class="-ml-2" :data="rowData" :draggable="draggable(rowData)" @dragstart="($event) => onDrag($event, rowData)" @dragend="onDrag($event, undefined)">
 						<span v-if="hatKompetenzUpdate" class="icon i-ri-draggable" />
 						<svws-ui-tooltip :hover="false" :indicator="false">
 							<template #content>
@@ -202,7 +203,7 @@
 	const dragData = ref<GostKlausurplanungDragData>(undefined);
 	const selected = shallowRef<GostKursklausur[]>([]);
 
-	const onDrag = (data: GostKlausurplanungDragData) => {
+	const onDrag = (event: DragEvent | undefined, data: GostKlausurplanungDragData) => {
 		props.terminSelected.value = undefined;
 		dragData.value = data;
 	};
@@ -250,7 +251,7 @@
 		return new HashSet<JavaMapEntry<number, List<GostSchuelerklausurTermin>>>();
 	}
 
-	const onDrop = async (zone: GostKlausurplanungDropZone) => {
+	const onDrop = async (event: DragEvent | undefined, zone: GostKlausurplanungDropZone) => {
 		if (dragData.value instanceof GostKursklausur) {
 			const klausur = dragData.value;
 			klausurMoveDropZone = zone;

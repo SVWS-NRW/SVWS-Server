@@ -17,6 +17,10 @@ public class GostKlausurtermin {
 	@Schema(description = "die ID des Klausurtermins", example = "4711")
 	public long id = -1;
 
+	/** Die ID des Schuljahresabschnitts, in welchem der Termin liegt. */
+	@Schema(description = "die ID des Schuljahresabschnitts, in welchem der Termin liegt", example = "815")
+	public long idSchuljahresabschnitt = -1;
+
 	/** Das Jahr, in welchem der Jahrgang Abitur machen wird. */
 	@Schema(description = "das Jahr, in welchem der Jahrgang Abitur machen wird", example = "2025")
 	public int abijahr = -1;

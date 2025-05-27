@@ -7,7 +7,7 @@ export class GostKlausurvorgabe extends JavaObject {
 	/**
 	 * Die ID der Klausurvorgabe.
 	 */
-	public idVorgabe : number = -1;
+	public id : number = -1;
 
 	/**
 	 * Das Jahr, in welchem der Jahrgang Abitur machen wird, -1 für die Vorlage.
@@ -79,7 +79,7 @@ export class GostKlausurvorgabe extends JavaObject {
 	 * @return true, falls die Objekte indentisch sind, sonst false
 	 */
 	public equals(another : unknown | null) : boolean {
-		return (another !== null) && (((another instanceof JavaObject) && (another.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe')))) && (this.idVorgabe === (cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurvorgabe(another)).idVorgabe);
+		return (another !== null) && (((another instanceof JavaObject) && (another.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe')))) && (this.id === (cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurvorgabe(another)).id);
 	}
 
 	/**
@@ -88,7 +88,7 @@ export class GostKlausurvorgabe extends JavaObject {
 	 * @return den HashCode
 	 */
 	public hashCode() : number {
-		return JavaLong.hashCode((this.idVorgabe));
+		return JavaLong.hashCode((this.id));
 	}
 
 	transpilerCanonicalName(): string {
@@ -104,9 +104,9 @@ export class GostKlausurvorgabe extends JavaObject {
 	public static transpilerFromJSON(json : string): GostKlausurvorgabe {
 		const obj = JSON.parse(json) as Partial<GostKlausurvorgabe>;
 		const result = new GostKlausurvorgabe();
-		if (obj.idVorgabe === undefined)
-			throw new Error('invalid json format, missing attribute idVorgabe');
-		result.idVorgabe = obj.idVorgabe;
+		if (obj.id === undefined)
+			throw new Error('invalid json format, missing attribute id');
+		result.id = obj.id;
 		if (obj.abiJahrgang === undefined)
 			throw new Error('invalid json format, missing attribute abiJahrgang');
 		result.abiJahrgang = obj.abiJahrgang;
@@ -143,7 +143,7 @@ export class GostKlausurvorgabe extends JavaObject {
 
 	public static transpilerToJSON(obj : GostKlausurvorgabe) : string {
 		let result = '{';
-		result += '"idVorgabe" : ' + obj.idVorgabe.toString() + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"abiJahrgang" : ' + obj.abiJahrgang.toString() + ',';
 		result += '"halbjahr" : ' + obj.halbjahr.toString() + ',';
 		result += '"quartal" : ' + obj.quartal.toString() + ',';
@@ -162,8 +162,8 @@ export class GostKlausurvorgabe extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostKlausurvorgabe>) : string {
 		let result = '{';
-		if (obj.idVorgabe !== undefined) {
-			result += '"idVorgabe" : ' + obj.idVorgabe.toString() + ',';
+		if (obj.id !== undefined) {
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.abiJahrgang !== undefined) {
 			result += '"abiJahrgang" : ' + obj.abiJahrgang.toString() + ',';

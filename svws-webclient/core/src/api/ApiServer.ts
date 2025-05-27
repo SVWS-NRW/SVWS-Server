@@ -5986,7 +5986,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode patchGostKlausurenKursklausur für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/kursklausuren/{id : \d+}/abiturjahrgang/{abiturjahr : -?\d+}/halbjahr/{halbjahr : -?\d+}
+	 * Implementierung der POST-Methode patchGostKlausurenKursklausur für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/kursklausuren/{id : \d+}
 	 *
 	 * Patcht eine Gost-Kursklausur und gibt die daraufhin geänderten Raumdaten zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen einer Gost-Kursklausur besitzt.
 	 *
@@ -6003,17 +6003,13 @@ export class ApiServer extends BaseApi {
 	 * @param {Partial<GostKursklausur>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
-	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
-	 * @param {number} halbjahr - der Pfad-Parameter halbjahr
 	 *
 	 * @returns Der Patch wurde erfolgreich in die Kursklausur integriert.
 	 */
-	public async patchGostKlausurenKursklausur(data : Partial<GostKursklausur>, schema : string, id : number, abiturjahr : number, halbjahr : number) : Promise<GostKlausurenCollectionSkrsKrsData> {
-		const path = "/db/{schema}/gost/klausuren/kursklausuren/{id : \\d+}/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : -?\\d+}"
+	public async patchGostKlausurenKursklausur(data : Partial<GostKursklausur>, schema : string, id : number) : Promise<GostKlausurenCollectionSkrsKrsData> {
+		const path = "/db/{schema}/gost/klausuren/kursklausuren/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
-			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
-			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = GostKursklausur.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -6442,7 +6438,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode setzeGostSchuelerklausurenZuRaum für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/zuraum/abiturjahrgang/{abiturjahr : -?\d+}/halbjahr/{halbjahr : -?\d+}
+	 * Implementierung der POST-Methode setzeGostSchuelerklausurenZuRaum für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/zuraum
 	 *
 	 * Weist die in den GostKlausurraumRich-Objekten übergebenen IDs der GostSchuelerklausurTermine dem jeweiligen GostKlausurraum zu.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Zuweisen eines Klausurraums besitzt.
 	 *
@@ -6455,16 +6451,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @param {List<GostKlausurraumRich>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
-	 * @param {number} halbjahr - der Pfad-Parameter halbjahr
 	 *
 	 * @returns Die Raumzuweisungen wurden erfolgreich übernommen.
 	 */
-	public async setzeGostSchuelerklausurenZuRaum(data : List<GostKlausurraumRich>, schema : string, abiturjahr : number, halbjahr : number) : Promise<GostKlausurenCollectionSkrsKrsData> {
-		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/zuraum/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : -?\\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
-			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
+	public async setzeGostSchuelerklausurenZuRaum(data : List<GostKlausurraumRich>, schema : string) : Promise<GostKlausurenCollectionSkrsKrsData> {
+		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/zuraum"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<GostKlausurraumRich>).map(d => GostKlausurraumRich.transpilerToJSON(d)).join() + "]";
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -6473,7 +6465,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode patchGostKlausurenKlausurtermin für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/termine/{id : \d+}/abschnitt/{abschnittid : -?\d+}
+	 * Implementierung der POST-Methode patchGostKlausurenKlausurtermin für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/termine/{id : \d+}
 	 *
 	 * Patcht einen GostKlausurtermin.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen eines GostKlausurtermins besitzt.
 	 *
@@ -6490,15 +6482,13 @@ export class ApiServer extends BaseApi {
 	 * @param {Partial<GostKlausurtermin>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
-	 * @param {number} abschnittid - der Pfad-Parameter abschnittid
 	 *
 	 * @returns Der Patch wurde erfolgreich in den GostKlausurtermin integriert.
 	 */
-	public async patchGostKlausurenKlausurtermin(data : Partial<GostKlausurtermin>, schema : string, id : number, abschnittid : number) : Promise<GostKlausurenCollectionSkrsKrsData> {
-		const path = "/db/{schema}/gost/klausuren/termine/{id : \\d+}/abschnitt/{abschnittid : -?\\d+}"
+	public async patchGostKlausurenKlausurtermin(data : Partial<GostKlausurtermin>, schema : string, id : number) : Promise<GostKlausurenCollectionSkrsKrsData> {
+		const path = "/db/{schema}/gost/klausuren/termine/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
-			.replace(/{abschnittid\s*(:[^{}]+({[^{}]+})*)?}/g, abschnittid.toString());
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = GostKlausurtermin.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;

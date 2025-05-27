@@ -44,6 +44,10 @@ public final class DateUtils {
 	private static final @NotNull String[] MONAT_ZU_TEXT =
 			new String[] { "", "Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember" };
 
+	/** Ein Mapping für den Wochentag als Zahl zu seiner textuellen Beschreibung. */
+	private static final @NotNull String[] WOCHENTAG_ZU_TEXT =
+			new String[] { "", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag" };
+
 	/**
 	 * Liefert für den jeweiligen Monat im Jahr die Summe der vergangenen Tage.<br>
 	 * [0][3] bedeutet, dass im März bereits 59 Tage vergangen sind (kein Schaltjahr).<br>
@@ -440,6 +444,17 @@ public final class DateUtils {
 	 */
 	public static int gibWochentagDesDatumsISO8601(final @NotNull String datumISO8601) {
 		return extractFromDateISO8601(datumISO8601)[3];
+	}
+
+	/**
+	 * Liefert den Wochentag (Montag...Sonntag) zu einem bestimmten Datum.
+	 *
+	 * @param datumISO8601   das Datum im ISO8601-Format uuuu-MM-dd (z.B. 2014-03-14).
+	 *
+	 * @return den Wochentag (Montag...Sonntag) zu einem bestimmten Datum.
+	 */
+	public static String gibWochentagNameDesDatumsISO8601(final @NotNull String datumISO8601) {
+		return WOCHENTAG_ZU_TEXT[extractFromDateISO8601(datumISO8601)[3]];
 	}
 
 	/**

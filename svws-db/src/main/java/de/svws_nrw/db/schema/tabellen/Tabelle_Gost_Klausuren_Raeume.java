@@ -30,6 +30,12 @@ public class Tabelle_Gost_Klausuren_Raeume extends SchemaTabelle {
 	public SchemaTabelleSpalte col_Stundenplan_Raum_ID = add("Stundenplan_Raum_ID", SchemaDatentypen.BIGINT, false)
 			.setJavaComment("ID des Raums aus der Tabelle Stundenplan_Raeume");
 
+	/** Die Definition der Tabellenspalte Stundenplan_Raum_Kuerzel */
+	public SchemaTabelleSpalte col_Stundenplan_Raum_Kuerzel = add("Stundenplan_Raum_Kuerzel", SchemaDatentypen.VARCHAR, false).setDatenlaenge(20)
+			.setJavaComment("Das Kürzel des Stundenplan_Raums, falls keine Stundenplan_Raum_ID gesetzt ist")
+			.setRevision(SchemaRevisionen.REV_40);
+
+
 	/** Die Definition der Tabellenspalte Bemerkungen */
 	public SchemaTabelleSpalte col_Bemerkungen = add("Bemerkungen", SchemaDatentypen.TEXT, false)
 			.setJavaComment("Text für Bemerkungen zum Klausurraum");
@@ -54,6 +60,11 @@ public class Tabelle_Gost_Klausuren_Raeume extends SchemaTabelle {
 	public SchemaTabelleUniqueIndex unique_Gost_Klausuren_Raume_UC1 = addUniqueIndex("Gost_Klausuren_Raume_UC1",
 			col_Termin_ID, col_Stundenplan_Raum_ID
 	);
+
+	/** Die Definition des Unique-Index Gost_Klausuren_Raume_UC2 */
+	public SchemaTabelleUniqueIndex unique_Gost_Klausuren_Raume_UC2 = addUniqueIndex("Gost_Klausuren_Raume_UC2",
+			col_Termin_ID, col_Stundenplan_Raum_Kuerzel
+	).setRevision(SchemaRevisionen.REV_40);
 
 	/** Die Definition des Non-Unique-Index Gost_Klausuren_Raume_IDX_Termin_ID */
 	public SchemaTabelleIndex index_Gost_Klausuren_Raume_IDX_Termin_ID = addIndex("Gost_Klausuren_Raume_IDX_Termin_ID",
