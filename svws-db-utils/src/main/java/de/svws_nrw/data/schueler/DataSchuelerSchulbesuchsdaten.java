@@ -4,6 +4,7 @@ import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.asd.types.jahrgang.PrimarstufeSchuleingangsphaseBesuchsjahre;
 import de.svws_nrw.asd.types.schueler.Uebergangsempfehlung;
 import de.svws_nrw.asd.types.schule.Schulform;
+import de.svws_nrw.core.types.schueler.Einschulungsart;
 import de.svws_nrw.core.types.schueler.Herkunftsarten;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOSchuleNRW;
 import jakarta.validation.constraints.NotNull;
@@ -108,7 +109,8 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 		daten.aufnehmendBestaetigt = dtoSchueler.WechselBestaetigt;
 		// Informationen zu der besuchten Grundschule
 		daten.grundschuleEinschulungsjahr = dtoSchueler.Einschulungsjahr;
-		daten.grundschuleEinschulungsartID = dtoSchueler.Einschulungsart_ID;
+		final Einschulungsart einschulungsart = Einschulungsart.getBySchluessel(dtoSchueler.EinschulungsartASD);
+		daten.grundschuleEinschulungsartID = (einschulungsart == null) ? null : einschulungsart.daten.id;
 		daten.grundschuleJahreEingangsphase = dtoSchueler.EPJahre;
 		daten.kuerzelGrundschuleUebergangsempfehlung = dtoSchueler.Uebergangsempfehlung_JG5;
 		// Informationen zu dem Besuch der Sekundarstufe I
@@ -161,8 +163,10 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 
 			// Informationen zu der besuchten Grundschule
 			case "grundschuleEinschulungsjahr" -> mapJahr(value, "grundschuleEinschulungsjahr", v -> dtoSchueler.Einschulungsjahr = v);
-			case "grundschuleEinschulungsartID" -> // TODO Katalog ...
-					dtoSchueler.Einschulungsart_ID = JSONMapper.convertToLong(value, true, "grundschuleEinschulungsartID");
+			case "grundschuleEinschulungsartID" -> {
+				final Einschulungsart einschulungsart = Einschulungsart.getByID(JSONMapper.convertToLong(value, true, "grundschuleEinschulungsartID"));
+				dtoSchueler.EinschulungsartASD = (einschulungsart == null) ? null : einschulungsart.daten.kuerzel;
+			}
 			case "grundschuleJahreEingangsphase" -> mapEingangsphase(dtoSchueler, value);
 			case "kuerzelGrundschuleUebergangsempfehlung" -> mapUebergangsempfehlung(dtoSchueler, value);
 

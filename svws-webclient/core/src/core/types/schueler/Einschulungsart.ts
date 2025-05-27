@@ -59,7 +59,12 @@ export class Einschulungsart extends JavaEnum<Einschulungsart> {
 	/**
 	 * Eine Hashmap mit allen definierten Einschulungsarten, zugeordnet zu ihren Kürzeln
 	 */
-	private static readonly _ebenen : HashMap<string, Einschulungsart> = new HashMap<string, Einschulungsart>();
+	private static readonly _mapBySchluessel : HashMap<string, Einschulungsart> = new HashMap<string, Einschulungsart>();
+
+	/**
+	 * Eine Hashmap mit allen definierten Einschulungsarten, zugeordnet zu ihren IDs
+	 */
+	private static readonly _mapByID : HashMap<number, Einschulungsart> = new HashMap<number, Einschulungsart>();
 
 	/**
 	 * Erzeugt eine neuen Einschulungsart in der Aufzählung.
@@ -82,14 +87,14 @@ export class Einschulungsart extends JavaEnum<Einschulungsart> {
 	 *
 	 * @return die Map von den Kürzeln auf die zugehörigen Einschulungsarten
 	 */
-	private static getMapByKuerzel() : HashMap<string, Einschulungsart> {
-		if (Einschulungsart._ebenen.size() === 0) {
+	private static getMapBySchluessel() : HashMap<string, Einschulungsart> {
+		if (Einschulungsart._mapBySchluessel.size() === 0) {
 			for (const s of Einschulungsart.values()) {
 				if (s.daten !== null)
-					Einschulungsart._ebenen.put(s.daten.kuerzel, s);
+					Einschulungsart._mapBySchluessel.put(s.daten.kuerzel, s);
 			}
 		}
-		return Einschulungsart._ebenen;
+		return Einschulungsart._mapBySchluessel;
 	}
 
 	/**
@@ -99,8 +104,36 @@ export class Einschulungsart extends JavaEnum<Einschulungsart> {
 	 *
 	 * @return die Einschulungsart oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : string | null) : Einschulungsart | null {
-		return Einschulungsart.getMapByKuerzel().get(kuerzel);
+	public static getBySchluessel(kuerzel : string | null) : Einschulungsart | null {
+		return Einschulungsart.getMapBySchluessel().get(kuerzel);
+	}
+
+	/**
+	 * Gibt eine Map von den IDs der Einschulungsarten auf die
+	 * zugehörigen Einschulungsarten zurück.
+	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
+	 *
+	 * @return die Map von den IDs auf die zugehörigen Einschulungsarten
+	 */
+	private static getMapByID() : HashMap<number, Einschulungsart> {
+		if (Einschulungsart._mapByID.size() === 0) {
+			for (const s of Einschulungsart.values()) {
+				if (s.daten !== null)
+					Einschulungsart._mapByID.put(s.daten.id, s);
+			}
+		}
+		return Einschulungsart._mapByID;
+	}
+
+	/**
+	 * Gibt die Einschulungsart für die angegebene ID zurück.
+	 *
+	 * @param id   die ID der Einschulungsart
+	 *
+	 * @return die Einschulungsart oder null, falls die ID ungültig ist
+	 */
+	public static getByID(id : number | null) : Einschulungsart | null {
+		return Einschulungsart.getMapByID().get(id);
 	}
 
 	/**

@@ -31,7 +31,6 @@ import de.svws_nrw.asd.types.kurse.ZulaessigeKursart;
 import de.svws_nrw.asd.types.lehrer.LehrerLeitungsfunktion;
 import de.svws_nrw.asd.types.schueler.HerkunftBildungsgang;
 import de.svws_nrw.asd.types.schueler.HerkunftBildungsgangTyp;
-import de.svws_nrw.core.types.schueler.Einschulungsart;
 import de.svws_nrw.core.types.schueler.HerkunftSchulform;
 import de.svws_nrw.core.types.schueler.HerkunftSonstige;
 import de.svws_nrw.core.types.schueler.Herkunftsarten;
@@ -123,7 +122,6 @@ public class DBCoreTypeUpdater {
 		tables.add(new CoreTypeTable("FachKatalog", Fach.data().getVersion(), updateZulaessigeFaecher));
 		tables.add(new CoreTypeTable("FachKatalog_Keys", Fach.data().getVersion(), updateZulaessigeFaecherKeys));
 		tables.add(new CoreTypeTable("FachKatalog_Schulformen", Fach.data().getVersion(), updateZulaessigeFaecherSchulformen));
-		tables.add(new CoreTypeTable("EinschulungsartKatalog_Keys", Einschulungsart.VERSION, updateEinschulungsartenKeys));
 		tables.add(new CoreTypeTable("Religionen_Keys", Religion.data().getVersion(), updateReligionenKeys));
 		tables.add(new CoreTypeTable("AllgemeineMerkmaleKatalog_Keys", AllgemeineMerkmale.VERSION, updateAllgemeineMerkmaleKeys));
 		tables.add(new CoreTypeTable("OrganisationsformenKatalog_Keys", BerufskollegOrganisationsformen.data().getVersion()
@@ -935,29 +933,6 @@ public class DBCoreTypeUpdater {
 			sql.append(
 					" ON DUPLICATE KEY UPDATE Fach_ID=VALUES(Fach_ID), Schulform_Kuerzel=VALUES(Schulform_Kuerzel), Schulgliederung_Kuerzel=VALUES(Schulgliederung_Kuerzel)");
 		updateCoreTypeTabelle(conn, tabname, Fach.class.getCanonicalName(), Fach.data().getVersion(), sql.toString());
-	};
-
-
-	/**
-	 * Aktualisiert die Tabelle für den Core-Type Einschulungsart.
-	 */
-	private final BiConsumer<DBEntityManager, Logger> updateEinschulungsartenKeys = (final DBEntityManager conn, final Logger logger) -> {
-		final String tabname = "EinschulungsartKatalog_Keys";
-		logger.logLn(strAktualisiereTabelle + tabname);
-		final StringBuilder sql = new StringBuilder();
-		sql.append(strInsertInto);
-		sql.append(tabname);
-		sql.append(strSpaltenNurKuerzel);
-		final List<String> kuerzel = Arrays.stream(Einschulungsart.values()).map(h -> h.daten.kuerzel).distinct().toList();
-		boolean isFirst = true;
-		for (final String k : kuerzel) {
-			sql.append(isFirst ? strValues : ", (");
-			isFirst = false;
-			sql.append("'").append(k).append("')");
-		}
-		if (conn.getDBDriver() != DBDriver.SQLITE)
-			sql.append(" ON DUPLICATE KEY UPDATE Kuerzel=VALUES(Kuerzel)");
-		updateCoreTypeTabelle(conn, tabname, Einschulungsart.class.getCanonicalName(), Einschulungsart.VERSION, sql.toString());
 	};
 
 

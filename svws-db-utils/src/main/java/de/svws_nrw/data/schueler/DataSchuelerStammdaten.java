@@ -14,6 +14,7 @@ import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.asd.types.schule.Nationalitaeten;
+import de.svws_nrw.core.types.schueler.Einschulungsart;
 import de.svws_nrw.core.types.schule.Verkehrssprache;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
@@ -23,7 +24,6 @@ import de.svws_nrw.db.dto.current.schild.katalog.DTOFahrschuelerart;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOHaltestellen;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKonfession;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil;
-import de.svws_nrw.db.dto.current.schild.schueler.DTOEinschulungsart;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerFoto;
 import de.svws_nrw.db.schema.Schema;
@@ -205,6 +205,13 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 		dto.MasernImpfnachweis = false;
 		dto.Bafoeg = false;
 		dto.MeisterBafoeg = false;
+
+		dto.BeginnBildungsgang = null;
+		dto.EinschulungsartASD = null;
+		dto.DauerKindergartenbesuch = null;
+		dto.Kindergarten_ID = null;
+		dto.VerpflichtungSprachfoerderkurs = null;
+		dto.TeilnahmeSprachfoerderkurs = null;
 	}
 
 	@Override
@@ -259,9 +266,18 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 		daten.hatMasernimpfnachweis = dto.MasernImpfnachweis;
 		daten.erhaeltSchuelerBAFOEG = dto.Bafoeg;
 		daten.erhaeltMeisterBAFOEG = dto.MeisterBafoeg;
+		daten.beginnBildungsgang = dto.BeginnBildungsgang; // Schulform BK und SB
+		// TODO DauerBildungsgang // Schulform BK und SB
 
-		daten.beginnBildungsgang = dto.BeginnBildungsgang;
+		// TODO Die nachfolgenden Daten gehören in SchuelerSchulbesuchsdaten und nicht in SchuelerStammdaten
+		final Einschulungsart einschulungsart = Einschulungsart.getBySchluessel(dto.EinschulungsartASD);
+		daten.einschulungsartID = (einschulungsart == null) ? null : einschulungsart.daten.id;
 		daten.dauerKindergartenbesuch = dto.DauerKindergartenbesuch;
+		daten.kindergartenID = dto.Kindergarten_ID;
+
+		// TODO klären, ob dies zu SchuelerSchulbesuchsdaten oder SchuelerStammdaten gehört
+		daten.verpflichtungSprachfoerderkurs = (dto.VerpflichtungSprachfoerderkurs != null) && dto.VerpflichtungSprachfoerderkurs;
+		daten.teilnahmeSprachfoerderkurs = (dto.TeilnahmeSprachfoerderkurs != null) && dto.TeilnahmeSprachfoerderkurs;
 		return daten;
 	}
 
@@ -489,16 +505,16 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 		dto.Haltestelle_ID = haltestelleId;
 	}
 
-	private void mapEinschulungsartID(final DTOSchueler dto, final Object value) throws ApiOperationException {
-		final Long einschulungsId = JSONMapper.convertToLongInRange(value, true, 0L, null, "einschulungsartID");
-		if (einschulungsId != null) {
-			final DTOEinschulungsart einschulungsartDTO = conn.queryByKey(DTOEinschulungsart.class, einschulungsId);
-			if (einschulungsartDTO == null)
-				throw new ApiOperationException(Status.NOT_FOUND);
-		}
-		dto.Einschulungsart_ID = einschulungsId;
+	// TODO -> verschieben nach DataSchuelerSchulbesuchsdaten bzw. SchuelerSchulbesuchdaten
+	private static void mapEinschulungsartID(final DTOSchueler dto, final Object value) throws ApiOperationException {
+		final Long idEinschulungsart = JSONMapper.convertToLongInRange(value, true, 0L, null, "einschulungsartID");
+		final Einschulungsart einschulungsart = Einschulungsart.getByID(idEinschulungsart);
+		if (einschulungsart == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Die ID %d der Einschulungsart ist ungültig.".formatted(idEinschulungsart));
+		dto.EinschulungsartASD = einschulungsart.daten.kuerzel;
 	}
 
+	// TODO -> verschieben nach DataSchuelerSchulbesuchsdaten bzw. SchuelerSchulbesuchdaten
 	private void mapKindergartenID(final DTOSchueler dto, final Object value) throws ApiOperationException {
 		final Long kindergartenId = JSONMapper.convertToLongInRange(value, true, 0L, null, "kindergartenID");
 		if (kindergartenId != null) {

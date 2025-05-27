@@ -32,6 +32,7 @@ import de.svws_nrw.db.schema.revisionen.Revision36Updates;
 import de.svws_nrw.db.schema.revisionen.Revision37Updates;
 import de.svws_nrw.db.schema.revisionen.Revision38Updates;
 import de.svws_nrw.db.schema.revisionen.Revision40Updates;
+import de.svws_nrw.db.schema.revisionen.Revision41Updates;
 import de.svws_nrw.db.schema.revisionen.Revision3Updates;
 import de.svws_nrw.db.schema.revisionen.Revision4Updates;
 import de.svws_nrw.db.schema.revisionen.Revision6Updates;
@@ -235,7 +236,10 @@ public enum SchemaRevisionen {
 	REV_39(39, "2025-05-19"),
 
 	/** Klausurplan resistent gegen Stundenplan-Änderungen */
-	REV_40(40, "2025-05-20");
+	REV_40(40, "2025-05-20"),
+
+	/** Ergänzen des Fremdschlüssels bei der Spalte EinschulungsartASD der Tabelle Schüler auf die Core-Type-Werte */
+	REV_41(41, "2025-05-27");
 
 
 	/**
@@ -243,14 +247,14 @@ public enum SchemaRevisionen {
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_40;
+	public static final SchemaRevisionen maxRevision = REV_41;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_40;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_41;
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */
 	private static Map<Long, SchemaRevisionen> _mapByNumber = null;
@@ -341,6 +345,7 @@ public enum SchemaRevisionen {
 				case REV_37 -> new Revision37Updates();
 				case REV_38 -> new Revision38Updates();
 				case REV_40 -> new Revision40Updates();
+				case REV_41 -> new Revision41Updates();
 				default -> new RevisionNoUpdates(this);
 			};
 		}

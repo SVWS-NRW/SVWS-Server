@@ -12,7 +12,7 @@ public final class Revision40Updates extends SchemaRevisionUpdateSQL {
 
 	/**
 	 * Erzeugt eine Instanz für die Revisions-Updates
-	 * für Revision 39.
+	 * für Revision 40.
 	 */
 	public Revision40Updates() {
 		super(SchemaRevisionen.REV_40);

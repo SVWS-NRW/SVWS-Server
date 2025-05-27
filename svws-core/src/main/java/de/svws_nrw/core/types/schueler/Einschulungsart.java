@@ -55,8 +55,10 @@ public enum Einschulungsart {
 	public final @NotNull EinschulungsartKatalogEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen definierten Einschulungsarten, zugeordnet zu ihren Kürzeln */
-	private static final @NotNull HashMap<String, Einschulungsart> _ebenen = new HashMap<>();
+	private static final @NotNull HashMap<String, Einschulungsart> _mapBySchluessel = new HashMap<>();
 
+	/** Eine Hashmap mit allen definierten Einschulungsarten, zugeordnet zu ihren IDs */
+	private static final @NotNull HashMap<Long, Einschulungsart> _mapByID = new HashMap<>();
 
 	/**
 	 * Erzeugt eine neuen Einschulungsart in der Aufzählung.
@@ -77,14 +79,14 @@ public enum Einschulungsart {
 	 *
 	 * @return die Map von den Kürzeln auf die zugehörigen Einschulungsarten
 	 */
-	private static @NotNull HashMap<String, Einschulungsart> getMapByKuerzel() {
-		if (_ebenen.size() == 0) {
+	private static @NotNull HashMap<String, Einschulungsart> getMapBySchluessel() {
+		if (_mapBySchluessel.size() == 0) {
 			for (final Einschulungsart s : Einschulungsart.values()) {
 				if (s.daten != null)
-					_ebenen.put(s.daten.kuerzel, s);
+					_mapBySchluessel.put(s.daten.kuerzel, s);
 			}
 		}
-		return _ebenen;
+		return _mapBySchluessel;
 	}
 
 
@@ -95,8 +97,38 @@ public enum Einschulungsart {
 	 *
 	 * @return die Einschulungsart oder null, falls das Kürzel ungültig ist
 	 */
-	public static Einschulungsart getByKuerzel(final String kuerzel) {
-		return getMapByKuerzel().get(kuerzel);
+	public static Einschulungsart getBySchluessel(final String kuerzel) {
+		return getMapBySchluessel().get(kuerzel);
+	}
+
+
+	/**
+	 * Gibt eine Map von den IDs der Einschulungsarten auf die
+	 * zugehörigen Einschulungsarten zurück.
+	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
+	 *
+	 * @return die Map von den IDs auf die zugehörigen Einschulungsarten
+	 */
+	private static @NotNull HashMap<Long, Einschulungsart> getMapByID() {
+		if (_mapByID.size() == 0) {
+			for (final Einschulungsart s : Einschulungsart.values()) {
+				if (s.daten != null)
+					_mapByID.put(s.daten.id, s);
+			}
+		}
+		return _mapByID;
+	}
+
+
+	/**
+	 * Gibt die Einschulungsart für die angegebene ID zurück.
+	 *
+	 * @param id   die ID der Einschulungsart
+	 *
+	 * @return die Einschulungsart oder null, falls die ID ungültig ist
+	 */
+	public static Einschulungsart getByID(final Long id) {
+		return getMapByID().get(id);
 	}
 
 }
