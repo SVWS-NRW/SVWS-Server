@@ -29,6 +29,9 @@ export abstract class BaseSelectManager<T> {
 	// Definiert, ob eine Multi-Selektion möglich ist
 	protected _multi = ref<boolean>(false);
 
+	// Definiert, ob die Selektion geleert werden kann
+	protected _removable = ref<boolean>(true);
+
 	// Definiert, wie die aktuelle Selektion im Inputfeld dargestellt wird
 	protected abstract _selectionDisplayText: string | ((option: any) => string);
 
@@ -285,6 +288,24 @@ export abstract class BaseSelectManager<T> {
 	}
 
 	/**
+	 * Setter zum Festlegen, ob eine Selektion geleert werden kann.
+	 *
+	 * @param value   true, wenn leeren erlaubt ist
+	 */
+	public set removable(value: boolean) {
+		this._removable.value = value;
+	}
+
+	/**
+	 * Getter, der angibt, ob eine Selektion geleert werden kann.
+	 *
+	 * @return true, wenn wenn leeren erlaubt ist
+	 */
+	public get removable(): boolean {
+		return this._removable.value;
+	}
+
+	/**
 	 * Getter für die Konfiguration der Darstellung der Selektion.
 	 *
 	 * @return Darstellungskonfiguration für die Selektion
@@ -344,7 +365,7 @@ export abstract class BaseSelectManager<T> {
 
 	/**
 	 * Selektiert die übergebene Option. Falls `_multi === false`, dann wird die aktuelle Selektion zunächst geleert. Andernfalls wird die neue Option der
-	 * bestehenden Selektion angefügt.
+	 * bestehenden Selektion angefügt. Falls `_removable === false`, dann wird die Selektion nicht geleert.
 	 *
 	 * @param option   die Option, die selektiert werden soll
 	 */
@@ -363,6 +384,8 @@ export abstract class BaseSelectManager<T> {
 	 * @param option   die Option, die deselektiert werden soll
 	 */
 	public deselect(option: T): void {
+		if (((this.removable === false) && (this.multi === false) )|| ((this.removable === false) && (this.multi === true) && (this._selected.value.size() === 1)))
+			return;
 		const index = this._selected.value.indexOf(option);
 		if (index !== -1) {
 			this._selected.value.removeElementAt(index);
@@ -376,6 +399,13 @@ export abstract class BaseSelectManager<T> {
 	public clearSelection(): void {
 		this._selected.value.clear();
 		triggerRef(this._selected);
+	}
+
+	public hasSelection(): boolean {
+		if (this.multi)
+			return this.selected.isEmpty() === false;
+		else
+			return (this.selected !== undefined) && (this.selected !== null);
 	}
 
 	/**

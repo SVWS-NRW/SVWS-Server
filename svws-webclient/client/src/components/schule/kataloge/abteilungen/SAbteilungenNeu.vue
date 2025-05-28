@@ -7,7 +7,7 @@
 				<svws-ui-text-input placeholder="Email" type="email" :max-len="100" v-model="data.email" :valid="fieldIsValid('email')" />
 				<svws-ui-text-input placeholder="Durchwahl" type="tel" :max-len="20" v-model="data.durchwahl" :valid="fieldIsValid('durchwahl')" />
 				<svws-ui-spacing />
-				<ui-select label="Lehrer" v-model="idLehrer" :select-manager="lehrerSelectManager" />
+				<ui-select label="Lehrer" v-model="idLehrer" :manager="lehrerSelectManager" />
 				<svws-ui-button :disabled="data.idAbteilungsleiter === null" type="transparent"
 					@click="goToLehrer(data.idAbteilungsleiter ?? -1)">
 					<span class="icon i-ri-link" /> Zum Lehrer

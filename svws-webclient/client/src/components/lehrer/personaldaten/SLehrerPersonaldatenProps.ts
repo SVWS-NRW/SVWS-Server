@@ -1,6 +1,7 @@
-import type { BenutzerKompetenz, LehrerFachrichtungAnerkennung, LehrerFachrichtungEintrag, LehrerLehramtAnerkennung, LehrerLehramtEintrag, LehrerLehrbefaehigungAnerkennung, LehrerLehrbefaehigungEintrag, LehrerListeManager, LehrerPersonalabschnittsdaten, LehrerPersonaldaten, List, Schulform, Schuljahresabschnitt, ServerMode} from "@core";
+import type { BenutzerKompetenz, LehrerFachrichtungAnerkennung, LehrerFachrichtungEintrag, LehrerLehramtAnerkennung, LehrerLehramtEintrag, LehrerLehrbefaehigungAnerkennung, LehrerLehrbefaehigungEintrag, LehrerListeEintrag, LehrerListeManager, LehrerPersonalabschnittsdaten, LehrerPersonaldaten, LehrerStammdaten, List, Schulform, Schuljahresabschnitt, ServerMode, ValidatorKontext} from "@core";
 
 export interface LehrerPersonaldatenProps {
+	validatorKontext: () => ValidatorKontext;
 	schulform: Schulform;
 	serverMode: ServerMode;
 	benutzerKompetenzen: Set<BenutzerKompetenz>,

@@ -1,24 +1,25 @@
 <template>
-	<Story title="Select New" id="ui-select" icon="ri:expand-up-down-line" auto-props-disabled :layout="{ type: 'grid', width: '45%'}">
+	<Story title="Select New" id="ui-select" icon="ri:expand-up-down-line" auto-props-disabled :layout="{ type: 'grid', width: '45%'}" :source="getSourceString()">
 		<Variant title="Single Selection">
 			<svws-ui-content-card class="p-5">
 				<svws-ui-input-wrapper>
-					<ui-select label="SimpleSelectManager mit String" :select-manager="sStringSelectManager()" :searchable="state.searchable"
+					<ui-select label="SimpleSelectManager mit String" :manager="sStringSelectManager()" :searchable="state.searchable"
 						:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" :headless="state.headless"
-						:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" />
-					<ui-select label="SimpleSelectManager mit Number" :select-manager="sNumberSelectManager()" :searchable="state.searchable"
+						:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
+					<ui-select label="SimpleSelectManager mit Number" :manager="sNumberSelectManager()" :searchable="state.searchable"
 						:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" :headless="state.headless"
-						:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" />
-					<ui-select label="CoreTypeSelectManager" :select-manager="sCoreTypeSelectManager()" :searchable="state.searchable" :disabled="state.disabled"
+						:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
+					<ui-select label="CoreTypeSelectManager" :manager="sCoreTypeSelectManager()" :searchable="state.searchable" :disabled="state.disabled"
 						:statistics="state.statistics" :removable="state.removable" :headless="state.headless"
-						:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" />
-					<ui-select label="ObjectSelectManager" :select-manager="sObjectSelectManager()" :searchable="state.searchable"
+						:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
+					<ui-select label="ObjectSelectManager" :manager="sObjectSelectManager()" :searchable="state.searchable"
 						:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" :headless="state.headless"
-						:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" />
+						:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<template #controls>
 				<HstCheckbox v-model="state.searchable" title="Searchable" />
+				<HstCheckbox v-model="state.required" title="Required" />
 				<HstCheckbox v-model="state.disabled" title="Disabled" />
 				<HstCheckbox v-model="state.statistics" title="Statistik" />
 				<HstCheckbox v-model="state.removable" title="Removable" />
@@ -50,22 +51,22 @@
 				]" />
 			</template>
 		</Variant>
-		<Variant title="Multi Selection">
+		<Variant title="Multi Selection" :source="getSourceString(true)">
 			<svws-ui-content-card class="p-5">
 				<svws-ui-input-wrapper>
-					<ui-select label="SimpleSelectManager mit String" :select-manager="mStringSelectManager()" :searchable="state.searchable"
+					<ui-select label="SimpleSelectManager mit String" :manager="mStringSelectManager()" :searchable="state.searchable"
 						:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" :headless="state.headless"
-						:min-options="state.minOptions" :max-options="state.maxOptions"
+						:min-options="state.minOptions" :max-options="state.maxOptions" :required="state.required"
 						:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" />
-					<ui-select label="SimpleSelectManager mit Number" :select-manager="mNumberSelectManager()" :searchable="state.searchable"
-						:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" :headless="state.headless"
+					<ui-select label="SimpleSelectManager mit Number" :manager="mNumberSelectManager()" :searchable="state.searchable"
+						:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" :headless="state.headless" :required="state.required"
 						:min-options="state.minOptions" :max-options="state.maxOptions" :class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" />
-					<ui-select label="CoreTypeSelectManager" :select-manager="mCoreTypeSelectManager()" :searchable="state.searchable" :disabled="state.disabled"
+					<ui-select label="CoreTypeSelectManager" :manager="mCoreTypeSelectManager()" :searchable="state.searchable" :disabled="state.disabled"
 						:statistics="state.statistics" :removable="state.removable" :headless="state.headless" :min-options="state.minOptions"
-						:max-options="state.maxOptions" :class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" />
-					<ui-select label="ObjectSelectManager" :select-manager="mObjectSelectManager()" :searchable="state.searchable" :disabled="state.disabled"
+						:max-options="state.maxOptions" :class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
+					<ui-select label="ObjectSelectManager" :manager="mObjectSelectManager()" :searchable="state.searchable" :disabled="state.disabled"
 						:statistics="state.statistics" :removable="state.removable" :headless="state.headless" :min-options="state.minOptions"
-						:max-options="state.maxOptions" :class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" />
+						:max-options="state.maxOptions" :class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 		</Variant>
@@ -90,9 +91,9 @@
 					<svws-ui-checkbox v-model="filterState2.musikUndKunst">
 						Musik und Kunst
 					</svws-ui-checkbox>
-					<ui-select label="CoreTypeSelectManager Fach abhängig von Fachgruppe" :select-manager="sFachSelectManager()" :searchable="state.searchable"
+					<ui-select label="CoreTypeSelectManager Fach abhängig von Fachgruppe" :manager="sFachSelectManager()" :searchable="state.searchable"
 						:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" :headless="state.headless"
-						:min-options="state.minOptions" :max-options="state.maxOptions"
+						:min-options="state.minOptions" :max-options="state.maxOptions" :required="state.required"
 						:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
@@ -110,17 +111,15 @@
 							]
 						</code>
 					</pre>
-					<ui-select label="Deep Search ObjectSelectManager" :select-manager="deepSearchObjectSelectManager()" :searchable="true" :disabled="state.disabled"
+					<ui-select label="Deep Search ObjectSelectManager" :manager="deepSearchObjectSelectManager()" :searchable="true" :disabled="state.disabled"
 						:statistics="state.statistics" :removable="state.removable" :headless="state.headless" :min-options="state.minOptions"
-						:max-options="state.maxOptions" :class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" />
+						:max-options="state.maxOptions" :class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 		</Variant>
-		<template #source>
-			{{ getSourceString() }}
-		</template>
 		<template #controls>
 			<HstCheckbox v-model="state.searchable" title="Searchable" />
+			<HstCheckbox v-model="state.required" title="Required" />
 			<HstCheckbox v-model="state.disabled" title="Disabled" />
 			<HstCheckbox v-model="state.statistics" title="Statistik" />
 			<HstCheckbox v-model="state.removable" title="Removable" />
@@ -169,13 +168,12 @@
 	import { Schulform } from "../../../../../core/src/asd/types/schule/Schulform";
 	import { ObjectSelectManager } from "./selectManager/ObjectSelectManager";
 
-
-
 	const state = reactive({
 		searchable: false,
 		disabled: false,
 		statistics: false,
 		removable: true,
+		required: false,
 		headless: false,
 		minOptions: undefined as number | undefined,
 		maxOptions: undefined as number | undefined,
@@ -229,45 +227,91 @@
 
 
 
-	// Arrow Functions sind bei den Managern notwendig! Beim Wechseln zwischen Stories führt Histoire structuredClone() aus und das führt bei komplexen Objekten
-	// zu Problemen.
-	const sStringSelectManager = () => new SimpleSelectManager(false, stringItems);
-	const sNumberSelectManager = () => new SimpleSelectManager(false, numberItems);
-	const sCoreTypeSelectManager = () => new CoreTypeSelectManager(false, LehrerRechtsverhaeltnis.class, 2018, Schulform.GY, 'text', 'kuerzelText');
-	const sObjectSelectManager = () => new ObjectSelectManager(false, carItems,
-		(option : { marke: string, color: string }) => option.marke, (option : { marke: string, color: string }) => `${option.marke} - ${option.color}`);
+	/** Arrow Functions sind bei den Managern notwendig! Beim Wechseln zwischen Stories führt Histoire structuredClone() aus und das führt bei komplexen Objekten
+	 * zu Problemen. Das führt allerdings auch dazu, dass immer wieder ein neuer SelectManager erzeugt wird. Dieser muss deshalb die Optionen, die durch den state
+	 * gesetzt werden, aber Auswirkungen auf den SelectManager haben, noch mal explizit setzen. */
+	const sStringSelectManager = () => {
+		const manager = new SimpleSelectManager(false, stringItems);
+		manager.removable = state.removable;
+		return manager;
+	};
+
+	const sNumberSelectManager = () => {
+		const manager = new SimpleSelectManager(false, numberItems);
+		manager.removable = state.removable;
+		return manager;
+	};
+
+	const sCoreTypeSelectManager = () => {
+		const manager = new CoreTypeSelectManager(false, LehrerRechtsverhaeltnis.class, 2018, Schulform.GY, 'text', 'kuerzelText');
+		manager.removable = state.removable;
+		return manager;
+	};
+
+	const sObjectSelectManager = () => {
+		const manager = new ObjectSelectManager(false, carItems,
+			(option: { marke: string, color: string }) => option.marke,
+			(option: { marke: string, color: string }) => `${option.marke} - ${option.color}`);
+		manager.removable = state.removable;
+		return manager;
+	};
+
 	const deepSearchObjectSelectManager = () => {
 		const manager = new ObjectSelectManager(false, carItems,
-			(option : { marke: string, color: string, baujahr: number }) => option.marke, (option : { marke: string, color: string, baujahr: number }) => `${option.marke} - ${option.color}`);
+			(option: { marke: string, color: string, baujahr: number }) => option.marke,
+			(option: { marke: string, color: string, baujahr: number }) => `${option.marke} - ${option.color}`);
 		manager.setDeepSearchAttributes(["marke", "color", "baujahr"]);
+		manager.removable = state.removable;
 		return manager;
-	}
+	};
+
 	const sFachSelectManager = () => {
 		const manager = new CoreTypeSelectManager(false, Fach.class, 2020, Schulform.GY, 'text', 'kuerzelText');
 		manager.addFilter(new FachSelectFilter("fachgruppe1", filter.value, 2020));
 		manager.addFilter(new FachSelectFilter("fachgruppe2", filter2.value, 2020));
+		manager.removable = state.removable;
 		return manager;
 	};
 
-	const mStringSelectManager = () => new SimpleSelectManager(true, stringItems);
-	const mNumberSelectManager = () => new SimpleSelectManager(true, numberItems);
-	const mCoreTypeSelectManager = () => new CoreTypeSelectManager(true, LehrerRechtsverhaeltnis.class, 2018, Schulform.GY, 'text', 'kuerzelText');
-	const mObjectSelectManager = () => new ObjectSelectManager(true, carItems,
-		(option : { marke: string, color: string }) => option.marke, (option : { marke: string, color: string }) => `${option.marke} - ${option.color}`);
+	const mStringSelectManager = () => {
+		const manager = new SimpleSelectManager(true, stringItems);
+		manager.removable = state.removable;
+		return manager;
+	};
 
+	const mNumberSelectManager = () => {
+		const manager = new SimpleSelectManager(true, numberItems);
+		manager.removable = state.removable;
+		return manager;
+	};
+
+	const mCoreTypeSelectManager = () => {
+		const manager = new CoreTypeSelectManager(true, LehrerRechtsverhaeltnis.class, 2018, Schulform.GY, 'text', 'kuerzelText');
+		manager.removable = state.removable;
+		return manager;
+	};
+
+	const mObjectSelectManager = () => {
+		const manager = new ObjectSelectManager(true, carItems,
+			(option: { marke: string, color: string }) => option.marke,
+			(option: { marke: string, color: string }) => `${option.marke} - ${option.color}`);
+		manager.removable = state.removable;
+		return manager;
+	};
 
 	function getSourceString (multi = false) {
 		return `<ui-select
         label="..."
-        :select-manager="..."
+        :manager="..."
         ${state.searchable ? 'searchable' : ''}
         ${state.disabled ? 'disabled' : ''}
         ${state.statistics ? 'statistics' : ''}
+		${state.required ? 'required' : ''}
         ${state.removable ? '' : ':removable="false"'}
         ${state.headless ? 'headless' : ''}
-        ${multi ? `:min-options="${state.minOptions}"` : ''}
-        ${multi ? `:max-options="${state.maxOptions}"` : ''}
-		/>
+		${multi ? (state.minOptions !== undefined ? `:min-options="${state.minOptions}"` : '') : ''}
+		${multi ? (state.maxOptions !== undefined ? `:max-options="${state.maxOptions}"` : '') : ''}
+/>
       `.split('\n').filter(line => line.trim() !== '').join('\n');
 
 	};

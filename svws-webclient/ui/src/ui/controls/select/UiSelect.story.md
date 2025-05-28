@@ -29,7 +29,7 @@ Folgende Props können gesetzt werden, um die Komponente zu konfigurieren.
 - **Default**: `""`   
 - Das Label der Komponente
 
-**selectManager**
+**manager**
 - **Typ**: `BaseSelectManager<T>` (T ist der Typ der Optionen zB. `string`)
 - Der `SelectManager`, der für die Logik der Komponente verantwortlich ist. Er stellt unter anderem die Optionen des Dropdowns zur Verfügung, speichert die aktuelle Selektion, definiert, ob die Komponente Multi-Selektionen zulässt etc. Für weitere Infos siehe [SelectManager](#selectmanager)
 
@@ -168,7 +168,7 @@ Dieser Manager akzeptiert einfach CoreTypes als Optionen und definiert, wie dies
 
 ## Filter
 Optionen im einem UiSelect können gefiltert werden. Damit mehrere Filter kombiniert werden können, existiert das Interface `SelectFilter`, auf dem basierend die Filter definiert werden. Diese Filter können anschließend an den SelectManager übergeben werden. \
-Bei Änderungen an einem Filter wie beispielsweise an darin befindlichen Attributen, muss ein `selectManager.updateFilter([betroffener Filter])` aufgerufen werden, da der selectManager diese Änderungen andernfalls nicht registriert. \
+Bei Änderungen an einem Filter wie beispielsweise an darin befindlichen Attributen, muss ein `manager.updateFilter([betroffener Filter])` aufgerufen werden, da der manager diese Änderungen andernfalls nicht registriert. \
 Die angezeigten Optionen im Dropdown des Selects sind ausschließlich Optionen, die für alle angewendeten Filter valide sind.
 
 ### SearchSelectFilter

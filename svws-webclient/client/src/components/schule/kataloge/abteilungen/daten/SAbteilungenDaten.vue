@@ -12,7 +12,7 @@
 				<svws-ui-text-input placeholder="Durchwahl" type="tel" :max-len="20" :model-value="manager().daten().durchwahl"
 					@change="durchwahl => patch({ durchwahl })" :readonly="!hatKompetenzUpdate" />
 				<svws-ui-spacing />
-				<ui-select label="Lehrer" :select-manager="selectManager" :model-value="manager().getLehrer().get(manager().daten().idAbteilungsleiter)"
+				<ui-select label="Lehrer" :manager="selectManager" :model-value="manager().getLehrer().get(manager().daten().idAbteilungsleiter)"
 					:readonly="!hatKompetenzUpdate" @update:model-value="v => patch({ idAbteilungsleiter: v?.id ?? null })" />
 				<svws-ui-button :disabled="manager().daten().idAbteilungsleiter === null" type="transparent"
 					@click="goToLehrer(manager().daten().idAbteilungsleiter ?? -1)">

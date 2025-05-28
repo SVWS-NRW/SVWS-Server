@@ -21,24 +21,28 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Beschäftigungsdaten">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-select title="Rechtsverhältnis" :disabled="!hatUpdateKompetenz" v-model="rechtsverhaeltnis" :items="LehrerRechtsverhaeltnis.values()"
-					:item-text="(i: LehrerRechtsverhaeltnis) => i.daten(schuljahr)?.text ?? '—'" focus-class-content statistics />
-				<svws-ui-select title="Beschäftigungsart" :disabled="!hatUpdateKompetenz" v-model="beschaeftigungsart" :items="LehrerBeschaeftigungsart.values()"
-					:item-text="(i: LehrerBeschaeftigungsart) => i.daten(schuljahr)?.text ?? '—'" statistics />
-				<svws-ui-input-number placeholder="Pflichtstundensoll" :disabled="!hatUpdateKompetenz" :model-value="personalabschnittsdaten()?.pflichtstundensoll ?? 0.0"
-					@change="pflichtstundensoll => patchAbschnittsdaten({ pflichtstundensoll: pflichtstundensoll }, personalabschnittsdaten()?.id ?? -1)"
-					statistics />
-				<svws-ui-select title="Einsatzstatus" :disabled="!hatUpdateKompetenz" v-model="einsatzstatus" :items="LehrerEinsatzstatus.values()"
-					:item-text="(i: LehrerEinsatzstatus) => i.daten(schuljahr)?.text ?? '—'" statistics />
+				<ui-select label="Rechtsverhältnis" :disabled="!hatUpdateKompetenz" v-model="rechtsverhaeltnis" :manager="rechtsverhaeltnisSelectManager" statistics
+					:validator="() => validatorPersonalabschnittsDaten" :do-validate="validatePersonalabschnittDaten" required :removable="false" focus-class-content />
+				<ui-select label="Beschäftigungsart" :disabled="!hatUpdateKompetenz" v-model="beschaeftigungsart" :manager="beschaeftigungsartSelectManager" statistics
+					required :removable="false" focus-class-content />
+				<svws-ui-input-number placeholder="Pflichtstundensoll" :disabled="!hatUpdateKompetenz" statistics
+					:model-value="personalabschnittsdaten()?.pflichtstundensoll ?? 0.0"
+					@change="pflichtstundensoll => patchAbschnittsdaten({ pflichtstundensoll: pflichtstundensoll }, personalabschnittsdaten()?.id ?? -1)" />
+				<ui-select label="Einsatzstatus" :disabled="!hatUpdateKompetenz" v-model="einsatzstatus" statistics
+					:manager="einsatzstatusSelectManager" required :removable="false" focus-class-content />
 				<svws-ui-text-input placeholder="Stammschule" :disabled="!hatUpdateKompetenz" :model-value="personalabschnittsdaten()?.stammschulnummer"
 					@change="stammschulnummer => patchAbschnittsdaten({ stammschulnummer }, personalabschnittsdaten()?.id ?? -1)" statistics />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Lehrämter">
 			<svws-ui-input-wrapper>
-				<s-lehrer-personaldaten-lehraemter :hat-update-kompetenz :lehrer-liste-manager :patch-lehramt-anerkennung :add-lehramt :remove-lehraemter :schuljahr />
-				<s-lehrer-personaldaten-lehrbefaehigungen :hat-update-kompetenz :lehrer-liste-manager :patch-lehrbefaehigung-anerkennung :add-lehrbefaehigung :remove-lehrbefaehigungen :schuljahr />
-				<s-lehrer-personaldaten-fachrichtungen :hat-update-kompetenz :lehrer-liste-manager :patch-fachrichtung-anerkennung :add-fachrichtung :remove-fachrichtungen="removeFachrichtungen" :schuljahr />
+				<s-lehrer-personaldaten-lehraemter :hat-update-kompetenz :lehrer-liste-manager :patch-lehramt-anerkennung
+					:add-lehramt :remove-lehraemter :schuljahr />
+				<s-lehrer-personaldaten-lehrbefaehigungen :hat-update-kompetenz :lehrer-liste-manager
+					:patch-lehrbefaehigung-anerkennung :add-lehrbefaehigung :remove-lehrbefaehigungen :schuljahr />
+				<s-lehrer-personaldaten-fachrichtungen :hat-update-kompetenz :lehrer-liste-manager
+					:patch-fachrichtung-anerkennung :add-fachrichtung :remove-fachrichtungen="removeFachrichtungen"
+					:schuljahr />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Mehr- und Minderleistung, Anrechnungsstunden">
@@ -50,7 +54,8 @@
 				<svws-ui-input-number placeholder="Stundensumme" :disabled="!hatUpdateKompetenz" :model-value="personalabschnittsdaten()?.pflichtstundensoll ?? 0.0"
 					@change="pflichtstundensoll => patchAbschnittsdaten({ pflichtstundensoll: pflichtstundensoll }, personalabschnittsdaten()?.id ?? -1)"
 					statistics />
-				<svws-ui-select title="Nicht unterrichtliche Tätigkeiten" :disabled="!hatUpdateKompetenz" v-model="anrechnungsgrund" :items="LehrerAnrechnungsgrund.values()"
+				<svws-ui-select title="Nicht unterrichtliche Tätigkeiten" :disabled="!hatUpdateKompetenz" v-model="anrechnungsgrund"
+					:items="LehrerAnrechnungsgrund.values()"
 					:item-text="i => i.daten(schuljahr)?.text ?? '—'" statistics />
 				<svws-ui-spacing />
 			</svws-ui-input-wrapper>
@@ -62,7 +67,11 @@
 
 	import { computed } from "vue";
 	import type { LehrerPersonaldatenProps } from './SLehrerPersonaldatenProps';
-	import { LehrerBeschaeftigungsart, LehrerEinsatzstatus, LehrerRechtsverhaeltnis, LehrerAnrechnungsgrund, LehrerMehrleistungsarten, LehrerMinderleistungsarten, BenutzerKompetenz} from "@core";
+	import type { Validator} from "@core";
+	import { DeveloperNotificationException, ValidatorLehrerPersonalabschnittsdaten} from "@core";
+	import { LehrerBeschaeftigungsart, LehrerEinsatzstatus, LehrerRechtsverhaeltnis, LehrerAnrechnungsgrund, LehrerMehrleistungsarten, LehrerMinderleistungsarten,
+		BenutzerKompetenz} from "@core";
+	import { CoreTypeSelectManager } from "../../../../../ui/src/ui/controls/select/selectManager/CoreTypeSelectManager";
 
 	const props = defineProps<LehrerPersonaldatenProps>();
 
@@ -72,6 +81,10 @@
 
 	const personaldaten = () => props.lehrerListeManager().personalDaten();
 	const personalabschnittsdaten = () => props.lehrerListeManager().getAbschnittBySchuljahresabschnittsId(props.aktAbschnitt.id);
+
+	const rechtsverhaeltnisSelectManager = new CoreTypeSelectManager(false, LehrerRechtsverhaeltnis.class, schuljahr.value, props.schulform, "text", "text");
+	const beschaeftigungsartSelectManager = new CoreTypeSelectManager(false, LehrerBeschaeftigungsart.class, schuljahr.value, props.schulform, "text" , "text");
+	const einsatzstatusSelectManager = new CoreTypeSelectManager(false, LehrerEinsatzstatus.class, schuljahr.value, props.schulform, "text" , "text");
 
 	const rechtsverhaeltnis = computed<LehrerRechtsverhaeltnis | undefined>({
 		get(): LehrerRechtsverhaeltnis | undefined {
@@ -138,5 +151,21 @@
 			// TODO props.patch({ anrechnungsgrund: val?.kuerzel });
 		},
 	});
+
+
+	const validatorPersonalabschnittsDaten = computed<ValidatorLehrerPersonalabschnittsdaten>(() => {
+		const daten = personalabschnittsdaten();
+		if (daten !== null)
+			return new ValidatorLehrerPersonalabschnittsdaten(daten, props.lehrerListeManager().daten(), props.validatorKontext());
+		else throw new DeveloperNotificationException("Keine Personalabschnittsdaten gefunden.");
+	});
+
+	function validatePersonalabschnittDaten(validator: Validator, value: string | null): boolean {
+		const geburtsdatum = props.lehrerListeManager().daten().geburtsdatum;
+		props.lehrerListeManager().daten().geburtsdatum = value ?? "";
+		const res = validator.run();
+		props.lehrerListeManager().daten().geburtsdatum = geburtsdatum;
+		return res;
+	};
 
 </script>
