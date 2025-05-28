@@ -2,9 +2,9 @@ package de.svws_nrw.data.schueler;
 
 import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.asd.types.jahrgang.PrimarstufeSchuleingangsphaseBesuchsjahre;
+import de.svws_nrw.asd.types.schueler.Einschulungsart;
 import de.svws_nrw.asd.types.schueler.Uebergangsempfehlung;
 import de.svws_nrw.asd.types.schule.Schulform;
-import de.svws_nrw.core.types.schueler.Einschulungsart;
 import de.svws_nrw.core.types.schueler.Herkunftsarten;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOSchuleNRW;
 import jakarta.validation.constraints.NotNull;
@@ -14,6 +14,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.asd.data.schueler.EinschulungsartKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchsdaten;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
@@ -109,8 +110,8 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 		daten.aufnehmendBestaetigt = dtoSchueler.WechselBestaetigt;
 		// Informationen zu der besuchten Grundschule
 		daten.grundschuleEinschulungsjahr = dtoSchueler.Einschulungsjahr;
-		final Einschulungsart einschulungsart = Einschulungsart.getBySchluessel(dtoSchueler.EinschulungsartASD);
-		daten.grundschuleEinschulungsartID = (einschulungsart == null) ? null : einschulungsart.daten.id;
+		final Einschulungsart einschulungsart = Einschulungsart.data().getWertBySchluessel(dtoSchueler.EinschulungsartASD);
+		daten.grundschuleEinschulungsartID = (einschulungsart == null) ? null : einschulungsart.getLetzterEintrag().id;
 		daten.grundschuleJahreEingangsphase = dtoSchueler.EPJahre;
 		daten.kuerzelGrundschuleUebergangsempfehlung = dtoSchueler.Uebergangsempfehlung_JG5;
 		// Informationen zu dem Besuch der Sekundarstufe I
@@ -164,8 +165,9 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 			// Informationen zu der besuchten Grundschule
 			case "grundschuleEinschulungsjahr" -> mapJahr(value, "grundschuleEinschulungsjahr", v -> dtoSchueler.Einschulungsjahr = v);
 			case "grundschuleEinschulungsartID" -> {
-				final Einschulungsart einschulungsart = Einschulungsart.getByID(JSONMapper.convertToLong(value, true, "grundschuleEinschulungsartID"));
-				dtoSchueler.EinschulungsartASD = (einschulungsart == null) ? null : einschulungsart.daten.kuerzel;
+				final Long id = JSONMapper.convertToLong(value, true, "grundschuleEinschulungsartID");
+				final EinschulungsartKatalogEintrag eintrag = Einschulungsart.data().getEintragByID(id);
+				dtoSchueler.EinschulungsartASD = (eintrag == null) ? null : eintrag.schluessel;
 			}
 			case "grundschuleJahreEingangsphase" -> mapEingangsphase(dtoSchueler, value);
 			case "kuerzelGrundschuleUebergangsempfehlung" -> mapUebergangsempfehlung(dtoSchueler, value);

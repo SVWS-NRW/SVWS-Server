@@ -1,0 +1,78 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "E51",
+		"idStatistik": "1",
+		"historie": [ {
+			"id": 51,
+			"schluessel": "51",
+			"kuerzel": "51",
+			"text": "älter als 6. Jahre",
+			"beschreibung": "Kinder, die bis zum gültigen Einschulungsstichtag das 6. Lebensjahr vollendet haben",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "E52",
+		"idStatistik": "2",
+		"historie": [ {
+			"id": 52,
+			"schluessel": "52",
+			"kuerzel": "52",
+			"text": "jünger als 6 Jahre",
+			"beschreibung": "Kinder, die nach dem gültigen Einschulungsstichtag das 6. Lebensjahr vollenden",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "E53",
+		"idStatistik": "3",
+		"historie": [ {
+			"id": 53,
+			"schluessel": "53",
+			"kuerzel": "53",
+			"text": "zurückgestellt (§35 Abs. 3 SchulG)",
+			"beschreibung": "Kinder, die in diesem Schuljahr erstmals gemäß §35 Abs. 3 SchulG eine Schule besuchen",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "E54",
+		"idStatistik": "4",
+		"historie": [ {
+			"id": 54,
+			"schluessel": "54",
+			"kuerzel": "54",
+			"text": "Früherziehung",
+			"beschreibung": "Kinder, die erstmals eine Früherziehung besuchen",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "E18",
+		"idStatistik": "5",
+		"historie": [ {
+			"id": 18,
+			"schluessel": "18",
+			"kuerzel": "18",
+			"text": "vorher: Früherziehung",
+			"beschreibung": "Im abgelaufenen Schuljahr: Teilnahme an einer Früherziehung",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "E19",
+		"idStatistik": "6",
+		"historie": [ {
+			"id": 19,
+			"schluessel": "19",
+			"kuerzel": "19",
+			"text": "vorher: Förderschulkindergarten",
+			"beschreibung": "Im abgelaufenen Schuljahr: Besuch eines Förderschul-(nicht Sonder)kindergarten",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	} ]
+}
+
+

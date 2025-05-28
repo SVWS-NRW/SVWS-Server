@@ -27,7 +27,7 @@ import { BKGymAbiturdaten } from '../core/abschluss/bk/d/BKGymAbiturdaten';
 import { BKGymLeistungen } from '../core/data/bk/abi/BKGymLeistungen';
 import { DatenbankVerbindungsdaten } from '../core/data/schema/DatenbankVerbindungsdaten';
 import { DBSchemaListeEintrag } from '../core/data/db/DBSchemaListeEintrag';
-import { EinschulungsartKatalogEintrag } from '../core/data/schule/EinschulungsartKatalogEintrag';
+import { EinschulungsartKatalogEintrag } from '../asd/data/schueler/EinschulungsartKatalogEintrag';
 import { Einwilligungsart } from '../core/data/schule/Einwilligungsart';
 import { ENMConfigResponse } from '../core/data/enm/ENMConfigResponse';
 import { ENMDaten } from '../core/data/enm/ENMDaten';

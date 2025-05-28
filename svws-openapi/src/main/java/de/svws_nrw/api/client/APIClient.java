@@ -454,6 +454,7 @@ public class APIClient {
 				case "WeiterbildungskollegOrganisationsformen" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/WeiterbildungskollegOrganisationsformen.json");
 				case "SchulabschlussAllgemeinbildend" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/SchulabschlussAllgemeinbildend.json");
 				case "SchulabschlussBerufsbildend" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/SchulabschlussBerufsbildend.json");
+				case "Einschulungsart" -> JsonReader.fromResource("de/svws_nrw/asd/types/schueler/Einschulungsart.json");
 				case "HerkunftBildungsgang" -> JsonReader.fromResource("de/svws_nrw/asd/types/schueler/HerkunftBildungsgang.json");
 				case "HerkunftBildungsgangTyp" -> JsonReader.fromResource("de/svws_nrw/asd/types/schueler/HerkunftBildungsgangTyp.json");
 				case "Jahrgaenge" -> JsonReader.fromResource("de/svws_nrw/asd/types/jahrgang/Jahrgaenge.json");

@@ -1,14 +1,13 @@
 package de.svws_nrw.data.schule;
 
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.ArrayList;
 
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-import de.svws_nrw.core.data.schule.EinschulungsartKatalogEintrag;
-import de.svws_nrw.core.types.schueler.Einschulungsart;
+import de.svws_nrw.asd.data.schueler.EinschulungsartKatalogEintrag;
+import de.svws_nrw.asd.types.schueler.Einschulungsart;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 
@@ -31,7 +30,7 @@ public final class DataKatalogEinschulungsarten extends DataManager<Long> {
 	public Response getAll() {
 		final ArrayList<EinschulungsartKatalogEintrag> daten = new ArrayList<>();
 		for (final Einschulungsart art : Einschulungsart.values())
-			daten.addAll(Arrays.asList(art.historie));
+			daten.addAll(art.historie());
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

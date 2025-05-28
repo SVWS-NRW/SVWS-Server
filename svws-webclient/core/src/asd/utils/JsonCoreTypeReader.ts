@@ -77,6 +77,7 @@ import { LehrerMinderleistungsarten } from "../types/lehrer/LehrerMinderleistung
 import { LehrerRechtsverhaeltnis } from "../types/lehrer/LehrerRechtsverhaeltnis";
 import { LehrerZugangsgrund } from "../types/lehrer/LehrerZugangsgrund";
 import { Note } from "../types/Note";
+import { Einschulungsart } from "../types/schueler/Einschulungsart";
 import { HerkunftBildungsgang } from "../types/schueler/HerkunftBildungsgang";
 import { HerkunftBildungsgangTyp } from "../types/schueler/HerkunftBildungsgangTyp";
 import { SchuelerStatus } from "../types/schueler/SchuelerStatus";
@@ -105,6 +106,7 @@ import { ValidatorFehlerartKontext } from "../validate/ValidatorFehlerartKontext
 import { ValidatorManager } from "../validate/ValidatorManager";
 import { NationalitaetenKatalogEintrag } from "../data/schule/NationalitaetenKatalogEintrag";
 import { Nationalitaeten } from "../types/schule/Nationalitaeten";
+import { EinschulungsartKatalogEintrag } from "../data/schueler/EinschulungsartKatalogEintrag";
 
 interface JsonCoreTypeEntry<T> {
 	bezeichner: string;
@@ -141,7 +143,7 @@ export class JsonCoreTypeReader {
 
 	private keys = [
 		"Schulform", "BerufskollegAnlage", "AllgemeinbildendOrganisationsformen", "BerufskollegOrganisationsformen", "WeiterbildungskollegOrganisationsformen",
-		"SchulabschlussAllgemeinbildend", "SchulabschlussBerufsbildend", "HerkunftBildungsgang", "HerkunftBildungsgangTyp", "Jahrgaenge", "PrimarstufeSchuleingangsphaseBesuchsjahre", "Religion",
+		"SchulabschlussAllgemeinbildend", "SchulabschlussBerufsbildend", "Einschulungsart", "HerkunftBildungsgang", "HerkunftBildungsgangTyp", "Jahrgaenge", "PrimarstufeSchuleingangsphaseBesuchsjahre", "Religion",
 		"Kindergartenbesuch", "SchuelerStatus", "Note", "Sprachreferenzniveau", "BerufskollegBildungsgangTyp", "WeiterbildungskollegBildungsgangTyp", "Schulgliederung", "Fachgruppe", "Fach",
 		"LehrerAbgangsgrund", "LehrerBeschaeftigungsart", "LehrerEinsatzstatus", "LehrerFachrichtung", "LehrerLehrbefaehigung", "LehrerFachrichtungAnerkennung", "LehrerLehramt",
 		"LehrerLehramtAnerkennung", "LehrerLehrbefaehigungAnerkennung", "LehrerLeitungsfunktion", "LehrerRechtsverhaeltnis", "LehrerZugangsgrund", "BilingualeSprache", "KAOABerufsfeld",
@@ -233,6 +235,13 @@ export class JsonCoreTypeReader {
 		const data = this.read('SchulabschlussBerufsbildend', (json) => SchulabschlussBerufsbildendKatalogEintrag.transpilerFromJSON(json));
 		const manager = new CoreTypeDataManager<SchulabschlussBerufsbildendKatalogEintrag, SchulabschlussBerufsbildend>(data.version, SchulabschlussBerufsbildend.class, SchulabschlussBerufsbildend.values(), data.mapData, data.mapStatistikIDs);
 		SchulabschlussBerufsbildend.init(manager);
+	}
+
+	public readEinschulungsart() {
+		const data = this.read('Einschulungsart', (json) => EinschulungsartKatalogEintrag.transpilerFromJSON(json));
+		CoreTypeSimple.initValues(new Einschulungsart(), Einschulungsart.class, data.mapData);
+		const manager = new CoreTypeDataManager<EinschulungsartKatalogEintrag, Einschulungsart>(data.version, Einschulungsart.class, Einschulungsart.values(), data.mapData, data.mapStatistikIDs);
+		Einschulungsart.init(manager);
 	}
 
 	public readHerkunftBildungsgang() {
@@ -539,6 +548,7 @@ export class JsonCoreTypeReader {
 			this.readWeiterbildungskollegOrganisationsformen();
 			this.readSchulabschlussAllgemeinbildend();
 			this.readSchulabschlussBerufsbildend();
+			this.readEinschulungsart();
 			this.readHerkunftBildungsgang();
 			this.readHerkunftBildungsgangTyp();
 			this.readJahrgaenge();

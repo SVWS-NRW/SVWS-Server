@@ -41,6 +41,7 @@ import de.svws_nrw.asd.data.lehrer.LehrerMehrleistungsartKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerMinderleistungsartKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerRechtsverhaeltnisKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerZugangsgrundKatalogEintrag;
+import de.svws_nrw.asd.data.schueler.EinschulungsartKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.HerkunftBildungsgangKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.HerkunftBildungsgangTypKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.SchuelerStatusKatalogEintrag;
@@ -90,6 +91,7 @@ import de.svws_nrw.asd.types.lehrer.LehrerMehrleistungsarten;
 import de.svws_nrw.asd.types.lehrer.LehrerMinderleistungsarten;
 import de.svws_nrw.asd.types.lehrer.LehrerRechtsverhaeltnis;
 import de.svws_nrw.asd.types.lehrer.LehrerZugangsgrund;
+import de.svws_nrw.asd.types.schueler.Einschulungsart;
 import de.svws_nrw.asd.types.schueler.HerkunftBildungsgang;
 import de.svws_nrw.asd.types.schueler.HerkunftBildungsgangTyp;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
@@ -444,6 +446,8 @@ public final class CoreTypeRessource<T extends CoreTypeData, U extends CoreType<
 				"de/svws_nrw/asd/types/kurse/ZulaessigeKursart.json");
 		add(Foerderschwerpunkt.class, FoerderschwerpunktKatalogEintrag.class, Foerderschwerpunkt.values(),
 				"de/svws_nrw/asd/types/schule/Foerderschwerpunkt.json");
+		addSimple(Einschulungsart.class, EinschulungsartKatalogEintrag.class,
+				"de/svws_nrw/asd/types/schueler/Einschulungsart.json");
 		addSimple(LehrerAnrechnungsgrund.class, LehrerAnrechnungsgrundKatalogEintrag.class,
 				"de/svws_nrw/asd/types/lehrer/LehrerAnrechnungsgrund.json");
 		addSimple(LehrerMehrleistungsarten.class, LehrerMehrleistungsartKatalogEintrag.class,

@@ -3,7 +3,7 @@ package de.svws_nrw.db.schema.tabellen;
 import java.util.Arrays;
 import java.util.Collection;
 
-import de.svws_nrw.core.types.schueler.Einschulungsart;
+import de.svws_nrw.asd.types.schueler.Einschulungsart;
 import de.svws_nrw.db.schema.SchemaDatentypen;
 import de.svws_nrw.db.schema.SchemaRevisionen;
 import de.svws_nrw.db.schema.SchemaTabelle;
@@ -31,10 +31,9 @@ public class Tabelle_EinschulungsartKatalog_Keys extends SchemaTabelle {
 		setJavaSubPackage("schild.schule");
 		setJavaClassName("DTOEinschulungsartenKatalogKeys");
 		setJavaComment("Gültige Schlüsselwerte für Fremdschlüssel zu den Einschulungsarten");
-		setCoreType(new SchemaTabelleCoreType(this, Einschulungsart.class, Einschulungsart.VERSION, rev -> Arrays
-				.stream(Einschulungsart.values())
-				.map(a -> Arrays.stream(a.historie).map(h -> h.kuerzel).toList())
-				.flatMap(Collection::stream).toList()));
+		setCoreType(new SchemaTabelleCoreType(this, Einschulungsart.class, Einschulungsart.data().getVersion(),
+				rev -> Arrays.stream(Einschulungsart.values())
+					.map(s -> s.historie().stream().map(h -> "" + h.schluessel).toList()).flatMap(Collection::stream).distinct().toList()));
 	}
 
 }

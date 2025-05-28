@@ -8,13 +8,14 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.asd.data.schueler.EinschulungsartKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerStatusKatalogEintrag;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.Geschlecht;
+import de.svws_nrw.asd.types.schueler.Einschulungsart;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.asd.types.schule.Nationalitaeten;
-import de.svws_nrw.core.types.schueler.Einschulungsart;
 import de.svws_nrw.core.types.schule.Verkehrssprache;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
@@ -270,8 +271,8 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 		// TODO DauerBildungsgang // Schulform BK und SB
 
 		// TODO Die nachfolgenden Daten gehören in SchuelerSchulbesuchsdaten und nicht in SchuelerStammdaten
-		final Einschulungsart einschulungsart = Einschulungsart.getBySchluessel(dto.EinschulungsartASD);
-		daten.einschulungsartID = (einschulungsart == null) ? null : einschulungsart.daten.id;
+		final Einschulungsart einschulungsart = Einschulungsart.data().getWertBySchluessel(dto.EinschulungsartASD);
+		daten.einschulungsartID = (einschulungsart == null) ? null : einschulungsart.getLetzterEintrag().id;
 		daten.dauerKindergartenbesuch = dto.DauerKindergartenbesuch;
 		daten.kindergartenID = dto.Kindergarten_ID;
 
@@ -507,11 +508,11 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 
 	// TODO -> verschieben nach DataSchuelerSchulbesuchsdaten bzw. SchuelerSchulbesuchdaten
 	private static void mapEinschulungsartID(final DTOSchueler dto, final Object value) throws ApiOperationException {
-		final Long idEinschulungsart = JSONMapper.convertToLongInRange(value, true, 0L, null, "einschulungsartID");
-		final Einschulungsart einschulungsart = Einschulungsart.getByID(idEinschulungsart);
-		if (einschulungsart == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Die ID %d der Einschulungsart ist ungültig.".formatted(idEinschulungsart));
-		dto.EinschulungsartASD = einschulungsart.daten.kuerzel;
+		final Long id = JSONMapper.convertToLongInRange(value, true, 0L, null, "einschulungsartID");
+		final EinschulungsartKatalogEintrag eintrag = Einschulungsart.data().getEintragByID(id);
+		if (eintrag == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Die ID %d der Einschulungsart ist ungültig.".formatted(id));
+		dto.EinschulungsartASD = eintrag.schluessel;
 	}
 
 	// TODO -> verschieben nach DataSchuelerSchulbesuchsdaten bzw. SchuelerSchulbesuchdaten
