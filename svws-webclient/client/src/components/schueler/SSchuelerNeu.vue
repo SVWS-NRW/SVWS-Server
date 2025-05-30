@@ -64,9 +64,9 @@
 					:item-sort="nationalitaetenKatalogEintragSort" :item-filter="nationalitaetenKatalogEintragFilter" :model-value="Nationalitaeten.getByISO3(data.geburtslandVater)"
 					:valid="fieldIsValid('geburtslandVater')" @update:model-value="v => data.geburtslandVater = v?.historie().getLast().iso3 ?? null" removable />
 				<svws-ui-spacing />
-				<svws-ui-select title="Verkehrssprache" :items="Verkehrssprache.values()" :item-text="i => `${i.daten.bezeichnung} (${i.daten.kuerzel})`"
-					:model-value="Verkehrssprache.getByKuerzelAuto(data.verkehrspracheFamilie) " :item-sort="verkehrsspracheKatalogEintragSort"
-					:item-filter="verkehrsspracheKatalogEintragFilter" @update:model-value="v => data.verkehrspracheFamilie = v?.daten.kuerzel ?? null" removable />
+				<svws-ui-select title="Verkehrssprache" :items="Verkehrssprache.values()" :item-text="i => `${i.historie().getLast().text} (${i.historie().getLast().iso3})`"
+					:model-value="Verkehrssprache.getByIsoKuerzel(data.verkehrspracheFamilie) " :item-sort="verkehrsspracheKatalogEintragSort"
+					:item-filter="verkehrsspracheKatalogEintragFilter" @update:model-value="v => data.verkehrspracheFamilie = v?.historie().getLast().iso3 ?? null" removable />
 				<svws-ui-input-number placeholder="Zuzugsjahr" v-model="data.zuzugsjahr" />
 				<svws-ui-text-input placeholder="Migrationshintergrund" :disabled="true" />
 				<svws-ui-select title="Fahrschüler" :items="mapFahrschuelerarten" :item-text="i => i.text ?? ''" :model-value="mapFahrschuelerarten.get(data.fahrschuelerArtID?? -1)"

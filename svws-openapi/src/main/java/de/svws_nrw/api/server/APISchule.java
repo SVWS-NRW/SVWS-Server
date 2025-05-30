@@ -13,6 +13,7 @@ import java.io.InputStream;
 import de.svws_nrw.asd.data.schule.SchuleStammdaten;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.data.schule.Schulleitung;
+import de.svws_nrw.asd.data.schule.VerkehrsspracheKatalogEintrag;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.kataloge.SchulEintrag;
 import de.svws_nrw.core.data.schueler.SchuelerEinwilligungsartenZusammenfassung;
@@ -45,7 +46,6 @@ import de.svws_nrw.core.data.schule.SchulenKatalogEintrag;
 import de.svws_nrw.asd.data.schule.SchulformKatalogEintrag;
 import de.svws_nrw.asd.data.schule.SchulgliederungKatalogEintrag;
 import de.svws_nrw.core.data.schule.SchultraegerKatalogEintrag;
-import de.svws_nrw.core.data.schule.VerkehrsspracheKatalogEintrag;
 import de.svws_nrw.core.data.stundenplan.StundenplanPausenzeit;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.types.ServerMode;
@@ -490,6 +490,7 @@ public class APISchule {
 
 
 	/**
+	 * DEPRECATED:
 	 * Die OpenAPI-Methode für die Abfrage des Kataloges der Verkehrssprachen in einer Familie.
 	 *
 	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
@@ -499,13 +500,14 @@ public class APISchule {
 	 */
 	@GET
 	@Path("/allgemein/verkehrssprachen")
-	@Operation(summary = "Gibt den Katalog der Verkehrssprachen in einer Familie zurück.",
-			description = "Erstellt eine Liste aller in dem Katalog vorhanden der Verkehrssprachen. "
+	@Operation(summary = "DEPRECATED: Gibt den Katalog der Verkehrssprachen in einer Familie zurück.",
+			description = "DEPRECATED: Erstellt eine Liste aller in dem Katalog vorhanden der Verkehrssprachen. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen",
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = VerkehrsspracheKatalogEintrag.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
+	@Deprecated
 	public Response getVerkehrssprachen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogVerkehrssprachen(null).getList(),
 				request, ServerMode.STABLE,

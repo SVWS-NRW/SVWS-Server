@@ -9,8 +9,8 @@ import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.asd.types.schule.Religion;
+import de.svws_nrw.asd.types.schule.Verkehrssprache;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
-import de.svws_nrw.core.types.schule.Verkehrssprache;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOFahrschuelerart;
@@ -98,7 +98,7 @@ class DataSchuelerStammdatenTest {
 				.hasFieldOrPropertyWithValue("hatMigrationshintergrund", schuelerDto.Migrationshintergrund)
 				.hasFieldOrPropertyWithValue("zuzugsjahr", schuelerDto.JahrZuzug)
 				.hasFieldOrPropertyWithValue("geburtsland", schuelerDto.GeburtslandSchueler.historie().getLast().iso3)
-				.hasFieldOrPropertyWithValue("verkehrspracheFamilie", schuelerDto.VerkehrsspracheFamilie.daten.kuerzel)
+				.hasFieldOrPropertyWithValue("verkehrspracheFamilie", schuelerDto.VerkehrsspracheFamilie.historie().getLast().iso3)
 				.hasFieldOrPropertyWithValue("geburtslandVater", schuelerDto.GeburtslandVater.historie().getLast().iso3)
 				.hasFieldOrPropertyWithValue("geburtslandMutter", schuelerDto.GeburtslandMutter.historie().getLast().iso3)
 				.hasFieldOrPropertyWithValue("status", schuelerDto.idStatus)
@@ -245,7 +245,7 @@ class DataSchuelerStammdatenTest {
 				arguments("zuzugsjahr", null, null, null),
 				arguments("zuzugsjahr", "abc", null, new ApiOperationException(Response.Status.BAD_REQUEST,
 						"Attribut zuzugsjahr: Fehler beim Konvertieren zu Integer: Das Objekt ist keine Zahl.")),
-				arguments("verkehrspracheFamilie", "ace", Verkehrssprache.getByKuerzelAuto("ace"), null),
+				arguments("verkehrspracheFamilie", "abk", Verkehrssprache.getByIsoKuerzel("abk"), null),
 				arguments("verkehrspracheFamilie", null, null, null),
 				arguments("verkehrspracheFamilie", "",   null, null),
 				arguments("verkehrspracheFamilie", "abc", null, new ApiOperationException(Response.Status.NOT_FOUND)),
@@ -737,7 +737,7 @@ class DataSchuelerStammdatenTest {
 		dto.Migrationshintergrund = true;
 		dto.JahrZuzug = 1991;
 		dto.GeburtslandSchueler = Nationalitaeten.getDEU();
-		dto.VerkehrsspracheFamilie = Verkehrssprache.DEU;
+		dto.VerkehrsspracheFamilie = Verkehrssprache.getByIsoKuerzel("deu");
 		dto.GeburtslandVater = Nationalitaeten.getDEU();
 		dto.GeburtslandMutter = Nationalitaeten.getByISO3("ALB");
 		// Statusdaten

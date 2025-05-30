@@ -202,7 +202,7 @@ import { StundenplanUnterrichtsverteilung } from '../core/data/stundenplan/Stund
 import { StundenplanZeitraster } from '../core/data/stundenplan/StundenplanZeitraster';
 import { TelefonArt } from '../core/data/schule/TelefonArt';
 import { UebergangsempfehlungKatalogEintrag } from '../asd/data/schueler/UebergangsempfehlungKatalogEintrag';
-import { VerkehrsspracheKatalogEintrag } from '../core/data/schule/VerkehrsspracheKatalogEintrag';
+import { VerkehrsspracheKatalogEintrag } from '../asd/data/schule/VerkehrsspracheKatalogEintrag';
 import { VermerkartEintrag } from '../core/data/schule/VermerkartEintrag';
 import { WiedervorlageEintrag } from '../core/data/schule/WiedervorlageEintrag';
 import { ZulaessigeKursartKatalogEintrag } from '../asd/data/kurse/ZulaessigeKursartKatalogEintrag';
@@ -12507,7 +12507,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der GET-Methode getVerkehrssprachen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/allgemein/verkehrssprachen
 	 *
-	 * Erstellt eine Liste aller in dem Katalog vorhanden der Verkehrssprachen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * DEPRECATED: Erstellt eine Liste aller in dem Katalog vorhanden der Verkehrssprachen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Katalog-Einträgen

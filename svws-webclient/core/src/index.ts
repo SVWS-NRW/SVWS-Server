@@ -189,6 +189,7 @@ export { SchulgliederungGueltigerAbschluss } from './asd/data/schule/Schulgliede
 export { SchulgliederungKatalogEintrag } from './asd/data/schule/SchulgliederungKatalogEintrag';
 export { Schuljahresabschnitt } from './asd/data/schule/Schuljahresabschnitt';
 export { Schulleitung } from './asd/data/schule/Schulleitung';
+export { VerkehrsspracheKatalogEintrag } from './asd/data/schule/VerkehrsspracheKatalogEintrag';
 export type { CoreType } from './asd/types/CoreType';
 export { CoreTypeSimple } from './asd/types/CoreTypeSimple';
 export { Geschlecht } from './asd/types/Geschlecht';
@@ -241,6 +242,7 @@ export { SchulabschlussAllgemeinbildend } from './asd/types/schule/Schulabschlus
 export { SchulabschlussBerufsbildend } from './asd/types/schule/SchulabschlussBerufsbildend';
 export { Schulform } from './asd/types/schule/Schulform';
 export { Schulgliederung } from './asd/types/schule/Schulgliederung';
+export { Verkehrssprache } from './asd/types/schule/Verkehrssprache';
 export { WeiterbildungskollegBildungsgangTyp } from './asd/types/schule/WeiterbildungskollegBildungsgangTyp';
 export { WeiterbildungskollegOrganisationsformen } from './asd/types/schule/WeiterbildungskollegOrganisationsformen';
 export { CoreTypeDataManager } from './asd/utils/CoreTypeDataManager';
@@ -591,7 +593,6 @@ export { SchulenKatalogEintrag } from './core/data/schule/SchulenKatalogEintrag'
 export { SchulformGliederungJahrgaenge } from './core/data/schule/SchulformGliederungJahrgaenge';
 export { SchultraegerKatalogEintrag } from './core/data/schule/SchultraegerKatalogEintrag';
 export { TelefonArt } from './core/data/schule/TelefonArt';
-export { VerkehrsspracheKatalogEintrag } from './core/data/schule/VerkehrsspracheKatalogEintrag';
 export { VermerkartEintrag } from './core/data/schule/VermerkartEintrag';
 export { WiedervorlageEintrag } from './core/data/schule/WiedervorlageEintrag';
 export { Stundenplan } from './core/data/stundenplan/Stundenplan';
@@ -712,7 +713,6 @@ export { Herkunftsschulnummern } from './core/types/schule/Herkunftsschulnummern
 export { PersonTyp } from './core/types/schule/PersonTyp';
 export { Pruefungsordnung } from './core/types/schule/Pruefungsordnung';
 export { Reformpaedagogik } from './core/types/schule/Reformpaedagogik';
-export { Verkehrssprache } from './core/types/schule/Verkehrssprache';
 export { AdressenUtils } from './core/utils/AdressenUtils';
 export { ArrayUtils } from './core/utils/ArrayUtils';
 export { AttributMitAuswahl } from './core/utils/AttributMitAuswahl';

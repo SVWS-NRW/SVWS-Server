@@ -19,6 +19,7 @@ import Sprachreferenzniveau from "@json/fach/Sprachreferenzniveau.json";
 import BerufskollegBildungsgangTyp from "@json/schule/BerufskollegBildungsgangTyp.json";
 import WeiterbildungskollegBildungsgangTyp from "@json/schule/WeiterbildungskollegBildungsgangTyp.json";
 import Schulgliederung from "@json/schule/Schulgliederung.json";
+import Verkehrssprache from "@json/schule/Verkehrssprache.json";
 import Fachgruppe from "@json/fach/Fachgruppe.json";
 import Fach from "@json/fach/Fach.json";
 import LehrerAbgangsgrund from "@json/lehrer/LehrerAbgangsgrund.json";
@@ -78,6 +79,7 @@ export class JsonCoreTypeReaderStatic extends JsonCoreTypeReader {
 		this.mapCoreTypeNameJsonDataImport.set("BerufskollegBildungsgangTyp", BerufskollegBildungsgangTyp);
 		this.mapCoreTypeNameJsonDataImport.set("WeiterbildungskollegBildungsgangTyp", WeiterbildungskollegBildungsgangTyp);
 		this.mapCoreTypeNameJsonDataImport.set("Schulgliederung", Schulgliederung);
+		this.mapCoreTypeNameJsonDataImport.set("Verkehrssprache", Verkehrssprache);
 		this.mapCoreTypeNameJsonDataImport.set("Fachgruppe", Fachgruppe);
 		this.mapCoreTypeNameJsonDataImport.set("Fach", Fach);
 		this.mapCoreTypeNameJsonDataImport.set("LehrerAbgangsgrund", LehrerAbgangsgrund);

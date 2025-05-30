@@ -68,15 +68,15 @@ export function staatsangehoerigkeitKatalogEintragSort(a: Nationalitaeten, b: Na
 export function verkehrsspracheKatalogEintragFilter(items: Iterable<Verkehrssprache>, search: string) {
 	const list = [];
 	for (const i of items)
-		if (i.daten.kuerzel.toLocaleLowerCase().includes(search.toLocaleLowerCase())
-			|| i.daten.bezeichnung.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+		if (i.historie().getLast().iso3.toLocaleLowerCase().includes(search.toLocaleLowerCase())
+			|| i.historie().getLast().text.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
 			list.push(i);
 	return list;
 }
 
 /** Sortierfunktion für Sprachen */
 export function verkehrsspracheKatalogEintragSort(a: Verkehrssprache, b: Verkehrssprache) {
-	return a.daten.bezeichnung.localeCompare(b.daten.bezeichnung);
+	return a.historie().getLast().text.localeCompare(b.historie().getLast().text);
 }
 
 /** Filter für Länder */

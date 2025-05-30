@@ -16,7 +16,7 @@ import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.schueler.Einschulungsart;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.asd.types.schule.Nationalitaeten;
-import de.svws_nrw.core.types.schule.Verkehrssprache;
+import de.svws_nrw.asd.types.schule.Verkehrssprache;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
@@ -249,7 +249,7 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 		daten.hatMigrationshintergrund = Boolean.TRUE.equals(dto.Migrationshintergrund);
 		daten.zuzugsjahr = dto.JahrZuzug;
 		daten.geburtsland = (dto.GeburtslandSchueler == null) ? null : dto.GeburtslandSchueler.historie().getLast().iso3;
-		daten.verkehrspracheFamilie = (dto.VerkehrsspracheFamilie == null) ? null : dto.VerkehrsspracheFamilie.daten.kuerzel;
+		daten.verkehrspracheFamilie = (dto.VerkehrsspracheFamilie == null) ? null : dto.VerkehrsspracheFamilie.historie().getLast().iso3;
 		daten.geburtslandVater = (dto.GeburtslandVater == null) ? null : dto.GeburtslandVater.historie().getLast().iso3;
 		daten.geburtslandMutter = (dto.GeburtslandMutter == null) ? null : dto.GeburtslandMutter.historie().getLast().iso3;
 		// Statusdaten
@@ -430,7 +430,7 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 			dto.VerkehrsspracheFamilie = null;
 			return;
 		}
-		final Verkehrssprache verkehrsprache = Verkehrssprache.getByKuerzelAuto(verkehrspracheFamilie);
+		final Verkehrssprache verkehrsprache = Verkehrssprache.getByIsoKuerzel(verkehrspracheFamilie);
 		if (verkehrsprache == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 		dto.VerkehrsspracheFamilie = verkehrsprache;

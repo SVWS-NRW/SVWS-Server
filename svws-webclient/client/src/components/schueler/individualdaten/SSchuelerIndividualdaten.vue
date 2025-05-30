@@ -152,7 +152,7 @@
 					:item-sort="nationalitaetenKatalogEintragSort" :item-filter="nationalitaetenKatalogEintragFilter"
 					:disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate" autocomplete statistics />
 				<svws-ui-select title="Verkehrssprache" v-model="verkehrsprache" autocomplete :items="Verkehrssprache.values()"
-					:item-text="i => `${i.daten.bezeichnung} (${i.daten.kuerzel})`" :item-sort="verkehrsspracheKatalogEintragSort"
+					:item-text="i => `${i.historie().getLast().text} (${i.historie().getLast().iso3})`" :item-sort="verkehrsspracheKatalogEintragSort"
 					:item-filter="verkehrsspracheKatalogEintragFilter" :disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate" class="col-span-full" statistics />
 				<svws-ui-select title="Geburtsland Mutter" v-model="geburtslandMutter" :items="Nationalitaeten.values()"
 					:item-text="i => `${i.historie().getLast().bezeichnung} (${i.historie().getLast().iso3})`" :item-sort="nationalitaetenKatalogEintragSort"
@@ -363,8 +363,8 @@
 	});
 
 	const verkehrsprache = computed<Verkehrssprache>({
-		get: () => Verkehrssprache.getByKuerzelAuto(data.value.verkehrspracheFamilie) || Verkehrssprache.DEU,
-		set: (value) => void props.patch({ verkehrspracheFamilie: value.daten.kuerzel }),
+		get: () => Verkehrssprache.getByIsoKuerzel(data.value.verkehrspracheFamilie) || Verkehrssprache.data().getWertBySchluesselOrException("de"),
+		set: (value) => void props.patch({ verkehrspracheFamilie: value.historie().getLast().iso3 }),
 	});
 
 	const inputStammschule = computed<SchulEintrag | undefined>({

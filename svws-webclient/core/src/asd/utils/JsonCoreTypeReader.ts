@@ -93,6 +93,7 @@ import { SchulabschlussAllgemeinbildend } from "../types/schule/SchulabschlussAl
 import { SchulabschlussBerufsbildend } from "../types/schule/SchulabschlussBerufsbildend";
 import { Schulform } from "../types/schule/Schulform";
 import { Schulgliederung } from "../types/schule/Schulgliederung";
+import { Verkehrssprache } from "../types/schule/Verkehrssprache";
 import { WeiterbildungskollegBildungsgangTyp } from "../types/schule/WeiterbildungskollegBildungsgangTyp";
 import { WeiterbildungskollegOrganisationsformen } from "../types/schule/WeiterbildungskollegOrganisationsformen";
 import { CoreTypeDataManager } from "./CoreTypeDataManager";
@@ -107,6 +108,7 @@ import { ValidatorManager } from "../validate/ValidatorManager";
 import { NationalitaetenKatalogEintrag } from "../data/schule/NationalitaetenKatalogEintrag";
 import { Nationalitaeten } from "../types/schule/Nationalitaeten";
 import { EinschulungsartKatalogEintrag } from "../data/schueler/EinschulungsartKatalogEintrag";
+import { VerkehrsspracheKatalogEintrag } from "../data/schule/VerkehrsspracheKatalogEintrag";
 
 interface JsonCoreTypeEntry<T> {
 	bezeichner: string;
@@ -144,7 +146,7 @@ export class JsonCoreTypeReader {
 	private keys = [
 		"Schulform", "BerufskollegAnlage", "AllgemeinbildendOrganisationsformen", "BerufskollegOrganisationsformen", "WeiterbildungskollegOrganisationsformen",
 		"SchulabschlussAllgemeinbildend", "SchulabschlussBerufsbildend", "Einschulungsart", "HerkunftBildungsgang", "HerkunftBildungsgangTyp", "Jahrgaenge", "PrimarstufeSchuleingangsphaseBesuchsjahre", "Religion",
-		"Kindergartenbesuch", "SchuelerStatus", "Note", "Sprachreferenzniveau", "BerufskollegBildungsgangTyp", "WeiterbildungskollegBildungsgangTyp", "Schulgliederung", "Fachgruppe", "Fach",
+		"Kindergartenbesuch", "SchuelerStatus", "Note", "Sprachreferenzniveau", "BerufskollegBildungsgangTyp", "WeiterbildungskollegBildungsgangTyp", "Schulgliederung", "Verkehrssprache", "Fachgruppe", "Fach",
 		"LehrerAbgangsgrund", "LehrerBeschaeftigungsart", "LehrerEinsatzstatus", "LehrerFachrichtung", "LehrerLehrbefaehigung", "LehrerFachrichtungAnerkennung", "LehrerLehramt",
 		"LehrerLehramtAnerkennung", "LehrerLehrbefaehigungAnerkennung", "LehrerLeitungsfunktion", "LehrerRechtsverhaeltnis", "LehrerZugangsgrund", "BilingualeSprache", "KAOABerufsfeld",
 		"KAOAMerkmaleOptionsarten", "KAOAZusatzmerkmaleOptionsarten", "KAOAEbene4", "KAOAZusatzmerkmal", "KAOAAnschlussoptionen", "KAOAKategorie", "KAOAMerkmal", "Klassenart", "Uebergangsempfehlung",
@@ -314,6 +316,13 @@ export class JsonCoreTypeReader {
 		const data = this.read('Schulgliederung', (json) => SchulgliederungKatalogEintrag.transpilerFromJSON(json));
 		const manager = new CoreTypeDataManager<SchulgliederungKatalogEintrag, Schulgliederung>(data.version, Schulgliederung.class, Schulgliederung.values(), data.mapData, data.mapStatistikIDs);
 		Schulgliederung.init(manager);
+	}
+
+	public readVerkehrssprache() {
+		const data = this.read('Verkehrssprache', (json) => VerkehrsspracheKatalogEintrag.transpilerFromJSON(json));
+		CoreTypeSimple.initValues(new Verkehrssprache(), Verkehrssprache.class, data.mapData);
+		const manager = new CoreTypeDataManager<VerkehrsspracheKatalogEintrag, Verkehrssprache>(data.version, Verkehrssprache.class, Verkehrssprache.values(), data.mapData, data.mapStatistikIDs);
+		Verkehrssprache.init(manager);
 	}
 
 	public readFachgruppe() {
@@ -561,6 +570,7 @@ export class JsonCoreTypeReader {
 			this.readBerufskollegBildungsgangTyp();
 			this.readWeiterbildungskollegBildungsgangTyp();
 			this.readSchulgliederung();
+			this.readVerkehrssprache();
 			this.readFachgruppe();
 			this.readFach();
 			this.readLehrerAbgangsgrund();

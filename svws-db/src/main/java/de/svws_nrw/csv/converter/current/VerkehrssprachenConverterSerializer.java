@@ -6,7 +6,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
-import de.svws_nrw.core.types.schule.Verkehrssprache;
+import de.svws_nrw.asd.types.schule.Verkehrssprache;
 import de.svws_nrw.db.converter.current.VerkehrssprachenConverter;
 
 /**

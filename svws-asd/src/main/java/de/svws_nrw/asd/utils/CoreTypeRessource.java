@@ -57,6 +57,7 @@ import de.svws_nrw.asd.data.schule.SchulabschlussAllgemeinbildendKatalogEintrag;
 import de.svws_nrw.asd.data.schule.SchulabschlussBerufsbildendKatalogEintrag;
 import de.svws_nrw.asd.data.schule.SchulformKatalogEintrag;
 import de.svws_nrw.asd.data.schule.SchulgliederungKatalogEintrag;
+import de.svws_nrw.asd.data.schule.VerkehrsspracheKatalogEintrag;
 import de.svws_nrw.asd.types.CoreType;
 import de.svws_nrw.asd.types.CoreTypeSimple;
 import de.svws_nrw.asd.types.Note;
@@ -108,6 +109,7 @@ import de.svws_nrw.asd.types.schule.SchulabschlussAllgemeinbildend;
 import de.svws_nrw.asd.types.schule.SchulabschlussBerufsbildend;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
+import de.svws_nrw.asd.types.schule.Verkehrssprache;
 import de.svws_nrw.asd.types.schule.WeiterbildungskollegBildungsgangTyp;
 import de.svws_nrw.asd.types.schule.WeiterbildungskollegOrganisationsformen;
 import de.svws_nrw.asd.utils.json.JsonCoreTypeData;
@@ -456,6 +458,8 @@ public final class CoreTypeRessource<T extends CoreTypeData, U extends CoreType<
 				"de/svws_nrw/asd/types/lehrer/LehrerMinderleistungsarten.json");
 		addSimple(Nationalitaeten.class, NationalitaetenKatalogEintrag.class,
 				"de/svws_nrw/asd/types/schule/Nationalitaeten.json");
+		addSimple(Verkehrssprache.class, VerkehrsspracheKatalogEintrag.class,
+				"de/svws_nrw/asd/types/schule/Verkehrssprache.json");
 	}
 
 }
