@@ -88,67 +88,67 @@
 
 	const rechtsverhaeltnis = computed<LehrerRechtsverhaeltnis | undefined>({
 		get(): LehrerRechtsverhaeltnis | undefined {
-			return LehrerRechtsverhaeltnis.values().find(r => r.daten(schuljahr.value)?.kuerzel === personalabschnittsdaten()?.rechtsverhaeltnis);
+			return LehrerRechtsverhaeltnis.values().find(r => r.daten(schuljahr.value)?.schluessel === personalabschnittsdaten()?.rechtsverhaeltnis);
 		},
 		set(val: LehrerRechtsverhaeltnis | undefined) {
 			const daten = personalabschnittsdaten();
 			if (daten !== null)
-				void props.patchAbschnittsdaten({ rechtsverhaeltnis: val?.daten(schuljahr.value)?.kuerzel }, daten.id);
+				void props.patchAbschnittsdaten({ rechtsverhaeltnis: val?.daten(schuljahr.value)?.schluessel }, daten.id);
 		},
 	});
 
 	const beschaeftigungsart = computed<LehrerBeschaeftigungsart | undefined>({
 		get(): LehrerBeschaeftigungsart | undefined {
-			return LehrerBeschaeftigungsart.values().find(r => r.daten(schuljahr.value)?.kuerzel === personalabschnittsdaten()?.beschaeftigungsart);
+			return LehrerBeschaeftigungsart.values().find(r => r.daten(schuljahr.value)?.schluessel === personalabschnittsdaten()?.beschaeftigungsart);
 		},
 		set(val: LehrerBeschaeftigungsart | undefined) {
 			const daten = personalabschnittsdaten();
 			if (daten !== null)
-				void props.patchAbschnittsdaten({ beschaeftigungsart: val?.daten(schuljahr.value)?.kuerzel }, daten.id);
+				void props.patchAbschnittsdaten({ beschaeftigungsart: val?.daten(schuljahr.value)?.schluessel }, daten.id);
 		},
 	});
 
 	const einsatzstatus = computed<LehrerEinsatzstatus | undefined>({
 		get(): LehrerEinsatzstatus | undefined {
-			return LehrerEinsatzstatus.values().find(r => r.daten(schuljahr.value)?.kuerzel === personalabschnittsdaten()?.einsatzstatus);
+			return LehrerEinsatzstatus.values().find(r => r.daten(schuljahr.value)?.schluessel === personalabschnittsdaten()?.einsatzstatus);
 		},
 		set(val: LehrerEinsatzstatus | undefined) {
 			const daten = personalabschnittsdaten();
 			if (daten !== null)
-				void props.patchAbschnittsdaten({ einsatzstatus: val?.daten(schuljahr.value)?.kuerzel }, daten.id);
+				void props.patchAbschnittsdaten({ einsatzstatus: val?.daten(schuljahr.value)?.schluessel }, daten.id);
 		},
 	});
 
 	const mehrleistungsgrund = computed<LehrerMehrleistungsarten | undefined>({
 		get(): LehrerMehrleistungsarten | undefined {
 			// TODO aus Personaldaten bestimmten
-			const kuerzel = undefined;
-			return LehrerMehrleistungsarten.values().find(e => e.daten(schuljahr.value)?.kuerzel === kuerzel);
+			const schluessel = undefined;
+			return LehrerMehrleistungsarten.values().find(e => e.daten(schuljahr.value)?.schluessel === schluessel);
 		},
 		set(val: LehrerMehrleistungsarten | undefined) {
-			// TODO props.patch({ mehrleistungsgrund: val?.kuerzel });
+			// TODO props.patch({ mehrleistungsgrund: val?.schluessel });
 		},
 	});
 
 	const minderleistungsgrund = computed<LehrerMinderleistungsarten | undefined>({
 		get(): LehrerMinderleistungsarten | undefined {
 			// TODO aus Personaldaten bestimmen
-			const kuerzel = undefined;
-			return LehrerMinderleistungsarten.values().find(e => e.daten(schuljahr.value)?.kuerzel === kuerzel);
+			const schluessel = undefined;
+			return LehrerMinderleistungsarten.values().find(e => e.daten(schuljahr.value)?.schluessel === schluessel);
 		},
 		set(val: LehrerMinderleistungsarten | undefined) {
-			// TODO props.patch({ minderleistungsgrund: val?.kuerzel });
+			// TODO props.patch({ minderleistungsgrund: val?.schluessel });
 		},
 	});
 
 	const anrechnungsgrund = computed<LehrerAnrechnungsgrund | undefined>({
 		get(): LehrerAnrechnungsgrund | undefined {
 			// TODO aus Personaldaten bestimmten
-			const kuerzel = undefined;
-			return LehrerAnrechnungsgrund.values().find(e => e.daten(schuljahr.value)?.kuerzel === kuerzel);
+			const schluessel = undefined;
+			return LehrerAnrechnungsgrund.values().find(e => e.daten(schuljahr.value)?.schluessel === schluessel);
 		},
 		set(val: LehrerAnrechnungsgrund | undefined) {
-			// TODO props.patch({ anrechnungsgrund: val?.kuerzel });
+			// TODO props.patch({ anrechnungsgrund: val?.schluessel });
 		},
 	});
 
