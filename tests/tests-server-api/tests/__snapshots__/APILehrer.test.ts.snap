@@ -80,7 +80,7 @@ ArrayList {
       "gueltigVon": null,
       "id": 1,
       "kuerzel": "V",
-      "schluessel": "1",
+      "schluessel": "V",
       "text": "Vollzeit",
     },
     LehrerBeschaeftigungsartKatalogEintrag {
@@ -88,7 +88,7 @@ ArrayList {
       "gueltigVon": null,
       "id": 2,
       "kuerzel": "T",
-      "schluessel": "2",
+      "schluessel": "T",
       "text": "Teilzeit",
     },
     LehrerBeschaeftigungsartKatalogEintrag {
@@ -96,7 +96,7 @@ ArrayList {
       "gueltigVon": null,
       "id": 3,
       "kuerzel": "AT",
-      "schluessel": "3",
+      "schluessel": "AT",
       "text": "Altersteilzeit (Beschäftigungsphase)",
     },
     LehrerBeschaeftigungsartKatalogEintrag {
@@ -104,7 +104,7 @@ ArrayList {
       "gueltigVon": null,
       "id": 4,
       "kuerzel": "TA",
-      "schluessel": "4",
+      "schluessel": "TA",
       "text": "Altersteilzeit, vorm. teilzeitbeschäftigt (Verzichtsphase Altersermäßigung)",
     },
     LehrerBeschaeftigungsartKatalogEintrag {
@@ -112,7 +112,7 @@ ArrayList {
       "gueltigVon": null,
       "id": 5,
       "kuerzel": "VA",
-      "schluessel": "5",
+      "schluessel": "VA",
       "text": "Altersteilzeit, vorm. vollzeitbeschäftigt (Verzichtsphase Altersermäßigung)",
     },
     LehrerBeschaeftigungsartKatalogEintrag {
@@ -120,7 +120,7 @@ ArrayList {
       "gueltigVon": null,
       "id": 6,
       "kuerzel": "TS",
-      "schluessel": "6",
+      "schluessel": "TS",
       "text": "Sabbatjahr",
     },
     LehrerBeschaeftigungsartKatalogEintrag {
@@ -128,7 +128,7 @@ ArrayList {
       "gueltigVon": null,
       "id": 8,
       "kuerzel": "SB",
-      "schluessel": "8",
+      "schluessel": "SB",
       "text": "Nebenberufliche Beschäftigung",
     },
     LehrerBeschaeftigungsartKatalogEintrag {
@@ -136,7 +136,7 @@ ArrayList {
       "gueltigVon": null,
       "id": 9,
       "kuerzel": "GB",
-      "schluessel": "9",
+      "schluessel": "GB",
       "text": "Geringfügige Beschäftigung",
     },
     LehrerBeschaeftigungsartKatalogEintrag {
@@ -144,7 +144,7 @@ ArrayList {
       "gueltigVon": null,
       "id": 11,
       "kuerzel": "ST",
-      "schluessel": "11",
+      "schluessel": "ST",
       "text": "Studierende",
     },
     LehrerBeschaeftigungsartKatalogEintrag {
@@ -152,7 +152,7 @@ ArrayList {
       "gueltigVon": null,
       "id": 12,
       "kuerzel": "NA",
-      "schluessel": "12",
+      "schluessel": "NA",
       "text": "Beamter, nebenamtlich (nicht hauptamtlich im Schuldienst)",
     },
     LehrerBeschaeftigungsartKatalogEintrag {
@@ -160,7 +160,7 @@ ArrayList {
       "gueltigVon": null,
       "id": 13,
       "kuerzel": "G",
-      "schluessel": "13",
+      "schluessel": "G",
       "text": "Gestellungsvertrag",
     },
     LehrerBeschaeftigungsartKatalogEintrag {
@@ -168,7 +168,7 @@ ArrayList {
       "gueltigVon": null,
       "id": 15,
       "kuerzel": "X",
-      "schluessel": "15",
+      "schluessel": "X",
       "text": "Unentgeltlich Beschäftigte",
     },
     LehrerBeschaeftigungsartKatalogEintrag {
@@ -176,7 +176,7 @@ ArrayList {
       "gueltigVon": null,
       "id": 16,
       "kuerzel": "WT",
-      "schluessel": "16",
+      "schluessel": "WT",
       "text": "Beamte auf Widerruf (LAA) in Teilzeit",
     },
     LehrerBeschaeftigungsartKatalogEintrag {
@@ -184,7 +184,7 @@ ArrayList {
       "gueltigVon": null,
       "id": 17,
       "kuerzel": "WV",
-      "schluessel": "17",
+      "schluessel": "WV",
       "text": "Beamte auf Widerruf (LAA) in Vollzeit",
     },
   ],
