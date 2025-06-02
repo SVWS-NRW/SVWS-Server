@@ -65,7 +65,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 		try {
 			const { abiturjahr, halbjahr: halbjahrId, idblockung: idBlockung, idergebnis: idErgebnis } = RouteNode.getIntParams(to_params, ["abiturjahr", "halbjahr", "idblockung", "idergebnis"]);
 			const halbjahr = GostHalbjahr.fromID(halbjahrId ?? null);
-			if ((abiturjahr === undefined) || (abiturjahr === -1))
+			if ((abiturjahr === undefined))
 				return this.getRoute({ abiturjahr: -1 });
 			if (halbjahr === null)
 				return this.getRouteHalbjahr(abiturjahr, 0);
