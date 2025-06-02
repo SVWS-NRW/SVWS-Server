@@ -43,66 +43,66 @@
 			</tr>
 		</thead>
 		<tbody class="svws-ui-tbody h-full overflow-y-auto" role="rowgroup" aria-label="Tabelleninhalt">
-			<template v-for="i in 5" :key="abiBelegungen[i]">
-				<template v-if="(abiBelegungen[i] !== null)">
+			<template v-for="belegung in abiBelegungen.values()" :key="`${manager().daten().schuelerID}_${belegung.abiturFach}`">
+				<template v-if="belegung.abiturFach !== null">
 					<tr class="svws-ui-tr grid-cols-[4rem_4rem_16rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_8rem] text-ui-static" role="row">
 						<td class="svws-ui-td text-center" role="cell">
-							<div class="w-full">{{ abiBelegungen[i].abiturFach }}.</div>
+							<div class="w-full">{{ belegung.abiturFach }}.</div>
 						</td>
-						<td class="svws-ui-td text-center" :style="{ 'background-color': getFachfarbe(abiBelegungen[i]) }" role="cell">
-							<div class="w-full">{{ manager().faecher().get(abiBelegungen[i].fachID)?.kuerzelAnzeige ?? "???" }}</div>
+						<td class="svws-ui-td text-center" :style="{ 'background-color': getFachfarbe(belegung) }" role="cell">
+							<div class="w-full">{{ manager().faecher().get(belegung.fachID)?.kuerzelAnzeige ?? "???" }}</div>
 						</td>
-						<td class="svws-ui-td" :style="{ 'background-color': getFachfarbe(abiBelegungen[i]) }" role="cell">
-							{{ manager().faecher().get(abiBelegungen[i].fachID)?.bezeichnung ?? "???" }}
+						<td class="svws-ui-td" :style="{ 'background-color': getFachfarbe(belegung) }" role="cell">
+							{{ manager().faecher().get(belegung.fachID)?.bezeichnung ?? "???" }}
 						</td>
 						<template v-for="hj in GostHalbjahr.getQualifikationsphase()" :key="hj.id">
 							<td class="svws-ui-td text-center" :class="{ 'svws-divider': (hj === GostHalbjahr.Q22) }" role="cell">
 								<div class="w-full">
-									{{ getNotenpunkteString(abiBelegungen[i], hj) }}
+									{{ getNotenpunkteString(belegung, hj) }}
 								</div>
 							</td>
 						</template>
 						<td class="svws-ui-td svws-divider text-center" role="cell">
-							<div class="w-full">{{ abiBelegungen[i].block1PunktSumme ?? 0 }}</div>
+							<div class="w-full">{{ belegung.block1PunktSumme ?? 0 }}</div>
 						</td>
 						<td class="svws-ui-td svws-divider text-center" role="cell">
-							<div class="w-full">{{ formatNotenpunkteDurchschnitt(abiBelegungen[i].block1NotenpunkteDurchschnitt) }}</div>
+							<div class="w-full">{{ formatNotenpunkteDurchschnitt(belegung.block1NotenpunkteDurchschnitt) }}</div>
 						</td>
 						<td class="svws-ui-td text-center" role="cell">
-							<div class="w-full" :class="{
-								'font-bold text-ui-danger': istDefizit(abiBelegungen[i].block2NotenKuerzelPruefung)
-							}">
-								{{ getNotenpunkteStringFromKuerzel(abiBelegungen[i].block2NotenKuerzelPruefung) }}
-							</div>
+							<div :ref="inputPruefungsnote(belegung)" class="w-full h-full focus:ring-2" :class="{
+								'font-bold text-ui-danger': istDefizit(belegung.block2NotenKuerzelPruefung)
+							}" />
 						</td>
 						<td class="svws-ui-td svws-divider text-center" role="cell">
 							<div class="w-full" :class="{
-								'font-bold text-ui-danger': istWertungDefizit(abiBelegungen[i].block2PunkteZwischenstand)
+								'font-bold text-ui-danger': istWertungDefizit(belegung.block2PunkteZwischenstand)
 							}">
-								{{ abiBelegungen[i].block2PunkteZwischenstand ?? '' }}
+								{{ belegung.block2PunkteZwischenstand ?? '' }}
 							</div>
 						</td>
-						<td class="svws-ui-td text-center" role="cell" :class="{ 'bg-ui-75': i >= 4 }">
+						<td class="svws-ui-td text-center" role="cell" :class="{ 'bg-ui-75': belegung.abiturFach >= 4 }">
 							<div class="w-full">
-								<span v-if="abiBelegungen[i].block2MuendlichePruefungBestehen === true" class="icon-sm i-ri-check-line" />
+								<span v-if="belegung.block2MuendlichePruefungBestehen === true" class="icon-sm i-ri-check-line" />
 							</div>
 						</td>
-						<td class="svws-ui-td text-center" role="cell" :class="{ 'bg-ui-75': i >= 4 }">
+						<td class="svws-ui-td text-center" role="cell" :class="{ 'bg-ui-75': belegung.abiturFach >= 4 }">
 							<div class="w-full">
-								<span v-if="abiBelegungen[i].block2MuendlichePruefungFreiwillig === true" class="icon-sm i-ri-check-line" />
+								<span v-if="belegung.block2MuendlichePruefungFreiwillig === true" class="icon-sm i-ri-check-line" />
 							</div>
 						</td>
-						<td class="svws-ui-td text-center" role="cell" :class="{ 'bg-ui-75': i >= 4 }">
-							<div class="w-full">{{ abiBelegungen[i].block2MuendlichePruefungReihenfolge ?? '' }}</div>
+						<td class="svws-ui-td text-center" role="cell" :class="{ 'bg-ui-75': belegung.abiturFach >= 4 }">
+							<div class="w-full">{{ belegung.block2MuendlichePruefungReihenfolge ?? '' }}</div>
 						</td>
-						<td class="svws-ui-td svws-divider text-center" role="cell" :class="{ 'bg-ui-75': i >= 4 }">
-							<div class="w-full">{{ getNotenpunkteStringFromKuerzel(abiBelegungen[i].block2MuendlichePruefungNotenKuerzel) }}</div>
+						<td class="svws-ui-td svws-divider text-center" role="cell" :class="{ 'bg-ui-75': belegung.abiturFach >= 4 }">
+							<div v-if="belegung.abiturFach < 4" :ref="inputPruefungsnoteMdl(belegung)" class="w-full h-full focus:ring-2" :class="{
+								'font-bold text-ui-danger': istDefizit(belegung.block2MuendlichePruefungNotenKuerzel)
+							}" />
 						</td>
 						<td class="svws-ui-td svws-divider text-center" role="cell">
 							<div class="w-full" :class="{
-								'font-bold text-ui-danger': istWertungDefizit(abiBelegungen[i].block2Punkte)
+								'font-bold text-ui-danger': istWertungDefizit(belegung.block2Punkte)
 							}">
-								{{ abiBelegungen[i].block2Punkte ?? '' }}
+								{{ belegung.block2Punkte ?? '' }}
 							</div>
 						</td>
 						<td class="svws-ui-td text-center" role="cell" />
@@ -141,33 +141,41 @@
 
 <script setup lang="ts">
 
-	import { computed } from "vue";
-	import type { AbiturFachbelegung, Fachgruppe, NoteKatalogEintrag } from "@core";
-	import { Fach, GostBesondereLernleistung, Note, RGBFarbe } from "@core";
+	import { computed, type ComponentPublicInstance } from "vue";
+	import type { AbiturFachbelegung, Comparator, Fachgruppe, JavaMap, NoteKatalogEintrag } from "@core";
+	import { ArrayList, Fach, GostBesondereLernleistung, HashMap, Note, RGBFarbe } from "@core";
 	import { DeveloperNotificationException, GostHalbjahr } from "@core";
 
 	import type { SchuelerAbiturPruefungsuebersichtTabelleProps } from "./SchuelerAbiturPruefungsuebersichtTabelleProps";
+	import { GridManager } from "./GridManager";
 
 	const props = defineProps<SchuelerAbiturPruefungsuebersichtTabelleProps>();
 
+	const gridInputManager = new GridManager<string>();
+
 	const schuljahr = computed<number>(() => props.manager().getAbiturjahr() - 1);
 
-	const abiBelegungen = computed<Array<AbiturFachbelegung | null>>(() => {
-		const result = new Array<AbiturFachbelegung | null>();
-		for (let i = 1; i < 6; i++)
-			result[i] = null;
+	const abiBelegungen = computed<JavaMap<number, AbiturFachbelegung>>(() => {
+		const tmp = new ArrayList<AbiturFachbelegung>();
 		for (const belegung of props.manager().daten().fachbelegungen) {
 			if ((belegung.abiturFach === null) || (belegung.abiturFach < 1) || (belegung.abiturFach > 5))
 				continue;
-			if (result[belegung.abiturFach] !== null)
+			tmp.add(belegung);
+		}
+		tmp.sort(<Comparator<AbiturFachbelegung>>{ compare(a, b) { return a.abiturFach! - b.abiturFach!; } });
+		const result = new HashMap<number, AbiturFachbelegung>();
+		for (const belegung of tmp) {
+			if (belegung.abiturFach === null)
+				continue;
+			if (result.containsKey(belegung.abiturFach))
 				throw new DeveloperNotificationException("Ein Abiturfach darf nur einmal gesetzt sein. Dies muss an dieser Stelle sichergestellt werden.");
-			result[belegung.abiturFach] = belegung;
+			result.put(belegung.abiturFach, belegung);
 		}
 		return result;
 	});
 
 	const hatBLL = computed<boolean>(() => GostBesondereLernleistung.fromKuerzel(props.manager().daten().besondereLernleistung) !== GostBesondereLernleistung.KEINE);
-	const hatAbiFach5 = computed<boolean>(() => (abiBelegungen.value[5] !== null) || hatBLL.value);
+	const hatAbiFach5 = computed<boolean>(() => abiBelegungen.value.containsKey(5) || hatBLL.value);
 
 	function istWertungDefizit(punkte: number | null): boolean {
 		if (punkte === null)
@@ -208,7 +216,7 @@
 	function getPunktSummePruefungen() {
 		let summe = 0;
 		for (let i = 1; i <= 5; i++) {
-			const belegung = abiBelegungen.value[i];
+			const belegung = abiBelegungen.value.get(i);
 			if (belegung !== null)
 				summe += (belegung.block2PunkteZwischenstand ?? 0);
 		}
@@ -241,6 +249,32 @@
 		while (tmp.length < 5)
 			tmp += "0";
 		return tmp;
+	}
+
+	function updateNotenpunkte(belegung: AbiturFachbelegung, value: string | null) : void {
+		console.log("Update: ", belegung.abiturFach, value);
+	}
+
+	function updateNotenpunkteMdl(belegung: AbiturFachbelegung, value: string | null) : void {
+		console.log("Update Mdl: ", belegung.abiturFach, value);
+	}
+
+	function inputPruefungsnote(belegung: AbiturFachbelegung) {
+		const key = 'PrüfungsnoteAbiFach' + belegung.abiturFach;
+		const getter = () => getNotenpunkteStringFromKuerzel(belegung.block2NotenKuerzelPruefung);
+		const setter = (value : string | null) => updateNotenpunkte(belegung, value);
+		return (element : Element | ComponentPublicInstance<unknown> | null) => {
+			return gridInputManager.applyInputAbiturNotenpunkte(key, 1, belegung.abiturFach!, element, getter, setter);
+		};
+	}
+
+	function inputPruefungsnoteMdl(belegung: AbiturFachbelegung) {
+		const key = 'PrüfungsnoteMdlAbiFach' + belegung.abiturFach;
+		const getter = () => getNotenpunkteStringFromKuerzel(belegung.block2MuendlichePruefungNotenKuerzel);
+		const setter = (value : string | null) => updateNotenpunkteMdl(belegung, value);
+		return (element : Element | ComponentPublicInstance<unknown> | null) => {
+			gridInputManager.applyInputAbiturNotenpunkte(key, 4, belegung.abiturFach!, element, getter, setter);
+		};
 	}
 
 </script>
